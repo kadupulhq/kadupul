@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.x
+-issue: Adjust wording in Template Setup
 -issue: Fall back to average statistics when an RRD lacks a MAX RRA for percentile maximum
 -issue: Guard a null message array in raise_message()
 -security: Enforce tree access when creating, deleting or renaming tree nodes
