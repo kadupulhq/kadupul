@@ -1004,7 +1004,7 @@ function raise_message($message_id, $message = '', $message_level = MESSAGE_LEVE
 	}
 
 	if (empty($message)) {
-		if (array_key_exists($message_id, $messages)) {
+		if (is_array($messages) && array_key_exists($message_id, $messages)) {
 			$predefined = $messages[$message_id];
 			if (isset($predefined['message'])) {
 				$message = $predefined['message'];
