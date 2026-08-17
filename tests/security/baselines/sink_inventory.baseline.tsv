@@ -349,11 +349,11 @@ dynamic_include	./lib/api_automation.php:2386		include_once($config['base_path']
 dynamic_include	./lib/api_device.php:946		include_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./lib/api_device.php:947		include_once($config['base_path'] . '/lib/variables.php');
 dynamic_include	./lib/api_device.php:948		include_once($config['base_path'] . '/lib/data_query.php');
-dynamic_include	./lib/boost.php:1265		include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/boost.php:1576			include_once($config['library_path'] . '/poller.php');
-dynamic_include	./lib/boost.php:277			include_once($config['library_path'] . '/poller.php');
-dynamic_include	./lib/boost.php:339		include_once($config['library_path'] . '/poller.php');
-dynamic_include	./lib/boost.php:701		include_once($config['library_path'] . '/rrd.php');
+dynamic_include	./lib/boost.php:1416		include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/boost.php:1731			include_once($config['library_path'] . '/poller.php');
+dynamic_include	./lib/boost.php:327			include_once($config['library_path'] . '/poller.php');
+dynamic_include	./lib/boost.php:467		include_once($config['library_path'] . '/poller.php');
+dynamic_include	./lib/boost.php:817		include_once($config['library_path'] . '/rrd.php');
 dynamic_include	./lib/data_query.php:1963		include_once($config['library_path'] . '/sort.php');
 dynamic_include	./lib/data_query.php:2372		include_once($config['library_path'] . '/variables.php');
 dynamic_include	./lib/data_query.php:602		include_once($config['library_path'] . '/xml.php');
@@ -439,8 +439,8 @@ dynamic_include	./lib/utility.php:182		include_once($config['library_path'] . '/
 dynamic_include	./lib/utility.php:46		include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./lib/utility.php:837		include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./link.php:73					include_once($file);
-dynamic_include	./poller.php:1047	    include_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./poller.php:1198	    include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./poller.php:1050	    include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./poller.php:1201	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:35	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:36	require_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./poller.php:37	require_once($config['base_path'] . '/lib/rrd.php');
@@ -466,7 +466,7 @@ dynamic_include	./poller_boost.php:36	require_once($config['base_path'] . '/lib/
 dynamic_include	./poller_boost.php:37	require_once($config['base_path'] . '/lib/dsstats.php');
 dynamic_include	./poller_boost.php:38	require_once($config['base_path'] . '/lib/rrdcheck.php');
 dynamic_include	./poller_boost.php:39	require_once($config['base_path'] . '/lib/rrd.php');
-dynamic_include	./poller_boost.php:717		include_once($config['library_path'] . '/rrd.php');
+dynamic_include	./poller_boost.php:777		include_once($config['library_path'] . '/rrd.php');
 dynamic_include	./poller_commands.php:40	require_once($config['base_path'] . '/lib/api_device.php');
 dynamic_include	./poller_commands.php:41	require_once($config['base_path'] . '/lib/api_data_source.php');
 dynamic_include	./poller_commands.php:42	require_once($config['base_path'] . '/lib/api_graph.php');
@@ -553,8 +553,8 @@ fs_write	./install/functions.php:365			file_put_contents($cacheFile, '<[version]
 fs_write	./install/functions.php:72				$fh = fopen($file, 'w');
 fs_write	./install/functions.php:856						$fp = fopen($config_file, 'w');
 fs_write	./lib/api_device.php:2637							file_put_contents($new_xmlfile, $data);
-fs_write	./lib/boost.php:454								if ($fileptr = fopen($cache_file, 'rb')) {
-fs_write	./lib/boost.php:577							if ($fileptr = fopen($cache_file, 'w')) {
+fs_write	./lib/boost.php:422		$fileptr = fopen($temp_file, 'wb');
+fs_write	./lib/boost.php:574								if ($fileptr = fopen($cache_file, 'rb')) {
 fs_write	./lib/clog_webapi.php:119					$log_fh = fopen($logfile, 'w');
 fs_write	./lib/csp_report_endpoint.php:164	$input   = @fopen('php://input', 'rb');
 fs_write	./lib/csp_report_endpoint.php:199		   leaving a symlink there gave fopen() somewhere else to write. */
