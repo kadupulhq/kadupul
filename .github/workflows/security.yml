@@ -27,14 +27,19 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
 
-      # Blocking. The tree starts clean, so the bar is zero findings and stays
-      # there. A rule that fires wrongly gets a nosem comment with a reason, not
-      # a relaxed gate.
+      # The tree is inherited from Cacti and does not start clean: a sample of
+      # 400 of our own files returns 41 findings. A zero-findings gate on that
+      # is a permanently red build, not a bar. So a pull request is measured
+      # against its merge base and blocks only on what it introduces, while the
+      # scheduled full scan reports everything without blocking.
       - name: Scan
         env:
           IMAGE: semgrep/semgrep@sha256:12672acdb0949e19f9f6a4c2b288edd0b404f268f0ca7738a2c06f372f50362e
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           set -euo pipefail
           configs=(--config p/php --config p/javascript --config p/typescript
@@ -43,14 +48,21 @@ jobs:
           [ -f .semgrep.yml ] && configs+=(--config .semgrep.yml)
           [ -d tests/security/semgrep ] && configs+=(--config tests/security/semgrep)
 
+          # A pull request blocks on new findings only. Everything else
+          # reports the whole tree and does not block.
+          gate=()
+          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+            git fetch --no-tags --depth=1 origin "${BASE_SHA}"
+            gate=(--baseline-commit "${BASE_SHA}" --error)
+          fi
+
           docker run --rm \
             --user "$(id -u):$(id -g)" \
             --env HOME=/tmp \
             --volume "${PWD}:/src" \
             --workdir /src \
             "$IMAGE" \
-            semgrep scan "${configs[@]}" \
-              --error \
+            semgrep scan "${configs[@]}" "${gate[@]}" \
               --metrics off \
               --timeout 0 --timeout-threshold 0 --max-target-bytes 0 \
               --sarif --output semgrep.sarif

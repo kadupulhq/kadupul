@@ -36,7 +36,9 @@ jobs:
       - name: Syntax check
         run: |
           set -euo pipefail
-          files=$(git ls-files '*.php')
+          # include/vendor is Composer's, not ours. Linting it means a
+          # deprecation in somebody else's library can redden our build.
+          files=$(git ls-files '*.php' | grep -v '^include/vendor/')
           if [ -z "$files" ]; then
             echo "No PHP sources tracked yet; nothing to check."
             exit 0
