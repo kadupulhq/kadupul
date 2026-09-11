@@ -1,0 +1,16 @@
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.rrd binary
+
+# Keep development scaffolding out of release archives.
+/.editorconfig  export-ignore
+/.gitattributes export-ignore
+/.github        export-ignore
+/tests          export-ignore
+
+# Composer-installed trees are not our code; do not let them skew language stats.
+/include/vendor/** linguist-vendored

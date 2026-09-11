@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  php:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.1', '8.2', '8.3', '8.4']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: gd, gmp, ldap, mbstring, mysqli, pdo_mysql, snmp, sockets, xml, zip
+          coverage: none
+          tools: none
+
+      # Fails loudly on a parse error in any tracked source file. This is the
+      # floor the rest of the pipeline builds on, and it runs even before there
+      # is a composer.json to install from.
+      - name: Syntax check
+        run: |
+          set -euo pipefail
+          files=$(git ls-files '*.php')
+          if [ -z "$files" ]; then
+            echo "No PHP sources tracked yet; nothing to check."
+            exit 0
+          fi
+          printf '%s\n' "$files" | xargs -n1 -P4 php -l
+
+      - name: Validate composer manifest
+        if: hashFiles('composer.json') != ''
+        run: composer validate --strict
+
+      - name: Install dependencies
+        if: hashFiles('composer.lock') != ''
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Static analysis
+        if: hashFiles('phpstan.neon', 'phpstan.neon.dist', '.phpstan.neon') != ''
+        run: composer run-script phpstan
+
+      - name: Tests
+        if: hashFiles('phpunit.xml', 'phpunit.xml.dist') != ''
+        run: composer test
+
+  style:
+    name: Code style
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.4'
+          coverage: none
+          tools: none
+
+      - name: Check formatting
+        if: hashFiles('.php-cs-fixer.php', '.php-cs-fixer.dist.php') != ''
+        run: composer run-script php-cs-fixer

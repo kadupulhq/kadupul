@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/kadupulhq/kadupul/security/advisories/new
+    about: Report privately. Do not open a public issue for a vulnerability.
+  - name: Question or install help
+    url: https://github.com/kadupulhq/kadupul/discussions
+    about: Not sure it is a bug? Ask here rather than opening an issue.

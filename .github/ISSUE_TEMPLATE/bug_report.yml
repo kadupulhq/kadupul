@@ -1,0 +1,65 @@
+name: Bug report
+description: Something behaves differently than documented.
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you observed, and what you expected instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: The shortest path from a working install to the failure.
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Kadupul version
+      description: Release tag, or the commit you built from.
+    validations:
+      required: true
+
+  - type: input
+    id: php
+    attributes:
+      label: PHP version
+      placeholder: "8.3.12"
+    validations:
+      required: true
+
+  - type: input
+    id: database
+    attributes:
+      label: Database
+      placeholder: "MariaDB 10.11.6"
+
+  - type: dropdown
+    id: poller
+    attributes:
+      label: Poller
+      options: [cmd.php, spine, not sure]
+
+  - type: checkboxes
+    id: upstream
+    attributes:
+      label: Upstream
+      options:
+        - label: I checked whether this also happens on stock Cacti.
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Poller or web log lines around the failure. Redact hostnames and credentials.
+      render: text
