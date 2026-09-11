@@ -12,6 +12,23 @@ Kadupul is in pre-alpha. The source is available, but there is no supported rele
 or upgrade path from an existing Cacti installation. It is not ready for production.
 See [project status](https://kadupul.org/project/status/) for details.
 
+## First-release goals
+
+The first release aims to provide a tested foundation for running Kadupul and
+migrating from Cacti:
+
+- Verify device polling, data collection, and graphing, with automated tests
+  covering core behavior and compatibility.
+- Preserve Cacti plugin APIs, hooks, templates, and existing RRD history, and
+  document any compatibility limits.
+- Update the user-facing product name to Kadupul while preserving the interfaces
+  existing plugins and integrations depend on.
+- Provide a documented installation path and a reversible migration tool for
+  Cacti databases, configuration, RRD files, and installed plugins.
+
+These are release goals, not completed features. See the
+[fork plan](docs/fork-import.md) for implementation details.
+
 ## Documentation
 
 - [Getting started](https://kadupul.org/start/what-kadupul-is/)
@@ -29,6 +46,15 @@ with Cacti plugins, templates, scripts, and integrations. See
 
 This project is not affiliated with or endorsed by The Cacti Group. Upstream
 copyright notices and attribution are preserved.
+
+## The name
+
+Kadupul (කඩුපුල්) is the Sinhala name for *Epiphyllum oxypetalum*, a cactus that
+flowers at night. The bloom opens after dark and wilts before dawn.
+
+Cacti takes its name from the plant family. Kadupul is one species inside that
+family, so the name says where the project came from without claiming to stand
+in for the whole of it.
 
 ## Contributing
 
