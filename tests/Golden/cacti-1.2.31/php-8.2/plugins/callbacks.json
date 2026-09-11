@@ -84,6 +84,166 @@
     ]
   },
   {
+    "callback": "event",
+    "args": [
+      [
+        "poller_top"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "event",
+    "args": [
+      [
+        "poller_bottom"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
     "callback": "filter",
     "args": [
       [

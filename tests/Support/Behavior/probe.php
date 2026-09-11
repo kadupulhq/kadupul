@@ -74,8 +74,23 @@ if ($mode === 'types') {
     trigger_error('behavior capture calibration', E_USER_WARNING);
     try { strlen([]); } catch (Throwable $e) { $out = ['exception' => get_class($e), 'message' => $e->getMessage()]; }
 } elseif ($mode === 'graph') {
-    $id = (int) db_fetch_cell("SELECT id FROM graph_local WHERE host_id=(SELECT id FROM host WHERE description='compat-device' LIMIT 1) ORDER BY id LIMIT 1");
-    if (!$id) { throw new RuntimeException('Graph fixture missing'); }
+    /**
+     * Pick a graph whose RRD actually exists. Targeting a never-polled device
+     * recorded "RRD file does not exist" with an empty source, which looks like
+     * a captured contract and asserts nothing about graph generation.
+     */
+    /**
+     * Follow the real relationship: a graph item names a task item, which is a
+     * data_template_rrd row, which points at the data_local row that owns the
+     * RRD file. Joining without those keys is a Cartesian product that answers
+     * "does any data source exist" rather than "does this graph have one".
+     */
+    $id = (int) db_fetch_cell('SELECT MIN(gti.local_graph_id)
+        FROM graph_templates_item AS gti
+        INNER JOIN data_template_rrd AS dtr ON dtr.id = gti.task_item_id
+        INNER JOIN data_local AS dl ON dl.id = dtr.local_data_id
+        WHERE gti.local_graph_id > 0');
+    if (!$id) { throw new RuntimeException('No graph is bound to a data source'); }
     $options = ['graph_start' => 1700000000, 'graph_end' => 1700003600, 'print_source' => 1];
     ob_start(); $result = rrdtool_function_graph($id, 0, $options); $source = ob_get_clean();
     $out = ['result' => $result, 'source' => $source];

@@ -1,5 +1,10 @@
 # Cacti runtime image for the e2e harness. The repo is baked into the image.
 
+# The tag is mutable: a base refresh can change diagnostics or defaults with no
+# source diff, which would surface as a behavioral regression nobody caused. The
+# recorded observations carry the exact PHP version, so a drift is at least
+# attributable. Pinning by digest is the stronger fix and needs a decision about
+# how the matrix is maintained.
 ARG PHP_VERSION=8.2
 FROM php:${PHP_VERSION}-apache
 
@@ -50,6 +55,11 @@ RUN { \
         echo 'max_execution_time = 60'; \
         echo 'post_max_size = 32M'; \
         echo 'upload_max_filesize = 32M'; \
+        # poller.php forks worker processes, and a -d flag on the parent does
+        # not reach them, so diagnostics raised in a child went unrecorded while
+        # the capture claimed to characterize PHP diagnostics. Setting it here
+        # covers every interpreter in the container, children included.
+        echo 'auto_prepend_file = /harness/errors.php'; \
     } > /usr/local/etc/php/conf.d/cacti.ini
 
 # cli/install_cacti.php calls parse_ini_file(php_ini_loaded_file()); the official
@@ -127,6 +137,26 @@ CMD ["apache2-foreground"]
 # .dockerignore keeps cache/, log/ and rra/ out of the build context, so the
 # cache subdirectories the installer checks for writability arrive empty. Recreate
 # them here rather than relaxing the installer's check.
+# Record every rrdtool invocation. Graph and update behaviour is a contract
+# about the arguments Cacti builds, not about the bytes rrdtool returns, so the
+# harness asserts argv. RRD_FAIL lets a scenario make the tool fail on demand.
+RUN mv /usr/bin/rrdtool /usr/bin/rrdtool.real \
+ && cat > /usr/bin/rrdtool <<'SHIM' && chmod +x /usr/bin/rrdtool
+#!/bin/sh
+# Cacti drives rrdtool in pipe mode ("rrdtool -"), so the real update and graph
+# commands arrive on stdin, not in argv. Record both or the log says only "-".
+printf 'ARGV %s\n' "$*" >> /artifacts/rrd-argv.log 2>/dev/null || true
+if [ -n "${RRD_FAIL:-}" ] || [ -f /artifacts/rrd-fail ]; then
+    echo "ERROR: injected rrdtool failure" >&2
+    exit 1
+fi
+if [ "$1" = "-" ]; then
+    tee -a /artifacts/rrd-stdin.log | /usr/bin/rrdtool.real "$@"
+    exit $?
+fi
+exec /usr/bin/rrdtool.real "$@"
+SHIM
+
 RUN mkdir -p /var/www/html/log /var/www/html/rra /artifacts \
         /var/www/html/cache/boost \
         /var/www/html/cache/mibcache \

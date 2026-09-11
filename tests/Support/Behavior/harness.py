@@ -34,9 +34,19 @@ def write_json(path, value):
 
 # Wall-clock only. Each pattern is anchored to a full timestamp shape so it
 # cannot swallow a version, an id, an OID or a counter value.
+#
+# Each also demands a plausible calendar date. Matching any four digits
+# swallowed the literal DDL default '0000-00-00 00:00:00' out of the schema
+# golden, so a rewrite could have changed that column default unnoticed.
+_Y = r'(?:19|20)\d{2}'
+_M = r'(?:0[1-9]|1[0-2])'
+_D = r'(?:0[1-9]|[12]\d|3[01])'
+
 CLOCK = re.compile(r'\[\d{2}:\d{2}:\d{2}\]')
-DATETIME = re.compile(r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}')
-ISO = re.compile(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?')
+DATETIME = re.compile(_Y + '-' + _M + '-' + _D + r' \d{2}:\d{2}:\d{2}')
+# Cacti's own log and poller stats use US order, e.g. 09/12/2026 02:39:50.
+US_DATETIME = re.compile(_M + '/' + _D + '/' + _Y + r' \d{2}:\d{2}:\d{2}')
+ISO = re.compile(_Y + '-' + _M + '-' + _D + r'T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?')
 
 
 def normalize(value):
@@ -52,8 +62,14 @@ def normalize(value):
         return [normalize(v) for v in value]
     if isinstance(value, str):
         value = value.replace('/var/www/html', '<APP>').replace('/harness', '<HARNESS>')
+        # Poller timing lines report per-process CPU and wall clock, which differ
+        # on every run. The line's presence and count still matter, its
+        # measurements do not.
+        value = re.sub(r'\bu:\d+\.\d+ s:\d+\.\d+ r:\d+\.\d+', 'u:<T> s:<T> r:<T>', value)
+        value = re.sub(r'\bTime:\d+\.\d+', 'Time:<T>', value)
         value = ISO.sub('<TIMESTAMP>', value)
         value = DATETIME.sub('<TIMESTAMP>', value)
+        value = US_DATETIME.sub('<TIMESTAMP>', value)
         return CLOCK.sub('[<TIME>]', value)
     return value
 
@@ -113,7 +129,10 @@ class Session:
 class Harness:
     def __init__(self, args):
         self.args = args
-        self.dc = ['docker', 'compose', '-p', f'kadupul-behavior-{os.getpid()}', '-f', str(ROOT / 'tests/behavior/compose.yml')]
+        # One stable project name. Keying it to the pid built a fresh image set on
+        # every run, which accumulated to tens of gigabytes locally and would do
+        # the same on CI.
+        self.dc = ['docker', 'compose', '-p', 'kadupul-behavior', '-f', str(ROOT / 'tests/behavior/compose.yml')]
         self.observed = {}
         self.destination = ROOT / 'tests/behavior/results' / args.target
 
@@ -129,7 +148,18 @@ class Harness:
         return self.command('php', '-d', 'auto_prepend_file=/harness/errors.php', *args)
 
     def sql(self, sql):
-        return self.compose('exec', '-T', 'db', 'mariadb', '-uroot', '-pbehavior-root', '-N', '-B', 'cacti', data=sql)['stdout']
+        """Run SQL against the fixture database.
+
+        run() checks the exit status, so a failed import raises rather than
+        yielding empty rows. Warnings arrive on stderr with a zero exit though,
+        and silently dropping those would let a truncated import look clean.
+        """
+        result = self.compose('exec', '-T', 'db', 'mariadb', '-uroot', '-pbehavior-root',
+                              '-N', '-B', 'cacti', data=sql)
+        noise = (result['stderr'] or '').strip()
+        if noise and 'Using a password' not in noise:
+            raise RuntimeError('Database reported a problem on a zero exit: ' + noise[:300])
+        return result['stdout']
 
     def rows(self, query):
         # JSON built by MariaDB preserves NULL, strings and numeric column types.
@@ -165,13 +195,56 @@ class Harness:
         grouped = {}
         for event in events:
             if 'fatal' in event:
-                key = ('FATAL', event['fatal'].get('message', ''), event['fatal'].get('file', ''))
+                key = ('FATAL', event['fatal'].get('message', ''), event['fatal'].get('file', ''), None)
             else:
-                key = (event.get('severity'), event.get('message', ''), event.get('file', ''))
+                key = (event.get('severity'), event.get('message', ''), event.get('file', ''),
+                       event.get('suppressed'))
             entry = grouped.setdefault(key, {'severity': key[0], 'message': key[1],
-                                             'file': key[2], 'count': 0, 'suppressed': event.get('suppressed')})
+                                             'file': key[2], 'count': 0,
+                                             'suppressed': event.get('suppressed'),
+                                             'suppressed_here': event.get('suppressed_here')})
             entry['count'] += 1
         return sorted(grouped.values(), key=lambda e: (str(e['severity']), e['message'], e['file']))
+
+    def rrd_calls(self):
+        """rrdtool invocations recorded by the image shim, normalized.
+
+        RRD behaviour is a contract about the arguments Cacti builds. Rendered
+        pixels are not asserted; the command is.
+        """
+        result = self.command('sh', '-c',
+            'for f in /artifacts/rrd-argv.log /artifacts/rrd-stdin.log; do test -f "$f" && cat "$f"; done || true')
+        calls = []
+        for line in result['stdout'].splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            # The first token is the subcommand; keep it and the file it acts on,
+            # drop absolute paths and epoch arguments that move every run.
+            call = re.sub(r'/var/www/html', '<APP>', line)
+            # Only the update timestamp, which is followed by the value colon.
+            # A bare ten-digit run is a DS maximum or an RRA row count.
+            call = re.sub(r'(?<=\s)1[0-9]{9}(?=:)', '<EPOCH>', call)
+            call = re.sub(r'--start \S+|--end \S+', lambda m: m[0].split()[0] + ' <TIME>', call)
+            # An update carries measured values: process count, load average,
+            # free memory. Those are the machine, not the behaviour. Keep the
+            # count and order of the fields, which IS the contract, and drop the
+            # readings so the scenario is reproducible.
+            call = re.sub(r'(<EPOCH>)((?::[^\s:]+)+)',
+                          lambda m: m[1] + ':<V>' * m[2].count(':'), call)
+            calls.append(call)
+        return calls
+
+    def truncate_artifacts(self, *names):
+        for name in names:
+            self.command('sh', '-c', 'rm -f /artifacts/' + name)
+
+    def poller_state(self):
+        return {
+            'poller_item': self.rows("SELECT JSON_OBJECT('host_id',host_id,'action',action,'rrd_name',rrd_name,'rrd_path',REPLACE(rrd_path,'/var/www/html','<APP>')) FROM poller_item ORDER BY local_data_id, rrd_name"),
+            'poller_output_rows': self.sql('SELECT COUNT(*) FROM poller_output').strip(),
+            'host_status': self.rows("SELECT JSON_OBJECT('description',description,'status',status,'status_event_count',status_event_count,'availability_method',availability_method) FROM host ORDER BY id"),
+        }
 
     def devices(self):
         return self.rows("SELECT JSON_OBJECT('id',id,'description',description,'hostname',hostname,'disabled',disabled,'snmp_version',snmp_version,'availability_method',availability_method,'host_template_id',host_template_id,'status',status) FROM host ORDER BY id")
@@ -181,7 +254,12 @@ class Harness:
                 'hooks': self.rows("SELECT JSON_OBJECT('hook',hook,'function',`function`,'status',status,'file',file) FROM plugin_hooks WHERE name='compatibility_test' ORDER BY hook")}
 
     def setup(self):
+        # The project name is stable so images are reused, which means a previous
+        # run's database and append-only artifacts survive. Drop them first, or a
+        # baseline can be recorded against state this run never created.
+        self.compose('down', '--volumes', '--remove-orphans', check=False, timeout=120)
         self.compose('up', '-d', '--build', '--wait', 'db', 'web', 'snmp', timeout=1200)
+        self.truncate_artifacts('php-errors.jsonl', 'plugin.jsonl', 'rrd-argv.log', 'rrd-stdin.log')
         self.sql((ROOT / 'cacti.sql').read_text())
         self.capture('database/fresh-schema', {'version': self.sql('SELECT * FROM version'),
                      'tables': self.sql('SHOW TABLES'), 'devices': self.devices(),
@@ -227,17 +305,174 @@ class Harness:
         self.capture('graphs/datasource-create', {'command': ds, 'database': self.sql('SELECT * FROM data_local ORDER BY id')})
         graph = self.php('cli/add_graphs.php', '--host-id=' + device, '--graph-type=cg', '--graph-template-id=4')
         self.capture('graphs/create', {'command': graph, 'database': self.sql('SELECT * FROM graph_local ORDER BY id')})
-        self.capture('graphs/definition', self.probe('graph'))
         self.capture('plugins/install', {'command': self.php('cli/plugin_manage.php', '--plugin=compatibility_test', '--install'), 'database': self.plugin_state()})
         self.capture('plugins/enable', {'command': self.php('cli/plugin_manage.php', '--plugin=compatibility_test', '--enable'), 'database': self.plugin_state()})
         self.capture('plugins/hook', self.probe('plugin'))
+
+        # A poller pass while the plugin is enabled. Without it the registered
+        # poller_top and poller_bottom hooks are never dispatched, so the plugin
+        # contract covers only the hooks the probe calls directly.
+        self.truncate_artifacts('plugin-poller.jsonl')
+        poller_hooks_before = len(self.jsonl('/artifacts/plugin.jsonl'))
+        poller_pass = self.php('poller.php', '--force')
+        poller_hooks = self.jsonl('/artifacts/plugin.jsonl')[poller_hooks_before:]
+        if not any(h.get('callback') == 'event' for h in poller_hooks):
+            raise RuntimeError('A poller pass dispatched no plugin hook; poller_top/bottom are unverified')
+        # Record the contract, not the schedule. The interleaved config_settings
+        # calls depend on how many workers the poller forks, so committing the
+        # raw log would report a regression whenever process scheduling differed.
+        # Which lifecycle hooks fired, and in what order, is the actual contract.
+        events = [c['args'][0][0] for c in poller_hooks
+                  if c.get('callback') == 'event' and c.get('args')]
+        self.capture('plugins/poller-hooks', {
+            'command': {k: poller_pass[k] for k in ('exit',)},
+            'events_in_order': events,
+            'other_callbacks_seen': sorted({c['callback'] for c in poller_hooks
+                                            if c.get('callback') != 'event'}),
+        })
         self.capture('plugins/disable', {'command': self.php('cli/plugin_manage.php', '--plugin=compatibility_test', '--disable'), 'database': self.plugin_state()})
         self.capture('plugins/hook-disabled', self.probe('plugin'))
         self.capture('plugins/uninstall', {'command': self.php('cli/plugin_manage.php', '--plugin=compatibility_test', '--uninstall'), 'database': self.plugin_state()})
         self.capture('plugins/callbacks', self.jsonl('/artifacts/plugin.jsonl'))
         self.capture('devices/delete', {'command': self.php('cli/remove_device.php', '--id=' + device, '--confirm'),
             'database': self.devices(), 'data_local': self.sql('SELECT * FROM data_local ORDER BY id'), 'graph_local': self.sql('SELECT * FROM graph_local ORDER BY id')})
-        self.capture('api/php-errors', self.diagnostics())
+
+    def poller_scenarios(self):
+        """The poller is the compatibility boundary most likely to break under a
+        rewrite, and the one least visible over HTTP. Drive it directly.
+
+        The installer's own device already carries five data sources with real
+        RRD files, so it is polled rather than a fixture device: a run that
+        collects nothing would record an empty contract that proves nothing.
+        """
+        device = self.sql("SELECT id FROM host WHERE description='Local Linux Machine' ORDER BY id LIMIT 1").strip()
+        if not device:
+            raise RuntimeError('Installer default device missing; cannot exercise the poller')
+
+        # setup() disables every host so nothing polls by accident.
+        self.sql("UPDATE host SET disabled='' WHERE id=" + device + ";")
+
+        self.truncate_artifacts('rrd-argv.log', 'rrd-stdin.log')
+        run = self.php('poller.php', '--force')
+        state = self.poller_state()
+        if not any(row['host_id'] == int(device) for row in state['poller_item']):
+            raise RuntimeError('Poller cache holds nothing for the polled device')
+        self.capture('poller/run-reachable', {
+            'command': {k: run[k] for k in ('exit', 'stdout', 'stderr')},
+            'database': state,
+            'rrd_calls': self.rrd_calls(),
+        })
+
+        # A graph probe that returns no source records "RRD file does not exist"
+        # and asserts nothing about graph generation, while looking like a
+        # captured contract. Refuse it rather than publish a hollow baseline.
+        definition = self.probe('graph')
+        result = definition['result']
+        if not isinstance(result, dict) or not str(result.get('source', '')).strip():
+            raise RuntimeError('Graph definition probe produced no rrdtool source: ' + json.dumps(result)[:200])
+        self.capture('graphs/definition', definition)
+
+        # The same poll with rrdtool failing, to record how Cacti reports a tool
+        # that exits non-zero rather than how it behaves when everything works.
+        self.truncate_artifacts('rrd-argv.log', 'rrd-stdin.log')
+        self.command('sh', '-c', 'touch /artifacts/rrd-fail && test -f /artifacts/rrd-fail', check=True)
+        failed = self.php('poller.php', '--force')
+        self.command('sh', '-c', 'rm -f /artifacts/rrd-fail', check=True)
+
+        # Negative control. Without it a no-op injection records an ordinary
+        # poll as the failure contract, and the two scenarios after it inherit
+        # the mistake.
+        if 'injected rrdtool failure' not in ((failed['stdout'] or '') + (failed['stderr'] or '')):
+            raise RuntimeError('rrdtool failure was never injected; the scenario would record a normal poll')
+
+        self.capture('poller/rrd-failure', {
+            'command': {k: failed[k] for k in ('exit', 'stdout', 'stderr')},
+            'database': self.poller_state(),
+            'rrd_calls': self.rrd_calls(),
+        })
+
+        # An address that cannot answer, exercising availability and timeout
+        # handling without waiting on a real network.
+        self.sql("UPDATE host SET hostname='203.0.113.1', availability_method=1 WHERE id=" + device + ";")
+        self.truncate_artifacts('rrd-argv.log', 'rrd-stdin.log')
+        unreachable = self.php('poller.php', '--force')
+        self.capture('poller/device-unreachable', {
+            'command': {k: unreachable[k] for k in ('exit', 'stdout', 'stderr')},
+            'database': self.poller_state(),
+        })
+        self.sql("UPDATE host SET hostname='127.0.0.1', availability_method=0 WHERE id=" + device + ";")
+
+    def fault_scenarios(self):
+        """Cacti's failure semantics under a broken dependency are a contract
+        too. A rewrite that turns a logged error into a fatal is a regression."""
+        # A data source whose RRD file has been removed underneath it.
+        self.command('sh', '-c', 'find /var/www/html/rra -name "*.rrd" -delete')
+        self.truncate_artifacts('rrd-argv.log', 'rrd-stdin.log')
+        missing = self.php('poller.php', '--force')
+        self.capture('faults/missing-rrd-file', {
+            'command': {k: missing[k] for k in ('exit', 'stdout', 'stderr')},
+            'rrd_calls': self.rrd_calls(),
+        })
+
+        # A CLI run against a database that refuses connections.
+        #
+        # set -e covers the setup only. It must not span the application call:
+        # a non-zero exit there would abort the script before the config was
+        # restored, leaving every later scenario pointed at a dead database and
+        # recording the shell's status instead of the application's.
+        script = (
+            'set -e; cp /var/www/html/include/config.php /tmp/config.bak; '
+            "sed -i \"s/\\$database_hostname *= *'[^']*'/\\$database_hostname = 'no-such-host'/\" /var/www/html/include/config.php; "
+            'grep -q "no-such-host" /var/www/html/include/config.php; '
+            'set +e; '
+            'php /var/www/html/cli/add_device.php --description=db-down --ip=1.2.3.4 '
+            '--template=0 --version=1 --community=public --avail=none; '
+            'status=$?; set -e; cp /tmp/config.bak /var/www/html/include/config.php; '
+            'grep -q "\'db\'" /var/www/html/include/config.php; '
+            'exit $status')
+        broken = self.command('sh', '-c', script)
+
+        # The point of the scenario is the application's own failure report. If
+        # the harness broke instead, or the application never spoke, recording
+        # the result would publish a contract about nothing.
+        combined = (broken['stdout'] or '') + (broken['stderr'] or '')
+        if 'Parse error' in combined or 'cannot stat' in combined:
+            raise RuntimeError('Fault scenario failed to run rather than exercising the fault: ' + combined[:200])
+        if 'database' not in combined.lower():
+            raise RuntimeError('Fault scenario produced no database failure report: ' + combined[:200])
+
+        self.capture('faults/database-unreachable', {k: broken[k] for k in ('exit', 'stdout', 'stderr')})
+
+    def diagnostics_scenario(self):
+        """Every PHP diagnostic raised by any process in the run.
+
+        This has to be captured last. When it ran at the end of scenarios() it
+        saw only the probe's own process, so the poller's fwrite notice on the
+        broken rrdtool pipe went unrecorded while the scenario claimed to
+        characterize PHP diagnostics.
+        """
+        events = self.diagnostics()
+
+        # Negative control: a diagnostic raised outside the probe must arrive.
+        # Without it, a recorder that silently stops working still looks green.
+        # Scope, stated rather than implied. include/global.php calls
+        # set_error_handler('CactiErrorHandler'), which displaces this recorder in
+        # every process that bootstraps the application. probe.php re-arms it
+        # explicitly; poller.php and its workers cannot without editing
+        # production code, so their diagnostics go to Cacti's own log instead and
+        # are visible in each scenario's stderr, not here.
+        #
+        # What this scenario therefore covers is diagnostics raised before or
+        # outside that handler swap. The control below keeps it honest: at least
+        # one event must come from application code rather than the probe, so a
+        # recorder that silently stops working still fails.
+        outside_probe = [e for e in events if '<HARNESS>' not in str(e.get('file', ''))]
+
+        if not outside_probe:
+            raise RuntimeError('Diagnostics captured nothing from application code; '
+                               'the recorder is no longer reaching lib/')
+
+        self.capture('api/php-errors', events)
 
     def finish(self, error=None):
         runtime = self.command('php', '-r', 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')['stdout'].strip()
@@ -261,6 +496,13 @@ class Harness:
                 failures.append(name + ': REGRESSION')
                 (self.destination / (name.replace('/', '--') + '.diff')).write_text(''.join(difflib.unified_diff(
                     path.read_text().splitlines(True), (json.dumps(value, indent=2, ensure_ascii=False) + '\n').splitlines(True), fromfile='golden', tofile='observed')))
+        # A golden with no observation means a scenario was renamed or removed.
+        # Walking only what ran would let that disappear silently.
+        if not self.args.update_golden and golden_root.exists():
+            recorded = {str(p.relative_to(golden_root))[:-5] for p in golden_root.rglob('*.json')}
+            for orphan in sorted(recorded - set(self.observed)):
+                failures.append(orphan + ': GOLDEN HAS NO OBSERVATION (scenario removed or renamed)')
+
         if skipped:
             print(f'{len(skipped)} scenarios ran but were not verified (--only {" ".join(self.args.only)})')
         print('\n'.join(failures) if failures else f'{len(selected)} contracts verified'
@@ -268,11 +510,26 @@ class Harness:
         return int(bool(failures))
 
     def selected(self):
-        """Scenario names in scope. --only matches the group before the slash."""
+        """Scenario names in scope. --only matches the group before the slash.
+
+        A group that matches nothing is an error, not an empty pass. Reporting
+        '0 contracts verified' and exiting 0 is a gate that succeeded because it
+        checked nothing, which is the failure this harness exists to prevent.
+        """
         if not self.args.only:
             return set(self.observed)
+
         groups = set(self.args.only)
-        return {n for n in self.observed if n.split('/', 1)[0] in groups}
+        known = {n.split('/', 1)[0] for n in self.observed}
+        unknown = groups - known
+        if unknown:
+            raise RuntimeError('--only named no known scenario group: ' + ', '.join(sorted(unknown))
+                               + '. Known groups: ' + ', '.join(sorted(known)))
+
+        chosen = {n for n in self.observed if n.split('/', 1)[0] in groups}
+        if not chosen:
+            raise RuntimeError('--only selected no scenarios')
+        return chosen
 
 
 def compare(args):
@@ -332,6 +589,9 @@ def main():
     try:
         harness.setup()
         harness.scenarios()
+        harness.poller_scenarios()
+        harness.fault_scenarios()
+        harness.diagnostics_scenario()
     except Exception as exc:
         error = str(exc)
         print(error, file=sys.stderr)

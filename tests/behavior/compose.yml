@@ -33,7 +33,10 @@ services:
       dockerfile: tests/behavior/Dockerfile
       args:
         PHP_VERSION: ${PHP_VERSION:-8.2}
+    # command is reset because overriding entrypoint alone leaves the image
+    # CMD in place, which appends apache2-foreground to snmpd's arguments.
     entrypoint: [snmpd, -f, -Lo, -C, -c, /fixtures/snmpd.conf]
+    command: []
     volumes:
       - ../Fixtures/snmp:/fixtures:ro
   poller:
@@ -41,6 +44,10 @@ services:
     build:
       context: ../..
       dockerfile: tests/behavior/Dockerfile
+    # The image prepends /harness/errors.php to every interpreter. Without the
+    # mount this service warns on each poll and records nothing.
+    volumes:
+      - ../Support/Behavior:/harness:ro
     environment:
       DB_HOST: db
     depends_on:

@@ -52,6 +52,10 @@ compare: ## Differential report. Usage: make compare BASELINE=cacti-1.2.31 CANDI
 		|| { echo 'Usage: make compare BASELINE=<target> CANDIDATE=<target>'; exit 2; }
 	./tests/bin/compare --baseline $(BASELINE) --candidate $(CANDIDATE) $(if $(APPROVALS),--approvals $(APPROVALS))
 
+.PHONY: test-harness-selftest
+test-harness-selftest: ## Check the harness normalization does not erase real contracts
+	mise exec python@3.12 -- python tests/Support/Behavior/selftest.py
+
 .PHONY: inventory
 inventory: ## Regenerate the behavioral surface inventory
 	mise exec python@3.12 -- python tests/Support/Behavior/inventory.py
@@ -59,7 +63,9 @@ inventory: ## Regenerate the behavioral surface inventory
 .PHONY: clean
 clean: ## Remove harness results and stop any stray compose projects
 	rm -rf tests/behavior/results
-	@docker compose ls --format json 2>/dev/null \
-		| grep -o '"Name":"kadupul-behavior-[^"]*"' \
+	@docker compose -p kadupul-behavior -f tests/behavior/compose.yml down --volumes --remove-orphans 2>/dev/null || true
+	@# Older runs used a per-pid project name; clean those up too.
+	@docker compose ls --all --format json 2>/dev/null \
+		| grep -o '"Name":"kadupul-behavior[^"]*"' \
 		| cut -d'"' -f4 \
 		| xargs -I{} docker compose -p {} -f tests/behavior/compose.yml down --volumes --remove-orphans 2>/dev/null || true
