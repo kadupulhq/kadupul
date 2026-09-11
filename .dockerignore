@@ -1,0 +1,38 @@
+# The image is built from a source tree, not from a working checkout. Anything
+# that is history, tooling, or local state stays out: it bloats the layer and
+# some of it is sensitive.
+.git
+.github
+.gitignore
+.gitattributes
+.editorconfig
+.semgrepignore
+
+*.md
+!README.md
+CHANGELOG.md
+
+tests/
+docs/
+.php-cs-fixer.php
+phpstan.neon
+phpstan.neon.dist
+phpunit.xml
+phpunit.xml.dist
+
+# Local install state.
+include/config.php
+.env
+.env.local
+docker-compose.override.yml
+log/
+cache/
+rra/
+*.log
+
+# Built elsewhere, or rebuilt inside the image.
+node_modules/
+dist/
+build/
+coverage/
+*.tar.gz

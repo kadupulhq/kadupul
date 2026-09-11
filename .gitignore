@@ -87,37 +87,45 @@ include/themes/custom.css
 !include/themes/midwinter
 
 # Ignore any mac DS_Store files
-.DS_Store
+||||||| parent of e6aa69ae8 (ci: lint workflows and gate the changelog on pull requests)
 
-# Ignore .well-known folders (certbot)
-.well-known
+# ---------------------------------------------------------------------------
+# Kadupul additions. Everything above is inherited from Cacti and still
+# describes this tree, so it stays.
+# ---------------------------------------------------------------------------
+# Local configuration. Never commit an install's own settings or credentials.
+.env
+.env.local
+docker-compose.override.yml
 
-# Ignore language files
-locales/po/*.mo
+# Dependencies installed by a package manager, not by us.
+/vendor/
+/include/vendor/
+node_modules/
 
-# Ignore CSRF secret file
-include/vendor/csrf/csrf-secret.php
+# Runtime state produced by a working install.
+log/*
+!log/.gitkeep
+cache/*
+!cache/.gitkeep
+rra/*.rrd
+rra/*.xml
+scripts/*.pid
+resource/**/*.cache
 
-# Ignore visual studio code
-.vscode/**
-
-# Ignore local developer tooling state (Claude Code, oh-my-claudecode, git worktrees, local notes)
-.claude/
-.omc/
-.worktrees/
-notepad.md
-
-# Ignore vendor folders
-include/vendor/*
-vendor/*
-.worktrees/
+# Build and test output.
+/dist/
+/build/
+*.tar.gz
+*.tar.gz.sha256
+coverage/
+.phpunit.result.cache
+.phpunit.cache/
+.php-cs-fixer.cache
+.php_cs.cache
+phpstan.neon.local
 tests/e2e/test-results/
+tests/e2e/playwright-report/
+semgrep.sarif
 
-# Dev tooling artifacts (never committed)
-.claude/
-.omc/
-.gemini_security/
-docs/superpowers/
-CLAUDE.md
-reproduce_ghsa_*.php
-verify_task*.php
+# Editor and operating system noise.

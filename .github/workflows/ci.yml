@@ -113,3 +113,45 @@ jobs:
       - name: Test
         if: steps.detect.outputs.found == 'true'
         run: npm run --if-present test
+
+  changelog:
+    name: Changelog
+    # The release workflow refuses to publish a tag the changelog does not
+    # describe. Finding that out at tag time is the worst moment, so catch it
+    # here instead. Add the no-changelog label to skip deliberately.
+    if: ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'no-changelog') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Require an entry
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          changed=$(git diff --name-only "$BASE_SHA" HEAD)
+
+          # A branch that only moves CI, docs or the changelog itself needs no entry.
+          substantive=false
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            case "$f" in
+              CHANGELOG.md|.github/*|docs/*|*.md) ;;
+              *) substantive=true ;;
+            esac
+          done <<< "$changed"
+
+          if [ "$substantive" = false ]; then
+            echo "No user-visible change in this branch; no entry needed."
+            exit 0
+          fi
+
+          if ! printf '%s\n' "$changed" | grep -qx 'CHANGELOG.md'; then
+            echo "::error file=CHANGELOG.md::This branch changes behaviour but does not touch CHANGELOG.md. Add an entry under Unreleased, or apply the no-changelog label." >&2
+            exit 1
+          fi
+          echo "Changelog updated."
+
