@@ -50,7 +50,10 @@ jobs:
         run: composer validate --strict
 
       - name: Install dependencies
-        if: hashFiles('composer.lock') != ''
+        # Gate on the manifest, not the lock. This repository commits its vendor
+        # tree and ships no lock file, so gating on the lock skipped install
+        # entirely and the test step then ran without a runner installed.
+        if: hashFiles('composer.json') != ''
         run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Static analysis

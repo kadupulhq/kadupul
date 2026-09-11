@@ -9,6 +9,21 @@ follows [Semantic Versioning](VERSIONING.md).
 Targeting `v1.3.0`, continuing from the Cacti 1.2.31 fork point. See
 [VERSIONING.md](VERSIONING.md).
 
+### Fixed
+
+- The unit test suite can run. Cacti 1.2.31 ships two tests requiring a helper
+  the tag does not contain, so the suite had never executed; the helper and
+  `lib/type_secure.php` are restored from upstream's own fix.
+- Hand-off tests are collected. Two directories differing only in case were
+  both tracked and neither was registered, so eight tests never ran. The three
+  that need a live database are quarantined rather than reporting success
+  while executing nothing.
+- Automation listings build a valid `LIMIT`. Both operands came from the
+  request unclamped, so a page or row count that validated to zero or below
+  produced `LIMIT -30,30` or `LIMIT 0,-5`, which MySQL rejects.
+- `CactiSecureType::toString()` guards arrays and objects without
+  `__toString`, the conversion its docblock promises to prevent.
+
 ### Added
 
 - Repository scaffolding: continuous integration for PHP 8.1 through 8.4 and

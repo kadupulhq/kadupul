@@ -40,7 +40,18 @@ class CactiSecureType {
 			return '';
 		}
 
-		return (string)$value;
+		if (is_scalar($value)) {
+			return (string)$value;
+		}
+
+		if ($value instanceof \Stringable || (is_object($value) && method_exists($value, '__toString'))) {
+			return (string)$value;
+		}
+
+		/* An array or an object with no __toString has no string form. Casting one
+		 * raises a conversion warning or throws, which is precisely the failure
+		 * this helper exists to prevent, so the guard has to cover it too. */
+		return '';
 	}
 
 	/**

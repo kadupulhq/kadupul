@@ -67,7 +67,12 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "scripts": {
-        "test": "pest --display-warnings"
+        "test": [
+            "@test:unit",
+            "@test:handoff"
+        ],
+        "test:unit": "pest --display-warnings --testsuite=Unit",
+        "test:handoff": "pest --display-warnings --testsuite=handoff"
     },
     "config": {
         "sort-packages": true,

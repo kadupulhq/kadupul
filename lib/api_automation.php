@@ -87,6 +87,9 @@ function display_matching_hosts($rule, $rule_type, $url) {
 		$rows = get_request_var('rowsd');
 	}
 
+	/* a non-positive row count builds an invalid LIMIT clause */
+	$rows = max(1, (int)$rows);
+
 	if ((!empty($_SESSION['sess_automation_host_status'])) && (!isempty_request_var('host_status'))) {
 		if ($_SESSION['sess_automation_host_status'] != get_request_var('host_status')) {
 			set_request_var('paged', '1');
@@ -276,7 +279,7 @@ function display_matching_hosts($rule, $rule_type, $url) {
 
 	$sql_query = $rows_query .
 		' ORDER BY ' . $sortby . ' ' . $sort_dir .
-		' LIMIT ' . ($rows*(get_request_var('paged')-1)) . ',' . $rows;
+		' LIMIT ' . max(0, $rows * (get_request_var('paged') - 1)) . ',' . $rows;
 
 	$hosts = db_fetch_assoc($sql_query, false);
 
@@ -385,6 +388,9 @@ function display_matching_graphs($rule, $rule_type, $url) {
 	} else {
 		$rows = get_request_var('rows');
 	}
+
+	/* a non-positive row count builds an invalid LIMIT clause */
+	$rows = max(1, (int)$rows);
 
 	?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
@@ -568,7 +574,7 @@ function display_matching_graphs($rule, $rule_type, $url) {
 		ON h.host_template_id=ht.id
 		$sql_where
 		" . get_order_string() . "
-		LIMIT " . ($rows*(get_request_var('page')-1)) . ',' . $rows;
+		LIMIT " . max(0, $rows * (get_request_var('page') - 1)) . ',' . $rows;
 
 	$graph_list = db_fetch_assoc($sql, false);
 
@@ -670,6 +676,9 @@ function display_new_graphs($rule, $url) {
 	} else {
 		$rows = get_request_var('rows');
 	}
+
+	/* a non-positive row count builds an invalid LIMIT clause */
+	$rows = max(1, (int)$rows);
 
 	?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
@@ -873,7 +882,7 @@ function display_new_graphs($rule, $url) {
 				set_request_var('page', '1');
 			}
 
-			$sql_query = $rows_query . ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
+			$sql_query = $rows_query . ' LIMIT ' . max(0, $rows * (get_request_var('page') - 1)) . ',' . $rows;
 
 			$snmp_query_indexes = db_fetch_assoc($sql_query, false);
 		} else {
@@ -1023,6 +1032,9 @@ function display_matching_trees ($rule_id, $rule_type, $item, $url) {
 	} else {
 		$rows = get_request_var('rows');
 	}
+
+	/* a non-positive row count builds an invalid LIMIT clause */
+	$rows = max(1, (int)$rows);
 
 	if ((!empty($_SESSION['sess_automation_host_status'])) && (!isempty_request_var('host_status'))) {
 		if ($_SESSION['sess_automation_host_status'] != get_request_var('host_status')) {
@@ -1230,7 +1242,7 @@ function display_matching_trees ($rule_id, $rule_type, $item, $url) {
 
 	$sql_query = "$rows_query ORDER BY $sortby " .
 		(strtoupper(get_request_var('sort_direction')) === 'DESC' ? 'DESC' : 'ASC') . ' LIMIT ' .
-		($rows*(get_request_var('page')-1)) . ',' . $rows;
+		max(0, $rows * (get_request_var('page') - 1)) . ',' . $rows;
 
 	$templates = db_fetch_assoc($sql_query, false);
 

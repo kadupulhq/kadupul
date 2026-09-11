@@ -6,5 +6,24 @@
         <testsuite name="Unit">
             <directory>./tests/Unit</directory>
         </testsuite>
+        <!-- Hand-off tests mirror production logic and assert the contract at the
+             boundary. They were tracked but registered nowhere, so none of them
+             had ever run. -->
+        <testsuite name="handoff">
+            <directory>./tests/handoff</directory>
+            <!-- These three bootstrap the application through include/global.php,
+                 which opens a database connection. Without one the bootstrap exits
+                 during collection and the suite reports success having run nothing,
+                 so they are excluded rather than allowed to fake a pass. Run them
+                 against a real instance via the handoff-db suite. -->
+            <exclude>./tests/handoff/CactiSortHandoffTest.php</exclude>
+            <exclude>./tests/handoff/CactiSortRegressionTest.php</exclude>
+            <exclude>./tests/handoff/AutomationTreeRuleHandoffTest.php</exclude>
+        </testsuite>
+        <testsuite name="handoff-db">
+            <file>./tests/handoff/CactiSortHandoffTest.php</file>
+            <file>./tests/handoff/CactiSortRegressionTest.php</file>
+            <file>./tests/handoff/AutomationTreeRuleHandoffTest.php</file>
+        </testsuite>
     </testsuites>
 </phpunit>
