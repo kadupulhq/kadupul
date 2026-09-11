@@ -1,0 +1,21 @@
+{
+  "command": {
+    "exit": 0,
+    "stdout": "      id |                           host |                    description\n       2 |                           snmp |                  compat-device\n\nRemoving devices with ids: 2\nSuccess - removed device-ids: 2\n",
+    "stderr": ""
+  },
+  "database": [
+    {
+      "id": 1,
+      "description": "Local Linux Machine",
+      "hostname": "localhost",
+      "disabled": "on",
+      "snmp_version": 0,
+      "availability_method": 0,
+      "host_template_id": 21,
+      "status": 0
+    }
+  ],
+  "data_local": "1\t309\t1\t0\t\t0\n2\t310\t1\t0\t\t0\n3\t311\t1\t0\t\t0\n4\t312\t1\t0\t\t0\n5\t313\t1\t0\t\t0\n6\t1\t2\t0\t\t0\n",
+  "graph_local": "1\t247\t1\t0\t0\t\n2\t248\t1\t0\t0\t\n3\t249\t1\t0\t0\t\n4\t250\t1\t0\t0\t\n"
+}

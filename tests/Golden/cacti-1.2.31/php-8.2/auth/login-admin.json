@@ -1,0 +1,10 @@
+{
+  "status": 200,
+  "url": "<BASE>/index.php",
+  "content_type": "text/html; charset=UTF-8",
+  "inputs": [],
+  "title": "Console ",
+  "login_form": false,
+  "admin_layout": true,
+  "messages": []
+}

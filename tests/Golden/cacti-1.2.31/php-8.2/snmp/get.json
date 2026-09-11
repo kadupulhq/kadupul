@@ -1,0 +1,9 @@
+{
+  "result": {
+    ".1.3.6.1.2.1.1.1.0": "Kadupul deterministic SNMP fixture",
+    ".1.3.6.1.4.1.8072.9999.1": "42"
+  },
+  "stdout": "\n",
+  "stderr": "",
+  "exit": 0
+}

@@ -1,0 +1,29 @@
+{
+  "command": {
+    "exit": 0,
+    "stdout": "Adding compat-device (snmp) as \"None\" using SNMP v2 with community \"public\"\nSuccess - new device-id: (2)\n",
+    "stderr": ""
+  },
+  "database": [
+    {
+      "id": 1,
+      "description": "Local Linux Machine",
+      "hostname": "localhost",
+      "disabled": "on",
+      "snmp_version": 0,
+      "availability_method": 0,
+      "host_template_id": 21,
+      "status": 0
+    },
+    {
+      "id": 2,
+      "description": "compat-device",
+      "hostname": "snmp",
+      "disabled": "",
+      "snmp_version": 2,
+      "availability_method": 0,
+      "host_template_id": 0,
+      "status": 0
+    }
+  ]
+}

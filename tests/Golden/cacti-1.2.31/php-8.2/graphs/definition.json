@@ -1,0 +1,9 @@
+{
+  "result": {
+    "result": "ERROR: RRD file does not exist: <APP>/rra/compat-device_tempstatusvalue_7.rrd",
+    "source": ""
+  },
+  "stdout": "\n",
+  "stderr": "",
+  "exit": 0
+}

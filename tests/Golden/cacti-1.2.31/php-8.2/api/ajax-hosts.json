@@ -1,0 +1,16 @@
+{
+  "status": 200,
+  "url": "<BASE>/utilities.php?action=ajax_hosts&term=compat",
+  "content_type": "text/html; charset=UTF-8",
+  "inputs": [],
+  "title": null,
+  "login_form": false,
+  "admin_layout": false,
+  "json": [
+    {
+      "label": "compat-device",
+      "value": "compat-device",
+      "id": 2
+    }
+  ]
+}
