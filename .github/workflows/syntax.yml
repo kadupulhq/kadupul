@@ -60,7 +60,7 @@ jobs:
     name: PHP ${{ matrix.php }} Test on ${{ matrix.os }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
 
     - name: Install PHP ${{ matrix.php }}
       uses: shivammathur/setup-php@v2
@@ -73,43 +73,43 @@ jobs:
       run: php -v
       
     - name: Checkout Thold Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@v2
+      uses: GuillaumeFalourd/clone-github-repo-action@v3
       with:
         owner: 'Cacti'
         repository: 'plugin_thold'
 
     - name: Checkout Monitor Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@v2
+      uses: GuillaumeFalourd/clone-github-repo-action@v3
       with:
         owner: 'Cacti'
         repository: 'plugin_monitor'
 
     - name: Checkout MacTrack Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@v2
+      uses: GuillaumeFalourd/clone-github-repo-action@v3
       with:
         owner: 'Cacti'
         repository: 'plugin_mactrack'
 
     - name: Checkout Intropage Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@v2
+      uses: GuillaumeFalourd/clone-github-repo-action@v3
       with:
         owner: 'Cacti'
         repository: 'plugin_intropage'
 
     - name: Checkout FlowView Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@v2
+      uses: GuillaumeFalourd/clone-github-repo-action@v3
       with:
         owner: 'Cacti'
         repository: 'plugin_flowview'
 
     - name: Checkout Audit Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@v2
+      uses: GuillaumeFalourd/clone-github-repo-action@v3
       with:
         owner: 'Cacti'
         repository: 'plugin_audit'
 
     - name: Checkout Syslog Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@v2
+      uses: GuillaumeFalourd/clone-github-repo-action@v3
       with:
         owner: 'Cacti'
         repository: 'plugin_syslog'
