@@ -19,5 +19,7 @@ follows [Semantic Versioning](VERSIONING.md).
   and buildx writes an SBOM into the published index.
 - The fork import plan, and the decision that the rename stops at the plugin
   API boundary.
+- A production container image: multi-stage, base images pinned by digest, the
+  application baked in, and every process running unprivileged.
 
 [Unreleased]: https://github.com/kadupulhq/kadupul/commits/main
