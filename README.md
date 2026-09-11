@@ -39,7 +39,9 @@ shapes where the shape is the reason a bug category recurs. Each of those is a
 reasonable thing for a mature project to turn down, which is the point.
 
 It is not a disagreement with Cacti's maintainers and not an attempt to replace
-Cacti. Fixes that suit upstream are sent upstream.
+Cacti. Kadupul does not send patches upstream: the licence moved to GPL-3.0, which
+makes that a one-way door, and a fix written against a changed internal shape would
+not apply to Cacti anyway.
 
 ## Relationship to Cacti
 
