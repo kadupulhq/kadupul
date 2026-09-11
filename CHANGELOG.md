@@ -15,5 +15,9 @@ follows [Semantic Versioning](VERSIONING.md).
 - Semgrep scanning as a blocking gate, and CodeQL for JavaScript and workflows.
 - Releases publish an offline deployment tarball with runtime dependencies
   vendored in, plus a checksum, and a multi-architecture container image.
+- Release artefacts carry build provenance, the image is signed with cosign,
+  and buildx writes an SBOM into the published index.
+- The fork import plan, and the decision that the rename stops at the plugin
+  API boundary.
 
 [Unreleased]: https://github.com/kadupulhq/kadupul/commits/main

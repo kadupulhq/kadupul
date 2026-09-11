@@ -8,11 +8,15 @@ permissions:
   contents: read
 
 jobs:
+  # A called workflow can only narrow the caller's token, never widen it, so
+  # every scope the reusable jobs need has to be granted here.
   release:
     uses: kadupulhq/.github/.github/workflows/release.yml@main
     permissions:
-      contents: write
-      packages: write
+      contents: write     # create the release and upload its assets
+      packages: write     # push the image, its signature and its attestation
+      id-token: write     # OIDC token for cosign and the attestations API
+      attestations: write # file provenance against the repository
     with:
       tarball: true
       image: true
