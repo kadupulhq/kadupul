@@ -21,5 +21,8 @@ follows [Semantic Versioning](VERSIONING.md).
   API boundary.
 - A production container image: multi-stage, base images pinned by digest, the
   application baked in, and every process running unprivileged.
+- The migration design, and `tools/migrate/assess.php`, which reports what a
+  Cacti install holds and what would survive the move. Read only, so it is safe
+  against production.
 
 [Unreleased]: https://github.com/kadupulhq/kadupul/commits/main
