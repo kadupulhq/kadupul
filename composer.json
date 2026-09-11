@@ -50,6 +50,7 @@
         "phpseclib/phpseclib": "^3.0"
     },
     "require-dev": {
+        "pestphp/pest": "^2 || ^3"
     },
     "authors": [
         {
@@ -65,8 +66,14 @@
     ],
     "minimum-stability": "stable",
     "prefer-stable": true,
+    "scripts": {
+        "test": "pest --display-warnings"
+    },
     "config": {
         "sort-packages": true,
-        "vendor-dir": "./include/vendor"
+        "vendor-dir": "./include/vendor",
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }
