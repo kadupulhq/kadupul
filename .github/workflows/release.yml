@@ -1,0 +1,14 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    uses: kadupulhq/.github/.github/workflows/release.yml@main
+    permissions:
+      contents: write
