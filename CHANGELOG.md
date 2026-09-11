@@ -6,8 +6,8 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
-Targeting `v2.0.0`. See [VERSIONING.md](VERSIONING.md) for why the numbering
-starts there rather than at zero or at 1.2.32.
+Targeting `v1.3.0`, continuing from the Cacti 1.2.31 fork point. See
+[VERSIONING.md](VERSIONING.md).
 
 ### Added
 
