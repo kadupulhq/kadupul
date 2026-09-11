@@ -37,7 +37,8 @@ jobs:
           IMAGE: semgrep/semgrep@sha256:12672acdb0949e19f9f6a4c2b288edd0b404f268f0ca7738a2c06f372f50362e
         run: |
           set -euo pipefail
-          configs=(--config p/php --config p/security-audit --config p/secrets)
+          configs=(--config p/php --config p/javascript --config p/typescript
+                   --config p/security-audit --config p/secrets)
           # Project-specific taint rules, once the fork carries them.
           [ -f .semgrep.yml ] && configs+=(--config .semgrep.yml)
           [ -d tests/security/semgrep ] && configs+=(--config tests/security/semgrep)

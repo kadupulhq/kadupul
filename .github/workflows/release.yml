@@ -12,3 +12,8 @@ jobs:
     uses: kadupulhq/.github/.github/workflows/release.yml@main
     permissions:
       contents: write
+      packages: write
+    with:
+      tarball: true
+      image: true
+      php-version: '8.3'
