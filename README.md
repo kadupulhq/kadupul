@@ -1,132 +1,45 @@
-<p align="center">
-  <img src="assets/primary.png" alt="" width="170">
-</p>
+# Kadupul
 
-<h1 align="center">Kadupul</h1>
+Network monitoring and graphing, forked from [Cacti](https://github.com/Cacti/cacti).
+Kadupul polls devices over SNMP and scripts, stores measurements in RRD files, and
+renders graphs with RRDtool.
 
-<p align="center">
-  <strong>Network monitoring and graphing. A fork of Cacti.</strong>
-</p>
+[Documentation](https://kadupul.org/) · [Issue tracker](https://github.com/kadupulhq/kadupul/issues) · [Discussions](https://github.com/kadupulhq/kadupul/discussions)
 
-<p align="center">
-  <img src="https://img.shields.io/badge/license-GPL--3.0--or--later-004C38" alt="License GPL-3.0-or-later">
-  <img src="https://img.shields.io/badge/PHP-8.1%2B-777BB4" alt="PHP 8.1 or newer">
-  <img src="https://img.shields.io/badge/status-pre--alpha-FBBB02" alt="Status pre-alpha">
-  <img src="https://img.shields.io/badge/next%20release-v1.3.0-4C1D95" alt="Next release v1.3.0">
-</p>
+## Status
 
----
+Kadupul is in pre-alpha. The source is available, but there is no supported release
+or upgrade path from an existing Cacti installation. It is not ready for production.
+See [project status](https://kadupul.org/project/status/) for details.
 
-> **Nothing here works yet.** This repository holds the name, the mark, and this file.
-> The fork has not been taken. There is no code, no build, no release, and no install path.
+## Documentation
 
-## About
+- [Getting started](https://kadupul.org/start/what-kadupul-is/)
+- [Installation](https://kadupul.org/start/install/) — planned setup and requirements;
+  these instructions describe the intended release.
+- [Documentation map](https://kadupul.org/map/) — tutorials, guides, concepts, and reference.
+- [Cacti compatibility](https://kadupul.org/project/compatibility-with-cacti/)
 
-Kadupul is a fork of [Cacti](https://github.com/Cacti/cacti), the PHP network monitoring
-and graphing tool. It keeps what Cacti does: poll devices over SNMP and scripts, store the
-results in RRD files, and draw graphs from them.
+## About the fork
 
-## Why this fork exists
+Kadupul is forked from Cacti by a major Cacti contributor. It focuses on modernizing
+subsystems and improving maintainability while aiming to preserve compatibility
+with Cacti plugins, templates, scripts, and integrations. See
+[why this fork exists](https://kadupul.org/project/why-this-fork/) for the rationale.
 
-Kadupul forks Cacti in order to make changes Cacti would reasonably decline.
+This project is not affiliated with or endorsed by The Cacti Group. Upstream
+copyright notices and attribution are preserved.
 
-Cacti is over twenty years old and runs where an upgrade is a scheduled event. Being
-careful with the language floor, with interfaces people built against, and with
-structural change is correct for that project and its users.
+## Contributing
 
-Kadupul takes the other side of that trade: replacing subsystems that keep producing
-the same class of defect, moving to a newer language floor, and changing internal
-shapes where the shape is the reason a bug category recurs. Each of those is a
-reasonable thing for a mature project to turn down, which is the point.
+Read the [contribution guide](https://kadupul.org/project/contributing/) before
+opening a pull request. Use the [issue tracker](https://github.com/kadupulhq/kadupul/issues)
+for bugs and feature requests, and [Discussions](https://github.com/kadupulhq/kadupul/discussions)
+for questions.
 
-It is not a disagreement with Cacti's maintainers and not an attempt to replace
-Cacti. Kadupul does not send patches upstream: the licence moved to GPL-3.0, which
-makes that a one-way door, and a fix written against a changed internal shape would
-not apply to Cacti anyway.
-
-## Relationship to Cacti
-
-Kadupul stays API compatible with Cacti for the foreseeable future. Plugins, templates,
-scripts, and integrations written against Cacti are meant to keep working. Where the two
-diverge, it will be documented rather than silent.
-
-Copyright notices and attribution to The Cacti Group stay in place in every file carried
-over from upstream.
-
-| | |
-|---|---|
-| Upstream | [Cacti/cacti](https://github.com/Cacti/cacti) |
-| License | GPL-3.0-or-later. See below |
-| API compatibility | Maintained with Cacti for the foreseeable future |
-| Current upstream release | 1.2.32 |
-| Upstream development line | 1.3.0, in `develop` |
-| Fork point | not chosen yet |
-
-## Origin
-
-Kadupul is forked from Cacti by a long-time Cacti contributor. As of September 2026: 347
-commits on `develop`, ranking 9th of 195 authors, 116 commits on the 1.2.x line, and 523
-merged pull requests. Member of the Cacti security and reviewer teams, and credited in the
-upstream README for code, security, maintenance, infrastructure, tests, and documentation.
-
-This fork is not affiliated with or endorsed by The Cacti Group.
-
-## Requirements
-
-Inherited from Cacti's manifest. These move once the fork point is set.
-
-| | |
-|---|---|
-| PHP | 8.1 or newer, with the extensions Cacti's `composer.json` requires |
-| Database | MySQL or MariaDB |
-| Graphing | RRDtool |
-| Collection | net-snmp |
-
-## The name
-
-Kadupul (කඩුපුල්) is the Sinhala name for *Epiphyllum oxypetalum*, a cactus that
-flowers at night. The bloom opens after dark and wilts before dawn.
-
-It being a cactus is the point. Cacti takes its name from the plant family. Kadupul is
-one species inside that family, so the name says where the project came from without
-claiming to stand in for the whole of it.
-
-The mark places a four-point metric trace at the center of the bloom.
-
-## Brand
-
-| File | Use |
-|---|---|
-| [`assets/primary.png`](assets/primary.png) | Full color on a transparent background |
-| [`assets/one-color.png`](assets/one-color.png) | Forest green on white, single ink |
-| [`assets/reversed-white.png`](assets/reversed-white.png) | White on forest green, for dark backgrounds |
-| [`assets/favicon-master.png`](assets/favicon-master.png) | Simplified mark with the stamens removed |
-| [`assets/favicon-32.png`](assets/favicon-32.png), [`assets/favicon-16.png`](assets/favicon-16.png) | Browser tab |
-
-| Color | Hex | |
-|---|---|---|
-| Forest green | `#004C38` | ![](https://img.shields.io/badge/-004C38-004C38) |
-| Gold | `#FBBB02` | ![](https://img.shields.io/badge/-FBBB02-FBBB02) |
-| Ivory | `#FDFAF1` | ![](https://img.shields.io/badge/-FDFAF1-FDFAF1) |
-
-The PNGs were generated rather than drawn, so their greens sample between `#024930` and
-`#01553C` instead of the specified `#004C38`. Redraw the mark as vector before using it
-anywhere the exact color matters. [`assets/GENERATION-NOTES.txt`](assets/GENERATION-NOTES.txt)
-records how each variant was produced.
+Report vulnerabilities through the [security policy](https://kadupul.org/project/security/).
 
 ## License
 
-[GPL-3.0-or-later](LICENSE).
-
-Cacti's source headers grant the program "either version 2 of the License, or (at your
-option) any later version". That is GPL-2.0-or-later, and it is the upstream grant that
-governs. 420 of 442 core PHP files carry it verbatim, and no file in the tree is version 2
-only. Kadupul takes the later-version option and distributes under version 3.
-
-Cacti's `composer.json` declares `GPL-2.0-only`, which contradicts its own file headers.
-It also conflicts with a dependency Cacti already ships, `greew/oauth2-azure-provider`,
-which is GPL-3.0-or-later and cannot be combined with version 2 only. Moving to version 3
-resolves that conflict rather than creating one.
-
-Upstream copyright headers stay as they are. Version 3 applies to the work as distributed
-here.
+[GPL-3.0-or-later](LICENSE). See the
+[licensing documentation](https://kadupul.org/project/license/) for details.
