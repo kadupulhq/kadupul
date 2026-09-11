@@ -1,0 +1,49 @@
+services:
+  db:
+    image: mariadb:10.11
+    environment:
+      MARIADB_ROOT_PASSWORD: behavior-root
+      MARIADB_DATABASE: cacti
+      MARIADB_USER: cactiuser
+      MARIADB_PASSWORD: cactiuser
+    command: [--character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --local-infile=1]
+    healthcheck:
+      test: [CMD, healthcheck.sh, --connect, --innodb_initialized]
+      interval: 2s
+      retries: 60
+  web:
+    build:
+      context: ../..
+      dockerfile: tests/behavior/Dockerfile
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.2}
+    environment:
+      DB_HOST: db
+      TZ: UTC
+    depends_on:
+      db:
+        condition: service_healthy
+    ports: ["127.0.0.1::80"]
+    volumes:
+      - ../Support/Behavior:/harness:ro
+      - ../Fixtures/plugins/compatibility_test:/var/www/html/plugins/compatibility_test:ro
+  snmp:
+    build:
+      context: ../..
+      dockerfile: tests/behavior/Dockerfile
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.2}
+    entrypoint: [snmpd, -f, -Lo, -C, -c, /fixtures/snmpd.conf]
+    volumes:
+      - ../Fixtures/snmp:/fixtures:ro
+  poller:
+    profiles: [scheduled]
+    build:
+      context: ../..
+      dockerfile: tests/behavior/Dockerfile
+    environment:
+      DB_HOST: db
+    depends_on:
+      db:
+        condition: service_healthy
+    command: [sh, -c, 'while true; do php poller.php --force; sleep 300; done']

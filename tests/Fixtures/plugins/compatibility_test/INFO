@@ -1,0 +1,9 @@
+[info]
+name = compatibility_test
+version = 1.0.0
+longname = Behavioral Compatibility Fixture
+author = Kadupul
+homepage = https://example.invalid
+email = nobody@example.invalid
+url = https://example.invalid
+compat = 1.2

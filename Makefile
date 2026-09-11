@@ -1,0 +1,65 @@
+# Behavioral characterization harness for the Cacti 1.2.31 baseline.
+#
+# The harness runs the application in containers and records normalized
+# observations. Golden files are the compatibility specification a Kadupul
+# rewrite must satisfy; they never update as a side effect of running tests.
+
+PHP_VERSION ?= 8.2
+TARGET      ?= cacti-1.2.31
+BEHAVIOR    := PHP_VERSION=$(PHP_VERSION) ./tests/bin/behavior
+
+.DEFAULT_GOAL := help
+
+.PHONY: help
+help: ## Show available targets
+	@grep -hE '^[a-zA-Z_ -]+:.*?## ' $(MAKEFILE_LIST) \
+		| awk 'BEGIN {FS=":.*?## "}; {printf "  %-26s %s\n", $$1, $$2}'
+
+.PHONY: test
+test: test-unit test-characterization ## Run the PHP suite and the behavioral suite
+
+.PHONY: test-unit
+test-unit: ## Run the in-process PHP suite (Pest)
+	composer test
+
+.PHONY: test-characterization
+test-characterization: ## Verify observed behavior against the committed goldens
+	$(BEHAVIOR) --target $(TARGET)
+
+.PHONY: test-update-golden
+test-update-golden: ## Re-record goldens. Review the diff before committing.
+	$(BEHAVIOR) --target $(TARGET) --update-golden
+
+.PHONY: test-keep
+test-keep: ## Run the behavioral suite and leave containers up for inspection
+	$(BEHAVIOR) --target $(TARGET) --keep
+
+# Scenario-scoped targets. The harness runs one ordered pass because later
+# scenarios consume fixtures created by earlier ones, so these report the
+# subset rather than running it in isolation.
+.PHONY: test-api test-poller test-plugins test-auth test-devices
+test-api: SCOPE := api
+test-poller: SCOPE := poller graphs
+test-plugins: SCOPE := plugins
+test-auth: SCOPE := auth
+test-devices: SCOPE := devices
+test-api test-poller test-plugins test-auth test-devices: ## Run the suite, reporting one scenario group
+	$(BEHAVIOR) --target $(TARGET) --only $(SCOPE)
+
+.PHONY: compare
+compare: ## Differential report. Usage: make compare BASELINE=cacti-1.2.31 CANDIDATE=kadupul
+	@test -n "$(BASELINE)" -a -n "$(CANDIDATE)" \
+		|| { echo 'Usage: make compare BASELINE=<target> CANDIDATE=<target>'; exit 2; }
+	./tests/bin/compare --baseline $(BASELINE) --candidate $(CANDIDATE) $(if $(APPROVALS),--approvals $(APPROVALS))
+
+.PHONY: inventory
+inventory: ## Regenerate the behavioral surface inventory
+	mise exec python@3.12 -- python tests/Support/Behavior/inventory.py
+
+.PHONY: clean
+clean: ## Remove harness results and stop any stray compose projects
+	rm -rf tests/behavior/results
+	@docker compose ls --format json 2>/dev/null \
+		| grep -o '"Name":"kadupul-behavior-[^"]*"' \
+		| cut -d'"' -f4 \
+		| xargs -I{} docker compose -p {} -f tests/behavior/compose.yml down --volumes --remove-orphans 2>/dev/null || true
