@@ -25,6 +25,22 @@ Kadupul is a fork of [Cacti](https://github.com/Cacti/cacti), the PHP network mo
 and graphing tool. It keeps what Cacti does: poll devices over SNMP and scripts, store the
 results in RRD files, and draw graphs from them.
 
+## Why this fork exists
+
+Kadupul forks Cacti in order to make changes Cacti would reasonably decline.
+
+Cacti is over twenty years old and runs where an upgrade is a scheduled event. Being
+careful with the language floor, with interfaces people built against, and with
+structural change is correct for that project and its users.
+
+Kadupul takes the other side of that trade: replacing subsystems that keep producing
+the same class of defect, moving to a newer language floor, and changing internal
+shapes where the shape is the reason a bug category recurs. Each of those is a
+reasonable thing for a mature project to turn down, which is the point.
+
+It is not a disagreement with Cacti's maintainers and not an attempt to replace
+Cacti. Fixes that suit upstream are sent upstream.
+
 ## Relationship to Cacti
 
 Kadupul stays API compatible with Cacti for the foreseeable future. Plugins, templates,
@@ -65,8 +81,14 @@ Inherited from Cacti's manifest. These move once the fork point is set.
 
 ## The name
 
-Kadupul is a night-blooming flower. It opens after dark and closes before morning. The
-mark places a four-point metric trace at the center of the bloom.
+Kadupul (කඩුපුල්) is the Sinhala name for *Epiphyllum oxypetalum*, a cactus that
+flowers at night. The bloom opens after dark and wilts before dawn.
+
+It being a cactus is the point. Cacti takes its name from the plant family. Kadupul is
+one species inside that family, so the name says where the project came from without
+claiming to stand in for the whole of it.
+
+The mark places a four-point metric trace at the center of the bloom.
 
 ## Brand
 
