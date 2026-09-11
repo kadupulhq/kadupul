@@ -6,6 +6,9 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
+Targeting `v2.0.0`. See [VERSIONING.md](VERSIONING.md) for why the numbering
+starts there rather than at zero or at 1.2.32.
+
 ### Added
 
 - Repository scaffolding: continuous integration for PHP 8.1 through 8.4 and

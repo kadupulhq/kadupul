@@ -43,10 +43,23 @@ Bug fixes and security fixes that keep the interface identical.
 A security fix ships as a patch on every supported branch. It is never bundled
 with a feature, so an operator can take the fix without taking anything else.
 
-## Pre-1.0
+## Where the numbering starts
 
-Until `v1.0.0` there is no compatibility promise. The minor number carries
-breaking changes, which is what semantic versioning specifies for a zero major.
+Kadupul continues Cacti's version line rather than restarting at zero. The code
+is twenty-three years old and carries a compatibility promise from its first
+release, and `v0.1.0` would say the opposite of both.
+
+The first release is **`v2.0.0`**, and the jump is deliberate. The fork point is
+Cacti 1.2.31 and Cacti's own development branch already declares 1.3.0, so
+anything in the 1.x range would collide with a real Cacti release and leave two
+different things in the world wearing the same number. Skipping to 2.0.0 leaves
+Cacti the whole 1.x line it is still using.
+
+A major bump is also what semantic versioning asks for here on its own terms.
+The licence changes, the product name changes, and session and cookie names
+change. Those are breaking, so the major moves.
+
+MariaDB did the same thing for the same reason when it left MySQL's numbering.
 
 ## Commits and releases
 

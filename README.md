@@ -12,6 +12,7 @@
   <img src="https://img.shields.io/badge/license-GPL--3.0--or--later-004C38" alt="License GPL-3.0-or-later">
   <img src="https://img.shields.io/badge/PHP-8.1%2B-777BB4" alt="PHP 8.1 or newer">
   <img src="https://img.shields.io/badge/status-pre--alpha-FBBB02" alt="Status pre-alpha">
+  <img src="https://img.shields.io/badge/next%20release-v2.0.0-4C1D95" alt="Next release v2.0.0">
 </p>
 
 ---
