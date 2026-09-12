@@ -10,6 +10,36 @@ $db = new PDO($dsn, getenv('KADUPUL_TEST_MYSQL_USER') ?: 'root', getenv('KADUPUL
 	PDO::ATTR_EMULATE_PREPARES => false,
 ]);
 $failUpdate = false;
+$install_options = ['install_eula' => 'on'];
+
+function __($message) {
+	$args = func_get_args();
+	array_shift($args);
+
+	return cacti_sizeof($args) ? vsprintf($message, $args) : $message;
+}
+
+function cacti_sizeof($value) {
+	return is_countable($value) ? count($value) : 0;
+}
+
+function read_config_option($name, $force = false) {
+	global $install_options;
+
+	return ($install_options[$name] ?? '');
+}
+
+function set_install_config_option($name, $value) {
+	global $install_options;
+
+	$install_options[$name] = $value;
+}
+
+function log_install_always($key, $message) {
+}
+
+function log_install_high($key, $message) {
+}
 
 function db_execute_prepared($sql, $parameters) {
 	global $db, $failUpdate;
@@ -54,6 +84,22 @@ foreach (['utf8mb4', 'latin1'] as $charset) {
 
 $failUpdate = true;
 check_branding_migration($migration->invoke(null) === false, 'Database failure was not propagated');
+
+$install_options = [
+	'install_eula'    => 'on',
+	'install_started' => '',
+];
+$failing_installer = new class {
+	public function setDefaults() {
+	}
+
+	public function install() {
+		set_install_config_option('install_step', Installer::STEP_ERROR);
+	}
+};
+
+Installer::beginInstall('-b', $failing_installer);
+check_branding_migration((int) read_config_option('install_step', true) === Installer::STEP_ERROR, 'Shared installer entry point no longer preserves web error state');
 
 $root = dirname(__DIR__, 2);
 foreach (['cli/install_cacti.php', 'install/background.php'] as $entry) {

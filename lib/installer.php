@@ -3551,11 +3551,11 @@ class Installer implements JsonSerializable {
 			$installer->install();
 		} catch (Exception $e) {
 			log_install_always('', __('Exception occurred during installation: #%s - %s', $e->getCode(), $e->getMessage()));
+			set_install_config_option('install_step', Installer::STEP_ERROR);
 		}
 
 		$backgroundDone = microtime(true);
 		set_install_config_option('install_complete', $backgroundDone);
-		set_install_config_option('install_step', Installer::STEP_COMPLETE);
 
 		$dateBack = DateTime::createFromFormat('U.u', $backgroundTime);
 		$dateTime = DateTime::createFromFormat('U.u', $backgroundDone);
