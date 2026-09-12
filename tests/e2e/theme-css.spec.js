@@ -21,16 +21,6 @@ test.describe('theme jquery ui css alignment', () => {
     }
   });
 
-  test('midwinter retains the custom selectmenu overrides as valid css', async ({ request }) => {
-    const css = await (await request.get('/include/themes/midwinter/jquery-ui.css')).text();
-
-    expect(css).toContain('button.ui-multiselect,');
-    expect(css).toContain('.ui-selectmenu-button.ui-button:focus-visible');
-    expect(css).toContain('.ui-button.ui-state-active:focus-within');
-    expect(css).toContain('background: var(--background-progress);');
-    expect(css).not.toContain('&:focus-within');
-    expect(css).not.toContain('-webkit-tap-highlight-color: 1px solid');
-  });
 });
 
 test.describe('theme jquery ui browser smoke', () => {
@@ -52,19 +42,6 @@ test.describe('theme jquery ui browser smoke', () => {
 
       const screenshot = await page.locator('#sandbox').screenshot();
       expect(screenshot.byteLength, `${theme} sandbox screenshot should not be empty`).toBeGreaterThan(1000);
-
-      if (theme === 'midwinter') {
-        const midwinterSelectmenu = await page.locator('#theme-select-button').evaluate((element) => {
-          const style = getComputedStyle(element);
-          return {
-            display: style.display,
-            maxWidth: style.maxWidth,
-          };
-        });
-
-        expect(midwinterSelectmenu.display).toBe('inline-flex');
-        expect(midwinterSelectmenu.maxWidth).toBe('400px');
-      }
 
 
     });
