@@ -84,7 +84,7 @@ function imageOptionsChanged(action) {
 			if ($('#rimage').length) {
 				$('#rimage').empty().attr('src', 'data:image/'+image_format+';base64,'+data.data);
 			} else {
-				$('#image').empty().html('<img id="rimage" class="realtimeimage" src="data:image/'+image_format+';base64,'+data.data+'"/>');
+				$('#image').empty().append($('<img id="rimage" class="realtimeimage">').attr('src', 'data:image/'+image_format+';base64,'+data.data));
 			}
 
 			realtimePopout = $('#rtfilter').outerHeight() + 60 + $('#rimage').outerHeight() + 30 > window.innerHeight || $('#rimage').outerWidth() + 40 > window.innerWidth ? true : false;

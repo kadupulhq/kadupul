@@ -79,9 +79,12 @@ function midWinterNavigation(element) {
 	let helper   =  element.closest('div[class^="cactiConsoleNavigation"]').data('helper');
 	let rubric   =  $('.compact_nav_icon[data-helper="'+helper+'"]').html();
 
-	$('#navTitle .rubric').html( rubric );
-	$('#navTitle .category').html( category );
-	$('#navTitle .action').html( action );
+	// The titles are copied from menu markup, so sanitise them on the way back in.
+	$.each({rubric: rubric, category: category, action: action}, function(target, markup) {
+		if (markup !== undefined) {
+			$('#navTitle .' + target).html(DOMPurify.sanitize(markup));
+		}
+	});
 }
 
 function updateNavigation() {
@@ -169,7 +172,7 @@ function setupTheme() {
 			+'<li><a href="#" class="toggleGuiFontSize">Font Size: '+ midWinter_Font_Size +'</a></li>'
 			+'<li><hr class="menu"></li>';
 
-		$('.menuoptions').find('li').eq(2).after(theme_switches);
+		$('.menuoptions').find('li').eq(2).after(DOMPurify.sanitize(theme_switches));
 	}
 
 	// -- standard & compact mode -- redesign navigation tabs
@@ -1156,7 +1159,7 @@ function dialog_client(event) {
 
 
 			$('#dialog_container').remove();
-			$('body').append('<div id="dialog_container" style="display:none">'+content+'</div>');
+			$('body').append(DOMPurify.sanitize('<div id="dialog_container" style="display:none">'+content+'</div>'));
 			$('#dialog_container').dialog({
 				draggable: true,
 				resizable: true,

@@ -48,6 +48,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Build menus and autocomplete items from DOM nodes or DOMPurify output, and
   refuse non-HTTP redirects taken from AJAX responses.
 - Exclude vendored libraries from CodeQL and drop workflows that never ran.
+- Sanitise AJAX, session-message and DOM-copied markup with DOMPurify before
+  inserting it, and build graph images from attribute values.
 
 
 [Unreleased]: https://github.com/kadupulhq/kadupul/commits/main

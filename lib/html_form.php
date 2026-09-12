@@ -1596,7 +1596,9 @@ function form_end($ajax = true) {
 
 						$('#main').empty().hide();
 						$('title').text(htmlTitle);
-						$('#breadcrumbs').html(breadCrumbs);
+						if (breadCrumbs !== undefined) {
+							$('#breadcrumbs').html(DOMPurify.sanitize(breadCrumbs));
+						}
 						$('div[class^="ui-"]').remove();
 						$('#main').html(data);
 						applySkin();

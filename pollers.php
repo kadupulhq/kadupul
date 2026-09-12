@@ -735,7 +735,7 @@ function poller_edit() {
 					dbsslcert:    $('#dbsslcert').val(),
 					dbsslca:      $('#dbsslca').val()
 				}).done(function(data) {
-					$('#results').empty().show().html(data).fadeOut(2000);
+					$('#results').empty().show().html(DOMPurify.sanitize(data)).fadeOut(2000);
 				});
 			}
 			</script>

@@ -1924,7 +1924,7 @@ function user_edit() {
 						checkPasswordConfirm();
 					} else {
 						$('#pass').remove();
-						$('#password').after('<span id="pass"><i class="badpassword fa fa-times"></i><span style="padding-left:4px;">'+data+'</span></span>');
+						$('#password').after(DOMPurify.sanitize('<span id="pass"><i class="badpassword fa fa-times"></i><span style="padding-left:4px;">'+data+'</span></span>'));
 					}
 				});
 			}

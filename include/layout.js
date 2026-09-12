@@ -284,7 +284,7 @@ $.fn.textBoxWidth = function() {
 		var text = encodeURIComponent(org.text());
 	}
 
-	var html = $('<span style="display:none;white-space:nowrap;position:absolute;width:auto;left:-9999px">' + text + '</span>');
+	var html = $('<span style="display:none;white-space:nowrap;position:absolute;width:auto;left:-9999px"></span>').text(text);
 	html.css('font-family', org.css('font-family'));
 	html.css('font-weight', org.css('font-weight'));
 	html.css('font-size',   org.css('font-size'));
@@ -486,7 +486,7 @@ $.tablesorter.addParser({
 			display: 'none'
 		});
 
-		$(div).html($(el).html());
+		$(div).html(DOMPurify.sanitize($(el).html()));
 
 		var styles = ['font-size','font-style', 'font-weight', 'font-family','line-height', 'text-transform', 'letter-spacing'];
 
@@ -1086,7 +1086,7 @@ function displayMessages() {
 			'</div>';
 
 		$('#messageContainer').remove();
-		$('body').append(returnStr);
+		$('body').append(DOMPurify.sanitize(returnStr));
 
 		var messageWidth = $(window).width();
 		if (messageWidth > 600) {
@@ -2149,7 +2149,9 @@ function loadTopTab(href, id, force) {
 					checkForRedirects(html, href);
 
 					$('title').text(htmlTitle);
-					$('#breadcrumbs').html(breadCrumbs);
+					if (breadCrumbs !== undefined) {
+						$('#breadcrumbs').html(DOMPurify.sanitize(breadCrumbs));
+					}
 					$('div[class^="ui-"]').remove();
 					$('#cactiContent').replaceWith(html);
 
@@ -2272,7 +2274,9 @@ function loadPage(href, force) {
 					}
 					$('#main').empty().hide();
 					$('title').text(htmlTitle);
-					$('#breadcrumbs').html(breadCrumbs);
+					if (breadCrumbs !== undefined) {
+						$('#breadcrumbs').html(DOMPurify.sanitize(breadCrumbs));
+					}
 					$('div[class^="ui-"]').remove();
 					$('#main').html(html);
 
@@ -2436,7 +2440,9 @@ function loadPageNoHeader(href, scroll, force) {
 
 					$('#main').empty().hide();
 					$('title').text(htmlTitle);
-					$('#breadcrumbs').html(breadCrumbs);
+					if (breadCrumbs !== undefined) {
+						$('#breadcrumbs').html(DOMPurify.sanitize(breadCrumbs));
+					}
 					$('div[class^="ui-"]').remove();
 					$('#main').html(html);
 
@@ -2556,7 +2562,7 @@ function getPresentHTTPErrorOrRedirect(data, url) {
 			}
 
 			$('#httperror').remove();
-			$('body').append(returnStr);
+			$('body').append(DOMPurify.sanitize(returnStr));
 			$('#httperror').dialog({
 				resizable: false,
 				height: 'auto',
@@ -3733,13 +3739,49 @@ function removeSpikes(method, dryrun, local_graph_id) {
 
 			$('#spikeresults').remove();
 			$('body').append('<div id="spikeresults" style="overflow-y:scroll;" title="' + spikeKillResults + '"></div>');
-			$('#spikeresults').html(data.results);
+			$('#spikeresults').html(DOMPurify.sanitize(data.results));
 			$('#spikeresults').dialog({ width:1100, maxHeight: 600 });
 		})
 		.fail(function(data) {
 			getPresentHTTPError(data);
 		}
 	);
+}
+
+/** buildGraphImage - returns the image element for a graph_json.php response.
+ *  DOMPurify would strip the non-standard attributes the zoom code reads, so
+ *  each value is set as an attribute rather than parsed from markup. */
+function buildGraphImage(data) {
+	var image = $('<img class="graphimage">');
+
+	$.each({
+		id:            'graph_' + data.local_graph_id,
+		src:           'data:image/' + data.type + ';base64,' + data.image,
+		rra_id:        data.rra_id,
+		graph_type:    data.type,
+		graph_id:      data.local_graph_id,
+		graph_start:   data.graph_start,
+		graph_end:     data.graph_end,
+		graph_left:    data.graph_left,
+		graph_top:     data.graph_top,
+		graph_width:   data.graph_width,
+		graph_height:  data.graph_height,
+		width:         data.image_width,
+		height:        data.image_height,
+		image_width:   data.image_width,
+		image_height:  data.image_height,
+		canvas_top:    data.graph_top,
+		canvas_left:   data.graph_left,
+		canvas_width:  data.graph_width,
+		canvas_height: data.graph_height,
+		value_min:     data.value_min,
+		value_max:     data.value_max
+	}, function(name, value) {
+		// String() matches the old concatenation, which wrote 'undefined' for a missing field.
+		image.attr(name, String(value));
+	});
+
+	return image;
 }
 
 function redrawGraph(graph_id) {
@@ -3783,29 +3825,7 @@ function redrawGraph(graph_id) {
 					data.graph_left   = parseInt(data.graph_left * ratio);
 				}
 
-				$('#wrapper_'+data.local_graph_id).empty().html(
-					"<img class='graphimage' id='graph_"+data.local_graph_id+"'"+
-					" src='data:image/"+data.type+";base64,"+data.image+"'"+
-					" rra_id='"+data.rra_id+"'"+
-					" graph_type='"+data.type+"'"+
-					" graph_id='"+data.local_graph_id+"'"+
-					" graph_start='"+data.graph_start+"'"+
-					" graph_end='"+data.graph_end+"'"+
-					" graph_left='"+data.graph_left+"'"+
-					" graph_top='"+data.graph_top+"'"+
-					" graph_width='"+data.graph_width+"'"+
-					" graph_height='"+data.graph_height+"'"+
-					" width='"+data.image_width+"'"+
-					" height='"+data.image_height+"'"+
-					" image_width='"+data.image_width+"'"+
-					" image_height='"+data.image_height+"'"+
-					" canvas_top='"+data.graph_top+"'"+
-					" canvas_left='"+data.graph_left+"'"+
-					" canvas_width='"+data.graph_width+"'"+
-					" canvas_height='"+data.graph_height+"'"+
-					" value_min='"+data.value_min+"'"+
-					" value_max='"+data.value_max+"'>"
-				);
+				$('#wrapper_'+data.local_graph_id).empty().append(buildGraphImage(data));
 
 				$('#graph_'+data.local_graph_id).zoom({
 					inputfieldStartTime : 'date1',
@@ -3960,29 +3980,7 @@ function initializeGraphs(disable_cache) {
 					wrapper_id += '[rra_id=\'' + data.rra_id + '\']';
 				}
 
-				$(wrapper_id).empty().html(
-					"<img class='graphimage' id='graph_"+data.local_graph_id+"'"+
-					" src='data:image/"+data.type+";base64,"+data.image+"'"+
-					" rra_id='"+data.rra_id+"'"+
-					" graph_type='"+data.type+"'"+
-					" graph_id='"+data.local_graph_id+"'"+
-					" graph_start='"+data.graph_start+"'"+
-					" graph_end='"+data.graph_end+"'"+
-					" graph_left='"+data.graph_left+"'"+
-					" graph_top='"+data.graph_top+"'"+
-					" graph_width='"+data.graph_width+"'"+
-					" graph_height='"+data.graph_height+"'"+
-					" width='"+data.image_width+"'"+
-					" height='"+data.image_height+"'"+
-					" image_width='"+data.image_width+"'"+
-					" image_height='"+data.image_height+"'"+
-					" canvas_top='"+data.graph_top+"'"+
-					" canvas_left='"+data.graph_left+"'"+
-					" canvas_width='"+data.graph_width+"'"+
-					" canvas_height='"+data.graph_height+"'"+
-					" value_min='"+data.value_min+"'"+
-					" value_max='"+data.value_max+"'>"
-				);
+				$(wrapper_id).empty().append(buildGraphImage(data));
 
 				var graph_id = '#graph_'+data.local_graph_id;
 				if (rra_id > 0) {
@@ -4422,7 +4420,7 @@ function copyToClipboard(containerId) {
 	}
 
 	if (clipboardData == null) {
-		$('body').append('<div style="display:none;" id="clipboardMessage" title="'+clipboard+'">'+clipboardCopyFailed+'<br/><br/>'+clipboardID+': '+clipboardDataId+'</div>');
+		$('body').append(DOMPurify.sanitize('<div style="display:none;" id="clipboardMessage" title="'+clipboard+'">'+clipboardCopyFailed+'<br/><br/>'+clipboardID+': '+clipboardDataId+'</div>'));
 
 		$('#clipboardMessage').dialog({
 			resizable: false,
