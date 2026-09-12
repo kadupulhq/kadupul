@@ -9,9 +9,13 @@ if [ ! -f "$MATRIX_FILE" ]; then
 	exit 1
 fi
 
-total="$(awk -F'\t' 'NR>1 {n++} END {print n+0}' "$MATRIX_FILE")"
-no_evidence="$(awk -F'\t' 'NR>1 && $NF=="NO_EVIDENCE" {n++} END {print n+0}' "$MATRIX_FILE")"
-partial="$(awk -F'\t' 'NR>1 && $NF=="PARTIAL_REFERENCE" {n++} END {print n+0}' "$MATRIX_FILE")"
+# NR>1 alone counted blank and malformed lines as evidence rows, so a header
+# followed by one blank line reported total=1 with nothing unresolved and strict
+# closure succeeded having proved nothing. A row must carry a status field.
+row='NR>1 && NF>1 && $1 != "" && $NF != ""'
+total="$(awk -F'\t' "${row} {n++} END {print n+0}" "$MATRIX_FILE")"
+no_evidence="$(awk -F'\t' "${row} && \$NF==\"NO_EVIDENCE\" {n++} END {print n+0}" "$MATRIX_FILE")"
+partial="$(awk -F'\t' "${row} && \$NF==\"PARTIAL_REFERENCE\" {n++} END {print n+0}" "$MATRIX_FILE")"
 
 echo "matrix_total=${total}"
 echo "matrix_no_evidence=${no_evidence}"
