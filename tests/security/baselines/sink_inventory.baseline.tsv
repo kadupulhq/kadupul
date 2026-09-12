@@ -557,7 +557,8 @@ fs_write	./lib/api_device.php:2630							file_put_contents($new_xmlfile, $data);
 fs_write	./lib/boost.php:442								if ($fileptr = fopen($cache_file, 'rb')) {
 fs_write	./lib/boost.php:565							if ($fileptr = fopen($cache_file, 'w')) {
 fs_write	./lib/clog_webapi.php:112					$log_fh = fopen($logfile, 'w');
-fs_write	./lib/csp_report_endpoint.php:169		$fh = @fopen($bucket, 'c+');
+fs_write	./lib/csp_report_endpoint.php:169		/* Bucket names are predictable, and fopen() follows symlinks, so a bucket in
+fs_write	./lib/csp_report_endpoint.php:184		$fh = @fopen($bucket, 'c+'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 fs_write	./lib/database.php:199					file_put_contents(sys_get_temp_dir() . '/cacti-option.log',
 fs_write	./lib/database.php:2129		file_put_contents(sys_get_temp_dir() . '/cacti-sql.log', get_debug_prefix() . $line, FILE_APPEND);
 fs_write	./lib/database.php:67					file_put_contents(sys_get_temp_dir() . '/cacti-option.log',

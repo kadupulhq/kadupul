@@ -163,10 +163,25 @@ $result = csp_report_validate_payload(
  * normal HTTP status so probing cannot infer the cap. */
 function csp_report_should_log() : bool {
 	$ip      = isset($_SERVER['REMOTE_ADDR']) ? (string) $_SERVER['REMOTE_ADDR'] : 'unknown';
-	$bucket  = sys_get_temp_dir() . '/cacti_csp_' . hash('sha256', $ip . '|' . gmdate('YmdHi'));
+	$dir     = sys_get_temp_dir() . '/kadupul_csp';
 	$cap     = 30;
 
-	$fh = @fopen($bucket, 'c+');
+	/* Bucket names are predictable, and fopen() follows symlinks, so a bucket in
+	 * the shared temp directory lets another local user redirect the write. Keep
+	 * buckets in a directory only this user can write, and refuse any other. */
+	if (!is_dir($dir)) {
+		@mkdir($dir, 0700);
+	}
+
+	clearstatcache(true, $dir);
+	if (is_link($dir) || !is_dir($dir) || !is_writable($dir) || (fileperms($dir) & 0077) !== 0) {
+		return true;
+	}
+
+	$bucket = $dir . '/' . hash('sha256', $ip . '|' . gmdate('YmdHi'));
+
+	// The bucket name is a SHA-256 hex digest of the client IP, so no request data reaches the path.
+	$fh = @fopen($bucket, 'c+'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 	if ($fh === false) {
 		return true;
 	}
