@@ -11,6 +11,8 @@ Targeting `v1.3.0`, continuing from the Cacti 1.2.31 fork point. See
 
 ### Added
 
+- Update vendored phpseclib to 3.0.57 and constant_time_encoding to 3.1.3, and lock runtime dependencies.
+
 - Repository scaffolding: continuous integration for PHP 8.1 through 8.4 and
   for JavaScript, Dependabot, issue and pull request templates, and the
   security policy.
