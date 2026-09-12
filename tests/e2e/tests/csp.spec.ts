@@ -84,7 +84,8 @@ test.describe('Pilot pages carry matching nonces', () => {
 
         const body = await resp.text();
         const bodyMatch = body.match(/<script[^>]*\bnonce=["']([A-Za-z0-9_-]+)["']/);
-        expect(bodyMatch, 'logout.php must render <script nonce="...">').not.toBeNull();
+        // Test assertion: matches a nonce in a fetched response body, nothing is rendered.
+        expect(bodyMatch, 'logout.php must render <script nonce="...">').not.toBeNull(); // nosemgrep: javascript.lang.security.audit.unknown-value-with-script-tag.unknown-value-with-script-tag
 
         expect(bodyMatch![1]).toBe(headerNonce);
     });
@@ -106,7 +107,7 @@ test.describe('Pilot pages carry matching nonces', () => {
 
         const body = await resp.text();
         const bodyMatch = body.match(/<script[^>]*\bnonce=["']([A-Za-z0-9_-]+)["']/);
-        expect(bodyMatch, 'permission_denied.php must render <script nonce="...">').not.toBeNull();
+        expect(bodyMatch, 'permission_denied.php must render <script nonce="...">').not.toBeNull(); // nosemgrep: javascript.lang.security.audit.unknown-value-with-script-tag.unknown-value-with-script-tag
 
         expect(bodyMatch![1]).toBe(headerNonce);
     });

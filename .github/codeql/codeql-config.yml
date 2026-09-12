@@ -1,0 +1,10 @@
+name: kadupul-codeql
+
+# Third-party libraries shipped as vendored copies. Findings inside them are
+# upstream code nobody here maintains, and .semgrepignore already excludes the
+# same trees for the same reason. Upgrade the library rather than patch it.
+paths-ignore:
+  - include/js
+  - include/fa
+  - include/vendor
+  - '**/*.min.js'

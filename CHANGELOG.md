@@ -45,6 +45,9 @@ Targeting `v1.3.0`, the first planned application release. See
 - Validate branding migrations in CI and reject missing advisory-tooling branches.
 - Use Kadupul branding and project contacts across the interface and documentation.
 - Remove optional author lists and project-history prose while retaining licensing.
+- Build menus and autocomplete items from DOM nodes or DOMPurify output, and
+  refuse non-HTTP redirects taken from AJAX responses.
+- Exclude vendored libraries from CodeQL and drop workflows that never ran.
 
 
 [Unreleased]: https://github.com/kadupulhq/kadupul/commits/main

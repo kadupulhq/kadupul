@@ -284,7 +284,7 @@ function setupTheme() {
 				}
 			}
 
-			$(compact_tab_menu_content).appendTo('#compact_tab_menu');
+			$(DOMPurify.sanitize(compact_tab_menu_content)).appendTo('#compact_tab_menu');
 
 			// -- compact mode --
 			$('<div class="compact_nav_icon" data-helper="help">'+
@@ -384,7 +384,7 @@ function setupTheme() {
 				+'</ul>'
 				+'</div>';
 
-			$(compact_user_menu_content).appendTo('#compact_user_menu');
+			$(DOMPurify.sanitize(compact_user_menu_content)).appendTo('#compact_user_menu');
 		}
 
 		if ($('.cactiTreeNavigationArea').length === 0) {

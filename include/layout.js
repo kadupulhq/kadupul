@@ -258,7 +258,9 @@ $.fn.replaceOptions = function(options, selected) {
  *  without any wrapping. */
 $.fn.textWidth = function(text){
 	var org = $(this);
-	var html = $('<span style="display:none;white-space:nowrap;position:absolute;width:auto;left:-9999px">' + (text || org.text()) + '</span>');
+	// Sanitised with DOMPurify, as elsewhere in this file: callers pass markup,
+	// so escaping to text would change the width being measured.
+	var html = $('<span style="display:none;white-space:nowrap;position:absolute;width:auto;left:-9999px"></span>').html(DOMPurify.sanitize(text || org.text()));
 	if (!text) {
 		html.css('font-family', org.css('font-family'));
 		html.css('font-weight', org.css('font-weight'));
@@ -1201,7 +1203,7 @@ function makeFiltersResponsive() {
 
 				if (filterContents.find('#export').length) {
 					title = $('#export').attr('value');
-					filterHeader.find('div.cactiTableButton').append('<span title="'+title+'" style="display:none;" class="cactiFilterExport"><i class="fa fa-arrow-down"></i></span>');
+					filterHeader.find('div.cactiTableButton').append($('<span style="display:none;" class="cactiFilterExport"><i class="fa fa-arrow-down"></i></span>').attr('title', title));
 
 					$('.cactiFilterExport').off('click').on('click', function(event) {
 						event.stopPropagation();
@@ -1211,7 +1213,7 @@ function makeFiltersResponsive() {
 
 				if (filterContents.find('#import').length) {
 					title = $('#import').attr('value');
-					filterHeader.find('div.cactiTableButton').append('<span title="'+title+'" style="display:none;" class="cactiFilterImport"><i class="fa fa-arrow-up"></i></span>');
+					filterHeader.find('div.cactiTableButton').append($('<span style="display:none;" class="cactiFilterImport"><i class="fa fa-arrow-up"></i></span>').attr('title', title));
 
 					$('.cactiFilterImport').off('click').on('click', function(event) {
 						event.stopPropagation();
@@ -2577,7 +2579,7 @@ function getPresentHTTPErrorOrRedirect(data, url) {
 			// Let the HTTP Error stick
 		} else if (data.statusText != 'abort') {
 			$.ajaxQ.abortAll();
-			document.location = stripHeaderSuppression(url);
+			document.location = safeLocation(stripHeaderSuppression(url));
 		}
 	}
 }
@@ -2959,6 +2961,23 @@ function appendHeaderSuppression(url) {
 	return url;
 }
 
+/** safeLocation - resolve a navigation target and refuse any scheme other than
+ *  http or https. Targets here come from link attributes and AJAX URLs, and a
+ *  javascript: URL assigned to document.location would run as script. */
+function safeLocation(url) {
+	try {
+		var target = new URL(url, document.location.href);
+
+		if (target.protocol === 'http:' || target.protocol === 'https:') {
+			return target.href;
+		}
+	} catch (e) {
+		// Fall through to the current page.
+	}
+
+	return document.location.href;
+}
+
 function stripHeaderSuppression(url) {
 	url = url.replace('header=false', '').replace('?&', '?').replace('&&', '&');
 	return url.replace('headercontent=true', '').replace('?&', '?').replace('&&', '&');
@@ -3313,10 +3332,13 @@ function hideCurrentTab(id, shrinking) {
 		var selected = $('#'+id).hasClass('selected');
 		var text     = $('#'+id).text();
 
+		// Built as nodes so tab text and attributes are never reparsed as HTML.
+		var item = $('<li>').append($('<a>').addClass('lefttab' + (selected ? ' selected' : '')).attr({id: myid, href: href}).text(text));
+
 		if (shrinking) {
-			$('#submenu-ellipsis').prepend('<li><a class="lefttab' + (selected ? ' selected':'') + '" id="'+myid+'" href="'+href+'">' + text + '</a></li>');
+			$('#submenu-ellipsis').prepend(item);
 		} else {
-			$('#submenu-ellipsis').append('<li><a class="lefttab' + (selected ? ' selected':'') + '" id="'+myid+'" href="'+href+'">' + text + '</a></li>');
+			$('#submenu-ellipsis').append(item);
 		}
 
 		setupResponsiveMenuAndTabs();
@@ -3406,7 +3428,7 @@ function checkForRedirects(data, href) {
 			document.location = stripHeaderSuppression(document.location.href);
 		} else {
 			$.ajaxQ.abortAll();
-			document.location = stripHeaderSuppression(href);
+			document.location = safeLocation(stripHeaderSuppression(href));
 		}
 	} else if (data.indexOf('cactiLoginLogo') >= 0) {
 		$.ajaxQ.abortAll();
@@ -4256,12 +4278,14 @@ $.widget('custom.dropcolor', {
 					var mylabel = $($.parseHTML(item.label));
 					var label = mylabel.text();
 
+					var swatch = $('<span class="ui-icon color-icon"></span>');
+
 					if (hex !== null) {
 						color = hex[1];
-						return $('<li>').attr('data-value', item.value).html('<div><span style="background-color:#'+color+';" class="ui-icon color-icon"></span>' + label + '</div>').appendTo(ul);
-					} else {
-						return $('<li>').attr('data-value', item.value).html('<div><span class="ui-icon color-icon"></span>' + label + '</div>').appendTo(ul);
+						swatch.css('background-color', '#' + color);
 					}
+
+					return $('<li>').attr('data-value', item.value).append($('<div>').append(swatch, document.createTextNode(label))).appendTo(ul);
 				}
 
 				$(this).data('ui-autocomplete')._resizeMenu = function () {

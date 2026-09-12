@@ -117,7 +117,8 @@ if (cacti_sizeof($parms)) {
 	}
 
 	if ($info_only) {
-		if ($filename != '' && is_readable($filename) && file_exists($filename) && !is_dir($filename)) {
+		// CLI only (cli_check.php): the operator supplies this path and already has filesystem access.
+		if ($filename != '' && is_readable($filename) && file_exists($filename) && !is_dir($filename)) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 			$result = import_package($filename, $profile_id, $remove_orphans, $replace_svalues, $preview_only, $info_only);
 
 			if ($result !== false && cacti_sizeof($result)) {
@@ -148,9 +149,9 @@ if (cacti_sizeof($parms)) {
 	}
 
 	if ($filename != '') {
-		if (file_exists($filename) && is_readable($filename) && file_exists($filename) && !is_dir($filename)) {
-			$fp   = fopen($filename, 'r');
-			$data = fread($fp, filesize($filename));
+		if (file_exists($filename) && is_readable($filename) && file_exists($filename) && !is_dir($filename)) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
+			$fp   = fopen($filename, 'r'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
+			$data = fread($fp, filesize($filename)); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 
 			fclose($fp);
 

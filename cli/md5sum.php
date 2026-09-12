@@ -165,19 +165,20 @@ if ($create) {
 		print 'Writing '.cacti_sizeof($file_array)." entries to $md5_file\n";
 	}
 
-	if (!$confirm && file_exists($md5_file)) {
+	// CLI only (cli_check.php): the operator supplies this path and already has filesystem access.
+	if (!$confirm && file_exists($md5_file)) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 		fail(EXIT_MD5OVR,$md5_file);
 	}
 
-	if (file_put_contents($md5_file,$output) === false) {
+	if (file_put_contents($md5_file,$output) === false) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 		fail(EXIT_MD5WRI,$md5_file);
 	}
 } else {
-	if (!file_exists($md5_file)) {
+	if (!file_exists($md5_file)) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 		fail(EXIT_MD5MIS,$md5_file);
 	}
 
-	$contents = file_get_contents($md5_file, false);
+	$contents = file_get_contents($md5_file, false); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 	if ($contents === false) {
 		fail(EXIT_MD5CON,$md5_file);
 	}

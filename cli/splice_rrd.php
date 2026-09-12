@@ -91,7 +91,8 @@ if (cacti_sizeof($parms)) {
 			case '--oldrrd':
 				$oldrrd = $value;
 
-				if (!file_exists($oldrrd)) {
+				// CLI only (cli_check.php): the operator supplies this path and already has filesystem access.
+				if (!file_exists($oldrrd)) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 					print 'FATAL: File \'' . $oldrrd . '\' does not exist.' . PHP_EOL;
 
 					exit(-9);
@@ -107,7 +108,7 @@ if (cacti_sizeof($parms)) {
 			case '--newrrd':
 				$newrrd = $value;
 
-				if (!file_exists($newrrd)) {
+				if (!file_exists($newrrd)) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 					print 'FATAL: File \'' . $newrrd . '\' does not exist.' . PHP_EOL;
 
 					exit(-9);
@@ -123,7 +124,7 @@ if (cacti_sizeof($parms)) {
 			case '--finrrd':
 				$finrrd = $value;
 
-				if (!is_resource_writable(dirname($finrrd) . '/') || (file_exists($finrrd) && !is_resource_writable($finrrd))) {
+				if (!is_resource_writable(dirname($finrrd) . '/') || (file_exists($finrrd) && !is_resource_writable($finrrd))) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 					print 'FATAL: File \'' . $finrrd . '\' is not writable by this account.' . PHP_EOL;
 
 					exit(-8);
@@ -331,7 +332,7 @@ unlink($newxmlfile);
 /* change ownership */
 if ($ownerset) {
 	if ($user == 'root') {
-		chown($finrrd, $owner);
+		chown($finrrd, $owner); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 	} else {
 		print 'ERROR: Unable to change owner.  You must run as root to change owner' . PHP_EOL;
 	}

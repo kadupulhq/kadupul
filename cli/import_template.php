@@ -110,9 +110,10 @@ if (cacti_sizeof($parms)) {
 	}
 
 	if ($filename != '') {
-		if(file_exists($filename) && is_readable($filename)) {
-			$fp = fopen($filename,'r');
-			$xml_data = fread($fp,filesize($filename));
+		// CLI only (cli_check.php): the operator supplies this path and already has filesystem access.
+		if(file_exists($filename) && is_readable($filename)) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
+			$fp = fopen($filename,'r'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
+			$xml_data = fread($fp,filesize($filename)); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 			fclose($fp);
 
 			print 'Read ' . strlen($xml_data) . ' bytes of XML data' . PHP_EOL;
