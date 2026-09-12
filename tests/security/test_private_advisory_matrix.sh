@@ -22,6 +22,13 @@ if bash tests/security/verify_private_advisory_matrix.sh "$scratch/matrix.tsv" >
 fi
 grep -q 'NO_EVIDENCE' "$scratch/log"
 
+printf 'branch\tproof_status\nmain\tUNKNOWN\n' > "$scratch/unknown.tsv"
+if bash tests/security/verify_private_advisory_matrix.sh "$scratch/unknown.tsv" > "$scratch/log" 2>&1; then
+	echo 'FAIL: unknown proof status accepted' >&2
+	exit 1
+fi
+grep -q 'unknown proof status' "$scratch/log"
+
 # A mock gh proves bad branch requests fail before accessing the network.
 mkdir "$scratch/bin"
 cat > "$scratch/bin/gh" <<'MOCK'
@@ -37,4 +44,12 @@ if PATH="$scratch/bin:$PATH" bash tests/security/build_private_advisory_matrix.s
 fi
 grep -q 'ERROR: requested branch not found:' "$scratch/log"
 test ! -e "$scratch/output"
+# HEAD resolves to a commit but is not a branch, so it cannot label proof.
+if PATH="$scratch/bin:$PATH" bash tests/security/build_private_advisory_matrix.sh \
+	kadupulhq/kadupul HEAD "$scratch/output" > "$scratch/log" 2>&1; then
+	echo 'FAIL: HEAD accepted as a branch' >&2
+	exit 1
+fi
+grep -q 'ERROR: requested branch not found: HEAD' "$scratch/log"
+
 echo 'PASS: advisory matrix rejects empty evidence and missing branches'

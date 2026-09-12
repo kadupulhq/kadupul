@@ -26,6 +26,12 @@ if [ "$total" -eq 0 ]; then
 	exit 1
 fi
 
+unknown="$(awk -F'\t' "${row} && \$NF!=\"PROVEN_TEST_BACKED\" && \$NF!=\"PROVEN_COMMIT_LINKED\" && \$NF!=\"PARTIAL_REFERENCE\" && \$NF!=\"NO_EVIDENCE\" {n++} END {print n+0}" "$MATRIX_FILE")"
+if [ "$unknown" -gt 0 ]; then
+	echo "ERROR: ${unknown} matrix rows carry an unknown proof status." >&2
+	exit 1
+fi
+
 if [ "$no_evidence" -gt 0 ]; then
 	echo "ERROR: unresolved advisories with NO_EVIDENCE." >&2
 	exit 1

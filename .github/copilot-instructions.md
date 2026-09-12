@@ -40,7 +40,6 @@ Use these notes to navigate and contribute productively to this PHP codebase.
 - Install the isolated PHP test runner with `composer install --working-dir=tests`. `tests/phpunit.xml` defines the available suites; inspect their bootstrap requirements before running them. Use only test scripts declared in the checked-out root `composer.json`; a `composer test` CI step alone does not establish that a runnable suite exists.
 - Run the focused CSP unit and integration checks with the commands and PHP runtime in `.github/workflows/csp-e2e.yml`.
 - Run theme tests from `tests/e2e`: `npm ci`, `npx playwright install chromium`, then `npm run test:themes -- --config=playwright.config.js`. The TypeScript configuration in the same directory is for the separate Docker CSP suite.
-- `make test-characterization` runs the container behavioral harness against MariaDB and a deterministic snmpd, comparing observations with the golden files in `tests/Golden/`. Those goldens are the compatibility contract: a change to one means user-visible behavior changed.
 - New tests should execute production behavior rather than assert on source-file substrings. Existing source-scan tests are not evidence that runtime behavior works.
 - Local quick checks:
   - PHP lint: `find . -name '*.php' -exec php -l {} \; | grep -iv 'no syntax errors detected'` (CI uses similar).

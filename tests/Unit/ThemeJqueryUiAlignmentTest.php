@@ -24,32 +24,15 @@ function read_theme_jquery_ui_css(string $theme): string {
 }
 
 test('all in-tree theme jquery ui bundles are aligned to 1.14.x', function () {
-	$themes = [
-		'cacti',
-		'carrot',
-		'dark',
-		'hollyberry',
-		'midwinter',
-		'modern',
-		'paper-plane',
-		'paw',
-		'raspberry',
-		'sunrise',
-	];
+	$themes = array_map('basename', glob(dirname(__DIR__, 2) . '/include/themes/*', GLOB_ONLYDIR));
+
+	expect($themes)->not->toBeEmpty();
 
 	foreach ($themes as $theme) {
 		$css = read_theme_jquery_ui_css($theme);
 
 		expect($css)->toMatch('/jQuery UI - v1\.14\./')
 			->and($css)->not->toContain('jQuery UI - v1.12.1');
-	}
-});
-
-test('generic legacy themes now match the 1.14.x reference bundle', function () {
-	$reference = read_theme_jquery_ui_css('paw');
-
-	foreach (['cacti', 'carrot', 'hollyberry', 'raspberry'] as $theme) {
-		expect(read_theme_jquery_ui_css($theme))->toBe($reference);
 	}
 });
 

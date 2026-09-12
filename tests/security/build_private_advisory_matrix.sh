@@ -22,8 +22,8 @@ OUT_DIR="${3:-/tmp}"
 
 # Validate the complete request before querying advisories or writing evidence.
 for b in $BRANCHES; do
-	if ! git rev-parse --verify --quiet "${b}^{commit}" >/dev/null &&
-		! git rev-parse --verify --quiet "origin/${b}^{commit}" >/dev/null; then
+	if ! git show-ref --verify --quiet "refs/heads/${b}" &&
+		! git show-ref --verify --quiet "refs/remotes/origin/${b}"; then
 		echo "ERROR: requested branch not found: $b" >&2
 		exit 1
 	fi
@@ -51,8 +51,8 @@ hash_key() {
 
 for b in $BRANCHES; do
 	branch_ref="$b"
-	if ! git rev-parse --verify --quiet "$branch_ref" >/dev/null; then
-		if git rev-parse --verify --quiet "origin/$b" >/dev/null; then
+	if ! git show-ref --verify --quiet "refs/heads/$b"; then
+		if git show-ref --verify --quiet "refs/remotes/origin/$b"; then
 			branch_ref="origin/$b"
 		else
 			echo "ERROR: branch not found locally or in origin: $b" >&2

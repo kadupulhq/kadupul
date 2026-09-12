@@ -31,9 +31,8 @@ docker compose up -d --build
 # human-readable signal.
 until curl -fsS http://localhost:8080/ >/dev/null; do sleep 2; done
 
-# Install Playwright and run the suite. npm install (not npm ci) because
-# package-lock.json is gitignored under tests/e2e/.
-npm install
+# Install Playwright and run the suite from the tracked lockfile.
+npm ci
 npm run install-browsers   # chromium + OS deps, once per machine
 npm test
 
