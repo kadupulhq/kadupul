@@ -474,10 +474,25 @@ class Harness:
 
         self.capture('api/php-errors', events)
 
+    def base_image_digest(self):
+        """The base image this run was built on.
+
+        The Dockerfile takes a version argument and resolves a mutable tag, which
+        the matrix needs. Pinning a digest there would fix one version and break
+        the rest, so record what was actually used instead: a base refresh then
+        shows up as a diff in the manifest rather than silently moving a golden.
+        """
+        result = self.command('sh', '-c', 'cat /etc/os-release | head -2; php -v | head -1', check=False)
+        image = run(['docker', 'image', 'inspect', '--format', '{{index .RepoDigests 0}}',
+                     f'php:{os.environ.get("PHP_VERSION", "8.2")}-apache'], check=False)
+        return {'ref': (image['stdout'] or '').strip() or 'unresolved',
+                'runtime': (result['stdout'] or '').strip()}
+
     def finish(self, error=None):
         runtime = self.command('php', '-r', 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')['stdout'].strip()
         manifest = {'format': 1, 'target': self.args.target, 'revision': run(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'])['stdout'].strip(),
                     'php': runtime, 'schema_sha256': hashlib.sha256((ROOT / 'cacti.sql').read_bytes()).hexdigest(),
+                    'base_image': self.base_image_digest(),
                     'complete': error is None, 'error': error, 'scenarios': self.observed}
         write_json(self.destination / 'observations.json', manifest)
         if error:

@@ -16,11 +16,11 @@ help: ## Show available targets
 		| awk 'BEGIN {FS=":.*?## "}; {printf "  %-26s %s\n", $$1, $$2}'
 
 .PHONY: test
-test: test-unit test-characterization ## Run the PHP suite and the behavioral suite
+test: test-characterization ## Run the behavioral suite
 
-.PHONY: test-unit
-test-unit: ## Run the in-process PHP suite (Pest)
-	composer test
+# The in-process PHP suite arrives with the characterization branch, which
+# adds tests/composer.json and the composer test script. Calling composer
+# test from here fails, because this branch has neither.
 
 .PHONY: test-characterization
 test-characterization: ## Verify observed behavior against the committed goldens
