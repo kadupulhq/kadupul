@@ -3551,6 +3551,12 @@ class Installer implements JsonSerializable {
 			$installer->install();
 		} catch (Exception $e) {
 			log_install_always('', __('Exception occurred during installation: #%s - %s', $e->getCode(), $e->getMessage()));
+
+			// The CLI reads the step from this instance, not from config
+			if ($installer instanceof Installer) {
+				$installer->setStep(Installer::STEP_ERROR);
+			}
+
 			set_install_config_option('install_step', Installer::STEP_ERROR);
 		}
 

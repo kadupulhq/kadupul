@@ -32,6 +32,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Report an installation exception to the CLI installer as well as to the web installer.
 - Refresh localized product names and compiled catalogs, with source-text fallback
   for translations awaiting review.
 - Update the shipped graph-watermark default through the shared installer while

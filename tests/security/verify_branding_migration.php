@@ -41,6 +41,18 @@ function log_install_always($key, $message) {
 function log_install_high($key, $message) {
 }
 
+function log_install_debug($section, $text, $background = false) {
+}
+
+function clean_up_lines($string) {
+	return $string;
+}
+
+// setDefaults() reaches this first, so throwing here fails the install before it touches the database
+function install_setup_get_tables() {
+	throw new Exception('table list unavailable');
+}
+
 function db_execute_prepared($sql, $parameters) {
 	global $db, $failUpdate;
 	return $failUpdate ? false : $db->prepare($sql)->execute($parameters);
@@ -100,6 +112,20 @@ $failing_installer = new class {
 
 Installer::beginInstall('-b', $failing_installer);
 check_branding_migration((int) read_config_option('install_step', true) === Installer::STEP_ERROR, 'Shared installer entry point no longer preserves web error state');
+
+$install_options = [
+	'install_eula'    => 'on',
+	'install_started' => '',
+	'install_step'    => Installer::STEP_INSTALL,
+];
+$throwing_installer = new class extends Installer {
+	public function __construct() {
+	}
+};
+
+Installer::beginInstall('-b', $throwing_installer);
+check_branding_migration($throwing_installer->getStep() === Installer::STEP_ERROR, 'CLI installer kept its pre-install step after an exception');
+check_branding_migration((int) read_config_option('install_step', true) === Installer::STEP_ERROR, 'Web install state missed the error step after an exception');
 
 $root = dirname(__DIR__, 2);
 foreach (['cli/install_cacti.php', 'install/background.php'] as $entry) {
