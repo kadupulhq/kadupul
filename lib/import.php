@@ -411,7 +411,7 @@ function import_read_package_data($xmlfile, &$public_key) {
 	$filename = "compress.zlib://$xmlfile";
 
 	if (!is_cacti_public_key($public_key)) {
-		cacti_log('FATAL: Package Public Key is not Official Kadupul Public Key for Package ' . $filename, true, 'IMPORT', POLLER_VERBOSITY_LOW);
+		cacti_log('FATAL: Package Public Key is not a built-in trusted key for Package ' . $filename, true, 'IMPORT', POLLER_VERBOSITY_LOW);
 		return false;
 	}
 
