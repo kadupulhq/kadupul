@@ -103,10 +103,10 @@ check_branding_migration((int) read_config_option('install_step', true) === Inst
 
 $root = dirname(__DIR__, 2);
 foreach (['cli/install_cacti.php', 'install/background.php'] as $entry) {
-	check_branding_migration(str_contains(file_get_contents("$root/$entry"), 'Installer::beginInstall('), "$entry no longer uses the shared installer");
+	check_branding_migration(strpos(file_get_contents("$root/$entry"), 'Installer::beginInstall(') !== false, "$entry no longer uses the shared installer");
 }
 $source = file_get_contents("$root/lib/installer.php");
-check_branding_migration(str_contains($source, '$installer->install();'), 'The shared entry point no longer runs installation');
-check_branding_migration(str_contains($source, 'if (empty($failure) && !self::migrateProductDefaults())'), 'The shared installer no longer gates completion on the migration');
+check_branding_migration(strpos($source, '$installer->install();') !== false, 'The shared entry point no longer runs installation');
+check_branding_migration(strpos($source, 'if (empty($failure) && !self::migrateProductDefaults())') !== false, 'The shared installer no longer gates completion on the migration');
 
 print "PASS: 12 database cases across utf8mb4 and latin1; idempotence, cache invalidation, failure propagation, and CLI/web wiring.\n";
