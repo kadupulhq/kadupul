@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-11 23:33-0700\n"
+"POT-Creation-Date: 2026-09-12 09:37-0700\n"
 "PO-Revision-Date: 2024-04-20 19:11-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -1094,14 +1094,14 @@ msgid "Added manually through device automation interface."
 msgstr "Handmatig toegevoegd door apparaat automatiseringsinterface."
 
 #: automation_devices.php:121
-#, php-format
+#, fuzzy, php-format
 msgid "Device %s Added to Kadupul"
-msgstr "Apparaat %s toegevoegd aan cactussen"
+msgstr "Apparaat %s toegevoegd aan Kadupul"
 
 #: automation_devices.php:123
-#, php-format
+#, fuzzy, php-format
 msgid "Device %s Not Added to Kadupul"
-msgstr "Apparaat %s niet toegevoegd aan cactussen"
+msgstr "Apparaat %s niet toegevoegd aan Kadupul"
 
 #: automation_devices.php:133
 msgid "Devices Removed from Kadupul Automation database"
@@ -1793,9 +1793,10 @@ msgstr "De naam van de e-mailaccount die moet worden gebruikt als de naam van de
 msgid "Notification From Email Address"
 msgstr "Kennisgeving van e-mail adres"
 
+#, fuzzy
 #: automation_networks.php:604
 msgid "The Email Address to be used as the senders Email for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Email Address if specified, otherwise, it will use the Kadupul system default Email Address"
-msgstr "Het e-mailadres dat moet worden gebruikt als afzenders-e-mail voor de notificatie-e-mail.  Indien leeg gelaten, zal Kadupul het standaard E-mailadres van de Automatiseringsmelding gebruiken indien gespecificeerd, anders zal het het standaard E-mailadres van het Cactus-systeem gebruiken."
+msgstr "Het e-mailadres dat moet worden gebruikt als afzenders-e-mail voor de notificatie-e-mail.  Indien leeg gelaten, zal Kadupul het standaard E-mailadres van de Automatiseringsmelding gebruiken indien gespecificeerd, anders zal het het standaard E-mailadres van het Kadupul-systeem gebruiken."
 
 #: automation_networks.php:611
 msgid "Discovery Timing"
@@ -2541,24 +2542,27 @@ msgstr "ROOT"
 msgid "No Tree Rules Found"
 msgstr "Geen boomstructuur regels gevonden"
 
+#, fuzzy
 #: cactid.php:37 help.php:37 lib/functions.php:6227 lib/functions.php:6296
 #: lib/functions.php:6386 lib/functions.php:6993 poller.php:387 poller.php:537
 #: poller.php:602 poller.php:642 poller.php:784 poller.php:890
 #: poller_automation.php:46 poller_boost.php:369
 msgid "Kadupul System Warning"
-msgstr "Cactus Systeem Waarschuwing"
+msgstr "Kadupul Systeem Waarschuwing"
 
 #: cactid.php:37
 msgid "WARNING: Kadupul Daemon PID["
 msgstr "WAARSCHUWING: Kadupul Daemon PID["
 
+#, fuzzy
 #: cactid.php:125
 msgid "Kadupul System Notice"
-msgstr "Hulpprogramma's voor cactussen"
+msgstr "Hulpprogramma's voor Kadupul"
 
+#, fuzzy
 #: cactid.php:125
 msgid "Notice: Kadupul Daemon PID["
-msgstr "Opmerking: Cactussen Daemon PID["
+msgstr "Opmerking: Kadupul Daemon PID["
 
 #: cdef.php:264
 msgid "Click 'Continue' to delete the following CDEF."
@@ -5262,9 +5266,9 @@ msgid "Set Default"
 msgstr "Stel in als standaard"
 
 #: help.php:37
-#, php-format
+#, fuzzy, php-format
 msgid "WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "WAARSCHUWING: cactuspagina:%s voor gebruiker:%s heeft een fatale fout gegenereerd %d!"
+msgstr "WAARSCHUWING: Kadupul:%s voor gebruiker:%s heeft een fatale fout gegenereerd %d!"
 
 #: help.php:59
 #, php-format
@@ -9721,9 +9725,10 @@ msgstr "Internationalisering (i18n)"
 msgid "Language Support"
 msgstr "Taal support"
 
+#, fuzzy
 #: include/global_settings.php:335
 msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
-msgstr "Kies 'enabled' om de lokalisatie van Cactussen toe te staan. De strikte modus vereist dat de gevraagde taal ook wordt ondersteund door alle plugins die op uw systeem worden geïnstalleerd. Als dat niet het geval is, wordt alles in het Engels weergegeven."
+msgstr "Kies 'enabled' om de lokalisatie van Kadupul toe te staan. De strikte modus vereist dat de gevraagde taal ook wordt ondersteund door alle plugins die op uw systeem worden geïnstalleerd. Als dat niet het geval is, wordt alles in het Engels weergegeven."
 
 #: include/global_settings.php:341
 msgid "Language"
@@ -9745,17 +9750,19 @@ msgstr "Sta toe om automatisch de 'standaard' taal van de gebruiker te bepalen e
 msgid "Preferred Language Processor"
 msgstr "Voorkeurstaalverwerker"
 
+#, fuzzy
 #: include/global_settings.php:359
 msgid "Kadupul includes support for multiple alternate Language Translation Processors.  If none is selected Kadupul will attempt to use the first one found."
-msgstr "Cactussen bieden ondersteuning voor meerdere alternatieve taalvertaalprocessors. Het zal standaard de ingebouwde PHP-ondersteuning gebruiken, maar niet alle Linux-varianten bevatten ingebouwde taalondersteuning. Als deze niet is geselecteerd, kiest Kadupul de eerste die wordt gevonden."
+msgstr "Kadupul bieden ondersteuning voor meerdere alternatieve taalvertaalprocessors. Het zal standaard de ingebouwde PHP-ondersteuning gebruiken, maar niet alle Linux-varianten bevatten ingebouwde taalondersteuning. Als deze niet is geselecteerd, kiest Kadupul de eerste die wordt gevonden."
 
 #: include/global_settings.php:365
 msgid "Client TimeZone Support"
 msgstr "MySQL - TimeZone ondersteuning"
 
+#, fuzzy
 #: include/global_settings.php:366
 msgid "How should Kadupul support Client Dates based upon the Client browsers timezone."
-msgstr "Hoe moeten cactussen klantdatums ondersteunen op basis van de tijdzone van de klantbrowser."
+msgstr "Hoe moeten Kadupul klantdatums ondersteunen op basis van de tijdzone van de klantbrowser."
 
 #: include/global_settings.php:375 include/global_settings.php:2621
 msgid "Date Display Format"
@@ -9769,9 +9776,10 @@ msgstr "Het standaard datumformaat van het systeem om te gebruiken in Kadupul."
 msgid "Date Separator"
 msgstr "Datum scheidingsteken"
 
+#, fuzzy
 #: include/global_settings.php:383
 msgid "The System default date separator to be used in Kadupul."
-msgstr "Het systeem standaard datumscheidingsteken voor gebruik in Cactussen."
+msgstr "Het systeem standaard datumscheidingsteken voor gebruik in Kadupul."
 
 #: include/global_settings.php:389
 msgid "Other Settings"
@@ -9885,9 +9893,10 @@ msgstr "Grafiek koppelregels"
 msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
 msgstr "Indien ingeschakeld, zal Kadupul grafieken niet vergrendelen. Dit maakt een snellere handmatige wijziging van gegevensbronnen met betrekking tot een grafiek mogelijk."
 
+#, fuzzy
 #: include/global_settings.php:471
 msgid "Hide Kadupul Dashboard"
-msgstr "Verberg Cactussen Dashboard"
+msgstr "Verberg Kadupul Dashboard"
 
 #: include/global_settings.php:472
 msgid "For use with Kadupul's External Link Support.  Using this setting, you can hide the Kadupul Dashboard, so you can display just your own page."
@@ -10227,9 +10236,10 @@ msgstr "Standaard Pingpoort voor alle nieuwe apparaten.  Met TCP zal Kadupul pro
 msgid "Default Ping Timeout value in milli-seconds for all new Devices.  The timeout values to use for Device SNMP, ICMP, UDP and TCP pinging.  ICMP Pings will be rounded up to the nearest second.  TCP and UDP connection timeouts on Windows are controlled by the operating system, and are therefore not recommended on Windows."
 msgstr "Standaard Ping Timeout waarde in milli-seconden voor alle nieuwe apparaten.  De te gebruiken time-outwaarden voor Device SNMP, ICMP, UDP en TCP pinging.  ICMP Pings worden naar boven afgerond op de dichtstbijzijnde seconde.  TCP- en UDP-verbindingstime-outs op Windows worden bestuurd door het besturingssysteem en worden daarom niet aanbevolen op Windows."
 
+#, fuzzy
 #: include/global_settings.php:825
 msgid "The number of times Kadupul will attempt to ping a Device before marking it as down."
-msgstr "Het aantal keren dat Cactussen proberen een apparaat te pingen voordat ze het als down markeren."
+msgstr "Het aantal keren dat Kadupul proberen een apparaat te pingen voordat ze het als down markeren."
 
 #: include/global_settings.php:832
 msgid "Up/Down Settings"
@@ -10679,9 +10689,10 @@ msgstr "Bedieningselementen voor het uitschakelen van de controle op het verhoge
 msgid "Remote Agent Timeout"
 msgstr "Time-out agent op afstand"
 
+#, fuzzy
 #: include/global_settings.php:1258
 msgid "The amount of time, in seconds, that the Central Kadupul web server will wait for a response from the Remote Data Collector to obtain various Device information before abandoning the request.  On Devices that are associated with Data Collectors other than the Central Kadupul Data Collector, the Remote Agent must be used to gather Device information."
-msgstr "De hoeveelheid tijd, in seconden, die de Central Kadupul webserver zal wachten op een antwoord van de Remote Data Collector om diverse Apparaatinformatie te verkrijgen alvorens af te zien van het verzoek.  Op Apparaten die zijn gekoppeld aan andere gegevensverzamelaars dan de Centrale Cactus Gegevensverzamelaar, moet de Externe Agent worden gebruikt om informatie over het Apparaat te verzamelen."
+msgstr "De hoeveelheid tijd, in seconden, die de Central Kadupul webserver zal wachten op een antwoord van de Remote Data Collector om diverse Apparaatinformatie te verkrijgen alvorens af te zien van het verzoek.  Op Apparaten die zijn gekoppeld aan andere gegevensverzamelaars dan de Centrale Kadupul Gegevensverzamelaar, moet de Externe Agent worden gebruikt om informatie over het Apparaat te verzamelen."
 
 #: include/global_settings.php:1269
 msgid "SNMP Bulkwalk Fetch Size"
@@ -10904,17 +10915,19 @@ msgstr "Deze instellingen worden bijgehouden op het niveau van de gegevensverzam
 msgid "Data Collector Processes"
 msgstr "Standaard gegevensverzamelprocessen"
 
+#, fuzzy
 #: include/global_settings.php:1483
 msgid "The default number of concurrent processes to execute per Data Collector.  NOTE: Starting from Kadupul 1.2, this setting is maintained in the Data Collector.  Moving forward, this value is only a preset for the Data Collector.  Using a higher number when using cmd.php will improve performance.  Performance improvements in Spine are best resolved with the threads parameter.  When using Spine, we recommend a lower number and leveraging threads instead.  When using cmd.php, use no more than 2x the number of CPU cores."
-msgstr "Het standaard aantal gelijktijdige processen dat per gegevensverzamelaar moet worden uitgevoerd.  OPMERKING: Vanaf Cactus 1.2 wordt deze instelling gehandhaafd in het gegevensverzamelprogramma.  Als u naar voren gaat, is deze waarde alleen een vooringestelde waarde voor de gegevensverzamelaar.  Het gebruik van een hoger getal bij het gebruik van cmd.php zal de prestaties verbeteren.  Prestatieverbeteringen in de wervelkolom worden het best opgelost met de parameter threads.  Bij gebruik van de wervelkolom adviseren wij een lager aantal en het gebruik van schroefdraad.  Gebruik bij gebruik van cmd.php niet meer dan 2x het aantal CPU-kernen."
+msgstr "Het standaard aantal gelijktijdige processen dat per gegevensverzamelaar moet worden uitgevoerd.  OPMERKING: Vanaf Kadupul 1.2 wordt deze instelling gehandhaafd in het gegevensverzamelprogramma.  Als u naar voren gaat, is deze waarde alleen een vooringestelde waarde voor de gegevensverzamelaar.  Het gebruik van een hoger getal bij het gebruik van cmd.php zal de prestaties verbeteren.  Prestatieverbeteringen in de wervelkolom worden het best opgelost met de parameter threads.  Bij gebruik van de wervelkolom adviseren wij een lager aantal en het gebruik van schroefdraad.  Gebruik bij gebruik van cmd.php niet meer dan 2x het aantal CPU-kernen."
 
 #: include/global_settings.php:1490
 msgid "Threads per Process"
 msgstr "Standaarddraden per proces"
 
+#, fuzzy
 #: include/global_settings.php:1491
 msgid "The Default Threads allowed per process.  NOTE: Starting in Kadupul 1.2+, this setting is maintained in the Data Collector, and this is simply the Preset.  Using a higher number when using Spine will improve performance.  However, ensure that you have enough MySQL/MariaDB connections to support the following equation: connections = data collectors * processes * (threads + script servers).  You must also ensure that you have enough spare connections for user login connections as well."
-msgstr "De Default Threads toegestaan per proces.  OPMERKING: Vanaf Cactus 1.2+ wordt deze instelling gehandhaafd in het Gegevensverzamelprogramma, en dit is gewoon de Vooraf ingestelde instelling.  Het gebruik van een hoger getal bij gebruik van de wervelkolom zal de prestaties verbeteren.  Zorg er echter voor dat u genoeg MySQL/MariaDB-verbindingen hebt om de volgende vergelijking te ondersteunen: verbindingen = gegevensverzamelaars * processen * (threads + scriptservers).  U moet er ook voor zorgen dat u over voldoende reserveaansluitingen voor de gebruikersaansluitingen beschikt."
+msgstr "De Default Threads toegestaan per proces.  OPMERKING: Vanaf Kadupul 1.2+ wordt deze instelling gehandhaafd in het Gegevensverzamelprogramma, en dit is gewoon de Vooraf ingestelde instelling.  Het gebruik van een hoger getal bij gebruik van de wervelkolom zal de prestaties verbeteren.  Zorg er echter voor dat u genoeg MySQL/MariaDB-verbindingen hebt om de volgende vergelijking te ondersteunen: verbindingen = gegevensverzamelaars * processen * (threads + scriptservers).  U moet er ook voor zorgen dat u over voldoende reserveaansluitingen voor de gebruikersaansluitingen beschikt."
 
 #: include/global_settings.php:1505
 msgid "Authentication Method"
@@ -11315,9 +11328,10 @@ msgstr "Opties voor e-mailen"
 msgid "Notify Primary Admin of Issues"
 msgstr "Primaire administratie van problemen op de hoogte brengen"
 
+#, fuzzy
 #: include/global_settings.php:1884
 msgid "In cases where the Kadupul server is experiencing problems, should the Primary Administrator be notified by Email?  The Primary Administrator's Kadupul user account is specified under the Authentication tab on Kadupul's settings page. It defaults to the 'admin' account."
-msgstr "In gevallen waarin de Cactus-server problemen ondervindt, moet de primaire beheerder per e-mail op de hoogte worden gebracht?  De primaire beheerdersaccount van de Kadupul-gebruikersaccount wordt gespecificeerd onder het tabblad Authenticatie op de instellingenpagina van Kadupul. Het wordt standaard op de 'admin'-account gezet."
+msgstr "In gevallen waarin de Kadupul-server problemen ondervindt, moet de primaire beheerder per e-mail op de hoogte worden gebracht?  De primaire beheerdersaccount van de Kadupul-gebruikersaccount wordt gespecificeerd onder het tabblad Authenticatie op de instellingenpagina van Kadupul. Het wordt standaard op de 'admin'-account gezet."
 
 #: include/global_settings.php:1889
 msgid "Test Email"
@@ -11461,7 +11475,7 @@ msgstr "De maximale grootte van het e-mailbericht inclusief alle bijlagen."
 
 #: include/global_settings.php:2016
 msgid "Poller Logging Level for Kadupul Reporting"
-msgstr "Poller Logging Level voor Cactierapportage"
+msgstr "Poller Logging Level voor Kadupulrapportage"
 
 #: include/global_settings.php:2017
 msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
@@ -11969,13 +11983,15 @@ msgstr "In welke modus wilt u de grafieken standaard getoond hebben als u de gra
 msgid "TimeZone Support"
 msgstr "MySQL - TimeZone ondersteuning"
 
+#, fuzzy
 #: include/global_settings.php:2581
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
-msgstr "Hoe wil je dat Kadupul datums presenteert?  Deze instelling verandert ook de manier waarop datums van cactusgrafieken worden weergegeven."
+msgstr "Hoe wil je dat Kadupul datums presenteert?  Deze instelling verandert ook de manier waarop datums van Kadupul worden weergegeven."
 
+#, fuzzy
 #: include/global_settings.php:2584
 msgid "Kadupul Server Timezone"
-msgstr "Cactus Server v%s - Onderhoud"
+msgstr "Kadupul Server v%s - Onderhoud"
 
 #: include/global_settings.php:2585
 msgid "My Browsers Timezone"
@@ -12025,9 +12041,10 @@ msgstr "Schakel horizontaal scrollen van tabellen in en schakel responsieve kolo
 msgid "The date format to use in Kadupul."
 msgstr "Het datumformaat om te gebruiken in Kadupul."
 
+#, fuzzy
 #: include/global_settings.php:2629
 msgid "The date separator to be used in Kadupul."
-msgstr "Het datumscheidingsteken dat in Cactussen moet worden gebruikt."
+msgstr "Het datumscheidingsteken dat in Kadupul moet worden gebruikt."
 
 #: include/global_settings.php:2635
 msgid "Page Refresh"
@@ -12101,9 +12118,10 @@ msgstr "Eindtijd werkdag."
 msgid "Thumbnail Sections"
 msgstr "Thumbnail secties"
 
+#, fuzzy
 #: include/global_settings.php:2710
 msgid "Which portions of Kadupul display Thumbnails by default."
-msgstr "Welke delen van de Cactussen tonen standaard Thumbnails."
+msgstr "Welke delen van de Kadupul tonen standaard Thumbnails."
 
 #: include/global_settings.php:2724
 msgid "Preview Thumbnail Columns"
@@ -12316,14 +12334,14 @@ msgid "Kadupul Install Help"
 msgstr "Actief/geinstalleerd"
 
 #: install/install.php:90
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Server v%s - Maintenance"
-msgstr "Cactus Server v%s - Onderhoud"
+msgstr "Kadupul Server v%s - Onderhoud"
 
 #: install/install.php:100
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Server v%s - Installation Wizard"
-msgstr "Cactus Server v%s - Installatie Wizard"
+msgstr "Kadupul Server v%s - Installatie Wizard"
 
 #: install/install.php:100
 msgid "Refresh current page"
@@ -12777,7 +12795,7 @@ msgstr "%s GBytes"
 #: lib/clog_webapi.php:113 utilities.php:1613
 #, php-format
 msgid "%s - WEBUI NOTE: Kadupul Log Cleared from Web Management Interface."
-msgstr "%s - WEBUI OPMERKING: Cactielogboek gewist van de webbeheerinterface."
+msgstr "%s - WEBUI OPMERKING: Kadupullogboek gewist van de webbeheerinterface."
 
 #: lib/clog_webapi.php:220
 msgid "Click 'Continue' to purge the Log File.<br><br><br>Note: If logging is set to both Kadupul and Syslog, the log information will remain in Syslog."
@@ -13539,9 +13557,9 @@ msgid "Message Not Sent due to ping failure."
 msgstr "Bericht Niet verzonden als gevolg van een pingstoring."
 
 #: lib/functions.php:6227 lib/functions.php:6296
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
-msgstr "Cactussen uitgeschakeld plugin %s als gevolg van de volgende fout: %s!  Zie het Kadupul logbestand voor meer details."
+msgstr "Kadupul uitgeschakeld plugin %s als gevolg van de volgende fout: %s!  Zie het Kadupul logbestand voor meer details."
 
 #: lib/functions.php:6386
 #, php-format
@@ -13564,9 +13582,9 @@ msgid "%s %s"
 msgstr "%s %s"
 
 #: lib/functions.php:6993
-#, php-format
+#, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
-msgstr "WAARSCHUWING:  Sleutelcactussen bevatten bestand %s ontbreekt.  Zoek en vervang dit bestand"
+msgstr "WAARSCHUWING:  Kadupul bevatten bestand %s ontbreekt.  Zoek en vervang dit bestand"
 
 #: lib/graphs.php:44
 msgid "Aggregated Device"
@@ -14715,13 +14733,15 @@ msgstr "Geselecteerd"
 msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "De zoekterm \"%s\" is niet geldig. Foutmelding is %s"
 
+#, fuzzy
 #: lib/html_utility.php:1129
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
-msgstr "Reguliere expressies van cactussen zijn om veiligheidsredenen beperkt tot 50 tekens."
+msgstr "Reguliere expressies van Kadupul zijn om veiligheidsredenen beperkt tot 50 tekens."
 
+#, fuzzy
 #: lib/html_utility.php:1133
 msgid "Kadupul regular expressions can not includes the semi-color character."
-msgstr "Cactussen reguliere expressies kunnen het semi-kleurige teken niet bevatten."
+msgstr "Kadupul reguliere expressies kunnen het semi-kleurige teken niet bevatten."
 
 #: lib/html_utility.php:1153
 msgid "There was an internal error!"
@@ -15292,9 +15312,10 @@ msgstr "De variabelen die moeten worden ingesteld in het config.php-bestand omva
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
 msgstr "De Installateur wijst automatisch een $poller_id toe en voegt deze toe aan het config.php bestand."
 
+#, fuzzy
 #: lib/installer.php:2193
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Kadupul database server.  Follow the same procedure you would with any other Kadupul install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
-msgstr "Zodra alle variabelen zijn ingesteld in het config.php-bestand, moet u de $rdatabase_username ook toegang verlenen tot de hoofdserver van de Kadupul database.  Volg dezelfde procedure als bij elke andere Cactus.  U kunt dan op de knop 'Test Connection' drukken.  Als de test geslaagd is, kunt u verder gaan en de installatie voltooien."
+msgstr "Zodra alle variabelen zijn ingesteld in het config.php-bestand, moet u de $rdatabase_username ook toegang verlenen tot de hoofdserver van de Kadupul database.  Volg dezelfde procedure als bij elke andere Kadupul.  U kunt dan op de knop 'Test Connection' drukken.  Als de test geslaagd is, kunt u verder gaan en de installatie voltooien."
 
 #: lib/installer.php:2197
 msgid "Additional Steps After Installation"
@@ -15328,9 +15349,10 @@ msgstr "Let op dat de rechten van de directories hieronder correct zijn ingestel
 msgid "After the install is complete, you can make some of these directories read only to increase security."
 msgstr "Nadat de installatie is voltooid, kunt u een aantal van deze directories alleen-lezen markeren om het beveiligingsniveau te verhogen."
 
+#, fuzzy
 #: lib/installer.php:2299
 msgid "These directories will be required to stay read writable after the install so that the Kadupul remote synchronization process can update them as the Main Kadupul Web Site changes"
-msgstr "Deze mappen moeten na de installatie leesbaar blijven, zodat het synchronisatieproces op afstand van de Cactus ze kan bijwerken als de Main Kadupul website verandert."
+msgstr "Deze mappen moeten na de installatie leesbaar blijven, zodat het synchronisatieproces op afstand van de Kadupul ze kan bijwerken als de Main Kadupul website verandert."
 
 #: lib/installer.php:2303
 msgid "If you are installing packages, once the packages are installed, you should change the scripts directory back to read only as this presents some exposure to the web site."
@@ -15356,9 +15378,10 @@ msgstr "Locatie moet schrijfbaar zijn ook nadat de installatie is voltooid"
 msgid "Potential permission issues"
 msgstr "Mogelijke vergunningsproblemen"
 
+#, fuzzy
 #: lib/installer.php:2382
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
-msgstr "Zorg ervoor dat uw webserver lees/schrijftoegang heeft tot de cactusmappen die hieronder fouten tonen."
+msgstr "Zorg ervoor dat uw webserver lees/schrijftoegang heeft tot de Kadupul die hieronder fouten tonen."
 
 #: lib/installer.php:2385
 msgid "If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools."
@@ -15446,9 +15469,10 @@ msgstr "Cron interval"
 msgid "Default Automation Network"
 msgstr "Standaard Automatiseringsnetwerk"
 
+#, fuzzy
 #: lib/installer.php:2487
 msgid "Kadupul can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
-msgstr "Cactussen kunnen het netwerk automatisch scannen zodra de installatie is voltooid. Hierbij wordt gebruik gemaakt van het onderstaande netwerkbereik om het bereik van IP-adressen uit te werken dat gescand kan worden.  Voor het scannen zijn vooraf gedefinieerde opties gedefinieerd, waaronder het gebruik van zowel 'publieke' als 'private' gemeenschappen."
+msgstr "Kadupul kunnen het netwerk automatisch scannen zodra de installatie is voltooid. Hierbij wordt gebruik gemaakt van het onderstaande netwerkbereik om het bereik van IP-adressen uit te werken dat gescand kan worden.  Voor het scannen zijn vooraf gedefinieerde opties gedefinieerd, waaronder het gebruik van zowel 'publieke' als 'private' gemeenschappen."
 
 #: lib/installer.php:2488
 msgid "If your devices require a different set of options to be used first, you may define them below and they will be utilized before the defaults"
@@ -15629,9 +15653,9 @@ msgid "Press '%s' then click '%s' to complete the installation process after sel
 msgstr "Druk op '%s' en klik vervolgens op '%s' om het installatieproces te voltooien na het selecteren van uw Device Templates."
 
 #: lib/installer.php:2741
-#, php-format
+#, fuzzy, php-format
 msgid "Installing Kadupul Server v%s"
-msgstr "Cactusserver installeren v%s"
+msgstr "Kadupul installeren v%s"
 
 #: lib/installer.php:2742
 msgid "Your Kadupul Server is now installing"
@@ -15780,9 +15804,10 @@ msgstr "Apparaat standaardinstellingen"
 msgid "No templated graphs for Default Device were found"
 msgstr "Er zijn geen sjabloongrafieken voor het standaardapparaat gevonden"
 
+#, fuzzy
 #: lib/installer.php:3324
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
-msgstr "WAARSCHUWING: apparaatsjabloon voor uw besturingssysteem niet gevonden. U moet apparaatsjablonen of cactussenpakketten importeren om uw cactusserver te bewaken."
+msgstr "WAARSCHUWING: apparaatsjabloon voor uw besturingssysteem niet gevonden. U moet apparaatsjablonen of Kadupul importeren om uw Kadupul te bewaken."
 
 #: lib/installer.php:3331
 msgid "Running first-time data query for local host"
@@ -16187,14 +16212,14 @@ msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "RRD minimum voor gegevensbron \"%s\" moet \"%s\" zijn"
 
 #: lib/rrd.php:3122
-#, php-format
+#, fuzzy, php-format
 msgid "DS '%s' missing in Kadupul definition"
-msgstr "DS \"%s\" ontbreekt in de definitie van cactussen"
+msgstr "DS \"%s\" ontbreekt in de definitie van Kadupul"
 
 #: lib/rrd.php:3136 lib/rrd.php:3137
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
-msgstr "Cactussen RRA \"%s\" heeft dezelfde CF/stappen (%s, %s) als \"%s\"."
+msgstr "Kadupul RRA \"%s\" heeft dezelfde CF/stappen (%s, %s) als \"%s\"."
 
 #: lib/rrd.php:3150 lib/rrd.php:3151
 #, php-format
@@ -16202,14 +16227,14 @@ msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Bestand RRA \"%s\" heeft dezelfde CF/stappen (%s, %s) als \"%s\"."
 
 #: lib/rrd.php:3183
-#, php-format
+#, fuzzy, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
-msgstr "De pdp_per_row van '%s' is ongeldig voor RRA '%s' moet '%s' zijn.  Overweeg om RRD-bestanden te verwijderen en toe te staan dat Cactussen deze opnieuw maken."
+msgstr "De pdp_per_row van '%s' is ongeldig voor RRA '%s' moet '%s' zijn.  Overweeg om RRD-bestanden te verwijderen en toe te staan dat Kadupul deze opnieuw maken."
 
 #: lib/rrd.php:3187
-#, php-format
+#, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
-msgstr "XFF voor cactussen RRA id \"%s\" moet \"%s\" zijn"
+msgstr "XFF voor Kadupul RRA id \"%s\" moet \"%s\" zijn"
 
 #: lib/rrd.php:3191
 #, php-format
@@ -16336,7 +16361,7 @@ msgstr "RRA-map"
 msgid "Root"
 msgstr "Root"
 
-#: lib/rrd.php:4079
+#: lib/rrd.php:4082
 msgid "Unknown RRDtool Error"
 msgstr "Onbekende RRDtool fout"
 
@@ -16679,9 +16704,10 @@ msgstr ""
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "Wanneer de InnoDB storage engine wordt gebruikt is het belangrijk om de table spaces gescheiden te houden. Dit maakt het beheer van de tabellen simpeler voor langdurig gebruik van %s. Als op dit moment deze waarde niet actief is, kunt u migreren naar de per-bestand opslag door deze optie te activeren en een ALTER statement uit te voeren op iedere InnoDB tabel."
 
+#, fuzzy
 #: lib/utility.php:1322
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Kadupul tables."
-msgstr "Bij het gebruik van innodb_file_per_table is het belangrijk om het innodb_file_format in te stellen op Barracuda.  Deze instelling maakt langere indexen mogelijk die belangrijk zijn voor bepaalde Cactustabellen."
+msgstr "Bij het gebruik van innodb_file_per_table is het belangrijk om het innodb_file_format in te stellen op Barracuda.  Deze instelling maakt langere indexen mogelijk die belangrijk zijn voor bepaalde Kadupul."
 
 #: lib/utility.php:1328
 msgid "If your tables have very large indexes, you must operate with the Barracuda innodb_file_format and the innodb_large_prefix equal to 1.  Failure to do this may result in plugins that can not properly create tables."
@@ -16946,9 +16972,10 @@ msgstr "Content bestand/URL"
 msgid "Web URL Below"
 msgstr "Web URL Hieronder"
 
+#, fuzzy
 #: links.php:554
 msgid "The file that contains the content for this page. This file needs to be in the Kadupul 'include/content/' directory."
-msgstr "Het bestand dat de inhoud van deze pagina bevat. Dit bestand moet in de map 'include/content/content/' van de Cactus staan."
+msgstr "Het bestand dat de inhoud van deze pagina bevat. Dit bestand moet in de map 'include/content/content/' van de Kadupul staan."
 
 #: links.php:558
 msgid "Web URL Location"
@@ -17485,9 +17512,10 @@ msgstr "FOUT: het pad naar de wervelkolom: %s is ongeldig voor poller-id %d.  Po
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Maximale looptijd van %d seconden overschreden voor poller-id %d. Bezig met afsluiten."
 
+#, fuzzy
 #: poller.php:890
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "WAARSCHUWING: Polling-cyclus cactussen overschreden poller-interval met"
+msgstr "WAARSCHUWING: Polling-cyclus Kadupul overschreden poller-interval met"
 
 #: poller.php:915
 #, php-format
@@ -17498,9 +17526,10 @@ msgstr "WAARSCHUWING: PollerID:%s met naam:%s is in hartslagstatus"
 msgid "Poller in Heartbeat Mode"
 msgstr "Poller in hartslagmodus"
 
+#, fuzzy
 #: poller.php:1174
 msgid "Kadupul System Notification"
-msgstr "Hulpprogramma's voor cactussen"
+msgstr "Hulpprogramma's voor Kadupul"
 
 #: poller.php:1174
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
@@ -17511,9 +17540,10 @@ msgstr "OPMERKING: Er is een tweede Kadupul-gegevensverzamelaar toegevoegd. Daar
 msgid "WARNING: Main Kadupul database %s offline or in recovery"
 msgstr "WAARSCHUWING: Main Kadupul-database offline of in herstel"
 
+#, fuzzy
 #: poller_automation.php:970 poller_automation.php:1021
 msgid "Kadupul Primary Admin"
-msgstr "Cactussen Primaire Admin"
+msgstr "Kadupul Primaire Admin"
 
 #: poller_automation.php:1122
 msgid "Kadupul Automation Report requires an html based Email client"
@@ -17845,9 +17875,10 @@ msgstr "De laatste keer dat deze gegevensverzamelaar is voltooid."
 msgid "Last Update"
 msgstr "Laatste update"
 
+#, fuzzy
 #: pollers.php:1072
 msgid "The last time this Data Collector checked in with the main Kadupul site."
-msgstr "De laatste keer dat deze Dataverzamelaar incheckte bij de hoofdsite van de Cactus."
+msgstr "De laatste keer dat deze Dataverzamelaar incheckte bij de hoofdsite van de Kadupul."
 
 #: pollers.php:1075
 msgid "Last Sync"
@@ -18023,9 +18054,9 @@ msgid "NOTE: Path Settings on this Tab are only saved locally!"
 msgstr "OPMERKING: Padinstellingen op dit tabblad worden alleen lokaal opgeslagen!"
 
 #: settings.php:374
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Settings (%s)%s"
-msgstr "Cactusinstellingen (%s)%s"
+msgstr "Kadupul (%s)%s"
 
 #: settings.php:492
 msgid "Changing Permission Model Warning"
@@ -19955,9 +19986,10 @@ msgstr "Met dit menu kunt u de laatste gebeurtenissen bekijken die SNMPAgent hee
 msgid "Allows Administrators to maintain SNMP notification receivers."
 msgstr "Hiermee kunnen beheerders SNMP-kennisgevingsontvangers onderhouden."
 
+#, fuzzy
 #: utilities.php:2380
 msgid "Kadupul System Utilities"
-msgstr "Hulpprogramma's voor cactussen"
+msgstr "Hulpprogramma's voor Kadupul"
 
 #: utilities.php:2490
 msgid "Refresh Interval"

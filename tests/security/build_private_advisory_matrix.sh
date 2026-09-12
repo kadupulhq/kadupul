@@ -17,7 +17,7 @@ if ! command -v git >/dev/null 2>&1; then
 fi
 
 REPO="${1:-kadupulhq/kadupul}"
-BRANCHES="${2:-1.2.x develop}"
+BRANCHES="${2:-main}"
 OUT_DIR="${3:-/tmp}"
 
 mkdir -p "$OUT_DIR"
@@ -46,8 +46,8 @@ for b in $BRANCHES; do
 		if git rev-parse --verify --quiet "origin/$b" >/dev/null; then
 			branch_ref="origin/$b"
 		else
-			echo "WARN: branch not found locally or in origin: $b" >&2
-			continue
+			echo "ERROR: branch not found locally or in origin: $b" >&2
+			exit 1
 		fi
 	fi
 
@@ -61,7 +61,7 @@ for b in $BRANCHES; do
 
 		commit_count="$(git log "$branch_ref" --oneline --grep "$advisory_key" | wc -l | tr -d ' ')"
 		test_hits="$( (git grep -n "$advisory_key" "$branch_ref" -- tests 2>/dev/null || true) | wc -l | tr -d ' ' )"
-		changelog_hits="$( (git grep -n "$advisory_key" "$branch_ref" -- CHANGELOG 2>/dev/null || true) | wc -l | tr -d ' ' )"
+		changelog_hits="$( (git grep -n "$advisory_key" "$branch_ref" -- CHANGELOG CHANGELOG.md 2>/dev/null || true) | wc -l | tr -d ' ' )"
 		security_hits="$( (git grep -n "$advisory_key" "$branch_ref" -- SECURITY.md 2>/dev/null || true) | wc -l | tr -d ' ' )"
 		code_hits="$( (git grep -n "$advisory_key" "$branch_ref" -- lib include cli api 2>/dev/null || true) | wc -l | tr -d ' ' )"
 

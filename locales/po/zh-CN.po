@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Chinese Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-11 23:33-0700\n"
+"POT-Creation-Date: 2026-09-12 09:37-0700\n"
 "PO-Revision-Date: 2024-06-23 04:09+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2547,9 +2547,10 @@ msgstr "未找到树规则"
 msgid "Kadupul System Warning"
 msgstr "Kadupul 系统警告"
 
+#, fuzzy
 #: cactid.php:37
 msgid "WARNING: Kadupul Daemon PID["
-msgstr "警告：仙人掌守护进程PID["
+msgstr "警告：Kadupul守护进程PID["
 
 #: cactid.php:125
 msgid "Kadupul System Notice"
@@ -2971,9 +2972,10 @@ msgstr "数据源调试收到无效的数据源ID。"
 msgid "All RRDfile repairs succeeded."
 msgstr "所有RRDfile修复成功。"
 
+#, fuzzy
 #: data_debug.php:59
 msgid "One or more RRDfile repairs failed.  See Kadupul log for errors."
-msgstr "一个或多个RRDfile修复失败。有关错误，请参阅仙人掌日志。"
+msgstr "一个或多个RRDfile修复失败。有关错误，请参阅Kadupul日志。"
 
 #: data_debug.php:67
 msgid "Automatic Data Source debug being rerun after repair."
@@ -3703,9 +3705,10 @@ msgid "Duplicate Data Source Profile"
 msgid_plural "Duplicate Date Source Profiles"
 msgstr[0] "重复的数据源配置文件"
 
+#, fuzzy
 #: data_source_profiles.php:387
 msgid "Unable to duplicate Data Source Profile.  Check Kadupul Log for errors."
-msgstr "一个或多个RRDfile修复失败。有关错误，请参阅仙人掌日志。"
+msgstr "一个或多个RRDfile修复失败。有关错误，请参阅Kadupul日志。"
 
 #: data_source_profiles.php:410
 msgid "Click 'Continue' to delete the following Data Source Profile RRA."
@@ -9821,9 +9824,10 @@ msgstr "选中后,表格和设置帮助将内嵌显示. 否则,当鼠标悬停�
 msgid "Local Page Help Only"
 msgstr "获取帮助"
 
+#, fuzzy
 #: include/global_settings.php:448
 msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
-msgstr "默认情况下，仙人掌页面帮助位于 kadupul.org。 但是，如果您的系统无法访问 Internet，您可以以 HTML 格式在本地下载文档并将其托管在 Kadupul 服务器的“文档”位置。 如果选择仅利用本地位置获取页面帮助文档，请选中此复选框。"
+msgstr "默认情况下，Kadupul页面帮助位于 kadupul.org。 但是，如果您的系统无法访问 Internet，您可以以 HTML 格式在本地下载文档并将其托管在 Kadupul 服务器的“文档”位置。 如果选择仅利用本地位置获取页面帮助文档，请选中此复选框。"
 
 #: include/global_settings.php:453
 msgid "Deletion Verification"
@@ -10675,9 +10679,10 @@ msgstr "此设置仅适用于单个轮询器系统，以便在每个轮询周期
 msgid "Disable Resource Cache Replication"
 msgstr "重建资源缓存"
 
+#, fuzzy
 #: include/global_settings.php:1304
 msgid "By default, the main Kadupul Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Kadupul Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting."
-msgstr "默认情况下，主仙人掌数据收集器会将整个网站和插件缓存到资源缓存中。然后，远程数据收集器会定期使用主仙人掌数据收集器的任何更新来更新主题。该资源缓存实质上允许远程数据收集器进行自我升级。如果您不想使用此选项，则可以使用此设置禁用它。"
+msgstr "默认情况下，主Kadupul数据收集器会将整个网站和插件缓存到资源缓存中。然后，远程数据收集器会定期使用主Kadupul数据收集器的任何更新来更新主题。该资源缓存实质上允许远程数据收集器进行自我升级。如果您不想使用此选项，则可以使用此设置禁用它。"
 
 #: include/global_settings.php:1309
 msgid "Additional Data Collector Settings"
@@ -10766,9 +10771,10 @@ msgstr "Kadupul的数据源统计脚本可以运行的最长时间，而不会�
 msgid "RRDChecker Timeout"
 msgstr "DNS 超时"
 
+#, fuzzy
 #: include/global_settings.php:1392
 msgid "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
-msgstr "仙人掌的Spikekill脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
+msgstr "Kadupul的Spikekill脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
 
 #: include/global_settings.php:1398 include/global_settings.php:1399
 #: include/global_settings.php:1400 include/global_settings.php:1455
@@ -10844,17 +10850,19 @@ msgstr "%d进程"
 msgid "Maintenance Background Generation Timeout"
 msgstr "维护后台生成超时"
 
+#, fuzzy
 #: include/global_settings.php:1446
 msgid "The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed."
-msgstr "仙人掌维护脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
+msgstr "Kadupul维护脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
 
 #: include/global_settings.php:1459
 msgid "Spikekill Background Generation Timeout"
 msgstr "Spikekill背景生成超时"
 
+#, fuzzy
 #: include/global_settings.php:1460
 msgid "The maximum amount of time a Kadupul's Spikekill script can run without generating a timeout error and being killed."
-msgstr "仙人掌的Spikekill脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
+msgstr "Kadupul的Spikekill脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
 
 #: include/global_settings.php:1476
 msgid "Data Collector Defaults"
@@ -11933,9 +11941,10 @@ msgstr "您首次访问 '图形' 页面时,默认显示哪种图形模式?"
 msgid "TimeZone Support"
 msgstr "MySQL - 时区支持"
 
+#, fuzzy
 #: include/global_settings.php:2581
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
-msgstr "你希望仙人掌如何呈现日期？ 此设置还将更改 Kadupul Graphs 日期的表示方式。"
+msgstr "你希望Kadupul如何呈现日期？ 此设置还将更改 Kadupul Graphs 日期的表示方式。"
 
 #: include/global_settings.php:2584
 msgid "Kadupul Server Timezone"
@@ -12142,9 +12151,10 @@ msgstr "选择是否展开在树上使用的设备图形模板和数据查询."
 msgid "Tree History"
 msgstr "历史密码"
 
+#, fuzzy
 #: include/global_settings.php:2791
 msgid "If enabled, Kadupul will remember your Tree History between logins and when you return to the Graphs page."
-msgstr "如果启用，则仙人掌将记住两次登录之间以及返回到“图形”页面时的树历史记录。"
+msgstr "如果启用，则Kadupul将记住两次登录之间以及返回到“图形”页面时的树历史记录。"
 
 #: include/global_settings.php:2814
 msgid "Use Custom Fonts"
@@ -13528,9 +13538,9 @@ msgid "%s %s"
 msgstr "%s %s"
 
 #: lib/functions.php:6993
-#, php-format
+#, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
-msgstr "警告：缺少密钥仙人掌包含文件%s。 请找到并替换此文件"
+msgstr "警告：缺少密钥Kadupul包含文件%s。 请找到并替换此文件"
 
 #: lib/graphs.php:44
 msgid "Aggregated Device"
@@ -14683,9 +14693,10 @@ msgstr "搜索字词 \"%s\"无效. 错误是%s"
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
 msgstr "出于安全原因，Kadupul 正则表达式限制为 50 个字符。"
 
+#, fuzzy
 #: lib/html_utility.php:1133
 msgid "Kadupul regular expressions can not includes the semi-color character."
-msgstr "仙人掌正则表达式不能包含半彩色字符。"
+msgstr "Kadupul正则表达式不能包含半彩色字符。"
 
 #: lib/html_utility.php:1153
 msgid "There was an internal error!"
@@ -16300,7 +16311,7 @@ msgstr "RRA 文件夹"
 msgid "Root"
 msgstr "根目录"
 
-#: lib/rrd.php:4079
+#: lib/rrd.php:4082
 msgid "Unknown RRDtool Error"
 msgstr "未知的RRDtool 错误"
 
@@ -17445,9 +17456,10 @@ msgstr "错误：spine路径：%s对轮询器id%d无效。轮询器无法继续�
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "轮询程序id%d超过了%d秒的最大运行时间。正在退出。"
 
+#, fuzzy
 #: poller.php:890
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "警告：仙人掌轮询周期超过轮询间隔 "
+msgstr "警告：Kadupul轮询周期超过轮询间隔 "
 
 #: poller.php:915
 #, php-format
@@ -17462,9 +17474,10 @@ msgstr "心跳模式下的轮询器"
 msgid "Kadupul System Notification"
 msgstr "Kadupul 系统工具"
 
+#, fuzzy
 #: poller.php:1174
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
-msgstr "注意：已添加第二个仙人掌数据收集器。因此，自动启用增强功能！"
+msgstr "注意：已添加第二个Kadupul数据收集器。因此，自动启用增强功能！"
 
 #: poller_automation.php:46
 #, fuzzy, php-format

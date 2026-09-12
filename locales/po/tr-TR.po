@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-11 23:33-0700\n"
+"POT-Creation-Date: 2026-09-12 09:37-0700\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -842,13 +842,15 @@ msgstr "Şifre Değiştirme sayfasında sorunlar var. Hemen Kadupul yöneticiniz
 msgid "Change Password"
 msgstr "Şifre Değiştir"
 
+#, fuzzy
 #: auth_changepassword.php:344
 msgid "Please enter your current password and your new<br>Kadupul password."
-msgstr "Lütfen mevcut şifrenizi ve yeni şifrenizi girin <br> Kaktüsler şifre."
+msgstr "Lütfen mevcut şifrenizi ve yeni şifrenizi girin <br> Kadupul şifre."
 
+#, fuzzy
 #: auth_changepassword.php:346
 msgid "Please enter your new Kadupul password."
-msgstr "Lütfen mevcut şifrenizi ve yeni şifrenizi girin <br> Kaktüsler şifre."
+msgstr "Lütfen mevcut şifrenizi ve yeni şifrenizi girin <br> Kadupul şifre."
 
 #: auth_changepassword.php:354 auth_login.php:321 auth_login.php:324
 #: include/global_settings.php:1816 lib/functions.php:5599
@@ -1093,14 +1095,14 @@ msgid "Added manually through device automation interface."
 msgstr "Cihaz otomasyon arayüzü ile manuel olarak eklenir."
 
 #: automation_devices.php:121
-#, php-format
+#, fuzzy, php-format
 msgid "Device %s Added to Kadupul"
-msgstr "%s Cihazı Kaktüslere Eklendi"
+msgstr "%s Cihazı Kadupul Eklendi"
 
 #: automation_devices.php:123
-#, php-format
+#, fuzzy, php-format
 msgid "Device %s Not Added to Kadupul"
-msgstr "%s Cihazı Kaktüslere Eklenmedi"
+msgstr "%s Cihazı Kadupul Eklenmedi"
 
 #: automation_devices.php:133
 msgid "Devices Removed from Kadupul Automation database"
@@ -1589,9 +1591,10 @@ msgstr "Bu Cihazdan veri toplamak için kullanılacak Kadupul Veri Toplayıcı /
 msgid "Associated Site"
 msgstr "İlişkili Site"
 
+#, fuzzy
 #: automation_networks.php:464
 msgid "Choose the Kadupul Site that you wish to associate discovered Devices with."
-msgstr "Bulunan Cihazları ilişkilendirmek istediğiniz Kaktüsler Sitesi&#39;ni seçin."
+msgstr "Bulunan Cihazları ilişkilendirmek istediğiniz Kadupul Sitesi&#39;ni seçin."
 
 #: automation_networks.php:472
 msgid "Subnet Range"
@@ -1736,9 +1739,10 @@ msgstr "NetBIOS&#39;u Etkinleştir"
 msgid "Use NetBIOS to attempt to resolve the hostname of up hosts."
 msgstr "Ana bilgisayarların ana bilgisayar adını çözümlemeye çalışmak için NetBIOS kullanın."
 
+#, fuzzy
 #: automation_networks.php:556
 msgid "Automatically Add to Kadupul"
-msgstr "Kaktüslere Otomatik Olarak Ekle"
+msgstr "Kadupul Otomatik Olarak Ekle"
 
 #: automation_networks.php:557
 msgid "For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Kadupul."
@@ -2540,20 +2544,22 @@ msgstr "KÖK"
 msgid "No Tree Rules Found"
 msgstr "Ağaç Kuralı Bulunamadı"
 
+#, fuzzy
 #: cactid.php:37 help.php:37 lib/functions.php:6227 lib/functions.php:6296
 #: lib/functions.php:6386 lib/functions.php:6993 poller.php:387 poller.php:537
 #: poller.php:602 poller.php:642 poller.php:784 poller.php:890
 #: poller_automation.php:46 poller_boost.php:369
 msgid "Kadupul System Warning"
-msgstr "Kaktüsler Sistemi Uyarısı"
+msgstr "Kadupul Sistemi Uyarısı"
 
 #: cactid.php:37
 msgid "WARNING: Kadupul Daemon PID["
 msgstr "UYARI: Kadupul Daemon PID["
 
+#, fuzzy
 #: cactid.php:125
 msgid "Kadupul System Notice"
-msgstr "Kaktüsler Sistem Araçları"
+msgstr "Kadupul Sistem Araçları"
 
 #: cactid.php:125
 msgid "Notice: Kadupul Daemon PID["
@@ -4524,9 +4530,10 @@ msgstr "Resim Önbellek Dizini mevcut değil. Lütfen önce onu oluşturun ve iz
 msgid "The Image Cache Directory is not writable.  Please set permissions and then attempt to open another Real-time graph."
 msgstr "Görüntü Önbelleği Dizini yazılabilir değil. Lütfen izinleri ayarlayın ve sonra başka bir Gerçek Zamanlı grafik açmayı deneyin."
 
+#, fuzzy
 #: graph_realtime.php:374
 msgid "Kadupul Real-time Graphing"
-msgstr "Kaktüsler Gerçek Zamanlı Grafikler"
+msgstr "Kadupul Gerçek Zamanlı Grafikler"
 
 #: graph_realtime.php:412 lib/html_graph.php:231 lib/html_reports.php:117
 #: lib/html_tree.php:1061
@@ -5261,9 +5268,9 @@ msgid "Set Default"
 msgstr "Varsayılana ayarla"
 
 #: help.php:37
-#, php-format
+#, fuzzy, php-format
 msgid "WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "UYARI: Kullanıcı için Kaktüsler Sayfası:%s: %s Ölümcül Hata Oluşturdu %d!"
+msgstr "UYARI: Kullanıcı için Kadupul Sayfası:%s: %s Ölümcül Hata Oluşturdu %d!"
 
 #: help.php:59
 #, php-format
@@ -5809,13 +5816,15 @@ msgstr "Aygıt Şablonu Bulunamadı"
 msgid "Not Logged In"
 msgstr "Giriş yapmadınız"
 
+#, fuzzy
 #: include/auth.php:162
 msgid "You must be logged in to access this area of Kadupul."
-msgstr "Bu kaktüslere erişmek için giriş yapmalısınız."
+msgstr "Bu Kadupul erişmek için giriş yapmalısınız."
 
+#, fuzzy
 #: include/auth.php:167
 msgid "FATAL: You must be logged in to access this area of Kadupul."
-msgstr "FATAL: Bu kaktüsler alanına erişmek için giriş yapmalısınız."
+msgstr "FATAL: Bu Kadupul alanına erişmek için giriş yapmalısınız."
 
 #: include/auth.php:276 include/auth.php:278 lib/auth.php:4683
 #: permission_denied.php:24 permission_denied.php:26
@@ -5831,9 +5840,10 @@ msgstr "Izin reddedildi"
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Bunun bir hata olduğunu düşünüyorsanız. Lütfen Kadupul Yöneticinizle görüşün."
 
+#, fuzzy
 #: include/auth.php:284 lib/functions.php:7595 permission_denied.php:48
 msgid "You are not permitted to access this section of Kadupul."
-msgstr "Kaktüslerin bu bölümüne erişmene izin verilmiyor."
+msgstr "Kadupul bu bölümüne erişmene izin verilmiyor."
 
 #: include/auth.php:287
 msgid "Installation In Progress"
@@ -5911,9 +5921,10 @@ msgstr "SNMP v3 Gizlilik Şifreleri eşleşmiyor"
 msgid "The SNMP v3 Authentication Passphrases do not match"
 msgstr "SNMP v3 Kimlik Doğrulama Şifreleri eşleşmiyor"
 
+#, fuzzy
 #: include/global_arrays.php:186
 msgid "XML: Kadupul version does not exist."
-msgstr "XML: Kaktüs versiyonu mevcut değil."
+msgstr "XML: Kadupul versiyonu mevcut değil."
 
 #: include/global_arrays.php:189
 msgid "XML: Hash version does not exist."
@@ -6047,17 +6058,20 @@ msgstr "Veri Girişi Alanı Kayıtlı. Grafikler veya Veri Kaynakları oluşturm
 msgid "Data Input Field Saved.  You must update the Data Templates referencing this Data Input Method before the Data Collectors will start using any new or modified Data Input - Input Fields."
 msgstr "Veri Girişi Alanı Kayıtlı. Veri Toplayıcıları herhangi bir yeni veya değiştirilmiş Veri Girişi Giriş Alanını kullanmaya başlamadan önce, bu Veri Girişi Yöntemine başvuran Veri Şablonlarını güncellemelisiniz."
 
+#, fuzzy
 #: include/global_arrays.php:288
 msgid "Log file specified is not a Kadupul log or archive file."
-msgstr "Belirtilen günlük dosyası kaktüsler günlüğü veya arşiv dosyası değil."
+msgstr "Belirtilen günlük dosyası Kadupul günlüğü veya arşiv dosyası değil."
 
+#, fuzzy
 #: include/global_arrays.php:291
 msgid "Log file specified was Kadupul archive file and was removed."
-msgstr "Belirtilen günlük dosyası Kaktüs arşiv dosyasıydı ve kaldırıldı."
+msgstr "Belirtilen günlük dosyası Kadupul arşiv dosyasıydı ve kaldırıldı."
 
+#, fuzzy
 #: include/global_arrays.php:294
 msgid "Kadupul log purged successfully"
-msgstr "Kaktüsler günlüğü başarıyla temizlendi"
+msgstr "Kadupul günlüğü başarıyla temizlendi"
 
 #: include/global_arrays.php:297
 msgid "If you force a password change, you must also allow the user to change their password."
@@ -6120,9 +6134,10 @@ msgstr "Uzak Veri Toplayıcı ile MySQL bağlantısı kurulamıyor."
 msgid "Data Collector synchronization must be initiated from the main Kadupul server."
 msgstr "Veri Toplayıcı senkronizasyonu ana Kadupul sunucusundan başlatılmalıdır."
 
+#, fuzzy
 #: include/global_arrays.php:342
 msgid "Synchronization does not include the Central Kadupul Database server."
-msgstr "Senkronizasyon, Merkezi Kaktüs Veri Tabanı sunucusunu içermez."
+msgstr "Senkronizasyon, Merkezi Kadupul Veri Tabanı sunucusunu içermez."
 
 #: include/global_arrays.php:345
 msgid "When saving a Remote Data Collector, the Database Hostname must be unique from all others."
@@ -6813,9 +6828,10 @@ msgstr "Erişim Noktaları, Denetleyiciler"
 msgid "Application Related"
 msgstr "Otomasyon Kurallarını Uygula"
 
+#, fuzzy
 #: include/global_arrays.php:1085
 msgid "Kadupul Related"
-msgstr "Kaktüsler Raporu"
+msgstr "Kadupul Raporu"
 
 #: include/global_arrays.php:1086
 msgid "Database Related"
@@ -7905,9 +7921,10 @@ msgstr "VDEF Öğeleri"
 msgid "View SNMP Notification Receivers"
 msgstr "SNMP Bildirim Alıcılarını Görüntüleyin"
 
+#, fuzzy
 #: include/global_arrays.php:2571
 msgid "Kadupul Settings"
-msgstr "Kaktüs Ayarları"
+msgstr "Kadupul Ayarları"
 
 #: include/global_arrays.php:2577
 msgid "External Link"
@@ -7917,9 +7934,10 @@ msgstr "Dış Bağlantı"
 msgid "(Action)"
 msgstr "Eylem:"
 
+#, fuzzy
 #: include/global_arrays.php:2637
 msgid "Kadupul Help"
-msgstr "Kaktüsler Ana Sayfa"
+msgstr "Kadupul Ana Sayfa"
 
 #: include/global_arrays.php:2649
 msgid "Export Results"
@@ -8079,9 +8097,10 @@ msgstr "SNMP için kullanılacak UDP port numarasını girin (varsayılan 161)."
 msgid "SNMP Timeout"
 msgstr "SNMP Zaman Aşımı"
 
+#, fuzzy
 #: include/global_form.php:129
 msgid "The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support)."
-msgstr "Maksimum milisaniye kaktüs sayısı SNMP yanıtını bekleyecektir (php-snmp desteği ile çalışmaz)."
+msgstr "Maksimum milisaniye Kadupul sayısı SNMP yanıtını bekleyecektir (php-snmp desteği ile çalışmaz)."
 
 #: include/global_form.php:140
 msgid "Maximum OIDs Per Get Request"
@@ -9544,9 +9563,10 @@ msgstr "PHP ikili dosyanızın yolu (bu dosyayı almak için bir php yeniden der
 msgid "Logging"
 msgstr "Günlükleme"
 
+#, fuzzy
 #: include/global_settings.php:164
 msgid "Kadupul Log Path"
-msgstr "Kaktüsler Günlük Yolu"
+msgstr "Kadupul Günlük Yolu"
 
 #: include/global_settings.php:165
 msgid "The path to your Kadupul log file (if blank, defaults to &lt;path_cacti&gt;/log/cacti.log)"
@@ -9560,9 +9580,10 @@ msgstr "Poller Standart Hata Günlüğü Yolu"
 msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
 msgstr "Kadupul&#39;nin Veri Toplayıcıları ile ilgili sorunlarınız varsa, bu dosya yolunu ayarlayın ve Veri Toplayıcıları standart hatası bu dosyaya yönlendirilecek"
 
+#, fuzzy
 #: include/global_settings.php:184
 msgid "Rotate the Kadupul Log"
-msgstr "Kaktüs Günlüğünü Döndür"
+msgstr "Kadupul Günlüğünü Döndür"
 
 #: include/global_settings.php:185
 msgid "This option will rotate the Kadupul Log periodically."
@@ -9720,9 +9741,10 @@ msgstr "Uluslararasılaştırma (i18n)"
 msgid "Language Support"
 msgstr "Dil Desteği"
 
+#, fuzzy
 #: include/global_settings.php:335
 msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
-msgstr "Kaktüslerin yerelleştirilmesine izin vermek için &#39;etkin&#39; seçeneğini seçin. Sıkı mod, istenen dilin sisteminizde kurulu olan tüm eklentiler tarafından da desteklenmesini gerektirir. Gerçek bu değilse, her şey İngilizce olarak gösterilecektir."
+msgstr "Kadupul yerelleştirilmesine izin vermek için &#39;etkin&#39; seçeneğini seçin. Sıkı mod, istenen dilin sisteminizde kurulu olan tüm eklentiler tarafından da desteklenmesini gerektirir. Gerçek bu değilse, her şey İngilizce olarak gösterilecektir."
 
 #: include/global_settings.php:341
 msgid "Language"
@@ -9744,9 +9766,10 @@ msgstr "Kullanıcının &#39;varsayılan&#39; dilini otomatik olarak belirlemeye
 msgid "Preferred Language Processor"
 msgstr "Tercih Edilen Dil İşlemcisi"
 
+#, fuzzy
 #: include/global_settings.php:359
 msgid "Kadupul includes support for multiple alternate Language Translation Processors.  If none is selected Kadupul will attempt to use the first one found."
-msgstr "Kaktüsler, birden çok alternatif Dil Çeviri İşlemcisi için destek içerir. Varsayılan olarak yerleşik PHP desteği kullanılacaktır, ancak tüm Linux türevleri yerleşik Dil Desteğini içermez. Seçilmezse, Kadupul ilk bulunanı seçecektir."
+msgstr "Kadupul, birden çok alternatif Dil Çeviri İşlemcisi için destek içerir. Varsayılan olarak yerleşik PHP desteği kullanılacaktır, ancak tüm Linux türevleri yerleşik Dil Desteğini içermez. Seçilmezse, Kadupul ilk bulunanı seçecektir."
 
 #: include/global_settings.php:365
 msgid "Client TimeZone Support"
@@ -9872,17 +9895,19 @@ msgstr "Öğe silmeden önce kullanıcıyı isteyin."
 msgid "Data Source Preservation Preset"
 msgstr "Grafik / Veri Kaynağı Oluşturma Yöntemi"
 
+#, fuzzy
 #: include/global_settings.php:460
 msgid "When enabled, Kadupul will set Radio Button to Delete related Data Sources of a Graph when removing Graphs.  Note: Kadupul will not allow the removal of Data Sources if they are used in other Graphs."
-msgstr "Etkinleştirildiğinde, Kadupul, Grafikleri kaldırırken Radyo Düğmesini Grafiğin İlgili Veri Kaynaklarını Sil olarak ayarlayacaktır. Not: Kaktüsler, diğer Grafiklerde kullanılıyorsa Veri Kaynaklarının kaldırılmasına izin vermez."
+msgstr "Etkinleştirildiğinde, Kadupul, Grafikleri kaldırırken Radyo Düğmesini Grafiğin İlgili Veri Kaynaklarını Sil olarak ayarlayacaktır. Not: Kadupul, diğer Grafiklerde kullanılıyorsa Veri Kaynaklarının kaldırılmasına izin vermez."
 
 #: include/global_settings.php:465
 msgid "Graphs Auto Unlock"
 msgstr "Grafik Eşleştirme Kuralı"
 
+#, fuzzy
 #: include/global_settings.php:466
 msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
-msgstr "Etkinleştirildiğinde, Kaktüsler Grafikleri kilitlemez. Bu, bir Grafikle ilgili Veri Kaynaklarının daha hızlı manuel olarak değiştirilmesine izin verir."
+msgstr "Etkinleştirildiğinde, Kadupul Grafikleri kilitlemez. Bu, bir Grafikle ilgili Veri Kaynaklarının daha hızlı manuel olarak değiştirilmesine izin verir."
 
 #: include/global_settings.php:471
 msgid "Hide Kadupul Dashboard"
@@ -10649,9 +10674,10 @@ msgstr "Kullanılan yoklama aralığı. Bu ayar RRD dosyalarının ne sıklıkla
 msgid "Cron/Daemon Interval"
 msgstr "Tekrar (Cron) aralığı"
 
+#, fuzzy
 #: include/global_settings.php:1233
 msgid "The frequency that the Kadupul data collector will be started.  You can use either crontab, a scheduled task (for windows), or the cactid systemd service to control launching the Kadupul data collector.  For instructions on using the cactid daemon, review the README.md file in the service directory."
-msgstr "Kadupul veri toplayıcının başlatılacağı frekans. Kadupul veri toplayıcının başlatılmasını kontrol etmek için crontab, zamanlanmış bir görev (Windows için) veya cactid systemd hizmetini kullanabilirsiniz. Kaktüs arka plan programının kullanımına ilişkin talimatlar için hizmet dizinindeki README.md dosyasını inceleyin."
+msgstr "Kadupul veri toplayıcının başlatılacağı frekans. Kadupul veri toplayıcının başlatılmasını kontrol etmek için crontab, zamanlanmış bir görev (Windows için) veya cactid systemd hizmetini kullanabilirsiniz. Kadupul arka plan programının kullanımına ilişkin talimatlar için hizmet dizinindeki README.md dosyasını inceleyin."
 
 #: include/global_settings.php:1239
 msgid "Balance Process Load"
@@ -10681,9 +10707,10 @@ msgstr "OID ağacını yürürken OID artışını devre dışı bırakma kontro
 msgid "Remote Agent Timeout"
 msgstr "Uzak Ajan Zaman Aşımı"
 
+#, fuzzy
 #: include/global_settings.php:1258
 msgid "The amount of time, in seconds, that the Central Kadupul web server will wait for a response from the Remote Data Collector to obtain various Device information before abandoning the request.  On Devices that are associated with Data Collectors other than the Central Kadupul Data Collector, the Remote Agent must be used to gather Device information."
-msgstr "Central Kadupul web sunucusunun, isteği terk etmeden önce, Uzak Veri Toplayıcı&#39;dan çeşitli Cihaz bilgileri alması için bir yanıt bekleyeceği saniye cinsinden süre. Merkezi Kaktüs Veri Toplayıcısı dışındaki Veri Toplayıcılarla ilişkilendirilen Aygıtlarda, Aygıt bilgilerini toplamak için Uzak Aracı kullanılmalıdır."
+msgstr "Central Kadupul web sunucusunun, isteği terk etmeden önce, Uzak Veri Toplayıcı&#39;dan çeşitli Cihaz bilgileri alması için bir yanıt bekleyeceği saniye cinsinden süre. Merkezi Kadupul Veri Toplayıcısı dışındaki Veri Toplayıcılarla ilişkilendirilen Aygıtlarda, Aygıt bilgilerini toplamak için Uzak Aracı kullanılmalıdır."
 
 #: include/global_settings.php:1269
 msgid "SNMP Bulkwalk Fetch Size"
@@ -10713,9 +10740,10 @@ msgstr "Bu ayar, bellek tablosunun takas kullanabilecek büyük veritabanlarına
 msgid "Disable Resource Cache Replication"
 msgstr "Kaynak Önbelleğini Yeniden Oluştur"
 
+#, fuzzy
 #: include/global_settings.php:1304
 msgid "By default, the main Kadupul Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Kadupul Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting."
-msgstr "Varsayılan olarak, ana Kaktüs Veri Toplayıcı tüm web sitesini ve eklentileri bir Kaynak Önbelleği'nde önbelleğe alır. Ardından, Uzak Veri Toplayıcıları periyodik olarak kendilerini ana Kaktüs Veri Toplayıcısından gelen güncellemelerle güncelleyecektir. Bu Kaynak Önbellek, esasen Uzak Veri Toplayıcıların kendi kendini yükseltmelerine izin verir. Bu seçeneği kullanmak istemiyorsanız, bu ayarı kullanarak devre dışı bırakabilirsiniz."
+msgstr "Varsayılan olarak, ana Kadupul Veri Toplayıcı tüm web sitesini ve eklentileri bir Kaynak Önbelleği'nde önbelleğe alır. Ardından, Uzak Veri Toplayıcıları periyodik olarak kendilerini ana Kadupul Veri Toplayıcısından gelen güncellemelerle güncelleyecektir. Bu Kaynak Önbellek, esasen Uzak Veri Toplayıcıların kendi kendini yükseltmelerine izin verir. Bu seçeneği kullanmak istemiyorsanız, bu ayarı kullanarak devre dışı bırakabilirsiniz."
 
 #: include/global_settings.php:1309
 msgid "Additional Data Collector Settings"
@@ -11161,9 +11189,10 @@ msgstr "Lütfen SMTP zaman aşımını saniye cinsinden girin."
 msgid "LDAP Debug Mode"
 msgstr "LDAP Hata Ayıklama Modu"
 
+#, fuzzy
 #: include/global_settings.php:1743
 msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities."
-msgstr "Kontrol Edilirse Kaktüsler, Bağlama ve Arama faaliyetleri sırasında Kaktüsler günlüğüne fazladan LDAP bilgisi kaydeder."
+msgstr "Kontrol Edilirse Kadupul, Bağlama ve Arama faaliyetleri sırasında Kadupul günlüğüne fazladan LDAP bilgisi kaydeder."
 
 #: include/global_settings.php:1748 user_domains.php:394
 msgid "Encryption"
@@ -11461,9 +11490,10 @@ msgstr "Maksimum E-Posta Boyutu"
 msgid "The maximum size of the E-Mail message including all attachments."
 msgstr "Tüm ekleri içeren e-posta mesajının maksimum boyutu."
 
+#, fuzzy
 #: include/global_settings.php:2016
 msgid "Poller Logging Level for Kadupul Reporting"
-msgstr "Kaktüs Raporlaması için Poller Günlük Seviyesi"
+msgstr "Kadupul Raporlaması için Poller Günlük Seviyesi"
 
 #: include/global_settings.php:2017
 msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
@@ -11971,9 +12001,10 @@ msgstr "Grafikler sayfasını ilk ziyaret ettiğinizde varsayılan olarak hangi 
 msgid "TimeZone Support"
 msgstr "MySQL - TimeZone Desteği"
 
+#, fuzzy
 #: include/global_settings.php:2581
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
-msgstr "Kaktüslerin tarihleri nasıl sunmasını istersiniz?  Bu ayar aynı zamanda Kadupul Graphs tarihlerinin gösterilme şeklini de değiştirecektir."
+msgstr "Kadupul tarihleri nasıl sunmasını istersiniz?  Bu ayar aynı zamanda Kadupul Graphs tarihlerinin gösterilme şeklini de değiştirecektir."
 
 #: include/global_settings.php:2584
 msgid "Kadupul Server Timezone"
@@ -12180,9 +12211,10 @@ msgstr "Ağaçtaki bir Aygıt tarafından kullanılan Grafik Şablonlarının ve
 msgid "Tree History"
 msgstr "Şifre Geçmişi"
 
+#, fuzzy
 #: include/global_settings.php:2791
 msgid "If enabled, Kadupul will remember your Tree History between logins and when you return to the Graphs page."
-msgstr "Etkinleştirilirse, Kaktüsler girişler arasındaki ve Grafikler sayfasına döndüğünüzde Ağaç Geçmişinizi hatırlar."
+msgstr "Etkinleştirilirse, Kadupul girişler arasındaki ve Grafikler sayfasına döndüğünüzde Ağaç Geçmişinizi hatırlar."
 
 #: include/global_settings.php:2814
 msgid "Use Custom Fonts"
@@ -12296,9 +12328,10 @@ msgstr "Uzaktan Veri Toplayıcı Durumu:"
 msgid "Number of Offline Records:"
 msgstr "Çevrimdışı Kayıt Sayısı:"
 
+#, fuzzy
 #: index.php:82
 msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Kadupul Database for updating."
-msgstr "<strong>NOT:</strong> Uzak Veri Toplayıcıya giriş yaptınız. <b>&#39;Online&#39;</b> olduğunda, Ana Kadupul Web Sitesinin çoğunu, sanki giriş yapmış gibi görüntüleyebilir ve kontrol edebilirsiniz. Ayrıca, Uzaktan Veri Toplayıcıların Kadupul&#39;nin Performans Artırma Hizmetleri <b>&#39;İsteğe Bağlı Güncelleme&#39;</b> özelliğini kullanması gerektiğini unutmayın ve daima Spine kullanmanızı öneririz. Uzak Veri Toplayıcı <b>&#39;çevrimdışı&#39;</b> olduğunda, Uzak Veri Toplayıcıları Web Sitesi çok daha az bilgi içerir. Bununla birlikte, Ana Kaktüs Veri Tabanı ve Web Sunucusu erişilinceye kadar tüm güncellemeleri önbelleğe alır. Ardından, Boost tablo çıkışını güncelleme için Ana Kaktüs Veri Tabanına geri gönderir."
+msgstr "<strong>NOT:</strong> Uzak Veri Toplayıcıya giriş yaptınız. <b>&#39;Online&#39;</b> olduğunda, Ana Kadupul Web Sitesinin çoğunu, sanki giriş yapmış gibi görüntüleyebilir ve kontrol edebilirsiniz. Ayrıca, Uzaktan Veri Toplayıcıların Kadupul&#39;nin Performans Artırma Hizmetleri <b>&#39;İsteğe Bağlı Güncelleme&#39;</b> özelliğini kullanması gerektiğini unutmayın ve daima Spine kullanmanızı öneririz. Uzak Veri Toplayıcı <b>&#39;çevrimdışı&#39;</b> olduğunda, Uzak Veri Toplayıcıları Web Sitesi çok daha az bilgi içerir. Bununla birlikte, Ana Kadupul Veri Tabanı ve Web Sunucusu erişilinceye kadar tüm güncellemeleri önbelleğe alır. Ardından, Boost tablo çıkışını güncelleme için Ana Kadupul Veri Tabanına geri gönderir."
 
 #: index.php:87
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
@@ -12323,9 +12356,9 @@ msgid "Kadupul Server v%s - Maintenance"
 msgstr "Kadupul Sunucu v %s - Bakım"
 
 #: install/install.php:100
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Server v%s - Installation Wizard"
-msgstr "Kaktüsler Server v %s - Kurulum Sihirbazı"
+msgstr "Kadupul Server v %s - Kurulum Sihirbazı"
 
 #: install/install.php:100
 msgid "Refresh current page"
@@ -12732,9 +12765,10 @@ msgstr "LDAP Arama Hatası: %s"
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Erişim Reddedildi!  Şablon kullanıcı kimliği %s mevcut değil.  Lütfen Yöneticinizle iletişime geçin."
 
+#, fuzzy
 #: lib/auth.php:4300
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "Kaktüs yöneticiniz girişler için karmaşık şifreleri zorladı ve mevcut Kaktüs şifreniz yeni gereksinimlere uymuyor. Bu nedenle, şimdi şifrenizi değiştirmeniz gerekir."
+msgstr "Kadupul yöneticiniz girişler için karmaşık şifreleri zorladı ve mevcut Kadupul şifreniz yeni gereksinimlere uymuyor. Bu nedenle, şimdi şifrenizi değiştirmeniz gerekir."
 
 #: lib/auth.php:4331
 #, php-format
@@ -12753,9 +12787,10 @@ msgstr "Şifreniz küçük harf ve büyük harflerden oluşan bir karışım iç
 msgid "Your password must contain at least 1 special character!"
 msgstr "Şifreniz en az 1 özel karakter içermelidir!"
 
+#, fuzzy
 #: lib/auth.php:4676
 msgid "Kadupul Login Failure"
-msgstr "Kaktüs Günlüğü Temizlendi"
+msgstr "Kadupul Günlüğü Temizlendi"
 
 #: lib/auth.php:4959
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
@@ -12777,9 +12812,9 @@ msgid "%s Bytes"
 msgstr "%s GBytes"
 
 #: lib/clog_webapi.php:113 utilities.php:1613
-#, php-format
+#, fuzzy, php-format
 msgid "%s - WEBUI NOTE: Kadupul Log Cleared from Web Management Interface."
-msgstr "%s - WEBUI NOT: Kaktüs Günlüğü, Web Yönetim Arayüzünden Temizlendi."
+msgstr "%s - WEBUI NOT: Kadupul Günlüğü, Web Yönetim Arayüzünden Temizlendi."
 
 #: lib/clog_webapi.php:220
 msgid "Click 'Continue' to purge the Log File.<br><br><br>Note: If logging is set to both Kadupul and Syslog, the log information will remain in Syslog."
@@ -13528,9 +13563,10 @@ msgstr "Mesaj Metni Oluşturuluyor ..."
 msgid "Sending Message..."
 msgstr "Mesaj Gönderiliyor..."
 
+#, fuzzy
 #: lib/functions.php:5634
 msgid "Kadupul Test Message"
-msgstr "Kaktüsler Test Mesajı"
+msgstr "Kadupul Test Mesajı"
 
 #: lib/functions.php:5636
 msgid "Success!"
@@ -13566,9 +13602,9 @@ msgid "%s %s"
 msgstr "%s %s"
 
 #: lib/functions.php:6993
-#, php-format
+#, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
-msgstr "UYARI:  Anahtar Kaktüsler %s Dosyasını İçeriyor eksik.  Lütfen bu dosyayı bulun ve değiştirin"
+msgstr "UYARI:  Anahtar Kadupul %s Dosyasını İçeriyor eksik.  Lütfen bu dosyayı bulun ve değiştirin"
 
 #: lib/graphs.php:44
 msgid "Aggregated Device"
@@ -13763,9 +13799,10 @@ msgstr "Öğe Rengi"
 msgid "Help"
 msgstr "Yardım"
 
+#, fuzzy
 #: lib/html.php:2577
 msgid "Kadupul Home"
-msgstr "Kaktüsler Ana Sayfa"
+msgstr "Kadupul Ana Sayfa"
 
 #: lib/html.php:2579
 msgid "Miscellaneous"
@@ -13779,9 +13816,10 @@ msgstr "Gösterge tabloları"
 msgid "Charts"
 msgstr "Grafikler"
 
+#, fuzzy
 #: lib/html.php:2583
 msgid "Kadupul Project Page"
-msgstr "Kaktüsler Proje Sayfası"
+msgstr "Kadupul Proje Sayfası"
 
 #: lib/html.php:2587
 msgid "Spine"
@@ -13799,9 +13837,10 @@ msgstr "Klavye"
 msgid "Shortcuts"
 msgstr "Kısayollar"
 
+#, fuzzy
 #: lib/html.php:2591
 msgid "Contribute to the Kadupul Project"
-msgstr "Kaktüs Günlüğünü Döndür"
+msgstr "Kadupul Günlüğünü Döndür"
 
 #: lib/html.php:2592
 msgid "Help in Developing"
@@ -13823,9 +13862,10 @@ msgstr "Çeviride Yardım"
 msgid "Report a bug"
 msgstr "Hata bildir"
 
+#, fuzzy
 #: lib/html.php:2600
 msgid "Kadupul"
-msgstr "Kaktüsgiller"
+msgstr "Kadupul"
 
 #: lib/html.php:2602
 msgid "Click to Show/Hide Filter"
@@ -14064,9 +14104,9 @@ msgid "Enter a valid directory path"
 msgstr "Geçerli bir dizin yolu girin"
 
 #: lib/html_form.php:1275
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Color (%s)"
-msgstr "Kaktüs Rengi ( %s)"
+msgstr "Kadupul Rengi ( %s)"
 
 #: lib/html_form.php:1340
 msgid "NO FONT VERIFICATION POSSIBLE"
@@ -14328,9 +14368,10 @@ msgstr "E-posta Gönderen / Alıcı Ayrıntıları"
 msgid "Subject"
 msgstr "Konu"
 
+#, fuzzy
 #: lib/html_reports.php:164
 msgid "Kadupul Report"
-msgstr "Kaktüsler Raporu"
+msgstr "Kadupul Raporu"
 
 #: lib/html_reports.php:165
 msgid "This value will be used as the default Email subject.  The report name will be used if left blank."
@@ -14717,13 +14758,15 @@ msgstr "Seçili"
 msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "&quot; %s&quot; arama terimi geçerli değil. Hata %s"
 
+#, fuzzy
 #: lib/html_utility.php:1129
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
-msgstr "Kaktüslerin normal ifadeleri yalnızca güvenlik nedeniyle 50 karakterle sınırlıdır."
+msgstr "Kadupul normal ifadeleri yalnızca güvenlik nedeniyle 50 karakterle sınırlıdır."
 
+#, fuzzy
 #: lib/html_utility.php:1133
 msgid "Kadupul regular expressions can not includes the semi-color character."
-msgstr "Kaktüslerin düzenli ifadeleri yarı renkli karakteri içeremez."
+msgstr "Kadupul düzenli ifadeleri yarı renkli karakteri içeremez."
 
 #: lib/html_utility.php:1153
 msgid "There was an internal error!"
@@ -14804,9 +14847,10 @@ msgstr "İçeri Aktarma Sonuçları"
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Paket ithal edildiyse, Kadupul aşağıdaki değişiklikleri yapar:"
 
+#, fuzzy
 #: lib/import.php:2642
 msgid "Kadupul has imported the following items for the Package:"
-msgstr "Kaktüsler, Paket için aşağıdaki öğeleri içe aktardı:"
+msgstr "Kadupul, Paket için aşağıdaki öğeleri içe aktardı:"
 
 #: lib/import.php:2645
 msgid "Package Files"
@@ -14820,9 +14864,10 @@ msgstr "Önizleme"
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Şablon içe aktarılırsa, Kadupul aşağıdaki değişiklikleri yapar:"
 
+#, fuzzy
 #: lib/import.php:2656
 msgid "Kadupul has imported the following items for the Template:"
-msgstr "Kaktüsler, Şablon için aşağıdaki öğeleri içe aktardı:"
+msgstr "Kadupul, Şablon için aşağıdaki öğeleri içe aktardı:"
 
 #: lib/import.php:2671
 msgid "[success]"
@@ -14951,13 +14996,15 @@ msgstr "NOT: Mevcut verileriniz değiştirilmeyecek, ya da yeni kurulum için he
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
 msgstr "Yeni bir veritabanı oluşturdunuz, ancak &#39;cacti.sql&#39; dosyasını henüz içe aktarmadınız. Komut satırında, devam etmek için aşağıdakileri yürütün:"
 
+#, fuzzy
 #: lib/installer.php:1592
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Kadupul database. Please ensure that the Kadupul database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Kadupul database."
-msgstr "Bu hata, kaktüs veritabanı kullanıcısı, Kaktüs veritabanı üzerinde doğru izinlere sahip değilse de oluşabilir. Lütfen Kadupul veritabanı kullanıcısının Kadupul veri tabanında SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX özelliklerine sahip olduğundan emin olun."
+msgstr "Bu hata, Kadupul veritabanı kullanıcısı, Kadupul veritabanı üzerinde doğru izinlere sahip değilse de oluşabilir. Lütfen Kadupul veritabanı kullanıcısının Kadupul veri tabanında SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX özelliklerine sahip olduğundan emin olun."
 
+#, fuzzy
 #: lib/installer.php:1593
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"
-msgstr "Ayrıca MySQL içine MySQL TimeZone bilgileri almak ve Kaktüs kullanıcıya mysql.time_zone_name masaya SEÇ erişim izni <b>GEREKİR</b>"
+msgstr "Ayrıca MySQL içine MySQL TimeZone bilgileri almak ve Kadupul kullanıcıya mysql.time_zone_name masaya SEÇ erişim izni <b>GEREKİR</b>"
 
 #: lib/installer.php:1596
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
@@ -14988,9 +15035,10 @@ msgstr "Yükselt"
 msgid "Downgrade"
 msgstr "Versiyon Düşür"
 
+#, fuzzy
 #: lib/installer.php:1740 utilities.php:265
 msgid "Kadupul Version"
-msgstr "Kaktüs Versiyonu"
+msgstr "Kadupul Versiyonu"
 
 #: lib/installer.php:1740
 msgid "License Agreement"
@@ -15024,9 +15072,10 @@ msgstr "Ayrıca, bu bir yükseltme ise, <a href=\"%s\">Yükseltme</a> bilgi dosy
 msgid "It is NOT recommended to downgrade as the database structure may be inconsistent"
 msgstr "Veri tabanı yapısı tutarsız olabileceğinden düşürülmesi önerilmez."
 
+#, fuzzy
 #: lib/installer.php:1758
 msgid "Kadupul is licensed under the GNU General Public License, you must agree to its provisions before continuing:"
-msgstr "Kaktüsler, GNU Genel Kamu Lisansı altında lisanslıdır, devam etmeden önce hükümlerini kabul etmeniz gerekir:"
+msgstr "Kadupul, GNU Genel Kamu Lisansı altında lisanslıdır, devam etmeden önce hükümlerini kabul etmeniz gerekir:"
 
 #: lib/installer.php:1762
 msgid "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
@@ -15278,9 +15327,10 @@ msgstr "Remote Poller&#39;ı yapılandırmak için config.php dosyanızın kurul
 msgid "Configuration of Poller"
 msgstr "Poller yapılandırması"
 
+#, fuzzy
 #: lib/installer.php:2174
 msgid "Your Remote Kadupul Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Kadupul database server.  Correct this and try again."
-msgstr "Remote Kadupul Poller bilgileriniz config.php dosyanıza eklenmedi. Lütfen config.php.dist <i>dosyasını inceleyin</i> ve değişkenleri ayarlayın: <i>$ rdatabase_default, $ rdatabase_username</i> , vb. Bu değişkenlerin ayarlanması ve Birincil Kaktüs veritabanı sunucunuzu göstermesi gerekir. Bunu düzeltin ve tekrar deneyin."
+msgstr "Remote Kadupul Poller bilgileriniz config.php dosyanıza eklenmedi. Lütfen config.php.dist <i>dosyasını inceleyin</i> ve değişkenleri ayarlayın: <i>$ rdatabase_default, $ rdatabase_username</i> , vb. Bu değişkenlerin ayarlanması ve Birincil Kadupul veritabanı sunucunuzu göstermesi gerekir. Bunu düzeltin ve tekrar deneyin."
 
 #: lib/installer.php:2178
 msgid "Remote Poller Variables"
@@ -15358,9 +15408,10 @@ msgstr "Kurulum Tamamlandıktan Sonra Gerekli Yazılabilir"
 msgid "Potential permission issues"
 msgstr "Potansiyel izin sorunları"
 
+#, fuzzy
 #: lib/installer.php:2382
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
-msgstr "Lütfen web sunucunuzun, aşağıdaki hataları gösteren kaktüs klasörlerine okuma / yazma erişimi olduğundan emin olun."
+msgstr "Lütfen web sunucunuzun, aşağıdaki hataları gösteren Kadupul klasörlerine okuma / yazma erişimi olduğundan emin olun."
 
 #: lib/installer.php:2385
 msgid "If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools."
@@ -15391,9 +15442,10 @@ msgstr "Tüm klasörler yazılabilir"
 msgid "Input Validation Whitelist Protection"
 msgstr "Giriş Doğrulama Beyaz Listesi Koruması"
 
+#, fuzzy
 #: lib/installer.php:2420
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
-msgstr "Bir komut dosyasını çağıran Kaktüs Veri Girişi yöntemlerinde, yönetici olmayan bir kişinin poller hesabının sahip olduğu dosyalara zarar verebileceği ve birisinin Kadupul poller'ı kök olarak çalıştırdığı durumlarda saldırganların altyapınızı kullanın."
+msgstr "Bir komut dosyasını çağıran Kadupul Veri Girişi yöntemlerinde, yönetici olmayan bir kişinin poller hesabının sahip olduğu dosyalara zarar verebileceği ve birisinin Kadupul poller'ı kök olarak çalıştırdığı durumlarda saldırganların altyapınızı kullanın."
 
 #: lib/installer.php:2421
 msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
@@ -15448,9 +15500,10 @@ msgstr "Tekrar (Cron) aralığı"
 msgid "Default Automation Network"
 msgstr "Varsayılan Otomasyon Ağı"
 
+#, fuzzy
 #: lib/installer.php:2487
 msgid "Kadupul can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
-msgstr "Kaktüsler kurulum tamamlandığında ağı otomatik olarak tarayabilir. Bu, taranabilecek IP&#39;lerin aralığını belirlemek için aşağıdaki ağ aralığını kullanacaktır. Tarama için, hem &#39;herkese açık&#39; hem de &#39;özel&#39; toplulukları içeren önceden tanımlanmış bir seçenek kümesi tanımlanmıştır."
+msgstr "Kadupul kurulum tamamlandığında ağı otomatik olarak tarayabilir. Bu, taranabilecek IP&#39;lerin aralığını belirlemek için aşağıdaki ağ aralığını kullanacaktır. Tarama için, hem &#39;herkese açık&#39; hem de &#39;özel&#39; toplulukları içeren önceden tanımlanmış bir seçenek kümesi tanımlanmıştır."
 
 #: lib/installer.php:2488
 msgid "If your devices require a different set of options to be used first, you may define them below and they will be utilized before the defaults"
@@ -15782,9 +15835,10 @@ msgstr "Aygıt Varsayılanları"
 msgid "No templated graphs for Default Device were found"
 msgstr "Varsayılan Cihaz için şablon grafik bulunamadı"
 
+#, fuzzy
 #: lib/installer.php:3324
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
-msgstr "UYARI: İşletim Sisteminizin Aygıt Şablonu Bulunamadı. Kadupul sunucunuzu izlemek için Aygıt Şablonlarını veya Kaktüs Paketlerini içe aktarmanız gerekir."
+msgstr "UYARI: İşletim Sisteminizin Aygıt Şablonu Bulunamadı. Kadupul sunucunuzu izlemek için Aygıt Şablonlarını veya Kadupul Paketlerini içe aktarmanız gerekir."
 
 #: lib/installer.php:3331
 msgid "Running first-time data query for local host"
@@ -16084,9 +16138,9 @@ msgid "Plugins"
 msgstr "Eklentiler"
 
 #: lib/plugins.php:1317 lib/plugins.php:1323
-#, php-format
+#, fuzzy, php-format
 msgid "Requires: Kadupul >= %s"
-msgstr "Gerektirir: Kaktüsler&gt; = %s"
+msgstr "Gerektirir: Kadupul&gt; = %s"
 
 #: lib/plugins.php:1320
 msgid "Legacy Plugin"
@@ -16209,9 +16263,9 @@ msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider
 msgstr ""
 
 #: lib/rrd.php:3187
-#, php-format
+#, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
-msgstr "Kaktüsler için XFF RRA kimliği &#39; %s&#39; &#39; %s&#39; olmalıdır"
+msgstr "Kadupul için XFF RRA kimliği &#39; %s&#39; &#39; %s&#39; olmalıdır"
 
 #: lib/rrd.php:3191
 #, php-format
@@ -16338,7 +16392,7 @@ msgstr "RRA Klasörü"
 msgid "Root"
 msgstr "Kök"
 
-#: lib/rrd.php:4079
+#: lib/rrd.php:4082
 msgid "Unknown RRDtool Error"
 msgstr "Bilinmeyen RRDtool Hatası"
 
@@ -16981,21 +17035,25 @@ msgstr "Dış Bağlantılar [değiştir: %s]"
 msgid "External Links [new]"
 msgstr "Dış Bağlantılar [yeni]"
 
+#, fuzzy
 #: logout.php:49
 msgid "You have been logged out of Kadupul due to a session timeout."
-msgstr "Bir oturum zaman aşımı nedeniyle Kaktüsler&#39;den çıkış yaptınız."
+msgstr "Bir oturum zaman aşımı nedeniyle Kadupul&#39;den çıkış yaptınız."
 
+#, fuzzy
 #: logout.php:51
 msgid "You have been logged out of Kadupul due to an account suspension."
-msgstr "Bir oturum zaman aşımı nedeniyle Kaktüsler&#39;den çıkış yaptınız."
+msgstr "Bir oturum zaman aşımı nedeniyle Kadupul&#39;den çıkış yaptınız."
 
+#, fuzzy
 #: logout.php:53
 msgid "You have been logged out of Kadupul due to a Remote Data Collector state change"
-msgstr "Bir oturum zaman aşımı nedeniyle Kaktüsler&#39;den çıkış yaptınız."
+msgstr "Bir oturum zaman aşımı nedeniyle Kadupul&#39;den çıkış yaptınız."
 
+#, fuzzy
 #: logout.php:61
 msgid "Logout of Kadupul"
-msgstr "Kaktüsler Oturumu Kapat"
+msgstr "Kadupul Oturumu Kapat"
 
 #: logout.php:68
 msgid "Automatic Logout"
@@ -17486,9 +17544,10 @@ msgstr ""
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr ""
 
+#, fuzzy
 #: poller.php:890
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "UYARI: Kaktüs Yoklama Döngüsü, Poller Aralığını Şu Kadar Aştı"
+msgstr "UYARI: Kadupul Yoklama Döngüsü, Poller Aralığını Şu Kadar Aştı"
 
 #: poller.php:915
 #, php-format
@@ -17499,9 +17558,10 @@ msgstr ""
 msgid "Poller in Heartbeat Mode"
 msgstr ""
 
+#, fuzzy
 #: poller.php:1174
 msgid "Kadupul System Notification"
-msgstr "Kaktüsler Sistem Araçları"
+msgstr "Kadupul Sistem Araçları"
 
 #: poller.php:1174
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
@@ -17512,13 +17572,15 @@ msgstr "NOT: İkinci bir Kadupul veri toplayıcısı eklendi. Bundan dolayı, ot
 msgid "WARNING: Main Kadupul database %s offline or in recovery"
 msgstr "UYARI: Ana Kadupul veritabanı çevrimdışı veya kurtarma aşamasında"
 
+#, fuzzy
 #: poller_automation.php:970 poller_automation.php:1021
 msgid "Kadupul Primary Admin"
-msgstr "Kaktüsler Birincil Yönetici"
+msgstr "Kadupul Birincil Yönetici"
 
+#, fuzzy
 #: poller_automation.php:1122
 msgid "Kadupul Automation Report requires an html based Email client"
-msgstr "Kaktüsler Otomasyon Raporu, html tabanlı bir E-posta istemcisi gerektirir."
+msgstr "Kadupul Otomasyon Raporu, html tabanlı bir E-posta istemcisi gerektirir."
 
 #: poller_boost.php:369
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
@@ -17687,11 +17749,12 @@ msgstr "Bu veritabanı ana makine adını '%s' zaten kullandınız. Lütfen yine
 msgid "Data Collector Statistics cleared."
 msgstr "Veri Kaynakları İstatistikleri"
 
+#, fuzzy
 #: pollers.php:552
 msgid "Click 'Continue' to delete the following Data Collector.  Note, all devices will be disassociated from this Data Collector and mapped back to the Main Kadupul Data Collector."
 msgid_plural "Click 'Continue' to delete all following Data Collectors.  Note, all devices will be disassociated from these Data Collectors and mapped back to the Main Kadupul Data Collector."
-msgstr[0] "Aşağıdaki Veri Toplayıcıyı silmek için &#39;Devam Et&#39;i tıklayın. Tüm cihazların bu Veri Toplayıcı ile bağlantısı kesileceğini ve Ana Kaktüs Veri Toplayıcı ile eşleştirileceğini unutmayın."
-msgstr[1] "Aşağıdaki tüm Veri Toplayıcıları silmek için &#39;Devam Et&#39;i tıklayın. Tüm cihazların bu Veri Toplayıcılardan ayrılacağını ve Ana Kaktüs Veri Toplayıcıya geri eşleneceğini unutmayın."
+msgstr[0] "Aşağıdaki Veri Toplayıcıyı silmek için &#39;Devam Et&#39;i tıklayın. Tüm cihazların bu Veri Toplayıcı ile bağlantısı kesileceğini ve Ana Kadupul Veri Toplayıcı ile eşleştirileceğini unutmayın."
+msgstr[1] "Aşağıdaki tüm Veri Toplayıcıları silmek için &#39;Devam Et&#39;i tıklayın. Tüm cihazların bu Veri Toplayıcılardan ayrılacağını ve Ana Kadupul Veri Toplayıcıya geri eşleneceğini unutmayın."
 
 #: pollers.php:557
 msgid "Delete Data Collector"
@@ -19480,9 +19543,10 @@ msgstr "HATA: RRDtool 1.2.x +, GIF resim biçimini desteklemiyor, ancak% d &quot
 msgid "General Information"
 msgstr "Genel bilgi"
 
+#, fuzzy
 #: utilities.php:270
 msgid "Kadupul OS"
-msgstr "Kaktüs İşletim Sistemi"
+msgstr "Kadupul İşletim Sistemi"
 
 #: utilities.php:280
 msgid "NET-SNMP Version"
@@ -19505,9 +19569,10 @@ msgstr "Genel Toplam: %s"
 msgid "Poller Information"
 msgstr "Poller Bilgisi"
 
+#, fuzzy
 #: utilities.php:341
 msgid "Different version of Kadupul and Spine!"
-msgstr "Kaktüsler ve Omurga Farklı sürümü!"
+msgstr "Kadupul ve Omurga Farklı sürümü!"
 
 #: utilities.php:359
 #, php-format
@@ -19771,13 +19836,15 @@ msgstr "Günlük [Toplam Satırlar:% d - Eşleşmeyen Öğeler Gizlendi]"
 msgid "Log [Total Lines: %d - All Items Shown]"
 msgstr "Günlük [Toplam Satır:% d - Gösterilen Tüm Öğeler]"
 
+#, fuzzy
 #: utilities.php:1602
 msgid "Clear Kadupul Log"
-msgstr "Kaktüs Günlüğünü Temizle"
+msgstr "Kadupul Günlüğünü Temizle"
 
+#, fuzzy
 #: utilities.php:1615
 msgid "Kadupul Log Cleared"
-msgstr "Kaktüs Günlüğü Temizlendi"
+msgstr "Kadupul Günlüğü Temizlendi"
 
 #: utilities.php:1617
 msgid "Error: Unable to clear log, no write permissions."
@@ -19847,9 +19914,10 @@ msgstr "Komut Dosyası Sunucusu:"
 msgid "RRD:"
 msgstr "RRD:"
 
+#, fuzzy
 #: utilities.php:2286
 msgid "Kadupul technical support page.  Used by developers and technical support persons to assist with issues in Kadupul.  Includes checks for common configuration issues."
-msgstr "Kaktüsler teknik destek sayfası. Geliştiriciler ve teknik destek personeli tarafından Kadupul&#39;deki sorunlara yardımcı olmak için kullanılır. Yaygın yapılandırma sorunları için çekleri içerir."
+msgstr "Kadupul teknik destek sayfası. Geliştiriciler ve teknik destek personeli tarafından Kadupul&#39;deki sorunlara yardımcı olmak için kullanılır. Yaygın yapılandırma sorunları için çekleri içerir."
 
 #: utilities.php:2290
 msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
@@ -19955,9 +20023,10 @@ msgstr "Bu menü seçimi, SNMPAgent&#39;ın kayıtlı bildirim alıcıları ile 
 msgid "Allows Administrators to maintain SNMP notification receivers."
 msgstr "Yöneticilerin SNMP bildirim alıcılarını korumalarına izin verir."
 
+#, fuzzy
 #: utilities.php:2380
 msgid "Kadupul System Utilities"
-msgstr "Kaktüsler Sistem Araçları"
+msgstr "Kadupul Sistem Araçları"
 
 #: utilities.php:2490
 msgid "Refresh Interval"

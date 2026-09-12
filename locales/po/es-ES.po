@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-11 23:33-0700\n"
+"POT-Creation-Date: 2026-09-12 09:37-0700\n"
 "PO-Revision-Date: 2025-12-23 22:54+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -5259,9 +5259,9 @@ msgid "Set Default"
 msgstr "Establecer como predeterminado"
 
 #: help.php:37
-#, php-format
+#, fuzzy, php-format
 msgid "WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "ADVERTENCIA: Página de cactus:%s para el usuario:%s ¡Se ha generado un error fatal %d!"
+msgstr "ADVERTENCIA: Página de Kadupul:%s para el usuario:%s ¡Se ha generado un error fatal %d!"
 
 #: help.php:59
 #, php-format
@@ -12773,9 +12773,9 @@ msgid "%s Bytes"
 msgstr "%s Bytes"
 
 #: lib/clog_webapi.php:113 utilities.php:1613
-#, php-format
+#, fuzzy, php-format
 msgid "%s - WEBUI NOTE: Kadupul Log Cleared from Web Management Interface."
-msgstr "%s - NOTA DE WEBUI: Registro de cactus borrado de la interfaz de administración web."
+msgstr "%s - NOTA DE WEBUI: Registro de Kadupul borrado de la interfaz de administración web."
 
 #: lib/clog_webapi.php:220
 msgid "Click 'Continue' to purge the Log File.<br><br><br>Note: If logging is set to both Kadupul and Syslog, the log information will remain in Syslog."
@@ -13562,9 +13562,9 @@ msgid "%s %s"
 msgstr "%s %s"
 
 #: lib/functions.php:6993
-#, php-format
+#, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
-msgstr "ADVERTENCIA: Falta el archivo de inclusión de cactus clave %s.  Por favor, localice y reemplace este archivo"
+msgstr "ADVERTENCIA: Falta el archivo de inclusión de Kadupul clave %s.  Por favor, localice y reemplace este archivo"
 
 #: lib/graphs.php:44
 msgid "Aggregated Device"
@@ -14713,13 +14713,15 @@ msgstr "Seleccionado"
 msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "El términio de búsqueda \"%s\" no es válido. El error es %s"
 
+#, fuzzy
 #: lib/html_utility.php:1129
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
-msgstr "Las expresiones regulares de los cactus están limitadas a 50 caracteres solo por razones de seguridad."
+msgstr "Las expresiones regulares de los Kadupul están limitadas a 50 caracteres solo por razones de seguridad."
 
+#, fuzzy
 #: lib/html_utility.php:1133
 msgid "Kadupul regular expressions can not includes the semi-color character."
-msgstr "Las expresiones regulares de cactus no pueden incluir el carácter semicolor."
+msgstr "Las expresiones regulares de Kadupul no pueden incluir el carácter semicolor."
 
 #: lib/html_utility.php:1153
 msgid "There was an internal error!"
@@ -16335,7 +16337,7 @@ msgstr "Carpeta RRA"
 msgid "Root"
 msgstr "Raiz"
 
-#: lib/rrd.php:4079
+#: lib/rrd.php:4082
 msgid "Unknown RRDtool Error"
 msgstr "Error de rrdtool desconocido"
 
@@ -17483,9 +17485,10 @@ msgstr "ERROR: La ruta de la columna vertebral: %s no es válida para el identif
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Se ha excedido el tiempo de ejecución máximo de %d segundos para el identificador del sondeador %d. Saliendo."
 
+#, fuzzy
 #: poller.php:890
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "ADVERTENCIA: El ciclo de sondeo de cactus excedió el intervalo de sondeo por"
+msgstr "ADVERTENCIA: El ciclo de sondeo de Kadupul excedió el intervalo de sondeo por"
 
 #: poller.php:915
 #, php-format
@@ -18021,9 +18024,9 @@ msgid "NOTE: Path Settings on this Tab are only saved locally!"
 msgstr "NOTA: La configuración de ruta en esta pestaña solo se guarda localmente."
 
 #: settings.php:374
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Settings (%s)%s"
-msgstr "Configuración de cactus (%s)%s"
+msgstr "Configuración de Kadupul (%s)%s"
 
 #: settings.php:492
 msgid "Changing Permission Model Warning"

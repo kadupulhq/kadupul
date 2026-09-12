@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-11 23:33-0700\n"
+"POT-Creation-Date: 2026-09-12 09:37-0700\n"
 "PO-Revision-Date: 2024-04-20 18:31-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -1093,14 +1093,14 @@ msgid "Added manually through device automation interface."
 msgstr "Προστέθηκε χειροκίνητα μέσω διεπαφής αυτοματισμού συσκευών."
 
 #: automation_devices.php:121
-#, php-format
+#, fuzzy, php-format
 msgid "Device %s Added to Kadupul"
-msgstr "Η συσκευή %s προστέθηκε στους κάκτους"
+msgstr "Η συσκευή %s προστέθηκε στους Kadupul"
 
 #: automation_devices.php:123
-#, php-format
+#, fuzzy, php-format
 msgid "Device %s Not Added to Kadupul"
-msgstr "Η συσκευή %s δεν προστέθηκε στους κάκτους"
+msgstr "Η συσκευή %s δεν προστέθηκε στους Kadupul"
 
 #: automation_devices.php:133
 msgid "Devices Removed from Kadupul Automation database"
@@ -1736,9 +1736,10 @@ msgstr "Ενεργοποιήστε το NetBIOS"
 msgid "Use NetBIOS to attempt to resolve the hostname of up hosts."
 msgstr "Χρησιμοποιήστε το NetBIOS για να προσπαθήσετε να επιλύσετε το όνομα του κεντρικού υπολογιστή."
 
+#, fuzzy
 #: automation_networks.php:556
 msgid "Automatically Add to Kadupul"
-msgstr "Προσθήκη αυτόματα σε κάκτους"
+msgstr "Προσθήκη αυτόματα σε Kadupul"
 
 #: automation_networks.php:557
 msgid "For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Kadupul."
@@ -5840,9 +5841,10 @@ msgstr "Δεν επιτρέπεται η πρόσβαση σε αυτήν την
 msgid "Installation In Progress"
 msgstr "Εγκατάσταση σε εξέλιξη"
 
+#, fuzzy
 #: include/auth.php:288
 msgid "Only Kadupul Administrators with Install/Upgrade privilege may login at this time"
-msgstr "Μόνο οι διαχειριστές κακτιών με δικαιώματα εγκατάστασης / αναβάθμισης ενδέχεται να συνδεθούν αυτή τη στιγμή"
+msgstr "Μόνο οι διαχειριστές Kadupul με δικαιώματα εγκατάστασης / αναβάθμισης ενδέχεται να συνδεθούν αυτή τη στιγμή"
 
 #: include/auth.php:288
 msgid "There is an Installation or Upgrade in progress."
@@ -9745,9 +9747,10 @@ msgstr "Να επιτρέπεται να προσδιορίζεται αυτόμ
 msgid "Preferred Language Processor"
 msgstr "Προτιμώμενος επεξεργαστής γλώσσας"
 
+#, fuzzy
 #: include/global_settings.php:359
 msgid "Kadupul includes support for multiple alternate Language Translation Processors.  If none is selected Kadupul will attempt to use the first one found."
-msgstr "Το Kadupul περιλαμβάνει υποστήριξη για πολλαπλούς εναλλακτικούς επεξεργαστές μετάφρασης γλωσσών. Θα είναι προεπιλεγμένη χρήση της ενσωματωμένης υποστήριξης PHP, αλλά δεν περιλαμβάνουν όλες οι παραλλαγές του Linux ενσωματωμένη υποστήριξη γλώσσας. Εάν δεν επιλεγεί, οι κάκτοι θα επιλέξουν τον πρώτο που θα βρεθεί."
+msgstr "Το Kadupul περιλαμβάνει υποστήριξη για πολλαπλούς εναλλακτικούς επεξεργαστές μετάφρασης γλωσσών. Θα είναι προεπιλεγμένη χρήση της ενσωματωμένης υποστήριξης PHP, αλλά δεν περιλαμβάνουν όλες οι παραλλαγές του Linux ενσωματωμένη υποστήριξη γλώσσας. Εάν δεν επιλεγεί, οι Kadupul θα επιλέξουν τον πρώτο που θα βρεθεί."
 
 #: include/global_settings.php:365
 msgid "Client TimeZone Support"
@@ -11160,9 +11163,10 @@ msgstr "Εισαγάγετε το χρονικό όριο SMTP σε δευτερ
 msgid "LDAP Debug Mode"
 msgstr "Λειτουργία εντοπισμού σφαλμάτων LDAP"
 
+#, fuzzy
 #: include/global_settings.php:1743
 msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities."
-msgstr "Εάν οι Κάκτοι έχουν επιλεγεί, θα καταγράψουν επιπλέον πληροφορίες LDAP στο αρχείο καταγραφής των Κάκτων κατά τη διάρκεια των δραστηριοτήτων δέσμευσης και αναζήτησης."
+msgstr "Εάν οι Kadupul έχουν επιλεγεί, θα καταγράψουν επιπλέον πληροφορίες LDAP στο αρχείο καταγραφής των Kadupul κατά τη διάρκεια των δραστηριοτήτων δέσμευσης και αναζήτησης."
 
 #: include/global_settings.php:1748 user_domains.php:394
 msgid "Encryption"
@@ -12295,9 +12299,10 @@ msgstr "Κατάσταση απομακρυσμένης συλλογής δεδ�
 msgid "Number of Offline Records:"
 msgstr "Αριθμός αρχείων εκτός σύνδεσης:"
 
+#, fuzzy
 #: index.php:82
 msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Kadupul Database for updating."
-msgstr "<strong>ΣΗΜΕΙΩΣΗ:</strong> Έχετε συνδεθεί σε έναν απομακρυσμένο συλλέκτη δεδομένων. Όταν είστε <b>συνδεδεμένοι στο διαδίκτυο</b> , θα μπορείτε να βλέπετε και να ελέγχετε μεγάλο μέρος της Ιστοσελίδας του Κύριου Κάκτι, σαν να συνδεθήκατε σε αυτό. Επίσης, είναι σημαντικό να σημειωθεί ότι οι συλλέκτες απομακρυσμένων δεδομένων πρέπει να χρησιμοποιούν τη λειτουργία της υπηρεσίας βελτίωσης απόδοσης Kadupul <b>&#39;On Demand Updating&#39;</b> και πάντα συνιστούμε τη χρήση της σπονδυλικής στήλης. Όταν ο απομακρυσμένος συλλέκτης δεδομένων είναι <b>«εκτός σύνδεσης»</b> , ο ιστότοπος συλλογής δεδομένων απομακρυσμένων δεδομένων θα περιέχει πολύ λιγότερες πληροφορίες. Ωστόσο, θα αποθηκεύσει προσωρινά όλες τις ενημερώσεις έως ότου επιτευχθεί η πρόσβαση στη Βάση Δεδομένων Κύριου Κατσί και στον Διακομιστή Web. Στη συνέχεια, θα αφαιρεθεί ο πίνακας Boost που επιστρέφει στη βάση δεδομένων του κύριου κατόχου για ενημέρωση."
+msgstr "<strong>ΣΗΜΕΙΩΣΗ:</strong> Έχετε συνδεθεί σε έναν απομακρυσμένο συλλέκτη δεδομένων. Όταν είστε <b>συνδεδεμένοι στο διαδίκτυο</b> , θα μπορείτε να βλέπετε και να ελέγχετε μεγάλο μέρος της Ιστοσελίδας του Κύριου Kadupul, σαν να συνδεθήκατε σε αυτό. Επίσης, είναι σημαντικό να σημειωθεί ότι οι συλλέκτες απομακρυσμένων δεδομένων πρέπει να χρησιμοποιούν τη λειτουργία της υπηρεσίας βελτίωσης απόδοσης Kadupul <b>&#39;On Demand Updating&#39;</b> και πάντα συνιστούμε τη χρήση της σπονδυλικής στήλης. Όταν ο απομακρυσμένος συλλέκτης δεδομένων είναι <b>«εκτός σύνδεσης»</b> , ο ιστότοπος συλλογής δεδομένων απομακρυσμένων δεδομένων θα περιέχει πολύ λιγότερες πληροφορίες. Ωστόσο, θα αποθηκεύσει προσωρινά όλες τις ενημερώσεις έως ότου επιτευχθεί η πρόσβαση στη Βάση Δεδομένων Κύριου Κατσί και στον Διακομιστή Web. Στη συνέχεια, θα αφαιρεθεί ο πίνακας Boost που επιστρέφει στη βάση δεδομένων του κύριου κατόχου για ενημέρωση."
 
 #: index.php:87
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
@@ -13527,9 +13532,10 @@ msgstr "Δημιουργία κειμένου μηνύματος ..."
 msgid "Sending Message..."
 msgstr "Αποστολή μηνύματος ..."
 
+#, fuzzy
 #: lib/functions.php:5634
 msgid "Kadupul Test Message"
-msgstr "Μήνυμα δοκιμής κάκτων"
+msgstr "Μήνυμα δοκιμής Kadupul"
 
 #: lib/functions.php:5636
 msgid "Success!"
@@ -14093,9 +14099,9 @@ msgid "There was a SQL Injection attempted on the page"
 msgstr "Έγινε απόπειρα έγχυσης SQL στη σελίδα"
 
 #: lib/html_form_template.php:156
-#, php-format
+#, fuzzy, php-format
 msgid "A client attempted to create a SQL Injection into Kadupul likely from an external host with the address %s"
-msgstr "Ένας πελάτης προσπάθησε να δημιουργήσει μια έγχυση SQL σε κάκτους πιθανώς από έναν εξωτερικό κεντρικό υπολογιστή με τη διεύθυνση %s"
+msgstr "Ένας πελάτης προσπάθησε να δημιουργήσει μια έγχυση SQL σε Kadupul πιθανώς από έναν εξωτερικό κεντρικό υπολογιστή με τη διεύθυνση %s"
 
 #: lib/html_form_template.php:632 lib/html_form_template.php:644
 #, php-format
@@ -14716,13 +14722,15 @@ msgstr "Επιλεγμένο"
 msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "Ο όρος αναζήτησης &quot; %s&quot; δεν είναι έγκυρος. Το σφάλμα είναι %s"
 
+#, fuzzy
 #: lib/html_utility.php:1129
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
-msgstr "Οι κανονικές εκφράσεις κάκτων περιορίζονται σε 50 χαρακτήρες μόνο για λόγους ασφαλείας."
+msgstr "Οι κανονικές εκφράσεις Kadupul περιορίζονται σε 50 χαρακτήρες μόνο για λόγους ασφαλείας."
 
+#, fuzzy
 #: lib/html_utility.php:1133
 msgid "Kadupul regular expressions can not includes the semi-color character."
-msgstr "Οι κανονικές εκφράσεις των κάκτων δεν μπορούν να περιλαμβάνουν τον ημίχρωμο χαρακτήρα."
+msgstr "Οι κανονικές εκφράσεις των Kadupul δεν μπορούν να περιλαμβάνουν τον ημίχρωμο χαρακτήρα."
 
 #: lib/html_utility.php:1153
 msgid "There was an internal error!"
@@ -14950,9 +14958,10 @@ msgstr "ΣΗΜΕΙΩΣΗ: Τα υπάρχοντα δεδομένα σας δεν
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
 msgstr "Δημιουργήσατε μια νέα βάση δεδομένων, αλλά δεν έχετε εισάγει ακόμα το αρχείο &quot;cacti.sql&quot;. Στη γραμμή εντολών, εκτελέστε τα παρακάτω για να συνεχίσετε:"
 
+#, fuzzy
 #: lib/installer.php:1592
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Kadupul database. Please ensure that the Kadupul database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Kadupul database."
-msgstr "Αυτό το σφάλμα μπορεί επίσης να δημιουργηθεί εάν ο χρήστης της βάσης δεδομένων κάκτων δεν έχει σωστά δικαιώματα στη βάση δεδομένων Kadupul. Βεβαιωθείτε ότι ο χρήστης της βάσης δεδομένων Kadupul έχει τη δυνατότητα να επιλέγει, να εισάγει, να διαγράφει, να ενημερώνει, να δημιουργεί, να αλλάζει, να καταγράφει, να καταγράφει, στη βάση δεδομένων Kadupul."
+msgstr "Αυτό το σφάλμα μπορεί επίσης να δημιουργηθεί εάν ο χρήστης της βάσης δεδομένων Kadupul δεν έχει σωστά δικαιώματα στη βάση δεδομένων Kadupul. Βεβαιωθείτε ότι ο χρήστης της βάσης δεδομένων Kadupul έχει τη δυνατότητα να επιλέγει, να εισάγει, να διαγράφει, να ενημερώνει, να δημιουργεί, να αλλάζει, να καταγράφει, να καταγράφει, στη βάση δεδομένων Kadupul."
 
 #: lib/installer.php:1593
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"
@@ -15357,9 +15366,10 @@ msgstr "Απαιτείται δυνατότητα γραφής μετά την �
 msgid "Potential permission issues"
 msgstr "Πιθανά ζητήματα άδειας"
 
+#, fuzzy
 #: lib/installer.php:2382
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
-msgstr "Βεβαιωθείτε ότι ο διακομιστής ιστού έχει πρόσβαση ανάγνωσης / εγγραφής στους φακέλους των κακτιών που εμφανίζουν τα παρακάτω σφάλματα."
+msgstr "Βεβαιωθείτε ότι ο διακομιστής ιστού έχει πρόσβαση ανάγνωσης / εγγραφής στους φακέλους των Kadupul που εμφανίζουν τα παρακάτω σφάλματα."
 
 #: lib/installer.php:2385
 msgid "If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools."
@@ -15447,9 +15457,10 @@ msgstr "Interval Cron"
 msgid "Default Automation Network"
 msgstr "Προεπιλεγμένο δίκτυο αυτοματισμού"
 
+#, fuzzy
 #: lib/installer.php:2487
 msgid "Kadupul can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
-msgstr "Οι κάκτοι μπορούν να σαρώσουν αυτόματα το δίκτυο μετά την ολοκλήρωση της εγκατάστασης. Αυτό θα χρησιμοποιήσει την περιοχή δικτύου παρακάτω για να επεξεργαστεί το φάσμα των διευθύνσεων IP που μπορούν να σαρωθούν. Προεπιλεγμένο σύνολο επιλογών ορίζεται για τη σάρωση, που περιλαμβάνει τη χρήση τόσο κοινών όσο και ιδιωτικών κοινοτήτων."
+msgstr "Οι Kadupul μπορούν να σαρώσουν αυτόματα το δίκτυο μετά την ολοκλήρωση της εγκατάστασης. Αυτό θα χρησιμοποιήσει την περιοχή δικτύου παρακάτω για να επεξεργαστεί το φάσμα των διευθύνσεων IP που μπορούν να σαρωθούν. Προεπιλεγμένο σύνολο επιλογών ορίζεται για τη σάρωση, που περιλαμβάνει τη χρήση τόσο κοινών όσο και ιδιωτικών κοινοτήτων."
 
 #: lib/installer.php:2488
 msgid "If your devices require a different set of options to be used first, you may define them below and they will be utilized before the defaults"
@@ -16203,9 +16214,9 @@ msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Το αρχείο RRA &#39; %s&#39; έχει τα ίδια CF / βήματα ( %s, %s) ως &#39; %s&#39;"
 
 #: lib/rrd.php:3183
-#, php-format
+#, fuzzy, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
-msgstr "Το pdp_per_row του '%s' δεν είναι έγκυρο για το RRA '%s' θα πρέπει να είναι '%s'.  Εξετάστε το ενδεχόμενο να διαγράψετε και να επιτρέψετε στους Κάκτους να δημιουργήσουν ξανά το αρχείο RRD."
+msgstr "Το pdp_per_row του '%s' δεν είναι έγκυρο για το RRA '%s' θα πρέπει να είναι '%s'.  Εξετάστε το ενδεχόμενο να διαγράψετε και να επιτρέψετε στους Kadupul να δημιουργήσουν ξανά το αρχείο RRD."
 
 #: lib/rrd.php:3187
 #, php-format
@@ -16337,7 +16348,7 @@ msgstr "Φάκελος RRA"
 msgid "Root"
 msgstr "Ρίζα"
 
-#: lib/rrd.php:4079
+#: lib/rrd.php:4082
 msgid "Unknown RRDtool Error"
 msgstr "Άγνωστο σφάλμα RRDtool"
 
@@ -17485,9 +17496,10 @@ msgstr "ΣΦΆΛΜΑ: Η διαδρομή της σπονδυλικής στήλ
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Υπέρβαση μέγιστου χρόνου εκτέλεσης %d δευτερολέπτων για το αναγνωριστικό δημοσκόπου %d. Έξοδος."
 
+#, fuzzy
 #: poller.php:890
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Ο κύκλος ψηφοφορίας κάκτων ξεπέρασε το διάστημα Poller από"
+msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Ο κύκλος ψηφοφορίας Kadupul ξεπέρασε το διάστημα Poller από"
 
 #: poller.php:915
 #, php-format

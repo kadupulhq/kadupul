@@ -188,6 +188,6 @@ if ($output !== false && $output != '') {
 	if ($image !== false) {
 		print $image;
 	} else {
-		print file_get_contents(__DIR__ . '/images/kadupul-icon.png');
+		print file_get_contents(__DIR__ . '/images/kadupul-error.png');
 	}
 }

@@ -4055,10 +4055,13 @@ function rrdtool_create_error_image($string, $width = '', $height = '') {
 	imagefilledrectangle($image, 2, 2, 447, 197, $back_color);
 
 	/* allocate the image */
-	$logo = imagecreatefrompng($config['base_path'] . '/images/kadupul-icon.png');
+	$logo_path = $config['base_path'] . '/images/kadupul-logo.png';
+	$logo = is_readable($logo_path) ? @imagecreatefrompng($logo_path) : false;
 
 	/* merge the two images */
-	imagecopyresampled($image, $logo, 20, 50, 0, 0, 100, 100, imagesx($logo), imagesy($logo));
+	if ($logo !== false) {
+		imagecopyresampled($image, $logo, 20, 50, 0, 0, 100, 100, imagesx($logo), imagesy($logo));
+	}
 
 	/* set the background color */
 	list($red, $green, $blue) = sscanf($font_color, '%02x%02x%02x');
@@ -4125,7 +4128,9 @@ function rrdtool_create_error_image($string, $width = '', $height = '') {
 
 	/* destroy the image object */
 	imagedestroy($image);
-	imagedestroy($logo);
+	if ($logo !== false) {
+		imagedestroy($logo);
+	}
 
 	if (isset($nimage)) {
 		imagedestroy($nimage);

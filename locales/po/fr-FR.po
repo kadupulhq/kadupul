@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-11 23:33-0700\n"
+"POT-Creation-Date: 2026-09-12 09:37-0700\n"
 "PO-Revision-Date: 2024-04-20 18:51-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -5257,9 +5257,9 @@ msgid "Set Default"
 msgstr "Définir par défaut"
 
 #: help.php:37
-#, php-format
+#, fuzzy, php-format
 msgid "WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "AVERTISSEMENT : Page Cactus :%s pour l'utilisateur :%s a généré une erreur fatale %d !"
+msgstr "AVERTISSEMENT : Page Kadupul :%s pour l'utilisateur :%s a généré une erreur fatale %d !"
 
 #: help.php:59
 #, php-format
@@ -13817,9 +13817,10 @@ msgstr "Aide à la traduction"
 msgid "Report a bug"
 msgstr "Signaler un bug"
 
+#, fuzzy
 #: lib/html.php:2600
 msgid "Kadupul"
-msgstr "Cactus"
+msgstr "Kadupul"
 
 #: lib/html.php:2602
 msgid "Click to Show/Hide Filter"
@@ -15352,9 +15353,10 @@ msgstr "Requis Inscriptible après l'installation Terminé"
 msgid "Potential permission issues"
 msgstr "Problèmes potentiels d'autorisation"
 
+#, fuzzy
 #: lib/installer.php:2382
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
-msgstr "Veuillez vous assurer que votre serveur web a un accès en lecture/écriture aux dossiers de cactus qui montrent les erreurs ci-dessous."
+msgstr "Veuillez vous assurer que votre serveur web a un accès en lecture/écriture aux dossiers de Kadupul qui montrent les erreurs ci-dessous."
 
 #: lib/installer.php:2385
 msgid "If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools."
@@ -16332,7 +16334,7 @@ msgstr "Dossier RRA"
 msgid "Root"
 msgstr "Racine"
 
-#: lib/rrd.php:4079
+#: lib/rrd.php:4082
 msgid "Unknown RRDtool Error"
 msgstr "Inconnu Erreur RRDtool"
 
@@ -17480,9 +17482,10 @@ msgstr "ERREUR : le chemin de la colonne vertébrale : %s n'est pas valide pou
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Durée d'exécution maximale de %d secondes dépassée pour l'ID du sondeur %d. Sortie."
 
+#, fuzzy
 #: poller.php:890
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "AVERTISSEMENT : le cycle d'interrogation des cactus a dépassé l'intervalle d'interrogation de"
+msgstr "AVERTISSEMENT : le cycle d'interrogation des Kadupul a dépassé l'intervalle d'interrogation de"
 
 #: poller.php:915
 #, php-format
@@ -18018,9 +18021,9 @@ msgid "NOTE: Path Settings on this Tab are only saved locally!"
 msgstr "REMARQUE: les paramètres de chemin de cet onglet ne sont enregistrés que localement!"
 
 #: settings.php:374
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Settings (%s)%s"
-msgstr "Paramètres des cactus (%s)%s"
+msgstr "Paramètres des Kadupul (%s)%s"
 
 #: settings.php:492
 msgid "Changing Permission Model Warning"

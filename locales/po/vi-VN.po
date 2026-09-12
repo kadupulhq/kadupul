@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-11 23:33-0700\n"
+"POT-Creation-Date: 2026-09-12 09:37-0700\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -17,9 +17,10 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.8.1\n"
 
+#, fuzzy
 #: about.php:22 include/global_arrays.php:2631 lib/html.php:2599
 msgid "About Kadupul"
-msgstr "Về xương rồng"
+msgstr "Về Kadupul"
 
 #: about.php:33
 msgid "Kadupul is an independent open-source project for network monitoring and time-series graphing."
@@ -842,13 +843,15 @@ msgstr ""
 msgid "Change Password"
 msgstr "Thay đổi mật khẩu"
 
+#, fuzzy
 #: auth_changepassword.php:344
 msgid "Please enter your current password and your new<br>Kadupul password."
-msgstr "Vui lòng nhập mật khẩu hiện tại của bạn và mới <br> Mật khẩu xương rồng."
+msgstr "Vui lòng nhập mật khẩu hiện tại của bạn và mới <br> Mật khẩu Kadupul."
 
+#, fuzzy
 #: auth_changepassword.php:346
 msgid "Please enter your new Kadupul password."
-msgstr "Vui lòng nhập mật khẩu hiện tại của bạn và mới <br> Mật khẩu xương rồng."
+msgstr "Vui lòng nhập mật khẩu hiện tại của bạn và mới <br> Mật khẩu Kadupul."
 
 #: auth_changepassword.php:354 auth_login.php:321 auth_login.php:324
 #: include/global_settings.php:1816 lib/functions.php:5599
@@ -1095,7 +1098,7 @@ msgstr "Thêm thủ công thông qua giao diện tự động hóa thiết bị.
 #: automation_devices.php:121
 #, fuzzy, php-format
 msgid "Device %s Added to Kadupul"
-msgstr "Đã thêm vào xương rồng"
+msgstr "Đã thêm vào Kadupul"
 
 #: automation_devices.php:123
 #, fuzzy, php-format
@@ -6020,9 +6023,10 @@ msgstr "Tệp nhật ký được chỉ định không phải là tệp nhật k
 msgid "Log file specified was Kadupul archive file and was removed."
 msgstr "Tệp nhật ký được chỉ định là tệp lưu trữ Kadupul và đã bị xóa."
 
+#, fuzzy
 #: include/global_arrays.php:294
 msgid "Kadupul log purged successfully"
-msgstr "Nhật ký xương rồng đã thanh trừng thành công"
+msgstr "Nhật ký Kadupul đã thanh trừng thành công"
 
 #: include/global_arrays.php:297
 msgid "If you force a password change, you must also allow the user to change their password."
@@ -6778,9 +6782,10 @@ msgstr ""
 msgid "Application Related"
 msgstr "Áp dụng quy tắc tự động hóa"
 
+#, fuzzy
 #: include/global_arrays.php:1085
 msgid "Kadupul Related"
-msgstr "Báo cáo xương rồng"
+msgstr "Báo cáo Kadupul"
 
 #: include/global_arrays.php:1086
 msgid "Database Related"
@@ -7870,9 +7875,10 @@ msgstr "Mục VDEF"
 msgid "View SNMP Notification Receivers"
 msgstr "Xem người nhận thông báo SNMP"
 
+#, fuzzy
 #: include/global_arrays.php:2571
 msgid "Kadupul Settings"
-msgstr "Cài đặt xương rồng"
+msgstr "Cài đặt Kadupul"
 
 #: include/global_arrays.php:2577
 msgid "External Link"
@@ -7882,9 +7888,10 @@ msgstr "Liên kết bên ngoài"
 msgid "(Action)"
 msgstr "Hành động:"
 
+#, fuzzy
 #: include/global_arrays.php:2637
 msgid "Kadupul Help"
-msgstr "Trang chủ xương rồng"
+msgstr "Trang chủ Kadupul"
 
 #: include/global_arrays.php:2649
 msgid "Export Results"
@@ -9525,9 +9532,10 @@ msgstr "Đường dẫn Nhật ký Lỗi Tiêu chuẩn của Poller"
 msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
 msgstr "Nếu bạn gặp sự cố với Trình thu thập dữ liệu của Kadupul, hãy đặt đường dẫn tệp này và lỗi tiêu chuẩn của Trình thu thập dữ liệu sẽ được chuyển hướng đến tệp này"
 
+#, fuzzy
 #: include/global_settings.php:184
 msgid "Rotate the Kadupul Log"
-msgstr "Xoay Nhật ký xương rồng"
+msgstr "Xoay Nhật ký Kadupul"
 
 #: include/global_settings.php:185
 msgid "This option will rotate the Kadupul Log periodically."
@@ -11123,9 +11131,10 @@ msgstr "Vui lòng nhập thời gian chờ SMTP trong vài giây."
 msgid "LDAP Debug Mode"
 msgstr "Chế độ gỡ lỗi LDAP"
 
+#, fuzzy
 #: include/global_settings.php:1743
 msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities."
-msgstr "Nếu được Kiểm tra Xương rồng sẽ ghi thông tin LDAP bổ sung vào nhật ký Xương rồng trong các hoạt động Ràng buộc và Tìm kiếm."
+msgstr "Nếu được Kiểm tra Kadupul sẽ ghi thông tin LDAP bổ sung vào nhật ký Kadupul trong các hoạt động Ràng buộc và Tìm kiếm."
 
 #: include/global_settings.php:1748 user_domains.php:394
 msgid "Encryption"
@@ -12715,9 +12724,10 @@ msgstr "Mật khẩu của bạn phải chứa hỗn hợp các ký tự chữ t
 msgid "Your password must contain at least 1 special character!"
 msgstr "Mật khẩu của bạn phải chứa ít nhất 1 ký tự đặc biệt!"
 
+#, fuzzy
 #: lib/auth.php:4676
 msgid "Kadupul Login Failure"
-msgstr "Nhật ký xương rồng đã bị xóa"
+msgstr "Nhật ký Kadupul đã bị xóa"
 
 #: lib/auth.php:4959
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
@@ -13490,9 +13500,10 @@ msgstr "Tạo tin nhắn văn bản ..."
 msgid "Sending Message..."
 msgstr "Đang gửi tin nhắn…"
 
+#, fuzzy
 #: lib/functions.php:5634
 msgid "Kadupul Test Message"
-msgstr "Thông báo kiểm tra xương rồng"
+msgstr "Thông báo kiểm tra Kadupul"
 
 #: lib/functions.php:5636
 msgid "Success!"
@@ -13725,9 +13736,10 @@ msgstr "Màu mục"
 msgid "Help"
 msgstr "Trợ giúp"
 
+#, fuzzy
 #: lib/html.php:2577
 msgid "Kadupul Home"
-msgstr "Trang chủ xương rồng"
+msgstr "Trang chủ Kadupul"
 
 #: lib/html.php:2579
 msgid "Miscellaneous"
@@ -13741,9 +13753,10 @@ msgstr "Bảng điều khiển"
 msgid "Charts"
 msgstr "Biểu đồ"
 
+#, fuzzy
 #: lib/html.php:2583
 msgid "Kadupul Project Page"
-msgstr "Trang dự án xương rồng"
+msgstr "Trang dự án Kadupul"
 
 #: lib/html.php:2587
 msgid "Spine"
@@ -13761,9 +13774,10 @@ msgstr "Bàn phím"
 msgid "Shortcuts"
 msgstr "Các Bố Trí Phím Tắt"
 
+#, fuzzy
 #: lib/html.php:2591
 msgid "Contribute to the Kadupul Project"
-msgstr "Xoay Nhật ký xương rồng"
+msgstr "Xoay Nhật ký Kadupul"
 
 #: lib/html.php:2592
 msgid "Help in Developing"
@@ -13785,9 +13799,10 @@ msgstr "Trợ giúp trong việc dịch"
 msgid "Report a bug"
 msgstr "Báo cáo lỗi"
 
+#, fuzzy
 #: lib/html.php:2600
 msgid "Kadupul"
-msgstr "Xương rồng"
+msgstr "Kadupul"
 
 #: lib/html.php:2602
 msgid "Click to Show/Hide Filter"
@@ -14026,9 +14041,9 @@ msgid "Enter a valid directory path"
 msgstr "Nhập một đường dẫn thư mục hợp lệ"
 
 #: lib/html_form.php:1275
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Color (%s)"
-msgstr "Màu xương rồng ( %s)"
+msgstr "Màu Kadupul ( %s)"
 
 #: lib/html_form.php:1340
 msgid "NO FONT VERIFICATION POSSIBLE"
@@ -14290,9 +14305,10 @@ msgstr "Chi tiết người gửi / người nhận email"
 msgid "Subject"
 msgstr "Tiêu đề"
 
+#, fuzzy
 #: lib/html_reports.php:164
 msgid "Kadupul Report"
-msgstr "Báo cáo xương rồng"
+msgstr "Báo cáo Kadupul"
 
 #: lib/html_reports.php:165
 msgid "This value will be used as the default Email subject.  The report name will be used if left blank."
@@ -14950,9 +14966,10 @@ msgstr "Nâng cấp"
 msgid "Downgrade"
 msgstr "Downgrade"
 
+#, fuzzy
 #: lib/installer.php:1740 utilities.php:265
 msgid "Kadupul Version"
-msgstr "Phiên bản xương rồng"
+msgstr "Phiên bản Kadupul"
 
 #: lib/installer.php:1740
 msgid "License Agreement"
@@ -16299,7 +16316,7 @@ msgstr "Thư mục RRA"
 msgid "Root"
 msgstr "Root"
 
-#: lib/rrd.php:4079
+#: lib/rrd.php:4082
 msgid "Unknown RRDtool Error"
 msgstr "Lỗi RRDtool không xác định"
 
@@ -16953,9 +16970,10 @@ msgstr "Bạn đã đăng xuất khỏi Kadupul do hết thời gian phiên."
 msgid "You have been logged out of Kadupul due to a Remote Data Collector state change"
 msgstr "Bạn đã đăng xuất khỏi Kadupul do hết thời gian phiên."
 
+#, fuzzy
 #: logout.php:61
 msgid "Logout of Kadupul"
-msgstr "Thoát khỏi xương rồng"
+msgstr "Thoát khỏi Kadupul"
 
 #: logout.php:68
 msgid "Automatic Logout"
@@ -17443,9 +17461,10 @@ msgstr "LRI: Đường dẫn cột sống: %s không hợp lệ. Xe đẩy khôn
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Thời gian chạy tối đa% d giây vượt quá. Thoát hiểm."
 
+#, fuzzy
 #: poller.php:890
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "CẢNH BÁO: Chu kỳ thăm dò của xương rồng đã vượt quá khoảng thời gian thăm dò của xương rồng bởi"
+msgstr "CẢNH BÁO: Chu kỳ thăm dò của Kadupul đã vượt quá khoảng thời gian thăm dò của Kadupul bởi"
 
 #: poller.php:915
 #, php-format
@@ -17974,7 +17993,7 @@ msgstr "LƯU Ý: Cài đặt đường dẫn trên Tab này chỉ được lưu 
 #: settings.php:374
 #, fuzzy, php-format
 msgid "Kadupul Settings (%s)%s"
-msgstr "Cài đặt xương rồng ( %s)"
+msgstr "Cài đặt Kadupul ( %s)"
 
 #: settings.php:492
 msgid "Changing Permission Model Warning"
@@ -19403,9 +19422,10 @@ msgstr "LRI: RRDtool 1.2.x + không hỗ trợ định dạng hình ảnh GIF, n
 msgid "General Information"
 msgstr "Thông tin chung"
 
+#, fuzzy
 #: utilities.php:270
 msgid "Kadupul OS"
-msgstr "Hệ điều hành xương rồng"
+msgstr "Hệ điều hành Kadupul"
 
 #: utilities.php:280
 msgid "NET-SNMP Version"
@@ -19694,13 +19714,15 @@ msgstr "Nhật ký [Tổng số dòng:% d - Ẩn các mục không khớp]"
 msgid "Log [Total Lines: %d - All Items Shown]"
 msgstr "Nhật ký [Tổng số dòng:% d - Tất cả các mục được hiển thị]"
 
+#, fuzzy
 #: utilities.php:1602
 msgid "Clear Kadupul Log"
-msgstr "Xóa nhật ký xương rồng"
+msgstr "Xóa nhật ký Kadupul"
 
+#, fuzzy
 #: utilities.php:1615
 msgid "Kadupul Log Cleared"
-msgstr "Nhật ký xương rồng đã bị xóa"
+msgstr "Nhật ký Kadupul đã bị xóa"
 
 #: utilities.php:1617
 msgid "Error: Unable to clear log, no write permissions."

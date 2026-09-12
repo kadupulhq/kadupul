@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-11 23:33-0700\n"
+"POT-Creation-Date: 2026-09-12 09:37-0700\n"
 "PO-Revision-Date: 2026-03-16 13:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -9539,7 +9539,7 @@ msgstr "Loggning"
 
 #: include/global_settings.php:164
 msgid "Kadupul Log Path"
-msgstr "Cactis loggsökväg"
+msgstr "Kadupuls loggsökväg"
 
 #: include/global_settings.php:165
 msgid "The path to your Kadupul log file (if blank, defaults to &lt;path_cacti&gt;/log/cacti.log)"
@@ -9551,7 +9551,7 @@ msgstr "Poller Standard Fel Loggsökväg"
 
 #: include/global_settings.php:175
 msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
-msgstr "Om du har problem med Cactis datainsamlare kan du ange den här filvägen så kommer standardfelet i datainsamlaren att omdirigeras till den här filen"
+msgstr "Om du har problem med Kadupuls datainsamlare kan du ange den här filvägen så kommer standardfelet i datainsamlaren att omdirigeras till den här filen"
 
 #: include/global_settings.php:184
 msgid "Rotate the Kadupul Log"
@@ -9683,7 +9683,7 @@ msgstr "Selektiv enhetsfelsökning"
 
 #: include/global_settings.php:302
 msgid "A comma delimited list of Device ID's that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process."
-msgstr "En kommaseparerad lista över enhets-ID:n som du vill ska vara i Debug-läge under datainsamlingen.  Denna Debug-nivå gäller endast under Cactis pollingprocess."
+msgstr "En kommaseparerad lista över enhets-ID:n som du vill ska vara i Debug-läge under datainsamlingen.  Denna Debug-nivå gäller endast under Kadupuls pollingprocess."
 
 #: include/global_settings.php:309
 msgid "Syslog/Eventlog Item Selection"
@@ -9883,7 +9883,7 @@ msgstr "Dölj Kadupul Dashboard"
 
 #: include/global_settings.php:472
 msgid "For use with Kadupul's External Link Support.  Using this setting, you can hide the Kadupul Dashboard, so you can display just your own page."
-msgstr "För användning med Cactis stöd för externa länkar.  Med den här inställningen kan du dölja Kadupul Dashboard, så att du bara kan visa din egen sida."
+msgstr "För användning med Kadupuls stöd för externa länkar.  Med den här inställningen kan du dölja Kadupul Dashboard, så att du bara kan visa din egen sida."
 
 #: include/global_settings.php:477
 msgid "Enable Drag-N-Drop"
@@ -9891,7 +9891,7 @@ msgstr "Aktivera Drag-N-Drop"
 
 #: include/global_settings.php:478
 msgid "Some of Kadupul's interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled."
-msgstr "Vissa av Cactis gränssnitt har stöd för Drag-N-Drop.  Om detta alternativ är markerat kommer det att aktiveras.  Obs: För synskadade användare kan detta alternativ vara inaktiverat."
+msgstr "Vissa av Kadupuls gränssnitt har stöd för Drag-N-Drop.  Om detta alternativ är markerat kommer det att aktiveras.  Obs: För synskadade användare kan detta alternativ vara inaktiverat."
 
 #: include/global_settings.php:483
 msgid "Site Security"
@@ -10657,7 +10657,7 @@ msgstr "Bredd på Debug-utgång"
 
 #: include/global_settings.php:1246
 msgid "If you choose this option, Kadupul will check for output that exceeds Kadupul's ability to store it and issue a warning when it finds it."
-msgstr "Om du väljer det här alternativet kommer Kadupul att söka efter utdata som överskrider Cactis förmåga att lagra dem och utfärda en varning när den hittar dem."
+msgstr "Om du väljer det här alternativet kommer Kadupul att söka efter utdata som överskrider Kadupuls förmåga att lagra dem och utfärda en varning när den hittar dem."
 
 #: include/global_settings.php:1251
 msgid "Disable increasing OID Check"
@@ -10689,7 +10689,7 @@ msgstr "SNMP Hämta OID-gräns"
 
 #: include/global_settings.php:1290
 msgid "The default maximum number of SNMP Get OIDs to issue per snmpget request.  For Devices, this setting is controlled at the Device level.  You should only use this setting when using Kadupul's SNMP API natively in your scripts or plugins."
-msgstr "Standardvärdet för maximalt antal SNMP Get OID:er som ska utfärdas per snmpget-begäran.  För enheter styrs den här inställningen på enhetsnivå.  Du bör endast använda den här inställningen när du använder Cactis SNMP API inbyggt i dina skript eller insticksprogram."
+msgstr "Standardvärdet för maximalt antal SNMP Get OID:er som ska utfärdas per snmpget-begäran.  För enheter styrs den här inställningen på enhetsnivå.  Du bör endast använda den här inställningen när du använder Kadupuls SNMP API inbyggt i dina skript eller insticksprogram."
 
 #: include/global_settings.php:1297
 msgid "Refresh Poller Table Per Cycle"
@@ -10773,7 +10773,7 @@ msgstr "Timeout för rapportgenerering"
 
 #: include/global_settings.php:1364
 msgid "The maximum amount of time Kadupul's Reports Generation script can run without generating a timeout error and being killed."
-msgstr "Den maximala tid som Cactis skript för generering av rapporter kan köras utan att generera ett timeout-fel och dödas."
+msgstr "Den maximala tid som Kadupuls skript för generering av rapporter kan köras utan att generera ett timeout-fel och dödas."
 
 #: include/global_settings.php:1368 include/global_settings.php:1381
 #: include/global_settings.php:1409 include/global_settings.php:1450
@@ -10788,7 +10788,7 @@ msgstr "Timeout för datakällans statistik"
 
 #: include/global_settings.php:1377
 msgid "The maximum amount of time Kadupul's Data Source Statistics script can run without generating a timeout error and being killed."
-msgstr "Den maximala tid som Cactis skript Data Source Statistics kan köras utan att generera ett timeout-fel och dödas."
+msgstr "Den maximala tid som Kadupuls skript Data Source Statistics kan köras utan att generera ett timeout-fel och dödas."
 
 #: include/global_settings.php:1391
 msgid "RRDChecker Timeout"
@@ -10796,7 +10796,7 @@ msgstr "RRDChecker Timeout"
 
 #: include/global_settings.php:1392
 msgid "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
-msgstr "Den maximala tiden ett Cactis Spikekill-skript kan köras utan att generera ett timeout-fel och dödas."
+msgstr "Den maximala tiden ett Kadupuls Spikekill-skript kan köras utan att generera ett timeout-fel och dödas."
 
 #: include/global_settings.php:1398 include/global_settings.php:1399
 #: include/global_settings.php:1400 include/global_settings.php:1455
@@ -10811,7 +10811,7 @@ msgstr "Kommandon för poller Timeout"
 
 #: include/global_settings.php:1405
 msgid "The maximum amount of time Kadupul's Background Commands script can run without generating a timeout error and being killed.  This script will perform tasks such as re-indexing Devices and pruning devices from Remote Data Collectors."
-msgstr "Den maximala tid som Cactis skript för bakgrundskommandon kan köras utan att generera ett timeout-fel och dödas.  Detta skript utför uppgifter som att indexera om enheter och beskära enheter från fjärrdatainsamlare."
+msgstr "Den maximala tid som Kadupuls skript för bakgrundskommandon kan köras utan att generera ett timeout-fel och dödas.  Detta skript utför uppgifter som att indexera om enheter och beskära enheter från fjärrdatainsamlare."
 
 #: include/global_settings.php:1417
 msgid "Poller Command Concurrent Processes"
@@ -11309,7 +11309,7 @@ msgstr "Meddela primär administratör om problem"
 
 #: include/global_settings.php:1884
 msgid "In cases where the Kadupul server is experiencing problems, should the Primary Administrator be notified by Email?  The Primary Administrator's Kadupul user account is specified under the Authentication tab on Kadupul's settings page. It defaults to the 'admin' account."
-msgstr "I de fall då Kadupul-servern har problem, ska den primära administratören meddelas via e-post?  Den primära administratörens Kadupul-användarkonto anges under fliken Authentication på Cactis inställningssida. Standardvärdet är kontot \"admin\"."
+msgstr "I de fall då Kadupul-servern har problem, ska den primära administratören meddelas via e-post?  Den primära administratörens Kadupul-användarkonto anges under fliken Authentication på Kadupuls inställningssida. Standardvärdet är kontot \"admin\"."
 
 #: include/global_settings.php:1889
 msgid "Test Email"
@@ -12288,7 +12288,7 @@ msgstr "Antal offline-poster:"
 
 #: index.php:82
 msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Kadupul Database for updating."
-msgstr "<strong>OBS:</strong> Du är inloggad på en fjärrdatainsamlare.  När du är <b>\"online\"</b> kommer du att kunna se och styra mycket av Cactis huvudplats precis som om du vore inloggad på den.  Det är också viktigt att notera att fjärrdatainsamlare måste använda funktionen <b>\"On Demand Updating</b> \" i Cactis Performance Boosting Services, och vi rekommenderar alltid att du använder Spine.  När fjärrdatainsamlaren är <b>\"offline\"</b> kommer fjärrdatainsamlarens plats att innehålla mycket mindre information.  Den kommer dock att cacha alla uppdateringar tills huvuddatabasen och webbservern för Kadupul är nåbara.  Då kommer den att dumpa sin Boost-tabellutmatning tillbaka till den huvudsakliga Kadupul-databasen för uppdatering."
+msgstr "<strong>OBS:</strong> Du är inloggad på en fjärrdatainsamlare.  När du är <b>\"online\"</b> kommer du att kunna se och styra mycket av Kadupuls huvudplats precis som om du vore inloggad på den.  Det är också viktigt att notera att fjärrdatainsamlare måste använda funktionen <b>\"On Demand Updating</b> \" i Kadupuls Performance Boosting Services, och vi rekommenderar alltid att du använder Spine.  När fjärrdatainsamlaren är <b>\"offline\"</b> kommer fjärrdatainsamlarens plats att innehålla mycket mindre information.  Den kommer dock att cacha alla uppdateringar tills huvuddatabasen och webbservern för Kadupul är nåbara.  Då kommer den att dumpa sin Boost-tabellutmatning tillbaka till den huvudsakliga Kadupul-databasen för uppdatering."
 
 #: index.php:87
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
@@ -13533,7 +13533,7 @@ msgstr "Meddelande ej skickat på grund av ping-fel."
 #: lib/functions.php:6227 lib/functions.php:6296
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
-msgstr "Kadupul inaktiverade insticksmodul %s på grund av följande fel: %s!  Se Cactis loggfil för mer information."
+msgstr "Kadupul inaktiverade insticksmodul %s på grund av följande fel: %s!  Se Kadupuls loggfil för mer information."
 
 #: lib/functions.php:6386
 #, php-format
@@ -14708,7 +14708,7 @@ msgstr "Det reguljära uttrycket \"%s\" är inte giltigt. Felet är %s"
 
 #: lib/html_utility.php:1129
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
-msgstr "Cactis reguljära uttryck är av säkerhetsskäl begränsade till 50 tecken."
+msgstr "Kadupuls reguljära uttryck är av säkerhetsskäl begränsade till 50 tecken."
 
 #: lib/html_utility.php:1133
 msgid "Kadupul regular expressions can not includes the semi-color character."
@@ -15220,7 +15220,7 @@ msgstr "Remote Pollers används för att få tillgång till nätverk som inte ä
 
 #: lib/installer.php:2139
 msgid "The following information has been determined from Kadupul's configuration file. If it is not correct, please edit \"include/config.php\" before continuing."
-msgstr "Följande information har hämtats från Cactis konfigurationsfil. Om den inte är korrekt, redigera \"include/config.php\" innan du fortsätter."
+msgstr "Följande information har hämtats från Kadupuls konfigurationsfil. Om den inte är korrekt, redigera \"include/config.php\" innan du fortsätter."
 
 #: lib/installer.php:2143
 msgid "Local Database Connection Information"
@@ -15285,7 +15285,7 @@ msgstr "Installeraren tilldelar automatiskt ett $poller_id och lägger till det 
 
 #: lib/installer.php:2193
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Kadupul database server.  Follow the same procedure you would with any other Kadupul install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
-msgstr "När alla variabler har ställts in i filen config.php måste du också ge $rdatabase_username åtkomst till Cactis huvuddatabasserver.  Följ samma procedur som du skulle göra med alla andra Kadupul-installationer.  Du kan sedan trycka på knappen \"Test Connection\".  Om testet är framgångsrikt kommer du att kunna fortsätta och slutföra installationen."
+msgstr "När alla variabler har ställts in i filen config.php måste du också ge $rdatabase_username åtkomst till Kadupuls huvuddatabasserver.  Följ samma procedur som du skulle göra med alla andra Kadupul-installationer.  Du kan sedan trycka på knappen \"Test Connection\".  Om testet är framgångsrikt kommer du att kunna fortsätta och slutföra installationen."
 
 #: lib/installer.php:2197
 msgid "Additional Steps After Installation"
@@ -15321,7 +15321,7 @@ msgstr "När installationen är klar kan du göra några av dessa kataloger skri
 
 #: lib/installer.php:2299
 msgid "These directories will be required to stay read writable after the install so that the Kadupul remote synchronization process can update them as the Main Kadupul Web Site changes"
-msgstr "Dessa kataloger måste vara skrivbara efter installationen så att Cactis fjärrsynkroniseringsprocess kan uppdatera dem när Cactis huvudplats ändras"
+msgstr "Dessa kataloger måste vara skrivbara efter installationen så att Kadupuls fjärrsynkroniseringsprocess kan uppdatera dem när Kadupuls huvudplats ändras"
 
 #: lib/installer.php:2303
 msgid "If you are installing packages, once the packages are installed, you should change the scripts directory back to read only as this presents some exposure to the web site."
@@ -15395,7 +15395,7 @@ msgstr "Så som vitlistningen fungerar är att när du först importerar en data
 
 #: lib/installer.php:2423
 msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
-msgstr "För att kunna identifiera datainmatningsmetoder i detta tillstånd har vi tillhandahållit ett valideringsskript i Cactis CLI-katalog som kan köras med följande alternativ:"
+msgstr "För att kunna identifiera datainmatningsmetoder i detta tillstånd har vi tillhandahållit ett valideringsskript i Kadupuls CLI-katalog som kan köras med följande alternativ:"
 
 #: lib/installer.php:2427
 msgid "This script option will search for any Data Input Methods that are currently banned and provide details as to why."
@@ -16327,7 +16327,7 @@ msgstr "RRA-mapp"
 msgid "Root"
 msgstr "Rot"
 
-#: lib/rrd.php:4079
+#: lib/rrd.php:4082
 msgid "Unknown RRDtool Error"
 msgstr "Okänt RRDtool-fel"
 

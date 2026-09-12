@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-11 23:33-0700\n"
+"POT-Creation-Date: 2026-09-12 09:37-0700\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -842,13 +842,15 @@ msgstr "비밀번호 변경 페이지에 문제가 있습니다. 즉시 Kadupul 
 msgid "Change Password"
 msgstr "비밀번호 변경"
 
+#, fuzzy
 #: auth_changepassword.php:344
 msgid "Please enter your current password and your new<br>Kadupul password."
-msgstr "현재 비밀번호와 새 비밀번호를 입력하십시오. <br> 선인장 암호."
+msgstr "현재 비밀번호와 새 비밀번호를 입력하십시오. <br> Kadupul 암호."
 
+#, fuzzy
 #: auth_changepassword.php:346
 msgid "Please enter your new Kadupul password."
-msgstr "현재 비밀번호와 새 비밀번호를 입력하십시오. <br> 선인장 암호."
+msgstr "현재 비밀번호와 새 비밀번호를 입력하십시오. <br> Kadupul 암호."
 
 #: auth_changepassword.php:354 auth_login.php:321 auth_login.php:324
 #: include/global_settings.php:1816 lib/functions.php:5599
@@ -1093,14 +1095,14 @@ msgid "Added manually through device automation interface."
 msgstr "장치 자동화 인터페이스를 통해 수동으로 추가되었습니다."
 
 #: automation_devices.php:121
-#, php-format
+#, fuzzy, php-format
 msgid "Device %s Added to Kadupul"
-msgstr "장치 %s 이 (가) 선인장에 추가됨"
+msgstr "장치 %s 이 (가) Kadupul에 추가됨"
 
 #: automation_devices.php:123
-#, php-format
+#, fuzzy, php-format
 msgid "Device %s Not Added to Kadupul"
-msgstr "장치 %s 이 (가) 선인장에 추가되지 않음"
+msgstr "장치 %s 이 (가) Kadupul에 추가되지 않음"
 
 #: automation_devices.php:133
 msgid "Devices Removed from Kadupul Automation database"
@@ -2540,24 +2542,28 @@ msgstr "ROOTConstellation name (optional)"
 msgid "No Tree Rules Found"
 msgstr "트리 규칙 없음"
 
+#, fuzzy
 #: cactid.php:37 help.php:37 lib/functions.php:6227 lib/functions.php:6296
 #: lib/functions.php:6386 lib/functions.php:6993 poller.php:387 poller.php:537
 #: poller.php:602 poller.php:642 poller.php:784 poller.php:890
 #: poller_automation.php:46 poller_boost.php:369
 msgid "Kadupul System Warning"
-msgstr "선인장 시스템 경고"
+msgstr "Kadupul 시스템 경고"
 
+#, fuzzy
 #: cactid.php:37
 msgid "WARNING: Kadupul Daemon PID["
-msgstr "경고: 선인장 데몬 PID["
+msgstr "경고: Kadupul 데몬 PID["
 
+#, fuzzy
 #: cactid.php:125
 msgid "Kadupul System Notice"
-msgstr "선인장 시스템 유틸리티"
+msgstr "Kadupul 시스템 유틸리티"
 
+#, fuzzy
 #: cactid.php:125
 msgid "Notice: Kadupul Daemon PID["
-msgstr "알림: 선인장 데몬 PID["
+msgstr "알림: Kadupul 데몬 PID["
 
 #: cdef.php:264
 msgid "Click 'Continue' to delete the following CDEF."
@@ -4489,9 +4495,10 @@ msgstr "이미지 캐시 디렉토리가 존재하지 않습니다. 먼저 그�
 msgid "The Image Cache Directory is not writable.  Please set permissions and then attempt to open another Real-time graph."
 msgstr "이미지 캐시 디렉토리에 쓸 수 없습니다. 권한을 설정하고 다른 실시간 그래프를 열어보십시오."
 
+#, fuzzy
 #: graph_realtime.php:374
 msgid "Kadupul Real-time Graphing"
-msgstr "선인장 실시간 그래프"
+msgstr "Kadupul 실시간 그래프"
 
 #: graph_realtime.php:412 lib/html_graph.php:231 lib/html_reports.php:117
 #: lib/html_tree.php:1061
@@ -5226,9 +5233,9 @@ msgid "Set Default"
 msgstr "기본 설정"
 
 #: help.php:37
-#, php-format
+#, fuzzy, php-format
 msgid "WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "경고: 사용자에 대한 선인장 페이지: %s: %s 치명적인 오류 %d 생성됨!"
+msgstr "경고: 사용자에 대한 Kadupul 페이지: %s: %s 치명적인 오류 %d 생성됨!"
 
 #: help.php:59
 #, php-format
@@ -6778,9 +6785,10 @@ msgstr "액세스 포인트, 컨트롤러"
 msgid "Application Related"
 msgstr "자동화 규칙 적용"
 
+#, fuzzy
 #: include/global_arrays.php:1085
 msgid "Kadupul Related"
-msgstr "선인장 보고서"
+msgstr "Kadupul 보고서"
 
 #: include/global_arrays.php:1086
 msgid "Database Related"
@@ -7870,9 +7878,10 @@ msgstr "VDEF 항목"
 msgid "View SNMP Notification Receivers"
 msgstr "SNMP 알림 수신자보기"
 
+#, fuzzy
 #: include/global_arrays.php:2571
 msgid "Kadupul Settings"
-msgstr "선인장 설정"
+msgstr "Kadupul 설정"
 
 #: include/global_arrays.php:2577
 msgid "External Link"
@@ -7882,9 +7891,10 @@ msgstr "외부 링크"
 msgid "(Action)"
 msgstr "실행"
 
+#, fuzzy
 #: include/global_arrays.php:2637
 msgid "Kadupul Help"
-msgstr "선인장 홈"
+msgstr "Kadupul 홈"
 
 #: include/global_arrays.php:2649
 msgid "Export Results"
@@ -9509,9 +9519,10 @@ msgstr "PHP 바이너리 파일의 경로 (이 파일을 얻으려면 PHP를 다
 msgid "Logging"
 msgstr "로그 기록"
 
+#, fuzzy
 #: include/global_settings.php:164
 msgid "Kadupul Log Path"
-msgstr "선인장 로그 경로"
+msgstr "Kadupul 로그 경로"
 
 #: include/global_settings.php:165
 msgid "The path to your Kadupul log file (if blank, defaults to &lt;path_cacti&gt;/log/cacti.log)"
@@ -9821,9 +9832,10 @@ msgstr "이 옵션을 선택하면 양식 및 설정 도움말이 인라인으�
 msgid "Local Page Help Only"
 msgstr "도와주세요."
 
+#, fuzzy
 #: include/global_settings.php:448
 msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
-msgstr "기본적으로 선인장 페이지 도움말은 kadupul.org에 있습니다. 그러나 시스템에 인터넷에 액세스할 수 없는 경우 HTML 형식으로 문서를 로컬로 다운로드하여 Kadupul 서버의 'docs' 위치에 호스팅할 수 있습니다. 페이지 도움말 문서에 로컬 위치만 활용하도록 선택한 경우 이 확인란을 선택합니다."
+msgstr "기본적으로 Kadupul 페이지 도움말은 kadupul.org에 있습니다. 그러나 시스템에 인터넷에 액세스할 수 없는 경우 HTML 형식으로 문서를 로컬로 다운로드하여 Kadupul 서버의 'docs' 위치에 호스팅할 수 있습니다. 페이지 도움말 문서에 로컬 위치만 활용하도록 선택한 경우 이 확인란을 선택합니다."
 
 #: include/global_settings.php:453
 msgid "Deletion Verification"
@@ -10224,9 +10236,10 @@ msgstr "테마 설정"
 msgid "Theme"
 msgstr "테마"
 
+#, fuzzy
 #: include/global_settings.php:861 include/global_settings.php:2567
 msgid "Please select one of the available Themes to skin your Kadupul with."
-msgstr "당신의 선인장을 피부로 가꿀 수있는 테마 중 하나를 선택하십시오."
+msgstr "당신의 Kadupul을 피부로 가꿀 수있는 테마 중 하나를 선택하십시오."
 
 #: include/global_settings.php:867
 msgid "Table Settings"
@@ -10939,9 +10952,10 @@ msgstr "웹 기본 인증"
 msgid "Basic Auth Login Failure Message"
 msgstr "기본 인증 맵 파일"
 
+#, fuzzy
 #: include/global_settings.php:1553
 msgid "When using basic authentication, if there are issues mapping the username to a valid Kadupul account, the message included here will be displayed to users.  It can include both text and HTML."
-msgstr "기본 인증을 사용할 때 유효한 선인장 계정에 사용자 이름을 매핑하는 데 문제가 있는 경우 여기에 포함된 메시지가 사용자에게 표시됩니다. 텍스트와 HTML을 모두 포함할 수 있습니다."
+msgstr "기본 인증을 사용할 때 유효한 Kadupul 계정에 사용자 이름을 매핑하는 데 문제가 있는 경우 여기에 포함된 메시지가 사용자에게 표시됩니다. 텍스트와 HTML을 모두 포함할 수 있습니다."
 
 #: include/global_settings.php:1560
 msgid "Basic Auth Mapfile"
@@ -11935,9 +11949,10 @@ msgstr "그래프 페이지를 처음 방문했을 때 기본적으로 표시되
 msgid "TimeZone Support"
 msgstr "MySQL - TimeZone 지원"
 
+#, fuzzy
 #: include/global_settings.php:2581
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
-msgstr "Kadupul가 날짜를 어떻게 제시하길 원하시나요? 이 설정은 선인장 그래프 날짜 표시 방식도 변경합니다."
+msgstr "Kadupul가 날짜를 어떻게 제시하길 원하시나요? 이 설정은 Kadupul 그래프 날짜 표시 방식도 변경합니다."
 
 #: include/global_settings.php:2584
 msgid "Kadupul Server Timezone"
@@ -12717,9 +12732,10 @@ msgstr "암호에는 소문자와 대문자가 혼합되어 있어야합니다."
 msgid "Your password must contain at least 1 special character!"
 msgstr "비밀번호는 적어도 1 개의 특수 문자를 포함해야합니다!"
 
+#, fuzzy
 #: lib/auth.php:4676
 msgid "Kadupul Login Failure"
-msgstr "선인장 로그 지워짐"
+msgstr "Kadupul 로그 지워짐"
 
 #: lib/auth.php:4959
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
@@ -13492,9 +13508,10 @@ msgstr "메시지 텍스트 작성 중 ..."
 msgid "Sending Message..."
 msgstr "메시지를 보내는 중 ..."
 
+#, fuzzy
 #: lib/functions.php:5634
 msgid "Kadupul Test Message"
-msgstr "선인장 테스트 메시지"
+msgstr "Kadupul 테스트 메시지"
 
 #: lib/functions.php:5636
 msgid "Success!"
@@ -13530,9 +13547,9 @@ msgid "%s %s"
 msgstr "%s %s"
 
 #: lib/functions.php:6993
-#, php-format
+#, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
-msgstr "경고: 키 선인장 포함 파일 %s 이 (가) 누락되었습니다. 이 파일을 찾아 교체하십시오"
+msgstr "경고: 키 Kadupul 포함 파일 %s 이 (가) 누락되었습니다. 이 파일을 찾아 교체하십시오"
 
 #: lib/graphs.php:44
 msgid "Aggregated Device"
@@ -13727,9 +13744,10 @@ msgstr "이이템 색상"
 msgid "Help"
 msgstr "도움말"
 
+#, fuzzy
 #: lib/html.php:2577
 msgid "Kadupul Home"
-msgstr "선인장 홈"
+msgstr "Kadupul 홈"
 
 #: lib/html.php:2579
 msgid "Miscellaneous"
@@ -13743,9 +13761,10 @@ msgstr "Dashboards"
 msgid "Charts"
 msgstr "차트"
 
+#, fuzzy
 #: lib/html.php:2583
 msgid "Kadupul Project Page"
-msgstr "선인장 프로젝트 페이지"
+msgstr "Kadupul 프로젝트 페이지"
 
 #: lib/html.php:2587
 msgid "Spine"
@@ -13787,9 +13806,10 @@ msgstr "번역에 도움"
 msgid "Report a bug"
 msgstr "버그 보고하기"
 
+#, fuzzy
 #: lib/html.php:2600
 msgid "Kadupul"
-msgstr "선인장"
+msgstr "Kadupul"
 
 #: lib/html.php:2602
 msgid "Click to Show/Hide Filter"
@@ -14028,9 +14048,9 @@ msgid "Enter a valid directory path"
 msgstr "올바른 디렉토리 경로를 입력하십시오."
 
 #: lib/html_form.php:1275
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Color (%s)"
-msgstr "선인장 색 ( %s)"
+msgstr "Kadupul 색 ( %s)"
 
 #: lib/html_form.php:1340
 msgid "NO FONT VERIFICATION POSSIBLE"
@@ -14292,9 +14312,10 @@ msgstr "이메일 발신자 / 수신자 세부 정보"
 msgid "Subject"
 msgstr "제목"
 
+#, fuzzy
 #: lib/html_reports.php:164
 msgid "Kadupul Report"
-msgstr "선인장 보고서"
+msgstr "Kadupul 보고서"
 
 #: lib/html_reports.php:165
 msgid "This value will be used as the default Email subject.  The report name will be used if left blank."
@@ -14685,9 +14706,10 @@ msgstr "검색어 &quot; %s&quot;이 (가) 유효하지 않습니다. 오류는 
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
 msgstr "Kadupul 정규 표현식은 보안상의 이유로 50자로 제한됩니다."
 
+#, fuzzy
 #: lib/html_utility.php:1133
 msgid "Kadupul regular expressions can not includes the semi-color character."
-msgstr "선인장 정규식은 반색 문자를 포함할 수 없습니다."
+msgstr "Kadupul 정규식은 반색 문자를 포함할 수 없습니다."
 
 #: lib/html_utility.php:1153
 msgid "There was an internal error!"
@@ -14768,9 +14790,10 @@ msgstr "결과 가져 오기"
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Kadupul는 패키지를 가져온 경우 다음과 같이 변경합니다."
 
+#, fuzzy
 #: lib/import.php:2642
 msgid "Kadupul has imported the following items for the Package:"
-msgstr "선인장은 패키지에 대해 다음 항목을 가져 왔습니다."
+msgstr "Kadupul은 패키지에 대해 다음 항목을 가져 왔습니다."
 
 #: lib/import.php:2645
 msgid "Package Files"
@@ -14919,9 +14942,10 @@ msgstr "새 데이터베이스를 만들었지 만 &#39;cacti.sql&#39;파일을 
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Kadupul database. Please ensure that the Kadupul database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Kadupul database."
 msgstr "이 오류는 Kadupul 데이터베이스 사용자에게 Kadupul 데이터베이스에 대한 올바른 사용 권한이없는 경우에도 발생할 수 있습니다. Kadupul 데이터베이스 사용자가 Kadupul 데이터베이스에서 SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX를 수행 할 수 있는지 확인하십시오."
 
+#, fuzzy
 #: lib/installer.php:1593
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"
-msgstr "당신은 또한 MySQL의에 MySQL의 시간대 정보를 가져오고 선인장 사용자에게 mysql.time_zone_name 테이블에 대한 SELECT 액세스 권한을 <b>부여해야합니다</b>"
+msgstr "당신은 또한 MySQL의에 MySQL의 시간대 정보를 가져오고 Kadupul 사용자에게 mysql.time_zone_name 테이블에 대한 SELECT 액세스 권한을 <b>부여해야합니다</b>"
 
 #: lib/installer.php:1596
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
@@ -14952,9 +14976,10 @@ msgstr "업그레이드"
 msgid "Downgrade"
 msgstr "다운그레이드"
 
+#, fuzzy
 #: lib/installer.php:1740 utilities.php:265
 msgid "Kadupul Version"
-msgstr "선인장 버전"
+msgstr "Kadupul 버전"
 
 #: lib/installer.php:1740
 msgid "License Agreement"
@@ -15322,9 +15347,10 @@ msgstr "설치 완료 후 쓰기 가능"
 msgid "Potential permission issues"
 msgstr "잠재적 인 권한 문제"
 
+#, fuzzy
 #: lib/installer.php:2382
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
-msgstr "웹 서버에 아래 오류가 표시된 선인장 폴더에 대한 읽기 / 쓰기 권한이 있는지 확인하십시오."
+msgstr "웹 서버에 아래 오류가 표시된 Kadupul 폴더에 대한 읽기 / 쓰기 권한이 있는지 확인하십시오."
 
 #: lib/installer.php:2385
 msgid "If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools."
@@ -16158,9 +16184,9 @@ msgid "DS '%s' missing in Kadupul definition"
 msgstr "Kadupul 정의에서 DS &#39; %s&#39;이 누락되었습니다."
 
 #: lib/rrd.php:3136 lib/rrd.php:3137
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
-msgstr "선인장 RRA &#39; %s&#39;의 CF / 스텝 수 ( %s,  %s)가 &#39; %s&#39;"
+msgstr "Kadupul RRA &#39; %s&#39;의 CF / 스텝 수 ( %s,  %s)가 &#39; %s&#39;"
 
 #: lib/rrd.php:3150 lib/rrd.php:3151
 #, php-format
@@ -16173,9 +16199,9 @@ msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider
 msgstr "'%s' 의 pdp_per_row가 유효하지 않습니다. RRA '%s' 은 (는) '%s' 이어야 합니다. Kadupul가 RRD 파일을 다시 만들 수 있도록 삭제하고 허용하는 것이 좋습니다."
 
 #: lib/rrd.php:3187
-#, php-format
+#, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
-msgstr "선인장에 대한 XFF RRA id &#39; %s&#39;은 (는) &#39; %s&#39;이어야합니다."
+msgstr "Kadupul에 대한 XFF RRA id &#39; %s&#39;은 (는) &#39; %s&#39;이어야합니다."
 
 #: lib/rrd.php:3191
 #, php-format
@@ -16302,7 +16328,7 @@ msgstr "RRA 폴더"
 msgid "Root"
 msgstr "워드프레스 루트 디렉토리를 확인할 수 없습니다"
 
-#: lib/rrd.php:4079
+#: lib/rrd.php:4082
 msgid "Unknown RRDtool Error"
 msgstr "알 수없는 RRDtool 오류"
 
@@ -16957,9 +16983,10 @@ msgstr "Kadupul에서 세션 시간 초과로 인해 로그 아웃되었습니�
 msgid "You have been logged out of Kadupul due to a Remote Data Collector state change"
 msgstr "Kadupul에서 세션 시간 초과로 인해 로그 아웃되었습니다."
 
+#, fuzzy
 #: logout.php:61
 msgid "Logout of Kadupul"
-msgstr "선인장 로그 아웃"
+msgstr "Kadupul 로그 아웃"
 
 #: logout.php:68
 msgid "Automatic Logout"
@@ -17447,9 +17474,10 @@ msgstr "오류: 척추 경로: %s 이 (가) 폴러 ID %d 에 유효하지 않습
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "폴러 ID %d 의 최대 런타임 %d 초를 초과했습니다. 종료 중."
 
+#, fuzzy
 #: poller.php:890
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "경고: 선인장 폴링 주기가 폴러 간격을 초과했습니다."
+msgstr "경고: Kadupul 폴링 주기가 폴러 간격을 초과했습니다."
 
 #: poller.php:915
 #, php-format
@@ -17460,9 +17488,10 @@ msgstr "경고: 이름: %s 의 PollerID: %s 이 (가) 하트비트 상태입니�
 msgid "Poller in Heartbeat Mode"
 msgstr "하트비트 모드의 폴러"
 
+#, fuzzy
 #: poller.php:1174
 msgid "Kadupul System Notification"
-msgstr "선인장 시스템 유틸리티"
+msgstr "Kadupul 시스템 유틸리티"
 
 #: poller.php:1174
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
@@ -17473,9 +17502,10 @@ msgstr "참고 : 두 번째 Kadupul 데이터 수집기가 추가되었습니다
 msgid "WARNING: Main Kadupul database %s offline or in recovery"
 msgstr "경고: 주요 Kadupul 데이터베이스가 오프라인이거나 복구 중입니다."
 
+#, fuzzy
 #: poller_automation.php:970 poller_automation.php:1021
 msgid "Kadupul Primary Admin"
-msgstr "선인장 기본 관리자"
+msgstr "Kadupul 기본 관리자"
 
 #: poller_automation.php:1122
 msgid "Kadupul Automation Report requires an html based Email client"
@@ -17976,9 +18006,9 @@ msgid "NOTE: Path Settings on this Tab are only saved locally!"
 msgstr "참고 :이 탭의 경로 설정은 로컬에만 저장됩니다!"
 
 #: settings.php:374
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Settings (%s)%s"
-msgstr "선인장 설정 (%s) %s"
+msgstr "Kadupul 설정 (%s) %s"
 
 #: settings.php:492
 msgid "Changing Permission Model Warning"
@@ -19407,9 +19437,10 @@ msgstr "오류 : RRDtool 1.2.x +는 GIF 이미지 형식을 지원하지 않지�
 msgid "General Information"
 msgstr "일반 정보"
 
+#, fuzzy
 #: utilities.php:270
 msgid "Kadupul OS"
-msgstr "선인장 OS"
+msgstr "Kadupul OS"
 
 #: utilities.php:280
 msgid "NET-SNMP Version"
@@ -19699,13 +19730,15 @@ msgstr "로그 [총선 수 : % d - 일치하지 않는 항목 숨김]"
 msgid "Log [Total Lines: %d - All Items Shown]"
 msgstr "로그 [총선 : % d - 표시된 모든 항목]"
 
+#, fuzzy
 #: utilities.php:1602
 msgid "Clear Kadupul Log"
-msgstr "선인장 로그 지우기"
+msgstr "Kadupul 로그 지우기"
 
+#, fuzzy
 #: utilities.php:1615
 msgid "Kadupul Log Cleared"
-msgstr "선인장 로그 지워짐"
+msgstr "Kadupul 로그 지워짐"
 
 #: utilities.php:1617
 msgid "Error: Unable to clear log, no write permissions."
@@ -19775,9 +19808,10 @@ msgstr "스크립트 서버 :"
 msgid "RRD:"
 msgstr "RRD :"
 
+#, fuzzy
 #: utilities.php:2286
 msgid "Kadupul technical support page.  Used by developers and technical support persons to assist with issues in Kadupul.  Includes checks for common configuration issues."
-msgstr "선인장 기술 지원 페이지. 개발자 및 기술 지원 담당자가 Kadupul의 문제를 지원할 때 사용합니다. 일반적인 구성 문제에 대한 검사를 포함합니다."
+msgstr "Kadupul 기술 지원 페이지. 개발자 및 기술 지원 담당자가 Kadupul의 문제를 지원할 때 사용합니다. 일반적인 구성 문제에 대한 검사를 포함합니다."
 
 #: utilities.php:2290
 msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
@@ -19883,9 +19917,10 @@ msgstr "이 메뉴 선택을 사용하면 SNMPAgent가 등록 된 알림 수신�
 msgid "Allows Administrators to maintain SNMP notification receivers."
 msgstr "관리자가 SNMP 알림 수신자를 유지 관리 할 수 있습니다."
 
+#, fuzzy
 #: utilities.php:2380
 msgid "Kadupul System Utilities"
-msgstr "선인장 시스템 유틸리티"
+msgstr "Kadupul 시스템 유틸리티"
 
 #: utilities.php:2490
 msgid "Refresh Interval"

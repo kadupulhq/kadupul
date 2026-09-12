@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-11 23:33-0700\n"
+"POT-Creation-Date: 2026-09-12 09:37-0700\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -17,9 +17,10 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && n % 10 == 0) ? 2 : 3));\n"
 "X-Generator: Poedit 3.4.2\n"
 
+#, fuzzy
 #: about.php:22 include/global_arrays.php:2631 lib/html.php:2599
 msgid "About Kadupul"
-msgstr "על קקט"
+msgstr "על Kadupul"
 
 #: about.php:33
 msgid "Kadupul is an independent open-source project for network monitoring and time-series graphing."
@@ -833,22 +834,25 @@ msgstr "חייב לכלול לפחות תו מיוחד אחד"
 msgid "Cannot be reused for %d password changes"
 msgstr "לא ניתן לעשות בו שימוש חוזר לשינויים ב-% d"
 
+#, fuzzy
 #: auth_changepassword.php:317
 msgid "There are problems with the Change Password page.  Contact your Kadupul administrator right away."
-msgstr "יש בעיות בדף שינוי סיסמה.  צור קשר עם מנהל הקקטוסים שלך באופן מיידי."
+msgstr "יש בעיות בדף שינוי סיסמה.  צור קשר עם מנהל Kadupul שלך באופן מיידי."
 
 #: auth_changepassword.php:327 auth_changepassword.php:334
 #: include/global_form.php:1566 lib/functions.php:3744 lib/html.php:2568
 msgid "Change Password"
 msgstr "שנה סיסמה"
 
+#, fuzzy
 #: auth_changepassword.php:344
 msgid "Please enter your current password and your new<br>Kadupul password."
-msgstr "הזן את הסיסמה הנוכחית ואת החדש <br> סיסמת קקט."
+msgstr "הזן את הסיסמה הנוכחית ואת החדש <br> סיסמת Kadupul."
 
+#, fuzzy
 #: auth_changepassword.php:346
 msgid "Please enter your new Kadupul password."
-msgstr "הזן את הסיסמה הנוכחית ואת החדש <br> סיסמת קקט."
+msgstr "הזן את הסיסמה הנוכחית ואת החדש <br> סיסמת Kadupul."
 
 #: auth_changepassword.php:354 auth_login.php:321 auth_login.php:324
 #: include/global_settings.php:1816 lib/functions.php:5599
@@ -1098,9 +1102,9 @@ msgid "Device %s Added to Kadupul"
 msgstr "מכשיר %s נוסף ל - Kadupul"
 
 #: automation_devices.php:123
-#, php-format
+#, fuzzy, php-format
 msgid "Device %s Not Added to Kadupul"
-msgstr "המכשיר %s לא נוסף לקקטוסים"
+msgstr "המכשיר %s לא נוסף Kadupul"
 
 #: automation_devices.php:133
 msgid "Devices Removed from Kadupul Automation database"
@@ -1581,9 +1585,10 @@ msgstr "רשת חדשה גילוי טווח"
 msgid "Data Collector"
 msgstr "אספן נתונים"
 
+#, fuzzy
 #: automation_networks.php:456 include/global_form.php:1209
 msgid "Choose the Kadupul Data Collector/Poller to be used to gather data from this Device."
-msgstr "בחר את קקטוס הנתונים אספן / פולר כדי לשמש כדי לאסוף נתונים ממכשיר זה."
+msgstr "בחר את Kadupul הנתונים אספן / פולר כדי לשמש כדי לאסוף נתונים ממכשיר זה."
 
 #: automation_networks.php:463
 msgid "Associated Site"
@@ -4594,9 +4599,10 @@ msgstr "המדריך Cache Image אינו קיים. תחילה צור אותו �
 msgid "The Image Cache Directory is not writable.  Please set permissions and then attempt to open another Real-time graph."
 msgstr "מדריך המטמון של התמונה אינו ניתן לכתיבה. הגדר הרשאות ולאחר מכן נסה לפתוח גרף נוסף בזמן אמת."
 
+#, fuzzy
 #: graph_realtime.php:374
 msgid "Kadupul Real-time Graphing"
-msgstr "קקטוסים בזמן אמת גרפים"
+msgstr "Kadupul בזמן אמת גרפים"
 
 #: graph_realtime.php:412 lib/html_graph.php:231 lib/html_reports.php:117
 #: lib/html_tree.php:1061
@@ -5331,9 +5337,9 @@ msgid "Set Default"
 msgstr "קבע כברירת מחדל"
 
 #: help.php:37
-#, php-format
+#, fuzzy, php-format
 msgid "WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "אזהרה: דף קקטוסים:%s למשתמש:%s יצר שגיאה חמורה %d!"
+msgstr "אזהרה: דף Kadupul:%s למשתמש:%s יצר שגיאה חמורה %d!"
 
 #: help.php:59
 #, php-format
@@ -6883,9 +6889,10 @@ msgstr "נקודות גישה, בקרים"
 msgid "Application Related"
 msgstr "החלת כללי אוטומציה"
 
+#, fuzzy
 #: include/global_arrays.php:1085
 msgid "Kadupul Related"
-msgstr "דו&quot;ח קקט"
+msgstr "דו&quot;ח Kadupul"
 
 #: include/global_arrays.php:1086
 msgid "Database Related"
@@ -7987,9 +7994,10 @@ msgstr "קישור חיצוני"
 msgid "(Action)"
 msgstr "פעולה:"
 
+#, fuzzy
 #: include/global_arrays.php:2637
 msgid "Kadupul Help"
-msgstr "בית קקט"
+msgstr "בית Kadupul"
 
 #: include/global_arrays.php:2649
 msgid "Export Results"
@@ -9630,9 +9638,10 @@ msgstr "נתיב תקלה של רשם נתיב רישום"
 msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
 msgstr "אם אתה נתקל בבעיות עם Kadupul&#39;s Data Collectors, הגדר נתיב קובץ זה והשגיאה הסטנדרטית של Data Collectors תנותב לקובץ זה"
 
+#, fuzzy
 #: include/global_settings.php:184
 msgid "Rotate the Kadupul Log"
-msgstr "סובב את יומן קקט"
+msgstr "סובב את יומן Kadupul"
 
 #: include/global_settings.php:185
 msgid "This option will rotate the Kadupul Log periodically."
@@ -9678,9 +9687,10 @@ msgstr "השביל לקובץ תצורה של עמוד השדרה. כברירת 
 msgid "RRDfile Auto Clean"
 msgstr "ניקוי אוטומטי של RRDfile"
 
+#, fuzzy
 #: include/global_settings.php:232
 msgid "Automatically archive or delete RRDfiles when their corresponding Data Sources are removed from Kadupul"
-msgstr "העבר אוטומטית לארכיון או מחק RRDfiles כאשר מקורות הנתונים המתאימים שלהם מוסרים מקקט"
+msgstr "העבר אוטומטית לארכיון או מחק RRDfiles כאשר מקורות הנתונים המתאימים שלהם מוסרים Kadupul"
 
 #: include/global_settings.php:237
 msgid "RRDfile Auto Clean Method"
@@ -9822,9 +9832,10 @@ msgstr "Kadupul כולל תמיכה במספר מעבדי תרגום שפות ח
 msgid "Client TimeZone Support"
 msgstr "תמיכה ב - TimeZone"
 
+#, fuzzy
 #: include/global_settings.php:366
 msgid "How should Kadupul support Client Dates based upon the Client browsers timezone."
-msgstr "כיצד קקטוסים צריכים לתמוך בתאריכי לקוח בהתבסס על אזור הזמן של דפדפני הלקוח."
+msgstr "כיצד Kadupul צריכים לתמוך בתאריכי לקוח בהתבסס על אזור הזמן של דפדפני הלקוח."
 
 #: include/global_settings.php:375 include/global_settings.php:2621
 msgid "Date Display Format"
@@ -9942,17 +9953,19 @@ msgstr "הצג את המשתמש לפני מחיקת הפריט."
 msgid "Data Source Preservation Preset"
 msgstr "שיטת יצירת גרף / מקור נתונים"
 
+#, fuzzy
 #: include/global_settings.php:460
 msgid "When enabled, Kadupul will set Radio Button to Delete related Data Sources of a Graph when removing Graphs.  Note: Kadupul will not allow the removal of Data Sources if they are used in other Graphs."
-msgstr "כאשר מופעל, קקטוסים יגדירו את כפתור הרדיו למחיקת מקורות נתונים קשורים לתרשים בעת הסרת גרפים. הערה: קקטוסים לא יאפשרו הסרת מקורות נתונים אם משתמשים בהם בתרשימים אחרים."
+msgstr "כאשר מופעל, Kadupul יגדירו את כפתור הרדיו למחיקת מקורות נתונים קשורים לתרשים בעת הסרת גרפים. הערה: Kadupul לא יאפשרו הסרת מקורות נתונים אם משתמשים בהם בתרשימים אחרים."
 
 #: include/global_settings.php:465
 msgid "Graphs Auto Unlock"
 msgstr "כלל התאמה של גרף"
 
+#, fuzzy
 #: include/global_settings.php:466
 msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
-msgstr "כאשר מופעל, קקטוסים לא נועלים גרפים. זה מאפשר שינוי ידני מהיר יותר של מקורות נתונים הקשורים לתרשים."
+msgstr "כאשר מופעל, Kadupul לא נועלים גרפים. זה מאפשר שינוי ידני מהיר יותר של מקורות נתונים הקשורים לתרשים."
 
 #: include/global_settings.php:471
 msgid "Hide Kadupul Dashboard"
@@ -10442,9 +10455,10 @@ msgstr "ניהול יומן"
 msgid "Default Log Tail Lines"
 msgstr "ברירת מחדל כניסה זנב קווים"
 
+#, fuzzy
 #: include/global_settings.php:970
 msgid "Default number of lines of the Kadupul log file to tail."
-msgstr "מספר ברירת המחדל של השורות של קובץ יומן קקטוסים לזנב."
+msgstr "מספר ברירת המחדל של השורות של קובץ יומן Kadupul לזנב."
 
 #: include/global_settings.php:976
 msgid "Maximum number of rows per page"
@@ -10717,9 +10731,10 @@ msgstr "מרווח הסקרים בשימוש. הגדרה זו תשפיע על ה
 msgid "Cron/Daemon Interval"
 msgstr "מרווח Cron"
 
+#, fuzzy
 #: include/global_settings.php:1233
 msgid "The frequency that the Kadupul data collector will be started.  You can use either crontab, a scheduled task (for windows), or the cactid systemd service to control launching the Kadupul data collector.  For instructions on using the cactid daemon, review the README.md file in the service directory."
-msgstr "התדירות בה יופעל אספן הנתונים של קקטוסים. תוכל להשתמש ב- crontab, במשימה מתוזמנת (עבור חלונות) או בשירות systemd cactid כדי לשלוט בהשקת אספן הנתונים של קקטוסים. לקבלת הוראות לשימוש בדמון הקקטיים, עיין בקובץ README.md בספריית השירות."
+msgstr "התדירות בה יופעל אספן הנתונים של Kadupul. תוכל להשתמש ב- crontab, במשימה מתוזמנת (עבור חלונות) או בשירות systemd cactid כדי לשלוט בהשקת אספן הנתונים של Kadupul. לקבלת הוראות לשימוש בדמון Kadupul, עיין בקובץ README.md בספריית השירות."
 
 #: include/global_settings.php:1239
 msgid "Balance Process Load"
@@ -10781,9 +10796,10 @@ msgstr "הגדרה זו מיועדת למערכות סוקר בודדות רק �
 msgid "Disable Resource Cache Replication"
 msgstr "לבנות מחדש מטמון משאבים"
 
+#, fuzzy
 #: include/global_settings.php:1304
 msgid "By default, the main Kadupul Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Kadupul Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting."
-msgstr "כברירת מחדל, קקטוסים הנתונים הראשי של קקטוסים ישמור את כל אתר האינטרנט במטמון ותוספים למטמון משאבים. לאחר מכן, מעת לעת אספני הנתונים המרוחקים יתעדכנו בעצמם בעדכוני כל העדכונים של אספן הנתונים הראשי של הקקטוסים. מטמון משאבים זה מאפשר למעשה לאספני נתונים מרוחקים לשדרג עצמי. אם אינך מעוניין להשתמש באפשרות זו, תוכל להשבית אותה באמצעות הגדרה זו."
+msgstr "כברירת מחדל, Kadupul הנתונים הראשי של Kadupul ישמור את כל אתר האינטרנט במטמון ותוספים למטמון משאבים. לאחר מכן, מעת לעת אספני הנתונים המרוחקים יתעדכנו בעצמם בעדכוני כל העדכונים של אספן הנתונים הראשי של Kadupul. מטמון משאבים זה מאפשר למעשה לאספני נתונים מרוחקים לשדרג עצמי. אם אינך מעוניין להשתמש באפשרות זו, תוכל להשבית אותה באמצעות הגדרה זו."
 
 #: include/global_settings.php:1309
 msgid "Additional Data Collector Settings"
@@ -10864,9 +10880,10 @@ msgstr "%s דקות"
 msgid "Data Source Statistics Timeout"
 msgstr "נתונים סטטיסטיים"
 
+#, fuzzy
 #: include/global_settings.php:1377
 msgid "The maximum amount of time Kadupul's Data Source Statistics script can run without generating a timeout error and being killed."
-msgstr "משך הזמן המרבי של סקריפט הנתונים של מקור הנתונים של קקטיי יכול לרוץ מבלי ליצור שגיאת פסק זמן ולהיהרג."
+msgstr "משך הזמן המרבי של סקריפט הנתונים של מקור הנתונים של Kadupul יכול לרוץ מבלי ליצור שגיאת פסק זמן ולהיהרג."
 
 #: include/global_settings.php:1391
 msgid "RRDChecker Timeout"
@@ -10887,9 +10904,10 @@ msgstr "%s שעות"
 msgid "Poller Commands Timeout"
 msgstr "פסק זמן לפקודות רקע"
 
+#, fuzzy
 #: include/global_settings.php:1405
 msgid "The maximum amount of time Kadupul's Background Commands script can run without generating a timeout error and being killed.  This script will perform tasks such as re-indexing Devices and pruning devices from Remote Data Collectors."
-msgstr "משך הזמן המרבי של סקריפט פקודות הרקע של קקטיי יכול לרוץ מבלי ליצור שגיאת פסק זמן ולהיהרג."
+msgstr "משך הזמן המרבי של סקריפט פקודות הרקע של Kadupul יכול לרוץ מבלי ליצור שגיאת פסק זמן ולהיהרג."
 
 #: include/global_settings.php:1417
 msgid "Poller Command Concurrent Processes"
@@ -11181,9 +11199,10 @@ msgstr "הגדרות כלליות של LDAP"
 msgid "Server(s)"
 msgstr "Serveurs"
 
+#, fuzzy
 #: include/global_settings.php:1697 user_domains.php:361
 msgid "A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
-msgstr "רשימה מופרדת של שמות מארחי DNS או כתובת IP של שרתי LDAP חוקיים. קקטוסים ינסו להשתמש בשרתי LDAP משמאל לימין כדי לאמת משתמש."
+msgstr "רשימה מופרדת של שמות מארחי DNS או כתובת IP של שרתי LDAP חוקיים. Kadupul ינסו להשתמש בשרתי LDAP משמאל לימין כדי לאמת משתמש."
 
 #: include/global_settings.php:1703 user_domains.php:369
 msgid "Port Standard"
@@ -11229,9 +11248,10 @@ msgstr "הזן את פסק הזמן של ה- SMTP תוך שניות."
 msgid "LDAP Debug Mode"
 msgstr "מצב ניפוי באגים LDAP"
 
+#, fuzzy
 #: include/global_settings.php:1743
 msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities."
-msgstr "אם מסומן קקטוסים ירשמו מידע LDAP נוסף ליומן הקקטוסים במהלך פעילויות כריכה וחיפוש."
+msgstr "אם מסומן Kadupul ירשמו מידע LDAP נוסף ליומן Kadupul במהלך פעילויות כריכה וחיפוש."
 
 #: include/global_settings.php:1748 user_domains.php:394
 msgid "Encryption"
@@ -11529,9 +11549,10 @@ msgstr "גודל דואר אלקטרוני מרבי"
 msgid "The maximum size of the E-Mail message including all attachments."
 msgstr "הגודל המרבי של הודעת הדואר האלקטרוני כולל את כל ההקשרים."
 
+#, fuzzy
 #: include/global_settings.php:2016
 msgid "Poller Logging Level for Kadupul Reporting"
-msgstr "רמת רישום של פולרים לדיווח על קקטוסים"
+msgstr "רמת רישום של פולרים לדיווח על Kadupul"
 
 #: include/global_settings.php:2017
 msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
@@ -11733,9 +11754,10 @@ msgstr "באיזה שעה ביום יש לעדכן נתונים שבועיים, 
 msgid "Memory Limit for Data Source Statistics Data Collector"
 msgstr "מגבלת זיכרון עבור נתונים מקור נתונים נתונים אספן"
 
+#, fuzzy
 #: include/global_settings.php:2243
 msgid "The maximum amount of memory for the Kadupul Poller and Data Source Statistics Poller"
-msgstr "הכמות המקסימלית של זיכרון עבור פולטי קקטן נתונים מקור נתונים סטטיסטיים Poller"
+msgstr "הכמות המקסימלית של זיכרון עבור פולטי Kadupul נתונים מקור נתונים סטטיסטיים Poller"
 
 #: include/global_settings.php:2249
 msgid "RRDfile Check"
@@ -12039,9 +12061,10 @@ msgstr "באיזה מצב גרף ברצונך להציג כברירת מחדל �
 msgid "TimeZone Support"
 msgstr "תמיכה ב - TimeZone"
 
+#, fuzzy
 #: include/global_settings.php:2581
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
-msgstr "איך תרצו שקקטוסים יציגו תאריכים? הגדרה זו תשנה גם את האופן שבו תאריכי גרפי קקטוסים מיוצגים."
+msgstr "איך תרצו Kadupul יציגו תאריכים? הגדרה זו תשנה גם את האופן שבו תאריכי גרפי Kadupul מיוצגים."
 
 #: include/global_settings.php:2584
 msgid "Kadupul Server Timezone"
@@ -12248,9 +12271,10 @@ msgstr "בחר אם להרחיב את תבניות התרשים ושאילתות
 msgid "Tree History"
 msgstr "היסטוריית סיסמאות"
 
+#, fuzzy
 #: include/global_settings.php:2791
 msgid "If enabled, Kadupul will remember your Tree History between logins and when you return to the Graphs page."
-msgstr "אם זה מופעל, קקטוסים יזכרו את היסטוריית העצים שלך בין כניסות וכשתחזור לדף הגרפים."
+msgstr "אם זה מופעל, Kadupul יזכרו את היסטוריית העצים שלך בין כניסות וכשתחזור לדף הגרפים."
 
 #: include/global_settings.php:2814
 msgid "Use Custom Fonts"
@@ -12800,9 +12824,10 @@ msgstr "שגיאה בחיפוש LDAP: %s"
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "הגישה נדחתה! מזהה משתמש התבנית %s אינו קיים.  צור קשר עם מנהל המערכת שלך."
 
+#, fuzzy
 #: lib/auth.php:4300
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
-msgstr "מנהל הקקטוסים שלך אילץ סיסמאות מורכבות להתחברות וסיסמת הקקטוסים הנוכחית שלך אינה תואמת את הדרישות החדשות. לכן עליכם לשנות את הסיסמא שלכם כעת."
+msgstr "מנהל Kadupul שלך אילץ סיסמאות מורכבות להתחברות וסיסמת Kadupul הנוכחית שלך אינה תואמת את הדרישות החדשות. לכן עליכם לשנות את הסיסמא שלכם כעת."
 
 #: lib/auth.php:4331
 #, php-format
@@ -13596,9 +13621,10 @@ msgstr "יוצר טקסט הודעה ..."
 msgid "Sending Message..."
 msgstr "לשלוח הודעה..."
 
+#, fuzzy
 #: lib/functions.php:5634
 msgid "Kadupul Test Message"
-msgstr "הודעה מבחן קקטוסים"
+msgstr "הודעה מבחן Kadupul"
 
 #: lib/functions.php:5636
 msgid "Success!"
@@ -13634,9 +13660,9 @@ msgid "%s %s"
 msgstr "%s %s"
 
 #: lib/functions.php:6993
-#, php-format
+#, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
-msgstr "אזהרה:  מפתח קקטוסים כלול קובץ %s חסר.  צריך לאתר ולהחליף את הקובץ הזה"
+msgstr "אזהרה:  מפתח Kadupul כלול קובץ %s חסר.  צריך לאתר ולהחליף את הקובץ הזה"
 
 #: lib/graphs.php:44
 msgid "Aggregated Device"
@@ -13831,9 +13857,10 @@ msgstr "צבע פריט"
 msgid "Help"
 msgstr "עזרה"
 
+#, fuzzy
 #: lib/html.php:2577
 msgid "Kadupul Home"
-msgstr "בית קקט"
+msgstr "בית Kadupul"
 
 #: lib/html.php:2579
 msgid "Miscellaneous"
@@ -13867,9 +13894,10 @@ msgstr "מקלדת"
 msgid "Shortcuts"
 msgstr "קיצורי דרך"
 
+#, fuzzy
 #: lib/html.php:2591
 msgid "Contribute to the Kadupul Project"
-msgstr "סובב את יומן קקט"
+msgstr "סובב את יומן Kadupul"
 
 #: lib/html.php:2592
 msgid "Help in Developing"
@@ -14162,9 +14190,9 @@ msgid "There was a SQL Injection attempted on the page"
 msgstr "היה ניסיון להזרקת SQL בדף"
 
 #: lib/html_form_template.php:156
-#, php-format
+#, fuzzy, php-format
 msgid "A client attempted to create a SQL Injection into Kadupul likely from an external host with the address %s"
-msgstr "לקוח ניסה ליצור הזרקת SQL לתוך קקטוסים ככל הנראה ממארח חיצוני עם הכתובת %s"
+msgstr "לקוח ניסה ליצור הזרקת SQL לתוך Kadupul ככל הנראה ממארח חיצוני עם הכתובת %s"
 
 #: lib/html_form_template.php:632 lib/html_form_template.php:644
 #, php-format
@@ -14396,9 +14424,10 @@ msgstr "דוא&quot;ל שולח / פרטי המקלט"
 msgid "Subject"
 msgstr "נושא"
 
+#, fuzzy
 #: lib/html_reports.php:164
 msgid "Kadupul Report"
-msgstr "דו&quot;ח קקט"
+msgstr "דו&quot;ח Kadupul"
 
 #: lib/html_reports.php:165
 msgid "This value will be used as the default Email subject.  The report name will be used if left blank."
@@ -14785,13 +14814,15 @@ msgstr "נבחר"
 msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "מונח החיפוש &quot; %s&quot; אינו חוקי. השגיאה היא %s"
 
+#, fuzzy
 #: lib/html_utility.php:1129
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
-msgstr "ביטויים רגילים של קקטוסים מוגבלים ל -50 תווים רק מטעמי אבטחה."
+msgstr "ביטויים רגילים של Kadupul מוגבלים ל -50 תווים רק מטעמי אבטחה."
 
+#, fuzzy
 #: lib/html_utility.php:1133
 msgid "Kadupul regular expressions can not includes the semi-color character."
-msgstr "ביטויים רגילים של קקטוסים אינם יכולים לכלול את התו הצבעוני למחצה."
+msgstr "ביטויים רגילים של Kadupul אינם יכולים לכלול את התו הצבעוני למחצה."
 
 #: lib/html_utility.php:1153
 msgid "There was an internal error!"
@@ -15019,13 +15050,15 @@ msgstr "הערה: הנתונים הקיימים שלך לא ישתנו, וגם �
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
 msgstr "יצרת מסד נתונים חדש, אך עדיין לא ייבאת את הקובץ &#39;cacti.sql&#39;. בשורת הפקודה, בצע את הפעולות הבאות כדי להמשיך:"
 
+#, fuzzy
 #: lib/installer.php:1592
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Kadupul database. Please ensure that the Kadupul database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Kadupul database."
-msgstr "שגיאה זו עשויה להיווצר גם אם למשתמש מסד הנתונים של קקטוסים אין הרשאות נכונות במסד הנתונים של Kadupul. אנא ודא כי המשתמש באתר Kadupul יש את היכולת לבחור, להוסיף, למחוק, לעדכן, ליצור, ALTER, DROP, INDEX על מסד הנתונים של Kadupul."
+msgstr "שגיאה זו עשויה להיווצר גם אם למשתמש מסד הנתונים של Kadupul אין הרשאות נכונות במסד הנתונים של Kadupul. אנא ודא כי המשתמש באתר Kadupul יש את היכולת לבחור, להוסיף, למחוק, לעדכן, ליצור, ALTER, DROP, INDEX על מסד הנתונים של Kadupul."
 
+#, fuzzy
 #: lib/installer.php:1593
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"
-msgstr "כמו כן, <b>עליך</b> לייבא מידע MySQL אזור זמן לתוך MySQL ולהעניק למשתמש קקטוסים גישה SELECT לשולחן mysql.time_zone_name"
+msgstr "כמו כן, <b>עליך</b> לייבא מידע MySQL אזור זמן לתוך MySQL ולהעניק למשתמש Kadupul גישה SELECT לשולחן mysql.time_zone_name"
 
 #: lib/installer.php:1596
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
@@ -15056,9 +15089,10 @@ msgstr "עדכון"
 msgid "Downgrade"
 msgstr "שנמוך"
 
+#, fuzzy
 #: lib/installer.php:1740 utilities.php:265
 msgid "Kadupul Version"
-msgstr "קקטוסים גירסה"
+msgstr "Kadupul גירסה"
 
 #: lib/installer.php:1740
 msgid "License Agreement"
@@ -15459,13 +15493,15 @@ msgstr "כל התיקיות ניתנות לכתיבה"
 msgid "Input Validation Whitelist Protection"
 msgstr "הגנה על רשימת אימות קלט"
 
+#, fuzzy
 #: lib/installer.php:2420
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
-msgstr "ניתן לנצל שיטות קלט נתונים של קקטוסים שקוראים לסקריפט בדרכים שאינן מנהל יכולות לגרום נזק לשני הקבצים שבבעלות חשבון הסקר, ובמקרים שבהם מישהו מפעיל את הסוקר Kadupul כשורש, יכול לפגוע במערכת ההפעלה המאפשרת לתוקפים ל לנצל את התשתית שלך."
+msgstr "ניתן לנצל שיטות קלט נתונים של Kadupul שקוראים לסקריפט בדרכים שאינן מנהל יכולות לגרום נזק לשני הקבצים שבבעלות חשבון הסקר, ובמקרים שבהם מישהו מפעיל את הסוקר Kadupul כשורש, יכול לפגוע במערכת ההפעלה המאפשרת לתוקפים ל לנצל את התשתית שלך."
 
+#, fuzzy
 #: lib/installer.php:2421
 msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
-msgstr "לפיכך, לפני מספר גרסאות, שופרו הקקטוסים בכדי לספק יכולות של רשימת לבן על סוגים אלה של שיטות הזנת נתונים. למרות שזה מאבטח קקטוסים בצורה יותר חדה, זה מגדיל את כמות העבודה הנדרשת על ידי מנהל הקקטוסים לייבוא וניהול של תבניות וחבילות."
+msgstr "לפיכך, לפני מספר גרסאות, שופרו Kadupul בכדי לספק יכולות של רשימת לבן על סוגים אלה של שיטות הזנת נתונים. למרות שזה מאבטח Kadupul בצורה יותר חדה, זה מגדיל את כמות העבודה הנדרשת על ידי מנהל Kadupul לייבוא וניהול של תבניות וחבילות."
 
 #: lib/installer.php:2422
 #, fuzzy
@@ -15850,9 +15886,10 @@ msgstr "הגדרות ברירת מחדל של ההתקן"
 msgid "No templated graphs for Default Device were found"
 msgstr "לא נמצאו גרשי תבנית עבור התקן ברירת מחדל"
 
+#, fuzzy
 #: lib/installer.php:3324
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
-msgstr "אזהרה: תבנית מכשיר עבור מערכת ההפעלה שלך לא נמצאה. יהיה עליכם לייבא תבניות מכשירים או חבילות קקטוסים כדי לפקח על שרת הקקטוסים שלכם."
+msgstr "אזהרה: תבנית מכשיר עבור מערכת ההפעלה שלך לא נמצאה. יהיה עליכם לייבא תבניות מכשירים או חבילות Kadupul כדי לפקח על שרת Kadupul שלכם."
 
 #: lib/installer.php:3331
 msgid "Running first-time data query for local host"
@@ -16289,7 +16326,7 @@ msgstr "מספר השורות עבור מזהה Kadupul RRA '{ 0 }' שגוי. מ
 #: lib/rrd.php:3208
 #, fuzzy, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
-msgstr "קובץ ה - RRA '{ 0 }' חסר בקקטוס RRD הקיים"
+msgstr "קובץ ה - RRA '{ 0 }' חסר Kadupul RRD הקיים"
 
 #: lib/rrd.php:3216
 #, php-format
@@ -16406,7 +16443,7 @@ msgstr "תיקיית RRA"
 msgid "Root"
 msgstr "‫Root"
 
-#: lib/rrd.php:4079
+#: lib/rrd.php:4082
 msgid "Unknown RRDtool Error"
 msgstr "שגיאת RRDtool לא ידועה"
 
@@ -16765,7 +16802,7 @@ msgstr "InnoDB תקיים כמה טבלאות ואינדקסים בזיכרון 
 #: lib/utility.php:1340
 #, fuzzy
 msgid "This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
-msgstr "הגדרות אלה צריכות להישאר פועלות אלא אם כן מופעי הקקטוסים שלך פועלים בשני ZFS או ב- FusionI / O, שלשניהם יש יומן פנימי כדי לאפשר קריסות מערכת פתאומיות. עם זאת, אם יש לך כוח טוב מאוד, והמערכות שלך לעתים נדירות נופלות ויש לך גיבויים, הפיכת הגדרה זו למצב OFF יכולה להביא לעלייה כמעט של 50% בביצועי מסד הנתונים."
+msgstr "הגדרות אלה צריכות להישאר פועלות אלא אם כן מופעי Kadupul שלך פועלים בשני ZFS או ב- FusionI / O, שלשניהם יש יומן פנימי כדי לאפשר קריסות מערכת פתאומיות. עם זאת, אם יש לך כוח טוב מאוד, והמערכות שלך לעתים נדירות נופלות ויש לך גיבויים, הפיכת הגדרה זו למצב OFF יכולה להביא לעלייה כמעט של 50% בביצועי מסד הנתונים."
 
 #: lib/utility.php:1345
 msgid "This is where metadata is stored. If you had a lot of tables, it would be useful to increase this."
@@ -17561,9 +17598,10 @@ msgstr "שגיאה: נתיב עמוד השדרה: %s אינו חוקי עבור 
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "חריגה מזמן הריצה המרבי של %d שניות עבור מזהה סוקר %d. יציאה."
 
+#, fuzzy
 #: poller.php:890
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "אזהרה: מחזור הסקרים של קקטוסים חרג ממרווח הסקרים עד"
+msgstr "אזהרה: מחזור הסקרים של Kadupul חרג ממרווח הסקרים עד"
 
 #: poller.php:915
 #, php-format
@@ -17578,14 +17616,15 @@ msgstr "פולר במצב פעימות לב"
 msgid "Kadupul System Notification"
 msgstr "מערכת כלי עזר"
 
+#, fuzzy
 #: poller.php:1174
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
-msgstr "הערה: נוסף אספן נתונים של קקטוסים. לפיכך, מאפשרים הגברה אוטומטית!"
+msgstr "הערה: נוסף אספן נתונים של Kadupul. לפיכך, מאפשרים הגברה אוטומטית!"
 
 #: poller_automation.php:46
 #, fuzzy, php-format
 msgid "WARNING: Main Kadupul database %s offline or in recovery"
-msgstr "אזהרה: מסד הנתונים הראשי של קקטוסים לא מקוון או בשחזור"
+msgstr "אזהרה: מסד הנתונים הראשי של Kadupul לא מקוון או בשחזור"
 
 #: poller_automation.php:970 poller_automation.php:1021
 msgid "Kadupul Primary Admin"
@@ -17762,10 +17801,11 @@ msgstr "השתמשת כבר בשם מארח בסיס נתונים זה '%s'. א�
 msgid "Data Collector Statistics cleared."
 msgstr "נתונים סטטיסטיים"
 
+#, fuzzy
 #: pollers.php:552
 msgid "Click 'Continue' to delete the following Data Collector.  Note, all devices will be disassociated from this Data Collector and mapped back to the Main Kadupul Data Collector."
 msgid_plural "Click 'Continue' to delete all following Data Collectors.  Note, all devices will be disassociated from these Data Collectors and mapped back to the Main Kadupul Data Collector."
-msgstr[0] "לחץ על 'המשך' כדי למחוק את מלקט הנתונים הבא.  שים לב, כל המכשירים ינותקו מאוסף נתונים זה וימופו חזרה לאספן הנתונים הראשי של קקטוסים."
+msgstr[0] "לחץ על 'המשך' כדי למחוק את מלקט הנתונים הבא.  שים לב, כל המכשירים ינותקו מאוסף נתונים זה וימופו חזרה לאספן הנתונים הראשי של Kadupul."
 msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
@@ -18117,9 +18157,9 @@ msgid "NOTE: Path Settings on this Tab are only saved locally!"
 msgstr "הערה: הגדרות הנתיב בכרטיסייה זו נשמרות רק באופן מקומי!"
 
 #: settings.php:374
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Settings (%s)%s"
-msgstr "הגדרות קקטוסים (%s)%s"
+msgstr "הגדרות Kadupul (%s)%s"
 
 #: settings.php:492
 msgid "Changing Permission Model Warning"
@@ -19916,9 +19956,10 @@ msgstr "התחבר [סה&quot;כ שורות:% d - פריטים שאינם תוא
 msgid "Log [Total Lines: %d - All Items Shown]"
 msgstr "יומן [סה&quot;כ שורות:% d - כל הפריטים המוצגים]"
 
+#, fuzzy
 #: utilities.php:1602
 msgid "Clear Kadupul Log"
-msgstr "נקה יומן קקט"
+msgstr "נקה יומן Kadupul"
 
 #: utilities.php:1615
 msgid "Kadupul Log Cleared"
@@ -20024,9 +20065,10 @@ msgstr "לבנות מחדש את המטמון מטמון"
 msgid "The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems."
 msgstr "מטמון ה- Poller ייווצר מחדש אם תבחר באפשרות זו. השתמש באפשרות זו רק במקרה של קריסת מסד נתונים אם אתה נתקל בבעיות לאחר ההתרסקות וכבר הפעלת את כלי תיקון הנתונים. לחלופין, אם אתה נתקל בבעיות בהתקן מסוים, פשוט שמור מחדש את ההתקן כדי לבנות מחדש את מטמון ה- Poller שלו. יש גם ממשק שורת פקודה שווה פקודה זו, כי הוא מומלץ עבור מערכות גדולות. <i class=\"deviceDown\">הערה: במערכות גדולות, פקודה זו עשויה להימשך מספר דקות עד שעות על מנת להשלים ולכן לא צריך להיות מופעל מתוך ממשק המשתמש Kadupul. אתה יכול פשוט להפעיל &#39;PHP -q cli / rebuild_poller_cache.php --help&#39; בשורת הפקודה לקבלת מידע נוסף.</i>"
 
+#, fuzzy
 #: utilities.php:2312
 msgid "NOTE: On large systems, this command may take several minutes to hours to complete and therefore should not be run from the Kadupul UI.  You can simply run 'php -q cli/rebuild_poller_cache.php --help' at the command line for more information."
-msgstr "הערה: במערכות גדולות, פקודה זו עשויה להימשך מספר דקות עד שעות ולכן אין להפעיל אותה מממשק המשתמש של קקטוסים.  ניתן פשוט להפעיל את 'php - q cli/rebuild_poller_cache.php -- help' בשורת הפקודה לקבלת מידע נוסף."
+msgstr "הערה: במערכות גדולות, פקודה זו עשויה להימשך מספר דקות עד שעות ולכן אין להפעיל אותה מממשק המשתמש של Kadupul.  ניתן פשוט להפעיל את 'php - q cli/rebuild_poller_cache.php -- help' בשורת הפקודה לקבלת מידע נוסף."
 
 #: utilities.php:2316
 msgid "Rebuild Resource Cache"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul German Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-11 23:33-0700\n"
+"POT-Creation-Date: 2026-09-12 09:37-0700\n"
 "PO-Revision-Date: 2024-05-25 15:08+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2554,12 +2554,13 @@ msgstr "Stammverzeichnis"
 msgid "No Tree Rules Found"
 msgstr "Keine Baumregeln gefunden"
 
+#, fuzzy
 #: cactid.php:37 help.php:37 lib/functions.php:6227 lib/functions.php:6296
 #: lib/functions.php:6386 lib/functions.php:6993 poller.php:387 poller.php:537
 #: poller.php:602 poller.php:642 poller.php:784 poller.php:890
 #: poller_automation.php:46 poller_boost.php:369
 msgid "Kadupul System Warning"
-msgstr "Warnung vor dem Kaktus-System"
+msgstr "Warnung vor dem Kadupul-System"
 
 #: cactid.php:37
 #, fuzzy
@@ -2999,9 +3000,10 @@ msgstr "Data Source Debug erhielt eine ungültige Data Source ID."
 msgid "All RRDfile repairs succeeded."
 msgstr "Alle RRDfile-Reparaturen waren erfolgreich."
 
+#, fuzzy
 #: data_debug.php:59
 msgid "One or more RRDfile repairs failed.  See Kadupul log for errors."
-msgstr "Eine oder mehrere RRDfile-Reparaturen sind fehlgeschlagen.  Siehe Kakteenprotokoll für Fehler."
+msgstr "Eine oder mehrere RRDfile-Reparaturen sind fehlgeschlagen.  Siehe Kadupul für Fehler."
 
 #: data_debug.php:67
 msgid "Automatic Data Source debug being rerun after repair."
@@ -3741,9 +3743,10 @@ msgid_plural "Duplicate Date Source Profiles"
 msgstr[0] "Datenquellenprofil duplizieren"
 msgstr[1] "Doppelte Datums-Quellprofile"
 
+#, fuzzy
 #: data_source_profiles.php:387
 msgid "Unable to duplicate Data Source Profile.  Check Kadupul Log for errors."
-msgstr "Eine oder mehrere RRDfile-Reparaturen sind fehlgeschlagen.  Siehe Kakteenprotokoll für Fehler."
+msgstr "Eine oder mehrere RRDfile-Reparaturen sind fehlgeschlagen.  Siehe Kadupul für Fehler."
 
 #: data_source_profiles.php:410
 msgid "Click 'Continue' to delete the following Data Source Profile RRA."
@@ -4524,10 +4527,11 @@ msgstr "Aktuelle Graph-Element Datenquelle"
 msgid "RRDtool Graph Syntax"
 msgstr "RRDtool Graph Syntax"
 
+#, fuzzy
 #: graph_image.php:174 graph_json.php:218 graph_realtime.php:238
 #: lib/rrd.php:1679
 msgid "The Kadupul Poller has not run yet."
-msgstr "Der Kakteenpoller ist noch nicht gelaufen."
+msgstr "Der Kadupul ist noch nicht gelaufen."
 
 #: graph_realtime.php:339
 msgid "Real-time has been disabled by your administrator."
@@ -5278,9 +5282,9 @@ msgid "Set Default"
 msgstr "Als Standard"
 
 #: help.php:37
-#, php-format
+#, fuzzy, php-format
 msgid "WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "WARNUNG: Kaktusseite:%s für Benutzer:%s hat einen schwerwiegenden Fehler %d verursacht!"
+msgstr "WARNUNG: Kadupul:%s für Benutzer:%s hat einen schwerwiegenden Fehler %d verursacht!"
 
 #: help.php:59
 #, php-format
@@ -6079,9 +6083,10 @@ msgstr "Die angegebene Protokolldatei ist keine Kadupul-Protokoll- oder Archivda
 msgid "Log file specified was Kadupul archive file and was removed."
 msgstr "Die angegebene Protokolldatei war die Kadupul-Archivdatei und wurde entfernt."
 
+#, fuzzy
 #: include/global_arrays.php:294
 msgid "Kadupul log purged successfully"
-msgstr "Kakteenprotokoll erfolgreich bereinigt"
+msgstr "Kadupul erfolgreich bereinigt"
 
 #: include/global_arrays.php:297
 msgid "If you force a password change, you must also allow the user to change their password."
@@ -8963,9 +8968,10 @@ msgstr "Geben Sie Notizen zu diesem Host ein."
 msgid "External ID"
 msgstr "Externe ID"
 
+#, fuzzy
 #: include/global_form.php:1320
 msgid "External ID for linking Kadupul data to external monitoring systems."
-msgstr "Externe ID zur Verknüpfung von Kakteendaten mit externen Überwachungssystemen."
+msgstr "Externe ID zur Verknüpfung von Kadupul mit externen Überwachungssystemen."
 
 #: include/global_form.php:1342
 msgid "A useful name for this host template."
@@ -9591,13 +9597,15 @@ msgstr "Poller Standard Fehlerprotokollpfad"
 msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
 msgstr "Wenn Sie Probleme mit den Datensammlern von Kadupul haben, setzen Sie diesen Dateipfad und der Standardfehler der Datensammler wird auf diese Datei umgeleitet."
 
+#, fuzzy
 #: include/global_settings.php:184
 msgid "Rotate the Kadupul Log"
-msgstr "Drehen Sie den Kakteenstamm."
+msgstr "Drehen Sie den Kadupul."
 
+#, fuzzy
 #: include/global_settings.php:185
 msgid "This option will rotate the Kadupul Log periodically."
-msgstr "Diese Option dreht das Kakteenlogbuch regelmäßig."
+msgstr "Diese Option dreht das Kadupul regelmäßig."
 
 #: include/global_settings.php:190
 msgid "Rotation Frequency"
@@ -10426,9 +10434,10 @@ msgstr "Benutzerdefinierte Anzahl von Zeilen, die der CLOG bei der Auswahl von'A
 msgid "Log Tail Refresh"
 msgstr "Protokoll-Schweif-Aktualisierung"
 
+#, fuzzy
 #: include/global_settings.php:985
 msgid "How often do you want the Kadupul log display to update."
-msgstr "Wie oft soll die Kakteenprotokollanzeige aktualisiert werden?"
+msgstr "Wie oft soll die Kadupul aktualisiert werden?"
 
 #: include/global_settings.php:991
 msgid "Log Viewer Settings"
@@ -10981,9 +10990,10 @@ msgstr "Spezial User"
 msgid "Primary Admin"
 msgstr "Primäre Verwaltung"
 
+#, fuzzy
 #: include/global_settings.php:1524
 msgid "The name of the primary administrative account that will automatically receive Emails when the Kadupul system experiences issues.  To receive these Emails, ensure that your mail settings are correct, and the administrative account has an Email address that is set."
-msgstr "Der Name des primären Administratorkontos, das automatisch E-Mails erhält, wenn das Kakteensystem Probleme hat.  Um diese E-Mails zu erhalten, stellen Sie sicher, dass Ihre E-Mail-Einstellungen korrekt sind und das Administratorkonto über eine E-Mail-Adresse verfügt, die festgelegt ist."
+msgstr "Der Name des primären Administratorkontos, das automatisch E-Mails erhält, wenn das Kadupul Probleme hat.  Um diese E-Mails zu erhalten, stellen Sie sicher, dass Ihre E-Mail-Einstellungen korrekt sind und das Administratorkonto über eine E-Mail-Adresse verfügt, die festgelegt ist."
 
 #: include/global_settings.php:1526 include/global_settings.php:1534
 #: include/global_settings.php:1542 user_domains.php:337
@@ -11344,9 +11354,10 @@ msgstr "URL-Verknüpfung"
 msgid "Server Base URL"
 msgstr "Server-Basis-URL"
 
+#, fuzzy
 #: include/global_settings.php:1872
 msgid "This is a the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
-msgstr "Dies ist der Serverstandort, der für Links zur Kakteenseite verwendet wird."
+msgstr "Dies ist der Serverstandort, der für Links zur Kadupul verwendet wird."
 
 #: include/global_settings.php:1879
 msgid "Emailing Options"
@@ -12800,9 +12811,10 @@ msgstr "Dein Passwort muss eine Mischung aus Kleinbuchstaben und Großbuchstaben
 msgid "Your password must contain at least 1 special character!"
 msgstr "Dein Passwort muss mindestens 1 Sonderzeichen enthalten!"
 
+#, fuzzy
 #: lib/auth.php:4676
 msgid "Kadupul Login Failure"
-msgstr "Kakteenprotokoll gelöscht"
+msgstr "Kadupul gelöscht"
 
 #: lib/auth.php:4959
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
@@ -12824,9 +12836,9 @@ msgid "%s Bytes"
 msgstr "%s GBytes"
 
 #: lib/clog_webapi.php:113 utilities.php:1613
-#, php-format
+#, fuzzy, php-format
 msgid "%s - WEBUI NOTE: Kadupul Log Cleared from Web Management Interface."
-msgstr "%s - WEBUI HINWEIS: Das Kakteenprotokoll wurde von der Web Management Oberfläche gelöscht."
+msgstr "%s - WEBUI HINWEIS: Das Kadupul wurde von der Web Management Oberfläche gelöscht."
 
 #: lib/clog_webapi.php:220
 #, fuzzy
@@ -13850,9 +13862,10 @@ msgstr "Tastatur"
 msgid "Shortcuts"
 msgstr "Shortcuts"
 
+#, fuzzy
 #: lib/html.php:2591
 msgid "Contribute to the Kadupul Project"
-msgstr "Drehen Sie den Kakteenstamm."
+msgstr "Drehen Sie den Kadupul."
 
 #: lib/html.php:2592
 msgid "Help in Developing"
@@ -14116,9 +14129,9 @@ msgid "Enter a valid directory path"
 msgstr "Geben Sie einen gültigen Verzeichnispfad ein"
 
 #: lib/html_form.php:1275
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Color (%s)"
-msgstr "Kakteenfarbe (%s)"
+msgstr "Kadupul (%s)"
 
 #: lib/html_form.php:1340
 msgid "NO FONT VERIFICATION POSSIBLE"
@@ -14308,9 +14321,10 @@ msgstr "Definiert die Standardausrichtung für Text und Grafiken."
 msgid "Graph Linked"
 msgstr "Grafik verlinkt"
 
+#, fuzzy
 #: lib/html_reports.php:84
 msgid "Should the Graphs be linked back to the Kadupul site?"
-msgstr "Sollen die Grafiken wieder mit der Kakteenseite verlinkt werden?"
+msgstr "Sollen die Grafiken wieder mit der Kadupul verlinkt werden?"
 
 #: lib/html_reports.php:88
 msgid "Graph Settings"
@@ -14774,9 +14788,10 @@ msgstr "Der Suchbegriff \"%s\" ist nicht gültig. Fehler ist %s"
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
 msgstr "Reguläre Ausdrücke von Kadupul sind nur aus Sicherheitsgründen auf 50 Zeichen beschränkt."
 
+#, fuzzy
 #: lib/html_utility.php:1133
 msgid "Kadupul regular expressions can not includes the semi-color character."
-msgstr "Reguläre Kakteenausdrücke können das Halbfarbenzeichen nicht enthalten."
+msgstr "Reguläre Kadupul können das Halbfarbenzeichen nicht enthalten."
 
 #: lib/html_utility.php:1153
 msgid "There was an internal error!"
@@ -15415,9 +15430,10 @@ msgstr "Erforderliche Beschreibbarkeit nach der Installation abgeschlossen"
 msgid "Potential permission issues"
 msgstr "Mögliche Berechtigungsprobleme"
 
+#, fuzzy
 #: lib/installer.php:2382
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
-msgstr "Bitte stellen Sie sicher, dass Ihr Webserver Lese-/Schreibzugriff auf die Kakteenordner hat, die untenstehende Fehler aufweisen."
+msgstr "Bitte stellen Sie sicher, dass Ihr Webserver Lese-/Schreibzugriff auf die Kadupul hat, die untenstehende Fehler aufweisen."
 
 #: lib/installer.php:2385
 msgid "If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools."
@@ -16249,9 +16265,9 @@ msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "RRD-Minimum für die Datenquelle '%s' sollte '%s' sein."
 
 #: lib/rrd.php:3122
-#, php-format
+#, fuzzy, php-format
 msgid "DS '%s' missing in Kadupul definition"
-msgstr "DS'%s' fehlt in der Kakteendefinition."
+msgstr "DS'%s' fehlt in der Kadupul."
 
 #: lib/rrd.php:3136 lib/rrd.php:3137
 #, fuzzy, php-format
@@ -16284,9 +16300,9 @@ msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "RRA'%s' fehlt in RRDatei"
 
 #: lib/rrd.php:3216
-#, php-format
+#, fuzzy, php-format
 msgid "RRA '%s' missing in Kadupul definition"
-msgstr "RRA'%s' fehlt in der Kakteendefinition."
+msgstr "RRA'%s' fehlt in der Kadupul."
 
 #: lib/rrd.php:3237
 msgid "RRD File Information"
@@ -16398,7 +16414,7 @@ msgstr "RRA-Ordner"
 msgid "Root"
 msgstr "Stammverzeichnis"
 
-#: lib/rrd.php:4079
+#: lib/rrd.php:4082
 msgid "Unknown RRDtool Error"
 msgstr "Unbekannter RRDtool-Fehler"
 
@@ -17752,11 +17768,12 @@ msgstr "Sie haben diesen Datenbank-Hostnamen '%s' bereits verwendet. Bitte geben
 msgid "Data Collector Statistics cleared."
 msgstr "Datenquellen-Statistik"
 
+#, fuzzy
 #: pollers.php:552
 msgid "Click 'Continue' to delete the following Data Collector.  Note, all devices will be disassociated from this Data Collector and mapped back to the Main Kadupul Data Collector."
 msgid_plural "Click 'Continue' to delete all following Data Collectors.  Note, all devices will be disassociated from these Data Collectors and mapped back to the Main Kadupul Data Collector."
-msgstr[0] "Klicken Sie auf \"Weiter\", um den folgenden Datensammler zu löschen.  Beachten Sie, dass alle Geräte von diesem Datensammler getrennt und dem Hauptkakteen-Datenammler zugeordnet werden."
-msgstr[1] "Klicken Sie auf \"Weiter\", um alle folgenden Datensammler zu löschen.  Beachten Sie, dass alle Geräte von diesen Datensammlern getrennt und dem Hauptkakteen-Datensammler zugeordnet werden."
+msgstr[0] "Klicken Sie auf \"Weiter\", um den folgenden Datensammler zu löschen.  Beachten Sie, dass alle Geräte von diesem Datensammler getrennt und dem Kadupul-Datenammler zugeordnet werden."
+msgstr[1] "Klicken Sie auf \"Weiter\", um alle folgenden Datensammler zu löschen.  Beachten Sie, dass alle Geräte von diesen Datensammlern getrennt und dem Kadupul-Datensammler zugeordnet werden."
 
 #: pollers.php:557
 msgid "Delete Data Collector"
@@ -19842,13 +19859,15 @@ msgstr "Protokoll[Gesamtzeile: %d - Nicht übereinstimmende Elemente ausgeblende
 msgid "Log [Total Lines: %d - All Items Shown]"
 msgstr "Protokoll[Gesamtzeile: %d - Alle angezeigten Artikel]"
 
+#, fuzzy
 #: utilities.php:1602
 msgid "Clear Kadupul Log"
-msgstr "Löschen des Kakteenprotokolls"
+msgstr "Löschen des Kadupul"
 
+#, fuzzy
 #: utilities.php:1615
 msgid "Kadupul Log Cleared"
-msgstr "Kakteenprotokoll gelöscht"
+msgstr "Kadupul gelöscht"
 
 #: utilities.php:1617
 msgid "Error: Unable to clear log, no write permissions."
@@ -19922,9 +19941,10 @@ msgstr "RRD Datei Information"
 msgid "Kadupul technical support page.  Used by developers and technical support persons to assist with issues in Kadupul.  Includes checks for common configuration issues."
 msgstr "Kadupul's technische Supportseite. Wird benutzt von Entwicklern und technischem Support Personal um bei Problemen in Kadupul zu helfen. Enthält Prüfungen für verbreitete Konfigurationseinstellungen."
 
+#, fuzzy
 #: utilities.php:2290
 msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
-msgstr "Das Kakteenprotokoll speichert je nach Systemeinstellung Statistiken, Fehler und andere Meldungen.  Diese Informationen können verwendet werden, um Probleme mit dem Prüfer und der Anwendung zu identifizieren."
+msgstr "Das Kadupul speichert je nach Systemeinstellung Statistiken, Fehler und andere Meldungen.  Diese Informationen können verwendet werden, um Probleme mit dem Prüfer und der Anwendung zu identifizieren."
 
 #: utilities.php:2294
 msgid "Allows Administrators to browse the user log.  Administrators can filter and export the log as well."
