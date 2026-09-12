@@ -95,7 +95,7 @@ jobs:
         working-directory: tests/e2e
         run: docker compose up -d --build
 
-      - name: Wait for Cacti to respond on :8080
+      - name: Wait for Kadupul to respond on :8080
         run: |
           set -euo pipefail
           # Require the CSP-Report-Only header to be present before
@@ -114,7 +114,7 @@ jobs:
           docker compose -f tests/e2e/docker-compose.yml logs --tail=200 || true
           exit 1
 
-      - name: Dump Cacti container logs (diagnostic)
+      - name: Dump Kadupul container logs (diagnostic)
         if: always()
         working-directory: tests/e2e
         run: |

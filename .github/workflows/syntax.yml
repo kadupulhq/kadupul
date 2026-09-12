@@ -12,7 +12,7 @@
 # | GNU General Public License for more details.                            |
 # +-------------------------------------------------------------------------+
 
-name: Cacti Commit Audit
+name: Kadupul Commit Audit
 
 on:
   push:
@@ -180,13 +180,13 @@ jobs:
         mysql $MYSQL_AUTH_USR cacti < ${{ github.workspace }}/cacti.sql
         mysql $MYSQL_AUTH_USR -e "INSERT INTO settings (name, value) VALUES ('path_php_binary', '/bin/php')" cacti
 
-    - name: Prime Cacti config.php File
+    - name: Prime Kadupul config.php File
       run: |
         cat ${{ github.workspace }}/include/config.php.dist | sed -r "s/localhost/127.0.0.1/g" > ${{ github.workspace }}/include/config.php
         sudo chmod 777 ${{ github.workspace }}/include/config.php
         cat ${{ github.workspace}}/include/config.php
 
-    - name: Setup Cacti Daemon
+    - name: Setup Kadupul Daemon
       run: |
         sudo cp ${{ github.workspace }}/tests/tools/cactid.service /etc/systemd/system/cactid.service
         sudo systemctl enable cactid
@@ -207,7 +207,7 @@ jobs:
         cd ${{ github.workspace }}
         sudo bash tests/tools/check_cli_version.sh
 
-    - name: Install Cacti through the CLI
+    - name: Install Kadupul through the CLI
       run: |
         cd ${{ github.workspace }}
         sudo php cli/install_cacti.php --accept-eula --install --force
@@ -232,7 +232,7 @@ jobs:
         sudo php cli/rebuild_poller_cache.php --debug
         sudo php cli/poller_reindex_hosts.php --id=all --debug
 
-    - name: Run Cacti poller
+    - name: Run Kadupul poller
       run: |
         sudo php ${{ github.workspace }}/poller.php --poller=1 --force --debug
         if ! grep -q "SYSTEM STATS" ${{ github.workspace }}/log/cacti.log; then
