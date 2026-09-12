@@ -2,7 +2,7 @@
 
 Network monitoring and graphing. Kadupul polls devices over SNMP and scripts,
 stores measurements in RRD files, and renders graphs with RRDtool.
-It is a fork of [Cacti](https://github.com/Cacti/cacti).
+It is an independent fork of [Cacti](https://github.com/Cacti/cacti), without affiliation or endorsement from that project.
 
 [Documentation](https://kadupul.org/) · [Issue tracker](https://github.com/kadupulhq/kadupul/issues) · [Discussions](https://github.com/kadupulhq/kadupul/discussions)
 
