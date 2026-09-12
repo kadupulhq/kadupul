@@ -1,7 +1,13 @@
 const { test, expect } = require('@playwright/test');
 
-// Themes shipped at the Cacti 1.2.31 fork point.
-const allThemes = ['classic', 'dark', 'midwinter', 'modern', 'paper-plane', 'paw', 'sunrise'];
+const fs = require('fs');
+const path = require('path');
+const themeRoot = path.resolve(__dirname, '../../include/themes');
+const allThemes = fs.readdirSync(themeRoot, { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => entry.name)
+  .sort();
+if (allThemes.length === 0) throw new Error('No shipped themes found');
 
 test.describe('theme jquery ui css alignment', () => {
   test('all themes serve 1.14.x jquery ui bundles', async ({ request }) => {

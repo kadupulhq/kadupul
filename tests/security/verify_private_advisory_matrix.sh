@@ -17,6 +17,11 @@ echo "matrix_total=${total}"
 echo "matrix_no_evidence=${no_evidence}"
 echo "matrix_partial=${partial}"
 
+if [ "$total" -eq 0 ]; then
+	echo "ERROR: empty matrix does not establish advisory closure." >&2
+	exit 1
+fi
+
 if [ "$no_evidence" -gt 0 ]; then
 	echo "ERROR: unresolved advisories with NO_EVIDENCE." >&2
 	exit 1

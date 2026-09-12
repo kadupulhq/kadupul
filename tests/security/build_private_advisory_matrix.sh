@@ -20,6 +20,15 @@ REPO="${1:-kadupulhq/kadupul}"
 BRANCHES="${2:-main}"
 OUT_DIR="${3:-/tmp}"
 
+# Validate the complete request before querying advisories or writing evidence.
+for b in $BRANCHES; do
+	if ! git rev-parse --verify --quiet "${b}^{commit}" >/dev/null &&
+		! git rev-parse --verify --quiet "origin/${b}^{commit}" >/dev/null; then
+		echo "ERROR: requested branch not found: $b" >&2
+		exit 1
+	fi
+done
+
 mkdir -p "$OUT_DIR"
 
 api_json="${OUT_DIR}/private_advisory_source.json"

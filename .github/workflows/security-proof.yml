@@ -38,6 +38,9 @@ jobs:
       - name: Install ripgrep
         run: sudo apt-get install -y ripgrep
 
+      - name: Verify advisory matrix failure handling
+        run: bash tests/security/test_private_advisory_matrix.sh
+
       - name: Verify tracked sink baseline
         run: tests/security/verify_sink_inventory.sh
 
