@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-12 09:37-0700\n"
+"POT-Creation-Date: 2026-09-12 09:56-0700\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -17,8 +17,8 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.8.1\n"
 
-#, fuzzy
 #: about.php:22 include/global_arrays.php:2631 lib/html.php:2599
+#, fuzzy
 msgid "About Kadupul"
 msgstr "Về Kadupul"
 
@@ -843,13 +843,13 @@ msgstr ""
 msgid "Change Password"
 msgstr "Thay đổi mật khẩu"
 
-#, fuzzy
 #: auth_changepassword.php:344
+#, fuzzy
 msgid "Please enter your current password and your new<br>Kadupul password."
 msgstr "Vui lòng nhập mật khẩu hiện tại của bạn và mới <br> Mật khẩu Kadupul."
 
-#, fuzzy
 #: auth_changepassword.php:346
+#, fuzzy
 msgid "Please enter your new Kadupul password."
 msgstr "Vui lòng nhập mật khẩu hiện tại của bạn và mới <br> Mật khẩu Kadupul."
 
@@ -6023,8 +6023,8 @@ msgstr "Tệp nhật ký được chỉ định không phải là tệp nhật k
 msgid "Log file specified was Kadupul archive file and was removed."
 msgstr "Tệp nhật ký được chỉ định là tệp lưu trữ Kadupul và đã bị xóa."
 
-#, fuzzy
 #: include/global_arrays.php:294
+#, fuzzy
 msgid "Kadupul log purged successfully"
 msgstr "Nhật ký Kadupul đã thanh trừng thành công"
 
@@ -6782,8 +6782,8 @@ msgstr ""
 msgid "Application Related"
 msgstr "Áp dụng quy tắc tự động hóa"
 
-#, fuzzy
 #: include/global_arrays.php:1085
+#, fuzzy
 msgid "Kadupul Related"
 msgstr "Báo cáo Kadupul"
 
@@ -7875,8 +7875,8 @@ msgstr "Mục VDEF"
 msgid "View SNMP Notification Receivers"
 msgstr "Xem người nhận thông báo SNMP"
 
-#, fuzzy
 #: include/global_arrays.php:2571
+#, fuzzy
 msgid "Kadupul Settings"
 msgstr "Cài đặt Kadupul"
 
@@ -7888,8 +7888,8 @@ msgstr "Liên kết bên ngoài"
 msgid "(Action)"
 msgstr "Hành động:"
 
-#, fuzzy
 #: include/global_arrays.php:2637
+#, fuzzy
 msgid "Kadupul Help"
 msgstr "Trang chủ Kadupul"
 
@@ -9532,8 +9532,8 @@ msgstr "Đường dẫn Nhật ký Lỗi Tiêu chuẩn của Poller"
 msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
 msgstr "Nếu bạn gặp sự cố với Trình thu thập dữ liệu của Kadupul, hãy đặt đường dẫn tệp này và lỗi tiêu chuẩn của Trình thu thập dữ liệu sẽ được chuyển hướng đến tệp này"
 
-#, fuzzy
 #: include/global_settings.php:184
+#, fuzzy
 msgid "Rotate the Kadupul Log"
 msgstr "Xoay Nhật ký Kadupul"
 
@@ -11131,8 +11131,8 @@ msgstr "Vui lòng nhập thời gian chờ SMTP trong vài giây."
 msgid "LDAP Debug Mode"
 msgstr "Chế độ gỡ lỗi LDAP"
 
-#, fuzzy
 #: include/global_settings.php:1743
+#, fuzzy
 msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities."
 msgstr "Nếu được Kiểm tra Kadupul sẽ ghi thông tin LDAP bổ sung vào nhật ký Kadupul trong các hoạt động Ràng buộc và Tìm kiếm."
 
@@ -12275,12 +12275,12 @@ msgstr "<strong>LƯU Ý:</strong> Bạn đã đăng nhập vào Bộ thu thập 
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
 msgstr "<strong>LƯU Ý: Cho</strong> đến nay, không có Plugin Kadupul lõi nào được thiết kế lại để hoạt động với Bộ thu thập dữ liệu từ xa. Do đó, các Plugin như MacTrack và HMIB, yêu cầu truy cập trực tiếp vào thiết bị sẽ không hoạt động với Bộ thu thập dữ liệu từ xa tại thời điểm này. Tuy nhiên, các plugin như Thold sẽ hoạt động miễn là Trình thu thập dữ liệu từ xa ở chế độ <b>&#39;trực tuyến&#39;</b> ."
 
-#: install/functions.php:609
+#: install/functions.php:613
 #, php-format
 msgid "Path for %s"
 msgstr "Đường dẫn cho %s"
 
-#: install/functions.php:820
+#: install/functions.php:824
 msgid "New Poller"
 msgstr "Xe đẩy mới"
 
@@ -12724,8 +12724,8 @@ msgstr "Mật khẩu của bạn phải chứa hỗn hợp các ký tự chữ t
 msgid "Your password must contain at least 1 special character!"
 msgstr "Mật khẩu của bạn phải chứa ít nhất 1 ký tự đặc biệt!"
 
-#, fuzzy
 #: lib/auth.php:4676
+#, fuzzy
 msgid "Kadupul Login Failure"
 msgstr "Nhật ký Kadupul đã bị xóa"
 
@@ -13500,8 +13500,8 @@ msgstr "Tạo tin nhắn văn bản ..."
 msgid "Sending Message..."
 msgstr "Đang gửi tin nhắn…"
 
-#, fuzzy
 #: lib/functions.php:5634
+#, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Thông báo kiểm tra Kadupul"
 
@@ -13736,8 +13736,8 @@ msgstr "Màu mục"
 msgid "Help"
 msgstr "Trợ giúp"
 
-#, fuzzy
 #: lib/html.php:2577
+#, fuzzy
 msgid "Kadupul Home"
 msgstr "Trang chủ Kadupul"
 
@@ -13753,8 +13753,8 @@ msgstr "Bảng điều khiển"
 msgid "Charts"
 msgstr "Biểu đồ"
 
-#, fuzzy
 #: lib/html.php:2583
+#, fuzzy
 msgid "Kadupul Project Page"
 msgstr "Trang dự án Kadupul"
 
@@ -13774,8 +13774,8 @@ msgstr "Bàn phím"
 msgid "Shortcuts"
 msgstr "Các Bố Trí Phím Tắt"
 
-#, fuzzy
 #: lib/html.php:2591
+#, fuzzy
 msgid "Contribute to the Kadupul Project"
 msgstr "Xoay Nhật ký Kadupul"
 
@@ -13799,8 +13799,8 @@ msgstr "Trợ giúp trong việc dịch"
 msgid "Report a bug"
 msgstr "Báo cáo lỗi"
 
-#, fuzzy
 #: lib/html.php:2600
+#, fuzzy
 msgid "Kadupul"
 msgstr "Kadupul"
 
@@ -14305,8 +14305,8 @@ msgstr "Chi tiết người gửi / người nhận email"
 msgid "Subject"
 msgstr "Tiêu đề"
 
-#, fuzzy
 #: lib/html_reports.php:164
+#, fuzzy
 msgid "Kadupul Report"
 msgstr "Báo cáo Kadupul"
 
@@ -14966,8 +14966,8 @@ msgstr "Nâng cấp"
 msgid "Downgrade"
 msgstr "Downgrade"
 
-#, fuzzy
 #: lib/installer.php:1740 utilities.php:265
+#, fuzzy
 msgid "Kadupul Version"
 msgstr "Phiên bản Kadupul"
 
@@ -16970,8 +16970,8 @@ msgstr "Bạn đã đăng xuất khỏi Kadupul do hết thời gian phiên."
 msgid "You have been logged out of Kadupul due to a Remote Data Collector state change"
 msgstr "Bạn đã đăng xuất khỏi Kadupul do hết thời gian phiên."
 
-#, fuzzy
 #: logout.php:61
+#, fuzzy
 msgid "Logout of Kadupul"
 msgstr "Thoát khỏi Kadupul"
 
@@ -17461,8 +17461,8 @@ msgstr "LRI: Đường dẫn cột sống: %s không hợp lệ. Xe đẩy khôn
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Thời gian chạy tối đa% d giây vượt quá. Thoát hiểm."
 
-#, fuzzy
 #: poller.php:890
+#, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "CẢNH BÁO: Chu kỳ thăm dò của Kadupul đã vượt quá khoảng thời gian thăm dò của Kadupul bởi"
 
@@ -19422,8 +19422,8 @@ msgstr "LRI: RRDtool 1.2.x + không hỗ trợ định dạng hình ảnh GIF, n
 msgid "General Information"
 msgstr "Thông tin chung"
 
-#, fuzzy
 #: utilities.php:270
+#, fuzzy
 msgid "Kadupul OS"
 msgstr "Hệ điều hành Kadupul"
 
@@ -19714,13 +19714,13 @@ msgstr "Nhật ký [Tổng số dòng:% d - Ẩn các mục không khớp]"
 msgid "Log [Total Lines: %d - All Items Shown]"
 msgstr "Nhật ký [Tổng số dòng:% d - Tất cả các mục được hiển thị]"
 
-#, fuzzy
 #: utilities.php:1602
+#, fuzzy
 msgid "Clear Kadupul Log"
 msgstr "Xóa nhật ký Kadupul"
 
-#, fuzzy
 #: utilities.php:1615
+#, fuzzy
 msgid "Kadupul Log Cleared"
 msgstr "Nhật ký Kadupul đã bị xóa"
 

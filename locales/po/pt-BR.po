@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-12 09:37-0700\n"
+"POT-Creation-Date: 2026-09-12 09:56-0700\n"
 "PO-Revision-Date: 2024-06-25 21:23+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -9886,8 +9886,8 @@ msgstr "Graph Match Rule"
 msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
 msgstr "Quando ativado, o Kadupul não bloqueia gráficos. Isso permite uma modificação manual mais rápida das fontes de dados relacionadas a um gráfico."
 
-#, fuzzy
 #: include/global_settings.php:471
+#, fuzzy
 msgid "Hide Kadupul Dashboard"
 msgstr "Ocultar painel de instrumentos de Kadupul"
 
@@ -12306,12 +12306,12 @@ msgstr "<strong>NOTE:</strong> Você está conectado a um Coletor de Dados Remot
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
 msgstr "<strong>NOTE:</strong> Nenhum dos plugins do Core Kadupul, até hoje, foi redesenhado para funcionar com coletores de dados remotos.  Portanto, Plugins como MacTrack e HMIB, que requerem acesso direto aos dispositivos, não funcionarão com os Remote Data Collectors neste momento.  No entanto, plugins como Thold funcionarão enquanto o Coletor de Dados Remoto estiver no modo <b>'online'</b>."
 
-#: install/functions.php:609
+#: install/functions.php:613
 #, php-format
 msgid "Path for %s"
 msgstr "Caminho para %s"
 
-#: install/functions.php:820
+#: install/functions.php:824
 msgid "New Poller"
 msgstr "Novo Polidor"
 
@@ -13825,8 +13825,8 @@ msgstr "Ajuda na tradução"
 msgid "Report a bug"
 msgstr "Reportar um Erro"
 
-#, fuzzy
 #: lib/html.php:2600
+#, fuzzy
 msgid "Kadupul"
 msgstr "Kadupul"
 
@@ -14720,13 +14720,13 @@ msgstr "Selecionados"
 msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "O termo de pesquisa \"%s\" não é válido. Erro é %s"
 
-#, fuzzy
 #: lib/html_utility.php:1129
+#, fuzzy
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
 msgstr "As expressões regulares de Kadupul são limitadas a 50 caracteres apenas por razões de segurança."
 
-#, fuzzy
 #: lib/html_utility.php:1133
+#, fuzzy
 msgid "Kadupul regular expressions can not includes the semi-color character."
 msgstr "As expressões regulares de Kadupul não podem incluir o caractere semicolor."
 
@@ -14956,8 +14956,8 @@ msgstr "NOTA: Seus dados existentes não serão modificados, nem estarão dispon
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
 msgstr "Você criou um novo banco de dados, mas ainda não importou o arquivo 'cacti.sql'. Na linha de comando, execute o seguinte para continuar:"
 
-#, fuzzy
 #: lib/installer.php:1592
+#, fuzzy
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Kadupul database. Please ensure that the Kadupul database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Kadupul database."
 msgstr "Este erro também pode ser gerado se o usuário do banco de dados Kadupul não tiver permissões corretas no banco de dados Kadupul. Certifique-se de que o usuário do banco de dados Kadupul tem a capacidade de SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX no banco de dados Kadupul."
 
@@ -15364,8 +15364,8 @@ msgstr "Necessário Gravável após a Instalação Completa"
 msgid "Potential permission issues"
 msgstr "Potenciais problemas de permissão"
 
-#, fuzzy
 #: lib/installer.php:2382
+#, fuzzy
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
 msgstr "Certifique-se de que o seu servidor web tem acesso de leitura/escrita às pastas de Kadupul que mostram os erros abaixo."
 
@@ -17494,8 +17494,8 @@ msgstr "ERRO: O caminho da espinha: %s é inválido para o ID do poller %d.  O s
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Tempo de execução máximo de %d segundos excedido para o ID do poller %d. Saindo."
 
-#, fuzzy
 #: poller.php:890
+#, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "AVISO: O ciclo de pesquisa dos Kadupul excedeu o intervalo do Poller em"
 
@@ -17521,8 +17521,8 @@ msgstr "NOTA: Um segundo coletor de dados Kadupul foi adicionado. Portanto, perm
 msgid "WARNING: Main Kadupul database %s offline or in recovery"
 msgstr "AVISO: Banco de dados principal do Kadupul offline ou em recuperação"
 
-#, fuzzy
 #: poller_automation.php:970 poller_automation.php:1021
+#, fuzzy
 msgid "Kadupul Primary Admin"
 msgstr "Kadupul Admin Primário"
 
@@ -17864,8 +17864,8 @@ msgstr "A última vez que este Coletor de Dados entrou no site principal de Kadu
 msgid "Last Sync"
 msgstr "Última Sincronia"
 
-#, fuzzy
 #: pollers.php:1078
+#, fuzzy
 msgid "The last time this Data Collector was full synced with main Kadupul site."
 msgstr "A última vez que este Coletor de Dados foi totalmente sincronizado com o site principal de Kadupul."
 

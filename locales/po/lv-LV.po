@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.20\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-12 09:37-0700\n"
+"POT-Creation-Date: 2026-09-12 09:56-0700\n"
 "PO-Revision-Date: 2026-05-10 08:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -833,8 +833,8 @@ msgstr "Jāsatur vismaz 1 īpašā rakstzīme"
 msgid "Cannot be reused for %d password changes"
 msgstr "Nevar atkārtoti izmantot līdz %d paroles maiņām"
 
-#, fuzzy
 #: auth_changepassword.php:317
+#, fuzzy
 msgid "There are problems with the Change Password page.  Contact your Kadupul administrator right away."
 msgstr "Radās problēmas ar paroles maiņas lapu.  Nekavējoties sazinieties ar savu Kadupul administratoru."
 
@@ -1590,8 +1590,8 @@ msgstr "Izvēlieties Kadupul datu apkopotāju/aptaujātaju, kas tiks izmantots �
 msgid "Associated Site"
 msgstr "Saistītā vietne"
 
-#, fuzzy
 #: automation_networks.php:464
+#, fuzzy
 msgid "Choose the Kadupul Site that you wish to associate discovered Devices with."
 msgstr "Izvēlieties Kadupul vietni, ar kuru vēlaties saistīt atklātās ierīces."
 
@@ -1738,8 +1738,8 @@ msgstr "Iespējot NetBIOS"
 msgid "Use NetBIOS to attempt to resolve the hostname of up hosts."
 msgstr "Izmantojiet NetBIOS, lai mēģinātu atrisināt augšējo saimniekdatoru resursdatora nosaukumu."
 
-#, fuzzy
 #: automation_networks.php:556
+#, fuzzy
 msgid "Automatically Add to Kadupul"
 msgstr "Automātiski pievienot Kadupul"
 
@@ -3000,8 +3000,8 @@ msgstr "Datu avota atkļūdošana saņēma nederīgu datu avota ID."
 msgid "All RRDfile repairs succeeded."
 msgstr "Visi RRDfile labojumi bija veiksmīgi."
 
-#, fuzzy
 #: data_debug.php:59
+#, fuzzy
 msgid "One or more RRDfile repairs failed.  See Kadupul log for errors."
 msgstr "Viens vai vairāki RRDfile labojumi neizdevās. Kļūdas skatiet sadaļā Kadupul žurnāls."
 
@@ -3755,8 +3755,8 @@ msgstr[0] "Datu avota profila dublikāts"
 msgstr[1] ""
 msgstr[2] ""
 
-#, fuzzy
 #: data_source_profiles.php:387
+#, fuzzy
 msgid "Unable to duplicate Data Source Profile.  Check Kadupul Log for errors."
 msgstr "Nevar dublēt datu avota profilu. Pārbaudiet, vai Kadupul žurnālā nav kļūdu."
 
@@ -4569,8 +4569,8 @@ msgstr "Attēlu kešatmiņas direktorijs nepastāv. Lūdzu, vispirms izveidojiet
 msgid "The Image Cache Directory is not writable.  Please set permissions and then attempt to open another Real-time graph."
 msgstr "Attēlu kešatmiņas direktorijs nav ierakstāms. Lūdzu, iestatiet atļaujas un pēc tam mēģiniet atvērt citu reāllaika grafiku."
 
-#, fuzzy
 #: graph_realtime.php:374
+#, fuzzy
 msgid "Kadupul Real-time Graphing"
 msgstr "Kadupul reāllaika diagrammas"
 
@@ -5854,13 +5854,13 @@ msgstr "Netika atrasta neviena ierīces veidne"
 msgid "Not Logged In"
 msgstr "Nav pieteicies"
 
-#, fuzzy
 #: include/auth.php:162
+#, fuzzy
 msgid "You must be logged in to access this area of Kadupul."
 msgstr "Lai piekļūtu šim Kadupul apgabalam, jums ir jāpiesakās."
 
-#, fuzzy
 #: include/auth.php:167
+#, fuzzy
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "FATAL: Jums ir jāpiesakās, lai piekļūtu šim Kadupul apgabalam."
 
@@ -6102,8 +6102,8 @@ msgstr "Norādītais žurnālfails nav Kadupul žurnāla vai arhīva fails."
 msgid "Log file specified was Kadupul archive file and was removed."
 msgstr "Norādītais žurnālfails bija Kadupul arhīva fails un tika noņemts."
 
-#, fuzzy
 #: include/global_arrays.php:294
+#, fuzzy
 msgid "Kadupul log purged successfully"
 msgstr "Kadupul baļķis veiksmīgi iztīrīts"
 
@@ -6168,8 +6168,8 @@ msgstr "Nevar izveidot MySQL savienojumu ar attālo datu apkopotāju."
 msgid "Data Collector synchronization must be initiated from the main Kadupul server."
 msgstr "Datu apkopotāja sinhronizācija ir jāuzsāk no galvenā Kadupul servera."
 
-#, fuzzy
 #: include/global_arrays.php:342
+#, fuzzy
 msgid "Synchronization does not include the Central Kadupul Database server."
 msgstr "Sinhronizācija neietver centrālās Kadupul datu bāzes serveri."
 
@@ -7954,8 +7954,8 @@ msgstr "VDEF preces"
 msgid "View SNMP Notification Receivers"
 msgstr "Skatiet SNMP paziņojumu uztvērējus"
 
-#, fuzzy
 #: include/global_arrays.php:2571
+#, fuzzy
 msgid "Kadupul Settings"
 msgstr "Kadupul iestatījumi"
 
@@ -7967,8 +7967,8 @@ msgstr "Ārējā saite"
 msgid "(Action)"
 msgstr "(Darbība)"
 
-#, fuzzy
 #: include/global_arrays.php:2637
+#, fuzzy
 msgid "Kadupul Help"
 msgstr "Kadupul mājas"
 
@@ -8413,8 +8413,8 @@ msgstr "Laiks sekundēs starp gaidāmajiem atjauninājumiem."
 msgid "Data Source Active"
 msgstr "Datu avots ir aktīvs"
 
-#, fuzzy
 #: include/global_form.php:607
+#, fuzzy
 msgid "Whether Kadupul should gather data for this data source or not."
 msgstr "Vai Kadupul vajadzētu vākt datus šim datu avotam vai nē."
 
@@ -8626,8 +8626,8 @@ msgstr "Iestata eksponenta vērtību uz Y ass skaitļiem. Piezīme. Šī opcija 
 msgid "Unit Exponent Value (--units-exponent)"
 msgstr "Vienības eksponenta vērtība (--vienības-eksponents)"
 
-#, fuzzy
 #: include/global_form.php:841
+#, fuzzy
 msgid "What unit Kadupul should use on the Y-axis. Use 3 to display everything in \"k\" or -6 to display everything in \"u\" (micro)."
 msgstr "Kādu vienību Kadupul vajadzētu izmantot uz Y ass. Izmantojiet 3, lai visu parādītu ar \"k\" vai -6, lai visu parādītu ar \"u\" (mikro)."
 
@@ -8988,8 +8988,8 @@ msgstr "Ievadiet piezīmes šim saimniekdatoram."
 msgid "External ID"
 msgstr "Ārējais ID"
 
-#, fuzzy
 #: include/global_form.php:1320
+#, fuzzy
 msgid "External ID for linking Kadupul data to external monitoring systems."
 msgstr "Ārējais ID Kadupul datu saistīšanai ar ārējām uzraudzības sistēmām."
 
@@ -9600,13 +9600,13 @@ msgstr "Ceļš uz jūsu PHP bināro failu (lai iegūtu šo failu, var būt nepie
 msgid "Logging"
 msgstr "Žurnāla reģistrēšana"
 
-#, fuzzy
 #: include/global_settings.php:164
+#, fuzzy
 msgid "Kadupul Log Path"
 msgstr "Kadupul baļķu ceļš"
 
-#, fuzzy
 #: include/global_settings.php:165
+#, fuzzy
 msgid "The path to your Kadupul log file (if blank, defaults to &lt;path_cacti&gt;/log/cacti.log)"
 msgstr "Ceļš uz jūsu Kadupul žurnāla failu (ja tas ir tukšs, noklusējuma vērtība ir &lt;path_cacti&gt;/log/cacti.log)"
 
@@ -9618,13 +9618,13 @@ msgstr "Poller standarta kļūdu žurnāla ceļš"
 msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
 msgstr "Ja jums ir problēmas ar Kadupul's Data Collectors, iestatiet šo faila ceļu, un Data Collectors standarta kļūda tiks novirzīta uz šo failu."
 
-#, fuzzy
 #: include/global_settings.php:184
+#, fuzzy
 msgid "Rotate the Kadupul Log"
 msgstr "Pagrieziet Kadupul žurnālu"
 
-#, fuzzy
 #: include/global_settings.php:185
+#, fuzzy
 msgid "This option will rotate the Kadupul Log periodically."
 msgstr "Šī opcija periodiski pagriezīs Kadupul žurnālu."
 
@@ -9676,8 +9676,8 @@ msgstr "Automātiski arhivējiet vai dzēsiet RRD failus, kad tiem atbilstošie 
 msgid "RRDfile Auto Clean Method"
 msgstr "RRDfile automātiskās tīrīšanas metode"
 
-#, fuzzy
 #: include/global_settings.php:238
+#, fuzzy
 msgid "The method used to Clean RRDfiles from Kadupul after their Data Sources are deleted."
 msgstr "Metode, ko izmanto RRD failu tīrīšanai no Kadupul pēc to datu avotu dzēšanas."
 
@@ -9781,8 +9781,8 @@ msgstr "Internacionalizācija (i18n)"
 msgid "Language Support"
 msgstr "Valodas atbalsts"
 
-#, fuzzy
 #: include/global_settings.php:335
+#, fuzzy
 msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
 msgstr "Izvēlieties “iespējots”, lai atļautu Kadupul lokalizāciju. Stingrajam režīmam ir nepieciešams, lai pieprasītā valoda tiktu atbalstīta arī visiem jūsu sistēmā instalētajiem spraudņiem. Ja tas tā nav, viss tiks rādīts angļu valodā."
 
@@ -9806,8 +9806,8 @@ msgstr "Ļauj automātiski noteikt lietotāja “noklusējuma” valodu un nodro
 msgid "Preferred Language Processor"
 msgstr "Vēlamās valodas procesors"
 
-#, fuzzy
 #: include/global_settings.php:359
+#, fuzzy
 msgid "Kadupul includes support for multiple alternate Language Translation Processors.  If none is selected Kadupul will attempt to use the first one found."
 msgstr "Kadupul ietver atbalstu vairākiem alternatīviem valodu tulkošanas procesoriem. Ja neviens nav atlasīts, Kadupul mēģinās izmantot pirmo atrasto."
 
@@ -9935,8 +9935,8 @@ msgstr "Jautāt lietotāju pirms elementa dzēšanas."
 msgid "Data Source Preservation Preset"
 msgstr "Datu avota saglabāšanas iepriekš iestatīts"
 
-#, fuzzy
 #: include/global_settings.php:460
+#, fuzzy
 msgid "When enabled, Kadupul will set Radio Button to Delete related Data Sources of a Graph when removing Graphs.  Note: Kadupul will not allow the removal of Data Sources if they are used in other Graphs."
 msgstr "Kad tas ir iespējots, Kadupul iestatīs radio pogu, lai dzēstu saistītos diagrammas datu avotus, noņemot grafikus. Piezīme. Kadupul neļaus noņemt datu avotus, ja tie tiks izmantoti citos grafikos."
 
@@ -10055,8 +10055,8 @@ msgstr "Ja tas ir atspējots, Kadupul Automation aktīvi neizveidos nevienu koka
 msgid "Automation Notification To Email"
 msgstr "Automatizācijas paziņojums uz e-pastu"
 
-#, fuzzy
 #: include/global_settings.php:557
+#, fuzzy
 msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account."
 msgstr "E-pasta adrese, uz kuru nosūtīt automatizācijas paziņojumu e-pasta ziņojumus, ja tā nav norādīta automatizācijas tīkla līmenī. Ja šis lauks vai Automatizācijas tīkla vērtība ir atstāta tukša, Kadupul izmantos primāro Kadupul administratoru e-pasta kontu."
 
@@ -10290,8 +10290,8 @@ msgstr "Noklusējuma ping ports visām jaunajām ierīcēm. Izmantojot TCP, Kadu
 msgid "Default Ping Timeout value in milli-seconds for all new Devices.  The timeout values to use for Device SNMP, ICMP, UDP and TCP pinging.  ICMP Pings will be rounded up to the nearest second.  TCP and UDP connection timeouts on Windows are controlled by the operating system, and are therefore not recommended on Windows."
 msgstr "Noklusējuma ehotestēšanas noildzes vērtība milisekundēs visām jaunajām ierīcēm. Taimauta vērtības, kas jāizmanto ierīces SNMP, ICMP, UDP un TCP ping. ICMP Ping tiks noapaļoti līdz tuvākajai sekundei. TCP un UDP savienojuma taimautu operētājsistēmā Windows kontrolē operētājsistēma, un tāpēc tie nav ieteicami operētājsistēmā Windows."
 
-#, fuzzy
 #: include/global_settings.php:825
+#, fuzzy
 msgid "The number of times Kadupul will attempt to ping a Device before marking it as down."
 msgstr "Reižu skaits, kad Kadupul mēģinās veikt ierīces ping, pirms to atzīmēs kā nederīgu."
 
@@ -10324,8 +10324,8 @@ msgstr "Tēmas iestatījumi"
 msgid "Theme"
 msgstr "Motīvs"
 
-#, fuzzy
 #: include/global_settings.php:861 include/global_settings.php:2567
+#, fuzzy
 msgid "Please select one of the available Themes to skin your Kadupul with."
 msgstr "Lūdzu, atlasiet vienu no pieejamajiem motīviem, ar kuriem novilkt Kadupul."
 
@@ -10478,8 +10478,8 @@ msgstr "Reāllaika grafiki"
 msgid "Enable Real-time Graphing"
 msgstr "Iespējot reāllaika grafiku veidošanu"
 
-#, fuzzy
 #: include/global_settings.php:1010
+#, fuzzy
 msgid "When an option is checked, users will be able to put Kadupul into Real-time mode."
 msgstr "Kad opcija ir atzīmēta, lietotāji varēs iestatīt Kadupul reāllaika režīmā."
 
@@ -10745,8 +10745,8 @@ msgstr "Vada atspējošanas pārbaudi, vai nav palielināts OID, ejot OID kokā.
 msgid "Remote Agent Timeout"
 msgstr "Attālā aģenta noildze"
 
-#, fuzzy
 #: include/global_settings.php:1258
+#, fuzzy
 msgid "The amount of time, in seconds, that the Central Kadupul web server will wait for a response from the Remote Data Collector to obtain various Device information before abandoning the request.  On Devices that are associated with Data Collectors other than the Central Kadupul Data Collector, the Remote Agent must be used to gather Device information."
 msgstr "Laiks sekundēs, cik ilgi Central Kadupul tīmekļa serveris gaidīs atbildi no attālā datu savācēja, lai iegūtu dažādu informāciju par ierīci, pirms atteiksies no pieprasījuma. Ierīcēs, kas ir saistītas ar datu savācējiem, kas nav centrālais Kadupul datu savācējs, ierīces informācijas apkopošanai ir jāizmanto attālais aģents."
 
@@ -11226,8 +11226,8 @@ msgstr "Saistīšanas taimauts sekundēs."
 msgid "LDAP Debug Mode"
 msgstr "LDAP atkļūdošanas režīms"
 
-#, fuzzy
 #: include/global_settings.php:1743
+#, fuzzy
 msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities."
 msgstr "Ja Checked Kadupul reģistrēs papildu LDAP informāciju Kadupul žurnālā saistīšanas un meklēšanas darbību laikā."
 
@@ -11527,8 +11527,8 @@ msgstr "Maksimālais e-pasta lielums"
 msgid "The maximum size of the E-Mail message including all attachments."
 msgstr "Maksimālais e-pasta ziņojuma lielums, ieskaitot visus pielikumus."
 
-#, fuzzy
 #: include/global_settings.php:2016
+#, fuzzy
 msgid "Poller Logging Level for Kadupul Reporting"
 msgstr "Poller mežizstrādes līmenis Kadupul ziņošanai"
 
@@ -11580,8 +11580,8 @@ msgstr "RRD atjaunināšanas iestatījumi pēc pieprasījuma"
 msgid "Enable On-demand RRD Updating"
 msgstr "Iespējot RRD atjaunināšanu pēc pieprasījuma"
 
-#, fuzzy
 #: include/global_settings.php:2064
+#, fuzzy
 msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on."
 msgstr "Vai Boost pēc pieprasījuma ir jāiespējo RRD atjaunināšana Kadupul? Ja atspējosit, šīs izmaiņas stāsies spēkā tikai pēc nākamā aptaujas cikla. Ja jums ir attālie datu savācēji, šiem iestatījumiem ir jābūt ieslēgtiem."
 
@@ -11693,8 +11693,8 @@ msgstr "Datu avotu statistika"
 msgid "Enable Data Source Statistics Collection"
 msgstr "Iespējot datu avota statistikas apkopošanu"
 
-#, fuzzy
 #: include/global_settings.php:2187
+#, fuzzy
 msgid "Should Data Source Statistics be collected for this Kadupul system?"
 msgstr "Vai par šo Kadupul sistēmu ir jāapkopo datu avotu statistika?"
 
@@ -11746,8 +11746,8 @@ msgstr "RRDfile tīrītājs"
 msgid "Enable RRDfile Check"
 msgstr "Iespējot kārtulu"
 
-#, fuzzy
 #: include/global_settings.php:2255
+#, fuzzy
 msgid "Should RRDfile check be enabled for this Kadupul system?"
 msgstr "Vai par šo Kadupul sistēmu ir jāapkopo datu avotu statistika?"
 
@@ -12041,8 +12041,8 @@ msgstr "Kuru diagrammu režīmu vēlaties rādīt pēc noklusējuma, kad pirmo r
 msgid "TimeZone Support"
 msgstr "MySQL — laika joslas atbalsts"
 
-#, fuzzy
 #: include/global_settings.php:2581
+#, fuzzy
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
 msgstr "Kā jūs vēlētos, lai Kadupul prezentē datumus?  Šis iestatījums arī mainīs veidu, kā tiek attēloti Kadupul Graphs datumi."
 
@@ -12094,13 +12094,13 @@ msgstr "Iespējot horizontālo ritināšanu"
 msgid "Enable Horizontal Scrolling of Tables, Disabling Responsive Column Visibility."
 msgstr "Iespējot tabulu horizontālo ritināšanu, atspējojot adaptīvo kolonnu redzamību."
 
-#, fuzzy
 #: include/global_settings.php:2622
+#, fuzzy
 msgid "The date format to use in Kadupul."
 msgstr "Datuma formāts, ko izmantot Kadupul."
 
-#, fuzzy
 #: include/global_settings.php:2629
+#, fuzzy
 msgid "The date separator to be used in Kadupul."
 msgstr "Datuma atdalītājs, kas jāizmanto Kadupul."
 
@@ -12369,22 +12369,22 @@ msgstr "Attālā datu savācēja statuss:"
 msgid "Number of Offline Records:"
 msgstr "Bezsaistes ierakstu skaits:"
 
-#, fuzzy
 #: index.php:82
+#, fuzzy
 msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Kadupul Database for updating."
 msgstr "<strong>PIEZĪME.</strong> Jūs esat pieteicies Remote Data Collector. Kad esat <b>tiešsaistē</b> , jūs varēsiet skatīt un kontrolēt lielu daļu no galvenās Kadupul vietnes, it kā jūs tajā būtu pieteicies. Turklāt ir svarīgi ņemt vērā, ka attālajiem datu savācējiem ir jāizmanto Kadupul veiktspējas uzlabošanas pakalpojumi <b>“atjaunināšana pēc pieprasījuma”</b> , un mēs vienmēr iesakām izmantot Spine. Kad Remote Data Collector ir <b>“bezsaistē”</b> , attālo datu savācēju vietnē būs daudz mazāk informācijas. Tomēr tas saglabās kešatmiņu visus atjauninājumus, līdz būs pieejama galvenā Kadupul datu bāze un tīmekļa serveris. Pēc tam tā Boost tabulas izvadi nosūtīs atpakaļ uz galveno Kadupul datu bāzi atjaunināšanai."
 
-#, fuzzy
 #: index.php:87
+#, fuzzy
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
 msgstr "<strong>PIEZĪME.</strong> Neviens no galvenajiem Kadupul spraudņiem līdz šim nav pārveidots tā, lai tas darbotos ar attāliem datu savācējiem. Tāpēc spraudņi, piemēram, MacTrack un HMIB, kuriem nepieciešama tieša piekļuve ierīcēm, pašlaik nedarbosies ar attālajiem datu savācējiem. Tomēr spraudņi, piemēram, Thold, darbosies tik ilgi, kamēr attālais datu apkopotājs ir <b>“tiešsaistes”</b> režīmā."
 
-#: install/functions.php:609
+#: install/functions.php:613
 #, php-format
 msgid "Path for %s"
 msgstr "Ceļš %s"
 
-#: install/functions.php:820
+#: install/functions.php:824
 msgid "New Poller"
 msgstr "Jauns aptaujātais"
 
@@ -12828,8 +12828,8 @@ msgstr "Jūsu parolei jāsastāv gan no mazajiem, gan lielajiem burtiem!"
 msgid "Your password must contain at least 1 special character!"
 msgstr "Jūsu parolei jāsatur vismaz 1 speciālā rakstzīme!"
 
-#, fuzzy
 #: lib/auth.php:4676
+#, fuzzy
 msgid "Kadupul Login Failure"
 msgstr "Kadupul pieteikšanās kļūme"
 
@@ -13557,8 +13557,8 @@ msgstr "Neizdevās izveidot savienojumu: %s"
 msgid "SMTP error: "
 msgstr "SMTP kļūda: "
 
-#, fuzzy
 #: lib/functions.php:5566
+#, fuzzy
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "Šis ir testa ziņojums, kas ģenerēts no Kadupul. Šis ziņojums tika nosūtīts, lai pārbaudītu jūsu pasta iestatījumu konfigurāciju."
 
@@ -13606,8 +13606,8 @@ msgstr "Notiek ziņojuma teksta izveide..."
 msgid "Sending Message..."
 msgstr "Notiek ziņas sūtīšana..."
 
-#, fuzzy
 #: lib/functions.php:5634
+#, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Kadupul testa ziņojums"
 
@@ -13845,8 +13845,8 @@ msgstr "Ignorēt sistēmas krāsu"
 msgid "Help"
 msgstr "Palīdzība"
 
-#, fuzzy
 #: lib/html.php:2577
+#, fuzzy
 msgid "Kadupul Home"
 msgstr "Kadupul mājas"
 
@@ -13862,8 +13862,8 @@ msgstr "Informācijas paneļi"
 msgid "Charts"
 msgstr "Diagrammas"
 
-#, fuzzy
 #: lib/html.php:2583
+#, fuzzy
 msgid "Kadupul Project Page"
 msgstr "Kadupul projekta lapa"
 
@@ -13883,8 +13883,8 @@ msgstr "Tastatūra"
 msgid "Shortcuts"
 msgstr "Īsceļi"
 
-#, fuzzy
 #: lib/html.php:2591
+#, fuzzy
 msgid "Contribute to the Kadupul Project"
 msgstr "Piedalieties Kadupul projektā"
 
@@ -14413,8 +14413,8 @@ msgstr "E-pasta sūtītāja/saņēmēja informācija"
 msgid "Subject"
 msgstr "Temats"
 
-#, fuzzy
 #: lib/html_reports.php:164
+#, fuzzy
 msgid "Kadupul Report"
 msgstr "Kadupul ziņojums"
 
@@ -14803,13 +14803,13 @@ msgstr "Atlasīts"
 msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "Regulārā izteiksme \"%s\" nav derīga. Kļūda ir %s"
 
-#, fuzzy
 #: lib/html_utility.php:1129
+#, fuzzy
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
 msgstr "Kadupul regulārās izteiksmes ir ierobežotas līdz 50 rakstzīmēm tikai drošības apsvērumu dēļ."
 
-#, fuzzy
 #: lib/html_utility.php:1133
+#, fuzzy
 msgid "Kadupul regular expressions can not includes the semi-color character."
 msgstr "Kadupul regulārās izteiksmes nedrīkst ietvert puskrāsu rakstzīmi."
 
@@ -15039,8 +15039,8 @@ msgstr "PIEZĪME. Jūsu esošie dati netiks mainīti, kā arī tie vai vēsture 
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
 msgstr "Jūs esat izveidojis jaunu datu bāzi, bet vēl neesat importējis failu 'cacti.sql'. Lai turpinātu, komandrindā izpildiet tālāk norādītās darbības:"
 
-#, fuzzy
 #: lib/installer.php:1592
+#, fuzzy
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Kadupul database. Please ensure that the Kadupul database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Kadupul database."
 msgstr "Šī kļūda var tikt ģenerēta arī tad, ja Kadupul datu bāzes lietotājam nav pareizu atļauju Kadupul datu bāzē. Lūdzu, pārliecinieties, ka Kadupul datu bāzes lietotājam ir iespēja ATLASĪT, IEVIETOT, dzēst, ATJAUNINĀT, IZVEIDOT, MAINĪT, DROP, INDEX Kadupul datu bāzē."
 
@@ -15077,8 +15077,8 @@ msgstr "Apgreidot"
 msgid "Downgrade"
 msgstr "Pazemināt"
 
-#, fuzzy
 #: lib/installer.php:1740 utilities.php:265
+#, fuzzy
 msgid "Kadupul Version"
 msgstr "Kadupul versija"
 
@@ -15091,8 +15091,8 @@ msgstr "Licences līgums"
 msgid "This version of Kadupul (%s) does not appear to have a valid version code, please contact the Kadupul Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 msgstr "Šķiet, ka šai Kadupul versijai (%s) nav derīga versijas koda. Lūdzu, sazinieties ar Kadupul izstrādes komandu, lai pārliecinātos, ka tas ir labots. Ja laidienā redzat šo kļūdu, lūdzu, nekavējoties ziņojiet par to vietnē GitHub"
 
-#, fuzzy
 #: lib/installer.php:1746
+#, fuzzy
 msgid "Thanks for taking the time to download and install Kadupul, the complete graphing solution for your network. Before you can start making cool graphs, there are a few pieces of data that Kadupul needs to know."
 msgstr "Paldies, ka veltījāt laiku, lai lejupielādētu un instalētu Kadupul — jūsu tīklam paredzēto pilnīgo grafiku risinājumu. Pirms varat sākt veidot foršus grafikus, Kadupul ir jāzina daži dati."
 
@@ -15144,8 +15144,8 @@ msgstr "Atrašanās vietas pārbaudes"
 msgid "ERROR:"
 msgstr "KĻŪDA:"
 
-#, fuzzy
 #: lib/installer.php:1859
+#, fuzzy
 msgid "Please update config.php with the correct relative URI location of Kadupul (url_path)."
 msgstr "Lūdzu, atjauniniet config.php, norādot pareizo Kadupul relatīvo URI atrašanās vietu (url_path)."
 
@@ -15203,8 +15203,8 @@ msgstr "Konkrētā vērtība, šķiet, atšķiras palaistajā konfigurācijā no
 msgid "PHP - Module Support (Required)"
 msgstr "PHP — moduļa atbalsts (nepieciešams)"
 
-#, fuzzy
 #: lib/installer.php:1941
+#, fuzzy
 msgid "Kadupul requires several PHP Modules to be installed to work properly. If any of these are not installed, you will be unable to continue the installation until corrected. In addition, for optimal system performance Kadupul should be run with certain MySQL system variables set.  Please follow the MySQL recommendations at your discretion.  Always seek the MySQL documentation if you have any questions."
 msgstr "Lai Kadupul darbotos pareizi, ir jāinstalē vairāki PHP moduļi. Ja kāds no tiem nav instalēts, jūs nevarēsit turpināt instalēšanu, kamēr tas netiks izlabots. Turklāt optimālai sistēmas veiktspējai Kadupul ir jādarbina ar noteiktiem MySQL sistēmas mainīgajiem. Lūdzu, ievērojiet MySQL ieteikumus pēc saviem ieskatiem. Ja jums ir kādi jautājumi, vienmēr meklējiet MySQL dokumentāciju."
 
@@ -15371,8 +15371,8 @@ msgstr "Lai konfigurētu attālo aptauju, jūsu config.php failam instalēšanas
 msgid "Configuration of Poller"
 msgstr "Aptaujātaja konfigurēšana"
 
-#, fuzzy
 #: lib/installer.php:2174
+#, fuzzy
 msgid "Your Remote Kadupul Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Kadupul database server.  Correct this and try again."
 msgstr "Jūsu Remote Kadupul Poller informācija nav iekļauta jūsu config.php failā. Lūdzu, pārskatiet config.php.dist un iestatiet mainīgos: <i>$rdatabase_default, $rdatabase_username</i> utt. Šie mainīgie ir jāiestata un jānorāda atpakaļ uz jūsu primāro Kadupul datu bāzes serveri. Izlabojiet to un mēģiniet vēlreiz."
 
@@ -15388,8 +15388,8 @@ msgstr "Mainīgie, kas jāiestata failā config.php, ir šādi:"
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
 msgstr "Instalēšanas programma automātiski piešķir $poller_id un pievieno to failam config.php."
 
-#, fuzzy
 #: lib/installer.php:2193
+#, fuzzy
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Kadupul database server.  Follow the same procedure you would with any other Kadupul install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
 msgstr "Kad visi mainīgie ir iestatīti failā config.php, jums ir arī jāpiešķir $rdatabase_username piekļuve galvenajam Kadupul datu bāzes serverim. Izpildiet to pašu procedūru, ko darītu ar jebkuru citu Kadupul instalēšanu. Pēc tam varat nospiest pogu Pārbaudīt savienojumu. Ja pārbaude būs veiksmīga, varēsiet turpināt un pabeigt instalēšanu."
 
@@ -15453,8 +15453,8 @@ msgstr "Nepieciešams rakstīt pēc instalēšanas pabeigšanas"
 msgid "Potential permission issues"
 msgstr "Iespējamās atļaujas problēmas"
 
-#, fuzzy
 #: lib/installer.php:2382
+#, fuzzy
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
 msgstr "Lūdzu, pārliecinieties, vai jūsu tīmekļa serverim ir lasīšanas/rakstīšanas piekļuve Kadupul mapēm, kurās tiek rādītas tālāk norādītās kļūdas."
 
@@ -15544,8 +15544,8 @@ msgstr "Krona intervāls"
 msgid "Default Automation Network"
 msgstr "Noklusējuma automatizācijas tīkls"
 
-#, fuzzy
 #: lib/installer.php:2487
+#, fuzzy
 msgid "Kadupul can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
 msgstr "Kad instalēšana ir pabeigta, Kadupul var automātiski skenēt tīklu. Tas izmantos tālāk norādīto tīkla diapazonu, lai noteiktu IP diapazonu, ko var skenēt. Skenēšanai ir definēts iepriekš definēts opciju kopums, kas ietver gan “publisku”, gan “privātu” kopienu izmantošanu."
 
@@ -15613,8 +15613,8 @@ msgstr "Autors"
 msgid "Homepage"
 msgstr "Mājas lapa"
 
-#, fuzzy
 #: lib/installer.php:2590
+#, fuzzy
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
 msgstr "Ierīču veidnes ļauj pārraudzīt un grafiski attēlot plašu Kadupul datu klāstu. Kad esat atlasījis vajadzīgās ierīces veidnes, nospiediet \"Next\" un instalēšana tiks pabeigta. Lūdzu, esiet pacietīgs šajā darbībā, jo ierīču veidņu importēšana var ilgt dažas minūtes."
 
@@ -15880,8 +15880,8 @@ msgstr "Ierīces pievienošana noklusējuma kokam"
 msgid "No templated graphs for Default Device were found"
 msgstr "Netika atrasts neviens no veidnes veidots grafiks noklusējuma ierīcei"
 
-#, fuzzy
 #: lib/installer.php:3324
+#, fuzzy
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "BRĪDINĀJUMS. Jūsu operētājsistēmas ierīces veidne nav atrasta. Lai pārraudzītu savu Kadupul serveri, jums būs jāimportē ierīču veidnes vai Kadupul pakotnes."
 
@@ -16778,8 +16778,8 @@ msgstr ""
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "Izmantojot InnoDB krātuvi, ir svarīgi saglabāt tabulas vietas atsevišķi. Tas padara tabulu pārvaldību vienkāršāku ilgstošiem %s lietotājiem. Ja pašlaik izmantojat šo funkciju, varat migrēt uz katra faila krātuvi, iespējojot līdzekli un pēc tam izpildot paziņojumu par izmaiņām visās InnoDB tabulās."
 
-#, fuzzy
 #: lib/utility.php:1322
+#, fuzzy
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Kadupul tables."
 msgstr "Izmantojot innodb_file_per_table, ir svarīgi iestatīt innodb_file_format uz Barracuda. Šis iestatījums ļaus izmantot garākus indeksus, kas ir svarīgi noteiktām Kadupul tabulām."
 
@@ -17091,8 +17091,8 @@ msgstr "Jūs esat atteicies no Kadupul konta darbības apturēšanas dēļ."
 msgid "You have been logged out of Kadupul due to a Remote Data Collector state change"
 msgstr "Jūs esat atteicies no Kadupul sesijas noildzes dēļ."
 
-#, fuzzy
 #: logout.php:61
+#, fuzzy
 msgid "Logout of Kadupul"
 msgstr "Atteikšanās no Kadupul"
 
@@ -17602,8 +17602,8 @@ msgstr "BRĪDINĀJUMS: PollerID:%s ar nosaukumu:%s ir periodisko kontrolziņojum
 msgid "Poller in Heartbeat Mode"
 msgstr "Aptaujas veicējs sirdspukstu režīmā"
 
-#, fuzzy
 #: poller.php:1174
+#, fuzzy
 msgid "Kadupul System Notification"
 msgstr "Kadupul sistēmas paziņojums"
 
@@ -17616,13 +17616,13 @@ msgstr "PIEZĪME. Ir pievienots otrs Kadupul datu savācējs. Tāpēc automātis
 msgid "WARNING: Main Kadupul database %s offline or in recovery"
 msgstr "BRĪDINĀJUMS: Galvenā Kadupul %s datubāze bezsaistē vai tiek atkopta"
 
-#, fuzzy
 #: poller_automation.php:970 poller_automation.php:1021
+#, fuzzy
 msgid "Kadupul Primary Admin"
 msgstr "Kadupul primārais administrators"
 
-#, fuzzy
 #: poller_automation.php:1122
+#, fuzzy
 msgid "Kadupul Automation Report requires an html based Email client"
 msgstr "Kadupul automatizācijas ziņojumam ir nepieciešams e-pasta klients, kura pamatā ir HTML"
 
@@ -17793,8 +17793,8 @@ msgstr "Jūs jau esat izmantojis šo datu bāzes resursdatora nosaukumu \"%s\". 
 msgid "Data Collector Statistics cleared."
 msgstr "Datu apkopotāja statistika ir notīrīta."
 
-#, fuzzy
 #: pollers.php:552
+#, fuzzy
 msgid "Click 'Continue' to delete the following Data Collector.  Note, all devices will be disassociated from this Data Collector and mapped back to the Main Kadupul Data Collector."
 msgid_plural "Click 'Continue' to delete all following Data Collectors.  Note, all devices will be disassociated from these Data Collectors and mapped back to the Main Kadupul Data Collector."
 msgstr[0] "Noklikšķiniet uz \"Turpināt\", lai dzēstu šādu datu vācēju.  Ņemiet vērā, ka visas ierīces tiks atdalītas no šī datu kolektora un kartētas atpakaļ uz galveno Kadupul datu kolektoru."
@@ -19620,8 +19620,8 @@ msgstr "KĻŪDA: RRDtool 1.2.x+ neatbalsta GIF attēlu formātu, taču %d\" di
 msgid "General Information"
 msgstr "Pamatinformācija"
 
-#, fuzzy
 #: utilities.php:270
+#, fuzzy
 msgid "Kadupul OS"
 msgstr "Kadupul OS"
 
@@ -19646,8 +19646,8 @@ msgstr "Kopā: %s"
 msgid "Poller Information"
 msgstr "Aptaujātaja informācija"
 
-#, fuzzy
 #: utilities.php:341
+#, fuzzy
 msgid "Different version of Kadupul and Spine!"
 msgstr "Dažāda Kadupul un mugurkaula versija!"
 
@@ -19913,13 +19913,13 @@ msgstr "Žurnāls [Kopā rindiņas: %d — paslēpti neatbilstoši vienumi]"
 msgid "Log [Total Lines: %d - All Items Shown]"
 msgstr "Žurnāls [Kopā rindas: %d — visi parādītie vienumi]"
 
-#, fuzzy
 #: utilities.php:1602
+#, fuzzy
 msgid "Clear Kadupul Log"
 msgstr "Notīrīt Kadupul žurnālu"
 
-#, fuzzy
 #: utilities.php:1615
+#, fuzzy
 msgid "Kadupul Log Cleared"
 msgstr "Kadupul žurnāls notīrīts"
 
@@ -19991,13 +19991,13 @@ msgstr "Skriptu serveris:"
 msgid "RRD:"
 msgstr "RRD:"
 
-#, fuzzy
 #: utilities.php:2286
+#, fuzzy
 msgid "Kadupul technical support page.  Used by developers and technical support persons to assist with issues in Kadupul.  Includes checks for common configuration issues."
 msgstr "Kadupul tehniskā atbalsta lapa. To izmanto izstrādātāji un tehniskā atbalsta personas, lai palīdzētu atrisināt problēmas ar Kadupul. Ietver bieži sastopamu konfigurācijas problēmu pārbaudes."
 
-#, fuzzy
 #: utilities.php:2290
+#, fuzzy
 msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
 msgstr "Kadupul žurnāls saglabā statistiku, kļūdu un citus ziņojumus atkarībā no sistēmas iestatījumiem. Šo informāciju var izmantot, lai identificētu problēmas ar aptauju un lietojumprogrammu."
 
@@ -20033,8 +20033,8 @@ msgstr "PIEZĪME: Lielās sistēmās šīs komandas izpilde var ilgt no vairāk�
 msgid "Rebuild Resource Cache"
 msgstr "Atkārtoti izveidojiet resursu kešatmiņu"
 
-#, fuzzy
 #: utilities.php:2319
+#, fuzzy
 msgid "When operating multiple Data Collectors in Kadupul, Kadupul will attempt to maintain state for key files on all Data Collectors.  This includes all core, non-install related website and plugin files.  When you force a Resource Cache rebuild, Kadupul will clear the local Resource Cache, and then rebuild it at the next scheduled poller start.  This will trigger all Remote Data Collectors to recheck their website and plugin files for consistency."
 msgstr "Izmantojot vairākus datu vācējus Kadupul, Kadupul mēģinās saglabāt galveno failu stāvokli visos datu vācējos. Tas ietver visus galvenos, ar instalēšanu nesaistītos vietņu un spraudņu failus. Piespiedu kārtā veicot resursu kešatmiņas pārbūvi, Kadupul notīrīs vietējo resursu kešatmiņu un pēc tam atjaunos to nākamajā plānotajā aptaujas sākšanas reizē. Tas liks visiem attālajiem datu apkopotājiem atkārtoti pārbaudīt savu vietņu un spraudņu failu konsekvenci."
 

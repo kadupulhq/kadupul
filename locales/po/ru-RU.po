@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Russian Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-12 09:37-0700\n"
+"POT-Creation-Date: 2026-09-12 09:56-0700\n"
 "PO-Revision-Date: 2024-12-06 19:24+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -3743,8 +3743,8 @@ msgstr[0] "Дублировать профиль источника данных
 msgstr[1] ""
 msgstr[2] ""
 
-#, fuzzy
 #: data_source_profiles.php:387
+#, fuzzy
 msgid "Unable to duplicate Data Source Profile.  Check Kadupul Log for errors."
 msgstr "Неудачно отремонтирован один или несколько RRD-файлов.  Ошибки см. в журнале Kadupul."
 
@@ -4556,8 +4556,8 @@ msgstr "Каталога кэша изображений не существуе
 msgid "The Image Cache Directory is not writable.  Please set permissions and then attempt to open another Real-time graph."
 msgstr "Каталог кэша изображений не доступен для записи.  Пожалуйста, установите разрешения, а затем попробуйте открыть еще один график в режиме реального времени."
 
-#, fuzzy
 #: graph_realtime.php:374
+#, fuzzy
 msgid "Kadupul Real-time Graphing"
 msgstr "Kadupul Графическое изображение в реальном времени"
 
@@ -5842,13 +5842,13 @@ msgstr "Шаблоны устройств не найдены"
 msgid "Not Logged In"
 msgstr "Не авторизован"
 
-#, fuzzy
 #: include/auth.php:162
+#, fuzzy
 msgid "You must be logged in to access this area of Kadupul."
 msgstr "Вы должны войти в систему, чтобы получить доступ к этой области Kadupul."
 
-#, fuzzy
 #: include/auth.php:167
+#, fuzzy
 msgid "FATAL: You must be logged in to access this area of Kadupul."
 msgstr "Вы должны войти в систему, чтобы получить доступ к этой области Kadupul."
 
@@ -5866,8 +5866,8 @@ msgstr "Доступ запрещён"
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "Если вы считаете, что это ошибка. Пожалуйста, свяжитесь с администратором Kadupul."
 
-#, fuzzy
 #: include/auth.php:284 lib/functions.php:7595 permission_denied.php:48
+#, fuzzy
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "Вам не разрешается доступ к этому разделу Kadupul."
 
@@ -5947,8 +5947,8 @@ msgstr "Парольные фразы конфиденциальности SNMP 
 msgid "The SNMP v3 Authentication Passphrases do not match"
 msgstr "Пароли аутентификации SNMP v3 не совпадают"
 
-#, fuzzy
 #: include/global_arrays.php:186
+#, fuzzy
 msgid "XML: Kadupul version does not exist."
 msgstr "XML Kadupul версии не существует."
 
@@ -7966,8 +7966,8 @@ msgstr "Пункты Десятилетней программы професс�
 msgid "View SNMP Notification Receivers"
 msgstr "Просмотр приемников уведомлений SNMP"
 
-#, fuzzy
 #: include/global_arrays.php:2571
+#, fuzzy
 msgid "Kadupul Settings"
 msgstr "Настройки Kadupul"
 
@@ -7979,8 +7979,8 @@ msgstr "Внешняя ссылка"
 msgid "(Action)"
 msgstr "Действие"
 
-#, fuzzy
 #: include/global_arrays.php:2637
+#, fuzzy
 msgid "Kadupul Help"
 msgstr "Kadupul дома"
 
@@ -9607,8 +9607,8 @@ msgstr "Путь к двоичному файлу PHP (для получения
 msgid "Logging"
 msgstr "Регистрация"
 
-#, fuzzy
 #: include/global_settings.php:164
+#, fuzzy
 msgid "Kadupul Log Path"
 msgstr "Путь Kadupul журнала"
 
@@ -9624,13 +9624,13 @@ msgstr "Стандартный путь регистрации стандарт�
 msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
 msgstr "Если у вас возникли проблемы со сборщиками данных Kadupul, задайте этот путь файла, и стандартная ошибка Сборщики данных будет перенаправлена в этот файл."
 
-#, fuzzy
 #: include/global_settings.php:184
+#, fuzzy
 msgid "Rotate the Kadupul Log"
 msgstr "Поверните журнал Kadupul"
 
-#, fuzzy
 #: include/global_settings.php:185
+#, fuzzy
 msgid "This option will rotate the Kadupul Log periodically."
 msgstr "Эта опция будет периодически поворачивать журнал Kadupul."
 
@@ -10440,8 +10440,8 @@ msgstr "Управление журналами"
 msgid "Default Log Tail Lines"
 msgstr "Хвостовые линии журнала по умолчанию"
 
-#, fuzzy
 #: include/global_settings.php:970
+#, fuzzy
 msgid "Default number of lines of the Kadupul log file to tail."
 msgstr "По умолчанию количество строк лог-файла Kadupul по умолчанию, которые нужно просмотреть."
 
@@ -10457,8 +10457,8 @@ msgstr "Определенное пользователем количество
 msgid "Log Tail Refresh"
 msgstr "Обновление хвоста журнала"
 
-#, fuzzy
 #: include/global_settings.php:985
+#, fuzzy
 msgid "How often do you want the Kadupul log display to update."
 msgstr "Как часто вы хотите обновлять отображение журнала Kadupul."
 
@@ -10748,8 +10748,8 @@ msgstr "Отключает проверку увеличения OID во вре
 msgid "Remote Agent Timeout"
 msgstr "Таймаут удаленного агента"
 
-#, fuzzy
 #: include/global_settings.php:1258
+#, fuzzy
 msgid "The amount of time, in seconds, that the Central Kadupul web server will wait for a response from the Remote Data Collector to obtain various Device information before abandoning the request.  On Devices that are associated with Data Collectors other than the Central Kadupul Data Collector, the Remote Agent must be used to gather Device information."
 msgstr "Время в секундах, в течение которого веб-сервер Central Kadupul будет ждать ответа от удаленного сборщика данных для получения различной информации об устройстве, прежде чем отклонять запрос.  На устройствах, которые связаны с другими сборщиками данных, кроме Центрального Kadupul сбора данных, удаленный агент должен использоваться для сбора информации об устройстве."
 
@@ -11529,8 +11529,8 @@ msgstr "Максимальный размер E-Mail"
 msgid "The maximum size of the E-Mail message including all attachments."
 msgstr "Максимальный размер сообщения электронной почты, включая все вложения."
 
-#, fuzzy
 #: include/global_settings.php:2016
+#, fuzzy
 msgid "Poller Logging Level for Kadupul Reporting"
 msgstr "Уровень регистрации в журнале регистрации избирателей для отчетности Kadupul"
 
@@ -11570,8 +11570,8 @@ msgstr "Введите вторичный IP-адрес DNS, который бу
 msgid "DNS Timeout"
 msgstr "Таймаут DNS"
 
-#, fuzzy
 #: include/global_settings.php:2049
+#, fuzzy
 msgid "Please enter the DNS timeout in milliseconds.  Kadupul uses a PHP based DNS resolver."
 msgstr "Пожалуйста, введите время ожидания DNS в миллисекундах.  Kadupul используют DNS преобразователь на базе PHP."
 
@@ -12374,12 +12374,12 @@ msgstr "<strong>NOTE:</strong> Вы вошли в удаленный сборщ�
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
 msgstr "<strong>NOTE:</strong> На сегодняшний день ни один из модулей Core Kadupul не был перепроектирован для работы с удаленными сборщиками данных.  Поэтому подключаемые модули, такие как MacTrack и HMIB, которые требуют прямого доступа к устройствам, в настоящее время не будут работать с удаленными сборщиками данных.  Однако плагины, такие как Thold, будут работать до тех пор, пока удаленный сборщик данных находится в режиме <b>'online' </b>."
 
-#: install/functions.php:609
+#: install/functions.php:613
 #, php-format
 msgid "Path for %s"
 msgstr "Путь к %s"
 
-#: install/functions.php:820
+#: install/functions.php:824
 msgid "New Poller"
 msgstr "Новый Poller"
 
@@ -12823,8 +12823,8 @@ msgstr "Ваш пароль должен содержать символы ни�
 msgid "Your password must contain at least 1 special character!"
 msgstr "Ваш пароль должен содержать не менее 1 специального символа!"
 
-#, fuzzy
 #: lib/auth.php:4676
+#, fuzzy
 msgid "Kadupul Login Failure"
 msgstr "Журнал Kadupul очищен."
 
@@ -13551,8 +13551,8 @@ msgstr "Не удалось подключиться: %s"
 msgid "SMTP error: "
 msgstr "SMTP ошибка: "
 
-#, fuzzy
 #: lib/functions.php:5566
+#, fuzzy
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "Это тестовое сообщение, сгенерированное Kadupul.  Это сообщение было отправлено для проверки конфигурации параметров вашей почты."
 
@@ -13600,8 +13600,8 @@ msgstr "Создание текста сообщения...."
 msgid "Sending Message..."
 msgstr "Отправка сообщения..."
 
-#, fuzzy
 #: lib/functions.php:5634
+#, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Сообщение о тестировании Kadupul"
 
@@ -13836,8 +13836,8 @@ msgstr "Цвет элемента"
 msgid "Help"
 msgstr "Помощь"
 
-#, fuzzy
 #: lib/html.php:2577
+#, fuzzy
 msgid "Kadupul Home"
 msgstr "Kadupul дома"
 
@@ -13873,8 +13873,8 @@ msgstr "Клавиатура"
 msgid "Shortcuts"
 msgstr "Горячие клавиши"
 
-#, fuzzy
 #: lib/html.php:2591
+#, fuzzy
 msgid "Contribute to the Kadupul Project"
 msgstr "Поверните журнал Kadupul"
 
@@ -13898,8 +13898,8 @@ msgstr "Помощь в переводе"
 msgid "Report a bug"
 msgstr "Сообщить об ошибке"
 
-#, fuzzy
 #: lib/html.php:2600
+#, fuzzy
 msgid "Kadupul"
 msgstr "Kadupul"
 
@@ -14793,13 +14793,13 @@ msgstr "Выбрано"
 msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "Поисковый запрос \"%s\" недействителен. Ошибка в %s"
 
-#, fuzzy
 #: lib/html_utility.php:1129
+#, fuzzy
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
 msgstr "Регулярные выражения Kadupul ограничены 50 символами только из соображений безопасности."
 
-#, fuzzy
 #: lib/html_utility.php:1133
+#, fuzzy
 msgid "Kadupul regular expressions can not includes the semi-color character."
 msgstr "Регулярные выражения Kadupul не могут включать полуцветной символ."
 
@@ -14878,13 +14878,13 @@ msgstr "Импорт результатов предварительного п�
 msgid "Import Results"
 msgstr "Импорт Результатов"
 
-#, fuzzy
 #: lib/import.php:2640
+#, fuzzy
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Kadupul внесли бы следующие изменения, если бы Пакет был импортирован:"
 
-#, fuzzy
 #: lib/import.php:2642
+#, fuzzy
 msgid "Kadupul has imported the following items for the Package:"
 msgstr "Kadupul импортировали следующие товары для пакета:"
 
@@ -14896,13 +14896,13 @@ msgstr "Файлы пакетов"
 msgid "[preview] "
 msgstr "[предпросмотр] "
 
-#, fuzzy
 #: lib/import.php:2654
+#, fuzzy
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Kadupul внесут следующие изменения, если Шаблон будет импортирован:"
 
-#, fuzzy
 #: lib/import.php:2656
+#, fuzzy
 msgid "Kadupul has imported the following items for the Template:"
 msgstr "Kadupul импортировали следующие элементы для Шаблона:"
 
@@ -15033,8 +15033,8 @@ msgstr "ПРИМЕЧАНИЕ: Ваши существующие данные н�
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
 msgstr "Вы создали новую базу данных, но еще не импортировали файл 'cacti.sql'. В командной строке выполните следующие действия, чтобы продолжить:"
 
-#, fuzzy
 #: lib/installer.php:1592
+#, fuzzy
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Kadupul database. Please ensure that the Kadupul database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Kadupul database."
 msgstr "Эта ошибка также может быть сгенерирована, если пользователь Kadupul базы данных не имеет соответствующих прав доступа к базе данных Kadupul. Пожалуйста, убедитесь, что у пользователя базы данных Kadupul есть возможность выбора SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX в базе данных Kadupul."
 
@@ -15107,8 +15107,8 @@ msgstr "Также, если это обновление, обязательно
 msgid "It is NOT recommended to downgrade as the database structure may be inconsistent"
 msgstr "НЕ рекомендуется понижать рейтинг, так как структура базы данных может быть непоследовательной."
 
-#, fuzzy
 #: lib/installer.php:1758
+#, fuzzy
 msgid "Kadupul is licensed under the GNU General Public License, you must agree to its provisions before continuing:"
 msgstr "Kadupul Kadupul лицензированы по Стандартной Общественной Лицензии GNU, вы должны согласиться с ее положениями, прежде чем продолжить:"
 
@@ -15137,8 +15137,8 @@ msgstr "Проверка местоположения"
 msgid "ERROR:"
 msgstr "ОШИБКА:"
 
-#, fuzzy
 #: lib/installer.php:1859
+#, fuzzy
 msgid "Please update config.php with the correct relative URI location of Kadupul (url_path)."
 msgstr "Пожалуйста, обновите config.php, указав правильное относительное местоположение URI Kadupul (url_path)."
 
@@ -15269,8 +15269,8 @@ msgstr "Тип установки"
 msgid "Upgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "Переход с <strong>%s</strong> на <strong>%s</strong>s</strong>s</strong>."
 
-#, fuzzy
 #: lib/installer.php:2064
+#, fuzzy
 msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "В случае возникновения проблем настоятельно рекомендуется очистить кэш браузера, закрыть его, затем открыть заново (а не только включить вкладку Kadupul) и повторить попытку, прежде чем поднимать проблему с Kadupul."
 
@@ -15444,8 +15444,8 @@ msgstr "Требуется Запись после установки Завер
 msgid "Potential permission issues"
 msgstr "Возможные проблемы с разрешениями"
 
-#, fuzzy
 #: lib/installer.php:2382
+#, fuzzy
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
 msgstr "Пожалуйста, убедитесь, что ваш веб-сервер имеет доступ на чтение/запись к папкам Kadupul, которые показывают ошибки ниже."
 
@@ -15535,8 +15535,8 @@ msgstr "Крон интервал"
 msgid "Default Automation Network"
 msgstr "Сеть автоматизации по умолчанию"
 
-#, fuzzy
 #: lib/installer.php:2487
+#, fuzzy
 msgid "Kadupul can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
 msgstr "Kadupul могут автоматически сканировать сеть после завершения установки. При этом для определения диапазона сканируемых IP-адресов будет использоваться сетевой диапазон, указанный ниже.  Для сканирования определен заранее определенный набор параметров, включающий в себя как \"публичное\", так и \"частное\" сообщества."
 
@@ -16771,8 +16771,8 @@ msgstr ""
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "При использовании системы хранения InnoDB важно, чтобы ваши столовые пространства были разделены.  Это упрощает управление таблицами в %s в течение длительного времени.  Если у вас в данный момент эта функция выключена, вы можете перейти на файловое хранилище, включив данную функцию, а затем запустив оператор change на всех таблицах InnoDB."
 
-#, fuzzy
 #: lib/utility.php:1322
+#, fuzzy
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Kadupul tables."
 msgstr "При использовании innodb_file_per_table важно установить формат innodb_file_format на Barracuda.  Эта настройка позволит использовать более длинные индексы, важные для определенных таблиц Kadupul."
 
@@ -17606,8 +17606,8 @@ msgstr "ПРИМЕЧАНИЕ. Добавлен второй сборщик да�
 msgid "WARNING: Main Kadupul database %s offline or in recovery"
 msgstr "ВНИМАНИЕ: основная база данных Kadupul в автономном режиме или в процессе восстановления"
 
-#, fuzzy
 #: poller_automation.php:970 poller_automation.php:1021
+#, fuzzy
 msgid "Kadupul Primary Admin"
 msgstr "Главный администратор Kadupul"
 
@@ -17782,8 +17782,8 @@ msgstr "Вы уже использовали это имя хоста базы �
 msgid "Data Collector Statistics cleared."
 msgstr "Источники данных Статистика"
 
-#, fuzzy
 #: pollers.php:552
+#, fuzzy
 msgid "Click 'Continue' to delete the following Data Collector.  Note, all devices will be disassociated from this Data Collector and mapped back to the Main Kadupul Data Collector."
 msgid_plural "Click 'Continue' to delete all following Data Collectors.  Note, all devices will be disassociated from these Data Collectors and mapped back to the Main Kadupul Data Collector."
 msgstr[0] "Нажмите «Продолжить», чтобы удалить следующий сборщик данных.  Обратите внимание, что все устройства будут отключены от этого устройства сбора данных и сопоставлены с основным устройством сбора данных Kadupul."
@@ -18431,8 +18431,8 @@ msgstr "ПРЕДУПРЕЖДЕНИЕ: Ошибки экспорта обнару
 msgid "What would you like to export?"
 msgstr "Что бы вы хотели экспортировать?"
 
-#, fuzzy
 #: templates_export.php:103
+#, fuzzy
 msgid "Select the Template type that you wish to export from Kadupul."
 msgstr "Выберите тип шаблона, который вы хотите экспортировать из Kadupul."
 
@@ -19652,8 +19652,8 @@ msgstr "Всего: %s"
 msgid "Poller Information"
 msgstr "Информация о респонденте"
 
-#, fuzzy
 #: utilities.php:341
+#, fuzzy
 msgid "Different version of Kadupul and Spine!"
 msgstr "Различные версии Kadupul и позвоночника!"
 
@@ -19919,13 +19919,13 @@ msgstr "Журнал [Всего строк: %d - Несоответствующ
 msgid "Log [Total Lines: %d - All Items Shown]"
 msgstr "Журнал [Total Lines: %d - All Items Show] (Все позиции показаны)"
 
-#, fuzzy
 #: utilities.php:1602
+#, fuzzy
 msgid "Clear Kadupul Log"
 msgstr "Очистить журнал Kadupul"
 
-#, fuzzy
 #: utilities.php:1615
+#, fuzzy
 msgid "Kadupul Log Cleared"
 msgstr "Журнал Kadupul очищен."
 

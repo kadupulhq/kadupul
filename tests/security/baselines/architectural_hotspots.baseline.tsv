@@ -19,7 +19,7 @@ cmd_exec	./cmd_realtime.php:108				$cactiphp = proc_open(cacti_escapeshellcmd(re
 cmd_exec	./data_input.php:77			$output = shell_exec($php . ' -q ' . $script . ' --update --push ' . $id_arg);
 cmd_exec	./graph_realtime.php:212		shell_exec($php_binary . ' -q ' . $script_path . ' ' . $args);
 cmd_exec	./host.php:188		shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/cli/poller_reindex_hosts.php') . ' --qid=all --id=' . cacti_escapeshellarg((string) $host_id));
-cmd_exec	./install/functions.php:531				$myinfo = @json_decode(shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/cli/import_package.php') . ' --filename=' . cacti_escapeshellarg("/$path/$xmlfile") . ' --info'), true);
+cmd_exec	./install/functions.php:535				$myinfo = @json_decode(shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/cli/import_package.php') . ' --filename=' . cacti_escapeshellarg("/$path/$xmlfile") . ' --info'), true);
 cmd_exec	./install/install.php:118			print '<li>' . __('The shell_exec() and/or exec() functions are currently blocked.') . '<br>' . __('See the PHP Manual: <a href="http://php.net/manual/en/ini.core.php#ini.disable-functions">Disable Functions</a>.') .'</li>';
 cmd_exec	./lib/database.php:2284		$process = proc_open(trim($cmd_string), $descriptors, $pipes, null, $env);
 cmd_exec	./lib/dsstats.php:1053		$process = proc_open($command, $fds, $pipes);
@@ -316,7 +316,7 @@ dynamic_include	./install/background.php:29	include_once($config['base_path'] . 
 dynamic_include	./install/background.php:30	include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./install/background.php:31	include_once($config['base_path'] . '/lib/snmp.php');
 dynamic_include	./install/background.php:32	include_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./install/functions.php:1129		include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./install/functions.php:1133		include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./install/install.php:22	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./install/install.php:23	require_once($config['base_path'] . '/lib/api_automation.php');
 dynamic_include	./install/install.php:24	require_once($config['base_path'] . '/lib/api_data_source.php');

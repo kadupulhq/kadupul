@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-12 09:37-0700\n"
+"POT-Creation-Date: 2026-09-12 09:56-0700\n"
 "PO-Revision-Date: 2024-04-20 19:13-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2547,8 +2547,8 @@ msgstr "Nie znaleziono zasad dotyczących drzew"
 msgid "Kadupul System Warning"
 msgstr "System ostrzegawczy Kadupul"
 
-#, fuzzy
 #: cactid.php:37
+#, fuzzy
 msgid "WARNING: Kadupul Daemon PID["
 msgstr "OSTRZEŻENIE: PID demona Kadupul ["
 
@@ -2556,8 +2556,8 @@ msgstr "OSTRZEŻENIE: PID demona Kadupul ["
 msgid "Kadupul System Notice"
 msgstr "Narzędzia systemu Kadupul"
 
-#, fuzzy
 #: cactid.php:125
+#, fuzzy
 msgid "Notice: Kadupul Daemon PID["
 msgstr "Uwaga: PID demona Kadupul ["
 
@@ -2998,8 +2998,8 @@ msgstr "Debug źródła danych otrzymał nieprawidłowy identyfikator źródła 
 msgid "All RRDfile repairs succeeded."
 msgstr "Wszystkie naprawy plików RRDfile zakończyły się sukcesem."
 
-#, fuzzy
 #: data_debug.php:59
+#, fuzzy
 msgid "One or more RRDfile repairs failed.  See Kadupul log for errors."
 msgstr "Jedna lub więcej napraw plików RRD nie powiodło się.  Informacje o błędach można znaleźć w dzienniku Kadupul."
 
@@ -3752,8 +3752,8 @@ msgstr[0] "Zduplikowany profil źródła danych"
 msgstr[1] ""
 msgstr[2] ""
 
-#, fuzzy
 #: data_source_profiles.php:387
+#, fuzzy
 msgid "Unable to duplicate Data Source Profile.  Check Kadupul Log for errors."
 msgstr "Jedna lub więcej napraw plików RRD nie powiodło się.  Informacje o błędach można znaleźć w dzienniku Kadupul."
 
@@ -6096,8 +6096,8 @@ msgstr "Określony plik dziennika nie jest plikiem dziennika Kadupul ani archiwu
 msgid "Log file specified was Kadupul archive file and was removed."
 msgstr "Określony plik dziennika był plikiem archiwum Kadupul i został usunięty."
 
-#, fuzzy
 #: include/global_arrays.php:294
+#, fuzzy
 msgid "Kadupul log purged successfully"
 msgstr "Kadupul pomyślnie oczyszczone z Kadupul"
 
@@ -7959,8 +7959,8 @@ msgstr "Zewnętrzny odnośnik"
 msgid "(Action)"
 msgstr "Akcja:"
 
-#, fuzzy
 #: include/global_arrays.php:2637
+#, fuzzy
 msgid "Kadupul Help"
 msgstr "Kadupul Strona główna"
 
@@ -8405,8 +8405,8 @@ msgstr "Ilość czasu w sekundach pomiędzy oczekiwanymi aktualizacjami."
 msgid "Data Source Active"
 msgstr "Źródło danych Aktywne źródło danych"
 
-#, fuzzy
 #: include/global_form.php:607
+#, fuzzy
 msgid "Whether Kadupul should gather data for this data source or not."
 msgstr "Czy Kadupul powinny zbierać dane dla tego źródła danych, czy nie."
 
@@ -10691,8 +10691,8 @@ msgstr "Stosowany okres pomiędzy kolejnymi wyborami.  To ustawienie ma wpływ n
 msgid "Cron/Daemon Interval"
 msgstr "Odstęp czasu między kolejnymi wymianami korony"
 
-#, fuzzy
 #: include/global_settings.php:1233
+#, fuzzy
 msgid "The frequency that the Kadupul data collector will be started.  You can use either crontab, a scheduled task (for windows), or the cactid systemd service to control launching the Kadupul data collector.  For instructions on using the cactid daemon, review the README.md file in the service directory."
 msgstr "Częstotliwość uruchamiania modułu gromadzącego dane Kadupul. Do sterowania uruchamianiem modułu zbierającego dane Kadupul można użyć crontab, zaplanowanego zadania (dla systemu Windows) lub usługi systemowej cactid. Aby uzyskać instrukcje dotyczące korzystania z demona Kadupul, przejrzyj plik README.md w katalogu service."
 
@@ -10862,8 +10862,8 @@ msgstr "%s Godziny"
 msgid "Poller Commands Timeout"
 msgstr "Limit czasu poleceń w tle"
 
-#, fuzzy
 #: include/global_settings.php:1405
+#, fuzzy
 msgid "The maximum amount of time Kadupul's Background Commands script can run without generating a timeout error and being killed.  This script will perform tasks such as re-indexing Devices and pruning devices from Remote Data Collectors."
 msgstr "Maksymalny czas, w którym skrypt poleceń Kadupul w tle może działać bez generowania błędu przekroczenia limitu czasu i zabijania."
 
@@ -10926,8 +10926,8 @@ msgstr "%d Procesy"
 msgid "Maintenance Background Generation Timeout"
 msgstr "Limit czasu generowania tła konserwacji"
 
-#, fuzzy
 #: include/global_settings.php:1446
+#, fuzzy
 msgid "The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed."
 msgstr "Maksymalny czas, w którym skrypt konserwacji Kadupul może działać bez generowania błędu przekroczenia limitu czasu i zabijania."
 
@@ -11206,8 +11206,8 @@ msgstr "Wprowadź w sekundach limit czasu SMTP."
 msgid "LDAP Debug Mode"
 msgstr "Tryb debugowania LDAP"
 
-#, fuzzy
 #: include/global_settings.php:1743
+#, fuzzy
 msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities."
 msgstr "Jeśli zaznaczone, Kadupul będą rejestrować dodatkowe informacje LDAP w dzienniku Kadupul podczas czynności wiązania i wyszukiwania."
 
@@ -12017,8 +12017,8 @@ msgstr "Który tryb wykresów ma być domyślnie wyświetlany podczas pierwszej 
 msgid "TimeZone Support"
 msgstr "MySQL - obsługa stref czasowych"
 
-#, fuzzy
 #: include/global_settings.php:2581
+#, fuzzy
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
 msgstr "Jak chciałbyś, aby Kadupul prezentowały daty?  To ustawienie zmieni również sposób przedstawiania dat Kadupul Graphs."
 
@@ -12351,12 +12351,12 @@ msgstr "<strong>NOTE:</strong> Jesteś zalogowany do Remote Data Collector.  Kie
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
 msgstr "<strong>NOTE:</strong> Żadna z wtyczek Core Kadupul Plugins, do tej pory, nie została przeprojektowana do pracy ze zdalnymi zbieraczami danych.  Dlatego wtyczki takie jak MacTrack i HMIB, które wymagają bezpośredniego dostępu do urządzeń, nie będą w tym czasie współpracować ze zdalnymi zbieraczami danych.  Jednak wtyczki takie jak Thold będą działać tak długo, jak długo Remote Data Collector jest w trybie <b>'online'</b>."
 
-#: install/functions.php:609
+#: install/functions.php:613
 #, php-format
 msgid "Path for %s"
 msgstr "Ścieżka dla %s"
 
-#: install/functions.php:820
+#: install/functions.php:824
 msgid "New Poller"
 msgstr "Nowy Poller"
 
@@ -12800,8 +12800,8 @@ msgstr "Twoje hasło musi zawierać kombinację małych i dużych liter!"
 msgid "Your password must contain at least 1 special character!"
 msgstr "Twoje hasło musi zawierać co najmniej 1 znak specjalny!"
 
-#, fuzzy
 #: lib/auth.php:4676
+#, fuzzy
 msgid "Kadupul Login Failure"
 msgstr "Kadupul oczyszczone z kłód"
 
@@ -13811,8 +13811,8 @@ msgstr "Kolor elementu"
 msgid "Help"
 msgstr "Pomoc"
 
-#, fuzzy
 #: lib/html.php:2577
+#, fuzzy
 msgid "Kadupul Home"
 msgstr "Kadupul Strona główna"
 
@@ -13872,8 +13872,8 @@ msgstr "Pomoc w tłumaczeniu"
 msgid "Report a bug"
 msgstr "Zgłoś błąd"
 
-#, fuzzy
 #: lib/html.php:2600
+#, fuzzy
 msgid "Kadupul"
 msgstr "Kadupul"
 
@@ -14850,8 +14850,8 @@ msgstr "Importowanie wyników podglądu"
 msgid "Import Results"
 msgstr "Wyniki przywozu"
 
-#, fuzzy
 #: lib/import.php:2640
+#, fuzzy
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Kadupul wprowadziłyby następujące zmiany, gdyby Pakiet był importowany:"
 
@@ -15446,8 +15446,8 @@ msgstr "Ochrona białej listy walidacji danych wejściowych"
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
 msgstr "Metody wprowadzania danych Kadupul, które wywołują skrypt, mogą być wykorzystane w taki sposób, że użytkownik niebędący administratorem może wyrządzić szkody w plikach należących do konta poller, a w przypadkach, gdy ktoś uruchamia poller Kadupul jako root, może zagrozić systemowi operacyjnemu, umożliwiając atakującym wykorzystaj swoją infrastrukturę."
 
-#, fuzzy
 #: lib/installer.php:2421
+#, fuzzy
 msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 msgstr "Dlatego kilka wersji temu Kadupul zostało ulepszone, aby zapewnić możliwość umieszczania na białej liście dla tych typów metod wprowadzania danych. Chociaż zapewnia to bardziej kompleksowe zabezpieczenie Kadupul, zwiększa ilość pracy wymaganej przez administratora Kadupul do importowania szablonów i pakietów oraz zarządzania nimi."
 
@@ -15834,8 +15834,8 @@ msgstr "Domyślne ustawienia urządzenia"
 msgid "No templated graphs for Default Device were found"
 msgstr "Nie znaleziono wykresów szablonowych dla urządzenia domyślnego"
 
-#, fuzzy
 #: lib/installer.php:3324
+#, fuzzy
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "OSTRZEŻENIE: Nie znaleziono szablonu urządzenia dla systemu operacyjnego. Będziesz musiał zaimportować szablony urządzeń lub pakiety Kadupul, aby monitorować serwer Kadupul."
 
@@ -17542,8 +17542,8 @@ msgstr "BŁĄD: ścieżka grzbietu: %s jest nieprawidłowa dla identyfikatora so
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Przekroczono maksymalny czas pracy %d sekund dla identyfikatora sondy %d. Kończenie."
 
-#, fuzzy
 #: poller.php:890
+#, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "OSTRZEŻENIE: Przekroczono interwał odpytywania Kadupul o"
 
@@ -19869,8 +19869,8 @@ msgstr "Dziennik [Linie ogółem: %d - wszystkie wyświetlone pozycje]."
 msgid "Clear Kadupul Log"
 msgstr "Przejrzysty rejestr Kadupul"
 
-#, fuzzy
 #: utilities.php:1615
+#, fuzzy
 msgid "Kadupul Log Cleared"
 msgstr "Kadupul oczyszczone z kłód"
 

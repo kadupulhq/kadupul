@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-12 09:37-0700\n"
+"POT-Creation-Date: 2026-09-12 09:56-0700\n"
 "PO-Revision-Date: 2025-12-23 22:54+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -12300,12 +12300,12 @@ msgstr "<strong>NOTA:</strong>Estas conectado a la Sonda remota. Cuando esté <b
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
 msgstr "<strong>Nota:</strong> Ninguno de los plugins de Core Kadupul, hasta la fecha, han sido re-diseñados para trabajar con Recolectores de datos remotos. Por lo tanto, plugins como MacTrack, y HMIB, que requieren acceso directo a los dispositivos no funcionarán con los recolectores de datos remotos en este momento. Sin embargo, plugins como thold funcionarán siempre y cuando el recolector de datos remoto se encuentre en el modo <b>'online'</b>."
 
-#: install/functions.php:609
+#: install/functions.php:613
 #, php-format
 msgid "Path for %s"
 msgstr "Ubicación para %s"
 
-#: install/functions.php:820
+#: install/functions.php:824
 msgid "New Poller"
 msgstr "Nueva Sonda"
 
@@ -14713,13 +14713,13 @@ msgstr "Seleccionado"
 msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "El términio de búsqueda \"%s\" no es válido. El error es %s"
 
-#, fuzzy
 #: lib/html_utility.php:1129
+#, fuzzy
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
 msgstr "Las expresiones regulares de los Kadupul están limitadas a 50 caracteres solo por razones de seguridad."
 
-#, fuzzy
 #: lib/html_utility.php:1133
+#, fuzzy
 msgid "Kadupul regular expressions can not includes the semi-color character."
 msgstr "Las expresiones regulares de Kadupul no pueden incluir el carácter semicolor."
 
@@ -17485,8 +17485,8 @@ msgstr "ERROR: La ruta de la columna vertebral: %s no es válida para el identif
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Se ha excedido el tiempo de ejecución máximo de %d segundos para el identificador del sondeador %d. Saliendo."
 
-#, fuzzy
 #: poller.php:890
+#, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "ADVERTENCIA: El ciclo de sondeo de Kadupul excedió el intervalo de sondeo por"
 

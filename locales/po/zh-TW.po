@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-12 09:37-0700\n"
+"POT-Creation-Date: 2026-09-12 09:56-0700\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2913,8 +2913,8 @@ msgstr "找不到樹規則"
 msgid "Kadupul System Warning"
 msgstr "Kadupul系統警告"
 
-#, fuzzy
 #: cactid.php:37
+#, fuzzy
 msgid "WARNING: Kadupul Daemon PID["
 msgstr "警告：Kadupul守護進程PID["
 
@@ -7869,8 +7869,8 @@ msgstr ""
 msgid "Application Related"
 msgstr "應用自動化規則"
 
-#, fuzzy
 #: include/global_arrays.php:1085
+#, fuzzy
 msgid "Kadupul Related"
 msgstr "Kadupul報告"
 
@@ -9186,8 +9186,8 @@ msgstr "外部連結"
 msgid "(Action)"
 msgstr "動作"
 
-#, fuzzy
 #: include/global_arrays.php:2637
+#, fuzzy
 msgid "Kadupul Help"
 msgstr "Kadupul之家"
 
@@ -12583,8 +12583,8 @@ msgstr ""
 msgid "Disable Resource Cache Replication"
 msgstr "重建資源緩存"
 
-#, fuzzy
 #: include/global_settings.php:1304
+#, fuzzy
 msgid "By default, the main Kadupul Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Kadupul Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting."
 msgstr "默認情況下，主Kadupul數據收集器會將整個網站和插件緩存到資源緩存中。然後，遠程數據收集器會定期使用主Kadupul數據收集器的任何更新來更新主題。該資源緩存實質上允許遠程數據收集器進行自我升級。如果您不想使用此選項，則可以使用此設置禁用它。"
 
@@ -14466,12 +14466,12 @@ msgstr "<strong>注意：</strong>您已登錄到遠程數據收集器。當<b>�
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
 msgstr "<strong>注意：</strong>到目前為止，Core Kadupul插件均未經過重新設計，無法與遠程數據收集器配合使用。因此，需要直接訪問設備的插件（如MacTrack和HMIB）目前無法與遠程數據收集器配合使用。但是，只要遠程數據收集器處於<b>“在線”</b>模式，Thold等插件就能正常工作。"
 
-#: install/functions.php:609
+#: install/functions.php:613
 #, fuzzy, php-format
 msgid "Path for %s"
 msgstr "%s的路徑"
 
-#: install/functions.php:820
+#: install/functions.php:824
 #, fuzzy
 msgid "New Poller"
 msgstr "新的Poller"
@@ -16167,8 +16167,8 @@ msgstr "鍵盤"
 msgid "Shortcuts"
 msgstr "快捷鍵"
 
-#, fuzzy
 #: lib/html.php:2591
+#, fuzzy
 msgid "Contribute to the Kadupul Project"
 msgstr "旋轉Kadupul日誌"
 
@@ -20382,8 +20382,8 @@ msgstr "錯誤：主幹路徑：％s無效。 Poller無法繼續！"
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "超出％d秒的最大運行時間。退出。"
 
-#, fuzzy
 #: poller.php:890
+#, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "警告：Kadupul輪詢週期超過輪詢間隔"
 
@@ -20401,8 +20401,8 @@ msgstr ""
 msgid "Kadupul System Notification"
 msgstr "Kadupul系統工具"
 
-#, fuzzy
 #: poller.php:1174
+#, fuzzy
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
 msgstr "注意：已添加第二個Kadupul數據收集器。因此，自動啟用增強功能！"
 

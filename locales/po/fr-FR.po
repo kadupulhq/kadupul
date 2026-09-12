@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-12 09:37-0700\n"
+"POT-Creation-Date: 2026-09-12 09:56-0700\n"
 "PO-Revision-Date: 2024-04-20 18:51-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -12298,12 +12298,12 @@ msgstr "<strong>NOTE:</strong> Vous êtes connecté à un collecteur de données
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
 msgstr "<strong>NOTE:</strong> Aucun des plugins Core Kadupul, à ce jour, n'a été redessiné pour fonctionner avec les collecteurs de données à distance.  Par conséquent, les plugins tels que MacTrack et HMIB, qui nécessitent un accès direct aux périphériques, ne fonctionneront pas avec les collecteurs de données à distance pour le moment.  Cependant, les plugins tels que Thold fonctionneront tant que le collecteur de données à distance est en mode <b>'online'</b>."
 
-#: install/functions.php:609
+#: install/functions.php:613
 #, php-format
 msgid "Path for %s"
 msgstr "Chemin pour %s"
 
-#: install/functions.php:820
+#: install/functions.php:824
 msgid "New Poller"
 msgstr "Nouveau Poller"
 
@@ -13817,8 +13817,8 @@ msgstr "Aide à la traduction"
 msgid "Report a bug"
 msgstr "Signaler un bug"
 
-#, fuzzy
 #: lib/html.php:2600
+#, fuzzy
 msgid "Kadupul"
 msgstr "Kadupul"
 
@@ -15353,8 +15353,8 @@ msgstr "Requis Inscriptible après l'installation Terminé"
 msgid "Potential permission issues"
 msgstr "Problèmes potentiels d'autorisation"
 
-#, fuzzy
 #: lib/installer.php:2382
+#, fuzzy
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
 msgstr "Veuillez vous assurer que votre serveur web a un accès en lecture/écriture aux dossiers de Kadupul qui montrent les erreurs ci-dessous."
 
@@ -17482,8 +17482,8 @@ msgstr "ERREUR : le chemin de la colonne vertébrale : %s n'est pas valide pou
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Durée d'exécution maximale de %d secondes dépassée pour l'ID du sondeur %d. Sortie."
 
-#, fuzzy
 #: poller.php:890
+#, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "AVERTISSEMENT : le cycle d'interrogation des Kadupul a dépassé l'intervalle d'interrogation de"
 

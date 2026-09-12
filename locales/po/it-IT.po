@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-12 09:37-0700\n"
+"POT-Creation-Date: 2026-09-12 09:56-0700\n"
 "PO-Revision-Date: 2024-04-20 18:59-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2547,8 +2547,8 @@ msgstr "Nessuna regola d'albero trovata"
 msgid "Kadupul System Warning"
 msgstr "Avviso sul sistema Kadupul"
 
-#, fuzzy
 #: cactid.php:37
+#, fuzzy
 msgid "WARNING: Kadupul Daemon PID["
 msgstr "ATTENZIONE: PID del demone Kadupul["
 
@@ -2556,8 +2556,8 @@ msgstr "ATTENZIONE: PID del demone Kadupul["
 msgid "Kadupul System Notice"
 msgstr "Utilità di sistema Kadupul"
 
-#, fuzzy
 #: cactid.php:125
+#, fuzzy
 msgid "Notice: Kadupul Daemon PID["
 msgstr "Avviso: PID del demone Kadupul["
 
@@ -7919,8 +7919,8 @@ msgstr "Link esterno"
 msgid "(Action)"
 msgstr "Azione:"
 
-#, fuzzy
 #: include/global_arrays.php:2637
+#, fuzzy
 msgid "Kadupul Help"
 msgstr "Casa Kadupul"
 
@@ -9859,8 +9859,8 @@ msgstr "Quando l'opzione è selezionata, il modulo e la Guida alle impostazioni 
 msgid "Local Page Help Only"
 msgstr "Ottieni aiuto"
 
-#, fuzzy
 #: include/global_settings.php:448
+#, fuzzy
 msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
 msgstr "Per impostazione predefinita, la guida della pagina Kadupul si trova su kadupul.org.  Tuttavia, se il tuo sistema non ha accesso a Internet, puoi scaricare la documentazione localmente in formato HTML e ospitarla nella posizione \"docs\" del tuo server Kadupul.  Se si sceglie di utilizzare solo la posizione locale per la documentazione della pagina di aiuto, selezionare questa casella di controllo."
 
@@ -9876,8 +9876,8 @@ msgstr "Richiedere all'utente prima della cancellazione dell'elemento."
 msgid "Data Source Preservation Preset"
 msgstr "Metodo di creazione di grafici e fonti di dati"
 
-#, fuzzy
 #: include/global_settings.php:460
+#, fuzzy
 msgid "When enabled, Kadupul will set Radio Button to Delete related Data Sources of a Graph when removing Graphs.  Note: Kadupul will not allow the removal of Data Sources if they are used in other Graphs."
 msgstr "Se abilitato, Kadupul imposterà il pulsante di opzione su Elimina le origini dati correlate di un grafico durante la rimozione dei grafici. Nota: i Kadupul non consentiranno la rimozione delle origini dati se utilizzate in altri grafici."
 
@@ -9885,8 +9885,8 @@ msgstr "Se abilitato, Kadupul imposterà il pulsante di opzione su Elimina le or
 msgid "Graphs Auto Unlock"
 msgstr "Regola di corrispondenza del grafico"
 
-#, fuzzy
 #: include/global_settings.php:466
+#, fuzzy
 msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
 msgstr "Se abilitato, Kadupul non bloccherà i grafici. Ciò consente una modifica manuale più rapida delle origini dati relative a un grafico."
 
@@ -10265,8 +10265,8 @@ msgstr "Impostazioni tema"
 msgid "Theme"
 msgstr "Tema"
 
-#, fuzzy
 #: include/global_settings.php:861 include/global_settings.php:2567
+#, fuzzy
 msgid "Please select one of the available Themes to skin your Kadupul with."
 msgstr "Seleziona uno dei temi disponibili per scuoiare i tuoi Kadupul."
 
@@ -10889,8 +10889,8 @@ msgstr "%d Processi"
 msgid "Maintenance Background Generation Timeout"
 msgstr "Timeout di generazione in background di manutenzione"
 
-#, fuzzy
 #: include/global_settings.php:1446
+#, fuzzy
 msgid "The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed."
 msgstr "Il tempo massimo che uno script di manutenzione dei Kadupul può eseguire senza generare un errore di timeout e essere ucciso."
 
@@ -11979,8 +11979,8 @@ msgstr "Quale modalità grafica si desidera visualizzare per impostazione predef
 msgid "TimeZone Support"
 msgstr "MySQL - Supporto TimeZone"
 
-#, fuzzy
 #: include/global_settings.php:2581
+#, fuzzy
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
 msgstr "Come vorresti che Kadupul presentasse le date?  Questa impostazione cambierà anche il modo in cui vengono rappresentate le date dei grafici Kadupul."
 
@@ -12189,8 +12189,8 @@ msgstr "Scegliere se espandere i modelli grafici e le query di dati utilizzati d
 msgid "Tree History"
 msgstr "Storico password"
 
-#, fuzzy
 #: include/global_settings.php:2791
+#, fuzzy
 msgid "If enabled, Kadupul will remember your Tree History between logins and when you return to the Graphs page."
 msgstr "Se abilitato, Kadupul ricorderà la tua Cronologia ad albero tra gli accessi e quando torni alla pagina Grafici."
 
@@ -12314,12 +12314,12 @@ msgstr "<strong>NOTA:</strong> Sei connesso ad un Remote Data Collector.  Quando
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
 msgstr "<strong>NOTA:</strong> Nessuno dei plugin Core Kadupul, ad oggi, è stato riprogettato per funzionare con i Remote Data Collector.  Pertanto, i plugin come MacTrack e HMIB, che richiedono l'accesso diretto ai dispositivi, al momento non funzionano con i Remote Data Collector.  Tuttavia, plugin come Thold funzionano finché il Remote Data Collector è in modalità <b>'online'</b>."
 
-#: install/functions.php:609
+#: install/functions.php:613
 #, php-format
 msgid "Path for %s"
 msgstr "Percorso per %s"
 
-#: install/functions.php:820
+#: install/functions.php:824
 msgid "New Poller"
 msgstr "Nuovo Poller"
 
@@ -12742,8 +12742,8 @@ msgstr "Errore di ricerca LDAP: %s"
 msgid "Access Denied!  Template user id %s does not exist.  Please contact your Administrator."
 msgstr "Accesso negato! L'ID utente del modello %s non esiste.  Contatta il tuo amministratore."
 
-#, fuzzy
 #: lib/auth.php:4300
+#, fuzzy
 msgid "Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now."
 msgstr "L'amministratore di Kadupul ha imposto password complesse per gli accessi e la password di Kadupul corrente non corrisponde ai nuovi requisiti. Pertanto, è necessario modificare la password ora."
 
@@ -13539,8 +13539,8 @@ msgstr "Creazione di messaggi di testo....."
 msgid "Sending Message..."
 msgstr "Inviando il messaggio..."
 
-#, fuzzy
 #: lib/functions.php:5634
+#, fuzzy
 msgid "Kadupul Test Message"
 msgstr "Messaggio di test dei Kadupul"
 
@@ -13775,8 +13775,8 @@ msgstr "Colore dell'Elemento"
 msgid "Help"
 msgstr "Aiuto"
 
-#, fuzzy
 #: lib/html.php:2577
+#, fuzzy
 msgid "Kadupul Home"
 msgstr "Casa Kadupul"
 
@@ -13836,8 +13836,8 @@ msgstr "Aiuto nella traduzione"
 msgid "Report a bug"
 msgstr "Segnala un bug"
 
-#, fuzzy
 #: lib/html.php:2600
+#, fuzzy
 msgid "Kadupul"
 msgstr "Kadupul"
 
@@ -14731,13 +14731,13 @@ msgstr "Selezionato"
 msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "Il termine di ricerca \"%s\" non è valido. L'errore è %s"
 
-#, fuzzy
 #: lib/html_utility.php:1129
+#, fuzzy
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
 msgstr "Le espressioni regolari dei Kadupul sono limitate a 50 caratteri solo per motivi di sicurezza."
 
-#, fuzzy
 #: lib/html_utility.php:1133
+#, fuzzy
 msgid "Kadupul regular expressions can not includes the semi-color character."
 msgstr "Le espressioni regolari dei Kadupul non possono includere il carattere semicolore."
 
@@ -14967,8 +14967,8 @@ msgstr "NOTA: i dati esistenti non verranno modificati, né saranno disponibili 
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
 msgstr "Avete creato un nuovo database, ma non avete ancora importato il file 'cacti.sql'. Sulla riga di comando, eseguire le seguenti operazioni per continuare:"
 
-#, fuzzy
 #: lib/installer.php:1592
+#, fuzzy
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Kadupul database. Please ensure that the Kadupul database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Kadupul database."
 msgstr "Questo errore può anche essere generato se l'utente del database dei Kadupul non ha i permessi corretti sul database Kadupul. Assicuratevi che l'utente del database Kadupul abbia la possibilità di selezionare, inserire, eliminare, cancellare, aggiornare, creare, creare, ALTER, DROP, INDEX sul database Kadupul."
 
@@ -15375,8 +15375,8 @@ msgstr "Necessario Scrivibile dopo il completamento dell'installazione"
 msgid "Potential permission issues"
 msgstr "Potenziali problemi di autorizzazione"
 
-#, fuzzy
 #: lib/installer.php:2382
+#, fuzzy
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
 msgstr "Assicurati che il tuo server web abbia accesso in lettura/scrittura alle cartelle dei Kadupul che mostrano gli errori qui sotto."
 
@@ -15409,13 +15409,13 @@ msgstr "Tutte le cartelle sono scrivibili"
 msgid "Input Validation Whitelist Protection"
 msgstr "Protezione whitelist di convalida input"
 
-#, fuzzy
 #: lib/installer.php:2420
+#, fuzzy
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
 msgstr "I metodi di inserimento dati Kadupul che richiamano uno script possono essere sfruttati in modo tale che un non amministratore possa danneggiare i file di proprietà dell'account poller e, nei casi in cui qualcuno esegue il polling Kadupul come root, può compromettere il sistema operativo consentendo agli aggressori di sfruttare la tua infrastruttura."
 
-#, fuzzy
 #: lib/installer.php:2421
+#, fuzzy
 msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 msgstr "Pertanto, diverse versioni fa, Kadupul è stato migliorato per fornire funzionalità di whitelist su questi tipi di metodi di immissione dei dati. Sebbene ciò protegga i Kadupul in modo più approfondito, aumenta la quantità di lavoro richiesto dall'amministratore dei Kadupul per importare e gestire modelli e pacchetti."
 
@@ -15802,8 +15802,8 @@ msgstr "Impostazioni predefinite del dispositivo"
 msgid "No templated graphs for Default Device were found"
 msgstr "Non sono stati trovati grafici basati su modelli per il dispositivo predefinito"
 
-#, fuzzy
 #: lib/installer.php:3324
+#, fuzzy
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "ATTENZIONE: modello di dispositivo per il sistema operativo in uso non trovato. Dovrai importare Modelli dispositivo o Pacchetti Kadupul per monitorare il tuo server Kadupul."
 
@@ -17507,8 +17507,8 @@ msgstr "ERRORE: il percorso della colonna vertebrale: %s non è valido per l'ID 
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Tempo di esecuzione massimo di %d secondi superato per l'ID poller %d. Uscita in corso."
 
-#, fuzzy
 #: poller.php:890
+#, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "AVVERTENZA: Ciclo di polling Kadupul superato Intervallo poller entro"
 
@@ -17525,8 +17525,8 @@ msgstr "Poller in modalità Heartbeat"
 msgid "Kadupul System Notification"
 msgstr "Utilità di sistema Kadupul"
 
-#, fuzzy
 #: poller.php:1174
+#, fuzzy
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
 msgstr "NOTA: è stato aggiunto un secondo raccoglitore di dati di Kadupul. Pertanto, abilitando boost automaticamente!"
 
@@ -17535,8 +17535,8 @@ msgstr "NOTA: è stato aggiunto un secondo raccoglitore di dati di Kadupul. Pert
 msgid "WARNING: Main Kadupul database %s offline or in recovery"
 msgstr "ATTENZIONE: database principale Kadupul offline o in recovery"
 
-#, fuzzy
 #: poller_automation.php:970 poller_automation.php:1021
+#, fuzzy
 msgid "Kadupul Primary Admin"
 msgstr "Kadupul Admin primario"
 
@@ -19795,8 +19795,8 @@ msgstr "Log [Linee totali: %d - Articoli non corrispondenti nascosti]."
 msgid "Log [Total Lines: %d - All Items Shown]"
 msgstr "Log [Linee totali: %d - Tutti gli articoli mostrati]"
 
-#, fuzzy
 #: utilities.php:1602
+#, fuzzy
 msgid "Clear Kadupul Log"
 msgstr "Cancella il registro dei Kadupul"
 

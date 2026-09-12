@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-12 09:37-0700\n"
+"POT-Creation-Date: 2026-09-12 09:56-0700\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -17,8 +17,8 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
 "X-Generator: Poedit 3.4.4\n"
 
-#, fuzzy
 #: about.php:22 include/global_arrays.php:2631 lib/html.php:2599
+#, fuzzy
 msgid "About Kadupul"
 msgstr "حول Kadupul"
 
@@ -843,13 +843,13 @@ msgstr "توجد مشاكل في صفحة تغيير كلمة المرور.  ا�
 msgid "Change Password"
 msgstr "تغيير كلمة المرور"
 
-#, fuzzy
 #: auth_changepassword.php:344
+#, fuzzy
 msgid "Please enter your current password and your new<br>Kadupul password."
 msgstr "يرجى إدخال كلمة المرور الحالية والخاصة بك <br> كلمة السر Kadupul."
 
-#, fuzzy
 #: auth_changepassword.php:346
+#, fuzzy
 msgid "Please enter your new Kadupul password."
 msgstr "يرجى إدخال كلمة المرور الحالية والخاصة بك <br> كلمة السر Kadupul."
 
@@ -928,8 +928,8 @@ msgstr "إذا كنت تشعر أن هذا خطأ. يرجى الاتصال بم�
 msgid "Access Denied! User account locked."
 msgstr "رفض الوصول ، تعطيل حساب المستخدم."
 
-#, fuzzy
 #: auth_login.php:294 lib/html_tree.php:157
+#, fuzzy
 msgid "Login to Kadupul"
 msgstr "تسجيل الدخول إلى Kadupul"
 
@@ -1741,8 +1741,8 @@ msgstr "تمكين NetBIOS"
 msgid "Use NetBIOS to attempt to resolve the hostname of up hosts."
 msgstr "استخدم NetBIOS لمحاولة حل اسم المضيف لأعلى المضيفين."
 
-#, fuzzy
 #: automation_networks.php:556
+#, fuzzy
 msgid "Automatically Add to Kadupul"
 msgstr "تلقائيا إضافة إلى Kadupul"
 
@@ -2546,11 +2546,11 @@ msgstr "الجذر"
 msgid "No Tree Rules Found"
 msgstr "لم يتم العثور على قواعد شجرة"
 
-#, fuzzy
 #: cactid.php:37 help.php:37 lib/functions.php:6227 lib/functions.php:6296
 #: lib/functions.php:6386 lib/functions.php:6993 poller.php:387 poller.php:537
 #: poller.php:602 poller.php:642 poller.php:784 poller.php:890
 #: poller_automation.php:46 poller_boost.php:369
+#, fuzzy
 msgid "Kadupul System Warning"
 msgstr "تحذير نظام Kadupul"
 
@@ -4685,8 +4685,8 @@ msgstr "دليل ذاكرة التخزين المؤقت للصور غير موج
 msgid "The Image Cache Directory is not writable.  Please set permissions and then attempt to open another Real-time graph."
 msgstr "لا يمكن للكتابة في دليل ذاكرة التخزين المؤقت للصورة. يرجى تعيين الأذونات ثم محاولة فتح رسم بياني آخر في الوقت الفعلي."
 
-#, fuzzy
 #: graph_realtime.php:374
+#, fuzzy
 msgid "Kadupul Real-time Graphing"
 msgstr "Kadupul في الوقت الحقيقي الرسوم البيانية"
 
@@ -6979,8 +6979,8 @@ msgstr "نقاط الوصول، وحدات التحكم"
 msgid "Application Related"
 msgstr "التطبيق ذات الصلة"
 
-#, fuzzy
 #: include/global_arrays.php:1085
+#, fuzzy
 msgid "Kadupul Related"
 msgstr "Kadupul ذات الصلة"
 
@@ -8073,8 +8073,8 @@ msgstr "عناصر VDEF"
 msgid "View SNMP Notification Receivers"
 msgstr "عرض استقبال إشعارات SNMP"
 
-#, fuzzy
 #: include/global_arrays.php:2571
+#, fuzzy
 msgid "Kadupul Settings"
 msgstr "إعدادات Kadupul"
 
@@ -8086,8 +8086,8 @@ msgstr "رابط خارجي"
 msgid "(Action)"
 msgstr "العمل:"
 
-#, fuzzy
 #: include/global_arrays.php:2637
+#, fuzzy
 msgid "Kadupul Help"
 msgstr "مساعدة Kadupul"
 
@@ -9714,8 +9714,8 @@ msgstr "المسار إلى ملفك الثنائي PHP (قد يتطلب إعا�
 msgid "Logging"
 msgstr "تسجيل الدخول"
 
-#, fuzzy
 #: include/global_settings.php:164
+#, fuzzy
 msgid "Kadupul Log Path"
 msgstr "Kadupul سجل المسار"
 
@@ -9779,8 +9779,8 @@ msgstr "المسار إلى ملف التكوين العمود الفقري. ا�
 msgid "RRDfile Auto Clean"
 msgstr "RRDfile السيارات النظيفة"
 
-#, fuzzy
 #: include/global_settings.php:232
+#, fuzzy
 msgid "Automatically archive or delete RRDfiles when their corresponding Data Sources are removed from Kadupul"
 msgstr "أرشفة تلقائيا أو حذف RRDfiles عندما تتم إزالة مصادر البيانات المقابلة لها من Kadupul"
 
@@ -9788,8 +9788,8 @@ msgstr "أرشفة تلقائيا أو حذف RRDfiles عندما تتم إزا�
 msgid "RRDfile Auto Clean Method"
 msgstr "RRDfile طريقة تنظيف السيارات"
 
-#, fuzzy
 #: include/global_settings.php:238
+#, fuzzy
 msgid "The method used to Clean RRDfiles from Kadupul after their Data Sources are deleted."
 msgstr "الطريقة المستخدمة لتنظيف RRDfiles من Kadupul بعد حذف مصادر البيانات الخاصة بهم."
 
@@ -9893,8 +9893,8 @@ msgstr "التدويل (i18n)"
 msgid "Language Support"
 msgstr "دعم اللغة"
 
-#, fuzzy
 #: include/global_settings.php:335
+#, fuzzy
 msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
 msgstr "اختر &quot;تمكين&quot; للسماح بترجمة Kadupul. يتطلب الوضع المقيد أن يتم دعم اللغة المطلوبة أيضًا من خلال جميع المكونات الإضافية التي يتم تثبيتها على نظامك. إذا لم تكن هذه هي الحقيقة فسيتم عرض كل شيء باللغة الإنجليزية."
 
@@ -10058,8 +10058,8 @@ msgstr "قاعدة مطابقة الرسم البياني"
 msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
 msgstr "عند التمكين ، لن يقفل Kadupul الرسوم البيانية. يسمح هذا بتعديل يدوي أسرع لمصادر البيانات المتعلقة بالرسم البياني."
 
-#, fuzzy
 #: include/global_settings.php:471
+#, fuzzy
 msgid "Hide Kadupul Dashboard"
 msgstr "إخفاء Kadupul لوحة القيادة"
 
@@ -10434,8 +10434,8 @@ msgstr "إعدادات الثيم"
 msgid "Theme"
 msgstr "قالب"
 
-#, fuzzy
 #: include/global_settings.php:861 include/global_settings.php:2567
+#, fuzzy
 msgid "Please select one of the available Themes to skin your Kadupul with."
 msgstr "يرجى تحديد واحد من الموضوعات المتاحة للبشرة مع Kadupul."
 
@@ -10822,8 +10822,8 @@ msgstr "الفاصل الزمني للاستقصاء قيد الاستخدام. 
 msgid "Cron/Daemon Interval"
 msgstr "كرون الفاصل"
 
-#, fuzzy
 #: include/global_settings.php:1233
+#, fuzzy
 msgid "The frequency that the Kadupul data collector will be started.  You can use either crontab, a scheduled task (for windows), or the cactid systemd service to control launching the Kadupul data collector.  For instructions on using the cactid daemon, review the README.md file in the service directory."
 msgstr "تكرار بدء تشغيل مجمع بيانات Kadupul. يمكنك استخدام crontab ، أو مهمة مجدولة (لنظام التشغيل windows) ، أو خدمة cactid systemd للتحكم في تشغيل مُجمع بيانات Kadupul. للحصول على إرشادات حول استخدام البرنامج الخفي Cactid ، راجع ملف README.md في دليل الخدمة."
 
@@ -11635,8 +11635,8 @@ msgstr "الحد الأقصى لحجم البريد الإلكتروني"
 msgid "The maximum size of the E-Mail message including all attachments."
 msgstr "الحد الأقصى لحجم رسالة البريد الإلكتروني بما في ذلك كافة المرفقات."
 
-#, fuzzy
 #: include/global_settings.php:2016
+#, fuzzy
 msgid "Poller Logging Level for Kadupul Reporting"
 msgstr "مستوى تسجيل مستقطب لتقارير Kadupul"
 
@@ -11688,8 +11688,8 @@ msgstr "إعدادات تحديث RRD على الطلب"
 msgid "Enable On-demand RRD Updating"
 msgstr "تمكين تحديث RRD عند الطلب"
 
-#, fuzzy
 #: include/global_settings.php:2064
+#, fuzzy
 msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on."
 msgstr "يجب تمكين Boost على تحديث الطلب على RRD في Kadupul؟ في حالة تعطيل هذا التغيير ، لن يسري هذا التغيير إلا بعد دورة الاستقصاء التالية. عندما يكون لديك أدوات تجميع البيانات عن بُعد ، يجب تشغيل هذه الإعدادات."
 
@@ -11854,8 +11854,8 @@ msgstr "فحص ملف RRD"
 msgid "Enable RRDfile Check"
 msgstr "تمكين فحص ملف RRDfile"
 
-#, fuzzy
 #: include/global_settings.php:2255
+#, fuzzy
 msgid "Should RRDfile check be enabled for this Kadupul system?"
 msgstr "هل يجب تمكين فحص ملف RRDلنظام Kadupul هذا؟"
 
@@ -12150,13 +12150,13 @@ msgstr "ما هو نمط الرسم البياني الذي تريد عرضه ب
 msgid "TimeZone Support"
 msgstr "MySQL - دعم TimeZone"
 
-#, fuzzy
 #: include/global_settings.php:2581
+#, fuzzy
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
 msgstr "كيف تريد أن يقدم Kadupul التواريخ؟  سيؤدي هذا الإعداد أيضا إلى تغيير طريقة تمثيل تواريخ Kadupul Graphs."
 
-#, fuzzy
 #: include/global_settings.php:2584
+#, fuzzy
 msgid "Kadupul Server Timezone"
 msgstr "المنطقة الزمنية لخادم Kadupul"
 
@@ -12204,13 +12204,13 @@ msgstr "تمكين التمرير الأفقي"
 msgid "Enable Horizontal Scrolling of Tables, Disabling Responsive Column Visibility."
 msgstr "تمكين التمرير الأفقي للجداول ، وتعطيل رؤية العمود المستجيب."
 
-#, fuzzy
 #: include/global_settings.php:2622
+#, fuzzy
 msgid "The date format to use in Kadupul."
 msgstr "تنسيق التاريخ لاستخدامها في Kadupul."
 
-#, fuzzy
 #: include/global_settings.php:2629
+#, fuzzy
 msgid "The date separator to be used in Kadupul."
 msgstr "فاصل التاريخ ليتم استخدامه في Kadupul."
 
@@ -12487,17 +12487,17 @@ msgstr "<strong>ملاحظة:</strong> لقد قمت بتسجيل الدخول �
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
 msgstr "<strong>ملاحظة:</strong> لم تتم إعادة تصميم أي من مكونات Core Kadupul الإضافية حتى الآن للعمل مع جامعي البيانات عن بُعد. لذلك ، لن تعمل المكونات الإضافية مثل MacTrack و HMIB ، والتي تتطلب الوصول المباشر إلى الأجهزة مع جامع البيانات البعيد في هذا الوقت. ومع ذلك ، ستعمل المكونات الإضافية مثل Thold طالما أن أداة تجميع البيانات عن بعد في وضع <b>&quot;عبر الإنترنت&quot;</b> ."
 
-#: install/functions.php:609
+#: install/functions.php:613
 #, php-format
 msgid "Path for %s"
 msgstr "مسار %s"
 
-#: install/functions.php:820
+#: install/functions.php:824
 msgid "New Poller"
 msgstr "بولير جديد"
 
-#, fuzzy
 #: install/install.php:82
+#, fuzzy
 msgid "Kadupul Install Help"
 msgstr "تعليمات تثبيت Kadupul"
 
@@ -12937,8 +12937,8 @@ msgstr "يجب أن تحتوي كلمة المرور الخاصة بك على م
 msgid "Your password must contain at least 1 special character!"
 msgstr "يجب أن تحتوي كلمة المرور الخاصة بك على حرف خاص واحد على الأقل!"
 
-#, fuzzy
 #: lib/auth.php:4676
+#, fuzzy
 msgid "Kadupul Login Failure"
 msgstr "فشل تسجيل الدخول إلى Kadupul"
 
@@ -13717,8 +13717,8 @@ msgstr "إنشاء نص الرسالة ..."
 msgid "Sending Message..."
 msgstr "إرسال رسالة …"
 
-#, fuzzy
 #: lib/functions.php:5634
+#, fuzzy
 msgid "Kadupul Test Message"
 msgstr "رسالة اختبار Kadupul"
 
@@ -13969,8 +13969,8 @@ msgstr "لوحات"
 msgid "Charts"
 msgstr "المخططات"
 
-#, fuzzy
 #: lib/html.php:2583
+#, fuzzy
 msgid "Kadupul Project Page"
 msgstr "صفحة مشروع Kadupul"
 
@@ -13991,8 +13991,8 @@ msgstr "لوحة المفاتيح"
 msgid "Shortcuts"
 msgstr "اختصارات"
 
-#, fuzzy
 #: lib/html.php:2591
+#, fuzzy
 msgid "Contribute to the Kadupul Project"
 msgstr "المساهمة في مشروع Kadupul"
 
@@ -14016,8 +14016,8 @@ msgstr "المساعدة في الترجمة"
 msgid "Report a bug"
 msgstr "الإبلاغ عن خطأ"
 
-#, fuzzy
 #: lib/html.php:2600
+#, fuzzy
 msgid "Kadupul"
 msgstr "Kadupul"
 
@@ -14522,8 +14522,8 @@ msgstr "البريد الإلكتروني المرسل / استقبال التف
 msgid "Subject"
 msgstr "الموضوع"
 
-#, fuzzy
 #: lib/html_reports.php:164
+#, fuzzy
 msgid "Kadupul Report"
 msgstr "تقرير Kadupul"
 
@@ -14912,13 +14912,13 @@ msgstr "مختار"
 msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "التعبير العادي \"%s\" غير صالح. الخطأ %s"
 
-#, fuzzy
 #: lib/html_utility.php:1129
+#, fuzzy
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
 msgstr "تقتصر تعبيرات Kadupul العادية على 50 حرفا فقط لأسباب أمنية."
 
-#, fuzzy
 #: lib/html_utility.php:1133
+#, fuzzy
 msgid "Kadupul regular expressions can not includes the semi-color character."
 msgstr "لا يمكن أن تتضمن تعبيرات Kadupul العادية الحرف شبه اللوني."
 
@@ -14997,8 +14997,8 @@ msgstr "استيراد نتائج المعاينة"
 msgid "Import Results"
 msgstr "نتائج الاستيراد"
 
-#, fuzzy
 #: lib/import.php:2640
+#, fuzzy
 msgid "Kadupul would make the following changes if the Package was imported:"
 msgstr "Kadupul سيجعل التغييرات التالية إذا تم استيراد الحزمة:"
 
@@ -15014,8 +15014,8 @@ msgstr "ملفات الحزمة"
 msgid "[preview] "
 msgstr "معاينة"
 
-#, fuzzy
 #: lib/import.php:2654
+#, fuzzy
 msgid "Kadupul would make the following changes if the Template was imported:"
 msgstr "Kadupul سيجعل التغييرات التالية إذا تم استيراد القالب:"
 
@@ -15188,8 +15188,8 @@ msgstr "ترقية"
 msgid "Downgrade"
 msgstr "تخفيض"
 
-#, fuzzy
 #: lib/installer.php:1740 utilities.php:265
+#, fuzzy
 msgid "Kadupul Version"
 msgstr "نسخة Kadupul"
 
@@ -17195,8 +17195,8 @@ msgstr "لقد تم تسجيل خروجك من Kadupul بسبب انتهاء م�
 msgid "You have been logged out of Kadupul due to a Remote Data Collector state change"
 msgstr "لقد تم تسجيل خروجك من Kadupul بسبب تغيير حالة \"جامع البيانات عن بعد\""
 
-#, fuzzy
 #: logout.php:61
+#, fuzzy
 msgid "Logout of Kadupul"
 msgstr "الخروج من Kadupul"
 
@@ -17666,8 +17666,8 @@ msgstr "دليل البرنامج المساعد \"%s\" مفقود setup.php"
 msgid "Plugin is lacking an INFO file"
 msgstr "البرنامج المساعد يفتقر إلى ملف INFO"
 
-#, fuzzy
 #: plugins.php:877
+#, fuzzy
 msgid "Plugin is integrated into Kadupul core"
 msgstr "تم دمج البرنامج المساعد في Kadupul الأساسية"
 
@@ -17704,8 +17704,8 @@ msgstr "خطأ: مسار العمود الرئيسي: %s غير صالح لمع�
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "تم تجاوز الحد الأقصى لوقت التشغيل البالغ %d ثانية ل %d معرف الاستطلاع. انهاء."
 
-#, fuzzy
 #: poller.php:890
+#, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "تحذير: تجاوزت دورة استقصاء Kadupul فترة الاستقصاء بمقدار"
 
@@ -17906,8 +17906,8 @@ msgstr "لقد استخدمت بالفعل اسم مضيف قاعدة البيا
 msgid "Data Collector Statistics cleared."
 msgstr "احصائيات مصادر البيانات"
 
-#, fuzzy
 #: pollers.php:552
+#, fuzzy
 msgid "Click 'Continue' to delete the following Data Collector.  Note, all devices will be disassociated from this Data Collector and mapped back to the Main Kadupul Data Collector."
 msgid_plural "Click 'Continue' to delete all following Data Collectors.  Note, all devices will be disassociated from these Data Collectors and mapped back to the Main Kadupul Data Collector."
 msgstr[0] "انقر فوق \"متابعة\" لحذف أداة تجميع البيانات التالية.  ملاحظة، سيتم فصل جميع الأجهزة من مجمع البيانات هذا وتعيينها مرة أخرى إلى مجمع بيانات Kadupul الرئيسي."
@@ -18619,8 +18619,8 @@ msgstr "تنسيق الإخراج"
 msgid "Choose the format to output the resulting XML file in."
 msgstr "اختر التنسيق لإخراج ملف XML الناتج في."
 
-#, fuzzy
 #: templates_export.php:136
+#, fuzzy
 msgid "Output to the Browser (within Kadupul)"
 msgstr "الإخراج إلى المتصفح (داخل Kadupul)"
 
@@ -19839,8 +19839,8 @@ msgstr "خطأ: لا يدعم RRDtool 1.2.x + تنسيق صور GIF ، ولكن 
 msgid "General Information"
 msgstr "معلومات عامة"
 
-#, fuzzy
 #: utilities.php:270
+#, fuzzy
 msgid "Kadupul OS"
 msgstr "نظام التشغيل Kadupul"
 
@@ -19865,8 +19865,8 @@ msgstr "المجموع : %s"
 msgid "Poller Information"
 msgstr "معلومات مستضد"
 
-#, fuzzy
 #: utilities.php:341
+#, fuzzy
 msgid "Different version of Kadupul and Spine!"
 msgstr "نسخة مختلفة من Kadupul والعمود الفقري!"
 
@@ -20132,13 +20132,13 @@ msgstr "السجل [إجمالي الأسطر: %d - العناصر غير الم
 msgid "Log [Total Lines: %d - All Items Shown]"
 msgstr "السجل [إجمالي الأسطر: %d - جميع العناصر المعروضة]"
 
-#, fuzzy
 #: utilities.php:1602
+#, fuzzy
 msgid "Clear Kadupul Log"
 msgstr "واضح Kadupul سجل"
 
-#, fuzzy
 #: utilities.php:1615
+#, fuzzy
 msgid "Kadupul Log Cleared"
 msgstr "سجل Kadupul مسح"
 
@@ -20210,8 +20210,8 @@ msgstr "خادم النص:"
 msgid "RRD:"
 msgstr "RRD:"
 
-#, fuzzy
 #: utilities.php:2286
+#, fuzzy
 msgid "Kadupul technical support page.  Used by developers and technical support persons to assist with issues in Kadupul.  Includes checks for common configuration issues."
 msgstr "صفحة الدعم الفني Kadupul. المستخدمة من قبل المطورين والأشخاص الدعم الفني للمساعدة في القضايا في Kadupul. يتضمن الشيكات لمشاكل التكوين المشتركة."
 

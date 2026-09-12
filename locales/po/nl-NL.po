@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-12 09:37-0700\n"
+"POT-Creation-Date: 2026-09-12 09:56-0700\n"
 "PO-Revision-Date: 2024-04-20 19:11-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -1793,8 +1793,8 @@ msgstr "De naam van de e-mailaccount die moet worden gebruikt als de naam van de
 msgid "Notification From Email Address"
 msgstr "Kennisgeving van e-mail adres"
 
-#, fuzzy
 #: automation_networks.php:604
+#, fuzzy
 msgid "The Email Address to be used as the senders Email for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Email Address if specified, otherwise, it will use the Kadupul system default Email Address"
 msgstr "Het e-mailadres dat moet worden gebruikt als afzenders-e-mail voor de notificatie-e-mail.  Indien leeg gelaten, zal Kadupul het standaard E-mailadres van de Automatiseringsmelding gebruiken indien gespecificeerd, anders zal het het standaard E-mailadres van het Kadupul-systeem gebruiken."
 
@@ -2542,11 +2542,11 @@ msgstr "ROOT"
 msgid "No Tree Rules Found"
 msgstr "Geen boomstructuur regels gevonden"
 
-#, fuzzy
 #: cactid.php:37 help.php:37 lib/functions.php:6227 lib/functions.php:6296
 #: lib/functions.php:6386 lib/functions.php:6993 poller.php:387 poller.php:537
 #: poller.php:602 poller.php:642 poller.php:784 poller.php:890
 #: poller_automation.php:46 poller_boost.php:369
+#, fuzzy
 msgid "Kadupul System Warning"
 msgstr "Kadupul Systeem Waarschuwing"
 
@@ -2554,13 +2554,13 @@ msgstr "Kadupul Systeem Waarschuwing"
 msgid "WARNING: Kadupul Daemon PID["
 msgstr "WAARSCHUWING: Kadupul Daemon PID["
 
-#, fuzzy
 #: cactid.php:125
+#, fuzzy
 msgid "Kadupul System Notice"
 msgstr "Hulpprogramma's voor Kadupul"
 
-#, fuzzy
 #: cactid.php:125
+#, fuzzy
 msgid "Notice: Kadupul Daemon PID["
 msgstr "Opmerking: Kadupul Daemon PID["
 
@@ -9725,8 +9725,8 @@ msgstr "Internationalisering (i18n)"
 msgid "Language Support"
 msgstr "Taal support"
 
-#, fuzzy
 #: include/global_settings.php:335
+#, fuzzy
 msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
 msgstr "Kies 'enabled' om de lokalisatie van Kadupul toe te staan. De strikte modus vereist dat de gevraagde taal ook wordt ondersteund door alle plugins die op uw systeem worden geïnstalleerd. Als dat niet het geval is, wordt alles in het Engels weergegeven."
 
@@ -9750,8 +9750,8 @@ msgstr "Sta toe om automatisch de 'standaard' taal van de gebruiker te bepalen e
 msgid "Preferred Language Processor"
 msgstr "Voorkeurstaalverwerker"
 
-#, fuzzy
 #: include/global_settings.php:359
+#, fuzzy
 msgid "Kadupul includes support for multiple alternate Language Translation Processors.  If none is selected Kadupul will attempt to use the first one found."
 msgstr "Kadupul bieden ondersteuning voor meerdere alternatieve taalvertaalprocessors. Het zal standaard de ingebouwde PHP-ondersteuning gebruiken, maar niet alle Linux-varianten bevatten ingebouwde taalondersteuning. Als deze niet is geselecteerd, kiest Kadupul de eerste die wordt gevonden."
 
@@ -9759,8 +9759,8 @@ msgstr "Kadupul bieden ondersteuning voor meerdere alternatieve taalvertaalproce
 msgid "Client TimeZone Support"
 msgstr "MySQL - TimeZone ondersteuning"
 
-#, fuzzy
 #: include/global_settings.php:366
+#, fuzzy
 msgid "How should Kadupul support Client Dates based upon the Client browsers timezone."
 msgstr "Hoe moeten Kadupul klantdatums ondersteunen op basis van de tijdzone van de klantbrowser."
 
@@ -9776,8 +9776,8 @@ msgstr "Het standaard datumformaat van het systeem om te gebruiken in Kadupul."
 msgid "Date Separator"
 msgstr "Datum scheidingsteken"
 
-#, fuzzy
 #: include/global_settings.php:383
+#, fuzzy
 msgid "The System default date separator to be used in Kadupul."
 msgstr "Het systeem standaard datumscheidingsteken voor gebruik in Kadupul."
 
@@ -9893,8 +9893,8 @@ msgstr "Grafiek koppelregels"
 msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
 msgstr "Indien ingeschakeld, zal Kadupul grafieken niet vergrendelen. Dit maakt een snellere handmatige wijziging van gegevensbronnen met betrekking tot een grafiek mogelijk."
 
-#, fuzzy
 #: include/global_settings.php:471
+#, fuzzy
 msgid "Hide Kadupul Dashboard"
 msgstr "Verberg Kadupul Dashboard"
 
@@ -10236,8 +10236,8 @@ msgstr "Standaard Pingpoort voor alle nieuwe apparaten.  Met TCP zal Kadupul pro
 msgid "Default Ping Timeout value in milli-seconds for all new Devices.  The timeout values to use for Device SNMP, ICMP, UDP and TCP pinging.  ICMP Pings will be rounded up to the nearest second.  TCP and UDP connection timeouts on Windows are controlled by the operating system, and are therefore not recommended on Windows."
 msgstr "Standaard Ping Timeout waarde in milli-seconden voor alle nieuwe apparaten.  De te gebruiken time-outwaarden voor Device SNMP, ICMP, UDP en TCP pinging.  ICMP Pings worden naar boven afgerond op de dichtstbijzijnde seconde.  TCP- en UDP-verbindingstime-outs op Windows worden bestuurd door het besturingssysteem en worden daarom niet aanbevolen op Windows."
 
-#, fuzzy
 #: include/global_settings.php:825
+#, fuzzy
 msgid "The number of times Kadupul will attempt to ping a Device before marking it as down."
 msgstr "Het aantal keren dat Kadupul proberen een apparaat te pingen voordat ze het als down markeren."
 
@@ -10689,8 +10689,8 @@ msgstr "Bedieningselementen voor het uitschakelen van de controle op het verhoge
 msgid "Remote Agent Timeout"
 msgstr "Time-out agent op afstand"
 
-#, fuzzy
 #: include/global_settings.php:1258
+#, fuzzy
 msgid "The amount of time, in seconds, that the Central Kadupul web server will wait for a response from the Remote Data Collector to obtain various Device information before abandoning the request.  On Devices that are associated with Data Collectors other than the Central Kadupul Data Collector, the Remote Agent must be used to gather Device information."
 msgstr "De hoeveelheid tijd, in seconden, die de Central Kadupul webserver zal wachten op een antwoord van de Remote Data Collector om diverse Apparaatinformatie te verkrijgen alvorens af te zien van het verzoek.  Op Apparaten die zijn gekoppeld aan andere gegevensverzamelaars dan de Centrale Kadupul Gegevensverzamelaar, moet de Externe Agent worden gebruikt om informatie over het Apparaat te verzamelen."
 
@@ -10915,8 +10915,8 @@ msgstr "Deze instellingen worden bijgehouden op het niveau van de gegevensverzam
 msgid "Data Collector Processes"
 msgstr "Standaard gegevensverzamelprocessen"
 
-#, fuzzy
 #: include/global_settings.php:1483
+#, fuzzy
 msgid "The default number of concurrent processes to execute per Data Collector.  NOTE: Starting from Kadupul 1.2, this setting is maintained in the Data Collector.  Moving forward, this value is only a preset for the Data Collector.  Using a higher number when using cmd.php will improve performance.  Performance improvements in Spine are best resolved with the threads parameter.  When using Spine, we recommend a lower number and leveraging threads instead.  When using cmd.php, use no more than 2x the number of CPU cores."
 msgstr "Het standaard aantal gelijktijdige processen dat per gegevensverzamelaar moet worden uitgevoerd.  OPMERKING: Vanaf Kadupul 1.2 wordt deze instelling gehandhaafd in het gegevensverzamelprogramma.  Als u naar voren gaat, is deze waarde alleen een vooringestelde waarde voor de gegevensverzamelaar.  Het gebruik van een hoger getal bij het gebruik van cmd.php zal de prestaties verbeteren.  Prestatieverbeteringen in de wervelkolom worden het best opgelost met de parameter threads.  Bij gebruik van de wervelkolom adviseren wij een lager aantal en het gebruik van schroefdraad.  Gebruik bij gebruik van cmd.php niet meer dan 2x het aantal CPU-kernen."
 
@@ -10924,8 +10924,8 @@ msgstr "Het standaard aantal gelijktijdige processen dat per gegevensverzamelaar
 msgid "Threads per Process"
 msgstr "Standaarddraden per proces"
 
-#, fuzzy
 #: include/global_settings.php:1491
+#, fuzzy
 msgid "The Default Threads allowed per process.  NOTE: Starting in Kadupul 1.2+, this setting is maintained in the Data Collector, and this is simply the Preset.  Using a higher number when using Spine will improve performance.  However, ensure that you have enough MySQL/MariaDB connections to support the following equation: connections = data collectors * processes * (threads + script servers).  You must also ensure that you have enough spare connections for user login connections as well."
 msgstr "De Default Threads toegestaan per proces.  OPMERKING: Vanaf Kadupul 1.2+ wordt deze instelling gehandhaafd in het Gegevensverzamelprogramma, en dit is gewoon de Vooraf ingestelde instelling.  Het gebruik van een hoger getal bij gebruik van de wervelkolom zal de prestaties verbeteren.  Zorg er echter voor dat u genoeg MySQL/MariaDB-verbindingen hebt om de volgende vergelijking te ondersteunen: verbindingen = gegevensverzamelaars * processen * (threads + scriptservers).  U moet er ook voor zorgen dat u over voldoende reserveaansluitingen voor de gebruikersaansluitingen beschikt."
 
@@ -11328,8 +11328,8 @@ msgstr "Opties voor e-mailen"
 msgid "Notify Primary Admin of Issues"
 msgstr "Primaire administratie van problemen op de hoogte brengen"
 
-#, fuzzy
 #: include/global_settings.php:1884
+#, fuzzy
 msgid "In cases where the Kadupul server is experiencing problems, should the Primary Administrator be notified by Email?  The Primary Administrator's Kadupul user account is specified under the Authentication tab on Kadupul's settings page. It defaults to the 'admin' account."
 msgstr "In gevallen waarin de Kadupul-server problemen ondervindt, moet de primaire beheerder per e-mail op de hoogte worden gebracht?  De primaire beheerdersaccount van de Kadupul-gebruikersaccount wordt gespecificeerd onder het tabblad Authenticatie op de instellingenpagina van Kadupul. Het wordt standaard op de 'admin'-account gezet."
 
@@ -11983,13 +11983,13 @@ msgstr "In welke modus wilt u de grafieken standaard getoond hebben als u de gra
 msgid "TimeZone Support"
 msgstr "MySQL - TimeZone ondersteuning"
 
-#, fuzzy
 #: include/global_settings.php:2581
+#, fuzzy
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
 msgstr "Hoe wil je dat Kadupul datums presenteert?  Deze instelling verandert ook de manier waarop datums van Kadupul worden weergegeven."
 
-#, fuzzy
 #: include/global_settings.php:2584
+#, fuzzy
 msgid "Kadupul Server Timezone"
 msgstr "Kadupul Server v%s - Onderhoud"
 
@@ -12041,8 +12041,8 @@ msgstr "Schakel horizontaal scrollen van tabellen in en schakel responsieve kolo
 msgid "The date format to use in Kadupul."
 msgstr "Het datumformaat om te gebruiken in Kadupul."
 
-#, fuzzy
 #: include/global_settings.php:2629
+#, fuzzy
 msgid "The date separator to be used in Kadupul."
 msgstr "Het datumscheidingsteken dat in Kadupul moet worden gebruikt."
 
@@ -12118,8 +12118,8 @@ msgstr "Eindtijd werkdag."
 msgid "Thumbnail Sections"
 msgstr "Thumbnail secties"
 
-#, fuzzy
 #: include/global_settings.php:2710
+#, fuzzy
 msgid "Which portions of Kadupul display Thumbnails by default."
 msgstr "Welke delen van de Kadupul tonen standaard Thumbnails."
 
@@ -12320,12 +12320,12 @@ msgstr "<strong>LET OP:</strong> U bent ingelogd in een Remote Data Collector. A
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
 msgstr "<strong>LET OP:</strong> Tot op heden zijn geen van de basis Kadupul plugins bijgewerkt om met remote pollers te werken. Daarom zullen plugins zoals bijvoorbeeld MacTrack en HMIB, die directe toegang nodig hebben op apparaten, op dit moment niet werken met Remote Data Collectors. Echter, plugins als Thold zullen wél werken zolang de Remote Data Collector in <b>'online'</b> modus is."
 
-#: install/functions.php:609
+#: install/functions.php:613
 #, php-format
 msgid "Path for %s"
 msgstr "Pad voor %s"
 
-#: install/functions.php:820
+#: install/functions.php:824
 msgid "New Poller"
 msgstr "Nieuwe Poller"
 
@@ -14733,13 +14733,13 @@ msgstr "Geselecteerd"
 msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "De zoekterm \"%s\" is niet geldig. Foutmelding is %s"
 
-#, fuzzy
 #: lib/html_utility.php:1129
+#, fuzzy
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
 msgstr "Reguliere expressies van Kadupul zijn om veiligheidsredenen beperkt tot 50 tekens."
 
-#, fuzzy
 #: lib/html_utility.php:1133
+#, fuzzy
 msgid "Kadupul regular expressions can not includes the semi-color character."
 msgstr "Kadupul reguliere expressies kunnen het semi-kleurige teken niet bevatten."
 
@@ -15312,8 +15312,8 @@ msgstr "De variabelen die moeten worden ingesteld in het config.php-bestand omva
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
 msgstr "De Installateur wijst automatisch een $poller_id toe en voegt deze toe aan het config.php bestand."
 
-#, fuzzy
 #: lib/installer.php:2193
+#, fuzzy
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Kadupul database server.  Follow the same procedure you would with any other Kadupul install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
 msgstr "Zodra alle variabelen zijn ingesteld in het config.php-bestand, moet u de $rdatabase_username ook toegang verlenen tot de hoofdserver van de Kadupul database.  Volg dezelfde procedure als bij elke andere Kadupul.  U kunt dan op de knop 'Test Connection' drukken.  Als de test geslaagd is, kunt u verder gaan en de installatie voltooien."
 
@@ -15349,8 +15349,8 @@ msgstr "Let op dat de rechten van de directories hieronder correct zijn ingestel
 msgid "After the install is complete, you can make some of these directories read only to increase security."
 msgstr "Nadat de installatie is voltooid, kunt u een aantal van deze directories alleen-lezen markeren om het beveiligingsniveau te verhogen."
 
-#, fuzzy
 #: lib/installer.php:2299
+#, fuzzy
 msgid "These directories will be required to stay read writable after the install so that the Kadupul remote synchronization process can update them as the Main Kadupul Web Site changes"
 msgstr "Deze mappen moeten na de installatie leesbaar blijven, zodat het synchronisatieproces op afstand van de Kadupul ze kan bijwerken als de Main Kadupul website verandert."
 
@@ -15378,8 +15378,8 @@ msgstr "Locatie moet schrijfbaar zijn ook nadat de installatie is voltooid"
 msgid "Potential permission issues"
 msgstr "Mogelijke vergunningsproblemen"
 
-#, fuzzy
 #: lib/installer.php:2382
+#, fuzzy
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
 msgstr "Zorg ervoor dat uw webserver lees/schrijftoegang heeft tot de Kadupul die hieronder fouten tonen."
 
@@ -15469,8 +15469,8 @@ msgstr "Cron interval"
 msgid "Default Automation Network"
 msgstr "Standaard Automatiseringsnetwerk"
 
-#, fuzzy
 #: lib/installer.php:2487
+#, fuzzy
 msgid "Kadupul can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
 msgstr "Kadupul kunnen het netwerk automatisch scannen zodra de installatie is voltooid. Hierbij wordt gebruik gemaakt van het onderstaande netwerkbereik om het bereik van IP-adressen uit te werken dat gescand kan worden.  Voor het scannen zijn vooraf gedefinieerde opties gedefinieerd, waaronder het gebruik van zowel 'publieke' als 'private' gemeenschappen."
 
@@ -15804,8 +15804,8 @@ msgstr "Apparaat standaardinstellingen"
 msgid "No templated graphs for Default Device were found"
 msgstr "Er zijn geen sjabloongrafieken voor het standaardapparaat gevonden"
 
-#, fuzzy
 #: lib/installer.php:3324
+#, fuzzy
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "WAARSCHUWING: apparaatsjabloon voor uw besturingssysteem niet gevonden. U moet apparaatsjablonen of Kadupul importeren om uw Kadupul te bewaken."
 
@@ -16704,8 +16704,8 @@ msgstr ""
 msgid "When using InnoDB storage it is important to keep your table spaces separate.  This makes managing the tables simpler for long time users of %s.  If you are running with this currently off, you can migrate to the per file storage by enabling the feature, and then running an alter statement on all InnoDB tables."
 msgstr "Wanneer de InnoDB storage engine wordt gebruikt is het belangrijk om de table spaces gescheiden te houden. Dit maakt het beheer van de tabellen simpeler voor langdurig gebruik van %s. Als op dit moment deze waarde niet actief is, kunt u migreren naar de per-bestand opslag door deze optie te activeren en een ALTER statement uit te voeren op iedere InnoDB tabel."
 
-#, fuzzy
 #: lib/utility.php:1322
+#, fuzzy
 msgid "When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Kadupul tables."
 msgstr "Bij het gebruik van innodb_file_per_table is het belangrijk om het innodb_file_format in te stellen op Barracuda.  Deze instelling maakt langere indexen mogelijk die belangrijk zijn voor bepaalde Kadupul."
 
@@ -16972,8 +16972,8 @@ msgstr "Content bestand/URL"
 msgid "Web URL Below"
 msgstr "Web URL Hieronder"
 
-#, fuzzy
 #: links.php:554
+#, fuzzy
 msgid "The file that contains the content for this page. This file needs to be in the Kadupul 'include/content/' directory."
 msgstr "Het bestand dat de inhoud van deze pagina bevat. Dit bestand moet in de map 'include/content/content/' van de Kadupul staan."
 
@@ -17512,8 +17512,8 @@ msgstr "FOUT: het pad naar de wervelkolom: %s is ongeldig voor poller-id %d.  Po
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Maximale looptijd van %d seconden overschreden voor poller-id %d. Bezig met afsluiten."
 
-#, fuzzy
 #: poller.php:890
+#, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "WAARSCHUWING: Polling-cyclus Kadupul overschreden poller-interval met"
 
@@ -17526,8 +17526,8 @@ msgstr "WAARSCHUWING: PollerID:%s met naam:%s is in hartslagstatus"
 msgid "Poller in Heartbeat Mode"
 msgstr "Poller in hartslagmodus"
 
-#, fuzzy
 #: poller.php:1174
+#, fuzzy
 msgid "Kadupul System Notification"
 msgstr "Hulpprogramma's voor Kadupul"
 
@@ -17540,8 +17540,8 @@ msgstr "OPMERKING: Er is een tweede Kadupul-gegevensverzamelaar toegevoegd. Daar
 msgid "WARNING: Main Kadupul database %s offline or in recovery"
 msgstr "WAARSCHUWING: Main Kadupul-database offline of in herstel"
 
-#, fuzzy
 #: poller_automation.php:970 poller_automation.php:1021
+#, fuzzy
 msgid "Kadupul Primary Admin"
 msgstr "Kadupul Primaire Admin"
 
@@ -17875,8 +17875,8 @@ msgstr "De laatste keer dat deze gegevensverzamelaar is voltooid."
 msgid "Last Update"
 msgstr "Laatste update"
 
-#, fuzzy
 #: pollers.php:1072
+#, fuzzy
 msgid "The last time this Data Collector checked in with the main Kadupul site."
 msgstr "De laatste keer dat deze Dataverzamelaar incheckte bij de hoofdsite van de Kadupul."
 
@@ -19986,8 +19986,8 @@ msgstr "Met dit menu kunt u de laatste gebeurtenissen bekijken die SNMPAgent hee
 msgid "Allows Administrators to maintain SNMP notification receivers."
 msgstr "Hiermee kunnen beheerders SNMP-kennisgevingsontvangers onderhouden."
 
-#, fuzzy
 #: utilities.php:2380
+#, fuzzy
 msgid "Kadupul System Utilities"
 msgstr "Hulpprogramma's voor Kadupul"
 

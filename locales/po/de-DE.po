@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul German Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-12 09:37-0700\n"
+"POT-Creation-Date: 2026-09-12 09:56-0700\n"
 "PO-Revision-Date: 2024-05-25 15:08+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -2554,11 +2554,11 @@ msgstr "Stammverzeichnis"
 msgid "No Tree Rules Found"
 msgstr "Keine Baumregeln gefunden"
 
-#, fuzzy
 #: cactid.php:37 help.php:37 lib/functions.php:6227 lib/functions.php:6296
 #: lib/functions.php:6386 lib/functions.php:6993 poller.php:387 poller.php:537
 #: poller.php:602 poller.php:642 poller.php:784 poller.php:890
 #: poller_automation.php:46 poller_boost.php:369
+#, fuzzy
 msgid "Kadupul System Warning"
 msgstr "Warnung vor dem Kadupul-System"
 
@@ -3000,8 +3000,8 @@ msgstr "Data Source Debug erhielt eine ungültige Data Source ID."
 msgid "All RRDfile repairs succeeded."
 msgstr "Alle RRDfile-Reparaturen waren erfolgreich."
 
-#, fuzzy
 #: data_debug.php:59
+#, fuzzy
 msgid "One or more RRDfile repairs failed.  See Kadupul log for errors."
 msgstr "Eine oder mehrere RRDfile-Reparaturen sind fehlgeschlagen.  Siehe Kadupul für Fehler."
 
@@ -3743,8 +3743,8 @@ msgid_plural "Duplicate Date Source Profiles"
 msgstr[0] "Datenquellenprofil duplizieren"
 msgstr[1] "Doppelte Datums-Quellprofile"
 
-#, fuzzy
 #: data_source_profiles.php:387
+#, fuzzy
 msgid "Unable to duplicate Data Source Profile.  Check Kadupul Log for errors."
 msgstr "Eine oder mehrere RRDfile-Reparaturen sind fehlgeschlagen.  Siehe Kadupul für Fehler."
 
@@ -4527,9 +4527,9 @@ msgstr "Aktuelle Graph-Element Datenquelle"
 msgid "RRDtool Graph Syntax"
 msgstr "RRDtool Graph Syntax"
 
-#, fuzzy
 #: graph_image.php:174 graph_json.php:218 graph_realtime.php:238
 #: lib/rrd.php:1679
+#, fuzzy
 msgid "The Kadupul Poller has not run yet."
 msgstr "Der Kadupul ist noch nicht gelaufen."
 
@@ -6083,8 +6083,8 @@ msgstr "Die angegebene Protokolldatei ist keine Kadupul-Protokoll- oder Archivda
 msgid "Log file specified was Kadupul archive file and was removed."
 msgstr "Die angegebene Protokolldatei war die Kadupul-Archivdatei und wurde entfernt."
 
-#, fuzzy
 #: include/global_arrays.php:294
+#, fuzzy
 msgid "Kadupul log purged successfully"
 msgstr "Kadupul erfolgreich bereinigt"
 
@@ -8968,8 +8968,8 @@ msgstr "Geben Sie Notizen zu diesem Host ein."
 msgid "External ID"
 msgstr "Externe ID"
 
-#, fuzzy
 #: include/global_form.php:1320
+#, fuzzy
 msgid "External ID for linking Kadupul data to external monitoring systems."
 msgstr "Externe ID zur Verknüpfung von Kadupul mit externen Überwachungssystemen."
 
@@ -9597,13 +9597,13 @@ msgstr "Poller Standard Fehlerprotokollpfad"
 msgid "If you are having issues with Kadupul's Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file"
 msgstr "Wenn Sie Probleme mit den Datensammlern von Kadupul haben, setzen Sie diesen Dateipfad und der Standardfehler der Datensammler wird auf diese Datei umgeleitet."
 
-#, fuzzy
 #: include/global_settings.php:184
+#, fuzzy
 msgid "Rotate the Kadupul Log"
 msgstr "Drehen Sie den Kadupul."
 
-#, fuzzy
 #: include/global_settings.php:185
+#, fuzzy
 msgid "This option will rotate the Kadupul Log periodically."
 msgstr "Diese Option dreht das Kadupul regelmäßig."
 
@@ -10434,8 +10434,8 @@ msgstr "Benutzerdefinierte Anzahl von Zeilen, die der CLOG bei der Auswahl von'A
 msgid "Log Tail Refresh"
 msgstr "Protokoll-Schweif-Aktualisierung"
 
-#, fuzzy
 #: include/global_settings.php:985
+#, fuzzy
 msgid "How often do you want the Kadupul log display to update."
 msgstr "Wie oft soll die Kadupul aktualisiert werden?"
 
@@ -10990,8 +10990,8 @@ msgstr "Spezial User"
 msgid "Primary Admin"
 msgstr "Primäre Verwaltung"
 
-#, fuzzy
 #: include/global_settings.php:1524
+#, fuzzy
 msgid "The name of the primary administrative account that will automatically receive Emails when the Kadupul system experiences issues.  To receive these Emails, ensure that your mail settings are correct, and the administrative account has an Email address that is set."
 msgstr "Der Name des primären Administratorkontos, das automatisch E-Mails erhält, wenn das Kadupul Probleme hat.  Um diese E-Mails zu erhalten, stellen Sie sicher, dass Ihre E-Mail-Einstellungen korrekt sind und das Administratorkonto über eine E-Mail-Adresse verfügt, die festgelegt ist."
 
@@ -11354,8 +11354,8 @@ msgstr "URL-Verknüpfung"
 msgid "Server Base URL"
 msgstr "Server-Basis-URL"
 
-#, fuzzy
 #: include/global_settings.php:1872
+#, fuzzy
 msgid "This is a the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder."
 msgstr "Dies ist der Serverstandort, der für Links zur Kadupul verwendet wird."
 
@@ -12362,12 +12362,12 @@ msgstr "<strong>HINWEIS:</strong> Sie sind bei einem Remote Data Collector angem
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
 msgstr "<strong>HINWEIS:</strong> Keines der Core Kadupul Plugins wurde bisher neu entwickelt, um mit Remote Data Collectors zu arbeiten.  Daher funktionieren Plugins wie MacTrack und HMIB, die einen direkten Zugriff auf Geräte erfordern, derzeit nicht mit Remote Data Collectors.  Plugins wie Thold funktionieren jedoch, solange sich der Remote Data Collector im <b>'online'</b> Modus befindet."
 
-#: install/functions.php:609
+#: install/functions.php:613
 #, php-format
 msgid "Path for %s"
 msgstr "Pfad für %s"
 
-#: install/functions.php:820
+#: install/functions.php:824
 msgid "New Poller"
 msgstr "Neuer Poller"
 
@@ -12811,8 +12811,8 @@ msgstr "Dein Passwort muss eine Mischung aus Kleinbuchstaben und Großbuchstaben
 msgid "Your password must contain at least 1 special character!"
 msgstr "Dein Passwort muss mindestens 1 Sonderzeichen enthalten!"
 
-#, fuzzy
 #: lib/auth.php:4676
+#, fuzzy
 msgid "Kadupul Login Failure"
 msgstr "Kadupul gelöscht"
 
@@ -13862,8 +13862,8 @@ msgstr "Tastatur"
 msgid "Shortcuts"
 msgstr "Shortcuts"
 
-#, fuzzy
 #: lib/html.php:2591
+#, fuzzy
 msgid "Contribute to the Kadupul Project"
 msgstr "Drehen Sie den Kadupul."
 
@@ -14321,8 +14321,8 @@ msgstr "Definiert die Standardausrichtung für Text und Grafiken."
 msgid "Graph Linked"
 msgstr "Grafik verlinkt"
 
-#, fuzzy
 #: lib/html_reports.php:84
+#, fuzzy
 msgid "Should the Graphs be linked back to the Kadupul site?"
 msgstr "Sollen die Grafiken wieder mit der Kadupul verlinkt werden?"
 
@@ -14788,8 +14788,8 @@ msgstr "Der Suchbegriff \"%s\" ist nicht gültig. Fehler ist %s"
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
 msgstr "Reguläre Ausdrücke von Kadupul sind nur aus Sicherheitsgründen auf 50 Zeichen beschränkt."
 
-#, fuzzy
 #: lib/html_utility.php:1133
+#, fuzzy
 msgid "Kadupul regular expressions can not includes the semi-color character."
 msgstr "Reguläre Kadupul können das Halbfarbenzeichen nicht enthalten."
 
@@ -15430,8 +15430,8 @@ msgstr "Erforderliche Beschreibbarkeit nach der Installation abgeschlossen"
 msgid "Potential permission issues"
 msgstr "Mögliche Berechtigungsprobleme"
 
-#, fuzzy
 #: lib/installer.php:2382
+#, fuzzy
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
 msgstr "Bitte stellen Sie sicher, dass Ihr Webserver Lese-/Schreibzugriff auf die Kadupul hat, die untenstehende Fehler aufweisen."
 
@@ -17768,8 +17768,8 @@ msgstr "Sie haben diesen Datenbank-Hostnamen '%s' bereits verwendet. Bitte geben
 msgid "Data Collector Statistics cleared."
 msgstr "Datenquellen-Statistik"
 
-#, fuzzy
 #: pollers.php:552
+#, fuzzy
 msgid "Click 'Continue' to delete the following Data Collector.  Note, all devices will be disassociated from this Data Collector and mapped back to the Main Kadupul Data Collector."
 msgid_plural "Click 'Continue' to delete all following Data Collectors.  Note, all devices will be disassociated from these Data Collectors and mapped back to the Main Kadupul Data Collector."
 msgstr[0] "Klicken Sie auf \"Weiter\", um den folgenden Datensammler zu löschen.  Beachten Sie, dass alle Geräte von diesem Datensammler getrennt und dem Kadupul-Datenammler zugeordnet werden."
@@ -19859,13 +19859,13 @@ msgstr "Protokoll[Gesamtzeile: %d - Nicht übereinstimmende Elemente ausgeblende
 msgid "Log [Total Lines: %d - All Items Shown]"
 msgstr "Protokoll[Gesamtzeile: %d - Alle angezeigten Artikel]"
 
-#, fuzzy
 #: utilities.php:1602
+#, fuzzy
 msgid "Clear Kadupul Log"
 msgstr "Löschen des Kadupul"
 
-#, fuzzy
 #: utilities.php:1615
+#, fuzzy
 msgid "Kadupul Log Cleared"
 msgstr "Kadupul gelöscht"
 
@@ -19941,8 +19941,8 @@ msgstr "RRD Datei Information"
 msgid "Kadupul technical support page.  Used by developers and technical support persons to assist with issues in Kadupul.  Includes checks for common configuration issues."
 msgstr "Kadupul's technische Supportseite. Wird benutzt von Entwicklern und technischem Support Personal um bei Problemen in Kadupul zu helfen. Enthält Prüfungen für verbreitete Konfigurationseinstellungen."
 
-#, fuzzy
 #: utilities.php:2290
+#, fuzzy
 msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
 msgstr "Das Kadupul speichert je nach Systemeinstellung Statistiken, Fehler und andere Meldungen.  Diese Informationen können verwendet werden, um Probleme mit dem Prüfer und der Anwendung zu identifizieren."
 
