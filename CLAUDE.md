@@ -4,6 +4,13 @@ This file is for AI coding assistants (Claude Code, Cursor, Copilot, Gemini,
 etc.) working against this repository.  It is also a concise reference for any
 human contributor who wants to know the house conventions at a glance.
 
+## Project identity
+
+Use Kadupul in project-facing content. Keep licensing information and one brief
+fork statement in the README. Do not add optional individual-credit lists or
+project-origin narratives. Preserve required copyright, license, and warranty
+notices, including display constants. Preserve compatibility identifiers.
+
 ## Do not commit
 
 The following directories are local developer tooling state.  They are in

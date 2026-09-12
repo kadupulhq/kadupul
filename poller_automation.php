@@ -980,7 +980,7 @@ function reportNetworkStatus($network_id, $old_devices) {
 					$fromemail = read_config_option('settings_from_email');
 
 					if ($fromemail == '') {
-						$fromemail = 'kadupul@localhost.localdomain';
+						$fromemail = 'noreply@kadupul.org';
 					}
 				}
 			} else {

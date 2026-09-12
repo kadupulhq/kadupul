@@ -859,7 +859,7 @@ $(function() {
 					var win = window.open('https://github.com/kadupulhq/kadupul/discussions');
 					win.focus;
 				} else if (buttonData.Step == STEP_GO_GITHUB) {
-					var win = window.open('https://github.com/kadupulhq/kadupul/cacti/issues/');
+					var win = window.open('https://github.com/kadupulhq/kadupul/issues/');
 					win.focus;
 				} else if (buttonData.Step == STEP_TEST_REMOTE) {
 					performTestConnection();

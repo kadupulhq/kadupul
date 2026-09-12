@@ -5007,7 +5007,7 @@ function send_mail($to, $from, $subject, $body, $attachments = '', $headers = ''
  *
  * If no contact is provided for $replyto then $from is used for that too.
  * If $from is empty, it will default to kadupul@<server> or if no server name can
- * be found, it will use kadupul@localhost.localdomain.
+ * be found, it will use noreply@kadupul.org.
  *
  * The $attachments parameter may either be a single string, or a list of attachments
  * either as strings or an array.  The array can have the following keys:
@@ -5109,7 +5109,7 @@ function mailer($from, $to, $cc, $bcc, $replyto, $subject, $body, $body_text = '
 	 * Set the from details using the variable passed in
 	 * - if name is blank, use setting's name
 	 * - if email is blank, use setting's email, otherwise default to
-	 *   kadupul@<server> or kadupul@localhost.localdomain if no known server name
+	 *   kadupul@<server> or noreply@kadupul.org if no known server name
 	 */
 	$from = parse_email_details($from, 1);
 
@@ -5127,7 +5127,7 @@ function mailer($from, $to, $cc, $bcc, $replyto, $subject, $body, $body_text = '
 		if (isset($_SERVER['HOSTNAME'])) {
 			$from['email'] = 'kadupul@' . $_SERVER['HOSTNAME'];
 		} else {
-			$from['email'] = 'kadupul@localhost.localdomain';
+			$from['email'] = 'noreply@kadupul.org';
 		}
 	}
 

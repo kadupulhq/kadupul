@@ -18,11 +18,11 @@ $addEmailStart = strpos($functionsSource, 'function add_email_details(');
 $addEmailEnd   = strpos($functionsSource, "\nfunction ", $addEmailStart + 1);
 $addEmailBody  = substr($functionsSource, $addEmailStart, $addEmailEnd - $addEmailStart);
 
-test('mailer-null-name: null from_name falls back to Cacti literal before PHPMailer call', function () use ($mailerBody) {
+test('mailer-null-name: null from_name falls back to Kadupul literal before PHPMailer call', function () use ($mailerBody) {
 	// The fallback guard must appear after the settings lookup so that a null
 	// settings_from_name value never reaches PHPMailer as null.
 	$settingsPos  = strpos($mailerBody, "read_config_option('settings_from_name')");
-	$fallbackPos  = strpos($mailerBody, "\$from['name'] = 'Cacti'");
+	$fallbackPos  = strpos($mailerBody, "\$from['name'] = 'Kadupul'");
 
 	expect($settingsPos)->not->toBeFalse();
 	expect($fallbackPos)->not->toBeFalse();
@@ -32,8 +32,8 @@ test('mailer-null-name: null from_name falls back to Cacti literal before PHPMai
 
 test('mailer-null-name: from name fallback is inside an empty() guard, not an unconditional assignment', function () use ($mailerBody) {
 	// An unconditional assignment would overwrite a valid configured name.
-	// Confirm the 'Cacti' literal only appears inside a conditional block.
-	$pos = strpos($mailerBody, "\$from['name'] = 'Cacti'");
+	// Confirm the 'Kadupul' literal only appears inside a conditional block.
+	$pos = strpos($mailerBody, "\$from['name'] = 'Kadupul'");
 	expect($pos)->not->toBeFalse();
 
 	// The nearest preceding control keyword must be 'if' (via empty()).
