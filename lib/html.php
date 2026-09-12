@@ -2661,7 +2661,7 @@ function html_common_header($title, $selectedTheme = '') {
 		var zoom_i18n_3rd_button='<?php print __esc('3rd Mouse Button');?>';
 	</script>
 	<link href='<?php print $config['url_path']; ?>include/themes/<?php print $selectedTheme;?>/images/kadupul-icon.png' rel='shortcut icon'>
-	<link href='<?php print $config['url_path']; ?>include/themes/<?php print $selectedTheme;?>/images/kadupul-icon.png' rel='icon' sizes='96x96'>
+	<link href='<?php print $config['url_path']; ?>include/themes/<?php print $selectedTheme;?>/images/kadupul-icon.png' rel='icon' sizes='32x32'>
 	<?php
 	print get_md5_include_css('include/themes/' . $selectedTheme .'/jquery.zoom.css');
 	print get_md5_include_css('include/themes/' . $selectedTheme .'/jquery-ui.css');

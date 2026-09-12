@@ -2,19 +2,19 @@ name: Security Proof Guardrails
 
 on:
   push:
-    branches: [develop, 1.2.x]
+    branches: [main, develop, 1.2.x]
   pull_request:
-    branches: [develop, 1.2.x]
+    branches: [main, develop, 1.2.x]
   workflow_dispatch:
     inputs:
       repo_name:
         description: "Repository to query for advisory source data (owner/name)"
         required: false
-        default: "Cacti/cacti"
+        default: "kadupulhq/kadupul"
       branch_list:
         description: "Space-separated branch list to evaluate"
         required: false
-        default: "1.2.x develop"
+        default: "main"
       strict_gate:
         description: "Fail run when unresolved advisories remain"
         required: false
