@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 if (function_exists('pcntl_async_signals')) {
@@ -374,7 +367,7 @@ function pushout_debug($message) {
  * display_version - displays version information
  */
 function display_version() {
-	print 'Cacti Rebuild poller cache Tool, Version ' . CACTI_VERSION . ' ' . COPYRIGHT_YEARS . PHP_EOL;
+	print 'Kadupul Rebuild poller cache Tool, Version ' . CACTI_VERSION . ' ' . COPYRIGHT_YEARS . PHP_EOL;
 }
 
 /**
@@ -385,7 +378,7 @@ function display_help() {
 
 	print PHP_EOL . 'usage: rebuild_poller_cache.php [--host-id=N] [--host-template-id=N] [--data-template-id=N] [--debug]' . PHP_EOL . PHP_EOL;
 
-	print 'Cacti\'s repopulate poller cache tool.  This CLI script will ' . PHP_EOL;
+	print 'Kadupul\'s repopulate poller cache tool.  This CLI script will ' . PHP_EOL;
 	print 'repopulate poller cache for all or specified hosts.' . PHP_EOL . PHP_EOL;
 	print 'This utility will run in parallel with the given number of threads,' . PHP_EOL;
 
@@ -402,7 +395,7 @@ function display_help() {
 }
 
 /**
- * sig_handler - provides a generic means to catch exceptions to the Cacti log.
+ * sig_handler - provides a generic means to catch exceptions to the Kadupul log.
  *
  * @param $signo - (int) the signal that was thrown by the interface.
  *

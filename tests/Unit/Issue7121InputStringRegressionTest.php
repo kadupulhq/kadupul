@@ -8,7 +8,6 @@
  | as published by the Free Software Foundation; either version 2          |
  | of the License, or (at your option) any later version.                  |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
 */
 
@@ -41,7 +40,7 @@
  *
  * The placeholder grammar matches the one already used by
  * generate_data_input_field_sequences() and get_full_script_path(), so
- * the validator no longer disagrees with the rest of Cacti about what
+ * the validator no longer disagrees with the rest of Kadupul about what
  * counts as a placeholder. The blocklist is unchanged, so the
  * GHSA-c4qp-j9r9-fq24 protection holds.
  */
@@ -51,7 +50,7 @@ $functionsSource = file_get_contents(__DIR__ . '/../../lib/functions.php');
 /**
  * Extract cacti_input_string_is_safe() from lib/functions.php into a
  * uniquely-named local copy so the test does not depend on the full
- * Cacti bootstrap (which other unit tests in this directory also avoid).
+ * Kadupul bootstrap (which other unit tests in this directory also avoid).
  */
 function _extract_input_string_validator(string $functionsSource, string $localName): callable {
 	preg_match(
@@ -66,7 +65,7 @@ function _extract_input_string_validator(string $functionsSource, string $localN
 	if (!function_exists($localName)) {
 		// Source-level test pattern: extract the canonical function definition
 		// from lib/functions.php so we exercise the real regex without booting
-		// the full Cacti runtime. Mirrors SecurityScriptServerDataInputTest.
+		// the full Kadupul runtime. Mirrors SecurityScriptServerDataInputTest.
 		eval($src); // nosemgrep: php.lang.security.eval-use.eval-use
 	}
 	return $localName;
@@ -82,13 +81,13 @@ test('issue #7121 ss_grid_preason input_string is accepted', function () use ($v
 	expect($validator($template))->toBeTrue();
 });
 
-test('TheWitness manual repro template is accepted', function () use ($validator) {
+test('Manual reproduction template is accepted', function () use ($validator) {
 	/* Single-arg script template where the user value contains spaces
 	 * (e.g. "this is a test"), which forces the placeholder to be wrapped
 	 * in shell quotes. Without the fix this rejects, so the data input
 	 * method save fails, no data_template_data linkage is created, and
 	 * downstream data source / graph template creation finds nothing to
-	 * push into poller_item. The cascade matches TheWitness's report:
+	 * push into poller_item. The cascade matches the regression report:
 	 * "no poller item is added" in advanced-mode data source creation. */
 	$template = '<path_php_binary> <path_cacti>/scripts/test.php "<param>"';
 	expect($validator($template))->toBeTrue();

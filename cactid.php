@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 if (function_exists('pcntl_async_signals')) {
@@ -31,7 +24,7 @@ if (function_exists('pcntl_async_signals')) {
 
 ini_set('output_buffering', 'Off');
 
-/* sig_handler - provides a generic means to catch exceptions to the Cacti log.
+/* sig_handler - provides a generic means to catch exceptions to the Kadupul log.
    @arg $signo - (int) the signal that was thrown by the interface.
    @returns - null */
 function sig_handler($signo) {
@@ -40,8 +33,8 @@ function sig_handler($signo) {
 	switch ($signo) {
 	case SIGTERM:
 	case SIGINT:
-		cacti_log('WARNING: Cacti Daemon PID[' . getmypid() . '] Terminated on Device[' . gethostname() . ']', true, 'CACTID');
-		admin_email(__('Cacti System Warning'), __('WARNING: Cacti Daemon PID[' . getmypid() . '] Terminated on Device[' . gethostname() . ']', true, 'CACTID'));
+		cacti_log('WARNING: Kadupul Daemon PID[' . getmypid() . '] Terminated on Device[' . gethostname() . ']', true, 'CACTID');
+		admin_email(__('Kadupul System Warning'), __('WARNING: Kadupul Daemon PID[' . getmypid() . '] Terminated on Device[' . gethostname() . ']', true, 'CACTID'));
 		exit(1);
 		break;
 	default:
@@ -102,7 +95,7 @@ if (DIRECTORY_SEPARATOR != '\\') {
 	exec('pgrep -a php | grep cactid.php', $output);
 
 	if (sizeof($output) >= 2) {
-		print 'The Cacti Daemon is still running' . PHP_EOL;
+		print 'The Kadupul Daemon is still running' . PHP_EOL;
 		return;
 	}
 } else {
@@ -110,7 +103,7 @@ if (DIRECTORY_SEPARATOR != '\\') {
 	$STDERR = fopen('null', 'wb');
 }
 
-print 'Starting Cacti Daemon ... ';
+print 'Starting Kadupul Daemon ... ';
 
 if (!$foreground) {
 	if (function_exists('pcntl_fork')) {
@@ -128,8 +121,8 @@ if (!$foreground) {
 		} elseif ($pid == 0) {
 			// We are the child
 		} else {
-			cacti_log('NOTE: Cacti Daemon PID[' . getmypid() . '] Started on Device[' . gethostname() . ']');
-			admin_email(__('Cacti System Notice'), __('Notice: Cacti Daemon PID[' . getmypid() . '] Started on Device[' . gethostname() . ']', true, 'CACTID'));
+			cacti_log('NOTE: Kadupul Daemon PID[' . getmypid() . '] Started on Device[' . gethostname() . ']');
+			admin_email(__('Kadupul System Notice'), __('Notice: Kadupul Daemon PID[' . getmypid() . '] Started on Device[' . gethostname() . ']', true, 'CACTID'));
 
 			print '[OK]' . PHP_EOL;
 
@@ -140,7 +133,7 @@ if (!$foreground) {
 		print '[OK]' . PHP_EOL . '[NOTE] This system does not support forking.' . PHP_EOL;
 	}
 } else {
-	print  '[OK]' . PHP_EOL . '[NOTE] The Cacti Daemon is running in foreground mode.' . PHP_EOL;
+	print  '[OK]' . PHP_EOL . '[NOTE] The Kadupul Daemon is running in foreground mode.' . PHP_EOL;
 }
 
 sleep(2);
@@ -152,7 +145,7 @@ while (true) {
 
 	run_poller();
 
-	// Force Cacti to check the service start frequency dynamically
+	// Force Kadupul to check the service start frequency dynamically
 	$frequency = -1;
 	$logrecon  = true;
 }
@@ -196,7 +189,7 @@ function wait_for_start($frequency = -1) {
 function run_poller() {
 	global $config, $debug;
 
-	debug('Cacti Data Collector');
+	debug('Kadupul Data Collector');
 
 	$command = ' -q ' . $config['base_path'] . '/poller.php --force' . ($debug ? ' --debug':'');
 
@@ -262,7 +255,7 @@ function debug($string) {
 function display_version() {
 	global $config;
 
-	print 'The Cacti Daemon (cactid), Version ' . CACTI_VERSION . ', ' . COPYRIGHT_YEARS . PHP_EOL;
+	print 'The Kadupul Daemon (cactid), Version ' . CACTI_VERSION . ', ' . COPYRIGHT_YEARS . PHP_EOL;
 }
 
 /*	display_help - displays the usage of the function */
@@ -270,7 +263,7 @@ function display_help () {
 	display_version();
 
 	print PHP_EOL . 'usage: cactid.php [ --foreground ] [ --debug ]' . PHP_EOL . PHP_EOL;
-	print 'Daemon for Cacti data collection, otherwise known as cactid.' . PHP_EOL;
+	print 'Daemon for Kadupul data collection, otherwise known as cactid.' . PHP_EOL;
 	print 'optional:' . PHP_EOL;
 	print '  --foreground       Run cactid in foreground mode, otherwise this is a forking daemon.' . PHP_EOL;
 	print '  --debug            Used for debugging in --foreground mode.' . PHP_EOL;

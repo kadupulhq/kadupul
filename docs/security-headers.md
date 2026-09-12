@@ -1,6 +1,6 @@
 # Web security headers
 
-Cacti sets its full HTTP security-header set in one place: `lib/headers_secure.php`.
+Kadupul sets its full HTTP security-header set in one place: `lib/headers_secure.php`.
 `include/global.php` calls `CactiSecureHeaders::emitHeaders()` once per request,
 early in the pipeline, so every authenticated page gets the same policy.
 
@@ -26,7 +26,7 @@ whitelisted CDN. `content_security_policy_script=unsafe-eval` adds
 
 ## `'unsafe-inline'` status
 
-Both `script-src` and `style-src` still allow `'unsafe-inline'`. Cacti ships
+Both `script-src` and `style-src` still allow `'unsafe-inline'`. Kadupul ships
 ~180 inline `<script>` tags across the UI that each need to be migrated to
 either an external file or a `nonce=` attribute before `'unsafe-inline'` can
 come out of `script-src`. Inline `<style>` tags are not part of this migration:
@@ -57,13 +57,13 @@ and `'unsafe-eval'`. `'strict-dynamic'` lets a nonced page script transitively
 trust scripts it inserts via DOM manipulation (jQuery `.html()`, `.append()`,
 etc.), which would otherwise fail because injected `<script>` tags don't carry
 a nonce. `'unsafe-eval'` covers jQuery's `globalEval` and `new Function()`
-paths. Without these two keywords most jQuery-driven UIs and Cacti plugins
+paths. Without these two keywords most jQuery-driven UIs and Kadupul plugins
 break under nonce mode. Browser support: Chrome 52+, Firefox 60+,
 Safari 15.4+.
 
 The `style-src` directive keeps `'unsafe-inline'` in nonce modes because
 jQuery `.css()`, `setAttribute('style', ...)`, and the legacy inline `style=""`
-attributes scattered across Cacti pages all rely on inline-style execution.
+attributes scattered across Kadupul pages all rely on inline-style execution.
 Style XSS is a much narrower attack surface than script XSS; the trade-off is
 intentional and documented.
 
@@ -82,7 +82,7 @@ if (class_exists('CactiSecureHeaders') && CactiSecureHeaders::isNonceMode()) {
 }
 ```
 
-The `class_exists` check keeps plugin code compatible with Cacti versions that
+The `class_exists` check keeps plugin code compatible with Kadupul versions that
 predate the `CactiSecureHeaders` class.
 
 In `nonce-report` mode, configure CSP violation reporting via the
@@ -130,7 +130,7 @@ shipped `.htaccess.dist` to `.htaccess` at the project root. It applies
 `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, and a
 narrow `Content-Security-Policy` to static files.
 
-For distros that install Cacti via `.deb` or `.rpm`, put the same
+For distros that install Kadupul via `.deb` or `.rpm`, put the same
 directives in `/etc/httpd/conf.d/cacti.conf` or `/etc/apache2/conf-available/`
 rather than shipping a per-project `.htaccess`.
 
@@ -146,8 +146,8 @@ location /cacti/ {
 
 ## Testing CSP under plugin load
 
-The Playwright harness in `tests/e2e/` brings up Cacti with two third-party
-plugins from the Cacti project preinstalled — `plugin_thold` and
+The Playwright harness in `tests/e2e/` brings up Kadupul with two third-party
+compatible plugins preinstalled — `plugin_thold` and
 `plugin_monitor` — and walks each plugin's admin pages with
 `content_security_policy_script=nonce-report`. Any inline `<script>` tag
 a plugin emits without a request nonce produces a violation report to
@@ -157,7 +157,7 @@ and source file named. Inline `<style>` tags and inline style attributes
 are not covered by this nonce reporting because the policy keeps
 `'unsafe-inline'` on `style-src` (style XSS is a much narrower attack
 surface and jQuery `.css()` and the legacy inline `style=""` attributes
-across Cacti pages depend on it).
+across Kadupul pages depend on it).
 
 Plugin sources are cloned into the PHP image at build time via the
 `PLUGIN_THOLD_REPO`, `PLUGIN_THOLD_REF`, `PLUGIN_MONITOR_REPO`, and

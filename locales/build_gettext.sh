@@ -1,4 +1,5 @@
 #!/bin/sh
+set -eu
 #+-------------------------------------------------------------------------+
 #| Copyright (C) 2004-2025 The Cacti Group                                 |
 #|                                                                         |
@@ -11,13 +12,6 @@
 #| but WITHOUT ANY WARRANTY; without even the implied warranty of          |
 #| MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
 #| GNU General Public License for more details.                            |
-#+-------------------------------------------------------------------------+
-#| Cacti: The Complete RRDtool-based Graphing Solution                     |
-#+-------------------------------------------------------------------------+
-#| This code is designed, written, and maintained by the Cacti Group. See  |
-#| about.php and/or the AUTHORS file for specific developer information.   |
-#+-------------------------------------------------------------------------+
-#| http://www.cacti.net/                                                   |
 #+-------------------------------------------------------------------------+
 
 # get script name
@@ -49,23 +43,25 @@ then
 fi
 
 # Update main gettext POT file with application strings
-echo "Updating Cacti language gettext language file..."
+echo "Updating Kadupul language gettext language file..."
 cd ${BASE_PATH}
 
-${XGETTEXT_BIN} --no-wrap --copyright-holder="The Cacti Group" --package-name="Cacti" --package-version=`cat include/cacti_version` --msgid-bugs-address="developers@cacti.net" -F -k__gettext -k__ -k__n:1,2 -k__x:1c,2 -k__xn:1c,2,3 -k__esc -k__esc_n:1,2 -k__esc_x:1c,2 -k__esc_xn:1c,2,3 -k__date -o locales/po/cacti.pot `find . -maxdepth 2 -name \*.php`
+${XGETTEXT_BIN} --from-code=UTF-8 --no-wrap --copyright-holder="The Cacti Group" --package-name="Kadupul" --package-version=`cat include/cacti_version` --msgid-bugs-address="https://github.com/kadupulhq/kadupul/issues" -F -k__gettext -k__ -k__n:1,2 -k__x:1c,2 -k__xn:1c,2,3 -k__esc -k__esc_n:1,2 -k__esc_x:1c,2 -k__esc_xn:1c,2,3 -k__date -o locales/po/cacti.pot `find . -maxdepth 2 -name \*.php`
 
 # Merge any changes to POT file into language files
 echo "Merging updates to language files..."
 
 for file in `ls -1 locales/po/*.po`;do
 	echo "Updating $file from cacti.pot"
-	msgmerge --backup off --no-wrap --update -F $file locales/po/cacti.pot
+	msgmerge --backup off --no-wrap --no-fuzzy-matching --update -F $file locales/po/cacti.pot
 done
 
 for file in `ls -1 locales/po/*.po`;do
-  ofile=$(basename --suffix=.po ${file})
+  ofile="${file##*/}"
+  ofile="${ofile%.po}"
   echo "Converting $file to LC_MESSAGES/${ofile}.mo"
-  msgfmt ${file} -o locales/LC_MESSAGES/${ofile}.mo
+  msgattrib --no-obsolete --no-wrap "$file" -o "$file"
+  msgfmt --check-format ${file} -o locales/LC_MESSAGES/${ofile}.mo
 done
 
 exit 0

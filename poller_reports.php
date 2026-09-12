@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 if (function_exists('pcntl_async_signals')) {
@@ -39,7 +32,7 @@ require_once($config['base_path'] . '/lib/reports.php');
 /*  display_version - displays version information */
 function display_version() {
 	$version = get_cacti_version();
-	print "Cacti Reporting Poller, Version $version, " . COPYRIGHT_YEARS . "\n";
+	print "Kadupul Reporting Poller, Version $version, " . COPYRIGHT_YEARS . "\n";
 }
 
 /** display_help - generic help screen for utilities
@@ -48,14 +41,14 @@ function display_help () {
 	display_version();
 
 	print "\nusage: poller_reports.php [--force] [--debug]\n\n";
-	print "Cacti's graphical reporting poller.  This poller will create and distribute\n";
+	print "Kadupul's graphical reporting poller.  This poller will create and distribute\n";
 	print "email reports to recipients based upon the schedules for those reports.\n\n";
 	print "Optional:\n";
 	print "    --force     - Force all Reports to be sent\n";
 	print "    --debug     - Display verbose output during execution\n\n";
 }
 
-/** sig_handler - provides a generic means to catch exceptions to the Cacti log.
+/** sig_handler - provides a generic means to catch exceptions to the Kadupul log.
  * @arg $signo 	- (int) the signal that was thrown by the interface.
  * @return 		- null */
 function sig_handler($signo) {
@@ -149,7 +142,7 @@ if (!$force) {
 } else {
 	$reports = db_fetch_assoc("SELECT * FROM reports WHERE enabled='on'");
 }
-reports_log('Cacti Reports reports found: ' . cacti_sizeof($reports), true, 'REPORTS', POLLER_VERBOSITY_MEDIUM);
+reports_log('Kadupul Reports reports found: ' . cacti_sizeof($reports), true, 'REPORTS', POLLER_VERBOSITY_MEDIUM);
 
 /* execute each of those reports */
 if (cacti_sizeof($reports)) {

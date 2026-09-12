@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require(__DIR__ . '/include/cli_check.php');
@@ -28,7 +21,7 @@ require_once($config['base_path'] . '/lib/poller.php');
 require_once($config['base_path'] . '/lib/data_query.php');
 require_once($config['base_path'] . '/lib/rrd.php');
 
-/* force Cacti to store realtime data locally */
+/* force Kadupul to store realtime data locally */
 $config['force_storage_location_local'] = true;
 
 /* initialize some additional variables */
@@ -159,16 +152,16 @@ db_close();
 /*  display_version - displays version information */
 function display_version() {
 	$version = get_cacti_version();
-	print "Cacti Realtime Poller, Version $version, " . COPYRIGHT_YEARS . "\n";
+	print "Kadupul Realtime Poller, Version $version, " . COPYRIGHT_YEARS . "\n";
 }
 
 function display_help() {
 	display_version();
 
 	print "\nusage: poller_realtime.php --graph=ID [--interval=SEC] [--force] [--debug]\n\n";
-	print "Cacti's Realtime graphing poller.  This poller behaves very similarly\n";
-	print "to Cacti's main poller with the exception that it only polls data source\n";
-	print "that are specific to the graph being rendered in the Cacti UI.\n\n";
+	print "Kadupul's Realtime graphing poller.  This poller behaves very similarly\n";
+	print "to Kadupul's main poller with the exception that it only polls data source\n";
+	print "that are specific to the graph being rendered in the Kadupul UI.\n\n";
 	print "Required:\n";
 	print "    --graph=ID     Specify the graph id to convert (realtime)\n\n";
 	print "Optional:\n";

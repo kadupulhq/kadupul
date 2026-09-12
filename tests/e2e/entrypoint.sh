@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Cacti E2E entrypoint. Bootstraps include/config.php, waits for MariaDB,
+# Kadupul E2E entrypoint. Bootstraps include/config.php, waits for MariaDB,
 # marks the schema as installed (cacti.sql ships with version='new_install'
 # which otherwise triggers the web wizard), flips CSP to nonce mode, and
 # relaxes the default-admin password-change flag so Playwright can log in.
@@ -47,7 +47,7 @@ else
     log "include/config.php present; CACTI_FORCE_CONFIG unset. leaving it alone"
 fi
 
-# 2. Wait for MariaDB using the PHP mysqli client (same stack Cacti uses at
+# 2. Wait for MariaDB using the PHP mysqli client (same stack Kadupul uses at
 #    runtime). Retry for up to ~60s.
 log "waiting for MariaDB at ${DB_HOST}:${DB_PORT}"
 attempt=0
@@ -69,7 +69,7 @@ log "MariaDB reachable after ${attempt} attempt(s)"
 #    boot, so the schema is already present. These statements are guarded so
 #    they are safe on re-run.
 #
-#    - version='new_install' is Cacti's "run the web wizard" sentinel. For
+#    - version='new_install' is Kadupul's "run the web wizard" sentinel. For
 #      E2E we mark installation complete by writing the distribution version
 #      string. The integration fixture uses the same trick.
 #    - settings row for content_security_policy_script is upserted so the
@@ -87,7 +87,7 @@ fi
 if [ -z "${CACTI_VER}" ]; then
     CACTI_VER="1.2.0"
 fi
-log "marking Cacti version as ${CACTI_VER} (was new_install)"
+log "marking Kadupul version as ${CACTI_VER} (was new_install)"
 
 mysql_cmd() {
     mariadb \
@@ -159,7 +159,7 @@ for plugin in thold monitor; do
             page="https://github.com/Cacti/plugin_thold"
             ;;
         monitor)
-            display="Cacti Monitor Plugin"
+            display="Monitor Plugin"
             page="https://github.com/Cacti/plugin_monitor"
             ;;
     esac
@@ -177,9 +177,9 @@ for plugin in thold monitor; do
     log "seeded plugin_config row for ${plugin} (status=1, installed)"
 done
 
-# 6. Make Cacti's writable directories world-writable. CI checks out the
+# 6. Make Kadupul's writable directories world-writable. CI checks out the
 #    repo as the runner user; the php-fpm container runs as www-data. The
-#    bind mount preserves host UIDs, so without this Cacti dies on its
+#    bind mount preserves host UIDs, so without this Kadupul dies on its
 #    very first log line with "System log file is not available for
 #    writing", killing emitHeaders() before it runs.
 for d in log cache rra resource; do

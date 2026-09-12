@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /**
@@ -1097,7 +1090,7 @@ function cache_in_path($path, $type, $recursive = true) {
 			// Don't cache a plugin config_local.php
 			$exclude = true;
 		} elseif (basename($path) == 'config.php') {
-			// Don't cache Cacti's config.php
+			// Don't cache Kadupul's config.php
 			$exclude = true;
 		} elseif (array_search(basename($path), $excluded_dirs_files, true) !== false) {
 			$exclude = true;
@@ -1149,7 +1142,7 @@ function update_db_from_path($path, $type, $recursive = true) {
 						update_db_from_path($path . DIRECTORY_SEPARATOR . $entry, $type, $recursive);
 					}
 				} elseif (basename($spath) == 'config.php' && strpos($path, 'plugins') === false) {
-					// Don't cache Cacti's config.php
+					// Don't cache Kadupul's config.php
 					continue;
 				} elseif (basename($path) == '.travis.yml') {
 					continue;
@@ -1392,7 +1385,7 @@ function md5sum_path($path, $recursive = true) {
 			} elseif (is_readable($path . DIRECTORY_SEPARATOR . $entry)) {
 				$filemd5s[] = md5_file($path . DIRECTORY_SEPARATOR . $entry);
 			} else {
-				cacti_log('WARNING: Unable to read file \'' . $path . DIRECTORY_SEPARATOR . $entry . '\' into Cacti resource cache.', false, 'REPLICATE');
+				cacti_log('WARNING: Unable to read file \'' . $path . DIRECTORY_SEPARATOR . $entry . '\' into Kadupul resource cache.', false, 'REPLICATE');
 			}
          }
     }
@@ -1508,7 +1501,7 @@ function poller_connect_to_remote($poller_id) {
 /**
  * replicate_out - this function sends table changes from the resource
  *   cache to the remote database.  This happens as a result of a full
- *   sync within Cacti.
+ *   sync within Kadupul.
  *
  * @param  (int)    remote_poller_id - the poller to send data to
  * @param  (string) class - the class of data to push to the poller
@@ -2370,7 +2363,7 @@ function get_remote_poller_ids_from_devices(&$devices) {
 
 /**
  * register_process_start - public function to register a process
- *   in Cacti's process table
+ *   in Kadupul's process table
  *
  * @param  (string) $tasktype - Mandatory task type
  * @param  (string) $taskname - Mandatory task name
@@ -2430,7 +2423,7 @@ function register_process_start($tasktype, $taskname, $taskid = 0, $timeout = 30
 }
 
 /**
- * register_process - register a process in Cacti's process table
+ * register_process - register a process in Kadupul's process table
  *
  * @param  (string) $tasktype  - Mandatory task type
  * @param  (string) $taskname  - Mandatory task name
@@ -2451,7 +2444,7 @@ function register_process($tasktype, $taskname, $taskid, $pid, $timeout) {
 }
 
 /**
- * unregister_process - remove a process from Cacti's process table
+ * unregister_process - remove a process from Kadupul's process table
  *
  * @param  (string) $tasktype  - Mandatory task type
  * @param  (string) $taskname  - Mandatory task name
@@ -2504,7 +2497,7 @@ function heartbeat_process($tasktype, $taskname, $taskid = 0) {
 }
 
 /**
- * timeout_kill_registered_processes - allow a Cacti plugin or scheduled task to
+ * timeout_kill_registered_processes - allow a Kadupul plugin or scheduled task to
  *   be bulk cleaned.
  *
  * @param  (string) $tasktype  - Optional task type

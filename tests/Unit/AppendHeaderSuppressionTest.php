@@ -8,7 +8,6 @@
  | as published by the Free Software Foundation; either version 2          |
  | of the License, or (at your option) any later version.                  |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
 */
 
@@ -37,7 +36,7 @@ test('lib/functions.php uses === false in appendHeaderSuppression', function () 
 });
 
 /* Local copy of the fixed function. We avoid loading lib/functions.php
- * here because that file requires the full Cacti bootstrap. The shape
+ * here because that file requires the full Kadupul bootstrap. The shape
  * mirrors the production definition; the source-pattern test above
  * pins the production code to this same shape. */
 if (!function_exists('_test_appendHeaderSuppression')) {

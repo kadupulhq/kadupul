@@ -13,17 +13,10 @@
   | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
   | GNU General Public License for more details.                            |
   +-------------------------------------------------------------------------+
-  | Cacti: The Complete RRDTool-based Graphing Solution                     |
-  +-------------------------------------------------------------------------+
-  | This code is designed, written, and maintained by the Cacti Group. See  |
-  | about.php and/or the AUTHORS file for specific developer information.   |
-  +-------------------------------------------------------------------------+
-  | http://www.cacti.net/                                                   |
-  +-------------------------------------------------------------------------+
 */
 
 /*
- * Have Cacti use the database for PHP session storage.
+ * Have Kadupul use the database for PHP session storage.
  * This allows for easier distribution of Web UI.
  */
 
@@ -47,14 +40,14 @@ function cacti_db_session_check() {
 }
 
 function cacti_db_session_open($savePath = '', $sessionName = '') {
-	// Cacti database is already active
+	// Kadupul database is already active
 	cacti_db_session_check();
 
 	return true;
 }
 
 function cacti_db_session_close() {
-	// Cacti database is not closed by sessions
+	// Kadupul database is not closed by sessions
 	return true;
 }
 

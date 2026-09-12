@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 include('./include/auth.php');
@@ -472,7 +465,7 @@ function import_validate_public_key($xmlfile, $accept = false) {
 function package_validate_signature($xmlfile) {
 	global $config;
 
-	// Cacti public key first
+	// Kadupul public key first
 	$cacti_key = get_public_key();
 
 	$package_key = import_package_get_public_key($xmlfile);
@@ -871,7 +864,7 @@ function get_import_form($default_profile) {
 		'trust_signer' => array(
 			'friendly_name' => __('Automatically Trust Signer'),
 			'method' => 'hidden',
-			'description' => __('If checked, Cacti will automatically Trust the Signer for this and any future Packages by that author.'),
+			'description' => __('If checked, Kadupul will automatically Trust the Signer for this and any future Packages by that author.'),
 			'value' => 'on',
 			'default' => ''
 		),
@@ -900,7 +893,7 @@ function get_import_form($default_profile) {
 		'remove_orphans' => array(
 			'friendly_name' => __('Remove Orphaned Graph Items'),
 			'method' => 'checkbox',
-			'description' => __('If checked, Cacti will delete any Graph Items from both the Graph Template and associated Graphs that are not included in the imported Graph Template.'),
+			'description' => __('If checked, Kadupul will delete any Graph Items from both the Graph Template and associated Graphs that are not included in the imported Graph Template.'),
 			'value' => $remove_orphans,
 			'default' => ''
 		),

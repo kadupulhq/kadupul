@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 include('./include/auth.php');
@@ -378,7 +371,7 @@ default:
 		$suffix = '';
 	}
 
-	html_start_box(__('Cacti Settings (%s)%s', $tabs[$current_tab], $suffix), '100%', true, '3', 'center', '');
+	html_start_box(__('Kadupul Settings (%s)%s', $tabs[$current_tab], $suffix), '100%', true, '3', 'center', '');
 
 	$form_array = array();
 

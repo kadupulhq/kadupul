@@ -14,7 +14,7 @@ const EXPECTED_CSP_HEADER = ENFORCE
     : 'content-security-policy-report-only';
 
 async function loginAsAdmin(page: Page): Promise<void> {
-    /* Cacti's login form has a __csrf_magic hidden field that must echo
+    /* Kadupul's login form has a __csrf_magic hidden field that must echo
      * back with the POST. Playwright's locator.fill + click picks up
      * the hidden input automatically; no manual extraction needed. */
     await page.goto('/');
@@ -47,7 +47,7 @@ test.describe('CSP header shape', () => {
         // Script-src must NOT carry 'unsafe-inline' (that's the whole point
         // of nonce mode). Style-src DOES still carry 'unsafe-inline' for
         // jQuery .css() and the legacy inline-style attributes scattered
-        // across Cacti pages — narrow the assertion to script-src only.
+        // across Kadupul pages — narrow the assertion to script-src only.
         const scriptSrc = cspHeader!.match(/script-src[^;]*/)?.[0] ?? '';
         expect(scriptSrc).not.toContain("'unsafe-inline'");
         // jQuery interop requires strict-dynamic + unsafe-eval in nonce mode.

@@ -13,18 +13,11 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 global $menu, $menu_glyphs, $graph_sources;
 
-/* Array of Cacti versions and template hash codes
+/* Array of Kadupul versions and template hash codes
    Remember to add every version here. */
 $cacti_version_codes = array(
 	'0.8'    => 'NaN',
@@ -172,7 +165,7 @@ $messages = array(
 		'message' => __('The directory highlighted does not exist.  Please enter a valid directory.'),
 		'level' => MESSAGE_LEVEL_ERROR),
 	9  => array(
-		'message' => __('The Cacti log file must have the extension \'.log\''),
+		'message' => __('The Kadupul log file must have the extension \'.log\''),
 		'level' => MESSAGE_LEVEL_ERROR),
 	10  => array(
 		'message' => __('Data Input for method does not appear to be whitelisted.'),
@@ -190,13 +183,13 @@ $messages = array(
 		'message' => __('The SNMP v3 Authentication Passphrases do not match'),
 		'level' => MESSAGE_LEVEL_ERROR),
 	15 => array(
-		'message' => __('XML: Cacti version does not exist.'),
+		'message' => __('XML: Kadupul version does not exist.'),
 		'level' => MESSAGE_LEVEL_ERROR),
 	16 => array(
 		'message' => __('XML: Hash version does not exist.'),
 		'level' => MESSAGE_LEVEL_ERROR),
 	17 => array(
-		'message' => __('XML: Generated with a newer version of Cacti.'),
+		'message' => __('XML: Generated with a newer version of Kadupul.'),
 		'level' => MESSAGE_LEVEL_ERROR),
 	18 => array(
 		'message' => __('XML: Cannot locate type code.'),
@@ -292,13 +285,13 @@ $messages = array(
 		'message' => __('Data Input Field Saved.  You must update the Data Templates referencing this Data Input Method before the Data Collectors will start using any new or modified Data Input - Input Fields.'),
 		'level' => MESSAGE_LEVEL_INFO),
 	'clog_invalid' => array(
-		'message' => __('Log file specified is not a Cacti log or archive file.'),
+		'message' => __('Log file specified is not a Kadupul log or archive file.'),
 		'level' => MESSAGE_LEVEL_INFO),
 	'clog_remove' => array(
-		'message' => __('Log file specified was Cacti archive file and was removed.'),
+		'message' => __('Log file specified was Kadupul archive file and was removed.'),
 		'level' => MESSAGE_LEVEL_INFO),
 	'clog_purged' => array(
-		'message' => __('Cacti log purged successfully'),
+		'message' => __('Kadupul log purged successfully'),
 		'level' => MESSAGE_LEVEL_INFO),
 	'password_change' => array(
 		'message' => __('If you force a password change, you must also allow the user to change their password.'),
@@ -343,10 +336,10 @@ $messages = array(
 		'message' => __('Unable to establish MySQL connection with Remote Data Collector.'),
 		'level' => MESSAGE_LEVEL_ERROR),
 	'poller_nosync' => array(
-		'message' => __('Data Collector synchronization must be initiated from the main Cacti server.'),
+		'message' => __('Data Collector synchronization must be initiated from the main Kadupul server.'),
 		'level' => MESSAGE_LEVEL_ERROR),
 	'poller_nomain' => array(
-		'message' => __('Synchronization does not include the Central Cacti Database server.'),
+		'message' => __('Synchronization does not include the Central Kadupul Database server.'),
 		'level' => MESSAGE_LEVEL_ERROR),
 	'poller_nodupe' => array(
 		'message' => __('When saving a Remote Data Collector, the Database Hostname must be unique from all others.'),
@@ -1089,7 +1082,7 @@ $menu_glyphs = array(
 $device_classes = array(
 	'wireless'     => __('Access Points, Controllers'),
 	'application'  => __('Application Related'),
-	'cacti'        => __('Cacti Related'),
+	'cacti'        => __('Kadupul Related'),
 	'database'     => __('Database Related'),
 	'facilities'   => __('Facilities Related'),
 	'general'      => __('Generic Device'),
@@ -2575,7 +2568,7 @@ $navigation = array(
 		'level' => '3'
 	),
 	'settings.php:' => array(
-		'title' => __('Cacti Settings'),
+		'title' => __('Kadupul Settings'),
 		'mapping' => 'index.php:',
 		'url' => 'settings.php',
 		'level' => '1'
@@ -2635,13 +2628,13 @@ $navigation = array(
 		'level' => '2'
 	),
 	'about.php:' => array(
-		'title' => __('About Cacti'),
+		'title' => __('About Kadupul'),
 		'mapping' => '',
 		'url' => 'about.php',
 		'level' => '1'
 	),
 	'help.php:' => array(
-		'title' => __('Cacti Help'),
+		'title' => __('Kadupul Help'),
 		'mapping' => '',
 		'url' => 'help.php',
 		'level' => '1'

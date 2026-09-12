@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require(__DIR__ . '/../include/cli_check.php');
@@ -29,7 +22,7 @@ $fail_msg = array();
 define_exit('EXIT_UNKNOWN',-1, "ERROR: Failed due to unknown reason\n");
 define_exit('EXIT_NORMAL',  0, "");
 define_exit('EXIT_ARGERR',  1, "ERROR: Invalid Argument: (%s)\n\n");
-define_exit('EXIT_NOTDIR',  2, "ERROR: Path '%s' is not a Cacti root folder\n");
+define_exit('EXIT_NOTDIR',  2, "ERROR: Path '%s' is not a Kadupul root folder\n");
 define_exit('EXIT_MD5OVR',  3, "ERROR: MD5 file '%s' exists, but not --confirm to overwrite\n");
 define_exit('EXIT_MD5WRI',  4, "ERROR: Failed to write to MD5 file '%s'\n");
 define_exit('EXIT_MD5MIS',  5, "ERROR: MD5 file '%s' is missing, cannot verify\n");
@@ -288,7 +281,7 @@ function dirToArray($dir,$base,$ignore) {
 /*  display_version - displays version information */
 function display_version() {
 	$version = get_cacti_cli_version();
-	print "Cacti md5sum Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
+	print "Kadupul md5sum Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
 }
 
 function display_help() {

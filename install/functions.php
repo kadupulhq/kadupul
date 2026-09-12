@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 function prime_default_settings() {
@@ -600,7 +593,7 @@ function to_array ($data) {
 
 /* Here, we define each name, default value, type, and path check for each value
 we want the user to input. The "name" field must exist in the 'settings' table for
-this to work. Cacti also uses different default values depending on what OS it is
+this to work. Kadupul also uses different default values depending on what OS it is
 running on. */
 
 function install_tool_path($name, $defaultPaths) {
@@ -1062,8 +1055,8 @@ function log_install_to_file($section, $data, $flags = FILE_APPEND, $level = POL
 }
 
 /** repair_automation() - Repairs mangled automation graph rules based
- *  upon the change in the way that Cacti imports the Graph Templates after
- *  Cacti 1.2.4.
+ *  upon the change in the way that Kadupul imports the Graph Templates after
+ *  Kadupul 1.2.4.
  **/
 function repair_automation() {
 	log_install_always('', 'Repairing Automation Rules');

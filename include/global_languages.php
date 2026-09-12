@@ -13,16 +13,9 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
-/* default localization of Cacti */
+/* default localization of Kadupul */
 $cacti_locale  = 'en-US';
 $cacti_country = 'us';
 
@@ -65,7 +58,7 @@ if (!isempty_request_var('language') && !empty($lang2locale[get_request_var('lan
 	/* language definition stored in the SESSION */
 	$user_locale = apply_locale($_SESSION['sess_user_language']);
 } else {
-	/* look up for user customized language setting stored in Cacti DB */
+	/* look up for user customized language setting stored in Kadupul DB */
 	$user_locale = apply_locale(read_user_i18n_setting('user_language'));
 }
 
@@ -796,7 +789,7 @@ function get_installed_locales() {
 		);
 	}
 
-	/* create a list of all languages this Cacti system supports ... */
+	/* create a list of all languages this Kadupul system supports ... */
 	$dhandle = opendir($config['base_path'] . '/locales/LC_MESSAGES');
 	if (is_resource($dhandle)) {
 		while (false !== ($filename = readdir($dhandle))) {

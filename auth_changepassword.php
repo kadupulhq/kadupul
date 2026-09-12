@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 include('./include/global.php');
@@ -319,9 +312,9 @@ if (isset_request_var('ref')) {
 	}
 
 	if (!$valid) {
-		cacti_log('WARNING: User attempted to access Cacti from unknown URL', false, 'AUTH');
+		cacti_log('WARNING: User attempted to access Kadupul from unknown URL', false, 'AUTH');
 
-		raise_message('problems_with_page', __('There are problems with the Change Password page.  Contact your Cacti administrator right away.'), MESSAGE_LEVEL_ERROR);
+		raise_message('problems_with_page', __('There are problems with the Change Password page.  Contact your Kadupul administrator right away.'), MESSAGE_LEVEL_ERROR);
 		header('Location:index.php');
 		exit;
 	}
@@ -348,9 +341,9 @@ if (isset_request_var('ref')) {
 $skip_current = (empty($user['password']));
 
 if ($skip_current) {
-	$title_message = __('Please enter your current password and your new<br>Cacti password.');
+	$title_message = __('Please enter your current password and your new<br>Kadupul password.');
 } else {
-	$title_message = __('Please enter your new Cacti password.');
+	$title_message = __('Please enter your new Kadupul password.');
 }
 ?>					<p><?php print $title_message;?></p>
 				</div>

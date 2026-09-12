@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require(__DIR__ . '/include/cli_check.php');
@@ -113,7 +106,7 @@ realtime_purge_cache();
 // Remove deleted devices
 api_device_purge_deleted_devices();
 
-// Rotate Cacti Logs
+// Rotate Kadupul Logs
 logrotate_check($force);
 
 // Remove deleted devices
@@ -227,7 +220,7 @@ function logrotate_check($force) {
 		$date_next = clone $date_last;
 		$date_next->modify('+'.$frequency.'day');
 
-		cacti_log('Cacti Log Rotation - TIMECHECK Ran: ' . $date_orig->format('Y-m-d H:i:s')
+		cacti_log('Kadupul Log Rotation - TIMECHECK Ran: ' . $date_orig->format('Y-m-d H:i:s')
 			. ', Now: ' . $date_now->format('Y-m-d H:i:s')
 			. ', Next: ' . $date_next->format('Y-m-d H:i:s'), true, 'MAINT', POLLER_VERBOSITY_HIGH);
 
@@ -335,11 +328,11 @@ function logrotate_rotatenow() {
 	if (empty($log)) {
 		$log = $config['base_path'] . '/log/cacti.log';
 	}
-	$logs['Cacti'] = $log;
+	$logs['Kadupul'] = $log;
 
 	$log = read_config_option('path_stderrlog');
 	if (!empty($log)) {
-		$logs['Cacti StdErr'] = $log;
+		$logs['Kadupul StdErr'] = $log;
 	}
 
 	$run_time = time();
@@ -383,7 +376,7 @@ function logrotate_file_rotate($name, $log, $date) {
 
 	clearstatcache();
 	if (!file_exists($log)) {
-		cacti_log('Cacti Log Rotation - Skipped missing ' . $name . ' Log : ' . $log, true, 'MAINT');
+		cacti_log('Kadupul Log Rotation - Skipped missing ' . $name . ' Log : ' . $log, true, 'MAINT');
 		return 0;
 	}
 
@@ -408,16 +401,16 @@ function logrotate_file_rotate($name, $log, $date) {
 				chown($log, $owner);
 				chgrp($log, $group);
 				chmod($log, $perms);
-				cacti_log('Cacti Log Rotation - Created ' . $name . ' Log : ' . basename($log) . '-' . $ext, true, 'MAINT');
+				cacti_log('Kadupul Log Rotation - Created ' . $name . ' Log : ' . basename($log) . '-' . $ext, true, 'MAINT');
 				return 1;
 			} else {
-				cacti_log('Cacti Log Rotation - ERROR: Could not rename ' . $name . ' Log "' . basename($log) . '" to "' . basename($log) . '-' . $ext . '"', true, 'MAINT');
+				cacti_log('Kadupul Log Rotation - ERROR: Could not rename ' . $name . ' Log "' . basename($log) . '" to "' . basename($log) . '-' . $ext . '"', true, 'MAINT');
 			}
 		} else {
-			cacti_log('Cacti Log Rotation - ERROR: Permissions issue.  Please check your ' . $name  . ' Log directory : ' . basename($log), true, 'MAINT');
+			cacti_log('Kadupul Log Rotation - ERROR: Permissions issue.  Please check your ' . $name  . ' Log directory : ' . basename($log), true, 'MAINT');
 		}
 	} else {
-		cacti_log('Cacti Log Rotation - ERROR: Permissions issue.  Please check your ' . $name . ' Log as directory or file are not writable : ' . $log, true, 'MAINT');
+		cacti_log('Kadupul Log Rotation - ERROR: Permissions issue.  Please check your ' . $name . ' Log as directory or file are not writable : ' . $log, true, 'MAINT');
 	}
 	return 0;
 }
@@ -446,7 +439,7 @@ function logrotate_file_clean($name, $log, $date, $rotation) {
 		$date_log->modify('-'.$rotation.'day');
 		$e = $date_log->format('Ymd');
 
-		cacti_log('Cacti Log Rotation - Purging all ' . $name . ' logs before '. $e, true, 'MAINT');
+		cacti_log('Kadupul Log Rotation - Purging all ' . $name . ' logs before '. $e, true, 'MAINT');
 
 		foreach ($dir as $d) {
 			$fileparts = explode('-', $d);
@@ -461,12 +454,12 @@ function logrotate_file_clean($name, $log, $date, $rotation) {
 							if ($p < $e) {
 								if (is_writable($baselogdir . $d)) {
 									@unlink($baselogdir . $d);
-									cacti_log('Cacti Log Rotation - Purging ' . $name  . ' Log : ' . $d, true, 'MAINT');
+									cacti_log('Kadupul Log Rotation - Purging ' . $name  . ' Log : ' . $d, true, 'MAINT');
 								} else {
-									cacti_log('Cacti Log Rotation - ERROR: Can not purge ' . $name  . ' Log : ' . $d, true, 'MAINT');
+									cacti_log('Kadupul Log Rotation - ERROR: Can not purge ' . $name  . ' Log : ' . $d, true, 'MAINT');
 								}
 							} else {
-								cacti_log('Cacti Log Rotation - NOTE: Not expired, keeping ' . $name . ' Log : ' . $d, true, 'MAINT', POLLER_VERBOSITY_HIGH);
+								cacti_log('Kadupul Log Rotation - NOTE: Not expired, keeping ' . $name . ' Log : ' . $d, true, 'MAINT', POLLER_VERBOSITY_HIGH);
 							}
 						}
 					}
@@ -474,7 +467,7 @@ function logrotate_file_clean($name, $log, $date, $rotation) {
 			}
 
 			if ($matches) {
-				cacti_log('Cacti Log Rotation - NOTE: File not in expected naming format, ignoring ' . $name . ' Log : ' . $d, true, 'MAINT', POLLER_VERBOSITY_DEBUG);
+				cacti_log('Kadupul Log Rotation - NOTE: File not in expected naming format, ignoring ' . $name . ' Log : ' . $d, true, 'MAINT', POLLER_VERBOSITY_DEBUG);
 			}
 		}
 	}
@@ -780,7 +773,7 @@ function maint_debug($message) {
  */
 function display_version() {
 	$version = get_cacti_version();
-	print "Cacti Maintenance Poller, Version $version, " . COPYRIGHT_YEARS . "\n";
+	print "Kadupul Maintenance Poller, Version $version, " . COPYRIGHT_YEARS . "\n";
 }
 
 /**
@@ -790,8 +783,8 @@ function display_help() {
 	display_version();
 
 	print "\nusage: poller_maintenance.php [--force] [--debug]\n\n";
-	print "Cacti's maintenance poller.  This poller is responsible for executing periodic\n";
-	print "maintenance activities for Cacti including log rotation, deactivating accounts, etc.\n\n";
+	print "Kadupul's maintenance poller.  This poller is responsible for executing periodic\n";
+	print "maintenance activities for Kadupul including log rotation, deactivating accounts, etc.\n\n";
 	print "Optional:\n";
 	print "    --force   - Force immediate execution, e.g. for testing.\n";
 	print "    --debug   - Display verbose output during execution.\n\n";

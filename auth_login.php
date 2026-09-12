@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /* include ldap support */
@@ -35,7 +28,7 @@ set_default_action();
  * and if not valid generate a fatal error.
  */
 $username = auth_get_username(); // Get the username from either basic auth or the login form
-$version  = get_cacti_version(); // Get the current Cacti version
+$version  = get_cacti_version(); // Get the current Kadupul version
 
 /* initialize some variables */
 $user          = array();                             // An array that will include all user details
@@ -43,7 +36,7 @@ $user_enabled  = true;                                // A variable to let plugi
 $guest_user    = false;                               // Indicates the Guest account is being used
 $realm         = 0;                                   // The compensated realm used for template and user validation
 $frv_realm     = get_nfilter_request_var('realm', 0); // The dropdown value for realm
-$auth_method   = read_config_option('auth_method');   // The authentication method for Cacti
+$auth_method   = read_config_option('auth_method');   // The authentication method for Kadupul
 $error         = false;                               // Global variable, will be true if any errors occur
 $error_msg     = '';                                  // The errors message in case there was a login error
 
@@ -72,7 +65,7 @@ if (get_nfilter_request_var('action') == 'login' || $auth_method == 2) {
 	switch ($auth_method) {
 		case '0': // No authentication, should not be reachable
 			$error     = true;
-			$error_msg = __esc('Cacti no longer supports No Authentication mode. Please contact your System Administrator.');
+			$error_msg = __esc('Kadupul no longer supports No Authentication mode. Please contact your System Administrator.');
 
 			cacti_log("FATAL: No authentication attempted and not supported.", false, 'AUTH');
 
@@ -189,9 +182,9 @@ if (get_nfilter_request_var('action') == 'login' || $auth_method == 2) {
 		if (!$error && !auth_user_has_access($user)) {
 			/* error */
 			$error     = true;
-			$error_msg = __('You do not have access to any area of Cacti.  Contact your administrator.');
+			$error_msg = __('You do not have access to any area of Kadupul.  Contact your administrator.');
 
-			cacti_log(sprintf("LOGIN FAILED: User %s with id %s does not have access to any area of Cacti.", $user['username'], $user['id']), false, 'AUTH');
+			cacti_log(sprintf("LOGIN FAILED: User %s with id %s does not have access to any area of Kadupul.", $user['username'], $user['id']), false, 'AUTH');
 
 			if ($auth_method == 2) {
 				auth_display_custom_error_message($error_msg);
@@ -298,7 +291,7 @@ $selectedTheme = get_selected_theme();
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<?php html_common_header(api_plugin_hook_function('login_title', __('Login to Cacti')));?>
+	<?php html_common_header(api_plugin_hook_function('login_title', __('Login to Kadupul')));?>
 </head>
 <body class='loginBody'>
 	<div class='loginLeft'></div>

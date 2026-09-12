@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /**
@@ -358,7 +351,7 @@ function utime_add($timestamp, $yr = 0, $mon = 0, $day = 0, $hr = 0, $min = 0, $
 }
 
 /**
- * reports_log - logs a string to Cacti's log file or optionally to the browser
+ * reports_log - logs a string to Kadupul's log file or optionally to the browser
  *
  * @param string $string  - the string to append to the log file
  * @param bool $output    - whether to output the log line to the browser using pring() or not
@@ -566,7 +559,7 @@ function generate_report($report, $force = false) {
 	}
 
 	$v = get_cacti_version();
-	$headers['User-Agent'] = 'Cacti-Reports-v' . $v;
+	$headers['User-Agent'] = 'Kadupul-Reports-v' . $v;
 
 	$error = mailer(
 		array($report['from_email'], $report['from_name']),
@@ -576,7 +569,7 @@ function generate_report($report, $force = false) {
 		'',
 		$subject,
 		$body,
-		'Cacti Reporting Requires and HTML Email Client',
+		'Kadupul Reporting Requires and HTML Email Client',
 		$attachments,
 		$headers
 	);

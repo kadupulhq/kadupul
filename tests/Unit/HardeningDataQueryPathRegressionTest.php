@@ -3,7 +3,6 @@
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
 */
 
@@ -28,7 +27,7 @@ test('GHSA-gx62-3v55-846j: allowed base includes /resource directory', function 
 	$end   = strpos($dqSource, "\nfunction ", $start + 1);
 	$body  = substr($dqSource, $start, $end - $start);
 
-	// The guard must anchor paths to the Cacti resource subtree.
+	// The guard must anchor paths to the Kadupul resource subtree.
 	$guardPos = strpos($body, 'cacti_path_is_within(');
 	expect($guardPos)->not->toBeFalse();
 

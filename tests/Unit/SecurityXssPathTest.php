@@ -8,7 +8,6 @@
  | as published by the Free Software Foundation; either version 2          |
  | of the License, or (at your option) any later version.                  |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
 */
 
@@ -65,7 +64,7 @@ test('GHSA-fwh3: aggregate_graphs.php escapes rfilter with htmlerv in value attr
 test('GHSA-fwh3: contract — rfilter output in HTML attributes must use htmlerv()', function () use ($aggregateGraphsPath) {
 	$contents = file_get_contents($aggregateGraphsPath);
 
-	// htmlerv() is the Cacti convention for encoding HTML attribute values
+	// htmlerv() is the Kadupul convention for encoding HTML attribute values
 	// retrieved from request variables. The raw grv() call must be replaced.
 	$hasRaw    = str_contains($contents, "value='<?php print grv('rfilter'); ?>'");
 	$hasSafe   = str_contains($contents, "value='<?php print htmlerv('rfilter'); ?>'");

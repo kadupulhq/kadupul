@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require(__DIR__ . '/../include/cli_check.php');
@@ -478,7 +471,7 @@ if (cacti_sizeof($parms)) {
 /*  display_version - displays version information */
 function display_version() {
 	$version = get_cacti_cli_version();
-	print "Cacti Add Device Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
+	print "Kadupul Add Device Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
 }
 
 function display_help() {
@@ -491,14 +484,14 @@ function display_help() {
 	print "    [--username= --password=] [--authproto=] [--privpass= --privproto=] [--context=] [--engineid=]\n";
 	print "    [--quiet]\n\n";
 	print "Required:\n";
-	print "    --description  the name that will be displayed by Cacti in the graphs\n";
+	print "    --description  the name that will be displayed by Kadupul in the graphs\n";
 	print "    --ip           self explanatory (can also be a FQDN)\n\n";
 	print "Optional:\n";
 	print "    --proxy        if specified, allows adding a second host with same ip address\n";
 	print "    --template     0, is a number (read below to get a list of templates)\n";
 	print "    --location     '', The physical location of the Device.\n";
 	print "    --notes        '', General information about this host.  Must be enclosed using double quotes.\n";
-	print "    --external-id  '', An external ID to align Cacti devices with devices from other systems.\n";
+	print "    --external-id  '', An external ID to align Kadupul devices with devices from other systems.\n";
 	print "    --disable      0, 1 to add this host but to disable checks and 0 to enable it\n";
 	print "    --poller       0, numeric poller id that will perform data collection for the device.\n";
 	print "    --site         0, numeric site id that will be associated with the device.\n";

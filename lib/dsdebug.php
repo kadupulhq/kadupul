@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /* dsstats_debug - this simple routine print's a standard message to the console
@@ -33,7 +26,7 @@ function dsdebug_debug($message) {
 	}
 }
 
-/* log_dsstats_statistics - provides generic timing message to both the Cacti log and the settings
+/* log_dsstats_statistics - provides generic timing message to both the Kadupul log and the settings
      table so that the statistics can be graphed as well.
    @arg $type - (string) the type of statistics to log, either 'HOURLY', 'DAILY' or 'MAJOR'.
    @returns - null */
@@ -91,7 +84,7 @@ function dsdebug_error_handler($errno, $errmsg, $filename, $linenum, $vars = [])
 		if (substr_count($errmsg, 'date_default_timezone')) return;
 		if (substr_count($errmsg, 'Only variables')) return;
 
-		/* log the error to the Cacti log */
+		/* log the error to the Kadupul log */
 		cacti_log('PROGERR: ' . $err, false, 'DSDEBUG');
 	}
 

@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require(__DIR__ . '/../include/cli_check.php');
@@ -197,7 +190,7 @@ function plugin_manage_install_allrealms($plugin) {
  */
 function display_version() {
 	$version = get_cacti_cli_version();
-	print "Cacti Install Utility, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
+	print "Kadupul Install Utility, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
 }
 
 /**
@@ -206,7 +199,7 @@ function display_version() {
 function display_help () {
 	print 'usage: plugin_manage.php [--plugin=S] [--install --enable --allperms] [--uninstall ] [--disable]' . PHP_EOL . PHP_EOL;
 
-	print  'A utility to install/uninstall a Cacti plugin or plugins' . PHP_EOL . PHP_EOL;
+	print  'A utility to install/uninstall a Kadupul plugin or plugins' . PHP_EOL . PHP_EOL;
 
 	print 'Required:' . PHP_EOL;
 	print '  --plugin=S   - The plugin to install.  Use the option multiple time for more plugins' . PHP_EOL . PHP_EOL;

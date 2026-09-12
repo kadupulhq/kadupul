@@ -3,11 +3,10 @@
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
  |                                                                         |
  | HandOff tests: verify behavioral properties of the security fixes from  |
- | SecurityHardening1_2xTest without requiring a full Cacti bootstrap.     |
+ | SecurityHardening1_2xTest without requiring a full Kadupul bootstrap.     |
  +-------------------------------------------------------------------------+
 */
 

@@ -3,7 +3,6 @@
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
 */
 
@@ -12,7 +11,7 @@
  * code path is callable and produces sane output for both the
  * happy-path (legitimate templates the regex must accept) and the
  * negative-path (GHSA-c4qp bypass payloads the regex must still
- * reject). Runs without Cacti's bootstrap by extracting the function
+ * reject). Runs without Kadupul's bootstrap by extracting the function
  * body from lib/functions.php.
  */
 

@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /*
@@ -450,7 +443,7 @@ class Ldap {
 		/* drop out of ldaps error handler */
 		restore_error_handler();
 
-		/* set an error handler for Cacti */
+		/* set an error handler for Kadupul */
 		set_error_handler('CactiErrorHandler');
 
 		cacti_session_start();

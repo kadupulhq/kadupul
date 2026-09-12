@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 if (function_exists('pcntl_async_signals')) {
@@ -122,7 +115,7 @@ if ($debug) {
 /**
  * Types include
  *
- * master  - the main process launched from the Cacti main poller and will launch child processes
+ * master  - the main process launched from the Kadupul main poller and will launch child processes
  * child   - a child of the master process from the 'master'
  *
  */
@@ -306,7 +299,7 @@ function commands_master_handler($forcerun, &$hosts, $threads) {
  * commands_launch_child - this function will launch collector children based upon
  *   the maximum number of threads and the process type
  *
- * @param  (int)  $host_id - The Cacti host_id
+ * @param  (int)  $host_id - The Kadupul host_id
  *
  * @return (void)
  */
@@ -358,7 +351,7 @@ function commands_debug($message) {
 }
 
 /**
- * sig_handler - provides a generic means to catch exceptions to the Cacti log.
+ * sig_handler - provides a generic means to catch exceptions to the Kadupul log.
  *
  * @param  (int) $signo - the signal that was thrown by the interface.
  *
@@ -422,7 +415,7 @@ function commands_kill_running_processes() {
  */
 function display_version() {
 	$version = get_cacti_version();
-	print "Cacti Poller Commands Poller, Version $version " . COPYRIGHT_YEARS . PHP_EOL;
+	print "Kadupul Poller Commands Poller, Version $version " . COPYRIGHT_YEARS . PHP_EOL;
 }
 
 /**
@@ -435,8 +428,8 @@ function display_help () {
 
 	print PHP_EOL;
 	print 'usage: poller_commands.php [--poller=ID] [--debug]' . PHP_EOL . PHP_EOL;
-	print 'Cacti\'s Commands Poller.  This poller can receive specifically crafted commands from' . PHP_EOL;
-	print 'either the Cacti UI, or from the main poller, and then run them in the background.' . PHP_EOL . PHP_EOL;
+	print 'Kadupul\'s Commands Poller.  This poller can receive specifically crafted commands from' . PHP_EOL;
+	print 'either the Kadupul UI, or from the main poller, and then run them in the background.' . PHP_EOL . PHP_EOL;
 	print 'Optional:' . PHP_EOL;
 	print '  --poller=ID - The poller to run as.  Defaults to the system poller' . PHP_EOL;
 	print '  --threads=N - Override the System Processes setting and use N processes' . PHP_EOL;

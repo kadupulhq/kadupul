@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDTool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 function upgrade_to_1_2_11() {
@@ -37,6 +30,6 @@ function upgrade_to_1_2_11() {
 		KEY `pid` (`pid`),
 		KEY `id` (`id`))
 		ENGINE=MEMORY
-		COMMENT='Stores Process Status for Cacti Background Processes'");
+		COMMENT='Stores Process Status for Kadupul Background Processes'");
 }
 

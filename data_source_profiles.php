@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 include('./include/auth.php');
@@ -391,7 +384,7 @@ function duplicate_data_source_profile($source_profile, $title_format) {
 				raise_message(2);
 			}
 		} else {
-			raise_message('profile_error', __('Unable to duplicate Data Source Profile.  Check Cacti Log for errors.'), MESSAGE_LEVEL_ERROR);
+			raise_message('profile_error', __('Unable to duplicate Data Source Profile.  Check Kadupul Log for errors.'), MESSAGE_LEVEL_ERROR);
 		}
 	}
 }

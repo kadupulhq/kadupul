@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDTool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 function upgrade_to_1_0_0() {
@@ -620,7 +613,7 @@ function upgrade_to_1_0_0() {
 			KEY `report_id` (`report_id`))
 			ENGINE=$engine
 			ROW_FORMAT=Dynamic
-			COMMENT='Cacti Reporting Items'");
+			COMMENT='Kadupul Reporting Items'");
 	} else {
 		db_install_rename_table('plugin_nectar', 'reports');
 		db_install_rename_table('plugin_nectar_items', 'reports_items');
@@ -1677,7 +1670,7 @@ function upgrade_to_1_0_0() {
 		PRIMARY KEY (`id`))
 		ENGINE=$engine
 		ROW_FORMAT=Dynamic
-		COMMENT='Pollers for Cacti'");
+		COMMENT='Pollers for Kadupul'");
 
 	db_install_execute('INSERT INTO poller (id, name, hostname) VALUES (1, "Main Poller", "' . php_uname('n') . '")');
 	db_install_execute('UPDATE automation_networks SET poller_id=1 WHERE poller_id=0');

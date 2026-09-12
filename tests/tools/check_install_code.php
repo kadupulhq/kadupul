@@ -13,12 +13,8 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
  +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
  +-------------------------------------------------------------------------+
 */
 
@@ -35,7 +31,7 @@ set_error_handler('error_handler');
 // allow infinite execute
 ini_set('max_execution_time', '0');
 
-// define base path of Cacti
+// define base path of Kadupul
 define('CACTI_PATH', str_replace('/tests/tools', '', dirname(__FILE__)));
 
 global $config;

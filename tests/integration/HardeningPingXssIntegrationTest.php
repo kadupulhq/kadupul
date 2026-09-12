@@ -3,7 +3,6 @@
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
  |
  | Integration test: hostname XSS hardening in lib/ping.php (GHSA-43gj-mcpx-24m9).

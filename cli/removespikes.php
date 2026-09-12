@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 $dir = dirname(__FILE__);
@@ -228,7 +221,7 @@ if (!$result) {
 /*  display_version - displays version information */
 function display_version() {
 	$version = get_cacti_cli_version();
-	print "Cacti Spike Remover Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
+	print "Kadupul Spike Remover Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
 }
 
 /* display_help - displays the usage of the function */
@@ -240,8 +233,8 @@ function display_help () {
 	print "    [-P|--percent=N] [-N|--number=N] [-D|--dryrun] [-d|--debug]\n";
 	print "    [--html]\n\n";
 
-	print "A utility to programmatically remove spikes from Cacti graphs. If no optional input parameters\n";
-	print "are specified the defaults are taken from the Cacti database.\n\n";
+	print "A utility to programmatically remove spikes from Kadupul graphs. If no optional input parameters\n";
+	print "are specified the defaults are taken from the Kadupul database.\n\n";
 
 	print "Required:\n";
 	print "    --rrdfile=F   - The path to the RRDfile that will be de-spiked.\n\n";

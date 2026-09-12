@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /* get the format files */
@@ -88,7 +81,7 @@ $fields_reports_edit = array(
 		'friendly_name' => __('Graph Linked'),
 		'method' => 'checkbox',
 		'default' => '',
-		'description' => __('Should the Graphs be linked back to the Cacti site?'),
+		'description' => __('Should the Graphs be linked back to the Kadupul site?'),
 		'value' => '|arg1:graph_linked|'
 		),
 	'graphhead' => array(
@@ -168,7 +161,7 @@ $fields_reports_edit = array(
 	'subject' => array(
 		'friendly_name' => __('Subject'),
 		'method' => 'textbox',
-		'default' => __('Cacti Report'),
+		'default' => __('Kadupul Report'),
 		'description' => __('This value will be used as the default Email subject.  The report name will be used if left blank.'),
 		'max_length' => 255,
 		'value' => '|arg1:subject|'

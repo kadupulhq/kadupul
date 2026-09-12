@@ -3,7 +3,7 @@ import { test, expect, type Page } from '@playwright/test';
 /*
  * E2E coverage for the four lib/utility.php poller cache integrity
  * fixes (issue #7133). Each test exercises one of the bugs end-to-end
- * against a real Cacti instance. Skipped unless E2E_CACTI_FULL=1
+ * against a real Kadupul instance. Skipped unless E2E_CACTI_FULL=1
  * because the suite needs admin login, a writable database, and a
  * running poller — the lighter csp/plugin specs do not exercise that.
  */

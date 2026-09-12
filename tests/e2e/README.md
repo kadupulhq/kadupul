@@ -1,4 +1,4 @@
-# Cacti E2E Tests (Playwright)
+# Kadupul E2E Tests (Playwright)
 
 Browser-level checks for the CSP nonce pilot. Six tests split across header
 shape, pilot-page nonce match, and browser behavior per mode.
@@ -7,7 +7,7 @@ shape, pilot-page nonce match, and browser behavior per mode.
 
 - `docker-compose.yml` + `Dockerfile` + `entrypoint.sh` + `nginx.conf`:
   a three-service stack (MariaDB 10.11, PHP 7.4-FPM, nginx) that serves
-  Cacti with `content_security_policy_script` preset via
+  Kadupul with `content_security_policy_script` preset via
   `CACTI_CSP_MODE` env (default `nonce-report`).
 - `docker-compose.enforce.yml`: overlay that flips `CACTI_CSP_MODE` to
   `nonce` (enforcing). Use for asserting the blocking path.

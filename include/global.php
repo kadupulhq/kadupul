@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /*
@@ -367,7 +360,7 @@ if ($config['poller_id'] > 1 || isset($rdatabase_hostname)) {
 		$li = $config['is_web'] ? '<li>' : PHP_EOL . '  - ';
 		$lu = $config['is_web'] ? '</ul>' : '';
 		$il = $config['is_web'] ? '</li>' : '';
-		print $ps . 'FATAL: Connection to Cacti database failed. Please ensure: ' . $ul;
+		print $ps . 'FATAL: Connection to Kadupul database failed. Please ensure: ' . $ul;
 		print $li . 'the PHP MySQL module is installed and enabled.' . $il;
 		print $li . 'the database is running.' . $il;
 		print $li . 'the credentials in config.php are valid.' . $il;
@@ -494,7 +487,7 @@ if ($config['is_web']) {
 		}
 	}
 
-	/* make sure to start only Cacti session at a time */
+	/* make sure to start only Kadupul session at a time */
 	if (!isset($_SESSION['cacti_cwd'])) {
 		$_SESSION['cacti_cwd'] = $config['base_path'];
 	} else {

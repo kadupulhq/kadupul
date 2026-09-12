@@ -16,7 +16,7 @@ if ! command -v git >/dev/null 2>&1; then
 	exit 1
 fi
 
-REPO="${1:-Cacti/cacti}"
+REPO="${1:-kadupulhq/kadupul}"
 BRANCHES="${2:-1.2.x develop}"
 OUT_DIR="${3:-/tmp}"
 

@@ -3,7 +3,6 @@
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
 */
 
@@ -15,7 +14,7 @@
  * contents of include/themes/ and return a safe default for anything else.
  *
  * Tests use source-scan + isolated reimplementation to avoid the full
- * Cacti bootstrap. The isolated logic must match the production helper.
+ * Kadupul bootstrap. The isolated logic must match the production helper.
  */
 
 beforeAll(function () {

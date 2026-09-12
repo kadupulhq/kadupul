@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 global $current_user;
@@ -36,14 +29,14 @@ if (!isset($config['cacti_db_version'])) {
 $auth_method = read_config_option('auth_method');
 
 /**
- * Check to see if Cacti authentication is disabled
+ * Check to see if Kadupul authentication is disabled
  * and force Local Authentication on if found
  */
 check_reset_no_authentication($auth_method);
 
 /**
- * Check to see if the Database Cacti version is different
- * from the installed Cacti version and start the install
+ * Check to see if the Database Kadupul version is different
+ * from the installed Kadupul version and start the install
  * process if found to be different.
  */
 if ($version != CACTI_VERSION && !defined('IN_CACTI_INSTALL')) {
@@ -126,7 +119,7 @@ if ($auth_method != 0) {
 	/**
 	 * If the special boolean $guest_account is set for a page, then the guest
 	 * account can be used.  Where this may not be the case is with basic auth
-	 * where to enter the Cacti website, you must first have a valid account.
+	 * where to enter the Kadupul website, you must first have a valid account.
 	 * if that is the case, then use that valid accounts permissions and not
 	 * the guest account.
 	 */
@@ -166,12 +159,12 @@ if ($auth_method != 0) {
 				array(
 					'status' => '500',
 					'statusText' => __('Not Logged In'),
-					'responseText' => __('You must be logged in to access this area of Cacti.')
+					'responseText' => __('You must be logged in to access this area of Kadupul.')
 				)
 			);
 		} elseif (isset($auth_text) && $auth_text == true) {
 			/* handle graph_image.php to respond with text. */
-			print __('FATAL: You must be logged in to access this area of Cacti.');
+			print __('FATAL: You must be logged in to access this area of Kadupul.');
 		} else {
 			require_once($config['base_path'] . '/auth_login.php');
 		}
@@ -288,11 +281,11 @@ if ($auth_method != 0) {
 			raise_ajax_permission_denied();
 
 			$title_header = __('Permission Denied');
-			$title_body = '<p>' . __('You are not permitted to access this section of Cacti.') . '</p><p>' . __('If you feel that this is an error. Please contact your Cacti Administrator.');
+			$title_body = '<p>' . __('You are not permitted to access this section of Kadupul.') . '</p><p>' . __('If you feel that this is an error. Please contact your Kadupul Administrator.');
 
 			if ($realm_id == 26) {
 				$title_header = __('Installation In Progress');
-				$title_body = '<p>' . __('There is an Installation or Upgrade in progress.') . '</p><p>' . __('Only Cacti Administrators with Install/Upgrade privilege may login at this time') . '</p>';
+				$title_body = '<p>' . __('There is an Installation or Upgrade in progress.') . '</p><p>' . __('Only Kadupul Administrators with Install/Upgrade privilege may login at this time') . '</p>';
 			}
 			print "<!DOCTYPE html>\n";
 			print "<html>\n";

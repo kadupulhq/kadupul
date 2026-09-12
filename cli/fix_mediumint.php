@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDTool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require(__DIR__ . '/../include/cli_check.php');
@@ -230,7 +223,7 @@ function debug($string) {
 
 function display_version() {
 	$version = get_cacti_cli_version();
-	print "Cacti Fix Database Range Issue, Version $version, " . COPYRIGHT_YEARS . "\n";
+	print "Kadupul Fix Database Range Issue, Version $version, " . COPYRIGHT_YEARS . "\n";
 }
 
 /*	display_help - displays the usage of the function */
@@ -240,8 +233,8 @@ function display_help () {
 	print 'Options:' . PHP_EOL;
 	print '--debug    - Display verbose output during execution' . PHP_EOL;
 	print '--local    - Perform the action on the Remote Data Collector if run from there' . PHP_EOL . PHP_EOL;
-	print 'This utility is used to increase the size of key Cacti columns to accomodate' . PHP_EOL;
+	print 'This utility is used to increase the size of key Kadupul columns to accomodate' . PHP_EOL;
 	print 'systems with over a million graphs and that have been in service for years.' . PHP_EOL;
-	print 'After some long amount of time, Cacti can run out of auto_increment fields.' . PHP_EOL;
+	print 'After some long amount of time, Kadupul can run out of auto_increment fields.' . PHP_EOL;
 }
 

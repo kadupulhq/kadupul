@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /* update_replication_crc - update hash stored in settings table to inform
@@ -1222,19 +1215,19 @@ function utilities_get_mysql_recommendations() {
 				'value' => 'utf8mb4_unicode_ci',
 				'class' => 'warning',
 				'measure' => 'equal',
-				'comment' => __('When using Cacti with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte.')
+				'comment' => __('When using Kadupul with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte.')
 				),
 			'character_set_server' => array(
 				'value' => 'utf8mb4',
 				'class' => 'warning',
 				'measure' => 'equal',
-				'comment' => __('When using Cacti with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte.')
+				'comment' => __('When using Kadupul with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte.')
 				),
 			'character_set_client' => array(
 				'value' => 'utf8mb4',
 				'class' => 'warning',
 				'measure' => 'equal',
-				'comment' => __('When using Cacti with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte.')
+				'comment' => __('When using Kadupul with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte.')
 				)
 		);
 	} else {
@@ -1259,19 +1252,19 @@ function utilities_get_mysql_recommendations() {
 			'collation_server' => array(
 				'value' => 'utf8mb4_unicode_ci',
 				'measure' => 'equal',
-				'comment' => __('When using Cacti with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte.')
+				'comment' => __('When using Kadupul with languages other than English, it is important to use the utf8mb4_unicode_ci collation type as some characters take more than a single byte.')
 				),
 			'character_set_server' => array(
 				'value' => 'utf8mb4',
 				'class' => 'warning',
 				'measure' => 'equal',
-				'comment' => __('When using Cacti with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte.')
+				'comment' => __('When using Kadupul with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte.')
 				),
 			'character_set_client' => array(
 				'value' => 'utf8mb4',
 				'class' => 'warning',
 				'measure' => 'equal',
-				'comment' => __('When using Cacti with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte.')
+				'comment' => __('When using Kadupul with languages other than English, it is important to use the utf8mb4 character set as some characters take more than a single byte.')
 				)
 		);
 	}
@@ -1296,7 +1289,7 @@ function utilities_get_mysql_recommendations() {
 			'value'   => '1.6',
 			'measure' => 'pmem',
 			'class'   => 'warning',
-			'comment' => __('If using the Cacti Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status.')
+			'comment' => __('If using the Kadupul Performance Booster and choosing a memory storage engine, you have to be careful to flush your Performance Booster buffer before the system runs out of memory table space.  This is done two ways, first reducing the size of your output column to just the right size.  This column is in the tables poller_output, and poller_output_boost.  The second thing you can do is allocate more memory to memory tables.  We have arbitrarily chosen a recommended value of 10%% of system memory, but if you are using SSD disk drives, or have a smaller system, you may ignore this recommendation or choose a different storage engine.  You may see the expected consumption of the Performance Booster tables under Console -> System Utilities -> View Boost Status.')
 			),
 		'tmp_table_size' => array(
 			'value'   => '1.6',
@@ -1326,7 +1319,7 @@ function utilities_get_mysql_recommendations() {
 			'value'   => 'Barracuda',
 			'measure' => 'equal',
 			'class'   => 'error',
-			'comment' => __('When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Cacti tables.')
+			'comment' => __('When using innodb_file_per_table, it is important to set the innodb_file_format to Barracuda.  This setting will allow longer indexes important for certain Kadupul tables.')
 			),
 		'innodb_large_prefix' => array(
 			'value'   => '1',
@@ -1344,7 +1337,7 @@ function utilities_get_mysql_recommendations() {
 			'value'   => 'ON',
 			'measure' => 'equalint',
 			'class' => 'error',
-			'comment' => __('This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance.')
+			'comment' => __('This settings should remain ON unless your Kadupul instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance.')
 			),
 		'innodb_additional_mem_pool_size' => array(
 			'value'   => '80M',

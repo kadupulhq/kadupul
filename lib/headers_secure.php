@@ -125,7 +125,7 @@ class CactiSecureHeaders {
 			$script_src = "script-src 'self' 'nonce-{$nonce}' 'strict-dynamic' 'unsafe-eval' {$alternates}";
 			/* Style-src keeps 'unsafe-inline' on purpose: jQuery .css(),
 			 * setAttribute('style', ...), and the dozens of legacy inline
-			 * style="" attributes scattered across Cacti pages all rely on
+			 * style="" attributes scattered across Kadupul pages all rely on
 			 * inline-style execution. Style XSS is a much narrower attack
 			 * surface than script XSS; the trade-off is operator-friendly. */
 			$style_src  = "style-src 'self' 'unsafe-inline' {$alternates}";
@@ -235,7 +235,7 @@ class CactiSecureHeaders {
 			}
 
 			/* Allow operators to configure the violation report endpoint; fall back
-			 * to the Cacti-bundled handler if the option is missing or invalid.
+			 * to the Kadupul-bundled handler if the option is missing or invalid.
 			 * The fallback is derived from $url_path so installs at /, /cacti2,
 			 * or behind a rewrite still point at the right shim. */
 			$cfg_report_uri = read_config_option('content_security_report_uri');

@@ -8,7 +8,6 @@
  | as published by the Free Software Foundation; either version 2          |
  | of the License, or (at your option) any later version.                  |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
 */
 
@@ -37,7 +36,7 @@ test('lib/time.php uses !== false in month_shift', function () use ($source) {
 });
 
 /* Local copy mirroring the fixed function. lib/time.php cannot be
- * included here without the wider Cacti bootstrap. */
+ * included here without the wider Kadupul bootstrap. */
 if (!function_exists('_test_month_shift')) {
 	function _test_month_shift($shift_size) {
 		return ( strpos(strtolower($shift_size), 'month') !== false);

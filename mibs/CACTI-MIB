@@ -1,7 +1,6 @@
 -- *****************************************************************
 -- CACTI-MIB: CACTI Management Information Base
 --
--- Dec 2012, Andreas Braun (aka browniebraun)
 --
 -- Copyright (c) 2004-2026 by The Cacti Group
 -- All rights reserved.
@@ -31,14 +30,12 @@ IMPORTS
 
 cacti MODULE-IDENTITY
     LAST-UPDATED    "201402030000Z"
-    ORGANIZATION    "The Cacti Group"
+    ORGANIZATION    "Kadupul"
     CONTACT-INFO
-            "The Cacti Group
-
-            E-mail: developers@cacti.net"
+            "Kadupul project: https://github.com/kadupulhq/kadupul"
     DESCRIPTION
         "The Structure of Management Information for the
-        Cacti enterprise.
+        Kadupul enterprise.
             +- cactiAppl
             |  |
             |  +- cactiApplLastUpdate
@@ -181,7 +178,7 @@ cacti MODULE-IDENTITY
         "- introduce cactiStatsPollerUtilization"
     REVISION        "201301240000Z"
     DESCRIPTION
-        "- Rename/update different states a Cacti plugin can have.
+        "- Rename/update different states a Kadupul plugin can have.
          - Rename single MIB object cactiStatsPollerRunTime to
            cactiStatsLocalPollerRunTime and change type to store float values."
     REVISION        "201212230000Z"
@@ -194,10 +191,10 @@ cacti MODULE-IDENTITY
          - Status 'notinstalled' missing in definition of cactiApplPluginStatus"
     REVISION        "201211160000Z"
     DESCRIPTION
-        "- Cacti Application object and data items added."
+        "- Kadupul Application object and data items added."
     REVISION        "201210150000Z"
     DESCRIPTION
-        "- Cacti Mib Groups added.
+        "- Kadupul Mib Groups added.
          - Clean up: Convert tabs to spaces.
                      Remove superfluos tabs and spaces.
 	                 Add notes to the different object identities"
@@ -250,11 +247,11 @@ TcCactiApplPollerType ::= TEXTUAL-CONVENTION
 cactiAppl OBJECT-IDENTITY
     STATUS          current
     DESCRIPTION
-        "reserved for Cacti application data"
+        "reserved for Kadupul application data"
     ::= { cacti 1 }
 
 --
--- Global Cacti Monitoring Variables
+-- Global Kadupul Monitoring Variables
 --
 cactiApplLastUpdate OBJECT-TYPE
     SYNTAX          Unsigned32
@@ -270,7 +267,7 @@ cactiApplVersion OBJECT-TYPE
     MAX-ACCESS      read-only
     STATUS          current
     DESCRIPTION
-        "Returns the version string of Cacti"
+        "Returns the version string of Kadupul"
     ::= { cactiAppl 2 }
 
 cactiApplSnmpVersion OBJECT-TYPE
@@ -278,7 +275,7 @@ cactiApplSnmpVersion OBJECT-TYPE
     MAX-ACCESS      read-only
     STATUS          current
     DESCRIPTION
-        "Represents the type of SNMP used by Cacti:
+        "Represents the type of SNMP used by Kadupul:
 
         NET-SNMP
         UCD-SNMP
@@ -291,7 +288,7 @@ cactiApplRrdtoolVersion OBJECT-TYPE
     MAX-ACCESS      read-only
     STATUS          current
     DESCRIPTION
-        "The version of RRDtool used by Cacti"
+        "The version of RRDtool used by Kadupul"
     ::= { cactiAppl 4 }
 
 --
@@ -302,7 +299,7 @@ cactiApplPollerEnabled OBJECT-TYPE
     MAX-ACCESS      read-only
     STATUS          current
     DESCRIPTION
-        "If Cacti polling has been enabled this object is set to true(1)."
+        "If Kadupul polling has been enabled this object is set to true(1)."
     DEFVAL          { true }
     ::= { cactiAppl 5 }
 
@@ -311,7 +308,7 @@ cactiApplPollerType OBJECT-TYPE
     MAX-ACCESS      read-only
     STATUS          current
     DESCRIPTION
-        "Describes the polling engine used by Cacti:
+        "Describes the polling engine used by Kadupul:
 
         cmd         - php based poller
         spine       - high performance C-based polling engine"
@@ -334,7 +331,7 @@ cactiApplPollerMaxProcesses OBJECT-TYPE
     MAX-ACCESS      read-only
     STATUS          current
     DESCRIPTION
-        "Represents the number of maximum poller processes Cacti is allowed to
+        "Represents the number of maximum poller processes Kadupul is allowed to
          perform in parallel."
     ::= { cactiAppl 8 }
 
@@ -343,7 +340,7 @@ cactiApplPollerLoadBalance OBJECT-TYPE
     MAX-ACCESS      read-only
     STATUS          current
     DESCRIPTION
-        "If true Cacti attempt to balance the load of each poller process."
+        "If true Kadupul attempt to balance the load of each poller process."
     DEFVAL          { false }
     ::= { cactiAppl 9 }
 
@@ -375,7 +372,7 @@ cactiApplSpineScriptTimeout OBJECT-TYPE
     MAX-ACCESS      read-only
     STATUS          current
     DESCRIPTION
-        "Describes the maximum time Cacti will wait on a script to complete."
+        "Describes the maximum time Kadupul will wait on a script to complete."
     ::= { cactiAppl 12 }
 
 cactiApplSpineMaxOids OBJECT-TYPE
@@ -396,7 +393,7 @@ cactiApplDeviceTable OBJECT-TYPE
     MAX-ACCESS      not-accessible
     STATUS          current
     DESCRIPTION
-        "A table of registered hosts on a Cacti system.
+        "A table of registered hosts on a Kadupul system.
          The maximum number of entries is implementation dependent."
     ::= { cactiAppl 14 }
 
@@ -405,7 +402,7 @@ cactiApplDeviceEntry OBJECT-TYPE
     MAX-ACCESS      not-accessible
     STATUS          current
     DESCRIPTION
-        "An entry in the table of registered hosts on a Cacti system. A row
+        "An entry in the table of registered hosts on a Kadupul system. A row
          in this table cannot be created or deleted by SNMP operations on
          columns of the table."
     INDEX           { cactiApplDeviceIndex }
@@ -428,7 +425,7 @@ cactiApplDeviceIndex OBJECT-TYPE
     MAX-ACCESS      read-only
     STATUS          current
     DESCRIPTION
-        "A unique device identifier. This ID will be created by Cacti itself."
+        "A unique device identifier. This ID will be created by Kadupul itself."
     ::= { cactiApplDeviceEntry 1 }
 
 cactiApplDeviceDescription OBJECT-TYPE
@@ -458,7 +455,7 @@ cactiApplDeviceStatus OBJECT-TYPE
     MAX-ACCESS      read-only
     STATUS          current
     DESCRIPTION
-        "The status a device can have within Cacti:
+        "The status a device can have within Kadupul:
          unknown(0)     - device has not been polled yet
          down(1)        - device became unresponsive
          recovering(2)  - device was down and became reachable again
@@ -506,7 +503,7 @@ cactiApplPollerTable OBJECT-TYPE
     MAX-ACCESS      not-accessible
     STATUS          current
     DESCRIPTION
-        "A table of pollers registered on a Cacti system.
+        "A table of pollers registered on a Kadupul system.
          The maximum number of entries is implementation dependent."
     ::= { cactiAppl 15 }
 
@@ -515,7 +512,7 @@ cactiApplPollerEntry OBJECT-TYPE
     MAX-ACCESS      not-accessible
     STATUS          current
     DESCRIPTION
-        "An entry in the table of registered pollers to a Cacti system. A row
+        "An entry in the table of registered pollers to a Kadupul system. A row
          in this table cannot be created or deleted by SNMP operations on
          columns of the table."
     INDEX           { cactiApplPollerIndex }
@@ -534,7 +531,7 @@ cactiApplPollerIndex OBJECT-TYPE
     MAX-ACCESS      read-only
     STATUS          current
     DESCRIPTION
-        "A unique poller identifier. This ID will be created by Cacti itself."
+        "A unique poller identifier. This ID will be created by Kadupul itself."
     ::= { cactiApplPollerEntry 1 }
 
 cactiApplPollerHostname OBJECT-TYPE
@@ -562,14 +559,14 @@ cactiApplPollerLastUpdate OBJECT-TYPE
     ::= { cactiApplPollerEntry 4 }
 
 --
--- Installed Cacti Plugins
+-- Installed Kadupul Plugins
 --
 cactiApplPluginTable OBJECT-TYPE
     SYNTAX          SEQUENCE OF CactiApplPluginEntry
     MAX-ACCESS      not-accessible
     STATUS          current
     DESCRIPTION
-        "A table of registered plugins on a Cacti system.
+        "A table of registered plugins on a Kadupul system.
          The maximum number of entries is implementation dependent."
     ::= { cactiAppl 16 }
 
@@ -578,7 +575,7 @@ cactiApplPluginEntry OBJECT-TYPE
     MAX-ACCESS      not-accessible
     STATUS          current
     DESCRIPTION
-        "An entry in the table of all installed Cacti plugins. A row
+        "An entry in the table of all installed Kadupul plugins. A row
          in this table cannot be created or deleted by SNMP operations on
          columns of the table."
     INDEX           { cactiApplPluginIndex }
@@ -598,7 +595,7 @@ cactiApplPluginIndex OBJECT-TYPE
     MAX-ACCESS      read-only
     STATUS          current
     DESCRIPTION
-        "A unique plugin identifier. This ID will be administrated by Cacti itself."
+        "A unique plugin identifier. This ID will be administrated by Kadupul itself."
     ::= { cactiApplPluginEntry 1 }
 
 cactiApplPluginType OBJECT-TYPE
@@ -610,7 +607,7 @@ cactiApplPluginType OBJECT-TYPE
     STATUS          current
     DESCRIPTION
         "Describes whether or not the plugin has been registered as a system plugin.
-         System plugins offer a lot of functions normal Cacti plugins rely on."
+         System plugins offer a lot of functions normal Kadupul plugins rely on."
     ::= { cactiApplPluginEntry 2 }
 
 cactiApplPluginName OBJECT-TYPE
@@ -635,7 +632,7 @@ cactiApplPluginStatus OBJECT-TYPE
     MAX-ACCESS      read-only
     STATUS          current
     DESCRIPTION
-        "The status a plugin can have within Cacti:
+        "The status a plugin can have within Kadupul:
          disabledold(-2)   - plugin (old PIA) is available, but has not been installed
          activeold(-1)     - plugin (old PIA) is installed and active
          notinstalled(0)   - plugin (new PIA) is available, but has not been installed
@@ -649,7 +646,7 @@ cactiApplPluginVersion OBJECT-TYPE
     MAX-ACCESS      read-only
     STATUS          current
     DESCRIPTION
-        "Version string of the Cacti plugin being installed."
+        "Version string of the Kadupul plugin being installed."
     ::= { cactiApplPluginEntry 5 }
 
 --
@@ -662,7 +659,7 @@ cactiStats OBJECT-IDENTITY
     ::= { cacti 2 }
 
 --
--- Global Cacti Stats Variables
+-- Global Kadupul Stats Variables
 --
 cactiStatsLastUpdate OBJECT-TYPE
     SYNTAX          Unsigned32
@@ -731,7 +728,7 @@ cactiStatsTotalsDeviceStatusTable OBJECT-TYPE
     MAX-ACCESS      not-accessible
     STATUS          deprecated
     DESCRIPTION
-        "A table of statistics for all devices registered on a Cacti system
+        "A table of statistics for all devices registered on a Kadupul system
          in relation to their device status.
          The maximum number of entries is limited to maximum number of
          device stati. "
@@ -742,7 +739,7 @@ cactiStatsTotalsDeviceStatusEntry OBJECT-TYPE
     MAX-ACCESS      not-accessible
     STATUS          deprecated
     DESCRIPTION
-        "A table of statistics for all devices registered on a Cacti system
+        "A table of statistics for all devices registered on a Kadupul system
          in relation to their device status.
          A row in this table cannot be created or deleted by SNMP operations on
          columns of the table."
@@ -790,7 +787,7 @@ cactiStatsDeviceTable OBJECT-TYPE
     MAX-ACCESS      not-accessible
     STATUS          current
     DESCRIPTION
-        "A table of statistics for all devices registered on a Cacti system.
+        "A table of statistics for all devices registered on a Kadupul system.
          The maximum number of entries is implementation dependent.
          This table has a 1:1 relationship to cactiApplDeviceTable. "
     ::= { cactiStats 9 }
@@ -800,7 +797,7 @@ cactiStatsDeviceEntry OBJECT-TYPE
     MAX-ACCESS      not-accessible
     STATUS          current
     DESCRIPTION
-        "An entry in the table of statistics for registered devices of a Cacti system.
+        "An entry in the table of statistics for registered devices of a Kadupul system.
          A row in this table cannot be created or deleted by SNMP operations on
          columns of the table."
     INDEX           { cactiApplDeviceIndex }
@@ -824,7 +821,7 @@ cactiStatsDeviceIndex OBJECT-TYPE
     MAX-ACCESS      read-only
     STATUS          current
     DESCRIPTION
-        "A unique device identifier. This ID will be created by Cacti itself."
+        "A unique device identifier. This ID will be created by Kadupul itself."
     ::= { cactiStatsDeviceEntry 1 }
 
 cactiStatsDeviceHostname OBJECT-TYPE
@@ -904,7 +901,7 @@ cactiStatsPollerTable OBJECT-TYPE
     MAX-ACCESS      not-accessible
     STATUS          current
     DESCRIPTION
-        "A table of statistics for all pollers registered on a Cacti system.
+        "A table of statistics for all pollers registered on a Kadupul system.
          The maximum number of entries is implementation dependent.
          This table has a 1:1 relationship to cactiApplPollerTable. "
     ::= { cactiStats 10 }
@@ -914,7 +911,7 @@ cactiStatsPollerEntry OBJECT-TYPE
     MAX-ACCESS      not-accessible
     STATUS          current
     DESCRIPTION
-        "An entry in the table of statistics for registered pollers of a Cacti system.
+        "An entry in the table of statistics for registered pollers of a Kadupul system.
          A row in this table cannot be created or deleted by SNMP operations on
          columns of the table."
     INDEX           { cactiApplPollerIndex }
@@ -940,7 +937,7 @@ cactiStatsPollerIndex OBJECT-TYPE
     MAX-ACCESS      read-only
     STATUS          current
     DESCRIPTION
-        "A unique poller identifier. This ID will be created by Cacti itself."
+        "A unique poller identifier. This ID will be created by Kadupul itself."
     ::= { cactiStatsPollerEntry 1 }
 
 cactiStatsPollerHostname OBJECT-TYPE
@@ -965,7 +962,7 @@ cactiStatsPollerMethod OBJECT-TYPE
     MAX-ACCESS      read-only
     STATUS          current
     DESCRIPTION
-       "Describes the polling engine used by Cacti:
+       "Describes the polling engine used by Kadupul:
         cmd         - php based poller
         spine       - high performance C-based polling engine"
     DEFVAL { cmd }
@@ -1072,7 +1069,7 @@ cactiStatsTotalsDeviceStatusDisabled OBJECT-TYPE
     ::= { cactiStats 15 }
 
 --
--- Cacti Events
+-- Kadupul Events
 --
 cactiEvents OBJECT-IDENTITY
     STATUS          current
@@ -1120,7 +1117,7 @@ cactiNotifyDeviceDown NOTIFICATION-TYPE
     }
     STATUS  current
     DESCRIPTION
-        "This SNMP notification will be send to notification receivers if Cacti has detected
+        "This SNMP notification will be send to notification receivers if Kadupul has detected
          that a monitored device went down."
     ::= { cactiEventNotifications 2 }
 
@@ -1133,7 +1130,7 @@ cactiNotifyDeviceRecovering NOTIFICATION-TYPE
     }
     STATUS  current
     DESCRIPTION
-        "This SNMP notification will be send to notification receivers if Cacti has detected
+        "This SNMP notification will be send to notification receivers if Kadupul has detected
          that a monitored device became reachable again."
     ::= { cactiEventNotifications 3 }
 
@@ -1145,7 +1142,7 @@ cactiNotifyPollerRuntimeExceeding NOTIFICATION-TYPE
     }
     STATUS  current
     DESCRIPTION
-        "This SNMP notification will be send to notification receivers if a Cacti poller
+        "This SNMP notification will be send to notification receivers if a Kadupul poller
          has breached its maximum runtime."
     ::= { cactiEventNotifications 4 }
 
@@ -1158,12 +1155,12 @@ cactiNotifyDeviceFailedPoll NOTIFICATION-TYPE
     }
     STATUS  current
     DESCRIPTION
-        "This SNMP notification will be send to notification receivers if Cacti
+        "This SNMP notification will be send to notification receivers if Kadupul
          was unable to poll a device."
     ::= { cactiEventNotifications 5 }
 
 --
--- Cacti Plugins
+-- Kadupul Plugins
 --
 cactiPlugins OBJECT-IDENTITY
     STATUS          current
@@ -1194,7 +1191,7 @@ cactiPlugins OBJECT-IDENTITY
     ::= { cacti 4 }
 
 --
--- Cacti MIB Groups
+-- Kadupul MIB Groups
 --
 cactiMibGroups OBJECT-IDENTITY
     STATUS          current
@@ -1251,6 +1248,6 @@ cactiNotifyGroup NOTIFICATION-GROUP
     }
     STATUS          current
     DESCRIPTION
-        "The group of notifications Cacti supports."
+        "The group of notifications Kadupul supports."
     ::= { cactiMibGroups 4 }
 END

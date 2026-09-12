@@ -3,7 +3,6 @@
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
 */
 
@@ -18,7 +17,7 @@
  *      bind-mounted plugins/<dir>, lands setup.php at the expected path,
  *      preserves world-readable permissions for the php-fpm user, and
  *      is idempotent unless CACTI_FORCE_PLUGINS=1 forces a wipe.
- *   2. A plugin_config row at status=1 is recognized by Cacti's plugin API
+ *   2. A plugin_config row at status=1 is recognized by Kadupul's plugin API
  *      (api_plugin_get_dependencies parses INFO) but does NOT fire the
  *      activate hook. Status 1 = installed-not-active in lib/plugins.php;
  *      status 5 = active, which the harness explicitly avoids.
@@ -124,7 +123,7 @@ function _handoff_stage_plugin($srcRoot, $dstRoot, $plugin, $force) {
 }
 
 /**
- * Mirror of api_plugin_get_dependencies() but without booting Cacti.
+ * Mirror of api_plugin_get_dependencies() but without booting Kadupul.
  * Reads the plugin's INFO file and extracts the requires= line. The
  * production function lives at lib/plugins.php:301; copying the parse
  * shape here lets us assert against it without dragging in the global
@@ -329,7 +328,7 @@ test('listener regex matches /csp_report.php under the docker url_path setting',
 	 * at the leading slash. This is intentional — the listener is
 	 * written to be url_path-agnostic — and we pin it so a future
 	 * tightening of the regex does not silently drop reports for
-	 * Cacti instances mounted at a sub-path. */
+	 * Kadupul instances mounted at a sub-path. */
 	expect(_handoff_listener_matches_url('http://localhost:8080/cacti/csp_report.php'))->toBeTrue();
 
 	/* Negative: unrelated endpoints must not match. */

@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /**
@@ -476,7 +469,7 @@ function api_device_change_options($device_ids, $post) {
 
 /**
  * api_device_clear_statistics - Clear all device level statistics and reset as if the
- *   device was new in Cacti
+ *   device was new in Kadupul
  *
  * @param  (array) An array of device ids
  *
@@ -1703,7 +1696,7 @@ function api_duplicate_device_template($_host_template_id, $host_template_title)
 
 /**
  * api_clone_message - Displays a clone specific log
- *   message if there to CLI and the Cacti log
+ *   message if there to CLI and the Kadupul log
  *
  * @param string - The message to output
  * @param bool - Is the output for CLI or the web only
@@ -1761,7 +1754,7 @@ function api_clone_get_unique_name($name, $table, $column = 'name') {
 
 /**
  * api_clone_get_unique_filename - Get a unique file name for
- *   a Cacti object based upon the file name.
+ *   a Kadupul object based upon the file name.
  *
  * @param string - The current filename
  *
@@ -2419,7 +2412,7 @@ function api_clone_device_template_get_objects($device_template_id) {
  * @param string - A comma delimited list of Data Templates to Include
  * @param string - A comma delimited list of Data Templates to Clone
  * @param string - The suffix to use for Cloning objects
- * @param bool   - Boolean to direct Cacti to clone the XML
+ * @param bool   - Boolean to direct Kadupul to clone the XML
  * @param bool   - Boolean to direct to Clone scripts
  *
  * @return int|false - Either the new Device Template ID or false on error

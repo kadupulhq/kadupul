@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDTool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 function upgrade_to_1_2_20() {
@@ -88,7 +81,7 @@ function upgrade_to_1_2_20() {
 		}
 	}
 
-	// Correct issues with Cacti Data Template input's
+	// Correct issues with Kadupul Data Template input's
 	db_execute("UPDATE data_input_data
 		SET t_value = 'on'
 		WHERE data_input_field_id IN (

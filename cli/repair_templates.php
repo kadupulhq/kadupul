@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require(__DIR__ . '/../include/cli_check.php');
@@ -138,7 +131,7 @@ if (cacti_sizeof($damaged_template_ids)) {
 /*  display_version - displays version information */
 function display_version() {
 	$version = get_cacti_cli_version();
-	print "Cacti Database Template Repair Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
+	print "Kadupul Database Template Repair Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
 }
 
 /* display_help - displays the usage of the function */
@@ -146,8 +139,8 @@ function display_help () {
 	display_version();
 
 	print "\nusage: repair_templates.php [--execute]\n\n";
-	print "A utility designed to repair any damaged Cacti Graph and Data Templates.  That lacked a hash.\n";
-	print "This utility should not need to be used in any modern Cacti install.\n\n";
+	print "A utility designed to repair any damaged Kadupul Graph and Data Templates.  That lacked a hash.\n";
+	print "This utility should not need to be used in any modern Kadupul install.\n\n";
 	print "Optional:\n";
 	print "    --execute  - Perform the repair.  Otherwise check for errors.\n";
 }

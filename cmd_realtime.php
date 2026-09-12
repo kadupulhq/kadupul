@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require_once(__DIR__ . '/include/cli_check.php');
@@ -103,7 +96,7 @@ if (cacti_sizeof($idbyhost)) {
 		AND host_id IN (' . implode(',', $hosts) . ')
 		AND local_data_id IN (' . implode(',', $ids) . ')');
 
-	/* startup Cacti php polling server and include the include file for script processing */
+	/* startup Kadupul php polling server and include the include file for script processing */
 	if ($script_server_calls > 0) {
 		$cactides = array(
 			0 => array('pipe', 'r'), // stdin is a pipe that the child will read from

@@ -50,7 +50,7 @@ if echo "$FINAL_URL" | grep -q 'auth_login\.php'; then
     echo "FAIL: login redirected to auth_login.php (URL: $FINAL_URL)" >&2
     exit 1
 fi
-if echo "$LOGIN_BODY" | grep -q '<title>Login to Cacti</title>'; then
+if echo "$LOGIN_BODY" | grep -q '<title>Login to Kadupul</title>'; then
     echo "FAIL: login response body contains login-page title — authentication did not succeed" >&2
     exit 1
 fi
@@ -96,7 +96,7 @@ for path in "${PAGES[@]}"; do
         exit 1
     fi
 
-    if echo "$BODY" | grep -q '<title>Login to Cacti</title>'; then
+    if echo "$BODY" | grep -q '<title>Login to Kadupul</title>'; then
         echo "FAIL [step $i, $path]: response body contains login-page title — session was destroyed" >&2
         exit 1
     fi

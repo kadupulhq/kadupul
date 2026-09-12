@@ -4,6 +4,13 @@ This file is for AI coding assistants (Claude Code, Cursor, Copilot, Gemini,
 etc.) working against this repository.  It is also a concise reference for any
 human contributor who wants to know the house conventions at a glance.
 
+## Project identity
+
+Use Kadupul in project-facing content. Keep licensing information and one brief
+fork statement in the README. Do not add optional individual-credit lists or
+project-origin narratives. Preserve required copyright, license, and warranty
+notices, including display constants. Preserve compatibility identifiers.
+
 ## Do not commit
 
 The following directories are local developer tooling state.  They are in
@@ -29,7 +36,7 @@ out with `git rm --cached`.
   - no `Stringable` / `ReturnTypeWillChange` reliance
 - `develop` targets PHP 8.1+.  PHP 8 syntax is fine there.
 
-## Cacti idioms
+## Application idioms
 
 Use the house wrappers instead of raw equivalents:
 
@@ -88,8 +95,7 @@ Use the house wrappers instead of raw equivalents:
 - Do **not** list every bullet point you can think of in the commit body.
   Human commits on this repo use 1-3 body lines max.  Anything with 9
   bulleted "fixes" in one commit reads as AI-generated.
-- No trailing `Co-Authored-By: Claude …` line.  Cacti does not use DCO
-  attribution for AI assistants.
+- Do not attribute commits to AI assistants.
 - Match the existing style of `git log --oneline -30` before writing your
   message.
 

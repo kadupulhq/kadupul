@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 include_once('./include/auth.php');
@@ -558,16 +551,16 @@ function edit_page() {
 			'directory' => $config['base_path'] . '/include/content',
 			'exclusions' => array('README', 'index.php'),
 			'none_value' => __('Web URL Below'),
-			'description' => __('The file that contains the content for this page. This file needs to be in the Cacti \'include/content/\' directory.'),
+			'description' => __('The file that contains the content for this page. This file needs to be in the Kadupul \'include/content/\' directory.'),
 			'value' => (isset($data['contentfile']) ? $data['contentfile']:'')
 		),
 		'fileurl' => array(
 			'friendly_name' => __('Web URL Location'),
 			'method' => 'textbox',
-			'description' => __('The valid URL to use for this external link.  Must include the type, for example http://www.cacti.net.  Note that many websites do not allow them to be embedded in an iframe from a foreign site, and therefore External Linking may not work.'),
+			'description' => __('The valid URL to use for this external link.  Must include the type, for example https://kadupul.org.  Note that many websites do not allow them to be embedded in an iframe from a foreign site, and therefore External Linking may not work.'),
 			'max_length' => 255,
 			'size' => 80,
-			'default' => 'http://www.cacti.net',
+			'default' => 'https://kadupul.org',
 			'value' => (isset($data['contentfile']) ? $data['contentfile']:'')
 		),
 		'enabled' => array(

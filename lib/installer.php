@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDTool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 include_once(dirname(__FILE__) . '/../lib/poller.php');
@@ -1575,7 +1568,7 @@ class Installer implements JsonSerializable {
 	private function exitWithUnknownReason($reason) {
 		$output  = Installer::sectionTitleError();
 		$output .= Installer::sectionNormal(__('The Installer could not proceed due to an unexpected error.'));
-		$output .= Installer::sectionNormal(__('Please report this to the Cacti Group.'));
+		$output .= Installer::sectionNormal(__('Please report this to the Kadupul Group.'));
 		$output .= Installer::sectionCode(__('Unknown Reason: %s', $reason));
 		return $output;
 	}
@@ -1583,7 +1576,7 @@ class Installer implements JsonSerializable {
 	private function exitDbTooOld() {
 		global $database_username, $database_default;
 		$output  = Installer::sectionTitleError();
-		$output .= Installer::sectionNormal(__('You are attempting to install Cacti %s onto a 0.6.x database. Unfortunately, this can not be performed.', CACTI_VERSION));
+		$output .= Installer::sectionNormal(__('You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this can not be performed.', CACTI_VERSION));
 		$output .= Installer::sectionNormal(__('To be able continue, you <b>MUST</b> create a new database, import "cacti.sql" into it:', CACTI_VERSION));
 		$output .= Installer::sectionCode(sprintf("mysql -u %s -p [new_database] < cacti.sql", $database_username, $database_default));
 		$output .= Installer::sectionNormal(__('You <b>MUST</b> then update "include/config.php" to point to the new database.'));
@@ -1596,14 +1589,14 @@ class Installer implements JsonSerializable {
 		$output  = Installer::sectionTitleError();
 		$output .= Installer::sectionNormal(__("You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"));
 		$output .= Installer::sectionCode(sprintf("mysql -u %s -p %s < cacti.sql", $database_username, $database_default));
-		$output .= Installer::sectionNormal(__("This error may also be generated if the cacti database user does not have correct permissions on the Cacti database. Please ensure that the Cacti database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Cacti database."));
-		$output .= Installer::sectionNormal(__("You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Cacti user SELECT access to the mysql.time_zone_name table"));
+		$output .= Installer::sectionNormal(__("This error may also be generated if the cacti database user does not have correct permissions on the Kadupul database. Please ensure that the Kadupul database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Kadupul database."));
+		$output .= Installer::sectionNormal(__("You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"));
 
 		if ($config['cacti_server_os'] == 'unix') {
 			$output .= Installer::sectionNormal(__("On Linux/UNIX, run the following as 'root' in a shell:"));
 			$output .= Installer::sectionCode(sprintf("mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql"));
 		} else {
-			$output .= Installer::sectionNormal(__("On Windows, you must follow the instructions here <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>Time zone description table</a>.  Once that is complete, you can issue the following command to grant the Cacti user access to the tables:"));
+			$output .= Installer::sectionNormal(__("On Windows, you must follow the instructions here <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>Time zone description table</a>.  Once that is complete, you can issue the following command to grant the Kadupul user access to the tables:"));
 		}
 
 		$output .= Installer::sectionNormal(__("Then run the following within MySQL as an administrator:"));
@@ -1744,14 +1737,14 @@ class Installer implements JsonSerializable {
 	public function processStepWelcome() {
 		global $config, $cacti_version_codes;
 
-		$output  = Installer::sectionTitle(__('Cacti Version') . ' ' . CACTI_VERSION . ' - ' . __('License Agreement'));
+		$output  = Installer::sectionTitle(__('Kadupul Version') . ' ' . CACTI_VERSION . ' - ' . __('License Agreement'));
 
 		if (!array_key_exists(CACTI_VERSION, $cacti_version_codes)) {
-			$output .= Installer::sectionError(__('This version of Cacti (%s) does not appear to have a valid version code, please contact the Cacti Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub', CACTI_VERSION));
+			$output .= Installer::sectionError(__('This version of Kadupul (%s) does not appear to have a valid version code, please contact the Kadupul Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub', CACTI_VERSION));
 		}
 
-		$output .= Installer::sectionNormal(__('Thanks for taking the time to download and install Cacti, the complete graphing solution for your network. Before you can start making cool graphs, there are a few pieces of data that Cacti needs to know.'));
-		$output .= Installer::sectionNormal(__('Make sure you have read and followed the required steps needed to install Cacti before continuing. Install information can be found for <a href="%s">Unix</a> and <a href="%s">Win32</a>-based operating systems.', '../docs/html/install_unix.html', '../docs/html/install_windows.html'));
+		$output .= Installer::sectionNormal(__('Thanks for taking the time to download and install Kadupul, the complete graphing solution for your network. Before you can start making cool graphs, there are a few pieces of data that Kadupul needs to know.'));
+		$output .= Installer::sectionNormal(__('Make sure you have read and followed the required steps needed to install Kadupul before continuing. Install information can be found for <a href="%s">Unix</a> and <a href="%s">Win32</a>-based operating systems.', '../docs/html/install_unix.html', '../docs/html/install_windows.html'));
 
 		if ($this->mode == Installer::MODE_UPGRADE) {
 			$output .= Installer::sectionNote(__('This process will guide you through the steps for upgrading from version \'%s\'. ',$this->old_cacti_version));
@@ -1762,7 +1755,7 @@ class Installer implements JsonSerializable {
 			$output .= Installer::sectionNote(__('It is NOT recommended to downgrade as the database structure may be inconsistent'));
 		}
 
-		$output .= Installer::sectionNormal(__('Cacti is licensed under the GNU General Public License, you must agree to its provisions before continuing:'));
+		$output .= Installer::sectionNormal(__('Kadupul is licensed under the GNU General Public License, you must agree to its provisions before continuing:'));
 
 		$output .= Installer::sectionCode(
 			__('This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.') . '<br/><br/>' .
@@ -1863,10 +1856,10 @@ class Installer implements JsonSerializable {
 
 		// The path was not what we expected so print an error
 		if ($test_compare_result !== 0) {
-			$output .= Installer::sectionNormal('<span class="textError"><strong>' . __('ERROR:') . '</strong> ' .  __('Please update config.php with the correct relative URI location of Cacti (url_path).') . '</span>');
+			$output .= Installer::sectionNormal('<span class="textError"><strong>' . __('ERROR:') . '</strong> ' .  __('Please update config.php with the correct relative URI location of Kadupul (url_path).') . '</span>');
 			$enabled['location'] = DB_STATUS_ERROR;
 		} else {
-			$output .= Installer::sectionNormal(__('Your Cacti configuration has the relative correct path (url_path) in config.php.'));
+			$output .= Installer::sectionNormal(__('Your Kadupul configuration has the relative correct path (url_path) in config.php.'));
 		}
 
 		$output .= Installer::sectionSubTitleEnd();
@@ -1945,9 +1938,9 @@ class Installer implements JsonSerializable {
 		}
 
 		$output .= Installer::sectionSubTitle(__('PHP - Module Support (Required)'), 'php_modules');
-		$output .= Installer::sectionNormal(__('Cacti requires several PHP Modules to be installed to work properly. If any of these are not installed, you will be unable to continue the installation until corrected. In addition, for optimal system performance Cacti should be run with certain MySQL system variables set.  Please follow the MySQL recommendations at your discretion.  Always seek the MySQL documentation if you have any questions.'));
+		$output .= Installer::sectionNormal(__('Kadupul requires several PHP Modules to be installed to work properly. If any of these are not installed, you will be unable to continue the installation until corrected. In addition, for optimal system performance Kadupul should be run with certain MySQL system variables set.  Please follow the MySQL recommendations at your discretion.  Always seek the MySQL documentation if you have any questions.'));
 
-		$output .= Installer::sectionNormal(__('The following PHP extensions are mandatory, and MUST be installed before continuing your Cacti install.'));
+		$output .= Installer::sectionNormal(__('The following PHP extensions are mandatory, and MUST be installed before continuing your Kadupul install.'));
 
 		ob_clean();
 
@@ -1977,7 +1970,7 @@ class Installer implements JsonSerializable {
 
 		$output .= Installer::sectionSubTitle(__('PHP - Module Support (Optional)'), 'php_optional');
 
-		$output .= Installer::sectionNormal(__('The following PHP extensions are recommended, and should be installed before continuing your Cacti install.  NOTE: If you are planning on supporting SNMPv3 with IPv6, you should not install the php-snmp module at this time.'));
+		$output .= Installer::sectionNormal(__('The following PHP extensions are recommended, and should be installed before continuing your Kadupul install.  NOTE: If you are planning on supporting SNMPv3 with IPv6, you should not install the php-snmp module at this time.'));
 
 		$ext = utility_php_optionals();
 
@@ -2018,18 +2011,18 @@ class Installer implements JsonSerializable {
 				$enabled['mysql_timezone'] = DB_STATUS_ERROR;
 			}
 		} else {
-			$output .= Installer::sectionNormal('<span class="textError"><strong>' . __('ERROR:') . '</strong> ' .  __('Your Cacti database login account does not have access to the MySQL TimeZone database.  Please provide the Cacti database account "select" access to the "time_zone_name" table in the "mysql" database, and populate MySQL\'s TimeZone information before proceeding.') . '</span>');
+			$output .= Installer::sectionNormal('<span class="textError"><strong>' . __('ERROR:') . '</strong> ' .  __('Your Kadupul database login account does not have access to the MySQL TimeZone database.  Please provide the Kadupul database account "select" access to the "time_zone_name" table in the "mysql" database, and populate MySQL\'s TimeZone information before proceeding.') . '</span>');
 			$enabled['mysql_timezone'] = DB_STATUS_ERROR;
 		}
 
 		if ($enabled['mysql_timezone'] == DB_STATUS_SUCCESS) {
-			$output .= Installer::sectionNormal(__('Your Cacti database account has access to the MySQL TimeZone database and that database is populated with global TimeZone information.'));
+			$output .= Installer::sectionNormal(__('Your Kadupul database account has access to the MySQL TimeZone database and that database is populated with global TimeZone information.'));
 		}
 
 		$output .= Installer::sectionSubTitleEnd();
 
 		$output .= Installer::sectionSubTitle(__('MySQL - Settings'), 'mysql_performance');
-		$output .= Installer::sectionNormal(__('These MySQL performance tuning settings will help your Cacti system perform better without issues for a longer time.'));
+		$output .= Installer::sectionNormal(__('These MySQL performance tuning settings will help your Kadupul system perform better without issues for a longer time.'));
 
 		html_start_box(__('Recommended MySQL System Variable Settings'), '100%', false, '3', '', false);
 		$output_temp = ob_get_contents();
@@ -2068,7 +2061,7 @@ class Installer implements JsonSerializable {
 				$output .= Installer::sectionSubTitle(__('Upgrade'));
 				$output .= Installer::sectionNormal(__('Upgrade from <strong>%s</strong> to <strong>%s</strong>', $this->old_cacti_version, CACTI_VERSION));
 
-				$output .= Installer::sectionWarning(__('In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Cacti is on) and retrying, before raising an issue with The Cacti Group'));
+				$output .= Installer::sectionWarning(__('In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul'));
 				$output .= Installer::sectionNormal(__('On rare occasions, we have had reports from users who experience some minor issues due to changes in the code.  These issues are caused by the browser retaining pre-upgrade code and whilst we have taken steps to minimise the chances of this, it may still occur.  If you need instructions on how to clear your browser cache, <a href=\'https://www.refreshyourcache.com\' target=\'_blank\'>https://www.refreshyourcache.com/</a> is a good starting point.'));
 				$output .= Installer::sectionNormal(__('If after clearing your cache and restarting your browser, you still experience issues, please raise the issue with us and we will try to identify the cause of it.'));
 
@@ -2143,7 +2136,7 @@ class Installer implements JsonSerializable {
 					'</select>'
 				);
 
-				$output .= Installer::sectionNormal(__('The following information has been determined from Cacti\'s configuration file. If it is not correct, please edit "include/config.php" before continuing.'));
+				$output .= Installer::sectionNormal(__('The following information has been determined from Kadupul\'s configuration file. If it is not correct, please edit "include/config.php" before continuing.'));
 
 				$output .= Installer::sectionSubTitleEnd();
 
@@ -2178,7 +2171,7 @@ class Installer implements JsonSerializable {
 				$output .= Installer::sectionSubTitleEnd();
 
 				$output .= Installer::sectionSubTitle(__('Configuration of Poller'), 'error_poller');
-				$output .= Installer::sectionNormal('<span class="textError"><strong>' . __('ERROR:') . '</strong> ' . __('Your Remote Cacti Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Cacti database server.  Correct this and try again.') . '</span>','config_remote');
+				$output .= Installer::sectionNormal('<span class="textError"><strong>' . __('ERROR:') . '</strong> ' . __('Your Remote Kadupul Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Kadupul database server.  Correct this and try again.') . '</span>','config_remote');
 
 				$output .= Installer::sectionSubTitleEnd();
 
@@ -2188,7 +2181,7 @@ class Installer implements JsonSerializable {
 				$output .= Installer::sectionCode(
 					'$rdatabase_type     = \'mysql\';<br>' .
 					'$rdatabase_default  = \'cacti\';<br>' .
-					'$rdatabase_hostname = \'cacti.example.com\'; // Central Cacti server.<br>' .
+					'$rdatabase_hostname = \'cacti.example.com\'; // Central Kadupul server.<br>' .
 					'$rdatabase_username = \'cactiuser\';<br>' .
 					'$rdatabase_password = \'cactiuser\';<br>' .
 					'$rdatabase_port     = \'3306\';<br>' .
@@ -2197,13 +2190,13 @@ class Installer implements JsonSerializable {
 
 				$output .= Installer::sectionNormal(__('The Installer automatically assigns a $poller_id and adds it to the config.php file.'), 'config_remote_poller');
 
-				$output .= Installer::sectionNormal(__('Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Cacti database server.  Follow the same procedure you would with any other Cacti install.  You may then press the \'Test Connection\' button.  If the test is successful you will be able to proceed and complete the install.'), 'config_remote_var');
+				$output .= Installer::sectionNormal(__('Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Kadupul database server.  Follow the same procedure you would with any other Kadupul install.  You may then press the \'Test Connection\' button.  If the test is successful you will be able to proceed and complete the install.'), 'config_remote_var');
 
 				$output .= Installer::sectionSubTitleEnd();
 
 				$output .= Installer::sectionSubTitle(__('Additional Steps After Installation'), 'poller_steps');
 
-				$output .= Installer::sectionNormal(__('It is essential that the Central Cacti server can communicate via MySQL to each remote Cacti database server.  Once the install is complete, you must edit the Remote Data Collector and ensure the settings are correct.  You can verify using the \'Test Connection\' when editing the Remote Data Collector.'), 'config_remote_db');
+				$output .= Installer::sectionNormal(__('It is essential that the Central Kadupul server can communicate via MySQL to each remote Kadupul database server.  Once the install is complete, you must edit the Remote Data Collector and ensure the settings are correct.  You can verify using the \'Test Connection\' when editing the Remote Data Collector.'), 'config_remote_db');
 
 				$output .= Installer::sectionSubTitleEnd();
 
@@ -2303,7 +2296,7 @@ class Installer implements JsonSerializable {
 		if ($this->mode == Installer::MODE_INSTALL) {
 			$output .= Installer::sectionNormal(__('After the install is complete, you can make some of these directories read only to increase security.'));
 		} else {
-			$output .= Installer::sectionNormal(__('These directories will be required to stay read writable after the install so that the Cacti remote synchronization process can update them as the Main Cacti Web Site changes'));
+			$output .= Installer::sectionNormal(__('These directories will be required to stay read writable after the install so that the Kadupul remote synchronization process can update them as the Main Kadupul Web Site changes'));
 		}
 
 		if ($this->mode != Installer::MODE_POLLER) {
@@ -2386,7 +2379,7 @@ class Installer implements JsonSerializable {
 			$running_user = get_running_user();
 
 			$sections['host_access'] = DB_STATUS_WARNING;
-			$text = __('Please make sure that your webserver has read/write access to the cacti folders that show errors below.');
+			$text = __('Please make sure that your webserver has read/write access to the Kadupul folders that show errors below.');
 			$paths = array_merge($this->permissions['install'],$this->permissions['always']);
 			if ($config['cacti_server_os'] == 'unix') {
 				$text .= '  ' . __('If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools.');
@@ -2424,10 +2417,10 @@ class Installer implements JsonSerializable {
 
 	public function processStepInputValidation() {
 		$output  = Installer::sectionTitle(__('Input Validation Whitelist Protection'));
-		$output .= Installer::sectionNormal(__('Cacti Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Cacti poller as root, can compromise the operating system allowing attackers to exploit your infrastructure.'));
-		$output .= Installer::sectionNormal(__('Therefore, several versions ago, Cacti was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Cacti more thoroughly, it does increase the amount of work required by the Cacti administrator to import and manage Templates and Packages.'));
+		$output .= Installer::sectionNormal(__('Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure.'));
+		$output .= Installer::sectionNormal(__('Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages.'));
 		$output .= Installer::sectionNormal(__('The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid.'));
-		$output .= Installer::sectionNormal(__('To make identifying Data Input Methods in this state, we have provided a validation script in Cacti\'s CLI directory that can be run with the following options:'));
+		$output .= Installer::sectionNormal(__('To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul\'s CLI directory that can be run with the following options:'));
 
 		$output .= Installer::sectionNormal(
 			'<ul>'.
@@ -2458,7 +2451,7 @@ class Installer implements JsonSerializable {
 
 		if (cacti_sizeof($profiles)) {
 			$output  = Installer::sectionTitle(__('Default Profile'));
-			$output .= Installer::sectionNormal(__('Please select the default Data Source Profile to be used for polling sources.  This is the maximum amount of time between scanning devices for information so the lower the polling interval, the more work is placed on the Cacti Server host.  Also, select the intended, or configured Cron interval that you wish to use for Data Collection.'));
+			$output .= Installer::sectionNormal(__('Please select the default Data Source Profile to be used for polling sources.  This is the maximum amount of time between scanning devices for information so the lower the polling interval, the more work is placed on the Kadupul Server host.  Also, select the intended, or configured Cron interval that you wish to use for Data Collection.'));
 
 			$fields_schedule = array(
 				'default_profile' => array(
@@ -2491,7 +2484,7 @@ class Installer implements JsonSerializable {
 			$output .= Installer::sectionNormal($html);
 
 			$output .= Installer::sectionTitle(__('Default Automation Network'));
-			$output .= Installer::sectionNormal(__('Cacti can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both \'public\' and \'private\' communities.'));
+			$output .= Installer::sectionNormal(__('Kadupul can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both \'public\' and \'private\' communities.'));
 			$output .= Installer::sectionNormal(__('If your devices require a different set of options to be used first, you may define them below and they will be utilized before the defaults'));
 			$output .= Installer::sectionNormal(__('All options may be adjusted post installation'));
 
@@ -2594,7 +2587,7 @@ class Installer implements JsonSerializable {
 		html_end_box(false);
 		$output .= Installer::sectionNormal(ob_get_contents());
 		ob_end_clean();
-		$output .= Installer::sectionNormal(__('Device Templates allow you to monitor and graph a vast assortment of data within Cacti.  After you select the desired Device Templates, press \'Next\' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes.'));
+		$output .= Installer::sectionNormal(__('Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press \'Next\' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes.'));
 
 		$this->stepData = array('Templates' => $this->templates);
 		return $output;
@@ -2629,7 +2622,7 @@ class Installer implements JsonSerializable {
 		} else {
 			$output .= Installer::sectionWarning(
 				__('Your database default collation does NOT appear to be full UTF8 compliant. ') .
-				__('Any tables created by plugins may have issues linked against Cacti Core tables if the collation is not matched.   Please ensure your database is changed to \'utf8mb4_unicode_ci\' by running the following: ') .
+				__('Any tables created by plugins may have issues linked against Kadupul Core tables if the collation is not matched.   Please ensure your database is changed to \'utf8mb4_unicode_ci\' by running the following: ') .
 				Installer::sectionCode(
 					'mysql> ALTER DATABASE ' . $database . ' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;'
 				)
@@ -2722,11 +2715,11 @@ class Installer implements JsonSerializable {
 
 		if ($this->mode == Installer::MODE_DOWNGRADE) {
 			$output = Installer::sectionTitleError(__('DOWNGRADE DETECTED'));
-			$output .= Installer::sectionCode(__('YOU MUST MANUALLY CHANGE THE CACTI DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU'));
+			$output .= Installer::sectionCode(__('YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU'));
 			$output .= Installer::sectionNormal(__('Downgrading should only be performed when absolutely necessary and doing so may break your installation'));
 		} else {
 			$output = Installer::sectionTitle($title);
-			$output .= Installer::sectionNormal(__('Your Cacti Server is almost ready.  Please check that you are happy to proceed.'));
+			$output .= Installer::sectionNormal(__('Your Kadupul Server is almost ready.  Please check that you are happy to proceed.'));
 
 			$output .= Installer::sectionNote(
 				__('Press \'%s\' then click \'%s\' to complete the installation process after selecting your Device Templates.', $title, $button)
@@ -2745,8 +2738,8 @@ class Installer implements JsonSerializable {
 		global $config;
 		$time = read_config_option('install_updated', true);
 
-		$output  = Installer::sectionTitle(__('Installing Cacti Server v%s', CACTI_VERSION));
-		$output .= Installer::sectionNormal(__('Your Cacti Server is now installing'));
+		$output  = Installer::sectionTitle(__('Installing Kadupul Server v%s', CACTI_VERSION));
+		$output .= Installer::sectionNormal(__('Your Kadupul Server is now installing'));
 		$output .= Installer::sectionNormal(
 			'<table width="100%"><tr>' .
 				'<td class="cactiInstallProgressLeft">Refresh in</td>' .
@@ -2860,11 +2853,11 @@ class Installer implements JsonSerializable {
 
 		if ($this->stepCurrent == Installer::STEP_COMPLETE) {
 			$output = Installer::sectionTitle(__('Complete'));
-			$output .= Installer::sectionNormal(__('Your Cacti Server v%s has been installed/updated.  You may now start using the software.', CACTI_VERSION));
+			$output .= Installer::sectionNormal(__('Your Kadupul Server v%s has been installed/updated.  You may now start using the software.', CACTI_VERSION));
 			db_execute('DELETE FROM settings WHERE name LIKE "install_%"');
 		} elseif ($this->stepCurrent == Installer::STEP_ERROR) {
 			$output = Installer::sectionTitleError();
-			$output .= Installer::sectionNormal(__('Your Cacti Server v%s has been installed/updated with errors', CACTI_VERSION));
+			$output .= Installer::sectionNormal(__('Your Kadupul Server v%s has been installed/updated with errors', CACTI_VERSION));
 		}
 
 		// Remove integrated plugin references
@@ -3283,14 +3276,14 @@ class Installer implements JsonSerializable {
 		// Add the host
 		if (!empty($host_template_id)) {
 			$this->setProgress(Installer::PROGRESS_DEVICE_TEMPLATE);
-			log_install_always('', __('Device Template for First Cacti Device is %s', $host_template_id));
+			log_install_always('', __('Device Template for First Kadupul Device is %s', $host_template_id));
 
 			$results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 				cacti_escapeshellarg($config['base_path'] . '/cli/add_device.php') .
 				' --description=' . cacti_escapeshellarg($description) .
 				' --ip=' . cacti_escapeshellarg($ip) .
 				' --template=' . $host_template_id .
-				' --notes=' . cacti_escapeshellarg('Initial Cacti Device') .
+				' --notes=' . cacti_escapeshellarg('Initial Kadupul Device') .
 				' --poller=1 --site=0 --avail=' . cacti_escapeshellarg($avail) .
 				' --version=' . $version .
 				' --community=' . cacti_escapeshellarg($community));
@@ -3328,7 +3321,7 @@ class Installer implements JsonSerializable {
 				}
 			}
 		} else {
-			log_install_always('', __('WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Cacti Packages to monitor your Cacti server.'));
+			log_install_always('', __('WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server.'));
 		}
 
 		/* just in case we have hard drive graphs to deal with */
@@ -3668,9 +3661,9 @@ class Installer implements JsonSerializable {
 
 				if ($disable) {
 					if ($integrated) {
-						cacti_log("Removing $plugin version $version as it is now integrated with Cacti " . CACTI_VERSION);
+						cacti_log("Removing $plugin version $version as it is now integrated with Kadupul " . CACTI_VERSION);
 					} else {
-						cacti_log("Disabling $plugin version $version as it is missing or not compatible with Cacti " . CACTI_VERSION);
+						cacti_log("Disabling $plugin version $version as it is missing or not compatible with Kadupul " . CACTI_VERSION);
 					}
 					api_plugin_disable_all($plugin);
 				}

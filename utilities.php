@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 include('./include/auth.php');
@@ -269,12 +262,12 @@ function utilities_view_tech() {
 		api_plugin_hook_function('custom_version_info');
 
 		form_alternate_row();
-		print '<td>' . __('Cacti Version') . '</td>';
+		print '<td>' . __('Kadupul Version') . '</td>';
 		print '<td>' . CACTI_VERSION . '</td>';
 		form_end_row();
 
 		form_alternate_row();
-		print '<td>' . __('Cacti OS') . '</td>';
+		print '<td>' . __('Kadupul OS') . '</td>';
 		print '<td>' . $config['cacti_server_os'] . '</td>';
 		form_end_row();
 
@@ -345,7 +338,7 @@ function utilities_view_tech() {
 		if (file_exists(read_config_option('path_spine')) && $poller_options[read_config_option('poller_type')] == 'spine') {
 			$type = $spine_version;
 		        if (!strpos($spine_version, CACTI_VERSION)) {
-		    	    $type .= '<span class="textError"> (' . __('Different version of Cacti and Spine!') . ')</span>';
+				$type .= '<span class="textError"> (' . __('Different version of Kadupul and Spine!') . ')</span>';
 			}
 		} else {
 			$type = $poller_options[read_config_option('poller_type')];
@@ -1606,7 +1599,7 @@ function utilities_clear_logfile() {
 		$logfile = './log/cacti.log';
 	}
 
-	html_start_box(__('Clear Cacti Log'), '100%', '', '3', 'center', '');
+	html_start_box(__('Clear Kadupul Log'), '100%', '', '3', 'center', '');
 	if (file_exists($logfile)) {
 		if (is_writable($logfile)) {
 			/* fill in the current date for printing in the log */
@@ -1617,9 +1610,9 @@ function utilities_clear_logfile() {
 			}
 
 			$log_fh = fopen($logfile, 'w');
-			fwrite($log_fh, __('%s - WEBUI NOTE: Cacti Log Cleared from Web Management Interface.', $date) . PHP_EOL);
+			fwrite($log_fh, __('%s - WEBUI NOTE: Kadupul Log Cleared from Web Management Interface.', $date) . PHP_EOL);
 			fclose($log_fh);
-			print '<tr><td>' . __('Cacti Log Cleared') . '</td></tr>';
+			print '<tr><td>' . __('Kadupul Log Cleared') . '</td></tr>';
 		} else {
 			print "<tr><td class='deviceDown'><b>" . __('Error: Unable to clear log, no write permissions.') . "<b></td></tr>";
 		}
@@ -2290,11 +2283,11 @@ function utilities() {
 	$utilities[__('Technical Support')] = array(
 		__('Technical Support') => array(
 			'link'  => 'utilities.php?action=view_tech',
-			'description' => __('Cacti technical support page.  Used by developers and technical support persons to assist with issues in Cacti.  Includes checks for common configuration issues.')
+			'description' => __('Kadupul technical support page.  Used by developers and technical support persons to assist with issues in Kadupul.  Includes checks for common configuration issues.')
 		),
 		__('Log Administration') => array(
 			'link'  => 'utilities.php?action=view_logfile',
-			'description' => __('The Cacti Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application.')
+			'description' => __('The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application.')
 		),
 		__('View User Log') => array(
 			'link'  => 'utilities.php?action=view_user_log',
@@ -2316,14 +2309,14 @@ function utilities() {
 			'mode'  => 'online',
 			'description' => __('The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems.'),
 			'note'        => array (
-				'message' => __('NOTE: On large systems, this command may take several minutes to hours to complete and therefore should not be run from the Cacti UI.  You can simply run \'php -q cli/rebuild_poller_cache.php --help\' at the command line for more information.'),
+				'message' => __('NOTE: On large systems, this command may take several minutes to hours to complete and therefore should not be run from the Kadupul UI.  You can simply run \'php -q cli/rebuild_poller_cache.php --help\' at the command line for more information.'),
 				'class'   => 'textWarning'
 			)
 		),
 		__('Rebuild Resource Cache') => array(
 			'link'  => 'utilities.php?action=rebuild_resource_cache',
 			'mode'  => 'online',
-			'description' => __('When operating multiple Data Collectors in Cacti, Cacti will attempt to maintain state for key files on all Data Collectors.  This includes all core, non-install related website and plugin files.  When you force a Resource Cache rebuild, Cacti will clear the local Resource Cache, and then rebuild it at the next scheduled poller start.  This will trigger all Remote Data Collectors to recheck their website and plugin files for consistency.')
+			'description' => __('When operating multiple Data Collectors in Kadupul, Kadupul will attempt to maintain state for key files on all Data Collectors.  This includes all core, non-install related website and plugin files.  When you force a Resource Cache rebuild, Kadupul will clear the local Resource Cache, and then rebuild it at the next scheduled poller start.  This will trigger all Remote Data Collectors to recheck their website and plugin files for consistency.')
 		),
 	);
 
@@ -2347,7 +2340,7 @@ function utilities() {
 			__('RRDfile Cleaner') => array(
 				'link'  => 'rrdcleaner.php',
 				'mode'  => 'online',
-				'description' => __('When you delete Data Sources from Cacti, the corresponding RRDfiles are not removed automatically.  Use this utility to facilitate the removal of these old files.')
+				'description' => __('When you delete Data Sources from Kadupul, the corresponding RRDfiles are not removed automatically.  Use this utility to facilitate the removal of these old files.')
 			),
 			__('RRDfile Checker') => array(
 				'link'  => 'rrdcheck.php',
@@ -2384,7 +2377,7 @@ function utilities() {
 
 	api_plugin_hook('utilities_array');
 
-	html_start_box(__('Cacti System Utilities'), '100%', '', '3', 'center', '');
+	html_start_box(__('Kadupul System Utilities'), '100%', '', '3', 'center', '');
 
 	foreach($utilities as $header => $content) {
 		$i = 0;
@@ -2435,9 +2428,9 @@ function purge_data_source_statistics() {
 	}
 
 	if (isset($_SESSION['sess_user_id'])) {
-		cacti_log('NOTE: Cacti DS Stats purged by user ' . get_username($_SESSION['sess_user_id']), false, 'WEBUI');
+		cacti_log('NOTE: Kadupul DS Stats purged by user ' . get_username($_SESSION['sess_user_id']), false, 'WEBUI');
 	} else {
-		cacti_log('NOTE: Cacti DS Stats purged by cli script');
+		cacti_log('NOTE: Kadupul DS Stats purged by cli script');
 	}
 }
 

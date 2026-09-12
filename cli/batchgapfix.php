@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 if (function_exists('pcntl_async_signals')) {
@@ -172,7 +165,7 @@ if ($host_ids !== false) {
 	$host_ids = explode(',', $host_ids);
 	foreach($host_ids as $id) {
 		if (!is_numeric($id)) {
-			print 'FATAL: The list of --host-ids must be a comma delimited list of numeric Cacti host_ids!' . PHP_EOL;
+			print 'FATAL: The list of --host-ids must be a comma delimited list of numeric Kadupul host_ids!' . PHP_EOL;
 			exit(1);
 		}
 	}
@@ -412,7 +405,7 @@ if ($child == 0) {
 
 exit(0);
 
-/** sig_handler - provides a generic means to catch exceptions to the Cacti log.
+/** sig_handler - provides a generic means to catch exceptions to the Kadupul log.
  * @arg $signo  - (int) the signal that was thrown by the interface.
  * @return      - null */
 function sig_handler($signo) {
@@ -444,7 +437,7 @@ function debug($string) {
 
 function display_version() {
     $version = get_cacti_cli_version();
-    print "Cacti Batch Graph Gap Fill Utility, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
+    print "Kadupul Batch Graph Gap Fill Utility, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
 }
 
 function display_help() {
@@ -463,7 +456,7 @@ function display_help() {
 	print '   --threads=N                     - Default is 5.  The number of parallel threads [1..40]' . PHP_EOL;
 	print '   --method=fill|float             - Default is \'fill\'.  The method to fill gaps.' . PHP_EOL;
 	print '   --avgnan=last|avg               - Default is \'last\'.  The number to use to fill gaps.' . PHP_EOL;
-	print '   --host-ids=N,N,N,...            - A comma delimited list of Cacti Device ID\'s to process.' . PHP_EOL;
+	print '   --host-ids=N,N,N,...            - A comma delimited list of Kadupul Device ID\'s to process.' . PHP_EOL;
 	print '   --force                         - Kill the current running batch gap fill and start over.' . PHP_EOL;
 	print '   --debug                         - Higher tracing level for select utilities.' . PHP_EOL . PHP_EOL;
 }

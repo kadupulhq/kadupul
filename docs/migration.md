@@ -1,6 +1,6 @@
-# Migrating an existing Cacti install
+# Migration design
 
-Nobody adopts a monitoring system by starting over. A Cacti install that has run
+Nobody adopts a monitoring system by starting over. An existing installation that has run
 for eight years holds graph history nobody can recreate, device templates
 somebody tuned by hand, and thresholds that encode what "normal" means on that
 network. If Kadupul cannot take that over, it has no reason to exist.
@@ -9,7 +9,7 @@ This is the design. Nothing here is built yet.
 
 ## The shape of the problem
 
-A Cacti install is four things, and only one of them is a database.
+An existing installation is four things, and only one of them is a database.
 
 | Part | What it is | Hardest problem |
 |---|---|---|
@@ -60,7 +60,7 @@ we cannot vouch for. It must never silently disable one.
 An operator will not point a one-way tool at a production monitoring system, and
 they are right not to. So:
 
-- Nothing is destructive. The tool reads the Cacti install and writes a new one
+- Nothing is destructive. The tool reads the source install and writes a new one
   beside it. The original keeps running until someone stops it.
 - The two can poll in parallel during a soak. Double polling costs device load,
   which is the operator's call to make, not ours.
@@ -71,7 +71,7 @@ they are right not to. So:
 
 Each stage is separately runnable and separately verifiable.
 
-1. **assess** reads a Cacti install and reports what it found, what would move,
+1. **assess** reads an existing installation and reports what it found, what would move,
    and what will not. Read only, no credentials written, safe against
    production. This is the stage worth building first, because it is useful
    before any of the rest exists.
@@ -84,7 +84,7 @@ Each stage is separately runnable and separately verifiable.
 
 ## What assess reports
 
-- Cacti version, from `SELECT cacti FROM version`, and whether it is one we
+- source version, from `SELECT cacti FROM version`, and whether it is one we
   support migrating from.
 - Counts: devices, data sources, graphs, templates, users, and how much of each
   is disabled or orphaned.
@@ -98,6 +98,6 @@ Each stage is separately runnable and separately verifiable.
 
 ## Versions we migrate from
 
-1.2.x and later only. Earlier installs upgrade to 1.2 with Cacti's own upgrade
+1.2.x and later only. Earlier installs upgrade to 1.2 with the supported upgrade
 path first, which is 47 upgrade scripts we are not reimplementing. The tool
 should say so rather than trying.

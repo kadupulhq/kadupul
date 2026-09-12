@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require(__DIR__ . '/../include/cli_check.php');
@@ -165,7 +158,7 @@ if (cacti_sizeof($entries)) {
 /*  display_version - displays version information */
 function display_version() {
     $version = get_cacti_cli_version();
-    print "Cacti Remove Broken Graphs Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
+    print "Kadupul Remove Broken Graphs Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
 }
 
 /*  display_help - displays the usage of the function */
@@ -173,7 +166,7 @@ function display_help () {
 	display_version();
 
 	print PHP_EOL . 'usage: remove_broken_graphs.php [--report | --remove] [-d|--debug]' . PHP_EOL . PHP_EOL;
-	print 'A utility to remove broken graphs from Cacti.  A broken Graph is one that.' . PHP_EOL;
+	print 'A utility to remove broken graphs from Kadupul.  A broken Graph is one that.' . PHP_EOL;
 	print 'lacks Data Sources.  This can happen from time to time when working with and modifying templates.' . PHP_EOL;
 	print 'It\'s important to periodically run this utility especially on larger systems.' . PHP_EOL . PHP_EOL;
 	print 'Optional:' . PHP_EOL;

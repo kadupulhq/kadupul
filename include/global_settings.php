@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 $dir = dir($config['base_path'] . '/include/themes/');
@@ -168,8 +161,8 @@ $settings = array(
 			'method' => 'spacer',
 		),
 		'path_cactilog' => array(
-			'friendly_name' => __('Cacti Log Path'),
-			'description' => __('The path to your Cacti log file (if blank, defaults to &lt;path_cacti&gt;/log/cacti.log)'),
+			'friendly_name' => __('Kadupul Log Path'),
+			'description' => __('The path to your Kadupul log file (if blank, defaults to &lt;path_cacti&gt;/log/cacti.log)'),
 			'method' => 'filepath',
 			'file_type' => 'ascii',
 			'default' => $config['base_path'] . '/log/cacti.log',
@@ -179,7 +172,7 @@ $settings = array(
 		),
 		'path_stderrlog' => array(
 			'friendly_name' => __('Poller Standard Error Log Path'),
-			'description' => __('If you are having issues with Cacti\'s Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file'),
+			'description' => __('If you are having issues with Kadupul\'s Data Collectors, set this file path and the Data Collectors standard error will be redirected to this file'),
 			'method' => 'filepath',
 			'file_type' => 'ascii',
 			'default' => $config['base_path'] . '/log/cacti_stderr.log',
@@ -188,8 +181,8 @@ $settings = array(
 			'install_optional' => true
 		),
 		'logrotate_enabled' => array(
-			'friendly_name' => __('Rotate the Cacti Log'),
-			'description' => __('This option will rotate the Cacti Log periodically.'),
+			'friendly_name' => __('Rotate the Kadupul Log'),
+			'description' => __('This option will rotate the Kadupul Log periodically.'),
 			'method' => 'checkbox',
 			'default' => 'on',
 		),
@@ -236,13 +229,13 @@ $settings = array(
 		),
 		'rrd_autoclean' => array(
 			'friendly_name' => __('RRDfile Auto Clean'),
-			'description' => __('Automatically archive or delete RRDfiles when their corresponding Data Sources are removed from Cacti'),
+			'description' => __('Automatically archive or delete RRDfiles when their corresponding Data Sources are removed from Kadupul'),
 			'method' => 'checkbox',
 			'default' => ''
  		),
 		'rrd_autoclean_method' => array(
 			'friendly_name' => __('RRDfile Auto Clean Method'),
-			'description' => __('The method used to Clean RRDfiles from Cacti after their Data Sources are deleted.'),
+			'description' => __('The method used to Clean RRDfiles from Kadupul after their Data Sources are deleted.'),
 			'method' => 'drop_array',
 			'array' => array(
 				'1' => __('Delete'),
@@ -266,7 +259,7 @@ $settings = array(
 		),
 		'log_destination' => array(
 			'friendly_name' => __('Log Destination'),
-			'description' => __('How will Cacti handle event logging.'),
+			'description' => __('How will Kadupul handle event logging.'),
 			'method' => 'drop_array',
 			'default' => 1,
 			'array' => $logfile_options,
@@ -306,7 +299,7 @@ $settings = array(
 		),
 		'selective_device_debug' => array(
 			'friendly_name' => __('Selective Device Debug'),
-			'description' => __('A comma delimited list of Device ID\'s that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Cacti polling process.'),
+			'description' => __('A comma delimited list of Device ID\'s that you wish to be in Debug mode during data collection.  This Debug level is only in place during the Kadupul polling process.'),
 			'method' => 'textbox',
 			'size' => '30',
 			'max_length' => 30,
@@ -314,7 +307,7 @@ $settings = array(
 		),
 		'poller_log' => array(
 			'friendly_name' => __('Syslog/Eventlog Item Selection'),
-			'description' => __('When using Syslog/Eventlog for logging, the Cacti log messages that will be forwarded to the Syslog/Eventlog.'),
+			'description' => __('When using Syslog/Eventlog for logging, the Kadupul log messages that will be forwarded to the Syslog/Eventlog.'),
 			'method' => 'checkbox_group',
 			'tab' => 'poller',
 			'items' => array(
@@ -339,7 +332,7 @@ $settings = array(
 		),
 		'i18n_language_support' => array(
 			'friendly_name' => __('Language Support'),
-			'description' => __('Choose \'enabled\' to allow the localization of Cacti. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that\'s not the fact everything will be displayed in English.'),
+			'description' => __('Choose \'enabled\' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that\'s not the fact everything will be displayed in English.'),
 			'method' => 'drop_array',
 			'default' => '1',
 			'array' => $i18n_modes
@@ -353,7 +346,7 @@ $settings = array(
 		),
 		'i18n_auto_detection' => array(
 			'friendly_name' => __('Auto Language Detection'),
-			'description' => __('Allow to automatically determine the \'default\' language of the user and provide it at login time if that language is supported by Cacti. If disabled, the default language will be in force until the user elects another language.'),
+			'description' => __('Allow to automatically determine the \'default\' language of the user and provide it at login time if that language is supported by Kadupul. If disabled, the default language will be in force until the user elects another language.'),
 			'method' => 'drop_array',
 			'default' => '1',
 			'array' => array(
@@ -363,14 +356,14 @@ $settings = array(
 		),
 		'i18n_language_handler' => array(
 			'friendly_name' => __('Preferred Language Processor'),
-			'description' => __('Cacti includes support for multiple alternate Language Translation Processors.  If none is selected Cacti will attempt to use the first one found.'),
+			'description' => __('Kadupul includes support for multiple alternate Language Translation Processors.  If none is selected Kadupul will attempt to use the first one found.'),
 			'method' => 'drop_array',
 			'default' => CACTI_LANGUAGE_HANDLER_DEFAULT,
 			'array' => $i18n_supported_languages
 		),
 		'client_timezone_support' => array(
 			'friendly_name' => __('Client TimeZone Support'),
-			'description' => __('How should Cacti support Client Dates based upon the Client browsers timezone.'),
+			'description' => __('How should Kadupul support Client Dates based upon the Client browsers timezone.'),
 			'method' => 'drop_array',
 			'array' => array(
 				'0' => __('Disabled'),
@@ -380,14 +373,14 @@ $settings = array(
 		),
 		'default_date_format' => array(
 			'friendly_name' => __('Date Display Format'),
-			'description' => __('The System default date format to use in Cacti.'),
+			'description' => __('The System default date format to use in Kadupul.'),
 			'method' => 'drop_array',
 			'array' => $dateformats,
 			'default' => GD_Y_MO_D
 		),
 		'default_datechar' => array(
 			'friendly_name' => __('Date Separator'),
-			'description' => __('The System default date separator to be used in Cacti.'),
+			'description' => __('The System default date separator to be used in Kadupul.'),
 			'method' => 'drop_array',
 			'array' => $datechar,
 			'default' => GDC_HYPHEN
@@ -452,7 +445,7 @@ $settings = array(
 		),
 		'local_documentation' => array(
 			'friendly_name' => __('Local Page Help Only'),
-			'description' => __('By default Cacti page help is located at docs.cacti.net.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the \'docs\' location of you Cacti server.  If you choose only to leverage the local location for page help documentation, check this checkbox.'),
+			'description' => __('By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the \'docs\' location of you Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox.'),
 			'default' => '',
 			'method' => 'checkbox',
 		),
@@ -464,25 +457,25 @@ $settings = array(
 		),
 		'ds_preselected_delete' => array(
 			'friendly_name' => __('Data Source Preservation Preset'),
-			'description' => __('When enabled, Cacti will set Radio Button to Delete related Data Sources of a Graph when removing Graphs.  Note: Cacti will not allow the removal of Data Sources if they are used in other Graphs.'),
+			'description' => __('When enabled, Kadupul will set Radio Button to Delete related Data Sources of a Graph when removing Graphs.  Note: Kadupul will not allow the removal of Data Sources if they are used in other Graphs.'),
 			'method' => 'checkbox',
 			'default' => 'on'
 		),
 		'graphs_auto_unlock' => array(
 			'friendly_name' => __('Graphs Auto Unlock'),
-			'description' => __('When enabled, Cacti will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph.'),
+			'description' => __('When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph.'),
 			'method' => 'checkbox',
 			'default' => ''
 		),
 		'hide_console' => array(
-			'friendly_name' => __('Hide Cacti Dashboard'),
-			'description' => __('For use with Cacti\'s External Link Support.  Using this setting, you can hide the Cacti Dashboard, so you can display just your own page.'),
+			'friendly_name' => __('Hide Kadupul Dashboard'),
+			'description' => __('For use with Kadupul\'s External Link Support.  Using this setting, you can hide the Kadupul Dashboard, so you can display just your own page.'),
 			'default' => '',
 			'method' => 'checkbox'
 		),
 		'drag_and_drop' => array(
 			'friendly_name' => __('Enable Drag-N-Drop'),
-			'description' => __('Some of Cacti\'s interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled.'),
+			'description' => __('Some of Kadupul\'s interfaces support Drag-N-Drop.  If checked this option will be enabled.  Note: For visually impaired user, this option may be disabled.'),
 			'method' => 'checkbox',
 			'default' => 'on',
 		),
@@ -493,7 +486,7 @@ $settings = array(
 		),
 		'force_https' => array(
 			'friendly_name' => __('Force Connections over HTTPS'),
-			'description' => __('When checked, any attempts to access Cacti will be redirected to HTTPS to ensure high security.'),
+			'description' => __('When checked, any attempts to access Kadupul will be redirected to HTTPS to ensure high security.'),
 			'default' => '',
 			'method' => 'checkbox',
 		),
@@ -505,14 +498,14 @@ $settings = array(
 		),
 		'allow_unsafe_metachars' => array(
 			'friendly_name' => __('Allow Unsafe Metacharacters in Data Input Methods'),
-			'description' => __('Historically, Cacti administrators created simple Data Input Methods that include commands like "ps -ef | grep something | wc -l" to represent a numeric value for use in Cacti Graphs.  In earlier versions of Cacti, this was permitted.  However, this is an unsafe practice as it is a gateway for third party users to publish insecure Data Templates.  In modern Cacti, these types of practices should be avoided.  However, we provide this option if you have older Data Input Methods that contain these unsafe Meta Characters and have not converted them to local scripts in the \'scripts\' directory.  When this option is unchecked, Cacti restricts shell-style metacharacters such as quotation marks, curly brackets, vertical bars, backslashes, and backticks.  Cacti continues to allow greater-than and less-than signs for things like <path_cacti> and for input parameters, but if this option is unchecked, that is the limit of their permitted use.'),
+			'description' => __('Historically, Kadupul administrators created simple Data Input Methods that include commands like "ps -ef | grep something | wc -l" to represent a numeric value for use in Kadupul Graphs.  In earlier versions of Kadupul, this was permitted.  However, this is an unsafe practice as it is a gateway for third party users to publish insecure Data Templates.  In modern Kadupul, these types of practices should be avoided.  However, we provide this option if you have older Data Input Methods that contain these unsafe Meta Characters and have not converted them to local scripts in the \'scripts\' directory.  When this option is unchecked, Kadupul restricts shell-style metacharacters such as quotation marks, curly brackets, vertical bars, backslashes, and backticks.  Kadupul continues to allow greater-than and less-than signs for things like <path_cacti> and for input parameters, but if this option is unchecked, that is the limit of their permitted use.'),
 			'default' => '',
 			'method' => 'checkbox',
 		),
 		'content_security_policy_script' => array(
 			'method' => 'drop_array',
 			'friendly_name' => __('Content-Security Script Policy'),
-			'description' => __('Controls the script-src CSP policy.  In Nonce Modes, Cacti Plugins that use inline JavaScript must include the nonce attribute from Cacti\'s builtin function \'CactiSecureHeaders::getNonceAttribute()\'. Otherwise, those scripts will be blocked by the browser.  Currently, Cacti only allows reporting on Cacti Plugins that do not properly use Nonce Mode.  In the future, we will allow Administrators to block such plugins from using their inline JavaScript if they are not using Nonces.'),
+			'description' => __('Controls the script-src CSP policy.  In Nonce Modes, Kadupul Plugins that use inline JavaScript must include the nonce attribute from Kadupul\'s builtin function \'CactiSecureHeaders::getNonceAttribute()\'. Otherwise, those scripts will be blocked by the browser.  Currently, Kadupul only allows reporting on Kadupul Plugins that do not properly use Nonce Mode.  In the future, we will allow Administrators to block such plugins from using their inline JavaScript if they are not using Nonces.'),
 			'default' => '',
 			'array' => array(
 				'0'            => __('Allow Non-Nonced Inline JavaScript'),
@@ -550,25 +543,25 @@ $settings = array(
 		'automation_graphs_enabled' => array(
 			'method' => 'checkbox',
 			'friendly_name' => __('Enable Automatic Graph Creation'),
-			'description' => __('When disabled, Cacti Automation will not actively create any Graph.  This is useful when adjusting Device settings so as to avoid creating new Graphs each time you save an object.  Invoking Automation Rules manually will still be possible.'),
+			'description' => __('When disabled, Kadupul Automation will not actively create any Graph.  This is useful when adjusting Device settings so as to avoid creating new Graphs each time you save an object.  Invoking Automation Rules manually will still be possible.'),
 			'default' => 'on',
 		),
 		'automation_tree_enabled' => array(
 			'method' => 'checkbox',
 			'friendly_name' => __('Enable Automatic Tree Item Creation'),
-			'description' => __('When disabled, Cacti Automation will not actively create any Tree Item.  This is useful when adjusting Device or Graph settings so as to avoid creating new Tree Entries each time you save an object.  Invoking Rules manually will still be possible.'),
+			'description' => __('When disabled, Kadupul Automation will not actively create any Tree Item.  This is useful when adjusting Device or Graph settings so as to avoid creating new Tree Entries each time you save an object.  Invoking Rules manually will still be possible.'),
 			'default' => 'on',
 		),
 		'automation_email' => array(
 			'friendly_name' => __('Automation Notification To Email'),
-			'description' => __('The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Cacti will use the Primary Cacti Admins Email account.'),
+			'description' => __('The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account.'),
 			'method' => 'textbox',
 			'default' => '',
 			'max_length' => '128',
 		),
 		'automation_fromname' => array(
 			'friendly_name' => __('Automation Notification From Name'),
-			'description' => __('The Email Name to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Cacti will use the system default From Name.'),
+			'description' => __('The Email Name to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Name.'),
 			'method' => 'textbox',
 			'default' => '',
 			'max_length' => '32',
@@ -576,7 +569,7 @@ $settings = array(
 		),
 		'automation_fromemail' => array(
 			'friendly_name' => __('Automation Notification From Email'),
-			'description' => __('The Email Address to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Cacti will use the system default From Email Address.'),
+			'description' => __('The Email Address to use for Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the system default From Email Address.'),
 			'method' => 'textbox',
 			'default' => '',
 			'max_length' => '100',
@@ -673,7 +666,7 @@ $settings = array(
 		),
 		'default_interface_speed' => array(
 			'friendly_name' => __('Default Interface Speed'),
-			'description' => __('If Cacti can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles.'),
+			'description' => __('If Kadupul can not determine the interface speed due to either ifSpeed or ifHighSpeed not being set or being zero, what maximum value do you wish on the resulting RRDfiles.'),
 			'method' => 'drop_array',
 			'default' => '1000',
 			'array' => array(
@@ -799,7 +792,7 @@ $settings = array(
 		),
 		'availability_method' => array(
 			'friendly_name' => __('Downed Device Detection'),
-			'description' => __('Default Availability/Reachability for all new Devices.  The method Cacti will use to determine if a Device is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>'),
+			'description' => __('Default Availability/Reachability for all new Devices.  The method Kadupul will use to determine if a Device is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>'),
 			'method' => 'drop_array',
 			'default' => AVAIL_SNMP,
 			'array' => $availability_options,
@@ -813,7 +806,7 @@ $settings = array(
 		),
 		'ping_port' => array(
 			'friendly_name' => __('Ping Port'),
-			'description' => __('Default Ping Port for all new Devices.  With TCP, Cacti will attempt to Syn the port.  With UDP, Cacti requires either a successful connection, or a \'port not reachable\' error to determine if the Device is up or not.'),
+			'description' => __('Default Ping Port for all new Devices.  With TCP, Kadupul will attempt to Syn the port.  With UDP, Kadupul requires either a successful connection, or a \'port not reachable\' error to determine if the Device is up or not.'),
 			'method' => 'textbox',
 			'default' => '23',
 			'max_length' => '10',
@@ -829,7 +822,7 @@ $settings = array(
 		),
 		'ping_retries' => array(
 			'friendly_name' => __('Ping Retry Count'),
-			'description' => __('The number of times Cacti will attempt to ping a Device before marking it as down.'),
+			'description' => __('The number of times Kadupul will attempt to ping a Device before marking it as down.'),
 			'method' => 'textbox',
 			'default' => '1',
 			'max_length' => '10',
@@ -865,7 +858,7 @@ $settings = array(
 		),
 		'selected_theme' => array(
 			'friendly_name' => __('Theme'),
-			'description' => __('Please select one of the available Themes to skin your Cacti with.'),
+			'description' => __('Please select one of the available Themes to skin your Kadupul with.'),
 			'method' => 'drop_array',
 			'default' => 'modern',
 			'array' => $themes
@@ -884,7 +877,7 @@ $settings = array(
 		),
 		'autocomplete_enabled' => array(
 			'friendly_name' => __('Autocomplete Enabled'),
-			'description' => __('In very large systems, select lists can slow the user interface significantly.  If this option is enabled, Cacti will use autocomplete callbacks to populate the select list systematically.  Note: autocomplete is forcibly disabled on the Classic theme.'),
+			'description' => __('In very large systems, select lists can slow the user interface significantly.  If this option is enabled, Kadupul will use autocomplete callbacks to populate the select list systematically.  Note: autocomplete is forcibly disabled on the Classic theme.'),
 			'method' => 'drop_array',
 			'default' => '1',
 			'array' => array(
@@ -974,7 +967,7 @@ $settings = array(
 		),
 		'num_rows_log' => array(
 			'friendly_name' => __('Default Log Tail Lines'),
-			'description' => __('Default number of lines of the Cacti log file to tail.'),
+			'description' => __('Default number of lines of the Kadupul log file to tail.'),
 			'method' => 'drop_array',
 			'default' => 500,
 			'array' => $log_tail_lines,
@@ -989,7 +982,7 @@ $settings = array(
 		),
 		'log_refresh_interval' => array(
 			'friendly_name' => __('Log Tail Refresh'),
-			'description' => __('How often do you want the Cacti log display to update.'),
+			'description' => __('How often do you want the Kadupul log display to update.'),
 			'method' => 'drop_array',
 			'default' => 60,
 			'array' => $page_refresh_interval,
@@ -1014,7 +1007,7 @@ $settings = array(
 		),
 		'realtime_enabled' => array(
 			'friendly_name' => __('Enable Real-time Graphing'),
-			'description' => __('When an option is checked, users will be able to put Cacti into Real-time mode.'),
+			'description' => __('When an option is checked, users will be able to put Kadupul into Real-time mode.'),
 			'method' => 'checkbox',
 			'default' => 'on'
 		),
@@ -1049,7 +1042,7 @@ $settings = array(
 			'friendly_name' => __('Custom Watermark'),
 			'description' => __('Text placed at the bottom center of every Graph.'),
 			'method' => 'textbox',
-			'default' => 'Generated by Cacti®',
+			'default' => 'Generated by Kadupul',
 			'max_length' => '80',
 			'size' => '60'
 		),
@@ -1210,7 +1203,7 @@ $settings = array(
 		),
 		'enable_snmp_agent' => array(
 			'friendly_name' => __('SNMP Agent Support Enabled'),
-			'description' => __('If this option is checked, Cacti will populate SNMP Agent tables with Cacti device and system information.  It does not enable the SNMP Agent itself.'),
+			'description' => __('If this option is checked, Kadupul will populate SNMP Agent tables with Kadupul device and system information.  It does not enable the SNMP Agent itself.'),
 			'method' => 'checkbox',
 			'default' => 'on'
 		),
@@ -1237,20 +1230,20 @@ $settings = array(
 		),
 		'cron_interval' => array(
 			'friendly_name' => __('Cron/Daemon Interval'),
-			'description' => __('The frequency that the Cacti data collector will be started.  You can use either crontab, a scheduled task (for windows), or the cactid systemd service to control launching the Cacti data collector.  For instructions on using the cactid daemon, review the README.md file in the service directory.'),
+			'description' => __('The frequency that the Kadupul data collector will be started.  You can use either crontab, a scheduled task (for windows), or the cactid systemd service to control launching the Kadupul data collector.  For instructions on using the cactid daemon, review the README.md file in the service directory.'),
 			'method' => 'drop_array',
 			'default' => 300,
 			'array' => $cron_intervals,
 		),
 		'process_leveling' => array(
 			'friendly_name' => __('Balance Process Load'),
-			'description' => __('If you choose this option, Cacti will attempt to balance the load of each poller process by equally distributing poller items per process.'),
+			'description' => __('If you choose this option, Kadupul will attempt to balance the load of each poller process by equally distributing poller items per process.'),
 			'method' => 'checkbox',
 			'default' => 'on'
 		),
 		'poller_debug' => array(
 			'friendly_name' => __('Debug Output Width'),
-			'description' => __('If you choose this option, Cacti will check for output that exceeds Cacti\'s ability to store it and issue a warning when it finds it.'),
+			'description' => __('If you choose this option, Kadupul will check for output that exceeds Kadupul\'s ability to store it and issue a warning when it finds it.'),
 			'method' => 'checkbox',
 			'default' => ''
 		),
@@ -1262,7 +1255,7 @@ $settings = array(
 		),
 		'remote_agent_timeout' => array(
 			'friendly_name' => __('Remote Agent Timeout'),
-			'description' => __('The amount of time, in seconds, that the Central Cacti web server will wait for a response from the Remote Data Collector to obtain various Device information before abandoning the request.  On Devices that are associated with Data Collectors other than the Central Cacti Data Collector, the Remote Agent must be used to gather Device information.'),
+			'description' => __('The amount of time, in seconds, that the Central Kadupul web server will wait for a response from the Remote Data Collector to obtain various Device information before abandoning the request.  On Devices that are associated with Data Collectors other than the Central Kadupul Data Collector, the Remote Agent must be used to gather Device information.'),
 			'method' => 'drop_array',
 			'default' => '5',
 			'array' => array(
@@ -1294,7 +1287,7 @@ $settings = array(
 		),
 		'max_get_size' => array(
 			'friendly_name' => __('SNMP Get OID Limit'),
-			'description' => __('The default maximum number of SNMP Get OIDs to issue per snmpget request.  For Devices, this setting is controlled at the Device level.  You should only use this setting when using Cacti\'s SNMP API natively in your scripts or plugins.'),
+			'description' => __('The default maximum number of SNMP Get OIDs to issue per snmpget request.  For Devices, this setting is controlled at the Device level.  You should only use this setting when using Kadupul\'s SNMP API natively in your scripts or plugins.'),
 			'method' => 'textbox',
 			'default' => '10',
 			'max_length' => '10',
@@ -1308,7 +1301,7 @@ $settings = array(
 		),
 		'disable_cache_replication' => array(
 			'friendly_name' => __('Disable Resource Cache Replication'),
-			'description' => __('By default, the main Cacti Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Cacti Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting.'),
+			'description' => __('By default, the main Kadupul Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Kadupul Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting.'),
 			'method' => 'checkbox',
 			'default' => ''
 		),
@@ -1368,7 +1361,7 @@ $settings = array(
 		),
 		'reports_timeout' => array(
 			'friendly_name' => __('Report Generation Timeout'),
-			'description' => __('The maximum amount of time Cacti\'s Reports Generation script can run without generating a timeout error and being killed.'),
+			'description' => __('The maximum amount of time Kadupul\'s Reports Generation script can run without generating a timeout error and being killed.'),
 			'method' => 'drop_array',
 			'default' => '300',
 			'array' => array(
@@ -1381,7 +1374,7 @@ $settings = array(
 		),
 		'dsstats_timeout' => array(
 			'friendly_name' => __('Data Source Statistics Timeout'),
-			'description' => __('The maximum amount of time Cacti\'s Data Source Statistics script can run without generating a timeout error and being killed.'),
+			'description' => __('The maximum amount of time Kadupul\'s Data Source Statistics script can run without generating a timeout error and being killed.'),
 			'method' => 'drop_array',
 			'default' => '300',
 			'array' => array(
@@ -1396,7 +1389,7 @@ $settings = array(
 		),
 		'rrdcheck_timeout' => array(
 			'friendly_name' => __('RRDChecker Timeout'),
-			'description' => __('The maximum amount of time Cacti\'s RRDfile check script can run without generating a timeout error and being killed.'),
+			'description' => __('The maximum amount of time Kadupul\'s RRDfile check script can run without generating a timeout error and being killed.'),
 			'method' => 'drop_array',
 			'default' => '3600',
 			'array' => array(
@@ -1409,7 +1402,7 @@ $settings = array(
 		),
 		'commands_timeout' => array(
 			'friendly_name' => __('Poller Commands Timeout'),
-			'description' => __('The maximum amount of time Cacti\'s Background Commands script can run without generating a timeout error and being killed.  This script will perform tasks such as re-indexing Devices and pruning devices from Remote Data Collectors.'),
+			'description' => __('The maximum amount of time Kadupul\'s Background Commands script can run without generating a timeout error and being killed.  This script will perform tasks such as re-indexing Devices and pruning devices from Remote Data Collectors.'),
 			'method' => 'drop_array',
 			'default' => '300',
 			'array' => array(
@@ -1450,7 +1443,7 @@ $settings = array(
 		),
 		'maintenance_timeout' => array(
 			'friendly_name' => __('Maintenance Background Generation Timeout'),
-			'description' => __('The maximum amount of time a Cacti\'s Maintenance script can run without generating a timeout error and being killed.'),
+			'description' => __('The maximum amount of time a Kadupul\'s Maintenance script can run without generating a timeout error and being killed.'),
 			'method' => 'drop_array',
 			'default' => '300',
 			'array' => array(
@@ -1464,7 +1457,7 @@ $settings = array(
 		),
 		'spikekill_timeout' => array(
 			'friendly_name' => __('Spikekill Background Generation Timeout'),
-			'description' => __('The maximum amount of time a Cacti\'s Spikekill script can run without generating a timeout error and being killed.'),
+			'description' => __('The maximum amount of time a Kadupul\'s Spikekill script can run without generating a timeout error and being killed.'),
 			'method' => 'drop_array',
 			'default' => '3600',
 			'array' => array(
@@ -1487,7 +1480,7 @@ $settings = array(
 		),
 		'concurrent_processes' => array(
 			'friendly_name' => __('Data Collector Processes'),
-			'description' => __('The default number of concurrent processes to execute per Data Collector.  NOTE: Starting from Cacti 1.2, this setting is maintained in the Data Collector.  Moving forward, this value is only a preset for the Data Collector.  Using a higher number when using cmd.php will improve performance.  Performance improvements in Spine are best resolved with the threads parameter.  When using Spine, we recommend a lower number and leveraging threads instead.  When using cmd.php, use no more than 2x the number of CPU cores.'),
+			'description' => __('The default number of concurrent processes to execute per Data Collector.  NOTE: Starting from Kadupul 1.2, this setting is maintained in the Data Collector.  Moving forward, this value is only a preset for the Data Collector.  Using a higher number when using cmd.php will improve performance.  Performance improvements in Spine are best resolved with the threads parameter.  When using Spine, we recommend a lower number and leveraging threads instead.  When using cmd.php, use no more than 2x the number of CPU cores.'),
 			'method' => 'textbox',
 			'default' => '1',
 			'max_length' => '10',
@@ -1495,7 +1488,7 @@ $settings = array(
 		),
 		'max_threads' => array(
 			'friendly_name' => __('Threads per Process'),
-			'description' => __('The Default Threads allowed per process.  NOTE: Starting in Cacti 1.2+, this setting is maintained in the Data Collector, and this is simply the Preset.  Using a higher number when using Spine will improve performance.  However, ensure that you have enough MySQL/MariaDB connections to support the following equation: connections = data collectors * processes * (threads + script servers).  You must also ensure that you have enough spare connections for user login connections as well.'),
+			'description' => __('The Default Threads allowed per process.  NOTE: Starting in Kadupul 1.2+, this setting is maintained in the Data Collector, and this is simply the Preset.  Using a higher number when using Spine will improve performance.  However, ensure that you have enough MySQL/MariaDB connections to support the following equation: connections = data collectors * processes * (threads + script servers).  You must also ensure that you have enough spare connections for user login connections as well.'),
 			'method' => 'textbox',
 			'default' => '1',
 			'max_length' => '10',
@@ -1510,7 +1503,7 @@ $settings = array(
 		),
 		'auth_method' => array(
 			'friendly_name' => __('Authentication Method'),
-			'description' => __('<blockquote><i>Built-in Authentication</i> - Cacti handles user authentication, which allows you to create users and give them rights to different areas within Cacti.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Cacti resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>'),
+			'description' => __('<blockquote><i>Built-in Authentication</i> - Kadupul handles user authentication, which allows you to create users and give them rights to different areas within Kadupul.<br><br><i>Web Basic Authentication</i> - Authentication is handled by the web server. Users can be added or created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.<br><br><i>LDAP Authentication</i> - Allows for authentication against a LDAP server. Users will be created automatically on first login if the Template User is defined, otherwise the defined guest permissions will be used.  If PHPs LDAP module is not enabled, LDAP Authentication will not appear as a selectable option.<br><br><i>Multiple LDAP/AD Domain Authentication</i> - Allows administrators to support multiple disparate groups from different LDAP/AD directories to access Kadupul resources.  Just as LDAP Authentication, the PHP LDAP module is required to utilize this method.</blockquote>'),
 			'method' => 'drop_array',
 			'default' => 1,
 			'array' => $auth_methods
@@ -1528,7 +1521,7 @@ $settings = array(
 		),
 		'admin_user' => array(
 			'friendly_name' => __('Primary Admin'),
-			'description' => __('The name of the primary administrative account that will automatically receive Emails when the Cacti system experiences issues.  To receive these Emails, ensure that your mail settings are correct, and the administrative account has an Email address that is set.'),
+			'description' => __('The name of the primary administrative account that will automatically receive Emails when the Kadupul system experiences issues.  To receive these Emails, ensure that your mail settings are correct, and the administrative account has an Email address that is set.'),
 			'method' => 'drop_sql',
 			'none_value' => __('No User'),
 			'sql' => 'SELECT id AS id, username AS name FROM user_auth WHERE realm = 0 ORDER BY username',
@@ -1544,7 +1537,7 @@ $settings = array(
 		),
 		'user_template' => array(
 			'friendly_name' => __('User Template'),
-			'description' => __('The name of the user that Cacti will use as a template for new Web Basic and LDAP users; is \'guest\' by default.  This user account will be disabled from logging in upon being selected.'),
+			'description' => __('The name of the user that Kadupul will use as a template for new Web Basic and LDAP users; is \'guest\' by default.  This user account will be disabled from logging in upon being selected.'),
 			'method' => 'drop_sql',
 			'none_value' => __('No User'),
 			'sql' => 'SELECT id AS id, username AS name FROM user_auth WHERE realm = 0 AND id NOT IN (' . $admin_account . ') ORDER BY username',
@@ -1557,7 +1550,7 @@ $settings = array(
 		),
 		'basic_auth_fail_message' => array(
 			'friendly_name' => __('Basic Auth Login Failure Message'),
-			'description' => __('When using basic authentication, if there are issues mapping the username to a valid Cacti account, the message included here will be displayed to users.  It can include both text and HTML.'),
+			'description' => __('When using basic authentication, if there are issues mapping the username to a valid Kadupul account, the message included here will be displayed to users.  It can include both text and HTML.'),
 			'method' => 'textarea',
 			'textarea_rows' => '4',
 			'textarea_cols' => '80',
@@ -1701,7 +1694,7 @@ $settings = array(
 		),
 		'ldap_server' => array(
 			'friendly_name' => __('Server(s)'),
-			'description' => __('A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Cacti will attempt to use the LDAP servers from left to right to authenticate a user.'),
+			'description' => __('A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user.'),
 			'method' => 'textbox',
 			'size' => '80',
 			'max_length' => '255'
@@ -1747,7 +1740,7 @@ $settings = array(
 		),
 		'ldap_debug' => array(
 			'friendly_name' => __('LDAP Debug Mode'),
-			'description' => __('If Checked Cacti will log extra LDAP information to the Cacti log during Binding and Searching activities.'),
+			'description' => __('If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities.'),
 			'default' => '',
 			'method' => 'checkbox'
 		),
@@ -1876,7 +1869,7 @@ $settings = array(
 		),
 		'base_url' => array(
 			'friendly_name' => __('Server Base URL'),
-			'description' => __('This is a the server location that will be used for links to the Cacti site. This should include the subdirectory if Cacti does not run from root folder.'),
+			'description' => __('This is a the server location that will be used for links to the Kadupul site. This should include the subdirectory if Kadupul does not run from root folder.'),
 			'method' => 'textbox',
 			'max_length' => 255,
 			'size' => '60',
@@ -1888,7 +1881,7 @@ $settings = array(
 		),
 		'notify_admin' => array(
 			'friendly_name' => __('Notify Primary Admin of Issues'),
-			'description' => __('In cases where the Cacti server is experiencing problems, should the Primary Administrator be notified by Email?  The Primary Administrator\'s Cacti user account is specified under the Authentication tab on Cacti\'s settings page. It defaults to the \'admin\' account.'),
+			'description' => __('In cases where the Kadupul server is experiencing problems, should the Primary Administrator be notified by Email?  The Primary Administrator\'s Kadupul user account is specified under the Authentication tab on Kadupul\'s settings page. It defaults to the \'admin\' account.'),
 			'default' => '',
 			'method' => 'checkbox'
 		),
@@ -2020,7 +2013,7 @@ $settings = array(
 			'array' => $attachment_sizes
 		),
 		'reports_log_verbosity' => array(
-			'friendly_name' => __('Poller Logging Level for Cacti Reporting'),
+			'friendly_name' => __('Poller Logging Level for Kadupul Reporting'),
 			'description' => __('What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly.'),
 			'method' => 'drop_array',
 			'default' => POLLER_VERBOSITY_LOW,
@@ -2053,7 +2046,7 @@ $settings = array(
 		),
 		'settings_dns_timeout' => array(
 			'friendly_name' => __('DNS Timeout'),
-			'description' => __('Please enter the DNS timeout in milliseconds.  Cacti uses a PHP based DNS resolver.'),
+			'description' => __('Please enter the DNS timeout in milliseconds.  Kadupul uses a PHP based DNS resolver.'),
 			'method' => 'textbox',
 			'default' => '500',
 			'max_length' => '10',
@@ -2068,7 +2061,7 @@ $settings = array(
 		),
 		'boost_rrd_update_enable' => array(
 			'friendly_name' => __('Enable On-demand RRD Updating'),
-			'description' => __('Should Boost enable on demand RRD updating in Cacti?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on.'),
+			'description' => __('Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on.'),
 			'method' => 'checkbox',
 			'default' => ''
 		),
@@ -2138,7 +2131,7 @@ $settings = array(
 		),
 		'boost_poller_mem_limit' => array(
 			'friendly_name' => __('Memory Limit for Boost and Poller'),
-			'description' => __('The maximum amount of memory for the Cacti Poller and Boosts Poller'),
+			'description' => __('The maximum amount of memory for the Kadupul Poller and Boosts Poller'),
 			'method' => 'drop_array',
 			'default' => '1024',
 			'array' => $boost_max_memory
@@ -2191,7 +2184,7 @@ $settings = array(
 		),
 		'dsstats_enable' => array(
 			'friendly_name' => __('Enable Data Source Statistics Collection'),
-			'description' => __('Should Data Source Statistics be collected for this Cacti system?'),
+			'description' => __('Should Data Source Statistics be collected for this Kadupul system?'),
 			'method' => 'checkbox',
 			'default' => ''
 		),
@@ -2247,7 +2240,7 @@ $settings = array(
 		),
 		'dsstats_poller_mem_limit' => array(
 			'friendly_name' => __('Memory Limit for Data Source Statistics Data Collector'),
-			'description' => __('The maximum amount of memory for the Cacti Poller and Data Source Statistics Poller'),
+			'description' => __('The maximum amount of memory for the Kadupul Poller and Data Source Statistics Poller'),
 			'method' => 'drop_array',
 			'default' => '1024',
 			'array' => $dsstats_max_memory
@@ -2259,7 +2252,7 @@ $settings = array(
 		),
 		'rrdcheck_enable' => array(
 			'friendly_name' => __('Enable RRDfile Check'),
-			'description' => __('Should RRDfile check be enabled for this Cacti system?'),
+			'description' => __('Should RRDfile check be enabled for this Kadupul system?'),
 			'method' => 'checkbox',
 			'default' => ''
 		),
@@ -2571,7 +2564,7 @@ $settings_user = array(
 	'general' => array(
 		'selected_theme' => array(
 			'friendly_name' => __('Theme'),
-			'description' => __('Please select one of the available Themes to skin your Cacti with.'),
+			'description' => __('Please select one of the available Themes to skin your Kadupul with.'),
 			'method' => 'drop_array',
 			'default' => read_config_option('selected_theme'),
 			'array' => $themes
@@ -2585,10 +2578,10 @@ $settings_user = array(
 		),
 		'client_timezone_support' => array(
 			'friendly_name' => __('TimeZone Support'),
-			'description' => __('How would you like Cacti to present dates?  This setting will also change the way that Cacti Graphs dates are represented.'),
+			'description' => __('How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented.'),
 			'method' => 'drop_array',
 			'array' => array(
-				'0' => __('Cacti Server Timezone'),
+				'0' => __('Kadupul Server Timezone'),
 				'1' => __('My Browsers Timezone')
 			),
 			'default' => '0'
@@ -2626,14 +2619,14 @@ $settings_user = array(
 		),
 		'default_date_format' => array(
 			'friendly_name' => __('Date Display Format'),
-			'description' => __('The date format to use in Cacti.'),
+			'description' => __('The date format to use in Kadupul.'),
 			'method' => 'drop_array',
 			'array' => $dateformats,
 			'default' => read_config_option('default_date_format')
 		),
 		'default_datechar' => array(
 			'friendly_name' => __('Date Separator'),
-			'description' => __('The date separator to be used in Cacti.'),
+			'description' => __('The date separator to be used in Kadupul.'),
 			'method' => 'drop_array',
 			'array' => $datechar,
 			'default' => read_config_option('default_datechar')
@@ -2714,7 +2707,7 @@ $settings_user = array(
 	'thumbnail' => array(
 		'thumbnail_sections' => array(
 			'friendly_name' => __('Thumbnail Sections'),
-			'description' => __('Which portions of Cacti display Thumbnails by default.'),
+			'description' => __('Which portions of Kadupul display Thumbnails by default.'),
 			'method' => 'checkbox_group',
 			'items' => array(
 				'thumbnail_section_preview' => array(
@@ -2795,7 +2788,7 @@ $settings_user = array(
 		),
 		'tree_history' => array(
 			'friendly_name' => __('Tree History'),
-			'description' => __('If enabled, Cacti will remember your Tree History between logins and when you return to the Graphs page.'),
+			'description' => __('If enabled, Kadupul will remember your Tree History between logins and when you return to the Graphs page.'),
 			'method' => 'checkbox',
 			'default' => 'on'
 		),

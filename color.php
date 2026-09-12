@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 include('./include/auth.php');
@@ -349,7 +342,7 @@ function color_import() {
 		html_start_box('Import Results', '100%', '', '3', 'center', '');
 
 		print "<tr class='even'><td>
-			<p class='textArea'>" . __('Cacti has imported the following items:') . "</p>
+			<p class='textArea'>" . __('Kadupul has imported the following items:') . "</p>
 		</td></tr>\n";
 
 		if (cacti_sizeof($_SESSION['import_debug_info'])) {

@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /* inject_form_variables - replaces all variables contained in $form_array with
@@ -362,7 +355,7 @@ function isempty_request_var($variable) {
 	return true;
 }
 
-/* set_request_var - sets a given $_REQUEST variable and Cacti global.
+/* set_request_var - sets a given $_REQUEST variable and Kadupul global.
    @arg $variable - The variable to set
    @arg $value - The value to set the variable to
    @returns - null */
@@ -376,7 +369,7 @@ function set_request_var($variable, $value) {
 }
 
 /* get_request_var - returns the current value of a PHP $_REQUEST variable, optionally
-     returning a default value if the request variable does not exist.  When Cacti
+     returning a default value if the request variable does not exist.  When Kadupul
      has 'log_validation' set on, it will log all instances where a request variable
      has not first been filtered.
    @arg $name - the name of the request variable. this should be a valid key in the
@@ -562,7 +555,7 @@ function get_request_var_post($name, $default = '') {
 
 /* validate_store_request_vars - validate, sanitize, and store
    request variables into the custom $_CACTI_REQUEST and desired
-   session variables for Cacti filtering.
+   session variables for Kadupul filtering.
 
 
    @arg $filters - an array keyed with the filter methods.
@@ -786,7 +779,7 @@ function cacti_build_sort_fragment($column, $direction) {
 	return '`' . implode('`.`', explode('.', $column)) . '` ' . cacti_normalize_sort_direction($direction);
 }
 
-/* update_order_string - creates a sort string for standard Cacti tables
+/* update_order_string - creates a sort string for standard Kadupul tables
    @returns - null */
 function update_order_string($inplace = false) {
 	$page = get_order_string_page(false);
@@ -993,7 +986,7 @@ function get_order_string_page($increment = true) {
 }
 
 /**
- * Validate that a redirect URL points to an internal Cacti page.
+ * Validate that a redirect URL points to an internal Kadupul page.
  * Prevents open redirect attacks by rejecting external URLs.
  *
  * @param string $url The URL to validate
@@ -1133,11 +1126,11 @@ function validate_is_regex($regex) {
 	 * length of the regular expression to 50 bytes or less.
 	 */
 	if (strlen($regex) > 50) {
-		return __('Cacti regular expressions are limited to 50 characters only for security reasons.');
+		return __('Kadupul regular expressions are limited to 50 characters only for security reasons.');
 	}
 
 	if (strpos($regex, ';') !== false) {
-		return __('Cacti regular expressions can not includes the semi-color character.');
+		return __('Kadupul regular expressions can not includes the semi-color character.');
 	}
 
 	restore_error_handler();

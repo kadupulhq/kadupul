@@ -8,7 +8,6 @@
  | as published by the Free Software Foundation; either version 2          |
  | of the License, or (at your option) any later version.                  |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
 */
 
@@ -65,7 +64,7 @@ test('sql.php does not call shell_exec directly', function () use ($sqlPhpPath) 
 test('sql.php returns U on empty execution output', function () use ($sqlPhpPath) {
 	$contents = file_get_contents($sqlPhpPath);
 
-	/* Cacti data source scripts must return 'U' on error, never empty string. */
+	/* Kadupul data source scripts must return 'U' on error, never empty string. */
 	expect($contents)->toContain("if (\$output === null || \$output === '')");
 	expect($contents)->toContain("print 'U';");
 });
@@ -111,7 +110,7 @@ test('ss_sql.php does not call shell_exec directly', function () use ($ssSqlPhpP
 test('ss_sql.php returns U on empty/null shell_exec output', function () use ($ssSqlPhpPath) {
 	$contents = file_get_contents($ssSqlPhpPath);
 
-	/* Cacti data source scripts must return 'U' on error, never empty string. */
+	/* Kadupul data source scripts must return 'U' on error, never empty string. */
 	expect($contents)->toContain(": 'U'");
 });
 

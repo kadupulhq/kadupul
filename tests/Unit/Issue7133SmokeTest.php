@@ -3,14 +3,13 @@
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
 */
 
 /*
  * Smoke tests for issue #7133. Cheap structural checks that verify
  * lib/utility.php still parses, the touched functions exist, and the
- * four post-fix shapes are present. Runs without Cacti's bootstrap.
+ * four post-fix shapes are present. Runs without Kadupul's bootstrap.
  */
 
 $repoRoot = __DIR__ . '/../..';

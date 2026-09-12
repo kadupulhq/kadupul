@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 define('RRD_NL', " \\\n");
@@ -33,7 +26,7 @@ if (read_config_option('storage_location')) {
 function escape_command($command) {
 	return $command;		# we escape every single argument now, no need for 'special' escaping
 	#return preg_replace("/(\\\$|`)/", "", $command); # current cacti code
-	#TODO return preg_replace((\\\$(?=\w+|\*|\@|\#|\?|\-|\\\$|\!|\_|[0-9]|\(.*\))|`(?=.*(?=`)))","$2", $command);  #suggested by ldevantier to allow for a single $
+	#TODO return preg_replace((\\\$(?=\w+|\*|\@|\#|\?|\-|\\\$|\!|\_|[0-9]|\(.*\))|`(?=.*(?=`)))","$2", $command);  #allow for a single $
 }
 
 /** set the language environment variable for rrdtool functions
@@ -964,7 +957,7 @@ function rrdtool_function_tune($rrd_tune_array) {
      either be absolute (unix timestamp) or relative (to now)
    @arg $resolution - the accuracy of the data measured in seconds
    @arg $show_unknown - Show unknown 'NAN' values in the output as 'U'
-   @arg $rrdtool_file - Don't force Cacti to calculate the file
+   @arg $rrdtool_file - Don't force Kadupul to calculate the file
    @arg $cf - Specify the consolidation function to use
    @arg $rrdtool_pipe - a pipe to an rrdtool command
    @returns - (array) an array containing all data in this data source broken down
@@ -1354,7 +1347,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 	/* prevent command injection
 	 * This function prepares an rrdtool graph statement to be executed by the web server.
 	 * We have to take care, that the attacker does not insert shell code.
-	 * As some rrdtool parameters accept "Cacti variables", we have to perform the
+	 * As some rrdtool parameters accept "Kadupul variables", we have to perform the
 	 * variable substitution prior to vulnerability checks.
 	 * We will enclose all parameters in quotes and substitute quotation marks within
 	 * those parameters.
@@ -1683,7 +1676,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 						return __('ERROR: RRD file does not exist: %s', $data_source_path);
 					}
 
-					return rrdtool_create_error_image(__('The Cacti Poller has not run yet.'));
+					return rrdtool_create_error_image(__('The Kadupul Poller has not run yet.'));
 				}
 
 				/* FOR WIN32: Escape all colon for drive letters (ex. D\:/path/to/rra) */
@@ -1857,7 +1850,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 			// Data Template that did not include the CF required to generate the graph.  The
 			// cf_reference picks the CF of the previously visible graph item and uses it as the CF.  So,
 			// instead of breaking these graphs, we use the cf_reference to ensure that RRDtool
-			// get's a legit DEF that includes the CF.  In many cases, the Data Template, or in Cacti 1.2,
+			// get's a legit DEF that includes the CF.  In many cases, the Data Template, or in Kadupul 1.2,
 			// the Data Source Profile misses the LAST consolidatin function.  So, we have to use
 			// either Average or Max depending on what showed up.  So, this code block can be discarded.
 			// We will do this in the near future when we have more testers available.
@@ -2498,7 +2491,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 			print '<pre>' . wordwrap(html_escape($source_command_line), 160, PHP_EOL, true) . '</pre>';
 			print '<span class="textInfo">' . 'RRDtool Command lengths = ' . $source_command_line_lengths . ' characters.</span><br>';
 			if ( $config['cacti_server_os'] == 'win32' && $source_command_line_lengths > 8191 ) {
-				print '<pre>' . 'Warning: The Cacti OS is Windows system, RRDtool Command lengths should not exceed 8191 characters.' . '</pre>';
+				print '<pre>' . 'Warning: The Kadupul OS is Windows system, RRDtool Command lengths should not exceed 8191 characters.' . '</pre>';
 			}
 		} else {
 			if (isset($graph_data_array['graphv'])) {
@@ -3063,7 +3056,7 @@ function rrdtool_cacti_compare($data_source_id, &$info) {
 			foreach($cacti_info['ds'] as $data_source_name => $data_source) {
 				/**
 				 * This should be a rare case today where the RRDfile does not
-				 * have the data source, but Cacti does.
+				 * have the data source, but Kadupul does.
 				 */
 				if (!isset($info['ds'][$data_source_name])) {
 					/* cacti knows this ds, but the rrd file does not */
@@ -3077,7 +3070,7 @@ function rrdtool_cacti_compare($data_source_id, &$info) {
 				}
 
 				/**
-				 * Accommodate a Cacti bug where the heartbeat was not
+				 * Accommodate a Kadupul bug where the heartbeat was not
 				 * propagated.
 				 */
 				if ($data_source['minimal_heartbeat'] != $profile_heartbeat) {
@@ -3126,7 +3119,7 @@ function rrdtool_cacti_compare($data_source_id, &$info) {
 		/* if there are data sources missing log that now */
 		foreach ($info['ds'] as $data_source_name => $data_source) {
 			if (!isset($data_source['seen'])) {
-				$diff['ds'][$data_source_name]['error'] = __("DS '%s' missing in Cacti definition", $data_source_name);
+				$diff['ds'][$data_source_name]['error'] = __("DS '%s' missing in Kadupul definition", $data_source_name);
 			}
 		}
 
@@ -3140,8 +3133,8 @@ function rrdtool_cacti_compare($data_source_id, &$info) {
 
 				foreach($cacti_info['rra'] as $cacti_rra_id => $cacti_rra) {
 					if ($cf == $cacti_rra['cf'] && $steps == $cacti_rra['steps'] && ($index != $cacti_rra_id)) {
-						$diff['rra'][$index]['error']        = __("Cacti RRA '%s' has same CF/steps (%s, %s) as '%s'", $index, $cf, $steps, $cacti_rra_id);
-						$diff['rra'][$cacti_rra_id]['error'] = __("Cacti RRA '%s' has same CF/steps (%s, %s) as '%s'", $cacti_rra_id, $cf, $steps, $index);
+						$diff['rra'][$index]['error']        = __("Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'", $index, $cf, $steps, $cacti_rra_id);
+						$diff['rra'][$cacti_rra_id]['error'] = __("Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'", $cacti_rra_id, $cf, $steps, $index);
 						$resize = false;
 					}
 				}
@@ -3187,15 +3180,15 @@ function rrdtool_cacti_compare($data_source_id, &$info) {
 						$cacti_info['rra'][$cacti_rra_id]['seen'] = true;
 
 						if ($cacti_rra['steps'] != $file_rra['pdp_per_row']) {
-							$diff['rra'][$file_rra_id]['pdp_per_row_error'] = __("The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Cacti to re-create RRDfile.", $file_rra['pdp_per_row'], $cacti_rra_id, $cacti_rra['steps']);
+							$diff['rra'][$file_rra_id]['pdp_per_row_error'] = __("The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile.", $file_rra['pdp_per_row'], $cacti_rra_id, $cacti_rra['steps']);
 						}
 
 						if ($cacti_rra['xff'] != $file_rra['xff']) {
-							$diff['rra'][$file_rra_id]['xff'] = __("The XFF for Cacti RRA id is '%s' but should be '%s'", $cacti_rra_id, $cacti_rra['xff']);
+							$diff['rra'][$file_rra_id]['xff'] = __("The XFF for Kadupul RRA id is '%s' but should be '%s'", $cacti_rra_id, $cacti_rra['xff']);
 						}
 
 						if ($cacti_rra['rows'] != $file_rra['rows'] && $resize) {
-							$diff['rra'][$file_rra_id]['rows'] = __("The number of rows for Cacti RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'", $cacti_rra_id, $file_rra['rows'], $cacti_rra['rows']);
+							$diff['rra'][$file_rra_id]['rows'] = __("The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'", $cacti_rra_id, $file_rra['rows'], $cacti_rra['rows']);
 							if ($cacti_rra['rows'] > $file_rra['rows']) {
 								$diff['resize'][] = $info['filename'] . ' ' . $cacti_rra_id . ' GROW ' . ($cacti_rra['rows'] - $file_rra['rows']);
 							} else {
@@ -3212,7 +3205,7 @@ function rrdtool_cacti_compare($data_source_id, &$info) {
 					$info['rra']['cacti_' . $cacti_rra_id]['steps'] = $cacti_rra['steps'];
 					$info['rra']['cacti_' . $cacti_rra_id]['xff']   = $cacti_rra['xff'];
 					$info['rra']['cacti_' . $cacti_rra_id]['rows']  = $cacti_rra['rows'];
-					$diff['rra']['cacti_' . $cacti_rra_id]['error'] = __("The RRA '%s' missing in the existing Cacti RRDfile", $cacti_rra_id);
+					$diff['rra']['cacti_' . $cacti_rra_id]['error'] = __("The RRA '%s' missing in the existing Kadupul RRDfile", $cacti_rra_id);
 				}
 			}
 		}
@@ -3220,7 +3213,7 @@ function rrdtool_cacti_compare($data_source_id, &$info) {
 		/* if the rrd file has an rra that has no cacti match, consider this as an error */
 		foreach ($info['rra'] as $file_rra_id => $file_rra) {
 			if (!isset($info['rra'][$file_rra_id]['seen'])) {
-				$diff['rra'][$file_rra_id]['error'] = __("RRA '%s' missing in Cacti definition", $file_rra_id);
+				$diff['rra'][$file_rra_id]['error'] = __("RRA '%s' missing in Kadupul definition", $file_rra_id);
 			}
 		}
 	}
@@ -4062,10 +4055,10 @@ function rrdtool_create_error_image($string, $width = '', $height = '') {
 	imagefilledrectangle($image, 2, 2, 447, 197, $back_color);
 
 	/* allocate the image */
-	$logo = imagecreatefrompng($config['base_path'] . '/images/cacti_error_image.png');
+	$logo = imagecreatefrompng($config['base_path'] . '/images/kadupul-icon.png');
 
 	/* merge the two images */
-	imagecopy($image, $logo, 0, 0, 0, 0, 450, 200);
+	imagecopyresampled($image, $logo, 20, 50, 0, 0, 100, 100, imagesx($logo), imagesy($logo));
 
 	/* set the background color */
 	list($red, $green, $blue) = sscanf($font_color, '%02x%02x%02x');

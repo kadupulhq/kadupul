@@ -12,13 +12,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /* main styles */
@@ -732,7 +725,7 @@ label {
 }
 
 .cactiPageHead {
-	background: #A9A9A9 url("./images/cacti_logo.svg") no-repeat scroll right 40% / 400px auto;
+	background: #A9A9A9 url("./images/kadupul-logo.png") no-repeat scroll right 40% / auto 80%;
 	border-bottom: 1px solid #00438C;
 	height: 36px;
 	width: 100%;
@@ -859,7 +852,7 @@ ul#breadcrumbs {
 
 .cactiLogo {
 	padding-top: 20px;
-	background: #F5F5F5 url('./images/cacti_logo.svg') no-repeat 30px;
+	background: #F5F5F5 url('./images/kadupul-logo.png') no-repeat 30px;
 	display: block;
 	cursor: pointer;
 	height: 140px;
@@ -867,6 +860,7 @@ ul#breadcrumbs {
 	margin-top: 0px;
 	margin-left: 2px;
 	margin-right: 2px;
+	background-size: contain;
 }
 
 .loginLeft, .logoutLeft {

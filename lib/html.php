@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /* html_start_box - draws the start of an HTML box with an optional title
@@ -46,7 +39,7 @@
             ...
         );
 
-        If the callback is true, the Cacti attribute will be added to the href
+        If the callback is true, the Kadupul attribute will be added to the href
         to present only the contents and not to include both the headers.  If
         the link must go off page, simply make sure $callback is false.  There
         is a requirement to use fontawesome icon sets for this class, but it
@@ -2581,13 +2574,13 @@ function html_common_header($title, $selectedTheme = '') {
 		var usePreferredColorTheme='<?php print __esc('Use System Color');?>';
 		var ignorePreferredColorTheme='<?php print __esc('Ignore System Color');?>';
 		var help='<?php print __esc('Help');?>';
-		var cactiHome='<?php print __esc('Cacti Home');?>';
+		var cactiHome='<?php print __esc('Kadupul Home');?>';
 		var cactiConsole='<?php print __esc('Console');?>';
 		var cactiMisc='<?php print __esc('Miscellaneous');?>';
 		var cactiDashboards='<?php print __esc('Dashboards');?>';
 		var cactiGeneral='<?php print __esc('General');?>';
 		var cactiCharts='<?php print __esc('Charts');?>';
-		var cactiProjectPage='<?php print __esc('Cacti Project Page');?>';
+		var cactiProjectPage='<?php print __esc('Kadupul Project Page');?>';
 		var cactiCommunityForum='<?php print __esc('User Community');?>';
 		var cactiUser='<?php print __esc('User');?>';
 		var cactiDocumentation='<?php print __esc('Documentation');?>';
@@ -2595,7 +2588,7 @@ function html_common_header($title, $selectedTheme = '') {
 		var cactiRRDProxy='<?php print __esc('RRDProxy');?>';
 		var cactiKeyboard='<?php print __esc('Keyboard');?>';
 		var cactiShortcuts='<?php print __esc('Shortcuts');?>';
-		var cactiContributeTo='<?php print __esc('Contribute to the Cacti Project');?>';
+		var cactiContributeTo='<?php print __esc('Contribute to the Kadupul Project');?>';
 		var cactiDevHelp='<?php print __esc('Help in Developing');?>';
 		var cactiDonate='<?php print __esc('Donation & Sponsoring');?>';
 		var cactiProfile='<?php print __esc('Profile');?>';
@@ -2603,8 +2596,8 @@ function html_common_header($title, $selectedTheme = '') {
 		var cactiClient='<?php print __esc('Client');?>';
 		var cactiTranslate='<?php print __esc('Help in Translating');?>';
 		var reportABug='<?php print __esc('Report a bug');?>';
-		var aboutCacti='<?php print __esc('About Cacti');?>';
-		var justCacti='<?php print __esc('Cacti');?>';
+		var aboutCacti='<?php print __esc('About Kadupul');?>';
+		var justCacti='<?php print __esc('Kadupul');?>';
 		var spikeKillResults='<?php print __esc('SpikeKill Results');?>';
 		var showHideFilter='<?php print __esc('Click to Show/Hide Filter');?>';
 		var clearFilterTitle='<?php print __esc('Clear Current Filter');?>';
@@ -2667,8 +2660,8 @@ function html_common_header($title, $selectedTheme = '') {
 		var zoom_i18n_settings='<?php print __esc('Settings');?>';
 		var zoom_i18n_3rd_button='<?php print __esc('3rd Mouse Button');?>';
 	</script>
-	<link href='<?php print $config['url_path']; ?>include/themes/<?php print $selectedTheme;?>/images/favicon.ico' rel='shortcut icon'>
-	<link href='<?php print $config['url_path']; ?>include/themes/<?php print $selectedTheme;?>/images/cacti_logo.gif' rel='icon' sizes='96x96'>
+	<link href='<?php print $config['url_path']; ?>include/themes/<?php print $selectedTheme;?>/images/kadupul-icon.png' rel='shortcut icon'>
+	<link href='<?php print $config['url_path']; ?>include/themes/<?php print $selectedTheme;?>/images/kadupul-icon.png' rel='icon' sizes='32x32'>
 	<?php
 	print get_md5_include_css('include/themes/' . $selectedTheme .'/jquery.zoom.css');
 	print get_md5_include_css('include/themes/' . $selectedTheme .'/jquery-ui.css');

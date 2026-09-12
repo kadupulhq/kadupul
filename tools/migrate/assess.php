@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 /**
- * Reports what a Cacti install contains and what would survive a migration to
+ * Reports what an existing installation contains and what would survive a migration to
  * Kadupul.
  *
  * Read only. It opens the database, runs SELECT statements, and stats files on
@@ -34,7 +34,7 @@ function fail(string $message) : never {
 }
 
 /**
- * Pulls the database settings out of a Cacti config.php without executing the
+ * Pulls the database settings out of the source config.php without executing the
  * rest of it. The file defines paths and includes others, and running it in
  * this process would drag in an entire installation.
  *
@@ -111,7 +111,7 @@ function assess_version(PDO $db) : array {
 	$version = scalar($db, 'SELECT cacti FROM version');
 
 	if ($version === null) {
-		return ['version' => null, 'supported' => false, 'note' => 'no version table; this may not be a Cacti database'];
+		return ['version' => null, 'supported' => false, 'note' => 'no version table; this may not be a compatible source database'];
 	}
 
 	$supported = version_compare($version, SUPPORTED_FROM, '>=');
@@ -119,7 +119,7 @@ function assess_version(PDO $db) : array {
 	return [
 		'version'   => $version,
 		'supported' => $supported,
-		'note'      => $supported ? null : 'upgrade to ' . SUPPORTED_FROM . ' with Cacti first; we do not reimplement its upgrade path',
+		'note'      => $supported ? null : 'upgrade to ' . SUPPORTED_FROM . ' using the source application before migration',
 	];
 }
 
@@ -156,7 +156,7 @@ function assess_rrds(PDO $db, ?string $rra_path, int $sample) : array {
 	];
 
 	if ($rra_path === null || !is_dir($rra_path)) {
-		$result['note'] = 'rra path not readable from here; run this on the Cacti host for a file check';
+		$result['note'] = 'rra path not readable from here; run this on the source host for a file check';
 
 		return $result;
 	}
@@ -245,7 +245,7 @@ function assess_anomalies(PDO $db, array $rrds, array $inventory) : array {
 
 function human(array $report) : void {
 	$v = $report['version'];
-	print "Cacti install\n";
+	print "Source installation\n";
 	print '  version        ' . ($v['version'] ?? 'unknown') . ($v['supported'] ? '' : '   NOT SUPPORTED') . "\n";
 	if ($v['note'] !== null) {
 		print '                 ' . $v['note'] . "\n";
