@@ -22,8 +22,10 @@ OUT_DIR="${3:-/tmp}"
 
 # Validate the complete request before querying advisories or writing evidence.
 for b in $BRANCHES; do
-	if ! git show-ref --verify --quiet "refs/heads/${b}" &&
-		! git show-ref --verify --quiet "refs/remotes/origin/${b}"; then
+	# origin/HEAD is a real ref, so HEAD would pass the lookup below without this.
+	if ! git check-ref-format --branch "$b" >/dev/null 2>&1 ||
+		{ ! git show-ref --verify --quiet "refs/heads/${b}" &&
+		! git show-ref --verify --quiet "refs/remotes/origin/${b}"; }; then
 		echo "ERROR: requested branch not found: $b" >&2
 		exit 1
 	fi
