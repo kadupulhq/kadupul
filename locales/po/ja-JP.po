@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-11 23:33-0700\n"
+"POT-Creation-Date: 2026-09-12 10:14-0700\n"
 "PO-Revision-Date: 2024-11-22 08:46+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -605,7 +605,7 @@ msgstr "いいえ"
 #: data_templates.php:1249 gprint_presets.php:439 graph_templates.php:897
 #: host_templates.php:974 include/global_settings.php:884
 #: include/global_settings.php:1907 lib/api_automation.php:1473
-#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3576
+#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3596
 #: links.php:410 tree.php:2337 tree.php:2338 user_admin.php:2336
 #: user_domains.php:762 user_domains.php:766 user_group_admin.php:2019
 #: vdef.php:927
@@ -839,12 +839,14 @@ msgid "Change Password"
 msgstr "パスワードの変更"
 
 #: auth_changepassword.php:344
+#, fuzzy
 msgid "Please enter your current password and your new<br>Kadupul password."
-msgstr "現在のパスワードと新しいパスワードを入力してください<br>サボテンのパスワード。"
+msgstr "現在のパスワードと新しいパスワードを入力してください<br>Kadupulのパスワード。"
 
 #: auth_changepassword.php:346
+#, fuzzy
 msgid "Please enter your new Kadupul password."
-msgstr "現在のパスワードと新しいパスワードを入力してください<br>サボテンのパスワード。"
+msgstr "現在のパスワードと新しいパスワードを入力してください<br>Kadupulのパスワード。"
 
 #: auth_changepassword.php:354 auth_login.php:321 auth_login.php:324
 #: include/global_settings.php:1816 lib/functions.php:5599
@@ -921,8 +923,9 @@ msgid "Access Denied! User account locked."
 msgstr "アクセスが拒否されました。ユーザーアカウントは無効です。"
 
 #: auth_login.php:294 lib/html_tree.php:157
+#, fuzzy
 msgid "Login to Kadupul"
-msgstr "サボテンにログイン"
+msgstr "Kadupulにログイン"
 
 #: auth_login.php:301
 msgid "User Login"
@@ -1100,7 +1103,7 @@ msgstr "デバイス%sはKadupulに追加されていません"
 
 #: automation_devices.php:133
 msgid "Devices Removed from Kadupul Automation database"
-msgstr "CactiAutomationデータベースから削除されたデバイス"
+msgstr "Kadupul Automationデータベースから削除されたデバイス"
 
 #: automation_devices.php:194
 msgid "Click 'Continue' to add the following Discovered device(s)."
@@ -1586,8 +1589,9 @@ msgid "Associated Site"
 msgstr "関連サイト"
 
 #: automation_networks.php:464
+#, fuzzy
 msgid "Choose the Kadupul Site that you wish to associate discovered Devices with."
-msgstr "あなたが発見したデバイスを関連付けるサボテンサイトを選択してください。"
+msgstr "あなたが発見したデバイスを関連付けるKadupulサイトを選択してください。"
 
 #: automation_networks.php:472
 msgid "Subnet Range"
@@ -1733,8 +1737,9 @@ msgid "Use NetBIOS to attempt to resolve the hostname of up hosts."
 msgstr "NetBIOSを使用して、稼働中のホストのホスト名を解決しようとします。"
 
 #: automation_networks.php:556
+#, fuzzy
 msgid "Automatically Add to Kadupul"
-msgstr "自動的にサボテンに追加"
+msgstr "自動的にKadupulに追加"
 
 #: automation_networks.php:557
 msgid "For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Kadupul."
@@ -2489,7 +2494,7 @@ msgstr "ツリー作成基準"
 msgid "Change Leaf Type"
 msgstr "葉の種類を変更"
 
-#: automation_tree_rules.php:726 lib/installer.php:3770 utilities.php:2643
+#: automation_tree_rules.php:726 lib/installer.php:3790 utilities.php:2643
 #: utilities.php:2644 utilities.php:2647 utilities.php:2648
 msgid "WARNING:"
 msgstr "警告:"
@@ -2540,20 +2545,24 @@ msgstr "ツリールールが見つかりません"
 #: lib/functions.php:6386 lib/functions.php:6993 poller.php:387 poller.php:537
 #: poller.php:602 poller.php:642 poller.php:784 poller.php:890
 #: poller_automation.php:46 poller_boost.php:369
+#, fuzzy
 msgid "Kadupul System Warning"
-msgstr "サボテンシステム警告"
+msgstr "Kadupulシステム警告"
 
 #: cactid.php:37
+#, fuzzy
 msgid "WARNING: Kadupul Daemon PID["
-msgstr "警告：サボテンデーモンPID ["
+msgstr "警告：KadupulデーモンPID ["
 
 #: cactid.php:125
+#, fuzzy
 msgid "Kadupul System Notice"
-msgstr "サボテンシステムユーティリティ"
+msgstr "Kadupulシステムユーティリティ"
 
 #: cactid.php:125
+#, fuzzy
 msgid "Notice: Kadupul Daemon PID["
-msgstr "注意：サボテンデーモンPID ["
+msgstr "注意：KadupulデーモンPID ["
 
 #: cdef.php:264
 msgid "Click 'Continue' to delete the following CDEF."
@@ -4486,8 +4495,9 @@ msgid "The Image Cache Directory is not writable.  Please set permissions and th
 msgstr "イメージキャッシュディレクトリは書き込み可能ではありません。権限を設定してから、別のリアルタイムグラフを開いてください。"
 
 #: graph_realtime.php:374
+#, fuzzy
 msgid "Kadupul Real-time Graphing"
-msgstr "サボテンリアルタイムグラフ"
+msgstr "Kadupulリアルタイムグラフ"
 
 #: graph_realtime.php:412 lib/html_graph.php:231 lib/html_reports.php:117
 #: lib/html_tree.php:1061
@@ -5771,12 +5781,14 @@ msgid "Not Logged In"
 msgstr "ログインはありません"
 
 #: include/auth.php:162
+#, fuzzy
 msgid "You must be logged in to access this area of Kadupul."
-msgstr "あなたはサボテンのこの地域にアクセスするためにログインしなければなりません。"
+msgstr "あなたはKadupulのこの地域にアクセスするためにログインしなければなりません。"
 
 #: include/auth.php:167
+#, fuzzy
 msgid "FATAL: You must be logged in to access this area of Kadupul."
-msgstr "致命的：あなたはサボテンのこの地域にアクセスするにはログインしなければなりません。"
+msgstr "致命的：あなたはKadupulのこの地域にアクセスするにはログインしなければなりません。"
 
 #: include/auth.php:276 include/auth.php:278 lib/auth.php:4683
 #: permission_denied.php:24 permission_denied.php:26
@@ -5793,8 +5805,9 @@ msgid "If you feel that this is an error. Please contact your Kadupul Administra
 msgstr "これがエラーだと感じたらKadupul管理者に連絡してください。"
 
 #: include/auth.php:284 lib/functions.php:7595 permission_denied.php:48
+#, fuzzy
 msgid "You are not permitted to access this section of Kadupul."
-msgstr "あなたはサボテンのこのセクションにアクセスすることを許可されていません。"
+msgstr "あなたはKadupulのこのセクションにアクセスすることを許可されていません。"
 
 #: include/auth.php:287
 msgid "Installation In Progress"
@@ -6017,8 +6030,9 @@ msgid "Log file specified was Kadupul archive file and was removed."
 msgstr "指定されたログファイルはKadupulアーカイブファイルであり、削除されました。"
 
 #: include/global_arrays.php:294
+#, fuzzy
 msgid "Kadupul log purged successfully"
-msgstr "サボテンログは正常に削除されました"
+msgstr "Kadupulログは正常に削除されました"
 
 #: include/global_arrays.php:297
 msgid "If you force a password change, you must also allow the user to change their password."
@@ -6775,8 +6789,9 @@ msgid "Application Related"
 msgstr "自動化ルールを適用する"
 
 #: include/global_arrays.php:1085
+#, fuzzy
 msgid "Kadupul Related"
-msgstr "サボテンレポート"
+msgstr "Kadupulレポート"
 
 #: include/global_arrays.php:1086
 msgid "Database Related"
@@ -7880,8 +7895,9 @@ msgid "(Action)"
 msgstr "アクション"
 
 #: include/global_arrays.php:2637
+#, fuzzy
 msgid "Kadupul Help"
-msgstr "サボテンホーム"
+msgstr "Kadupulホーム"
 
 #: include/global_arrays.php:2649
 msgid "Export Results"
@@ -9507,8 +9523,9 @@ msgid "Logging"
 msgstr "ログイン"
 
 #: include/global_settings.php:164
+#, fuzzy
 msgid "Kadupul Log Path"
-msgstr "サボテンのログパス"
+msgstr "Kadupulのログパス"
 
 #: include/global_settings.php:165
 msgid "The path to your Kadupul log file (if blank, defaults to &lt;path_cacti&gt;/log/cacti.log)"
@@ -9523,12 +9540,14 @@ msgid "If you are having issues with Kadupul's Data Collectors, set this file pa
 msgstr "Kadupulのデータコレクタに問題がある場合は、このファイルパスを設定すると、データコレクタの標準エラーがこのファイルにリダイレクトされます。"
 
 #: include/global_settings.php:184
+#, fuzzy
 msgid "Rotate the Kadupul Log"
-msgstr "サボテンログを回転させる"
+msgstr "Kadupulログを回転させる"
 
 #: include/global_settings.php:185
+#, fuzzy
 msgid "This option will rotate the Kadupul Log periodically."
-msgstr "このオプションは定期的にサボテンログを交代させます。"
+msgstr "このオプションは定期的にKadupulログを交代させます。"
 
 #: include/global_settings.php:190
 msgid "Rotation Frequency"
@@ -9847,8 +9866,9 @@ msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual m
 msgstr "有効にすると、Kadupulはグラフをロックしません。これにより、グラフに関連するデータソースをより迅速に手動で変更できます。"
 
 #: include/global_settings.php:471
+#, fuzzy
 msgid "Hide Kadupul Dashboard"
-msgstr "サボテンダッシュボードを隠す"
+msgstr "Kadupulダッシュボードを隠す"
 
 #: include/global_settings.php:472
 msgid "For use with Kadupul's External Link Support.  Using this setting, you can hide the Kadupul Dashboard, so you can display just your own page."
@@ -10222,8 +10242,9 @@ msgid "Theme"
 msgstr "テーマ"
 
 #: include/global_settings.php:861 include/global_settings.php:2567
+#, fuzzy
 msgid "Please select one of the available Themes to skin your Kadupul with."
-msgstr "あなたのサボテンの皮をむくために利用可能なテーマの一つを選択してください。"
+msgstr "あなたのKadupulの皮をむくために利用可能なテーマの一つを選択してください。"
 
 #: include/global_settings.php:867
 msgid "Table Settings"
@@ -11422,8 +11443,9 @@ msgid "The maximum size of the E-Mail message including all attachments."
 msgstr "すべての添付ファイルを含む電子メールメッセージの最大サイズ。"
 
 #: include/global_settings.php:2016
+#, fuzzy
 msgid "Poller Logging Level for Kadupul Reporting"
-msgstr "サボテンレポートのポーラーログレベル"
+msgstr "Kadupulレポートのポーラーログレベル"
 
 #: include/global_settings.php:2017
 msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
@@ -12714,8 +12736,9 @@ msgid "Your password must contain at least 1 special character!"
 msgstr "パスワードには少なくとも1つの特殊文字を含める必要があります。"
 
 #: lib/auth.php:4676
+#, fuzzy
 msgid "Kadupul Login Failure"
-msgstr "サボテンログをクリアしました"
+msgstr "Kadupulログをクリアしました"
 
 #: lib/auth.php:4959
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
@@ -13489,8 +13512,9 @@ msgid "Sending Message..."
 msgstr "メッセージを送信しています…"
 
 #: lib/functions.php:5634
+#, fuzzy
 msgid "Kadupul Test Message"
-msgstr "サボテンテストメッセージ"
+msgstr "Kadupulテストメッセージ"
 
 #: lib/functions.php:5636
 msgid "Success!"
@@ -13724,8 +13748,9 @@ msgid "Help"
 msgstr "ヘルプ"
 
 #: lib/html.php:2577
+#, fuzzy
 msgid "Kadupul Home"
-msgstr "サボテンホーム"
+msgstr "Kadupulホーム"
 
 #: lib/html.php:2579
 msgid "Miscellaneous"
@@ -13740,8 +13765,9 @@ msgid "Charts"
 msgstr "チャート"
 
 #: lib/html.php:2583
+#, fuzzy
 msgid "Kadupul Project Page"
-msgstr "サボテンプロジェクトページ"
+msgstr "Kadupulプロジェクトページ"
 
 #: lib/html.php:2587
 msgid "Spine"
@@ -13760,8 +13786,9 @@ msgid "Shortcuts"
 msgstr "ショートカット"
 
 #: lib/html.php:2591
+#, fuzzy
 msgid "Contribute to the Kadupul Project"
-msgstr "サボテンログを回転させる"
+msgstr "Kadupulログを回転させる"
 
 #: lib/html.php:2592
 msgid "Help in Developing"
@@ -13784,8 +13811,9 @@ msgid "Report a bug"
 msgstr "バグを報告"
 
 #: lib/html.php:2600
+#, fuzzy
 msgid "Kadupul"
-msgstr "サボテン"
+msgstr "Kadupul"
 
 #: lib/html.php:2602
 msgid "Click to Show/Hide Filter"
@@ -14024,9 +14052,9 @@ msgid "Enter a valid directory path"
 msgstr "有効なディレクトリパスを入力してください"
 
 #: lib/html_form.php:1275
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Color (%s)"
-msgstr "サボテンの色（%s）"
+msgstr "Kadupulの色（%s）"
 
 #: lib/html_form.php:1340
 msgid "NO FONT VERIFICATION POSSIBLE"
@@ -14289,8 +14317,9 @@ msgid "Subject"
 msgstr "件名"
 
 #: lib/html_reports.php:164
+#, fuzzy
 msgid "Kadupul Report"
-msgstr "サボテンレポート"
+msgstr "Kadupulレポート"
 
 #: lib/html_reports.php:165
 msgid "This value will be used as the default Email subject.  The report name will be used if left blank."
@@ -14709,7 +14738,7 @@ msgstr "不正なUTF-8オフセットエラーです。"
 msgid "Down (Thold)"
 msgstr "ダウンロード"
 
-#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3692
+#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3712
 msgid "Error"
 msgstr "エラー"
 
@@ -14882,8 +14911,9 @@ msgid "The Installer could not proceed due to an unexpected error."
 msgstr "予期しないエラーのため、インストーラーは続行できませんでした。"
 
 #: lib/installer.php:1571
+#, fuzzy
 msgid "Please report this to the Kadupul Group."
-msgstr "これをサボテングループに報告してください。"
+msgstr "これをKadupulグループに報告してください。"
 
 #: lib/installer.php:1572
 #, php-format
@@ -14916,8 +14946,9 @@ msgid "This error may also be generated if the cacti database user does not have
 msgstr "このエラーは、KadupulデータベースユーザーがKadupulデータベースに対する正しい権限を持っていない場合にも発生する可能性があります。 KadupulデータベースユーザーがKadupulデータベースでSELECT、INSERT、DELETE、UPDATE、CREATE、ALTER、DROP、INDEXを実行できることを確認してください。"
 
 #: lib/installer.php:1593
+#, fuzzy
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"
-msgstr "また、MySQLのにMySQLのタイムゾーン情報をインポートし、サボテンのユーザーにmysql.time_zone_nameテーブルへのSELECTアクセス権限を付与<b>しなければなりません</b>"
+msgstr "また、MySQLのにMySQLのタイムゾーン情報をインポートし、Kadupulのユーザーにmysql.time_zone_nameテーブルへのSELECTアクセス権限を付与<b>しなければなりません</b>"
 
 #: lib/installer.php:1596
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
@@ -15009,7 +15040,7 @@ msgid "Location checks"
 msgstr "位置確認"
 
 #: lib/installer.php:1859 lib/installer.php:2010 lib/installer.php:2014
-#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3789
+#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3809
 msgid "ERROR:"
 msgstr "エラー:"
 
@@ -15319,8 +15350,9 @@ msgid "Potential permission issues"
 msgstr "潜在的な許可の問題"
 
 #: lib/installer.php:2382
+#, fuzzy
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
-msgstr "下記のエラーが表示されているサボテンのフォルダに、あなたのウェブサーバーが読み書きできることを確認してください。"
+msgstr "下記のエラーが表示されているKadupulのフォルダに、あなたのウェブサーバーが読み書きできることを確認してください。"
 
 #: lib/installer.php:2385
 msgid "If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools."
@@ -15630,229 +15662,233 @@ msgstr "問題を報告する"
 msgid "Get Started"
 msgstr "始める"
 
-#: lib/installer.php:3009
+#: lib/installer.php:3025
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "V %sの%sプロセスを開始"
 
-#: lib/installer.php:3034
+#: lib/installer.php:3051
+msgid "Unable to update application defaults."
+msgstr ""
+
+#: lib/installer.php:3054
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "V %sの%sプロセスを完了しました"
 
-#: lib/installer.php:3073
+#: lib/installer.php:3093
 #, php-format
 msgid "Found %s templates to install"
 msgstr "インストールする%sテンプレートが見つかりました"
 
-#: lib/installer.php:3083
+#: lib/installer.php:3103
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "パッケージ#%s '%s'をインポートしようとしています。"
 
-#: lib/installer.php:3092
+#: lib/installer.php:3112
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "プロファイル'%s'のパッケージ#%s'%s'のインポートに成功しました"
 
-#: lib/installer.php:3098
+#: lib/installer.php:3118
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "プロファイル'%s'のパッケージ#%s'%s'のインポートに失敗しました"
 
-#: lib/installer.php:3113
+#: lib/installer.php:3133
 #, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "デバイステンプレート'%s'のマッピング自動化テンプレート"
 
-#: lib/installer.php:3130
+#: lib/installer.php:3150
 msgid "No templates were selected for import"
 msgstr "インポートするテンプレートが選択されていません"
 
-#: lib/installer.php:3139
+#: lib/installer.php:3159
 msgid "Updating remote configuration file"
 msgstr "設定待ち"
 
-#: lib/installer.php:3171
+#: lib/installer.php:3191
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "デフォルトのデータソースプロファイルを%s (%s)に設定しています"
 
-#: lib/installer.php:3193
+#: lib/installer.php:3213
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "選択したプロファイル（%s）が見つかりませんでした。変更は行われませんでした"
 
-#: lib/installer.php:3202
+#: lib/installer.php:3222
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "自動化ネットワーク（%s）の更新、モード\"%s\" => \"%s\"、サブネット\"%s\" => %s\""
 
-#: lib/installer.php:3212
+#: lib/installer.php:3232
 msgid "Failed to find automation network, no changes were made"
 msgstr "自動化ネットワークが見つかりませんでした。変更は行われませんでした"
 
-#: lib/installer.php:3216
+#: lib/installer.php:3236
 msgid "Adding extra snmp settings for automation"
 msgstr "自動化のための追加のSNMP設定の追加"
 
-#: lib/installer.php:3222
+#: lib/installer.php:3242
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "オートメーションオプションセット%sの選択"
 
-#: lib/installer.php:3235
+#: lib/installer.php:3255
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "自動化オプションセット%sの更新"
 
-#: lib/installer.php:3238
+#: lib/installer.php:3258
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "自動化オプションセット%sが正常に更新されました"
 
-#: lib/installer.php:3240
+#: lib/installer.php:3260
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "自動化オプションセット%sのシーケンス変更"
 
-#: lib/installer.php:3246
+#: lib/installer.php:3266
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "自動化オプションセット%sの更新に失敗しました"
 
-#: lib/installer.php:3249
+#: lib/installer.php:3269
 msgid "Failed to find any automation option set"
 msgstr "コピーするデータが見つかりませんでした。"
 
-#: lib/installer.php:3279
+#: lib/installer.php:3299
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "最初のKadupulデバイスのデバイステンプレートは%sです"
 
-#: lib/installer.php:3305
+#: lib/installer.php:3325
 msgid "Creating Graphs for Default Device"
 msgstr "このデバイスのグラフを作成する"
 
-#: lib/installer.php:3312
+#: lib/installer.php:3332
 msgid "Adding Device to Default Tree"
 msgstr "デバイスデフォルト"
 
-#: lib/installer.php:3320
+#: lib/installer.php:3340
 msgid "No templated graphs for Default Device were found"
 msgstr "デフォルトデバイスのテンプレートグラフが見つかりませんでした"
 
-#: lib/installer.php:3324
+#: lib/installer.php:3344
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "警告：オペレーティングシステムのデバイステンプレートが見つかりません。 Kadupulサーバーを監視するには、デバイステンプレートまたはKadupulパッケージをインポートする必要があります。"
 
-#: lib/installer.php:3331
+#: lib/installer.php:3351
 msgid "Running first-time data query for local host"
 msgstr "ローカルホストの初回データクエリの実行"
 
-#: lib/installer.php:3339
+#: lib/installer.php:3359
 msgid "Repopulating poller cache"
 msgstr "ポーラーキャッシュを再構築する"
 
-#: lib/installer.php:3344
+#: lib/installer.php:3364
 msgid "Repopulating SNMP Agent cache"
 msgstr "SNMPエージェントのキャッシュを再構築する"
 
-#: lib/installer.php:3349
+#: lib/installer.php:3369
 msgid "Generating RSA Key Pair"
 msgstr "RSAキーペアの生成"
 
-#: lib/installer.php:3361
+#: lib/installer.php:3381
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "変換するテーブルが%s個見つかりました"
 
-#: lib/installer.php:3368
+#: lib/installer.php:3388
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "テーブル#%s「%s」を変換しています"
 
-#: lib/installer.php:3383
+#: lib/installer.php:3403
 msgid "No tables where found or selected for conversion"
 msgstr "変換用に検出または選択されたテーブルはありません"
 
-#: lib/installer.php:3394
+#: lib/installer.php:3414
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "%sから%sに切り替えました"
 
-#: lib/installer.php:3398
+#: lib/installer.php:3418
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "注：データベースキャッシュに一時ファイルを使用する：%s"
 
-#: lib/installer.php:3420
+#: lib/installer.php:3440
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "V %s（ DB %s）からv %sにアップグレード中"
 
-#: lib/installer.php:3428
+#: lib/installer.php:3448
 #, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "警告： v %sのアップグレード機能が見つかりませんでした"
 
-#: lib/installer.php:3487
+#: lib/installer.php:3507
 msgid "Install aborted due to no EULA acceptance"
 msgstr "EULAが受け入れられないため、インストールが中止されました"
 
-#: lib/installer.php:3510
+#: lib/installer.php:3530
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "バックグラウンドはすでに%sで開始されています。%sでのこの試みはスキップされました"
 
-#: lib/installer.php:3533
+#: lib/installer.php:3553
 #, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "インストール中に例外が発生しました: #%s - %s"
 
-#: lib/installer.php:3543
+#: lib/installer.php:3563
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "インストールは%sに開始され、%sに完了しました"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 msgid "Both"
 msgstr "両方"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 #, php-format
 msgid "No - %s"
 msgstr "No - %s"
 
-#: lib/installer.php:3583
+#: lib/installer.php:3603
 #, php-format
 msgid "%s - N/A"
 msgstr "%s - N/A"
 
-#: lib/installer.php:3583 lib/installer.php:3585
+#: lib/installer.php:3603 lib/installer.php:3605
 msgid "Web"
 msgstr "Web"
 
-#: lib/installer.php:3585 lib/installer.php:3588
+#: lib/installer.php:3605 lib/installer.php:3608
 #, php-format
 msgid "%s - No"
 msgstr "%s - No"
 
-#: lib/installer.php:3588
+#: lib/installer.php:3608
 msgid "Cli"
 msgstr "CLI"
 
-#: lib/installer.php:3593
+#: lib/installer.php:3613
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "PHPオプションの設定%s = %s"
 
-#: lib/installer.php:3599
+#: lib/installer.php:3619
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "PHPオプション%sの設定に失敗しました。%sです（%sにする必要があります）"
 
-#: lib/installer.php:3618
+#: lib/installer.php:3638
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "同期を試みるときにデータコレクタが見つかりません"
 
@@ -16044,9 +16080,9 @@ msgid "Plugins"
 msgstr "プラグイン"
 
 #: lib/plugins.php:1317 lib/plugins.php:1323
-#, php-format
+#, fuzzy, php-format
 msgid "Requires: Kadupul >= %s"
-msgstr "必要条件：サボテン>= %s"
+msgstr "必要条件：Kadupul>= %s"
 
 #: lib/plugins.php:1320
 msgid "Legacy Plugin"
@@ -16298,7 +16334,7 @@ msgstr "RRAフォルダ"
 msgid "Root"
 msgstr "ルート"
 
-#: lib/rrd.php:4079
+#: lib/rrd.php:4082
 msgid "Unknown RRDtool Error"
 msgstr "不明なRRDtoolエラー"
 
@@ -16954,8 +16990,9 @@ msgid "You have been logged out of Kadupul due to a Remote Data Collector state 
 msgstr "セッションタイムアウトによりKadupulからログアウトしました。"
 
 #: logout.php:61
+#, fuzzy
 msgid "Logout of Kadupul"
-msgstr "サボテンのログアウト"
+msgstr "Kadupulのログアウト"
 
 #: logout.php:68
 msgid "Automatic Logout"
@@ -17444,8 +17481,9 @@ msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "ポーラーID %dの最大実行時間%d秒を超えました。終了します。"
 
 #: poller.php:890
+#, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "警告：サボテンのポーリングサイクルがポーラー間隔を超えました"
+msgstr "警告：Kadupulのポーリングサイクルがポーラー間隔を超えました"
 
 #: poller.php:915
 #, php-format
@@ -17457,8 +17495,9 @@ msgid "Poller in Heartbeat Mode"
 msgstr "ハートビートモードのポーラー"
 
 #: poller.php:1174
+#, fuzzy
 msgid "Kadupul System Notification"
-msgstr "サボテンシステムユーティリティ"
+msgstr "Kadupulシステムユーティリティ"
 
 #: poller.php:1174
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
@@ -17470,8 +17509,9 @@ msgid "WARNING: Main Kadupul database %s offline or in recovery"
 msgstr "警告：メインのKadupulデータベースはオフラインまたはリカバリ中です"
 
 #: poller_automation.php:970 poller_automation.php:1021
+#, fuzzy
 msgid "Kadupul Primary Admin"
-msgstr "サボテンの一次管理者"
+msgstr "Kadupulの一次管理者"
 
 #: poller_automation.php:1122
 msgid "Kadupul Automation Report requires an html based Email client"
@@ -17972,9 +18012,9 @@ msgid "NOTE: Path Settings on this Tab are only saved locally!"
 msgstr "注：このタブのパス設定はローカルでのみ保存されます！"
 
 #: settings.php:374
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Settings (%s)%s"
-msgstr "サボテンの設定（%s）%s"
+msgstr "Kadupulの設定（%s）%s"
 
 #: settings.php:492
 msgid "Changing Permission Model Warning"
@@ -19404,8 +19444,9 @@ msgid "General Information"
 msgstr "一般情報"
 
 #: utilities.php:270
+#, fuzzy
 msgid "Kadupul OS"
-msgstr "サボテンOS"
+msgstr "KadupulOS"
 
 #: utilities.php:280
 msgid "NET-SNMP Version"
@@ -19429,8 +19470,9 @@ msgid "Poller Information"
 msgstr "ポーラー情報"
 
 #: utilities.php:341
+#, fuzzy
 msgid "Different version of Kadupul and Spine!"
-msgstr "サボテンと背骨の異なるバージョン！"
+msgstr "Kadupulと背骨の異なるバージョン！"
 
 #: utilities.php:359
 #, php-format
@@ -19695,12 +19737,14 @@ msgid "Log [Total Lines: %d - All Items Shown]"
 msgstr "ログ[合計行数：%d -すべての項目が表示されます]"
 
 #: utilities.php:1602
+#, fuzzy
 msgid "Clear Kadupul Log"
-msgstr "サボテンログをクリア"
+msgstr "Kadupulログをクリア"
 
 #: utilities.php:1615
+#, fuzzy
 msgid "Kadupul Log Cleared"
-msgstr "サボテンログをクリアしました"
+msgstr "Kadupulログをクリアしました"
 
 #: utilities.php:1617
 msgid "Error: Unable to clear log, no write permissions."
@@ -19771,8 +19815,9 @@ msgid "RRD:"
 msgstr "RRD："
 
 #: utilities.php:2286
+#, fuzzy
 msgid "Kadupul technical support page.  Used by developers and technical support persons to assist with issues in Kadupul.  Includes checks for common configuration issues."
-msgstr "サボテンテクニカルサポートページ。 Kadupulの問題を解決するために開発者や技術サポート担当者によって使用されます。一般的な設定問題のチェックを含みます。"
+msgstr "Kadupulテクニカルサポートページ。 Kadupulの問題を解決するために開発者や技術サポート担当者によって使用されます。一般的な設定問題のチェックを含みます。"
 
 #: utilities.php:2290
 msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."
@@ -19879,8 +19924,9 @@ msgid "Allows Administrators to maintain SNMP notification receivers."
 msgstr "管理者がSNMP通知受信者を管理できるようにします。"
 
 #: utilities.php:2380
+#, fuzzy
 msgid "Kadupul System Utilities"
-msgstr "サボテンシステムユーティリティ"
+msgstr "Kadupulシステムユーティリティ"
 
 #: utilities.php:2490
 msgid "Refresh Interval"

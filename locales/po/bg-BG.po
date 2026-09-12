@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-11 23:33-0700\n"
+"POT-Creation-Date: 2026-09-12 10:14-0700\n"
 "PO-Revision-Date: 2024-04-20 18:23-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -605,7 +605,7 @@ msgstr "Не"
 #: data_templates.php:1249 gprint_presets.php:439 graph_templates.php:897
 #: host_templates.php:974 include/global_settings.php:884
 #: include/global_settings.php:1907 lib/api_automation.php:1473
-#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3576
+#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3596
 #: links.php:410 tree.php:2337 tree.php:2338 user_admin.php:2336
 #: user_domains.php:762 user_domains.php:766 user_group_admin.php:2019
 #: vdef.php:927
@@ -830,8 +830,9 @@ msgid "Cannot be reused for %d password changes"
 msgstr "Не може да се използва повторно за% d промени в паролата"
 
 #: auth_changepassword.php:317
+#, fuzzy
 msgid "There are problems with the Change Password page.  Contact your Kadupul administrator right away."
-msgstr "Възникнаха проблеми със страницата Промяна на паролата.  Свържете се незабавно с вашия администратор на кактуси."
+msgstr "Възникнаха проблеми със страницата Промяна на паролата.  Свържете се незабавно с вашия администратор на Kadupul."
 
 #: auth_changepassword.php:327 auth_changepassword.php:334
 #: include/global_form.php:1566 lib/functions.php:3744 lib/html.php:2568
@@ -1089,14 +1090,14 @@ msgid "Added manually through device automation interface."
 msgstr "Добавен ръчно през интерфейса за автоматизация на устройството."
 
 #: automation_devices.php:121
-#, php-format
+#, fuzzy, php-format
 msgid "Device %s Added to Kadupul"
-msgstr "Устройство %s добавено към кактуси"
+msgstr "Устройство %s добавено към Kadupul"
 
 #: automation_devices.php:123
-#, php-format
+#, fuzzy, php-format
 msgid "Device %s Not Added to Kadupul"
-msgstr "Устройство %s не е добавено към кактуси"
+msgstr "Устройство %s не е добавено към Kadupul"
 
 #: automation_devices.php:133
 msgid "Devices Removed from Kadupul Automation database"
@@ -2489,7 +2490,7 @@ msgstr "Критерии за създаване на дърво"
 msgid "Change Leaf Type"
 msgstr "Промяна на вида на листа"
 
-#: automation_tree_rules.php:726 lib/installer.php:3770 utilities.php:2643
+#: automation_tree_rules.php:726 lib/installer.php:3790 utilities.php:2643
 #: utilities.php:2644 utilities.php:2647 utilities.php:2648
 msgid "WARNING:"
 msgstr "ПРЕДУПРЕЖДЕНИЕ:"
@@ -2540,8 +2541,9 @@ msgstr "Не са намерени правила за дърво"
 #: lib/functions.php:6386 lib/functions.php:6993 poller.php:387 poller.php:537
 #: poller.php:602 poller.php:642 poller.php:784 poller.php:890
 #: poller_automation.php:46 poller_boost.php:369
+#, fuzzy
 msgid "Kadupul System Warning"
-msgstr "Предупреждение за кактуси"
+msgstr "Предупреждение за Kadupul"
 
 #: cactid.php:37
 msgid "WARNING: Kadupul Daemon PID["
@@ -5257,9 +5259,9 @@ msgid "Set Default"
 msgstr "Настройки по подразбиране"
 
 #: help.php:37
-#, php-format
+#, fuzzy, php-format
 msgid "WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "ПРЕДУПРЕЖДЕНИЕ: Страница с кактуси:%s за потребител:%s Генерира фатална грешка %d!"
+msgstr "ПРЕДУПРЕЖДЕНИЕ: Страница с Kadupul:%s за потребител:%s Генерира фатална грешка %d!"
 
 #: help.php:59
 #, php-format
@@ -6052,8 +6054,9 @@ msgid "Log file specified was Kadupul archive file and was removed."
 msgstr "Лог файлът е указан като Kadupul архивен файл и е премахнат."
 
 #: include/global_arrays.php:294
+#, fuzzy
 msgid "Kadupul log purged successfully"
-msgstr "Кактусният дневник успешно се прочисти"
+msgstr "Kadupul дневник успешно се прочисти"
 
 #: include/global_arrays.php:297
 msgid "If you force a password change, you must also allow the user to change their password."
@@ -7914,8 +7917,9 @@ msgid "(Action)"
 msgstr "Действие"
 
 #: include/global_arrays.php:2637
+#, fuzzy
 msgid "Kadupul Help"
-msgstr "Кактуси вкъщи"
+msgstr "Kadupul вкъщи"
 
 #: include/global_arrays.php:2649
 msgid "Export Results"
@@ -9541,8 +9545,9 @@ msgid "Logging"
 msgstr "Влизане"
 
 #: include/global_settings.php:164
+#, fuzzy
 msgid "Kadupul Log Path"
-msgstr "Път на регистрация на кактуси"
+msgstr "Път на регистрация на Kadupul"
 
 #: include/global_settings.php:165
 msgid "The path to your Kadupul log file (if blank, defaults to &lt;path_cacti&gt;/log/cacti.log)"
@@ -9741,8 +9746,9 @@ msgid "Preferred Language Processor"
 msgstr "Предпочитан езиков процесор"
 
 #: include/global_settings.php:359
+#, fuzzy
 msgid "Kadupul includes support for multiple alternate Language Translation Processors.  If none is selected Kadupul will attempt to use the first one found."
-msgstr "Kadupul включва поддръжка за множество алтернативни процесори за езиков превод. По подразбиране ще се използва вградената поддръжка на PHP, но не всички варианти на Linux включват вградена езикова поддръжка. Ако не е избрано, кактусите ще изберат първия намерен."
+msgstr "Kadupul включва поддръжка за множество алтернативни процесори за езиков превод. По подразбиране ще се използва вградената поддръжка на PHP, но не всички варианти на Linux включват вградена езикова поддръжка. Ако не е избрано, Kadupul ще изберат първия намерен."
 
 #: include/global_settings.php:365
 msgid "Client TimeZone Support"
@@ -9869,16 +9875,18 @@ msgid "Data Source Preservation Preset"
 msgstr "Метод за създаване на график / източник на данни"
 
 #: include/global_settings.php:460
+#, fuzzy
 msgid "When enabled, Kadupul will set Radio Button to Delete related Data Sources of a Graph when removing Graphs.  Note: Kadupul will not allow the removal of Data Sources if they are used in other Graphs."
-msgstr "Когато е активирано, Kadupul ще настрои Радио бутон на Изтриване на свързани източници на данни на графика при премахване на графики. Забележка: Кактусите няма да позволят премахването на източници на данни, ако те се използват в други графики."
+msgstr "Когато е активирано, Kadupul ще настрои Радио бутон на Изтриване на свързани източници на данни на графика при премахване на графики. Забележка: Kadupul няма да позволят премахването на източници на данни, ако те се използват в други графики."
 
 #: include/global_settings.php:465
 msgid "Graphs Auto Unlock"
 msgstr "Правило за съответствие на графиката"
 
 #: include/global_settings.php:466
+#, fuzzy
 msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual modification of Data Sources related to a Graph."
-msgstr "Когато са активирани, кактусите няма да заключват графики. Това позволява по-бързо ръчно модифициране на източници на данни, свързани с графика."
+msgstr "Когато са активирани, Kadupul няма да заключват графики. Това позволява по-бързо ръчно модифициране на източници на данни, свързани с графика."
 
 #: include/global_settings.php:471
 msgid "Hide Kadupul Dashboard"
@@ -9989,8 +9997,9 @@ msgid "Automation Notification To Email"
 msgstr "Известие за автоматизация към имейл"
 
 #: include/global_settings.php:557
+#, fuzzy
 msgid "The Email Address to send Automation Notification Emails to if not specified at the Automation Network level.  If either this field, or the Automation Network value are left blank, Kadupul will use the Primary Kadupul Admins Email account."
-msgstr "Имейл адресът, на който да се изпращат имейли за уведомяване по автоматизация, ако не е посочено на ниво Автоматизирана мрежа. Ако или това поле, или стойността на мрежата за автоматизация останат празни, Kadupul ще използва имейл акаунта на главния администратор на кактуси."
+msgstr "Имейл адресът, на който да се изпращат имейли за уведомяване по автоматизация, ако не е посочено на ниво Автоматизирана мрежа. Ако или това поле, или стойността на мрежата за автоматизация останат празни, Kadupul ще използва имейл акаунта на главния администратор на Kadupul."
 
 #: include/global_settings.php:563
 msgid "Automation Notification From Name"
@@ -10708,8 +10717,9 @@ msgid "Disable Resource Cache Replication"
 msgstr "Възстановете кеш на ресурсите"
 
 #: include/global_settings.php:1304
+#, fuzzy
 msgid "By default, the main Kadupul Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Kadupul Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting."
-msgstr "По подразбиране основният Kadupul Data Collector ще кешира целия уеб сайт и ще се включи в Resource Cache. След това от време на време дистанционните колектори на данни ще се актуализират с всички актуализации от основния събирач на данни за кактуси. Този ресурсен кеш по същество позволява на отдалечените колектори на данни да се надграждат самостоятелно. Ако не искате да използвате тази опция, можете да я деактивирате, като използвате тази настройка."
+msgstr "По подразбиране основният Kadupul Data Collector ще кешира целия уеб сайт и ще се включи в Resource Cache. След това от време на време дистанционните колектори на данни ще се актуализират с всички актуализации от основния събирач на данни за Kadupul. Този ресурсен кеш по същество позволява на отдалечените колектори на данни да се надграждат самостоятелно. Ако не искате да използвате тази опция, можете да я деактивирате, като използвате тази настройка."
 
 #: include/global_settings.php:1309
 msgid "Additional Data Collector Settings"
@@ -11108,8 +11118,9 @@ msgid "Server(s)"
 msgstr "Сървъри"
 
 #: include/global_settings.php:1697 user_domains.php:361
+#, fuzzy
 msgid "A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user."
-msgstr "Списък с разделени с интервал имена на хостове на DNS или IP адрес на за валидни LDAP сървъри. Кактусите ще се опитат да използват LDAP сървърите отляво надясно за удостоверяване на потребител."
+msgstr "Списък с разделени с интервал имена на хостове на DNS или IP адрес на за валидни LDAP сървъри. Kadupul ще се опитат да използват LDAP сървърите отляво надясно за удостоверяване на потребител."
 
 #: include/global_settings.php:1703 user_domains.php:369
 msgid "Port Standard"
@@ -11966,8 +11977,9 @@ msgid "TimeZone Support"
 msgstr "MySQL - Поддръжка на TimeZone"
 
 #: include/global_settings.php:2581
+#, fuzzy
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
-msgstr "Как бихте искали кактусите да представят датите?  Тази настройка също ще промени начина, по който са представени датите на Kadupul Graphs."
+msgstr "Как бихте искали Kadupul да представят датите?  Тази настройка също ще промени начина, по който са представени датите на Kadupul Graphs."
 
 #: include/global_settings.php:2584
 msgid "Kadupul Server Timezone"
@@ -12175,8 +12187,9 @@ msgid "Tree History"
 msgstr "История на паролите"
 
 #: include/global_settings.php:2791
+#, fuzzy
 msgid "If enabled, Kadupul will remember your Tree History between logins and when you return to the Graphs page."
-msgstr "Ако е активирано, кактусите ще запомнят вашата история на дърветата между влизанията и когато се върнете на страницата Графики."
+msgstr "Ако е активирано, Kadupul ще запомнят вашата история на дърветата между влизанията и когато се върнете на страницата Графики."
 
 #: include/global_settings.php:2814
 msgid "Use Custom Fonts"
@@ -12291,8 +12304,9 @@ msgid "Number of Offline Records:"
 msgstr "Брой на офлайн записите:"
 
 #: index.php:82
+#, fuzzy
 msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Kadupul Database for updating."
-msgstr "<strong>ЗАБЕЛЕЖКА:</strong> Вие сте влезли в Remote Data Collector. Когато сте <b>онлайн</b> , ще можете да преглеждате и контролирате по-голямата част от главния уебсайт на Кактуси, както ако сте влезли в него. Също така е важно да се отбележи, че за дистанционно събиране на данни са задължени да използват Изпълнение на кактуси на Увеличаване на услугите <b>&quot;On Demand Актуализиране&quot;</b> функция, а ние винаги препоръчваме използването на гръбначния стълб. Когато Remote Data Collector е <b>&quot;офлайн&quot;</b> , уеб сайтът на Remote Data Collectors ще съдържа много по-малко информация. Въпреки това, той ще кешира всички актуализации, докато основната база данни на Kadupul и уеб сървъра бъдат достигнати. След това ще изхвърли продукцията на Boost таблицата обратно в Main Kadupul Database за актуализиране."
+msgstr "<strong>ЗАБЕЛЕЖКА:</strong> Вие сте влезли в Remote Data Collector. Когато сте <b>онлайн</b> , ще можете да преглеждате и контролирате по-голямата част от главния уебсайт на Kadupul, както ако сте влезли в него. Също така е важно да се отбележи, че за дистанционно събиране на данни са задължени да използват Изпълнение на Kadupul на Увеличаване на услугите <b>&quot;On Demand Актуализиране&quot;</b> функция, а ние винаги препоръчваме използването на гръбначния стълб. Когато Remote Data Collector е <b>&quot;офлайн&quot;</b> , уеб сайтът на Remote Data Collectors ще съдържа много по-малко информация. Въпреки това, той ще кешира всички актуализации, докато основната база данни на Kadupul и уеб сървъра бъдат достигнати. След това ще изхвърли продукцията на Boost таблицата обратно в Main Kadupul Database за актуализиране."
 
 #: index.php:87
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
@@ -12748,8 +12762,9 @@ msgid "Your password must contain at least 1 special character!"
 msgstr "Вашата парола трябва да съдържа поне 1 специален знак!"
 
 #: lib/auth.php:4676
+#, fuzzy
 msgid "Kadupul Login Failure"
-msgstr "Изчистена регистрация на кактуси"
+msgstr "Изчистена регистрация на Kadupul"
 
 #: lib/auth.php:4959
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
@@ -13560,9 +13575,9 @@ msgid "%s %s"
 msgstr "%s %s"
 
 #: lib/functions.php:6993
-#, php-format
+#, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
-msgstr "ПРЕДУПРЕЖДЕНИЕ:  Ключовите кактуси включват липсващ файл %s. Моля, намерете и заменете този файл"
+msgstr "ПРЕДУПРЕЖДЕНИЕ:  Ключовите Kadupul включват липсващ файл %s. Моля, намерете и заменете този файл"
 
 #: lib/graphs.php:44
 msgid "Aggregated Device"
@@ -13758,8 +13773,9 @@ msgid "Help"
 msgstr "Помощ"
 
 #: lib/html.php:2577
+#, fuzzy
 msgid "Kadupul Home"
-msgstr "Кактуси вкъщи"
+msgstr "Kadupul вкъщи"
 
 #: lib/html.php:2579
 msgid "Miscellaneous"
@@ -13818,8 +13834,9 @@ msgid "Report a bug"
 msgstr "Доклад за дефект…"
 
 #: lib/html.php:2600
+#, fuzzy
 msgid "Kadupul"
-msgstr "Кактусови"
+msgstr "Kadupul"
 
 #: lib/html.php:2602
 msgid "Click to Show/Hide Filter"
@@ -14088,9 +14105,9 @@ msgid "There was a SQL Injection attempted on the page"
 msgstr "Имаше опит за SQL инжектиране на страницата"
 
 #: lib/html_form_template.php:156
-#, php-format
+#, fuzzy, php-format
 msgid "A client attempted to create a SQL Injection into Kadupul likely from an external host with the address %s"
-msgstr "Клиент се опита да създаде SQL инжекция в кактуси вероятно от външен хост с адрес %s"
+msgstr "Клиент се опита да създаде SQL инжекция в Kadupul вероятно от външен хост с адрес %s"
 
 #: lib/html_form_template.php:632 lib/html_form_template.php:644
 #, php-format
@@ -14712,12 +14729,14 @@ msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "Терминът „ %s“ не е валиден. Грешка е %s"
 
 #: lib/html_utility.php:1129
+#, fuzzy
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
-msgstr "Редовните изрази за кактуси са ограничени до 50 знака само от съображения за сигурност."
+msgstr "Редовните изрази за Kadupul са ограничени до 50 знака само от съображения за сигурност."
 
 #: lib/html_utility.php:1133
+#, fuzzy
 msgid "Kadupul regular expressions can not includes the semi-color character."
-msgstr "Редовните изрази за кактуси не могат да включват полуцветния знак."
+msgstr "Редовните изрази за Kadupul не могат да включват полуцветния знак."
 
 #: lib/html_utility.php:1153
 msgid "There was an internal error!"
@@ -14743,7 +14762,7 @@ msgstr "Лоша грешка при отместването на UTF-8!"
 msgid "Down (Thold)"
 msgstr "Изтегли"
 
-#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3692
+#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3712
 msgid "Error"
 msgstr "Грешка"
 
@@ -14983,8 +15002,9 @@ msgid "Downgrade"
 msgstr "Преминаване към по-стара версия"
 
 #: lib/installer.php:1740 utilities.php:265
+#, fuzzy
 msgid "Kadupul Version"
-msgstr "Кактусна версия"
+msgstr "Kadupul версия"
 
 #: lib/installer.php:1740
 msgid "License Agreement"
@@ -15043,7 +15063,7 @@ msgid "Location checks"
 msgstr "Проверки на местоположението"
 
 #: lib/installer.php:1859 lib/installer.php:2010 lib/installer.php:2014
-#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3789
+#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3809
 msgid "ERROR:"
 msgstr "Грешка: Файлът не може да бъде изтрит"
 
@@ -15390,8 +15410,9 @@ msgid "Kadupul Data Input methods that call a script can be exploited in ways th
 msgstr "Методите за въвеждане на данни за Kadupul, които извикват скрипт, могат да бъдат използвани по начини, по които неадминистратор може да нанесе щети на файлове, притежавани от акаунта на полера, а в случаите, когато някой изпълнява Kadupul poller като root, може да компрометира операционната система, позволяваща на нападателите да използвайте вашата инфраструктура."
 
 #: lib/installer.php:2421
+#, fuzzy
 msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
-msgstr "Ето защо, преди няколко версии, Kadupul беше подобрен, за да предостави възможности за бял списък за тези видове методи за въвеждане на данни. Макар това да осигурява по-пълноценно кактусите, то увеличава обема работа, необходим на администратора на кактусите за импортиране и управление на шаблони и пакети."
+msgstr "Ето защо, преди няколко версии, Kadupul беше подобрен, за да предостави възможности за бял списък за тези видове методи за въвеждане на данни. Макар това да осигурява по-пълноценно Kadupul, то увеличава обема работа, необходим на администратора на Kadupul за импортиране и управление на шаблони и пакети."
 
 #: lib/installer.php:2422
 #, fuzzy
@@ -15664,229 +15685,234 @@ msgstr "Подаване на сигнал за проблем"
 msgid "Get Started"
 msgstr "Първи стъпки"
 
-#: lib/installer.php:3009
+#: lib/installer.php:3025
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "Стартиране на%s процес за v%s"
 
-#: lib/installer.php:3034
+#: lib/installer.php:3051
+msgid "Unable to update application defaults."
+msgstr ""
+
+#: lib/installer.php:3054
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "Завършен%s процес за v%s"
 
-#: lib/installer.php:3073
+#: lib/installer.php:3093
 #, php-format
 msgid "Found %s templates to install"
 msgstr "Намерени са%s шаблони за инсталиране"
 
-#: lib/installer.php:3083
+#: lib/installer.php:3103
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "Предстои импортиране на пакет #%s '%s'."
 
-#: lib/installer.php:3092
+#: lib/installer.php:3112
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "Импортирането на пакет #%s '%s' под профил '%s' бе успешно"
 
-#: lib/installer.php:3098
+#: lib/installer.php:3118
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "Импортирането на пакет #%s '%s' под профил '%s' не бе успешно"
 
-#: lib/installer.php:3113
+#: lib/installer.php:3133
 #, fuzzy, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "Съпоставяне на шаблон за автоматизация за шаблон на устройство '{ 0 }'"
 
-#: lib/installer.php:3130
+#: lib/installer.php:3150
 msgid "No templates were selected for import"
 msgstr "Не са избрани шаблони за импортиране"
 
-#: lib/installer.php:3139
+#: lib/installer.php:3159
 msgid "Updating remote configuration file"
 msgstr "Очаква се конфигурация"
 
-#: lib/installer.php:3171
+#: lib/installer.php:3191
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "Задаване на профил на източника на данни по подразбиране на %s (%s)"
 
-#: lib/installer.php:3193
+#: lib/installer.php:3213
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "Неуспешно намиране на избрания профил (%s), не са направени промени"
 
-#: lib/installer.php:3202
+#: lib/installer.php:3222
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "Актуализиране на мрежата за автоматизация (%s), режим \"%s\" => \"%s\", подмрежа \"%s\" =>%s \""
 
-#: lib/installer.php:3212
+#: lib/installer.php:3232
 msgid "Failed to find automation network, no changes were made"
 msgstr "Неуспешно намиране на мрежа за автоматизация, не бяха направени промени"
 
-#: lib/installer.php:3216
+#: lib/installer.php:3236
 msgid "Adding extra snmp settings for automation"
 msgstr "Добавяне на допълнителни snmp настройки за автоматизация"
 
-#: lib/installer.php:3222
+#: lib/installer.php:3242
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "Избор на набор от опции за автоматизация %s"
 
-#: lib/installer.php:3235
+#: lib/installer.php:3255
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "Актуализиране на набор от опции за автоматизация %s"
 
-#: lib/installer.php:3238
+#: lib/installer.php:3258
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "Успешно актуализиран набор от опции за автоматизация%s"
 
-#: lib/installer.php:3240
+#: lib/installer.php:3260
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "Набор от опции за автоматизация за преоразмеряване %s"
 
-#: lib/installer.php:3246
+#: lib/installer.php:3266
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "Неуспешно актуализиране на набора от опции за автоматизация %s"
 
-#: lib/installer.php:3249
+#: lib/installer.php:3269
 msgid "Failed to find any automation option set"
 msgstr "Неуспешно намиране на данни за копиране!"
 
-#: lib/installer.php:3279
+#: lib/installer.php:3299
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "Шаблони за устройства [редактиране: %s]"
 
-#: lib/installer.php:3305
+#: lib/installer.php:3325
 msgid "Creating Graphs for Default Device"
 msgstr "Създайте графики за това устройство"
 
-#: lib/installer.php:3312
+#: lib/installer.php:3332
 msgid "Adding Device to Default Tree"
 msgstr "По подразбиране на устройството"
 
-#: lib/installer.php:3320
+#: lib/installer.php:3340
 msgid "No templated graphs for Default Device were found"
 msgstr "Не бяха намерени шаблонирани графики за устройство по подразбиране"
 
-#: lib/installer.php:3324
+#: lib/installer.php:3344
+#, fuzzy
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
-msgstr "ПРЕДУПРЕЖДЕНИЕ: Шаблонът на устройството за вашата операционна система не е намерен. Ще трябва да импортирате шаблони за устройства или пакети за кактуси, за да наблюдавате вашия сървър за кактуси."
+msgstr "ПРЕДУПРЕЖДЕНИЕ: Шаблонът на устройството за вашата операционна система не е намерен. Ще трябва да импортирате шаблони за устройства или пакети за Kadupul, за да наблюдавате вашия сървър за Kadupul."
 
-#: lib/installer.php:3331
+#: lib/installer.php:3351
 msgid "Running first-time data query for local host"
 msgstr "Изпълнява се първа заявка за данни за локален хост"
 
-#: lib/installer.php:3339
+#: lib/installer.php:3359
 msgid "Repopulating poller cache"
 msgstr "Възстановете кеш за полъри"
 
-#: lib/installer.php:3344
+#: lib/installer.php:3364
 msgid "Repopulating SNMP Agent cache"
 msgstr "Възстановете кеш за SNMPAgent"
 
-#: lib/installer.php:3349
+#: lib/installer.php:3369
 msgid "Generating RSA Key Pair"
 msgstr "Генериране на RSA двойка ключове"
 
-#: lib/installer.php:3361
+#: lib/installer.php:3381
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "Намерени%s таблици за конвертиране"
 
-#: lib/installer.php:3368
+#: lib/installer.php:3388
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "Таблица за преобразуване #%s '%s'"
 
-#: lib/installer.php:3383
+#: lib/installer.php:3403
 msgid "No tables where found or selected for conversion"
 msgstr "Няма таблици, където са намерени или избрани за преобразуване"
 
-#: lib/installer.php:3394
+#: lib/installer.php:3414
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "Превключихте от%s на%s"
 
-#: lib/installer.php:3398
+#: lib/installer.php:3418
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "ЗАБЕЛЕЖКА: Използване на временен файл за db кеш:%s"
 
-#: lib/installer.php:3420
+#: lib/installer.php:3440
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "Надстройка от v%s (DB%s) до v%s"
 
-#: lib/installer.php:3428
+#: lib/installer.php:3448
 #, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "ПРЕДУПРЕЖДЕНИЕ: Неуспешно намиране на функция за надстройка за v%s"
 
-#: lib/installer.php:3487
+#: lib/installer.php:3507
 msgid "Install aborted due to no EULA acceptance"
 msgstr "Инсталирането е прекратено поради липса на приемане от EULA"
 
-#: lib/installer.php:3510
+#: lib/installer.php:3530
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "Фонът вече беше стартиран в%s, този опит за%s беше пропуснат"
 
-#: lib/installer.php:3533
+#: lib/installer.php:3553
 #, fuzzy, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "Възникна изключение по време на инсталацията: #{ 0} - %s"
 
-#: lib/installer.php:3543
+#: lib/installer.php:3563
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "Инсталацията е стартирана на %s, завършена на %s"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 msgid "Both"
 msgstr "И двете"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "%s %s"
 
-#: lib/installer.php:3583
+#: lib/installer.php:3603
 #, fuzzy, php-format
 msgid "%s - N/A"
 msgstr "N/A"
 
-#: lib/installer.php:3583 lib/installer.php:3585
+#: lib/installer.php:3603 lib/installer.php:3605
 msgid "Web"
 msgstr "Уеб"
 
-#: lib/installer.php:3585 lib/installer.php:3588
+#: lib/installer.php:3605 lib/installer.php:3608
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "%s %s"
 
-#: lib/installer.php:3588
+#: lib/installer.php:3608
 msgid "Cli"
 msgstr "Класически"
 
-#: lib/installer.php:3593
+#: lib/installer.php:3613
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "Задаване на PHP опция%s =%s"
 
-#: lib/installer.php:3599
+#: lib/installer.php:3619
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "Неуспешно задаване на PHP опция%s, е%s (трябва да бъде%s)"
 
-#: lib/installer.php:3618
+#: lib/installer.php:3638
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "Колектор (и) за данни не са намерени при опит за синхронизация"
 
@@ -16200,7 +16226,7 @@ msgstr "Файлът RRA &#39; %s&#39; има същите стъпки ( %s, %s
 #: lib/rrd.php:3183
 #, fuzzy, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
-msgstr "Pdp_per_row на „{ 0 }“ е невалиден за RRA „{ 1 }“ трябва да бъде „{ 2 }“. Помислете дали да не изтриете и позволите на кактусите да пресъздадат RRD файла."
+msgstr "Pdp_per_row на „{ 0 }“ е невалиден за RRA „{ 1 }“ трябва да бъде „{ 2 }“. Помислете дали да не изтриете и позволите на Kadupul да пресъздадат RRD файла."
 
 #: lib/rrd.php:3187
 #, php-format
@@ -16332,7 +16358,7 @@ msgstr "RRA Папка"
 msgid "Root"
 msgstr "Root"
 
-#: lib/rrd.php:4079
+#: lib/rrd.php:4082
 msgid "Unknown RRDtool Error"
 msgstr "Неизвестна грешка на RRDtool"
 
@@ -17481,8 +17507,9 @@ msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Максималното време на изпълнение от %d секунди е превишено за идентификатор на цветен прашец %d. Излизане."
 
 #: poller.php:890
+#, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "ПРЕДУПРЕЖДЕНИЕ: Цикълът на гласуване на кактуси надхвърля интервала на Poller от"
+msgstr "ПРЕДУПРЕЖДЕНИЕ: Цикълът на гласуване на Kadupul надхвърля интервала на Poller от"
 
 #: poller.php:915
 #, php-format
@@ -17498,17 +17525,19 @@ msgid "Kadupul System Notification"
 msgstr "Kadupul System Utilities"
 
 #: poller.php:1174
+#, fuzzy
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
-msgstr "ЗАБЕЛЕЖКА: Добавен е втори колектор за данни на кактуси. Затова, позволявайки автоматично усилване!"
+msgstr "ЗАБЕЛЕЖКА: Добавен е втори колектор за данни на Kadupul. Затова, позволявайки автоматично усилване!"
 
 #: poller_automation.php:46
 #, fuzzy, php-format
 msgid "WARNING: Main Kadupul database %s offline or in recovery"
-msgstr "ВНИМАНИЕ: Основната база данни за кактуси е офлайн или се възстановява"
+msgstr "ВНИМАНИЕ: Основната база данни за Kadupul е офлайн или се възстановява"
 
 #: poller_automation.php:970 poller_automation.php:1021
+#, fuzzy
 msgid "Kadupul Primary Admin"
-msgstr "Главен Администратор на Кактуси"
+msgstr "Главен Администратор на Kadupul"
 
 #: poller_automation.php:1122
 msgid "Kadupul Automation Report requires an html based Email client"
@@ -18020,7 +18049,7 @@ msgstr "ЗАБЕЛЕЖКА: Настройките на пътя в този р�
 #: settings.php:374
 #, fuzzy, php-format
 msgid "Kadupul Settings (%s)%s"
-msgstr "Настройки на кактуси ({0 }){ 1}"
+msgstr "Настройки на Kadupul ({0 }){ 1}"
 
 #: settings.php:492
 msgid "Changing Permission Model Warning"
@@ -19767,12 +19796,14 @@ msgid "Log [Total Lines: %d - All Items Shown]"
 msgstr "Вход [Общо линии:% d - Показани са всички елементи]"
 
 #: utilities.php:1602
+#, fuzzy
 msgid "Clear Kadupul Log"
-msgstr "Изчистване на дневника на кактусите"
+msgstr "Изчистване на дневника на Kadupul"
 
 #: utilities.php:1615
+#, fuzzy
 msgid "Kadupul Log Cleared"
-msgstr "Изчистена регистрация на кактуси"
+msgstr "Изчистена регистрация на Kadupul"
 
 #: utilities.php:1617
 msgid "Error: Unable to clear log, no write permissions."

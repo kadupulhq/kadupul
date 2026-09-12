@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Chinese Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-11 23:33-0700\n"
+"POT-Creation-Date: 2026-09-12 10:14-0700\n"
 "PO-Revision-Date: 2024-06-23 04:09+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -609,7 +609,7 @@ msgstr "否"
 #: data_templates.php:1249 gprint_presets.php:439 graph_templates.php:897
 #: host_templates.php:974 include/global_settings.php:884
 #: include/global_settings.php:1907 lib/api_automation.php:1473
-#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3576
+#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3596
 #: links.php:410 tree.php:2337 tree.php:2338 user_admin.php:2336
 #: user_domains.php:762 user_domains.php:766 user_group_admin.php:2019
 #: vdef.php:927
@@ -2493,7 +2493,7 @@ msgstr "树创建标准"
 msgid "Change Leaf Type"
 msgstr "改变叶子类型"
 
-#: automation_tree_rules.php:726 lib/installer.php:3770 utilities.php:2643
+#: automation_tree_rules.php:726 lib/installer.php:3790 utilities.php:2643
 #: utilities.php:2644 utilities.php:2647 utilities.php:2648
 msgid "WARNING:"
 msgstr "WARNING:"
@@ -2548,8 +2548,9 @@ msgid "Kadupul System Warning"
 msgstr "Kadupul 系统警告"
 
 #: cactid.php:37
+#, fuzzy
 msgid "WARNING: Kadupul Daemon PID["
-msgstr "警告：仙人掌守护进程PID["
+msgstr "警告：Kadupul守护进程PID["
 
 #: cactid.php:125
 msgid "Kadupul System Notice"
@@ -2972,8 +2973,9 @@ msgid "All RRDfile repairs succeeded."
 msgstr "所有RRDfile修复成功。"
 
 #: data_debug.php:59
+#, fuzzy
 msgid "One or more RRDfile repairs failed.  See Kadupul log for errors."
-msgstr "一个或多个RRDfile修复失败。有关错误，请参阅仙人掌日志。"
+msgstr "一个或多个RRDfile修复失败。有关错误，请参阅Kadupul日志。"
 
 #: data_debug.php:67
 msgid "Automatic Data Source debug being rerun after repair."
@@ -3704,8 +3706,9 @@ msgid_plural "Duplicate Date Source Profiles"
 msgstr[0] "重复的数据源配置文件"
 
 #: data_source_profiles.php:387
+#, fuzzy
 msgid "Unable to duplicate Data Source Profile.  Check Kadupul Log for errors."
-msgstr "一个或多个RRDfile修复失败。有关错误，请参阅仙人掌日志。"
+msgstr "一个或多个RRDfile修复失败。有关错误，请参阅Kadupul日志。"
 
 #: data_source_profiles.php:410
 msgid "Click 'Continue' to delete the following Data Source Profile RRA."
@@ -9822,8 +9825,9 @@ msgid "Local Page Help Only"
 msgstr "获取帮助"
 
 #: include/global_settings.php:448
+#, fuzzy
 msgid "By default Kadupul page help is located at kadupul.org.  However, if your system does not have access to the Internet, you may download the documentation locally in HTML format and host it in the 'docs' location of you Kadupul server.  If you choose only to leverage the local location for page help documentation, check this checkbox."
-msgstr "默认情况下，仙人掌页面帮助位于 kadupul.org。 但是，如果您的系统无法访问 Internet，您可以以 HTML 格式在本地下载文档并将其托管在 Kadupul 服务器的“文档”位置。 如果选择仅利用本地位置获取页面帮助文档，请选中此复选框。"
+msgstr "默认情况下，Kadupul页面帮助位于 kadupul.org。 但是，如果您的系统无法访问 Internet，您可以以 HTML 格式在本地下载文档并将其托管在 Kadupul 服务器的“文档”位置。 如果选择仅利用本地位置获取页面帮助文档，请选中此复选框。"
 
 #: include/global_settings.php:453
 msgid "Deletion Verification"
@@ -10676,8 +10680,9 @@ msgid "Disable Resource Cache Replication"
 msgstr "重建资源缓存"
 
 #: include/global_settings.php:1304
+#, fuzzy
 msgid "By default, the main Kadupul Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Kadupul Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting."
-msgstr "默认情况下，主仙人掌数据收集器会将整个网站和插件缓存到资源缓存中。然后，远程数据收集器会定期使用主仙人掌数据收集器的任何更新来更新主题。该资源缓存实质上允许远程数据收集器进行自我升级。如果您不想使用此选项，则可以使用此设置禁用它。"
+msgstr "默认情况下，主Kadupul数据收集器会将整个网站和插件缓存到资源缓存中。然后，远程数据收集器会定期使用主Kadupul数据收集器的任何更新来更新主题。该资源缓存实质上允许远程数据收集器进行自我升级。如果您不想使用此选项，则可以使用此设置禁用它。"
 
 #: include/global_settings.php:1309
 msgid "Additional Data Collector Settings"
@@ -10767,8 +10772,9 @@ msgid "RRDChecker Timeout"
 msgstr "DNS 超时"
 
 #: include/global_settings.php:1392
+#, fuzzy
 msgid "The maximum amount of time Kadupul's RRDfile check script can run without generating a timeout error and being killed."
-msgstr "仙人掌的Spikekill脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
+msgstr "Kadupul的Spikekill脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
 
 #: include/global_settings.php:1398 include/global_settings.php:1399
 #: include/global_settings.php:1400 include/global_settings.php:1455
@@ -10845,16 +10851,18 @@ msgid "Maintenance Background Generation Timeout"
 msgstr "维护后台生成超时"
 
 #: include/global_settings.php:1446
+#, fuzzy
 msgid "The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed."
-msgstr "仙人掌维护脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
+msgstr "Kadupul维护脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
 
 #: include/global_settings.php:1459
 msgid "Spikekill Background Generation Timeout"
 msgstr "Spikekill背景生成超时"
 
 #: include/global_settings.php:1460
+#, fuzzy
 msgid "The maximum amount of time a Kadupul's Spikekill script can run without generating a timeout error and being killed."
-msgstr "仙人掌的Spikekill脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
+msgstr "Kadupul的Spikekill脚本可以运行的最长时间，而不会产生超时错误并被杀死。"
 
 #: include/global_settings.php:1476
 msgid "Data Collector Defaults"
@@ -11934,8 +11942,9 @@ msgid "TimeZone Support"
 msgstr "MySQL - 时区支持"
 
 #: include/global_settings.php:2581
+#, fuzzy
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
-msgstr "你希望仙人掌如何呈现日期？ 此设置还将更改 Kadupul Graphs 日期的表示方式。"
+msgstr "你希望Kadupul如何呈现日期？ 此设置还将更改 Kadupul Graphs 日期的表示方式。"
 
 #: include/global_settings.php:2584
 msgid "Kadupul Server Timezone"
@@ -12143,8 +12152,9 @@ msgid "Tree History"
 msgstr "历史密码"
 
 #: include/global_settings.php:2791
+#, fuzzy
 msgid "If enabled, Kadupul will remember your Tree History between logins and when you return to the Graphs page."
-msgstr "如果启用，则仙人掌将记住两次登录之间以及返回到“图形”页面时的树历史记录。"
+msgstr "如果启用，则Kadupul将记住两次登录之间以及返回到“图形”页面时的树历史记录。"
 
 #: include/global_settings.php:2814
 msgid "Use Custom Fonts"
@@ -13528,9 +13538,9 @@ msgid "%s %s"
 msgstr "%s %s"
 
 #: lib/functions.php:6993
-#, php-format
+#, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
-msgstr "警告：缺少密钥仙人掌包含文件%s。 请找到并替换此文件"
+msgstr "警告：缺少密钥Kadupul包含文件%s。 请找到并替换此文件"
 
 #: lib/graphs.php:44
 msgid "Aggregated Device"
@@ -14684,8 +14694,9 @@ msgid "Kadupul regular expressions are limited to 50 characters only for securit
 msgstr "出于安全原因，Kadupul 正则表达式限制为 50 个字符。"
 
 #: lib/html_utility.php:1133
+#, fuzzy
 msgid "Kadupul regular expressions can not includes the semi-color character."
-msgstr "仙人掌正则表达式不能包含半彩色字符。"
+msgstr "Kadupul正则表达式不能包含半彩色字符。"
 
 #: lib/html_utility.php:1153
 msgid "There was an internal error!"
@@ -14711,7 +14722,7 @@ msgstr "UTF-8 偏移错误!"
 msgid "Down (Thold)"
 msgstr "下载"
 
-#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3692
+#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3712
 msgid "Error"
 msgstr "错误"
 
@@ -15011,7 +15022,7 @@ msgid "Location checks"
 msgstr "位置检查"
 
 #: lib/installer.php:1859 lib/installer.php:2010 lib/installer.php:2014
-#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3789
+#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3809
 msgid "ERROR:"
 msgstr "ERROR:"
 
@@ -15632,229 +15643,233 @@ msgstr "报告问题"
 msgid "Get Started"
 msgstr "开始使用"
 
-#: lib/installer.php:3009
+#: lib/installer.php:3025
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "为v%s启动%s流程"
 
-#: lib/installer.php:3034
+#: lib/installer.php:3051
+msgid "Unable to update application defaults."
+msgstr ""
+
+#: lib/installer.php:3054
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "已完成%s针对v%s的进程"
 
-#: lib/installer.php:3073
+#: lib/installer.php:3093
 #, php-format
 msgid "Found %s templates to install"
 msgstr "找到了要安装的%s模板"
 
-#: lib/installer.php:3083
+#: lib/installer.php:3103
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "即将导入软件包#%s '%s'。"
 
-#: lib/installer.php:3092
+#: lib/installer.php:3112
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "已成功在配置文件'%s'下导入软件包#%s '%s'"
 
-#: lib/installer.php:3098
+#: lib/installer.php:3118
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "在配置文件'%s'下导入软件包#%s '%s'失败"
 
-#: lib/installer.php:3113
+#: lib/installer.php:3133
 #, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "设备模板'%s'的映射自动化模板"
 
-#: lib/installer.php:3130
+#: lib/installer.php:3150
 msgid "No templates were selected for import"
 msgstr "未选择要导入的模板"
 
-#: lib/installer.php:3139
+#: lib/installer.php:3159
 msgid "Updating remote configuration file"
 msgstr "等待配置"
 
-#: lib/installer.php:3171
+#: lib/installer.php:3191
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "设置默认数据源配置文件%s (%s)"
 
-#: lib/installer.php:3193
+#: lib/installer.php:3213
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "找不到选定的配置文件(%s)，未进行任何更改"
 
-#: lib/installer.php:3202
+#: lib/installer.php:3222
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "更新自动化网络(%s)，模式\"%s =>'%s'，子网'%s' =>%s\""
 
-#: lib/installer.php:3212
+#: lib/installer.php:3232
 msgid "Failed to find automation network, no changes were made"
 msgstr "找不到自动化网络，未进行任何更改"
 
-#: lib/installer.php:3216
+#: lib/installer.php:3236
 msgid "Adding extra snmp settings for automation"
 msgstr "添加额外的snmp设置以实现自动化"
 
-#: lib/installer.php:3222
+#: lib/installer.php:3242
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "正在选择自动化选项集%s"
 
-#: lib/installer.php:3235
+#: lib/installer.php:3255
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "正在更新自动化选项集%s"
 
-#: lib/installer.php:3238
+#: lib/installer.php:3258
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "成功更新了自动化选项集%s"
 
-#: lib/installer.php:3240
+#: lib/installer.php:3260
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "重新排序自动化选项集%s"
 
-#: lib/installer.php:3246
+#: lib/installer.php:3266
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "无法更新自动化选项集%s"
 
-#: lib/installer.php:3249
+#: lib/installer.php:3269
 msgid "Failed to find any automation option set"
 msgstr "无法找到要复制的数据"
 
-#: lib/installer.php:3279
+#: lib/installer.php:3299
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "设备模板 [编辑: %s]"
 
-#: lib/installer.php:3305
+#: lib/installer.php:3325
 msgid "Creating Graphs for Default Device"
 msgstr "为设备创建图形"
 
-#: lib/installer.php:3312
+#: lib/installer.php:3332
 msgid "Adding Device to Default Tree"
 msgstr "设备默认值"
 
-#: lib/installer.php:3320
+#: lib/installer.php:3340
 msgid "No templated graphs for Default Device were found"
 msgstr "找不到默认设备的模板化图"
 
-#: lib/installer.php:3324
+#: lib/installer.php:3344
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "警告：找不到您的操作系统的设备模板。您将需要导入设备模板或Kadupul软件包以监视您的Kadupul服务器。"
 
-#: lib/installer.php:3331
+#: lib/installer.php:3351
 msgid "Running first-time data query for local host"
 msgstr "运行本地主机的首次数据查询"
 
-#: lib/installer.php:3339
+#: lib/installer.php:3359
 msgid "Repopulating poller cache"
 msgstr "重建poller 缓存"
 
-#: lib/installer.php:3344
+#: lib/installer.php:3364
 msgid "Repopulating SNMP Agent cache"
 msgstr "重建SNMPAgent 缓存"
 
-#: lib/installer.php:3349
+#: lib/installer.php:3369
 msgid "Generating RSA Key Pair"
 msgstr "生成RSA密钥对"
 
-#: lib/installer.php:3361
+#: lib/installer.php:3381
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "找到要转换的%s表"
 
-#: lib/installer.php:3368
+#: lib/installer.php:3388
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "转换表#%s '%s'"
 
-#: lib/installer.php:3383
+#: lib/installer.php:3403
 msgid "No tables where found or selected for conversion"
 msgstr "没有找到或选择要转换的表"
 
-#: lib/installer.php:3394
+#: lib/installer.php:3414
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "从%s切换到%s"
 
-#: lib/installer.php:3398
+#: lib/installer.php:3418
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "注意：使用临时文件进行数据库高速缓存：%s"
 
-#: lib/installer.php:3420
+#: lib/installer.php:3440
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "从v%s（数据库%s）升级到v%s"
 
-#: lib/installer.php:3428
+#: lib/installer.php:3448
 #, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "警告：无法找到v%s的升级功能"
 
-#: lib/installer.php:3487
+#: lib/installer.php:3507
 msgid "Install aborted due to no EULA acceptance"
 msgstr "由于未接受EULA，安装被中止"
 
-#: lib/installer.php:3510
+#: lib/installer.php:3530
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "后台已在%s开始，此尝试已在%s跳过"
 
-#: lib/installer.php:3533
+#: lib/installer.php:3553
 #, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "安装期间发生异常: #%s - %s"
 
-#: lib/installer.php:3543
+#: lib/installer.php:3563
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "安装在 %s 开始,在 %s 完成"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 msgid "Both"
 msgstr "两者"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 #, php-format
 msgid "No - %s"
 msgstr "否-%s"
 
-#: lib/installer.php:3583
+#: lib/installer.php:3603
 #, php-format
 msgid "%s - N/A"
 msgstr "%s-不适用"
 
-#: lib/installer.php:3583 lib/installer.php:3585
+#: lib/installer.php:3603 lib/installer.php:3605
 msgid "Web"
 msgstr "网页"
 
-#: lib/installer.php:3585 lib/installer.php:3588
+#: lib/installer.php:3605 lib/installer.php:3608
 #, php-format
 msgid "%s - No"
 msgstr "%s - 否"
 
-#: lib/installer.php:3588
+#: lib/installer.php:3608
 msgid "Cli"
 msgstr "如果您选择此选项，则将重新生成轮询缓存。如果在崩溃后遇到问题并且已经运行数据库修复工具，则只有在发生数据库崩溃的情况下才使用此选项;或者，如果您遇到问题 使用特定的设备，只需重新保存该设备以重建其轮询缓存即可。还有一个与此命令等效的命令行界面，建议用于大型系统。<i class = “deviceDown ”>注意：在大型系统 ，这个命令可能需要几分钟到几个小时才能完成，因此不应该从Kadupul UI运行。您可以在命令行运行'php -q cli / rebuild_poller_cache.php --help'以获取更多信息。</ i>"
 
-#: lib/installer.php:3593
+#: lib/installer.php:3613
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "设置PHP选项%s =%s"
 
-#: lib/installer.php:3599
+#: lib/installer.php:3619
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "无法设置PHP选项%s，为%s（应为%s）"
 
-#: lib/installer.php:3618
+#: lib/installer.php:3638
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "尝试同步时未找到数据采集器"
 
@@ -16300,7 +16315,7 @@ msgstr "RRA 文件夹"
 msgid "Root"
 msgstr "根目录"
 
-#: lib/rrd.php:4079
+#: lib/rrd.php:4082
 msgid "Unknown RRDtool Error"
 msgstr "未知的RRDtool 错误"
 
@@ -17446,8 +17461,9 @@ msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "轮询程序id%d超过了%d秒的最大运行时间。正在退出。"
 
 #: poller.php:890
+#, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "警告：仙人掌轮询周期超过轮询间隔 "
+msgstr "警告：Kadupul轮询周期超过轮询间隔 "
 
 #: poller.php:915
 #, php-format
@@ -17463,8 +17479,9 @@ msgid "Kadupul System Notification"
 msgstr "Kadupul 系统工具"
 
 #: poller.php:1174
+#, fuzzy
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
-msgstr "注意：已添加第二个仙人掌数据收集器。因此，自动启用增强功能！"
+msgstr "注意：已添加第二个Kadupul数据收集器。因此，自动启用增强功能！"
 
 #: poller_automation.php:46
 #, fuzzy, php-format

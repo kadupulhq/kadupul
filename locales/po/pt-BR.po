@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-11 23:33-0700\n"
+"POT-Creation-Date: 2026-09-12 10:14-0700\n"
 "PO-Revision-Date: 2024-06-25 21:23+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -609,7 +609,7 @@ msgstr "Não"
 #: data_templates.php:1249 gprint_presets.php:439 graph_templates.php:897
 #: host_templates.php:974 include/global_settings.php:884
 #: include/global_settings.php:1907 lib/api_automation.php:1473
-#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3576
+#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3596
 #: links.php:410 tree.php:2337 tree.php:2338 user_admin.php:2336
 #: user_domains.php:762 user_domains.php:766 user_group_admin.php:2019
 #: vdef.php:927
@@ -2493,7 +2493,7 @@ msgstr "Critérios de criação de árvore"
 msgid "Change Leaf Type"
 msgstr "Modificar tipo de folha"
 
-#: automation_tree_rules.php:726 lib/installer.php:3770 utilities.php:2643
+#: automation_tree_rules.php:726 lib/installer.php:3790 utilities.php:2643
 #: utilities.php:2644 utilities.php:2647 utilities.php:2648
 msgid "WARNING:"
 msgstr "AVISO:"
@@ -5262,9 +5262,9 @@ msgid "Set Default"
 msgstr "Definir Padrão"
 
 #: help.php:37
-#, php-format
+#, fuzzy, php-format
 msgid "WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "AVISO: Página de cactos:%s para o usuário:%s gerou um erro fatal %d!"
+msgstr "AVISO: Página de Kadupul:%s para o usuário:%s gerou um erro fatal %d!"
 
 #: help.php:59
 #, php-format
@@ -9887,8 +9887,9 @@ msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual m
 msgstr "Quando ativado, o Kadupul não bloqueia gráficos. Isso permite uma modificação manual mais rápida das fontes de dados relacionadas a um gráfico."
 
 #: include/global_settings.php:471
+#, fuzzy
 msgid "Hide Kadupul Dashboard"
-msgstr "Ocultar painel de instrumentos de Cactos"
+msgstr "Ocultar painel de instrumentos de Kadupul"
 
 #: include/global_settings.php:472
 msgid "For use with Kadupul's External Link Support.  Using this setting, you can hide the Kadupul Dashboard, so you can display just your own page."
@@ -13825,8 +13826,9 @@ msgid "Report a bug"
 msgstr "Reportar um Erro"
 
 #: lib/html.php:2600
+#, fuzzy
 msgid "Kadupul"
-msgstr "Cactaceae"
+msgstr "Kadupul"
 
 #: lib/html.php:2602
 msgid "Click to Show/Hide Filter"
@@ -14065,9 +14067,9 @@ msgid "Enter a valid directory path"
 msgstr "Entrar um caminho de diretório válido"
 
 #: lib/html_form.php:1275
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Color (%s)"
-msgstr "Cactos Cor (%s)"
+msgstr "Kadupul Cor (%s)"
 
 #: lib/html_form.php:1340
 msgid "NO FONT VERIFICATION POSSIBLE"
@@ -14719,12 +14721,14 @@ msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "O termo de pesquisa \"%s\" não é válido. Erro é %s"
 
 #: lib/html_utility.php:1129
+#, fuzzy
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
-msgstr "As expressões regulares de cactos são limitadas a 50 caracteres apenas por razões de segurança."
+msgstr "As expressões regulares de Kadupul são limitadas a 50 caracteres apenas por razões de segurança."
 
 #: lib/html_utility.php:1133
+#, fuzzy
 msgid "Kadupul regular expressions can not includes the semi-color character."
-msgstr "As expressões regulares de cactos não podem incluir o caractere semicolor."
+msgstr "As expressões regulares de Kadupul não podem incluir o caractere semicolor."
 
 #: lib/html_utility.php:1153
 msgid "There was an internal error!"
@@ -14750,7 +14754,7 @@ msgstr "Erro de desvio UTF-8 mau!"
 msgid "Down (Thold)"
 msgstr "Download"
 
-#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3692
+#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3712
 msgid "Error"
 msgstr "Erro"
 
@@ -14953,8 +14957,9 @@ msgid "You have created a new database, but have not yet imported the 'cacti.sql
 msgstr "Você criou um novo banco de dados, mas ainda não importou o arquivo 'cacti.sql'. Na linha de comando, execute o seguinte para continuar:"
 
 #: lib/installer.php:1592
+#, fuzzy
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Kadupul database. Please ensure that the Kadupul database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Kadupul database."
-msgstr "Este erro também pode ser gerado se o usuário do banco de dados cactos não tiver permissões corretas no banco de dados Kadupul. Certifique-se de que o usuário do banco de dados Kadupul tem a capacidade de SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX no banco de dados Kadupul."
+msgstr "Este erro também pode ser gerado se o usuário do banco de dados Kadupul não tiver permissões corretas no banco de dados Kadupul. Certifique-se de que o usuário do banco de dados Kadupul tem a capacidade de SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX no banco de dados Kadupul."
 
 #: lib/installer.php:1593
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"
@@ -15050,7 +15055,7 @@ msgid "Location checks"
 msgstr "Verificações de localização"
 
 #: lib/installer.php:1859 lib/installer.php:2010 lib/installer.php:2014
-#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3789
+#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3809
 msgid "ERROR:"
 msgstr "ERRO:"
 
@@ -15360,8 +15365,9 @@ msgid "Potential permission issues"
 msgstr "Potenciais problemas de permissão"
 
 #: lib/installer.php:2382
+#, fuzzy
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
-msgstr "Certifique-se de que o seu servidor web tem acesso de leitura/escrita às pastas de cactos que mostram os erros abaixo."
+msgstr "Certifique-se de que o seu servidor web tem acesso de leitura/escrita às pastas de Kadupul que mostram os erros abaixo."
 
 #: lib/installer.php:2385
 msgid "If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools."
@@ -15671,229 +15677,233 @@ msgstr "Problema de relatório"
 msgid "Get Started"
 msgstr "Iniciar"
 
-#: lib/installer.php:3009
+#: lib/installer.php:3025
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "Iniciando%s Processo para v%s"
 
-#: lib/installer.php:3034
+#: lib/installer.php:3051
+msgid "Unable to update application defaults."
+msgstr ""
+
+#: lib/installer.php:3054
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "Processo%s concluído para v%s"
 
-#: lib/installer.php:3073
+#: lib/installer.php:3093
 #, php-format
 msgid "Found %s templates to install"
 msgstr "Encontrados%s modelos para instalar"
 
-#: lib/installer.php:3083
+#: lib/installer.php:3103
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "Sobre a importação do pacote #%s '%s'."
 
-#: lib/installer.php:3092
+#: lib/installer.php:3112
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "A importação do pacote #%s '%s' no perfil '%s' foi bem-sucedida"
 
-#: lib/installer.php:3098
+#: lib/installer.php:3118
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "Falha na importação do pacote #%s '%s' no perfil '%s'"
 
-#: lib/installer.php:3113
+#: lib/installer.php:3133
 #, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "Modelo de Automação de Mapeamento para Modelo de Dispositivo '%s'"
 
-#: lib/installer.php:3130
+#: lib/installer.php:3150
 msgid "No templates were selected for import"
 msgstr "Nenhum modelo foi selecionado para importação"
 
-#: lib/installer.php:3139
+#: lib/installer.php:3159
 msgid "Updating remote configuration file"
 msgstr "Aguardando Configuração"
 
-#: lib/installer.php:3171
+#: lib/installer.php:3191
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "Definindo perfil de fonte de dados padrão para %s (%s)"
 
-#: lib/installer.php:3193
+#: lib/installer.php:3213
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "Falha ao encontrar o perfil selecionado (%s), nenhuma alteração foi feita"
 
-#: lib/installer.php:3202
+#: lib/installer.php:3222
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "Atualizando a rede de automação (%s), modo \"%s\" => \"%s\", sub-rede \"%s\" =>%s \""
 
-#: lib/installer.php:3212
+#: lib/installer.php:3232
 msgid "Failed to find automation network, no changes were made"
 msgstr "Falha ao encontrar a rede de automação, nenhuma alteração foi feita"
 
-#: lib/installer.php:3216
+#: lib/installer.php:3236
 msgid "Adding extra snmp settings for automation"
 msgstr "Adicionando configurações snmp extras para automação"
 
-#: lib/installer.php:3222
+#: lib/installer.php:3242
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "Selecionando o conjunto de opções de automação %s"
 
-#: lib/installer.php:3235
+#: lib/installer.php:3255
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "Atualizando o conjunto de opções de automação %s"
 
-#: lib/installer.php:3238
+#: lib/installer.php:3258
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "Conjunto de opções de automação atualizado com sucesso%s"
 
-#: lib/installer.php:3240
+#: lib/installer.php:3260
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "Conjunto de opções de automação de re-sequenciamento %s"
 
-#: lib/installer.php:3246
+#: lib/installer.php:3266
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "Falha ao atualizar o Conjunto de Opções de Automação %s"
 
-#: lib/installer.php:3249
+#: lib/installer.php:3269
 msgid "Failed to find any automation option set"
 msgstr "Falha ao encontrar dados para copiar!"
 
-#: lib/installer.php:3279
+#: lib/installer.php:3299
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "Modelos de dispositivo [editar: %s]"
 
-#: lib/installer.php:3305
+#: lib/installer.php:3325
 msgid "Creating Graphs for Default Device"
 msgstr "Criar gráficos para este dispositivo"
 
-#: lib/installer.php:3312
+#: lib/installer.php:3332
 msgid "Adding Device to Default Tree"
 msgstr "Predefinições do dispositivo"
 
-#: lib/installer.php:3320
+#: lib/installer.php:3340
 msgid "No templated graphs for Default Device were found"
 msgstr "Não foram encontrados gráficos de modelo para o dispositivo padrão"
 
-#: lib/installer.php:3324
+#: lib/installer.php:3344
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "AVISO: Modelo de dispositivo para o sistema operacional não encontrado. Você precisará importar modelos de dispositivos ou pacotes Kadupul para monitorar seu servidor Kadupul."
 
-#: lib/installer.php:3331
+#: lib/installer.php:3351
 msgid "Running first-time data query for local host"
 msgstr "Executando uma consulta de dados pela primeira vez para o host local"
 
-#: lib/installer.php:3339
+#: lib/installer.php:3359
 msgid "Repopulating poller cache"
 msgstr "Reconstruir o cache do Poller"
 
-#: lib/installer.php:3344
+#: lib/installer.php:3364
 msgid "Repopulating SNMP Agent cache"
 msgstr "Reconstruir Cache SNMPAgent"
 
-#: lib/installer.php:3349
+#: lib/installer.php:3369
 msgid "Generating RSA Key Pair"
 msgstr "Gerando par de chaves RSA"
 
-#: lib/installer.php:3361
+#: lib/installer.php:3381
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "Encontradas%s tabelas para converter"
 
-#: lib/installer.php:3368
+#: lib/installer.php:3388
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "Convertendo tabela #%s '%s'"
 
-#: lib/installer.php:3383
+#: lib/installer.php:3403
 msgid "No tables where found or selected for conversion"
 msgstr "Nenhuma tabela foi encontrada ou selecionada para conversão"
 
-#: lib/installer.php:3394
+#: lib/installer.php:3414
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "Alternado de %s para %s"
 
-#: lib/installer.php:3398
+#: lib/installer.php:3418
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "NOTA: Usando arquivo temporário para cache db:%s"
 
-#: lib/installer.php:3420
+#: lib/installer.php:3440
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "Atualizando de v%s (DB%s) para v%s"
 
-#: lib/installer.php:3428
+#: lib/installer.php:3448
 #, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "AVISO: falha ao encontrar a função de atualização para v%s"
 
-#: lib/installer.php:3487
+#: lib/installer.php:3507
 msgid "Install aborted due to no EULA acceptance"
 msgstr "Instalação interrompida devido a nenhuma aceitação do EULA"
 
-#: lib/installer.php:3510
+#: lib/installer.php:3530
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "O fundo já foi iniciado em%s, essa tentativa em%s foi ignorada"
 
-#: lib/installer.php:3533
+#: lib/installer.php:3553
 #, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "Ocorreu uma exceção durante a instalação: #%s - %s"
 
-#: lib/installer.php:3543
+#: lib/installer.php:3563
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "A instalação foi iniciada em %s, concluída em %s"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 msgid "Both"
 msgstr "Ambos"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "Alternado de %s para %s"
 
-#: lib/installer.php:3583
+#: lib/installer.php:3603
 #, fuzzy, php-format
 msgid "%s - N/A"
 msgstr "N/A"
 
-#: lib/installer.php:3583 lib/installer.php:3585
+#: lib/installer.php:3603 lib/installer.php:3605
 msgid "Web"
 msgstr "Web"
 
-#: lib/installer.php:3585 lib/installer.php:3588
+#: lib/installer.php:3605 lib/installer.php:3608
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "Alternado de %s para %s"
 
-#: lib/installer.php:3588
+#: lib/installer.php:3608
 msgid "Cli"
 msgstr "CLI"
 
-#: lib/installer.php:3593
+#: lib/installer.php:3613
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "Configurando a opção PHP%s =%s"
 
-#: lib/installer.php:3599
+#: lib/installer.php:3619
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "Falha ao definir a opção do PHP%s, é%s (deve ser%s)"
 
-#: lib/installer.php:3618
+#: lib/installer.php:3638
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "Coletor(es) de dados não encontrado(s) na tentativa de sincronização"
 
@@ -16085,9 +16095,9 @@ msgid "Plugins"
 msgstr "Plugins"
 
 #: lib/plugins.php:1317 lib/plugins.php:1323
-#, php-format
+#, fuzzy, php-format
 msgid "Requires: Kadupul >= %s"
-msgstr "Requer: Cactos >= %s"
+msgstr "Requer: Kadupul >= %s"
 
 #: lib/plugins.php:1320
 msgid "Legacy Plugin"
@@ -16210,9 +16220,9 @@ msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider
 msgstr "A pdp_per_row de '%s' é inválida para RRA '%s' deve ser '%s'.  Considere excluir e permitir que o Kadupul recrie o arquivo RRD."
 
 #: lib/rrd.php:3187
-#, php-format
+#, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
-msgstr "XFF para cactos RRA id \"%s\" deve ser \"%s\"."
+msgstr "XFF para Kadupul RRA id \"%s\" deve ser \"%s\"."
 
 #: lib/rrd.php:3191
 #, php-format
@@ -16339,7 +16349,7 @@ msgstr "Pasta RRA"
 msgid "Root"
 msgstr "Root"
 
-#: lib/rrd.php:4079
+#: lib/rrd.php:4082
 msgid "Unknown RRDtool Error"
 msgstr "Erro desconhecido do RRDtool"
 
@@ -17489,8 +17499,9 @@ msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Tempo de execução máximo de %d segundos excedido para o ID do poller %d. Saindo."
 
 #: poller.php:890
+#, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "AVISO: O ciclo de pesquisa dos cactos excedeu o intervalo do Poller em"
+msgstr "AVISO: O ciclo de pesquisa dos Kadupul excedeu o intervalo do Poller em"
 
 #: poller.php:915
 #, php-format
@@ -17515,8 +17526,9 @@ msgid "WARNING: Main Kadupul database %s offline or in recovery"
 msgstr "AVISO: Banco de dados principal do Kadupul offline ou em recuperação"
 
 #: poller_automation.php:970 poller_automation.php:1021
+#, fuzzy
 msgid "Kadupul Primary Admin"
-msgstr "Cactos Admin Primário"
+msgstr "Kadupul Admin Primário"
 
 #: poller_automation.php:1122
 msgid "Kadupul Automation Report requires an html based Email client"
@@ -17857,8 +17869,9 @@ msgid "Last Sync"
 msgstr "Última Sincronia"
 
 #: pollers.php:1078
+#, fuzzy
 msgid "The last time this Data Collector was full synced with main Kadupul site."
-msgstr "A última vez que este Coletor de Dados foi totalmente sincronizado com o site principal de Cactos."
+msgstr "A última vez que este Coletor de Dados foi totalmente sincronizado com o site principal de Kadupul."
 
 #: pollers.php:1132
 msgid "No Data Collectors Found"
@@ -18026,9 +18039,9 @@ msgid "NOTE: Path Settings on this Tab are only saved locally!"
 msgstr "NOTA: As configurações de caminho nesta guia são salvas apenas localmente!"
 
 #: settings.php:374
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Settings (%s)%s"
-msgstr "Configurações de cactos (%s)%s"
+msgstr "Configurações de Kadupul (%s)%s"
 
 #: settings.php:492
 msgid "Changing Permission Model Warning"

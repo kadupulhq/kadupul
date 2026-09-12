@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Install ripgrep
         run: sudo apt-get install -y ripgrep
@@ -44,13 +44,41 @@ jobs:
       - name: Verify no new architectural hotspots
         run: tests/security/verify_architectural_hotspots.sh
 
+  branding-migration-guard:
+    name: branding migration (utf8mb4 and latin1)
+    runs-on: ubuntu-latest
+    services:
+      database:
+        image: mariadb:11.8
+        env:
+          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: '1'
+          MARIADB_DATABASE: kadupul_branding_test
+        ports:
+          - 3306/tcp
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Set up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.4'
+          extensions: pdo_mysql
+          coverage: none
+      - name: Verify migration and installer wiring
+        env:
+          KADUPUL_TEST_MYSQL_DSN: mysql:host=127.0.0.1;port=${{ job.services.database.ports['3306'] }};dbname=kadupul_branding_test;charset=utf8mb4
+        run: php tests/security/verify_branding_migration.php
+
   advisory-proof-matrix:
     name: private advisory proof matrix
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0
 

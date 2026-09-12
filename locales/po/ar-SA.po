@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-11 23:33-0700\n"
+"POT-Creation-Date: 2026-09-12 10:14-0700\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -18,8 +18,9 @@ msgstr ""
 "X-Generator: Poedit 3.4.4\n"
 
 #: about.php:22 include/global_arrays.php:2631 lib/html.php:2599
+#, fuzzy
 msgid "About Kadupul"
-msgstr "حول الصبار"
+msgstr "حول Kadupul"
 
 #: about.php:33
 msgid "Kadupul is an independent open-source project for network monitoring and time-series graphing."
@@ -609,7 +610,7 @@ msgstr "لا"
 #: data_templates.php:1249 gprint_presets.php:439 graph_templates.php:897
 #: host_templates.php:974 include/global_settings.php:884
 #: include/global_settings.php:1907 lib/api_automation.php:1473
-#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3576
+#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3596
 #: links.php:410 tree.php:2337 tree.php:2338 user_admin.php:2336
 #: user_domains.php:762 user_domains.php:766 user_group_admin.php:2019
 #: vdef.php:927
@@ -843,12 +844,14 @@ msgid "Change Password"
 msgstr "تغيير كلمة المرور"
 
 #: auth_changepassword.php:344
+#, fuzzy
 msgid "Please enter your current password and your new<br>Kadupul password."
-msgstr "يرجى إدخال كلمة المرور الحالية والخاصة بك <br> كلمة السر الصبار."
+msgstr "يرجى إدخال كلمة المرور الحالية والخاصة بك <br> كلمة السر Kadupul."
 
 #: auth_changepassword.php:346
+#, fuzzy
 msgid "Please enter your new Kadupul password."
-msgstr "يرجى إدخال كلمة المرور الحالية والخاصة بك <br> كلمة السر الصبار."
+msgstr "يرجى إدخال كلمة المرور الحالية والخاصة بك <br> كلمة السر Kadupul."
 
 #: auth_changepassword.php:354 auth_login.php:321 auth_login.php:324
 #: include/global_settings.php:1816 lib/functions.php:5599
@@ -926,8 +929,9 @@ msgid "Access Denied! User account locked."
 msgstr "رفض الوصول ، تعطيل حساب المستخدم."
 
 #: auth_login.php:294 lib/html_tree.php:157
+#, fuzzy
 msgid "Login to Kadupul"
-msgstr "تسجيل الدخول إلى الصبار"
+msgstr "تسجيل الدخول إلى Kadupul"
 
 #: auth_login.php:301
 msgid "User Login"
@@ -1738,8 +1742,9 @@ msgid "Use NetBIOS to attempt to resolve the hostname of up hosts."
 msgstr "استخدم NetBIOS لمحاولة حل اسم المضيف لأعلى المضيفين."
 
 #: automation_networks.php:556
+#, fuzzy
 msgid "Automatically Add to Kadupul"
-msgstr "تلقائيا إضافة إلى الصبار"
+msgstr "تلقائيا إضافة إلى Kadupul"
 
 #: automation_networks.php:557
 msgid "For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Kadupul."
@@ -2494,7 +2499,7 @@ msgstr "معايير إنشاء الشجرة"
 msgid "Change Leaf Type"
 msgstr "تغيير نوع ورقة"
 
-#: automation_tree_rules.php:726 lib/installer.php:3770 utilities.php:2643
+#: automation_tree_rules.php:726 lib/installer.php:3790 utilities.php:2643
 #: utilities.php:2644 utilities.php:2647 utilities.php:2648
 msgid "WARNING:"
 msgstr "تحذير:"
@@ -2545,8 +2550,9 @@ msgstr "لم يتم العثور على قواعد شجرة"
 #: lib/functions.php:6386 lib/functions.php:6993 poller.php:387 poller.php:537
 #: poller.php:602 poller.php:642 poller.php:784 poller.php:890
 #: poller_automation.php:46 poller_boost.php:369
+#, fuzzy
 msgid "Kadupul System Warning"
-msgstr "تحذير نظام الصبار"
+msgstr "تحذير نظام Kadupul"
 
 #: cactid.php:37
 msgid "WARNING: Kadupul Daemon PID["
@@ -4680,8 +4686,9 @@ msgid "The Image Cache Directory is not writable.  Please set permissions and th
 msgstr "لا يمكن للكتابة في دليل ذاكرة التخزين المؤقت للصورة. يرجى تعيين الأذونات ثم محاولة فتح رسم بياني آخر في الوقت الفعلي."
 
 #: graph_realtime.php:374
+#, fuzzy
 msgid "Kadupul Real-time Graphing"
-msgstr "الصبار في الوقت الحقيقي الرسوم البيانية"
+msgstr "Kadupul في الوقت الحقيقي الرسوم البيانية"
 
 #: graph_realtime.php:412 lib/html_graph.php:231 lib/html_reports.php:117
 #: lib/html_tree.php:1061
@@ -5416,9 +5423,9 @@ msgid "Set Default"
 msgstr "تعين كافتراضي"
 
 #: help.php:37
-#, php-format
+#, fuzzy, php-format
 msgid "WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error %d!"
-msgstr "تحذير: صفحة الصبار: %s للمستخدم: %s إنشاء خطأ فادح %d!"
+msgstr "تحذير: صفحة Kadupul: %s للمستخدم: %s إنشاء خطأ فادح %d!"
 
 #: help.php:59
 #, php-format
@@ -6973,8 +6980,9 @@ msgid "Application Related"
 msgstr "التطبيق ذات الصلة"
 
 #: include/global_arrays.php:1085
+#, fuzzy
 msgid "Kadupul Related"
-msgstr "الصبار ذات الصلة"
+msgstr "Kadupul ذات الصلة"
 
 #: include/global_arrays.php:1086
 msgid "Database Related"
@@ -8066,8 +8074,9 @@ msgid "View SNMP Notification Receivers"
 msgstr "عرض استقبال إشعارات SNMP"
 
 #: include/global_arrays.php:2571
+#, fuzzy
 msgid "Kadupul Settings"
-msgstr "إعدادات الصبار"
+msgstr "إعدادات Kadupul"
 
 #: include/global_arrays.php:2577
 msgid "External Link"
@@ -8078,8 +8087,9 @@ msgid "(Action)"
 msgstr "العمل:"
 
 #: include/global_arrays.php:2637
+#, fuzzy
 msgid "Kadupul Help"
-msgstr "مساعدة الصبار"
+msgstr "مساعدة Kadupul"
 
 #: include/global_arrays.php:2649
 msgid "Export Results"
@@ -9705,8 +9715,9 @@ msgid "Logging"
 msgstr "تسجيل الدخول"
 
 #: include/global_settings.php:164
+#, fuzzy
 msgid "Kadupul Log Path"
-msgstr "الصبار سجل المسار"
+msgstr "Kadupul سجل المسار"
 
 #: include/global_settings.php:165
 msgid "The path to your Kadupul log file (if blank, defaults to &lt;path_cacti&gt;/log/cacti.log)"
@@ -9769,16 +9780,18 @@ msgid "RRDfile Auto Clean"
 msgstr "RRDfile السيارات النظيفة"
 
 #: include/global_settings.php:232
+#, fuzzy
 msgid "Automatically archive or delete RRDfiles when their corresponding Data Sources are removed from Kadupul"
-msgstr "أرشفة تلقائيا أو حذف RRDfiles عندما تتم إزالة مصادر البيانات المقابلة لها من الصبار"
+msgstr "أرشفة تلقائيا أو حذف RRDfiles عندما تتم إزالة مصادر البيانات المقابلة لها من Kadupul"
 
 #: include/global_settings.php:237
 msgid "RRDfile Auto Clean Method"
 msgstr "RRDfile طريقة تنظيف السيارات"
 
 #: include/global_settings.php:238
+#, fuzzy
 msgid "The method used to Clean RRDfiles from Kadupul after their Data Sources are deleted."
-msgstr "الطريقة المستخدمة لتنظيف RRDfiles من الصبار بعد حذف مصادر البيانات الخاصة بهم."
+msgstr "الطريقة المستخدمة لتنظيف RRDfiles من Kadupul بعد حذف مصادر البيانات الخاصة بهم."
 
 #: include/global_settings.php:242
 msgid "Archive"
@@ -9881,8 +9894,9 @@ msgid "Language Support"
 msgstr "دعم اللغة"
 
 #: include/global_settings.php:335
+#, fuzzy
 msgid "Choose 'enabled' to allow the localization of Kadupul. The strict mode requires that the requested language will also be supported by all plugins being installed at your system. If that's not the fact everything will be displayed in English."
-msgstr "اختر &quot;تمكين&quot; للسماح بترجمة الصبار. يتطلب الوضع المقيد أن يتم دعم اللغة المطلوبة أيضًا من خلال جميع المكونات الإضافية التي يتم تثبيتها على نظامك. إذا لم تكن هذه هي الحقيقة فسيتم عرض كل شيء باللغة الإنجليزية."
+msgstr "اختر &quot;تمكين&quot; للسماح بترجمة Kadupul. يتطلب الوضع المقيد أن يتم دعم اللغة المطلوبة أيضًا من خلال جميع المكونات الإضافية التي يتم تثبيتها على نظامك. إذا لم تكن هذه هي الحقيقة فسيتم عرض كل شيء باللغة الإنجليزية."
 
 #: include/global_settings.php:341
 msgid "Language"
@@ -10045,8 +10059,9 @@ msgid "When enabled, Kadupul will not lock Graphs.  This allow a faster manual m
 msgstr "عند التمكين ، لن يقفل Kadupul الرسوم البيانية. يسمح هذا بتعديل يدوي أسرع لمصادر البيانات المتعلقة بالرسم البياني."
 
 #: include/global_settings.php:471
+#, fuzzy
 msgid "Hide Kadupul Dashboard"
-msgstr "إخفاء الصبار لوحة القيادة"
+msgstr "إخفاء Kadupul لوحة القيادة"
 
 #: include/global_settings.php:472
 msgid "For use with Kadupul's External Link Support.  Using this setting, you can hide the Kadupul Dashboard, so you can display just your own page."
@@ -10420,8 +10435,9 @@ msgid "Theme"
 msgstr "قالب"
 
 #: include/global_settings.php:861 include/global_settings.php:2567
+#, fuzzy
 msgid "Please select one of the available Themes to skin your Kadupul with."
-msgstr "يرجى تحديد واحد من الموضوعات المتاحة للبشرة مع الصبار."
+msgstr "يرجى تحديد واحد من الموضوعات المتاحة للبشرة مع Kadupul."
 
 #: include/global_settings.php:867
 msgid "Table Settings"
@@ -10807,8 +10823,9 @@ msgid "Cron/Daemon Interval"
 msgstr "كرون الفاصل"
 
 #: include/global_settings.php:1233
+#, fuzzy
 msgid "The frequency that the Kadupul data collector will be started.  You can use either crontab, a scheduled task (for windows), or the cactid systemd service to control launching the Kadupul data collector.  For instructions on using the cactid daemon, review the README.md file in the service directory."
-msgstr "تكرار بدء تشغيل مجمع بيانات الصبار. يمكنك استخدام crontab ، أو مهمة مجدولة (لنظام التشغيل windows) ، أو خدمة cactid systemd للتحكم في تشغيل مُجمع بيانات Kadupul. للحصول على إرشادات حول استخدام البرنامج الخفي Cactid ، راجع ملف README.md في دليل الخدمة."
+msgstr "تكرار بدء تشغيل مجمع بيانات Kadupul. يمكنك استخدام crontab ، أو مهمة مجدولة (لنظام التشغيل windows) ، أو خدمة cactid systemd للتحكم في تشغيل مُجمع بيانات Kadupul. للحصول على إرشادات حول استخدام البرنامج الخفي Cactid ، راجع ملف README.md في دليل الخدمة."
 
 #: include/global_settings.php:1239
 msgid "Balance Process Load"
@@ -11619,8 +11636,9 @@ msgid "The maximum size of the E-Mail message including all attachments."
 msgstr "الحد الأقصى لحجم رسالة البريد الإلكتروني بما في ذلك كافة المرفقات."
 
 #: include/global_settings.php:2016
+#, fuzzy
 msgid "Poller Logging Level for Kadupul Reporting"
-msgstr "مستوى تسجيل مستقطب لتقارير الصبار"
+msgstr "مستوى تسجيل مستقطب لتقارير Kadupul"
 
 #: include/global_settings.php:2017
 msgid "What level of detail do you want sent to the log file. WARNING: Leaving in any other status than NONE or LOW can exhaust your disk space rapidly."
@@ -11671,8 +11689,9 @@ msgid "Enable On-demand RRD Updating"
 msgstr "تمكين تحديث RRD عند الطلب"
 
 #: include/global_settings.php:2064
+#, fuzzy
 msgid "Should Boost enable on demand RRD updating in Kadupul?  If you disable, this change will not take affect until after the next polling cycle.  When you have Remote Data Collectors, this settings is required to be on."
-msgstr "يجب تمكين Boost على تحديث الطلب على RRD في الصبار؟ في حالة تعطيل هذا التغيير ، لن يسري هذا التغيير إلا بعد دورة الاستقصاء التالية. عندما يكون لديك أدوات تجميع البيانات عن بُعد ، يجب تشغيل هذه الإعدادات."
+msgstr "يجب تمكين Boost على تحديث الطلب على RRD في Kadupul؟ في حالة تعطيل هذا التغيير ، لن يسري هذا التغيير إلا بعد دورة الاستقصاء التالية. عندما يكون لديك أدوات تجميع البيانات عن بُعد ، يجب تشغيل هذه الإعدادات."
 
 #: include/global_settings.php:2069
 msgid "System Level RRD Updater"
@@ -11836,8 +11855,9 @@ msgid "Enable RRDfile Check"
 msgstr "تمكين فحص ملف RRDfile"
 
 #: include/global_settings.php:2255
+#, fuzzy
 msgid "Should RRDfile check be enabled for this Kadupul system?"
-msgstr "هل يجب تمكين فحص ملف RRDلنظام الصبار هذا؟"
+msgstr "هل يجب تمكين فحص ملف RRDلنظام Kadupul هذا؟"
 
 #: include/global_settings.php:2260
 msgid "Number of RRDfile Check Processes"
@@ -12131,12 +12151,14 @@ msgid "TimeZone Support"
 msgstr "MySQL - دعم TimeZone"
 
 #: include/global_settings.php:2581
+#, fuzzy
 msgid "How would you like Kadupul to present dates?  This setting will also change the way that Kadupul Graphs dates are represented."
-msgstr "كيف تريد أن يقدم الصبار التواريخ؟  سيؤدي هذا الإعداد أيضا إلى تغيير طريقة تمثيل تواريخ Kadupul Graphs."
+msgstr "كيف تريد أن يقدم Kadupul التواريخ؟  سيؤدي هذا الإعداد أيضا إلى تغيير طريقة تمثيل تواريخ Kadupul Graphs."
 
 #: include/global_settings.php:2584
+#, fuzzy
 msgid "Kadupul Server Timezone"
-msgstr "المنطقة الزمنية لخادم الصبار"
+msgstr "المنطقة الزمنية لخادم Kadupul"
 
 #: include/global_settings.php:2585
 msgid "My Browsers Timezone"
@@ -12183,12 +12205,14 @@ msgid "Enable Horizontal Scrolling of Tables, Disabling Responsive Column Visibi
 msgstr "تمكين التمرير الأفقي للجداول ، وتعطيل رؤية العمود المستجيب."
 
 #: include/global_settings.php:2622
+#, fuzzy
 msgid "The date format to use in Kadupul."
-msgstr "تنسيق التاريخ لاستخدامها في الصبار."
+msgstr "تنسيق التاريخ لاستخدامها في Kadupul."
 
 #: include/global_settings.php:2629
+#, fuzzy
 msgid "The date separator to be used in Kadupul."
-msgstr "فاصل التاريخ ليتم استخدامه في الصبار."
+msgstr "فاصل التاريخ ليتم استخدامه في Kadupul."
 
 #: include/global_settings.php:2635
 msgid "Page Refresh"
@@ -12473,18 +12497,19 @@ msgid "New Poller"
 msgstr "بولير جديد"
 
 #: install/install.php:82
+#, fuzzy
 msgid "Kadupul Install Help"
-msgstr "تعليمات تثبيت الصبار"
+msgstr "تعليمات تثبيت Kadupul"
 
 #: install/install.php:90
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Server v%s - Maintenance"
-msgstr "خادم الصبار v%s - الصيانة"
+msgstr "خادم Kadupul v%s - الصيانة"
 
 #: install/install.php:100
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Server v%s - Installation Wizard"
-msgstr "خادم الصبار v%s - معالج التثبيت"
+msgstr "خادم Kadupul v%s - معالج التثبيت"
 
 #: install/install.php:100
 msgid "Refresh current page"
@@ -12913,8 +12938,9 @@ msgid "Your password must contain at least 1 special character!"
 msgstr "يجب أن تحتوي كلمة المرور الخاصة بك على حرف خاص واحد على الأقل!"
 
 #: lib/auth.php:4676
+#, fuzzy
 msgid "Kadupul Login Failure"
-msgstr "فشل تسجيل الدخول إلى الصبار"
+msgstr "فشل تسجيل الدخول إلى Kadupul"
 
 #: lib/auth.php:4959
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
@@ -12936,9 +12962,9 @@ msgid "%s Bytes"
 msgstr "%s بايت"
 
 #: lib/clog_webapi.php:113 utilities.php:1613
-#, php-format
+#, fuzzy, php-format
 msgid "%s - WEBUI NOTE: Kadupul Log Cleared from Web Management Interface."
-msgstr "%s - ملاحظة WEBUI: تم مسح سجل الصبار من واجهة إدارة الويب."
+msgstr "%s - ملاحظة WEBUI: تم مسح سجل Kadupul من واجهة إدارة الويب."
 
 #: lib/clog_webapi.php:220
 msgid "Click 'Continue' to purge the Log File.<br><br><br>Note: If logging is set to both Kadupul and Syslog, the log information will remain in Syslog."
@@ -13692,8 +13718,9 @@ msgid "Sending Message..."
 msgstr "إرسال رسالة …"
 
 #: lib/functions.php:5634
+#, fuzzy
 msgid "Kadupul Test Message"
-msgstr "رسالة اختبار الصبار"
+msgstr "رسالة اختبار Kadupul"
 
 #: lib/functions.php:5636
 msgid "Success!"
@@ -13704,9 +13731,9 @@ msgid "Message Not Sent due to ping failure."
 msgstr "رسالة غير مرسلة بسبب فشل اختبار الاتصال."
 
 #: lib/functions.php:6227 lib/functions.php:6296
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
-msgstr "قام Kadupul بتعطيل البرنامج المساعد %s بسبب الخطأ التالي: %s!  راجع ملف سجل الصبار لمزيد من التفاصيل."
+msgstr "قام Kadupul بتعطيل البرنامج المساعد %s بسبب الخطأ التالي: %s!  راجع ملف سجل Kadupul لمزيد من التفاصيل."
 
 #: lib/functions.php:6386
 #, php-format
@@ -13729,9 +13756,9 @@ msgid "%s %s"
 msgstr "%s %s"
 
 #: lib/functions.php:6993
-#, php-format
+#, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
-msgstr "تحذير: مفتاح الصبار تضمين ملف %s مفقود.  الرجاء تحديد موقع هذا الملف واستبداله"
+msgstr "تحذير: مفتاح Kadupul تضمين ملف %s مفقود.  الرجاء تحديد موقع هذا الملف واستبداله"
 
 #: lib/graphs.php:44
 msgid "Aggregated Device"
@@ -13943,8 +13970,9 @@ msgid "Charts"
 msgstr "المخططات"
 
 #: lib/html.php:2583
+#, fuzzy
 msgid "Kadupul Project Page"
-msgstr "صفحة مشروع الصبار"
+msgstr "صفحة مشروع Kadupul"
 
 #: lib/html.php:2587
 #, fuzzy
@@ -13964,8 +13992,9 @@ msgid "Shortcuts"
 msgstr "اختصارات"
 
 #: lib/html.php:2591
+#, fuzzy
 msgid "Contribute to the Kadupul Project"
-msgstr "المساهمة في مشروع الصبار"
+msgstr "المساهمة في مشروع Kadupul"
 
 #: lib/html.php:2592
 msgid "Help in Developing"
@@ -13988,8 +14017,9 @@ msgid "Report a bug"
 msgstr "الإبلاغ عن خطأ"
 
 #: lib/html.php:2600
+#, fuzzy
 msgid "Kadupul"
-msgstr "صبار"
+msgstr "Kadupul"
 
 #: lib/html.php:2602
 msgid "Click to Show/Hide Filter"
@@ -14228,9 +14258,9 @@ msgid "Enter a valid directory path"
 msgstr "أدخل مسار دليل صالح"
 
 #: lib/html_form.php:1275
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Color (%s)"
-msgstr "لون الصبار (%s)"
+msgstr "لون Kadupul (%s)"
 
 #: lib/html_form.php:1340
 msgid "NO FONT VERIFICATION POSSIBLE"
@@ -14258,9 +14288,9 @@ msgid "There was a SQL Injection attempted on the page"
 msgstr "كانت هناك محاولة حقن SQL على الصفحة"
 
 #: lib/html_form_template.php:156
-#, php-format
+#, fuzzy, php-format
 msgid "A client attempted to create a SQL Injection into Kadupul likely from an external host with the address %s"
-msgstr "حاول عميل إنشاء حقن SQL في الصبار من المحتمل من مضيف خارجي بعنوان %s"
+msgstr "حاول عميل إنشاء حقن SQL في Kadupul من المحتمل من مضيف خارجي بعنوان %s"
 
 #: lib/html_form_template.php:632 lib/html_form_template.php:644
 #, php-format
@@ -14493,8 +14523,9 @@ msgid "Subject"
 msgstr "الموضوع"
 
 #: lib/html_reports.php:164
+#, fuzzy
 msgid "Kadupul Report"
-msgstr "تقرير الصبار"
+msgstr "تقرير Kadupul"
 
 #: lib/html_reports.php:165
 msgid "This value will be used as the default Email subject.  The report name will be used if left blank."
@@ -14882,12 +14913,14 @@ msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "التعبير العادي \"%s\" غير صالح. الخطأ %s"
 
 #: lib/html_utility.php:1129
+#, fuzzy
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
-msgstr "تقتصر تعبيرات الصبار العادية على 50 حرفا فقط لأسباب أمنية."
+msgstr "تقتصر تعبيرات Kadupul العادية على 50 حرفا فقط لأسباب أمنية."
 
 #: lib/html_utility.php:1133
+#, fuzzy
 msgid "Kadupul regular expressions can not includes the semi-color character."
-msgstr "لا يمكن أن تتضمن تعبيرات الصبار العادية الحرف شبه اللوني."
+msgstr "لا يمكن أن تتضمن تعبيرات Kadupul العادية الحرف شبه اللوني."
 
 #: lib/html_utility.php:1153
 msgid "There was an internal error!"
@@ -14913,7 +14946,7 @@ msgstr "سوء UTF-8 خطأ إزاحة!"
 msgid "Down (Thold)"
 msgstr "أسفل (قال)"
 
-#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3692
+#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3712
 msgid "Error"
 msgstr "خطأ"
 
@@ -14965,8 +14998,9 @@ msgid "Import Results"
 msgstr "نتائج الاستيراد"
 
 #: lib/import.php:2640
+#, fuzzy
 msgid "Kadupul would make the following changes if the Package was imported:"
-msgstr "الصبار سيجعل التغييرات التالية إذا تم استيراد الحزمة:"
+msgstr "Kadupul سيجعل التغييرات التالية إذا تم استيراد الحزمة:"
 
 #: lib/import.php:2642
 msgid "Kadupul has imported the following items for the Package:"
@@ -14981,8 +15015,9 @@ msgid "[preview] "
 msgstr "معاينة"
 
 #: lib/import.php:2654
+#, fuzzy
 msgid "Kadupul would make the following changes if the Template was imported:"
-msgstr "الصبار سيجعل التغييرات التالية إذا تم استيراد القالب:"
+msgstr "Kadupul سيجعل التغييرات التالية إذا تم استيراد القالب:"
 
 #: lib/import.php:2656
 msgid "Kadupul has imported the following items for the Template:"
@@ -15096,9 +15131,9 @@ msgid "Unknown Reason: %s"
 msgstr "سبب غير معروف: %s"
 
 #: lib/installer.php:1579
-#, php-format
+#, fuzzy, php-format
 msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this can not be performed."
-msgstr "تحاول تثبيت %s الصبار على قاعدة بيانات 0.6.x. لسوء الحظ ، لا يمكن تنفيذ هذا."
+msgstr "تحاول تثبيت %s Kadupul على قاعدة بيانات 0.6.x. لسوء الحظ ، لا يمكن تنفيذ هذا."
 
 #: lib/installer.php:1580
 msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
@@ -15154,8 +15189,9 @@ msgid "Downgrade"
 msgstr "تخفيض"
 
 #: lib/installer.php:1740 utilities.php:265
+#, fuzzy
 msgid "Kadupul Version"
-msgstr "نسخة الصبار"
+msgstr "نسخة Kadupul"
 
 #: lib/installer.php:1740
 msgid "License Agreement"
@@ -15214,7 +15250,7 @@ msgid "Location checks"
 msgstr "الشيكات الموقع"
 
 #: lib/installer.php:1859 lib/installer.php:2010 lib/installer.php:2014
-#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3789
+#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3809
 msgid "ERROR:"
 msgstr "خطأ:"
 
@@ -15797,9 +15833,9 @@ msgid "Press '%s' then click '%s' to complete the installation process after sel
 msgstr "اضغط على \"%s\" ثم انقر فوق \"%s\" لإكمال عملية التثبيت بعد تحديد قوالب الجهاز."
 
 #: lib/installer.php:2741
-#, php-format
+#, fuzzy, php-format
 msgid "Installing Kadupul Server v%s"
-msgstr "تثبيت خادم الصبار v%s"
+msgstr "تثبيت خادم Kadupul v%s"
 
 #: lib/installer.php:2742
 msgid "Your Kadupul Server is now installing"
@@ -15815,9 +15851,9 @@ msgid "Complete"
 msgstr "مكتمّل"
 
 #: lib/installer.php:2856
-#, php-format
+#, fuzzy, php-format
 msgid "Your Kadupul Server v%s has been installed/updated.  You may now start using the software."
-msgstr "تم تثبيت / تحديث خادم الصبار v%s الخاص بك.  يمكنك الآن البدء في استخدام البرنامج."
+msgstr "تم تثبيت / تحديث خادم Kadupul v%s الخاص بك.  يمكنك الآن البدء في استخدام البرنامج."
 
 #: lib/installer.php:2860
 #, php-format
@@ -15836,229 +15872,233 @@ msgstr "إبلاغ عن مشكلة"
 msgid "Get Started"
 msgstr "البدء"
 
-#: lib/installer.php:3009
+#: lib/installer.php:3025
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "بدء عملية %s ل v%s"
 
-#: lib/installer.php:3034
+#: lib/installer.php:3051
+msgid "Unable to update application defaults."
+msgstr ""
+
+#: lib/installer.php:3054
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "انتهت عملية %s ل v%s"
 
-#: lib/installer.php:3073
+#: lib/installer.php:3093
 #, php-format
 msgid "Found %s templates to install"
 msgstr "العثور على قوالب %s للتثبيت"
 
-#: lib/installer.php:3083
+#: lib/installer.php:3103
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "على وشك استيراد الحزمة # %s '%s'."
 
-#: lib/installer.php:3092
+#: lib/installer.php:3112
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "نجح استيراد الحزمة # %s '%s' ضمن الملف الشخصي \"%s\""
 
-#: lib/installer.php:3098
+#: lib/installer.php:3118
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "فشل استيراد الحزمة # %s '%s' ضمن الملف الشخصي '%s'"
 
-#: lib/installer.php:3113
+#: lib/installer.php:3133
 #, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "قالب أتمتة التعيين لقالب الجهاز '%s'"
 
-#: lib/installer.php:3130
+#: lib/installer.php:3150
 msgid "No templates were selected for import"
 msgstr "لم يتم تحديد أي قوالب للاستيراد"
 
-#: lib/installer.php:3139
+#: lib/installer.php:3159
 msgid "Updating remote configuration file"
 msgstr "في انتظار التكوين"
 
-#: lib/installer.php:3171
+#: lib/installer.php:3191
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "تعيين ملف تعريف مصدر البيانات الافتراضي إلى %s (%s)"
 
-#: lib/installer.php:3193
+#: lib/installer.php:3213
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "فشل في العثور على ملف التعريف المحدد (%s) ، لم يتم إجراء أي تغييرات"
 
-#: lib/installer.php:3202
+#: lib/installer.php:3222
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "تحديث شبكة الأتمتة (%s) ، الوضع \"%s\" = > \"%s\" ، الشبكة الفرعية \"%s\" = > %s\""
 
-#: lib/installer.php:3212
+#: lib/installer.php:3232
 msgid "Failed to find automation network, no changes were made"
 msgstr "فشل العثور على شبكة الأتمتة ، ولم يتم إجراء أي تغييرات"
 
-#: lib/installer.php:3216
+#: lib/installer.php:3236
 msgid "Adding extra snmp settings for automation"
 msgstr "إضافة إعدادات snmp إضافية للأتمتة"
 
-#: lib/installer.php:3222
+#: lib/installer.php:3242
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "تحديد تعيين خيار التنفيذ التلقائي %s"
 
-#: lib/installer.php:3235
+#: lib/installer.php:3255
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "تحديث مجموعة خيارات التنفيذ التلقائي %s"
 
-#: lib/installer.php:3238
+#: lib/installer.php:3258
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "تم تحديث مجموعة خيارات التنفيذ التلقائي بنجاح %s"
 
-#: lib/installer.php:3240
+#: lib/installer.php:3260
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "تعيين خيار أتمتة إعادة التسلسل %s"
 
-#: lib/installer.php:3246
+#: lib/installer.php:3266
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "فشل تحديث مجموعة خيارات التنفيذ التلقائي %s"
 
-#: lib/installer.php:3249
+#: lib/installer.php:3269
 msgid "Failed to find any automation option set"
 msgstr "تعذّر العثور على البيانات لنسخها!"
 
-#: lib/installer.php:3279
-#, php-format
+#: lib/installer.php:3299
+#, fuzzy, php-format
 msgid "Device Template for First Kadupul Device is %s"
-msgstr "قالب الجهاز لجهاز الصبار الأول هو %s"
+msgstr "قالب الجهاز لجهاز Kadupul الأول هو %s"
 
-#: lib/installer.php:3305
+#: lib/installer.php:3325
 msgid "Creating Graphs for Default Device"
 msgstr "إنشاء الرسوم البيانية لهذا الجهاز"
 
-#: lib/installer.php:3312
+#: lib/installer.php:3332
 msgid "Adding Device to Default Tree"
 msgstr "افتراضيات الجهاز"
 
-#: lib/installer.php:3320
+#: lib/installer.php:3340
 msgid "No templated graphs for Default Device were found"
 msgstr "لم يتم العثور على الرسوم البيانية القوالب للجهاز الافتراضي"
 
-#: lib/installer.php:3324
+#: lib/installer.php:3344
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "تحذير: لم يتم العثور على نموذج الجهاز لنظام التشغيل الخاص بك. ستحتاج إلى استيراد قوالب الأجهزة أو حزم Kadupul لمراقبة خادم Kadupul."
 
-#: lib/installer.php:3331
+#: lib/installer.php:3351
 msgid "Running first-time data query for local host"
 msgstr "تشغيل استعلام بيانات لأول مرة للمضيف المحلي"
 
-#: lib/installer.php:3339
+#: lib/installer.php:3359
 msgid "Repopulating poller cache"
 msgstr "إعادة بناء بولير"
 
-#: lib/installer.php:3344
+#: lib/installer.php:3364
 msgid "Repopulating SNMP Agent cache"
 msgstr "إعادة بناء SNMPAgent ذاكرة التخزين المؤقت"
 
-#: lib/installer.php:3349
+#: lib/installer.php:3369
 msgid "Generating RSA Key Pair"
 msgstr "توليد زوج مفاتيح RSA"
 
-#: lib/installer.php:3361
+#: lib/installer.php:3381
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "تم العثور على جداول %s للتحويل"
 
-#: lib/installer.php:3368
+#: lib/installer.php:3388
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "تحويل الجدول # %s '%s'"
 
-#: lib/installer.php:3383
+#: lib/installer.php:3403
 msgid "No tables where found or selected for conversion"
 msgstr "لم يتم العثور على جداول أو تحديدها للتحويل"
 
-#: lib/installer.php:3394
+#: lib/installer.php:3414
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "تم التبديل من %s إلى %s"
 
-#: lib/installer.php:3398
+#: lib/installer.php:3418
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "ملاحظة: استخدام ملف مؤقت لذاكرة التخزين المؤقت ديسيبل: %s"
 
-#: lib/installer.php:3420
+#: lib/installer.php:3440
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "الترقية من v%s (DB %s) إلى v%s"
 
-#: lib/installer.php:3428
+#: lib/installer.php:3448
 #, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "تحذير: فشل العثور على وظيفة الترقية ل v%s"
 
-#: lib/installer.php:3487
+#: lib/installer.php:3507
 msgid "Install aborted due to no EULA acceptance"
 msgstr "تم إحباط التثبيت بسبب عدم قبول اتفاقية ترخيص المستخدم النهائي"
 
-#: lib/installer.php:3510
+#: lib/installer.php:3530
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "بدأت الخلفية بالفعل في %s ، وتم تخطي هذه المحاولة في %s"
 
-#: lib/installer.php:3533
+#: lib/installer.php:3553
 #, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "حدث استثناء أثناء التثبيت: # %s - %s"
 
-#: lib/installer.php:3543
+#: lib/installer.php:3563
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "بدأ التثبيت في %s ، واكتمل في %s"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 msgid "Both"
 msgstr "كلاهما"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "%s %s"
 
-#: lib/installer.php:3583
+#: lib/installer.php:3603
 #, php-format
 msgid "%s - N/A"
 msgstr "%s - غير متوفر"
 
-#: lib/installer.php:3583 lib/installer.php:3585
+#: lib/installer.php:3603 lib/installer.php:3605
 msgid "Web"
 msgstr "شبكة الويب"
 
-#: lib/installer.php:3585 lib/installer.php:3588
+#: lib/installer.php:3605 lib/installer.php:3608
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "%s %s"
 
-#: lib/installer.php:3588
+#: lib/installer.php:3608
 msgid "Cli"
 msgstr "كلاسيكي"
 
-#: lib/installer.php:3593
+#: lib/installer.php:3613
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "إعداد خيار PHP %s = %s"
 
-#: lib/installer.php:3599
+#: lib/installer.php:3619
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "فشل في تعيين خيار PHP %s ، هل %s (يجب أن يكون %s)"
 
-#: lib/installer.php:3618
+#: lib/installer.php:3638
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "لم يتم العثور على جامعي البيانات عن بعد للمزامنة الكاملة"
 
@@ -16250,9 +16290,9 @@ msgid "Plugins"
 msgstr "الإضافات"
 
 #: lib/plugins.php:1317 lib/plugins.php:1323
-#, php-format
+#, fuzzy, php-format
 msgid "Requires: Kadupul >= %s"
-msgstr "يتطلب: الصبار > = %s"
+msgstr "يتطلب: Kadupul > = %s"
 
 #: lib/plugins.php:1320
 msgid "Legacy Plugin"
@@ -16355,9 +16395,9 @@ msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "يجب أن يكون الحد الأدنى لمصدر البيانات \"%s\" هو \"%s\""
 
 #: lib/rrd.php:3122
-#, php-format
+#, fuzzy, php-format
 msgid "DS '%s' missing in Kadupul definition"
-msgstr "DS '%s' مفقود في تعريف الصبار"
+msgstr "DS '%s' مفقود في تعريف Kadupul"
 
 #: lib/rrd.php:3136 lib/rrd.php:3137
 #, php-format
@@ -16390,9 +16430,9 @@ msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "RRA '%s' مفقود في ملف Kadupul RRD الحالي"
 
 #: lib/rrd.php:3216
-#, php-format
+#, fuzzy, php-format
 msgid "RRA '%s' missing in Kadupul definition"
-msgstr "RRA \"%s\" مفقود في تعريف الصبار"
+msgstr "RRA \"%s\" مفقود في تعريف Kadupul"
 
 #: lib/rrd.php:3237
 msgid "RRD File Information"
@@ -16504,7 +16544,7 @@ msgstr "مجلد RRA"
 msgid "Root"
 msgstr "الجذر"
 
-#: lib/rrd.php:4079
+#: lib/rrd.php:4082
 msgid "Unknown RRDtool Error"
 msgstr "خطأ RRDtool غير معروف"
 
@@ -17160,8 +17200,9 @@ msgid "You have been logged out of Kadupul due to a Remote Data Collector state 
 msgstr "لقد تم تسجيل خروجك من Kadupul بسبب تغيير حالة \"جامع البيانات عن بعد\""
 
 #: logout.php:61
+#, fuzzy
 msgid "Logout of Kadupul"
-msgstr "الخروج من الصبار"
+msgstr "الخروج من Kadupul"
 
 #: logout.php:68
 msgid "Automatic Logout"
@@ -17630,8 +17671,9 @@ msgid "Plugin is lacking an INFO file"
 msgstr "البرنامج المساعد يفتقر إلى ملف INFO"
 
 #: plugins.php:877
+#, fuzzy
 msgid "Plugin is integrated into Kadupul core"
-msgstr "تم دمج البرنامج المساعد في الصبار الأساسية"
+msgstr "تم دمج البرنامج المساعد في Kadupul الأساسية"
 
 #: plugins.php:879
 msgid "Plugin is not compatible"
@@ -17667,8 +17709,9 @@ msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "تم تجاوز الحد الأقصى لوقت التشغيل البالغ %d ثانية ل %d معرف الاستطلاع. انهاء."
 
 #: poller.php:890
+#, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "تحذير: تجاوزت دورة استقصاء الصبار فترة الاستقصاء بمقدار"
+msgstr "تحذير: تجاوزت دورة استقصاء Kadupul فترة الاستقصاء بمقدار"
 
 #: poller.php:915
 #, php-format
@@ -17868,9 +17911,10 @@ msgid "Data Collector Statistics cleared."
 msgstr "احصائيات مصادر البيانات"
 
 #: pollers.php:552
+#, fuzzy
 msgid "Click 'Continue' to delete the following Data Collector.  Note, all devices will be disassociated from this Data Collector and mapped back to the Main Kadupul Data Collector."
 msgid_plural "Click 'Continue' to delete all following Data Collectors.  Note, all devices will be disassociated from these Data Collectors and mapped back to the Main Kadupul Data Collector."
-msgstr[0] "انقر فوق \"متابعة\" لحذف أداة تجميع البيانات التالية.  ملاحظة، سيتم فصل جميع الأجهزة من مجمع البيانات هذا وتعيينها مرة أخرى إلى مجمع بيانات الصبار الرئيسي."
+msgstr[0] "انقر فوق \"متابعة\" لحذف أداة تجميع البيانات التالية.  ملاحظة، سيتم فصل جميع الأجهزة من مجمع البيانات هذا وتعيينها مرة أخرى إلى مجمع بيانات Kadupul الرئيسي."
 msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
@@ -18241,9 +18285,9 @@ msgid "NOTE: Path Settings on this Tab are only saved locally!"
 msgstr "ملاحظة: يتم حفظ إعدادات المسار في علامة التبويب هذه محليًا فقط!"
 
 #: settings.php:374
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Settings (%s)%s"
-msgstr "إعدادات الصبار (%s)%s"
+msgstr "إعدادات Kadupul (%s)%s"
 
 #: settings.php:492
 msgid "Changing Permission Model Warning"
@@ -18580,8 +18624,9 @@ msgid "Choose the format to output the resulting XML file in."
 msgstr "اختر التنسيق لإخراج ملف XML الناتج في."
 
 #: templates_export.php:136
+#, fuzzy
 msgid "Output to the Browser (within Kadupul)"
-msgstr "الإخراج إلى المتصفح (داخل الصبار)"
+msgstr "الإخراج إلى المتصفح (داخل Kadupul)"
 
 #: templates_export.php:140
 msgid "Output to the Browser (raw XML)"
@@ -19799,8 +19844,9 @@ msgid "General Information"
 msgstr "معلومات عامة"
 
 #: utilities.php:270
+#, fuzzy
 msgid "Kadupul OS"
-msgstr "نظام التشغيل الصبار"
+msgstr "نظام التشغيل Kadupul"
 
 #: utilities.php:280
 msgid "NET-SNMP Version"
@@ -19824,8 +19870,9 @@ msgid "Poller Information"
 msgstr "معلومات مستضد"
 
 #: utilities.php:341
+#, fuzzy
 msgid "Different version of Kadupul and Spine!"
-msgstr "نسخة مختلفة من الصبار والعمود الفقري!"
+msgstr "نسخة مختلفة من Kadupul والعمود الفقري!"
 
 #: utilities.php:359
 #, php-format
@@ -20090,12 +20137,14 @@ msgid "Log [Total Lines: %d - All Items Shown]"
 msgstr "السجل [إجمالي الأسطر: %d - جميع العناصر المعروضة]"
 
 #: utilities.php:1602
+#, fuzzy
 msgid "Clear Kadupul Log"
-msgstr "واضح الصبار سجل"
+msgstr "واضح Kadupul سجل"
 
 #: utilities.php:1615
+#, fuzzy
 msgid "Kadupul Log Cleared"
-msgstr "سجل الصبار مسح"
+msgstr "سجل Kadupul مسح"
 
 #: utilities.php:1617
 msgid "Error: Unable to clear log, no write permissions."
@@ -20166,8 +20215,9 @@ msgid "RRD:"
 msgstr "RRD:"
 
 #: utilities.php:2286
+#, fuzzy
 msgid "Kadupul technical support page.  Used by developers and technical support persons to assist with issues in Kadupul.  Includes checks for common configuration issues."
-msgstr "صفحة الدعم الفني Kadupul. المستخدمة من قبل المطورين والأشخاص الدعم الفني للمساعدة في القضايا في الصبار. يتضمن الشيكات لمشاكل التكوين المشتركة."
+msgstr "صفحة الدعم الفني Kadupul. المستخدمة من قبل المطورين والأشخاص الدعم الفني للمساعدة في القضايا في Kadupul. يتضمن الشيكات لمشاكل التكوين المشتركة."
 
 #: utilities.php:2290
 msgid "The Kadupul Log stores statistic, error and other message depending on system settings.  This information can be used to identify problems with the poller and application."

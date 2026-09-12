@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-11 23:33-0700\n"
+"POT-Creation-Date: 2026-09-12 10:14-0700\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -20,7 +20,7 @@ msgstr ""
 #: about.php:22 include/global_arrays.php:2631 lib/html.php:2599
 #, fuzzy
 msgid "About Kadupul"
-msgstr "關於仙人掌"
+msgstr "關於Kadupul"
 
 #: about.php:33
 msgid "Kadupul is an independent open-source project for network monitoring and time-series graphing."
@@ -664,7 +664,7 @@ msgstr "否"
 #: data_templates.php:1249 gprint_presets.php:439 graph_templates.php:897
 #: host_templates.php:974 include/global_settings.php:884
 #: include/global_settings.php:1907 lib/api_automation.php:1473
-#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3576
+#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3596
 #: links.php:410 tree.php:2337 tree.php:2338 user_admin.php:2336
 #: user_domains.php:762 user_domains.php:766 user_group_admin.php:2019
 #: vdef.php:927
@@ -932,12 +932,12 @@ msgstr "更改密碼"
 #: auth_changepassword.php:344
 #, fuzzy
 msgid "Please enter your current password and your new<br>Kadupul password."
-msgstr "請輸入您當前的密碼和新密碼<br>仙人掌密碼。"
+msgstr "請輸入您當前的密碼和新密碼<br>Kadupul密碼。"
 
 #: auth_changepassword.php:346
 #, fuzzy
 msgid "Please enter your new Kadupul password."
-msgstr "請輸入您當前的密碼和新密碼<br>仙人掌密碼。"
+msgstr "請輸入您當前的密碼和新密碼<br>Kadupul密碼。"
 
 #: auth_changepassword.php:354 auth_login.php:321 auth_login.php:324
 #: include/global_settings.php:1816 lib/functions.php:5599
@@ -1227,12 +1227,12 @@ msgstr "通過設備自動化界面手動添加。"
 #: automation_devices.php:121
 #, fuzzy, php-format
 msgid "Device %s Added to Kadupul"
-msgstr "添加到仙人掌"
+msgstr "添加到Kadupul"
 
 #: automation_devices.php:123
 #, fuzzy, php-format
 msgid "Device %s Not Added to Kadupul"
-msgstr "沒有添加到仙人掌"
+msgstr "沒有添加到Kadupul"
 
 #: automation_devices.php:133
 msgid "Devices Removed from Kadupul Automation database"
@@ -1782,7 +1782,7 @@ msgstr "相關網站"
 #: automation_networks.php:464
 #, fuzzy
 msgid "Choose the Kadupul Site that you wish to associate discovered Devices with."
-msgstr "選擇您希望將發現的設備與之關聯的仙人掌網站。"
+msgstr "選擇您希望將發現的設備與之關聯的Kadupul網站。"
 
 #: automation_networks.php:472
 #, fuzzy
@@ -1946,7 +1946,7 @@ msgstr "使用NetBIOS嘗試解析主機的主機名。"
 #: automation_networks.php:556
 #, fuzzy
 msgid "Automatically Add to Kadupul"
-msgstr "自動添加到仙人掌"
+msgstr "自動添加到Kadupul"
 
 #: automation_networks.php:557
 #, fuzzy
@@ -2847,7 +2847,7 @@ msgstr "樹創建標準"
 msgid "Change Leaf Type"
 msgstr "改變葉子類型"
 
-#: automation_tree_rules.php:726 lib/installer.php:3770 utilities.php:2643
+#: automation_tree_rules.php:726 lib/installer.php:3790 utilities.php:2643
 #: utilities.php:2644 utilities.php:2647 utilities.php:2648
 #, fuzzy
 msgid "WARNING:"
@@ -2911,16 +2911,17 @@ msgstr "找不到樹規則"
 #: poller_automation.php:46 poller_boost.php:369
 #, fuzzy
 msgid "Kadupul System Warning"
-msgstr "仙人掌系統警告"
+msgstr "Kadupul系統警告"
 
 #: cactid.php:37
+#, fuzzy
 msgid "WARNING: Kadupul Daemon PID["
-msgstr "警告：仙人掌守護進程PID["
+msgstr "警告：Kadupul守護進程PID["
 
 #: cactid.php:125
 #, fuzzy
 msgid "Kadupul System Notice"
-msgstr "仙人掌系統工具"
+msgstr "Kadupul系統工具"
 
 #: cactid.php:125
 msgid "Notice: Kadupul Daemon PID["
@@ -3408,7 +3409,7 @@ msgstr "所有RRDfile修復成功。"
 #: data_debug.php:59
 #, fuzzy
 msgid "One or more RRDfile repairs failed.  See Kadupul log for errors."
-msgstr "一個或多個RRDfile修復失敗。有關錯誤，請參閱仙人掌日誌。"
+msgstr "一個或多個RRDfile修復失敗。有關錯誤，請參閱Kadupul日誌。"
 
 #: data_debug.php:67
 #, fuzzy
@@ -4273,7 +4274,7 @@ msgstr[0] "重複的數據源配置文件"
 #: data_source_profiles.php:387
 #, fuzzy
 msgid "Unable to duplicate Data Source Profile.  Check Kadupul Log for errors."
-msgstr "一個或多個RRDfile修復失敗。有關錯誤，請參閱仙人掌日誌。"
+msgstr "一個或多個RRDfile修復失敗。有關錯誤，請參閱Kadupul日誌。"
 
 #: data_source_profiles.php:410
 #, fuzzy
@@ -5174,7 +5175,7 @@ msgstr "圖像緩存目錄不可寫。請設置權限，然後嘗試打開另一
 #: graph_realtime.php:374
 #, fuzzy
 msgid "Kadupul Real-time Graphing"
-msgstr "仙人掌實時圖形"
+msgstr "Kadupul實時圖形"
 
 #: graph_realtime.php:412 lib/html_graph.php:231 lib/html_reports.php:117
 #: lib/html_tree.php:1061
@@ -6962,7 +6963,7 @@ msgstr "指定的日誌文件是Kadupul存檔文件，已被刪除。"
 #: include/global_arrays.php:294
 #, fuzzy
 msgid "Kadupul log purged successfully"
-msgstr "仙人掌日誌成功清除"
+msgstr "Kadupul日誌成功清除"
 
 #: include/global_arrays.php:297
 #, fuzzy
@@ -7869,8 +7870,9 @@ msgid "Application Related"
 msgstr "應用自動化規則"
 
 #: include/global_arrays.php:1085
+#, fuzzy
 msgid "Kadupul Related"
-msgstr "仙人掌報告"
+msgstr "Kadupul報告"
 
 #: include/global_arrays.php:1086
 msgid "Database Related"
@@ -9172,7 +9174,7 @@ msgstr "查看SNMP通知接收器"
 #: include/global_arrays.php:2571
 #, fuzzy
 msgid "Kadupul Settings"
-msgstr "仙人掌設置"
+msgstr "Kadupul設置"
 
 #: include/global_arrays.php:2577
 #, fuzzy
@@ -9185,8 +9187,9 @@ msgid "(Action)"
 msgstr "動作"
 
 #: include/global_arrays.php:2637
+#, fuzzy
 msgid "Kadupul Help"
-msgstr "仙人掌之家"
+msgstr "Kadupul之家"
 
 #: include/global_arrays.php:2649
 #, fuzzy
@@ -11181,7 +11184,7 @@ msgstr "記錄"
 #: include/global_settings.php:164
 #, fuzzy
 msgid "Kadupul Log Path"
-msgstr "仙人掌日誌路徑"
+msgstr "Kadupul日誌路徑"
 
 #: include/global_settings.php:165
 #, fuzzy
@@ -11201,7 +11204,7 @@ msgstr "如果您遇到Kadupul數據收集器的問題，請設置此文件路�
 #: include/global_settings.php:184
 #, fuzzy
 msgid "Rotate the Kadupul Log"
-msgstr "旋轉仙人掌日誌"
+msgstr "旋轉Kadupul日誌"
 
 #: include/global_settings.php:185
 #, fuzzy
@@ -11593,12 +11596,12 @@ msgstr "啟用後，Kadupul將不會鎖定圖表。這樣可以更快地手動�
 #: include/global_settings.php:471
 #, fuzzy
 msgid "Hide Kadupul Dashboard"
-msgstr "隱藏仙人掌儀表板"
+msgstr "隱藏Kadupul儀表板"
 
 #: include/global_settings.php:472
 #, fuzzy
 msgid "For use with Kadupul's External Link Support.  Using this setting, you can hide the Kadupul Dashboard, so you can display just your own page."
-msgstr "用於Kadupul的外部鏈接支持。使用此設置，您可以隱藏仙人掌儀表板，這樣您就可以只顯示自己的頁面。"
+msgstr "用於Kadupul的外部鏈接支持。使用此設置，您可以隱藏Kadupul儀表板，這樣您就可以只顯示自己的頁面。"
 
 #: include/global_settings.php:477
 #, fuzzy
@@ -12041,7 +12044,7 @@ msgstr "佈景主題"
 #: include/global_settings.php:861 include/global_settings.php:2567
 #, fuzzy
 msgid "Please select one of the available Themes to skin your Kadupul with."
-msgstr "請選擇一個可用的主題來為您的仙人掌提供皮膚。"
+msgstr "請選擇一個可用的主題來為您的Kadupul提供皮膚。"
 
 #: include/global_settings.php:867
 #, fuzzy
@@ -12581,8 +12584,9 @@ msgid "Disable Resource Cache Replication"
 msgstr "重建資源緩存"
 
 #: include/global_settings.php:1304
+#, fuzzy
 msgid "By default, the main Kadupul Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Kadupul Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting."
-msgstr "默認情況下，主仙人掌數據收集器會將整個網站和插件緩存到資源緩存中。然後，遠程數據收集器會定期使用主仙人掌數據收集器的任何更新來更新主題。該資源緩存實質上允許遠程數據收集器進行自我升級。如果您不想使用此選項，則可以使用此設置禁用它。"
+msgstr "默認情況下，主Kadupul數據收集器會將整個網站和插件緩存到資源緩存中。然後，遠程數據收集器會定期使用主Kadupul數據收集器的任何更新來更新主題。該資源緩存實質上允許遠程數據收集器進行自我升級。如果您不想使用此選項，則可以使用此設置禁用它。"
 
 #: include/global_settings.php:1309
 #, fuzzy
@@ -12766,7 +12770,7 @@ msgstr "維護後台生成超時"
 #: include/global_settings.php:1446
 #, fuzzy
 msgid "The maximum amount of time a Kadupul's Maintenance script can run without generating a timeout error and being killed."
-msgstr "仙人掌維護腳本可以運行的最長時間，而不會產生超時錯誤並被殺死。"
+msgstr "Kadupul維護腳本可以運行的最長時間，而不會產生超時錯誤並被殺死。"
 
 #: include/global_settings.php:1459
 #, fuzzy
@@ -13457,7 +13461,7 @@ msgstr "電子郵件消息的最大大小，包括所有附件。"
 #: include/global_settings.php:2016
 #, fuzzy
 msgid "Poller Logging Level for Kadupul Reporting"
-msgstr "仙人掌報告的輪詢記錄水平"
+msgstr "Kadupul報告的輪詢記錄水平"
 
 #: include/global_settings.php:2017
 #, fuzzy
@@ -14316,7 +14320,7 @@ msgstr "密碼歷史"
 #: include/global_settings.php:2791
 #, fuzzy
 msgid "If enabled, Kadupul will remember your Tree History between logins and when you return to the Graphs page."
-msgstr "如果啟用，則仙人掌將記住兩次登錄之間以及返回到“圖形”頁面時的樹歷史記錄。"
+msgstr "如果啟用，則Kadupul將記住兩次登錄之間以及返回到“圖形”頁面時的樹歷史記錄。"
 
 #: include/global_settings.php:2814
 #, fuzzy
@@ -14455,7 +14459,7 @@ msgstr "離線記錄數："
 #: index.php:82
 #, fuzzy
 msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Kadupul Database for updating."
-msgstr "<strong>注意：</strong>您已登錄到遠程數據收集器。當<b>“在線”時</b> ，您將能夠查看和控制主要仙人掌網站的大部分內容，就像您已登錄它一樣。此外，重要的是要注意遠程數據收集器需要使用Kadupul的性能提升服務<b>“按需更新”</b>功能，我們始終建議使用Spine。當遠程數據收集器<b>處於“脫機”狀態時</b> ，遠程數據收集器網站將包含更少的信息。但是，它將緩存所有更新，直到可以訪問主仙人掌數據庫和Web服務器。然後它會將它的Boost表輸出轉儲回Main Kadupul數據庫進行更新。"
+msgstr "<strong>注意：</strong>您已登錄到遠程數據收集器。當<b>“在線”時</b> ，您將能夠查看和控制主要Kadupul網站的大部分內容，就像您已登錄它一樣。此外，重要的是要注意遠程數據收集器需要使用Kadupul的性能提升服務<b>“按需更新”</b>功能，我們始終建議使用Spine。當遠程數據收集器<b>處於“脫機”狀態時</b> ，遠程數據收集器網站將包含更少的信息。但是，它將緩存所有更新，直到可以訪問主Kadupul數據庫和Web服務器。然後它會將它的Boost表輸出轉儲回Main Kadupul數據庫進行更新。"
 
 #: index.php:87
 #, fuzzy
@@ -15846,7 +15850,7 @@ msgstr "發送消息......"
 #: lib/functions.php:5634
 #, fuzzy
 msgid "Kadupul Test Message"
-msgstr "仙人掌測試消息"
+msgstr "Kadupul測試消息"
 
 #: lib/functions.php:5636
 #, fuzzy
@@ -16123,7 +16127,7 @@ msgstr "說明"
 #: lib/html.php:2577
 #, fuzzy
 msgid "Kadupul Home"
-msgstr "仙人掌之家"
+msgstr "Kadupul之家"
 
 #: lib/html.php:2579
 #, fuzzy
@@ -16142,7 +16146,7 @@ msgstr "圖表"
 #: lib/html.php:2583
 #, fuzzy
 msgid "Kadupul Project Page"
-msgstr "仙人掌項目"
+msgstr "Kadupul項目"
 
 #: lib/html.php:2587
 #, fuzzy
@@ -16164,8 +16168,9 @@ msgid "Shortcuts"
 msgstr "快捷鍵"
 
 #: lib/html.php:2591
+#, fuzzy
 msgid "Contribute to the Kadupul Project"
-msgstr "旋轉仙人掌日誌"
+msgstr "旋轉Kadupul日誌"
 
 #: lib/html.php:2592
 msgid "Help in Developing"
@@ -16192,7 +16197,7 @@ msgstr "回報臭蟲"
 #: lib/html.php:2600
 #, fuzzy
 msgid "Kadupul"
-msgstr "仙人掌"
+msgstr "Kadupul"
 
 #: lib/html.php:2602
 #, fuzzy
@@ -16492,7 +16497,7 @@ msgstr "輸入有效的目錄路徑"
 #: lib/html_form.php:1275
 #, fuzzy, php-format
 msgid "Kadupul Color (%s)"
-msgstr "仙人掌顏色（%s）"
+msgstr "Kadupul顏色（%s）"
 
 #: lib/html_form.php:1340
 #, fuzzy
@@ -16807,7 +16812,7 @@ msgstr "主旨"
 #: lib/html_reports.php:164
 #, fuzzy
 msgid "Kadupul Report"
-msgstr "仙人掌報告"
+msgstr "Kadupul報告"
 
 #: lib/html_reports.php:165
 #, fuzzy
@@ -17287,7 +17292,7 @@ msgstr "錯誤的UTF-8偏移錯誤！"
 msgid "Down (Thold)"
 msgstr "下載"
 
-#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3692
+#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3712
 #, fuzzy
 msgid "Error"
 msgstr "錯誤"
@@ -17575,7 +17580,7 @@ msgstr "降級"
 #: lib/installer.php:1740 utilities.php:265
 #, fuzzy
 msgid "Kadupul Version"
-msgstr "仙人掌版"
+msgstr "Kadupul版"
 
 #: lib/installer.php:1740
 #, fuzzy
@@ -17643,7 +17648,7 @@ msgid "Location checks"
 msgstr "位置檢查"
 
 #: lib/installer.php:1859 lib/installer.php:2010 lib/installer.php:2014
-#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3789
+#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3809
 #, fuzzy
 msgid "ERROR:"
 msgstr "錯誤:"
@@ -17983,7 +17988,7 @@ msgstr "安裝完成後，您可以將其中一些目錄設置為只讀以提高
 #: lib/installer.php:2299
 #, fuzzy
 msgid "These directories will be required to stay read writable after the install so that the Kadupul remote synchronization process can update them as the Main Kadupul Web Site changes"
-msgstr "這些目錄在安裝後需要保持可讀寫狀態，以便Kadupul遠程同步過程可以在主要仙人掌網站更改時更新它們"
+msgstr "這些目錄在安裝後需要保持可讀寫狀態，以便Kadupul遠程同步過程可以在主要Kadupul網站更改時更新它們"
 
 #: lib/installer.php:2303
 #, fuzzy
@@ -18126,7 +18131,7 @@ msgstr "默認自動化網絡"
 #: lib/installer.php:2487
 #, fuzzy
 msgid "Kadupul can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
-msgstr "安裝完成後，仙人掌可以自動掃描網絡。這將利用下面的網絡範圍來計算可掃描的IP範圍。為掃描定義了一組預定義的選項，包括使用“公共”和“私人”社區。"
+msgstr "安裝完成後，Kadupul可以自動掃描網絡。這將利用下面的網絡範圍來計算可掃描的IP範圍。為掃描定義了一組預定義的選項，包括使用“公共”和“私人”社區。"
 
 #: lib/installer.php:2488
 #, fuzzy
@@ -18390,247 +18395,251 @@ msgstr "報告問題"
 msgid "Get Started"
 msgstr "開始使用"
 
-#: lib/installer.php:3009
+#: lib/installer.php:3025
 #, fuzzy, php-format
 msgid "Starting %s Process for v%s"
 msgstr "為v%s啟動%s流程"
 
-#: lib/installer.php:3034
+#: lib/installer.php:3051
+msgid "Unable to update application defaults."
+msgstr ""
+
+#: lib/installer.php:3054
 #, fuzzy, php-format
 msgid "Finished %s Process for v%s"
 msgstr "v%s完成的%s處理"
 
-#: lib/installer.php:3073
+#: lib/installer.php:3093
 #, fuzzy, php-format
 msgid "Found %s templates to install"
 msgstr "找到了要安裝的%s模板"
 
-#: lib/installer.php:3083
+#: lib/installer.php:3103
 #, fuzzy, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "即將導入軟件包＃%s'%s'。"
 
-#: lib/installer.php:3092
+#: lib/installer.php:3112
 #, fuzzy, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "已成功在配置文件'%s'下導入軟件包＃%s'%s'"
 
-#: lib/installer.php:3098
+#: lib/installer.php:3118
 #, fuzzy, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "在配置文件“%s”下導入軟件包＃%s“%s”失敗"
 
-#: lib/installer.php:3113
+#: lib/installer.php:3133
 #, fuzzy, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "[已刪除模板]的自動化模板"
 
-#: lib/installer.php:3130
+#: lib/installer.php:3150
 #, fuzzy
 msgid "No templates were selected for import"
 msgstr "未選擇要導入的模板"
 
-#: lib/installer.php:3139
+#: lib/installer.php:3159
 #, fuzzy
 msgid "Updating remote configuration file"
 msgstr "等待配置"
 
-#: lib/installer.php:3171
+#: lib/installer.php:3191
 #, fuzzy, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "此數據模板的默認數據源配置文件。"
 
-#: lib/installer.php:3193
+#: lib/installer.php:3213
 #, fuzzy, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "無法應用指定的配置文件%s！=%s"
 
-#: lib/installer.php:3202
+#: lib/installer.php:3222
 #, fuzzy, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "更新自動化網絡（%s），模式“%s” =>“%s”，子網“%s” =>%s“"
 
-#: lib/installer.php:3212
+#: lib/installer.php:3232
 #, fuzzy
 msgid "Failed to find automation network, no changes were made"
 msgstr "找不到自動化網絡，未進行任何更改"
 
-#: lib/installer.php:3216
+#: lib/installer.php:3236
 #, fuzzy
 msgid "Adding extra snmp settings for automation"
 msgstr "添加額外的snmp設置以實現自動化"
 
-#: lib/installer.php:3222
+#: lib/installer.php:3242
 #, fuzzy, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "刪除自動化模板"
 
-#: lib/installer.php:3235
+#: lib/installer.php:3255
 #, fuzzy, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "自動化SNMP選項"
 
-#: lib/installer.php:3238
+#: lib/installer.php:3258
 #, fuzzy, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "成功更新了自動化選項集%s"
 
-#: lib/installer.php:3240
+#: lib/installer.php:3260
 #, fuzzy, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "在設備上運行自動化"
 
-#: lib/installer.php:3246
+#: lib/installer.php:3266
 #, fuzzy, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "無法應用指定的自動化範圍"
 
-#: lib/installer.php:3249
+#: lib/installer.php:3269
 #, fuzzy
 msgid "Failed to find any automation option set"
 msgstr "無法找到要復制的數據！"
 
-#: lib/installer.php:3279
+#: lib/installer.php:3299
 #, fuzzy, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "設備模板[編輯：%s]"
 
-#: lib/installer.php:3305
+#: lib/installer.php:3325
 #, fuzzy
 msgid "Creating Graphs for Default Device"
 msgstr "為此設備創建圖表"
 
-#: lib/installer.php:3312
+#: lib/installer.php:3332
 #, fuzzy
 msgid "Adding Device to Default Tree"
 msgstr "設備默認值"
 
-#: lib/installer.php:3320
+#: lib/installer.php:3340
 #, fuzzy
 msgid "No templated graphs for Default Device were found"
 msgstr "找不到默認設備的模板化圖"
 
-#: lib/installer.php:3324
+#: lib/installer.php:3344
 #, fuzzy
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "警告：找不到您的操作系統的設備模板。您將需要導入設備模板或Kadupul軟件包來監視您的Kadupul服務器。"
 
-#: lib/installer.php:3331
+#: lib/installer.php:3351
 #, fuzzy
 msgid "Running first-time data query for local host"
 msgstr "運行本地主機的首次數據查詢"
 
-#: lib/installer.php:3339
+#: lib/installer.php:3359
 #, fuzzy
 msgid "Repopulating poller cache"
 msgstr "重建輪詢器緩存"
 
-#: lib/installer.php:3344
+#: lib/installer.php:3364
 #, fuzzy
 msgid "Repopulating SNMP Agent cache"
 msgstr "重建SNMPAgent緩存"
 
-#: lib/installer.php:3349
+#: lib/installer.php:3369
 #, fuzzy
 msgid "Generating RSA Key Pair"
 msgstr "生成RSA密鑰對"
 
-#: lib/installer.php:3361
+#: lib/installer.php:3381
 #, fuzzy, php-format
 msgid "Found %s tables to convert"
 msgstr "找到要轉換的%s表"
 
-#: lib/installer.php:3368
+#: lib/installer.php:3388
 #, fuzzy, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "轉換錶＃%s'%s'"
 
-#: lib/installer.php:3383
+#: lib/installer.php:3403
 #, fuzzy
 msgid "No tables where found or selected for conversion"
 msgstr "沒有找到或選擇要轉換的表"
 
-#: lib/installer.php:3394
+#: lib/installer.php:3414
 #, fuzzy, php-format
 msgid "Switched from %s to %s"
 msgstr "從%s切換到%s"
 
-#: lib/installer.php:3398
+#: lib/installer.php:3418
 #, fuzzy, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "注意：使用臨時文件進行數據庫高速緩存：%s"
 
-#: lib/installer.php:3420
+#: lib/installer.php:3440
 #, fuzzy, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "從v%s（數據庫%s）升級到v%s"
 
-#: lib/installer.php:3428
+#: lib/installer.php:3448
 #, fuzzy, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "警告：無法找到v%s的升級功能"
 
-#: lib/installer.php:3487
+#: lib/installer.php:3507
 #, fuzzy
 msgid "Install aborted due to no EULA acceptance"
 msgstr "由於未接受EULA，安裝被中止"
 
-#: lib/installer.php:3510
+#: lib/installer.php:3530
 #, fuzzy, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "後台已在%s開始，此嘗試已在%s跳過"
 
-#: lib/installer.php:3533
+#: lib/installer.php:3553
 #, fuzzy, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "安裝期間發生異常：＃"
 
-#: lib/installer.php:3543
+#: lib/installer.php:3563
 #, fuzzy, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "安裝在%s開始，在%s完成"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 #, fuzzy
 msgid "Both"
 msgstr "兩者"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "%s Minutes"
 
-#: lib/installer.php:3583
+#: lib/installer.php:3603
 #, php-format
 msgid "%s - N/A"
 msgstr "%s Minutes"
 
-#: lib/installer.php:3583 lib/installer.php:3585
+#: lib/installer.php:3603 lib/installer.php:3605
 #, fuzzy
 msgid "Web"
 msgstr "網頁"
 
-#: lib/installer.php:3585 lib/installer.php:3588
+#: lib/installer.php:3605 lib/installer.php:3608
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "%s Minutes"
 
-#: lib/installer.php:3588
+#: lib/installer.php:3608
 #, fuzzy
 msgid "Cli"
 msgstr "經典"
 
-#: lib/installer.php:3593
+#: lib/installer.php:3613
 #, fuzzy, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "設置PHP選項%s =%s"
 
-#: lib/installer.php:3599
+#: lib/installer.php:3619
 #, fuzzy, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "無法設置PHP選項%s，為%s（應為%s）"
 
-#: lib/installer.php:3618
+#: lib/installer.php:3638
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "嘗試同步時找不到數據收集器"
 
@@ -18974,7 +18983,7 @@ msgstr ""
 #: lib/rrd.php:3187
 #, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
-msgstr "仙人掌RRA id&#39;%s&#39;的XFF應為&#39;%s&#39;"
+msgstr "KadupulRRA id&#39;%s&#39;的XFF應為&#39;%s&#39;"
 
 #: lib/rrd.php:3191
 #, fuzzy, php-format
@@ -19119,7 +19128,7 @@ msgstr "RRA文件夾"
 msgid "Root"
 msgstr "根部"
 
-#: lib/rrd.php:4079
+#: lib/rrd.php:4082
 #, fuzzy
 msgid "Unknown RRDtool Error"
 msgstr "未知的RRDtool錯誤"
@@ -19836,7 +19845,7 @@ msgstr "由於會話超時，您已退出Kadupul。"
 #: logout.php:61
 #, fuzzy
 msgid "Logout of Kadupul"
-msgstr "退出仙人掌"
+msgstr "退出Kadupul"
 
 #: logout.php:68
 #, fuzzy
@@ -20378,8 +20387,9 @@ msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "超出％d秒的最大運行時間。退出。"
 
 #: poller.php:890
+#, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "警告：仙人掌輪詢週期超過輪詢間隔"
+msgstr "警告：Kadupul輪詢週期超過輪詢間隔"
 
 #: poller.php:915
 #, php-format
@@ -20393,11 +20403,12 @@ msgstr ""
 #: poller.php:1174
 #, fuzzy
 msgid "Kadupul System Notification"
-msgstr "仙人掌系統工具"
+msgstr "Kadupul系統工具"
 
 #: poller.php:1174
+#, fuzzy
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
-msgstr "注意：已添加第二個仙人掌數據收集器。因此，自動啟用增強功能！"
+msgstr "注意：已添加第二個Kadupul數據收集器。因此，自動啟用增強功能！"
 
 #: poller_automation.php:46
 #, fuzzy, php-format
@@ -20996,7 +21007,7 @@ msgstr "注意：此選項卡上的路徑設置僅在本地保存！"
 #: settings.php:374
 #, fuzzy, php-format
 msgid "Kadupul Settings (%s)%s"
-msgstr "仙人掌設置（%s）"
+msgstr "Kadupul設置（%s）"
 
 #: settings.php:492
 msgid "Changing Permission Model Warning"
@@ -22673,7 +22684,7 @@ msgstr "一般資訊"
 #: utilities.php:270
 #, fuzzy
 msgid "Kadupul OS"
-msgstr "仙人掌OS"
+msgstr "KadupulOS"
 
 #: utilities.php:280
 #, fuzzy
@@ -22703,7 +22714,7 @@ msgstr "輪詢信息"
 #: utilities.php:341
 #, fuzzy
 msgid "Different version of Kadupul and Spine!"
-msgstr "不同版本的仙人掌和脊椎！"
+msgstr "不同版本的Kadupul和脊椎！"
 
 #: utilities.php:359
 #, fuzzy, php-format
@@ -23013,7 +23024,7 @@ msgstr "記錄[總行數：%d  - 顯示的所有項目]"
 #: utilities.php:1602
 #, fuzzy
 msgid "Clear Kadupul Log"
-msgstr "清除仙人掌日誌"
+msgstr "清除Kadupul日誌"
 
 #: utilities.php:1615
 #, fuzzy
@@ -23108,7 +23119,7 @@ msgstr "RRD："
 #: utilities.php:2286
 #, fuzzy
 msgid "Kadupul technical support page.  Used by developers and technical support persons to assist with issues in Kadupul.  Includes checks for common configuration issues."
-msgstr "仙人掌技術支持頁面。開發人員和技術支持人員使用它來協助Kadupul中的問題。包括對常見配置問題的檢查。"
+msgstr "Kadupul技術支持頁面。開發人員和技術支持人員使用它來協助Kadupul中的問題。包括對常見配置問題的檢查。"
 
 #: utilities.php:2290
 #, fuzzy
@@ -23237,7 +23248,7 @@ msgstr "允許管理員維護SNMP通知接收器。"
 #: utilities.php:2380
 #, fuzzy
 msgid "Kadupul System Utilities"
-msgstr "仙人掌系統工具"
+msgstr "Kadupul系統工具"
 
 #: utilities.php:2490
 #, fuzzy

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-11 23:33-0700\n"
+"POT-Creation-Date: 2026-09-12 10:14-0700\n"
 "PO-Revision-Date: 2024-04-20 18:31-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -609,7 +609,7 @@ msgstr "Όχι"
 #: data_templates.php:1249 gprint_presets.php:439 graph_templates.php:897
 #: host_templates.php:974 include/global_settings.php:884
 #: include/global_settings.php:1907 lib/api_automation.php:1473
-#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3576
+#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3596
 #: links.php:410 tree.php:2337 tree.php:2338 user_admin.php:2336
 #: user_domains.php:762 user_domains.php:766 user_group_admin.php:2019
 #: vdef.php:927
@@ -1093,14 +1093,14 @@ msgid "Added manually through device automation interface."
 msgstr "Προστέθηκε χειροκίνητα μέσω διεπαφής αυτοματισμού συσκευών."
 
 #: automation_devices.php:121
-#, php-format
+#, fuzzy, php-format
 msgid "Device %s Added to Kadupul"
-msgstr "Η συσκευή %s προστέθηκε στους κάκτους"
+msgstr "Η συσκευή %s προστέθηκε στους Kadupul"
 
 #: automation_devices.php:123
-#, php-format
+#, fuzzy, php-format
 msgid "Device %s Not Added to Kadupul"
-msgstr "Η συσκευή %s δεν προστέθηκε στους κάκτους"
+msgstr "Η συσκευή %s δεν προστέθηκε στους Kadupul"
 
 #: automation_devices.php:133
 msgid "Devices Removed from Kadupul Automation database"
@@ -1737,8 +1737,9 @@ msgid "Use NetBIOS to attempt to resolve the hostname of up hosts."
 msgstr "Χρησιμοποιήστε το NetBIOS για να προσπαθήσετε να επιλύσετε το όνομα του κεντρικού υπολογιστή."
 
 #: automation_networks.php:556
+#, fuzzy
 msgid "Automatically Add to Kadupul"
-msgstr "Προσθήκη αυτόματα σε κάκτους"
+msgstr "Προσθήκη αυτόματα σε Kadupul"
 
 #: automation_networks.php:557
 msgid "For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Kadupul."
@@ -2493,7 +2494,7 @@ msgstr "Κριτήρια δημιουργίας δέντρου"
 msgid "Change Leaf Type"
 msgstr "Αλλαγή τύπου φύλλων"
 
-#: automation_tree_rules.php:726 lib/installer.php:3770 utilities.php:2643
+#: automation_tree_rules.php:726 lib/installer.php:3790 utilities.php:2643
 #: utilities.php:2644 utilities.php:2647 utilities.php:2648
 msgid "WARNING:"
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ:"
@@ -5841,8 +5842,9 @@ msgid "Installation In Progress"
 msgstr "Εγκατάσταση σε εξέλιξη"
 
 #: include/auth.php:288
+#, fuzzy
 msgid "Only Kadupul Administrators with Install/Upgrade privilege may login at this time"
-msgstr "Μόνο οι διαχειριστές κακτιών με δικαιώματα εγκατάστασης / αναβάθμισης ενδέχεται να συνδεθούν αυτή τη στιγμή"
+msgstr "Μόνο οι διαχειριστές Kadupul με δικαιώματα εγκατάστασης / αναβάθμισης ενδέχεται να συνδεθούν αυτή τη στιγμή"
 
 #: include/auth.php:288
 msgid "There is an Installation or Upgrade in progress."
@@ -9746,8 +9748,9 @@ msgid "Preferred Language Processor"
 msgstr "Προτιμώμενος επεξεργαστής γλώσσας"
 
 #: include/global_settings.php:359
+#, fuzzy
 msgid "Kadupul includes support for multiple alternate Language Translation Processors.  If none is selected Kadupul will attempt to use the first one found."
-msgstr "Το Kadupul περιλαμβάνει υποστήριξη για πολλαπλούς εναλλακτικούς επεξεργαστές μετάφρασης γλωσσών. Θα είναι προεπιλεγμένη χρήση της ενσωματωμένης υποστήριξης PHP, αλλά δεν περιλαμβάνουν όλες οι παραλλαγές του Linux ενσωματωμένη υποστήριξη γλώσσας. Εάν δεν επιλεγεί, οι κάκτοι θα επιλέξουν τον πρώτο που θα βρεθεί."
+msgstr "Το Kadupul περιλαμβάνει υποστήριξη για πολλαπλούς εναλλακτικούς επεξεργαστές μετάφρασης γλωσσών. Θα είναι προεπιλεγμένη χρήση της ενσωματωμένης υποστήριξης PHP, αλλά δεν περιλαμβάνουν όλες οι παραλλαγές του Linux ενσωματωμένη υποστήριξη γλώσσας. Εάν δεν επιλεγεί, οι Kadupul θα επιλέξουν τον πρώτο που θα βρεθεί."
 
 #: include/global_settings.php:365
 msgid "Client TimeZone Support"
@@ -11161,8 +11164,9 @@ msgid "LDAP Debug Mode"
 msgstr "Λειτουργία εντοπισμού σφαλμάτων LDAP"
 
 #: include/global_settings.php:1743
+#, fuzzy
 msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities."
-msgstr "Εάν οι Κάκτοι έχουν επιλεγεί, θα καταγράψουν επιπλέον πληροφορίες LDAP στο αρχείο καταγραφής των Κάκτων κατά τη διάρκεια των δραστηριοτήτων δέσμευσης και αναζήτησης."
+msgstr "Εάν οι Kadupul έχουν επιλεγεί, θα καταγράψουν επιπλέον πληροφορίες LDAP στο αρχείο καταγραφής των Kadupul κατά τη διάρκεια των δραστηριοτήτων δέσμευσης και αναζήτησης."
 
 #: include/global_settings.php:1748 user_domains.php:394
 msgid "Encryption"
@@ -12296,8 +12300,9 @@ msgid "Number of Offline Records:"
 msgstr "Αριθμός αρχείων εκτός σύνδεσης:"
 
 #: index.php:82
+#, fuzzy
 msgid "<strong>NOTE:</strong> You are logged into a Remote Data Collector.  When <b>'online'</b>, you will be able to view and control much of the Main Kadupul Web Site just as if you were logged into it.  Also, it's important to note that Remote Data Collectors are required to use the Kadupul's Performance Boosting Services <b>'On Demand Updating'</b> feature, and we always recommend using Spine.  When the Remote Data Collector is <b>'offline'</b>, the Remote Data Collectors Web Site will contain much less information.  However, it will cache all updates until the Main Kadupul Database and Web Server are reachable.  Then it will dump it's Boost table output back to the Main Kadupul Database for updating."
-msgstr "<strong>ΣΗΜΕΙΩΣΗ:</strong> Έχετε συνδεθεί σε έναν απομακρυσμένο συλλέκτη δεδομένων. Όταν είστε <b>συνδεδεμένοι στο διαδίκτυο</b> , θα μπορείτε να βλέπετε και να ελέγχετε μεγάλο μέρος της Ιστοσελίδας του Κύριου Κάκτι, σαν να συνδεθήκατε σε αυτό. Επίσης, είναι σημαντικό να σημειωθεί ότι οι συλλέκτες απομακρυσμένων δεδομένων πρέπει να χρησιμοποιούν τη λειτουργία της υπηρεσίας βελτίωσης απόδοσης Kadupul <b>&#39;On Demand Updating&#39;</b> και πάντα συνιστούμε τη χρήση της σπονδυλικής στήλης. Όταν ο απομακρυσμένος συλλέκτης δεδομένων είναι <b>«εκτός σύνδεσης»</b> , ο ιστότοπος συλλογής δεδομένων απομακρυσμένων δεδομένων θα περιέχει πολύ λιγότερες πληροφορίες. Ωστόσο, θα αποθηκεύσει προσωρινά όλες τις ενημερώσεις έως ότου επιτευχθεί η πρόσβαση στη Βάση Δεδομένων Κύριου Κατσί και στον Διακομιστή Web. Στη συνέχεια, θα αφαιρεθεί ο πίνακας Boost που επιστρέφει στη βάση δεδομένων του κύριου κατόχου για ενημέρωση."
+msgstr "<strong>ΣΗΜΕΙΩΣΗ:</strong> Έχετε συνδεθεί σε έναν απομακρυσμένο συλλέκτη δεδομένων. Όταν είστε <b>συνδεδεμένοι στο διαδίκτυο</b> , θα μπορείτε να βλέπετε και να ελέγχετε μεγάλο μέρος της Ιστοσελίδας του Κύριου Kadupul, σαν να συνδεθήκατε σε αυτό. Επίσης, είναι σημαντικό να σημειωθεί ότι οι συλλέκτες απομακρυσμένων δεδομένων πρέπει να χρησιμοποιούν τη λειτουργία της υπηρεσίας βελτίωσης απόδοσης Kadupul <b>&#39;On Demand Updating&#39;</b> και πάντα συνιστούμε τη χρήση της σπονδυλικής στήλης. Όταν ο απομακρυσμένος συλλέκτης δεδομένων είναι <b>«εκτός σύνδεσης»</b> , ο ιστότοπος συλλογής δεδομένων απομακρυσμένων δεδομένων θα περιέχει πολύ λιγότερες πληροφορίες. Ωστόσο, θα αποθηκεύσει προσωρινά όλες τις ενημερώσεις έως ότου επιτευχθεί η πρόσβαση στη Βάση Δεδομένων Κύριου Κατσί και στον Διακομιστή Web. Στη συνέχεια, θα αφαιρεθεί ο πίνακας Boost που επιστρέφει στη βάση δεδομένων του κύριου κατόχου για ενημέρωση."
 
 #: index.php:87
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
@@ -13528,8 +13533,9 @@ msgid "Sending Message..."
 msgstr "Αποστολή μηνύματος ..."
 
 #: lib/functions.php:5634
+#, fuzzy
 msgid "Kadupul Test Message"
-msgstr "Μήνυμα δοκιμής κάκτων"
+msgstr "Μήνυμα δοκιμής Kadupul"
 
 #: lib/functions.php:5636
 msgid "Success!"
@@ -14093,9 +14099,9 @@ msgid "There was a SQL Injection attempted on the page"
 msgstr "Έγινε απόπειρα έγχυσης SQL στη σελίδα"
 
 #: lib/html_form_template.php:156
-#, php-format
+#, fuzzy, php-format
 msgid "A client attempted to create a SQL Injection into Kadupul likely from an external host with the address %s"
-msgstr "Ένας πελάτης προσπάθησε να δημιουργήσει μια έγχυση SQL σε κάκτους πιθανώς από έναν εξωτερικό κεντρικό υπολογιστή με τη διεύθυνση %s"
+msgstr "Ένας πελάτης προσπάθησε να δημιουργήσει μια έγχυση SQL σε Kadupul πιθανώς από έναν εξωτερικό κεντρικό υπολογιστή με τη διεύθυνση %s"
 
 #: lib/html_form_template.php:632 lib/html_form_template.php:644
 #, php-format
@@ -14717,12 +14723,14 @@ msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "Ο όρος αναζήτησης &quot; %s&quot; δεν είναι έγκυρος. Το σφάλμα είναι %s"
 
 #: lib/html_utility.php:1129
+#, fuzzy
 msgid "Kadupul regular expressions are limited to 50 characters only for security reasons."
-msgstr "Οι κανονικές εκφράσεις κάκτων περιορίζονται σε 50 χαρακτήρες μόνο για λόγους ασφαλείας."
+msgstr "Οι κανονικές εκφράσεις Kadupul περιορίζονται σε 50 χαρακτήρες μόνο για λόγους ασφαλείας."
 
 #: lib/html_utility.php:1133
+#, fuzzy
 msgid "Kadupul regular expressions can not includes the semi-color character."
-msgstr "Οι κανονικές εκφράσεις των κάκτων δεν μπορούν να περιλαμβάνουν τον ημίχρωμο χαρακτήρα."
+msgstr "Οι κανονικές εκφράσεις των Kadupul δεν μπορούν να περιλαμβάνουν τον ημίχρωμο χαρακτήρα."
 
 #: lib/html_utility.php:1153
 msgid "There was an internal error!"
@@ -14748,7 +14756,7 @@ msgstr "Κακό σφάλμα αντιστάθμισης UTF-8!"
 msgid "Down (Thold)"
 msgstr "Λήψη"
 
-#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3692
+#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3712
 msgid "Error"
 msgstr "Σφάλμα"
 
@@ -14951,8 +14959,9 @@ msgid "You have created a new database, but have not yet imported the 'cacti.sql
 msgstr "Δημιουργήσατε μια νέα βάση δεδομένων, αλλά δεν έχετε εισάγει ακόμα το αρχείο &quot;cacti.sql&quot;. Στη γραμμή εντολών, εκτελέστε τα παρακάτω για να συνεχίσετε:"
 
 #: lib/installer.php:1592
+#, fuzzy
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Kadupul database. Please ensure that the Kadupul database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Kadupul database."
-msgstr "Αυτό το σφάλμα μπορεί επίσης να δημιουργηθεί εάν ο χρήστης της βάσης δεδομένων κάκτων δεν έχει σωστά δικαιώματα στη βάση δεδομένων Kadupul. Βεβαιωθείτε ότι ο χρήστης της βάσης δεδομένων Kadupul έχει τη δυνατότητα να επιλέγει, να εισάγει, να διαγράφει, να ενημερώνει, να δημιουργεί, να αλλάζει, να καταγράφει, να καταγράφει, στη βάση δεδομένων Kadupul."
+msgstr "Αυτό το σφάλμα μπορεί επίσης να δημιουργηθεί εάν ο χρήστης της βάσης δεδομένων Kadupul δεν έχει σωστά δικαιώματα στη βάση δεδομένων Kadupul. Βεβαιωθείτε ότι ο χρήστης της βάσης δεδομένων Kadupul έχει τη δυνατότητα να επιλέγει, να εισάγει, να διαγράφει, να ενημερώνει, να δημιουργεί, να αλλάζει, να καταγράφει, να καταγράφει, στη βάση δεδομένων Kadupul."
 
 #: lib/installer.php:1593
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"
@@ -15048,7 +15057,7 @@ msgid "Location checks"
 msgstr "Έλεγχοι τοποθεσίας"
 
 #: lib/installer.php:1859 lib/installer.php:2010 lib/installer.php:2014
-#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3789
+#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3809
 msgid "ERROR:"
 msgstr "ΣΦΑΛΜΑ:"
 
@@ -15358,8 +15367,9 @@ msgid "Potential permission issues"
 msgstr "Πιθανά ζητήματα άδειας"
 
 #: lib/installer.php:2382
+#, fuzzy
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
-msgstr "Βεβαιωθείτε ότι ο διακομιστής ιστού έχει πρόσβαση ανάγνωσης / εγγραφής στους φακέλους των κακτιών που εμφανίζουν τα παρακάτω σφάλματα."
+msgstr "Βεβαιωθείτε ότι ο διακομιστής ιστού έχει πρόσβαση ανάγνωσης / εγγραφής στους φακέλους των Kadupul που εμφανίζουν τα παρακάτω σφάλματα."
 
 #: lib/installer.php:2385
 msgid "If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools."
@@ -15448,8 +15458,9 @@ msgid "Default Automation Network"
 msgstr "Προεπιλεγμένο δίκτυο αυτοματισμού"
 
 #: lib/installer.php:2487
+#, fuzzy
 msgid "Kadupul can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
-msgstr "Οι κάκτοι μπορούν να σαρώσουν αυτόματα το δίκτυο μετά την ολοκλήρωση της εγκατάστασης. Αυτό θα χρησιμοποιήσει την περιοχή δικτύου παρακάτω για να επεξεργαστεί το φάσμα των διευθύνσεων IP που μπορούν να σαρωθούν. Προεπιλεγμένο σύνολο επιλογών ορίζεται για τη σάρωση, που περιλαμβάνει τη χρήση τόσο κοινών όσο και ιδιωτικών κοινοτήτων."
+msgstr "Οι Kadupul μπορούν να σαρώσουν αυτόματα το δίκτυο μετά την ολοκλήρωση της εγκατάστασης. Αυτό θα χρησιμοποιήσει την περιοχή δικτύου παρακάτω για να επεξεργαστεί το φάσμα των διευθύνσεων IP που μπορούν να σαρωθούν. Προεπιλεγμένο σύνολο επιλογών ορίζεται για τη σάρωση, που περιλαμβάνει τη χρήση τόσο κοινών όσο και ιδιωτικών κοινοτήτων."
 
 #: lib/installer.php:2488
 msgid "If your devices require a different set of options to be used first, you may define them below and they will be utilized before the defaults"
@@ -15669,229 +15680,233 @@ msgstr "Αναφορά τεύχους"
 msgid "Get Started"
 msgstr "Ξεκίνα"
 
-#: lib/installer.php:3009
+#: lib/installer.php:3025
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "Έναρξη%s Διαδικασία για v%s"
 
-#: lib/installer.php:3034
+#: lib/installer.php:3051
+msgid "Unable to update application defaults."
+msgstr ""
+
+#: lib/installer.php:3054
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "Ολοκληρώθηκε η διαδικασία%s για v%s"
 
-#: lib/installer.php:3073
+#: lib/installer.php:3093
 #, php-format
 msgid "Found %s templates to install"
 msgstr "Βρέθηκαν πρότυπα%s για εγκατάσταση"
 
-#: lib/installer.php:3083
+#: lib/installer.php:3103
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "Πρόκειται να εισαγάγετε το πακέτο #%s '%s'."
 
-#: lib/installer.php:3092
+#: lib/installer.php:3112
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "Η εισαγωγή του πακέτου #%s '%s' στο προφίλ '%s' ολοκληρώθηκε με επιτυχία"
 
-#: lib/installer.php:3098
+#: lib/installer.php:3118
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "Η εισαγωγή του πακέτου #%s '%s' στο προφίλ '%s' απέτυχε"
 
-#: lib/installer.php:3113
+#: lib/installer.php:3133
 #, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "Πρότυπο αυτοματοποίησης αντιστοίχισης για το πρότυπο συσκευής '%s'"
 
-#: lib/installer.php:3130
+#: lib/installer.php:3150
 msgid "No templates were selected for import"
 msgstr "Δεν επιλέχθηκαν πρότυπα για εισαγωγή"
 
-#: lib/installer.php:3139
+#: lib/installer.php:3159
 msgid "Updating remote configuration file"
 msgstr "Αναμονή ρύθμισης παραμέτρων"
 
-#: lib/installer.php:3171
+#: lib/installer.php:3191
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "Ορισμός προεπιλεγμένου προφίλ προέλευσης δεδομένων σε %s (%s)"
 
-#: lib/installer.php:3193
+#: lib/installer.php:3213
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "Απέτυχε η εύρεση του επιλεγμένου προφίλ (%s), δεν έγιναν αλλαγές"
 
-#: lib/installer.php:3202
+#: lib/installer.php:3222
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "Ενημέρωση δικτύου αυτοματισμού (%s), λειτουργία \"%s\" => \"%s\", υποδίκτυο \"%s\" =>%s \""
 
-#: lib/installer.php:3212
+#: lib/installer.php:3232
 msgid "Failed to find automation network, no changes were made"
 msgstr "Αποτυχία εύρεσης δικτύου αυτοματισμού, δεν πραγματοποιήθηκαν αλλαγές"
 
-#: lib/installer.php:3216
+#: lib/installer.php:3236
 msgid "Adding extra snmp settings for automation"
 msgstr "Προσθήκη επιπλέον ρυθμίσεων snmp για αυτοματοποίηση"
 
-#: lib/installer.php:3222
+#: lib/installer.php:3242
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "Επιλογή συνόλου επιλογών αυτοματισμού %s"
 
-#: lib/installer.php:3235
+#: lib/installer.php:3255
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "Ενημέρωση του συνόλου επιλογών αυτοματισμού %s"
 
-#: lib/installer.php:3238
+#: lib/installer.php:3258
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "Το σετ επιλογών αυτοματοποίησης%s ενημερώθηκε επιτυχώς"
 
-#: lib/installer.php:3240
+#: lib/installer.php:3260
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "Επαναπροσδιορισμός συνόλου επιλογών αυτοματισμού %s"
 
-#: lib/installer.php:3246
+#: lib/installer.php:3266
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "Απέτυχε η ενημέρωση του συνόλου επιλογών αυτοματισμού %s"
 
-#: lib/installer.php:3249
+#: lib/installer.php:3269
 msgid "Failed to find any automation option set"
 msgstr "Αποτυχία εύρεσης δεδομένων για αντιγραφή!"
 
-#: lib/installer.php:3279
+#: lib/installer.php:3299
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "Πρότυπα συσκευών [επεξεργασία: %s]"
 
-#: lib/installer.php:3305
+#: lib/installer.php:3325
 msgid "Creating Graphs for Default Device"
 msgstr "Δημιουργία γραφημάτων για αυτήν τη συσκευή"
 
-#: lib/installer.php:3312
+#: lib/installer.php:3332
 msgid "Adding Device to Default Tree"
 msgstr "Προεπιλογές συσκευής"
 
-#: lib/installer.php:3320
+#: lib/installer.php:3340
 msgid "No templated graphs for Default Device were found"
 msgstr "Δεν βρέθηκαν πρότυπα γραφήματα για προεπιλεγμένη συσκευή"
 
-#: lib/installer.php:3324
+#: lib/installer.php:3344
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Το πρότυπο συσκευής για το λειτουργικό σας σύστημα δεν βρέθηκε. Θα χρειαστεί να εισαγάγετε πρότυπα συσκευών ή πακέτα Kadupul για την παρακολούθηση του διακομιστή Kadupul."
 
-#: lib/installer.php:3331
+#: lib/installer.php:3351
 msgid "Running first-time data query for local host"
 msgstr "Εκτέλεση πρώτου ερωτήματος δεδομένων για τοπικό κεντρικό υπολογιστή"
 
-#: lib/installer.php:3339
+#: lib/installer.php:3359
 msgid "Repopulating poller cache"
 msgstr "Ανασυγκρότηση της προσωρινής κρυφής μνήμης"
 
-#: lib/installer.php:3344
+#: lib/installer.php:3364
 msgid "Repopulating SNMP Agent cache"
 msgstr "Ανακατασκευή της προσωρινής μνήμης SNMPAgent"
 
-#: lib/installer.php:3349
+#: lib/installer.php:3369
 msgid "Generating RSA Key Pair"
 msgstr "Δημιουργία ζεύγους κλειδιών RSA"
 
-#: lib/installer.php:3361
+#: lib/installer.php:3381
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "Βρέθηκαν πίνακες%s για μετατροπή"
 
-#: lib/installer.php:3368
+#: lib/installer.php:3388
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "Μετατροπή πίνακα #%s '%s'"
 
-#: lib/installer.php:3383
+#: lib/installer.php:3403
 msgid "No tables where found or selected for conversion"
 msgstr "Δεν υπάρχουν πίνακες όπου βρέθηκαν ή επιλέχθηκαν για μετατροπή"
 
-#: lib/installer.php:3394
+#: lib/installer.php:3414
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "Αλλαγή από %s σε %s"
 
-#: lib/installer.php:3398
+#: lib/installer.php:3418
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "ΣΗΜΕΙΩΣΗ: Χρήση προσωρινού αρχείου για προσωρινή μνήμη db:%s"
 
-#: lib/installer.php:3420
+#: lib/installer.php:3440
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "Αναβάθμιση από v%s (DB%s) σε v%s"
 
-#: lib/installer.php:3428
+#: lib/installer.php:3448
 #, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Αποτυχία εύρεσης λειτουργίας αναβάθμισης για v%s"
 
-#: lib/installer.php:3487
+#: lib/installer.php:3507
 msgid "Install aborted due to no EULA acceptance"
 msgstr "Η εγκατάσταση ακυρώθηκε λόγω μη αποδοχής της EULA"
 
-#: lib/installer.php:3510
+#: lib/installer.php:3530
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "Το φόντο ξεκίνησε ήδη στο%s, αυτή η προσπάθεια στο%s παραλείφθηκε"
 
-#: lib/installer.php:3533
+#: lib/installer.php:3553
 #, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "Προέκυψε εξαίρεση κατά την εγκατάσταση: #%s - %s"
 
-#: lib/installer.php:3543
+#: lib/installer.php:3563
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "Η εγκατάσταση ξεκίνησε στο %s, ολοκληρώθηκε στο %s"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 msgid "Both"
 msgstr "Και τα δυο"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "Αλλαγή από %s σε %s"
 
-#: lib/installer.php:3583
+#: lib/installer.php:3603
 #, fuzzy, php-format
 msgid "%s - N/A"
 msgstr "Δ/Υ"
 
-#: lib/installer.php:3583 lib/installer.php:3585
+#: lib/installer.php:3603 lib/installer.php:3605
 msgid "Web"
 msgstr "Ιστότοπος"
 
-#: lib/installer.php:3585 lib/installer.php:3588
+#: lib/installer.php:3605 lib/installer.php:3608
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "Αλλαγή από %s σε %s"
 
-#: lib/installer.php:3588
+#: lib/installer.php:3608
 msgid "Cli"
 msgstr "Κλασικό"
 
-#: lib/installer.php:3593
+#: lib/installer.php:3613
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "Ρύθμιση επιλογής PHP%s =%s"
 
-#: lib/installer.php:3599
+#: lib/installer.php:3619
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "Αποτυχία ορισμού της επιλογής PHP%s, είναι%s (θα πρέπει να είναι%s)"
 
-#: lib/installer.php:3618
+#: lib/installer.php:3638
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "Οι συλλέκτες δεδομένων δεν βρέθηκαν κατά την προσπάθεια συγχρονισμού"
 
@@ -16203,9 +16218,9 @@ msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Το αρχείο RRA &#39; %s&#39; έχει τα ίδια CF / βήματα ( %s, %s) ως &#39; %s&#39;"
 
 #: lib/rrd.php:3183
-#, php-format
+#, fuzzy, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
-msgstr "Το pdp_per_row του '%s' δεν είναι έγκυρο για το RRA '%s' θα πρέπει να είναι '%s'.  Εξετάστε το ενδεχόμενο να διαγράψετε και να επιτρέψετε στους Κάκτους να δημιουργήσουν ξανά το αρχείο RRD."
+msgstr "Το pdp_per_row του '%s' δεν είναι έγκυρο για το RRA '%s' θα πρέπει να είναι '%s'.  Εξετάστε το ενδεχόμενο να διαγράψετε και να επιτρέψετε στους Kadupul να δημιουργήσουν ξανά το αρχείο RRD."
 
 #: lib/rrd.php:3187
 #, php-format
@@ -16337,7 +16352,7 @@ msgstr "Φάκελος RRA"
 msgid "Root"
 msgstr "Ρίζα"
 
-#: lib/rrd.php:4079
+#: lib/rrd.php:4082
 msgid "Unknown RRDtool Error"
 msgstr "Άγνωστο σφάλμα RRDtool"
 
@@ -17486,8 +17501,9 @@ msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Υπέρβαση μέγιστου χρόνου εκτέλεσης %d δευτερολέπτων για το αναγνωριστικό δημοσκόπου %d. Έξοδος."
 
 #: poller.php:890
+#, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Ο κύκλος ψηφοφορίας κάκτων ξεπέρασε το διάστημα Poller από"
+msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Ο κύκλος ψηφοφορίας Kadupul ξεπέρασε το διάστημα Poller από"
 
 #: poller.php:915
 #, php-format

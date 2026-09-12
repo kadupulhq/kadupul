@@ -5,7 +5,7 @@ ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." &> /dev/null && pwd)
 STAMP="$(date +%Y%m%d-%H%M%S)"
 OUT_BASE="${ROOT_DIR}/security/proof-freeze/${STAMP}"
 REPO="${1:-kadupulhq/kadupul}"
-BRANCHES="${2:-1.2.x develop}"
+BRANCHES="${2:-main}"
 
 mkdir -p "$OUT_BASE"
 

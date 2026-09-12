@@ -250,7 +250,7 @@ case 'countdown':
 		ob_end_clean();
 
 		if ($graph_contents === false) {
-			$graph_contents = file_get_contents(__DIR__ . '/images/kadupul-icon.png');
+			$graph_contents = file_get_contents(__DIR__ . '/images/kadupul-error.png');
 		}
 	}
 

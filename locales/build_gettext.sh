@@ -17,7 +17,7 @@ set -eu
 # get script name
 SCRIPT_NAME=`basename ${0}`
 
-# locate base directory of Cacti
+# locate the application base directory
 REALPATH_BIN=`which realpath 2>/dev/null`
 if [ $? -gt 0 ]
 then

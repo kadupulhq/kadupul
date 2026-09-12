@@ -247,7 +247,7 @@ if ($output !== false && $output != '' && strpos($output, 'image = ') !== false)
 	if ($image !== false) {
 		$oarray['image'] = base64_encode($image);
 	} else {
-		$oarray['image'] = base64_encode(file_get_contents(__DIR__ . '/images/kadupul-icon.png'));
+		$oarray['image'] = base64_encode(file_get_contents(__DIR__ . '/images/kadupul-error.png'));
 	}
 }
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-11 23:33-0700\n"
+"POT-Creation-Date: 2026-09-12 10:14-0700\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -18,8 +18,9 @@ msgstr ""
 "X-Generator: Weblate 4.8.1\n"
 
 #: about.php:22 include/global_arrays.php:2631 lib/html.php:2599
+#, fuzzy
 msgid "About Kadupul"
-msgstr "Về xương rồng"
+msgstr "Về Kadupul"
 
 #: about.php:33
 msgid "Kadupul is an independent open-source project for network monitoring and time-series graphing."
@@ -609,7 +610,7 @@ msgstr "Không"
 #: data_templates.php:1249 gprint_presets.php:439 graph_templates.php:897
 #: host_templates.php:974 include/global_settings.php:884
 #: include/global_settings.php:1907 lib/api_automation.php:1473
-#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3576
+#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3596
 #: links.php:410 tree.php:2337 tree.php:2338 user_admin.php:2336
 #: user_domains.php:762 user_domains.php:766 user_group_admin.php:2019
 #: vdef.php:927
@@ -843,12 +844,14 @@ msgid "Change Password"
 msgstr "Thay đổi mật khẩu"
 
 #: auth_changepassword.php:344
+#, fuzzy
 msgid "Please enter your current password and your new<br>Kadupul password."
-msgstr "Vui lòng nhập mật khẩu hiện tại của bạn và mới <br> Mật khẩu xương rồng."
+msgstr "Vui lòng nhập mật khẩu hiện tại của bạn và mới <br> Mật khẩu Kadupul."
 
 #: auth_changepassword.php:346
+#, fuzzy
 msgid "Please enter your new Kadupul password."
-msgstr "Vui lòng nhập mật khẩu hiện tại của bạn và mới <br> Mật khẩu xương rồng."
+msgstr "Vui lòng nhập mật khẩu hiện tại của bạn và mới <br> Mật khẩu Kadupul."
 
 #: auth_changepassword.php:354 auth_login.php:321 auth_login.php:324
 #: include/global_settings.php:1816 lib/functions.php:5599
@@ -1095,7 +1098,7 @@ msgstr "Thêm thủ công thông qua giao diện tự động hóa thiết bị.
 #: automation_devices.php:121
 #, fuzzy, php-format
 msgid "Device %s Added to Kadupul"
-msgstr "Đã thêm vào xương rồng"
+msgstr "Đã thêm vào Kadupul"
 
 #: automation_devices.php:123
 #, fuzzy, php-format
@@ -2493,7 +2496,7 @@ msgstr "Tiêu chí tạo cây"
 msgid "Change Leaf Type"
 msgstr "Thay đổi loại lá"
 
-#: automation_tree_rules.php:726 lib/installer.php:3770 utilities.php:2643
+#: automation_tree_rules.php:726 lib/installer.php:3790 utilities.php:2643
 #: utilities.php:2644 utilities.php:2647 utilities.php:2648
 msgid "WARNING:"
 msgstr "LƯU Ý:"
@@ -6021,8 +6024,9 @@ msgid "Log file specified was Kadupul archive file and was removed."
 msgstr "Tệp nhật ký được chỉ định là tệp lưu trữ Kadupul và đã bị xóa."
 
 #: include/global_arrays.php:294
+#, fuzzy
 msgid "Kadupul log purged successfully"
-msgstr "Nhật ký xương rồng đã thanh trừng thành công"
+msgstr "Nhật ký Kadupul đã thanh trừng thành công"
 
 #: include/global_arrays.php:297
 msgid "If you force a password change, you must also allow the user to change their password."
@@ -6779,8 +6783,9 @@ msgid "Application Related"
 msgstr "Áp dụng quy tắc tự động hóa"
 
 #: include/global_arrays.php:1085
+#, fuzzy
 msgid "Kadupul Related"
-msgstr "Báo cáo xương rồng"
+msgstr "Báo cáo Kadupul"
 
 #: include/global_arrays.php:1086
 msgid "Database Related"
@@ -7871,8 +7876,9 @@ msgid "View SNMP Notification Receivers"
 msgstr "Xem người nhận thông báo SNMP"
 
 #: include/global_arrays.php:2571
+#, fuzzy
 msgid "Kadupul Settings"
-msgstr "Cài đặt xương rồng"
+msgstr "Cài đặt Kadupul"
 
 #: include/global_arrays.php:2577
 msgid "External Link"
@@ -7883,8 +7889,9 @@ msgid "(Action)"
 msgstr "Hành động:"
 
 #: include/global_arrays.php:2637
+#, fuzzy
 msgid "Kadupul Help"
-msgstr "Trang chủ xương rồng"
+msgstr "Trang chủ Kadupul"
 
 #: include/global_arrays.php:2649
 msgid "Export Results"
@@ -9526,8 +9533,9 @@ msgid "If you are having issues with Kadupul's Data Collectors, set this file pa
 msgstr "Nếu bạn gặp sự cố với Trình thu thập dữ liệu của Kadupul, hãy đặt đường dẫn tệp này và lỗi tiêu chuẩn của Trình thu thập dữ liệu sẽ được chuyển hướng đến tệp này"
 
 #: include/global_settings.php:184
+#, fuzzy
 msgid "Rotate the Kadupul Log"
-msgstr "Xoay Nhật ký xương rồng"
+msgstr "Xoay Nhật ký Kadupul"
 
 #: include/global_settings.php:185
 msgid "This option will rotate the Kadupul Log periodically."
@@ -11124,8 +11132,9 @@ msgid "LDAP Debug Mode"
 msgstr "Chế độ gỡ lỗi LDAP"
 
 #: include/global_settings.php:1743
+#, fuzzy
 msgid "If Checked Kadupul will log extra LDAP information to the Kadupul log during Binding and Searching activities."
-msgstr "Nếu được Kiểm tra Xương rồng sẽ ghi thông tin LDAP bổ sung vào nhật ký Xương rồng trong các hoạt động Ràng buộc và Tìm kiếm."
+msgstr "Nếu được Kiểm tra Kadupul sẽ ghi thông tin LDAP bổ sung vào nhật ký Kadupul trong các hoạt động Ràng buộc và Tìm kiếm."
 
 #: include/global_settings.php:1748 user_domains.php:394
 msgid "Encryption"
@@ -12716,8 +12725,9 @@ msgid "Your password must contain at least 1 special character!"
 msgstr "Mật khẩu của bạn phải chứa ít nhất 1 ký tự đặc biệt!"
 
 #: lib/auth.php:4676
+#, fuzzy
 msgid "Kadupul Login Failure"
-msgstr "Nhật ký xương rồng đã bị xóa"
+msgstr "Nhật ký Kadupul đã bị xóa"
 
 #: lib/auth.php:4959
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
@@ -13491,8 +13501,9 @@ msgid "Sending Message..."
 msgstr "Đang gửi tin nhắn…"
 
 #: lib/functions.php:5634
+#, fuzzy
 msgid "Kadupul Test Message"
-msgstr "Thông báo kiểm tra xương rồng"
+msgstr "Thông báo kiểm tra Kadupul"
 
 #: lib/functions.php:5636
 msgid "Success!"
@@ -13726,8 +13737,9 @@ msgid "Help"
 msgstr "Trợ giúp"
 
 #: lib/html.php:2577
+#, fuzzy
 msgid "Kadupul Home"
-msgstr "Trang chủ xương rồng"
+msgstr "Trang chủ Kadupul"
 
 #: lib/html.php:2579
 msgid "Miscellaneous"
@@ -13742,8 +13754,9 @@ msgid "Charts"
 msgstr "Biểu đồ"
 
 #: lib/html.php:2583
+#, fuzzy
 msgid "Kadupul Project Page"
-msgstr "Trang dự án xương rồng"
+msgstr "Trang dự án Kadupul"
 
 #: lib/html.php:2587
 msgid "Spine"
@@ -13762,8 +13775,9 @@ msgid "Shortcuts"
 msgstr "Các Bố Trí Phím Tắt"
 
 #: lib/html.php:2591
+#, fuzzy
 msgid "Contribute to the Kadupul Project"
-msgstr "Xoay Nhật ký xương rồng"
+msgstr "Xoay Nhật ký Kadupul"
 
 #: lib/html.php:2592
 msgid "Help in Developing"
@@ -13786,8 +13800,9 @@ msgid "Report a bug"
 msgstr "Báo cáo lỗi"
 
 #: lib/html.php:2600
+#, fuzzy
 msgid "Kadupul"
-msgstr "Xương rồng"
+msgstr "Kadupul"
 
 #: lib/html.php:2602
 msgid "Click to Show/Hide Filter"
@@ -14026,9 +14041,9 @@ msgid "Enter a valid directory path"
 msgstr "Nhập một đường dẫn thư mục hợp lệ"
 
 #: lib/html_form.php:1275
-#, php-format
+#, fuzzy, php-format
 msgid "Kadupul Color (%s)"
-msgstr "Màu xương rồng ( %s)"
+msgstr "Màu Kadupul ( %s)"
 
 #: lib/html_form.php:1340
 msgid "NO FONT VERIFICATION POSSIBLE"
@@ -14291,8 +14306,9 @@ msgid "Subject"
 msgstr "Tiêu đề"
 
 #: lib/html_reports.php:164
+#, fuzzy
 msgid "Kadupul Report"
-msgstr "Báo cáo xương rồng"
+msgstr "Báo cáo Kadupul"
 
 #: lib/html_reports.php:165
 msgid "This value will be used as the default Email subject.  The report name will be used if left blank."
@@ -14711,7 +14727,7 @@ msgstr "Lỗi bù UTF-8 xấu!"
 msgid "Down (Thold)"
 msgstr "Tải xuống"
 
-#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3692
+#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3712
 msgid "Error"
 msgstr "Lỗi"
 
@@ -14951,8 +14967,9 @@ msgid "Downgrade"
 msgstr "Downgrade"
 
 #: lib/installer.php:1740 utilities.php:265
+#, fuzzy
 msgid "Kadupul Version"
-msgstr "Phiên bản xương rồng"
+msgstr "Phiên bản Kadupul"
 
 #: lib/installer.php:1740
 msgid "License Agreement"
@@ -15011,7 +15028,7 @@ msgid "Location checks"
 msgstr "Kiểm tra vị trí"
 
 #: lib/installer.php:1859 lib/installer.php:2010 lib/installer.php:2014
-#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3789
+#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3809
 msgid "ERROR:"
 msgstr "Lỗi:"
 
@@ -15631,229 +15648,233 @@ msgstr "Báo cáo vấn đề"
 msgid "Get Started"
 msgstr "Bắt đầu"
 
-#: lib/installer.php:3009
+#: lib/installer.php:3025
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "Bắt đầu quá trình%s cho v%s"
 
-#: lib/installer.php:3034
+#: lib/installer.php:3051
+msgid "Unable to update application defaults."
+msgstr ""
+
+#: lib/installer.php:3054
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "Đã hoàn thành%s Quá trình cho v%s"
 
-#: lib/installer.php:3073
+#: lib/installer.php:3093
 #, php-format
 msgid "Found %s templates to install"
 msgstr "Đã tìm thấy mẫu%s để cài đặt"
 
-#: lib/installer.php:3083
+#: lib/installer.php:3103
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "Sắp nhập Gói #%s '%s'."
 
-#: lib/installer.php:3092
+#: lib/installer.php:3112
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "Nhập gói #%s '%s' trong Hồ sơ '%s' đã thành công"
 
-#: lib/installer.php:3098
+#: lib/installer.php:3118
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "Nhập gói #%s '%s' trong Hồ sơ '%s' không thành công"
 
-#: lib/installer.php:3113
+#: lib/installer.php:3133
 #, fuzzy, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "Mẫu tự động hóa cho [Mẫu đã xóa]"
 
-#: lib/installer.php:3130
+#: lib/installer.php:3150
 msgid "No templates were selected for import"
 msgstr "Không có mẫu nào được chọn để nhập"
 
-#: lib/installer.php:3139
+#: lib/installer.php:3159
 msgid "Updating remote configuration file"
 msgstr "Đang chờ cấu hình"
 
-#: lib/installer.php:3171
+#: lib/installer.php:3191
 #, fuzzy, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "Hồ sơ nguồn dữ liệu mặc định cho mẫu dữ liệu này."
 
-#: lib/installer.php:3193
+#: lib/installer.php:3213
 #, fuzzy, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "Không thể áp dụng hồ sơ được chỉ định %s! = %s"
 
-#: lib/installer.php:3202
+#: lib/installer.php:3222
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "Cập nhật mạng tự động (%s), chế độ \"%s\" => \"%s\", mạng con \"%s\" =>%s \""
 
-#: lib/installer.php:3212
+#: lib/installer.php:3232
 msgid "Failed to find automation network, no changes were made"
 msgstr "Không thể tìm thấy mạng tự động, không có thay đổi nào được thực hiện"
 
-#: lib/installer.php:3216
+#: lib/installer.php:3236
 msgid "Adding extra snmp settings for automation"
 msgstr "Thêm cài đặt snmp bổ sung cho tự động hóa"
 
-#: lib/installer.php:3222
+#: lib/installer.php:3242
 #, fuzzy, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "Xóa (các) Mẫu tự động hóa"
 
-#: lib/installer.php:3235
+#: lib/installer.php:3255
 #, fuzzy, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "Tùy chọn SNMP tự động hóa"
 
-#: lib/installer.php:3238
+#: lib/installer.php:3258
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "Tùy chọn tự động cập nhật thành công Đặt%s"
 
-#: lib/installer.php:3240
+#: lib/installer.php:3260
 #, fuzzy, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "Chạy tự động hóa trên thiết bị"
 
-#: lib/installer.php:3246
+#: lib/installer.php:3266
 #, fuzzy, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "Không thể áp dụng Phạm vi tự động hóa được chỉ định"
 
-#: lib/installer.php:3249
+#: lib/installer.php:3269
 msgid "Failed to find any automation option set"
 msgstr "Không thể tìm thấy dữ liệu để sao chép!"
 
-#: lib/installer.php:3279
+#: lib/installer.php:3299
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "Mẫu thiết bị [chỉnh sửa: %s]"
 
-#: lib/installer.php:3305
+#: lib/installer.php:3325
 msgid "Creating Graphs for Default Device"
 msgstr "Tạo đồ thị cho thiết bị này"
 
-#: lib/installer.php:3312
+#: lib/installer.php:3332
 msgid "Adding Device to Default Tree"
 msgstr "Mặc định thiết bị"
 
-#: lib/installer.php:3320
+#: lib/installer.php:3340
 msgid "No templated graphs for Default Device were found"
 msgstr "Không tìm thấy biểu đồ khuôn mẫu cho Thiết bị mặc định"
 
-#: lib/installer.php:3324
+#: lib/installer.php:3344
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "CẢNH BÁO: Không tìm thấy Mẫu thiết bị cho Hệ điều hành của bạn. Bạn sẽ cần nhập Mẫu thiết bị hoặc Gói Kadupul để theo dõi máy chủ Kadupul của bạn."
 
-#: lib/installer.php:3331
+#: lib/installer.php:3351
 msgid "Running first-time data query for local host"
 msgstr "Chạy truy vấn dữ liệu lần đầu cho máy chủ cục bộ"
 
-#: lib/installer.php:3339
+#: lib/installer.php:3359
 msgid "Repopulating poller cache"
 msgstr "Rebuild Pug Cache"
 
-#: lib/installer.php:3344
+#: lib/installer.php:3364
 msgid "Repopulating SNMP Agent cache"
 msgstr "Xây dựng lại bộ nhớ cache SNMPAgent"
 
-#: lib/installer.php:3349
+#: lib/installer.php:3369
 msgid "Generating RSA Key Pair"
 msgstr "Tạo cặp khóa RSA"
 
-#: lib/installer.php:3361
+#: lib/installer.php:3381
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "Đã tìm thấy bảng%s để chuyển đổi"
 
-#: lib/installer.php:3368
+#: lib/installer.php:3388
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "Bảng chuyển đổi #%s '%s'"
 
-#: lib/installer.php:3383
+#: lib/installer.php:3403
 msgid "No tables where found or selected for conversion"
 msgstr "Không có bảng nơi tìm thấy hoặc được chọn để chuyển đổi"
 
-#: lib/installer.php:3394
+#: lib/installer.php:3414
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "Chuyển từ%s sang%s"
 
-#: lib/installer.php:3398
+#: lib/installer.php:3418
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "LƯU Ý: Sử dụng tệp tạm thời cho bộ đệm db:%s"
 
-#: lib/installer.php:3420
+#: lib/installer.php:3440
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "Nâng cấp từ v%s (DB%s) lên v%s"
 
-#: lib/installer.php:3428
+#: lib/installer.php:3448
 #, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "CẢNH BÁO: Không thể tìm thấy chức năng nâng cấp cho v%s"
 
-#: lib/installer.php:3487
+#: lib/installer.php:3507
 msgid "Install aborted due to no EULA acceptance"
 msgstr "Cài đặt bị hủy bỏ do không chấp nhận EULA"
 
-#: lib/installer.php:3510
+#: lib/installer.php:3530
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "Bối cảnh đã được bắt đầu ở%s, lần thử này ở%s đã bị bỏ qua"
 
-#: lib/installer.php:3533
+#: lib/installer.php:3553
 #, fuzzy, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "Ngoại lệ xảy ra trong khi cài đặt: #"
 
-#: lib/installer.php:3543
+#: lib/installer.php:3563
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "Cài đặt đã được bắt đầu ở %s, hoàn thành ở %s"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 msgid "Both"
 msgstr "Cả hai"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "Phút"
 
-#: lib/installer.php:3583
+#: lib/installer.php:3603
 #, fuzzy, php-format
 msgid "%s - N/A"
 msgstr "Phút"
 
-#: lib/installer.php:3583 lib/installer.php:3585
+#: lib/installer.php:3603 lib/installer.php:3605
 msgid "Web"
 msgstr "Web"
 
-#: lib/installer.php:3585 lib/installer.php:3588
+#: lib/installer.php:3605 lib/installer.php:3608
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "Phút"
 
-#: lib/installer.php:3588
+#: lib/installer.php:3608
 msgid "Cli"
 msgstr "Cổ điển"
 
-#: lib/installer.php:3593
+#: lib/installer.php:3613
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "Đặt tùy chọn PHP%s =%s"
 
-#: lib/installer.php:3599
+#: lib/installer.php:3619
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "Không thể đặt tùy chọn PHP%s, là%s (nên là%s)"
 
-#: lib/installer.php:3618
+#: lib/installer.php:3638
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "Không tìm thấy (các) Trình thu thập dữ liệu khi thử đồng bộ hóa"
 
@@ -16299,7 +16320,7 @@ msgstr "Thư mục RRA"
 msgid "Root"
 msgstr "Root"
 
-#: lib/rrd.php:4079
+#: lib/rrd.php:4082
 msgid "Unknown RRDtool Error"
 msgstr "Lỗi RRDtool không xác định"
 
@@ -16954,8 +16975,9 @@ msgid "You have been logged out of Kadupul due to a Remote Data Collector state 
 msgstr "Bạn đã đăng xuất khỏi Kadupul do hết thời gian phiên."
 
 #: logout.php:61
+#, fuzzy
 msgid "Logout of Kadupul"
-msgstr "Thoát khỏi xương rồng"
+msgstr "Thoát khỏi Kadupul"
 
 #: logout.php:68
 msgid "Automatic Logout"
@@ -17444,8 +17466,9 @@ msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Thời gian chạy tối đa% d giây vượt quá. Thoát hiểm."
 
 #: poller.php:890
+#, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
-msgstr "CẢNH BÁO: Chu kỳ thăm dò của xương rồng đã vượt quá khoảng thời gian thăm dò của xương rồng bởi"
+msgstr "CẢNH BÁO: Chu kỳ thăm dò của Kadupul đã vượt quá khoảng thời gian thăm dò của Kadupul bởi"
 
 #: poller.php:915
 #, php-format
@@ -17974,7 +17997,7 @@ msgstr "LƯU Ý: Cài đặt đường dẫn trên Tab này chỉ được lưu 
 #: settings.php:374
 #, fuzzy, php-format
 msgid "Kadupul Settings (%s)%s"
-msgstr "Cài đặt xương rồng ( %s)"
+msgstr "Cài đặt Kadupul ( %s)"
 
 #: settings.php:492
 msgid "Changing Permission Model Warning"
@@ -19404,8 +19427,9 @@ msgid "General Information"
 msgstr "Thông tin chung"
 
 #: utilities.php:270
+#, fuzzy
 msgid "Kadupul OS"
-msgstr "Hệ điều hành xương rồng"
+msgstr "Hệ điều hành Kadupul"
 
 #: utilities.php:280
 msgid "NET-SNMP Version"
@@ -19695,12 +19719,14 @@ msgid "Log [Total Lines: %d - All Items Shown]"
 msgstr "Nhật ký [Tổng số dòng:% d - Tất cả các mục được hiển thị]"
 
 #: utilities.php:1602
+#, fuzzy
 msgid "Clear Kadupul Log"
-msgstr "Xóa nhật ký xương rồng"
+msgstr "Xóa nhật ký Kadupul"
 
 #: utilities.php:1615
+#, fuzzy
 msgid "Kadupul Log Cleared"
-msgstr "Nhật ký xương rồng đã bị xóa"
+msgstr "Nhật ký Kadupul đã bị xóa"
 
 #: utilities.php:1617
 msgid "Error: Unable to clear log, no write permissions."
