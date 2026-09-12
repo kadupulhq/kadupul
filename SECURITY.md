@@ -11,10 +11,22 @@ whether the issue is reachable before authentication.
 
 ## Coordinated disclosure
 
-Maintainers assess exploitability and exposure before publication. If a finding
-affects other projects, maintainers coordinate private disclosure with them.
+Maintainers aim to acknowledge reports within three working days and assess exploitability and exposure privately.
+For shared-code vulnerabilities, maintainers must contact affected projects through
+their private security channels before publishing an advisory or fix, and agree
+on a coordinated disclosure timeline. Reporters should include any related private
+reports so maintainers can coordinate without exposing the finding publicly.
 Unreleased code may still be deployed; report privately regardless of release status.
 
 ## Supported versions
 
 No supported release is available yet. Reports against the source are welcome.
+
+## Scope
+
+In scope: the application, the poller, the installer, and the packaging in this
+repository.
+
+Out of scope: third-party plugins, RRDtool, Net-SNMP, the web server, the
+database, and anything that requires an administrator to act against their own
+install.
