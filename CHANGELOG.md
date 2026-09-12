@@ -30,6 +30,12 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Refresh localized product names and compiled catalogs, with source-text fallback
+  for translations awaiting review.
+- Update the shipped graph-watermark default through the shared installer while
+  preserving custom values across supported database encodings.
+- Show clear graph-rendering failure feedback and handle an unavailable logo.
+- Validate branding migrations in CI and reject missing advisory-tooling branches.
 - Use Kadupul branding and project contacts across the interface and documentation.
 - Remove optional author lists and project-history prose while retaining licensing.
 
