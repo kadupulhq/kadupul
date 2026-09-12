@@ -48,7 +48,7 @@ jobs:
         working-directory: tests/e2e
 
       - name: Run theme Playwright suite
-        run: npm run test:themes
+        run: npm run test:themes -- --config=playwright.config.js
         working-directory: tests/e2e
 
       - name: Upload Playwright artifacts on failure

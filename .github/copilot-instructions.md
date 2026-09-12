@@ -33,18 +33,15 @@ Use these notes to navigate and contribute productively to this PHP codebase.
 
 ## Plugin framework
 - Hooks are declared in DB and executed via `api_plugin_hook(...)` and `api_plugin_hook_function(...)` (see `lib/plugins.php`).
-- Plugins must reside in `plugins/<name>/` with `setup.php` and `INFO`; enabled/ordered via `plugin_config` table. The plugin API contract is characterized in `tests/Characterization/LibPluginsTest.php` and driven end to end by the synthetic plugin in `tests/Fixtures/plugins/compatibility_test/`.
+- Plugins must reside in `plugins/<name>/` with `setup.php` and `INFO`; enabled/ordered via `plugin_config` table. Plugin lifecycle and hook implementations are in `lib/plugins.php`; inspect callers before changing their contracts.
 - Use hooks like `page_head`, `poller_top`, `device_remove`, `create_complete_graph_from_template` to integrate (grep for `api_plugin_hook_function` in `lib/`).
 
 ## Testing, CI, and local checks
-- `make test-characterization` runs the container behavioral harness: it installs the app
-  against MariaDB and a deterministic snmpd, then compares observations against committed
-  golden files in `tests/Golden/`. Those goldens are the compatibility contract; a change to
-  one means user-visible behavior changed.
-- The in-process PHP suite and its `composer test` script arrive with the characterization
-  branch. Until that lands, this repository has no runnable PHP test suite.
-- Do not write tests that `file_get_contents()` a source file and assert a substring. They
-  pass while the code is broken.
+- Install the isolated PHP test runner with `composer install --working-dir=tests`. `tests/phpunit.xml` defines the available suites; inspect their bootstrap requirements before running them. Use only test scripts declared in the checked-out root `composer.json`; a `composer test` CI step alone does not establish that a runnable suite exists.
+- Run the focused CSP unit and integration checks with the commands and PHP runtime in `.github/workflows/csp-e2e.yml`.
+- Run theme tests from `tests/e2e`: `npm ci`, `npx playwright install chromium`, then `npm run test:themes -- --config=playwright.config.js`. The TypeScript configuration in the same directory is for the separate Docker CSP suite.
+- `make test-characterization` runs the container behavioral harness against MariaDB and a deterministic snmpd, comparing observations with the golden files in `tests/Golden/`. Those goldens are the compatibility contract: a change to one means user-visible behavior changed.
+- New tests should execute production behavior rather than assert on source-file substrings. Existing source-scan tests are not evidence that runtime behavior works.
 - Local quick checks:
   - PHP lint: `find . -name '*.php' -exec php -l {} \; | grep -iv 'no syntax errors detected'` (CI uses similar).
   - Minimal smoke: create `include/config.php` from `.dist`, import `cacti.sql`, then run install + `poller.php` as above; tail `log/cacti.log` for `SYSTEM STATS`.
@@ -60,7 +57,7 @@ Use these notes to navigate and contribute productively to this PHP codebase.
   - Preserve the file’s indentation (tabs vs spaces) and brace style; do not reformat unrelated code.
   - Keep the copyright and GPL notices at the top of PHP files.
   - Use snake_case functions and procedural structure consistent with the codebase; avoid introducing namespaces unless integrating vendor code.
-  - Maintain PHP 5.4+ compatibility (CI tests 7.0–8.4). Avoid using features requiring >7.0 (e.g., union types, attributes, typed properties) in core code.
+  - Maintain the PHP >=8.0 requirement in `composer.json`; the CI matrix covers PHP 8.1–8.4.
   - Don’t change public function signatures in `lib/api_*.php` or widely used helpers without auditing usages.
   - For dependencies, prefer Composer-managed libs under `include/vendor` and keep versions pinned by `composer.lock`.
 

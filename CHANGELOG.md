@@ -9,6 +9,11 @@ follows [Semantic Versioning](VERSIONING.md).
 Targeting `v1.3.0`, the first planned application release. See
 [VERSIONING.md](VERSIONING.md).
 
+### Fixed
+
+- Run the theme browser suite against the themes shipped by this fork using
+  its standalone Playwright configuration.
+
 ### Added
 
 - Update vendored phpseclib to 3.0.57 and constant_time_encoding to 3.1.3, and lock runtime dependencies.
