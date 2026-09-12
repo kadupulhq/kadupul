@@ -15427,7 +15427,7 @@ msgid "Potential permission issues"
 msgstr "בעיות אפשריות באישור"
 
 #: lib/installer.php:2382
-msgid "Please make sure that your webserver has read/write access to the cacti folders that show errors below."
+msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
 msgstr "אנא ודא כי שרת האינטרנט שלך יש גישה לקריאה / כתיבה לתיקיות Kadupul המציגות שגיאות למטה."
 
 #: lib/installer.php:2385
@@ -15682,7 +15682,7 @@ msgid "DOWNGRADE DETECTED"
 msgstr "DOWNGRADE זוהה"
 
 #: lib/installer.php:2718
-msgid "YOU MUST MANUALLY CHANGE THE CACTI DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
+msgid "YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
 msgstr "אתה חייב לשנות את מסד הנתונים Kadupul כדי למנוע כל שדרוג שינויים שנעשו. <br/> למתקן אין שיטה לעשות זאת באופן אוטומטי עבורך"
 
 #: lib/installer.php:2719

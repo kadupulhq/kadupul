@@ -2379,7 +2379,7 @@ class Installer implements JsonSerializable {
 			$running_user = get_running_user();
 
 			$sections['host_access'] = DB_STATUS_WARNING;
-			$text = __('Please make sure that your webserver has read/write access to the cacti folders that show errors below.');
+			$text = __('Please make sure that your webserver has read/write access to the Kadupul folders that show errors below.');
 			$paths = array_merge($this->permissions['install'],$this->permissions['always']);
 			if ($config['cacti_server_os'] == 'unix') {
 				$text .= '  ' . __('If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools.');
@@ -2715,7 +2715,7 @@ class Installer implements JsonSerializable {
 
 		if ($this->mode == Installer::MODE_DOWNGRADE) {
 			$output = Installer::sectionTitleError(__('DOWNGRADE DETECTED'));
-			$output .= Installer::sectionCode(__('YOU MUST MANUALLY CHANGE THE CACTI DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU'));
+			$output .= Installer::sectionCode(__('YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU'));
 			$output .= Installer::sectionNormal(__('Downgrading should only be performed when absolutely necessary and doing so may break your installation'));
 		} else {
 			$output = Installer::sectionTitle($title);

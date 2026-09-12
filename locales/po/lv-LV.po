@@ -15400,7 +15400,7 @@ msgid "Potential permission issues"
 msgstr "Iespējamās atļaujas problēmas"
 
 #: lib/installer.php:2382
-msgid "Please make sure that your webserver has read/write access to the cacti folders that show errors below."
+msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
 msgstr "Lūdzu, pārliecinieties, vai jūsu tīmekļa serverim ir lasīšanas/rakstīšanas piekļuve kaktusu mapēm, kurās tiek rādītas tālāk norādītās kļūdas."
 
 #: lib/installer.php:2385
@@ -15655,7 +15655,7 @@ msgid "DOWNGRADE DETECTED"
 msgstr "KONSTATĒTA SAMAZINĀŠANA"
 
 #: lib/installer.php:2718
-msgid "YOU MUST MANUALLY CHANGE THE CACTI DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
+msgid "YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
 msgstr "JUMS MANUĀLI JĀMAINA Kadupul DATUBĀZE, LAI ATJAUNOTU JEBKĀDAS JAUNINĀJUMA VEIKTĀS IZMAIŅAS.<br/>UZSTĀDĪTĀJS NEVAR TO AUTOMĀTISKI IZDARĪT JŪSU VIETĀ"
 
 #: lib/installer.php:2719

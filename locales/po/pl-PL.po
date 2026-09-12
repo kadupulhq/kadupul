@@ -15394,7 +15394,7 @@ msgid "Potential permission issues"
 msgstr "Potencjalne kwestie związane z pozwoleniami"
 
 #: lib/installer.php:2382
-msgid "Please make sure that your webserver has read/write access to the cacti folders that show errors below."
+msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
 msgstr "Upewnij się, że Twój serwer ma dostęp do folderów Kadupul, które zawierają błędy poniżej."
 
 #: lib/installer.php:2385
@@ -15649,7 +15649,7 @@ msgid "DOWNGRADE DETECTED"
 msgstr "WYKRYTA OBNIŻKA"
 
 #: lib/installer.php:2718
-msgid "YOU MUST MANUALLY CHANGE THE CACTI DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
+msgid "YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
 msgstr "MUSISZ MUSI ZMIANY ZMIANAĆ DATY Kadupul, aby uzyskać jakiekolwiek zmiany, które zostały wprowadzone w życie. <br/>Instalator NIE MOŻE WIEDZIEĆ TEGO AUTOMATYCZNEGO DLA TWOICH"
 
 #: lib/installer.php:2719

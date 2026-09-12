@@ -15360,7 +15360,7 @@ msgid "Potential permission issues"
 msgstr "Potenciais problemas de permissão"
 
 #: lib/installer.php:2382
-msgid "Please make sure that your webserver has read/write access to the cacti folders that show errors below."
+msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
 msgstr "Certifique-se de que o seu servidor web tem acesso de leitura/escrita às pastas de cactos que mostram os erros abaixo."
 
 #: lib/installer.php:2385
@@ -15615,7 +15615,7 @@ msgid "DOWNGRADE DETECTED"
 msgstr "DOWNGRADE DETECTADO"
 
 #: lib/installer.php:2718
-msgid "YOU MUST MANUALLY CHANGE THE CACTI DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
+msgid "YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
 msgstr "VOCÊ DEVE MUDAR MANUALMENTE A BASE DE DADOS CÁCTICOS PARA REVERTER QUALQUER ALTERAÇÃO ATUAL QUE TER SIDO MADE.<br/>O INSTALADOR NÃO TEM MÉTODO DE FAZER ESTE AUTOMATICAMENTE PARA VOCÊ"
 
 #: lib/installer.php:2719

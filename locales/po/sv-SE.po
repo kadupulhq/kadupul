@@ -15348,7 +15348,7 @@ msgid "Potential permission issues"
 msgstr "Potentiella frågor om tillstånd"
 
 #: lib/installer.php:2382
-msgid "Please make sure that your webserver has read/write access to the cacti folders that show errors below."
+msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
 msgstr "Se till att din webbserver har läs- och skrivåtkomst till de Kadupul-mappar som visar fel nedan."
 
 #: lib/installer.php:2385
@@ -15603,7 +15603,7 @@ msgid "DOWNGRADE DETECTED"
 msgstr "NEDGRADERING UPPTÄCKT"
 
 #: lib/installer.php:2718
-msgid "YOU MUST MANUALLY CHANGE THE CACTI DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
+msgid "YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
 msgstr "DU MÅSTE MANUELLT ÄNDRA Kadupul-DATABASEN FÖR ATT ÅTERSTÄLLA ALLA UPPGRADERINGSÄNDRINGAR SOM HAR GJORTS.<br/>INSTALLATIONSPROGRAMMET HAR INGEN METOD FÖR ATT GÖRA DETTA AUTOMATISKT ÅT DIG"
 
 #: lib/installer.php:2719

@@ -15320,7 +15320,7 @@ msgid "Potential permission issues"
 msgstr "Vấn đề cho phép tiềm năng"
 
 #: lib/installer.php:2382
-msgid "Please make sure that your webserver has read/write access to the cacti folders that show errors below."
+msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
 msgstr "Vui lòng đảm bảo rằng máy chủ web của bạn có quyền truy cập đọc / ghi vào các thư mục Kadupul hiển thị lỗi bên dưới."
 
 #: lib/installer.php:2385
@@ -15575,7 +15575,7 @@ msgid "DOWNGRADE DETECTED"
 msgstr "DOWNGRADE PHÁT HIỆN"
 
 #: lib/installer.php:2718
-msgid "YOU MUST MANUALLY CHANGE THE CACTI DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
+msgid "YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
 msgstr "BẠN PHẢI THAY ĐỔI SỰ THAY ĐỔI Kadupul ĐỂ TÌM HIỂU BẤT K CH SỰ THAY ĐỔI NÀO NÀO ĐÃ ĐƯỢC THỰC HIỆN. <br/> CÀI ĐẶT KHÔNG CÓ PHƯƠNG PHÁP NÀO ĐỂ TỰ ĐỘNG NÀY CHO BẠN"
 
 #: lib/installer.php:2719
