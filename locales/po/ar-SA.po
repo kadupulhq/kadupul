@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-12 09:56-0700\n"
+"POT-Creation-Date: 2026-09-12 10:14-0700\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -610,7 +610,7 @@ msgstr "لا"
 #: data_templates.php:1249 gprint_presets.php:439 graph_templates.php:897
 #: host_templates.php:974 include/global_settings.php:884
 #: include/global_settings.php:1907 lib/api_automation.php:1473
-#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3576
+#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3596
 #: links.php:410 tree.php:2337 tree.php:2338 user_admin.php:2336
 #: user_domains.php:762 user_domains.php:766 user_group_admin.php:2019
 #: vdef.php:927
@@ -2499,7 +2499,7 @@ msgstr "معايير إنشاء الشجرة"
 msgid "Change Leaf Type"
 msgstr "تغيير نوع ورقة"
 
-#: automation_tree_rules.php:726 lib/installer.php:3770 utilities.php:2643
+#: automation_tree_rules.php:726 lib/installer.php:3790 utilities.php:2643
 #: utilities.php:2644 utilities.php:2647 utilities.php:2648
 msgid "WARNING:"
 msgstr "تحذير:"
@@ -12487,12 +12487,12 @@ msgstr "<strong>ملاحظة:</strong> لقد قمت بتسجيل الدخول �
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
 msgstr "<strong>ملاحظة:</strong> لم تتم إعادة تصميم أي من مكونات Core Kadupul الإضافية حتى الآن للعمل مع جامعي البيانات عن بُعد. لذلك ، لن تعمل المكونات الإضافية مثل MacTrack و HMIB ، والتي تتطلب الوصول المباشر إلى الأجهزة مع جامع البيانات البعيد في هذا الوقت. ومع ذلك ، ستعمل المكونات الإضافية مثل Thold طالما أن أداة تجميع البيانات عن بعد في وضع <b>&quot;عبر الإنترنت&quot;</b> ."
 
-#: install/functions.php:613
+#: install/functions.php:609
 #, php-format
 msgid "Path for %s"
 msgstr "مسار %s"
 
-#: install/functions.php:824
+#: install/functions.php:820
 msgid "New Poller"
 msgstr "بولير جديد"
 
@@ -14946,7 +14946,7 @@ msgstr "سوء UTF-8 خطأ إزاحة!"
 msgid "Down (Thold)"
 msgstr "أسفل (قال)"
 
-#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3692
+#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3712
 msgid "Error"
 msgstr "خطأ"
 
@@ -15250,7 +15250,7 @@ msgid "Location checks"
 msgstr "الشيكات الموقع"
 
 #: lib/installer.php:1859 lib/installer.php:2010 lib/installer.php:2014
-#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3789
+#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3809
 msgid "ERROR:"
 msgstr "خطأ:"
 
@@ -15872,229 +15872,233 @@ msgstr "إبلاغ عن مشكلة"
 msgid "Get Started"
 msgstr "البدء"
 
-#: lib/installer.php:3009
+#: lib/installer.php:3025
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "بدء عملية %s ل v%s"
 
-#: lib/installer.php:3034
+#: lib/installer.php:3051
+msgid "Unable to update application defaults."
+msgstr ""
+
+#: lib/installer.php:3054
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "انتهت عملية %s ل v%s"
 
-#: lib/installer.php:3073
+#: lib/installer.php:3093
 #, php-format
 msgid "Found %s templates to install"
 msgstr "العثور على قوالب %s للتثبيت"
 
-#: lib/installer.php:3083
+#: lib/installer.php:3103
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "على وشك استيراد الحزمة # %s '%s'."
 
-#: lib/installer.php:3092
+#: lib/installer.php:3112
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "نجح استيراد الحزمة # %s '%s' ضمن الملف الشخصي \"%s\""
 
-#: lib/installer.php:3098
+#: lib/installer.php:3118
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "فشل استيراد الحزمة # %s '%s' ضمن الملف الشخصي '%s'"
 
-#: lib/installer.php:3113
+#: lib/installer.php:3133
 #, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "قالب أتمتة التعيين لقالب الجهاز '%s'"
 
-#: lib/installer.php:3130
+#: lib/installer.php:3150
 msgid "No templates were selected for import"
 msgstr "لم يتم تحديد أي قوالب للاستيراد"
 
-#: lib/installer.php:3139
+#: lib/installer.php:3159
 msgid "Updating remote configuration file"
 msgstr "في انتظار التكوين"
 
-#: lib/installer.php:3171
+#: lib/installer.php:3191
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "تعيين ملف تعريف مصدر البيانات الافتراضي إلى %s (%s)"
 
-#: lib/installer.php:3193
+#: lib/installer.php:3213
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "فشل في العثور على ملف التعريف المحدد (%s) ، لم يتم إجراء أي تغييرات"
 
-#: lib/installer.php:3202
+#: lib/installer.php:3222
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "تحديث شبكة الأتمتة (%s) ، الوضع \"%s\" = > \"%s\" ، الشبكة الفرعية \"%s\" = > %s\""
 
-#: lib/installer.php:3212
+#: lib/installer.php:3232
 msgid "Failed to find automation network, no changes were made"
 msgstr "فشل العثور على شبكة الأتمتة ، ولم يتم إجراء أي تغييرات"
 
-#: lib/installer.php:3216
+#: lib/installer.php:3236
 msgid "Adding extra snmp settings for automation"
 msgstr "إضافة إعدادات snmp إضافية للأتمتة"
 
-#: lib/installer.php:3222
+#: lib/installer.php:3242
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "تحديد تعيين خيار التنفيذ التلقائي %s"
 
-#: lib/installer.php:3235
+#: lib/installer.php:3255
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "تحديث مجموعة خيارات التنفيذ التلقائي %s"
 
-#: lib/installer.php:3238
+#: lib/installer.php:3258
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "تم تحديث مجموعة خيارات التنفيذ التلقائي بنجاح %s"
 
-#: lib/installer.php:3240
+#: lib/installer.php:3260
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "تعيين خيار أتمتة إعادة التسلسل %s"
 
-#: lib/installer.php:3246
+#: lib/installer.php:3266
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "فشل تحديث مجموعة خيارات التنفيذ التلقائي %s"
 
-#: lib/installer.php:3249
+#: lib/installer.php:3269
 msgid "Failed to find any automation option set"
 msgstr "تعذّر العثور على البيانات لنسخها!"
 
-#: lib/installer.php:3279
+#: lib/installer.php:3299
 #, fuzzy, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "قالب الجهاز لجهاز Kadupul الأول هو %s"
 
-#: lib/installer.php:3305
+#: lib/installer.php:3325
 msgid "Creating Graphs for Default Device"
 msgstr "إنشاء الرسوم البيانية لهذا الجهاز"
 
-#: lib/installer.php:3312
+#: lib/installer.php:3332
 msgid "Adding Device to Default Tree"
 msgstr "افتراضيات الجهاز"
 
-#: lib/installer.php:3320
+#: lib/installer.php:3340
 msgid "No templated graphs for Default Device were found"
 msgstr "لم يتم العثور على الرسوم البيانية القوالب للجهاز الافتراضي"
 
-#: lib/installer.php:3324
+#: lib/installer.php:3344
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "تحذير: لم يتم العثور على نموذج الجهاز لنظام التشغيل الخاص بك. ستحتاج إلى استيراد قوالب الأجهزة أو حزم Kadupul لمراقبة خادم Kadupul."
 
-#: lib/installer.php:3331
+#: lib/installer.php:3351
 msgid "Running first-time data query for local host"
 msgstr "تشغيل استعلام بيانات لأول مرة للمضيف المحلي"
 
-#: lib/installer.php:3339
+#: lib/installer.php:3359
 msgid "Repopulating poller cache"
 msgstr "إعادة بناء بولير"
 
-#: lib/installer.php:3344
+#: lib/installer.php:3364
 msgid "Repopulating SNMP Agent cache"
 msgstr "إعادة بناء SNMPAgent ذاكرة التخزين المؤقت"
 
-#: lib/installer.php:3349
+#: lib/installer.php:3369
 msgid "Generating RSA Key Pair"
 msgstr "توليد زوج مفاتيح RSA"
 
-#: lib/installer.php:3361
+#: lib/installer.php:3381
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "تم العثور على جداول %s للتحويل"
 
-#: lib/installer.php:3368
+#: lib/installer.php:3388
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "تحويل الجدول # %s '%s'"
 
-#: lib/installer.php:3383
+#: lib/installer.php:3403
 msgid "No tables where found or selected for conversion"
 msgstr "لم يتم العثور على جداول أو تحديدها للتحويل"
 
-#: lib/installer.php:3394
+#: lib/installer.php:3414
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "تم التبديل من %s إلى %s"
 
-#: lib/installer.php:3398
+#: lib/installer.php:3418
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "ملاحظة: استخدام ملف مؤقت لذاكرة التخزين المؤقت ديسيبل: %s"
 
-#: lib/installer.php:3420
+#: lib/installer.php:3440
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "الترقية من v%s (DB %s) إلى v%s"
 
-#: lib/installer.php:3428
+#: lib/installer.php:3448
 #, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "تحذير: فشل العثور على وظيفة الترقية ل v%s"
 
-#: lib/installer.php:3487
+#: lib/installer.php:3507
 msgid "Install aborted due to no EULA acceptance"
 msgstr "تم إحباط التثبيت بسبب عدم قبول اتفاقية ترخيص المستخدم النهائي"
 
-#: lib/installer.php:3510
+#: lib/installer.php:3530
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "بدأت الخلفية بالفعل في %s ، وتم تخطي هذه المحاولة في %s"
 
-#: lib/installer.php:3533
+#: lib/installer.php:3553
 #, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "حدث استثناء أثناء التثبيت: # %s - %s"
 
-#: lib/installer.php:3543
+#: lib/installer.php:3563
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "بدأ التثبيت في %s ، واكتمل في %s"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 msgid "Both"
 msgstr "كلاهما"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "%s %s"
 
-#: lib/installer.php:3583
+#: lib/installer.php:3603
 #, php-format
 msgid "%s - N/A"
 msgstr "%s - غير متوفر"
 
-#: lib/installer.php:3583 lib/installer.php:3585
+#: lib/installer.php:3603 lib/installer.php:3605
 msgid "Web"
 msgstr "شبكة الويب"
 
-#: lib/installer.php:3585 lib/installer.php:3588
+#: lib/installer.php:3605 lib/installer.php:3608
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "%s %s"
 
-#: lib/installer.php:3588
+#: lib/installer.php:3608
 msgid "Cli"
 msgstr "كلاسيكي"
 
-#: lib/installer.php:3593
+#: lib/installer.php:3613
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "إعداد خيار PHP %s = %s"
 
-#: lib/installer.php:3599
+#: lib/installer.php:3619
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "فشل في تعيين خيار PHP %s ، هل %s (يجب أن يكون %s)"
 
-#: lib/installer.php:3618
+#: lib/installer.php:3638
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "لم يتم العثور على جامعي البيانات عن بعد للمزامنة الكاملة"
 

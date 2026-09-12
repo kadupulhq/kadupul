@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-12 09:56-0700\n"
+"POT-Creation-Date: 2026-09-12 10:14-0700\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -609,7 +609,7 @@ msgstr "Hayır"
 #: data_templates.php:1249 gprint_presets.php:439 graph_templates.php:897
 #: host_templates.php:974 include/global_settings.php:884
 #: include/global_settings.php:1907 lib/api_automation.php:1473
-#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3576
+#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3596
 #: links.php:410 tree.php:2337 tree.php:2338 user_admin.php:2336
 #: user_domains.php:762 user_domains.php:766 user_group_admin.php:2019
 #: vdef.php:927
@@ -2497,7 +2497,7 @@ msgstr "Ağaç Yaratma Kriterleri"
 msgid "Change Leaf Type"
 msgstr "Yaprak Tipini Değiştir"
 
-#: automation_tree_rules.php:726 lib/installer.php:3770 utilities.php:2643
+#: automation_tree_rules.php:726 lib/installer.php:3790 utilities.php:2643
 #: utilities.php:2644 utilities.php:2647 utilities.php:2648
 msgid "WARNING:"
 msgstr "UYARI:"
@@ -12337,12 +12337,12 @@ msgstr "<strong>NOT:</strong> Uzak Veri Toplayıcıya giriş yaptınız. <b>&#39
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
 msgstr "<strong>NOT:</strong> Bugüne kadar, Core Kadupul Eklentilerinden hiçbiri Uzak Veri Toplayıcılarla çalışmak üzere yeniden tasarlanmamıştır. Bu nedenle, cihazlara doğrudan erişim gerektiren MacTrack ve HMIB gibi Eklentiler şu anda Uzak Veri Toplayıcılarla çalışmaz. Ancak, Thold gibi eklentiler, Uzak Veri Toplayıcı <b>&#39;çevrimiçi&#39;</b> modda olduğu sürece çalışacaktır."
 
-#: install/functions.php:613
+#: install/functions.php:609
 #, php-format
 msgid "Path for %s"
 msgstr "%s yolu"
 
-#: install/functions.php:824
+#: install/functions.php:820
 msgid "New Poller"
 msgstr "Yeni Poller"
 
@@ -14792,7 +14792,7 @@ msgstr "Kötü UTF-8 ofset hatası!"
 msgid "Down (Thold)"
 msgstr "İndir"
 
-#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3692
+#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3712
 msgid "Error"
 msgstr "Hata"
 
@@ -15098,7 +15098,7 @@ msgid "Location checks"
 msgstr "Yer kontrolleri"
 
 #: lib/installer.php:1859 lib/installer.php:2010 lib/installer.php:2014
-#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3789
+#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3809
 msgid "ERROR:"
 msgstr "HATA:"
 
@@ -15723,230 +15723,234 @@ msgstr "Sorun Bildir"
 msgid "Get Started"
 msgstr "Şimdi Başlayın"
 
-#: lib/installer.php:3009
+#: lib/installer.php:3025
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "V%s için%s Süreci Başlatılıyor"
 
-#: lib/installer.php:3034
+#: lib/installer.php:3051
+msgid "Unable to update application defaults."
+msgstr ""
+
+#: lib/installer.php:3054
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "V%s için%s işlemi tamamlandı"
 
-#: lib/installer.php:3073
+#: lib/installer.php:3093
 #, php-format
 msgid "Found %s templates to install"
 msgstr "Yüklenecek%s şablon bulundu"
 
-#: lib/installer.php:3083
+#: lib/installer.php:3103
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "#%s '%s' Paketini içe aktarmak üzere."
 
-#: lib/installer.php:3092
+#: lib/installer.php:3112
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "'%s' Profili altındaki #%s '%s' Paketinin İçe Aktarılması başarılı oldu"
 
-#: lib/installer.php:3098
+#: lib/installer.php:3118
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "'%s' Profili altındaki #%s '%s' Paketinin İçe Aktarılması başarısız oldu"
 
-#: lib/installer.php:3113
+#: lib/installer.php:3133
 #, fuzzy, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "'{ 0 }' Cihaz Şablonu için Eşleştirme Otomasyonu Şablonu"
 
-#: lib/installer.php:3130
+#: lib/installer.php:3150
 msgid "No templates were selected for import"
 msgstr "İçe aktarma için şablon seçilmedi"
 
-#: lib/installer.php:3139
+#: lib/installer.php:3159
 msgid "Updating remote configuration file"
 msgstr "Yapılandırma bekleniyor"
 
-#: lib/installer.php:3171
+#: lib/installer.php:3191
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "Varsayılan veri kaynağı profili %s (%s) olarak ayarlanıyor"
 
-#: lib/installer.php:3193
+#: lib/installer.php:3213
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "Seçilen profil (%s) bulunamadı, hiçbir değişiklik yapılmadı"
 
-#: lib/installer.php:3202
+#: lib/installer.php:3222
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "Otomasyon ağını güncelleme (%s), mod \"%s\" => \"%s\", alt ağ \"%s\" =>%s \""
 
-#: lib/installer.php:3212
+#: lib/installer.php:3232
 msgid "Failed to find automation network, no changes were made"
 msgstr "Otomasyon ağı bulunamadı, değişiklik yapılmadı"
 
-#: lib/installer.php:3216
+#: lib/installer.php:3236
 msgid "Adding extra snmp settings for automation"
 msgstr "Otomasyon için ekstra snmp ayarları ekleme"
 
-#: lib/installer.php:3222
+#: lib/installer.php:3242
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "Otomasyon Seçenek Kümesini Seçme %s"
 
-#: lib/installer.php:3235
+#: lib/installer.php:3255
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "Otomasyon Seçenek Kümesi Güncelleniyor %s"
 
-#: lib/installer.php:3238
+#: lib/installer.php:3258
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "%s Otomasyon Seçenek Kümesi başarıyla güncellendi"
 
-#: lib/installer.php:3240
+#: lib/installer.php:3260
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "Otomasyon Seçenek Kümesini Yeniden Sıralama %s"
 
-#: lib/installer.php:3246
+#: lib/installer.php:3266
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "Otomasyon Seçenek Kümesi %s güncellenemedi"
 
-#: lib/installer.php:3249
+#: lib/installer.php:3269
 msgid "Failed to find any automation option set"
 msgstr "Kopyalanacak veri bulunamadı!"
 
-#: lib/installer.php:3279
+#: lib/installer.php:3299
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "Cihaz Şablonları [edit: %s]"
 
-#: lib/installer.php:3305
+#: lib/installer.php:3325
 msgid "Creating Graphs for Default Device"
 msgstr "Bu Cihaz için Grafik Oluştur"
 
-#: lib/installer.php:3312
+#: lib/installer.php:3332
 msgid "Adding Device to Default Tree"
 msgstr "Aygıt Varsayılanları"
 
-#: lib/installer.php:3320
+#: lib/installer.php:3340
 msgid "No templated graphs for Default Device were found"
 msgstr "Varsayılan Cihaz için şablon grafik bulunamadı"
 
-#: lib/installer.php:3324
+#: lib/installer.php:3344
 #, fuzzy
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "UYARI: İşletim Sisteminizin Aygıt Şablonu Bulunamadı. Kadupul sunucunuzu izlemek için Aygıt Şablonlarını veya Kadupul Paketlerini içe aktarmanız gerekir."
 
-#: lib/installer.php:3331
+#: lib/installer.php:3351
 msgid "Running first-time data query for local host"
 msgstr "Yerel ana bilgisayar için ilk kez veri sorgusu çalıştırma"
 
-#: lib/installer.php:3339
+#: lib/installer.php:3359
 msgid "Repopulating poller cache"
 msgstr "Poller Cache&#39;i Yeniden Oluştur"
 
-#: lib/installer.php:3344
+#: lib/installer.php:3364
 msgid "Repopulating SNMP Agent cache"
 msgstr "SNMPAgent Önbelleğini Yeniden Oluştur"
 
-#: lib/installer.php:3349
+#: lib/installer.php:3369
 msgid "Generating RSA Key Pair"
 msgstr "RSA Anahtar Çifti Oluşturma"
 
-#: lib/installer.php:3361
+#: lib/installer.php:3381
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "Dönüştürülecek%s tablo bulundu"
 
-#: lib/installer.php:3368
+#: lib/installer.php:3388
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "Dönüştürme Tablosu #%s '%s'"
 
-#: lib/installer.php:3383
+#: lib/installer.php:3403
 msgid "No tables where found or selected for conversion"
 msgstr "Dönüşüm için bulunduğu veya seçildiği yerlerde tablo yok"
 
-#: lib/installer.php:3394
+#: lib/installer.php:3414
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "%s iken%s olarak değiştirildi"
 
-#: lib/installer.php:3398
+#: lib/installer.php:3418
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "NOT: db önbelleği için geçici dosya kullanma:%s"
 
-#: lib/installer.php:3420
+#: lib/installer.php:3440
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "V%s'den (DB%s) v%s'ye yükseltme"
 
-#: lib/installer.php:3428
+#: lib/installer.php:3448
 #, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "UYARI: v%s için yükseltme işlevi bulunamadı"
 
-#: lib/installer.php:3487
+#: lib/installer.php:3507
 msgid "Install aborted due to no EULA acceptance"
 msgstr "EULA kabulü olmadığından yükleme iptal edildi"
 
-#: lib/installer.php:3510
+#: lib/installer.php:3530
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "Arka plan zaten%s'de başlatıldı,%s'deki bu deneme atlandı"
 
-#: lib/installer.php:3533
+#: lib/installer.php:3553
 #, fuzzy, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "Kurulum sırasında istisna oluştu: #{ 0} - %s"
 
-#: lib/installer.php:3543
+#: lib/installer.php:3563
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "Kuruluma %s ile başlandı, %s ile tamamlandı."
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 msgid "Both"
 msgstr "Her ikisi de"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 #, php-format
 msgid "No - %s"
 msgstr "%s saat"
 
-#: lib/installer.php:3583
+#: lib/installer.php:3603
 #, php-format
 msgid "%s - N/A"
 msgstr "%s saat"
 
-#: lib/installer.php:3583 lib/installer.php:3585
+#: lib/installer.php:3603 lib/installer.php:3605
 msgid "Web"
 msgstr "Web"
 
-#: lib/installer.php:3585 lib/installer.php:3588
+#: lib/installer.php:3605 lib/installer.php:3608
 #, php-format
 msgid "%s - No"
 msgstr "%s saat"
 
-#: lib/installer.php:3588
+#: lib/installer.php:3608
 msgid "Cli"
 msgstr "komut satırı"
 
-#: lib/installer.php:3593
+#: lib/installer.php:3613
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "PHP Seçeneğini Ayarlama%s =%s"
 
-#: lib/installer.php:3599
+#: lib/installer.php:3619
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "%s PHP seçeneği ayarlanamadı,%s (%s olmalı)"
 
-#: lib/installer.php:3618
+#: lib/installer.php:3638
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "Eşitleme denenirken Veri Toplayıcıları bulunamadı"
 

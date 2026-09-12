@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-12 09:56-0700\n"
+"POT-Creation-Date: 2026-09-12 10:14-0700\n"
 "PO-Revision-Date: 2024-04-20 18:53-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -610,7 +610,7 @@ msgstr "לא"
 #: data_templates.php:1249 gprint_presets.php:439 graph_templates.php:897
 #: host_templates.php:974 include/global_settings.php:884
 #: include/global_settings.php:1907 lib/api_automation.php:1473
-#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3576
+#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3596
 #: links.php:410 tree.php:2337 tree.php:2338 user_admin.php:2336
 #: user_domains.php:762 user_domains.php:766 user_group_admin.php:2019
 #: vdef.php:927
@@ -2498,7 +2498,7 @@ msgstr "קריטריונים ליצירת עץ"
 msgid "Change Leaf Type"
 msgstr "שינוי סוג העלה"
 
-#: automation_tree_rules.php:726 lib/installer.php:3770 utilities.php:2643
+#: automation_tree_rules.php:726 lib/installer.php:3790 utilities.php:2643
 #: utilities.php:2644 utilities.php:2647 utilities.php:2648
 msgid "WARNING:"
 msgstr "<strong>אזהרה:</strong>"
@@ -12396,12 +12396,12 @@ msgstr "<strong>הערה:</strong> אתה מחובר לאספן נתונים מ�
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
 msgstr "<strong>הערה:</strong> אף אחד מהתוספים Core Kadupul, עד כה, תוכנן מחדש לעבוד עם Remote Data Collectors. לכן, יישומי פלאגין כגון MacTrack ו- HMIB, הדורשים גישה ישירה למכשירים, לא יפעלו בשלב זה עם Remote Data Collectors. עם זאת, יישומי פלאגין כגון Thold יפעלו כל עוד אספן הנתונים המרוחק נמצא במצב <b>&#39;מקוון&#39;</b> ."
 
-#: install/functions.php:613
+#: install/functions.php:609
 #, php-format
 msgid "Path for %s"
 msgstr "נתיב עבור %s"
 
-#: install/functions.php:824
+#: install/functions.php:820
 msgid "New Poller"
 msgstr "פולר חדש"
 
@@ -14848,7 +14848,7 @@ msgstr "שגיאת היסט לקויה של UTF-8!"
 msgid "Down (Thold)"
 msgstr "הורדה"
 
-#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3692
+#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3712
 msgid "Error"
 msgstr "שגיאה"
 
@@ -15151,7 +15151,7 @@ msgid "Location checks"
 msgstr "בדיקות מיקום"
 
 #: lib/installer.php:1859 lib/installer.php:2010 lib/installer.php:2014
-#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3789
+#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3809
 msgid "ERROR:"
 msgstr "שגיאה:"
 
@@ -15774,230 +15774,234 @@ msgstr "דווח על בעיה"
 msgid "Get Started"
 msgstr "התחל"
 
-#: lib/installer.php:3009
+#: lib/installer.php:3025
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "הפעלת%s תהליך במשך v%s"
 
-#: lib/installer.php:3034
+#: lib/installer.php:3051
+msgid "Unable to update application defaults."
+msgstr ""
+
+#: lib/installer.php:3054
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "סיים תהליך%s עבור v%s"
 
-#: lib/installer.php:3073
+#: lib/installer.php:3093
 #, php-format
 msgid "Found %s templates to install"
 msgstr "נמצאו תבניות%s להתקנה"
 
-#: lib/installer.php:3083
+#: lib/installer.php:3103
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "עומד לייבא את החבילה #%s '%s'."
 
-#: lib/installer.php:3092
+#: lib/installer.php:3112
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "ייבוא החבילה #%s '%s' תחת הפרופיל '%s' הצליח"
 
-#: lib/installer.php:3098
+#: lib/installer.php:3118
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "ייבוא החבילה #%s '%s' תחת הפרופיל '%s' נכשל"
 
-#: lib/installer.php:3113
+#: lib/installer.php:3133
 #, fuzzy, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "מיפוי תבנית אוטומציה עבור תבנית המכשיר '{ 0 }'"
 
-#: lib/installer.php:3130
+#: lib/installer.php:3150
 msgid "No templates were selected for import"
 msgstr "לא נבחרו תבניות לייבוא"
 
-#: lib/installer.php:3139
+#: lib/installer.php:3159
 msgid "Updating remote configuration file"
 msgstr "ממתין לתצורה"
 
-#: lib/installer.php:3171
+#: lib/installer.php:3191
 #, fuzzy, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "הגדרת פרופיל ברירת המחדל של מקור הנתונים ל -{ 0 }({ 1})"
 
-#: lib/installer.php:3193
+#: lib/installer.php:3213
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "איתור הפרופיל שנבחר (%s) נכשל, לא בוצעו שינויים"
 
-#: lib/installer.php:3202
+#: lib/installer.php:3222
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "מעדכן רשת אוטומציה (%s), מצב \"%s\" => \"%s\", רשת משנה \"%s\" =>%s \""
 
-#: lib/installer.php:3212
+#: lib/installer.php:3232
 msgid "Failed to find automation network, no changes were made"
 msgstr "כשל במציאת רשת אוטומציה, לא בוצעו שינויים"
 
-#: lib/installer.php:3216
+#: lib/installer.php:3236
 msgid "Adding extra snmp settings for automation"
 msgstr "הוספת הגדרות snmp נוספות לאוטומציה"
 
-#: lib/installer.php:3222
+#: lib/installer.php:3242
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "בחירת ערכת אפשרויות אוטומציה %s"
 
-#: lib/installer.php:3235
+#: lib/installer.php:3255
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "מעדכן ערכת אפשרויות אוטומציה %s"
 
-#: lib/installer.php:3238
+#: lib/installer.php:3258
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "מערך אפשרויות אוטומציה שעודכן בהצלחה%s"
 
-#: lib/installer.php:3240
+#: lib/installer.php:3260
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "ערכת אפשרויות לאוטומציה של Resequencing %s"
 
-#: lib/installer.php:3246
+#: lib/installer.php:3266
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "ערכת אפשרויות האוטומציה המעודכנת %s נכשלה"
 
-#: lib/installer.php:3249
+#: lib/installer.php:3269
 msgid "Failed to find any automation option set"
 msgstr "נכשל הניסיון למצוא נתונים להעתקה!"
 
-#: lib/installer.php:3279
+#: lib/installer.php:3299
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "תבניות מכשיר [עריכה: %s]"
 
-#: lib/installer.php:3305
+#: lib/installer.php:3325
 msgid "Creating Graphs for Default Device"
 msgstr "צור גרפים עבור התקן זה"
 
-#: lib/installer.php:3312
+#: lib/installer.php:3332
 msgid "Adding Device to Default Tree"
 msgstr "הגדרות ברירת מחדל של ההתקן"
 
-#: lib/installer.php:3320
+#: lib/installer.php:3340
 msgid "No templated graphs for Default Device were found"
 msgstr "לא נמצאו גרשי תבנית עבור התקן ברירת מחדל"
 
-#: lib/installer.php:3324
+#: lib/installer.php:3344
 #, fuzzy
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "אזהרה: תבנית מכשיר עבור מערכת ההפעלה שלך לא נמצאה. יהיה עליכם לייבא תבניות מכשירים או חבילות Kadupul כדי לפקח על שרת Kadupul שלכם."
 
-#: lib/installer.php:3331
+#: lib/installer.php:3351
 msgid "Running first-time data query for local host"
 msgstr "הפעלת שאילתת נתונים ראשונה עבור המארח המקומי"
 
-#: lib/installer.php:3339
+#: lib/installer.php:3359
 msgid "Repopulating poller cache"
 msgstr "לבנות מחדש את המטמון מטמון"
 
-#: lib/installer.php:3344
+#: lib/installer.php:3364
 msgid "Repopulating SNMP Agent cache"
 msgstr "לבנות מחדש מטמון SNMPAgent"
 
-#: lib/installer.php:3349
+#: lib/installer.php:3369
 msgid "Generating RSA Key Pair"
 msgstr "יצירת זוג מפתח RSA"
 
-#: lib/installer.php:3361
+#: lib/installer.php:3381
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "נמצאו טבלאות%s להמרה"
 
-#: lib/installer.php:3368
+#: lib/installer.php:3388
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "המרת טבלה #%s '%s'"
 
-#: lib/installer.php:3383
+#: lib/installer.php:3403
 msgid "No tables where found or selected for conversion"
 msgstr "אין טבלאות שנמצאו או שנבחרו להמרה"
 
-#: lib/installer.php:3394
+#: lib/installer.php:3414
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "עבר מ-%s ל-%s"
 
-#: lib/installer.php:3398
+#: lib/installer.php:3418
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "הערה: שימוש בקובץ זמני עבור מטמון db:%s"
 
-#: lib/installer.php:3420
+#: lib/installer.php:3440
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "שדרוג מ- v%s (DB%s) ל- v%s"
 
-#: lib/installer.php:3428
+#: lib/installer.php:3448
 #, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "אזהרה: לא מצא את פונקציית השדרוג עבור v%s"
 
-#: lib/installer.php:3487
+#: lib/installer.php:3507
 msgid "Install aborted due to no EULA acceptance"
 msgstr "התקנה שבוטלה עקב שום אישור של ה- EULA"
 
-#: lib/installer.php:3510
+#: lib/installer.php:3530
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "הרקע כבר התחיל ב-%s, ניסיון זה ב-%s דילג"
 
-#: lib/installer.php:3533
+#: lib/installer.php:3553
 #, fuzzy, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "החריגה אירעה במהלך ההתקנה: #{ 0} - %s"
 
-#: lib/installer.php:3543
+#: lib/installer.php:3563
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "ההתקנה החלה ב- %s, הושלמה ב- %s"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 msgid "Both"
 msgstr "שניהם"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "עבר מ-%s ל-%s"
 
-#: lib/installer.php:3583
+#: lib/installer.php:3603
 #, fuzzy, php-format
 msgid "%s - N/A"
 msgstr "אין"
 
-#: lib/installer.php:3583 lib/installer.php:3585
+#: lib/installer.php:3603 lib/installer.php:3605
 msgid "Web"
 msgstr "אתר אינטרנט"
 
-#: lib/installer.php:3585 lib/installer.php:3588
+#: lib/installer.php:3605 lib/installer.php:3608
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "עבר מ-%s ל-%s"
 
-#: lib/installer.php:3588
+#: lib/installer.php:3608
 msgid "Cli"
 msgstr "קלאסי"
 
-#: lib/installer.php:3593
+#: lib/installer.php:3613
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "הגדרת אפשרות PHP%s =%s"
 
-#: lib/installer.php:3599
+#: lib/installer.php:3619
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "הגדרת אפשרות PHP%s נכשלה, היא%s (צריכה להיות%s)"
 
-#: lib/installer.php:3618
+#: lib/installer.php:3638
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "אוספי נתונים לא נמצאו בעת ניסיון לסנכרן"
 

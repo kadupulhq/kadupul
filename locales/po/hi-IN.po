@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-12 09:56-0700\n"
+"POT-Creation-Date: 2026-09-12 10:14-0700\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -610,7 +610,7 @@ msgstr "नहीं"
 #: data_templates.php:1249 gprint_presets.php:439 graph_templates.php:897
 #: host_templates.php:974 include/global_settings.php:884
 #: include/global_settings.php:1907 lib/api_automation.php:1473
-#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3576
+#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3596
 #: links.php:410 tree.php:2337 tree.php:2338 user_admin.php:2336
 #: user_domains.php:762 user_domains.php:766 user_group_admin.php:2019
 #: vdef.php:927
@@ -2504,7 +2504,7 @@ msgstr "ट्री क्रिएशन क्राइटेरिया"
 msgid "Change Leaf Type"
 msgstr "पत्ता प्रकार बदलें"
 
-#: automation_tree_rules.php:726 lib/installer.php:3770 utilities.php:2643
+#: automation_tree_rules.php:726 lib/installer.php:3790 utilities.php:2643
 #: utilities.php:2644 utilities.php:2647 utilities.php:2648
 msgid "WARNING:"
 msgstr "चेतावनी:"
@@ -12367,12 +12367,12 @@ msgstr "<strong>नोट:</strong> आप दूरस्थ डेटा स�
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
 msgstr "<strong>नोट:</strong> कोई भी कोर Kadupul प्लगइन्स, आज तक, रिमोट डेटा कलेक्टरों के साथ काम करने के लिए फिर से डिज़ाइन नहीं किया गया है। इसलिए, प्लगइन्स जैसे मैकट्रैक, और एचएमआईबी, जिन्हें इस समय रिमोट डेटा कलेक्टरों के साथ काम नहीं करने की आवश्यकता होगी। हालाँकि, Thold जैसे प्लगइन्स इतने लंबे समय तक काम करेंगे जब रिमोट डेटा कलेक्टर <b>&#39;ऑनलाइन&#39;</b> मोड में होगा।"
 
-#: install/functions.php:613
+#: install/functions.php:609
 #, php-format
 msgid "Path for %s"
 msgstr "%s के लिए पथ"
 
-#: install/functions.php:824
+#: install/functions.php:820
 msgid "New Poller"
 msgstr "न्यू पोलर"
 
@@ -14824,7 +14824,7 @@ msgstr "खराब UTF-8 ऑफसेट त्रुटि!"
 msgid "Down (Thold)"
 msgstr "डाउनलोड"
 
-#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3692
+#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3712
 msgid "Error"
 msgstr "त्रुटि"
 
@@ -15133,7 +15133,7 @@ msgid "Location checks"
 msgstr "स्थान की जाँच"
 
 #: lib/installer.php:1859 lib/installer.php:2010 lib/installer.php:2014
-#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3789
+#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3809
 msgid "ERROR:"
 msgstr "त्रुटि:"
 
@@ -15771,230 +15771,234 @@ msgstr "रिपोर्ट जारी करना"
 msgid "Get Started"
 msgstr "शुरू होई जाओ"
 
-#: lib/installer.php:3009
+#: lib/installer.php:3025
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "V%s के लिए%s प्रक्रिया शुरू करना"
 
-#: lib/installer.php:3034
+#: lib/installer.php:3051
+msgid "Unable to update application defaults."
+msgstr ""
+
+#: lib/installer.php:3054
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "V%s के लिए%s प्रक्रिया समाप्त"
 
-#: lib/installer.php:3073
+#: lib/installer.php:3093
 #, php-format
 msgid "Found %s templates to install"
 msgstr "%s टेम्प्लेट स्थापित करने के लिए मिला"
 
-#: lib/installer.php:3083
+#: lib/installer.php:3103
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "पैकेज #%s '%s' आयात करने के बारे में।"
 
-#: lib/installer.php:3092
+#: lib/installer.php:3112
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "प्रोफ़ाइल '%s' के तहत पैकेज #%s '%s' का आयात सफल रहा"
 
-#: lib/installer.php:3098
+#: lib/installer.php:3118
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "प्रोफ़ाइल '%s' के तहत पैकेज #%s '%s' का आयात विफल रहा"
 
-#: lib/installer.php:3113
+#: lib/installer.php:3133
 #, fuzzy, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "डिवाइस टेम्पलेट '{ 0 }' के लिए मैपिंग ऑटोमेशन टेम्पलेट"
 
-#: lib/installer.php:3130
+#: lib/installer.php:3150
 msgid "No templates were selected for import"
 msgstr "आयात के लिए कोई टेम्पलेट नहीं चुना गया था"
 
-#: lib/installer.php:3139
+#: lib/installer.php:3159
 msgid "Updating remote configuration file"
 msgstr "कॉन्फ़िगरेशन की प्रतीक्षा कर रहा है"
 
-#: lib/installer.php:3171
+#: lib/installer.php:3191
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "%s (%s) में डिफ़ॉल्ट डेटा स्रोत प्रोफ़ाइल सेट करना"
 
-#: lib/installer.php:3193
+#: lib/installer.php:3213
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "चयनित प्रोफ़ाइल (%s) खोजने में विफल, कोई बदलाव नहीं किया गया"
 
-#: lib/installer.php:3202
+#: lib/installer.php:3222
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "ऑटोमेशन नेटवर्क (%s), मोड \"%s\" => \"%s\", सबनेट \"%s\" = =%s \""
 
-#: lib/installer.php:3212
+#: lib/installer.php:3232
 msgid "Failed to find automation network, no changes were made"
 msgstr "स्वचालन नेटवर्क खोजने में विफल, कोई परिवर्तन नहीं किए गए थे"
 
-#: lib/installer.php:3216
+#: lib/installer.php:3236
 msgid "Adding extra snmp settings for automation"
 msgstr "स्वचालन के लिए अतिरिक्त स्निप सेटिंग्स जोड़ना"
 
-#: lib/installer.php:3222
+#: lib/installer.php:3242
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "स्वचालन विकल्प सेट %s का चयन करना"
 
-#: lib/installer.php:3235
+#: lib/installer.php:3255
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "ऑटोमेशन विकल्प सेट %s को अपडेट किया जा रहा है"
 
-#: lib/installer.php:3238
+#: lib/installer.php:3258
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "सफलतापूर्वक अपडेट किया गया स्वचालन विकल्प सेट%s"
 
-#: lib/installer.php:3240
+#: lib/installer.php:3260
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "ऑटोमेशन विकल्प सेट %s को फिर से सेट किया जा रहा है"
 
-#: lib/installer.php:3246
+#: lib/installer.php:3266
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "ऑटोमेशन विकल्प सेट %s को अपडेट नहीं किया जा सका"
 
-#: lib/installer.php:3249
+#: lib/installer.php:3269
 msgid "Failed to find any automation option set"
 msgstr "कॉपी करने के लिए डेटा खोजने में विफल!"
 
-#: lib/installer.php:3279
+#: lib/installer.php:3299
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "डिवाइस टेम्पलेट [संपादित करें: %s]"
 
-#: lib/installer.php:3305
+#: lib/installer.php:3325
 msgid "Creating Graphs for Default Device"
 msgstr "इस उपकरण के लिए रेखांकन बनाएँ"
 
-#: lib/installer.php:3312
+#: lib/installer.php:3332
 msgid "Adding Device to Default Tree"
 msgstr "डिवाइस की कमी"
 
-#: lib/installer.php:3320
+#: lib/installer.php:3340
 msgid "No templated graphs for Default Device were found"
 msgstr "डिफ़ॉल्ट डिवाइस के लिए कोई अस्थायी ग्राफ़ नहीं मिले"
 
-#: lib/installer.php:3324
+#: lib/installer.php:3344
 #, fuzzy
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "चेतावनी: आपके ऑपरेटिंग सिस्टम के लिए डिवाइस टेम्पलेट नहीं मिला। आपको अपने Kadupul सर्वर की निगरानी के लिए डिवाइस टेम्प्लेट या Kadupul पैकेज आयात करने की आवश्यकता होगी।"
 
-#: lib/installer.php:3331
+#: lib/installer.php:3351
 msgid "Running first-time data query for local host"
 msgstr "स्थानीय होस्ट के लिए पहली बार डेटा क्वेरी चलाना"
 
-#: lib/installer.php:3339
+#: lib/installer.php:3359
 msgid "Repopulating poller cache"
 msgstr "पोलर कैश का पुनर्निर्माण करें"
 
-#: lib/installer.php:3344
+#: lib/installer.php:3364
 msgid "Repopulating SNMP Agent cache"
 msgstr "SNMPAgent Cache का पुनर्निर्माण करें"
 
-#: lib/installer.php:3349
+#: lib/installer.php:3369
 msgid "Generating RSA Key Pair"
 msgstr "आरएसए कुंजी जोड़ी उत्पन्न करना"
 
-#: lib/installer.php:3361
+#: lib/installer.php:3381
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "%s तालिकाओं को परिवर्तित करने के लिए मिला"
 
-#: lib/installer.php:3368
+#: lib/installer.php:3388
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "परिवर्तित तालिका #%s '%s'"
 
-#: lib/installer.php:3383
+#: lib/installer.php:3403
 msgid "No tables where found or selected for conversion"
 msgstr "कोई तालिका नहीं मिली है या रूपांतरण के लिए चयनित है"
 
-#: lib/installer.php:3394
+#: lib/installer.php:3414
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "%s से%s पर स्विच किया गया"
 
-#: lib/installer.php:3398
+#: lib/installer.php:3418
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "नोट: db कैश के लिए अस्थायी फ़ाइल का उपयोग करना:%s"
 
-#: lib/installer.php:3420
+#: lib/installer.php:3440
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "V%s (DB%s) से v%s में अपग्रेड करना"
 
-#: lib/installer.php:3428
+#: lib/installer.php:3448
 #, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "चेतावनी: v%s के लिए अपग्रेड फंक्शन खोजने में विफल"
 
-#: lib/installer.php:3487
+#: lib/installer.php:3507
 msgid "Install aborted due to no EULA acceptance"
 msgstr "EULA स्वीकृति नहीं होने के कारण गर्भपात कराएं"
 
-#: lib/installer.php:3510
+#: lib/installer.php:3530
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "पृष्ठभूमि को%s पर पहले ही शुरू कर दिया गया था,%s पर यह प्रयास छोड़ दिया गया था"
 
-#: lib/installer.php:3533
+#: lib/installer.php:3553
 #, fuzzy, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "इंस्टॉलेशन के दौरान अपवाद हुआ: #{ 0} - %s"
 
-#: lib/installer.php:3543
+#: lib/installer.php:3563
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "%s पर संस्थापन आरंभ किया गया था, %s पर पूरा हुआ"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 msgid "Both"
 msgstr "दोनों"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 #, php-format
 msgid "No - %s"
 msgstr "के रूप में दाखिल%s"
 
-#: lib/installer.php:3583
+#: lib/installer.php:3603
 #, php-format
 msgid "%s - N/A"
 msgstr "के रूप में दाखिल%s"
 
-#: lib/installer.php:3583 lib/installer.php:3585
+#: lib/installer.php:3603 lib/installer.php:3605
 msgid "Web"
 msgstr "वेब"
 
-#: lib/installer.php:3585 lib/installer.php:3588
+#: lib/installer.php:3605 lib/installer.php:3608
 #, php-format
 msgid "%s - No"
 msgstr "के रूप में दाखिल%s"
 
-#: lib/installer.php:3588
+#: lib/installer.php:3608
 msgid "Cli"
 msgstr "प्रतिष्टित"
 
-#: lib/installer.php:3593
+#: lib/installer.php:3613
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "PHP विकल्प%s =%s को सेट करना"
 
-#: lib/installer.php:3599
+#: lib/installer.php:3619
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "PHP विकल्प%s सेट करने में विफल,%s है (%s होना चाहिए)"
 
-#: lib/installer.php:3618
+#: lib/installer.php:3638
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "सिंक्रनाइज़ेशन का प्रयास करते समय डेटा कलेक्टर (ओं) को नहीं मिला"
 

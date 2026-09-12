@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-12 09:56-0700\n"
+"POT-Creation-Date: 2026-09-12 10:14-0700\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -664,7 +664,7 @@ msgstr "否"
 #: data_templates.php:1249 gprint_presets.php:439 graph_templates.php:897
 #: host_templates.php:974 include/global_settings.php:884
 #: include/global_settings.php:1907 lib/api_automation.php:1473
-#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3576
+#: lib/installer.php:1955 lib/installer.php:1983 lib/installer.php:3596
 #: links.php:410 tree.php:2337 tree.php:2338 user_admin.php:2336
 #: user_domains.php:762 user_domains.php:766 user_group_admin.php:2019
 #: vdef.php:927
@@ -2847,7 +2847,7 @@ msgstr "樹創建標準"
 msgid "Change Leaf Type"
 msgstr "改變葉子類型"
 
-#: automation_tree_rules.php:726 lib/installer.php:3770 utilities.php:2643
+#: automation_tree_rules.php:726 lib/installer.php:3790 utilities.php:2643
 #: utilities.php:2644 utilities.php:2647 utilities.php:2648
 #, fuzzy
 msgid "WARNING:"
@@ -14466,12 +14466,12 @@ msgstr "<strong>注意：</strong>您已登錄到遠程數據收集器。當<b>�
 msgid "<strong>NOTE:</strong> None of the Core Kadupul Plugins, to date, have been re-designed to work with Remote Data Collectors.  Therefore, Plugins such as MacTrack, and HMIB, which require direct access to devices will not work with Remote Data Collectors at this time.  However, plugins such as Thold will work so long as the Remote Data Collector is in <b>'online'</b> mode."
 msgstr "<strong>注意：</strong>到目前為止，Core Kadupul插件均未經過重新設計，無法與遠程數據收集器配合使用。因此，需要直接訪問設備的插件（如MacTrack和HMIB）目前無法與遠程數據收集器配合使用。但是，只要遠程數據收集器處於<b>“在線”</b>模式，Thold等插件就能正常工作。"
 
-#: install/functions.php:613
+#: install/functions.php:609
 #, fuzzy, php-format
 msgid "Path for %s"
 msgstr "%s的路徑"
 
-#: install/functions.php:824
+#: install/functions.php:820
 #, fuzzy
 msgid "New Poller"
 msgstr "新的Poller"
@@ -17292,7 +17292,7 @@ msgstr "錯誤的UTF-8偏移錯誤！"
 msgid "Down (Thold)"
 msgstr "下載"
 
-#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3692
+#: lib/html_utility.php:1221 lib/installer.php:1916 lib/installer.php:3712
 #, fuzzy
 msgid "Error"
 msgstr "錯誤"
@@ -17648,7 +17648,7 @@ msgid "Location checks"
 msgstr "位置檢查"
 
 #: lib/installer.php:1859 lib/installer.php:2010 lib/installer.php:2014
-#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3789
+#: lib/installer.php:2169 lib/installer.php:2174 lib/installer.php:3809
 #, fuzzy
 msgid "ERROR:"
 msgstr "錯誤:"
@@ -18395,247 +18395,251 @@ msgstr "報告問題"
 msgid "Get Started"
 msgstr "開始使用"
 
-#: lib/installer.php:3009
+#: lib/installer.php:3025
 #, fuzzy, php-format
 msgid "Starting %s Process for v%s"
 msgstr "為v%s啟動%s流程"
 
-#: lib/installer.php:3034
+#: lib/installer.php:3051
+msgid "Unable to update application defaults."
+msgstr ""
+
+#: lib/installer.php:3054
 #, fuzzy, php-format
 msgid "Finished %s Process for v%s"
 msgstr "v%s完成的%s處理"
 
-#: lib/installer.php:3073
+#: lib/installer.php:3093
 #, fuzzy, php-format
 msgid "Found %s templates to install"
 msgstr "找到了要安裝的%s模板"
 
-#: lib/installer.php:3083
+#: lib/installer.php:3103
 #, fuzzy, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "即將導入軟件包＃%s'%s'。"
 
-#: lib/installer.php:3092
+#: lib/installer.php:3112
 #, fuzzy, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "已成功在配置文件'%s'下導入軟件包＃%s'%s'"
 
-#: lib/installer.php:3098
+#: lib/installer.php:3118
 #, fuzzy, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "在配置文件“%s”下導入軟件包＃%s“%s”失敗"
 
-#: lib/installer.php:3113
+#: lib/installer.php:3133
 #, fuzzy, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "[已刪除模板]的自動化模板"
 
-#: lib/installer.php:3130
+#: lib/installer.php:3150
 #, fuzzy
 msgid "No templates were selected for import"
 msgstr "未選擇要導入的模板"
 
-#: lib/installer.php:3139
+#: lib/installer.php:3159
 #, fuzzy
 msgid "Updating remote configuration file"
 msgstr "等待配置"
 
-#: lib/installer.php:3171
+#: lib/installer.php:3191
 #, fuzzy, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "此數據模板的默認數據源配置文件。"
 
-#: lib/installer.php:3193
+#: lib/installer.php:3213
 #, fuzzy, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "無法應用指定的配置文件%s！=%s"
 
-#: lib/installer.php:3202
+#: lib/installer.php:3222
 #, fuzzy, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "更新自動化網絡（%s），模式“%s” =>“%s”，子網“%s” =>%s“"
 
-#: lib/installer.php:3212
+#: lib/installer.php:3232
 #, fuzzy
 msgid "Failed to find automation network, no changes were made"
 msgstr "找不到自動化網絡，未進行任何更改"
 
-#: lib/installer.php:3216
+#: lib/installer.php:3236
 #, fuzzy
 msgid "Adding extra snmp settings for automation"
 msgstr "添加額外的snmp設置以實現自動化"
 
-#: lib/installer.php:3222
+#: lib/installer.php:3242
 #, fuzzy, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "刪除自動化模板"
 
-#: lib/installer.php:3235
+#: lib/installer.php:3255
 #, fuzzy, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "自動化SNMP選項"
 
-#: lib/installer.php:3238
+#: lib/installer.php:3258
 #, fuzzy, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "成功更新了自動化選項集%s"
 
-#: lib/installer.php:3240
+#: lib/installer.php:3260
 #, fuzzy, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "在設備上運行自動化"
 
-#: lib/installer.php:3246
+#: lib/installer.php:3266
 #, fuzzy, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "無法應用指定的自動化範圍"
 
-#: lib/installer.php:3249
+#: lib/installer.php:3269
 #, fuzzy
 msgid "Failed to find any automation option set"
 msgstr "無法找到要復制的數據！"
 
-#: lib/installer.php:3279
+#: lib/installer.php:3299
 #, fuzzy, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "設備模板[編輯：%s]"
 
-#: lib/installer.php:3305
+#: lib/installer.php:3325
 #, fuzzy
 msgid "Creating Graphs for Default Device"
 msgstr "為此設備創建圖表"
 
-#: lib/installer.php:3312
+#: lib/installer.php:3332
 #, fuzzy
 msgid "Adding Device to Default Tree"
 msgstr "設備默認值"
 
-#: lib/installer.php:3320
+#: lib/installer.php:3340
 #, fuzzy
 msgid "No templated graphs for Default Device were found"
 msgstr "找不到默認設備的模板化圖"
 
-#: lib/installer.php:3324
+#: lib/installer.php:3344
 #, fuzzy
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "警告：找不到您的操作系統的設備模板。您將需要導入設備模板或Kadupul軟件包來監視您的Kadupul服務器。"
 
-#: lib/installer.php:3331
+#: lib/installer.php:3351
 #, fuzzy
 msgid "Running first-time data query for local host"
 msgstr "運行本地主機的首次數據查詢"
 
-#: lib/installer.php:3339
+#: lib/installer.php:3359
 #, fuzzy
 msgid "Repopulating poller cache"
 msgstr "重建輪詢器緩存"
 
-#: lib/installer.php:3344
+#: lib/installer.php:3364
 #, fuzzy
 msgid "Repopulating SNMP Agent cache"
 msgstr "重建SNMPAgent緩存"
 
-#: lib/installer.php:3349
+#: lib/installer.php:3369
 #, fuzzy
 msgid "Generating RSA Key Pair"
 msgstr "生成RSA密鑰對"
 
-#: lib/installer.php:3361
+#: lib/installer.php:3381
 #, fuzzy, php-format
 msgid "Found %s tables to convert"
 msgstr "找到要轉換的%s表"
 
-#: lib/installer.php:3368
+#: lib/installer.php:3388
 #, fuzzy, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "轉換錶＃%s'%s'"
 
-#: lib/installer.php:3383
+#: lib/installer.php:3403
 #, fuzzy
 msgid "No tables where found or selected for conversion"
 msgstr "沒有找到或選擇要轉換的表"
 
-#: lib/installer.php:3394
+#: lib/installer.php:3414
 #, fuzzy, php-format
 msgid "Switched from %s to %s"
 msgstr "從%s切換到%s"
 
-#: lib/installer.php:3398
+#: lib/installer.php:3418
 #, fuzzy, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "注意：使用臨時文件進行數據庫高速緩存：%s"
 
-#: lib/installer.php:3420
+#: lib/installer.php:3440
 #, fuzzy, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "從v%s（數據庫%s）升級到v%s"
 
-#: lib/installer.php:3428
+#: lib/installer.php:3448
 #, fuzzy, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "警告：無法找到v%s的升級功能"
 
-#: lib/installer.php:3487
+#: lib/installer.php:3507
 #, fuzzy
 msgid "Install aborted due to no EULA acceptance"
 msgstr "由於未接受EULA，安裝被中止"
 
-#: lib/installer.php:3510
+#: lib/installer.php:3530
 #, fuzzy, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "後台已在%s開始，此嘗試已在%s跳過"
 
-#: lib/installer.php:3533
+#: lib/installer.php:3553
 #, fuzzy, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "安裝期間發生異常：＃"
 
-#: lib/installer.php:3543
+#: lib/installer.php:3563
 #, fuzzy, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "安裝在%s開始，在%s完成"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 #, fuzzy
 msgid "Both"
 msgstr "兩者"
 
-#: lib/installer.php:3578
+#: lib/installer.php:3598
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "%s Minutes"
 
-#: lib/installer.php:3583
+#: lib/installer.php:3603
 #, php-format
 msgid "%s - N/A"
 msgstr "%s Minutes"
 
-#: lib/installer.php:3583 lib/installer.php:3585
+#: lib/installer.php:3603 lib/installer.php:3605
 #, fuzzy
 msgid "Web"
 msgstr "網頁"
 
-#: lib/installer.php:3585 lib/installer.php:3588
+#: lib/installer.php:3605 lib/installer.php:3608
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "%s Minutes"
 
-#: lib/installer.php:3588
+#: lib/installer.php:3608
 #, fuzzy
 msgid "Cli"
 msgstr "經典"
 
-#: lib/installer.php:3593
+#: lib/installer.php:3613
 #, fuzzy, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "設置PHP選項%s =%s"
 
-#: lib/installer.php:3599
+#: lib/installer.php:3619
 #, fuzzy, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "無法設置PHP選項%s，為%s（應為%s）"
 
-#: lib/installer.php:3618
+#: lib/installer.php:3638
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "嘗試同步時找不到數據收集器"
 
