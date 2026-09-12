@@ -1,4 +1,4 @@
-# Cacti E2E stack. Three services on a private network; nginx exposes
+# Kadupul E2E stack. Three services on a private network; nginx exposes
 # localhost:8080 so Playwright's default baseURL works unchanged.
 #
 # Tags are unpinned here for readability. CI pins via --pull=always plus a

@@ -8,7 +8,6 @@
  | as published by the Free Software Foundation; either version 2          |
  | of the License, or (at your option) any later version.                  |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
 */
 
@@ -82,13 +81,13 @@ test('issue #7121 ss_grid_preason input_string is accepted', function () use ($v
 	expect($validator($template))->toBeTrue();
 });
 
-test('TheWitness manual repro template is accepted', function () use ($validator) {
+test('Manual reproduction template is accepted', function () use ($validator) {
 	/* Single-arg script template where the user value contains spaces
 	 * (e.g. "this is a test"), which forces the placeholder to be wrapped
 	 * in shell quotes. Without the fix this rejects, so the data input
 	 * method save fails, no data_template_data linkage is created, and
 	 * downstream data source / graph template creation finds nothing to
-	 * push into poller_item. The cascade matches TheWitness's report:
+	 * push into poller_item. The cascade matches the regression report:
 	 * "no poller item is added" in advanced-mode data source creation. */
 	$template = '<path_php_binary> <path_cacti>/scripts/test.php "<param>"';
 	expect($validator($template))->toBeTrue();

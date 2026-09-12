@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 error_reporting(E_ALL);
 
@@ -86,7 +79,7 @@ if ($config['cacti_server_os'] == 'unix') {
 
 $help_anchor = '';
 if ($help != '') {
-	$help_anchor = '<a style="padding:2px" href="#" data-page="' . $help . '" title="' . __esc('Cacti Install Help') . '" class="helpPage menu_parent"><i class="far fa-question-circle"></i></a>';
+	$help_anchor = '<a style="padding:2px" href="#" data-page="' . $help . '" title="' . __esc('Kadupul Install Help') . '" class="helpPage menu_parent"><i class="far fa-question-circle"></i></a>';
 }
 
 ?>
@@ -94,7 +87,7 @@ if ($help != '') {
 <html>
 <head>
 <?php
-print html_common_header(__('Cacti Server v%s - Maintenance', CACTI_VERSION));
+print html_common_header(__('Kadupul Server v%s - Maintenance', CACTI_VERSION));
 if ($hasEverything) {
 	print get_md5_include_js('install/install.js');
 }
@@ -104,18 +97,18 @@ print get_md5_include_css('install/install.css');
 <body>
 	<div class='cactiInstallTable'>
 		<div class='cactiTableTitleRow cactiBorderWall'>
-			<div class='textHeaderDark'><?php print __esc('Cacti Server v%s - Installation Wizard', CACTI_VERSION); ?><span style="float:right"><?php print $help_anchor;?><a class="menu_parent" id="installRefresh" href="#" title="<?php print __esc('Refresh current page');?>" style="padding:2px"><i class="fa fa-redo"></i></a></span></div>
+			<div class='textHeaderDark'><?php print __esc('Kadupul Server v%s - Installation Wizard', CACTI_VERSION); ?><span style="float:right"><?php print $help_anchor;?><a class="menu_parent" id="installRefresh" href="#" title="<?php print __esc('Refresh current page');?>" style="padding:2px"><i class="fa fa-redo"></i></a></span></div>
 		</div>
 		<div class='cactiInstallArea cactiBorderWall'>
 			<div class='cactiInstallAreaContent' id='installContent'>
 <?php
 if ($hasEverything) {
 	print Installer::sectionTitle(__('Initializing'));
-	print Installer::sectionNormal(__('Please wait while the installation system for Cacti Version %s initializes. You must have JavaScript enabled for this to work.', CACTI_VERSION));
+	print Installer::sectionNormal(__('Please wait while the installation system for Kadupul Version %s initializes. You must have JavaScript enabled for this to work.', CACTI_VERSION));
 } else {
-	print '<div class="installErrorImage"><img src=\'../images/cacti_logo.svg\'></div>';
+	print '<div class="installErrorImage"><img src=\'../images/kadupul-logo.png\'></div>';
 	print '<div class="installErrorText">';
-	print '<p>' . __('FATAL: We are unable to continue with this installation. In order to install Cacti, PHP must be at version 5.4 or later.') . '</p>';
+	print '<p>' . __('FATAL: We are unable to continue with this installation. In order to install Kadupul, PHP must be at version 5.4 or later.') . '</p>';
 	print '<ul>';
 	if (!$hasJson) {
 		print '<li>' . __('The php-json module must also be installed.') . '<br>' . __('See the PHP Manual: <a href="http://php.net/manual/en/book.json.php">JavaScript Object Notation</a>.') . '</li>';
@@ -129,7 +122,7 @@ if ($hasEverything) {
 ?>
 			</div>
 			<div class='cactiInstallLoader' id='installLoader'>
-				<div class='cactiInstallLoaderLogo'><img src='../images/cacti_logo.svg' /></div>
+				<div class='cactiInstallLoaderLogo'><img src='../images/kadupul-logo.png' /></div>
 				<div class='cactiInstallLoaderSpinnerTheme cactiInstallLoaderSpinner'></div>
 			</div>
 		</div>

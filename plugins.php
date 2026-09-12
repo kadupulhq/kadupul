@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 include('./include/auth.php');
@@ -236,7 +229,7 @@ function plugins_load_temp_table() {
 			db_execute("CREATE TEMPORARY TABLE IF NOT EXISTS $table LIKE plugin_config");
 			db_execute("TRUNCATE $table");
 
-			/* Cacti strips NO_AUTO_VALUE_ON_ZERO on connect (database.php). Without it,
+			/* Kadupul strips NO_AUTO_VALUE_ON_ZERO on connect (database.php). Without it,
 			 * a row with id=0 in plugin_config (e.g. from a plugin upgrade script) is
 			 * reassigned by AUTO_INCREMENT to the next sequence value, causing a 1062
 			 * collision when another row already holds that id. */
@@ -881,7 +874,7 @@ function plugin_actions($plugin, $table) {
 			} elseif (!file_exists("$path/INFO")) {
 				$link .= "<a class='pierror' href='#' title='" . __esc('Plugin is lacking an INFO file') . "' class='linkEditMain'><img src='images/cog_error.png'></a>";
 			} elseif (in_array($directory, $plugins_integrated)) {
-				$link .= "<a class='pierror' href='#' title='" . __esc('Plugin is integrated into Cacti core') . "' class='linkEditMain'><img src='images/cog_error.png'></a>";
+				$link .= "<a class='pierror' href='#' title='" . __esc('Plugin is integrated into Kadupul core') . "' class='linkEditMain'><img src='images/cog_error.png'></a>";
 			} else {
 				$link .= "<a class='pierror' href='#' title='" . __esc('Plugin is not compatible') . "' class='linkEditMain'><img src='images/cog_error.png'></a>";
 			}

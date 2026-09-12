@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /* include cacti base functions */
@@ -460,7 +453,7 @@ function network_edit() {
 	'poller_id' => array(
 		'method' => 'drop_sql',
 		'friendly_name' => __('Data Collector'),
-		'description' => __('Choose the Cacti Data Collector/Poller to be used to gather data from this Device.'),
+		'description' => __('Choose the Kadupul Data Collector/Poller to be used to gather data from this Device.'),
 		'value' => '|arg1:poller_id|',
 		'default' => read_config_option('default_poller'),
 		'sql' => 'SELECT id, name FROM poller ORDER BY name',
@@ -468,7 +461,7 @@ function network_edit() {
 	'site_id' => array(
 		'method' => 'drop_sql',
 		'friendly_name' => __('Associated Site'),
-		'description' => __('Choose the Cacti Site that you wish to associate discovered Devices with.'),
+		'description' => __('Choose the Kadupul Site that you wish to associate discovered Devices with.'),
 		'value' => '|arg1:site_id|',
 		'default' => read_config_option('default_site'),
 		'sql' => 'SELECT id, name FROM sites ORDER BY name',
@@ -560,8 +553,8 @@ function network_edit() {
 		),
 	'add_to_cacti' => array(
 		'method' => 'checkbox',
-		'friendly_name' => __('Automatically Add to Cacti'),
-		'description' => __('For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Cacti.'),
+		'friendly_name' => __('Automatically Add to Kadupul'),
+		'description' => __('For any newly discovered Devices that are reachable using SNMP and who match a Device Rule, add them to Kadupul.'),
 		'value' => '|arg1:add_to_cacti|'
 		),
 	'same_sysname' => array(
@@ -573,7 +566,7 @@ function network_edit() {
 	'rerun_data_queries' => array(
 		'method' => 'checkbox',
 		'friendly_name' => __('Rerun Data Queries'),
-		'description' => __('If a device previously added to Cacti is found, rerun its data queries.'),
+		'description' => __('If a device previously added to Kadupul is found, rerun its data queries.'),
 		'value' => '|arg1:rerun_data_queries|'
 		),
 	'spacern' => array(
@@ -599,7 +592,7 @@ function network_edit() {
 	'notification_fromname' => array(
 		'method' => 'textbox',
 		'friendly_name' => __('Notification From Name'),
-		'description' => __('The Email account name to be used as the senders name for the Notification Email.  If left blank, Cacti will use the default Automation Notification Name if specified, otherwise, it will use the Cacti system default Email name'),
+		'description' => __('The Email account name to be used as the senders name for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Name if specified, otherwise, it will use the Kadupul system default Email name'),
 		'value' => '|arg1:notification_fromname|',
 		'max_length' => '32',
 		'size' => '30',
@@ -608,7 +601,7 @@ function network_edit() {
 	'notification_fromemail' => array(
 		'method' => 'textbox',
 		'friendly_name' => __('Notification From Email Address'),
-		'description' => __('The Email Address to be used as the senders Email for the Notification Email.  If left blank, Cacti will use the default Automation Notification Email Address if specified, otherwise, it will use the Cacti system default Email Address'),
+		'description' => __('The Email Address to be used as the senders Email for the Notification Email.  If left blank, Kadupul will use the default Automation Notification Email Address if specified, otherwise, it will use the Kadupul system default Email Address'),
 		'value' => '|arg1:notification_fromemail|',
 		'max_length' => '128',
 		'default' => ''
@@ -757,7 +750,7 @@ function network_edit() {
 		),
 	'ping_retries' => array(
 		'friendly_name' => __('Ping Retry Count'),
-		'description' => __('After an initial failure, the number of ping retries Cacti will attempt before failing.'),
+		'description' => __('After an initial failure, the number of ping retries Kadupul will attempt before failing.'),
 		'method' => 'textbox',
 		'value' => '|arg1:ping_retries|',
 		'default' => read_config_option('ping_retries'),

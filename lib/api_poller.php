@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 function api_poller_cache_item_add($host_id, $host_field_override, $local_data_id, $rrd_step, $poller_action_id, $data_source_item_name, $num_rrd_items, $arg1 = '', $arg2 = '', $arg3 = '') {
@@ -119,7 +112,7 @@ function api_poller_get_rrd_next_step($host_id, $rrd_step, $local_data_id) {
 	if ($rrd_step < $poller_interval && !$warning_issued) {
 		$message = sprintf('WARNING: The Poller Interval is %s and you have a Data Source with a sampling interval of %s.  Change your Poller Interval to %s seconds, and repopulate your poller cache.', $poller_interval, $rrd_step, $rrd_step);
 
-		admin_email('Cacti Poller Interval Warning', $message);
+		admin_email('Kadupul Poller Interval Warning', $message);
 		cacti_log($message, false, 'POLLER');
 		$warning_issued = true;
 	}

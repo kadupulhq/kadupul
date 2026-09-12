@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require(__DIR__ . '/../include/cli_check.php');
@@ -121,14 +114,14 @@ if (cacti_sizeof($repaired_hosts) && $total_repairs > 0) {
 print_separator(true);
 
 if ($total_errors == 0 && $total_repairs == 0) {
-	printf('NOTE: Found 0 Cacti database issues to repair.' . PHP_EOL . PHP_EOL);
+	printf('NOTE: Found 0 Kadupul database issues to repair.' . PHP_EOL . PHP_EOL);
 } elseif (($total_errors > 0 || $total_repairs > 0) && !$force) {
-	printf('WARNING: Found %s problems in your Cacti database and automatically repaired %s of them.' . PHP_EOL, $total_errors, $total_repairs);
+	printf('WARNING: Found %s problems in your Kadupul database and automatically repaired %s of them.' . PHP_EOL, $total_errors, $total_repairs);
 	printf('WARNING: Using the \'--force\' option will either repair, remove or ignore any additional issues' . PHP_EOL);
 	printf('WARNING: if they can not be repaired.' . PHP_EOL . PHP_EOL);
-	printf('WARNING: Because these changes can not be reversed, make sure you make a Cacti backup first.' . PHP_EOL . PHP_EOL);
+	printf('WARNING: Because these changes can not be reversed, make sure you make a Kadupul backup first.' . PHP_EOL . PHP_EOL);
 } else {
-	printf('WARNING: Found %s and repaired %s Cacti database issues.' . PHP_EOL . PHP_EOL, $total_errors, $total_repairs);
+	printf('WARNING: Found %s and repaired %s Kadupul database issues.' . PHP_EOL . PHP_EOL, $total_errors, $total_repairs);
 }
 
 function table_structural_repair() {
@@ -146,7 +139,7 @@ function table_structural_repair() {
 			printf("NOTE: Repairing tables for local database" . PHP_EOL);
 		}
 
-		printf('NOTE: Repairing all %s Cacti base database tables' . PHP_EOL, cacti_sizeof($base_tables));
+		printf('NOTE: Repairing all %s Kadupul base database tables' . PHP_EOL, cacti_sizeof($base_tables));
 
 		db_execute('UNLOCK TABLES');
 
@@ -165,7 +158,7 @@ function table_structural_repair() {
 		}
 	} else {
 		printf('NOTE: Skipping table physical repair' . PHP_EOL);
-		printf('NOTE: %s Cacti base tables would be checked/repaired if using --tables option.' . PHP_EOL, cacti_sizeof($base_tables));
+		printf('NOTE: %s Kadupul base tables would be checked/repaired if using --tables option.' . PHP_EOL, cacti_sizeof($base_tables));
 	}
 }
 
@@ -367,7 +360,7 @@ function detailed_checks() {
 		printf('Detailed Basic Checks and Repairs.' . PHP_EOL . PHP_EOL);
 	}
 
-	printf('NOTE: Searching for invalid Cacti GPRINT Presets.' . PHP_EOL);
+	printf('NOTE: Searching for invalid Kadupul GPRINT Presets.' . PHP_EOL);
 
 	/* remove invalid GPrint Presets from the Database, validated */
 	$rows = db_fetch_cell('SELECT COUNT(*)
@@ -392,10 +385,10 @@ function detailed_checks() {
 
 		printf('NOTE: Found ' . ($force ? 'and repaired ':'') . "$rows invalid GPRINT Preset rows in Graph Templates." . PHP_EOL);
 	} else {
-		printf('NOTE: Found 0 invalid Cacti GPRINT Presets.' . PHP_EOL);
+		printf('NOTE: Found 0 invalid Kadupul GPRINT Presets.' . PHP_EOL);
 	}
 
-	printf('NOTE: Searching for invalid Cacti CDEFs.' . PHP_EOL);
+	printf('NOTE: Searching for invalid Kadupul CDEFs.' . PHP_EOL);
 
 	/* remove invalid CDEF Items from the Database, validated */
 	$rows = db_fetch_cell('SELECT COUNT(*)
@@ -418,10 +411,10 @@ function detailed_checks() {
 
 		printf('NOTE: Found ' . ($force ? 'and repaired ':'') . "$fixes of $rows invalid CDEFs in Graph Templates." . PHP_EOL);
 	} else {
-		printf('NOTE: Found 0 invalid Cacti CDEFs.' . PHP_EOL);
+		printf('NOTE: Found 0 invalid Kadupul CDEFs.' . PHP_EOL);
 	}
 
-	printf('NOTE: Searching for invalid Cacti Data Inputs.' . PHP_EOL);
+	printf('NOTE: Searching for invalid Kadupul Data Inputs.' . PHP_EOL);
 
 	/* remove invalid Data Templates from the Database, validated */
 	$rows = db_fetch_cell('SELECT COUNT(*)
@@ -444,7 +437,7 @@ function detailed_checks() {
 
 		printf('NOTE: Found ' . ($force ? 'and repaired ':'') . "$fixes of $rows invalid Data Inputs in Data Templates." . PHP_EOL);
 	} else {
-		printf('NOTE: Found 0 invalid Cacti Data Inputs.' . PHP_EOL);
+		printf('NOTE: Found 0 invalid Kadupul Data Inputs.' . PHP_EOL);
 	}
 
 	printf('NOTE: Searching for Graph Templates whose Graphs have invalid item counts.' . PHP_EOL);
@@ -500,7 +493,7 @@ function detailed_checks() {
 		printf('NOTE: Found 0 Graph Templates whose Graphs had incorrect item counts.' . PHP_EOL);
 	}
 
-	printf('NOTE: Searching for invalid Cacti Data Input fields.' . PHP_EOL);
+	printf('NOTE: Searching for invalid Kadupul Data Input fields.' . PHP_EOL);
 
 	/* remove invalid Data Input fields from the Database, validated */
 	$rows = db_fetch_cell('SELECT COUNT(*)
@@ -523,10 +516,10 @@ function detailed_checks() {
 
 		printf('NOTE: Found ' . ($force ? 'and repaired ':'') . "$rows invalid Data Input fields in Data Templates." . PHP_EOL);
 	} else {
-		printf('NOTE: Found 0 invalid Cacti Data Input fields.' . PHP_EOL);
+		printf('NOTE: Found 0 invalid Kadupul Data Input fields.' . PHP_EOL);
 	}
 
-	printf('NOTE: Searching for invalid Cacti Data Input Data rows (Pass 1).' . PHP_EOL);
+	printf('NOTE: Searching for invalid Kadupul Data Input Data rows (Pass 1).' . PHP_EOL);
 
 	/* remove invalid Data Input Data Rows from the Database in two passes */
 	$rows = db_fetch_cell('SELECT COUNT(*)
@@ -547,10 +540,10 @@ function detailed_checks() {
 
 		printf('NOTE: Found ' . ($force ? 'and repaired ':'') . "$rows invalid Data Input Data rows in Data Templates" . PHP_EOL);
 	} else {
-		printf('NOTE: Found 0 invalid Cacti Data Input Data rows (Pass 1).' . PHP_EOL);
+		printf('NOTE: Found 0 invalid Kadupul Data Input Data rows (Pass 1).' . PHP_EOL);
 	}
 
-	printf('NOTE: Searching for invalid Cacti Data Input Data rows (Pass 2).' . PHP_EOL);
+	printf('NOTE: Searching for invalid Kadupul Data Input Data rows (Pass 2).' . PHP_EOL);
 
 	$rows = db_fetch_cell('SELECT COUNT(*)
 		FROM data_input_data
@@ -570,13 +563,13 @@ function detailed_checks() {
 
 		printf('NOTE: Found ' . ($force ? 'and repaired ':'') . "$rows invalid Data Input Data rows based upon field mappings in Data Templates." . PHP_EOL);
 	} else {
-		printf('NOTE: Found 0 invalid Cacti Data Input Data rows (Pass 2).' . PHP_EOL);
+		printf('NOTE: Found 0 invalid Kadupul Data Input Data rows (Pass 2).' . PHP_EOL);
 	}
 }
 
 /**
  * There have been reports of data_input_data not including the correct information for
- * snmp columns.  This is likely caused by a legacy bug in Cacti where snmp information
+ * snmp columns.  This is likely caused by a legacy bug in Kadupul where snmp information
  * was not properly copied to the data_input_data table upon change.
  *
  * Therefore, let's detect that bogus information for the snmp Data Input types only
@@ -863,7 +856,7 @@ function snmp_index_repairs() {
 		$total_errors += cacti_sizeof($broken_data_rows);
 
 		if ($force) {
-			printf('NOTE: Attempting to repair %s Data Query indexes from other Cacti tables.' . PHP_EOL, $broken_local_data_ids);
+			printf('NOTE: Attempting to repair %s Data Query indexes from other Kadupul tables.' . PHP_EOL, $broken_local_data_ids);
 
 			$fixes = 0;
 
@@ -1183,7 +1176,7 @@ function snmp_index_repairs() {
  */
 function display_version() {
 	$version = get_cacti_cli_version();
-	print "Cacti Database Repair Utility, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
+	print "Kadupul Database Repair Utility, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
 }
 
 /**
@@ -1193,8 +1186,8 @@ function display_help () {
 	display_version();
 
 	print PHP_EOL . 'usage: repair_database.php [--dynamic] [--debug] [--force] [--form]' . PHP_EOL . PHP_EOL;
-	print 'A utility designed to repair the Cacti database if damaged, and optionally repair any' . PHP_EOL;
-	print 'corruption found in the Cacti databases various Templates.' . PHP_EOL . PHP_EOL;
+	print 'A utility designed to repair the Kadupul database if damaged, and optionally repair any' . PHP_EOL;
+	print 'corruption found in the Kadupul databases various Templates.' . PHP_EOL . PHP_EOL;
 	print 'Optional:' . PHP_EOL;
 	print '    --dynamic - Convert a table to Dynamic row format if available' . PHP_EOL;
 	print '    --form    - Force rebuilding the indexes from the database creation syntax.' . PHP_EOL;

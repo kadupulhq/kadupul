@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require('./include/auth.php');
@@ -556,7 +549,7 @@ function form_actions() {
 		if (get_nfilter_request_var('drp_action') == '1') { // delete
 			print "<tr>
 				<td class='textArea' class='odd'>
-					<p>" . __n('Click \'Continue\' to delete the following Data Collector.  Note, all devices will be disassociated from this Data Collector and mapped back to the Main Cacti Data Collector.', 'Click \'Continue\' to delete all following Data Collectors.  Note, all devices will be disassociated from these Data Collectors and mapped back to the Main Cacti Data Collector.', cacti_sizeof($poller_array)) . "</p>
+					<p>" . __n('Click \'Continue\' to delete the following Data Collector.  Note, all devices will be disassociated from this Data Collector and mapped back to the Main Kadupul Data Collector.', 'Click \'Continue\' to delete all following Data Collectors.  Note, all devices will be disassociated from these Data Collectors and mapped back to the Main Kadupul Data Collector.', cacti_sizeof($poller_array)) . "</p>
 					<div class='itemlist'><ul>$pollers</ul></div>
 				</td>
 			</tr>\n";
@@ -1076,13 +1069,13 @@ function pollers() {
 			'display' => __('Last Update'),
 			'align' => 'right',
 			'sort' => 'DESC',
-			'tip' => __('The last time this Data Collector checked in with the main Cacti site.')
+			'tip' => __('The last time this Data Collector checked in with the main Kadupul site.')
 		),
 		'last_sync' => array(
 			'display' => __('Last Sync'),
 			'align' => 'right',
 			'sort' => 'DESC',
-			'tip' => __('The last time this Data Collector was full synced with main Cacti site.')
+			'tip' => __('The last time this Data Collector was full synced with main Kadupul site.')
 		)
 	);
 

@@ -1,8 +1,7 @@
-# Cacti PR #7054 e2e harness
+# Kadupul PR #7054 e2e harness
 
-Reproducible Docker-based regression checks for the four behaviours TheWitness
-flagged on PR #7054 (`feat/security-architecture-1.2.x`). The repo root is
-bind-mounted into both Cacti containers, so every run exercises whatever code is
+Reproducible Docker-based regression checks for the four reported regression cases (`feat/security-architecture-1.2.x`). The repo root is
+bind-mounted into both application containers, so every run exercises whatever code is
 checked out.
 
 ## Layout
@@ -84,7 +83,7 @@ maturity and are honest regression detectors at different fidelity levels.
 | --- | --- | --- |
 | 04 realm enforcement (static) | PASS | confirms `is_realm_allowed()` is the only realm helper defined in the tree |
 | 04 realm enforcement (runtime) | LENIENT PASS | low-priv user fetch returns status=200 with no admin marker; the script accepts that as denied. A status=200 from a hostile redirect or noop page would also pass — tighten if higher confidence is needed. |
-| 02 self-signed TLS | FAIL (correctly) | `get_default_contextoption()` on this branch returns SSL options that verify the peer cert, so `file_get_contents()` against the self-signed poller fails with `error:0A000086:SSL routines::certificate verify failed`. **This is the regression TheWitness reported.** Making it green requires an application-code fix (loosen `verify_peer` to opt-in or honor a setting). |
+| 02 self-signed TLS | FAIL (correctly) | `get_default_contextoption()` on this branch returns SSL options that verify the peer cert, so `file_get_contents()` against the self-signed poller fails with `error:0A000086:SSL routines::certificate verify failed`. **This is the regression the report identified.** Making it green requires an application-code fix (loosen `verify_peer` to opt-in or honor a setting). |
 | 01 form description HTML | FAIL | `curl` round-trips through `auth_login.php` POST but the subsequent `settings.php?tab=path` fetch returns the login page rather than the settings UI; the cookie jar isn't carrying the authenticated session. Likely a missing form field (CSRF token, `action`, or similar) in the POST. |
 | 03 session persistence | PASS-state TBD | Curl-based 5-page navigation loop; flips to FAIL if cacti_auth_transition destroys the session at login. Currently PASS-state TBD pending application of the stashed auth fix. |
 

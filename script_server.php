@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 if (function_exists('pcntl_async_signals')) {
@@ -322,7 +315,7 @@ while (1) {
 			/* Refuse to call PHP internals (system, passthru, exec, ...) and
 			 * any function whose source file lives outside base_path. The
 			 * script-server contract is to dispatch into user scripts in the
-			 * Cacti tree; anything else is a containment failure. */
+			 * Kadupul tree; anything else is a containment failure. */
 			try {
 				$ref = new ReflectionFunction($function);
 			} catch (ReflectionException $e) {
@@ -524,7 +517,7 @@ function sig_handler($signo) {
  */
 function display_version() {
 	$version = get_cacti_version();
-	print "Cacti Script Server, Version $version " . COPYRIGHT_YEARS . PHP_EOL;
+	print "Kadupul Script Server, Version $version " . COPYRIGHT_YEARS . PHP_EOL;
 }
 
 /**
@@ -537,7 +530,7 @@ function display_help () {
 
 	print PHP_EOL;
 	print 'usage: script_server.php [environ poller_id] | [ --environ=S --poller=N --mode [--force-level=N] ]' . PHP_EOL . PHP_EOL;
-	print 'Cacti\'s Script Server.  The Script Server provides a memory resident server for executing php' . PHP_EOL;
+	print 'Kadupul\'s Script Server.  The Script Server provides a memory resident server for executing php' . PHP_EOL;
 	print 'scripts saving reducing the time to process the scripts through pre-compiling them for all consumers.' . PHP_EOL;
 	print 'The Script Server can be called using two methods.  The first method is the legacy method.  When using' . PHP_EOL;
 	print 'the legacy method, the first argument will be the environment, and the second will be the poller id.' . PHP_EOL . PHP_EOL;
@@ -553,7 +546,7 @@ function display_help () {
 	print 'If no options are passed to the Script Server, it assumes that the environ is \'cmd\' and the poller id' . PHP_EOL;
 	print 'is 1 or the Main Data Collector.' . PHP_EOL . PHP_EOL;
 
-	print 'It is common that when developing Cacti Data Input methods one will use the Script Server to test' . PHP_EOL;
+	print 'It is common that when developing Kadupul Data Input methods one will use the Script Server to test' . PHP_EOL;
 	print 'scripts prior to creating thousands of Graphs using them.  To to that simply create at least' . PHP_EOL;
 	print 'one Data Source, start the Script Server, and then copy the Poller Cache entry into a running' . PHP_EOL;
 	print 'Script Server.  When doing so you should see the output you expect printed to standard output.  When' . PHP_EOL;

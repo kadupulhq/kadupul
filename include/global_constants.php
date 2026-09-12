@@ -13,20 +13,13 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 define('CACTI_PHP_VERSION_MINIMUM', '5.4.0');
 
 define('CACTI_ESCAPE_CHARACTER', '"');
 define('COPYRIGHT_YEARS', 'Copyright (C) 2004-' . date('Y') . ' The Cacti Group');
-define('COPYRIGHT_YEARS_SHORT', '(c) 2004-' . date('Y') . ' - The Cacti Group');
+define('COPYRIGHT_YEARS_SHORT', '(c) 2004-' . date('Y') . ' - The Kadupul Group');
 
 define('HOST_GROUPING_GRAPH_TEMPLATE', 1);
 define('HOST_GROUPING_DATA_QUERY_INDEX', 2);

@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require_once(__DIR__ . '/include/cli_check.php');
@@ -291,7 +284,7 @@ if (cacti_sizeof($poller_items) && read_config_option('poller_enabled') == 'on')
 	$error_ds     = array();
 	$width_dses   = array();
 
-	/* startup Cacti php polling server and include the
+	/* startup Kadupul php polling server and include the
 	 * include file for script processing
 	 */
 	if ($script_server_calls > 0) {
@@ -1003,7 +996,7 @@ function sig_handler($signo) {
 	switch ($signo) {
 		case SIGTERM:
 		case SIGINT:
-			cacti_log('WARNING: Cacti Poller process terminated by user', true, 'POLLER');
+			cacti_log('WARNING: Kadupul Poller process terminated by user', true, 'POLLER');
 
 			// record the process as having completed
 			record_cmdphp_done();
@@ -1018,7 +1011,7 @@ function sig_handler($signo) {
 
 function display_version() {
 	$version = get_cacti_version();
-	print "Cacti Legacy Host Data Collector, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
+	print "Kadupul Legacy Host Data Collector, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
 }
 
 /**
@@ -1032,7 +1025,7 @@ function display_help () {
 	print PHP_EOL;
 	print 'usage: cmd.php --first=ID --last=ID [--poller=ID] [--mibs] [--debug]' . PHP_EOL . PHP_EOL;
 
-	print 'Cacti\'s legacy data collector.  This data collector is called by poller.php' . PHP_EOL;
+	print 'Kadupul\'s legacy data collector.  This data collector is called by poller.php' . PHP_EOL;
 	print 'every poller interval to gather information from devices.  It is recommended' . PHP_EOL;
 	print 'that every system deploy spine instead of cmd.php in production due to the built' . PHP_EOL;
 	print 'in scalability limits of cmd.php.' . PHP_EOL . PHP_EOL;

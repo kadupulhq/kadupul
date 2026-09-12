@@ -1,4 +1,4 @@
-# Cacti E2E Tests (Playwright)
+# Kadupul E2E Tests (Playwright)
 
 Browser-level checks for the CSP nonce pilot. Six tests split across header
 shape, pilot-page nonce match, and browser behavior per mode.

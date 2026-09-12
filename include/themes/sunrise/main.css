@@ -12,13 +12,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /* main styles */
@@ -930,7 +923,7 @@ label.ui-state-hover > span {
 }
 
 .cactiLogo {
-	background: transparent url('./images/cacti_logo.svg') no-repeat 30px;
+	background: transparent url('./images/kadupul-logo.png') no-repeat 30px;
 	display:none;
 	cursor: pointer;
 	padding-bottom: 140px;
@@ -939,6 +932,7 @@ label.ui-state-hover > span {
 	margin-top: -6px;
 	margin-left: 2px;
 	margin-right: 2px;
+	background-size: contain;
 }
 
 .cactiVersion {
@@ -2654,7 +2648,7 @@ tr#realtime td:first-child {
 	left: 4px;
 	bottom: 3px;
 	background-color: white;
-	background-image: url('./images/cacti_logo.svg');
+	background-image: url('./images/kadupul-logo.png');
 	background-repeat: no-repeat;
 	background-size: 7px;
 	background-position: center;
@@ -2741,7 +2735,7 @@ input:checked + .checkboxSlider:before {
 	left: 4px;
 	bottom: 4px;
 	background-color: white;
-	background-image: url('./images/cacti_logo.svg');
+	background-image: url('./images/kadupul-logo.png');
 	background-repeat: no-repeat;
 	background-size: 7px;
 	background-position: center;

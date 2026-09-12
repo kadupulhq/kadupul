@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /**
@@ -113,7 +106,7 @@ function boost_error_handler($errno, $errmsg, $filename, $linenum, $vars = []) {
 		if (substr_count($errmsg, 'date_default_timezone')) return;
 		if (substr_count($errmsg, 'Only variables')) return;
 
-		/* log the error to the Cacti log */
+		/* log the error to the Kadupul log */
 		cacti_log('PROGERR: ' . $err, false, 'BOOST');
 	}
 
@@ -1450,7 +1443,7 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
 	}
 }
 
-/* boost_rrdtool_function_update - a re-write of the Cacti rrdtool update command
+/* boost_rrdtool_function_update - a re-write of the Kadupul rrdtool update command
    specifically designed for bulk updates.
    @arg $local_data_id - the data source to obtain information from
    @arg $rrd_path      - the path to the RRD file

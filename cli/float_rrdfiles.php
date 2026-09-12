@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 if (function_exists('pcntl_async_signals')) {
@@ -145,7 +138,7 @@ if (cacti_sizeof($parms)) {
 /**
  * Types include
  *
- * rmaster  - the main process launched from the Cacti main poller and will launch child processes
+ * rmaster  - the main process launched from the Kadupul main poller and will launch child processes
  * child    - a child of the master process from the 'rmaster'
  *
  */
@@ -650,7 +643,7 @@ function float_debug($message) {
  */
 function display_version() {
 	$version = get_cacti_version();
-	print "Cacti RRDfile Data Float Tool, Version $version " . COPYRIGHT_YEARS . PHP_EOL;
+	print "Kadupul RRDfile Data Float Tool, Version $version " . COPYRIGHT_YEARS . PHP_EOL;
 }
 
 /**
@@ -661,8 +654,8 @@ function display_help () {
 
 	print PHP_EOL . 'usage: float_rrdfiles.php --start=TS --end=TS [--threads=N --host-id=N --host-template-id=N --graph-template-id=N] [--debug]' . PHP_EOL . PHP_EOL;
 
-	print 'Cacti\'s RRDfile Data Float Tool.  This CLI script will float a' . PHP_EOL;
-	print 'range in select Cacti Graphs using the RRDtool dump/import utility.' . PHP_EOL . PHP_EOL;
+	print 'Kadupul\'s RRDfile Data Float Tool.  This CLI script will float a' . PHP_EOL;
+	print 'range in select Kadupul Graphs using the RRDtool dump/import utility.' . PHP_EOL . PHP_EOL;
 	print 'This utility will run in parallel with the given number of threads,' . PHP_EOL;
 	print 'except in the case when you have specified specific --graph-ids as' . PHP_EOL;
 	print 'show with the optional settings below.' . PHP_EOL . PHP_EOL;
@@ -687,7 +680,7 @@ function display_help () {
 }
 
 /**
- * sig_handler - provides a generic means to catch exceptions to the Cacti log.
+ * sig_handler - provides a generic means to catch exceptions to the Kadupul log.
  *
  * @param $signo - (int) the signal that was thrown by the interface.
  *

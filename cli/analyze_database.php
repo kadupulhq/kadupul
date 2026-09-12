@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require(__DIR__ . '/../include/cli_check.php');
@@ -71,7 +64,7 @@ if (cacti_sizeof($parms)) {
 	}
 }
 
-print "NOTE: Analyzing All Cacti Database Tables\n";
+print "NOTE: Analyzing All Kadupul Database Tables\n";
 
 if (!$local && $config['poller_id'] > 1) {
 	db_switch_remote_to_main();
@@ -96,13 +89,13 @@ if (cacti_sizeof($tables)) {
 		print ($status == 0 ? ' Failed' : ' Successful') . "\n";
 	}
 
-	cacti_log('ANALYSIS STATS: Analyzing Cacti Tables Complete.  Total time ' . (time() - $start) . ' seconds.', false, 'SYSTEM');
+	cacti_log('ANALYSIS STATS: Analyzing Kadupul Tables Complete.  Total time ' . (time() - $start) . ' seconds.', false, 'SYSTEM');
 }
 
 /*  display_version - displays version information */
 function display_version() {
 	$version = get_cacti_cli_version();
-	print "Cacti Analyze Database Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
+	print "Kadupul Analyze Database Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
 }
 
 /*	display_help - displays the usage of the function */
@@ -110,7 +103,7 @@ function display_help () {
 	display_version();
 
 	print "\nusage: analyze_database.php [-d|--debug]\n\n";
-	print "A utility to recalculate the cardinality of indexes within the Cacti database.\n";
+	print "A utility to recalculate the cardinality of indexes within the Kadupul database.\n";
 	print "It's important to periodically run this utility especially on larger systems.\n\n";
 	print "Optional:\n";
 	print "     --local   - Perform the action on the Remote Data Collector if run from there\n";

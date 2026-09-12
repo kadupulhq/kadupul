@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 if (function_exists('pcntl_async_signals')) {
@@ -55,7 +48,7 @@ function sig_handler($signo) {
 	switch ($signo) {
 		case SIGTERM:
 		case SIGINT:
-			cacti_log('WARNING: Cacti Master Poller process terminated by user', true, 'POLLER', POLLER_VERBOSITY_LOW);
+			cacti_log('WARNING: Kadupul Master Poller process terminated by user', true, 'POLLER', POLLER_VERBOSITY_LOW);
 
 			$running_processes = db_fetch_assoc('SELECT ' . SQL_NO_CACHE . ' *
 				FROM poller_time
@@ -142,7 +135,7 @@ if (cacti_sizeof($parms)) {
 
 // catch upgrade case
 if (!db_column_exists('poller', 'dbhost')) {
-	cacti_log('Poller is upgrading from pre Cacti 1.0, exiting till upgraded.', false, 'POLLER');
+	cacti_log('Poller is upgrading from pre Kadupul 1.0, exiting till upgraded.', false, 'POLLER');
 	exit(0);
 }
 
@@ -391,7 +384,7 @@ if ((isset($poller_lastrun) && isset($poller_interval) && $poller_lastrun > 0) &
  */
 if ((($poller_start - $poller_lastrun - 10) > MAX_POLLER_RUNTIME) && ($poller_lastrun > 0)) {
 	cacti_log("WARNING: $task_type is out of sync with the Poller Interval!  The Poller Interval is '$poller_interval' seconds, with a maximum of a '$min_period' second $task_type, but " . number_format_i18n($poller_start - $poller_lastrun, 1) . ' seconds have passed since the last poll!', true, 'POLLER');
-	admin_email(__('Cacti System Warning'), __('WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!', $task_type, $poller_id, $poller_interval, $min_period, number_format_i18n($poller_start - $poller_lastrun, 1)));
+	admin_email(__('Kadupul System Warning'), __('WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!', $task_type, $poller_id, $poller_interval, $min_period, number_format_i18n($poller_start - $poller_lastrun, 1)));
 }
 
 /* used for current implementation for individual pollers */
@@ -541,7 +534,7 @@ while ($poller_runs_completed < $poller_runs) {
 
 	if ($running_processes) {
 		cacti_log("WARNING: There are $running_processes processes detected as overrunning a polling cycle, please investigate", true, 'POLLER');
-		admin_email(__('Cacti System Warning'), __('WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate.', $running_processes, $poller_id));
+		admin_email(__('Kadupul System Warning'), __('WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate.', $running_processes, $poller_id));
 	}
 
 	db_execute_prepared('DELETE FROM poller_time
@@ -606,7 +599,7 @@ while ($poller_runs_completed < $poller_runs) {
 		}
 
 		cacti_log("WARNING: Poller Output Table not Empty.  Issues: $count, $issue_list", true, 'POLLER');
-		admin_email(__('Cacti System Warning'), __('WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s.', $poller_id, $count, $issue_list));
+		admin_email(__('Kadupul System Warning'), __('WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s.', $poller_id, $count, $issue_list));
 
 		db_execute_prepared('DELETE po
 			FROM poller_output AS po
@@ -646,7 +639,7 @@ while ($poller_runs_completed < $poller_runs) {
 		// exit poller if spine is selected and file does not exist
 		if (($poller_type == '2') && (!file_exists(read_config_option('path_spine')))) {
 			cacti_log('ERROR: The spine path: ' . read_config_option('path_spine') . ' is invalid.  Poller can not continue!', true, 'POLLER');
-			admin_email(__('Cacti System Warning'), __('ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!', read_config_option('path_spine'), $poller_id));
+			admin_email(__('Kadupul System Warning'), __('ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!', read_config_option('path_spine'), $poller_id));
 			exit;
 		}
 
@@ -788,7 +781,7 @@ while ($poller_runs_completed < $poller_runs) {
 					// end the process if the runtime exceeds MAX_POLLER_RUNTIME
 					if (($poller_start + MAX_POLLER_RUNTIME) < time()) {
 						cacti_log('Maximum runtime of ' . MAX_POLLER_RUNTIME . ' seconds exceeded. Exiting.', true, 'POLLER');
-						admin_email(__('Cacti System Warning'), __('Maximum runtime of %d seconds exceeded for poller id %d. Exiting.', MAX_POLLER_RUNTIME, $poller_id));
+						admin_email(__('Kadupul System Warning'), __('Maximum runtime of %d seconds exceeded for poller id %d. Exiting.', MAX_POLLER_RUNTIME, $poller_id));
 
 						// generate a snmp notification
 						snmpagent_poller_exiting();
@@ -836,7 +829,7 @@ while ($poller_runs_completed < $poller_runs) {
 			}
 		}
 	} else {
-		cacti_log('WARNING: The Cacti Data Collector is currently disabled!', true, 'POLLER');
+		cacti_log('WARNING: The Kadupul Data Collector is currently disabled!', true, 'POLLER');
 	}
 
 	$poller_runs_completed++;
@@ -893,8 +886,8 @@ while ($poller_runs_completed < $poller_runs) {
 				ON h.id = pi.host_id ' . $sql_where);
 		}
 	} else {
-		cacti_log('WARNING: Cacti Polling Cycle Exceeded Poller Interval by ' . round($loop_end-$loop_start-$poller_interval, 2) . ' seconds', true, 'POLLER', $level);
-		admin_email(__('Cacti System Warning'), __('WARNING: Cacti Polling Cycle Exceeded Poller Interval by ' . round($loop_end-$loop_start-$poller_interval, 2) . ' seconds', true, 'POLLER', $level));
+		cacti_log('WARNING: Kadupul Polling Cycle Exceeded Poller Interval by ' . round($loop_end-$loop_start-$poller_interval, 2) . ' seconds', true, 'POLLER', $level);
+		admin_email(__('Kadupul System Warning'), __('WARNING: Kadupul Polling Cycle Exceeded Poller Interval by ' . round($loop_end-$loop_start-$poller_interval, 2) . ' seconds', true, 'POLLER', $level));
 	}
 
 	if (!$logged) {
@@ -1177,8 +1170,8 @@ function multiple_poller_boost_check() {
 	$pollers = db_fetch_cell('SELECT COUNT(*) FROM poller WHERE disabled="" AND id > 1');
 
 	if ($pollers > 0 && read_config_option('boost_rrd_update_enable') == '') {
-		cacti_log('NOTE: A second Cacti data collector has been added.  Therefore, enabling boost automatically!', false, 'POLLER');
-		admin_email(__('Cacti System Notification'), __('NOTE: A second Cacti data collector has been added.  Therefore, enabling boost automatically!'));
+		cacti_log('NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!', false, 'POLLER');
+		admin_email(__('Kadupul System Notification'), __('NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!'));
 
 		set_config_option('boost_rrd_update_enable', 'on');
 		set_config_option('boost_rrd_update_system_enable', 'on');
@@ -1200,15 +1193,15 @@ function spikekill_poller_bottom () {
 /*  display_version - displays version information */
 function display_version() {
 	$version = get_cacti_version();
-	print "Cacti Main Poller, Version $version, " . COPYRIGHT_YEARS . "\n";
+	print "Kadupul Main Poller, Version $version, " . COPYRIGHT_YEARS . "\n";
 }
 
 function display_help() {
 	display_version();
 
 	print "\nusage: poller.php [--poller=ID] [--force] [--debug]\n\n";
-	print "Cacti's main poller.  This poller is the launcher of cmd.php, spine, and all other\n";
-	print "background processes.  It is the heart of Cacti's data collection engine.\n\n";
+	print "Kadupul's main poller.  This poller is the launcher of cmd.php, spine, and all other\n";
+	print "background processes.  It is the heart of Kadupul's data collection engine.\n\n";
 	print "Optional:\n";
 	print "    --poller=ID    Run as the poller indicated and not the default poller.\n";
 	print "    --force        Override poller overrun detection and force a poller run.\n";

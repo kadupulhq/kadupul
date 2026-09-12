@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 if (function_exists('pcntl_async_signals')) {
@@ -39,7 +32,7 @@ require_once($config['base_path'] . '/lib/dsstats.php');
 /*  display_version - displays version information */
 function display_version() {
 	$version = get_cacti_version();
-	print "Cacti Boost RRD Update Poller, Version $version " . COPYRIGHT_YEARS . "\n";
+	print "Kadupul Boost RRD Update Poller, Version $version " . COPYRIGHT_YEARS . "\n";
 }
 
 /*	display_help - displays the usage of the function */
@@ -47,8 +40,8 @@ function display_help () {
 	display_version();
 
 	print "\nusage: poller_recovery.php [--verbose] [--force] [--debug]\n\n";
-	print "Cacti's Remote Poller Recovery Script.  This poller will transfer all offline boost records\n";
-	print "to the Main Cacti Pollers boost table\n";
+	print "Kadupul's Remote Poller Recovery Script.  This poller will transfer all offline boost records\n";
+	print "to the Main Kadupul Pollers boost table\n";
 	print "Optional:\n";
 	print "    --verbose - Show details logs at the command line\n";
 	print "    --force   - Force the execution of a update process\n";
@@ -141,7 +134,7 @@ if (cacti_sizeof($parms)) {
 
 /* check for an invalid run location */
 if ($poller_id == 1) {
-	print "ERROR: This command is only to be run on remote Cacti Data Collectors\n";
+	print "ERROR: This command is only to be run on remote Kadupul Data Collectors\n";
 	exit(1);
 }
 

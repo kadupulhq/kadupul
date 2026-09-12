@@ -12,13 +12,6 @@
   | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
   | GNU General Public License for more details.                            |
   +-------------------------------------------------------------------------+
-  | Cacti: The Complete RRDTool-based Graphing Solution                     |
-  +-------------------------------------------------------------------------+
-  | This code is designed, written, and maintained by the Cacti Group. See  |
-  | about.php and/or the AUTHORS file for specific developer information.   |
-  +-------------------------------------------------------------------------+
-  | http://www.cacti.net/                                                   |
-  +-------------------------------------------------------------------------+
 */
 
 /***********************************************************
@@ -642,9 +635,9 @@ function prepareStepTemplateInstall(installData) {
 
 function setAddressBar(data, replace) {
 	if (replace) {
-		window.history.replaceState('' , 'Cacti Installation - Step ' + data.Step, 'install.php?data=' + prepareInstallData(data.Step, true));
+		window.history.replaceState('' , 'Kadupul Installation - Step ' + data.Step, 'install.php?data=' + prepareInstallData(data.Step, true));
 	} else {
-		window.history.pushState('' , 'Cacti Installation - Step ' + data.Step, 'install.php?data=' + prepareInstallData(data.Step, true));
+		window.history.pushState('' , 'Kadupul Installation - Step ' + data.Step, 'install.php?data=' + prepareInstallData(data.Step, true));
 	}
 }
 
@@ -863,10 +856,10 @@ $(function() {
 				if (buttonData.Step == STEP_GO_SITE) {
 					window.location.assign('../');
 				} else if (buttonData.Step == STEP_GO_FORUMS) {
-					var win = window.open('https://forums.cacti.net/');
+					var win = window.open('https://github.com/kadupulhq/kadupul/discussions');
 					win.focus;
 				} else if (buttonData.Step == STEP_GO_GITHUB) {
-					var win = window.open('https://github.com/cacti/cacti/issues/');
+					var win = window.open('https://github.com/kadupulhq/kadupul/cacti/issues/');
 					win.focus;
 				} else if (buttonData.Step == STEP_TEST_REMOTE) {
 					performTestConnection();

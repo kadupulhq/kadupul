@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /*
@@ -57,13 +50,13 @@ function draw_edit_form($array) {
 		foreach ($fields_array as $field_name => $field_array) {
 			if ($field_array['method'] == 'hidden') {
 				if (!isset($field_array['value'])) {
-					cacti_log("WARNING: Cacti Form field '$field_name' does not include a 'value' Column.  Using default.", false);
+					cacti_log("WARNING: Kadupul Form field '$field_name' does not include a 'value' Column.  Using default.", false);
 					cacti_debug_backtrace('form_edit');
 
 					if (isset($field_array['default'])) {
 						$field_array['value'] = $field_array['default'];
 					} else {
-						cacti_log("WARNING: Cacti Form field '$field_name' does not include a 'default' Column.  Using empty string.", false);
+						cacti_log("WARNING: Kadupul Form field '$field_name' does not include a 'default' Column.  Using empty string.", false);
 						$field_array['value'] = '';
 					}
 				}
@@ -73,13 +66,13 @@ function draw_edit_form($array) {
 				print '</div>';
 			} elseif ($field_array['method'] == 'hidden_zero') {
 				if (!isset($field_array['value'])) {
-					cacti_log("WARNING: Cacti Form field '$field_name' does not include a 'value' Column.  Using default.", false);
+					cacti_log("WARNING: Kadupul Form field '$field_name' does not include a 'value' Column.  Using default.", false);
 					cacti_debug_backtrace('form_edit');
 
 					if (isset($field_array['default'])) {
 						$field_array['value'] = $field_array['default'];
 					} else {
-						cacti_log("WARNING: Cacti Form field '$field_name' does not include a 'default' Column.  Using '0'.", false);
+						cacti_log("WARNING: Kadupul Form field '$field_name' does not include a 'default' Column.  Using '0'.", false);
 						$field_array['value'] = '0';
 					}
 				}
@@ -113,13 +106,13 @@ function draw_edit_form($array) {
 
 				if (isset($field_array['sub_checkbox'])) {
 					if (!isset($field_array['sub_checkbox']['value'])) {
-						cacti_log("WARNING: Cacti Form field '$field_name' does not include a sub_checkbox 'value' Column.  Using default", false);
+						cacti_log("WARNING: Kadupul Form field '$field_name' does not include a sub_checkbox 'value' Column.  Using default", false);
 						cacti_debug_backtrace('form_edit');
 
 						if (isset($field_array['sub_checkbox']['default'])) {
 							$field_array['sub_checkbox']['value'] = $field_array['default'];
 						} else {
-							cacti_log("WARNING: Cacti Form field '$field_name' does not include a 'default' Column.  Using ''.", false);
+							cacti_log("WARNING: Kadupul Form field '$field_name' does not include a 'default' Column.  Using ''.", false);
 							$field_array['sub_checkbox']['value'] = '';
 						}
 					}
@@ -1279,7 +1272,7 @@ function form_color_dropdown($form_name, $form_previous_value, $form_none_entry,
 	if (cacti_sizeof($colors_list)) {
 		foreach ($colors_list as $color) {
 			if ($color['name'] == '') {
-				$display = __('Cacti Color (%s)', $color['hex']);
+				$display = __('Kadupul Color (%s)', $color['hex']);
 			} else {
 				$display = $color['name'] . ' (' . $color['hex'] . ')';
 			}

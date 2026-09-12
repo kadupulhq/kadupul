@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
  */
 
 require(__DIR__ . '/../include/cli_check.php');
@@ -304,7 +297,7 @@ exit(0);
 /*  display_version - displays version information */
 function display_version() {
 	$version = get_cacti_cli_version();
-	print "Cacti Remove Graphs Utility, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
+	print "Kadupul Remove Graphs Utility, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
 }
 
 function display_help() {
@@ -314,7 +307,7 @@ function display_help() {
 	print "    [--host-id=ID] [--graph-regex=R]" . PHP_EOL;
 	print "    [--force] [--preserve]" . PHP_EOL . PHP_EOL;
 
-	print "Cacti utility for removing Graphs through the command line." . PHP_EOL . PHP_EOL;
+	print "Kadupul utility for removing Graphs through the command line." . PHP_EOL . PHP_EOL;
 
 	print "Options:" . PHP_EOL;
 	print "    --graph-template-id=ID  Mandatory list of Graph Templates." . PHP_EOL;

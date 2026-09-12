@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require(__DIR__ . '/../include/cli_check.php');
@@ -322,7 +315,7 @@ if (cacti_sizeof($rrdfiles)) {
  */
 function display_version() {
 	$version = get_cacti_cli_version();
-	print "Cacti Update RRDfile Heartbeat Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
+	print "Kadupul Update RRDfile Heartbeat Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
 }
 
 /**
@@ -334,14 +327,14 @@ function display_help () {
 	display_version();
 
 	print "\nusage: update_heartbeat.php --new-heartbeat=N [--data-template-id=id] [--prev-heartbeat=N] [--force] [--debug|-d]\n\n";
-	print "A utility to update RRDfile heartbeats and the Cacti database to match.\n\n";
+	print "A utility to update RRDfile heartbeats and the Kadupul database to match.\n\n";
 	print "Required:\n";
-	print "    --new-heartbeat=N     - A Heartbeat in seconds.  It must align with available Heartbeats in Cacti\n";
+	print "    --new-heartbeat=N     - A Heartbeat in seconds.  It must align with available Heartbeats in Kadupul\n";
 	print "                            Currently Heartbeats include from 20-172800 seconds.  The value must also\n";
-	print "                            be at least two times the current Cacti poller interval.\n";
+	print "                            be at least two times the current Kadupul poller interval.\n";
 	print "Optional:\n";
-	print "    --data-template-id=N  - Only update Cacti Data Source Heartbeats that are associated with a Data Template id.\n";
-	print "    --prev-heartbeat=N    - Only update Cacti Data Sources that currently have the Heartbeat specified.\n";
+	print "    --data-template-id=N  - Only update Kadupul Data Source Heartbeats that are associated with a Data Template id.\n";
+	print "    --prev-heartbeat=N    - Only update Kadupul Data Sources that currently have the Heartbeat specified.\n";
 	print "    --force               - If the heartbeat selected does not match the Data Source Profile, update the\n";
 	print "                            Data Source Profile to match the command.  Otherwise, the script will exit.\n";
 	print "    --debug               - Display verbose output during execution\n\n";

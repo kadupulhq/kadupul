@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 
@@ -543,7 +536,7 @@ function do_rrdcheck($thread_id = 1) {
 }
 
 /**
- * rrdcheck_log_statistics - provides generic timing message to both the Cacti log and the settings
+ * rrdcheck_log_statistics - provides generic timing message to both the Kadupul log and the settings
  *   table so that the statistics can be graphed as well.
  *
  * @param $type - (string) the type of statistics to log, either 'HOURLY', 'BOOST'.
@@ -695,7 +688,7 @@ function rrdcheck_error_handler($errno, $errmsg, $filename, $linenum, $vars = []
 		if (substr_count($errmsg, 'date_default_timezone')) return;
 		if (substr_count($errmsg, 'Only variables')) return;
 
-		/* log the error to the Cacti log */
+		/* log the error to the Kadupul log */
 		cacti_log('PROGERR: ' . $err, false, 'RRDCHECK');
 	}
 
@@ -735,7 +728,7 @@ function rrdcheck_boost_bottom() {
 /**
  * rrdcheck_poller_bottom - this routine launches the main rrdcheck poller.
  *   It is forked independently
- *   to the Cacti poller after all polling has finished.
+ *   to the Kadupul poller after all polling has finished.
  *
  * @return - NULL
  */
@@ -765,7 +758,7 @@ function rrdcheck_poller_bottom () {
 
 /**
  * rrdcheck_rrdtool_init - this routine provides a bi-directional socket based connection to RRDtool.
- *   it provides a high speed connection to rrdfile in the case where the traditional Cacti call does
+ *   it provides a high speed connection to rrdfile in the case where the traditional Kadupul call does
  *   not when performing fetch type calls.
  *
  * @return - (mixed) An array that includes both the process resource and the pipes to communicate

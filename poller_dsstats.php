@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 if (function_exists('pcntl_async_signals')) {
@@ -104,7 +97,7 @@ if (cacti_sizeof($parms)) {
 /**
  * Types include
  *
- * pmaster  - the main process launched from the Cacti main poller and will launch child processes
+ * pmaster  - the main process launched from the Kadupul main poller and will launch child processes
  * pchild   - a child of the master process from the 'master'
 
  * bmaster  - a boost master process, will perform launch bchild processes
@@ -302,7 +295,7 @@ function dsstats_master_handler($type, $forcerun) {
  */
 function display_version() {
 	$version = get_cacti_version();
-	print "Cacti Data Source Statistics Poller, Version $version " . COPYRIGHT_YEARS . PHP_EOL;
+	print "Kadupul Data Source Statistics Poller, Version $version " . COPYRIGHT_YEARS . PHP_EOL;
 }
 
 /**
@@ -313,9 +306,9 @@ function display_help () {
 
 	print PHP_EOL . 'usage: poller_dsstats.php [--force] [--debug]' . PHP_EOL . PHP_EOL;
 
-	print 'Cacti\'s Data Source Statistics poller.  This poller will periodically' . PHP_EOL;
-	print 'to calculate Data Source statistics for Cacti and works in conjunction' . PHP_EOL;
-	print 'with Cacti\'s performance boosting poller as required.' . PHP_EOL . PHP_EOL;
+	print 'Kadupul\'s Data Source Statistics poller.  This poller will periodically' . PHP_EOL;
+	print 'to calculate Data Source statistics for Kadupul and works in conjunction' . PHP_EOL;
+	print 'with Kadupul\'s performance boosting poller as required.' . PHP_EOL . PHP_EOL;
 
 	print 'System Controlled:' . PHP_EOL;
 	print '    --type      - The type and subtype of the dsstats process' . PHP_EOL;
@@ -327,7 +320,7 @@ function display_help () {
 }
 
 /**
- * sig_handler - provides a generic means to catch exceptions to the Cacti log.
+ * sig_handler - provides a generic means to catch exceptions to the Kadupul log.
  *
  * @param $signo - (int) the signal that was thrown by the interface.
  *

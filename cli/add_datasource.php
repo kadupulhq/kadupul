@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDTool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require(__DIR__ . '/../include/cli_check.php');
@@ -115,13 +108,13 @@ print "DS Added - DS[$local_data_id]\n";
 /*  display_version - displays version information */
 function display_version() {
 	$version = get_cacti_cli_version();
-	print "Cacti Add Data Source, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
+	print "Kadupul Add Data Source, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
 }
 
 function display_help() {
 	display_version();
 	print "usage: add_datasource.php --host-id=[ID] --data-template-id=[ID]\n\n";
-	print "Cacti utility for adding datasources via a command line interface.\n\n";
+	print "Kadupul utility for adding datasources via a command line interface.\n\n";
 	print "--host-id=id - The host id\n";
 	print "--data-template-id=id - The numerical ID of the data template to be added\n";
 }

@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 function clog_get_datasource_titles($local_data_ids) {
@@ -117,12 +110,12 @@ function clog_purge_logfile() {
 				}
 
 				$log_fh = fopen($logfile, 'w');
-				fwrite($log_fh, __('%s - WEBUI NOTE: Cacti Log Cleared from Web Management Interface.', $date) . PHP_EOL);
+				fwrite($log_fh, __('%s - WEBUI NOTE: Kadupul Log Cleared from Web Management Interface.', $date) . PHP_EOL);
 				fclose($log_fh);
 				raise_message('clog_purged');
 			}
 
-			cacti_log('NOTE: Cacti Log file ' . $purgefile . ', Removed by user ' . get_username($_SESSION['sess_user_id']), false, 'WEBUI');
+			cacti_log('NOTE: Kadupul Log file ' . $purgefile . ', Removed by user ' . get_username($_SESSION['sess_user_id']), false, 'WEBUI');
 		} else {
 			raise_message('clog_permissions');
 		}
@@ -224,7 +217,7 @@ function clog_view_logfile() {
 
 		print "<tr>
 			<td class='textArea'>
-				<p>" . __('Click \'Continue\' to purge the Log File.<br><br><br>Note: If logging is set to both Cacti and Syslog, the log information will remain in Syslog.') . "</p>
+				<p>" . __('Click \'Continue\' to purge the Log File.<br><br><br>Note: If logging is set to both Kadupul and Syslog, the log information will remain in Syslog.') . "</p>
 			</td>
 		</tr>
 		<tr class='saveRow'>
@@ -324,7 +317,7 @@ function clog_view_logfile() {
 					continue;
 				}
 			} elseif (!$exclude_reported) {
-				cacti_log('Cacti Log Exclude Regex "' . $exclude_regex . '" is Invalid.  Update your Exclude Regex to be valid!');
+				cacti_log('Kadupul Log Exclude Regex "' . $exclude_regex . '" is Invalid.  Update your Exclude Regex to be valid!');
 				$exclude_reported = true;
 			}
 		}
@@ -411,7 +404,7 @@ function clog_get_logfiles() {
 	// Defaults go first and second
 	$stdFileArray[] = basename($configLogPath);
 
-	// After Defaults, do Cacti log first (of archived)
+	// After Defaults, do Kadupul log first (of archived)
 	if (cacti_sizeof($files)) {
 		$stdLogFileArray = array();
 		foreach ($files as $logFile) {
@@ -443,7 +436,7 @@ function clog_get_logfiles() {
 	if (!empty($stderrLogPath)) {
 		$stdFileArray[] = basename($stderrLogPath);
 
-		// After Defaults, do Cacti StdErr log second (of archived)
+		// After Defaults, do Kadupul StdErr log second (of archived)
 		if (dirname($stderrLogPath) != $logPath) {
 			$errFiles = @scandir(dirname($stderrLogPath));
 			$files = $errFiles;

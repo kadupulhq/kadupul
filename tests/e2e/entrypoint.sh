@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Cacti E2E entrypoint. Bootstraps include/config.php, waits for MariaDB,
+# Kadupul E2E entrypoint. Bootstraps include/config.php, waits for MariaDB,
 # marks the schema as installed (cacti.sql ships with version='new_install'
 # which otherwise triggers the web wizard), flips CSP to nonce mode, and
 # relaxes the default-admin password-change flag so Playwright can log in.

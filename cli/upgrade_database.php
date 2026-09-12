@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require(__DIR__ . '/../include/cli_check.php');
@@ -104,7 +97,7 @@ $old_version_index = (array_key_exists($old_cacti_version, $cacti_version_codes)
 
 /* do a version check */
 if ($old_cacti_version == CACTI_VERSION) {
-	print 'Your Cacti is already up to date (v' . CACTI_VERSION . ' vs v' . $old_cacti_version . ')' . PHP_EOL;
+	print 'Your Kadupul is already up to date (v' . CACTI_VERSION . ' vs v' . $old_cacti_version . ')' . PHP_EOL;
 	exit;
 } elseif ($old_cacti_version < 0.7) {
 	print 'You are attempting to install cacti ' . CACTI_VERSION . ' onto a 0.6.x database.' . PHP_EOL . "To continue, you must create a new database, import 'cacti.sql' into it," . PHP_EOL . "and\tupdate 'include/config.php' to point to the new database." . PHP_EOL;
@@ -113,7 +106,7 @@ if ($old_cacti_version == CACTI_VERSION) {
 	print "You have created a new database, but have not yet imported the 'cacti.sql' file." . PHP_EOL;
 	exit;
 } elseif ($old_version_index == '') {
-	print "Invalid Cacti version $old_cacti_version, cannot upgrade to " . CACTI_VERSION . PHP_EOL;
+	print "Invalid Kadupul version $old_cacti_version, cannot upgrade to " . CACTI_VERSION . PHP_EOL;
 	exit;
 }
 
@@ -209,7 +202,7 @@ function db_install_errors($cacti_version) {
 /*  display_version - displays version information */
 function display_version() {
 	$version = get_cacti_cli_version();
-	print "Cacti Database Upgrade Utility, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
+	print "Kadupul Database Upgrade Utility, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
 }
 
 /*  display_help - displays the usage of the function */
@@ -217,10 +210,10 @@ function display_help () {
 	display_version();
 
 	print PHP_EOL . 'usage: upgrade_database.php [--debug] [--forcever=VERSION]' . PHP_EOL . PHP_EOL;
-	print 'A command line version of the Cacti database upgrade tool.  You must execute' . PHP_EOL;
+	print 'A command line version of the Kadupul database upgrade tool.  You must execute' . PHP_EOL;
 	print 'this command as a super user, or someone who can write a PHP session file.' . PHP_EOL;
 	print 'Typically, this user account will be apache, www-run, or root.' . PHP_EOL . PHP_EOL;
-	print 'If you are running a beta or alpha version of Cacti and need to rerun' . PHP_EOL;
+	print 'If you are running a beta or alpha version of Kadupul and need to rerun' . PHP_EOL;
 	print 'the upgrade script, simply set the forcever to the previous release.' . PHP_EOL . PHP_EOL;
 	print '--forcever - Force the starting version, say ' . CACTI_VERSION . PHP_EOL;
 	print '--local    - Perform the action on the Remote Data Collector if run from there' . PHP_EOL;

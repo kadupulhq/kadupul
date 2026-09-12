@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 include('./include/auth.php');
@@ -107,7 +100,7 @@ function export() {
 	$form_template_export1 = array(
 		'export_type' => array(
 			'friendly_name' => __('What would you like to export?'),
-			'description' => __('Select the Template type that you wish to export from Cacti.'),
+			'description' => __('Select the Template type that you wish to export from Kadupul.'),
 			'method' => 'drop_array',
 			'value' => get_nfilter_request_var('export_type'),
 			'array' => $export_array,
@@ -126,7 +119,7 @@ function export() {
 		),
 		'include_deps' => array(
 			'friendly_name' => __('Include Dependencies'),
-			'description' => __('Some templates rely on other items in Cacti to function properly. It is highly recommended that you select this box or the resulting import may fail.'),
+			'description' => __('Some templates rely on other items in Kadupul to function properly. It is highly recommended that you select this box or the resulting import may fail.'),
 			'value' => 'on',
 			'method' => 'checkbox',
 			'default' => 'on'
@@ -140,7 +133,7 @@ function export() {
 			'items' => array(
 				0 => array(
 					'radio_value' => '1',
-					'radio_caption' => __('Output to the Browser (within Cacti)'),
+					'radio_caption' => __('Output to the Browser (within Kadupul)'),
 					),
 				1 => array(
 					'radio_value' => '2',

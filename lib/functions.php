@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /**
@@ -389,7 +382,7 @@ function read_user_setting($config_name, $default = false, $force = false, $user
 }
 
 /**
- * is_remote_path_setting - determines of a Cacti setting should be maintained
+ * is_remote_path_setting - determines of a Kadupul setting should be maintained
  *   on the Remote Data Collector separate from the Main cacti server
  *
  * @param $config_name - the name of the configuration setting as specified $settings array
@@ -509,7 +502,7 @@ function config_value_exists($config_name) {
 }
 
 /**
- * read_default_config_option - finds the default value of a Cacti configuration setting
+ * read_default_config_option - finds the default value of a Kadupul configuration setting
  *
  * @param $config_name - the name of the configuration setting as specified $settings array
  *   in 'include/global_settings.php'
@@ -669,7 +662,7 @@ function prime_common_config_settings() {
 }
 
 /**
- * Finds the current value of a Cacti configuration setting
+ * Finds the current value of a Kadupul configuration setting
  *
  * @param $config_name    The name of the configuration setting as specified
  *                        as a key in $settings array in
@@ -1097,7 +1090,7 @@ function display_output_messages() {
 			if (!empty($message)) {
 				$omessage['message'] = (isset($omessage['message']) && $omessage['message'] != '' ? $omessage['message'] . '<br>':'') . $message;
 			} else {
-				cacti_log("ERROR: Cacti Error Message Id '$current_message_id' Not Defined", false, 'WEBUI');
+				cacti_log("ERROR: Kadupul Error Message Id '$current_message_id' Not Defined", false, 'WEBUI');
 			}
 		}
 	}
@@ -1263,7 +1256,7 @@ function get_selective_log_level() {
 }
 
 /**
- * cacti_log - logs a string to Cacti's log file or optionally to the browser
+ * cacti_log - logs a string to Kadupul's log file or optionally to the browser
  *
  * @param $string - the string to append to the log file
  * @param $output - (bool) whether to output the log line to the browser using print() or not
@@ -1402,7 +1395,7 @@ function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '') {
 
 /**
  * tail_file - Emulates the tail function with PHP native functions.
- * It is used in 0.8.6 to speed the viewing of the Cacti log file, which
+ * It is used in 0.8.6 to speed the viewing of the Kadupul log file, which
  * can be problematic in the 0.8.6 branch.
  *
  * @param $file_name    - (char constant) the name of the file to tail
@@ -3729,8 +3722,8 @@ function draw_login_status($using_guest_account = false) {
 		print __('Logged in as') . " <span id='user' class='user usermenuup'>". __('guest') . "</span></div><div><ul class='menuoptions' style='display:none;'>" . ($auth_method != 2 ? "<li><a href='" . $config['url_path'] . "index.php?login=true'>" . __('Login as Regular User') . "</a></li>":"<li><a href='#'>" . __('Logged in a Guest') . '</a></li>');
 
 		print "<li class='menuHr'><hr class='menu'></li>";
-		print "<li id='userCommunity'><a href='https://forums.cacti.net' target='_blank' rel='noopener'>" . __('User Community') . "</a></li>";
-		print "<li id='userDocumentation'><a href='https://github.com/Cacti/documentation/blob/develop/README.md' target='_blank' rel='noopener'>" . __('Documentation') . "</a></li>";
+		print "<li id='userCommunity'><a href='https://github.com/kadupulhq/kadupul/discussions' target='_blank' rel='noopener'>" . __('User Community') . "</a></li>";
+		print "<li id='userDocumentation'><a href='https://kadupul.org/' target='_blank' rel='noopener'>" . __('Documentation') . "</a></li>";
 		print "</ul>";
 
 		api_plugin_hook('nav_login_after');
@@ -3752,8 +3745,8 @@ function draw_login_status($using_guest_account = false) {
 		print ((is_realm_allowed(20) || ($user['password_change'] == 'on' && $user['realm'] == 0)) ? "<li class='menuHr'><hr class='menu'></li>":'');
 
 		if (is_realm_allowed(28)) {
-			print "<li id='userCommunity'><a href='https://forums.cacti.net' target='_blank' rel='noopener'>" . __('User Community') . '</a></li>';
-			print "<li id='userDocumentation'><a href='https://github.com/Cacti/documentation/blob/develop/README.md' target='_blank' rel='noopener'>" . __('Documentation') . '</a></li>';
+			print "<li id='userCommunity'><a href='https://github.com/kadupulhq/kadupul/discussions' target='_blank' rel='noopener'>" . __('User Community') . '</a></li>';
+			print "<li id='userDocumentation'><a href='https://kadupul.org/' target='_blank' rel='noopener'>" . __('Documentation') . '</a></li>';
 			print "<li class='menuHr'><hr class='menu'></li>";
 		}
 
@@ -4795,7 +4788,7 @@ function cacti_escapeshellarg($string, $quote = true) {
 }
 
 /**
- * set a page refresh in Cacti through a callback
+ * set a page refresh in Kadupul through a callback
  *
  * @param $refresh - an array containing the page, seconds, and logout
  *
@@ -5013,8 +5006,8 @@ function send_mail($to, $from, $subject, $body, $attachments = '', $headers = ''
  * The $from field will only use the first contact specified.
  *
  * If no contact is provided for $replyto then $from is used for that too.
- * If $from is empty, it will default to cacti@<server> or if no server name can
- * be found, it will use cacti@cacti.net.
+ * If $from is empty, it will default to kadupul@<server> or if no server name can
+ * be found, it will use kadupul@localhost.localdomain.
  *
  * The $attachments parameter may either be a single string, or a list of attachments
  * either as strings or an array.  The array can have the following keys:
@@ -5116,7 +5109,7 @@ function mailer($from, $to, $cc, $bcc, $replyto, $subject, $body, $body_text = '
 	 * Set the from details using the variable passed in
 	 * - if name is blank, use setting's name
 	 * - if email is blank, use setting's email, otherwise default to
-	 *   cacti@<server> or cacti@cacti.net if no known server name
+	 *   kadupul@<server> or kadupul@localhost.localdomain if no known server name
 	 */
 	$from = parse_email_details($from, 1);
 
@@ -5132,16 +5125,16 @@ function mailer($from, $to, $cc, $bcc, $replyto, $subject, $body, $body_text = '
 
 	if (empty($from['email'])) {
 		if (isset($_SERVER['HOSTNAME'])) {
-			$from['email'] = 'Cacti@' . $_SERVER['HOSTNAME'];
+			$from['email'] = 'kadupul@' . $_SERVER['HOSTNAME'];
 		} else {
-			$from['email'] = 'Cacti@cacti.net';
+			$from['email'] = 'kadupul@localhost.localdomain';
 		}
 	}
 
 	// Ensure name is never null — PHPMailer passes it to preg_replace()
 	// which is deprecated for null in PHP 8.x.
 	if (empty($from['name'])) {
-		$from['name'] = 'Cacti';
+		$from['name'] = 'Kadupul';
 	}
 
 	$result = null;
@@ -5570,7 +5563,7 @@ function ping_mail_server($host, $port, $user, $password, $timeout = 10, $secure
 function email_test() {
 	global $config;
 
-	$message  =  __('This is a test message generated from Cacti.  This message was sent to test the configuration of your Mail Settings.') . '<br><br>';
+	$message  =  __('This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings.') . '<br><br>';
 	$message .= __('Your email settings are currently set as follows') . '<br><br>';
 	$message .= '<b>' . __('Method') . '</b>: ';
 
@@ -5638,7 +5631,7 @@ function email_test() {
 
 		$global_alert_address = read_config_option('settings_test_email');
 
-		$errors = send_mail($global_alert_address, '', __('Cacti Test Message'), $message, '', '', true);
+		$errors = send_mail($global_alert_address, '', __('Kadupul Test Message'), $message, '', '', true);
 		if ($errors == '') {
 			$errors = __('Success!');
 		}
@@ -6231,7 +6224,7 @@ function CactiErrorHandler($level, $message, $file, $line, $context = array()) {
 			if ($plugin != '') {
 				api_plugin_disable_all($plugin);
 				cacti_log("ERRORS DETECTED - DISABLING PLUGIN '$plugin'");
-				admin_email(__('Cacti System Warning'), __('Cacti disabled plugin %s due to the following error: %s!  See the Cacti logfile for more details.', $plugin, $error));
+				admin_email(__('Kadupul System Warning'), __('Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details.', $plugin, $error));
 			}
 			break;
 		case E_RECOVERABLE_ERROR:
@@ -6300,7 +6293,7 @@ function CactiShutdownHandler() {
 					if ($plugin != '') {
 						api_plugin_disable_all($plugin);
 						cacti_log("ERRORS DETECTED - DISABLING PLUGIN '$plugin'");
-						admin_email(__('Cacti System Warning'), __('Cacti disabled plugin %s due to the following error: %s!  See the Cacti logfile for more details.', $plugin, $message));
+						admin_email(__('Kadupul System Warning'), __('Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details.', $plugin, $message));
 					}
 			}
 		}
@@ -6390,7 +6383,7 @@ function call_remote_data_collector($poller_id, $url, $logtype = 'WEBUI') {
 			if (debounce_run_notification('poller_down:' . $poller_id)) {
 				cacti_log(sprintf('WARNING: PollerID:%s has an invalid hostname:%s.  It is not reachable via DNS!', $poller_id, $hostname), false, $logtype);
 
-				admin_email(__('Cacti System Warning'), __('WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!', $poller_id, $hostname));
+				admin_email(__('Kadupul System Warning'), __('WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!', $poller_id, $hostname));
 			}
 
 			return '';
@@ -6648,7 +6641,7 @@ function repair_system_data_input_methods($step = 'import') {
 								array($data_input_field_id));
 						}
 					} else {
-						cacti_log('WARNING: Could not find Cacti default matching hash for unknown system hash "' . $bhash['hash'] . '" for ' . $data_input_id . '.  No repair performed.');
+						cacti_log('WARNING: Could not find Kadupul default matching hash for unknown system hash "' . $bhash['hash'] . '" for ' . $data_input_id . '.  No repair performed.');
 					}
 				}
 			}
@@ -6797,7 +6790,7 @@ function get_cacti_cli_version() {
 }
 
 /**
- * cacti_version_compare - Compare Cacti version numbers
+ * cacti_version_compare - Compare Kadupul version numbers
  */
 function cacti_version_compare($version1, $version2, $operator = '>') {
 	if ($version1 == 'new_install') {
@@ -6995,9 +6988,9 @@ function get_include_relpath($path) {
 	} elseif (debounce_run_notification('missing:' . $path)) {
 		$npath = str_replace($basePath, '', $path);
 
-		cacti_log(sprintf('WARNING: Key Cacti Include File %s missing.  Please locate and replace this file', $config['base_path'] . '/' . $npath), false, 'WEBUI');
+		cacti_log(sprintf('WARNING: Key Kadupul Include File %s missing.  Please locate and replace this file', $config['base_path'] . '/' . $npath), false, 'WEBUI');
 
-		admin_email(__('Cacti System Warning'), __('WARNING:  Key Cacti Include File %s missing.  Please locate and replace this file', $config['base_path'] . '/' . $npath));
+		admin_email(__('Kadupul System Warning'), __('WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file', $config['base_path'] . '/' . $npath));
 	}
 
 	return $npath;
@@ -7237,8 +7230,8 @@ function get_client_addr() {
 }
 
 /**
- * get_cacti_base_tables - Extracts all the base Cacti tables from the
- * cacti.sql file in the base Cacti directory.
+ * get_cacti_base_tables - Extracts all the base Kadupul tables from the
+ * cacti.sql file in the base Kadupul directory.
  */
 function get_cacti_base_tables() {
 	global $config;
@@ -7429,7 +7422,7 @@ function cacti_input_string_is_safe($input_string) {
 		return false;
 	}
 
-	// If the Cacti admin permit's unsafe metachars short circuit here
+	// If the Kadupul admin permit's unsafe metachars short circuit here
 	if (read_config_option('allow_unsafe_metachars') == 'on') {
 		return true;
 	}
@@ -7599,13 +7592,13 @@ function is_page_ajax() {
 function raise_ajax_permission_denied() {
 	if (is_page_ajax()) {
 		header('HTTP/1.1 401 ' . __('Permission Denied'));
-		print __('You are not permitted to access this section of Cacti.') . '  ' . __('If you feel that this is an error. Please contact your Cacti Administrator.');
+		print __('You are not permitted to access this section of Kadupul.') . '  ' . __('If you feel that this is an error. Please contact your Kadupul Administrator.');
 		exit;
 	}
 }
 
 /**
- * cacti_session_start - Create a Cacti session from the settings set by the administrator
+ * cacti_session_start - Create a Kadupul session from the settings set by the administrator
  *
  * @param bool $regenerate - If you are logging in for the first time, regenerate the token
  *
@@ -7651,7 +7644,7 @@ function cacti_session_start($regenerate = false) {
  * cacti_session_regenerate - This function will regenerate a session token in cases
  * where the user logs in for the first time, or their session token has existed
  * too long. We forcibly destroy old session data as it will remove the entry from
- * the Cacti sessions table immediately thus reducing the number of inactive
+ * the Kadupul sessions table immediately thus reducing the number of inactive
  * sessions in the sessions table.
  *
  * @return array - The prior sessions data
@@ -7669,7 +7662,7 @@ function cacti_session_regenerate() {
 }
 
 /**
- * cacti_session_close - Closes the open Cacti session if it is open
+ * cacti_session_close - Closes the open Kadupul session if it is open
  * it can be re-opened afterwards in the case after a long running query
  *
  * @return - null
@@ -7726,7 +7719,7 @@ function cacti_cookie_set($session, $val) {
 }
 
 /**
- * cacti_cookie_logout - Clears the Cacti and the 'keep me logged in' cookies
+ * cacti_cookie_logout - Clears the Kadupul and the 'keep me logged in' cookies
  *
  * @return - null
  */
@@ -7804,7 +7797,7 @@ function cacti_cookie_session_set($user, $realm, $nssecret) {
 }
 
 /**
- * cacti_cookie_session_logout - Logs out of Cacti and the remember me session
+ * cacti_cookie_session_logout - Logs out of Kadupul and the remember me session
  *
  * @return - null
  */

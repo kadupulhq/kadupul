@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 if (function_exists('pcntl_async_signals')) {
@@ -373,7 +366,7 @@ function boost_prepare_process_table() {
 			if ($previous_start_time + $max_run_duration < $start_time) {
 				cacti_log('WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash', true, 'BOOST SVR');
 
-				admin_email(__('Cacti System Warning'), __('WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash', 'BOOST SVR'));
+				admin_email(__('Kadupul System Warning'), __('WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash', 'BOOST SVR'));
 			}
 		}
 	}
@@ -1405,7 +1398,7 @@ function boost_purge_cached_png_files($forcerun) {
 			if ($normalized_cache === false || $normalized_base === false
 				|| $normalized_cache === $normalized_base
 				|| strpos($normalized_cache, $normalized_base . '/') !== 0) {
-				cacti_log("ERROR: Boost PNG Cache Directory '$cache_directory' is outside of Cacti base path. Purge aborted.", true, 'BOOST');
+				cacti_log("ERROR: Boost PNG Cache Directory '$cache_directory' is outside of Kadupul base path. Purge aborted.", true, 'BOOST');
 				return;
 			}
 
@@ -1444,7 +1437,7 @@ function boost_purge_cached_png_files($forcerun) {
 /*  display_version - displays version information */
 function display_version() {
 	$version = get_cacti_version();
-	print "Cacti Boost RRD Update Poller, Version $version " . COPYRIGHT_YEARS . "\n";
+	print "Kadupul Boost RRD Update Poller, Version $version " . COPYRIGHT_YEARS . "\n";
 }
 
 /*	display_help - displays the usage of the function */
@@ -1452,7 +1445,7 @@ function display_help () {
 	display_version();
 
 	print "\nusage: poller_boost.php [--verbose] [--force] [--debug]\n\n";
-	print "Cacti's performance boosting poller.  This poller will purge the boost cache periodically.  You may\n";
+	print "Kadupul's performance boosting poller.  This poller will purge the boost cache periodically.  You may\n";
 	print "force the processing of the boost cache by using the --force option.\n\n";
 	print "Optional:\n";
 	print "    --verbose - Show details logs at the command line\n";

@@ -14,16 +14,8 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDTool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
-/* Original script is located here https://forums.cacti.net/viewtopic.php?t=35816, but this one was modified quite a lot */
 
 require(__DIR__ . '/../include/cli_check.php');
 require_once($config['base_path'] . '/lib/poller.php');
@@ -185,14 +177,14 @@ if (cacti_sizeof($graph)) {
 
 function display_version() {
 	$version = get_cacti_cli_version();
-	print "Cacti Graph Repair Tool, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
+	print "Kadupul Graph Repair Tool, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
 }
 
 /* display_help - displays the usage of the function */
 function display_help() {
 	print "usage: repair_graphs.php [--host-id=ID] --data-template-id=[ID]\n";
 	print "	--graph-template-id=[ID] [--show-sql] [--execute]\n\n";
-	print "Cacti utility for repairing graph<->datasource relationship via a command line interface.\n\n";
+	print "Kadupul utility for repairing graph<->datasource relationship via a command line interface.\n\n";
 	print "--execute - Perform the repair\n";
 	print "--show-sql - Show SQL lines for the repair (optional)\n";
 	print "--host-id=id - The host_id to repair or leave empty to process all hosts\n";

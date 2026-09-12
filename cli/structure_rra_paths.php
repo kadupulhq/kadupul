@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require(__DIR__ . '/../include/cli_check.php');
@@ -87,7 +80,7 @@ if (cacti_sizeof($parms)) {
 $start = microtime(true);
 
 if (read_config_option('boost_rrd_update_enable') !== 'on') {
-	print PHP_EOL . 'FATAL: Cacti\'s Performance Booster required to run this utility.'. PHP_DEOL;
+	print PHP_EOL . 'FATAL: Kadupul\'s Performance Booster required to run this utility.'. PHP_DEOL;
 	display_help();
 	exit -1;
 }
@@ -390,7 +383,7 @@ function sp_recursive_chgrp($path, $group) {
  */
 function display_version() {
 	$version = get_cacti_cli_version();
-	print "Cacti Structured Paths Creation Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
+	print "Kadupul Structured Paths Creation Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
 }
 
 /**
@@ -401,7 +394,7 @@ function display_help() {
 
 	print PHP_EOL . 'usage: structure_rra_paths.php [--host-id=N] [--host-template-id=N] [--proceed]' . PHP_DEOL;
 
-	print 'A simple interactive command line utility that converts a Cacti system from using' . PHP_EOL;
+	print 'A simple interactive command line utility that converts a Kadupul system from using' . PHP_EOL;
 	print 'legacy RRA paths to using structured RRA paths with the following' . PHP_EOL;
 	print 'four naming patterns:' . PHP_DEOL;
 
@@ -418,14 +411,14 @@ function display_help() {
 	print ' --host-id=N           Specify if you wish to switch on a single Device.' . PHP_EOL;
 	print ' --host-template-id=N  Specify if you wish to change for a class of Devices.' . PHP_DEOL;
 
-	print 'This utility is designed for very large Cacti systems or file systems that have' . PHP_EOL;
+	print 'This utility is designed for very large Kadupul systems or file systems that have' . PHP_EOL;
 	print 'problems with very large directories.  It will run interactively, but it first' . PHP_EOL;
-	print 'requires you to be using Cacti\'s performance boosting feature called Boost.' . PHP_DEOL;
+	print 'requires you to be using Kadupul\'s performance boosting feature called Boost.' . PHP_DEOL;
 
 	print 'On Linux/UNIX, the root user is required to apply file and directory ownership.' . PHP_EOL;
-	print 'The when leveraging boost, the utility will work with or without the Cacti poller' . PHP_EOL;
+	print 'The when leveraging boost, the utility will work with or without the Kadupul poller' . PHP_EOL;
 	print 'running.  The utility will use the set_lock() and release_lock() MySQL/MariaDB' . PHP_EOL;
-	print 'for interlocking, and therefore the utility is safe to run while the Cacti' . PHP_EOL;
+	print 'for interlocking, and therefore the utility is safe to run while the Kadupul' . PHP_EOL;
 	print 'poller is running.'. PHP_DEOL;
 
 	print 'It is recommended that you not interrupt this script as files may not appear' . PHP_EOL;

@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
  */
 
 function aggregate_build_children_url($local_graph_id, $graph_start = -1, $graph_end = -1, $rra_id = -1) {
@@ -301,7 +294,7 @@ function aggregate_error_handler($errno, $errmsg, $filename, $linenum, $vars = [
 		if (substr_count($errmsg, 'date_default_timezone')) return;
 		if (substr_count($errmsg, 'Only variables')) return;
 
-		/* log the error to the Cacti log */
+		/* log the error to the Kadupul log */
 		cacti_log('PROGERR: ' . $err, false, 'AGGREGATE', POLLER_VERBOSITY_DEBUG);
 		print('PROGERR: ' . $err . '<br><pre>');
 

@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /* This endpoint is unauthenticated and reachable pre-bootstrap, so it
@@ -33,7 +26,7 @@
  * Self-contained logger for the CSP report endpoint. Prefers cacti_log()
  * when a parent caller has already bootstrapped $config; otherwise writes
  * to PHP's default error log. Either way the report lands somewhere an
- * operator can read it without depending on the Cacti DB.
+ * operator can read it without depending on the Kadupul DB.
  */
 function csp_report_log($message) {
 	$message = preg_replace('/[\x00-\x1f\x7f]/', ' ', (string) $message);

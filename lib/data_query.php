@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 function run_data_query($host_id, $snmp_query_id, $automation = false, $force = false) {
@@ -609,7 +602,7 @@ function get_data_query_array($snmp_query_id) {
 		$replace       = array($config['base_path'], read_config_option('path_snmpget'), read_config_option('path_php_binary'));
 		$xml_file_path = str_replace($search, $replace, $xml_file_path);
 
-		/* Reject paths that resolve outside the Cacti resource tree.
+		/* Reject paths that resolve outside the Kadupul resource tree.
 		 * xml_path may be absolute after <path_cacti> substitution above,
 		 * so we validate against the actual filesystem location rather than
 		 * just the token value. */
@@ -1782,7 +1775,7 @@ function encode_data_query_index($index) {
    @returns - the decoded data query index */
 function decode_data_query_index($encoded_index, $data_query_id, $host_id) {
 	/* yes, i know MySQL has a MD5() function that would make this a bit quicker. however i would like to
-	keep things abstracted for now so Cacti works with ADODB fully when i get around to porting my db calls */
+	keep things abstracted for now so Kadupul works with ADODB fully when i get around to porting my db calls */
 	$indexes = db_fetch_assoc_prepared('SELECT snmp_index
 		FROM host_snmp_cache
 		WHERE host_id = ?
@@ -2352,7 +2345,7 @@ function get_best_data_query_index_type($host_id, $data_query_id) {
 				return false;
 			}
 		} else {
-			cacti_log('ERROR: Cacti Data Query DQ[' . $data_query_id . '] XML file may be missing or not readable.');
+			cacti_log('ERROR: Kadupul Data Query DQ[' . $data_query_id . '] XML file may be missing or not readable.');
 			return false;
 		}
 	}

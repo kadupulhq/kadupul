@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 // include global
@@ -31,5 +24,5 @@ if (file_exists($config['base_path'] . "/" . CACTI_DOCUMENTATION_TOC)) {
 	print file_get_contents($config['base_path'] . "/" . CACTI_DOCUMENTATION_TOC);
 } else {
 	// Redirect to GitHub documentation
-	header("Location: https://github.com/Cacti/documentation/blob/develop/README.md");
+	header("Location: https://kadupul.org/");
 }

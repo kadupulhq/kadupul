@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 function do_hook($name) {
@@ -253,7 +246,7 @@ function api_plugin_run_plugin_hook_function($hook, $plugin, $function, $ret) {
 		$required_capabilities = array(
 			// Poller related
 			'poller_output'            => array('remote_collect'),              // Processing poller output, api_plugin_hook_function
-			'cacti_stats_update'       => array('remote_collect'),              // Updating Cacti stats
+			'cacti_stats_update'       => array('remote_collect'),              // Updating Kadupul stats
 
 			// GUI Related
 			'top_header'               => array('online_view', 'offline_view'), // Top Tabs, api_plugin_hook_function
@@ -1321,13 +1314,13 @@ function plugin_is_compatible($plugin) {
 
 	if ($info !== false) {
 		if (!isset($info['compat']) || cacti_version_compare(CACTI_VERSION, $info['compat'], '<')) {
-			return array('compat' => false, 'requires' => __('Requires: Cacti >= %s', $info['compat']));
+			return array('compat' => false, 'requires' => __('Requires: Kadupul >= %s', $info['compat']));
 		}
 	} else {
 		return array('compat' => false, 'requires' => __('Legacy Plugin'));
 	}
 
-	return array('compat' => true, 'requires' => __('Requires: Cacti >= %s', $info['compat']));
+	return array('compat' => true, 'requires' => __('Requires: Kadupul >= %s', $info['compat']));
 }
 
 function plugin_load_info_defaults($file, $info, $defaults = array()) {

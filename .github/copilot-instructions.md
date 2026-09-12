@@ -1,9 +1,9 @@
-Copilot instructions for this repo (Cacti 1.2.x)
+Copilot instructions for this repo (Kadupul)
 
 Use these notes to navigate and contribute productively to this PHP codebase.
 
 ## Big picture
-- Cacti is a PHP web app + CLI poller/daemon that stores state in MySQL/MariaDB and graphs via RRDtool.
+- Kadupul is a PHP web app + CLI poller/daemon that stores state in MySQL/MariaDB and graphs via RRDtool.
 - Bootstrap: `include/global.php` loads config, DB connection (`lib/database.php`), core libs, and sets `$config` globals. Web pages typically include `include/auth.php` first; CLI scripts include `include/cli_check.php`.
 - Major areas:
   - Web UI (top-level `*.php`, helpers in `lib/html*.php`, `include/top_*_header.php`/`bottom_footer.php`).
@@ -37,7 +37,7 @@ Use these notes to navigate and contribute productively to this PHP codebase.
 - Use hooks like `page_head`, `poller_top`, `device_remove`, `create_complete_graph_from_template` to integrate (grep for `api_plugin_hook_function` in `lib/`).
 
 ## Testing, CI, and local checks
-- No PHPUnit; CI runs syntax checks and an end-to-end smoke: sets up Apache+MySQL, installs Cacti, enables plugins, runs poller, and spiders pages (see `.github/workflows/syntax.yml`, scripts in `tests/tools/`).
+- No PHPUnit; CI runs syntax checks and an end-to-end smoke: sets up Apache+MySQL, installs Kadupul, enables plugins, runs poller, and spiders pages (see `.github/workflows/syntax.yml`, scripts in `tests/tools/`).
 - Local quick checks:
   - PHP lint: `find . -name '*.php' -exec php -l {} \; | grep -iv 'no syntax errors detected'` (CI uses similar).
   - Minimal smoke: create `include/config.php` from `.dist`, import `cacti.sql`, then run install + `poller.php` as above; tail `log/cacti.log` for `SYSTEM STATS`.
@@ -51,7 +51,7 @@ Use these notes to navigate and contribute productively to this PHP codebase.
 ## Coding standards
 - Follow PHP PSR standards (PSR-12/PSR-1) for new or standalone code where practical, but match the file’s existing conventions.
   - Preserve the file’s indentation (tabs vs spaces) and brace style; do not reformat unrelated code.
-  - Keep the Cacti GPL header block at the top of PHP files.
+  - Keep the copyright and GPL notices at the top of PHP files.
   - Use snake_case functions and procedural structure consistent with the codebase; avoid introducing namespaces unless integrating vendor code.
   - Maintain PHP 5.4+ compatibility (CI tests 7.0–8.4). Avoid using features requiring >7.0 (e.g., union types, attributes, typed properties) in core code.
   - Don’t change public function signatures in `lib/api_*.php` or widely used helpers without auditing usages.

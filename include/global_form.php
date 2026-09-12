@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 if (!defined('VALID_HOST_FIELDS')) {
@@ -133,7 +126,7 @@ $fields_snmp_item = array(
 	'snmp_timeout' => array(
 		'method' => 'textbox',
 		'friendly_name' => __('SNMP Timeout'),
-		'description' => __('The maximum number of milliseconds Cacti will wait for an SNMP response (does not work with php-snmp support).'),
+		'description' => __('The maximum number of milliseconds Kadupul will wait for an SNMP response (does not work with php-snmp support).'),
 		'value' => '|arg1:snmp_timeout|',
 		'max_length' => '8',
 		'default' => read_config_option('snmp_timeout'),
@@ -568,7 +561,7 @@ $struct_data_source = array(
 		'max_length' => '250',
 		'size' => '80',
 		'default' => '',
-		'description' => __('Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation.'),
+		'description' => __('Choose a name for this data source.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation.'),
 		'flags' => ''
 		),
 	'data_source_path' => array(
@@ -611,7 +604,7 @@ $struct_data_source = array(
 		'method' => 'checkbox',
 		'default' => 'on',
 		'form_id' => '|arg1:id|',
-		'description' => __('Whether Cacti should gather data for this data source or not.'),
+		'description' => __('Whether Kadupul should gather data for this data source or not.'),
 		'flags' => ''
 		)
 	);
@@ -706,7 +699,7 @@ $struct_graph = array(
 		'method' => 'textbox',
 		'max_length' => '255',
 		'default' => '',
-		'description' => __('The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Cacti documentation.'),
+		'description' => __('The name that is printed on the graph.  It can include replacement variables such as |host_description| or |query_fieldName|.  For a complete list of supported replacement tags, please see the Kadupul documentation.'),
 		'size' => '80'
 		),
 	'vertical_label' => array(
@@ -845,7 +838,7 @@ $struct_graph = array(
 		'method' => 'textbox',
 		'max_length' => '50',
 		'default' => '',
-		'description' => __('What unit Cacti should use on the Y-axis. Use 3 to display everything in "k" or -6 to display everything in "u" (micro).'),
+		'description' => __('What unit Kadupul should use on the Y-axis. Use 3 to display everything in "k" or -6 to display everything in "u" (micro).'),
 		'size' => '12'
 		),
 	'unit_length' => array(
@@ -1213,7 +1206,7 @@ $fields_host_edit = array(
 	'poller_id' => array(
 		'method' => 'drop_sql',
 		'friendly_name' => __('Poller Association'),
-		'description' => __('Choose the Cacti Data Collector/Poller to be used to gather data from this Device.'),
+		'description' => __('Choose the Kadupul Data Collector/Poller to be used to gather data from this Device.'),
 		'value' => '|arg1:poller_id|',
 		'default' => read_config_option('default_poller'),
 		'sql' => 'SELECT id, name FROM poller ORDER BY name',
@@ -1265,7 +1258,7 @@ $fields_host_edit = array(
 		),
 	'availability_method' => array(
 		'friendly_name' => __('Downed Device Detection'),
-		'description' => __('The method Cacti will use to determine if a host is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>'),
+		'description' => __('The method Kadupul will use to determine if a host is available for polling.  <br><i>NOTE: It is recommended that, at a minimum, SNMP always be selected.</i>'),
 		'on_change' => 'changeHostForm()',
 		'value' => '|arg1:availability_method|',
 		'method' => 'drop_array',
@@ -1301,7 +1294,7 @@ $fields_host_edit = array(
 		),
 	'ping_retries' => array(
 		'friendly_name' => __('Ping Retry Count'),
-		'description' => __('After an initial failure, the number of ping retries Cacti will attempt before failing.'),
+		'description' => __('After an initial failure, the number of ping retries Kadupul will attempt before failing.'),
 		'method' => 'textbox',
 		'value' => '|arg1:ping_retries|',
 		'default' => read_config_option('ping_retries'),
@@ -1324,7 +1317,7 @@ $fields_host_edit = array(
 		),
 	'external_id' => array(
 		'friendly_name' => __('External ID'),
-		'description' => __('External ID for linking Cacti data to external monitoring systems.'),
+		'description' => __('External ID for linking Kadupul data to external monitoring systems.'),
 		'method' => 'textbox',
 		'value' => '|arg1:external_id|',
 		'default' => '',
@@ -1713,7 +1706,7 @@ $fields_template_import = array(
 	'remove_orphans' => array(
 		'friendly_name' => __('Remove Orphaned Graph Items'),
 		'method' => 'checkbox',
-		'description' => __('If checked, Cacti will delete any Graph Items from both the Graph Template and associated Graphs that are not included in the imported Graph Template.'),
+		'description' => __('If checked, Kadupul will delete any Graph Items from both the Graph Template and associated Graphs that are not included in the imported Graph Template.'),
 		'value' => '',
 		'default' => ''
 	),

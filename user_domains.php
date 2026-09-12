@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 include('./include/auth.php');
@@ -338,7 +331,7 @@ function domain_edit() {
 			),
 		'user_id' => array(
 			'friendly_name' => __('User Template'),
-			'description' => __('The name of the user that Cacti will use as a template for new user accounts.'),
+			'description' => __('The name of the user that Kadupul will use as a template for new user accounts.'),
 			'method' => 'drop_sql',
 			'value' => '|arg1:user_id|',
 			'none_value' => __('No User'),
@@ -365,7 +358,7 @@ function domain_edit() {
 	$fields_domain_ldap_edit = array(
 		'server' => array(
 			'friendly_name' => __('Server(s)'),
-			'description' => __('A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Cacti will attempt to use the LDAP servers from left to right to authenticate a user.'),
+			'description' => __('A space delimited list of DNS hostnames or IP address of for valid LDAP servers.  Kadupul will attempt to use the LDAP servers from left to right to authenticate a user.'),
 			'method' => 'textbox',
 			'value' => '|arg1:server|',
 			'default' => read_config_option('ldap_server'),

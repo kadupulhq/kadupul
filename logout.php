@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 define('CACTI_IN_INSTALL', 1);
@@ -53,11 +46,11 @@ if (api_plugin_hook_function('custom_logout_message', OPER_MODE_NATIVE) === OPER
 /* Check to see if we are using Web Basic Auth */
 if (get_request_var('action') == 'timeout' || get_request_var('action') == 'disabled' || get_request_var('action') == 'remote') {
 	if (get_request_var('action') == 'timeout') {
-		$message = __('You have been logged out of Cacti due to a session timeout.');
+		$message = __('You have been logged out of Kadupul due to a session timeout.');
 	} elseif (get_request_var('action') == 'disabled') {
-		$message = __('You have been logged out of Cacti due to an account suspension.');
+		$message = __('You have been logged out of Kadupul due to an account suspension.');
 	} elseif (get_request_var('action') == 'remove') {
-		$message = __('You have been logged out of Cacti due to a Remote Data Collector state change');
+		$message = __('You have been logged out of Kadupul due to a Remote Data Collector state change');
 	} else {
 		$message = '';
 	}
@@ -65,7 +58,7 @@ if (get_request_var('action') == 'timeout' || get_request_var('action') == 'disa
 	print "<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN' 'http://www.w3.org/TR/html4/loose.dtd'>";
 	print "<html>";
 	print "<head>";
-	html_common_header(__('Logout of Cacti'));
+	html_common_header(__('Logout of Kadupul'));
 	print "</head>";
 	print "<body class='logoutBody'>
 	<div class='logoutLeft'></div>

@@ -12,13 +12,6 @@
   | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
   | GNU General Public License for more details.                            |
   +-------------------------------------------------------------------------+
-  | Cacti: The Complete RRDTool-based Graphing Solution                     |
-  +-------------------------------------------------------------------------+
-  | This code is designed, written, and maintained by the Cacti Group. See  |
-  | about.php and/or the AUTHORS file for specific developer information.   |
-  +-------------------------------------------------------------------------+
-  | http://www.cacti.net/                                                   |
-  +-------------------------------------------------------------------------+
 */
 
 // Host Autocomplete Magic
@@ -133,7 +126,7 @@ function setupTheme() {
 
 	// -- login, logout -- rewrite
 	if ($('.loginArea legend').length !== 0) {
-		$('.loginArea legend').text('Cacti Monitoring');
+		$('.loginArea legend').text('Kadupul Monitoring');
 		$('.loginTitle p').html('v'+cactiVersion);
 		$('#login_username, #login_password').attr('placeholder', '');
 	}
@@ -152,13 +145,13 @@ function setupTheme() {
 		$('<div class="maintabs usertabs">' + user_tab_content + '</div>').insertAfter('.maintabs');
 
 		let submenu_user_help_content =
-			'<li><a href="https://www.cacti.net" target="_blank" rel="noopener">'+cactiHome+'</></a></li>'
-			+'<li><a href="https://github.com/cacti" target="_blank" rel="noopener">'+cactiProjectPage+'</a></li>'
+			'<li><a href="https://kadupul.org" target="_blank" rel="noopener">'+cactiHome+'</></a></li>'
+			+'<li><a href="https://github.com/kadupulhq/kadupul" target="_blank" rel="noopener">'+cactiProjectPage+'</a></li>'
 			+'<li><hr class="menu"></li>'
-			+'<li><a href="https://forums.cacti.net/" target="_blank" rel="noopener">'+cactiCommunityForum+'</a></li>'
-			+'<li><a href="https://github.com/Cacti/documentation/blob/develop/README.md" target="_blank" rel="noopener">'+cactiDocumentation+'</a></li>'
+			+'<li><a href="https://github.com/kadupulhq/kadupul/discussions" target="_blank" rel="noopener">'+cactiCommunityForum+'</a></li>'
+			+'<li><a href="https://kadupul.org/" target="_blank" rel="noopener">'+cactiDocumentation+'</a></li>'
 			+'<li><hr class="menu"></li>'
-			+'<li><a href="https://github.com/Cacti/cacti/issues/new" target="_blank" rel="noopener">'+reportABug+'</a></li>'
+			+'<li><a href="https://github.com/kadupulhq/kadupul/issues/new" target="_blank" rel="noopener">'+reportABug+'</a></li>'
 			+'<li><a href="'+urlPath+'about.php">'+aboutCacti+'</a></li>';
 
 		$('<div class="dropdownMenu">'
@@ -316,9 +309,9 @@ function setupTheme() {
 				+       '</a>'
 				+       '<ul>'
 				+           '<li><a class="pic" role="menuitem" href="'+urlPath+'about.php">'+aboutCacti+'</a></li>'
-				+           '<li><a href="https://github.com/Cacti/documentation/blob/develop/README.md" target="_blank" rel="noopener">'+cactiDocumentation+'</a></li>'
-				+           '<li><a href="https://github.com/cacti" target="_blank" rel="noopener">'+cactiProjectPage+'</a></li>'
-				+           '<li><a href="https://www.cacti.net" target="_blank" rel="noopener">'+cactiHome+'</></a></li>'
+				+           '<li><a href="https://kadupul.org/" target="_blank" rel="noopener">'+cactiDocumentation+'</a></li>'
+				+           '<li><a href="https://github.com/kadupulhq/kadupul" target="_blank" rel="noopener">'+cactiProjectPage+'</a></li>'
+				+           '<li><a href="https://kadupul.org" target="_blank" rel="noopener">'+cactiHome+'</></a></li>'
 				+       '</ul>'
 				+   '</li>'
 				+   '<li class="menuitem" id="menu_user_issues">'
@@ -327,10 +320,8 @@ function setupTheme() {
 				+           '<span>'+reportABug+'</span>'
 				+       '</a>'
 				+       '<ul>'
-				+           '<li><a href="https://github.com/Cacti/cacti/issues/new/choose" target="_blank" rel="noopener">'+justCacti+'</></a></li>'
-				+           '<li><a href="https://github.com/Cacti/documentation/issues/new/choose" target="_blank" rel="noopener">'+cactiDocumentation+'</></a></li>'
-				+           '<li><a href="https://github.com/Cacti/spine/issues/new/choose" target="_blank" rel="noopener">'+cactiSpine+'</a></li>'
-				+           '<li><a href="https://github.com/Cacti/rrdproxy/issues/new/choose" target="_blank" rel="noopener">'+cactiRRDProxy+'</a></li>'
+				+           '<li><a href="https://github.com/kadupulhq/kadupul/issues/new/choose" target="_blank" rel="noopener">'+justCacti+'</></a></li>'
+				+           '<li><a href="https://github.com/kadupulhq/website/issues/new/choose" target="_blank" rel="noopener">'+cactiDocumentation+'</></a></li>'
 				+       '</ul>'
 				+   '</li>'
 				+   '<li class="menuitem" id="menu_user_shortcuts">'
@@ -348,10 +339,10 @@ function setupTheme() {
 				+           '<span>'+cactiContributeTo+'</span>'
 				+       '</a>'
 				+       '<ul>'
-				+           '<li><a href="https://forums.cacti.net/" target="_blank" rel="noopener">'+cactiCommunityForum+'</a></li>'
-				+           '<li><a href="https://github.com/cacti" target="_blank" rel="noopener">'+cactiDevHelp+'</a></li>'
-				+           '<li><a href="https://www.cacti.net/development/contribute" target="_blank" rel="noopener">'+cactiDonate+'</a></li>'
-				+           '<li><a href="https://translate.cacti.net" target="_blank" rel="noopener">'+cactiTranslate+'</a></li>'
+				+           '<li><a href="https://github.com/kadupulhq/kadupul/discussions" target="_blank" rel="noopener">'+cactiCommunityForum+'</a></li>'
+				+           '<li><a href="https://github.com/kadupulhq/kadupul" target="_blank" rel="noopener">'+cactiDevHelp+'</a></li>'
+				+           '<li><a href="https://kadupul.org/project/contributing/" target="_blank" rel="noopener">'+cactiDonate+'</a></li>'
+				+           '<li><a href="https://github.com/kadupulhq/kadupul/issues" target="_blank" rel="noopener">'+cactiTranslate+'</a></li>'
                 +       '</ul>'
 				+   '</li>'
 				+   '</ul>'
@@ -498,7 +489,7 @@ function setupDefaultElements() {
 			});
 		} else {
 			$("#cactiConsoleBackdrop").click( function() {
-				window.open('https://cacti.net', '_blank');
+				window.open('https://kadupul.org', '_blank');
 			});
 		}
 	}

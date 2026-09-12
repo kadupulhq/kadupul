@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 $guest_account = true;
@@ -36,68 +29,34 @@ if (isset_request_var('error')) {
 		$username = 'unknown';
 	}
 
-	$message = sprintf('WARNING: Cacti Page:%s for User:%s Generated a Fatal Error:%d', $page, $username, $error);
+	$message = sprintf('WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error:%d', $page, $username, $error);
 
 	cacti_log($message, false);
 
 	if (debounce_run_notification('page_error_' . $page)) {
-		admin_email(__('Cacti System Warning'), __('WARNING: Cacti Page:%s for User:%s Generated a Fatal Error %d!', $page, $username, $error));
+		admin_email(__('Kadupul System Warning'), __('WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error %d!', $page, $username, $error));
 	}
 } elseif (isset_request_var('page')) {
 	get_filter_request_var('page', FILTER_CALLBACK, array('options' => 'sanitize_search_string'));
 
 	$page = basename(str_replace('.html', '.md', get_request_var('page')));
 
-	if (read_config_option('local_documentation') != 'on') {
-		$response_code = 0;
-		$contents      = cacti_http('https://docs.cacti.net/' . $page, 2, array('docs.cacti.net'), $response_code);
-		if ($contents === false && $response_code === 0) {
-			$response_code = 599;
-		}
-		if ($contents === false && $response_code >= 200 && $response_code < 300) {
-			$response_code = 599;
-		}
-	} else {
-		$contents      = '';
-		$response_code = 200;
-	}
-
 	header('Content-Type: application/json');
 
-	if ($response_code != 200) {
-		print json_encode(
-			array(
-				'status' => 'Not Reachable',
-				'message' => __('The Document page \'%s\' count not be reached.  The Cacti Documentation site is not reachable.  The http error was \'%s\'.  Consider downloading an official release to obtain the latest documentation and hosting the documentation locally.', $page, $response_code)
-			)
-		);
-	} elseif ($contents != '' && !preg_match('/does not appear to exist/i', $contents)) {
-		print json_encode(
-			array(
-				'status'   => 'Success',
-				'location' => 'https://docs.cacti.net/' . $page
-			)
-		);
-	} elseif ($contents != '' && preg_match('/does not appear to exist/i', $contents)) {
-		print json_encode(
-			array(
-				'status'   => 'Not Found',
-				'location' => __esc('The Help File %s was not located on the Cacti Documentation Website.', $page) . '<br><br>' . __esc('Open a ticket at ') . '<a target="_blank" href="https://github.com/cacti/cacti/issues">' . __esc('Cacti GitHub Site') . '</a>.'
-			)
-		);
+	if (read_config_option('local_documentation') != 'on') {
+		print json_encode(array(
+			'status' => 'Success',
+			'location' => 'https://kadupul.org/map/'
+		));
 	} elseif (file_exists($config['base_path'] . '/docs/' . $page)) {
-		print json_encode(
-			array(
-				'status'   => 'Success',
-				'location' => $config['url_path'] . 'docs/' . $page
-			)
-		);
+		print json_encode(array(
+			'status' => 'Success',
+			'location' => $config['url_path'] . 'docs/' . $page
+		));
 	} else {
-		print json_encode(
-			array(
-				'status' => 'Not Reachable',
-				'message' => __('The Document page \'%s\' count not be reached locally.', $page, $response_code)
-			)
-		);
+		print json_encode(array(
+			'status' => 'Not Reachable',
+			'message' => __('The document page \'%s\' could not be reached locally.', $page)
+		));
 	}
 }

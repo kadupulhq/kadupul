@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require(__DIR__ . '/../include/cli_check.php');
@@ -185,7 +178,7 @@ if ($exists > 0) {
 function display_version() {
 	$version = get_cacti_cli_version();
 
-	print "Cacti Retemplate Host Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
+	print "Kadupul Retemplate Host Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
 }
 
 /*	display_help - displays the usage of the function */
@@ -193,7 +186,7 @@ function display_help () {
 	display_version();
 
 	print "\nusage: host_update_template.php --host-id=[host-id|all] [--host-template=[ID]] [--debug]\n\n";
-	print "A utility to update Cacti devices with the latest Device Template\n\n";
+	print "A utility to update Kadupul devices with the latest Device Template\n\n";
 	print "Required:\n";
 	print "    --host-id=host_id|all - The host_id to have templates reapplied 'all' to do all hosts\n";
 	print "    --host-template=ID    - Which Host Template to Refresh\n\n";

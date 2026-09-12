@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 include('./include/auth.php');
@@ -125,9 +118,9 @@ function form_actions() {
 					$description = (trim($d['hostname']) != '' ? $d['hostname'] : $d['ip']);
 
 					if ($host_id) {
-						raise_message('automation_msg_' . $i, __esc('Device %s Added to Cacti', $description), MESSAGE_LEVEL_INFO);
+						raise_message('automation_msg_' . $i, __esc('Device %s Added to Kadupul', $description), MESSAGE_LEVEL_INFO);
 					} else {
-						raise_message('automation_msg_' . $i, __esc('Device %s Not Added to Cacti', $description), MESSAGE_LEVEL_ERROR);
+						raise_message('automation_msg_' . $i, __esc('Device %s Not Added to Kadupul', $description), MESSAGE_LEVEL_ERROR);
 					}
 
 					$i++;
@@ -137,7 +130,7 @@ function form_actions() {
 					db_execute_prepared('DELETE FROM automation_devices WHERE id = ?', array($id));
 				}
 
-				raise_message('automation_remove', __('Devices Removed from Cacti Automation database'), MESSAGE_LEVEL_INFO);
+				raise_message('automation_remove', __('Devices Removed from Kadupul Automation database'), MESSAGE_LEVEL_INFO);
 			}
 		}
 

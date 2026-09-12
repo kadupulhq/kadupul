@@ -1,7 +1,6 @@
 -- *****************************************************************
 -- CACTI-BOOST-MIB
 --
--- Jan 2015, Andreas Braun (aka browniebraun)
 --
 -- Copyright (c) 2004-2026 by The Cacti Group
 -- All rights reserved.
@@ -34,14 +33,12 @@ IMPORTS
 
 boost MODULE-IDENTITY
     LAST-UPDATED    "201603080000Z"
-    ORGANIZATION    "The Cacti Group"
+    ORGANIZATION    "Kadupul"
     CONTACT-INFO
-            "The Cacti Group
-
-            E-mail: developers@cacti.net"
+            "Kadupul project: https://github.com/kadupulhq/kadupul"
     DESCRIPTION
         "This modules defines a MIB for Boost, the Large Site Performance
-        Booster plugin for Cacti.
+        Booster plugin for Kadupul.
         The Structure of Management Information for Boost
             +- boostAppl
             |  |
@@ -121,7 +118,7 @@ boost MODULE-IDENTITY
     REVISION        "201303230000Z"
     DESCRIPTION
         "Initial version of this MIB module."
-    ::= { cactiPlugins 2 }    -- assigned by the Cacti Group
+    ::= { cactiPlugins 2 }    -- assigned by the Kadupul Group
 
 --
 -- BOOST APPLICATION DATA
@@ -203,7 +200,7 @@ boostApplRrdUpdatePollerMemLimit OBJECT-TYPE
     MAX-ACCESS      read-only
     STATUS          current
     DESCRIPTION
-        "Returns the maximum amount of memory for the Cacti Poller and
+        "Returns the maximum amount of memory for the Kadupul Poller and
          Boost's Poller."
     ::= { boostAppl 7 }
 

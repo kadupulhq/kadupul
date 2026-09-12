@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require(__DIR__ . '/../include/cli_check.php');
@@ -331,7 +324,7 @@ function process_install_errors($results) {
 /*  display_version - displays version information */
 function display_version() {
 	$version = get_cacti_cli_version();
-	print "Cacti Install Utility, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
+	print "Kadupul Install Utility, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
 }
 
 /*	display_help - displays the usage of the function */
@@ -341,7 +334,7 @@ function display_help () {
 	print '                         [--language=] [--mode=] [--profile=] [--path=]' . PHP_EOL;
 	print '                         [--rrdtool=] [--snmp=] [--table=] [--template=]' . PHP_EOL;
 	print '                         [--theme=]' . PHP_EOL;
-	print PHP_EOL . 'A utility to install/upgrade Cacti to the currently sourced version' . PHP_EOL;
+	print PHP_EOL . 'A utility to install/upgrade Kadupul to the currently sourced version' . PHP_EOL;
 	print PHP_EOL . 'Flags:' . PHP_EOL;
 	print '  -d  | --debug           - Display verbose output during execution' . PHP_EOL;
 	print '  -h  | --help            - Display this help' . PHP_EOL;

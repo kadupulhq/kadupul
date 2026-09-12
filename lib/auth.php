@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 use phpseclib3\Crypt\RSA;
@@ -660,7 +653,7 @@ function auth_check_perms($objects, $policy) {
 }
 
 /**
- * auth_augment_roles - A helper function to extend Cacti roles with additional realms
+ * auth_augment_roles - A helper function to extend Kadupul roles with additional realms
  *   or to add a new role.
  *
  * @param  (string) $role_name - The role to extend or add
@@ -711,7 +704,7 @@ function auth_augment_roles($role_name, $files) {
 }
 
 /**
- * auth_augment_roles_byname - A helper function to extend Cacti roles with additional realms
+ * auth_augment_roles_byname - A helper function to extend Kadupul roles with additional realms
  *   or to add a new role.
  *
  * @param  (string)  $role_name - The role to extend or add
@@ -928,8 +921,8 @@ function is_view_allowed($view = 'show_tree') {
 /**
  * is_tree_branch_empty - Given a tree id and a branch id, check if it's empty
  *
- * @param  (int)  $tree_id - The Cacti Tree id
- * @param  (int)  $parent  - The Cacti Tree branch id
+ * @param  (int)  $tree_id - The Kadupul Tree id
+ * @param  (int)  $parent  - The Kadupul Tree branch id
  *
  * @return (bool) True if empty, else false
  */
@@ -2243,7 +2236,7 @@ function get_policy_where($graph_auth_method, $policies, $sql_where) {
  *   logic for this is somewhat complex, but understandable.  First, the $graph object will include
  *   three columns generally graphX, deviceX, and templateX for each of the user or groups in the collection.
  *   The way we assign a restrictive or permissive value is based upon the graph permission setting
- *   in Cacti, but also whether or not the default access for the object type is either 'Allow' or 'Deny'.
+ *   in Kadupul, but also whether or not the default access for the object type is either 'Allow' or 'Deny'.
  *
  *   - If the 'default access' for the object type is 'Deny', then a numeric value in userX means
  *     the user has permission to an object.
@@ -2256,7 +2249,7 @@ function get_policy_where($graph_auth_method, $policies, $sql_where) {
  *   - deviceX   - The user does or does not have permission to the Graph at the Device Level
  *   - templateX - The user does or does not have permission to the Graph at the Graph Template Level
  *
- *   Then, the effective permission are calculated by the Graph Permission Model in Cacti.  They are
+ *   Then, the effective permission are calculated by the Graph Permission Model in Kadupul.  They are
  *
  *   - Permissive - If the user has access to the Graph, the Device, or Graph Template, then the
  *     user will have access to the Graph.
@@ -3129,7 +3122,7 @@ function auth_valid_user($user_id) {
 			$exists = db_fetch_cell_prepared('SELECT id FROM user_auth WHERE id = ?', array($user_id));
 
 			if (empty($exists)) {
-				cacti_log(sprintf('ERROR: Invalid Cacti User ID %d is being used in a permission that does not exist', $user_id), false, 'AUTH');
+				cacti_log(sprintf('ERROR: Invalid Kadupul User ID %d is being used in a permission that does not exist', $user_id), false, 'AUTH');
 
 				cacti_debug_backtrace('Invalid User Accound');
 
@@ -3157,7 +3150,7 @@ function auth_valid_user($user_id) {
  * @param  (string) The sql to be executed, either prepared or otherwise
  * @param  (array)  In the case of a prepared statement the
  * @param  (string) The user defined class of data
- * @param  (int)    The timeout for the Class if not controlled by Cacti
+ * @param  (int)    The timeout for the Class if not controlled by Kadupul
  *
  * @return (array) an array containing a list of hosts
  */
@@ -3692,9 +3685,9 @@ function basic_auth_login_process($username) {
 
 	if (!$user && get_template_account($username) == 0 && get_guest_account() === 0) {
 		$error     = true;
-		$error_msg = __esc('%s authenticated by Web Server, but both Template and Guest Users are not defined in Cacti.', $username);
+		$error_msg = __esc('%s authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul.', $username);
 
-		cacti_log("LOGIN FAILED: User '" . $username . "' authenticated by Web Server, but both Template and Guest Users are not defined in Cacti.  Exiting.", false, 'AUTH');
+		cacti_log("LOGIN FAILED: User '" . $username . "' authenticated by Web Server, but both Template and Guest Users are not defined in Kadupul.  Exiting.", false, 'AUTH');
 
 		auth_display_custom_error_message($error_msg);
 		exit;
@@ -4304,7 +4297,7 @@ function secpass_login_process($username) {
 				AND enabled = 'on'",
 				array($username));
 
-			$error_msg = __('Your Cacti administrator has forced complex passwords for logins and your current Cacti password does not match the new requirements.  Therefore, you must change your password now.');
+			$error_msg = __('Your Kadupul administrator has forced complex passwords for logins and your current Kadupul password does not match the new requirements.  Therefore, you must change your password now.');
 
 			raise_message('forced_password', $error_msg, MESSAGE_LEVEL_INFO);
 			header('Location: auth_changepassword.php?header=false');
@@ -4399,8 +4392,8 @@ function secpass_check_history($id, $password) {
 }
 
 /**
- * rsa_check_keypair - Checks that Cacti ras_public_key is present.  If not
- *   it will insert the information into the Cacti database.
+ * rsa_check_keypair - Checks that Kadupul ras_public_key is present.  If not
+ *   it will insert the information into the Kadupul database.
  *
  * @return (void)
  */
@@ -4680,7 +4673,7 @@ function auth_display_custom_error_message($message) {
 	print '<html>';
 	print '<head>';
 
-	html_common_header(__('Cacti Login Failure'));
+	html_common_header(__('Kadupul Login Failure'));
 
 	print '</head>';
 	print '<body><center>';
@@ -4899,7 +4892,7 @@ function auth_login_create_user_from_template($username, $realm) {
 }
 
 /**
- * check_reset_no_authentication - Attempts to switch Cacti from No Authentication to Local
+ * check_reset_no_authentication - Attempts to switch Kadupul from No Authentication to Local
  *   authentication, or generate an error on failure through the globals error, and error_msg.
  *
  * @param  (int)  $auth_method - The current auth method
@@ -5190,7 +5183,7 @@ function cacti_authorize_has_realm($user_id, $realm_id) {
 
 /**
  * cacti_authorize_is_admin - returns true iff the user holds the system
- * admin realm (realm 1 in Cacti's user_auth_realm table).
+ * admin realm (realm 1 in Kadupul's user_auth_realm table).
  *
  * Cached per-request to avoid hammering the DB on hot paths. Intentionally
  * a private helper — callers should use cacti_authorize_resource() which

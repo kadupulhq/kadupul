@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 include('./include/auth.php');
@@ -52,7 +45,7 @@ print "<body class='logoutBody'>
 			<div class='cactiLogoutLogo'></div>
 			<legend>" . __('Permission Denied') . "</legend>
 			<div class='logoutTitle'>
-				<p>" . __('You are not permitted to access this section of Cacti.') . '</p><p>' . __('If you feel that this is an error. Please contact your Cacti Administrator.') . "</p>
+				<p>" . __('You are not permitted to access this section of Kadupul.') . '</p><p>' . __('If you feel that this is an error. Please contact your Kadupul Administrator.') . "</p>
 				<center>" . $goBack . "</center>
 			</div>
 			<div class='logoutErrors'></div>

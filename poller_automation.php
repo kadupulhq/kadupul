@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 if (function_exists('pcntl_async_signals')) {
@@ -49,13 +42,13 @@ if ($config['poller_id'] > 1) {
 	if ($config['connection'] == 'online') {
 		db_force_remote_cnn();
 	} elseif (debounce_run_notification('db_offline')) {
-		cacti_log(sprintf('WARNING: Main Cacti database %s offline or in recovery.  Can not run automation', $rdatabase_hostname), false, 'AUTOM8');
-		admin_email(__('Cacti System Warning'), __("WARNING: Main Cacti database %s offline or in recovery", $rdatabase_hostname));
+		cacti_log(sprintf('WARNING: Main Kadupul database %s offline or in recovery.  Can not run automation', $rdatabase_hostname), false, 'AUTOM8');
+		admin_email(__('Kadupul System Warning'), __("WARNING: Main Kadupul database %s offline or in recovery", $rdatabase_hostname));
 		exit(1);
 	}
 }
 
-/** sig_handler - provides a generic means to catch exceptions to the Cacti log.
+/** sig_handler - provides a generic means to catch exceptions to the Kadupul log.
  * @arg $signo  - (int) the signal that was thrown by the interface.
  * @return      - null */
 function sig_handler($signo) {
@@ -549,7 +542,7 @@ function discoverDevices($network_id, $thread) {
 				array($device['ip_address'], $device['hostname']));
 
 			if (!cacti_sizeof($exists)) {
-				automation_debug(", Status: Not in Cacti");
+				automation_debug(", Status: Not in Kadupul");
 
 				if (substr($device['ip_address'], -3) < 255) {
 					automation_debug(', Ping: ');
@@ -652,9 +645,9 @@ function discoverDevices($network_id, $thread) {
 									rerunDataQueries($exists['id'], $network);
 								}
 
-								automation_debug(' Device is in Cacti!');
+								automation_debug(' Device is in Kadupul!');
 							} else {
-								automation_debug(' Device is in Cacti but marked as deleted!');
+								automation_debug(' Device is in Kadupul but marked as deleted!');
 							}
 
 							markIPDone($device['ip_address'], $network_id);
@@ -676,7 +669,7 @@ function discoverDevices($network_id, $thread) {
 									array($snmp_sysName, $device['ip_address']));
 
 								if ($isCactiSysName) {
-									automation_debug(", Skipping sysName '" . $snmp_sysName . "' already in Cacti!\n");
+									automation_debug(", Skipping sysName '" . $snmp_sysName . "' already in Kadupul!\n");
 									markIPDone($device['ip_address'], $network_id);
 									continue;
 								}
@@ -766,11 +759,11 @@ function discoverDevices($network_id, $thread) {
 
 									$stats['added']++;
 								} elseif ($fos == false) {
-									automation_debug(", Template: Not found, Not adding to Cacti\n");
+									automation_debug(", Template: Not found, Not adding to Kadupul\n");
 								} else {
 									automation_debug(", Template: " . $fos['name']);
 									$device['os'] = $fos['name'];
-									automation_debug(", Skipped: Add to Cacti disabled\n");
+									automation_debug(", Skipped: Add to Kadupul disabled\n");
 								}
 							}
 
@@ -848,9 +841,9 @@ function discoverDevices($network_id, $thread) {
 						rerunDataQueries($exists['id'], $network);
 					}
 
-					automation_debug(", Status: Already in Cacti\n");
+					automation_debug(", Status: Already in Kadupul\n");
 				} else {
-					automation_debug(", Status: Already in Cacti but marked as deleted\n");
+					automation_debug(", Status: Already in Kadupul but marked as deleted\n");
 				}
 
 				markIPDone($device['ip_address'], $network_id);
@@ -861,7 +854,7 @@ function discoverDevices($network_id, $thread) {
 		}
 	}
 
-	cacti_log(automation_get_pid() . ' Network ' . $network['name'] . " Thread $thread Finished, " . $stats['scanned'] . ' IPs Scanned, ' . $stats['ping'] . ' IPs Responded to Ping, ' . $stats['snmp'] . ' Responded to SNMP, ' . $stats['added'] . ' Device Added, ' . $count_graph .  ' Graphs Added to Cacti', true, 'AUTOM8');
+	cacti_log(automation_get_pid() . ' Network ' . $network['name'] . " Thread $thread Finished, " . $stats['scanned'] . ' IPs Scanned, ' . $stats['ping'] . ' IPs Responded to Ping, ' . $stats['snmp'] . ' Responded to SNMP, ' . $stats['added'] . ' Device Added, ' . $count_graph .  ' Graphs Added to Kadupul', true, 'AUTOM8');
 
 	return true;
 }
@@ -869,7 +862,7 @@ function discoverDevices($network_id, $thread) {
 /*  display_version - displays version information */
 function display_version() {
 	$version = get_cacti_version();
-    print "Cacti Network Discovery Scanner, Version $version, " . COPYRIGHT_YEARS . "\n";
+    print "Kadupul Network Discovery Scanner, Version $version, " . COPYRIGHT_YEARS . "\n";
 }
 
 /*	display_help - displays the usage of the function */
@@ -878,8 +871,8 @@ function display_help () {
 
 	print "\nusage: poller_automation.php -M [--poller=ID] | --network=network_id [-T=thread_id]\n";
 	print "    [--debug] [--force]\n\n";
-	print "Cacti's automation poller.  This poller has two operating modes, master and worker.\n";
-	print "The master process tracks and launches all workers based upon Cacti's automation\n";
+	print "Kadupul's automation poller.  This poller has two operating modes, master and worker.\n";
+	print "The master process tracks and launches all workers based upon Kadupul's automation\n";
 	print "settings.  If you only want to force a network to be collected, you only need to\n";
 	print "specify the Network ID and the force options.\n\n";
 	print "Master Process:\n";
@@ -974,7 +967,7 @@ function reportNetworkStatus($network_id, $old_devices) {
 					$fromname = read_config_option('settings_from_name');
 
 					if ($fromname == '') {
-						$fromname = __('Cacti Primary Admin');
+						$fromname = __('Kadupul Primary Admin');
 					}
 				}
 			} else {
@@ -987,7 +980,7 @@ function reportNetworkStatus($network_id, $old_devices) {
 					$fromemail = read_config_option('settings_from_email');
 
 					if ($fromemail == '') {
-						$fromemail = 'root@cacti.net';
+						$fromemail = 'kadupul@localhost.localdomain';
 					}
 				}
 			} else {
@@ -1025,7 +1018,7 @@ function reportNetworkStatus($network_id, $old_devices) {
 						return false;
 					}
 
-					$email = ($details['full_name'] != '' ? $details['full_name']:__('Cacti Primary Admin')) . ' <' . $details['notification_email'] . '>';
+					$email = ($details['full_name'] != '' ? $details['full_name']:__('Kadupul Primary Admin')) . ' <' . $details['notification_email'] . '>';
 				}
 			}
 
@@ -1079,7 +1072,7 @@ function reportNetworkStatus($network_id, $old_devices) {
 			}
 
 			$v = get_cacti_version();
-			$headers['User-Agent'] = 'Cacti-Automation-v' . $v;
+			$headers['User-Agent'] = 'Kadupul-Automation-v' . $v;
 
 			$status = ($count_new + $count_exist) . ' devices discovered';
 			if ($count_new > 0) {
@@ -1126,7 +1119,7 @@ function reportNetworkStatus($network_id, $old_devices) {
 				'',
 				$subject,
 				$output,
-				__('Cacti Automation Report requires an html based Email client'),
+				__('Kadupul Automation Report requires an html based Email client'),
 				'',
 				$headers
 			);

@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /* since we'll have additional headers, tell php when to flush them */
@@ -222,7 +215,7 @@ if ($output !== false && $output != '' && strpos($output, 'image = ') !== false)
 	ob_end_clean();
 
 	if (read_config_option('stats_poller') == '') {
-		$error = __('The Cacti Poller has not run yet.');
+		$error = __('The Kadupul Poller has not run yet.');
 	}
 
 	if (isset($graph_data_array['graph_width']) && isset($graph_data_array['graph_height'])) {
@@ -254,7 +247,7 @@ if ($output !== false && $output != '' && strpos($output, 'image = ') !== false)
 	if ($image !== false) {
 		$oarray['image'] = base64_encode($image);
 	} else {
-		$oarray['image'] = base64_encode(file_get_contents(__DIR__ . '/images/cacti_error_image.png'));
+		$oarray['image'] = base64_encode(file_get_contents(__DIR__ . '/images/kadupul-icon.png'));
 	}
 }
 

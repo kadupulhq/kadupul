@@ -1,7 +1,6 @@
 -- *****************************************************************
 -- CACTI-SNMPAGENT-MIB
 --
--- NOV 2013, Andreas Braun (aka browniebraun)
 --
 -- Copyright (c) 2004-2026 by The Cacti Group
 -- All rights reserved.
@@ -33,17 +32,15 @@ IMPORTS
 
 snmpagent MODULE-IDENTITY
     LAST-UPDATED    "201311160000Z"
-    ORGANIZATION    "The Cacti Group"
+    ORGANIZATION    "Kadupul"
     CONTACT-INFO
-            "The Cacti Group
-
-            E-mail: developers@cacti.net"
+            "Kadupul project: https://github.com/kadupulhq/kadupul"
     DESCRIPTION
         "Initial version of this MIB module."
     REVISION        "201311160000Z"
     DESCRIPTION
         "Initial version of this MIB module."
-    ::= { cactiPlugins 4 }    -- assigned by the Cacti Group
+    ::= { cactiPlugins 4 }    -- assigned by the Kadupul Group
 
 --
 -- TEXTUAL CONVENTIONS
@@ -84,7 +81,7 @@ snmpagentStats OBJECT-IDENTITY
     ::= { snmpagent 2 }
 
 --
--- Global Cacti Stats Variables
+-- Global Kadupul Stats Variables
 --
 snmpagentStatsLastUpdate OBJECT-TYPE
     SYNTAX          Unsigned32

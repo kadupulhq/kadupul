@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphans = false, $replace_svalues = false, $import_hashes = array(), $class = '') {
@@ -418,7 +411,7 @@ function import_read_package_data($xmlfile, &$public_key) {
 	$filename = "compress.zlib://$xmlfile";
 
 	if (!is_cacti_public_key($public_key)) {
-		cacti_log('FATAL: Package Public Key is not Official Cacti Public Key for Package ' . $filename, true, 'IMPORT', POLLER_VERBOSITY_LOW);
+		cacti_log('FATAL: Package Public Key is not Official Kadupul Public Key for Package ' . $filename, true, 'IMPORT', POLLER_VERBOSITY_LOW);
 		return false;
 	}
 
@@ -430,7 +423,7 @@ function import_read_package_data($xmlfile, &$public_key) {
 			$x = fgets($f);
 
 			if (strlen($x) == 0) {
-				cacti_log('FATAL: Unable to read Cacti Package ' . $filename, true, 'IMPORT', POLLER_VERBOSITY_LOW);
+				cacti_log('FATAL: Unable to read Kadupul Package ' . $filename, true, 'IMPORT', POLLER_VERBOSITY_LOW);
 				fclose($f);
 				return false;
 			} elseif (strpos($x, '<signature>') !== FALSE) {
@@ -513,7 +506,7 @@ function import_read_package_data($xmlfile, &$public_key) {
 
 /**
  * import_package - This function will selectively import some or all of the
- *   components of a Cacti, Provide a preview of the import, or provide information
+ *   components of a Kadupul, Provide a preview of the import, or provide information
  *   about the Package depending upon the settings provided below.
  *
  * This function can also read from the $_REQUEST environment certain overrides for
@@ -2585,7 +2578,7 @@ function check_hash_version($hash_version) {
 	}
 
 	if (!isset($current_version_code)) {
-		cacti_log("ERROR: $hash_version Current Cacti Version does not exist!", false, 'IMPORT');
+		cacti_log("ERROR: $hash_version Current Kadupul Version does not exist!", false, 'IMPORT');
 		$import_messages[] = 15; /* xml parse error */
 		return false;
 	} elseif (!isset($hash_version_code)) {
@@ -2594,7 +2587,7 @@ function check_hash_version($hash_version) {
 		return false;
 	} elseif ($hash_version_code > $current_version_code) {
 		cacti_log("ERROR: $hash_version_code > $current_version_code", false, 'IMPORT');
-		cacti_log("ERROR: $hash_version hash version is for a newer Cacti!", false, 'IMPORT');
+		cacti_log("ERROR: $hash_version hash version is for a newer Kadupul!", false, 'IMPORT');
 		$import_messages[] = 17; /* xml parse error */
 		return false;
 	}
@@ -2644,9 +2637,9 @@ function import_display_results($import_debug_info, $filestatus, $web = false, $
 
 		if (cacti_sizeof($filestatus)) {
 			if ($preview) {
-				print "<tr class='odd'><td><p class='textArea'>" . __('Cacti would make the following changes if the Package was imported:') . '</p>' . PHP_EOL;
+				print "<tr class='odd'><td><p class='textArea'>" . __('Kadupul would make the following changes if the Package was imported:') . '</p>' . PHP_EOL;
 			} else {
-				print "<tr class='odd'><td><p class='textArea'>" . __('Cacti has imported the following items for the Package:') . '</p>' . PHP_EOL;
+				print "<tr class='odd'><td><p class='textArea'>" . __('Kadupul has imported the following items for the Package:') . '</p>' . PHP_EOL;
 			}
 
 			print "<p><strong>" . __('Package Files') . "</strong></p>" . PHP_EOL;
@@ -2658,9 +2651,9 @@ function import_display_results($import_debug_info, $filestatus, $web = false, $
 			print '</ul>' . PHP_EOL;
 		} else {
 			if ($preview) {
-				print "<tr class='odd'><td><p class='textArea'>" . __('Cacti would make the following changes if the Template was imported:') . '</p>' . PHP_EOL;
+				print "<tr class='odd'><td><p class='textArea'>" . __('Kadupul would make the following changes if the Template was imported:') . '</p>' . PHP_EOL;
 			} else {
-				print "<tr class='odd'><td><p class='textArea'>" . __('Cacti has imported the following items for the Template:') . '</p>' . PHP_EOL;
+				print "<tr class='odd'><td><p class='textArea'>" . __('Kadupul has imported the following items for the Template:') . '</p>' . PHP_EOL;
 			}
 		}
 

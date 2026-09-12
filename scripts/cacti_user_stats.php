@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 error_reporting(0);
@@ -93,7 +86,7 @@ if ($cacti_db_session == true) {
 
 					/* first off check if we are allowed to read the session
 					 * file. Then we are only interested in sessions of
-					 * authenticated Cacti users
+					 * authenticated Kadupul users
 					 */
 					if ($session !== false && strpos($session, 'cacti_cwd') !== false && preg_match('/sess_user_id\|s:[0-9]*:\"[0-9]*\"/', $session, $match)) {
 						$session_user_id = substr($match[0], strpos($match[0], ':"')+2, -1);

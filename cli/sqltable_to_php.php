@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require(__DIR__ . '/../include/cli_check.php');
@@ -221,7 +214,7 @@ function sql_clean($text) {
 /*  display_version - displays version information */
 function display_version() {
 	$version = get_cacti_cli_version();
-	print "Cacti SQL to PHP Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
+	print "Kadupul SQL to PHP Utility, Version $version, " . COPYRIGHT_YEARS . "\n";
 }
 
 function display_help() {
@@ -229,11 +222,11 @@ function display_help() {
 
 	print "\nusage: sqltable_to_php.php --table=table_name [--plugin=name] [--update]\n\n";
 	print "A simple developers utility to create a save schema for a newly created or\n";
-	print "modified database table in a format that is consumable by Cacti.\n\n";
+	print "modified database table in a format that is consumable by Kadupul.\n\n";
 	print "These save schema's can be placed into a plugins setup.php file in order\n";
 	print "to create the tables inside of a plugin as a part of it's install function.\n";
 	print "The plugin parameter is optional, but if you want the table(s) automatically\n";
-	print "removed from Cacti when uninstalling the plugin, specify it's name.\n\n";
+	print "removed from Kadupul when uninstalling the plugin, specify it's name.\n\n";
 	print "Required:\n";
 	print "--table=table_name - The table that you want exported\n\n";
 	print "Optional:\n";

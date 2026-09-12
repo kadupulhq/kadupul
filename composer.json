@@ -12,19 +12,12 @@
         "| but WITHOUT ANY WARRANTY; without even the implied warranty of          |",
         "| MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |",
         "| GNU General Public License for more details.                            |",
-        "+-------------------------------------------------------------------------+",
-        "| Cacti: The Complete RRDtool-based Graphing Solution                     |",
-        "+-------------------------------------------------------------------------+",
-        "| This code is designed, written, and maintained by the Cacti Group. See  |",
-        "| about.php and/or the AUTHORS file for specific developer information.   |",
-        "+-------------------------------------------------------------------------+",
-        "| http://www.cacti.net/                                                   |",
         "+-------------------------------------------------------------------------+"
     ],
-    "name": "cacti/cacti",
-    "description": "Cacti Network Monitoring Framework",
+    "name": "kadupulhq/kadupul",
+    "description": "Network monitoring and graphing",
     "type": "composer-plugin",
-    "license": "GPL-2.0-only",
+    "license": "GPL-3.0-or-later",
     "require": {
         "php": ">=8.0",
         "ext-PDO": "*",
@@ -49,20 +42,7 @@
         "paragonie/random_compat": "^9.99",
         "phpseclib/phpseclib": "^3.0"
     },
-    "require-dev": {
-    },
-    "authors": [
-        {
-            "name": "The Cacti Group",
-            "email": "developers@cacti.net"
-        }
-    ],
-    "funding": [
-        {
-            "url": "https://github.com/sponsors/Cacti",
-            "type": "github"
-        }
-    ],
+    "require-dev": {},
     "minimum-stability": "stable",
     "prefer-stable": true,
     "config": {

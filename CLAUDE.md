@@ -29,7 +29,7 @@ out with `git rm --cached`.
   - no `Stringable` / `ReturnTypeWillChange` reliance
 - `develop` targets PHP 8.1+.  PHP 8 syntax is fine there.
 
-## Cacti idioms
+## Application idioms
 
 Use the house wrappers instead of raw equivalents:
 
@@ -88,8 +88,7 @@ Use the house wrappers instead of raw equivalents:
 - Do **not** list every bullet point you can think of in the commit body.
   Human commits on this repo use 1-3 body lines max.  Anything with 9
   bulleted "fixes" in one commit reads as AI-generated.
-- No trailing `Co-Authored-By: Claude …` line.  Cacti does not use DCO
-  attribution for AI assistants.
+- Do not attribute commits to AI assistants.
 - Match the existing style of `git log --oneline -30` before writing your
   message.
 

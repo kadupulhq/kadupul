@@ -13,13 +13,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /* draw_nontemplated_fields_graph - draws a form that consists of all non-templated graph fields associated
@@ -160,10 +153,10 @@ function draw_nontemplated_fields_graph_item($graph_template_id, $local_graph_id
 				raise_message_javascript(
 					__('Attempted SQL Injection'),
 					__('There was a SQL Injection attempted on the page'),
-					__('A client attempted to create a SQL Injection into Cacti likely from an external host with the address %s', get_client_addr())
+					__('A client attempted to create a SQL Injection into Kadupul likely from an external host with the address %s', get_client_addr())
 				);
 
-				cacti_log(sprintf('ERROR: A client attempted to create a SQL Injection into Cacti likely from an external host with the address %s', get_client_addr()), false, 'SECURITY');
+				cacti_log(sprintf('ERROR: A client attempted to create a SQL Injection into Kadupul likely from an external host with the address %s', get_client_addr()), false, 'SECURITY');
 
 				exit;
 			}

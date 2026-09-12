@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require(__DIR__ . '/include/cli_check.php');
@@ -261,15 +254,15 @@ function kill_spikes($templates, &$found) {
 /*  display_version - displays version information */
 function display_version() {
 	$version = get_cacti_version();
-	print "Cacti SpikeKiller Batch Poller, Version $version, " . COPYRIGHT_YEARS . "\n";
+	print "Kadupul SpikeKiller Batch Poller, Version $version, " . COPYRIGHT_YEARS . "\n";
 }
 
 function display_help() {
 	display_version();
 
 	print "\nusage: poller_spikekill.php [--templates=N,N,...] [--force] [--debug]\n\n";
-	print "Cacti's SpikeKill batch removal poller.  This poller will remove spikes\n";
-	print "in Cacti's RRDfiles based upon the settings maintained in Cacti's database.\n\n";
+	print "Kadupul's SpikeKill batch removal poller.  This poller will remove spikes\n";
+	print "in Kadupul's RRDfiles based upon the settings maintained in Kadupul's database.\n\n";
 	print "Optional:\n";
 	print "    --templates=N,N,... - Only despike the templates provided.\n";
 	print "    --force             - Force running the despiking immediately.\n";

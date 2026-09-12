@@ -43,37 +43,9 @@ Bug fixes and security fixes that keep the interface identical.
 A security fix ships as a patch on every supported branch. It is never bundled
 with a feature, so an operator can take the fix without taking anything else.
 
-## Where the numbering starts
+## Release target
 
-Kadupul continues Cacti's version line rather than restarting at zero. The code
-is twenty-three years old and carries a compatibility promise from its first
-release, and `v0.1.0` would say the opposite of both.
-
-The fork point is Cacti 1.2.31, so the first Kadupul release is **`v1.3.0`**.
-That is the number an operator running 1.2.31 would expect to see next, and the
-continuity is the point: a fork that resets its version number asks every user
-to work out where they are.
-
-1.2.32 is not available: Cacti's 1.2.x branch already declares that version and
-is building it now, with security work in it. Two releases of a monitoring tool
-sharing a patch number means nobody can answer "do you have that fix" from a
-version string, which is the one place a collision does real harm.
-
-Cacti's development branch also carries 1.3.0, but 1.3 has never been released.
-If Cacti ships it later, two 1.3.0 releases exist. That is a cost accepted
-deliberately, and a much smaller one than colliding on a security patch line.
-
-## The fork point and the security line
-
-The split is Cacti 1.2.31, the release, deliberately. It is reproducible and it
-is a version operators actually run.
-
-That is separate from what gets carried forward. Cacti's 1.2.x branch has 107
-commits since that release, 28 of them security work. Those land here as
-reviewed cherry-picks on top of the fork point, not as a merge of the branch.
-Taking the security work without the other 79 changes is the point: it halves
-the footprint, 291 files rather than 630, and every one arrives as a deliberate
-decision.
+The first planned application release is **`v1.3.0`**.
 
 ## Commits and releases
 

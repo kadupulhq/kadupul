@@ -12,13 +12,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /* main styles */
@@ -721,7 +714,7 @@ label {
 }
 
 .cactiGraphPageHeadBackdrop {
-	background: transparent url("./images/cacti_logo.svg") no-repeat scroll left 40% / 380px auto;
+	background: transparent url("./images/kadupul-logo.png") no-repeat scroll left 40% / auto 80%;
 	padding-bottom: 0px;
 	float: right;
 	width: 400px;
@@ -733,7 +726,7 @@ label {
 }
 
 .cactiConsolePageHeadBackdrop {
-	background: transparent url("./images/cacti_logo.svg") no-repeat scroll left 40% / 380px auto;
+	background: transparent url("./images/kadupul-logo.png") no-repeat scroll left 40% / auto 80%;
 	padding-bottom: 0px;
 	float: right;
 	width: 400px;
@@ -923,7 +916,7 @@ ul#breadcrumbs {
 }
 
 .cactiLogo {
-	background: #efefef url('./images/cacti_logo.svg') no-repeat 30px;
+	background: #efefef url('./images/kadupul-logo.png') no-repeat 30px;
 	display: block;
 	cursor: pointer;
 	padding-bottom: 160px;
@@ -932,6 +925,7 @@ ul#breadcrumbs {
 	margin-top: 10px;
 	margin-left: 2px;
 	margin-right: 2px;
+	background-size: contain;
 }
 
 .loginLeft, .logoutLeft {
@@ -963,13 +957,14 @@ ul#breadcrumbs {
 .cactiLoginLogo, .cactiLogoutLogo {
 	position: relative;
 	float: right;
-	background: transparent url('./images/cacti_logo.svg') no-repeat center;
+	background: transparent url('./images/kadupul-logo.png') no-repeat center;
 	width: 120px;
 	height: 148px;
 	z-index: 2;
 	margin-top: -95px;
 	margin-left: 240px;
 	margin-bottom: -20px;
+	background-size: contain;
 }
 
 .loginArea, .logoutArea {
@@ -1969,7 +1964,7 @@ td#tabs {
 }
 
 .cactiGraphHeaderBackground {
-	background: transparent url("./images/cacti_logo.svg") no-repeat scroll left 10% / 380px auto;
+	background: transparent url("./images/kadupul-logo.png") no-repeat scroll left 10% / auto 80%;
 	height: 35px;
 	width: 400px;
 	float: right;
@@ -2587,7 +2582,7 @@ tr#realtime td:first-child {
 	left: 4px;
 	bottom: 4px;
 	background-color: white;
-	background-image: url('./images/cacti_logo.svg');
+	background-image: url('./images/kadupul-logo.png');
 	background-repeat: no-repeat;
 	background-size: 7px;
 	background-position: center;
@@ -2669,7 +2664,7 @@ input:checked + .checkboxSlider:before {
 	left: 4px;
 	bottom: 4px;
 	background-color: white;
-	background-image: url('./images/cacti_logo.svg');
+	background-image: url('./images/kadupul-logo.png');
 	background-repeat: no-repeat;
 	background-size: 7px;
 	background-position: center;

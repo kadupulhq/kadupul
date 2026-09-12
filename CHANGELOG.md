@@ -6,7 +6,7 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
-Targeting `v1.3.0`, continuing from the Cacti 1.2.31 fork point. See
+Targeting `v1.3.0`, the first planned application release. See
 [VERSIONING.md](VERSIONING.md).
 
 ### Added
@@ -25,13 +25,13 @@ Targeting `v1.3.0`, continuing from the Cacti 1.2.31 fork point. See
 - A production container image: multi-stage, base images pinned by digest, the
   application baked in, and every process running unprivileged.
 - The migration design, and `tools/migrate/assess.php`, which reports what a
-  Cacti install holds and what would survive the move. Read only, so it is safe
+  existing installation holds and what would survive the move. Read only, so it is safe
   against production.
 
 ### Changed
 
-- Point the About page and contributor review contacts at Kadupul instead of
-  presenting the upstream developer roster as this project's team. Preserve
-  the imported credits in AUTHORS as historical upstream attribution.
+- Use Kadupul branding and project contacts across the interface and documentation.
+- Remove optional author lists and project-history prose while retaining licensing.
+
 
 [Unreleased]: https://github.com/kadupulhq/kadupul/commits/main

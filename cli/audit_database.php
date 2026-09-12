@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 require(__DIR__ . '/../include/cli_check.php');
@@ -109,7 +102,7 @@ if (cacti_sizeof($parms)) {
 	}
 
 	if ($upgrade_required) {
-		print 'WARNING: Cacti must be upgraded first.  Use the --upgrade option to perform that upgrade' . PHP_EOL;
+		print 'WARNING: Kadupul must be upgraded first.  Use the --upgrade option to perform that upgrade' . PHP_EOL;
 		exit(1);
 	} elseif ($db_version != CACTI_VERSION && $upgrade) {
 		upgrade_database();
@@ -140,7 +133,7 @@ function upgrade_database() {
 
 	$start = microtime(true);
 
-	cacti_log('NOTE: Upgrading Cacti, this will take a few minutes.', true, 'UPGRADE');
+	cacti_log('NOTE: Upgrading Kadupul, this will take a few minutes.', true, 'UPGRADE');
 
 	$return_var = 0;
 	$output     = array();
@@ -150,9 +143,9 @@ function upgrade_database() {
 	$end = microtime(true);
 
 	if ($return_var == 0) {
-		cacti_log(sprintf('NOTE: Cacti Upgrade succeeded in %.2f seconds', $end - $start), true, 'UPGRADE');
+		cacti_log(sprintf('NOTE: Kadupul Upgrade succeeded in %.2f seconds', $end - $start), true, 'UPGRADE');
 	} else {
-		cacti_log('WARNING: Cacti Upgrade Encountered Errors.  Messages below.  Details are below, but also in Cacti upgrade log.', true, 'UPGRADE');
+		cacti_log('WARNING: Kadupul Upgrade Encountered Errors.  Messages below.  Details are below, but also in Kadupul upgrade log.', true, 'UPGRADE');
 		print '---------------------------------------------------------------------------------------------' . PHP_EOL;
 		print implode(PHP_EOL, $output) . PHP_EOL;
 		print '---------------------------------------------------------------------------------------------' . PHP_EOL;
@@ -240,12 +233,12 @@ function upgrade_database() {
 
 							if ($return_var == 0) {
 								print implode(PHP_EOL, $output) . PHP_EOL;
-								cacti_log("NOTE: Cacti Plugin $pname Upgrade Succeeded.", true, 'UPGRADE');
+								cacti_log("NOTE: Kadupul Plugin $pname Upgrade Succeeded.", true, 'UPGRADE');
 								print '---------------------------------------------------------------------------------------------' . PHP_EOL;
 								print implode(PHP_EOL, $output) . PHP_EOL;
 								print '---------------------------------------------------------------------------------------------' . PHP_EOL;
 							} else {
-								cacti_log("WARNING: Cacti Plugin $pname Upgrade Encountered Errors.", true, 'UPGRADE');
+								cacti_log("WARNING: Kadupul Plugin $pname Upgrade Encountered Errors.", true, 'UPGRADE');
 								print '---------------------------------------------------------------------------------------------' . PHP_EOL;
 								print implode(PHP_EOL, $output) . PHP_EOL;
 								print '---------------------------------------------------------------------------------------------' . PHP_EOL;
@@ -294,7 +287,7 @@ function upgrade_database() {
 
 	$end = microtime(true);
 
-	cacti_log(sprintf('NOTE: Cacti Plugin Upgrades completed in %.2f seconds', $end - $pistart), true, 'UPGRADE');
+	cacti_log(sprintf('NOTE: Kadupul Plugin Upgrades completed in %.2f seconds', $end - $pistart), true, 'UPGRADE');
 
 	cacti_log(sprintf('NOTE: Audit Upgrade completed in %.2f seconds.', $end - $start), true, 'UPGRADE');
 }
@@ -486,7 +479,7 @@ function report_audit_results($output = true) {
 
 							if (!cacti_sizeof($plugin_column)) {
 								if ($output) {
-									print PHP_EOL . 'WARNING Col: \'' . $c['Field'] . '\', does not exist in default Cacti.  Plugin possible';
+									print PHP_EOL . 'WARNING Col: \'' . $c['Field'] . '\', does not exist in default Kadupul.  Plugin possible';
 								}
 
 								$warnings++;
@@ -607,7 +600,7 @@ function report_audit_results($output = true) {
 								// Primary keys come in Phase II
 								if ($i['Key_name'] != 'PRIMARY') {
 									if ($output) {
-										print PHP_EOL . 'WARNING Index: \'' . $i['Key_name'] . '\', does not exist in default Cacti.  Dropping.';
+										print PHP_EOL . 'WARNING Index: \'' . $i['Key_name'] . '\', does not exist in default Kadupul.  Dropping.';
 									}
 
 									$alter_cmds[]  = 'DROP INDEX ' . $i['Key_name'];
@@ -927,7 +920,7 @@ function create_tables($load = true) {
 		table_extra varchar(128) default NULL,
 		PRIMARY KEY (table_name, table_sequence, table_field))
 		ENGINE=InnoDB
-		COMMENT='Holds Default Cacti Table Definitions'");
+		COMMENT='Holds Default Kadupul Table Definitions'");
 
 	$exists_columns = db_table_exists('table_columns');
 
@@ -951,7 +944,7 @@ function create_tables($load = true) {
 		idx_comment varchar(128) default NULL,
 		PRIMARY KEY (idx_table_name, idx_key_name, idx_seq_in_index, idx_column_name))
 		ENGINE=InnoDB
-		COMMENT='Holds Default Cacti Index Definitions'");
+		COMMENT='Holds Default Kadupul Index Definitions'");
 
 	$exists_indexes = db_table_exists('table_indexes');
 
@@ -1095,22 +1088,22 @@ function load_audit_database() {
 /*  display_version - displays version information */
 function display_version() {
 	$version = get_cacti_cli_version();
-	print "Cacti Database Audit Utility, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
+	print "Kadupul Database Audit Utility, Version $version, " . COPYRIGHT_YEARS . PHP_EOL;
 }
 
 function display_help() {
 	display_version();
 
 	print PHP_EOL . 'usage: audit_database.php --report | --repair [ --upgrade ]' . PHP_EOL . PHP_EOL;
-	print 'Cacti utility for auditing and correcting your Cacti database.  This utility can' . PHP_EOL;
-	print 'will scan your Cacti database and report any problems in the schema that it finds.' . PHP_EOL . PHP_EOL;
+	print 'Kadupul utility for auditing and correcting your Kadupul database.  This utility can' . PHP_EOL;
+	print 'will scan your Kadupul database and report any problems in the schema that it finds.' . PHP_EOL . PHP_EOL;
 	print 'Options:' . PHP_EOL;
 	print '    --report  - Report on any issues found in the audit of the database' . PHP_EOL;
 	print '    --repair  - Repair any issues found during the audit of the database' . PHP_EOL;
-	print '    --upgrade - Upgrade the Cacti database before running' . PHP_EOL . PHP_EOL;
+	print '    --upgrade - Upgrade the Kadupul database before running' . PHP_EOL . PHP_EOL;
 	print 'Developer Options:' . PHP_EOL;
 	print '    --create  - Initialize or Re-initialize the Audit Schema tables.' . PHP_EOL;
-	print '    --load    - Take a pristine Cacti install and create Audit Schema and file.' . PHP_EOL;
+	print '    --load    - Take a pristine Kadupul install and create Audit Schema and file.' . PHP_EOL;
 	print '    --alters  - Print out all the alter commands vs. executing for debugging.' . PHP_EOL . PHP_EOL;
 }
 

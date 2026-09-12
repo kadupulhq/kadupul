@@ -36,7 +36,7 @@ echo "[setup] running cli/install_cacti.php"
 "${DC[@]}" exec -T cacti-master php /var/www/html/cli/install_cacti.php --accept-eula --install --mode=1
 
 # Confirm the installer populated the version row; abort early if it did not.
-# Cacti tracks the installed db version in a dedicated `version` table (see
+# Kadupul tracks the installed db version in a dedicated `version` table (see
 # include/global.php: SELECT cacti FROM version LIMIT 1), not in the settings
 # key/value store, so the check has to look there.
 echo "[setup] verifying installer outcome"

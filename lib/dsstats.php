@@ -13,17 +13,10 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDtool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 /**
- * get_rrdfile_names - this routine returns all of the RRDfiles know to Cacti
+ * get_rrdfile_names - this routine returns all of the RRDfiles know to Kadupul
  *   so as to be processed when performing the Daily, Weekly, Monthly and Yearly
  *   average and peak calculations.
  *
@@ -296,7 +289,7 @@ function dsstats_obtain_data_source_avgpeak_values($local_data_id, $rrdfile, $in
 			$max     = false;
 			$dsnames = array();
 
-			/* figure out what is in this RRDfile.  Assume CF Uniformity as Cacti does not allow async rrdfiles.
+			/* figure out what is in this RRDfile.  Assume CF Uniformity as Kadupul does not allow async rrdfiles.
 			 * also verify the consolidation functions in the RRDfile for average and max calculations.
 			 */
 			if (cacti_sizeof($info_array)) {
@@ -458,7 +451,7 @@ function dsstats_obtain_data_source_avgpeak_values($local_data_id, $rrdfile, $in
 }
 
 /**
- * dsstats_log_statistics - provides generic timing message to both the Cacti log and the settings
+ * dsstats_log_statistics - provides generic timing message to both the Kadupul log and the settings
  *   table so that the statistics can be graphed as well.
  *
  * @param $type - (string) the type of statistics to log, either 'HOURLY', 'DAILY', 'BOOST' or 'MAJOR'.
@@ -614,7 +607,7 @@ function dsstats_error_handler($errno, $errmsg, $filename, $linenum, $vars = [])
 		if (substr_count($errmsg, 'date_default_timezone')) return;
 		if (substr_count($errmsg, 'Only variables')) return;
 
-		/* log the error to the Cacti log */
+		/* log the error to the Kadupul log */
 		cacti_log('PROGERR: ' . $err, false, 'DSSTATS');
 	}
 
@@ -998,7 +991,7 @@ function dsstats_memory_limit() {
 /**
  * dsstats_poller_bottom - this routine launches the main dsstats poller so that it might
  *   calculate the Hourly, Daily, Weekly, Monthly, and Yearly averages.  It is forked independently
- *   to the Cacti poller after all polling has finished.
+ *   to the Kadupul poller after all polling has finished.
  *
  * @return - NULL
  */
@@ -1027,7 +1020,7 @@ function dsstats_poller_bottom () {
 
 /**
  * dsstats_rrdtool_init - this routine provides a bi-directional socket based connection to RRDtool.
- *   it provides a high speed connection to rrdfile in the case where the traditional Cacti call does
+ *   it provides a high speed connection to rrdfile in the case where the traditional Kadupul call does
  *   not when performing fetch type calls.
  *
  * @return - (mixed) An array that includes both the process resource and the pipes to communicate

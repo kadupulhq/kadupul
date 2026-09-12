@@ -14,13 +14,6 @@
  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
  | GNU General Public License for more details.                            |
  +-------------------------------------------------------------------------+
- | Cacti: The Complete RRDTool-based Graphing Solution                     |
- +-------------------------------------------------------------------------+
- | This code is designed, written, and maintained by the Cacti Group. See  |
- | about.php and/or the AUTHORS file for specific developer information.   |
- +-------------------------------------------------------------------------+
- | http://www.cacti.net/                                                   |
- +-------------------------------------------------------------------------+
 */
 
 ini_set('output_buffering', 'Off');
@@ -42,7 +35,7 @@ cacti_log('WARNING: Deprecated script push_out_hosts.php. Please use rebuild_pol
 
 if (in_array('-v', $parms) || in_array('-V', $parms) || in_array('--version', $parms)) {
 	// exception for github tests
-	print 'Cacti Push out hosts/repopulate poller cache Tool, Version ' . get_cacti_cli_version() . ' ' . COPYRIGHT_YEARS . PHP_EOL;
+	print 'Kadupul Push out hosts/repopulate poller cache Tool, Version ' . get_cacti_cli_version() . ' ' . COPYRIGHT_YEARS . PHP_EOL;
 } else {
 	print 'WARNING: Deprecated script push_out_hosts.php. Please use rebuild_poller_cache.php.' . PHP_EOL;
 

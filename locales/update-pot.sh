@@ -12,13 +12,6 @@
 #   | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           |
 #   | GNU General Public License for more details.                            |
 #   +-------------------------------------------------------------------------+
-#   | Cacti: The Complete RRDTool-based Graphing Solution                     |
-#   +-------------------------------------------------------------------------+
-#   | This code is designed, written, and maintained by the Cacti Group. See  |
-#   | about.php and/or the AUTHORS file for specific developer information.   |
-#   +-------------------------------------------------------------------------+
-#   | http://www.cacti.net/                                                   |
-#   +-------------------------------------------------------------------------+
 
 # get script name
 SCRIPT_NAME=`basename ${0}`

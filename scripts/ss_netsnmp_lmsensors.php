@@ -7,11 +7,11 @@
 # Copyright (C) 2006-2010, Eric A. Hall
 # http://www.eric-a-hall.com/
 #
-# This software is licensed under the same terms as Cacti itself
+# This software is licensed under the same terms as Kadupul itself
 # ------------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------------
-# load the Cacti configuration settings if they aren't already present
+# load the Kadupul configuration settings if they aren't already present
 # ------------------------------------------------------------------------------------
 if (!isset($called_by_script_server)) {
 	include(__DIR__ . '/../include/cli_check.php');
@@ -25,7 +25,7 @@ if (!function_exists('cacti_snmp_walk')) {
 }
 
 # ------------------------------------------------------------------------------------
-# call the main function manually if executed outside the Cacti script server
+# call the main function manually if executed outside the Kadupul script server
 # ------------------------------------------------------------------------------------
 if (!isset($called_by_script_server)) {
 	array_shift($_SERVER['argv']);
@@ -129,7 +129,7 @@ function ss_netsnmp_lmsensors($host_id = '', $sensor_type = '', $cacti_request =
 	# ------------------------------------------------------------------------------------
 	# build the snmp_get_arguments and snmp_walk_arguments array for future use
 	#
-	# note that the array structure varies according to the version of Cacti in use
+	# note that the array structure varies according to the version of Kadupul in use
 	# ------------------------------------------------------------------------------------
 	$snmp_get_arguments = array(
 		$host['hostname'],
