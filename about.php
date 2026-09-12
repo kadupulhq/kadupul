@@ -26,7 +26,7 @@ include('./include/auth.php');
 
 top_header();
 
-html_start_box(__('About Cacti'), '100%', '', '3', 'center', '');
+html_start_box(__('About Kadupul'), '100%', '', '3', 'center', '');
 
 ?>
 
@@ -37,65 +37,15 @@ html_start_box(__('About Cacti'), '100%', '', '3', 'center', '');
 </tr>
 <tr>
 	<td valign='top' class='odd' class='textArea'>
-		<div style='float:right;'><a href='http://www.cacti.net/'><img class='right' src='images/cacti_about_logo.gif' alt='raXnet'></a></div>
+		<p><?php print __('Kadupul is an independent open-source project for network monitoring and time-series graphing.'); ?></p>
 
-		<p><?php print __('Cacti is designed to be a complete graphing solution based on the RRDtool Time Series Database (TSDB) and Graphing solution. Its goal is to make the Network Administrator\'s job easier by taking care of all the important details necessary to create meaningful Graphs.'); ?></p>
+		<p><?php print __('Development, contributions, and release decisions are managed by the %sKadupul organization%s.', '<a href="https://github.com/kadupulhq">', '</a>'); ?></p>
 
-		<p><?php print __('Please see the official %sCacti website%s for information on how to use Cacti, get support, and updates.', '<a href="http://www.cacti.net/?version=' . CACTI_VERSION . '">', '</a>'); ?></p>
-
-		<div class='flexContainer'>
-		<div class='flexChild' style='min-width:300px;'>
-		<p><strong><?php print __('Active Developers'); ?></strong></p>
-		<p style='min-height:45px'><?php print __('Developers working on Cacti, its Architecture, Documentation and Future Releases.'); ?></strong></p>
-		<ul type='disc'>
-			<li>Larry Adams <i>(TheWitness)</i></li>
-			<li>Mark Brugnoli-Vinten <i>(netniV)</i></li>
-			<li>Jimmy Conner <i>(cigamit)</i></li>
-			<li>Petr Macek <i>(xmacan)</i></li>
-			<li>Sean Mancini <i>(bmfmancini)</i></li>
-			<li>Andreas Braun <i>(browniebraun)</i></li>
-			<li>Thomas Vincent <i>(somethingwithproof)</i></li>
-		</ul>
-		</div>
-		<div class='flexChild' style='min-width:300px;'>
-		<p><strong><?php print __('Honorable Mentions'); ?></strong></p>
-		<p style='min-height:45px'><?php print __('Contributors to Documentation, QA, Packaging, the Forums and our YouTube page.'); ?></strong></p>
-		<ul type='disc'>
-			<li>Thomas Urban <i>(phalek)</i></li>
-			<li>Paul Gevers (Debian) <i>(paulgevers)</i></strong></li>
-			<li>Morten Stevens (Fedora) <i>(mortenstevens)</i></strong></li>
-		</ul>
-		</div>
-		<div class='flexChild' style='min-width:300px;'>
-		<p><strong><?php print __('Emeritus Members'); ?></strong></p>
-		<p style='min-height:45px'><?php print __('Members of the original Cacti Group that have since moved on in their careers.  We continue to wish them the best.'); ?></strong></p>
-		<ul type='disc'>
-			<li>Ian Berry <i>(raX)</i></li>
-			<li>Reinhard Scheck <i>(gandalf)</i></li>
-			<li>Tony Roman <i>(rony)</i></strong></li>
-			<li>Chris Bell (Windows) <i>(BSOD2600)</i></li>
-			<li>Andy Blyler <i>(ablyler)</i></strong></li>
-			<li>Jing Chen <i>(ddb4github)</i></li>
-			<li>J.P. Pasnak, CD <i>(Linegod)</i> - Till we meet again!</strong></li>
-		</ul>
-		</div>
-		</div>
-
-		<p><strong><?php print __('Thanks'); ?></a></strong><br>
-		<ul type='disc'>
-			<li>
-				<?php print __('A very special thanks to %sTobi Oetiker%s, the creator of %sRRDtool%s and the very popular %sMRTG%s.', '<a href="http://tobi.oetiker.ch/"><strong>', '</strong></a>', '<a href="http://www.rrdtool.org/">', '</a>', '<a href="http://www.rrdtool.org">', '</a>'); ?>
-			</li>
-			<li>
-				<strong><?php print __('The users of Cacti'); ?></strong>
-				<?php print __('Especially anyone who has taken the time to create an issue report, or otherwise help fix a Cacti related problems. Also to anyone who has contributed to supporting Cacti.'); ?>
-			</li>
-		</ul>
-		</p>
+		<p><?php print __('For documentation and support, visit the %sKadupul project%s.', '<a href="https://github.com/kadupulhq/kadupul">', '</a>'); ?></p>
 
 		<strong><?php print __('License'); ?></strong><br>
 
-		<p><?php print __('Cacti is licensed under the GNU GPL:'); ?></p>
+		<p><?php print __('Kadupul is licensed under the GNU GPL:'); ?></p>
 
 		<p><tt><?php print __('This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.');?></tt></p>
 

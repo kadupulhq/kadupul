@@ -1,4 +1,4 @@
-# Cacti — Contributor notes for AI coding assistants
+# Kadupul — Contributor notes for AI coding assistants
 
 This file is for AI coding assistants (Claude Code, Cursor, Copilot, Gemini,
 etc.) working against this repository.  It is also a concise reference for any
@@ -134,6 +134,6 @@ Use the house wrappers instead of raw equivalents:
 
 ## Contact and review
 
-- Upstream maintainer: @TheWitness
-- Reviewer who catches style drift: @netniV
+- Project contacts and review: https://github.com/kadupulhq/kadupul
+- Follow this repository's CODEOWNERS and contribution guidance for reviews.
 - When in doubt, open a draft PR and ask before you rebase across 60 files.

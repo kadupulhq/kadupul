@@ -28,4 +28,10 @@ Targeting `v1.3.0`, continuing from the Cacti 1.2.31 fork point. See
   Cacti install holds and what would survive the move. Read only, so it is safe
   against production.
 
+### Changed
+
+- Point the About page and contributor review contacts at Kadupul instead of
+  presenting the upstream developer roster as this project's team. Preserve
+  the imported credits in AUTHORS as historical upstream attribution.
+
 [Unreleased]: https://github.com/kadupulhq/kadupul/commits/main
