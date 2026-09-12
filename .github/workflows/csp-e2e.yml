@@ -9,9 +9,6 @@
 name: CSP Migration CI
 
 on:
-  push:
-    branches:
-      - security/csp-nonce-migration
   pull_request:
     paths:
       - lib/headers_secure.php

@@ -33,11 +33,18 @@ Use these notes to navigate and contribute productively to this PHP codebase.
 
 ## Plugin framework
 - Hooks are declared in DB and executed via `api_plugin_hook(...)` and `api_plugin_hook_function(...)` (see `lib/plugins.php`).
-- Plugins must reside in `plugins/<name>/` with `setup.php` and `INFO`; enabled/ordered via `plugin_config` table. CI fetches core plugins (`.github/workflows/syntax.yml`).
+- Plugins must reside in `plugins/<name>/` with `setup.php` and `INFO`; enabled/ordered via `plugin_config` table. The plugin API contract is characterized in `tests/Characterization/LibPluginsTest.php` and driven end to end by the synthetic plugin in `tests/Fixtures/plugins/compatibility_test/`.
 - Use hooks like `page_head`, `poller_top`, `device_remove`, `create_complete_graph_from_template` to integrate (grep for `api_plugin_hook_function` in `lib/`).
 
 ## Testing, CI, and local checks
-- No PHPUnit; CI runs syntax checks and an end-to-end smoke: sets up Apache+MySQL, installs Kadupul, enables plugins, runs poller, and spiders pages (see `.github/workflows/syntax.yml`, scripts in `tests/tools/`).
+- `make test-characterization` runs the container behavioral harness: it installs the app
+  against MariaDB and a deterministic snmpd, then compares observations against committed
+  golden files in `tests/Golden/`. Those goldens are the compatibility contract; a change to
+  one means user-visible behavior changed.
+- The in-process PHP suite and its `composer test` script arrive with the characterization
+  branch. Until that lands, this repository has no runnable PHP test suite.
+- Do not write tests that `file_get_contents()` a source file and assert a substring. They
+  pass while the code is broken.
 - Local quick checks:
   - PHP lint: `find . -name '*.php' -exec php -l {} \; | grep -iv 'no syntax errors detected'` (CI uses similar).
   - Minimal smoke: create `include/config.php` from `.dist`, import `cacti.sql`, then run install + `poller.php` as above; tail `log/cacti.log` for `SYSTEM STATS`.

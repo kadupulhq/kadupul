@@ -1,7 +1,11 @@
 version: 2
 updates:
   - package-ecosystem: composer
-    directory: /
+    directories:
+      - /
+      # The test runner is installed here, not into the tracked include/vendor
+      # tree, so its lock file needs updates too.
+      - /tests
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
