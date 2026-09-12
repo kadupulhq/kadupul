@@ -1,6 +1,7 @@
 """External compatibility scenarios. Standard library only; no production imports."""
 import argparse
 import difflib
+import fcntl
 import hashlib
 import html
 from html.parser import HTMLParser
@@ -133,6 +134,13 @@ class Harness:
         # every run, which accumulated to tens of gigabytes locally and would do
         # the same on CI.
         self.dc = ['docker', 'compose', '-p', 'kadupul-behavior', '-f', str(ROOT / 'tests/behavior/compose.yml')]
+        # The shared project name means a second concurrent run would tear down
+        # the first one's containers in setup(). Refuse it instead.
+        self.lock = open(Path(tempfile.gettempdir()) / 'kadupul-behavior.lock', 'w')
+        try:
+            fcntl.flock(self.lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            raise RuntimeError('Another behavioral harness run holds the kadupul-behavior project') from None
         self.observed = {}
         self.destination = ROOT / 'tests/behavior/results' / args.target
 
@@ -354,13 +362,20 @@ class Harness:
 
         self.truncate_artifacts('rrd-argv.log', 'rrd-stdin.log')
         run = self.php('poller.php', '--force')
+        if run['exit']:
+            raise RuntimeError(f"Poller exited {run['exit']}; refusing to record a failed run")
         state = self.poller_state()
         if not any(row['host_id'] == int(device) for row in state['poller_item']):
             raise RuntimeError('Poller cache holds nothing for the polled device')
+        # A populated cache proves setup, not collection. Only an RRD update shows
+        # this run gathered something worth recording.
+        rrd_calls = self.rrd_calls()
+        if not any(call.startswith('update ') for call in rrd_calls):
+            raise RuntimeError('Poller made no RRD updates; refusing to record a hollow run')
         self.capture('poller/run-reachable', {
             'command': {k: run[k] for k in ('exit', 'stdout', 'stderr')},
             'database': state,
-            'rrd_calls': self.rrd_calls(),
+            'rrd_calls': rrd_calls,
         })
 
         # A graph probe that returns no source records "RRD file does not exist"
@@ -485,7 +500,9 @@ class Harness:
         result = self.command('sh', '-c', 'cat /etc/os-release | head -2; php -v | head -1', check=False)
         image = run(['docker', 'image', 'inspect', '--format', '{{index .RepoDigests 0}}',
                      f'php:{os.environ.get("PHP_VERSION", "8.2")}-apache'], check=False)
+        db = run(['docker', 'image', 'inspect', '--format', '{{index .RepoDigests 0}}', 'mariadb:10.11'], check=False)
         return {'ref': (image['stdout'] or '').strip() or 'unresolved',
+                'db_ref': (db['stdout'] or '').strip() or 'unresolved',
                 'runtime': (result['stdout'] or '').strip()}
 
     def finish(self, error=None):

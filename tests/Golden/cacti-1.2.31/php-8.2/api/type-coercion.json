@@ -151,6 +151,6 @@
     }
   ],
   "stdout": "\n",
-  "stderr": "PHP Deprecated:  preg_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated in <APP>/lib/functions.php on line 4479\n",
+  "stderr": "",
   "exit": 0
 }

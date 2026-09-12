@@ -1,10 +1,9 @@
 # Cacti runtime image for the e2e harness. The repo is baked into the image.
 
 # The tag is mutable: a base refresh can change diagnostics or defaults with no
-# source diff, which would surface as a behavioral regression nobody caused. The
-# recorded observations carry the exact PHP version, so a drift is at least
-# attributable. Pinning by digest is the stronger fix and needs a decision about
-# how the matrix is maintained.
+# source diff. The manifest records the resolved digest of this image and of the
+# database image, so a refresh shows up there. A digest pin here would fix one
+# PHP version and break the version matrix.
 ARG PHP_VERSION=8.2
 FROM php:${PHP_VERSION}-apache
 

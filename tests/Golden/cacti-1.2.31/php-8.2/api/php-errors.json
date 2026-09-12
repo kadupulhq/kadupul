@@ -13,6 +13,6 @@
     "file": "<APP>/lib/functions.php",
     "count": 1,
     "suppressed": true,
-    "suppressed_here": false
+    "suppressed_here": true
   }
 ]

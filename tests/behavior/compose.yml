@@ -23,6 +23,13 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    # up --wait only waits for a healthcheck. Without one the first login can
+    # race Apache startup. A static file keeps the check independent of the
+    # schema, which setup() imports after the stack is up.
+    healthcheck:
+      test: [CMD, curl, -fsS, -o, /dev/null, http://127.0.0.1/include/layout.js]
+      interval: 2s
+      retries: 60
     ports: ["127.0.0.1::80"]
     volumes:
       - ../Support/Behavior:/harness:ro

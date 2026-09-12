@@ -19,14 +19,12 @@ function behavior_error_record(array $event) {
 }
 
 function behavior_install_error_handler() {
-    // Capture at E_ALL so nothing is missed, but remember the level the shipped
-    // configuration actually uses. Reporting suppression against the forced
-    // level would record every diagnostic as surfaced, including deprecations
-    // that php.ini-production hides.
+    // A user handler receives every diagnostic whatever error_reporting says,
+    // so the level stays as configured. Raising it made PHP print deprecations
+    // that php.ini-production hides, which recorded the recorder, not Cacti.
     if (!isset($GLOBALS['behavior_configured_error_level'])) {
         $GLOBALS['behavior_configured_error_level'] = error_reporting();
     }
-    error_reporting(E_ALL);
 
     $previous = set_error_handler(function ($severity, $message, $file, $line) use (&$previous) {
         behavior_error_record([
@@ -36,8 +34,8 @@ function behavior_install_error_handler() {
             'line'       => $line,
             // A diagnostic suppressed by @ or by error_reporting still reaches
             // the handler. Judge suppression against the configuration the
-            // application ships with, not against the level forced above, or
-            // every event reads as surfaced.
+            // application ships with; suppressed_here reflects any level Cacti
+            // set after bootstrapping.
             'suppressed' => !($GLOBALS['behavior_configured_error_level'] & $severity),
             'suppressed_here' => !(error_reporting() & $severity),
             'context'    => array_map(static fn($f) => $f['function'] ?? '{main}',
