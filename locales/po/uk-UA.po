@@ -15205,7 +15205,7 @@ msgid "Upgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr ""
 
 #: lib/installer.php:2064
-msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with The Kadupul Group"
+msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr ""
 
 #: lib/installer.php:2065

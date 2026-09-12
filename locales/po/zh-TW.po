@@ -17807,8 +17807,8 @@ msgstr "從<strong>%s</strong>升級到<strong>%s</strong>"
 
 #: lib/installer.php:2064
 #, fuzzy
-msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with The Kadupul Group"
-msgstr "如果出現問題，強烈建議您清除瀏覽器緩存，關閉然後重新打開瀏覽器（不只是“Kadupul”選項卡）並重試，然後再向The Kadupul Group提出問題"
+msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
+msgstr "如果出現問題，強烈建議您清除瀏覽器緩存，關閉然後重新打開瀏覽器（不只是“Kadupul”選項卡）並重試，然後再向Kadupul提出問題"
 
 #: lib/installer.php:2065
 #, fuzzy

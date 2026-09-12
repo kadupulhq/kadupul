@@ -4,7 +4,7 @@ import { test, expect, type Page, type Request } from '@playwright/test';
  * Plugin CSP harness. The base csp.spec.ts proves the header shape and
  * verifies the pilot pages (logout, permission_denied) carry matching
  * nonces. This spec extends coverage to two third-party plugins shipped
- * by the Cacti project — thold and monitor — to catch the case where a
+ * by external projects — thold and monitor — to catch the case where a
  * plugin emits inline <script> tags directly without calling
  * CactiSecureHeaders::getNonceAttribute().
  *
@@ -100,7 +100,7 @@ interface PluginWalk {
     /* Display name for test titles. */
     label: string;
     /* Paths to walk. The first entry should be the plugin index — the
-     * page Cacti renders when a user clicks the plugin's menu entry. The
+     * page Kadupul renders when a user clicks the plugin's menu entry. The
      * URL pattern follows lib/plugins.php's plugins.php?plugin=<dir>
      * convention; for plugins that register their own top-level page
      * (thold's threshold list, monitor's device dashboard) we hit those

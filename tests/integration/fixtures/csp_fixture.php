@@ -14,7 +14,7 @@
  * the harness can drive every branch of CactiSecureHeaders without a DB.
  *
  * Keep this file dependency-free on purpose: only lib/headers_secure.php is
- * loaded so a failure here points at the header helper, not at the Cacti
+ * loaded so a failure here points at the header helper, not at the Kadupul
  * bootstrap.
  */
 

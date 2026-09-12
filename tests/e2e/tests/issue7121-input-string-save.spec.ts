@@ -16,12 +16,12 @@ import { test, expect, type Page } from '@playwright/test';
  *   poller_item table stays empty for that data source.
  *
  * The unit and integration suites pin the regex behavior directly. This
- * spec exercises the form path against a real Cacti instance so a
+ * spec exercises the form path against a real Kadupul instance so a
  * regression in the GUI plumbing (or a future tightening of the
  * validator that re-introduces the bug) is caught end-to-end.
  *
  * Skipped unless E2E_CACTI_FULL=1 because creating a Data Input Method
- * requires the full Cacti DB schema and a writable installation, which
+ * requires the full Kadupul DB schema and a writable installation, which
  * the lighter csp/plugin specs do not exercise.
  */
 
@@ -61,7 +61,7 @@ test.describe('issue #7121 data input method save', () => {
             page.locator('input[name="save_component_data_input"]').click(),
         ]);
 
-        /* Assert the validation_error message did NOT fire. Cacti renders
+        /* Assert the validation_error message did NOT fire. Kadupul renders
          * raise_message() output in #message_container; a successful save
          * either redirects to ?action=edit&id=N or shows the success
          * banner. */

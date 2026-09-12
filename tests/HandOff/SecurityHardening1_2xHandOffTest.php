@@ -6,7 +6,7 @@
  +-------------------------------------------------------------------------+
  |                                                                         |
  | HandOff tests: verify behavioral properties of the security fixes from  |
- | SecurityHardening1_2xTest without requiring a full Cacti bootstrap.     |
+ | SecurityHardening1_2xTest without requiring a full Kadupul bootstrap.     |
  +-------------------------------------------------------------------------+
 */
 

@@ -31,7 +31,7 @@ set_error_handler('error_handler');
 // allow infinite execute
 ini_set('max_execution_time', '0');
 
-// define base path of Cacti
+// define base path of Kadupul
 define('CACTI_PATH', str_replace('/tests/tools', '', dirname(__FILE__)));
 
 global $config;

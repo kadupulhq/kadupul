@@ -31,7 +31,7 @@ The script brings the stack up, seeds the database, runs every test in
 `tests/` in lexical order, and tears the stack down on exit. The final exit
 code is the worst test exit code.
 
-By default the master Cacti UI binds to `127.0.0.1:8088`. To use a different port, set `CACTI_E2E_PORT` before running: `CACTI_E2E_PORT=8090 ./run.sh`.
+By default the master Kadupul UI binds to `127.0.0.1:8088`. To use a different port, set `CACTI_E2E_PORT` before running: `CACTI_E2E_PORT=8090 ./run.sh`.
 
 ## Tests
 
@@ -48,7 +48,7 @@ By default the master Cacti UI binds to `127.0.0.1:8088`. To use a different por
 - `docker compose -f tests/e2e/docker/docker-compose.yml logs cacti-master` --
   Apache + PHP error logs.
 - `docker compose -f tests/e2e/docker/docker-compose.yml exec cacti-master tail
-  -n 200 /var/www/html/log/cacti.log` -- Cacti's own log.
+  -n 200 /var/www/html/log/cacti.log` -- Kadupul's own log.
 - `docker compose -f tests/e2e/docker/docker-compose.yml exec cacti-db mariadb
   -ucactiuser -pcactiuser cacti` -- direct DB shell.
 - Playwright traces land in `tests/e2e/docker/test-results/` (retained on
@@ -89,7 +89,7 @@ maturity and are honest regression detectors at different fidelity levels.
 
 ## CSRF tokens
 
-Cacti's csrf-magic middleware (include/csrf.php) rejects every POST that
+Kadupul's csrf-magic middleware (include/csrf.php) rejects every POST that
 does not carry a fresh `__csrf_magic` hidden field whose token contains
 a sid hash matching the current PHP session and an ip hash matching the
 client. Tests that drive a login over curl must GET /index.php first,

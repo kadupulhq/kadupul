@@ -1,12 +1,12 @@
-# PHP-FPM image for the Cacti E2E stack. PHP 7.4 matches the 1.2.x branch
+# PHP-FPM image for the Kadupul E2E stack. PHP 7.4 matches the 1.2.x branch
 # floor. Vendor tree is already committed under include/vendor, so Composer
 # is intentionally not installed here.
 
 FROM php:7.4-fpm-alpine
 
 LABEL org.opencontainers.image.title="cacti-e2e-php" \
-      org.opencontainers.image.source="https://github.com/Cacti/cacti" \
-      org.opencontainers.image.description="PHP-FPM runtime for Cacti Playwright E2E stack (CSP nonce pilot)"
+      org.opencontainers.image.source="https://github.com/kadupulhq/kadupul" \
+      org.opencontainers.image.description="PHP-FPM runtime for Kadupul Playwright E2E stack (CSP nonce pilot)"
 
 # Build-time packages for the ext compile, then runtime packages. Split into
 # two groups so the build-deps can be dropped in a single --virtual cleanup.
@@ -56,7 +56,7 @@ RUN set -eux; \
 
 # Plugin clone for the CSP harness. Build args let CI pin a branch/tag without
 # editing the Dockerfile. Defaults track the 1.2.x development line because
-# that matches the Cacti branch this harness exercises. Clones go into a
+# that matches the Kadupul branch this harness exercises. Clones go into a
 # staging directory; the entrypoint copies them into place under the bind-
 # mounted plugins/ tree at first start (the bind mount would otherwise hide
 # anything baked into the image).

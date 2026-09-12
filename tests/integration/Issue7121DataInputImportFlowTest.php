@@ -20,7 +20,7 @@
  *     would reject the same templates with a "validation_error" raise.
  *
  * A true DB-backed integration test (sql_save against data_input,
- * data_input_fields, data_template_data, data_local) needs the Cacti
+ * data_input_fields, data_template_data, data_local) needs the Kadupul
  * bootstrap and a writable database. This file stays at the structural
  * level so it can run on any PHP installation that has the source tree
  * available, while still exercising the real source paths.
@@ -82,7 +82,7 @@ test('shared validator placeholder grammar matches generate_data_input_field_seq
 	/* lib/functions.php:generate_data_input_field_sequences() parses
 	 * placeholders with /<([_a-zA-Z0-9]+)>/. cacti_input_string_is_safe()
 	 * must accept any input_string the sequence generator accepts, or the
-	 * GUI save will refuse templates that the rest of Cacti happily
+	 * GUI save will refuse templates that the rest of Kadupul happily
 	 * processes. Cross-check both regexes against a shared corpus. */
 	preg_match(
 		'/^function cacti_input_string_is_safe\([^)]*\)\s*\{.*?^\}/sm',

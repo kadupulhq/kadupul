@@ -40,7 +40,7 @@
  *
  * The placeholder grammar matches the one already used by
  * generate_data_input_field_sequences() and get_full_script_path(), so
- * the validator no longer disagrees with the rest of Cacti about what
+ * the validator no longer disagrees with the rest of Kadupul about what
  * counts as a placeholder. The blocklist is unchanged, so the
  * GHSA-c4qp-j9r9-fq24 protection holds.
  */
@@ -50,7 +50,7 @@ $functionsSource = file_get_contents(__DIR__ . '/../../lib/functions.php');
 /**
  * Extract cacti_input_string_is_safe() from lib/functions.php into a
  * uniquely-named local copy so the test does not depend on the full
- * Cacti bootstrap (which other unit tests in this directory also avoid).
+ * Kadupul bootstrap (which other unit tests in this directory also avoid).
  */
 function _extract_input_string_validator(string $functionsSource, string $localName): callable {
 	preg_match(
@@ -65,7 +65,7 @@ function _extract_input_string_validator(string $functionsSource, string $localN
 	if (!function_exists($localName)) {
 		// Source-level test pattern: extract the canonical function definition
 		// from lib/functions.php so we exercise the real regex without booting
-		// the full Cacti runtime. Mirrors SecurityScriptServerDataInputTest.
+		// the full Kadupul runtime. Mirrors SecurityScriptServerDataInputTest.
 		eval($src); // nosemgrep: php.lang.security.eval-use.eval-use
 	}
 	return $localName;

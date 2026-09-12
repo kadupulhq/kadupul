@@ -97,7 +97,7 @@ test('buildCspPolicy nonce mode includes strict-dynamic and unsafe-eval for jQue
 	/* Without strict-dynamic, jQuery .html() / .append() injected scripts fail
 	 * because they do not carry the nonce. Without unsafe-eval, jQuery's
 	 * globalEval and new Function() paths fail. Both are required for
-	 * Cacti core + plugins (thold, monitor, etc) to render under nonce mode. */
+	 * Kadupul core + plugins (thold, monitor, etc) to render under nonce mode. */
 	$policy = CactiSecureHeaders::buildCspPolicy('nonce', 'XYZ', '');
 	$start  = strpos($policy, 'script-src');
 	$end    = strpos($policy, ';', $start);
@@ -108,7 +108,7 @@ test('buildCspPolicy nonce mode includes strict-dynamic and unsafe-eval for jQue
 
 test('buildCspPolicy nonce mode style-src keeps unsafe-inline for jQuery .css() / inline style attrs', function () {
 	/* jQuery .css() and the dozens of legacy inline style="" attributes
-	 * across Cacti pages need unsafe-inline. Style XSS is a much narrower
+	 * across Kadupul pages need unsafe-inline. Style XSS is a much narrower
 	 * attack surface than script XSS, so the trade-off is intentional. */
 	$policy = CactiSecureHeaders::buildCspPolicy('nonce', 'XYZ', '');
 	$start  = strpos($policy, 'style-src');

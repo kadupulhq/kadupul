@@ -15241,7 +15241,7 @@ msgstr "Upgrade von <stark>%s</stark> auf <stark>%s</stark>"
 
 #: lib/installer.php:2064
 #, fuzzy
-msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with The Kadupul Group"
+msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "Bei Problemen wird dringend empfohlen, den Cache des Browsers zu leeren, den Browser zu schließen und erneut zu öffnen (nicht nur die Registerkarte, auf der sich Kadupul befindet) und es erneut zu versuchen, bevor Sie ein Problem der Kadupul Group melden."
 
 #: lib/installer.php:2065

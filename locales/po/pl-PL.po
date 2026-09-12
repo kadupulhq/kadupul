@@ -15220,8 +15220,8 @@ msgid "Upgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "Podwyższenie z <strong>%s</strong> do <strong>%s</strong>"
 
 #: lib/installer.php:2064
-msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with The Kadupul Group"
-msgstr "W przypadku problemów zaleca się wyczyścić pamięć podręczną przeglądarki, zamknąć, a następnie ponownie otworzyć przeglądarkę (nie tylko zakładka Kadupul jest włączona) i spróbować ponownie, przed zgłoszeniem problemu z The Kadupul Group."
+msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
+msgstr "W przypadku problemów zaleca się wyczyścić pamięć podręczną przeglądarki, zamknąć, a następnie ponownie otworzyć przeglądarkę (nie tylko zakładka Kadupul jest włączona) i spróbować ponownie, przed zgłoszeniem problemu z Kadupul."
 
 #: lib/installer.php:2065
 msgid "On rare occasions, we have had reports from users who experience some minor issues due to changes in the code.  These issues are caused by the browser retaining pre-upgrade code and whilst we have taken steps to minimise the chances of this, it may still occur.  If you need instructions on how to clear your browser cache, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> is a good starting point."

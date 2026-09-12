@@ -16,13 +16,13 @@ test('CactiFilesystem operations work correctly', function () {
 	$temp_dir = sys_get_temp_dir() . '/cacti_fs_test_' . mt_rand();
 	$temp_file = $temp_dir . '/test.txt';
 	
-	\Cacti\Filesystem\CactiFilesystem::mkdir($temp_dir);
-	expect(\Cacti\Filesystem\CactiFilesystem::exists($temp_dir))->toBeTrue();
+	\Kadupul\Filesystem\CactiFilesystem::mkdir($temp_dir);
+	expect(\Kadupul\Filesystem\CactiFilesystem::exists($temp_dir))->toBeTrue();
 	
-	\Cacti\Filesystem\CactiFilesystem::dumpFile($temp_file, 'hello world');
-	expect(\Cacti\Filesystem\CactiFilesystem::exists($temp_file))->toBeTrue();
+	\Kadupul\Filesystem\CactiFilesystem::dumpFile($temp_file, 'hello world');
+	expect(\Kadupul\Filesystem\CactiFilesystem::exists($temp_file))->toBeTrue();
 	expect(file_get_contents($temp_file))->toBe('hello world');
 	
-	\Cacti\Filesystem\CactiFilesystem::remove($temp_dir);
-	expect(\Cacti\Filesystem\CactiFilesystem::exists($temp_dir))->toBeFalse();
+	\Kadupul\Filesystem\CactiFilesystem::remove($temp_dir);
+	expect(\Kadupul\Filesystem\CactiFilesystem::exists($temp_dir))->toBeFalse();
 });

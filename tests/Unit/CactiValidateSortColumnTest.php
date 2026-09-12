@@ -84,7 +84,7 @@ describe('cacti_validate_sort_column', function () {
 	});
 
 	it('accepts function-expression entries in the allowlist', function () {
-		// Cacti's existing get_order_string() can legitimately sort by
+		// Kadupul's existing get_order_string() can legitimately sort by
 		// function expressions like INET_ATON(hostname) or LENGTH(description).
 		// The allowlist accepts any string the caller approves — strict ===
 		// comparison means a function-wrapped entry passes iff the caller

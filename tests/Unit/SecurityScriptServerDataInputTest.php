@@ -99,7 +99,7 @@ test('cacti_input_string_is_safe is defined in lib/functions.php', function () u
 
 test('cacti_input_string_is_safe extracts and runs against canonical payloads', function () use ($functionsSource) {
 	/* Pull the function definition out of lib/functions.php and evaluate it
-	 * in test scope. Requiring the whole file would drag in the full Cacti
+	 * in test scope. Requiring the whole file would drag in the full Kadupul
 	 * bootstrap, which other tests in this directory deliberately avoid. */
 	preg_match(
 		'/^function cacti_input_string_is_safe\([^)]*\)\s*\{.*?^\}/sm',

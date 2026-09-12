@@ -15179,8 +15179,8 @@ msgid "Upgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "Mise à niveau de <strong>%s</strong> à <strong>%s</strong>"
 
 #: lib/installer.php:2064
-msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with The Kadupul Group"
-msgstr "En cas de problème, il est fortement recommandé de vider le cache de votre navigateur, de fermer puis de rouvrir votre navigateur (pas seulement l'onglet Kadupul activé) et de réessayer, avant de soulever un problème avec The Kadupul Group."
+msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
+msgstr "En cas de problème, il est fortement recommandé de vider le cache de votre navigateur, de fermer puis de rouvrir votre navigateur (pas seulement l'onglet Kadupul activé) et de réessayer, avant de soulever un problème avec Kadupul."
 
 #: lib/installer.php:2065
 msgid "On rare occasions, we have had reports from users who experience some minor issues due to changes in the code.  These issues are caused by the browser retaining pre-upgrade code and whilst we have taken steps to minimise the chances of this, it may still occur.  If you need instructions on how to clear your browser cache, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> is a good starting point."

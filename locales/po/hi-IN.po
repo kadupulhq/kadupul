@@ -15183,7 +15183,7 @@ msgid "Upgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "<strong> %s</strong> <strong>से %s</strong> से अपग्रेड"
 
 #: lib/installer.php:2064
-msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with The Kadupul Group"
+msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "मुद्दों की स्थिति में, यह अत्यधिक अनुशंसा की जाती है कि आप अपना ब्राउज़र कैश साफ़ करें, बंद करना फिर अपना ब्राउज़र फिर से खोलना (न केवल टैब कैक्टि चालू है) और फिर से प्रयास करना, कैक्टि समूह के साथ एक मुद्दा उठाने से पहले।"
 
 #: lib/installer.php:2065

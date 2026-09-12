@@ -18,13 +18,13 @@
  *   api_plugin_moveup() and api_plugin_movedown() swap plugin order by
  *   renaming rows via a three-step id rotation (current->temp, prior->current,
  *   temp->prior). When called at the boundary (first plugin moved up, last
- *   plugin moved down), the subquery MAX/MIN returns NULL. Cacti strips
+ *   plugin moved down), the subquery MAX/MIN returns NULL. Kadupul strips
  *   STRICT_TRANS_TABLES from the session SQL mode on every connection; under
  *   non-strict mode, UPDATE SET id = NULL on a NOT NULL column silently stores
  *   0, leaving the plugin with a corrupted primary key.
  *
  * BUG 2 (plugins_load_temp_table 1062 on id=0 row):
- *   plugin_config.id is AUTO_INCREMENT. Cacti also strips NO_AUTO_VALUE_ON_ZERO
+ *   plugin_config.id is AUTO_INCREMENT. Kadupul also strips NO_AUTO_VALUE_ON_ZERO
  *   on connect. When an id=0 row exists in plugin_config (caused by bug 1 or a
  *   plugin upgrade script), the bulk INSERT INTO temp SELECT * FROM plugin_config
  *   reassigns the 0 to the next AUTO_INCREMENT sequence value, colliding with

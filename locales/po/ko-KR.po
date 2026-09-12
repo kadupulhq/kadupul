@@ -15149,7 +15149,7 @@ msgid "Upgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "<strong>%s</strong> 에서 <strong>%s</strong> (으) 로 업그레이드"
 
 #: lib/installer.php:2064
-msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with The Kadupul Group"
+msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "문제가 발생할 경우 Kadupul Group과 관련된 문제를 제기하기 전에 브라우저 캐시를 지우고 브라우저를 닫은 다음 (Kadupul 탭 만이 아니라) 브라우저를 다시 열고 다시 시도하는 것이 좋습니다"
 
 #: lib/installer.php:2065

@@ -14,8 +14,8 @@ require_once dirname(__DIR__, 2) . '/lib/CactiLogger.php';
 
 test('CactiLogger falls back to cacti_log when no PSR-3 logger is set', function () {
 	// Since we can't easily capture cacti_log global output here, we ensure it doesn't crash
-	\Cacti\Log\CactiLogger::info('Testing CactiLogger info fallback');
-	\Cacti\Log\CactiLogger::error('Testing CactiLogger error fallback');
+	\Kadupul\Log\CactiLogger::info('Testing CactiLogger info fallback');
+	\Kadupul\Log\CactiLogger::error('Testing CactiLogger error fallback');
 	
 	expect(true)->toBeTrue();
 });
@@ -29,12 +29,12 @@ test('CactiLogger can use a custom PSR-3 logger', function () {
 		}
 	};
 	
-	\Cacti\Log\CactiLogger::setLogger($mockLogger);
-	\Cacti\Log\CactiLogger::info('Custom log message');
+	\Kadupul\Log\CactiLogger::setLogger($mockLogger);
+	\Kadupul\Log\CactiLogger::info('Custom log message');
 	
 	expect($mockLogger->logs)->toHaveCount(1);
 	expect($mockLogger->logs[0]['message'])->toBe('Custom log message');
 	
 	// Reset for other tests
-	// \Cacti\Log\CactiLogger::setLogger(null); // would need static reset helper
+	// \Kadupul\Log\CactiLogger::setLogger(null); // would need static reset helper
 });

@@ -19,7 +19,7 @@
  *
  * lib/rrd.php calls read_config_option() at the top level during load.
  * A minimal stub is defined here so the file can be included without a
- * database connection or full Cacti bootstrap.
+ * database connection or full Kadupul bootstrap.
  */
 
 if (!function_exists('read_config_option')) {
@@ -114,15 +114,15 @@ test('colourBrightness with integer percent -1 returns black', function () {
 	expect(colourBrightness('4080c0', -1))->toBe('000000');
 });
 
-// Exact-value regression: representative Cacti call with a mid-range color
+// Exact-value regression: representative Kadupul call with a mid-range color
 // and the decimal percent used by the gradient renderer (-0.4 for darkening).
 // Lighter (0.4): round(r*0.4)+round(255*0.6), darker (-0.4): round(r*0.6)
-test('colourBrightness produces correct exact value for representative Cacti call (lighter)', function () {
+test('colourBrightness produces correct exact value for representative Kadupul call (lighter)', function () {
 	// '1a2b3c': r=26,g=43,b=60 → lighter by 0.4 → r=163(a3),g=170(aa),b=177(b1)
 	expect(colourBrightness('1a2b3c', 0.4))->toBe('a3aab1');
 });
 
-test('colourBrightness produces correct exact value for representative Cacti call (darker)', function () {
+test('colourBrightness produces correct exact value for representative Kadupul call (darker)', function () {
 	// '1a2b3c': r=26,g=43,b=60 → darker by -0.4 → r=16(10),g=26(1a),b=36(24)
 	expect(colourBrightness('1a2b3c', -0.4))->toBe('101a24');
 });

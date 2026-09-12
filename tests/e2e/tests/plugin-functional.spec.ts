@@ -47,7 +47,7 @@ const PLUGINS: PluginFunctional[] = [
         indexUrl: '/plugins/thold/thold.php',
         expectedSelectors: [
             /* thold.php?action=list renders a tholds table with the
-             * standard Cacti table chrome. The export button is JS-bound
+             * standard Kadupul table chrome. The export button is JS-bound
              * and only appears once thold's inline script has executed. */
             'table.cactiTable',
         ],
@@ -58,7 +58,7 @@ const PLUGINS: PluginFunctional[] = [
         indexUrl: '/plugins/monitor/monitor.php',
         expectedSelectors: [
             /* monitor.php registers a host_view template with a header
-             * cell labelled by Cacti's __() helper. The exact label
+             * cell labelled by Kadupul's __() helper. The exact label
              * varies across plugin versions (Description / Hostname);
              * matching on the table itself is more durable. */
             'table.cactiTable',

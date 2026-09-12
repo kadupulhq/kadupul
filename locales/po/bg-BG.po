@@ -15179,7 +15179,7 @@ msgid "Upgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "Надстройка от <strong> %s</strong> на <strong> %s</strong>"
 
 #: lib/installer.php:2064
-msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with The Kadupul Group"
+msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "В случай на проблеми, силно се препоръчва да изчистите кеша на браузъра си, като затворите и отворите отново браузъра си (не само в раздела Kadupul е включен) и опитайте отново, преди да повдигнете проблем с Kadupul Group"
 
 #: lib/installer.php:2065

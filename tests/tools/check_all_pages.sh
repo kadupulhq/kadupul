@@ -104,20 +104,20 @@ while [ -n "$1" ]; do
       read -r DBUSER
       echo "Enter Database Password"
       read -r DBPASS
-      echo "Enter Cacti Admin password"
+      echo "Enter Kadupul Admin password"
       read -r WAPASS
       ;;
     "--help")
-      echo "NOTE: Checks all Cacti pages using wget options"
+      echo "NOTE: Checks all Kadupul pages using wget options"
       echo "NOTE: Original script by team Debian."
       echo ""
       echo "usage: check_all_pages.sh [--interactive] [options]"
       echo ""
       echo "Options:"
-      echo "  --interactive        Prompt for database user/password and Cacti admin password"
-      echo "  -wh <url>           Set Cacti web host URL (default: ${WEBHOST})"
-      echo "  -wU <user>          Set Cacti web UI username (default: ${WAUSER})"
-      echo "  -wp <pass>          Set Cacti web UI password (default: ${WAPASS})"
+      echo "  --interactive        Prompt for database user/password and Kadupul admin password"
+      echo "  -wh <url>           Set Kadupul web host URL (default: ${WEBHOST})"
+      echo "  -wU <user>          Set Kadupul web UI username (default: ${WAUSER})"
+      echo "  -wp <pass>          Set Kadupul web UI password (default: ${WAPASS})"
       echo "  -wo <user>          Set web server user/owner (default: ${WSOWNER})"
       echo "  -we <path>          Set web server error log path (default: ${WSERROR})"
       echo "  -wa <path>          Set web server access log path (default: ${WSACCESS})"
@@ -300,7 +300,7 @@ save_log_files() {
 # Some functions to handle settings consistently
 # ------------------------------------------------------------------------------
 set_cacti_admin_password() {
-  echo "NOTE: Setting Cacti admin password and unsetting forced password change"
+  echo "NOTE: Setting Kadupul admin password and unsetting forced password change"
 
   $dbshell $MYSQL_AUTH_USR -e "UPDATE user_auth SET password=MD5('$WAPASS') WHERE id = 1 ;" "$DBNAME"
   $dbshell $MYSQL_AUTH_USR -e "UPDATE user_auth SET password_change='', must_change_password='' WHERE id = 1 ;" "$DBNAME"
@@ -308,37 +308,37 @@ set_cacti_admin_password() {
 }
 
 enable_log_validation() {
-  echo "NOTE: Setting Cacti log validation to on to validate improperly validated variables"
+  echo "NOTE: Setting Kadupul log validation to on to validate improperly validated variables"
 
   $dbshell $MYSQL_AUTH_USR -e "REPLACE INTO settings (name, value) VALUES ('log_validation','on') ;" "$DBNAME"
 }
 
 set_log_level_none() {
-  echo "NOTE: Setting Cacti log verbosity to none"
+  echo "NOTE: Setting Kadupul log verbosity to none"
 
   $dbshell $MYSQL_AUTH_USR -e "REPLACE INTO settings (name, value) VALUES ('log_verbosity', '1') ;" "$DBNAME"
 }
 
 set_log_level_normal() {
-  echo "NOTE: Setting Cacti log verbosity to low"
+  echo "NOTE: Setting Kadupul log verbosity to low"
 
   $dbshell $MYSQL_AUTH_USR -e "REPLACE INTO settings (name, value) VALUES ('log_verbosity', '2') ;" "$DBNAME"
 }
 
 set_log_level_debug() {
-  echo "NOTE: Setting Cacti log verbosity to DEBUG"
+  echo "NOTE: Setting Kadupul log verbosity to DEBUG"
 
   $dbshell $MYSQL_AUTH_USR -e "REPLACE INTO settings (name, value) VALUES ('log_verbosity', '6') ;" "$DBNAME"
 }
 
 set_stderr_logging() {
-  echo "NOTE: Setting Cacti standard error log location"
+  echo "NOTE: Setting Kadupul standard error log location"
 
   $dbshell $MYSQL_AUTH_USR -e "REPLACE INTO settings (name, value) VALUES ('path_stderrlog', '${CACTI_ERRLOG}');" "$DBNAME"
 }
 
 allow_index_following() {
-  echo "NOTE: Altering Cacti to allow following pages"
+  echo "NOTE: Altering Kadupul to allow following pages"
 
   sed -i "s/<meta name='robots' content='noindex,nofollow'>//g" "$BASE_PATH/lib/html.php"
 }
@@ -401,7 +401,7 @@ echo "NOTE: Current Directory is $(pwd)"
 /bin/chown "$WSOWNER":"$WSOWNER" "$CACTI_ERRLOG"
 
 # ------------------------------------------------------------------------------
-# Make a backup copy of the Cacti settings table and enable log validation
+# Make a backup copy of the Kadupul settings table and enable log validation
 # ------------------------------------------------------------------------------
 set_cacti_admin_password
 enable_log_validation
@@ -439,7 +439,7 @@ if [ $DEBUG -eq 1 ]; then
   # ------------------------------------------------------------------------------
   if [ -f "/etc/apache2/sites-available/000-default.conf" ]; then
     echo "---------------------------------------------------------------------"
-    echo "Apache Configuration for Cacti"
+    echo "Apache Configuration for Kadupul"
     echo "---------------------------------------------------------------------"
     cat /etc/apache2/sites-available/000-default.conf
   fi
@@ -448,7 +448,7 @@ if [ $DEBUG -eq 1 ]; then
   # List to contents of the web root
   # ------------------------------------------------------------------------------
   echo "---------------------------------------------------------------------"
-  echo "Top Level Cacti Web Root Files"
+  echo "Top Level Kadupul Web Root Files"
   echo "---------------------------------------------------------------------"
   ls -altr /var/www/html/cacti/*.php
 
@@ -501,7 +501,7 @@ fi
 
 postData="action=login&login_username=${WAUSER}&login_password=${WAPASS}&__csrf_magic=${magic}"
 
-echo "NOTE: Logging into the Cacti User Interface"
+echo "NOTE: Logging into the Kadupul User Interface"
 wget $loadSaveCookie --post-data="${postData}" --output-document="${tmpFile2}" "${WEBHOST}"/index.php >/dev/null 2>&1
 
 if [ $DEBUG -eq 1 ]; then
@@ -550,7 +550,7 @@ if [ $DEBUG -eq 1 ]; then
   echo "---------------------------------------------------------------------"
   cat "${logFile1}"
   echo "---------------------------------------------------------------------"
-  echo "Output of Cacti Log file"
+  echo "Output of Kadupul Log file"
   echo "---------------------------------------------------------------------"
   cat "${CACTI_LOG}"
   echo "---------------------------------------------------------------------"
@@ -605,12 +605,12 @@ fi
 # ------------------------------------------------------------------------------
 # Finally check the cacti log for unexpected items
 # ------------------------------------------------------------------------------
-echo "NOTE: Checking Cacti Log for Errors"
+echo "NOTE: Checking Kadupul Log for Errors"
 FILTERED_LOG="$(grep -v \
   -e "AUTH LOGIN: User 'admin' authenticated" \
   -e "WEBUI NOTE: Poller Resource Cache scheduled for rebuild by user admin" \
   -e "WEBUI NOTE: Poller Cache repopulated by user admin" \
-  -e "WEBUI NOTE: Cacti DS Stats purged by user admin" \
+  -e "WEBUI NOTE: Kadupul DS Stats purged by user admin" \
   -e "IMPORT NOTE: File is Signed Correctly" \
   -e "MAILER INFO:" \
   -e "STATS:" \

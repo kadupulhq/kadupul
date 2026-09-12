@@ -10,7 +10,7 @@
  * Smoke tests for issue #7135. Verify that lib/utility.php and
  * lib/functions.php both parse, the foreach($outputs) loops are still
  * present, and each calls unset() at iteration top. Runs without
- * Cacti's bootstrap.
+ * Kadupul's bootstrap.
  */
 
 $repoRoot = __DIR__ . '/../..';

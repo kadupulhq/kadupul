@@ -13,7 +13,7 @@ services:
       MARIADB_DATABASE: cacti
       MARIADB_USER: cactiuser
       MARIADB_PASSWORD: cactipass
-    # The schema file is the standard Cacti bootstrap dump. Mounted read-only
+    # The schema file is the standard Kadupul bootstrap dump. Mounted read-only
     # into the MariaDB init hook directory so the container seeds the `cacti`
     # DB on first start.
     volumes:
@@ -34,7 +34,7 @@ services:
       args:
         # Pinning is intentionally loose; CI overrides via
         # `docker compose build --build-arg PLUGIN_*_REF=<sha>` when a
-        # specific commit is needed. Public Cacti plugin repos clone over
+        # specific commit is needed. Public Kadupul plugin repos clone over
         # HTTPS without auth.
         PLUGIN_THOLD_REPO: ${PLUGIN_THOLD_REPO:-https://github.com/Cacti/plugin_thold.git}
         PLUGIN_THOLD_REF: ${PLUGIN_THOLD_REF:-develop}
@@ -52,7 +52,7 @@ services:
       CACTI_DB_PORT: "3306"
       CACTI_CSP_MODE: nonce-report
       CACTI_FORCE_CONFIG: "1"
-    # Mount the repo root read-write: Cacti writes into cache/, log/, and
+    # Mount the repo root read-write: Kadupul writes into cache/, log/, and
     # resource/ at runtime. The entrypoint creates include/config.php from
     # the .dist template, so mounting rw is required.
     volumes:
