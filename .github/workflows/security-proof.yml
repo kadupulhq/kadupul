@@ -85,13 +85,15 @@ jobs:
       - name: Build proof matrix
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADVISORY_REPO: ${{ inputs.repo_name }}
+          ADVISORY_BRANCHES: ${{ inputs.branch_list }}
         run: |
           set -euo pipefail
           out_dir="security/proof-run/${GITHUB_RUN_ID}"
           mkdir -p "${out_dir}"
           tests/security/build_private_advisory_matrix.sh \
-            "${{ inputs.repo_name }}" \
-            "${{ inputs.branch_list }}" \
+            "${ADVISORY_REPO}" \
+            "${ADVISORY_BRANCHES}" \
             "${out_dir}"
           tests/security/build_sink_inventory.sh > "${out_dir}/sink_inventory.current.tsv"
           tests/security/build_architectural_helper_report.sh --summary > "${out_dir}/architectural_helper.summary.tsv"
