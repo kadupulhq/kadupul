@@ -9,6 +9,11 @@ follows [Semantic Versioning](VERSIONING.md).
 Targeting `v1.3.0`, continuing from the Cacti 1.2.31 fork point. See
 [VERSIONING.md](VERSIONING.md).
 
+### Changed
+
+- Point the About page and contributor review contacts at Kadupul instead of
+  presenting the upstream developer roster as this project's team.
+
 ### Added
 
 - Repository scaffolding: continuous integration for PHP 8.1 through 8.4 and
