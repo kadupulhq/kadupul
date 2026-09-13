@@ -88,7 +88,7 @@ test('bind timeout is gated on LDAP_OPT_TIMEOUT', function () use ($ldapSource) 
 	expect($ldapSource)->toContain("defined('LDAP_OPT_TIMEOUT')");
 });
 
-test('new LDAP installs demand a valid TLS certificate', function () use ($settings) {
-	expect($settings)->toContain("'default' => LDAP_OPT_X_TLS_DEMAND");
-	expect($settings)->not->toContain("'default' => LDAP_OPT_X_TLS_NEVER");
+test('new LDAP installs keep the 1.2.31 Never default for TLS certificates', function () use ($settings) {
+	expect($settings)->toContain("'default' => LDAP_OPT_X_TLS_NEVER");
+	expect($settings)->not->toContain("'default' => LDAP_OPT_X_TLS_DEMAND");
 });

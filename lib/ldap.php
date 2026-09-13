@@ -518,6 +518,15 @@ class Ldap {
 				$cert = LDAP_OPT_X_TLS_NEVER;
 			}
 
+			/* Never stays the default for existing installs; name the risk once per request */
+			static $unverified_logged = false;
+
+			if ($cert == LDAP_OPT_X_TLS_NEVER && !$unverified_logged) {
+				cacti_log('WARNING: LDAP encryption is enabled, but TLS Certificate Requirements is Never, so the server certificate is not verified', false, 'AUTH');
+
+				$unverified_logged = true;
+			}
+
 			// For good measure, we will use both the php function and set the environment
 			switch($cert) {
 				case LDAP_OPT_X_TLS_NEVER:
