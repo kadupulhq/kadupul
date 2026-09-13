@@ -102,7 +102,7 @@ test('cacti_plugin_path routes the relative path through validate_relative_path_
 test('help.php uses a fixed documentation destination without an outbound fetch', function () use ($helpSource) {
 	expect($helpSource)->toContain("'location' => 'https://kadupul.org/map/'");
 	expect($helpSource)->not->toContain('cacti_http(');
-	expect($helpSource)->toContain("basename(str_replace('.html', '.md', get_request_var('page')))");
+	expect($helpSource)->toContain("basename(get_request_var('page'))");
 });
 
 test('lib/plugins.php routes plugin setup.php includes through cacti_plugin_path', function () use ($pluginsSource) {

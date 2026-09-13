@@ -11,6 +11,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Local page help looks for the HTML page it was asked for under `docs/`, as
+  the Local Page Help Only setting describes, instead of a Markdown file.
 - Run the theme browser suite against the themes shipped by this fork using
   its standalone Playwright configuration.
 - Install end-to-end test dependencies without npm lifecycle scripts, and

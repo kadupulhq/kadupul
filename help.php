@@ -30,7 +30,7 @@ if (isset_request_var('error')) {
 } elseif (isset_request_var('page')) {
     get_filter_request_var('page', FILTER_CALLBACK, array('options' => 'sanitize_search_string'));
 
-    $page = basename(str_replace('.html', '.md', get_request_var('page')));
+    $page = basename(get_request_var('page'));
 
     header('Content-Type: application/json');
 
