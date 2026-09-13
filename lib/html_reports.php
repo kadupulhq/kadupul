@@ -1925,12 +1925,16 @@ function reports_from_allowed($from_email) {
 			continue;
 		}
 
-		/* mailer() sends as the address inside "Name <address>" */
-		if (preg_match('/<([^>]*)>/', $entry, $match)) {
-			$entry = trim($match[1]);
+		/* check the address mailer() takes from the entry, which keeps any text
+		   after the closing bracket. An entry it cannot parse sends as the site
+		   From address, so that entry must itself be an allowed address. */
+		$sent = trim(split_emaildetail($entry)['email']);
+
+		if ($sent == '') {
+			$sent = $entry;
 		}
 
-		if ($entry == '' || !in_array(mb_strtolower($entry), $allowed, true)) {
+		if (!in_array(mb_strtolower($sent), $allowed, true)) {
 			return false;
 		}
 	}

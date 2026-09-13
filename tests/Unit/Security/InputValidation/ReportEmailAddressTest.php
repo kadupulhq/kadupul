@@ -377,16 +377,24 @@ function duplicate_from_as($admin, $from) {
 
 // the user's account address is Me@Example.com and the site From is Cacti@example.com
 dataset('From addresses a user without Reports Administration may use', array(
-	'blank for the site default' => array(''),
-	'their own address'          => array('me@example.com'),
-	'their own named address'    => array('Me <ME@example.com>'),
-	'the site From address'      => array('cacti@example.com'),
+	'blank for the site default'                  => array(''),
+	'their own address'                           => array('me@example.com'),
+	'their own named address'                     => array('Me <ME@example.com>'),
+	'the site From address'                       => array('cacti@example.com'),
+	'their own address and trailing spaces'       => array('me@example.com   '),
+	'their own named address and trailing spaces' => array('Me <me@example.com>   '),
+	'the site From address with a quoted name'    => array('"Cacti Reports" <cacti@example.com>'),
+	'a second < after their own address'          => array('Me <me@example.com<ceo@example.com>'),
 ));
 
 dataset('From addresses only Reports Administration may use', array(
-	'another address'         => array('ceo@example.com'),
-	'own and another address' => array('me@example.com, ceo@example.com'),
-	'a name without address'  => array('Cacti'),
+	'another address'                        => array('ceo@example.com'),
+	'own and another address'                => array('me@example.com, ceo@example.com'),
+	'a name without address'                 => array('Cacti'),
+	'text after their own bracketed address' => array('Me <me@example.com>.attacker.example'),
+	'a space and text after the brackets'    => array('Me <me@example.com> .attacker.example'),
+	'their own address after a second <'     => array('Me <ceo@example.com<me@example.com>'),
+	'their own address in a quoted name'     => array('"Me <me@example.com>" <ceo@example.com>'),
 ));
 
 test('a user without Reports Administration saves and duplicates a From they may use', function ($from) use ($root) {
@@ -580,3 +588,18 @@ test('a scheduled send hands mailer() the From that reports_mail_from() gives', 
 	expect($match)->not->toBeEmpty();
 	expect($match[0])->toContain("mailer(\n\t\treports_mail_from(\$report),");
 });
+
+test('mailer() keeps text after the brackets as part of the From address', function () use ($root) {
+	load_send($root);
+
+	expect(mailer_from(array('Me <me@example.com>.attacker.example', 'Ops Team'))['email'])->toBe('me@example.com.attacker.example');
+});
+
+test('a From a user without Reports Administration may save is sent from their own or the site address', function ($from) use ($root) {
+	load_send($root);
+
+	$sent = mailer_from(reports_mail_from(array('from_email' => $from, 'from_name' => 'Ops Team')));
+
+	expect($sent['sent'])->toBeTrue();
+	expect(array('me@example.com', 'cacti@example.com'))->toContain(mb_strtolower($sent['email']));
+})->with('From addresses a user without Reports Administration may use');
