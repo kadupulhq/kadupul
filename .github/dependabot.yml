@@ -12,7 +12,7 @@ updates:
       interval: weekly
     open-pull-requests-limit: 5
     ignore:
-      # Pest 2 and later require PHP 8.2 or newer, and the CSP test jobs run
+      # Pest 2 and later require PHP 8.1 or newer, and the CSP test jobs run
       # PHP 7.4. A major bump fails composer install there until those jobs move.
       - dependency-name: pestphp/pest
         update-types: ["version-update:semver-major"]
