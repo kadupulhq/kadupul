@@ -596,9 +596,9 @@ if ($config['is_web']) {
 		   browser re-sends credentials on that request, so no session cookie is
 		   needed at all.
 
-		   Every anchor that carried one of these now takes the cactiPostAction
-		   class and goes out through submitPageUsingPost(), which is the
-		   mechanism this branch already used for the plugin actions. The tree
+		   Every link that carried one of these now takes the cactiPostAction
+		   class and posts in the page through loadPage(url, false, true). The
+		   plugin enable and disable links submit a full page POST. The tree
 		   editor's jstree callbacks reach the *_node actions over XHR instead,
 		   and send them with $.post and the token.
 
