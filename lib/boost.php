@@ -628,7 +628,7 @@ function boost_atomic_write_cache($cache_file, $output) {
 		return false;
 	}
 
-	if (!chmod($temp_file, 0640)) {
+	if (!chmod($temp_file, 0644)) {
 		/* tempnam() creates a stricter 0600 file, so publication remains safe. */
 		cacti_log('WARNING: Boost could not set shared graph cache permissions; publishing with the existing stricter mode.', false, 'BOOST');
 	}
