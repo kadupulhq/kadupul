@@ -13,6 +13,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Run the theme browser suite against the themes shipped by this fork using
   its standalone Playwright configuration.
+- Install end-to-end test dependencies without npm lifecycle scripts, and
+  download supercronic in the container image over HTTPS only.
 
 ### Added
 
