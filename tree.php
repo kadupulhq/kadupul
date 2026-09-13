@@ -1038,7 +1038,7 @@ function tree_edit($partial = false) {
 				+ '&host_id=' + (selectedItem.host_id ? selectedItem.host_id:''))
 				.done(function(data) {
 					$('#graphs').jstree('destroy');
-					$('#graphs').html(data);
+					$('#graphs').html(DOMPurify.sanitize(data));
 					draggable('graphs');
 				})
 				.fail(function(data) {
@@ -1051,7 +1051,7 @@ function tree_edit($partial = false) {
 				+ '&site_id=' + (selectedItem.site_id ? selectedItem.site_id:''))
 				.done(function(data) {
 					$('#hosts').jstree('destroy');
-					$('#hosts').html(data);
+					$('#hosts').html(DOMPurify.sanitize(data));
 					draggable('hosts');
 					draggable('graphs');
 				})
@@ -1063,7 +1063,7 @@ function tree_edit($partial = false) {
 		function getSiteData() {
 			$.get('tree.php?action=sites&filter='+$('#sfilter').val(), function(data) {
 				$('#sites').jstree('destroy');
-				$('#sites').html(data);
+				$('#sites').html(DOMPurify.sanitize(data));
 				draggable('sites');
 				draggable('hosts');
 				draggable('graphs');
