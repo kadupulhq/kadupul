@@ -62,7 +62,7 @@ Ordered by priority. Nothing here has a golden file.
 | Boost | Queue, batch, `LOAD DATA`, duplicates, retries | no | no | ordering, partial failure, empty batch | P1 |
 | Upgrade | 1.2.x fixture upgraded forward | no | no | repeated and partial migration | P1 |
 | Logging | Normalized log assertions per operation | no | no | severity, subsystem, ordering | P1 |
-| Fault injection | DB down, SQL error, SNMP timeout, RRD failure | no | no | permission denied, missing file | P1 |
+| Fault injection | SQL error, SNMP timeout | no | no | permission denied | P1 |
 | UI | Pagination, sorting, filtering | no | no | across list pages | P1 |
 | Templates | Import, export, apply, reapply | no | no | graph and host templates | P1 |
 | Automation | Discovery, network rules, tree rules | no | no | — | P2 |

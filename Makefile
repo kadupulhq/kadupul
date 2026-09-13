@@ -18,9 +18,8 @@ help: ## Show available targets
 .PHONY: test
 test: test-characterization ## Run the behavioral suite
 
-# The in-process PHP suite arrives with the characterization branch, which
-# adds tests/composer.json and the composer test script. Calling composer
-# test from here fails, because this branch has neither.
+# The root composer.json has no test script, so composer test fails from here.
+# The in-process Pest suite installs separately from tests/composer.json.
 
 .PHONY: test-characterization
 test-characterization: ## Verify observed behavior against the committed goldens

@@ -65,9 +65,11 @@ def normalize(value):
         value = value.replace('/var/www/html', '<APP>').replace('/harness', '<HARNESS>')
         # Poller timing lines report per-process CPU and wall clock, which differ
         # on every run. The line's presence and count still matter, its
-        # measurements do not.
-        value = re.sub(r'\bu:\d+\.\d+ s:\d+\.\d+ r:\d+\.\d+', 'u:<T> s:<T> r:<T>', value)
-        value = re.sub(r'\bTime:\d+\.\d+', 'Time:<T>', value)
+        # measurements do not. Both patterns are anchored to the poller's own
+        # line shapes so an application message carrying the same tokens is
+        # still compared.
+        value = re.sub(r'(?<=OK )u:\d+\.\d+ s:\d+\.\d+ r:\d+\.\d+', 'u:<T> s:<T> r:<T>', value)
+        value = re.sub(r'(?<=SYSTEM STATS: )Time:\d+\.\d+', 'Time:<T>', value)
         value = ISO.sub('<TIMESTAMP>', value)
         value = DATETIME.sub('<TIMESTAMP>', value)
         value = US_DATETIME.sub('<TIMESTAMP>', value)
@@ -324,6 +326,7 @@ class Harness:
         poller_hooks_before = len(self.jsonl('/artifacts/plugin.jsonl'))
         poller_pass = self.php('poller.php', '--force')
         poller_hooks = self.jsonl('/artifacts/plugin.jsonl')[poller_hooks_before:]
+        poller_hooks_after = poller_hooks_before + len(poller_hooks)
         if not any(h.get('callback') == 'event' for h in poller_hooks):
             raise RuntimeError('A poller pass dispatched no plugin hook; poller_top/bottom are unverified')
         # Record the contract, not the schedule. The interleaved config_settings
@@ -332,6 +335,9 @@ class Harness:
         # Which lifecycle hooks fired, and in what order, is the actual contract.
         events = [c['args'][0][0] for c in poller_hooks
                   if c.get('callback') == 'event' and c.get('args')]
+        missing_events = {'poller_top', 'poller_bottom'} - set(events)
+        if missing_events:
+            raise RuntimeError('The poller pass did not dispatch ' + ', '.join(sorted(missing_events)))
         self.capture('plugins/poller-hooks', {
             'command': {k: poller_pass[k] for k in ('exit',)},
             'events_in_order': events,
@@ -341,7 +347,10 @@ class Harness:
         self.capture('plugins/disable', {'command': self.php('cli/plugin_manage.php', '--plugin=compatibility_test', '--disable'), 'database': self.plugin_state()})
         self.capture('plugins/hook-disabled', self.probe('plugin'))
         self.capture('plugins/uninstall', {'command': self.php('cli/plugin_manage.php', '--plugin=compatibility_test', '--uninstall'), 'database': self.plugin_state()})
-        self.capture('plugins/callbacks', self.jsonl('/artifacts/plugin.jsonl'))
+        # The poller pass is recorded above as its lifecycle. Its config_settings
+        # count follows worker scheduling, so that slice stays out of the raw log.
+        callbacks = self.jsonl('/artifacts/plugin.jsonl')
+        self.capture('plugins/callbacks', callbacks[:poller_hooks_before] + callbacks[poller_hooks_after:])
         self.capture('devices/delete', {'command': self.php('cli/remove_device.php', '--id=' + device, '--confirm'),
             'database': self.devices(), 'data_local': self.sql('SELECT * FROM data_local ORDER BY id'), 'graph_local': self.sql('SELECT * FROM graph_local ORDER BY id')})
 
@@ -421,7 +430,12 @@ class Harness:
         """Cacti's failure semantics under a broken dependency are a contract
         too. A rewrite that turns a logged error into a fatal is a regression."""
         # A data source whose RRD file has been removed underneath it.
-        self.command('sh', '-c', 'find /var/www/html/rra -name "*.rrd" -delete')
+        count = "find /var/www/html/rra -name '*.rrd' | wc -l"
+        if int(self.command('sh', '-c', count, check=True)['stdout'].strip() or 0) == 0:
+            raise RuntimeError('No RRD files to remove; the missing-RRD fault would record an ordinary poll')
+        self.command('sh', '-c', "find /var/www/html/rra -name '*.rrd' -delete", check=True)
+        if int(self.command('sh', '-c', count, check=True)['stdout'].strip() or 0) != 0:
+            raise RuntimeError('RRD files survived deletion; the missing-RRD fault is not in place')
         self.truncate_artifacts('rrd-argv.log', 'rrd-stdin.log')
         missing = self.php('poller.php', '--force')
         self.capture('faults/missing-rrd-file', {
@@ -481,7 +495,9 @@ class Harness:
         # outside that handler swap. The control below keeps it honest: at least
         # one event must come from application code rather than the probe, so a
         # recorder that silently stops working still fails.
-        outside_probe = [e for e in events if '<HARNESS>' not in str(e.get('file', ''))]
+        # Events are still raw here; normalize() only rewrites /harness later.
+        outside_probe = [e for e in events
+                         if not any(m in str(e.get('file', '')) for m in ('/harness/', '<HARNESS>'))]
 
         if not outside_probe:
             raise RuntimeError('Diagnostics captured nothing from application code; '
@@ -501,8 +517,11 @@ class Harness:
         image = run(['docker', 'image', 'inspect', '--format', '{{index .RepoDigests 0}}',
                      f'php:{os.environ.get("PHP_VERSION", "8.2")}-apache'], check=False)
         db = run(['docker', 'image', 'inspect', '--format', '{{index .RepoDigests 0}}', 'mariadb:10.11'], check=False)
+        packages = self.command('sh', '-c', "dpkg-query -W -f='${Package}=${Version}\\n' rrdtool snmp snmpd", check=False)
         return {'ref': (image['stdout'] or '').strip() or 'unresolved',
                 'db_ref': (db['stdout'] or '').strip() or 'unresolved',
+                # The base digest does not pin apt, so a rebuild can change these.
+                'packages': (packages['stdout'] or '').strip(),
                 'runtime': (result['stdout'] or '').strip()}
 
     def finish(self, error=None):
@@ -573,6 +592,11 @@ def compare(args):
     approvals = json.loads(Path(args.approvals).read_text()) if args.approvals else {}
     repeat = json.loads(Path(args.repeat).read_text()) if args.repeat else None
     report = []
+    # Matching scenarios prove little if the runs used different runtimes or packages.
+    for key in ('php', 'base_image'):
+        if baseline.get(key) != candidate.get(key):
+            report.append({'scenario': '<environment>/' + key, 'status': 'NEEDS_REVIEW', 'digest': '',
+                           'baseline': baseline.get(key), 'candidate': candidate.get(key)})
     for name in sorted(baseline['scenarios'].keys() | candidate['scenarios'].keys()):
         b, c = baseline['scenarios'].get(name), candidate['scenarios'].get(name)
         digest = hashlib.sha256(json.dumps({'baseline': b, 'candidate': c}, sort_keys=True).encode()).hexdigest()

@@ -22,5 +22,6 @@ reused to wave through a later change.
 make compare BASELINE=cacti-1.2.31 CANDIDATE=kadupul APPROVALS=tests/Contracts/approvals.json
 ```
 
-An approvals file is written when a rewrite intentionally diverges. There is
-none yet, because nothing has diverged.
+compare only reads approvals. When a rewrite intentionally diverges, create the
+file by hand: copy each scenario's digest from comparison.json and give the
+reason. There is none yet, because nothing has diverged.
