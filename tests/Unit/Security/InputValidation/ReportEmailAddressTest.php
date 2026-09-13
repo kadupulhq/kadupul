@@ -151,3 +151,154 @@ test('a duplicate copies a stored list that 1.2.31 still mails', function () use
 	expect($branch)->toContain('duplicate_reports($selected_items[$i]');
 	expect($branch)->not->toContain('reports_address_malformed(');
 });
+
+/*
+ * A refused save redirects to the edit form, which redraws each refused field
+ * from $_SESSION['sess_field_values']. reports_form_save(), form_input_validate()
+ * and is_error_message() from lib/functions.php, form_text_area() from
+ * lib/html_form.php and html_escape() from lib/html.php run as they are; only the
+ * request, database, redirect and message calls are stubbed.
+ */
+function load_save_and_render($root) {
+	if (function_exists(__NAMESPACE__ . '\reports_form_save')) {
+		return;
+	}
+
+	load_address_check($root);
+
+	preg_match_all("/^define\('((?:REPORTS|MESSAGE_LEVEL)_[A-Z0-9_]+)',\s*([0-9]+)\);/m", file_get_contents($root . '/include/global_constants.php'), $constants, PREG_SET_ORDER);
+
+	foreach ($constants as $constant) {
+		if (!defined($constant[1])) {
+			define($constant[1], (int) $constant[2]);
+		}
+	}
+
+	$code    = '';
+	$sources = array(
+		'lib/html_reports.php' => array('reports_form_save'),
+		'lib/functions.php'    => array('form_input_validate', 'is_error_message'),
+		'lib/html_form.php'    => array('form_text_area'),
+		'lib/html.php'         => array('html_escape'),
+	);
+
+	foreach ($sources as $file => $fns) {
+		$src = file_get_contents($root . '/' . $file);
+
+		foreach ($fns as $fn) {
+			preg_match('/^function ' . $fn . '\(.*?^}\n/ms', $src, $match);
+			expect($match)->not->toBeEmpty();
+
+			$code .= $match[0];
+		}
+	}
+
+	// each exit follows a recorded redirect, and would otherwise end the run
+	// test-only eval of source read from this repository, not external input
+	eval('namespace ' . __NAMESPACE__ . '; ' . str_replace('exit;', 'return;', $code));
+}
+
+function isset_request_var($name) {
+	return isset($GLOBALS['ra_request'][$name]);
+}
+
+function isempty_request_var($name) {
+	return (!isset($GLOBALS['ra_request'][$name]) || $GLOBALS['ra_request'][$name] == '');
+}
+
+function get_nfilter_request_var($name, $default = '') {
+	return $GLOBALS['ra_request'][$name] ?? $default;
+}
+
+function get_filter_request_var($name, $filter = FILTER_VALIDATE_INT, $options = array()) {
+	return $GLOBALS['ra_request'][$name] ?? '';
+}
+
+function read_config_option($name) {
+	return ($name == 'poller_interval' ? 300 : '');
+}
+
+function raise_message($message_id, $message = '', $message_level = 0) {
+	$GLOBALS['ra_messages'][] = $message_id;
+}
+
+function cacti_sizeof($array) {
+	return (is_array($array) ? count($array) : 0);
+}
+
+function cacti_authorize_resource($user_id, $resource_id, $resource_type) {
+	return true;
+}
+
+function db_fetch_cell_prepared($sql, $params = array()) {
+	return '5';
+}
+
+function sql_save($save, $table_name) {
+	$GLOBALS['ra_saved'][] = $save;
+
+	return 7;
+}
+
+function get_reports_page() {
+	return 'reports_user.php';
+}
+
+function header($header) {
+	$GLOBALS['ra_headers'][] = $header;
+}
+
+function report_save_request($field, $value) {
+	return array_merge(array(
+		'save_component_report' => '1',
+		'id'              => '7',
+		'name'            => 'Daily',
+		'email'           => 'ops@example.com',
+		'font_size'       => '10',
+		'alignment'       => '1',
+		'graph_columns'   => '2',
+		'graph_width'     => '300',
+		'graph_height'    => '150',
+		'intrvl'          => '1',
+		'count'           => '1',
+		'mailtime'        => '2099-01-01 10:00',
+		'from_email'      => 'cacti@example.com',
+		'bcc'             => '',
+		'attachment_type' => '1',
+	), array($field => $value));
+}
+
+dataset('address fields', array(
+	'To'   => array('email'),
+	'BCC'  => array('bcc'),
+	'From' => array('from_email'),
+));
+
+test('an array address is refused and the edit form redraws the stored value', function ($field) use ($root) {
+	load_save_and_render($root);
+
+	date_default_timezone_set('UTC');
+
+	$_SESSION = array('sess_user_id' => 5);
+	$GLOBALS['ra_request']  = report_save_request($field, array('ops@example.com'));
+	$GLOBALS['ra_messages'] = array();
+	$GLOBALS['ra_saved']    = array();
+	$GLOBALS['ra_headers']  = array();
+
+	reports_form_save();
+
+	expect($GLOBALS['ra_saved'])->toBe(array());
+	expect($GLOBALS['ra_headers'])->toBe(array('Location: reports_user.php?action=edit&header=false&id=7'));
+	expect($GLOBALS['ra_messages'])->toContain(3);
+
+	ob_start();
+
+	try {
+		form_text_area($field, 'stored@example.com', 5, 50, '');
+	} finally {
+		$html = ob_get_clean();
+	}
+
+	expect($html)->toContain('txtErrorTextBox');
+	expect($html)->toContain('>stored@example.com</textarea>');
+})->with('address fields');

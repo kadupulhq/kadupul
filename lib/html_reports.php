@@ -332,6 +332,12 @@ function reports_form_save() {
 				raise_message(3);
 
 				$_SESSION['sess_error_fields'][$field] = $field;
+
+				/* the edit form redraws a refused field from the session and
+				   cannot escape an array, so let it show the stored value */
+				if (isset($_SESSION['sess_field_values'][$field]) && !is_string($_SESSION['sess_field_values'][$field])) {
+					unset($_SESSION['sess_field_values'][$field]);
+				}
 			}
 		}
 
