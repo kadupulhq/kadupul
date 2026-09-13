@@ -49,7 +49,12 @@ require_once $root . '/include/vendor/phpmailer/src/PHPMailer.php';
 function load_address_check($root) {
 	if (!function_exists(__NAMESPACE__ . '\reports_address_malformed')) {
 		preg_match('/^function reports_address_malformed\(.*?^}\n/ms', file_get_contents($root . '/lib/html_reports.php'), $match);
-		expect($match)->not->toBeEmpty();
+
+		// release/1.2.31 and lts/1.2 refuse no address, so the parity cases pass
+		// there and the refusal cases fail
+		if (empty($match)) {
+			$match = array('function reports_address_malformed($value) { return false; }');
+		}
 
 		// test-only eval of source read from this repository, not external input
 		eval('namespace ' . __NAMESPACE__ . '; ' . $match[0]);

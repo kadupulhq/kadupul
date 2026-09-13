@@ -80,6 +80,12 @@ if (!function_exists(__NAMESPACE__ . '\reports_form_save')) {
 
 	foreach (array('reports_form_save', 'reports_address_malformed', 'reports_item_movedown', 'reports_item_moveup', 'reports_item_edit') as $fn) {
 		preg_match('/^function ' . $fn . '\(.*?^}\n/ms', $src, $match);
+
+		// release/1.2.31 and lts/1.2 have no address check for the save to call
+		if ($fn == 'reports_address_malformed' && empty($match)) {
+			continue;
+		}
+
 		expect($match)->not->toBeEmpty();
 
 		$code .= $match[0];
