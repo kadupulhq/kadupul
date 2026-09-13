@@ -19,6 +19,10 @@ on:
       - tests/integration/**
       - tests/e2e/**
       - .github/workflows/csp-e2e.yml
+      - tests/Unit/HeadersSecureTest.php
+      - tests/Unit/CspReportEndpointTest.php
+      - tests/bootstrap-unit.php
+      - tests/composer.json
 
 permissions:
   contents: read
@@ -58,7 +62,7 @@ jobs:
           set -euo pipefail
           for test in Unit/HeadersSecureTest.php Unit/CspReportEndpointTest.php; do
             ./vendor/bin/pest --colors=never --bootstrap bootstrap-unit.php "$test" | tee "$RUNNER_TEMP/pest.log"
-            grep -Eq 'Tests: +[0-9]+ passed' "$RUNNER_TEMP/pest.log"
+            grep -Eq 'Tests: +[1-9][0-9]* passed' "$RUNNER_TEMP/pest.log"
           done
 
   integration:
@@ -88,7 +92,7 @@ jobs:
         run: |
           set -euo pipefail
           ./vendor/bin/pest --colors=never --bootstrap bootstrap-unit.php integration/ContentSecurityPolicyTest.php | tee "$RUNNER_TEMP/pest.log"
-          grep -Eq 'Tests: +[0-9]+ passed' "$RUNNER_TEMP/pest.log"
+          grep -Eq 'Tests: +[1-9][0-9]* passed' "$RUNNER_TEMP/pest.log"
 
   e2e:
     name: Playwright E2E (docker-compose + Playwright)
