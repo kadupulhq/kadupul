@@ -39,6 +39,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Hold the test runner at Pest 1 while the CSP test jobs run PHP 7.4.
 - Report an installation exception to the CLI installer as well as to the web installer.
 - Refresh localized product names and compiled catalogs, with source-text fallback
   for translations awaiting review.
