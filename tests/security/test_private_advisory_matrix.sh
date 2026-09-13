@@ -29,6 +29,13 @@ if bash tests/security/verify_private_advisory_matrix.sh "$scratch/unknown.tsv" 
 fi
 grep -q 'unknown proof status' "$scratch/log"
 
+printf 'branch\tproof_status\nmain\tPROVEN_TEST_BACKED\ngarbage\n' > "$scratch/malformed.tsv"
+if bash tests/security/verify_private_advisory_matrix.sh "$scratch/malformed.tsv" > "$scratch/log" 2>&1; then
+	echo 'FAIL: malformed row accepted' >&2
+	exit 1
+fi
+grep -q 'rows are malformed' "$scratch/log"
+
 # A mock gh proves bad branch requests fail before accessing the network.
 mkdir "$scratch/bin"
 cat > "$scratch/bin/gh" <<'MOCK'
@@ -38,7 +45,7 @@ exit 99
 MOCK
 chmod +x "$scratch/bin/gh"
 if PATH="$scratch/bin:$PATH" bash tests/security/build_private_advisory_matrix.sh \
-	kadupulhq/kadupul "HEAD refs/heads/nonexistent-review-test-$$" "$scratch/output" > "$scratch/log" 2>&1; then
+	kadupulhq/kadupul "nonexistent-review-test-$$" "$scratch/output" > "$scratch/log" 2>&1; then
 	echo 'FAIL: missing requested branch accepted' >&2
 	exit 1
 fi

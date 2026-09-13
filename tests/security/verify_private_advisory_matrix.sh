@@ -26,6 +26,13 @@ if [ "$total" -eq 0 ]; then
 	exit 1
 fi
 
+# A non-blank row that fails the predicate is corrupt evidence, not an absent row.
+malformed="$(awk -F'\t' "NR>1 && NF>0 && !(${row}) {n++} END {print n+0}" "$MATRIX_FILE")"
+if [ "$malformed" -gt 0 ]; then
+	echo "ERROR: ${malformed} matrix rows are malformed." >&2
+	exit 1
+fi
+
 unknown="$(awk -F'\t' "${row} && \$NF!=\"PROVEN_TEST_BACKED\" && \$NF!=\"PROVEN_COMMIT_LINKED\" && \$NF!=\"PARTIAL_REFERENCE\" && \$NF!=\"NO_EVIDENCE\" {n++} END {print n+0}" "$MATRIX_FILE")"
 if [ "$unknown" -gt 0 ]; then
 	echo "ERROR: ${unknown} matrix rows carry an unknown proof status." >&2
