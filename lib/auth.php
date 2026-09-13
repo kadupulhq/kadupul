@@ -5053,7 +5053,10 @@ function cacti_auth_transition($user_id, $reason = 'login') {
 		WHERE id = ?',
 		array($user_id));
 
-	if (!cacti_sizeof($user) || $user['enabled'] != 'on') {
+	/* the guest account is saved disabled by design; only the login guest fallback may use it */
+	$guest_login = ($reason == 'login' && cacti_sizeof($user) && $user_id == get_guest_account());
+
+	if (!cacti_sizeof($user) || ($user['enabled'] != 'on' && !$guest_login)) {
 		cacti_log('SECURITY: auth transition blocked for disabled user: ' . $user_id . ' reason: ' . $reason, false, 'AUTH');
 
 		return false;

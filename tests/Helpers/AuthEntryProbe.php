@@ -282,6 +282,15 @@ function validate_redirect_url($url = '', $default = 'index.php') {
 }
 
 function get_guest_account() {
+	$guest = (string) ($GLOBALS['probe']['config']['guest_user'] ?? '');
+
+	/* mirrors lib/functions.php: match by username or id, enabled or not */
+	foreach ($GLOBALS['probe']['users'] as $row) {
+		if ($guest !== '' && ($row['username'] === $guest || (string) $row['id'] === $guest)) {
+			return (string) $row['id'];
+		}
+	}
+
 	return 0;
 }
 

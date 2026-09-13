@@ -116,11 +116,42 @@ test('cacti_auth_transition refuses disabled and unknown accounts', function () 
 });
 
 /*
+ * The guest account is saved disabled by design, so the login guest fallback
+ * must still get through the transition. Nothing else may use that exemption.
+ */
+function disabled_account_guest_transition(array $user, array $config, string $reason = 'login') : bool {
+	return cacti_test_run_auth_entry_probe(array(
+		'config' => $config,
+		'users'  => array(disabled_account_user($user + array('username' => 'guest'))),
+		'call'   => array('type' => 'cacti_auth_transition', 'args' => array(42, $reason)),
+	))['return'];
+}
+
+test('cacti_auth_transition lets the configured guest log in while it is disabled', function () {
+	expect(disabled_account_guest_transition(array('enabled' => ''), array('guest_user' => '42')))->toBeTrue()
+		->and(disabled_account_guest_transition(array('enabled' => ''), array('guest_user' => 'guest')))->toBeTrue();
+});
+
+test('cacti_auth_transition refuses a locked guest', function () {
+	expect(disabled_account_guest_transition(array('enabled' => '', 'locked' => 'on'), array('guest_user' => '42')))->toBeFalse();
+});
+
+test('cacti_auth_transition refuses a disabled account that is not the configured guest', function () {
+	expect(disabled_account_guest_transition(array('enabled' => ''), array('guest_user' => '3')))->toBeFalse()
+		->and(disabled_account_guest_transition(array('enabled' => ''), array()))->toBeFalse();
+});
+
+test('cacti_auth_transition keeps the guest exemption off the cookie and Web Basic paths', function () {
+	expect(disabled_account_guest_transition(array('enabled' => ''), array('guest_user' => '42'), 'cookie_restore'))->toBeFalse()
+		->and(disabled_account_guest_transition(array('enabled' => ''), array('guest_user' => '42'), 'basic_auth'))->toBeFalse();
+});
+
+/*
  * user_admin.php runs page code at file scope, so form_save() and the lib/auth.php
  * revocation helpers are lifted out and run in a child with request and
  * database stubs.
  */
-function disabled_account_run_user_save(array $request) : array {
+function disabled_account_run_user_save(array $request, bool $template = false) : array {
 	$root   = dirname(__DIR__, 4);
 	$admin  = file_get_contents($root . '/user_admin.php');
 	$auth   = file_get_contents($root . '/lib/auth.php');
@@ -132,6 +163,7 @@ $scenario = json_decode(stream_get_contents(STDIN), true);
 $GLOBALS['req']      = $scenario['request'];
 $GLOBALS['executed'] = array();
 $GLOBALS['saved']    = array();
+$GLOBALS['template'] = $scenario['template'];
 $_SESSION            = array('sess_user_id' => 1);
 
 function isset_request_var($name) {
@@ -177,7 +209,7 @@ function read_config_option($name, $force = false) {
 }
 
 function is_template_account($user_id) {
-	return false;
+	return $GLOBALS['template'];
 }
 
 function api_plugin_hook_function($name, $parm = null) {
@@ -219,7 +251,7 @@ PHP;
 	$source .= "form_save();\n";
 	$source .= "print json_encode(array('executed' => \$GLOBALS['executed'], 'saved' => \$GLOBALS['saved']));\n";
 
-	return cacti_test_run_php_source($source, array('request' => $request + array(
+	return cacti_test_run_php_source($source, array('template' => $template, 'request' => $request + array(
 		'save_component_user' => 1,
 		'id'                  => '7',
 		'username'            => 'bob',
@@ -242,5 +274,13 @@ test('saving an enabled account from the edit form keeps its sessions', function
 	$result = disabled_account_run_user_save(array('enabled' => 'on'));
 
 	expect($result['saved'][0]['enabled'])->toBe('on')
+		->and(disabled_account_executed($result, 'DELETE FROM sessions'))->toBe(array());
+});
+
+test('saving a template or guest account from the edit form keeps its sessions', function () {
+	$result = disabled_account_run_user_save(array('enabled' => 'on'), true);
+
+	expect($result['saved'][0]['enabled'])->toBe('')
+		->and(disabled_account_executed($result, 'DELETE FROM user_auth_cache'))->toBe(array())
 		->and(disabled_account_executed($result, 'DELETE FROM sessions'))->toBe(array());
 });
