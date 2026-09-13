@@ -2,15 +2,16 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
  +-------------------------------------------------------------------------+
  */
 
-require_once dirname(__DIR__) . '/Helpers/CactiStubs.php';
-require_once dirname(__DIR__, 3) . '/include/global.php';
-require_once dirname(__DIR__, 3) . '/install/functions.php';
+// Both methods under test are pure static helpers, so include/global.php (and
+// the database connection it opens) is not loaded.
+require_once dirname(__DIR__, 2) . '/Helpers/CactiStubs.php';
 require_once dirname(__DIR__, 3) . '/lib/installer.php';
 
 test('installer accepts only complete browser selection payloads', function () {

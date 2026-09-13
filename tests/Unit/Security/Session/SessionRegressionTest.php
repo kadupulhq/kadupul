@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  +-------------------------------------------------------------------------+
  | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
@@ -32,13 +33,37 @@ test('GHSA-273r: cacti_auth_transition rotates the session id', function () use 
 	expect($body)->toContain('session_regenerate_id(true);');
 });
 
-test('GHSA-273r: form login routes through cacti_auth_transition before assigning sess_user_id', function () use ($authLoginSource) {
-	$transitionPos = strpos($authLoginSource, "cacti_auth_transition((int)\$user['id'], 'login')");
-	$assignPos     = strpos($authLoginSource, "\$_SESSION['sess_user_id'] = \$user['id']");
+test('GHSA-273r: form login regenerates the session and drops it when the transition is refused', function () use ($authLoginSource) {
+	// The 1.2.x login path assigns sess_user_id before cacti_auth_transition()
+	// runs. That order is safe only because the session id was regenerated
+	// first and a refused transition destroys and restarts the session before
+	// the redirect, so each step must stay in this order inside one block.
+	$steps = array(
+		'cacti_session_start(true);',
+		"\$_SESSION['sess_user_id'] = \$user['id'];",
+		"if (!cacti_auth_transition((int)\$user['id'], 'login')) {",
+		'$error     = true;',
+		'cacti_session_destroy();',
+		'cacti_session_start(true);',
+		"header('Location: auth_login.php');",
+	);
 
-	expect($transitionPos)->not->toBeFalse();
+	$assignPos = strpos($authLoginSource, $steps[1]);
 	expect($assignPos)->not->toBeFalse();
-	expect($transitionPos)->toBeLessThan($assignPos);
+
+	$offset = strrpos(substr($authLoginSource, 0, $assignPos), $steps[0]);
+	expect($offset)->not->toBeFalse();
+
+	$blockStart = $offset;
+
+	foreach ($steps as $step) {
+		$pos = strpos($authLoginSource, $step, $offset);
+		expect($pos)->not->toBeFalse();
+
+		$offset = $pos + strlen($step);
+	}
+
+	expect($offset - $blockStart)->toBeLessThan(800);
 });
 
 test('GHSA-273r: cookie-restore path routes through cacti_auth_transition', function () use ($includeAuthSource) {

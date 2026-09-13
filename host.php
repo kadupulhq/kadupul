@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -1267,7 +1268,7 @@ function device_javascript() {
 			request = $(this).attr('href');
 			$.get(request)
 				.done(function(data) {
-					$('#cdialog').html(data);
+					$('#cdialog').html(DOMPurify.sanitize(data));
 
 					applySkin();
 

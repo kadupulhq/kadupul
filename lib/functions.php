@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -2893,7 +2894,14 @@ function cacti_rrdtool_valid_path_token($path) {
  * @return (bool) True when the value is U or an RRDtool numeric value
  */
 function cacti_rrdtool_valid_bound($value) {
-	$value = trim((string) $value);
+	$value = (string) $value;
+
+	/* callers write the untrimmed value into the DS definition */
+	if (cacti_has_control_chars($value)) {
+		return false;
+	}
+
+	$value = trim($value);
 
 	return $value === 'U' || preg_match('/^-?(?:[0-9]+(?:\.[0-9]*)?|[0-9]*\.[0-9]+)(?:[eE][+\-]?[0-9]+)?$/', $value) === 1;
 }
@@ -4760,7 +4768,8 @@ function validate_relative_path_within($path, $base_dir) {
 	foreach ($parts as $part) {
 		$walk .= '/' . $part;
 
-		if (file_exists($walk) && is_link($walk)) {
+		/* file_exists() is false for a dangling link, which a write still follows */
+		if (is_link($walk)) {
 			return false;
 		}
 	}

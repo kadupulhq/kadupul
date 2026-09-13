@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -4310,10 +4311,10 @@ function secpass_login_process($username) {
 			return array();
 		}
 	} else {
-		/* Verify against a fixed bcrypt hash tied to no account so an unknown
-		 * username costs as much as a known one and response time does not
-		 * reveal which usernames exist.  The result is discarded. */
-		compat_password_verify((string) $password, '$2y$10$VWBpVwPd5enH/FIf0bNNxO0d12/V8EZag/sNP.SQqsyYWyOFXvaV.');
+		/* hash a fixed value exactly when a known account would, so timing does not reveal usernames */
+		if (trim($password) != '') {
+			compat_password_verify((string) $password, '$2y$10$VWBpVwPd5enH/FIf0bNNxO0d12/V8EZag/sNP.SQqsyYWyOFXvaV.');
+		}
 
 		/* error */
 		$error     = true;
@@ -4953,20 +4954,22 @@ function check_reset_no_authentication($auth_method) {
 	global $config, $error, $error_msg;
 
 	if ($auth_method == 0) {
-		$admin_id = db_fetch_cell_prepared('SELECT id
+		$admin_id = db_fetch_cell_prepared("SELECT id
 			FROM user_auth
-			WHERE id = ?',
+			WHERE id = ?
+			AND enabled = 'on'",
 			array(read_config_option('admin_user')));
 
 		cacti_log('Admin User (' . read_config_option('admin_user') . ' vs ' . $admin_id . ')', true, 'AUTH_NONE', POLLER_VERBOSITY_DEVDBG);
 
 		if (!$admin_id) {
-			$admin_sql_query = 'SELECT TOP 1 id FROM (
+			$admin_sql_query = 'SELECT id FROM (
 				SELECT ua.id
 				FROM user_auth AS ua
 				INNER JOIN user_auth_realm AS uar
 				ON uar.user_id = ua.id
-				WHERE uar.realm_id = ?';
+				WHERE ua.enabled="on"
+				AND uar.realm_id = ?';
 
 			$admin_sql_params = array(15);
 
@@ -4980,7 +4983,7 @@ function check_reset_no_authentication($auth_method) {
 				INNER JOIN user_auth_group AS uag
 				ON uag.id = uagm.group_id
 				INNER JOIN user_auth_group_realm AS uagr
-				ON uagr.group_id=uag.group_id
+				ON uagr.group_id = uag.id
 				WHERE uag.enabled="on" AND ua.enabled="on"
 				AND uagr.realm_id = ?';
 
@@ -4988,7 +4991,9 @@ function check_reset_no_authentication($auth_method) {
 			}
 
 			$admin_sql_query .= '
-				) AS id';
+				) AS id
+				ORDER BY id
+				LIMIT 1';
 
 			cacti_log('SQL query ' . $admin_sql_query, true, 'AUTH_NONE', POLLER_VERBOSITY_DEVDBG);
 			cacti_log('SQL param ' . implode(',', $admin_sql_params), true, 'AUTH_NONE', POLLER_VERBOSITY_DEVDBG);

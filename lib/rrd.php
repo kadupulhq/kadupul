@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -296,24 +297,21 @@ function rrdtool_execute() {
 }
 
 /**
- * rrd_check_path - reject an RRD file path that shows directory traversal or a
- *   NUL byte, and confine it to the RRA directory when that directory resolves.
+ * rrd_check_path - reject an RRD file path that is empty, carries a NUL byte or
+ *   has a '..' segment.
  *
- *   data_source_path is stored in the database and reaches every rrdtool
- *   create, update, fetch and graph command, so a '..' segment could otherwise
- *   point rrdtool outside the RRA directory. The traversal and NUL checks always
- *   apply. Containment applies only when both the RRA directory and the target,
- *   or its nearest existing parent, resolve with realpath(); proxy-relative
- *   remote storage leaves them unresolved and is not second-guessed.
+ *   data_source_path is stored in the database and reaches rrdtool create,
+ *   update and last, so a '..' segment could walk rrdtool out of the directory
+ *   an administrator chose. The path is not confined to the RRA directory:
+ *   1.2.31 accepted custom absolute locations and symlinked storage, and those
+ *   installs must keep working.
  *
  * @param  (string) $path     - the candidate RRD file path
- * @param  (string) $rra_base - the RRA directory, defaults to $config['rra_path']
+ * @param  (string) $rra_base - unused, kept so existing callers need no change
  *
  * @return (bool) true when the path is safe to use
  */
 function rrd_check_path($path, $rra_base = null) {
-	global $config;
-
 	$path = (string) $path;
 
 	if ($path === '' || strpos($path, "\0") !== false) {
@@ -324,41 +322,7 @@ function rrd_check_path($path, $rra_base = null) {
 		return false;
 	}
 
-	if ($rra_base === null) {
-		$rra_base = isset($config['rra_path']) ? (string) $config['rra_path'] : '';
-	}
-
-	$base = ($rra_base !== '') ? realpath($rra_base) : false;
-
-	if ($base === false) {
-		return true;
-	}
-
-	$real = realpath($path);
-
-	if ($real === false) {
-		$dir  = $path;
-		$tail = '';
-
-		while (true) {
-			$parent   = dirname($dir);
-			$tail     = ($tail === '') ? basename($dir) : basename($dir) . DIRECTORY_SEPARATOR . $tail;
-			$resolved = realpath($parent);
-
-			if ($resolved !== false) {
-				$real = $resolved . DIRECTORY_SEPARATOR . $tail;
-				break;
-			}
-
-			if ($parent === $dir) {
-				return true;
-			}
-
-			$dir = $parent;
-		}
-	}
-
-	return $real === $base || strpos($real, $base . DIRECTORY_SEPARATOR) === 0;
+	return true;
 }
 
 function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pipe = false, $logopt = 'WEBLOG') {
@@ -720,7 +684,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 
 	$data_source_path = get_data_source_path($local_data_id, true);
 
-	if (!cacti_rrdtool_valid_path($data_source_path)) {
+	if (!cacti_rrdtool_valid_path($data_source_path) || !rrd_check_path($data_source_path)) {
 		cacti_log("ERROR: Invalid RRD file path for local_data_id: $local_data_id.", false, 'POLLER');
 
 		return false;
@@ -954,7 +918,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false) {
 	foreach ($update_cache_array as $rrd_path => $rrd_fields) {
 		$create_rrd_file = false;
 
-		if (!cacti_rrdtool_valid_path($rrd_path)) {
+		if (!cacti_rrdtool_valid_path($rrd_path) || !rrd_check_path($rrd_path)) {
 			cacti_log("ERROR: Invalid RRD file path in poller cache for local_data_id: {$rrd_fields['local_data_id']}.", false, 'POLLER');
 
 			continue;

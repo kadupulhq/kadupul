@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -1518,6 +1519,12 @@ function boost_rrdtool_get_last_update_time($rrd_path, &$rrdtool_pipe) {
 		return time();
 	}
 
+	if (!rrd_check_path($rrd_path)) {
+		cacti_log("ERROR: Refusing unsafe RRD file path '$rrd_path' in boost cache.", false, 'BOOST');
+
+		return time();
+	}
+
 	if (read_config_option('storage_location')) {
 		$file_exists = rrdtool_execute_path_command('file_exists', $rrd_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
 	} else {
@@ -1881,6 +1888,12 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 
 	if (!cacti_rrdtool_valid_path($rrd_path)) {
 		cacti_log("ERROR: Invalid RRD file path in boost update cache for local_data_id: $local_data_id.", false, 'BOOST');
+
+		return 'ERROR';
+	}
+
+	if (!rrd_check_path($rrd_path)) {
+		cacti_log("ERROR: Refusing unsafe data source path '$rrd_path' for local_data_id $local_data_id", false, 'BOOST');
 
 		return 'ERROR';
 	}

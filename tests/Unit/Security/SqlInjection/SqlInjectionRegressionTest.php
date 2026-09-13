@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  +-------------------------------------------------------------------------+
  | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
@@ -28,11 +29,30 @@ $aggregateGraphsSource = file_get_contents(__DIR__ . '/../../../../aggregate_gra
 $htmlReportsSource    = file_get_contents(__DIR__ . '/../../../../lib/html_reports.php');
 $managersSource       = file_get_contents(dirname(__DIR__, 4) . '/managers.php');
 $apiAutomationSource  = file_get_contents(__DIR__ . '/../../../../lib/api_automation.php');
+$htmlUtilitySource    = file_get_contents(__DIR__ . '/../../../../lib/html_utility.php');
 
-// GHSA-3p6w: cacti_validate_sort_column() allowlist in utilities.php sort_column sites.
-test('GHSA-3p6w: utilities.php contains the 3p6w fix', function () use ($utilitiesSource) {
+// GHSA-3p6w: utilities.php sort_column sites. The per-call cacti_validate_sort_column()
+// allowlists were folded into get_order_string(), which validates the column before
+// it reaches ORDER BY.
+test('GHSA-3p6w: utilities.php builds ORDER BY through get_order_string', function () use ($utilitiesSource) {
 	expect($utilitiesSource)->not->toBeFalse();
-	expect($utilitiesSource)->toContain('cacti_validate_sort_column');
+	// view_user_log and view_poller_cache
+	expect($utilitiesSource)->toContain("\t\t\" . get_order_string() . \"\n");
+	expect($utilitiesSource)->toContain('$order_string = get_order_string();');
+	expect($utilitiesSource)->not->toMatch('/ORDER BY[^;]*get_(nfilter_|filter_)?request_var\(\'sort_(column|direction)\'\)/');
+});
+
+test('GHSA-3p6w: get_order_string validates the requested sort column and clamps direction', function () use ($htmlUtilitySource) {
+	$start = strpos($htmlUtilitySource, 'function get_order_string() {');
+	expect($start)->not->toBeFalse();
+
+	$end  = strpos($htmlUtilitySource, "\n}\n", $start);
+	$body = substr($htmlUtilitySource, $start, $end - $start);
+
+	expect($body)->toContain("\$sort_column = cacti_normalize_sort_column(get_nfilter_request_var('sort_column'));");
+	expect($body)->toContain('$column    = validate_sort_column($request_column, $page);');
+	expect($body)->toContain("(strtoupper((string)\$direction_raw) == 'DESC' ? 'DESC' : 'ASC')");
+	expect($htmlUtilitySource)->toContain("preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(?:\\.[a-zA-Z][a-zA-Z0-9_]*)*\$/', \$column)");
 });
 
 // GHSA-69gg / GHSA-xrh3 / GHSA-gp82 / GHSA-pf37: db_qstr_rlike() hardening.
@@ -86,8 +106,24 @@ test('GHSA-72vr: html_reports ORDER BY uses cacti_validate_sort_column', functio
 	expect($htmlReportsSource)->toContain('cacti_validate_sort_column(get_request_var(\'sort_column\')');
 });
 
-test('GHSA-72vr: html_reports sort_column allowlist contains expected report columns', function () use ($htmlReportsSource) {
-	expect($htmlReportsSource)->toContain("array('name', 'user_id', 'enabled', 'mailtime', 'lastsent', 'intrvl', 'count')");
+test('GHSA-72vr: html_reports sort_column allowlist maps request keys to fixed SQL columns', function () use ($htmlReportsSource) {
+	expect($htmlReportsSource)->toContain("cacti_validate_sort_column(get_request_var('sort_column'), array_keys(\$sort_columns), 'name')");
+	expect($htmlReportsSource)->toMatch('/\$sortby\s*=\s*\$sort_columns\[\$sort_column\];/');
+
+	$expected = array(
+		'name'            => 'reports.name',
+		'full_name'       => 'user_auth.full_name',
+		'cint'            => 'cint',
+		'lastsent'        => 'reports.lastsent',
+		'mailtime'        => 'reports.mailtime',
+		'from_name'       => 'reports.from_name',
+		'attachment_type' => 'reports.attachment_type',
+		'enabled'         => 'reports.enabled',
+	);
+
+	foreach ($expected as $key => $column) {
+		expect($htmlReportsSource)->toMatch('/\'' . preg_quote($key, '/') . '\'\s*=>\s*\'' . preg_quote($column, '/') . '\'/');
+	}
 });
 
 test('GHSA-72vr: html_reports sort_direction is clamped to ASC or DESC', function () use ($htmlReportsSource) {
@@ -95,20 +131,21 @@ test('GHSA-72vr: html_reports sort_direction is clamped to ASC or DESC', functio
 });
 
 test('GHSA-72vr: html_reports does not concatenate raw sort_column into ORDER BY', function () use ($htmlReportsSource) {
-	// Neither of these unsafe patterns should appear near an ORDER BY clause.
-	// The only get_request_var('sort_column') usage in ORDER BY must go through the helper.
-	$orderByPos = strpos($htmlReportsSource, 'ORDER BY " .');
+	// ORDER BY may only interpolate $sortby, which comes from the fixed map above.
+	$orderByPos = strpos($htmlReportsSource, 'ORDER BY $sortby " .');
 	expect($orderByPos)->not->toBeFalse();
 
 	$fragment = substr($htmlReportsSource, $orderByPos, 400);
-	expect($fragment)->not->toContain("get_request_var('sort_column') . ' '");
+	expect($fragment)->not->toContain("get_request_var('sort_column')");
+	expect($htmlReportsSource)->not->toMatch('/ORDER BY[^;]*get_(nfilter_|filter_)?request_var\(\'sort_column\'\)/');
 });
 
 test('GHSA-72vr: html_reports does not concatenate raw sort_direction into ORDER BY', function () use ($htmlReportsSource) {
-	$orderByPos = strpos($htmlReportsSource, 'ORDER BY " .');
+	$orderByPos = strpos($htmlReportsSource, 'ORDER BY $sortby " .');
 	expect($orderByPos)->not->toBeFalse();
 
 	$fragment = substr($htmlReportsSource, $orderByPos, 400);
+	expect($fragment)->toContain("(strtoupper(get_request_var('sort_direction')) === 'DESC' ? 'DESC' : 'ASC') .");
 	expect($fragment)->not->toContain("get_request_var('sort_direction') . ' LIMIT'");
 });
 
@@ -188,9 +225,10 @@ test('GHSA-j9jv: managers.php form_actions no longer implodes unsanitized select
 });
 
 // GHSA-q9xg: ORDER BY sort_column and sort_direction hardening in lib/api_automation.php.
-test('GHSA-q9xg: api_automation ORDER BY uses cacti_validate_sort_column at the missed call site', function () use ($apiAutomationSource) {
-	// The fixed function is around line 1210. Verify the helper is called.
-	expect($apiAutomationSource)->toContain("cacti_validate_sort_column(get_request_var('sort_column'), array('h.description', 'h.hostname', 'h.status', 'ht.name'), 'h.description')");
+test('GHSA-q9xg: api_automation ORDER BY uses cacti_validate_sort_column at both device list call sites', function () use ($apiAutomationSource) {
+	// Both device lists validate the request key against a fixed column map.
+	expect(substr_count($apiAutomationSource, "cacti_validate_sort_column(get_request_var('sort_column'), array_keys(\$sort_columns), 'description')"))->toBeGreaterThanOrEqual(2);
+	expect(preg_match_all('/\$sortby\s*=\s*\$sort_columns\[\$sort_column\];/', $apiAutomationSource))->toBeGreaterThanOrEqual(2);
 });
 
 test('GHSA-q9xg: api_automation sort_direction is clamped to ASC or DESC at the fixed call site', function () use ($apiAutomationSource) {
@@ -198,9 +236,11 @@ test('GHSA-q9xg: api_automation sort_direction is clamped to ASC or DESC at the 
 	expect($apiAutomationSource)->toContain("strtoupper(get_request_var('sort_direction')) === 'DESC' ? 'DESC' : 'ASC'");
 });
 
-test('GHSA-q9xg: api_automation INET_ATON branch uses strict equality', function () use ($apiAutomationSource) {
-	// Fix tightened == to === for the hostname rewrite branch.
-	expect($apiAutomationSource)->toContain("if (\$sortby === 'h.hostname')");
+test('GHSA-q9xg: api_automation hostname sort maps to a fixed INET_ATON expression', function () use ($apiAutomationSource) {
+	// The former $sortby === 'h.hostname' rewrite became a map entry, so the
+	// INET_ATON() wrapper is fixed SQL rather than built around a request value.
+	expect(preg_match_all('/\'hostname\'\s*=>\s*\'INET_ATON\(h\.hostname\)\',/', $apiAutomationSource))->toBeGreaterThanOrEqual(2);
+	expect($apiAutomationSource)->not->toMatch('/\$sortby\s*==\s*\'h\.hostname\'/');
 });
 
 test('GHSA-q9xg: api_automation ORDER BY at fixed site does not build sortby from raw request var', function () use ($apiAutomationSource) {

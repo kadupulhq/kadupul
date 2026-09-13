@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -833,7 +834,7 @@ function tree_edit($partial = false) {
 		$lockdiv = "<div style='padding:5px 5px 5px 0px'><table><tr><td><input type='button' class='ui-button ui-corner-all ui-widget' id='lock' value='" . __esc('Edit Tree') . "'></td><td style='font-weight:bold;'>" . __('To Edit this tree, you must first lock it by pressing the Edit Tree button.') . "</td></tr></table></div>\n";
 		$editable = false;
 	} elseif (isset($tree['locked']) && $tree['locked'] == 1) {
-		$lockdiv = "<div style='padding:5px 5px 5px 0px'><table><tr><td><input type='button' class='ui-button ui-corner-all ui-widget' id='unlock' value='" . __esc('Finish Editing Tree') . "'></td><td><input type='button' class='ui-button ui-corner-all ui-widget' id='addbranch' value='" . __esc('Add Root Branch') . "' onClick='createNode()'></td><td style='font-weight:bold;'>" . __('This tree has been locked for Editing on %s by %s.', $tree['locked_date'], get_username($tree['modified_by']));
+		$lockdiv = "<div style='padding:5px 5px 5px 0px'><table><tr><td><input type='button' class='ui-button ui-corner-all ui-widget' id='unlock' value='" . __esc('Finish Editing Tree') . "'></td><td><input type='button' class='ui-button ui-corner-all ui-widget' id='addbranch' value='" . __esc('Add Root Branch') . "' onClick='createNode()'></td><td style='font-weight:bold;'>" . __('This tree has been locked for Editing on %s by %s.', $tree['locked_date'], html_escape(get_username($tree['modified_by'])));
 		if ($tree['modified_by'] == $_SESSION['sess_user_id']) {
 			$lockdiv .= '</td></tr></table></div>';
 		} else {
@@ -1038,7 +1039,7 @@ function tree_edit($partial = false) {
 				+ '&host_id=' + (selectedItem.host_id ? selectedItem.host_id:''))
 				.done(function(data) {
 					$('#graphs').jstree('destroy');
-					$('#graphs').html(data);
+					$('#graphs').html(DOMPurify.sanitize(data));
 					draggable('graphs');
 				})
 				.fail(function(data) {
@@ -1051,7 +1052,7 @@ function tree_edit($partial = false) {
 				+ '&site_id=' + (selectedItem.site_id ? selectedItem.site_id:''))
 				.done(function(data) {
 					$('#hosts').jstree('destroy');
-					$('#hosts').html(data);
+					$('#hosts').html(DOMPurify.sanitize(data));
 					draggable('hosts');
 					draggable('graphs');
 				})
@@ -1063,7 +1064,7 @@ function tree_edit($partial = false) {
 		function getSiteData() {
 			$.get('tree.php?action=sites&filter='+$('#sfilter').val(), function(data) {
 				$('#sites').jstree('destroy');
-				$('#sites').html(data);
+				$('#sites').html(DOMPurify.sanitize(data));
 				draggable('sites');
 				draggable('hosts');
 				draggable('graphs');
@@ -1297,7 +1298,7 @@ function tree_edit($partial = false) {
 				}
 			})
 			.on('create_node.jstree', function (e, data) {
-				$.get('?action=create_node', { 'id' : data.node.parent, 'tree_id' : $('#id').val(), 'position' : data.position, 'text' : data.node.text })
+				$.post('?action=create_node', { 'id' : data.node.parent, 'tree_id' : $('#id').val(), 'position' : data.position, 'text' : data.node.text, '__csrf_magic' : csrfMagicToken })
 					.done(function (d) {
 						data.instance.set_id(data.node, d.id);
 						data.instance.set_text(data.node, d.text);
@@ -1313,7 +1314,7 @@ function tree_edit($partial = false) {
 					});
 			})
 			.on('rename_node.jstree', function (e, data) {
-				$.get('?action=rename_node', { 'id' : data.node.id, 'tree_id' : $('#id').val(), 'text' : data.text })
+				$.post('?action=rename_node', { 'id' : data.node.id, 'tree_id' : $('#id').val(), 'text' : data.text, '__csrf_magic' : csrfMagicToken })
 					.done(function (d) {
 						if (d.result == 'false') {
 							data.instance.set_text(data.node, d.text);
@@ -1328,7 +1329,7 @@ function tree_edit($partial = false) {
 					});
 			})
 			.on('move_node.jstree', function (e, data) {
-				$.get('?action=move_node', { 'id' : data.node.id, 'tree_id' : $('#id').val(), 'parent' : data.parent, 'position' : data.position })
+				$.post('?action=move_node', { 'id' : data.node.id, 'tree_id' : $('#id').val(), 'parent' : data.parent, 'position' : data.position, '__csrf_magic' : csrfMagicToken })
 					.always(function () {
 						var st = data.instance.get_state();
 						data.instance.load_node(data.instance.get_parent(data.node.id), function () { this.set_state(st); });
@@ -1345,7 +1346,7 @@ function tree_edit($partial = false) {
 					$('#graphs').jstree().deselect_all();
 				}
 
-				$.get('?action=copy_node', { 'id' : data.original.id, 'tree_id' : $('#id').val(), 'parent' : data.parent, 'position' : data.position })
+				$.post('?action=copy_node', { 'id' : data.original.id, 'tree_id' : $('#id').val(), 'parent' : data.parent, 'position' : data.position, '__csrf_magic' : csrfMagicToken })
 					.always(function () {
 						var st = data.instance.get_state();
 						data.instance.load_node(data.instance.get_parent(data.node.id), function () { this.set_state(st); });

@@ -1,7 +1,7 @@
 <?php
 /*
  +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  +-------------------------------------------------------------------------+
  | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
@@ -109,6 +109,17 @@ test('an unknown username runs as many password verifications as a known one', f
 		->and($unknown['user'])->toBe(array())
 		->and($unknown['error'])->toBeTrue()
 		->and($known['verify_calls'])->toBeGreaterThan(0)
+		->and($unknown['verify_calls'])->toBe($known['verify_calls']);
+});
+
+test('a blank password runs as many password verifications for an unknown username as a known one', function () {
+	$known   = local_login_timing_run('alice', '');
+	$unknown = local_login_timing_run('nobody', '');
+
+	expect($known['user'])->toBe(array())
+		->and($unknown['user'])->toBe(array())
+		->and($known['error'])->toBeTrue()
+		->and($unknown['error'])->toBeTrue()
 		->and($unknown['verify_calls'])->toBe($known['verify_calls']);
 });
 

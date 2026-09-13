@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -3658,6 +3659,13 @@ class Installer implements JsonSerializable {
 			$success = $installer->getStep() === Installer::STEP_COMPLETE;
 		} catch (Throwable $e) {
 			log_install_always('', __('Exception occurred during installation: #%s - %s', $e->getCode(), $e->getMessage()));
+
+			// The CLI reads the step from this instance, not from config
+			if ($installer instanceof Installer) {
+				$installer->setStep(Installer::STEP_ERROR);
+			}
+
+			set_install_config_option('install_step', Installer::STEP_ERROR);
 		}
 
 		$backgroundDone = microtime(true);

@@ -1,6 +1,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -779,7 +780,7 @@ function handleTableNav() {
 		cactiReturnTo(url);
 	});
 
-	$('.cactiPostAction').on('click', function(event) {
+	$('.cactiPostAction').off('click.cactiPostAction').on('click.cactiPostAction', function(event) {
 		event.preventDefault();
 		var url = $(this).data('url') || $(this).attr('href');
 		submitPageUsingPost(url);

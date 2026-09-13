@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -37,8 +38,9 @@ function guarded_actions() {
         'item_moveup_gsv', 'item_moveup_dssv',
         'item_movedown_gsv', 'item_movedown_dssv',
         'delete_node', 'gt_remove', 'query_remove', 'remove', 'change_leaf',
+        'create_node', 'rename_node', 'move_node', 'copy_node',
         'moveup', 'movedown',
-        'tree_up', 'tree_down', 'move_page_up', 'move_page_down',
+        'tree_up', 'tree_down', 'move_page_up', 'move_page_down', 'delete_page',
         'rrd_add', 'rrd_remove',
     );
 }
@@ -146,6 +148,25 @@ test('no page still links a state changing action by GET', function () {
     expect($unconverted)->toBe(array());
 });
 
+test('the tree editor sends every node mutation by POST with the token', function () {
+	$src = file_get_contents(dirname(__DIR__, 4) . '/tree.php');
+
+	expect($src)->not->toBeFalse();
+
+	/* The jstree callbacks call these actions over XHR rather than through an
+	   anchor, so the anchor scan above never sees them. */
+	$unconverted = array();
+
+	foreach (array('create_node', 'rename_node', 'move_node', 'copy_node', 'delete_node') as $action) {
+		if (preg_match('/\\$\\.(?:get|getJSON|ajax)\\(\\s*[\'"][^\'"]*action=' . $action . '(?![a-z_])/', $src)
+			|| !preg_match('/\\$\\.post\\(\'\\?action=' . $action . '\', \\{[^}]*\'__csrf_magic\' : csrfMagicToken[^}]*\\}\\)/', $src)) {
+			$unconverted[] = $action;
+		}
+	}
+
+	expect($unconverted)->toBe(array());
+});
+
 test('the cactiPostAction handler posts the token and refuses another origin', function () {
     $js = file_get_contents(dirname(__DIR__, 4) . '/include/layout.js');
 
@@ -168,4 +189,15 @@ test('the cactiPostAction handler posts the token and refuses another origin', f
     expect($body)->toContain('csrfMagicToken')
         ->and($body)->toContain('__csrf_magic')
         ->and($body)->toContain('Refusing to send a CSRF token to a different origin');
+});
+
+test('a form action that carries its selected items is refused without a POST token', function () {
+	$src = file_get_contents(dirname(__DIR__, 4) . '/include/global.php');
+
+	expect($src)->not->toBeFalse();
+
+	/* 'actions' can not join $bad_actions outright: breadcrumbs link back to the
+	   confirmation page by GET. Every form_actions() changes data only once
+	   selected_items arrives, so that is the request to refuse. */
+	expect($src)->toContain("if (\$action == 'actions' && isset_request_var('selected_items') && !isset(\$_POST['__csrf_magic'])) {");
 });

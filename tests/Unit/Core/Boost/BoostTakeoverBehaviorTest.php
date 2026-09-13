@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -37,7 +38,13 @@ function boostTakeoverSizeof($value) {
 }
 
 function boostTakeoverIsSystemPid($pid) {
-	return (int) $pid <= 100;
+	$GLOBALS['boost_takeover_state']['checked'][] = $pid;
+
+	return !preg_match('/\A[0-9]+\z/', (string) $pid) || (int) $pid <= 100;
+}
+
+function boostTakeoverPidForLog($pid) {
+	return (string) $pid;
 }
 
 function boostTakeoverStillRunning($pid) {
@@ -93,6 +100,8 @@ function boostTakeoverLoadFunction($root) {
 		'cacti_sizeof',
 		'is_system_pid',
 		'cacti_process_still_running',
+		'cacti_process_pid_for_log',
+		'cacti_process_kill',
 		'unregister_process',
 		'cacti_log',
 		'posix_kill',
@@ -105,6 +114,8 @@ function boostTakeoverLoadFunction($root) {
 		'boostTakeoverSizeof',
 		'boostTakeoverIsSystemPid',
 		'boostTakeoverStillRunning',
+		'boostTakeoverPidForLog',
+		'boostTakeoverKill',
 		'boostTakeoverUnregister',
 		'boostTakeoverLog',
 		'boostTakeoverKill',
@@ -158,6 +169,18 @@ test('takeover refuses to signal a reserved system PID', function () {
 	boostTakeoverReset(array('processes' => array($process)));
 
 	expect(boostTakeoverStopProcesses())->toBeFalse()
+		->and($GLOBALS['boost_takeover_state']['signals'])->toBe(array())
+		->and($GLOBALS['boost_takeover_state']['unregistered'])->toBe(array());
+});
+
+/* A 64-bit build cannot narrow an unsigned pid column value, so a malformed
+ * value stands in for the 32-bit case: both change meaning when cast first. */
+test('takeover validates the stored PID before narrowing it to an integer', function () {
+	$process = array('tasktype' => 'boost', 'taskname' => 'child', 'taskid' => 5, 'pid' => '1203abc');
+	boostTakeoverReset(array('processes' => array($process), 'running' => array(1203 => true)));
+
+	expect(boostTakeoverStopProcesses())->toBeFalse()
+		->and($GLOBALS['boost_takeover_state']['checked'])->toBe(array('1203abc'))
 		->and($GLOBALS['boost_takeover_state']['signals'])->toBe(array())
 		->and($GLOBALS['boost_takeover_state']['unregistered'])->toBe(array());
 });

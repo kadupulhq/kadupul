@@ -1,5 +1,6 @@
 # +-------------------------------------------------------------------------+
 # | Copyright (C) 2004-2024 The Cacti Group                                 |
+# | Copyright (C) 2026 The Kadupul project and contributors                 |
 # |                                                                         |
 # | This program is free software; you can redistribute it and/or           |
 # | modify it under the terms of the GNU General Public License             |
@@ -51,10 +52,10 @@ jobs:
         options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=5s --health-timeout=5s --health-retries=10
     steps:
     - name: Checkout
-      uses: actions/checkout@v7
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
     - name: Install PHP 8.1
-      uses: shivammathur/setup-php@v2
+      uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
       with:
         php-version: '8.1'
         extensions: pdo_mysql
@@ -78,10 +79,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: Checkout
-      uses: actions/checkout@v7
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
     - name: Install PHP 8.1
-      uses: shivammathur/setup-php@v2
+      uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
       with:
         php-version: '8.1'
         coverage: none
@@ -99,10 +100,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: Checkout
-      uses: actions/checkout@v7
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
     - name: Install Node.js
-      uses: actions/setup-node@v7
+      uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
       with:
         node-version: '22'
 
@@ -135,10 +136,10 @@ jobs:
     name: PHP ${{ matrix.php }} Test on ${{ matrix.os }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v7
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
     - name: Install PHP ${{ matrix.php }}
-      uses: shivammathur/setup-php@v2
+      uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
       with:
         php-version: ${{ matrix.php }}
         extensions: intl, mysql, gd, ldap, gmp, xml, curl, json, mbstring #optional
@@ -148,43 +149,43 @@ jobs:
       run: php -v
       
     - name: Checkout Thold Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@v3
+      uses: GuillaumeFalourd/clone-github-repo-action@62795acaa4a02f89824de75c7025459a9cabaa45 # v3
       with:
         owner: 'Cacti'
         repository: 'plugin_thold'
 
     - name: Checkout Monitor Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@v3
+      uses: GuillaumeFalourd/clone-github-repo-action@62795acaa4a02f89824de75c7025459a9cabaa45 # v3
       with:
         owner: 'Cacti'
         repository: 'plugin_monitor'
 
     - name: Checkout MacTrack Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@v3
+      uses: GuillaumeFalourd/clone-github-repo-action@62795acaa4a02f89824de75c7025459a9cabaa45 # v3
       with:
         owner: 'Cacti'
         repository: 'plugin_mactrack'
 
     - name: Checkout Intropage Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@v3
+      uses: GuillaumeFalourd/clone-github-repo-action@62795acaa4a02f89824de75c7025459a9cabaa45 # v3
       with:
         owner: 'Cacti'
         repository: 'plugin_intropage'
 
     - name: Checkout FlowView Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@v3
+      uses: GuillaumeFalourd/clone-github-repo-action@62795acaa4a02f89824de75c7025459a9cabaa45 # v3
       with:
         owner: 'Cacti'
         repository: 'plugin_flowview'
 
     - name: Checkout Audit Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@v3
+      uses: GuillaumeFalourd/clone-github-repo-action@62795acaa4a02f89824de75c7025459a9cabaa45 # v3
       with:
         owner: 'Cacti'
         repository: 'plugin_audit'
 
     - name: Checkout Syslog Plugin
-      uses: GuillaumeFalourd/clone-github-repo-action@v3
+      uses: GuillaumeFalourd/clone-github-repo-action@62795acaa4a02f89824de75c7025459a9cabaa45 # v3
       with:
         owner: 'Cacti'
         repository: 'plugin_syslog'

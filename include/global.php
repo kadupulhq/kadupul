@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -596,19 +597,22 @@ if ($config['is_web']) {
 
 		   Every anchor that carried one of these now takes the cactiPostAction
 		   class and goes out through submitPageUsingPost(), which is the
-		   mechanism this branch already used for the plugin actions.
+		   mechanism this branch already used for the plugin actions. The tree
+		   editor's jstree callbacks reach the *_node actions over XHR instead,
+		   and send them with $.post and the token.
 
 		   Read-only actions stay out by intent: item_edit, edit, tree and the
 		   *_confirm dialogs render a page and change nothing. */
 		$bad_actions = array(
 			'save', 'update_data', 'changepassword',
 			'delete_node', 'gt_remove', 'query_remove', 'remove', 'change_leaf',
+			'create_node', 'rename_node', 'move_node', 'copy_node',
 			'item_remove', 'item_moveup', 'item_movedown',
 			'item_remove_gsv', 'item_remove_dssv',
 			'item_moveup_gsv', 'item_moveup_dssv',
 			'item_movedown_gsv', 'item_movedown_dssv',
 			'moveup', 'movedown',
-			'tree_up', 'tree_down', 'move_page_up', 'move_page_down',
+			'tree_up', 'tree_down', 'move_page_up', 'move_page_down', 'delete_page',
 			'rrd_add', 'rrd_remove'
 		);
 
@@ -625,6 +629,15 @@ if ($config['is_web']) {
 				http_response_code(405);
 				exit;
 			}
+		}
+
+		/* 'actions' can not join the list above: breadcrumbs link back to the
+		   confirmation page by GET. Every form_actions() changes data only once
+		   selected_items arrives, so that is the request to refuse. */
+		if ($action == 'actions' && isset_request_var('selected_items') && !isset($_POST['__csrf_magic'])) {
+			header('Allow: POST');
+			http_response_code(405);
+			exit;
 		}
 	}
 

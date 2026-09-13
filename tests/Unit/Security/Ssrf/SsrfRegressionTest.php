@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  +-------------------------------------------------------------------------+
 */
 
@@ -24,9 +25,12 @@ $graphJsonSource  = file_get_contents(__DIR__ . '/../../../../graph_json.php');
 test('GHSA-23p9: lib/functions.php contains the 23p9 fix', function () use ($functionsSource) {
 	expect($functionsSource)->not->toBeFalse();
 	// Fix-specific assertion anchors below:
-	expect($functionsSource)->toContain("'verify_peer'");
-	expect($functionsSource)->toMatch('/verify_peer.+=>\s*true/');
-	expect($functionsSource)->toContain("'follow_location'");
+	// Peer verification stays on unless the admin opts into allow_unsafe_https.
+	expect($functionsSource)->toMatch('/\'verify_peer\'\s*=>\s*read_config_option\(\'allow_unsafe_https\'\)\s*!=\s*\'on\'\s*\?\s*true\s*:\s*false,/');
+	expect($functionsSource)->toMatch('/\'verify_peer_name\'\s*=>\s*read_config_option\(\'allow_unsafe_https\'\)\s*!=\s*\'on\'\s*\?\s*true\s*:\s*false,/');
+	expect($functionsSource)->toMatch('/\'allow_self_signed\'\s*=>\s*read_config_option\(\'allow_unsafe_https\'\)\s*==\s*\'on\'\s*\?\s*true\s*:\s*false,/');
+	expect($functionsSource)->not->toMatch('/\'verify_peer(_name)?\'\s*=>\s*false/');
+	expect($functionsSource)->toMatch('/\'follow_location\'\s*=>\s*0,/');
 });
 
 // GHSA-9mf9: remote agent URL must rawurlencode() keys and values.
