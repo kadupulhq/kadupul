@@ -96,17 +96,50 @@ function cacti_cli_create_file($path) {
 		return sprintf("Unable to create '%s'", $path);
 	}
 
-	/* second safeguard where umask() has no effect; this file is ours */
+	/* The umask is the protection. PHP has no fchmod(), and a chmod() by name
+	 * could reach a file swapped in after the create, so a mode that is still
+	 * wide is refused rather than repaired. Windows reports 0666 for every file
+	 * and relies on the per-user TEMP directory instead. */
 	$stat = fstat($handle);
 
-	if ($stat === false || (($stat['mode'] & 0777) !== 0600 && !chmod($path, 0600))) {
-		fclose($handle);
-		unlink($path);
+	if ($stat === false || (DIRECTORY_SEPARATOR == '/' && ($stat['mode'] & 0777) !== 0600)) {
+		cacti_cli_remove_file($handle, $path);
 
-		return sprintf("Unable to restrict '%s' to its owner", $path);
+		return sprintf("Refusing to use '%s' because it is not private to its owner", $path);
 	}
 
 	return $handle;
+}
+
+/**
+ * Close a file made by cacti_cli_create_file() and remove it by name.
+ *
+ * PHP cannot unlink a descriptor, so the name is removed only while it still
+ * refers to the open file. A name that now points elsewhere, a symlink
+ * included, is left alone.
+ *
+ * @param resource $handle The handle returned by cacti_cli_create_file().
+ * @param string   $path   The name the file was created under.
+ *
+ * @return bool True when the file was removed.
+ */
+function cacti_cli_remove_file($handle, $path) {
+	$opened = is_resource($handle) ? fstat($handle) : false;
+	$named  = @lstat($path);
+
+	if (is_resource($handle)) {
+		fclose($handle);
+	}
+
+	if ($opened === false || $named === false || ($named['mode'] & 0170000) !== 0100000) {
+		return false;
+	}
+
+	if ($opened['dev'] !== $named['dev'] || $opened['ino'] !== $named['ino']) {
+		return false;
+	}
+
+	return @unlink($path);
 }
 
 /**

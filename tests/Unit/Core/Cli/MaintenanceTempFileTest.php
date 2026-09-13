@@ -188,6 +188,52 @@ test('temporary files and the debug log keep binary data byte for byte', functio
 		->and($source)->not->toMatch("/fopen\\(\\\$path, '[xa]'\\)/");
 });
 
+test('a created file is removed by name while the name still refers to it', function () {
+	$path   = $this->dir . '/42.xml';
+	$handle = cacti_cli_create_file($path);
+
+	expect(cacti_cli_remove_file($handle, $path))->toBeTrue()
+		->and(is_resource($handle))->toBeFalse()
+		->and(file_exists($path))->toBeFalse();
+});
+
+test('a name swapped for a symlink after the create is not removed and its target is untouched', function () {
+	$path   = $this->dir . '/42.xml';
+	$handle = cacti_cli_create_file($path);
+
+	unlink($path);
+	symlink($this->victim, $path);
+
+	expect(cacti_cli_remove_file($handle, $path))->toBeFalse()
+		->and(is_link($path))->toBeTrue()
+		->and(file_get_contents($this->victim))->toBe('original');
+});
+
+test('a name swapped for another regular file after the create is not removed', function () {
+	$path   = $this->dir . '/42.xml';
+	$handle = cacti_cli_create_file($path);
+
+	unlink($path);
+	file_put_contents($path, 'someone else');
+
+	expect(cacti_cli_remove_file($handle, $path))->toBeFalse()
+		->and(file_get_contents($path))->toBe('someone else');
+});
+
+test('the create helper never changes or removes a file by name', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/lib/maintenance_cli.php');
+
+	preg_match('/^function cacti_cli_create_file\(.*?^}$/ms', $source, $body);
+
+	expect($body)->toHaveKey(0);
+
+	$code = preg_replace('#/\*.*?\*/#s', '', $body[0]);
+
+	expect($code)->not->toContain('chmod(')
+		->and($code)->not->toContain('unlink(')
+		->and($code)->toContain('cacti_cli_remove_file($handle, $path);');
+});
+
 test('splice_rrd uses the 1.2.31 names and creates every temporary file exclusively', function () {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/cli/splice_rrd.php');
 

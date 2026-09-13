@@ -39,6 +39,7 @@ Cacti CHANGELOG
 -issue: Delete a dead poller_time row by its id instead of its pid so a reused pid cannot delete a new collector's row
 -issue: Keep staged Boost rows when rrdtool pipe restarts are exhausted instead of treating the lost update as written
 -issue: Stage poller output rows that Boost does not already hold when Boost redirect is on instead of dropping them
+-security: Never chmod or remove a maintenance temporary file by name once the name no longer refers to the file that was created
 -issue: Open splice_rrd.php and float_rrdfiles.php temporary files and the debug log in binary mode so Windows does not translate RRD bytes
 -security: Create splice_rrd.php and float_rrdfiles.php temporary files and a new debug log with owner-only permissions
 -issue: ss_netsnmp_lmsensors.php get returns degrees and volts again, as before 1.2.31, so stored lm-sensors values drop 1000x at upgrade; remove any /1000 CDEF added for 1.2.31
