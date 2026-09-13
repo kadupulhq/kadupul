@@ -126,6 +126,16 @@ test('an ordinary page is logged and mailed byte for byte as in 1.2.31', functio
 	expect($GLOBALS['help_mail'])->toBe(array("WARNING: Cacti Page:$name for User:$username Generated a Fatal Error 500!"));
 })->with('ordinary pages');
 
+test('a session user that no longer exists is logged and mailed as in 1.2.31', function () {
+	// get_username() returns the false db_fetch_cell_prepared() gives for no row
+	$GLOBALS['help_username'] = false;
+
+	report('graph_view.php', 1000000);
+
+	expect($GLOBALS['help_log'])->toBe(array('WARNING: Cacti Page:graph_view.php for User: Generated a Fatal Error:500'));
+	expect($GLOBALS['help_mail'])->toBe(array('WARNING: Cacti Page:graph_view.php for User: Generated a Fatal Error 500!'));
+});
+
 test('each page value keeps the 1.2.31 two hour notification cadence', function () {
 	report('graph_view.php?action=tree', 1000000);
 	report('graph_view.php?action=tree', 1000100);
