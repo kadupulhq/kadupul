@@ -8,10 +8,9 @@
 */
 
 /*
- * Web Basic authentication must take the user name only from variables the
- * web server sets after it has authenticated the request. HTTP_* entries are
- * request headers, and PHP fills PHP_AUTH_USER from the Authorization header
- * whether or not the server checked it.
+ * Web Basic authentication reads PHP_AUTH_USER, REMOTE_USER and
+ * REDIRECT_REMOTE_USER in 1.2.31 order. HTTP_* entries are request headers a
+ * client can send, so those copies are never read.
  */
 
 require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
@@ -30,12 +29,12 @@ test('request header variants are not accepted as the Web Basic user', function 
 	}
 });
 
-test('PHP_AUTH_USER without a server-set user is not accepted', function () {
-	expect(basic_identity_username(array('PHP_AUTH_USER' => 'admin')))->toBeFalse();
+test('PHP_AUTH_USER is accepted as the Web Basic user', function () {
+	expect(basic_identity_username(array('PHP_AUTH_USER' => 'admin')))->toBe('admin');
 });
 
-test('the server-set REMOTE_USER wins over PHP_AUTH_USER', function () {
-	expect(basic_identity_username(array('REMOTE_USER' => 'alice', 'PHP_AUTH_USER' => 'admin')))->toBe('alice');
+test('PHP_AUTH_USER is read ahead of REMOTE_USER, in 1.2.31 order', function () {
+	expect(basic_identity_username(array('REMOTE_USER' => 'alice', 'PHP_AUTH_USER' => 'admin')))->toBe('admin');
 });
 
 test('server-set user variables are still accepted', function () {

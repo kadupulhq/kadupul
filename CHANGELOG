@@ -10,6 +10,7 @@ Cacti CHANGELOG
 -security: Skip the Data Input Method repair after a web import by a user without the Data Input Methods permission
 -issue: Stop a template import cleanly when it refuses a Data Input Method input string
 -issue: Treat a registered task owned by another user as still running instead of starting a second copy
+-issue: Accept PHP_AUTH_USER again as the Web Basic user for FPM and CGI servers; request header copies stay ignored
 -issue: Let a login without a session cookie proceed unless it posts the login form token, so kiosk URLs and scripted logins work again
 -issue: Keep remember-me logins signed in when an administrator edits their permissions, groups or realms
 -issue: Keep Never as the LDAP TLS Certificate Requirements default, and log a warning when encrypted LDAP does not verify the server certificate

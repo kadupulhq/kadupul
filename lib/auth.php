@@ -279,10 +279,13 @@ function get_basic_auth_username() {
 		return false;
 	}
 
-	/* HTTP_* entries are request headers, and PHP fills PHP_AUTH_USER from the
-	 * client's Authorization header whether or not the web server checked it.
-	 * Only REMOTE_USER is set by the server once it has authenticated the user. */
-	if (isset($_SERVER['REMOTE_USER'])) {
+	/* 1.2.31 order. FPM and CGI setups often pass only PHP_AUTH_USER, which PHP
+	 * takes from the Authorization header, so it is only as trustworthy as the
+	 * web server's Basic authentication in front of Cacti. HTTP_* entries are
+	 * request headers any client can send, and are never read. */
+	if (isset($_SERVER['PHP_AUTH_USER'])) {
+		$username = str_replace("\\", "\\\\", $_SERVER['PHP_AUTH_USER']);
+	} elseif (isset($_SERVER['REMOTE_USER'])) {
 		$username = str_replace("\\", "\\\\", $_SERVER['REMOTE_USER']);
 	} elseif (isset($_SERVER['REDIRECT_REMOTE_USER'])) {
 		$username = str_replace("\\", "\\\\", $_SERVER['REDIRECT_REMOTE_USER']);

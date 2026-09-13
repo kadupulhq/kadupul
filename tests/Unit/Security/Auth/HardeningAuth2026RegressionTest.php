@@ -57,7 +57,7 @@ test('GHSA-9ffc-rr2g-c8hh: header reads only appear after the auth_method gate',
     expect($guardPos)->not->toBeFalse();
     expect($remoteUserPos)->toBeGreaterThan($guardPos);
     expect($body)->not->toContain("\$_SERVER['HTTP_REMOTE_USER']");
-    expect($body)->not->toContain("\$_SERVER['PHP_AUTH_USER']");
+    expect(strpos($body, "\$_SERVER['PHP_AUTH_USER']"))->toBeGreaterThan($guardPos);
 });
 
 // --- GHSA-3jj2-v5ch-wmq5: LDAP realm boundary ---
