@@ -5,7 +5,7 @@ on:
     tags:
       - 'release/**'
   pull_request:
-    branches: ['1.2.x']
+    branches: ['1.2.x', 'lts/1.2']
     paths:
       - composer.json
       - composer.lock
