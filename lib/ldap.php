@@ -671,7 +671,13 @@ class Ldap {
 						$ldap_group_response = Ldap::isUserInLDAPGroup($ldap_conn, $this->search_base, $this->group_dn, $this->dn);
 					}
 				} elseif ($this->group_member_type == 2) {
-					$filter = cacti_ldap_filter('(|(uid=<username>)(cn=<username>)(userPrincipalName=<username>))', array('username' => $this->username));
+					/* Do a lookup to find this user's true DN. */
+					/* ldap_exop_whoami is not yet included in PHP. For reference, the
+					 * feature request: http://bugs.php.net/bug.php?id=42060
+					 * And the patch against latest PHP release:
+					 * http://cvsweb.netbsd.org/bsdweb.cgi/pkgsrc/databases/php-ldap/files/ldap-ctrl-exop.patch
+					*/
+					$filter = cacti_ldap_filter('(|(uid=<dn>)(cn=<dn>)(userPrincipalName=<dn>))', array('dn' => $this->dn));
 					$true_dn_result = ldap_search($ldap_conn, $this->search_base, $filter, array('dn'));
 					$first_entry    = ldap_first_entry($ldap_conn, $true_dn_result);
 

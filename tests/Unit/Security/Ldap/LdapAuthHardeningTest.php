@@ -77,12 +77,11 @@ test('Getcn distinguishes no user from many users', function () use ($ldapSource
 	expect($body)->toContain('LdapError::SearchFoundMultiUser)');
 });
 
-test('username group membership searches uid cn and UPN with the login name', function () use ($ldapSource) {
+test('username group membership looks up the true DN with the escaped bind DN', function () use ($ldapSource) {
 	$start = strpos($ldapSource, 'function Authenticate()');
 	$body  = substr($ldapSource, $start, 8000);
 
-	expect($body)->toContain("cacti_ldap_filter('(|(uid=<username>)(cn=<username>)(userPrincipalName=<username>))'");
-	expect($body)->toContain("'username' => \$this->username");
+	expect($body)->toContain("cacti_ldap_filter('(|(uid=<dn>)(cn=<dn>)(userPrincipalName=<dn>))', array('dn' => \$this->dn))");
 });
 
 test('bind timeout is gated on LDAP_OPT_TIMEOUT', function () use ($ldapSource) {
