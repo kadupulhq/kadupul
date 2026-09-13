@@ -4530,7 +4530,9 @@ function debug_log_clear($type = '') {
 /**
  * debug_log_return - returns the debug log for a particular category.
  *
- * NOTE: Escaping is done in the insert functions.
+ * NOTE: Entries are returned as stored.  Local callers escape text with
+ * __esc() before inserting it, and run_data_query() passes entries from a
+ * Remote Data Collector through debug_log_escape() when it receives them.
  *
  * @param $type - the 'category' to return the debug log for.
  *
