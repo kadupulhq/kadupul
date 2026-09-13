@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -59,6 +60,35 @@ case 'countdown':
 	ob_start();
 
 	$guest_account = true;
+
+	/* poller_realtime.php polls every device behind the graph, so refuse
+	 * before any polling when real-time is off or the graph render below
+	 * would deny this user */
+	$local_graph_id = get_filter_request_var('local_graph_id');
+
+	if (read_config_option('realtime_enabled') == '') {
+		$denied = __('Real-time has been disabled by your administrator.');
+	} elseif (empty($local_graph_id) || ($_SESSION['sess_user_id'] > 0 && !is_graph_allowed($local_graph_id, $_SESSION['sess_user_id']))) {
+		$denied = __('Access Denied');
+	}
+
+	if (isset($denied)) {
+		ob_end_clean();
+
+		$graph_contents = rrdtool_create_error_image($denied);
+
+		if ($graph_contents === false) {
+			$graph_contents = file_get_contents(__DIR__ . '/images/cacti_error_image.png');
+		}
+
+		print json_encode(array(
+			'local_graph_id' => $local_graph_id,
+			'data'           => base64_encode($graph_contents),
+			'image_format'   => 'png'
+		));
+
+		exit;
+	}
 
 	switch (get_request_var('action')) {
 	case 'init':
@@ -214,7 +244,7 @@ case 'countdown':
 	$graph_rrd      = read_config_option('realtime_cache_path') . '/user_' . $hash . '_lgi_' . $local_graph_id . '.png';
 	$php_binary     = cacti_escapeshellcmd(read_config_option('path_php_binary'));
 	$script_path    = cacti_escapeshellarg($config['base_path'] . '/poller_realtime.php');
-	$args           = '--graph=' . $local_graph_id . ' --interval=' . $graph_data_array['ds_step'] . ' --poller_id=' . $hash;
+	$args           = cacti_escapeshellarg('--graph=' . $local_graph_id) . ' ' . cacti_escapeshellarg('--interval=' . $graph_data_array['ds_step']) . ' ' . cacti_escapeshellarg('--poller_id=' . $hash);
 
 	shell_exec($php_binary . ' -q ' . $script_path . ' ' . $args);
 
