@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.x
+-security: Require a normal login after moving off the retired no-authentication method
 -security: Take the Web Basic user name only from server-set variables
 -security: Refuse remember-me and Web Basic logins for disabled accounts
 -issue: Send device data query and graph template removal and tree node deletion by POST, which the CSRF guard now requires

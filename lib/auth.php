@@ -4939,13 +4939,13 @@ function auth_login_create_user_from_template($username, $realm) {
  *
  * @param  (int)  $auth_method - The current auth method
  *
- * @return (bool) Returns false on failure to set user account, otherwise redirects
+ * @return (void) Redirects to the login flow when authentication was not set
  */
 function check_reset_no_authentication($auth_method) {
 	global $config, $error, $error_msg;
 
 	if ($auth_method == 0) {
-		$admin_id = db_execute_prepared('SELECT id
+		$admin_id = db_fetch_cell_prepared('SELECT id
 			FROM user_auth
 			WHERE id = ?',
 			array(read_config_option('admin_user')));
@@ -5000,24 +5000,24 @@ function check_reset_no_authentication($auth_method) {
 			$error     = true;
 			$error_msg = __('Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found.');
 
-			return false;
+			cacti_log('ERROR: ' . $error_msg, false, 'AUTH');
+		} else {
+			/* keep the stored password so the administrator can still sign in,
+			 * and require a new one at that login */
+			db_execute_prepared("UPDATE user_auth SET
+				must_change_password = 'on',
+				password_change = 'on'
+				WHERE id = ?",
+				array($admin_id));
 		}
 
-		// Authentication method is currently set to none
-		// lets switch this to basic and allow setting of
-		// a password.
-		db_execute_prepared("UPDATE user_auth SET
-			password = '',
-			must_change_password = 'on',
-			password_change = 'on'
-			WHERE id = ?",
-			array($admin_id));
-
+		/* Nothing about this request identifies the administrator, so switch to
+		 * local authentication without starting a session.  Staying on no
+		 * authentication would leave every page open.  Without a session,
+		 * auth_changepassword.php sends the browser on to the login page. */
 		$auth_method = 1;
 		set_config_option('auth_method', $auth_method, true);
 
-		$_SESSION['sess_user_id'] = $admin_id;
-		$_SESSION['sess_change_password'] = true;
 		header ('Location: ' . $config['url_path'] . 'auth_changepassword.php?action=force&ref=' . urlencode(validate_redirect_url(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'index.php')));
 		exit;
 	}
