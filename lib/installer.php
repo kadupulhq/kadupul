@@ -2867,7 +2867,7 @@ class Installer implements JsonSerializable {
 		if (!$backgroundNeeded) {
 			log_install_debug('background', PHP_EOL . '----------------' . PHP_EOL . 'Check Expire' . PHP_EOL . '----------------');
 
-			$backgroundDateStarted = DateTime::createFromFormat('U.u', $backgroundTime);
+			$backgroundDateStarted = Installer::dateFromMicrotime($backgroundTime);
 			$backgroundLast = read_config_option('install_updated', true);
 
 			log_install_debug('background', 'backgroundDateStarted = ' . $backgroundDateStarted->format('Y-m-d H:i:s') . PHP_EOL);
@@ -3620,13 +3620,13 @@ class Installer implements JsonSerializable {
 
 		log_install_high('', "beginInstall(): '$backgroundTime' (time) != '$backgroundArg' (arg) && '-b' != '$backgroundArg' (arg)");
 		if ("$backgroundTime" != "$backgroundArg" && "-b" != "$backgroundArg") {
-			$dateTime = DateTime::createFromFormat('U.u', $backgroundTime);
+			$dateTime = Installer::dateFromMicrotime($backgroundTime);
 
 			if ($dateTime === false) {
 				$dateTime = new DateTime();
 			}
 
-			$dateArg = DateTime::createFromFormat('U.u', $backgroundArg);
+			$dateArg = Installer::dateFromMicrotime($backgroundArg);
 
 			if ($dateArg === false) {
 				$dateArg = new DateTime();
@@ -3671,8 +3671,8 @@ class Installer implements JsonSerializable {
 		$backgroundDone = microtime(true);
 		set_install_config_option('install_complete', $backgroundDone);
 
-		$dateBack = DateTime::createFromFormat('U.u', $backgroundTime);
-		$dateTime = DateTime::createFromFormat('U.u', $backgroundDone);
+		$dateBack = Installer::dateFromMicrotime($backgroundTime);
+		$dateTime = Installer::dateFromMicrotime($backgroundDone);
 
 		log_install_always('', __('Installation was started at %s, completed at %s', (string) $dateBack->format('Y-m-d H:i:s'), (string) $dateTime->format('Y-m-d H:i:s')));
 
@@ -3734,6 +3734,21 @@ class Installer implements JsonSerializable {
 				log_install_always('', __('Failed to set PHP option %s, is %s (should be %s)', $option_name, $value, $option_value));
 			}
 		}
+	}
+
+	/*
+	 * PHP casts a float to a string with 14 significant digits, so a timestamp
+	 * within 50 microseconds of a whole second loses the fraction 'U.u' needs.
+	 * Fall back only then, so every value that parsed before keeps its output.
+	 */
+	private static function dateFromMicrotime($value) {
+		$date = DateTime::createFromFormat('U.u', $value);
+
+		if ($date === false && is_numeric($value)) {
+			$date = DateTime::createFromFormat('U.u', sprintf('%.6F', $value));
+		}
+
+		return $date;
 	}
 
 	private static function fullSyncDataCollectorLog($poller_ids, $format) {
