@@ -33,6 +33,19 @@ $runPerl = function (string $script, array $args): string {
 	return $output;
 };
 
+/* runs a script with $^O set first, which selects the FreeBSD or the other df command */
+$runPerlAs = function (string $os, string $script, array $args): string {
+	$process = proc_open(array_merge(array('perl', '-e', '$^O = shift @ARGV; $script = shift @ARGV; do $script;', $os, $script), $args), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+
+	$output = stream_get_contents($pipes[1]);
+	fclose($pipes[1]);
+	fclose($pipes[2]);
+	proc_close($process);
+
+	/* df block counts drift between two runs; the percentage and layout do not */
+	return preg_replace('/megabytes:[0-9]+/', 'megabytes:N', $output);
+};
+
 beforeEach(function () {
 	if (trim((string) shell_exec('command -v perl')) === '') {
 		$this->markTestSkipped('perl is not installed');
@@ -47,10 +60,11 @@ beforeEach(function () {
 });
 
 afterEach(function () {
-	foreach (array('second-shell', 'access_log', 'access log') as $name) {
+	foreach (array('second-shell', 'access_log', 'access log', 'diskfree-1.2.31.pl') as $name) {
 		@unlink($this->dir . '/' . $name);
 	}
 
+	@rmdir($this->dir . '/with space');
 	@rmdir($this->dir);
 });
 
@@ -83,4 +97,43 @@ test('webhits.pl still counts lines for plain and quoted paths as 1.2.31 did', f
 		->and($runPerl($scriptsDir . '/webhits.pl', array('"' . $this->dir . '/access log"')))->toBe('2')
 		->and($runPerl($scriptsDir . '/webhits.pl', array("'" . $this->dir . "/access log'")))->toBe('2')
 		->and($runPerl($scriptsDir . '/webhits.pl', array($this->dir . '/missing_log')))->toBe('');
+});
+
+test('diskfree.pl gives the 1.2.31 output for legitimate arguments on both df commands', function () use ($scriptsDir, $runPerlAs) {
+	$guard = '# the argument is pasted into a shell command, so refuse shell metacharacters' . "\n"
+		. 'if ($ARGV[0] =~ /[`\$;&|<>\r\n]/) {' . "\n\texit;\n}\n\n";
+
+	/* removing the guard must give back the 1.2.31 file byte for byte */
+	$legacy = str_replace($guard, '', file_get_contents($scriptsDir . '/diskfree.pl'), $count);
+
+	expect($count)->toBe(1)
+		->and(hash('sha256', $legacy))->toBe('498b0e999d4f3e0f3df6e734b79ab823d48bf39723e73d10cb2303487d8ee972');
+
+	file_put_contents($this->dir . '/diskfree-1.2.31.pl', $legacy);
+	mkdir($this->dir . '/with space');
+
+	$df_line = explode("\n", trim((string) shell_exec('df -P /')));
+	$device  = preg_split('/\s+/', $df_line[1])[0];
+
+	$cases = array(
+		'device path'            => array($device),
+		'mount point'            => array('/'),
+		'no argument'            => array(),
+		'path with a space'      => array($this->dir . '/with space'),
+		'quoted path with space' => array('"' . $this->dir . '/with space"'),
+	);
+
+	$old = array();
+	$new = array();
+
+	foreach (array('freebsd', 'linux') as $os) {
+		foreach ($cases as $label => $args) {
+			$old["$os df command, $label"] = $runPerlAs($os, $this->dir . '/diskfree-1.2.31.pl', $args);
+			$new["$os df command, $label"] = $runPerlAs($os, $scriptsDir . '/diskfree.pl', $args);
+		}
+	}
+
+	/* at least one df command must work on this host, or the comparison proves nothing */
+	expect($new)->toBe($old)
+		->and(implode('', $new))->toContain('megabytes:');
 });

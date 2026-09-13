@@ -28,7 +28,7 @@
 namespace RrdMaintenanceTraversalTest;
 
 if (!function_exists(__NAMESPACE__ . '\remove_files')) {
-	$root = dirname(__DIR__, 2);
+	$root = dirname(__DIR__, 4);
 
 	$source = file_get_contents($root . '/poller_maintenance.php');
 	preg_match('/^function remove_files\(.*?^}\n/ms', $source, $remove);
