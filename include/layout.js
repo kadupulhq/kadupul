@@ -780,7 +780,7 @@ function handleTableNav() {
 		cactiReturnTo(url);
 	});
 
-	$('.cactiPostAction').on('click', function(event) {
+	$('.cactiPostAction').off('click.cactiPostAction').on('click.cactiPostAction', function(event) {
 		event.preventDefault();
 		var url = $(this).data('url') || $(this).attr('href');
 		submitPageUsingPost(url);
