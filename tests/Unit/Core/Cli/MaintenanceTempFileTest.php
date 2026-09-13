@@ -101,6 +101,68 @@ test('the debug log refuses a symlink and a directory', function () {
 		->and(cacti_cli_open_log($this->dir))->toBe("Refusing to append to '{$this->dir}' because it is not a regular file");
 });
 
+test('created files are owner-only under a 022 umask, which is restored afterwards', function () {
+	$previous = umask(022);
+
+	try {
+		$path   = $this->dir . '/new.dump.12345';
+		$handle = cacti_cli_create_file($path);
+
+		expect($handle)->toBeResource()
+			->and(umask())->toBe(022);
+
+		fclose($handle);
+
+		$log = cacti_cli_open_log($this->dir . '/clearer.log');
+
+		expect($log)->toBeResource()
+			->and(umask())->toBe(022);
+
+		fclose($log);
+		clearstatcache();
+
+		expect(fileperms($path) & 0777)->toBe(0600)
+			->and(fileperms($this->dir . '/clearer.log') & 0777)->toBe(0600);
+	} finally {
+		umask($previous);
+	}
+});
+
+test('the umask is restored when a name is refused or cannot be created', function () {
+	$previous = umask(022);
+
+	try {
+		$link = $this->dir . '/new.dump.12345';
+
+		symlink($this->victim, $link);
+
+		expect(cacti_cli_create_file($link))->toBeString()
+			->and(umask())->toBe(022)
+			->and(cacti_cli_create_file($this->dir . '/missing/new.dump.1'))->toBe("Unable to create '{$this->dir}/missing/new.dump.1'")
+			->and(umask())->toBe(022);
+	} finally {
+		umask($previous);
+	}
+});
+
+test('an existing debug log keeps its mode', function () {
+	$path = $this->dir . '/clearer.log';
+
+	file_put_contents($path, "one\n");
+	chmod($path, 0644);
+
+	$log = cacti_cli_open_log($path);
+
+	expect($log)->toBeResource();
+
+	fwrite($log, "two\n");
+	fclose($log);
+	clearstatcache();
+
+	expect(fileperms($path) & 0777)->toBe(0644)
+		->and(file_get_contents($path))->toBe("one\ntwo\n");
+});
+
 test('splice_rrd uses the 1.2.31 names and creates every temporary file exclusively', function () {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/cli/splice_rrd.php');
 

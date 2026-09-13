@@ -84,10 +84,26 @@ function cacti_cli_create_file($path) {
 		return sprintf("Refusing to overwrite existing file '%s'", $path);
 	}
 
+	/* A new file gets 0666 less the process umask, which commonly leaves a
+	 * dump or backup of an RRD readable by other local users. The umask is
+	 * narrowed for the create itself so the file is 0600 from the moment it
+	 * exists, and restored before anything else runs. */
+	$umask  = umask(0077);
 	$handle = @fopen($path, 'x');
+	umask($umask);
 
 	if ($handle === false) {
 		return sprintf("Unable to create '%s'", $path);
+	}
+
+	/* second safeguard where umask() has no effect; this file is ours */
+	$stat = fstat($handle);
+
+	if ($stat === false || (($stat['mode'] & 0777) !== 0600 && !chmod($path, 0600))) {
+		fclose($handle);
+		unlink($path);
+
+		return sprintf("Unable to restrict '%s' to its owner", $path);
 	}
 
 	return $handle;
