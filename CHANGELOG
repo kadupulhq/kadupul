@@ -2,6 +2,7 @@ Cacti CHANGELOG
 
 1.2.x
 -issue: Parse installer start and finish times that fall on a whole second instead of crashing
+-security: Add optional $trusted_proxies so proxy client address and HTTPS headers are honoured only from listed proxies
 -issue: Declare GPL-2.0-or-later in composer.json, the license the source headers grant
 -security: Pass over a disabled configured administrator when moving off the retired no-authentication method
 -security: Skip the unknown-username password hash for blank passwords, as a known username does

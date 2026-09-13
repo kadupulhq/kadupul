@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -216,8 +217,27 @@ $disable_log_rotation = false;
  *
  * NOTE: The following will always be checked:
  *		'REMOTE_ADDR',
+ *
+ * NOTE: Without $trusted_proxies below, any client can set these
+ * headers, and Remote Data Collector authorization uses the
+ * resulting address.  Dash-style names only take effect when
+ * $trusted_proxies is set; otherwise use the HTTP_* names.
  */
 $proxy_headers = null;
+
+/**
+ * Optional, and recommended when $proxy_headers is used: the
+ * addresses or CIDR ranges of the reverse proxies allowed to
+ * supply those headers, for example:
+ *
+ *   $trusted_proxies = array('127.0.0.1', '10.1.0.0/24', '2001:db8::/64');
+ *
+ * When set, the headers, including X-Forwarded-Proto for the
+ * session cookie, are only honoured from a listed proxy, and the
+ * right-most address that is not a listed proxy is used.  When
+ * unset, the headers are handled as in earlier releases.
+ */
+$trusted_proxies = null;
 
 /*
  * Set this to define the default i18n handler if not set
