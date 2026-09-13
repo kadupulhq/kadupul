@@ -11,7 +11,7 @@ jobs:
   # A called workflow can only narrow the caller's token, never widen it, so
   # every scope the reusable jobs need has to be granted here.
   release:
-    uses: kadupulhq/.github/.github/workflows/release.yml@917f4d4369474e947d29252a7597868927f3a38a # main
+    uses: kadupulhq/.github/.github/workflows/release.yml@917f4d4369474e947d29252a7597868927f3a38a # v1.0.0
     permissions:
       contents: write     # create the release and upload its assets
       packages: write     # push the image, its signature and its attestation
