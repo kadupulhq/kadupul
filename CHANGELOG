@@ -22,6 +22,7 @@ Cacti CHANGELOG
 -issue: Push out graph template input values that are NULL instead of aborting, as 1.2.31 did
 -issue: Finish an upgrade with missing core tables such as poller_output_boost_local_data_ids, logging a warning, as 1.2.31 did
 -issue: Accept a literal connection argument to db_check_reconnect() again, as 1.2.31 did
+-security: Quote graph, export and fetch arguments, including user font settings, the way the RRDtool command parser reads them
 -issue: Declare GPL-2.0-or-later in composer.json, the license the source headers grant
 -security: Pass over a disabled configured administrator when moving off the retired no-authentication method
 -security: Skip the unknown-username password hash for blank passwords, as a known username does
