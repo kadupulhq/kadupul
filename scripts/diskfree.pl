@@ -8,6 +8,11 @@ $ENV{PATH} = '/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/sbin';
 #
 my $osname = "$^O";
 
+# the argument is pasted into a shell command, so refuse shell metacharacters
+if ($ARGV[0] =~ /[`\$;&|<>\r\n]/) {
+	exit;
+}
+
 if ($osname =~ 'freebsd') {
   # FreeBSD have other parameters
   $dfcmd="df -k -P $ARGV[0] | grep -v Filesystem |";

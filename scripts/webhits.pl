@@ -9,6 +9,11 @@ if ($ARGV[0] eq "") {
 	$log_path = $ARGV[0];
 }
 
+# the path is pasted into a shell command, so refuse shell metacharacters
+if ($log_path =~ /[`\$;&|<>\r\n]/) {
+	exit;
+}
+
 open(PROCESS,"wc -l $log_path |");
 $webhits = <PROCESS>;
 close(PROCESS);
