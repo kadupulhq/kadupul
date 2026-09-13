@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  +-------------------------------------------------------------------------+
  | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
@@ -111,7 +112,7 @@ test('the liveness guard falls back when procfs identity is unreadable', functio
 	$body = substr($src, $start, strpos($src, "\n}\n", $start) - $start);
 
 	expect($body)->toContain('$identity_matches !== null')
-		->and($body)->toContain('return posix_kill($pid, 0);');
+		->and($body)->toContain('return cacti_process_signalable($pid);');
 });
 
 test('all common PHP executables require script identity', function () {

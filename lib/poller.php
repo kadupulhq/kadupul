@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -2556,7 +2557,7 @@ function cacti_process_still_running($pid) {
 
 	$pid = intval($pid);
 
-	if (!function_exists('posix_kill') || !posix_kill($pid, 0)) {
+	if (!cacti_process_signalable($pid)) {
 		return false;
 	}
 
@@ -2572,7 +2573,7 @@ function cacti_process_still_running($pid) {
 	 * existence test, but re-check it here rather than trusting the result
 	 * from the top of the function, which can now be stale if the pid exited
 	 * in the window between that check and these file reads. */
-	return posix_kill($pid, 0);
+	return cacti_process_signalable($pid);
 }
 
 /**
