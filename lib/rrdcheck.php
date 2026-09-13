@@ -160,7 +160,9 @@ function do_rrdcheck($thread_id = 1) {
 			$file = $rrdval['data_source_path'];
 
 			if ($use_proxy) {
-				$file_exists = rrdtool_execute('file_exists ' . rrdtool_quote_argument($file), true, RRDTOOL_OUTPUT_BOOLEAN, false, 'RRDCHECK');
+				/* RRDproxy runs file_exists in PHP on arguments split at spaces and keeps
+				 * quotes, so it gets the bare path from the path command builder */
+				$file_exists = rrdtool_execute_path_command('file_exists', $file, '', true, RRDTOOL_OUTPUT_BOOLEAN, false, 'RRDCHECK');
 			} else {
 				clearstatcache();
 				$file_exists = file_exists($file);

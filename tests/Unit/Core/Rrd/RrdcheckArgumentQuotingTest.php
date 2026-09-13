@@ -78,10 +78,11 @@ test('rrdcheck info and fetch arguments use the rrdtool quoter', function () use
 		->and($rrdcheckSource)->toContain("rrdtool_execute('info ' . rrdtool_quote_argument(\$file)");
 });
 
-test('both RRDproxy commands in rrdcheck quote the path the same way', function () use ($rrdcheckSource) {
-	expect($rrdcheckSource)->toContain("rrdtool_execute('file_exists ' . rrdtool_quote_argument(\$file)")
-		->and($rrdcheckSource)->toContain("rrdtool_execute('info ' . rrdtool_quote_argument(\$file)")
-		->and($rrdcheckSource)->not->toContain("'file_exists ' . cacti_escapeshellarg(");
+test('rrdcheck quotes info for rrdtool and sends file_exists as a bare RRDproxy path command', function () use ($rrdcheckSource) {
+	/* rrdtool parses info, but RRDproxy runs file_exists in PHP on arguments split at spaces */
+	expect($rrdcheckSource)->toContain("rrdtool_execute('info ' . rrdtool_quote_argument(\$file)")
+		->and($rrdcheckSource)->toContain("rrdtool_execute_path_command('file_exists', \$file, '', true, RRDTOOL_OUTPUT_BOOLEAN, false, 'RRDCHECK')")
+		->and($rrdcheckSource)->not->toMatch("/'file_exists ' \\. (rrdtool_quote_argument|cacti_escapeshellarg)\\(/");
 
 	$paths  = array('/var/www/cacti/rra/1/traffic_in_1.rrd', './2/a b.rrd', 'C:\\cacti\\rra\\x.rrd');
 	$legacy = cacti_test_rrd_harness_run(array('action' => 'legacy_quote', 'values' => $paths));

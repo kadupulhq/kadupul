@@ -17,16 +17,28 @@
  * fingerprint check, and the proxy honours it, so every later RRDtool command
  * and its output crossed the network in clear text. A local stand-in proxy
  * speaks the same framing and cipher as Cacti/rrdproxy and records whether
- * each client packet arrived encrypted.
+ * each client packet arrived encrypted. It also answers file_exists the way
+ * RRDproxy does: a PHP call on the arguments split at spaces, quotes kept.
  */
+
+require_once dirname(__DIR__, 3) . '/Helpers/RrdGraphHarness.php';
 
 $rrdProxyRoot = dirname(__DIR__, 4);
 
-function rrd_proxy_channel_run(string $root) : array {
+/**
+ * @param array<int, array<int, string>> $calls - ('path', command, path) or ('quoted', command, path),
+ *                                                where {work} in a path is the run's work directory
+ * @param array<int, string>             $touch - files to create in the work directory first
+ */
+function rrd_proxy_channel_run(string $root, array $calls = array(), array $touch = array()) : array {
 	require_once $root . '/include/vendor/autoload.php';
 
 	$work = sys_get_temp_dir() . '/cacti-rrdp-' . bin2hex(random_bytes(6));
 	mkdir($work, 0700);
+
+	foreach ($touch as $name) {
+		touch($work . '/' . $name);
+	}
 
 	$proxyKey  = phpseclib3\Crypt\RSA::createKey(2048);
 	$clientKey = phpseclib3\Crypt\RSA::createKey(2048);
@@ -38,9 +50,20 @@ function rrd_proxy_channel_run(string $root) : array {
 		'client_public'  => $clientKey->getPublicKey()->toString('PKCS8'),
 		'fingerprint'    => $proxyKey->getPublicKey()->getFingerprint(),
 		'root'           => $root,
+		'work'           => $work,
+		'calls'          => $calls,
 	);
 
 	file_put_contents($work . '/keys.json', json_encode($keys));
+
+	$fsrc    = file_get_contents($root . '/lib/functions.php');
+	$shipped = "<?php\n";
+
+	foreach (array('cacti_escapeshellarg', 'cacti_has_control_chars', 'cacti_rrdtool_valid_path', 'cacti_rrdtool_valid_path_token') as $name) {
+		$shipped .= cacti_test_rrd_function_source($fsrc, $name) . "\n\n";
+	}
+
+	file_put_contents($work . '/shipped.php', $shipped);
 
 	$proxy = <<<'PHP'
 <?php
@@ -131,7 +154,17 @@ while (($raw = proxy_read_message($client)) !== false) {
 		continue;
 	}
 
-	$reply = "filename = \"t.rrd\"\nOK u:0.00 s:0.00 r:0.00";
+	/* Cacti/rrdproxy lib/client.php: trim, split the verb, then $options = explode(' ', $cmd_options)
+	 * and call_user_func_array($cmd, $options); include/global.php: RRD_OK 'OK u:0.00', RRD_ERROR 'ERROR:' */
+	$parts = explode(' ', trim($command), 2);
+
+	if ($parts[0] === 'file_exists') {
+		$status = call_user_func_array('file_exists', explode(' ', $parts[1] ?? ''));
+		$reply  = ($status === true) ? 'OK u:0.00' : 'ERROR:';
+	} else {
+		$reply = "filename = \"t.rrd\"\nOK u:0.00 s:0.00 r:0.00";
+	}
+
 	socket_write($client, ($encryption ? proxy_encrypt($reply, $client_public) : $reply) . "_EOT_\r\n");
 }
 
@@ -143,6 +176,7 @@ PHP;
 $keys = json_decode(file_get_contents($argv[1]), true);
 $port = (int) $argv[2];
 
+define('CACTI_ESCAPE_CHARACTER', '"');
 define('RRDTOOL_OUTPUT_NULL', 0);
 define('RRDTOOL_OUTPUT_STDOUT', 1);
 define('RRDTOOL_OUTPUT_STDERR', 2);
@@ -171,14 +205,27 @@ function read_config_option($name, $force = false) {
 function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '') {
 }
 
+require $keys['work'] . '/shipped.php';
 require $keys['root'] . '/include/vendor/autoload.php';
 require $keys['root'] . '/lib/rrd.php';
 
 $rrdp   = __rrd_proxy_init();
 $result = __rrd_proxy_execute('info t.rrd', false, RRDTOOL_OUTPUT_STDOUT, $rrdp);
+$calls  = array();
+
+foreach ($keys['calls'] as $call) {
+	$path = str_replace('{work}', $keys['work'], $call[2]);
+
+	if ($call[0] == 'path') {
+		$calls[] = rrdtool_execute_path_command($call[1], $path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdp, 'RRDCHECK');
+	} else {
+		$calls[] = rrdtool_execute($call[1] . ' ' . rrdtool_quote_argument($path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdp, 'RRDCHECK');
+	}
+}
+
 __rrd_proxy_close($rrdp);
 
-print json_encode(array('connected' => $rrdp !== false, 'result' => $result, 'encryption' => $GLOBALS['encryption']));
+print json_encode(array('connected' => $rrdp !== false, 'result' => $result, 'calls' => $calls, 'encryption' => $GLOBALS['encryption']));
 PHP;
 
 	file_put_contents($work . '/proxy.php', $proxy);
@@ -205,7 +252,7 @@ PHP;
 
 	rmdir($work);
 
-	return array('client' => json_decode($clientOut, true) ?? $clientOut, 'packets' => $packets ?? array());
+	return array('work' => $work, 'client' => json_decode($clientOut, true) ?? $clientOut, 'packets' => $packets ?? array());
 }
 
 test('the RRDproxy client keeps message encryption on after the handshake', function () use ($rrdProxyRoot) {
@@ -230,3 +277,32 @@ test('the RRDproxy client keeps message encryption on after the handshake', func
 test('lib/rrd.php never asks the proxy to disable encryption', function () use ($rrdProxyRoot) {
 	expect(file_get_contents($rrdProxyRoot . '/lib/rrd.php'))->not->toContain('setcnn encryption');
 });
+
+test('RRDproxy file_exists finds existing paths, including one with an apostrophe, and reports missing ones', function () use ($rrdProxyRoot) {
+	$run = rrd_proxy_channel_run($rrdProxyRoot, array(
+		array('path', 'file_exists', "{work}/it's.rrd"),
+		array('path', 'file_exists', '{work}/plain.rrd'),
+		array('path', 'file_exists', "{work}/gone's.rrd"),
+		array('path', 'file_exists', '{work}/missing.rrd'),
+		array('quoted', 'file_exists', "{work}/it's.rrd"),
+		array('quoted', 'file_exists', '{work}/plain.rrd'),
+	), array("it's.rrd", 'plain.rrd'));
+
+	expect($run['client'])->toBeArray()
+		->and($run['client']['connected'])->toBeTrue();
+
+	/* the bare path command RRDcheck now sends */
+	expect(array_slice($run['client']['calls'], 0, 4))->toBe(array(true, true, false, false));
+
+	/* the quoted form RRDcheck sent before: RRDproxy keeps the quotes, so no path is found */
+	expect(array_slice($run['client']['calls'], 4, 2))->toBe(array(false, false));
+
+	$commands = array_column($run['packets'], 'command');
+
+	expect($commands)->toContain('file_exists ' . $run['work'] . "/it's.rrd")
+		->and($commands)->toContain('file_exists ' . $run['work'] . '/missing.rrd');
+
+	foreach ($run['packets'] as $packet) {
+		expect($packet['encrypted'])->toBeTrue();
+	}
+})->skip(!extension_loaded('sockets'), 'the sockets extension is not loaded');
