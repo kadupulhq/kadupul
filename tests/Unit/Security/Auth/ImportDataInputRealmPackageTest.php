@@ -28,9 +28,10 @@ namespace ImportDataInputRealmPackageTest;
 if (!function_exists(__NAMESPACE__ . '\import_package')) {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/lib/import.php');
 	preg_match('/^function import_package\(.*?^}\n/ms', $source, $match);
+	preg_match('/^function import_package_refused_hashes\(.*?^}\n/ms', $source, $preflight);
 
 	// test-only eval of source read from this repository, not external input
-	eval('namespace ' . __NAMESPACE__ . '; ' . $match[0]);
+	eval('namespace ' . __NAMESPACE__ . '; ' . $match[0] . ($preflight[0] ?? ''));
 }
 
 function import_validate_signature($xmlfile) : bool {
@@ -73,6 +74,10 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 }
 
 function cacti_log($message, $output = false, $environ = 'CMDPHP', $level = '') {
+}
+
+function cacti_sizeof($array) {
+	return is_array($array) ? count($array) : 0;
 }
 
 function __($text, ...$args) {

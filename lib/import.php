@@ -693,6 +693,11 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 		}
 	}
 
+	/* without the realm, a dependent can sit in an earlier file than the method it needs, so classify the whole package first */
+	if (!$data_input_allowed) {
+		$refused_hashes = import_package_refused_hashes($data['files']['file'], $profile_id, $remove_orphans, $replace_svalues, $import_hashes, $class);
+	}
+
 	if (!$preview) {
 		cacti_log('Processing Files for Import', false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 	} else {
@@ -834,6 +839,41 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 	}
 
 	return array($debug_data, $filestatus);
+}
+
+/* preview every XML file of a package until no further object is refused, so each file is then imported
+ * knowing every Data Input Method skipped anywhere in the package and everything that uses one */
+function import_package_refused_hashes($package_files, $profile_id, $remove_orphans, $replace_svalues, $import_hashes, $class) {
+	global $preview_only, $import_messages;
+
+	$saved_preview  = $preview_only;
+	$saved_messages = $import_messages;
+	$preview_only   = true;
+	$refused_hashes = array();
+
+	do {
+		$refused_count = cacti_sizeof($refused_hashes);
+
+		foreach ($package_files as $f) {
+			$name            = $f['name'];
+			$normalized_name = str_replace('\\', '/', $name);
+
+			/* the names import_package() does not hand to import_xml_data() */
+			if (strpos($name, chr(0)) !== false || preg_match('#(^|/)\.\.(/|$)#', $normalized_name) || preg_match('#^([/\\\\]|[A-Za-z]:)#', $name)
+				|| strpos($name, 'scripts/') !== false || strpos($name, 'resource/') !== false) {
+				continue;
+			}
+
+			$fdata = base64_decode($f['data']);
+
+			import_xml_data($fdata, false, $profile_id, $remove_orphans, $replace_svalues, $import_hashes, $class, false, $refused_hashes);
+		}
+	} while (cacti_sizeof($refused_hashes) > $refused_count);
+
+	$preview_only    = $saved_preview;
+	$import_messages = $saved_messages;
+
+	return $refused_hashes;
 }
 
 function xml_to_graph_template($hash, &$xml_array, &$hash_cache, $hash_version, $remove_orphans = false) {

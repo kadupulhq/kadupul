@@ -33,7 +33,7 @@ if (!function_exists(__NAMESPACE__ . '\import_xml_data')) {
 		'xml_detect_ignorable_hash_cache', 'compare_data', 'resolve_hash_to_id', 'parse_xml_hash', 'check_hash_type',
 		'check_hash_version', 'import_validate_data_source_item', 'xml_character_decode', 'import_is_base64_encoded',
 		'import_xml_record_refused', 'import_xml_refused_reference', 'import_xml_refuse_dependent',
-		'import_xml_unresolved_data_input', 'import_package'
+		'import_xml_unresolved_data_input', 'import_package', 'import_package_refused_hashes'
 	);
 
 	/* helpers a later fix adds are simply absent before it */
@@ -166,9 +166,11 @@ function update_replication_crc($poller_id, $variable) {
 function generate_data_input_field_sequences($input_string, $data_input_id) {
 }
 
-/* only reached when a graph template is not skipped; recorded rather than imported */
+/* only reached when a graph template is not skipped; an import is recorded, a preview writes nothing */
 function xml_to_graph_template($hash, &$xml_array, &$hash_cache, $hash_version, $remove_orphans = false) {
-	$GLOBALS['ifl_graph_templates'][] = $hash;
+	if (!$GLOBALS['preview_only']) {
+		$GLOBALS['ifl_graph_templates'][] = $hash;
+	}
 
 	return array();
 }
@@ -594,4 +596,48 @@ test('the installer passes its own decision only from an installer entry point',
 
 	expect($body)->toContain("\$data_input_allowed = (defined('IN_CACTI_INSTALL') || !\$config['is_web']) ? true : null;")
 		->and($body)->toContain("\$info['class'], false, \$data_input_allowed);");
+});
+
+/* a graph template in one file uses a data template in another, whose method is in a third */
+$chainFiles = function (bool $reverse) use ($methodXml, $templateXml, $graphXml, $methodHash, $dtHash, $gtHash): array {
+	$files = array(
+		'graph.xml'    => array('hash_000103' . $gtHash => $graphXml),
+		'template.xml' => array('hash_010103' . $dtHash => $templateXml),
+		'method.xml'   => array('hash_030103' . $methodHash => $methodXml('/usr/local/bin/uptime-probe <host>')),
+	);
+
+	return $reverse ? array_reverse($files, true) : $files;
+};
+
+test('a graph template in an earlier file than the template and refused method it depends on is skipped', function () use ($runPackage, $chainFiles, $dtHash, $gtHash, $pointsAtNothing) {
+	$runPackage($chainFiles(false));
+
+	expect($GLOBALS['ifl_graph_templates'])->toBe(array())
+		->and($GLOBALS['ifl_saves'])->toBe(array())
+		->and($pointsAtNothing())->toBe(array())
+		->and($GLOBALS['ifl_messages'])->toHaveKey('import_data_input_dependent_' . $dtHash)
+		->and($GLOBALS['ifl_messages'])->toHaveKey('import_data_input_dependent_' . $gtHash)
+		->and(implode("\n", $GLOBALS['ifl_log']))->toContain("graph_template '$gtHash'")
+		->and($GLOBALS['preview_only'])->toBeFalse();
+});
+
+test('the same dependency chain in reverse file order is skipped as well', function () use ($runPackage, $chainFiles, $dtHash, $gtHash, $pointsAtNothing) {
+	$runPackage($chainFiles(true));
+
+	expect($GLOBALS['ifl_graph_templates'])->toBe(array())
+		->and($GLOBALS['ifl_saves'])->toBe(array())
+		->and($pointsAtNothing())->toBe(array())
+		->and($GLOBALS['ifl_messages'])->toHaveKey('import_data_input_dependent_' . $dtHash)
+		->and($GLOBALS['ifl_messages'])->toHaveKey('import_data_input_dependent_' . $gtHash);
+});
+
+test('a user with the realm imports the whole dependency chain as before', function () use ($runPackage, $chainFiles, $gtHash, $savedTo) {
+	$GLOBALS['ifl_realm'] = 2;
+
+	$runPackage($chainFiles(false));
+
+	expect($GLOBALS['ifl_graph_templates'])->toBe(array($gtHash))
+		->and($savedTo('data_template'))->toHaveCount(1)
+		->and($savedTo('data_input'))->toHaveCount(1)
+		->and($GLOBALS['ifl_messages'])->toBe(array());
 });
