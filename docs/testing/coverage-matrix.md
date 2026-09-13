@@ -66,7 +66,7 @@ Ordered by priority. Nothing here has a golden file.
 | UI | Pagination, sorting, filtering | no | no | across list pages | P1 |
 | Templates | Import, export, apply, reapply | no | no | graph and host templates | P1 |
 | Automation | Discovery, network rules, tree rules | no | no | — | P2 |
-| CLI | The remaining 42 scripts | no | no | per-script exit status and side effects | P2 |
+| CLI | The remaining 39 scripts | no | no | per-script exit status and side effects | P2 |
 | Plugins | Failure and malformed return handling | no | no | hook that throws or returns wrong type | P2 |
 | Threshold | Event behavior | no | no | requires a thold install; none seeded | P3 |
 
@@ -83,7 +83,7 @@ not the behavior. The number of values and their template order are preserved,
 because those are the contract.
 
 Boost remains uncharacterized, as do templates, automation, and the remaining
-42 CLI scripts. Authorization is characterized only for login and CSRF, not for
+39 CLI scripts. Authorization is characterized only for login and CSRF, not for
 the per-page and per-endpoint permission matrix.
 
 The PHP matrix has run on 8.2 only. Goldens are stored per version, so adding

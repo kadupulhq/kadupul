@@ -43,7 +43,7 @@ _Y = r'(?:19|20)\d{2}'
 _M = r'(?:0[1-9]|1[0-2])'
 _D = r'(?:0[1-9]|[12]\d|3[01])'
 
-CLOCK = re.compile(r'\[\d{2}:\d{2}:\d{2}\]')
+CLOCK = re.compile(r'^\[\d{2}:\d{2}:\d{2}\]', re.MULTILINE)
 DATETIME = re.compile(_Y + '-' + _M + '-' + _D + r' \d{2}:\d{2}:\d{2}')
 # Cacti's own log and poller stats use US order, e.g. 09/12/2026 02:39:50.
 US_DATETIME = re.compile(_M + '/' + _D + '/' + _Y + r' \d{2}:\d{2}:\d{2}')
@@ -214,7 +214,8 @@ class Harness:
                                              'suppressed': event.get('suppressed'),
                                              'suppressed_here': event.get('suppressed_here')})
             entry['count'] += 1
-        return sorted(grouped.values(), key=lambda e: (str(e['severity']), e['message'], e['file']))
+        return sorted(grouped.values(), key=lambda e: (str(e['severity']), e['message'], e['file'],
+                                                      str(e['suppressed'])))
 
     def rrd_calls(self):
         """rrdtool invocations recorded by the image shim, normalized.
@@ -593,6 +594,9 @@ def compare(args):
         raise RuntimeError('Cannot compare incomplete runs')
     approvals = json.loads(Path(args.approvals).read_text()) if args.approvals else {}
     repeat = json.loads(Path(args.repeat).read_text()) if args.repeat else None
+    # A partial control run would label every later difference NONDETERMINISTIC.
+    if repeat is not None and not repeat['complete']:
+        raise RuntimeError('Cannot use an incomplete run as the repeat control')
     report = []
     # Matching scenarios prove little if the runs used different runtimes or packages.
     for key in ('php', 'base_image'):

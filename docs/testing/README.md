@@ -157,7 +157,7 @@ reproduce exactly.
 ## Known captured oddities
 
 `sanitize_search_string(null)` reaches `preg_replace()` with a null subject and
-emits a deprecation on PHP 8.1 and later, at `lib/functions.php:4479`. The
+emits a deprecation on PHP 8.1 and later, inside that function in `lib/functions.php`. The
 harness records the deprecation rather than suppressing it.
 
 `get_request_var()` memoizes each name into the `$_CACTI_REQUEST` global. Once
