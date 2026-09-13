@@ -214,7 +214,7 @@ if (!empty($recovery_pid)) {
 
 		$run = true;
 	} else {
-		cacti_log('RECOVERY: Another recovery process is still running (PID=' . cacti_process_pid_for_log($recovery_pid) . ').', false, 'POLLER');
+		cacti_log('RECOVERY: Another recovery process is still running (PID=' . cacti_process_pid_for_log($recovery_pid) . ').', false, 'POLLER', POLLER_VERBOSITY_DEBUG);
 
 		$run = false;
 	}
@@ -307,7 +307,8 @@ if ($run) {
 				}
 
 				$record_count = cacti_sizeof($sql_array);
-				cacti_log('RECOVERY: Writing ' . $record_count . ' records to main.', false, 'POLLER');
+				$packet_size  = strlen(implode('', $sql_array));
+				cacti_log('RECOVERY: Writing ' . $record_count . ' records (' . $packet_size . ' bytes) to main (last slice).', false, 'POLLER');
 
 				if (!boost_flush_output_batch($sql_array, $remote_db_cnn_id)) {
 					cacti_log('RECOVERY ERROR: Main collector did not acknowledge the Boost batch; retaining local rows.', false, 'POLLER');
