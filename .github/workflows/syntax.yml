@@ -360,6 +360,13 @@ jobs:
         sudo php cli/rebuild_poller_cache.php --debug
         sudo php cli/poller_reindex_hosts.php --id=all --debug
 
+    # cactid polls as www-data on every five minute boundary. When that run
+    # overlaps the root poller below, a www-data plugin task cannot signal the
+    # root task it finds registered, treats it as exited, and logs a warning
+    # that fails the page check. Nothing after this point needs the daemon.
+    - name: Stop Cacti Daemon
+      run: sudo systemctl stop cactid
+
     - name: Run Cacti poller
       run: |
         sudo php ${{ github.workspace }}/poller.php --poller=1 --force --debug
