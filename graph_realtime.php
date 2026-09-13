@@ -69,7 +69,7 @@ case 'countdown':
 	if (read_config_option('realtime_enabled') == '') {
 		$denied = __('Real-time has been disabled by your administrator.');
 	} elseif (empty($local_graph_id) || ($_SESSION['sess_user_id'] > 0 && !is_graph_allowed($local_graph_id, $_SESSION['sess_user_id']))) {
-		$denied = __('Access Denied');
+		$denied = __('Permission Denied');
 	}
 
 	if (isset($denied)) {
@@ -81,8 +81,34 @@ case 'countdown':
 			$graph_contents = file_get_contents(__DIR__ . '/images/cacti_error_image.png');
 		}
 
+		$ds_step = get_request_var('ds_step');
+
+		if (empty($ds_step) || $ds_step < 1) {
+			$ds_step = read_user_setting('realtime_interval', 10);
+		}
+
+		$graph_start = get_request_var('graph_start');
+
+		if (empty($graph_start)) {
+			$graph_start = read_user_setting('realtime_gwindow', 60);
+		}
+
+		$size = (int)get_request_var('size');
+
+		if (!array_key_exists($size, $realtime_sizes)) {
+			$size = $realtime_default_size;
+		}
+
+		/* realtime.js resets its interval, window, size and thumbnail controls
+		 * from every reply, so a refusal carries the same keys as the reply below */
 		print json_encode(array(
 			'local_graph_id' => $local_graph_id,
+			'top'            => get_request_var('top'),
+			'left'           => get_request_var('left'),
+			'ds_step'        => html_escape($ds_step),
+			'graph_start'    => html_escape($graph_start),
+			'size'           => html_escape($size),
+			'thumbnails'     => html_escape(get_request_var('graph_nolegend') == 'true' ? 'true' : 'false'),
 			'data'           => base64_encode($graph_contents),
 			'image_format'   => 'png'
 		));

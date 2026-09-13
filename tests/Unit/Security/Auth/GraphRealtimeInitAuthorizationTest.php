@@ -53,7 +53,7 @@ function graph_realtime_init_run(array $scenario) : array {
 <?php
 $scenario = json_decode(file_get_contents(getenv('RT_SCENARIO')), true);
 $config   = array('base_path' => '/opt/kadupul', 'url_path' => '/', 'cacti_server_os' => 'unix');
-$calls    = array('graph' => 0, 'allowed' => array());
+$calls    = array('graph' => 0, 'graph_users' => array(), 'allowed' => array());
 $_SESSION = array('sess_user_id' => 7);
 
 $realtime_sizes        = array(25 => '25%', 50 => '50%', 75 => '75%', 100 => '100%');
@@ -134,6 +134,12 @@ function is_graph_allowed($local_graph_id, $user_id = 0) {
 
 function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rrdtool_pipe = false, &$xport_meta = array(), $user = 0) {
 	$GLOBALS['calls']['graph']++;
+	$GLOBALS['calls']['graph_users'][] = $user;
+
+	/* the shipped renderer refuses a graph the given user may not view */
+	if ($user > 0 && !is_graph_allowed($local_graph_id, $user)) {
+		return 'GRAPH ACCESS DENIED';
+	}
 
 	return 'PNGDATA';
 }
@@ -184,6 +190,7 @@ test('an allowed graph is polled once with the 1.2.31 poller arguments and respo
 
 	expect($run['polls'])->toBe(array('[-q][/opt/kadupul/poller_realtime.php][--graph=5][--interval=10][--poller_id=abc123]'))
 		->and($run['calls']['graph'])->toBeGreaterThan(0)
+		->and($run['response']['data'])->toBe('')
 		->and(array_keys($run['response']))->toBe(array('local_graph_id', 'top', 'left', 'ds_step', 'graph_start', 'size', 'thumbnails', 'data', 'image_format'));
 });
 
@@ -202,7 +209,36 @@ test('a graph the user may not view is not polled', function () use ($realtimeRe
 	expect($run['polls'])->toBe(array())
 		->and($run['calls']['graph'])->toBe(0)
 		->and($run['calls']['allowed'])->toBe(array(5))
-		->and($run['response']['data'])->toBe(base64_encode('ERRPNG:Access Denied'));
+		->and($run['response']['data'])->toBe(base64_encode('ERRPNG:Permission Denied'));
+});
+
+test('a refused request keeps the reply shape realtime.js reads', function () use ($realtimeRequest) {
+	$allowed = graph_realtime_init_run(array('request' => $realtimeRequest, 'allowed' => array(5), 'config' => array('realtime_enabled' => 'on')));
+	$denied  = graph_realtime_init_run(array('request' => $realtimeRequest, 'allowed' => array(6), 'config' => array('realtime_enabled' => 'on')));
+
+	expect(array_keys($denied['response']))->toBe(array_keys($allowed['response']))
+		->and($denied['response']['local_graph_id'])->toBe(5)
+		->and($denied['response']['ds_step'])->toBe('10')
+		->and($denied['response']['graph_start'])->toBe('-60')
+		->and($denied['response']['size'])->toBe('100')
+		->and($denied['response']['thumbnails'])->toBe('false')
+		->and($denied['response']['image_format'])->toBe('png');
+
+	$request = $realtimeRequest;
+	unset($request['graph_start'], $request['ds_step']);
+
+	$countdown = graph_realtime_init_run(array(
+		'request' => array('action' => 'countdown', 'graph_nolegend' => 'true', 'size' => 50) + $request,
+		'allowed' => array(6),
+		'user'    => array('realtime_interval' => '20', 'realtime_gwindow' => '300'),
+		'config'  => array('realtime_enabled' => 'on'),
+	));
+
+	expect(array_keys($countdown['response']))->toBe(array_keys($allowed['response']))
+		->and($countdown['response']['ds_step'])->toBe('20')
+		->and($countdown['response']['graph_start'])->toBe('300')
+		->and($countdown['response']['size'])->toBe('50')
+		->and($countdown['response']['thumbnails'])->toBe('true');
 });
 
 test('no graph is polled while real-time is disabled', function () use ($realtimeRequest) {
