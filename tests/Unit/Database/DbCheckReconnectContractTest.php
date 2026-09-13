@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -16,7 +17,9 @@ test('database reconnect contract propagates replacement handles', function () {
 	$source = file_get_contents(dirname(__DIR__, 3) . '/lib/database.php');
 
 	expect($source)->not->toBeFalse()
-		->and($source)->toMatch('/function db_check_reconnect\s*\(\s*&\$db_conn\s*=\s*false/')
+		->and($source)->toMatch('/function db_check_reconnect\s*\(\s*\$db_conn\s*=\s*false/')
+		->and($source)->toMatch('/function db_check_reconnect_handle\s*\(\s*&\$db_conn\s*=\s*false/')
+		->and($source)->toContain('if (db_check_reconnect_handle($db_conn)) {')
 		->and($source)->toMatch('/if\s*\(\s*\$db_conn\s*!==\s*false\s*\)\s*{\s*\$db_conn\s*=\s*\$cnn_id;/s');
 });
 
