@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.x
+-security: Bind the reverse-DNS hostname in the automation duplicate-device check
 -security: Refuse data source paths that escape the RRA directory when Boost creates RRD files
 -security: Refuse loopback, link-local and reserved addresses for Remote Data Collector requests
 -security: Cast report ids to integers before the edit redirects
