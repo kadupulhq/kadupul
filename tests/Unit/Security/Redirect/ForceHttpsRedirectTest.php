@@ -88,6 +88,23 @@ test('forced HTTPS redirects accept a Host header listed in trusted_hosts', func
 		->toBe('https://cacti.internal/cacti/');
 });
 
+test('forced HTTPS redirects compare IPv6 and IPv4 Host headers without brackets or port', function () {
+	expect(cacti_build_https_redirect_url('2001:db8::1', '/cacti/', '/cacti/', '[2001:DB8::1]:8443'))
+		->toBe('https://[2001:DB8::1]:8443/cacti/');
+
+	expect(cacti_build_https_redirect_url('cacti.internal', '/cacti/', '/cacti/', '[2001:db8::1]', array('[2001:db8::1]')))
+		->toBe('https://[2001:db8::1]/cacti/');
+
+	expect(cacti_build_https_redirect_url('cacti.internal', '/cacti/', '/cacti/', '[2001:db8::1]:8443', array('2001:db8::1')))
+		->toBe('https://[2001:db8::1]:8443/cacti/');
+
+	expect(cacti_build_https_redirect_url('cacti.internal', '/cacti/', '/cacti/', '[2001:db8::2]:8443', array('2001:db8::1')))
+		->toBe('https://cacti.internal/cacti/');
+
+	expect(cacti_build_https_redirect_url('192.0.2.10', '/cacti/', '/cacti/', '192.0.2.10:8080'))
+		->toBe('https://192.0.2.10:8080/cacti/');
+});
+
 test('forced HTTPS redirects keep the request URI byte for byte as 1.2.31 did', function () {
 	$uris = array(
 		'/cacti/graph_view.php?rfilter=a%7Cb',

@@ -127,6 +127,38 @@ test('an empty SERVER_NAME still refuses a mismatched target, a malformed Host h
 	))->toBe('index.php');
 });
 
+test('an empty SERVER_NAME matches a trusted IPv6 or IPv4 Host header without its brackets or port', function () {
+	expect(redirect_host_fallback_check(
+		array('SERVER_NAME' => '', 'HTTP_HOST' => '[2001:db8::1]:8443', 'SERVER_PORT' => '8443'),
+		'https://[2001:db8::1]:8443/cacti/host.php',
+		array('2001:db8::1')
+	))->toBe('/cacti/host.php');
+
+	expect(redirect_host_fallback_check(
+		array('SERVER_NAME' => '', 'HTTP_HOST' => '[2001:DB8::1]'),
+		'https://[2001:db8::1]/cacti/host.php',
+		array('[2001:db8::1]')
+	))->toBe('/cacti/host.php');
+
+	expect(redirect_host_fallback_check(
+		array('SERVER_NAME' => '', 'HTTP_HOST' => '192.0.2.10:8080', 'SERVER_PORT' => '8080'),
+		'https://192.0.2.10:8080/cacti/host.php',
+		array('192.0.2.10')
+	))->toBe('/cacti/host.php');
+
+	expect(redirect_host_fallback_check(
+		array('SERVER_NAME' => '', 'HTTP_HOST' => '[2001:db8::1]:8443', 'SERVER_PORT' => '8443'),
+		'https://[2001:db8::1]:8443/cacti/host.php',
+		array('2001:db8::2')
+	))->toBe('index.php');
+
+	expect(redirect_host_fallback_check(
+		array('SERVER_NAME' => '', 'HTTP_HOST' => '[2001:db8::1]'),
+		'https://[2001:db8::2]/cacti/host.php',
+		array('2001:db8::1')
+	))->toBe('index.php');
+});
+
 test('a configured SERVER_NAME still ignores the Host header', function () {
 	expect(redirect_host_fallback_check(
 		array('SERVER_NAME' => 'monitor.example', 'HTTP_HOST' => 'cacti.example.com'),
