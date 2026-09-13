@@ -129,6 +129,12 @@ function db_fetch_cell_prepared($sql, $params = array(), $col_name = '', $log = 
 function is_graph_allowed($local_graph_id, $user_id = 0) {
 	$GLOBALS['calls']['allowed'][] = $local_graph_id;
 
+	/* lib/auth.php get_allowed_graphs() adds the graph predicate only when $graph_id > 0,
+	 * so any other id is allowed for a user who may view at least one graph */
+	if ((int) $local_graph_id <= 0) {
+		return count($GLOBALS['scenario']['allowed']) > 0;
+	}
+
 	return in_array((int) $local_graph_id, $GLOBALS['scenario']['allowed'], true);
 }
 
@@ -269,3 +275,14 @@ test('a request without a graph id is not polled', function () use ($realtimeReq
 	expect($run['polls'])->toBe(array())
 		->and($run['calls']['graph'])->toBe(0);
 });
+
+test('a zero or negative graph id is refused like a missing one', function ($id) use ($realtimeRequest) {
+	foreach (array('init', 'countdown') as $action) {
+		$run = graph_realtime_init_run(array('request' => array('action' => $action, 'local_graph_id' => $id) + $realtimeRequest, 'allowed' => array(5), 'config' => array('realtime_enabled' => 'on')));
+
+		expect($run['polls'])->toBe(array())
+			->and($run['calls']['graph'])->toBe(0)
+			->and($run['response']['data'])->toBe(base64_encode('ERRPNG:Permission Denied'))
+			->and(array_keys($run['response']))->toBe(array('local_graph_id', 'top', 'left', 'ds_step', 'graph_start', 'size', 'thumbnails', 'data', 'image_format'));
+	}
+})->with(array('-1' => -1, '0' => 0, 'string -5' => '-5'));

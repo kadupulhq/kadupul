@@ -63,12 +63,13 @@ case 'countdown':
 
 	/* poller_realtime.php polls every device behind the graph, so refuse
 	 * before any polling when real-time is off or the graph render below
-	 * would deny this user */
+	 * would deny this user. is_graph_allowed() filters on the graph only for
+	 * a positive id, so a zero or negative id is refused like a missing one */
 	$local_graph_id = get_filter_request_var('local_graph_id');
 
 	if (read_config_option('realtime_enabled') == '') {
 		$denied = __('Real-time has been disabled by your administrator.');
-	} elseif (empty($local_graph_id) || ($_SESSION['sess_user_id'] > 0 && !is_graph_allowed($local_graph_id, $_SESSION['sess_user_id']))) {
+	} elseif (empty($local_graph_id) || $local_graph_id < 1 || ($_SESSION['sess_user_id'] > 0 && !is_graph_allowed($local_graph_id, $_SESSION['sess_user_id']))) {
 		$denied = __('Permission Denied');
 	}
 
