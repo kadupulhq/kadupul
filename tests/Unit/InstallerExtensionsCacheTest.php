@@ -22,7 +22,52 @@ if ($source === false) {
     throw new RuntimeException('Unable to read lib/installer.php');
 }
 
+require_once __DIR__ . '/../../lib/installer.php';
+
 /*
+ * lib/utility.php holds the real function, and no unit test loads it into
+ * this process, so the stub below is the only definition. It counts calls so
+ * the test can tell a cached result from a recomputed one.
+ */
+$GLOBALS['installer_extensions_cache_calls'] = 0;
+
+function installer_extensions_cache_fixture()
+{
+    return [
+        'mbstring' => ['cli' => true, 'web' => true, 'installed' => true],
+        'xml'      => ['cli' => true, 'web' => true, 'installed' => true],
+    ];
+}
+
+if (!function_exists('utility_php_extensions')) {
+    function utility_php_extensions()
+    {
+        $GLOBALS['installer_extensions_cache_calls']++;
+
+        return installer_extensions_cache_fixture();
+    }
+}
+
+test('getModules computes the extension list once and serves the cache after', function () {
+    $GLOBALS['installer_extensions_cache_calls'] = 0;
+
+    $installer  = (new ReflectionClass(Installer::class))->newInstanceWithoutConstructor();
+    $getModules = new ReflectionMethod(Installer::class, 'getModules');
+    $getModules->setAccessible(true);
+
+    $first  = $getModules->invoke($installer);
+    $second = $getModules->invoke($installer);
+
+    expect($first)->toBe(installer_extensions_cache_fixture())
+        ->and($second)->toBe(installer_extensions_cache_fixture())
+        ->and($GLOBALS['installer_extensions_cache_calls'])->toBe(1);
+});
+
+/*
+ * Formatting guards. They read the source rather than run it, so they only
+ * catch the guard being rewritten back to its buggy form; the runtime test
+ * above is the behavior check.
+ *
  * The method ends at the brace that matches its opening one. Walking the
  * tokens finds it whatever the indentation, and braces inside strings or
  * comments are not tokens of their own, so they cannot end the body early.
@@ -59,17 +104,17 @@ foreach ($tokens as $index => $token) {
     break;
 }
 
-test('getModules body is bounded by its own braces', function () use ($body) {
+test('formatting guard: getModules body is bounded by its own braces', function () use ($body) {
     expect($body)->toStartWith('function getModules(')
         ->and($body)->toEndWith('}')
         ->and($body)->toContain('return $this->extensions;');
 });
 
-test('getModules guard begins with !isset', function () use ($body) {
+test('formatting guard: getModules guard begins with !isset', function () use ($body) {
     expect($body)->toContain('!isset($this->extensions) || empty($this->extensions)');
 });
 
-test('getModules no longer contains the original always-true guard', function () use ($body) {
+test('formatting guard: getModules no longer contains the original always-true guard', function () use ($body) {
     /* The buggy form started "if (isset(...". The fixed form starts
      * "if (!isset(...", so this substring cannot match the fix and is a
      * clean negative check for the regression. */
