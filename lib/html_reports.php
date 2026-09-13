@@ -341,6 +341,12 @@ function reports_form_save() {
 			}
 		}
 
+		if (!reports_address_malformed($save['from_email']) && !reports_from_allowed($save['from_email'])) {
+			raise_message('report_message', __('The From Email Address must be your own e-mail address or the site From Email Address.'), MESSAGE_LEVEL_ERROR);
+
+			$_SESSION['sess_error_fields']['from_email'] = 'from_email';
+		}
+
 		$atype = get_nfilter_request_var('attachment_type');
 		if (($atype != REPORTS_TYPE_INLINE_PNG) &&
 			($atype != REPORTS_TYPE_INLINE_JPG) &&
@@ -486,6 +492,14 @@ function reports_form_actions() {
 				}
 			} elseif (get_nfilter_request_var('drp_action') == REPORTS_DUPLICATE) { // duplicate
 				for ($i=0;($i<cacti_count($selected_items));$i++) {
+					/* the copy belongs to the caller, so its From must pass the check a
+					   save by the caller would */
+					if (!reports_from_allowed((string) db_fetch_cell_prepared('SELECT from_email FROM reports WHERE id = ?', array($selected_items[$i])))) {
+						raise_message('report_message', __('The From Email Address must be your own e-mail address or the site From Email Address.'), MESSAGE_LEVEL_ERROR);
+
+						continue;
+					}
+
 					reports_log(__FUNCTION__ . ', duplicate: ' . $selected_items[$i] . ' name: ' . get_nfilter_request_var('name_format'), false, 'REPORTS TRACE', POLLER_VERBOSITY_MEDIUM);
 
 					duplicate_reports($selected_items[$i], get_nfilter_request_var('name_format'));
@@ -1884,6 +1898,39 @@ function reports_address_malformed($value) {
 	}
 
 	return false;
+}
+
+/* reports go out through the site mail relay, so a user without Reports
+   Administration may send only as their own account or the site From address.
+   A blank From sends as the site address. */
+function reports_from_allowed($from_email) {
+	if (is_reports_admin()) {
+		return true;
+	}
+
+	$allowed = array(
+		mb_strtolower(trim((string) read_config_option('settings_from_email'))),
+		mb_strtolower(trim((string) db_fetch_cell_prepared('SELECT email_address FROM user_auth WHERE id = ?', array($_SESSION['sess_user_id']))))
+	);
+
+	foreach (explode(',', $from_email) as $entry) {
+		$entry = trim($entry);
+
+		if ($entry == '') {
+			continue;
+		}
+
+		/* mailer() sends as the address inside "Name <address>" */
+		if (preg_match('/<([^>]*)>/', $entry, $match)) {
+			$entry = trim($match[1]);
+		}
+
+		if ($entry == '' || !in_array(mb_strtolower($entry), $allowed, true)) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 function is_reports_admin() {

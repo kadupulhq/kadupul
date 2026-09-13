@@ -171,7 +171,7 @@ function load_save_and_render($root) {
 
 	load_address_check($root);
 
-	preg_match_all("/^define\('((?:REPORTS|MESSAGE_LEVEL)_[A-Z0-9_]+)',\s*([0-9]+)\);/m", file_get_contents($root . '/include/global_constants.php'), $constants, PREG_SET_ORDER);
+	preg_match_all("/^define\('((?:REPORTS|MESSAGE_LEVEL|POLLER_VERBOSITY)_[A-Z0-9_]+)',\s*([0-9]+)\);/m", file_get_contents($root . '/include/global_constants.php'), $constants, PREG_SET_ORDER);
 
 	foreach ($constants as $constant) {
 		if (!defined($constant[1])) {
@@ -181,7 +181,7 @@ function load_save_and_render($root) {
 
 	$code    = '';
 	$sources = array(
-		'lib/html_reports.php' => array('reports_form_save'),
+		'lib/html_reports.php' => array('reports_form_save', 'reports_form_actions', 'reports_from_allowed'),
 		'lib/functions.php'    => array('form_input_validate', 'is_error_message'),
 		'lib/html_form.php'    => array('form_text_area'),
 		'lib/html.php'         => array('html_escape'),
@@ -192,6 +192,12 @@ function load_save_and_render($root) {
 
 		foreach ($fns as $fn) {
 			preg_match('/^function ' . $fn . '\(.*?^}\n/ms', $src, $match);
+
+			// release/1.2.31 and lts/1.2 have no From check
+			if ($fn == 'reports_from_allowed' && empty($match)) {
+				continue;
+			}
+
 			expect($match)->not->toBeEmpty();
 
 			$code .= $match[0];
@@ -220,7 +226,9 @@ function get_filter_request_var($name, $filter = FILTER_VALIDATE_INT, $options =
 }
 
 function read_config_option($name) {
-	return ($name == 'poller_interval' ? 300 : '');
+	$options = array('poller_interval' => 300, 'settings_from_email' => 'Cacti@example.com');
+
+	return $options[$name] ?? '';
 }
 
 function raise_message($message_id, $message = '', $message_level = 0) {
@@ -236,6 +244,14 @@ function cacti_authorize_resource($user_id, $resource_id, $resource_type) {
 }
 
 function db_fetch_cell_prepared($sql, $params = array()) {
+	$sql = preg_replace('/\s+/', ' ', $sql);
+
+	if ($sql == 'SELECT email_address FROM user_auth WHERE id = ?') {
+		return ($params == array(5) ? 'Me@Example.com' : false);
+	} elseif ($sql == 'SELECT from_email FROM reports WHERE id = ?') {
+		return $GLOBALS['ra_from_rows'][(int) $params[0]] ?? false;
+	}
+
 	return '5';
 }
 
@@ -307,3 +323,120 @@ test('an array address is refused and the edit form redraws the stored value', f
 	expect($html)->toContain('txtErrorTextBox');
 	expect($html)->toContain('>stored@example.com</textarea>');
 })->with('address fields');
+
+function is_reports_admin() {
+	return $GLOBALS['ra_admin'] ?? false;
+}
+
+function __($text, ...$args) {
+	return vsprintf($text, $args);
+}
+
+function sanitize_unserialize_selected_items($items) {
+	return array('7');
+}
+
+function cacti_count($array) {
+	return count($array);
+}
+
+function reports_log($message, $output = false, $environ = 'REPORTS', $level = 0) {
+}
+
+function duplicate_reports($id, $title) {
+	$GLOBALS['ra_duplicated'][] = (int) $id;
+}
+
+function force_session_data() {
+}
+
+function save_from_as($admin, $from) {
+	date_default_timezone_set('UTC');
+
+	$_SESSION = array('sess_user_id' => 5);
+	$GLOBALS['ra_admin']    = $admin;
+	$GLOBALS['ra_request']  = report_save_request('from_email', $from);
+	$GLOBALS['ra_messages'] = array();
+	$GLOBALS['ra_saved']    = array();
+	$GLOBALS['ra_headers']  = array();
+
+	reports_form_save();
+}
+
+function duplicate_from_as($admin, $from) {
+	$_SESSION = array('sess_user_id' => 5);
+	$GLOBALS['ra_admin']      = $admin;
+	$GLOBALS['ra_from_rows']  = array(7 => $from);
+	$GLOBALS['ra_request']    = array('selected_items' => 'a:1:{i:0;s:1:"7";}', 'drp_action' => (string) REPORTS_DUPLICATE, 'name_format' => '<name> (1)');
+	$GLOBALS['ra_duplicated'] = array();
+	$GLOBALS['ra_messages']   = array();
+	$GLOBALS['ra_headers']    = array();
+
+	reports_form_actions();
+}
+
+// the user's account address is Me@Example.com and the site From is Cacti@example.com
+dataset('From addresses a user without Reports Administration may use', array(
+	'blank for the site default' => array(''),
+	'their own address'          => array('me@example.com'),
+	'their own named address'    => array('Me <ME@example.com>'),
+	'the site From address'      => array('cacti@example.com'),
+));
+
+dataset('From addresses only Reports Administration may use', array(
+	'another address'         => array('ceo@example.com'),
+	'own and another address' => array('me@example.com, ceo@example.com'),
+	'a name without address'  => array('Cacti'),
+));
+
+test('a user without Reports Administration saves and duplicates a From they may use', function ($from) use ($root) {
+	load_save_and_render($root);
+
+	save_from_as(false, $from);
+
+	expect($GLOBALS['ra_saved'])->toHaveCount(1);
+	expect($GLOBALS['ra_saved'][0]['from_email'])->toBe($from);
+
+	duplicate_from_as(false, $from);
+
+	expect($GLOBALS['ra_duplicated'])->toBe(array(7));
+	expect($GLOBALS['ra_headers'])->toBe(array('Location: reports_user.php?header=false'));
+})->with('From addresses a user without Reports Administration may use');
+
+test('a Reports Administration user saves and duplicates any From', function ($from) use ($root) {
+	load_save_and_render($root);
+
+	save_from_as(true, $from);
+
+	expect($GLOBALS['ra_saved'])->toHaveCount(1);
+	expect($GLOBALS['ra_saved'][0]['from_email'])->toBe($from);
+
+	duplicate_from_as(true, $from);
+
+	expect($GLOBALS['ra_duplicated'])->toBe(array(7));
+})->with('From addresses only Reports Administration may use');
+
+test('a user without Reports Administration cannot save or duplicate another From', function ($from) use ($root) {
+	load_save_and_render($root);
+
+	save_from_as(false, $from);
+
+	expect($GLOBALS['ra_saved'])->toBe(array());
+	expect($GLOBALS['ra_messages'])->toContain('report_message');
+	expect($_SESSION['sess_error_fields'] ?? array())->toHaveKey('from_email');
+
+	duplicate_from_as(false, $from);
+
+	expect($GLOBALS['ra_duplicated'])->toBe(array());
+	expect($GLOBALS['ra_messages'])->toContain('report_message');
+})->with('From addresses only Reports Administration may use');
+
+test('an existing report still opens and sends with the From it holds', function () use ($root) {
+	// the From check guards the two writes, a save and a duplicate, not the edit page or the mail
+	foreach (array('lib/html_reports.php' => 'reports_edit', 'lib/reports.php' => 'generate_report') as $file => $fn) {
+		preg_match('/^function ' . $fn . '\(.*?^}\n/ms', file_get_contents($root . '/' . $file), $match);
+
+		expect($match)->not->toBeEmpty();
+		expect($match[0])->not->toContain('reports_from_allowed(');
+	}
+});

@@ -78,11 +78,11 @@ foreach ($constants as $constant) {
 if (!function_exists(__NAMESPACE__ . '\reports_form_save')) {
 	$code = '';
 
-	foreach (array('reports_form_save', 'reports_address_malformed', 'reports_item_movedown', 'reports_item_moveup', 'reports_item_edit') as $fn) {
+	foreach (array('reports_form_save', 'reports_address_malformed', 'reports_from_allowed', 'reports_item_movedown', 'reports_item_moveup', 'reports_item_edit') as $fn) {
 		preg_match('/^function ' . $fn . '\(.*?^}\n/ms', $src, $match);
 
-		// release/1.2.31 and lts/1.2 have no address check for the save to call
-		if ($fn == 'reports_address_malformed' && empty($match)) {
+		// release/1.2.31 and lts/1.2 have no address or From check for the save to call
+		if (in_array($fn, array('reports_address_malformed', 'reports_from_allowed')) && empty($match)) {
 			continue;
 		}
 
@@ -159,6 +159,11 @@ function cacti_authorize_resource($user_id, $resource_id, $resource_type) {
 	return (($GLOBALS['ro_reports'][$resource_id] ?? 0) === $user_id);
 }
 
+/* lib/html_reports.php checks realm 21, which user 1 stands for here */
+function is_reports_admin() {
+	return ($_SESSION['sess_user_id'] == 1);
+}
+
 function db_fetch_cell_prepared($sql, $params = array()) {
 	$sql = preg_replace('/\s+/', ' ', $sql);
 
@@ -166,6 +171,8 @@ function db_fetch_cell_prepared($sql, $params = array()) {
 		return (isset($GLOBALS['ro_reports'][$params[0]]) ? (string) $GLOBALS['ro_reports'][$params[0]] : false);
 	} elseif ($sql == 'SELECT report_id FROM reports_items WHERE id = ?') {
 		return (isset($GLOBALS['ro_items'][$params[0]]) ? (string) $GLOBALS['ro_items'][$params[0]] : false);
+	} elseif ($sql == 'SELECT email_address FROM user_auth WHERE id = ?') {
+		return 'owner@example.com';
 	} elseif (strpos($sql, 'SELECT MAX(sequence)+1 FROM reports_items') === 0) {
 		return '4';
 	}
@@ -190,7 +197,7 @@ function reports_item_resequence($report_id) {
 }
 
 function read_config_option($name) {
-	return 300;
+	return ($name == 'settings_from_email' ? 'cacti@example.com' : 300);
 }
 
 function get_reports_page() {
