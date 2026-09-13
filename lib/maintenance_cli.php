@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -59,6 +60,63 @@ function cacti_remove_graphs_parameter_is_valid($parameter, $shortopts, $longopt
 	}
 
 	return ($valid_longopts[$name] && $has_value) || (!$valid_longopts[$name] && !$has_equals);
+}
+
+/**
+ * Decide what remove_graphs.php does with an argument that fails validation.
+ *
+ * 1.2.31 let getopt() drop unknown options silently. An unknown long option is
+ * reported and skipped, except when its name looks like a mistyped filter
+ * option, because dropping a filter widens what the command removes. A name
+ * looks mistyped when it is within two edits of a filter option, or when one
+ * name is a prefix of the other and the shorter has at least four characters.
+ * A declared option with the wrong value shape, a bare word (getopt() stops
+ * parsing there), "--", and a short cluster naming a declared letter abort.
+ *
+ * @param string $parameter The raw command-line argument.
+ * @param string $shortopts The getopt() short-option declaration.
+ * @param array  $longopts  The getopt() long-option declarations.
+ *
+ * @return string 'ignore' for the retired --graph-type option, 'warn' for an
+ *                unknown option that cannot be a filter, otherwise 'abort'.
+ */
+function cacti_remove_graphs_unknown_parameter_action($parameter, $shortopts, $longopts) {
+	$filters = array('host-id', 'graph-template-id', 'host-template-id', 'graph-regex');
+
+	if (strpos($parameter, '--') !== 0) {
+		if (strpos($parameter, '-') === 0 && strlen($parameter) > 1 && strpbrk(substr($parameter, 1), str_replace(':', '', $shortopts)) === false) {
+			return 'warn';
+		}
+
+		return 'abort';
+	}
+
+	$name = explode('=', substr($parameter, 2), 2)[0];
+
+	if ($name === '') {
+		return 'abort';
+	}
+
+	if ($name === 'graph-type') {
+		return 'ignore';
+	}
+
+	foreach($longopts as $option) {
+		if (rtrim($option, ':') === $name) {
+			return 'abort';
+		}
+	}
+
+	foreach($filters as $filter) {
+		$shorter = strlen($name) < strlen($filter) ? $name : $filter;
+		$longer  = $shorter === $name ? $filter : $name;
+
+		if (levenshtein($name, $filter) <= 2 || (strlen($shorter) >= 4 && strpos($longer, $shorter) === 0)) {
+			return 'abort';
+		}
+	}
+
+	return 'warn';
 }
 
 /**

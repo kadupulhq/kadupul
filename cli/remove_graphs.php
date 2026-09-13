@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -82,10 +83,21 @@ if (cacti_sizeof($parms)) {
 		'version',
 		'help'
 	);
-	/* getopt() silently discards unknown options. Validate the raw tokens
-	 * first so a typo cannot be ignored by this destructive command. */
+	/* getopt() silently discards unknown options. Report them, but abort on
+	 * one that looks like a mistyped filter, since dropping a filter widens
+	 * what this destructive command removes. */
 	foreach($parms as $parameter) {
 		if (cacti_remove_graphs_parameter_is_valid($parameter, $shortopts, $longopts)) {
+			continue;
+		}
+
+		$action = cacti_remove_graphs_unknown_parameter_action($parameter, $shortopts, $longopts);
+
+		if ($action == 'ignore') {
+			continue;
+		} elseif ($action == 'warn') {
+			print "WARNING: Ignoring unknown argument: ($parameter)" . PHP_EOL;
+
 			continue;
 		}
 
