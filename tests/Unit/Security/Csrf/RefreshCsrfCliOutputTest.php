@@ -218,6 +218,54 @@ test('a leftover vendor secret file is reported and removed', function () use ($
 		->and(file_exists($legacy))->toBeFalse();
 });
 
+test('an external rotation removes a leftover vendor secret file', function () use ($start) {
+	$dirs   = refresh_csrf_cli_dirs();
+	$path   = $dirs['outside'] . '/csrf-secret.php';
+	$legacy = $dirs['base'] . '/include/vendor/csrf/csrf-secret.php';
+
+	file_put_contents($legacy, '5829483104da972116dde2a1e1e444d52df679c0');
+
+	$run = refresh_csrf_cli_run(array('base_path' => $dirs['base'], 'external' => $path));
+
+	expect($run['output'])->toBe($start . "WARNING: csrf_secret.php file does not exist!\nNOTE: New csrf_secret.php file written.\n")
+		->and($run['exit'])->toBe(0)
+		->and(file_exists($legacy))->toBeFalse();
+});
+
+test('a failed external rotation leaves the vendor secret file in place', function () use ($start) {
+	if (function_exists('posix_geteuid') && posix_geteuid() === 0) {
+		$this->markTestSkipped('root can write a read-only directory');
+	}
+
+	$dirs   = refresh_csrf_cli_dirs();
+	$path   = $dirs['outside'] . '/csrf-secret.php';
+	$legacy = $dirs['base'] . '/include/vendor/csrf/csrf-secret.php';
+
+	file_put_contents($legacy, '5829483104da972116dde2a1e1e444d52df679c0');
+	chmod($dirs['outside'], 0500);
+
+	$run = refresh_csrf_cli_run(array('base_path' => $dirs['base'], 'external' => $path));
+
+	chmod($dirs['outside'], 0700);
+
+	expect($run['output'])->toBe($start . "WARNING: csrf_secret.php file does not exist!\nFATAL: Unable to write new csrf_secret.php file.\n")
+		->and($run['exit'])->toBe(1)
+		->and(file_exists($legacy))->toBeTrue();
+});
+
+test('a failed settings rotation leaves the vendor secret file in place', function () use ($start) {
+	$dirs   = refresh_csrf_cli_dirs();
+	$legacy = $dirs['base'] . '/include/vendor/csrf/csrf-secret.php';
+
+	file_put_contents($legacy, '5829483104da972116dde2a1e1e444d52df679c0');
+
+	$run = refresh_csrf_cli_run(array('base_path' => $dirs['base'], 'external' => '', 'db_fails' => true));
+
+	expect($run['output'])->toBe($start . "NOTE: Removing old csrf_secret.php file.\nFATAL: Unable to write new csrf_secret.php file.\n")
+		->and($run['exit'])->toBe(1)
+		->and(file_exists($legacy))->toBeTrue();
+});
+
 test('a settings write that does not stick fails with the 1.2.31 write failure', function () use ($start) {
 	$dirs = refresh_csrf_cli_dirs();
 

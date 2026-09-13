@@ -86,10 +86,6 @@ if (!file_exists($path_csrf_secret)) {
 	}
 } else {
 	print "NOTE: Removing old csrf_secret.php file." . PHP_EOL;
-
-	if (!$external) {
-		@unlink($path_csrf_secret);
-	}
 }
 
 if ($external) {
@@ -102,6 +98,11 @@ if ($external) {
 }
 
 if ($written) {
+	$legacy_path = $config['base_path'] . '/include/vendor/csrf/csrf-secret.php';
+	if (file_exists($legacy_path) && is_writable($legacy_path)) {
+		@unlink($legacy_path);
+	}
+
 	print "NOTE: New csrf_secret.php file written." . PHP_EOL;
 	exit(0);
 }
