@@ -107,6 +107,11 @@ function get_nfilter_request_var($name, $default = '') {
 	return $GLOBALS['req'][$name] ?? $default;
 }
 
+/* lib/html_validate.php exits on a non-numeric value; the realm checks below must still see one */
+function get_filter_request_var($name, $filter = FILTER_VALIDATE_INT, $options = array()) {
+	return $GLOBALS['req'][$name] ?? '';
+}
+
 function __(...$args) {
 	return vsprintf((string) $args[0], array_slice($args, 1));
 }
