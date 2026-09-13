@@ -1,8 +1,8 @@
-# PHP-FPM image for the Kadupul E2E stack. PHP 7.4 matches the 1.2.x branch
-# floor. Vendor tree is already committed under include/vendor, so Composer
-# is intentionally not installed here.
+# PHP-FPM image for the Kadupul E2E stack. The committed include/vendor tree
+# requires PHP 8.0 or later, so a 7.4 image fails every request in Composer's
+# platform check. Composer is intentionally not installed here.
 
-FROM php:7.4-fpm-alpine
+FROM php:8.4-fpm-alpine
 
 LABEL org.opencontainers.image.title="cacti-e2e-php" \
       org.opencontainers.image.source="https://github.com/kadupulhq/kadupul" \
@@ -30,6 +30,7 @@ RUN set -eux; \
         oniguruma; \
     apk add --no-cache --virtual .build-deps \
         $PHPIZE_DEPS \
+        linux-headers \
         libpng-dev \
         libxml2-dev \
         icu-dev \
