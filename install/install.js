@@ -1,6 +1,7 @@
 /*
   +-------------------------------------------------------------------------+
   | Copyright (C) 2004-2026 The Cacti Group                                 |
+  | Copyright (C) 2026 The Kadupul project and contributors                 |
   |                                                                         |
   | This program is free software; you can redistribute it and/or           |
   | modify it under the terms of the GNU General Public License             |
@@ -856,11 +857,9 @@ $(function() {
 				if (buttonData.Step == STEP_GO_SITE) {
 					window.location.assign('../');
 				} else if (buttonData.Step == STEP_GO_FORUMS) {
-					var win = window.open('https://github.com/kadupulhq/kadupul/discussions');
-					win.focus;
+					window.open('https://github.com/kadupulhq/kadupul/discussions', '_blank', 'noopener');
 				} else if (buttonData.Step == STEP_GO_GITHUB) {
-					var win = window.open('https://github.com/kadupulhq/kadupul/issues/');
-					win.focus;
+					window.open('https://github.com/kadupulhq/kadupul/issues/', '_blank', 'noopener');
 				} else if (buttonData.Step == STEP_TEST_REMOTE) {
 					performTestConnection();
 				} else {
