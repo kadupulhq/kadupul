@@ -1002,6 +1002,8 @@ function get_order_string_page($increment = true) {
  * @return string The validated URL, or the provided $default if invalid
  */
 function validate_redirect_url($url = '', $default = 'index.php') {
+	global $config;
+
 	if ($url === '') {
 		return $default;
 	}
@@ -1073,6 +1075,10 @@ function validate_redirect_url($url = '', $default = 'index.php') {
 	/* Use the server-configured name rather than the client-supplied Host header. */
 	if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] != '') {
 		$srv_host = preg_replace('/:\d+$/', '', $_SERVER['SERVER_NAME']);
+	} elseif (isset($_SERVER['HTTP_HOST']) && cacti_trusted_host_header($_SERVER['HTTP_HOST'], $config['trusted_hosts'] ?? array()) !== '') {
+		/* 1.2.31 compared against any Host header when the server sets no
+		 * name. Here the Host header must also be listed in $trusted_hosts. */
+		$srv_host = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST']);
 	}
 
 	if ($ref_host !== null) {
@@ -1137,6 +1143,32 @@ function cacti_valid_host_header(string $host) : string {
 }
 
 /**
+ * Returns the Host header when its host name is listed in $trusted_hosts.
+ *
+ * @param string        $host_header   The client-supplied Host header.
+ * @param array<string> $trusted_hosts Host names from include/config.php.
+ *
+ * @return string The Host header, port included, or an empty string.
+ */
+function cacti_trusted_host_header(string $host_header, array $trusted_hosts) : string {
+	$host = cacti_valid_host_header($host_header);
+
+	if ($host === '') {
+		return '';
+	}
+
+	$name = strtolower(trim(preg_replace('/:[0-9]+$/', '', $host), '[]'));
+
+	foreach ($trusted_hosts as $trusted) {
+		if (is_string($trusted) && strtolower(trim($trusted, '[] ')) === $name) {
+			return $host;
+		}
+	}
+
+	return '';
+}
+
+/**
  * Returns the Host header when a redirect may be built from it.
  *
  * A browser can not set a victim's Host header, but a shared cache can replay
@@ -1168,13 +1200,7 @@ function cacti_accepted_host_header(string $host_header, string $server_name, ar
 		return $host;
 	}
 
-	foreach ($trusted_hosts as $trusted) {
-		if (is_string($trusted) && strtolower(trim($trusted, '[] ')) === $name) {
-			return $host;
-		}
-	}
-
-	return '';
+	return cacti_trusted_host_header($host, $trusted_hosts);
 }
 
 /**
