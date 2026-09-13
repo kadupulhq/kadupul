@@ -822,6 +822,7 @@ header_redirect	./host_templates.php:80			header('Location: host_templates.php?h
 header_redirect	./images/index.php:25	header("Location:../index.php");
 header_redirect	./include/auth.php:50		header ('Location: ' . $config['url_path'] . 'install/');
 header_redirect	./include/auth.php:71				header ('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
+header_redirect	./include/auth.php:94							header ('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
 header_redirect	./include/content/index.php:25	header("Location:../index.php");
 header_redirect	./include/csrf.php:215		header('Location: ' . validate_redirect_url($_SERVER['REQUEST_URI']));
 header_redirect	./include/fa/css/index.php:25	header("Location:../index.php");

@@ -769,19 +769,26 @@ function is_tree_allowed($tree_id, $user_id = 0) {
 		return true;
 	}
 
-	if (isset($_SESSION['sess_tree_perms'][$tree_id])) {
-		return $_SESSION['sess_tree_perms'][$tree_id];
+	if ($user_id === 0 && isset($_SESSION['sess_user_id'])) {
+		$user_id = $_SESSION['sess_user_id'];
+	}
+
+	/* keyed by user as the report poller checks several owners in one process; drop an older unkeyed cache */
+	if (isset($_SESSION['sess_tree_perms'][$user_id]) && !is_array($_SESSION['sess_tree_perms'][$user_id])) {
+		kill_session_var('sess_tree_perms');
+	}
+
+	auth_perm_cache_check_reset($user_id);
+
+	if (isset($_SESSION['sess_tree_perms'][$user_id][$tree_id])) {
+		return $_SESSION['sess_tree_perms'][$user_id][$tree_id];
 	}
 
 	if (read_config_option('auth_method') != 0) {
 		if ($user_id === 0) {
-			if (isset($_SESSION['sess_user_id'])) {
-				$user_id = $_SESSION['sess_user_id'];
-			} else {
-				$_SESSION['sess_tree_perms'][$tree_id] = false;
+			$_SESSION['sess_tree_perms'][$user_id][$tree_id] = false;
 
-				return false;
-			}
+			return false;
 		}
 
 		$policy = db_fetch_cell_prepared('SELECT policy_trees
@@ -797,7 +804,7 @@ function is_tree_allowed($tree_id, $user_id = 0) {
 			array($user_id, $tree_id));
 
 		if (auth_check_perms($trees, $policy)) {
-			$_SESSION['sess_tree_perms'][$tree_id] = true;
+			$_SESSION['sess_tree_perms'][$user_id][$tree_id] = true;
 
 			return true;
 		}
@@ -812,14 +819,14 @@ function is_tree_allowed($tree_id, $user_id = 0) {
 			array($user_id));
 
 		if (!cacti_sizeof($groups)) {
-			$_SESSION['sess_tree_perms'][$tree_id] = false;
+			$_SESSION['sess_tree_perms'][$user_id][$tree_id] = false;
 
 			return false;
 		}
 
 		foreach ($groups as $g) {
 			if (auth_check_perms($trees, $g['policy_trees'])) {
-				$_SESSION['sess_tree_perms'][$tree_id] = true;
+				$_SESSION['sess_tree_perms'][$user_id][$tree_id] = true;
 
 				return true;
 			}
@@ -839,16 +846,16 @@ function is_tree_allowed($tree_id, $user_id = 0) {
 
 		foreach ($groups as $g) {
 			if (auth_check_perms($gtrees, $g['policy_trees'])) {
-				$_SESSION['sess_tree_perms'][$tree_id] = true;
+				$_SESSION['sess_tree_perms'][$user_id][$tree_id] = true;
 				return true;
 			}
 		}
 
-		$_SESSION['sess_tree_perms'][$tree_id] = false;
+		$_SESSION['sess_tree_perms'][$user_id][$tree_id] = false;
 
 		return false;
 	} else {
-		$_SESSION['sess_tree_perms'][$tree_id] = true;
+		$_SESSION['sess_tree_perms'][$user_id][$tree_id] = true;
 
 		return true;
 	}
@@ -1727,8 +1734,15 @@ function get_simple_device_perms($user) {
  * @return (bool)   True if simple permissions are in place, otherwise false
  */
 function get_simple_graph_perms($user_id) {
-	if (isset($_SESSION['sess_simple_perms'])) {
-		return $_SESSION['sess_simple_perms'];
+	/* keyed by user as the report poller checks several owners in one process; drop an older unkeyed cache */
+	if (isset($_SESSION['sess_simple_perms']) && !is_array($_SESSION['sess_simple_perms'])) {
+		kill_session_var('sess_simple_perms');
+	}
+
+	auth_perm_cache_check_reset($user_id);
+
+	if (isset($_SESSION['sess_simple_perms'][$user_id])) {
+		return $_SESSION['sess_simple_perms'][$user_id];
 	}
 
 	$policy_graphs = db_fetch_cell_prepared('SELECT policy_graphs
@@ -1743,7 +1757,7 @@ function get_simple_graph_perms($user_id) {
 		array($user_id));
 
 	if ($policy_graphs == 1 && $perm_count == 0) {
-		$_SESSION['sess_simple_perms'] = true;
+		$_SESSION['sess_simple_perms'][$user_id] = true;
 
 		return true;
 	} else {
@@ -1761,14 +1775,14 @@ function get_simple_graph_perms($user_id) {
 		if (cacti_sizeof($policies)) {
 			foreach($policies as $p) {
 				if ($p['policy_graphs'] == 1 && $p['exceptions'] == 0) {
-					$_SESSION['sess_simple_perms'] = true;
+					$_SESSION['sess_simple_perms'][$user_id] = true;
 
 					return true;
 				}
 			}
 		}
 
-		$_SESSION['sess_simple_perms'] = false;
+		$_SESSION['sess_simple_perms'][$user_id] = false;
 
 		return false;
 	}
@@ -1784,8 +1798,15 @@ function get_simple_graph_perms($user_id) {
  * @return (bool)   True if simple permissions are in place, otherwise false
  */
 function get_simple_graph_template_perms($user_id) {
-	if (isset($_SESSION['sess_simple_template_perms'])) {
-		return $_SESSION['sess_simple_template_perms'];
+	/* keyed by user as the report poller checks several owners in one process; drop an older unkeyed cache */
+	if (isset($_SESSION['sess_simple_template_perms']) && !is_array($_SESSION['sess_simple_template_perms'])) {
+		kill_session_var('sess_simple_template_perms');
+	}
+
+	auth_perm_cache_check_reset($user_id);
+
+	if (isset($_SESSION['sess_simple_template_perms'][$user_id])) {
+		return $_SESSION['sess_simple_template_perms'][$user_id];
 	}
 
 	$policy_graph_templates = db_fetch_cell_prepared('SELECT policy_graph_templates
@@ -1800,7 +1821,7 @@ function get_simple_graph_template_perms($user_id) {
 		array($user_id));
 
 	if ($policy_graph_templates == 1 && $perm_count == 0) {
-		$_SESSION['sess_simple_template_perms'] = true;
+		$_SESSION['sess_simple_template_perms'][$user_id] = true;
 
 		return true;
 	} else {
@@ -1818,14 +1839,14 @@ function get_simple_graph_template_perms($user_id) {
 		if (cacti_sizeof($policies)) {
 			foreach($policies as $p) {
 				if ($p['policy_graph_templates'] == 1 && $p['exceptions'] == 0) {
-					$_SESSION['sess_simple_template_perms'] = true;
+					$_SESSION['sess_simple_template_perms'][$user_id] = true;
 
 					return true;
 				}
 			}
 		}
 
-		$_SESSION['sess_simple_template_perms'] = false;
+		$_SESSION['sess_simple_template_perms'][$user_id] = false;
 
 		return false;
 	}
@@ -3813,7 +3834,7 @@ function ldap_login_process($username) {
 		} else {
 			/* error searching */
 			$error     = true;
-			$error_msg =  __('Access Denied!  LDAP Search Error: %s', $ldap_dn_search_response['error_text']);
+			$error_msg = __('Access Denied!  Login Failed.');
 
 			cacti_log('LOGIN FAILED: LDAP Error: ' . $ldap_dn_search_response['error_text'], false, 'AUTH');
 		}
@@ -3834,7 +3855,7 @@ function ldap_login_process($username) {
 			} else {
 				/* error */
 				$error     = true;
-				$error_msg = __('Access Denied!  LDAP Error: %s', $ldap_auth_response['error_text']);
+				$error_msg = __('Access Denied!  Login Failed.');
 
 				cacti_log('LOGIN FAILED: LDAP Error: ' . $ldap_auth_response['error_text'], false, 'AUTH');
 
@@ -4540,6 +4561,44 @@ function is_user_perms_valid($user_id) {
 	$_SESSION['sess_user_perms_key'] = $key;
 
 	return $valid;
+}
+
+/**
+ * auth_perm_cache_check_reset - drop a user's cached tree and graph answers
+ *   once that user's permissions have been reset.
+ *
+ * The reset runs in another request or process, such as user_admin.php while
+ * poller_reports.php is checking report owners, so the cached answers are tied
+ * to the user's reset_perms value rather than cleared by the reset itself. The
+ * signed-in user is left to is_realm_allowed(), which clears these caches for
+ * that user on reset.
+ *
+ * @param  (int) $user_id The user whose cached answers are about to be used
+ *
+ * @return (void)
+ */
+function auth_perm_cache_check_reset($user_id) {
+	if (empty($user_id) || (isset($_SESSION['sess_user_id']) && $user_id == $_SESSION['sess_user_id'])) {
+		return;
+	}
+
+	$key = db_fetch_cell_prepared('SELECT reset_perms
+		FROM user_auth
+		WHERE id = ?',
+		array($user_id));
+
+	if (isset($_SESSION['sess_perms_reset_key'][$user_id]) && $_SESSION['sess_perms_reset_key'][$user_id] == $key) {
+		return;
+	}
+
+	/* an unkeyed legacy cache is a scalar here, and unsetting an offset of true is an Error */
+	foreach (array('sess_tree_perms', 'sess_simple_perms', 'sess_simple_template_perms') as $cache) {
+		if (isset($_SESSION[$cache]) && is_array($_SESSION[$cache])) {
+			unset($_SESSION[$cache][$user_id]);
+		}
+	}
+
+	$_SESSION['sess_perms_reset_key'][$user_id] = $key;
 }
 
 /**

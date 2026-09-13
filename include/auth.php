@@ -81,6 +81,19 @@ if ($auth_method != 0) {
 
 				if (cacti_auth_transition((int)$cookie_user, 'cookie_restore')) {
 					$_SESSION['sess_user_id'] = $cookie_user;
+
+					/* a password login by this user would land on the forced change, so the cookie must too */
+					$cookie_account = db_fetch_row_prepared('SELECT realm, must_change_password, password_change
+						FROM user_auth
+						WHERE id = ?',
+						array($cookie_user));
+
+					if (cacti_sizeof($cookie_account) && $cookie_account['realm'] == 0 && $cookie_account['must_change_password'] == 'on' && $cookie_account['password_change'] == 'on') {
+						$_SESSION['sess_change_password'] = true;
+
+						header ('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
+						exit;
+					}
 				}
 			}
 		}
@@ -122,7 +135,7 @@ if ($auth_method != 0) {
 					VALUES (?, ?, 1, ?, NOW())',
 					array($username, $current_user['id'], $client_addr));
 
-				return true;
+				/* no early return: the guest page and realm checks below run on this first request as on every later one */
 			} else {
 				require_once($config['base_path'] . '/auth_login.php');
 			}
@@ -136,6 +149,11 @@ if ($auth_method != 0) {
 	 * if that is the case, then use that valid accounts permissions and not
 	 * the guest account.
 	 */
+	/* every anonymous visitor shares the guest account, so the guest may not open its profile */
+	if (isset($guest_account) && get_current_page() == 'auth_profile.php' && (empty($_SESSION['sess_user_id']) || $_SESSION['sess_user_id'] == get_guest_account())) {
+		unset($guest_account);
+	}
+
 	if (isset($guest_account)) {
 		$guest_user_id = get_guest_account();
 
