@@ -20,7 +20,7 @@
 
 dataset('remote graph callers', array('graph_json.php', 'graph_image.php'));
 
-test('console callers forward the session user to remote_agent', function ($file) {
+test('graph endpoints forward the session user to remote_agent', function ($file) {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
 
 	$remote  = strpos($source, "remote_agent.php?action=graph_json");
