@@ -5275,12 +5275,20 @@ function cacti_authorize_has_realm($user_id, $realm_id) {
 		return $realm_cache[$key];
 	}
 
-	/* a group grants its realms only while it is enabled, as is_realm_allowed()
-	   has it, so a disabled group cannot make its members report admins here */
-	$has = (bool) db_fetch_cell_prepared('SELECT 1
+	$sql = 'SELECT 1
 		FROM user_auth_realm
 		WHERE user_id = ?
-		AND realm_id = ?
+		AND realm_id = ?';
+
+	$params = array($user_id, $realm_id);
+
+	/* include/auth.php joins the group tables only once all three exist.  A
+	   group grants its realms only while it is enabled, as is_realm_allowed()
+	   has it, so a disabled group cannot make its members report admins here */
+	if (db_table_exists('user_auth_group_realm') &&
+		db_table_exists('user_auth_group') &&
+		db_table_exists('user_auth_group_members')) {
+		$sql .= '
 		UNION
 		SELECT 1
 		FROM user_auth_group_realm AS ugr
@@ -5290,9 +5298,14 @@ function cacti_authorize_has_realm($user_id, $realm_id) {
 		ON ugm.group_id = ugr.group_id
 		WHERE ug.enabled = \'on\'
 		AND ugm.user_id = ?
-		AND ugr.realm_id = ?
+		AND ugr.realm_id = ?';
+
+		$params = array_merge($params, array($user_id, $realm_id));
+	}
+
+	$has = (bool) db_fetch_cell_prepared($sql . '
 		LIMIT 1',
-		array($user_id, $realm_id, $user_id, $realm_id)
+		$params
 	);
 
 	$realm_cache[$key] = $has;

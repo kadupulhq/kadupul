@@ -115,6 +115,13 @@ function db_fetch_row_prepared($sql, $params = array()) {
 	throw new \RuntimeException('item row loaded');
 }
 
+function db_table_exists($table, $log = true, $db_conn = false) {
+	$query = $GLOBALS['rg_db']->prepare("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?");
+	$query->execute(array($table));
+
+	return ($query->fetchColumn() !== false);
+}
+
 function read_config_option($name) {
 	return ($name == 'auth_method' ? '1' : '');
 }
@@ -287,3 +294,53 @@ test('cacti_authorize_has_realm() answers as is_realm_allowed() does', function 
 	expect(is_realm_allowed(21, $user_id))->toBe($expected);
 	expect(cacti_authorize_has_realm($user_id, 21))->toBe($expected);
 })->with('realm holders');
+
+dataset('databases without every group table', array(
+	'no group tables'        => array(array()),
+	'no user_auth_group'     => array(array('user_auth_group_members', 'user_auth_group_realm')),
+	'no group realm table'   => array(array('user_auth_group', 'user_auth_group_members')),
+	'no group members table' => array(array('user_auth_group', 'user_auth_group_realm')),
+));
+
+test('cacti_authorize_has_realm() counts only the account realm while a group table is missing', function ($tables) {
+	// include/auth.php joins the group tables only once all three exist
+	$schema = array(
+		'user_auth_group'         => "CREATE TABLE user_auth_group (id INTEGER PRIMARY KEY, enabled CHAR(2) NOT NULL DEFAULT 'on')",
+		'user_auth_group_members' => "CREATE TABLE user_auth_group_members (group_id INTEGER NOT NULL, user_id INTEGER NOT NULL, PRIMARY KEY (group_id, user_id))",
+		'user_auth_group_realm'   => "CREATE TABLE user_auth_group_realm (group_id INTEGER NOT NULL, realm_id INTEGER NOT NULL, PRIMARY KEY (group_id, realm_id))",
+	);
+
+	static $user_id = 100;
+
+	// cacti_authorize_has_realm() caches each user and realm for the request
+	$group_user   = ++$user_id;
+	$account_user = ++$user_id;
+	$no_user      = ++$user_id;
+
+	$db = new PDO('sqlite::memory:');
+	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$db->exec("CREATE TABLE user_auth_realm (realm_id INTEGER NOT NULL DEFAULT 0, user_id INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (realm_id, user_id))");
+	$db->exec("INSERT INTO user_auth_realm VALUES (21, $account_user)");
+
+	foreach ($tables as $table) {
+		$db->exec($schema[$table]);
+	}
+
+	if (in_array('user_auth_group', $tables, true)) {
+		$db->exec("INSERT INTO user_auth_group VALUES (2, 'on')");
+	}
+
+	if (in_array('user_auth_group_members', $tables, true)) {
+		$db->exec("INSERT INTO user_auth_group_members VALUES (2, $group_user)");
+	}
+
+	if (in_array('user_auth_group_realm', $tables, true)) {
+		$db->exec("INSERT INTO user_auth_group_realm VALUES (2, 21)");
+	}
+
+	$GLOBALS['rg_db'] = $db;
+
+	expect(cacti_authorize_has_realm($account_user, 21))->toBeTrue();
+	expect(cacti_authorize_has_realm($group_user, 21))->toBeFalse();
+	expect(cacti_authorize_has_realm($no_user, 21))->toBeFalse();
+})->with('databases without every group table');
