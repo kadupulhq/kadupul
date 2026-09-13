@@ -58,14 +58,32 @@ function boostRedirect_db_fetch_assoc_prepared($sql, $params = array(), $log = t
 		return false;
 	}
 
-	$wanted = array_flip(array_map('strval', $params));
-	$rows   = array();
+	/* each clause binds one time and then the ids polled at that time */
+	preg_match_all('/\(time = \? AND local_data_id IN \(([?,]+)\)\)/', $sql, $clauses);
+
+	$wanted = array();
+	$offset = 0;
+
+	foreach ($clauses[1] as $markers) {
+		$count = substr_count($markers, '?');
+		$time  = $params[$offset];
+
+		for ($i = 1; $i <= $count; $i++) {
+			$wanted[$params[$offset + $i] . "\t" . $time] = true;
+		}
+
+		$offset += $count + 1;
+	}
+
+	$rows = array();
 
 	foreach ($state['boost_rows'] as $row) {
-		if (isset($wanted[(string) $row['local_data_id']]) && isset($wanted[$row['time']])) {
+		if (isset($wanted[$row['local_data_id'] . "\t" . $row['time']])) {
 			$rows[] = $row;
 		}
 	}
+
+	$state['read'] += count($rows);
 
 	return $rows;
 }
@@ -120,6 +138,7 @@ function boostRedirectRun(array $options, array $boost_rows = null, array $state
 		'tuples'       => array(),
 		'lookups'      => 0,
 		'markers'      => array(),
+		'read'         => 0,
 		'lookup_fails' => false,
 		'flush_fails'  => false,
 		'owned'        => true,
@@ -158,7 +177,7 @@ test('Boost redirect stages only the rows missing from poller_output_boost', fun
 });
 
 test('a 40000 row batch with distinct timestamps stays under the marker limit and finds every row', function () {
-	$GLOBALS['boost_redirect_test'] = array('lookups' => 0, 'markers' => array(), 'lookup_fails' => false, 'boost_rows' => array());
+	$GLOBALS['boost_redirect_test'] = array('lookups' => 0, 'markers' => array(), 'read' => 0, 'lookup_fails' => false, 'boost_rows' => array());
 
 	$results = array();
 
@@ -171,6 +190,27 @@ test('a 40000 row batch with distinct timestamps stays under the marker limit an
 	expect(boostRedirect_boost_redirect_missing_rows($results))->toBe(array())
 		->and(max($GLOBALS['boost_redirect_test']['markers']))->toBeLessThanOrEqual(60000)
 		->and($GLOBALS['boost_redirect_test']['lookups'])->toBe(2);
+});
+
+test('the presence lookup reads only the requested data source and time pairs', function () {
+	$results = array(
+		array('local_data_id' => 7, 'rrd_name' => 'traffic_in', 'time' => '2026-01-01 00:05:00', 'output' => '10'),
+		array('local_data_id' => 7, 'rrd_name' => 'traffic_out', 'time' => '2026-01-01 00:05:00', 'output' => '11'),
+		array('local_data_id' => 8, 'rrd_name' => 'traffic_in', 'time' => '2026-01-01 00:05:01', 'output' => '12'),
+	);
+
+	/* one exact match, and each data source also held at the other one's time */
+	$boost_rows = array(
+		array('local_data_id' => 7, 'rrd_name' => 'traffic_out', 'time' => '2026-01-01 00:05:00'),
+		array('local_data_id' => 7, 'rrd_name' => 'traffic_in', 'time' => '2026-01-01 00:05:01'),
+		array('local_data_id' => 8, 'rrd_name' => 'traffic_in', 'time' => '2026-01-01 00:05:00'),
+	);
+
+	$GLOBALS['boost_redirect_test'] = array('lookups' => 0, 'markers' => array(), 'read' => 0, 'lookup_fails' => false, 'boost_rows' => $boost_rows);
+
+	expect(boostRedirect_boost_redirect_missing_rows($results))->toBe(array($results[0], $results[2]))
+		->and($GLOBALS['boost_redirect_test']['read'])->toBe(1)
+		->and($GLOBALS['boost_redirect_test']['lookups'])->toBe(1);
 });
 
 test('a failed Boost presence lookup stages every row instead of dropping them', function () {

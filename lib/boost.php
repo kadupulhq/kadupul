@@ -396,39 +396,57 @@ function boost_validate_poller_ownership($results, $poller_id, $conn = false) {
  */
 function boost_redirect_missing_rows($results, $conn = false) {
 	/* The server refuses more than 65535 markers in one statement, so a lookup
-	 * holds at most 60000 data source ids and times together. */
+	 * holds at most 60000 data source ids and times together.  Each time lists
+	 * only its own ids, so the lookup reads the requested pairs and no others. */
 	$max_markers = 60000;
 	$chunks      = array();
-	$ids         = array();
-	$times       = array();
+	$pairs       = array();
+	$markers     = 0;
 
 	foreach ($results as $result) {
 		$id   = (int) $result['local_data_id'];
 		$time = (string) $result['time'];
-		$new  = (isset($ids[$id]) ? 0 : 1) + (isset($times[$time]) ? 0 : 1);
 
-		if (cacti_sizeof($ids) + cacti_sizeof($times) + $new > $max_markers) {
-			$chunks[] = array(array_keys($ids), array_keys($times));
-			$ids      = array();
-			$times    = array();
+		if (isset($pairs[$time][$id])) {
+			continue;
 		}
 
-		$ids[$id]     = true;
-		$times[$time] = true;
+		$new = isset($pairs[$time]) ? 1 : 2;
+
+		if ($markers + $new > $max_markers) {
+			$chunks[] = $pairs;
+			$pairs    = array();
+			$markers  = 0;
+			$new      = 2;
+		}
+
+		$pairs[$time][$id] = true;
+		$markers          += $new;
 	}
 
-	if (cacti_sizeof($ids)) {
-		$chunks[] = array(array_keys($ids), array_keys($times));
+	if ($markers > 0) {
+		$chunks[] = $pairs;
 	}
 
 	$present = array();
 
 	foreach ($chunks as $chunk) {
+		$clauses = array();
+		$params  = array();
+
+		foreach ($chunk as $time => $ids) {
+			$clauses[] = '(time = ? AND local_data_id IN (' . implode(',', array_fill(0, cacti_sizeof($ids), '?')) . '))';
+			$params[]  = (string) $time;
+
+			foreach (array_keys($ids) as $id) {
+				$params[] = $id;
+			}
+		}
+
 		$rows = db_fetch_assoc_prepared('SELECT local_data_id, rrd_name, time
 			FROM poller_output_boost
-			WHERE local_data_id IN (' . implode(',', array_fill(0, cacti_sizeof($chunk[0]), '?')) . ')
-			AND time IN (' . implode(',', array_fill(0, cacti_sizeof($chunk[1]), '?')) . ')',
-			array_merge($chunk[0], $chunk[1]), true, $conn);
+			WHERE ' . implode(' OR ', $clauses),
+			$params, true, $conn);
 
 		if ($rows === false) {
 			return $results;
