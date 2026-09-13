@@ -9,6 +9,10 @@
  * PHP casts a float to a string with 14 significant digits, so a microtime(true)
  * within 50 microseconds of a whole second loses its fraction, and 'U.u' then
  * refuses it. The settings table hands the same digits back as a string.
+ *
+ * lib/installer.php only defines the class and pulls in lib/poller.php, which
+ * only defines functions, so the helper runs in this process where coverage
+ * can see it.
  */
 
 $root            = dirname(__DIR__, 2);
@@ -18,116 +22,55 @@ if ($installerSource === false) {
     throw new RuntimeException('Unable to read installer source');
 }
 
+require_once $root . '/lib/installer.php';
+
+function installer_microtime_date($value)
+{
+    $parse = new ReflectionMethod(Installer::class, 'dateFromMicrotime');
+    $parse->setAccessible(true);
+
+    $date = $parse->invoke(null, $value);
+
+    return $date === false ? false : $date->format('Y-m-d H:i:s.u');
+}
+
 test('installer timestamps parse through the microtime helper', function () use ($installerSource) {
     expect($installerSource)->not->toContain("DateTime::createFromFormat('U.u', \$background");
 });
 
-test('microtime values without a fraction still produce a date', function () use ($root) {
-    $stub = <<<'PHP'
-        <?php
-        $install_options = [];
+test('values with a fraction take the original parse', function () {
+    expect(installer_microtime_date(1789333661.25))->toBe('2026-09-13 21:07:41.250000')
+        ->and(installer_microtime_date('1789333661.1235'))->toBe('2026-09-13 21:07:41.123500');
+});
 
-        function __($message)
-        {
-            $args = func_get_args();
-            array_shift($args);
+test('whole-second floats fall back to a six-digit fraction', function () {
+    expect(installer_microtime_date(1789333661.0))->toBe('2026-09-13 21:07:41.000000')
+        ->and(installer_microtime_date(1789333661.99996))->toBe('2026-09-13 21:07:41.999960');
+});
 
-            return count($args) ? vsprintf($message, $args) : $message;
+test('stored settings strings parse whatever their precision', function () {
+    expect(installer_microtime_date((string) 1789333661.0))->toBe('2026-09-13 21:07:41.000000')
+        ->and(installer_microtime_date('1789333661.0000'))->toBe('2026-09-13 21:07:41.000000')
+        ->and(installer_microtime_date('1789333661.1234567'))->toBe('2026-09-13 21:07:41.123457');
+});
+
+test('non-numeric values still return false', function () {
+    expect(installer_microtime_date(''))->toBeFalse()
+        ->and(installer_microtime_date('-b'))->toBeFalse()
+        ->and(installer_microtime_date(false))->toBeFalse();
+});
+
+test('every value the old parse accepted keeps its output', function () {
+    $changed = 0;
+
+    for ($i = 0; $i < 20000; $i++) {
+        $value = 1789333661 + $i / 20000;
+        $old   = DateTime::createFromFormat('U.u', $value);
+
+        if ($old !== false && $old->format('Y-m-d H:i:s.u') !== installer_microtime_date($value)) {
+            $changed++;
         }
+    }
 
-        function cacti_sizeof($value)
-        {
-            return is_countable($value) ? count($value) : 0;
-        }
-
-        function read_config_option($name, $force = false)
-        {
-            global $install_options;
-
-            return $install_options[$name] ?? '';
-        }
-
-        function set_install_config_option($name, $value)
-        {
-            global $install_options;
-
-            $install_options[$name] = $value;
-        }
-
-        function log_install_always($key, $message) {}
-
-        function log_install_high($key, $message) {}
-
-        function log_install_medium($key, $message) {}
-
-        function log_install_debug($section, $text, $background = false) {}
-
-        function clean_up_lines($string)
-        {
-            return $string;
-        }
-
-        require $argv[1] . '/lib/installer.php';
-
-        $parse = new ReflectionMethod('Installer', 'dateFromMicrotime');
-        $parse->setAccessible(true);
-
-        $format = function ($value) use ($parse) {
-            $date = $parse->invoke(null, $value);
-
-            return $date === false ? false : $date->format('Y-m-d H:i:s.u');
-        };
-
-        // The settings table returns the value as the string PHP cast it to
-        set_install_config_option('install_started', 1789333661.0);
-        $stored = (string) read_config_option('install_started', true);
-
-        $results = [
-            'whole float'     => $format(1789333661.0),
-            'rounded float'   => $format(1789333661.99996),
-            'stored whole'    => $format($stored),
-            'stored fraction' => $format('1789333661.1235'),
-            'stored 7 digits' => $format('1789333661.1234567'),
-            'empty setting'   => $format(''),
-            'background flag' => $format('-b'),
-        ];
-
-        // Every value the old parse accepted must format exactly as it did before
-        $changed = 0;
-        for ($i = 0; $i < 20000; $i++) {
-            $value = 1789333661 + $i / 20000;
-            $old   = DateTime::createFromFormat('U.u', $value);
-
-            if ($old !== false && $old->format('Y-m-d H:i:s.u') !== $format($value)) {
-                $changed++;
-            }
-        }
-
-        $results['changed'] = $changed;
-
-        print json_encode($results);
-        PHP;
-
-    $script = tempnam(sys_get_temp_dir(), 'kadupul_install_mt_');
-    file_put_contents($script, $stub);
-
-    $cmd = escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($script) . ' '
-        . escapeshellarg($root) . ' 2>&1';
-
-    $output = [];
-    exec($cmd, $output);
-    @unlink($script);
-
-    $results = json_decode(implode("\n", $output), true);
-
-    expect($results)->toBe([
-        'whole float'     => '2026-09-13 21:07:41.000000',
-        'rounded float'   => '2026-09-13 21:07:41.999960',
-        'stored whole'    => '2026-09-13 21:07:41.000000',
-        'stored fraction' => '2026-09-13 21:07:41.123500',
-        'stored 7 digits' => '2026-09-13 21:07:41.123457',
-        'empty setting'   => false,
-        'background flag' => false,
-        'changed'         => 0,
-    ]);
+    expect($changed)->toBe(0);
 });

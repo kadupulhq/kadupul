@@ -3632,7 +3632,8 @@ class Installer implements JsonSerializable {
 	 * within 50 microseconds of a whole second loses the fraction 'U.u' needs.
 	 * Fall back only then, so every value that parsed before keeps its output.
 	 */
-	private static function dateFromMicrotime($value) {
+	private static function dateFromMicrotime($value)
+	{
 		$date = DateTime::createFromFormat('U.u', $value);
 
 		if ($date === false && is_numeric($value)) {
