@@ -389,6 +389,51 @@ function boost_validate_poller_ownership($results, $poller_id, $conn = false) {
 	return $assigned_ids === $local_data_ids;
 }
 
+/**
+ * boost_redirect_missing_rows - return the poller output rows that
+ *   poller_output_boost does not hold.  One indexed lookup covers a
+ *   poller_output chunk; a failed lookup returns every row so none is dropped.
+ */
+function boost_redirect_missing_rows($results, $conn = false) {
+	$ids   = array();
+	$times = array();
+
+	foreach ($results as $result) {
+		$ids[(int) $result['local_data_id']] = true;
+		$times[(string) $result['time']]     = true;
+	}
+
+	$times   = array_keys($times);
+	$present = array();
+
+	/* stay under the prepared statement placeholder limit for larger batches */
+	foreach (array_chunk(array_keys($ids), 30000) as $chunk) {
+		$rows = db_fetch_assoc_prepared('SELECT local_data_id, rrd_name, time
+			FROM poller_output_boost
+			WHERE local_data_id IN (' . implode(',', array_fill(0, cacti_sizeof($chunk), '?')) . ')
+			AND time IN (' . implode(',', array_fill(0, cacti_sizeof($times), '?')) . ')',
+			array_merge($chunk, $times), true, $conn);
+
+		if ($rows === false) {
+			return $results;
+		}
+
+		foreach ($rows as $row) {
+			$present[$row['local_data_id'] . "\t" . $row['rrd_name'] . "\t" . $row['time']] = true;
+		}
+	}
+
+	$missing = array();
+
+	foreach ($results as $result) {
+		if (!isset($present[(int) $result['local_data_id'] . "\t" . $result['rrd_name'] . "\t" . $result['time']])) {
+			$missing[] = $result;
+		}
+	}
+
+	return $missing;
+}
+
 function boost_poller_on_demand(&$results) {
 	global $config, $remote_db_cnn_id;
 
@@ -445,8 +490,31 @@ function boost_poller_on_demand(&$results) {
 				$return_value = false;
 			}
 		} elseif ($boost_enabled) {
-			/* with boost redirect on, the collectors already wrote these rows to poller_output_boost */
+			/* With boost redirect on the collectors also write these rows to
+			 * poller_output_boost, but a batch from before redirect was switched on,
+			 * or whose Boost insert failed, exists only here.  Stage what Boost lacks. */
 			$return_value = false;
+			$missing      = cacti_sizeof($results) ? boost_redirect_missing_rows($results, $conn) : array();
+
+			if (cacti_sizeof($missing)) {
+				if ($config['poller_id'] > 1 && !boost_validate_poller_ownership($missing, $config['poller_id'], $conn)) {
+					cacti_log('ERROR: Boost rejected a handoff containing data sources not assigned to this poller.', false, 'BOOST');
+
+					$return_value = true;
+				} else {
+					$value_tuples = array();
+
+					foreach ($missing as $result) {
+						$value_tuples[] = '(' .
+							(int) $result['local_data_id'] . ',' .
+							db_qstr($result['rrd_name'], $conn) . ',' .
+							db_qstr($result['time'], $conn) . ',' .
+							db_qstr($result['output'], $conn) . ')';
+					}
+
+					$return_value = !boost_flush_output_batch($value_tuples, $conn);
+				}
+			}
 		} else {
 			$return_value = true;
 		}

@@ -42,8 +42,33 @@ function boostRedirect_boost_check_correct_enabled() {
 
 function boostRedirect_boost_flush_output_batch($value_tuples, $conn = false) {
 	$GLOBALS['boost_redirect_test']['staged'] += count($value_tuples);
+	$GLOBALS['boost_redirect_test']['tuples']  = array_merge($GLOBALS['boost_redirect_test']['tuples'], $value_tuples);
 
-	return true;
+	return !$GLOBALS['boost_redirect_test']['flush_fails'];
+}
+
+/* answers the presence lookup from the rows the test places in poller_output_boost */
+function boostRedirect_db_fetch_assoc_prepared($sql, $params = array(), $log = true, $conn = false) {
+	$state =& $GLOBALS['boost_redirect_test'];
+	$state['lookups']++;
+
+	if ($state['lookup_fails']) {
+		return false;
+	}
+
+	$rows = array();
+
+	foreach ($state['boost_rows'] as $row) {
+		if (in_array($row['local_data_id'], $params) && in_array($row['time'], $params, true)) {
+			$rows[] = $row;
+		}
+	}
+
+	return $rows;
+}
+
+function boostRedirect_boost_validate_poller_ownership($results, $poller_id, $conn = false) {
+	return $GLOBALS['boost_redirect_test']['owned'];
 }
 
 function boostRedirect_db_qstr($value, $conn = false) {
@@ -63,20 +88,38 @@ function boostRedirectLoad($root) {
 	}
 
 	$source = file_get_contents($root . '/lib/boost.php');
-	$start  = strpos($source, 'function boost_poller_on_demand(');
-	$end    = strpos($source, "\nfunction ", $start + 1);
 
-	expect($start)->not->toBeFalse()
-		->and($end)->not->toBeFalse();
+	foreach (array('boost_redirect_missing_rows', 'boost_poller_on_demand') as $name) {
+		$start = strpos($source, 'function ' . $name . '(');
 
-	eval(preg_replace('/\b(boost_poller_on_demand|read_config_option|set_config_option|boost_check_correct_enabled|boost_flush_output_batch|db_qstr|cacti_sizeof|cacti_log)\(/', 'boostRedirect_$1(', substr($source, $start, $end - $start)));
+		if ($start === false) {
+			continue;
+		}
+
+		$end = strpos($source, "\nfunction ", $start + 1);
+
+		eval(preg_replace('/\b(boost_redirect_missing_rows|boost_poller_on_demand|boost_validate_poller_ownership|read_config_option|set_config_option|boost_check_correct_enabled|boost_flush_output_batch|db_fetch_assoc_prepared|db_qstr|cacti_sizeof|cacti_log)\(/', 'boostRedirect_$1(', substr($source, $start, $end - $start)));
+	}
+
+	expect(function_exists('boostRedirect_boost_poller_on_demand'))->toBeTrue();
 }
 
-function boostRedirectRun(array $options) {
-	$GLOBALS['boost_redirect_test'] = array('options' => $options, 'staged' => 0);
-
+function boostRedirectRun(array $options, array $boost_rows = null, array $state = array()) {
 	$results = array(
 		array('local_data_id' => 7, 'rrd_name' => 'traffic_in', 'time' => '2026-01-01 00:05:00', 'output' => '10'),
+		array('local_data_id' => 7, 'rrd_name' => 'traffic_out', 'time' => '2026-01-01 00:05:00', 'output' => '11'),
+		array('local_data_id' => 8, 'rrd_name' => 'traffic_in', 'time' => '2026-01-01 00:05:00', 'output' => '12'),
+	);
+
+	$GLOBALS['boost_redirect_test'] = $state + array(
+		'options'      => $options,
+		'staged'       => 0,
+		'tuples'       => array(),
+		'lookups'      => 0,
+		'lookup_fails' => false,
+		'flush_fails'  => false,
+		'owned'        => true,
+		'boost_rows'   => $boost_rows === null ? $results : $boost_rows,
 	);
 
 	return boostRedirect_boost_poller_on_demand($results);
@@ -93,20 +136,50 @@ afterEach(function () {
 	$GLOBALS['config'] = $this->saved_config;
 });
 
-test('Boost redirect leaves poller output to Boost instead of the RRD files', function () {
+test('Boost redirect leaves poller output to Boost when Boost already holds every row', function () {
 	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on')))->toBeFalse()
+		->and($GLOBALS['boost_redirect_test']['staged'])->toBe(0)
+		->and($GLOBALS['boost_redirect_test']['lookups'])->toBe(1);
+});
+
+test('Boost redirect stages only the rows missing from poller_output_boost', function () {
+	$present = array(array('local_data_id' => 7, 'rrd_name' => 'traffic_in', 'time' => '2026-01-01 00:05:00'));
+
+	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on'), $present))->toBeFalse()
+		->and($GLOBALS['boost_redirect_test']['lookups'])->toBe(1)
+		->and($GLOBALS['boost_redirect_test']['tuples'])->toBe(array(
+			"(7,'traffic_out','2026-01-01 00:05:00','11')",
+			"(8,'traffic_in','2026-01-01 00:05:00','12')",
+		));
+});
+
+test('a failed Boost presence lookup stages every row instead of dropping them', function () {
+	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on'), array(), array('lookup_fails' => true)))->toBeFalse()
+		->and($GLOBALS['boost_redirect_test']['staged'])->toBe(3);
+});
+
+test('when staging the missing rows fails the poller writes the batch directly', function () {
+	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on'), array(), array('lookup_fails' => true, 'flush_fails' => true)))->toBeTrue();
+});
+
+test('a remote collector still refuses to stage missing rows it does not own', function () {
+	$GLOBALS['config']['poller_id'] = 2;
+
+	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on'), array(), array('owned' => false)))->toBeTrue()
 		->and($GLOBALS['boost_redirect_test']['staged'])->toBe(0);
 });
 
-test('without redirect Boost stages the rows and skips the direct update', function () {
+test('without redirect Boost stages the rows and skips the direct update as in 1.2.31', function () {
 	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => '')))->toBeFalse()
-		->and($GLOBALS['boost_redirect_test']['staged'])->toBe(1);
+		->and($GLOBALS['boost_redirect_test']['staged'])->toBe(3)
+		->and($GLOBALS['boost_redirect_test']['lookups'])->toBe(0);
 });
 
-test('a redirect value other than on stages the rows as the collectors expect', function () {
+test('a redirect value other than on stages the rows as in 1.2.31', function () {
 	/* cmd.php and spine write poller_output_boost only when boost_redirect is exactly on */
 	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'yes')))->toBeFalse()
-		->and($GLOBALS['boost_redirect_test']['staged'])->toBe(1);
+		->and($GLOBALS['boost_redirect_test']['staged'])->toBe(3)
+		->and($GLOBALS['boost_redirect_test']['lookups'])->toBe(0);
 });
 
 test('with Boost off the poller still updates the RRD files directly', function () {
