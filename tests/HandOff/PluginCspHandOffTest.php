@@ -124,7 +124,7 @@ function _handoff_stage_plugin($srcRoot, $dstRoot, $plugin, $force) {
 /**
  * Mirror of api_plugin_get_dependencies() but without booting Kadupul.
  * Reads the plugin's INFO file and extracts the requires= line. The
- * production function lives at lib/plugins.php:301; copying the parse
+ * production function lives in lib/plugins.php; copying the parse
  * shape here lets us assert against it without dragging in the global
  * $config array.
  */
