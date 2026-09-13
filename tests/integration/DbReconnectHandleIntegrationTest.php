@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -36,8 +37,8 @@ if ($source === false) {
 	throw new \RuntimeException('Unable to read lib/database.php for the reconnect integration test.');
 }
 
-if (preg_match('/function db_check_reconnect\(.*?^}\R/ms', $source, $matches) !== 1) {
-	throw new \RuntimeException('Unable to extract db_check_reconnect() for the reconnect integration test.');
+if (preg_match('/function db_check_reconnect_handle\(.*?^}\R/ms', $source, $matches) !== 1) {
+	throw new \RuntimeException('Unable to extract db_check_reconnect_handle() for the reconnect integration test.');
 }
 
 eval('namespace DbReconnectHandleIntegrationTest;' . $matches[0]); // nosemgrep: php.lang.security.eval-use.eval-use
@@ -78,7 +79,7 @@ beforeEach(function () {
 
 test('a successful reconnect replaces the callers dead connection', function () {
 	$caller = $GLOBALS['db_reconnect_old'];
-	$result = db_check_reconnect($caller, false);
+	$result = db_check_reconnect_handle($caller, false);
 
 	expect($result)->toBeTrue()
 		->and($caller)->toBe($GLOBALS['db_reconnect_replacement'])
@@ -87,7 +88,7 @@ test('a successful reconnect replaces the callers dead connection', function () 
 
 test('a default connection probe remains in default mode after reconnecting', function () {
 	$caller = false;
-	$result = db_check_reconnect($caller, false);
+	$result = db_check_reconnect_handle($caller, false);
 
 	expect($result)->toBeTrue()
 		->and($caller)->toBeFalse();
@@ -96,7 +97,7 @@ test('a default connection probe remains in default mode after reconnecting', fu
 test('a healthy caller connection is retained without reconnecting', function () {
 	$GLOBALS['db_reconnect_connection_is_healthy'] = true;
 	$caller                                         = $GLOBALS['db_reconnect_old'];
-	$result                                         = db_check_reconnect($caller, false);
+	$result                                         = db_check_reconnect_handle($caller, false);
 
 	expect($result)->toBeTrue()
 		->and($caller)->toBe($GLOBALS['db_reconnect_old']);

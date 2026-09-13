@@ -240,13 +240,27 @@ function db_connect_real($device, $user, $pass, $db_name, $db_type = 'mysql', $p
  * db_check_reconnect - Check the database connection.  If the connection is gone
  *  attempt to reconnect, otherwise return the connection
  *
+ * @param bool|object $db_conn The connection to check
+ * @param bool        $log     Whether or not to log the connection check
+ *
+ * @return bool True when the database is connected, otherwise false
+ */
+function db_check_reconnect($db_conn = false, $log = true) {
+	/* by value, as in 1.2.31, so plugins may still pass a literal */
+	return db_check_reconnect_handle($db_conn, $log);
+}
+
+/**
+ * db_check_reconnect_handle - db_check_reconnect() for callers that keep using
+ *  the handle afterwards
+ *
  * @param bool|object &$db_conn The connection to check. Replaced with the new
  *                              connection after a successful reconnect.
  * @param bool         $log     Whether or not to log the connection check
  *
  * @return bool True when the database is connected, otherwise false
  */
-function db_check_reconnect(&$db_conn = false, $log = true) {
+function db_check_reconnect_handle(&$db_conn = false, $log = true) {
 	global $config, $database_details;
 
 	if (file_exists($config['base_path'] . '/include/config.php')) {
@@ -620,7 +634,7 @@ function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = fa
 
 					sleep(5);
 
-					if (db_check_reconnect($db_conn)) {
+					if (db_check_reconnect_handle($db_conn)) {
 						if ($errors < 5) {
 							/* retry the query now */
 							continue;
@@ -955,7 +969,7 @@ function db_is_safe_column_type($type) {
 
 	$type = trim($type);
 
-	if ($type === '' || preg_match('/[`;"#]|--|\/\*/', $type)) {
+	if ($type === '' || preg_match('/[`;#]|--|\/\*/', $type)) {
 		return false;
 	}
 
@@ -975,7 +989,10 @@ function db_is_safe_column_type($type) {
 	}
 
 	if ($base_type === 'enum' || $base_type === 'set') {
-		return preg_match("/^\\s*'([^'\\\\]|\\\\.|'')*'(\\s*,\\s*'([^'\\\\]|\\\\.|'')*')*\\s*$/", $params) === 1;
+		/* MySQL accepts single or double quoted values, as plugins such as evidence use */
+		$value = "(?:'(?:[^'\\\\]|\\\\.|'')*'|\"(?:[^\"\\\\]|\\\\.|\"\")*\")";
+
+		return preg_match("/^\\s*$value(?:\\s*,\\s*$value)*\\s*$/", $params) === 1;
 	}
 
 	return false;

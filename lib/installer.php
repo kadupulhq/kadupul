@@ -569,7 +569,10 @@ class Installer implements JsonSerializable {
 			$valid = (is_resource_writable($path));
 			$permissions['always'][$path] = $valid;
 			log_install_debug('permission',"($name) $path = $valid (always)");
-			if (!$valid) {
+			if (!$valid && $name == 'purifier') {
+				/* HTMLPurifier runs without its definition cache, and 1.2.31 did not require this path */
+				log_install_always('permission', __('WARNING: Path is not writable, HTMLPurifier will run without a definition cache: %s', $path));
+			} elseif (!$valid) {
 				$this->addError(Installer::STEP_PERMISSION_CHECK, 'Permission', $name.':'.$path, __('Path is not writable'));
 			}
 		}
@@ -2444,6 +2447,15 @@ class Installer implements JsonSerializable {
 				$permissions .=
 					'<i class="' . $this->iconClass[DB_STATUS_SUCCESS] . '"></i> ' .
 					'<font color="#008000">' . __('Writable') . '</font>';
+			} elseif ($path == $config['base_path'] . '/cache/purifier/') {
+				/* HTMLPurifier runs without its definition cache, so this path does not block */
+				$permissions .=
+					'<i class="' . $this->iconClass[DB_STATUS_WARNING] . '"></i> ' .
+					'<font color="orange">' . __('Not Writable') . '</font>';
+
+				if ($sections['writable_always'] == DB_STATUS_SUCCESS) {
+					$sections['writable_always'] = DB_STATUS_WARNING;
+				}
 			} else {
 				$permissions .=
 					'<i class="' . $this->iconClass[DB_STATUS_ERROR] . '"></i> ' .
@@ -3121,7 +3133,13 @@ class Installer implements JsonSerializable {
 		log_install_always('', __('Finished %s Process for v%s', $which, CACTI_VERSION));
 
 		if (empty($failure)) {
-			$failure = $this->validateCoreSchema();
+			/* 1.2.31 finished upgrades with tables missing, such as Boost tables no
+			 * upgrade creates, so report the gap without failing the upgrade */
+			$schema_warning = $this->validateCoreSchema();
+
+			if ($schema_warning != '') {
+				log_install_always('', $schema_warning);
+			}
 		}
 
 		set_install_config_option('install_error', $failure);
@@ -3156,13 +3174,13 @@ class Installer implements JsonSerializable {
 		$schema_sql = file_get_contents($config['base_path'] . '/cacti.sql');
 
 		if ($schema_sql === false) {
-			return __('ERROR: Unable to validate the installed database because cacti.sql could not be read');
+			return __('WARNING: Unable to validate the installed database because cacti.sql could not be read');
 		}
 
 		$expected_tables = audit_schema_table_names($schema_sql);
 
 		if (!cacti_sizeof($expected_tables)) {
-			return __('ERROR: Unable to validate the installed database because cacti.sql contains no table definitions');
+			return __('WARNING: Unable to validate the installed database because cacti.sql contains no table definitions');
 		}
 
 		$table_rows = db_fetch_assoc_prepared('SELECT TABLE_NAME
@@ -3171,14 +3189,14 @@ class Installer implements JsonSerializable {
 			array($database_default));
 
 		if (!is_array($table_rows)) {
-			return __('ERROR: Unable to query the installed database schema');
+			return __('WARNING: Unable to query the installed database schema');
 		}
 
 		$actual_tables = array_column($table_rows, 'TABLE_NAME');
 		$missing_tables = audit_missing_core_tables($expected_tables, $actual_tables);
 
 		if (cacti_sizeof($missing_tables)) {
-			return __('ERROR: Required core database tables are missing: %s', implode(', ', $missing_tables));
+			return __('WARNING: Core database tables are missing: %s', implode(', ', $missing_tables));
 		}
 
 		return '';
@@ -3211,7 +3229,7 @@ class Installer implements JsonSerializable {
 					set_install_config_option('install_updated', microtime(true));
 
 					$info = import_package_get_details($path . $package);
-					$result = import_package($path . $package, $this->profile, false, false, false, false, true, array(), array(), $info['class']);
+					$result = import_package($path . $package, $this->profile, false, false, false, false, true, array(), array(), $info['class'], false);
 
 					if ($result !== false) {
 						log_install_always('', __('Import of Package #%s \'%s\' under Profile \'%s\' succeeded', $i, $package, $this->profile));

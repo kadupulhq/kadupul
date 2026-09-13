@@ -415,8 +415,13 @@ function package_public_key_is_trusted($public_key) {
 		return false;
 	}
 
-	if ($public_key == get_public_key()) {
+	/* both official Cacti keys, which import_read_package_data() also accepts */
+	if ($public_key == get_public_key() || is_cacti_public_key($public_key)) {
 		return true;
+	}
+
+	if (!db_table_exists('package_public_keys')) {
+		return false;
 	}
 
 	$trusted = db_fetch_assoc('SELECT public_key FROM package_public_keys');
@@ -504,11 +509,21 @@ function package_validate_signature($xmlfile) {
 
 	$package_key = import_package_get_public_key($xmlfile);
 
+	/* shipped packages carry the 2048-bit Cacti key; signatures are still
+	 * verified by import_package() */
+	if (is_cacti_public_key($package_key)) {
+		return true;
+	}
+
 	// Other trusted keys next
-	$keys = array_rekey(
-		db_fetch_assoc('SELECT public_key FROM package_public_keys'),
-		'public_key', 'public_key'
-	);
+	$keys = array();
+
+	if (db_table_exists('package_public_keys')) {
+		$keys = array_rekey(
+			db_fetch_assoc('SELECT public_key FROM package_public_keys'),
+			'public_key', 'public_key'
+		);
+	}
 
 	$keys[$cacti_key] = $cacti_key;
 

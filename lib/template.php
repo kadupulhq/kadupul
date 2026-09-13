@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -523,7 +524,8 @@ function push_out_graph_input($graph_template_input_id, $graph_template_item_id,
 
 	if (cacti_sizeof($values_to_apply)) {
 		foreach ($values_to_apply as $value) {
-			if (!graph_template_input_value_is_allowed($column_name, $value[$column_name])) {
+			/* nullable graph item columns hold NULL, which 1.2.31 pushed out as is */
+			if ($value[$column_name] !== null && !graph_template_input_value_is_allowed($column_name, $value[$column_name])) {
 				cacti_log('ERROR: push_out_graph_input() refused an invalid graph input value', false, 'SECURITY');
 
 				return;
