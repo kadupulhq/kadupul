@@ -35,6 +35,7 @@ Cacti CHANGELOG
 -issue: Open the Data Query graph template delete dialog again
 -issue: Add a data template item from the New link again
 -issue: Load move, delete and confirm links in the page again, keeping their POST token
+-security: Require the Data Input Methods permission to create or change Data Input Methods through a web template or package import
 -security: Refuse .. segments in RRD file and archive paths that maintenance archives or deletes
 -security: Refuse shell metacharacters in webhits.pl and diskfree.pl arguments
 -issue: Declare GPL-2.0-or-later in composer.json, the license the source headers grant

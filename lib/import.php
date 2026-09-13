@@ -33,6 +33,9 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 	$files            = array();
 	$ignorable_hashes = array();
 
+	/* one decision for the whole import, taken before any object is written */
+	$data_input_allowed = import_data_input_realm_allowed();
+
 	$xml_array = xml2array($xml_data);
 
 	if (cacti_sizeof($xml_array) == 0) {
@@ -270,7 +273,7 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 					$hash_cache += xml_to_host_template($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache, $host_template_data, $class);
 					break;
 				case 'data_input_method':
-					$hash_cache += xml_to_data_input_method($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache);
+					$hash_cache += xml_to_data_input_method($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache, $data_input_allowed);
 					$repair++;
 					break;
 				case 'data_query':
@@ -2322,12 +2325,54 @@ function xml_detect_ignorable_hash_cache($hash, &$xml_array) {
 	return $found;
 }
 
-function xml_to_data_input_method($hash, &$xml_array, &$hash_cache) {
+/* An input string is a poller command, so a web import may write data input
+ * methods only for a user holding the Data Input Methods realm.  CLI and
+ * installer imports have no session and are not gated.  The realm tables are
+ * read directly: is_realm_allowed() ends an invalidated session, which would
+ * stop the import partway through. */
+function import_data_input_realm_allowed() {
+	global $config;
+
+	if (!$config['is_web']) {
+		return true;
+	}
+
+	if (empty($_SESSION['sess_user_id'])) {
+		return false;
+	}
+
+	$realm = db_fetch_cell_prepared("SELECT realm_id
+		FROM user_auth_realm
+		WHERE user_id = ?
+		AND realm_id = ?
+		UNION
+		SELECT realm_id
+		FROM user_auth_group_realm AS uagr
+		INNER JOIN user_auth_group AS uag
+		ON uag.id = uagr.group_id
+		INNER JOIN user_auth_group_members AS uagm
+		ON uag.id = uagm.group_id
+		WHERE uag.enabled = 'on'
+		AND uagr.realm_id = ?
+		AND uagm.user_id = ?",
+		array($_SESSION['sess_user_id'], 2, 2, $_SESSION['sess_user_id']));
+
+	return !empty($realm);
+}
+
+function xml_to_data_input_method($hash, &$xml_array, &$hash_cache, $realm_allowed = null) {
 	global $fields_data_input_edit, $fields_data_input_field_edit, $fields_data_input_field_edit_1;
 	global $preview_only, $import_debug_info, $ignorable_hashes;
 
 	/* track changes */
 	$status = 0;
+
+	/* import_xml_data() passes the decision it took before the import began */
+	if ($realm_allowed === null) {
+		$realm_allowed = import_data_input_realm_allowed();
+	}
+
+	$write = !$preview_only && $realm_allowed;
 
 	/* aggregate field arrays */
 	$fields_data_input_field_edit += $fields_data_input_field_edit_1;
@@ -2387,7 +2432,7 @@ function xml_to_data_input_method($hash, &$xml_array, &$hash_cache) {
 	/* check for status changes */
 	$status += compare_data($save, $previous_data, 'data_input');
 
-	if (!$preview_only) {
+	if ($write) {
 		$data_input_id = sql_save($save, 'data_input');
 
 		$hash_cache['data_input_method'][$hash] = $data_input_id;
@@ -2456,7 +2501,7 @@ function xml_to_data_input_method($hash, &$xml_array, &$hash_cache) {
 			/* check for status changes */
 			$status += compare_data($save, $previous_data, 'data_input_fields');
 
-			if (!$preview_only) {
+			if ($write) {
 				$data_input_field_id = sql_save($save, 'data_input_fields');
 
 				/* update field use counter cache if possible */
@@ -2473,11 +2518,25 @@ function xml_to_data_input_method($hash, &$xml_array, &$hash_cache) {
 		}
 	}
 
+	/* an unchanged existing method is still reused, so dependent templates link to it */
+	$skipped = !$realm_allowed && (empty($_data_input_id) || $status > 0);
+
+	if ($skipped) {
+		$skip_message = __('Data Input Method \'%s\' was not imported because you do not have permission to edit Data Input Methods.', html_escape($xml_array['name']));
+
+		$import_debug_info['differences'][] = $skip_message;
+
+		if (!$preview_only) {
+			cacti_log("WARNING: Skipped importing data input method '$hash' - the user lacks the Data Input Methods permission", false, 'IMPORT');
+			raise_message('import_data_input_' . $hash, $skip_message, MESSAGE_LEVEL_WARN);
+		}
+	}
+
 	/* status information that will be presented to the user */
 	$import_debug_info['type']   = (empty($_data_input_id) ? 'new' : ($status > 0 ? 'updated':'unchanged'));
 	$import_debug_info['hash']   = $hash;
 	$import_debug_info['title']  = $xml_array['name'];
-	$import_debug_info['result'] = ($preview_only ? 'preview':(empty($data_input_id) ? 'fail' : 'success'));
+	$import_debug_info['result'] = ($preview_only ? 'preview':(empty($data_input_id) || $skipped ? 'fail' : 'success'));
 
 	return $hash_cache;
 }
