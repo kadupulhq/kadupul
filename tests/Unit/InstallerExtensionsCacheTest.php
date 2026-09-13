@@ -1,4 +1,5 @@
 <?php
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -24,12 +25,12 @@ $end  = strpos($source, "\n\t}", $start);
 $body = substr($source, $start, $end !== false ? $end - $start : 2000);
 
 test('getModules guard begins with !isset', function () use ($body) {
-	expect($body)->toContain('!isset($this->extensions) || empty($this->extensions)');
+    expect($body)->toContain('!isset($this->extensions) || empty($this->extensions)');
 });
 
 test('getModules no longer contains the original always-true guard', function () use ($body) {
-	/* The buggy form started "if (isset(...". The fixed form starts
-	 * "if (!isset(...", so this substring cannot match the fix and is a
-	 * clean negative check for the regression. */
-	expect($body)->not->toContain('if (isset($this->extensions) || empty($this->extensions))');
+    /* The buggy form started "if (isset(...". The fixed form starts
+     * "if (!isset(...", so this substring cannot match the fix and is a
+     * clean negative check for the regression. */
+    expect($body)->not->toContain('if (isset($this->extensions) || empty($this->extensions))');
 });
