@@ -53,6 +53,7 @@ Cacti CHANGELOG
 -security: Require the Data Input Methods permission to create or change Data Input Methods through a web template or package import
 -security: Refuse .. segments in RRD file and archive paths that maintenance archives or deletes
 -security: Refuse shell metacharacters in webhits.pl and diskfree.pl arguments
+-security: Limit help.php page error reports per session and user, and key their notices on scripts that exist
 -security: Limit the report From address to the user's own or the site address for users without Reports Administration, on save and duplicate
 -security: Refuse report mail addresses that hold a request array, a NUL byte or a line break inside an address
 -security: Refuse a page array in help.php error reports and escape angle brackets in the page and user names of the admin notice

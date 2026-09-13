@@ -8361,6 +8361,39 @@ function debounce_run_notification($id, $frequency = 7200) {
 	return false;
 }
 
+/* debounce_run_notification() reads the setting and then writes it, so two
+   requests at the same moment can both send. Each statement here checks and
+   sets under the row lock, and the connection counts matched rows, so this
+   request wins only when it inserted the row or found it outside the window. */
+function debounce_claim_notification($id, $frequency = 7200) {
+	$full = 'debounce_' . $id;
+	$key  = substr($full, 0, 50);
+
+	if ($full !== $key) {
+		cacti_debug_backtrace("ERROR: debounce key was truncated from $full to $key");
+	}
+
+	$now = time();
+
+	db_execute_prepared('INSERT IGNORE INTO settings
+		(name, value) VALUES (?, ?)',
+		array($key, $now));
+
+	if (db_affected_rows() == 1) {
+		return true;
+	}
+
+	/* as in debounce_run_notification(), a value that is not a timestamp does
+	   not hold the key. CASE keeps strict mode from casting such a value. */
+	db_execute_prepared('UPDATE settings
+		SET value = ?
+		WHERE name = ?
+		AND CASE WHEN value REGEXP \'^[0-9]+$\' THEN CAST(value AS UNSIGNED) < ? ELSE 1 END',
+		array($now, $key, $now - $frequency));
+
+	return (db_affected_rows() == 1);
+}
+
 function cacti_unserialize($strobj) {
 	if ($strobj === null || $strobj === '') {
 		return false;
