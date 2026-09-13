@@ -6536,6 +6536,12 @@ function call_remote_data_collector($poller_id, $url, $logtype = 'WEBUI') {
 		WHERE id = ?',
 		array($poller_id));
 
+	/* A bracketed IPv6 literal is checked without its brackets; the request
+	 * URL puts them back. */
+	if (preg_match('/^\[([^\]]+)\]$/', (string) $hostname, $bracketed) && filter_var($bracketed[1], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false) {
+		$hostname = $bracketed[1];
+	}
+
 	if (!is_ipaddress($hostname)) {
 		$ipaddress = gethostbyname($hostname);
 
@@ -6583,7 +6589,10 @@ function call_remote_data_collector($poller_id, $url, $logtype = 'WEBUI') {
 	$fgc_contextoption = get_default_contextoption();
 	$fgc_context       = stream_context_create($fgc_contextoption);
 
-	return  file_get_contents(get_url_type() .'://' . $hostname . $url, false, $fgc_context);
+	/* an IPv6 literal needs brackets to be a URL host */
+	$url_host = filter_var($hostname, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false ? '[' . $hostname . ']' : $hostname;
+
+	return  file_get_contents(get_url_type() .'://' . $url_host . $url, false, $fgc_context);
 }
 
 /**

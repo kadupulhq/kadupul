@@ -25,7 +25,7 @@
 namespace RemoteDataCollectorReservedAddressTest;
 
 if (!function_exists(__NAMESPACE__ . '\call_remote_data_collector')) {
-	$source = file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php');
+	$source = \file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php');
 	preg_match('/^function call_remote_data_collector\(.*?^}\n/ms', $source, $match);
 
 	// test-only eval of source read from this repository, not external input
@@ -53,7 +53,13 @@ function debounce_run_notification($id) {
 }
 
 function get_default_contextoption($timeout = false) {
-	throw new \RuntimeException('connection attempted');
+	return array();
+}
+
+function file_get_contents($url, $use_include_path = false, $context = null) {
+	$GLOBALS['rdc_url'] = $url;
+
+	return 'reply';
 }
 
 function get_url_type() {
@@ -64,14 +70,11 @@ function remote_collector_call(string $hostname, array $dns = array()) : array {
 	$GLOBALS['rdc_hostname'] = $hostname;
 	$GLOBALS['rdc_dns']      = $dns;
 	$GLOBALS['rdc_log']      = [];
+	$GLOBALS['rdc_url']      = null;
 
-	try {
-		$result = call_remote_data_collector(2, '/remote_agent.php?action=ping');
-	} catch (\RuntimeException $e) {
-		return array('connected', $GLOBALS['rdc_log']);
-	}
+	$result = call_remote_data_collector(2, '/remote_agent.php?action=ping');
 
-	return array($result, $GLOBALS['rdc_log']);
+	return array($result === 'reply' ? 'connected' : $result, $GLOBALS['rdc_log'], $GLOBALS['rdc_url']);
 }
 
 dataset('refused addresses', array(
@@ -90,11 +93,19 @@ dataset('refused addresses', array(
 ));
 
 test('refuses link-local, this-network and reserved collector addresses before connecting', function (string $address) {
-	[$result, $log] = remote_collector_call($address);
+	[$result, $log, $url] = remote_collector_call($address);
 
 	expect($result)->toBe('')
+		->and($url)->toBeNull()
 		->and(implode("\n", $log))->toContain('reserved address');
 })->with('refused addresses');
+
+test('refuses bracketed link-local and metadata literals too', function (string $address) {
+	[$result, $log, $url] = remote_collector_call($address);
+
+	expect($result)->toBe('')
+		->and($url)->toBeNull();
+})->with(array('[fe80::1]', '[::ffff:169.254.169.254]', '[::]'));
 
 test('refuses a collector name that resolves to the metadata address', function () {
 	[$result, $log] = remote_collector_call('metadata.internal', array('metadata.internal' => '169.254.169.254'));
@@ -121,3 +132,17 @@ test('lets loopback and private collector addresses through to the connection st
 	expect($result)->toBe('connected')
 		->and($log)->toBe(array());
 })->with('allowed addresses');
+
+test('builds a reachable URL host for IPv4, names and IPv6 literals', function (string $hostname, array $dns, string $url) {
+	[$result, $log, $requested] = remote_collector_call($hostname, $dns);
+
+	expect($result)->toBe('connected')
+		->and($requested)->toBe($url);
+})->with(array(
+	'IPv4'                  => array('127.0.0.1', array(), 'https://127.0.0.1/remote_agent.php?action=ping'),
+	'private IPv4'          => array('10.20.30.40', array(), 'https://10.20.30.40/remote_agent.php?action=ping'),
+	'host name'             => array('collector.example.net', array('collector.example.net' => '10.1.2.3'), 'https://collector.example.net/remote_agent.php?action=ping'),
+	'IPv6 loopback'         => array('::1', array(), 'https://[::1]/remote_agent.php?action=ping'),
+	'bracketed IPv6'        => array('[::1]', array(), 'https://[::1]/remote_agent.php?action=ping'),
+	'mapped loopback'       => array('::ffff:127.0.0.1', array(), 'https://[::ffff:127.0.0.1]/remote_agent.php?action=ping'),
+));
