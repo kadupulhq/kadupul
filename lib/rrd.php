@@ -558,6 +558,13 @@ function rrdtool_trim_output(&$output) {
 function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp='', $logopt = 'WEBLOG') {
 	global $config, $encryption;
 
+	/* RRDproxy passes rrdtool commands to its own 'rrdtool -' pipe, so an argv
+	 * is joined and quoted exactly as __rrd_execute() does for a local pipe */
+	if (is_array($command_line)) {
+		$cmd = array_shift($command_line);
+		$command_line = $cmd . ' ' . implode(' ', array_map('rrdtool_quote_argument', $command_line));
+	}
+
 	static $last_command;
 	$end_of_packet = "_EOP_\r\n";
 	$end_of_sequence = "_EOT_\r\n";

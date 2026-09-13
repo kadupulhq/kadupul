@@ -17,8 +17,9 @@
  * fingerprint check, and the proxy honours it, so every later RRDtool command
  * and its output crossed the network in clear text. A local stand-in proxy
  * speaks the same framing and cipher as Cacti/rrdproxy and records whether
- * each client packet arrived encrypted. It also answers file_exists the way
- * RRDproxy does: a PHP call on the arguments split at spaces, quotes kept.
+ * each client packet arrived encrypted. It answers file_exists the way
+ * RRDproxy does, a PHP call on the arguments split at spaces with quotes
+ * kept, and passes fetch to its own 'rrdtool -' pipe as RRDproxy does.
  */
 
 require_once dirname(__DIR__, 3) . '/Helpers/RrdGraphHarness.php';
@@ -26,11 +27,12 @@ require_once dirname(__DIR__, 3) . '/Helpers/RrdGraphHarness.php';
 $rrdProxyRoot = dirname(__DIR__, 4);
 
 /**
- * @param array<int, array<int, string>> $calls - ('path', command, path) or ('quoted', command, path),
- *                                                where {work} in a path is the run's work directory
- * @param array<int, string>             $touch - files to create in the work directory first
+ * @param array<int, array<int, mixed>> $calls - ('path', command, path), ('quoted', command, path)
+ *                                               or ('array', argv), where {work} is the run's work directory
+ * @param array<int, string>            $touch - empty files to create in the work directory first
+ * @param array<int, string>            $rrds  - RRD files to create in the work directory first
  */
-function rrd_proxy_channel_run(string $root, array $calls = array(), array $touch = array()) : array {
+function rrd_proxy_channel_run(string $root, array $calls = array(), array $touch = array(), array $rrds = array()) : array {
 	require_once $root . '/include/vendor/autoload.php';
 
 	$work = sys_get_temp_dir() . '/cacti-rrdp-' . bin2hex(random_bytes(6));
@@ -38,6 +40,14 @@ function rrd_proxy_channel_run(string $root, array $calls = array(), array $touc
 
 	foreach ($touch as $name) {
 		touch($work . '/' . $name);
+	}
+
+	if (cacti_sizeof_or_zero($rrds)) {
+		cacti_test_rrdtool_batch('create fetch-source.rrd --start 1700000000 --step 300 DS:a:GAUGE:600:U:U RRA:LAST:0.5:1:20', $work);
+
+		foreach ($rrds as $name) {
+			copy($work . '/fetch-source.rrd', $work . '/' . $name);
+		}
 	}
 
 	$proxyKey  = phpseclib3\Crypt\RSA::createKey(2048);
@@ -52,6 +62,7 @@ function rrd_proxy_channel_run(string $root, array $calls = array(), array $touc
 		'root'           => $root,
 		'work'           => $work,
 		'calls'          => $calls,
+		'rrdtool'        => cacti_test_rrdtool_binary(),
 	);
 
 	file_put_contents($work . '/keys.json', json_encode($keys));
@@ -161,6 +172,16 @@ while (($raw = proxy_read_message($client)) !== false) {
 	if ($parts[0] === 'file_exists') {
 		$status = call_user_func_array('file_exists', explode(' ', $parts[1] ?? ''));
 		$reply  = ($status === true) ? 'OK u:0.00' : 'ERROR:';
+	} elseif ($parts[0] === 'fetch' && $keys['rrdtool'] !== '') {
+		/* Cacti/rrdproxy lib/client.php: an $rrdtool_cmds verb is written to the proxy's
+		 * own 'rrdtool -' pipe as $cmd . ' ' . $cmd_options . "\r\n" */
+		$process = proc_open(array($keys['rrdtool'], '-'), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $keys['work']);
+		fwrite($pipes[0], $parts[0] . ' ' . ($parts[1] ?? '') . "\r\nquit\r\n");
+		fclose($pipes[0]);
+		$reply = trim(stream_get_contents($pipes[1]) . stream_get_contents($pipes[2]));
+		fclose($pipes[1]);
+		fclose($pipes[2]);
+		proc_close($process);
 	} else {
 		$reply = "filename = \"t.rrd\"\nOK u:0.00 s:0.00 r:0.00";
 	}
@@ -214,12 +235,23 @@ $result = __rrd_proxy_execute('info t.rrd', false, RRDTOOL_OUTPUT_STDOUT, $rrdp)
 $calls  = array();
 
 foreach ($keys['calls'] as $call) {
-	$path = str_replace('{work}', $keys['work'], $call[2]);
+	try {
+		if ($call[0] == 'array') {
+			$argv = str_replace('{work}', $keys['work'], $call[1]);
+			$calls[] = rrdtool_execute($argv, false, RRDTOOL_OUTPUT_STDOUT, $rrdp, 'RRDCHECK');
 
-	if ($call[0] == 'path') {
-		$calls[] = rrdtool_execute_path_command($call[1], $path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdp, 'RRDCHECK');
-	} else {
-		$calls[] = rrdtool_execute($call[1] . ' ' . rrdtool_quote_argument($path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdp, 'RRDCHECK');
+			continue;
+		}
+
+		$path = str_replace('{work}', $keys['work'], $call[2]);
+
+		if ($call[0] == 'path') {
+			$calls[] = rrdtool_execute_path_command($call[1], $path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdp, 'RRDCHECK');
+		} else {
+			$calls[] = rrdtool_execute($call[1] . ' ' . rrdtool_quote_argument($path), true, RRDTOOL_OUTPUT_BOOLEAN, $rrdp, 'RRDCHECK');
+		}
+	} catch (Throwable $e) {
+		$calls[] = array('error' => get_class($e) . ': ' . $e->getMessage());
 	}
 }
 
@@ -253,6 +285,10 @@ PHP;
 	rmdir($work);
 
 	return array('work' => $work, 'client' => json_decode($clientOut, true) ?? $clientOut, 'packets' => $packets ?? array());
+}
+
+function cacti_sizeof_or_zero(array $values) : int {
+	return count($values);
 }
 
 test('the RRDproxy client keeps message encryption on after the handshake', function () use ($rrdProxyRoot) {
@@ -306,3 +342,40 @@ test('RRDproxy file_exists finds existing paths, including one with an apostroph
 		expect($packet['encrypted'])->toBeTrue();
 	}
 })->skip(!extension_loaded('sockets'), 'the sockets extension is not loaded');
+
+test('RRDproxy array fetch commands arrive as one quoted rrdtool command, including a path with an apostrophe', function () use ($rrdProxyRoot) {
+	$argvs = array(
+		array('fetch', '{work}/fetch.rrd', 'LAST', '-s', '1700000000', '-e', '1700003600'),
+		array('fetch', "{work}/fetch's.rrd", 'LAST', '-s', '1700000000', '-e', '1700003600'),
+	);
+
+	$run = rrd_proxy_channel_run($rrdProxyRoot, array(array('array', $argvs[0]), array('array', $argvs[1])), array(), array('fetch.rrd', "fetch's.rrd"));
+
+	expect($run['client'])->toBeArray()
+		->and($run['client']['connected'])->toBeTrue();
+
+	$commands = array_column($run['packets'], 'command');
+
+	foreach ($argvs as $i => $argv) {
+		$values = str_replace('{work}', $run['work'], $argv);
+		$verb   = array_shift($values);
+		$quoted = cacti_test_rrd_harness_run(array('action' => 'quote', 'values' => $values));
+		$legacy = cacti_test_rrd_harness_run(array('action' => 'legacy_quote', 'values' => $values));
+
+		/* the proxy receives the argv joined exactly as __rrd_execute() joins it for a local pipe */
+		expect($commands)->toContain($verb . ' ' . implode(' ', $quoted['quoted']));
+
+		if (strpos(implode('', $values), "'") === false) {
+			/* 1.2.31 local array commands: $cmd . ' ' . implode(' ', array_map('cacti_escapeshellarg', ...)) */
+			expect($quoted['quoted'])->toBe($legacy['quoted']);
+		}
+
+		expect($run['client']['calls'][$i])->toBeString()
+			->and($run['client']['calls'][$i])->not->toContain('ERROR')
+			->and($run['client']['calls'][$i])->toMatch('/^1700000\d{3}: /m');
+	}
+
+	foreach ($run['packets'] as $packet) {
+		expect($packet['encrypted'])->toBeTrue();
+	}
+})->skip(!extension_loaded('sockets') || cacti_test_rrdtool_binary() === '', 'the sockets extension or rrdtool is not available');
