@@ -12,6 +12,7 @@ Cacti CHANGELOG
 -security: Apply the page realm check to the first request of a Web Basic session, as later requests already do
 -security: Cache graph, graph template and tree permission checks per user so one report owner's access does not apply to another, and recompute them after that user's permissions are reset
 -security: Send a remember-me login with a pending password change to the change password page, as a password login does
+-issue: Print the step summary again after cli/install_cacti.php --install
 -issue: Push out graph template input values that are NULL instead of aborting, as 1.2.31 did
 -issue: Finish an upgrade with missing core tables such as poller_output_boost_local_data_ids, logging a warning, as 1.2.31 did
 -issue: Accept a literal connection argument to db_check_reconnect() again, as 1.2.31 did
