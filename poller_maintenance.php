@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -556,7 +557,13 @@ function remove_files($file_array) {
 		}
 
 		$rrd_archive = rtrim($rrd_archive, '/');
-		rrdclean_create_path($rrd_archive);
+
+		/* custom archive locations stay allowed, but not a .. segment */
+		if (rrd_check_path($rrd_archive)) {
+			rrdclean_create_path($rrd_archive);
+		} else {
+			cacti_log('WARNING: RRDfile Maintenance will not archive into ' . cacti_log_safe_value($rrd_archive) . ' as the path has a .. segment!', true, 'MAINT');
+		}
 	}
 
 	/* now scan the files */
@@ -574,7 +581,10 @@ function remove_files($file_array) {
 		if (read_config_option('storage_location') == 0) {
 			switch ($file['action']) {
 				case '1' :
-					if (file_exists($real_file) && strtolower(pathinfo($real_file, PATHINFO_EXTENSION)) === 'rrd') {
+					/* files outside the RRA path are still removed as in 1.2.31, but not through a .. segment */
+					if (!rrd_check_path($real_file)) {
+						cacti_log('WARNING: RRDfile Maintenance will not remove ' . cacti_log_safe_value($real_file) . ' as the path has a .. segment!', true, 'MAINT');
+					} elseif (file_exists($real_file) && strtolower(pathinfo($real_file, PATHINFO_EXTENSION)) === 'rrd') {
 						if (unlink($real_file)) {
 							maint_debug('Deleted: ' . $real_file);
 							$purged++;
@@ -587,6 +597,13 @@ function remove_files($file_array) {
 				case '3' :
 					$target_file = $rrd_archive . '/' . $base_file;
 					$target_dir = dirname($target_file);
+
+					/* refuse before the target directory is created */
+					if (!rrd_check_path($real_file) || !rrd_check_path($target_file)) {
+						cacti_log('WARNING: RRDfile Maintenance will not move ' . cacti_log_safe_value($real_file) . ' to ' . cacti_log_safe_value($target_file) . ' as a path has a .. segment!', true, 'MAINT');
+
+						break;
+					}
 
 					if (!is_dir($target_dir)) {
 						rrdclean_create_path($target_dir);
