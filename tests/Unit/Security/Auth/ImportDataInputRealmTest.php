@@ -26,7 +26,7 @@
 
 namespace ImportDataInputRealmTest;
 
-$importSource = file_get_contents(dirname(__DIR__, 2) . '/lib/import.php');
+$importSource = file_get_contents(dirname(__DIR__, 4) . '/lib/import.php');
 
 if (!function_exists(__NAMESPACE__ . '\xml_to_data_input_method')) {
 	preg_match('/^function import_data_input_realm_allowed\(.*?^}\n/ms', $importSource, $helper);
@@ -43,11 +43,17 @@ if (!defined('MESSAGE_LEVEL_WARN')) {
 function db_fetch_cell_prepared($sql, $params = array()) {
 	if (strpos($sql, 'user_auth_realm') !== false) {
 		$GLOBALS['idr_realm_queries'][] = $params;
+		$GLOBALS['idr_realm_sql'][]     = $sql;
 
 		return $GLOBALS['idr_realm_row'];
 	}
 
 	return strpos($sql, 'data_input_fields') !== false ? $GLOBALS['idr_field_id'] : $GLOBALS['idr_method_id'];
+}
+
+/* upgrades from before 1.x may lack the group tables */
+function db_table_exists($table) {
+	return $GLOBALS['idr_group_tables'];
 }
 
 function db_fetch_row_prepared($sql, $params = array()) {
@@ -157,6 +163,8 @@ beforeEach(function () {
 
 	$GLOBALS['idr_realm_row']     = false;
 	$GLOBALS['idr_realm_queries'] = array();
+	$GLOBALS['idr_realm_sql']     = array();
+	$GLOBALS['idr_group_tables']  = true;
 	$GLOBALS['idr_method_id']     = 9;
 	$GLOBALS['idr_method_row']    = array('id' => 9, 'hash' => '95ed0993eb3095f137d3ab3d3dcbcd9c', 'name' => 'Unix - Get <Load> Average', 'type_id' => '1', 'input_string' => 'perl <path_cacti>/scripts/loadavg.pl');
 	$GLOBALS['idr_field_id']      = 31;
@@ -242,7 +250,21 @@ test('the realm check reads the realm tables for the session user', function () 
 	$GLOBALS['idr_realm_row'] = 2;
 
 	expect(import_data_input_realm_allowed())->toBeTrue()
-		->and($GLOBALS['idr_realm_queries'])->toBe(array(array(5, 2, 2, 5)));
+		->and($GLOBALS['idr_realm_queries'])->toBe(array(array(5, 2, 2, 5)))
+		->and($GLOBALS['idr_realm_sql'][0])->toContain('user_auth_group_members');
+
+	$GLOBALS['idr_realm_row'] = false;
+
+	expect(import_data_input_realm_allowed())->toBeFalse();
+});
+
+test('the realm check reads only the user realm table when the group tables are absent', function () {
+	$GLOBALS['idr_group_tables'] = false;
+	$GLOBALS['idr_realm_row']    = 2;
+
+	expect(import_data_input_realm_allowed())->toBeTrue()
+		->and($GLOBALS['idr_realm_queries'])->toBe(array(array(5, 2)))
+		->and($GLOBALS['idr_realm_sql'][0])->not->toContain('user_auth_group');
 
 	$GLOBALS['idr_realm_row'] = false;
 

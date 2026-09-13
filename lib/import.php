@@ -2341,21 +2341,33 @@ function import_data_input_realm_allowed() {
 		return false;
 	}
 
-	$realm = db_fetch_cell_prepared("SELECT realm_id
+	$sql_query = 'SELECT realm_id
 		FROM user_auth_realm
 		WHERE user_id = ?
-		AND realm_id = ?
-		UNION
-		SELECT realm_id
-		FROM user_auth_group_realm AS uagr
-		INNER JOIN user_auth_group AS uag
-		ON uag.id = uagr.group_id
-		INNER JOIN user_auth_group_members AS uagm
-		ON uag.id = uagm.group_id
-		WHERE uag.enabled = 'on'
-		AND uagr.realm_id = ?
-		AND uagm.user_id = ?",
-		array($_SESSION['sess_user_id'], 2, 2, $_SESSION['sess_user_id']));
+		AND realm_id = ?';
+
+	$sql_params = array($_SESSION['sess_user_id'], 2);
+
+	/* upgrades from before 1.x may not have the group tables, as include/auth.php allows */
+	if (db_table_exists('user_auth_group_realm') &&
+		db_table_exists('user_auth_group') &&
+		db_table_exists('user_auth_group_members')) {
+		$sql_query .= "
+			UNION
+			SELECT realm_id
+			FROM user_auth_group_realm AS uagr
+			INNER JOIN user_auth_group AS uag
+			ON uag.id = uagr.group_id
+			INNER JOIN user_auth_group_members AS uagm
+			ON uag.id = uagm.group_id
+			WHERE uag.enabled = 'on'
+			AND uagr.realm_id = ?
+			AND uagm.user_id = ?";
+
+		$sql_params = array_merge($sql_params, array(2, $_SESSION['sess_user_id']));
+	}
+
+	$realm = db_fetch_cell_prepared($sql_query, $sql_params);
 
 	return !empty($realm);
 }
