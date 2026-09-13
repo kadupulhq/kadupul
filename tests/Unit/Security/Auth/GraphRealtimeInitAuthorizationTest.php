@@ -18,6 +18,8 @@
  * before the real-time enabled setting was read. The shipped page runs here
  * against a stub include/auth.php; the PHP binary is a script that records
  * each argument it receives, so a poll shows up with its exact argv.
+ * action=view returns the image the last poll cached for the session, so it
+ * is refused under the same conditions.
  */
 
 require_once dirname(__DIR__, 3) . '/Helpers/RrdGraphHarness.php';
@@ -46,6 +48,10 @@ function graph_realtime_init_run(array $scenario) : array {
 		'path_php_binary'     => $work . '/php-marker.sh',
 		'realtime_cache_path' => $work,
 	);
+
+	foreach ($scenario['cache'] ?? array() as $id => $contents) {
+		file_put_contents($work . '/user_abc123_lgi_' . $id . '.png', $contents);
+	}
 
 	file_put_contents($work . '/scenario.json', json_encode($scenario));
 
@@ -175,11 +181,16 @@ PHP);
 		'polls'    => file_exists($work . '/marker.txt') ? file($work . '/marker.txt', FILE_IGNORE_NEW_LINES) : array(),
 		'calls'    => json_decode((string) @file_get_contents($work . '/calls.json'), true),
 		'response' => json_decode($stdout, true),
+		'stdout'   => $stdout,
 		'raw'      => $stdout . $stderr,
 	);
 
 	foreach (array('include/auth.php', 'lib/rrd.php', 'shipped.php', 'php-marker.sh', 'graph_realtime.php', 'scenario.json', 'calls.json', 'marker.txt') as $file) {
 		@unlink($work . '/' . $file);
+	}
+
+	foreach (glob($work . '/*.png') as $file) {
+		unlink($file);
 	}
 
 	rmdir($work . '/include');
@@ -286,3 +297,36 @@ test('a zero or negative graph id is refused like a missing one', function ($id)
 			->and(array_keys($run['response']))->toBe(array('local_graph_id', 'top', 'left', 'ds_step', 'graph_start', 'size', 'thumbnails', 'data', 'image_format'));
 	}
 })->with(array('-1' => -1, '0' => 0, 'string -5' => '-5'));
+
+$viewRequest = array('action' => 'view', 'local_graph_id' => 5);
+
+test('an allowed graph with real-time enabled views its cached image as 1.2.31 did', function () use ($viewRequest) {
+	$run = graph_realtime_init_run(array('request' => $viewRequest, 'allowed' => array(5), 'cache' => array(5 => 'CACHEDPNG'), 'config' => array('realtime_enabled' => 'on')));
+
+	expect($run['stdout'])->toBe(base64_encode('CACHEDPNG'))
+		->and($run['calls']['allowed'])->toBe(array(5))
+		->and($run['polls'])->toBe(array());
+
+	$run = graph_realtime_init_run(array('request' => $viewRequest, 'allowed' => array(5), 'config' => array('realtime_enabled' => 'on')));
+
+	expect($run['stdout'])->toBe('');
+});
+
+test('a cached image is not viewed for a graph the user may not view', function () use ($viewRequest) {
+	$run = graph_realtime_init_run(array('request' => $viewRequest, 'allowed' => array(6), 'cache' => array(5 => 'CACHEDPNG'), 'config' => array('realtime_enabled' => 'on')));
+
+	expect($run['stdout'])->toBe(base64_encode('ERRPNG:Permission Denied'))
+		->and($run['calls']['allowed'])->toBe(array(5));
+});
+
+test('a cached image is not viewed while real-time is disabled', function () use ($viewRequest) {
+	$run = graph_realtime_init_run(array('request' => $viewRequest, 'allowed' => array(5), 'cache' => array(5 => 'CACHEDPNG'), 'config' => array('realtime_enabled' => '')));
+
+	expect($run['stdout'])->toBe(base64_encode('ERRPNG:Real-time has been disabled by your administrator.'));
+});
+
+test('a cached image is not viewed for a zero or negative graph id', function ($id) use ($viewRequest) {
+	$run = graph_realtime_init_run(array('request' => array('local_graph_id' => $id) + $viewRequest, 'allowed' => array(5), 'cache' => array($id => 'CACHEDPNG'), 'config' => array('realtime_enabled' => 'on')));
+
+	expect($run['stdout'])->toBe(base64_encode('ERRPNG:Permission Denied'));
+})->with(array('-1' => -1, '0' => 0));
