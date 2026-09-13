@@ -166,6 +166,36 @@ test('an ownership lookup that fails keeps every row and fails the transfer', fu
 		->and($GLOBALS['boost_recovery_ownership']['deleted'])->toBe(array());
 });
 
+test('a row without a data source id is discarded with its own log line', function () {
+	$rows   = boostRecoveryOwnershipRows();
+	$rows[] = array('local_data_id' => '0', 'rrd_name' => 'traffic_in', 'time' => '2026-01-01 00:05:00', 'output' => '40');
+
+	$result = boostRecoveryOwnershipBatch($rows, 3);
+	$state  = $GLOBALS['boost_recovery_ownership'];
+	$logs   = implode("\n", $state['logs']);
+
+	expect($result['transfer_failed'])->toBeFalse()
+		->and($result['records_inserted'])->toBe(2)
+		->and($state['deleted'])->toHaveCount(4)
+		->and($logs)->toContain('Discarding 1 records without a valid data source id')
+		->and($logs)->toContain('Discarding 1 records for data sources not assigned to this poller');
+});
+
+test('a batch of rows without a data source id needs no lookup and logs the discard', function () {
+	$rows = array(array('local_data_id' => '0', 'rrd_name' => 'traffic_in', 'time' => '2026-01-01 00:05:00', 'output' => '40'));
+
+	$result = boostRecoveryOwnershipBatch($rows, 3);
+	$state  = $GLOBALS['boost_recovery_ownership'];
+	$logs   = implode("\n", $state['logs']);
+
+	expect($result['transfer_failed'])->toBeFalse()
+		->and($state['lookups'])->toBe(0)
+		->and($state['forwarded'])->toBe(array())
+		->and($state['deleted'])->toHaveCount(1)
+		->and($logs)->toContain('Discarding 1 records without a valid data source id')
+		->and($logs)->not->toContain('not assigned to this poller');
+});
+
 test('a lookup that fails once and would succeed on retry still keeps every row', function () {
 	$GLOBALS['boost_recovery_ownership']['assigned']       = array(5, 9);
 	$GLOBALS['boost_recovery_ownership']['failed_lookups'] = array(1);

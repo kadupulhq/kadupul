@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -276,8 +277,15 @@ if ($run) {
 
 				$sql_array = array();
 				$unowned   = 0;
+				$invalid   = 0;
 
 				foreach($rows as $r) {
+					/* no data source has id 0, so main could never file the row */
+					if ((int) $r['local_data_id'] <= 0) {
+						$invalid++;
+						continue;
+					}
+
 					/* a device moved or deleted while offline; main does not take its rows */
 					if (!isset($owned[(int) $r['local_data_id']])) {
 						$unowned++;
@@ -288,6 +296,10 @@ if ($run) {
 						db_qstr($r['rrd_name'], $remote_db_cnn_id) . ',' .
 						db_qstr($r['time'], $remote_db_cnn_id) . ',' .
 						db_qstr($r['output'], $remote_db_cnn_id) . ')';
+				}
+
+				if ($invalid > 0) {
+					cacti_log('RECOVERY WARNING: Discarding ' . $invalid . ' records without a valid data source id.', false, 'POLLER');
 				}
 
 				if ($unowned > 0) {
