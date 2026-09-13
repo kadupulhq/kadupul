@@ -2447,6 +2447,15 @@ class Installer implements JsonSerializable {
 				$permissions .=
 					'<i class="' . $this->iconClass[DB_STATUS_SUCCESS] . '"></i> ' .
 					'<font color="#008000">' . __('Writable') . '</font>';
+			} elseif ($path == $config['base_path'] . '/cache/purifier/') {
+				/* HTMLPurifier runs without its definition cache, so this path does not block */
+				$permissions .=
+					'<i class="' . $this->iconClass[DB_STATUS_WARNING] . '"></i> ' .
+					'<font color="orange">' . __('Not Writable') . '</font>';
+
+				if ($sections['writable_always'] == DB_STATUS_SUCCESS) {
+					$sections['writable_always'] = DB_STATUS_WARNING;
+				}
 			} else {
 				$permissions .=
 					'<i class="' . $this->iconClass[DB_STATUS_ERROR] . '"></i> ' .
