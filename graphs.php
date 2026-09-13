@@ -1831,7 +1831,26 @@ function graph_edit() {
 
 		$.getJSON(imageSource)
 			.done(function(data) {
-				$('#graphLocation').html("<img class='cactiGraphImage' src='data:image/"+data.type+";base64,"+data.image+"' graph_start='"+data.graph_start+"' graph_end='"+data.graph_end+"' graph_left='"+data.graph_left+"' graph_top='"+data.graph_top+"' graph_width='"+data.graph_width+"' graph_height='"+data.graph_height+"' width='"+data.image_width+"' height='"+data.image_height+"' image_width='"+data.image_width+"' image_height='"+data.image_height+"' value_min='"+data.value_min+"' value_max='"+data.value_max+"'>");
+				var image = $('<img class="cactiGraphImage">').attr('src', 'data:image/' + data.type + ';base64,' + data.image);
+
+				$.each({
+					graph_start: data.graph_start,
+					graph_end: data.graph_end,
+					graph_left: data.graph_left,
+					graph_top: data.graph_top,
+					graph_width: data.graph_width,
+					graph_height: data.graph_height,
+					width: data.image_width,
+					height: data.image_height,
+					image_width: data.image_width,
+					image_height: data.image_height,
+					value_min: data.value_min,
+					value_max: data.value_max
+				}, function(name, value) {
+					image.attr(name, String(value));
+				});
+
+				$('#graphLocation').empty().append(image);
 				$(window).trigger('resize');
 			})
 			.fail(function(data) {

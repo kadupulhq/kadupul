@@ -678,7 +678,7 @@ default:
 				$.get('settings.php?action=send_test')
 					.done(function(data) {
 						$('body').append('<div id="testmail" title="<?php print __esc('Test Email Results');?>"></div>');
-						$('#testmail').html(data);
+						$('#testmail').html(DOMPurify.sanitize(data));
 
 						$('#testmail').dialog({
 							autoOpen: false,

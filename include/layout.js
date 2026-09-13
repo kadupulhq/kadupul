@@ -265,7 +265,9 @@ $.fn.replaceOptions = function(options, selected) {
  *  without any wrapping. */
 $.fn.textWidth = function(text){
 	var org = $(this);
-	var html = $('<span style="display:none;white-space:nowrap;position:absolute;width:auto;left:-9999px">' + (text || org.text()) + '</span>');
+	// Sanitised with DOMPurify, as elsewhere in this file: callers pass markup,
+	// so escaping to text would change the width being measured.
+	var html = $('<span style="display:none;white-space:nowrap;position:absolute;width:auto;left:-9999px"></span>').html(DOMPurify.sanitize(text || org.text()));
 	if (!text) {
 		html.css('font-family', org.css('font-family'));
 		html.css('font-weight', org.css('font-weight'));
@@ -289,7 +291,7 @@ $.fn.textBoxWidth = function() {
 		var text = encodeURIComponent(org.text());
 	}
 
-	var html = $('<span style="display:none;white-space:nowrap;position:absolute;width:auto;left:-9999px">' + text + '</span>');
+	var html = $('<span style="display:none;white-space:nowrap;position:absolute;width:auto;left:-9999px"></span>').text(text);
 	html.css('font-family', org.css('font-family'));
 	html.css('font-weight', org.css('font-weight'));
 	html.css('font-size',   org.css('font-size'));
@@ -491,7 +493,7 @@ $.tablesorter.addParser({
 			display: 'none'
 		});
 
-		$(div).html($(el).html());
+		$(div).html(DOMPurify.sanitize($(el).html()));
 
 		var styles = ['font-size','font-style', 'font-weight', 'font-family','line-height', 'text-transform', 'letter-spacing'];
 
@@ -1120,7 +1122,7 @@ function displayMessages() {
 			'</div>';
 
 		$('#messageContainer').remove();
-		$('body').append(returnStr);
+		$('body').append(DOMPurify.sanitize(returnStr));
 
 		var messageWidth = $(window).width();
 		if (messageWidth > 600) {
@@ -1237,7 +1239,7 @@ function makeFiltersResponsive() {
 
 				if (filterContents.find('#export').length) {
 					title = $('#export').attr('value');
-					filterHeader.find('div.cactiTableButton').append('<span title="'+title+'" style="display:none;" class="cactiFilterExport"><i class="fa fa-arrow-down"></i></span>');
+					filterHeader.find('div.cactiTableButton').append($('<span style="display:none;" class="cactiFilterExport"><i class="fa fa-arrow-down"></i></span>').attr('title', title));
 
 					$('.cactiFilterExport').off('click').on('click', function(event) {
 						event.stopPropagation();
@@ -1247,7 +1249,7 @@ function makeFiltersResponsive() {
 
 				if (filterContents.find('#import').length) {
 					title = $('#import').attr('value');
-					filterHeader.find('div.cactiTableButton').append('<span title="'+title+'" style="display:none;" class="cactiFilterImport"><i class="fa fa-arrow-up"></i></span>');
+					filterHeader.find('div.cactiTableButton').append($('<span style="display:none;" class="cactiFilterImport"><i class="fa fa-arrow-up"></i></span>').attr('title', title));
 
 					$('.cactiFilterImport').off('click').on('click', function(event) {
 						event.stopPropagation();
@@ -2184,7 +2186,9 @@ function loadTopTab(href, id, force) {
 					checkForRedirects(html, href);
 
 					$('title').text(htmlTitle);
-					$('#breadcrumbs').html(breadCrumbs);
+					if (breadCrumbs !== undefined) {
+						$('#breadcrumbs').html(DOMPurify.sanitize(breadCrumbs));
+					}
 					$('div[class^="ui-"]').remove();
 					$('#cactiContent').replaceWith(html);
 
@@ -2362,7 +2366,9 @@ function loadPage(href, force) {
 					}
 					$('#main').empty().hide();
 					$('title').text(htmlTitle);
-					$('#breadcrumbs').html(breadCrumbs);
+					if (breadCrumbs !== undefined) {
+						$('#breadcrumbs').html(DOMPurify.sanitize(breadCrumbs));
+					}
 					$('div[class^="ui-"]').remove();
 					$('#main').html(html);
 
@@ -2526,7 +2532,9 @@ function loadPageNoHeader(href, scroll, force) {
 
 					$('#main').empty().hide();
 					$('title').text(htmlTitle);
-					$('#breadcrumbs').html(breadCrumbs);
+					if (breadCrumbs !== undefined) {
+						$('#breadcrumbs').html(DOMPurify.sanitize(breadCrumbs));
+					}
 					$('div[class^="ui-"]').remove();
 					$('#main').html(html);
 
@@ -2646,7 +2654,7 @@ function getPresentHTTPErrorOrRedirect(data, url) {
 			}
 
 			$('#httperror').remove();
-			$('body').append(returnStr);
+			$('body').append(DOMPurify.sanitize(returnStr));
 			$('#httperror').dialog({
 				resizable: false,
 				height: 'auto',
@@ -2669,7 +2677,7 @@ function getPresentHTTPErrorOrRedirect(data, url) {
 			// Let the HTTP Error stick
 		} else if (data.statusText != 'abort') {
 			$.ajaxQ.abortAll();
-			document.location = stripHeaderSuppression(url);
+			document.location = safeLocation(stripHeaderSuppression(url));
 		}
 	}
 }
@@ -3058,6 +3066,23 @@ function appendHeaderSuppression(url) {
 	return url;
 }
 
+/** safeLocation - resolve a navigation target and refuse any scheme other than
+ *  http or https. Targets here come from link attributes and AJAX URLs, and a
+ *  javascript: URL assigned to document.location would run as script. */
+function safeLocation(url) {
+	try {
+		var target = new URL(url, document.location.href);
+
+		if (target.protocol === 'http:' || target.protocol === 'https:') {
+			return target.href;
+		}
+	} catch (e) {
+		// Fall through to the current page.
+	}
+
+	return document.location.href;
+}
+
 function stripHeaderSuppression(url) {
 	url = url.replace('header=false', '').replace('?&', '?').replace('&&', '&');
 	return url.replace('headercontent=true', '').replace('?&', '?').replace('&&', '&');
@@ -3408,10 +3433,13 @@ function hideCurrentTab(id, shrinking) {
 		var selected = $('#'+id).hasClass('selected');
 		var text     = $('#'+id).text();
 
+		// Built as nodes so tab text and attributes are never reparsed as HTML.
+		var item = $('<li>').append($('<a>').addClass('lefttab' + (selected ? ' selected' : '')).attr({id: myid, href: href}).text(text));
+
 		if (shrinking) {
-			$('#submenu-ellipsis').prepend('<li><a class="lefttab' + (selected ? ' selected':'') + '" id="'+myid+'" href="'+href+'">' + text + '</a></li>');
+			$('#submenu-ellipsis').prepend(item);
 		} else {
-			$('#submenu-ellipsis').append('<li><a class="lefttab' + (selected ? ' selected':'') + '" id="'+myid+'" href="'+href+'">' + text + '</a></li>');
+			$('#submenu-ellipsis').append(item);
 		}
 
 		setupResponsiveMenuAndTabs();
@@ -3501,7 +3529,7 @@ function checkForRedirects(data, href) {
 			document.location = stripHeaderSuppression(document.location.href);
 		} else {
 			$.ajaxQ.abortAll();
-			document.location = stripHeaderSuppression(href);
+			document.location = safeLocation(stripHeaderSuppression(href));
 		}
 	} else if (data.indexOf('cactiLoginLogo') >= 0) {
 		$.ajaxQ.abortAll();
@@ -3806,13 +3834,49 @@ function removeSpikes(method, dryrun, local_graph_id) {
 
 			$('#spikeresults').remove();
 			$('body').append('<div id="spikeresults" style="overflow-y:scroll;" title="' + spikeKillResults + '"></div>');
-			$('#spikeresults').html(data.results);
+			$('#spikeresults').html(DOMPurify.sanitize(data.results));
 			$('#spikeresults').dialog({ width:1100, maxHeight: 600 });
 		})
 		.fail(function(data) {
 			getPresentHTTPError(data);
 		}
 	);
+}
+
+/** buildGraphImage - returns the image element for a graph_json.php response.
+ *  DOMPurify would strip the non-standard attributes the zoom code reads, so
+ *  each value is set as an attribute rather than parsed from markup. */
+function buildGraphImage(data) {
+	var image = $('<img class="graphimage">');
+
+	$.each({
+		id:            'graph_' + data.local_graph_id,
+		src:           'data:image/' + data.type + ';base64,' + data.image,
+		rra_id:        data.rra_id,
+		graph_type:    data.type,
+		graph_id:      data.local_graph_id,
+		graph_start:   data.graph_start,
+		graph_end:     data.graph_end,
+		graph_left:    data.graph_left,
+		graph_top:     data.graph_top,
+		graph_width:   data.graph_width,
+		graph_height:  data.graph_height,
+		width:         data.image_width,
+		height:        data.image_height,
+		image_width:   data.image_width,
+		image_height:  data.image_height,
+		canvas_top:    data.graph_top,
+		canvas_left:   data.graph_left,
+		canvas_width:  data.graph_width,
+		canvas_height: data.graph_height,
+		value_min:     data.value_min,
+		value_max:     data.value_max
+	}, function(name, value) {
+		// String() matches the old concatenation, which wrote 'undefined' for a missing field.
+		image.attr(name, String(value));
+	});
+
+	return image;
 }
 
 function redrawGraph(graph_id) {
@@ -3856,29 +3920,7 @@ function redrawGraph(graph_id) {
 					data.graph_left   = parseInt(data.graph_left * ratio);
 				}
 
-				$('#wrapper_'+data.local_graph_id).empty().html(
-					"<img class='graphimage' id='graph_"+data.local_graph_id+"'"+
-					" src='data:image/"+data.type+";base64,"+data.image+"'"+
-					" rra_id='"+data.rra_id+"'"+
-					" graph_type='"+data.type+"'"+
-					" graph_id='"+data.local_graph_id+"'"+
-					" graph_start='"+data.graph_start+"'"+
-					" graph_end='"+data.graph_end+"'"+
-					" graph_left='"+data.graph_left+"'"+
-					" graph_top='"+data.graph_top+"'"+
-					" graph_width='"+data.graph_width+"'"+
-					" graph_height='"+data.graph_height+"'"+
-					" width='"+data.image_width+"'"+
-					" height='"+data.image_height+"'"+
-					" image_width='"+data.image_width+"'"+
-					" image_height='"+data.image_height+"'"+
-					" canvas_top='"+data.graph_top+"'"+
-					" canvas_left='"+data.graph_left+"'"+
-					" canvas_width='"+data.graph_width+"'"+
-					" canvas_height='"+data.graph_height+"'"+
-					" value_min='"+data.value_min+"'"+
-					" value_max='"+data.value_max+"'>"
-				);
+				$('#wrapper_'+data.local_graph_id).empty().append(buildGraphImage(data));
 
 				$('#graph_'+data.local_graph_id).zoom({
 					inputfieldStartTime : 'date1',
@@ -4033,29 +4075,7 @@ function initializeGraphs(disable_cache) {
 					wrapper_id += '[rra_id=\'' + data.rra_id + '\']';
 				}
 
-				$(wrapper_id).empty().html(
-					"<img class='graphimage' id='graph_"+data.local_graph_id+"'"+
-					" src='data:image/"+data.type+";base64,"+data.image+"'"+
-					" rra_id='"+data.rra_id+"'"+
-					" graph_type='"+data.type+"'"+
-					" graph_id='"+data.local_graph_id+"'"+
-					" graph_start='"+data.graph_start+"'"+
-					" graph_end='"+data.graph_end+"'"+
-					" graph_left='"+data.graph_left+"'"+
-					" graph_top='"+data.graph_top+"'"+
-					" graph_width='"+data.graph_width+"'"+
-					" graph_height='"+data.graph_height+"'"+
-					" width='"+data.image_width+"'"+
-					" height='"+data.image_height+"'"+
-					" image_width='"+data.image_width+"'"+
-					" image_height='"+data.image_height+"'"+
-					" canvas_top='"+data.graph_top+"'"+
-					" canvas_left='"+data.graph_left+"'"+
-					" canvas_width='"+data.graph_width+"'"+
-					" canvas_height='"+data.graph_height+"'"+
-					" value_min='"+data.value_min+"'"+
-					" value_max='"+data.value_max+"'>"
-				);
+				$(wrapper_id).empty().append(buildGraphImage(data));
 
 				var graph_id = '#graph_'+data.local_graph_id;
 				if (rra_id > 0) {
@@ -4351,12 +4371,14 @@ $.widget('custom.dropcolor', {
 					var mylabel = $($.parseHTML(item.label));
 					var label = mylabel.text();
 
+					var swatch = $('<span class="ui-icon color-icon"></span>');
+
 					if (hex !== null) {
 						color = hex[1];
-						return $('<li>').attr('data-value', item.value).html('<div><span style="background-color:#'+color+';" class="ui-icon color-icon"></span>' + label + '</div>').appendTo(ul);
-					} else {
-						return $('<li>').attr('data-value', item.value).html('<div><span class="ui-icon color-icon"></span>' + label + '</div>').appendTo(ul);
+						swatch.css('background-color', '#' + color);
 					}
+
+					return $('<li>').attr('data-value', item.value).append($('<div>').append(swatch, document.createTextNode(label))).appendTo(ul);
 				}
 
 				$(this).data('ui-autocomplete')._resizeMenu = function () {
@@ -4493,7 +4515,7 @@ function copyToClipboard(containerId) {
 	}
 
 	if (clipboardData == null) {
-		$('body').append('<div style="display:none;" id="clipboardMessage" title="'+clipboard+'">'+clipboardCopyFailed+'<br/><br/>'+clipboardID+': '+clipboardDataId+'</div>');
+		$('body').append(DOMPurify.sanitize('<div style="display:none;" id="clipboardMessage" title="'+clipboard+'">'+clipboardCopyFailed+'<br/><br/>'+clipboardID+': '+clipboardDataId+'</div>'));
 
 		$('#clipboardMessage').dialog({
 			resizable: false,

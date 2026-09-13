@@ -215,29 +215,7 @@ case 'view':
 				($('#thumbnails').val() == 'true' ? '&graph_nolegend=true':''))
 				.done(function(data) {
 					wrapper=$('#wrapper_'+data.local_graph_id+'[rra_id=\''+data.rra_id+'\']');
-					wrapper.html(
-						"<img class='graphimage' id='graph_"+data.local_graph_id+
-						"' src='data:image/"+data.type+";base64,"+data.image+
-						"' rra_id='"+data.rra_id+
-						"' graph_type='"+data.type+
-						"' graph_id='"+data.local_graph_id+
-						"' graph_start='"+data.graph_start+
-						"' graph_end='"+data.graph_end+
-						"' graph_left='"+data.graph_left+
-						"' graph_top='"+data.graph_top+
-						"' graph_width='"+data.graph_width+
-						"' graph_height='"+data.graph_height+
-						"' image_width='"+data.image_width+
-						"' image_height='"+data.image_height+
-						"' canvas_left='"+data.graph_left+
-						"' canvas_top='"+data.graph_top+
-						"' canvas_width='"+data.graph_width+
-						"' canvas_height='"+data.graph_height+
-						"' width='"+data.image_width+
-						"' height='"+data.image_height+
-						"' value_min='"+data.value_min+
-						"' value_max='"+data.value_max+"'>"
-					);
+					wrapper.empty().append(buildGraphImage(data));
 
 					$('#graph_start').val(data.graph_start);
 					$('#graph_end').val(data.graph_end);
@@ -511,29 +489,7 @@ case 'zoom':
 				'&disable_cache=true'+
 				($('#thumbnails').val() == 'true' ? '&graph_nolegend=true':''))
 				.done(function(data) {
-					$('#wrapper_'+data.local_graph_id).html(
-						"<img class='graphimage' id='graph_"+data.local_graph_id+
-						"' src='data:image/"+data.type+";base64,"+data.image+
-						"' rra_id='"+data.rra_id+
-						"' graph_type='"+data.type+
-						"' graph_id='"+data.local_graph_id+
-						"' graph_start='"+data.graph_start+
-						"' graph_end='"+data.graph_end+
-						"' graph_left='"+data.graph_left+
-						"' graph_top='"+data.graph_top+
-						"' graph_width='"+data.graph_width+
-						"' graph_height='"+data.graph_height+
-						"' image_width='"+data.image_width+
-						"' image_height='"+data.image_height+
-						"' canvas_left='"+data.graph_left+
-						"' canvas_top='"+data.graph_top+
-						"' canvas_width='"+data.graph_width+
-						"' canvas_height='"+data.graph_height+
-						"' width='"+data.image_width+
-						"' height='"+data.image_height+
-						"' value_min='"+data.value_min+
-						"' value_max='"+data.value_max+"'>"
-					);
+					$('#wrapper_'+data.local_graph_id).empty().append(buildGraphImage(data));
 
 					$('#graph_start').val(data.graph_start);
 					$('#graph_end').val(data.graph_end);
