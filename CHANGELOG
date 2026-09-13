@@ -1,6 +1,8 @@
 Cacti CHANGELOG
 
 1.2.x
+-issue: Report the error step to the CLI installer when installation throws
+-security: Refuse Packages that carry no public key instead of trusting the default key
 -security: Match local login password hashing work for unknown usernames
 -security: Require a normal login after moving off the retired no-authentication method
 -security: Take the Web Basic user name only from server-set variables
