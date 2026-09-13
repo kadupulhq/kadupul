@@ -18,6 +18,7 @@
         <testsuite name="Coverage">
             <directory suffix="Test.php">./Unit</directory>
             <directory suffix="Test.php">./HandOff</directory>
+            <directory suffix="Test.php">./handoff</directory>
             <directory suffix="Test.php">./mutation</directory>
 
             <!-- Pest 2 describe(); tests/composer.json pins Pest 1. -->
@@ -30,9 +31,9 @@
             <!-- Requires include/global.php, which exits with status 0 when
                  no database is reachable and ends the run before the report
                  is written. -->
-            <exclude>./HandOff/AutomationTreeRuleHandoffTest.php</exclude>
-            <exclude>./HandOff/CactiSortHandoffTest.php</exclude>
-            <exclude>./HandOff/CactiSortRegressionTest.php</exclude>
+            <exclude>./handoff/AutomationTreeRuleHandoffTest.php</exclude>
+            <exclude>./handoff/CactiSortHandoffTest.php</exclude>
+            <exclude>./handoff/CactiSortRegressionTest.php</exclude>
 
             <!-- Requires tests/Helpers/CactiStubs.php, which does not exist. -->
             <exclude>./Unit/AggregatePtileTypeTest.php</exclude>
@@ -43,8 +44,8 @@
             <exclude>./Unit/CactiLoggerTest.php</exclude>
             <exclude>./Unit/CactiSecureTypeTest.php</exclude>
             <exclude>./Unit/CactiValidatorTest.php</exclude>
-            <exclude>./HandOff/AggregateDataHandoffTest.php</exclude>
-            <exclude>./HandOff/AutomationSortHandoffTest.php</exclude>
+            <exclude>./handoff/AggregateDataHandoffTest.php</exclude>
+            <exclude>./handoff/AutomationSortHandoffTest.php</exclude>
             <exclude>./mutation/RlikeHelperMutationTest.php</exclude>
 
             <!-- Calls read_config_option() or is_urlencoded() without
@@ -53,7 +54,7 @@
             <exclude>./Unit/Issue7121SmokeTest.php</exclude>
             <exclude>./Unit/RedirectValidationTest.php</exclude>
             <exclude>./Unit/SecurityScriptServerDataInputTest.php</exclude>
-            <exclude>./HandOff/RedirectDataHandoffTest.php</exclude>
+            <exclude>./handoff/RedirectDataHandoffTest.php</exclude>
             <exclude>./mutation/CactiInputStringRegexMutationTest.php</exclude>
             <exclude>./mutation/RedirectMutationTest.php</exclude>
 
