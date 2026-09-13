@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  +-------------------------------------------------------------------------+
  | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
@@ -15,6 +16,8 @@ if (!function_exists('read_config_option')) {
 	}
 }
 
+// phpseclib3 ships in the root Composer tree, which the Pest bootstrap does not load.
+require_once dirname(__DIR__, 3) . '/include/vendor/autoload.php';
 require_once dirname(__DIR__, 3) . '/lib/rrd.php';
 
 beforeAll(function () {
