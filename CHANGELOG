@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.x
+-security: Refuse loopback, link-local and reserved addresses for Remote Data Collector requests
 -security: Cast report ids to integers before the edit redirects
 -issue: Adjust wording in Template Setup
 -issue: Fall back to average statistics when an RRD lacks a MAX RRA for percentile maximum
