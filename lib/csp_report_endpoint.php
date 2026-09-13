@@ -219,6 +219,14 @@ function csp_report_should_log() : bool {
 		if ($owner === false || $owner !== posix_getuid()) {
 			return false;
 		}
+
+		/* Owning the directory is not enough if group or other can write it:
+		   they could plant a bucket symlink for the open below to follow. */
+		$perms = @fileperms($dir);
+
+		if ($perms === false || ($perms & 0077) !== 0) {
+			return false;
+		}
 	}
 
 	csp_report_prune_buckets($dir);

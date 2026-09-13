@@ -111,3 +111,49 @@ test('pruning removes stale counters and leaves current ones', function () {
 	@unlink($current);
 	@rmdir($dir);
 });
+
+test('a counter directory that other users can write drops the report', function () {
+	if (!function_exists('posix_getuid')) {
+		$this->markTestSkipped('The owner and mode checks need the posix extension');
+	}
+
+	$stub = <<<'PHP'
+<?php
+define('CACTI_CSP_REPORT_TEST_MODE', true);
+
+require $argv[1] . '/lib/csp_report_endpoint.php';
+
+$_SERVER['REMOTE_ADDR'] = '192.0.2.10';
+
+print csp_report_should_log() ? 'logged' : 'dropped';
+PHP;
+
+	$base = sys_get_temp_dir() . '/cacti_csp_mode_' . bin2hex(random_bytes(6));
+	$dir  = $base . '/cacti_csp';
+	mkdir($dir, 0700, true);
+
+	$script = $base . '/stub.php';
+	file_put_contents($script, $stub);
+
+	$cmd = escapeshellarg(PHP_BINARY) . ' -d sys_temp_dir=' . escapeshellarg($base) . ' ' .
+		escapeshellarg($script) . ' ' . escapeshellarg(dirname(__DIR__, 2)) . ' 2>&1';
+
+	$private = array();
+	exec($cmd, $private);
+
+	// a planted bucket symlink is only possible once group or other can write
+	chmod($dir, 0777);
+
+	$shared = array();
+	exec($cmd, $shared);
+
+	foreach (glob($dir . '/*') as $bucket) {
+		@unlink($bucket);
+	}
+	@rmdir($dir);
+	@unlink($script);
+	@rmdir($base);
+
+	expect(implode("\n", $private))->toBe('logged')
+		->and(implode("\n", $shared))->toBe('dropped');
+});

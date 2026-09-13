@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.x
+-security: Refuse a CSP report counter directory that group or other users can access
 -security: Require a POST token to delete link pages and to apply form actions to selected items
 -issue: Report the error step to the CLI installer when installation throws
 -security: Refuse Packages that carry no public key instead of trusting the default key
