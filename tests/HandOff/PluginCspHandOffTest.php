@@ -1,10 +1,9 @@
 <?php
 /*
- +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2026 The Cacti Group                                 |
- +-------------------------------------------------------------------------+
- +-------------------------------------------------------------------------+
-*/
+ * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
 
 /*
  * Hand-off tests for the plugin CSP e2e harness (PR #7081).
@@ -125,7 +124,7 @@ function _handoff_stage_plugin($srcRoot, $dstRoot, $plugin, $force) {
 /**
  * Mirror of api_plugin_get_dependencies() but without booting Kadupul.
  * Reads the plugin's INFO file and extracts the requires= line. The
- * production function lives at lib/plugins.php:301; copying the parse
+ * production function lives in lib/plugins.php; copying the parse
  * shape here lets us assert against it without dragging in the global
  * $config array.
  */

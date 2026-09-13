@@ -1,9 +1,8 @@
 <?php
 /*
- +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2026 The Cacti Group                                 |
- +-------------------------------------------------------------------------+
-*/
+ * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
 
 test('GHSA-274c-97hj-pv2v: import package flow enforces signature validation', function () {
 	$src = file_get_contents(__DIR__ . '/../../lib/import.php');

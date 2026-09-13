@@ -1,8 +1,10 @@
-## cactid.service
+<!--
+SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+SPDX-License-Identifier: GPL-2.0-or-later
+-->
 
-[//] #
-[//] # Copyright (C) 2004-2026 The Cacti Group
-[//] #
+## cactid.service
 
 Run the Kadupul collector as a managed system service.
 
