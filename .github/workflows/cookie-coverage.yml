@@ -2,7 +2,7 @@ name: Cookie Coverage
 
 on:
   push:
-    branches: [1.2.x]
+    branches: [1.2.x, lts/1.2]
     paths:
       - '.github/workflows/cookie-coverage.yml'
       - 'auth_changepassword.php'
@@ -25,7 +25,7 @@ on:
       - 'tests/composer.lock'
       - 'tests/phpunit-cookie.xml'
   pull_request:
-    branches: [1.2.x]
+    branches: [1.2.x, lts/1.2]
     paths:
       - '.github/workflows/cookie-coverage.yml'
       - 'auth_changepassword.php'
