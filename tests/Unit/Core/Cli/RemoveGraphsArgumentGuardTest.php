@@ -211,9 +211,9 @@ test('all regex consumers honor the validator true-or-error contract', function 
 	$add_graphs = file_get_contents($root . '/cli/add_graphs.php');
 	expect($add_graphs)->toContain("'snmp-value-regex:'")
 		->and($add_graphs)->toContain("if (\$item === false || \$item === '')")
-		->and($add_graphs)->toContain('validate_is_rlike_regex($item)')
+		->and($add_graphs)->toContain('validate_is_regex($item)')
 		->and($add_graphs)->toContain('if ($validation !== true)')
-		->and($add_graphs)->toContain("' AND field_value ' . db_qstr_rlike(")
+		->and($add_graphs)->toContain("' AND field_value REGEXP ' . db_qstr(\$dsGraph")
 		->and($add_graphs)->not->toContain('field_value REGEXP "');
 
 	foreach (array(
