@@ -267,6 +267,79 @@ test('an unchanged name still refers to its handle until it is removed', functio
 		->and(file_exists($path))->toBeFalse();
 });
 
+/**
+ * Runs a snippet against lib/maintenance_cli.php in a child PHP process with
+ * the POSIX user functions disabled, as on a build without that extension.
+ *
+ * @param string $code PHP code that prints a JSON result.
+ *
+ * @return mixed The decoded result.
+ */
+function maintenance_without_posix(string $code) {
+	$library = dirname(__DIR__, 4) . '/lib/maintenance_cli.php';
+	$pipes   = array();
+	$process = proc_open(
+		array(PHP_BINARY, '-d', 'disable_functions=posix_geteuid,posix_getuid', '-r', 'require ' . var_export($library, true) . ';' . $code),
+		array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+		$pipes
+	);
+	$output  = stream_get_contents($pipes[1]);
+	$error   = stream_get_contents($pipes[2]);
+
+	fclose($pipes[1]);
+	fclose($pipes[2]);
+
+	expect(proc_close($process))->toBe(0, $error);
+
+	return json_decode($output, true);
+}
+
+test('the running user is found without the POSIX extension', function () {
+	if (DIRECTORY_SEPARATOR != '/') {
+		test()->markTestSkipped('ownership cannot be verified on Windows');
+	}
+
+	$path = $this->dir . '/clearer.log';
+
+	file_put_contents($path, "one\n");
+
+	$result = maintenance_without_posix(
+		'$log = cacti_cli_open_log(' . var_export($path, true) . ');'
+		. '$opened = is_resource($log);'
+		. 'if ($opened) { fwrite($log, "two\\n"); fclose($log); }'
+		. 'echo json_encode(array(function_exists("posix_geteuid"), cacti_cli_current_uid(), $opened ? true : $log));'
+	);
+
+	expect($result[0])->toBeFalse()
+		->and($result[1])->toBe(fileowner($path))
+		->and($result[2])->toBeTrue()
+		->and(file_get_contents($path))->toBe("one\ntwo\n");
+});
+
+test('a debug log owned by another user is refused with and without POSIX', function () {
+	if (!function_exists('posix_geteuid') || posix_geteuid() !== 0) {
+		test()->markTestSkipped('changing a file owner needs root');
+	}
+
+	$path = $this->dir . '/clearer.log';
+
+	file_put_contents($path, "theirs\n");
+	chown($path, 12345);
+
+	$without = maintenance_without_posix('echo json_encode(cacti_cli_open_log(' . var_export($path, true) . '));');
+
+	expect(cacti_cli_open_log($path))->toBe("Refusing to append to '$path' because another user owns it")
+		->and($without)->toBe("Refusing to append to '$path' because another user owns it")
+		->and(file_get_contents($path))->toBe("theirs\n");
+});
+
+test('an owner that cannot be verified is refused rather than trusted', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/lib/maintenance_cli.php');
+
+	expect($source)->toContain("if (\$uid === false) {\n\t\treturn sprintf(\"Refusing to append to '%s' because its owner cannot be verified\", \$path);")
+		->and($source)->not->toContain("function_exists('posix_geteuid') && \$before['uid']");
+});
+
 test('splice_rrd uses the 1.2.31 names and creates every temporary file exclusively', function () {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/cli/splice_rrd.php');
 

@@ -204,6 +204,38 @@ function cacti_cli_read_lines($handle) {
 }
 
 /**
+ * The user id files this process creates belong to, or false if unknown.
+ *
+ * Without the POSIX extension this falls back, as get_running_user() does, to
+ * the owner of a file the process creates; tmpfile() leaves no name behind to
+ * swap. Windows reports owner 0 for every file, so ownership cannot be
+ * verified there and the caller must refuse.
+ *
+ * @return int|false The user id, or false when it cannot be determined.
+ */
+function cacti_cli_current_uid() {
+	if (function_exists('posix_geteuid')) {
+		return posix_geteuid();
+	}
+
+	if (DIRECTORY_SEPARATOR != '/') {
+		return false;
+	}
+
+	$probe = tmpfile();
+
+	if ($probe === false) {
+		return false;
+	}
+
+	$stat = fstat($probe);
+
+	fclose($probe);
+
+	return $stat === false ? false : $stat['uid'];
+}
+
+/**
  * Open a debug log for appending without following a symlink.
  *
  * A missing log is created exclusively. An existing log is appended only when
@@ -226,7 +258,13 @@ function cacti_cli_open_log($path) {
 		return sprintf("Refusing to append to '%s' because it is not a regular file", $path);
 	}
 
-	if (function_exists('posix_geteuid') && $before['uid'] !== posix_geteuid()) {
+	$uid = cacti_cli_current_uid();
+
+	if ($uid === false) {
+		return sprintf("Refusing to append to '%s' because its owner cannot be verified", $path);
+	}
+
+	if ($before['uid'] !== $uid) {
 		return sprintf("Refusing to append to '%s' because another user owns it", $path);
 	}
 
