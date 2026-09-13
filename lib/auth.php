@@ -3762,6 +3762,9 @@ function local_auth_login_process($username) {
 						array($password, $username));
 				}
 			}
+		} else {
+			/* a known account verifies here a second time; keep unknown usernames level */
+			compat_password_verify((string) get_nfilter_request_var('login_password'), '$2y$10$VWBpVwPd5enH/FIf0bNNxO0d12/V8EZag/sNP.SQqsyYWyOFXvaV.');
 		}
 	}
 
@@ -4307,6 +4310,11 @@ function secpass_login_process($username) {
 			return array();
 		}
 	} else {
+		/* Verify against a fixed bcrypt hash tied to no account so an unknown
+		 * username costs as much as a known one and response time does not
+		 * reveal which usernames exist.  The result is discarded. */
+		compat_password_verify((string) $password, '$2y$10$VWBpVwPd5enH/FIf0bNNxO0d12/V8EZag/sNP.SQqsyYWyOFXvaV.');
+
 		/* error */
 		$error     = true;
 		$error_msg = __('Access Denied!  Login Failed.');
