@@ -18,7 +18,7 @@
  */
 
 test('the graph template association delete dialog is fetched by POST', function () {
-	$src = file_get_contents(dirname(__DIR__, 3) . '/data_queries.php');
+	$src = file_get_contents(dirname(__DIR__, 4) . '/data_queries.php');
 
 	expect($src)->not->toBeFalse();
 
@@ -34,7 +34,7 @@ test('the graph template association delete dialog is fetched by POST', function
 });
 
 test('the dialog step itself still requires POST', function () {
-	$src = file_get_contents(dirname(__DIR__, 3) . '/data_queries.php');
+	$src = file_get_contents(dirname(__DIR__, 4) . '/data_queries.php');
 
 	expect($src)->toMatch("/case 'item_remove_confirm':\\s+csrf_require_post\\(\\);\\s+data_query_item_remove_confirm\\(\\);/");
 });

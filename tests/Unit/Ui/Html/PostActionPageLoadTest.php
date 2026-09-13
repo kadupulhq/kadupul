@@ -18,7 +18,7 @@
  */
 
 test('plugin enable and disable links still reload the whole page', function () {
-	$src = file_get_contents(dirname(__DIR__, 3) . '/plugins.php');
+	$src = file_get_contents(dirname(__DIR__, 4) . '/plugins.php');
 
 	expect($src)->not->toBeFalse();
 
@@ -29,7 +29,7 @@ test('plugin enable and disable links still reload the whole page', function () 
 });
 
 test('plugin ordering and install links keep the in-page load', function () {
-	$src = file_get_contents(dirname(__DIR__, 3) . '/plugins.php');
+	$src = file_get_contents(dirname(__DIR__, 4) . '/plugins.php');
 
 	expect($src)->toContain("class='pic fa fa-caret-up moveArrow cactiPostAction'")
 		->and($src)->toContain("class='pic fa fa-caret-down moveArrow cactiPostAction'")
@@ -37,7 +37,7 @@ test('plugin ordering and install links keep the in-page load', function () {
 });
 
 test('the data template New item link posts rrd_add in the page', function () {
-	$src = file_get_contents(dirname(__DIR__, 3) . '/data_templates.php');
+	$src = file_get_contents(dirname(__DIR__, 4) . '/data_templates.php');
 
 	expect($src)->not->toBeFalse();
 
@@ -48,9 +48,9 @@ test('the data template New item link posts rrd_add in the page', function () {
 });
 
 test('the New item icon renders as 1.2.31 drew it apart from the link target', function () {
-	require_once dirname(__DIR__, 2) . '/Helpers/AuthEntryProbe.php';
+	require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
 
-	$html = file_get_contents(dirname(__DIR__, 3) . '/lib/html.php');
+	$html = file_get_contents(dirname(__DIR__, 4) . '/lib/html.php');
 
 	$source = '<?php
 		$config = array("poller_id" => 1);
@@ -93,7 +93,7 @@ test('the New item icon renders as 1.2.31 drew it apart from the link target', f
 });
 
 test('the graph item list does not load a post action link by GET as well', function () {
-	$src = file_get_contents(dirname(__DIR__, 3) . '/graphs.php');
+	$src = file_get_contents(dirname(__DIR__, 4) . '/graphs.php');
 
 	expect($src)->not->toBeFalse();
 
