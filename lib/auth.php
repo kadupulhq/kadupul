@@ -5275,6 +5275,8 @@ function cacti_authorize_has_realm($user_id, $realm_id) {
 		return $realm_cache[$key];
 	}
 
+	/* a group grants its realms only while it is enabled, as is_realm_allowed()
+	   has it, so a disabled group cannot make its members report admins here */
 	$has = (bool) db_fetch_cell_prepared('SELECT 1
 		FROM user_auth_realm
 		WHERE user_id = ?
@@ -5282,9 +5284,12 @@ function cacti_authorize_has_realm($user_id, $realm_id) {
 		UNION
 		SELECT 1
 		FROM user_auth_group_realm AS ugr
+		INNER JOIN user_auth_group AS ug
+		ON ug.id = ugr.group_id
 		INNER JOIN user_auth_group_members AS ugm
 		ON ugm.group_id = ugr.group_id
-		WHERE ugm.user_id = ?
+		WHERE ug.enabled = \'on\'
+		AND ugm.user_id = ?
 		AND ugr.realm_id = ?
 		LIMIT 1',
 		array($user_id, $realm_id, $user_id, $realm_id)
