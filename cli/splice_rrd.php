@@ -101,13 +101,13 @@ if (cacti_sizeof($parms)) {
 				if (!file_exists($oldrrd)) {
 					print 'FATAL: File \'' . $oldrrd . '\' does not exist.' . PHP_EOL;
 
-					exit(-9);
+					exit(1);
 				}
 
 				if (!is_resource_writable($oldrrd)) {
 					print 'FATAL: File \'' . $oldrrd . '\' is not writable by this account.' . PHP_EOL;
 
-					exit(-8);
+					exit(1);
 				}
 
 				break;
@@ -117,13 +117,13 @@ if (cacti_sizeof($parms)) {
 				if (!file_exists($newrrd)) {
 					print 'FATAL: File \'' . $newrrd . '\' does not exist.' . PHP_EOL;
 
-					exit(-9);
+					exit(1);
 				}
 
 				if (!is_resource_writable($newrrd)) {
 					print 'FATAL: File \'' . $newrrd . '\' is not writable by this account.' . PHP_EOL;
 
-					exit(-8);
+					exit(1);
 				}
 
 				break;
@@ -133,7 +133,7 @@ if (cacti_sizeof($parms)) {
 				if (!is_resource_writable(dirname($finrrd) . '/') || (file_exists($finrrd) && !is_resource_writable($finrrd))) {
 					print 'FATAL: File \'' . $finrrd . '\' is not writable by this account.' . PHP_EOL;
 
-					exit(-8);
+					exit(1);
 				}
 
 				break;
@@ -178,7 +178,7 @@ if (cacti_sizeof($parms)) {
 				print 'ERROR: Invalid Parameter ' . $parameter . PHP_EOL . PHP_EOL;
 				display_help();
 
-				exit(-3);
+				exit(1);
 		}
 	}
 }
@@ -188,14 +188,14 @@ if ($oldrrd == '') {
 	print 'FATAL: You must specify a old RRDfile!' . PHP_EOL . PHP_EOL;
 	display_help();
 
-	exit(-2);
+	exit(1);
 }
 
 if ($newrrd == '') {
 	print 'FATAL: You must specify a New RRDfile!' . PHP_EOL . PHP_EOL;
 	display_help();
 
-	exit(-2);
+	exit(1);
 }
 
 if ($overwrite && $finrrd == '') {
@@ -206,7 +206,7 @@ if ($finrrd == '') {
 	print 'FATAL: You must specify a New RRDfile or use the overwrite option!' . PHP_EOL . PHP_EOL;
 	display_help();
 
-	exit(-2);
+	exit(1);
 }
 
 debug('Entering Mainline');
@@ -234,31 +234,31 @@ if (!file_exists($rrdtool)) {
 	}
 }
 
-$response = shell_exec($rrdtool);
+$response = shell_exec(cacti_escapeshellcmd($rrdtool));
 
 if (strlen($response)) {
 	$response_array = explode(' ', $response);
 	print 'NOTE: Using ' . $response_array[0] . ' Version ' . $response_array[1] . PHP_EOL;
 } else {
-	print 'FATAL: RRDTool not found in configuration or path.' . PHP_EOL . 'Please insure RRDTool can be found using one of these methods!' . PHP_EOL;
+	print 'FATAL: RRDTool not found in configuration or path.' . PHP_EOL . 'Please ensure RRDTool can be found using one of these methods!' . PHP_EOL;
 
-	exit(-1);
+	exit(1);
 }
 
-/* determine the temporary file name */
-$seed = mt_rand();
+/* The dump files and the backups were previously named from the RRD basename
+ * and mt_rand() directly in a world writable directory, and were created by
+ * shell redirection and copy(), both of which follow symlinks. Everything now
+ * goes in one private directory created for this run, so the names cannot be
+ * claimed in advance. */
+$tempdir = tempnam(sys_get_temp_dir(), 'cacti_splice_');
 
-if (substr_count(PHP_OS, 'WIN')) {
-	$tempdir    = getenv('TEMP');
-	$oldxmlfile = $tempdir . '/' . str_replace('.rrd', '', basename($oldrrd)) . '.dump.' . $seed;
-	$seed++;
-	$newxmlfile = $tempdir . '/' . str_replace('.rrd', '', basename($newrrd)) . '.dump.' . $seed;
-} else {
-	$tempdir    = '/tmp';
-	$oldxmlfile = '/tmp/' . str_replace('.rrd', '', basename($oldrrd)) . '.dump.' . $seed;
-	$seed++;
-	$newxmlfile = '/tmp/' . str_replace('.rrd', '', basename($newrrd)) . '.dump.' . $seed;
+if ($tempdir === false || !unlink($tempdir) || !mkdir($tempdir, 0700)) {
+	print 'FATAL: Unable to create a private working directory' . PHP_EOL;
+	exit(1);
 }
+
+$oldxmlfile = $tempdir . '/' . str_replace('.rrd', '', basename($oldrrd)) . '.dump';
+$newxmlfile = $tempdir . '/' . str_replace('.rrd', '', basename($newrrd)) . '.dump';
 
 if ($finrrd == '') {
 	$finrrd = dirname($newrrd) . '/' . basename($newrrd) . '.new';
@@ -280,7 +280,7 @@ if (file_exists($oldxmlfile)) {
 } else {
 	print 'FATAL: RRDtool Command Failed on \'' . $oldrrd . '\'.  Please insure your RRDtool install is valid!' . PHP_EOL;
 
-	exit(-12);
+	exit(1);
 }
 
 if (file_exists($newxmlfile)) {
@@ -291,7 +291,7 @@ if (file_exists($newxmlfile)) {
 } else {
 	print 'FATAL: RRDtool Command Failed on \'' . $newrrd . '\'.  Please insure your RRDtool install is valid!' . PHP_EOL;
 
-	exit(-12);
+	exit(1);
 }
 
 print 'NOTE: RRDfile will be written to \'' . $finrrd . '\'' . PHP_EOL;
@@ -873,14 +873,16 @@ function writeXMLFile($output, $xmlfile) {
 }
 
 function backupRRDFile($rrdfile) {
-	global $tempdir, $seed, $html;
+	global $tempdir, $html;
 
 	$backupdir = $tempdir;
 
-	if (file_exists($backupdir . '/' . basename($rrdfile))) {
-		$newfile = basename($rrdfile) . '.' . $seed;
-	} else {
-		$newfile = basename($rrdfile);
+	/* the working directory is private to this run, so a name only has to be
+	 * unique within it rather than unguessable */
+	$newfile = basename($rrdfile);
+
+	for ($i = 1; file_exists($backupdir . '/' . $newfile); $i++) {
+		$newfile = basename($rrdfile) . '.' . $i;
 	}
 
 	print 'NOTE: Backing Up \'' . $rrdfile . '\' to \'' . $backupdir . '/' .  $newfile . '\'' . PHP_EOL;

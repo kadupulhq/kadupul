@@ -784,13 +784,34 @@ function handleTableNav() {
 	});
 }
 
+/** setupSelectmenuScrollClose - Close open select menus when their scroll
+ *  container moves so the detached menu cannot remain over unrelated fields. */
+function setupSelectmenuScrollClose() {
+	$('.cactiConsoleContentArea, .cactiGraphContentArea, .cactiGraphContentAreaPreview, .cactiTreeNavigationArea')
+		.add(window)
+		.off('scroll.cactiSelectmenu')
+		.on('scroll.cactiSelectmenu', function() {
+			if (!$('.ui-selectmenu-open').length) {
+				return;
+			}
+
+			$('select').each(function() {
+				if ($(this).selectmenu('instance') !== undefined) {
+					$(this).selectmenu('close');
+				}
+			});
+		});
+}
+
 /** applySkin - This function re-asserts all javascript behavior to a page
  *  that can't be set using a live attribute 'on()' */
 function applySkin() {
 	// Support callback nonces
-	$.ajaxSetup({
-		nonce: cactiNonce
-	});
+	if (typeof cactiNonce !== 'undefined') {
+		$.ajaxSetup({
+			nonce: cactiNonce
+		});
+	}
 
 	pageName = basename($(location).attr('pathname'));
 
@@ -845,6 +866,8 @@ function applySkin() {
 	if (typeof themeReady == 'function') {
 		themeReady();
 	}
+
+	setupSelectmenuScrollClose();
 
 	makeFiltersResponsive();
 
@@ -2670,7 +2693,8 @@ function ajaxAnchors() {
 		}
 
 		if ($(this).hasClass('cactiPostAction')) {
-			submitPageUsingPost(href);
+			event.stopImmediatePropagation();
+			submitPageUsingPost($(this).data('url') || href);
 
 			return false;
 		}

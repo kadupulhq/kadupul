@@ -442,7 +442,6 @@ if ($config['is_web']) {
 	/* add additional cookie directives */
 	ini_set('session.cookie_httponly', true);
 	ini_set('session.cookie_path', $config['url_path']);
-	ini_set('session.cookie_domain', '');
 	ini_set('session.use_strict_mode', true);
 	ini_set('session.use_only_cookies', true);
 
@@ -453,14 +452,8 @@ if ($config['is_web']) {
 	);
 
 	if (isset($cacti_cookie_domain) && $cacti_cookie_domain != '') {
-		$server_name = $_SERVER['SERVER_NAME'] ?? '';
-
-		if (cacti_cookie_domain_matches_host($cacti_cookie_domain, $server_name)) {
-			ini_set('session.cookie_domain', $cacti_cookie_domain);
-			$options['cookie_domain'] = $cacti_cookie_domain;
-		} elseif (!isset($_COOKIE[$cacti_session_name])) {
-			cacti_log('WARNING: Ignoring configured session cookie domain ' . cacti_log_safe_value($cacti_cookie_domain) . ' because it does not match the configured server name; using a host-only cookie.', false, 'AUTH');
-		}
+		ini_set('session.cookie_domain', $cacti_cookie_domain);
+		$options['cookie_domain'] = $cacti_cookie_domain;
 	}
 
 	// SameSite php7.3+ behavior
@@ -594,11 +587,42 @@ if ($config['is_web']) {
 	if (isset_request_var('action')) {
 		$action = get_nfilter_request_var('action');
 
-		$bad_actions = array('save', 'update_data', 'changepassword');
+		/* State changing actions must arrive by POST with a CSRF token. The
+		   actions below were reachable by GET, so a cross origin <img> or link
+		   could delete or reorder a template item, a tree branch or a link page
+		   using only the victim's session cookie. Under AUTH_METHOD_BASIC the
+		   browser re-sends credentials on that request, so no session cookie is
+		   needed at all.
+
+		   Every anchor that carried one of these now takes the cactiPostAction
+		   class and goes out through submitPageUsingPost(), which is the
+		   mechanism this branch already used for the plugin actions.
+
+		   Read-only actions stay out by intent: item_edit, edit, tree and the
+		   *_confirm dialogs render a page and change nothing. */
+		$bad_actions = array(
+			'save', 'update_data', 'changepassword',
+			'delete_node', 'gt_remove', 'query_remove', 'remove', 'change_leaf',
+			'item_remove', 'item_moveup', 'item_movedown',
+			'item_remove_gsv', 'item_remove_dssv',
+			'item_moveup_gsv', 'item_moveup_dssv',
+			'item_movedown_gsv', 'item_movedown_dssv',
+			'moveup', 'movedown',
+			'tree_up', 'tree_down', 'move_page_up', 'move_page_down',
+			'rrd_add', 'rrd_remove'
+		);
 
 		foreach($bad_actions as $bad) {
 			if ($action == $bad && !isset($_POST['__csrf_magic'])) {
-				cacti_log('WARNING: Attempt to use GET method for POST operations from IP ' . get_client_addr(), false, 'WEBUI');
+				/* Preserve the legacy warning for form actions. Item-action links
+				 * can also come from plugins outside this repository; crawlers may
+				 * discover those URLs, but they must still fail closed. */
+				if (in_array($bad, array('save', 'update_data', 'changepassword'), true)) {
+					cacti_log('WARNING: Attempt to use GET method for POST operations from IP ' . get_client_addr(), false, 'WEBUI');
+				}
+
+				header('Allow: POST');
+				http_response_code(405);
 				exit;
 			}
 		}
