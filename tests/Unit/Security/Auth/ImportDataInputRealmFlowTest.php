@@ -478,8 +478,8 @@ if (!defined('OPENSSL_ALGO_SHA1')) {
 	define('OPENSSL_ALGO_SHA256', 7);
 }
 
-/* each file name maps to that file's parsed XML, in package order */
-$runPackage = function (array $files) {
+/* each file name maps to that file's parsed XML, in package order; $decision is what the installer passes */
+$runPackage = function (array $files, $decision = null) {
 	$package_files = array();
 
 	foreach ($files as $name => $xml) {
@@ -492,7 +492,11 @@ $runPackage = function (array $files) {
 
 	$GLOBALS['ifl_package'] = array('info' => array(), 'files' => array('file' => $package_files));
 
-	return import_package('package.xml.gz', 1, false, false, false, false, false);
+	if ($decision === null) {
+		return import_package('package.xml.gz', 1, false, false, false, false, false);
+	}
+
+	return import_package('package.xml.gz', 1, false, false, false, false, false, array(), array(), '', false, $decision);
 };
 
 test('a method refused in one package file skips a template that uses it in a later file', function () use ($runPackage, $methodXml, $templateXml, $methodHash, $dtHash, $pointsAtNothing) {
@@ -551,4 +555,43 @@ test('a standalone template import without the realm skips a method it cannot re
 	expect($pointsAtNothing())->toBe(array())
 		->and($GLOBALS['ifl_saves'])->toBe(array())
 		->and($result['data_template'][0]['result'])->toBe('fail');
+});
+
+test('the installer imports a shipped package with its methods and templates without a session realm', function () use ($runPackage, $methodXml, $templateXml, $methodHash, $dtHash, $savedTo, $pointsAtNothing) {
+	/* install/install.php runs in the web SAPI with no session user during an install or upgrade */
+	$_SESSION = array();
+
+	$runPackage(array(
+		'method.xml'   => array('hash_030103' . $methodHash => $methodXml('/usr/local/bin/uptime-probe <host>')),
+		'template.xml' => array('hash_010103' . $dtHash => $templateXml),
+	), true);
+
+	expect($savedTo('data_input'))->toHaveCount(1)
+		->and($savedTo('data_template'))->toHaveCount(1)
+		->and($pointsAtNothing())->toBe(array())
+		->and($GLOBALS['ifl_repairs'])->toBe(2)
+		->and($GLOBALS['ifl_messages'])->toBe(array());
+});
+
+test('a web package import without the realm is still gated when no decision is passed', function () use ($runPackage, $methodXml, $templateXml, $methodHash, $dtHash) {
+	$_SESSION = array();
+
+	$runPackage(array(
+		'method.xml'   => array('hash_030103' . $methodHash => $methodXml('/usr/local/bin/uptime-probe <host>')),
+		'template.xml' => array('hash_010103' . $dtHash => $templateXml),
+	));
+
+	expect($GLOBALS['ifl_saves'])->toBe(array())
+		->and($GLOBALS['ifl_messages'])->toHaveKey('import_data_input_dependent_' . $dtHash);
+});
+
+test('the installer passes its own decision only from an installer entry point', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/lib/installer.php');
+
+	$start = strpos($source, 'private function installTemplate(');
+	$end   = strpos($source, "\n\t}\n", $start);
+	$body  = substr($source, $start, $end - $start);
+
+	expect($body)->toContain("\$data_input_allowed = (defined('IN_CACTI_INSTALL') || !\$config['is_web']) ? true : null;")
+		->and($body)->toContain("\$info['class'], false, \$data_input_allowed);");
 });

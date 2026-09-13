@@ -630,7 +630,7 @@ function import_read_package_data($xmlfile, &$public_key) {
  *
  */
 function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $replace_svalues = false,
-	$preview = false, $info_only = false, $limitex = true, $import_hashes = array(), $import_files = array(), $class = '', $replace_files = true) {
+	$preview = false, $info_only = false, $limitex = true, $import_hashes = array(), $import_files = array(), $class = '', $replace_files = true, $data_input_allowed = null) {
 
 	global $config, $preview_only;
 
@@ -662,9 +662,12 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 	}
 
 	/* every XML file in the package is imported under the same realm decision, and an object
-	 * skipped in one file is remembered for the files after it */
-	$data_input_allowed = import_data_input_realm_allowed();
-	$refused_hashes     = array();
+	 * skipped in one file is remembered for the files after it; the installer passes its own */
+	if ($data_input_allowed === null) {
+		$data_input_allowed = import_data_input_realm_allowed();
+	}
+
+	$refused_hashes = array();
 
 	cacti_log('Verifying each files signature', false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 
