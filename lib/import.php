@@ -203,6 +203,9 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 		}
 	}
 
+	/* objects skipped because they use a Data Input Method the import may not write, keyed by hash */
+	$refused_hashes = array();
+
 	/**
 	 * Second pass, we will actually perform the import of the entirety of the Template.
 	 *
@@ -235,7 +238,13 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 					return false;
 				}
 
-				switch($type) {
+				/* anything that uses a skipped method, or an object skipped for that reason, would save rows pointing at nothing */
+				$refused_by = ($type == 'data_input_method' ? false : import_xml_refused_reference($hash_array, $refused_hashes));
+
+				switch($refused_by === false ? $type : 'refused_dependency') {
+					case 'refused_dependency':
+						import_xml_refuse_dependent($type, $dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache, $refused_hashes);
+						break;
 					case 'graph_template':
 						$transaction_started = $preview_only ? false : db_begin_transaction();
 
@@ -273,7 +282,7 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 					$hash_cache += xml_to_host_template($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache, $host_template_data, $class);
 					break;
 				case 'data_input_method':
-					$cache_add = xml_to_data_input_method($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache, $data_input_allowed);
+					$cache_add = xml_to_data_input_method($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache, $data_input_allowed, $refused_hashes);
 
 					if ($cache_add === false) {
 						return false;
@@ -2396,7 +2405,72 @@ function import_data_input_realm_allowed() {
 	return !empty($realm);
 }
 
-function xml_to_data_input_method($hash, &$xml_array, &$hash_cache, $realm_allowed = null) {
+/* remember a skipped object and every sub-object it defines, so objects that use any of them are skipped too */
+function import_xml_record_refused($hash, $xml_array, &$refused_hashes) {
+	if ($hash != '') {
+		$refused_hashes[$hash] = true;
+	}
+
+	if (is_array($xml_array)) {
+		foreach ($xml_array as $key => $value) {
+			if (is_string($key) && preg_match('/^hash_[a-f0-9]{2}(?:[a-f0-9]{4})?([a-f0-9]{32})$/', $key, $matches)) {
+				$refused_hashes[$matches[1]] = true;
+			}
+
+			if (is_array($value)) {
+				import_xml_record_refused('', $value, $refused_hashes);
+			}
+		}
+	}
+}
+
+/* return the first skipped object that an object's XML refers to, or false */
+function import_xml_refused_reference($xml_array, $refused_hashes) {
+	if (!cacti_sizeof($refused_hashes) || !is_array($xml_array)) {
+		return false;
+	}
+
+	foreach ($xml_array as $value) {
+		if (is_array($value)) {
+			$reference = import_xml_refused_reference($value, $refused_hashes);
+
+			if ($reference !== false) {
+				return $reference;
+			}
+		} elseif (is_string($value) && preg_match_all('/hash_[a-f0-9]{2}(?:[a-f0-9]{4})?([a-f0-9]{32})(?![a-f0-9])/', $value, $matches)) {
+			foreach ($matches[1] as $reference) {
+				if (isset($refused_hashes[$reference])) {
+					return $reference;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+/* skip an object that uses a skipped Data Input Method instead of saving rows that point at nothing */
+function import_xml_refuse_dependent($type, $hash, $xml_array, $hash_cache, &$refused_hashes) {
+	global $preview_only, $import_debug_info;
+
+	import_xml_record_refused($hash, $xml_array, $refused_hashes);
+
+	$title   = (isset($xml_array['name']) ? $xml_array['name'] : $hash);
+	$message = __('\'%s\' was not imported because it uses a Data Input Method you do not have permission to edit.', html_escape($title));
+
+	$import_debug_info['type']          = (empty($hash_cache[$type][$hash]) ? 'new' : 'unchanged');
+	$import_debug_info['hash']          = $hash;
+	$import_debug_info['title']         = $title;
+	$import_debug_info['result']        = ($preview_only ? 'preview' : 'fail');
+	$import_debug_info['differences'][] = $message;
+
+	if (!$preview_only) {
+		cacti_log("WARNING: Skipped importing $type '$hash' - it uses a data input method the user lacks the permission to edit", false, 'IMPORT');
+		raise_message('import_data_input_dependent_' . $hash, $message, MESSAGE_LEVEL_WARN);
+	}
+}
+
+function xml_to_data_input_method($hash, &$xml_array, &$hash_cache, $realm_allowed = null, &$refused_hashes = array()) {
 	global $fields_data_input_edit, $fields_data_input_field_edit, $fields_data_input_field_edit_1;
 	global $preview_only, $import_debug_info, $ignorable_hashes;
 
@@ -2561,6 +2635,8 @@ function xml_to_data_input_method($hash, &$xml_array, &$hash_cache, $realm_allow
 		$skip_message = __('Data Input Method \'%s\' was not imported because you do not have permission to edit Data Input Methods.', html_escape($xml_array['name']));
 
 		$import_debug_info['differences'][] = $skip_message;
+
+		import_xml_record_refused($hash, $xml_array, $refused_hashes);
 
 		if (!$preview_only) {
 			cacti_log("WARNING: Skipped importing data input method '$hash' - the user lacks the Data Input Methods permission", false, 'IMPORT');

@@ -140,6 +140,25 @@ function update_replication_crc($poller_id, $variable) {
 function generate_data_input_field_sequences($input_string, $data_input_id) {
 }
 
+/* only reached when a graph template is not skipped; recorded rather than imported */
+function xml_to_graph_template($hash, &$xml_array, &$hash_cache, $hash_version, $remove_orphans = false) {
+	$GLOBALS['ifl_graph_templates'][] = $hash;
+
+	return array();
+}
+
+function db_begin_transaction() {
+	return true;
+}
+
+function db_commit_transaction() {
+	return true;
+}
+
+function db_rollback_transaction() {
+	return true;
+}
+
 function api_plugin_hook_function($name, $parameters = '') {
 	return $parameters;
 }
@@ -253,6 +272,7 @@ beforeEach(function () use ($typeCodes, $versionCodes, $libraryDir) {
 	$GLOBALS['ifl_repairs']  = 0;
 	$GLOBALS['ifl_log']      = array();
 	$GLOBALS['ifl_messages'] = array();
+	$GLOBALS['ifl_graph_templates'] = array();
 });
 
 afterEach(function () {
@@ -343,4 +363,84 @@ test('the preview shows that the repair would be skipped', function () use ($run
 	expect($GLOBALS['ifl_repairs'])->toBe(0)
 		->and(implode("\n", $result['data_template'][0]['differences']))->toContain('repair was skipped')
 		->and($GLOBALS['ifl_messages'])->toBe(array());
+});
+
+$gtHash     = md5('kadupul import realm graph template');
+$gtItemHash = md5('kadupul import realm graph template item');
+
+$graphXml = array(
+	'name'  => 'Uptime Probe Graph',
+	'graph' => array('title' => '|host_description| - Uptime'),
+	'items' => array(
+		'hash_100103' . $gtItemHash => array('task_item_id' => 'hash_080103' . $itemHash, 'color_id' => '', 'sequence' => '1')
+	)
+);
+
+/* no saved row may point a data template, its items or its data at a missing method or field */
+$pointsAtNothing = function (): array {
+	$broken = array();
+
+	foreach ($GLOBALS['ifl_saves'] as $save) {
+		foreach (array('data_input_id', 'data_input_field_id') as $column) {
+			if (array_key_exists($column, $save['row']) && empty($save['row'][$column])) {
+				$broken[] = $save['table'] . '.' . $column;
+			}
+		}
+	}
+
+	return $broken;
+};
+
+test('a refused new method leaves no template row pointing at field id 0', function () use ($runImport, $methodXml, $templateXml, $methodHash, $dtHash, $pointsAtNothing) {
+	$result = $runImport(array(
+		'hash_030103' . $methodHash => $methodXml('/usr/local/bin/uptime-probe <host>'),
+		'hash_010103' . $dtHash     => $templateXml,
+	));
+
+	expect($pointsAtNothing())->toBe(array())
+		->and($GLOBALS['ifl_saves'])->toBe(array())
+		->and($result['data_template'][0]['result'])->toBe('fail')
+		->and(implode("\n", $result['data_template'][0]['differences']))->toContain('uses a Data Input Method you do not have permission to edit')
+		->and(implode("\n", $GLOBALS['ifl_log']))->toContain("data_template '$dtHash'")
+		->and($GLOBALS['ifl_messages'])->toHaveKey('import_data_input_dependent_' . $dtHash);
+});
+
+test('an object that uses a skipped template is skipped as well', function () use ($runImport, $methodXml, $templateXml, $graphXml, $methodHash, $dtHash, $gtHash) {
+	$result = $runImport(array(
+		'hash_030103' . $methodHash => $methodXml('/usr/local/bin/uptime-probe <host>'),
+		'hash_010103' . $dtHash     => $templateXml,
+		'hash_000103' . $gtHash     => $graphXml,
+	));
+
+	expect($GLOBALS['ifl_graph_templates'])->toBe(array())
+		->and($GLOBALS['ifl_saves'])->toBe(array())
+		->and($result['graph_template'][0]['hash'])->toBe($gtHash)
+		->and(implode("\n", $result['graph_template'][0]['differences']))->toContain('uses a Data Input Method you do not have permission to edit');
+});
+
+test('the preview marks a template that would be skipped', function () use ($runImport, $methodXml, $templateXml, $methodHash, $dtHash) {
+	$GLOBALS['preview_only'] = true;
+
+	$result = $runImport(array(
+		'hash_030103' . $methodHash => $methodXml('/usr/local/bin/uptime-probe <host>'),
+		'hash_010103' . $dtHash     => $templateXml,
+	));
+
+	expect($GLOBALS['ifl_saves'])->toBe(array())
+		->and($result['data_template'][0]['result'])->toBe('preview')
+		->and(implode("\n", $result['data_template'][0]['differences']))->toContain('uses a Data Input Method you do not have permission to edit')
+		->and($GLOBALS['ifl_messages'])->toBe(array());
+});
+
+test('a user with the realm imports the graph template that uses the method', function () use ($runImport, $methodXml, $templateXml, $graphXml, $methodHash, $dtHash, $gtHash, $pointsAtNothing) {
+	$GLOBALS['ifl_realm'] = 2;
+
+	$runImport(array(
+		'hash_030103' . $methodHash => $methodXml('/usr/local/bin/uptime-probe <host>'),
+		'hash_010103' . $dtHash     => $templateXml,
+		'hash_000103' . $gtHash     => $graphXml,
+	));
+
+	expect($GLOBALS['ifl_graph_templates'])->toBe(array($gtHash))
+		->and($pointsAtNothing())->toBe(array());
 });

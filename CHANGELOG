@@ -3,6 +3,7 @@ Cacti CHANGELOG
 1.2.x
 -issue: Send array rrdtool commands such as the RRDcheck fetch through RRDproxy as one quoted command instead of failing before they are sent
 -issue: Send the RRDproxy file_exists check in RRDcheck a bare path so an RRD path holding a quote character is found, and skip the local writable and modify time checks for RRDs on the proxy
+-security: Skip Data Templates and the objects that use them when a web import skips their Data Input Method
 -security: Skip the Data Input Method repair after a web import by a user without the Data Input Methods permission
 -issue: Stop a template import cleanly when it refuses a Data Input Method input string
 -issue: Parse installer start and finish times that fall on a whole second instead of crashing

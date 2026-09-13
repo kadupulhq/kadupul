@@ -31,9 +31,10 @@ $importSource = file_get_contents(dirname(__DIR__, 4) . '/lib/import.php');
 if (!function_exists(__NAMESPACE__ . '\xml_to_data_input_method')) {
 	preg_match('/^function import_data_input_realm_allowed\(.*?^}\n/ms', $importSource, $helper);
 	preg_match('/^function xml_to_data_input_method\(.*?^}\n/ms', $importSource, $method);
+	preg_match('/^function import_xml_record_refused\(.*?^}\n/ms', $importSource, $record);
 
 	// test-only eval of source read from this repository, not external input
-	eval('namespace ' . __NAMESPACE__ . '; ' . ($helper[0] ?? '') . $method[0]);
+	eval('namespace ' . __NAMESPACE__ . '; ' . ($helper[0] ?? '') . $method[0] . ($record[0] ?? ''));
 }
 
 if (!defined('MESSAGE_LEVEL_WARN')) {
@@ -323,7 +324,7 @@ test('import_xml_data evaluates the realm once before the import and passes it o
 
 	$check = strpos($body, '$data_input_allowed = import_data_input_realm_allowed();');
 	$loop  = strpos($body, 'foreach ($xml_array as $hash => $hash_array)');
-	$call  = strpos($body, "xml_to_data_input_method(\$dep_hash_cache[\$type][\$i]['hash'], \$hash_array, \$hash_cache, \$data_input_allowed);");
+	$call  = strpos($body, "xml_to_data_input_method(\$dep_hash_cache[\$type][\$i]['hash'], \$hash_array, \$hash_cache, \$data_input_allowed, \$refused_hashes);");
 
 	expect($check)->not->toBeFalse()
 		->and($check)->toBeLessThan($loop)
