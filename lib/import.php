@@ -668,7 +668,20 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 		}
 
 		if (strpos($name, 'scripts/') !== false || strpos($name, 'resource/') !== false) {
-			$filename = $config['base_path'] . "/$name";
+			/* Packages ship scripts and resources for the base or a plugin only.
+			 * A name such as 'evil/scripts/x.php' or a symlink under the base
+			 * would otherwise place the write or preview read anywhere. */
+			$filename = false;
+
+			if (preg_match('#^(plugins/[A-Za-z0-9_-]+/)?(scripts|resource)/#', $normalized_name)) {
+				$filename = validate_relative_path_within($normalized_name, $config['base_path']);
+			}
+
+			if ($filename === false) {
+				cacti_log("WARNING: Skipping package file outside the script and resource directories: $name", false, 'IMPORT');
+
+				continue;
+			}
 
 			if (!$preview) {
 				if (!cacti_sizeof($import_files) || in_array($name, $import_files)) {

@@ -2,6 +2,7 @@
 /*
 +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -24,7 +25,7 @@ $src = file_get_contents(dirname(__DIR__, 2) . '/lib/import.php');
 
 test('the traversal and absolute-path guards run before the file write', function () use ($src) {
 	$guard = strpos($src, "preg_match('#(^|/)\\.\\.(/|\$)#', \$normalized_name)");
-	$write = strpos($src, "\$filename = \$config['base_path'] . \"/\$name\";");
+	$write = strpos($src, "\$filename = validate_relative_path_within(\$normalized_name, \$config['base_path']);");
 
 	expect($guard)->not->toBeFalse();
 	expect($write)->not->toBeFalse();
