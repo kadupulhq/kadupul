@@ -629,6 +629,13 @@ function remove_files($file_array) {
 
 			switch($file['action']) {
 				case '1':
+					/* the proxy gets the same .. refusal as local storage */
+					if (!rrd_check_path($file['name'])) {
+						cacti_log('WARNING: RRDfile Maintenance will not remove ' . cacti_log_safe_value($file['name']) . ' from the RRDproxy as the path has a .. segment!', true, 'MAINT');
+
+						break;
+					}
+
 					if (rrdtool_execute_path_command('unlink', $file['name'], '', false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, $logopt = 'MAINT')) {
 						maint_debug('Deleted: ' . $file['name']);
 					} else {
@@ -639,6 +646,12 @@ function remove_files($file_array) {
 
 					break;
 				case '3':
+					if (!rrd_check_path($file['name'])) {
+						cacti_log('WARNING: RRDfile Maintenance will not move ' . cacti_log_safe_value($file['name']) . ' to the RRDproxy Archive as the path has a .. segment!', true, 'MAINT');
+
+						break;
+					}
+
 					if (rrdtool_execute_path_command('archive', $file['name'], '', false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, $logopt = 'MAINT')) {
 						maint_debug("Moved: {file['name']} to: RRDproxy Archive");
 					} else {

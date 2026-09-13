@@ -16,7 +16,8 @@
  * The maintenance poller archives or deletes the file a removed data source
  * pointed at. As with RRD creation on this line, a '..' segment is refused in
  * the source, the archive target and the archive directory, while custom
- * locations outside the RRA directory keep working as in 1.2.31.
+ * locations outside the RRA directory keep working as in 1.2.31. With RRDproxy
+ * storage the same '..' refusal applies before the path is sent to the proxy.
  *
  * remove_files() is extracted from poller_maintenance.php, with
  * rrd_check_path() from lib/rrd.php, and run against a temporary tree with the
@@ -69,6 +70,34 @@ function db_execute_prepared($sql, $params = array()) {
 	return true;
 }
 
+if (!defined('RRDTOOL_OUTPUT_NULL')) {
+	define('RRDTOOL_OUTPUT_NULL', 0);
+}
+
+if (!defined('RRDTOOL_OUTPUT_BOOLEAN')) {
+	define('RRDTOOL_OUTPUT_BOOLEAN', 4);
+}
+
+function rrd_init() {
+	return 'proxy-pipe';
+}
+
+function rrd_close($rrdtool_pipe) {
+}
+
+function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pipe = false, $logopt = 'WEBLOG') {
+}
+
+function cacti_rrdtool_valid_path($path) {
+	return is_string($path) && $path !== '' && !preg_match('/[\x00-\x1f\x7f]/', $path);
+}
+
+function rrdtool_execute_path_command($command, $path, $suffix = '', $log_to_stdout = false, $output_flag = RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe = false, $logopt = 'WEBLOG') {
+	$GLOBALS['rmt_proxy'][] = array($command, $path);
+
+	return $GLOBALS['rmt_proxy_result'];
+}
+
 $purge = function (string $name, string $action): void {
 	/* local_data_id 0 skips the data source and graph removal that follows the file step */
 	remove_files(array(array('id' => 1, 'name' => $name, 'local_data_id' => 0, 'action' => $action)));
@@ -101,6 +130,8 @@ beforeEach(function () {
 	$GLOBALS['rmt_settings'] = array('storage_location' => 0, 'rrd_archive' => '');
 	$GLOBALS['rmt_log']      = array();
 	$GLOBALS['rmt_dropped']  = array();
+	$GLOBALS['rmt_proxy']    = array();
+	$GLOBALS['rmt_proxy_result'] = true;
 	$GLOBALS['archived']     = 0;
 	$GLOBALS['purged']       = 0;
 });
@@ -179,4 +210,57 @@ test('does not archive into a directory reached through a .. segment', function 
 		->and(is_dir($this->rra . '/archive'))->toBeFalse()
 		->and($GLOBALS['archived'])->toBe(0)
 		->and(implode("\n", $GLOBALS['rmt_log']))->toContain('.. segment');
+});
+
+test('sends a delete to the RRDproxy as 1.2.31 did', function () use ($purge) {
+	$GLOBALS['rmt_settings']['storage_location'] = 1;
+
+	$purge('5/local_5.rrd', '1');
+
+	expect($GLOBALS['rmt_proxy'])->toBe(array(array('unlink', '5/local_5.rrd')))
+		->and($GLOBALS['purged'])->toBe(1)
+		->and($GLOBALS['rmt_dropped'])->toBe(array('5/local_5.rrd'))
+		->and($GLOBALS['rmt_log'])->toBe(array());
+});
+
+test('sends an archive of a custom location to the RRDproxy as 1.2.31 did', function () use ($purge) {
+	$GLOBALS['rmt_settings']['storage_location'] = 1;
+
+	$purge('/srv/rrd/local_7.rrd', '3');
+
+	expect($GLOBALS['rmt_proxy'])->toBe(array(array('archive', '/srv/rrd/local_7.rrd')))
+		->and($GLOBALS['archived'])->toBe(1)
+		->and($GLOBALS['rmt_log'])->toBe(array());
+});
+
+test('counts and reports a failed RRDproxy delete as 1.2.31 did', function () use ($purge) {
+	$GLOBALS['rmt_settings']['storage_location'] = 1;
+	$GLOBALS['rmt_proxy_result'] = false;
+
+	$purge('5/local_5.rrd', '1');
+
+	expect($GLOBALS['purged'])->toBe(1)
+		->and(implode("\n", $GLOBALS['rmt_log']))->toContain('unable to remove 5/local_5.rrd from the RRDproxy');
+});
+
+test('does not send a .. path to the RRDproxy for deletion', function () use ($purge) {
+	$GLOBALS['rmt_settings']['storage_location'] = 1;
+
+	$purge('../../outside/other.rrd', '1');
+
+	expect($GLOBALS['rmt_proxy'])->toBe(array())
+		->and($GLOBALS['purged'])->toBe(0)
+		->and(implode("\n", $GLOBALS['rmt_log']))->toContain('.. segment')
+		->and($GLOBALS['rmt_dropped'])->toBe(array('../../outside/other.rrd'));
+});
+
+test('does not send a .. path to the RRDproxy for archiving', function () use ($purge) {
+	$GLOBALS['rmt_settings']['storage_location'] = 1;
+
+	$purge('5/../../include/config.php', '3');
+
+	expect($GLOBALS['rmt_proxy'])->toBe(array())
+		->and($GLOBALS['archived'])->toBe(0)
+		->and(implode("\n", $GLOBALS['rmt_log']))->toContain('.. segment')
+		->and($GLOBALS['rmt_dropped'])->toBe(array('5/../../include/config.php'));
 });
