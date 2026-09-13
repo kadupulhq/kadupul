@@ -608,7 +608,7 @@ if ($config['is_web']) {
 			'item_moveup_gsv', 'item_moveup_dssv',
 			'item_movedown_gsv', 'item_movedown_dssv',
 			'moveup', 'movedown',
-			'tree_up', 'tree_down', 'move_page_up', 'move_page_down',
+			'tree_up', 'tree_down', 'move_page_up', 'move_page_down', 'delete_page',
 			'rrd_add', 'rrd_remove'
 		);
 
@@ -625,6 +625,15 @@ if ($config['is_web']) {
 				http_response_code(405);
 				exit;
 			}
+		}
+
+		/* 'actions' can not join the list above: breadcrumbs link back to the
+		   confirmation page by GET. Every form_actions() changes data only once
+		   selected_items arrives, so that is the request to refuse. */
+		if ($action == 'actions' && isset_request_var('selected_items') && !isset($_POST['__csrf_magic'])) {
+			header('Allow: POST');
+			http_response_code(405);
+			exit;
 		}
 	}
 
