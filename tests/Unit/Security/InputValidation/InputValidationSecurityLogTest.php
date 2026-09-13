@@ -119,16 +119,22 @@ test('entropy failures retain a usable correlation identifier', function () {
 /**
  * Runs the real die_html_input_error() in a child process, because it exits.
  *
- * @param bool $json Whether the request asked for a JSON reply.
+ * The child loads the real redaction helpers from lib/functions.php. Before
+ * the call it also evaluates the release/1.2.31 log expression against the
+ * same request, so the parity check compares against that code, not a copy
+ * of its output.
+ *
+ * @param array<string, string> $request  The request the failure happens in.
+ * @param string                $variable The variable that failed validation.
+ * @param string                $value    Its value.
  *
  * @return array<int, array{0: string, 1: string}> Log lines as [facility, text].
  */
-function run_die_html_input_error($json) {
-	$library = dirname(__DIR__, 4) . '/lib/html_validate.php';
+function run_die_html_input_error(array $request, $variable = 'graph_id', $value = '7<x') {
+	$root    = dirname(__DIR__, 4);
 	$code    = 'namespace { const CACTI_CLI = false;'
-		. '$_REQUEST = array("graph_id" => "7<x", "json" => ' . ($json ? '"1"' : 'null') . ');'
-		. 'if (' . ($json ? 'false' : 'true') . ') { unset($_REQUEST["json"]); }'
-		. '$_SERVER["REQUEST_METHOD"] = "GET"; $_SERVER["SCRIPT_NAME"] = "/cacti/graphs.php";'
+		. '$_REQUEST = ' . var_export($request, true) . ';'
+		. '$_SERVER["REQUEST_METHOD"] = "POST"; $_SERVER["SCRIPT_NAME"] = "/cacti/auth_login.php";'
 		. 'function __esc($m) { return $m; } function __($m) { return $m; }'
 		. 'function html_escape($s) { return htmlspecialchars((string) $s, ENT_QUOTES, "UTF-8"); }'
 		. 'function get_client_addr() { return "192.0.2.10"; }'
@@ -136,11 +142,17 @@ function run_die_html_input_error($json) {
 		. 'function bottom_footer() {}'
 		. 'function cacti_log($m, $o = false, $e = "") { fwrite(STDERR, json_encode(array($e, $m)) . "\n"); }'
 		. 'function cacti_debug_backtrace($m, $h = false) { fwrite(STDERR, json_encode(array("BACKTRACE", $m)) . "\n"); }'
-		. '$source = file_get_contents(' . var_export($library, true) . ');'
+		. '$functions = file_get_contents(' . var_export($root . '/lib/functions.php', true) . ');'
+		. 'foreach (array("cacti_is_sensitive_key", "cacti_redact_sensitive", "cacti_redact_value") as $name) {'
+		. '  if (preg_match("/^function " . $name . "\\\\(.*?^}\\\\R/ms", $functions, $m)) { eval($m[0]); }'
+		. '}'
+		. '$source = file_get_contents(' . var_export($root . '/lib/html_validate.php', true) . ');'
 		. 'preg_match("/^function security_log_input_validation_failure\\\\(.*?^}\\\\R/ms", $source, $a);'
 		. 'preg_match("/^function die_html_input_error\\\\(.*?^}\\\\R/ms", $source, $b);'
 		. 'eval($a[0] . $b[0]);'
-		. 'ob_start(); die_html_input_error("graph_id", "7<x"); }';
+		. '$variable = ' . var_export($variable, true) . '; $value = ' . var_export($value, true) . ';'
+		. 'fwrite(STDERR, json_encode(array("RELEASE_1.2.31", "Validation Error" . ($variable != "" ? ", Variable:" . html_escape($variable):"") . ($value != "" ? ", Value:" . html_escape($value):"") . ", Source: " . get_client_addr() . ", Request: " . json_encode($_REQUEST))) . "\n");'
+		. 'ob_start(); die_html_input_error($variable, $value); }';
 	$pipes   = array();
 	$process = proc_open(array(PHP_BINARY, '-r', $code), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
 
@@ -166,21 +178,80 @@ function run_die_html_input_error($json) {
 	return $lines;
 }
 
-test('validation failures log the SECURITY event and the 1.2.31 backtrace line', function (bool $json) {
-	$lines   = run_die_html_input_error($json);
-	$request = $json ? '{"graph_id":"7<x","json":"1"}' : '{"graph_id":"7<x"}';
+test('a failure without secrets logs the release/1.2.31 line byte for byte', function (bool $json) {
+	$request = $json ? array('graph_id' => '7<x', 'json' => '1') : array('graph_id' => '7<x');
+	$lines   = run_die_html_input_error($request);
+	$text    = 'Validation Error, Variable:graph_id, Value:7&lt;x, Source: 192.0.2.10, Request: ' . json_encode($request);
 
-	expect($lines)->toHaveCount(2)
-		->and($lines[0][0])->toBe('SECURITY')
-		->and(json_decode($lines[0][1], true)['event'])->toBe('input_validation_failure')
-		->and($lines[1])->toBe(array('BACKTRACE', 'Validation Error, Variable:graph_id, Value:7&lt;x, Source: 192.0.2.10, Request: ' . $request));
+	expect($lines)->toHaveCount(3)
+		->and($lines[0])->toBe(array('RELEASE_1.2.31', $text))
+		->and($lines[1][0])->toBe('SECURITY')
+		->and(json_decode($lines[1][1], true)['event'])->toBe('input_validation_failure')
+		->and($lines[2])->toBe(array('BACKTRACE', $text));
 })->with(array('html reply' => false, 'json reply' => true));
 
-test('the backtrace line carries no correlation id', function () {
+test('a failure during login masks the password and CSRF token in every log line', function () {
+	$request = array(
+		'action'         => 'login',
+		'login_username' => 'admin',
+		'login_password' => 'hunter2',
+		'__csrf_magic'   => 'sid:abc',
+		'graph_id'       => '7<x',
+	);
+	$lines   = run_die_html_input_error($request);
+	$logged  = implode("\n", array_map(function ($line) {
+		return $line[1];
+	}, array_slice($lines, 1)));
+
+	expect($lines[2])->toBe(array('BACKTRACE', 'Validation Error, Variable:graph_id, Value:7&lt;x, Source: 192.0.2.10, Request: {"action":"login","login_username":"admin","login_password":"[REDACTED]","__csrf_magic":"[REDACTED]","graph_id":"7<x"}'))
+		->and($logged)->not->toContain('hunter2')
+		->and($logged)->not->toContain('sid:abc')
+		->and(json_decode($lines[1][1], true))->not->toHaveKey('request');
+});
+
+test('a failing sensitive variable does not log its value', function () {
+	$lines  = run_die_html_input_error(array('password' => 'hunter2'), 'password', 'hunter2');
+	$logged = implode("\n", array_map(function ($line) {
+		return $line[1];
+	}, array_slice($lines, 1)));
+
+	expect($lines[2])->toBe(array('BACKTRACE', 'Validation Error, Variable:password, Value:[REDACTED], Source: 192.0.2.10, Request: {"password":"[REDACTED]"}'))
+		->and($logged)->not->toContain('hunter2');
+});
+
+test('the SECURITY event carries no request values', function () {
+	$lines = run_die_html_input_error(array('login_password' => 'hunter2', 'note' => 'plain-value'), 'note', 'plain-value');
+	$event = json_decode($lines[1][1], true);
+
+	expect(array_keys($event))->toBe(array('event', 'event_id', 'variable', 'source_address', 'request_method', 'script'))
+		->and($lines[1][1])->not->toContain('hunter2')
+		->and($lines[1][1])->not->toContain('plain-value');
+});
+
+test('login, password change and token fields are treated as secrets', function () {
+	$functions = file_get_contents(dirname(__DIR__, 4) . '/lib/functions.php');
+
+	preg_match('/^function cacti_is_sensitive_key\(.*?^}\R/ms', $functions, $matches);
+
+	expect($matches)->toHaveKey(0);
+
+	$check = eval('return function ($key) {' . preg_replace('/^function cacti_is_sensitive_key\(\$key\) \{/', '', rtrim($matches[0])) . ';');
+
+	foreach (array('login_password', 'password', 'password_confirm', 'current_password', 'ldap_password', 'dbpass', 'token', '__csrf_magic', 'snmp_password', 'snmp_priv_passphrase', 'snmp_auth_passphrase', 'path_csrf_secret', 'settings_ldap_password', 'snmp_community') as $key) {
+		expect($check($key))->toBeTrue($key);
+	}
+
+	foreach (array('graph_id', 'action', 'login_username', 'host_id', 'rfilter', 'json') as $key) {
+		expect($check($key))->toBeFalse($key);
+	}
+});
+
+test('both Validation Error lines pass the request and value through the redaction helpers', function () {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/lib/html_validate.php');
 
-	expect($source)->toContain('security_log_input_validation_failure($variable);')
+	expect(substr_count($source, "', Request: ' . json_encode(cacti_redact_sensitive(\$_REQUEST))"))->toBe(2)
+		->and(substr_count($source, "', Value:' . html_escape(cacti_redact_value(\$variable, \$value))"))->toBe(2)
+		->and($source)->not->toContain('json_encode($_REQUEST)')
 		->and($source)->not->toContain('Validation Error, Event:')
-		->and(substr_count($source, "cacti_debug_backtrace('Validation Error' . (\$variable != ''"))->toBe(2)
-		->and($source)->toContain("\$source_address = CACTI_CLI ? '' : get_client_addr();");
+		->and($source)->toContain('security_log_input_validation_failure($variable);');
 });

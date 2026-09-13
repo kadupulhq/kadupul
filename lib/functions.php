@@ -8592,7 +8592,7 @@ function cacti_is_sensitive_key($key) {
 		'password', 'pass', 'snmp_password', 'snmp_priv_passphrase',
 		'snmp_auth_passphrase', 'rsa_private_key', 'secret',
 		'auth_key', 'priv_key', 'token', 'cookie', 'community',
-		'snmp_community', 'specific_password', 'ldap_password',
+		'snmp_community', 'specific_password', 'ldap_password', 'csrf',
 	);
 
 	$lower = strtolower((string) $key);
