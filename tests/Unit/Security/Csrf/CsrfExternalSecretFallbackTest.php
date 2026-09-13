@@ -162,6 +162,37 @@ test('with no usable database secret either, the session bootstrap secret keeps 
 		->and($run['conf']['secret'] ?? null)->toBe(str_repeat('b', 64));
 });
 
+test('the warning names the database secret when that is the secret in use', function () {
+	$dirs = csrf_external_secret_fallback_dirs();
+
+	$run = csrf_external_secret_fallback_run(array(
+		'base_path' => $dirs['base'],
+		'external'  => $dirs['outside'] . '/missing/csrf-secret.php',
+		'db_secret' => str_repeat('c', 64),
+		'sessions'  => array(2),
+	));
+
+	expect($run['logs'])->toBe(array(
+		'SYSTEM: WARNING: The configured external CSRF secret is unavailable or invalid, using the database secret instead',
+	));
+});
+
+test('the warning names the session bootstrap secret when the database secret is unusable too', function () {
+	$dirs = csrf_external_secret_fallback_dirs();
+
+	$run = csrf_external_secret_fallback_run(array(
+		'base_path' => $dirs['base'],
+		'external'  => $dirs['outside'] . '/missing/csrf-secret.php',
+		'db_secret' => 'short',
+		'sessions'  => array(3),
+	));
+
+	expect($run['conf']['secret'] ?? null)->toBe(str_repeat('b', 64))
+		->and($run['logs'])->toBe(array(
+			'SYSTEM: WARNING: The configured external CSRF secret is unavailable or invalid, using the session bootstrap secret instead',
+		));
+});
+
 test('a good external secret still wins over the database secret without a warning', function () {
 	$dirs = csrf_external_secret_fallback_dirs();
 	$path = $dirs['outside'] . '/csrf-secret.php';

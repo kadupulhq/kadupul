@@ -40,13 +40,16 @@ function csrf_startup() {
 			/* 1.2.31 kept serving pages when the secret file was unusable, so
 			 * fall back to the database secret and tell the operator once. */
 			if (!cacti_csrf_secret_is_valid($secret) && !cacti_csrf_install_pending()) {
-				if (empty($_SESSION['cacti_csrf_external_secret_warned'])) {
-					cacti_log('WARNING: The configured external CSRF secret is unavailable or invalid, using the database secret instead', false, 'SYSTEM');
-					$_SESSION['cacti_csrf_external_secret_warned'] = true;
-				}
-
 				$external_secret = false;
 				$secret          = read_config_option('csrf_secret', true);
+
+				if (empty($_SESSION['cacti_csrf_external_secret_warned'])) {
+					/* The session bootstrap below takes over when the database secret is unusable too. */
+					$selected = (cacti_csrf_secret_is_valid($secret) ? 'the database secret' : 'the session bootstrap secret');
+
+					cacti_log('WARNING: The configured external CSRF secret is unavailable or invalid, using ' . $selected . ' instead', false, 'SYSTEM');
+					$_SESSION['cacti_csrf_external_secret_warned'] = true;
+				}
 			}
 		} else {
 			$secret = read_config_option('csrf_secret', true);
