@@ -52,6 +52,11 @@ function importPkgDest_cacti_sizeof($value) {
 	return is_array($value) ? count($value) : 0;
 }
 
+/* the realm decision is not what this test checks */
+function importPkgDest_import_data_input_realm_allowed() {
+	return true;
+}
+
 function importPkgDest_import_xml_data($xml) {
 	$GLOBALS['import_pkg_dest']['xml'][] = $xml;
 
@@ -79,7 +84,7 @@ function importPkgDestLoad($root) {
 	expect($start)->not->toBeFalse()
 		->and($end)->not->toBeFalse();
 
-	eval(preg_replace('/\b(import_package|import_validate_signature|import_read_package_data|openssl_verify|cacti_log|__|cacti_sizeof|import_xml_data)\(/', 'importPkgDest_$1(', substr($source, $start, $end - $start)));
+	eval(preg_replace('/\b(import_package|import_validate_signature|import_read_package_data|openssl_verify|cacti_log|__|cacti_sizeof|import_xml_data|import_data_input_realm_allowed)\(/', 'importPkgDest_$1(', substr($source, $start, $end - $start)));
 }
 
 function importPkgDestRun($names, $preview = false) {

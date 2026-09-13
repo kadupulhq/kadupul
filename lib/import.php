@@ -23,7 +23,7 @@
  +-------------------------------------------------------------------------+
 */
 
-function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphans = false, $replace_svalues = false, $import_hashes = array(), $class = '') {
+function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphans = false, $replace_svalues = false, $import_hashes = array(), $class = '', $data_input_allowed = null) {
 	global $config, $hash_type_codes, $cacti_version_codes, $ignorable_hashes, $preview_only;
 	global $import_debug_info, $import_messages, $legacy_template;
 
@@ -33,8 +33,10 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 	$files            = array();
 	$ignorable_hashes = array();
 
-	/* one decision for the whole import, taken before any object is written */
-	$data_input_allowed = import_data_input_realm_allowed();
+	/* one decision for the whole import, taken before any object is written; import_package() passes the one it took */
+	if ($data_input_allowed === null) {
+		$data_input_allowed = import_data_input_realm_allowed();
+	}
 
 	$xml_array = xml2array($xml_data);
 
@@ -654,6 +656,9 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 		return $data['info'];
 	}
 
+	/* every XML file in the package is imported under the same realm decision */
+	$data_input_allowed = import_data_input_realm_allowed();
+
 	cacti_log('Verifying each files signature', false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 
 	if (isset($data['files']['file']['data'])) {
@@ -806,7 +811,7 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 				cacti_log('Previewing XML Data for ' . $name, false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 			}
 
-			$debug_data = import_xml_data($fdata, false, $profile_id, $remove_orphans, $replace_svalues, $import_hashes, $class);
+			$debug_data = import_xml_data($fdata, false, $profile_id, $remove_orphans, $replace_svalues, $import_hashes, $class, $data_input_allowed);
 
 			if ($debug_data === false) {
 				return false;
