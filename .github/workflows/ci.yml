@@ -88,12 +88,14 @@ jobs:
 
       # main moves to PER-CS one edited file at a time, so only the PHP files
       # this push or pull request changes are checked. On a pull request HEAD
-      # is the test merge, and its first parent is the base branch tip.
+      # is the test merge, and its first parent is the base branch tip. Calling
+      # bash keeps the step working if a patch-based cherry-pick drops the
+      # script's executable bit.
       - name: Check formatting
         if: hashFiles('.php-cs-fixer.php', '.php-cs-fixer.dist.php') != ''
         env:
           BASE: ${{ github.event_name == 'pull_request' && 'HEAD^1' || github.event.before }}
-        run: tests/tools/check_php_style.sh "$BASE"
+        run: bash tests/tools/check_php_style.sh "$BASE"
 
   javascript:
     name: JavaScript
