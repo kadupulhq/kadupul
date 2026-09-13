@@ -144,6 +144,20 @@ test('a new RRD created through the rrdtool pipe is updated and acknowledged', f
 		->and($GLOBALS['boost_piped_create']['executed'][0])->toStartWith('update ' . $path . ' ');
 });
 
+test('later updates for the same new RRD on one pipe do not queue another create', function () {
+	$path = $GLOBALS['boost_piped_create']['path'];
+
+	for ($i = 0; $i < 3; $i++) {
+		$values = ' ' . (1000 + $i * 300) . ':1';
+
+		expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, '', $values, $this->pipe))->toBe('OK');
+	}
+
+	/* rrdtool create overwrites an existing file, so a second create would drop the queued updates */
+	expect($GLOBALS['boost_piped_create']['creates'])->toBe(1)
+		->and($GLOBALS['boost_piped_create']['executed'])->toHaveCount(3);
+});
+
 test('a create that Boost refused still fails on the pipe', function () {
 	$values = ' 1000:1';
 

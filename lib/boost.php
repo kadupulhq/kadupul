@@ -1904,6 +1904,8 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
 function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_template, &$rrd_update_values, &$rrdtool_pipe) {
 	global $debug;
 
+	static $piped_creates = array();
+
 	/* lets count the number of rrd files processed */
 	$rrds_processed = 0;
 
@@ -1942,12 +1944,23 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 
 		// Check for a Data Source that has been removed
 		if ($ds_exists) {
-			$created = boost_rrdtool_function_create($local_data_id, false, $rrdtool_pipe);
+			$pipe_key = is_resource($rrdtool_pipe) ? (int) $rrdtool_pipe . ':' . $rrd_path : false;
 
-			if (is_resource($rrdtool_pipe)) {
+			if ($pipe_key !== false && isset($piped_creates[$pipe_key])) {
+				/* rrdtool create overwrites, so queue one create per file on a pipe */
+				$created = true;
+			} else {
+				$created = boost_rrdtool_function_create($local_data_id, false, $rrdtool_pipe);
+			}
+
+			if ($pipe_key !== false) {
 				/* rrdtool has not read a piped create yet, so the file can still be
 				 * missing here.  It runs the create before the update that follows. */
 				$valid_entry = $created !== false;
+
+				if ($valid_entry) {
+					$piped_creates[$pipe_key] = true;
+				}
 			} elseif (read_config_option('storage_location')) {
 				$valid_entry = rrdtool_execute_path_command('file_exists', $rrd_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
 			} else {
