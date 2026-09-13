@@ -19,6 +19,9 @@ on:
       - lib/csp_report_endpoint.php
       - include/global.php
       - include/global_settings.php
+      - include/global_arrays.php
+      - include/global_constants.php
+      - lib/functions.php
       - csp_report.php
       - tests/integration/**
       - tests/e2e/**
@@ -89,6 +92,18 @@ jobs:
           # PHP variables must not expand in the shell.
           # shellcheck disable=SC2016
           php -r '$xml = is_file($argv[1]) ? @simplexml_load_file($argv[1]) : false; $tests = $xml === false ? false : $xml->xpath("//testcase"); if (!is_array($tests) || count($tests) < 1) { fwrite(STDERR, "Missing, invalid, or empty CSP integration test report\n"); exit(1); }' "$RUNNER_TEMP/csp-integration.xml"
+
+      - name: Run trusted proxy integration tests
+        working-directory: tests
+        run: |
+          # Pest runs only the first path argument, so this file gets its own run.
+          ./vendor/bin/pest \
+            --bootstrap=./bootstrap-unit.php \
+            --log-junit="$RUNNER_TEMP/trusted-proxy-integration.xml" \
+            integration/TrustedProxyClientAddrIntegrationTest.php
+          # PHP variables must not expand in the shell.
+          # shellcheck disable=SC2016
+          php -r '$xml = is_file($argv[1]) ? @simplexml_load_file($argv[1]) : false; $tests = $xml === false ? false : $xml->xpath("//testcase"); if (!is_array($tests) || count($tests) < 1) { fwrite(STDERR, "Missing, invalid, or empty trusted proxy integration test report\n"); exit(1); }' "$RUNNER_TEMP/trusted-proxy-integration.xml"
 
   e2e:
     name: Playwright E2E (docker-compose + Playwright)
