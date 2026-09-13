@@ -769,19 +769,24 @@ function is_tree_allowed($tree_id, $user_id = 0) {
 		return true;
 	}
 
-	if (isset($_SESSION['sess_tree_perms'][$tree_id])) {
-		return $_SESSION['sess_tree_perms'][$tree_id];
+	if ($user_id === 0 && isset($_SESSION['sess_user_id'])) {
+		$user_id = $_SESSION['sess_user_id'];
+	}
+
+	/* keyed by user as the report poller checks several owners in one process; drop an older unkeyed cache */
+	if (isset($_SESSION['sess_tree_perms'][$user_id]) && !is_array($_SESSION['sess_tree_perms'][$user_id])) {
+		kill_session_var('sess_tree_perms');
+	}
+
+	if (isset($_SESSION['sess_tree_perms'][$user_id][$tree_id])) {
+		return $_SESSION['sess_tree_perms'][$user_id][$tree_id];
 	}
 
 	if (read_config_option('auth_method') != 0) {
 		if ($user_id === 0) {
-			if (isset($_SESSION['sess_user_id'])) {
-				$user_id = $_SESSION['sess_user_id'];
-			} else {
-				$_SESSION['sess_tree_perms'][$tree_id] = false;
+			$_SESSION['sess_tree_perms'][$user_id][$tree_id] = false;
 
-				return false;
-			}
+			return false;
 		}
 
 		$policy = db_fetch_cell_prepared('SELECT policy_trees
@@ -797,7 +802,7 @@ function is_tree_allowed($tree_id, $user_id = 0) {
 			array($user_id, $tree_id));
 
 		if (auth_check_perms($trees, $policy)) {
-			$_SESSION['sess_tree_perms'][$tree_id] = true;
+			$_SESSION['sess_tree_perms'][$user_id][$tree_id] = true;
 
 			return true;
 		}
@@ -812,14 +817,14 @@ function is_tree_allowed($tree_id, $user_id = 0) {
 			array($user_id));
 
 		if (!cacti_sizeof($groups)) {
-			$_SESSION['sess_tree_perms'][$tree_id] = false;
+			$_SESSION['sess_tree_perms'][$user_id][$tree_id] = false;
 
 			return false;
 		}
 
 		foreach ($groups as $g) {
 			if (auth_check_perms($trees, $g['policy_trees'])) {
-				$_SESSION['sess_tree_perms'][$tree_id] = true;
+				$_SESSION['sess_tree_perms'][$user_id][$tree_id] = true;
 
 				return true;
 			}
@@ -839,16 +844,16 @@ function is_tree_allowed($tree_id, $user_id = 0) {
 
 		foreach ($groups as $g) {
 			if (auth_check_perms($gtrees, $g['policy_trees'])) {
-				$_SESSION['sess_tree_perms'][$tree_id] = true;
+				$_SESSION['sess_tree_perms'][$user_id][$tree_id] = true;
 				return true;
 			}
 		}
 
-		$_SESSION['sess_tree_perms'][$tree_id] = false;
+		$_SESSION['sess_tree_perms'][$user_id][$tree_id] = false;
 
 		return false;
 	} else {
-		$_SESSION['sess_tree_perms'][$tree_id] = true;
+		$_SESSION['sess_tree_perms'][$user_id][$tree_id] = true;
 
 		return true;
 	}
@@ -1727,8 +1732,13 @@ function get_simple_device_perms($user) {
  * @return (bool)   True if simple permissions are in place, otherwise false
  */
 function get_simple_graph_perms($user_id) {
-	if (isset($_SESSION['sess_simple_perms'])) {
-		return $_SESSION['sess_simple_perms'];
+	/* keyed by user as the report poller checks several owners in one process; drop an older unkeyed cache */
+	if (isset($_SESSION['sess_simple_perms']) && !is_array($_SESSION['sess_simple_perms'])) {
+		kill_session_var('sess_simple_perms');
+	}
+
+	if (isset($_SESSION['sess_simple_perms'][$user_id])) {
+		return $_SESSION['sess_simple_perms'][$user_id];
 	}
 
 	$policy_graphs = db_fetch_cell_prepared('SELECT policy_graphs
@@ -1743,7 +1753,7 @@ function get_simple_graph_perms($user_id) {
 		array($user_id));
 
 	if ($policy_graphs == 1 && $perm_count == 0) {
-		$_SESSION['sess_simple_perms'] = true;
+		$_SESSION['sess_simple_perms'][$user_id] = true;
 
 		return true;
 	} else {
@@ -1761,14 +1771,14 @@ function get_simple_graph_perms($user_id) {
 		if (cacti_sizeof($policies)) {
 			foreach($policies as $p) {
 				if ($p['policy_graphs'] == 1 && $p['exceptions'] == 0) {
-					$_SESSION['sess_simple_perms'] = true;
+					$_SESSION['sess_simple_perms'][$user_id] = true;
 
 					return true;
 				}
 			}
 		}
 
-		$_SESSION['sess_simple_perms'] = false;
+		$_SESSION['sess_simple_perms'][$user_id] = false;
 
 		return false;
 	}
@@ -1784,8 +1794,13 @@ function get_simple_graph_perms($user_id) {
  * @return (bool)   True if simple permissions are in place, otherwise false
  */
 function get_simple_graph_template_perms($user_id) {
-	if (isset($_SESSION['sess_simple_template_perms'])) {
-		return $_SESSION['sess_simple_template_perms'];
+	/* keyed by user as the report poller checks several owners in one process; drop an older unkeyed cache */
+	if (isset($_SESSION['sess_simple_template_perms']) && !is_array($_SESSION['sess_simple_template_perms'])) {
+		kill_session_var('sess_simple_template_perms');
+	}
+
+	if (isset($_SESSION['sess_simple_template_perms'][$user_id])) {
+		return $_SESSION['sess_simple_template_perms'][$user_id];
 	}
 
 	$policy_graph_templates = db_fetch_cell_prepared('SELECT policy_graph_templates
@@ -1800,7 +1815,7 @@ function get_simple_graph_template_perms($user_id) {
 		array($user_id));
 
 	if ($policy_graph_templates == 1 && $perm_count == 0) {
-		$_SESSION['sess_simple_template_perms'] = true;
+		$_SESSION['sess_simple_template_perms'][$user_id] = true;
 
 		return true;
 	} else {
@@ -1818,14 +1833,14 @@ function get_simple_graph_template_perms($user_id) {
 		if (cacti_sizeof($policies)) {
 			foreach($policies as $p) {
 				if ($p['policy_graph_templates'] == 1 && $p['exceptions'] == 0) {
-					$_SESSION['sess_simple_template_perms'] = true;
+					$_SESSION['sess_simple_template_perms'][$user_id] = true;
 
 					return true;
 				}
 			}
 		}
 
-		$_SESSION['sess_simple_template_perms'] = false;
+		$_SESSION['sess_simple_template_perms'][$user_id] = false;
 
 		return false;
 	}

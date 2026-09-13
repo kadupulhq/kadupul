@@ -7,6 +7,7 @@ Cacti CHANGELOG
 -security: Check graph permissions for Remote Data Collector graph images, as graph_json.php already does
 -security: Escape markup in data query debug output returned by a Remote Data Collector
 -security: Add optional $trusted_proxies so proxy client address and HTTPS headers are honoured only from listed proxies
+-security: Cache graph, graph template and tree permission checks per user so one report owner's access does not apply to another
 -security: Send a remember-me login with a pending password change to the change password page, as a password login does
 -issue: Declare GPL-2.0-or-later in composer.json, the license the source headers grant
 -security: Pass over a disabled configured administrator when moving off the retired no-authentication method
