@@ -273,7 +273,13 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 					$hash_cache += xml_to_host_template($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache, $host_template_data, $class);
 					break;
 				case 'data_input_method':
-					$hash_cache += xml_to_data_input_method($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache, $data_input_allowed);
+					$cache_add = xml_to_data_input_method($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache, $data_input_allowed);
+
+					if ($cache_add === false) {
+						return false;
+					}
+
+					$hash_cache += $cache_add;
 					$repair++;
 					break;
 				case 'data_query':
