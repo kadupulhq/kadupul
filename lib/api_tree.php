@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -66,6 +67,19 @@ function api_tree_unlock($tree_id, $user_id = 0, $web = true) {
 function api_tree_copy_node($tree_id, $node_id, $new_parent, $new_position) {
 	input_validate_input_number($tree_id);
 	input_validate_input_number($new_position);
+
+	// Basic Error Checking - reject an out-of-range TreeID before is_tree_allowed(),
+	// which caches into $_SESSION and hits the database.
+	if ($tree_id <= 0) {
+		cacti_log("ERROR: Invalid TreeID: '$tree_id', Function copy_node", false);
+		return;
+	}
+
+	if (!is_tree_allowed($tree_id)) {
+		cacti_log("SECURITY: User is not permitted to modify TreeID:'$tree_id', Function copy_node", false, 'AUTH');
+
+		return;
+	}
 
 	$data  = api_tree_parse_node_data($node_id);
 	$pdata = api_tree_parse_node_data($new_parent);
@@ -436,6 +450,12 @@ function api_tree_move_node($tree_id, $node_id, $new_parent, $new_position) {
 	// Basic Error Checking
 	if (empty($tree_id) || $tree_id < 0) {
 		cacti_log("ERROR: Invalid TreeID: '$tree_id', Function delete_node", false);
+		return;
+	}
+
+	if (!is_tree_allowed($tree_id)) {
+		cacti_log("SECURITY: User is not permitted to modify TreeID:'$tree_id', Function move_node", false, 'AUTH');
+
 		return;
 	}
 
