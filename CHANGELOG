@@ -39,6 +39,7 @@ Cacti CHANGELOG
 -issue: Delete a dead poller_time row by its id instead of its pid so a reused pid cannot delete a new collector's row
 -issue: Keep staged Boost rows when rrdtool pipe restarts are exhausted instead of treating the lost update as written
 -issue: Stage poller output rows that Boost does not already hold when Boost redirect is on instead of dropping them
+-issue: ss_netsnmp_lmsensors.php get returns degrees and volts again, as before 1.2.31, so stored lm-sensors values drop 1000x at upgrade; remove any /1000 CDEF added for 1.2.31
 -issue: Restore the 1.2.31 temporary file names of splice_rrd.php and float_rrdfiles.php, created exclusively so a planted symlink or existing file is refused
 -issue: Recognise a registered process launched with a relative script path from another directory, so a second copy does not start
 -issue: Allow loopback Remote Data Collector addresses again, as 1.2.31 did; link-local, this-network and IPv4-mapped forms of them stay refused
