@@ -6,6 +6,7 @@ Cacti CHANGELOG
 -issue: Report the error step to the CLI installer when installation throws
 -security: Refuse Packages that carry no public key instead of trusting the default key
 -security: Sanitise delete dialog and tree editor site, device, and graph list fragments with DOMPurify
+-security: Validate a stored Boost PID before casting it and signal it through the process guard
 -security: Refuse data source paths that escape the RRA directory when Boost updates or reads RRD files
 -security: Match local login password hashing work for unknown usernames
 -security: Require a normal login after moving off the retired no-authentication method

@@ -398,13 +398,15 @@ function boost_kill_running_processes($wait_seconds = 10) {
 	$waiting = array();
 
 	foreach($processes as $p) {
-		$pid = (int) $p['pid'];
-
-		if (is_system_pid($pid)) {
-			cacti_log(sprintf('ERROR: Refusing to signal reserved Boost PID %d.', $pid), true, 'BOOST');
+		if (is_system_pid($p['pid'])) {
+			cacti_log(sprintf('ERROR: Refusing to signal reserved Boost PID %s.', cacti_process_pid_for_log($p['pid'])), true, 'BOOST');
 
 			return false;
 		}
+
+		/* Cast only after is_system_pid() has bounded the column value; a 32-bit
+		 * build otherwise saturates 4294967295 to a PID the check accepts. */
+		$pid = (int) $p['pid'];
 
 		if (!cacti_process_still_running($pid)) {
 			unregister_process($p['tasktype'], $p['taskname'], $p['taskid'], $pid);
@@ -413,7 +415,7 @@ function boost_kill_running_processes($wait_seconds = 10) {
 
 		cacti_log(sprintf('WARNING: Stopping Boost %s PID %d due to another boost process starting.', ucfirst($p['taskname']), $pid), true, 'BOOST');
 
-		if (!posix_kill($pid, SIGTERM)) {
+		if (!cacti_process_kill($pid, SIGTERM, 'BOOST')) {
 			cacti_log(sprintf('ERROR: Unable to signal Boost PID %d.', $pid), true, 'BOOST');
 
 			return false;
