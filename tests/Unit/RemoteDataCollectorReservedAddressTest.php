@@ -44,28 +44,80 @@ function is_ipaddress($address) {
 	return filter_var($address, FILTER_VALIDATE_IP) !== false;
 }
 
+function gethostbyname($hostname) {
+	return $GLOBALS['rdc_dns'][$hostname] ?? $hostname;
+}
+
+function debounce_run_notification($id) {
+	return false;
+}
+
 function get_default_contextoption($timeout = false) {
-	throw new \RuntimeException('connection attempted for a refused address');
+	throw new \RuntimeException('connection attempted');
 }
 
 function get_url_type() {
 	return 'https';
 }
 
-dataset('reserved addresses', ['127.0.0.1', '169.254.169.254', '0.0.0.0', '::1', 'fe80::1']);
-
-test('refuses reserved remote collector addresses before connecting', function ($address) {
-	$GLOBALS['rdc_hostname'] = $address;
+function remote_collector_call(string $hostname, array $dns = array()) : array {
+	$GLOBALS['rdc_hostname'] = $hostname;
+	$GLOBALS['rdc_dns']      = $dns;
 	$GLOBALS['rdc_log']      = [];
 
-	expect(call_remote_data_collector(2, '/remote_agent.php?action=ping'))->toBe('');
-	expect(implode("\n", $GLOBALS['rdc_log']))->toContain('reserved address');
-})->with('reserved addresses');
+	try {
+		$result = call_remote_data_collector(2, '/remote_agent.php?action=ping');
+	} catch (\RuntimeException $e) {
+		return array('connected', $GLOBALS['rdc_log']);
+	}
 
-test('lets a private collector address through to the connection step', function () {
-	$GLOBALS['rdc_hostname'] = '10.20.30.40';
-	$GLOBALS['rdc_log']      = [];
+	return array($result, $GLOBALS['rdc_log']);
+}
 
-	expect(fn () => call_remote_data_collector(2, '/remote_agent.php?action=ping'))
-		->toThrow(\RuntimeException::class, 'connection attempted');
+dataset('refused addresses', array(
+	'metadata' => array('169.254.169.254'),
+	'link-local IPv4' => array('169.254.0.1'),
+	'this network' => array('0.0.0.0'),
+	'this network range' => array('0.1.2.3'),
+	'unspecified IPv6' => array('::'),
+	'link-local IPv6' => array('fe80::1'),
+	'link-local IPv6 range end' => array('febf::1'),
+	'mapped metadata' => array('::ffff:169.254.169.254'),
+	'mapped metadata hex' => array('::ffff:a9fe:a9fe'),
+	'mapped this network' => array('::ffff:0.0.0.0'),
+	'reserved IPv4' => array('240.0.0.1'),
+	'broadcast' => array('255.255.255.255'),
+));
+
+test('refuses link-local, this-network and reserved collector addresses before connecting', function (string $address) {
+	[$result, $log] = remote_collector_call($address);
+
+	expect($result)->toBe('')
+		->and(implode("\n", $log))->toContain('reserved address');
+})->with('refused addresses');
+
+test('refuses a collector name that resolves to the metadata address', function () {
+	[$result, $log] = remote_collector_call('metadata.internal', array('metadata.internal' => '169.254.169.254'));
+
+	expect($result)->toBe('')
+		->and(implode("\n", $log))->toContain('reserved address 169.254.169.254');
 });
+
+dataset('allowed addresses', array(
+	'same host IPv4 loopback' => array('127.0.0.1', array()),
+	'loopback range' => array('127.10.20.30', array()),
+	'same host IPv6 loopback' => array('::1', array()),
+	'mapped loopback' => array('::ffff:127.0.0.1', array()),
+	'localhost name' => array('localhost', array('localhost' => '127.0.0.1')),
+	'hosts-file loopback name' => array('cacti-main.local', array('cacti-main.local' => '127.0.1.1')),
+	'container host network' => array('host.docker.internal', array('host.docker.internal' => '172.17.0.1')),
+	'private collector' => array('10.20.30.40', array()),
+	'mapped private collector' => array('::ffff:10.20.30.40', array()),
+));
+
+test('lets loopback and private collector addresses through to the connection step', function (string $hostname, array $dns) {
+	[$result, $log] = remote_collector_call($hostname, $dns);
+
+	expect($result)->toBe('connected')
+		->and($log)->toBe(array());
+})->with('allowed addresses');

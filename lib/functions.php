@@ -6556,13 +6556,25 @@ function call_remote_data_collector($poller_id, $url, $logtype = 'WEBUI') {
 		return '';
 	}
 
-	/* Refuse loopback, link-local (including the 169.254.169.254 metadata
-	 * address) and other reserved ranges, so a poller record cannot point these
-	 * requests at services on the Cacti host itself. RFC1918 private ranges stay
-	 * allowed because remote Data Collectors normally run on internal networks. */
+	/* Refuse link-local (including the 169.254.169.254 metadata address),
+	 * 0.0.0.0/8 and the other reserved ranges. Loopback stays allowed, as in
+	 * 1.2.31, for a main and remote collector on one host or in host-network
+	 * containers. An IPv4-mapped IPv6 address is checked as the IPv4 address it
+	 * carries, so ::ffff:169.254.169.254 cannot bypass the refusal. RFC1918
+	 * private ranges stay allowed because remote Data Collectors normally run
+	 * on internal networks. */
 	$target_ip = is_ipaddress($hostname) ? $hostname : gethostbyname($hostname);
+	$check_ip  = $target_ip;
+	$packed    = @inet_pton($target_ip);
 
-	if (filter_var($target_ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) === false) {
+	if ($packed !== false && strlen($packed) == 16 && substr($packed, 0, 12) === str_repeat("\0", 10) . "\xff\xff") {
+		$packed   = substr($packed, 12);
+		$check_ip = inet_ntop($packed);
+	}
+
+	$loopback = $packed !== false && ((strlen($packed) == 4 && ord($packed[0]) == 127) || $packed === str_repeat("\0", 15) . "\1");
+
+	if (!$loopback && filter_var($check_ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) === false) {
 		cacti_log(sprintf('SECURITY: Refusing Remote Data Collector request for PollerID:%s to reserved address %s', $poller_id, $target_ip), false, 'SECURITY');
 
 		return '';
