@@ -74,6 +74,7 @@ Cacti CHANGELOG
 -security: Refuse report mail addresses that hold a request array, a NUL byte or a line break inside an address
 -security: Refuse a page array in help.php error reports and escape angle brackets in the page and user names of the admin notice
 -security: Check report ownership when saving, editing or moving report items
+-issue: Stop repeating the poller overrun warning and mail every cycle for a collector that has died
 -issue: Leave poller output to Boost when Boost redirect is on instead of also writing it to the RRD files
 -issue: Stop marking a Boost run failed when it creates a new RRD file through the rrdtool pipe
 -issue: Declare GPL-2.0-or-later in composer.json, the license the source headers grant

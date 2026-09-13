@@ -555,6 +555,8 @@ while ($poller_runs_completed < $poller_runs) {
 		AND end_time != '0000-00-00 00:00:00'",
 		array($poller_id), true, $poller_db_cnn_id);
 
+	poller_remove_dead_time_rows($poller_id);
+
 	/**
 	 * only report issues for the main poller or from bad local
 	 * data ids, other pollers may insert somewhat asynchronously
@@ -1014,6 +1016,39 @@ function bad_index_check($mibs) {
 			$device_str = 'Device[' . implode('], Device[', $devices) . ']';
 
 			cacti_log('WARNING: You have ' . cacti_sizeof($devices) . ' Devices with bad SNMP Indexes.  Devices: ' . $device_str . ' totalling ' . $bad_indexes . ' Data Sources.  Please Either Re-Index, Delete or Disable these Data Sources.', false, 'POLLER');
+		}
+	}
+}
+
+/**
+ * poller_remove_dead_time_rows - remove open poller_time rows whose collector
+ *   process is gone.  A collector that dies never records its end time, so its
+ *   row would raise the overrun warning and mail again on every later cycle.
+ *
+ * @param  (int) $poller_id - the poller whose rows are checked
+ */
+function poller_remove_dead_time_rows($poller_id) {
+	global $poller_db_cnn_id;
+
+	if (!function_exists('posix_kill')) {
+		return;
+	}
+
+	$processes = db_fetch_assoc_prepared("SELECT pid
+		FROM poller_time
+		WHERE poller_id = ?
+		AND end_time = '0000-00-00 00:00:00'",
+		array($poller_id), true, $poller_db_cnn_id);
+
+	if (cacti_sizeof($processes)) {
+		foreach ($processes as $process) {
+			if (!cacti_process_signalable($process['pid'])) {
+				db_execute_prepared("DELETE FROM poller_time
+					WHERE poller_id = ?
+					AND pid = ?
+					AND end_time = '0000-00-00 00:00:00'",
+					array($poller_id, $process['pid']), true, $poller_db_cnn_id);
+			}
 		}
 	}
 }
