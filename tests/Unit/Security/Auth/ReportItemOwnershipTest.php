@@ -78,7 +78,7 @@ foreach ($constants as $constant) {
 if (!function_exists(__NAMESPACE__ . '\reports_form_save')) {
 	$code = '';
 
-	foreach (array('reports_form_save', 'reports_item_movedown', 'reports_item_moveup', 'reports_item_edit') as $fn) {
+	foreach (array('reports_form_save', 'reports_address_malformed', 'reports_item_movedown', 'reports_item_moveup', 'reports_item_edit') as $fn) {
 		preg_match('/^function ' . $fn . '\(.*?^}\n/ms', $src, $match);
 		expect($match)->not->toBeEmpty();
 

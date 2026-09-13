@@ -327,6 +327,14 @@ function reports_form_save() {
 		$save['from_email']       = get_nfilter_request_var('from_email');
 		$save['bcc']              = get_nfilter_request_var('bcc');
 
+		foreach (array('email', 'bcc', 'from_email') as $field) {
+			if (reports_address_malformed($save[$field])) {
+				raise_message(3);
+
+				$_SESSION['sess_error_fields'][$field] = $field;
+			}
+		}
+
 		$atype = get_nfilter_request_var('attachment_type');
 		if (($atype != REPORTS_TYPE_INLINE_PNG) &&
 			($atype != REPORTS_TYPE_INLINE_JPG) &&
@@ -1850,6 +1858,23 @@ function display_reports_items($report_id) {
 
 function get_reports_page() {
 	return (is_realm_allowed(21) ? 'reports_admin.php' : 'reports_user.php');
+}
+
+/* mailer() splits these fields on commas and trims each entry, so a line break
+   between entries is ordinary textarea input. A break left inside an entry, a
+   NUL or a request array is never an address it can send to. */
+function reports_address_malformed($value) {
+	if (!is_string($value) || strpos($value, "\0") !== false) {
+		return true;
+	}
+
+	foreach (explode(',', $value) as $entry) {
+		if (strpbrk(trim($entry), "\r\n") !== false) {
+			return true;
+		}
+	}
+
+	return false;
 }
 
 function is_reports_admin() {
