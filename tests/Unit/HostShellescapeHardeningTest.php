@@ -1,10 +1,8 @@
 <?php
 /*
- +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2026 The Cacti Group                                 |
- +-------------------------------------------------------------------------+
- +-------------------------------------------------------------------------+
-*/
+ * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
 
 /*
  * Regression test for host.php shell command host_id hardening.

@@ -1,10 +1,9 @@
 <?php
 /*
- +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2026 The Cacti Group                                 |
- +-------------------------------------------------------------------------+
- +-------------------------------------------------------------------------+
-*/
+ * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
 
 /*
  * Stand-alone fixture served by the built-in PHP web server

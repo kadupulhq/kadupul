@@ -1,18 +1,15 @@
 <?php
 /*
- +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2026 The Cacti Group                                 |
- +-------------------------------------------------------------------------+
- +-------------------------------------------------------------------------+
- |
- | Integration test: hostname XSS hardening in lib/ping.php (GHSA-43gj-mcpx-24m9).
- |
- | Run inside the container where lib/ and include/ are available:
- |   docker exec cacti12_web php /var/www/html/cacti/tests/integration/HardeningPingXssIntegrationTest.php
- |
- | Exit 0 on all assertions passing; exit 1 on first failure.
- +-------------------------------------------------------------------------+
-*/
+ * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ *
+ * Integration test: hostname XSS hardening in lib/ping.php (GHSA-43gj-mcpx-24m9).
+ *
+ * Run inside the container where lib/ and include/ are available:
+ *   docker exec cacti12_web php /var/www/html/cacti/tests/integration/HardeningPingXssIntegrationTest.php
+ *
+ * Exit 0 on all assertions passing; exit 1 on first failure.
+ */
 
 define('CACTI_CLI_ONLY', true);
 chdir('/var/www/html/cacti');

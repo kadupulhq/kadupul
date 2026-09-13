@@ -1,15 +1,8 @@
 <?php
 /*
- +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2026 The Cacti Group                                 |
- |                                                                         |
- | This program is free software; you can redistribute it and/or           |
- | modify it under the terms of the GNU General Public License             |
- | as published by the Free Software Foundation; either version 2          |
- | of the License, or (at your option) any later version.                  |
- +-------------------------------------------------------------------------+
- +-------------------------------------------------------------------------+
-*/
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
 
 // Adapter for legacy public PHP APIs. A rewrite supplies an equivalent adapter.
 $mode = $argv[1] ?? '';

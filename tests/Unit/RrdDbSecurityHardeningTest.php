@@ -1,15 +1,8 @@
 <?php
 /*
- +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2026 The Cacti Group                                 |
- |                                                                         |
- | This program is free software; you can redistribute it and/or           |
- | modify it under the terms of the GNU General Public License             |
- | as published by the Free Software Foundation; either version 2          |
- | of the License, or (at your option) any later version.                  |
- +-------------------------------------------------------------------------+
- +-------------------------------------------------------------------------+
-*/
+ * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
 
 $rrdSource      = file_get_contents(dirname(__DIR__, 2) . '/lib/rrd.php');
 $dbSource       = file_get_contents(dirname(__DIR__, 2) . '/lib/database.php');

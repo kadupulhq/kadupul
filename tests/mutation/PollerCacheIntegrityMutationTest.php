@@ -1,10 +1,8 @@
 <?php
 /*
- +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2026 The Cacti Group                                 |
- +-------------------------------------------------------------------------+
- +-------------------------------------------------------------------------+
-*/
+ * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
 
 /*
  * Mutation protection for the four lib/utility.php poller-cache

@@ -1,10 +1,8 @@
 <?php
 /*
- +-------------------------------------------------------------------------+
- | Copyright (C) 2004-2026 The Cacti Group                                 |
- +-------------------------------------------------------------------------+
- +-------------------------------------------------------------------------+
-*/
+ * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
 
 $authLoginSource    = file_get_contents(__DIR__ . '/../../auth_login.php');
 $includeAuthSource  = file_get_contents(__DIR__ . '/../../include/auth.php');
