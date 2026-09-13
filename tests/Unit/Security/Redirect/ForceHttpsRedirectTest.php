@@ -177,5 +177,6 @@ test('forced HTTPS bootstrap passes the Host header and trusted hosts, and forbi
 
 	$dist = file_get_contents(dirname(__DIR__, 4) . '/include/config.php.dist');
 
-	expect($dist)->toContain("//\$trusted_hosts = array('cacti.example.com');");
+	expect($dist)->toContain("//\$trusted_hosts = array('cacti.example.com');")
+		->and($dist)->toContain('validate_redirect_url() also needs');
 });

@@ -151,7 +151,9 @@ $disable_log_rotation = false;
  * HTTPS redirect may send a browser to. Without an entry, a Host header that
  * differs from the server name is replaced by the server name, unless the
  * server name is empty, "_" or a wildcard. List the external name here when
- * Cacti is reached through a name other than its internal ServerName.
+ * Cacti is reached through a name other than its internal ServerName. When
+ * the web server sets no server name, validate_redirect_url() also needs the
+ * name listed here to accept a same-host return URL.
  */
 
 //$trusted_hosts = array('cacti.example.com');
