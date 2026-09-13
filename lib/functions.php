@@ -4567,6 +4567,41 @@ function debug_log_return($type) {
 }
 
 /**
+ * debug_log_escape - neutralises markup in a debug log entry that did not
+ * come from this server, such as the data query log a Remote Data Collector
+ * returns.  The exact markup of debug_log_insert_section_start() and _end()
+ * passes through.  Otherwise only angle brackets are encoded, so entries
+ * built with __esc() or plain text keep their bytes.
+ *
+ * @param $text - the debug log entry
+ *
+ * @return - the entry, safe inside a table cell
+ */
+function debug_log_escape($text) {
+	if (!is_scalar($text)) {
+		return '';
+	}
+
+	$text = (string) $text;
+
+	if ($text === '</div></td></tr></table></td></tr></td></table>') {
+		return $text;
+	}
+
+	$section_start = '/^<table class=\'cactiTable debug\'(?: id=\'clipboardHeader[0-9a-f]{32}\')?>' .
+		'<tr class=\'tableHeader\'><td>[^<>\'"]*' .
+		'(?:<div class=\'cactiTableButton debug\'><span><a class=\'linkCopyDark cactiTableCopy\' id=\'copyToClipboard[0-9a-f]{32}\'>[^<>\'"]*<\/a><\/span><\/div>)?' .
+		'<\/td><\/tr><tr><td style=\'padding:0px;\'><table style=\'display:none;\'(?: id=\'clipboardData[0-9a-f]{32}\')?>' .
+		'<tr><td><div style=\'font-family: monospace;\'>$/D';
+
+	if (preg_match($section_start, $text)) {
+		return $text;
+	}
+
+	return str_replace(array('<', '>'), array('&lt;', '&gt;'), $text);
+}
+
+/**
  * sanitize_search_string - cleans up a search string submitted by the user to be passed
  * to the database. NOTE: some of the code for this function came from the phpBB project.
  *

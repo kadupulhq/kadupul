@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -60,6 +61,13 @@ function run_data_query($host_id, $snmp_query_id, $automation = false, $force = 
 
 		if ($response != '') {
 			$response = json_decode($response, true);
+
+			/* the collector controls this log and host.php prints it as HTML */
+			if (isset($response['data_query']) && is_array($response['data_query'])) {
+				foreach ($response['data_query'] as $key => $line) {
+					$response['data_query'][$key] = debug_log_escape($line);
+				}
+			}
 
 			$_SESSION['debug_log']['data_query'] = $response['data_query'];
 
