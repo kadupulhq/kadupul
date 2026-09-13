@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -40,4 +41,9 @@ function upgrade_to_1_2_32() {
 	db_install_add_column('poller_output_boost_processes', array('name' => 'run_id', 'type' => 'char(32)', 'NULL' => false, 'default' => '', 'after' => 'sock_int_value'));
 	db_install_add_column('poller_output_boost_processes', array('name' => 'child_id', 'type' => 'int(10)', 'unsigned' => true, 'NULL' => false, 'default' => '0', 'after' => 'run_id'));
 	db_install_add_key('poller_output_boost_processes', 'UNIQUE', 'run_child', array('run_id', 'child_id'));
+
+	/* allow_unsafe_https now defaults to off for new installs. An install
+	 * without a stored row ran with the old 'on' default, so store that value
+	 * rather than change its collector HTTPS checks on upgrade. */
+	db_install_execute("INSERT IGNORE INTO settings (name, value) VALUES ('allow_unsafe_https', 'on')");
 }

@@ -4530,7 +4530,9 @@ function debug_log_clear($type = '') {
 /**
  * debug_log_return - returns the debug log for a particular category.
  *
- * NOTE: Escaping is done in the insert functions.
+ * NOTE: Entries are returned as stored.  Local callers escape text with
+ * __esc() before inserting it, and run_data_query() passes entries from a
+ * Remote Data Collector through debug_log_escape() when it receives them.
  *
  * @param $type - the 'category' to return the debug log for.
  *
@@ -4564,6 +4566,41 @@ function debug_log_return($type) {
 	}
 
 	return $log_text;
+}
+
+/**
+ * debug_log_escape - neutralises markup in a debug log entry that did not
+ * come from this server, such as the data query log a Remote Data Collector
+ * returns.  The exact markup of debug_log_insert_section_start() and _end()
+ * passes through.  Otherwise only angle brackets are encoded, so entries
+ * built with __esc() or plain text keep their bytes.
+ *
+ * @param $text - the debug log entry
+ *
+ * @return - the entry, safe inside a table cell
+ */
+function debug_log_escape($text) {
+	if (!is_scalar($text)) {
+		return '';
+	}
+
+	$text = (string) $text;
+
+	if ($text === '</div></td></tr></table></td></tr></td></table>') {
+		return $text;
+	}
+
+	$section_start = '/^<table class=\'cactiTable debug\'(?: id=\'clipboardHeader[0-9a-f]{32}\')?>' .
+		'<tr class=\'tableHeader\'><td>[^<>\'"]*' .
+		'(?:<div class=\'cactiTableButton debug\'><span><a class=\'linkCopyDark cactiTableCopy\' id=\'copyToClipboard[0-9a-f]{32}\'>[^<>\'"]*<\/a><\/span><\/div>)?' .
+		'<\/td><\/tr><tr><td style=\'padding:0px;\'><table style=\'display:none;\'(?: id=\'clipboardData[0-9a-f]{32}\')?>' .
+		'<tr><td><div style=\'font-family: monospace;\'>$/D';
+
+	if (preg_match($section_start, $text)) {
+		return $text;
+	}
+
+	return str_replace(array('<', '>'), array('&lt;', '&gt;'), $text);
 }
 
 /**
@@ -7324,7 +7361,12 @@ function get_debug_prefix() {
 }
 
 function get_client_addr() {
-	global $config, $allowed_proxy_headers;
+	global $config, $allowed_proxy_headers, $trusted_proxies;
+
+	/* $trusted_proxies is opt-in; without it keep the original header handling */
+	if (!empty($trusted_proxies)) {
+		return get_trusted_client_addr();
+	}
 
 	$proxy_headers = (isset($config['proxy_headers']) ? $config['proxy_headers'] : []);
 
@@ -7361,6 +7403,161 @@ function get_client_addr() {
 	}
 
 	return $client_addr;
+}
+
+/**
+ * get_trusted_client_addr - returns the client address when $trusted_proxies
+ * is set in config.php. Forwarded headers count only when the connecting
+ * peer is a trusted proxy.
+ *
+ * @return (string|bool) The client address, or false without a valid REMOTE_ADDR
+ */
+function get_trusted_client_addr() {
+	global $config, $allowed_proxy_headers;
+
+	$proxy_headers = (isset($config['proxy_headers']) ? $config['proxy_headers'] : []);
+
+	if ($proxy_headers === true) {
+		$proxy_headers = $allowed_proxy_headers;
+	}
+
+	if (!is_array($proxy_headers)) {
+		$proxy_headers = [];
+	}
+
+	/* $_SERVER only carries headers as HTTP_* keys, so map dash-style names
+	 * onto the key PHP actually sets */
+	$server_keys = array();
+	foreach (array($proxy_headers, is_array($allowed_proxy_headers) ? $allowed_proxy_headers : array()) as $index => $headers) {
+		$server_keys[$index] = array();
+
+		foreach ($headers as $header) {
+			$key = strtoupper(str_replace('-', '_', trim($header)));
+
+			if ($key != 'REMOTE_ADDR' && strpos($key, 'HTTP_') !== 0) {
+				$key = 'HTTP_' . $key;
+			}
+
+			$server_keys[$index][] = $key;
+		}
+	}
+
+	$proxy_headers = array_diff(array_unique(array_intersect($server_keys[0], $server_keys[1])), array('REMOTE_ADDR'));
+
+	if (empty($_SERVER['REMOTE_ADDR'])) {
+		return false;
+	}
+
+	$remote_addr = $_SERVER['REMOTE_ADDR'];
+
+	if (!filter_var($remote_addr, FILTER_VALIDATE_IP)) {
+		cacti_log('ERROR: Invalid remote client IP Address found in header (REMOTE_ADDR).', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+		return false;
+	}
+
+	/* Each proxy appends the address it received from, so walk the list from
+	 * the right and stop at the first hop that is not a trusted proxy; every
+	 * entry to the left of that hop is client supplied. */
+	if (cacti_sizeof($proxy_headers) && is_trusted_proxy_addr($remote_addr)) {
+		foreach ($proxy_headers as $header) {
+			if (empty($_SERVER[$header])) {
+				continue;
+			}
+
+			$client_addr = false;
+
+			foreach (array_reverse(explode(',', $_SERVER[$header])) as $header_ip) {
+				$header_ip = trim($header_ip);
+
+				if (!filter_var($header_ip, FILTER_VALIDATE_IP)) {
+					cacti_log('ERROR: Invalid remote client IP Address found in header (' . $header . ').', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+					$client_addr = false;
+					break;
+				}
+
+				$client_addr = $header_ip;
+
+				if (!is_trusted_proxy_addr($header_ip)) {
+					break;
+				}
+			}
+
+			if ($client_addr !== false) {
+				cacti_log('DEBUG: Using remote client IP Address found in header (' . $header . '): ' . $client_addr . ' (' . $_SERVER[$header] . ')', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+
+				return $client_addr;
+			}
+		}
+	} elseif (cacti_sizeof($proxy_headers)) {
+		cacti_log('DEBUG: Ignoring proxy headers from ' . $remote_addr . ', which is not listed in $trusted_proxies', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+	}
+
+	cacti_log('DEBUG: Using remote client IP Address found in header (REMOTE_ADDR): ' . $remote_addr . ' (' . $remote_addr . ')', false, 'AUTH', POLLER_VERBOSITY_DEBUG);
+
+	return $remote_addr;
+}
+
+/**
+ * is_trusted_proxy_addr - checks an address against $trusted_proxies from
+ * config.php, which lists addresses and CIDR ranges of reverse proxies.
+ * An empty or missing list trusts no proxy.
+ *
+ * @param  (string) The IPv4 or IPv6 address to check
+ *
+ * @return (bool) True when the address is inside a trusted proxy entry
+ */
+function is_trusted_proxy_addr($addr) {
+	global $trusted_proxies;
+
+	if (empty($trusted_proxies) || !filter_var($addr, FILTER_VALIDATE_IP)) {
+		return false;
+	}
+
+	$packed = inet_pton($addr);
+
+	foreach ((array) $trusted_proxies as $proxy) {
+		$parts   = explode('/', trim((string) $proxy), 2);
+		$network = $parts[0];
+
+		if (!filter_var($network, FILTER_VALIDATE_IP)) {
+			continue;
+		}
+
+		$network = inet_pton($network);
+
+		/* never compare an IPv4 entry against an IPv6 address */
+		if (strlen($network) != strlen($packed)) {
+			continue;
+		}
+
+		$bits = strlen($network) * 8;
+
+		if (isset($parts[1])) {
+			if (!ctype_digit($parts[1]) || $parts[1] > $bits) {
+				continue;
+			}
+
+			$bits = (int) $parts[1];
+		}
+
+		$bytes = intdiv($bits, 8);
+
+		if (substr($packed, 0, $bytes) !== substr($network, 0, $bytes)) {
+			continue;
+		}
+
+		if ($bits % 8) {
+			$mask = (0xff << (8 - $bits % 8)) & 0xff;
+
+			if ((ord($packed[$bytes]) & $mask) != (ord($network[$bytes]) & $mask)) {
+				continue;
+			}
+		}
+
+		return true;
+	}
+
+	return false;
 }
 
 /**

@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -25,6 +26,16 @@
 function prime_default_settings() {
 	global $settings;
 
+	/* A web upgrade primes settings before upgrade_to_1_2_32() runs, so an
+	 * install from before 1.2.32 keeps the old allow_unsafe_https default here
+	 * instead of taking the new one first. */
+	$legacy_defaults = array();
+	$db_version      = get_cacti_version();
+
+	if ($db_version != '' && $db_version != 'new_install' && cacti_version_compare($db_version, '1.2.32', '<')) {
+		$legacy_defaults['allow_unsafe_https'] = 'on';
+	}
+
 	if (is_array($settings) && !isset($_SESSION['settings_primed'])) {
 		foreach ($settings as $tab_array) {
 			if (cacti_sizeof($tab_array)) {
@@ -38,7 +49,7 @@ function prime_default_settings() {
 						if ($current == '' || $current == null) {
 							db_execute_prepared('INSERT IGNORE INTO settings
 								(name, value) VALUES (?, ?)',
-								array($setting, $attributes['default']));
+								array($setting, (isset($legacy_defaults[$setting]) ? $legacy_defaults[$setting] : $attributes['default'])));
 						}
 					} elseif (isset($attributes['items'])) {
 						foreach($attributes['items'] as $isetting => $iattributes) {

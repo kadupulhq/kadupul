@@ -464,11 +464,12 @@ if ($config['is_web']) {
 	}
 
 	/* Direct TLS, or TLS terminated at a proxy we are configured to trust
-	 * ($config['proxy_headers']). Only honour a forwarded-proto header when
-	 * proxy trust is enabled, so a client cannot force the Secure flag. */
+	 * ($config['proxy_headers'] and $trusted_proxies). Only honour a
+	 * forwarded-proto header from a trusted peer, as get_client_addr() does,
+	 * so a client cannot force the Secure flag. */
 	$https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off');
 
-	if (!$https && !empty($config['proxy_headers'])) {
+	if (!$https && !empty($config['proxy_headers']) && isset($_SERVER['REMOTE_ADDR']) && is_trusted_proxy_addr($_SERVER['REMOTE_ADDR'])) {
 		$fwd_proto = isset($_SERVER['HTTP_X_FORWARDED_PROTO']) ? strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) : '';
 		$fwd_ssl   = isset($_SERVER['HTTP_X_FORWARDED_SSL'])   ? strtolower($_SERVER['HTTP_X_FORWARDED_SSL'])   : '';
 

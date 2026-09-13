@@ -19,7 +19,21 @@ on:
       - lib/csp_report_endpoint.php
       - include/global.php
       - include/global_settings.php
+      - include/global_arrays.php
+      - include/global_constants.php
+      - include/config.php.dist
+      - lib/functions.php
+      - lib/database.php
+      - lib/data_query.php
+      - graph_image.php
       - csp_report.php
+      - tests/Unit/Security/Auth/ClientAddrTrustedProxyTest.php
+      - tests/Unit/Security/Xss/DebugLogRemoteMarkupTest.php
+      - tests/Unit/Security/Auth/RemoteAgentGraphUserTest.php
+      - tests/Unit/Database/SqlSaveLogRedactionTest.php
+      - tests/Unit/Security/Ssrf/RemoteCollectorHttpsDefaultTest.php
+      - install/functions.php
+      - install/upgrades/1_2_32.php
       - tests/integration/**
       - tests/e2e/**
       - .github/workflows/csp-e2e.yml
@@ -61,6 +75,26 @@ jobs:
           # shellcheck disable=SC2016
           php -r '$xml = is_file($argv[1]) ? @simplexml_load_file($argv[1]) : false; $tests = $xml === false ? false : $xml->xpath("//testcase"); if (!is_array($tests) || count($tests) < 1) { fwrite(STDERR, "Missing, invalid, or empty CSP unit test report\n"); exit(1); }' "$RUNNER_TEMP/csp-unit.xml"
 
+      - name: Run remote collector and proxy hardening unit tests
+        working-directory: tests
+        run: |
+          # Pest runs only the first path argument, so each file gets its own run.
+          for test_file in \
+            Unit/Security/Auth/ClientAddrTrustedProxyTest.php \
+            Unit/Security/Xss/DebugLogRemoteMarkupTest.php \
+            Unit/Security/Auth/RemoteAgentGraphUserTest.php \
+            Unit/Database/SqlSaveLogRedactionTest.php \
+            Unit/Security/Ssrf/RemoteCollectorHttpsDefaultTest.php; do
+            report="$RUNNER_TEMP/$(basename "$test_file" .php).xml"
+            ./vendor/bin/pest \
+              --bootstrap=./bootstrap-unit.php \
+              --log-junit="$report" \
+              "$test_file"
+            # PHP variables must not expand in the shell.
+            # shellcheck disable=SC2016
+            php -r '$xml = is_file($argv[1]) ? @simplexml_load_file($argv[1]) : false; $tests = $xml === false ? false : $xml->xpath("//testcase"); if (!is_array($tests) || count($tests) < 1) { fwrite(STDERR, "Missing, invalid, or empty unit test report: " . $argv[1] . "\n"); exit(1); }' "$report"
+          done
+
   integration:
     name: Integration tests (php -S harness)
     runs-on: ubuntu-latest
@@ -89,6 +123,18 @@ jobs:
           # PHP variables must not expand in the shell.
           # shellcheck disable=SC2016
           php -r '$xml = is_file($argv[1]) ? @simplexml_load_file($argv[1]) : false; $tests = $xml === false ? false : $xml->xpath("//testcase"); if (!is_array($tests) || count($tests) < 1) { fwrite(STDERR, "Missing, invalid, or empty CSP integration test report\n"); exit(1); }' "$RUNNER_TEMP/csp-integration.xml"
+
+      - name: Run trusted proxy integration tests
+        working-directory: tests
+        run: |
+          # Pest runs only the first path argument, so this file gets its own run.
+          ./vendor/bin/pest \
+            --bootstrap=./bootstrap-unit.php \
+            --log-junit="$RUNNER_TEMP/trusted-proxy-integration.xml" \
+            integration/TrustedProxyClientAddrIntegrationTest.php
+          # PHP variables must not expand in the shell.
+          # shellcheck disable=SC2016
+          php -r '$xml = is_file($argv[1]) ? @simplexml_load_file($argv[1]) : false; $tests = $xml === false ? false : $xml->xpath("//testcase"); if (!is_array($tests) || count($tests) < 1) { fwrite(STDERR, "Missing, invalid, or empty trusted proxy integration test report\n"); exit(1); }' "$RUNNER_TEMP/trusted-proxy-integration.xml"
 
   e2e:
     name: Playwright E2E (docker-compose + Playwright)
