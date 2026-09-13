@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+<!--
+  Coverage run for SonarQube Cloud. phpunit.xml boots include/global.php,
+  which needs a database, so this config uses the source-scan bootstrap and
+  runs every test file that passes in one process without one.
+
+  Every exclusion below fails on main when run on its own, or breaks another
+  file when loaded alongside it. Remove an entry once its cause is fixed.
+
+  tests/integration is left out: those tests start php -S servers, and
+  coverage from a child process is not recorded.
+-->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="bootstrap-unit.php"
+         colors="true">
+    <testsuites>
+        <testsuite name="Coverage">
+            <directory suffix="Test.php">./Unit</directory>
+            <directory suffix="Test.php">./HandOff</directory>
+            <directory suffix="Test.php">./handoff</directory>
+            <directory suffix="Test.php">./mutation</directory>
+
+            <!-- Pest 2 describe(); tests/composer.json pins Pest 1. -->
+            <exclude>./Unit/CactiAuthorizeTest.php</exclude>
+            <exclude>./Unit/CactiBuildRemoteUrlTest.php</exclude>
+            <exclude>./Unit/CactiHtmlContextEscapeTest.php</exclude>
+            <exclude>./Unit/CactiValidateSortColumnTest.php</exclude>
+            <exclude>./Unit/CactiValidateThemeTest.php</exclude>
+
+            <!-- Requires include/global.php, which exits with status 0 when
+                 no database is reachable and ends the run before the report
+                 is written. -->
+            <exclude>./handoff/AutomationTreeRuleHandoffTest.php</exclude>
+            <exclude>./handoff/CactiSortHandoffTest.php</exclude>
+            <exclude>./handoff/CactiSortRegressionTest.php</exclude>
+
+            <!-- Requires tests/Helpers/CactiStubs.php, which does not exist. -->
+            <exclude>./Unit/AggregatePtileTypeTest.php</exclude>
+            <exclude>./Unit/DbLayerHardeningTest.php</exclude>
+
+            <!-- Requires a lib/ file that does not exist on main. -->
+            <exclude>./Unit/CactiFilesystemTest.php</exclude>
+            <exclude>./Unit/CactiLoggerTest.php</exclude>
+            <exclude>./Unit/CactiSecureTypeTest.php</exclude>
+            <exclude>./Unit/CactiValidatorTest.php</exclude>
+            <exclude>./handoff/AggregateDataHandoffTest.php</exclude>
+            <exclude>./handoff/AutomationSortHandoffTest.php</exclude>
+            <exclude>./mutation/RlikeHelperMutationTest.php</exclude>
+
+            <!-- Calls read_config_option() or is_urlencoded() without
+                 loading lib/functions.php or stubbing them. -->
+            <exclude>./Unit/Issue7121InputStringRegressionTest.php</exclude>
+            <exclude>./Unit/Issue7121SmokeTest.php</exclude>
+            <exclude>./Unit/RedirectValidationTest.php</exclude>
+            <exclude>./Unit/SecurityScriptServerDataInputTest.php</exclude>
+            <exclude>./handoff/RedirectDataHandoffTest.php</exclude>
+            <exclude>./mutation/CactiInputStringRegexMutationTest.php</exclude>
+            <exclude>./mutation/RedirectMutationTest.php</exclude>
+
+            <!-- Assertions fail against the source on main. -->
+            <exclude>./Unit/AuthLoginHardeningTest.php</exclude>
+            <exclude>./Unit/BoostDaemonHardeningTest.php</exclude>
+            <exclude>./Unit/CactiSecurityGatewaysTest.php</exclude>
+            <exclude>./Unit/CactiSortValidationTest.php</exclude>
+            <exclude>./Unit/CmdReindexLoopStateTest.php</exclude>
+            <exclude>./Unit/CoreSecurityHardeningTest.php</exclude>
+            <exclude>./Unit/CsrfHardeningTest.php</exclude>
+            <exclude>./Unit/DbFetchRowGuardTest.php</exclude>
+            <exclude>./Unit/DefenseInDepthFollowupTest.php</exclude>
+            <exclude>./Unit/Ghsa23p9RegressionTest.php</exclude>
+            <exclude>./Unit/Ghsa273rRegressionTest.php</exclude>
+            <exclude>./Unit/Ghsa3p6wRegressionTest.php</exclude>
+            <exclude>./Unit/Ghsa4494RegressionTest.php</exclude>
+            <exclude>./Unit/Ghsa72vrRegressionTest.php</exclude>
+            <exclude>./Unit/GhsaG9c7RegressionTest.php</exclude>
+            <exclude>./Unit/GhsaMjvwRegressionTest.php</exclude>
+            <exclude>./Unit/GhsaQ9xgRegressionTest.php</exclude>
+            <exclude>./Unit/GraphInvalidLocalGraphIdTest.php</exclude>
+            <exclude>./Unit/GraphRealtimeShellTest.php</exclude>
+            <exclude>./Unit/HtmlFilterXssTest.php</exclude>
+            <exclude>./Unit/JsContextHardeningTest.php</exclude>
+            <exclude>./Unit/PathAndRedirectHardeningTest.php</exclude>
+            <exclude>./Unit/PluginMoveorderBugTest.php</exclude>
+            <exclude>./Unit/PrivateAdvisoryEvidenceRegressionTest.php</exclude>
+            <exclude>./Unit/RlikeSqliMigrationTest.php</exclude>
+            <exclude>./Unit/RrdCfFallbackTest.php</exclude>
+            <exclude>./Unit/SecurityHardening1_2xTest.php</exclude>
+            <exclude>./Unit/SecurityXssPathTest.php</exclude>
+
+            <!-- Declares a read_config_option() stub that returns false. It
+                 loads first and shadows HeadersSecureTest's stub, which
+                 reads $GLOBALS['__test_config_options']. -->
+            <exclude>./Unit/ColourBrightnessTest.php</exclude>
+        </testsuite>
+    </testsuites>
+    <coverage>
+        <include>
+            <directory suffix=".php">..</directory>
+        </include>
+        <!-- Matches sonar.exclusions so both tools measure the same files. -->
+        <exclude>
+            <directory>../include/vendor</directory>
+            <directory>../include/fa</directory>
+            <directory>../include/js</directory>
+            <directory>../tests</directory>
+            <directory>../locales</directory>
+            <directory>../docs</directory>
+            <directory>../cache</directory>
+            <directory>../log</directory>
+            <directory>../rra</directory>
+        </exclude>
+        <report>
+            <clover outputFile="coverage.xml"/>
+        </report>
+    </coverage>
+</phpunit>
