@@ -28,6 +28,7 @@ Cacti CHANGELOG
 -security: Check graph permission and the real-time enabled setting before real-time init polls a graph or real-time view returns its cached image
 -security: Quote each real-time poller argument separately when the graph page starts the poller
 -security: Quote graph, export, fetch, RRDcheck and RRD file path arguments, including user font settings, the way the RRDtool command parser reads them
+-issue: Fall back to the database CSRF secret with a warning when the external secret file is unusable
 -issue: Return to a same-host page when the web server sets no name and the Host header is in $trusted_hosts
 -issue: Keep the request URI and a matching or trusted Host header in forced HTTPS redirects
 -issue: Restore the refresh_csrf.php messages and exit codes from 1.2.31

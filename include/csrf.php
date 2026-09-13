@@ -36,6 +36,18 @@ function csrf_startup() {
 		$external_secret = !empty($config['path_csrf_secret']);
 		if ($external_secret) {
 			$secret = cacti_csrf_read_external_secret($config['path_csrf_secret']);
+
+			/* 1.2.31 kept serving pages when the secret file was unusable, so
+			 * fall back to the database secret and tell the operator once. */
+			if (!cacti_csrf_secret_is_valid($secret) && !cacti_csrf_install_pending()) {
+				if (empty($_SESSION['cacti_csrf_external_secret_warned'])) {
+					cacti_log('WARNING: The configured external CSRF secret is unavailable or invalid, using the database secret instead', false, 'SYSTEM');
+					$_SESSION['cacti_csrf_external_secret_warned'] = true;
+				}
+
+				$external_secret = false;
+				$secret          = read_config_option('csrf_secret', true);
+			}
 		} else {
 			$secret = read_config_option('csrf_secret', true);
 		}
