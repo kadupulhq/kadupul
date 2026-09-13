@@ -584,7 +584,7 @@ function import_read_package_data($xmlfile, &$public_key) {
  *
  */
 function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $replace_svalues = false,
-	$preview = false, $info_only = false, $limitex = true, $import_hashes = array(), $import_files = array(), $class = '') {
+	$preview = false, $info_only = false, $limitex = true, $import_hashes = array(), $import_files = array(), $class = '', $replace_files = true) {
 
 	global $config, $preview_only;
 
@@ -685,6 +685,19 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 
 			if (!$preview) {
 				if (!cacti_sizeof($import_files) || in_array($name, $import_files)) {
+					/* a shipped package can carry an older copy of a file the release already hardened */
+					if (!$replace_files && file_exists($filename)) {
+						cacti_log('NOTE: Keeping existing file: ' . $filename, false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
+
+						$filestatus[$filename] = __('kept existing');
+
+						continue;
+					}
+
+					if (file_exists($filename) && md5_file($filename) !== md5($fdata)) {
+						cacti_log('WARNING: Package file replaces a different existing file: ' . $filename, false, 'IMPORT');
+					}
+
 					cacti_log('Writing file: ' . $filename, false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 
 					if ((is_writeable(dirname($filename)) && !file_exists($filename)) || is_writable($filename)) {
