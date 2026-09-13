@@ -1,0 +1,41 @@
+{
+  "status": 200,
+  "url": "<BASE>/host.php",
+  "content_type": "text/html; charset=UTF-8",
+  "inputs": [
+    {
+      "type": "submit"
+    },
+    {
+      "type": "button"
+    },
+    {
+      "type": "button"
+    },
+    {
+      "type": "text"
+    },
+    {
+      "name": "__csrf_magic",
+      "type": "hidden"
+    },
+    {
+      "type": "checkbox"
+    },
+    {
+      "name": "chk_1",
+      "type": "checkbox"
+    },
+    {
+      "type": "submit"
+    },
+    {
+      "name": "action",
+      "type": "hidden"
+    }
+  ],
+  "title": "Console > Devices ",
+  "login_form": false,
+  "admin_layout": true,
+  "messages": []
+}

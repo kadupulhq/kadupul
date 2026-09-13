@@ -1,0 +1,11 @@
+{
+  "command": {
+    "exit": 0,
+    "stdout": "NOTE: 1 Plugins to be acted on.\nNOTE: Plugin 'compatibility_test' processing started\nNOTE: Uninstalling Plugin compatibility_test.\n",
+    "stderr": ""
+  },
+  "database": {
+    "config": [],
+    "hooks": []
+  }
+}

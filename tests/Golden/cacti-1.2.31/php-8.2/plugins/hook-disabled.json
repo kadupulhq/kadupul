@@ -1,0 +1,82 @@
+{
+  "result": {
+    "event": [
+      "compatibility_event",
+      "payload",
+      {
+        "value": 42
+      }
+    ],
+    "filter": [
+      {
+        "input": null,
+        "result": null
+      },
+      {
+        "input": false,
+        "result": false
+      },
+      {
+        "input": "",
+        "result": ""
+      },
+      {
+        "input": "0",
+        "result": "0"
+      },
+      {
+        "input": 0,
+        "result": 0
+      },
+      {
+        "input": [],
+        "result": []
+      },
+      {
+        "input": {
+          "value": 42
+        },
+        "result": {
+          "value": 42
+        }
+      }
+    ],
+    "callbacks_observed": 0,
+    "registered_hooks": [
+      {
+        "hook": "compatibility_event",
+        "function": "compatibility_test_event",
+        "status": 4
+      },
+      {
+        "hook": "compatibility_filter",
+        "function": "compatibility_test_filter",
+        "status": 4
+      },
+      {
+        "hook": "config_settings",
+        "function": "compatibility_test_filter",
+        "status": 1
+      },
+      {
+        "hook": "draw_navigation_text",
+        "function": "compatibility_test_filter",
+        "status": 4
+      },
+      {
+        "hook": "poller_bottom",
+        "function": "compatibility_test_event",
+        "status": 4
+      },
+      {
+        "hook": "poller_top",
+        "function": "compatibility_test_event",
+        "status": 4
+      }
+    ],
+    "plugin_status": 4
+  },
+  "stdout": "\n",
+  "stderr": "",
+  "exit": 0
+}

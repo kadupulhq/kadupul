@@ -1,0 +1,54 @@
+{
+  "command": {
+    "exit": 0,
+    "stdout": "NOTE: 1 Plugins to be acted on.\nNOTE: Plugin 'compatibility_test' processing started\nNOTE: Enabling Plugin compatibility_test.\n",
+    "stderr": ""
+  },
+  "database": {
+    "config": [
+      {
+        "directory": "compatibility_test",
+        "status": 1,
+        "version": "1.0.0"
+      }
+    ],
+    "hooks": [
+      {
+        "hook": "compatibility_event",
+        "function": "compatibility_test_event",
+        "status": 1,
+        "file": "setup.php"
+      },
+      {
+        "hook": "compatibility_filter",
+        "function": "compatibility_test_filter",
+        "status": 1,
+        "file": "setup.php"
+      },
+      {
+        "hook": "config_settings",
+        "function": "compatibility_test_filter",
+        "status": 1,
+        "file": "setup.php"
+      },
+      {
+        "hook": "draw_navigation_text",
+        "function": "compatibility_test_filter",
+        "status": 1,
+        "file": "setup.php"
+      },
+      {
+        "hook": "poller_bottom",
+        "function": "compatibility_test_event",
+        "status": 1,
+        "file": "setup.php"
+      },
+      {
+        "hook": "poller_top",
+        "function": "compatibility_test_event",
+        "status": 1,
+        "file": "setup.php"
+      }
+    ]
+  }
+}

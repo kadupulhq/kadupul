@@ -1,0 +1,8 @@
+{
+  "command": {
+    "exit": 0,
+    "stdout": "Graph Added - Graph[5] - DS[7]\n",
+    "stderr": ""
+  },
+  "database": "1\t247\t1\t0\t0\t\n2\t248\t1\t0\t0\t\n3\t249\t1\t0\t0\t\n4\t250\t1\t0\t0\t\n5\t4\t2\t0\t0\t\n"
+}

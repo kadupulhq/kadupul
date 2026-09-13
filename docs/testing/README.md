@@ -1,0 +1,165 @@
+# Behavioral characterization harness
+
+This harness records what Cacti 1.2.31 actually does, so a later Kadupul
+rewrite can be checked against it. It is a specification captured by
+observation, not a correctness suite. Where Cacti behaves oddly, the harness
+records the oddity and marks it. It does not change it.
+
+The working order is observe, capture, assert, preserve.
+
+## Requirements
+
+- Docker with Compose v2
+- `mise`, providing Python 3.12
+- GNU Make
+
+Nothing else. The application, database, SNMP agent and RRDtool all run in
+containers built from this checkout, so no local PHP, MariaDB or net-snmp
+install is involved and no developer database is ever touched.
+
+## Running it
+
+```sh
+make test-characterization    # verify observed behavior against committed goldens
+make test-update-golden       # re-record goldens, then review the diff by hand
+make test-keep                # leave the containers up to inspect a failure
+make clean                    # drop results and stop stray compose projects
+```
+
+Scope the report to one group while still running the full pass:
+
+```sh
+make test-api
+make test-plugins
+make test-auth
+make test-devices
+make test-poller
+```
+
+Every scenario always executes, because later ones consume fixtures the earlier
+ones create. The scoping flag decides what is verified, not what runs.
+
+Pick a PHP version with `PHP_VERSION`. Goldens are stored per version, so a
+capture on one version never overwrites another.
+
+```sh
+PHP_VERSION=8.3 make test-update-golden
+```
+
+## What a run does
+
+1. Starts MariaDB, an Apache/PHP container built from this checkout, and an
+   snmpd fixture that answers with fixed values.
+2. Imports `cacti.sql` and records the fresh schema.
+3. Runs `cli/install_cacti.php` and records its output and exit status.
+4. Replaces the admin password and the tool paths, then records scenarios
+   across auth, UI, CLI, devices, data sources, graphs, SNMP, plugins and PHP
+   diagnostics.
+5. Writes `tests/behavior/results/<target>/observations.json`, then compares
+   each scenario against `tests/Golden/<target>/php-<version>/<name>.json`.
+
+Containers are torn down afterwards unless `--keep` is passed.
+
+## Golden files
+
+Goldens are the compatibility contract. They never update as a side effect of
+a normal run: a scenario with no golden is reported as `MISSING GOLDEN` and
+fails. Only `make test-update-golden` writes them, and that target refuses to
+run scoped, so a partial capture cannot leave the rest stale.
+
+Normalization is deliberately narrow. Filesystem roots become `<APP>` and
+`<HARNESS>`, and the base URL becomes `<BASE>`. Process ids and timestamps are
+never recorded. Identifiers, row counts, scalar types, ordering and message
+text are all preserved, because a change in any of them is a behavioral change.
+
+When a golden changes, read the diff. A legitimate change is approved
+explicitly through the differential runner, never by re-recording silently.
+
+## Differential runs
+
+The point of the harness is comparing a baseline against a candidate.
+
+```sh
+make test-update-golden TARGET=cacti-1.2.31
+make test-update-golden TARGET=kadupul
+make compare BASELINE=cacti-1.2.31 CANDIDATE=kadupul
+```
+
+`make compare` writes `comparison.json` and `comparison.md` under
+`tests/behavior/results/`, classifying each scenario as `IDENTICAL`,
+`INTENTIONAL_CHANGE`, `REGRESSION`, `NONDETERMINISTIC` or `NEEDS_REVIEW`.
+
+A difference counts as intentional only when an approvals file names the
+scenario, carries the digest of that exact baseline-candidate pair, and gives a
+reason. Changing either side invalidates the approval.
+
+```json
+{
+  "auth/login-invalid": {
+    "digest": "<digest printed in comparison.json>",
+    "reason": "Login error text reworded; see ADR-014."
+  }
+}
+```
+
+```sh
+make compare BASELINE=cacti-1.2.31 CANDIDATE=kadupul APPROVALS=tests/Contracts/approvals.json
+```
+
+Pass `--repeat` a second candidate run to have scenarios that differ between
+two runs of the same code classified `NONDETERMINISTIC` rather than blamed on
+the candidate.
+
+## Layout
+
+| Path | Contents |
+|---|---|
+| `tests/Support/Behavior/harness.py` | Scenario driver. Standard library only, imports nothing from the application. |
+| `tests/Support/Behavior/probe.php` | In-process adapter for behavior not reachable over HTTP or the CLI. A rewrite supplies its own. |
+| `tests/Support/Behavior/errors.php` | PHP diagnostic capture. Chains to the handler it replaces. |
+| `tests/Support/Behavior/inventory.py` | Regenerates the lexical surface inventory. |
+| `tests/behavior/compose.yml` | Database, web, SNMP and poller services. |
+| `tests/Fixtures/plugins/compatibility_test/` | Synthetic plugin exercising the public plugin API. |
+| `tests/Fixtures/snmp/` | Deterministic snmpd configuration. |
+| `tests/Golden/<target>/php-<version>/` | Recorded contracts. |
+| `tests/behavior/results/` | Per-run observations and diffs. Not committed. |
+
+## The probe boundary
+
+Most scenarios go through HTTP or the CLI, which any implementation must
+support. Some behavior, such as type coercion in helper functions and plugin
+hook dispatch, has no external surface. Those go through `probe.php`.
+
+`probe.php` is the one place coupled to Cacti's internal function names. A
+Kadupul implementation supplies its own probe exposing the same observations.
+The goldens stay unchanged. Nothing else in the harness names an internal
+function, so replacing every class and function in the application leaves the
+suite meaningful.
+
+## Recording new behavior
+
+1. Add a scenario in `Harness.scenarios()`, capturing both the application's
+   response and the resulting database state.
+2. Run `make test-update-golden` and read the new file. If it contains a value
+   that varies between runs, normalize it in `normalize()` or stop recording
+   it. Do not normalize a value that carries meaning.
+3. Run `make test-characterization` twice and confirm both pass, which is what
+   distinguishes a stable contract from a flaky one.
+4. Commit the scenario and its golden together.
+
+If a scenario reveals behavior that looks wrong, keep it and mark it. The tags
+used in this tree are `@legacy-behavior` for behavior that is odd but relied
+upon, `@suspected-bug` for behavior that looks defective, `@security-behavior`
+for anything security-sensitive, `@de-facto-api` for undocumented behavior real
+plugins depend on, and `@compatibility-contract` for behavior a rewrite must
+reproduce exactly.
+
+## Known captured oddities
+
+`sanitize_search_string(null)` reaches `preg_replace()` with a null subject and
+emits a deprecation on PHP 8.1 and later, at `lib/functions.php:4479`. The
+harness records the deprecation rather than suppressing it.
+
+`get_request_var()` memoizes each name into the `$_CACTI_REQUEST` global. Once
+a name is read, later changes to `$_REQUEST` are ignored for the rest of the
+request. Callers rely on this, so it is recorded as a contract.

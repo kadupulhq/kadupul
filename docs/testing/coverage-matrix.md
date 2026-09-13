@@ -1,0 +1,117 @@
+# Coverage matrix
+
+What the behavioral harness characterizes today, and what it does not.
+
+Characterized means a golden file exists and a fresh run reproduces it. Nothing
+in this table is marked characterized on the strength of a test that was
+written but never run.
+
+Priorities: **P0** blocks Kadupul compatibility, **P1** is important behavior,
+**P2** is useful, **P3** is obscure or legacy.
+
+## Characterized
+
+| Subsystem | Operation | Characterized | Happy path | Failure path | Edge cases | Golden fixture | Priority |
+|---|---|---|---|---|---|---|---|
+| Database | Fresh schema import | yes | yes | no | schema, columns, seeded rows | `database/fresh-schema` | P0 |
+| Install | CLI install, mode 1 | yes | yes | no | exit status, full stdout | `upgrade/install` | P0 |
+| Auth | Admin login | yes | yes | n/a | post-login layout | `auth/login-admin` | P0 |
+| Auth | Invalid password | yes | n/a | yes | error text, form fields retained | `auth/login-invalid` | P0 |
+| Auth | Missing CSRF token | yes | n/a | yes | POST with no token | `auth/missing-csrf` | P0 |
+| UI | Device list page | yes | yes | no | status, title, form inputs | `ui/devices` | P1 |
+| API/AJAX | `utilities.php` host search | yes | yes | no | JSON body preserved whole | `api/ajax-hosts` | P0 |
+| CLI | `add_device.php --help` | yes | yes | n/a | exit status, usage text | `cli/device-help` | P1 |
+| CLI | `add_device.php` missing args | yes | n/a | yes | exit status, stderr | `cli/device-missing` | P0 |
+| CLI | `add_datasource.php` non-numeric id | yes | n/a | yes | `--host-id=oops` | `api/datasource-invalid` | P0 |
+| Devices | Create via CLI | yes | yes | no | response plus resulting host row | `devices/create` | P0 |
+| Devices | Delete via CLI | yes | yes | no | resulting `data_local` and `graph_local` rows | `devices/delete` | P0 |
+| Graphs | Data source create | yes | yes | no | response plus `data_local` | `graphs/datasource-create` | P0 |
+| Graphs | Graph create | yes | yes | no | response plus `graph_local` | `graphs/create` | P0 |
+| RRD | Graph definition generation | yes | yes | no | full rrdtool graph command, captured after the poll creates the RRD | `graphs/definition` | P0 |
+| SNMP | v2c get, known and custom OID | yes | yes | no | deterministic snmpd fixture | `snmp/get` | P0 |
+| Plugins | Install | yes | yes | no | `plugin_config`, `plugin_hooks` | `plugins/install` | P0 |
+| Plugins | Enable | yes | yes | no | status transition | `plugins/enable` | P0 |
+| Plugins | Hook dispatch, enabled | yes | yes | no | 7-value type matrix, callback count | `plugins/hook` | P0 |
+| Plugins | Hook dispatch, disabled | yes | n/a | yes | zero callbacks, hooks still registered | `plugins/hook-disabled` | P0 |
+| Plugins | Disable | yes | yes | no | status transition | `plugins/disable` | P0 |
+| Plugins | Uninstall | yes | yes | no | rows removed | `plugins/uninstall` | P0 |
+| Plugins | Callback order and arguments | yes | yes | no | full ordered lifecycle log | `plugins/callbacks` | P0 |
+| PHP types | Coercion through helpers | yes | yes | yes | null, false, true, `''`, `'0'`, 0, `'1'`, 1, numeric, malformed, array, unexpected key | `api/type-coercion` | P0 |
+| PHP types | `get_request_var` memoization | yes | n/a | n/a | stale read after superglobal change | `api/type-coercion` | P0 |
+| PHP types | Empty result-set shapes | yes | n/a | yes | `db_fetch_row`, `_cell`, `_assoc` | `api/type-coercion` | P0 |
+| Diagnostics | Warnings, notices, deprecations raised outside Cacti's own handler | yes | n/a | yes | grouped and counted, suppression flagged | `api/php-errors` | P0 |
+| Diagnostics | Handler calibration | yes | n/a | yes | `E_USER_WARNING`, `TypeError` | `api/warning-calibration` | P1 |
+| Poller | Full run against a device with data sources | yes | yes | no | exit status, stats line, poller cache, rrdtool argv | `poller/run-reachable` | P0 |
+| Poller | rrdtool exits non-zero mid-run | yes | n/a | yes | poller still exits 0; fwrite notice on the broken pipe | `poller/rrd-failure` | P0 |
+| Poller | Device at an unroutable address | yes | n/a | yes | availability method 1, status transition | `poller/device-unreachable` | P0 |
+| RRD | create and update argument capture | yes | yes | yes | pipe-mode stdin, DS and RRA definitions, template order | `poller/run-reachable` | P0 |
+| Faults | RRD file deleted underneath a data source | yes | n/a | yes | rrdtool argv, exit status | `faults/missing-rrd-file` | P1 |
+| Faults | CLI against an unreachable database | yes | n/a | yes | exit status, stdout | `faults/database-unreachable` | P1 |
+
+## Not characterized
+
+Ordered by priority. Nothing here has a golden file.
+
+| Subsystem | Operation | Happy path | Failure path | Edge cases | Priority |
+|---|---|---|---|---|---|
+| Poller | Counter rollover, large integers, null result | no | no | numeric edges not yet driven | P0 |
+| Poller | Malformed and partial SNMP responses | no | no | the snmpd fixture answers correctly only | P1 |
+| Devices | SNMP v1, v3, IPv6, duplicate, bad credentials | no | no | per-version credential handling | P0 |
+| Auth | Disabled account, expired session, realm denial | no | no | admin against non-admin | P0 |
+| Auth | Permission enforcement per page and endpoint | no | no | representative matrix | P0 |
+| Boost | Queue, batch, `LOAD DATA`, duplicates, retries | no | no | ordering, partial failure, empty batch | P1 |
+| Upgrade | 1.2.x fixture upgraded forward | no | no | repeated and partial migration | P1 |
+| Logging | Normalized log assertions per operation | no | no | severity, subsystem, ordering | P1 |
+| Fault injection | SQL error, SNMP timeout | no | no | permission denied | P1 |
+| UI | Pagination, sorting, filtering | no | no | across list pages | P1 |
+| Templates | Import, export, apply, reapply | no | no | graph and host templates | P1 |
+| Automation | Discovery, network rules, tree rules | no | no | — | P2 |
+| CLI | The remaining 42 scripts | no | no | per-script exit status and side effects | P2 |
+| Plugins | Failure and malformed return handling | no | no | hook that throws or returns wrong type | P2 |
+| Threshold | Event behavior | no | no | requires a thold install; none seeded | P3 |
+
+## Gaps worth naming
+
+RRD is now characterized at create and update level. Cacti drives rrdtool in
+pipe mode, so the commands arrive on stdin rather than in argv; the image shim
+records both. Graph rendering is still asserted as a definition rather than as
+pixels, which is deliberate.
+
+Measured values are normalized out of the recorded rrdtool updates: a process
+count, a load average and free memory differ on every run and are the machine,
+not the behavior. The number of values and their template order are preserved,
+because those are the contract.
+
+Boost remains uncharacterized, as do templates, automation, and the remaining
+42 CLI scripts. Authorization is characterized only for login and CSRF, not for
+the per-page and per-endpoint permission matrix.
+
+The PHP matrix has run on 8.2 only. Goldens are stored per version, so adding
+8.1, 8.3, 8.4 and 8.5 is a capture per version rather than new scenarios, and
+the deprecation counts in `api/php-errors` are expected to differ between them.
+That difference is the point and must not be normalized away.
+
+## Guards on the capture itself
+
+Two scenarios once recorded a name rather than a behavior. `graphs/definition`
+targeted a device that was never polled, so it captured "RRD file does not
+exist" with an empty source while appearing to characterize graph generation.
+`faults/database-unreachable` captured a shell quoting error from the harness
+itself rather than the application's response.
+
+Both now refuse to record: the graph capture raises unless the probe returns a
+non-empty rrdtool source, and the database fault raises if the command failed to
+start. A hollow contract is worse than a missing one, because every green run
+makes it look more trustworthy.
+
+## What the diagnostics scenario does not see
+
+`include/global.php` installs `CactiErrorHandler`, which displaces the recorder
+in every process that bootstraps the application. The probe re-arms it by hand;
+`poller.php` and the workers it forks cannot, without editing production code.
+
+So `api/php-errors` covers diagnostics raised before or outside that swap, not
+every diagnostic in the run. The poller's own notices reach Cacti's log and show
+up in each scenario's captured stderr, which is where `poller/rrd-failure`
+records the broken-pipe notice. Reading the Cacti log as a normalized stream is
+the way to close this, and is not done yet.

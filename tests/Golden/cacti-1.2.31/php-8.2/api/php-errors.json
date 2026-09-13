@@ -1,0 +1,18 @@
+[
+  {
+    "severity": 512,
+    "message": "behavior capture calibration",
+    "file": "<HARNESS>/probe.php",
+    "count": 1,
+    "suppressed": false,
+    "suppressed_here": false
+  },
+  {
+    "severity": 8192,
+    "message": "preg_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated",
+    "file": "<APP>/lib/functions.php",
+    "count": 1,
+    "suppressed": true,
+    "suppressed_here": true
+  }
+]

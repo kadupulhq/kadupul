@@ -1,0 +1,70 @@
+services:
+  db:
+    image: mariadb:10.11
+    environment:
+      MARIADB_ROOT_PASSWORD: behavior-root
+      MARIADB_DATABASE: cacti
+      MARIADB_USER: cactiuser
+      MARIADB_PASSWORD: cactiuser
+    command: [--character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --local-infile=1]
+    healthcheck:
+      test: [CMD, healthcheck.sh, --connect, --innodb_initialized]
+      interval: 2s
+      retries: 60
+  web:
+    build:
+      context: ../..
+      dockerfile: tests/behavior/Dockerfile
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.2}
+    environment:
+      DB_HOST: db
+      TZ: UTC
+    depends_on:
+      db:
+        condition: service_healthy
+    # up --wait only waits for a healthcheck. Without one the first login can
+    # race Apache startup. A static file keeps the check independent of the
+    # schema, which setup() imports after the stack is up.
+    healthcheck:
+      test: [CMD, curl, -fsS, -o, /dev/null, http://127.0.0.1/include/layout.js]
+      interval: 2s
+      retries: 60
+    ports: ["127.0.0.1::80"]
+    volumes:
+      - ../Support/Behavior:/harness:ro
+      - ../Fixtures/plugins/compatibility_test:/var/www/html/plugins/compatibility_test:ro
+  snmp:
+    build:
+      context: ../..
+      dockerfile: tests/behavior/Dockerfile
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.2}
+    # command is reset because overriding entrypoint alone leaves the image
+    # CMD in place, which appends apache2-foreground to snmpd's arguments.
+    entrypoint: [snmpd, -f, -Lo, -C, -c, /fixtures/snmpd.conf]
+    command: []
+    # up --wait must include the agent, or the first SNMP probe races snmpd.
+    healthcheck:
+      test: [CMD, snmpget, -v2c, -c, public, -t, '1', -r, '0', 127.0.0.1, 1.3.6.1.2.1.1.1.0]
+      interval: 2s
+      retries: 30
+    volumes:
+      - ../Fixtures/snmp:/fixtures:ro
+  poller:
+    profiles: [scheduled]
+    build:
+      context: ../..
+      dockerfile: tests/behavior/Dockerfile
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.2}
+    # The image prepends /harness/errors.php to every interpreter. Without the
+    # mount this service warns on each poll and records nothing.
+    volumes:
+      - ../Support/Behavior:/harness:ro
+    environment:
+      DB_HOST: db
+    depends_on:
+      db:
+        condition: service_healthy
+    command: [sh, -c, 'while true; do php poller.php --force; sleep 300; done']

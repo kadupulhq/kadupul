@@ -1,0 +1,156 @@
+{
+  "result": [
+    {
+      "input": null,
+      "cacti_sizeof": {
+        "value": 0
+      },
+      "sanitize_search_string": {
+        "value": ""
+      },
+      "request": "",
+      "missing": ""
+    },
+    {
+      "input": false,
+      "cacti_sizeof": {
+        "value": 0
+      },
+      "sanitize_search_string": {
+        "value": ""
+      },
+      "request": false,
+      "missing": ""
+    },
+    {
+      "input": true,
+      "cacti_sizeof": {
+        "value": 0
+      },
+      "sanitize_search_string": {
+        "value": "1"
+      },
+      "request": true,
+      "missing": ""
+    },
+    {
+      "input": "",
+      "cacti_sizeof": {
+        "value": 0
+      },
+      "sanitize_search_string": {
+        "value": ""
+      },
+      "request": "",
+      "missing": ""
+    },
+    {
+      "input": "0",
+      "cacti_sizeof": {
+        "value": 0
+      },
+      "sanitize_search_string": {
+        "value": "0"
+      },
+      "request": "0",
+      "missing": ""
+    },
+    {
+      "input": 0,
+      "cacti_sizeof": {
+        "value": 0
+      },
+      "sanitize_search_string": {
+        "value": "0"
+      },
+      "request": 0,
+      "missing": ""
+    },
+    {
+      "input": "1",
+      "cacti_sizeof": {
+        "value": 0
+      },
+      "sanitize_search_string": {
+        "value": "1"
+      },
+      "request": "1",
+      "missing": ""
+    },
+    {
+      "input": 1,
+      "cacti_sizeof": {
+        "value": 0
+      },
+      "sanitize_search_string": {
+        "value": "1"
+      },
+      "request": 1,
+      "missing": ""
+    },
+    {
+      "input": "12.5",
+      "cacti_sizeof": {
+        "value": 0
+      },
+      "sanitize_search_string": {
+        "value": "12.5"
+      },
+      "request": "12.5",
+      "missing": ""
+    },
+    {
+      "input": "12oops",
+      "cacti_sizeof": {
+        "value": 0
+      },
+      "sanitize_search_string": {
+        "value": "12oops"
+      },
+      "request": "12oops",
+      "missing": ""
+    },
+    {
+      "input": [],
+      "cacti_sizeof": {
+        "value": 0
+      },
+      "sanitize_search_string": {
+        "value": []
+      },
+      "request": [],
+      "missing": ""
+    },
+    {
+      "input": {
+        "unexpected": 1
+      },
+      "cacti_sizeof": {
+        "value": 1
+      },
+      "sanitize_search_string": {
+        "value": {
+          "unexpected": "1"
+        }
+      },
+      "request": {
+        "unexpected": 1
+      },
+      "missing": ""
+    },
+    {
+      "request_var_cache": {
+        "first_read": "first",
+        "after_superglobal_change": "first"
+      }
+    },
+    {
+      "db_empty_row": [],
+      "db_empty_cell": false,
+      "db_empty_assoc": []
+    }
+  ],
+  "stdout": "\n",
+  "stderr": "",
+  "exit": 0
+}
