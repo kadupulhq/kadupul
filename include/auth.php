@@ -149,6 +149,11 @@ if ($auth_method != 0) {
 	 * if that is the case, then use that valid accounts permissions and not
 	 * the guest account.
 	 */
+	/* every anonymous visitor shares the guest account, so the guest may not open its profile */
+	if (isset($guest_account) && get_current_page() == 'auth_profile.php' && (empty($_SESSION['sess_user_id']) || $_SESSION['sess_user_id'] == get_guest_account())) {
+		unset($guest_account);
+	}
+
 	if (isset($guest_account)) {
 		$guest_user_id = get_guest_account();
 
