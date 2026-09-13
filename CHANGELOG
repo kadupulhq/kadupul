@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.x
+-issue: Send device data query and graph template removal and tree node deletion by POST, which the CSRF guard now requires
 -security: Validate Data Source item names and bounds arriving from Template XML imports
 -security: Bind the reverse-DNS hostname in the automation duplicate-device check
 -security: Refuse data source paths that escape the RRA directory when Boost creates RRD files
