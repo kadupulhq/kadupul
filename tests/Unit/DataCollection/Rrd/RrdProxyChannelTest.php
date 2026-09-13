@@ -20,7 +20,7 @@
  * each client packet arrived encrypted.
  */
 
-$rrdProxyRoot = dirname(__DIR__, 3);
+$rrdProxyRoot = dirname(__DIR__, 4);
 
 function rrd_proxy_channel_run(string $root) : array {
 	require_once $root . '/include/vendor/autoload.php';
