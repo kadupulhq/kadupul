@@ -352,7 +352,7 @@ function reports_form_save() {
 			}
 		}
 
-		header('Location: ' . get_reports_page() . '?action=edit&header=false&id=' . (empty($id) ? get_nfilter_request_var('id') : $id));
+		header('Location: ' . get_reports_page() . '?action=edit&header=false&id=' . (int) (empty($id) ? get_nfilter_request_var('id') : $id));
 
 		exit;
 	} elseif (isset_request_var('save_component_report_item')) {
@@ -404,7 +404,7 @@ function reports_form_save() {
 			}
 		}
 
-		header('Location: ' . get_reports_page() . '?action=item_edit&id=' . get_nfilter_request_var('report_id') . '&item_id=' . (empty($item_id) ? get_nfilter_request_var('id') : $item_id));
+		header('Location: ' . get_reports_page() . '?action=item_edit&id=' . (int) get_nfilter_request_var('report_id') . '&item_id=' . (int) (empty($item_id) ? get_nfilter_request_var('id') : $item_id));
 	} else {
 		header('Location: ' . get_reports_page() . '?header=false');
 	}
