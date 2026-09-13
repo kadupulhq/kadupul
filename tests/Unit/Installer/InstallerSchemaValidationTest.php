@@ -14,8 +14,8 @@ if ($installerSource === false || $cliSource === false) {
 	throw new RuntimeException('Unable to read installer sources');
 }
 
-test('installer validates the complete core schema before reporting success', function () use ($installerSource) {
-	$validation = strpos($installerSource, '$failure = $this->validateCoreSchema();');
+test('installer reports missing core tables without failing the upgrade', function () use ($installerSource) {
+	$validation = strpos($installerSource, '$schema_warning = $this->validateCoreSchema();');
 	$version    = strpos($installerSource, "db_execute('TRUNCATE TABLE version');");
 	$complete   = strpos($installerSource, '$this->setStep(Installer::STEP_COMPLETE);');
 
@@ -29,8 +29,9 @@ test('installer validates the complete core schema before reporting success', fu
 
 	expect($validation)->toBeLessThan($version)
 		->and($validation)->toBeLessThan($complete)
-		->and($installerSource)->toContain('ERROR: Required core database tables are missing: %s')
-		->and($installerSource)->toContain('ERROR: Unable to query the installed database schema');
+		->and($installerSource)->not->toContain('$failure = $this->validateCoreSchema();')
+		->and($installerSource)->toContain('WARNING: Core database tables are missing: %s')
+		->and($installerSource)->toContain('WARNING: Unable to query the installed database schema');
 });
 
 test('background and CLI installation paths preserve failure state', function () use ($installerSource, $cliSource) {
