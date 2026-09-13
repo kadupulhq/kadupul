@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -42,6 +43,7 @@ $loadopt    = false;
 $report     = false;
 $repair     = false;
 $altersopt  = false;
+$missingopt = false;
 
 if (cacti_sizeof($parms)) {
 	$shortopts = 'VvHh';
@@ -53,6 +55,7 @@ if (cacti_sizeof($parms)) {
 		'upgrade',
 		'repair',
 		'alters',
+		'missing-tables',
 		'version',
 		'help'
 	);
@@ -79,6 +82,10 @@ if (cacti_sizeof($parms)) {
 			break;
 		case 'alters':
 			$altersopt = true;
+
+			break;
+		case 'missing-tables':
+			$missingopt = true;
 
 			break;
 		case 'upgrade':
@@ -470,16 +477,16 @@ function repair_database($run = true) {
 	if ($bad == 0 && $good == 0) {
 		print ($altersopt ? '-- ' : '') . 'Repair Completed!  No changes performed.' . PHP_EOL;
 	} elseif ($bad) {
-		print 'Repair Completed!  ' . $good . ' operations succeeded and ' . $bad . ' failed!' . PHP_EOL;
+		print 'Repair Completed!  ' . $good . ' Alters succeeded and ' . $bad . ' failed!' . PHP_EOL;
 	} else {
-		print 'Repair Completed!  All ' . $good . ' operations succeeded!' . PHP_EOL;
+		print 'Repair Completed!  All ' . $good . ' Alters succeeded!' . PHP_EOL;
 	}
 
 	return $bad === 0;
 }
 
 function report_audit_results($output = true) {
-	global $config, $database_default, $altersopt;
+	global $config, $database_default, $altersopt, $missingopt;
 
 	$db_name = 'Tables_in_' . $database_default;
 
@@ -494,19 +501,25 @@ function report_audit_results($output = true) {
 	}
 
 	$alters  = array();
-	$actual_tables = array_column($tables, $db_name);
-	$expected_tables = db_fetch_assoc('SELECT DISTINCT table_name
-		FROM table_columns
-		ORDER BY table_name');
+	$missing_tables = array();
 
-	if (!is_array($expected_tables)) {
-		print 'FATAL: Unable to query the canonical Cacti audit schema' . PHP_EOL;
+	/* 1.2.31 audited only the tables present; listing and creating absent core
+	 * tables is opt-in */
+	if ($missingopt) {
+		$actual_tables = array_column($tables, $db_name);
+		$expected_tables = db_fetch_assoc('SELECT DISTINCT table_name
+			FROM table_columns
+			ORDER BY table_name');
 
-		return false;
+		if (!is_array($expected_tables)) {
+			print 'FATAL: Unable to query the canonical Cacti audit schema' . PHP_EOL;
+
+			return false;
+		}
+
+		$expected_tables = array_column($expected_tables, 'table_name');
+		$missing_tables  = audit_missing_core_tables($expected_tables, $actual_tables);
 	}
-
-	$expected_tables = array_column($expected_tables, 'table_name');
-	$missing_tables  = audit_missing_core_tables($expected_tables, $actual_tables);
 
 	if (cacti_sizeof($missing_tables)) {
 		$schema_sql = file_get_contents($config['base_path'] . '/cacti.sql');
@@ -1265,7 +1278,8 @@ function display_help() {
 	print 'Options:' . PHP_EOL;
 	print '    --report  - Report on any issues found in the audit of the database' . PHP_EOL;
 	print '    --repair  - Repair any issues found during the audit of the database' . PHP_EOL;
-	print '    --upgrade - Upgrade the Cacti database before running' . PHP_EOL . PHP_EOL;
+	print '    --upgrade - Upgrade the Cacti database before running' . PHP_EOL;
+	print '    --missing-tables - Also report missing core tables, and create them with --repair' . PHP_EOL . PHP_EOL;
 	print 'Developer Options:' . PHP_EOL;
 	print '    --create  - Initialize or Re-initialize the Audit Schema tables.' . PHP_EOL;
 	print '    --load    - Take a pristine Cacti install and create Audit Schema and file.' . PHP_EOL;
