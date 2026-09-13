@@ -147,6 +147,16 @@ $disable_log_rotation = false;
 //$path_csrf_secret = '/usr/share/cacti/resource/csrf-secret.php';
 
 /**
+ * Optional host names, besides the web server's own name, that the forced
+ * HTTPS redirect may send a browser to. Without an entry, a Host header that
+ * differs from the server name is replaced by the server name, unless the
+ * server name is empty, "_" or a wildcard. List the external name here when
+ * Cacti is reached through a name other than its internal ServerName.
+ */
+
+//$trusted_hosts = array('cacti.example.com');
+
+/**
  * The following are optional variables for debugging low level system
  * functions that are generally only used by Cacti Developers to help
  * identify potential issues in commonly used functions

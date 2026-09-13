@@ -198,6 +198,10 @@ if (!empty($path_csrf_secret)) {
 	$config['path_csrf_secret'] = $path_csrf_secret;
 }
 
+if (isset($trusted_hosts) && is_array($trusted_hosts)) {
+	$config['trusted_hosts'] = $trusted_hosts;
+}
+
 /* built-in snmp support */
 if ((isset($php_snmp_support) && $php_snmp_support == false) || !function_exists('snmpget')) {
 	$config['php_snmp_support'] = false;
@@ -424,7 +428,9 @@ if ($config['is_web']) {
 			$location = cacti_build_https_redirect_url(
 				$_SERVER['SERVER_NAME'] ?? '',
 				$_SERVER['REQUEST_URI'] ?? '',
-				$config['url_path']
+				$config['url_path'],
+				$_SERVER['HTTP_HOST'] ?? '',
+				$config['trusted_hosts'] ?? array()
 			);
 
 			if ($location === '') {
@@ -432,6 +438,9 @@ if ($config['is_web']) {
 				exit;
 			}
 
+			/* The target follows the Host header, so a shared cache must not replay it. */
+			header('Cache-Control: no-store');
+			header('Vary: Host');
 			header('Location: ' . $location);
 			exit;
 		}
