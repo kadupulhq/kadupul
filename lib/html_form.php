@@ -1552,6 +1552,8 @@ function form_end($ajax = true) {
 							loadPageNoHeader(href, scroll_or_id, true);
 						} else if (type == 'toptab') {
 							loadTopTab(href, scroll_or_id, true);
+						} else if (type == 'post') {
+							loadPage(href, true, true);
 						} else {
 							loadPage(href, true);
 						}

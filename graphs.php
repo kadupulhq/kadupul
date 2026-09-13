@@ -1435,7 +1435,7 @@ function item() {
 	?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 	$(function() {
-		$('.deleteMarker, .moveArrow').on('click', function(event) {
+		$('.deleteMarker, .moveArrow').not('.cactiPostAction').on('click', function(event) {
 			event.preventDefault();
 			loadPageNoHeader($(this).attr('href'));
 		});

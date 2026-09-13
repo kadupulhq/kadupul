@@ -28,6 +28,7 @@ Cacti CHANGELOG
 -security: Check graph permission and the real-time enabled setting before real-time init polls a graph or real-time view returns its cached image
 -security: Quote each real-time poller argument separately when the graph page starts the poller
 -security: Quote graph, export, fetch, RRDcheck and RRD file path arguments, including user font settings, the way the RRDtool command parser reads them
+-issue: Load move, delete and confirm links in the page again, keeping their POST token
 -issue: Declare GPL-2.0-or-later in composer.json, the license the source headers grant
 -security: Pass over a disabled configured administrator when moving off the retired no-authentication method
 -security: Skip the unknown-username password hash for blank passwords, as a known username does
