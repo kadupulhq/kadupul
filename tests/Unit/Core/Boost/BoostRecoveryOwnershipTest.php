@@ -23,8 +23,9 @@ $root = dirname(__DIR__, 4);
 
 function boostRecoveryOwnership_db_fetch_assoc_prepared($sql, $params = array(), $log = true, $conn = false) {
 	$state =& $GLOBALS['boost_recovery_ownership'];
+	$state['lookups']++;
 
-	if ($state['query_fails']) {
+	if (in_array($state['lookups'], $state['failed_lookups'], true)) {
 		return false;
 	}
 
@@ -37,24 +38,6 @@ function boostRecoveryOwnership_db_fetch_assoc_prepared($sql, $params = array(),
 	}
 
 	return $rows;
-}
-
-/* the whole-batch check: false when the lookup fails or any row is not assigned */
-function boostRecoveryOwnership_boost_validate_poller_ownership($results, $poller_id, $conn = false) {
-	$state =& $GLOBALS['boost_recovery_ownership'];
-	$state['batch_checks']++;
-
-	if ($state['query_fails']) {
-		return false;
-	}
-
-	foreach ($results as $row) {
-		if (!in_array((int) $row['local_data_id'], $state['assigned'], true)) {
-			return false;
-		}
-	}
-
-	return true;
 }
 
 function boostRecoveryOwnership_boost_flush_output_batch($value_tuples, $conn = false) {
@@ -142,12 +125,12 @@ beforeEach(function () use ($root) {
 	boostRecoveryOwnershipLoad($root);
 
 	$GLOBALS['boost_recovery_ownership'] = array(
-		'assigned'     => array(5),
-		'query_fails'  => false,
-		'batch_checks' => 0,
-		'forwarded'    => array(),
-		'deleted'      => array(),
-		'logs'         => array(),
+		'assigned'       => array(5),
+		'failed_lookups' => array(),
+		'lookups'        => 0,
+		'forwarded'      => array(),
+		'deleted'        => array(),
+		'logs'           => array(),
 	);
 });
 
@@ -169,16 +152,28 @@ test('rows for assigned data sources are all forwarded', function () {
 
 	expect($result['transfer_failed'])->toBeFalse()
 		->and($result['records_inserted'])->toBe(3)
-		->and($GLOBALS['boost_recovery_ownership']['batch_checks'])->toBe(1)
+		->and($GLOBALS['boost_recovery_ownership']['lookups'])->toBe(1)
 		->and($GLOBALS['boost_recovery_ownership']['forwarded'])->toHaveCount(3);
 });
 
 test('an ownership lookup that fails keeps every row and fails the transfer', function () {
-	$GLOBALS['boost_recovery_ownership']['query_fails'] = true;
+	$GLOBALS['boost_recovery_ownership']['failed_lookups'] = array(1, 2, 3);
 
 	$result = boostRecoveryOwnershipBatch(boostRecoveryOwnershipRows(), 3);
 
 	expect($result['transfer_failed'])->toBeTrue()
+		->and($GLOBALS['boost_recovery_ownership']['forwarded'])->toBe(array())
+		->and($GLOBALS['boost_recovery_ownership']['deleted'])->toBe(array());
+});
+
+test('a lookup that fails once and would succeed on retry still keeps every row', function () {
+	$GLOBALS['boost_recovery_ownership']['assigned']       = array(5, 9);
+	$GLOBALS['boost_recovery_ownership']['failed_lookups'] = array(1);
+
+	$result = boostRecoveryOwnershipBatch(boostRecoveryOwnershipRows(), 3);
+
+	expect($result['transfer_failed'])->toBeTrue()
+		->and($result['records_inserted'])->toBe(0)
 		->and($GLOBALS['boost_recovery_ownership']['forwarded'])->toBe(array())
 		->and($GLOBALS['boost_recovery_ownership']['deleted'])->toBe(array());
 });

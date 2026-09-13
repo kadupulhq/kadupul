@@ -65,7 +65,9 @@ test('Remote hand-offs validate poller ownership before staging', function () {
 	expect($boost)->toContain('function boost_validate_poller_ownership($results, $poller_id, $conn = false)');
 	expect($boost)->toContain('WHERE poller_id = ?');
 	expect($boost)->toContain("\$config['poller_id'] > 1 && !boost_validate_poller_ownership");
-	expect($recovery)->toContain('!boost_validate_poller_ownership($rows, $poller_id, $remote_db_cnn_id)');
+	expect($recovery)->toContain('$owned = recovery_owned_data_source_ids($rows, $poller_id, $remote_db_cnn_id);');
+	expect($recovery)->toContain('if ($owned === false) {');
+	expect($recovery)->toContain('WHERE poller_id = ?');
 });
 
 test('Archive discovery validates every dynamic table identifier', function () {

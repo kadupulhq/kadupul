@@ -265,16 +265,13 @@ if ($run) {
 				array($max_time), true, $local_db_cnn_id);
 
 			if (cacti_sizeof($rows)) {
-				$owned = true;
+				/* one lookup, so a failed query is seen before any row is filtered */
+				$owned = recovery_owned_data_source_ids($rows, $poller_id, $remote_db_cnn_id);
 
-				if (!boost_validate_poller_ownership($rows, $poller_id, $remote_db_cnn_id)) {
-					$owned = recovery_owned_data_source_ids($rows, $poller_id, $remote_db_cnn_id);
-
-					if ($owned === false) {
-						cacti_log('RECOVERY ERROR: Retaining local rows because their data-source ownership could not be verified.', false, 'POLLER');
-						$transfer_failed = true;
-						break;
-					}
+				if ($owned === false) {
+					cacti_log('RECOVERY ERROR: Retaining local rows because their data-source ownership could not be verified.', false, 'POLLER');
+					$transfer_failed = true;
+					break;
 				}
 
 				$sql_array = array();
@@ -282,7 +279,7 @@ if ($run) {
 
 				foreach($rows as $r) {
 					/* a device moved or deleted while offline; main does not take its rows */
-					if ($owned !== true && !isset($owned[(int) $r['local_data_id']])) {
+					if (!isset($owned[(int) $r['local_data_id']])) {
 						$unowned++;
 						continue;
 					}
