@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -78,14 +79,16 @@ function security_log_input_validation_failure($variable) {
 
 function die_html_input_error($variable = '', $value = '', $message = '') {
 	global $config;
-	$event_id = security_log_input_validation_failure($variable);
+	/* The SECURITY line carries the correlation id; the backtrace line below keeps
+	 * its 1.2.31 text because log parsers match it. */
+	security_log_input_validation_failure($variable);
 
 	if ($message == '') {
 		$message = __esc('Validation error for variable %s with a value of %s.  See backtrace below for more details.', $variable, html_escape($value));
 	}
 
 	if (isset_request_var('json')) {
-		cacti_debug_backtrace('Validation Error, Event: ' . $event_id . ($variable != '' ? ', Variable:' . html_escape($variable):'') . ($value != '' ? ', Value:' . html_escape($value):'') . ', Source: ' . get_client_addr() . ', Request: ' . json_encode($_REQUEST), false);
+		cacti_debug_backtrace('Validation Error' . ($variable != '' ? ', Variable:' . html_escape($variable):'') . ($value != '' ? ', Value:' . html_escape($value):'') . ', Source: ' . get_client_addr() . ', Request: ' . json_encode($_REQUEST), false);
 		print json_encode(
 			array(
 				'status' => '500',
@@ -94,7 +97,7 @@ function die_html_input_error($variable = '', $value = '', $message = '') {
 			)
 		);
 	} else {
-		cacti_debug_backtrace('Validation Error, Event: ' . $event_id . ($variable != '' ? ', Variable:' . html_escape($variable):'') . ($value != '' ? ', Value:' . html_escape($value):'') . ', Source: ' . get_client_addr() . ', Request: ' . json_encode($_REQUEST), true);
+		cacti_debug_backtrace('Validation Error' . ($variable != '' ? ', Variable:' . html_escape($variable):'') . ($value != '' ? ', Value:' . html_escape($value):'') . ', Source: ' . get_client_addr() . ', Request: ' . json_encode($_REQUEST), true);
 
 		print "<table style='width:100%;text-align:center;'><tr><td>$message</td></tr></table>";
 		bottom_footer();
