@@ -4,10 +4,12 @@
 # version 0.9a
 # November 11, 2010
 #
-# Copyright (C) 2006-2010, Eric A. Hall
-# http://www.eric-a-hall.com/
+# SPDX-FileCopyrightText: 2006-2010 Eric A. Hall
+# SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-2.0-or-later
 #
-# This software is licensed under the same terms as Kadupul itself
+# http://www.eric-a-hall.com/
 # ------------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------------
