@@ -12,9 +12,10 @@
 
 /*
  * cacti_process_still_running() decides whether register_process_start() may
- * replace a registered task. A cactid poller running as www-data finds the
- * row of a task root started, posix_kill($pid, 0) fails with EPERM, and the
- * task was reported as exited: its row was replaced and a second copy ran.
+ * replace a registered task. When a cactid poller running as www-data finds
+ * the row of a task that was started by root, posix_kill($pid, 0) fails with
+ * EPERM. The task was reported as exited, its row was replaced, and a second
+ * copy ran.
  *
  * The kernel only returns EPERM across users, so each scenario runs in a child
  * PHP with posix_kill() and posix_get_last_error() disabled and redefined.
