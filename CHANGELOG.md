@@ -15,6 +15,8 @@ Targeting `v1.3.0`, the first planned application release. See
   its standalone Playwright configuration.
 - Install end-to-end test dependencies without npm lifecycle scripts, and
   download supercronic in the container image over HTTPS only.
+- Open the project website, Discussions and Issues links from the midwinter
+  theme and the installer with `noopener`.
 
 ### Added
 
