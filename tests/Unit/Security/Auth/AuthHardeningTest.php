@@ -9,7 +9,7 @@
 
 /*
  * Regression tests for three 1.2.x auth-hardening fixes found in review:
- *  - a disabled guest account must not keep granting anonymous access
+ *  - a disabled guest account keeps granting anonymous access, as in 1.2.31
  *  - the get_allowed_* permission where-clauses must not interpolate a raw id
  *  - the Secure session cookie must be set behind a trusted TLS proxy
  */
@@ -18,11 +18,12 @@ $functions = file_get_contents(dirname(__DIR__, 4) . '/lib/functions.php');
 $auth      = file_get_contents(dirname(__DIR__, 4) . '/lib/auth.php');
 $global    = file_get_contents(dirname(__DIR__, 4) . '/include/global.php');
 
-test('get_guest_account requires the guest user to be enabled', function () use ($functions) {
+test('get_guest_account selects the guest user whether or not it is enabled', function () use ($functions) {
 	$start = strpos($functions, 'function get_guest_account(');
 	expect($start)->not->toBeFalse();
-	$body = substr($functions, $start, 400);
-	expect($body)->toContain("enabled = 'on'");
+	$body = substr($functions, $start, strpos($functions, "\n}", $start) - $start);
+	expect($body)->toContain('WHERE username = ? OR id = ?')
+		->and($body)->not->toContain('enabled');
 });
 
 test('permission where-clauses cast the id to int rather than interpolating it raw', function () use ($auth) {

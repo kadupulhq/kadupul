@@ -102,7 +102,12 @@ if ($auth_method != 0) {
 			if (cacti_sizeof($current_user)) {
 				/* GHSA-273r-qr93-wgcp: regenerate session id on auth transition */
 				if (!cacti_auth_transition((int)$current_user['id'], 'basic_auth')) {
-					return false;
+					cacti_log("LOGIN FAILED: User '" . $current_user['username'] . "' authenticated via Basic Authentication, but the account is disabled or locked", false, 'AUTH');
+
+					/* returning from here would let the including page run without a session */
+					auth_display_custom_error_message(__('Access Denied!  Login Failed.'));
+
+					exit;
 				}
 
 				$_SESSION['sess_user_id'] = $current_user['id'];;

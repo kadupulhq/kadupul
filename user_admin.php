@@ -616,6 +616,12 @@ function form_save() {
 			$user_id = sql_save($save, 'user_auth');
 
 			if ($user_id) {
+				/* revoke tokens and sessions the same way the bulk Disable action does;
+				 * template accounts are always saved disabled, so saving one must not log out guests */
+				if ($save['enabled'] != 'on' && !is_template_account($user_id)) {
+					user_disable($user_id);
+				}
+
 				raise_message(1);
 			} else {
 				raise_message(2);

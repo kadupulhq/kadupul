@@ -165,16 +165,18 @@ function check_auth_cookie() {
 
 		if ($user_id > 0 && $user_id != get_guest_account()) {
 			if ($realm_id == -1) {
-				$user_info = db_fetch_row_prepared('SELECT id, realm, username
+				$user_info = db_fetch_row_prepared("SELECT id, realm, username
 					FROM user_auth
 					WHERE id = ?
-					AND realm = 0',
+					AND realm = 0
+					AND enabled = 'on'",
 					array($user_id));
 			} else {
-				$user_info = db_fetch_row_prepared('SELECT id, realm, username
+				$user_info = db_fetch_row_prepared("SELECT id, realm, username
 					FROM user_auth
 					WHERE id = ?
-					AND realm = ?',
+					AND realm = ?
+					AND enabled = 'on'",
 					array($user_id, $realm_id));
 			}
 
@@ -276,18 +278,13 @@ function get_basic_auth_username() {
 		return false;
 	}
 
-	if (isset($_SERVER['PHP_AUTH_USER'])) {
-		$username = str_replace("\\", "\\\\", $_SERVER['PHP_AUTH_USER']);
-	} elseif (isset($_SERVER['REMOTE_USER'])) {
+	/* HTTP_* entries are request headers, and PHP fills PHP_AUTH_USER from the
+	 * client's Authorization header whether or not the web server checked it.
+	 * Only REMOTE_USER is set by the server once it has authenticated the user. */
+	if (isset($_SERVER['REMOTE_USER'])) {
 		$username = str_replace("\\", "\\\\", $_SERVER['REMOTE_USER']);
 	} elseif (isset($_SERVER['REDIRECT_REMOTE_USER'])) {
 		$username = str_replace("\\", "\\\\", $_SERVER['REDIRECT_REMOTE_USER']);
-	} elseif (isset($_SERVER['HTTP_PHP_AUTH_USER'])) {
-		$username = str_replace("\\", "\\\\", $_SERVER['HTTP_PHP_AUTH_USER']);
-	} elseif (isset($_SERVER['HTTP_REMOTE_USER'])) {
-		$username = str_replace("\\", "\\\\", $_SERVER['HTTP_REMOTE_USER']);
-	} elseif (isset($_SERVER['HTTP_REDIRECT_REMOTE_USER'])) {
-		$username = str_replace("\\", "\\\\", $_SERVER['HTTP_REDIRECT_REMOTE_USER']);
 	} else {
 		$username = false;
 	}
@@ -3765,6 +3762,9 @@ function local_auth_login_process($username) {
 						array($password, $username));
 				}
 			}
+		} else {
+			/* a known account verifies here a second time; keep unknown usernames level */
+			compat_password_verify((string) get_nfilter_request_var('login_password'), '$2y$10$VWBpVwPd5enH/FIf0bNNxO0d12/V8EZag/sNP.SQqsyYWyOFXvaV.');
 		}
 	}
 
@@ -4310,6 +4310,11 @@ function secpass_login_process($username) {
 			return array();
 		}
 	} else {
+		/* Verify against a fixed bcrypt hash tied to no account so an unknown
+		 * username costs as much as a known one and response time does not
+		 * reveal which usernames exist.  The result is discarded. */
+		compat_password_verify((string) $password, '$2y$10$VWBpVwPd5enH/FIf0bNNxO0d12/V8EZag/sNP.SQqsyYWyOFXvaV.');
+
 		/* error */
 		$error     = true;
 		$error_msg = __('Access Denied!  Login Failed.');
@@ -4942,13 +4947,13 @@ function auth_login_create_user_from_template($username, $realm) {
  *
  * @param  (int)  $auth_method - The current auth method
  *
- * @return (bool) Returns false on failure to set user account, otherwise redirects
+ * @return (void) Redirects to the login flow when authentication was not set
  */
 function check_reset_no_authentication($auth_method) {
 	global $config, $error, $error_msg;
 
 	if ($auth_method == 0) {
-		$admin_id = db_execute_prepared('SELECT id
+		$admin_id = db_fetch_cell_prepared('SELECT id
 			FROM user_auth
 			WHERE id = ?',
 			array(read_config_option('admin_user')));
@@ -5003,24 +5008,24 @@ function check_reset_no_authentication($auth_method) {
 			$error     = true;
 			$error_msg = __('Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found.');
 
-			return false;
+			cacti_log('ERROR: ' . $error_msg, false, 'AUTH');
+		} else {
+			/* keep the stored password so the administrator can still sign in,
+			 * and require a new one at that login */
+			db_execute_prepared("UPDATE user_auth SET
+				must_change_password = 'on',
+				password_change = 'on'
+				WHERE id = ?",
+				array($admin_id));
 		}
 
-		// Authentication method is currently set to none
-		// lets switch this to basic and allow setting of
-		// a password.
-		db_execute_prepared("UPDATE user_auth SET
-			password = '',
-			must_change_password = 'on',
-			password_change = 'on'
-			WHERE id = ?",
-			array($admin_id));
-
+		/* Nothing about this request identifies the administrator, so switch to
+		 * local authentication without starting a session.  Staying on no
+		 * authentication would leave every page open.  Without a session,
+		 * auth_changepassword.php sends the browser on to the login page. */
 		$auth_method = 1;
 		set_config_option('auth_method', $auth_method, true);
 
-		$_SESSION['sess_user_id'] = $admin_id;
-		$_SESSION['sess_change_password'] = true;
 		header ('Location: ' . $config['url_path'] . 'auth_changepassword.php?action=force&ref=' . urlencode(validate_redirect_url(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'index.php')));
 		exit;
 	}
@@ -5042,13 +5047,22 @@ function check_reset_no_authentication($auth_method) {
  * @return bool True if the transition succeeded, false if the user is locked out
  */
 function cacti_auth_transition($user_id, $reason = 'login') {
-	/* check lockout status before allowing transition */
-	$locked = db_fetch_cell_prepared('SELECT locked
+	/* check account status before allowing transition */
+	$user = db_fetch_row_prepared('SELECT enabled, locked
 		FROM user_auth
 		WHERE id = ?',
 		array($user_id));
 
-	if ($locked == 'on') {
+	/* the guest account is saved disabled by design; only the login guest fallback may use it */
+	$guest_login = ($reason == 'login' && cacti_sizeof($user) && $user_id == get_guest_account());
+
+	if (!cacti_sizeof($user) || ($user['enabled'] != 'on' && !$guest_login)) {
+		cacti_log('SECURITY: auth transition blocked for disabled user: ' . $user_id . ' reason: ' . $reason, false, 'AUTH');
+
+		return false;
+	}
+
+	if ($user['locked'] == 'on') {
 		cacti_log('SECURITY: auth transition blocked for locked user: ' . $user_id . ' reason: ' . $reason, false, 'AUTH');
 
 		return false;

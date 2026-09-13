@@ -1,6 +1,10 @@
 Cacti CHANGELOG
 
 1.2.x
+-security: Match local login password hashing work for unknown usernames
+-security: Require a normal login after moving off the retired no-authentication method
+-security: Take the Web Basic user name only from server-set variables
+-security: Refuse remember-me and Web Basic logins for disabled accounts
 -issue: Send device data query and graph template removal and tree node deletion by POST, which the CSRF guard now requires
 -security: Validate Data Source item names and bounds arriving from Template XML imports
 -security: Bind the reverse-DNS hostname in the automation duplicate-device check
@@ -32,7 +36,6 @@ Cacti CHANGELOG
 -security: Harden CLI shell arguments, database credentials, and temporary RRD files
 -security#7027: Detect reused process IDs before treating registry tasks as live
 -security: Update bundled DOMPurify to 3.4.14
--security: Revoke anonymous access when the guest account is disabled
 -security: Cast graph and device ids to int in get_allowed_* permission filters
 -security: Set the Secure session cookie behind a trusted TLS-terminating proxy
 -security: Escape path_dsstats_log before logging
