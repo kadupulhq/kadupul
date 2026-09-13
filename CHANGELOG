@@ -7,6 +7,7 @@ Cacti CHANGELOG
 -security: Check graph permissions for Remote Data Collector graph images, as graph_json.php already does
 -security: Escape markup in data query debug output returned by a Remote Data Collector
 -security: Add optional $trusted_proxies so proxy client address and HTTPS headers are honoured only from listed proxies
+-security: Show one generic message for failed LDAP logins and keep the directory error in the log
 -security: Apply the page realm check to the first request of a Web Basic session, as later requests already do
 -security: Cache graph, graph template and tree permission checks per user so one report owner's access does not apply to another, and recompute them after that user's permissions are reset
 -security: Send a remember-me login with a pending password change to the change password page, as a password login does
