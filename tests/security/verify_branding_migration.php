@@ -44,6 +44,9 @@ function log_install_high($key, $message) {
 function log_install_debug($section, $text, $background = false) {
 }
 
+function log_install_medium($key, $message) {
+}
+
 function clean_up_lines($string) {
 	return $string;
 }
@@ -133,6 +136,7 @@ $throwing_installer = new class extends Installer {
 
 Installer::beginInstall('-b', $throwing_installer);
 check_branding_migration($throwing_installer->getStep() === Installer::STEP_ERROR, 'CLI installer kept its pre-install step after an exception');
+check_branding_migration(cacti_sizeof($throwing_installer->getErrors()) > 0, 'CLI installer recorded no error, so install_cacti.php would exit 0');
 check_branding_migration((int) read_config_option('install_step', true) === Installer::STEP_ERROR, 'Web install state missed the error step after an exception');
 
 $root = dirname(__DIR__, 2);
