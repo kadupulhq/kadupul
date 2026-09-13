@@ -103,6 +103,12 @@ test('without redirect Boost stages the rows and skips the direct update', funct
 		->and($GLOBALS['boost_redirect_test']['staged'])->toBe(1);
 });
 
+test('a redirect value other than on stages the rows as the collectors expect', function () {
+	/* cmd.php and spine write poller_output_boost only when boost_redirect is exactly on */
+	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'yes')))->toBeFalse()
+		->and($GLOBALS['boost_redirect_test']['staged'])->toBe(1);
+});
+
 test('with Boost off the poller still updates the RRD files directly', function () {
 	expect(boostRedirectRun(array('boost_rrd_update_enable' => '', 'boost_redirect' => 'on')))->toBeTrue()
 		->and($GLOBALS['boost_redirect_test']['staged'])->toBe(0);
