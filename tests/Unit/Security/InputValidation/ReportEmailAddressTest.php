@@ -385,6 +385,7 @@ dataset('From addresses a user without Reports Administration may use', array(
 	'their own named address and trailing spaces' => array('Me <me@example.com>   '),
 	'the site From address with a quoted name'    => array('"Cacti Reports" <cacti@example.com>'),
 	'a second < after their own address'          => array('Me <me@example.com<ceo@example.com>'),
+	'their own address and a trailing comma'      => array('me@example.com,'),
 ));
 
 dataset('From addresses only Reports Administration may use', array(
@@ -395,6 +396,8 @@ dataset('From addresses only Reports Administration may use', array(
 	'a space and text after the brackets'    => array('Me <me@example.com> .attacker.example'),
 	'their own address after a second <'     => array('Me <ceo@example.com<me@example.com>'),
 	'their own address in a quoted name'     => array('"Me <me@example.com>" <ceo@example.com>'),
+	'only a comma'                           => array(','),
+	'only commas and spaces'                 => array(' , ,'),
 ));
 
 test('a user without Reports Administration saves and duplicates a From they may use', function ($from) use ($root) {
@@ -603,3 +606,12 @@ test('a From a user without Reports Administration may save is sent from their o
 	expect($sent['sent'])->toBeTrue();
 	expect(array('me@example.com', 'cacti@example.com'))->toContain(mb_strtolower($sent['email']));
 })->with('From addresses a user without Reports Administration may use');
+
+test('Send Now takes a From of only commas as set, not as the blank From', function () use ($root) {
+	load_send($root);
+
+	send_now(',', '');
+
+	expect($GLOBALS['ra_sent'])->toBe(array());
+	expect($GLOBALS['ra_messages'])->toBe(array('report_message'));
+});

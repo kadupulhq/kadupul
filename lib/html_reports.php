@@ -1918,6 +1918,11 @@ function reports_from_allowed($from_email) {
 		mb_strtolower(trim((string) db_fetch_cell_prepared('SELECT email_address FROM user_auth WHERE id = ?', array($_SESSION['sess_user_id']))))
 	);
 
+	/* reports_send() takes a From of only commas as set, not as the blank From */
+	if (trim($from_email) != '' && trim($from_email, ", \t\r\n\0\x0B") == '') {
+		return false;
+	}
+
 	foreach (explode(',', $from_email) as $entry) {
 		$entry = trim($entry);
 
