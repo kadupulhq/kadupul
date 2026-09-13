@@ -684,7 +684,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 
 	$data_source_path = get_data_source_path($local_data_id, true);
 
-	if (!cacti_rrdtool_valid_path($data_source_path)) {
+	if (!cacti_rrdtool_valid_path($data_source_path) || !rrd_check_path($data_source_path)) {
 		cacti_log("ERROR: Invalid RRD file path for local_data_id: $local_data_id.", false, 'POLLER');
 
 		return false;
@@ -918,7 +918,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false) {
 	foreach ($update_cache_array as $rrd_path => $rrd_fields) {
 		$create_rrd_file = false;
 
-		if (!cacti_rrdtool_valid_path($rrd_path)) {
+		if (!cacti_rrdtool_valid_path($rrd_path) || !rrd_check_path($rrd_path)) {
 			cacti_log("ERROR: Invalid RRD file path in poller cache for local_data_id: {$rrd_fields['local_data_id']}.", false, 'POLLER');
 
 			continue;

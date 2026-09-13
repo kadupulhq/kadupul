@@ -7,6 +7,7 @@ Cacti CHANGELOG
 -security: Require a POST token to create, rename, move or copy tree nodes
 -issue: Let the 1.2.31 upgrade reach the 1.2.32 repair when the Boost process table is missing
 -issue: Submit a post action link once per click after the page refreshes
+-security: Refuse NUL bytes and .. segments in data source paths when the poller creates or updates RRD files without Boost
 -security: Refuse control characters anywhere in RRD data source minimum and maximum bounds
 -security: Refuse package files outside the script and resource directories or behind a symlink
 -security: Refuse a CSP report counter directory that group or other users can access
