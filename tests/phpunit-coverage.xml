@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
+  SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+<!--
   Coverage run for SonarQube Cloud. phpunit.xml boots include/global.php,
   which needs a database, so this config uses the source-scan bootstrap and
   runs every test file that passes in one process without one.
