@@ -2099,10 +2099,9 @@ function user() {
 			'default' => ''
 		),
 		'group' => array(
-			'filter' => FILTER_CALLBACK,
+			'filter' => FILTER_VALIDATE_INT,
 			'default' => '-1',
-			'pageset' => true,
-			'options' => array('options' => 'sanitize_search_string')
+			'pageset' => true
 		),
 		'sort_column' => array(
 			'filter' => FILTER_CALLBACK,
@@ -2117,6 +2116,12 @@ function user() {
 	);
 
 	validate_store_request_vars($filters, 'sess_usera');
+
+	/* constrain sort_column to the displayed columns so it cannot pivot ORDER BY
+	   onto sensitive user_auth columns such as password or tfa_secret */
+	set_request_var('sort_column', cacti_validate_sort_column(get_request_var('sort_column'),
+		array('username', 'id', 'full_name', 'enabled', 'realm', 'policy_graphs', 'policy_hosts', 'policy_graph_templates', 'dtime'),
+		'username'));
 	/* ================= input validation ================= */
 
 	?>
@@ -2274,8 +2279,10 @@ function user() {
 		}
 	}
 
-	if (get_request_var('group') > 0) {
-		$sql_where .= ($sql_where != '' ? ' AND ':'WHERE ') . ' ug.group_id = ' . get_request_var('group');
+	$group_id = (int) get_request_var('group');
+
+	if ($group_id > 0) {
+		$sql_where .= ($sql_where != '' ? ' AND ':'WHERE ') . ' ug.group_id = ' . $group_id;
 	}
 
 	if (get_request_var('login') > 0) {

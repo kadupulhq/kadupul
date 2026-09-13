@@ -1070,12 +1070,9 @@ function validate_redirect_url($url = '', $default = 'index.php') {
 
 	$srv_host = null;
 
-	/* Prefer SERVER_NAME (set by server config) over HTTP_HOST (client-supplied)
-	   to prevent open redirect via Host header spoofing */
+	/* Use the server-configured name rather than the client-supplied Host header. */
 	if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] != '') {
 		$srv_host = preg_replace('/:\d+$/', '', $_SERVER['SERVER_NAME']);
-	} elseif (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != '') {
-		$srv_host = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST']);
 	}
 
 	if ($ref_host !== null) {
@@ -1112,6 +1109,93 @@ function validate_redirect_url($url = '', $default = 'index.php') {
 }
 
 /**
+ * Builds a forced-HTTPS redirect using a server-configured host name.
+ *
+ * @param string $server_name  The web server's configured name.
+ * @param string $request_uri  The requested local path and query string.
+ * @param string $default_path A local fallback when the request URI is invalid.
+ *
+ * @psalm-taint-escape header
+ *
+ * @return string A safe absolute HTTPS URL, or an empty string for an invalid host.
+ */
+function cacti_build_https_redirect_url(string $server_name, string $request_uri, string $default_path = '/') : string {
+	$server_name = trim($server_name);
+	$host         = trim($server_name, '[]');
+
+	if (filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false) {
+		$host = '[' . $host . ']';
+	} elseif (filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false &&
+		filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)  === false) {
+		return '';
+	}
+
+	$path = validate_redirect_url($request_uri, $default_path);
+	$path = '/' . ltrim($path, '/');
+
+	return 'https://' . $host . $path;
+}
+
+/**
+ * Checks whether a configured cookie domain can domain-match a host.
+ *
+ * A leading dot on the cookie domain is ignored by modern clients. Host names
+ * are compared case-insensitively, while IP addresses must match exactly.
+ *
+ * @param string $cookie_domain The configured Domain attribute.
+ * @param string $host          The web server's configured host name.
+ *
+ * @return bool True when a browser can accept the Domain attribute for the host.
+ */
+function cacti_cookie_domain_matches_host(string $cookie_domain, string $host) : bool {
+	if (preg_match('/[\x00-\x20\x7f]/', $cookie_domain) || preg_match('/[\x00-\x20\x7f]/', $host)) {
+		return false;
+	}
+
+	$cookie_domain = strtolower(trim($cookie_domain));
+	$host          = strtolower(trim($host));
+
+	if ($cookie_domain === '' || $host === '' || substr($cookie_domain, -1) === '.') {
+		return false;
+	}
+
+	$cookie_domain = ltrim($cookie_domain, '.');
+	$host          = rtrim($host, '.');
+
+	if (filter_var($cookie_domain, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false ||
+		filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false) {
+		return false;
+	}
+
+	$domain_is_ip = filter_var($cookie_domain, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false;
+	$host_is_ip   = filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false;
+
+	if ($domain_is_ip || $host_is_ip) {
+		return $domain_is_ip && $host_is_ip && $cookie_domain === $host;
+	}
+
+	if (filter_var($cookie_domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false ||
+		filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false) {
+		return false;
+	}
+
+	if ($host === $cookie_domain) {
+		return true;
+	}
+
+	/* A single-label domain that is not the host itself is a public suffix as
+	 * far as the browser is concerned, so it would be discarded. 'localhost'
+	 * still works because it matches the host exactly above. This does not
+	 * catch multi-label suffixes such as co.uk, which would need the public
+	 * suffix list. */
+	if (strpos($cookie_domain, '.') === false) {
+		return false;
+	}
+
+	return substr($host, -(strlen($cookie_domain) + 1)) === '.' . $cookie_domain;
+}
+
+/**
  * Validates if the given string is a valid regular expression.
  *
  * This function checks if the provided regular expression is valid and safe to use.
@@ -1142,19 +1226,15 @@ function validate_is_regex($regex) {
 
 	restore_error_handler();
 
-	$track_errors = ini_get('track_errors');
-	ini_set('track_errors', 1);
-
-    if (@preg_match("'" . $regex . "'", NULL) !== false) {
-		ini_set('track_errors', $track_errors);
+	if (@preg_match("'" . $regex . "'", '') !== false) {
 		return true;
 	}
 
 	$last_error = error_get_last();
 
-	$php_error = trim(str_replace('preg_match():', '', $last_error['message']));
-
-	ini_set('track_errors', $track_errors);
+	$php_error = isset($last_error['message'])
+		? trim(str_replace('preg_match():', '', $last_error['message']))
+		: __('Invalid regular expression.');
 
 	$errors = array(
 		PREG_INTERNAL_ERROR         => __('There was an internal error!'),

@@ -1138,17 +1138,7 @@ function clear_messages() {
  * kill_session_var - kills a session variable using unset()
  */
 function kill_session_var($var_name) {
-	/* register_global = on: reset local settings cache so the user sees the new settings */
 	unset($_SESSION[$var_name]);
-
-	/* register_global = off: reset local settings cache so the user sees the new settings */
-	/* session_unregister is deprecated in PHP 5.3.0, unset is sufficient */
-
-	if (version_compare(PHP_VERSION, '5.3.0', '<')) {
-		session_unregister($var_name);
-	} else {
-		unset($var_name);
-	}
 }
 
 /**
@@ -3050,9 +3040,10 @@ function get_graph_title($local_graph_id) {
  * @return (int) the guest account if greater than 0
  */
 function get_guest_account() {
-	$user = db_fetch_cell_prepared('SELECT id
+	$user = db_fetch_cell_prepared("SELECT id
 		FROM user_auth
-		WHERE username = ? OR id = ?',
+		WHERE (username = ? OR id = ?)
+		AND enabled = 'on'",
 		array(read_config_option('guest_user'), read_config_option('guest_user')));
 
 	if (empty($user)) {
@@ -7704,8 +7695,7 @@ function cacti_count($array) {
 
 function is_function_enabled($name) {
 	return function_exists($name) &&
-		!in_array($name, array_map('trim', explode(', ', ini_get('disable_functions')))) &&
-		strtolower(ini_get('safe_mode')) != 1;
+		!in_array($name, array_map('trim', explode(',', (string) ini_get('disable_functions'))), true);
 }
 
 function is_page_ajax() {
@@ -7779,13 +7769,12 @@ function cacti_session_start($regenerate = false) {
 function cacti_session_regenerate() {
 	if (session_status() === PHP_SESSION_ACTIVE) {
 		$session_data = $_SESSION;
-	} else {
-		$session_data = array();
+		session_regenerate_id(true);
+
+		return $session_data;
 	}
 
-	session_regenerate_id(true);
-
-	return $session_data;
+	return array();
 }
 
 /**

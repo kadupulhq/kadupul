@@ -262,7 +262,7 @@ function package_file_get_contents($filename) {
 
 		$data = import_read_package_data($xmlfile, $binary_signature);
 
-		if (isset($data['publickey'])) {
+		if (isset($data['publickey']) && package_public_key_is_trusted(base64_decode($data['publickey']))) {
 			$public_key = base64_decode($data['publickey']);
 		} else {
 			$public_key = get_public_key();
@@ -276,10 +276,12 @@ function package_file_get_contents($filename) {
 
 				$fdata = base64_decode($file['data']);
 
-				if (strlen($public_key) < 200) {
+				// Prefer SHA-256, but fall back to SHA-1 so packages signed before the
+				// SHA-256 transition still verify against a trusted public key.
+				$ok = openssl_verify($fdata, $binary_signature, $public_key, OPENSSL_ALGO_SHA256);
+
+				if ($ok != 1) {
 					$ok = openssl_verify($fdata, $binary_signature, $public_key, OPENSSL_ALGO_SHA1);
-				} else {
-					$ok = openssl_verify($fdata, $binary_signature, $public_key, OPENSSL_ALGO_SHA256);
 				}
 
 				if ($ok != 1) {
@@ -372,10 +374,12 @@ function package_get_details() {
 			$data = get_repo_file($package_location, $filename, false);
 
 			if ($data !== false) {
-				$tmp_dir = sys_get_temp_dir() . '/package' . $_SESSION['sess_user_id'];
+				/* use an unpredictable, private per-run directory so a local
+				   co-tenant cannot pre-plant a symlink at a guessable path */
+				$tmp_dir = sys_get_temp_dir() . '/cacti_pkg_' . $_SESSION['sess_user_id'] . '_' . bin2hex(random_bytes(8));
 
 				if (!is_dir($tmp_dir)) {
-					mkdir($tmp_dir);
+					mkdir($tmp_dir, 0700);
 				}
 
 				$xmlfile = $tmp_dir . '/' . $filename;
@@ -404,6 +408,28 @@ function package_get_details() {
 	} else {
 		raise_message_javascript(__('Error in Package'), __('The package download or validation failed'), __('See the cacti.log for more information.  It could be that you had either an API Key error or the package was tamered with, or the location is not available'));
 	}
+}
+
+function package_public_key_is_trusted($public_key) {
+	if ($public_key == '') {
+		return false;
+	}
+
+	if ($public_key == get_public_key()) {
+		return true;
+	}
+
+	$trusted = db_fetch_assoc('SELECT public_key FROM package_public_keys');
+
+	if (cacti_sizeof($trusted)) {
+		foreach ($trusted as $t) {
+			if ($t['public_key'] == $public_key) {
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 function import_validate_public_key($xmlfile, $accept = false) {
@@ -452,7 +478,10 @@ function import_validate_public_key($xmlfile, $accept = false) {
 				$package_publickey = base64_decode($xml['publickey']);
 			}
 
-			if ($package_publickey != '') {
+			// Only trust the key the package ships if the operator has
+			// already trusted it; otherwise verify against the Cacti key, which
+			// a self-signed package cannot forge.
+			if ($package_publickey != '' && package_public_key_is_trusted($package_publickey)) {
 				return $package_publickey;
 			} else {
 				return get_public_key();
