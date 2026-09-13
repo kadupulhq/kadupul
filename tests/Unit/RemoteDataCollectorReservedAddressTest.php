@@ -15,41 +15,42 @@
  * reserved targets before it opens a connection. The function is extracted
  * from lib/functions.php and run with its database and logging helpers
  * stubbed, so no request leaves the test.
+ *
+ * The stubs and the extracted function live in this namespace. Other unit
+ * tests require lib/functions.php, which defines the same global names, and
+ * a shared process would fatal on redeclaration. Unqualified calls inside the
+ * namespace resolve to these stubs first and fall back to PHP built-ins.
  */
 
-if (!function_exists('rdc_test_load')) {
-	function rdc_test_load() {
-		if (function_exists('call_remote_data_collector')) {
-			return;
-		}
+namespace RemoteDataCollectorReservedAddressTest;
 
-		$source = file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php');
-		preg_match('/^function call_remote_data_collector\(.*?^}\n/ms', $source, $match);
-		eval($match[0]);
-	}
+if (!function_exists(__NAMESPACE__ . '\call_remote_data_collector')) {
+	$source = file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php');
+	preg_match('/^function call_remote_data_collector\(.*?^}\n/ms', $source, $match);
 
-	function db_fetch_cell_prepared($sql, $params = array()) {
-		return $GLOBALS['rdc_hostname'];
-	}
-
-	function cacti_log($message, $stdout = false, $facility = 'CACTI', $level = '') {
-		$GLOBALS['rdc_log'][] = $message;
-	}
-
-	function is_ipaddress($address) {
-		return filter_var($address, FILTER_VALIDATE_IP) !== false;
-	}
-
-	function get_default_contextoption($timeout = false) {
-		throw new RuntimeException('connection attempted for a refused address');
-	}
-
-	function get_url_type() {
-		return 'https';
-	}
+	// test-only eval of source read from this repository, not external input
+	eval('namespace ' . __NAMESPACE__ . '; ' . $match[0]);
 }
 
-rdc_test_load();
+function db_fetch_cell_prepared($sql, $params = array()) {
+	return $GLOBALS['rdc_hostname'];
+}
+
+function cacti_log($message, $stdout = false, $facility = 'CACTI', $level = '') {
+	$GLOBALS['rdc_log'][] = $message;
+}
+
+function is_ipaddress($address) {
+	return filter_var($address, FILTER_VALIDATE_IP) !== false;
+}
+
+function get_default_contextoption($timeout = false) {
+	throw new \RuntimeException('connection attempted for a refused address');
+}
+
+function get_url_type() {
+	return 'https';
+}
 
 dataset('reserved addresses', ['127.0.0.1', '169.254.169.254', '0.0.0.0', '::1', 'fe80::1']);
 
@@ -66,5 +67,5 @@ test('lets a private collector address through to the connection step', function
 	$GLOBALS['rdc_log']      = [];
 
 	expect(fn () => call_remote_data_collector(2, '/remote_agent.php?action=ping'))
-		->toThrow(RuntimeException::class, 'connection attempted');
+		->toThrow(\RuntimeException::class, 'connection attempted');
 });
