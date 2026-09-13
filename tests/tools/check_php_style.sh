@@ -16,6 +16,17 @@ fixer=${PHP_CS_FIXER:-php-cs-fixer}
 
 cd "$(git rev-parse --show-toplevel)"
 
+# Same precedence the fixer uses when no --config is given, and the same two
+# names the CI job accepts.
+if [ -f .php-cs-fixer.php ]; then
+	config=.php-cs-fixer.php
+elif [ -f .php-cs-fixer.dist.php ]; then
+	config=.php-cs-fixer.dist.php
+else
+	echo "No .php-cs-fixer.php or .php-cs-fixer.dist.php at the repository root." >&2
+	exit 2
+fi
+
 # Diff from the merge base to the working tree, so a local run also covers
 # uncommitted edits, and add untracked files so a new file is checked before
 # it is staged. In CI the working tree is the commit under test and nothing
@@ -38,5 +49,5 @@ if [ "${#files[@]}" -eq 0 ]; then
 fi
 
 # intersection keeps the config's exclusions in force for the paths given.
-exec "$fixer" check --config=.php-cs-fixer.php --path-mode=intersection \
+exec "$fixer" check --config="$config" --path-mode=intersection \
 	--using-cache=no --diff -- "${files[@]}"
