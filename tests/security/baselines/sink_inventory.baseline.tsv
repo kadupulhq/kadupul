@@ -860,7 +860,7 @@ header_redirect	./include/themes/paw/index.php:7	header("Location:../index.php")
 header_redirect	./include/themes/sunrise/default/index.php:7	header("Location:../index.php");
 header_redirect	./include/themes/sunrise/images/index.php:7	header("Location:../index.php");
 header_redirect	./include/themes/sunrise/index.php:7	header("Location:../index.php");
-header_redirect	./include/vendor/index.php:7	header("Location:../index.php");
+header_redirect	./include/vendor/index.php:25	header("Location:../index.php");
 header_redirect	./install/upgrades/index.php:7	header("Location:../../index.php");
 header_redirect	./lib/auth.php:4293				header('Location: auth_changepassword.php?header=false');
 header_redirect	./lib/auth.php:4753					header('Location: ' . $referer);
