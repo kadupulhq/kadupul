@@ -1267,7 +1267,7 @@ function device_javascript() {
 			request = $(this).attr('href');
 			$.get(request)
 				.done(function(data) {
-					$('#cdialog').html(data);
+					$('#cdialog').html(DOMPurify.sanitize(data));
 
 					applySkin();
 
