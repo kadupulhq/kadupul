@@ -247,7 +247,7 @@ class Harness:
 
     def truncate_artifacts(self, *names):
         for name in names:
-            self.command('sh', '-c', 'rm -f /artifacts/' + name)
+            self.command('sh', '-c', 'rm -f /artifacts/' + name, check=True)
 
     def poller_state(self):
         return {
@@ -473,7 +473,7 @@ class Harness:
         self.capture('faults/database-unreachable', {k: broken[k] for k in ('exit', 'stdout', 'stderr')})
 
     def diagnostics_scenario(self):
-        """Every PHP diagnostic raised by any process in the run.
+        """PHP diagnostics the recorder sees during the run.
 
         This has to be captured last. When it ran at the end of scenarios() it
         saw only the probe's own process, so the poller's fwrite notice on the
@@ -567,8 +567,10 @@ class Harness:
         '0 contracts verified' and exiting 0 is a gate that succeeded because it
         checked nothing, which is the failure this harness exists to prevent.
         """
-        if not self.args.only:
+        if self.args.only is None:
             return set(self.observed)
+        if not self.args.only:
+            raise RuntimeError('--only needs at least one scenario group')
 
         groups = set(self.args.only)
         known = {n.split('/', 1)[0] for n in self.observed}

@@ -15,7 +15,7 @@ Priorities: **P0** blocks Kadupul compatibility, **P1** is important behavior,
 |---|---|---|---|---|---|---|---|
 | Database | Fresh schema import | yes | yes | no | schema, columns, seeded rows | `database/fresh-schema` | P0 |
 | Install | CLI install, mode 1 | yes | yes | no | exit status, full stdout | `upgrade/install` | P0 |
-| Auth | Admin login | yes | yes | n/a | session cookie, post-login layout | `auth/login-admin` | P0 |
+| Auth | Admin login | yes | yes | n/a | post-login layout | `auth/login-admin` | P0 |
 | Auth | Invalid password | yes | n/a | yes | error text, form fields retained | `auth/login-invalid` | P0 |
 | Auth | Missing CSRF token | yes | n/a | yes | POST with no token | `auth/missing-csrf` | P0 |
 | UI | Device list page | yes | yes | no | status, title, form inputs | `ui/devices` | P1 |
@@ -24,7 +24,7 @@ Priorities: **P0** blocks Kadupul compatibility, **P1** is important behavior,
 | CLI | `add_device.php` missing args | yes | n/a | yes | exit status, stderr | `cli/device-missing` | P0 |
 | CLI | `add_datasource.php` non-numeric id | yes | n/a | yes | `--host-id=oops` | `api/datasource-invalid` | P0 |
 | Devices | Create via CLI | yes | yes | no | response plus resulting host row | `devices/create` | P0 |
-| Devices | Delete via CLI | yes | yes | no | cascade into `data_local`, `graph_local` | `devices/delete` | P0 |
+| Devices | Delete via CLI | yes | yes | no | resulting `data_local` and `graph_local` rows | `devices/delete` | P0 |
 | Graphs | Data source create | yes | yes | no | response plus `data_local` | `graphs/datasource-create` | P0 |
 | Graphs | Graph create | yes | yes | no | response plus `graph_local` | `graphs/create` | P0 |
 | RRD | Graph definition generation | yes | yes | no | full rrdtool graph command, captured after the poll creates the RRD | `graphs/definition` | P0 |
@@ -46,7 +46,7 @@ Priorities: **P0** blocks Kadupul compatibility, **P1** is important behavior,
 | Poller | Device at an unroutable address | yes | n/a | yes | availability method 1, status transition | `poller/device-unreachable` | P0 |
 | RRD | create and update argument capture | yes | yes | yes | pipe-mode stdin, DS and RRA definitions, template order | `poller/run-reachable` | P0 |
 | Faults | RRD file deleted underneath a data source | yes | n/a | yes | rrdtool argv, exit status | `faults/missing-rrd-file` | P1 |
-| Faults | CLI against an unreachable database | yes | n/a | yes | exit status, stderr | `faults/database-unreachable` | P1 |
+| Faults | CLI against an unreachable database | yes | n/a | yes | exit status, stdout | `faults/database-unreachable` | P1 |
 
 ## Not characterized
 
