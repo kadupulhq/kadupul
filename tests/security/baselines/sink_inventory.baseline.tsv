@@ -878,8 +878,7 @@ header_redirect	./lib/clog_webapi.php:107			header('Location: ' . get_current_pa
 header_redirect	./lib/functions.php:8246		header('Location: ' . $save_url);
 header_redirect	./lib/functions.php:8269		header('Location: ' . $safe_url, true, $status);
 header_redirect	./lib/html_graph.php:521			header('Location: ' . $page . '?host_id=' . $host_id . '&header=false');
-header_redirect	./lib/html_reports.php:1507				header('Location: reports.php');
-header_redirect	./lib/html_reports.php:274					header('Location: reports.php');
+header_redirect	./lib/html_reports.php:275					header('Location: ' . get_reports_page() . '?header=false');
 header_redirect	./lib/html_reports.php:355			header('Location: ' . get_reports_page() . '?action=edit&header=false&id=' . (int) (empty($id) ? get_nfilter_request_var('id') : $id));
 header_redirect	./lib/html_reports.php:407			header('Location: ' . get_reports_page() . '?action=item_edit&id=' . (int) get_nfilter_request_var('report_id') . '&item_id=' . (int) (empty($item_id) ? get_nfilter_request_var('id') : $item_id));
 header_redirect	./lib/html_reports.php:409			header('Location: ' . get_reports_page() . '?header=false');

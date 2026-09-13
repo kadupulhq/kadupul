@@ -53,6 +53,7 @@ Cacti CHANGELOG
 -security: Require the Data Input Methods permission to create or change Data Input Methods through a web template or package import
 -security: Refuse .. segments in RRD file and archive paths that maintenance archives or deletes
 -security: Refuse shell metacharacters in webhits.pl and diskfree.pl arguments
+-security: Check report ownership when saving, editing or moving report items
 -issue: Declare GPL-2.0-or-later in composer.json, the license the source headers grant
 -security: Pass over a disabled configured administrator when moving off the retired no-authentication method
 -security: Skip the unknown-username password hash for blank passwords, as a known username does
