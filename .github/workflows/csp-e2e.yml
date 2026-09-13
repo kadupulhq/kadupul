@@ -50,7 +50,16 @@ jobs:
 
       - name: Run Pest unit tests
         working-directory: tests
-        run: ./vendor/bin/pest Unit/HeadersSecureTest.php Unit/CspReportEndpointTest.php
+        # phpunit.xml bootstraps include/global.php, which exits 0 without a
+        # database, and Pest reads only its first path argument. Both left this
+        # step green with no tests run, so each file runs on its own against the
+        # database-free bootstrap and a run with no passing tests fails.
+        run: |
+          set -euo pipefail
+          for test in Unit/HeadersSecureTest.php Unit/CspReportEndpointTest.php; do
+            ./vendor/bin/pest --colors=never --bootstrap bootstrap-unit.php "$test" | tee "$RUNNER_TEMP/pest.log"
+            grep -Eq 'Tests: +[0-9]+ passed' "$RUNNER_TEMP/pest.log"
+          done
 
   integration:
     name: Integration tests (php -S harness)
@@ -74,7 +83,12 @@ jobs:
 
       - name: Run Pest integration tests
         working-directory: tests
-        run: ./vendor/bin/pest integration/
+        # Only the php -S header harness runs without a database; the other
+        # integration files need the container stack and never ran here.
+        run: |
+          set -euo pipefail
+          ./vendor/bin/pest --colors=never --bootstrap bootstrap-unit.php integration/ContentSecurityPolicyTest.php | tee "$RUNNER_TEMP/pest.log"
+          grep -Eq 'Tests: +[0-9]+ passed' "$RUNNER_TEMP/pest.log"
 
   e2e:
     name: Playwright E2E (docker-compose + Playwright)
