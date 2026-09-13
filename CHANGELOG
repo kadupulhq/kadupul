@@ -27,6 +27,7 @@ Cacti CHANGELOG
 -issue: Send a report with a blank From address from the site From address and name, on Send Now and on schedule
 -security: Refuse report item saves, moves and edits under a report that does not exist, including for Reports Administration users
 -security: Count Reports Administration from a user's groups only while the group is enabled when authorizing report changes, as page access already does
+-issue: Keep staged Boost rows when rrdtool pipe restarts are exhausted instead of treating the lost update as written
 -issue: Stage poller output rows that Boost does not already hold when Boost redirect is on instead of dropping them
 -issue: Parse installer start and finish times that fall on a whole second instead of crashing
 -security: Verify Remote Data Collector HTTPS certificates by default on new installs; upgraded installs keep their previous behaviour

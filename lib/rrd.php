@@ -460,7 +460,8 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 				if ($i > 4) {
 					cacti_log("FATAL: RRDtool Restart Attempts Exceeded. Giving up on '$command_line'.");
 
-					break;
+					/* a written command also returns nothing, so tell callers this one never reached rrdtool */
+					return false;
 				} else {
 					$i++;
 				}

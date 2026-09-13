@@ -21,7 +21,7 @@
 
 $root = dirname(__DIR__, 4);
 
-foreach (array('RRDTOOL_OUTPUT_STDOUT' => 1, 'RRDTOOL_OUTPUT_BOOLEAN' => 4, 'POLLER_VERBOSITY_NONE' => 1, 'POLLER_VERBOSITY_HIGH' => 4) as $name => $value) {
+foreach (array('RRDTOOL_OUTPUT_STDOUT' => 1, 'RRDTOOL_OUTPUT_STDERR' => 2, 'RRDTOOL_OUTPUT_GRAPH_DATA' => 3, 'RRDTOOL_OUTPUT_BOOLEAN' => 4, 'RRDTOOL_OUTPUT_RETURN_STDERR' => 5, 'POLLER_VERBOSITY_NONE' => 1, 'POLLER_VERBOSITY_HIGH' => 4, 'POLLER_VERBOSITY_DEBUG' => 5) as $name => $value) {
 	if (!defined($name)) {
 		define($name, $value);
 	}
@@ -71,13 +71,57 @@ function boostPipedCreate_cacti_has_control_chars($value) {
 }
 
 function boostPipedCreate_cacti_log($message) {
+	$GLOBALS['boost_piped_create']['logs'][] = $message;
 }
 
 function boostPipedCreate_rrdtool_execute($command) {
 	$GLOBALS['boost_piped_create']['executed'][] = $command;
 
-	/* a piped command returns nothing */
-	return null;
+	/* a piped command returns nothing once written */
+	return $GLOBALS['boost_piped_create']['execute_return'];
+}
+
+function boostPipedCreate_rrd_close($rrdtool_pipe) {
+	$GLOBALS['boost_piped_create']['closed']++;
+}
+
+function boostPipedCreate_rrd_init() {
+	/* the restarted rrdtool cannot take input either */
+	return fopen('php://memory', 'r');
+}
+
+function boostPipedCreate_escape_command($command) {
+	return $command;
+}
+
+function boostPipedCreateRrdExecute($root, $command, $rrdtool_pipe) {
+	if (!function_exists('boostPipedCreate___rrd_execute')) {
+		$source = file_get_contents($root . '/lib/rrd.php');
+		$start  = strpos($source, 'function __rrd_execute(');
+		$end    = strpos($source, "\nfunction ", $start + 1);
+
+		expect($start)->not->toBeFalse()
+			->and($end)->not->toBeFalse();
+
+		eval(preg_replace('/\b(__rrd_execute|rrd_close|rrd_init|escape_command|read_config_option|cacti_log)\(/', 'boostPipedCreate_$1(', substr($source, $start, $end - $start)));
+	}
+
+	$saved = isset($GLOBALS['config']) ? $GLOBALS['config'] : null;
+
+	$GLOBALS['config'] = array('cacti_server_os' => 'unix');
+
+	/* a write to a dead pipe raises a notice before fwrite() returns false */
+	set_error_handler(function () {
+		return true;
+	});
+
+	try {
+		return boostPipedCreate___rrd_execute($command, false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'BOOST');
+	} finally {
+		restore_error_handler();
+
+		$GLOBALS['config'] = $saved;
+	}
 }
 
 function boostPipedCreateLoad($root) {
@@ -125,6 +169,9 @@ beforeEach(function () use ($root) {
 		'create_return'      => null,
 		'create_writes_file' => false,
 		'executed'           => array(),
+		'execute_return'     => null,
+		'closed'             => 0,
+		'logs'               => array(),
 	);
 });
 
@@ -234,4 +281,25 @@ test('without a pipe the create is still confirmed on disk', function () {
 
 	expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, '', $values, $pipe))->toBe('OK')
 		->and($GLOBALS['boost_piped_create']['executed'])->toHaveCount(1);
+});
+
+test('a piped update rrdtool never received is not acknowledged', function () {
+	$values = ' 1000:1';
+
+	$GLOBALS['boost_piped_create']['execute_return'] = false;
+
+	$result = boostPipedCreate_boost_rrdtool_function_update(12, $GLOBALS['boost_piped_create']['path'], '', $values, $this->pipe);
+
+	expect(boostPipedCreateFails($result))->toBeTrue()
+		->and($GLOBALS['boost_piped_create']['executed'])->toHaveCount(1);
+});
+
+test('rrdtool_execute returns false once every pipe restart fails and null for a written command', function () use ($root) {
+	$dead = fopen('php://memory', 'r');
+
+	expect(boostPipedCreateRrdExecute($root, 'create /rra/12.rrd --step 300', $dead))->toBeFalse()
+		->and($GLOBALS['boost_piped_create']['closed'])->toBe(6)
+		->and(implode("\n", $GLOBALS['boost_piped_create']['logs']))->toContain('Restart Attempts Exceeded');
+
+	expect(boostPipedCreateRrdExecute($root, 'update /rra/12.rrd 1000:1', $this->pipe))->toBeNull();
 });
