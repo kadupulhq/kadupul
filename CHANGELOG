@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.x
+-issue: Declare GPL-2.0-or-later in composer.json, the license the source headers grant
 -security: Pass over a disabled configured administrator when moving off the retired no-authentication method
 -security: Skip the unknown-username password hash for blank passwords, as a known username does
 -security: Enforce tree access when copying or moving tree nodes
