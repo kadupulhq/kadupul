@@ -492,7 +492,7 @@ function setupDefaultElements() {
 			});
 		} else {
 			$("#cactiConsoleBackdrop").click( function() {
-				window.open('https://kadupul.org', '_blank');
+				window.open('https://kadupul.org', '_blank', 'noopener');
 			});
 		}
 	}
