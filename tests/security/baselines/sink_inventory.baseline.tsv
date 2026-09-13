@@ -575,8 +575,8 @@ fs_write	./lib/functions.php:7232				file_put_contents($tmp_file, 'cacti');
 fs_write	./lib/import.php:466		$f   = fopen($filename, 'r');
 fs_write	./lib/import.php:671							$file = fopen($filename, 'wb');
 fs_write	./lib/installer.php:2969				$file = fopen($cacheFile, "r");
-fs_write	./lib/maintenance_cli.php:123		$handle = @fopen($path, 'a');
-fs_write	./lib/maintenance_cli.php:87		$handle = @fopen($path, 'x');
+fs_write	./lib/maintenance_cli.php:123		$handle = @fopen($path, 'ab');
+fs_write	./lib/maintenance_cli.php:87		$handle = @fopen($path, 'xb');
 fs_write	./lib/poller.php:1410									if (file_put_contents($tmpfile, $contents) !== false) {
 fs_write	./lib/poller.php:1417												file_put_contents($mypath, $contents);
 fs_write	./lib/poller.php:1446								file_put_contents($mypath, $contents);

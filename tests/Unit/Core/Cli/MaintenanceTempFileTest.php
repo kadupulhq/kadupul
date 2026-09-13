@@ -163,6 +163,31 @@ test('an existing debug log keeps its mode', function () {
 		->and(file_get_contents($path))->toBe("one\ntwo\n");
 });
 
+test('temporary files and the debug log keep binary data byte for byte', function () {
+	$bytes  = "RRD\x00\r\n\x1a\n\xff";
+	$path   = $this->dir . '/backup.rrd.1';
+	$handle = cacti_cli_create_file($path);
+
+	fwrite($handle, $bytes);
+	fclose($handle);
+
+	$log = cacti_cli_open_log($path . '.log');
+	fwrite($log, $bytes);
+	fclose($log);
+
+	$log = cacti_cli_open_log($path . '.log');
+	fwrite($log, $bytes);
+	fclose($log);
+
+	$source = file_get_contents(dirname(__DIR__, 4) . '/lib/maintenance_cli.php');
+
+	expect(file_get_contents($path))->toBe($bytes)
+		->and(file_get_contents($path . '.log'))->toBe($bytes . $bytes)
+		->and($source)->toContain("@fopen(\$path, 'xb')")
+		->and($source)->toContain("@fopen(\$path, 'ab')")
+		->and($source)->not->toMatch("/fopen\\(\\\$path, '[xa]'\\)/");
+});
+
 test('splice_rrd uses the 1.2.31 names and creates every temporary file exclusively', function () {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/cli/splice_rrd.php');
 

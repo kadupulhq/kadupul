@@ -66,7 +66,7 @@ function cacti_remove_graphs_parameter_is_valid($parameter, $shortopts, $longopt
  * Create a file for writing without following a symlink or reusing a name.
  *
  * The maintenance scripts keep their 1.2.31 names in the shared temporary
- * directory, where another local user can claim a name first. Mode 'x' opens
+ * directory, where another local user can claim a name first. Mode 'xb' opens
  * with O_CREAT|O_EXCL, which fails when anything, a symlink included, already
  * holds the name, so a claimed name stops the caller instead of redirecting
  * its write.
@@ -89,7 +89,7 @@ function cacti_cli_create_file($path) {
 	 * narrowed for the create itself so the file is 0600 from the moment it
 	 * exists, and restored before anything else runs. */
 	$umask  = umask(0077);
-	$handle = @fopen($path, 'x');
+	$handle = @fopen($path, 'xb');
 	umask($umask);
 
 	if ($handle === false) {
@@ -136,7 +136,7 @@ function cacti_cli_open_log($path) {
 		return sprintf("Refusing to append to '%s' because another user owns it", $path);
 	}
 
-	$handle = @fopen($path, 'a');
+	$handle = @fopen($path, 'ab');
 
 	if ($handle === false) {
 		return sprintf("Unable to open '%s'", $path);
