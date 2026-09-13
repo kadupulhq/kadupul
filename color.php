@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -253,7 +254,7 @@ function color_import_processor(&$colors) {
 				if ($required >= 2 && in_array('hex', $header, true) && in_array('name', $header, true)) {
 					array_push($return_array, '<b>HEADER LINE PROCESSED OK</b>:  <br>Columns found where: (' . implode(', ', $header) . ')<br>');
 				} else {
-					array_push($return_array, '<b>HEADER LINE PROCESSING ERROR</b>: Missing required field <br>Columns found where: (' . html_escape(implode(', ', $header)) . ')<br>');
+					array_push($return_array, '<b>HEADER LINE PROCESSING ERROR</b>: Missing required field <br>Columns found where:(' . html_escape(implode(', ', $header)) . ')<br>');
 
 					break;
 				}
@@ -274,7 +275,14 @@ function color_import_processor(&$colors) {
 				if (isset($row['hex']) && isset($row['name'])) {
 					$hex        = $row['hex'];
 					$name       = $row['name'];
-					$save_value = '(' . html_escape($hex) . ',' . html_escape($name) . ')';
+					$quoted     = array();
+
+					/* 1.2.31 result lines quote each value in header column order */
+					foreach ($header as $column) {
+						$quoted[] = "'" . html_escape($row[$column]) . "'";
+					}
+
+					$save_value = '(' . implode(',', $quoted) . ')';
 
 					if (!preg_match('/^[A-Fa-f0-9]{6}$/', $hex)) {
 						array_push($return_array, "<strong>INSERT SKIPPED, INVALID HEX:</strong> $save_value");
