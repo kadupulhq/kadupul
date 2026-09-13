@@ -59,14 +59,21 @@ Use the house wrappers instead of raw equivalents:
 
 ## Style
 
-- Match the file you are editing.  No drive-by reformat.
+- On `main`, PHP files a change edits follow PHP-FIG PER-CS 2.0, as
+  configured in `.php-cs-fixer.php`.  Files the change does not touch keep
+  their current formatting.  No drive-by reformat.
+- Reformat an edited file in its own commit, separate from the behaviour
+  change.  That commit changes whitespace only; `array()` to `[]`, trailing
+  commas and other token changes go in separate commits.
+- Run `tests/tools/check_php_style.sh` before pushing.  It checks only the PHP
+  files changed since `origin/main`, and CI runs the same script.  A few files
+  need `php-cs-fixer fix` twice before the check passes.
+- `lts/1.2` keeps upstream Cacti formatting (tabs, same-line function braces)
+  so upstream fixes cherry-pick cleanly.  Do not reformat files there.
 - Don't rewrite `api_aggregate.php`, `lib/aggregate.php`, or any other
   file you are not explicitly touching.  Multiple past PRs have been rejected
   because an AI assistant "tidied" unrelated code.
-- Tabs for indentation.
 - One blank line after a function closing brace.
-- PHP-CS-Fixer runs on commit via pre-commit hook.  Install it:
-  `composer run-script phpcsfixit` locally before pushing.
 - Long lines in `locales/po/*.po` are intentional.  Do not rewrap at 80 cols.
 
 ## Security

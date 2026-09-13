@@ -44,6 +44,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- PHP files a change edits on main move to PER-CS 2.0 formatting, and CI checks
+  only those files. The `lts/1.2` branch keeps upstream Cacti formatting.
 - File headers carry SPDX copyright and license tags instead of the GPL notice box.
   Inherited files stay GPL-2.0-or-later and files Kadupul created are GPL-3.0-or-later.
 - Run SonarQube Cloud analysis on pushes to main and on pull requests.
