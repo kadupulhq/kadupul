@@ -1380,6 +1380,9 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 					if (trim((string) $return_value) !== 'OK') {
 						cacti_log("WARNING: RRD Update Warning '" . $return_value . "' for Local Data ID '$local_data_id'", false, 'BOOST');
 						$updates_ok = false;
+
+						/* later samples would move the RRD past the failed ones; keep the page queued */
+						break;
 					}
 				}
 
@@ -1510,7 +1513,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 		}
 
 		/* process the last rrdupdate if applicable */
-		if ($vals_in_buffer) {
+		if ($vals_in_buffer && $updates_ok) {
 			boost_timer('rrdupdate', BOOST_TIMER_START);
 			$return_value = boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_tmpl, $outbuf, $rrdtool_pipe);
 			boost_timer('rrdupdate', BOOST_TIMER_END);

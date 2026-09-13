@@ -238,6 +238,16 @@ test('a data source that fits in one page takes one query as in 1.2.31', functio
 		->and(boostPagingDeletes())->toBe(1);
 });
 
+test('a failed update inside a page sends no further update and deletes nothing', function () {
+	boostPagingReset(40, array('boost_rrd_update_string_length' => 40));
+	$GLOBALS['boost_paging']['fail_update_call'] = 2;
+
+	expect(boostPaging_boost_process_poller_output(7))->toBe(-1)
+		->and(boostPaging_state()['update_calls'])->toBe(2)
+		->and(count(boostPaging_state()['page_sizes']))->toBe(1)
+		->and(boostPagingDeletes())->toBe(0);
+});
+
 test('a failed RRD update stops paging and keeps the staged rows', function () {
 	boostPagingReset(10, array('boost_rrd_update_max_records_per_select' => 4));
 	$GLOBALS['boost_paging']['fail_update_call'] = 1;
