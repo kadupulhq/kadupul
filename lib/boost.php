@@ -526,6 +526,7 @@ function boost_fetch_cache_check($local_data_id, $rrdtool_pipe = false) {
 
 		/* close rrdtool */
 		if ($close_pipe) {
+			boost_rrdtool_pipe_creates('forget', $rrdtool_pipe);
 			rrd_close($rrdtool_pipe);
 		}
 	}
@@ -1467,6 +1468,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 	}
 
 	if ($rrdp_auto_close) {
+		boost_rrdtool_pipe_creates('forget', $rrdtool_pipe);
 		rrd_close($rrdtool_pipe);
 	}
 
@@ -1895,6 +1897,46 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
 	}
 }
 
+/* boost_rrdtool_pipe_creates - track the RRD creates queued on an open rrdtool pipe.
+   rrdtool create overwrites a file, so each file gets one create per pipe.  An
+   entry keeps its own pipe handle, so it ends when that pipe is closed or
+   forgotten and never matches a pipe opened later.
+   @arg $action       - 'check', 'add' or 'forget'
+   @arg $rrdtool_pipe - the open rrdtool pipe
+   @arg $rrd_path     - the RRD file for 'check' and 'add'
+   @returns - (bool) true when a create for the file is queued on the pipe */
+function boost_rrdtool_pipe_creates($action, $rrdtool_pipe, $rrd_path = '') {
+	static $pipes = array();
+
+	foreach ($pipes as $index => $entry) {
+		if (!is_resource($entry['pipe']) || ($action == 'forget' && $entry['pipe'] === $rrdtool_pipe)) {
+			unset($pipes[$index]);
+		}
+	}
+
+	if ($action == 'forget' || !is_resource($rrdtool_pipe)) {
+		return false;
+	}
+
+	foreach ($pipes as $index => $entry) {
+		if ($entry['pipe'] === $rrdtool_pipe) {
+			if ($action == 'add') {
+				$pipes[$index]['paths'][$rrd_path] = true;
+			}
+
+			return isset($pipes[$index]['paths'][$rrd_path]);
+		}
+	}
+
+	if ($action == 'add') {
+		$pipes[] = array('pipe' => $rrdtool_pipe, 'paths' => array($rrd_path => true));
+
+		return true;
+	}
+
+	return false;
+}
+
 /* boost_rrdtool_function_update - a re-write of the Cacti rrdtool update command
    specifically designed for bulk updates.
    @arg $local_data_id - the data source to obtain information from
@@ -1903,8 +1945,6 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
    @arg $rrd_update_values    - values to include in the database */
 function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_template, &$rrd_update_values, &$rrdtool_pipe) {
 	global $debug;
-
-	static $piped_creates = array();
 
 	/* lets count the number of rrd files processed */
 	$rrds_processed = 0;
@@ -1944,22 +1984,22 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 
 		// Check for a Data Source that has been removed
 		if ($ds_exists) {
-			$pipe_key = is_resource($rrdtool_pipe) ? (int) $rrdtool_pipe . ':' . $rrd_path : false;
+			$piped = is_resource($rrdtool_pipe);
 
-			if ($pipe_key !== false && isset($piped_creates[$pipe_key])) {
+			if ($piped && boost_rrdtool_pipe_creates('check', $rrdtool_pipe, $rrd_path)) {
 				/* rrdtool create overwrites, so queue one create per file on a pipe */
 				$created = true;
 			} else {
 				$created = boost_rrdtool_function_create($local_data_id, false, $rrdtool_pipe);
 			}
 
-			if ($pipe_key !== false) {
+			if ($piped) {
 				/* rrdtool has not read a piped create yet, so the file can still be
 				 * missing here.  It runs the create before the update that follows. */
 				$valid_entry = $created !== false;
 
 				if ($valid_entry) {
-					$piped_creates[$pipe_key] = true;
+					boost_rrdtool_pipe_creates('add', $rrdtool_pipe, $rrd_path);
 				}
 			} elseif (read_config_option('storage_location')) {
 				$valid_entry = rrdtool_execute_path_command('file_exists', $rrd_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');

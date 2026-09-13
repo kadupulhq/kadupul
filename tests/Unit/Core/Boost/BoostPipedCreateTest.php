@@ -91,13 +91,20 @@ function boostPipedCreateLoad($root) {
 	}
 
 	$source = file_get_contents($root . '/lib/boost.php');
-	$start  = strpos($source, 'function boost_rrdtool_function_update(');
-	$end    = strpos($source, "\nfunction ", $start + 1);
 
-	expect($start)->not->toBeFalse()
-		->and($end)->not->toBeFalse();
+	foreach (array('boost_rrdtool_pipe_creates', 'boost_rrdtool_function_update') as $name) {
+		$start = strpos($source, 'function ' . $name . '(');
+		$end   = strpos($source, "\nfunction ", $start + 1);
 
-	eval(preg_replace('/\b(boost_rrdtool_function_update|boost_rrdtool_function_create|rrdtool_execute_path_command|rrdtool_execute|cacti_rrdtool_valid_ds_template|cacti_rrdtool_valid_path|cacti_has_control_chars|cacti_version_compare|get_rrdtool_version|read_config_option|db_fetch_cell_prepared|cacti_log)\(/', 'boostPipedCreate_$1(', substr($source, $start, $end - $start)));
+		expect($start)->not->toBeFalse()
+			->and($end)->not->toBeFalse();
+
+		boostPipedCreateEval(substr($source, $start, $end - $start));
+	}
+}
+
+function boostPipedCreateEval($code) {
+	eval(preg_replace('/\b(boost_rrdtool_pipe_creates|boost_rrdtool_function_update|boost_rrdtool_function_create|rrdtool_execute_path_command|rrdtool_execute|cacti_rrdtool_valid_ds_template|cacti_rrdtool_valid_path|cacti_has_control_chars|cacti_version_compare|get_rrdtool_version|read_config_option|db_fetch_cell_prepared|cacti_log)\(/', 'boostPipedCreate_$1(', $code));
 }
 
 /* The acknowledgement test Boost applies to this return value. */
@@ -156,6 +163,43 @@ test('later updates for the same new RRD on one pipe do not queue another create
 	/* rrdtool create overwrites an existing file, so a second create would drop the queued updates */
 	expect($GLOBALS['boost_piped_create']['creates'])->toBe(1)
 		->and($GLOBALS['boost_piped_create']['executed'])->toHaveCount(3);
+});
+
+test('a pipe Boost forgot when closing it sends the create again under the same resource id', function () {
+	$path   = $GLOBALS['boost_piped_create']['path'];
+	$values = ' 1000:1';
+
+	expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, '', $values, $this->pipe))->toBe('OK');
+
+	boostPipedCreate_boost_rrdtool_pipe_creates('forget', $this->pipe);
+
+	/* the same handle stands in for a later pipe that reused the id; the file is still missing */
+	$values = ' 1300:1';
+
+	expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, '', $values, $this->pipe))->toBe('OK')
+		->and($GLOBALS['boost_piped_create']['creates'])->toBe(2);
+});
+
+test('creates queued on a closed pipe do not carry over to the next pipe', function () {
+	$path   = $GLOBALS['boost_piped_create']['path'];
+	$values = ' 1000:1';
+	$first  = fopen('php://memory', 'w');
+
+	expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, '', $values, $first))->toBe('OK');
+
+	fclose($first);
+
+	$values = ' 1300:1';
+
+	expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, '', $values, $this->pipe))->toBe('OK')
+		->and($GLOBALS['boost_piped_create']['creates'])->toBe(2);
+});
+
+test('Boost forgets queued creates where it closes a pipe it opened', function () use ($root) {
+	$source = file_get_contents($root . '/lib/boost.php');
+
+	expect(substr_count($source, "boost_rrdtool_pipe_creates('forget', \$rrdtool_pipe);\n\t\t\trrd_close(\$rrdtool_pipe);"))->toBe(1)
+		->and(substr_count($source, "boost_rrdtool_pipe_creates('forget', \$rrdtool_pipe);\n\t\trrd_close(\$rrdtool_pipe);"))->toBe(1);
 });
 
 test('a create that Boost refused still fails on the pipe', function () {

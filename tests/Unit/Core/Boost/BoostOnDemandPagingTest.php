@@ -95,6 +95,10 @@ function boostPaging_rrd_init() {
 	return fopen('php://memory', 'w');
 }
 
+function boostPaging_boost_rrdtool_pipe_creates($action, $pipe, $path = '') {
+	return false;
+}
+
 function boostPaging_rrd_close($pipe) {
 	$GLOBALS['boost_paging']['pipes_closed']++;
 }
@@ -126,7 +130,7 @@ function boostPagingLoad($root) {
 	}
 
 	$source = file_get_contents($root . '/lib/boost.php');
-	$names  = 'boost_process_poller_output|boost_limit_complete_timestamp_page|boost_rrdtool_function_update|boost_get_rrd_filename_and_template|boost_get_arch_table_names|boost_get_unused_data_source_names|boost_get_input_field_names|boost_timer|read_config_option|db_fetch_assoc_prepared|db_fetch_cell|db_execute_prepared|db_execute|db_affected_rows|rrd_init|rrd_close|cacti_log|cacti_system_zone_set|cacti_version_compare|get_rrdtool_version|cacti_sizeof|cacti_count';
+	$names  = 'boost_rrdtool_pipe_creates|boost_process_poller_output|boost_limit_complete_timestamp_page|boost_rrdtool_function_update|boost_get_rrd_filename_and_template|boost_get_arch_table_names|boost_get_unused_data_source_names|boost_get_input_field_names|boost_timer|read_config_option|db_fetch_assoc_prepared|db_fetch_cell|db_execute_prepared|db_execute|db_affected_rows|rrd_init|rrd_close|cacti_log|cacti_system_zone_set|cacti_version_compare|get_rrdtool_version|cacti_sizeof|cacti_count';
 
 	foreach (array('boost_limit_complete_timestamp_page', 'boost_process_poller_output') as $name) {
 		$start = strpos($source, 'function ' . $name . '(');
