@@ -54,7 +54,7 @@ Use these notes to navigate and contribute productively to this PHP codebase.
 ## Coding standards
 - Follow PHP PSR standards (PSR-12/PSR-1) for new or standalone code where practical, but match the file’s existing conventions.
   - Preserve the file’s indentation (tabs vs spaces) and brace style; do not reformat unrelated code.
-  - Keep the copyright and GPL notices at the top of PHP files.
+  - Start each file with SPDX tags, not the old GPL box. Files inherited from Cacti keep `SPDX-FileCopyrightText: <years> The Cacti Group` with its existing years and `SPDX-License-Identifier: GPL-2.0-or-later`; add `SPDX-FileCopyrightText: 2026 The Kadupul project and contributors` when you make a substantive change. Files Kadupul creates carry only the Kadupul line and `GPL-3.0-or-later`.
   - Use snake_case functions and procedural structure consistent with the codebase; avoid introducing namespaces unless integrating vendor code.
   - Maintain the PHP >=8.0 requirement in `composer.json`; the CI matrix covers PHP 8.1–8.4.
   - Don’t change public function signatures in `lib/api_*.php` or widely used helpers without auditing usages.
