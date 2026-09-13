@@ -21,6 +21,10 @@
  * single_quote and no_unused_imports are not part of @PER-CS2x0 in fixer
  * 3.95.25. They are pinned off so a later revision of the set cannot start
  * rewriting string delimiters or deleting imports in a formatting commit.
+ *
+ * visibility_required is the deprecated name of modifier_keywords in 3.95.25
+ * and is not in the resolved set either. It is pinned off so that nothing
+ * resolving the old name can add visibility keywords.
  */
 
 $finder = PhpCsFixer\Finder::create()
@@ -55,5 +59,6 @@ return (new PhpCsFixer\Config())
         'single_trait_insert_per_statement' => false,
         'switch_case_semicolon_to_colon' => false,
         'trailing_comma_in_multiline' => false,
+        'visibility_required' => false,
     ])
     ->setFinder($finder);
