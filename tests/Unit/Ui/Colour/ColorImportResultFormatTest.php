@@ -42,7 +42,7 @@ function db_execute_prepared($sql, $params = array()) {
 	return true;
 }
 
-$source = file_get_contents(dirname(__DIR__, 3) . '/color.php');
+$source = file_get_contents(dirname(__DIR__, 4) . '/color.php');
 
 if ($source === false || preg_match('/^function color_import_processor\(.*?^}\R/ms', $source, $matches) !== 1) {
 	throw new \RuntimeException('Unable to extract color_import_processor() from color.php');
