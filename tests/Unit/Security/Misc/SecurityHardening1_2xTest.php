@@ -39,15 +39,42 @@ test('sanitize_uri does not call urldecode', function () use ($functionsSource) 
 	expect($body)->not->toContain('urldecode(');
 });
 
-// M-3/M-4: validate_redirect_url does not trust HTTP_HOST
+// M-3/M-4: validate_redirect_url trusts HTTP_HOST only when SERVER_NAME is empty and it is listed in $trusted_hosts
 
-test('validate_redirect_url does not trust HTTP_HOST', function () use ($htmlUtilitySource) {
-	$start = strpos($htmlUtilitySource, 'function validate_redirect_url(');
-	expect($start)->not->toBeFalse();
+test('validate_redirect_url does not trust an unlisted HTTP_HOST', function () {
+	require_once __DIR__ . '/../../../../lib/functions.php';
+	require_once __DIR__ . '/../../../../lib/html_utility.php';
 
-	$body = substr($htmlUtilitySource, $start, 3000);
-	expect($body)->toContain('SERVER_NAME');
-	expect($body)->not->toContain('HTTP_HOST');
+	$saved_server = $_SERVER;
+	$had_config   = array_key_exists('config', $GLOBALS);
+	$saved_config = $GLOBALS['config'] ?? null;
+
+	try {
+		unset($_SERVER['SERVER_PORT']);
+		$GLOBALS['config'] = array('trusted_hosts' => array('cacti.example.com'));
+
+		/* SERVER_NAME empty, attacker-chosen Host header naming the target's host */
+		$_SERVER['SERVER_NAME'] = '';
+		$_SERVER['HTTP_HOST']   = 'evil.example';
+		expect(validate_redirect_url('https://evil.example/phish', '/cacti/'))->toBe('/cacti/');
+
+		/* SERVER_NAME empty, Host header listed in $trusted_hosts */
+		$_SERVER['HTTP_HOST'] = 'cacti.example.com';
+		expect(validate_redirect_url('https://cacti.example.com/cacti/host.php?id=3', '/cacti/'))->toBe('/cacti/host.php?id=3');
+
+		/* SERVER_NAME set: the Host header is never used, even when listed */
+		$_SERVER['SERVER_NAME'] = 'monitor.example';
+		expect(validate_redirect_url('https://cacti.example.com/cacti/host.php?id=3', '/cacti/'))->toBe('/cacti/');
+		expect(validate_redirect_url('https://monitor.example/cacti/host.php?id=3', '/cacti/'))->toBe('/cacti/host.php?id=3');
+	} finally {
+		$_SERVER = $saved_server;
+
+		if ($had_config) {
+			$GLOBALS['config'] = $saved_config;
+		} else {
+			unset($GLOBALS['config']);
+		}
+	}
 });
 
 test('validate_redirect_url rejects protocol-relative URLs after sanitize_uri', function () use ($htmlUtilitySource) {
