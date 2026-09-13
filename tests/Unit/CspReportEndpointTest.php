@@ -85,3 +85,47 @@ test('validator accepts Reporting API body format', function () {
 	expect($result['ok'])->toBeTrue();
 	expect($result['summary'])->toContain('script-src');
 });
+
+/* ---- rate-limit buckets ---- */
+
+function _csp_bucket_base() {
+	$base = sys_get_temp_dir() . '/kadupul-csp-test-' . bin2hex(random_bytes(4));
+	mkdir($base, 0700);
+
+	return $base;
+}
+
+test('rate limiter keeps buckets in a private directory and caps each client', function () {
+	$base = _csp_bucket_base();
+	$_SERVER['REMOTE_ADDR'] = '192.0.2.10';
+
+	for ($i = 0; $i < 30; $i++) {
+		expect(csp_report_should_log($base))->toBeTrue();
+	}
+
+	expect(csp_report_should_log($base))->toBeFalse();
+	expect(fileperms($base . '/kadupul_csp') & 0777)->toBe(0700);
+});
+
+test('rate limiter refuses a bucket directory other users can write', function () {
+	$base = _csp_bucket_base();
+	mkdir($base . '/kadupul_csp', 0700);
+	chmod($base . '/kadupul_csp', 0777);
+	$_SERVER['REMOTE_ADDR'] = '192.0.2.11';
+
+	for ($i = 0; $i < 35; $i++) {
+		expect(csp_report_should_log($base))->toBeTrue();
+	}
+
+	expect(glob($base . '/kadupul_csp/*'))->toBe([]);
+});
+
+test('rate limiter refuses a symlinked bucket directory', function () {
+	$base   = _csp_bucket_base();
+	$target = _csp_bucket_base();
+	symlink($target, $base . '/kadupul_csp');
+	$_SERVER['REMOTE_ADDR'] = '192.0.2.12';
+
+	expect(csp_report_should_log($base))->toBeTrue();
+	expect(glob($target . '/*'))->toBe([]);
+});
