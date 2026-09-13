@@ -2,7 +2,7 @@ name: Database audit coverage
 
 on:
   push:
-    branches: [1.2.x]
+    branches: [1.2.x, lts/1.2]
     paths:
       - '.github/workflows/audit-database-coverage.yml'
       - 'composer.json'
@@ -15,7 +15,7 @@ on:
       - 'tests/Unit/Database/AuditDatabaseMissingTableTest.php'
       - 'tests/Unit/Installer/InstallerSchemaValidationTest.php'
   pull_request:
-    branches: [1.2.x]
+    branches: [1.2.x, lts/1.2]
     paths:
       - '.github/workflows/audit-database-coverage.yml'
       - 'composer.json'

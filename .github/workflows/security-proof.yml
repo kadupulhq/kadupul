@@ -2,9 +2,9 @@ name: Security Proof Guardrails
 
 on:
   push:
-    branches: [develop, 1.2.x]
+    branches: [develop, 1.2.x, lts/1.2]
   pull_request:
-    branches: [develop, 1.2.x]
+    branches: [develop, 1.2.x, lts/1.2]
   workflow_dispatch:
     inputs:
       repo_name:
