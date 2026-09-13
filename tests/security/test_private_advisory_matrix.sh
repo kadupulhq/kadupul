@@ -40,6 +40,9 @@ rejects "$scratch/malformed.tsv" 'rows are malformed' 'malformed row accepted'
 { header; row main a1b2c3d4e5f6 PROVEN_TEST_BACKED; printf 'main\tPROVEN_TEST_BACKED\n'; } > "$scratch/truncated.tsv"
 rejects "$scratch/truncated.tsv" 'rows are malformed' 'truncated row accepted'
 
+{ header; printf 'main\ta1b2c3d4e5f6\tdraft\thigh\tsummary\tx\tx\tx\tx\tx\tPROVEN_TEST_BACKED\n'; } > "$scratch/counts.tsv"
+rejects "$scratch/counts.tsv" 'rows are malformed' 'non-numeric evidence counts accepted'
+
 { header; row main '' PROVEN_TEST_BACKED; } > "$scratch/nokey.tsv"
 rejects "$scratch/nokey.tsv" 'rows are malformed' 'row without an advisory key accepted'
 
