@@ -2624,7 +2624,11 @@ function register_process_start($tasktype, $taskname, $taskid = 0, $timeout = 30
 				if (cacti_process_still_running($timeout_pid)) {
 					cacti_log(sprintf('ERROR: Process being killed due to timeout! (%s, %s, %s, Process %s, Time %s, Timeout %s, Timestamp %s)', $tasktype, $taskname, $taskid, $logged_timeout_pid, $r['timeout_exceeded'], $r['timeout'], $r['current_timestamp']), false, 'POLLER');
 
-					cacti_process_kill($timeout_pid, SIGTERM);
+					if (!cacti_process_kill($timeout_pid, SIGTERM) && cacti_process_kill_denied($timeout_pid)) {
+						cacti_log(sprintf('ERROR: Process owned by another user could not be killed and stays registered! (%s, %s, %s, %s)', $tasktype, $taskname, $taskid, $logged_timeout_pid), false, 'POLLER');
+
+						return false;
+					}
 				}
 
 				unregister_process($tasktype, $taskname, $taskid);
@@ -2891,6 +2895,23 @@ function cacti_process_kill($pid, $signal = SIGTERM, $environ = 'POLLER') {
 }
 
 /**
+ * cacti_process_kill_denied - whether a failed cacti_process_kill() left a live
+ *   process this account may not signal
+ *
+ *   A task started by another user answers EPERM. Its registry row has to stay,
+ *   or the task keeps running with no row and a second copy can register. A
+ *   reserved or invalid pid is excluded because the guard refused it before any
+ *   signal was sent, and a pid that has exited reads as gone.
+ *
+ * @param  (int) $pid - The pid cacti_process_kill() failed to signal
+ *
+ * @return (bool) true when the process is still there
+ */
+function cacti_process_kill_denied($pid) {
+	return !is_system_pid($pid) && cacti_process_signalable($pid);
+}
+
+/**
  * is_system_pid - test whether a PID is one Cacti must never signal from the
  *   registry. init owns pid 1 on every platform, so a tampered or reused pid
  *   column could otherwise take down the host's own service manager.
@@ -2972,7 +2993,11 @@ function timeout_kill_registered_processes($tasktype = '', $taskname = '', $task
 
 			} elseif (cacti_process_still_running($pid)) {
 				cacti_log(sprintf('ERROR: Process killed due to timeout! (%s, %s, %s, %s)', $r['tasktype'], $r['taskname'], $r['taskid'], $logged_pid), false, 'POLLER');
-				cacti_process_kill($pid, SIGTERM);
+				if (!cacti_process_kill($pid, SIGTERM) && cacti_process_kill_denied($pid)) {
+					cacti_log(sprintf('ERROR: Process owned by another user could not be killed and stays registered! (%s, %s, %s, %s)', $r['tasktype'], $r['taskname'], $r['taskid'], $logged_pid), false, 'POLLER');
+
+					continue;
+				}
 			} else {
 				cacti_log(sprintf('ERROR: Detected process that is gone and did not unregister first! (%s, %s, %s, %s)', $r['tasktype'], $r['taskname'], $r['taskid'], $logged_pid), false, 'POLLER');
 			}

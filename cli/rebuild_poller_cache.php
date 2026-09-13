@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -451,7 +452,11 @@ function pushout_kill_running_processes() {
 		foreach ($processes as $p) {
 			if (cacti_process_still_running($p['pid'])) {
 				cacti_log(sprintf('WARNING: Killing Cleanup %s PID %d due to another due to signal or overrun.', ucfirst($p['taskname']), $p['pid']), false, 'PUSHOUT');
-				cacti_process_kill($p['pid'], SIGTERM, 'PUSHOUT');
+				if (!cacti_process_kill($p['pid'], SIGTERM, 'PUSHOUT') && cacti_process_kill_denied($p['pid'])) {
+					cacti_log(sprintf('WARNING: Unable to kill Cleanup %s PID %d owned by another user, leaving it registered.', ucfirst($p['taskname']), $p['pid']), false, 'PUSHOUT');
+
+					continue;
+				}
 			}
 
 			unregister_process($p['tasktype'], $p['taskname'], $p['taskid'], $p['pid']);

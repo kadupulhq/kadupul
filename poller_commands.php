@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -409,7 +410,11 @@ function commands_kill_running_processes() {
         foreach($processes as $p) {
             if (cacti_process_still_running($p['pid'])) {
                 cacti_log(sprintf('WARNING: Killing Commands %s PID %d due to another due to signal or overrun.', ucfirst($p['taskname']), $p['pid']), false, 'CLEANUP');
-                cacti_process_kill($p['pid'], SIGTERM, 'CLEANUP');
+                if (!cacti_process_kill($p['pid'], SIGTERM, 'CLEANUP') && cacti_process_kill_denied($p['pid'])) {
+                    cacti_log(sprintf('WARNING: Unable to kill Commands %s PID %d owned by another user, leaving it registered.', ucfirst($p['taskname']), $p['pid']), false, 'CLEANUP');
+
+                    continue;
+                }
             }
 
             unregister_process($p['tasktype'], $p['taskname'], $p['taskid'], $p['pid']);

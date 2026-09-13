@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -209,7 +210,11 @@ if ($child == 0) {
 				if (cacti_process_still_running($r['pid'])) {
 					printf("NOTE: Process with PID: %s being killed." . PHP_EOL, $logged_pid);
 
-					cacti_process_kill($r['pid'], SIGTERM, 'POLLER');
+					if (!cacti_process_kill($r['pid'], SIGTERM, 'POLLER') && cacti_process_kill_denied($r['pid'])) {
+						printf("NOTE: Process with PID: %s is owned by another user and was left registered." . PHP_EOL, $logged_pid);
+
+						continue;
+					}
 				} else {
 					printf("NOTE: Process with PID: %s is no longer running or does not match the registered command." . PHP_EOL, $logged_pid);
 				}
