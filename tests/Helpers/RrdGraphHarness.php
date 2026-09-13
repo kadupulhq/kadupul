@@ -121,6 +121,7 @@ function cacti_test_rrd_harness_run(array $scenario) : array {
 	}
 
 	$shipped .= cacti_test_rrd_function_source($hsrc, 'html_escape') . "\n\n";
+	$shipped .= cacti_test_rrd_function_source($fsrc, 'get_rrd_cfs') . "\n\n";
 	$shipped .= cacti_test_rrd_function_source(file_get_contents($root . '/lib/rrdcheck.php'), 'rrdcheck_rrdtool_execute') . "\n";
 
 	$work = sys_get_temp_dir() . '/cacti-rrd-harness-' . bin2hex(random_bytes(6));
@@ -156,6 +157,7 @@ define('RRDTOOL_OUTPUT_STDERR', 2);
 define('RRDTOOL_OUTPUT_GRAPH_DATA', 3);
 define('RRDTOOL_OUTPUT_BOOLEAN', 4);
 define('RRDTOOL_OUTPUT_RETURN_STDERR', 5);
+define('CACTI_LOCALE', 'en-US');
 
 $config = array(
 	'cacti_server_os' => $scenario['os'] ?? 'unix',
@@ -166,6 +168,8 @@ $config = array(
 );
 
 $datechar = array(0 => '-', 1 => '/', 2 => '.');
+
+$consolidation_functions = array(1 => 'AVERAGE', 2 => 'MIN', 3 => 'MAX', 4 => 'LAST');
 
 function read_config_option($name, $force = false) {
 	return $GLOBALS['scenario']['config'][$name] ?? '';
@@ -184,6 +188,14 @@ function get_selected_theme() {
 }
 
 function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '') {
+}
+
+/* session and database boundaries for __rrd_execute() and get_rrd_cfs() */
+function cacti_session_close() {
+}
+
+function get_data_source_path($local_data_id, $expand_paths) {
+	return $GLOBALS['scenario']['values'][$local_data_id - 1] ?? '';
 }
 
 function db_fetch_cell_prepared($sql, $params = array(), $col_name = '', $log = true) {
@@ -284,6 +296,15 @@ try {
 		case 'def':
 			/* the DEF expression rrdtool_function_graph() builds for a data source path */
 			$out['def'] = 'DEF:a=' . rrdtool_quote_argument(rrdtool_escape_string($scenario['path'])) . ':' . rrdtool_quote_argument('a') . ':AVERAGE:step=300';
+
+			break;
+		case 'get_rrd_cfs':
+			/* runs the shipped function through __rrd_execute() and a real process at config path_rrdtool */
+			$out['cfs'] = array();
+
+			foreach ($scenario['values'] as $i => $path) {
+				$out['cfs'][] = get_rrd_cfs($i + 1);
+			}
 
 			break;
 		case 'font':

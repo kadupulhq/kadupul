@@ -3279,7 +3279,8 @@ function get_rrd_cfs($local_data_id) {
 		return $cfs;
 	}
 
-	$output = @rrdtool_execute("info $rrdfile", false, RRDTOOL_OUTPUT_STDOUT);
+	/* bare as in 1.2.31 unless the path holds a quote character rrdtool would parse */
+	$output = @rrdtool_execute('info ' . rrdtool_quote_path_token($rrdfile), false, RRDTOOL_OUTPUT_STDOUT);
 
 	/* search for
 	 * 		rra[0].cf = 'LAST'
