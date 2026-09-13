@@ -303,8 +303,8 @@ beforeEach(function () {
 	date_default_timezone_set('UTC');
 
 	// report id => owner, item id => report id; user 1 is an admin
-	$GLOBALS['ro_reports']  = array(7 => 5, 8 => 6);
-	$GLOBALS['ro_items']    = array(70 => 7, 80 => 8);
+	$GLOBALS['ro_reports']  = array(7 => 5, 8 => 6, 9 => 5);
+	$GLOBALS['ro_items']    = array(70 => 7, 80 => 8, 90 => 9);
 	$GLOBALS['ro_request']  = array();
 	$GLOBALS['ro_messages'] = array();
 	$GLOBALS['ro_saved']    = array();
@@ -410,8 +410,9 @@ test('an item move leaves an item of another report alone', function () {
 });
 
 dataset('item edits 1.2.31 allows', array(
-	'owner opens their item' => array(5, '7', '70'),
-	'admin opens any item'   => array(1, '8', '80'),
+	'owner opens their item'                    => array(5, '7', '70'),
+	'owner opens an item of their other report' => array(5, '9', '90'),
+	'admin opens any item'                      => array(1, '8', '80'),
 ));
 
 test('an item edit 1.2.31 allows loads the same row', function ($user, $report_id, $item_id) {
@@ -432,3 +433,18 @@ test('an item edit refuses an item outside the caller\'s report', function () {
 	expect($GLOBALS['ro_messages'])->toBe(array('permission_denied', 'permission_denied'));
 	expect($GLOBALS['ro_headers'])->toBe(array());
 });
+
+dataset('item ids filed under a different report', array(
+	'owner pairs their two reports' => array(5, '7', '90'),
+	'admin pairs two reports'       => array(1, '8', '70'),
+));
+
+test('an item edit refuses an item filed under a different report', function ($user, $report_id, $item_id) {
+	$_SESSION['sess_user_id'] = $user;
+
+	edit_item(array('id' => $report_id, 'item_id' => $item_id));
+
+	expect($GLOBALS['ro_loaded'])->toBe(array());
+	expect($GLOBALS['ro_messages'])->toBe(array('permission_denied'));
+	expect($GLOBALS['ro_headers'])->toBe(array());
+})->with('item ids filed under a different report');

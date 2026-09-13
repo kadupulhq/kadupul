@@ -930,8 +930,11 @@ function reports_item_edit() {
 	$report_id = (int) get_filter_request_var('id');
 	$item_id   = (isset_request_var('item_id') ? (int) get_filter_request_var('item_id') : 0);
 
+	/* the item is drawn under $report_id, so it must be filed there, as save and
+	   move already require */
 	if (!cacti_authorize_resource($_SESSION['sess_user_id'], $report_id, 'reports') ||
-		($item_id > 0 && !cacti_authorize_resource($_SESSION['sess_user_id'], $item_id, 'report_item'))) {
+		($item_id > 0 && (!cacti_authorize_resource($_SESSION['sess_user_id'], $item_id, 'report_item') ||
+		db_fetch_cell_prepared('SELECT report_id FROM reports_items WHERE id = ?', array($item_id)) != $report_id))) {
 		/* the caller has already printed the page header */
 		raise_message('permission_denied');
 
