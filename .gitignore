@@ -112,6 +112,7 @@ resource/**/*.cache
 *.tar.gz
 *.tar.gz.sha256
 coverage/
+tests/coverage.xml
 .phpunit.result.cache
 .phpunit.cache/
 .php-cs-fixer.cache
