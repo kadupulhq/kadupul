@@ -18,6 +18,7 @@ Cacti CHANGELOG
 -issue: Keep Never as the LDAP TLS Certificate Requirements default, and log a warning when encrypted LDAP does not verify the server certificate
 -issue: Look up LDAP group members of type Username by the bound DN again, so posixGroup memberUid groups pass
 -issue: Let a Domains user in a domain with no User Template fall back to the global template or guest account, as 1.2.31 did
+-security: Refuse report item saves, moves and edits under a report that does not exist, including for Reports Administration users
 -security: Count Reports Administration from a user's groups only while the group is enabled when authorizing report changes, as page access already does
 -issue: Parse installer start and finish times that fall on a whole second instead of crashing
 -security: Verify Remote Data Collector HTTPS certificates by default on new installs; upgraded installs keep their previous behaviour

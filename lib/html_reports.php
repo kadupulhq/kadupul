@@ -389,8 +389,10 @@ function reports_form_save() {
 
 		/* sql_save() overwrites whatever row carries this id, so an existing
 		   item must already sit in a report the caller may change.  Failing
-		   here skips the save, and item_edit then refuses the same ids. */
+		   here skips the save, and item_edit then refuses the same ids.  A report
+		   admin passes the ownership check for any id, so the report must exist. */
 		if (!cacti_authorize_resource($_SESSION['sess_user_id'], $report_id, 'reports') ||
+			!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ?', array($report_id)) ||
 			($item_id > 0 && db_fetch_cell_prepared('SELECT report_id FROM reports_items WHERE id = ?', array($item_id)) != $report_id)) {
 			raise_message('permission_denied');
 
@@ -682,6 +684,7 @@ function reports_item_movedown() {
 
 	/* move_item_down() rewrites the item row by id alone */
 	if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) get_request_var('id'), 'reports') ||
+		!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ?', array(get_request_var('id'))) ||
 		db_fetch_cell_prepared('SELECT report_id FROM reports_items WHERE id = ?', array(get_request_var('item_id'))) != get_request_var('id')) {
 		return;
 	}
@@ -697,6 +700,7 @@ function reports_item_moveup() {
 
 	/* move_item_up() rewrites the item row by id alone */
 	if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) get_request_var('id'), 'reports') ||
+		!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ?', array(get_request_var('id'))) ||
 		db_fetch_cell_prepared('SELECT report_id FROM reports_items WHERE id = ?', array(get_request_var('item_id'))) != get_request_var('id')) {
 		return;
 	}
@@ -945,8 +949,9 @@ function reports_item_edit() {
 	$item_id   = (isset_request_var('item_id') ? (int) get_filter_request_var('item_id') : 0);
 
 	/* the item is drawn under $report_id, so it must be filed there, as save and
-	   move already require */
+	   move already require, and the report itself must exist */
 	if (!cacti_authorize_resource($_SESSION['sess_user_id'], $report_id, 'reports') ||
+		!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ?', array($report_id)) ||
 		($item_id > 0 && (!cacti_authorize_resource($_SESSION['sess_user_id'], $item_id, 'report_item') ||
 		db_fetch_cell_prepared('SELECT report_id FROM reports_items WHERE id = ?', array($item_id)) != $report_id))) {
 		/* the caller has already printed the page header */

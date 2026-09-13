@@ -169,6 +169,8 @@ function db_fetch_cell_prepared($sql, $params = array()) {
 
 	if ($sql == 'SELECT user_id FROM reports WHERE id = ?') {
 		return (isset($GLOBALS['ro_reports'][$params[0]]) ? (string) $GLOBALS['ro_reports'][$params[0]] : false);
+	} elseif ($sql == 'SELECT id FROM reports WHERE id = ?') {
+		return (isset($GLOBALS['ro_reports'][$params[0]]) ? (string) (int) $params[0] : false);
 	} elseif ($sql == 'SELECT report_id FROM reports_items WHERE id = ?') {
 		return (isset($GLOBALS['ro_items'][$params[0]]) ? (string) $GLOBALS['ro_items'][$params[0]] : false);
 	} elseif ($sql == 'SELECT email_address FROM user_auth WHERE id = ?') {
@@ -311,7 +313,8 @@ beforeEach(function () {
 
 	// report id => owner, item id => report id; user 1 is an admin
 	$GLOBALS['ro_reports']  = array(7 => 5, 8 => 6, 9 => 5);
-	$GLOBALS['ro_items']    = array(70 => 7, 80 => 8, 90 => 9);
+	// item 95 is still filed under report 99, which no longer exists
+	$GLOBALS['ro_items']    = array(70 => 7, 80 => 8, 90 => 9, 95 => 99);
 	$GLOBALS['ro_request']  = array();
 	$GLOBALS['ro_messages'] = array();
 	$GLOBALS['ro_saved']    = array();
@@ -326,6 +329,7 @@ dataset('item saves 1.2.31 allows', array(
 	'owner adds an item'                 => array(5, '7', '', 'Location: reports_user.php?action=item_edit&id=7&item_id=42', item_row(7, 0, 4)),
 	'owner edits an item'                => array(5, '7', '70', 'Location: reports_user.php?action=item_edit&id=7&item_id=70', item_row(7, 70, 2)),
 	'admin edits another user\'s item'   => array(1, '8', '80', 'Location: reports_user.php?action=item_edit&id=8&item_id=80', item_row(8, 80, 2)),
+	'admin adds to another user\'s report' => array(1, '8', '', 'Location: reports_user.php?action=item_edit&id=8&item_id=42', item_row(8, 0, 4)),
 ));
 
 test('an item save 1.2.31 allows redirects and writes as it did', function ($user, $report_id, $id, $location, $row) {
@@ -455,3 +459,24 @@ test('an item edit refuses an item filed under a different report', function ($u
 	expect($GLOBALS['ro_messages'])->toBe(array('permission_denied'));
 	expect($GLOBALS['ro_headers'])->toBe(array());
 })->with('item ids filed under a different report');
+
+test('a report admin cannot add, move or open an item under a report that does not exist', function () {
+	$_SESSION['sess_user_id'] = 1;
+	$GLOBALS['ro_request']    = item_request('99', '');
+
+	reports_form_save();
+
+	foreach (array('reports_item_movedown', 'reports_item_moveup') as $fn) {
+		$GLOBALS['ro_request'] = array('item_id' => '95', 'id' => '99');
+
+		$fn = __NAMESPACE__ . '\\' . $fn;
+		$fn();
+	}
+
+	edit_item(array('id' => '99', 'item_id' => '95'));
+
+	expect($GLOBALS['ro_saved'])->toBe(array());
+	expect($GLOBALS['ro_moves'])->toBe(array());
+	expect($GLOBALS['ro_loaded'])->toBe(array());
+	expect($GLOBALS['ro_messages'])->toBe(array('permission_denied', 'permission_denied'));
+});
