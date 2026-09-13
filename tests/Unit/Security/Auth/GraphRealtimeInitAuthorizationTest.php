@@ -194,6 +194,15 @@ test('an allowed graph is polled once with the 1.2.31 poller arguments and respo
 		->and(array_keys($run['response']))->toBe(array('local_graph_id', 'top', 'left', 'ds_step', 'graph_start', 'size', 'thumbnails', 'data', 'image_format'));
 });
 
+test('an allowed graph costs one permission query per request', function () use ($realtimeRequest) {
+	foreach (array('init', 'countdown') as $action) {
+		$run = graph_realtime_init_run(array('request' => array('action' => $action) + $realtimeRequest, 'allowed' => array(5), 'config' => array('realtime_enabled' => 'on')));
+
+		expect($run['calls']['allowed'])->toBe(array(5))
+			->and($run['polls'])->toHaveCount(1);
+	}
+});
+
 test('a stored interval with a space reaches the poller as one argument', function () use ($realtimeRequest) {
 	$request = $realtimeRequest;
 	unset($request['ds_step']);
