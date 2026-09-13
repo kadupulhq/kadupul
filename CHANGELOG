@@ -1,5 +1,30 @@
 Cacti CHANGELOG
 
+1.2.x
+-security: Harden advisory command execution and database DDL sink validation
+-security: Restrict graph input fields across the template, graph and import handoffs
+-security: Treat a non-boolean signature result as a failure in import_package
+-issue#5679: Attempt SNMP in Ping-OR-SNMP availability checks when ping fails
+-issue#6609: Return a controlled empty export when RRDtool XPORT omits metadata
+-issue#6684: Prevent VDEF-backed aggregate graph items from being emitted as XPORT data sources
+-issue#7212: Address a few small memory leaks in realtime graphing
+-issue#7216: Aggregate totalling legend printed untotalled single data source values
+-issue#7359: Undefined variables detected with legacy plugins
+-issue#7424: Correct SNMP disk counter wrap delta calculations
+-issue#7425: Guard process registration and cleanup against PID reuse
+-issue#7426: Stop tracking the generated CSRF secret so each install creates its own
+-issue#7427: Update device status by host id instead of non-unique hostname
+-issue#7429: Prevent monthly automation schedules from resetting next_start to 1970
+-issue#7493: SNMP walk for output_format fields used max OIDs instead of the device bulk walk size
+-issue#7552: HTMLPurifier definition cache written inside the read-only library tree
+-issue#7553: Drop down menus do not update page content after upgrading to 1.2.31
+-issue#7666: cacti_exec() returned the wrong exit code and warned about a missing exit_code key
+-issue#7699: Guard three divisors that PHP 8 makes fatal
+-issue#7702: CSP report endpoint size limit never triggers and rate-limit buckets accumulate
+-issue#7708: Bind the MIB column names in MibCache::select()
+-issue#7727: Log entry for Data Source validation has a double space
+-feature#7246: It should be possible to change the Device of a Graph if both Devices include the Data Query
+
 1.2.31
 -security#GHSA-23g4-vf2j-94w4: CVE-2026-39894 RRDtool metric shift via LC_NUMERIC locale comma decimal formatting
 -security#GHSA-273r-qr93-wgcp: CVE-2026-40082 Session Fixation via missing session_regenerate_id() after login
@@ -78,6 +103,7 @@ Cacti CHANGELOG
 -issue#6606: When using SpikeKill, actions would not always lead to expected results
 -issue#6706: Some hosts may show as down incorrectly by xmacan
 -issue#6945: Improve PHP 8.5 support
+-issue#7070: Align percentile rank with observed samples and expose missing export rows
 -issue#7121: When using data input methods, unexpected log entries may appear
 -issue#7133: When attempting to push out items, offline data sources can have unexpected results
 -issue#7135: Fix issue with locally scoped OID/Script path not being correctly cleared

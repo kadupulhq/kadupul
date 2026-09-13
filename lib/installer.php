@@ -23,6 +23,7 @@
 */
 
 include_once(dirname(__FILE__) . '/../lib/poller.php');
+include_once(dirname(__FILE__) . '/../lib/audit.php');
 
 class Installer implements JsonSerializable {
 	const EXIT_DB_EMPTY = 1;
@@ -531,6 +532,7 @@ class Installer implements JsonSerializable {
 			'log'       => $config['base_path'] . '/log',
 			'boost'     => $config['base_path'] . '/cache/boost',
 			'mibcache'  => $config['base_path'] . '/cache/mibcache',
+			'purifier'  => $config['base_path'] . '/cache/purifier',
 			'realtime'  => $config['base_path'] . '/cache/realtime',
 			'spikekill' => $config['base_path'] . '/cache/spikekill'
 		);
@@ -1214,6 +1216,34 @@ class Installer implements JsonSerializable {
 		return $selected;
 	}
 
+	/* isCompleteSelectionPayload - confirms that a browser submitted every
+	 * server-rendered checkbox and only supported boolean values. */
+	private static function isCompleteSelectionPayload($submitted, $expected) {
+		unset($submitted['all']);
+
+		$submitted_keys = array_keys($submitted);
+		sort($submitted_keys);
+		sort($expected);
+
+		if ($submitted_keys !== $expected) {
+			return false;
+		}
+
+		foreach ($submitted as $value) {
+			if (!in_array($value, array(true, false, 'true', 'false', 'on', '', 1, 0, '1', '0'), true)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/* isTableSelectable() - determines whether the web installer renders a
+	 *                       conversion checkbox for a table */
+	private static function isTableSelectable($table) {
+		return isset($table['Rows']) && is_numeric($table['Rows']) && $table['Rows'] < 1000000;
+	}
+
 	/* setTemplates() - sets a list of templates that should be installed
 	 *                  during the installServer() phase.
 	 * @param_templates - an array of templates to install in the form of
@@ -1223,8 +1253,26 @@ class Installer implements JsonSerializable {
 	 *         passed that is not expected */
 	private function setTemplates($param_templates = array()) {
 		if (is_array($param_templates)) {
-			db_execute('DELETE FROM settings WHERE name like \'install_tp_%\'');
 			$known_templates = install_setup_get_templates();
+			$expected_keys   = array();
+
+			if (!is_array($known_templates)) {
+				$this->addError(Installer::STEP_TEMPLATE_INSTALL, 'Templates', 'SelectionPayload', __('Unable to load the available templates'));
+
+				return;
+			}
+
+			foreach ($known_templates as $known) {
+				$expected_keys[] = 'chk_template_' . str_replace('.', '_', $known['filename']);
+			}
+
+			if ($this->runtime === 'Web' && !self::isCompleteSelectionPayload($param_templates, $expected_keys)) {
+				$this->addError(Installer::STEP_TEMPLATE_INSTALL, 'Templates', 'SelectionPayload', __('The template selection was incomplete. Reload this installer step and select the templates again.'));
+
+				return;
+			}
+
+			db_execute('DELETE FROM settings WHERE name like \'install_tp_%\'');
 
 			log_install_medium('templates',"setTemplates(): Updating templates");
 			log_install_debug('templates',"setTemplates(): Parameter data:" . clean_up_lines(var_export($param_templates, true)));
@@ -1330,9 +1378,28 @@ class Installer implements JsonSerializable {
 	 *         conversion list due to being converted elsewhere */
 	private function setTables($param_tables = array()) {
 		if (is_array($param_tables)) {
-			db_execute('DELETE FROM settings WHERE name like \'install_table_%\'');
-
 			$known_tables = install_setup_get_tables();
+			$expected_keys = array();
+
+			if (!is_array($known_tables)) {
+				$this->addError(Installer::STEP_CHECK_TABLES, 'Tables', 'SelectionPayload', __('Unable to load the tables requiring conversion'));
+
+				return;
+			}
+
+			foreach ($known_tables as $known) {
+				if (self::isTableSelectable($known)) {
+					$expected_keys[] = 'chk_table_' . $known['Name'];
+				}
+			}
+
+			if ($this->runtime === 'Web' && !self::isCompleteSelectionPayload($param_tables, $expected_keys)) {
+				$this->addError(Installer::STEP_CHECK_TABLES, 'Tables', 'SelectionPayload', __('The table selection was incomplete. Reload this installer step and select the tables again.'));
+
+				return;
+			}
+
+			db_execute('DELETE FROM settings WHERE name like \'install_table_%\'');
 
 			log_install_medium('tables',"setTables(): Updating Tables");
 			log_install_debug('tables',"setTables(): Parameter data:" . clean_up_lines(var_export($param_tables, true)));
@@ -2657,7 +2724,7 @@ class Installer implements JsonSerializable {
 				html_start_box(__('Tables'), '100%', false, '3', 'center', '', '');
 				html_header_checkbox(array(__('Name'), __('Collation'), __('Row Format'), __('Engine'), __('Rows')));
 				foreach ($tables as $id => $p) {
-					$enabled = ($p['Rows'] < 1000000 ? true : false);
+					$enabled = self::isTableSelectable($p);
 
 					$style = ($enabled ? '' : 'text-decoration: line-through;');
 
@@ -3040,6 +3107,10 @@ class Installer implements JsonSerializable {
 
 		log_install_always('', __('Finished %s Process for v%s', $which, CACTI_VERSION));
 
+		if (empty($failure)) {
+			$failure = $this->validateCoreSchema();
+		}
+
 		set_install_config_option('install_error', $failure);
 
 		if (empty($failure)) {
@@ -3064,6 +3135,40 @@ class Installer implements JsonSerializable {
 			$this->setProgress(Installer::PROGRESS_COMPLETE);
 			$this->setStep(Installer::STEP_ERROR);
 		}
+	}
+
+	private function validateCoreSchema() {
+		global $config, $database_default;
+
+		$schema_sql = file_get_contents($config['base_path'] . '/cacti.sql');
+
+		if ($schema_sql === false) {
+			return __('ERROR: Unable to validate the installed database because cacti.sql could not be read');
+		}
+
+		$expected_tables = audit_schema_table_names($schema_sql);
+
+		if (!cacti_sizeof($expected_tables)) {
+			return __('ERROR: Unable to validate the installed database because cacti.sql contains no table definitions');
+		}
+
+		$table_rows = db_fetch_assoc_prepared('SELECT TABLE_NAME
+			FROM information_schema.TABLES
+			WHERE TABLE_SCHEMA = ?',
+			array($database_default));
+
+		if (!is_array($table_rows)) {
+			return __('ERROR: Unable to query the installed database schema');
+		}
+
+		$actual_tables = array_column($table_rows, 'TABLE_NAME');
+		$missing_tables = audit_missing_core_tables($expected_tables, $actual_tables);
+
+		if (cacti_sizeof($missing_tables)) {
+			return __('ERROR: Required core database tables are missing: %s', implode(', ', $missing_tables));
+		}
+
+		return '';
 	}
 
 	private function installTemplate() {
@@ -3529,26 +3634,29 @@ class Installer implements JsonSerializable {
 
 		Installer::setPhpOption('max_execution_time', 0);
 		Installer::setPhpOption('memory_limit', -1);
+		$backgroundTime = microtime(true);
+		$success        = false;
+
 		try {
-			$backgroundTime = microtime(true);
 			if ($installer == null) {
 				$installer = new Installer();
 			}
 			$installer->setDefaults();
 			$installer->install();
-		} catch (Exception $e) {
+			$success = $installer->getStep() === Installer::STEP_COMPLETE;
+		} catch (Throwable $e) {
 			log_install_always('', __('Exception occurred during installation: #%s - %s', $e->getCode(), $e->getMessage()));
 		}
 
 		$backgroundDone = microtime(true);
 		set_install_config_option('install_complete', $backgroundDone);
-		set_install_config_option('install_step', Installer::STEP_COMPLETE);
 
 		$dateBack = DateTime::createFromFormat('U.u', $backgroundTime);
 		$dateTime = DateTime::createFromFormat('U.u', $backgroundDone);
 
 		log_install_always('', __('Installation was started at %s, completed at %s', (string) $dateBack->format('Y-m-d H:i:s'), (string) $dateTime->format('Y-m-d H:i:s')));
-		return true;
+
+		return $success;
 	}
 
 	public static function getInstallLog() {
