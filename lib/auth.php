@@ -4961,12 +4961,13 @@ function check_reset_no_authentication($auth_method) {
 		cacti_log('Admin User (' . read_config_option('admin_user') . ' vs ' . $admin_id . ')', true, 'AUTH_NONE', POLLER_VERBOSITY_DEVDBG);
 
 		if (!$admin_id) {
-			$admin_sql_query = 'SELECT TOP 1 id FROM (
+			$admin_sql_query = 'SELECT id FROM (
 				SELECT ua.id
 				FROM user_auth AS ua
 				INNER JOIN user_auth_realm AS uar
 				ON uar.user_id = ua.id
-				WHERE uar.realm_id = ?';
+				WHERE ua.enabled="on"
+				AND uar.realm_id = ?';
 
 			$admin_sql_params = array(15);
 
@@ -4980,7 +4981,7 @@ function check_reset_no_authentication($auth_method) {
 				INNER JOIN user_auth_group AS uag
 				ON uag.id = uagm.group_id
 				INNER JOIN user_auth_group_realm AS uagr
-				ON uagr.group_id=uag.group_id
+				ON uagr.group_id = uag.id
 				WHERE uag.enabled="on" AND ua.enabled="on"
 				AND uagr.realm_id = ?';
 
@@ -4988,7 +4989,9 @@ function check_reset_no_authentication($auth_method) {
 			}
 
 			$admin_sql_query .= '
-				) AS id';
+				) AS id
+				ORDER BY id
+				LIMIT 1';
 
 			cacti_log('SQL query ' . $admin_sql_query, true, 'AUTH_NONE', POLLER_VERBOSITY_DEVDBG);
 			cacti_log('SQL param ' . implode(',', $admin_sql_params), true, 'AUTH_NONE', POLLER_VERBOSITY_DEVDBG);

@@ -149,6 +149,10 @@ $GLOBALS['probe'] = array(
 	'config'         => $scenario['config'] ?? array(),
 	'users'          => $scenario['users'] ?? array(),
 	'cache'          => $scenario['cache'] ?? array(),
+	'realms'         => $scenario['realms'] ?? null,
+	'groups'         => $scenario['groups'] ?? array(),
+	'group_members'  => $scenario['group_members'] ?? array(),
+	'group_realms'   => $scenario['group_realms'] ?? array(),
 	'executed'       => array(),
 	'events'         => array(),
 	'config_writes'  => array(),
@@ -196,6 +200,55 @@ function probe_user_rows(string $sql, array $params) : array {
 	return $rows;
 }
 
+/**
+ * Run a query that joins the realm tables against an in-memory SQLite copy of
+ * the scenario, so syntax and column names are checked by a real SQL engine
+ * rather than by pattern matching. An engine error returns false, as the
+ * database layer does.
+ *
+ * @return mixed
+ */
+function probe_realm_cell(string $sql, array $params) {
+	static $pdo = null;
+
+	if ($pdo === null) {
+		$pdo = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+		$pdo->exec('CREATE TABLE user_auth (id INTEGER PRIMARY KEY, username TEXT, enabled TEXT)');
+		$pdo->exec('CREATE TABLE user_auth_realm (realm_id INTEGER, user_id INTEGER)');
+		$pdo->exec('CREATE TABLE user_auth_group (id INTEGER PRIMARY KEY, enabled TEXT)');
+		$pdo->exec('CREATE TABLE user_auth_group_members (group_id INTEGER, user_id INTEGER)');
+		$pdo->exec('CREATE TABLE user_auth_group_realm (group_id INTEGER, realm_id INTEGER)');
+
+		$seed = array(
+			'INSERT INTO user_auth (id, username, enabled) VALUES (?, ?, ?)' => array_map(function (array $row) : array {
+				return array($row['id'], $row['username'], $row['enabled']);
+			}, $GLOBALS['probe']['users']),
+			'INSERT INTO user_auth_realm (user_id, realm_id) VALUES (?, ?)'         => $GLOBALS['probe']['realms'],
+			'INSERT INTO user_auth_group (id, enabled) VALUES (?, ?)'               => $GLOBALS['probe']['groups'],
+			'INSERT INTO user_auth_group_members (group_id, user_id) VALUES (?, ?)' => $GLOBALS['probe']['group_members'],
+			'INSERT INTO user_auth_group_realm (group_id, realm_id) VALUES (?, ?)'  => $GLOBALS['probe']['group_realms'],
+		);
+
+		foreach ($seed as $insert => $rows) {
+			$statement = $pdo->prepare($insert);
+
+			foreach ($rows as $row) {
+				$statement->execute($row);
+			}
+		}
+	}
+
+	try {
+		$statement = $pdo->prepare($sql);
+		$statement->execute($params);
+	} catch (PDOException $e) {
+		return false;
+	}
+
+	return $statement->fetchColumn();
+}
+
 function read_config_option($name, $force = false) {
 	return $GLOBALS['probe']['config'][$name] ?? '';
 }
@@ -224,6 +277,10 @@ function db_fetch_cell_prepared($sql, $params = array(), $col_name = '', $log = 
 		}
 
 		return false;
+	}
+
+	if ($GLOBALS['probe']['realms'] !== null && strpos($sql, 'user_auth_realm') !== false) {
+		return probe_realm_cell($sql, $params);
 	}
 
 	/* SELECT TOP is not MySQL syntax; the real server rejects it */
