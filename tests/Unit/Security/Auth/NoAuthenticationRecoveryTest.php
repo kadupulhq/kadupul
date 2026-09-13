@@ -65,6 +65,27 @@ test('without the configured administrator an enabled settings user is chosen', 
 		->and($result['config_writes'])->toContain(array('auth_method', 1));
 });
 
+test('a disabled configured administrator is passed over for an enabled settings user', function () {
+	$result = cacti_test_run_auth_entry_probe(array(
+		'config' => array('auth_method' => 0, 'admin_user' => 5),
+		'users'  => array(
+			array('id' => 5, 'username' => 'admin', 'realm' => 0, 'enabled' => '', 'locked' => '', 'password' => 'stored-hash'),
+			array('id' => 7, 'username' => 'ops', 'realm' => 0, 'enabled' => 'on', 'locked' => '', 'password' => 'stored-hash'),
+		),
+		'realms' => array(array(5, 15), array(7, 15)),
+	));
+
+	$updates = no_auth_executed($result, 'UPDATE user_auth');
+
+	expect($updates)->toHaveCount(1)
+		->and($updates[0]['params'])->toBe(array(7))
+		->and($result['session'])->not->toHaveKey('sess_user_id')
+		->and($result['session'])->not->toHaveKey('sess_change_password')
+		->and($result['events'])->not->toContain('cookie_set')
+		->and($result['config_writes'])->toContain(array('auth_method', 1))
+		->and($result['page_continued'])->toBeFalse();
+});
+
 test('without the configured administrator a settings user from an enabled group is chosen', function () {
 	$result = cacti_test_run_auth_entry_probe(array(
 		'config'        => array('auth_method' => 0, 'admin_user' => 99),
