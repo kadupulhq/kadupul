@@ -16,6 +16,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Added
 
+- SonarQube Cloud analysis for main and same-repository pull requests.
 - Update vendored phpseclib to 3.0.57 and constant_time_encoding to 3.1.3, and lock runtime dependencies.
 - Behavioral characterization harness recording 31 contracts from a running
   1.2.31 install, with a differential runner so a rewrite of the internals can
