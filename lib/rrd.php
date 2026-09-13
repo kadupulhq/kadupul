@@ -3108,6 +3108,26 @@ function rrdtool_file_exists($data_source_path, $rrdtool_pipe = null) {
 }
 
 /**
+ * rrdtool_quote_path_token - quote a validated path for the rrdtool command
+ *   parser only when it holds a quote character.
+ *
+ *   1.2.31 sent these paths bare. rrdtool reads a bare path correctly unless
+ *   it holds ' or ", which open a quoted argument, so only those paths are
+ *   quoted and every other path stays byte for byte as it was.
+ *
+ * @param  (string) $path - a path accepted by cacti_rrdtool_valid_path_token()
+ *
+ * @return (string) the path, quoted only when it holds a quote character
+ */
+function rrdtool_quote_path_token($path) {
+	if (strpbrk($path, '\'"') === false) {
+		return $path;
+	}
+
+	return rrdtool_quote_argument($path);
+}
+
+/**
  * rrdtool_build_path_command - build a validated RRDtool command with a path argument
  *
  * @param  (string) $command - RRDtool command verb
@@ -3119,6 +3139,12 @@ function rrdtool_file_exists($data_source_path, $rrdtool_pipe = null) {
 function rrdtool_build_path_command($command, $path, $suffix = '') {
 	if (!is_string($command) || preg_match('/^[A-Za-z0-9_-]+$/', $command) !== 1 || !cacti_rrdtool_valid_path_token($path) || cacti_has_control_chars($suffix)) {
 		return false;
+	}
+
+	/* RRDproxy runs these as PHP functions on arguments split at spaces and never
+	 * removes quotes (Cacti/rrdproxy include/global.php), so they keep a bare path */
+	if (!in_array($command, array('file_exists', 'filemtime', 'is_dir', 'mkdir', 'rmdir', 'unlink', 'archive'), true)) {
+		$path = rrdtool_quote_path_token($path);
 	}
 
 	return trim($command . ' ' . $path . ($suffix !== '' ? ' ' . $suffix : ''));
@@ -3164,7 +3190,7 @@ function rrdtool_execute_restore_command($xml_file, $rrd_file, $log_to_stdout = 
 		return false;
 	}
 
-	return rrdtool_execute("restore -f $xml_file $rrd_file", $log_to_stdout, $output_flag, $rrdtool_pipe, $logopt);
+	return rrdtool_execute('restore -f ' . rrdtool_quote_path_token($xml_file) . ' ' . rrdtool_quote_path_token($rrd_file), $log_to_stdout, $output_flag, $rrdtool_pipe, $logopt);
 }
 
 /**

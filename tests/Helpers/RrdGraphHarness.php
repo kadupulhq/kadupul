@@ -113,6 +113,13 @@ function cacti_test_rrd_harness_run(array $scenario) : array {
 		$shipped .= cacti_test_rrd_function_source($fsrc, $name) . "\n\n";
 	}
 
+	/* path validators are newer than 1.2.31, so load them only where they exist */
+	foreach (array('cacti_has_control_chars', 'cacti_rrdtool_valid_path', 'cacti_rrdtool_valid_path_token') as $name) {
+		if (strpos($fsrc, "\nfunction " . $name . '(') !== false) {
+			$shipped .= cacti_test_rrd_function_source($fsrc, $name) . "\n\n";
+		}
+	}
+
 	$shipped .= cacti_test_rrd_function_source($hsrc, 'html_escape') . "\n\n";
 	$shipped .= cacti_test_rrd_function_source(file_get_contents($root . '/lib/rrdcheck.php'), 'rrdcheck_rrdtool_execute') . "\n";
 
@@ -143,6 +150,12 @@ define('GD_Y_MO_D', 4);
 define('GD_Y_MN_D', 5);
 define('POLLER_VERBOSITY_LOW', 2);
 define('POLLER_VERBOSITY_DEBUG', 5);
+define('RRDTOOL_OUTPUT_NULL', 0);
+define('RRDTOOL_OUTPUT_STDOUT', 1);
+define('RRDTOOL_OUTPUT_STDERR', 2);
+define('RRDTOOL_OUTPUT_GRAPH_DATA', 3);
+define('RRDTOOL_OUTPUT_BOOLEAN', 4);
+define('RRDTOOL_OUTPUT_RETURN_STDERR', 5);
 
 $config = array(
 	'cacti_server_os' => $scenario['os'] ?? 'unix',
@@ -230,6 +243,47 @@ try {
 
 			fclose($pipes[0]);
 			proc_close($process);
+
+			break;
+		case 'path_command':
+			$out['commands'] = array();
+
+			foreach ($scenario['commands'] as $command) {
+				$out['commands'][] = rrdtool_build_path_command($command[0], $command[1], $command[2] ?? '');
+			}
+
+			break;
+		case 'execute_capture':
+			/* the exact bytes __rrd_execute() writes to an open rrdtool pipe */
+			$out['written'] = array();
+
+			foreach ($scenario['calls'] as $call) {
+				$pipe = fopen('php://temp', 'w+');
+
+				if ($call[0] == 'raw') {
+					rrdtool_execute($call[1], false, RRDTOOL_OUTPUT_NULL, $pipe);
+				} elseif ($call[0] == 'path') {
+					rrdtool_execute_path_command($call[1], $call[2], '', false, RRDTOOL_OUTPUT_NULL, $pipe);
+				} elseif ($call[0] == 'restore') {
+					rrdtool_execute_restore_command($call[1], $call[2], false, RRDTOOL_OUTPUT_NULL, $pipe);
+				}
+
+				rewind($pipe);
+				$out['written'][] = stream_get_contents($pipe);
+			}
+
+			break;
+		case 'file_exists':
+			$out['exists'] = array();
+
+			foreach ($scenario['values'] as $value) {
+				$out['exists'][] = rrdtool_file_exists($value);
+			}
+
+			break;
+		case 'def':
+			/* the DEF expression rrdtool_function_graph() builds for a data source path */
+			$out['def'] = 'DEF:a=' . rrdtool_quote_argument(rrdtool_escape_string($scenario['path'])) . ':' . rrdtool_quote_argument('a') . ':AVERAGE:step=300';
 
 			break;
 		case 'font':
