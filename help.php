@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -27,6 +28,11 @@ $guest_account = true;
 include('./include/auth.php');
 
 if (isset_request_var('error')) {
+	/* page[]= is not a page name, and basename() throws on an array */
+	if (!is_string(get_nfilter_request_var('page'))) {
+		die_html_input_error('page');
+	}
+
 	$page  = basename(get_nfilter_request_var('page'));
 	$error = get_filter_request_var('error');
 
@@ -41,7 +47,11 @@ if (isset_request_var('error')) {
 	cacti_log($message, false);
 
 	if (debounce_run_notification('page_error_' . $page)) {
-		admin_email(__('Cacti System Warning'), __('WARNING: Cacti Page:%s for User:%s Generated a Fatal Error %d!', $page, $username, $error));
+		/* the notice is HTML mail and page is the request's own value. Only angle
+		   brackets are escaped, so a page query string reads as it always has. */
+		$tags = array('<' => '&lt;', '>' => '&gt;');
+
+		admin_email(__('Cacti System Warning'), __('WARNING: Cacti Page:%s for User:%s Generated a Fatal Error %d!', strtr($page, $tags), strtr($username, $tags), $error));
 	}
 } elseif (isset_request_var('page')) {
 	get_filter_request_var('page', FILTER_CALLBACK, array('options' => 'sanitize_search_string'));
