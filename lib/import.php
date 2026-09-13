@@ -334,7 +334,25 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 	}
 
 	if ($repair) {
-		repair_system_data_input_methods();
+		if ($data_input_allowed) {
+			repair_system_data_input_methods();
+		} else {
+			/* the repair rewrites data input fields and their mappings, so it needs the same permission */
+			$repair_message = __('The Data Input Method repair was skipped because you do not have permission to edit Data Input Methods.');
+
+			foreach (array('data_input_method', 'data_template') as $repair_type) {
+				if (isset($info_array[$repair_type])) {
+					foreach ($info_array[$repair_type] as $index => $repair_info) {
+						$info_array[$repair_type][$index]['differences'][] = $repair_message;
+					}
+				}
+			}
+
+			if (!$preview_only) {
+				cacti_log('WARNING: Skipped the data input method repair after an import - the user lacks the Data Input Methods permission', false, 'IMPORT');
+				raise_message('import_data_input_repair', $repair_message, MESSAGE_LEVEL_WARN);
+			}
+		}
 	}
 
 	return $info_array;

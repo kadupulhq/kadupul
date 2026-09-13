@@ -302,3 +302,45 @@ test('a refused input string fails the import cleanly instead of throwing', func
 		->and($savedTo('data_input'))->toBe(array())
 		->and($savedTo('data_template_rrd'))->toBe(array());
 });
+
+/* the template uses a method and field that already exist, so only the repair is in question */
+$existingMethod = function () use ($methodHash, $fieldHash): void {
+	$GLOBALS['ifl_existing'] = array(
+		array('type' => 'data_input_method', 'id' => 9, 'hash' => $methodHash),
+		array('type' => 'data_input_field', 'id' => 31, 'hash' => $fieldHash),
+	);
+};
+
+test('a user without the realm triggers no data input method repair', function () use ($runImport, $templateXml, $dtHash, $existingMethod, $savedTo) {
+	$existingMethod();
+
+	$result = $runImport(array('hash_010103' . $dtHash => $templateXml));
+
+	expect($GLOBALS['ifl_repairs'])->toBe(0)
+		->and($savedTo('data_template_rrd')[0]['row']['data_input_field_id'])->toBe(31)
+		->and(implode("\n", $result['data_template'][0]['differences']))->toContain('repair was skipped')
+		->and(implode("\n", $GLOBALS['ifl_log']))->toContain('Skipped the data input method repair')
+		->and(implode("\n", $GLOBALS['ifl_messages']))->toContain('repair was skipped');
+});
+
+test('a user with the realm still runs the data input method repair', function () use ($runImport, $templateXml, $dtHash, $existingMethod) {
+	$existingMethod();
+	$GLOBALS['ifl_realm'] = 2;
+
+	$result = $runImport(array('hash_010103' . $dtHash => $templateXml));
+
+	expect($GLOBALS['ifl_repairs'])->toBe(1)
+		->and($result['data_template'][0]['differences'] ?? array())->toBe(array())
+		->and($GLOBALS['ifl_messages'])->toBe(array());
+});
+
+test('the preview shows that the repair would be skipped', function () use ($runImport, $templateXml, $dtHash, $existingMethod) {
+	$existingMethod();
+	$GLOBALS['preview_only'] = true;
+
+	$result = $runImport(array('hash_010103' . $dtHash => $templateXml));
+
+	expect($GLOBALS['ifl_repairs'])->toBe(0)
+		->and(implode("\n", $result['data_template'][0]['differences']))->toContain('repair was skipped')
+		->and($GLOBALS['ifl_messages'])->toBe(array());
+});
