@@ -412,7 +412,9 @@ function boost_poller_on_demand(&$results) {
 		/* install the boost error handler */
 		set_error_handler('boost_error_handler');
 
-		if (boost_check_correct_enabled() && read_config_option('boost_redirect') == '') {
+		$boost_enabled = boost_check_correct_enabled();
+
+		if ($boost_enabled && read_config_option('boost_redirect') == '') {
 			if (cacti_sizeof($results)) {
 				if ($config['poller_id'] > 1 && !boost_validate_poller_ownership($results, $config['poller_id'], $conn)) {
 					cacti_log('ERROR: Boost rejected a handoff containing data sources not assigned to this poller.', false, 'BOOST');
@@ -442,6 +444,9 @@ function boost_poller_on_demand(&$results) {
 			} else {
 				$return_value = false;
 			}
+		} elseif ($boost_enabled) {
+			/* with boost redirect on, the collectors already wrote these rows to poller_output_boost */
+			$return_value = false;
 		} else {
 			$return_value = true;
 		}
