@@ -8,8 +8,7 @@ set -eu
 SCRIPT_NAME=`basename ${0}`
 
 # locate the application base directory
-REALPATH_BIN=`which realpath 2>/dev/null`
-if [ $? -gt 0 ]
+if ! REALPATH_BIN=`command -v realpath`
 then
 	echo "ERROR: unable to locate realpath"
 	echo
@@ -20,17 +19,20 @@ then
 fi
 BASE_PATH=`${REALPATH_BIN} ${0} | sed s#/locales/${SCRIPT_NAME}##`
 
-# locate xgettext for processing
-XGETTEXT_BIN=`which xgettext 2>/dev/null`
-if [ $? -gt 0 ]
-then
-	echo "ERROR: Unable to locate xgettext"
-	echo
-	echo "Linux: Install GNU gettext"
-	echo "Mac: Brew install GNU gettext"
-	echo
-	exit 1
-fi
+# locate the gettext tools used for processing
+for TOOL in xgettext msgmerge msgattrib msgfmt
+do
+	if ! command -v "${TOOL}" > /dev/null
+	then
+		echo "ERROR: Unable to locate ${TOOL}"
+		echo
+		echo "Linux: Install GNU gettext"
+		echo "Mac: Brew install GNU gettext"
+		echo
+		exit 1
+	fi
+done
+XGETTEXT_BIN=`command -v xgettext`
 
 # Update main gettext POT file with application strings
 echo "Updating Kadupul language gettext language file..."

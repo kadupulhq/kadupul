@@ -17,6 +17,8 @@ Targeting `v1.3.0`, the first planned application release. See
   download supercronic in the container image over HTTPS only.
 - Open the project website, Discussions and Issues links from the midwinter
   theme and the installer with `noopener`.
+- `locales/build_gettext.sh` prints its error message and exits non-zero
+  when realpath or a gettext tool is missing, instead of exiting silently.
 
 ### Added
 
