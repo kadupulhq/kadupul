@@ -6510,6 +6510,18 @@ function call_remote_data_collector($poller_id, $url, $logtype = 'WEBUI') {
 		return '';
 	}
 
+	/* Refuse loopback, link-local (including the 169.254.169.254 metadata
+	 * address) and other reserved ranges, so a poller record cannot point these
+	 * requests at services on the Cacti host itself. RFC1918 private ranges stay
+	 * allowed because remote Data Collectors normally run on internal networks. */
+	$target_ip = is_ipaddress($hostname) ? $hostname : gethostbyname($hostname);
+
+	if (filter_var($target_ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) === false) {
+		cacti_log(sprintf('SECURITY: Refusing Remote Data Collector request for PollerID:%s to reserved address %s', $poller_id, $target_ip), false, 'SECURITY');
+
+		return '';
+	}
+
 	$fgc_contextoption = get_default_contextoption();
 	$fgc_context       = stream_context_create($fgc_contextoption);
 

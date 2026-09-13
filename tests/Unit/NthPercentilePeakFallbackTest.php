@@ -34,6 +34,16 @@ if (!function_exists('nth_percentile_stats_stub')) {
 	}
 }
 
+// nth_percentile() calls cacti_sizeof(), which the database-free unit bootstrap
+// does not load. Use the production definition rather than a double that could drift.
+if (!function_exists('cacti_sizeof')) {
+	$functions = file_get_contents(__DIR__ . '/../../lib/functions.php');
+	preg_match('/^function cacti_sizeof\(.*?^}\n/ms', $functions, $sizeof);
+
+	// test-only eval of source read from this repository, not external input
+	eval($sizeof[0]);
+}
+
 if (!function_exists('nth_percentile_under_test')) {
 	$src = file_get_contents(__DIR__ . '/../../lib/graph_variables.php');
 

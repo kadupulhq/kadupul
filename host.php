@@ -1242,6 +1242,18 @@ function device_javascript() {
 		});
 	}
 
+	/* query_remove and gt_remove change data, and include/global.php rejects them
+	 * unless they arrive by POST with a CSRF token. */
+	function hostPagePost(strURL, postData) {
+		var scrollTop = $(window).scrollTop();
+		postData.__csrf_magic = csrfMagicToken;
+		$.post(strURL, postData, function(data) {
+			$('#main').html(data);
+			applySkin();
+			$(window).scrollTop(scrollTop);
+		});
+	}
+
 	$(function() {
 		// Need to set this for global snmpv3 functions to remain sane between edits
 		snmp_security_initialized = false;
@@ -1310,13 +1322,19 @@ function device_javascript() {
 		});
 
 		$('[id^="remove"]').on('click', function(data) {
-			var strURL = 'host.php?action=query_remove&id='+$(this).attr('data-id')+'&host_id='+$('#id').val()+'&nostate=true';
-			hostPageLoad(strURL);
+			hostPagePost('host.php?action=query_remove', {
+				id: $(this).attr('data-id'),
+				host_id: $('#id').val(),
+				nostate: 'true'
+			});
 		});
 
 		$('[id^="gtremove"]').on('click', function(data) {
-			strURL = 'host.php?action=gt_remove&id='+$(this).attr('data-id')+'&host_id='+$('#id').val()+'&nostate=true';
-			hostPageLoad(strURL);
+			hostPagePost('host.php?action=gt_remove', {
+				id: $(this).attr('data-id'),
+				host_id: $('#id').val(),
+				nostate: 'true'
+			});
 		});
 
 		$('#add_dq').on('click', function() {

@@ -2348,6 +2348,19 @@ function sql_save($array_items, $table_name, $key_cols = 'id', $autoinc = true, 
  *
  * @return (string) The escaped SQL string
  */
+/**
+ * db_like_escape - escape the LIKE wildcard characters in a value so it matches
+ *   literally. Pass the result as a bound parameter (LIKE ?), then add any
+ *   surrounding '%' wildcards; db_qstr() would escape the backslashes twice.
+ *
+ * @param  (string) $value - the value to use literally in a LIKE clause
+ *
+ * @return (string) the value with backslash, '%' and '_' escaped
+ */
+function db_like_escape($value) {
+	return str_replace(array('\\', '%', '_'), array('\\\\', '\\%', '\\_'), (string) $value);
+}
+
 function db_qstr($s, $db_conn = false) {
 	global $database_sessions, $database_default, $database_hostname, $database_port;
 

@@ -690,8 +690,8 @@ function discoverDevices($network_id, $thread) {
 								$isCactiSysName = db_fetch_cell_prepared('SELECT COUNT(*)
 									FROM host
 									WHERE snmp_sysName = ?
-									AND (hostname = ? OR hostname LIKE "' . $hostname . '%")',
-									array($snmp_sysName, $device['ip_address']));
+									AND (hostname = ? OR hostname LIKE ?)',
+									array($snmp_sysName, $device['ip_address'], db_like_escape($hostname) . '%'));
 
 								if ($isCactiSysName) {
 									automation_debug(", Skipping sysName '" . $snmp_sysName . "' already in Cacti!\n");

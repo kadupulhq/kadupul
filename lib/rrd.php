@@ -295,6 +295,72 @@ function rrdtool_execute() {
 	return call_user_func_array($function, $args);
 }
 
+/**
+ * rrd_check_path - reject an RRD file path that shows directory traversal or a
+ *   NUL byte, and confine it to the RRA directory when that directory resolves.
+ *
+ *   data_source_path is stored in the database and reaches every rrdtool
+ *   create, update, fetch and graph command, so a '..' segment could otherwise
+ *   point rrdtool outside the RRA directory. The traversal and NUL checks always
+ *   apply. Containment applies only when both the RRA directory and the target,
+ *   or its nearest existing parent, resolve with realpath(); proxy-relative
+ *   remote storage leaves them unresolved and is not second-guessed.
+ *
+ * @param  (string) $path     - the candidate RRD file path
+ * @param  (string) $rra_base - the RRA directory, defaults to $config['rra_path']
+ *
+ * @return (bool) true when the path is safe to use
+ */
+function rrd_check_path($path, $rra_base = null) {
+	global $config;
+
+	$path = (string) $path;
+
+	if ($path === '' || strpos($path, "\0") !== false) {
+		return false;
+	}
+
+	if (preg_match('/(^|[\/\\\\:])\.\.([\/\\\\:]|$)/', $path)) {
+		return false;
+	}
+
+	if ($rra_base === null) {
+		$rra_base = isset($config['rra_path']) ? (string) $config['rra_path'] : '';
+	}
+
+	$base = ($rra_base !== '') ? realpath($rra_base) : false;
+
+	if ($base === false) {
+		return true;
+	}
+
+	$real = realpath($path);
+
+	if ($real === false) {
+		$dir  = $path;
+		$tail = '';
+
+		while (true) {
+			$parent   = dirname($dir);
+			$tail     = ($tail === '') ? basename($dir) : basename($dir) . DIRECTORY_SEPARATOR . $tail;
+			$resolved = realpath($parent);
+
+			if ($resolved !== false) {
+				$real = $resolved . DIRECTORY_SEPARATOR . $tail;
+				break;
+			}
+
+			if ($parent === $dir) {
+				return true;
+			}
+
+			$dir = $parent;
+		}
+	}
+
+	return $real === $base || strpos($real, $base . DIRECTORY_SEPARATOR) === 0;
+}
+
 function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pipe = false, $logopt = 'WEBLOG') {
 	global $config;
 
