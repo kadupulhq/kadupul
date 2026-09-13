@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -171,11 +172,11 @@ test('reapply names rejects malformed values that compare loosely to zero', func
 	expect(cacti_reapply_names_where('all', ''))->toBe(array('', array()));
 });
 
-test('normalized maintenance failures use the portable non-zero exit', function () {
+test('maintenance failures keep their 1.2.31 negative exit codes', function () {
 	foreach (array('removespikes.php', 'splice_rrd.php') as $script) {
 		$source = file_get_contents(__DIR__ . '/../../../../cli/' . $script);
 
-		expect($source)->not->toMatch('/exit\(-[0-9]+\)/');
+		expect($source)->toMatch('/exit\(-3\)/');
 	}
 });
 
