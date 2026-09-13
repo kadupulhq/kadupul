@@ -12,8 +12,6 @@ cmd_exec	./cli/remove_broken_graphs.php:47		$stty = shell_exec('stty size');
 cmd_exec	./cli/reset_password.php:101		shell_exec('stty -echo');
 cmd_exec	./cli/reset_password.php:105		shell_exec('stty echo');
 cmd_exec	./cli/splice_rrd.php:237	$response = shell_exec(cacti_escapeshellcmd($rrdtool));
-cmd_exec	./cli/splice_rrd.php:269	shell_exec(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($oldrrd) . ' > ' . cacti_escapeshellarg($oldxmlfile));
-cmd_exec	./cli/splice_rrd.php:272	shell_exec(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($newrrd) . ' > ' . cacti_escapeshellarg($newxmlfile));
 cmd_exec	./cli/splice_rrd.php:854		$result      = exec($command, $output, $return_var);
 cmd_exec	./cli/update_heartbeat.php:271				$result = exec($command, $output, $return_code);
 cmd_exec	./cmd.php:312			$cactiphp = proc_open($command, $cactides, $pipes);
@@ -41,6 +39,7 @@ cmd_exec	./lib/installer.php:3405				$results = shell_exec(cacti_escapeshellcmd(
 cmd_exec	./lib/installer.php:3437						shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:3493						$results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:837							$output = shell_exec(
+cmd_exec	./lib/maintenance_cli.php:173		$process = proc_open($command, array(1 => array('pipe', 'w')), $pipes);
 cmd_exec	./lib/ping.php:167					$result = shell_exec('ping ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:169					$result = shell_exec('ping -m ' . ceil($this->timeout/1000) . ' -n ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:171					$result = shell_exec('ping -t ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
@@ -576,7 +575,7 @@ fs_write	./lib/import.php:466		$f   = fopen($filename, 'r');
 fs_write	./lib/import.php:671							$file = fopen($filename, 'wb');
 fs_write	./lib/installer.php:2969				$file = fopen($cacheFile, "r");
 fs_write	./lib/maintenance_cli.php:123		$handle = @fopen($path, 'ab');
-fs_write	./lib/maintenance_cli.php:87		$handle = @fopen($path, 'xb');
+fs_write	./lib/maintenance_cli.php:92		$handle = @fopen($path, 'x+b');
 fs_write	./lib/poller.php:1410									if (file_put_contents($tmpfile, $contents) !== false) {
 fs_write	./lib/poller.php:1417												file_put_contents($mypath, $contents);
 fs_write	./lib/poller.php:1446								file_put_contents($mypath, $contents);

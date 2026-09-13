@@ -66,7 +66,7 @@ function cacti_remove_graphs_parameter_is_valid($parameter, $shortopts, $longopt
  * Create a file for writing without following a symlink or reusing a name.
  *
  * The maintenance scripts keep their 1.2.31 names in the shared temporary
- * directory, where another local user can claim a name first. Mode 'xb' opens
+ * directory, where another local user can claim a name first. Mode 'x+b' opens
  * with O_CREAT|O_EXCL, which fails when anything, a symlink included, already
  * holds the name, so a claimed name stops the caller instead of redirecting
  * its write.
@@ -89,7 +89,7 @@ function cacti_cli_create_file($path) {
 	 * narrowed for the create itself so the file is 0600 from the moment it
 	 * exists, and restored before anything else runs. */
 	$umask  = umask(0077);
-	$handle = @fopen($path, 'xb');
+	$handle = @fopen($path, 'x+b');
 	umask($umask);
 
 	if ($handle === false) {
@@ -124,22 +124,83 @@ function cacti_cli_create_file($path) {
  * @return bool True when the file was removed.
  */
 function cacti_cli_remove_file($handle, $path) {
-	$opened = is_resource($handle) ? fstat($handle) : false;
-	$named  = @lstat($path);
+	$same = cacti_cli_path_is_handle($handle, $path);
 
 	if (is_resource($handle)) {
 		fclose($handle);
 	}
 
+	return $same && @unlink($path);
+}
+
+/**
+ * Whether a name still refers to an open file made by cacti_cli_create_file().
+ *
+ * rrdtool restore can only take a file name, so the name is checked against
+ * the open descriptor immediately before another program is given it.
+ *
+ * @param resource $handle The open file.
+ * @param string   $path   The name it was created under.
+ *
+ * @return bool True when the name is a regular file with the same device and inode.
+ */
+function cacti_cli_path_is_handle($handle, $path) {
+	$opened = is_resource($handle) ? fstat($handle) : false;
+	$named  = @lstat($path);
+
 	if ($opened === false || $named === false || ($named['mode'] & 0170000) !== 0100000) {
 		return false;
 	}
 
-	if ($opened['dev'] !== $named['dev'] || $opened['ino'] !== $named['ino']) {
+	return $opened['dev'] === $named['dev'] && $opened['ino'] === $named['ino'];
+}
+
+/**
+ * Run a command and write its standard output through an open handle.
+ *
+ * A shell redirect reopens its target by name and follows a symlink swapped in
+ * after the file was created. Copying the pipe into the descriptor keeps the
+ * write on the file that was created. Standard error is inherited, as it was
+ * with the redirect.
+ *
+ * @param string   $command The command line, already quoted by the caller.
+ * @param resource $handle  Where standard output is written.
+ *
+ * @return bool True when the command was started, whatever its exit status.
+ */
+function cacti_cli_run_to_handle($command, $handle) {
+	$pipes   = array();
+	$process = proc_open($command, array(1 => array('pipe', 'w')), $pipes);
+
+	if (!is_resource($process)) {
 		return false;
 	}
 
-	return @unlink($path);
+	stream_copy_to_stream($pipes[1], $handle);
+	fclose($pipes[1]);
+	proc_close($process);
+	fflush($handle);
+
+	return true;
+}
+
+/**
+ * Read an open file from the start, one line per element as file() returns.
+ *
+ * @param resource $handle The open file.
+ *
+ * @return array The lines, each with its line ending.
+ */
+function cacti_cli_read_lines($handle) {
+	$lines = array();
+
+	rewind($handle);
+
+	while (($line = fgets($handle)) !== false) {
+		$lines[] = $line;
+	}
+
+	return $lines;
 }
 
 /**

@@ -183,7 +183,7 @@ test('temporary files and the debug log keep binary data byte for byte', functio
 
 	expect(file_get_contents($path))->toBe($bytes)
 		->and(file_get_contents($path . '.log'))->toBe($bytes . $bytes)
-		->and($source)->toContain("@fopen(\$path, 'xb')")
+		->and($source)->toContain("@fopen(\$path, 'x+b')")
 		->and($source)->toContain("@fopen(\$path, 'ab')")
 		->and($source)->not->toMatch("/fopen\\(\\\$path, '[xa]'\\)/");
 });
@@ -234,6 +234,39 @@ test('the create helper never changes or removes a file by name', function () {
 		->and($code)->toContain('cacti_cli_remove_file($handle, $path);');
 });
 
+test('a dump written through the handle lands in the created file after the name is swapped for a symlink', function () {
+	$path   = $this->dir . '/new.dump.12345';
+	$handle = cacti_cli_create_file($path);
+
+	/* the command plants the symlink itself, as a local process winning the
+	   race between the create and the dump would */
+	$command = escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg(
+		'unlink(' . var_export($path, true) . ');'
+		. 'symlink(' . var_export($this->victim, true) . ', ' . var_export($path, true) . ');'
+		. 'echo "<rrd>\n<step>300</step>\n</rrd>\n";'
+	);
+
+	expect(cacti_cli_run_to_handle($command, $handle))->toBeTrue()
+		->and(is_link($path))->toBeTrue()
+		->and(file_get_contents($this->victim))->toBe('original')
+		->and(cacti_cli_read_lines($handle))->toBe(array("<rrd>\n", "<step>300</step>\n", "</rrd>\n"))
+		->and(cacti_cli_path_is_handle($handle, $path))->toBeFalse()
+		->and(cacti_cli_remove_file($handle, $path))->toBeFalse()
+		->and(file_get_contents($this->victim))->toBe('original');
+});
+
+test('an unchanged name still refers to its handle until it is removed', function () {
+	$path   = $this->dir . '/new.dump.12345';
+	$handle = cacti_cli_create_file($path);
+
+	expect(cacti_cli_run_to_handle(escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg('echo "a\nb";'), $handle))->toBeTrue()
+		->and(cacti_cli_path_is_handle($handle, $path))->toBeTrue()
+		->and(cacti_cli_read_lines($handle))->toBe(array("a\n", 'b'))
+		->and(file($path))->toBe(array("a\n", 'b'))
+		->and(cacti_cli_remove_file($handle, $path))->toBeTrue()
+		->and(file_exists($path))->toBeFalse();
+});
+
 test('splice_rrd uses the 1.2.31 names and creates every temporary file exclusively', function () {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/cli/splice_rrd.php');
 
@@ -243,5 +276,13 @@ test('splice_rrd uses the 1.2.31 names and creates every temporary file exclusiv
 		->and(substr_count($source, 'cacti_cli_create_file('))->toBe(3)
 		->and($source)->not->toContain("tempnam(sys_get_temp_dir(), 'cacti_splice_')")
 		->and($source)->not->toContain('file_put_contents($newxmlfile')
-		->and($source)->not->toContain('return copy(');
+		->and($source)->not->toContain('return copy(')
+		->and($source)->not->toContain("' > ' . cacti_escapeshellarg(\$oldxmlfile)")
+		->and($source)->not->toContain("' > ' . cacti_escapeshellarg(\$newxmlfile)")
+		->and(substr_count($source, 'cacti_cli_run_to_handle('))->toBe(2)
+		->and($source)->not->toContain('= file($oldxmlfile)')
+		->and($source)->not->toContain('= file($newxmlfile)')
+		->and($source)->not->toContain('unlink($oldxmlfile)')
+		->and($source)->not->toContain('unlink($newxmlfile)')
+		->and($source)->toContain('if (!cacti_cli_path_is_handle($handle, $newxmlfile)) {');
 });

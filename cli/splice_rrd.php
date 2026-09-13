@@ -263,25 +263,24 @@ if (substr_count(PHP_OS, 'WIN')) {
 }
 
 /* The dumps keep their 1.2.31 names in the shared temporary directory, so each
- * one is created exclusively before rrdtool writes into it. A name that is
- * already taken, by a planted symlink or anything else, stops the run rather
- * than being followed. */
+ * one is created exclusively and then written and read only through its open
+ * descriptor. A name that is already taken, by a planted symlink or anything
+ * else, stops the run rather than being followed. */
 $created = array();
 
 foreach (array($oldxmlfile, $newxmlfile) as $xmlfile) {
 	$handle = cacti_cli_create_file($xmlfile);
 
 	if (!is_resource($handle)) {
-		foreach ($created as $file) {
-			unlink($file);
+		foreach ($created as $file => $open) {
+			cacti_cli_remove_file($open, $file);
 		}
 
 		print 'FATAL: ' . $handle . PHP_EOL;
 		exit(1);
 	}
 
-	fclose($handle);
-	$created[] = $xmlfile;
+	$created[$xmlfile] = $handle;
 }
 
 if ($finrrd == '') {
@@ -290,28 +289,28 @@ if ($finrrd == '') {
 
 /* execute the dump commands */
 debug("Creating XML file '$oldxmlfile' from '$oldrrd'");
-shell_exec(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($oldrrd) . ' > ' . cacti_escapeshellarg($oldxmlfile));
+$old_dumped = cacti_cli_run_to_handle(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($oldrrd), $created[$oldxmlfile]);
 
 debug("Creating XML file '$newxmlfile' from '$newrrd'");
-shell_exec(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($newrrd) . ' > ' . cacti_escapeshellarg($newxmlfile));
+$new_dumped = cacti_cli_run_to_handle(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($newrrd), $created[$newxmlfile]);
 
 /* read the xml files into arrays */
-if (file_exists($oldxmlfile)) {
-	$old_output = file($oldxmlfile);
+if ($old_dumped) {
+	$old_output = cacti_cli_read_lines($created[$oldxmlfile]);
 
 	/* remove the temp file */
-	unlink($oldxmlfile);
+	cacti_cli_remove_file($created[$oldxmlfile], $oldxmlfile);
 } else {
 	print 'FATAL: RRDtool Command Failed on \'' . $oldrrd . '\'.  Please insure your RRDtool install is valid!' . PHP_EOL;
 
 	exit(-12);
 }
 
-if (file_exists($newxmlfile)) {
-	$new_output = file($newxmlfile);
+if ($new_dumped) {
+	$new_output = cacti_cli_read_lines($created[$newxmlfile]);
 
 	/* remove the temp file */
-	unlink($newxmlfile);
+	cacti_cli_remove_file($created[$newxmlfile], $newxmlfile);
 } else {
 	print 'FATAL: RRDtool Command Failed on \'' . $newrrd . '\'.  Please insure your RRDtool install is valid!' . PHP_EOL;
 
@@ -356,16 +355,23 @@ if (!is_resource($handle)) {
 }
 
 fwrite($handle, $new_xml);
-fclose($handle);
+fflush($handle);
 
 /* finally update the file XML file and Reprocess the RRDfile */
 if (!$dryrun) {
+	/* rrdtool restore opens the file by name, so the name must still be the
+	 * file written above */
+	if (!cacti_cli_path_is_handle($handle, $newxmlfile)) {
+		print 'FATAL: Refusing to restore \'' . $newxmlfile . '\' because it changed after it was written' . PHP_EOL;
+		exit(1);
+	}
+
 	debug('Creating New RRDfile');
 	createRRDFileFromXML($newxmlfile, $finrrd);
 }
 
 /* remove the temp file */
-unlink($newxmlfile);
+cacti_cli_remove_file($handle, $newxmlfile);
 
 /* change ownership */
 if ($ownerset) {

@@ -453,18 +453,31 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 					fwrite($fp, $line);
 				}
 
-				fclose($fp);
+				fflush($fp);
 
 				/* restore the file */
 				$return  = 0;
 				$output  = array();
 				$command = cacti_escapeshellarg($rrdtool_bin) . ' restore -f ' . cacti_escapeshellarg($tmp_file) . ' ' . cacti_escapeshellarg($rrd_path);
 
+				/* rrdtool restore opens the file by name, so the name must still be
+				 * the file written above */
+				if (!cacti_cli_path_is_handle($fp, $tmp_file)) {
+					cacti_log(sprintf('WARNING: Refusing to restore %s because it changed after it was written', $tmp_file), false, 'RFLOAT');
+					fclose($fp);
+
+					if ($seebug && is_resource($lf)) {
+						fclose($lf);
+					}
+
+					return false;
+				}
+
 				$response = exec($command, $output, $return);
 
 				if ($return == 0) {
 					cacti_log(sprintf('NOTE: Range floated for RRDfile %s', $rrd_path), false, 'RFLOAT');
-					unlink($tmp_file);
+					cacti_cli_remove_file($fp, $tmp_file);
 
 					if ($seebug && is_resource($lf)) {
 						fclose($lf);
@@ -473,7 +486,7 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 					return true;
 				} else {
 					cacti_log(sprintf('WARNING: Range float FAILED for RRDfile %s.  Message is %s', $rrd_path, $response), false, 'RFLOAT');
-					unlink($tmp_file);
+					cacti_cli_remove_file($fp, $tmp_file);
 
 					if ($seebug && is_resource($lf)) {
 						fclose($lf);
@@ -483,7 +496,6 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 				}
 			} else {
 				cacti_log(sprintf('WARNING: Unable to open file %s for writing', $tmp_file), false, 'RFLOAT');
-				unlink($tmp_file);
 				return false;
 			}
 		} else {
