@@ -46,7 +46,7 @@ function boostCacheModeLoad($root) {
 
 	$source = file_get_contents($root . '/lib/boost.php');
 
-	foreach (array('boost_graph_cache_filename', 'boost_atomic_write_cache') as $name) {
+	foreach (array('boost_graph_cache_filename', 'boost_atomic_write_cache', 'boost_replace_cache_file_on_windows') as $name) {
 		$start = strpos($source, 'function ' . $name . '(');
 		$end   = strpos($source, "\nfunction ", $start + 1);
 
@@ -110,5 +110,29 @@ test('publication replaces the cache file in one rename and leaves no temporary 
 
 	expect(boostCacheMode_boost_atomic_write_cache($file, 'new image'))->toBeTrue()
 		->and(file_get_contents($file))->toBe('new image')
+		->and(glob($this->dir . '/.boost-*'))->toBe(array());
+});
+
+/* rename() over an open file can fail on Windows; the fallback is plain file
+ * operations, so it runs here on any platform. */
+test('the Windows fallback swaps in the new cache file and removes its backup', function () {
+	$file = $this->dir . '/cache.png';
+	$temp = $this->dir . '/.boost-new';
+
+	file_put_contents($file, 'old');
+	file_put_contents($temp, 'new image');
+
+	expect(boostCacheMode_boost_replace_cache_file_on_windows($temp, $file))->toBeTrue()
+		->and(file_get_contents($file))->toBe('new image')
+		->and(glob($this->dir . '/.boost-*'))->toBe(array());
+});
+
+test('the Windows fallback keeps the old cache file when there is nothing to publish', function () {
+	$file = $this->dir . '/cache.png';
+
+	file_put_contents($file, 'old');
+
+	expect(boostCacheMode_boost_replace_cache_file_on_windows($this->dir . '/.boost-missing', $file))->toBeFalse()
+		->and(file_get_contents($file))->toBe('old')
 		->and(glob($this->dir . '/.boost-*'))->toBe(array());
 });
