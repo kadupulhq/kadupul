@@ -2,7 +2,7 @@ name: cacti_exec Coverage
 
 on:
   push:
-    branches: [1.2.x]
+    branches: [1.2.x, lts/1.2]
     paths:
       - '.github/workflows/cacti-exec-coverage.yml'
       - 'lib/functions.php'
@@ -10,7 +10,7 @@ on:
       - 'tests/integration/CactiExecExitCodeTest.php'
       - 'tests/phpunit-cacti-exec.xml'
   pull_request:
-    branches: [1.2.x]
+    branches: [1.2.x, lts/1.2]
     paths:
       - '.github/workflows/cacti-exec-coverage.yml'
       - 'lib/functions.php'

@@ -14,7 +14,7 @@ on:
       - 'tests/e2e/docker/**'
       - '.github/workflows/ldap-e2e.yml'
   push:
-    branches: [1.2.x]
+    branches: [1.2.x, lts/1.2]
     paths:
       - 'lib/ldap.php'
       - 'lib/auth.php'

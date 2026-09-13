@@ -2,7 +2,7 @@ name: CSRF Action Coverage
 
 on:
   push:
-    branches: [1.2.x]
+    branches: [1.2.x, lts/1.2]
     paths:
       - '.github/workflows/csrf-action-coverage.yml'
       - 'include/global.php'
@@ -12,7 +12,7 @@ on:
       - 'tests/Unit/Security/Csrf/ItemActionPostOnlyTest.php'
       - 'tests/js/csrf_post_actions.test.js'
   pull_request:
-    branches: [1.2.x]
+    branches: [1.2.x, lts/1.2]
     paths:
       - '.github/workflows/csrf-action-coverage.yml'
       - 'include/global.php'

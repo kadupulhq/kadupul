@@ -2,7 +2,7 @@ name: CSV Window Coverage
 
 on:
   push:
-    branches: [1.2.x]
+    branches: [1.2.x, lts/1.2]
     paths:
       - '.github/workflows/csv-window-coverage.yml'
       - 'lib/rrd.php'
@@ -16,7 +16,7 @@ on:
       - 'tests/composer.json'
       - 'tests/composer.lock'
   pull_request:
-    branches: [1.2.x]
+    branches: [1.2.x, lts/1.2]
     paths:
       - '.github/workflows/csv-window-coverage.yml'
       - 'lib/rrd.php'
