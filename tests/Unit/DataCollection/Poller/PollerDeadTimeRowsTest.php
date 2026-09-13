@@ -37,6 +37,10 @@ function pollerDeadTime_cacti_process_signalable($pid) {
 	return in_array((int) $pid, $GLOBALS['poller_dead_time']['alive'], true);
 }
 
+function pollerDeadTime_has_posix() {
+	return $GLOBALS['poller_dead_time']['posix'];
+}
+
 function pollerDeadTime_cacti_sizeof($value) {
 	return is_array($value) ? count($value) : 0;
 }
@@ -53,7 +57,9 @@ function pollerDeadTimeLoad($root) {
 
 	$end = strpos($source, "\n}\n", $start);
 
-	eval(preg_replace('/\b(poller_remove_dead_time_rows|db_fetch_assoc_prepared|db_execute_prepared|cacti_process_signalable|cacti_sizeof)\(/', 'pollerDeadTime_$1(', substr($source, $start, $end + 3 - $start)));
+	$function = str_replace("function_exists('posix_kill')", 'pollerDeadTime_has_posix()', substr($source, $start, $end + 3 - $start));
+
+	eval(preg_replace('/\b(poller_remove_dead_time_rows|db_fetch_assoc_prepared|db_execute_prepared|cacti_process_signalable|cacti_sizeof)\(/', 'pollerDeadTime_$1(', $function));
 }
 
 beforeEach(function () use ($root) {
@@ -62,17 +68,14 @@ beforeEach(function () use ($root) {
 	$GLOBALS['poller_dead_time'] = array(
 		'open_rows' => array(array('pid' => 4101), array('pid' => 4102)),
 		'alive'     => array(4101),
+		'posix'     => true,
 		'selects'   => array(),
 		'deletes'   => array(),
 	);
 });
 
 test('an open row whose collector is gone is removed and a running one is kept', function () {
-	if (!function_exists('posix_kill')) {
-		$this->markTestSkipped('posix is required to probe collector processes.');
-	}
-
-	pollerDeadTime_poller_remove_dead_time_rows(3);
+	pollerDeadTime_poller_remove_dead_time_rows(3, 600);
 
 	expect($GLOBALS['poller_dead_time']['selects'])->toHaveCount(1)
 		->and($GLOBALS['poller_dead_time']['selects'][0][1])->toBe(array(3))
@@ -84,15 +87,27 @@ test('an open row whose collector is gone is removed and a running one is kept',
 test('no open rows means no deletes', function () {
 	$GLOBALS['poller_dead_time']['open_rows'] = array();
 
-	pollerDeadTime_poller_remove_dead_time_rows(1);
+	pollerDeadTime_poller_remove_dead_time_rows(1, 600);
 
 	expect($GLOBALS['poller_dead_time']['deletes'])->toBe(array());
+});
+
+test('without posix open rows older than the age limit are removed by age', function () {
+	$GLOBALS['poller_dead_time']['posix'] = false;
+
+	pollerDeadTime_poller_remove_dead_time_rows(3, 600);
+
+	expect($GLOBALS['poller_dead_time']['selects'])->toBe(array())
+		->and($GLOBALS['poller_dead_time']['deletes'])->toHaveCount(1)
+		->and($GLOBALS['poller_dead_time']['deletes'][0][1])->toBe(array(3, 600))
+		->and($GLOBALS['poller_dead_time']['deletes'][0][0])->toContain("AND end_time = '0000-00-00 00:00:00'")
+		->and($GLOBALS['poller_dead_time']['deletes'][0][0])->toContain('AND start_time < DATE_SUB(NOW(), INTERVAL ? SECOND)');
 });
 
 test('the cycle start keeps running rows and then clears dead ones', function () use ($root) {
 	$source = file_get_contents($root . '/poller.php');
 	$keep   = strpos($source, "AND end_time != '0000-00-00 00:00:00'");
-	$clear  = strpos($source, 'poller_remove_dead_time_rows($poller_id);');
+	$clear  = strpos($source, 'poller_remove_dead_time_rows($poller_id, 2 * $cron_interval);');
 
 	expect($keep)->not->toBeFalse()
 		->and($clear)->not->toBeFalse()

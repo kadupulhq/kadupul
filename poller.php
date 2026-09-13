@@ -555,7 +555,7 @@ while ($poller_runs_completed < $poller_runs) {
 		AND end_time != '0000-00-00 00:00:00'",
 		array($poller_id), true, $poller_db_cnn_id);
 
-	poller_remove_dead_time_rows($poller_id);
+	poller_remove_dead_time_rows($poller_id, 2 * $cron_interval);
 
 	/**
 	 * only report issues for the main poller or from bad local
@@ -1026,11 +1026,21 @@ function bad_index_check($mibs) {
  *   row would raise the overrun warning and mail again on every later cycle.
  *
  * @param  (int) $poller_id - the poller whose rows are checked
+ * @param  (int) $max_age   - seconds an open row may age where no process probe exists
  */
-function poller_remove_dead_time_rows($poller_id) {
+function poller_remove_dead_time_rows($poller_id, $max_age) {
 	global $poller_db_cnn_id;
 
 	if (!function_exists('posix_kill')) {
+		/* Without a process probe, fall back to age.  poller.php ends its own loop
+		 * after MAX_POLLER_RUNTIME, one cron interval less two seconds, so a
+		 * collector that started two cron intervals ago belongs to no live cycle. */
+		db_execute_prepared("DELETE FROM poller_time
+			WHERE poller_id = ?
+			AND end_time = '0000-00-00 00:00:00'
+			AND start_time < DATE_SUB(NOW(), INTERVAL ? SECOND)",
+			array($poller_id, (int) $max_age), true, $poller_db_cnn_id);
+
 		return;
 	}
 
