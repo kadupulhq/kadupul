@@ -76,8 +76,8 @@ test('failed RRD updates retain both scheduled shards and on-demand rows', funct
 
 	expect($poller)->toContain('if ($updates_ok && $results !== false)')
 		->and($poller)->toContain('return $updates_ok && $results !== false ? cacti_sizeof($results) : -1;')
-		->and($boost)->toContain('if ($updates_ok && cacti_sizeof($results))')
-		->and($boost)->toContain('return $updates_ok ? cacti_sizeof($results) : -1;');
+		->and($boost)->toContain('if ($updates_ok && $boost_results > 0)')
+		->and($boost)->toContain('return $updates_ok ? $boost_results : -1;');
 });
 
 test('dynamic archive identifiers are validated before select delete analyze and drop use', function () use ($root) {
@@ -154,14 +154,15 @@ test('scheduled Boost pages are hard bounded and advance run-scoped primary-key 
 		->and($body)->not->toContain('WHERE local_data_id <= ?');
 });
 
-test('on-demand Boost defers oversized result sets without deleting them', function () use ($root) {
+test('on-demand Boost pages oversized result sets on complete timestamps before deleting them', function () use ($root) {
 	$source = file_get_contents($root . '/lib/boost.php');
 	$body   = boostLifecycleFunctionBody($source, 'function boost_process_poller_output(');
 
 	expect($body)->toContain('LIMIT \' . ($max_rows + 1)')
-		->and($body)->toContain('if (cacti_sizeof($results) > $max_rows)')
-		->and($body)->toContain('rows were retained for scheduled processing')
-		->and(strpos($body, 'return -1;'))->toBeLessThan(strpos($body, 'DELETE FROM poller_output_boost'));
+		->and($body)->toContain('boost_limit_complete_timestamp_page($results, $max_rows)')
+		->and($body)->toContain("AND po.time > FROM_UNIXTIME(?)")
+		->and($body)->not->toContain('rows were retained for scheduled processing')
+		->and(strpos($body, 'rrd_close($rrdtool_pipe);'))->toBeLessThan(strpos($body, 'DELETE FROM poller_output_boost'));
 });
 
 test('scheduled and on-demand parsers share cached data-source metadata', function () use ($root) {

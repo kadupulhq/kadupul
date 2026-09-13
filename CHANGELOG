@@ -74,6 +74,7 @@ Cacti CHANGELOG
 -security: Refuse report mail addresses that hold a request array, a NUL byte or a line break inside an address
 -security: Refuse a page array in help.php error reports and escape angle brackets in the page and user names of the admin notice
 -security: Check report ownership when saving, editing or moving report items
+-issue: Write every staged Boost row when a graph is viewed by paging through data sources above the per-select row limit
 -issue: Create Boost graph cache files with mode 0644 as 1.2.31 did so other local accounts can read them
 -issue: Restore the 1.2.31 default real-time graph size of 100 percent for users without a saved size
 -issue: Restore the 1.2.31 CSV and table export header without the Expected Rows and Missing Rows lines

@@ -1159,9 +1159,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 			INNER JOIN data_local AS dl
 			ON po.local_data_id = dl.id
 			WHERE po.local_data_id = ?
-			AND po.time < FROM_UNIXTIME(?)
-			ORDER BY time ASC, rrd_name ASC
-			LIMIT " . ($max_rows + 1);
+			AND po.time < FROM_UNIXTIME(?)";
 	} else {
 		$query_string = 'SELECT po.local_data_id, dl.data_template_id,
 			UNIX_TIMESTAMP(po.time) AS timestamp, po.rrd_name, po.output
@@ -1169,46 +1167,65 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 			INNER JOIN data_local AS dl
 			ON po.local_data_id = dl.id
 			WHERE po.local_data_id = ?
-			AND po.time < FROM_UNIXTIME(?)
-			ORDER BY time ASC, rrd_name ASC
-			LIMIT ' . ($max_rows + 1);
+			AND po.time < FROM_UNIXTIME(?)';
 	}
 
 	$sql_params[] = $local_data_id;
 	$sql_params[] = $timestamp;
 
-	boost_timer('get_records', BOOST_TIMER_START);
-	$results = db_fetch_assoc_prepared($query_string, $sql_params);
-	boost_timer('get_records', BOOST_TIMER_END);
+	$boost_results   = 0;
+	$updates_ok      = true;
+	$rrdp_auto_close = false;
+	$cursor          = false;
 
-	$boost_results = cacti_sizeof($results);
+	/* Page through the rows so a long backlog is written in full without
+	 * loading more than max_rows at once.  Each page ends on a complete
+	 * timestamp, so the next page starts after the last one written. */
+	while (true) {
+		$page_query  = $query_string;
+		$page_params = $sql_params;
 
-	if ($temp_table !== false) {
-		db_execute("DROP TEMPORARY TABLE $temp_table");
-	}
-
-	if (cacti_sizeof($results) > $max_rows) {
-		cacti_log("WARNING: On-demand Boost processing for Local Data ID '$local_data_id' exceeded the $max_rows row request limit; rows were retained for scheduled processing.", false, 'BOOST');
-		restore_error_handler();
-		error_reporting($previous_error_reporting);
-
-		return -1;
-	}
-
-	cacti_log('Local Data ID: ' . $local_data_id . ', Boost Results: ' . $boost_results, false, 'BOOST', POLLER_VERBOSITY_MEDIUM);
-	$updates_ok = $results !== false;
-
-	/* log memory */
-	if ($get_memory) {
-		$cur_memory = memory_get_usage();
-
-		if ($cur_memory > $memory_used) {
-			$memory_used = $cur_memory;
+		if ($cursor !== false) {
+			$page_query   .= ' AND po.time > FROM_UNIXTIME(?)';
+			$page_params[] = $cursor;
 		}
-	}
 
-	if (cacti_sizeof($results)) {
-		$rrdp_auto_close = false;
+		boost_timer('get_records', BOOST_TIMER_START);
+		$results = db_fetch_assoc_prepared($page_query . ' ORDER BY time ASC, rrd_name ASC LIMIT ' . ($max_rows + 1), $page_params);
+		boost_timer('get_records', BOOST_TIMER_END);
+
+		if ($results === false) {
+			$updates_ok = false;
+
+			break;
+		}
+
+		$last_page = cacti_sizeof($results) <= $max_rows;
+		$results   = boost_limit_complete_timestamp_page($results, $max_rows);
+
+		if ($results === false) {
+			cacti_log("ERROR: Boost row limit $max_rows is smaller than one complete timestamp group for Local Data ID '$local_data_id'; queued rows were retained.", false, 'BOOST');
+			$updates_ok = false;
+
+			break;
+		}
+
+		if (!cacti_sizeof($results)) {
+			break;
+		}
+
+		$boost_results += cacti_sizeof($results);
+
+		cacti_log('Local Data ID: ' . $local_data_id . ', Boost Results: ' . cacti_sizeof($results), false, 'BOOST', POLLER_VERBOSITY_MEDIUM);
+
+		/* log memory */
+		if ($get_memory) {
+			$cur_memory = memory_get_usage();
+
+			if ($cur_memory > $memory_used) {
+				$memory_used = $cur_memory;
+			}
+		}
 
 		if (!$rrdtool_pipe) {
 			$rrdtool_pipe    = rrd_init();
@@ -1438,9 +1455,19 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 
 		boost_timer('results_cycle', BOOST_TIMER_END);
 
-		if ($rrdp_auto_close) {
-			rrd_close($rrdtool_pipe);
+		$cursor = $results[cacti_sizeof($results) - 1]['timestamp'];
+
+		if ($last_page || !$updates_ok) {
+			break;
 		}
+	}
+
+	if ($temp_table !== false) {
+		db_execute("DROP TEMPORARY TABLE $temp_table");
+	}
+
+	if ($rrdp_auto_close) {
+		rrd_close($rrdtool_pipe);
 	}
 
 	/* Remove retry records only after RRD and archive forwarding acknowledgement. */
@@ -1481,7 +1508,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 		}
 	}
 
-	if ($updates_ok && cacti_sizeof($results)) {
+	if ($updates_ok && $boost_results > 0) {
 		$updates_ok = db_execute_prepared('DELETE FROM poller_output_boost
 			WHERE local_data_id = ?
 			AND time < FROM_UNIXTIME(?)',
@@ -1502,7 +1529,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 	restore_error_handler();
 	error_reporting($previous_error_reporting);
 
-	return $updates_ok ? cacti_sizeof($results) : -1;
+	return $updates_ok ? $boost_results : -1;
 }
 
 function boost_rrdtool_get_last_update_time($rrd_path, &$rrdtool_pipe) {
