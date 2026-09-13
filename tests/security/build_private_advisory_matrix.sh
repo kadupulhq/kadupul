@@ -20,6 +20,27 @@ REPO="${1:-kadupulhq/kadupul}"
 BRANCHES="${2:-main}"
 OUT_DIR="${3:-/tmp}"
 
+# Validate the complete request before querying advisories or writing evidence.
+# A blank list would skip the loop below and build a matrix for no branch.
+if [ -z "${BRANCHES//[[:space:]]/}" ]; then
+	echo "ERROR: no branches requested." >&2
+	exit 1
+fi
+
+for b in $BRANCHES; do
+	# HEAD and symbolic refs such as origin/HEAD resolve to a commit without
+	# naming a branch, and some git versions let HEAD through check-ref-format.
+	if [ "$b" = "HEAD" ] ||
+		git symbolic-ref -q "refs/heads/${b}" >/dev/null 2>&1 ||
+		git symbolic-ref -q "refs/remotes/origin/${b}" >/dev/null 2>&1 ||
+		! git check-ref-format --branch "$b" >/dev/null 2>&1 ||
+		{ ! git show-ref --verify --quiet "refs/heads/${b}" &&
+		! git show-ref --verify --quiet "refs/remotes/origin/${b}"; }; then
+		echo "ERROR: requested branch not found: $b" >&2
+		exit 1
+	fi
+done
+
 mkdir -p "$OUT_DIR"
 
 api_json="${OUT_DIR}/private_advisory_source.json"
@@ -42,8 +63,8 @@ hash_key() {
 
 for b in $BRANCHES; do
 	branch_ref="$b"
-	if ! git rev-parse --verify --quiet "$branch_ref" >/dev/null; then
-		if git rev-parse --verify --quiet "origin/$b" >/dev/null; then
+	if ! git show-ref --verify --quiet "refs/heads/$b"; then
+		if git show-ref --verify --quiet "refs/remotes/origin/$b"; then
 			branch_ref="origin/$b"
 		else
 			echo "ERROR: branch not found locally or in origin: $b" >&2

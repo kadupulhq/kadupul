@@ -1761,7 +1761,8 @@ function utilities_php_modules() {
 	*/
 
 	ob_start();
-	phpinfo(INFO_MODULES);
+	// Module listing for the authenticated Utilities page; utilities.php requires include/auth.php.
+	phpinfo(INFO_MODULES); // nosemgrep: php.lang.security.phpinfo-use.phpinfo-use
 	$php_info = ob_get_contents();
 	ob_end_clean();
 

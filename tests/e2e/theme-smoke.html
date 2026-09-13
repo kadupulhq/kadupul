@@ -52,7 +52,7 @@
 	<script>
 		(function () {
 			const params = new URLSearchParams(window.location.search);
-			const theme = params.get('theme') || 'cacti';
+			const theme = params.get('theme') || 'classic';
 			const link = document.createElement('link');
 			link.rel = 'stylesheet';
 			link.href = `/include/themes/${theme}/jquery-ui.css`;

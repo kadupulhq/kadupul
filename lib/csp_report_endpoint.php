@@ -125,6 +125,71 @@ function csp_report_validate_payload(array $headers, $body, $maxBytes) {
 
 }
 
+/* The effective uid. getmyuid() reports the script file's owner instead, so
+ * without the posix extension use the owner of a file this process creates. */
+function csp_report_process_uid() {
+	if (function_exists('posix_geteuid')) {
+		return posix_geteuid();
+	}
+
+	$probe = @tempnam(sys_get_temp_dir(), 'kadupul_csp_uid');
+	if ($probe === false) {
+		return false;
+	}
+
+	$uid = @fileowner($probe);
+	@unlink($probe);
+
+	return $uid;
+}
+
+/* Per-IP / per-minute rate cap. The endpoint is unauthenticated by design
+ * (the browser fires reports without credentials) so an attacker can flood
+ * cacti_log / error_log unless we drop excess events. We always return the
+ * normal HTTP status so probing cannot infer the cap. */
+function csp_report_should_log(string $base = '') : bool {
+	$ip      = isset($_SERVER['REMOTE_ADDR']) ? (string) $_SERVER['REMOTE_ADDR'] : 'unknown';
+	$dir     = ($base !== '' ? $base : sys_get_temp_dir()) . '/kadupul_csp';
+	$cap     = 30;
+
+	/* Bucket names are predictable, and fopen() follows symlinks, so a bucket in
+	 * the shared temp directory lets another local user redirect the write. Keep
+	 * buckets in a directory only this user can write, and refuse any other.
+	 * Mode bits alone do not prove that: an ACL can let this user write another
+	 * user's 0700 directory, so the owner has to match as well. */
+	if (!is_dir($dir)) {
+		@mkdir($dir, 0700);
+	}
+
+	clearstatcache(true, $dir);
+	if (is_link($dir) || !is_dir($dir) || !is_writable($dir) || (fileperms($dir) & 0077) !== 0 || fileowner($dir) !== csp_report_process_uid()) {
+		return true;
+	}
+
+	$bucket = $dir . '/' . hash('sha256', $ip . '|' . gmdate('YmdHi'));
+
+	// The bucket name is a SHA-256 hex digest of the client IP, so no request data reaches the path.
+	$fh = @fopen($bucket, 'c+'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
+	if ($fh === false) {
+		return true;
+	}
+
+	$logged = false;
+	if (flock($fh, LOCK_EX)) {
+		$count = (int) fread($fh, 16);
+		if ($count < $cap) {
+			rewind($fh);
+			ftruncate($fh, 0);
+			fwrite($fh, (string) ($count + 1));
+			$logged = true;
+		}
+		flock($fh, LOCK_UN);
+	}
+	fclose($fh);
+
+	return $logged;
+}
+
 /* --- Entry point ---------------------------------------------------------- */
 
 if (defined('CACTI_CSP_REPORT_TEST_MODE')) {
@@ -156,36 +221,6 @@ $result = csp_report_validate_payload(
 	$rawBody,
 	16384
 );
-
-/* Per-IP / per-minute rate cap. The endpoint is unauthenticated by design
- * (the browser fires reports without credentials) so an attacker can flood
- * cacti_log / error_log unless we drop excess events. We always return the
- * normal HTTP status so probing cannot infer the cap. */
-function csp_report_should_log() : bool {
-	$ip      = isset($_SERVER['REMOTE_ADDR']) ? (string) $_SERVER['REMOTE_ADDR'] : 'unknown';
-	$bucket  = sys_get_temp_dir() . '/cacti_csp_' . hash('sha256', $ip . '|' . gmdate('YmdHi'));
-	$cap     = 30;
-
-	$fh = @fopen($bucket, 'c+');
-	if ($fh === false) {
-		return true;
-	}
-
-	$logged = false;
-	if (flock($fh, LOCK_EX)) {
-		$count = (int) fread($fh, 16);
-		if ($count < $cap) {
-			rewind($fh);
-			ftruncate($fh, 0);
-			fwrite($fh, (string) ($count + 1));
-			$logged = true;
-		}
-		flock($fh, LOCK_UN);
-	}
-	fclose($fh);
-
-	return $logged;
-}
 
 if ($result['ok']) {
 	if (csp_report_should_log()) {

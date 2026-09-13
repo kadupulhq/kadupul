@@ -91,6 +91,7 @@ log "marking Kadupul version as ${CACTI_VER} (was new_install)"
 
 mysql_cmd() {
     mariadb \
+        --skip-ssl \
         --host="${DB_HOST}" \
         --port="${DB_PORT}" \
         --user="${DB_USER}" \

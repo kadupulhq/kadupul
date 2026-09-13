@@ -402,7 +402,7 @@ if ($skip_current) {
 					checkPasswordConfirm();
 				} else {
 					$('#pass').remove();
-					$('#password').after('<div id="pass" class="password badpassword fa fa-times" title="'+data+'"></div>');
+					$('#password').after(DOMPurify.sanitize('<div id="pass" class="password badpassword fa fa-times" title="'+data+'"></div>'));
 					$('.password').tooltip();
 				}
 			});

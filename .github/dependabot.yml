@@ -1,7 +1,13 @@
 version: 2
 updates:
   - package-ecosystem: composer
-    directory: /
+    directories:
+      - /
+      # The test runner is declared here rather than in the tracked
+      # include/vendor tree. Only the manifest is committed on this branch; the
+      # lock file arrives with the characterization suite, after which Dependabot
+      # updates both.
+      - /tests
     schedule:
       interval: weekly
     open-pull-requests-limit: 5

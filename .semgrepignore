@@ -2,6 +2,7 @@
 # code, and scanning them produces findings nobody here can fix.
 include/vendor/
 include/fa/
+include/js/
 node_modules/
 tests/e2e/node_modules/
 

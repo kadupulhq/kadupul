@@ -555,7 +555,7 @@ function item_edit() {
 	function get_size() {
 		$.get('data_source_profiles.php?action=ajax_size&type=rra&id='+profile_id+'&rows='+$('#rows').val())
 			.done(function(data) {
-				$('#row_size').find('.formColumnRight').empty().html('<em>'+data+'</em>');
+				$('#row_size').find('.formColumnRight').empty().html(DOMPurify.sanitize('<em>'+data+'</em>'));
 			})
 			.fail(function(data) {
 				getPresentHTTPError(data);
@@ -565,7 +565,7 @@ function item_edit() {
 	function get_span() {
 		$.get('data_source_profiles.php?action=ajax_span&profile_id='+profile_id+'&span='+$('#steps').val()+'&rows='+$('#rows').val())
 			.done(function(data) {
-				$('#row_retention').find('.formColumnRight').empty().html('<em>'+data+'</em>');
+				$('#row_retention').find('.formColumnRight').empty().html(DOMPurify.sanitize('<em>'+data+'</em>'));
 			})
 			.fail(function(data) {
 				getPresentHTTPError(data);
@@ -752,7 +752,7 @@ function profile_edit() {
 		checked = $('#consolidation_function_id').multiselect('getChecked').length;
 		$.get('data_source_profiles.php?action=ajax_size&type=profile&id='+profile_id+'&cfs='+checked)
 			.done(function(data) {
-				$('#row_size').find('.formColumnRight').empty().html('<em>'+data+'</em>');
+				$('#row_size').find('.formColumnRight').empty().html(DOMPurify.sanitize('<em>'+data+'</em>'));
 			})
 			.fail(function(data) {
 				getPresentHTTPError(data);

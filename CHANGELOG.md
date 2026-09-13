@@ -9,6 +9,11 @@ follows [Semantic Versioning](VERSIONING.md).
 Targeting `v1.3.0`, the first planned application release. See
 [VERSIONING.md](VERSIONING.md).
 
+### Fixed
+
+- Run the theme browser suite against the themes shipped by this fork using
+  its standalone Playwright configuration.
+
 ### Added
 
 - Update vendored phpseclib to 3.0.57 and constant_time_encoding to 3.1.3, and lock runtime dependencies.
@@ -40,6 +45,11 @@ Targeting `v1.3.0`, the first planned application release. See
 - Validate branding migrations in CI and reject missing advisory-tooling branches.
 - Use Kadupul branding and project contacts across the interface and documentation.
 - Remove optional author lists and project-history prose while retaining licensing.
+- Build menus and autocomplete items from DOM nodes or DOMPurify output, and
+  refuse non-HTTP redirects taken from AJAX responses.
+- Exclude vendored libraries from CodeQL and drop workflows that never ran.
+- Sanitise AJAX, session-message and DOM-copied markup with DOMPurify before
+  inserting it, and build graph images from attribute values.
 
 
 [Unreleased]: https://github.com/kadupulhq/kadupul/commits/main

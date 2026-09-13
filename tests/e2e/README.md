@@ -6,7 +6,7 @@ shape, pilot-page nonce match, and browser behavior per mode.
 ## What this directory ships
 
 - `docker-compose.yml` + `Dockerfile` + `entrypoint.sh` + `nginx.conf`:
-  a three-service stack (MariaDB 10.11, PHP 7.4-FPM, nginx) that serves
+  a three-service stack (MariaDB 10.11, PHP 8.4-FPM, nginx) that serves
   Kadupul with `content_security_policy_script` preset via
   `CACTI_CSP_MODE` env (default `nonce-report`).
 - `docker-compose.enforce.yml`: overlay that flips `CACTI_CSP_MODE` to
@@ -17,7 +17,7 @@ shape, pilot-page nonce match, and browser behavior per mode.
 
 ## Running locally
 
-Requirements: Docker (with Compose v2) and Node.js 18+.
+Requirements: Docker (with Compose v2) and Node.js 20+, which Playwright 1.63 requires.
 
 ### Report-only mode (default, realistic rollout posture)
 
@@ -31,11 +31,10 @@ docker compose up -d --build
 # human-readable signal.
 until curl -fsS http://localhost:8080/ >/dev/null; do sleep 2; done
 
-# Install Playwright and run the suite. npm install (not npm ci) because
-# package-lock.json is gitignored under tests/e2e/.
-npm install
-npm run install-browsers   # chromium + OS deps, once per machine
-npm test
+# Install Playwright and run the suite from the tracked lockfile.
+npm ci
+npx playwright install --with-deps chromium   # once per machine
+npx playwright test tests/csp.spec.ts tests/csp-plugins.spec.ts
 
 docker compose down -v
 ```
@@ -50,7 +49,7 @@ docker compose down -v
 docker compose -f docker-compose.yml -f docker-compose.enforce.yml up -d --build
 until curl -fsS http://localhost:8080/ >/dev/null; do sleep 2; done
 
-E2E_CSP_ENFORCE=1 npm test
+E2E_CSP_ENFORCE=1 npx playwright test tests/csp.spec.ts tests/csp-plugins.spec.ts
 ```
 
 The `E2E_CSP_ENFORCE=1` flag tells the spec to look for
@@ -65,7 +64,7 @@ for instance), override the host port:
 
 ```bash
 HOST_PORT=8090 docker compose up -d
-E2E_BASE_URL=http://localhost:8090 npm test
+E2E_BASE_URL=http://localhost:8090 npx playwright test tests/csp.spec.ts tests/csp-plugins.spec.ts
 ```
 
 ## What the stack does at boot

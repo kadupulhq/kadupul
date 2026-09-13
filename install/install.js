@@ -677,7 +677,7 @@ function performStep(installStep, suppressRefresh, forceReload) {
 				debugData.Html = '';
 				debug = $('#installDebug');
 				debug.empty();
-				debug.html('<h5 style="border: 1px dashed grey">' + JSON.stringify(debugData) + '</h5>');
+				debug.append($('<h5 style="border: 1px dashed grey"></h5>').text(JSON.stringify(debugData)));
  			}
 
 			setButtonData('Previous',data.Prev);
@@ -817,7 +817,7 @@ function createItemSelectMenu() {
 }
 
 $.urlParam = function(name){
-    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    var results = new RegExp('[?&]' + name + '=([^&#]*)').exec(window.location.href);
     if (results==null){
        return null;
     }
