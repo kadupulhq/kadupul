@@ -116,7 +116,7 @@ jobs:
 
       - name: Install
         if: steps.detect.outputs.found == 'true'
-        run: npm ci --no-audit --no-fund
+        run: npm ci --no-audit --no-fund --ignore-scripts
 
       - name: Lint
         if: steps.detect.outputs.found == 'true'

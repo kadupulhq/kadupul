@@ -65,7 +65,7 @@ RUN set -eux; \
       arm64) sha=02aa0cb229ba09050cba6638059dadb9eedc2276632ea43d6a57a2f8c1629dd5 ;; \
       *) echo "unsupported architecture: ${TARGETARCH}" >&2; exit 1 ;; \
     esac; \
-    curl -fsSL -o /usr/local/bin/supercronic \
+    curl -fsSL --proto '=https' --tlsv1.2 -o /usr/local/bin/supercronic \
       "https://github.com/aptible/supercronic/releases/download/${SUPERCRONIC_VERSION}/supercronic-linux-${TARGETARCH}"; \
     echo "${sha}  /usr/local/bin/supercronic" | sha256sum -c -; \
     chmod 0755 /usr/local/bin/supercronic
