@@ -145,6 +145,42 @@ test('keeps 1.2.31 cookie Secure handling without trusted proxies', function () 
 		->and(forwarded_https(array('REMOTE_ADDR' => '10.0.0.1', 'HTTPS' => 'off'), null))->toBeFalse();
 });
 
+/*
+ * release/1.2.31 include/global.php set the Secure flag from direct TLS only;
+ * the forwarded-proto block arrived later on lts/1.2 (070476015).
+ */
+function release_1_2_31_https() {
+	return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off');
+}
+
+dataset('cookie secure inputs', function () {
+	$cases = array();
+
+	foreach (array(null, '', 'on', 'off', '1') as $https) {
+		foreach (array(array(), array('HTTP_X_FORWARDED_PROTO' => 'https'), array('HTTP_X_FORWARDED_SSL' => 'on')) as $forwarded) {
+			foreach (array(null, array(), true, array('HTTP_X_FORWARDED_FOR')) as $proxy_headers) {
+				foreach (array(null, array()) as $trusted) {
+					$server = array('REMOTE_ADDR' => '10.0.0.1') + $forwarded;
+
+					if ($https !== null) {
+						$server['HTTPS'] = $https;
+					}
+
+					$cases[] = array($server, $proxy_headers, $trusted);
+				}
+			}
+		}
+	}
+
+	return $cases;
+});
+
+test('matches the release/1.2.31 cookie Secure condition without trusted proxies', function ($server, $proxy_headers, $trusted) {
+	$expected = with_request($server, null, fn () => release_1_2_31_https());
+
+	expect(forwarded_https($server, $proxy_headers, $trusted))->toBe($expected);
+})->with('cookie secure inputs');
+
 test('ignores forwarded headers from a peer outside the trusted list', function () {
 	expect(resolve_client_addr(array(
 		'REMOTE_ADDR'          => '192.0.2.10',
