@@ -200,6 +200,21 @@ function api_tree_create_node($tree_id, $node_id, $position, $title = '') {
 	input_validate_input_number($tree_id);
 	input_validate_input_number($position);
 
+	// Reject an out-of-range TreeID before the permission check: is_tree_allowed()
+	// caches into $_SESSION and hits the database, so a 0/negative id should fail
+	// as bad input rather than as an authorization result.
+	if ($tree_id <= 0) {
+		cacti_log("ERROR: Invalid TreeID: '$tree_id', Function create_node", false);
+
+		return false;
+	}
+
+	if (!is_tree_allowed($tree_id)) {
+		cacti_log("SECURITY: User is not permitted to modify TreeID:'$tree_id', Function create_node", false, 'AUTH');
+
+		return false;
+	}
+
 	if ($title == '') {
 		$title = __('New Branch');
 	}
@@ -342,9 +357,16 @@ function api_tree_graph_exists($tree_id, $parent, $local_graph_id) {
 function api_tree_delete_node($tree_id, $node_id) {
 	input_validate_input_number($tree_id);
 
-	// Basic Error Checking
-	if (empty($tree_id) || $tree_id < 0) {
+	// Basic Error Checking - reject an out-of-range TreeID before is_tree_allowed(),
+	// which caches into $_SESSION and hits the database.
+	if ($tree_id <= 0) {
 		cacti_log("ERROR: Invalid TreeID: '$tree_id', Function delete_node", false);
+		return;
+	}
+
+	if (!is_tree_allowed($tree_id)) {
+		cacti_log("SECURITY: User is not permitted to modify TreeID:'$tree_id', Function delete_node", false, 'AUTH');
+
 		return;
 	}
 
@@ -549,12 +571,19 @@ function api_tree_parse_node_data($variable) {
 function api_tree_rename_node($tree_id, $node_id = '', $title = '') {
 	input_validate_input_number($tree_id);
 
-	// Basic Error Checking
+	// Basic Error Checking - reject an out-of-range TreeID before is_tree_allowed(),
+	// which caches into $_SESSION and hits the database.
 	if ($tree_id <= 0) {
 		cacti_log("ERROR: Invalid TreeID: '" . $tree_id . "', Function rename_node", false);
 
 		header('Content-Type: application/json; charset=utf-8');
 		print json_encode(array('id' => $node_id, 'result' => false));
+
+		return;
+	}
+
+	if (!is_tree_allowed($tree_id)) {
+		cacti_log("SECURITY: User is not permitted to modify TreeID:'$tree_id', Function rename_node", false, 'AUTH');
 
 		return;
 	}

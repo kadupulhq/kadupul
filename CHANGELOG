@@ -1,6 +1,10 @@
 Cacti CHANGELOG
 
 1.2.x
+-issue: Adjust wording in Template Setup
+-issue: Fall back to average statistics when an RRD lacks a MAX RRA for percentile maximum
+-issue: Guard a null message array in raise_message()
+-security: Enforce tree access when creating, deleting or renaming tree nodes
 -security: Sanitise inserted markup with DOMPurify and build graph images from attribute values
 -issue#7029: Propagate replacement database handles to reconnecting callers
 -issue#7344: Share and preserve realtime graph sizing in Inline and New Window modes
