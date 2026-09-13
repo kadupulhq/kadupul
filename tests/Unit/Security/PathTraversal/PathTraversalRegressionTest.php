@@ -25,6 +25,7 @@
 
 $reportsSource     = file_get_contents(__DIR__ . '/../../../../lib/reports.php');
 $htmlReportsSource = file_get_contents(__DIR__ . '/../../../../lib/html_reports.php');
+$functionsSource   = file_get_contents(__DIR__ . '/../../../../lib/functions.php');
 
 // GHSA-g37j / GHSA-mjvw: reports_load_format_file anchors the path to the formats
 // directory via validate_path_within() before any file IO runs.
@@ -90,20 +91,31 @@ test('GHSA-mjvw: basename preserves a legitimate format file name', function () 
 });
 
 test('GHSA-mjvw: html_reports.php sanitizes format_file before save', function () use ($htmlReportsSource) {
-	expect($htmlReportsSource)->toContain("basename((string) \$post['format_file'])");
-	expect($htmlReportsSource)->not->toMatch('/\$save\[[\'"]format_file[\'"]\]\s*=\s*\$post\[[\'"]format_file[\'"]\];/');
+	expect($htmlReportsSource)->toContain("\$save['format_file']   = basename(get_nfilter_request_var('format_file'));");
+	// every assignment to $save['format_file'] must go through basename()
+	expect($htmlReportsSource)->not->toMatch('/\$save\[[\'"]format_file[\'"]\]\s*=\s*+(?!basename\()/');
 });
 
-test('GHSA-mjvw: reports_load_format_file applies basename before concatenation', function () use ($reportsSource) {
-	$openPos = strpos($reportsSource, 'function reports_load_format_file');
-	expect($openPos)->not->toBeFalse();
+test('GHSA-mjvw: reports_load_format_file strips directory components before joining the formats path', function () use ($reportsSource, $functionsSource) {
+	$start = strpos($reportsSource, 'function reports_load_format_file(');
+	$end   = strpos($reportsSource, "\n}\n", $start);
+	$body  = substr($reportsSource, $start, $end - $start);
 
-	$slice = substr($reportsSource, $openPos, 1200);
+	// The load site no longer concatenates the stored value onto a formats path itself.
+	expect($body)->not->toContain('CACTI_PATH_FORMATS');
 
-	$basenamePos = strpos($slice, 'basename($format_file)');
-	$concatPos   = strpos($slice, 'CACTI_PATH_FORMATS');
+	$helperStart = strpos($functionsSource, 'function validate_path_within(');
+	expect($helperStart)->not->toBeFalse();
+
+	$helperEnd  = strpos($functionsSource, "\n}\n", $helperStart);
+	$helperBody = substr($functionsSource, $helperStart, $helperEnd - $helperStart);
+
+	$basenamePos = strpos($helperBody, '$filename = basename($filename);');
+	$joinPos     = strpos($helperBody, "return \$base_real . '/' . \$filename;");
 
 	expect($basenamePos)->not->toBeFalse();
-	expect($concatPos)->not->toBeFalse();
-	expect($basenamePos)->toBeLessThan($concatPos);
+	expect($joinPos)->not->toBeFalse();
+	expect($basenamePos)->toBeLessThan($joinPos);
+	expect($helperBody)->toContain("if (\$filename === '' || \$filename === '.' || \$filename === '..') {");
+	expect($helperBody)->toContain('$base_real = realpath($base_dir);');
 });

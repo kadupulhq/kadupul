@@ -64,14 +64,33 @@ test('GHSA-c4qp: get_full_test_script_path does not wrap raw field values in man
 	expect($functionsSource)->not->toContain("\$value = \"'\" . \$item['value'] . \"'\";");
 });
 
-// GHSA-g9c7: cacti_exec() must reject binaries starting with a dash or containing
-// embedded whitespace (both are argv-injection vectors).
+// GHSA-g9c7: cacti_exec() must reject binaries starting with a dash (option
+// injection). Whitespace is no longer rejected because the binary is passed as
+// argv[0] to proc_open() and never reaches a shell for word splitting.
 test('GHSA-g9c7: cacti_exec rejects binary strings that begin with dash', function () use ($functionsSource) {
-	expect($functionsSource)->toContain('function cacti_exec(');
-	expect($functionsSource)->toContain("if (\$binary[0] === '-')");
-	expect($functionsSource)->toContain('binary must not begin with "-"');
+	$start = strpos($functionsSource, 'function cacti_exec(');
+	expect($start)->not->toBeFalse();
+
+	$end  = strpos($functionsSource, "\n}\n", $start);
+	$body = substr($functionsSource, $start, $end - $start);
+
+	$guard = "if (strpos(trim(\$binary), '-') === 0) {\n"
+		. "\t\tcacti_log('ERROR: cacti_exec() rejected binary starting with dash: ' . \$binary, false, 'SYSTEM');\n"
+		. "\t\treturn 255;\n"
+		. "\t}";
+
+	expect($body)->toContain($guard);
+	// the dash guard must run before anything is spawned
+	expect(strpos($body, $guard))->toBeLessThan(strpos($body, 'proc_open('));
 });
 
-test('GHSA-g9c7: cacti_exec still rejects whitespace-mixed command strings', function () use ($functionsSource) {
-	expect($functionsSource)->toContain("preg_match('/\\s/', \$binary)");
+test('GHSA-g9c7: cacti_exec spawns the binary with a discrete argv array, not a shell string', function () use ($functionsSource) {
+	$start = strpos($functionsSource, 'function cacti_exec(');
+	$end   = strpos($functionsSource, "\n}\n", $start);
+	$body  = substr($functionsSource, $start, $end - $start);
+
+	expect($body)->toContain('$argv = array_merge(array($binary), array_values($args));');
+	expect($body)->toContain('$process = proc_open($argv, $descriptors, $pipes);');
+	expect(substr_count($body, 'proc_open('))->toBe(1);
+	expect($body)->not->toMatch('/\b(shell_exec|exec|system|passthru|popen)\s*\(/');
 });
