@@ -3,6 +3,7 @@ Cacti CHANGELOG
 1.2.x
 -security: Pass over a disabled configured administrator when moving off the retired no-authentication method
 -security: Skip the unknown-username password hash for blank passwords, as a known username does
+-security: Require a POST token to create, rename, move or copy tree nodes
 -security: Refuse a CSP report counter directory that group or other users can access
 -security: Require a POST token to delete link pages and to apply form actions to selected items
 -issue: Report the error step to the CLI installer when installation throws

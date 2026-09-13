@@ -38,6 +38,7 @@ function guarded_actions() {
         'item_moveup_gsv', 'item_moveup_dssv',
         'item_movedown_gsv', 'item_movedown_dssv',
         'delete_node', 'gt_remove', 'query_remove', 'remove', 'change_leaf',
+        'create_node', 'rename_node', 'move_node', 'copy_node',
         'moveup', 'movedown',
         'tree_up', 'tree_down', 'move_page_up', 'move_page_down', 'delete_page',
         'rrd_add', 'rrd_remove',
@@ -145,6 +146,25 @@ test('no page still links a state changing action by GET', function () {
     }
 
     expect($unconverted)->toBe(array());
+});
+
+test('the tree editor sends every node mutation by POST with the token', function () {
+	$src = file_get_contents(dirname(__DIR__, 4) . '/tree.php');
+
+	expect($src)->not->toBeFalse();
+
+	/* The jstree callbacks call these actions over XHR rather than through an
+	   anchor, so the anchor scan above never sees them. */
+	$unconverted = array();
+
+	foreach (array('create_node', 'rename_node', 'move_node', 'copy_node', 'delete_node') as $action) {
+		if (preg_match('/\\$\\.(?:get|getJSON|ajax)\\(\\s*[\'"][^\'"]*action=' . $action . '(?![a-z_])/', $src)
+			|| !preg_match('/\\$\\.post\\(\'\\?action=' . $action . '\', \\{[^}]*\'__csrf_magic\' : csrfMagicToken[^}]*\\}\\)/', $src)) {
+			$unconverted[] = $action;
+		}
+	}
+
+	expect($unconverted)->toBe(array());
 });
 
 test('the cactiPostAction handler posts the token and refuses another origin', function () {

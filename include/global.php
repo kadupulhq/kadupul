@@ -597,13 +597,16 @@ if ($config['is_web']) {
 
 		   Every anchor that carried one of these now takes the cactiPostAction
 		   class and goes out through submitPageUsingPost(), which is the
-		   mechanism this branch already used for the plugin actions.
+		   mechanism this branch already used for the plugin actions. The tree
+		   editor's jstree callbacks reach the *_node actions over XHR instead,
+		   and send them with $.post and the token.
 
 		   Read-only actions stay out by intent: item_edit, edit, tree and the
 		   *_confirm dialogs render a page and change nothing. */
 		$bad_actions = array(
 			'save', 'update_data', 'changepassword',
 			'delete_node', 'gt_remove', 'query_remove', 'remove', 'change_leaf',
+			'create_node', 'rename_node', 'move_node', 'copy_node',
 			'item_remove', 'item_moveup', 'item_movedown',
 			'item_remove_gsv', 'item_remove_dssv',
 			'item_moveup_gsv', 'item_moveup_dssv',
