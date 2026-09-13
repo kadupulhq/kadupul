@@ -1518,7 +1518,7 @@ function tree_edit($partial = false) {
 					divdata += "<ul><li id='" + id + "' data-jstree='" + jsdata + "'>" + text + '</li></ul>';
 				});
 
-				$(id).jstree('destroy').html(divdata);
+				$(id).jstree('destroy').html(DOMPurify.sanitize(divdata));
 			}
 
 			$(id)

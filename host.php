@@ -1373,7 +1373,7 @@ function device_javascript() {
 
 		$.get(urlPath+'host.php?action=ping_host&id='+$('#id').val())
 			.done(function(data) {
-				$('#ping_results').html(data);
+				$('#ping_results').html(DOMPurify.sanitize(data));
 				hostInfoHeight = $('.hostInfoHeader').height();
 			})
 			.fail(function(data) {
