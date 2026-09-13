@@ -21,6 +21,12 @@ BRANCHES="${2:-main}"
 OUT_DIR="${3:-/tmp}"
 
 # Validate the complete request before querying advisories or writing evidence.
+# A blank list would skip the loop below and build a matrix for no branch.
+if [ -z "${BRANCHES//[[:space:]]/}" ]; then
+	echo "ERROR: no branches requested." >&2
+	exit 1
+fi
+
 for b in $BRANCHES; do
 	# HEAD and symbolic refs such as origin/HEAD resolve to a commit without
 	# naming a branch, and some git versions let HEAD through check-ref-format.

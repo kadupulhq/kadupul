@@ -11,8 +11,9 @@ fi
 
 # NR>1 alone counted blank and malformed lines as evidence rows, so a header
 # followed by one blank line reported total=1 with nothing unresolved and strict
-# closure succeeded having proved nothing. A row must carry a status field.
-row='NR>1 && NF>1 && $1 != "" && $NF != ""'
+# closure succeeded having proved nothing. A row must match the 11-column schema
+# build_private_advisory_matrix.sh writes, with a branch, advisory key and status.
+row='NR>1 && NF==11 && $1 != "" && $2 != "" && $NF != ""'
 total="$(awk -F'\t' "${row} {n++} END {print n+0}" "$MATRIX_FILE")"
 no_evidence="$(awk -F'\t' "${row} && \$NF==\"NO_EVIDENCE\" {n++} END {print n+0}" "$MATRIX_FILE")"
 partial="$(awk -F'\t' "${row} && \$NF==\"PARTIAL_REFERENCE\" {n++} END {print n+0}" "$MATRIX_FILE")"
@@ -21,15 +22,15 @@ echo "matrix_total=${total}"
 echo "matrix_no_evidence=${no_evidence}"
 echo "matrix_partial=${partial}"
 
-if [ "$total" -eq 0 ]; then
-	echo "ERROR: empty matrix does not establish advisory closure." >&2
-	exit 1
-fi
-
 # A non-blank row that fails the predicate is corrupt evidence, not an absent row.
 malformed="$(awk -F'\t' "NR>1 && NF>0 && !(${row}) {n++} END {print n+0}" "$MATRIX_FILE")"
 if [ "$malformed" -gt 0 ]; then
 	echo "ERROR: ${malformed} matrix rows are malformed." >&2
+	exit 1
+fi
+
+if [ "$total" -eq 0 ]; then
+	echo "ERROR: empty matrix does not establish advisory closure." >&2
 	exit 1
 fi
 

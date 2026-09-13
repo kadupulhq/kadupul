@@ -6,7 +6,7 @@ shape, pilot-page nonce match, and browser behavior per mode.
 ## What this directory ships
 
 - `docker-compose.yml` + `Dockerfile` + `entrypoint.sh` + `nginx.conf`:
-  a three-service stack (MariaDB 10.11, PHP 7.4-FPM, nginx) that serves
+  a three-service stack (MariaDB 10.11, PHP 8.4-FPM, nginx) that serves
   Kadupul with `content_security_policy_script` preset via
   `CACTI_CSP_MODE` env (default `nonce-report`).
 - `docker-compose.enforce.yml`: overlay that flips `CACTI_CSP_MODE` to
@@ -17,7 +17,7 @@ shape, pilot-page nonce match, and browser behavior per mode.
 
 ## Running locally
 
-Requirements: Docker (with Compose v2) and Node.js 18+.
+Requirements: Docker (with Compose v2) and Node.js 20+, which Playwright 1.63 requires.
 
 ### Report-only mode (default, realistic rollout posture)
 
