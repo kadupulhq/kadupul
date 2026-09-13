@@ -195,11 +195,18 @@ test('creates queued on a closed pipe do not carry over to the next pipe', funct
 		->and($GLOBALS['boost_piped_create']['creates'])->toBe(2);
 });
 
-test('Boost forgets queued creates where it closes a pipe it opened', function () use ($root) {
+test('Boost forgets queued creates at both places it closes a pipe it opened', function () use ($root) {
 	$source = file_get_contents($root . '/lib/boost.php');
+	$forget = "boost_rrdtool_pipe_creates('forget', \$rrdtool_pipe);";
 
-	expect(substr_count($source, "boost_rrdtool_pipe_creates('forget', \$rrdtool_pipe);\n\t\t\trrd_close(\$rrdtool_pipe);"))->toBe(1)
-		->and(substr_count($source, "boost_rrdtool_pipe_creates('forget', \$rrdtool_pipe);\n\t\trrd_close(\$rrdtool_pipe);"))->toBe(1);
+	foreach (array('boost_fetch_cache_check', 'boost_process_poller_output') as $name) {
+		$start = strpos($source, 'function ' . $name . '(');
+		$body  = substr($source, $start, strpos($source, "\nfunction ", $start + 1) - $start);
+
+		expect(preg_match('/' . preg_quote($forget, '/') . '\s*rrd_close\(\$rrdtool_pipe\);/', $body))->toBe(1, $name);
+	}
+
+	expect(substr_count($source, $forget))->toBe(2);
 });
 
 test('a create that Boost refused still fails on the pipe', function () {
