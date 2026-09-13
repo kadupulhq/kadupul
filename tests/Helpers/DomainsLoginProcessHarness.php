@@ -45,9 +45,9 @@ function cacti_test_load_cacti_ldap_filter(string $src) : void {
 	throw new RuntimeException('cacti_ldap_filter() is unbalanced');
 }
 
-function cacti_test_run_domains_login_process_1_2(array $scenario) : array {
+function cacti_test_run_domains_login_process_1_2(array $scenario, ?string $src = null) : array {
 	$root = dirname(__DIR__, 2);
-	$src  = file_get_contents($root . '/lib/auth.php');
+	$src  = $src ?? file_get_contents($root . '/lib/auth.php');
 	$start = strpos($src, 'function domains_login_process(');
 
 	if ($start === false) {

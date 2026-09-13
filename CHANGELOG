@@ -10,6 +10,7 @@ Cacti CHANGELOG
 -security: Skip the Data Input Method repair after a web import by a user without the Data Input Methods permission
 -issue: Stop a template import cleanly when it refuses a Data Input Method input string
 -issue: Treat a registered task owned by another user as still running instead of starting a second copy
+-issue: Let a Domains user in a domain with no User Template fall back to the global template or guest account, as 1.2.31 did
 -issue: Parse installer start and finish times that fall on a whole second instead of crashing
 -security: Verify Remote Data Collector HTTPS certificates by default on new installs; upgraded installs keep their previous behaviour
 -security: Mask passwords, passphrases and community strings in DEVDBG SQL save logging with the existing ******** placeholder

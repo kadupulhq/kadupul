@@ -35,11 +35,11 @@ test('domains_login_process does not interpolate LDAP error_text into the login 
 	expect($body)->not->toContain("__('Access Denied!  LDAP Error: %s'");
 });
 
-test('domains_login_process fails when LDAP succeeded but the domain has no template and no user', function () use ($authSource) {
+test('domains_login_process leaves a bound user with no domain template to the global template and guest checks', function () use ($authSource) {
 	$start = strpos($authSource, 'function domains_login_process(');
 	$body  = substr($authSource, $start, 8000);
 
-	expect($body)->toContain('Domain template is not configured');
+	expect($body)->not->toContain('Domain template is not configured');
 });
 
 test('domains_login_process does not log a missing cn search index', function () use ($authSource) {

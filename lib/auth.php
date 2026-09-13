@@ -4023,13 +4023,6 @@ function domains_login_process($username) {
 						cacti_log("LOGIN FAILED: Template user id '" . $template_user . "' does not exist.", false, 'AUTH');
 					}
 				}
-
-				if (!$error && !cacti_sizeof($user)) {
-					$error     = true;
-					$error_msg = __('Access Denied!  Domain template is not configured.  Please contact your Administrator.');
-
-					cacti_log("LOGIN FAILED: LDAP user '" . $username . "' authenticated but the domain has no template and no existing account.", false, 'AUTH');
-				}
 			} else {
 				$error     = true;
 				$error_msg = __('Access Denied!  Login Failed.');

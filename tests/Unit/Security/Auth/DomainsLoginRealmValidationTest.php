@@ -127,7 +127,7 @@ test('a bind that returns no array fails closed', function () {
 		->and($result['lockout_calls'])->toBe(0);
 });
 
-test('LDAP success with no account and no domain template is rejected', function () {
+test('LDAP success with no account and no domain template leaves the fallback to auth_login.php', function () {
 	$result = cacti_test_run_domains_login_process_1_2([
 		'request'       => ['realm' => '1001', 'login_password' => 'x'],
 		'ldap_ok'       => true,
@@ -135,8 +135,8 @@ test('LDAP success with no account and no domain template is rejected', function
 		'template_user' => 0,
 	]);
 
-	expect($result['error'])->toBeTrue()
-		->and($result['error_msg'])->toContain('Domain template is not configured')
+	expect($result['error'])->toBeFalse()
+		->and($result['user'])->toBe([])
 		->and($result['copy_calls'])->toBe(0);
 });
 
