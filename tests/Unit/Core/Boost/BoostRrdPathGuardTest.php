@@ -113,6 +113,7 @@ afterEach(function () {
 	$GLOBALS['config'] = $this->saved_config;
 
 	@unlink($this->tmp . '/storage');
+	@unlink($this->tmp . '/rra/7');
 	@unlink($this->tmp . '/rra/5/12.rrd');
 	@unlink($this->tmp . '/outside/evil.rrd');
 	@rmdir($this->tmp . '/rra/5');
@@ -129,12 +130,12 @@ test('Boost refuses to update an existing RRD reached through traversal', functi
 		->and($GLOBALS['boost_rrd_guard']['executed'])->toBe(array());
 });
 
-test('Boost refuses to update an existing RRD outside the RRA directory', function () {
+test('Boost still updates an existing RRD at a custom location outside the RRA directory', function () {
 	$pipe   = false;
 	$values = ' 1000:1';
 
-	expect(boostRrdGuard_boost_rrdtool_function_update(12, $this->tmp . '/outside/evil.rrd', '', $values, $pipe))->toBe('ERROR')
-		->and($GLOBALS['boost_rrd_guard']['executed'])->toBe(array());
+	expect(boostRrdGuard_boost_rrdtool_function_update(12, $this->tmp . '/outside/evil.rrd', '', $values, $pipe))->toBe('OK')
+		->and($GLOBALS['boost_rrd_guard']['executed'])->toHaveCount(1);
 });
 
 test('Boost still updates an RRD under the default RRA directory', function () {
@@ -160,13 +161,24 @@ test('Boost still updates an RRD when the RRA directory is a symlink to other st
 		->and($GLOBALS['boost_rrd_guard']['executed'])->toHaveCount(1);
 });
 
-test('Boost reads the last update only for an RRD inside the RRA directory', function () {
+test('Boost still updates an RRD in a symlinked subdirectory under the RRA directory', function () {
+	$pipe   = false;
+	$values = ' 1000:1';
+
+	expect(symlink($this->tmp . '/outside', $this->tmp . '/rra/7'))->toBeTrue();
+
+	expect(boostRrdGuard_boost_rrdtool_function_update(12, $this->tmp . '/rra/7/evil.rrd', '', $values, $pipe))->toBe('OK')
+		->and($GLOBALS['boost_rrd_guard']['executed'])->toHaveCount(1);
+});
+
+test('Boost reads the last update except for a traversal path', function () {
 	$pipe = false;
 
-	boostRrdGuard_boost_rrdtool_get_last_update_time($this->tmp . '/outside/evil.rrd', $pipe);
+	boostRrdGuard_boost_rrdtool_get_last_update_time($this->tmp . '/rra/../outside/evil.rrd', $pipe);
 
 	expect($GLOBALS['boost_rrd_guard']['path_commands'])->toBe(array());
 
-	expect(boostRrdGuard_boost_rrdtool_get_last_update_time($this->tmp . '/rra/5/12.rrd', $pipe))->toBe('1234')
-		->and($GLOBALS['boost_rrd_guard']['path_commands'])->toBe(array(array('last', $this->tmp . '/rra/5/12.rrd')));
+	expect(boostRrdGuard_boost_rrdtool_get_last_update_time($this->tmp . '/outside/evil.rrd', $pipe))->toBe('1234')
+		->and(boostRrdGuard_boost_rrdtool_get_last_update_time($this->tmp . '/rra/5/12.rrd', $pipe))->toBe('1234')
+		->and($GLOBALS['boost_rrd_guard']['path_commands'])->toBe(array(array('last', $this->tmp . '/outside/evil.rrd'), array('last', $this->tmp . '/rra/5/12.rrd')));
 });
