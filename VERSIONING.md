@@ -45,7 +45,16 @@ with a feature, so an operator can take the fix without taking anything else.
 
 ## Release target
 
-The first planned application release is **`v1.3.0`**.
+The first planned application release is **`v1.3.0`**. It carries the Kadupul
+rename and the new features from `main`.
+
+## Long-term support
+
+**`v1.2.32`** is a long-term support release on the `lts/1.2` branch. That branch
+starts at Cacti 1.2.31 and takes upstream 1.2.x bug fixes, security fixes and
+hardening, plus Kadupul's own security fixes where the same code exists. It takes
+no features and keeps the interface above identical, so an existing 1.2.31 install
+or script keeps working. The rename and new features ship in `v1.3.0` only.
 
 ## Commits and releases
 

@@ -41,6 +41,7 @@ Targeting `v1.3.0`, the first planned application release. See
 ### Changed
 
 - Run SonarQube Cloud analysis on pushes to main and on pull requests.
+- Document the 1.2 long-term support line on `lts/1.2`, which ships `v1.2.32`.
 - Report an installation exception to the CLI installer as well as to the web installer.
 - Refresh localized product names and compiled catalogs, with source-text fallback
   for translations awaiting review.
