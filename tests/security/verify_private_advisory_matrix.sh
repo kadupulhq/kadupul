@@ -12,8 +12,9 @@ fi
 # NR>1 alone counted blank and malformed lines as evidence rows, so a header
 # followed by one blank line reported total=1 with nothing unresolved and strict
 # closure succeeded having proved nothing. A row must match the 11-column schema
-# build_private_advisory_matrix.sh writes, with a branch, advisory key and status.
-row='NR>1 && NF==11 && $1 != "" && $2 != "" && $NF != ""'
+# build_private_advisory_matrix.sh writes: a branch, advisory key, state, severity,
+# five integer evidence counts and a status.
+row='NR>1 && NF==11 && $1 != "" && $2 != "" && $3 != "" && $4 != "" && $6 ~ /^[0-9]+$/ && $7 ~ /^[0-9]+$/ && $8 ~ /^[0-9]+$/ && $9 ~ /^[0-9]+$/ && $10 ~ /^[0-9]+$/ && $NF != ""'
 total="$(awk -F'\t' "${row} {n++} END {print n+0}" "$MATRIX_FILE")"
 no_evidence="$(awk -F'\t' "${row} && \$NF==\"NO_EVIDENCE\" {n++} END {print n+0}" "$MATRIX_FILE")"
 partial="$(awk -F'\t' "${row} && \$NF==\"PARTIAL_REFERENCE\" {n++} END {print n+0}" "$MATRIX_FILE")"

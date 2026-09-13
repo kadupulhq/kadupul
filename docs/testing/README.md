@@ -157,8 +157,16 @@ reproduce exactly.
 ## Known captured oddities
 
 `sanitize_search_string(null)` reaches `preg_replace()` with a null subject and
-emits a deprecation on PHP 8.1 and later, at `lib/functions.php:4479`. The
+emits a deprecation on PHP 8.1 and later, inside that function in `lib/functions.php`. The
 harness records the deprecation rather than suppressing it.
+
+Main has renamed Cacti to Kadupul in visible output, so six scenarios no longer
+match these 1.2.31 goldens: `upgrade/install`, `cli/device-help`,
+`auth/login-invalid`, `auth/missing-csrf`, `faults/database-unreachable` and
+`graphs/definition`, whose default watermark still reads Cacti. A seventh,
+`poller/rrd-failure`, differs because the warning it records moved from
+`lib/rrd.php` line 334 to 327. The goldens stay the 1.2.31 contract, so a run
+against main reports these seven until they are approved as intended changes.
 
 `get_request_var()` memoizes each name into the `$_CACTI_REQUEST` global. Once
 a name is read, later changes to `$_REQUEST` are ignored for the rest of the
