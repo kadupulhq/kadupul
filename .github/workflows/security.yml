@@ -67,6 +67,16 @@ jobs:
               --timeout 0 --timeout-threshold 0 --max-target-bytes 0 \
               --sarif --output semgrep.sarif
 
+      # Semgrep honours nosemgrep, but it still writes those findings to the
+      # SARIF with an inSource suppression, and code scanning lists them as open
+      # alerts. Drop them so the upload reports only live findings.
+      - name: Drop suppressed findings from the report
+        if: ${{ always() && hashFiles('semgrep.sarif') != '' }}
+        run: |
+          set -euo pipefail
+          jq '.runs |= map(.results |= map(select((.suppressions // []) | length == 0)))' semgrep.sarif > semgrep.filtered.sarif
+          mv semgrep.filtered.sarif semgrep.sarif
+
       # Code scanning needs the paid Code Security add-on on a private
       # repository, so this only runs once the repository is public. The scan
       # above is the gate either way.
