@@ -144,6 +144,7 @@ define('POLLER_VERBOSITY_DEBUG', 5);
 define('POLLER_VERBOSITY_DEVDBG', 6);
 define('OPER_MODE_NATIVE', 0);
 define('OPER_MODE_RESKIN', 2);
+define('COPYRIGHT_YEARS_SHORT', '2004-2026');
 
 $GLOBALS['probe'] = array(
 	'config'         => $scenario['config'] ?? array(),
@@ -158,6 +159,7 @@ $GLOBALS['probe'] = array(
 	'config_writes'  => array(),
 	'return'         => null,
 	'page_continued' => false,
+	'page'           => $scenario['page'] ?? 'probe.php',
 );
 
 function probe_normalize_sql(string $sql) : string {
@@ -303,6 +305,12 @@ function db_execute_prepared($sql, $params = array(), $log = true) {
 	return true;
 }
 
+function db_execute($sql, $log = true) {
+	$GLOBALS['probe']['executed'][] = array('sql' => probe_normalize_sql($sql), 'params' => array());
+
+	return true;
+}
+
 function db_table_exists($table, $log = true) {
 	return true;
 }
@@ -327,7 +335,7 @@ function get_cacti_version() {
 }
 
 function get_current_page($basename = true) {
-	return 'probe.php';
+	return $GLOBALS['probe']['page'];
 }
 
 function api_plugin_hook_function($name, $parm = null) {
@@ -448,7 +456,11 @@ $call = $scenario['call'] ?? array('type' => 'include_auth');
 
 if ($call['type'] === 'include_auth') {
 	/* realm -1 lets an authenticated request through without a realm lookup */
-	$user_auth_realm_filenames = array('probe.php' => -1);
+	$user_auth_realm_filenames = $scenario['realm_filenames'] ?? array('probe.php' => -1);
+
+	if (!empty($scenario['guest_account'])) {
+		$guest_account = true;
+	}
 
 	require $root . '/include/auth.php';
 

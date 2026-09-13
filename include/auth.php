@@ -135,7 +135,7 @@ if ($auth_method != 0) {
 					VALUES (?, ?, 1, ?, NOW())',
 					array($username, $current_user['id'], $client_addr));
 
-				return true;
+				/* no early return: the guest page and realm checks below run on this first request as on every later one */
 			} else {
 				require_once($config['base_path'] . '/auth_login.php');
 			}
