@@ -1651,7 +1651,7 @@ $realtime_refresh = array(
 	120 => __('%d Minutes', 2)
 );
 
-$realtime_default_size = 50;
+$realtime_default_size = 100;
 $realtime_sizes = array(
 	100 => '100%',
 	90  => '90%',

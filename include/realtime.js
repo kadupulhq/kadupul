@@ -69,7 +69,7 @@ function imageOptionsChanged(action) {
 	var url            = '';
 
 	if (size == null) {
-		size = 50;
+		size = 100;
 	}
 
 	local_graph_id = $('#local_graph_id').val();
