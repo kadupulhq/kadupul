@@ -22,8 +22,12 @@ OUT_DIR="${3:-/tmp}"
 
 # Validate the complete request before querying advisories or writing evidence.
 for b in $BRANCHES; do
-	# origin/HEAD is a real ref, so HEAD would pass the lookup below without this.
-	if ! git check-ref-format --branch "$b" >/dev/null 2>&1 ||
+	# HEAD and symbolic refs such as origin/HEAD resolve to a commit without
+	# naming a branch, and some git versions let HEAD through check-ref-format.
+	if [ "$b" = "HEAD" ] ||
+		git symbolic-ref -q "refs/heads/${b}" >/dev/null 2>&1 ||
+		git symbolic-ref -q "refs/remotes/origin/${b}" >/dev/null 2>&1 ||
+		! git check-ref-format --branch "$b" >/dev/null 2>&1 ||
 		{ ! git show-ref --verify --quiet "refs/heads/${b}" &&
 		! git show-ref --verify --quiet "refs/remotes/origin/${b}"; }; then
 		echo "ERROR: requested branch not found: $b" >&2

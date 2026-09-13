@@ -33,8 +33,8 @@ until curl -fsS http://localhost:8080/ >/dev/null; do sleep 2; done
 
 # Install Playwright and run the suite from the tracked lockfile.
 npm ci
-npm run install-browsers   # chromium + OS deps, once per machine
-npm test
+npx playwright install --with-deps chromium   # once per machine
+npx playwright test tests/csp.spec.ts tests/csp-plugins.spec.ts
 
 docker compose down -v
 ```
@@ -49,7 +49,7 @@ docker compose down -v
 docker compose -f docker-compose.yml -f docker-compose.enforce.yml up -d --build
 until curl -fsS http://localhost:8080/ >/dev/null; do sleep 2; done
 
-E2E_CSP_ENFORCE=1 npm test
+E2E_CSP_ENFORCE=1 npx playwright test tests/csp.spec.ts tests/csp-plugins.spec.ts
 ```
 
 The `E2E_CSP_ENFORCE=1` flag tells the spec to look for
@@ -64,7 +64,7 @@ for instance), override the host port:
 
 ```bash
 HOST_PORT=8090 docker compose up -d
-E2E_BASE_URL=http://localhost:8090 npm test
+E2E_BASE_URL=http://localhost:8090 npx playwright test tests/csp.spec.ts tests/csp-plugins.spec.ts
 ```
 
 ## What the stack does at boot
