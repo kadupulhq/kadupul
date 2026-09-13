@@ -35,6 +35,7 @@ ini_set('output_buffering', 'Off');
 require(__DIR__ . '/../include/cli_check.php');
 require_once($config['base_path'] . '/lib/poller.php');
 require_once($config['base_path'] . '/lib/rrd.php');
+require_once($config['base_path'] . '/lib/maintenance_cli.php');
 
 /* process calling arguments */
 $parms = $_SERVER['argv'];
@@ -342,18 +343,25 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 				return false;
 			}
 
-			$tmp_file = tempnam($tmp_dir, 'cacti_float_');
+			/* 1.2.31 names in the shared temporary directory, created exclusively
+			 * so a planted symlink or leftover file is refused, not followed */
+			$tmp_file = $tmp_dir . '/' . $local_data_id . '.xml';
+			$fp       = cacti_cli_create_file($tmp_file);
 
-			if ($tmp_file === false) {
-				cacti_log('WARNING: Unable to create a private temporary RRD XML file', false, 'RFLOAT');
+			if (!is_resource($fp)) {
+				cacti_log('WARNING: ' . $fp, false, 'RFLOAT');
 				return false;
 			}
 
-			$fp = fopen($tmp_file, 'w');
 			$lf = false;
 
 			if ($seebug) {
-				$lf     = @fopen('php://stderr', 'w');
+				$lf = cacti_cli_open_log('/tmp/clearer.log');
+
+				if (!is_resource($lf)) {
+					cacti_log('WARNING: ' . $lf . '.  Debug output is disabled for this file.', false, 'RFLOAT');
+				}
+
 				$seebug = is_resource($lf);
 			}
 

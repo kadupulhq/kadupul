@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  +-------------------------------------------------------------------------+
  | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
@@ -29,9 +30,12 @@ test('CLI subprocesses pass background arguments as arrays', function () use ($b
 		->and($floatRrdfilesSource)->toContain('$php_binary = PHP_BINARY;');
 });
 
-test('float rrdfiles uses a private temporary file and reachable cleanup', function () use ($floatRrdfilesSource) {
-	expect($floatRrdfilesSource)->toContain("tempnam(\$tmp_dir, 'cacti_float_')")
-		->and($floatRrdfilesSource)->not->toContain("\$tmp_dir . '/' . \$local_data_id . '.xml'")
+test('float rrdfiles creates its 1.2.31 temporary names exclusively and cleans up', function () use ($floatRrdfilesSource) {
+	expect($floatRrdfilesSource)->toContain("\$tmp_file = \$tmp_dir . '/' . \$local_data_id . '.xml';")
+		->and($floatRrdfilesSource)->toContain('$fp       = cacti_cli_create_file($tmp_file);')
+		->and($floatRrdfilesSource)->toContain("\$lf = cacti_cli_open_log('/tmp/clearer.log');")
+		->and($floatRrdfilesSource)->not->toContain("tempnam(\$tmp_dir, 'cacti_float_')")
+		->and($floatRrdfilesSource)->not->toContain("fopen('/tmp/clearer.log'")
 		->and(substr_count($floatRrdfilesSource, 'unlink($tmp_file);'))->toBeGreaterThanOrEqual(3)
 		->and($floatRrdfilesSource)->toContain('$lf = false;')
 		->and($floatRrdfilesSource)->toContain('$seebug = is_resource($lf);')

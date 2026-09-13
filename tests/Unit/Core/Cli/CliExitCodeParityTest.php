@@ -58,8 +58,8 @@ test('maintenance scripts keep their 1.2.31 exit code for each failure', functio
 		->and(cli_exit_code_after($source, $message))->toBe($code);
 })->with('1.2.31 exit codes');
 
-test('splice_rrd still refuses to run without a private working directory', function () {
+test('splice_rrd stops with exit 1 when a temporary name is already taken', function () {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/cli/splice_rrd.php');
 
-	expect(cli_exit_code_after($source, "print 'FATAL: Unable to create a private working directory'"))->toBe('1');
+	expect(cli_exit_code_after($source, "print 'FATAL: ' . \$handle . PHP_EOL;"))->toBe('1');
 });

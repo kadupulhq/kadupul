@@ -173,6 +173,7 @@ dynamic_include	./cli/change_device.php:35	require_once($config['base_path'] . '
 dynamic_include	./cli/change_device.php:36	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/float_rrdfiles.php:35	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/float_rrdfiles.php:36	require_once($config['base_path'] . '/lib/rrd.php');
+dynamic_include	./cli/float_rrdfiles.php:38	require_once($config['base_path'] . '/lib/maintenance_cli.php');
 dynamic_include	./cli/host_update_template.php:27	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/host_update_template.php:28	require_once($config['base_path'] . '/lib/api_automation.php');
 dynamic_include	./cli/host_update_template.php:29	require_once($config['base_path'] . '/lib/api_data_source.php');

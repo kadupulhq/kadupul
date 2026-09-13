@@ -63,6 +63,81 @@ function cacti_remove_graphs_parameter_is_valid($parameter, $shortopts, $longopt
 }
 
 /**
+ * Create a file for writing without following a symlink or reusing a name.
+ *
+ * The maintenance scripts keep their 1.2.31 names in the shared temporary
+ * directory, where another local user can claim a name first. Mode 'x' opens
+ * with O_CREAT|O_EXCL, which fails when anything, a symlink included, already
+ * holds the name, so a claimed name stops the caller instead of redirecting
+ * its write.
+ *
+ * @param string $path The file to create.
+ *
+ * @return resource|string An open handle, or a printable reason it was refused.
+ */
+function cacti_cli_create_file($path) {
+	if (is_link($path)) {
+		return sprintf("Refusing to write '%s' because it is a symbolic link", $path);
+	}
+
+	if (file_exists($path)) {
+		return sprintf("Refusing to overwrite existing file '%s'", $path);
+	}
+
+	$handle = @fopen($path, 'x');
+
+	if ($handle === false) {
+		return sprintf("Unable to create '%s'", $path);
+	}
+
+	return $handle;
+}
+
+/**
+ * Open a debug log for appending without following a symlink.
+ *
+ * A missing log is created exclusively. An existing log is appended only when
+ * it is a regular file owned by this user and is still that file once opened,
+ * so a name swapped for a symlink between the check and the open is closed
+ * again before anything is written.
+ *
+ * @param string $path The log file.
+ *
+ * @return resource|string An open handle, or a printable reason it was refused.
+ */
+function cacti_cli_open_log($path) {
+	if (!is_link($path) && !file_exists($path)) {
+		return cacti_cli_create_file($path);
+	}
+
+	$before = @lstat($path);
+
+	if ($before === false || ($before['mode'] & 0170000) !== 0100000) {
+		return sprintf("Refusing to append to '%s' because it is not a regular file", $path);
+	}
+
+	if (function_exists('posix_geteuid') && $before['uid'] !== posix_geteuid()) {
+		return sprintf("Refusing to append to '%s' because another user owns it", $path);
+	}
+
+	$handle = @fopen($path, 'a');
+
+	if ($handle === false) {
+		return sprintf("Unable to open '%s'", $path);
+	}
+
+	$after = fstat($handle);
+
+	if ($after === false || $after['dev'] !== $before['dev'] || $after['ino'] !== $before['ino']) {
+		fclose($handle);
+
+		return sprintf("Refusing to append to '%s' because it changed while it was opened", $path);
+	}
+
+	return $handle;
+}
+
+/**
  * Decide what remove_graphs.php does with an argument that fails validation.
  *
  * 1.2.31 let getopt() drop unknown options silently. An unknown long option is

@@ -25,6 +25,7 @@
 */
 
 require(__DIR__ . '/../include/cli_check.php');
+require_once(__DIR__ . '/../lib/maintenance_cli.php');
 
 if ($config['poller_id'] > 1) {
 	print 'FATAL: This utility is designed for the main Data Collector only' . PHP_EOL;
@@ -246,20 +247,42 @@ if (strlen($response)) {
 	exit(-1);
 }
 
-/* The dump files and the backups were previously named from the RRD basename
- * and mt_rand() directly in a world writable directory, and were created by
- * shell redirection and copy(), both of which follow symlinks. Everything now
- * goes in one private directory created for this run, so the names cannot be
- * claimed in advance. */
-$tempdir = tempnam(sys_get_temp_dir(), 'cacti_splice_');
+/* determine the temporary file name */
+$seed = mt_rand();
 
-if ($tempdir === false || !unlink($tempdir) || !mkdir($tempdir, 0700)) {
-	print 'FATAL: Unable to create a private working directory' . PHP_EOL;
-	exit(1);
+if (substr_count(PHP_OS, 'WIN')) {
+	$tempdir    = getenv('TEMP');
+	$oldxmlfile = $tempdir . '/' . str_replace('.rrd', '', basename($oldrrd)) . '.dump.' . $seed;
+	$seed++;
+	$newxmlfile = $tempdir . '/' . str_replace('.rrd', '', basename($newrrd)) . '.dump.' . $seed;
+} else {
+	$tempdir    = '/tmp';
+	$oldxmlfile = '/tmp/' . str_replace('.rrd', '', basename($oldrrd)) . '.dump.' . $seed;
+	$seed++;
+	$newxmlfile = '/tmp/' . str_replace('.rrd', '', basename($newrrd)) . '.dump.' . $seed;
 }
 
-$oldxmlfile = $tempdir . '/' . str_replace('.rrd', '', basename($oldrrd)) . '.dump';
-$newxmlfile = $tempdir . '/' . str_replace('.rrd', '', basename($newrrd)) . '.dump';
+/* The dumps keep their 1.2.31 names in the shared temporary directory, so each
+ * one is created exclusively before rrdtool writes into it. A name that is
+ * already taken, by a planted symlink or anything else, stops the run rather
+ * than being followed. */
+$created = array();
+
+foreach (array($oldxmlfile, $newxmlfile) as $xmlfile) {
+	$handle = cacti_cli_create_file($xmlfile);
+
+	if (!is_resource($handle)) {
+		foreach ($created as $file) {
+			unlink($file);
+		}
+
+		print 'FATAL: ' . $handle . PHP_EOL;
+		exit(1);
+	}
+
+	fclose($handle);
+	$created[] = $xmlfile;
+}
 
 if ($finrrd == '') {
 	$finrrd = dirname($newrrd) . '/' . basename($newrrd) . '.new';
@@ -325,7 +348,15 @@ debug('Re-Creating XML File');
 $new_xml = recreateXML($new_rrd);
 
 debug('Writing XML File to Disk');
-file_put_contents($newxmlfile, $new_xml);
+$handle = cacti_cli_create_file($newxmlfile);
+
+if (!is_resource($handle)) {
+	print 'FATAL: ' . $handle . PHP_EOL;
+	exit(1);
+}
+
+fwrite($handle, $new_xml);
+fclose($handle);
 
 /* finally update the file XML file and Reprocess the RRDfile */
 if (!$dryrun) {
@@ -874,21 +905,38 @@ function writeXMLFile($output, $xmlfile) {
 }
 
 function backupRRDFile($rrdfile) {
-	global $tempdir, $html;
+	global $tempdir, $seed, $html;
 
 	$backupdir = $tempdir;
 
-	/* the working directory is private to this run, so a name only has to be
-	 * unique within it rather than unguessable */
-	$newfile = basename($rrdfile);
-
-	for ($i = 1; file_exists($backupdir . '/' . $newfile); $i++) {
-		$newfile = basename($rrdfile) . '.' . $i;
+	if (file_exists($backupdir . '/' . basename($rrdfile)) || is_link($backupdir . '/' . basename($rrdfile))) {
+		$newfile = basename($rrdfile) . '.' . $seed;
+	} else {
+		$newfile = basename($rrdfile);
 	}
 
 	print 'NOTE: Backing Up \'' . $rrdfile . '\' to \'' . $backupdir . '/' .  $newfile . '\'' . PHP_EOL;
 
-	return copy($rrdfile, $backupdir . '/' . $newfile);
+	/* copy() follows a symlink planted at the backup name, so the backup is
+	 * created exclusively and filled from the source instead */
+	$target = cacti_cli_create_file($backupdir . '/' . $newfile);
+
+	if (!is_resource($target)) {
+		print 'ERROR: ' . $target . PHP_EOL;
+
+		return false;
+	}
+
+	$source = @fopen($rrdfile, 'rb');
+	$copied = $source !== false && stream_copy_to_stream($source, $target) !== false;
+
+	if ($source !== false) {
+		fclose($source);
+	}
+
+	fclose($target);
+
+	return $copied;
 }
 
 /** preProcessXML - This function strips the timestamps off the XML dump
