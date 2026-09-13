@@ -1,4 +1,4 @@
-# PHP-FPM image for the Cacti E2E stack. PHP 8.1 matches the composer.json
+# PHP-FPM image for the Cacti E2E stack. PHP 8.1 satisfies the composer.json
 # floor. Vendor tree is already committed under include/vendor, so Composer
 # is intentionally not installed here.
 
