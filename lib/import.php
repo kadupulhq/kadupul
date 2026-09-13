@@ -23,7 +23,7 @@
  +-------------------------------------------------------------------------+
 */
 
-function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphans = false, $replace_svalues = false, $import_hashes = array(), $class = '', $data_input_allowed = null) {
+function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphans = false, $replace_svalues = false, $import_hashes = array(), $class = '', $data_input_allowed = null, &$refused_hashes = array()) {
 	global $config, $hash_type_codes, $cacti_version_codes, $ignorable_hashes, $preview_only;
 	global $import_debug_info, $import_messages, $legacy_template;
 
@@ -205,8 +205,8 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 		}
 	}
 
-	/* objects skipped because they use a Data Input Method the import may not write, keyed by hash */
-	$refused_hashes = array();
+	/* $refused_hashes holds objects skipped because they use a Data Input Method the import may not write,
+	 * keyed by hash; import_package() shares one set across its files */
 
 	/**
 	 * Second pass, we will actually perform the import of the entirety of the Template.
@@ -242,6 +242,11 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 
 				/* anything that uses a skipped method, or an object skipped for that reason, would save rows pointing at nothing */
 				$refused_by = ($type == 'data_input_method' ? false : import_xml_refused_reference($hash_array, $refused_hashes));
+
+				/* without the realm, a method or field the import has not saved, such as one from a later package file, would be saved as id 0 */
+				if ($refused_by === false && $type != 'data_input_method' && !$data_input_allowed) {
+					$refused_by = import_xml_unresolved_data_input($hash_array, $hash_cache);
+				}
 
 				switch($refused_by === false ? $type : 'refused_dependency') {
 					case 'refused_dependency':
@@ -656,8 +661,10 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 		return $data['info'];
 	}
 
-	/* every XML file in the package is imported under the same realm decision */
+	/* every XML file in the package is imported under the same realm decision, and an object
+	 * skipped in one file is remembered for the files after it */
 	$data_input_allowed = import_data_input_realm_allowed();
+	$refused_hashes     = array();
 
 	cacti_log('Verifying each files signature', false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 
@@ -811,7 +818,7 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 				cacti_log('Previewing XML Data for ' . $name, false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 			}
 
-			$debug_data = import_xml_data($fdata, false, $profile_id, $remove_orphans, $replace_svalues, $import_hashes, $class, $data_input_allowed);
+			$debug_data = import_xml_data($fdata, false, $profile_id, $remove_orphans, $replace_svalues, $import_hashes, $class, $data_input_allowed, $refused_hashes);
 
 			if ($debug_data === false) {
 				return false;
@@ -2446,6 +2453,42 @@ function import_xml_refused_reference($xml_array, $refused_hashes) {
 			foreach ($matches[1] as $reference) {
 				if (isset($refused_hashes[$reference])) {
 					return $reference;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+/* return the first Data Input Method or field an object's XML refers to that the hash cache cannot resolve, or false */
+function import_xml_unresolved_data_input($xml_array, $hash_cache) {
+	global $hash_type_codes, $ignorable_hashes;
+
+	if (!is_array($xml_array)) {
+		return false;
+	}
+
+	/* resolve_hash_to_id() maps these bad SNMP port and index hashes to 0 on purpose */
+	$known_hashes = array('5240353b8f7f259acaf30e6229bc14e7', 'd94caa7cc3733bd95ee00a3917fdcbb5', 'cbbe5c1ddfb264a6e5d509ce1c78c95f', '51bde3d899e12bde28ad979166985584');
+
+	$types = array(
+		$hash_type_codes['data_input_method'] => 'data_input_method',
+		$hash_type_codes['data_input_field']  => 'data_input_field'
+	);
+
+	foreach ($xml_array as $value) {
+		if (is_array($value)) {
+			$reference = import_xml_unresolved_data_input($value, $hash_cache);
+
+			if ($reference !== false) {
+				return $reference;
+			}
+		} elseif (is_string($value) && preg_match_all('/hash_([a-f0-9]{2})(?:[a-f0-9]{4})?([a-f0-9]{32})(?![a-f0-9])/', $value, $matches, PREG_SET_ORDER)) {
+			foreach ($matches as $match) {
+				if (isset($types[$match[1]]) && empty($hash_cache[$types[$match[1]]][$match[2]])
+					&& !in_array($match[2], $known_hashes, true) && !in_array($match[2], (array) $ignorable_hashes, true)) {
+					return $match[2];
 				}
 			}
 		}

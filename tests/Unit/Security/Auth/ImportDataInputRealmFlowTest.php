@@ -32,7 +32,8 @@ if (!function_exists(__NAMESPACE__ . '\import_xml_data')) {
 		'import_xml_data', 'import_data_input_realm_allowed', 'xml_to_data_input_method', 'xml_to_data_template',
 		'xml_detect_ignorable_hash_cache', 'compare_data', 'resolve_hash_to_id', 'parse_xml_hash', 'check_hash_type',
 		'check_hash_version', 'import_validate_data_source_item', 'xml_character_decode', 'import_is_base64_encoded',
-		'import_xml_record_refused', 'import_xml_refused_reference', 'import_xml_refuse_dependent'
+		'import_xml_record_refused', 'import_xml_refused_reference', 'import_xml_refuse_dependent',
+		'import_xml_unresolved_data_input', 'import_package'
 	);
 
 	/* helpers a later fix adds are simply absent before it */
@@ -75,12 +76,37 @@ if (!is_dir($libraryDir)) {
 /* import_xml_data() includes lib/xml.php; xml2array() is stubbed below */
 file_put_contents($libraryDir . '/xml.php', "<?php\n");
 
+/* a package hands each file's data to import_xml_data(), so answer per file when one is set */
 function xml2array($data) {
-	return $GLOBALS['ifl_xml'];
+	return $GLOBALS['ifl_xml_files'][$data] ?? $GLOBALS['ifl_xml'];
 }
 
+function import_validate_signature($xmlfile) : bool {
+	return true;
+}
+
+function import_read_package_data($xmlfile, &$public_key) {
+	$public_key = str_repeat('k', 300);
+
+	return $GLOBALS['ifl_package'];
+}
+
+function openssl_verify($data, $signature, $public_key, $algorithm = 0) {
+	return 1;
+}
+
+/* the hash cache query sees rows saved by an earlier import, as the database would */
 function db_fetch_assoc($sql) {
-	return $GLOBALS['ifl_existing'];
+	$rows  = $GLOBALS['ifl_existing'];
+	$types = array('data_input' => 'data_input_method', 'data_input_fields' => 'data_input_field', 'data_template' => 'data_template', 'data_template_rrd' => 'data_template_item');
+
+	foreach ($GLOBALS['ifl_saves'] as $save) {
+		if (isset($types[$save['table']]) && !empty($save['row']['hash'])) {
+			$rows[] = array('type' => $types[$save['table']], 'id' => $save['id'], 'hash' => $save['row']['hash']);
+		}
+	}
+
+	return $rows;
 }
 
 function db_fetch_cell_prepared($sql, $params = array()) {
@@ -273,6 +299,8 @@ beforeEach(function () use ($typeCodes, $versionCodes, $libraryDir) {
 	$GLOBALS['ifl_log']      = array();
 	$GLOBALS['ifl_messages'] = array();
 	$GLOBALS['ifl_graph_templates'] = array();
+	$GLOBALS['ifl_xml_files']       = array();
+	$GLOBALS['ifl_package']         = array();
 });
 
 afterEach(function () {
@@ -443,4 +471,84 @@ test('a user with the realm imports the graph template that uses the method', fu
 
 	expect($GLOBALS['ifl_graph_templates'])->toBe(array($gtHash))
 		->and($pointsAtNothing())->toBe(array());
+});
+
+if (!defined('OPENSSL_ALGO_SHA1')) {
+	define('OPENSSL_ALGO_SHA1', 1);
+	define('OPENSSL_ALGO_SHA256', 7);
+}
+
+/* each file name maps to that file's parsed XML, in package order */
+$runPackage = function (array $files) {
+	$package_files = array();
+
+	foreach ($files as $name => $xml) {
+		$data = '<' . $name . '/>';
+
+		$GLOBALS['ifl_xml_files'][$data] = $xml;
+
+		$package_files[] = array('name' => $name, 'data' => base64_encode($data), 'filesignature' => base64_encode('signature'));
+	}
+
+	$GLOBALS['ifl_package'] = array('info' => array(), 'files' => array('file' => $package_files));
+
+	return import_package('package.xml.gz', 1, false, false, false, false, false);
+};
+
+test('a method refused in one package file skips a template that uses it in a later file', function () use ($runPackage, $methodXml, $templateXml, $methodHash, $dtHash, $pointsAtNothing) {
+	$runPackage(array(
+		'method.xml'   => array('hash_030103' . $methodHash => $methodXml('/usr/local/bin/uptime-probe <host>')),
+		'template.xml' => array('hash_010103' . $dtHash => $templateXml),
+	));
+
+	expect($pointsAtNothing())->toBe(array())
+		->and($GLOBALS['ifl_saves'])->toBe(array())
+		->and(implode("\n", $GLOBALS['ifl_log']))->toContain("data_template '$dtHash'")
+		->and($GLOBALS['ifl_messages'])->toHaveKey('import_data_input_dependent_' . $dtHash);
+});
+
+test('a template in an earlier package file than its refused method is skipped as well', function () use ($runPackage, $methodXml, $templateXml, $methodHash, $dtHash, $pointsAtNothing) {
+	$runPackage(array(
+		'template.xml' => array('hash_010103' . $dtHash => $templateXml),
+		'method.xml'   => array('hash_030103' . $methodHash => $methodXml('/usr/local/bin/uptime-probe <host>')),
+	));
+
+	expect($pointsAtNothing())->toBe(array())
+		->and($GLOBALS['ifl_saves'])->toBe(array())
+		->and(implode("\n", $GLOBALS['ifl_log']))->toContain("data_template '$dtHash'")
+		->and($GLOBALS['ifl_messages'])->toHaveKey('import_data_input_dependent_' . $dtHash);
+});
+
+test('a user with the realm imports a package whose template uses a method from an earlier file', function () use ($runPackage, $methodXml, $templateXml, $methodHash, $dtHash, $savedTo, $pointsAtNothing) {
+	$GLOBALS['ifl_realm'] = 2;
+
+	$runPackage(array(
+		'method.xml'   => array('hash_030103' . $methodHash => $methodXml('/usr/local/bin/uptime-probe <host>')),
+		'template.xml' => array('hash_010103' . $dtHash => $templateXml),
+	));
+
+	expect($pointsAtNothing())->toBe(array())
+		->and($savedTo('data_template_rrd')[0]['row']['data_input_field_id'])->toBe($savedTo('data_input_fields')[0]['id'])
+		->and($GLOBALS['ifl_messages'])->toBe(array());
+});
+
+test('a user with the realm still imports a template whose method comes in a later file', function () use ($runPackage, $methodXml, $templateXml, $methodHash, $dtHash, $savedTo) {
+	$GLOBALS['ifl_realm'] = 2;
+
+	$runPackage(array(
+		'template.xml' => array('hash_010103' . $dtHash => $templateXml),
+		'method.xml'   => array('hash_030103' . $methodHash => $methodXml('/usr/local/bin/uptime-probe <host>')),
+	));
+
+	expect($savedTo('data_template'))->toHaveCount(1)
+		->and($savedTo('data_input'))->toHaveCount(1)
+		->and($GLOBALS['ifl_messages'])->toBe(array());
+});
+
+test('a standalone template import without the realm skips a method it cannot resolve', function () use ($runImport, $templateXml, $dtHash, $pointsAtNothing) {
+	$result = $runImport(array('hash_010103' . $dtHash => $templateXml));
+
+	expect($pointsAtNothing())->toBe(array())
+		->and($GLOBALS['ifl_saves'])->toBe(array())
+		->and($result['data_template'][0]['result'])->toBe('fail');
 });
