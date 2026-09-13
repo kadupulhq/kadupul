@@ -23,18 +23,19 @@ require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
 
 /**
  * Run permission checks in a fresh process and record, per call, which policy
- * columns were read from user_auth. A call answered from the cache reads none.
+ * columns were read from user_auth and how often a reset key was read. A call
+ * answered from the cache reads no policy column.
  *
  * @param array<int, array{0: string, 1: array<int, mixed>}> $calls
  * @param array<string, mixed>                                $session
  *
- * @return array{returns: array<int, mixed>, queries: array<int, array<int, string>>, session: array<string, mixed>}
+ * @return array{returns: array<int, mixed>, queries: array<int, array<int, string>>, reset_checks: array<int, int>, session: array<string, mixed>}
  */
 function permission_cache_trace(array $calls, array $session = array()) : array {
 	$src  = file_get_contents(dirname(__DIR__, 4) . '/lib/auth.php');
 	$body = '';
 
-	foreach (array('auth_check_perms', 'is_tree_allowed', 'get_simple_graph_perms', 'get_simple_graph_template_perms') as $name) {
+	foreach (array('auth_check_perms', 'is_tree_allowed', 'get_simple_graph_perms', 'get_simple_graph_template_perms', 'auth_perm_cache_check_reset') as $name) {
 		$body .= cacti_test_function_source($src, $name) . "\n\n";
 	}
 
@@ -48,7 +49,20 @@ $GLOBALS['policies'] = array(
 	7 => array('policy_graphs' => 2, 'policy_graph_templates' => 2, 'policy_trees' => 2),
 );
 
-$GLOBALS['queries'] = array();
+/* user_auth.reset_perms, which reset_user_perms() and reset_group_perms() change */
+$GLOBALS['reset_keys'] = array(1 => '101', 7 => '107');
+
+$GLOBALS['queries']      = array();
+$GLOBALS['reset_checks'] = 0;
+
+/* an administrator changes a user's policy from another process, as user_admin.php does */
+function permission_cache_admin_change($user_id, $column, $value, $reset = true) {
+	$GLOBALS['policies'][$user_id][$column] = $value;
+
+	if ($reset) {
+		$GLOBALS['reset_keys'][$user_id] .= 'r';
+	}
+}
 
 function read_config_option($name, $force = false) {
 	return $name == 'auth_method' ? 1 : '';
@@ -59,6 +73,12 @@ function db_fetch_cell_prepared($sql, $params = array(), $col_name = '', $log = 
 		$GLOBALS['queries'][] = $match[1];
 
 		return $GLOBALS['policies'][$params[0]][$match[1]];
+	}
+
+	if (preg_match('/SELECT reset_perms\s+FROM user_auth\s/', $sql)) {
+		$GLOBALS['reset_checks']++;
+
+		return $GLOBALS['reset_keys'][$params[0]] ?? false;
 	}
 
 	return 0;
@@ -83,15 +103,19 @@ PHP;
 $_SESSION = $scenario['session'];
 $returns      = array();
 $call_queries = array();
+$call_resets  = array();
 
 /* this runs at file scope, where $queries would be $GLOBALS['queries'] itself */
 foreach ($scenario['calls'] as $call) {
-	$GLOBALS['queries'] = array();
+	$GLOBALS['queries']      = array();
+	$GLOBALS['reset_checks'] = 0;
+
 	$returns[]      = call_user_func_array($call[0], $call[1]);
 	$call_queries[] = $GLOBALS['queries'];
+	$call_resets[]  = $GLOBALS['reset_checks'];
 }
 
-print json_encode(array('returns' => $returns, 'queries' => $call_queries, 'session' => $_SESSION));
+print json_encode(array('returns' => $returns, 'queries' => $call_queries, 'reset_checks' => $call_resets, 'session' => $_SESSION));
 
 PHP;
 
@@ -133,13 +157,14 @@ test('the session user tree answer does not leak to an explicit user or back', f
 	expect(permission_cache_run($calls, array('sess_user_id' => 7)))->toBe(array(false, true, false));
 });
 
-test('repeated checks for the same user still use the cache', function () {
+test('repeated checks for the signed-in user still use the cache', function () {
 	$calls = array(
 		array('is_tree_allowed', array(5, 7)),
 		array('get_simple_graph_perms', array(7)),
 	);
 
 	$session = array(
+		'sess_user_id'      => 7,
 		'sess_tree_perms'   => array(7 => array(5 => true)),
 		'sess_simple_perms' => array(7 => true),
 	);
@@ -225,4 +250,86 @@ test('a false unkeyed simple permission cache is discarded rather than served', 
 		->and($trace['queries'])->toBe(array(array('policy_graphs'), array('policy_graph_templates')))
 		->and($trace['session']['sess_simple_perms'])->toBe(array(1 => true))
 		->and($trace['session']['sess_simple_template_perms'])->toBe(array(1 => true));
+});
+
+test('a permission reset for a report owner between two checks denies the later check', function () {
+	foreach (array(
+		array('is_tree_allowed', array(5, 1), 'policy_trees'),
+		array('get_simple_graph_perms', array(1), 'policy_graphs'),
+		array('get_simple_graph_template_perms', array(1), 'policy_graph_templates'),
+	) as $check) {
+		$returns = permission_cache_run(array(
+			array($check[0], $check[1]),
+			array('permission_cache_admin_change', array(1, $check[2], 2)),
+			array($check[0], $check[1]),
+		));
+
+		expect($returns)->toBe(array(true, null, false));
+	}
+});
+
+test('a reset drops every cached answer of that owner, not only the one checked next', function () {
+	$returns = permission_cache_run(array(
+		array('is_tree_allowed', array(5, 1)),
+		array('get_simple_graph_perms', array(1)),
+		array('permission_cache_admin_change', array(1, 'policy_graphs', 2)),
+		array('is_tree_allowed', array(5, 1)),
+		array('get_simple_graph_perms', array(1)),
+	));
+
+	expect($returns)->toBe(array(true, true, null, true, false));
+});
+
+test('without a reset an owner answer is served from the cache after one reset key read', function () {
+	$trace = permission_cache_trace(array(
+		array('is_tree_allowed', array(5, 1)),
+		array('permission_cache_admin_change', array(1, 'policy_trees', 2, false)),
+		array('is_tree_allowed', array(5, 1)),
+	));
+
+	expect($trace['returns'])->toBe(array(true, null, true))
+		->and($trace['queries'])->toBe(array(array('policy_trees'), array(), array()))
+		->and($trace['reset_checks'])->toBe(array(1, 0, 1));
+});
+
+test('a reset of one owner leaves another owner cached answers in place', function () {
+	$trace = permission_cache_trace(array(
+		array('is_tree_allowed', array(5, 1)),
+		array('is_tree_allowed', array(5, 7)),
+		array('permission_cache_admin_change', array(7, 'policy_trees', 1)),
+		array('is_tree_allowed', array(5, 1)),
+		array('is_tree_allowed', array(5, 7)),
+	));
+
+	expect($trace['returns'])->toBe(array(true, false, null, true, true))
+		->and($trace['queries'][3])->toBe(array())
+		->and($trace['queries'][4])->toBe(array('policy_trees'));
+});
+
+test('the signed-in user checks read no reset key, as in 1.2.31', function () {
+	/* is_realm_allowed() already clears these caches when the signed-in user is reset */
+	$trace = permission_cache_trace(array(
+		array('is_tree_allowed', array(5)),
+		array('get_simple_graph_perms', array(7)),
+		array('get_simple_graph_template_perms', array('7')),
+		array('is_tree_allowed', array(5, '7')),
+		array('get_simple_graph_perms', array(7)),
+	), array('sess_user_id' => 7));
+
+	expect($trace['returns'])->toBe(array(false, false, false, false, false))
+		->and($trace['reset_checks'])->toBe(array(0, 0, 0, 0, 0))
+		->and($trace['queries'][3])->toBe(array())
+		->and($trace['queries'][4])->toBe(array());
+});
+
+test('an administrator session rechecks another user after that user is reset', function () {
+	$trace = permission_cache_trace(array(
+		array('is_tree_allowed', array(5, 7)),
+		array('permission_cache_admin_change', array(7, 'policy_trees', 1)),
+		array('is_tree_allowed', array(5, 7)),
+		array('is_tree_allowed', array(5)),
+	), array('sess_user_id' => 1));
+
+	expect($trace['returns'])->toBe(array(false, null, true, true))
+		->and($trace['reset_checks'])->toBe(array(1, 0, 1, 0));
 });

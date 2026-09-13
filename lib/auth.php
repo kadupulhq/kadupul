@@ -778,6 +778,8 @@ function is_tree_allowed($tree_id, $user_id = 0) {
 		kill_session_var('sess_tree_perms');
 	}
 
+	auth_perm_cache_check_reset($user_id);
+
 	if (isset($_SESSION['sess_tree_perms'][$user_id][$tree_id])) {
 		return $_SESSION['sess_tree_perms'][$user_id][$tree_id];
 	}
@@ -1737,6 +1739,8 @@ function get_simple_graph_perms($user_id) {
 		kill_session_var('sess_simple_perms');
 	}
 
+	auth_perm_cache_check_reset($user_id);
+
 	if (isset($_SESSION['sess_simple_perms'][$user_id])) {
 		return $_SESSION['sess_simple_perms'][$user_id];
 	}
@@ -1798,6 +1802,8 @@ function get_simple_graph_template_perms($user_id) {
 	if (isset($_SESSION['sess_simple_template_perms']) && !is_array($_SESSION['sess_simple_template_perms'])) {
 		kill_session_var('sess_simple_template_perms');
 	}
+
+	auth_perm_cache_check_reset($user_id);
 
 	if (isset($_SESSION['sess_simple_template_perms'][$user_id])) {
 		return $_SESSION['sess_simple_template_perms'][$user_id];
@@ -4555,6 +4561,44 @@ function is_user_perms_valid($user_id) {
 	$_SESSION['sess_user_perms_key'] = $key;
 
 	return $valid;
+}
+
+/**
+ * auth_perm_cache_check_reset - drop a user's cached tree and graph answers
+ *   once that user's permissions have been reset.
+ *
+ * The reset runs in another request or process, such as user_admin.php while
+ * poller_reports.php is checking report owners, so the cached answers are tied
+ * to the user's reset_perms value rather than cleared by the reset itself. The
+ * signed-in user is left to is_realm_allowed(), which clears these caches for
+ * that user on reset.
+ *
+ * @param  (int) $user_id The user whose cached answers are about to be used
+ *
+ * @return (void)
+ */
+function auth_perm_cache_check_reset($user_id) {
+	if (empty($user_id) || (isset($_SESSION['sess_user_id']) && $user_id == $_SESSION['sess_user_id'])) {
+		return;
+	}
+
+	$key = db_fetch_cell_prepared('SELECT reset_perms
+		FROM user_auth
+		WHERE id = ?',
+		array($user_id));
+
+	if (isset($_SESSION['sess_perms_reset_key'][$user_id]) && $_SESSION['sess_perms_reset_key'][$user_id] == $key) {
+		return;
+	}
+
+	/* an unkeyed legacy cache is a scalar here, and unsetting an offset of true is an Error */
+	foreach (array('sess_tree_perms', 'sess_simple_perms', 'sess_simple_template_perms') as $cache) {
+		if (isset($_SESSION[$cache]) && is_array($_SESSION[$cache])) {
+			unset($_SESSION[$cache][$user_id]);
+		}
+	}
+
+	$_SESSION['sess_perms_reset_key'][$user_id] = $key;
 }
 
 /**
