@@ -74,6 +74,10 @@ if (!defined('RRDTOOL_OUTPUT_NULL')) {
 	define('RRDTOOL_OUTPUT_NULL', 0);
 }
 
+if (!defined('RRDTOOL_OUTPUT_STDOUT')) {
+	define('RRDTOOL_OUTPUT_STDOUT', 1);
+}
+
 if (!defined('RRDTOOL_OUTPUT_BOOLEAN')) {
 	define('RRDTOOL_OUTPUT_BOOLEAN', 4);
 }
