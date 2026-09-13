@@ -22,6 +22,7 @@ Cacti CHANGELOG
 -issue: Push out graph template input values that are NULL instead of aborting, as 1.2.31 did
 -issue: Finish an upgrade with missing core tables such as poller_output_boost_local_data_ids, logging a warning, as 1.2.31 did
 -issue: Accept a literal connection argument to db_check_reconnect() again, as 1.2.31 did
+-security: Keep RRDproxy message encryption on instead of asking the proxy to disable it after the handshake
 -security: Check graph permission and the real-time enabled setting before real-time init polls a graph
 -security: Quote each real-time poller argument separately when the graph page starts the poller
 -security: Quote graph, export, fetch, RRDcheck and RRD file path arguments, including user font settings, the way the RRDtool command parser reads them

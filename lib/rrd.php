@@ -176,8 +176,8 @@ function __rrd_proxy_init($logopt = 'WEBLOG') {
 			rrdtool_execute("setenv RRD_DEFAULT_FONT '" . read_config_option('path_rrdtool_default_font') . "'", false, RRDTOOL_OUTPUT_NULL, $rrdproxy, $logopt = 'WEBLOG');
 		}
 
-		/* disable encryption */
-		$encryption = rrdtool_execute('setcnn encryption off', false, RRDTOOL_OUTPUT_BOOLEAN, $rrdproxy, $logopt = 'WEBLOG') ? false : true;
+		/* keep message encryption on: the proxy honours a request to turn it off
+		 * and would then carry every command and its output in clear text */
 		return $rrdproxy;
 	}
 }
@@ -219,7 +219,12 @@ function encrypt($output, $rsa_key) {
 	if ($encryption) {
 		try {
 			/* Preserve the RRDproxy protocol's phpseclib 2 OAEP/SHA-1 wire
-			 * format while using the maintained Composer dependency. */
+			 * format while using the maintained Composer dependency.
+			 *
+			 * Existing proxies decrypt with a zero IV and check no MAC, so a
+			 * random IV or an HMAC would break them. The fresh AES key per
+			 * message stops the fixed IV from exposing repeated plaintext;
+			 * integrity protection needs a proxy protocol change. */
 			$rsa = \phpseclib3\Crypt\PublicKeyLoader::loadPublicKey($rsa_key)
 				->withPadding(\phpseclib3\Crypt\RSA::ENCRYPTION_OAEP)
 				->withHash('sha1')
