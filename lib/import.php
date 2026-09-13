@@ -581,6 +581,9 @@ function import_read_package_data($xmlfile, &$public_key) {
  * @param  (array)       $import_hashes - The hashes to import from the package
  * @param  (array)       $import_files - The XML resource files and script files to import from the package
  * @param  (string)      $class - The Class of the Package in the case of a Device Template
+ * @param  (bool)        $replace_files - If true, the default, package script and resource files
+ *                       overwrite existing files.  The installer passes false so it only
+ *                       writes files that are missing.
  *
  */
 function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $replace_svalues = false,
