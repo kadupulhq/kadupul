@@ -112,6 +112,17 @@ test('an unknown username runs as many password verifications as a known one', f
 		->and($unknown['verify_calls'])->toBe($known['verify_calls']);
 });
 
+test('a blank password runs as many password verifications for an unknown username as a known one', function () {
+	$known   = local_login_timing_run('alice', '');
+	$unknown = local_login_timing_run('nobody', '');
+
+	expect($known['user'])->toBe(array())
+		->and($unknown['user'])->toBe(array())
+		->and($known['error'])->toBeTrue()
+		->and($unknown['error'])->toBeTrue()
+		->and($unknown['verify_calls'])->toBe($known['verify_calls']);
+});
+
 test('a correct password still returns the account', function () {
 	$result = local_login_timing_run('alice', 'right');
 
