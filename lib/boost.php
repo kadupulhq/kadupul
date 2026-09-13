@@ -1910,9 +1910,13 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 
 		// Check for a Data Source that has been removed
 		if ($ds_exists) {
-			boost_rrdtool_function_create($local_data_id, false, $rrdtool_pipe);
+			$created = boost_rrdtool_function_create($local_data_id, false, $rrdtool_pipe);
 
-			if (read_config_option('storage_location')) {
+			if (is_resource($rrdtool_pipe)) {
+				/* rrdtool has not read a piped create yet, so the file can still be
+				 * missing here.  It runs the create before the update that follows. */
+				$valid_entry = $created !== false;
+			} elseif (read_config_option('storage_location')) {
 				$valid_entry = rrdtool_execute_path_command('file_exists', $rrd_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
 			} else {
 				$valid_entry = file_exists($rrd_path);
