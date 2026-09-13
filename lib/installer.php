@@ -569,7 +569,10 @@ class Installer implements JsonSerializable {
 			$valid = (is_resource_writable($path));
 			$permissions['always'][$path] = $valid;
 			log_install_debug('permission',"($name) $path = $valid (always)");
-			if (!$valid) {
+			if (!$valid && $name == 'purifier') {
+				/* HTMLPurifier runs without its definition cache, and 1.2.31 did not require this path */
+				log_install_always('permission', __('WARNING: Path is not writable, HTMLPurifier will run without a definition cache: %s', $path));
+			} elseif (!$valid) {
 				$this->addError(Installer::STEP_PERMISSION_CHECK, 'Permission', $name.':'.$path, __('Path is not writable'));
 			}
 		}
