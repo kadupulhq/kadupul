@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -210,7 +211,7 @@ function do_rrdcheck($thread_id = 1) {
 				}
 
 				if ($use_proxy) {
-					$output = rrdtool_execute('info ' . cacti_escapeshellarg($file), false, RRDTOOL_OUTPUT_STDOUT, false, 'RRDCHECK');
+					$output = rrdtool_execute('info ' . rrdtool_quote_argument($file), false, RRDTOOL_OUTPUT_STDOUT, false, 'RRDCHECK');
 				} else {
 					$output = rrdcheck_rrdtool_execute(['info', $file], $pipes);
 				}
@@ -827,7 +828,7 @@ function rrdcheck_rrdtool_execute($command, &$pipes) {
 				$escaped_args = array();
 
 				foreach($command as $arg) {
-					$escaped_args[] = cacti_escapeshellarg($arg);
+					$escaped_args[] = rrdtool_quote_argument($arg);
 				}
 
 				$command_line .= ' ' . implode(' ', $escaped_args);

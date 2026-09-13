@@ -113,7 +113,8 @@ function cacti_test_rrd_harness_run(array $scenario) : array {
 		$shipped .= cacti_test_rrd_function_source($fsrc, $name) . "\n\n";
 	}
 
-	$shipped .= cacti_test_rrd_function_source($hsrc, 'html_escape') . "\n";
+	$shipped .= cacti_test_rrd_function_source($hsrc, 'html_escape') . "\n\n";
+	$shipped .= cacti_test_rrd_function_source(file_get_contents($root . '/lib/rrdcheck.php'), 'rrdcheck_rrdtool_execute') . "\n";
 
 	$work = sys_get_temp_dir() . '/cacti-rrd-harness-' . bin2hex(random_bytes(6));
 	mkdir($work, 0700);
@@ -202,6 +203,34 @@ try {
 			$graph = $scenario['graph'];
 			$gda   = $scenario['graph_data_array'] ?? array();
 			$out['options'] = rrd_function_process_graph_options($scenario['start'], $scenario['end'], $graph, $gda);
+			break;
+		case 'rrdcheck_command':
+			/* capture the exact bytes rrdcheck writes to its rrdtool pipe */
+			$out['written'] = array();
+
+			foreach ($scenario['commands'] as $command) {
+				$pipes = array(fopen('php://temp', 'w+'), fopen('php://temp', 'w+'));
+				fwrite($pipes[1], "OK u:0.00 s:0.00 r:0.00\n");
+				rewind($pipes[1]);
+
+				rrdcheck_rrdtool_execute($command, $pipes);
+
+				rewind($pipes[0]);
+				$out['written'][] = stream_get_contents($pipes[0]);
+			}
+
+			break;
+		case 'rrdcheck_rrdtool':
+			$process = proc_open(array($scenario['rrdtool'], '-'), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $scenario['cwd']);
+			$out['output'] = array();
+
+			foreach ($scenario['commands'] as $command) {
+				$out['output'][] = rrdcheck_rrdtool_execute($command, $pipes);
+			}
+
+			fclose($pipes[0]);
+			proc_close($process);
+
 			break;
 		case 'font':
 			$out['font'] = rrdtool_function_set_font($scenario['type'], $scenario['no_legend'] ?? '', $scenario['themefonts'] ?? array());
