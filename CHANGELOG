@@ -95,6 +95,7 @@ Cacti CHANGELOG
 -issue: Stop repeating the poller overrun warning and mail every cycle for a collector that has died
 -issue: Leave poller output to Boost when Boost redirect is on instead of also writing it to the RRD files
 -issue: Stop marking a Boost run failed when it creates a new RRD file through the rrdtool pipe
+-issue: Restore the 1.2.31 warning when an SNMP notification has no receivers
 -issue: Declare GPL-2.0-or-later in composer.json, the license the source headers grant
 -security: Pass over a disabled configured administrator when moving off the retired no-authentication method
 -security: Skip the unknown-username password hash for blank passwords, as a known username does
