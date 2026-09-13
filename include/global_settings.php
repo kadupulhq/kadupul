@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -500,7 +501,7 @@ $settings = array(
 		'allow_unsafe_https' => array(
 			'friendly_name' => __('Allow Unsafe Remote Data Collector HTTPS'),
 			'description' => __('Allow the use of Self Signed Certificates and allow the hostname of the Certificate to differ from that of the Remote Data Collector.'),
-			'default' => 'on',
+			'default' => '',
 			'method' => 'checkbox',
 		),
 		'allow_unsafe_metachars' => array(

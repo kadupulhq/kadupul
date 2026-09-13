@@ -2,6 +2,7 @@ Cacti CHANGELOG
 
 1.2.x
 -issue: Parse installer start and finish times that fall on a whole second instead of crashing
+-security: Verify Remote Data Collector HTTPS certificates by default on new installs; upgraded installs keep their previous behaviour
 -security: Mask passwords, passphrases and community strings in DEVDBG SQL save logging with the existing ******** placeholder
 -security: Check graph permissions for Remote Data Collector graph images, as graph_json.php already does
 -security: Escape markup in data query debug output returned by a Remote Data Collector

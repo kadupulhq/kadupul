@@ -31,6 +31,9 @@ on:
       - tests/Unit/Security/Xss/DebugLogRemoteMarkupTest.php
       - tests/Unit/Security/Auth/RemoteAgentGraphUserTest.php
       - tests/Unit/Database/SqlSaveLogRedactionTest.php
+      - tests/Unit/Security/Ssrf/RemoteCollectorHttpsDefaultTest.php
+      - install/functions.php
+      - install/upgrades/1_2_32.php
       - tests/integration/**
       - tests/e2e/**
       - .github/workflows/csp-e2e.yml
@@ -80,7 +83,8 @@ jobs:
             Unit/Security/Auth/ClientAddrTrustedProxyTest.php \
             Unit/Security/Xss/DebugLogRemoteMarkupTest.php \
             Unit/Security/Auth/RemoteAgentGraphUserTest.php \
-            Unit/Database/SqlSaveLogRedactionTest.php; do
+            Unit/Database/SqlSaveLogRedactionTest.php \
+            Unit/Security/Ssrf/RemoteCollectorHttpsDefaultTest.php; do
             report="$RUNNER_TEMP/$(basename "$test_file" .php).xml"
             ./vendor/bin/pest \
               --bootstrap=./bootstrap-unit.php \
