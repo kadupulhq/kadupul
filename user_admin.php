@@ -616,6 +616,11 @@ function form_save() {
 			$user_id = sql_save($save, 'user_auth');
 
 			if ($user_id) {
+				/* revoke tokens and sessions the same way the bulk Disable action does */
+				if ($save['enabled'] != 'on') {
+					user_disable($user_id);
+				}
+
 				raise_message(1);
 			} else {
 				raise_message(2);

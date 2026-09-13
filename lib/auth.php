@@ -165,16 +165,18 @@ function check_auth_cookie() {
 
 		if ($user_id > 0 && $user_id != get_guest_account()) {
 			if ($realm_id == -1) {
-				$user_info = db_fetch_row_prepared('SELECT id, realm, username
+				$user_info = db_fetch_row_prepared("SELECT id, realm, username
 					FROM user_auth
 					WHERE id = ?
-					AND realm = 0',
+					AND realm = 0
+					AND enabled = 'on'",
 					array($user_id));
 			} else {
-				$user_info = db_fetch_row_prepared('SELECT id, realm, username
+				$user_info = db_fetch_row_prepared("SELECT id, realm, username
 					FROM user_auth
 					WHERE id = ?
-					AND realm = ?',
+					AND realm = ?
+					AND enabled = 'on'",
 					array($user_id, $realm_id));
 			}
 
@@ -5042,13 +5044,19 @@ function check_reset_no_authentication($auth_method) {
  * @return bool True if the transition succeeded, false if the user is locked out
  */
 function cacti_auth_transition($user_id, $reason = 'login') {
-	/* check lockout status before allowing transition */
-	$locked = db_fetch_cell_prepared('SELECT locked
+	/* check account status before allowing transition */
+	$user = db_fetch_row_prepared('SELECT enabled, locked
 		FROM user_auth
 		WHERE id = ?',
 		array($user_id));
 
-	if ($locked == 'on') {
+	if (!cacti_sizeof($user) || $user['enabled'] != 'on') {
+		cacti_log('SECURITY: auth transition blocked for disabled user: ' . $user_id . ' reason: ' . $reason, false, 'AUTH');
+
+		return false;
+	}
+
+	if ($user['locked'] == 'on') {
 		cacti_log('SECURITY: auth transition blocked for locked user: ' . $user_id . ' reason: ' . $reason, false, 'AUTH');
 
 		return false;
