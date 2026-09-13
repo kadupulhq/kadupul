@@ -21,6 +21,8 @@ Targeting `v1.3.0`, the first planned application release. See
   theme and the installer with `noopener`.
 - `locales/build_gettext.sh` prints its error message and exits non-zero
   when realpath or a gettext tool is missing, instead of exiting silently.
+- Parse installer start and finish times that fall on a whole second instead
+  of stopping the installer with a fatal error.
 
 ### Added
 
