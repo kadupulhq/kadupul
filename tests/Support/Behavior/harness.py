@@ -205,17 +205,19 @@ class Harness:
         grouped = {}
         for event in events:
             if 'fatal' in event:
-                key = ('FATAL', event['fatal'].get('message', ''), event['fatal'].get('file', ''), None)
+                key = ('FATAL', event['fatal'].get('message', ''), event['fatal'].get('file', ''), None, None)
             else:
+                # Both suppression flags are part of the event, or the first arrival
+                # decides which value an entry records.
                 key = (event.get('severity'), event.get('message', ''), event.get('file', ''),
-                       event.get('suppressed'))
+                       event.get('suppressed'), event.get('suppressed_here'))
             entry = grouped.setdefault(key, {'severity': key[0], 'message': key[1],
                                              'file': key[2], 'count': 0,
                                              'suppressed': event.get('suppressed'),
                                              'suppressed_here': event.get('suppressed_here')})
             entry['count'] += 1
         return sorted(grouped.values(), key=lambda e: (str(e['severity']), e['message'], e['file'],
-                                                      str(e['suppressed'])))
+                                                      str(e['suppressed']), str(e['suppressed_here'])))
 
     def rrd_calls(self):
         """rrdtool invocations recorded by the image shim, normalized.

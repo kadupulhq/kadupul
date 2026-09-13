@@ -7,8 +7,12 @@ because the golden and the observation are normalized the same way.
 Run with: python tests/Support/Behavior/selftest.py
 """
 import importlib.util
+import json
 from pathlib import Path
+import shutil
 import sys
+import types
+import uuid
 
 ROOT = Path(__file__).resolve().parents[3]
 spec = importlib.util.spec_from_file_location('harness', Path(__file__).with_name('harness.py'))
@@ -23,6 +27,7 @@ CASES = [
     ('sql datetime', 'completed at 2026-09-11 20:50:21', 'completed at <TIMESTAMP>'),
     ('iso stamp', '2026-09-12T02:39:50Z ready', '<TIMESTAMP> ready'),
     ('bracketed clock', '[20:47:59] [ global ] Finished', '[<TIME>] [ global ] Finished'),
+    ('clock after newline', 'start\n[20:47:59] [ global ] Finished', 'start\n[<TIME>] [ global ] Finished'),
     ('poller timing', 'OK u:0.12 s:0.03 r:0.20', 'OK u:<T> s:<T> r:<T>'),
 
     # Schema and behaviour must survive.
@@ -33,8 +38,34 @@ CASES = [
     ('ids and ports', 'host id 7, rows 1234, port 161, timeout 500',
      'host id 7, rows 1234, port 161, timeout 500'),
     ('rra definition', 'RRA:AVERAGE:0.5:1:600', 'RRA:AVERAGE:0.5:1:600'),
+    ('clock inside a message', 'maintenance window [12:34:56] kept', 'maintenance window [12:34:56] kept'),
     ('ds definition', 'DS:proc:GAUGE:600:0:U', 'DS:proc:GAUGE:600:0:U'),
 ]
+
+
+def incomplete_repeat_failure():
+    """compare must refuse a partial repeat run instead of labelling differences
+    NONDETERMINISTIC against it."""
+    results = ROOT / 'tests/behavior/results'
+    tag = 'selftest-' + uuid.uuid4().hex[:8]
+    dirs = {}
+    try:
+        for role, complete in (('baseline', True), ('candidate', True), ('repeat', False)):
+            dirs[role] = results / f'{tag}-{role}'
+            dirs[role].mkdir(parents=True)
+            (dirs[role] / 'observations.json').write_text(json.dumps(
+                {'complete': complete, 'php': '8.2', 'base_image': {}, 'scenarios': {'x': 1}}))
+        args = types.SimpleNamespace(baseline=dirs['baseline'].name, candidate=dirs['candidate'].name,
+                                     approvals=None, repeat=str(dirs['repeat'] / 'observations.json'),
+                                     output=str(dirs['baseline'] / 'comparison'))
+        try:
+            harness.compare(args)
+        except RuntimeError:
+            return None
+        return 'incomplete repeat: compare accepted a partial control run'
+    finally:
+        for path in dirs.values():
+            shutil.rmtree(path, ignore_errors=True)
 
 
 def main():
@@ -46,6 +77,12 @@ def main():
             failures.append(f'{label}:\n  expected {expected!r}\n  got      {actual!r}')
 
     print(f'{len(CASES) - len(failures)}/{len(CASES)} normalization cases pass')
+
+    repeat_failure = incomplete_repeat_failure()
+    if repeat_failure:
+        failures.append(repeat_failure)
+    else:
+        print('compare rejects an incomplete repeat control')
 
     for failure in failures:
         print('FAIL ' + failure, file=sys.stderr)
