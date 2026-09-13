@@ -51,15 +51,18 @@ function boostRedirect_boost_flush_output_batch($value_tuples, $conn = false) {
 function boostRedirect_db_fetch_assoc_prepared($sql, $params = array(), $log = true, $conn = false) {
 	$state =& $GLOBALS['boost_redirect_test'];
 	$state['lookups']++;
+	$state['markers'][] = substr_count($sql, '?');
 
-	if ($state['lookup_fails']) {
+	/* the server refuses a statement with more than 65535 markers */
+	if ($state['lookup_fails'] || substr_count($sql, '?') > 65535) {
 		return false;
 	}
 
-	$rows = array();
+	$wanted = array_flip(array_map('strval', $params));
+	$rows   = array();
 
 	foreach ($state['boost_rows'] as $row) {
-		if (in_array($row['local_data_id'], $params) && in_array($row['time'], $params, true)) {
+		if (isset($wanted[(string) $row['local_data_id']]) && isset($wanted[$row['time']])) {
 			$rows[] = $row;
 		}
 	}
@@ -116,6 +119,7 @@ function boostRedirectRun(array $options, array $boost_rows = null, array $state
 		'staged'       => 0,
 		'tuples'       => array(),
 		'lookups'      => 0,
+		'markers'      => array(),
 		'lookup_fails' => false,
 		'flush_fails'  => false,
 		'owned'        => true,
@@ -151,6 +155,22 @@ test('Boost redirect stages only the rows missing from poller_output_boost', fun
 			"(7,'traffic_out','2026-01-01 00:05:00','11')",
 			"(8,'traffic_in','2026-01-01 00:05:00','12')",
 		));
+});
+
+test('a 40000 row batch with distinct timestamps stays under the marker limit and finds every row', function () {
+	$GLOBALS['boost_redirect_test'] = array('lookups' => 0, 'markers' => array(), 'lookup_fails' => false, 'boost_rows' => array());
+
+	$results = array();
+
+	for ($i = 1; $i <= 40000; $i++) {
+		$results[] = array('local_data_id' => $i, 'rrd_name' => 'traffic_in', 'time' => gmdate('Y-m-d H:i:s', 1789000000 + $i), 'output' => '1');
+	}
+
+	$GLOBALS['boost_redirect_test']['boost_rows'] = $results;
+
+	expect(boostRedirect_boost_redirect_missing_rows($results))->toBe(array())
+		->and(max($GLOBALS['boost_redirect_test']['markers']))->toBeLessThanOrEqual(60000)
+		->and($GLOBALS['boost_redirect_test']['lookups'])->toBe(2);
 });
 
 test('a failed Boost presence lookup stages every row instead of dropping them', function () {
