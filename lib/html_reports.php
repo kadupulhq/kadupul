@@ -666,11 +666,11 @@ function reports_send($id) {
 			raise_message('report_message', __esc('Unable to send Report \'%s\'.  Please set destination e-mail addresses',  $report['name']), MESSAGE_LEVEL_ERROR);
 		} elseif ($report['subject'] == '') {
 			raise_message('report_message', __esc('Unable to send Report \'%s\'.  Please set an e-mail subject',  $report['name']), MESSAGE_LEVEL_ERROR);
-		} elseif ($report['from_name'] == '') {
+		} elseif (trim($report['from_email']) != '' && $report['from_name'] == '') {
 			raise_message('report_message', __esc('Unable to send Report \'%s\'.  Please set an e-mail From Name',  $report['name']), MESSAGE_LEVEL_ERROR);
-		} elseif ($report['from_email'] == '') {
-			raise_message('report_message', __esc('Unable to send Report \'%s\'.  Please set an e-mail from address',  $report['name']), MESSAGE_LEVEL_ERROR);
 		} else {
+			/* a blank From address goes out from the site From address and name,
+			   see reports_mail_from() */
 			generate_report($report, true);
 		}
 	}

@@ -382,6 +382,18 @@ function reports_log($string, $output = false, $environ = 'REPORTS', $level = PO
 	}
 }
 
+/* mailer() falls back to the site From address and name only when the From it
+   is given is empty. For a report with a blank From address the stored pair
+   would hand it the From Name as the address, so pass nothing and let the site
+   From apply. A stored From address goes through as it always has. */
+function reports_mail_from($report) {
+	if (trim((string) $report['from_email']) == '') {
+		return '';
+	}
+
+	return array($report['from_email'], $report['from_name']);
+}
+
 /**
  * generate_report - create the complete mail for a single report and send it
  *
@@ -569,7 +581,7 @@ function generate_report($report, $force = false) {
 	$headers['User-Agent'] = 'Cacti-Reports-v' . $v;
 
 	$error = mailer(
-		array($report['from_email'], $report['from_name']),
+		reports_mail_from($report),
 		$report['email'],
 		'',
 		$report['bcc'],

@@ -226,7 +226,7 @@ function get_filter_request_var($name, $filter = FILTER_VALIDATE_INT, $options =
 }
 
 function read_config_option($name) {
-	$options = array('poller_interval' => 300, 'settings_from_email' => 'Cacti@example.com');
+	$options = array('poller_interval' => 300, 'settings_from_email' => 'Cacti@example.com', 'settings_from_name' => 'Cacti Reports');
 
 	return $options[$name] ?? '';
 }
@@ -439,4 +439,144 @@ test('an existing report still opens and sends with the From it holds', function
 		expect($match)->not->toBeEmpty();
 		expect($match[0])->not->toContain('reports_from_allowed(');
 	}
+});
+
+function __esc($text, ...$args) {
+	return vsprintf($text, $args);
+}
+
+function input_validate_input_number($value) {
+}
+
+function db_fetch_row_prepared($sql, $params = array()) {
+	return $GLOBALS['ra_send_row'];
+}
+
+function generate_report($report, $force = false) {
+	$GLOBALS['ra_sent'][] = $report;
+}
+
+/*
+ * generate_report() hands mailer() the report's From. The From block of mailer()
+ * in lib/functions.php runs here as written, against the bundled PHPMailer and
+ * the site From address and name in read_config_option(), without sending.
+ */
+function load_send($root) {
+	if (function_exists(__NAMESPACE__ . '\reports_send')) {
+		return;
+	}
+
+	load_save_and_render($root);
+
+	preg_match('/^function reports_send\(.*?^}\n/ms', file_get_contents($root . '/lib/html_reports.php'), $send);
+	preg_match('/^function reports_mail_from\(.*?^}\n/ms', file_get_contents($root . '/lib/reports.php'), $from);
+
+	$functions = file_get_contents($root . '/lib/functions.php');
+	$open      = "\t\$from = parse_email_details(\$from, 1);";
+	$close     = "array(\$mail, 'setFrom'));";
+	$start     = strpos($functions, $open);
+	$end       = strpos($functions, $close, (int) $start);
+
+	expect($send)->not->toBeEmpty();
+	expect($start)->not->toBeFalse();
+	expect($end)->not->toBeFalse();
+
+	// release/1.2.31 and lts/1.2 hand mailer() the stored pair as it is
+	if (empty($from)) {
+		$from = array('function reports_mail_from($report) { return array($report[\'from_email\'], $report[\'from_name\']); }');
+	}
+
+	$block = substr($functions, $start, $end + strlen($close) - $start);
+
+	// test-only eval of source read from this repository, not external input
+	eval('namespace ' . __NAMESPACE__ . '; ' . $send[0] . $from[0] . '
+		function mailer_from($from) {
+			$validator = \PHPMailer\PHPMailer\PHPMailer::$validator;
+			$mail = new \PHPMailer\PHPMailer\PHPMailer();
+			$mail::$validator = \'eai\';
+			' . $block . '
+			\PHPMailer\PHPMailer\PHPMailer::$validator = $validator;
+
+			return array(\'sent\' => $result != false, \'email\' => $mail->From, \'name\' => $mail->FromName);
+		}');
+}
+
+function send_now($from_email, $from_name) {
+	$_SESSION = array('sess_user_id' => 5);
+	$GLOBALS['ra_send_row'] = array('id' => 7, 'user_id' => 5, 'name' => 'Daily', 'subject' => '', 'email' => 'ops@example.com', 'from_email' => $from_email, 'from_name' => $from_name);
+	$GLOBALS['ra_sent']     = array();
+	$GLOBALS['ra_messages'] = array();
+
+	reports_send(7);
+}
+
+$site_from = array('sent' => true, 'email' => 'Cacti@example.com', 'name' => 'Cacti Reports');
+
+test('1.2.31 mailer() gives up on a blank From address with a From Name', function () use ($root) {
+	load_send($root);
+
+	expect(mailer_from(array('', 'Ops Team'))['sent'])->toBeFalse();
+	expect(mailer_from(array('', '')))->toBe(array('sent' => true, 'email' => 'Cacti@example.com', 'name' => 'Cacti Reports'));
+});
+
+test('a scheduled send of a blank From goes out from the site address and name', function () use ($root, $site_from) {
+	load_send($root);
+
+	foreach (array('Ops Team', '') as $name) {
+		expect(mailer_from(reports_mail_from(array('from_email' => '', 'from_name' => $name))))->toBe($site_from);
+	}
+});
+
+test('Send Now sends a blank From from the site address and name and keeps the row', function () use ($root, $site_from) {
+	load_send($root);
+
+	foreach (array('Ops Team', '') as $name) {
+		send_now('', $name);
+
+		expect($GLOBALS['ra_sent'])->toHaveCount(1);
+		expect($GLOBALS['ra_sent'][0]['from_email'])->toBe('');
+		expect($GLOBALS['ra_sent'][0]['from_name'])->toBe($name);
+		expect(mailer_from(reports_mail_from($GLOBALS['ra_sent'][0])))->toBe($site_from);
+	}
+});
+
+dataset('stored From addresses', array(
+	'a user\'s own address'        => array('me@example.com', 'Ops Team', 'me@example.com'),
+	'an admin\'s custom address'   => array('ceo@example.com', 'CEO', 'ceo@example.com'),
+	'a named address and no name'  => array('Me <me@example.com>', 'Ops Team', 'me@example.com'),
+));
+
+test('a stored From address reaches mailer() as the pair 1.2.31 passes', function ($email, $name, $address) use ($root) {
+	load_send($root);
+
+	$report = array('from_email' => $email, 'from_name' => $name);
+
+	expect(reports_mail_from($report))->toBe(array($email, $name));
+
+	$sent = mailer_from(reports_mail_from($report));
+
+	expect($sent['sent'])->toBeTrue();
+	expect($sent['email'])->toBe($address);
+	expect($sent)->toBe(mailer_from(array($email, $name)));
+})->with('stored From addresses');
+
+test('Send Now keeps the 1.2.31 checks for a stored From address', function () use ($root) {
+	load_send($root);
+
+	send_now('me@example.com', 'Ops Team');
+	expect($GLOBALS['ra_sent'])->toHaveCount(1);
+
+	send_now('ceo@example.com', 'CEO');
+	expect($GLOBALS['ra_sent'])->toHaveCount(1);
+
+	send_now('me@example.com', '');
+	expect($GLOBALS['ra_sent'])->toBe(array());
+	expect($GLOBALS['ra_messages'])->toBe(array('report_message'));
+});
+
+test('a scheduled send hands mailer() the From that reports_mail_from() gives', function () use ($root) {
+	preg_match('/^function generate_report\(.*?^}\n/ms', file_get_contents($root . '/lib/reports.php'), $match);
+
+	expect($match)->not->toBeEmpty();
+	expect($match[0])->toContain("mailer(\n\t\treports_mail_from(\$report),");
 });
