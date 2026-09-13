@@ -7,8 +7,6 @@ Cacti CHANGELOG
 -security: Refuse Packages that carry no public key instead of trusting the default key
 -security: Sanitise delete dialog and tree editor site, device, and graph list fragments with DOMPurify
 -security: Validate a stored Boost PID before casting it and signal it through the process guard
--security: Refuse data source paths that escape the RRA directory when Boost updates or reads RRD files
--security: Refuse only NUL bytes and .. segments in data source paths so custom RRD locations and symlinked storage keep working as in 1.2.31
 -security: Match local login password hashing work for unknown usernames
 -security: Require a normal login after moving off the retired no-authentication method
 -security: Take the Web Basic user name only from server-set variables
@@ -16,7 +14,7 @@ Cacti CHANGELOG
 -issue: Send device data query and graph template removal and tree node deletion by POST, which the CSRF guard now requires
 -security: Validate Data Source item names and bounds arriving from Template XML imports
 -security: Bind the reverse-DNS hostname in the automation duplicate-device check
--security: Refuse data source paths that escape the RRA directory when Boost creates RRD files
+-security: Refuse NUL bytes and .. segments in data source paths when Boost creates, updates or reads RRD files
 -security: Refuse loopback, link-local and reserved addresses for Remote Data Collector requests
 -security: Cast report ids to integers before the edit redirects
 -issue: Adjust wording in Template Setup
