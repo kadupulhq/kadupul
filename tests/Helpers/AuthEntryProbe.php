@@ -428,7 +428,7 @@ $config = array(
 	'url_path'         => '/cacti/',
 );
 
-$_SESSION = array();
+$_SESSION = $scenario['session'] ?? array();
 
 foreach (array('PHP_AUTH_USER', 'REMOTE_USER', 'REDIRECT_REMOTE_USER', 'HTTP_PHP_AUTH_USER', 'HTTP_REMOTE_USER', 'HTTP_REDIRECT_REMOTE_USER', 'HTTP_REFERER') as $key) {
 	unset($_SERVER[$key]);

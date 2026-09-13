@@ -81,6 +81,19 @@ if ($auth_method != 0) {
 
 				if (cacti_auth_transition((int)$cookie_user, 'cookie_restore')) {
 					$_SESSION['sess_user_id'] = $cookie_user;
+
+					/* a password login by this user would land on the forced change, so the cookie must too */
+					$cookie_account = db_fetch_row_prepared('SELECT realm, must_change_password, password_change
+						FROM user_auth
+						WHERE id = ?',
+						array($cookie_user));
+
+					if (cacti_sizeof($cookie_account) && $cookie_account['realm'] == 0 && $cookie_account['must_change_password'] == 'on' && $cookie_account['password_change'] == 'on') {
+						$_SESSION['sess_change_password'] = true;
+
+						header ('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
+						exit;
+					}
 				}
 			}
 		}
