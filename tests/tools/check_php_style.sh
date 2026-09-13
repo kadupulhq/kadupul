@@ -17,13 +17,20 @@ fixer=${PHP_CS_FIXER:-php-cs-fixer}
 cd "$(git rev-parse --show-toplevel)"
 
 # Diff from the merge base to the working tree, so a local run also covers
-# uncommitted edits. In CI the working tree is the commit under test.
+# uncommitted edits, and add untracked files so a new file is checked before
+# it is staged. In CI the working tree is the commit under test and nothing
+# is untracked.
 merge_base=$(git merge-base "$base" HEAD)
 
 files=()
 while IFS= read -r -d '' f; do
 	files+=("$f")
-done < <(git diff -z --name-only --diff-filter=ACMR "$merge_base" -- '*.php')
+done < <(
+	{
+		git diff -z --name-only --diff-filter=ACMR "$merge_base" -- '*.php'
+		git ls-files -z --others --exclude-standard -- '*.php'
+	} | sort -zu
+)
 
 if [ "${#files[@]}" -eq 0 ]; then
 	echo "No changed PHP files; nothing to check."
