@@ -37,9 +37,14 @@ jobs:
           coverage: pcov
           tools: composer
 
+      # composer install only warns when the lock is stale; validate exits
+      # non-zero, so the run uses exactly the committed versions.
       - name: Install test dependencies
         working-directory: tests
-        run: composer install --no-progress --no-interaction
+        run: |
+          set -euo pipefail
+          composer validate --no-check-publish --check-lock
+          composer install --no-progress --no-interaction
 
       # No continue-on-error. A failing test stops the job before the scan, so
       # Sonar never receives coverage from a partial run. The checks after the
