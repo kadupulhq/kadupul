@@ -170,7 +170,9 @@ function do_rrdcheck($thread_id = 1) {
 
 			// don't attempt to get information if the file does not exist
 			if ($file_exists) {
-				if (!is_resource_writable($file)) {
+				/* with RRDproxy the RRD is on the proxy host, which has no writable
+				 * check, so the local probe and filemtime() would test a missing file */
+				if (!$use_proxy && !is_resource_writable($file)) {
 					db_execute_prepared ('INSERT INTO rrdcheck
 						(local_data_id, test_date, message)
 						VALUES	(?,NOW(),?)',
@@ -181,7 +183,7 @@ function do_rrdcheck($thread_id = 1) {
 					);
 				}
 
-				if (time() > (filemtime($file) + 3600)) {
+				if (!$use_proxy && time() > (filemtime($file) + 3600)) {
 					db_execute_prepared ('INSERT INTO rrdcheck
 						(local_data_id, test_date, message)
 						VALUES (?,NOW(),?)',
