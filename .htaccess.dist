@@ -1,18 +1,17 @@
-# +-------------------------------------------------------------------------+
-# | Copyright (C) 2004-2026 The Cacti Group                                 |
-# +-------------------------------------------------------------------------+
-# | Optional security-header overlay for Apache deployments.                |
-# |                                                                         |
-# | Rename to `.htaccess` if you want Apache to apply these headers to      |
-# | the PHP entry points AND to the static assets Cacti serves (images,    |
-# | JS, CSS, robots.txt). PHP responses already get the full header set    |
-# | via CactiSecureHeaders::emitHeaders(); this file covers the static     |
-# | files that never touch PHP.                                            |
-# |                                                                         |
-# | Distros that manage Apache config centrally should put the same        |
-# | directives in /etc/httpd/conf.d/cacti.conf instead of enabling this    |
-# | file.                                                                   |
-# +-------------------------------------------------------------------------+
+# SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# Optional security-header overlay for Apache deployments.
+#
+# Rename to `.htaccess` if you want Apache to apply these headers to
+# the PHP entry points AND to the static assets Cacti serves (images,
+# JS, CSS, robots.txt). PHP responses already get the full header set
+# via CactiSecureHeaders::emitHeaders(); this file covers the static
+# files that never touch PHP.
+#
+# Distros that manage Apache config centrally should put the same
+# directives in /etc/httpd/conf.d/cacti.conf instead of enabling this
+# file.
 
 <IfModule mod_headers.c>
 	# Applied to every response (including static files).
