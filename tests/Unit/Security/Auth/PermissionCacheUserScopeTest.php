@@ -22,12 +22,15 @@
 require_once dirname(__DIR__, 3) . '/Helpers/AuthEntryProbe.php';
 
 /**
+ * Run permission checks in a fresh process and record, per call, which policy
+ * columns were read from user_auth. A call answered from the cache reads none.
+ *
  * @param array<int, array{0: string, 1: array<int, mixed>}> $calls
  * @param array<string, mixed>                                $session
  *
- * @return array<int, mixed>
+ * @return array{returns: array<int, mixed>, queries: array<int, array<int, string>>, session: array<string, mixed>}
  */
-function permission_cache_run(array $calls, array $session = array()) : array {
+function permission_cache_trace(array $calls, array $session = array()) : array {
 	$src  = file_get_contents(dirname(__DIR__, 4) . '/lib/auth.php');
 	$body = '';
 
@@ -45,12 +48,16 @@ $GLOBALS['policies'] = array(
 	7 => array('policy_graphs' => 2, 'policy_graph_templates' => 2, 'policy_trees' => 2),
 );
 
+$GLOBALS['queries'] = array();
+
 function read_config_option($name, $force = false) {
 	return $name == 'auth_method' ? 1 : '';
 }
 
 function db_fetch_cell_prepared($sql, $params = array(), $col_name = '', $log = true) {
 	if (preg_match('/SELECT (policy_[a-z_]+)\s+FROM user_auth\s/', $sql, $match)) {
+		$GLOBALS['queries'][] = $match[1];
+
 		return $GLOBALS['policies'][$params[0]][$match[1]];
 	}
 
@@ -74,17 +81,31 @@ PHP;
 	$source .= $body;
 	$source .= <<<'PHP'
 $_SESSION = $scenario['session'];
-$returns  = array();
+$returns      = array();
+$call_queries = array();
 
+/* this runs at file scope, where $queries would be $GLOBALS['queries'] itself */
 foreach ($scenario['calls'] as $call) {
-	$returns[] = call_user_func_array($call[0], $call[1]);
+	$GLOBALS['queries'] = array();
+	$returns[]      = call_user_func_array($call[0], $call[1]);
+	$call_queries[] = $GLOBALS['queries'];
 }
 
-print json_encode(array('returns' => $returns));
+print json_encode(array('returns' => $returns, 'queries' => $call_queries, 'session' => $_SESSION));
 
 PHP;
 
-	return cacti_test_run_php_source($source, array('calls' => $calls, 'session' => $session))['returns'];
+	return cacti_test_run_php_source($source, array('calls' => $calls, 'session' => $session));
+}
+
+/**
+ * @param array<int, array{0: string, 1: array<int, mixed>}> $calls
+ * @param array<string, mixed>                                $session
+ *
+ * @return array<int, mixed>
+ */
+function permission_cache_run(array $calls, array $session = array()) : array {
+	return permission_cache_trace($calls, $session)['returns'];
 }
 
 test('simple graph permissions are not shared between users in one process', function () {
@@ -169,4 +190,39 @@ test('a single signed-in user gets the same answers with the cache as without it
 test('a signed-out tree check is still denied and user -1 still passes', function () {
 	expect(permission_cache_run(array(array('is_tree_allowed', array(5)), array('is_tree_allowed', array(5)))))->toBe(array(false, false))
 		->and(permission_cache_run(array(array('is_tree_allowed', array(5, -1))), array('sess_user_id' => 7)))->toBe(array(true));
+});
+
+test('a denied answer is served from the cache on the next check', function () {
+	/* isset() is true for a cached false, so a denial is not recomputed */
+	foreach (array(
+		array('is_tree_allowed', array(5, 7), 'policy_trees'),
+		array('get_simple_graph_perms', array(7), 'policy_graphs'),
+		array('get_simple_graph_template_perms', array(7), 'policy_graph_templates'),
+	) as $check) {
+		$trace = permission_cache_trace(array(array($check[0], $check[1]), array($check[0], $check[1])));
+
+		expect($trace['returns'])->toBe(array(false, false))
+			->and($trace['queries'])->toBe(array(array($check[2]), array()));
+	}
+});
+
+test('a false unkeyed tree entry whose key equals the user id discards the old cache', function () {
+	/* in the old layout the keys are tree ids, so tree 1 denied collides with user 1 */
+	$trace = permission_cache_trace(array(array('is_tree_allowed', array(9, 1))), array('sess_tree_perms' => array(1 => false, 5 => true)));
+
+	expect($trace['returns'])->toBe(array(true))
+		->and($trace['queries'])->toBe(array(array('policy_trees')))
+		->and($trace['session']['sess_tree_perms'])->toBe(array(1 => array(9 => true)));
+});
+
+test('a false unkeyed simple permission cache is discarded rather than served', function () {
+	$trace = permission_cache_trace(array(
+		array('get_simple_graph_perms', array(1)),
+		array('get_simple_graph_template_perms', array(1)),
+	), array('sess_simple_perms' => false, 'sess_simple_template_perms' => false));
+
+	expect($trace['returns'])->toBe(array(true, true))
+		->and($trace['queries'])->toBe(array(array('policy_graphs'), array('policy_graph_templates')))
+		->and($trace['session']['sess_simple_perms'])->toBe(array(1 => true))
+		->and($trace['session']['sess_simple_template_perms'])->toBe(array(1 => true));
 });
