@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -137,6 +138,10 @@ if ($config['poller_id'] == 1 || read_config_option('storage_location')) {
 	$null_param = array();
 	$output = rrdtool_function_graph(get_request_var('local_graph_id'), $rra_id, $graph_data_array, '', $null_param, $_SESSION['sess_user_id']);
 } else {
+	if (isset($_SESSION['sess_user_id'])) {
+		$graph_data_array['effective_user'] = $_SESSION['sess_user_id'];
+	}
+
 	$url  = $config['url_path'] . 'remote_agent.php?action=graph_json';
 	$url .= '&local_graph_id=' . get_request_var('local_graph_id');
 	$url .= '&rra_id=' . $rra_id;
