@@ -2,6 +2,7 @@ Cacti CHANGELOG
 
 1.2.x
 -issue: Parse installer start and finish times that fall on a whole second instead of crashing
+-security: Mask passwords, passphrases and community strings in DEVDBG SQL save logging with the existing ******** placeholder
 -security: Check graph permissions for Remote Data Collector graph images, as graph_json.php already does
 -security: Escape markup in data query debug output returned by a Remote Data Collector
 -security: Add optional $trusted_proxies so proxy client address and HTTPS headers are honoured only from listed proxies

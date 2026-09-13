@@ -2158,14 +2158,11 @@ function db_replace($table_name, $array_items, $keyCols, $db_conn = false) {
 		$db_conn = $database_sessions["$database_hostname:$database_port:$database_default"];
 	}
 
+	/* rows carry community strings, passphrases and collector database
+	 * passwords, and cacti.log is readable from the log viewer realm */
 	$log_items = $array_items;
-	$redact_fields = array(
-		'snmp_community', 'snmp_password', 'snmp_priv_passphrase',
-		'snmp_auth_passphrase', 'password', 'proxy_password',
-		'rsa_private_key', 'secret', 'auth_key', 'priv_key'
-	);
-	foreach ($redact_fields as $field) {
-		if (isset($log_items[$field])) {
+	foreach ($log_items as $field => $value) {
+		if (cacti_is_sensitive_key($field)) {
 			$log_items[$field] = '********';
 		}
 	}
@@ -2284,7 +2281,14 @@ function sql_save($array_items, $table_name, $key_cols = 'id', $autoinc = true, 
 
 	$cols = db_get_table_column_types($table_name, $db_conn);
 
-	cacti_log("DEVEL: SQL Save on table '$table_name': '" . serialize($array_items) . "'", false, 'DBCALL', POLLER_VERBOSITY_DEVDBG);
+	$log_items = $array_items;
+	foreach ($log_items as $field => $value) {
+		if (cacti_is_sensitive_key($field)) {
+			$log_items[$field] = '********';
+		}
+	}
+
+	cacti_log("DEVEL: SQL Save on table '$table_name': '" . serialize($log_items) . "'", false, 'DBCALL', POLLER_VERBOSITY_DEVDBG);
 
 	foreach ($array_items as $key => $value) {
 		if (!isset($cols[$key])) {
