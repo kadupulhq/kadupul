@@ -111,5 +111,28 @@ test('color csv import uses csv parser, prepared statements, and escaped output'
 	expect($colorSource)->toContain("preg_match('/^[A-Fa-f0-9]{6}$/', \$hex)");
 	expect($colorSource)->toContain('db_execute_prepared(\'INSERT INTO colors');
 	expect($colorSource)->toContain('db_fetch_row_prepared(\'SELECT *');
-	expect($colorSource)->toContain('html_escape($name)');
+
+	// Run the real processor so the check follows the escaping, not how the result line is assembled
+	if (!function_exists('PrivateAdvisoryColorImport\color_import_processor')) {
+		expect(preg_match('/^function color_import_processor\(.*?^}\R/ms', $colorSource, $processor))->toBe(1);
+
+		eval('namespace PrivateAdvisoryColorImport;
+			function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+			function html_escape($string) { return htmlspecialchars((string) $string, ENT_QUOTES, \'UTF-8\'); }
+			function isset_request_var($name) { return false; }
+			function db_fetch_row_prepared($sql, $params = array()) { return array(); }
+			function db_execute_prepared($sql, $params = array()) { return true; }
+			' . $processor[0]); // nosemgrep: php.lang.security.eval-use.eval-use
+	}
+
+	$lines   = array("name,hex\n", "\"<script>alert(1)</script>\",\"00FF00\"\n", "\"<b>x</b>\",\"<i>zz\"\n");
+	$results = implode("\n", PrivateAdvisoryColorImport\color_import_processor($lines));
+
+	expect($results)->toContain('INSERT SUCCEEDED: (')
+		->and($results)->toContain('&lt;script&gt;alert(1)&lt;/script&gt;')
+		->and($results)->toContain('&lt;b&gt;x&lt;/b&gt;')
+		->and($results)->toContain('&lt;i&gt;zz')
+		->and($results)->not->toContain('<script>')
+		->and($results)->not->toContain('<b>x</b>')
+		->and($results)->not->toContain('<i>zz');
 });
