@@ -6,8 +6,10 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+# PER-CS 2.0 on main, applied to PHP files as changes edit them. lts/1.2
+# keeps tabs.
 [*.php]
-indent_style = tab
+indent_style = space
 indent_size = 4
 
 [*.{c,h}]

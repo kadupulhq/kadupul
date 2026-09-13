@@ -52,8 +52,10 @@ Use these notes to navigate and contribute productively to this PHP codebase.
 - Respect remote poller modes and `$config['is_web']`/CLI guards (`$no_http_header_files` in `include/global.php`).
 
 ## Coding standards
-- Follow PHP PSR standards (PSR-12/PSR-1) for new or standalone code where practical, but match the file’s existing conventions.
-  - Preserve the file’s indentation (tabs vs spaces) and brace style; do not reformat unrelated code.
+- On `main`, PHP files a change edits follow PHP-FIG PER-CS 2.0 as configured in `.php-cs-fixer.php`. Files the change does not touch keep their current formatting; do not reformat unrelated code.
+  - Reformat an edited file in its own formatting-only commit. That commit changes whitespace only; token changes such as `array()` to `[]` or trailing commas go in separate commits.
+  - `tests/tools/check_php_style.sh` runs the fixer on changed PHP files only, and CI runs the same script. A tab-indented file that a change edits is expected to be reformatted, not flagged as a departure from convention.
+  - `lts/1.2` keeps upstream Cacti formatting (tabs, same-line function braces) so upstream fixes cherry-pick cleanly. Do not reformat files there.
   - Start each file with SPDX tags, not the old GPL box. Files inherited from Cacti keep `SPDX-FileCopyrightText: <years> The Cacti Group` with its existing years and `SPDX-License-Identifier: GPL-2.0-or-later`; add `SPDX-FileCopyrightText: 2026 The Kadupul project and contributors` when you make a substantive change. Files Kadupul creates carry only the Kadupul line and `GPL-3.0-or-later`.
   - Use snake_case functions and procedural structure consistent with the codebase; avoid introducing namespaces unless integrating vendor code.
   - Maintain the PHP >=8.0 requirement in `composer.json`; the CI matrix covers PHP 8.1–8.4.
