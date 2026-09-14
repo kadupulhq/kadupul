@@ -130,7 +130,7 @@ test('the fallback name is created in the same directory, not the system temp di
 });
 
 test('an unwritable backup directory fails instead of falling back to the system temp directory', function () {
-	if (posix_geteuid() === 0) {
+	if (function_exists('posix_geteuid') && posix_geteuid() === 0) {
 		$this->markTestSkipped('directory permissions have no effect running as root');
 	}
 
