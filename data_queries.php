@@ -1233,8 +1233,8 @@ function data_query_edit() {
 		$('.delete').on('click', function (event) {
 			event.preventDefault();
 
-			request = $(this).attr('href');
-			$.get(request)
+			var removeRequest = cactiPreparePostRequestFromUrl($(this).attr('href'));
+			$.post(removeRequest.url, removeRequest.data)
 				.done(function(data) {
 					$('#cdialog').html(data);
 

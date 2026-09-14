@@ -714,6 +714,11 @@ function update_show_current () {
 				buttons: btnUninstall
 			});
 		});
+
+		$('.pienable, .pidisable').on('click', function(event) {
+			event.preventDefault();
+			submitPageUsingPost($(this).attr('href'));
+		});
 	});
 	</script>
 	<?php
@@ -848,7 +853,7 @@ function plugin_actions($plugin, $table) {
 			} else {
 				$link .= "<a class='piuninstall' href='" . html_escape($config['url_path'] . 'plugins.php?mode=uninstall&id=' . $plugin['directory']) . "' title='" . __esc('Uninstall Plugin') . "'><img src='" . $config['url_path'] . "images/cog_delete.png'></a>";
 			}
-			$link .= "<a class='pidisable cactiPostAction' href='" . html_escape($config['url_path'] . 'plugins.php?mode=disable&id=' . $plugin['directory']) . "' title='" . __esc('Disable Plugin') . "'><img src='" . $config['url_path'] . "images/stop.png'></a>";
+			$link .= "<a class='pidisable' href='" . html_escape($config['url_path'] . 'plugins.php?mode=disable&id=' . $plugin['directory']) . "' title='" . __esc('Disable Plugin') . "'><img src='" . $config['url_path'] . "images/stop.png'></a>";
 			break;
 		case '2': // Configuration issues
 			$link .= "<a class='piuninstall' href='" . html_escape($config['url_path'] . 'plugins.php?mode=uninstall&id=' . $plugin['directory']) . "' title='" . __esc('Uninstall Plugin') . "'><img src='" . $config['url_path'] . "images/cog_delete.png'></a>";
@@ -860,7 +865,7 @@ function plugin_actions($plugin, $table) {
 			} else {
 				$link .= "<a class='piuninstall' href='" . html_escape($config['url_path'] . 'plugins.php?mode=uninstall&id=' . $plugin['directory']) . "' title='" . __esc('Uninstall Plugin') . "'><img src='" . $config['url_path'] . "images/cog_delete.png'></a>";
 			}
-			$link .= "<a class='pienable cactiPostAction' href='" . html_escape($config['url_path'] . 'plugins.php?mode=enable&id=' . $plugin['directory']) . "' title='" . __esc('Enable Plugin') . "'><img src='" . $config['url_path'] . "images/accept.png'></a>";
+			$link .= "<a class='pienable' href='" . html_escape($config['url_path'] . 'plugins.php?mode=enable&id=' . $plugin['directory']) . "' title='" . __esc('Enable Plugin') . "'><img src='" . $config['url_path'] . "images/accept.png'></a>";
 			break;
 		case '-5': // Plugin directory missing
 			$link .= "<a class='pierror' href='#' title='" . __esc('Plugin directory is missing!') . "' class='linkEditMain'><img src='images/cog_error.png'></a>";
@@ -900,7 +905,7 @@ function plugin_actions($plugin, $table) {
 				//$link .= "<a class='pidisable' href='" . html_escape($config['url_path'] . 'plugins.php?mode=remote_disable&id=' . $plugin['directory']) . "' title='" . __esc('Disable Plugin Locally') . "'><img src='" . $config['url_path'] . "images/stop.png'></a>";
 			} elseif ($plugin['remote_status'] == 4) { // Installed but inactive
 				if ($plugin['status'] == 1) {
-					$link .= "<a class='pienable cactiPostAction' href='" . html_escape($config['url_path'] . 'plugins.php?mode=remote_enable&id=' . $plugin['directory']) . "' title='" . __esc('Enable Plugin Locally') . "'><img src='" . $config['url_path'] . "images/accept.png'></a>";
+					$link .= "<a class='pienable' href='" . html_escape($config['url_path'] . 'plugins.php?mode=remote_enable&id=' . $plugin['directory']) . "' title='" . __esc('Enable Plugin Locally') . "'><img src='" . $config['url_path'] . "images/accept.png'></a>";
 				}
 			}
 		}

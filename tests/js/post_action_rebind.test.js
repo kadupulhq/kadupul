@@ -90,7 +90,7 @@ function loadHandleTableNav() {
 
 	const context = {
 		$: element,
-		submitPageUsingPost: (url) => posts.push(url),
+		loadPage: (url) => posts.push(url),
 	};
 
 	vm.runInNewContext(extractFunction('handleTableNav'), context);

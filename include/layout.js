@@ -783,7 +783,7 @@ function handleTableNav() {
 	$('.cactiPostAction').off('click.cactiPostAction').on('click.cactiPostAction', function(event) {
 		event.preventDefault();
 		var url = $(this).data('url') || $(this).attr('href');
-		submitPageUsingPost(url);
+		loadPage(url, false, true);
 	});
 }
 
@@ -2330,7 +2330,7 @@ function loadPageUsingPost(href, postData, returnLocation) {
 	});
 }
 
-function loadPage(href, force) {
+function loadPage(href, force, post) {
 	statePushed = false;
 	cont = false;
 
@@ -2339,7 +2339,7 @@ function loadPage(href, force) {
 	}
 
 	if (!force) {
-		cont = checkFormStatus(href, 'loadpage');
+		cont = checkFormStatus(href, post ? 'post' : 'loadpage');
 	} else {
 		cont = true;
 	}
@@ -2349,8 +2349,14 @@ function loadPage(href, force) {
 
 		clearAllTimeouts();
 
+		/* A post action keeps its query string in href so the unsaved form
+		 * dialog can replay it, but history and redirects must never repeat
+		 * the action by GET. */
+		var returnHref = (post ? undefined : href);
+		var request    = (post ? cactiPreparePostRequestFromUrl(href) : null);
+
 		$.ajaxQ.abortAll();
-		$.get(href)
+		(post ? $.post(request.url, request.data) : $.get(href))
 			.done(function(html) {
 				var htmlObject  = $(html);
 				var matches     = html.match(/<title>(.*?)<\/title>/);
@@ -2361,7 +2367,7 @@ function loadPage(href, force) {
 					var html        = htmlObject.find('#main').html();
 					var jstree		= htmlObject.find('.cactiTreeNavigationArea').html();
 
-					checkForRedirects(html, href);
+					checkForRedirects(html, returnHref);
 					if(typeof jstree !== 'undefined' && $('.cactiTreeNavigationArea').length !== 0) {
 						$('.cactiTreeNavigationArea').html(jstree);
 					}
@@ -2376,16 +2382,20 @@ function loadPage(href, force) {
 					myTitle = htmlTitle;
 					myHref  = cleanHeader(href);
 
-					pushState(myTitle, href);
+					if (!post) {
+						pushState(myTitle, href);
+					}
 				} else {
-					checkForRedirects(html, href);
+					checkForRedirects(html, returnHref);
 
 					$('#main').empty().hide();
 					$('#main').html(html);
 
 					thref = stripHeaderSuppression(href);
 
-					pushState(myTitle, href);
+					if (!post) {
+						pushState(myTitle, href);
+					}
 				}
 
 				var hrefParts = href.split('?');
@@ -2429,7 +2439,7 @@ function loadPage(href, force) {
 				return false;
 			})
 			.fail(function(html) {
-				getPresentHTTPErrorOrRedirect(html, href);
+				getPresentHTTPErrorOrRedirect(html, (post ? document.location.href : href));
 			}
 		);
 	}
@@ -2703,7 +2713,7 @@ function ajaxAnchors() {
 
 		if ($(this).hasClass('cactiPostAction')) {
 			event.stopImmediatePropagation();
-			submitPageUsingPost($(this).data('url') || href);
+			loadPage($(this).data('url') || href, false, true);
 
 			return false;
 		}

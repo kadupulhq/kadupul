@@ -60,36 +60,55 @@ if (cacti_sizeof($parms)) {
 }
 
 /* issue warnings and start message if applicable */
-print "NOTE: Updating the Cacti CSRF secret" . PHP_EOL;
+print "NOTE: Updating csrf_secret file with new information" . PHP_EOL;
 
-if (!empty($config['path_csrf_secret'])) {
+$external = !empty($config['path_csrf_secret']);
+
+if ($external) {
 	$path_csrf_secret = cacti_csrf_external_secret_path($config['path_csrf_secret']);
 	if (!cacti_csrf_external_path_is_safe($path_csrf_secret)) {
 		print "FATAL: The configured CSRF secret must be outside the Cacti document root." . PHP_EOL;
 		exit(1);
 	}
+} else {
+	/* The default secret lives in settings now; this is the file older
+	 * releases kept it in, reported as they reported it. */
+	$path_csrf_secret = $config['base_path'] . '/include/vendor/csrf/csrf-secret.php';
+}
 
-	if (!csrf_write_secret_atomic($path_csrf_secret, csrf_generate_secret())) {
-		print "FATAL: Unable to atomically write the configured external CSRF secret." . PHP_EOL;
+if (!file_exists($path_csrf_secret)) {
+	print "WARNING: csrf_secret.php file does not exist!" . PHP_EOL;
+} elseif (!is_writable($path_csrf_secret)) {
+	/* A stale vendor file no longer holds the secret, so it can not block the rotation. */
+	if ($external) {
+		print "FATAL: unable to unlink csrf_secret.php!" . PHP_EOL;
 		exit(1);
 	}
+} else {
+	print "NOTE: Removing old csrf_secret.php file." . PHP_EOL;
+}
+
+if ($external) {
+	$written = csrf_write_secret_atomic($path_csrf_secret, csrf_generate_secret());
 } else {
 	$new_secret = csrf_generate_secret();
 	set_config_option('csrf_secret', $new_secret, true);
 	$stored_secret = read_config_option('csrf_secret', true);
-	if (!is_string($stored_secret) || !hash_equals($new_secret, $stored_secret)) {
-		print "FATAL: Unable to verify the updated CSRF secret in the database." . PHP_EOL;
-		exit(1);
+	$written = (is_string($stored_secret) && hash_equals($new_secret, $stored_secret));
+}
+
+if ($written) {
+	$legacy_path = $config['base_path'] . '/include/vendor/csrf/csrf-secret.php';
+	if (file_exists($legacy_path) && is_writable($legacy_path)) {
+		@unlink($legacy_path);
 	}
+
+	print "NOTE: New csrf_secret.php file written." . PHP_EOL;
+	exit(0);
 }
 
-$legacy_path = $config['base_path'] . '/include/vendor/csrf/csrf-secret.php';
-if (file_exists($legacy_path) && is_writable($legacy_path)) {
-	@unlink($legacy_path);
-}
-
-print "NOTE: New CSRF secret installed." . PHP_EOL;
-exit(0);
+print "FATAL: Unable to write new csrf_secret.php file." . PHP_EOL;
+exit(1);
 
 /*  display_version - displays version information */
 function display_version() {

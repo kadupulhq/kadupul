@@ -773,7 +773,7 @@ function template_edit() {
 	}
 
 	if (!$isSNMPGet && !$readOnly) {
-		html_start_box(__('Data Source Item [%s]', (isset($template_rrd) ? html_escape($template_rrd['data_source_name']) : '')), '100%', true, '0', 'center', (!isempty_request_var('id') ? 'data_templates.php?action=rrd_add&id=' . get_request_var('id'):''), __('New'));
+		html_start_box(__('Data Source Item [%s]', (isset($template_rrd) ? html_escape($template_rrd['data_source_name']) : '')), '100%', true, '0', 'center', (!isempty_request_var('id') ? array(array('id' => 'rrd_add', 'href' => '#', 'callback' => true)):''), __('New'));
 	} else {
 		html_start_box(__('Data Source Item [%s]', (isset($template_rrd) ? html_escape($template_rrd['data_source_name']) : '')), '100%', true, '0', 'center', '', '');
 	}
@@ -932,6 +932,11 @@ function template_edit() {
 	var readOnly = <?php print $readOnly ? 'true':'false';?>;
 
 	$(function() {
+		$('#rrd_add').on('click', function(event) {
+			event.preventDefault();
+			loadPage('data_templates.php?action=rrd_add&id=<?php print (int) get_request_var('id');?>', false, true);
+		});
+
 		if (readOnly) {
 			// Data Source
 			$('#data_input_id').prop('disabled', true).addClass('ui-state-disabled');

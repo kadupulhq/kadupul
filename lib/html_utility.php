@@ -1002,6 +1002,8 @@ function get_order_string_page($increment = true) {
  * @return string The validated URL, or the provided $default if invalid
  */
 function validate_redirect_url($url = '', $default = 'index.php') {
+	global $config;
+
 	if ($url === '') {
 		return $default;
 	}
@@ -1073,6 +1075,10 @@ function validate_redirect_url($url = '', $default = 'index.php') {
 	/* Use the server-configured name rather than the client-supplied Host header. */
 	if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] != '') {
 		$srv_host = preg_replace('/:\d+$/', '', $_SERVER['SERVER_NAME']);
+	} elseif (isset($_SERVER['HTTP_HOST']) && cacti_trusted_host_header($_SERVER['HTTP_HOST'], $config['trusted_hosts'] ?? array()) !== '') {
+		/* 1.2.31 compared against any Host header when the server sets no
+		 * name. Here the Host header must also be listed in $trusted_hosts. */
+		$srv_host = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST']);
 	}
 
 	if ($ref_host !== null) {
@@ -1109,31 +1115,129 @@ function validate_redirect_url($url = '', $default = 'index.php') {
 }
 
 /**
- * Builds a forced-HTTPS redirect using a server-configured host name.
+ * Returns a Host header that is a well-formed host with an optional port.
  *
- * @param string $server_name  The web server's configured name.
- * @param string $request_uri  The requested local path and query string.
- * @param string $default_path A local fallback when the request URI is invalid.
+ * Underscores are accepted because 1.2.31 redirected to such names. Anything
+ * that could carry credentials, a path or a header break is refused.
+ *
+ * @param string $host The client-supplied Host header.
+ *
+ * @return string The header as sent, or an empty string when it is malformed.
+ */
+function cacti_valid_host_header(string $host) : string {
+	$label = '[A-Za-z0-9_](?:[A-Za-z0-9_-]{0,61}[A-Za-z0-9_])?';
+
+	if (!preg_match('/^(\[[0-9A-Fa-f:.]+\]|' . $label . '(?:\.' . $label . ')*)(?::([0-9]{1,5}))?$/D', $host, $matches)) {
+		return '';
+	}
+
+	if ($matches[1][0] === '[' && filter_var(substr($matches[1], 1, -1), FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
+		return '';
+	}
+
+	if (isset($matches[2]) && ((int) $matches[2] < 1 || (int) $matches[2] > 65535)) {
+		return '';
+	}
+
+	return (strlen($matches[1]) <= 255 ? $host : '');
+}
+
+/**
+ * Returns the Host header when its host name is listed in $trusted_hosts.
+ *
+ * @param string        $host_header   The client-supplied Host header.
+ * @param array<string> $trusted_hosts Host names from include/config.php.
+ *
+ * @return string The Host header, port included, or an empty string.
+ */
+function cacti_trusted_host_header(string $host_header, array $trusted_hosts) : string {
+	$host = cacti_valid_host_header($host_header);
+
+	if ($host === '') {
+		return '';
+	}
+
+	$name = strtolower(trim(preg_replace('/:[0-9]+$/', '', $host), '[]'));
+
+	foreach ($trusted_hosts as $trusted) {
+		if (is_string($trusted) && strtolower(trim($trusted, '[] ')) === $name) {
+			return $host;
+		}
+	}
+
+	return '';
+}
+
+/**
+ * Returns the Host header when a redirect may be built from it.
+ *
+ * A browser can not set a victim's Host header, but a shared cache can replay
+ * a redirect built from another client's. So the header is used only when it
+ * names this server, when the server has no single usable name (empty, nginx
+ * "_", a wildcard or a regex), or when it is listed in $trusted_hosts.
+ *
+ * @param string        $host_header   The client-supplied Host header.
+ * @param string        $server_name   The web server's configured name.
+ * @param array<string> $trusted_hosts Further host names from include/config.php.
+ *
+ * @return string The Host header, port included, or an empty string.
+ */
+function cacti_accepted_host_header(string $host_header, string $server_name, array $trusted_hosts = array()) : string {
+	$host = cacti_valid_host_header($host_header);
+
+	if ($host === '') {
+		return '';
+	}
+
+	$name        = strtolower(trim(preg_replace('/:[0-9]+$/', '', $host), '[]'));
+	$server_name = strtolower(trim(trim($server_name), '[]'));
+
+	if ($server_name === '' || $server_name === '_' || $server_name[0] === '.' || strpbrk($server_name, '*~') !== false) {
+		return $host;
+	}
+
+	if ($name === $server_name) {
+		return $host;
+	}
+
+	return cacti_trusted_host_header($host, $trusted_hosts);
+}
+
+/**
+ * Builds a forced-HTTPS redirect to the host and URI the browser asked for.
+ *
+ * @param string        $server_name   The web server's configured name, used when the Host header is not accepted.
+ * @param string        $request_uri   The raw requested path and query string.
+ * @param string        $default_path  A local fallback when the request URI is not a plain local path.
+ * @param string        $host_header   The client-supplied Host header, including any port.
+ * @param array<string> $trusted_hosts Further host names the redirect may use.
  *
  * @psalm-taint-escape header
  *
  * @return string A safe absolute HTTPS URL, or an empty string for an invalid host.
  */
-function cacti_build_https_redirect_url(string $server_name, string $request_uri, string $default_path = '/') : string {
-	$server_name = trim($server_name);
-	$host         = trim($server_name, '[]');
+function cacti_build_https_redirect_url(string $server_name, string $request_uri, string $default_path = '/', string $host_header = '', array $trusted_hosts = array()) : string {
+	$host = cacti_accepted_host_header($host_header, $server_name, $trusted_hosts);
 
-	if (filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false) {
-		$host = '[' . $host . ']';
-	} elseif (filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false &&
-		filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)  === false) {
-		return '';
+	if ($host === '') {
+		$server_name = trim($server_name);
+		$host        = trim($server_name, '[]');
+
+		if (filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false) {
+			$host = '[' . $host . ']';
+		} elseif (filter_var($host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false &&
+			filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)  === false) {
+			return '';
+		}
 	}
 
-	$path = validate_redirect_url($request_uri, $default_path);
-	$path = '/' . ltrim($path, '/');
+	/* 1.2.31 appended REQUEST_URI unchanged, so query strings keep their
+	 * encoding. Only a target that is not a plain local path is replaced. */
+	if ($request_uri === '' || $request_uri[0] !== '/' || preg_match('#^/[\\\\/]#', $request_uri) || preg_match('/[\x00-\x20\x7f]/', $request_uri)) {
+		$request_uri = '/' . ltrim($default_path, '/');
+	}
 
-	return 'https://' . $host . $path;
+	return 'https://' . $host . $request_uri;
 }
 
 /**
