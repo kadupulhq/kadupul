@@ -57,6 +57,12 @@ dataset('remove_graphs unknown arguments', array(
 	'option terminator'            => array('--', 'abort'),
 	'bare word stops getopt'       => array('graph', 'abort'),
 	'short cluster with help'      => array('-Hfoo', 'abort'),
+	'filter in upper case'         => array('--HOST-ID=5', 'abort'),
+	'filter in mixed case'         => array('--Graph-Regex=edge', 'abort'),
+	'template filter in upper case' => array('--GRAPH-TEMPLATE-ID=5', 'abort'),
+	'declared flag in upper case'  => array('--ALL', 'abort'),
+	'retired graph type upper case' => array('--GRAPH-TYPE=cg', 'ignore'),
+	'unrelated flag in upper case' => array('--BOGUS', 'warn'),
 ));
 
 test('remove_graphs sorts unknown arguments into ignore, warn and abort', function (string $parameter, string $action) use ($unknownLongopts) {

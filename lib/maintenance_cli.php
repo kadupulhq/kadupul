@@ -326,7 +326,10 @@ function cacti_remove_graphs_unknown_parameter_action($parameter, $shortopts, $l
 		return 'abort';
 	}
 
-	$name = explode('=', substr($parameter, 2), 2)[0];
+	/* getopt() matches option names exactly, so a name that differs only in
+	 * case is dropped like any other unknown option. It is compared in lower
+	 * case so that --HOST-ID still counts as a mistyped filter. */
+	$name = strtolower(explode('=', substr($parameter, 2), 2)[0]);
 
 	if ($name === '') {
 		return 'abort';
