@@ -101,3 +101,13 @@ test('the graph item list does not load a post action link by GET as well', func
 	   The page handler would abort the POST and fetch '#' instead. */
 	expect($src)->toContain("$('.deleteMarker, .moveArrow').not('.cactiPostAction').on('click', function(event) {");
 });
+
+test('a locked graph leaves its item links inert as 1.2.31 did', function () {
+	$src = file_get_contents(dirname(__DIR__, 4) . '/graphs.php');
+
+	expect($src)->not->toBeFalse();
+
+	/* 1.2.31 only had to clear href. The post action handler reads data-url,
+	   so the lock must also drop that, the class and any bound handler. */
+	expect($src)->toMatch("/if \\(locked\\) \\{\\s+[^\\n]+\\n\\s+\\/\\*[^\\n]+\\*\\/\\n\\s+\\$\\('\\.moveArrow, \\.deleteMarker, \\.linkOverDark, \\.linkEditMain'\\)\\.attr\\('href', '#'\\)\\.removeAttr\\('data-url'\\)\\.off\\('click\\.cactiPostAction'\\)\\.removeClass\\('moveArrow deleteMarker cactiPostAction'\\);/");
+});

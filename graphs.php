@@ -1898,7 +1898,8 @@ function graph_edit() {
 
 	if (locked) {
 		$('input').not('input[value="<?php print __('Cancel');?>"]').not('input[value="<?php print __('Return');?>"]').prop('disabled', true);
-		$('.moveArrow, .deleteMarker, .linkOverDark, .linkEditMain').attr('href', '#').removeClass('moveArrow').removeClass('deleteMarker');
+		/* Item links post from data-url through the global cactiPostAction handler, so clearing href alone leaves them live. */
+		$('.moveArrow, .deleteMarker, .linkOverDark, .linkEditMain').attr('href', '#').removeAttr('data-url').off('click.cactiPostAction').removeClass('moveArrow deleteMarker cactiPostAction');
 		if ($('#submit').button('instance')) {
 			$('#submit').button('disable');
 		} else {
