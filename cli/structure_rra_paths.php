@@ -488,19 +488,21 @@ function sp_recursive_chown($path, $user) {
 		return lchown($path, $user);
 	}
 
+	$result = true;
+
 	if (is_dir($path) && ($items = glob($path . '/*'))) {
 		foreach ($items as $item) {
 			if (is_dir($item) && !is_link($item)) {
-				return sp_recursive_chown($item, $user);
+				$result = sp_recursive_chown($item, $user) && $result;
 			} else {
-				return lchown($item, $user);
+				$result = lchown($item, $user) && $result;
 			}
 		}
 	}
 
 	/* lchown() rather than an is_link() check and chown(), so a symlink
 	   swapped in after the checks above is never followed */
-	return lchown($path, $user);
+	return lchown($path, $user) && $result;
 }
 
 /**
@@ -518,19 +520,21 @@ function sp_recursive_chgrp($path, $group) {
 		return lchgrp($path, $group);
 	}
 
+	$result = true;
+
 	if (is_dir($path) && ($items = glob($path . '/*'))) {
 		foreach ($items as $item) {
 			if (is_dir($item) && !is_link($item)) {
-				return sp_recursive_chgrp($item, $group);
+				$result = sp_recursive_chgrp($item, $group) && $result;
 			} else {
-				return lchgrp($item, $group);
+				$result = lchgrp($item, $group) && $result;
 			}
 		}
 	}
 
 	/* lchgrp() rather than an is_link() check and chgrp(), so a symlink
 	   swapped in after the checks above is never followed */
-	return lchgrp($path, $group);
+	return lchgrp($path, $group) && $result;
 }
 
 /**

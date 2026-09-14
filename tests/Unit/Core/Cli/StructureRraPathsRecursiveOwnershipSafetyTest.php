@@ -157,6 +157,7 @@ test('sp_recursive_chown still recurses into a real directory and reaches its co
 	expect(calls())->toBe(array(
 		array('glob', $dir . '/*'),
 		array('lchown', $dir . '/item'),
+		array('lchown', $dir),
 	));
 
 	unlink($dir . '/item');
@@ -173,6 +174,7 @@ test('sp_recursive_chgrp still recurses into a real directory and reaches its co
 	expect(calls())->toBe(array(
 		array('glob', $dir . '/*'),
 		array('lchgrp', $dir . '/item'),
+		array('lchgrp', $dir),
 	));
 
 	unlink($dir . '/item');
@@ -207,8 +209,87 @@ test('sp_recursive_chown uses lchown on a symlink found inside a real directory'
 	expect(calls())->toBe(array(
 		array('glob', $dir . '/*'),
 		array('lchown', $dir . '/item'),
+		array('lchown', $dir),
 	));
 
 	unlink($dir . '/item');
+	rmdir($dir);
+});
+
+test('sp_recursive_chown visits every file in a directory and a nested subdirectory', function () {
+	$dir = $this->base . '/real';
+	mkdir($dir, 0700, true);
+	file_put_contents($dir . '/one', 'contents');
+	file_put_contents($dir . '/two', 'contents');
+
+	$sub = $dir . '/sub';
+	mkdir($sub, 0700, true);
+	file_put_contents($sub . '/three', 'contents');
+	file_put_contents($sub . '/four', 'contents');
+
+	sp_recursive_chown($dir, 1000);
+
+	$visited = array_column(
+		array_filter(calls(), function ($call) {
+			return $call[0] !== 'glob';
+		}),
+		1
+	);
+
+	sort($visited);
+
+	expect($visited)->toBe(array(
+		$dir,
+		$dir . '/one',
+		$sub,
+		$sub . '/four',
+		$sub . '/three',
+		$dir . '/two',
+	));
+
+	unlink($sub . '/three');
+	unlink($sub . '/four');
+	rmdir($sub);
+	unlink($dir . '/one');
+	unlink($dir . '/two');
+	rmdir($dir);
+});
+
+test('sp_recursive_chgrp visits every file in a directory and a nested subdirectory', function () {
+	$dir = $this->base . '/real';
+	mkdir($dir, 0700, true);
+	file_put_contents($dir . '/one', 'contents');
+	file_put_contents($dir . '/two', 'contents');
+
+	$sub = $dir . '/sub';
+	mkdir($sub, 0700, true);
+	file_put_contents($sub . '/three', 'contents');
+	file_put_contents($sub . '/four', 'contents');
+
+	sp_recursive_chgrp($dir, 1000);
+
+	$visited = array_column(
+		array_filter(calls(), function ($call) {
+			return $call[0] !== 'glob';
+		}),
+		1
+	);
+
+	sort($visited);
+
+	expect($visited)->toBe(array(
+		$dir,
+		$dir . '/one',
+		$sub,
+		$sub . '/four',
+		$sub . '/three',
+		$dir . '/two',
+	));
+
+	unlink($sub . '/three');
+	unlink($sub . '/four');
+	rmdir($sub);
+	unlink($dir . '/one');
+	unlink($dir . '/two');
 	rmdir($dir);
 });
