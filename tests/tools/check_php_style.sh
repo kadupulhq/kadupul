@@ -48,6 +48,18 @@ if [ "${#files[@]}" -eq 0 ]; then
 	exit 0
 fi
 
+# The Finder's file list is read one path per line below, so a path that
+# contains a newline could never match it. Refuse such a path instead of
+# skipping it without a check.
+for f in "${files[@]}"; do
+	case "$f" in
+		*$'\n'*)
+			printf 'Refusing to check a PHP path that contains a newline: %q\n' "$f" >&2
+			exit 2
+			;;
+	esac
+done
+
 # main moves to PER-CS one file at a time. A file that was not yet PER-CS clean
 # at the merge base is skipped, so a small fix in an unconverted file does not
 # force a whole-file reformat; converting it is its own formatting-only change.
@@ -103,7 +115,7 @@ done < <(git diff -z --name-status -M --diff-filter=R "$merge_base" -- '*.php')
 # Paths the config's Finder covers (it excludes include/vendor and
 # tests/Fixtures). The merge-base copy is checked with --path-mode=override,
 # which would otherwise bypass those exclusions.
-included=$("$fixer_path" list-files --config="$config" | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##')
+included=$("$fixer_path" list-files --config="$config" | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##' -e "s/'[\\\\]''/'/g")
 
 # True when two PHP files hold the same tokens apart from whitespace, so a
 # change between them only reformats. String and heredoc contents are tokens,
@@ -136,38 +148,40 @@ same_tokens() {
 	' -- "$1" "$2"
 }
 
-# Paths the Finder covered at the merge base. A rename source no longer exists
-# in the working tree, so list-files there cannot say whether it was excluded.
-# The Finder only looks at names, so empty placeholder files are enough.
+# Paths the Finder covered at the merge base. A file the merge-base Finder
+# excluded was never held to the rules, so it is checked as new even when this
+# config now includes it. list-files runs on a placeholder tree because a
+# rename source no longer exists in the working tree; the Finder only looks at
+# names, so empty placeholder files are enough. list-files quotes each path
+# like escapeshellarg(), so an embedded quote is unescaped after the outer
+# quotes are removed.
 base_included=
-if [ "${#rename_to[@]}" -gt 0 ]; then
-	base_tree="$tmp/.merge-base-tree"
-	mkdir -p "$base_tree"
-	cp "$base_config" "$base_tree/$config"
-	# ls-tree takes pathspecs as literal prefixes, so '*.php' would match
-	# nothing; filter the NUL-delimited names instead.
-	git ls-tree -z -r --name-only "$merge_base" > "$tmp/.merge-base-names"
-	while IFS= read -r -d '' n; do
-		case "$n" in
-			*.php) printf '%s\0' "$n" ;;
-		esac
-	done < "$tmp/.merge-base-names" > "$tmp/.merge-base-files"
-	while IFS= read -r -d '' n; do
-		case "$n" in
-			*/*) printf '%s\0' "${n%/*}" ;;
-		esac
-	done < "$tmp/.merge-base-files" | sort -zu > "$tmp/.merge-base-dirs"
-	(
-		cd "$base_tree"
-		if [ -s "$tmp/.merge-base-dirs" ]; then
-			xargs -0 mkdir -p -- < "$tmp/.merge-base-dirs"
-		fi
-		if [ -s "$tmp/.merge-base-files" ]; then
-			xargs -0 touch -- < "$tmp/.merge-base-files"
-		fi
-	)
-	base_included=$(cd "$base_tree" && "$fixer_path" list-files --config="$config" | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##')
-fi
+base_tree="$tmp/.merge-base-tree"
+mkdir -p "$base_tree"
+cp "$base_config" "$base_tree/$config"
+# ls-tree takes pathspecs as literal prefixes, so '*.php' would match
+# nothing; filter the NUL-delimited names instead.
+git ls-tree -z -r --name-only "$merge_base" > "$tmp/.merge-base-names"
+while IFS= read -r -d '' n; do
+	case "$n" in
+		*.php) printf '%s\0' "$n" ;;
+	esac
+done < "$tmp/.merge-base-names" > "$tmp/.merge-base-files"
+while IFS= read -r -d '' n; do
+	case "$n" in
+		*/*) printf '%s\0' "${n%/*}" ;;
+	esac
+done < "$tmp/.merge-base-files" | sort -zu > "$tmp/.merge-base-dirs"
+(
+	cd "$base_tree"
+	if [ -s "$tmp/.merge-base-dirs" ]; then
+		xargs -0 mkdir -p -- < "$tmp/.merge-base-dirs"
+	fi
+	if [ -s "$tmp/.merge-base-files" ]; then
+		xargs -0 touch -- < "$tmp/.merge-base-files"
+	fi
+)
+base_included=$(cd "$base_tree" && "$fixer_path" list-files --config="$config" | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##' -e "s/'[\\\\]''/'/g")
 
 for f in "${files[@]}"; do
 	if ! printf '%s\n' "$included" | grep -Fqx -- "$f"; then
@@ -181,9 +195,9 @@ for f in "${files[@]}"; do
 		fi
 		i=$((i + 1))
 	done
-	# A file moved in from outside the Finder was never subject to the rules;
-	# treat it as new so it is checked in full.
-	if [ "$base_path" != "$f" ] && ! printf '%s\n' "$base_included" | grep -Fqx -- "$base_path"; then
+	# A file outside the merge-base Finder (moved in, or under an exclusion this
+	# change removes) was never subject to the rules; check it in full as new.
+	if ! printf '%s\n' "$base_included" | grep -Fqx -- "$base_path"; then
 		checked+=("$f")
 		continue
 	fi
