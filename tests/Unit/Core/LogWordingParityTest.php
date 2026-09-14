@@ -72,6 +72,13 @@ test('log and console lines keep their 1.2.31 wording', function (string $file, 
 		->and($source)->not->toContain($replaced);
 })->with('1.2.31 wording');
 
+test('the recovery write size is counted while the batch is built, as 1.2.31 did', function () {
+	$source = log_wording_source('poller_recovery.php');
+
+	expect($source)->toContain('$packet_size += strlen($sql);')
+		->and($source)->not->toContain("strlen(implode('', \$sql_array))");
+});
+
 test('the second recovery-running line is debug only, so default logs match 1.2.31', function () {
 	$source = log_wording_source('poller_recovery.php');
 
