@@ -8504,10 +8504,14 @@ function cacti_normalize_windows_path($path) {
  *
  * On POSIX, '/', '//' and '///' all collapse to '/' rather than '', the
  * same behaviour a bare rtrim($dir, '/') has always had once the empty
- * result is put back to '/'.  On Windows, a drive root ('C:\') and a bare
- * '\' are left intact so the check downstream still targets the directory
- * itself and not its parent; rtrim() only ever trims from the right, so a
- * UNC root's leading '\\' is never touched either way.
+ * result is put back to '/'.  On Windows, both '/' and '\' are trimmed
+ * as separators (Kadupul stores configured paths with forward slashes, so
+ * a Windows path ending in '/' must be trimmed too), while a drive root
+ * ('C:\' or 'C:/'), a bare '\' or '/', and a drive-relative path with no
+ * separator at all ('C:') are left intact so the check downstream still
+ * targets the directory itself and not its parent, and never widens into
+ * the drive root; rtrim() only ever trims from the right, so a UNC root's
+ * leading '\\' is never touched either way.
  *
  * @param  string $dir
  * @param  string $separator  DIRECTORY_SEPARATOR of the target platform
@@ -8519,17 +8523,29 @@ function cacti_trim_dir_separator($dir, $separator = DIRECTORY_SEPARATOR) {
 		return $dir;
 	}
 
-	$trimmed = rtrim($dir, $separator);
+	/* Windows accepts both slash styles as a separator, so both must be
+	   trimmed regardless of which one the configured path used */
+	$trim_chars = ($separator === '\\') ? '/\\' : $separator;
 
-	if ($trimmed === '') {
-		return $separator;
+	$trimmed = rtrim($dir, $trim_chars);
+
+	if ($trimmed === $dir) {
+		/* nothing was trimmed; a drive-relative path like 'C:' must not
+		   gain a root separator it never had, or it silently becomes the
+		   drive root instead of the current directory on that drive */
+		return $dir;
 	}
 
-	/* a Windows drive root ('C:\') must keep its separator, or the result
-	   ('C:') means the current directory on that drive instead of its
+	if ($trimmed === '') {
+		/* bare root: preserve whichever separator the input actually used */
+		return substr($dir, -1);
+	}
+
+	/* a Windows drive root ('C:\' or 'C:/') must keep its separator, or the
+	   result ('C:') means the current directory on that drive instead of its
 	   root */
 	if ($separator === '\\' && preg_match('/^[A-Za-z]:$/', $trimmed)) {
-		return $trimmed . $separator;
+		return $trimmed . substr($dir, strlen($trimmed), 1);
 	}
 
 	return $trimmed;
