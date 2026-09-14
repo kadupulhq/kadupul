@@ -36,11 +36,9 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      # The project quality gate is shared with main and also checks coverage,
-      # duplication and maintainability, which the 1.2 line does not track.
-      # This step decides the 1.2 result on bugs and security alone: a pull
-      # request fails when it adds a bug, a vulnerability or an unreviewed
-      # security hotspot. A push to lts/1.2 only records the baseline and lists
+      # The 1.2 project's quality gate counts only bugs and security findings.
+      # This step lists them and fails a pull request that adds a bug, a
+      # vulnerability or an unreviewed security hotspot. A push to lts/1.2 only records the baseline and lists
       # what is open.
       - name: Bug and security gate
         env:
@@ -50,7 +48,7 @@ jobs:
         run: |
           set -euo pipefail
           api=https://sonarcloud.io/api
-          key=kadupulhq_kadupul
+          key=kadupulhq_kadupul-lts
 
           ce_url=$(sed -n 's/^ceTaskUrl=//p' .scannerwork/report-task.txt)
           status=PENDING
