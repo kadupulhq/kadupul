@@ -980,8 +980,15 @@ class spikekill {
 		$source_handle = fopen($source, 'rb');
 
 		if ($source_handle === false) {
-			$this->unlinkOwnedFile($desired_path, fstat($handle));
+			/* capture the identity before closing: Windows refuses to
+			   delete a file while a handle to it is still open, and the
+			   identity check below has to run against the stat taken at
+			   creation, not a fresh one, so a symlink swapped in after
+			   the close is never followed */
+			$fstat = fstat($handle);
 			fclose($handle);
+
+			$this->unlinkOwnedFile($desired_path, $fstat);
 
 			return false;
 		}

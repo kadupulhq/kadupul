@@ -31,6 +31,25 @@
  * temp directory rather than a text-extracted copy of it.
  */
 
+/* spikekill::normalizeDir() delegates to cacti_trim_dir_separator()
+   (lib/functions.php); lib/functions.php as a whole is never require'd
+   here because it would define the real read_config_option(), cacti_log()
+   and cacti_sizeof() ahead of every other test file's function_exists()
+   guard in this same Pest process, so only this one pure function is
+   extracted by source, the same technique the eval() blocks elsewhere in
+   this suite use */
+if (!function_exists('cacti_trim_dir_separator')) {
+	$spikekill_functions_source = file_get_contents(dirname(__DIR__, 4) . '/lib/functions.php');
+
+	$trim_start = strpos($spikekill_functions_source, 'function cacti_trim_dir_separator(');
+	expect($trim_start)->not->toBeFalse();
+
+	$trim_end = strpos($spikekill_functions_source, "\n}\n", $trim_start);
+	$trim_body = substr($spikekill_functions_source, $trim_start, $trim_end - $trim_start + 2);
+
+	eval($trim_body); // nosemgrep: php.lang.security.eval-use.eval-use
+}
+
 require_once dirname(__DIR__, 4) . '/lib/spikekill.php';
 
 /* read_config_option() is guarded with function_exists() because
@@ -235,6 +254,32 @@ test('an unwritable backup directory fails instead of falling back to the system
 	expect($written)->toBeFalse();
 
 	unlink($desired);
+});
+
+test('a failed source open closes the destination handle before removing it', function () {
+	/* Windows refuses to delete a file while a handle to it is still
+	   open, so the destination handle has to be closed before
+	   unlinkOwnedFile() runs against it, not after; the fstat() the
+	   identity check needs has to be captured before that close too,
+	   since fstat() needs a live handle. Isolated to the
+	   '$source_handle === false' branch specifically (not the function as
+	   a whole), because the later short-copy-failure branch already
+	   captures fstat() before fclose() and would make a position search
+	   across the whole function pass regardless of this branch's order. */
+	$source = file_get_contents(dirname(__DIR__, 4) . '/lib/spikekill.php');
+
+	$branch_start = strpos($source, 'if ($source_handle === false) {');
+	expect($branch_start)->not->toBeFalse();
+
+	$branch_end = strpos($source, "\n\t\t}\n", $branch_start);
+	$branch     = substr($source, $branch_start, $branch_end - $branch_start);
+
+	$fclose_pos = strpos($branch, 'fclose($handle)');
+	$unlink_pos = strpos($branch, 'unlinkOwnedFile($desired_path,');
+
+	expect($fclose_pos)->not->toBeFalse()
+		->and($unlink_pos)->not->toBeFalse()
+		->and($fclose_pos)->toBeLessThan($unlink_pos);
 });
 
 test('no chmod or by-name reopen happens after the file is created', function () {
