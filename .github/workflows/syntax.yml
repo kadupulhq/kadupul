@@ -215,10 +215,13 @@ jobs:
         # lib/functions_http_legacy.php reads $http_response_header, which PHP
         # 8.5 flags at compile time regardless of whether the reference ever
         # runs; cacti_http() only requires this file on interpreters older
-        # than 8.4, where the variable is not deprecated. Excluded here so an
-        # 8.5 entry can be added to the matrix above without failing on a
-        # file it never loads.
-        if find ${{ github.workspace }} -name '*.php' -not -path '*/lib/functions_http_legacy.php' -exec php -l {} 2>&1 \; | grep -iv 'no syntax errors detected'; then exit 1; fi
+        # than 8.4, where the variable is not deprecated. It is skipped only on
+        # PHP 8.5 and later, so the 8.1 to 8.4 jobs still lint it.
+        skip_legacy=()
+        if php -r 'exit(PHP_VERSION_ID >= 80500 ? 0 : 1);'; then
+          skip_legacy=(-not -path '*/lib/functions_http_legacy.php')
+        fi
+        if find ${{ github.workspace }} -name '*.php' "${skip_legacy[@]}" -exec php -l {} 2>&1 \; | grep -iv 'no syntax errors detected'; then exit 1; fi
 
     - name: Add ondrej PHP PPA and apt-get update
       run: |
