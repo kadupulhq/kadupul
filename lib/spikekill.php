@@ -889,6 +889,8 @@ class spikekill {
 			return false;
 		}
 
+		$source_size = fstat($source_handle)['size'];
+
 		$copied = stream_copy_to_stream($source_handle, $handle);
 
 		fclose($source_handle);
@@ -896,7 +898,11 @@ class spikekill {
 		$fstat = fstat($handle);
 		fclose($handle);
 
-		if ($copied === false) {
+		/* stream_copy_to_stream() returns the byte count it wrote, not a
+		   pass/fail flag, so a short write (a full disk, a quota) still
+		   returns a truthy int and must be caught by comparing against
+		   the source size rather than testing for false alone */
+		if ($copied === false || $copied !== $source_size) {
 			$this->unlinkOwnedFile($desired_path, $fstat);
 
 			return false;

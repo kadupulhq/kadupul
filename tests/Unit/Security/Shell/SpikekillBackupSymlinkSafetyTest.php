@@ -60,6 +60,46 @@ function spikekill_copy_path($result) {
 	return $result === false ? false : $result['path'];
 }
 
+/* a minimal read-only stream wrapper whose declared size (stream_stat)
+   exceeds the bytes it actually yields, standing in for a short copy: a
+   destination write that stops early (a full disk, a quota) hands
+   stream_copy_to_stream() fewer bytes than fstat() on the source reported
+   before the copy started */
+class SpikekillShortSourceStream {
+	public $context;
+
+	private $data     = 'short-content';
+	private $position = 0;
+
+	public function stream_open($path, $mode, $options, &$opened_path) {
+		$this->position = 0;
+
+		return true;
+	}
+
+	public function stream_read($count) {
+		$chunk = substr($this->data, $this->position, $count);
+		$this->position += strlen($chunk);
+
+		return $chunk;
+	}
+
+	public function stream_eof() {
+		return $this->position >= strlen($this->data);
+	}
+
+	public function stream_stat() {
+		return array('size' => strlen($this->data) + 1000);
+	}
+
+	public function stream_close() {
+	}
+}
+
+if (!in_array('spikekillshortsource', stream_get_wrappers())) {
+	stream_wrapper_register('spikekillshortsource', 'SpikekillShortSourceStream');
+}
+
 beforeEach(function () {
 	$this->dir = sys_get_temp_dir() . '/spikekill_test_' . uniqid();
 	mkdir($this->dir, 0700, true);
@@ -264,4 +304,13 @@ test('a directory resolved once through a symlinked ancestor refuses a later anc
 	unlink($parent);
 	rmdir($real_b . '/spikekill');
 	rmdir($real_b);
+});
+
+test('a short copy is treated as failure and the partial backup is removed', function () {
+	$desired = $this->dir . '/backup.rrd';
+
+	$written = invoke_spikekill_private('copyFileSafely', ['spikekillshortsource://source', $desired]);
+
+	expect($written)->toBeFalse()
+		->and(file_exists($desired))->toBeFalse();
 });
