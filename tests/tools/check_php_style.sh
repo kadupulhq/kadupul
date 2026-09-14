@@ -56,6 +56,15 @@ tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 root=$(pwd)
 
+# Files are classified under the rules in force at the merge base, so a change
+# that tightens the config cannot make an already formatted file look
+# unconverted and skip its edit. The final check still uses this config.
+base_config="$tmp/.merge-base-config/$config"
+mkdir -p "$tmp/.merge-base-config"
+if ! git show "$merge_base:$config" > "$base_config" 2>/dev/null; then
+	cp "$config" "$base_config"
+fi
+
 # Resolve the fixer once: the merge-base check below runs from another directory,
 # where a relative PHP_CS_FIXER path would no longer point at the binary.
 if ! fixer_path=$(command -v "$fixer"); then
@@ -117,7 +126,7 @@ base_included=
 if [ "${#rename_to[@]}" -gt 0 ]; then
 	base_tree="$tmp/.merge-base-tree"
 	mkdir -p "$base_tree"
-	cp "$config" "$base_tree/"
+	cp "$base_config" "$base_tree/$config"
 	# ls-tree takes pathspecs as literal prefixes, so '*.php' would match
 	# nothing; filter the NUL-delimited names instead.
 	git ls-tree -z -r --name-only "$merge_base" > "$tmp/.merge-base-names"
@@ -166,7 +175,7 @@ for f in "${files[@]}"; do
 		git show "$merge_base:$base_path" > "$tmp/$base_path"
 		# override applies the rules to the copy, which lies outside the config's finder
 		set +e
-		(cd "$tmp" && "$fixer_path" check --config="$root/$config" --path-mode=override \
+		(cd "$tmp" && "$fixer_path" check --config="$base_config" --path-mode=override \
 			--using-cache=no -- "$base_path" >/dev/null 2>&1)
 		status=$?
 		set -e
