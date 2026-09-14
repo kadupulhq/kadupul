@@ -431,7 +431,7 @@ function import_package_get_details($xmlfile) {
 	$data = file_get_contents($filename, 'r');
 
 	/* SECURITY: PHP requires libxml >= 2.9, which disables external entity
-	 * loading by default, so no libxml_disable_entity_loader() call is
+	 * loading by default, so no entity loader toggle is
 	 * needed to prevent XXE. The call below passes no entity-expansion
 	 * flags, so that stays the case. */
 	libxml_use_internal_errors(true);
@@ -568,7 +568,7 @@ function import_read_package_data($xmlfile, &$public_key) {
 	cacti_log('Loading Plugin Information from package', false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 
 	/* SECURITY: PHP requires libxml >= 2.9, which disables external entity
-	 * loading by default, so no libxml_disable_entity_loader() call is
+	 * loading by default, so no entity loader toggle is
 	 * needed to prevent XXE. The call below passes no entity-expansion
 	 * flags, so that stays the case. */
 	libxml_use_internal_errors(true);
