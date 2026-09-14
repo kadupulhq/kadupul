@@ -79,3 +79,67 @@ test('a successful copy keeps the backup under its 1.2.31 name', function () {
 	expect(backupRRDFile($rrdfile))->toBeTrue();
 	expect(file_get_contents($this->dir . '/live.rrd'))->toBe('rrd-bytes');
 });
+
+/*
+ * stream_copy_to_stream() returns the byte count it moved even when the
+ * source ends early, so an interrupted copy has to be simulated with a
+ * source that stops short of its real size. This wrapper reads the real
+ * source file but claims EOF after a fixed number of bytes, the same shape
+ * as a read that was cut off partway through.
+ */
+class ShortCopyStreamWrapper {
+	public $context;
+
+	private $handle;
+	private $limit;
+	private $read = 0;
+
+	public function stream_open($path, $mode, $options, &$opened_path) {
+		list($limit, $real) = explode('|', substr($path, strlen('shortcopy://')), 2);
+
+		$this->limit  = (int) $limit;
+		$this->handle = @fopen($real, $mode);
+
+		return $this->handle !== false;
+	}
+
+	public function stream_read($count) {
+		$remaining = $this->limit - $this->read;
+
+		if ($remaining <= 0) {
+			return '';
+		}
+
+		$data = fread($this->handle, min($count, $remaining));
+		$this->read += strlen($data);
+
+		return $data;
+	}
+
+	public function stream_eof() {
+		return $this->read >= $this->limit;
+	}
+
+	public function stream_stat() {
+		return fstat($this->handle);
+	}
+
+	public function stream_close() {
+		fclose($this->handle);
+	}
+}
+
+test('a copy that ends before the source does is not reported as a success', function () {
+	$rrdfile = $this->rradir . '/live.rrd';
+
+	file_put_contents($rrdfile, 'rrd-bytes-longer-than-the-short-copy-limit');
+
+	stream_wrapper_register('shortcopy', __NAMESPACE__ . '\ShortCopyStreamWrapper');
+
+	try {
+		expect(backupRRDFile('shortcopy://5|' . $rrdfile))->toBeFalse();
+		expect(glob($this->dir . '/*'))->toBe(array());
+	} finally {
+		stream_wrapper_unregister('shortcopy');
+	}
+});

@@ -949,7 +949,14 @@ function backupRRDFile($rrdfile) {
 	}
 
 	$source = @fopen($rrdfile, 'rb');
-	$copied = $source !== false && stream_copy_to_stream($source, $target) !== false;
+	$size   = $source !== false ? @fstat($source) : false;
+	$bytes  = $source !== false ? stream_copy_to_stream($source, $target) : false;
+
+	/* stream_copy_to_stream() returns the byte count it actually moved even
+	 * when the source ends early, so an interrupted copy has to be caught by
+	 * comparing that count against the source's size taken before the copy
+	 * started, not by checking the return value against false alone */
+	$copied = $bytes !== false && $size !== false && $bytes === $size['size'];
 
 	if ($source !== false) {
 		fclose($source);
