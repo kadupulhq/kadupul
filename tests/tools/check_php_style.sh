@@ -81,7 +81,7 @@ done < <(git diff -z --name-status -M --diff-filter=R "$merge_base" -- '*.php')
 # Paths the config's Finder covers (it excludes include/vendor and
 # tests/Fixtures). The merge-base copy is checked with --path-mode=override,
 # which would otherwise bypass those exclusions.
-included=$("$fixer_path" list-files --config="$config" 2>/dev/null | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##')
+included=$("$fixer_path" list-files --config="$config" | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##')
 
 # True when two PHP files hold the same tokens apart from whitespace, so a
 # change between them only reformats. String and heredoc contents are tokens,
@@ -140,7 +140,7 @@ if [ "${#rename_to[@]}" -gt 0 ]; then
 			xargs -0 touch -- < "$tmp/.merge-base-files"
 		fi
 	)
-	base_included=$(cd "$base_tree" && "$fixer_path" list-files --config="$config" 2>/dev/null | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##')
+	base_included=$(cd "$base_tree" && "$fixer_path" list-files --config="$config" | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##')
 fi
 
 for f in "${files[@]}"; do
@@ -180,7 +180,11 @@ for f in "${files[@]}"; do
 				checked+=("$f")
 				continue
 			fi
-			echo "Skipping $f: not PER-CS formatted at $merge_base; convert it in a formatting-only change."
+			if [ "$base_path" != "$f" ] && cmp -s -- "$tmp/$base_path" "$f"; then
+				echo "Skipping $f: renamed from $base_path without changes."
+			else
+				echo "Skipping $f: not PER-CS formatted at $merge_base; convert it in a formatting-only change."
+			fi
 			continue
 		elif [ "$status" -ne 0 ]; then
 			echo "php-cs-fixer failed with status $status while checking $base_path at $merge_base" >&2
