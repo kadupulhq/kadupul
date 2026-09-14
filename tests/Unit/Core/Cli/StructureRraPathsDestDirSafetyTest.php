@@ -172,7 +172,10 @@ test('a nested destination under an rra directory configured with a trailing sla
    directory; structure_rra_is_safe_dest() is the second check the move
    site runs against $new_rrd_path itself right before rename(), so a
    directory or a symlink already sitting at the exact destination is
-   refused instead of being moved into or followed. */
+   refused instead of being moved into or followed. It used to accept
+   anything that was merely neither a directory nor a link, which let a
+   FIFO, socket or device node through too; it now requires a missing
+   path or a regular file. */
 
 test('a missing destination path is safe', function () {
 	$dest = $this->base . '/missing.rrd';
@@ -202,6 +205,17 @@ test('a symlink already at the destination is refused', function () {
 	symlink($target, $dest);
 
 	expect(structure_rra_is_safe_dest($dest))->toBeFalse();
+});
+
+test('a FIFO already at the destination is refused', function () {
+	if (!function_exists('posix_mkfifo')) {
+		$this->markTestSkipped('posix_mkfifo() is not available');
+	}
+
+	$dest = $this->base . '/fifo.rrd';
+
+	expect(posix_mkfifo($dest, 0600))->toBeTrue()
+		->and(structure_rra_is_safe_dest($dest))->toBeFalse();
 });
 
 /* PHP caches the last stat() and lstat() result per path, and on 8.3+

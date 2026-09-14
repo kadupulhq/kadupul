@@ -423,8 +423,9 @@ function structure_rra_is_safe_source($path, $base_rra_path) {
  * validates the parent directory. If '$new_rrd_path' itself already exists
  * as a directory or a symlink, rename() below would move the legacy file
  * inside it (a directory) or follow it (a symlink) instead of replacing it,
- * so both are refused here and only a missing path or a regular file, which
- * rename() has always been allowed to overwrite, are treated as safe.
+ * so both are refused here; a FIFO, socket or device node is refused too,
+ * since neither is what rename() has ever been allowed to overwrite, and
+ * only a missing path or a regular file are treated as safe.
  *
  * @param  (string) $new_rrd_path - the destination path a legacy RRD file
  *                   is about to be renamed to
@@ -435,7 +436,11 @@ function structure_rra_is_safe_dest($new_rrd_path) {
 	/* PHP answers a repeat lookup of the same path from its stat cache */
 	clearstatcache(true, $new_rrd_path);
 
-	return !is_link($new_rrd_path) && !is_dir($new_rrd_path);
+	if (is_link($new_rrd_path)) {
+		return false;
+	}
+
+	return !file_exists($new_rrd_path) || is_file($new_rrd_path);
 }
 
 /**
