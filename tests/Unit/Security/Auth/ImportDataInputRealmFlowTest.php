@@ -641,3 +641,18 @@ test('a user with the realm imports the whole dependency chain as before', funct
 		->and($savedTo('data_input'))->toHaveCount(1)
 		->and($GLOBALS['ifl_messages'])->toBe(array());
 });
+
+test('a later package file that fails its import stops the package before an earlier file is written', function () use ($runPackage, $methodXml, $templateXml, $methodHash, $dtHash, $existingMethod) {
+	/* the template resolves against the method already in the database, and a later file changes that method unsafely */
+	$existingMethod();
+
+	$result = $runPackage(array(
+		'template.xml' => array('hash_010103' . $dtHash => $templateXml),
+		'method.xml'   => array('hash_030103' . $methodHash => $methodXml('/usr/local/bin/uptime-probe <host>; touch /tmp/owned')),
+	));
+
+	expect($result)->toBeFalse()
+		->and($GLOBALS['ifl_saves'])->toBe(array())
+		->and(implode("\n", $GLOBALS['ifl_log']))->toContain('shell metacharacters')
+		->and($GLOBALS['preview_only'])->toBeFalse();
+});

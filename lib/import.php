@@ -696,6 +696,10 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 	/* without the realm, a dependent can sit in an earlier file than the method it needs, so classify the whole package first */
 	if (!$data_input_allowed) {
 		$refused_hashes = import_package_refused_hashes($data['files']['file'], $profile_id, $remove_orphans, $replace_svalues, $import_hashes, $class);
+
+		if ($refused_hashes === false) {
+			return false;
+		}
 	}
 
 	if (!$preview) {
@@ -842,7 +846,8 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 }
 
 /* preview every XML file of a package until no further object is refused, so each file is then imported
- * knowing every Data Input Method skipped anywhere in the package and everything that uses one */
+ * knowing every Data Input Method skipped anywhere in the package and everything that uses one; returns
+ * false when a file fails its import, so the package stops before any earlier file is written */
 function import_package_refused_hashes($package_files, $profile_id, $remove_orphans, $replace_svalues, $import_hashes, $class) {
 	global $preview_only, $import_messages;
 
@@ -866,7 +871,12 @@ function import_package_refused_hashes($package_files, $profile_id, $remove_orph
 
 			$fdata = base64_decode($f['data']);
 
-			import_xml_data($fdata, false, $profile_id, $remove_orphans, $replace_svalues, $import_hashes, $class, false, $refused_hashes);
+			if (import_xml_data($fdata, false, $profile_id, $remove_orphans, $replace_svalues, $import_hashes, $class, false, $refused_hashes) === false) {
+				/* keep the failed file's import messages for the caller */
+				$preview_only = $saved_preview;
+
+				return false;
+			}
 		}
 	} while (cacti_sizeof($refused_hashes) > $refused_count);
 
