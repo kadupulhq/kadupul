@@ -37,10 +37,11 @@ jobs:
 
       # The project quality gate is shared with main and also checks coverage,
       # duplication and maintainability, which the 1.2 line does not track.
-      # This step decides the 1.2 result on security alone: a pull request
-      # fails when it adds a vulnerability or an unreviewed security hotspot.
-      # A push to lts/1.2 only records the baseline and lists what is open.
-      - name: Security gate
+      # This step decides the 1.2 result on bugs and security alone: a pull
+      # request fails when it adds a bug, a vulnerability or an unreviewed
+      # security hotspot. A push to lts/1.2 only records the baseline and lists
+      # what is open.
+      - name: Bug and security gate
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
@@ -71,13 +72,18 @@ jobs:
             scope="branch=$BRANCH&inNewCodePeriod=true"
           fi
 
+          bugs=$(curl -fsS -u "$SONAR_TOKEN:" "$api/issues/search?componentKeys=$key&$scope&types=BUG&resolved=false&ps=100")
           vulns=$(curl -fsS -u "$SONAR_TOKEN:" "$api/issues/search?componentKeys=$key&$scope&types=VULNERABILITY&resolved=false&ps=100")
           hotspots=$(curl -fsS -u "$SONAR_TOKEN:" "$api/hotspots/search?projectKey=$key&$scope&status=TO_REVIEW&ps=100")
+          bug_count=$(jq '.paging.total // .total' <<<"$bugs")
           vuln_count=$(jq '.paging.total // .total' <<<"$vulns")
           hotspot_count=$(jq '.paging.total' <<<"$hotspots")
 
           {
-            echo "### SonarQube Cloud security findings"
+            echo "### SonarQube Cloud bug and security findings"
+            echo
+            echo "New bugs: $bug_count"
+            jq -r '.issues[] | "- \(.severity) `\(.rule)` \(.component | sub("^[^:]*:"; "")):\(.line // "-") \(.message)"' <<<"$bugs"
             echo
             echo "New vulnerabilities: $vuln_count"
             jq -r '.issues[] | "- \(.severity) `\(.rule)` \(.component | sub("^[^:]*:"; "")):\(.line // "-") \(.message)"' <<<"$vulns"
@@ -86,7 +92,7 @@ jobs:
             jq -r '.hotspots[] | "- \(.vulnerabilityProbability) \(.securityCategory) \(.component | sub("^[^:]*:"; "")):\(.line // "-") \(.message)"' <<<"$hotspots"
           } | tee -a "$GITHUB_STEP_SUMMARY"
 
-          if [ -n "$PR_NUMBER" ] && { [ "$vuln_count" -gt 0 ] || [ "$hotspot_count" -gt 0 ]; }; then
-            echo "Security findings must be fixed, or the hotspots reviewed in SonarQube Cloud, before merging."
+          if [ -n "$PR_NUMBER" ] && { [ "$bug_count" -gt 0 ] || [ "$vuln_count" -gt 0 ] || [ "$hotspot_count" -gt 0 ]; }; then
+            echo "Bugs and vulnerabilities must be fixed, or marked in SonarQube Cloud, and hotspots reviewed, before merging."
             exit 1
           fi
