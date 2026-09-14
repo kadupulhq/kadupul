@@ -934,7 +934,7 @@ function get_format_message_instance($current_message) {
 		case MESSAGE_LEVEL_CSRF:
 			$message = '<span class="deviceDown">' . $fmessage . '</span>';
 			break;
-		default;
+		default:
 			$message = '<span class="deviceUnknown">' . $fmessage . '</span>';
 			break;
 	}
