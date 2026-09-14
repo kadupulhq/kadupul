@@ -161,7 +161,7 @@ test('1.2.x graph input deletion requires a CSRF protected POST', function () {
 	$handler = file_get_contents(dirname(__DIR__, 2) . '/graph_templates_inputs.php');
 	$ui      = file_get_contents(dirname(__DIR__, 2) . '/graph_templates.php');
 
-	expect($handler)->toMatch('/function input_remove\(\) \{\s+(?:\/\*[^*]*\*\/\s+)?csrf_require_post\(\);/');
+	expect($handler)->toMatch('/function input_remove\(\) \{\s+(?:\/\*.*?\*\/\s+)?csrf_require_post\(true\);/s');
 	expect($ui)
 		->toContain("loadPageUsingPost('graph_templates_inputs.php'")
 		->toContain('__csrf_magic: csrfMagicToken')
