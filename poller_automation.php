@@ -270,7 +270,12 @@ if (!$master && $thread == 0) {
 	if (cacti_sizeof($pids)) {
 		foreach($pids as $pid) {
 			if (isProcessRunning($pid)) {
-				killProcess($pid);
+				if (!killProcess($pid) && cacti_process_kill_denied($pid)) {
+					cacti_log("WARNING: Automation Process $pid is owned by another user and was not killed, not starting another discovery for Network ID: $network_id", true, 'AUTOM8');
+
+					exit(0);
+				}
+
 				cacti_log("WARNING: Automation Process $pid is still running for Network ID: $network_id", true, 'AUTOM8');
 			} else {
 				cacti_log("WARNING: Process $pid claims to be running but not found for Network ID: $network_id", true, 'AUTOM8');
@@ -349,6 +354,8 @@ if (!$master && $thread == 0) {
 		// Are there no more running tasks? Wait up to 15 seconds to
 		// allow processes to start before checking for failures
 		if (($running == 0 && $failcount > 3) || $command == 'cancel') {
+			$undead_pids = array();
+
 			if ($command == 'cancel') {
 				$pids = array_rekey(db_fetch_assoc_prepared("SELECT pid
 					FROM automation_processes
@@ -359,7 +366,11 @@ if (!$master && $thread == 0) {
 				if (cacti_sizeof($pids)) {
 					foreach($pids as $pid) {
 						if (cacti_process_still_running($pid)) {
-							cacti_process_kill($pid, SIGTERM, 'AUTOM8');
+							if (!cacti_process_kill($pid, SIGTERM, 'AUTOM8') && cacti_process_kill_denied($pid)) {
+								cacti_log("WARNING: Automation Process $pid is owned by another user and was not killed on cancel, retaining its row for Network ID: $network_id", true, 'AUTOM8');
+
+								$undead_pids[] = $pid;
+							}
 						}
 					}
 
@@ -389,7 +400,7 @@ if (!$master && $thread == 0) {
 				WHERE id = ?',
 				array($totals['up'], $totals['snmp'], date('Y-m-d H:i:s', $startTime), ($end - $start), $network_id));
 
-			clearAllTasks($network_id);
+			clearAllTasks($network_id, $undead_pids);
 			reportNetworkStatus($network_id, $preexisting_devices);
 
 			exit(0);
@@ -1186,10 +1197,19 @@ function clearTask($network_id, $pid) {
 		array($network_id));
 }
 
-function clearAllTasks($network_id) {
-	db_execute_prepared('DELETE FROM automation_processes
-		WHERE network_id = ?',
-		array($network_id));
+function clearAllTasks($network_id, $keep_pids = array()) {
+	if (cacti_sizeof($keep_pids)) {
+		$placeholders = implode(',', array_fill(0, cacti_sizeof($keep_pids), '?'));
+
+		db_execute_prepared("DELETE FROM automation_processes
+			WHERE network_id = ?
+			AND pid NOT IN ($placeholders)",
+			array_merge(array($network_id), array_values($keep_pids)));
+	} else {
+		db_execute_prepared('DELETE FROM automation_processes
+			WHERE network_id = ?',
+			array($network_id));
+	}
 }
 
 function markIPRunning($ip_address, $network_id) {

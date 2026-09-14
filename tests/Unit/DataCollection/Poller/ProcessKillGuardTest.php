@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -416,7 +417,7 @@ test('automation cancel reaches full network cleanup before exit', function () {
 		->and(substr($src, $cancel))->toContain('cacti_process_kill($pid, SIGTERM')
 		->and(strpos($src, 'cacti_process_kill($pid, SIGTERM', $cancel))->toBeLessThan(strpos($src, 'DELETE FROM automation_ips', $cancel))
 		->and(substr($src, $cancel))->toContain('DELETE FROM automation_ips')
-		->and(substr($src, $cancel))->toContain('clearAllTasks($network_id)')
+		->and(substr($src, $cancel))->toContain('clearAllTasks($network_id, $undead_pids)')
 		->and(substr($src, $cancel))->toContain('reportNetworkStatus($network_id, $preexisting_devices)');
 });
 
