@@ -6542,6 +6542,15 @@ function call_remote_data_collector($poller_id, $url, $logtype = 'WEBUI') {
 		$hostname = $bracketed[1];
 	}
 
+	/* The stored name becomes the Host header and TLS peer name below, and
+	 * the poller form saves it without a pattern, so a row written before
+	 * this check could carry a line break into the request headers. */
+	if (preg_match('/[\x00-\x20\x7f]/', (string) $hostname) || (filter_var($hostname, FILTER_VALIDATE_IP) === false && filter_var($hostname, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false)) {
+		cacti_log(sprintf('SECURITY: Refusing Remote Data Collector request for PollerID:%s because its hostname is not a valid host name or address', $poller_id), false, 'SECURITY');
+
+		return '';
+	}
+
 	if (!is_ipaddress($hostname)) {
 		$ipaddress = gethostbyname($hostname);
 

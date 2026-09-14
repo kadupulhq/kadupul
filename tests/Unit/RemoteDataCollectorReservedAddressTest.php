@@ -198,3 +198,31 @@ test('a name that resolves to the metadata address is refused before any request
 		->and($url)->toBeNull()
 		->and($GLOBALS['rdc_context'])->toBeNull();
 });
+
+test('a stored collector name with a line break or space is refused before any header is built', function (string $hostname) {
+	/* the resolver answers for the name, so only the name check stands in the way */
+	[$result, $log, $url] = remote_collector_call($hostname, array($hostname => '10.1.2.3'));
+
+	expect($result)->toBe('')
+		->and($url)->toBeNull()
+		->and($GLOBALS['rdc_context'])->toBeNull()
+		->and($log)->toHaveCount(1)
+		->and($log[0])->toContain('not a valid host name or address')
+		->and($log[0])->not->toContain("\n");
+})->with(array(
+	'CRLF'  => array("collector.example.net\r\nX-Injected: 1"),
+	'space' => array('collector example.net'),
+));
+
+test('a valid collector name, IPv4 literal and bracketed IPv6 literal still connect', function (string $hostname, array $dns, string $url, ?string $header) {
+	[$result, $log, $requested] = remote_collector_call($hostname, $dns);
+
+	expect($result)->toBe('connected')
+		->and($log)->toBe(array())
+		->and($requested)->toBe($url)
+		->and($GLOBALS['rdc_context']['http']['header'] ?? null)->toBe($header);
+})->with(array(
+	'host name'      => array('collector.example.net', array('collector.example.net' => '10.1.2.3'), 'https://10.1.2.3/remote_agent.php?action=ping', 'Host: collector.example.net'),
+	'IPv4'           => array('10.20.30.40', array(), 'https://10.20.30.40/remote_agent.php?action=ping', null),
+	'bracketed IPv6' => array('[2001:db8::10]', array(), 'https://[2001:db8::10]/remote_agent.php?action=ping', null),
+));
