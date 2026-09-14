@@ -71,9 +71,9 @@ cmd_exec	./lib/rrd.php:300				$process = proc_open(read_config_option('path_rrdt
 cmd_exec	./lib/rrd.php:74		return popen($command, 'w');
 cmd_exec	./lib/rrd.php:931					$fp = popen($rrdtool_cmd, 'r');
 cmd_exec	./lib/rrdcheck.php:781		$process = proc_open($command, $fds, $pipes);
-cmd_exec	./lib/snmp.php:196			exec($command, $snmp_value);
-cmd_exec	./lib/snmp.php:296			exec($command, $snmp_value);
-cmd_exec	./lib/snmp.php:391			exec($command, $snmp_value);
+cmd_exec	./lib/snmp.php:197			exec($command, $snmp_value);
+cmd_exec	./lib/snmp.php:297			exec($command, $snmp_value);
+cmd_exec	./lib/snmp.php:392			exec($command, $snmp_value);
 cmd_exec	./lib/snmpagent.php:642		/* add pollers of a distributed system (future) */
 cmd_exec	./lib/spikekill.php:429			shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' dump ' . cacti_escapeshellarg($this->rrdfile) . ' > ' . cacti_escapeshellarg($xmlfile));
 cmd_exec	./lib/spikekill.php:755			$response = shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' restore -f -r ' . cacti_escapeshellarg($xmlfile) . ' ' . cacti_escapeshellarg($rrdfile));
@@ -429,8 +429,8 @@ dynamic_include	./lib/rrd.php:900		include($config['include_path'] . '/global_ar
 dynamic_include	./lib/rrd.php:974		include_once($config['library_path'] . '/boost.php');
 dynamic_include	./lib/rrdcheck.php:699			include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/rrdcheck.php:729			include_once($config['library_path'] . '/poller.php');
-dynamic_include	./lib/snmp.php:31		include_once($config['include_path'] . '/vendor/phpsnmp/extension.php');
-dynamic_include	./lib/snmp.php:33		include_once($config['include_path'] . '/vendor/phpsnmp/classSNMP.php');
+dynamic_include	./lib/snmp.php:32		include_once($config['include_path'] . '/vendor/phpsnmp/extension.php');
+dynamic_include	./lib/snmp.php:34		include_once($config['include_path'] . '/vendor/phpsnmp/classSNMP.php');
 dynamic_include	./lib/snmpagent.php:873				include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/template.php:1465		include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/timespan_settings.php:14	include_once($config['base_path'] . '/lib/time.php');

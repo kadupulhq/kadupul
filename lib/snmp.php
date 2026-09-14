@@ -2,6 +2,7 @@
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-FileCopyrightText: 2010 Boris Lytochkin, Sponsored by Yandex LLC
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -447,6 +448,19 @@ function cacti_get_snmpv3_auth($auth_proto, $auth_user, $auth_pass, $priv_proto,
 		' '    . $engineid);
 }
 
+function cacti_snmp_timeout_ms($session, $info) {
+	/* phpsnmp\SNMP has two implementations with different units: the
+	   native extension wrapper (extension.php) extends \SNMP and leaves
+	   info['timeout'] in microseconds, while the bundled class
+	   (classSNMP.php) does not extend \SNMP and already converts its own
+	   info['timeout'] to milliseconds in its constructor */
+	if ($session instanceof \SNMP) {
+		return round($info['timeout'] / 1000, 0);
+	}
+
+	return round($info['timeout'], 0);
+}
+
 function cacti_snmp_session_walk($session, $oid, $dummy = false, $max_repetitions = NULL,
 	$non_repeaters = NULL, $value_output_format = SNMP_STRING_OUTPUT_GUESS) {
 
@@ -492,7 +506,7 @@ function cacti_snmp_session_walk($session, $oid, $dummy = false, $max_repetition
 			$oid == '.1.3.6.1.4.1.9.9.23.1.2.1.1.6') {
 			/* do nothing */
 		} elseif ($session->getErrno() == SNMP::ERRNO_TIMEOUT) {
-			cacti_log('WARNING: SNMP Error:\'Timeout (' . ($info['timeout']/1000) . " ms)', Device:'" . $info['hostname'] . "', OID:'$oid'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
+			cacti_log('WARNING: SNMP Error:\'Timeout (' . cacti_snmp_timeout_ms($session, $info) . " ms)', Device:'" . $info['hostname'] . "', OID:'$oid'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
 		}
 
 		return array();
@@ -541,7 +555,7 @@ function cacti_snmp_session_get($session, $oid, $strip_alpha = false) {
 
 	if ($out === false) {
 		if ($session->getErrno() == SNMP::ERRNO_TIMEOUT) {
-			cacti_log('WARNING: SNMP Error:\'Timeout (' . round($info['timeout']/1000,0) . " ms)', Device:'" . $info['hostname'] . "', OID:'$oid'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
+			cacti_log('WARNING: SNMP Error:\'Timeout (' . cacti_snmp_timeout_ms($session, $info) . " ms)', Device:'" . $info['hostname'] . "', OID:'$oid'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
 		}
 
 		return false;
@@ -583,7 +597,7 @@ function cacti_snmp_session_getnext($session, $oid) {
 		$oid = implode(',', $oid);
 	} elseif ($out === false) {
 		if ($session->getErrno() == SNMP::ERRNO_TIMEOUT) {
-			cacti_log('WARNING: SNMP Error:\'Timeout (' . round($info['timeout']/1000, 0) . " ms)', Device:'" . $info['hostname'] . "', OID:'$oid'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
+			cacti_log('WARNING: SNMP Error:\'Timeout (' . cacti_snmp_timeout_ms($session, $info) . " ms)', Device:'" . $info['hostname'] . "', OID:'$oid'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
 		}
 
 		return false;
