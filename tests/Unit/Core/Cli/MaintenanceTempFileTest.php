@@ -268,13 +268,13 @@ test('a dump written through the handle lands in the created file after the name
 
 	/* the command plants the symlink itself, as a local process winning the
 	   race between the create and the dump would */
-	$command = escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg(
+	$argv = array(PHP_BINARY, '-r',
 		'unlink(' . var_export($path, true) . ');'
 		. 'symlink(' . var_export($this->victim, true) . ', ' . var_export($path, true) . ');'
 		. 'echo "<rrd>\n<step>300</step>\n</rrd>\n";'
 	);
 
-	expect(cacti_cli_run_to_handle($command, $handle))->toBeTrue()
+	expect(cacti_cli_run_to_handle($argv, $handle))->toBeTrue()
 		->and(is_link($path))->toBeTrue()
 		->and(file_get_contents($this->victim))->toBe('original')
 		->and(cacti_cli_read_lines($handle))->toBe(array("<rrd>\n", "<step>300</step>\n", "</rrd>\n"))
@@ -287,12 +287,39 @@ test('an unchanged name still refers to its handle until it is removed', functio
 	$path   = $this->dir . '/new.dump.12345';
 	$handle = cacti_cli_create_file($path);
 
-	expect(cacti_cli_run_to_handle(escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg('echo "a\nb";'), $handle))->toBeTrue()
+	expect(cacti_cli_run_to_handle(array(PHP_BINARY, '-r', 'echo "a\nb";'), $handle))->toBeTrue()
 		->and(cacti_cli_path_is_handle($handle, $path))->toBeTrue()
 		->and(cacti_cli_read_lines($handle))->toBe(array("a\n", 'b'))
 		->and(file($path))->toBe(array("a\n", 'b'))
 		->and(cacti_cli_remove_file($handle, $path))->toBeTrue()
 		->and(file_exists($path))->toBeFalse();
+});
+
+test('an argument with shell metacharacters reaches the child as one literal argument', function () {
+	$path   = $this->dir . '/new.dump.12345';
+	$handle = cacti_cli_create_file($path);
+
+	/* every argv-form regression is worthless if a shell ever gets to parse
+	   this: `;`, `$()` and a space would each split or expand it first */
+	$needle = 'old.rrd; $(touch ' . $this->dir . '/pwned) `id` & 1 2';
+
+	expect(cacti_cli_run_to_handle(array(PHP_BINARY, '-r', 'echo end($argv);', $needle), $handle))->toBeTrue()
+		->and(cacti_cli_read_lines($handle))->toBe(array($needle))
+		->and(file_exists($this->dir . '/pwned'))->toBeFalse();
+
+	cacti_cli_remove_file($handle, $path);
+});
+
+test('the run helper only accepts an argv array, not a shell string', function () {
+	expect(fn () => cacti_cli_run_to_handle('true', STDOUT))->toThrow(\TypeError::class);
+});
+
+test('splice_rrd runs the dump command as an argv array, not a shell string', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/cli/splice_rrd.php');
+
+	expect($source)->toContain("cacti_cli_run_to_handle(array(\$rrdtool, 'dump', \$oldrrd), \$created[\$oldxmlfile]);")
+		->and($source)->toContain("cacti_cli_run_to_handle(array(\$rrdtool, 'dump', \$newrrd), \$created[\$newxmlfile]);")
+		->and($source)->not->toContain("cacti_escapeshellcmd(\$rrdtool) . ' dump ' . cacti_escapeshellarg(");
 });
 
 /**
@@ -351,13 +378,13 @@ test('a short destination write is reported as a failure, not a partial success'
 		stream_wrapper_register('shortwrite', MaintenanceShortWriteStream::class);
 	}
 
-	$command = escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg('echo "0123456789";');
+	$argv = array(PHP_BINARY, '-r', 'echo "0123456789";');
 
 	MaintenanceShortWriteStream::reset();
 
 	$handle = fopen('shortwrite://test', 'wb');
 
-	expect(cacti_cli_run_to_handle($command, $handle))->toBeFalse();
+	expect(cacti_cli_run_to_handle($argv, $handle))->toBeFalse();
 
 	fclose($handle);
 
@@ -496,7 +523,7 @@ test('a dump command that exits non-zero is reported as failed', function () {
 	$path   = $this->dir . '/new.dump.12345';
 	$handle = cacti_cli_create_file($path);
 
-	expect(cacti_cli_run_to_handle(escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg('echo "<rrd>"; exit(3);'), $handle))->toBeFalse()
+	expect(cacti_cli_run_to_handle(array(PHP_BINARY, '-r', 'echo "<rrd>"; exit(3);'), $handle))->toBeFalse()
 		->and(cacti_cli_read_lines($handle))->toBe(array('<rrd>'));
 
 	cacti_cli_remove_file($handle, $path);
@@ -504,7 +531,7 @@ test('a dump command that exits non-zero is reported as failed', function () {
 	$path   = $this->dir . '/old.dump.12345';
 	$handle = cacti_cli_create_file($path);
 
-	expect(cacti_cli_run_to_handle(escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg('echo "<rrd>";'), $handle))->toBeTrue();
+	expect(cacti_cli_run_to_handle(array(PHP_BINARY, '-r', 'echo "<rrd>";'), $handle))->toBeTrue();
 
 	cacti_cli_remove_file($handle, $path);
 });

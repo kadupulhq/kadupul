@@ -227,10 +227,12 @@ function cacti_cli_path_is_handle($handle, $path) {
 /**
  * Run a command and write its standard output through an open handle.
  *
- * A shell redirect reopens its target by name and follows a symlink swapped in
- * after the file was created. Copying the pipe into the descriptor keeps the
- * write on the file that was created. Standard error is inherited, as it was
- * with the redirect.
+ * The argv array goes straight to execve(), so shell metacharacters in an
+ * argument are inert instead of being parsed by an intermediate shell. A
+ * shell redirect would also reopen its target by name and follow a symlink
+ * swapped in after the file was created; copying the pipe into the
+ * descriptor instead keeps the write on the file that was created. Standard
+ * error is inherited, as it was with the redirect.
  *
  * stream_copy_to_stream() only fails on a read error: a destination that
  * accepts fewer bytes than it was offered still returns that short count, and
@@ -238,14 +240,14 @@ function cacti_cli_path_is_handle($handle, $path) {
  * chunks and checking fwrite()'s return against the chunk length catches that
  * short write instead of restoring a truncated XML dump later.
  *
- * @param string   $command The command line, already quoted by the caller.
- * @param resource $handle  Where standard output is written.
+ * @param array    $argv   The command as argv[0] plus its arguments, unescaped.
+ * @param resource $handle Where standard output is written.
  *
  * @return bool True when the command exited 0 and all of its output was copied.
  */
-function cacti_cli_run_to_handle($command, $handle) {
+function cacti_cli_run_to_handle(array $argv, $handle) {
 	$pipes   = array();
-	$process = proc_open($command, array(1 => array('pipe', 'w')), $pipes);
+	$process = proc_open($argv, array(1 => array('pipe', 'w')), $pipes);
 
 	if (!is_resource($process)) {
 		return false;

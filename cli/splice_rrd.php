@@ -287,10 +287,10 @@ if ($finrrd == '') {
 
 /* execute the dump commands */
 debug("Creating XML file '$oldxmlfile' from '$oldrrd'");
-$old_dumped = cacti_cli_run_to_handle(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($oldrrd), $created[$oldxmlfile]);
+$old_dumped = cacti_cli_run_to_handle(array($rrdtool, 'dump', $oldrrd), $created[$oldxmlfile]);
 
 debug("Creating XML file '$newxmlfile' from '$newrrd'");
-$new_dumped = cacti_cli_run_to_handle(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($newrrd), $created[$newxmlfile]);
+$new_dumped = cacti_cli_run_to_handle(array($rrdtool, 'dump', $newrrd), $created[$newxmlfile]);
 
 /* read the xml files into arrays */
 if ($old_dumped) {
