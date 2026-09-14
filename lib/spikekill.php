@@ -399,12 +399,10 @@ class spikekill {
 		$this->seed = mt_rand();
 
 		if ($config['cacti_server_os'] == 'win32') {
-			$this->tempdir  = read_config_option('spikekill_backupdir');
-			$xmlfile = $this->tempdir . '/' . str_replace('.rrd', '', basename($this->rrdfile)) . '.dump.' . $this->seed;
+			$this->tempdir = read_config_option('spikekill_backupdir');
 			$bakfile = $this->tempdir . '/' . str_replace('.rrd', '', basename($this->rrdfile)) . '.backup.' . $this->seed . '.rrd';
 		} else {
 			$this->tempdir = read_config_option('spikekill_backupdir');
-			$xmlfile = $this->tempdir . '/' . str_replace('.rrd', '', basename($this->rrdfile)) . '.dump.' . $this->seed;
 			$bakfile = $this->tempdir . '/' . str_replace('.rrd', '', basename($this->rrdfile)) . '.backup.' . $this->seed . '.rrd';
 		}
 
@@ -417,6 +415,23 @@ class spikekill {
 		if ($this->method == SPIKE_METHOD_VARIANCE) {
 			$this->strout .= ($this->html ? "<p class='spikekillNote'>" : '') . sprintf("NOTE: Variance Calculation removes top and bottom %s samples due to Outliers setting", $this->outliers) . ($this->html ? "</p>\n" : "\n");
 		}
+
+		/* create the temporary XML dump file exclusively; this runs as root
+		   from cli/removespikes.php and batchgapfix, into a directory the
+		   poller-writable web user controls, so the name must be
+		   unpredictable and the file kept open under our own handle rather
+		   than reopened by name later, the same rationale copyFileSafely()
+		   documents for the RRD backup */
+		$xmlfile_info = $this->createXmlFileExclusively($this->tempdir);
+
+		if ($xmlfile_info === false) {
+			$this->set_error(__esc("FATAL: Unable to safely create a temporary XML file in '%s'!", $this->tempdir));
+			return false;
+		}
+
+		$xmlfile        = $xmlfile_info['path'];
+		$xmlfile_handle = $xmlfile_info['handle'];
+		$xmlfile_stat   = $xmlfile_info['stat'];
 
 		/* execute the dump command */
 		$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . "NOTE: Creating XML file '$xmlfile' from '$this->rrdfile'" . ($this->html ? "</p>\n":"\n");
@@ -447,17 +462,24 @@ class spikekill {
 			cacti_log($mes, false, 'SPIKEKILL');
 		}
 
-		shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' dump ' . cacti_escapeshellarg($this->rrdfile) . ' > ' . cacti_escapeshellarg($xmlfile));
+		/* dump straight into the held handle instead of a shell '>'
+		   redirection, so there is never a by-name reopen of $xmlfile for
+		   the RRDtool child process to be redirected away from */
+		if (!$this->runRRDDump($this->rrdfile, $xmlfile_handle)) {
+			fclose($xmlfile_handle);
+			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
 
-		/* read the xml file into an array*/
-		if (file_exists($xmlfile)) {
-			$output = file($xmlfile);
-
-			/* remove the temp file */
-			unlink($xmlfile);
-		} else {
 			$this->set_error(__("FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"));
 			return false;
+		}
+
+		/* read the dumped XML back through the same handle */
+		rewind($xmlfile_handle);
+
+		$output = array();
+
+		while (($line = fgets($xmlfile_handle)) !== false) {
+			$output[] = $line;
 		}
 
 		/* backup the rrdfile if requested */
@@ -732,11 +754,15 @@ class spikekill {
 		if (!$this->dryrun) {
 			if ($continue) {
 				if ($output == true && $new_output != '') {
-					if ($this->writeXMLFile($new_output, $xmlfile)) {
+					if ($this->writeXMLFile($new_output, $xmlfile_handle)) {
 						if ($this->backupRRDFile($this->rrdfile)) {
-							$this->createRRDFileFromXML($xmlfile, $this->rrdfile);
-							$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
-								__('NOTE: Spikes Found and Remediated.  Total Spikes %s', $this->total_kills) . ($this->html ? "</p>\n":"\n");
+							if ($this->createRRDFileFromXML($xmlfile, $this->rrdfile, $xmlfile_stat)) {
+								$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
+									__('NOTE: Spikes Found and Remediated.  Total Spikes %s', $this->total_kills) . ($this->html ? "</p>\n":"\n");
+							} else {
+								$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
+									__esc("FATAL: XML file '%s' changed identity before restore", $xmlfile) . ($this->html ? "</p>\n":"\n");
+							}
 						} else {
 							$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
 								__esc("FATAL: Unable to backup '%s'", $this->rrdfile) . ($this->html ? "</p>\n":"\n");
@@ -760,9 +786,8 @@ class spikekill {
 			cacti_log("NOTE: Removed '$this->total_kills' Spikes from '$this->rrdfile', Method:'$this->method'", false, 'WEBUI');
 		}
 
-		if (file_exists($xmlfile)) {
-			unlink($xmlfile);
-		}
+		fclose($xmlfile_handle);
+		$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
 
 		$this->unlinkOwnedFile($bakfile, $bakfile_stat);
 
@@ -770,7 +795,19 @@ class spikekill {
 	}
 
 	/* All Functions */
-	private function createRRDFileFromXML($xmlfile, $rrdfile) {
+	private function createRRDFileFromXML($xmlfile, $rrdfile, $stat) {
+		/* rrdtool restore has to read the XML by path.  Re-check right
+		   before running it that the name still refers to the file this
+		   call wrote through: nothing stops the name from being swapped
+		   between the write above and rrdtool's own open() here, so this
+		   narrows but does not close the window.  Accepted residual for
+		   1.2. */
+		$lstat = @lstat($xmlfile);
+
+		if ($lstat === false || $lstat['dev'] !== $stat['dev'] || $lstat['ino'] !== $stat['ino']) {
+			return false;
+		}
+
 		/* execute the dump command */
 		$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
 			__esc("NOTE: Re-Importing '%s' to '%s'", $xmlfile, $rrdfile) . ($this->html ? "</p>\n":"\n");
@@ -780,10 +817,28 @@ class spikekill {
 		if ($response != '') {
 			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . $response . ($this->html ? "</p>\n":"\n");
 		}
+
+		return true;
 	}
 
-	private function writeXMLFile($output, $xmlfile) {
-		return file_put_contents($xmlfile, $output);
+	private function writeXMLFile($output, $handle) {
+		if (!is_resource($handle)) {
+			return false;
+		}
+
+		$data = is_array($output) ? implode('', $output) : $output;
+
+		if (!ftruncate($handle, 0) || !rewind($handle)) {
+			return false;
+		}
+
+		$written = fwrite($handle, $data);
+
+		if ($written === false || $written !== strlen($data)) {
+			return false;
+		}
+
+		return fflush($handle);
 	}
 
 	private function backupRRDFile($rrdfile) {
@@ -909,6 +964,93 @@ class spikekill {
 		}
 
 		return array('path' => $desired_path, 'stat' => $fstat);
+	}
+
+	/**
+	 * createXmlFileExclusively - create an empty file with a random name in
+	 * $tempdir, exclusively and under a restrictive umask, for the RRDtool
+	 * dump/restore round trip in remove_spikes().  This runs as root from
+	 * cli/removespikes.php and batchgapfix into a directory the poller
+	 * user's web process can write to, so the name must not be guessable
+	 * and $tempdir itself is refused if it is a symlink or resolves away
+	 * from its canonical path, the same checks copyFileSafely() applies to
+	 * the RRD backup directory.
+	 *
+	 * @param  (string) $tempdir
+	 *
+	 * @return (array|false) - array('path' => ..., 'handle' => ..., 'stat' => ...)
+	 *                         opened read/write, or false on failure
+	 */
+	private function createXmlFileExclusively($tempdir) {
+		if ($tempdir == '' || is_link($tempdir) || !is_dir($tempdir)) {
+			return false;
+		}
+
+		$canonical_dir = $this->canonicalDir($tempdir);
+
+		if ($canonical_dir === false || realpath($tempdir) !== $canonical_dir) {
+			return false;
+		}
+
+		for ($i = 0; $i < 10; $i++) {
+			$candidate = $tempdir . '/spikekill.' . bin2hex(random_bytes(8)) . '.xml';
+
+			$old_umask = umask(0177);
+			$handle    = @fopen($candidate, 'xb+');
+			umask($old_umask);
+
+			if ($handle !== false) {
+				return array('path' => $candidate, 'handle' => $handle, 'stat' => fstat($handle));
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * runRRDDump - run 'rrdtool dump' with its stdout going straight into
+	 * an already-open file handle via proc_open, instead of a shell '>'
+	 * redirection that would reopen the destination by name.  The argv-array
+	 * form of proc_open is used, the same as cacti_exec() in
+	 * lib/functions.php, so $rrdfile reaches execve() as a single literal
+	 * argument with no shell in between to reinterpret it.
+	 *
+	 * @param  (string)   $rrdfile
+	 * @param  (resource) $handle
+	 *
+	 * @return (bool)
+	 */
+	private function runRRDDump($rrdfile, $handle) {
+		$descriptors = array(
+			0 => array('pipe', 'r'),
+			1 => $handle,
+			2 => array('pipe', 'w'),
+		);
+
+		$argv = array(read_config_option('path_rrdtool'), 'dump', $rrdfile);
+
+		$process = @proc_open($argv, $descriptors, $pipes);
+
+		if (!is_resource($process)) {
+			return false;
+		}
+
+		fclose($pipes[0]);
+
+		$stderr = stream_get_contents($pipes[2]);
+		fclose($pipes[2]);
+
+		$status = proc_close($process);
+
+		if ($status !== 0) {
+			if (trim($stderr) != '') {
+				cacti_log("ERROR: rrdtool dump failed for '$rrdfile': " . trim($stderr), false, 'SPIKEKILL');
+			}
+
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
