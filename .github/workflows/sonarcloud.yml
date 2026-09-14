@@ -95,6 +95,10 @@ jobs:
             echo
             echo "Unreviewed new security hotspots: $hotspot_count"
             jq -r '.hotspots[] | "- \(.vulnerabilityProbability) \(.securityCategory) \(.component | sub("^[^:]*:"; "")):\(.line // "-") \(.message)"' <<<"$hotspots"
+            if [ "$bug_count" -gt 100 ] || [ "$vuln_count" -gt 100 ] || [ "$hotspot_count" -gt 100 ]; then
+              echo
+              echo "Each list shows the first 100 findings; see the pull request in SonarQube Cloud for the rest."
+            fi
           } | tee -a "$GITHUB_STEP_SUMMARY"
 
           if [ -n "$PR_NUMBER" ] && { [ "$bug_count" -gt 0 ] || [ "$vuln_count" -gt 0 ] || [ "$hotspot_count" -gt 0 ]; }; then
