@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.x
+-issue: Pass the CSV separator, enclosure and escape explicitly to str_getcsv() and fputcsv() in the color import, device export and basic auth mapfile so PHP 8.4 raises no deprecation notice, with parsing and output unchanged
 -issue: Remove imagedestroy, xml_parser_free and curl_close calls that PHP 8.5 deprecates and PHP 8.0 already made no-ops
 -issue: Use the (float) cast in spikekill's standard deviation helper instead of the (double) alias PHP 8.5 deprecates
 -issue: Use the colon terminator on two utilities.php case labels that PHP 8.5 deprecates
