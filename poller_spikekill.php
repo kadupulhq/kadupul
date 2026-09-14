@@ -242,8 +242,11 @@ function purge_spike_backups() {
 						   deleting it only requires write access to the
 						   containing directory */
 						if (is_writable(dirname($filepath))) {
-							unlink($filepath);
-							$purges++;
+							if (unlink($filepath)) {
+								$purges++;
+							} else {
+								cacti_log('Unable to remove ' . $filepath . ' due to unlink failure', 'SPIKES');
+							}
 						} else {
 							cacti_log('Unable to remove ' . $filepath . ' due to write permissions', 'SPIKES');
 						}

@@ -22,6 +22,7 @@ Cacti CHANGELOG
 -security: Check the normalized, not the trailing-slash, path before following a symlink in structure_rra_paths.php's sp_recursive_chown/chgrp ownership walk
 -security: Trim a Windows trailing backslash, keeping a drive root or UNC share intact, before the spikekill and purge symlink checks run
 -issue: Honor the configured Spikekill Background Generation Timeout for the rrdtool dump/restore round trip instead of capping it at 30 seconds
+-issue: Count a spikekill backup purge only when unlink() succeeds, logging a failure instead of over-reporting the purge count
 -issue: Send array rrdtool commands such as the RRDcheck fetch through RRDproxy as one quoted command instead of failing before they are sent
 -issue: Send the RRDproxy file_exists check in RRDcheck a bare path so an RRD path holding a quote character is found, and skip the local writable and modify time checks for RRDs on the proxy
 -issue: Show the validation error instead of success when a template import fails
