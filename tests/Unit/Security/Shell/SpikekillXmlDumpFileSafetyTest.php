@@ -224,10 +224,25 @@ test('runRRDDump reports failure when rrdtool exits non-zero', function () {
 /* createRRDFileFromXML() runs 'rrdtool restore'; these tests create a real
    instance (rather than the shared helper) so the private $strout property
    the method writes to can be read back with reflection afterward */
-function spikekill_xmldump_create_rrd_from_xml($xmlfile, $rrdfile, $stat) {
+function spikekill_xmldump_create_rrd_from_xml($xmlfile, $rrdfile, $stat, $rrdfile_stat = 'auto') {
 	$reflection = new ReflectionClass('spikekill');
 	$instance   = $reflection->newInstanceWithoutConstructor();
-	$m          = $reflection->getMethod('createRRDFileFromXML');
+
+	/* createRRDFileFromXML() re-checks the restore destination against
+	   $rrdfile_stat, the identity initialize_spikekill() would have
+	   captured; production never reaches this method without $rrdfile
+	   already existing (initialize_spikekill()'s file_exists() check), so
+	   these tests create it too and prime the capture from its real
+	   identity unless a test passes its own mismatched stat */
+	if (!file_exists($rrdfile)) {
+		file_put_contents($rrdfile, '');
+	}
+
+	$rrdfile_stat_prop = $reflection->getProperty('rrdfile_stat');
+	$rrdfile_stat_prop->setAccessible(true);
+	$rrdfile_stat_prop->setValue($instance, $rrdfile_stat === 'auto' ? lstat($rrdfile) : $rrdfile_stat);
+
+	$m = $reflection->getMethod('createRRDFileFromXML');
 	$m->setAccessible(true);
 
 	$ok = $m->invokeArgs($instance, [$xmlfile, $rrdfile, $stat]);
@@ -255,6 +270,32 @@ test('createRRDFileFromXML refuses to restore when the xml file changed identity
 	$result = spikekill_xmldump_create_rrd_from_xml($xmlfile, $this->dir . '/target.rrd', $stat);
 
 	unlink($xmlfile);
+
+	expect($result['ok'])->toBeFalse();
+});
+
+test('createRRDFileFromXML refuses to restore when the restore destination changed identity', function () {
+	spikekill_xmldump_test_stub_config(array('path_rrdtool' => $this->rrdtool_stub));
+
+	$xmlfile = $this->dir . '/dump-target.xml';
+	file_put_contents($xmlfile, '<xml/>');
+	$stat = lstat($xmlfile);
+
+	$rrdfile = $this->dir . '/target.rrd';
+	file_put_contents($rrdfile, 'rrd-bytes');
+
+	/* a stat taken from a different file, standing in for $rrdfile having
+	   been swapped for a symlink or a different file since
+	   initialize_spikekill() captured its identity */
+	$other = $this->dir . '/other.rrd';
+	file_put_contents($other, 'other-bytes');
+	$other_stat = lstat($other);
+	unlink($other);
+
+	$result = spikekill_xmldump_create_rrd_from_xml($xmlfile, $rrdfile, $stat, $other_stat);
+
+	unlink($xmlfile);
+	unlink($rrdfile);
 
 	expect($result['ok'])->toBeFalse();
 });

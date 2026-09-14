@@ -90,6 +90,18 @@ function invoke_spikekill_private_on($instance, string $method, array $args) {
 	return $m->invokeArgs($instance, $args);
 }
 
+/* backupRRDFile() re-checks its argument against $rrdfile_stat, the
+   identity initialize_spikekill() would have captured; these tests build
+   instances via newInstanceWithoutConstructor() and call backupRRDFile()
+   directly, so that capture has to be primed by hand the same way
+   remove_spikes() would have left it */
+function spikekill_prime_rrdfile_stat($instance, $stat) {
+	$reflection = new ReflectionClass($instance);
+	$prop       = $reflection->getProperty('rrdfile_stat');
+	$prop->setAccessible(true);
+	$prop->setValue($instance, $stat);
+}
+
 /* copyFileSafely() returns array('path' => ..., 'stat' => ...) on success
    so the success-path cleanup can remove the backup by its creation
    identity instead of by name; tests that only care about the path use
@@ -404,13 +416,45 @@ test('backupRRDFile refuses a symlinked spikekill_backupdir configured with its 
 
 	spikekill_backup_test_stub_config(array('spikekill_backupdir' => $backupdir_link . '/'));
 
-	$ok = invoke_spikekill_private('backupRRDFile', [$this->rrdfile]);
+	$reflection = new ReflectionClass('spikekill');
+	$instance   = $reflection->newInstanceWithoutConstructor();
+
+	spikekill_prime_rrdfile_stat($instance, lstat($this->rrdfile));
+
+	$ok = invoke_spikekill_private_on($instance, 'backupRRDFile', [$this->rrdfile]);
 
 	expect($ok)->toBeFalse()
 		->and(glob($real_backupdir . '/*'))->toBe([]);
 
 	unlink($backupdir_link);
 	rmdir($real_backupdir);
+});
+
+test('backupRRDFile refuses when the source identity no longer matches what was captured', function () {
+	$backupdir = $this->dir . '/backupdir';
+	mkdir($backupdir, 0700, true);
+
+	/* a stat taken from a different file, standing in for $rrdfile having
+	   been swapped for a symlink or a different file since
+	   initialize_spikekill() captured its identity */
+	$other = $this->dir . '/other.rrd';
+	file_put_contents($other, 'other-bytes');
+	$other_stat = lstat($other);
+	unlink($other);
+
+	spikekill_backup_test_stub_config(array('spikekill_backupdir' => $backupdir));
+
+	$reflection = new ReflectionClass('spikekill');
+	$instance   = $reflection->newInstanceWithoutConstructor();
+
+	spikekill_prime_rrdfile_stat($instance, $other_stat);
+
+	$ok = invoke_spikekill_private_on($instance, 'backupRRDFile', [$this->rrdfile]);
+
+	expect($ok)->toBeFalse()
+		->and(glob($backupdir . '/*'))->toBe([]);
+
+	rmdir($backupdir);
 });
 
 /* PHP caches the last stat() and lstat() result per path, and on 8.3+

@@ -304,3 +304,67 @@ test('remove_spikes reports failure and cleans up the temp XML when the backup f
 		->and(glob($this->backup_dir . '/*'))->toBe([])
 		->and(glob($this->backup_dir . '/spikekill.*.xml'))->toBe([]);
 });
+
+test('remove_spikes refuses a symlinked RRD source', function () {
+	/* initialize_spikekill() previously checked the RRD path with
+	   file_exists() and is_writable() alone, both of which follow a
+	   symlink; a poller-writable path swapped for a link would have let
+	   root dump, back up and restore through it */
+	$real_rrdfile = $this->rrd_dir . '/real-source.rrd';
+	rename($this->rrdfile, $real_rrdfile);
+	symlink($real_rrdfile, $this->rrdfile);
+
+	$instance = spikekill_e2e_instance($this->rrdfile);
+
+	$ok = $instance->remove_spikes();
+
+	expect($ok)->toBeFalse()
+		->and($instance->get_errors())->toContain('is not a regular file')
+		->and(glob($this->backup_dir . '/*'))->toBe([]);
+
+	/* afterEach() globs and unlinks everything left under rrd_dir, which
+	   covers both the symlink at the original name and real-source.rrd */
+});
+
+test('remove_spikes refuses when the RRD source is swapped for a different file during the dump', function () {
+	/* the rrdtool 'dump' stub itself performs the swap, so it lands inside
+	   the window between initialize_spikekill() capturing the source
+	   identity and backupRRDFile()'s re-check of it, the same as an
+	   attacker racing a real rrdtool dump would */
+	$evil_target = $this->dir . '/evil-target.rrd';
+	file_put_contents($evil_target, 'evil-bytes');
+
+	$swap_stub = $this->dir . '/rrdtool-swap-stub.sh';
+	file_put_contents($swap_stub, "#!/bin/sh\n" .
+		"if [ \"\$1\" = 'dump' ]; then\n" .
+		"  cat \"\$RRDTOOL_STUB_DUMP_FIXTURE\"\n" .
+		"  rm -f \"\$2\"\n" .
+		"  ln -s \"\$SPIKEKILL_TEST_EVIL_TARGET\" \"\$2\"\n" .
+		"  exit 0\n" .
+		"fi\n" .
+		"if [ \"\$1\" = 'restore' ]; then\n" .
+		"  exit 0\n" .
+		"fi\n" .
+		"exit 1\n");
+	chmod($swap_stub, 0700);
+
+	putenv('SPIKEKILL_TEST_EVIL_TARGET=' . $evil_target);
+
+	spikekill_e2e_test_stub_config(array(
+		'spikekill_backupdir' => $this->backup_dir,
+		'path_rrdtool'        => $swap_stub,
+	));
+
+	$instance = spikekill_e2e_instance($this->rrdfile);
+
+	$ok = $instance->remove_spikes();
+
+	putenv('SPIKEKILL_TEST_EVIL_TARGET');
+
+	expect($ok)->toBeFalse()
+		->and($instance->get_errors())->toContain('Unable to backup')
+		->and(glob($this->backup_dir . '/*'))->toBe([]);
+
+	/* afterEach() globs and unlinks everything left under rrd_dir (the
+	   symlink the stub planted) and dir (evil_target, the swap stub) */
+});

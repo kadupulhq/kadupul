@@ -68,6 +68,7 @@ class spikekill {
 	// Internal globals
 	private $tempdir         = '';
 	private $canonical_dirs  = array();
+	private $rrdfile_stat    = false;
 	private $seed            = '';
 	private $strout          = '';
 	private $ds_min          = '';
@@ -189,8 +190,26 @@ class spikekill {
 
 		if (!file_exists($this->rrdfile)) {
 			$this->set_error(__esc("FATAL: File '%s' does not exist.", $this->rrdfile));
-		} elseif (!is_writable($this->rrdfile)) {
-			$this->set_error(__esc("FATAL: File '%s' is not writable by '%s'.", $this->rrdfile, get_execution_user()));
+		} else {
+			/* file_exists() and is_writable() both follow a symlink; refuse
+			   one here so the dump, backup and restore below never open a
+			   path this call does not actually own.  PHP caches the last
+			   stat of a path for the whole run, so the file_exists() call
+			   just above would otherwise answer for this lstat() too. */
+			clearstatcache(true, $this->rrdfile);
+
+			$rrdfile_lstat = @lstat($this->rrdfile);
+
+			if ($rrdfile_lstat === false || is_link($this->rrdfile) || !is_file($this->rrdfile)) {
+				$this->set_error(__esc("FATAL: File '%s' is not a regular file.", $this->rrdfile));
+			} elseif (!is_writable($this->rrdfile)) {
+				$this->set_error(__esc("FATAL: File '%s' is not writable by '%s'.", $this->rrdfile, get_execution_user()));
+			} else {
+				/* captured once here so backupRRDFile() and
+				   createRRDFileFromXML() can each re-check the name still
+				   refers to this same file right before they open it */
+				$this->rrdfile_stat = $rrdfile_lstat;
+			}
 		}
 
 		$umethod   = read_user_setting('spikekill_method', $this->dmethod, true);
@@ -839,6 +858,20 @@ class spikekill {
 			return false;
 		}
 
+		/* likewise for the restore destination: re-check it against the
+		   identity initialize_spikekill() captured, right before rrdtool
+		   restore opens it by name */
+		clearstatcache(true, $rrdfile);
+
+		$rrdfile_lstat = @lstat($rrdfile);
+
+		if ($rrdfile_lstat === false || $this->rrdfile_stat === false
+			|| $rrdfile_lstat['dev'] !== $this->rrdfile_stat['dev']
+			|| $rrdfile_lstat['ino'] !== $this->rrdfile_stat['ino']) {
+
+			return false;
+		}
+
 		/* execute the restore command */
 		$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
 			__esc("NOTE: Re-Importing '%s' to '%s'", $xmlfile, $rrdfile) . ($this->html ? "</p>\n":"\n");
@@ -878,6 +911,20 @@ class spikekill {
 	}
 
 	private function backupRRDFile($rrdfile) {
+		/* re-check the source identity initialize_spikekill() captured:
+		   nothing stops the name from being swapped for a symlink between
+		   that check and this copy */
+		clearstatcache(true, $rrdfile);
+
+		$rrdfile_lstat = @lstat($rrdfile);
+
+		if ($rrdfile_lstat === false || $this->rrdfile_stat === false
+			|| $rrdfile_lstat['dev'] !== $this->rrdfile_stat['dev']
+			|| $rrdfile_lstat['ino'] !== $this->rrdfile_stat['ino']) {
+
+			return false;
+		}
+
 		$backupdir = $this->normalizeDir(read_config_option('spikekill_backupdir'));
 
 		if ($backupdir == '') {
