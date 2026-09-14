@@ -340,6 +340,34 @@ test('an owner that cannot be verified is refused rather than trusted', function
 		->and($source)->not->toContain("function_exists('posix_geteuid') && \$before['uid']");
 });
 
+test('splice_rrd removes every dump it created before either dump failure exit', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/cli/splice_rrd.php');
+
+	preg_match('/^function removeTempFiles\\(.*?^}$/ms', $source, $function);
+
+	expect($function)->toHaveKey(0);
+
+	if (!function_exists('removeTempFiles')) {
+		eval($function[0]);
+	}
+
+	$old = $this->dir . '/old.dump.1';
+	$new = $this->dir . '/new.dump.2';
+	$created = array($old => cacti_cli_create_file($old), $new => cacti_cli_create_file($new));
+
+	removeTempFiles($created);
+
+	$exits = substr_count($source, "removeTempFiles(\$created);\n\n\tprint 'FATAL: RRDtool Command Failed on");
+
+	expect($created)->toBe(array())
+		->and(file_exists($old))->toBeFalse()
+		->and(file_exists($new))->toBeFalse()
+		->and($exits)->toBe(2)
+		->and(substr_count($source, 'exit(-12);'))->toBe(2)
+		->and($source)->toContain("unset(\$created[\$oldxmlfile]);")
+		->and($source)->toContain("unset(\$created[\$newxmlfile]);");
+});
+
 test('splice_rrd uses the 1.2.31 names and creates every temporary file exclusively', function () {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/cli/splice_rrd.php');
 

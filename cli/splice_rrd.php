@@ -272,9 +272,7 @@ foreach (array($oldxmlfile, $newxmlfile) as $xmlfile) {
 	$handle = cacti_cli_create_file($xmlfile);
 
 	if (!is_resource($handle)) {
-		foreach ($created as $file => $open) {
-			cacti_cli_remove_file($open, $file);
-		}
+		removeTempFiles($created);
 
 		print 'FATAL: ' . $handle . PHP_EOL;
 		exit(1);
@@ -300,7 +298,10 @@ if ($old_dumped) {
 
 	/* remove the temp file */
 	cacti_cli_remove_file($created[$oldxmlfile], $oldxmlfile);
+	unset($created[$oldxmlfile]);
 } else {
+	removeTempFiles($created);
+
 	print 'FATAL: RRDtool Command Failed on \'' . $oldrrd . '\'.  Please insure your RRDtool install is valid!' . PHP_EOL;
 
 	exit(-12);
@@ -311,7 +312,10 @@ if ($new_dumped) {
 
 	/* remove the temp file */
 	cacti_cli_remove_file($created[$newxmlfile], $newxmlfile);
+	unset($created[$newxmlfile]);
 } else {
+	removeTempFiles($created);
+
 	print 'FATAL: RRDtool Command Failed on \'' . $newrrd . '\'.  Please insure your RRDtool install is valid!' . PHP_EOL;
 
 	exit(-12);
@@ -904,6 +908,17 @@ function createRRDFileFromXML($xmlfile, $rrdfile) {
 
 function XMLrip($tag, $line) {
 	return trim(str_replace("<$tag>", '', str_replace("</$tag>", '', $line)));
+}
+
+/* Close and remove every dump file this run still holds, so an early exit does
+ * not leave a predictable name behind in the temporary directory for the next
+ * run to refuse. */
+function removeTempFiles(&$created) {
+	foreach ($created as $file => $handle) {
+		cacti_cli_remove_file($handle, $file);
+	}
+
+	$created = array();
 }
 
 function writeXMLFile($output, $xmlfile) {
