@@ -107,7 +107,7 @@ same_tokens() {
 			return $out;
 		};
 		exit($strip($argv[1]) === $strip($argv[2]) ? 0 : 1);
-	' "$1" "$2"
+	' -- "$1" "$2"
 }
 
 # Paths the Finder covered at the merge base. A rename source no longer exists
@@ -134,10 +134,10 @@ if [ "${#rename_to[@]}" -gt 0 ]; then
 	(
 		cd "$base_tree"
 		if [ -s "$tmp/.merge-base-dirs" ]; then
-			xargs -0 mkdir -p < "$tmp/.merge-base-dirs"
+			xargs -0 mkdir -p -- < "$tmp/.merge-base-dirs"
 		fi
 		if [ -s "$tmp/.merge-base-files" ]; then
-			xargs -0 touch < "$tmp/.merge-base-files"
+			xargs -0 touch -- < "$tmp/.merge-base-files"
 		fi
 	)
 	base_included=$(cd "$base_tree" && "$fixer_path" list-files --config="$config" 2>/dev/null | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##')
@@ -162,7 +162,7 @@ for f in "${files[@]}"; do
 		continue
 	fi
 	if git cat-file -e "$merge_base:$base_path" 2>/dev/null; then
-		mkdir -p "$tmp/$(dirname "$base_path")"
+		mkdir -p -- "$tmp/$(dirname -- "$base_path")"
 		git show "$merge_base:$base_path" > "$tmp/$base_path"
 		# override applies the rules to the copy, which lies outside the config's finder
 		set +e
@@ -176,7 +176,7 @@ for f in "${files[@]}"; do
 			# A change that only moves whitespace is a PER-CS conversion; it must
 			# finish the job, so it is checked in full rather than skipped. A pure
 			# rename changes nothing and keeps the exemption.
-			if ! cmp -s "$tmp/$base_path" "$f" && same_tokens "$tmp/$base_path" "$f"; then
+			if ! cmp -s -- "$tmp/$base_path" "$f" && same_tokens "$tmp/$base_path" "$f"; then
 				checked+=("$f")
 				continue
 			fi
