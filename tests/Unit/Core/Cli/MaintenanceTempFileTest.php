@@ -78,6 +78,10 @@ test('an existing file is refused with a clear message and kept as it is', funct
 });
 
 test('the debug log is created when missing and appended when it is ours', function () {
+	if (cacti_cli_current_uid() === false) {
+		test()->markTestSkipped('ownership cannot be verified, so cacti_cli_open_log() only returns a refusal string here');
+	}
+
 	$path = $this->dir . '/clearer.log';
 
 	$first = cacti_cli_open_log($path);
@@ -102,6 +106,10 @@ test('the debug log refuses a symlink and a directory', function () {
 });
 
 test('created files are owner-only under a 022 umask, which is restored afterwards', function () {
+	if (cacti_cli_current_uid() === false) {
+		test()->markTestSkipped('ownership cannot be verified, so cacti_cli_open_log() only returns a refusal string here');
+	}
+
 	$previous = umask(022);
 
 	try {
@@ -146,6 +154,10 @@ test('the umask is restored when a name is refused or cannot be created', functi
 });
 
 test('an existing debug log keeps its mode', function () {
+	if (cacti_cli_current_uid() === false) {
+		test()->markTestSkipped('ownership cannot be verified, so cacti_cli_open_log() only returns a refusal string here');
+	}
+
 	$path = $this->dir . '/clearer.log';
 
 	file_put_contents($path, "one\n");
@@ -164,6 +176,10 @@ test('an existing debug log keeps its mode', function () {
 });
 
 test('temporary files and the debug log keep binary data byte for byte', function () {
+	if (cacti_cli_current_uid() === false) {
+		test()->markTestSkipped('ownership cannot be verified, so cacti_cli_open_log() only returns a refusal string here');
+	}
+
 	$bytes  = "RRD\x00\r\n\x1a\n\xff";
 	$path   = $this->dir . '/backup.rrd.1';
 	$handle = cacti_cli_create_file($path);
@@ -482,6 +498,10 @@ test('a dump command that exits non-zero is reported as failed', function () {
 });
 
 test('a new debug log shared by two children keeps both children\'s lines', function () {
+	if (cacti_cli_current_uid() === false) {
+		test()->markTestSkipped('ownership cannot be verified, so cacti_cli_open_log() only returns a refusal string here');
+	}
+
 	$path  = $this->dir . '/clearer.log';
 	$first = cacti_cli_open_log($path);
 	$other = cacti_cli_open_log($path);
