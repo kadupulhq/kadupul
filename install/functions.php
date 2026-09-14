@@ -36,6 +36,12 @@ function prime_default_settings() {
 		$legacy_defaults['allow_unsafe_https'] = 'on';
 	}
 
+	/* ldap_tls_certificate keeps the 1.2.31 default of Never so an upgrade with no
+	 * stored row keeps connecting; only a new install starts at Demand. */
+	if ($db_version == 'new_install') {
+		$legacy_defaults['ldap_tls_certificate'] = LDAP_OPT_X_TLS_DEMAND;
+	}
+
 	if (is_array($settings) && !isset($_SESSION['settings_primed'])) {
 		foreach ($settings as $tab_array) {
 			if (cacti_sizeof($tab_array)) {

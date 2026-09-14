@@ -10,6 +10,7 @@ Cacti CHANGELOG
 -security: Skip the Data Input Method repair after a web import by a user without the Data Input Methods permission
 -issue: Stop a template import cleanly when it refuses a Data Input Method input string
 -issue: Treat a registered task owned by another user as still running instead of starting a second copy
+-security: Store Demand for LDAP TLS Certificate Requirements on new web installs; upgrades keep the Never default
 -issue: Add cli/reset_password.php to set a local account password from the command line and require a new one at the next login
 -issue: Accept PHP_AUTH_USER again as the Web Basic user for FPM and CGI servers; request header copies stay ignored
 -issue: Let a login without a session cookie proceed unless it posts the login form token, so kiosk URLs and scripted logins work again

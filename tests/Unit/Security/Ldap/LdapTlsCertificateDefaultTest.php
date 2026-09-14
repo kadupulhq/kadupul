@@ -212,3 +212,159 @@ test('the certificate requirement handed to php-ldap matches 1.2.31', function (
 })->skip(function () {
 	return ldap_tls_release_source('lib/ldap.php') === null;
 }, 'release/1.2.31 is not available in this clone');
+
+/**
+ * Run prime_default_settings(), and for an upgrade upgrade_to_1_2_32(), against
+ * an in-memory settings table whose name column is the primary key, so INSERT
+ * IGNORE never replaces a stored row. install/install.php primes settings; a
+ * CLI upgrade runs only the upgrade step.
+ *
+ * @param array<string, string> $stored
+ *
+ * @return array<string, string>
+ */
+function ldap_tls_install_run(string $version, array $stored, bool $prime, bool $upgrade, ?string $install_functions = null) : array {
+	$root = dirname(__DIR__, 4);
+	$lib  = file_get_contents($root . '/lib/functions.php');
+
+	$code  = cacti_test_function_source($install_functions ?? file_get_contents($root . '/install/functions.php'), 'prime_default_settings') . "\n\n";
+	$code .= cacti_test_function_source($lib, 'cacti_version_compare') . "\n\n";
+	$code .= cacti_test_function_source($lib, 'version_to_decimal') . "\n\n";
+	$code .= cacti_test_function_source(file_get_contents($root . '/install/upgrades/1_2_32.php'), 'upgrade_to_1_2_32') . "\n\n";
+
+	$child = <<<'PHP'
+<?php
+$scenario = json_decode(stream_get_contents(STDIN), true);
+
+$GLOBALS['table'] = $scenario['stored'];
+$_SESSION         = array();
+
+$settings = array(
+	'authentication' => array(
+		'ldap_tls_certificate' => array('method' => 'drop_array', 'default' => $scenario['default']),
+	),
+);
+
+function insert_ignore($name, $value) {
+	if (!array_key_exists($name, $GLOBALS['table'])) {
+		$GLOBALS['table'][$name] = (string) $value;
+	}
+}
+
+function get_cacti_version() {
+	return $GLOBALS['scenario']['version'];
+}
+
+function cacti_sizeof($array) {
+	return is_array($array) ? count($array) : 0;
+}
+
+function db_fetch_cell_prepared($sql, $params = array(), $col_name = '', $log = true) {
+	return array_key_exists($params[0], $GLOBALS['table']) ? $GLOBALS['table'][$params[0]] : false;
+}
+
+function db_execute_prepared($sql, $params = array(), $log = true) {
+	if (strpos($sql, 'INSERT IGNORE INTO settings') !== false) {
+		insert_ignore($params[0], $params[1]);
+	}
+
+	return true;
+}
+
+function db_install_execute($sql, $params = array(), $log = true) {
+	if (preg_match("/^INSERT IGNORE INTO settings \(name, value\) VALUES \('([^']+)', '([^']*)'\)$/", $sql, $match)) {
+		insert_ignore($match[1], $match[2]);
+	}
+
+	return true;
+}
+
+function db_table_exists($table, $log = true, $db_conn = false) {
+	return true;
+}
+
+function db_column_exists($table, $column, $log = true, $db_conn = false) {
+	return true;
+}
+
+function db_install_add_column($table, $column, $log = true) {
+	return true;
+}
+
+function db_install_add_key($table, $type, $key, $columns, $using = '') {
+	return true;
+}
+
+PHP;
+
+	$child .= $code;
+	$child .= <<<'PHP'
+if ($scenario['prime']) {
+	prime_default_settings();
+}
+
+if ($scenario['upgrade']) {
+	upgrade_to_1_2_32();
+}
+
+print json_encode(array('table' => $GLOBALS['table']));
+PHP;
+
+	return cacti_test_run_php_source($child, array(
+		'version' => $version,
+		'stored'  => (object) $stored,
+		'prime'   => $prime,
+		'upgrade' => $upgrade,
+		'default' => constant(ldap_tls_shipped_default()),
+	))['table'];
+}
+
+function ldap_tls_shipped_default() : string {
+	$entry = ldap_tls_settings_entry(file_get_contents(dirname(__DIR__, 4) . '/include/global_settings.php'));
+
+	if (preg_match("/'default' => (LDAP_OPT_X_TLS_[A-Z]+),/", $entry, $match) !== 1) {
+		throw new RuntimeException('ldap_tls_certificate default not found');
+	}
+
+	return $match[1];
+}
+
+test('a new web install stores Demand for LDAP TLS certificates', function () {
+	expect(ldap_tls_install_run('new_install', array(), true, false))
+		->toHaveKey('ldap_tls_certificate', (string) LDAP_OPT_X_TLS_DEMAND);
+});
+
+test('a CLI upgrade without a stored row saves no LDAP TLS certificate value', function () {
+	foreach (array('1.2.31', '1.2.27') as $version) {
+		expect(ldap_tls_install_run($version, array(), false, true))->not->toHaveKey('ldap_tls_certificate');
+	}
+});
+
+test('a web upgrade stores the Never default that 1.2.31 priming stored', function () {
+	foreach (array('1.2.31', '1.2.27', '1.2.32') as $version) {
+		expect(ldap_tls_install_run($version, array(), true, true))
+			->toHaveKey('ldap_tls_certificate', (string) LDAP_OPT_X_TLS_NEVER);
+	}
+});
+
+test('a stored LDAP TLS certificate value survives every install and upgrade path', function () {
+	foreach (array((string) LDAP_OPT_X_TLS_NEVER, (string) LDAP_OPT_X_TLS_ALLOW) as $value) {
+		foreach (array(array('new_install', true, false), array('1.2.31', true, true), array('1.2.31', false, true)) as $path) {
+			expect(ldap_tls_install_run($path[0], array('ldap_tls_certificate' => $value), $path[1], $path[2]))
+				->toHaveKey('ldap_tls_certificate', $value);
+		}
+	}
+});
+
+test('priming an existing install stores what 1.2.31 priming stored', function () {
+	$release = ldap_tls_release_source('install/functions.php');
+
+	foreach (array('1.2.31', '1.2.27') as $version) {
+		$current = ldap_tls_install_run($version, array(), true, false);
+		$before  = ldap_tls_install_run($version, array(), true, false, $release);
+
+		expect($current['ldap_tls_certificate'])->toBe($before['ldap_tls_certificate']);
+	}
+})->skip(function () {
+	return ldap_tls_release_source('install/functions.php') === null;
+}, 'release/1.2.31 is not available in this clone');
