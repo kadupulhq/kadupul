@@ -468,6 +468,39 @@ function boost_redirect_missing_rows($results, $conn = false) {
 	return $missing;
 }
 
+/**
+ * boost_redirect_delete_staged_rows - remove rows from poller_output_boost
+ *   that a Boost redirect handoff is about to write directly to RRD files, so
+ *   scheduled Boost does not also replay them.
+ */
+function boost_redirect_delete_staged_rows($results, $conn = false) {
+	if (!cacti_sizeof($results)) {
+		return true;
+	}
+
+	/* three markers per row; stay well under the server's placeholder limit */
+	$max_rows = 20000;
+	$success  = true;
+
+	foreach (array_chunk($results, $max_rows) as $chunk) {
+		$clauses = array();
+		$params  = array();
+
+		foreach ($chunk as $result) {
+			$clauses[] = '(local_data_id = ? AND rrd_name = ? AND time = ?)';
+			$params[]  = (int) $result['local_data_id'];
+			$params[]  = $result['rrd_name'];
+			$params[]  = $result['time'];
+		}
+
+		if (db_execute_prepared('DELETE FROM poller_output_boost WHERE ' . implode(' OR ', $clauses), $params, true, $conn) === false) {
+			$success = false;
+		}
+	}
+
+	return $success;
+}
+
 function boost_poller_on_demand(&$results) {
 	global $config, $remote_db_cnn_id;
 
@@ -547,6 +580,32 @@ function boost_poller_on_demand(&$results) {
 					}
 
 					$return_value = !boost_flush_output_batch($value_tuples, $conn);
+
+					if ($return_value) {
+						/* Staging failed partway or not at all, and the rest of
+						 * $results was already staged before this call.  Recheck
+						 * the smaller $missing set and drop whatever is now staged
+						 * so the direct RRD update below is not replayed later by
+						 * scheduled Boost too. */
+						$still_missing      = boost_redirect_missing_rows($missing, $conn);
+						$still_missing_keys = array();
+
+						foreach ($still_missing as $result) {
+							$still_missing_keys[(int) $result['local_data_id'] . "\t" . $result['rrd_name'] . "\t" . $result['time']] = true;
+						}
+
+						$staged = array();
+
+						foreach ($results as $result) {
+							$key = (int) $result['local_data_id'] . "\t" . $result['rrd_name'] . "\t" . $result['time'];
+
+							if (!isset($still_missing_keys[$key])) {
+								$staged[] = $result;
+							}
+						}
+
+						boost_redirect_delete_staged_rows($staged, $conn);
+					}
 				}
 			}
 		} else {

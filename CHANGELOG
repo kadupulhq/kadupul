@@ -27,6 +27,7 @@ Cacti CHANGELOG
 -issue: Send a report with a blank From address from the site From address and name, on Send Now and on schedule
 -security: Refuse report item saves, moves and edits under a report that does not exist, including for Reports Administration users
 -security: Count Reports Administration from a user's groups only while the group is enabled when authorizing report changes, as page access already does
+-issue: Purge Boost rows already staged before a failed handoff falls back to a direct RRD update so scheduled Boost does not replay them
 -issue: Delete a dead poller_time row by its id instead of its pid so a reused pid cannot delete a new collector's row
 -issue: Keep staged Boost rows when rrdtool pipe restarts are exhausted instead of treating the lost update as written
 -issue: Stage poller output rows that Boost does not already hold when Boost redirect is on instead of dropping them
