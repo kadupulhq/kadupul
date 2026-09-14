@@ -135,3 +135,27 @@ test('a destination outside the configured rra directory is refused', function (
 	expect($status)->toBe('unsafe')
 		->and(is_dir($dest))->toBeFalse();
 });
+
+test('a sibling directory sharing the rra directory name as a prefix is refused', function () {
+	$sibling = $this->base . '_evil';
+	$dest    = $sibling . '/host';
+
+	$status = structure_rra_prepare_dest_dir($dest, $this->base);
+
+	expect($status)->toBe('unsafe')
+		->and(is_dir($dest))->toBeFalse()
+		->and(is_dir($this->base . '/_evil'))->toBeFalse();
+
+	if (is_dir($sibling)) {
+		structure_rra_dest_test_rrmdir($sibling);
+	}
+});
+
+test('a nested destination under an rra directory configured with a trailing slash is accepted', function () {
+	$dest = $this->base . '/host';
+
+	$status = structure_rra_prepare_dest_dir($dest, $this->base . '/');
+
+	expect($status)->toBe('ok')
+		->and(is_dir($dest))->toBeTrue();
+});

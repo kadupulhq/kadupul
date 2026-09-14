@@ -418,12 +418,13 @@ function structure_rra_is_safe_source($path, $base_rra_path) {
  */
 function structure_rra_prepare_dest_dir($new_base_path, $base_rra_path) {
 	$real_base = realpath($base_rra_path);
+	$root      = rtrim($base_rra_path, '/');
 
-	if ($real_base === false || strpos($new_base_path, $base_rra_path) !== 0) {
+	if ($real_base === false || ($new_base_path != $root && strpos($new_base_path, $root . '/') !== 0)) {
 		return 'unsafe';
 	}
 
-	$relative = trim(substr($new_base_path, strlen($base_rra_path)), '/');
+	$relative = trim(substr($new_base_path, strlen($root)), '/');
 	$segments = ($relative === '') ? array() : explode('/', $relative);
 
 	$walked = $real_base;
@@ -457,9 +458,11 @@ function structure_rra_prepare_dest_dir($new_base_path, $base_rra_path) {
 		}
 	}
 
-	$real_dest = realpath($walked);
+	/* the caller renames into $new_base_path, not $walked, so it is the
+	   path that has to resolve to the directory just walked */
+	$real_dest = realpath($new_base_path);
 
-	if ($real_dest === false) {
+	if ($real_dest === false || $real_dest !== realpath($walked)) {
 		return 'unsafe';
 	}
 
