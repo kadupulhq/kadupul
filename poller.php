@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -555,6 +556,8 @@ while ($poller_runs_completed < $poller_runs) {
 		AND end_time != '0000-00-00 00:00:00'",
 		array($poller_id), true, $poller_db_cnn_id);
 
+	poller_remove_dead_time_rows($poller_id, 2 * $cron_interval);
+
 	/**
 	 * only report issues for the main poller or from bad local
 	 * data ids, other pollers may insert somewhat asynchronously
@@ -1014,6 +1017,52 @@ function bad_index_check($mibs) {
 			$device_str = 'Device[' . implode('], Device[', $devices) . ']';
 
 			cacti_log('WARNING: You have ' . cacti_sizeof($devices) . ' Devices with bad SNMP Indexes.  Devices: ' . $device_str . ' totalling ' . $bad_indexes . ' Data Sources.  Please Either Re-Index, Delete or Disable these Data Sources.', false, 'POLLER');
+		}
+	}
+}
+
+/**
+ * poller_remove_dead_time_rows - remove open poller_time rows whose collector
+ *   process is gone.  A collector that dies never records its end time, so its
+ *   row would raise the overrun warning and mail again on every later cycle.
+ *
+ * @param  (int) $poller_id - the poller whose rows are checked
+ * @param  (int) $max_age   - seconds an open row may age where no process probe exists
+ */
+function poller_remove_dead_time_rows($poller_id, $max_age) {
+	global $poller_db_cnn_id;
+
+	if (!function_exists('posix_kill')) {
+		/* Without a process probe, fall back to age.  poller.php ends its own loop
+		 * after MAX_POLLER_RUNTIME, one cron interval less two seconds, so a
+		 * collector that started two cron intervals ago belongs to no live cycle. */
+		db_execute_prepared("DELETE FROM poller_time
+			WHERE poller_id = ?
+			AND end_time = '0000-00-00 00:00:00'
+			AND start_time < DATE_SUB(NOW(), INTERVAL ? SECOND)",
+			array($poller_id, (int) $max_age), true, $poller_db_cnn_id);
+
+		return;
+	}
+
+	$processes = db_fetch_assoc_prepared("SELECT id, pid
+		FROM poller_time
+		WHERE poller_id = ?
+		AND end_time = '0000-00-00 00:00:00'",
+		array($poller_id), true, $poller_db_cnn_id);
+
+	if (cacti_sizeof($processes)) {
+		foreach ($processes as $process) {
+			if (!cacti_process_signalable($process['pid'])) {
+				/* Match the row this probe actually inspected.  The pid alone can be
+				 * reused by a new collector between the SELECT and this DELETE, and a
+				 * pid-only match would take that collector's live row with it. */
+				db_execute_prepared("DELETE FROM poller_time
+					WHERE id = ?
+					AND poller_id = ?
+					AND end_time = '0000-00-00 00:00:00'",
+					array($process['id'], $poller_id), true, $poller_db_cnn_id);
+			}
 		}
 	}
 }

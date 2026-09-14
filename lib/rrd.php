@@ -457,10 +457,17 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 				/* open a new rrdtool process */
 				$rrdtool_pipe = rrd_init();
 
+				if (!is_resource($rrdtool_pipe)) {
+					cacti_log("FATAL: RRDtool could not be restarted. Giving up on '$command_line'.");
+
+					return false;
+				}
+
 				if ($i > 4) {
 					cacti_log("FATAL: RRDtool Restart Attempts Exceeded. Giving up on '$command_line'.");
 
-					break;
+					/* a written command also returns nothing, so tell callers this one never reached rrdtool */
+					return false;
 				} else {
 					$i++;
 				}

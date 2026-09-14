@@ -59,7 +59,7 @@ function readRealtimeSize(value) {
 test('inline realtime requests preserve the stored size when no control exists', () => {
 	assert.equal(readRealtimeSize(null), null);
 	assert.match(clientSource, /sizeOption\s*=\s*size == null \? '' : '&size='\+size/);
-	assert.doesNotMatch(clientSource, /size = 100;/);
+	assert.doesNotMatch(extractFunction('realtimeGrapher'), /size = \d+;/);
 });
 
 test('inline realtime requests use the selected percentage', () => {
@@ -95,11 +95,12 @@ test('session and tree sizes are clamped to the shared allowlist', () => {
 	assert.match(tree, /\$selected_size = \$realtime_default_size/);
 });
 
-test('server rendering applies the shared 50 percent default', () => {
+test('realtime graphs keep the 1.2.31 default of 100 percent', () => {
 	const arrays = fs.readFileSync(path.join(root, 'include/global_arrays.php'), 'utf8');
 	const endpoint = fs.readFileSync(path.join(root, 'graph_realtime.php'), 'utf8');
 
-	assert.match(arrays, /\$realtime_default_size = 50;/);
+	assert.match(arrays, /\$realtime_default_size = 100;/);
+	assert.match(extractFunction('imageOptionsChanged'), /if \(size == null\) \{\s*size = 100;/);
 	assert.match(arrays, /\$realtime_sizes = array\([\s\S]*100 => '100%'[\s\S]*40\s+=> '40%'/);
 	assert.doesNotMatch(endpoint, /read_user_setting\('realtime_size', 100\)/);
 	assert.match(endpoint, /if \(\$size < 100\)/);

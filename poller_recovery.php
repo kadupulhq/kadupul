@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -98,6 +99,29 @@ function recovery_delete_acknowledged_rows($rows, $conn) {
 	}
 
 	return true;
+}
+
+function recovery_owned_data_source_ids($rows, $poller_id, $conn) {
+	$local_data_ids = array_values(array_unique(array_filter(array_map('intval', array_column($rows, 'local_data_id')))));
+	$owned          = array();
+
+	foreach (array_chunk($local_data_ids, 1000) as $chunk) {
+		$placeholders = implode(',', array_fill(0, cacti_sizeof($chunk), '?'));
+		$assigned     = db_fetch_assoc_prepared("SELECT DISTINCT local_data_id
+			FROM poller_item
+			WHERE poller_id = ?
+			AND local_data_id IN ($placeholders)", array_merge(array($poller_id), $chunk), true, $conn);
+
+		if ($assigned === false) {
+			return false;
+		}
+
+		foreach ($assigned as $row) {
+			$owned[(int) $row['local_data_id']] = true;
+		}
+	}
+
+	return $owned;
 }
 
 global $local_db_cnn_id, $remote_db_cnn_id;
@@ -242,19 +266,44 @@ if ($run) {
 				array($max_time), true, $local_db_cnn_id);
 
 			if (cacti_sizeof($rows)) {
-				if (!boost_validate_poller_ownership($rows, $poller_id, $remote_db_cnn_id)) {
+				/* one lookup, so a failed query is seen before any row is filtered */
+				$owned = recovery_owned_data_source_ids($rows, $poller_id, $remote_db_cnn_id);
+
+				if ($owned === false) {
 					cacti_log('RECOVERY ERROR: Retaining local rows because their data-source ownership could not be verified.', false, 'POLLER');
 					$transfer_failed = true;
 					break;
 				}
 
 				$sql_array = array();
+				$unowned   = 0;
+				$invalid   = 0;
 
 				foreach($rows as $r) {
+					/* no data source has id 0, so main could never file the row */
+					if ((int) $r['local_data_id'] <= 0) {
+						$invalid++;
+						continue;
+					}
+
+					/* a device moved or deleted while offline; main does not take its rows */
+					if (!isset($owned[(int) $r['local_data_id']])) {
+						$unowned++;
+						continue;
+					}
+
 					$sql_array[] = '(' . (int) $r['local_data_id'] . ',' .
 						db_qstr($r['rrd_name'], $remote_db_cnn_id) . ',' .
 						db_qstr($r['time'], $remote_db_cnn_id) . ',' .
 						db_qstr($r['output'], $remote_db_cnn_id) . ')';
+				}
+
+				if ($invalid > 0) {
+					cacti_log('RECOVERY WARNING: Discarding ' . $invalid . ' records without a valid data source id.', false, 'POLLER');
+				}
+
+				if ($unowned > 0) {
+					cacti_log('RECOVERY WARNING: Discarding ' . $unowned . ' records for data sources not assigned to this poller.', false, 'POLLER');
 				}
 
 				$record_count = cacti_sizeof($sql_array);

@@ -27,6 +27,10 @@ Cacti CHANGELOG
 -issue: Send a report with a blank From address from the site From address and name, on Send Now and on schedule
 -security: Refuse report item saves, moves and edits under a report that does not exist, including for Reports Administration users
 -security: Count Reports Administration from a user's groups only while the group is enabled when authorizing report changes, as page access already does
+-issue: Purge Boost rows already staged before a failed handoff falls back to a direct RRD update so scheduled Boost does not replay them
+-issue: Delete a dead poller_time row by its id instead of its pid so a reused pid cannot delete a new collector's row
+-issue: Keep staged Boost rows when rrdtool pipe restarts are exhausted instead of treating the lost update as written
+-issue: Stage poller output rows that Boost does not already hold when Boost redirect is on instead of dropping them
 -issue: Parse installer start and finish times that fall on a whole second instead of crashing
 -security: Verify Remote Data Collector HTTPS certificates by default on new installs; upgraded installs keep their previous behaviour
 -security: Mask passwords, passphrases and community strings in DEVDBG SQL save logging with the existing ******** placeholder
@@ -74,6 +78,15 @@ Cacti CHANGELOG
 -security: Refuse report mail addresses that hold a request array, a NUL byte or a line break inside an address
 -security: Refuse a page array in help.php error reports and escape angle brackets in the page and user names of the admin notice
 -security: Check report ownership when saving, editing or moving report items
+-issue: Queue one RRD create per new data source on a Boost rrdtool pipe so later creates do not overwrite queued samples
+-issue: Write every staged Boost row when a graph is viewed by paging through data sources above the per-select row limit
+-issue: Create Boost graph cache files with mode 0644 as 1.2.31 did so other local accounts can read them
+-issue: Restore the 1.2.31 default real-time graph size of 100 percent for users without a saved size
+-issue: Restore the 1.2.31 CSV and table export header without the Expected Rows and Missing Rows lines
+-issue: Let remote collector recovery finish and return the poller to online when some rows belong to data sources it no longer owns
+-issue: Stop repeating the poller overrun warning and mail every cycle for a collector that has died
+-issue: Leave poller output to Boost when Boost redirect is on instead of also writing it to the RRD files
+-issue: Stop marking a Boost run failed when it creates a new RRD file through the rrdtool pipe
 -issue: Declare GPL-2.0-or-later in composer.json, the license the source headers grant
 -security: Pass over a disabled configured administrator when moving off the retired no-authentication method
 -security: Skip the unknown-username password hash for blank passwords, as a known username does

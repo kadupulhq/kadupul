@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -338,15 +339,7 @@ if (cacti_sizeof($poller_items) && read_config_option('poller_enabled') == 'on')
 				if ($output_count > 0) {
 					cacti_log("Device[$last_host] Writing $output_count items to Poller Output Table", $print_data_to_stdout, 'POLLER', debug_level($host_id, POLLER_VERBOSITY_MEDIUM));
 
-					db_execute('INSERT IGNORE INTO poller_output
-						(local_data_id, rrd_name, time, output)
-						VALUES ' . implode(', ', $output_array), true, $poller_db_cnn_id);
-
-					if (read_config_option('boost_redirect') == 'on' && read_config_option('boost_rrd_update_enable') == 'on') {
-						db_execute('INSERT IGNORE INTO poller_output_boost
-							(local_data_id, rrd_name, time, output)
-							VALUES ' . implode(', ', $output_array), true, $poller_db_cnn_id);
-					}
+					cmd_write_poller_output($output_array, $poller_db_cnn_id);
 
 					$output_array = array();
 					$output_count = 0;
@@ -405,15 +398,7 @@ if (cacti_sizeof($poller_items) && read_config_option('poller_enabled') == 'on')
 			if ($output_count > 2000) {
 				cacti_log("Device[$host_id] Writing $output_count items to Poller Output Table", $print_data_to_stdout, 'POLLER', debug_level($host_id, POLLER_VERBOSITY_MEDIUM));
 
-				db_execute('INSERT IGNORE INTO poller_output
-					(local_data_id, rrd_name, time, output)
-					VALUES ' . implode(', ', $output_array), true, $poller_db_cnn_id);
-
-				if (read_config_option('boost_redirect') == 'on' && read_config_option('boost_rrd_update_enable') == 'on') {
-					db_execute('INSERT IGNORE INTO poller_output_boost
-						(local_data_id, rrd_name, time, output)
-						VALUES ' . implode(', ', $output_array), true, $poller_db_cnn_id);
-				}
+				cmd_write_poller_output($output_array, $poller_db_cnn_id);
 
 				$output_array = array();
 				$output_count = 0;
@@ -437,15 +422,7 @@ if (cacti_sizeof($poller_items) && read_config_option('poller_enabled') == 'on')
 	if ($output_count > 0) {
 		cacti_log("Device[$host_id] Writing $output_count items to Poller Output Table", $print_data_to_stdout, 'POLLER', debug_level($host_id, POLLER_VERBOSITY_MEDIUM));
 
-		db_execute('INSERT IGNORE INTO poller_output
-			(local_data_id, rrd_name, time, output)
-			VALUES ' . implode(', ', $output_array), true, $poller_db_cnn_id);
-
-		if (read_config_option('boost_redirect') == 'on' && read_config_option('boost_rrd_update_enable') == 'on') {
-			db_execute('INSERT IGNORE INTO poller_output_boost
-				(local_data_id, rrd_name, time, output)
-				VALUES ' . implode(', ', $output_array), true, $poller_db_cnn_id);
-		}
+		cmd_write_poller_output($output_array, $poller_db_cnn_id);
 	}
 
 	db_execute_prepared('UPDATE host
@@ -543,6 +520,33 @@ record_cmdphp_done();
 db_close();
 
 exit(0);
+
+/* With Boost redirect on the same rows go to poller_output and
+ * poller_output_boost in two statements, and Boost matches the copies on their
+ * time.  CURRENT_TIMESTAMP() is read as each statement starts, so a flush that
+ * crossed a second stamped the copies differently and Boost staged the sample
+ * twice.  Pinning the session clock keeps CURRENT_TIMESTAMP() and the value it
+ * stores. */
+function cmd_write_poller_output($output_array, $conn) {
+	$values   = implode(', ', $output_array);
+	$redirect = read_config_option('boost_redirect') == 'on' && read_config_option('boost_rrd_update_enable') == 'on';
+
+	if ($redirect) {
+		db_execute('SET timestamp = UNIX_TIMESTAMP()', true, $conn);
+	}
+
+	db_execute('INSERT IGNORE INTO poller_output
+		(local_data_id, rrd_name, time, output)
+		VALUES ' . $values, true, $conn);
+
+	if ($redirect) {
+		db_execute('INSERT IGNORE INTO poller_output_boost
+			(local_data_id, rrd_name, time, output)
+			VALUES ' . $values, true, $conn);
+
+		db_execute('SET timestamp = DEFAULT', true, $conn);
+	}
+}
 
 // function to assist in logging
 function debug_level($host_id, $level) {

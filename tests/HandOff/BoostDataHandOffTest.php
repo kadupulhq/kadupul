@@ -65,7 +65,9 @@ test('Remote hand-offs validate poller ownership before staging', function () {
 	expect($boost)->toContain('function boost_validate_poller_ownership($results, $poller_id, $conn = false)');
 	expect($boost)->toContain('WHERE poller_id = ?');
 	expect($boost)->toContain("\$config['poller_id'] > 1 && !boost_validate_poller_ownership");
-	expect($recovery)->toContain('!boost_validate_poller_ownership($rows, $poller_id, $remote_db_cnn_id)');
+	expect($recovery)->toContain('$owned = recovery_owned_data_source_ids($rows, $poller_id, $remote_db_cnn_id);');
+	expect($recovery)->toContain('if ($owned === false) {');
+	expect($recovery)->toContain('WHERE poller_id = ?');
 });
 
 test('Archive discovery validates every dynamic table identifier', function () {
@@ -92,7 +94,7 @@ test('Graph cache names are opaque and writes are atomically published', functio
 	expect($boost)->toContain("hash_hmac('sha256', \$cache_key, \$secret) . '.png'");
 	expect($boost)->toContain("tempnam(dirname(\$cache_file), '.boost-')");
 	expect($boost)->toContain("if (!\$published && PHP_OS_FAMILY === 'Windows')");
-	expect($boost)->toContain('chmod($temp_file, 0640)');
+	expect($boost)->toContain('chmod($temp_file, 0644)');
 	expect($boost)->not->toContain("get_selected_theme() . '_lgi_'");
 
 	$directory = sys_get_temp_dir() . '/cacti-boost-cache-' . bin2hex(random_bytes(8));

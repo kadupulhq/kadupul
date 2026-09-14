@@ -389,6 +389,118 @@ function boost_validate_poller_ownership($results, $poller_id, $conn = false) {
 	return $assigned_ids === $local_data_ids;
 }
 
+/**
+ * boost_redirect_missing_rows - return the poller output rows that
+ *   poller_output_boost does not hold.  One indexed lookup covers a
+ *   poller_output chunk; a failed lookup returns every row so none is dropped.
+ */
+function boost_redirect_missing_rows($results, $conn = false) {
+	/* The server refuses more than 65535 markers in one statement, so a lookup
+	 * holds at most 60000 data source ids and times together.  Each time lists
+	 * only its own ids, so the lookup reads the requested pairs and no others. */
+	$max_markers = 60000;
+	$chunks      = array();
+	$pairs       = array();
+	$markers     = 0;
+
+	foreach ($results as $result) {
+		$id   = (int) $result['local_data_id'];
+		$time = (string) $result['time'];
+
+		if (isset($pairs[$time][$id])) {
+			continue;
+		}
+
+		$new = isset($pairs[$time]) ? 1 : 2;
+
+		if ($markers + $new > $max_markers) {
+			$chunks[] = $pairs;
+			$pairs    = array();
+			$markers  = 0;
+			$new      = 2;
+		}
+
+		$pairs[$time][$id] = true;
+		$markers          += $new;
+	}
+
+	if ($markers > 0) {
+		$chunks[] = $pairs;
+	}
+
+	$present = array();
+
+	foreach ($chunks as $chunk) {
+		$clauses = array();
+		$params  = array();
+
+		foreach ($chunk as $time => $ids) {
+			$clauses[] = '(time = ? AND local_data_id IN (' . implode(',', array_fill(0, cacti_sizeof($ids), '?')) . '))';
+			$params[]  = (string) $time;
+
+			foreach (array_keys($ids) as $id) {
+				$params[] = $id;
+			}
+		}
+
+		$rows = db_fetch_assoc_prepared('SELECT local_data_id, rrd_name, time
+			FROM poller_output_boost
+			WHERE ' . implode(' OR ', $clauses),
+			$params, true, $conn);
+
+		if ($rows === false) {
+			return $results;
+		}
+
+		foreach ($rows as $row) {
+			$present[$row['local_data_id'] . "\t" . $row['rrd_name'] . "\t" . $row['time']] = true;
+		}
+	}
+
+	$missing = array();
+
+	foreach ($results as $result) {
+		if (!isset($present[(int) $result['local_data_id'] . "\t" . $result['rrd_name'] . "\t" . $result['time']])) {
+			$missing[] = $result;
+		}
+	}
+
+	return $missing;
+}
+
+/**
+ * boost_redirect_delete_staged_rows - remove rows from poller_output_boost
+ *   that a Boost redirect handoff is about to write directly to RRD files, so
+ *   scheduled Boost does not also replay them.
+ */
+function boost_redirect_delete_staged_rows($results, $conn = false) {
+	if (!cacti_sizeof($results)) {
+		return true;
+	}
+
+	/* three markers per row; stay well under the server's placeholder limit */
+	$max_rows = 20000;
+	$success  = true;
+
+	foreach (array_chunk($results, $max_rows) as $chunk) {
+		$clauses = array();
+		$params  = array();
+
+		foreach ($chunk as $result) {
+			$clauses[] = '(local_data_id = ? AND rrd_name = ? AND time = ?)';
+			$params[]  = (int) $result['local_data_id'];
+			$params[]  = $result['rrd_name'];
+			$params[]  = $result['time'];
+		}
+
+		if (db_execute_prepared('DELETE FROM poller_output_boost WHERE ' . implode(' OR ', $clauses), $params, true, $conn) === false) {
+			$success = false;
+		}
+	}
+
+	return $success;
+}
+
 function boost_poller_on_demand(&$results) {
 	global $config, $remote_db_cnn_id;
 
@@ -412,7 +524,9 @@ function boost_poller_on_demand(&$results) {
 		/* install the boost error handler */
 		set_error_handler('boost_error_handler');
 
-		if (boost_check_correct_enabled() && read_config_option('boost_redirect') == '') {
+		$boost_enabled = boost_check_correct_enabled();
+
+		if ($boost_enabled && read_config_option('boost_redirect') != 'on') {
 			if (cacti_sizeof($results)) {
 				if ($config['poller_id'] > 1 && !boost_validate_poller_ownership($results, $config['poller_id'], $conn)) {
 					cacti_log('ERROR: Boost rejected a handoff containing data sources not assigned to this poller.', false, 'BOOST');
@@ -426,7 +540,7 @@ function boost_poller_on_demand(&$results) {
 
 				$value_tuples = array();
 
-				if (read_config_option('boost_redirect') == '') {
+				if (read_config_option('boost_redirect') != 'on') {
 					foreach ($results as $result) {
 						$value_tuples[] = '(' .
 							(int) $result['local_data_id'] . ',' .
@@ -441,6 +555,80 @@ function boost_poller_on_demand(&$results) {
 				}
 			} else {
 				$return_value = false;
+			}
+		} elseif ($boost_enabled) {
+			/* With boost redirect on the collectors also write these rows to
+			 * poller_output_boost, but a batch from before redirect was switched on,
+			 * or whose Boost insert failed, exists only here.  Stage what Boost lacks. */
+			$return_value = false;
+			$missing      = cacti_sizeof($results) ? boost_redirect_missing_rows($results, $conn) : array();
+
+			if (cacti_sizeof($missing)) {
+				if ($config['poller_id'] > 1 && !boost_validate_poller_ownership($missing, $config['poller_id'], $conn)) {
+					cacti_log('ERROR: Boost rejected a handoff containing data sources not assigned to this poller.', false, 'BOOST');
+
+					/* $missing is rejected outright, and the caller falls back to a
+					 * direct RRD update on the whole batch.  The rest of $results was
+					 * already staged before this call, so drop it here or scheduled
+					 * Boost replays it too. */
+					$missing_keys = array();
+
+					foreach ($missing as $result) {
+						$missing_keys[(int) $result['local_data_id'] . "\t" . $result['rrd_name'] . "\t" . $result['time']] = true;
+					}
+
+					$staged = array();
+
+					foreach ($results as $result) {
+						$key = (int) $result['local_data_id'] . "\t" . $result['rrd_name'] . "\t" . $result['time'];
+
+						if (!isset($missing_keys[$key])) {
+							$staged[] = $result;
+						}
+					}
+
+					boost_redirect_delete_staged_rows($staged, $conn);
+
+					$return_value = true;
+				} else {
+					$value_tuples = array();
+
+					foreach ($missing as $result) {
+						$value_tuples[] = '(' .
+							(int) $result['local_data_id'] . ',' .
+							db_qstr($result['rrd_name'], $conn) . ',' .
+							db_qstr($result['time'], $conn) . ',' .
+							db_qstr($result['output'], $conn) . ')';
+					}
+
+					$return_value = !boost_flush_output_batch($value_tuples, $conn);
+
+					if ($return_value) {
+						/* Staging failed partway or not at all, and the rest of
+						 * $results was already staged before this call.  Recheck
+						 * the smaller $missing set and drop whatever is now staged
+						 * so the direct RRD update below is not replayed later by
+						 * scheduled Boost too. */
+						$still_missing      = boost_redirect_missing_rows($missing, $conn);
+						$still_missing_keys = array();
+
+						foreach ($still_missing as $result) {
+							$still_missing_keys[(int) $result['local_data_id'] . "\t" . $result['rrd_name'] . "\t" . $result['time']] = true;
+						}
+
+						$staged = array();
+
+						foreach ($results as $result) {
+							$key = (int) $result['local_data_id'] . "\t" . $result['rrd_name'] . "\t" . $result['time'];
+
+							if (!isset($still_missing_keys[$key])) {
+								$staged[] = $result;
+							}
+						}
+
+						boost_redirect_delete_staged_rows($staged, $conn);
+					}
+				}
 			}
 		} else {
 			$return_value = true;
@@ -521,6 +709,7 @@ function boost_fetch_cache_check($local_data_id, $rrdtool_pipe = false) {
 
 		/* close rrdtool */
 		if ($close_pipe) {
+			boost_rrdtool_pipe_creates('forget', $rrdtool_pipe);
 			rrd_close($rrdtool_pipe);
 		}
 	}
@@ -623,7 +812,7 @@ function boost_atomic_write_cache($cache_file, $output) {
 		return false;
 	}
 
-	if (!chmod($temp_file, 0640)) {
+	if (!chmod($temp_file, 0644)) {
 		/* tempnam() creates a stricter 0600 file, so publication remains safe. */
 		cacti_log('WARNING: Boost could not set shared graph cache permissions; publishing with the existing stricter mode.', false, 'BOOST');
 	}
@@ -1154,9 +1343,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 			INNER JOIN data_local AS dl
 			ON po.local_data_id = dl.id
 			WHERE po.local_data_id = ?
-			AND po.time < FROM_UNIXTIME(?)
-			ORDER BY time ASC, rrd_name ASC
-			LIMIT " . ($max_rows + 1);
+			AND po.time < FROM_UNIXTIME(?)";
 	} else {
 		$query_string = 'SELECT po.local_data_id, dl.data_template_id,
 			UNIX_TIMESTAMP(po.time) AS timestamp, po.rrd_name, po.output
@@ -1164,46 +1351,65 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 			INNER JOIN data_local AS dl
 			ON po.local_data_id = dl.id
 			WHERE po.local_data_id = ?
-			AND po.time < FROM_UNIXTIME(?)
-			ORDER BY time ASC, rrd_name ASC
-			LIMIT ' . ($max_rows + 1);
+			AND po.time < FROM_UNIXTIME(?)';
 	}
 
 	$sql_params[] = $local_data_id;
 	$sql_params[] = $timestamp;
 
-	boost_timer('get_records', BOOST_TIMER_START);
-	$results = db_fetch_assoc_prepared($query_string, $sql_params);
-	boost_timer('get_records', BOOST_TIMER_END);
+	$boost_results   = 0;
+	$updates_ok      = true;
+	$rrdp_auto_close = false;
+	$cursor          = false;
 
-	$boost_results = cacti_sizeof($results);
+	/* Page through the rows so a long backlog is written in full without
+	 * loading more than max_rows at once.  Each page ends on a complete
+	 * timestamp, so the next page starts after the last one written. */
+	while (true) {
+		$page_query  = $query_string;
+		$page_params = $sql_params;
 
-	if ($temp_table !== false) {
-		db_execute("DROP TEMPORARY TABLE $temp_table");
-	}
-
-	if (cacti_sizeof($results) > $max_rows) {
-		cacti_log("WARNING: On-demand Boost processing for Local Data ID '$local_data_id' exceeded the $max_rows row request limit; rows were retained for scheduled processing.", false, 'BOOST');
-		restore_error_handler();
-		error_reporting($previous_error_reporting);
-
-		return -1;
-	}
-
-	cacti_log('Local Data ID: ' . $local_data_id . ', Boost Results: ' . $boost_results, false, 'BOOST', POLLER_VERBOSITY_MEDIUM);
-	$updates_ok = $results !== false;
-
-	/* log memory */
-	if ($get_memory) {
-		$cur_memory = memory_get_usage();
-
-		if ($cur_memory > $memory_used) {
-			$memory_used = $cur_memory;
+		if ($cursor !== false) {
+			$page_query   .= ' AND po.time > FROM_UNIXTIME(?)';
+			$page_params[] = $cursor;
 		}
-	}
 
-	if (cacti_sizeof($results)) {
-		$rrdp_auto_close = false;
+		boost_timer('get_records', BOOST_TIMER_START);
+		$results = db_fetch_assoc_prepared($page_query . ' ORDER BY time ASC, rrd_name ASC LIMIT ' . ($max_rows + 1), $page_params);
+		boost_timer('get_records', BOOST_TIMER_END);
+
+		if ($results === false) {
+			$updates_ok = false;
+
+			break;
+		}
+
+		$last_page = cacti_sizeof($results) <= $max_rows;
+		$results   = boost_limit_complete_timestamp_page($results, $max_rows);
+
+		if ($results === false) {
+			cacti_log("ERROR: Boost row limit $max_rows is smaller than one complete timestamp group for Local Data ID '$local_data_id'; queued rows were retained.", false, 'BOOST');
+			$updates_ok = false;
+
+			break;
+		}
+
+		if (!cacti_sizeof($results)) {
+			break;
+		}
+
+		$boost_results += cacti_sizeof($results);
+
+		cacti_log('Local Data ID: ' . $local_data_id . ', Boost Results: ' . cacti_sizeof($results), false, 'BOOST', POLLER_VERBOSITY_MEDIUM);
+
+		/* log memory */
+		if ($get_memory) {
+			$cur_memory = memory_get_usage();
+
+			if ($cur_memory > $memory_used) {
+				$memory_used = $cur_memory;
+			}
+		}
 
 		if (!$rrdtool_pipe) {
 			$rrdtool_pipe    = rrd_init();
@@ -1289,6 +1495,9 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 					if (trim((string) $return_value) !== 'OK') {
 						cacti_log("WARNING: RRD Update Warning '" . $return_value . "' for Local Data ID '$local_data_id'", false, 'BOOST');
 						$updates_ok = false;
+
+						/* later samples would move the RRD past the failed ones; keep the page queued */
+						break;
 					}
 				}
 
@@ -1419,7 +1628,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 		}
 
 		/* process the last rrdupdate if applicable */
-		if ($vals_in_buffer) {
+		if ($vals_in_buffer && $updates_ok) {
 			boost_timer('rrdupdate', BOOST_TIMER_START);
 			$return_value = boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_tmpl, $outbuf, $rrdtool_pipe);
 			boost_timer('rrdupdate', BOOST_TIMER_END);
@@ -1433,9 +1642,20 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 
 		boost_timer('results_cycle', BOOST_TIMER_END);
 
-		if ($rrdp_auto_close) {
-			rrd_close($rrdtool_pipe);
+		$cursor = $results[cacti_sizeof($results) - 1]['timestamp'];
+
+		if ($last_page || !$updates_ok) {
+			break;
 		}
+	}
+
+	if ($temp_table !== false) {
+		db_execute("DROP TEMPORARY TABLE $temp_table");
+	}
+
+	if ($rrdp_auto_close) {
+		boost_rrdtool_pipe_creates('forget', $rrdtool_pipe);
+		rrd_close($rrdtool_pipe);
 	}
 
 	/* Remove retry records only after RRD and archive forwarding acknowledgement. */
@@ -1476,7 +1696,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 		}
 	}
 
-	if ($updates_ok && cacti_sizeof($results)) {
+	if ($updates_ok && $boost_results > 0) {
 		$updates_ok = db_execute_prepared('DELETE FROM poller_output_boost
 			WHERE local_data_id = ?
 			AND time < FROM_UNIXTIME(?)',
@@ -1497,7 +1717,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 	restore_error_handler();
 	error_reporting($previous_error_reporting);
 
-	return $updates_ok ? cacti_sizeof($results) : -1;
+	return $updates_ok ? $boost_results : -1;
 }
 
 function boost_rrdtool_get_last_update_time($rrd_path, &$rrdtool_pipe) {
@@ -1863,6 +2083,46 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
 	}
 }
 
+/* boost_rrdtool_pipe_creates - track the RRD creates queued on an open rrdtool pipe.
+   rrdtool create overwrites a file, so each file gets one create per pipe.  An
+   entry keeps its own pipe handle, so it ends when that pipe is closed or
+   forgotten and never matches a pipe opened later.
+   @arg $action       - 'check', 'add' or 'forget'
+   @arg $rrdtool_pipe - the open rrdtool pipe
+   @arg $rrd_path     - the RRD file for 'check' and 'add'
+   @returns - (bool) true when a create for the file is queued on the pipe */
+function boost_rrdtool_pipe_creates($action, $rrdtool_pipe, $rrd_path = '') {
+	static $pipes = array();
+
+	foreach ($pipes as $index => $entry) {
+		if (!is_resource($entry['pipe']) || ($action == 'forget' && $entry['pipe'] === $rrdtool_pipe)) {
+			unset($pipes[$index]);
+		}
+	}
+
+	if ($action == 'forget' || !is_resource($rrdtool_pipe)) {
+		return false;
+	}
+
+	foreach ($pipes as $index => $entry) {
+		if ($entry['pipe'] === $rrdtool_pipe) {
+			if ($action == 'add') {
+				$pipes[$index]['paths'][$rrd_path] = true;
+			}
+
+			return isset($pipes[$index]['paths'][$rrd_path]);
+		}
+	}
+
+	if ($action == 'add') {
+		$pipes[] = array('pipe' => $rrdtool_pipe, 'paths' => array($rrd_path => true));
+
+		return true;
+	}
+
+	return false;
+}
+
 /* boost_rrdtool_function_update - a re-write of the Cacti rrdtool update command
    specifically designed for bulk updates.
    @arg $local_data_id - the data source to obtain information from
@@ -1910,9 +2170,24 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 
 		// Check for a Data Source that has been removed
 		if ($ds_exists) {
-			boost_rrdtool_function_create($local_data_id, false, $rrdtool_pipe);
+			$piped = is_resource($rrdtool_pipe);
 
-			if (read_config_option('storage_location')) {
+			if ($piped && boost_rrdtool_pipe_creates('check', $rrdtool_pipe, $rrd_path)) {
+				/* rrdtool create overwrites, so queue one create per file on a pipe */
+				$created = true;
+			} else {
+				$created = boost_rrdtool_function_create($local_data_id, false, $rrdtool_pipe);
+			}
+
+			if ($piped) {
+				/* rrdtool has not read a piped create yet, so the file can still be
+				 * missing here.  It runs the create before the update that follows. */
+				$valid_entry = $created !== false;
+
+				if ($valid_entry) {
+					boost_rrdtool_pipe_creates('add', $rrdtool_pipe, $rrd_path);
+				}
+			} elseif (read_config_option('storage_location')) {
 				$valid_entry = rrdtool_execute_path_command('file_exists', $rrd_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
 			} else {
 				$valid_entry = file_exists($rrd_path);

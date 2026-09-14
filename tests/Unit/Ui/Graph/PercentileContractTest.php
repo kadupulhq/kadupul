@@ -35,9 +35,9 @@ test('percentile index is based on observed samples', function () use ($graphVar
 	expect(issue7070_percentile_index(0, 95))->toBe(0);
 });
 
-test('CSV export exposes sparse-period coverage', function () use ($graphXport) {
+test('CSV export keeps the 1.2.31 header rows', function () use ($graphXport) {
 	expect($graphXport)->not->toBeFalse();
-	expect($graphXport)->toContain("__('Expected Rows')");
-	expect($graphXport)->toContain("__('Missing Rows')");
-	expect($graphXport)->toContain("['meta']['missing_rows']");
+	expect($graphXport)->toContain("__('Total Rows') . '\",\"'     . \$xport_array['meta']['rows']                       . '\"' . \"\\n\";\n\t\t\$output .= '\"' . __('Graph ID')");
+	expect($graphXport)->not->toContain("__('Expected Rows')");
+	expect($graphXport)->not->toContain("__('Missing Rows')");
 });
