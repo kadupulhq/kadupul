@@ -368,3 +368,71 @@ test('remove_spikes refuses when the RRD source is swapped for a different file 
 	/* afterEach() globs and unlinks everything left under rrd_dir (the
 	   symlink the stub planted) and dir (evil_target, the swap stub) */
 });
+
+test('remove_spikes refuses a requested backup when the RRD source is swapped during the dump', function () {
+	/* a fixture with no outlier row: std_kills/out_kills/var_kills all
+	   stay false, so updateXML()/backupRRDFile()/createRRDFileFromXML()
+	   never run and the $this->backup-requested copyFileSafely() call at
+	   the top of remove_spikes() is the only thing that can catch the
+	   swap. That call is separate from, and runs before, the pre-restore
+	   backupRRDFile() the swap test above already covers. */
+	$rows = '';
+
+	for ($i = 0; $i < 20; $i++) {
+		$rows .= '<row><timestamp>' . (1000000000 + $i * 300) . '</timestamp><v>1.0000000000e+01</v></row>' . "\n";
+	}
+
+	$no_spike_fixture = $this->dir . '/dump-fixture-no-spike.xml';
+	file_put_contents($no_spike_fixture,
+		"<step>300</step>\n" .
+		"<name>traffic_in</name>\n" .
+		"<min>0</min>\n" .
+		"<max>1000000</max>\n" .
+		"<rra>\n" .
+		"<cf>AVERAGE</cf>\n" .
+		"<pdp_per_row>1</pdp_per_row>\n" .
+		"<database>\n" .
+		$rows .
+		"</database>\n" .
+		"</rra>\n"
+	);
+
+	$evil_target = $this->dir . '/evil-target-backup.rrd';
+	file_put_contents($evil_target, 'evil-bytes');
+
+	$swap_stub = $this->dir . '/rrdtool-swap-backup-stub.sh';
+	file_put_contents($swap_stub, "#!/bin/sh\n" .
+		"if [ \"\$1\" = 'dump' ]; then\n" .
+		"  cat \"\$RRDTOOL_STUB_DUMP_FIXTURE\"\n" .
+		"  rm -f \"\$2\"\n" .
+		"  ln -s \"\$SPIKEKILL_TEST_EVIL_TARGET\" \"\$2\"\n" .
+		"  exit 0\n" .
+		"fi\n" .
+		"if [ \"\$1\" = 'restore' ]; then\n" .
+		"  exit 0\n" .
+		"fi\n" .
+		"exit 1\n");
+	chmod($swap_stub, 0700);
+
+	putenv('RRDTOOL_STUB_DUMP_FIXTURE=' . $no_spike_fixture);
+	putenv('SPIKEKILL_TEST_EVIL_TARGET=' . $evil_target);
+
+	spikekill_e2e_test_stub_config(array(
+		'spikekill_backupdir' => $this->backup_dir,
+		'path_rrdtool'        => $swap_stub,
+	));
+
+	$instance = spikekill_e2e_instance($this->rrdfile);
+	$instance->backup = true;
+
+	$ok = $instance->remove_spikes();
+
+	putenv('SPIKEKILL_TEST_EVIL_TARGET');
+
+	expect($ok)->toBeFalse()
+		->and($instance->get_errors())->toContain('FAILED')
+		->and(glob($this->backup_dir . '/*'))->toBe([]);
+
+	/* afterEach() globs and unlinks everything left under rrd_dir (the
+	   symlink the stub planted) and dir (evil_target, the swap stub) */
+});

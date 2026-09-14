@@ -503,7 +503,22 @@ class spikekill {
 
 		/* backup the rrdfile if requested */
 		if ($this->backup && !$this->dryrun) {
-			$backup_result = $this->copyFileSafely($this->rrdfile, $bakfile, $this->tempdir);
+			/* re-check the source identity initialize_spikekill() captured:
+			   nothing stops the name from being swapped for a symlink between
+			   that check and this copy, the same rationale backupRRDFile()
+			   documents */
+			clearstatcache(true, $this->rrdfile);
+
+			$rrdfile_lstat = @lstat($this->rrdfile);
+
+			if ($rrdfile_lstat === false || $this->rrdfile_stat === false
+				|| $rrdfile_lstat['dev'] !== $this->rrdfile_stat['dev']
+				|| $rrdfile_lstat['ino'] !== $this->rrdfile_stat['ino']) {
+
+				$backup_result = false;
+			} else {
+				$backup_result = $this->copyFileSafely($this->rrdfile, $bakfile, $this->tempdir);
+			}
 
 			if ($backup_result !== false) {
 				$bakfile      = $backup_result['path'];
