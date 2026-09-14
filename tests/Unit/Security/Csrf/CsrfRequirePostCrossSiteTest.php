@@ -247,6 +247,24 @@ test('an RRD cleaner rescan refuses a GET only from another site', function () {
 		->and(run_checked($matches[0], 'GET', array(), array(), array('HTTP_SEC_FETCH_SITE' => 'cross-site')))->toBe('pass');
 });
 
+test('user_admin.php and user_group_admin.php refuse a GET default policy change', function () {
+	/* update_policies() runs ahead of the page's action switch on a hidden
+	   update_policy=1 field, so the switch guard never sees it; the UI only
+	   ever submits it by POST */
+	foreach (array('user_admin.php', 'user_group_admin.php') as $page) {
+		$source = file_get_contents(dirname(__DIR__, 4) . '/' . $page);
+
+		expect(preg_match("/if \(isset_request_var\('update_policy'\)\) \{\n\tupdate_policies\(\);\n\}/", $source))->toBe(1, $page);
+		expect(preg_match('/function update_policies\(\) \{\n\t(csrf_require_post\(true\);)\n/', $source, $matches))->toBe(1, $page);
+
+		$check = "if (isset_request_var('update_policy')) {\n\t" . $matches[1] . "\n\tset_request_var('action', 'updated');\n}";
+
+		expect(run_checked($check, 'GET', array('update_policy' => '1')))->toBe('405', $page)
+			->and(run_checked($check, 'GET', array('update_policy' => '1'), array(), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('405', $page)
+			->and(run_checked($check, 'POST', array('update_policy' => '1'), array('__csrf_magic' => 'sid:x')))->toBe('pass:updated', $page);
+	}
+});
+
 test('only a GET gets the same-site relaxation; HEAD, PUT, DELETE and PATCH get 405', function () {
 	$wrong = array();
 
