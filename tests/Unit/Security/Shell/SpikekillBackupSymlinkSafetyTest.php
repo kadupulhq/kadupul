@@ -36,10 +36,28 @@ require_once dirname(__DIR__, 4) . '/lib/spikekill.php';
 function invoke_spikekill_private(string $method, array $args) {
 	$reflection = new ReflectionClass('spikekill');
 	$instance   = $reflection->newInstanceWithoutConstructor();
+
+	return invoke_spikekill_private_on($instance, $method, $args);
+}
+
+/* like invoke_spikekill_private(), but reuses a caller-supplied instance so
+   its per-instance canonicalDir() cache carries over between calls, the way
+   one remove_spikes() call reuses $this across its two copyFileSafely()
+   backups */
+function invoke_spikekill_private_on($instance, string $method, array $args) {
+	$reflection = new ReflectionClass($instance);
 	$m          = $reflection->getMethod($method);
 	$m->setAccessible(true);
 
 	return $m->invokeArgs($instance, $args);
+}
+
+/* copyFileSafely() returns array('path' => ..., 'stat' => ...) on success
+   so the success-path cleanup can remove the backup by its creation
+   identity instead of by name; tests that only care about the path use
+   this to unwrap it. */
+function spikekill_copy_path($result) {
+	return $result === false ? false : $result['path'];
 }
 
 beforeEach(function () {
@@ -61,9 +79,11 @@ afterEach(function () {
 test('a normal backup is created with the expected content and name', function () {
 	$desired = $this->dir . '/backup.rrd';
 
-	$written = invoke_spikekill_private('copyFileSafely', [$this->rrdfile, $desired]);
+	$result  = invoke_spikekill_private('copyFileSafely', [$this->rrdfile, $desired]);
+	$written = spikekill_copy_path($result);
 
 	expect($written)->toBe($desired)
+		->and($result['stat'])->toBeArray()
 		->and(is_link($desired))->toBeFalse()
 		->and(file_get_contents($desired))->toBe('rrd-bytes')
 		->and(fileperms($desired) & 0777)->toBe(0600);
@@ -75,7 +95,7 @@ test('a planted symlink at the backup name is never written to', function () {
 
 	symlink($evil_target, $desired);
 
-	$written = invoke_spikekill_private('copyFileSafely', [$this->rrdfile, $desired]);
+	$written = spikekill_copy_path(invoke_spikekill_private('copyFileSafely', [$this->rrdfile, $desired]));
 
 	expect($written)->not->toBe($desired)
 		->and(is_link($desired))->toBeTrue()
@@ -91,7 +111,7 @@ test('a dangling symlink at the backup name is not followed', function () {
 
 	symlink($this->dir . '/does-not-exist', $desired);
 
-	$written = invoke_spikekill_private('copyFileSafely', [$this->rrdfile, $desired]);
+	$written = spikekill_copy_path(invoke_spikekill_private('copyFileSafely', [$this->rrdfile, $desired]));
 
 	expect($written)->not->toBe($desired)
 		->and(is_link($desired))->toBeTrue()
@@ -105,7 +125,7 @@ test('an existing regular file at the backup name is not overwritten', function 
 	$desired = $this->dir . '/backup.rrd';
 	file_put_contents($desired, 'do-not-touch');
 
-	$written = invoke_spikekill_private('copyFileSafely', [$this->rrdfile, $desired]);
+	$written = spikekill_copy_path(invoke_spikekill_private('copyFileSafely', [$this->rrdfile, $desired]));
 
 	expect($written)->not->toBe($desired)
 		->and(file_get_contents($desired))->toBe('do-not-touch')
@@ -119,7 +139,7 @@ test('the fallback name is created in the same directory, not the system temp di
 	$desired = $this->dir . '/backup.rrd';
 	file_put_contents($desired, 'taken');
 
-	$written = invoke_spikekill_private('copyFileSafely', [$this->rrdfile, $desired]);
+	$written = spikekill_copy_path(invoke_spikekill_private('copyFileSafely', [$this->rrdfile, $desired]));
 
 	expect($written)->not->toBeFalse()
 		->and(dirname($written))->toBe($this->dir)
@@ -184,4 +204,64 @@ test('unlinkOwnedFile refuses to remove a name swapped for a symlink', function 
 		->and(file_exists($this->dir . '/source.rrd'))->toBeTrue();
 
 	unlink($path);
+});
+
+test('a symlinked backup directory is refused', function () {
+	$real_backupdir = $this->dir . '/real-backupdir';
+	mkdir($real_backupdir, 0700, true);
+
+	$backupdir_link = $this->dir . '/backupdir';
+	symlink($real_backupdir, $backupdir_link);
+
+	$desired = $backupdir_link . '/backup.rrd';
+
+	$written = spikekill_copy_path(invoke_spikekill_private('copyFileSafely', [$this->rrdfile, $desired, $backupdir_link]));
+
+	expect($written)->toBeFalse()
+		->and(glob($real_backupdir . '/*'))->toBe([]);
+
+	unlink($backupdir_link);
+	rmdir($real_backupdir);
+});
+
+test('a directory resolved once through a symlinked ancestor refuses a later ancestor swap on the same instance', function () {
+	$real_a = $this->dir . '/real-a';
+	mkdir($real_a . '/spikekill', 0700, true);
+
+	$parent = $this->dir . '/parent';
+	symlink($real_a, $parent);
+
+	$configured = $parent . '/spikekill';
+
+	/* one instance backs both copyFileSafely() calls in a single
+	   remove_spikes() run (the requested backup, then backupRRDFile()),
+	   so its canonicalDir() cache is primed with the legitimate
+	   resolution here, the same as the first of those two calls would */
+	$reflection = new ReflectionClass('spikekill');
+	$instance   = $reflection->newInstanceWithoutConstructor();
+
+	$primed = spikekill_copy_path(invoke_spikekill_private_on($instance, 'copyFileSafely', [$this->rrdfile, $configured . '/backup1.rrd', $configured]));
+	expect($primed)->toBe($configured . '/backup1.rrd');
+
+	/* an attacker with write access to the parent directory repoints it
+	   at a different real directory after that first, legitimate
+	   resolution; the leaf directory name is unchanged and is not itself
+	   a symlink, so only the cached canonical path catches this */
+	$real_b = $this->dir . '/real-b';
+	mkdir($real_b . '/spikekill', 0700, true);
+
+	unlink($parent);
+	symlink($real_b, $parent);
+
+	$written = spikekill_copy_path(invoke_spikekill_private_on($instance, 'copyFileSafely', [$this->rrdfile, $configured . '/backup2.rrd', $configured]));
+
+	expect($written)->toBeFalse()
+		->and(glob($real_b . '/spikekill/*'))->toBe([]);
+
+	unlink($real_a . '/spikekill/backup1.rrd');
+	rmdir($real_a . '/spikekill');
+	rmdir($real_a);
+	unlink($parent);
+	rmdir($real_b . '/spikekill');
+	rmdir($real_b);
 });

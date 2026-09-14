@@ -66,12 +66,13 @@ class spikekill {
 	private $davgnan   = 'last';
 
 	// Internal globals
-	private $tempdir     = '';
-	private $seed        = '';
-	private $strout      = '';
-	private $ds_min      = '';
-	private $ds_max      = '';
-	private $total_kills = 0;
+	private $tempdir         = '';
+	private $canonical_dirs  = array();
+	private $seed            = '';
+	private $strout          = '';
+	private $ds_min          = '';
+	private $ds_max          = '';
+	private $total_kills     = 0;
 
 	private $rra_cf      = array();
 	private $ds_name     = array();
@@ -407,6 +408,8 @@ class spikekill {
 			$bakfile = $this->tempdir . '/' . str_replace('.rrd', '', basename($this->rrdfile)) . '.backup.' . $this->seed . '.rrd';
 		}
 
+		$bakfile_stat = false;
+
 		if (!empty($this->out_start) && !$this->dryrun) {
 			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . "NOTE: Removing Outliers in Range and Replacing with Last" . ($this->html ? "</p>\n":"\n");
 		}
@@ -459,10 +462,11 @@ class spikekill {
 
 		/* backup the rrdfile if requested */
 		if ($this->backup && !$this->dryrun) {
-			$written = $this->copyFileSafely($this->rrdfile, $bakfile);
+			$backup_result = $this->copyFileSafely($this->rrdfile, $bakfile, $this->tempdir);
 
-			if ($written !== false) {
-				$bakfile = $written;
+			if ($backup_result !== false) {
+				$bakfile      = $backup_result['path'];
+				$bakfile_stat = $backup_result['stat'];
 				$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . "NOTE: RRDfile '$this->rrdfile' backed up to '$bakfile'" . ($this->html ? "</p>\n":"\n");
 			} else {
 				$this->set_error(__esc("FATAL: RRDfile Backup of '%s' to '%s' FAILED!", $this->rrdfile, $bakfile));
@@ -760,9 +764,7 @@ class spikekill {
 			unlink($xmlfile);
 		}
 
-		if (file_exists($bakfile)) {
-			unlink($bakfile);
-		}
+		$this->unlinkOwnedFile($bakfile, $bakfile_stat);
 
 		return true;
 	}
@@ -791,14 +793,14 @@ class spikekill {
 			$backupdir = $this->tempdir;
 		}
 
-		$written = $this->copyFileSafely($rrdfile, $backupdir . '/' . basename($rrdfile));
+		$backup_result = $this->copyFileSafely($rrdfile, $backupdir . '/' . basename($rrdfile), $backupdir);
 
-		if ($written === false) {
+		if ($backup_result === false) {
 			return false;
 		}
 
 		$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
-			__esc("NOTE: Backing Up '%s' to '%s'", $rrdfile, $written) . ($this->html ? "</p>\n":"\n");
+			__esc("NOTE: Backing Up '%s' to '%s'", $rrdfile, $backup_result['path']) . ($this->html ? "</p>\n":"\n");
 
 		return true;
 	}
@@ -810,16 +812,40 @@ class spikekill {
 	 * web user's poller can write to, so a symlink planted there ahead of time
 	 * must not be followed: the target gets created exclusively, and if the
 	 * name is already taken (by a symlink or a real file) a unique sibling
-	 * name is used instead.
+	 * name is used instead.  The exclusive open only protects the final
+	 * name; a symlink planted at the directory itself, or at an ancestor
+	 * resolved earlier and swapped since, would still redirect the write, so
+	 * the directory is re-checked here: refused outright if it is a symlink,
+	 * and refused if its current realpath() no longer matches $configured_dir's
+	 * canonical path (resolved once and cached, so a later swap is caught
+	 * against the trusted value rather than against itself).
 	 *
-	 * @param  (string) $source
-	 * @param  (string) $desired_path
+	 * @param  (string)      $source
+	 * @param  (string)      $desired_path
+	 * @param  (string|null) $configured_dir - the admin-configured directory
+	 *                        $desired_path is expected to live in; null skips
+	 *                        the canonical-path check (used by tests that
+	 *                        exercise the exclusive-open behavior directly)
 	 *
-	 * @return (string|false) - the path actually written, or false on failure
+	 * @return (array|false) - array('path' => ..., 'stat' => ...) for the
+	 *                         path actually written and its fstat() at
+	 *                         creation time, or false on failure
 	 */
-	private function copyFileSafely($source, $desired_path) {
+	private function copyFileSafely($source, $desired_path, $configured_dir = null) {
 		$dir      = dirname($desired_path);
 		$basename = basename($desired_path);
+
+		if (is_link($dir)) {
+			return false;
+		}
+
+		if ($configured_dir !== null) {
+			$canonical_dir = $this->canonicalDir($configured_dir);
+
+			if ($canonical_dir === false || realpath($dir) !== $canonical_dir) {
+				return false;
+			}
+		}
 
 		if (is_link($desired_path) || file_exists($desired_path)) {
 			$handle = false;
@@ -876,7 +902,25 @@ class spikekill {
 			return false;
 		}
 
-		return $desired_path;
+		return array('path' => $desired_path, 'stat' => $fstat);
+	}
+
+	/**
+	 * canonicalDir - resolve a configured directory's real path once and
+	 * cache it, so every copyFileSafely() call for that directory compares
+	 * against the same trusted value instead of re-resolving a path whose
+	 * ancestor a symlink could redirect between calls in the same run.
+	 *
+	 * @param  (string) $configured_dir
+	 *
+	 * @return (string|false)
+	 */
+	private function canonicalDir($configured_dir) {
+		if (!array_key_exists($configured_dir, $this->canonical_dirs)) {
+			$this->canonical_dirs[$configured_dir] = realpath($configured_dir);
+		}
+
+		return $this->canonical_dirs[$configured_dir];
 	}
 
 	/**
