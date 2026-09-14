@@ -18,7 +18,7 @@
  */
 
 function log_wording_source(string $file) : string {
-	$source = file_get_contents(dirname(__DIR__, 3) . '/' . $file);
+	$source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
 
 	if ($source === false) {
 		throw new RuntimeException('Unable to read ' . $file);
