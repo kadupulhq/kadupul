@@ -268,6 +268,80 @@ test('an unchanged name still refers to its handle until it is removed', functio
 });
 
 /**
+ * A stream wrapper whose write() accepts fewer bytes than it is offered, to
+ * reproduce a destination that stops taking data partway through a dump.
+ */
+class MaintenanceShortWriteStream {
+	/** @var resource */
+	public $context;
+
+	/* A wrapper that only ever hands back a short strlen($accepted) is not
+	 * enough: fwrite() itself keeps calling stream_write() with what is left
+	 * over until the whole buffer lands or a call returns 0. The budget below
+	 * runs out and stays at 0, so the call after it reproduces the short
+	 * fwrite() return a full destination or a hit quota would give. */
+	private $remaining = 4;
+
+	private static $written = '';
+
+	public static function reset() {
+		self::$written = '';
+	}
+
+	public static function written() {
+		return self::$written;
+	}
+
+	public function stream_open($path, $mode, $options, &$opened_path) {
+		return true;
+	}
+
+	public function stream_write($data) {
+		if ($this->remaining <= 0) {
+			return 0;
+		}
+
+		$accepted = substr($data, 0, $this->remaining);
+
+		$this->remaining -= strlen($accepted);
+		self::$written    .= $accepted;
+
+		return strlen($accepted);
+	}
+
+	public function stream_eof() {
+		return true;
+	}
+
+	public function stream_stat() {
+		return array();
+	}
+}
+
+test('a short destination write is reported as a failure, not a partial success', function () {
+	if (!in_array('shortwrite', stream_get_wrappers(), true)) {
+		stream_wrapper_register('shortwrite', MaintenanceShortWriteStream::class);
+	}
+
+	$command = escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg('echo "0123456789";');
+
+	MaintenanceShortWriteStream::reset();
+
+	$handle = fopen('shortwrite://test', 'wb');
+
+	expect(cacti_cli_run_to_handle($command, $handle))->toBeFalse();
+
+	fclose($handle);
+
+	/* Only 4 of the 10 bytes rrdtool "wrote" reached the destination before
+	 * this loop caught the short fwrite() and stopped. The old
+	 * stream_copy_to_stream() call trusted whatever the wrapper reported
+	 * without checking it chunk by chunk against a known length, since the
+	 * source here has none. */
+	expect(MaintenanceShortWriteStream::written())->toBe('0123');
+});
+
+/**
  * Runs a snippet against lib/maintenance_cli.php in a child PHP process with
  * the POSIX user functions disabled, as on a build without that extension.
  *

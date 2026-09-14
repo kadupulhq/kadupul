@@ -206,6 +206,12 @@ function cacti_cli_path_is_handle($handle, $path) {
  * write on the file that was created. Standard error is inherited, as it was
  * with the redirect.
  *
+ * stream_copy_to_stream() only fails on a read error: a destination that
+ * accepts fewer bytes than it was offered still returns that short count, and
+ * an rrdtool dump has no known length to check it against. Reading in fixed
+ * chunks and checking fwrite()'s return against the chunk length catches that
+ * short write instead of restoring a truncated XML dump later.
+ *
  * @param string   $command The command line, already quoted by the caller.
  * @param resource $handle  Where standard output is written.
  *
@@ -219,14 +225,34 @@ function cacti_cli_run_to_handle($command, $handle) {
 		return false;
 	}
 
-	$copied = stream_copy_to_stream($pipes[1], $handle);
+	$copied = true;
+
+	while (!feof($pipes[1])) {
+		$chunk = fread($pipes[1], 65536);
+
+		if ($chunk === false) {
+			$copied = false;
+
+			break;
+		}
+
+		if ($chunk === '') {
+			continue;
+		}
+
+		if (fwrite($handle, $chunk) !== strlen($chunk)) {
+			$copied = false;
+
+			break;
+		}
+	}
 
 	fclose($pipes[1]);
 
 	$status  = proc_close($process);
 	$flushed = fflush($handle);
 
-	return $copied !== false && $flushed && $status === 0;
+	return $copied && $flushed && $status === 0;
 }
 
 /**
