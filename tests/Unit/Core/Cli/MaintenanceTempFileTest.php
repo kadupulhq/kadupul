@@ -385,6 +385,22 @@ test('a dump command that exits non-zero is reported as failed', function () {
 	cacti_cli_remove_file($handle, $path);
 });
 
+test('a new debug log shared by two children keeps both children\'s lines', function () {
+	$path  = $this->dir . '/clearer.log';
+	$first = cacti_cli_open_log($path);
+	$other = cacti_cli_open_log($path);
+
+	fwrite($first, "first-1\n");
+	fwrite($other, "other-1\n");
+	fwrite($first, "first-2\n");
+	fclose($first);
+	fclose($other);
+	clearstatcache();
+
+	expect(file_get_contents($path))->toBe("first-1\nother-1\nfirst-2\n")
+		->and(fileperms($path) & 0777)->toBe(DIRECTORY_SEPARATOR == '/' ? 0600 : fileperms($path) & 0777);
+});
+
 test('splice_rrd uses the 1.2.31 names and creates every temporary file exclusively', function () {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/cli/splice_rrd.php');
 

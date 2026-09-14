@@ -251,7 +251,17 @@ function cacti_cli_current_uid() {
  */
 function cacti_cli_open_log($path) {
 	if (!is_link($path) && !file_exists($path)) {
-		return cacti_cli_create_file($path);
+		$created = cacti_cli_create_file($path);
+
+		/* The exclusive create only makes the log owner-only. It is reopened
+		 * below in append mode, because another child may append to it first
+		 * and a handle left at offset 0 would overwrite those lines. Losing the
+		 * create race to that child is handled the same way. */
+		if (is_resource($created)) {
+			fclose($created);
+		} elseif (is_link($path) || !file_exists($path)) {
+			return $created;
+		}
 	}
 
 	$before = @lstat($path);
