@@ -24,6 +24,7 @@ Cacti CHANGELOG
 -issue: Honor the configured Spikekill Background Generation Timeout for the rrdtool dump/restore round trip instead of capping it at 30 seconds
 -issue: Count a spikekill backup purge only when unlink() succeeds, logging a failure instead of over-reporting the purge count
 -issue: Close the spikekill RRD backup destination handle before removing it on a failed copy, so Windows can delete it
+-issue: Stop echoing spikekill purge failure messages to poller output; they were only meant for the log
 -issue: Send array rrdtool commands such as the RRDcheck fetch through RRDproxy as one quoted command instead of failing before they are sent
 -issue: Send the RRDproxy file_exists check in RRDcheck a bare path so an RRD path holding a quote character is found, and skip the local writable and modify time checks for RRDs on the proxy
 -issue: Show the validation error instead of success when a template import fails

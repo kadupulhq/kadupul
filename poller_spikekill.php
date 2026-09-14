@@ -245,10 +245,10 @@ function purge_spike_backups() {
 							if (unlink($filepath)) {
 								$purges++;
 							} else {
-								cacti_log('Unable to remove ' . $filepath . ' due to unlink failure', 'SPIKES');
+								cacti_log('Unable to remove ' . $filepath . ' due to unlink failure', false, 'SPIKES');
 							}
 						} else {
-							cacti_log('Unable to remove ' . $filepath . ' due to write permissions', 'SPIKES');
+							cacti_log('Unable to remove ' . $filepath . ' due to write permissions', false, 'SPIKES');
 						}
 					}
 				}

@@ -66,7 +66,11 @@ function cacti_sizeof($value) {
 }
 
 function cacti_log($message, $output = false, $environ = 'SPIKES') {
-	$GLOBALS['purge_unlink_failure_log'][] = $message;
+	$GLOBALS['purge_unlink_failure_log'][] = array(
+		'message' => $message,
+		'output'  => $output,
+		'environ' => $environ,
+	);
 }
 
 function unlink($path) {
@@ -102,12 +106,11 @@ test('a backup unlink() fails to remove is not counted as purged and is logged',
 
 	$purges = purge_spike_backups();
 
-	expect($purges)->toBe(0)
-		->and(calls())->toBe([$backup . ' due to unlink failure']);
-});
+	$entries = $GLOBALS['purge_unlink_failure_log'];
 
-function calls() {
-	return array_map(function ($message) {
-		return preg_replace('/^Unable to remove /', '', $message);
-	}, $GLOBALS['purge_unlink_failure_log']);
-}
+	expect($purges)->toBe(0)
+		->and($entries)->toHaveCount(1)
+		->and($entries[0]['message'])->toBe('Unable to remove ' . $backup . ' due to unlink failure')
+		->and($entries[0]['output'])->toBeFalse()
+		->and($entries[0]['environ'])->toBe('SPIKES');
+});
