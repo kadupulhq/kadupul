@@ -77,6 +77,47 @@ renames=$(git diff --name-status -M --diff-filter=R "$merge_base" -- '*.php')
 # which would otherwise bypass those exclusions.
 included=$("$fixer_path" list-files --config="$config" 2>/dev/null | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##')
 
+# True when two PHP files hold the same tokens apart from whitespace, so a
+# change between them only reformats. String and heredoc contents are tokens,
+# so a changed literal does not count as whitespace.
+same_tokens() {
+	php -r '
+		$strip = function ($file) {
+			$out = array();
+			foreach (token_get_all(file_get_contents($file)) as $t) {
+				if (is_array($t)) {
+					if ($t[0] === T_WHITESPACE) {
+						continue;
+					}
+					$out[] = array($t[0], $t[1]);
+				} else {
+					$out[] = $t;
+				}
+			}
+			return $out;
+		};
+		exit($strip($argv[1]) === $strip($argv[2]) ? 0 : 1);
+	' "$1" "$2"
+}
+
+# Paths the Finder covered at the merge base. A rename source no longer exists
+# in the working tree, so list-files there cannot say whether it was excluded.
+# The Finder only looks at names, so empty placeholder files are enough.
+base_included=
+if [ -n "$renames" ]; then
+	base_tree="$tmp/.merge-base-tree"
+	mkdir -p "$base_tree"
+	cp "$config" "$base_tree/"
+	# ls-tree takes pathspecs as literal prefixes, so '*.php' would match nothing.
+	git ls-tree -r --name-only "$merge_base" | { grep '\.php$' || true; } > "$tmp/.merge-base-files"
+	(
+		cd "$base_tree"
+		awk -F/ 'NF > 1 { NF--; print }' OFS=/ "$tmp/.merge-base-files" | sort -u | tr '\n' '\0' | xargs -0 mkdir -p
+		tr '\n' '\0' < "$tmp/.merge-base-files" | xargs -0 touch
+	)
+	base_included=$(cd "$base_tree" && "$fixer_path" list-files --config="$config" 2>/dev/null | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##')
+fi
+
 for f in "${files[@]}"; do
 	if ! printf '%s\n' "$included" | grep -Fqx -- "$f"; then
 		continue
@@ -87,6 +128,12 @@ for f in "${files[@]}"; do
 			base_path=$from
 		fi
 	done <<< "$renames"
+	# A file moved in from outside the Finder was never subject to the rules;
+	# treat it as new so it is checked in full.
+	if [ "$base_path" != "$f" ] && ! printf '%s\n' "$base_included" | grep -Fqx -- "$base_path"; then
+		checked+=("$f")
+		continue
+	fi
 	if git cat-file -e "$merge_base:$base_path" 2>/dev/null; then
 		mkdir -p "$tmp/$(dirname "$base_path")"
 		git show "$merge_base:$base_path" > "$tmp/$base_path"
@@ -101,7 +148,7 @@ for f in "${files[@]}"; do
 		if [ "$status" -eq 8 ]; then
 			# A change that only moves whitespace is a PER-CS conversion; it must
 			# finish the job, so it is checked in full rather than skipped.
-			if [ "$base_path" = "$f" ] && git diff -w --ignore-blank-lines --quiet "$merge_base" -- "$f"; then
+			if same_tokens "$tmp/$base_path" "$f"; then
 				checked+=("$f")
 				continue
 			fi
