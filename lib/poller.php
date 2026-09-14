@@ -2551,7 +2551,10 @@ function cacti_process_pid_for_log($pid) {
  * @return (bool) true if the pid is live and cannot be shown to be unrelated
  */
 function cacti_process_still_running($pid) {
-	if (!cacti_process_pid_is_valid($pid)) {
+	/* A reserved pid never names a Cacti task. Init answers EPERM to an
+	 * unprivileged probe, which would otherwise read as live wherever /proc
+	 * cannot establish identity. */
+	if (is_system_pid($pid)) {
 		return false;
 	}
 

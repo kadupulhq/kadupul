@@ -67,6 +67,12 @@ test('a live task owned by another user is still running', function () {
 	expect(process_still_running_with_errno('self', PROCESS_STILL_RUNNING_EPERM))->toBeTrue();
 });
 
+test('a reserved pid is never reported running', function () {
+	/* An unprivileged signal probe of init answers EPERM. Where /proc cannot
+	   establish identity, that must not make a stale pid 1 row look live. */
+	expect(process_still_running_with_errno(1, PROCESS_STILL_RUNNING_EPERM))->toBeFalse();
+});
+
 test('a pid that no longer exists is reported exited', function () {
 	expect(process_still_running_with_errno(999999999, PROCESS_STILL_RUNNING_ESRCH))->toBeFalse();
 });
