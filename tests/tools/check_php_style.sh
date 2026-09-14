@@ -72,7 +72,15 @@ checked=()
 # script working on the bash 3.2 that macOS ships.
 renames=$(git diff --name-status -M --diff-filter=R "$merge_base" -- '*.php')
 
+# Paths the config's Finder covers (it excludes include/vendor and
+# tests/Fixtures). The merge-base copy is checked with --path-mode=override,
+# which would otherwise bypass those exclusions.
+included=$("$fixer_path" list-files --config="$config" 2>/dev/null | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##')
+
 for f in "${files[@]}"; do
+	if ! printf '%s\n' "$included" | grep -Fqx -- "$f"; then
+		continue
+	fi
 	base_path=$f
 	while IFS=$'\t' read -r _ from to; do
 		if [ "$to" = "$f" ]; then
@@ -91,6 +99,12 @@ for f in "${files[@]}"; do
 		# php-cs-fixer check exits 8 when files only need formatting; any other
 		# non-zero status is a real failure and must not be read as "unconverted".
 		if [ "$status" -eq 8 ]; then
+			# A change that only moves whitespace is a PER-CS conversion; it must
+			# finish the job, so it is checked in full rather than skipped.
+			if [ "$base_path" = "$f" ] && git diff -w --ignore-blank-lines --quiet "$merge_base" -- "$f"; then
+				checked+=("$f")
+				continue
+			fi
 			echo "Skipping $f: not PER-CS formatted at $merge_base; convert it in a formatting-only change."
 			continue
 		elif [ "$status" -ne 0 ]; then
@@ -107,5 +121,10 @@ if [ "${#checked[@]}" -eq 0 ]; then
 fi
 
 # intersection keeps the config's exclusions in force for the paths given.
-exec "$fixer_path" check --config="$config" --path-mode=intersection \
+# Not exec: the EXIT trap must still remove the temporary directory.
+set +e
+"$fixer_path" check --config="$config" --path-mode=intersection \
 	--using-cache=no --diff -- "${checked[@]}"
+status=$?
+set -e
+exit "$status"

@@ -52,9 +52,9 @@ Use these notes to navigate and contribute productively to this PHP codebase.
 - Respect remote poller modes and `$config['is_web']`/CLI guards (`$no_http_header_files` in `include/global.php`).
 
 ## Coding standards
-- On `main`, PHP files a change edits follow PHP-FIG PER-CS 2.0 as configured in `.php-cs-fixer.php`. Files the change does not touch keep their current formatting; do not reformat unrelated code.
-  - Reformat an edited file in its own formatting-only commit. That commit changes whitespace only; token changes such as `array()` to `[]` or trailing commas go in separate commits.
-  - `tests/tools/check_php_style.sh` runs the fixer on changed PHP files only, and CI runs the same script. A tab-indented file that a change edits is expected to be reformatted, not flagged as a departure from convention.
+- On `main`, PHP files move to PHP-FIG PER-CS 2.0 as configured in `.php-cs-fixer.php`, one file at a time. Files already on PER-CS and new files must stay formatted; a small change to a file not yet converted may keep its current formatting. Do not reformat unrelated code.
+  - Convert a file in its own formatting-only commit, and convert it completely. That commit changes whitespace only; token changes such as `array()` to `[]` or trailing commas go in separate commits.
+  - `tests/tools/check_php_style.sh` checks changed PHP files that were already formatted at the merge base, new files, and whitespace-only conversions; CI runs the same script. Do not flag an unconverted tab-indented file that a small change edits.
   - `lts/1.2` keeps upstream Cacti formatting (tabs, same-line function braces) so upstream fixes cherry-pick cleanly. Do not reformat files there.
   - Start each file with SPDX tags, not the old GPL box. Files inherited from Cacti keep `SPDX-FileCopyrightText: <years> The Cacti Group` with its existing years and `SPDX-License-Identifier: GPL-2.0-or-later`; add `SPDX-FileCopyrightText: 2026 The Kadupul project and contributors` when you make a substantive change. Files Kadupul creates carry only the Kadupul line and `GPL-3.0-or-later`.
   - Use snake_case functions and procedural structure consistent with the codebase; avoid introducing namespaces unless integrating vendor code.
