@@ -58,10 +58,23 @@ root=$(pwd)
 
 # Files are classified under the rules in force at the merge base, so a change
 # that tightens the config cannot make an already formatted file look
-# unconverted and skip its edit. The final check still uses this config.
-base_config="$tmp/.merge-base-config/$config"
+# unconverted and skip its edit. The merge base's config is found with the
+# same precedence as above, and this config stands in only when the merge base
+# has neither name. A failure reading a config that exists stops the check.
+# The final check still uses this config.
+base_config_name=
+for name in .php-cs-fixer.php .php-cs-fixer.dist.php; do
+	if git cat-file -e "$merge_base:$name" 2>/dev/null; then
+		base_config_name=$name
+		break
+	fi
+done
 mkdir -p "$tmp/.merge-base-config"
-if ! git show "$merge_base:$config" > "$base_config" 2>/dev/null; then
+if [ -n "$base_config_name" ]; then
+	base_config="$tmp/.merge-base-config/$base_config_name"
+	git show "$merge_base:$base_config_name" > "$base_config"
+else
+	base_config="$tmp/.merge-base-config/$config"
 	cp "$config" "$base_config"
 fi
 
@@ -107,6 +120,10 @@ same_tokens() {
 					// The opening tag token carries the whitespace that follows it.
 					if ($t[0] === T_OPEN_TAG || $t[0] === T_OPEN_TAG_WITH_ECHO) {
 						$t[1] = rtrim($t[1]);
+					}
+					// Formatting can re-indent a docblock or respace a comment.
+					if ($t[0] === T_COMMENT || $t[0] === T_DOC_COMMENT) {
+						$t[1] = preg_replace("/\\s+/", "", $t[1]);
 					}
 					$out[] = array($t[0], $t[1]);
 				} else {
