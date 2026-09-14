@@ -211,9 +211,12 @@ function reset_password_apply($username, $password) {
 		$password_history = implode('|', $passes);
 	}
 
-	/* Revoke before saving: if a later step fails without a transaction, the old
-	 * password still works but no token or session from before outlives it. */
-	$transaction = db_begin_transaction();
+	/* without a transaction a failed later write would leave tokens and sessions revoked but the old password in place */
+	if (!db_begin_transaction()) {
+		print "ERROR: Could not start a database transaction for local user '" . $user['username'] . "'; the password was not changed" . PHP_EOL;
+
+		return 1;
+	}
 
 	$steps = array(
 		'revoke remember-me tokens' => array('DELETE FROM user_auth_cache WHERE user_id = ?', array($user['id'])),
@@ -229,9 +232,7 @@ function reset_password_apply($username, $password) {
 
 	foreach ($steps as $step => $query) {
 		if (!db_execute_prepared($query[0], $query[1])) {
-			if ($transaction) {
-				db_rollback_transaction();
-			}
+			db_rollback_transaction();
 
 			print "ERROR: Could not $step for local user '" . $user['username'] . "'; the password was not changed" . PHP_EOL;
 
@@ -239,7 +240,7 @@ function reset_password_apply($username, $password) {
 		}
 	}
 
-	if ($transaction && !db_commit_transaction()) {
+	if (!db_commit_transaction()) {
 		db_rollback_transaction();
 
 		print "ERROR: Could not commit the change for local user '" . $user['username'] . "'; the password was not changed" . PHP_EOL;

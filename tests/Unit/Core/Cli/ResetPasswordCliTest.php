@@ -226,17 +226,6 @@ function reset_password_cli_writes(array $result, string $prefix) : array {
 	}));
 }
 
-/**
- * @param array<string, mixed> $result
- *
- * @return array<int, string>
- */
-function reset_password_cli_order(array $result) : array {
-	return array_map(function (array $query) : string {
-		return implode(' ', array_slice(explode(' ', $query['sql']), 0, strpos($query['sql'], 'UPDATE') === 0 ? 2 : 3));
-	}, $result['executed']);
-}
-
 function reset_password_cli_user(array $fields = array()) : array {
 	return $fields + array('id' => 1, 'username' => 'admin', 'realm' => 0, 'enabled' => 'on', 'locked' => '', 'password' => '', 'password_history' => '');
 }
@@ -304,7 +293,6 @@ test('a reset revokes tokens and sessions and never shows or logs the password',
 
 	expect($result['executed'])->toContain(array('sql' => 'DELETE FROM user_auth_cache WHERE user_id = ?', 'params' => array(1)))
 		->and($result['executed'])->toContain(array('sql' => 'DELETE FROM sessions WHERE user_id = ?', 'params' => array(1)))
-		->and(reset_password_cli_order($result))->toBe(array('DELETE FROM user_auth_cache', 'DELETE FROM sessions', 'UPDATE user_auth'))
 		->and($result['transaction'])->toBe(array('begin', 'commit'))
 		->and(implode("\n", $result['logs']))->toContain('admin')
 		->and($shown)->not->toContain('Recover-1234')
@@ -405,16 +393,15 @@ test('a failed commit rolls back and exits 1', function () {
 		->and($result['transaction'])->toBe(array('begin', 'commit', 'rollback'));
 });
 
-test('without a transaction the old tokens and sessions end before the password is saved', function () {
-	$failed = reset_password_cli_run(array('--username=admin'), "Recover-1234\n", array('no_transaction' => true, 'fail_on' => 'UPDATE user_auth'));
-	$done   = reset_password_cli_run(array('--username=admin'), "Recover-1234\n", array('no_transaction' => true));
+test('a transaction that can not start exits 1 before any write', function () {
+	$result = reset_password_cli_run(array('--username=admin'), "Recover-1234\n", array('no_transaction' => true));
 
-	expect($failed['code'])->toBe(1)
-		->and(reset_password_cli_order($failed))->toBe(array('DELETE FROM user_auth_cache', 'DELETE FROM sessions', 'UPDATE user_auth'))
-		->and($failed['transaction'])->toBe(array('begin'))
-		->and($done['code'])->toBe(0)
-		->and($done['transaction'])->toBe(array('begin'))
-		->and($done['stdout'])->toContain('Password reset');
+	expect($result['code'])->toBe(1)
+		->and($result['stdout'])->toContain("ERROR: Could not start a database transaction for local user 'admin'; the password was not changed")
+		->and($result['stdout'])->not->toContain('Password reset')
+		->and($result['transaction'])->toBe(array('begin'))
+		->and($result['executed'])->toBe(array())
+		->and($result['logs'])->toBe(array());
 });
 
 test('a password column check that dies exits 1 before any write', function () {
