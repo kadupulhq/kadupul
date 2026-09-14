@@ -358,8 +358,16 @@ if (!is_resource($handle)) {
 	exit(1);
 }
 
-fwrite($handle, $new_xml);
-fflush($handle);
+/* fwrite() can return a short count, or fflush() can fail, on a full disk.
+ * Either one leaves a truncated file on disk that rrdtool restore below
+ * would read as if it were complete. */
+$bytes_written = fwrite($handle, $new_xml);
+
+if ($bytes_written !== strlen($new_xml) || !fflush($handle)) {
+	print 'FATAL: Refusing to restore \'' . $newxmlfile . '\' because the XML file was not written completely' . PHP_EOL;
+	cacti_cli_remove_file($handle, $newxmlfile);
+	exit(1);
+}
 
 /* finally update the file XML file and Reprocess the RRDfile */
 if (!$dryrun) {
