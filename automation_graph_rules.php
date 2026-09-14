@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -37,7 +38,7 @@ set_default_action();
 
 switch (get_request_var('action')) {
 	case 'save':
-		csrf_require_post();
+		csrf_require_post(true);
 		save();
 
 		break;

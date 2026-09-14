@@ -34,7 +34,7 @@ set_default_action();
 
 switch (get_request_var('action')) {
 	case 'save':
-		csrf_require_post();
+		csrf_require_post(true);
 		form_save();
 
 		break;

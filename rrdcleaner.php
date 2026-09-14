@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -37,6 +38,8 @@ $rra_path = $config['rra_path'] . '/';
 set_default_action();
 
 if (isset_request_var('rescan')) {
+	/* a rescan rebuilds the RRDfile list, so refuse one another site starts */
+	csrf_require_post();
 	set_request_var('action', 'restart');
 }
 

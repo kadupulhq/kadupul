@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -144,11 +145,10 @@ function form_save() {
    ------------------------------------ */
 
 function input_remove() {
-	if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
-		cacti_log('WARNING: Rejected non-POST request to remove a Graph Item Input', false, 'AUTH');
-
-		return;
-	}
+	/* the caller redirects once this returns, so a refusal has to end the request.
+	 * loadPageUsingPost() is the only caller, so unlike the GET compatibility
+	 * links elsewhere, a same-origin GET here has nothing legitimate to serve. */
+	csrf_require_post(true);
 
 	/* ================= input validation ================= */
 	get_filter_request_var('id');
