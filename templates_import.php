@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -116,7 +117,8 @@ function form_save() {
 		/* obtain debug information if it's set */
 		$debug_data = import_xml_data($xml_data, $import_as_new, $profile_id, $remove_orphans, $replace_svalues, $import_hashes);
 
-		if (!$preview_only) {
+		/* a failed import falls through to the validation error below */
+		if (!$preview_only && $debug_data !== false) {
 			raise_message('import_success', __('The Template Import Succeeded.'), MESSAGE_LEVEL_INFO);
 
 			header('Location: templates_import.php');
