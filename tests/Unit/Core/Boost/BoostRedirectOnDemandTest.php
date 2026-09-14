@@ -138,7 +138,7 @@ function boostRedirectLoad($root) {
 	expect(function_exists('boostRedirect_boost_poller_on_demand'))->toBeTrue();
 }
 
-function boostRedirectRun(array $options, array $boost_rows = null, array $state = array()) {
+function boostRedirectRun(array $options, ?array $boost_rows = null, array $state = array()) {
 	$results = array(
 		array('local_data_id' => 7, 'rrd_name' => 'traffic_in', 'time' => '2026-01-01 00:05:00', 'output' => '10'),
 		array('local_data_id' => 7, 'rrd_name' => 'traffic_out', 'time' => '2026-01-01 00:05:00', 'output' => '11'),
