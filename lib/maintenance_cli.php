@@ -139,10 +139,11 @@ function cacti_cli_create_file($path) {
 		return sprintf("Unable to create '%s'", $path);
 	}
 
-	/* The umask is the protection. PHP has no fchmod(), and a chmod() by name
+	/* The umask is the protection, not a repair afterwards: a chmod() by name
 	 * could reach a file swapped in after the create, so a mode that is still
-	 * wide is refused rather than repaired. Windows reports 0666 for every file
-	 * and relies on the per-user TEMP directory instead. */
+	 * wide is refused rather than narrowed. Windows reports 0666 for every
+	 * file, so this check is skipped there and the per-user TEMP directory is
+	 * the only protection. */
 	$stat = fstat($handle);
 
 	if ($stat === false || (DIRECTORY_SEPARATOR == '/' && ($stat['mode'] & 0777) !== 0600)) {
