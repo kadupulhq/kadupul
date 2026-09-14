@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  +-------------------------------------------------------------------------+
 */
 
@@ -35,11 +36,11 @@ test('domains_login_process does not interpolate LDAP error_text into the login 
 	expect($body)->not->toContain("__('Access Denied!  LDAP Error: %s'");
 });
 
-test('domains_login_process fails when LDAP succeeded but the domain has no template and no user', function () use ($authSource) {
+test('domains_login_process leaves a bound user with no domain template to the global template and guest checks', function () use ($authSource) {
 	$start = strpos($authSource, 'function domains_login_process(');
 	$body  = substr($authSource, $start, 8000);
 
-	expect($body)->toContain('Domain template is not configured');
+	expect($body)->not->toContain('Domain template is not configured');
 });
 
 test('domains_login_process does not log a missing cn search index', function () use ($authSource) {
@@ -77,19 +78,18 @@ test('Getcn distinguishes no user from many users', function () use ($ldapSource
 	expect($body)->toContain('LdapError::SearchFoundMultiUser)');
 });
 
-test('username group membership searches uid cn and UPN with the login name', function () use ($ldapSource) {
+test('username group membership looks up the true DN with the escaped bind DN', function () use ($ldapSource) {
 	$start = strpos($ldapSource, 'function Authenticate()');
 	$body  = substr($ldapSource, $start, 8000);
 
-	expect($body)->toContain("cacti_ldap_filter('(|(uid=<username>)(cn=<username>)(userPrincipalName=<username>))'");
-	expect($body)->toContain("'username' => \$this->username");
+	expect($body)->toContain("cacti_ldap_filter('(|(uid=<dn>)(cn=<dn>)(userPrincipalName=<dn>))', array('dn' => \$this->dn))");
 });
 
 test('bind timeout is gated on LDAP_OPT_TIMEOUT', function () use ($ldapSource) {
 	expect($ldapSource)->toContain("defined('LDAP_OPT_TIMEOUT')");
 });
 
-test('new LDAP installs demand a valid TLS certificate', function () use ($settings) {
-	expect($settings)->toContain("'default' => LDAP_OPT_X_TLS_DEMAND");
-	expect($settings)->not->toContain("'default' => LDAP_OPT_X_TLS_NEVER");
+test('new LDAP installs keep the 1.2.31 Never default for TLS certificates', function () use ($settings) {
+	expect($settings)->toContain("'default' => LDAP_OPT_X_TLS_NEVER");
+	expect($settings)->not->toContain("'default' => LDAP_OPT_X_TLS_DEMAND");
 });

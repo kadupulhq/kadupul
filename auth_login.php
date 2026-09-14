@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -52,8 +53,9 @@ global $error, $error_msg;
 
 /* The IP fallback can validate a login CSRF token when a clean browser rejects
  * a mis-scoped session cookie. Stop before authenticating so that successful
- * credentials do not redirect back to a fresh unauthenticated session. */
-if ($auth_method != 2 && get_nfilter_request_var('action') == 'login') {
+ * credentials do not redirect back to a fresh unauthenticated session. Only a
+ * posted form token shows the cookie was lost; kiosk URLs and scripts send none. */
+if ($auth_method != 2 && get_nfilter_request_var('action') == 'login' && isset($_POST['__csrf_magic'])) {
 	$session_name = session_name();
 
 	if ($session_name !== '' && !isset($_COOKIE[$session_name])) {

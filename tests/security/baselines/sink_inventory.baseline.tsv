@@ -9,6 +9,8 @@ cmd_exec	./cli/float_rrdfiles.php:337				$response = exec($command, $output, $re
 cmd_exec	./cli/float_rrdfiles.php:454					$response = exec($command, $output, $return);
 cmd_exec	./cli/push_out_hosts.php:67		passthru($command, $exit_code);
 cmd_exec	./cli/remove_broken_graphs.php:47		$stty = shell_exec('stty size');
+cmd_exec	./cli/reset_password.php:101		shell_exec('stty -echo');
+cmd_exec	./cli/reset_password.php:105		shell_exec('stty echo');
 cmd_exec	./cli/splice_rrd.php:237	$response = shell_exec(cacti_escapeshellcmd($rrdtool));
 cmd_exec	./cli/splice_rrd.php:269	shell_exec(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($oldrrd) . ' > ' . cacti_escapeshellarg($oldxmlfile));
 cmd_exec	./cli/splice_rrd.php:272	shell_exec(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($newrrd) . ' > ' . cacti_escapeshellarg($newxmlfile));

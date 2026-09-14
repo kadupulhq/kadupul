@@ -279,10 +279,13 @@ function get_basic_auth_username() {
 		return false;
 	}
 
-	/* HTTP_* entries are request headers, and PHP fills PHP_AUTH_USER from the
-	 * client's Authorization header whether or not the web server checked it.
-	 * Only REMOTE_USER is set by the server once it has authenticated the user. */
-	if (isset($_SERVER['REMOTE_USER'])) {
+	/* 1.2.31 order. FPM and CGI setups often pass only PHP_AUTH_USER, which PHP
+	 * takes from the Authorization header, so it is only as trustworthy as the
+	 * web server's Basic authentication in front of Cacti. HTTP_* entries are
+	 * request headers any client can send, and are never read. */
+	if (isset($_SERVER['PHP_AUTH_USER'])) {
+		$username = str_replace("\\", "\\\\", $_SERVER['PHP_AUTH_USER']);
+	} elseif (isset($_SERVER['REMOTE_USER'])) {
 		$username = str_replace("\\", "\\\\", $_SERVER['REMOTE_USER']);
 	} elseif (isset($_SERVER['REDIRECT_REMOTE_USER'])) {
 		$username = str_replace("\\", "\\\\", $_SERVER['REDIRECT_REMOTE_USER']);
@@ -4023,13 +4026,6 @@ function domains_login_process($username) {
 						cacti_log("LOGIN FAILED: Template user id '" . $template_user . "' does not exist.", false, 'AUTH');
 					}
 				}
-
-				if (!$error && !cacti_sizeof($user)) {
-					$error     = true;
-					$error_msg = __('Access Denied!  Domain template is not configured.  Please contact your Administrator.');
-
-					cacti_log("LOGIN FAILED: LDAP user '" . $username . "' authenticated but the domain has no template and no existing account.", false, 'AUTH');
-				}
 			} else {
 				$error     = true;
 				$error_msg = __('Access Denied!  Login Failed.');
@@ -4477,12 +4473,12 @@ function rsa_check_keypair() {
 }
 
 /**
- * Expires persistent authentication tokens and reloads permissions for users
- * who are members of the changed group.
+ * reset_group_perms - sets a flag for all users of a group logged in that their perms
+ *   need to be reloaded from the database
  *
- * @param int $group_id ID of the group whose user permissions changed.
+ * @param  (int) $group_id - the id of the group to check
  *
- * @return void
+ * @return (void)
  */
 function reset_group_perms($group_id) {
 	$users = array_rekey(db_fetch_assoc_prepared('SELECT user_id
@@ -4494,10 +4490,6 @@ function reset_group_perms($group_id) {
 		$user_ids     = array_values($users);
 		$placeholders = implode(',', array_fill(0, cacti_sizeof($user_ids), '?'));
 
-		db_execute_prepared("DELETE FROM user_auth_cache
-			WHERE user_id IN ($placeholders)",
-			$user_ids);
-
 		db_execute_prepared("UPDATE user_auth
 			SET reset_perms=FLOOR(RAND() * 4294967295) + 1
 			WHERE id IN ($placeholders)",
@@ -4506,15 +4498,14 @@ function reset_group_perms($group_id) {
 }
 
 /**
- * Expires persistent authentication tokens and reloads permissions for a user.
+ * reset_user_perms - sets a flag for all users logged in as this user that their perms
+ *   need to be reloaded from the database
  *
- * @param int $user_id ID of the user whose permissions changed.
+ * @param  (int) $user_id - the id of the current user
  *
- * @return void
+ * @return (void)
  */
 function reset_user_perms($user_id) {
-	db_execute_prepared('DELETE FROM user_auth_cache WHERE user_id = ?', array($user_id));
-
 	db_execute_prepared('UPDATE user_auth
 		SET reset_perms=FLOOR(RAND() * 4294967295) + 1
 		WHERE id = ?',

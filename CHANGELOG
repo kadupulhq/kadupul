@@ -10,6 +10,14 @@ Cacti CHANGELOG
 -security: Skip the Data Input Method repair after a web import by a user without the Data Input Methods permission
 -issue: Stop a template import cleanly when it refuses a Data Input Method input string
 -issue: Treat a registered task owned by another user as still running instead of starting a second copy
+-security: Store Demand for LDAP TLS Certificate Requirements on new web installs; upgrades keep the Never default
+-issue: Add cli/reset_password.php to set a local account password from the command line and require a new one at the next login
+-issue: Accept PHP_AUTH_USER again as the Web Basic user for FPM and CGI servers; request header copies stay ignored
+-issue: Let a login without a session cookie proceed unless it posts the login form token, so kiosk URLs and scripted logins work again
+-issue: Keep remember-me logins signed in when an administrator edits their permissions, groups or realms
+-issue: Keep Never as the LDAP TLS Certificate Requirements default, and log a warning when encrypted LDAP does not verify the server certificate
+-issue: Look up LDAP group members of type Username by the bound DN again, so posixGroup memberUid groups pass
+-issue: Let a Domains user in a domain with no User Template fall back to the global template or guest account, as 1.2.31 did
 -issue: Parse installer start and finish times that fall on a whole second instead of crashing
 -security: Verify Remote Data Collector HTTPS certificates by default on new installs; upgraded installs keep their previous behaviour
 -security: Mask passwords, passphrases and community strings in DEVDBG SQL save logging with the existing ******** placeholder
