@@ -12,9 +12,10 @@ Targeting `v1.3.0`, the first planned application release. See
 ### Fixed
 
 - Theme stylesheets no longer carry declarations browsers discard: an invalid
-  `#white` colour and `word-break-wrap` in midwinter and paw, placeholder
-  `#TODO` rules in the midwinter compact layouts, and `background-color`
-  values the following `background` shorthands replaced. The modern theme's
+  `#white` colour in midwinter, paw, paper-plane and sunrise, `word-break-wrap`
+  in midwinter, placeholder `#TODO` rules in the midwinter compact layouts, and
+  `background-color` values the following `background` shorthands replaced in
+  modern and paw. The modern theme's
   navigation bar hover and visited link styles apply again.
 - Tables that hide columns to fit the window sort the kept column indexes as
   numbers.
