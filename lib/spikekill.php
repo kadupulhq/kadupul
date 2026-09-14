@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -1403,7 +1404,7 @@ class spikekill {
 		$carry = 0.0;
 
 		foreach ($items as $val) {
-			$d = ((double) $val) - $mean;
+			$d = ((float) $val) - $mean;
 			$carry += $d * $d;
 		}
 

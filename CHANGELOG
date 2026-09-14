@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.x
+-issue: Use the (float) cast in spikekill's standard deviation helper instead of the (double) alias PHP 8.5 deprecates
 -issue: Use the colon terminator on two utilities.php case labels that PHP 8.5 deprecates
 -security: Require a POST token to change a user's or group's default policy, refusing GET from any site
 -security: Compare the CSRF guard's same-origin check against a bare IPv6 SERVER_NAME instead of stripping its last hextet as a port
