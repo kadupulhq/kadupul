@@ -1,6 +1,7 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -125,12 +126,10 @@ function _csp_fetch($port) {
 	$raw = curl_exec($ch);
 	if ($raw === false) {
 		$err = curl_error($ch);
-		curl_close($ch);
 		throw new RuntimeException('curl failed: ' . $err);
 	}
 	$status      = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
 	$header_size = (int) curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-	curl_close($ch);
 
 	$raw_headers = substr($raw, 0, $header_size);
 	$body        = substr($raw, $header_size);

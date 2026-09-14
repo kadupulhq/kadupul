@@ -1,6 +1,7 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -14,10 +15,6 @@ function xml2array($data) {
 	xml_parser_set_option($p, XML_OPTION_SKIP_WHITE, 1);
 	xml_parser_set_option($p, XML_OPTION_CASE_FOLDING, 0);
 	xml_parse_into_struct($p, $data, $vals, $index);
-
-	if (version_compare(PHP_VERSION, '8.5', '<')) {
-		xml_parser_free($p);
-	}
 
 	$tree = array();
 	$i = 0;
@@ -101,10 +98,6 @@ function rrdxport2array($data) {
 	xml_parser_set_option($p, XML_OPTION_CASE_FOLDING, 0);
 	xml_parser_set_option($p, XML_OPTION_TARGET_ENCODING, 'UTF-8');
 	xml_parse_into_struct($p, $data, $vals, $index);
-
-	if (version_compare(PHP_VERSION, '8.5', '<')) {
-		xml_parser_free($p);
-	}
 
 	$tree = array();
 	$i = 0;
