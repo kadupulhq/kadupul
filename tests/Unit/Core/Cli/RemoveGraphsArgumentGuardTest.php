@@ -104,6 +104,18 @@ test('remove_graphs recognizes a declared long option written without "="', func
 	}
 });
 
+test('remove_graphs recognizes a following token that looks like an option', function () {
+	/* A negative-looking value is rejected here too: it must be passed
+	 * joined to its option with "=", e.g. "--host-id=-1". */
+	foreach (array('--host-id=5', '-V', '-', '--', '-1') as $token) {
+		expect(cacti_remove_graphs_next_looks_like_option($token))->toBeTrue($token);
+	}
+
+	foreach (array('5', '^foo', 'host-id') as $token) {
+		expect(cacti_remove_graphs_next_looks_like_option($token))->toBeFalse($token);
+	}
+});
+
 /**
  * Reproduce cli/remove_graphs.php's own argument loop, one decision per
  * token, so a regression there shows up without spawning the full CLI
@@ -123,6 +135,12 @@ function remove_graphs_argument_outcomes($parms, $shortopts, $longopts) {
 		}
 
 		if ($i + 1 < $total && cacti_remove_graphs_takes_next_argument($parameter, $longopts)) {
+			if (cacti_remove_graphs_next_looks_like_option($parms[$i + 1])) {
+				$outcomes[] = array($parameter, 'abort');
+
+				break;
+			}
+
 			$outcomes[] = array($parameter, 'valid', $parms[$i + 1]);
 			$i++;
 
@@ -180,6 +198,30 @@ test('remove_graphs loop still aborts a trailing option with no value', function
 	expect($outcomes)->toBe(array(
 		array('--force', 'valid'),
 		array('--host-id', 'abort'),
+	));
+});
+
+test('remove_graphs loop aborts instead of taking a following option as a value', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--graph-regex', '--host-id=5'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--graph-regex', 'abort'),
+	));
+});
+
+test('remove_graphs loop aborts a bare option immediately followed by another option', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--host-id', '--force'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--host-id', 'abort'),
+	));
+});
+
+test('remove_graphs loop still accepts a negative value joined with "="', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--host-id=-1'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--host-id=-1', 'valid'),
 	));
 });
 
@@ -275,6 +317,7 @@ test('remove_graphs wires strict validation before getopt', function () {
 	expect($source)->not->toBeFalse()
 		->and($source)->toContain('cacti_remove_graphs_parameter_is_valid($parameter, $shortopts, $longopts)')
 		->and($source)->toContain('cacti_remove_graphs_takes_next_argument($parameter, $longopts)')
+		->and($source)->toContain('cacti_remove_graphs_next_looks_like_option($parms[$i + 1])')
 		->and($source)->toContain('ERROR: Invalid Argument:')
 		->and($source)->not->toContain("'graph-type::'");
 

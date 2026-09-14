@@ -86,6 +86,26 @@ function cacti_remove_graphs_takes_next_argument($parameter, $longopts) {
 }
 
 /**
+ * Whether a token that would be taken as a value looks like another option
+ * instead.
+ *
+ * getopt() does not check this: a value-required option with no "=" takes
+ * the next argv token unconditionally, so "--graph-regex --host-id=5" uses
+ * "--host-id=5" as the regex and silently drops the host filter. The calling
+ * loop checks this before treating the next token as a value, so it can
+ * abort instead of widening what a destructive command removes. A value that
+ * legitimately begins with "-", such as a negative id, can still be passed
+ * as "--opt=-1".
+ *
+ * @param string $token The next command-line token.
+ *
+ * @return bool True when $token looks like an option rather than a value.
+ */
+function cacti_remove_graphs_next_looks_like_option($token) {
+	return strpos($token, '-') === 0;
+}
+
+/**
  * Create a file for writing without following a symlink or reusing a name.
  *
  * The maintenance scripts keep their 1.2.31 names in the shared temporary

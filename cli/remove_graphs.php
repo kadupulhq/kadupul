@@ -98,8 +98,17 @@ if (cacti_sizeof($parms)) {
 		/* getopt() takes a required long-option value from the next argv
 		 * element when it is not joined with "=". Skip that element here
 		 * too, or it fails validation on its own and aborts a legitimate
-		 * invocation such as "--host-id 5". */
+		 * invocation such as "--host-id 5". But when that next element
+		 * looks like another option, getopt() would still swallow it as
+		 * the value, so treat the value as missing and abort instead of
+		 * letting a filter option silently disappear. */
 		if ($i + 1 < $parms_total && cacti_remove_graphs_takes_next_argument($parameter, $longopts)) {
+			if (cacti_remove_graphs_next_looks_like_option($parms[$i + 1])) {
+				print "ERROR: Invalid Argument: ($parameter) requires a value" . PHP_EOL . PHP_EOL;
+				display_help();
+				exit(1);
+			}
+
 			$i++;
 
 			continue;
