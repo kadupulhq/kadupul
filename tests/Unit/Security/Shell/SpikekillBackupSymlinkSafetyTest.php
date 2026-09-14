@@ -33,6 +33,24 @@
 
 require_once dirname(__DIR__, 4) . '/lib/spikekill.php';
 
+/* read_config_option() is guarded with function_exists() because
+   PurgeSpikeBackupsWritableCheckTest.php and SpikekillXmlDumpFileSafetyTest.php
+   stub the same global and all three files run in the same Pest process. */
+
+function spikekill_backup_test_stub_config($values) {
+	global $spikekill_shell_test_config;
+
+	$spikekill_shell_test_config = $values;
+}
+
+if (!function_exists('read_config_option')) {
+	function read_config_option($option) {
+		global $spikekill_shell_test_config;
+
+		return $spikekill_shell_test_config[$option] ?? '';
+	}
+}
+
 function invoke_spikekill_private(string $method, array $args) {
 	$reflection = new ReflectionClass('spikekill');
 	$instance   = $reflection->newInstanceWithoutConstructor();
@@ -313,4 +331,38 @@ test('a short copy is treated as failure and the partial backup is removed', fun
 
 	expect($written)->toBeFalse()
 		->and(file_exists($desired))->toBeFalse();
+});
+
+test('normalizeDir strips a trailing slash but keeps a bare root or empty value', function () {
+	expect(invoke_spikekill_private('normalizeDir', ['/var/lib/cacti/backups/']))->toBe('/var/lib/cacti/backups')
+		->and(invoke_spikekill_private('normalizeDir', ['/var/lib/cacti/backups']))->toBe('/var/lib/cacti/backups')
+		->and(invoke_spikekill_private('normalizeDir', ['/']))->toBe('/')
+		->and(invoke_spikekill_private('normalizeDir', ['///']))->toBe('/')
+		->and(invoke_spikekill_private('normalizeDir', ['']))->toBe('');
+});
+
+test('backupRRDFile refuses a symlinked spikekill_backupdir configured with its default trailing slash', function () {
+	/* spikekill_backupdir defaults to a path with a trailing slash
+	   (include/global_settings.php); is_link('dir/') follows the final
+	   symlink to stat what it points at instead of the link itself, so a
+	   symlinked backup directory would pass an is_link() check made
+	   against the unnormalized configured value */
+	$real_backupdir = $this->dir . '/real-backupdir';
+	mkdir($real_backupdir, 0700, true);
+
+	$backupdir_link = $this->dir . '/backupdir';
+	symlink($real_backupdir, $backupdir_link);
+
+	expect(is_link($backupdir_link . '/'))->toBeFalse()
+		->and(is_link($backupdir_link))->toBeTrue();
+
+	spikekill_backup_test_stub_config(array('spikekill_backupdir' => $backupdir_link . '/'));
+
+	$ok = invoke_spikekill_private('backupRRDFile', [$this->rrdfile]);
+
+	expect($ok)->toBeFalse()
+		->and(glob($real_backupdir . '/*'))->toBe([]);
+
+	unlink($backupdir_link);
+	rmdir($real_backupdir);
 });

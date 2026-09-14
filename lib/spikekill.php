@@ -399,10 +399,10 @@ class spikekill {
 		$this->seed = mt_rand();
 
 		if ($config['cacti_server_os'] == 'win32') {
-			$this->tempdir = read_config_option('spikekill_backupdir');
+			$this->tempdir = $this->normalizeDir(read_config_option('spikekill_backupdir'));
 			$bakfile = $this->tempdir . '/' . str_replace('.rrd', '', basename($this->rrdfile)) . '.backup.' . $this->seed . '.rrd';
 		} else {
-			$this->tempdir = read_config_option('spikekill_backupdir');
+			$this->tempdir = $this->normalizeDir(read_config_option('spikekill_backupdir'));
 			$bakfile = $this->tempdir . '/' . str_replace('.rrd', '', basename($this->rrdfile)) . '.backup.' . $this->seed . '.rrd';
 		}
 
@@ -842,7 +842,7 @@ class spikekill {
 	}
 
 	private function backupRRDFile($rrdfile) {
-		$backupdir = read_config_option('spikekill_backupdir');
+		$backupdir = $this->normalizeDir(read_config_option('spikekill_backupdir'));
 
 		if ($backupdir == '') {
 			$backupdir = $this->tempdir;
@@ -1051,6 +1051,25 @@ class spikekill {
 		}
 
 		return true;
+	}
+
+	/**
+	 * normalizeDir - strip a trailing slash from a configured or derived
+	 * directory before it is passed to is_link(), canonicalDir() or used to
+	 * build a path.  spikekill_backupdir defaults to a path with a trailing
+	 * slash (include/global_settings.php), and is_link('dir/') follows the
+	 * final symlink to stat what it points at instead of the link itself,
+	 * so a symlinked backup directory would otherwise pass the is_link()
+	 * check it is meant to fail.
+	 *
+	 * @param  (string) $dir
+	 *
+	 * @return (string)
+	 */
+	private function normalizeDir($dir) {
+		$trimmed = rtrim($dir, '/');
+
+		return ($trimmed === '' && $dir !== '') ? '/' : $trimmed;
 	}
 
 	/**
