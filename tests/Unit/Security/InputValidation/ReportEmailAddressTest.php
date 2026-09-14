@@ -615,3 +615,12 @@ test('Send Now takes a From of only commas as set, not as the blank From', funct
 	expect($GLOBALS['ra_sent'])->toBe(array());
 	expect($GLOBALS['ra_messages'])->toBe(array('report_message'));
 });
+
+test('Send Now refuses a comma-only From even with a From Name set', function () use ($root) {
+	load_send($root);
+
+	send_now(',', 'Ops Team');
+
+	expect($GLOBALS['ra_sent'])->toBe(array());
+	expect($GLOBALS['ra_messages'])->toBe(array('report_message'));
+});

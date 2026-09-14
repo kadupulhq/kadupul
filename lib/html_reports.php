@@ -668,6 +668,9 @@ function reports_send($id) {
 			raise_message('report_message', __esc('Unable to send Report \'%s\'.  Please set an e-mail subject',  $report['name']), MESSAGE_LEVEL_ERROR);
 		} elseif (trim($report['from_email']) != '' && $report['from_name'] == '') {
 			raise_message('report_message', __esc('Unable to send Report \'%s\'.  Please set an e-mail From Name',  $report['name']), MESSAGE_LEVEL_ERROR);
+		} elseif (trim($report['from_email']) != '' && trim($report['from_email'], ", \t\r\n\0\x0B") == '') {
+			/* same comma-only check reports_from_allowed() applies on save */
+			raise_message('report_message', __('The From Email Address must be your own e-mail address or the site From Email Address.'), MESSAGE_LEVEL_ERROR);
 		} else {
 			/* a blank From address goes out from the site From address and name,
 			   see reports_mail_from() */
