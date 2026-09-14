@@ -7,6 +7,7 @@ Cacti CHANGELOG
 -issue: Use the (float) cast in spikekill's standard deviation helper instead of the (double) alias PHP 8.5 deprecates
 -issue: Use the colon terminator on two utilities.php case labels that PHP 8.5 deprecates
 -issue: Stop reading the E_STRICT constant, which PHP 8.4 deprecates, and drop the libxml_disable_entity_loader() calls PHP 8.0 deprecated, so neither raises a deprecation notice; XXE protection is unchanged
+-issue: Read the online help fetch's response status in cacti_http() through http_get_last_response_headers() on PHP 8.5, isolating the older $http_response_header fallback so 8.5 raises no deprecation notice
 -security: Require a POST token to change a user's or group's default policy, refusing GET from any site
 -security: Compare the CSRF guard's same-origin check against a bare IPv6 SERVER_NAME instead of stripping its last hextet as a port
 -issue: Sort the visible table column indexes numerically instead of as strings when recalculating layout width
