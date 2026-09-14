@@ -23,6 +23,9 @@ require_once $root . '/lib/installer.php';
 function installer_microtime_date($value)
 {
     $parse = new ReflectionMethod(Installer::class, 'dateFromMicrotime');
+    if (PHP_VERSION_ID < 80100) {
+        $parse->setAccessible(true);
+    }
 
     $date = $parse->invoke(null, $value);
 
