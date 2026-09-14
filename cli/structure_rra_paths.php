@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -197,6 +198,16 @@ foreach ($data_sources as $info) {
     }
 
 	/* create one subfolder for every host */
+	if (is_link($new_base_path)) {
+		$warn_count++;
+
+		print "WARNING: Refusing to use Directory '$new_base_path', it is a Symlink" . PHP_EOL;
+
+		db_fetch_cell("SELECT RELEASE_LOCK('boost.single_ds.$local_data_id')");
+
+		continue;
+	}
+
 	if (!is_dir($new_base_path)) {
 		/* see if we can create the directory for the new file */
 		if (mkdir($new_base_path, 0775, true)) {
@@ -261,7 +272,11 @@ foreach ($data_sources as $info) {
 	 * it's new location if different than the old
 	 */
 	if (file_exists($old_rrd_path)) {
-		if ($old_rrd_path != $new_rrd_path) {
+		if (!structure_rra_is_safe_source($old_rrd_path, $base_rra_path)) {
+			$warn_count++;
+
+			print "WARNING: Refusing to move Source Path '$old_rrd_path', it is not a Regular '.rrd' File inside the configured RRA Directory" . PHP_EOL;
+		} elseif ($old_rrd_path != $new_rrd_path) {
 			if (rename($old_rrd_path, $new_rrd_path)) {
 				$done_count++;
 
@@ -338,6 +353,47 @@ function update_database($info) {
 }
 
 /**
+ * structure_rra_is_safe_source - This script runs as root and moves whatever
+ * file the database names as a data source's old path.  A symlink planted at
+ * that path would make the chown/chgrp below follow it and change ownership
+ * of an arbitrary target, and 'data_source_path' is only checked for
+ * newlines when it is saved, so it can also point outside the RRA tree
+ * entirely.  Refuse to touch anything that is not a plain '.rrd' file
+ * resolving inside the configured RRA directory.
+ *
+ * @param  (string) $path          - the legacy path read from the database
+ * @param  (string) $base_rra_path - the configured 'rra_path' setting
+ *
+ * @return (bool)
+ */
+function structure_rra_is_safe_source($path, $base_rra_path) {
+	if (is_link($path)) {
+		return false;
+	}
+
+	if (!is_file($path)) {
+		return false;
+	}
+
+	if (strtolower(substr($path, -4)) != '.rrd') {
+		return false;
+	}
+
+	$real_path = realpath($path);
+	$real_base = realpath($base_rra_path);
+
+	if ($real_path === false || $real_base === false) {
+		return false;
+	}
+
+	if ($real_path != $real_base && strpos($real_path, $real_base . DIRECTORY_SEPARATOR) !== 0) {
+		return false;
+	}
+
+	return true;
+}
+
+/**
  * sp_recursive_chown - Recursively chown on a path
  *
  * @param  (string)     $path
@@ -350,12 +406,20 @@ function sp_recursive_chown($path, $user) {
 
 	if ($items = glob($path . '/*')) {
 		foreach ($items as $item) {
-			if (is_dir($item)) {
+			if (is_dir($item) && !is_link($item)) {
 				return sp_recursive_chown($item, $user);
+			} elseif (is_link($item)) {
+				return lchown($item, $user);
 			} else {
 				return chown($item, $user);
 			}
 		}
+	}
+
+	/* re-check right before use so a swap between the caller's check and
+	   here cannot redirect a chown() onto a symlink's target */
+	if (is_link($path)) {
+		return lchown($path, $user);
 	}
 
 	return chown($path, $user);
@@ -374,12 +438,20 @@ function sp_recursive_chgrp($path, $group) {
 
 	if ($items = glob($path . '/*')) {
 		foreach ($items as $item) {
-			if (is_dir($item)) {
+			if (is_dir($item) && !is_link($item)) {
 				return sp_recursive_chgrp($item, $group);
+			} elseif (is_link($item)) {
+				return lchgrp($item, $group);
 			} else {
 				return chgrp($item, $group);
 			}
 		}
+	}
+
+	/* re-check right before use so a swap between the caller's check and
+	   here cannot redirect a chgrp() onto a symlink's target */
+	if (is_link($path)) {
+		return lchgrp($path, $group);
 	}
 
 	return chgrp($path, $group);
