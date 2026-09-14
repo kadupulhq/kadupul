@@ -56,16 +56,46 @@ tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 root=$(pwd)
 
+# Resolve the fixer once: the merge-base check below runs from another directory,
+# where a relative PHP_CS_FIXER path would no longer point at the binary.
+if ! fixer_path=$(command -v "$fixer"); then
+	echo "php-cs-fixer not found: $fixer" >&2
+	exit 2
+fi
+case "$fixer_path" in
+	/*) ;;
+	*) fixer_path="$root/$fixer_path" ;;
+esac
+
 checked=()
+# A renamed file is compared with its merge-base name. A plain list keeps the
+# script working on the bash 3.2 that macOS ships.
+renames=$(git diff --name-status -M --diff-filter=R "$merge_base" -- '*.php')
+
 for f in "${files[@]}"; do
-	if git cat-file -e "$merge_base:$f" 2>/dev/null; then
-		mkdir -p "$tmp/$(dirname "$f")"
-		git show "$merge_base:$f" > "$tmp/$f"
+	base_path=$f
+	while IFS=$'\t' read -r _ from to; do
+		if [ "$to" = "$f" ]; then
+			base_path=$from
+		fi
+	done <<< "$renames"
+	if git cat-file -e "$merge_base:$base_path" 2>/dev/null; then
+		mkdir -p "$tmp/$(dirname "$base_path")"
+		git show "$merge_base:$base_path" > "$tmp/$base_path"
 		# override applies the rules to the copy, which lies outside the config's finder
-		if ! (cd "$tmp" && "$fixer" check --config="$root/$config" --path-mode=override \
-			--using-cache=no -- "$f" >/dev/null 2>&1); then
+		set +e
+		(cd "$tmp" && "$fixer_path" check --config="$root/$config" --path-mode=override \
+			--using-cache=no -- "$base_path" >/dev/null 2>&1)
+		status=$?
+		set -e
+		# php-cs-fixer check exits 8 when files only need formatting; any other
+		# non-zero status is a real failure and must not be read as "unconverted".
+		if [ "$status" -eq 8 ]; then
 			echo "Skipping $f: not PER-CS formatted at $merge_base; convert it in a formatting-only change."
 			continue
+		elif [ "$status" -ne 0 ]; then
+			echo "php-cs-fixer failed with status $status while checking $base_path at $merge_base" >&2
+			exit "$status"
 		fi
 	fi
 	checked+=("$f")
@@ -77,5 +107,5 @@ if [ "${#checked[@]}" -eq 0 ]; then
 fi
 
 # intersection keeps the config's exclusions in force for the paths given.
-exec "$fixer" check --config="$config" --path-mode=intersection \
+exec "$fixer_path" check --config="$config" --path-mode=intersection \
 	--using-cache=no --diff -- "${checked[@]}"
