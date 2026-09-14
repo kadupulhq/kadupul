@@ -2,6 +2,7 @@
 /*
   +-------------------------------------------------------------------------+
   | Copyright (C) 2004-2026 The Cacti Group                                 |
+  | Copyright (C) 2026 The Kadupul project and contributors                 |
   |                                                                         |
   | This program is free software; you can redistribute it and/or           |
   | modify it under the terms of the GNU General Public License             |
@@ -43,12 +44,23 @@ function csrf_startup() {
 				$external_secret = false;
 				$secret          = read_config_option('csrf_secret', true);
 
-				if (empty($_SESSION['cacti_csrf_external_secret_warned'])) {
-					/* The session bootstrap below takes over when the database secret is unusable too. */
+				/* A database session stores nothing for an anonymous visitor, so a
+				 * per-session bootstrap secret would differ between the login form
+				 * and its POST. Store a database secret as the installer does. */
+				if (!cacti_csrf_secret_is_valid($secret)) {
+					set_config_option('csrf_secret', csrf_generate_secret());
+					$secret = read_config_option('csrf_secret', true);
+				}
+
+				/* The session flag is lost the same way, so a settings marker
+				 * also limits the warning to one an hour. */
+				if (empty($_SESSION['cacti_csrf_external_secret_warned']) && (int) read_config_option('csrf_external_secret_warned', true) < time() - 3600) {
+					/* The session bootstrap below takes over when the database secret could not be stored. */
 					$selected = (cacti_csrf_secret_is_valid($secret) ? 'the database secret' : 'the session bootstrap secret');
 
 					cacti_log('WARNING: The configured external CSRF secret is unavailable or invalid, using ' . $selected . ' instead', false, 'SYSTEM');
 					$_SESSION['cacti_csrf_external_secret_warned'] = true;
+					set_config_option('csrf_external_secret_warned', time());
 				}
 			}
 		} else {

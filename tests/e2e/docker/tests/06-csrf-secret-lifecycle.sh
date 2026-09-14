@@ -132,6 +132,87 @@ if "${DC[@]}" exec -T cacti-master grep -qE "$LAYOUT_MARKER" /tmp/c06_bad_login;
 	exit 1
 fi
 
+# Database sessions store nothing for an anonymous visitor, so neither a
+# session flag nor a per-session secret survives from the login page to the
+# login POST. With no database secret either, one must be stored.
+db_session_cleanup() {
+	"${DC[@]}" exec -T cacti-master cp \
+		/tmp/c06-config.php /var/www/html/include/config.php >/dev/null 2>&1 || true
+	"${DC[@]}" exec -T cacti-master rm -f /tmp/c06-config.php >/dev/null 2>&1 || true
+	# php.ini-production caches file timestamps for two seconds.
+	sleep 3
+}
+"${DC[@]}" exec -T cacti-master cp \
+	/var/www/html/include/config.php /tmp/c06-config.php
+trap db_session_cleanup EXIT
+
+# Count before the marker goes: the healthcheck may log the one warning
+# before this test's first request does.
+DB_WARNINGS_BEFORE=$(count_fallback_warnings)
+
+# shellcheck disable=SC2016
+"${DC[@]}" exec -T cacti-master sh -c \
+	'printf '\''%s\n'\'' "\$cacti_db_session = true;" >> /var/www/html/include/config.php'
+"${DC[@]}" exec -T cacti-db mariadb -ucactiuser -pcactiuser cacti \
+	-e "DELETE FROM settings WHERE name IN ('csrf_secret', 'csrf_external_secret_warned'); DELETE FROM sessions"
+sleep 3
+
+"${DC[@]}" exec -T cacti-master rm -f /tmp/c06-db.jar
+"${DC[@]}" exec -T cacti-master curl -fsS \
+	-b /tmp/c06-db.jar -c /tmp/c06-db.jar -o /tmp/c06_db_form \
+	http://127.0.0.1/index.php
+for _ in 1 2 3 4; do
+	"${DC[@]}" exec -T cacti-master curl -fsS \
+		-b /tmp/c06-db.jar -c /tmp/c06-db.jar -o /dev/null \
+		http://127.0.0.1/index.php
+done
+DB_TOKEN=$("${DC[@]}" exec -T cacti-master php \
+	/var/www/html/tests/e2e/docker/probes/extract_csrf.php /tmp/c06_db_form)
+if ! [[ "$DB_TOKEN" =~ ^(sid|cookie|key|user|ip):[a-f0-9]+,[0-9]+ ]]; then
+	echo "FAIL: the database session login page did not issue a valid token shape" >&2
+	exit 1
+fi
+
+STORED_SECRET=$("${DC[@]}" exec -T cacti-db mariadb -N -B \
+	-ucactiuser -pcactiuser cacti \
+	-e "SELECT value FROM settings WHERE name='csrf_secret' LIMIT 1")
+if ! [[ "$STORED_SECRET" =~ ^[a-f0-9]{64}$ ]]; then
+	echo "FAIL: the fallback did not store a database secret for database sessions" >&2
+	exit 1
+fi
+
+# The healthcheck may race the first request, so allow two warnings, not one
+# per request.
+DB_WARNINGS=$(( $(count_fallback_warnings) - DB_WARNINGS_BEFORE ))
+if [ "$DB_WARNINGS" -lt 1 ] || [ "$DB_WARNINGS" -gt 2 ]; then
+	echo "FAIL: database sessions logged $DB_WARNINGS fallback warnings for five anonymous requests" >&2
+	exit 1
+fi
+
+"${DC[@]}" exec -T cacti-master curl -sS -L \
+	-b /tmp/c06-db.jar -c /tmp/c06-db.jar \
+	-o /tmp/c06_db_login \
+	--data-urlencode 'action=login' \
+	--data-urlencode 'login_username=admin' \
+	--data-urlencode 'login_password=cacti-e2e-admin' \
+	--data-urlencode "__csrf_magic=$DB_TOKEN" \
+	--data-urlencode 'realm=1' \
+	http://127.0.0.1/index.php
+if ! "${DC[@]}" exec -T cacti-master grep -qE "$LAYOUT_MARKER" /tmp/c06_db_login; then
+	echo "FAIL: a token from the database session login page did not log in" >&2
+	exit 1
+fi
+DB_SESSIONS=$("${DC[@]}" exec -T cacti-db mariadb -N -B \
+	-ucactiuser -pcactiuser cacti \
+	-e "SELECT COUNT(*) FROM sessions WHERE user_id > 0")
+if [ "$DB_SESSIONS" -lt 1 ]; then
+	echo "FAIL: the login did not run with database sessions" >&2
+	exit 1
+fi
+
+db_session_cleanup
+trap - EXIT
+
 "${DC[@]}" exec -T cacti-master php /var/www/html/cli/refresh_csrf.php >/dev/null
 if ! "${DC[@]}" exec -T cacti-master test -f /var/cacti-state/csrf-secret; then
 	echo "FAIL: refresh_csrf.php did not create the configured external secret" >&2
