@@ -36,7 +36,7 @@ test('float rrdfiles creates its 1.2.31 temporary names exclusively and cleans u
 		->and($floatRrdfilesSource)->toContain("\$lf = cacti_cli_open_log('/tmp/clearer.log');")
 		->and($floatRrdfilesSource)->not->toContain("tempnam(\$tmp_dir, 'cacti_float_')")
 		->and($floatRrdfilesSource)->not->toContain("fopen('/tmp/clearer.log'")
-		->and(substr_count($floatRrdfilesSource, 'cacti_cli_remove_file($fp, $tmp_file);'))->toBe(2)
+		->and(substr_count($floatRrdfilesSource, 'cacti_cli_remove_file($fp, $tmp_file);'))->toBe(4)
 		->and($floatRrdfilesSource)->not->toContain('unlink($tmp_file)')
 		->and($floatRrdfilesSource)->toContain('if (!cacti_cli_path_is_handle($fp, $tmp_file)) {')
 		->and($floatRrdfilesSource)->toContain('$lf         = false;')
