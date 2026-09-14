@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -1733,7 +1734,6 @@ function png2jpeg ($png_data) {
 		$ImageData = ob_get_contents(); // fetch image from buffer
 		$ImageDataLength = ob_get_length();
 		ob_end_clean(); // stop this output buffer
-		imagedestroy($im); //clean up
 
 		unlink($fn); // delete scratch file
 	}
@@ -1774,7 +1774,6 @@ function png2gif ($png_data) {
 		$ImageData = ob_get_contents(); // fetch image from buffer
 		$ImageDataLength = ob_get_length();
 		ob_end_clean(); // stop this output buffer
-		imagedestroy($im); //clean up
 
 		unlink($fn); // delete scratch file
 	}

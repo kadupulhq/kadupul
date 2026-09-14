@@ -124,11 +124,9 @@ function _tp_fetch($port, array $headers = array()) {
 	$body = curl_exec($ch);
 	if ($body === false) {
 		$err = curl_error($ch);
-		curl_close($ch);
 		throw new RuntimeException('curl failed: ' . $err);
 	}
 	$status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
-	curl_close($ch);
 
 	$data = json_decode($body, true);
 	if ($status !== 200 || !is_array($data)) {

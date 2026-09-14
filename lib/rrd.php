@@ -4551,14 +4551,6 @@ function rrdtool_create_error_image($string, $width = '', $height = '') {
 	/* get the image from the buffer */
 	$image_data = ob_get_contents();
 
-	/* destroy the image object */
-	imagedestroy($image);
-	imagedestroy($logo);
-
-	if (isset($nimage)) {
-		imagedestroy($nimage);
-	}
-
 	/* flush the buffer */
 	ob_end_clean();
 
