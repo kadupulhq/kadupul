@@ -1,6 +1,8 @@
 Cacti CHANGELOG
 
 1.2.x
+-issue: Sort the visible table column indexes numerically instead of as strings when recalculating layout width
+-security: Open the midwinter theme and installer project links with noopener so the opened page cannot reach back into window.opener
 -issue: Send array rrdtool commands such as the RRDcheck fetch through RRDproxy as one quoted command instead of failing before they are sent
 -issue: Send the RRDproxy file_exists check in RRDcheck a bare path so an RRD path holding a quote character is found, and skip the local writable and modify time checks for RRDs on the proxy
 -issue: Show the validation error instead of success when a template import fails
