@@ -34,20 +34,21 @@
 require_once dirname(__DIR__, 4) . '/lib/spikekill.php';
 
 /* read_config_option() is guarded with function_exists() because
-   PurgeSpikeBackupsWritableCheckTest.php and SpikekillXmlDumpFileSafetyTest.php
-   stub the same global and all three files run in the same Pest process. */
+   PurgeSpikeBackupsWritableCheckTest.php, SpikekillXmlDumpFileSafetyTest.php
+   and HeadersSecureTest.php stub the same global and all four files run in
+   the same Pest process. Every one of those stubs reads and writes
+   $GLOBALS['__test_config_options'], the store HeadersSecureTest.php
+   already used, so whichever file's guarded definition wins the race still
+   honors this file's stubbed values instead of silently falling back to
+   another file's. */
 
 function spikekill_backup_test_stub_config($values) {
-	global $spikekill_shell_test_config;
-
-	$spikekill_shell_test_config = $values;
+	$GLOBALS['__test_config_options'] = $values;
 }
 
 if (!function_exists('read_config_option')) {
 	function read_config_option($option) {
-		global $spikekill_shell_test_config;
-
-		return $spikekill_shell_test_config[$option] ?? '';
+		return $GLOBALS['__test_config_options'][$option] ?? '';
 	}
 }
 

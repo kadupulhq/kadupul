@@ -27,21 +27,23 @@
  * because poller_spikekill.php runs top-level poller setup on include.
  *
  * read_config_option()/cacti_log()/cacti_sizeof() are guarded with
- * function_exists() because SpikekillXmlDumpFileSafetyTest.php stubs the
- * same globals and both files run in the same Pest process.
+ * function_exists() because SpikekillXmlDumpFileSafetyTest.php,
+ * SpikekillBackupSymlinkSafetyTest.php and HeadersSecureTest.php stub the
+ * same globals and all four files run in the same Pest process. Every one
+ * of those read_config_option() stubs reads and writes
+ * $GLOBALS['__test_config_options'], the store HeadersSecureTest.php
+ * already used, so whichever file's guarded definition wins the
+ * function_exists() race still honors this file's stubbed values instead
+ * of silently falling back to another file's.
  */
 
 function purge_spike_backups_test_stub_config($values) {
-	global $spikekill_shell_test_config;
-
-	$spikekill_shell_test_config = $values;
+	$GLOBALS['__test_config_options'] = $values;
 }
 
 if (!function_exists('read_config_option')) {
 	function read_config_option($option) {
-		global $spikekill_shell_test_config;
-
-		return $spikekill_shell_test_config[$option] ?? '';
+		return $GLOBALS['__test_config_options'][$option] ?? '';
 	}
 }
 
