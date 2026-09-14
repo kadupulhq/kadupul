@@ -145,6 +145,10 @@ function cacti_cli_create_file($path) {
 	}
 
 	if (file_exists($path)) {
+		if (!is_file($path)) {
+			return sprintf("Refusing to write '%s' because it is not a regular file", $path);
+		}
+
 		return sprintf("Refusing to overwrite existing file '%s'", $path);
 	}
 

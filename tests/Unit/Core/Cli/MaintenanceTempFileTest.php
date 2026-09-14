@@ -77,6 +77,18 @@ test('an existing file is refused with a clear message and kept as it is', funct
 		->and(file_get_contents($this->victim))->toBe('original');
 });
 
+test('an existing directory is refused as not a regular file, not as an overwrite', function () {
+	$path = $this->dir . '/already-a-directory';
+
+	mkdir($path, 0700);
+
+	try {
+		expect(cacti_cli_create_file($path))->toBe("Refusing to write '$path' because it is not a regular file");
+	} finally {
+		rmdir($path);
+	}
+});
+
 test('the debug log is created when missing and appended when it is ours', function () {
 	if (cacti_cli_current_uid() === false) {
 		test()->markTestSkipped('ownership cannot be verified, so cacti_cli_open_log() only returns a refusal string here');
