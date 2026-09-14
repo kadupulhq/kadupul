@@ -272,7 +272,7 @@ function reports_form_save() {
 		} else {
 			if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) get_nfilter_request_var('id'), 'reports')) {
 				raise_message('permission_denied');
-				header('Location: reports.php');
+				header('Location: ' . get_reports_page() . '?header=false');
 
 				exit;
 			}
@@ -327,6 +327,26 @@ function reports_form_save() {
 		$save['from_email']       = get_nfilter_request_var('from_email');
 		$save['bcc']              = get_nfilter_request_var('bcc');
 
+		foreach (array('email', 'bcc', 'from_email') as $field) {
+			if (reports_address_malformed($save[$field])) {
+				raise_message(3);
+
+				$_SESSION['sess_error_fields'][$field] = $field;
+
+				/* the edit form redraws a refused field from the session and
+				   cannot escape an array, so let it show the stored value */
+				if (isset($_SESSION['sess_field_values'][$field]) && !is_string($_SESSION['sess_field_values'][$field])) {
+					unset($_SESSION['sess_field_values'][$field]);
+				}
+			}
+		}
+
+		if (!reports_address_malformed($save['from_email']) && !reports_from_allowed($save['from_email'])) {
+			raise_message('report_message', __('The From Email Address must be your own e-mail address or the site From Email Address.'), MESSAGE_LEVEL_ERROR);
+
+			$_SESSION['sess_error_fields']['from_email'] = 'from_email';
+		}
+
 		$atype = get_nfilter_request_var('attachment_type');
 		if (($atype != REPORTS_TYPE_INLINE_PNG) &&
 			($atype != REPORTS_TYPE_INLINE_JPG) &&
@@ -364,10 +384,25 @@ function reports_form_save() {
 
 		unset($_SESSION['sess_error_fields']);
 
+		$report_id = (int) get_request_var('report_id');
+		$item_id   = (int) get_request_var('id');
+
+		/* sql_save() overwrites whatever row carries this id, so an existing
+		   item must already sit in a report the caller may change.  Failing
+		   here skips the save, and item_edit then refuses the same ids.  A report
+		   admin passes the ownership check for any id, so the report must exist. */
+		if (!cacti_authorize_resource($_SESSION['sess_user_id'], $report_id, 'reports') ||
+			!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ?', array($report_id)) ||
+			($item_id > 0 && db_fetch_cell_prepared('SELECT report_id FROM reports_items WHERE id = ?', array($item_id)) != $report_id)) {
+			raise_message('permission_denied');
+
+			$_SESSION['sess_error_fields']['report_id'] = 'report_id';
+		}
+
 		$save = array();
 
-		$save['id']                = get_nfilter_request_var('id');
-		$save['report_id']         = form_input_validate(get_nfilter_request_var('report_id'), 'report_id', '^[0-9]+$', false, 3);
+		$save['id']                = $item_id;
+		$save['report_id']         = $report_id;
 
 		if (isempty_request_var('id')) {
 			$save['sequence'] = db_fetch_cell_prepared('SELECT MAX(sequence)+1
@@ -459,6 +494,14 @@ function reports_form_actions() {
 				}
 			} elseif (get_nfilter_request_var('drp_action') == REPORTS_DUPLICATE) { // duplicate
 				for ($i=0;($i<cacti_count($selected_items));$i++) {
+					/* the copy belongs to the caller, so its From must pass the check a
+					   save by the caller would */
+					if (!reports_from_allowed((string) db_fetch_cell_prepared('SELECT from_email FROM reports WHERE id = ?', array($selected_items[$i])))) {
+						raise_message('report_message', __('The From Email Address must be your own e-mail address or the site From Email Address.'), MESSAGE_LEVEL_ERROR);
+
+						continue;
+					}
+
 					reports_log(__FUNCTION__ . ', duplicate: ' . $selected_items[$i] . ' name: ' . get_nfilter_request_var('name_format'), false, 'REPORTS TRACE', POLLER_VERBOSITY_MEDIUM);
 
 					duplicate_reports($selected_items[$i], get_nfilter_request_var('name_format'));
@@ -623,11 +666,14 @@ function reports_send($id) {
 			raise_message('report_message', __esc('Unable to send Report \'%s\'.  Please set destination e-mail addresses',  $report['name']), MESSAGE_LEVEL_ERROR);
 		} elseif ($report['subject'] == '') {
 			raise_message('report_message', __esc('Unable to send Report \'%s\'.  Please set an e-mail subject',  $report['name']), MESSAGE_LEVEL_ERROR);
-		} elseif ($report['from_name'] == '') {
+		} elseif (trim($report['from_email']) != '' && $report['from_name'] == '') {
 			raise_message('report_message', __esc('Unable to send Report \'%s\'.  Please set an e-mail From Name',  $report['name']), MESSAGE_LEVEL_ERROR);
-		} elseif ($report['from_email'] == '') {
-			raise_message('report_message', __esc('Unable to send Report \'%s\'.  Please set an e-mail from address',  $report['name']), MESSAGE_LEVEL_ERROR);
+		} elseif (trim($report['from_email']) != '' && trim($report['from_email'], ", \t\r\n\0\x0B") == '') {
+			/* same comma-only check reports_from_allowed() applies on save */
+			raise_message('report_message', __('The From Email Address must be your own e-mail address or the site From Email Address.'), MESSAGE_LEVEL_ERROR);
 		} else {
+			/* a blank From address goes out from the site From address and name,
+			   see reports_mail_from() */
 			generate_report($report, true);
 		}
 	}
@@ -639,7 +685,10 @@ function reports_item_movedown() {
 	get_filter_request_var('id');
 	/* ==================================================== */
 
-	if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) get_request_var('id'), 'reports')) {
+	/* move_item_down() rewrites the item row by id alone */
+	if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) get_request_var('id'), 'reports') ||
+		!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ?', array(get_request_var('id'))) ||
+		db_fetch_cell_prepared('SELECT report_id FROM reports_items WHERE id = ?', array(get_request_var('item_id'))) != get_request_var('id')) {
 		return;
 	}
 
@@ -652,7 +701,10 @@ function reports_item_moveup() {
 	get_filter_request_var('id');
 	/* ==================================================== */
 
-	if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) get_request_var('id'), 'reports')) {
+	/* move_item_up() rewrites the item row by id alone */
+	if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) get_request_var('id'), 'reports') ||
+		!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ?', array(get_request_var('id'))) ||
+		db_fetch_cell_prepared('SELECT report_id FROM reports_items WHERE id = ?', array(get_request_var('item_id'))) != get_request_var('id')) {
 		return;
 	}
 
@@ -896,10 +948,25 @@ function reports_item_edit() {
 	$report_item['host_id']           = -1;
 	$report_item['tree_id']           = -1;
 
-	if (isset_request_var('item_id') && get_filter_request_var('item_id') > 0) {
+	$report_id = (int) get_filter_request_var('id');
+	$item_id   = (isset_request_var('item_id') ? (int) get_filter_request_var('item_id') : 0);
+
+	/* the item is drawn under $report_id, so it must be filed there, as save and
+	   move already require, and the report itself must exist */
+	if (!cacti_authorize_resource($_SESSION['sess_user_id'], $report_id, 'reports') ||
+		!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ?', array($report_id)) ||
+		($item_id > 0 && (!cacti_authorize_resource($_SESSION['sess_user_id'], $item_id, 'report_item') ||
+		db_fetch_cell_prepared('SELECT report_id FROM reports_items WHERE id = ?', array($item_id)) != $report_id))) {
+		/* the caller has already printed the page header */
+		raise_message('permission_denied');
+
+		return;
+	}
+
+	if ($item_id > 0) {
 		$report_item = db_fetch_row_prepared('SELECT *
 			FROM reports_items WHERE id = ?',
-			array(get_request_var('item_id')));
+			array($item_id));
 	} else {
 		$report_item['report_id']      = get_request_var('id');
 		$report_item['local_graph_id'] = 0;
@@ -1504,10 +1571,10 @@ function reports_edit() {
 		$report = db_fetch_row_prepared('SELECT * FROM reports WHERE id = ?', array(get_request_var('id')));
 
 		if (!empty($report) && !cacti_authorize_resource($_SESSION['sess_user_id'], (int) get_request_var('id'), 'reports')) {
+			/* the caller has already printed the page header */
 			raise_message('permission_denied');
-			header('Location: reports.php');
 
-			exit;
+			return;
 		}
 	}
 
@@ -1822,6 +1889,65 @@ function display_reports_items($report_id) {
 
 function get_reports_page() {
 	return (is_realm_allowed(21) ? 'reports_admin.php' : 'reports_user.php');
+}
+
+/* mailer() splits these fields on commas and trims each entry, so a line break
+   between entries is ordinary textarea input. A break left inside an entry, a
+   NUL or a request array is never an address it can send to. */
+function reports_address_malformed($value) {
+	if (!is_string($value) || strpos($value, "\0") !== false) {
+		return true;
+	}
+
+	foreach (explode(',', $value) as $entry) {
+		if (strpbrk(trim($entry), "\r\n") !== false) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/* reports go out through the site mail relay, so a user without Reports
+   Administration may send only as their own account or the site From address.
+   A blank From sends as the site address. */
+function reports_from_allowed($from_email) {
+	if (is_reports_admin()) {
+		return true;
+	}
+
+	$allowed = array(
+		mb_strtolower(trim((string) read_config_option('settings_from_email'))),
+		mb_strtolower(trim((string) db_fetch_cell_prepared('SELECT email_address FROM user_auth WHERE id = ?', array($_SESSION['sess_user_id']))))
+	);
+
+	/* reports_send() takes a From of only commas as set, not as the blank From */
+	if (trim($from_email) != '' && trim($from_email, ", \t\r\n\0\x0B") == '') {
+		return false;
+	}
+
+	foreach (explode(',', $from_email) as $entry) {
+		$entry = trim($entry);
+
+		if ($entry == '') {
+			continue;
+		}
+
+		/* check the address mailer() takes from the entry, which keeps any text
+		   after the closing bracket. An entry it cannot parse sends as the site
+		   From address, so that entry must itself be an allowed address. */
+		$sent = trim(split_emaildetail($entry)['email']);
+
+		if ($sent == '') {
+			$sent = $entry;
+		}
+
+		if (!in_array(mb_strtolower($sent), $allowed, true)) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 function is_reports_admin() {
