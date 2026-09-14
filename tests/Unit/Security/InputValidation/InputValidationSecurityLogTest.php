@@ -249,9 +249,33 @@ test('login, password change and token fields are treated as secrets', function 
 test('both Validation Error lines pass the request and value through the redaction helpers', function () {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/lib/html_validate.php');
 
-	expect(substr_count($source, "', Request: ' . json_encode(cacti_redact_sensitive(\$_REQUEST))"))->toBe(2)
+	expect(substr_count($source, "', Request: ' . json_encode(cacti_redact_sensitive(\$_REQUEST), JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE)"))->toBe(2)
 		->and(substr_count($source, "', Value:' . html_escape(cacti_redact_value(\$variable, \$value))"))->toBe(2)
 		->and($source)->not->toContain('json_encode($_REQUEST)')
 		->and($source)->not->toContain('Validation Error, Event:')
 		->and($source)->toContain('security_log_input_validation_failure($variable);');
+});
+
+test('an invalid-UTF-8 request logs a JSON string with the secret still redacted', function () {
+	$request = array(
+		'login_password' => 'hunter2',
+		'note'            => "bad-byte-\xB1-here",
+	);
+	$lines  = run_die_html_input_error($request, 'note', 'plain-value');
+	$logged = $lines[2][1];
+
+	$prefix = 'Validation Error, Variable:note, Value:plain-value, Source: 192.0.2.10, Request: ';
+
+	expect($logged)->toStartWith($prefix);
+
+	$json = substr($logged, strlen($prefix));
+
+	expect($json)->not->toBe('')
+		->and($json)->not->toBe('false');
+
+	$decoded = json_decode($json, true);
+
+	expect($decoded)->toBeArray()
+		->and($decoded['login_password'])->toBe('[REDACTED]')
+		->and($decoded['note'])->toContain('bad-byte-');
 });
