@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -209,11 +210,22 @@ function purge_spike_backups() {
 			foreach($files as $file) {
 				$filepath = $directory . '/' . $file;
 
+				/* skip a symlink outright: never follow it into is_file()'s
+				   stat, and never let a planted link stand in for a backup */
+				if (is_link($filepath)) {
+					continue;
+				}
+
 				if (is_file($filepath) && strpos($filepath, 'rrd') !== false) {
 					$mtime = filemtime($filepath);
 
 					if ($mtime < $earlytime) {
-						if (is_writable($filepath)) {
+						/* backups are created 0600 by root (copyFileSafely()
+						   under umask(0177)), so is_writable() on the file
+						   itself is false for the poller user even though
+						   deleting it only requires write access to the
+						   containing directory */
+						if (is_writable(dirname($filepath))) {
 							unlink($filepath);
 							$purges++;
 						} else {

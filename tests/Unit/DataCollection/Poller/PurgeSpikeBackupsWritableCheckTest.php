@@ -1,0 +1,156 @@
+<?php
+/*
+ +-------------------------------------------------------------------------+
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
+ |                                                                         |
+ | This program is free software; you can redistribute it and/or           |
+ | modify it under the terms of the GNU General Public License             |
+ | as published by the Free Software Foundation; either version 2          |
+ | of the License, or (at your option) any later version.                  |
+ +-------------------------------------------------------------------------+
+*/
+
+/*
+ * poller_spikekill.php's purge_spike_backups() runs as the poller (or web)
+ * user and deletes expired backups that lib/spikekill.php's
+ * copyFileSafely() created earlier while running as root under
+ * umask(0177), so they are 0600 and owned by root. The prior code gated
+ * each deletion on is_writable($filepath), which is always false for the
+ * poller user against a root-owned file, so those backups were never
+ * purged and just accumulated. Deleting a file only requires write access
+ * to its containing directory, not to the file itself, so the check is
+ * moved to is_writable(dirname($filepath)). A is_link() guard also skips
+ * a planted symlink outright rather than following it into is_file().
+ *
+ * The function is extracted here by string and eval()'d, the same way
+ * StructureRraPathsDestDirSafetyTest exercises structure_rra_paths.php,
+ * because poller_spikekill.php runs top-level poller setup on include.
+ *
+ * read_config_option()/cacti_log()/cacti_sizeof() are guarded with
+ * function_exists() because SpikekillXmlDumpFileSafetyTest.php stubs the
+ * same globals and both files run in the same Pest process.
+ */
+
+function purge_spike_backups_test_stub_config($values) {
+	global $spikekill_shell_test_config;
+
+	$spikekill_shell_test_config = $values;
+}
+
+if (!function_exists('read_config_option')) {
+	function read_config_option($option) {
+		global $spikekill_shell_test_config;
+
+		return $spikekill_shell_test_config[$option] ?? '';
+	}
+}
+
+if (!function_exists('cacti_sizeof')) {
+	function cacti_sizeof($value) {
+		return is_array($value) ? count($value) : 0;
+	}
+}
+
+if (!function_exists('cacti_log')) {
+	function cacti_log($message, $output = false, $environ = 'SPIKES') {
+		global $spikekill_shell_test_log;
+
+		$spikekill_shell_test_log[] = $message;
+	}
+}
+
+$source = file_get_contents(dirname(__DIR__, 3) . '/../poller_spikekill.php');
+
+$start = strpos($source, 'function purge_spike_backups(');
+expect($start)->not->toBeFalse();
+
+$end = strpos($source, "\n}\n", $start);
+$body = substr($source, $start, $end - $start + 2);
+
+eval($body); // nosemgrep: php.lang.security.eval-use.eval-use
+
+beforeEach(function () {
+	global $spikekill_shell_test_log;
+
+	$spikekill_shell_test_log = array();
+
+	$this->dir = sys_get_temp_dir() . '/purge_spike_backups_test_' . uniqid();
+	mkdir($this->dir, 0700, true);
+});
+
+afterEach(function () {
+	foreach (glob($this->dir . '/*') as $item) {
+		unlink($item);
+	}
+
+	rmdir($this->dir);
+});
+
+test('an expired root-owned backup is purged when the directory is writable', function () {
+	$backup = $this->dir . '/host_traffic.backup.123.rrd';
+	file_put_contents($backup, 'backup-bytes');
+	chmod($backup, 0600);
+	touch($backup, time() - 1000);
+
+	purge_spike_backups_test_stub_config(array(
+		'spikekill_backupdir' => $this->dir,
+		'spikekill_purge'     => 500,
+	));
+
+	$purges = purge_spike_backups();
+
+	expect($purges)->toBe(1)
+		->and(file_exists($backup))->toBeFalse();
+});
+
+test('a backup newer than the retention window is left alone', function () {
+	$backup = $this->dir . '/host_traffic.backup.123.rrd';
+	file_put_contents($backup, 'backup-bytes');
+	touch($backup, time());
+
+	purge_spike_backups_test_stub_config(array(
+		'spikekill_backupdir' => $this->dir,
+		'spikekill_purge'     => 500,
+	));
+
+	$purges = purge_spike_backups();
+
+	expect($purges)->toBe(0)
+		->and(file_exists($backup))->toBeTrue();
+
+	unlink($backup);
+});
+
+test('a symlink planted in the backup directory is skipped, not followed or removed', function () {
+	/* the target lives outside the scanned directory so the only entry
+	   purge_spike_backups() iterates over is the symlink itself */
+	$evil_target = sys_get_temp_dir() . '/purge_spike_backups_evil_' . uniqid() . '.rrd';
+	file_put_contents($evil_target, 'do-not-touch');
+	touch($evil_target, time() - 1000);
+
+	$link = $this->dir . '/host_traffic.backup.999.rrd';
+	symlink($evil_target, $link);
+
+	purge_spike_backups_test_stub_config(array(
+		'spikekill_backupdir' => $this->dir,
+		'spikekill_purge'     => 500,
+	));
+
+	$purges = purge_spike_backups();
+
+	expect($purges)->toBe(0)
+		->and(is_link($link))->toBeTrue()
+		->and(file_exists($evil_target))->toBeTrue();
+
+	unlink($link);
+	unlink($evil_target);
+});
+
+test('no retention configured skips the purge entirely', function () {
+	purge_spike_backups_test_stub_config(array(
+		'spikekill_backupdir' => $this->dir,
+		'spikekill_purge'     => '',
+	));
+
+	expect(purge_spike_backups())->toBeFalse();
+});
