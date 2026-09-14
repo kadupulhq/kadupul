@@ -17,6 +17,7 @@ Cacti CHANGELOG
 -security: Refuse an RRD cleaner rescan sent by GET from another site
 -security: Refuse automation, color, data query and RRD check changes by GET only from another site, as 1.2.31 accepted them otherwise
 -security: Refuse to move or take ownership of a legacy RRD path in structure_rra_paths.php unless it is a real .rrd file already inside the configured RRA directory
+-security: Create the spikekill RRD backup file exclusively instead of following a pre-existing name, falling back to a unique name when one is already taken
 -issue: Send array rrdtool commands such as the RRDcheck fetch through RRDproxy as one quoted command instead of failing before they are sent
 -issue: Send the RRDproxy file_exists check in RRDcheck a bare path so an RRD path holding a quote character is found, and skip the local writable and modify time checks for RRDs on the proxy
 -issue: Show the validation error instead of success when a template import fails

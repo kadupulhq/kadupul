@@ -459,7 +459,10 @@ class spikekill {
 
 		/* backup the rrdfile if requested */
 		if ($this->backup && !$this->dryrun) {
-			if (copy($this->rrdfile, $bakfile)) {
+			$written = $this->copyFileSafely($this->rrdfile, $bakfile);
+
+			if ($written !== false) {
+				$bakfile = $written;
 				$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . "NOTE: RRDfile '$this->rrdfile' backed up to '$bakfile'" . ($this->html ? "</p>\n":"\n");
 			} else {
 				$this->set_error(__esc("FATAL: RRDfile Backup of '%s' to '%s' FAILED!", $this->rrdfile, $bakfile));
@@ -788,16 +791,110 @@ class spikekill {
 			$backupdir = $this->tempdir;
 		}
 
-		if (file_exists($backupdir . '/' . basename($rrdfile))) {
-			$newfile = basename($rrdfile) . '.' . $this->seed;
-		} else {
-			$newfile = basename($rrdfile);
+		$written = $this->copyFileSafely($rrdfile, $backupdir . '/' . basename($rrdfile));
+
+		if ($written === false) {
+			return false;
 		}
 
 		$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
-			__esc("NOTE: Backing Up '%s' to '%s/%s'", $rrdfile, $backupdir, $newfile) . ($this->html ? "</p>\n":"\n");
+			__esc("NOTE: Backing Up '%s' to '%s'", $rrdfile, $written) . ($this->html ? "</p>\n":"\n");
 
-		return copy($rrdfile, $backupdir . "/" . $newfile);
+		return true;
+	}
+
+	/**
+	 * copyFileSafely - copy $source to $desired_path without ever following or
+	 * clobbering whatever already sits at that name.  removespikes and
+	 * batchgapfix run this as root, and $desired_path lives in a directory the
+	 * web user's poller can write to, so a symlink planted there ahead of time
+	 * must not be followed: the target gets created exclusively, and if the
+	 * name is already taken (by a symlink or a real file) a unique sibling
+	 * name is used instead.
+	 *
+	 * @param  (string) $source
+	 * @param  (string) $desired_path
+	 *
+	 * @return (string|false) - the path actually written, or false on failure
+	 */
+	private function copyFileSafely($source, $desired_path) {
+		$dir      = dirname($desired_path);
+		$basename = basename($desired_path);
+
+		if (is_link($desired_path) || file_exists($desired_path)) {
+			$handle = false;
+		} else {
+			$old_umask = umask(0177);
+			$handle    = @fopen($desired_path, 'xb');
+			umask($old_umask);
+		}
+
+		if ($handle === false) {
+			/* name already taken (or lost a race creating it); write to a
+			   unique sibling instead of following or overwriting it */
+			$desired_path = tempnam($dir, $basename . '.');
+
+			if ($desired_path === false) {
+				return false;
+			}
+
+			chmod($desired_path, 0600);
+			$handle = fopen($desired_path, 'wb');
+
+			if ($handle === false) {
+				@unlink($desired_path);
+				return false;
+			}
+		}
+
+		$source_handle = fopen($source, 'rb');
+
+		if ($source_handle === false) {
+			$this->unlinkOwnedFile($desired_path, fstat($handle));
+			fclose($handle);
+
+			return false;
+		}
+
+		$copied = stream_copy_to_stream($source_handle, $handle);
+
+		fclose($source_handle);
+
+		$fstat = fstat($handle);
+		fclose($handle);
+
+		if ($copied === false) {
+			$this->unlinkOwnedFile($desired_path, $fstat);
+
+			return false;
+		}
+
+		return $desired_path;
+	}
+
+	/**
+	 * unlinkOwnedFile - remove a file this call created, but only after
+	 * confirming the name still refers to that same file.  Comparing the
+	 * device/inode captured when we created it against a fresh lstat() means
+	 * a symlink swapped in after creation is never followed or removed.
+	 *
+	 * @param  (string)      $path
+	 * @param  (array|false) $fstat - fstat() of the handle at creation time
+	 *
+	 * @return (void)
+	 */
+	private function unlinkOwnedFile($path, $fstat) {
+		if (is_link($path) || $fstat === false) {
+			return;
+		}
+
+		$lstat = @lstat($path);
+
+		if ($lstat === false || $lstat['dev'] !== $fstat['dev'] || $lstat['ino'] !== $fstat['ino']) {
+			return;
+		}
+
+		@unlink($path);
 	}
 
 	private function calculateVarianceAverages(&$rra, &$samples) {
