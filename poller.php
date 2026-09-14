@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -1044,7 +1045,7 @@ function poller_remove_dead_time_rows($poller_id, $max_age) {
 		return;
 	}
 
-	$processes = db_fetch_assoc_prepared("SELECT pid
+	$processes = db_fetch_assoc_prepared("SELECT id, pid
 		FROM poller_time
 		WHERE poller_id = ?
 		AND end_time = '0000-00-00 00:00:00'",
@@ -1053,11 +1054,14 @@ function poller_remove_dead_time_rows($poller_id, $max_age) {
 	if (cacti_sizeof($processes)) {
 		foreach ($processes as $process) {
 			if (!cacti_process_signalable($process['pid'])) {
+				/* Match the row this probe actually inspected.  The pid alone can be
+				 * reused by a new collector between the SELECT and this DELETE, and a
+				 * pid-only match would take that collector's live row with it. */
 				db_execute_prepared("DELETE FROM poller_time
-					WHERE poller_id = ?
-					AND pid = ?
+					WHERE id = ?
+					AND poller_id = ?
 					AND end_time = '0000-00-00 00:00:00'",
-					array($poller_id, $process['pid']), true, $poller_db_cnn_id);
+					array($process['id'], $poller_id), true, $poller_db_cnn_id);
 			}
 		}
 	}

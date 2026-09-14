@@ -66,7 +66,7 @@ beforeEach(function () use ($root) {
 	pollerDeadTimeLoad($root);
 
 	$GLOBALS['poller_dead_time'] = array(
-		'open_rows' => array(array('pid' => 4101), array('pid' => 4102)),
+		'open_rows' => array(array('id' => 501, 'pid' => 4101), array('id' => 502, 'pid' => 4102)),
 		'alive'     => array(4101),
 		'posix'     => true,
 		'selects'   => array(),
@@ -80,8 +80,26 @@ test('an open row whose collector is gone is removed and a running one is kept',
 	expect($GLOBALS['poller_dead_time']['selects'])->toHaveCount(1)
 		->and($GLOBALS['poller_dead_time']['selects'][0][1])->toBe(array(3))
 		->and($GLOBALS['poller_dead_time']['deletes'])->toHaveCount(1)
-		->and($GLOBALS['poller_dead_time']['deletes'][0][1])->toBe(array(3, 4102))
+		->and($GLOBALS['poller_dead_time']['deletes'][0][1])->toBe(array(502, 3))
 		->and($GLOBALS['poller_dead_time']['deletes'][0][0])->toContain("AND end_time = '0000-00-00 00:00:00'");
+});
+
+test('a dead row is matched by its own id, not by a pid a new collector could reuse', function () {
+	/* both rows share a pid, as a reused pid would look once the old collector is
+	 * gone; only the row this probe actually inspected may be removed */
+	$GLOBALS['poller_dead_time']['open_rows'] = array(
+		array('id' => 501, 'pid' => 4102),
+		array('id' => 502, 'pid' => 4102),
+	);
+	$GLOBALS['poller_dead_time']['alive'] = array();
+
+	pollerDeadTime_poller_remove_dead_time_rows(3, 600);
+
+	expect($GLOBALS['poller_dead_time']['deletes'])->toHaveCount(2)
+		->and($GLOBALS['poller_dead_time']['deletes'][0][1])->toBe(array(501, 3))
+		->and($GLOBALS['poller_dead_time']['deletes'][1][1])->toBe(array(502, 3))
+		->and($GLOBALS['poller_dead_time']['deletes'][0][0])->toContain('WHERE id = ?')
+		->and($GLOBALS['poller_dead_time']['deletes'][0][0])->not->toContain('pid = ?');
 });
 
 test('no open rows means no deletes', function () {
