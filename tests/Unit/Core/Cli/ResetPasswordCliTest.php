@@ -337,6 +337,26 @@ test('the current or a previous password is refused when password history is on'
 	}
 });
 
+test('the current password is refused even when password history is off', function () {
+	$current = password_hash('Current-Pass-1', PASSWORD_DEFAULT);
+
+	$cases = array(
+		'history off'           => array('user' => reset_password_cli_user(array('password' => $current))),
+		'disabled with history' => array('user' => reset_password_cli_user(array('password' => $current, 'enabled' => '')), 'config' => array('secpass_history' => 3)),
+	);
+
+	foreach ($cases as $name => $scenario) {
+		$result = reset_password_cli_run(array('--username=admin'), "Current-Pass-1\n", $scenario);
+
+		expect($result['code'])->toBe(1, $name)
+			->and($result['stdout'])->toContain('Your new password cannot be the same as the old password.')
+			->and($result['transaction'])->toBe(array(), $name)
+			->and($result['executed'])->toBe(array(), $name);
+	}
+
+	expect(reset_password_cli_run(array('--username=admin'), "Recover-1234\n", $cases['history off'])['code'])->toBe(0);
+});
+
 test('the replaced hash joins the password history as the web password change keeps it', function () {
 	$user = reset_password_cli_user(array('password' => 'H0', 'password_history' => 'H1|H2'));
 

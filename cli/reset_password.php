@@ -182,6 +182,13 @@ function reset_password_apply($username, $password) {
 		return 1;
 	}
 
+	/* auth_changepassword.php refuses the current password even with history off */
+	if (compat_password_verify($password, $user['password'])) {
+		print 'ERROR: ' . __('Your new password cannot be the same as the old password. Please try again.') . PHP_EOL;
+
+		return 1;
+	}
+
 	/* db_check_password_length() dies on failure, and die() alone exits 0 */
 	$GLOBALS['reset_password_pending'] = true;
 
