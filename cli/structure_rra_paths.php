@@ -481,7 +481,11 @@ function structure_rra_prepare_dest_dir($new_base_path, $base_rra_path) {
 function sp_recursive_chown($path, $user) {
 	$directory = rtrim($path, '/');
 
-	if ($items = glob($path . '/*')) {
+	if (is_link($path)) {
+		return lchown($path, $user);
+	}
+
+	if (is_dir($path) && ($items = glob($path . '/*'))) {
 		foreach ($items as $item) {
 			if (is_dir($item) && !is_link($item)) {
 				return sp_recursive_chown($item, $user);
@@ -493,7 +497,7 @@ function sp_recursive_chown($path, $user) {
 		}
 	}
 
-	/* re-check right before use so a swap between the caller's check and
+	/* re-check right before use so a swap between the check above and
 	   here cannot redirect a chown() onto a symlink's target */
 	if (is_link($path)) {
 		return lchown($path, $user);
@@ -513,7 +517,11 @@ function sp_recursive_chown($path, $user) {
 function sp_recursive_chgrp($path, $group) {
 	$directory = rtrim($path, '/');
 
-	if ($items = glob($path . '/*')) {
+	if (is_link($path)) {
+		return lchgrp($path, $group);
+	}
+
+	if (is_dir($path) && ($items = glob($path . '/*'))) {
 		foreach ($items as $item) {
 			if (is_dir($item) && !is_link($item)) {
 				return sp_recursive_chgrp($item, $group);
@@ -525,7 +533,7 @@ function sp_recursive_chgrp($path, $group) {
 		}
 	}
 
-	/* re-check right before use so a swap between the caller's check and
+	/* re-check right before use so a swap between the check above and
 	   here cannot redirect a chgrp() onto a symlink's target */
 	if (is_link($path)) {
 		return lchgrp($path, $group);
