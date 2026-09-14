@@ -55,7 +55,7 @@ jobs:
           ce_url=$(sed -n 's/^ceTaskUrl=//p' .scannerwork/report-task.txt)
           status=PENDING
           for _ in $(seq 1 90); do
-            status=$(curl -fsS --retry 3 --retry-delay 5 --retry-all-errors --max-time 30 -u "$SONAR_TOKEN:" "$ce_url" | jq -r .task.status)
+            status=$(curl -fsS --retry 3 --retry-delay 5 --retry-all-errors --connect-timeout 10 --max-time 30 -u "$SONAR_TOKEN:" "$ce_url" | jq -r .task.status)
             case "$status" in
               SUCCESS) break ;;
               FAILED|CANCELED) echo "SonarQube Cloud analysis $status"; exit 1 ;;
@@ -75,7 +75,7 @@ jobs:
 
           # The search index can lag the finished analysis and answer 503 for a while.
           sonar_get() {
-            curl -fsS --retry 6 --retry-delay 10 --retry-all-errors -u "$SONAR_TOKEN:" "$api/$1"
+            curl -fsS --retry 6 --retry-delay 10 --retry-all-errors --connect-timeout 10 --max-time 60 -u "$SONAR_TOKEN:" "$api/$1"
           }
           bugs=$(sonar_get "issues/search?componentKeys=$key&$scope&types=BUG&resolved=false&ps=100")
           vulns=$(sonar_get "issues/search?componentKeys=$key&$scope&types=VULNERABILITY&resolved=false&ps=100")
