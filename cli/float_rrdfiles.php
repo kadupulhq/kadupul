@@ -278,11 +278,15 @@ switch ($type) {
 			/* Update the rrdfile to current */
 			rrdtool_function_fetch($data['local_data_id'], time()-120, time());
 
-			float_rrdfile($data['rrd_path'], $data['local_data_id'], $step, $start_time, $end_time);
-
-			db_execute_prepared('DELETE FROM poller_float_rrdfiles_not_done
-				WHERE local_data_id = ?',
-				array($data['local_data_id']));
+			/* A float that fails keeps its queue row so --resume retries it. The
+			 * temporary XML file is created exclusively, so one left by a killed
+			 * child is refused rather than overwritten, and deleting the row
+			 * anyway would drop that RRD from the queue unfloated. */
+			if (float_rrdfile($data['rrd_path'], $data['local_data_id'], $step, $start_time, $end_time)) {
+				db_execute_prepared('DELETE FROM poller_float_rrdfiles_not_done
+					WHERE local_data_id = ?',
+					array($data['local_data_id']));
+			}
 		}
 
 		$total_time = microtime(true) - $child_start;
