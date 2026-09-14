@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -271,7 +272,6 @@ function aggregate_error_handler($errno, $errmsg, $filename, $linenum, $vars = [
 	if($errno == 0) return;
 
 	# define constants not available with PHP 4
-	if(!defined('E_STRICT'))            define('E_STRICT', 2048);
 	if(!defined('E_RECOVERABLE_ERROR')) define('E_RECOVERABLE_ERROR', 4096);
 
 	if (read_config_option('log_verbosity') >= POLLER_VERBOSITY_DEBUG) {
@@ -288,9 +288,12 @@ function aggregate_error_handler($errno, $errmsg, $filename, $linenum, $vars = [
 			E_USER_ERROR        => 'User Error',
 			E_USER_WARNING      => 'User Warning',
 			E_USER_NOTICE       => 'User Notice',
-			E_STRICT            => 'Runtime Notice',
 			E_RECOVERABLE_ERROR => 'Catchable Fatal Error'
 		);
+
+		/* E_STRICT's value has always been 2048; PHP 8.4 deprecates reading
+		 * the constant itself, so use the literal instead */
+		$errortype[2048] = 'Runtime Notice';
 
 		/* create an error string for the log */
 		$err = "ERRNO:'"  . $errno   . "' TYPE:'"    . $errortype[$errno] .

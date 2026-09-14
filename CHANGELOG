@@ -4,6 +4,7 @@ Cacti CHANGELOG
 -issue: Remove imagedestroy, xml_parser_free and curl_close calls that PHP 8.5 deprecates and PHP 8.0 already made no-ops
 -issue: Use the (float) cast in spikekill's standard deviation helper instead of the (double) alias PHP 8.5 deprecates
 -issue: Use the colon terminator on two utilities.php case labels that PHP 8.5 deprecates
+-issue: Stop referencing the removed E_STRICT constant and calling the removed libxml_disable_entity_loader() so PHP 8.4 and 8.5 raise no deprecation notice, keeping XXE protection unchanged
 -security: Require a POST token to change a user's or group's default policy, refusing GET from any site
 -security: Compare the CSRF guard's same-origin check against a bare IPv6 SERVER_NAME instead of stripping its last hextet as a port
 -issue: Sort the visible table column indexes numerically instead of as strings when recalculating layout width
