@@ -1,0 +1,92 @@
+name: SonarQube Cloud
+
+on:
+  push:
+    branches: [lts/1.2]
+  pull_request:
+    branches: [lts/1.2]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sonarcloud-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: SonarQube Cloud security analysis
+    runs-on: ubuntu-latest
+    # Fork and Dependabot pull requests get no secrets, so the scan cannot authenticate there.
+    if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Blame and new-code detection need the full history.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Scan
+        uses: SonarSource/sonarqube-scan-action@22918119ff8e1ca75a623e15c8296b6ea4fbe28f # v8.2.1
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # The project quality gate is shared with main and also checks coverage,
+      # duplication and maintainability, which the 1.2 line does not track.
+      # This step decides the 1.2 result on security alone: a pull request
+      # fails when it adds a vulnerability or an unreviewed security hotspot.
+      # A push to lts/1.2 only records the baseline and lists what is open.
+      - name: Security gate
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          api=https://sonarcloud.io/api
+          key=kadupulhq_kadupul
+
+          ce_url=$(sed -n 's/^ceTaskUrl=//p' .scannerwork/report-task.txt)
+          status=PENDING
+          for _ in $(seq 1 90); do
+            status=$(curl -fsS -u "$SONAR_TOKEN:" "$ce_url" | jq -r .task.status)
+            case "$status" in
+              SUCCESS) break ;;
+              FAILED|CANCELED) echo "SonarQube Cloud analysis $status"; exit 1 ;;
+            esac
+            sleep 10
+          done
+          if [ "$status" != SUCCESS ]; then
+            echo "SonarQube Cloud analysis did not finish (last status $status)"
+            exit 1
+          fi
+
+          if [ -n "$PR_NUMBER" ]; then
+            scope="pullRequest=$PR_NUMBER"
+          else
+            scope="branch=$BRANCH&inNewCodePeriod=true"
+          fi
+
+          vulns=$(curl -fsS -u "$SONAR_TOKEN:" "$api/issues/search?componentKeys=$key&$scope&types=VULNERABILITY&resolved=false&ps=100")
+          hotspots=$(curl -fsS -u "$SONAR_TOKEN:" "$api/hotspots/search?projectKey=$key&$scope&status=TO_REVIEW&ps=100")
+          vuln_count=$(jq '.paging.total // .total' <<<"$vulns")
+          hotspot_count=$(jq '.paging.total' <<<"$hotspots")
+
+          {
+            echo "### SonarQube Cloud security findings"
+            echo
+            echo "New vulnerabilities: $vuln_count"
+            jq -r '.issues[] | "- \(.severity) `\(.rule)` \(.component | sub("^[^:]*:"; "")):\(.line // "-") \(.message)"' <<<"$vulns"
+            echo
+            echo "Unreviewed new security hotspots: $hotspot_count"
+            jq -r '.hotspots[] | "- \(.vulnerabilityProbability) \(.securityCategory) \(.component | sub("^[^:]*:"; "")):\(.line // "-") \(.message)"' <<<"$hotspots"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+          if [ -n "$PR_NUMBER" ] && { [ "$vuln_count" -gt 0 ] || [ "$hotspot_count" -gt 0 ]; }; then
+            echo "Security findings must be fixed, or the hotspots reviewed in SonarQube Cloud, before merging."
+            exit 1
+          fi
