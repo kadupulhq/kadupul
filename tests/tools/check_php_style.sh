@@ -48,6 +48,34 @@ if [ "${#files[@]}" -eq 0 ]; then
 	exit 0
 fi
 
+# main moves to PER-CS one file at a time. A file that was not yet PER-CS clean
+# at the merge base is skipped, so a small fix in an unconverted file does not
+# force a whole-file reformat; converting it is its own formatting-only change.
+# New files, and files already clean at the merge base, must stay clean.
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+root=$(pwd)
+
+checked=()
+for f in "${files[@]}"; do
+	if git cat-file -e "$merge_base:$f" 2>/dev/null; then
+		mkdir -p "$tmp/$(dirname "$f")"
+		git show "$merge_base:$f" > "$tmp/$f"
+		# override applies the rules to the copy, which lies outside the config's finder
+		if ! (cd "$tmp" && "$fixer" check --config="$root/$config" --path-mode=override \
+			--using-cache=no -- "$f" >/dev/null 2>&1); then
+			echo "Skipping $f: not PER-CS formatted at $merge_base; convert it in a formatting-only change."
+			continue
+		fi
+	fi
+	checked+=("$f")
+done
+
+if [ "${#checked[@]}" -eq 0 ]; then
+	echo "No changed PHP files already on PER-CS; nothing to check."
+	exit 0
+fi
+
 # intersection keeps the config's exclusions in force for the paths given.
 exec "$fixer" check --config="$config" --path-mode=intersection \
-	--using-cache=no --diff -- "${files[@]}"
+	--using-cache=no --diff -- "${checked[@]}"
