@@ -8874,10 +8874,21 @@ function cacti_http($url, $timeout = 10, array $allowlist = array(), &$status = 
 		'ssl' => $ssl,
 	));
 
-	$body = @file_get_contents($url, false, $ctx);
+	/* $http_response_header is deprecated in PHP 8.5, and PHP raises that
+	 * notice for any function whose compiled body mentions the variable at
+	 * all, whether or not the reference actually runs. The pre-8.5 fallback
+	 * therefore lives in its own file, required only when the 8.5 replacement
+	 * is unavailable, so this file never compiles that reference. */
+	if (function_exists('http_get_last_response_headers')) {
+		$body = @file_get_contents($url, false, $ctx);
+		$response_headers = http_get_last_response_headers() ?? array();
+	} else {
+		require_once __DIR__ . '/functions_http_legacy.php';
+		list($body, $response_headers) = cacti_http_fetch_legacy($url, $ctx);
+	}
 
-	if (isset($http_response_header) && is_array($http_response_header) && count($http_response_header) > 0) {
-		if (preg_match('#HTTP/\S+\s+(\d+)#', $http_response_header[0], $m)) {
+	if (count($response_headers) > 0) {
+		if (preg_match('#HTTP/\S+\s+(\d+)#', $response_headers[0], $m)) {
 			$status = (int) $m[1];
 		}
 	}
