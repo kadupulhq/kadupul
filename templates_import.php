@@ -117,8 +117,8 @@ function form_save() {
 		/* obtain debug information if it's set */
 		$debug_data = import_xml_data($xml_data, $import_as_new, $profile_id, $remove_orphans, $replace_svalues, $import_hashes);
 
-		/* a failed import falls through to the validation error below */
-		if (!$preview_only && $debug_data !== false) {
+		/* a failed import, or a file that does not parse and only adds an import message, falls through to the validation error below */
+		if (!$preview_only && $debug_data !== false && !cacti_sizeof($import_messages)) {
 			raise_message('import_success', __('The Template Import Succeeded.'), MESSAGE_LEVEL_INFO);
 
 			header('Location: templates_import.php');

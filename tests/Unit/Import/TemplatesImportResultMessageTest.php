@@ -57,6 +57,11 @@ function db_fetch_cell($sql) {
 }
 
 function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphans = false, $replace_svalues = false, $import_hashes = array()) {
+	/* import_xml_data() reports an XML parse error through $import_messages */
+	foreach ($GLOBALS['tir_import_messages'] as $message) {
+		$GLOBALS['import_messages'][] = $message;
+	}
+
 	return $GLOBALS['tir_result'];
 }
 
@@ -101,6 +106,7 @@ beforeEach(function () {
 
 	$GLOBALS['messages']    = array();
 	$GLOBALS['tir_events']  = array();
+	$GLOBALS['tir_import_messages'] = array();
 	$GLOBALS['tir_request'] = array(
 		'save_component_import'      => 'yes',
 		'import_data_source_profile' => '1',
@@ -150,4 +156,22 @@ test('a failed preview still shows the validation error as in 1.2.31', function 
 
 	expect($GLOBALS['tir_events'])->toContain('javascript:The Template XML file "Uptime_Probe.xml" validation failed')
 		->and($GLOBALS['tir_events'])->not->toContain('message:import_success');
+});
+
+test('a malformed template file shows the validation error instead of success', function () {
+	$GLOBALS['tir_result']          = array();
+	$GLOBALS['tir_import_messages'] = array(7);
+
+	form_save();
+
+	expect($GLOBALS['tir_events'])->not->toContain('message:import_success')
+		->and($GLOBALS['tir_events'])->toContain('javascript:The Template XML file "Uptime_Probe.xml" validation failed');
+});
+
+test('an import that leaves nothing to change still reports success as in 1.2.31', function () {
+	$GLOBALS['tir_result'] = array();
+
+	form_save();
+
+	expect($GLOBALS['tir_events'])->toBe(array('message:import_success', 'header:Location: templates_import.php'));
 });
