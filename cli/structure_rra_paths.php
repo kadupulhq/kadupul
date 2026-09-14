@@ -288,7 +288,7 @@ foreach ($data_sources as $info) {
 			if (!structure_rra_is_safe_dest($new_rrd_path)) {
 				$warn_count++;
 
-				print "WARNING: Refusing to move to Destination Path '$new_rrd_path', it already exists as a Directory or Symlink" . PHP_EOL;
+				print "WARNING: Refusing to move to Destination Path '$new_rrd_path', only a Missing Path or a Regular File is accepted as a Destination" . PHP_EOL;
 			} elseif (rename($old_rrd_path, $new_rrd_path)) {
 				$done_count++;
 
