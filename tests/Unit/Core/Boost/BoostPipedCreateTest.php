@@ -83,11 +83,49 @@ function boostPipedCreate_rrdtool_execute($command) {
 
 function boostPipedCreate_rrd_close($rrdtool_pipe) {
 	$GLOBALS['boost_piped_create']['closed']++;
+
+	if (is_resource($rrdtool_pipe)) {
+		fclose($rrdtool_pipe);
+	}
 }
 
 function boostPipedCreate_rrd_init() {
-	/* the restarted rrdtool cannot take input either */
-	return fopen('php://memory', 'r');
+	switch ($GLOBALS['boost_piped_create']['init']) {
+		case 'fails':
+			return false;
+		case 'counted':
+			return fopen('boostpipedcreate://restart', 'w');
+		default:
+			/* the restarted rrdtool cannot take input either */
+			return fopen('php://memory', 'r');
+	}
+}
+
+/* a pipe that refuses every write and counts the handles still open */
+class BoostPipedCreateDeadPipe {
+	public $context;
+
+	public function stream_open($path, $mode, $options, &$opened_path) {
+		$GLOBALS['boost_piped_create']['open_pipes']++;
+
+		return true;
+	}
+
+	public function stream_write($data) {
+		return false;
+	}
+
+	public function stream_flush() {
+		return true;
+	}
+
+	public function stream_close() {
+		$GLOBALS['boost_piped_create']['open_pipes']--;
+	}
+}
+
+if (!in_array('boostpipedcreate', stream_get_wrappers(), true)) {
+	stream_wrapper_register('boostpipedcreate', 'BoostPipedCreateDeadPipe');
 }
 
 function boostPipedCreate_escape_command($command) {
@@ -171,6 +209,8 @@ beforeEach(function () use ($root) {
 		'executed'           => array(),
 		'execute_return'     => null,
 		'closed'             => 0,
+		'init'               => 'dead',
+		'open_pipes'         => 0,
 		'logs'               => array(),
 	);
 });
@@ -302,4 +342,23 @@ test('rrdtool_execute returns false once every pipe restart fails and null for a
 		->and(implode("\n", $GLOBALS['boost_piped_create']['logs']))->toContain('Restart Attempts Exceeded');
 
 	expect(boostPipedCreateRrdExecute($root, 'update /rra/12.rrd 1000:1', $this->pipe))->toBeNull();
+});
+
+test('rrdtool_execute returns false instead of writing to a restart that failed', function () use ($root) {
+	$GLOBALS['boost_piped_create']['init'] = 'fails';
+
+	expect(boostPipedCreateRrdExecute($root, 'update /rra/12.rrd 1000:1', fopen('php://memory', 'r')))->toBeFalse()
+		->and($GLOBALS['boost_piped_create']['closed'])->toBe(1)
+		->and(implode("\n", $GLOBALS['boost_piped_create']['logs']))->toContain('could not be restarted');
+});
+
+test('no restarted rrdtool pipe is left open once rrdtool_execute gives up', function () use ($root) {
+	$GLOBALS['boost_piped_create']['init'] = 'counted';
+
+	$dead = fopen('boostpipedcreate://first', 'w');
+
+	expect(boostPipedCreateRrdExecute($root, 'update /rra/12.rrd 1000:1', $dead))->toBeFalse()
+		->and($GLOBALS['boost_piped_create']['closed'])->toBe(6)
+		->and(is_resource($dead))->toBeFalse()
+		->and($GLOBALS['boost_piped_create']['open_pipes'])->toBe(0);
 });
