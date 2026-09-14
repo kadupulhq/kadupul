@@ -233,6 +233,8 @@ foreach ($data_sources as $info) {
 		}
 	}
 
+	$found_elsewhere = false;
+
 	/**
 	 * check for the old file and if not exists, try to find it
 	 * else update the database and set an error
@@ -259,16 +261,18 @@ foreach ($data_sources as $info) {
 
 		if (file_exists($data_source_path1)) {
 			$old_rrd_path = $data_source_path1;
+			$found_elsewhere = true;
 		} elseif (file_exists($data_source_path2)) {
 			$old_rrd_path = $data_source_path2;
+			$found_elsewhere = true;
 		} else {
 			$warn_count++;
 
 			print "WARNING: Legacy RRA Path '$old_rrd_path' Does not exist, Skipping" . PHP_EOL;
-		}
 
-		/* alter database */
-		update_database($info);
+			/* alter database; there is no file whose move could be refused */
+			update_database($info);
+		}
 	}
 
 	/**
@@ -307,6 +311,14 @@ foreach ($data_sources as $info) {
 			}
 		} else {
 			$skip_count++;
+
+			/* a file found by the search above already sits at the new
+			   path, so only the database still names the old one.  A found
+			   file that gets moved updates the database after rename(), and
+			   one that is refused leaves it untouched */
+			if ($found_elsewhere) {
+				update_database($info);
+			}
 		}
 	}
 
