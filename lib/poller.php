@@ -2779,9 +2779,13 @@ function cacti_process_identity_matches($pid) {
 					if ($argument[0] !== '/') {
 						$cwd = @readlink('/proc/' . $owner . '/cwd');
 
-						if ($cwd !== false) {
-							$argument = $cwd . '/' . $argument;
+						/* Resolving it against our own directory instead could
+						 * match an unrelated process, so the script is unknown. */
+						if ($cwd === false) {
+							return null;
 						}
+
+						$argument = $cwd . '/' . $argument;
 					}
 
 					$resolved = realpath($argument);
@@ -2796,6 +2800,10 @@ function cacti_process_identity_matches($pid) {
 		$theirs_script = $script($other_cmdline, $pid);
 
 		if ($mine_script !== false && $theirs_script !== false) {
+			if ($mine_script === null || $theirs_script === null) {
+				return null;
+			}
+
 			return hash_equals($mine_script, $theirs_script);
 		}
 
