@@ -36,6 +36,7 @@ test('graph_realtime.php uses cacti_escapeshellarg for poller_realtime script pa
 
 	expect($contents)->toContain("\$config['base_path'] . '/poller_realtime.php'");
 	expect($contents)->toContain('poller_realtime.php');
+	expect($contents)->toContain("cacti_escapeshellarg(\$config['base_path'] . '/poller_realtime.php')");
 });
 
 test('graph_realtime.php quotes each poller argument separately', function () use ($graphRealtimePath) {
