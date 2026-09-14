@@ -1435,10 +1435,9 @@ function host_validate_vars() {
 			'default' => ''
 			),
 		'location' => array(
-			'filter' => FILTER_CALLBACK,
+			'filter' => FILTER_DEFAULT,
 			'pageset' => true,
-			'default' => '-1',
-			'options' => array('options' => 'sanitize_search_string')
+			'default' => '-1'
 			),
 		'sort_column' => array(
 			'filter' => FILTER_CALLBACK,
@@ -1476,6 +1475,44 @@ function host_validate_vars() {
 
 	validate_store_request_vars($filters, 'sess_host');
 	/* ================= input validation ================= */
+
+	/* The location is compared exactly and quoted in the query, so it skips
+	 * sanitize_search_string(), which dropped quotes and matched other devices.
+	 * Only a location a device stores may narrow the list. */
+	set_request_var('location', host_filter_location(get_request_var('location'), get_request_var('site_id')));
+}
+
+/* host_filter_location - keeps a Devices location filter only when a device stores it
+   @arg $location - the requested location
+   @arg $site_id - the selected site, or -1 for all sites
+   @returns - the location, or -1 (All) when no device on that site stores exactly that value */
+function host_filter_location($location, $site_id = '-1') {
+	if ($location == '-1' || $location == '' || $location == __('Undefined')) {
+		return $location;
+	}
+
+	/* the Location options list only the selected site's locations */
+	if ($site_id >= '0') {
+		$stored = db_fetch_assoc_prepared('SELECT location
+			FROM host
+			WHERE location = ?
+			AND site_id = ?',
+			array($location, $site_id));
+	} else {
+		$stored = db_fetch_assoc_prepared('SELECT location
+			FROM host
+			WHERE location = ?',
+			array($location));
+	}
+
+	/* the collation also matches other letter case and trailing spaces */
+	foreach ($stored as $row) {
+		if ($row['location'] === $location) {
+			return $location;
+		}
+	}
+
+	return '-1';
 }
 
 function get_device_records(&$total_rows, $rows) {
@@ -1680,7 +1717,8 @@ function host() {
 
 							if (cacti_sizeof($locations)) {
 								foreach ($locations as $l) {
-									print "<option value='" . $l['location'] . "'"; if (get_request_var('location') == $l['location']) { print ' selected'; } print '>' . html_escape($l['location']) . '</option>';
+									/* html_escape() keeps an existing &amp;, which the browser would decode before the exact match */
+									print "<option value='" . htmlspecialchars($l['location'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8') . "'"; if (get_request_var('location') == $l['location']) { print ' selected'; } print '>' . html_escape($l['location']) . '</option>';
 								}
 							}
 							?>
@@ -1745,7 +1783,7 @@ function host() {
 			strURL += '&host_template_id=' + $('#host_template_id').val();
 			strURL += '&site_id=' + $('#site_id').val();
 			strURL += '&poller_id=' + $('#poller_id').val();
-			strURL += '&location=' + $('#location').val();
+			strURL += '&location=' + encodeURIComponent($('#location').val());
 			strURL += '&rows=' + $('#rows').val();
 			strURL += '&filter=' + $('#filter').val();
 			strURL += '&header=false';
