@@ -108,6 +108,13 @@ checked=()
 rename_from=()
 rename_to=()
 while IFS= read -r -d '' _score && IFS= read -r -d '' from && IFS= read -r -d '' to; do
+	# The source name is matched against the line-oriented Finder list too.
+	case "$from$to" in
+		*$'\n'*)
+			printf 'Refusing to check a PHP rename whose path contains a newline: %q -> %q\n' "$from" "$to" >&2
+			exit 2
+			;;
+	esac
 	rename_from+=("$from")
 	rename_to+=("$to")
 done < <(git diff -z --name-status -M --diff-filter=R "$merge_base" -- '*.php')
