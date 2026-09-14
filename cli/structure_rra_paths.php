@@ -281,7 +281,11 @@ foreach ($data_sources as $info) {
 
 			print "WARNING: Refusing to move Source Path '$old_rrd_path', it is not a Regular '.rrd' File inside the configured RRA Directory" . PHP_EOL;
 		} elseif ($old_rrd_path != $new_rrd_path) {
-			if (rename($old_rrd_path, $new_rrd_path)) {
+			if (!structure_rra_is_safe_dest($new_rrd_path)) {
+				$warn_count++;
+
+				print "WARNING: Refusing to move to Destination Path '$new_rrd_path', it already exists as a Directory or Symlink" . PHP_EOL;
+			} elseif (rename($old_rrd_path, $new_rrd_path)) {
 				$done_count++;
 
 				struct_debug("Move Completed for: '" . $old_rrd_path . "' > '" . $new_rrd_path . "'");
@@ -395,6 +399,23 @@ function structure_rra_is_safe_source($path, $base_rra_path) {
 	}
 
 	return true;
+}
+
+/**
+ * structure_rra_is_safe_dest - structure_rra_prepare_dest_dir() only
+ * validates the parent directory. If '$new_rrd_path' itself already exists
+ * as a directory or a symlink, rename() below would move the legacy file
+ * inside it (a directory) or follow it (a symlink) instead of replacing it,
+ * so both are refused here and only a missing path or a regular file, which
+ * rename() has always been allowed to overwrite, are treated as safe.
+ *
+ * @param  (string) $new_rrd_path - the destination path a legacy RRD file
+ *                   is about to be renamed to
+ *
+ * @return (bool)
+ */
+function structure_rra_is_safe_dest($new_rrd_path) {
+	return !is_link($new_rrd_path) && !is_dir($new_rrd_path);
 }
 
 /**

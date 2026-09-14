@@ -56,6 +56,14 @@ $body = substr($source, $start, $end - $start + 2);
 
 eval($body); // nosemgrep: php.lang.security.eval-use.eval-use
 
+$dest_start = strpos($source, 'function structure_rra_is_safe_dest(');
+expect($dest_start)->not->toBeFalse();
+
+$dest_end  = strpos($source, "\n}\n", $dest_start);
+$dest_body = substr($source, $dest_start, $dest_end - $dest_start + 2);
+
+eval($dest_body); // nosemgrep: php.lang.security.eval-use.eval-use
+
 beforeEach(function () {
 	$this->base = sys_get_temp_dir() . '/structure_rra_dest_test_' . uniqid();
 	mkdir($this->base, 0700, true);
@@ -158,4 +166,40 @@ test('a nested destination under an rra directory configured with a trailing sla
 
 	expect($status)->toBe('ok')
 		->and(is_dir($dest))->toBeTrue();
+});
+
+/* structure_rra_prepare_dest_dir() above only validates the parent
+   directory; structure_rra_is_safe_dest() is the second check the move
+   site runs against $new_rrd_path itself right before rename(), so a
+   directory or a symlink already sitting at the exact destination is
+   refused instead of being moved into or followed. */
+
+test('a missing destination path is safe', function () {
+	$dest = $this->base . '/missing.rrd';
+
+	expect(structure_rra_is_safe_dest($dest))->toBeTrue();
+});
+
+test('a regular file already at the destination is safe, matching rename()\'s overwrite behavior', function () {
+	$dest = $this->base . '/existing.rrd';
+	file_put_contents($dest, 'legacy rrd bytes');
+
+	expect(structure_rra_is_safe_dest($dest))->toBeTrue();
+});
+
+test('a real directory already at the destination is refused', function () {
+	$dest = $this->base . '/existing-dir';
+	mkdir($dest, 0700, true);
+
+	expect(structure_rra_is_safe_dest($dest))->toBeFalse();
+});
+
+test('a symlink already at the destination is refused', function () {
+	$target = $this->base . '/symlink-target';
+	file_put_contents($target, 'legacy rrd bytes');
+
+	$dest = $this->base . '/symlinked.rrd';
+	symlink($target, $dest);
+
+	expect(structure_rra_is_safe_dest($dest))->toBeFalse();
 });
