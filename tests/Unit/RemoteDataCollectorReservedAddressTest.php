@@ -53,7 +53,13 @@ function debounce_run_notification($id) {
 }
 
 function get_default_contextoption($timeout = false) {
-	return array();
+	return $GLOBALS['rdc_base_context'] ?? array();
+}
+
+function stream_context_create($options = array()) {
+	$GLOBALS['rdc_context'] = $options;
+
+	return null;
 }
 
 function file_get_contents($url, $use_include_path = false, $context = null) {
@@ -71,6 +77,7 @@ function remote_collector_call(string $hostname, array $dns = array()) : array {
 	$GLOBALS['rdc_dns']      = $dns;
 	$GLOBALS['rdc_log']      = [];
 	$GLOBALS['rdc_url']      = null;
+	$GLOBALS['rdc_context']  = null;
 
 	$result = call_remote_data_collector(2, '/remote_agent.php?action=ping');
 
@@ -141,8 +148,53 @@ test('builds a reachable URL host for IPv4, names and IPv6 literals', function (
 })->with(array(
 	'IPv4'                  => array('127.0.0.1', array(), 'https://127.0.0.1/remote_agent.php?action=ping'),
 	'private IPv4'          => array('10.20.30.40', array(), 'https://10.20.30.40/remote_agent.php?action=ping'),
-	'host name'             => array('collector.example.net', array('collector.example.net' => '10.1.2.3'), 'https://collector.example.net/remote_agent.php?action=ping'),
+	'host name, pinned'     => array('collector.example.net', array('collector.example.net' => '10.1.2.3'), 'https://10.1.2.3/remote_agent.php?action=ping'),
 	'IPv6 loopback'         => array('::1', array(), 'https://[::1]/remote_agent.php?action=ping'),
 	'bracketed IPv6'        => array('[::1]', array(), 'https://[::1]/remote_agent.php?action=ping'),
 	'mapped loopback'       => array('::ffff:127.0.0.1', array(), 'https://[::ffff:127.0.0.1]/remote_agent.php?action=ping'),
 ));
+
+test('a collector request never follows a redirect', function (string $hostname, array $dns) {
+	[$result, $log, $url] = remote_collector_call($hostname, $dns);
+
+	expect($result)->toBe('connected')
+		->and($GLOBALS['rdc_context']['http']['follow_location'])->toBe(0)
+		->and($GLOBALS['rdc_context']['http']['max_redirects'])->toBe(0);
+})->with(array(
+	'IPv4'       => array('10.20.30.40', array()),
+	'IPv6'       => array('::1', array()),
+	'host name'  => array('collector.example.net', array('collector.example.net' => '10.1.2.3')),
+));
+
+test('a collector name is connected to at the address that was checked, with its own Host and certificate name', function () {
+	$GLOBALS['rdc_base_context'] = array(
+		'ssl'  => array('verify_peer' => true, 'verify_peer_name' => true),
+		'http' => array('header' => "X-Plugin: kept\r\n"),
+	);
+
+	try {
+		[$result, $log, $url] = remote_collector_call('collector.example.net', array('collector.example.net' => '10.1.2.3'));
+	} finally {
+		unset($GLOBALS['rdc_base_context']);
+	}
+
+	expect($url)->toBe('https://10.1.2.3/remote_agent.php?action=ping')
+		->and($GLOBALS['rdc_context']['http']['header'])->toBe("X-Plugin: kept\r\nHost: collector.example.net")
+		->and($GLOBALS['rdc_context']['ssl'])->toBe(array('verify_peer' => true, 'verify_peer_name' => true, 'peer_name' => 'collector.example.net'));
+});
+
+test('an address literal keeps the 1.2.31 URL and adds no Host header', function () {
+	[$result, $log, $url] = remote_collector_call('10.20.30.40');
+
+	expect($url)->toBe('https://10.20.30.40/remote_agent.php?action=ping')
+		->and($GLOBALS['rdc_context']['http'])->not->toHaveKey('header')
+		->and($GLOBALS['rdc_context'])->not->toHaveKey('ssl');
+});
+
+test('a name that resolves to the metadata address is refused before any request', function () {
+	[$result, $log, $url] = remote_collector_call('collector.example.net', array('collector.example.net' => '169.254.169.254'));
+
+	expect($result)->toBe('')
+		->and($url)->toBeNull()
+		->and($GLOBALS['rdc_context'])->toBeNull();
+});

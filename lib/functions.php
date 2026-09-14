@@ -6587,10 +6587,37 @@ function call_remote_data_collector($poller_id, $url, $logtype = 'WEBUI') {
 	}
 
 	$fgc_contextoption = get_default_contextoption();
-	$fgc_context       = stream_context_create($fgc_contextoption);
+
+	/* The address checked above is the one connected to. A redirect is not
+	 * followed, and a name is not resolved again, so neither can move the
+	 * request to an address that check would refuse. The http wrapper reads
+	 * these options for https URLs too. */
+	$fgc_contextoption['http']['follow_location'] = 0;
+	$fgc_contextoption['http']['max_redirects']   = 0;
+
+	if (is_ipaddress($hostname)) {
+		$url_host = $hostname;
+	} else {
+		$url_host = $target_ip;
+		$host_header = 'Host: ' . $hostname;
+
+		if (!isset($fgc_contextoption['http']['header']) || $fgc_contextoption['http']['header'] === '') {
+			$fgc_contextoption['http']['header'] = $host_header;
+		} elseif (is_array($fgc_contextoption['http']['header'])) {
+			$fgc_contextoption['http']['header'][] = $host_header;
+		} else {
+			$fgc_contextoption['http']['header'] = rtrim($fgc_contextoption['http']['header'], "\r\n") . "\r\n" . $host_header;
+		}
+
+		if (get_url_type() == 'https') {
+			$fgc_contextoption['ssl']['peer_name'] = $hostname;
+		}
+	}
+
+	$fgc_context = stream_context_create($fgc_contextoption);
 
 	/* an IPv6 literal needs brackets to be a URL host */
-	$url_host = filter_var($hostname, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false ? '[' . $hostname . ']' : $hostname;
+	$url_host = filter_var($url_host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false ? '[' . $url_host . ']' : $url_host;
 
 	return  file_get_contents(get_url_type() .'://' . $url_host . $url, false, $fgc_context);
 }
