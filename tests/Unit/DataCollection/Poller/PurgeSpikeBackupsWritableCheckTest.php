@@ -159,3 +159,35 @@ test('no retention configured skips the purge entirely', function () {
 
 	expect(purge_spike_backups())->toBeFalse();
 });
+
+test('a symlinked backup directory is refused before it is ever scanned, even with a trailing slash', function () {
+	/* spikekill_backupdir defaults to a path with a trailing slash
+	   (include/global_settings.php); is_link('dir/') follows the final
+	   symlink to stat what it points at instead of the link itself, so
+	   the directory-level is_link() check has to run against the
+	   trailing-slash-stripped value or a symlinked backup directory
+	   would still be scanned */
+	$real_dir = $this->dir . '/real-backupdir';
+	mkdir($real_dir, 0700, true);
+
+	$expired = $real_dir . '/host_traffic.backup.123.rrd';
+	file_put_contents($expired, 'backup-bytes');
+	touch($expired, time() - 1000);
+
+	$link = $this->dir . '/backupdir-link';
+	symlink($real_dir, $link);
+
+	purge_spike_backups_test_stub_config(array(
+		'spikekill_backupdir' => $link . '/',
+		'spikekill_purge'     => 500,
+	));
+
+	$purges = purge_spike_backups();
+
+	expect($purges)->toBe(0)
+		->and(file_exists($expired))->toBeTrue();
+
+	unlink($expired);
+	unlink($link);
+	rmdir($real_dir);
+});

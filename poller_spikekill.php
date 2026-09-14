@@ -192,7 +192,11 @@ function debug($message) {
 
 
 function purge_spike_backups() {
-	$directory = read_config_option('spikekill_backupdir');
+	/* spikekill_backupdir defaults to a path with a trailing slash
+	   (include/global_settings.php), and is_link('dir/') follows the final
+	   symlink to stat what it points at instead of the link itself, so the
+	   trailing slash has to go before is_link() is checked below */
+	$directory = rtrim(read_config_option('spikekill_backupdir'), '/');
 	$retention = read_config_option('spikekill_purge');
 
 	$purges = 0;
@@ -203,7 +207,10 @@ function purge_spike_backups() {
 
 	$earlytime = time() - $retention;
 
-	if ($directory != '' && is_dir($directory) && is_writable($directory)) {
+	/* refuse a symlinked directory before is_dir()/scandir() ever follow
+	   it, the same as the root-side spikekill helpers do for the backup
+	   and temp directories */
+	if ($directory != '' && !is_link($directory) && is_dir($directory) && is_writable($directory)) {
 		$files = array_diff(scandir($directory), array('.', '..'));
 
 		if (cacti_sizeof($files)) {
