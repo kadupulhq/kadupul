@@ -68,9 +68,15 @@ case "$fixer_path" in
 esac
 
 checked=()
-# A renamed file is compared with its merge-base name. A plain list keeps the
-# script working on the bash 3.2 that macOS ships.
-renames=$(git diff --name-status -M --diff-filter=R "$merge_base" -- '*.php')
+# A renamed file is compared with its merge-base name. -z keeps names with
+# unusual characters unquoted, so they match the file list above; parallel
+# arrays keep the script working on the bash 3.2 that macOS ships.
+rename_from=()
+rename_to=()
+while IFS= read -r -d '' _score && IFS= read -r -d '' from && IFS= read -r -d '' to; do
+	rename_from+=("$from")
+	rename_to+=("$to")
+done < <(git diff -z --name-status -M --diff-filter=R "$merge_base" -- '*.php')
 
 # Paths the config's Finder covers (it excludes include/vendor and
 # tests/Fixtures). The merge-base copy is checked with --path-mode=override,
@@ -108,16 +114,31 @@ same_tokens() {
 # in the working tree, so list-files there cannot say whether it was excluded.
 # The Finder only looks at names, so empty placeholder files are enough.
 base_included=
-if [ -n "$renames" ]; then
+if [ "${#rename_to[@]}" -gt 0 ]; then
 	base_tree="$tmp/.merge-base-tree"
 	mkdir -p "$base_tree"
 	cp "$config" "$base_tree/"
-	# ls-tree takes pathspecs as literal prefixes, so '*.php' would match nothing.
-	git ls-tree -r --name-only "$merge_base" | { grep '\.php$' || true; } > "$tmp/.merge-base-files"
+	# ls-tree takes pathspecs as literal prefixes, so '*.php' would match
+	# nothing; filter the NUL-delimited names instead.
+	git ls-tree -z -r --name-only "$merge_base" > "$tmp/.merge-base-names"
+	while IFS= read -r -d '' n; do
+		case "$n" in
+			*.php) printf '%s\0' "$n" ;;
+		esac
+	done < "$tmp/.merge-base-names" > "$tmp/.merge-base-files"
+	while IFS= read -r -d '' n; do
+		case "$n" in
+			*/*) printf '%s\0' "${n%/*}" ;;
+		esac
+	done < "$tmp/.merge-base-files" | sort -zu > "$tmp/.merge-base-dirs"
 	(
 		cd "$base_tree"
-		awk -F/ 'NF > 1 { NF--; print }' OFS=/ "$tmp/.merge-base-files" | sort -u | tr '\n' '\0' | xargs -0 mkdir -p
-		tr '\n' '\0' < "$tmp/.merge-base-files" | xargs -0 touch
+		if [ -s "$tmp/.merge-base-dirs" ]; then
+			xargs -0 mkdir -p < "$tmp/.merge-base-dirs"
+		fi
+		if [ -s "$tmp/.merge-base-files" ]; then
+			xargs -0 touch < "$tmp/.merge-base-files"
+		fi
 	)
 	base_included=$(cd "$base_tree" && "$fixer_path" list-files --config="$config" 2>/dev/null | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##')
 fi
@@ -127,11 +148,13 @@ for f in "${files[@]}"; do
 		continue
 	fi
 	base_path=$f
-	while IFS=$'\t' read -r _ from to; do
-		if [ "$to" = "$f" ]; then
-			base_path=$from
+	i=0
+	while [ "$i" -lt "${#rename_to[@]}" ]; do
+		if [ "${rename_to[$i]}" = "$f" ]; then
+			base_path=${rename_from[$i]}
 		fi
-	done <<< "$renames"
+		i=$((i + 1))
+	done
 	# A file moved in from outside the Finder was never subject to the rules;
 	# treat it as new so it is checked in full.
 	if [ "$base_path" != "$f" ] && ! printf '%s\n' "$base_included" | grep -Fqx -- "$base_path"; then
