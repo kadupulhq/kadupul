@@ -89,7 +89,12 @@ afterEach(function () {
 test('an expired root-owned backup is purged when the directory is writable', function () {
 	$backup = $this->dir . '/host_traffic.backup.123.rrd';
 	file_put_contents($backup, 'backup-bytes');
-	chmod($backup, 0600);
+
+	/* 0400 leaves the file non-writable to the test user even though it
+	   owns it, simulating the root-owned, poller-inaccessible backup this
+	   test is about; 0600 would still be writable to the owner and pass
+	   under the old is_writable($filepath) check too, proving nothing */
+	chmod($backup, 0400);
 	touch($backup, time() - 1000);
 
 	purge_spike_backups_test_stub_config(array(
