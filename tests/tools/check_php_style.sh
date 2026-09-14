@@ -48,6 +48,209 @@ if [ "${#files[@]}" -eq 0 ]; then
 	exit 0
 fi
 
+# The Finder's file list is read one path per line below, so a path that
+# contains a newline could never match it. Refuse such a path instead of
+# skipping it without a check.
+for f in "${files[@]}"; do
+	case "$f" in
+		*$'\n'*)
+			printf 'Refusing to check a PHP path that contains a newline: %q\n' "$f" >&2
+			exit 2
+			;;
+	esac
+done
+
+# main moves to PER-CS one file at a time. A file that was not yet PER-CS clean
+# at the merge base is skipped, so a small fix in an unconverted file does not
+# force a whole-file reformat; converting it is its own formatting-only change.
+# New files, and files already clean at the merge base, must stay clean.
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+root=$(pwd)
+
+# Files are classified under the rules in force at the merge base, so a change
+# that tightens the config cannot make an already formatted file look
+# unconverted and skip its edit. The merge base's config is found with the
+# same precedence as above, and this config stands in only when the merge base
+# has neither name. A failure reading a config that exists stops the check.
+# The final check still uses this config.
+base_config_name=
+for name in .php-cs-fixer.php .php-cs-fixer.dist.php; do
+	if git cat-file -e "$merge_base:$name" 2>/dev/null; then
+		base_config_name=$name
+		break
+	fi
+done
+mkdir -p "$tmp/.merge-base-config"
+if [ -n "$base_config_name" ]; then
+	base_config="$tmp/.merge-base-config/$base_config_name"
+	git show "$merge_base:$base_config_name" > "$base_config"
+else
+	base_config="$tmp/.merge-base-config/$config"
+	cp "$config" "$base_config"
+fi
+
+# Resolve the fixer once: the merge-base check below runs from another directory,
+# where a relative PHP_CS_FIXER path would no longer point at the binary.
+if ! fixer_path=$(command -v "$fixer"); then
+	echo "php-cs-fixer not found: $fixer" >&2
+	exit 2
+fi
+case "$fixer_path" in
+	/*) ;;
+	*) fixer_path="$root/$fixer_path" ;;
+esac
+
+checked=()
+# A renamed file is compared with its merge-base name. -z keeps names with
+# unusual characters unquoted, so they match the file list above; parallel
+# arrays keep the script working on the bash 3.2 that macOS ships.
+rename_from=()
+rename_to=()
+while IFS= read -r -d '' _score && IFS= read -r -d '' from && IFS= read -r -d '' to; do
+	# The source name is matched against the line-oriented Finder list too.
+	case "$from$to" in
+		*$'\n'*)
+			printf 'Refusing to check a PHP rename whose path contains a newline: %q -> %q\n' "$from" "$to" >&2
+			exit 2
+			;;
+	esac
+	rename_from+=("$from")
+	rename_to+=("$to")
+done < <(git diff -z --name-status -M --diff-filter=R "$merge_base" -- '*.php')
+
+# Paths the config's Finder covers (it excludes include/vendor and
+# tests/Fixtures). The merge-base copy is checked with --path-mode=override,
+# which would otherwise bypass those exclusions.
+included=$("$fixer_path" list-files --config="$config" | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##' -e "s/'[\\\\]''/'/g")
+
+# True when two PHP files hold the same tokens apart from whitespace, so a
+# change between them only reformats. String and heredoc contents are tokens,
+# so a changed literal does not count as whitespace.
+same_tokens() {
+	php -r '
+		$strip = function ($file) {
+			$out = array();
+			foreach (token_get_all(file_get_contents($file)) as $t) {
+				if (is_array($t)) {
+					if ($t[0] === T_WHITESPACE) {
+						continue;
+					}
+					// The opening tag token carries the whitespace that follows it.
+					if ($t[0] === T_OPEN_TAG || $t[0] === T_OPEN_TAG_WITH_ECHO) {
+						$t[1] = rtrim($t[1]);
+					}
+					// Formatting can re-indent a docblock or respace a comment.
+					if ($t[0] === T_COMMENT || $t[0] === T_DOC_COMMENT) {
+						$t[1] = preg_replace("/\\s+/", "", $t[1]);
+					}
+					$out[] = array($t[0], $t[1]);
+				} else {
+					$out[] = $t;
+				}
+			}
+			return $out;
+		};
+		exit($strip($argv[1]) === $strip($argv[2]) ? 0 : 1);
+	' -- "$1" "$2"
+}
+
+# Paths the Finder covered at the merge base. A file the merge-base Finder
+# excluded was never held to the rules, so it is checked as new even when this
+# config now includes it. list-files runs on a placeholder tree because a
+# rename source no longer exists in the working tree; the Finder only looks at
+# names, so empty placeholder files are enough. list-files quotes each path
+# like escapeshellarg(), so an embedded quote is unescaped after the outer
+# quotes are removed.
+base_included=
+base_tree="$tmp/.merge-base-tree"
+mkdir -p "$base_tree"
+cp "$base_config" "$base_tree/$config"
+# ls-tree takes pathspecs as literal prefixes, so '*.php' would match
+# nothing; filter the NUL-delimited names instead.
+git ls-tree -z -r --name-only "$merge_base" > "$tmp/.merge-base-names"
+while IFS= read -r -d '' n; do
+	case "$n" in
+		*.php) printf '%s\0' "$n" ;;
+	esac
+done < "$tmp/.merge-base-names" > "$tmp/.merge-base-files"
+while IFS= read -r -d '' n; do
+	case "$n" in
+		*/*) printf '%s\0' "${n%/*}" ;;
+	esac
+done < "$tmp/.merge-base-files" | sort -zu > "$tmp/.merge-base-dirs"
+(
+	cd "$base_tree"
+	if [ -s "$tmp/.merge-base-dirs" ]; then
+		xargs -0 mkdir -p -- < "$tmp/.merge-base-dirs"
+	fi
+	if [ -s "$tmp/.merge-base-files" ]; then
+		xargs -0 touch -- < "$tmp/.merge-base-files"
+	fi
+)
+base_included=$(cd "$base_tree" && "$fixer_path" list-files --config="$config" | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##' -e "s/'[\\\\]''/'/g")
+
+for f in "${files[@]}"; do
+	if ! printf '%s\n' "$included" | grep -Fqx -- "$f"; then
+		continue
+	fi
+	base_path=$f
+	i=0
+	while [ "$i" -lt "${#rename_to[@]}" ]; do
+		if [ "${rename_to[$i]}" = "$f" ]; then
+			base_path=${rename_from[$i]}
+		fi
+		i=$((i + 1))
+	done
+	# A file outside the merge-base Finder (moved in, or under an exclusion this
+	# change removes) was never subject to the rules; check it in full as new.
+	if ! printf '%s\n' "$base_included" | grep -Fqx -- "$base_path"; then
+		checked+=("$f")
+		continue
+	fi
+	if git cat-file -e "$merge_base:$base_path" 2>/dev/null; then
+		mkdir -p -- "$tmp/$(dirname -- "$base_path")"
+		git show "$merge_base:$base_path" > "$tmp/$base_path"
+		# override applies the rules to the copy, which lies outside the config's finder
+		set +e
+		(cd "$tmp" && "$fixer_path" check --config="$base_config" --path-mode=override \
+			--using-cache=no -- "$base_path" >/dev/null 2>&1)
+		status=$?
+		set -e
+		# php-cs-fixer check exits 8 when files only need formatting; any other
+		# non-zero status is a real failure and must not be read as "unconverted".
+		if [ "$status" -eq 8 ]; then
+			# A change that only moves whitespace is a PER-CS conversion; it must
+			# finish the job, so it is checked in full rather than skipped. A pure
+			# rename changes nothing and keeps the exemption.
+			if ! cmp -s -- "$tmp/$base_path" "$f" && same_tokens "$tmp/$base_path" "$f"; then
+				checked+=("$f")
+				continue
+			fi
+			if [ "$base_path" != "$f" ] && cmp -s -- "$tmp/$base_path" "$f"; then
+				echo "Skipping $f: renamed from $base_path without changes."
+			else
+				echo "Skipping $f: not PER-CS formatted at $merge_base; convert it in a formatting-only change."
+			fi
+			continue
+		elif [ "$status" -ne 0 ]; then
+			echo "php-cs-fixer failed with status $status while checking $base_path at $merge_base" >&2
+			exit "$status"
+		fi
+	fi
+	checked+=("$f")
+done
+
+if [ "${#checked[@]}" -eq 0 ]; then
+	echo "No changed PHP files already on PER-CS; nothing to check."
+	exit 0
+fi
+
 # intersection keeps the config's exclusions in force for the paths given.
-exec "$fixer" check --config="$config" --path-mode=intersection \
-	--using-cache=no --diff -- "${files[@]}"
+# Not exec: the EXIT trap must still remove the temporary directory.
+set +e
+"$fixer_path" check --config="$config" --path-mode=intersection \
+	--using-cache=no --diff -- "${checked[@]}"
+status=$?
+set -e
+exit "$status"

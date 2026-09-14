@@ -59,14 +59,17 @@ Use the house wrappers instead of raw equivalents:
 
 ## Style
 
-- On `main`, PHP files a change edits follow PHP-FIG PER-CS 2.0, as
-  configured in `.php-cs-fixer.php`.  Files the change does not touch keep
-  their current formatting.  No drive-by reformat.
-- Reformat an edited file in its own commit, separate from the behaviour
-  change.  That commit changes whitespace only; `array()` to `[]`, trailing
+- On `main`, PHP files move to PHP-FIG PER-CS 2.0, as configured in
+  `.php-cs-fixer.php`, one file at a time.  Files already on PER-CS and new
+  files the Finder includes (not `include/vendor` or `tests/Fixtures`) must
+  stay formatted.  A small change to a file that is not converted
+  yet may keep its current formatting; the style check skips it.  No drive-by
+  reformat.
+- Convert a file in its own commit, separate from any behaviour change.  That commit changes whitespace only; `array()` to `[]`, trailing
   commas and other token changes go in separate commits.
-- Run `tests/tools/check_php_style.sh` before pushing.  It checks only the PHP
-  files changed since `origin/main`, and CI runs the same script.  A few files
+- Run `tests/tools/check_php_style.sh` before pushing.  It checks the PHP files
+  changed since `origin/main` that were already formatted at the merge base,
+  new files, and whitespace-only conversions, and CI runs the same script.  A few files
   need `php-cs-fixer fix` twice before the check passes.
 - `lts/1.2` keeps upstream Cacti formatting (tabs, same-line function braces)
   so upstream fixes cherry-pick cleanly.  Do not reformat files there.
