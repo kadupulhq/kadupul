@@ -104,7 +104,7 @@ $snmpSource = file_get_contents(__DIR__ . '/../../lib/snmp.php');
 /* eval() runs only function source read from lib/snmp.php in this repository,
  * never external input, so the test exercises the production code without
  * loading lib/snmp.php's include-time setup. */
-foreach (['cacti_snmp_session_walk', 'cacti_snmp_session_get', 'cacti_snmp_session_getnext'] as $snmpFunction) {
+foreach (['cacti_snmp_timeout_ms', 'cacti_snmp_session_walk', 'cacti_snmp_session_get', 'cacti_snmp_session_getnext'] as $snmpFunction) {
     if (!function_exists(__NAMESPACE__ . '\\' . $snmpFunction)) {
         eval('namespace ' . __NAMESPACE__ . '; ' . snmp_timeout_warning_function_source($snmpSource, $snmpFunction)); // nosemgrep: php.lang.security.eval-use.eval-use
     }
@@ -137,3 +137,67 @@ test('getnext logs the configured timeout in milliseconds', function () {
         ["WARNING: SNMP Error:'Timeout (500 ms)', Device:'router-1', OID:'.1.3.6.1.2.1.1.5'", false, 'SNMP', POLLER_VERBOSITY_HIGH],
     ]);
 });
+
+if (class_exists('\SNMP')) {
+    /**
+     * Native ext-snmp session whose info['timeout'] stays in microseconds,
+     * unlike the bundled TimedOutSession above. Mirrors the public
+     * bulk_walk_size and value_output_format properties phpsnmp\SNMP's
+     * extension.php wrapper declares on top of the native class.
+     */
+    final class NativeTimedOutSession extends \SNMP
+    {
+        public $bulk_walk_size = 10;
+        public $value_output_format;
+
+        public function walk($oid, $suffix_as_key = false, $max_repetitions = -1, $non_repeaters = 0): array|false
+        {
+            return false;
+        }
+
+        public function get($oid, $preserve_keys = false): mixed
+        {
+            return false;
+        }
+
+        public function getnext($oid): mixed
+        {
+            return false;
+        }
+
+        public function getErrno(): int
+        {
+            return SNMP::ERRNO_TIMEOUT;
+        }
+    }
+}
+
+test('walk logs the native SNMP extension timeout in milliseconds, not microseconds', function () {
+    $session = new NativeTimedOutSession(\SNMP::VERSION_2c, '127.0.0.1', 'public', 500000, 0);
+
+    expect(cacti_snmp_session_walk($session, '.1.3.6.1.2.1.1.1'))->toBe([]);
+
+    expect($GLOBALS['snmp_timeout_warning_logs'])->toBe([
+        ["WARNING: SNMP Error:'Timeout (500 ms)', Device:'127.0.0.1', OID:'.1.3.6.1.2.1.1.1'", false, 'SNMP', POLLER_VERBOSITY_HIGH],
+    ]);
+})->skip(!class_exists('\SNMP'), 'ext-snmp is not loaded');
+
+test('get logs the native SNMP extension timeout in milliseconds, not microseconds', function () {
+    $session = new NativeTimedOutSession(\SNMP::VERSION_2c, '127.0.0.1', 'public', 500000, 0);
+
+    expect(cacti_snmp_session_get($session, '.1.3.6.1.2.1.1.3.0'))->toBeFalse();
+
+    expect($GLOBALS['snmp_timeout_warning_logs'])->toBe([
+        ["WARNING: SNMP Error:'Timeout (500 ms)', Device:'127.0.0.1', OID:'.1.3.6.1.2.1.1.3.0'", false, 'SNMP', POLLER_VERBOSITY_HIGH],
+    ]);
+})->skip(!class_exists('\SNMP'), 'ext-snmp is not loaded');
+
+test('getnext logs the native SNMP extension timeout in milliseconds, not microseconds', function () {
+    $session = new NativeTimedOutSession(\SNMP::VERSION_2c, '127.0.0.1', 'public', 500000, 0);
+
+    expect(cacti_snmp_session_getnext($session, '.1.3.6.1.2.1.1.5'))->toBeFalse();
+
+    expect($GLOBALS['snmp_timeout_warning_logs'])->toBe([
+        ["WARNING: SNMP Error:'Timeout (500 ms)', Device:'127.0.0.1', OID:'.1.3.6.1.2.1.1.5'", false, 'SNMP', POLLER_VERBOSITY_HIGH],
+    ]);
+})->skip(!class_exists('\SNMP'), 'ext-snmp is not loaded');
