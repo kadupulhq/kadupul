@@ -3,6 +3,14 @@
 	<testsuites>
 		<testsuite name="CSRF action coverage">
 			<file>Unit/Security/Csrf/ItemActionPostOnlyTest.php</file>
+			<file>Unit/Security/Csrf/ActionArrayGuardTest.php</file>
+			<file>Unit/Security/Csrf/CrossSiteGetGuardTest.php</file>
+			<file>Unit/Security/Csrf/CsrfIpTokenTest.php</file>
+			<file>Unit/Security/Csrf/CsrfRequirePostCrossSiteTest.php</file>
+		</testsuite>
+		<testsuite name="Output escaping">
+			<file>Unit/Security/Xss/HostLocationFilterEscapeTest.php</file>
+			<file>Unit/Security/Xss/TemplateImportPreviewEscapeTest.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>

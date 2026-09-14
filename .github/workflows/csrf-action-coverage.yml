@@ -6,20 +6,32 @@ on:
     paths:
       - '.github/workflows/csrf-action-coverage.yml'
       - 'include/global.php'
+      - 'lib/html_utility.php'
+      - 'host.php'
+      - 'templates_import.php'
       - 'include/layout.js'
       - '**/*.php'
       - 'tests/phpunit-csrf.xml'
       - 'tests/Unit/Security/Csrf/ItemActionPostOnlyTest.php'
+      - 'tests/Unit/Security/Csrf/ActionArrayGuardTest.php'
+      - 'tests/Unit/Security/Xss/HostLocationFilterEscapeTest.php'
+      - 'tests/Unit/Security/Xss/TemplateImportPreviewEscapeTest.php'
       - 'tests/js/csrf_post_actions.test.js'
   pull_request:
     branches: [1.2.x, lts/1.2]
     paths:
       - '.github/workflows/csrf-action-coverage.yml'
       - 'include/global.php'
+      - 'lib/html_utility.php'
+      - 'host.php'
+      - 'templates_import.php'
       - 'include/layout.js'
       - '**/*.php'
       - 'tests/phpunit-csrf.xml'
       - 'tests/Unit/Security/Csrf/ItemActionPostOnlyTest.php'
+      - 'tests/Unit/Security/Csrf/ActionArrayGuardTest.php'
+      - 'tests/Unit/Security/Xss/HostLocationFilterEscapeTest.php'
+      - 'tests/Unit/Security/Xss/TemplateImportPreviewEscapeTest.php'
       - 'tests/js/csrf_post_actions.test.js'
   workflow_dispatch:
 

@@ -245,15 +245,66 @@ function csrf_error_callback() {
 }
 
 /**
- * Reject state changes transported through a URL or an unsupported method.
+ * Reject a state change that is not a POST, except a GET from Cacti's own site.
  * csrf-magic validates the token before page dispatch for every POST request.
+ *
+ * 1.2.31 accepted these actions by GET, and links, bookmarks and scripts still
+ * send them that way. No 1.2.31 link used another method, and link prefetch
+ * uses GET, so HEAD, PUT, DELETE and PATCH stay refused. Pass $strict for a step
+ * 1.2.31 already refused without a token, which stays refused from anywhere.
  */
-function csrf_require_post() {
-	if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
-		header('Allow: POST');
-		http_response_code(405);
-		exit;
+function csrf_require_post($strict = false) {
+	$method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : '';
+
+	if ($method === 'POST' || ($method === 'GET' && !$strict && !csrf_request_is_cross_site())) {
+		return;
 	}
+
+	header('Allow: POST');
+	http_response_code(405);
+	exit;
+}
+
+/**
+ * Whether the browser marked this request as coming from another site.
+ *
+ * Sec-Fetch-Site decides whenever a browser sends it, because a page can not set
+ * it. Browsers without it fall back to the Origin and Referer hosts. A request
+ * with none of these, such as a bookmark, a script or a Remote Data Collector
+ * call, is not cross-site.
+ */
+function csrf_request_is_cross_site() {
+	if (isset($_SERVER['HTTP_SEC_FETCH_SITE'])) {
+		return !in_array(strtolower(trim($_SERVER['HTTP_SEC_FETCH_SITE'])), array('same-origin', 'none'), true);
+	}
+
+	foreach (array('HTTP_ORIGIN', 'HTTP_REFERER') as $header) {
+		if (isset($_SERVER[$header]) && $_SERVER[$header] !== '' && !csrf_request_host_matches($_SERVER[$header])) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Whether a URL names this server.
+ *
+ * The host is compared with the server-configured name, as
+ * validate_redirect_url() does, because the Host header is client input. Only
+ * the host name is compared: TLS ending at a reverse proxy changes the scheme
+ * and often the port, and a browser that tells ports apart sends
+ * Sec-Fetch-Site, so it never reaches this comparison.
+ */
+function csrf_request_host_matches($url) {
+	$source = parse_url($url, PHP_URL_HOST);
+	$target = isset($_SERVER['SERVER_NAME']) ? preg_replace('/:\d+$/', '', $_SERVER['SERVER_NAME']) : '';
+
+	if (!is_string($source) || $source === '' || $target === '') {
+		return false;
+	}
+
+	return strtolower(trim($source, '[]')) === strtolower(trim($target, '[]'));
 }
 
 include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');

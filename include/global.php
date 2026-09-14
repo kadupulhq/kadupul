@@ -598,7 +598,14 @@ if ($config['is_web']) {
 	if (isset_request_var('action')) {
 		$action = get_nfilter_request_var('action');
 
-		/* State changing actions must arrive by POST with a CSRF token. The
+		/* No page takes an array action. A loose compare let action[]=save miss
+		   every name below, and set_default_action() used to dispatch element 0. */
+		if (!is_string($action)) {
+			http_response_code(400);
+			exit;
+		}
+
+		/* State changing actions must not arrive by GET from another site. The
 		   actions below were reachable by GET, so a cross origin <img> or link
 		   could delete or reorder a template item, a tree branch or a link page
 		   using only the victim's session cookie. Under AUTH_METHOD_BASIC the
@@ -613,6 +620,8 @@ if ($config['is_web']) {
 
 		   Read-only actions stay out by intent: item_edit, edit, tree and the
 		   *_confirm dialogs render a page and change nothing. */
+		$method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : '';
+
 		$bad_actions = array(
 			'save', 'update_data', 'changepassword',
 			'delete_node', 'gt_remove', 'query_remove', 'remove', 'change_leaf',
@@ -623,16 +632,33 @@ if ($config['is_web']) {
 			'item_movedown_gsv', 'item_movedown_dssv',
 			'moveup', 'movedown',
 			'tree_up', 'tree_down', 'move_page_up', 'move_page_down', 'delete_page',
-			'rrd_add', 'rrd_remove'
+			'rrd_add', 'rrd_remove',
+			/* 1.2.31 GET actions that change state; their pages still send them by GET */
+			'logout_everywhere', 'clear_user_settings', 'reset_default',
+			'ajax_dnd', 'lock', 'unlock', 'sortasc', 'sortdesc', 'set_branch_sort', 'set_host_sort',
+			'ajax_reports', 'update_timespan',
+			'run_debug', 'run_repair', 'runall', 'ds_disable', 'ds_enable',
+			'query_reload', 'ajax_save', 'ajax_save_filter',
+			'reindex', 'gt_add', 'query_add', 'query_change', 'query_verbose',
+			'ping_host', 'enable_debug', 'disable_debug', 'repopulate',
+			'item_add_gt', 'item_remove_gt', 'item_add_dq', 'item_remove_dq',
+			'ping', 'restart', 'remall', 'arcall', 'send_test', 'perm_remove',
+			'clear_poller_cache', 'rebuild_resource_cache', 'clear_logfile', 'purge_logfile', 'clear_user_log',
+			'field_remove', 'ds_remove', 'template_remove', 'input_remove', 'send',
+			'purge_data_source_statistics', 'rebuild_snmpagent_cache'
 		);
 
 		foreach($bad_actions as $bad) {
-			if ($action == $bad && !isset($_POST['__csrf_magic'])) {
-				/* Preserve the legacy warning for form actions. Item-action links
-				 * can also come from plugins outside this repository; crawlers may
-				 * discover those URLs, but they must still fail closed. */
+			if ($action === $bad && !isset($_POST['__csrf_magic'])) {
+				/* 1.2.31 refused the form actions from any request without a
+				 * token and logged it. The other names were GET links in 1.2.31
+				 * that plugins, bookmarks and scripts still use, so only a GET
+				 * the browser does not mark as coming from another site is let
+				 * through; every other method still lacks a token and gets 405. */
 				if (in_array($bad, array('save', 'update_data', 'changepassword'), true)) {
 					cacti_log('WARNING: Attempt to use GET method for POST operations from IP ' . get_client_addr(), false, 'WEBUI');
+				} elseif ($method === 'GET' && !csrf_request_is_cross_site()) {
+					break;
 				}
 
 				header('Allow: POST');
@@ -643,8 +669,9 @@ if ($config['is_web']) {
 
 		/* 'actions' can not join the list above: breadcrumbs link back to the
 		   confirmation page by GET. Every form_actions() changes data only once
-		   selected_items arrives, so that is the request to refuse. */
-		if ($action == 'actions' && isset_request_var('selected_items') && !isset($_POST['__csrf_magic'])) {
+		   selected_items arrives, so that is the request to refuse unless it is
+		   a same-site GET. */
+		if ($action === 'actions' && isset_request_var('selected_items') && !isset($_POST['__csrf_magic']) && ($method !== 'GET' || csrf_request_is_cross_site())) {
 			header('Allow: POST');
 			http_response_code(405);
 			exit;
