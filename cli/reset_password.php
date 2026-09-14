@@ -101,6 +101,8 @@ function reset_password_echo_on() {
  * Read the new password from STDIN. At a terminal it is typed twice without
  * echo; otherwise the first line is used, so it can come from a file or a
  * here-string rather than the command line where other users could see it.
+ * Windows has no stty to hide terminal input, so a Windows console session
+ * is refused and told to pipe the password in instead.
  *
  * @return string|false
  */
@@ -109,6 +111,14 @@ function reset_password_read() {
 		$line = fgets(STDIN);
 
 		return ($line === false) ? '' : rtrim($line, "\r\n");
+	}
+
+	global $config;
+
+	if ($config['cacti_server_os'] == 'win32') {
+		print 'ERROR: Hidden password input is not available on Windows.  Pipe the new password into this command instead.' . PHP_EOL;
+
+		return false;
 	}
 
 	print 'New password: ';

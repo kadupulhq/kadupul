@@ -451,6 +451,7 @@ function reset_password_tty_run(array $scenario) : array {
 namespace ResetPasswordTty {
 	$GLOBALS['scenario'] = json_decode(stream_get_contents(\STDIN), true);
 	$GLOBALS['tty']      = array('stty' => array(), 'shutdown' => 0, 'async' => false, 'signals' => array(), 'order' => array());
+	$GLOBALS['config']   = array('cacti_server_os' => $GLOBALS['scenario']['cacti_server_os'] ?? 'unix');
 
 	function stream_isatty($stream) {
 		return true;
@@ -581,6 +582,17 @@ test('the SIGINT handler is armed before stty -echo, so a failure in that call s
 })->skip(function () {
 	return !extension_loaded('pcntl');
 }, 'pcntl is not loaded');
+
+test('a Windows console session is refused rather than echoing the password', function () {
+	$process = reset_password_tty_run(array('cacti_server_os' => 'win32', 'lines' => array("Recover-1234\n", "Recover-1234\n")));
+	$result  = reset_password_tty_result($process);
+
+	expect($result['password'])->toBeFalse()
+		->and($process['stdout'])->toContain('ERROR: Hidden password input is not available on Windows')
+		->and($result['tty']['stty'])->toBe(array())
+		->and($result['tty']['shutdown'])->toBe(0)
+		->and($result['tty']['signals'])->toBe(array());
+});
 
 test('the script follows the CLI conventions', function () {
 	$source = file_get_contents(reset_password_cli_path());
