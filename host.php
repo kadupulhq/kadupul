@@ -597,7 +597,7 @@ function host_export() {
 	if (cacti_sizeof($hosts)) {
 		$columns = array_keys($hosts[0]);
 
-		fputcsv($stdout, $columns, ',', '"', '\\', "\n");
+		fputcsv($stdout, $columns, ',', '"', '\\');
 
 		foreach($hosts as $h) {
 			foreach(array_keys($h) as $hc) {
@@ -612,7 +612,7 @@ function host_export() {
 
 			unset($field);
 
-			fputcsv($stdout, $h, ',', '"', '\\', "\n");
+			fputcsv($stdout, $h, ',', '"', '\\');
 		}
 	}
 
