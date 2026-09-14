@@ -298,13 +298,35 @@ function csrf_request_is_cross_site() {
  */
 function csrf_request_host_matches($url) {
 	$source = parse_url($url, PHP_URL_HOST);
-	$target = isset($_SERVER['SERVER_NAME']) ? preg_replace('/:\d+$/', '', $_SERVER['SERVER_NAME']) : '';
+	$target = isset($_SERVER['SERVER_NAME']) ? csrf_strip_host_port($_SERVER['SERVER_NAME']) : '';
 
 	if (!is_string($source) || $source === '' || $target === '') {
 		return false;
 	}
 
 	return strtolower(trim($source, '[]')) === strtolower(trim($target, '[]'));
+}
+
+/**
+ * Strips a trailing :port from a host, the way parse_url() reports it.
+ *
+ * A bracketed IPv6 host keeps its brackets, with or without a port:
+ * [::1] and [::1]:8443 both return [::1]. A bare IPv6 address, such as the
+ * SERVER_NAME Apache and nginx report without brackets when the Host header
+ * carries no port, has more than one colon and none of them is a port
+ * separator, so it is returned unchanged; stripping the trailing :digits
+ * there would eat the last hextet instead of a port.
+ */
+function csrf_strip_host_port($host) {
+	if (preg_match('/^(\[[0-9A-Fa-f:]+\])(?::\d+)?$/', $host, $matches)) {
+		return $matches[1];
+	}
+
+	if (substr_count($host, ':') > 1) {
+		return $host;
+	}
+
+	return preg_replace('/:\d+$/', '', $host);
 }
 
 include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');

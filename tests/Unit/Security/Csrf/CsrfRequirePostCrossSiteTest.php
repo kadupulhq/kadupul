@@ -86,7 +86,7 @@ function run_checked($code, $method, array $request = array(), array $post = arr
 	$csrf    = file_get_contents(dirname(__DIR__, 4) . '/include/csrf.php');
 	$helpers = '';
 
-	foreach (array('csrf_require_post', 'csrf_request_is_cross_site', 'csrf_request_host_matches') as $name) {
+	foreach (array('csrf_require_post', 'csrf_request_is_cross_site', 'csrf_request_host_matches', 'csrf_strip_host_port') as $name) {
 		if (preg_match('/^function ' . $name . '\(.*?^}\R/ms', $csrf, $matches) === 1) {
 			$helpers .= $matches[0];
 		}

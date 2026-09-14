@@ -69,7 +69,7 @@ function run_guard($method, array $request, array $post = array(), array $server
 
 	$helpers = '';
 
-	foreach (array('csrf_request_is_cross_site', 'csrf_request_host_matches') as $name) {
+	foreach (array('csrf_request_is_cross_site', 'csrf_request_host_matches', 'csrf_strip_host_port') as $name) {
 		if (preg_match('/^function ' . $name . '\(.*?^}\R/ms', $csrf, $matches) === 1) {
 			$helpers .= $matches[0];
 		}
@@ -235,6 +235,21 @@ test('the Origin and Referer fallback compares the host name only', function () 
 		->and(run_guard('GET', array('action' => 'item_remove'), array(), array('SERVER_NAME' => 'cacti.example:8443', 'HTTP_REFERER' => 'https://CACTI.example/')))->toBe('pass')
 		->and(run_guard('GET', array('action' => 'item_remove'), array(), array('SERVER_NAME' => '[::1]', 'HTTP_ORIGIN' => 'http://[::1]:8080')))->toBe('pass')
 		->and(run_guard('GET', array('action' => 'item_remove'), array(), array('SERVER_NAME' => '[::1]', 'HTTP_ORIGIN' => 'http://[::2]')))->toBe('405');
+});
+
+test('the fallback normalizes IPv4, name and IPv6 SERVER_NAME the way parse_url reports the Origin host', function () {
+	/* SERVER_NAME may carry a :port, a bracketed IPv6 host with or without a
+	   :port, or a bare IPv6 host with no brackets and no port, which is what
+	   Apache and nginx report when the Host header names an IPv6 address
+	   with no port; stripping a trailing :digits there would eat the
+	   address's last hextet instead of a port */
+	expect(run_guard('GET', array('action' => 'item_remove'), array(), array('SERVER_NAME' => '192.0.2.10', 'HTTP_ORIGIN' => 'http://192.0.2.10/')))->toBe('pass')
+		->and(run_guard('GET', array('action' => 'item_remove'), array(), array('SERVER_NAME' => 'cacti.example', 'HTTP_ORIGIN' => 'http://cacti.example/')))->toBe('pass')
+		->and(run_guard('GET', array('action' => 'item_remove'), array(), array('SERVER_NAME' => 'cacti.example:8443', 'HTTP_ORIGIN' => 'https://cacti.example/')))->toBe('pass')
+		->and(run_guard('GET', array('action' => 'item_remove'), array(), array('SERVER_NAME' => '[::1]:8443', 'HTTP_ORIGIN' => 'http://[::1]/')))->toBe('pass')
+		->and(run_guard('GET', array('action' => 'item_remove'), array(), array('SERVER_NAME' => '::1', 'HTTP_ORIGIN' => 'http://[::1]/')))->toBe('pass')
+		->and(run_guard('GET', array('action' => 'item_remove'), array(), array('SERVER_NAME' => '2001:db8::1', 'HTTP_ORIGIN' => 'http://[2001:db8::1]/')))->toBe('pass')
+		->and(run_guard('GET', array('action' => 'item_remove'), array(), array('SERVER_NAME' => '::1', 'HTTP_ORIGIN' => 'http://[::2]/')))->toBe('405');
 });
 
 test('the fallback compares the server name, not the Host header the client sent', function () {
