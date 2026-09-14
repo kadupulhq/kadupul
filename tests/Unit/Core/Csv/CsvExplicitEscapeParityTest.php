@@ -8,8 +8,8 @@
 */
 
 /*
- * color.php, host.php and lib/auth.php now pass $escape (and, for fputcsv(),
- * $eol) explicitly to str_getcsv()/fputcsv() instead of relying on PHP's
+ * color.php, host.php and lib/auth.php now pass $escape explicitly to
+ * str_getcsv()/fputcsv() instead of relying on PHP's
  * default, which PHP 8.4 deprecates omitting. The values passed, ',', '"'
  * and '\\', are exactly PHP's own pre-8.4 defaults, so parsing and output
  * for a sample containing quotes and backslashes must match what the
@@ -27,7 +27,7 @@ test('fputcsv with explicit defaults writes and round-trips a quoted, backslash-
 	$fields = array('CORP\jdoe', 'quoted "value" here', 'a,field,with,commas');
 
 	$stream = fopen('php://memory', 'r+');
-	fputcsv($stream, $fields, ',', '"', '\\', "\n");
+	fputcsv($stream, $fields, ',', '"', '\\');
 	rewind($stream);
 	$output = stream_get_contents($stream);
 	fclose($stream);
