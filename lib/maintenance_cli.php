@@ -106,6 +106,27 @@ function cacti_remove_graphs_next_looks_like_option($token) {
 }
 
 /**
+ * Resolve the Windows temporary directory splice_rrd.php dumps into.
+ *
+ * getenv('TEMP') can come back unset or empty under some Windows service
+ * accounts, which left the dump path rooted at the current drive instead of
+ * a temporary directory. sys_get_temp_dir() is PHP's own fallback for the
+ * same case, so an empty TEMP resolves the same way tempnam() would resolve
+ * it.
+ *
+ * @param string|false $temp_env The raw getenv('TEMP') result.
+ *
+ * @return string The directory to write dumps into.
+ */
+function cacti_cli_windows_tempdir($temp_env) {
+	if ($temp_env === false || $temp_env === '') {
+		return sys_get_temp_dir();
+	}
+
+	return $temp_env;
+}
+
+/**
  * Create a file for writing without following a symlink or reusing a name.
  *
  * The maintenance scripts keep their 1.2.31 names in the shared temporary

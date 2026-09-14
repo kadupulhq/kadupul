@@ -251,7 +251,7 @@ if (strlen($response)) {
 $seed = mt_rand();
 
 if (substr_count(PHP_OS, 'WIN')) {
-	$tempdir    = getenv('TEMP');
+	$tempdir    = cacti_cli_windows_tempdir(getenv('TEMP'));
 	$oldxmlfile = $tempdir . '/' . str_replace('.rrd', '', basename($oldrrd)) . '.dump.' . $seed;
 	$seed++;
 	$newxmlfile = $tempdir . '/' . str_replace('.rrd', '', basename($newrrd)) . '.dump.' . $seed;

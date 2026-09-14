@@ -536,3 +536,21 @@ test('splice_rrd uses the 1.2.31 names and creates every temporary file exclusiv
 		->and($source)->not->toContain('unlink($newxmlfile)')
 		->and($source)->toContain('if (!cacti_cli_path_is_handle($handle, $newxmlfile)) {');
 });
+
+test('an unset or empty Windows TEMP falls back to the PHP temp directory', function () {
+	expect(cacti_cli_windows_tempdir(false))->toBe(sys_get_temp_dir())
+		->and(cacti_cli_windows_tempdir(''))->toBe(sys_get_temp_dir());
+});
+
+test('a Windows TEMP that is set is used unchanged', function () {
+	expect(cacti_cli_windows_tempdir('C:\\Users\\cacti\\AppData\\Local\\Temp'))->toBe('C:\\Users\\cacti\\AppData\\Local\\Temp')
+		->and(cacti_cli_windows_tempdir($this->dir))->toBe($this->dir);
+});
+
+test('splice_rrd resolves its Windows temp directory through the fallback helper', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/cli/splice_rrd.php');
+
+	expect($source)->toContain("\$tempdir    = cacti_cli_windows_tempdir(getenv('TEMP'));")
+		->and($source)->not->toContain("\$tempdir    = getenv('TEMP');")
+		->and($source)->toContain("\$tempdir    = '/tmp';");
+});
