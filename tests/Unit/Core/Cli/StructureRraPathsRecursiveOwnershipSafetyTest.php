@@ -20,6 +20,12 @@ namespace Kadupul\Tests\StructureRraRecursiveOwnership;
  * symlink, so a symlinked directory's real contents were chown()/chgrp()'d
  * as root instead of being refused.
  *
+ * Both functions also used to check is_link() against the raw, unnormalized
+ * argument, so a symlinked directory passed with a trailing slash defeated
+ * the check entirely: is_link('dir/') follows the final symlink to stat
+ * what it points at instead of the link itself. They now check and walk the
+ * same rtrim()'d path.
+ *
  * These tests eval the extracted functions into this file's own namespace
  * and define spy versions of glob(), chown(), lchown(), chgrp() and
  * lchgrp() here too. PHP resolves an unqualified function call from inside
@@ -139,6 +145,43 @@ test('sp_recursive_chgrp refuses a symlinked path without globbing into its cont
 	symlink($real, $link);
 
 	sp_recursive_chgrp($link, 1000);
+
+	expect(calls())->toBe(array(array('lchgrp', $link)));
+
+	unlink($real . '/canary');
+	rmdir($real);
+	unlink($link);
+});
+
+test('sp_recursive_chown refuses a symlinked directory passed with a trailing slash', function () {
+	/* is_link('dir/') follows the final symlink to stat what it points at
+	   instead of the link itself, so a trailing slash on the argument used
+	   to defeat the is_link() check entirely */
+	$real = $this->base . '/real-target';
+	mkdir($real, 0700, true);
+	file_put_contents($real . '/canary', 'do-not-touch');
+
+	$link = $this->base . '/link';
+	symlink($real, $link);
+
+	sp_recursive_chown($link . '/', 1000);
+
+	expect(calls())->toBe(array(array('lchown', $link)));
+
+	unlink($real . '/canary');
+	rmdir($real);
+	unlink($link);
+});
+
+test('sp_recursive_chgrp refuses a symlinked directory passed with a trailing slash', function () {
+	$real = $this->base . '/real-target';
+	mkdir($real, 0700, true);
+	file_put_contents($real . '/canary', 'do-not-touch');
+
+	$link = $this->base . '/link';
+	symlink($real, $link);
+
+	sp_recursive_chgrp($link . '/', 1000);
 
 	expect(calls())->toBe(array(array('lchgrp', $link)));
 

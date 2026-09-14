@@ -19,6 +19,7 @@ Cacti CHANGELOG
 -security: Refuse to move or take ownership of a legacy RRD path in structure_rra_paths.php unless it is a real .rrd file already inside the configured RRA directory
 -security: Create the spikekill RRD backup file exclusively instead of following a pre-existing name, falling back to a unique name when one is already taken
 -security: Refuse a FIFO, socket or device node as a structure_rra_paths.php move destination, accepting only a missing path or a regular file
+-security: Check the normalized, not the trailing-slash, path before following a symlink in structure_rra_paths.php's sp_recursive_chown/chgrp ownership walk
 -issue: Send array rrdtool commands such as the RRDcheck fetch through RRDproxy as one quoted command instead of failing before they are sent
 -issue: Send the RRDproxy file_exists check in RRDcheck a bare path so an RRD path holding a quote character is found, and skip the local writable and modify time checks for RRDs on the proxy
 -issue: Show the validation error instead of success when a template import fails

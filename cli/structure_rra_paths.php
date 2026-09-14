@@ -532,15 +532,20 @@ function structure_rra_prepare_dest_dir($new_base_path, $base_rra_path) {
  * @return (void)
  */
 function sp_recursive_chown($path, $user) {
+	/* is_link('dir/') follows the final symlink to stat what it points at
+	   instead of the link itself, so the trailing slash has to go before
+	   is_link() is checked, and the normalized path has to be what glob()
+	   and the recursion below walk too, or the check and the walk target
+	   different strings */
 	$directory = rtrim($path, '/');
 
-	if (is_link($path)) {
-		return lchown($path, $user);
+	if (is_link($directory)) {
+		return lchown($directory, $user);
 	}
 
 	$result = true;
 
-	if (is_dir($path) && ($items = glob($path . '/*'))) {
+	if (is_dir($directory) && ($items = glob($directory . '/*'))) {
 		foreach ($items as $item) {
 			if (is_dir($item) && !is_link($item)) {
 				$result = sp_recursive_chown($item, $user) && $result;
@@ -552,7 +557,7 @@ function sp_recursive_chown($path, $user) {
 
 	/* lchown() rather than an is_link() check and chown(), so a symlink
 	   swapped in after the checks above is never followed */
-	return lchown($path, $user) && $result;
+	return lchown($directory, $user) && $result;
 }
 
 /**
@@ -564,15 +569,20 @@ function sp_recursive_chown($path, $user) {
  * @return (void)
  */
 function sp_recursive_chgrp($path, $group) {
+	/* is_link('dir/') follows the final symlink to stat what it points at
+	   instead of the link itself, so the trailing slash has to go before
+	   is_link() is checked, and the normalized path has to be what glob()
+	   and the recursion below walk too, or the check and the walk target
+	   different strings */
 	$directory = rtrim($path, '/');
 
-	if (is_link($path)) {
-		return lchgrp($path, $group);
+	if (is_link($directory)) {
+		return lchgrp($directory, $group);
 	}
 
 	$result = true;
 
-	if (is_dir($path) && ($items = glob($path . '/*'))) {
+	if (is_dir($directory) && ($items = glob($directory . '/*'))) {
 		foreach ($items as $item) {
 			if (is_dir($item) && !is_link($item)) {
 				$result = sp_recursive_chgrp($item, $group) && $result;
@@ -584,7 +594,7 @@ function sp_recursive_chgrp($path, $group) {
 
 	/* lchgrp() rather than an is_link() check and chgrp(), so a symlink
 	   swapped in after the checks above is never followed */
-	return lchgrp($path, $group) && $result;
+	return lchgrp($directory, $group) && $result;
 }
 
 /**
