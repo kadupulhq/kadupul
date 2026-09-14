@@ -89,6 +89,10 @@ same_tokens() {
 					if ($t[0] === T_WHITESPACE) {
 						continue;
 					}
+					// The opening tag token carries the whitespace that follows it.
+					if ($t[0] === T_OPEN_TAG || $t[0] === T_OPEN_TAG_WITH_ECHO) {
+						$t[1] = rtrim($t[1]);
+					}
 					$out[] = array($t[0], $t[1]);
 				} else {
 					$out[] = $t;
@@ -147,8 +151,9 @@ for f in "${files[@]}"; do
 		# non-zero status is a real failure and must not be read as "unconverted".
 		if [ "$status" -eq 8 ]; then
 			# A change that only moves whitespace is a PER-CS conversion; it must
-			# finish the job, so it is checked in full rather than skipped.
-			if same_tokens "$tmp/$base_path" "$f"; then
+			# finish the job, so it is checked in full rather than skipped. A pure
+			# rename changes nothing and keeps the exemption.
+			if ! cmp -s "$tmp/$base_path" "$f" && same_tokens "$tmp/$base_path" "$f"; then
 				checked+=("$f")
 				continue
 			fi
