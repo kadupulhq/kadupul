@@ -367,6 +367,7 @@ if (!$dryrun) {
 	 * file written above */
 	if (!cacti_cli_path_is_handle($handle, $newxmlfile)) {
 		print 'FATAL: Refusing to restore \'' . $newxmlfile . '\' because it changed after it was written' . PHP_EOL;
+		cacti_cli_remove_file($handle, $newxmlfile);
 		exit(1);
 	}
 
