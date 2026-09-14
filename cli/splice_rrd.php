@@ -955,7 +955,13 @@ function backupRRDFile($rrdfile) {
 		fclose($source);
 	}
 
-	fclose($target);
+	/* a failed copy leaves an empty or partial file at $newfile, which a later
+	 * run would then treat as an existing backup */
+	if ($copied) {
+		fclose($target);
+	} else {
+		cacti_cli_remove_file($target, $backupdir . '/' . $newfile);
+	}
 
 	return $copied;
 }
