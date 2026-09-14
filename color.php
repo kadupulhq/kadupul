@@ -225,7 +225,7 @@ function color_import_processor(&$colors) {
 	if (cacti_sizeof($colors)) {
 		foreach ($colors as $color_line) {
 			// parse line
-			$line_array = str_getcsv($color_line);
+			$line_array = str_getcsv($color_line, ',', '"', '\\');
 
 			/* header row */
 			if ($i == 0) {

@@ -107,7 +107,7 @@ test('realtime poller avoids direct rrdtool shell create', function () use ($rea
 });
 
 test('color csv import uses csv parser, prepared statements, and escaped output', function () use ($colorSource) {
-	expect($colorSource)->toContain('str_getcsv($color_line)');
+	expect($colorSource)->toContain("str_getcsv(\$color_line, ',', '\"', '\\\\')");
 	expect($colorSource)->toContain("preg_match('/^[A-Fa-f0-9]{6}$/', \$hex)");
 	expect($colorSource)->toContain('db_execute_prepared(\'INSERT INTO colors');
 	expect($colorSource)->toContain('db_fetch_row_prepared(\'SELECT *');
