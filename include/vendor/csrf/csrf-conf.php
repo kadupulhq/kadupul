@@ -60,8 +60,11 @@ $GLOBALS['csrf']['rewrite'] = true;
  * less reliable and less secure than sessions, but is useful when you need
  * to give facilities to anonymous users and do not wish to maintain a database
  * of valid keys.
+ *
+ * Kadupul turns this off. An ip: token is not tied to a session, and every
+ * authenticated page already carries a sid: token.
  */
-$GLOBALS['csrf']['allow-ip'] = true;
+$GLOBALS['csrf']['allow-ip'] = false;
 
 /**
  * If this information is available, use the cookie by this name to determine

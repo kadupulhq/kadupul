@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -317,7 +318,8 @@ function set_default_action($default = '') {
 			cacti_log('WARNING: Request variable \'action\' was passed as array in ' . $_SERVER['SCRIPT_NAME'] . '.', false, 'WEBUI');
 		}
 
-		set_request_var('action', $_REQUEST['action'][0]);
+		/* element 0 would dispatch an action the POST guard never compared */
+		set_request_var('action', $default);
 	} else {
 		set_request_var('action', $_REQUEST['action']);
 	}

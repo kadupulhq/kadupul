@@ -208,6 +208,18 @@ function prepare_template_display(&$import_info) {
 	return $templates;
 }
 
+/* import_escape_markup - neutralises markup in preview text from an uploaded template
+   @arg $text - a name, path, difference or orphan line
+   @returns - the text with every tag opener escaped except a color swatch */
+function import_escape_markup($text) {
+	/* Only '<' is escaped, so text without markup, including entities lib/import.php
+	 * already encoded, prints exactly as before. The one tag the preview builds
+	 * itself is the color swatch around a hex value. */
+	return preg_replace_callback('/<span style="background-color:#([0-9A-Fa-f]{0,8})">\1<\/span>|</', function ($match) {
+		return $match[0] === '<' ? '&lt;' : $match[0];
+	}, (string) $text);
+}
+
 function display_template_data(&$templates) {
 	global $config;
 
@@ -242,7 +254,7 @@ function display_template_data(&$templates) {
 
 			form_alternate_row('line_' . $id);
 
-			form_selectable_cell($path, $id);
+			form_selectable_cell(import_escape_markup($path), $id);
 			form_selectable_cell($status, $id);
 
 			form_end_row();
@@ -301,7 +313,7 @@ function display_template_data(&$templates) {
 			form_alternate_row('line_import_' . $detail['status'] . '_' . $id);
 
 			form_selectable_cell($detail['type_name'], $id);
-			form_selectable_cell($detail['name'], $id);
+			form_selectable_cell(import_escape_markup($detail['name']), $id);
 			form_selectable_cell($status, $id);
 
 			if (isset($detail['deps'])) {
@@ -342,7 +354,7 @@ function display_template_data(&$templates) {
 				foreach($detail['vals'] as $type => $diffs) {
 					if ($type == 'differences') {
 						foreach($diffs as $item) {
-							$diff_array[$item] = $item;
+							$diff_array[$item] = import_escape_markup($item);
 						}
 					} elseif ($type == 'orphans') {
 						foreach($diffs as $item) {
@@ -356,7 +368,7 @@ function display_template_data(&$templates) {
 				}
 
 				if (cacti_sizeof($orphan_array)) {
-					$diff_details .= ($diff_details != '' ? '<br>':'') . __('Orphans', 'package') . '<br>' . implode('<br>', $orphan_array);
+					$diff_details .= ($diff_details != '' ? '<br>':'') . __('Orphans', 'package') . '<br>' . implode('<br>', array_map('import_escape_markup', $orphan_array));
 				}
 
 				form_selectable_cell($diff_details, $id, '', 'white-space:pre-wrap');

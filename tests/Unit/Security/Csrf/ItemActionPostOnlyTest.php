@@ -199,5 +199,5 @@ test('a form action that carries its selected items is refused without a POST to
 	/* 'actions' can not join $bad_actions outright: breadcrumbs link back to the
 	   confirmation page by GET. Every form_actions() changes data only once
 	   selected_items arrives, so that is the request to refuse. */
-	expect($src)->toContain("if (\$action == 'actions' && isset_request_var('selected_items') && !isset(\$_POST['__csrf_magic'])) {");
+	expect($src)->toContain("if (\$action === 'actions' && isset_request_var('selected_items') && !isset(\$_POST['__csrf_magic']) && (\$method !== 'GET' || csrf_request_is_cross_site())) {");
 });

@@ -18,7 +18,7 @@ test('state-mutating routes explicitly require POST', function () {
 	foreach ($routes as $route => $actions) {
 		$source = file_get_contents($base . '/' . $route);
 		foreach ($actions as $action) {
-			expect($source)->toMatch("/case ['\"]" . preg_quote($action, '/') . "['\"]:\\s+csrf_require_post\\(\\);/");
+			expect($source)->toMatch("/case ['\"]" . preg_quote($action, '/') . "['\"]:\\s+csrf_require_post\\((?:true)?\\);/");
 		}
 	}
 

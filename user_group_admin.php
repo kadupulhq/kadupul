@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -256,6 +257,8 @@ function user_group_copy($id, $prefix = 'New Group') {
 }
 
 function update_policies() {
+	csrf_require_post(true);
+
 	$policies = array('policy_graphs', 'policy_trees', 'policy_hosts', 'policy_graph_templates');
 
 	foreach ($policies as $p) {
