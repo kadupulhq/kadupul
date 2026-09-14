@@ -94,6 +94,35 @@ test('rejects a recycled pid running a readable native command', function () use
 	expect($stillRunning($pid))->toBeFalse();
 });
 
+test('cacti_process_kill_denied does not keep the row of a pid reused by an unrelated process', function () {
+	if (!is_dir('/proc/' . getmypid())) {
+		test()->markTestSkipped('command identity is available only on procfs platforms');
+	}
+
+	// cacti_process_kill_denied() used to fall back to cacti_process_signalable(),
+	// which only asks whether the pid exists. A registered task that exited and
+	// whose pid was recycled by an unrelated program then read as "denied", not
+	// "gone", and its row was kept forever. Routing it through
+	// cacti_process_still_running() instead means the identity mismatch, not
+	// mere existence, decides the row's fate.
+	$descriptors = array(1 => array('pipe', 'w'), 2 => array('pipe', 'w'));
+	$proc        = proc_open('sleep 5', $descriptors, $pipes);
+
+	expect($proc)->not->toBeFalse();
+
+	$pid = proc_get_status($proc)['pid'];
+
+	expect(cacti_process_kill_denied($pid))->toBeFalse();
+
+	posix_kill($pid, SIGKILL);
+
+	foreach ($pipes as $pipe) {
+		fclose($pipe);
+	}
+
+	proc_close($proc);
+});
+
 test('falls back to the bare existence check when /proc is unavailable', function () use ($stillRunning) {
 	if (is_dir('/proc')) {
 		test()->markTestSkipped('This host has /proc; the Linux command-name comparison path is exercised instead.');

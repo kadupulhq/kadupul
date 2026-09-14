@@ -2906,12 +2906,18 @@ function cacti_process_kill($pid, $signal = SIGTERM, $environ = 'POLLER') {
  *   reserved or invalid pid is excluded because the guard refused it before any
  *   signal was sent, and a pid that has exited reads as gone.
  *
+ *   cacti_process_still_running() is used rather than cacti_process_signalable()
+ *   so a pid the registered task already exited is not mistaken for the denial
+ *   it left behind: if the pid was reused by another user's process before this
+ *   check ran, the /proc identity comparison tells the two apart, where a bare
+ *   signalability probe cannot.
+ *
  * @param  (int) $pid - The pid cacti_process_kill() failed to signal
  *
  * @return (bool) true when the process is still there
  */
 function cacti_process_kill_denied($pid) {
-	return !is_system_pid($pid) && cacti_process_signalable($pid);
+	return !is_system_pid($pid) && cacti_process_still_running($pid);
 }
 
 /**
