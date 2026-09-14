@@ -430,19 +430,13 @@ function import_package_get_details($xmlfile) {
 	$return = array();
 	$data = file_get_contents($filename, 'r');
 
-	/* SECURITY: Disable external entity loading to prevent XXE on PHP < 8.0 */
-	$disable_entities = false;
-	if (LIBXML_VERSION < 20900) {
-		$disable_entities = libxml_disable_entity_loader(true);
-	}
-
+	/* SECURITY: PHP requires libxml >= 2.9, which disables external entity
+	 * loading by default, so no entity loader toggle is
+	 * needed to prevent XXE. The call below passes no entity-expansion
+	 * flags, so that stays the case. */
 	libxml_use_internal_errors(true);
 	$xmlget = simplexml_load_string($data);
 	libxml_use_internal_errors(false);
-
-	if (LIBXML_VERSION < 20900) {
-		libxml_disable_entity_loader($disable_entities);
-	}
 
 	if ($xmlget === false) {
 		cacti_log('FATAL: Unable to parse package XML structure.', true, 'IMPORT', POLLER_VERBOSITY_LOW);
@@ -573,19 +567,13 @@ function import_read_package_data($xmlfile, &$public_key) {
 
 	cacti_log('Loading Plugin Information from package', false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 
-	/* SECURITY: Disable external entity loading to prevent XXE on PHP < 8.0 */
-	$disable_entities = false;
-	if (LIBXML_VERSION < 20900) {
-		$disable_entities = libxml_disable_entity_loader(true);
-	}
-
+	/* SECURITY: PHP requires libxml >= 2.9, which disables external entity
+	 * loading by default, so no entity loader toggle is
+	 * needed to prevent XXE. The call below passes no entity-expansion
+	 * flags, so that stays the case. */
 	libxml_use_internal_errors(true);
 	$xmlget = simplexml_load_string($xml);
 	libxml_use_internal_errors(false);
-
-	if (LIBXML_VERSION < 20900) {
-		libxml_disable_entity_loader($disable_entities);
-	}
 
 	if ($xmlget === false) {
 		cacti_log('FATAL: Unable to parse XML structure.', true, 'IMPORT', POLLER_VERBOSITY_LOW);

@@ -6404,7 +6404,7 @@ function CactiErrorHandler($level, $message, $file, $line, $context = array()) {
 			cacti_log($error, false, 'ERROR');
 			cacti_debug_backtrace('PHP ERROR NOTICE', false, true, 0, 1);
 			break;
-		case E_STRICT:
+		case 2048: /* E_STRICT's value; PHP 8.4 deprecates reading the constant itself */
 			cacti_log($error, false, 'ERROR');
 			cacti_debug_backtrace('PHP ERROR STRICT', false, true, 0, 1);
 			break;

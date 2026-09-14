@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  +-------------------------------------------------------------------------+
  | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
@@ -54,8 +55,10 @@ test('data_query_duplicate uses strip_tags on name', function () use ($dqSource)
 	expect($body)->toContain('strip_tags($data_query_name)');
 });
 
-test('import.php disables entity loader for XXE prevention', function () use ($impSource) {
-	expect($impSource)->toContain('libxml_disable_entity_loader(true)');
+test('import.php never enables entity expansion when parsing package XML', function () use ($impSource) {
+	expect($impSource)->not->toContain('LIBXML_NOENT');
+	expect($impSource)->not->toContain('LIBXML_DTDLOAD');
+	expect($impSource)->not->toContain('libxml_disable_entity_loader(');
 });
 
 test('import.php suppresses libxml warnings', function () use ($impSource) {
