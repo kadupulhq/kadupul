@@ -197,35 +197,39 @@ foreach ($data_sources as $info) {
         usleep(50000);
     }
 
-	/* create one subfolder for every host */
-	if (is_link($new_base_path)) {
+	/* create one subfolder for every host, walking the destination path
+	   from the canonical rra root one component at a time so a symlink
+	   planted at an intermediate directory, such as a hash bucket, cannot
+	   redirect mkdir() or the rename() below */
+	$dest_existed = is_dir($new_base_path) && !is_link($new_base_path);
+
+	$dest_status = structure_rra_prepare_dest_dir($new_base_path, $base_rra_path);
+
+	if ($dest_status == 'unsafe') {
 		$warn_count++;
 
-		print "WARNING: Refusing to use Directory '$new_base_path', it is a Symlink" . PHP_EOL;
+		print "WARNING: Refusing to use Directory '$new_base_path', it contains a Symlink or resolves Outside the configured RRA Directory" . PHP_EOL;
 
 		db_fetch_cell("SELECT RELEASE_LOCK('boost.single_ds.$local_data_id')");
 
 		continue;
+	} elseif ($dest_status == 'mkdir_failed') {
+		print "FATAL: Could NOT Make New Directory '$new_base_path'" . PHP_EOL;
+
+		exit -1;
 	}
 
-	if (!is_dir($new_base_path)) {
-		/* see if we can create the directory for the new file */
-		if (mkdir($new_base_path, 0775, true)) {
-			struct_debug("NOTE: New Directory '$new_base_path' Created for RRD Files");
+	if (!$dest_existed) {
+		struct_debug("NOTE: New Directory '$new_base_path' Created for RRD Files");
 
-			if ($config['cacti_server_os'] != 'win32') {
-				if (sp_recursive_chown($new_base_path, $owner_id) && sp_recursive_chgrp($new_base_path, $group_id)) {
-					struct_debug("NOTE: New Directory '$new_base_path' Permissions Set");
-				} else {
-					print "FATAL: Could not Set Permissions for Directory '$new_base_path'" . PHP_EOL;
+		if ($config['cacti_server_os'] != 'win32') {
+			if (sp_recursive_chown($new_base_path, $owner_id) && sp_recursive_chgrp($new_base_path, $group_id)) {
+				struct_debug("NOTE: New Directory '$new_base_path' Permissions Set");
+			} else {
+				print "FATAL: Could not Set Permissions for Directory '$new_base_path'" . PHP_EOL;
 
-					exit -5;
-				}
+				exit -5;
 			}
-		} else {
-			print "FATAL: Could NOT Make New Directory '$new_base_path'" . PHP_EOL;
-
-			exit -1;
 		}
 	}
 
@@ -391,6 +395,79 @@ function structure_rra_is_safe_source($path, $base_rra_path) {
 	}
 
 	return true;
+}
+
+/**
+ * structure_rra_prepare_dest_dir - create the destination directory for a
+ * restructured RRD one path component at a time, walking from the canonical
+ * RRA root.  mkdir(..., true) and rename() both resolve straight through a
+ * symlink planted at an intermediate component, such as a hash bucket
+ * directory, so each component is checked with is_link() before it is
+ * trusted, and any missing component is created non-recursively and
+ * re-checked with is_link() immediately afterward.
+ *
+ * @param  (string) $new_base_path - the destination directory to prepare
+ * @param  (string) $base_rra_path - the configured 'rra_path' setting
+ *
+ * @return (string) - 'ok' if the directory exists, or now exists, safely
+ *                     inside the RRA root; 'unsafe' if an existing
+ *                     component is a symlink or the result would resolve
+ *                     outside the RRA root; 'mkdir_failed' if a missing
+ *                     component could not be created for an unrelated
+ *                     reason such as a permissions or disk space problem
+ */
+function structure_rra_prepare_dest_dir($new_base_path, $base_rra_path) {
+	$real_base = realpath($base_rra_path);
+
+	if ($real_base === false || strpos($new_base_path, $base_rra_path) !== 0) {
+		return 'unsafe';
+	}
+
+	$relative = trim(substr($new_base_path, strlen($base_rra_path)), '/');
+	$segments = ($relative === '') ? array() : explode('/', $relative);
+
+	$walked = $real_base;
+
+	foreach ($segments as $segment) {
+		if ($segment === '' || $segment === '.' || $segment === '..') {
+			return 'unsafe';
+		}
+
+		$walked .= DIRECTORY_SEPARATOR . $segment;
+
+		if (is_link($walked)) {
+			return 'unsafe';
+		}
+
+		if (file_exists($walked)) {
+			if (!is_dir($walked)) {
+				return 'mkdir_failed';
+			}
+		} else {
+			if (!mkdir($walked, 0775)) {
+				return 'mkdir_failed';
+			}
+
+			/* mkdir() and this check are not atomic, so re-check right
+			   away that nothing swapped the new component for a symlink
+			   before the next segment is walked through it */
+			if (is_link($walked)) {
+				return 'unsafe';
+			}
+		}
+	}
+
+	$real_dest = realpath($walked);
+
+	if ($real_dest === false) {
+		return 'unsafe';
+	}
+
+	if ($real_dest != $real_base && strpos($real_dest, $real_base . DIRECTORY_SEPARATOR) !== 0) {
+		return 'unsafe';
+	}
+
+	return 'ok';
 }
 
 /**
