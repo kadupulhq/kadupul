@@ -829,6 +829,10 @@ class spikekill {
 		   between the write above and rrdtool's own open() here, so this
 		   narrows but does not close the window.  Accepted residual for
 		   1.2. */
+		/* PHP caches the last lstat() of a path for the whole run, so an
+		   earlier lookup of this name would otherwise answer for it */
+		clearstatcache(true, $xmlfile);
+
 		$lstat = @lstat($xmlfile);
 
 		if ($lstat === false || $lstat['dev'] !== $stat['dev'] || $lstat['ino'] !== $stat['ino']) {
@@ -922,6 +926,12 @@ class spikekill {
 		$dir      = dirname($desired_path);
 		$basename = basename($desired_path);
 
+		/* PHP caches stat results and resolved paths for the whole run.
+		   The whole realpath cache is dropped, not just $dir's entry,
+		   because realpath() below resolves $dir through cached ancestor
+		   entries that a swapped parent directory would leave stale */
+		clearstatcache(true);
+
 		if (is_link($dir)) {
 			return false;
 		}
@@ -1014,6 +1024,9 @@ class spikekill {
 	 *                         opened read/write, or false on failure
 	 */
 	private function createXmlFileExclusively($tempdir) {
+		/* the whole cache, for the same reason as in copyFileSafely() */
+		clearstatcache(true);
+
 		if ($tempdir == '' || is_link($tempdir) || !is_dir($tempdir)) {
 			return false;
 		}
@@ -1225,6 +1238,10 @@ class spikekill {
 	 * @return (void)
 	 */
 	private function unlinkOwnedFile($path, $fstat) {
+		/* PHP caches the last lstat() of a path for the whole run, so an
+		   earlier lookup of this name would otherwise answer for it */
+		clearstatcache(true, $path);
+
 		if (is_link($path) || $fstat === false) {
 			return;
 		}

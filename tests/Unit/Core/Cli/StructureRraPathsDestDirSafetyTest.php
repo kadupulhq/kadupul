@@ -203,3 +203,67 @@ test('a symlink already at the destination is refused', function () {
 
 	expect(structure_rra_is_safe_dest($dest))->toBeFalse();
 });
+
+/* PHP caches the last stat() and lstat() result per path, and on 8.3+
+   clears that cache on any plain stream read, write or flush.  The swap
+   below therefore runs in a child process with no pipes and is waited on
+   with proc_get_status() alone, the same as an attacker's own process
+   would act, so nothing in this process refreshes the cache before the
+   check under test reads it. */
+if (!function_exists('structure_rra_swap_externally')) {
+	function structure_rra_swap_externally($script) {
+		$process = proc_open(array('sh', '-c', $script), array(), $pipes);
+
+		do {
+			usleep(10000);
+			$status = proc_get_status($process);
+		} while ($status['running']);
+
+		return array('process' => $process, 'exit' => $status['exitcode']);
+	}
+}
+
+test('a destination file swapped for a symlink after a cached stat is still refused', function () {
+	$target = $this->base . '/symlink-target';
+	file_put_contents($target, 'legacy rrd bytes');
+
+	$dest = $this->base . '/swapped.rrd';
+	file_put_contents($dest, 'legacy rrd bytes');
+
+	is_link($dest);
+
+	$swap = structure_rra_swap_externally('rm ' . escapeshellarg($dest) . ' && ln -s ' . escapeshellarg($target) . ' ' . escapeshellarg($dest));
+
+	$safe = structure_rra_is_safe_dest($dest);
+
+	proc_close($swap['process']);
+
+	expect($swap['exit'])->toBe(0)
+		->and($safe)->toBeFalse();
+});
+
+test('a destination directory swapped for a symlink after the caller\'s cached stat is refused', function () {
+	/* the walk compares paths built from realpath() of the rra root, so
+	   the root has to be canonical for the caller's cached entry and the
+	   walked component to be the same string, as they are in production */
+	$base = realpath($this->base);
+
+	$dest = $base . '/1';
+	mkdir($dest, 0700);
+
+	$other = $base . '/other';
+	mkdir($other, 0700);
+
+	/* the same check the migration loop runs before calling the walk */
+	$dest_existed = is_dir($dest) && !is_link($dest);
+
+	$swap = structure_rra_swap_externally('rmdir ' . escapeshellarg($dest) . ' && ln -s ' . escapeshellarg($other) . ' ' . escapeshellarg($dest));
+
+	$status = structure_rra_prepare_dest_dir($dest, $base);
+
+	proc_close($swap['process']);
+
+	expect($dest_existed)->toBeTrue()
+		->and($swap['exit'])->toBe(0)
+		->and($status)->toBe('unsafe');
+});

@@ -366,3 +366,111 @@ test('backupRRDFile refuses a symlinked spikekill_backupdir configured with its 
 	unlink($backupdir_link);
 	rmdir($real_backupdir);
 });
+
+/* PHP caches the last stat() and lstat() result per path, and on 8.3+
+   clears that cache on any plain stream read, write or flush.  The swap
+   below therefore runs in a child process with no pipes and is waited on
+   with proc_get_status() alone, the same as an attacker's own process
+   would act, so nothing in this process refreshes the cache before the
+   method under test reads it. */
+if (!function_exists('spikekill_swap_externally')) {
+	function spikekill_swap_externally($script) {
+		$process = proc_open(array('sh', '-c', $script), array(), $pipes);
+
+		do {
+			usleep(10000);
+			$status = proc_get_status($process);
+		} while ($status['running']);
+
+		return array('process' => $process, 'exit' => $status['exitcode']);
+	}
+}
+
+test('unlinkOwnedFile does not trust a cached lstat from before the name was swapped', function () {
+	$path  = $this->dir . '/owned.rrd';
+	$fh    = fopen($path, 'xb');
+	$fstat = fstat($fh);
+	fclose($fh);
+
+	$replacement = $this->dir . '/replacement.rrd';
+	file_put_contents($replacement, 'not ours');
+
+	lstat($path);
+
+	$swap = spikekill_swap_externally('mv ' . escapeshellarg($replacement) . ' ' . escapeshellarg($path));
+
+	invoke_spikekill_private('unlinkOwnedFile', [$path, $fstat]);
+
+	proc_close($swap['process']);
+
+	expect($swap['exit'])->toBe(0)
+		->and(file_exists($path))->toBeTrue()
+		->and(file_get_contents($path))->toBe('not ours');
+});
+
+test('copyFileSafely does not trust a cached is_link() from before its directory was swapped for a symlink', function () {
+	$dir = $this->dir . '/backups';
+	mkdir($dir, 0700);
+
+	$elsewhere = $this->dir . '/elsewhere';
+	mkdir($elsewhere, 0700);
+
+	is_link($dir);
+
+	$swap = spikekill_swap_externally('rmdir ' . escapeshellarg($dir) . ' && ln -s ' . escapeshellarg($elsewhere) . ' ' . escapeshellarg($dir));
+
+	$written = invoke_spikekill_private('copyFileSafely', [$this->rrdfile, $dir . '/backup.rrd']);
+
+	proc_close($swap['process']);
+
+	$leaked = glob($elsewhere . '/*');
+
+	array_map('unlink', $leaked);
+	unlink($dir);
+	rmdir($elsewhere);
+
+	expect($swap['exit'])->toBe(0)
+		->and($written)->toBeFalse()
+		->and($leaked)->toBe([]);
+});
+
+test('copyFileSafely does not trust a cached realpath() after another process swaps an ancestor directory', function () {
+	$real_a = $this->dir . '/real-a';
+	mkdir($real_a . '/spikekill', 0700, true);
+
+	$real_b = $this->dir . '/real-b';
+	mkdir($real_b . '/spikekill', 0700, true);
+
+	$parent = $this->dir . '/parent';
+	symlink($real_a, $parent);
+
+	$configured = $parent . '/spikekill';
+
+	$reflection = new ReflectionClass('spikekill');
+	$instance   = $reflection->newInstanceWithoutConstructor();
+
+	$primed = spikekill_copy_path(invoke_spikekill_private_on($instance, 'copyFileSafely', [$this->rrdfile, $configured . '/backup1.rrd', $configured]));
+
+	/* unlike the in-process swap above, unlink() and symlink() are not
+	   called here, so PHP's realpath cache still maps the configured
+	   directory to real-a when the second copy runs */
+	$swap = spikekill_swap_externally('rm ' . escapeshellarg($parent) . ' && ln -s ' . escapeshellarg($real_b) . ' ' . escapeshellarg($parent));
+
+	$written = spikekill_copy_path(invoke_spikekill_private_on($instance, 'copyFileSafely', [$this->rrdfile, $configured . '/backup2.rrd', $configured]));
+
+	proc_close($swap['process']);
+
+	$leaked = glob($real_b . '/spikekill/*');
+
+	array_map('unlink', array_merge($leaked, glob($real_a . '/spikekill/*')));
+	rmdir($real_a . '/spikekill');
+	rmdir($real_a);
+	rmdir($real_b . '/spikekill');
+	rmdir($real_b);
+	unlink($parent);
+
+	expect($primed)->toBe($configured . '/backup1.rrd')
+		->and($swap['exit'])->toBe(0)
+		->and($written)->toBeFalse()
+		->and($leaked)->toBe([]);
+});

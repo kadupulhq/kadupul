@@ -94,3 +94,41 @@ test('a path outside the configured rra directory is refused', function () {
 
 	unlink($outside);
 });
+
+/* PHP caches the last stat() and lstat() result per path, and on 8.3+
+   clears that cache on any plain stream read, write or flush.  The swap
+   below therefore runs in a child process with no pipes and is waited on
+   with proc_get_status() alone, the same as an attacker's own process
+   would act, so nothing in this process refreshes the cache before the
+   check under test reads it. */
+if (!function_exists('structure_rra_swap_externally')) {
+	function structure_rra_swap_externally($script) {
+		$process = proc_open(array('sh', '-c', $script), array(), $pipes);
+
+		do {
+			usleep(10000);
+			$status = proc_get_status($process);
+		} while ($status['running']);
+
+		return array('process' => $process, 'exit' => $status['exitcode']);
+	}
+}
+
+test('a legacy file swapped for a symlink after a cached stat is still refused', function () {
+	$target = $this->base . '/sub/target.rrd';
+	file_put_contents($target, 'rrd');
+
+	$path = $this->base . '/sub/ds.rrd';
+	file_put_contents($path, 'rrd');
+
+	is_link($path);
+
+	$swap = structure_rra_swap_externally('rm ' . escapeshellarg($path) . ' && ln -s ' . escapeshellarg($target) . ' ' . escapeshellarg($path));
+
+	$safe = structure_rra_is_safe_source($path, $this->base);
+
+	proc_close($swap['process']);
+
+	expect($swap['exit'])->toBe(0)
+		->and($safe)->toBeFalse();
+});

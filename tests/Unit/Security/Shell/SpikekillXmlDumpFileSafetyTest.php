@@ -341,3 +341,75 @@ test('writeXMLFile returns false when the handle is already closed', function ()
 
 	unlink($xmlfile);
 });
+
+/* PHP caches the last stat() and lstat() result per path, and on 8.3+
+   clears that cache on any plain stream read, write or flush.  The swap
+   below therefore runs in a child process with no pipes and is waited on
+   with proc_get_status() alone, the same as an attacker's own process
+   would act, so nothing in this process refreshes the cache before the
+   method under test reads it. */
+if (!function_exists('spikekill_swap_externally')) {
+	function spikekill_swap_externally($script) {
+		$process = proc_open(array('sh', '-c', $script), array(), $pipes);
+
+		do {
+			usleep(10000);
+			$status = proc_get_status($process);
+		} while ($status['running']);
+
+		return array('process' => $process, 'exit' => $status['exitcode']);
+	}
+}
+
+test('createRRDFileFromXML does not trust a cached lstat from before the xml file was swapped', function () {
+	spikekill_xmldump_test_stub_config(array('path_rrdtool' => $this->rrdtool_stub));
+
+	$xmlfile = $this->dir . '/dump-target.xml';
+	file_put_contents($xmlfile, '<xml/>');
+
+	$replacement = $this->dir . '/replacement.xml';
+	file_put_contents($replacement, '<xml>planted</xml>');
+
+	$stat = lstat($xmlfile);
+
+	$swap = spikekill_swap_externally('mv ' . escapeshellarg($replacement) . ' ' . escapeshellarg($xmlfile));
+
+	$result = spikekill_xmldump_create_rrd_from_xml($xmlfile, $this->dir . '/target.rrd', $stat);
+
+	proc_close($swap['process']);
+
+	unlink($xmlfile);
+
+	expect($swap['exit'])->toBe(0)
+		->and($result['ok'])->toBeFalse();
+});
+
+test('createXmlFileExclusively does not trust a cached is_link() from before the tempdir was swapped for a symlink', function () {
+	$tempdir = $this->dir . '/tempdir';
+	mkdir($tempdir, 0700);
+
+	$elsewhere = $this->dir . '/elsewhere';
+	mkdir($elsewhere, 0700);
+
+	is_link($tempdir);
+
+	$swap = spikekill_swap_externally('rmdir ' . escapeshellarg($tempdir) . ' && ln -s ' . escapeshellarg($elsewhere) . ' ' . escapeshellarg($tempdir));
+
+	$info = invoke_spikekill_xmldump_private('createXmlFileExclusively', [$tempdir]);
+
+	proc_close($swap['process']);
+
+	if (is_array($info)) {
+		fclose($info['handle']);
+	}
+
+	$leaked = glob($elsewhere . '/*');
+
+	array_map('unlink', $leaked);
+	unlink($tempdir);
+	rmdir($elsewhere);
+
+	expect($swap['exit'])->toBe(0)
+		->and($info)->toBeFalse()
+		->and($leaked)->toBe([]);
+});

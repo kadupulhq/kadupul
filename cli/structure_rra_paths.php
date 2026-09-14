@@ -387,6 +387,11 @@ function update_database($info) {
  * @return (bool)
  */
 function structure_rra_is_safe_source($path, $base_rra_path) {
+	/* the loop has already stat()ed this path, and PHP answers repeat
+	   lookups from its cache.  The whole realpath cache is dropped because
+	   realpath() below would resolve through stale ancestor entries */
+	clearstatcache(true);
+
 	if (is_link($path)) {
 		return false;
 	}
@@ -427,6 +432,9 @@ function structure_rra_is_safe_source($path, $base_rra_path) {
  * @return (bool)
  */
 function structure_rra_is_safe_dest($new_rrd_path) {
+	/* PHP answers a repeat lookup of the same path from its stat cache */
+	clearstatcache(true, $new_rrd_path);
+
 	return !is_link($new_rrd_path) && !is_dir($new_rrd_path);
 }
 
@@ -450,6 +458,10 @@ function structure_rra_is_safe_dest($new_rrd_path) {
  *                     reason such as a permissions or disk space problem
  */
 function structure_rra_prepare_dest_dir($new_base_path, $base_rra_path) {
+	/* the loop stat()s $new_base_path before calling this, and PHP would
+	   answer the walk's is_link() and the final realpath() from its caches */
+	clearstatcache(true);
+
 	$real_base = realpath($base_rra_path);
 	$root      = rtrim($base_rra_path, '/');
 
