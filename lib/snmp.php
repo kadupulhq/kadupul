@@ -553,7 +553,8 @@ function cacti_snmp_log_session_error($session, $info, $oid, $warning = '') {
 	$error_number = $session->getErrno();
 
 	if ($error_number == SNMP::ERRNO_TIMEOUT) {
-		$error = 'Timeout (' . round($info['timeout'] / 1000, 0) . ' ms)';
+		/* the SNMP class already stores the timeout in milliseconds */
+		$error = 'Timeout (' . round($info['timeout'], 0) . ' ms)';
 	} else {
 		$error = trim((string) $session->getError());
 
