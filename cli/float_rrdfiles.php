@@ -353,8 +353,11 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 				return false;
 			}
 
-			$lf = false;
+			$lf         = false;
+			$file_debug = false;
 
+			/* A refused log turns debug output off for this file only; later
+			 * files open the log again, as 1.2.31 did for each file. */
 			if ($seebug) {
 				$lf = cacti_cli_open_log('/tmp/clearer.log');
 
@@ -362,7 +365,7 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 					cacti_log('WARNING: ' . $lf . '.  Debug output is disabled for this file.', false, 'RFLOAT');
 				}
 
-				$seebug = is_resource($lf);
+				$file_debug = is_resource($lf);
 			}
 
 			if (is_resource($fp)) {
@@ -410,7 +413,7 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 							$in_range = false;
 							$line .= PHP_EOL;
 						} elseif ($prev_data != '') {
-							if ($seebug) {
+							if ($file_debug) {
 								if ($step !== false) {
 									fwrite($lf, sprintf("In Range: CurDate:%s, StartDate:%s, EndDate:%s, Granularity:%s, Delta:%s, Step:%s" . PHP_EOL, date('Y-m-d H:i:s', $timestamp), date('Y-m-d H:i:s', $start_time), date('Y-m-d H:i:s', $end_time), $granularity, $delta_time, $step));
 								} else {
@@ -425,14 +428,14 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 
 								$nline = $db_prefix . implode(' ', $parts) . ' ' .  $prev_data . PHP_EOL;
 
-								if ($seebug) {
+								if ($file_debug) {
 									fwrite($lf, sprintf("Pruning: CurDate:%s, StartDate:%s, EndDate:%s, Granularity:%s, Delta:%s" . PHP_EOL, date('Y-m-d H:i:s', $timestamp), date('Y-m-d H:i:s', $start_time), date('Y-m-d H:i:s', $end_time), $granularity, $delta_time));
 									fwrite($lf, sprintf("PreLine: %s\nOldLine: %s\nNewLine: %s\n\n", trim($prev_line), trim($line), trim($nline)));
 								}
 
 								$line = $nline;
 							} else {
-								if ($seebug) {
+								if ($file_debug) {
 									fwrite($lf, sprintf("Not Pruning: CurDate:%s, StartDate:%s, EndDate:%s, Granularity:%s, Delta:%s" . PHP_EOL, date('Y-m-d H:i:s', $timestamp), date('Y-m-d H:i:s', $start_time), date('Y-m-d H:i:s', $end_time), $granularity, $delta_time));
 									fwrite($lf, sprintf("PreLine: %s\nOldLine: %s\n\n", trim($prev_line), trim($line)));
 								}
@@ -466,7 +469,7 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 					cacti_log(sprintf('WARNING: Refusing to restore %s because it changed after it was written', $tmp_file), false, 'RFLOAT');
 					fclose($fp);
 
-					if ($seebug && is_resource($lf)) {
+					if ($file_debug) {
 						fclose($lf);
 					}
 
@@ -479,7 +482,7 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 					cacti_log(sprintf('NOTE: Range floated for RRDfile %s', $rrd_path), false, 'RFLOAT');
 					cacti_cli_remove_file($fp, $tmp_file);
 
-					if ($seebug && is_resource($lf)) {
+					if ($file_debug) {
 						fclose($lf);
 					}
 
@@ -488,7 +491,7 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 					cacti_log(sprintf('WARNING: Range float FAILED for RRDfile %s.  Message is %s', $rrd_path, $response), false, 'RFLOAT');
 					cacti_cli_remove_file($fp, $tmp_file);
 
-					if ($seebug && is_resource($lf)) {
+					if ($file_debug) {
 						fclose($lf);
 					}
 
