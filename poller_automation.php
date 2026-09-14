@@ -270,7 +270,12 @@ if (!$master && $thread == 0) {
 	if (cacti_sizeof($pids)) {
 		foreach($pids as $pid) {
 			if (isProcessRunning($pid)) {
-				killProcess($pid);
+				if (!killProcess($pid) && cacti_process_kill_denied($pid)) {
+					cacti_log("WARNING: Automation Process $pid is owned by another user and was not killed, not starting another discovery for Network ID: $network_id", true, 'AUTOM8');
+
+					exit(0);
+				}
+
 				cacti_log("WARNING: Automation Process $pid is still running for Network ID: $network_id", true, 'AUTOM8');
 			} else {
 				cacti_log("WARNING: Process $pid claims to be running but not found for Network ID: $network_id", true, 'AUTOM8');
