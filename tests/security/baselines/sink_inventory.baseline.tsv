@@ -75,8 +75,8 @@ cmd_exec	./lib/snmp.php:196			exec($command, $snmp_value);
 cmd_exec	./lib/snmp.php:296			exec($command, $snmp_value);
 cmd_exec	./lib/snmp.php:391			exec($command, $snmp_value);
 cmd_exec	./lib/snmpagent.php:642		/* add pollers of a distributed system (future) */
-cmd_exec	./lib/spikekill.php:428			shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' dump ' . cacti_escapeshellarg($this->rrdfile) . ' > ' . cacti_escapeshellarg($xmlfile));
-cmd_exec	./lib/spikekill.php:754			$response = shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' restore -f -r ' . cacti_escapeshellarg($xmlfile) . ' ' . cacti_escapeshellarg($rrdfile));
+cmd_exec	./lib/spikekill.php:429			shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' dump ' . cacti_escapeshellarg($this->rrdfile) . ' > ' . cacti_escapeshellarg($xmlfile));
+cmd_exec	./lib/spikekill.php:755			$response = shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' restore -f -r ' . cacti_escapeshellarg($xmlfile) . ' ' . cacti_escapeshellarg($rrdfile));
 cmd_exec	./lib/utility.php:1691						$nproc = system('nproc');
 cmd_exec	./lib/utility.php:1810			exec('wmic os get FreePhysicalMemory', $memInfo['FreePhysicalMemory']);
 cmd_exec	./lib/utility.php:1811			exec('wmic os get FreeSpaceInPagingFiles', $memInfo['FreeSpaceInPagingFiles']);
@@ -406,7 +406,7 @@ dynamic_include	./lib/reports.php:1144		include($config['include_path'] . '/glob
 dynamic_include	./lib/reports.php:1145		include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/reports.php:1146		include_once($config['library_path'] . '/html_tree.php');
 dynamic_include	./lib/reports.php:1147		include_once($config['library_path'] . '/html_utility.php');
-dynamic_include	./lib/reports.php:1804		include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./lib/reports.php:1802		include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./lib/reports.php:377		include_once($config['base_path'] . '/lib/time.php');
 dynamic_include	./lib/reports.php:378		include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/reports.php:379		include_once($config['base_path'] . '/lib/html_reports.php');
@@ -578,9 +578,9 @@ fs_write	./lib/poller.php:1282									if (file_put_contents($tmpfile, $contents
 fs_write	./lib/poller.php:1289												file_put_contents($mypath, $contents);
 fs_write	./lib/poller.php:1318								file_put_contents($mypath, $contents);
 fs_write	./lib/reports.php:1687			$f = fopen($fn, 'wb');
-fs_write	./lib/reports.php:1728			$f = fopen($fn, 'wb');
+fs_write	./lib/reports.php:1727			$f = fopen($fn, 'wb');
 fs_write	./lib/rrd.php:2503					if ($fp = fopen($graph_data_array['export_realtime'], 'w')) {
-fs_write	./lib/spikekill.php:762			return file_put_contents($xmlfile, $output);
+fs_write	./lib/spikekill.php:763			return file_put_contents($xmlfile, $output);
 fs_write	./package_import.php:368					file_put_contents($xmlfile, $data);
 fs_write	./package_import.php:79		if (file_put_contents($xmlfile, $_SESSION['sess_import_package']) === false) {
 fs_write	./script_server.php:32		define('STDIN', fopen('php://stdin', 'r'));
