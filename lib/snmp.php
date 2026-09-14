@@ -554,8 +554,18 @@ function cacti_snmp_log_session_error($session, $info, $oid, $warning = '') {
 	$error_number = $session->getErrno();
 
 	if ($error_number == SNMP::ERRNO_TIMEOUT) {
-		/* the SNMP class already stores the timeout in milliseconds */
-		$error = 'Timeout (' . round($info['timeout'], 0) . ' ms)';
+		/* phpsnmp\SNMP has two implementations with different units: the
+		 * native extension wrapper (extension.php) extends \SNMP and leaves
+		 * info['timeout'] in microseconds, while the bundled class
+		 * (classSNMP.php) does not extend \SNMP and already converts its
+		 * own info['timeout'] to milliseconds in its constructor */
+		if ($session instanceof \SNMP) {
+			$timeout_ms = $info['timeout'] / 1000;
+		} else {
+			$timeout_ms = $info['timeout'];
+		}
+
+		$error = 'Timeout (' . round($timeout_ms, 0) . ' ms)';
 	} else {
 		$error = trim((string) $session->getError());
 
