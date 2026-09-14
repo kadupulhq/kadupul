@@ -225,10 +225,6 @@ html[data-theme-mode='compact'] .cactiConsoleNavigationArea .menuitem {
 html[data-theme-mode='compact'] .cactiConsoleNavigationArea .menuitem:hover {
 }
 
-html[data-theme-mode='compact'] .cactiConsoleNavigationArea .menuitem span{
-    #TODO: color
-}
-
 html[data-theme-mode='compact'] .cactiConsoleNavigationArea .menuitem:hover span {
     display: inline-block !important;
     animation: dropdown-anim .15s ease-in-out .1s forwards;

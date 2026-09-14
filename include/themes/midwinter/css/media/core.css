@@ -1489,7 +1489,6 @@ table.cactiTable {
     font-weight: normal;
     line-height: 14px;
     padding-left: 1px;
-    word-break-wrap: auto;
 }
 
 .formTooltip {
@@ -1625,7 +1624,6 @@ table.cactiTable {
 }
 
 .graphSubHeaderColumn {
-    color: #white;
     vertical-align: middle;
     text-align: left;
     text-align: left;
