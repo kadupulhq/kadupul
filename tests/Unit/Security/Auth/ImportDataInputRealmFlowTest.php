@@ -546,8 +546,13 @@ test('a user with the realm still imports a template whose method comes in a lat
 		'method.xml'   => array('hash_030103' . $methodHash => $methodXml('/usr/local/bin/uptime-probe <host>')),
 	));
 
+	/* the template is saved before its method and field exist, so both references are 0, as 1.2.31 saves them */
 	expect($savedTo('data_template'))->toHaveCount(1)
 		->and($savedTo('data_input'))->toHaveCount(1)
+		->and($savedTo('data_template_data')[0]['row']['data_input_id'])->toBe(0)
+		->and($savedTo('data_template_rrd')[0]['row']['data_input_field_id'])->toBe(0)
+		->and($savedTo('data_input')[0]['id'])->toBeGreaterThan(0)
+		->and($savedTo('data_input_fields')[0]['id'])->toBeGreaterThan(0)
 		->and($GLOBALS['ifl_messages'])->toBe(array());
 });
 
