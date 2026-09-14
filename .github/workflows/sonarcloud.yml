@@ -18,7 +18,8 @@ jobs:
     name: SonarQube Cloud security analysis
     runs-on: ubuntu-latest
     # Fork and Dependabot pull requests get no secrets, so the scan cannot authenticate there.
-    if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
+    # The PR author, not the triggering actor, since a maintainer can push to a Dependabot branch.
+    if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]' }}
     permissions:
       contents: read
       pull-requests: read
@@ -72,9 +73,13 @@ jobs:
             scope="branch=$BRANCH&inNewCodePeriod=true"
           fi
 
-          bugs=$(curl -fsS -u "$SONAR_TOKEN:" "$api/issues/search?componentKeys=$key&$scope&types=BUG&resolved=false&ps=100")
-          vulns=$(curl -fsS -u "$SONAR_TOKEN:" "$api/issues/search?componentKeys=$key&$scope&types=VULNERABILITY&resolved=false&ps=100")
-          hotspots=$(curl -fsS -u "$SONAR_TOKEN:" "$api/hotspots/search?projectKey=$key&$scope&status=TO_REVIEW&ps=100")
+          # The search index can lag the finished analysis and answer 503 for a while.
+          sonar_get() {
+            curl -fsS --retry 6 --retry-delay 10 --retry-all-errors -u "$SONAR_TOKEN:" "$api/$1"
+          }
+          bugs=$(sonar_get "issues/search?componentKeys=$key&$scope&types=BUG&resolved=false&ps=100")
+          vulns=$(sonar_get "issues/search?componentKeys=$key&$scope&types=VULNERABILITY&resolved=false&ps=100")
+          hotspots=$(sonar_get "hotspots/search?projectKey=$key&$scope&status=TO_REVIEW&ps=100")
           bug_count=$(jq '.paging.total // .total' <<<"$bugs")
           vuln_count=$(jq '.paging.total // .total' <<<"$vulns")
           hotspot_count=$(jq '.paging.total' <<<"$hotspots")
