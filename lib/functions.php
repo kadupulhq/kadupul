@@ -6848,9 +6848,18 @@ if (isset($config['cacti_server_os']) && $config['cacti_server_os'] == 'win32' &
 			if ($signal == 0) {
 				return true;  // The process is running
 			} elseif ($signal == SIGTERM || $signal == SIGINT || $signal == SIGKILL) {
+				/* Terminate() returns a WMI status code, 0 for success, on every proc
+				   matched. A same-user process must read as killed here, or the caller
+				   classes a successful termination as a denied one and keeps its row. */
+				$terminated = true;
+
 				foreach($procs as $proc) {
-					$proc->Terminate();
+					if ($proc->Terminate() !== 0) {
+						$terminated = false;
+					}
 				}
+
+				return $terminated;
 			} elseif ($signal == SIGHUP) {
 				cacti_log("WARNING: SIGHUP Signal for pid: $pid is not supported on Windows", false, 'POLLER');
 			} else {
@@ -6860,7 +6869,8 @@ if (isset($config['cacti_server_os']) && $config['cacti_server_os'] == 'win32' &
 		} elseif ($signal == 0) {
 			return false;
 		} else {
-			return true;
+			/* The pid is already gone, so there is nothing this call terminated. */
+			return false;
 		}
 	}
 }
