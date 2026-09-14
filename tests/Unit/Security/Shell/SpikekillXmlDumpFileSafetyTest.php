@@ -317,3 +317,27 @@ test('runRRDCommand drains a real child process and returns its exit code withou
 		->and($result['stdout'])->toBe('out')
 		->and($result['stderr'])->toBe('err');
 });
+
+/* remove_spikes() only reaches its restore/backup/write-XML tail once a
+   real rrdtool dump has been parsed into statistics that trip std_kills,
+   out_kills or var_kills, which needs read_user_setting(), cacti_sizeof(),
+   number_format_i18n() and friends beyond what this file already stubs.
+   Driving that end to end is disproportionate to the bug: remove_spikes()
+   returning true past a failure was a control-flow mistake in how it read
+   the return value of writeXMLFile() and backupRRDFile(), not a bug in
+   either method itself. writeXMLFile() failing here, backupRRDFile()
+   failing in SpikekillBackupSymlinkSafetyTest.php, and
+   createRRDFileFromXML() failing above are the same three false returns
+   remove_spikes() now checks. */
+
+test('writeXMLFile returns false when the handle is already closed', function () {
+	$xmlfile = $this->dir . '/writexml-target.xml';
+	$handle  = fopen($xmlfile, 'xb+');
+	fclose($handle);
+
+	$result = invoke_spikekill_xmldump_private('writeXMLFile', ['<xml/>', $handle]);
+
+	expect($result)->toBeFalse();
+
+	unlink($xmlfile);
+});

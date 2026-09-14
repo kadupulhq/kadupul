@@ -771,16 +771,32 @@ class spikekill {
 							} else {
 								$restored = false;
 
+								$message = __esc("FATAL: Unable to restore '%s' from '%s'", $this->rrdfile, $xmlfile);
+
+								$this->set_error($message);
+
 								$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
-									__esc("FATAL: Unable to restore '%s' from '%s'", $this->rrdfile, $xmlfile) . ($this->html ? "</p>\n":"\n");
+									$message . ($this->html ? "</p>\n":"\n");
 							}
 						} else {
+							$restored = false;
+
+							$message = __esc("FATAL: Unable to backup '%s'", $this->rrdfile);
+
+							$this->set_error($message);
+
 							$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
-								__esc("FATAL: Unable to backup '%s'", $this->rrdfile) . ($this->html ? "</p>\n":"\n");
+								$message . ($this->html ? "</p>\n":"\n");
 						}
 					} else {
+						$restored = false;
+
+						$message = __esc("FATAL: Unable to write XML file '%s'", $xmlfile);
+
+						$this->set_error($message);
+
 						$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
-							__esc("FATAL: Unable to write XML file '%s'", $xmlfile) . ($this->html ? "</p>\n":"\n");
+							$message . ($this->html ? "</p>\n":"\n");
 					}
 				} else {
 					$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
