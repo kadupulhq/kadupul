@@ -115,6 +115,60 @@ test('an existing regular file at the backup name is not overwritten', function 
 	unlink($desired);
 });
 
+test('the fallback name is created in the same directory, not the system temp directory', function () {
+	$desired = $this->dir . '/backup.rrd';
+	file_put_contents($desired, 'taken');
+
+	$written = invoke_spikekill_private('copyFileSafely', [$this->rrdfile, $desired]);
+
+	expect($written)->not->toBeFalse()
+		->and(dirname($written))->toBe($this->dir)
+		->and(dirname($written))->not->toBe(sys_get_temp_dir());
+
+	unlink($written);
+	unlink($desired);
+});
+
+test('an unwritable backup directory fails instead of falling back to the system temp directory', function () {
+	if (posix_geteuid() === 0) {
+		$this->markTestSkipped('directory permissions have no effect running as root');
+	}
+
+	$desired = $this->dir . '/backup.rrd';
+	file_put_contents($desired, 'taken');
+
+	chmod($this->dir, 0500);
+
+	/* the exclusive opens inside copyFileSafely are error-suppressed with
+	   '@' for the caller they report to (a false return); swallow the
+	   underlying E_WARNING here too so the permission-denied noise from
+	   this deliberately-unwritable directory doesn't fail the test run */
+	set_error_handler(function () {
+		return true;
+	});
+
+	$written = invoke_spikekill_private('copyFileSafely', [$this->rrdfile, $desired]);
+
+	restore_error_handler();
+
+	chmod($this->dir, 0700);
+
+	expect($written)->toBeFalse();
+
+	unlink($desired);
+});
+
+test('no chmod or by-name reopen happens after the file is created', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/lib/spikekill.php');
+
+	$start = strpos($source, 'private function copyFileSafely');
+	$end   = strpos($source, 'private function unlinkOwnedFile', $start);
+	$body  = substr($source, $start, $end - $start);
+
+	expect($body)->not->toContain('chmod(')
+		->and($body)->not->toContain("'wb'");
+});
+
 test('unlinkOwnedFile refuses to remove a name swapped for a symlink', function () {
 	$path = $this->dir . '/owned.rrd';
 	$fh   = fopen($path, 'xb');

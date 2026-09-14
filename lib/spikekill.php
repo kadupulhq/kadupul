@@ -830,19 +830,26 @@ class spikekill {
 		}
 
 		if ($handle === false) {
-			/* name already taken (or lost a race creating it); write to a
-			   unique sibling instead of following or overwriting it */
-			$desired_path = tempnam($dir, $basename . '.');
+			/* name already taken (or lost a race creating it); create a
+			   unique sibling exclusively in the same directory instead of
+			   following or overwriting it.  'xb' refuses any existing
+			   name, including a symlink, so the file is born 0600 under
+			   the umask with no separate by-name permission or reopen
+			   step afterward. */
+			for ($i = 0; $i < 10; $i++) {
+				$candidate = $dir . '/' . $basename . '.' . bin2hex(random_bytes(8));
 
-			if ($desired_path === false) {
-				return false;
+				$old_umask = umask(0177);
+				$handle    = @fopen($candidate, 'xb');
+				umask($old_umask);
+
+				if ($handle !== false) {
+					$desired_path = $candidate;
+					break;
+				}
 			}
 
-			chmod($desired_path, 0600);
-			$handle = fopen($desired_path, 'wb');
-
 			if ($handle === false) {
-				@unlink($desired_path);
 				return false;
 			}
 		}
