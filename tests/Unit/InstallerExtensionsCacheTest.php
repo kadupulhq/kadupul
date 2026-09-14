@@ -54,7 +54,6 @@ test('getModules computes the extension list once and serves the cache after', f
 
     $installer  = (new ReflectionClass(Installer::class))->newInstanceWithoutConstructor();
     $getModules = new ReflectionMethod(Installer::class, 'getModules');
-    $getModules->setAccessible(true);
 
     $first  = $getModules->invoke($installer);
     $second = $getModules->invoke($installer);

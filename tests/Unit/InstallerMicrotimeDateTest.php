@@ -23,7 +23,6 @@ require_once $root . '/lib/installer.php';
 function installer_microtime_date($value)
 {
     $parse = new ReflectionMethod(Installer::class, 'dateFromMicrotime');
-    $parse->setAccessible(true);
 
     $date = $parse->invoke(null, $value);
 
