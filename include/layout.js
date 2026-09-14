@@ -1788,7 +1788,9 @@ function tuneTable(object, width) {
 	tableChanged = false;
 
 	if (allSeenWidth < width) {
-		calculatedColumns = calculatedColumns.sort();
+		calculatedColumns = calculatedColumns.sort(function(a, b) {
+			return a - b;
+		});
 
 		// Since we can show hidden columns now, let's go
 		// in reverse until we run out of space
