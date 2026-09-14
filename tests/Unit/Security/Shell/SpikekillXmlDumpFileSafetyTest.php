@@ -300,3 +300,20 @@ test('createRRDFileFromXML drains large concurrent stdout and stderr without dea
 	expect($result['ok'])->toBeTrue()
 		->and(strlen($result['strout']))->toBeGreaterThanOrEqual(600000);
 });
+
+test('runRRDCommand drains a real child process and returns its exit code without warnings', function () {
+	/* exercises stream_select() with the default 30-second timeout
+	   against a real proc_open(), not the rrdtool stub, so a bad
+	   argument to stream_select() (its microseconds parameter must
+	   stay under 1,000,000, unlike the seconds/microseconds split this
+	   file's other tests pass through the stub) would surface here as
+	   a warning under Pest's error handler rather than a silent pass */
+	$result = invoke_spikekill_xmldump_private('runRRDCommand', [
+		[PHP_BINARY, '-r', 'fwrite(STDOUT, "out"); fwrite(STDERR, "err"); exit(7);'],
+		null,
+	]);
+
+	expect($result['exit'])->toBe(7)
+		->and($result['stdout'])->toBe('out')
+		->and($result['stderr'])->toBe('err');
+});
