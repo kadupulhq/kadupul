@@ -63,6 +63,29 @@ function cacti_remove_graphs_parameter_is_valid($parameter, $shortopts, $longopt
 }
 
 /**
+ * Whether a value-required long option written without "=" claims the next
+ * command-line token as its value, the same way getopt() does.
+ *
+ * cacti_remove_graphs_parameter_is_valid() only sees one token at a time, so
+ * it cannot tell "--host-id 5" from a bare, unfollowed "--host-id" and
+ * rejects both. The calling loop checks this first, so it can recognize the
+ * valid two-token form before that rejection would abort the command.
+ *
+ * @param string $parameter The raw command-line argument.
+ * @param array  $longopts  The getopt() long-option declarations.
+ *
+ * @return bool True when $parameter is exactly a declared long option that
+ *              requires a value and was written without "=".
+ */
+function cacti_remove_graphs_takes_next_argument($parameter, $longopts) {
+	if (strpos($parameter, '--') !== 0 || strpos($parameter, '=') !== false) {
+		return false;
+	}
+
+	return in_array(substr($parameter, 2) . ':', $longopts, true);
+}
+
+/**
  * Create a file for writing without following a symlink or reusing a name.
  *
  * The maintenance scripts keep their 1.2.31 names in the shared temporary

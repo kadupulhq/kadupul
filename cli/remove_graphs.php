@@ -86,8 +86,22 @@ if (cacti_sizeof($parms)) {
 	/* getopt() silently discards unknown options. Report them, but abort on
 	 * one that looks like a mistyped filter, since dropping a filter widens
 	 * what this destructive command removes. */
-	foreach($parms as $parameter) {
+	$parms_total = cacti_sizeof($parms);
+
+	for ($i = 0; $i < $parms_total; $i++) {
+		$parameter = $parms[$i];
+
 		if (cacti_remove_graphs_parameter_is_valid($parameter, $shortopts, $longopts)) {
+			continue;
+		}
+
+		/* getopt() takes a required long-option value from the next argv
+		 * element when it is not joined with "=". Skip that element here
+		 * too, or it fails validation on its own and aborts a legitimate
+		 * invocation such as "--host-id 5". */
+		if ($i + 1 < $parms_total && cacti_remove_graphs_takes_next_argument($parameter, $longopts)) {
+			$i++;
+
 			continue;
 		}
 

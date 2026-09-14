@@ -94,6 +94,95 @@ test('remove_graphs short option validation follows its declaration', function (
 		->and(cacti_remove_graphs_parameter_is_valid('-qX', 'VvHhq', $longopts))->toBeFalse();
 });
 
+test('remove_graphs recognizes a declared long option written without "="', function () use ($longopts) {
+	foreach (array('--host-id', '--graph-regex', '--graph-template-id', '--host-template-id') as $parameter) {
+		expect(cacti_remove_graphs_takes_next_argument($parameter, $longopts))->toBeTrue($parameter);
+	}
+
+	foreach (array('--host-id=5', '--HOST-ID', '--force', '--bogus', 'host-id', '--') as $parameter) {
+		expect(cacti_remove_graphs_takes_next_argument($parameter, $longopts))->toBeFalse($parameter);
+	}
+});
+
+/**
+ * Reproduce cli/remove_graphs.php's own argument loop, one decision per
+ * token, so a regression there shows up without spawning the full CLI
+ * bootstrap. Keep it in lockstep with the loop in that file.
+ */
+function remove_graphs_argument_outcomes($parms, $shortopts, $longopts) {
+	$outcomes = array();
+	$total    = count($parms);
+
+	for ($i = 0; $i < $total; $i++) {
+		$parameter = $parms[$i];
+
+		if (cacti_remove_graphs_parameter_is_valid($parameter, $shortopts, $longopts)) {
+			$outcomes[] = array($parameter, 'valid');
+
+			continue;
+		}
+
+		if ($i + 1 < $total && cacti_remove_graphs_takes_next_argument($parameter, $longopts)) {
+			$outcomes[] = array($parameter, 'valid', $parms[$i + 1]);
+			$i++;
+
+			continue;
+		}
+
+		$action = cacti_remove_graphs_unknown_parameter_action($parameter, $shortopts, $longopts);
+		$outcomes[] = array($parameter, $action);
+
+		if ($action !== 'ignore' && $action !== 'warn') {
+			break;
+		}
+	}
+
+	return $outcomes;
+}
+
+test('remove_graphs loop takes a required value from the next argv token', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--host-id', '5', '--force'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--host-id', 'valid', '5'),
+		array('--force', 'valid'),
+	));
+});
+
+test('remove_graphs loop still accepts the "=" form', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--host-id=5', '--force'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--host-id=5', 'valid'),
+		array('--force', 'valid'),
+	));
+});
+
+test('remove_graphs loop takes a regex value from the next argv token', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--graph-regex', '^foo'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--graph-regex', 'valid', '^foo'),
+	));
+});
+
+test('remove_graphs loop still aborts a mistyped filter even with a following value', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--HOST-ID', '5'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--HOST-ID', 'abort'),
+	));
+});
+
+test('remove_graphs loop still aborts a trailing option with no value', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--force', '--host-id'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--force', 'valid'),
+		array('--host-id', 'abort'),
+	));
+});
+
 test('remove_graphs uses the real regex length and semicolon guards', function () {
 	$valid     = remove_graphs_regex_result('edge.*');
 	$malformed = remove_graphs_regex_result('(');
@@ -185,6 +274,7 @@ test('remove_graphs wires strict validation before getopt', function () {
 
 	expect($source)->not->toBeFalse()
 		->and($source)->toContain('cacti_remove_graphs_parameter_is_valid($parameter, $shortopts, $longopts)')
+		->and($source)->toContain('cacti_remove_graphs_takes_next_argument($parameter, $longopts)')
 		->and($source)->toContain('ERROR: Invalid Argument:')
 		->and($source)->not->toContain("'graph-type::'");
 
