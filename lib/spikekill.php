@@ -492,11 +492,18 @@ class spikekill {
 				$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . "NOTE: RRDfile '$this->rrdfile' backed up to '$bakfile'" . ($this->html ? "</p>\n":"\n");
 			} else {
 				$this->set_error(__esc("FATAL: RRDfile Backup of '%s' to '%s' FAILED!", $this->rrdfile, $bakfile));
+
+				fclose($xmlfile_handle);
+				$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
+
 				return false;
 			}
 		}
 
 		if ($this->is_error_set()) {
+			fclose($xmlfile_handle);
+			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
+
 			return false;
 		}
 
