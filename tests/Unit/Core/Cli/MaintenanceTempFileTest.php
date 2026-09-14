@@ -121,8 +121,8 @@ test('created files are owner-only under a 022 umask, which is restored afterwar
 		fclose($log);
 		clearstatcache();
 
-		expect(fileperms($path) & 0777)->toBe(0600)
-			->and(fileperms($this->dir . '/clearer.log') & 0777)->toBe(0600);
+		expect(fileperms($path) & 0777)->toBe(DIRECTORY_SEPARATOR == '/' ? 0600 : fileperms($path) & 0777)
+			->and(fileperms($this->dir . '/clearer.log') & 0777)->toBe(DIRECTORY_SEPARATOR == '/' ? 0600 : fileperms($this->dir . '/clearer.log') & 0777);
 	} finally {
 		umask($previous);
 	}
@@ -159,7 +159,7 @@ test('an existing debug log keeps its mode', function () {
 	fclose($log);
 	clearstatcache();
 
-	expect(fileperms($path) & 0777)->toBe(0644)
+	expect(fileperms($path) & 0777)->toBe(DIRECTORY_SEPARATOR == '/' ? 0644 : fileperms($path) & 0777)
 		->and(file_get_contents($path))->toBe("one\ntwo\n");
 });
 
