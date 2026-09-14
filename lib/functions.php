@@ -8552,6 +8552,39 @@ function cacti_trim_dir_separator($dir, $separator = DIRECTORY_SEPARATOR) {
 }
 
 /**
+ * cacti_join_dir_child - append a child name to a directory that already
+ * went through cacti_trim_dir_separator().  A plain concatenation with a
+ * separator corrupts a bare Windows drive-relative directory ('C:'): 'C:'
+ * means the current directory on drive C, but 'C:/child' means the root of
+ * that drive instead.  A directory that already ends in a separator (a
+ * POSIX root '/', or a Windows root 'C:\' or 'C:/') must not gain a second
+ * one either.
+ *
+ * @param  (string) $dir
+ * @param  (string) $name
+ * @param  (string) $separator
+ *
+ * @return (string)
+ */
+function cacti_join_dir_child($dir, $name, $separator = DIRECTORY_SEPARATOR) {
+	if ($dir === '') {
+		return $name;
+	}
+
+	if ($separator === '\\' && preg_match('/^[A-Za-z]:$/', $dir)) {
+		return $dir . $name;
+	}
+
+	$last = substr($dir, -1);
+
+	if ($last === '/' || $last === '\\') {
+		return $dir . $name;
+	}
+
+	return $dir . $separator . $name;
+}
+
+/**
  * cacti_header - Redirect to the default if the HTTP_REFERER is empty
  *
  * @param string $default The default to redirect to unless

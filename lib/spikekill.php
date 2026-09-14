@@ -419,10 +419,10 @@ class spikekill {
 
 		if ($config['cacti_server_os'] == 'win32') {
 			$this->tempdir = $this->normalizeDir(read_config_option('spikekill_backupdir'));
-			$bakfile = $this->tempdir . '/' . str_replace('.rrd', '', basename($this->rrdfile)) . '.backup.' . $this->seed . '.rrd';
+			$bakfile = cacti_join_dir_child($this->tempdir, str_replace('.rrd', '', basename($this->rrdfile)) . '.backup.' . $this->seed . '.rrd', DIRECTORY_SEPARATOR);
 		} else {
 			$this->tempdir = $this->normalizeDir(read_config_option('spikekill_backupdir'));
-			$bakfile = $this->tempdir . '/' . str_replace('.rrd', '', basename($this->rrdfile)) . '.backup.' . $this->seed . '.rrd';
+			$bakfile = cacti_join_dir_child($this->tempdir, str_replace('.rrd', '', basename($this->rrdfile)) . '.backup.' . $this->seed . '.rrd', DIRECTORY_SEPARATOR);
 		}
 
 		$bakfile_stat = false;
@@ -946,7 +946,7 @@ class spikekill {
 			$backupdir = $this->tempdir;
 		}
 
-		$backup_result = $this->copyFileSafely($rrdfile, $backupdir . '/' . basename($rrdfile), $backupdir);
+		$backup_result = $this->copyFileSafely($rrdfile, cacti_join_dir_child($backupdir, basename($rrdfile), DIRECTORY_SEPARATOR), $backupdir);
 
 		if ($backup_result === false) {
 			return false;
@@ -1107,7 +1107,7 @@ class spikekill {
 		}
 
 		for ($i = 0; $i < 10; $i++) {
-			$candidate = $tempdir . '/spikekill.' . bin2hex(random_bytes(8)) . '.xml';
+			$candidate = cacti_join_dir_child($tempdir, 'spikekill.' . bin2hex(random_bytes(8)) . '.xml', DIRECTORY_SEPARATOR);
 
 			$old_umask = umask(0177);
 			$handle    = @fopen($candidate, 'xb+');

@@ -89,6 +89,22 @@ if (!function_exists('cacti_trim_dir_separator')) {
 	eval($trim_body); // nosemgrep: php.lang.security.eval-use.eval-use
 }
 
+/* purge_spike_backups() joins the trimmed backup directory to each
+   filename through cacti_join_dir_child() (lib/functions.php), the same
+   pure helper spikekill.php's requested-backup and temp-XML paths use.
+   Pulled in by the same extraction technique as above. */
+if (!function_exists('cacti_join_dir_child')) {
+	$functions_source = file_get_contents(dirname(__DIR__, 3) . '/../lib/functions.php');
+
+	$join_start = strpos($functions_source, 'function cacti_join_dir_child(');
+	expect($join_start)->not->toBeFalse();
+
+	$join_end = strpos($functions_source, "\n}\n", $join_start);
+	$join_body = substr($functions_source, $join_start, $join_end - $join_start + 2);
+
+	eval($join_body); // nosemgrep: php.lang.security.eval-use.eval-use
+}
+
 beforeEach(function () {
 	global $spikekill_shell_test_log;
 

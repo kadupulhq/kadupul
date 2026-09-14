@@ -52,7 +52,17 @@ expect($trim_start)->not->toBeFalse();
 $trim_end = strpos($functions_source, "\n}\n", $trim_start);
 $trim_body = substr($functions_source, $trim_start, $trim_end - $trim_start + 2);
 
+/* purge_spike_backups() also joins the trimmed backup directory to each
+   filename through cacti_join_dir_child() (lib/functions.php), pulled in
+   the same way */
+$join_start = strpos($functions_source, 'function cacti_join_dir_child(');
+expect($join_start)->not->toBeFalse();
+
+$join_end = strpos($functions_source, "\n}\n", $join_start);
+$join_body = substr($functions_source, $join_start, $join_end - $join_start + 2);
+
 eval("namespace PurgeSpikeBackupsWritePermissionLogTest;\n" . $trim_body); // nosemgrep: php.lang.security.eval-use.eval-use
+eval("namespace PurgeSpikeBackupsWritePermissionLogTest;\n" . $join_body); // nosemgrep: php.lang.security.eval-use.eval-use
 eval("namespace PurgeSpikeBackupsWritePermissionLogTest;\n" . $body); // nosemgrep: php.lang.security.eval-use.eval-use
 
 function reset_state() {

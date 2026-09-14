@@ -224,7 +224,7 @@ function purge_spike_backups() {
 
 		if (cacti_sizeof($files)) {
 			foreach($files as $file) {
-				$filepath = $directory . '/' . $file;
+				$filepath = cacti_join_dir_child($directory, $file, DIRECTORY_SEPARATOR);
 
 				/* skip a symlink outright: never follow it into is_file()'s
 				   stat, and never let a planted link stand in for a backup */
