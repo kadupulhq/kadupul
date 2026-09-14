@@ -106,7 +106,7 @@ $snmpSource = file_get_contents(__DIR__ . '/../../lib/snmp.php');
  * loading lib/snmp.php's include-time setup. */
 foreach (['cacti_snmp_session_walk', 'cacti_snmp_session_get', 'cacti_snmp_session_getnext'] as $snmpFunction) {
     if (!function_exists(__NAMESPACE__ . '\\' . $snmpFunction)) {
-        eval('namespace ' . __NAMESPACE__ . '; ' . snmp_timeout_warning_function_source($snmpSource, $snmpFunction));
+        eval('namespace ' . __NAMESPACE__ . '; ' . snmp_timeout_warning_function_source($snmpSource, $snmpFunction)); // nosemgrep: php.lang.security.eval-use.eval-use
     }
 }
 
