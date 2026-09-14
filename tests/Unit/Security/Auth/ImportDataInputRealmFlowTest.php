@@ -661,3 +661,26 @@ test('a later package file that fails its import stops the package before an ear
 		->and(implode("\n", $GLOBALS['ifl_log']))->toContain('shell metacharacters')
 		->and($GLOBALS['preview_only'])->toBeFalse();
 });
+
+test('a malformed package file stops the package before an earlier file is written', function () use ($runPackage, $templateXml, $dtHash, $existingMethod) {
+	$existingMethod();
+
+	/* xml2array() gives nothing for a malformed file, and import_xml_data() reports message 7 with an empty result */
+	$result = $runPackage(array(
+		'template.xml'  => array('hash_010103' . $dtHash => $templateXml),
+		'malformed.xml' => array(),
+	));
+
+	expect($result)->toBeFalse()
+		->and($GLOBALS['ifl_saves'])->toBe(array())
+		->and($GLOBALS['import_messages'])->toContain(7);
+});
+
+test('the package preflight leaves an unset import message list as an empty array', function () use ($runPackage, $templateXml, $dtHash, $existingMethod) {
+	$existingMethod();
+	unset($GLOBALS['import_messages']);
+
+	$runPackage(array('template.xml' => array('hash_010103' . $dtHash => $templateXml)));
+
+	expect($GLOBALS['import_messages'])->toBe(array());
+});

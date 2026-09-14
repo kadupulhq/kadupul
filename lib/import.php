@@ -847,12 +847,12 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 
 /* preview every XML file of a package until no further object is refused, so each file is then imported
  * knowing every Data Input Method skipped anywhere in the package and everything that uses one; returns
- * false when a file fails its import, so the package stops before any earlier file is written */
+ * false when a file fails its import or does not parse, so the package stops before any file is written */
 function import_package_refused_hashes($package_files, $profile_id, $remove_orphans, $replace_svalues, $import_hashes, $class) {
 	global $preview_only, $import_messages;
 
 	$saved_preview  = $preview_only;
-	$saved_messages = $import_messages;
+	$saved_messages = (is_array($import_messages) ? $import_messages : array());
 	$preview_only   = true;
 	$refused_hashes = array();
 
@@ -871,7 +871,11 @@ function import_package_refused_hashes($package_files, $profile_id, $remove_orph
 
 			$fdata = base64_decode($f['data']);
 
-			if (import_xml_data($fdata, false, $profile_id, $remove_orphans, $replace_svalues, $import_hashes, $class, false, $refused_hashes) === false) {
+			$messages_before = cacti_sizeof($import_messages);
+
+			/* a parse error returns an empty result and adds an import message instead of returning false */
+			if (import_xml_data($fdata, false, $profile_id, $remove_orphans, $replace_svalues, $import_hashes, $class, false, $refused_hashes) === false
+				|| cacti_sizeof($import_messages) > $messages_before) {
 				/* keep the failed file's import messages for the caller */
 				$preview_only = $saved_preview;
 
