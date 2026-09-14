@@ -273,7 +273,15 @@ function cacti_cli_current_uid() {
  * @return resource|string An open handle, or a printable reason it was refused.
  */
 function cacti_cli_open_log($path) {
+	$uid = cacti_cli_current_uid();
+
 	if (!is_link($path) && !file_exists($path)) {
+		/* A log created here and then refused would be left behind, and every
+		 * later run would refuse the file it finds. */
+		if ($uid === false) {
+			return sprintf("Refusing to append to '%s' because its owner cannot be verified", $path);
+		}
+
 		$created = cacti_cli_create_file($path);
 
 		/* The exclusive create only makes the log owner-only. It is reopened
@@ -292,8 +300,6 @@ function cacti_cli_open_log($path) {
 	if ($before === false || ($before['mode'] & 0170000) !== 0100000) {
 		return sprintf("Refusing to append to '%s' because it is not a regular file", $path);
 	}
-
-	$uid = cacti_cli_current_uid();
 
 	if ($uid === false) {
 		return sprintf("Refusing to append to '%s' because its owner cannot be verified", $path);

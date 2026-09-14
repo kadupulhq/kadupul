@@ -340,6 +340,28 @@ test('an owner that cannot be verified is refused rather than trusted', function
 		->and($source)->not->toContain("function_exists('posix_geteuid') && \$before['uid']");
 });
 
+test('a missing debug log is not created when its owner cannot be verified', function () {
+	/* cacti_cli_open_log() runs in a namespace where the running user is
+	 * unknown, as on Windows, so a later run does not find an empty file
+	 * left behind and refuse it forever. */
+	if (!function_exists('MaintenanceUnknownUid\\cacti_cli_open_log')) {
+		$source = file_get_contents(dirname(__DIR__, 4) . '/lib/maintenance_cli.php');
+
+		preg_match('/^function cacti_cli_open_log\\(.*?^}\\R/ms', $source, $match);
+
+		// test-only eval of source read from this repository, not external input
+		eval('namespace MaintenanceUnknownUid; function cacti_cli_current_uid() { return false; } ' . $match[0]);
+	}
+
+	$path    = $this->dir . '/clearer.log';
+	$message = "Refusing to append to '$path' because its owner cannot be verified";
+
+	expect(\MaintenanceUnknownUid\cacti_cli_open_log($path))->toBe($message)
+		->and(file_exists($path))->toBeFalse()
+		->and(\MaintenanceUnknownUid\cacti_cli_open_log($path))->toBe($message)
+		->and(file_exists($path))->toBeFalse();
+});
+
 test('splice_rrd removes every dump it created before either dump failure exit', function () {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/cli/splice_rrd.php');
 
