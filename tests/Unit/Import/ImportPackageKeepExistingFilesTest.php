@@ -56,6 +56,11 @@ function cacti_sizeof($value) {
 	return is_array($value) ? count($value) : 0;
 }
 
+/* the realm decision is not what this test checks */
+function import_data_input_realm_allowed() {
+	return true;
+}
+
 function import_xml_data($xml) {
 	return array();
 }
@@ -144,5 +149,5 @@ test('an administrator import of identical content writes without a warning', fu
 test('the installer imports shipped packages without replacing files', function () {
 	$source = file_get_contents(dirname(__DIR__, 3) . '/lib/installer.php');
 
-	expect($source)->toContain("import_package(\$path . \$package, \$this->profile, false, false, false, false, true, array(), array(), \$info['class'], false);");
+	expect($source)->toContain("import_package(\$path . \$package, \$this->profile, false, false, false, false, true, array(), array(), \$info['class'], false, \$data_input_allowed);");
 });

@@ -3229,7 +3229,11 @@ class Installer implements JsonSerializable {
 					set_install_config_option('install_updated', microtime(true));
 
 					$info = import_package_get_details($path . $package);
-					$result = import_package($path . $package, $this->profile, false, false, false, false, true, array(), array(), $info['class'], false);
+
+					/* installs and upgrades import every shipped Data Input Method, as in 1.2.31, even from the web SAPI without a session realm */
+					$data_input_allowed = (defined('IN_CACTI_INSTALL') || !$config['is_web']) ? true : null;
+
+					$result = import_package($path . $package, $this->profile, false, false, false, false, true, array(), array(), $info['class'], false, $data_input_allowed);
 
 					if ($result !== false) {
 						log_install_always('', __('Import of Package #%s \'%s\' under Profile \'%s\' succeeded', $i, $package, $this->profile));

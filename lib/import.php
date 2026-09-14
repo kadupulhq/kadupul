@@ -23,7 +23,7 @@
  +-------------------------------------------------------------------------+
 */
 
-function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphans = false, $replace_svalues = false, $import_hashes = array(), $class = '') {
+function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphans = false, $replace_svalues = false, $import_hashes = array(), $class = '', $data_input_allowed = null, &$refused_hashes = array()) {
 	global $config, $hash_type_codes, $cacti_version_codes, $ignorable_hashes, $preview_only;
 	global $import_debug_info, $import_messages, $legacy_template;
 
@@ -32,6 +32,11 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 	$info_array       = array();
 	$files            = array();
 	$ignorable_hashes = array();
+
+	/* one decision for the whole import, taken before any object is written; import_package() passes the one it took */
+	if ($data_input_allowed === null) {
+		$data_input_allowed = import_data_input_realm_allowed();
+	}
 
 	$xml_array = xml2array($xml_data);
 
@@ -200,6 +205,9 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 		}
 	}
 
+	/* $refused_hashes holds objects skipped because they use a Data Input Method the import may not write,
+	 * keyed by hash; import_package() shares one set across its files */
+
 	/**
 	 * Second pass, we will actually perform the import of the entirety of the Template.
 	 *
@@ -232,7 +240,18 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 					return false;
 				}
 
-				switch($type) {
+				/* anything that uses a skipped method, or an object skipped for that reason, would save rows pointing at nothing */
+				$refused_by = ($type == 'data_input_method' ? false : import_xml_refused_reference($hash_array, $refused_hashes));
+
+				/* without the realm, a method or field the import has not saved, such as one from a later package file, would be saved as id 0 */
+				if ($refused_by === false && $type != 'data_input_method' && !$data_input_allowed) {
+					$refused_by = import_xml_unresolved_data_input($hash_array, $hash_cache);
+				}
+
+				switch($refused_by === false ? $type : 'refused_dependency') {
+					case 'refused_dependency':
+						import_xml_refuse_dependent($type, $dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache, $refused_hashes);
+						break;
 					case 'graph_template':
 						$transaction_started = $preview_only ? false : db_begin_transaction();
 
@@ -270,7 +289,13 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 					$hash_cache += xml_to_host_template($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache, $host_template_data, $class);
 					break;
 				case 'data_input_method':
-					$hash_cache += xml_to_data_input_method($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache);
+					$cache_add = xml_to_data_input_method($dep_hash_cache[$type][$i]['hash'], $hash_array, $hash_cache, $data_input_allowed, $refused_hashes);
+
+					if ($cache_add === false) {
+						return false;
+					}
+
+					$hash_cache += $cache_add;
 					$repair++;
 					break;
 				case 'data_query':
@@ -325,7 +350,25 @@ function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphan
 	}
 
 	if ($repair) {
-		repair_system_data_input_methods();
+		if ($data_input_allowed) {
+			repair_system_data_input_methods();
+		} else {
+			/* the repair rewrites data input fields and their mappings, so it needs the same permission */
+			$repair_message = __('The Data Input Method repair was skipped because you do not have permission to edit Data Input Methods.');
+
+			foreach (array('data_input_method', 'data_template') as $repair_type) {
+				if (isset($info_array[$repair_type])) {
+					foreach ($info_array[$repair_type] as $index => $repair_info) {
+						$info_array[$repair_type][$index]['differences'][] = $repair_message;
+					}
+				}
+			}
+
+			if (!$preview_only) {
+				cacti_log('WARNING: Skipped the data input method repair after an import - the user lacks the Data Input Methods permission', false, 'IMPORT');
+				raise_message('import_data_input_repair', $repair_message, MESSAGE_LEVEL_WARN);
+			}
+		}
 	}
 
 	return $info_array;
@@ -587,7 +630,7 @@ function import_read_package_data($xmlfile, &$public_key) {
  *
  */
 function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $replace_svalues = false,
-	$preview = false, $info_only = false, $limitex = true, $import_hashes = array(), $import_files = array(), $class = '', $replace_files = true) {
+	$preview = false, $info_only = false, $limitex = true, $import_hashes = array(), $import_files = array(), $class = '', $replace_files = true, $data_input_allowed = null) {
 
 	global $config, $preview_only;
 
@@ -618,6 +661,14 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 		return $data['info'];
 	}
 
+	/* every XML file in the package is imported under the same realm decision, and an object
+	 * skipped in one file is remembered for the files after it; the installer passes its own */
+	if ($data_input_allowed === null) {
+		$data_input_allowed = import_data_input_realm_allowed();
+	}
+
+	$refused_hashes = array();
+
 	cacti_log('Verifying each files signature', false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 
 	if (isset($data['files']['file']['data'])) {
@@ -638,6 +689,15 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 			cacti_log('NOTE: File OK: ' . $f['name'], false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 		} else {
 			cacti_log('FATAL: Could not Verify Signature for file: ' . $f['name'], true, 'IMPORT', POLLER_VERBOSITY_LOW);
+			return false;
+		}
+	}
+
+	/* without the realm, a dependent can sit in an earlier file than the method it needs, so classify the whole package first */
+	if (!$data_input_allowed) {
+		$refused_hashes = import_package_refused_hashes($data['files']['file'], $profile_id, $remove_orphans, $replace_svalues, $import_hashes, $class);
+
+		if ($refused_hashes === false) {
 			return false;
 		}
 	}
@@ -770,7 +830,7 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 				cacti_log('Previewing XML Data for ' . $name, false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 			}
 
-			$debug_data = import_xml_data($fdata, false, $profile_id, $remove_orphans, $replace_svalues, $import_hashes, $class);
+			$debug_data = import_xml_data($fdata, false, $profile_id, $remove_orphans, $replace_svalues, $import_hashes, $class, $data_input_allowed, $refused_hashes);
 
 			if ($debug_data === false) {
 				return false;
@@ -783,6 +843,51 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 	}
 
 	return array($debug_data, $filestatus);
+}
+
+/* preview every XML file of a package until no further object is refused, so each file is then imported
+ * knowing every Data Input Method skipped anywhere in the package and everything that uses one; returns
+ * false when a file fails its import or does not parse, so the package stops before any file is written */
+function import_package_refused_hashes($package_files, $profile_id, $remove_orphans, $replace_svalues, $import_hashes, $class) {
+	global $preview_only, $import_messages;
+
+	$saved_preview  = $preview_only;
+	$saved_messages = (is_array($import_messages) ? $import_messages : array());
+	$preview_only   = true;
+	$refused_hashes = array();
+
+	do {
+		$refused_count = cacti_sizeof($refused_hashes);
+
+		foreach ($package_files as $f) {
+			$name            = $f['name'];
+			$normalized_name = str_replace('\\', '/', $name);
+
+			/* the names import_package() does not hand to import_xml_data() */
+			if (strpos($name, chr(0)) !== false || preg_match('#(^|/)\.\.(/|$)#', $normalized_name) || preg_match('#^([/\\\\]|[A-Za-z]:)#', $name)
+				|| strpos($name, 'scripts/') !== false || strpos($name, 'resource/') !== false) {
+				continue;
+			}
+
+			$fdata = base64_decode($f['data']);
+
+			$messages_before = cacti_sizeof($import_messages);
+
+			/* a parse error returns an empty result and adds an import message instead of returning false */
+			if (import_xml_data($fdata, false, $profile_id, $remove_orphans, $replace_svalues, $import_hashes, $class, false, $refused_hashes) === false
+				|| cacti_sizeof($import_messages) > $messages_before) {
+				/* keep the failed file's import messages for the caller */
+				$preview_only = $saved_preview;
+
+				return false;
+			}
+		}
+	} while (cacti_sizeof($refused_hashes) > $refused_count);
+
+	$preview_only    = $saved_preview;
+	$import_messages = $saved_messages;
+
+	return $refused_hashes;
 }
 
 function xml_to_graph_template($hash, &$xml_array, &$hash_cache, $hash_version, $remove_orphans = false) {
@@ -2322,12 +2427,167 @@ function xml_detect_ignorable_hash_cache($hash, &$xml_array) {
 	return $found;
 }
 
-function xml_to_data_input_method($hash, &$xml_array, &$hash_cache) {
+/* An input string is a poller command, so a web import may write data input
+ * methods only for a user holding the Data Input Methods realm.  CLI and
+ * installer imports have no session and are not gated.  The realm tables are
+ * read directly: is_realm_allowed() ends an invalidated session, which would
+ * stop the import partway through. */
+function import_data_input_realm_allowed() {
+	global $config;
+
+	if (!$config['is_web']) {
+		return true;
+	}
+
+	if (empty($_SESSION['sess_user_id'])) {
+		return false;
+	}
+
+	$sql_query = 'SELECT realm_id
+		FROM user_auth_realm
+		WHERE user_id = ?
+		AND realm_id = ?';
+
+	$sql_params = array($_SESSION['sess_user_id'], 2);
+
+	/* upgrades from before 1.x may not have the group tables, as include/auth.php allows */
+	if (db_table_exists('user_auth_group_realm') &&
+		db_table_exists('user_auth_group') &&
+		db_table_exists('user_auth_group_members')) {
+		$sql_query .= "
+			UNION
+			SELECT realm_id
+			FROM user_auth_group_realm AS uagr
+			INNER JOIN user_auth_group AS uag
+			ON uag.id = uagr.group_id
+			INNER JOIN user_auth_group_members AS uagm
+			ON uag.id = uagm.group_id
+			WHERE uag.enabled = 'on'
+			AND uagr.realm_id = ?
+			AND uagm.user_id = ?";
+
+		$sql_params = array_merge($sql_params, array(2, $_SESSION['sess_user_id']));
+	}
+
+	$realm = db_fetch_cell_prepared($sql_query, $sql_params);
+
+	return !empty($realm);
+}
+
+/* remember a skipped object and every sub-object it defines, so objects that use any of them are skipped too */
+function import_xml_record_refused($hash, $xml_array, &$refused_hashes) {
+	if ($hash != '') {
+		$refused_hashes[$hash] = true;
+	}
+
+	if (is_array($xml_array)) {
+		foreach ($xml_array as $key => $value) {
+			if (is_string($key) && preg_match('/^hash_[a-f0-9]{2}(?:[a-f0-9]{4})?([a-f0-9]{32})$/', $key, $matches)) {
+				$refused_hashes[$matches[1]] = true;
+			}
+
+			if (is_array($value)) {
+				import_xml_record_refused('', $value, $refused_hashes);
+			}
+		}
+	}
+}
+
+/* return the first skipped object that an object's XML refers to, or false */
+function import_xml_refused_reference($xml_array, $refused_hashes) {
+	if (!cacti_sizeof($refused_hashes) || !is_array($xml_array)) {
+		return false;
+	}
+
+	foreach ($xml_array as $value) {
+		if (is_array($value)) {
+			$reference = import_xml_refused_reference($value, $refused_hashes);
+
+			if ($reference !== false) {
+				return $reference;
+			}
+		} elseif (is_string($value) && preg_match_all('/hash_[a-f0-9]{2}(?:[a-f0-9]{4})?([a-f0-9]{32})(?![a-f0-9])/', $value, $matches)) {
+			foreach ($matches[1] as $reference) {
+				if (isset($refused_hashes[$reference])) {
+					return $reference;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+/* return the first Data Input Method or field an object's XML refers to that the hash cache cannot resolve, or false */
+function import_xml_unresolved_data_input($xml_array, $hash_cache) {
+	global $hash_type_codes, $ignorable_hashes;
+
+	if (!is_array($xml_array)) {
+		return false;
+	}
+
+	/* resolve_hash_to_id() maps these bad SNMP port and index hashes to 0 on purpose */
+	$known_hashes = array('5240353b8f7f259acaf30e6229bc14e7', 'd94caa7cc3733bd95ee00a3917fdcbb5', 'cbbe5c1ddfb264a6e5d509ce1c78c95f', '51bde3d899e12bde28ad979166985584');
+
+	$types = array(
+		$hash_type_codes['data_input_method'] => 'data_input_method',
+		$hash_type_codes['data_input_field']  => 'data_input_field'
+	);
+
+	foreach ($xml_array as $value) {
+		if (is_array($value)) {
+			$reference = import_xml_unresolved_data_input($value, $hash_cache);
+
+			if ($reference !== false) {
+				return $reference;
+			}
+		} elseif (is_string($value) && preg_match_all('/hash_([a-f0-9]{2})(?:[a-f0-9]{4})?([a-f0-9]{32})(?![a-f0-9])/', $value, $matches, PREG_SET_ORDER)) {
+			foreach ($matches as $match) {
+				if (isset($types[$match[1]]) && empty($hash_cache[$types[$match[1]]][$match[2]])
+					&& !in_array($match[2], $known_hashes, true) && !in_array($match[2], (array) $ignorable_hashes, true)) {
+					return $match[2];
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+/* skip an object that uses a skipped Data Input Method instead of saving rows that point at nothing */
+function import_xml_refuse_dependent($type, $hash, $xml_array, $hash_cache, &$refused_hashes) {
+	global $preview_only, $import_debug_info;
+
+	import_xml_record_refused($hash, $xml_array, $refused_hashes);
+
+	$title   = (isset($xml_array['name']) ? $xml_array['name'] : $hash);
+	$message = __('\'%s\' was not imported because it uses a Data Input Method you do not have permission to edit.', html_escape($title));
+
+	$import_debug_info['type']          = (empty($hash_cache[$type][$hash]) ? 'new' : 'unchanged');
+	$import_debug_info['hash']          = $hash;
+	$import_debug_info['title']         = $title;
+	$import_debug_info['result']        = ($preview_only ? 'preview' : 'fail');
+	$import_debug_info['differences'][] = $message;
+
+	if (!$preview_only) {
+		cacti_log("WARNING: Skipped importing $type '$hash' - it uses a data input method the user lacks the permission to edit", false, 'IMPORT');
+		raise_message('import_data_input_dependent_' . $hash, $message, MESSAGE_LEVEL_WARN);
+	}
+}
+
+function xml_to_data_input_method($hash, &$xml_array, &$hash_cache, $realm_allowed = null, &$refused_hashes = array()) {
 	global $fields_data_input_edit, $fields_data_input_field_edit, $fields_data_input_field_edit_1;
 	global $preview_only, $import_debug_info, $ignorable_hashes;
 
 	/* track changes */
 	$status = 0;
+
+	/* import_xml_data() passes the decision it took before the import began */
+	if ($realm_allowed === null) {
+		$realm_allowed = import_data_input_realm_allowed();
+	}
+
+	$write = !$preview_only && $realm_allowed;
 
 	/* aggregate field arrays */
 	$fields_data_input_field_edit += $fields_data_input_field_edit_1;
@@ -2387,7 +2647,7 @@ function xml_to_data_input_method($hash, &$xml_array, &$hash_cache) {
 	/* check for status changes */
 	$status += compare_data($save, $previous_data, 'data_input');
 
-	if (!$preview_only) {
+	if ($write) {
 		$data_input_id = sql_save($save, 'data_input');
 
 		$hash_cache['data_input_method'][$hash] = $data_input_id;
@@ -2456,7 +2716,7 @@ function xml_to_data_input_method($hash, &$xml_array, &$hash_cache) {
 			/* check for status changes */
 			$status += compare_data($save, $previous_data, 'data_input_fields');
 
-			if (!$preview_only) {
+			if ($write) {
 				$data_input_field_id = sql_save($save, 'data_input_fields');
 
 				/* update field use counter cache if possible */
@@ -2473,11 +2733,27 @@ function xml_to_data_input_method($hash, &$xml_array, &$hash_cache) {
 		}
 	}
 
+	/* an unchanged existing method is still reused, so dependent templates link to it */
+	$skipped = !$realm_allowed && (empty($_data_input_id) || $status > 0);
+
+	if ($skipped) {
+		$skip_message = __('Data Input Method \'%s\' was not imported because you do not have permission to edit Data Input Methods.', html_escape($xml_array['name']));
+
+		$import_debug_info['differences'][] = $skip_message;
+
+		import_xml_record_refused($hash, $xml_array, $refused_hashes);
+
+		if (!$preview_only) {
+			cacti_log("WARNING: Skipped importing data input method '$hash' - the user lacks the Data Input Methods permission", false, 'IMPORT');
+			raise_message('import_data_input_' . $hash, $skip_message, MESSAGE_LEVEL_WARN);
+		}
+	}
+
 	/* status information that will be presented to the user */
 	$import_debug_info['type']   = (empty($_data_input_id) ? 'new' : ($status > 0 ? 'updated':'unchanged'));
 	$import_debug_info['hash']   = $hash;
 	$import_debug_info['title']  = $xml_array['name'];
-	$import_debug_info['result'] = ($preview_only ? 'preview':(empty($data_input_id) ? 'fail' : 'success'));
+	$import_debug_info['result'] = ($preview_only ? 'preview':(empty($data_input_id) || $skipped ? 'fail' : 'success'));
 
 	return $hash_cache;
 }
