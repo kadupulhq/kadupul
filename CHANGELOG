@@ -1,6 +1,8 @@
 Cacti CHANGELOG
 
 1.2.x
+-issue: Send array rrdtool commands such as the RRDcheck fetch through RRDproxy as one quoted command instead of failing before they are sent
+-issue: Send the RRDproxy file_exists check in RRDcheck a bare path so an RRD path holding a quote character is found, and skip the local writable and modify time checks for RRDs on the proxy
 -issue: Parse installer start and finish times that fall on a whole second instead of crashing
 -security: Verify Remote Data Collector HTTPS certificates by default on new installs; upgraded installs keep their previous behaviour
 -security: Mask passwords, passphrases and community strings in DEVDBG SQL save logging with the existing ******** placeholder
@@ -22,6 +24,10 @@ Cacti CHANGELOG
 -issue: Push out graph template input values that are NULL instead of aborting, as 1.2.31 did
 -issue: Finish an upgrade with missing core tables such as poller_output_boost_local_data_ids, logging a warning, as 1.2.31 did
 -issue: Accept a literal connection argument to db_check_reconnect() again, as 1.2.31 did
+-security: Keep RRDproxy message encryption on instead of asking the proxy to disable it after the handshake
+-security: Check graph permission and the real-time enabled setting before real-time init polls a graph or real-time view returns its cached image
+-security: Quote each real-time poller argument separately when the graph page starts the poller
+-security: Quote graph, export, fetch, RRDcheck and RRD file path arguments, including user font settings, the way the RRDtool command parser reads them
 -issue: Declare GPL-2.0-or-later in composer.json, the license the source headers grant
 -security: Pass over a disabled configured administrator when moving off the retired no-authentication method
 -security: Skip the unknown-username password hash for blank passwords, as a known username does

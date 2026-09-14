@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -159,7 +160,9 @@ function do_rrdcheck($thread_id = 1) {
 			$file = $rrdval['data_source_path'];
 
 			if ($use_proxy) {
-				$file_exists = rrdtool_execute('file_exists ' . cacti_escapeshellarg($file), true, RRDTOOL_OUTPUT_BOOLEAN, false, 'RRDCHECK');
+				/* RRDproxy runs file_exists in PHP on arguments split at spaces and keeps
+				 * quotes, so it gets the bare path from the path command builder */
+				$file_exists = rrdtool_execute_path_command('file_exists', $file, '', true, RRDTOOL_OUTPUT_BOOLEAN, false, 'RRDCHECK');
 			} else {
 				clearstatcache();
 				$file_exists = file_exists($file);
@@ -167,7 +170,9 @@ function do_rrdcheck($thread_id = 1) {
 
 			// don't attempt to get information if the file does not exist
 			if ($file_exists) {
-				if (!is_resource_writable($file)) {
+				/* with RRDproxy the RRD is on the proxy host, which has no writable
+				 * check, so the local probe and filemtime() would test a missing file */
+				if (!$use_proxy && !is_resource_writable($file)) {
 					db_execute_prepared ('INSERT INTO rrdcheck
 						(local_data_id, test_date, message)
 						VALUES	(?,NOW(),?)',
@@ -178,7 +183,7 @@ function do_rrdcheck($thread_id = 1) {
 					);
 				}
 
-				if (time() > (filemtime($file) + 3600)) {
+				if (!$use_proxy && time() > (filemtime($file) + 3600)) {
 					db_execute_prepared ('INSERT INTO rrdcheck
 						(local_data_id, test_date, message)
 						VALUES (?,NOW(),?)',
@@ -210,7 +215,7 @@ function do_rrdcheck($thread_id = 1) {
 				}
 
 				if ($use_proxy) {
-					$output = rrdtool_execute('info ' . cacti_escapeshellarg($file), false, RRDTOOL_OUTPUT_STDOUT, false, 'RRDCHECK');
+					$output = rrdtool_execute('info ' . rrdtool_quote_argument($file), false, RRDTOOL_OUTPUT_STDOUT, false, 'RRDCHECK');
 				} else {
 					$output = rrdcheck_rrdtool_execute(['info', $file], $pipes);
 				}
@@ -827,7 +832,7 @@ function rrdcheck_rrdtool_execute($command, &$pipes) {
 				$escaped_args = array();
 
 				foreach($command as $arg) {
-					$escaped_args[] = cacti_escapeshellarg($arg);
+					$escaped_args[] = rrdtool_quote_argument($arg);
 				}
 
 				$command_line .= ' ' . implode(' ', $escaped_args);

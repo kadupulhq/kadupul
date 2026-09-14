@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -16,8 +17,8 @@
  * Tests for command injection hardening in graph_realtime.php.
  *
  * grv('local_graph_id') was interpolated into shell_exec via sprintf without
- * escaping. The fix casts to (int), uses cacti_escapeshellcmd for the PHP
- * binary, and cacti_escapeshellarg for the script path.
+ * escaping. The fix uses cacti_escapeshellcmd for the PHP binary and
+ * cacti_escapeshellarg for the script path and for each poller argument.
  */
 
 $graphRealtimePath = __DIR__ . '/../../../../graph_realtime.php';
@@ -35,12 +36,15 @@ test('graph_realtime.php uses cacti_escapeshellarg for poller_realtime script pa
 
 	expect($contents)->toContain("\$config['base_path'] . '/poller_realtime.php'");
 	expect($contents)->toContain('poller_realtime.php');
+	expect($contents)->toContain("cacti_escapeshellarg(\$config['base_path'] . '/poller_realtime.php')");
 });
 
-test('graph_realtime.php casts local_graph_id to int before shell_exec', function () use ($graphRealtimePath) {
+test('graph_realtime.php quotes each poller argument separately', function () use ($graphRealtimePath) {
 	$contents = file_get_contents($graphRealtimePath);
 
-	expect($contents)->toMatch('/\(int\)\s+gfrv\s*\(\s*[\'"]local_graph_id[\'"]\s*\)/');
+	expect($contents)->toContain("cacti_escapeshellarg('--graph=' . \$local_graph_id)")
+		->and($contents)->toContain("cacti_escapeshellarg('--interval=' . \$graph_data_array['ds_step'])")
+		->and($contents)->toContain("cacti_escapeshellarg('--poller_id=' . \$hash)");
 });
 
 test('graph_realtime.php does not pass raw grv local_graph_id to sprintf for shell', function () use ($graphRealtimePath) {

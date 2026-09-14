@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -25,7 +26,7 @@ test('fetch quotes an RRD path before passing it to the command parser', functio
 	preg_match('/function rrdtool_function_fetch\(.*?^}\R/ms', $source, $matches);
 
 	expect($matches)->toHaveKey(0)
-		->and($matches[0])->toContain("cacti_escapeshellarg(\$data_source_path)");
+		->and($matches[0])->toContain("rrdtool_quote_argument(\$data_source_path)");
 });
 
 test('fetch output is bounded by the requested end and reports its observed step', function () {

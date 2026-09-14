@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -31,6 +32,6 @@ test('CSV export does not shift the requested start boundary', function () {
 	$rrd = file_get_contents(dirname(__DIR__, 4) . '/lib/rrd.php');
 
 	expect($rrd)->not->toBeFalse()
-		->and($rrd)->toContain("'--start=' . cacti_escapeshellarg(\$graph_start)")
+		->and($rrd)->toContain("'--start=' . rrdtool_quote_argument(\$graph_start)")
 		->and($rrd)->not->toMatch('/--start=.*graph_start\s*-\s*1/');
 });

@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -51,6 +52,20 @@ $hash = $_SESSION['sess_realtime_hash'];
 
 set_default_action();
 
+/* poller_realtime.php polls every device behind the graph and view returns the
+ * image that poll cached, so refuse both when real-time is off or the graph
+ * render would deny this user. is_graph_allowed() filters on the graph only
+ * for a positive id, so a zero or negative id is refused like a missing one */
+if (in_array(get_request_var('action'), array('init', 'timespan', 'interval', 'countdown', 'view'), true)) {
+	$local_graph_id = get_filter_request_var('local_graph_id');
+
+	if (read_config_option('realtime_enabled') == '') {
+		$denied = __('Real-time has been disabled by your administrator.');
+	} elseif (empty($local_graph_id) || $local_graph_id < 1 || ($_SESSION['sess_user_id'] > 0 && !is_graph_allowed($local_graph_id, $_SESSION['sess_user_id']))) {
+		$denied = __('Permission Denied');
+	}
+}
+
 switch (get_request_var('action')) {
 case 'init':
 case 'timespan':
@@ -59,6 +74,50 @@ case 'countdown':
 	ob_start();
 
 	$guest_account = true;
+
+	if (isset($denied)) {
+		ob_end_clean();
+
+		$graph_contents = rrdtool_create_error_image($denied);
+
+		if ($graph_contents === false) {
+			$graph_contents = file_get_contents(__DIR__ . '/images/cacti_error_image.png');
+		}
+
+		$ds_step = get_request_var('ds_step');
+
+		if (empty($ds_step) || $ds_step < 1) {
+			$ds_step = read_user_setting('realtime_interval', 10);
+		}
+
+		$graph_start = get_request_var('graph_start');
+
+		if (empty($graph_start)) {
+			$graph_start = read_user_setting('realtime_gwindow', 60);
+		}
+
+		$size = (int)get_request_var('size');
+
+		if (!array_key_exists($size, $realtime_sizes)) {
+			$size = $realtime_default_size;
+		}
+
+		/* realtime.js resets its interval, window, size and thumbnail controls
+		 * from every reply, so a refusal carries the same keys as the reply below */
+		print json_encode(array(
+			'local_graph_id' => $local_graph_id,
+			'top'            => get_request_var('top'),
+			'left'           => get_request_var('left'),
+			'ds_step'        => html_escape($ds_step),
+			'graph_start'    => html_escape($graph_start),
+			'size'           => html_escape($size),
+			'thumbnails'     => html_escape(get_request_var('graph_nolegend') == 'true' ? 'true' : 'false'),
+			'data'           => base64_encode($graph_contents),
+			'image_format'   => 'png'
+		));
+
+		exit;
+	}
 
 	switch (get_request_var('action')) {
 	case 'init':
@@ -214,7 +273,7 @@ case 'countdown':
 	$graph_rrd      = read_config_option('realtime_cache_path') . '/user_' . $hash . '_lgi_' . $local_graph_id . '.png';
 	$php_binary     = cacti_escapeshellcmd(read_config_option('path_php_binary'));
 	$script_path    = cacti_escapeshellarg($config['base_path'] . '/poller_realtime.php');
-	$args           = '--graph=' . $local_graph_id . ' --interval=' . $graph_data_array['ds_step'] . ' --poller_id=' . $hash;
+	$args           = cacti_escapeshellarg('--graph=' . $local_graph_id) . ' ' . cacti_escapeshellarg('--interval=' . $graph_data_array['ds_step']) . ' ' . cacti_escapeshellarg('--poller_id=' . $hash);
 
 	shell_exec($php_binary . ' -q ' . $script_path . ' ' . $args);
 
@@ -223,7 +282,9 @@ case 'countdown':
 	$graph_data_array['output_flag']     = RRDTOOL_OUTPUT_GRAPH_DATA;
 	$null_param = array();
 
-	$output = rrdtool_function_graph($local_graph_id, '', $graph_data_array, '', $null_param, $_SESSION['sess_user_id']);
+	/* the permission check above already ran for this user and graph, so the
+	 * renderer's own check would repeat the query on every refresh */
+	$output = rrdtool_function_graph($local_graph_id, '', $graph_data_array, '', $null_param, 0);
 
 	$error = '';
 	if (file_exists($graph_rrd)) {
@@ -237,7 +298,7 @@ case 'countdown':
 	if (empty($output) && empty($error)) {
 		$graph_data_array['get_error'] = true;
 		$null_param = array();
-		rrdtool_function_graph($local_graph_id, '', $graph_data_array, '', $null_param, $_SESSION['sess_user_id']);
+		rrdtool_function_graph($local_graph_id, '', $graph_data_array, '', $null_param, 0);
 
 		$error = ob_get_contents();
 
@@ -296,6 +357,18 @@ case 'countdown':
 	exit;
 	break;
 case 'view':
+	if (isset($denied)) {
+		$graph_contents = rrdtool_create_error_image($denied);
+
+		if ($graph_contents === false) {
+			$graph_contents = file_get_contents(__DIR__ . '/images/cacti_error_image.png');
+		}
+
+		print base64_encode($graph_contents);
+
+		exit;
+	}
+
 	$graph_rrd = read_config_option('realtime_cache_path') . '/user_' . $hash . '_lgi_' . get_filter_request_var('local_graph_id') . '.png';
 
 	if (file_exists($graph_rrd)) {
