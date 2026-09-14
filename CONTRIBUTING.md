@@ -9,7 +9,7 @@ Match the surrounding code and repository formatting rules. Preserve public
 interfaces unless a change includes a documented migration. Avoid unrelated edits.
 
 On `main`, PHP files move to PHP-FIG PER-CS 2.0 one file at a time. A file that
-is already PER-CS formatted, and every new PHP file, must stay formatted. A small
+is already PER-CS formatted, and every new PHP file outside `include/vendor` and `tests/Fixtures`, must stay formatted. A small
 change to a file that is not converted yet may keep its current formatting;
 converting a file is its own whitespace-only change, which must convert it
 completely. `tests/tools/check_php_style.sh` applies these rules. The `lts/1.2`

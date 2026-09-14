@@ -52,7 +52,7 @@ Use these notes to navigate and contribute productively to this PHP codebase.
 - Respect remote poller modes and `$config['is_web']`/CLI guards (`$no_http_header_files` in `include/global.php`).
 
 ## Coding standards
-- On `main`, PHP files move to PHP-FIG PER-CS 2.0 as configured in `.php-cs-fixer.php`, one file at a time. Files already on PER-CS and new files must stay formatted; a small change to a file not yet converted may keep its current formatting. Do not reformat unrelated code.
+- On `main`, PHP files move to PHP-FIG PER-CS 2.0 as configured in `.php-cs-fixer.php`, one file at a time. Files already on PER-CS and new files the Finder includes (it excludes `include/vendor` and `tests/Fixtures`) must stay formatted; a small change to a file not yet converted may keep its current formatting. Do not reformat unrelated code.
   - Convert a file in its own formatting-only commit, and convert it completely. That commit changes whitespace only; token changes such as `array()` to `[]` or trailing commas go in separate commits.
   - `tests/tools/check_php_style.sh` checks changed PHP files that were already formatted at the merge base, new files, and whitespace-only conversions; CI runs the same script. Do not flag an unconverted tab-indented file that a small change edits.
   - `lts/1.2` keeps upstream Cacti formatting (tabs, same-line function braces) so upstream fixes cherry-pick cleanly. Do not reformat files there.

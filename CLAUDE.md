@@ -61,7 +61,8 @@ Use the house wrappers instead of raw equivalents:
 
 - On `main`, PHP files move to PHP-FIG PER-CS 2.0, as configured in
   `.php-cs-fixer.php`, one file at a time.  Files already on PER-CS and new
-  files must stay formatted.  A small change to a file that is not converted
+  files the Finder includes (not `include/vendor` or `tests/Fixtures`) must
+  stay formatted.  A small change to a file that is not converted
   yet may keep its current formatting; the style check skips it.  No drive-by
   reformat.
 - Convert a file in its own commit, separate from any behaviour change.  That commit changes whitespace only; `array()` to `[]`, trailing
