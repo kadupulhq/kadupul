@@ -192,6 +192,59 @@ test('the timeout sweep retires the row of a task that is already gone', functio
 		->and(implode("\n", $out['log']))->toContain('Detected process that is gone and did not unregister first!');
 });
 
+/**
+ * Run timeout_kill_registered_processes() against a row whose pid answers
+ * alive to every liveness probe but reports ESRCH the moment the real kill
+ * signal is sent, modelling a process that exits in the window between the
+ * probe and the kill.
+ *
+ * @return array{log: array<int, string>, writes: array<int, string>}
+ */
+function process_kill_permission_exit_during_kill() {
+	$code    = 'define("POLLER_VERBOSITY_MEDIUM", 2);'
+		. '$target = getmypid(); $exited = false; $log = array(); $writes = array(); $result = null;'
+		. '$row = array("tasktype" => "poller", "taskname" => "child", "taskid" => 0, "pid" => $target, "timeout" => 300, "timeout_exceeded" => 1720000000, "current_timestamp" => 1720000600);'
+		. 'function posix_kill($pid, $signal) { global $target, $exited; if ((int) $pid !== (int) $target) { return true; } if ($signal !== 0) { $exited = true; return false; } return !$exited; }'
+		. 'function posix_get_last_error() { global $exited; return $exited ? ' . PROCESS_KILL_PERMISSION_ESRCH . ' : 0; }'
+		. 'function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }'
+		. 'function array_rekey($array, $key, $key_value) { $out = array(); foreach ($array as $item) { $out[$item[$key]] = $item[$key_value]; } return $out; }'
+		. 'function cacti_log($message, $output = false, $environ = "CMDPHP", $level = 0) { global $log; $log[] = $message; return true; }'
+		. 'function db_table_exists($table) { return true; }'
+		. 'function db_execute_prepared($sql, $params = array()) { global $writes; $writes[] = strtok(trim($sql), " \n\t"); return true; }'
+		. 'function db_fetch_row_prepared($sql, $params = array()) { global $row; return $row; }'
+		. 'function db_fetch_assoc_prepared($sql, $params = array()) { global $row; return array($row); }'
+		. 'require ' . var_export(dirname(__DIR__, 4) . '/lib/poller.php', true) . ';'
+		. '$result = timeout_kill_registered_processes();'
+		. 'echo json_encode(array("result" => $result, "log" => $log, "writes" => $writes));';
+	$pipes   = array();
+	$process = proc_open(array(PHP_BINARY, '-d', 'disable_functions=posix_kill,posix_get_last_error', '-r', $code), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+
+	expect($process)->not->toBeFalse();
+
+	$stdout = stream_get_contents($pipes[1]);
+	$error  = stream_get_contents($pipes[2]);
+
+	fclose($pipes[1]);
+	fclose($pipes[2]);
+
+	expect(proc_close($process))->toBe(0, $error);
+
+	$out = json_decode($stdout, true);
+
+	expect($out)->toBeArray($stdout . $error);
+
+	return $out;
+}
+
+test('the timeout sweep treats a kill that fails because the process already exited as gone', function () {
+	$out = process_kill_permission_exit_during_kill();
+
+	expect($out['writes'])->toBe(array('DELETE'))
+		->and($out['log'])->toHaveCount(1)
+		->and($out['log'][0])->toContain('Detected process that is gone and did not unregister first!')
+		->and($out['log'][0])->not->toContain('killed due to timeout');
+});
+
 dataset('cleanup routines', array('dsstats', 'rrdcheck', 'float', 'pushout', 'commands', 'batchgapfix'));
 
 test('a cleanup routine keeps the row of a child it may not signal', function ($action) {
