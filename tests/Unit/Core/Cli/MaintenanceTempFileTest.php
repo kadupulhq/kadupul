@@ -368,6 +368,23 @@ test('splice_rrd removes every dump it created before either dump failure exit',
 		->and($source)->toContain("unset(\$created[\$newxmlfile]);");
 });
 
+test('a dump command that exits non-zero is reported as failed', function () {
+	$path   = $this->dir . '/new.dump.12345';
+	$handle = cacti_cli_create_file($path);
+
+	expect(cacti_cli_run_to_handle(escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg('echo "<rrd>"; exit(3);'), $handle))->toBeFalse()
+		->and(cacti_cli_read_lines($handle))->toBe(array('<rrd>'));
+
+	cacti_cli_remove_file($handle, $path);
+
+	$path   = $this->dir . '/old.dump.12345';
+	$handle = cacti_cli_create_file($path);
+
+	expect(cacti_cli_run_to_handle(escapeshellarg(PHP_BINARY) . ' -r ' . escapeshellarg('echo "<rrd>";'), $handle))->toBeTrue();
+
+	cacti_cli_remove_file($handle, $path);
+});
+
 test('splice_rrd uses the 1.2.31 names and creates every temporary file exclusively', function () {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/cli/splice_rrd.php');
 

@@ -39,6 +39,7 @@ Cacti CHANGELOG
 -issue: Delete a dead poller_time row by its id instead of its pid so a reused pid cannot delete a new collector's row
 -issue: Keep staged Boost rows when rrdtool pipe restarts are exhausted instead of treating the lost update as written
 -issue: Stage poller output rows that Boost does not already hold when Boost redirect is on instead of dropping them
+-issue: Stop splice_rrd.php with the RRDtool Command Failed error when rrdtool dump exits with an error, as 1.2.31 intended, instead of splicing partial XML
 -issue: Remove splice_rrd.php temporary dump files before exiting when an rrdtool dump fails
 -security: Mask passwords, tokens and the CSRF token in the request that a Validation Error line writes to cacti.log
 -issue: Put IPv6 Remote Data Collector addresses in brackets in the request URL, and accept a bracketed IPv6 address

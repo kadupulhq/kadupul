@@ -166,7 +166,7 @@ function cacti_cli_path_is_handle($handle, $path) {
  * @param string   $command The command line, already quoted by the caller.
  * @param resource $handle  Where standard output is written.
  *
- * @return bool True when the command was started, whatever its exit status.
+ * @return bool True when the command exited 0 and all of its output was copied.
  */
 function cacti_cli_run_to_handle($command, $handle) {
 	$pipes   = array();
@@ -176,12 +176,14 @@ function cacti_cli_run_to_handle($command, $handle) {
 		return false;
 	}
 
-	stream_copy_to_stream($pipes[1], $handle);
-	fclose($pipes[1]);
-	proc_close($process);
-	fflush($handle);
+	$copied = stream_copy_to_stream($pipes[1], $handle);
 
-	return true;
+	fclose($pipes[1]);
+
+	$status  = proc_close($process);
+	$flushed = fflush($handle);
+
+	return $copied !== false && $flushed && $status === 0;
 }
 
 /**
