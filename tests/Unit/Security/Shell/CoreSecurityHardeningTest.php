@@ -58,6 +58,7 @@ test('data_query_duplicate uses strip_tags on name', function () use ($dqSource)
 test('import.php never enables entity expansion when parsing package XML', function () use ($impSource) {
 	expect($impSource)->not->toContain('LIBXML_NOENT');
 	expect($impSource)->not->toContain('LIBXML_DTDLOAD');
+	expect($impSource)->not->toContain('libxml_disable_entity_loader(');
 });
 
 test('import.php suppresses libxml warnings', function () use ($impSource) {
