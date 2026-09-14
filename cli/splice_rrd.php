@@ -967,6 +967,12 @@ function backupRRDFile($rrdfile) {
 	 * started, not by checking the return value against false alone */
 	$copied = $bytes !== false && $size !== false && $bytes === $size['size'];
 
+	/* buffered bytes can still fail to reach the disk, so a copy only counts
+	 * once they are flushed; the file is removed through its handle otherwise */
+	if ($copied && !fflush($target)) {
+		$copied = false;
+	}
+
 	if ($source !== false) {
 		fclose($source);
 	}
