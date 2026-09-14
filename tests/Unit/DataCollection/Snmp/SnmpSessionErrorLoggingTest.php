@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -130,7 +131,7 @@ beforeEach(function () {
 test('timeout failures retain the configured timeout detail', function () {
 	cacti_snmp_log_session_error(new FakeSnmpSession(SNMP::ERRNO_TIMEOUT, 'ignored'), array('timeout' => 1500, 'hostname' => 'router-1'), '.1.3.6');
 
-	expect($GLOBALS['snmp_session_error_logs'][0][0])->toContain("SNMP Error:'Timeout (2 ms)'")
+	expect($GLOBALS['snmp_session_error_logs'][0][0])->toContain("SNMP Error:'Timeout (1500 ms)'")
 		->and($GLOBALS['snmp_session_error_logs'][0][0])->toContain("Device:'router-1', OID:'.1.3.6'")
 		->and($GLOBALS['snmp_session_error_logs'][0][2])->toBe('SNMP')
 		->and($GLOBALS['snmp_session_error_logs'][0][3])->toBe(POLLER_VERBOSITY_HIGH);
