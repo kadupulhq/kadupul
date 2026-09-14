@@ -433,6 +433,24 @@ function cacti_remove_graphs_unknown_parameter_action($parameter, $shortopts, $l
 }
 
 /**
+ * Whether the validation loop should claim the next command-line token as
+ * the retired remove_graphs.php --graph-type option's value.
+ *
+ * 1.2.31 declared graph-type with an optional value ("graph-type::"), so
+ * "--graph-type cg" did not abort. The bare "=" form and the last-token form
+ * are already handled by cacti_remove_graphs_unknown_parameter_action()
+ * returning 'ignore'; this covers the remaining case, a following token that
+ * is not itself another option.
+ *
+ * @param string $parameter The raw command-line argument.
+ *
+ * @return bool True when $parameter is exactly the bare "--graph-type" token.
+ */
+function cacti_remove_graphs_type_takes_next_argument($parameter) {
+	return $parameter === '--graph-type';
+}
+
+/**
  * Return the validation error for a remove_graphs.php regular expression.
  *
  * @param string $regex The expression supplied by the operator.

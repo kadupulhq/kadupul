@@ -117,6 +117,25 @@ if (cacti_sizeof($parms)) {
 		$action = cacti_remove_graphs_unknown_parameter_action($parameter, $shortopts, $longopts);
 
 		if ($action == 'ignore') {
+			/* --graph-type took an optional value in 1.2.31. The "=" and
+			 * last-token forms need nothing further, but "--graph-type cg"
+			 * still has to consume "cg" here or it is left as a bare word
+			 * that aborts below. getopt() below reads the real argv, not
+			 * this loop's view of it, and stops at the first bare word it
+			 * finds; consuming "cg" here would only hide that stop from
+			 * this loop while getopt() still silently dropped every filter
+			 * that came after it. So this is safe only when nothing else
+			 * follows; otherwise abort rather than let a filter disappear. */
+			if (cacti_remove_graphs_type_takes_next_argument($parameter) && $i + 1 < $parms_total && !cacti_remove_graphs_next_looks_like_option($parms[$i + 1])) {
+				if ($i + 2 < $parms_total) {
+					print "ERROR: Invalid Argument: ($parameter) needs \"=\" when another argument follows, for example ($parameter=" . $parms[$i + 1] . ')' . PHP_EOL . PHP_EOL;
+					display_help();
+					exit(1);
+				}
+
+				$i++;
+			}
+
 			continue;
 		} elseif ($action == 'warn') {
 			print "WARNING: Ignoring unknown argument: ($parameter)" . PHP_EOL;
