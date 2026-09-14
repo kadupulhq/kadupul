@@ -453,10 +453,33 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 						$line .= PHP_EOL;
 					}
 
-					fwrite($fp, $line);
+					/* fwrite() can return a short count, or fflush() below can fail,
+					 * on a full disk. Either one leaves a truncated file on disk
+					 * that rrdtool restore below would read as if it were complete. */
+					$bytes_written = fwrite($fp, $line);
+
+					if ($bytes_written !== strlen($line)) {
+						cacti_log(sprintf('WARNING: Refusing to restore %s because the XML file was not written completely', $tmp_file), false, 'RFLOAT');
+						cacti_cli_remove_file($fp, $tmp_file);
+
+						if ($file_debug) {
+							fclose($lf);
+						}
+
+						return false;
+					}
 				}
 
-				fflush($fp);
+				if (!fflush($fp)) {
+					cacti_log(sprintf('WARNING: Refusing to restore %s because the XML file was not written completely', $tmp_file), false, 'RFLOAT');
+					cacti_cli_remove_file($fp, $tmp_file);
+
+					if ($file_debug) {
+						fclose($lf);
+					}
+
+					return false;
+				}
 
 				/* restore the file */
 				$return  = 0;
