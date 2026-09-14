@@ -156,7 +156,7 @@ test('sp_recursive_chown still recurses into a real directory and reaches its co
 
 	expect(calls())->toBe(array(
 		array('glob', $dir . '/*'),
-		array('chown', $dir . '/item'),
+		array('lchown', $dir . '/item'),
 	));
 
 	unlink($dir . '/item');
@@ -172,7 +172,41 @@ test('sp_recursive_chgrp still recurses into a real directory and reaches its co
 
 	expect(calls())->toBe(array(
 		array('glob', $dir . '/*'),
-		array('chgrp', $dir . '/item'),
+		array('lchgrp', $dir . '/item'),
+	));
+
+	unlink($dir . '/item');
+	rmdir($dir);
+});
+
+test('sp_recursive_chown uses lchown on a regular file passed directly', function () {
+	$file = $this->base . '/ds.rrd';
+	file_put_contents($file, 'rrd');
+
+	sp_recursive_chown($file, 1000);
+
+	expect(calls())->toBe(array(array('lchown', $file)));
+});
+
+test('sp_recursive_chgrp uses lchgrp on a regular file passed directly', function () {
+	$file = $this->base . '/ds.rrd';
+	file_put_contents($file, 'rrd');
+
+	sp_recursive_chgrp($file, 1000);
+
+	expect(calls())->toBe(array(array('lchgrp', $file)));
+});
+
+test('sp_recursive_chown uses lchown on a symlink found inside a real directory', function () {
+	$dir = $this->base . '/real';
+	mkdir($dir, 0700, true);
+	symlink($this->base . '/elsewhere', $dir . '/item');
+
+	sp_recursive_chown($dir, 1000);
+
+	expect(calls())->toBe(array(
+		array('glob', $dir . '/*'),
+		array('lchown', $dir . '/item'),
 	));
 
 	unlink($dir . '/item');

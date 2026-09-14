@@ -492,21 +492,15 @@ function sp_recursive_chown($path, $user) {
 		foreach ($items as $item) {
 			if (is_dir($item) && !is_link($item)) {
 				return sp_recursive_chown($item, $user);
-			} elseif (is_link($item)) {
-				return lchown($item, $user);
 			} else {
-				return chown($item, $user);
+				return lchown($item, $user);
 			}
 		}
 	}
 
-	/* re-check right before use so a swap between the check above and
-	   here cannot redirect a chown() onto a symlink's target */
-	if (is_link($path)) {
-		return lchown($path, $user);
-	}
-
-	return chown($path, $user);
+	/* lchown() rather than an is_link() check and chown(), so a symlink
+	   swapped in after the checks above is never followed */
+	return lchown($path, $user);
 }
 
 /**
@@ -528,21 +522,15 @@ function sp_recursive_chgrp($path, $group) {
 		foreach ($items as $item) {
 			if (is_dir($item) && !is_link($item)) {
 				return sp_recursive_chgrp($item, $group);
-			} elseif (is_link($item)) {
-				return lchgrp($item, $group);
 			} else {
-				return chgrp($item, $group);
+				return lchgrp($item, $group);
 			}
 		}
 	}
 
-	/* re-check right before use so a swap between the check above and
-	   here cannot redirect a chgrp() onto a symlink's target */
-	if (is_link($path)) {
-		return lchgrp($path, $group);
-	}
-
-	return chgrp($path, $group);
+	/* lchgrp() rather than an is_link() check and chgrp(), so a symlink
+	   swapped in after the checks above is never followed */
+	return lchgrp($path, $group);
 }
 
 /**
