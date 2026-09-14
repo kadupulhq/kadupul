@@ -264,6 +264,18 @@ test('a remote collector still refuses to stage missing rows it does not own', f
 		->and($GLOBALS['boost_redirect_test']['staged'])->toBe(0);
 });
 
+test('a rejected handoff purges the rows already staged before the attempt', function () {
+	$GLOBALS['config']['poller_id'] = 2;
+
+	/* row 0 is already in poller_output_boost; the unowned rows trigger the refusal */
+	$present = array(array('local_data_id' => 7, 'rrd_name' => 'traffic_in', 'time' => '2026-01-01 00:05:00'));
+
+	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on'), $present, array('owned' => false)))->toBeTrue()
+		->and($GLOBALS['boost_redirect_test']['deletes'])->toBe(array(
+			array(7, 'traffic_in', '2026-01-01 00:05:00'),
+		));
+});
+
 test('without redirect Boost stages the rows and skips the direct update as in 1.2.31', function () {
 	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => '')))->toBeFalse()
 		->and($GLOBALS['boost_redirect_test']['staged'])->toBe(3)

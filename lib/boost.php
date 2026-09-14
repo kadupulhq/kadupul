@@ -567,6 +567,28 @@ function boost_poller_on_demand(&$results) {
 				if ($config['poller_id'] > 1 && !boost_validate_poller_ownership($missing, $config['poller_id'], $conn)) {
 					cacti_log('ERROR: Boost rejected a handoff containing data sources not assigned to this poller.', false, 'BOOST');
 
+					/* $missing is rejected outright, and the caller falls back to a
+					 * direct RRD update on the whole batch.  The rest of $results was
+					 * already staged before this call, so drop it here or scheduled
+					 * Boost replays it too. */
+					$missing_keys = array();
+
+					foreach ($missing as $result) {
+						$missing_keys[(int) $result['local_data_id'] . "\t" . $result['rrd_name'] . "\t" . $result['time']] = true;
+					}
+
+					$staged = array();
+
+					foreach ($results as $result) {
+						$key = (int) $result['local_data_id'] . "\t" . $result['rrd_name'] . "\t" . $result['time'];
+
+						if (!isset($missing_keys[$key])) {
+							$staged[] = $result;
+						}
+					}
+
+					boost_redirect_delete_staged_rows($staged, $conn);
+
 					$return_value = true;
 				} else {
 					$value_tuples = array();
