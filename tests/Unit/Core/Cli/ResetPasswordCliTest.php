@@ -450,14 +450,15 @@ function reset_password_tty_run(array $scenario) : array {
 <?php
 namespace ResetPasswordTty {
 	$GLOBALS['scenario'] = json_decode(stream_get_contents(\STDIN), true);
-	$GLOBALS['tty']      = array('stty' => array(), 'shutdown' => 0, 'async' => false, 'signals' => array());
+	$GLOBALS['tty']      = array('stty' => array(), 'shutdown' => 0, 'async' => false, 'signals' => array(), 'order' => array());
 
 	function stream_isatty($stream) {
 		return true;
 	}
 
 	function shell_exec($command) {
-		$GLOBALS['tty']['stty'][] = $command;
+		$GLOBALS['tty']['stty'][]  = $command;
+		$GLOBALS['tty']['order'][] = 'stty:' . $command;
 		print "\n[" . $command . "]\n";
 
 		return '';
@@ -473,6 +474,7 @@ namespace ResetPasswordTty {
 
 	function register_shutdown_function(callable $callback) {
 		$GLOBALS['tty']['shutdown']++;
+		$GLOBALS['tty']['order'][] = 'shutdown';
 
 		\register_shutdown_function($callback);
 	}
@@ -484,6 +486,7 @@ namespace ResetPasswordTty {
 	function pcntl_signal($signal, $handler) {
 		$GLOBALS['tty']['signals'][] = $signal;
 		$GLOBALS['tty']['handler']   = $handler;
+		$GLOBALS['tty']['order'][]   = 'signal';
 
 		return true;
 	}
@@ -561,6 +564,20 @@ test('Ctrl-C at the password prompt turns echo back on and exits 130', function 
 		->and($process['stdout'])->toContain('[stty -echo]')
 		->and(substr_count($process['stdout'], '[stty echo]'))->toBe(1)
 		->and($process['stdout'])->not->toContain('RESULT');
+})->skip(function () {
+	return !extension_loaded('pcntl');
+}, 'pcntl is not loaded');
+
+test('the shutdown handler is armed before stty -echo, so a failure in that call still restores echo', function () {
+	$result = reset_password_tty_result(reset_password_tty_run(array('lines' => array("Recover-1234\n", "Recover-1234\n"))));
+
+	expect(array_search('shutdown', $result['tty']['order'], true))->toBeLessThan(array_search('stty:stty -echo', $result['tty']['order'], true));
+});
+
+test('the SIGINT handler is armed before stty -echo, so a failure in that call still restores echo', function () {
+	$result = reset_password_tty_result(reset_password_tty_run(array('lines' => array("Recover-1234\n", "Recover-1234\n"))));
+
+	expect(array_search('signal', $result['tty']['order'], true))->toBeLessThan(array_search('stty:stty -echo', $result['tty']['order'], true));
 })->skip(function () {
 	return !extension_loaded('pcntl');
 }, 'pcntl is not loaded');

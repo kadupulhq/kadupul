@@ -112,10 +112,10 @@ function reset_password_read() {
 	}
 
 	print 'New password: ';
-	shell_exec('stty -echo');
 	$GLOBALS['reset_password_echo_off'] = true;
 
-	/* Ctrl-C or a fatal error must not leave the terminal without echo */
+	/* Armed before stty -echo itself, so a Ctrl-C or a fatal error during
+	   that call still leaves the terminal able to restore echo. */
 	register_shutdown_function(function () {
 		reset_password_echo_on();
 	});
@@ -129,6 +129,8 @@ function reset_password_read() {
 			exit(130);
 		});
 	}
+
+	shell_exec('stty -echo');
 
 	$password = rtrim((string) fgets(STDIN), "\r\n");
 	print PHP_EOL . 'Confirm password: ';
