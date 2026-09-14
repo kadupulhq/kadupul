@@ -62,22 +62,25 @@ test('GHSA-9ffc-rr2g-c8hh: header reads only appear after the auth_method gate',
 
 // --- GHSA-3jj2-v5ch-wmq5: LDAP realm boundary ---
 
-test('GHSA-3jj2-v5ch-wmq5: domains_login_process uses >= 3 realm boundary', function () use ($authSource) {
-    // realm=3 is a valid domain realm; > 3 would allow it to bypass the LDAP bind.
-    // The guard and comment sit ~605-640 chars into the function body.
+test('GHSA-3jj2-v5ch-wmq5: domains_login_process binds only for Domains realms of 1000 and up', function () use ($authSource) {
+    // Domains realms are 1000 + domain_id; a lower posted realm must not reach
+    // the template or guest fallback without an LDAP bind.
     $start = strpos($authSource, 'function domains_login_process(');
     expect($start)->not->toBeFalse();
 
-    $body = substr($authSource, $start, 800);
-    expect($body)->toContain('$realm >= 3');
+    $body = substr($authSource, $start, 2500);
+    expect($body)->toContain("\$realm >= 1000 && \$password != ''");
 });
 
-test('GHSA-3jj2-v5ch-wmq5: realm boundary comment cites the advisory', function () use ($authSource) {
+test('GHSA-3jj2-v5ch-wmq5: a posted realm must be one the login page lists before any bind', function () use ($authSource) {
     $start = strpos($authSource, 'function domains_login_process(');
     expect($start)->not->toBeFalse();
 
-    $body = substr($authSource, $start, 800);
-    expect($body)->toContain('GHSA-3jj2-v5ch-wmq5');
+    $body   = substr($authSource, $start, 2500);
+    $listed = strpos($body, 'array_key_exists($realm, get_auth_realms(true))');
+
+    expect($listed)->not->toBeFalse();
+    expect(strpos($body, '$realm >= 1000'))->toBeGreaterThan($listed);
 });
 
 // --- GHSA-2px8-gvmq-85f3: LDAP lockout call-site ---
