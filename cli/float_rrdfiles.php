@@ -490,7 +490,7 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 				 * the file written above */
 				if (!cacti_cli_path_is_handle($fp, $tmp_file)) {
 					cacti_log(sprintf('WARNING: Refusing to restore %s because it changed after it was written', $tmp_file), false, 'RFLOAT');
-					fclose($fp);
+					cacti_cli_remove_file($fp, $tmp_file);
 
 					if ($file_debug) {
 						fclose($lf);
