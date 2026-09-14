@@ -87,6 +87,13 @@ exit(reset_password_apply($username, $password));
  * @return void
  */
 function reset_password_echo_on() {
+	/* the normal return, the SIGINT handler and the shutdown function all call this */
+	if (empty($GLOBALS['reset_password_echo_off'])) {
+		return;
+	}
+
+	$GLOBALS['reset_password_echo_off'] = false;
+
 	shell_exec('stty echo');
 }
 
@@ -106,6 +113,7 @@ function reset_password_read() {
 
 	print 'New password: ';
 	shell_exec('stty -echo');
+	$GLOBALS['reset_password_echo_off'] = true;
 
 	/* Ctrl-C or a fatal error must not leave the terminal without echo */
 	register_shutdown_function(function () {

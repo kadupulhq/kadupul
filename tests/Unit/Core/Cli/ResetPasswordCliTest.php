@@ -536,8 +536,8 @@ test('at a terminal the password is read twice without echo and echo comes back'
 		->and($process['stdout'])->toContain('New password:')
 		->and($process['stdout'])->toContain('Confirm password:')
 		->and(substr_count($process['stdout'], 'Recover-1234'))->toBe(1)
-		/* the shutdown function turns echo on again even after a normal return */
-		->and(substr($process['stdout'], -strlen("[stty echo]\n")))->toBe("[stty echo]\n");
+		/* the shutdown function does not run stty again once echo is back */
+		->and(substr_count($process['stdout'], '[stty echo]'))->toBe(1);
 });
 
 test('mismatched terminal entries are refused and echo comes back', function () {
@@ -559,7 +559,7 @@ test('Ctrl-C at the password prompt turns echo back on and exits 130', function 
 
 	expect($process['code'])->toBe(130)
 		->and($process['stdout'])->toContain('[stty -echo]')
-		->and($process['stdout'])->toContain('[stty echo]')
+		->and(substr_count($process['stdout'], '[stty echo]'))->toBe(1)
 		->and($process['stdout'])->not->toContain('RESULT');
 })->skip(function () {
 	return !extension_loaded('pcntl');
