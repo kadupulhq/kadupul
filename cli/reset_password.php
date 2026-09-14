@@ -82,16 +82,23 @@ if ($password === false) {
 exit(reset_password_apply($username, $password));
 
 /**
+ * Turn terminal echo back on after reset_password_read() turned it off.
+ *
+ * @return void
+ */
+function reset_password_echo_on() {
+	shell_exec('stty echo');
+}
+
+/**
  * Read the new password from STDIN. At a terminal it is typed twice without
- * echo; otherwise the first line is used, so it can be piped in rather than
- * passed on the command line where other users could see it.
+ * echo; otherwise the first line is used, so it can come from a file or a
+ * here-string rather than the command line where other users could see it.
  *
  * @return string|false
  */
 function reset_password_read() {
-	$terminal = function_exists('posix_isatty') && posix_isatty(STDIN);
-
-	if (!$terminal) {
+	if (!stream_isatty(STDIN)) {
 		$line = fgets(STDIN);
 
 		return ($line === false) ? '' : rtrim($line, "\r\n");
@@ -99,10 +106,26 @@ function reset_password_read() {
 
 	print 'New password: ';
 	shell_exec('stty -echo');
+
+	/* Ctrl-C or a fatal error must not leave the terminal without echo */
+	register_shutdown_function(function () {
+		reset_password_echo_on();
+	});
+
+	if (function_exists('pcntl_async_signals') && function_exists('pcntl_signal')) {
+		pcntl_async_signals(true);
+		pcntl_signal(SIGINT, function () {
+			reset_password_echo_on();
+			print PHP_EOL;
+
+			exit(130);
+		});
+	}
+
 	$password = rtrim((string) fgets(STDIN), "\r\n");
 	print PHP_EOL . 'Confirm password: ';
 	$confirm = rtrim((string) fgets(STDIN), "\r\n");
-	shell_exec('stty echo');
+	reset_password_echo_on();
 	print PHP_EOL;
 
 	if ($password !== $confirm) {
@@ -124,7 +147,7 @@ function reset_password_read() {
  * @return int Exit status: 0 on success, 1 on failure.
  */
 function reset_password_apply($username, $password) {
-	$user = db_fetch_row_prepared('SELECT id, username, enabled
+	$user = db_fetch_row_prepared('SELECT id, username, password, password_history, enabled, locked
 		FROM user_auth
 		WHERE username = ?
 		AND realm = 0',
@@ -150,17 +173,79 @@ function reset_password_apply($username, $password) {
 		return 1;
 	}
 
+	$history = intval(read_config_option('secpass_history'));
+
+	/* as auth_changepassword.php checks; secpass_check_history() only reads enabled accounts */
+	if ($history > 0 && $user['enabled'] == 'on' && !secpass_check_history($user['id'], $password)) {
+		print 'ERROR: ' . __('You cannot use a previously entered password!') . PHP_EOL;
+
+		return 1;
+	}
+
+	/* db_check_password_length() dies on failure, and die() alone exits 0 */
+	$GLOBALS['reset_password_pending'] = true;
+
+	register_shutdown_function(function () {
+		if (!empty($GLOBALS['reset_password_pending'])) {
+			print PHP_EOL . 'ERROR: The password was not changed' . PHP_EOL;
+
+			exit(1);
+		}
+	});
+
 	db_check_password_length();
 
-	db_execute_prepared("UPDATE user_auth
-		SET password = ?,
-		must_change_password = 'on',
-		password_change = 'on'
-		WHERE id = ?",
-		array(compat_password_hash($password, PASSWORD_DEFAULT), $user['id']));
+	$GLOBALS['reset_password_pending'] = false;
 
-	db_execute_prepared('DELETE FROM user_auth_cache WHERE user_id = ?', array($user['id']));
-	db_execute_prepared('DELETE FROM sessions WHERE user_id = ?', array($user['id']));
+	/* keep the replaced hash so the forced change can not set it again, as auth_changepassword.php does */
+	$password_history = $user['password_history'];
+
+	if ($history > 0) {
+		$passes = explode('|', (string) $user['password_history']);
+
+		while (cacti_count($passes) > $history - 1) {
+			array_shift($passes);
+		}
+
+		$passes[]         = $user['password'];
+		$password_history = implode('|', $passes);
+	}
+
+	/* Revoke before saving: if a later step fails without a transaction, the old
+	 * password still works but no token or session from before outlives it. */
+	$transaction = db_begin_transaction();
+
+	$steps = array(
+		'revoke remember-me tokens' => array('DELETE FROM user_auth_cache WHERE user_id = ?', array($user['id'])),
+		'end sessions'              => array('DELETE FROM sessions WHERE user_id = ?', array($user['id'])),
+		'save the password'         => array("UPDATE user_auth
+			SET password = ?,
+			password_history = ?,
+			must_change_password = 'on',
+			password_change = 'on'
+			WHERE id = ?",
+			array(compat_password_hash($password, PASSWORD_DEFAULT), $password_history, $user['id'])),
+	);
+
+	foreach ($steps as $step => $query) {
+		if (!db_execute_prepared($query[0], $query[1])) {
+			if ($transaction) {
+				db_rollback_transaction();
+			}
+
+			print "ERROR: Could not $step for local user '" . $user['username'] . "'; the password was not changed" . PHP_EOL;
+
+			return 1;
+		}
+	}
+
+	if ($transaction && !db_commit_transaction()) {
+		db_rollback_transaction();
+
+		print "ERROR: Could not commit the change for local user '" . $user['username'] . "'; the password was not changed" . PHP_EOL;
+
+		return 1;
+	}
 
 	cacti_log("CLI: Password reset for local user '" . $user['username'] . "', a new password is required at the next login", false, 'AUTH');
 
@@ -168,6 +253,10 @@ function reset_password_apply($username, $password) {
 
 	if ($user['enabled'] != 'on') {
 		print 'NOTE: This account is disabled. Enable it in User Management before it can log in.' . PHP_EOL;
+	}
+
+	if ($user['locked'] == 'on') {
+		print 'NOTE: This account is locked. Unlock it in User Management before it can log in.' . PHP_EOL;
 	}
 
 	return 0;
@@ -187,7 +276,11 @@ function display_help() {
 	print 'Sets a new password for a local Cacti account and requires the user to change' . PHP_EOL;
 	print 'it at the next login.  Remember-me tokens and sessions for the account end.' . PHP_EOL . PHP_EOL;
 	print 'The password is read from standard input.  At a terminal it is typed twice' . PHP_EOL;
-	print 'without echo; otherwise the first line is used, for example:' . PHP_EOL . PHP_EOL;
-	print '    printf \'%s\n\' "$NEW_PASSWORD" | php reset_password.php --username=admin' . PHP_EOL . PHP_EOL;
+	print 'without echo.  Otherwise the first line is used, for example from a file' . PHP_EOL;
+	print 'only root can read, or from a variable read without echo:' . PHP_EOL . PHP_EOL;
+	print '    php reset_password.php --username=admin < /root/new_password' . PHP_EOL . PHP_EOL;
+	print '    read -rs NEW_PASSWORD' . PHP_EOL;
+	print '    php reset_password.php --username=admin <<< "$NEW_PASSWORD"' . PHP_EOL;
+	print '    unset NEW_PASSWORD' . PHP_EOL . PHP_EOL;
 	print 'Exit status is 0 on success and 1 on any error.' . PHP_EOL . PHP_EOL;
 }
