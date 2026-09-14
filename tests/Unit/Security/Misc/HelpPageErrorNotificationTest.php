@@ -11,7 +11,7 @@
 */
 
 /*
- * help.php?error= is open to any session, including the guest account. It put
+ * help.php?error= is open to any session, including the guest account. It puts
  * the page name from the request into the HTML admin notice as is, a page[]
  * array made basename() throw, and every new page value added a settings row
  * and could send another mail. The error branch is extracted from help.php and
