@@ -28,6 +28,15 @@
  * shell_exec(). runRRDCommand() drains stdout/stderr with stream_select()
  * so reading one pipe to completion can never stall on the other filling
  * up.
+ *
+ * runRRDCommand()'s 30 second default timeout is meant for a caller that
+ * passes none; runRRDDump() and createRRDFileFromXML() now pass
+ * commandTimeout(), which reads 'spikekill_timeout' (up to 8 hours,
+ * default 1 hour), so a legitimate long-running dump or restore is no
+ * longer capped at 30 seconds the way it was when both call sites left
+ * the argument out entirely. 1.2.31 ran both through shell_exec() with no
+ * deadline of its own; commandTimeout() is the closest equivalent that
+ * still gives runRRDCommand()'s stream_select() loop a bound.
  */
 
 require_once dirname(__DIR__, 4) . '/lib/spikekill.php';
@@ -317,6 +326,51 @@ test('runRRDCommand drains a real child process and returns its exit code withou
 	expect($result['exit'])->toBe(7)
 		->and($result['stdout'])->toBe('out')
 		->and($result['stderr'])->toBe('err');
+});
+
+test('runRRDCommand kills a command that outlives its timeout instead of blocking forever', function () {
+	/* proves the enforcement side of commandTimeout(): a genuinely wedged
+	   rrdtool still gets killed, whatever timeout is in effect, rather
+	   than the loop blocking indefinitely */
+	$result = invoke_spikekill_xmldump_private('runRRDCommand', [
+		[PHP_BINARY, '-r', 'sleep(3); exit(0);'],
+		null,
+		1,
+	]);
+
+	expect($result['exit'])->toBeFalse();
+});
+
+test('commandTimeout uses the configured spikekill_timeout instead of the 30 second runRRDCommand default', function () {
+	/* 1.2.31 ran the dump/restore round trip through shell_exec() with no
+	   deadline of its own; runRRDCommand()'s 30 second default (meant for
+	   a caller that passes none) must not become an artificial ceiling on
+	   a legitimate multi-hour dump/restore just because it happens to be
+	   runRRDCommand()'s fallback */
+	spikekill_xmldump_test_stub_config(array('spikekill_timeout' => '28800'));
+
+	expect(invoke_spikekill_xmldump_private('commandTimeout', []))->toBe(28800);
+});
+
+test('commandTimeout falls back to one hour, not 30 seconds, when spikekill_timeout is not configured', function () {
+	spikekill_xmldump_test_stub_config(array());
+
+	expect(invoke_spikekill_xmldump_private('commandTimeout', []))->toBe(3600);
+});
+
+test('runRRDDump and createRRDFileFromXML pass commandTimeout() to runRRDCommand instead of leaving it at the 30 second default', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/lib/spikekill.php');
+
+	$dump_start = strpos($source, 'private function runRRDDump(');
+	$dump_end   = strpos($source, "\n\t}\n", $dump_start);
+	$dump_body  = substr($source, $dump_start, $dump_end - $dump_start);
+
+	$restore_start = strpos($source, 'private function createRRDFileFromXML(');
+	$restore_end   = strpos($source, "\n\t}\n", $restore_start);
+	$restore_body  = substr($source, $restore_start, $restore_end - $restore_start);
+
+	expect($dump_body)->toContain('$this->commandTimeout()')
+		->and($restore_body)->toContain('$this->commandTimeout()');
 });
 
 /* remove_spikes() only reaches its restore/backup/write-XML tail once a

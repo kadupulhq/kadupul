@@ -195,16 +195,16 @@ function purge_spike_backups() {
 	/* spikekill_backupdir defaults to a path with a trailing slash
 	   (include/global_settings.php), and is_link('dir/') follows the final
 	   symlink to stat what it points at instead of the link itself, so the
-	   trailing slash has to go before is_link() is checked below; a bare
-	   rtrim() would turn '/' or '///' into '', which is_dir() then fails
-	   and the purge silently skips, the very directory
-	   spikekill::normalizeDir() (lib/spikekill.php) keeps as '/' */
+	   trailing slash has to go before is_link() is checked below.
+	   cacti_trim_dir_separator() (lib/functions.php) is the same helper
+	   spikekill::normalizeDir() (lib/spikekill.php) uses, rather than a
+	   local rtrim() here that would turn '/' or '///' into '' and make
+	   is_dir() fail, silently skipping the purge of the very directory
+	   normalizeDir() keeps as '/'. poller_spikekill.php does not load
+	   lib/spikekill.php (it must not instantiate the spikekill class), but
+	   both files already load lib/functions.php through include/global.php */
 	$backupdir = read_config_option('spikekill_backupdir');
-	$directory = rtrim($backupdir, '/');
-
-	if ($directory === '' && $backupdir !== '') {
-		$directory = '/';
-	}
+	$directory = cacti_trim_dir_separator($backupdir, DIRECTORY_SEPARATOR);
 
 	$retention = read_config_option('spikekill_purge');
 

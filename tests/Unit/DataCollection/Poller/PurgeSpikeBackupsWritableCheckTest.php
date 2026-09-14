@@ -71,6 +71,24 @@ $body = substr($source, $start, $end - $start + 2);
 
 eval($body); // nosemgrep: php.lang.security.eval-use.eval-use
 
+/* purge_spike_backups() normalizes spikekill_backupdir through
+   cacti_trim_dir_separator() (lib/functions.php), the same pure helper
+   spikekill::normalizeDir() delegates to. Pulled in by the same
+   extraction technique as above, guarded because
+   SpikekillBackupSymlinkSafetyTest.php needs it too and both files run in
+   the same Pest process. */
+if (!function_exists('cacti_trim_dir_separator')) {
+	$functions_source = file_get_contents(dirname(__DIR__, 3) . '/../lib/functions.php');
+
+	$trim_start = strpos($functions_source, 'function cacti_trim_dir_separator(');
+	expect($trim_start)->not->toBeFalse();
+
+	$trim_end = strpos($functions_source, "\n}\n", $trim_start);
+	$trim_body = substr($functions_source, $trim_start, $trim_end - $trim_start + 2);
+
+	eval($trim_body); // nosemgrep: php.lang.security.eval-use.eval-use
+}
+
 beforeEach(function () {
 	global $spikekill_shell_test_log;
 

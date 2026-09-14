@@ -8495,6 +8495,47 @@ function cacti_normalize_windows_path($path) {
 }
 
 /**
+ * cacti_trim_dir_separator - trim a trailing directory separator from a
+ * configured or derived directory before it reaches is_link(), which
+ * follows the final symlink in a path ending with a separator instead of
+ * stat'ing the link itself.  Parameterized on $separator, rather than
+ * reading DIRECTORY_SEPARATOR internally, so the Windows behaviour can be
+ * exercised from a POSIX test run.
+ *
+ * On POSIX, '/', '//' and '///' all collapse to '/' rather than '', the
+ * same behaviour a bare rtrim($dir, '/') has always had once the empty
+ * result is put back to '/'.  On Windows, a drive root ('C:\') and a bare
+ * '\' are left intact so the check downstream still targets the directory
+ * itself and not its parent; rtrim() only ever trims from the right, so a
+ * UNC root's leading '\\' is never touched either way.
+ *
+ * @param  string $dir
+ * @param  string $separator  DIRECTORY_SEPARATOR of the target platform
+ *
+ * @return string
+ */
+function cacti_trim_dir_separator($dir, $separator = DIRECTORY_SEPARATOR) {
+	if ($dir === '') {
+		return $dir;
+	}
+
+	$trimmed = rtrim($dir, $separator);
+
+	if ($trimmed === '') {
+		return $separator;
+	}
+
+	/* a Windows drive root ('C:\') must keep its separator, or the result
+	   ('C:') means the current directory on that drive instead of its
+	   root */
+	if ($separator === '\\' && preg_match('/^[A-Za-z]:$/', $trimmed)) {
+		return $trimmed . $separator;
+	}
+
+	return $trimmed;
+}
+
+/**
  * cacti_header - Redirect to the default if the HTTP_REFERER is empty
  *
  * @param string $default The default to redirect to unless

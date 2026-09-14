@@ -846,7 +846,7 @@ class spikekill {
 		/* argv array through runRRDCommand(), the same as runRRDDump(),
 		   instead of a shell string whose exit status went unchecked */
 		$argv   = array(read_config_option('path_rrdtool'), 'restore', '-f', '-r', $xmlfile, $rrdfile);
-		$result = $this->runRRDCommand($argv, null);
+		$result = $this->runRRDCommand($argv, null, $this->commandTimeout());
 
 		$response = trim($result['stdout'] . $result['stderr']);
 
@@ -1176,7 +1176,7 @@ class spikekill {
 	private function runRRDDump($rrdfile, $handle) {
 		$argv = array(read_config_option('path_rrdtool'), 'dump', $rrdfile);
 
-		$result = $this->runRRDCommand($argv, $handle);
+		$result = $this->runRRDCommand($argv, $handle, $this->commandTimeout());
 
 		if ($result['exit'] !== 0) {
 			if (trim($result['stderr']) != '') {
@@ -1190,22 +1190,41 @@ class spikekill {
 	}
 
 	/**
-	 * normalizeDir - strip a trailing slash from a configured or derived
-	 * directory before it is passed to is_link(), canonicalDir() or used to
-	 * build a path.  spikekill_backupdir defaults to a path with a trailing
-	 * slash (include/global_settings.php), and is_link('dir/') follows the
-	 * final symlink to stat what it points at instead of the link itself,
-	 * so a symlinked backup directory would otherwise pass the is_link()
-	 * check it is meant to fail.
+	 * commandTimeout - the ceiling runRRDCommand() waits for the rrdtool
+	 * dump/restore round trip in remove_spikes().  1.2.31 ran both through
+	 * the shell_exec builtin with no deadline of its own; runRRDCommand()'s
+	 * stream_select() loop needs some bound to avoid stalling forever on a
+	 * wedged rrdtool, so it uses the same 'spikekill_timeout' setting that
+	 * already bounds the whole spikekill run (poller_spikekill.php), up to
+	 * 8 hours, instead of the 30 second default meant for a caller that
+	 * doesn't pass one.
+	 *
+	 * @return (int)
+	 */
+	private function commandTimeout() {
+		$configured = (int) read_config_option('spikekill_timeout');
+
+		return $configured > 0 ? $configured : 3600;
+	}
+
+	/**
+	 * normalizeDir - strip a trailing directory separator from a configured
+	 * or derived directory before it is passed to is_link(), canonicalDir()
+	 * or used to build a path.  spikekill_backupdir defaults to a path with
+	 * a trailing slash (include/global_settings.php), and is_link('dir/')
+	 * follows the final symlink to stat what it points at instead of the
+	 * link itself, so a symlinked backup directory would otherwise pass the
+	 * is_link() check it is meant to fail.  Delegates to
+	 * cacti_trim_dir_separator() (lib/functions.php), the same helper
+	 * poller_spikekill.php's purge_spike_backups() uses, so both trim the
+	 * same way on Windows too.
 	 *
 	 * @param  (string) $dir
 	 *
 	 * @return (string)
 	 */
 	private function normalizeDir($dir) {
-		$trimmed = rtrim($dir, '/');
-
-		return ($trimmed === '' && $dir !== '') ? '/' : $trimmed;
+		return cacti_trim_dir_separator($dir, DIRECTORY_SEPARATOR);
 	}
 
 	/**
