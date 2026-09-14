@@ -758,6 +758,8 @@ class spikekill {
 		}
 
 		/* finally update the file XML file and Reprocess the RRDfile */
+		$restored = true;
+
 		if (!$this->dryrun) {
 			if ($continue) {
 				if ($output == true && $new_output != '') {
@@ -767,8 +769,10 @@ class spikekill {
 								$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
 									__('NOTE: Spikes Found and Remediated.  Total Spikes %s', $this->total_kills) . ($this->html ? "</p>\n":"\n");
 							} else {
+								$restored = false;
+
 								$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
-									__esc("FATAL: XML file '%s' changed identity before restore", $xmlfile) . ($this->html ? "</p>\n":"\n");
+									__esc("FATAL: Unable to restore '%s' from '%s'", $this->rrdfile, $xmlfile) . ($this->html ? "</p>\n":"\n");
 							}
 						} else {
 							$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
@@ -798,7 +802,7 @@ class spikekill {
 
 		$this->unlinkOwnedFile($bakfile, $bakfile_stat);
 
-		return true;
+		return $restored;
 	}
 
 	/* All Functions */
@@ -815,17 +819,22 @@ class spikekill {
 			return false;
 		}
 
-		/* execute the dump command */
+		/* execute the restore command */
 		$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
 			__esc("NOTE: Re-Importing '%s' to '%s'", $xmlfile, $rrdfile) . ($this->html ? "</p>\n":"\n");
 
-		$response = shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' restore -f -r ' . cacti_escapeshellarg($xmlfile) . ' ' . cacti_escapeshellarg($rrdfile));
+		/* argv array through runRRDCommand(), the same as runRRDDump(),
+		   instead of a shell string whose exit status went unchecked */
+		$argv   = array(read_config_option('path_rrdtool'), 'restore', '-f', '-r', $xmlfile, $rrdfile);
+		$result = $this->runRRDCommand($argv, null);
+
+		$response = trim($result['stdout'] . $result['stderr']);
 
 		if ($response != '') {
 			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . $response . ($this->html ? "</p>\n":"\n");
 		}
 
-		return true;
+		return $result['exit'] === 0;
 	}
 
 	private function writeXMLFile($output, $handle) {
@@ -1015,12 +1024,120 @@ class spikekill {
 	}
 
 	/**
+	 * runRRDCommand - run an rrdtool subcommand via proc_open, with argv
+	 * reaching execve() as literal arguments the same as cacti_exec() in
+	 * lib/functions.php, and drain its pipes with stream_select() instead
+	 * of a blocking read of one before the other: reading stdout to
+	 * completion before ever touching stderr (or vice versa) can deadlock
+	 * if rrdtool fills the unread pipe and blocks writing to it while this
+	 * process is still blocked reading the other one.
+	 *
+	 * @param  (array)         $argv
+	 * @param  (resource|null) $stdout_handle - when given, stdout is
+	 *                          written straight into this already-open
+	 *                          handle instead of being captured, so a dump
+	 *                          is never reopened by name to redirect it;
+	 *                          the returned 'stdout' is then always ''
+	 * @param  (int)           $timeout - seconds to wait for the command
+	 *
+	 * @return (array) array('exit' => int|false, 'stdout' => string, 'stderr' => string)
+	 */
+	private function runRRDCommand(array $argv, $stdout_handle, $timeout = 30) {
+		$capture_stdout = ($stdout_handle === null);
+
+		$descriptors = array(
+			0 => array('pipe', 'r'),
+			1 => $capture_stdout ? array('pipe', 'w') : $stdout_handle,
+			2 => array('pipe', 'w'),
+		);
+
+		$process = @proc_open($argv, $descriptors, $pipes);
+
+		if (!is_resource($process)) {
+			return array('exit' => false, 'stdout' => '', 'stderr' => '');
+		}
+
+		fclose($pipes[0]);
+
+		if ($capture_stdout) {
+			stream_set_blocking($pipes[1], false);
+		}
+
+		stream_set_blocking($pipes[2], false);
+
+		$stdout    = '';
+		$stderr    = '';
+		$remaining = (int) $timeout * 1000000;
+		$exit      = null;
+
+		while ($remaining > 0) {
+			$start  = microtime(true);
+			$read   = $capture_stdout ? array($pipes[1], $pipes[2]) : array($pipes[2]);
+			$write  = array();
+			$except = array();
+			stream_select($read, $write, $except, 0, $remaining);
+
+			usleep(50000);
+
+			$status = proc_get_status($process);
+
+			if ($capture_stdout) {
+				$stdout .= stream_get_contents($pipes[1]);
+			}
+
+			$stderr .= stream_get_contents($pipes[2]);
+
+			/* proc_get_status() returns false on a dead handle. Preserve a
+			   valid exitcode while it is observable because a later status
+			   read or proc_close() can return -1 after the child has
+			   already been reaped. */
+			if (!is_array($status) || empty($status['running'])) {
+				if (is_array($status) && isset($status['exitcode']) && $status['exitcode'] >= 0) {
+					$exit = (int) $status['exitcode'];
+				}
+
+				break;
+			}
+
+			$remaining -= (int) ((microtime(true) - $start) * 1000000);
+		}
+
+		if ($capture_stdout) {
+			fclose($pipes[1]);
+		}
+
+		fclose($pipes[2]);
+
+		$status = proc_get_status($process);
+
+		if (is_array($status) && !empty($status['running'])) {
+			if (isset($status['pid']) && function_exists('posix_kill')) {
+				posix_kill($status['pid'], 9);
+			}
+
+			proc_terminate($process, 9);
+			proc_close($process);
+
+			return array('exit' => false, 'stdout' => $stdout, 'stderr' => $stderr);
+		}
+
+		if ($exit === null && is_array($status) && isset($status['exitcode']) && $status['exitcode'] >= 0) {
+			$exit = (int) $status['exitcode'];
+		}
+
+		$close_exit = proc_close($process);
+
+		if ($exit === null) {
+			$exit = $close_exit;
+		}
+
+		return array('exit' => $exit, 'stdout' => $stdout, 'stderr' => $stderr);
+	}
+
+	/**
 	 * runRRDDump - run 'rrdtool dump' with its stdout going straight into
-	 * an already-open file handle via proc_open, instead of a shell '>'
-	 * redirection that would reopen the destination by name.  The argv-array
-	 * form of proc_open is used, the same as cacti_exec() in
-	 * lib/functions.php, so $rrdfile reaches execve() as a single literal
-	 * argument with no shell in between to reinterpret it.
+	 * an already-open file handle via runRRDCommand(), instead of a shell
+	 * '>' redirection that would reopen the destination by name.
 	 *
 	 * @param  (string)   $rrdfile
 	 * @param  (resource) $handle
@@ -1028,30 +1145,13 @@ class spikekill {
 	 * @return (bool)
 	 */
 	private function runRRDDump($rrdfile, $handle) {
-		$descriptors = array(
-			0 => array('pipe', 'r'),
-			1 => $handle,
-			2 => array('pipe', 'w'),
-		);
-
 		$argv = array(read_config_option('path_rrdtool'), 'dump', $rrdfile);
 
-		$process = @proc_open($argv, $descriptors, $pipes);
+		$result = $this->runRRDCommand($argv, $handle);
 
-		if (!is_resource($process)) {
-			return false;
-		}
-
-		fclose($pipes[0]);
-
-		$stderr = stream_get_contents($pipes[2]);
-		fclose($pipes[2]);
-
-		$status = proc_close($process);
-
-		if ($status !== 0) {
-			if (trim($stderr) != '') {
-				cacti_log("ERROR: rrdtool dump failed for '$rrdfile': " . trim($stderr), false, 'SPIKEKILL');
+		if ($result['exit'] !== 0) {
+			if (trim($result['stderr']) != '') {
+				cacti_log("ERROR: rrdtool dump failed for '$rrdfile': " . trim($result['stderr']), false, 'SPIKEKILL');
 			}
 
 			return false;
