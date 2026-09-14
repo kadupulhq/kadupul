@@ -144,7 +144,7 @@ test('a sibling directory sharing the rra directory name as a prefix is refused'
 
 	expect($status)->toBe('unsafe')
 		->and(is_dir($dest))->toBeFalse()
-		->and(is_dir($this->base . '/_evil'))->toBeFalse();
+		->and(is_dir($sibling))->toBeFalse();
 
 	if (is_dir($sibling)) {
 		structure_rra_dest_test_rrmdir($sibling);
