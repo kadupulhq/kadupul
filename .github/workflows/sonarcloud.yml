@@ -1,0 +1,107 @@
+name: SonarQube Cloud
+
+on:
+  push:
+    branches: [lts/1.2]
+  pull_request:
+    branches: [lts/1.2]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sonarcloud-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: SonarQube Cloud security analysis
+    runs-on: ubuntu-latest
+    # Fork and Dependabot pull requests get no secrets, so the scan cannot authenticate there.
+    # The PR author, not the triggering actor, since a maintainer can push to a Dependabot branch.
+    if: ${{ github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]' }}
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Blame and new-code detection need the full history.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Scan
+        uses: SonarSource/sonarqube-scan-action@22918119ff8e1ca75a623e15c8296b6ea4fbe28f # v8.2.1
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # The project quality gate is shared with main and also checks coverage,
+      # duplication and maintainability, which the 1.2 line does not track.
+      # This step decides the 1.2 result on bugs and security alone: a pull
+      # request fails when it adds a bug, a vulnerability or an unreviewed
+      # security hotspot. A push to lts/1.2 only records the baseline and lists
+      # what is open.
+      - name: Bug and security gate
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          api=https://sonarcloud.io/api
+          key=kadupulhq_kadupul
+
+          ce_url=$(sed -n 's/^ceTaskUrl=//p' .scannerwork/report-task.txt)
+          status=PENDING
+          for _ in $(seq 1 90); do
+            status=$(curl -fsS --retry 3 --retry-delay 5 --retry-all-errors --connect-timeout 10 --max-time 30 -u "$SONAR_TOKEN:" "$ce_url" | jq -r .task.status)
+            case "$status" in
+              SUCCESS) break ;;
+              FAILED|CANCELED) echo "SonarQube Cloud analysis $status"; exit 1 ;;
+            esac
+            sleep 10
+          done
+          if [ "$status" != SUCCESS ]; then
+            echo "SonarQube Cloud analysis did not finish (last status $status)"
+            exit 1
+          fi
+
+          if [ -n "$PR_NUMBER" ]; then
+            scope="pullRequest=$PR_NUMBER"
+          else
+            scope="branch=$BRANCH&inNewCodePeriod=true"
+          fi
+
+          # The search index can lag the finished analysis and answer 503 for a while.
+          sonar_get() {
+            curl -fsS --retry 6 --retry-delay 10 --retry-all-errors --connect-timeout 10 --max-time 60 -u "$SONAR_TOKEN:" "$api/$1"
+          }
+          bugs=$(sonar_get "issues/search?componentKeys=$key&$scope&types=BUG&resolved=false&ps=100")
+          vulns=$(sonar_get "issues/search?componentKeys=$key&$scope&types=VULNERABILITY&resolved=false&ps=100")
+          hotspots=$(sonar_get "hotspots/search?projectKey=$key&$scope&status=TO_REVIEW&ps=100")
+          bug_count=$(jq '.paging.total // .total' <<<"$bugs")
+          vuln_count=$(jq '.paging.total // .total' <<<"$vulns")
+          hotspot_count=$(jq '.paging.total' <<<"$hotspots")
+
+          {
+            echo "### SonarQube Cloud bug and security findings"
+            echo
+            echo "New bugs: $bug_count"
+            jq -r '.issues[] | "- \(.severity) `\(.rule)` \(.component | sub("^[^:]*:"; "")):\(.line // "-") \(.message)"' <<<"$bugs"
+            echo
+            echo "New vulnerabilities: $vuln_count"
+            jq -r '.issues[] | "- \(.severity) `\(.rule)` \(.component | sub("^[^:]*:"; "")):\(.line // "-") \(.message)"' <<<"$vulns"
+            echo
+            echo "Unreviewed new security hotspots: $hotspot_count"
+            jq -r '.hotspots[] | "- \(.vulnerabilityProbability) \(.securityCategory) \(.component | sub("^[^:]*:"; "")):\(.line // "-") \(.message)"' <<<"$hotspots"
+            if [ "$bug_count" -gt 100 ] || [ "$vuln_count" -gt 100 ] || [ "$hotspot_count" -gt 100 ]; then
+              echo
+              echo "Each list shows the first 100 findings; see the pull request in SonarQube Cloud for the rest."
+            fi
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+          if [ -n "$PR_NUMBER" ] && { [ "$bug_count" -gt 0 ] || [ "$vuln_count" -gt 0 ] || [ "$hotspot_count" -gt 0 ]; }; then
+            echo "Bugs and vulnerabilities must be fixed, or marked in SonarQube Cloud, and hotspots reviewed, before merging."
+            exit 1
+          fi
