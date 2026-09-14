@@ -11,6 +11,13 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Theme stylesheets no longer carry declarations browsers discard: an invalid
+  `#white` colour and `word-break-wrap` in midwinter and paw, placeholder
+  `#TODO` rules in the midwinter compact layouts, and `background-color`
+  values the following `background` shorthands replaced. The modern theme's
+  navigation bar hover and visited link styles apply again.
+- Tables that hide columns to fit the window sort the kept column indexes as
+  numbers.
 - Local page help looks for the HTML page it was asked for under `docs/`, as
   the Local Page Help Only setting describes, instead of a Markdown file.
 - Run the theme browser suite against the themes shipped by this fork using
