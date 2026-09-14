@@ -195,8 +195,17 @@ function purge_spike_backups() {
 	/* spikekill_backupdir defaults to a path with a trailing slash
 	   (include/global_settings.php), and is_link('dir/') follows the final
 	   symlink to stat what it points at instead of the link itself, so the
-	   trailing slash has to go before is_link() is checked below */
-	$directory = rtrim(read_config_option('spikekill_backupdir'), '/');
+	   trailing slash has to go before is_link() is checked below; a bare
+	   rtrim() would turn '/' or '///' into '', which is_dir() then fails
+	   and the purge silently skips, the very directory
+	   spikekill::normalizeDir() (lib/spikekill.php) keeps as '/' */
+	$backupdir = read_config_option('spikekill_backupdir');
+	$directory = rtrim($backupdir, '/');
+
+	if ($directory === '' && $backupdir !== '') {
+		$directory = '/';
+	}
+
 	$retention = read_config_option('spikekill_purge');
 
 	$purges = 0;
