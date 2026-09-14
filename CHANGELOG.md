@@ -11,7 +11,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
-- PHP 8.5 no longer reports deprecation notices for two semicolon case
+- PHP 8.5 no longer reports deprecation notices for three semicolon case
   terminators, the `(double)` cast in spikekill, or `imagedestroy()`,
   `xml_parser_free()` and `curl_close()` calls that have had no effect since
   PHP 8.0.
