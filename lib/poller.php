@@ -646,8 +646,10 @@ function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$re
  *
  * @return (int) - The number of rrdfiles processed
  */
-function process_poller_output(&$rrdtool_pipe, $remainder = 0) {
+function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null) {
 	global $config, $debug;
+
+	$deferred = false;
 
 	static $rrd_field_names = array();
 	static $checked_bad     = false;
@@ -688,11 +690,12 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0) {
 	}
 
 	if (cacti_sizeof($results)) {
-		/* Resolve queue ownership before removing any source rows. A failed
-		 * cleanup leaves both queues available for the next poller pass. */
+		/* Acknowledge the handoff before removing source rows. A failed
+		 * handoff leaves both queues available for the next poller pass. */
 		$direct_rrd_update = boost_poller_on_demand($results);
 
 		if ($direct_rrd_update === null) {
+			$deferred = true;
 			return 0;
 		}
 
@@ -950,7 +953,11 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0) {
 				FROM poller_time
 				WHERE end_time = "0000-00-00"');
 
-			$rrds_processed += process_poller_output($rrdtool_pipe, $rows < $max_rows ? $rows : $max_rows);
+			$rrds_processed += process_poller_output($rrdtool_pipe, $rows < $max_rows ? $rows : $max_rows, $deferred);
+
+			if ($deferred) {
+				return $rrds_processed;
+			}
 
 			if ($running == 0 && !$checked_bad) {
 				// Remove recently deleted items from the poller_output table
