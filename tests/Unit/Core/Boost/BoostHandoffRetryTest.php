@@ -14,6 +14,14 @@ function cacti_sizeof($rows)
 }
 function db_fetch_assoc($sql)
 {
+    if (!empty($GLOBALS['diagnostic_probe'])) {
+        if (str_contains($sql, 'WHERE dl.id IS NULL')) { return $GLOBALS['diagnostic_orphan_fail'] ? false : array(); }
+        if (str_contains($sql, 'SELECT rrd_num')) {
+            $GLOBALS['diagnostic_probe_ran'] = true;
+            return array(array('name' => 'Partial', 'local_data_ids' => '7'));
+        }
+        return array($GLOBALS['cleanup_retry_rows'][$GLOBALS['diagnostic_probe_reads']++ === 0 ? 0 : 1]);
+    }
     return $GLOBALS['cleanup_retry_rows'] ?? array(array('local_data_id' => 7));
 }
 function db_fetch_assoc_prepared(...$args)
@@ -36,6 +44,9 @@ function rrdtool_function_update(...$args)
 {
     if (isset($GLOBALS['cleanup_retry_rows'])) {
         $GLOBALS['cleanup_retry_updates'] = $args[0];
+        if (!empty($GLOBALS['diagnostic_probe'])) {
+            return count(array_filter($args[0], function ($row) { return !empty($row['times']); }));
+        }
         return 1;
     }
     throw new \RuntimeException('A failed handoff must not write an RRD');
@@ -99,13 +110,20 @@ test('main poller skips subsequent drains and final drain after a deferred hando
 
 function poller_delete_output_rows($keys, &$failed) {
     $GLOBALS['cleanup_retry_keys'] = $keys;
+    if (!empty($GLOBALS['diagnostic_probe'])) {
+        $failed = false;
+        return count($keys);
+    }
     $failed = true;
     return 1;
 }
 function dsstats_poller_output($rows) {}
 function dsdebug_poller_output($rows) {}
 function api_plugin_hook_function($name, $rows) {}
-function db_fetch_cell($sql) { throw new \RuntimeException('Cleanup failure must stop further drain queries'); }
+function db_fetch_cell($sql) {
+    if (!empty($GLOBALS['diagnostic_probe'])) { return str_contains($sql, 'FROM poller_time') ? 0 : 1; }
+    throw new \RuntimeException('Cleanup failure must stop further drain queries');
+}
 
 test('partial cleanup failure still updates consumed samples and propagates deferral', function () {
     $saved = $GLOBALS['config'] ?? null;
@@ -134,3 +152,37 @@ test('partial cleanup failure still updates consumed samples and propagates defe
         rmdir($root);
     }
 });
+
+
+test('post-drain diagnostics preserve partial arrivals and fail closed on unreadable orphans', function ($lookup_fails) {
+    $saved = $GLOBALS['config'] ?? null;
+    $root = sys_get_temp_dir() . '/diagnostic-retry-' . bin2hex(random_bytes(6));
+    mkdir($root, 0700);
+    file_put_contents($root . '/rrd.php', '<?php');
+    $GLOBALS['config']['library_path'] = $root;
+    $row = array('local_data_id' => 7, 'output' => '10', 'time' => '2026-09-15 00:00:00', 'unix_time' => 1789430400,
+        'rrd_path' => '/example.rrd', 'rrd_name' => 'value', 'rrd_num' => 1, 'data_template_id' => 0);
+    $partial = $row;
+    $partial['time'] = '2026-09-15 00:01:00';
+    $partial['unix_time'] += 60;
+    $partial['rrd_num'] = 2;
+    $GLOBALS['cleanup_retry_rows'] = array($row, $partial);
+    $GLOBALS['diagnostic_probe'] = true;
+    $GLOBALS['diagnostic_probe_reads'] = 0;
+    $GLOBALS['diagnostic_probe_ran'] = false;
+    $GLOBALS['diagnostic_orphan_fail'] = $lookup_fails;
+    try {
+        $pipe = null;
+        expect(process_poller_output($pipe, false, $deferred, $consumed))->toBe(1)
+            ->and($deferred)->toBe($lookup_fails)
+            ->and($consumed)->toBe(1)
+            ->and($GLOBALS['diagnostic_probe_ran'])->toBe(!$lookup_fails);
+        // db_execute() throws if either old broad diagnostic DELETE is reached.
+    } finally {
+        unset($GLOBALS['cleanup_retry_rows'], $GLOBALS['cleanup_retry_keys'], $GLOBALS['cleanup_retry_updates'],
+            $GLOBALS['diagnostic_probe'], $GLOBALS['diagnostic_probe_reads'], $GLOBALS['diagnostic_probe_ran'], $GLOBALS['diagnostic_orphan_fail']);
+        $GLOBALS['config'] = $saved;
+        unlink($root . '/rrd.php');
+        rmdir($root);
+    }
+})->with(array(true, false));
