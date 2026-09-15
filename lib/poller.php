@@ -637,6 +637,30 @@ function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$re
 	poller_push_reindex_only_data_to_main($host_id, $data_query_id);
 }
 
+/** Delete only the selected source samples, preserving concurrent arrivals. */
+function poller_delete_output_rows($keys) {
+	if (!$keys) {
+		return 0;
+	}
+
+	$consumed = 0;
+	foreach (array_chunk($keys, 10000) as $chunk) {
+		$params = array();
+		foreach ($chunk as $key) {
+			$params[] = (int) $key[0];
+			$params[] = (string) $key[1];
+			$params[] = (string) $key[2];
+		}
+		$placeholders = implode(',', array_fill(0, count($chunk), '(?,?,?)'));
+		if (db_execute_prepared("DELETE FROM poller_output WHERE (local_data_id, rrd_name, time) IN ($placeholders)", $params) === false) {
+			break;
+		}
+		$consumed += (int) db_affected_rows();
+	}
+
+	return $consumed;
+}
+
 /**
  * process_poller_output - grabs data from the 'poller_output' table and feeds the *completed*
  *   results to RRDtool for processing
@@ -900,7 +924,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 
 		/* make sure each .rrd file has complete data */
 		$k        = 0;
-		$data_ids = array();
+		$output_keys = array();
 
 		foreach ($results as $item) {
 			$unix_time = $item['unix_time'];
@@ -914,13 +938,11 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 				 * those data sources from the $rrd_update_array yet.
 				 */
 				if ($item['rrd_num'] <= cacti_sizeof($rrd_update_array[$rrd_path]['times'][$unix_time])) {
-					$data_ids[] = $item['local_data_id'];
+					$output_keys[] = array($item['local_data_id'], $item['rrd_name'], $item['time']);
 					$k++;
 					if ($k % 10000 == 0) {
-						if (db_execute('DELETE FROM poller_output WHERE local_data_id IN (' . implode(',', $data_ids) . ')') !== false) {
-							$consumed += (int) db_affected_rows();
-						}
-						$data_ids = array();
+						$consumed += poller_delete_output_rows($output_keys);
+						$output_keys = array();
 						$k = 0;
 					}
 				} else {
@@ -930,9 +952,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 		}
 
 		if ($k > 0) {
-			if (db_execute('DELETE FROM poller_output WHERE local_data_id IN (' . implode(',', $data_ids) . ')') !== false) {
-				$consumed += (int) db_affected_rows();
-			}
+			$consumed += poller_delete_output_rows($output_keys);
 		}
 
 		/* process dsstats information */
