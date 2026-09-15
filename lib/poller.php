@@ -638,7 +638,8 @@ function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$re
 }
 
 /** Delete only the selected source samples, preserving concurrent arrivals. */
-function poller_delete_output_rows($keys) {
+function poller_delete_output_rows($keys, &$failed = null) {
+	$failed = false;
 	if (!$keys) {
 		return 0;
 	}
@@ -653,6 +654,7 @@ function poller_delete_output_rows($keys) {
 		}
 		$placeholders = implode(',', array_fill(0, count($chunk), '(?,?,?)'));
 		if (db_execute_prepared("DELETE FROM poller_output WHERE (local_data_id, rrd_name, time) IN ($placeholders)", $params) === false) {
+			$failed = true;
 			break;
 		}
 		$consumed += (int) db_affected_rows();
@@ -923,7 +925,6 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 		}
 
 		/* make sure each .rrd file has complete data */
-		$k        = 0;
 		$output_keys = array();
 
 		foreach ($results as $item) {
@@ -939,21 +940,14 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 				 */
 				if ($item['rrd_num'] <= cacti_sizeof($rrd_update_array[$rrd_path]['times'][$unix_time])) {
 					$output_keys[] = array($item['local_data_id'], $item['rrd_name'], $item['time']);
-					$k++;
-					if ($k % 10000 == 0) {
-						$consumed += poller_delete_output_rows($output_keys);
-						$output_keys = array();
-						$k = 0;
-					}
+
 				} else {
 					unset($rrd_update_array[$rrd_path]['times'][$unix_time]);
 				}
 			}
 		}
 
-		if ($k > 0) {
-			$consumed += poller_delete_output_rows($output_keys);
-		}
+		$consumed += poller_delete_output_rows($output_keys, $deferred);
 
 		/* process dsstats information */
 		dsstats_poller_output($rrd_update_array);
@@ -967,6 +961,14 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 
 		$results = NULL;
 		$rrd_update_array = NULL;
+
+		if ($deferred) {
+			/* Earlier DELETE chunks may have committed, so their RRD updates
+			 * above must still run. Retained rows use the timestamp-idempotent
+			 * update path on retry; do not recurse or report a successful drain. */
+			cacti_log('ERROR: Poller source cleanup failed; remaining samples retained for retry.', false, 'POLLER');
+			return $rrds_processed;
+		}
 
 		/* to much records in poller_output, process in chunks */
 		$rows = db_fetch_cell('SELECT COUNT(local_data_id)
