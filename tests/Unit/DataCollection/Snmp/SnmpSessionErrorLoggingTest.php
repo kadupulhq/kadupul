@@ -15,7 +15,8 @@
 
 namespace SnmpSessionErrorLoggingTest;
 
-const POLLER_VERBOSITY_HIGH = 4;
+const POLLER_VERBOSITY_HIGH  = 4;
+const POLLER_VERBOSITY_DEBUG = 5;
 
 $GLOBALS['snmp_session_error_logs'] = array();
 
@@ -131,16 +132,16 @@ beforeEach(function () {
 test('timeout failures retain the configured timeout detail', function () {
 	cacti_snmp_log_session_error(new FakeSnmpSession(SNMP::ERRNO_TIMEOUT, 'ignored'), array('timeout' => 1500, 'hostname' => 'router-1'), '.1.3.6');
 
-	expect($GLOBALS['snmp_session_error_logs'][0][0])->toContain("SNMP Error:'Timeout (1500 ms)'")
-		->and($GLOBALS['snmp_session_error_logs'][0][0])->toContain("Device:'router-1', OID:'.1.3.6'")
+	expect($GLOBALS['snmp_session_error_logs'][0][0])->toBe("WARNING: SNMP Error:'Timeout (1500 ms)', Device:'router-1', OID:'.1.3.6'")
 		->and($GLOBALS['snmp_session_error_logs'][0][2])->toBe('SNMP')
 		->and($GLOBALS['snmp_session_error_logs'][0][3])->toBe(POLLER_VERBOSITY_HIGH);
 });
 
-test('non-timeout failures log the native reason without line injection', function () {
+test('non-timeout failures log the native reason at debug without line injection', function () {
 	cacti_snmp_log_session_error(new FakeSnmpSession(2, "Invalid address\r\nPermission denied"), array('timeout' => 500, 'hostname' => 'router-2'), array('.1', '.2'), 'ignored warning');
 
 	expect($GLOBALS['snmp_session_error_logs'][0][0])->toContain("SNMP Error:'Invalid address  Permission denied'")
+		->and($GLOBALS['snmp_session_error_logs'][0][3])->toBe(POLLER_VERBOSITY_DEBUG)
 		->and($GLOBALS['snmp_session_error_logs'][0][0])->toContain("OID:'.1,.2'")
 		->and($GLOBALS['snmp_session_error_logs'][0][0])->not->toContain("\n");
 });
@@ -197,6 +198,32 @@ test('empty native errors retain their numeric diagnostic and all callers use th
 	cacti_snmp_log_session_error(new FakeSnmpSession(9, ''), array('timeout' => 500, 'hostname' => 'router-3'), '.3');
 
 	expect($GLOBALS['snmp_session_error_logs'][0][0])->toContain("SNMP Error:'Error Number 9'")
+		->and($GLOBALS['snmp_session_error_logs'][0][3])->toBe(POLLER_VERBOSITY_DEBUG)
 		->and(substr_count($source, 'cacti_snmp_log_session_error($session, $info, $oid, $warning);'))->toBe(3)
 		->and(substr_count($source, 'cacti_snmp_session_call($session,'))->toBe(4);
 });
+
+if (class_exists('\SNMP')) {
+	/**
+	 * Native ext-snmp session whose info['timeout'] stays in microseconds,
+	 * unlike the bundled FakeSnmpSession above.
+	 */
+	class NativeSnmpSession extends \SNMP {
+		/**
+		 * @return int The ERRNO_TIMEOUT this test suite's fake SNMP class
+		 *              declares, since that is what the helper compares
+		 *              against once evaluated into this namespace.
+		 */
+		public function getErrno() : int {
+			return SNMP::ERRNO_TIMEOUT;
+		}
+	}
+}
+
+test('native SNMP extension sessions report the timeout in milliseconds, not microseconds', function () {
+	$session = new NativeSnmpSession(\SNMP::VERSION_2c, '127.0.0.1', 'public', 1500000, 0);
+
+	cacti_snmp_log_session_error($session, $session->info, '.1.3.6');
+
+	expect($GLOBALS['snmp_session_error_logs'][0][0])->toContain("SNMP Error:'Timeout (1500 ms)'");
+})->skip(!class_exists('\SNMP'), 'ext-snmp is not loaded');

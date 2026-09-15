@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -274,7 +275,7 @@ while (1) {
 
 			if (!$path_ok) {
 				if ($real_include !== false) {
-					cacti_log("WARNING: Script file '$include_file' resolves outside the allowed script roots. Rejected.", false, 'PHPSVR');
+					cacti_log("WARNING: Script file '$include_file' resolves outside base path. Rejected.", false, 'PHPSVR');
 				} else {
 					cacti_log("WARNING: Script file '$include_file' could not be resolved. Rejected.", false, 'PHPSVR');
 				}
@@ -351,7 +352,7 @@ while (1) {
 			}
 
 			if (!script_server_path_is_allowed($fn_real, $allowed_roots)) {
-				cacti_log("WARNING: Function '$function' defined outside the allowed script roots ('$fn_file'). Rejected.", false, 'PHPSVR');
+				cacti_log("WARNING: Function '$function' defined outside base path ('$fn_file'). Rejected.", false, 'PHPSVR');
 				fputs(STDOUT, "U\n");
 				fflush(STDOUT);
 				continue;
