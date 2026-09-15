@@ -272,3 +272,44 @@ test('runtime repair clears duplicate legacy rows before adding the run-child ke
 		->and((int) boostMariaDbFetchCellPrepared('SELECT COUNT(*) FROM poller_output_boost_processes'))->toBe(0)
 		->and($GLOBALS['boost_mariadb_logs'])->toBe(array());
 });
+
+function boostMariaDbDeletePrepared($sql, $params) {
+	try {
+		$statement = $GLOBALS['boost_mariadb_pdo']->prepare($sql);
+		$statement->execute($params);
+		$GLOBALS['boost_delete_affected'] = $statement->rowCount();
+		return true;
+	} catch (PDOException $error) {
+		$GLOBALS['boost_delete_affected'] = 0;
+		return false;
+	}
+}
+
+function boostMariaDbDeleteAffected() {
+	return $GLOBALS['boost_delete_affected'];
+}
+
+test('poller deletes only its selected sample keys when newer rows arrive before deletion', function () use ($root) {
+	if (!function_exists('boostMariaDbDeleteOutputRows')) {
+		preg_match('/^function poller_delete_output_rows\(.*?^}\n/ms', file_get_contents($root . '/lib/poller.php'), $match);
+		expect($match)->not->toBeEmpty();
+		eval(str_replace(array('poller_delete_output_rows(', 'db_execute_prepared(', 'db_affected_rows('), array('boostMariaDbDeleteOutputRows(', 'boostMariaDbDeletePrepared(', 'boostMariaDbDeleteAffected('), $match[0]));
+	}
+	$db = $GLOBALS['boost_mariadb_pdo'];
+	$db->exec('CREATE TEMPORARY TABLE poller_output (local_data_id INT, rrd_name VARCHAR(19), time TIMESTAMP, output VARCHAR(512), PRIMARY KEY(local_data_id,rrd_name,time)) ENGINE=MEMORY');
+	try {
+		$insert = $db->prepare('INSERT INTO poller_output VALUES (?,?,?,?)');
+		$insert->execute(array(7, 'traffic_in', '2026-09-15 00:00:00', '10'));
+		$selected = $db->query('SELECT local_data_id,rrd_name,time FROM poller_output')->fetchAll(PDO::FETCH_NUM);
+		// Deterministic interleaving: these rows arrive after the drain's SELECT.
+		$insert->execute(array(7, 'traffic_in', '2026-09-15 00:01:00', '11'));
+		$insert->execute(array(7, 'traffic_out', '2026-09-15 00:00:00', '12'));
+		expect(boostMariaDbDeleteOutputRows($selected))->toBe(1)
+			->and((int) $db->query('SELECT count(*) FROM poller_output')->fetchColumn())->toBe(2)
+			->and(boostMariaDbDeleteOutputRows($selected))->toBe(0)
+			->and(boostMariaDbDeleteOutputRows(array()))->toBe(0);
+		expect($db->query('SELECT output FROM poller_output ORDER BY output')->fetchAll(PDO::FETCH_COLUMN))->toBe(array('11', '12'));
+	} finally {
+		$db->exec('DROP TEMPORARY TABLE poller_output');
+	}
+});
