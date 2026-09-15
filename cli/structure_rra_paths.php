@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -196,27 +197,43 @@ foreach ($data_sources as $info) {
         usleep(50000);
     }
 
-	/* create one subfolder for every host */
-	if (!is_dir($new_base_path)) {
-		/* see if we can create the directory for the new file */
-		if (mkdir($new_base_path, 0775, true)) {
-			struct_debug("NOTE: New Directory '$new_base_path' Created for RRD Files");
+	/* create one subfolder for every host, walking the destination path
+	   from the canonical rra root one component at a time so a symlink
+	   planted at an intermediate directory, such as a hash bucket, cannot
+	   redirect mkdir() or the rename() below */
+	$dest_existed = is_dir($new_base_path) && !is_link($new_base_path);
 
-			if ($config['cacti_server_os'] != 'win32') {
-				if (sp_recursive_chown($new_base_path, $owner_id) && sp_recursive_chgrp($new_base_path, $group_id)) {
-					struct_debug("NOTE: New Directory '$new_base_path' Permissions Set");
-				} else {
-					print "FATAL: Could not Set Permissions for Directory '$new_base_path'" . PHP_EOL;
+	$dest_status = structure_rra_prepare_dest_dir($new_base_path, $base_rra_path);
 
-					exit -5;
-				}
+	if ($dest_status == 'unsafe') {
+		$warn_count++;
+
+		print "WARNING: Refusing to use Directory '$new_base_path', it contains a Symlink or resolves Outside the configured RRA Directory" . PHP_EOL;
+
+		db_fetch_cell("SELECT RELEASE_LOCK('boost.single_ds.$local_data_id')");
+
+		continue;
+	} elseif ($dest_status == 'mkdir_failed') {
+		print "FATAL: Could NOT Make New Directory '$new_base_path'" . PHP_EOL;
+
+		exit -1;
+	}
+
+	if (!$dest_existed) {
+		struct_debug("NOTE: New Directory '$new_base_path' Created for RRD Files");
+
+		if ($config['cacti_server_os'] != 'win32') {
+			if (sp_recursive_chown($new_base_path, $owner_id) && sp_recursive_chgrp($new_base_path, $group_id)) {
+				struct_debug("NOTE: New Directory '$new_base_path' Permissions Set");
+			} else {
+				print "FATAL: Could not Set Permissions for Directory '$new_base_path'" . PHP_EOL;
+
+				exit -5;
 			}
-		} else {
-			print "FATAL: Could NOT Make New Directory '$new_base_path'" . PHP_EOL;
-
-			exit -1;
 		}
 	}
+
+	$found_elsewhere = false;
 
 	/**
 	 * check for the old file and if not exists, try to find it
@@ -244,16 +261,18 @@ foreach ($data_sources as $info) {
 
 		if (file_exists($data_source_path1)) {
 			$old_rrd_path = $data_source_path1;
+			$found_elsewhere = true;
 		} elseif (file_exists($data_source_path2)) {
 			$old_rrd_path = $data_source_path2;
+			$found_elsewhere = true;
 		} else {
 			$warn_count++;
 
 			print "WARNING: Legacy RRA Path '$old_rrd_path' Does not exist, Skipping" . PHP_EOL;
-		}
 
-		/* alter database */
-		update_database($info);
+			/* alter database; there is no file whose move could be refused */
+			update_database($info);
+		}
 	}
 
 	/**
@@ -261,8 +280,16 @@ foreach ($data_sources as $info) {
 	 * it's new location if different than the old
 	 */
 	if (file_exists($old_rrd_path)) {
-		if ($old_rrd_path != $new_rrd_path) {
-			if (rename($old_rrd_path, $new_rrd_path)) {
+		if (!structure_rra_is_safe_source($old_rrd_path, $base_rra_path)) {
+			$warn_count++;
+
+			print "WARNING: Refusing to move Source Path '$old_rrd_path', it is not a Regular '.rrd' File inside the configured RRA Directory" . PHP_EOL;
+		} elseif ($old_rrd_path != $new_rrd_path) {
+			if (!structure_rra_is_safe_dest($new_rrd_path)) {
+				$warn_count++;
+
+				print "WARNING: Refusing to move to Destination Path '$new_rrd_path', only a Missing Path or a Regular File is accepted as a Destination" . PHP_EOL;
+			} elseif (rename($old_rrd_path, $new_rrd_path)) {
 				$done_count++;
 
 				struct_debug("Move Completed for: '" . $old_rrd_path . "' > '" . $new_rrd_path . "'");
@@ -284,6 +311,14 @@ foreach ($data_sources as $info) {
 			}
 		} else {
 			$skip_count++;
+
+			/* a file found by the search above already sits at the new
+			   path, so only the database still names the old one.  A found
+			   file that gets moved updates the database after rename(), and
+			   one that is refused leaves it untouched */
+			if ($found_elsewhere) {
+				update_database($info);
+			}
 		}
 	}
 
@@ -338,6 +373,154 @@ function update_database($info) {
 }
 
 /**
+ * structure_rra_is_safe_source - This script runs as root and moves whatever
+ * file the database names as a data source's old path.  A symlink planted at
+ * that path would make the chown/chgrp below follow it and change ownership
+ * of an arbitrary target, and 'data_source_path' is only checked for
+ * newlines when it is saved, so it can also point outside the RRA tree
+ * entirely.  Refuse to touch anything that is not a plain '.rrd' file
+ * resolving inside the configured RRA directory.
+ *
+ * @param  (string) $path          - the legacy path read from the database
+ * @param  (string) $base_rra_path - the configured 'rra_path' setting
+ *
+ * @return (bool)
+ */
+function structure_rra_is_safe_source($path, $base_rra_path) {
+	/* the loop has already stat()ed this path, and PHP answers repeat
+	   lookups from its cache.  The whole realpath cache is dropped because
+	   realpath() below would resolve through stale ancestor entries */
+	clearstatcache(true);
+
+	if (is_link($path)) {
+		return false;
+	}
+
+	if (!is_file($path)) {
+		return false;
+	}
+
+	if (strtolower(substr($path, -4)) != '.rrd') {
+		return false;
+	}
+
+	$real_path = realpath($path);
+	$real_base = realpath($base_rra_path);
+
+	if ($real_path === false || $real_base === false) {
+		return false;
+	}
+
+	return cacti_path_is_within($real_path, $real_base);
+}
+
+/**
+ * structure_rra_is_safe_dest - structure_rra_prepare_dest_dir() only
+ * validates the parent directory. If '$new_rrd_path' itself already exists
+ * as a directory or a symlink, rename() below would move the legacy file
+ * inside it (a directory) or follow it (a symlink) instead of replacing it,
+ * so both are refused here; a FIFO, socket or device node is refused too,
+ * since neither is what rename() has ever been allowed to overwrite, and
+ * only a missing path or a regular file are treated as safe.
+ *
+ * @param  (string) $new_rrd_path - the destination path a legacy RRD file
+ *                   is about to be renamed to
+ *
+ * @return (bool)
+ */
+function structure_rra_is_safe_dest($new_rrd_path) {
+	/* PHP answers a repeat lookup of the same path from its stat cache */
+	clearstatcache(true, $new_rrd_path);
+
+	if (is_link($new_rrd_path)) {
+		return false;
+	}
+
+	return !file_exists($new_rrd_path) || is_file($new_rrd_path);
+}
+
+/**
+ * structure_rra_prepare_dest_dir - create the destination directory for a
+ * restructured RRD one path component at a time, walking from the canonical
+ * RRA root.  mkdir(..., true) and rename() both resolve straight through a
+ * symlink planted at an intermediate component, such as a hash bucket
+ * directory, so each component is checked with is_link() before it is
+ * trusted, and any missing component is created non-recursively and
+ * re-checked with is_link() immediately afterward.
+ *
+ * @param  (string) $new_base_path - the destination directory to prepare
+ * @param  (string) $base_rra_path - the configured 'rra_path' setting
+ *
+ * @return (string) - 'ok' if the directory exists, or now exists, safely
+ *                     inside the RRA root; 'unsafe' if an existing
+ *                     component is a symlink or the result would resolve
+ *                     outside the RRA root; 'mkdir_failed' if a missing
+ *                     component could not be created for an unrelated
+ *                     reason such as a permissions or disk space problem
+ */
+function structure_rra_prepare_dest_dir($new_base_path, $base_rra_path) {
+	/* the loop stat()s $new_base_path before calling this, and PHP would
+	   answer the walk's is_link() and the final realpath() from its caches */
+	clearstatcache(true);
+
+	$real_base = realpath($base_rra_path);
+	$root      = rtrim($base_rra_path, '/');
+	$prefix    = $root . '/';
+
+	if ($real_base === false || ($new_base_path != $root && strpos($new_base_path, $prefix) !== 0)) {
+		return 'unsafe';
+	}
+
+	$relative = trim(substr($new_base_path, strlen($root)), '/');
+	$segments = ($relative === '') ? array() : explode('/', $relative);
+
+	$walked = $real_base;
+
+	foreach ($segments as $segment) {
+		if ($segment === '' || $segment === '.' || $segment === '..') {
+			return 'unsafe';
+		}
+
+		$walked = rtrim($walked, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $segment;
+
+		if (is_link($walked)) {
+			return 'unsafe';
+		}
+
+		if (file_exists($walked)) {
+			if (!is_dir($walked)) {
+				return 'mkdir_failed';
+			}
+		} else {
+			if (!mkdir($walked, 0775)) {
+				return 'mkdir_failed';
+			}
+
+			/* mkdir() and this check are not atomic, so re-check right
+			   away that nothing swapped the new component for a symlink
+			   before the next segment is walked through it */
+			if (is_link($walked)) {
+				return 'unsafe';
+			}
+		}
+	}
+
+	/* the caller renames into $new_base_path, not $walked, so it is the
+	   path that has to resolve to the directory just walked */
+	$real_dest = realpath($new_base_path);
+
+	if ($real_dest === false || $real_dest !== realpath($walked)) {
+		return 'unsafe';
+	}
+
+	if ($real_dest != $real_base && strpos($real_dest, rtrim($real_base, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR) !== 0) {
+		return 'unsafe';
+	}
+
+	return 'ok';
+}
+
+/**
  * sp_recursive_chown - Recursively chown on a path
  *
  * @param  (string)     $path
@@ -346,19 +529,32 @@ function update_database($info) {
  * @return (void)
  */
 function sp_recursive_chown($path, $user) {
+	/* is_link('dir/') follows the final symlink to stat what it points at
+	   instead of the link itself, so the trailing slash has to go before
+	   is_link() is checked, and the normalized path has to be what glob()
+	   and the recursion below walk too, or the check and the walk target
+	   different strings */
 	$directory = rtrim($path, '/');
 
-	if ($items = glob($path . '/*')) {
+	if (is_link($directory)) {
+		return lchown($directory, $user);
+	}
+
+	$result = true;
+
+	if (is_dir($directory) && ($items = glob($directory . '/*'))) {
 		foreach ($items as $item) {
-			if (is_dir($item)) {
-				return sp_recursive_chown($item, $user);
+			if (is_dir($item) && !is_link($item)) {
+				$result = sp_recursive_chown($item, $user) && $result;
 			} else {
-				return chown($item, $user);
+				$result = lchown($item, $user) && $result;
 			}
 		}
 	}
 
-	return chown($path, $user);
+	/* lchown() rather than an is_link() check and chown(), so a symlink
+	   swapped in after the checks above is never followed */
+	return lchown($directory, $user) && $result;
 }
 
 /**
@@ -370,19 +566,32 @@ function sp_recursive_chown($path, $user) {
  * @return (void)
  */
 function sp_recursive_chgrp($path, $group) {
+	/* is_link('dir/') follows the final symlink to stat what it points at
+	   instead of the link itself, so the trailing slash has to go before
+	   is_link() is checked, and the normalized path has to be what glob()
+	   and the recursion below walk too, or the check and the walk target
+	   different strings */
 	$directory = rtrim($path, '/');
 
-	if ($items = glob($path . '/*')) {
+	if (is_link($directory)) {
+		return lchgrp($directory, $group);
+	}
+
+	$result = true;
+
+	if (is_dir($directory) && ($items = glob($directory . '/*'))) {
 		foreach ($items as $item) {
-			if (is_dir($item)) {
-				return sp_recursive_chgrp($item, $group);
+			if (is_dir($item) && !is_link($item)) {
+				$result = sp_recursive_chgrp($item, $group) && $result;
 			} else {
-				return chgrp($item, $group);
+				$result = lchgrp($item, $group) && $result;
 			}
 		}
 	}
 
-	return chgrp($path, $group);
+	/* lchgrp() rather than an is_link() check and chgrp(), so a symlink
+	   swapped in after the checks above is never followed */
+	return lchgrp($directory, $group) && $result;
 }
 
 /**

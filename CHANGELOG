@@ -9,6 +9,9 @@ Cacti CHANGELOG
 -issue: Use the colon terminator on two utilities.php case labels that PHP 8.5 deprecates
 -issue: Stop reading the E_STRICT constant, which PHP 8.4 deprecates, and drop the libxml_disable_entity_loader() calls PHP 8.0 deprecated, so neither raises a deprecation notice; XXE protection is unchanged
 -issue: Read the online help fetch's response status in cacti_http() through http_get_last_response_headers() on PHP 8.5, isolating the older $http_response_header fallback so 8.5 raises no deprecation notice
+-security: Preserve a bare Windows drive-relative spikekill or purge directory when a child name is joined to it, instead of turning it into that drive's root
+-security: Re-check the spikekill RRD source identity before the requested backup copy too, not just before rrdtool restore
+-security: Refuse a symlinked or non-regular spikekill RRD source, and re-check its identity before the backup copy and before rrdtool restore
 -security: Require a POST token to change a user's or group's default policy, refusing GET from any site
 -security: Compare the CSRF guard's same-origin check against a bare IPv6 SERVER_NAME instead of stripping its last hextet as a port
 -issue: Sort the visible table column indexes numerically instead of as strings when recalculating layout width
@@ -17,6 +20,15 @@ Cacti CHANGELOG
 -security: Require a POST token to remove a graph template input, refusing GET from any site
 -security: Refuse an RRD cleaner rescan sent by GET from another site
 -security: Refuse automation, color, data query and RRD check changes by GET only from another site, as 1.2.31 accepted them otherwise
+-security: Refuse to move or take ownership of a legacy RRD path in structure_rra_paths.php unless it is a real .rrd file already inside the configured RRA directory
+-security: Create the spikekill RRD backup file exclusively instead of following a pre-existing name, falling back to a unique name when one is already taken
+-security: Refuse a FIFO, socket or device node as a structure_rra_paths.php move destination, accepting only a missing path or a regular file
+-security: Check the normalized, not the trailing-slash, path before following a symlink in structure_rra_paths.php's sp_recursive_chown/chgrp ownership walk
+-security: Trim a Windows trailing separator of either slash style, keeping a drive root, UNC share or bare drive-relative path intact, before the spikekill and purge symlink checks run
+-issue: Honor the configured Spikekill Background Generation Timeout for the rrdtool dump/restore round trip instead of capping it at 30 seconds
+-issue: Count a spikekill backup purge only when unlink() succeeds, logging a failure instead of over-reporting the purge count
+-issue: Close the spikekill RRD backup destination handle before removing it on a failed copy, so Windows can delete it
+-issue: Stop echoing spikekill purge failure messages to poller output; they were only meant for the log
 -issue: Send array rrdtool commands such as the RRDcheck fetch through RRDproxy as one quoted command instead of failing before they are sent
 -issue: Send the RRDproxy file_exists check in RRDcheck a bare path so an RRD path holding a quote character is found, and skip the local writable and modify time checks for RRDs on the proxy
 -issue: Show the validation error instead of success when a template import fails
