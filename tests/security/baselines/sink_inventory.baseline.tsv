@@ -12,8 +12,6 @@ cmd_exec	./cli/remove_broken_graphs.php:47		$stty = shell_exec('stty size');
 cmd_exec	./cli/reset_password.php:101		shell_exec('stty -echo');
 cmd_exec	./cli/reset_password.php:105		shell_exec('stty echo');
 cmd_exec	./cli/splice_rrd.php:237	$response = shell_exec(cacti_escapeshellcmd($rrdtool));
-cmd_exec	./cli/splice_rrd.php:269	shell_exec(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($oldrrd) . ' > ' . cacti_escapeshellarg($oldxmlfile));
-cmd_exec	./cli/splice_rrd.php:272	shell_exec(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($newrrd) . ' > ' . cacti_escapeshellarg($newxmlfile));
 cmd_exec	./cli/splice_rrd.php:854		$result      = exec($command, $output, $return_var);
 cmd_exec	./cli/update_heartbeat.php:271				$result = exec($command, $output, $return_code);
 cmd_exec	./cmd.php:312			$cactiphp = proc_open($command, $cactides, $pipes);
@@ -41,6 +39,7 @@ cmd_exec	./lib/installer.php:3405				$results = shell_exec(cacti_escapeshellcmd(
 cmd_exec	./lib/installer.php:3437						shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:3493						$results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:837							$output = shell_exec(
+cmd_exec	./lib/maintenance_cli.php:173		$process = proc_open($argv, array(1 => array('pipe', 'w')), $pipes);
 cmd_exec	./lib/ping.php:167					$result = shell_exec('ping ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:169					$result = shell_exec('ping -m ' . ceil($this->timeout/1000) . ' -n ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:171					$result = shell_exec('ping -t ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
@@ -174,6 +173,7 @@ dynamic_include	./cli/change_device.php:35	require_once($config['base_path'] . '
 dynamic_include	./cli/change_device.php:36	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/float_rrdfiles.php:35	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/float_rrdfiles.php:36	require_once($config['base_path'] . '/lib/rrd.php');
+dynamic_include	./cli/float_rrdfiles.php:38	require_once($config['base_path'] . '/lib/maintenance_cli.php');
 dynamic_include	./cli/host_update_template.php:27	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/host_update_template.php:28	require_once($config['base_path'] . '/lib/api_automation.php');
 dynamic_include	./cli/host_update_template.php:29	require_once($config['base_path'] . '/lib/api_data_source.php');
@@ -536,16 +536,14 @@ dynamic_include	./spikekill.php:26	include_once($config['base_path'] . '/lib/spi
 fs_write	./cactid.php:110		$STDERR = fopen('null', 'wb');
 fs_write	./cactid.php:99		$STDERR = fopen('/dev/null', 'wb');
 fs_write	./cli/audit_database.php:215		if (file_put_contents($path, $contents) === false) {
-fs_write	./cli/float_rrdfiles.php:351				$fp = fopen($tmp_file, 'w');
-fs_write	./cli/float_rrdfiles.php:355					$lf     = @fopen('php://stderr', 'w');
 fs_write	./cli/import_package.php:159				$fp   = fopen($filename, 'r');
 fs_write	./cli/import_template.php:121				$fp = fopen($filename,'r');
 fs_write	./cli/input_whitelist.php:188			file_put_contents($config['input_whitelist'], json_encode($input));
 fs_write	./cli/md5sum.php:179		if (file_put_contents($md5_file,$output) === false) {
-fs_write	./cli/splice_rrd.php:327	file_put_contents($newxmlfile, $new_xml);
 fs_write	./cli/splice_rrd.php:47				if (($f = @fopen($path, 'a'))) {
 fs_write	./cli/splice_rrd.php:56			if (($f = @fopen($path, 'w'))) {
 fs_write	./cli/splice_rrd.php:872		return file_put_contents($xmlfile, $output);
+fs_write	./cli/splice_rrd.php:930		$source = @fopen($rrdfile, 'rb');
 fs_write	./host.php:591		$stdout = fopen('php://output', 'w');
 fs_write	./include/global_languages.php:956			file_put_contents($config['i18n_log'], $text . $eol, $mode);
 fs_write	./include/global_languages.php:964			file_put_contents($config['i18n_text_log'], $text . $eol, $mode);
@@ -576,6 +574,8 @@ fs_write	./lib/functions.php:7232				file_put_contents($tmp_file, 'cacti');
 fs_write	./lib/import.php:466		$f   = fopen($filename, 'r');
 fs_write	./lib/import.php:671							$file = fopen($filename, 'wb');
 fs_write	./lib/installer.php:2969				$file = fopen($cacheFile, "r");
+fs_write	./lib/maintenance_cli.php:123		$handle = @fopen($path, 'ab');
+fs_write	./lib/maintenance_cli.php:92		$handle = @fopen($path, 'x+b');
 fs_write	./lib/poller.php:1410									if (file_put_contents($tmpfile, $contents) !== false) {
 fs_write	./lib/poller.php:1417												file_put_contents($mypath, $contents);
 fs_write	./lib/poller.php:1446								file_put_contents($mypath, $contents);

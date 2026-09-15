@@ -39,6 +39,27 @@ Cacti CHANGELOG
 -issue: Delete a dead poller_time row by its id instead of its pid so a reused pid cannot delete a new collector's row
 -issue: Keep staged Boost rows when rrdtool pipe restarts are exhausted instead of treating the lost update as written
 -issue: Stage poller output rows that Boost does not already hold when Boost redirect is on instead of dropping them
+-issue: Keep float_rrdfiles.php debug output for later files when the debug log is refused for one file
+-security: Abort remove_graphs.php on a filter or declared option given in the wrong case, which getopt ignores
+-security: Do not follow redirects from a Remote Data Collector, and connect to the address that passed the reserved-address check
+-issue: Count the recovery batch size while building it instead of joining a second copy of the batch
+-issue: Open a new float_rrdfiles.php debug log in append mode so parallel children do not overwrite each other's lines
+-issue: Stop splice_rrd.php with the RRDtool Command Failed error when rrdtool dump exits with an error, as 1.2.31 intended, instead of splicing partial XML
+-issue: Remove splice_rrd.php temporary dump files before exiting when an rrdtool dump fails
+-security: Mask passwords, tokens and the CSRF token in the request that a Validation Error line writes to cacti.log
+-issue: Put IPv6 Remote Data Collector addresses in brackets in the request URL, and accept a bracketed IPv6 address
+-security: Refuse to append to an existing float_rrdfiles.php debug log when its owner cannot be verified, including builds without the POSIX extension
+-security: Write splice_rrd.php dumps through the created temporary file and check its name before rrdtool restore reads it
+-security: Never chmod or remove a maintenance temporary file by name once the name no longer refers to the file that was created
+-issue: Open splice_rrd.php and float_rrdfiles.php temporary files and the debug log in binary mode so Windows does not translate RRD bytes
+-security: Create splice_rrd.php and float_rrdfiles.php temporary files and a new debug log with owner-only permissions
+-issue: ss_netsnmp_lmsensors.php get returns degrees and volts again, as before 1.2.31, so stored lm-sensors values drop 1000x at upgrade; remove any /1000 CDEF added for 1.2.31
+-issue: Restore the 1.2.31 temporary file names of splice_rrd.php and float_rrdfiles.php, created exclusively so a planted symlink or existing file is refused
+-issue: Recognise a registered process launched with a relative script path from another directory, so a second copy does not start
+-issue: Allow loopback Remote Data Collector addresses again, as 1.2.31 did; link-local, this-network and IPv4-mapped forms of them stay refused
+-issue: Let remove_graphs.php accept --graph-type and warn on other unknown options, aborting only on a likely mistyped filter
+-issue: Accept alternation and bounded repeats in add_graphs.php --snmp-value-regex again, as 1.2.31 did
+-issue: Restore the 1.2.31 text of the Validation Error log line; the correlation id stays in the SECURITY event
 -issue: Parse installer start and finish times that fall on a whole second instead of crashing
 -security: Verify Remote Data Collector HTTPS certificates by default on new installs; upgraded installs keep their previous behaviour
 -security: Mask passwords, passphrases and community strings in DEVDBG SQL save logging with the existing ******** placeholder
@@ -95,6 +116,10 @@ Cacti CHANGELOG
 -issue: Stop repeating the poller overrun warning and mail every cycle for a collector that has died
 -issue: Leave poller output to Boost when Boost redirect is on instead of also writing it to the RRD files
 -issue: Stop marking a Boost run failed when it creates a new RRD file through the rrdtool pipe
+-issue: Restore the 1.2.31 wording of data source validation, script server, database audit, gap fill and recovery log lines
+-issue: Log SNMP errors other than timeouts at DEBUG, since 1.2.31 logged only timeouts at HIGH
+-issue: Restore the 1.2.31 exit codes of removespikes.php and splice_rrd.php
+-issue: Restore the 1.2.31 warning when an SNMP notification has no receivers
 -issue: Declare GPL-2.0-or-later in composer.json, the license the source headers grant
 -security: Pass over a disabled configured administrator when moving off the retired no-authentication method
 -security: Skip the unknown-username password hash for blank passwords, as a known username does

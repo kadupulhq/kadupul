@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -24,6 +25,7 @@
 */
 
 require(__DIR__ . '/../include/cli_check.php');
+require_once(__DIR__ . '/../lib/maintenance_cli.php');
 
 if ($config['poller_id'] > 1) {
 	print 'FATAL: This utility is designed for the main Data Collector only' . PHP_EOL;
@@ -101,13 +103,13 @@ if (cacti_sizeof($parms)) {
 				if (!file_exists($oldrrd)) {
 					print 'FATAL: File \'' . $oldrrd . '\' does not exist.' . PHP_EOL;
 
-					exit(1);
+					exit(-9);
 				}
 
 				if (!is_resource_writable($oldrrd)) {
 					print 'FATAL: File \'' . $oldrrd . '\' is not writable by this account.' . PHP_EOL;
 
-					exit(1);
+					exit(-8);
 				}
 
 				break;
@@ -117,13 +119,13 @@ if (cacti_sizeof($parms)) {
 				if (!file_exists($newrrd)) {
 					print 'FATAL: File \'' . $newrrd . '\' does not exist.' . PHP_EOL;
 
-					exit(1);
+					exit(-9);
 				}
 
 				if (!is_resource_writable($newrrd)) {
 					print 'FATAL: File \'' . $newrrd . '\' is not writable by this account.' . PHP_EOL;
 
-					exit(1);
+					exit(-8);
 				}
 
 				break;
@@ -133,7 +135,7 @@ if (cacti_sizeof($parms)) {
 				if (!is_resource_writable(dirname($finrrd) . '/') || (file_exists($finrrd) && !is_resource_writable($finrrd))) {
 					print 'FATAL: File \'' . $finrrd . '\' is not writable by this account.' . PHP_EOL;
 
-					exit(1);
+					exit(-8);
 				}
 
 				break;
@@ -178,7 +180,7 @@ if (cacti_sizeof($parms)) {
 				print 'ERROR: Invalid Parameter ' . $parameter . PHP_EOL . PHP_EOL;
 				display_help();
 
-				exit(1);
+				exit(-3);
 		}
 	}
 }
@@ -188,14 +190,14 @@ if ($oldrrd == '') {
 	print 'FATAL: You must specify a old RRDfile!' . PHP_EOL . PHP_EOL;
 	display_help();
 
-	exit(1);
+	exit(-2);
 }
 
 if ($newrrd == '') {
 	print 'FATAL: You must specify a New RRDfile!' . PHP_EOL . PHP_EOL;
 	display_help();
 
-	exit(1);
+	exit(-2);
 }
 
 if ($overwrite && $finrrd == '') {
@@ -206,7 +208,7 @@ if ($finrrd == '') {
 	print 'FATAL: You must specify a New RRDfile or use the overwrite option!' . PHP_EOL . PHP_EOL;
 	display_help();
 
-	exit(1);
+	exit(-2);
 }
 
 debug('Entering Mainline');
@@ -240,25 +242,44 @@ if (strlen($response)) {
 	$response_array = explode(' ', $response);
 	print 'NOTE: Using ' . $response_array[0] . ' Version ' . $response_array[1] . PHP_EOL;
 } else {
-	print 'FATAL: RRDTool not found in configuration or path.' . PHP_EOL . 'Please ensure RRDTool can be found using one of these methods!' . PHP_EOL;
+	print 'FATAL: RRDTool not found in configuration or path.' . PHP_EOL . 'Please insure RRDTool can be found using one of these methods!' . PHP_EOL;
 
-	exit(1);
+	exit(-1);
 }
 
-/* The dump files and the backups were previously named from the RRD basename
- * and mt_rand() directly in a world writable directory, and were created by
- * shell redirection and copy(), both of which follow symlinks. Everything now
- * goes in one private directory created for this run, so the names cannot be
- * claimed in advance. */
-$tempdir = tempnam(sys_get_temp_dir(), 'cacti_splice_');
+/* determine the temporary file name */
+$seed = mt_rand();
 
-if ($tempdir === false || !unlink($tempdir) || !mkdir($tempdir, 0700)) {
-	print 'FATAL: Unable to create a private working directory' . PHP_EOL;
-	exit(1);
+if (substr_count(PHP_OS, 'WIN')) {
+	$tempdir    = cacti_cli_windows_tempdir(getenv('TEMP'));
+	$oldxmlfile = $tempdir . '/' . str_replace('.rrd', '', basename($oldrrd)) . '.dump.' . $seed;
+	$seed++;
+	$newxmlfile = $tempdir . '/' . str_replace('.rrd', '', basename($newrrd)) . '.dump.' . $seed;
+} else {
+	$tempdir    = '/tmp';
+	$oldxmlfile = '/tmp/' . str_replace('.rrd', '', basename($oldrrd)) . '.dump.' . $seed;
+	$seed++;
+	$newxmlfile = '/tmp/' . str_replace('.rrd', '', basename($newrrd)) . '.dump.' . $seed;
 }
 
-$oldxmlfile = $tempdir . '/' . str_replace('.rrd', '', basename($oldrrd)) . '.dump';
-$newxmlfile = $tempdir . '/' . str_replace('.rrd', '', basename($newrrd)) . '.dump';
+/* The dumps keep their 1.2.31 names in the shared temporary directory, so each
+ * one is created exclusively and then written and read only through its open
+ * descriptor. A name that is already taken, by a planted symlink or anything
+ * else, stops the run rather than being followed. */
+$created = array();
+
+foreach (array($oldxmlfile, $newxmlfile) as $xmlfile) {
+	$handle = cacti_cli_create_file($xmlfile);
+
+	if (!is_resource($handle)) {
+		removeTempFiles($created);
+
+		print 'FATAL: ' . $handle . PHP_EOL;
+		exit(1);
+	}
+
+	$created[$xmlfile] = $handle;
+}
 
 if ($finrrd == '') {
 	$finrrd = dirname($newrrd) . '/' . basename($newrrd) . '.new';
@@ -266,32 +287,38 @@ if ($finrrd == '') {
 
 /* execute the dump commands */
 debug("Creating XML file '$oldxmlfile' from '$oldrrd'");
-shell_exec(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($oldrrd) . ' > ' . cacti_escapeshellarg($oldxmlfile));
+$old_dumped = cacti_cli_run_to_handle(array($rrdtool, 'dump', $oldrrd), $created[$oldxmlfile]);
 
 debug("Creating XML file '$newxmlfile' from '$newrrd'");
-shell_exec(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($newrrd) . ' > ' . cacti_escapeshellarg($newxmlfile));
+$new_dumped = cacti_cli_run_to_handle(array($rrdtool, 'dump', $newrrd), $created[$newxmlfile]);
 
 /* read the xml files into arrays */
-if (file_exists($oldxmlfile)) {
-	$old_output = file($oldxmlfile);
+if ($old_dumped) {
+	$old_output = cacti_cli_read_lines($created[$oldxmlfile]);
 
 	/* remove the temp file */
-	unlink($oldxmlfile);
+	cacti_cli_remove_file($created[$oldxmlfile], $oldxmlfile);
+	unset($created[$oldxmlfile]);
 } else {
+	removeTempFiles($created);
+
 	print 'FATAL: RRDtool Command Failed on \'' . $oldrrd . '\'.  Please insure your RRDtool install is valid!' . PHP_EOL;
 
-	exit(1);
+	exit(-12);
 }
 
-if (file_exists($newxmlfile)) {
-	$new_output = file($newxmlfile);
+if ($new_dumped) {
+	$new_output = cacti_cli_read_lines($created[$newxmlfile]);
 
 	/* remove the temp file */
-	unlink($newxmlfile);
+	cacti_cli_remove_file($created[$newxmlfile], $newxmlfile);
+	unset($created[$newxmlfile]);
 } else {
+	removeTempFiles($created);
+
 	print 'FATAL: RRDtool Command Failed on \'' . $newrrd . '\'.  Please insure your RRDtool install is valid!' . PHP_EOL;
 
-	exit(1);
+	exit(-12);
 }
 
 print 'NOTE: RRDfile will be written to \'' . $finrrd . '\'' . PHP_EOL;
@@ -324,16 +351,40 @@ debug('Re-Creating XML File');
 $new_xml = recreateXML($new_rrd);
 
 debug('Writing XML File to Disk');
-file_put_contents($newxmlfile, $new_xml);
+$handle = cacti_cli_create_file($newxmlfile);
+
+if (!is_resource($handle)) {
+	print 'FATAL: ' . $handle . PHP_EOL;
+	exit(1);
+}
+
+/* fwrite() can return a short count, or fflush() can fail, on a full disk.
+ * Either one leaves a truncated file on disk that rrdtool restore below
+ * would read as if it were complete. */
+$bytes_written = fwrite($handle, $new_xml);
+
+if ($bytes_written !== strlen($new_xml) || !fflush($handle)) {
+	print 'FATAL: Refusing to restore \'' . $newxmlfile . '\' because the XML file was not written completely' . PHP_EOL;
+	cacti_cli_remove_file($handle, $newxmlfile);
+	exit(1);
+}
 
 /* finally update the file XML file and Reprocess the RRDfile */
 if (!$dryrun) {
+	/* rrdtool restore opens the file by name, so the name must still be the
+	 * file written above */
+	if (!cacti_cli_path_is_handle($handle, $newxmlfile)) {
+		print 'FATAL: Refusing to restore \'' . $newxmlfile . '\' because it changed after it was written' . PHP_EOL;
+		cacti_cli_remove_file($handle, $newxmlfile);
+		exit(1);
+	}
+
 	debug('Creating New RRDfile');
 	createRRDFileFromXML($newxmlfile, $finrrd);
 }
 
 /* remove the temp file */
-unlink($newxmlfile);
+cacti_cli_remove_file($handle, $newxmlfile);
 
 /* change ownership */
 if ($ownerset) {
@@ -868,26 +919,73 @@ function XMLrip($tag, $line) {
 	return trim(str_replace("<$tag>", '', str_replace("</$tag>", '', $line)));
 }
 
+/* Close and remove every dump file this run still holds, so an early exit does
+ * not leave a predictable name behind in the temporary directory for the next
+ * run to refuse. */
+function removeTempFiles(&$created) {
+	foreach ($created as $file => $handle) {
+		cacti_cli_remove_file($handle, $file);
+	}
+
+	$created = array();
+}
+
 function writeXMLFile($output, $xmlfile) {
 	return file_put_contents($xmlfile, $output);
 }
 
 function backupRRDFile($rrdfile) {
-	global $tempdir, $html;
+	global $tempdir, $seed, $html;
 
 	$backupdir = $tempdir;
 
-	/* the working directory is private to this run, so a name only has to be
-	 * unique within it rather than unguessable */
-	$newfile = basename($rrdfile);
-
-	for ($i = 1; file_exists($backupdir . '/' . $newfile); $i++) {
-		$newfile = basename($rrdfile) . '.' . $i;
+	if (file_exists($backupdir . '/' . basename($rrdfile)) || is_link($backupdir . '/' . basename($rrdfile))) {
+		$newfile = basename($rrdfile) . '.' . $seed;
+	} else {
+		$newfile = basename($rrdfile);
 	}
 
 	print 'NOTE: Backing Up \'' . $rrdfile . '\' to \'' . $backupdir . '/' .  $newfile . '\'' . PHP_EOL;
 
-	return copy($rrdfile, $backupdir . '/' . $newfile);
+	/* copy() follows a symlink planted at the backup name, so the backup is
+	 * created exclusively and filled from the source instead */
+	$target = cacti_cli_create_file($backupdir . '/' . $newfile);
+
+	if (!is_resource($target)) {
+		print 'ERROR: ' . $target . PHP_EOL;
+
+		return false;
+	}
+
+	$source = @fopen($rrdfile, 'rb');
+	$size   = $source !== false ? @fstat($source) : false;
+	$bytes  = $source !== false ? stream_copy_to_stream($source, $target) : false;
+
+	/* stream_copy_to_stream() returns the byte count it actually moved even
+	 * when the source ends early, so an interrupted copy has to be caught by
+	 * comparing that count against the source's size taken before the copy
+	 * started, not by checking the return value against false alone */
+	$copied = $bytes !== false && $size !== false && $bytes === $size['size'];
+
+	/* buffered bytes can still fail to reach the disk, so a copy only counts
+	 * once they are flushed; the file is removed through its handle otherwise */
+	if ($copied && !fflush($target)) {
+		$copied = false;
+	}
+
+	if ($source !== false) {
+		fclose($source);
+	}
+
+	/* a failed copy leaves an empty or partial file at $newfile, which a later
+	 * run would then treat as an existing backup */
+	if ($copied) {
+		fclose($target);
+	} else {
+		cacti_cli_remove_file($target, $backupdir . '/' . $newfile);
+	}
+
+	return $copied;
 }
 
 /** preProcessXML - This function strips the timestamps off the XML dump

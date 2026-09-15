@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -168,7 +169,7 @@ if (cacti_sizeof($parms)) {
 			default:
 				print 'ERROR: Invalid Parameter ' . $parameter . "\n\n";
 				display_help();
-				exit(1);
+				exit(-3);
 		}
 	}
 } else {
@@ -219,7 +220,7 @@ $result = $spiker->remove_spikes();
 if (!$result) {
 	print "ERROR: Remove Spikes experienced errors\n";
 	print $spiker->get_errors();
-	exit(1);
+	exit(-1);
 } else {
 	print $spiker->get_output();
 	exit(0);

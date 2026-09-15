@@ -2771,9 +2771,23 @@ function cacti_process_identity_matches($pid) {
 	 * Compare script paths while ignoring flags that legitimately differ
 	 * between master and worker instances of the same Cacti command. */
 	if ($self_cmdline !== false && $self_cmdline !== '' && $other_cmdline !== false && $other_cmdline !== '') {
-		$script = static function ($cmdline) {
+		$script = static function ($cmdline, $owner) {
 			foreach (explode("\0", $cmdline) as $argument) {
 				if (preg_match('/\.php\z/i', $argument)) {
+					/* A relative script path is relative to the working directory
+					 * of the process that was launched with it, not to ours. */
+					if ($argument[0] !== '/') {
+						$cwd = @readlink('/proc/' . $owner . '/cwd');
+
+						/* Resolving it against our own directory instead could
+						 * match an unrelated process, so the script is unknown. */
+						if ($cwd === false) {
+							return null;
+						}
+
+						$argument = $cwd . '/' . $argument;
+					}
+
 					$resolved = realpath($argument);
 
 					return $resolved !== false ? $resolved : $argument;
@@ -2782,10 +2796,14 @@ function cacti_process_identity_matches($pid) {
 
 			return false;
 		};
-		$mine_script   = $script($self_cmdline);
-		$theirs_script = $script($other_cmdline);
+		$mine_script   = $script($self_cmdline, getmypid());
+		$theirs_script = $script($other_cmdline, $pid);
 
 		if ($mine_script !== false && $theirs_script !== false) {
+			if ($mine_script === null || $theirs_script === null) {
+				return null;
+			}
+
 			return hash_equals($mine_script, $theirs_script);
 		}
 
