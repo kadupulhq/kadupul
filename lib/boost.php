@@ -2136,6 +2136,24 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 		$update_options = '--skip-past-updates';
 	} else {
 		$update_options = '';
+		if (cacti_has_control_chars($rrd_update_values)) {
+			return 'ERROR: Invalid control characters in legacy RRD update values';
+		}
+		/* Legacy RRDtool stops a bulk command at a stale timestamp. Match the
+		 * modern skip-past-updates behavior before submitting retained rows. */
+		$last_update = boost_rrdtool_get_last_update_time($rrd_path, $rrdtool_pipe);
+		if (!ctype_digit((string) $last_update)) {
+			return 'ERROR: Unable to read the last RRD update for a legacy retry';
+		}
+		$samples = preg_split('/\s+/', trim($rrd_update_values), -1, PREG_SPLIT_NO_EMPTY);
+		$samples = array_filter($samples, function($sample) use ($last_update) {
+			$timestamp = explode(':', $sample, 2)[0];
+			return !ctype_digit($timestamp) || (int) $timestamp > (int) $last_update;
+		});
+		$rrd_update_values = implode(' ', $samples);
+		if ($rrd_update_values === '') {
+			return 'OK';
+		}
 	}
 
 	if ($valid_entry) {
