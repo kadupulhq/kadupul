@@ -16,6 +16,9 @@ Targeting `v1.3.0`, the first planned application release. See
 - Preserve meaningful dates in behavioral observations and record incomplete
   manifests reliably when test setup fails.
 
+- PHP 8.4 no longer reports a deprecation notice for the device export or the
+  basic auth mapfile, which now pass the CSV escape argument explicitly.
+  Parsing and output are unchanged.
 - PHP 8.5 no longer reports deprecation notices for three semicolon case
   terminators, the `(double)` cast in spikekill, or `imagedestroy()`,
   `xml_parser_free()` and `curl_close()` calls that have had no effect since
