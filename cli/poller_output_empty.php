@@ -75,7 +75,11 @@ while (($pending = (int) db_fetch_cell('SELECT count(*) FROM poller_output')) > 
 	$rrds_processed = $rrds_processed + process_poller_output($rrdtool_pipe, false, $deferred, $consumed);
 
 	if ($deferred || $consumed === 0) {
-		print "ERROR: Poller output made no progress; queued samples retained for a later retry.\n";
+		if ($deferred) {
+			print "ERROR: Poller output deferred after a handoff or cleanup failure; remaining samples retained for retry.\n";
+		} else {
+			print "ERROR: Poller output made no progress; queued samples retained for a later retry.\n";
+		}
 		rrd_close($rrdtool_pipe);
 		exit(1);
 	}

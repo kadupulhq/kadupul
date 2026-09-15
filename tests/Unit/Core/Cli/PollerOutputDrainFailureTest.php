@@ -2,14 +2,14 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-2.0-or-later
 
-test('the production drain reports a deferred failure even after partial progress', function ($consumed) {
+test('the production drain reports deferral separately from zero progress', function ($consumed, $deferred) {
     $source = file_get_contents(dirname(__DIR__, 4) . '/cli/poller_output_empty.php');
     $start = strpos($source, 'while (');
     $end = strpos($source, '/*  display_version', $start);
     expect($start)->not->toBeFalse();
     expect($end)->not->toBeFalse();
     $code = 'set_time_limit(3); function db_fetch_cell($sql) { return 2; }'
-        . 'function process_poller_output(&$pipe, $remainder, &$deferred, &$consumed) { $deferred=true; $consumed=' . $consumed . '; return 0; }'
+        . 'function process_poller_output(&$pipe, $remainder, &$deferred, &$consumed) { $deferred=' . ($deferred ? 'true' : 'false') . '; $consumed=' . $consumed . '; return 0; }'
         . 'function rrd_close($pipe) { echo "CLOSED\\n"; }'
         . '$rrds_processed=0; $rrdtool_pipe=null;'
         . substr($source, $start, $end - $start);
@@ -19,9 +19,9 @@ test('the production drain reports a deferred failure even after partial progres
     $stderr = stream_get_contents($pipes[2]);
     fclose($pipes[1]); fclose($pipes[2]);
     expect(proc_close($child))->toBe(1)
-        ->and($stdout)->toContain('made no progress')->toContain('CLOSED')
+        ->and($stdout)->toContain($deferred ? 'deferred after a handoff or cleanup failure' : 'made no progress')->toContain('CLOSED')
         ->and($stderr)->toBe('');
-})->with(array(0, 1));
+})->with(array(array(0, true), array(1, true), array(0, false)));
 
 
 test('concurrent arrivals do not stop a drain that acknowledged source deletions', function () {

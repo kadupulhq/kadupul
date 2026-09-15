@@ -319,7 +319,7 @@ function boostMariaDbLoadDeleteRows($root) {
 	if (!function_exists('boostMariaDbDeleteOutputRows')) {
 		preg_match('/^function poller_delete_output_rows\(.*?^}\n/ms', file_get_contents($root . '/lib/poller.php'), $match);
 		expect($match)->not->toBeEmpty();
-		eval(str_replace(array('poller_delete_output_rows(', 'db_execute_prepared(', 'db_affected_rows('), array('boostMariaDbDeleteOutputRows(', 'boostMariaDbDeletePrepared(', 'boostMariaDbDeleteAffected('), $match[0]));
+		eval(str_replace(array('poller_delete_output_rows(', 'db_execute_prepared(', 'db_affected_rows(', 'cacti_sizeof('), array('boostMariaDbDeleteOutputRows(', 'boostMariaDbDeletePrepared(', 'boostMariaDbDeleteAffected(', 'count('), $match[0]));
 	}
 }
 

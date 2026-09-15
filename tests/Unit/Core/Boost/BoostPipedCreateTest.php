@@ -55,7 +55,7 @@ function boostPipedCreate_boost_rrdtool_function_create($local_data_id, $show_so
 }
 
 function boostPipedCreate_get_rrdtool_version() {
-	return '1.7';
+	return $GLOBALS['boost_piped_create']['version'] ?? '1.7';
 }
 
 function boostPipedCreate_cacti_version_compare($a, $b, $operator) {
@@ -78,7 +78,7 @@ function boostPipedCreate_rrdtool_execute($command) {
 	$GLOBALS['boost_piped_create']['executed'][] = $command;
 
 	if (!empty($GLOBALS['boost_piped_create']['real_binary'])) {
-		return boostPipedCreateRealCommand(array_merge(array($GLOBALS['boost_piped_create']['real_binary']), explode(' ', $command)));
+		return boostPipedCreateRealCommand(array_merge(array($GLOBALS['boost_piped_create']['real_binary']), preg_split('/\s+/', trim($command))));
 	}
 
 	/* a piped command returns nothing once written */
@@ -190,7 +190,7 @@ function boostPipedCreateLoad($root) {
 }
 
 function boostPipedCreateEval($code) {
-	eval(preg_replace('/\b(boost_rrdtool_pipe_creates|boost_rrdtool_function_update|boost_rrdtool_function_create|rrdtool_execute_path_command|rrdtool_execute|cacti_rrdtool_valid_ds_template|cacti_rrdtool_valid_path|cacti_has_control_chars|cacti_version_compare|get_rrdtool_version|read_config_option|db_fetch_cell_prepared|cacti_log)\(/', 'boostPipedCreate_$1(', $code));
+	eval(preg_replace('/\b(boost_rrdtool_pipe_creates|boost_rrdtool_get_last_update_time|boost_rrdtool_function_update|boost_rrdtool_function_create|rrdtool_execute_path_command|rrdtool_execute|cacti_rrdtool_valid_ds_template|cacti_rrdtool_valid_path|cacti_has_control_chars|cacti_version_compare|get_rrdtool_version|read_config_option|db_fetch_cell_prepared|cacti_log)\(/', 'boostPipedCreate_$1(', $code));
 }
 
 /* The acknowledgement test Boost applies to this return value. */
@@ -381,7 +381,8 @@ function boostPipedCreateRealCommand($args) {
 	return $stdout;
 }
 
-test('Boost retries skip consumed timestamps and still apply newer samples in a real RRD', function () {
+test('Boost retries skip consumed timestamps and still apply newer samples in a real RRD', function ($version) {
+	$GLOBALS['boost_piped_create']['version'] = $version;
 	$binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
 	if (!is_executable($binary)) {
 		$this->markTestSkipped('RRDtool is required for the real replay check');
@@ -399,4 +400,35 @@ test('Boost retries skip consumed timestamps and still apply newer samples in a 
 	$values = '1700000060:999 1700000120:20';
 	expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, 'value', $values, $pipe))->toBe('OK')
 		->and(boostPipedCreateRealCommand(array($binary, 'lastupdate', $path)))->toContain('1700000120: 20');
+})->with(array('1.7', '1.4'));
+
+function boostPipedCreate_boost_rrdtool_get_last_update_time($path, &$pipe) {
+	if (!empty($GLOBALS['boost_piped_create']['real_binary'])) {
+		return trim(boostPipedCreateRealCommand(array($GLOBALS['boost_piped_create']['real_binary'], 'last', $path)));
+	}
+	return $GLOBALS['boost_piped_create']['last_update'] ?? '0';
+}
+
+test('legacy retry refuses to discard samples when the last-update query is unreadable', function () {
+	$GLOBALS['boost_piped_create']['version'] = '1.4';
+	$GLOBALS['boost_piped_create']['last_update'] = 'ERROR';
+	$path = $GLOBALS['boost_piped_create']['path'];
+	touch($path);
+	$pipe = false;
+	$values = '1700000060:10';
+	expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, 'value', $values, $pipe))->toContain('ERROR:')
+		->and($values)->toBe('1700000060:10')
+		->and($GLOBALS['boost_piped_create']['executed'])->toBe(array());
+});
+
+
+test('legacy filtering preserves rejection of control characters before tokenizing values', function () {
+	$GLOBALS['boost_piped_create']['version'] = '1.4';
+	$path = $GLOBALS['boost_piped_create']['path'];
+	touch($path);
+	$pipe = false;
+	$values = "1700000060:10\n1700000120:20";
+	expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, 'value', $values, $pipe))->toContain('ERROR:')
+		->and($values)->toBe("1700000060:10\n1700000120:20")
+		->and($GLOBALS['boost_piped_create']['executed'])->toBe(array());
 });

@@ -652,7 +652,7 @@ function poller_delete_output_rows($keys, &$failed = null) {
 			$params[] = (string) $key[1];
 			$params[] = (string) $key[2];
 		}
-		$placeholders = implode(',', array_fill(0, count($chunk), '(?,?,?)'));
+		$placeholders = implode(',', array_fill(0, cacti_sizeof($chunk), '(?,?,?)'));
 		if (db_execute_prepared("DELETE FROM poller_output WHERE (local_data_id, rrd_name, time) IN ($placeholders)", $params) === false) {
 			$failed = true;
 			break;
