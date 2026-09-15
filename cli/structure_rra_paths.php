@@ -411,11 +411,7 @@ function structure_rra_is_safe_source($path, $base_rra_path) {
 		return false;
 	}
 
-	if ($real_path != $real_base && strpos($real_path, $real_base . DIRECTORY_SEPARATOR) !== 0) {
-		return false;
-	}
-
-	return true;
+	return cacti_path_is_within($real_path, $real_base);
 }
 
 /**

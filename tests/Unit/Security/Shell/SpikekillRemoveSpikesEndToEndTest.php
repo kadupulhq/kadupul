@@ -278,6 +278,7 @@ test('remove_spikes reports failure and cleans up the temp XML when the restore 
 
 	expect($ok)->toBeFalse()
 		->and($instance->get_errors())->toContain('Unable to restore')
+		->and(implode(' ', $GLOBALS['spikekill_e2e_test_log']))->not->toContain('Removed ')
 		/* the restore failing after a successful backup must not remove
 		   the backup an admin would need to recover from it manually */
 		->and(file_exists($backup))->toBeTrue()

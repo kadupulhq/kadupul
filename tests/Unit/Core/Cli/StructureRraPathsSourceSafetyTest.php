@@ -26,6 +26,8 @@
  * the symlink and realpath checks are exercised, not just asserted as text.
  */
 
+require_once dirname(__DIR__, 3) . '/Helpers/SpikekillPathFunctions.php';
+
 $source = file_get_contents(dirname(__DIR__, 4) . '/cli/structure_rra_paths.php');
 
 $start = strpos($source, 'function structure_rra_is_safe_source(');

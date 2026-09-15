@@ -8577,7 +8577,7 @@ function cacti_join_dir_child($dir, $name, $separator = DIRECTORY_SEPARATOR) {
 
 	$last = substr($dir, -1);
 
-	if ($last === '/' || $last === '\\') {
+	if ($last === '/' || ($separator === '\\' && $last === '\\')) {
 		return $dir . $name;
 	}
 

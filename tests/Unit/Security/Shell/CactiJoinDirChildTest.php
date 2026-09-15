@@ -54,5 +54,6 @@ test('a child name is joined without corrupting a bare Windows drive-relative di
 	'POSIX: a relative dir gets one separator'                 => ['dir', 'child', '/', 'dir/child'],
 	'POSIX: a plain dir gets one separator'                    => ['/dir', 'child', '/', '/dir/child'],
 	'POSIX: a trailing-slash dir is not doubled'               => ['/dir/', 'child', '/', '/dir/child'],
+	'POSIX: backslash is a directory name character' => ['/dir\\', 'child', '/', '/dir\\/child'],
 	'Empty dir returns the bare name'                          => ['', 'child', '/', 'child'],
 ]);

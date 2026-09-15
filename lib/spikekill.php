@@ -848,9 +848,9 @@ class spikekill {
 
 		$this->strout .= ($this->html ? "</table>":'');
 
-		if ($this->total_kills > 0) {
+		if ($restored && !$this->dryrun && $this->total_kills > 0) {
 			cacti_log("WARNING: Removed '$this->total_kills' Spikes from '$this->rrdfile', Method:'$this->method'", false, 'WEBUI');
-		} elseif($this->debug) {
+		} elseif ($restored && !$this->dryrun && $this->debug) {
 			cacti_log("NOTE: Removed '$this->total_kills' Spikes from '$this->rrdfile', Method:'$this->method'", false, 'WEBUI');
 		}
 

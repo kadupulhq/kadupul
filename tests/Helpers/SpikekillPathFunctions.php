@@ -3,9 +3,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 // Execute the production pure path helper without loading database globals.
-if (!function_exists('cacti_join_dir_child')) {
+foreach (array('cacti_join_dir_child', 'cacti_path_is_within', 'cacti_normalize_windows_path') as $name) {
+	if (function_exists($name)) {
+		continue;
+	}
 	$source = file_get_contents(dirname(__DIR__, 2) . '/lib/functions.php');
-	$start = strpos($source, 'function cacti_join_dir_child(');
+	$start = strpos($source, 'function ' . $name . '(');
 	if ($start === false) {
 		throw new RuntimeException('Missing production directory join helper');
 	}
