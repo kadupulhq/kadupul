@@ -988,9 +988,30 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 			}
 
 			if ($running == 0 && !$checked_bad) {
-				// Remove recently deleted items from the poller_output table
-				db_execute('DELETE FROM poller_output WHERE local_data_id NOT IN (SELECT id FROM data_local)');
+				/* Purge only the exact orphan keys observed here, so arrivals for
+				 * a concurrently recreated data source cannot be swept away. */
+				$orphans = db_fetch_assoc('SELECT po.local_data_id, po.rrd_name, po.time
+					FROM poller_output AS po
+					LEFT JOIN data_local AS dl ON dl.id = po.local_data_id
+					WHERE dl.id IS NULL LIMIT 40000');
+				if ($orphans === false) {
+					$deferred = true;
+					cacti_log('ERROR: Unable to inspect orphan samples; rows retained for retry.', false, 'POLLER');
+					return $rrds_processed;
+				}
+				$orphan_keys = array();
+				foreach ($orphans as $orphan) {
+					$orphan_keys[] = array($orphan['local_data_id'], $orphan['rrd_name'], $orphan['time']);
+				}
+				$consumed += poller_delete_output_rows($orphan_keys, $orphan_failed);
+				if ($orphan_failed) {
+					$deferred = true;
+					cacti_log('ERROR: Orphan sample cleanup failed; rows retained for retry.', false, 'POLLER');
+					return $rrds_processed;
+				}
 
+				/* A new poller may have started since the running-count snapshot.
+				 * Diagnose incomplete samples, but retain them for later arrivals. */
 				// Identify data sources that are somehow not aligned
 				$items = db_fetch_assoc('SELECT rrd_num,
 					COUNT(DISTINCT po.local_data_id, po.rrd_name) AS ids, dt.name, dl.host_id,
@@ -1014,7 +1035,6 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 							cacti_log(sprintf('WARNING: Data Template \'%s\' is impacted by lack of complete information', $item['name']), false, 'POLLER');
 							$prevName = $item['name'];
 
-							db_execute('DELETE FROM poller_output WHERE local_data_id IN(' . $item['local_data_ids'] . ')');
 						}
 					}
 				}
