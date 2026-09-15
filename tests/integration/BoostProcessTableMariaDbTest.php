@@ -31,6 +31,8 @@ function boostMariaDbReset() {
 	);
 	$GLOBALS['boost_mariadb_cache'] = array('tables' => array(), 'columns' => array());
 	$GLOBALS['boost_mariadb_logs']  = array();
+	$GLOBALS['boost_delete_calls'] = 0;
+	$GLOBALS['boost_delete_fail_at'] = 0;
 }
 
 function boostMariaDbFetchCellPrepared($sql, $params = array()) {
@@ -274,6 +276,9 @@ test('runtime repair clears duplicate legacy rows before adding the run-child ke
 });
 
 function boostMariaDbDeletePrepared($sql, $params) {
+	if (++$GLOBALS['boost_delete_calls'] === $GLOBALS['boost_delete_fail_at']) {
+		return false;
+	}
 	try {
 		$statement = $GLOBALS['boost_mariadb_pdo']->prepare($sql);
 		$statement->execute($params);
@@ -290,11 +295,7 @@ function boostMariaDbDeleteAffected() {
 }
 
 test('poller deletes only its selected sample keys when newer rows arrive before deletion', function () use ($root) {
-	if (!function_exists('boostMariaDbDeleteOutputRows')) {
-		preg_match('/^function poller_delete_output_rows\(.*?^}\n/ms', file_get_contents($root . '/lib/poller.php'), $match);
-		expect($match)->not->toBeEmpty();
-		eval(str_replace(array('poller_delete_output_rows(', 'db_execute_prepared(', 'db_affected_rows('), array('boostMariaDbDeleteOutputRows(', 'boostMariaDbDeletePrepared(', 'boostMariaDbDeleteAffected('), $match[0]));
-	}
+	boostMariaDbLoadDeleteRows($root);
 	$db = $GLOBALS['boost_mariadb_pdo'];
 	$db->exec('CREATE TEMPORARY TABLE poller_output (local_data_id INT, rrd_name VARCHAR(19), time TIMESTAMP, output VARCHAR(512), PRIMARY KEY(local_data_id,rrd_name,time)) ENGINE=MEMORY');
 	try {
@@ -313,3 +314,34 @@ test('poller deletes only its selected sample keys when newer rows arrive before
 		$db->exec('DROP TEMPORARY TABLE poller_output');
 	}
 });
+
+function boostMariaDbLoadDeleteRows($root) {
+	if (!function_exists('boostMariaDbDeleteOutputRows')) {
+		preg_match('/^function poller_delete_output_rows\(.*?^}\n/ms', file_get_contents($root . '/lib/poller.php'), $match);
+		expect($match)->not->toBeEmpty();
+		eval(str_replace(array('poller_delete_output_rows(', 'db_execute_prepared(', 'db_affected_rows('), array('boostMariaDbDeleteOutputRows(', 'boostMariaDbDeletePrepared(', 'boostMariaDbDeleteAffected('), $match[0]));
+	}
+}
+
+
+test('poller reports failed source deletion even after earlier chunks made progress', function ($fail_at) use ($root) {
+	boostMariaDbLoadDeleteRows($root);
+	$db = $GLOBALS['boost_mariadb_pdo'];
+	$db->exec('CREATE TEMPORARY TABLE poller_output (local_data_id INT, rrd_name VARCHAR(19), time TIMESTAMP, PRIMARY KEY(local_data_id,rrd_name,time)) ENGINE=MEMORY');
+	try {
+		$values = array();
+		$keys = array();
+		for ($id = 1; $id <= 10001; $id++) {
+			$values[] = "($id,'value','2026-09-15 00:00:00')";
+			$keys[] = array($id, 'value', '2026-09-15 00:00:00');
+		}
+		$db->exec('INSERT INTO poller_output VALUES ' . implode(',', $values));
+		$GLOBALS['boost_delete_fail_at'] = $fail_at;
+		$consumed = boostMariaDbDeleteOutputRows($keys, $failed);
+		expect($failed)->toBeTrue()
+			->and($consumed)->toBe($fail_at === 1 ? 0 : 10000)
+			->and((int) $db->query('SELECT count(*) FROM poller_output')->fetchColumn())->toBe(10001 - $consumed);
+	} finally {
+		$db->exec('DROP TEMPORARY TABLE poller_output');
+	}
+})->with(array(1, 2));

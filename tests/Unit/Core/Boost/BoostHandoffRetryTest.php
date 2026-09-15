@@ -14,7 +14,7 @@ function cacti_sizeof($rows)
 }
 function db_fetch_assoc($sql)
 {
-    return array(array('local_data_id' => 7));
+    return $GLOBALS['cleanup_retry_rows'] ?? array(array('local_data_id' => 7));
 }
 function db_fetch_assoc_prepared(...$args)
 {
@@ -26,7 +26,7 @@ function array_rekey($rows, ...$args)
 }
 function boost_poller_on_demand(&$rows)
 {
-    return null;
+    return isset($GLOBALS['cleanup_retry_rows']) ? true : null;
 }
 function db_execute(...$args)
 {
@@ -34,6 +34,10 @@ function db_execute(...$args)
 }
 function rrdtool_function_update(...$args)
 {
+    if (isset($GLOBALS['cleanup_retry_rows'])) {
+        $GLOBALS['cleanup_retry_updates'] = $args[0];
+        return 1;
+    }
     throw new \RuntimeException('A failed handoff must not write an RRD');
 }
 
@@ -90,4 +94,43 @@ test('main poller skips subsequent drains and final drain after a deferred hando
     }
     expect($GLOBALS['deferred_probe_calls'])->toBe(1)
         ->and($poller_output_deferred)->toBeTrue();
+});
+
+
+function poller_delete_output_rows($keys, &$failed) {
+    $GLOBALS['cleanup_retry_keys'] = $keys;
+    $failed = true;
+    return 1;
+}
+function dsstats_poller_output($rows) {}
+function dsdebug_poller_output($rows) {}
+function api_plugin_hook_function($name, $rows) {}
+function db_fetch_cell($sql) { throw new \RuntimeException('Cleanup failure must stop further drain queries'); }
+
+test('partial cleanup failure still updates consumed samples and propagates deferral', function () {
+    $saved = $GLOBALS['config'] ?? null;
+    $root = sys_get_temp_dir() . '/cleanup-retry-' . bin2hex(random_bytes(6));
+    mkdir($root, 0700);
+    file_put_contents($root . '/rrd.php', '<?php');
+    $GLOBALS['config']['library_path'] = $root;
+    $row = array('local_data_id' => 7, 'output' => '10', 'time' => '2026-09-15 00:00:00', 'unix_time' => 1789430400,
+        'rrd_path' => '/example.rrd', 'rrd_name' => 'value', 'rrd_num' => 1, 'data_template_id' => 0);
+    $next = $row;
+    $next['time'] = '2026-09-15 00:01:00';
+    $next['unix_time'] += 60;
+    $next['output'] = '11';
+    $GLOBALS['cleanup_retry_rows'] = array($row, $next);
+    try {
+        $pipe = null;
+        expect(process_poller_output($pipe, false, $deferred, $consumed))->toBe(1)
+            ->and($deferred)->toBeTrue()
+            ->and($consumed)->toBe(1)
+            ->and($GLOBALS['cleanup_retry_keys'])->toBe(array(array(7, 'value', $row['time']), array(7, 'value', $next['time'])))
+            ->and($GLOBALS['cleanup_retry_updates']['/example.rrd']['times'])->toBe(array($row['unix_time'] => array('value' => '10'), $next['unix_time'] => array('value' => '11')));
+    } finally {
+        unset($GLOBALS['cleanup_retry_rows'], $GLOBALS['cleanup_retry_keys'], $GLOBALS['cleanup_retry_updates']);
+        $GLOBALS['config'] = $saved;
+        unlink($root . '/rrd.php');
+        rmdir($root);
+    }
 });
