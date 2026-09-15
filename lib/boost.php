@@ -590,9 +590,7 @@ function boost_poller_on_demand(&$results) {
 						}
 					}
 
-					boost_redirect_delete_staged_rows($staged, $conn);
-
-					$return_value = true;
+					$return_value = boost_redirect_delete_staged_rows($staged, $conn) ? true : null;
 				} else {
 					$value_tuples = array();
 
@@ -629,12 +627,18 @@ function boost_poller_on_demand(&$results) {
 							}
 						}
 
-						boost_redirect_delete_staged_rows($staged, $conn);
+						if (!boost_redirect_delete_staged_rows($staged, $conn)) {
+							$return_value = null;
+						}
 					}
 				}
 			}
 		} else {
 			$return_value = true;
+		}
+
+		if ($return_value === null) {
+			cacti_log('ERROR: Boost handoff cleanup failed; retaining poller output for retry without a direct RRD update.', false, 'BOOST');
 		}
 
 		/* restore original error handler */

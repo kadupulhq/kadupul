@@ -75,6 +75,17 @@ function run_guard($method, array $request, array $post = array(), array $server
 		}
 	}
 
+	$functions = file_get_contents($root . '/lib/functions.php');
+	foreach (array('sanitize_uri', 'is_urlencoded') as $name) {
+		if (preg_match('/^function ' . $name . '\(.*?^}\R/ms', $functions, $matches) !== 1) {
+			throw new \RuntimeException('Missing URI helper');
+		}
+		$helpers .= $matches[0];
+	}
+	if (preg_match('/\tif \(isset\(\$_SERVER\[\'HTTP_REFERER\'\]\)\) \{.*?\n\t}/s', $global, $referer) !== 1) {
+		throw new \RuntimeException('Missing Referer sanitization');
+	}
+
 	$script = '<?php
 		function isset_request_var($v) { return isset($_REQUEST[$v]); }
 		function get_nfilter_request_var($n, $d = "") { return isset($_REQUEST[$n]) ? $_REQUEST[$n] : $d; }
@@ -88,7 +99,7 @@ function run_guard($method, array $request, array $post = array(), array $server
 		register_shutdown_function(function () use (&$passed) {
 			print $passed ? "pass" : (string) http_response_code();
 		});
-		' . substr($global, $start, $end - $start) . '
+		' . $referer[0] . substr($global, $start, $end - $start) . '
 		$passed = true;';
 
 	$file = tempnam(sys_get_temp_dir(), 'guard');
@@ -448,4 +459,10 @@ test('only GET gets the same-site relaxation on a guarded action; HEAD, PUT, DEL
 				->and(run_guard($method, $request, array(), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('405', "$action $method same-origin");
 		}
 	}
+});
+
+
+test('IPv6 Referer survives global bootstrap before same-site validation', function () {
+    expect(run_guard('GET', array('action' => 'item_remove'), array(), array('SERVER_NAME' => '::1', 'HTTP_REFERER' => 'http://[::1]/cacti/')))->toBe('pass')
+        ->and(run_guard('GET', array('action' => 'item_remove'), array(), array('SERVER_NAME' => '::1', 'HTTP_REFERER' => 'http://[::2]/cacti/')))->toBe('405');
 });

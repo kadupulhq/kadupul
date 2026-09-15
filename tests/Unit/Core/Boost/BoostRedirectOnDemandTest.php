@@ -293,3 +293,9 @@ test('with Boost off the poller still updates the RRD files directly', function 
 	expect(boostRedirectRun(array('boost_rrd_update_enable' => '', 'boost_redirect' => 'on')))->toBeTrue()
 		->and($GLOBALS['boost_redirect_test']['staged'])->toBe(0);
 });
+
+
+test('failed cleanup defers the batch instead of authorizing a duplicate direct update', function () {
+    $present = array(array('local_data_id' => 7, 'rrd_name' => 'traffic_in', 'time' => '2026-01-01 00:05:00'));
+    expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on'), $present, array('flush_fails' => true, 'delete_fails' => true)))->toBeNull();
+});

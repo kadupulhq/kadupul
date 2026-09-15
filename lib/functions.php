@@ -4643,7 +4643,7 @@ function sanitize_search_string($string) {
  *
  * @return string    - the sanitized uri
  */
-function sanitize_uri($uri) {
+function sanitize_uri($uri, $preserve_brackets = false) {
 	static $drop_char_match = array(
 		'^', '$',
 		'<', '>',
@@ -4678,7 +4678,9 @@ function sanitize_uri($uri) {
 		}
 	}
 
-	return str_replace($drop_char_match, $drop_char_replace, strip_tags($uri));
+	$drop_characters = $preserve_brackets ? array_diff($drop_char_match, array('[', ']')) : $drop_char_match;
+
+	return str_replace($drop_characters, $drop_char_replace, strip_tags($uri));
 }
 
 /**

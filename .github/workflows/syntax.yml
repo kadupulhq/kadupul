@@ -375,7 +375,12 @@ jobs:
     # root task it finds registered, treats it as exited, and logs a warning
     # that fails the page check. Nothing after this point needs the daemon.
     - name: Stop Cacti Daemon
-      run: sudo systemctl stop cactid
+      run: |
+        sudo systemctl stop cactid
+        test "$(sudo systemctl show cactid --property=ActiveState --value)" = inactive
+        # Only this job's disposable database is cleared after the service stops.
+        mysql --defaults-file="$HOME/.my.cnf" cacti -e 'DELETE FROM processes; DELETE FROM poller_time WHERE end_time = "0000-00-00 00:00:00";'
+
 
     - name: Run Cacti poller
       run: |

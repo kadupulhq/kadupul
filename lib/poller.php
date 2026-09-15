@@ -688,6 +688,14 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0) {
 	}
 
 	if (cacti_sizeof($results)) {
+		/* Resolve queue ownership before removing any source rows. A failed
+		 * cleanup leaves both queues available for the next poller pass. */
+		$direct_rrd_update = boost_poller_on_demand($results);
+
+		if ($direct_rrd_update === null) {
+			return 0;
+		}
+
 		/* create an array keyed off of each .rrd file */
 		foreach ($results as $item) {
 			/* trim the default characters, but add single and double quotes */
@@ -925,7 +933,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0) {
 
 		api_plugin_hook_function('poller_output', $rrd_update_array);
 
-		if (boost_poller_on_demand($results)) {
+		if ($direct_rrd_update) {
 			$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe);
 		}
 
