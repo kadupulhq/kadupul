@@ -24,8 +24,11 @@ CASES = [
     # Wall clock must go.
     ('cacti log line', '09/12/2026 02:39:50 - SYSTEM STATS: DataSources:5',
      '<TIMESTAMP> - SYSTEM STATS: DataSources:5'),
-    ('sql datetime', 'completed at 2026-09-11 20:50:21', 'completed at <TIMESTAMP>'),
-    ('iso stamp', '2026-09-12T02:39:50Z ready', '<TIMESTAMP> ready'),
+    ('contract datetime', 'completed at 2026-09-11 20:50:21', 'completed at 2026-09-11 20:50:21'),
+    ('contract ISO', '2026-09-12T02:39:50Z ready', '2026-09-12T02:39:50Z ready'),
+    ('installer timing', '[20:47:59] [ global always ] Installation was started at 2026-09-11 20:50:21, completed at 2026-09-11 20:55:21',
+     '[<TIME>] [ global always ] Installation was started at <TIMESTAMP>, completed at <TIMESTAMP>'),
+    ('database date', {'created': '2026-09-12 02:39:50'}, {'created': '2026-09-12 02:39:50'}),
     ('bracketed clock', '[20:47:59] [ global ] Finished', '[<TIME>] [ global ] Finished'),
     ('clock after newline', 'start\n[20:47:59] [ global ] Finished', 'start\n[<TIME>] [ global ] Finished'),
     ('poller timing', 'OK u:0.12 s:0.03 r:0.20', 'OK u:<T> s:<T> r:<T>'),
@@ -41,6 +44,17 @@ CASES = [
     ('clock inside a message', 'maintenance window [12:34:56] kept', 'maintenance window [12:34:56] kept'),
     ('ds definition', 'DS:proc:GAUGE:600:0:U', 'DS:proc:GAUGE:600:0:U'),
 ]
+
+# Exercise every date_time_format() option, preserving dates outside the
+# diagnostic prefix and meaningful values later in the same diagnostic line.
+for separator in ('-', '/', '.'):
+    for month in ('09', 'Sep'):
+        for parts in (('2026', month, '12'), (month, '12', '2026'), ('12', month, '2026')):
+            stamp = separator.join(parts) + ' 02:39:50'
+            suffix = ' - SYSTEM STATS: DataSources:5 cutoff=' + stamp
+            CASES.append(('configured poller date ' + stamp, stamp + suffix, '<TIMESTAMP>' + suffix))
+            CASES.append(('preserved message date ' + stamp, stamp + ' - plugin event', stamp + ' - plugin event'))
+
 
 
 def incomplete_repeat_failure():
@@ -68,6 +82,51 @@ def incomplete_repeat_failure():
             shutil.rmtree(path, ignore_errors=True)
 
 
+def failed_setup_manifest():
+    directory = ROOT / 'tests/behavior/results' / ('selftest-failure-' + uuid.uuid4().hex)
+    recorder = object.__new__(harness.Harness)
+    recorder.args = types.SimpleNamespace(target='selftest')
+    recorder.observed = {}
+    recorder.destination = directory
+    def unavailable(*args, **kwargs):
+        raise AssertionError('Failure cleanup must not probe unavailable containers')
+    recorder.command = unavailable
+    recorder.base_image_digest = unavailable
+    try:
+        assert recorder.finish(error='fixture setup failed') == 2
+        result = json.loads((directory / 'observations.json').read_text())
+        assert result['complete'] is False
+        assert result['error'] == 'fixture setup failed'
+        assert result['php'] is None and result['base_image'] is None
+    finally:
+        shutil.rmtree(directory, ignore_errors=True)
+
+
+def unavailable_docker_failure():
+    from unittest.mock import patch
+    tag = 'selftest-docker-' + uuid.uuid4().hex[:8]
+    def unavailable(*args, **kwargs):
+        raise FileNotFoundError('docker unavailable')
+    try:
+        with patch('sys.argv', ['harness', 'run', '--target', tag]), patch.object(harness.Harness, 'compose', unavailable):
+            assert harness.main() == 2
+        manifest = json.loads((ROOT / 'tests/behavior/results' / tag / 'observations.json').read_text())
+        assert manifest['complete'] is False
+        assert manifest['error'] == 'docker unavailable'
+    finally:
+        shutil.rmtree(ROOT / 'tests/behavior/results' / tag, ignore_errors=True)
+    print('unavailable Docker preserves the setup failure through teardown')
+    with patch('sys.argv', ['harness', 'run', '--target', tag]), patch.object(harness.Harness, 'compose', unavailable), patch.object(harness.Harness, 'finish', side_effect=RuntimeError('manifest write failed')):
+        try:
+            harness.main()
+        except RuntimeError as error:
+            assert str(error) == 'manifest write failed'
+        else:
+            raise AssertionError('manifest failure was swallowed')
+    print('cleanup preserves a manifest-write exception')
+
+
+
 def main():
     failures = []
 
@@ -77,6 +136,10 @@ def main():
             failures.append(f'{label}:\n  expected {expected!r}\n  got      {actual!r}')
 
     print(f'{len(CASES) - len(failures)}/{len(CASES)} normalization cases pass')
+
+    failed_setup_manifest()
+    unavailable_docker_failure()
+    print('setup failure records an incomplete manifest without probing containers')
 
     repeat_failure = incomplete_repeat_failure()
     if repeat_failure:

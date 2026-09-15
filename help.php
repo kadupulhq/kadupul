@@ -35,9 +35,11 @@ if (isset_request_var('error')) {
     header('Content-Type: application/json');
 
     if (read_config_option('local_documentation') != 'on') {
+        require_once __DIR__ . '/lib/documentation.php';
+
         print json_encode(array(
             'status' => 'Success',
-            'location' => 'https://kadupul.org/map/'
+            'location' => cacti_documentation_url($page)
         ));
     } elseif (file_exists($config['base_path'] . '/docs/' . $page)) {
         print json_encode(array(

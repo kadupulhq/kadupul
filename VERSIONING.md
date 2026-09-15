@@ -50,7 +50,7 @@ rename and the new features from `main`.
 
 ## Long-term support
 
-**`v1.2.32`** is a long-term support release on the `lts/1.2` branch. That branch
+**`v1.2.32`** is the planned long-term support release on the `lts/1.2` branch. That branch
 starts at Cacti 1.2.31 and takes upstream 1.2.x bug fixes, security fixes and
 hardening, plus Kadupul's own security fixes where the same code exists. It takes
 no features and keeps the interface above identical, so an existing 1.2.31 install

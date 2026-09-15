@@ -119,7 +119,6 @@ function setupTheme() {
 
 	// -- login, logout -- rewrite
 	if ($('.loginArea legend').length !== 0) {
-		$('.loginArea legend').text('Kadupul Monitoring');
 		$('.loginTitle p').html('v'+cactiVersion);
 		$('#login_username, #login_password').attr('placeholder', '');
 	}
@@ -138,7 +137,7 @@ function setupTheme() {
 		$('<div class="maintabs usertabs">' + user_tab_content + '</div>').insertAfter('.maintabs');
 
 		let submenu_user_help_content =
-			'<li><a href="https://kadupul.org" target="_blank" rel="noopener">'+cactiHome+'</></a></li>'
+			'<li><a href="https://kadupul.org" target="_blank" rel="noopener">'+cactiHome+'</a></li>'
 			+'<li><a href="https://github.com/kadupulhq/kadupul" target="_blank" rel="noopener">'+cactiProjectPage+'</a></li>'
 			+'<li><hr class="menu"></li>'
 			+'<li><a href="https://github.com/kadupulhq/kadupul/discussions" target="_blank" rel="noopener">'+cactiCommunityForum+'</a></li>'
@@ -304,7 +303,7 @@ function setupTheme() {
 				+           '<li><a class="pic" role="menuitem" href="'+urlPath+'about.php">'+aboutCacti+'</a></li>'
 				+           '<li><a href="https://kadupul.org/" target="_blank" rel="noopener">'+cactiDocumentation+'</a></li>'
 				+           '<li><a href="https://github.com/kadupulhq/kadupul" target="_blank" rel="noopener">'+cactiProjectPage+'</a></li>'
-				+           '<li><a href="https://kadupul.org" target="_blank" rel="noopener">'+cactiHome+'</></a></li>'
+				+           '<li><a href="https://kadupul.org" target="_blank" rel="noopener">'+cactiHome+'</a></li>'
 				+       '</ul>'
 				+   '</li>'
 				+   '<li class="menuitem" id="menu_user_issues">'
@@ -313,8 +312,8 @@ function setupTheme() {
 				+           '<span>'+reportABug+'</span>'
 				+       '</a>'
 				+       '<ul>'
-				+           '<li><a href="https://github.com/kadupulhq/kadupul/issues/new/choose" target="_blank" rel="noopener">'+justCacti+'</></a></li>'
-				+           '<li><a href="https://github.com/kadupulhq/website/issues/new/choose" target="_blank" rel="noopener">'+cactiDocumentation+'</></a></li>'
+				+           '<li><a href="https://github.com/kadupulhq/kadupul/issues/new/choose" target="_blank" rel="noopener">'+justCacti+'</a></li>'
+				+           '<li><a href="https://github.com/kadupulhq/website/issues/new/choose" target="_blank" rel="noopener">'+cactiDocumentation+'</a></li>'
 				+       '</ul>'
 				+   '</li>'
 				+   '<li class="menuitem" id="menu_user_shortcuts">'

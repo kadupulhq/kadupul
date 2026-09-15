@@ -142,10 +142,10 @@ test('a traversal attempt is confined to docs by basename', function () {
     ]);
 });
 
-test('online help ignores docs and returns the fixed destination', function () {
+test('online help preserves page context using a trusted route', function () {
     expect(_help_request($this->root, ['page' => 'Graphs.html'], ''))->toBe([
         'status'   => 'Success',
-        'location' => 'https://kadupul.org/map/',
+        'location' => 'https://kadupul.org/concepts/how-graphs-are-drawn/',
     ]);
 });
 
@@ -154,4 +154,13 @@ test('the local documentation setting describes HTML hosted under docs', functio
     $start    = strpos($settings, "'local_documentation' => array(");
 
     expect(substr($settings, $start, 600))->toContain('in HTML format');
+});
+
+
+test('unknown online help pages fall back to the map', function () {
+    expect(_help_request($this->root, ['page' => 'Unknown.html'], '')['location'])->toBe('https://kadupul.org/map/');
+});
+
+test('online settings help opens the settings reference', function () {
+    expect(_help_request($this->root, ['page' => 'Settings-Auth.html'], '')['location'])->toBe('https://kadupul.org/reference/settings/');
 });

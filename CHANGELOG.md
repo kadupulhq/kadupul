@@ -11,6 +11,11 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Preserve page context in online help and translated login legends in midwinter.
+  Repair malformed midwinter links and two Portuguese translations.
+- Preserve meaningful dates in behavioral observations and record incomplete
+  manifests reliably when test setup fails.
+
 - PHP 8.4 no longer reports a deprecation notice for the device export or the
   basic auth mapfile, which now pass the CSV escape argument explicitly.
   Parsing and output are unchanged.
@@ -76,7 +81,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - File headers carry SPDX copyright and license tags instead of the GPL notice box.
   Inherited files stay GPL-2.0-or-later and files Kadupul created are GPL-3.0-or-later.
 - Run SonarQube Cloud analysis on pushes to main and on pull requests.
-- Document the 1.2 long-term support line on `lts/1.2`, which ships `v1.2.32`.
+- Document the 1.2 long-term support line on `lts/1.2`, which targets `v1.2.32`.
 - Leave nosemgrep-suppressed findings out of the Semgrep code scanning upload.
 - Report an installation exception to the CLI installer as well as to the web installer.
 - Refresh localized product names and compiled catalogs, with source-text fallback

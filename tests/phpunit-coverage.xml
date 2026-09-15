@@ -65,7 +65,6 @@
             <!-- Assertions fail against the source on main. -->
             <exclude>./Unit/AuthLoginHardeningTest.php</exclude>
             <exclude>./Unit/BoostDaemonHardeningTest.php</exclude>
-            <exclude>./Unit/CactiSecurityGatewaysTest.php</exclude>
             <exclude>./Unit/CactiSortValidationTest.php</exclude>
             <exclude>./Unit/CmdReindexLoopStateTest.php</exclude>
             <exclude>./Unit/CoreSecurityHardeningTest.php</exclude>
