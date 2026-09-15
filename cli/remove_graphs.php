@@ -103,7 +103,7 @@ if (cacti_sizeof($parms)) {
 		 * the value, so treat the value as missing and abort instead of
 		 * letting a filter option silently disappear. */
 		if ($i + 1 < $parms_total && cacti_remove_graphs_takes_next_argument($parameter, $longopts)) {
-			if (cacti_remove_graphs_next_looks_like_option($parms[$i + 1])) {
+			if ($parms[$i + 1] === '' || cacti_remove_graphs_next_looks_like_option($parms[$i + 1])) {
 				print "ERROR: Invalid Argument: ($parameter) requires a value" . PHP_EOL . PHP_EOL;
 				display_help();
 				exit(1);

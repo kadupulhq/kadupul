@@ -475,7 +475,7 @@ function cacti_remove_graphs_unknown_parameter_action($parameter, $shortopts, $l
  * @return bool True when $parameter is exactly the bare "--graph-type" token.
  */
 function cacti_remove_graphs_type_takes_next_argument($parameter) {
-	return $parameter === '--graph-type';
+	return strtolower($parameter) === '--graph-type';
 }
 
 /**

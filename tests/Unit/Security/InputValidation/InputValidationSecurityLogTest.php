@@ -179,7 +179,8 @@ function run_die_html_input_error(array $request, $variable = 'graph_id', $value
 }
 
 test('a failure without secrets logs the release/1.2.31 line byte for byte', function (bool $json) {
-	$request = $json ? array('graph_id' => '7<x', 'json' => '1') : array('graph_id' => '7<x');
+	$request = array('graph_id' => '7<x', 'path' => '/graphs/test');
+	if ($json) { $request['json'] = '1'; }
 	$lines   = run_die_html_input_error($request);
 	$text    = 'Validation Error, Variable:graph_id, Value:7&lt;x, Source: 192.0.2.10, Request: ' . json_encode($request);
 
@@ -249,7 +250,7 @@ test('login, password change and token fields are treated as secrets', function 
 test('both Validation Error lines pass the request and value through the redaction helpers', function () {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/lib/html_validate.php');
 
-	expect(substr_count($source, "', Request: ' . json_encode(cacti_redact_sensitive(\$_REQUEST), JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE)"))->toBe(2)
+	expect(substr_count($source, "', Request: ' . json_encode(cacti_redact_sensitive(\$_REQUEST), JSON_INVALID_UTF8_SUBSTITUTE)"))->toBe(2)
 		->and(substr_count($source, "', Value:' . html_escape(cacti_redact_value(\$variable, \$value))"))->toBe(2)
 		->and($source)->not->toContain('json_encode($_REQUEST)')
 		->and($source)->not->toContain('Validation Error, Event:')

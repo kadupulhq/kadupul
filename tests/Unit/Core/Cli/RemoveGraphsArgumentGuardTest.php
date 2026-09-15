@@ -135,7 +135,7 @@ function remove_graphs_argument_outcomes($parms, $shortopts, $longopts) {
 		}
 
 		if ($i + 1 < $total && cacti_remove_graphs_takes_next_argument($parameter, $longopts)) {
-			if (cacti_remove_graphs_next_looks_like_option($parms[$i + 1])) {
+			if ($parms[$i + 1] === '' || cacti_remove_graphs_next_looks_like_option($parms[$i + 1])) {
 				$outcomes[] = array($parameter, 'abort');
 
 				break;
@@ -510,4 +510,36 @@ test('graph-name reapply wires invalid selectors to distinct failures', function
 		->and($source)->toContain('cacti_reapply_names_where($host_id, $filter)')
 		->and($source)->toContain('You must specify either a host_id')
 		->and($source)->toContain("Invalid host id '");
+});
+
+
+test('empty space-form regex filters are refused', function () use ($shortopts, $longopts) {
+    expect(remove_graphs_argument_outcomes(array('--graph-regex', '', '--force'), $shortopts, $longopts))->toBe(array(array('--graph-regex', 'abort')));
+});
+
+test('retired graph type values are consumed with mixed-case names', function () use ($shortopts, $longopts) {
+    expect(remove_graphs_argument_outcomes(array('--GRAPH-TYPE', 'cg'), $shortopts, $longopts))->toBe(array(array('--GRAPH-TYPE', 'ignore', 'cg')));
+});
+
+test('the production argument loop refuses an empty regex before getopt or deletion', function () use ($shortopts, $longopts) {
+    $source = file_get_contents(dirname(__DIR__, 4) . '/cli/remove_graphs.php');
+    $start = strpos($source, '\tfor ($i = 0; $i < $parms_total; $i++) {');
+    if ($start === false) { $start = strpos($source, "\tfor (\$i = 0; \$i < \$parms_total; \$i++) {"); }
+    $end = strpos($source, '$options = getopt', $start);
+    if ($end === false) { $end = strpos($source, '$options     = getopt', $start); }
+    expect($start)->not->toBeFalse();
+    expect($end)->not->toBeFalse();
+    $code = 'require ' . var_export(dirname(__DIR__, 4) . '/lib/maintenance_cli.php', true) . '; function display_help() {}'
+        . '$parms = array("--graph-regex", "", "--force"); $parms_total = count($parms);'
+        . '$shortopts = ' . var_export($shortopts, true) . '; $longopts = ' . var_export($longopts, true) . ';'
+        . substr($source, $start, $end - $start)
+        . 'throw new RuntimeException("Unsafe filter reached dispatch");';
+    $pipes = array();
+    $process = proc_open(array(PHP_BINARY, '-r', $code), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]); fclose($pipes[2]);
+    expect(proc_close($process))->toBe(1)
+        ->and($stdout)->toContain('requires a value')
+        ->and($stderr)->toBe('');
 });
