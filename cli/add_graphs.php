@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -171,7 +172,7 @@ if (cacti_sizeof($parms)) {
 					exit(1);
 				}
 
-				$validation = validate_is_rlike_regex($item);
+				$validation = validate_is_regex($item);
 
 				if ($validation !== true) {
 					print "ERROR: Regex specified '$item' is not valid: $validation\n";
@@ -650,7 +651,7 @@ if (cacti_sizeof($parms)) {
 				if (isset($dsGraph['snmpValue'][$index_snmp_filter])) {
 					$req .= ' AND field_value = ' . db_qstr($dsGraph['snmpValue'][$index_snmp_filter]). ')';
 				} elseif (isset($dsGraph['snmpValueRegex'][$index_snmp_filter])) {
-					$req .= ' AND field_value ' . db_qstr_rlike($dsGraph['snmpValueRegex'][$index_snmp_filter]) . ')';
+					$req .= ' AND field_value REGEXP ' . db_qstr($dsGraph['snmpValueRegex'][$index_snmp_filter]) . ')';
 				}
 
 				$index_snmp_filter++;

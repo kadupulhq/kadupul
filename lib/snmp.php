@@ -553,6 +553,8 @@ function cacti_snmp_session_call($session, $method, $args, &$warning) {
 function cacti_snmp_log_session_error($session, $info, $oid, $warning = '') {
 	$error_number = $session->getErrno();
 
+	/* 1.2.31 logged only timeouts at HIGH. Other failures go to DEBUG so a
+	 * HIGH log keeps the lines operators already filter on. */
 	if ($error_number == SNMP::ERRNO_TIMEOUT) {
 		/* phpsnmp\SNMP has two implementations with different units: the
 		 * native extension wrapper (extension.php) extends \SNMP and leaves
@@ -566,7 +568,9 @@ function cacti_snmp_log_session_error($session, $info, $oid, $warning = '') {
 		}
 
 		$error = 'Timeout (' . round($timeout_ms, 0) . ' ms)';
+		$level = POLLER_VERBOSITY_HIGH;
 	} else {
+		$level = POLLER_VERBOSITY_DEBUG;
 		$error = trim((string) $session->getError());
 
 		if ($error === '') {
@@ -581,7 +585,7 @@ function cacti_snmp_log_session_error($session, $info, $oid, $warning = '') {
 	$error = str_replace(array("\r", "\n"), ' ', $error);
 	$oid   = is_array($oid) ? implode(',', $oid) : $oid;
 
-	cacti_log("WARNING: SNMP Error:'$error', Device:'" . $info['hostname'] . "', OID:'$oid'", false, 'SNMP', POLLER_VERBOSITY_HIGH);
+	cacti_log("WARNING: SNMP Error:'$error', Device:'" . $info['hostname'] . "', OID:'$oid'", false, 'SNMP', $level);
 }
 
 function cacti_snmp_session_walk($session, $oid, $dummy = false, $max_repetitions = NULL,

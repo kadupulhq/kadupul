@@ -214,7 +214,7 @@ if (!empty($recovery_pid)) {
 
 		$run = true;
 	} else {
-		cacti_log('RECOVERY: Another recovery process is still running (PID=' . cacti_process_pid_for_log($recovery_pid) . ').', false, 'POLLER');
+		cacti_log('RECOVERY: Another recovery process is still running (PID=' . cacti_process_pid_for_log($recovery_pid) . ').', false, 'POLLER', POLLER_VERBOSITY_DEBUG);
 
 		$run = false;
 	}
@@ -275,9 +275,10 @@ if ($run) {
 					break;
 				}
 
-				$sql_array = array();
-				$unowned   = 0;
-				$invalid   = 0;
+				$sql_array   = array();
+				$unowned     = 0;
+				$invalid     = 0;
+				$packet_size = 0;
 
 				foreach($rows as $r) {
 					/* no data source has id 0, so main could never file the row */
@@ -292,10 +293,13 @@ if ($run) {
 						continue;
 					}
 
-					$sql_array[] = '(' . (int) $r['local_data_id'] . ',' .
+					$sql = '(' . (int) $r['local_data_id'] . ',' .
 						db_qstr($r['rrd_name'], $remote_db_cnn_id) . ',' .
 						db_qstr($r['time'], $remote_db_cnn_id) . ',' .
 						db_qstr($r['output'], $remote_db_cnn_id) . ')';
+
+					$sql_array[]  = $sql;
+					$packet_size += strlen($sql);
 				}
 
 				if ($invalid > 0) {
@@ -307,7 +311,7 @@ if ($run) {
 				}
 
 				$record_count = cacti_sizeof($sql_array);
-				cacti_log('RECOVERY: Writing ' . $record_count . ' records to main.', false, 'POLLER');
+				cacti_log('RECOVERY: Writing ' . $record_count . ' records (' . $packet_size . ' bytes) to main (last slice).', false, 'POLLER');
 
 				if (!boost_flush_output_batch($sql_array, $remote_db_cnn_id)) {
 					cacti_log('RECOVERY ERROR: Main collector did not acknowledge the Boost batch; retaining local rows.', false, 'POLLER');

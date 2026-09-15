@@ -41,6 +41,7 @@ cmd_exec	./lib/installer.php:3405				$results = shell_exec(cacti_escapeshellcmd(
 cmd_exec	./lib/installer.php:3437						shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:3493						$results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:837							$output = shell_exec(
+cmd_exec	./lib/maintenance_cli.php:173		$process = proc_open($argv, array(1 => array('pipe', 'w')), $pipes);
 cmd_exec	./lib/ping.php:167					$result = shell_exec('ping ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:169					$result = shell_exec('ping -m ' . ceil($this->timeout/1000) . ' -n ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:171					$result = shell_exec('ping -t ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
@@ -173,6 +174,7 @@ dynamic_include	./cli/change_device.php:35	require_once($config['base_path'] . '
 dynamic_include	./cli/change_device.php:36	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/float_rrdfiles.php:35	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/float_rrdfiles.php:36	require_once($config['base_path'] . '/lib/rrd.php');
+dynamic_include	./cli/float_rrdfiles.php:38	require_once($config['base_path'] . '/lib/maintenance_cli.php');
 dynamic_include	./cli/host_update_template.php:27	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/host_update_template.php:28	require_once($config['base_path'] . '/lib/api_automation.php');
 dynamic_include	./cli/host_update_template.php:29	require_once($config['base_path'] . '/lib/api_data_source.php');

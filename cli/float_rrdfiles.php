@@ -35,6 +35,7 @@ ini_set('output_buffering', 'Off');
 require(__DIR__ . '/../include/cli_check.php');
 require_once($config['base_path'] . '/lib/poller.php');
 require_once($config['base_path'] . '/lib/rrd.php');
+require_once($config['base_path'] . '/lib/maintenance_cli.php');
 
 /* process calling arguments */
 $parms = $_SERVER['argv'];
@@ -277,11 +278,15 @@ switch ($type) {
 			/* Update the rrdfile to current */
 			rrdtool_function_fetch($data['local_data_id'], time()-120, time());
 
-			float_rrdfile($data['rrd_path'], $data['local_data_id'], $step, $start_time, $end_time);
-
-			db_execute_prepared('DELETE FROM poller_float_rrdfiles_not_done
-				WHERE local_data_id = ?',
-				array($data['local_data_id']));
+			/* A float that fails keeps its queue row so --resume retries it. The
+			 * temporary XML file is created exclusively, so one left by a killed
+			 * child is refused rather than overwritten, and deleting the row
+			 * anyway would drop that RRD from the queue unfloated. */
+			if (float_rrdfile($data['rrd_path'], $data['local_data_id'], $step, $start_time, $end_time)) {
+				db_execute_prepared('DELETE FROM poller_float_rrdfiles_not_done
+					WHERE local_data_id = ?',
+					array($data['local_data_id']));
+			}
 		}
 
 		$total_time = microtime(true) - $child_start;
@@ -342,19 +347,29 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 				return false;
 			}
 
-			$tmp_file = tempnam($tmp_dir, 'cacti_float_');
+			/* 1.2.31 names in the shared temporary directory, created exclusively
+			 * so a planted symlink or leftover file is refused, not followed */
+			$tmp_file = $tmp_dir . '/' . $local_data_id . '.xml';
+			$fp       = cacti_cli_create_file($tmp_file);
 
-			if ($tmp_file === false) {
-				cacti_log('WARNING: Unable to create a private temporary RRD XML file', false, 'RFLOAT');
+			if (!is_resource($fp)) {
+				cacti_log('WARNING: ' . $fp, false, 'RFLOAT');
 				return false;
 			}
 
-			$fp = fopen($tmp_file, 'w');
-			$lf = false;
+			$lf         = false;
+			$file_debug = false;
 
+			/* A refused log turns debug output off for this file only; later
+			 * files open the log again, as 1.2.31 did for each file. */
 			if ($seebug) {
-				$lf     = @fopen('php://stderr', 'w');
-				$seebug = is_resource($lf);
+				$lf = cacti_cli_open_log('/tmp/clearer.log');
+
+				if (!is_resource($lf)) {
+					cacti_log('WARNING: ' . $lf . '.  Debug output is disabled for this file.', false, 'RFLOAT');
+				}
+
+				$file_debug = is_resource($lf);
 			}
 
 			if (is_resource($fp)) {
@@ -402,7 +417,7 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 							$in_range = false;
 							$line .= PHP_EOL;
 						} elseif ($prev_data != '') {
-							if ($seebug) {
+							if ($file_debug) {
 								if ($step !== false) {
 									fwrite($lf, sprintf("In Range: CurDate:%s, StartDate:%s, EndDate:%s, Granularity:%s, Delta:%s, Step:%s" . PHP_EOL, date('Y-m-d H:i:s', $timestamp), date('Y-m-d H:i:s', $start_time), date('Y-m-d H:i:s', $end_time), $granularity, $delta_time, $step));
 								} else {
@@ -417,14 +432,14 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 
 								$nline = $db_prefix . implode(' ', $parts) . ' ' .  $prev_data . PHP_EOL;
 
-								if ($seebug) {
+								if ($file_debug) {
 									fwrite($lf, sprintf("Pruning: CurDate:%s, StartDate:%s, EndDate:%s, Granularity:%s, Delta:%s" . PHP_EOL, date('Y-m-d H:i:s', $timestamp), date('Y-m-d H:i:s', $start_time), date('Y-m-d H:i:s', $end_time), $granularity, $delta_time));
 									fwrite($lf, sprintf("PreLine: %s\nOldLine: %s\nNewLine: %s\n\n", trim($prev_line), trim($line), trim($nline)));
 								}
 
 								$line = $nline;
 							} else {
-								if ($seebug) {
+								if ($file_debug) {
 									fwrite($lf, sprintf("Not Pruning: CurDate:%s, StartDate:%s, EndDate:%s, Granularity:%s, Delta:%s" . PHP_EOL, date('Y-m-d H:i:s', $timestamp), date('Y-m-d H:i:s', $start_time), date('Y-m-d H:i:s', $end_time), $granularity, $delta_time));
 									fwrite($lf, sprintf("PreLine: %s\nOldLine: %s\n\n", trim($prev_line), trim($line)));
 								}
@@ -442,32 +457,68 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 						$line .= PHP_EOL;
 					}
 
-					fwrite($fp, $line);
+					/* fwrite() can return a short count, or fflush() below can fail,
+					 * on a full disk. Either one leaves a truncated file on disk
+					 * that rrdtool restore below would read as if it were complete. */
+					$bytes_written = fwrite($fp, $line);
+
+					if ($bytes_written !== strlen($line)) {
+						cacti_log(sprintf('WARNING: Refusing to restore %s because the XML file was not written completely', $tmp_file), false, 'RFLOAT');
+						cacti_cli_remove_file($fp, $tmp_file);
+
+						if ($file_debug) {
+							fclose($lf);
+						}
+
+						return false;
+					}
 				}
 
-				fclose($fp);
+				if (!fflush($fp)) {
+					cacti_log(sprintf('WARNING: Refusing to restore %s because the XML file was not written completely', $tmp_file), false, 'RFLOAT');
+					cacti_cli_remove_file($fp, $tmp_file);
+
+					if ($file_debug) {
+						fclose($lf);
+					}
+
+					return false;
+				}
 
 				/* restore the file */
 				$return  = 0;
 				$output  = array();
 				$command = cacti_escapeshellarg($rrdtool_bin) . ' restore -f ' . cacti_escapeshellarg($tmp_file) . ' ' . cacti_escapeshellarg($rrd_path);
 
+				/* rrdtool restore opens the file by name, so the name must still be
+				 * the file written above */
+				if (!cacti_cli_path_is_handle($fp, $tmp_file)) {
+					cacti_log(sprintf('WARNING: Refusing to restore %s because it changed after it was written', $tmp_file), false, 'RFLOAT');
+					cacti_cli_remove_file($fp, $tmp_file);
+
+					if ($file_debug) {
+						fclose($lf);
+					}
+
+					return false;
+				}
+
 				$response = exec($command, $output, $return);
 
 				if ($return == 0) {
 					cacti_log(sprintf('NOTE: Range floated for RRDfile %s', $rrd_path), false, 'RFLOAT');
-					unlink($tmp_file);
+					cacti_cli_remove_file($fp, $tmp_file);
 
-					if ($seebug && is_resource($lf)) {
+					if ($file_debug) {
 						fclose($lf);
 					}
 
 					return true;
 				} else {
 					cacti_log(sprintf('WARNING: Range float FAILED for RRDfile %s.  Message is %s', $rrd_path, $response), false, 'RFLOAT');
-					unlink($tmp_file);
+					cacti_cli_remove_file($fp, $tmp_file);
 
-					if ($seebug && is_resource($lf)) {
+					if ($file_debug) {
 						fclose($lf);
 					}
 
@@ -475,7 +526,6 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 				}
 			} else {
 				cacti_log(sprintf('WARNING: Unable to open file %s for writing', $tmp_file), false, 'RFLOAT');
-				unlink($tmp_file);
 				return false;
 			}
 		} else {
