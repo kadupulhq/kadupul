@@ -3,6 +3,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -191,7 +192,20 @@ function debug($message) {
 
 
 function purge_spike_backups() {
-	$directory = read_config_option('spikekill_backupdir');
+	/* spikekill_backupdir defaults to a path with a trailing slash
+	   (include/global_settings.php), and is_link('dir/') follows the final
+	   symlink to stat what it points at instead of the link itself, so the
+	   trailing slash has to go before is_link() is checked below.
+	   cacti_trim_dir_separator() (lib/functions.php) is the same helper
+	   spikekill::normalizeDir() (lib/spikekill.php) uses, rather than a
+	   local rtrim() here that would turn '/' or '///' into '' and make
+	   is_dir() fail, silently skipping the purge of the very directory
+	   normalizeDir() keeps as '/'. poller_spikekill.php does not load
+	   lib/spikekill.php (it must not instantiate the spikekill class), but
+	   both files already load lib/functions.php through include/global.php */
+	$backupdir = read_config_option('spikekill_backupdir');
+	$directory = cacti_trim_dir_separator($backupdir, DIRECTORY_SEPARATOR);
+
 	$retention = read_config_option('spikekill_purge');
 
 	$purges = 0;
@@ -202,22 +216,39 @@ function purge_spike_backups() {
 
 	$earlytime = time() - $retention;
 
-	if ($directory != '' && is_dir($directory) && is_writable($directory)) {
+	/* refuse a symlinked directory before is_dir()/scandir() ever follow
+	   it, the same as the root-side spikekill helpers do for the backup
+	   and temp directories */
+	if ($directory != '' && !is_link($directory) && is_dir($directory) && is_writable($directory)) {
 		$files = array_diff(scandir($directory), array('.', '..'));
 
 		if (cacti_sizeof($files)) {
 			foreach($files as $file) {
-				$filepath = $directory . '/' . $file;
+				$filepath = cacti_join_dir_child($directory, $file, DIRECTORY_SEPARATOR);
+
+				/* skip a symlink outright: never follow it into is_file()'s
+				   stat, and never let a planted link stand in for a backup */
+				if (is_link($filepath)) {
+					continue;
+				}
 
 				if (is_file($filepath) && strpos($filepath, 'rrd') !== false) {
 					$mtime = filemtime($filepath);
 
 					if ($mtime < $earlytime) {
-						if (is_writable($filepath)) {
-							unlink($filepath);
-							$purges++;
+						/* backups are created 0600 by root (copyFileSafely()
+						   under umask(0177)), so is_writable() on the file
+						   itself is false for the poller user even though
+						   deleting it only requires write access to the
+						   containing directory */
+						if (is_writable(dirname($filepath))) {
+							if (unlink($filepath)) {
+								$purges++;
+							} else {
+								cacti_log('Unable to remove ' . $filepath . ' due to unlink failure', false, 'SPIKES');
+							}
 						} else {
-							cacti_log('Unable to remove ' . $filepath . ' due to write permissions', 'SPIKES');
+							cacti_log('Unable to remove ' . $filepath . ' due to write permissions', false, 'SPIKES');
 						}
 					}
 				}
