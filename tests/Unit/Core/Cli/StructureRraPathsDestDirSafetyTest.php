@@ -281,3 +281,9 @@ test('a destination directory swapped for a symlink after the caller\'s cached s
 		->and($swap['exit'])->toBe(0)
 		->and($status)->toBe('unsafe');
 });
+
+
+test('a POSIX root base accepts an existing canonical temporary directory', function () {
+    if (DIRECTORY_SEPARATOR !== '/') { $this->markTestSkipped('POSIX root contract'); }
+    expect(structure_rra_prepare_dest_dir(realpath(sys_get_temp_dir()), '/'))->toBe('ok');
+});

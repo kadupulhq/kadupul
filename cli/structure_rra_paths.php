@@ -465,8 +465,9 @@ function structure_rra_prepare_dest_dir($new_base_path, $base_rra_path) {
 
 	$real_base = realpath($base_rra_path);
 	$root      = rtrim($base_rra_path, '/');
+	$prefix    = $root . '/';
 
-	if ($real_base === false || ($new_base_path != $root && strpos($new_base_path, $root . '/') !== 0)) {
+	if ($real_base === false || ($new_base_path != $root && strpos($new_base_path, $prefix) !== 0)) {
 		return 'unsafe';
 	}
 
@@ -480,7 +481,7 @@ function structure_rra_prepare_dest_dir($new_base_path, $base_rra_path) {
 			return 'unsafe';
 		}
 
-		$walked .= DIRECTORY_SEPARATOR . $segment;
+		$walked = rtrim($walked, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $segment;
 
 		if (is_link($walked)) {
 			return 'unsafe';
@@ -512,7 +513,7 @@ function structure_rra_prepare_dest_dir($new_base_path, $base_rra_path) {
 		return 'unsafe';
 	}
 
-	if ($real_dest != $real_base && strpos($real_dest, $real_base . DIRECTORY_SEPARATOR) !== 0) {
+	if ($real_dest != $real_base && strpos($real_dest, rtrim($real_base, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR) !== 0) {
 		return 'unsafe';
 	}
 

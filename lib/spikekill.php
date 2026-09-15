@@ -490,8 +490,14 @@ class spikekill {
 		if ($dump_stat === false || $this->rrdfile_stat === false
 			|| ($dump_stat['mode'] & 0170000) !== 0100000
 			|| $dump_stat['dev'] !== $this->rrdfile_stat['dev']
-			|| $dump_stat['ino'] !== $this->rrdfile_stat['ino']
-			|| !$this->runRRDDump($this->rrdfile, $xmlfile_handle)) {
+			|| $dump_stat['ino'] !== $this->rrdfile_stat['ino']) {
+			fclose($xmlfile_handle);
+			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
+			$this->set_error(__('FATAL: RRD source identity changed or the source is not a regular file.'));
+			return false;
+		}
+
+		if (!$this->runRRDDump($this->rrdfile, $xmlfile_handle)) {
 			fclose($xmlfile_handle);
 			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
 

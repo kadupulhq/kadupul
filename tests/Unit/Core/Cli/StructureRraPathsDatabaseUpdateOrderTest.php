@@ -44,7 +44,7 @@ function structure_rra_loop_scenario($base, $pattern, $info) {
 	expect(preg_match('/^foreach \(\$data_sources as \$info\) \{\n.*?^}\n/ms', $source, $loop))
 		->toBe(1, 'the migration loop is no longer where this test expects it');
 
-	$functions = '';
+	$functions = 'require_once ' . var_export($root . '/tests/Helpers/SpikekillPathFunctions.php', true) . ';';
 
 	foreach (array('struct_debug', 'update_database', 'structure_rra_is_safe_source', 'structure_rra_is_safe_dest', 'structure_rra_prepare_dest_dir', 'sp_recursive_chown', 'sp_recursive_chgrp') as $function) {
 		expect(preg_match('/^function ' . $function . '\(.*?^}\n/ms', $source, $match))

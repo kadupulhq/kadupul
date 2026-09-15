@@ -134,3 +134,11 @@ test('a legacy file swapped for a symlink after a cached stat is still refused',
 	expect($swap['exit'])->toBe(0)
 		->and($safe)->toBeFalse();
 });
+
+
+test('a POSIX root RRA base contains regular RRD sources', function () {
+    if (DIRECTORY_SEPARATOR !== '/') { $this->markTestSkipped('POSIX root contract'); }
+    $path = $this->base . '/sub/root.rrd';
+    file_put_contents($path, 'rrd');
+    expect(structure_rra_is_safe_source($path, '/'))->toBeTrue();
+});

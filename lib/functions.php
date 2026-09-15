@@ -8459,7 +8459,7 @@ function cacti_path_is_within($candidate, $base) {
 		$base_resolved = cacti_normalize_windows_path($base_resolved);
 	}
 
-	return strpos($resolved, $base_resolved . '/') === 0 || $resolved === $base_resolved;
+	return strpos($resolved, rtrim($base_resolved, '/') . '/') === 0 || $resolved === $base_resolved;
 }
 
 /**
