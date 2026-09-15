@@ -50,6 +50,8 @@ if (!function_exists('cacti_trim_dir_separator')) {
 	eval($trim_body); // nosemgrep: php.lang.security.eval-use.eval-use
 }
 
+require_once dirname(__DIR__, 3) . '/Helpers/SpikekillPathFunctions.php';
+
 require_once dirname(__DIR__, 4) . '/lib/spikekill.php';
 
 /* read_config_option() is guarded with function_exists() because
@@ -139,7 +141,11 @@ class SpikekillShortSourceStream {
 	}
 
 	public function stream_stat() {
-		return array('size' => strlen($this->data) + 1000);
+		return array('size' => strlen($this->data) + 1000, 'mode' => 0100600, 'dev' => 1, 'ino' => 1);
+	}
+
+	public function url_stat($path, $flags) {
+		return $this->stream_stat();
 	}
 
 	public function stream_close() {
@@ -148,6 +154,29 @@ class SpikekillShortSourceStream {
 
 if (!in_array('spikekillshortsource', stream_get_wrappers())) {
 	stream_wrapper_register('spikekillshortsource', 'SpikekillShortSourceStream');
+}
+
+class SpikekillSwappedSourceStream extends SpikekillShortSourceStream {
+	public static $reads = 0;
+
+	public function url_stat($path, $flags) {
+		return parent::stream_stat();
+	}
+
+	public function stream_stat() {
+		$stat = parent::stream_stat();
+		$stat['ino'] = 2;
+		return $stat;
+	}
+
+	public function stream_read($count) {
+		self::$reads++;
+		return parent::stream_read($count);
+	}
+}
+
+if (!in_array('spikekillswappedsource', stream_get_wrappers())) {
+	stream_wrapper_register('spikekillswappedsource', 'SpikekillSwappedSourceStream');
 }
 
 beforeEach(function () {
@@ -177,6 +206,35 @@ test('a normal backup is created with the expected content and name', function (
 		->and(is_link($desired))->toBeFalse()
 		->and(file_get_contents($desired))->toBe('rrd-bytes')
 		->and(fileperms($desired) & 0777)->toBe(0600);
+});
+
+test('a changed source identity is refused before copying into a backup', function () {
+	$expected = lstat($this->rrdfile);
+	rename($this->rrdfile, $this->dir . '/original.rrd');
+	file_put_contents($this->rrdfile, 'replacement-bytes');
+	$desired = $this->dir . '/backup.rrd';
+
+	expect(invoke_spikekill_private('copyFileSafely', [$this->rrdfile, $desired, null, $expected]))->toBeFalse()
+		->and(file_exists($desired))->toBeFalse();
+});
+
+test('a source symlink is refused even when its target is the expected file', function () {
+	$expected = lstat($this->rrdfile);
+	rename($this->rrdfile, $this->dir . '/original.rrd');
+	symlink($this->dir . '/original.rrd', $this->rrdfile);
+	$desired = $this->dir . '/backup.rrd';
+
+	expect(invoke_spikekill_private('copyFileSafely', [$this->rrdfile, $desired, null, $expected]))->toBeFalse()
+		->and(file_exists($desired))->toBeFalse();
+});
+
+test('a source replaced between stat and open is rejected without reading its bytes', function () {
+	$desired = $this->dir . '/backup.rrd';
+	SpikekillSwappedSourceStream::$reads = 0;
+
+	expect(invoke_spikekill_private('copyFileSafely', ['spikekillswappedsource://source', $desired]))->toBeFalse()
+		->and(SpikekillSwappedSourceStream::$reads)->toBe(0)
+		->and(file_exists($desired))->toBeFalse();
 });
 
 test('a planted symlink at the backup name is never written to', function () {

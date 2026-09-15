@@ -56,6 +56,8 @@ if (!function_exists('cacti_trim_dir_separator')) {
 	eval($trim_body); // nosemgrep: php.lang.security.eval-use.eval-use
 }
 
+require_once dirname(__DIR__, 3) . '/Helpers/SpikekillPathFunctions.php';
+
 require_once dirname(__DIR__, 4) . '/lib/spikekill.php';
 
 /* read_config_option()/cacti_log()/cacti_sizeof()/__esc() are guarded with
@@ -251,6 +253,18 @@ test('remove_spikes runs the dump/backup/restore round trip end to end and repor
 		->and(glob($this->backup_dir . '/spikekill.*.xml'))->toBe([]);
 
 	unlink($backup);
+});
+
+test('remove_spikes refuses a source swapped after initialization before invoking the dump', function () {
+	$instance = spikekill_e2e_instance($this->rrdfile);
+	rename($this->rrdfile, $this->rrd_dir . '/original.rrd');
+	symlink($this->rrd_dir . '/original.rrd', $this->rrdfile);
+	$marker = $this->dir . '/dump-ran';
+	file_put_contents($this->rrdtool_stub, "#!/bin/sh\ntouch " . escapeshellarg($marker) . "\nexit 0\n");
+
+	expect($instance->remove_spikes())->toBeFalse()
+		->and(file_exists($marker))->toBeFalse()
+		->and(glob($this->backup_dir . '/*'))->toBe([]);
 });
 
 test('remove_spikes reports failure and cleans up the temp XML when the restore fails', function () {

@@ -484,7 +484,14 @@ class spikekill {
 		/* dump straight into the held handle instead of a shell '>'
 		   redirection, so there is never a by-name reopen of $xmlfile for
 		   the RRDtool child process to be redirected away from */
-		if (!$this->runRRDDump($this->rrdfile, $xmlfile_handle)) {
+		clearstatcache(true, $this->rrdfile);
+		$dump_stat = @lstat($this->rrdfile);
+
+		if ($dump_stat === false || $this->rrdfile_stat === false
+			|| ($dump_stat['mode'] & 0170000) !== 0100000
+			|| $dump_stat['dev'] !== $this->rrdfile_stat['dev']
+			|| $dump_stat['ino'] !== $this->rrdfile_stat['ino']
+			|| !$this->runRRDDump($this->rrdfile, $xmlfile_handle)) {
 			fclose($xmlfile_handle);
 			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
 
@@ -517,7 +524,7 @@ class spikekill {
 
 				$backup_result = false;
 			} else {
-				$backup_result = $this->copyFileSafely($this->rrdfile, $bakfile, $this->tempdir);
+				$backup_result = $this->copyFileSafely($this->rrdfile, $bakfile, $this->tempdir, $this->rrdfile_stat);
 			}
 
 			if ($backup_result !== false) {
@@ -946,7 +953,7 @@ class spikekill {
 			$backupdir = $this->tempdir;
 		}
 
-		$backup_result = $this->copyFileSafely($rrdfile, cacti_join_dir_child($backupdir, basename($rrdfile), DIRECTORY_SEPARATOR), $backupdir);
+		$backup_result = $this->copyFileSafely($rrdfile, cacti_join_dir_child($backupdir, basename($rrdfile), DIRECTORY_SEPARATOR), $backupdir, $this->rrdfile_stat);
 
 		if ($backup_result === false) {
 			return false;
@@ -984,15 +991,29 @@ class spikekill {
 	 *                         path actually written and its fstat() at
 	 *                         creation time, or false on failure
 	 */
-	private function copyFileSafely($source, $desired_path, $configured_dir = null) {
-		$dir      = dirname($desired_path);
-		$basename = basename($desired_path);
+	private function copyFileSafely($source, $desired_path, $configured_dir = null, $expected_source = null) {
+		$dir      = $configured_dir === null ? dirname($desired_path) : $this->normalizeDir($configured_dir);
+		$prefix   = cacti_join_dir_child($dir, '', DIRECTORY_SEPARATOR);
+		$basename = strpos($desired_path, $prefix) === 0 ? substr($desired_path, strlen($prefix)) : basename($desired_path);
+		if ($basename === '' || strpbrk($basename, DIRECTORY_SEPARATOR === '\\' ? '/\\' : '/') !== false
+			|| ($configured_dir !== null && $desired_path !== $prefix . $basename)) {
+			return false;
+		}
 
 		/* PHP caches stat results and resolved paths for the whole run.
 		   The whole realpath cache is dropped, not just $dir's entry,
 		   because realpath() below resolves $dir through cached ancestor
 		   entries that a swapped parent directory would leave stale */
 		clearstatcache(true);
+		$source_stat = @lstat($source);
+		$expected_source = $expected_source ?? $source_stat;
+
+		if ($source_stat === false || $expected_source === false
+			|| ($source_stat['mode'] & 0170000) !== 0100000
+			|| $source_stat['dev'] !== $expected_source['dev']
+			|| $source_stat['ino'] !== $expected_source['ino']) {
+			return false;
+		}
 
 		if (is_link($dir)) {
 			return false;
@@ -1022,7 +1043,7 @@ class spikekill {
 			   the umask with no separate by-name permission or reopen
 			   step afterward. */
 			for ($i = 0; $i < 10; $i++) {
-				$candidate = $dir . '/' . $basename . '.' . bin2hex(random_bytes(8));
+				$candidate = cacti_join_dir_child($dir, $basename . '.' . bin2hex(random_bytes(8)), DIRECTORY_SEPARATOR);
 
 				$old_umask = umask(0177);
 				$handle    = @fopen($candidate, 'xb');
@@ -1040,6 +1061,15 @@ class spikekill {
 		}
 
 		$source_handle = fopen($source, 'rb');
+		if ($source_handle !== false) {
+			$opened_stat = fstat($source_handle);
+			if ($opened_stat === false || ($opened_stat['mode'] & 0170000) !== 0100000
+				|| $opened_stat['dev'] !== $expected_source['dev']
+				|| $opened_stat['ino'] !== $expected_source['ino']) {
+				fclose($source_handle);
+				$source_handle = false;
+			}
+		}
 
 		if ($source_handle === false) {
 			/* capture the identity before closing: Windows refuses to

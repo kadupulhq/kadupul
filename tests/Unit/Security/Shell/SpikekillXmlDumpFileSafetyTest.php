@@ -39,6 +39,8 @@
  * still gives runRRDCommand()'s stream_select() loop a bound.
  */
 
+require_once dirname(__DIR__, 3) . '/Helpers/SpikekillPathFunctions.php';
+
 require_once dirname(__DIR__, 4) . '/lib/spikekill.php';
 
 /* read_config_option()/cacti_log()/__()/__esc() are guarded with
