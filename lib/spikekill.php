@@ -66,12 +66,14 @@ class spikekill {
 	private $davgnan   = 'last';
 
 	// Internal globals
-	private $tempdir     = '';
-	private $seed        = '';
-	private $strout      = '';
-	private $ds_min      = '';
-	private $ds_max      = '';
-	private $total_kills = 0;
+	private $tempdir         = '';
+	private $canonical_dirs  = array();
+	private $rrdfile_stat    = false;
+	private $seed            = '';
+	private $strout          = '';
+	private $ds_min          = '';
+	private $ds_max          = '';
+	private $total_kills     = 0;
 
 	private $rra_cf      = array();
 	private $ds_name     = array();
@@ -188,8 +190,26 @@ class spikekill {
 
 		if (!file_exists($this->rrdfile)) {
 			$this->set_error(__esc("FATAL: File '%s' does not exist.", $this->rrdfile));
-		} elseif (!is_writable($this->rrdfile)) {
-			$this->set_error(__esc("FATAL: File '%s' is not writable by '%s'.", $this->rrdfile, get_execution_user()));
+		} else {
+			/* file_exists() and is_writable() both follow a symlink; refuse
+			   one here so the dump, backup and restore below never open a
+			   path this call does not actually own.  PHP caches the last
+			   stat of a path for the whole run, so the file_exists() call
+			   just above would otherwise answer for this lstat() too. */
+			clearstatcache(true, $this->rrdfile);
+
+			$rrdfile_lstat = @lstat($this->rrdfile);
+
+			if ($rrdfile_lstat === false || is_link($this->rrdfile) || !is_file($this->rrdfile)) {
+				$this->set_error(__esc("FATAL: File '%s' is not a regular file.", $this->rrdfile));
+			} elseif (!is_writable($this->rrdfile)) {
+				$this->set_error(__esc("FATAL: File '%s' is not writable by '%s'.", $this->rrdfile, get_execution_user()));
+			} else {
+				/* captured once here so backupRRDFile() and
+				   createRRDFileFromXML() can each re-check the name still
+				   refers to this same file right before they open it */
+				$this->rrdfile_stat = $rrdfile_lstat;
+			}
 		}
 
 		$umethod   = read_user_setting('spikekill_method', $this->dmethod, true);
@@ -398,14 +418,14 @@ class spikekill {
 		$this->seed = mt_rand();
 
 		if ($config['cacti_server_os'] == 'win32') {
-			$this->tempdir  = read_config_option('spikekill_backupdir');
-			$xmlfile = $this->tempdir . '/' . str_replace('.rrd', '', basename($this->rrdfile)) . '.dump.' . $this->seed;
-			$bakfile = $this->tempdir . '/' . str_replace('.rrd', '', basename($this->rrdfile)) . '.backup.' . $this->seed . '.rrd';
+			$this->tempdir = $this->normalizeDir(read_config_option('spikekill_backupdir'));
+			$bakfile = cacti_join_dir_child($this->tempdir, str_replace('.rrd', '', basename($this->rrdfile)) . '.backup.' . $this->seed . '.rrd', DIRECTORY_SEPARATOR);
 		} else {
-			$this->tempdir = read_config_option('spikekill_backupdir');
-			$xmlfile = $this->tempdir . '/' . str_replace('.rrd', '', basename($this->rrdfile)) . '.dump.' . $this->seed;
-			$bakfile = $this->tempdir . '/' . str_replace('.rrd', '', basename($this->rrdfile)) . '.backup.' . $this->seed . '.rrd';
+			$this->tempdir = $this->normalizeDir(read_config_option('spikekill_backupdir'));
+			$bakfile = cacti_join_dir_child($this->tempdir, str_replace('.rrd', '', basename($this->rrdfile)) . '.backup.' . $this->seed . '.rrd', DIRECTORY_SEPARATOR);
 		}
+
+		$bakfile_stat = false;
 
 		if (!empty($this->out_start) && !$this->dryrun) {
 			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . "NOTE: Removing Outliers in Range and Replacing with Last" . ($this->html ? "</p>\n":"\n");
@@ -414,6 +434,23 @@ class spikekill {
 		if ($this->method == SPIKE_METHOD_VARIANCE) {
 			$this->strout .= ($this->html ? "<p class='spikekillNote'>" : '') . sprintf("NOTE: Variance Calculation removes top and bottom %s samples due to Outliers setting", $this->outliers) . ($this->html ? "</p>\n" : "\n");
 		}
+
+		/* create the temporary XML dump file exclusively; this runs as root
+		   from cli/removespikes.php and batchgapfix, into a directory the
+		   poller-writable web user controls, so the name must be
+		   unpredictable and the file kept open under our own handle rather
+		   than reopened by name later, the same rationale copyFileSafely()
+		   documents for the RRD backup */
+		$xmlfile_info = $this->createXmlFileExclusively($this->tempdir);
+
+		if ($xmlfile_info === false) {
+			$this->set_error(__esc("FATAL: Unable to safely create a temporary XML file in '%s'!", $this->tempdir));
+			return false;
+		}
+
+		$xmlfile        = $xmlfile_info['path'];
+		$xmlfile_handle = $xmlfile_info['handle'];
+		$xmlfile_stat   = $xmlfile_info['stat'];
 
 		/* execute the dump command */
 		$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . "NOTE: Creating XML file '$xmlfile' from '$this->rrdfile'" . ($this->html ? "</p>\n":"\n");
@@ -444,30 +481,76 @@ class spikekill {
 			cacti_log($mes, false, 'SPIKEKILL');
 		}
 
-		shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' dump ' . cacti_escapeshellarg($this->rrdfile) . ' > ' . cacti_escapeshellarg($xmlfile));
+		/* dump straight into the held handle instead of a shell '>'
+		   redirection, so there is never a by-name reopen of $xmlfile for
+		   the RRDtool child process to be redirected away from */
+		clearstatcache(true, $this->rrdfile);
+		$dump_stat = @lstat($this->rrdfile);
 
-		/* read the xml file into an array*/
-		if (file_exists($xmlfile)) {
-			$output = file($xmlfile);
+		if ($dump_stat === false || $this->rrdfile_stat === false
+			|| ($dump_stat['mode'] & 0170000) !== 0100000
+			|| $dump_stat['dev'] !== $this->rrdfile_stat['dev']
+			|| $dump_stat['ino'] !== $this->rrdfile_stat['ino']) {
+			fclose($xmlfile_handle);
+			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
+			$this->set_error(__('FATAL: RRD source identity changed or the source is not a regular file.'));
+			return false;
+		}
 
-			/* remove the temp file */
-			unlink($xmlfile);
-		} else {
+		if (!$this->runRRDDump($this->rrdfile, $xmlfile_handle)) {
+			fclose($xmlfile_handle);
+			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
+
 			$this->set_error(__("FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"));
 			return false;
 		}
 
+		/* read the dumped XML back through the same handle */
+		rewind($xmlfile_handle);
+
+		$output = array();
+
+		while (($line = fgets($xmlfile_handle)) !== false) {
+			$output[] = $line;
+		}
+
 		/* backup the rrdfile if requested */
 		if ($this->backup && !$this->dryrun) {
-			if (copy($this->rrdfile, $bakfile)) {
+			/* re-check the source identity initialize_spikekill() captured:
+			   nothing stops the name from being swapped for a symlink between
+			   that check and this copy, the same rationale backupRRDFile()
+			   documents */
+			clearstatcache(true, $this->rrdfile);
+
+			$rrdfile_lstat = @lstat($this->rrdfile);
+
+			if ($rrdfile_lstat === false || $this->rrdfile_stat === false
+				|| $rrdfile_lstat['dev'] !== $this->rrdfile_stat['dev']
+				|| $rrdfile_lstat['ino'] !== $this->rrdfile_stat['ino']) {
+
+				$backup_result = false;
+			} else {
+				$backup_result = $this->copyFileSafely($this->rrdfile, $bakfile, $this->tempdir, $this->rrdfile_stat);
+			}
+
+			if ($backup_result !== false) {
+				$bakfile      = $backup_result['path'];
+				$bakfile_stat = $backup_result['stat'];
 				$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . "NOTE: RRDfile '$this->rrdfile' backed up to '$bakfile'" . ($this->html ? "</p>\n":"\n");
 			} else {
 				$this->set_error(__esc("FATAL: RRDfile Backup of '%s' to '%s' FAILED!", $this->rrdfile, $bakfile));
+
+				fclose($xmlfile_handle);
+				$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
+
 				return false;
 			}
 		}
 
 		if ($this->is_error_set()) {
+			fclose($xmlfile_handle);
+			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
+
 			return false;
 		}
 
@@ -722,21 +805,45 @@ class spikekill {
 		}
 
 		/* finally update the file XML file and Reprocess the RRDfile */
+		$restored = true;
+
 		if (!$this->dryrun) {
 			if ($continue) {
 				if ($output == true && $new_output != '') {
-					if ($this->writeXMLFile($new_output, $xmlfile)) {
+					if ($this->writeXMLFile($new_output, $xmlfile_handle)) {
 						if ($this->backupRRDFile($this->rrdfile)) {
-							$this->createRRDFileFromXML($xmlfile, $this->rrdfile);
-							$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
-								__('NOTE: Spikes Found and Remediated.  Total Spikes %s', $this->total_kills) . ($this->html ? "</p>\n":"\n");
+							if ($this->createRRDFileFromXML($xmlfile, $this->rrdfile, $xmlfile_stat)) {
+								$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
+									__('NOTE: Spikes Found and Remediated.  Total Spikes %s', $this->total_kills) . ($this->html ? "</p>\n":"\n");
+							} else {
+								$restored = false;
+
+								$message = __esc("FATAL: Unable to restore '%s' from '%s'", $this->rrdfile, $xmlfile);
+
+								$this->set_error($message);
+
+								$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
+									$message . ($this->html ? "</p>\n":"\n");
+							}
 						} else {
+							$restored = false;
+
+							$message = __esc("FATAL: Unable to backup '%s'", $this->rrdfile);
+
+							$this->set_error($message);
+
 							$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
-								__esc("FATAL: Unable to backup '%s'", $this->rrdfile) . ($this->html ? "</p>\n":"\n");
+								$message . ($this->html ? "</p>\n":"\n");
 						}
 					} else {
+						$restored = false;
+
+						$message = __esc("FATAL: Unable to write XML file '%s'", $xmlfile);
+
+						$this->set_error($message);
+
 						$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
-							__esc("FATAL: Unable to write XML file '%s'", $xmlfile) . ($this->html ? "</p>\n":"\n");
+							$message . ($this->html ? "</p>\n":"\n");
 					}
 				} else {
 					$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
@@ -747,57 +854,534 @@ class spikekill {
 
 		$this->strout .= ($this->html ? "</table>":'');
 
-		if ($this->total_kills > 0) {
+		if ($restored && !$this->dryrun && $this->total_kills > 0) {
 			cacti_log("WARNING: Removed '$this->total_kills' Spikes from '$this->rrdfile', Method:'$this->method'", false, 'WEBUI');
-		} elseif($this->debug) {
+		} elseif ($restored && !$this->dryrun && $this->debug) {
 			cacti_log("NOTE: Removed '$this->total_kills' Spikes from '$this->rrdfile', Method:'$this->method'", false, 'WEBUI');
 		}
 
-		if (file_exists($xmlfile)) {
-			unlink($xmlfile);
-		}
+		fclose($xmlfile_handle);
+		$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
 
-		if (file_exists($bakfile)) {
-			unlink($bakfile);
-		}
+		$this->unlinkOwnedFile($bakfile, $bakfile_stat);
 
-		return true;
+		return $restored;
 	}
 
 	/* All Functions */
-	private function createRRDFileFromXML($xmlfile, $rrdfile) {
-		/* execute the dump command */
+	private function createRRDFileFromXML($xmlfile, $rrdfile, $stat) {
+		/* rrdtool restore has to read the XML by path.  Re-check right
+		   before running it that the name still refers to the file this
+		   call wrote through: nothing stops the name from being swapped
+		   between the write above and rrdtool's own open() here, so this
+		   narrows but does not close the window.  Accepted residual for
+		   1.2. */
+		/* PHP caches the last lstat() of a path for the whole run, so an
+		   earlier lookup of this name would otherwise answer for it */
+		clearstatcache(true, $xmlfile);
+
+		$lstat = @lstat($xmlfile);
+
+		if ($lstat === false || $lstat['dev'] !== $stat['dev'] || $lstat['ino'] !== $stat['ino']) {
+			return false;
+		}
+
+		/* likewise for the restore destination: re-check it against the
+		   identity initialize_spikekill() captured, right before rrdtool
+		   restore opens it by name */
+		clearstatcache(true, $rrdfile);
+
+		$rrdfile_lstat = @lstat($rrdfile);
+
+		if ($rrdfile_lstat === false || $this->rrdfile_stat === false
+			|| $rrdfile_lstat['dev'] !== $this->rrdfile_stat['dev']
+			|| $rrdfile_lstat['ino'] !== $this->rrdfile_stat['ino']) {
+
+			return false;
+		}
+
+		/* execute the restore command */
 		$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
 			__esc("NOTE: Re-Importing '%s' to '%s'", $xmlfile, $rrdfile) . ($this->html ? "</p>\n":"\n");
 
-		$response = shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' restore -f -r ' . cacti_escapeshellarg($xmlfile) . ' ' . cacti_escapeshellarg($rrdfile));
+		/* argv array through runRRDCommand(), the same as runRRDDump(),
+		   instead of a shell string whose exit status went unchecked */
+		$argv   = array(read_config_option('path_rrdtool'), 'restore', '-f', '-r', $xmlfile, $rrdfile);
+		$result = $this->runRRDCommand($argv, null, $this->commandTimeout());
+
+		$response = trim($result['stdout'] . $result['stderr']);
 
 		if ($response != '') {
 			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . $response . ($this->html ? "</p>\n":"\n");
 		}
+
+		return $result['exit'] === 0;
 	}
 
-	private function writeXMLFile($output, $xmlfile) {
-		return file_put_contents($xmlfile, $output);
+	private function writeXMLFile($output, $handle) {
+		if (!is_resource($handle)) {
+			return false;
+		}
+
+		$data = is_array($output) ? implode('', $output) : $output;
+
+		if (!ftruncate($handle, 0) || !rewind($handle)) {
+			return false;
+		}
+
+		$written = fwrite($handle, $data);
+
+		if ($written === false || $written !== strlen($data)) {
+			return false;
+		}
+
+		return fflush($handle);
 	}
 
 	private function backupRRDFile($rrdfile) {
-		$backupdir = read_config_option('spikekill_backupdir');
+		/* re-check the source identity initialize_spikekill() captured:
+		   nothing stops the name from being swapped for a symlink between
+		   that check and this copy */
+		clearstatcache(true, $rrdfile);
+
+		$rrdfile_lstat = @lstat($rrdfile);
+
+		if ($rrdfile_lstat === false || $this->rrdfile_stat === false
+			|| $rrdfile_lstat['dev'] !== $this->rrdfile_stat['dev']
+			|| $rrdfile_lstat['ino'] !== $this->rrdfile_stat['ino']) {
+
+			return false;
+		}
+
+		$backupdir = $this->normalizeDir(read_config_option('spikekill_backupdir'));
 
 		if ($backupdir == '') {
 			$backupdir = $this->tempdir;
 		}
 
-		if (file_exists($backupdir . '/' . basename($rrdfile))) {
-			$newfile = basename($rrdfile) . '.' . $this->seed;
-		} else {
-			$newfile = basename($rrdfile);
+		$backup_result = $this->copyFileSafely($rrdfile, cacti_join_dir_child($backupdir, basename($rrdfile), DIRECTORY_SEPARATOR), $backupdir, $this->rrdfile_stat);
+
+		if ($backup_result === false) {
+			return false;
 		}
 
 		$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
-			__esc("NOTE: Backing Up '%s' to '%s/%s'", $rrdfile, $backupdir, $newfile) . ($this->html ? "</p>\n":"\n");
+			__esc("NOTE: Backing Up '%s' to '%s'", $rrdfile, $backup_result['path']) . ($this->html ? "</p>\n":"\n");
 
-		return copy($rrdfile, $backupdir . "/" . $newfile);
+		return true;
+	}
+
+	/**
+	 * copyFileSafely - copy $source to $desired_path without ever following or
+	 * clobbering whatever already sits at that name.  removespikes and
+	 * batchgapfix run this as root, and $desired_path lives in a directory the
+	 * web user's poller can write to, so a symlink planted there ahead of time
+	 * must not be followed: the target gets created exclusively, and if the
+	 * name is already taken (by a symlink or a real file) a unique sibling
+	 * name is used instead.  The exclusive open only protects the final
+	 * name; a symlink planted at the directory itself, or at an ancestor
+	 * resolved earlier and swapped since, would still redirect the write, so
+	 * the directory is re-checked here: refused outright if it is a symlink,
+	 * and refused if its current realpath() no longer matches $configured_dir's
+	 * canonical path (resolved once and cached, so a later swap is caught
+	 * against the trusted value rather than against itself).
+	 *
+	 * @param  (string)      $source
+	 * @param  (string)      $desired_path
+	 * @param  (string|null) $configured_dir - the admin-configured directory
+	 *                        $desired_path is expected to live in; null skips
+	 *                        the canonical-path check (used by tests that
+	 *                        exercise the exclusive-open behavior directly)
+	 *
+	 * @return (array|false) - array('path' => ..., 'stat' => ...) for the
+	 *                         path actually written and its fstat() at
+	 *                         creation time, or false on failure
+	 */
+	private function copyFileSafely($source, $desired_path, $configured_dir = null, $expected_source = null) {
+		$dir      = $configured_dir === null ? dirname($desired_path) : $this->normalizeDir($configured_dir);
+		$prefix   = cacti_join_dir_child($dir, '', DIRECTORY_SEPARATOR);
+		$basename = strpos($desired_path, $prefix) === 0 ? substr($desired_path, strlen($prefix)) : basename($desired_path);
+		if ($basename === '' || strpbrk($basename, DIRECTORY_SEPARATOR === '\\' ? '/\\' : '/') !== false
+			|| ($configured_dir !== null && $desired_path !== $prefix . $basename)) {
+			return false;
+		}
+
+		/* PHP caches stat results and resolved paths for the whole run.
+		   The whole realpath cache is dropped, not just $dir's entry,
+		   because realpath() below resolves $dir through cached ancestor
+		   entries that a swapped parent directory would leave stale */
+		clearstatcache(true);
+		$source_stat = @lstat($source);
+		$expected_source = $expected_source ?? $source_stat;
+
+		if ($source_stat === false || $expected_source === false
+			|| ($source_stat['mode'] & 0170000) !== 0100000
+			|| $source_stat['dev'] !== $expected_source['dev']
+			|| $source_stat['ino'] !== $expected_source['ino']) {
+			return false;
+		}
+
+		if (is_link($dir)) {
+			return false;
+		}
+
+		if ($configured_dir !== null) {
+			$canonical_dir = $this->canonicalDir($configured_dir);
+
+			if ($canonical_dir === false || realpath($dir) !== $canonical_dir) {
+				return false;
+			}
+		}
+
+		if (is_link($desired_path) || file_exists($desired_path)) {
+			$handle = false;
+		} else {
+			$old_umask = umask(0177);
+			$handle    = @fopen($desired_path, 'xb');
+			umask($old_umask);
+		}
+
+		if ($handle === false) {
+			/* name already taken (or lost a race creating it); create a
+			   unique sibling exclusively in the same directory instead of
+			   following or overwriting it.  'xb' refuses any existing
+			   name, including a symlink, so the file is born 0600 under
+			   the umask with no separate by-name permission or reopen
+			   step afterward. */
+			for ($i = 0; $i < 10; $i++) {
+				$candidate = cacti_join_dir_child($dir, $basename . '.' . bin2hex(random_bytes(8)), DIRECTORY_SEPARATOR);
+
+				$old_umask = umask(0177);
+				$handle    = @fopen($candidate, 'xb');
+				umask($old_umask);
+
+				if ($handle !== false) {
+					$desired_path = $candidate;
+					break;
+				}
+			}
+
+			if ($handle === false) {
+				return false;
+			}
+		}
+
+		$source_handle = fopen($source, 'rb');
+		if ($source_handle !== false) {
+			$opened_stat = fstat($source_handle);
+			if ($opened_stat === false || ($opened_stat['mode'] & 0170000) !== 0100000
+				|| $opened_stat['dev'] !== $expected_source['dev']
+				|| $opened_stat['ino'] !== $expected_source['ino']) {
+				fclose($source_handle);
+				$source_handle = false;
+			}
+		}
+
+		if ($source_handle === false) {
+			/* capture the identity before closing: Windows refuses to
+			   delete a file while a handle to it is still open, and the
+			   identity check below has to run against the stat taken at
+			   creation, not a fresh one, so a symlink swapped in after
+			   the close is never followed */
+			$fstat = fstat($handle);
+			fclose($handle);
+
+			$this->unlinkOwnedFile($desired_path, $fstat);
+
+			return false;
+		}
+
+		$source_size = fstat($source_handle)['size'];
+
+		$copied = stream_copy_to_stream($source_handle, $handle);
+
+		fclose($source_handle);
+
+		$fstat = fstat($handle);
+		fclose($handle);
+
+		/* stream_copy_to_stream() returns the byte count it wrote, not a
+		   pass/fail flag, so a short write (a full disk, a quota) still
+		   returns a truthy int and must be caught by comparing against
+		   the source size rather than testing for false alone */
+		if ($copied === false || $copied !== $source_size) {
+			$this->unlinkOwnedFile($desired_path, $fstat);
+
+			return false;
+		}
+
+		return array('path' => $desired_path, 'stat' => $fstat);
+	}
+
+	/**
+	 * createXmlFileExclusively - create an empty file with a random name in
+	 * $tempdir, exclusively and under a restrictive umask, for the RRDtool
+	 * dump/restore round trip in remove_spikes().  This runs as root from
+	 * cli/removespikes.php and batchgapfix into a directory the poller
+	 * user's web process can write to, so the name must not be guessable
+	 * and $tempdir itself is refused if it is a symlink or resolves away
+	 * from its canonical path, the same checks copyFileSafely() applies to
+	 * the RRD backup directory.
+	 *
+	 * @param  (string) $tempdir
+	 *
+	 * @return (array|false) - array('path' => ..., 'handle' => ..., 'stat' => ...)
+	 *                         opened read/write, or false on failure
+	 */
+	private function createXmlFileExclusively($tempdir) {
+		/* the whole cache, for the same reason as in copyFileSafely() */
+		clearstatcache(true);
+
+		if ($tempdir == '' || is_link($tempdir) || !is_dir($tempdir)) {
+			return false;
+		}
+
+		$canonical_dir = $this->canonicalDir($tempdir);
+
+		if ($canonical_dir === false || realpath($tempdir) !== $canonical_dir) {
+			return false;
+		}
+
+		for ($i = 0; $i < 10; $i++) {
+			$candidate = cacti_join_dir_child($tempdir, 'spikekill.' . bin2hex(random_bytes(8)) . '.xml', DIRECTORY_SEPARATOR);
+
+			clearstatcache(true);
+			if (is_link($tempdir) || realpath($tempdir) !== $canonical_dir) {
+				return false;
+			}
+
+			$old_umask = umask(0177);
+			$handle    = @fopen($candidate, 'xb+');
+			umask($old_umask);
+
+			if ($handle !== false) {
+				return array('path' => $candidate, 'handle' => $handle, 'stat' => fstat($handle));
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * runRRDCommand - run an rrdtool subcommand via proc_open, with argv
+	 * reaching execve() as literal arguments the same as cacti_exec() in
+	 * lib/functions.php, and drain its pipes with stream_select() instead
+	 * of a blocking read of one before the other: reading stdout to
+	 * completion before ever touching stderr (or vice versa) can deadlock
+	 * if rrdtool fills the unread pipe and blocks writing to it while this
+	 * process is still blocked reading the other one.
+	 *
+	 * @param  (array)         $argv
+	 * @param  (resource|null) $stdout_handle - when given, stdout is
+	 *                          written straight into this already-open
+	 *                          handle instead of being captured, so a dump
+	 *                          is never reopened by name to redirect it;
+	 *                          the returned 'stdout' is then always ''
+	 * @param  (int)           $timeout - seconds to wait for the command
+	 *
+	 * @return (array) array('exit' => int|false, 'stdout' => string, 'stderr' => string)
+	 */
+	private function runRRDCommand(array $argv, $stdout_handle, $timeout = 30) {
+		$capture_stdout = ($stdout_handle === null);
+
+		$descriptors = array(
+			0 => array('pipe', 'r'),
+			1 => $capture_stdout ? array('pipe', 'w') : $stdout_handle,
+			2 => array('pipe', 'w'),
+		);
+
+		$process = @proc_open($argv, $descriptors, $pipes);
+
+		if (!is_resource($process)) {
+			return array('exit' => false, 'stdout' => '', 'stderr' => '');
+		}
+
+		fclose($pipes[0]);
+
+		if ($capture_stdout) {
+			stream_set_blocking($pipes[1], false);
+		}
+
+		stream_set_blocking($pipes[2], false);
+
+		$stdout    = '';
+		$stderr    = '';
+		$remaining = (int) $timeout * 1000000;
+		$exit      = null;
+
+		while ($remaining > 0) {
+			$start  = microtime(true);
+			$read   = $capture_stdout ? array($pipes[1], $pipes[2]) : array($pipes[2]);
+			$write  = array();
+			$except = array();
+			stream_select($read, $write, $except, 0, $remaining);
+
+			usleep(50000);
+
+			$status = proc_get_status($process);
+
+			if ($capture_stdout) {
+				$stdout .= stream_get_contents($pipes[1]);
+			}
+
+			$stderr .= stream_get_contents($pipes[2]);
+
+			/* proc_get_status() returns false on a dead handle. Preserve a
+			   valid exitcode while it is observable because a later status
+			   read or proc_close() can return -1 after the child has
+			   already been reaped. */
+			if (!is_array($status) || empty($status['running'])) {
+				if (is_array($status) && isset($status['exitcode']) && $status['exitcode'] >= 0) {
+					$exit = (int) $status['exitcode'];
+				}
+
+				break;
+			}
+
+			$remaining -= (int) ((microtime(true) - $start) * 1000000);
+		}
+
+		if ($capture_stdout) {
+			fclose($pipes[1]);
+		}
+
+		fclose($pipes[2]);
+
+		$status = proc_get_status($process);
+
+		if (is_array($status) && !empty($status['running'])) {
+			if (isset($status['pid']) && function_exists('posix_kill')) {
+				posix_kill($status['pid'], 9);
+			}
+
+			proc_terminate($process, 9);
+			proc_close($process);
+
+			return array('exit' => false, 'stdout' => $stdout, 'stderr' => $stderr);
+		}
+
+		if ($exit === null && is_array($status) && isset($status['exitcode']) && $status['exitcode'] >= 0) {
+			$exit = (int) $status['exitcode'];
+		}
+
+		$close_exit = proc_close($process);
+
+		if ($exit === null) {
+			$exit = $close_exit;
+		}
+
+		return array('exit' => $exit, 'stdout' => $stdout, 'stderr' => $stderr);
+	}
+
+	/**
+	 * runRRDDump - run 'rrdtool dump' with its stdout going straight into
+	 * an already-open file handle via runRRDCommand(), instead of a shell
+	 * '>' redirection that would reopen the destination by name.
+	 *
+	 * @param  (string)   $rrdfile
+	 * @param  (resource) $handle
+	 *
+	 * @return (bool)
+	 */
+	private function runRRDDump($rrdfile, $handle) {
+		$argv = array(read_config_option('path_rrdtool'), 'dump', $rrdfile);
+
+		$result = $this->runRRDCommand($argv, $handle, $this->commandTimeout());
+
+		if ($result['exit'] !== 0) {
+			if (trim($result['stderr']) != '') {
+				cacti_log("ERROR: rrdtool dump failed for '$rrdfile': " . trim($result['stderr']), false, 'SPIKEKILL');
+			}
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * commandTimeout - the ceiling runRRDCommand() waits for the rrdtool
+	 * dump/restore round trip in remove_spikes().  1.2.31 ran both through
+	 * the shell_exec builtin with no deadline of its own; runRRDCommand()'s
+	 * stream_select() loop needs some bound to avoid stalling forever on a
+	 * wedged rrdtool, so it uses the same 'spikekill_timeout' setting that
+	 * already bounds the whole spikekill run (poller_spikekill.php), up to
+	 * 8 hours, instead of the 30 second default meant for a caller that
+	 * doesn't pass one.
+	 *
+	 * @return (int)
+	 */
+	private function commandTimeout() {
+		$configured = (int) read_config_option('spikekill_timeout');
+
+		return $configured > 0 ? $configured : 3600;
+	}
+
+	/**
+	 * normalizeDir - strip a trailing directory separator from a configured
+	 * or derived directory before it is passed to is_link(), canonicalDir()
+	 * or used to build a path.  spikekill_backupdir defaults to a path with
+	 * a trailing slash (include/global_settings.php), and is_link('dir/')
+	 * follows the final symlink to stat what it points at instead of the
+	 * link itself, so a symlinked backup directory would otherwise pass the
+	 * is_link() check it is meant to fail.  Delegates to
+	 * cacti_trim_dir_separator() (lib/functions.php), the same helper
+	 * poller_spikekill.php's purge_spike_backups() uses, so both trim the
+	 * same way on Windows too.
+	 *
+	 * @param  (string) $dir
+	 *
+	 * @return (string)
+	 */
+	private function normalizeDir($dir) {
+		return cacti_trim_dir_separator($dir, DIRECTORY_SEPARATOR);
+	}
+
+	/**
+	 * canonicalDir - resolve a configured directory's real path once and
+	 * cache it, so every copyFileSafely() call for that directory compares
+	 * against the same trusted value instead of re-resolving a path whose
+	 * ancestor a symlink could redirect between calls in the same run.
+	 *
+	 * @param  (string) $configured_dir
+	 *
+	 * @return (string|false)
+	 */
+	private function canonicalDir($configured_dir) {
+		if (!array_key_exists($configured_dir, $this->canonical_dirs)) {
+			$this->canonical_dirs[$configured_dir] = realpath($configured_dir);
+		}
+
+		return $this->canonical_dirs[$configured_dir];
+	}
+
+	/**
+	 * unlinkOwnedFile - remove a file this call created, but only after
+	 * confirming the name still refers to that same file.  Comparing the
+	 * device/inode captured when we created it against a fresh lstat() means
+	 * a symlink swapped in after creation is never followed or removed.
+	 *
+	 * @param  (string)      $path
+	 * @param  (array|false) $fstat - fstat() of the handle at creation time
+	 *
+	 * @return (void)
+	 */
+	private function unlinkOwnedFile($path, $fstat) {
+		/* PHP caches the last lstat() of a path for the whole run, so an
+		   earlier lookup of this name would otherwise answer for it */
+		clearstatcache(true, $path);
+
+		if (is_link($path) || $fstat === false) {
+			return;
+		}
+
+		$lstat = @lstat($path);
+
+		if ($lstat === false || $lstat['dev'] !== $fstat['dev'] || $lstat['ino'] !== $fstat['ino']) {
+			return;
+		}
+
+		@unlink($path);
 	}
 
 	private function calculateVarianceAverages(&$rra, &$samples) {

@@ -80,8 +80,7 @@ cmd_exec	./lib/snmp.php:214			exec($command, $snmp_value);
 cmd_exec	./lib/snmp.php:314			exec($command, $snmp_value);
 cmd_exec	./lib/snmp.php:409			exec($command, $snmp_value);
 cmd_exec	./lib/snmpagent.php:659		/* add pollers of a distributed system (future) */
-cmd_exec	./lib/spikekill.php:446			shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' dump ' . cacti_escapeshellarg($this->rrdfile) . ' > ' . cacti_escapeshellarg($xmlfile));
-cmd_exec	./lib/spikekill.php:772			$response = shell_exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' restore -f -r ' . cacti_escapeshellarg($xmlfile) . ' ' . cacti_escapeshellarg($rrdfile));
+cmd_exec	./lib/spikekill.php:1032			$process = @proc_open($argv, $descriptors, $pipes);
 cmd_exec	./lib/utility.php:1711						$nproc = system('nproc');
 cmd_exec	./lib/utility.php:1829			exec('wmic os get FreePhysicalMemory', $memInfo['FreePhysicalMemory']);
 cmd_exec	./lib/utility.php:1830			exec('wmic os get FreeSpaceInPagingFiles', $memInfo['FreeSpaceInPagingFiles']);
@@ -93,7 +92,7 @@ cmd_exec	./lib/utility.php:1866				exec('/usr/bin/free', $output, $exit_code);
 cmd_exec	./lib/utility.php:1917		$json     = shell_exec($php . ' -q ' . $php_file);
 cmd_exec	./lib/utility.php:1985		$json     = shell_exec($php . ' -q ' . $php_file);
 cmd_exec	./lib/utility.php:2117		$json     = shell_exec($php . ' -q ' . $php_file);
-cmd_exec	./poller_spikekill.php:247				$response = exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
+cmd_exec	./poller_spikekill.php:258				$response = exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./remote_agent.php:499								$cactiphp = proc_open($php_bin . ' -q ' . $srv_path . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
 cmd_exec	./script_server.php:185					exec("TASKLIST /FO LIST /FI \"PID eq $parent_pid\"", $out);
 cmd_exec	./snmpagent_mibcache.php:50			popen('start "CactiSNMPCacheChild" /I ' . $php . ' ' . $extra_args, 'r');

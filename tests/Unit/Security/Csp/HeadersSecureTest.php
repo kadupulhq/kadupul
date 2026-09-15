@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  +-------------------------------------------------------------------------+
  | Cacti: The Complete RRDtool-based Graphing Solution                     |
  +-------------------------------------------------------------------------+
@@ -10,7 +11,12 @@
 require_once __DIR__ . '/../../../../lib/headers_secure.php';
 
 /* Stub read_config_option() so tests can control flag values via
- * $GLOBALS['__test_config_options'] without a database connection. */
+ * $GLOBALS['__test_config_options'] without a database connection.
+ * PurgeSpikeBackupsWritableCheckTest.php, SpikekillBackupSymlinkSafetyTest.php
+ * and SpikekillXmlDumpFileSafetyTest.php run in the same Pest process and
+ * guard their own read_config_option() the same way against the same
+ * store, so whichever file's definition wins the function_exists() race,
+ * every file's stubbed values are still honored. */
 if (!function_exists('read_config_option')) {
 	function read_config_option($key) {
 		if (isset($GLOBALS['__test_config_options'][$key])) {
