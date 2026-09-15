@@ -40,8 +40,14 @@ _M = r'(?:0[1-9]|1[0-2])'
 _D = r'(?:0[1-9]|[12]\d|3[01])'
 _DATE = _Y + '-' + _M + '-' + _D + r' \d{2}:\d{2}:\d{2}'
 CLOCK = re.compile(r'^\[\d{2}:\d{2}:\d{2}\]', re.MULTILINE)
-POLLER_TIMESTAMP = re.compile(r'^' + _M + '/' + _D + '/' + _Y
-                              + r' \d{2}:\d{2}:\d{2}(?= - SYSTEM STATS:)', re.MULTILINE)
+# date_time_format() supports six orders/month forms and three separators.
+_MONTH_NAME = r'(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)'
+_POLLER_DATES = [re.escape(separator).join(parts)
+                 for separator in ('-', '/', '.')
+                 for month in (_M, _MONTH_NAME)
+                 for parts in ((_Y, month, _D), (month, _D, _Y), (_D, month, _Y))]
+POLLER_TIMESTAMP = re.compile(r'^(?:' + '|'.join(_POLLER_DATES)
+                              + r') \d{2}:\d{2}:\d{2}(?= - SYSTEM STATS:)', re.MULTILINE)
 INSTALL_TIMESTAMPS = re.compile(
     r'^(\[\d{2}:\d{2}:\d{2}\] \[\s*global always\s*\] Installation was started at )'
     + _DATE + r'(, completed at )' + _DATE + r'$', re.MULTILINE)

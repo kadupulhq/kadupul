@@ -45,6 +45,17 @@ CASES = [
     ('ds definition', 'DS:proc:GAUGE:600:0:U', 'DS:proc:GAUGE:600:0:U'),
 ]
 
+# Exercise every date_time_format() option, preserving dates outside the
+# diagnostic prefix and meaningful values later in the same diagnostic line.
+for separator in ('-', '/', '.'):
+    for month in ('09', 'Sep'):
+        for parts in (('2026', month, '12'), (month, '12', '2026'), ('12', month, '2026')):
+            stamp = separator.join(parts) + ' 02:39:50'
+            suffix = ' - SYSTEM STATS: DataSources:5 cutoff=' + stamp
+            CASES.append(('configured poller date ' + stamp, stamp + suffix, '<TIMESTAMP>' + suffix))
+            CASES.append(('preserved message date ' + stamp, stamp + ' - plugin event', stamp + ' - plugin event'))
+
+
 
 def incomplete_repeat_failure():
     """compare must refuse a partial repeat run instead of labelling differences
