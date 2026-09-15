@@ -683,9 +683,12 @@ function rrdcheck_error_handler($errno, $errmsg, $filename, $linenum, $vars = []
 			E_COMPILE_WARNING   => 'Compile Warning',
 			E_USER_ERROR        => 'User Error',
 			E_USER_WARNING      => 'User Warning',
-			E_USER_NOTICE       => 'User Notice',
-			E_STRICT            => 'Runtime Notice'
+			E_USER_NOTICE       => 'User Notice'
 		);
+
+		/* E_STRICT's value has always been 2048; PHP 8.4 deprecates reading
+		 * the constant itself, so use the literal instead */
+		$errortype[2048] = 'Runtime Notice';
 
 		if (defined('E_RECOVERABLE_ERROR')) {
 			$errortype[E_RECOVERABLE_ERROR] = 'Catchable Fatal Error';

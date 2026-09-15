@@ -3,6 +3,7 @@
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
  | Portions Copyright (C) 2010 Boris Lytochkin, Sponsored by Yandex LLC    |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -553,7 +554,18 @@ function cacti_snmp_log_session_error($session, $info, $oid, $warning = '') {
 	$error_number = $session->getErrno();
 
 	if ($error_number == SNMP::ERRNO_TIMEOUT) {
-		$error = 'Timeout (' . round($info['timeout'] / 1000, 0) . ' ms)';
+		/* phpsnmp\SNMP has two implementations with different units: the
+		 * native extension wrapper (extension.php) extends \SNMP and leaves
+		 * info['timeout'] in microseconds, while the bundled class
+		 * (classSNMP.php) does not extend \SNMP and already converts its
+		 * own info['timeout'] to milliseconds in its constructor */
+		if ($session instanceof \SNMP) {
+			$timeout_ms = $info['timeout'] / 1000;
+		} else {
+			$timeout_ms = $info['timeout'];
+		}
+
+		$error = 'Timeout (' . round($timeout_ms, 0) . ' ms)';
 	} else {
 		$error = trim((string) $session->getError());
 

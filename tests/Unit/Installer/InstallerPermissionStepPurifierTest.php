@@ -71,16 +71,22 @@ foreach (array(
 	'buttonNext'  => new InstallerButton(),
 ) as $name => $value) {
 	$property = new ReflectionProperty('Installer', $name);
-	$property->setAccessible(true);
+	if (PHP_VERSION_ID < 80100) {
+		$property->setAccessible(true);
+	}
 	$property->setValue($installer, $value);
 }
 
 $output = $installer->processStepPermissionCheck();
 
 $next = new ReflectionProperty('Installer', 'buttonNext');
-$next->setAccessible(true);
+if (PHP_VERSION_ID < 80100) {
+	$next->setAccessible(true);
+}
 $data = new ReflectionProperty('Installer', 'stepData');
-$data->setAccessible(true);
+if (PHP_VERSION_ID < 80100) {
+	$data->setAccessible(true);
+}
 
 print json_encode(array(
 	'enabled'  => $next->getValue($installer)->Enabled,

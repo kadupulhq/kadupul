@@ -71,18 +71,26 @@ $installer = (new ReflectionClass('Installer'))->newInstanceWithoutConstructor()
 
 foreach (array('mode' => Installer::MODE_UPGRADE, 'stepError' => false, 'errors' => array()) as $name => $value) {
 	$property = new ReflectionProperty('Installer', $name);
-	$property->setAccessible(true);
+	if (PHP_VERSION_ID < 80100) {
+		$property->setAccessible(true);
+	}
 	$property->setValue($installer, $value);
 }
 
 $method = new ReflectionMethod('Installer', 'getPermissions');
-$method->setAccessible(true);
+if (PHP_VERSION_ID < 80100) {
+	$method->setAccessible(true);
+}
 $permissions = $method->invoke($installer);
 
 $errors = new ReflectionProperty('Installer', 'errors');
-$errors->setAccessible(true);
+if (PHP_VERSION_ID < 80100) {
+	$errors->setAccessible(true);
+}
 $step = new ReflectionProperty('Installer', 'stepError');
-$step->setAccessible(true);
+if (PHP_VERSION_ID < 80100) {
+	$step->setAccessible(true);
+}
 
 print json_encode(array(
 	'errors'    => $errors->getValue($installer),

@@ -76,7 +76,9 @@ function clean_up_lines($string) {
 require $argv[1] . '/lib/installer.php';
 
 $parse = new ReflectionMethod('Installer', 'dateFromMicrotime');
-$parse->setAccessible(true);
+if (PHP_VERSION_ID < 80100) {
+	$parse->setAccessible(true);
+}
 
 $format = function ($value) use ($parse) {
 	$date = $parse->invoke(null, $value);

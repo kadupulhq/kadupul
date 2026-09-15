@@ -17,7 +17,9 @@ require_once dirname(__DIR__, 3) . '/lib/installer.php';
 test('installer accepts only complete browser selection payloads', function () {
 	$method   = new ReflectionMethod(Installer::class, 'isCompleteSelectionPayload');
 	$expected = array('chk_template_one', 'chk_template_two');
-	$method->setAccessible(true);
+	if (PHP_VERSION_ID < 80100) {
+		$method->setAccessible(true);
+	}
 
 	expect($method->invoke(null, array(
 		'chk_template_one' => true,
@@ -44,7 +46,9 @@ test('installer accepts only complete browser selection payloads', function () {
 
 test('installer requires payload keys only for rendered table controls', function () {
 	$method = new ReflectionMethod(Installer::class, 'isTableSelectable');
-	$method->setAccessible(true);
+	if (PHP_VERSION_ID < 80100) {
+		$method->setAccessible(true);
+	}
 
 	expect($method->invoke(null, array('Rows' => 0)))->toBeTrue()
 		->and($method->invoke(null, array('Rows' => '999999')))->toBeTrue()
