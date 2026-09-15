@@ -2423,7 +2423,7 @@ function xml_detect_ignorable_hash_cache($hash, &$xml_array) {
 function import_data_input_realm_allowed() {
 	global $config;
 
-	if (!$config['is_web']) {
+	if (!$config['is_web'] || (string) read_config_option('auth_method') === '0') {
 		return true;
 	}
 

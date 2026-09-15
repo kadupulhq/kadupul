@@ -1,6 +1,9 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Retain poller samples for retry when Boost handoff cleanup fails, without duplicate direct RRD updates
+-security: Preserve IPv6 Referer hosts before same-site validation and refuse hidden terminal input without signal support
+-issue: Honor explicit disabled authentication during template imports and isolate Windows shim test extensions
 -issue: Pass the CSV separator, enclosure and escape explicitly to str_getcsv() and fputcsv() in the color import, device export and basic auth mapfile so PHP 8.4 raises no deprecation notice, with parsing and output unchanged
 -issue#84: Show the configured timeout in SNMP timeout warnings instead of dividing the millisecond value by 1000 again
 -issue#84: Show SNMP timeout warnings in milliseconds when PHP's SNMP extension is in use, not only with the bundled SNMP class

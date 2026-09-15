@@ -1076,7 +1076,9 @@ function validate_redirect_url($url = '', $default = 'index.php') {
 
 	/* Use the server-configured name rather than the client-supplied Host header. */
 	if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] != '') {
-		$srv_host = preg_replace('/:\d+$/', '', $_SERVER['SERVER_NAME']);
+		$server_name = $_SERVER['SERVER_NAME'];
+		$srv_host = filter_var(trim($server_name, '[]'), FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false
+			? trim($server_name, '[]') : preg_replace('/:\d+$/', '', $server_name);
 	} elseif (isset($_SERVER['HTTP_HOST']) && cacti_trusted_host_header($_SERVER['HTTP_HOST'], $config['trusted_hosts'] ?? array()) !== '') {
 		/* 1.2.31 compared against any Host header when the server sets no
 		 * name. Here the Host header must also be listed in $trusted_hosts. */
@@ -1084,7 +1086,7 @@ function validate_redirect_url($url = '', $default = 'index.php') {
 	}
 
 	if ($ref_host !== null) {
-		if ($srv_host === null || strtolower($ref_host) !== strtolower($srv_host)) {
+		if ($srv_host === null || strtolower(trim($ref_host, '[]')) !== strtolower(trim($srv_host, '[]'))) {
 			return $default;
 		}
 	}

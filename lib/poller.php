@@ -646,8 +646,11 @@ function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$re
  *
  * @return (int) - The number of rrdfiles processed
  */
-function process_poller_output(&$rrdtool_pipe, $remainder = 0) {
+function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null, &$consumed = null) {
 	global $config, $debug;
+
+	$deferred = false;
+	$consumed = 0;
 
 	static $rrd_field_names = array();
 	static $checked_bad     = false;
@@ -688,6 +691,15 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0) {
 	}
 
 	if (cacti_sizeof($results)) {
+		/* Acknowledge the handoff before removing source rows. A failed
+		 * handoff leaves both queues available for the next poller pass. */
+		$direct_rrd_update = boost_poller_on_demand($results);
+
+		if ($direct_rrd_update === null) {
+			$deferred = true;
+			return 0;
+		}
+
 		/* create an array keyed off of each .rrd file */
 		foreach ($results as $item) {
 			/* trim the default characters, but add single and double quotes */
@@ -905,7 +917,9 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0) {
 					$data_ids[] = $item['local_data_id'];
 					$k++;
 					if ($k % 10000 == 0) {
-						db_execute('DELETE FROM poller_output WHERE local_data_id IN (' . implode(',', $data_ids) . ')');
+						if (db_execute('DELETE FROM poller_output WHERE local_data_id IN (' . implode(',', $data_ids) . ')') !== false) {
+							$consumed += (int) db_affected_rows();
+						}
 						$data_ids = array();
 						$k = 0;
 					}
@@ -916,7 +930,9 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0) {
 		}
 
 		if ($k > 0) {
-			db_execute('DELETE FROM poller_output WHERE local_data_id IN (' . implode(',', $data_ids) . ')');
+			if (db_execute('DELETE FROM poller_output WHERE local_data_id IN (' . implode(',', $data_ids) . ')') !== false) {
+				$consumed += (int) db_affected_rows();
+			}
 		}
 
 		/* process dsstats information */
@@ -925,7 +941,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0) {
 
 		api_plugin_hook_function('poller_output', $rrd_update_array);
 
-		if (boost_poller_on_demand($results)) {
+		if ($direct_rrd_update) {
 			$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe);
 		}
 
@@ -937,12 +953,17 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0) {
 			FROM poller_output');
 
 		/* to much records in poller_output, process in chunks */
-		if ($rows && $remainder == $max_rows) {
+		if ($rows && $remainder == $max_rows && $consumed > 0) {
 			$running = db_fetch_cell('SELECT COUNT(*)
 				FROM poller_time
 				WHERE end_time = "0000-00-00"');
 
-			$rrds_processed += process_poller_output($rrdtool_pipe, $rows < $max_rows ? $rows : $max_rows);
+			$rrds_processed += process_poller_output($rrdtool_pipe, $rows < $max_rows ? $rows : $max_rows, $deferred, $child_consumed);
+			$consumed += $child_consumed;
+
+			if ($deferred) {
+				return $rrds_processed;
+			}
 
 			if ($running == 0 && !$checked_bad) {
 				// Remove recently deleted items from the poller_output table

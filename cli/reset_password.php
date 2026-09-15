@@ -121,6 +121,12 @@ function reset_password_read() {
 		return false;
 	}
 
+	if (!function_exists('pcntl_async_signals') || !function_exists('pcntl_signal')) {
+		print 'ERROR: Safe hidden input requires pcntl. Pipe the new password into this command instead.' . PHP_EOL;
+
+		return false;
+	}
+
 	print 'New password: ';
 	$GLOBALS['reset_password_echo_off'] = true;
 

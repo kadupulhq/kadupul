@@ -523,7 +523,7 @@ if ($config['is_web']) {
 
 	/* Sanitize the http referer */
 	if (isset($_SERVER['HTTP_REFERER'])) {
-		$_SERVER['HTTP_REFERER'] = sanitize_uri($_SERVER['HTTP_REFERER']);
+		$_SERVER['HTTP_REFERER'] = sanitize_uri($_SERVER['HTTP_REFERER'], true);
 	}
 }
 

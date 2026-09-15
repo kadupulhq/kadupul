@@ -51,6 +51,10 @@ function boostRedirect_boost_flush_output_batch($value_tuples, $conn = false) {
 		$state['boost_rows'] = array_merge($state['boost_rows'], $state['partial_stage']);
 	}
 
+	if (!empty($state['consume_during_flush'])) {
+		$state['boost_rows'] = array();
+	}
+
 	return !$state['flush_fails'];
 }
 
@@ -67,7 +71,7 @@ function boostRedirect_db_fetch_assoc_prepared($sql, $params = array(), $log = t
 	$state['markers'][] = substr_count($sql, '?');
 
 	/* the server refuses a statement with more than 65535 markers */
-	if ($state['lookup_fails'] || substr_count($sql, '?') > 65535) {
+	if ($state['lookup_fails'] || (!empty($state['lookup_fails_after_first']) && $state['lookups'] > 1) || substr_count($sql, '?') > 65535) {
 		return false;
 	}
 
@@ -123,7 +127,7 @@ function boostRedirectLoad($root) {
 
 	$source = file_get_contents($root . '/lib/boost.php');
 
-	foreach (array('boost_redirect_missing_rows', 'boost_redirect_delete_staged_rows', 'boost_poller_on_demand') as $name) {
+	foreach (array('boost_redirect_missing_rows', 'boost_poller_on_demand') as $name) {
 		$start = strpos($source, 'function ' . $name . '(');
 
 		if ($start === false) {
@@ -132,7 +136,7 @@ function boostRedirectLoad($root) {
 
 		$end = strpos($source, "\nfunction ", $start + 1);
 
-		eval(preg_replace('/\b(boost_redirect_missing_rows|boost_redirect_delete_staged_rows|boost_poller_on_demand|boost_validate_poller_ownership|read_config_option|set_config_option|boost_check_correct_enabled|boost_flush_output_batch|db_fetch_assoc_prepared|db_execute_prepared|db_qstr|cacti_sizeof|cacti_log)\(/', 'boostRedirect_$1(', substr($source, $start, $end - $start)));
+		eval(preg_replace('/\b(boost_redirect_missing_rows|boost_poller_on_demand|boost_validate_poller_ownership|read_config_option|set_config_option|boost_check_correct_enabled|boost_flush_output_batch|db_fetch_assoc_prepared|db_execute_prepared|db_qstr|cacti_sizeof|cacti_log)\(/', 'boostRedirect_$1(', substr($source, $start, $end - $start)));
 	}
 
 	expect(function_exists('boostRedirect_boost_poller_on_demand'))->toBeTrue();
@@ -229,51 +233,40 @@ test('the presence lookup reads only the requested data source and time pairs', 
 		->and($GLOBALS['boost_redirect_test']['lookups'])->toBe(1);
 });
 
-test('a failed Boost presence lookup stages every row instead of dropping them', function () {
-	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on'), array(), array('lookup_fails' => true)))->toBeFalse()
-		->and($GLOBALS['boost_redirect_test']['staged'])->toBe(3);
+test('a failed Boost presence lookup defers without staging or deleting rows', function () {
+	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on'), array(), array('lookup_fails' => true)))->toBeNull()
+		->and($GLOBALS['boost_redirect_test']['staged'])->toBe(0)
+		->and($GLOBALS['boost_redirect_test']['deletes'])->toBe(array());
 });
 
-test('when staging the missing rows fails the poller writes the batch directly', function () {
-	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on'), array(), array('lookup_fails' => true, 'flush_fails' => true)))->toBeTrue();
-});
-
-test('a failed handoff purges the rows already staged before the attempt', function () {
-	/* row 0 is already in poller_output_boost; staging the other two fails */
+test('failed staging retains rows already queued without a direct fallback', function () {
 	$present = array(array('local_data_id' => 7, 'rrd_name' => 'traffic_in', 'time' => '2026-01-01 00:05:00'));
-
-	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on'), $present, array('flush_fails' => true)))->toBeTrue()
-		->and($GLOBALS['boost_redirect_test']['deletes'])->toBe(array(
-			array(7, 'traffic_in', '2026-01-01 00:05:00'),
-		));
+	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on'), $present, array('flush_fails' => true)))->toBeNull()
+		->and($GLOBALS['boost_redirect_test']['boost_rows'])->toBe($present)
+		->and($GLOBALS['boost_redirect_test']['deletes'])->toBe(array());
 });
 
-test('a chunk that staged before a later chunk failed is also purged', function () {
+test('partial staging preserves acknowledged chunks for Boost after a later failure', function () {
 	$partial = array(array('local_data_id' => 7, 'rrd_name' => 'traffic_out', 'time' => '2026-01-01 00:05:00'));
-
-	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on'), array(), array('flush_fails' => true, 'partial_stage' => $partial)))->toBeTrue()
-		->and($GLOBALS['boost_redirect_test']['deletes'])->toBe(array(
-			array(7, 'traffic_out', '2026-01-01 00:05:00'),
-		));
+	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on'), array(), array('flush_fails' => true, 'partial_stage' => $partial)))->toBeNull()
+		->and($GLOBALS['boost_redirect_test']['boost_rows'])->toBe($partial)
+		->and($GLOBALS['boost_redirect_test']['deletes'])->toBe(array());
 });
 
-test('a remote collector still refuses to stage missing rows it does not own', function () {
-	$GLOBALS['config']['poller_id'] = 2;
-
-	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on'), array(), array('owned' => false)))->toBeTrue()
-		->and($GLOBALS['boost_redirect_test']['staged'])->toBe(0);
-});
-
-test('a rejected handoff purges the rows already staged before the attempt', function () {
-	$GLOBALS['config']['poller_id'] = 2;
-
-	/* row 0 is already in poller_output_boost; the unowned rows trigger the refusal */
+test('a concurrent consumer cannot turn failed staging into a direct fallback', function () {
 	$present = array(array('local_data_id' => 7, 'rrd_name' => 'traffic_in', 'time' => '2026-01-01 00:05:00'));
+	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on'), $present, array('flush_fails' => true, 'consume_during_flush' => true)))->toBeNull()
+		->and($GLOBALS['boost_redirect_test']['boost_rows'])->toBe(array())
+		->and($GLOBALS['boost_redirect_test']['deletes'])->toBe(array());
+});
 
-	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on'), $present, array('owned' => false)))->toBeTrue()
-		->and($GLOBALS['boost_redirect_test']['deletes'])->toBe(array(
-			array(7, 'traffic_in', '2026-01-01 00:05:00'),
-		));
+test('a remote collector defers unowned missing rows and preserves the existing queue', function () {
+	$GLOBALS['config']['poller_id'] = 2;
+	$present = array(array('local_data_id' => 7, 'rrd_name' => 'traffic_in', 'time' => '2026-01-01 00:05:00'));
+	expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on'), $present, array('owned' => false)))->toBeNull()
+		->and($GLOBALS['boost_redirect_test']['staged'])->toBe(0)
+		->and($GLOBALS['boost_redirect_test']['boost_rows'])->toBe($present)
+		->and($GLOBALS['boost_redirect_test']['deletes'])->toBe(array());
 });
 
 test('without redirect Boost stages the rows and skips the direct update as in 1.2.31', function () {

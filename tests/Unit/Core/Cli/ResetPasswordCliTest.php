@@ -449,6 +449,13 @@ function reset_password_tty_run(array $scenario) : array {
 	$child = <<<'PHP'
 <?php
 namespace ResetPasswordTty {
+    function function_exists($name) {
+        if (!empty($GLOBALS['scenario']['no_pcntl']) && strpos($name, 'pcntl_') === 0) {
+            return false;
+        }
+        return \function_exists($name);
+    }
+
 	$GLOBALS['scenario'] = json_decode(stream_get_contents(\STDIN), true);
 	$GLOBALS['tty']      = array('stty' => array(), 'shutdown' => 0, 'async' => false, 'signals' => array(), 'order' => array());
 	$GLOBALS['config']   = array('cacti_server_os' => $GLOBALS['scenario']['cacti_server_os'] ?? 'unix');
@@ -602,4 +609,12 @@ test('the script follows the CLI conventions', function () {
 		->and($source)->toContain('stream_isatty(STDIN)')
 		->and($source)->not->toContain('posix_isatty')
 		->and(is_executable(reset_password_cli_path()))->toBeTrue();
+});
+
+
+test('a terminal without signal support is refused before disabling echo', function () {
+    $process = reset_password_tty_run(array('no_pcntl' => true));
+    $result = reset_password_tty_result($process);
+    expect($result['password'])->toBeFalse()
+        ->and($result['tty']['stty'])->toBe(array());
 });

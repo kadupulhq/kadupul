@@ -71,8 +71,14 @@ $rrdtool_pipe = rrd_init();
 
 $rrds_processed = 0;
 
-while (db_fetch_cell('SELECT count(*) FROM poller_output') > 0) {
-	$rrds_processed = $rrds_processed + process_poller_output($rrdtool_pipe, false);
+while (($pending = (int) db_fetch_cell('SELECT count(*) FROM poller_output')) > 0) {
+	$rrds_processed = $rrds_processed + process_poller_output($rrdtool_pipe, false, $deferred, $consumed);
+
+	if ($deferred || $consumed === 0) {
+		print "ERROR: Poller output made no progress; queued samples retained for a later retry.\n";
+		rrd_close($rrdtool_pipe);
+		exit(1);
+	}
 }
 
 print "There were $rrds_processed RRD updates made this pass\n";

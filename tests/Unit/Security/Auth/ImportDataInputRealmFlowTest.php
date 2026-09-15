@@ -77,6 +77,10 @@ if (!is_dir($libraryDir)) {
 file_put_contents($libraryDir . '/xml.php', "<?php\n");
 
 /* a package hands each file's data to import_xml_data(), so answer per file when one is set */
+function read_config_option($name) {
+	return 1;
+}
+
 function xml2array($data) {
 	return $GLOBALS['ifl_xml_files'][$data] ?? $GLOBALS['ifl_xml'];
 }
