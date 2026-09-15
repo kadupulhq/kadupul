@@ -71,6 +71,16 @@ jobs:
         if: steps.composer-test.outputs.available == 'true'
         run: composer test
 
+      - name: Install isolated CSV test runner
+        run: composer install --working-dir=tests --prefer-dist --no-progress --no-interaction
+
+      - name: Exercise production CSV paths
+        working-directory: tests
+        # The old Pest runner emits dependency deprecations on PHP 8.4. The
+        # isolated production subprocess explicitly enables E_ALL and throws
+        # on every diagnostic, including CSV default-argument deprecations.
+        run: php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/CsvExplicitEscapeParityTest.php --colors=never
+
   style:
     name: Code style
     runs-on: ubuntu-latest
@@ -178,4 +188,3 @@ jobs:
             exit 1
           fi
           echo "Changelog updated."
-

@@ -276,7 +276,7 @@ function get_basic_auth_username() {
 
 			if (cacti_sizeof($records)) {
 				foreach($records as $r) {
-					list($basic, $shortform) = str_getcsv($r);
+					list($basic, $shortform) = str_getcsv($r, ',', '"', '\\');
 
 					if (trim($basic) == $username) {
 						$username = trim($shortform);
