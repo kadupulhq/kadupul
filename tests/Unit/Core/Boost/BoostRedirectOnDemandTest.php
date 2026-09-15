@@ -67,7 +67,7 @@ function boostRedirect_db_fetch_assoc_prepared($sql, $params = array(), $log = t
 	$state['markers'][] = substr_count($sql, '?');
 
 	/* the server refuses a statement with more than 65535 markers */
-	if ($state['lookup_fails'] || substr_count($sql, '?') > 65535) {
+	if ($state['lookup_fails'] || (!empty($state['lookup_fails_after_first']) && $state['lookups'] > 1) || substr_count($sql, '?') > 65535) {
 		return false;
 	}
 
@@ -298,4 +298,11 @@ test('with Boost off the poller still updates the RRD files directly', function 
 test('failed cleanup defers the batch instead of authorizing a duplicate direct update', function () {
     $present = array(array('local_data_id' => 7, 'rrd_name' => 'traffic_in', 'time' => '2026-01-01 00:05:00'));
     expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on'), $present, array('flush_fails' => true, 'delete_fails' => true)))->toBeNull();
+});
+
+
+test('failed verification after a partial stage cannot authorize a duplicate write', function () {
+    $partial = array(array('local_data_id' => 7, 'rrd_name' => 'traffic_out', 'time' => '2026-01-01 00:05:00'));
+    expect(boostRedirectRun(array('boost_rrd_update_enable' => 'on', 'boost_redirect' => 'on'), array(), array('flush_fails' => true, 'partial_stage' => $partial, 'lookup_fails_after_first' => true, 'delete_fails' => true)))->toBeNull()
+        ->and($GLOBALS['boost_redirect_test']['deletes'])->toBe(array(array(7, 'traffic_in', '2026-01-01 00:05:00', 7, 'traffic_out', '2026-01-01 00:05:00', 8, 'traffic_in', '2026-01-01 00:05:00')));
 });

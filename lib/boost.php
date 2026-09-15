@@ -397,7 +397,8 @@ function boost_validate_poller_ownership($results, $poller_id, $conn = false) {
  *   poller_output_boost does not hold.  One indexed lookup covers a
  *   poller_output chunk; a failed lookup returns every row so none is dropped.
  */
-function boost_redirect_missing_rows($results, $conn = false) {
+function boost_redirect_missing_rows($results, $conn = false, &$lookup_failed = null) {
+	$lookup_failed = false;
 	/* The server refuses more than 65535 markers in one statement, so a lookup
 	 * holds at most 60000 data source ids and times together.  Each time lists
 	 * only its own ids, so the lookup reads the requested pairs and no others. */
@@ -452,6 +453,7 @@ function boost_redirect_missing_rows($results, $conn = false) {
 			$params, true, $conn);
 
 		if ($rows === false) {
+			$lookup_failed = true;
 			return $results;
 		}
 
@@ -564,7 +566,7 @@ function boost_poller_on_demand(&$results) {
 			 * poller_output_boost, but a batch from before redirect was switched on,
 			 * or whose Boost insert failed, exists only here.  Stage what Boost lacks. */
 			$return_value = false;
-			$missing      = cacti_sizeof($results) ? boost_redirect_missing_rows($results, $conn) : array();
+			$missing      = cacti_sizeof($results) ? boost_redirect_missing_rows($results, $conn, $presence_failed) : array();
 
 			if (cacti_sizeof($missing)) {
 				if ($config['poller_id'] > 1 && !boost_validate_poller_ownership($missing, $config['poller_id'], $conn)) {
@@ -590,7 +592,7 @@ function boost_poller_on_demand(&$results) {
 						}
 					}
 
-					$return_value = boost_redirect_delete_staged_rows($staged, $conn) ? true : null;
+					$return_value = boost_redirect_delete_staged_rows($presence_failed ? $results : $staged, $conn) ? true : null;
 				} else {
 					$value_tuples = array();
 
@@ -610,7 +612,7 @@ function boost_poller_on_demand(&$results) {
 						 * the smaller $missing set and drop whatever is now staged
 						 * so the direct RRD update below is not replayed later by
 						 * scheduled Boost too. */
-						$still_missing      = boost_redirect_missing_rows($missing, $conn);
+						$still_missing      = boost_redirect_missing_rows($missing, $conn, $verification_failed);
 						$still_missing_keys = array();
 
 						foreach ($still_missing as $result) {
@@ -627,7 +629,9 @@ function boost_poller_on_demand(&$results) {
 							}
 						}
 
-						if (!boost_redirect_delete_staged_rows($staged, $conn)) {
+						/* A failed presence query proves nothing about staged rows.
+						 * Delete every exact batch key before allowing direct writes. */
+						if (!boost_redirect_delete_staged_rows(($presence_failed || $verification_failed) ? $results : $staged, $conn)) {
 							$return_value = null;
 						}
 					}
