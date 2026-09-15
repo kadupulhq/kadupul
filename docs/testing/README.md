@@ -68,8 +68,8 @@ fails. Only `make test-update-golden` writes them, and that target refuses to
 run scoped, so a partial capture cannot leave the rest stale.
 
 Normalization is deliberately narrow. Filesystem roots become `<APP>` and
-`<HARNESS>`, and the base URL becomes `<BASE>`. Process ids and timestamps are
-never recorded. Identifiers, row counts, scalar types, ordering and message
+`<HARNESS>`, and the base URL becomes `<BASE>`. Known diagnostic process ids, log clocks and installer/poller timestamps are
+normalized. Dates in database values, UI output and plugin messages are preserved. Identifiers, row counts, scalar types, ordering and message
 text are all preserved, because a change in any of them is a behavioral change.
 
 When a golden changes, read the diff. A legitimate change is approved

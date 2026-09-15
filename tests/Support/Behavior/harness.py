@@ -670,7 +670,11 @@ def main():
             status = harness.finish(error)
         finally:
             if not args.keep:
-                harness.compose('down', '--volumes', '--remove-orphans', timeout=120)
+                try:
+                    harness.compose('down', '--volumes', '--remove-orphans', timeout=120)
+                except (OSError, RuntimeError, subprocess.TimeoutExpired) as cleanup_error:
+                    print('Container cleanup failed: ' + str(cleanup_error), file=sys.stderr)
+                    status = status or 2
             else:
                 print('Kept project: ' + ' '.join(harness.dc))
     return status

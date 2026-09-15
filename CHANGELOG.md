@@ -78,7 +78,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - File headers carry SPDX copyright and license tags instead of the GPL notice box.
   Inherited files stay GPL-2.0-or-later and files Kadupul created are GPL-3.0-or-later.
 - Run SonarQube Cloud analysis on pushes to main and on pull requests.
-- Document the 1.2 long-term support line on `lts/1.2`, which ships `v1.2.32`.
+- Document the 1.2 long-term support line on `lts/1.2`, which targets `v1.2.32`.
 - Leave nosemgrep-suppressed findings out of the Semgrep code scanning upload.
 - Report an installation exception to the CLI installer as well as to the web installer.
 - Refresh localized product names and compiled catalogs, with source-text fallback

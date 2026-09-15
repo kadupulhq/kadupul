@@ -91,6 +91,22 @@ def failed_setup_manifest():
         shutil.rmtree(directory, ignore_errors=True)
 
 
+def unavailable_docker_failure():
+    from unittest.mock import patch
+    tag = 'selftest-docker-' + uuid.uuid4().hex[:8]
+    def unavailable(*args, **kwargs):
+        raise FileNotFoundError('docker unavailable')
+    try:
+        with patch('sys.argv', ['harness', 'run', '--target', tag]), patch.object(harness.Harness, 'compose', unavailable):
+            assert harness.main() == 2
+        manifest = json.loads((ROOT / 'tests/behavior/results' / tag / 'observations.json').read_text())
+        assert manifest['complete'] is False
+        assert manifest['error'] == 'docker unavailable'
+    finally:
+        shutil.rmtree(ROOT / 'tests/behavior/results' / tag, ignore_errors=True)
+    print('unavailable Docker preserves the setup failure through teardown')
+
+
 def main():
     failures = []
 
@@ -102,6 +118,7 @@ def main():
     print(f'{len(CASES) - len(failures)}/{len(CASES)} normalization cases pass')
 
     failed_setup_manifest()
+    unavailable_docker_failure()
     print('setup failure records an incomplete manifest without probing containers')
 
     repeat_failure = incomplete_repeat_failure()
