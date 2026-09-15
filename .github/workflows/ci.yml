@@ -71,6 +71,33 @@ jobs:
         if: steps.composer-test.outputs.available == 'true'
         run: composer test
 
+  application-smoke:
+    name: Install, login and poller smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3
+        with:
+          install_args: python@3.12.12
+      - name: Verify observation normalization and failure reporting
+        run: mise exec python@3.12.12 -- python tests/Support/Behavior/selftest.py
+      # This exercises runtime invariants without claiming parity with upstream.
+      # Observations are ephemeral CI artifacts; committed goldens stay untouched.
+      - name: Exercise fresh install, authentication and collection
+        env:
+          PHP_VERSION: '8.2'
+        run: mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py run --target ci-smoke --update-golden
+      - name: Upload observations
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: application-smoke-observations
+          path: tests/behavior/results/ci-smoke/
+          if-no-files-found: warn
+
   style:
     name: Code style
     runs-on: ubuntu-latest

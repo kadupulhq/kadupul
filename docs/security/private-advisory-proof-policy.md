@@ -45,8 +45,8 @@ Production readiness requires no unresolved advisories at `PARTIAL_REFERENCE` or
 
 Use this order for closure:
 
-1. Resolve and prove on `1.2.x` first.
-2. Port controls and tests to `develop`.
+1. Resolve and prove on `lts/1.2` first.
+2. Port applicable controls and tests to `main`.
 3. Re-run proof checks on both branches.
 
 This keeps compatibility and behavior aligned while preserving newer branch hardening.

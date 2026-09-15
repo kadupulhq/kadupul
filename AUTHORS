@@ -1,0 +1,41 @@
+Historical upstream attribution
+==============================
+
+Kadupul derives from Cacti 1.2.31. The following credits were carried by the imported
+About page. They record upstream contributions, not current Kadupul membership,
+review responsibility, endorsement, or support contacts.
+
+Upstream developers
+-------------------
+Larry Adams (TheWitness)
+Mark Brugnoli-Vinten (netniV)
+Jimmy Conner (cigamit)
+Petr Macek (xmacan)
+Sean Mancini (bmfmancini)
+Andreas Braun (browniebraun)
+Thomas Vincent (somethingwithproof)
+
+Upstream documentation, QA, packaging, and community contributors
+---------------------------------------------------------------
+Thomas Urban (phalek)
+Paul Gevers (Debian) (paulgevers)
+Morten Stevens (Fedora) (mortenstevens)
+
+Upstream emeritus members
+------------------------
+Ian Berry (raX)
+Reinhard Scheck (gandalf)
+Tony Roman (rony)
+Chris Bell (Windows) (BSOD2600)
+Andy Blyler (ablyler)
+Jing Chen (ddb4github)
+J.P. Pasnak, CD (Linegod) - Till we meet again!
+
+Acknowledgments
+---------------
+Tobi Oetiker, creator of RRDtool and MRTG.
+The users who reported issues, contributed fixes, and supported Cacti.
+
+Additional historical credits remain in source notices, translation headers,
+and the upstream CHANGELOG. Current project contacts and contributions:
+https://github.com/kadupulhq/kadupul

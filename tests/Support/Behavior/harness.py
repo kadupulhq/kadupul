@@ -33,21 +33,18 @@ def write_json(path, value):
     path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + '\n')
 
 
-# Wall-clock only. Each pattern is anchored to a full timestamp shape so it
-# cannot swallow a version, an id, an OID or a counter value.
-#
-# Each also demands a plausible calendar date. Matching any four digits
-# swallowed the literal DDL default '0000-00-00 00:00:00' out of the schema
-# golden, so a rewrite could have changed that column default unnoticed.
+# Normalize only timestamps in known diagnostic line shapes. Arbitrary dates
+# in database rows, UI output, or plugin messages are part of the contract.
 _Y = r'(?:19|20)\d{2}'
 _M = r'(?:0[1-9]|1[0-2])'
 _D = r'(?:0[1-9]|[12]\d|3[01])'
-
+_DATE = _Y + '-' + _M + '-' + _D + r' \d{2}:\d{2}:\d{2}'
 CLOCK = re.compile(r'^\[\d{2}:\d{2}:\d{2}\]', re.MULTILINE)
-DATETIME = re.compile(_Y + '-' + _M + '-' + _D + r' \d{2}:\d{2}:\d{2}')
-# Cacti's own log and poller stats use US order, e.g. 09/12/2026 02:39:50.
-US_DATETIME = re.compile(_M + '/' + _D + '/' + _Y + r' \d{2}:\d{2}:\d{2}')
-ISO = re.compile(_Y + '-' + _M + '-' + _D + r'T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?')
+POLLER_TIMESTAMP = re.compile(r'^' + _M + '/' + _D + '/' + _Y
+                              + r' \d{2}:\d{2}:\d{2}(?= - SYSTEM STATS:)', re.MULTILINE)
+INSTALL_TIMESTAMPS = re.compile(
+    r'^(\[\d{2}:\d{2}:\d{2}\] \[\s*global always\s*\] Installation was started at )'
+    + _DATE + r'(, completed at )' + _DATE + r'$', re.MULTILINE)
 
 
 def normalize(value):
@@ -70,9 +67,8 @@ def normalize(value):
         # still compared.
         value = re.sub(r'(?<=OK )u:\d+\.\d+ s:\d+\.\d+ r:\d+\.\d+', 'u:<T> s:<T> r:<T>', value)
         value = re.sub(r'(?<=SYSTEM STATS: )Time:\d+\.\d+', 'Time:<T>', value)
-        value = ISO.sub('<TIMESTAMP>', value)
-        value = DATETIME.sub('<TIMESTAMP>', value)
-        value = US_DATETIME.sub('<TIMESTAMP>', value)
+        value = POLLER_TIMESTAMP.sub('<TIMESTAMP>', value)
+        value = INSTALL_TIMESTAMPS.sub(r'\g<1><TIMESTAMP>\g<2><TIMESTAMP>', value)
         return CLOCK.sub('[<TIME>]', value)
     return value
 
@@ -528,10 +524,20 @@ class Harness:
                 'runtime': (result['stdout'] or '').strip()}
 
     def finish(self, error=None):
-        runtime = self.command('php', '-r', 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;')['stdout'].strip()
+        runtime = None
+        base_image = None
+        if error is None:
+            try:
+                result = self.command('php', '-r', 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;', check=True)
+                runtime = result['stdout'].strip()
+                if not re.fullmatch(r'\d+\.\d+', runtime):
+                    raise RuntimeError('Web container did not report a valid PHP runtime')
+                base_image = self.base_image_digest()
+            except (OSError, RuntimeError, subprocess.TimeoutExpired) as probe_error:
+                error = 'Cannot record runtime provenance: ' + str(probe_error)
         manifest = {'format': 1, 'target': self.args.target, 'revision': run(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'])['stdout'].strip(),
                     'php': runtime, 'schema_sha256': hashlib.sha256((ROOT / 'cacti.sql').read_bytes()).hexdigest(),
-                    'base_image': self.base_image_digest(),
+                    'base_image': base_image,
                     'complete': error is None, 'error': error, 'scenarios': self.observed}
         write_json(self.destination / 'observations.json', manifest)
         if error:

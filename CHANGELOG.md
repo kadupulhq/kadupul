@@ -11,6 +11,11 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Preserve page context in online help and translated login legends in midwinter.
+  Repair malformed midwinter links and two Portuguese translations.
+- Preserve meaningful dates in behavioral observations and record incomplete
+  manifests reliably when test setup fails.
+
 - PHP 8.5 no longer reports deprecation notices for three semicolon case
   terminators, the `(double)` cast in spikekill, or `imagedestroy()`,
   `xml_parser_free()` and `curl_close()` calls that have had no effect since

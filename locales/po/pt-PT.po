@@ -5850,7 +5850,7 @@ msgstr "Há uma Instalação ou Atualização em andamento."
 
 #: include/global.php:551
 msgid "The Main Data Collector has returned to an Online Status"
-msgstr "A última vez que este Coletor de Dados foi totalmente sincronizado com o site principal de Cactos."
+msgstr "O coletor de dados principal voltou a estar online."
 
 #: include/global.php:555
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
@@ -13775,7 +13775,7 @@ msgstr "Diversos"
 
 #: lib/html.php:2570
 msgid "Dashboards"
-msgstr "Ocultar painel de instrumentos de Cactos"
+msgstr "Painéis"
 
 #: lib/html.php:2572
 msgid "Charts"
