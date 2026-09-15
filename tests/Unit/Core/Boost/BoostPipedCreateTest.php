@@ -77,6 +77,10 @@ function boostPipedCreate_cacti_log($message) {
 function boostPipedCreate_rrdtool_execute($command) {
 	$GLOBALS['boost_piped_create']['executed'][] = $command;
 
+	if (!empty($GLOBALS['boost_piped_create']['real_binary'])) {
+		return boostPipedCreateRealCommand(array_merge(array($GLOBALS['boost_piped_create']['real_binary']), explode(' ', $command)));
+	}
+
 	/* a piped command returns nothing once written */
 	return $GLOBALS['boost_piped_create']['execute_return'];
 }
@@ -361,4 +365,38 @@ test('no restarted rrdtool pipe is left open once rrdtool_execute gives up', fun
 		->and($GLOBALS['boost_piped_create']['closed'])->toBe(6)
 		->and(is_resource($dead))->toBeFalse()
 		->and($GLOBALS['boost_piped_create']['open_pipes'])->toBe(0);
+});
+
+
+function boostPipedCreateRealCommand($args) {
+	$process = proc_open($args, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+	$stdout = stream_get_contents($pipes[1]);
+	$stderr = stream_get_contents($pipes[2]);
+	fclose($pipes[1]);
+	fclose($pipes[2]);
+	$status = proc_close($process);
+	if ($status !== 0) {
+		throw new RuntimeException($stderr);
+	}
+	return $stdout;
+}
+
+test('Boost retries skip consumed timestamps and still apply newer samples in a real RRD', function () {
+	$binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
+	if (!is_executable($binary)) {
+		$this->markTestSkipped('RRDtool is required for the real replay check');
+	}
+	$path = $GLOBALS['boost_piped_create']['path'];
+	boostPipedCreateRealCommand(array($binary, 'create', $path, '--start', '1700000000', '--step', '60', 'DS:value:GAUGE:120:U:U', 'RRA:AVERAGE:0.5:1:10'));
+	$GLOBALS['boost_piped_create']['real_binary'] = $binary;
+	$pipe = false;
+	$values = '1700000060:10';
+	expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, 'value', $values, $pipe))->toBe('OK');
+	$before = boostPipedCreateRealCommand(array($binary, 'lastupdate', $path));
+	$values = '1700000060:999';
+	expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, 'value', $values, $pipe))->toBe('OK')
+		->and(boostPipedCreateRealCommand(array($binary, 'lastupdate', $path)))->toBe($before);
+	$values = '1700000060:999 1700000120:20';
+	expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, 'value', $values, $pipe))->toBe('OK')
+		->and(boostPipedCreateRealCommand(array($binary, 'lastupdate', $path)))->toContain('1700000120: 20');
 });

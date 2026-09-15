@@ -646,10 +646,11 @@ function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$re
  *
  * @return (int) - The number of rrdfiles processed
  */
-function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null) {
+function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null, &$consumed = null) {
 	global $config, $debug;
 
 	$deferred = false;
+	$consumed = 0;
 
 	static $rrd_field_names = array();
 	static $checked_bad     = false;
@@ -916,7 +917,9 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 					$data_ids[] = $item['local_data_id'];
 					$k++;
 					if ($k % 10000 == 0) {
-						db_execute('DELETE FROM poller_output WHERE local_data_id IN (' . implode(',', $data_ids) . ')');
+						if (db_execute('DELETE FROM poller_output WHERE local_data_id IN (' . implode(',', $data_ids) . ')') !== false) {
+							$consumed += (int) db_affected_rows();
+						}
 						$data_ids = array();
 						$k = 0;
 					}
@@ -927,7 +930,9 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 		}
 
 		if ($k > 0) {
-			db_execute('DELETE FROM poller_output WHERE local_data_id IN (' . implode(',', $data_ids) . ')');
+			if (db_execute('DELETE FROM poller_output WHERE local_data_id IN (' . implode(',', $data_ids) . ')') !== false) {
+				$consumed += (int) db_affected_rows();
+			}
 		}
 
 		/* process dsstats information */
@@ -948,12 +953,13 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 			FROM poller_output');
 
 		/* to much records in poller_output, process in chunks */
-		if ($rows && $remainder == $max_rows) {
+		if ($rows && $remainder == $max_rows && $consumed > 0) {
 			$running = db_fetch_cell('SELECT COUNT(*)
 				FROM poller_time
 				WHERE end_time = "0000-00-00"');
 
-			$rrds_processed += process_poller_output($rrdtool_pipe, $rows < $max_rows ? $rows : $max_rows, $deferred);
+			$rrds_processed += process_poller_output($rrdtool_pipe, $rows < $max_rows ? $rows : $max_rows, $deferred, $child_consumed);
+			$consumed += $child_consumed;
 
 			if ($deferred) {
 				return $rrds_processed;

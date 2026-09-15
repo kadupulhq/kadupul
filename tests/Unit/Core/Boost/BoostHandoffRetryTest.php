@@ -58,7 +58,8 @@ test('failed Boost handoff retains source samples and skips direct RRD writes', 
     try {
         $pipe = null;
         $deferred = false;
-        expect(process_poller_output($pipe, false, $deferred))->toBe(0)
+        expect(process_poller_output($pipe, false, $deferred, $consumed))->toBe(0)
+            ->and($consumed)->toBe(0)
             ->and($deferred)->toBeTrue();
     } finally {
         $GLOBALS['config'] = $saved;
