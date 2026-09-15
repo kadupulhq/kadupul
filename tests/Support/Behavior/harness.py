@@ -656,6 +656,7 @@ def main():
         parser.error('--update-golden records every scenario; it cannot be scoped with --only')
     harness = Harness(args)
     error = None
+    status = 2
     try:
         harness.setup()
         harness.scenarios()

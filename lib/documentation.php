@@ -2,7 +2,7 @@
 
 /*
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
- * SPDX-License-Identifier: GPL-2.0-or-later
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 function cacti_documentation_url(string $page): string
@@ -43,6 +43,12 @@ function cacti_documentation_url(string $page): string
         'User-Domains.html' => 'guides/manage-users-and-permissions/',
         'User-Group-Management.html' => 'guides/manage-users-and-permissions/',
         'User-Management.html' => 'guides/manage-users-and-permissions/',
+        'Reports-Admin.html' => 'guides/send-email-notifications/',
+        'Reports-Items.html' => 'guides/send-email-notifications/',
+        'Reports-Preview.html' => 'guides/send-email-notifications/',
+        'Reports-Events.html' => 'guides/send-email-notifications/',
+        'Reports-User.html' => 'guides/send-email-notifications/',
+        'External-Links.html' => 'reference/realms-and-permissions/',
         'Cacti-Log.html' => 'reference/logging/',
     );
     $route = $routes[$page] ?? (str_starts_with($page, 'Settings-') ? 'reference/settings/' : 'map/');

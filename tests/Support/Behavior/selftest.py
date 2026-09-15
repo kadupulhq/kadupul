@@ -105,6 +105,15 @@ def unavailable_docker_failure():
     finally:
         shutil.rmtree(ROOT / 'tests/behavior/results' / tag, ignore_errors=True)
     print('unavailable Docker preserves the setup failure through teardown')
+    with patch('sys.argv', ['harness', 'run', '--target', tag]), patch.object(harness.Harness, 'compose', unavailable), patch.object(harness.Harness, 'finish', side_effect=RuntimeError('manifest write failed')):
+        try:
+            harness.main()
+        except RuntimeError as error:
+            assert str(error) == 'manifest write failed'
+        else:
+            raise AssertionError('manifest failure was swallowed')
+    print('cleanup preserves a manifest-write exception')
+
 
 
 def main():
