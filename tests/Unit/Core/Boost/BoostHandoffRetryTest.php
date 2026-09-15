@@ -30,6 +30,7 @@ function db_fetch_assoc($sql)
             $GLOBALS['diagnostic_probe_ran'] = true;
             return array(array('name' => 'Partial', 'local_data_ids' => '7'));
         }
+        if (!empty($GLOBALS['diagnostic_empty_selection'])) { return array(); }
         return array($GLOBALS['cleanup_retry_rows'][$GLOBALS['diagnostic_probe_reads']++ === 0 ? 0 : 1]);
     }
     return $GLOBALS['cleanup_retry_rows'] ?? array(array('local_data_id' => 7));
@@ -69,10 +70,12 @@ if (!defined('SQL_NO_CACHE')) {
     define('SQL_NO_CACHE', '');
 }
 $source = file_get_contents(dirname(__DIR__, 4) . '/lib/poller.php');
-if (!preg_match('/^function process_poller_output\(.*?^}\n/ms', $source, $match)) {
-    throw new \RuntimeException('Missing production poller function');
+foreach (array('poller_cleanup_orphan_rows', 'process_poller_output') as $name) {
+    if (!preg_match('/^function ' . $name . '\(.*?^}\n/ms', $source, $match)) {
+        throw new \RuntimeException('Missing production poller function');
+    }
+    eval('namespace ' . __NAMESPACE__ . '; ' . $match[0]); // nosemgrep: php.lang.security.eval-use.eval-use
 }
-eval('namespace ' . __NAMESPACE__ . '; ' . $match[0]); // nosemgrep: php.lang.security.eval-use.eval-use
 
 test('failed Boost handoff retains source samples and skips direct RRD writes', function () {
     $saved = $GLOBALS['config'] ?? null;
@@ -200,3 +203,30 @@ test('post-drain diagnostics preserve partial arrivals and fail closed on unread
         rmdir($root);
     }
 })->with(array(array(true, 0), array(false, 40003)));
+
+
+test('an orphan-only queue is drained or explicitly deferred on lookup failure', function ($lookup_fails) {
+    $saved = $GLOBALS['config'] ?? null;
+    $root = sys_get_temp_dir() . '/orphan-only-' . bin2hex(random_bytes(6));
+    mkdir($root, 0700);
+    file_put_contents($root . '/rrd.php', '<?php');
+    $GLOBALS['config']['library_path'] = $root;
+    $GLOBALS['diagnostic_probe'] = true;
+    $GLOBALS['diagnostic_empty_selection'] = true;
+    $GLOBALS['diagnostic_orphan_fail'] = $lookup_fails;
+    $GLOBALS['diagnostic_orphan_remaining'] = 3;
+    $GLOBALS['diagnostic_orphan_queries'] = 0;
+    try {
+        $pipe = null;
+        expect(process_poller_output($pipe, false, $deferred, $consumed))->toBe(0)
+            ->and($deferred)->toBe($lookup_fails)
+            ->and($consumed)->toBe($lookup_fails ? 0 : 3)
+            ->and($GLOBALS['diagnostic_orphan_remaining'])->toBe($lookup_fails ? 3 : 0);
+    } finally {
+        unset($GLOBALS['diagnostic_probe'], $GLOBALS['diagnostic_empty_selection'], $GLOBALS['diagnostic_orphan_fail'],
+            $GLOBALS['diagnostic_orphan_remaining'], $GLOBALS['diagnostic_orphan_queries'], $GLOBALS['cleanup_retry_keys']);
+        $GLOBALS['config'] = $saved;
+        unlink($root . '/rrd.php');
+        rmdir($root);
+    }
+})->with(array(false, true));

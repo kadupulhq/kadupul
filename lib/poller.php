@@ -663,6 +663,35 @@ function poller_delete_output_rows($keys, &$failed = null) {
 	return $consumed;
 }
 
+/** Remove observed orphan keys even when no normal poller rows are available. */
+function poller_cleanup_orphan_rows(&$failed = null) {
+	$failed = false;
+	$consumed = 0;
+	do {
+		$orphans = db_fetch_assoc('SELECT po.local_data_id, po.rrd_name, po.time
+			FROM poller_output AS po
+			LEFT JOIN data_local AS dl ON dl.id = po.local_data_id
+			WHERE dl.id IS NULL LIMIT 40000');
+		if ($orphans === false) {
+			$failed = true;
+			cacti_log('ERROR: Unable to inspect orphan samples; rows retained for retry.', false, 'POLLER');
+			return $consumed;
+		}
+		$orphan_keys = array();
+		foreach ($orphans as $orphan) {
+			$orphan_keys[] = array($orphan['local_data_id'], $orphan['rrd_name'], $orphan['time']);
+		}
+		$orphan_consumed = poller_delete_output_rows($orphan_keys, $orphan_failed);
+		$consumed += $orphan_consumed;
+		if ($orphan_failed || ($orphan_keys && $orphan_consumed === 0)) {
+			$failed = true;
+			cacti_log('ERROR: Orphan sample cleanup failed; rows retained for retry.', false, 'POLLER');
+			return $consumed;
+		}
+	} while (cacti_sizeof($orphans) === 40000);
+	return $consumed;
+}
+
 /**
  * process_poller_output - grabs data from the 'poller_output' table and feeds the *completed*
  *   results to RRDtool for processing
@@ -990,28 +1019,10 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 			if ($running == 0 && !$checked_bad) {
 				/* Purge only the exact orphan keys observed here, so arrivals for
 				 * a concurrently recreated data source cannot be swept away. */
-				do {
-					$orphans = db_fetch_assoc('SELECT po.local_data_id, po.rrd_name, po.time
-						FROM poller_output AS po
-						LEFT JOIN data_local AS dl ON dl.id = po.local_data_id
-						WHERE dl.id IS NULL LIMIT 40000');
-					if ($orphans === false) {
-						$deferred = true;
-						cacti_log('ERROR: Unable to inspect orphan samples; rows retained for retry.', false, 'POLLER');
-						return $rrds_processed;
-					}
-					$orphan_keys = array();
-					foreach ($orphans as $orphan) {
-						$orphan_keys[] = array($orphan['local_data_id'], $orphan['rrd_name'], $orphan['time']);
-					}
-					$orphan_consumed = poller_delete_output_rows($orphan_keys, $orphan_failed);
-					$consumed += $orphan_consumed;
-					if ($orphan_failed || ($orphan_keys && $orphan_consumed === 0)) {
-						$deferred = true;
-						cacti_log('ERROR: Orphan sample cleanup failed; rows retained for retry.', false, 'POLLER');
-						return $rrds_processed;
-					}
-				} while (cacti_sizeof($orphans) === 40000);
+				$consumed += poller_cleanup_orphan_rows($deferred);
+				if ($deferred) {
+					return $rrds_processed;
+				}
 
 				/* A new poller may have started since the running-count snapshot.
 				 * Diagnose incomplete samples, but retain them for later arrivals. */
@@ -1045,6 +1056,8 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 				$checked_bad = true;
 			}
 		}
+	} elseif ($results === array()) {
+		$consumed += poller_cleanup_orphan_rows($deferred);
 	}
 
 	return $rrds_processed;
