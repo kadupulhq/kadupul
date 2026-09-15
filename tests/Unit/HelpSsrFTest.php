@@ -26,7 +26,7 @@ test('help.php uses basename for page parameter', function () use ($helpPath) {
 test('help.php uses a fixed online destination without fetching a URL', function () use ($helpPath) {
     $contents = file_get_contents($helpPath);
 
-    expect($contents)->toContain("'location' => 'https://kadupul.org/' . \$route");
+    expect($contents)->toContain("'location' => cacti_documentation_url(\$page)");
     expect($contents)->not->toContain('cacti_http(');
     expect($contents)->not->toContain('file_get_contents(');
 });
