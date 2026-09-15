@@ -1145,6 +1145,11 @@ class spikekill {
 		for ($i = 0; $i < 10; $i++) {
 			$candidate = cacti_join_dir_child($tempdir, 'spikekill.' . bin2hex(random_bytes(8)) . '.xml', DIRECTORY_SEPARATOR);
 
+			clearstatcache(true);
+			if (is_link($tempdir) || realpath($tempdir) !== $canonical_dir) {
+				return false;
+			}
+
 			$old_umask = umask(0177);
 			$handle    = @fopen($candidate, 'xb+');
 			umask($old_umask);
