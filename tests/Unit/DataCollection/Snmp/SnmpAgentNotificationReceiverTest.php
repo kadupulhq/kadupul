@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -68,7 +69,7 @@ beforeEach(function () {
 	$GLOBALS['snmpagent_notification_logs'] = array();
 });
 
-test('missing receivers produce an actionable notice', function () {
+test('missing receivers log the 1.2.31 warning', function () {
 	$result = snmpagent_notification(
 		'cactiNotifyDeviceFailedPoll',
 		'CACTI-MIB',
@@ -78,10 +79,7 @@ test('missing receivers produce an actionable notice', function () {
 
 	expect($result)->toBeFalse()
 		->and($GLOBALS['snmpagent_notification_logs'])->toHaveCount(1)
-		->and($GLOBALS['snmpagent_notification_logs'][0][0])->toStartWith('NOTICE:')
-		->and($GLOBALS['snmpagent_notification_logs'][0][0])->toContain('No enabled SNMP notification receivers')
-		->and($GLOBALS['snmpagent_notification_logs'][0][0])->toContain('Console > Utilities > SNMP Agent Utilities > SNMP Notification Receivers')
-		->and($GLOBALS['snmpagent_notification_logs'][0][0])->toContain('ignore this notice when SNMP traps are intentionally disabled')
+		->and($GLOBALS['snmpagent_notification_logs'][0][0])->toBe('WARNING: No notification receivers configured for event: cactiNotifyDeviceFailedPoll (CACTI-MIB), severity: medium')
 		->and($GLOBALS['snmpagent_notification_logs'][0][2])->toBe('SNMPAGENT')
 		->and($GLOBALS['snmpagent_notification_logs'][0][3])->toBe(POLLER_VERBOSITY_NONE);
 });

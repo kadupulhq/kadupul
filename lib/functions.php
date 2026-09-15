@@ -1993,7 +1993,7 @@ function prepare_validate_result(&$result) {
 
 			$space_cnt = substr_count(trim($result), ' ');
 
-			dsv_log('prepare_validate_result', "data has $space_cnt spaces and $delim_cnt fields; this is " . (($space_cnt + 1 == $delim_cnt) ? '' : 'NOT ') . 'okay', POLLER_VERBOSITY_MEDIUM);
+			dsv_log('prepare_validate_result', "data has $space_cnt spaces and $delim_cnt fields which is " . (($space_cnt + 1 == $delim_cnt) ? '' : 'NOT') . ' okay', POLLER_VERBOSITY_MEDIUM);
 
 			return ($space_cnt+1 == $delim_cnt);
 		}
@@ -6536,6 +6536,22 @@ function call_remote_data_collector($poller_id, $url, $logtype = 'WEBUI') {
 		WHERE id = ?',
 		array($poller_id));
 
+	/* A bracketed IPv6 literal is checked without its brackets; the request
+	 * URL puts them back. */
+	if (preg_match('/^\[([^\]]+)\]$/', (string) $hostname, $bracketed) && filter_var($bracketed[1], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false) {
+		$hostname = $bracketed[1];
+	}
+
+	/* The stored name becomes the Host header and TLS peer name below, and
+	 * the poller form saves it without a pattern, so a row written before
+	 * this check could carry a line break into the request headers. Names may
+	 * use underscores, as container and internal DNS names often do. */
+	if (preg_match('/[\x00-\x20\x7f]/', (string) $hostname) || (filter_var($hostname, FILTER_VALIDATE_IP) === false && !preg_match('/^(?=.{1,253}\.?$)[A-Za-z0-9_](?:[A-Za-z0-9_-]{0,61}[A-Za-z0-9_])?(?:\.[A-Za-z0-9_](?:[A-Za-z0-9_-]{0,61}[A-Za-z0-9_])?)*\.?$/', (string) $hostname))) {
+		cacti_log(sprintf('SECURITY: Refusing Remote Data Collector request for PollerID:%s because its hostname is not a valid host name or address', $poller_id), false, 'SECURITY');
+
+		return '';
+	}
+
 	if (!is_ipaddress($hostname)) {
 		$ipaddress = gethostbyname($hostname);
 
@@ -6556,22 +6572,64 @@ function call_remote_data_collector($poller_id, $url, $logtype = 'WEBUI') {
 		return '';
 	}
 
-	/* Refuse loopback, link-local (including the 169.254.169.254 metadata
-	 * address) and other reserved ranges, so a poller record cannot point these
-	 * requests at services on the Cacti host itself. RFC1918 private ranges stay
-	 * allowed because remote Data Collectors normally run on internal networks. */
+	/* Refuse link-local (including the 169.254.169.254 metadata address),
+	 * 0.0.0.0/8 and the other reserved ranges. Loopback stays allowed, as in
+	 * 1.2.31, for a main and remote collector on one host or in host-network
+	 * containers. An IPv4-mapped IPv6 address is checked as the IPv4 address it
+	 * carries, so ::ffff:169.254.169.254 cannot bypass the refusal. RFC1918
+	 * private ranges stay allowed because remote Data Collectors normally run
+	 * on internal networks. */
 	$target_ip = is_ipaddress($hostname) ? $hostname : gethostbyname($hostname);
+	$check_ip  = $target_ip;
+	$packed    = @inet_pton($target_ip);
 
-	if (filter_var($target_ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) === false) {
+	if ($packed !== false && strlen($packed) == 16 && substr($packed, 0, 12) === str_repeat("\0", 10) . "\xff\xff") {
+		$packed   = substr($packed, 12);
+		$check_ip = inet_ntop($packed);
+	}
+
+	$loopback = $packed !== false && ((strlen($packed) == 4 && ord($packed[0]) == 127) || $packed === str_repeat("\0", 15) . "\1");
+
+	if (!$loopback && filter_var($check_ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) === false) {
 		cacti_log(sprintf('SECURITY: Refusing Remote Data Collector request for PollerID:%s to reserved address %s', $poller_id, $target_ip), false, 'SECURITY');
 
 		return '';
 	}
 
 	$fgc_contextoption = get_default_contextoption();
-	$fgc_context       = stream_context_create($fgc_contextoption);
 
-	return  file_get_contents(get_url_type() .'://' . $hostname . $url, false, $fgc_context);
+	/* The address checked above is the one connected to. A redirect is not
+	 * followed, and a name is not resolved again, so neither can move the
+	 * request to an address that check would refuse. The http wrapper reads
+	 * these options for https URLs too. */
+	$fgc_contextoption['http']['follow_location'] = 0;
+	$fgc_contextoption['http']['max_redirects']   = 0;
+
+	if (is_ipaddress($hostname)) {
+		$url_host = $hostname;
+	} else {
+		$url_host = $target_ip;
+		$host_header = 'Host: ' . $hostname;
+
+		if (!isset($fgc_contextoption['http']['header']) || $fgc_contextoption['http']['header'] === '') {
+			$fgc_contextoption['http']['header'] = $host_header;
+		} elseif (is_array($fgc_contextoption['http']['header'])) {
+			$fgc_contextoption['http']['header'][] = $host_header;
+		} else {
+			$fgc_contextoption['http']['header'] = rtrim($fgc_contextoption['http']['header'], "\r\n") . "\r\n" . $host_header;
+		}
+
+		if (get_url_type() == 'https') {
+			$fgc_contextoption['ssl']['peer_name'] = $hostname;
+		}
+	}
+
+	$fgc_context = stream_context_create($fgc_contextoption);
+
+	/* an IPv6 literal needs brackets to be a URL host */
+	$url_host = filter_var($url_host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false ? '[' . $url_host . ']' : $url_host;
+
+	return  file_get_contents(get_url_type() .'://' . $url_host . $url, false, $fgc_context);
 }
 
 /**
@@ -8571,7 +8629,7 @@ function cacti_is_sensitive_key($key) {
 		'password', 'pass', 'snmp_password', 'snmp_priv_passphrase',
 		'snmp_auth_passphrase', 'rsa_private_key', 'secret',
 		'auth_key', 'priv_key', 'token', 'cookie', 'community',
-		'snmp_community', 'specific_password', 'ldap_password',
+		'snmp_community', 'specific_password', 'ldap_password', 'csrf',
 	);
 
 	$lower = strtolower((string) $key);

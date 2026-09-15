@@ -216,7 +216,7 @@ if ($child == 0) {
 						continue;
 					}
 				} else {
-					printf("NOTE: Process with PID: %s is no longer running or does not match the registered command." . PHP_EOL, $logged_pid);
+					printf("NOTE: Process with PID: %s, not found likely crashed." . PHP_EOL, $logged_pid);
 				}
 
 				unregister_process($r['tasktype'], $r['taskname'], $r['taskid'], $r['pid']);

@@ -193,3 +193,102 @@ test('dsstats_kill_running_processes() guards its SIGTERM with the same check', 
 
 	expect($fragment)->toContain('if (cacti_process_still_running($p[\'pid\'])) {');
 });
+
+/**
+ * Starts a PHP process that runs $script from $cwd and waits for procfs to
+ * show its command line.
+ *
+ * @param array<int, string> $command Command and arguments.
+ * @param string             $cwd     Working directory for the child.
+ *
+ * @return array{0: resource, 1: int} The process handle and its pid.
+ */
+function pid_reuse_start_probe(array $command, string $cwd) : array {
+	$pipes   = array();
+	$process = proc_open($command, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $cwd);
+
+	expect($process)->not->toBeFalse();
+
+	$pid      = proc_get_status($process)['pid'];
+	$deadline = microtime(true) + 5;
+
+	while (strpos((string) @file_get_contents('/proc/' . $pid . '/cmdline'), 'probe.php') === false && microtime(true) < $deadline) {
+		usleep(20000);
+	}
+
+	return array($process, $pid);
+}
+
+/**
+ * Runs the checker from $cwd and returns cacti_process_still_running($pid).
+ *
+ * @param array<int, string> $command Checker command and arguments.
+ * @param string             $cwd     Working directory for the checker.
+ *
+ * @return string JSON true or false as printed by the probe.
+ */
+function pid_reuse_check(array $command, string $cwd) : string {
+	$pipes   = array();
+	$process = proc_open($command, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $cwd);
+	$output  = trim(stream_get_contents($pipes[1]));
+	$error   = stream_get_contents($pipes[2]);
+
+	fclose($pipes[1]);
+	fclose($pipes[2]);
+	proc_close($process);
+
+	expect($output)->toBeIn(array('true', 'false'), $error);
+
+	return $output;
+}
+
+test('a relative script launch matches the same script checked from another directory', function () {
+	if (!is_dir('/proc/' . getmypid()) || !is_dir('/proc/self/cwd')) {
+		test()->markTestSkipped('command identity is available only on procfs platforms');
+	}
+
+	$root  = sys_get_temp_dir() . '/cacti_pid_reuse_' . getmypid();
+	$app   = $root . '/app';
+	$other = $root . '/other';
+	$twin  = $root . '/twin';
+
+	foreach (array($app, $other, $twin) as $dir) {
+		@mkdir($dir, 0700, true);
+	}
+
+	$probe = '<?php' . PHP_EOL
+		. 'if ($argv[1] === "sleep") { sleep(20); exit; }' . PHP_EOL
+		. 'require ' . var_export(dirname(__DIR__, 4) . '/lib/poller.php', true) . ';' . PHP_EOL
+		. 'echo json_encode(cacti_process_still_running((int) $argv[2]));' . PHP_EOL;
+
+	file_put_contents($app . '/probe.php', $probe);
+	file_put_contents($twin . '/probe.php', $probe);
+
+	[$relative, $relative_pid] = pid_reuse_start_probe(array(PHP_BINARY, 'probe.php', 'sleep'), $app);
+	[$absolute, $absolute_pid] = pid_reuse_start_probe(array(PHP_BINARY, $app . '/probe.php', 'sleep'), $other);
+
+	try {
+		/* the two cases that returned false before relative paths were resolved
+		   against the target's working directory */
+		expect(pid_reuse_check(array(PHP_BINARY, $app . '/probe.php', 'check', (string) $relative_pid), $other))->toBe('true')
+			->and(pid_reuse_check(array(PHP_BINARY, $app . '/probe.php', 'check', (string) $relative_pid), $twin))->toBe('true')
+			->and(pid_reuse_check(array(PHP_BINARY, 'probe.php', 'check', (string) $relative_pid), $app))->toBe('true')
+			->and(pid_reuse_check(array(PHP_BINARY, '../app/probe.php', 'check', (string) $absolute_pid), $other))->toBe('true')
+			/* a same-named script in another directory is still a different command */
+			->and(pid_reuse_check(array(PHP_BINARY, 'probe.php', 'check', (string) $relative_pid), $twin))->toBe('false')
+			->and(pid_reuse_check(array(PHP_BINARY, $twin . '/probe.php', 'check', (string) $absolute_pid), $other))->toBe('false');
+	} finally {
+		foreach (array(array($relative, $relative_pid), array($absolute, $absolute_pid)) as $child) {
+			posix_kill($child[1], 9);
+			proc_close($child[0]);
+		}
+
+		foreach (array($app, $twin) as $dir) {
+			@unlink($dir . '/probe.php');
+		}
+
+		foreach (array($app, $other, $twin, $root) as $dir) {
+			@rmdir($dir);
+		}
+	}
+});

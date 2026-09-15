@@ -2,6 +2,7 @@
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
+ | Copyright (C) 2026 The Kadupul project and contributors                 |
  |                                                                         |
  | This program is free software; you can redistribute it and/or           |
  | modify it under the terms of the GNU General Public License             |
@@ -93,6 +94,276 @@ test('remove_graphs short option validation follows its declaration', function (
 		->and(cacti_remove_graphs_parameter_is_valid('-qX', 'VvHhq', $longopts))->toBeFalse();
 });
 
+test('remove_graphs recognizes a declared long option written without "="', function () use ($longopts) {
+	foreach (array('--host-id', '--graph-regex', '--graph-template-id', '--host-template-id') as $parameter) {
+		expect(cacti_remove_graphs_takes_next_argument($parameter, $longopts))->toBeTrue($parameter);
+	}
+
+	foreach (array('--host-id=5', '--HOST-ID', '--force', '--bogus', 'host-id', '--') as $parameter) {
+		expect(cacti_remove_graphs_takes_next_argument($parameter, $longopts))->toBeFalse($parameter);
+	}
+});
+
+test('remove_graphs recognizes a following token that looks like an option', function () {
+	/* A negative-looking value is rejected here too: it must be passed
+	 * joined to its option with "=", e.g. "--host-id=-1". */
+	foreach (array('--host-id=5', '-V', '-', '--', '-1') as $token) {
+		expect(cacti_remove_graphs_next_looks_like_option($token))->toBeTrue($token);
+	}
+
+	foreach (array('5', '^foo', 'host-id') as $token) {
+		expect(cacti_remove_graphs_next_looks_like_option($token))->toBeFalse($token);
+	}
+});
+
+/**
+ * Reproduce cli/remove_graphs.php's own argument loop, one decision per
+ * token, so a regression there shows up without spawning the full CLI
+ * bootstrap. Keep it in lockstep with the loop in that file.
+ */
+function remove_graphs_argument_outcomes($parms, $shortopts, $longopts) {
+	$outcomes = array();
+	$total    = count($parms);
+
+	for ($i = 0; $i < $total; $i++) {
+		$parameter = $parms[$i];
+
+		if (cacti_remove_graphs_parameter_is_valid($parameter, $shortopts, $longopts)) {
+			$outcomes[] = array($parameter, 'valid');
+
+			continue;
+		}
+
+		if ($i + 1 < $total && cacti_remove_graphs_takes_next_argument($parameter, $longopts)) {
+			if ($parms[$i + 1] === '' || cacti_remove_graphs_next_looks_like_option($parms[$i + 1])) {
+				$outcomes[] = array($parameter, 'abort');
+
+				break;
+			}
+
+			$outcomes[] = array($parameter, 'valid', $parms[$i + 1]);
+			$i++;
+
+			continue;
+		}
+
+		$action = cacti_remove_graphs_unknown_parameter_action($parameter, $shortopts, $longopts);
+
+		if ($action === 'ignore' && cacti_remove_graphs_type_takes_next_argument($parameter) && $i + 1 < $total && !cacti_remove_graphs_next_looks_like_option($parms[$i + 1])) {
+			if ($i + 2 < $total) {
+				$outcomes[] = array($parameter, 'abort');
+
+				break;
+			}
+
+			$outcomes[] = array($parameter, 'ignore', $parms[$i + 1]);
+			$i++;
+
+			continue;
+		}
+
+		$outcomes[] = array($parameter, $action);
+
+		if ($action !== 'ignore' && $action !== 'warn') {
+			break;
+		}
+	}
+
+	return $outcomes;
+}
+
+test('remove_graphs loop takes a required value from the next argv token', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--host-id', '5', '--force'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--host-id', 'valid', '5'),
+		array('--force', 'valid'),
+	));
+});
+
+test('remove_graphs loop still accepts the "=" form', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--host-id=5', '--force'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--host-id=5', 'valid'),
+		array('--force', 'valid'),
+	));
+});
+
+test('remove_graphs loop takes a regex value from the next argv token', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--graph-regex', '^foo'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--graph-regex', 'valid', '^foo'),
+	));
+});
+
+test('remove_graphs loop still aborts a mistyped filter even with a following value', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--HOST-ID', '5'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--HOST-ID', 'abort'),
+	));
+});
+
+test('remove_graphs loop still aborts a trailing option with no value', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--force', '--host-id'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--force', 'valid'),
+		array('--host-id', 'abort'),
+	));
+});
+
+test('remove_graphs loop aborts instead of taking a following option as a value', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--graph-regex', '--host-id=5'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--graph-regex', 'abort'),
+	));
+});
+
+test('remove_graphs loop aborts a bare option immediately followed by another option', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--host-id', '--force'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--host-id', 'abort'),
+	));
+});
+
+test('remove_graphs loop still accepts a negative value joined with "="', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--host-id=-1'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--host-id=-1', 'valid'),
+	));
+});
+
+test('remove_graphs loop takes the retired --graph-type value from the next argv token', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--graph-type', 'cg'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--graph-type', 'ignore', 'cg'),
+	));
+});
+
+test('remove_graphs loop still accepts the retired --graph-type "=" form', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--graph-type=cg', '--force'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--graph-type=cg', 'ignore'),
+		array('--force', 'valid'),
+	));
+});
+
+test('remove_graphs loop still ignores a trailing --graph-type with no value', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--force', '--graph-type'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--force', 'valid'),
+		array('--graph-type', 'ignore'),
+	));
+});
+
+test('remove_graphs loop still validates an option that follows a bare --graph-type', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--graph-type', '--force'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--graph-type', 'ignore'),
+		array('--force', 'valid'),
+	));
+});
+
+test('remove_graphs loop still aborts an unrelated bare argument', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('cg'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('cg', 'abort'),
+	));
+});
+
+/**
+ * getopt() below reads the real argv itself, not this loop's parsed view of
+ * it, and stops at the first bare word it finds there, silently dropping
+ * every option that follows. Swallowing "cg" here would hide that stop from
+ * this loop while getopt() still lost whatever came next, so the loop must
+ * abort instead once anything follows the consumed value.
+ */
+test('remove_graphs loop aborts instead of letting getopt() silently drop a later filter', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--graph-type', 'cg', '--host-id', '5'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--graph-type', 'abort'),
+	));
+});
+
+test('remove_graphs loop aborts when a filter given before --graph-type would still be followed by more', function () use ($shortopts, $longopts) {
+	$outcomes = remove_graphs_argument_outcomes(array('--host-id=5', '--graph-type', 'cg', '--force'), $shortopts, $longopts);
+
+	expect($outcomes)->toBe(array(
+		array('--host-id=5', 'valid'),
+		array('--graph-type', 'abort'),
+	));
+});
+
+/**
+ * Runs PHP's own getopt() against a real argv in a child process, since
+ * getopt() always reads the running process's actual command line and
+ * cannot be pointed at an arbitrary token array the way the loop above is.
+ *
+ * @param array $parms The tokens to pass as if they were argv.
+ *
+ * @return array The option names getopt() actually recognized.
+ */
+function remove_graphs_real_getopt_keys($parms, $shortopts, $longopts) {
+	$code = 'echo json_encode(array_keys(getopt(' . var_export($shortopts, true) . ', ' . var_export($longopts, true) . ')));';
+	$cmd  = array_merge(array(PHP_BINARY, '-r', $code, '--'), $parms);
+	$pipes = array();
+	$process = proc_open($cmd, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+
+	expect($process)->not->toBeFalse();
+
+	$output = stream_get_contents($pipes[1]);
+	$error  = stream_get_contents($pipes[2]);
+
+	fclose($pipes[1]);
+	fclose($pipes[2]);
+
+	expect(proc_close($process))->toBe(0, $error);
+
+	return json_decode($output, true);
+}
+
+test('every invocation the loop lets through still gives getopt() every filter it validated', function () use ($shortopts, $longopts) {
+	foreach (array(
+		array('--host-id=5', '--graph-type', 'cg'),
+		array('--graph-type', 'cg'),
+		array('--force', '--graph-type', 'cg'),
+		array('--graph-type', '--host-id=5'),
+	) as $parms) {
+		$outcomes = remove_graphs_argument_outcomes($parms, $shortopts, $longopts);
+		$last     = end($outcomes);
+
+		expect($last[1])->not->toBe('abort', implode(' ', $parms));
+
+		$expected = array();
+
+		foreach ($outcomes as $outcome) {
+			$name = ltrim(explode('=', $outcome[0], 2)[0], '-');
+
+			if ($outcome[1] === 'valid' && strpos($outcome[0], '--') === 0) {
+				$expected[] = $name;
+			}
+		}
+
+		$actual = remove_graphs_real_getopt_keys($parms, $shortopts, $longopts);
+
+		foreach ($expected as $name) {
+			expect(in_array($name, $actual, true))->toBeTrue(implode(' ', $parms) . ' lost --' . $name);
+		}
+	}
+});
+
 test('remove_graphs uses the real regex length and semicolon guards', function () {
 	$valid     = remove_graphs_regex_result('edge.*');
 	$malformed = remove_graphs_regex_result('(');
@@ -171,11 +442,11 @@ test('reapply names rejects malformed values that compare loosely to zero', func
 	expect(cacti_reapply_names_where('all', ''))->toBe(array('', array()));
 });
 
-test('normalized maintenance failures use the portable non-zero exit', function () {
+test('maintenance failures keep their 1.2.31 negative exit codes', function () {
 	foreach (array('removespikes.php', 'splice_rrd.php') as $script) {
 		$source = file_get_contents(__DIR__ . '/../../../../cli/' . $script);
 
-		expect($source)->not->toMatch('/exit\(-[0-9]+\)/');
+		expect($source)->toMatch('/exit\(-3\)/');
 	}
 });
 
@@ -184,6 +455,8 @@ test('remove_graphs wires strict validation before getopt', function () {
 
 	expect($source)->not->toBeFalse()
 		->and($source)->toContain('cacti_remove_graphs_parameter_is_valid($parameter, $shortopts, $longopts)')
+		->and($source)->toContain('cacti_remove_graphs_takes_next_argument($parameter, $longopts)')
+		->and($source)->toContain('cacti_remove_graphs_next_looks_like_option($parms[$i + 1])')
 		->and($source)->toContain('ERROR: Invalid Argument:')
 		->and($source)->not->toContain("'graph-type::'");
 
@@ -210,9 +483,9 @@ test('all regex consumers honor the validator true-or-error contract', function 
 	$add_graphs = file_get_contents($root . '/cli/add_graphs.php');
 	expect($add_graphs)->toContain("'snmp-value-regex:'")
 		->and($add_graphs)->toContain("if (\$item === false || \$item === '')")
-		->and($add_graphs)->toContain('validate_is_rlike_regex($item)')
+		->and($add_graphs)->toContain('validate_is_regex($item)')
 		->and($add_graphs)->toContain('if ($validation !== true)')
-		->and($add_graphs)->toContain("' AND field_value ' . db_qstr_rlike(")
+		->and($add_graphs)->toContain("' AND field_value REGEXP ' . db_qstr(\$dsGraph")
 		->and($add_graphs)->not->toContain('field_value REGEXP "');
 
 	foreach (array(
@@ -237,4 +510,36 @@ test('graph-name reapply wires invalid selectors to distinct failures', function
 		->and($source)->toContain('cacti_reapply_names_where($host_id, $filter)')
 		->and($source)->toContain('You must specify either a host_id')
 		->and($source)->toContain("Invalid host id '");
+});
+
+
+test('empty space-form regex filters are refused', function () use ($shortopts, $longopts) {
+    expect(remove_graphs_argument_outcomes(array('--graph-regex', '', '--force'), $shortopts, $longopts))->toBe(array(array('--graph-regex', 'abort')));
+});
+
+test('retired graph type values are consumed with mixed-case names', function () use ($shortopts, $longopts) {
+    expect(remove_graphs_argument_outcomes(array('--GRAPH-TYPE', 'cg'), $shortopts, $longopts))->toBe(array(array('--GRAPH-TYPE', 'ignore', 'cg')));
+});
+
+test('the production argument loop refuses an empty regex before getopt or deletion', function () use ($shortopts, $longopts) {
+    $source = file_get_contents(dirname(__DIR__, 4) . '/cli/remove_graphs.php');
+    $start = strpos($source, '\tfor ($i = 0; $i < $parms_total; $i++) {');
+    if ($start === false) { $start = strpos($source, "\tfor (\$i = 0; \$i < \$parms_total; \$i++) {"); }
+    $end = strpos($source, '$options = getopt', $start);
+    if ($end === false) { $end = strpos($source, '$options     = getopt', $start); }
+    expect($start)->not->toBeFalse();
+    expect($end)->not->toBeFalse();
+    $code = 'require ' . var_export(dirname(__DIR__, 4) . '/lib/maintenance_cli.php', true) . '; function display_help() {}'
+        . '$parms = array("--graph-regex", "", "--force"); $parms_total = count($parms);'
+        . '$shortopts = ' . var_export($shortopts, true) . '; $longopts = ' . var_export($longopts, true) . ';'
+        . substr($source, $start, $end - $start)
+        . 'throw new RuntimeException("Unsafe filter reached dispatch");';
+    $pipes = array();
+    $process = proc_open(array(PHP_BINARY, '-r', $code), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]); fclose($pipes[2]);
+    expect(proc_close($process))->toBe(1)
+        ->and($stdout)->toContain('requires a value')
+        ->and($stderr)->toBe('');
 });
