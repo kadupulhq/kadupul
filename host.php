@@ -1515,7 +1515,89 @@ function host_filter_location($location, $site_id = '-1') {
 	return '-1';
 }
 
-function get_device_records(&$total_rows, $rows) {
+function get_device_display_columns() {
+	return array(
+		'description' => array(
+			'display' => __('Device Description'),
+			'align' => 'left',
+			'sort' => 'ASC',
+			'tip' => __('The name by which this Device will be referred to.')
+		),
+		'hostname' => array(
+			'display' => __('Hostname'),
+			'align' => 'left',
+			'sort' => 'ASC',
+			'tip' => __('Either an IP address, or hostname.  If a hostname, it must be resolvable by either DNS, or from your hosts file.')
+		),
+		'id' => array(
+			'display' => __('ID'),
+			'align' => 'right',
+			'sort' => 'ASC',
+			'tip' => __('The internal database ID for this Device.  Useful when performing automation or debugging.')
+		),
+		'graphs' => array(
+			'display' => __('Graphs'),
+			'align' => 'right',
+			'sort' => 'DESC',
+			'tip' => __('The total number of Graphs generated from this Device.')
+		),
+		'data_sources' => array(
+			'display' => __('Data Sources'),
+			'align' => 'right',
+			'sort' => 'DESC',
+			'tip' => __('The total number of Data Sources generated from this Device.')
+		),
+		'status' => array(
+			'display' => __('Status'),
+			'align' => 'center',
+			'sort' => 'ASC',
+			'tip' => __('The monitoring status of the Device based upon ping results.  If this Device is a special type Device, by using the hostname "localhost", or due to the setting to not perform an Availability Check, it will always remain Up.  When using cmd.php data collector, a Device with no Graphs, is not pinged by the data collector and will remain in an "Unknown" state.')
+		),
+		'instate' => array(
+			'display' => __('In State'),
+			'align' => 'right',
+			'sort' => 'ASC',
+			'tip' => __('The amount of time that this Device has been in its current state.')
+		),
+		'snmp_sysUpTimeInstance' => array(
+			'display' => __('Uptime'),
+			'align' => 'right',
+			'sort' => 'ASC',
+			'tip' => __('The current amount of time that the host has been up.')
+		),
+		'polling_time' => array(
+			'display' => __('Poll Time'),
+			'align' => 'right',
+			'sort' => 'DESC',
+			'tip' => __('The amount of time it takes to collect data from this Device.')
+		),
+		'cur_time' => array(
+			'display' => __('Current (ms)'),
+			'align' => 'right',
+			'sort' => 'DESC',
+			'tip' => __('The current ping time in milliseconds to reach the Device.')
+		),
+		'avg_time' => array(
+			'display' => __('Average (ms)'),
+			'align' => 'right',
+			'sort' => 'DESC',
+			'tip' => __('The average ping time in milliseconds to reach the Device since the counters were cleared for this Device.')
+		),
+		'availability' => array(
+			'display' => __('Availability'),
+			'align' => 'right',
+			'sort' => 'ASC',
+			'tip' => __('The availability percentage based upon ping results since the counters were cleared for this Device.')
+		)
+	);
+
+}
+
+function get_device_records(&$total_rows, $rows, $display_columns = null) {
+	if ($display_columns === null) {
+		$display_columns = api_plugin_hook_function('device_display_text', get_device_display_columns());
+	}
+
 	$sql_where = '';
 
 	/* form the 'where' clause for our main sql query */
@@ -1586,7 +1668,8 @@ function get_device_records(&$total_rows, $rows) {
 
 	$poller_interval = read_config_option('poller_interval');
 
-	$sql_order = get_order_string(array('description', 'hostname', 'id', 'graphs', 'data_sources', 'status', 'instate', 'snmp_sysUpTimeInstance', 'polling_time', 'cur_time', 'avg_time', 'availability'));
+	$sort_columns = array_filter(array_keys($display_columns), function ($column) { return strpos($column, 'nosort') !== 0; });
+	$sql_order = get_order_string($sort_columns);
 	$sql_limit = 'LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$sql_query = "SELECT host.*, gl.graphs, dl.data_sources,
@@ -1827,85 +1910,12 @@ function host() {
 
 	html_end_box();
 
-	$display_text = array(
-		'description' => array(
-			'display' => __('Device Description'),
-			'align' => 'left',
-			'sort' => 'ASC',
-			'tip' => __('The name by which this Device will be referred to.')
-		),
-		'hostname' => array(
-			'display' => __('Hostname'),
-			'align' => 'left',
-			'sort' => 'ASC',
-			'tip' => __('Either an IP address, or hostname.  If a hostname, it must be resolvable by either DNS, or from your hosts file.')
-		),
-		'id' => array(
-			'display' => __('ID'),
-			'align' => 'right',
-			'sort' => 'ASC',
-			'tip' => __('The internal database ID for this Device.  Useful when performing automation or debugging.')
-		),
-		'graphs' => array(
-			'display' => __('Graphs'),
-			'align' => 'right',
-			'sort' => 'DESC',
-			'tip' => __('The total number of Graphs generated from this Device.')
-		),
-		'data_sources' => array(
-			'display' => __('Data Sources'),
-			'align' => 'right',
-			'sort' => 'DESC',
-			'tip' => __('The total number of Data Sources generated from this Device.')
-		),
-		'status' => array(
-			'display' => __('Status'),
-			'align' => 'center',
-			'sort' => 'ASC',
-			'tip' => __('The monitoring status of the Device based upon ping results.  If this Device is a special type Device, by using the hostname "localhost", or due to the setting to not perform an Availability Check, it will always remain Up.  When using cmd.php data collector, a Device with no Graphs, is not pinged by the data collector and will remain in an "Unknown" state.')
-		),
-		'instate' => array(
-			'display' => __('In State'),
-			'align' => 'right',
-			'sort' => 'ASC',
-			'tip' => __('The amount of time that this Device has been in its current state.')
-		),
-		'snmp_sysUpTimeInstance' => array(
-			'display' => __('Uptime'),
-			'align' => 'right',
-			'sort' => 'ASC',
-			'tip' => __('The current amount of time that the host has been up.')
-		),
-		'polling_time' => array(
-			'display' => __('Poll Time'),
-			'align' => 'right',
-			'sort' => 'DESC',
-			'tip' => __('The amount of time it takes to collect data from this Device.')
-		),
-		'cur_time' => array(
-			'display' => __('Current (ms)'),
-			'align' => 'right',
-			'sort' => 'DESC',
-			'tip' => __('The current ping time in milliseconds to reach the Device.')
-		),
-		'avg_time' => array(
-			'display' => __('Average (ms)'),
-			'align' => 'right',
-			'sort' => 'DESC',
-			'tip' => __('The average ping time in milliseconds to reach the Device since the counters were cleared for this Device.')
-		),
-		'availability' => array(
-			'display' => __('Availability'),
-			'align' => 'right',
-			'sort' => 'ASC',
-			'tip' => __('The availability percentage based upon ping results since the counters were cleared for this Device.')
-		)
-	);
+	$display_text = get_device_display_columns();
 
 	$display_text_size = sizeof($display_text);
 	$display_text = api_plugin_hook_function('device_display_text', $display_text);
 
-	$hosts = get_device_records($total_rows, $rows);
+	$hosts = get_device_records($total_rows, $rows, $display_text);
 
 	$nav = html_nav_bar('host.php?filter=' . get_request_var('filter'), MAX_DISPLAY_PAGES, get_request_var('page'), $rows, $total_rows, cacti_sizeof($display_text) + 1, __('Devices'), 'page', 'main');
 

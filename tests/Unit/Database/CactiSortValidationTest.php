@@ -145,3 +145,14 @@ test('explicit columns constrain stored multi-column sorting for this query', fu
     $_SESSION['sort_data'][$page] = array('name' => 'DESC', 'id' => 'ASC', 'secret_column' => 'DESC');
     expect(get_order_string(array('name', 'id')))->toBe('ORDER BY `name` DESC, `id` ASC');
 });
+
+
+test('automation matching graphs retain the default title order on first render', function () {
+    $source = file_get_contents(dirname(__DIR__, 3) . '/lib/api_automation.php');
+    $start = strpos($source, 'function display_matching_graphs(');
+    expect(preg_match('/get_order_string\(array\(([^\n]+)\)\)/', substr($source, $start), $match))->toBe(1);
+    $columns = eval('return array(' . $match[1] . ');');
+    set_request_var('sort_column', 'title_cache');
+    set_request_var('sort_direction', 'ASC');
+    expect(get_order_string($columns))->toBe('ORDER BY `title_cache` ASC');
+});
