@@ -190,6 +190,16 @@ function rrd_close() {
 	}
 }
 
+/** Keep an owned writer pipe scoped to one operation, including early returns. */
+function rrd_with_pipe($operation) {
+	$pipe = rrd_init();
+	try {
+		return $operation($pipe);
+	} finally {
+		rrd_close($pipe);
+	}
+}
+
 function __rrd_close($rrdtool_pipe) {
 	/* close the rrdtool file descriptor */
 	if (is_resource($rrdtool_pipe)) {
@@ -3578,10 +3588,8 @@ function rrd_repair($data_source_id) {
  * @return (mixed) - success (bool) or error message (array)
  */
 function rrd_datasource_add($file_array, $ds_array, $debug) {
-	global $data_source_types, $consolidation_functions;
-
-	$rrdtool_pipe = rrd_init();
-	try {
+	return rrd_with_pipe(function ($rrdtool_pipe) use ($file_array, $ds_array, $debug) {
+		global $data_source_types, $consolidation_functions;
 
 		/* iterate all given rrd files */
 		foreach ($file_array as $file) {
@@ -3639,9 +3647,7 @@ function rrd_datasource_add($file_array, $ds_array, $debug) {
 		}
 
 		return true;
-	} finally {
-		rrd_close($rrdtool_pipe);
-	}
+	});
 }
 
 /**
@@ -3654,8 +3660,7 @@ function rrd_datasource_add($file_array, $ds_array, $debug) {
  * @return (mixed) true for success (bool) or error message (array)
  */
 function rrd_rra_delete($file_array, $rra_array, $debug) {
-	$rrdtool_pipe = rrd_init();
-	try {
+	return rrd_with_pipe(function ($rrdtool_pipe) use ($file_array, $rra_array, $debug) {
 
 		/* iterate all given rrd files */
 		foreach ($file_array as $file) {
@@ -3698,9 +3703,7 @@ function rrd_rra_delete($file_array, $rra_array, $debug) {
 		}
 
 		return true;
-	} finally {
-		rrd_close($rrdtool_pipe);
-	}
+	});
 }
 
 /**
@@ -3714,8 +3717,7 @@ function rrd_rra_delete($file_array, $rra_array, $debug) {
  * @return (mixed)  success (bool) or error message (array)
  */
 function rrd_rra_clone($file_array, $cf, $rra_array, $debug) {
-	$rrdtool_pipe = rrd_init();
-	try {
+	return rrd_with_pipe(function ($rrdtool_pipe) use ($file_array, $cf, $rra_array, $debug) {
 
 		/* iterate all given rrd files */
 		foreach ($file_array as $file) {
@@ -3758,9 +3760,7 @@ function rrd_rra_clone($file_array, $cf, $rra_array, $debug) {
 		}
 
 		return true;
-	} finally {
-		rrd_close($rrdtool_pipe);
-	}
+	});
 }
 
 /**

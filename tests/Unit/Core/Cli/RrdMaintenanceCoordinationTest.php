@@ -85,7 +85,7 @@ function cacti_escapeshellarg($value) { return escapeshellarg($value); }
 function cacti_escapeshellcmd($value) { return escapeshellcmd($value); }
 function cacti_log(...$args) {}
 function register_process_start(...$args) { return true; }
-function unregister_process(...$args) {}
+function unregister_process(...$args) { touch(dirname(__DIR__) . "/unregistered"); }
 function db_fetch_cell(...$args) { return '1.3.0'; }
 function db_execute_prepared(...$args) { touch(dirname(__DIR__) . '/db-write'); return true; }
 function array_rekey($rows, $key, $value) { $out = array(); foreach ($rows as $row) { $out[$row[$key]] = $row[$value]; } return $out; }
@@ -144,7 +144,8 @@ FIXTURE;
             expect($status)->toBe(1)->and(file_exists($dir . '/db-write'))->toBeFalse()
                 ->and(file_get_contents($rrd))->toBe($before);
             if ($failure === 'storage') {
-                expect($stderr)->toContain('maintenance lock is unavailable');
+                expect($stderr)->toContain('maintenance lock is unavailable')
+                    ->and(file_exists($dir . '/unregistered'))->toBeTrue();
             }
         } elseif ($scriptName === 'splice_rrd.php' && $busy) {
             expect($status)->toBe(1)->and($stderr)->toContain('storage is busy')
@@ -291,7 +292,7 @@ function db_execute_prepared($sql, $args) { return db_execute($sql); }
 function db_fetch_cell($sql) {
     static $queueReads = 0;
     if (strpos($sql, 'FROM processes') !== false) { return 0; }
-    return $queueReads++ === 0 ? 1 : (int) getenv('TEST_FLOAT_REMAINING');
+    return $queueReads++ === 0 ? 1 : (getenv('TEST_FLOAT_REMAINING') === 'unknown' ? false : (int) getenv('TEST_FLOAT_REMAINING'));
 }
 function db_fetch_cell_prepared(...$args) { return 1; }
 function exec_background(...$args) { touch(dirname(__DIR__) . '/launched'); }
@@ -318,4 +319,4 @@ FIXTURE;
             rrd_cli_fixture_remove($dir);
         }
     }
-})->with(array(0, 1));
+})->with(array(0, 1, 'unknown'));
