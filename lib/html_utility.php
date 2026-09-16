@@ -935,6 +935,7 @@ function get_order_string($allowed_columns = null) {
 	}
 
 	$parts = array();
+	$validated_columns = array();
 	foreach ($columns as $column => $direction) {
 		$column = validate_sort_column($column, $page);
 		if ($column === '') {
@@ -943,13 +944,19 @@ function get_order_string($allowed_columns = null) {
 		$direction = cacti_normalize_sort_direction($direction);
 		if (cacti_normalize_sort_column($column) !== '') {
 			$parts[] = cacti_build_sort_fragment($column, $direction);
+			$validated_columns[$column] = $direction;
 		} elseif (isset($_SESSION['valid_sort_columns'][$page]) && in_array($column, $_SESSION['valid_sort_columns'][$page], true)) {
 			// Only a server-defined allowlist may authorize an SQL expression.
 			$parts[] = $column . ' ' . $direction;
+			$validated_columns[$column] = $direction;
 		}
 	}
 
-	return $parts ? 'ORDER BY ' . implode(', ', $parts) : '';
+	// Request-state processing can precede the first registration of this map.
+	// Persist only the columns validated here so pagination retains that sort.
+	$_SESSION['sort_data'][$page] = $validated_columns;
+	$_SESSION['sort_string'][$page] = $parts ? 'ORDER BY ' . implode(', ', $parts) : '';
+	return $_SESSION['sort_string'][$page];
 }
 
 /**

@@ -18,6 +18,33 @@ beforeEach(function () {
     $_SERVER['SCRIPT_NAME'] = 'sort-contract.php';
 });
 
+test('first-request sorting persists after late allowlist registration', function () {
+    set_request_var('sort_column', 'description');
+    set_request_var('sort_direction', 'DESC');
+    $page = get_order_string_page(false);
+    update_order_string();
+    expect($_SESSION['sort_data'][$page] ?? array())->toBe(array());
+    expect(get_order_string(array('description', 'id')))->toBe('ORDER BY `description` DESC');
+    expect($_SESSION['sort_data'][$page])->toBe(array('description' => 'DESC'));
+
+    // Transfer the persisted page state to the next invocation's table key.
+    // The helper's static counter normally resets at the next HTTP request.
+    $next = get_order_string_page(false);
+    $_SESSION['sort_data'][$next] = $_SESSION['sort_data'][$page];
+    $_REQUEST = $GLOBALS['_CACTI_REQUEST'] = array();
+    expect(get_order_string(array('description', 'id')))->toBe('ORDER BY `description` DESC');
+});
+
+test('late registration never persists rejected sort columns', function () {
+    set_request_var('sort_column', 'password');
+    set_request_var('sort_direction', 'DESC');
+    $page = get_order_string_page(false);
+    update_order_string();
+    expect(get_order_string(array('description', 'id')))->toBe('');
+    expect($_SESSION['sort_data'][$page])->toBe(array());
+    expect($_SESSION['sort_string'][$page])->toBe('');
+});
+
 test('sanitize_sql_column() allows valid columns', function () {
 	expect(sanitize_sql_column('hostname'))->toBe('hostname');
 	expect(sanitize_sql_column('host.id'))->toBe('host.id');
