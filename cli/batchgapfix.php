@@ -215,8 +215,14 @@ if ($child == 0) {
 		exit(1);
 	}
 
+	// Also release registration on early database failures and interruption.
+	register_shutdown_function(function () { unregister_process('batchgapfix', 'master', 0); });
+
 	if (db_table_exists('graph_local_spikekill')) {
-		batchgapfix_reap_dead_children();
+		if (!batchgapfix_reap_dead_children()) {
+			fwrite(STDERR, "ERROR: Previous gap repair workers failed or could not be reconciled; queue retained.\n");
+			exit(1);
+		}
 		$running = db_fetch_cell('SELECT COUNT(*) FROM graph_local_spikekill WHERE ended = "0000-00-00"');
 
 		/* db_fetch_cell() answers false when the query fails, which compares as
@@ -416,8 +422,10 @@ function sig_handler($signo) {
 		case SIGINT:
 			unregister_process('batchgapfix', $type, $child);
 
-			if ($child == 0) {
-				db_execute('TRUNCATE TABLE graph_local_spikekill');
+			// Preserve pending work. The parent observes a child's nonzero exit.
+			if ($child != 0) {
+				db_execute_prepared('UPDATE graph_local_spikekill SET ended = NOW(), exit_code = 1
+					WHERE child = ? AND ended = "0000-00-00"', array($child));
 			}
 
 			exit(1);
@@ -435,6 +443,8 @@ function batchgapfix_reap_dead_children() {
 		AND taskname = ?',
 		array('batchgapfix', 'child'));
 
+	if (!is_array($children)) { return false; }
+	$clean = true;
 	foreach($children as $c) {
 		if (cacti_process_still_running($c['pid'])) {
 			continue;
@@ -442,16 +452,20 @@ function batchgapfix_reap_dead_children() {
 
 		/* exit_code 1 is what a failing child would have written itself, so the
 		 * $failed tally below the wait loop counts these and retains the queue */
-		db_execute_prepared('UPDATE graph_local_spikekill
+		$clean = false;
+		if (db_execute_prepared('UPDATE graph_local_spikekill
 			SET ended = NOW(), exit_code = 1
 			WHERE child = ?
 			AND ended = "0000-00-00"',
-			array($c['taskid']));
+			array($c['taskid'])) === false) {
+			return false;
+		}
 
 		cacti_log(sprintf('WARNING: BATCHFIX child %s with PID %s exited without recording its results.  Its unfinished RRDfiles were marked failed.', $c['taskid'], cacti_process_pid_for_log($c['pid'])), false, 'SYSTEM');
 
 		unregister_process($c['tasktype'], $c['taskname'], $c['taskid'], $c['pid']);
 	}
+	return $clean;
 }
 
 function debug($string) {

@@ -120,7 +120,10 @@ function rrdtool_function_update($updates, $pipe = false, &$completed = null)
 function db_close()
 {
     if (in_array(getenv('ACK_FAIL'), array('mixed', 'page'), true)) {
-        file_put_contents(getenv('ACK_FIXTURE') . '/outcome.json', json_encode($GLOBALS['ack_db']->query('SELECT output, COUNT(*) AS remaining FROM poller_output GROUP BY output')->fetchAll(PDO::FETCH_ASSOC)));
+        $rows = $GLOBALS['ack_db']->query('SELECT output, COUNT(*) AS remaining FROM poller_output GROUP BY output')->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rows as &$row) { $row['remaining'] = (int) $row['remaining']; }
+        unset($row);
+        file_put_contents(getenv('ACK_FIXTURE') . '/outcome.json', json_encode($rows));
         return;
     }
     file_put_contents(getenv('ACK_FIXTURE') . '/outcome.json', json_encode($GLOBALS['ack_db']->query('SELECT output FROM ' . $GLOBALS['ack_table'] . ' ORDER BY time')->fetchAll(PDO::FETCH_COLUMN)));

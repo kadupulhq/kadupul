@@ -239,7 +239,13 @@ FIXTURE;
         $stdout = stream_get_contents($pipes[1]); $stderr = stream_get_contents($pipes[2]);
         fclose($pipes[1]); fclose($pipes[2]);
         $status = proc_close($process);
-        if ($stale) { expect(file_exists($dir . '/reaped'))->toBeTrue(); }
+        if ($stale) {
+            expect(file_exists($dir . '/reaped'))->toBeTrue()->and($status)->toBe(1)
+                ->and($stderr)->toContain('queue retained')
+                ->and(file_exists($dir . '/mutations'))->toBeFalse()
+                ->and(file_exists($dir . '/launches'))->toBeFalse();
+            return;
+        }
         if ($childStatus !== null) {
             expect($status)->toBe($childStatus ? 1 : 0)->and($stderr)->toBe('')
                 ->and($stdout)->toContain($childStatus ? 'FAILED:' : 'SUCCESS:')

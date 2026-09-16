@@ -750,7 +750,8 @@ function float_processes_running() {
 		WHERE tasktype = "rfloat"
 		AND taskname = "child"');
 
-	if ($running == 0) {
+	if (!is_numeric($running)) { return false; }
+	if ((int) $running === 0) {
 		return 0;
 	}
 

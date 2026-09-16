@@ -966,7 +966,8 @@ function validate_sort_column($column, $page) {
 		}
 	}
 
-	return sanitize_sql_column($column);
+	// The table must register its columns before request-driven sorting.
+	return '';
 }
 
 function remove_column_from_order_string($column) {

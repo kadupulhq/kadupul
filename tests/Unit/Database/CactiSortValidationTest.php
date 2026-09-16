@@ -42,6 +42,7 @@ test('update_order_string() enforces ASC/DESC direction', function () {
 		@session_start();
 	}
 
+	$_SESSION['valid_sort_columns'][get_order_string_page(false)] = array('hostname');
 	set_request_var('sort_column', 'hostname');
 	set_request_var('sort_direction', 'ASC; --');
 	update_order_string();
@@ -95,13 +96,15 @@ test('update_order_string() uses session allowlist', function () {
 	expect($order)->toContain('description');
 });
 
-test('get_order_string() fallback sanitization works', function () {
+test('get_order_string() refuses a first request without a table allowlist', function () {
 	$_SESSION = [];
 	set_request_var('sort_column', 'dangerous` column');
 	set_request_var('sort_direction', 'ASC');
 	
 	$order = get_order_string();
-	expect($order)->toBe('ORDER BY `dangerouscolumn` ASC');
+	expect($order)->toBe('');
+    set_request_var('sort_column', 'secret_column');
+    expect(get_order_string())->toBe('');
 });
 
 test('array sort inputs fail closed without PHP warnings', function () {
@@ -120,6 +123,7 @@ test('stored sorts are validated again against the current table allowlist', fun
 });
 
 test('malformed stored sorts fall back to a safe request and empty sorts produce no clause', function () {
+    $_SESSION['valid_sort_columns'][get_order_string_page(false)] = array('id');
     $_SESSION['sort_data'][get_order_string_page(false)] = 'id DESC';
     set_request_var('sort_column', 'id');
     set_request_var('sort_direction', 'DESC');

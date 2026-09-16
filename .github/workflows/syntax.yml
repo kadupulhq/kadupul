@@ -156,7 +156,7 @@ jobs:
       uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
       with:
         php-version: ${{ matrix.php }}
-        extensions: intl, mysql, gd, ldap, gmp, xml, curl, json, mbstring #optional
+        extensions: intl, mysql, gd, ldap, gmp, xml, curl, json, mbstring, posix #optional
         ini-values: "post_max_size=256M, max_execution_time=60, date.timezone=America/New_York" #optional
 
     - name: Check PHP version
@@ -277,8 +277,8 @@ jobs:
     - name: Link Web Root and Fix Permissions and Disable Apparmor
       run: |
         sudo ln -s "$GITHUB_WORKSPACE" /var/www/html/cacti
-        sudo find "$(dirname "$GITHUB_WORKSPACE")" -type d -exec chmod 777 {} \;
-        sudo find "$(dirname "$GITHUB_WORKSPACE")" -type f -exec chmod 777 {} \;
+        sudo find "$(dirname "$GITHUB_WORKSPACE")" -type d -exec chmod 775 {} \;
+        sudo find "$(dirname "$GITHUB_WORKSPACE")" -type f -exec chmod ug+rw,o-w {} \;
         sudo systemctl stop apparmor
         sudo systemctl disable apparmor
         sudo chown -R www-data:runner "$(dirname "$GITHUB_WORKSPACE")"
@@ -312,7 +312,8 @@ jobs:
     - name: Prime Cacti config.php File
       run: |
         cat ${{ github.workspace }}/include/config.php.dist | sed -r "s/localhost/127.0.0.1/g" > ${{ github.workspace }}/include/config.php
-        sudo chmod 777 ${{ github.workspace }}/include/config.php
+        sudo chmod 664 ${{ github.workspace }}/include/config.php
+        printf '\n$config["rrd_maintenance_trusted_uids"] = array(%s, %s);\n$config["rrd_maintenance_trusted_gids"] = array(%s);\n' "$(id -u www-data)" "$(id -u runner)" "$(id -g runner)" >> "$GITHUB_WORKSPACE/include/config.php"
         cat ${{ github.workspace}}/include/config.php
 
     - name: Setup Cacti Daemon

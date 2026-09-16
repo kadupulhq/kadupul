@@ -39,6 +39,7 @@ function db_fetch_assoc_prepared($sql, $params = array()) {
 
 function db_execute_prepared($sql, $params = array()) {
 	$GLOBALS['batchgapfix_updates'][] = array($sql, $params);
+	if ($GLOBALS['batchgapfix_update_fails']) { return false; }
 
 	foreach ($GLOBALS['batchgapfix_rows'] as $index => $row) {
 		if ($row['child'] == $params[0] && $row['ended'] === '0000-00-00') {
@@ -76,6 +77,7 @@ function queue_row($id, $child, $ended = '0000-00-00', $exit_code = 0) {
 
 beforeEach(function () {
 	$GLOBALS['batchgapfix_processes']    = array();
+	$GLOBALS['batchgapfix_update_fails'] = false;
 	$GLOBALS['batchgapfix_rows']         = array();
 	$GLOBALS['batchgapfix_live_pids']    = array();
 	$GLOBALS['batchgapfix_selects']      = array();
@@ -140,4 +142,19 @@ test('no registered children leaves the queue untouched', function () {
 		->and($GLOBALS['batchgapfix_unregistered'])->toBe(array())
 		->and($GLOBALS['batchgapfix_log'])->toBe(array())
 		->and($GLOBALS['batchgapfix_selects'][0][1])->toBe(array('batchgapfix', 'child'));
+});
+
+test('unreadable reconciliation retains registration and reports failure', function ($selectFails) {
+    $GLOBALS['batchgapfix_processes'] = $selectFails ? false : array(process_row('1', 4242));
+    $GLOBALS['batchgapfix_update_fails'] = !$selectFails;
+    $GLOBALS['batchgapfix_rows'] = array(queue_row(1, 1));
+    expect(batchgapfix_reap_dead_children())->toBeFalse()
+        ->and($GLOBALS['batchgapfix_unregistered'])->toBe(array())
+        ->and($GLOBALS['batchgapfix_rows'][0]['ended'])->toBe('0000-00-00');
+})->with(array(true, false));
+
+test('a dead child reports failure even after its final row was stamped', function () {
+    $GLOBALS['batchgapfix_processes'] = array(process_row('1', 4242));
+    $GLOBALS['batchgapfix_rows'] = array(queue_row(1, 1, '2026-09-16 11:59:00'));
+    expect(batchgapfix_reap_dead_children())->toBeFalse();
 });

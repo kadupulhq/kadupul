@@ -33,6 +33,7 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         gd \
         mysqli \
         pcntl \
+        posix \
         pdo_mysql \
         snmp \
         sockets \
@@ -112,6 +113,8 @@ if [ ! -f /var/www/html/include/config.php ] && [ -f /var/www/html/include/confi
         -e "s/\\\$database_password *=.*/\$database_password = '${DB_PASS:-cactiuser}';/" \
         -e "s|\\\$url_path *=.*|\$url_path = '/';|" \
         /var/www/html/include/config.php
+    # The fixture runs CLI installation as root and serves requests as www-data.
+    printf '\n$config["rrd_maintenance_trusted_uids"] = array(%s);\n$config["rrd_maintenance_trusted_gids"] = array(%s);\n' "$(id -u www-data)" "$(id -g www-data)" >> /var/www/html/include/config.php
 fi
 
 exec "$@"

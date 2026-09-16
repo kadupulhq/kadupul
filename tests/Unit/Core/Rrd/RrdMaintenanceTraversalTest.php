@@ -26,6 +26,7 @@
  */
 
 namespace RrdMaintenanceTraversalTest;
+require_once dirname(__DIR__, 4) . '/lib/rrd_maintenance.php';
 
 if (!function_exists(__NAMESPACE__ . '\remove_files')) {
 	$root = dirname(__DIR__, 4);
@@ -268,3 +269,19 @@ test('does not send a .. path to the RRDproxy for archiving', function () use ($
 		->and(implode("\n", $GLOBALS['rmt_log']))->toContain('.. segment')
 		->and($GLOBALS['rmt_dropped'])->toBe(array('5/../../include/config.php'));
 });
+
+ test('local purge and archive defer while a writer holds the lease', function ($action) use ($purge) {
+    $lease = \rrd_maintenance_acquire(false, false);
+    expect(is_resource($lease))->toBeTrue();
+    try {
+        $purge('keep.rrd', $action);
+        expect(file_get_contents($this->rra . '/keep.rrd'))->toBe('rrd')
+            ->and($GLOBALS['rmt_dropped'])->toBe(array())
+            ->and($GLOBALS['rmt_log'][0])->toContain('purge queue retained');
+    } finally { \rrd_maintenance_release($lease); }
+    $purge('keep.rrd', $action);
+    expect(file_exists($this->rra . '/keep.rrd'))->toBeFalse();
+    $exclusive = \rrd_maintenance_acquire(true, false);
+    expect(is_resource($exclusive))->toBeTrue();
+    \rrd_maintenance_release($exclusive);
+})->with(array('1', '3'));

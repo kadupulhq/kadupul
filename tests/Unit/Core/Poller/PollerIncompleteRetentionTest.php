@@ -74,7 +74,7 @@ test('the production processor expires old incomplete rows only after a writer i
     $pipe = $available;
     expect(process_poller_output($pipe, 0, $deferred, $consumed))->toBe(0)
         ->and($deferred)->toBe(!$available)
-        ->and($GLOBALS['retention_db']->query('SELECT COUNT(*) FROM poller_output')->fetchColumn())->toBe($available ? 0 : 1);
+        ->and((int) $GLOBALS['retention_db']->query('SELECT COUNT(*) FROM poller_output')->fetchColumn())->toBe($available ? 0 : 1);
 })->with(array(true, false));
 
 afterEach(function () {

@@ -40,7 +40,7 @@ function run($block, $stubs, $prologue, $answers) {
 	$runner = '<?php' . "\n"
 		. 'function db_execute($sql) { file_put_contents(getenv("OUT") . "/executed", $sql . "\n", FILE_APPEND); return true; }' . "\n"
 		. 'function cacti_log($message, ...$args) {}' . "\n"
-		. 'function unregister_process(...$args) {}' . "\n"
+		. 'function unregister_process(...$args) { file_put_contents(getenv("OUT") . "/executed", "UNREGISTER\n", FILE_APPEND); }' . "\n"
 		. $stubs . "\n"
 		. $prologue . "\n"
 		. $block . "\n";
@@ -112,3 +112,21 @@ test('a start run refuses to truncate when the in-progress count cannot be read'
 	'a forced restart'               => array('3', true, 0, true),
 	'an idle queue'                  => array('0', false, 0, true),
 ));
+
+test('registered master is released by shutdown on early failure', function () {
+    $source = file_get_contents(dirname(__DIR__, 4) . '/cli/batchgapfix.php');
+    preg_match('/register_shutdown_function\(function \(\) \{ unregister_process.*?\}\);/', $source, $match);
+    expect($match)->not->toBeEmpty();
+    $result = run($match[0] . 'exit(1);', '', '', array());
+    expect($result['status'])->toBe(1)->and($result['executed'])->toBe("UNREGISTER\n");
+});
+
+test('interrupted repair retains the queue and marks child work failed', function ($child) {
+    $source = file_get_contents(dirname(__DIR__, 4) . '/cli/batchgapfix.php');
+    preg_match('/^function sig_handler\(.*?^}\R/ms', $source, $match);
+    $result = run($match[0] . 'sig_handler(15);',
+        'if (!defined("SIGTERM")) {define("SIGTERM",15);define("SIGINT",2);} function db_execute_prepared($sql,$args) {return db_execute($sql);}',
+        '$child=' . $child . ';$type=' . var_export($child ? 'child' : 'master', true) . ';', array());
+    expect($result['status'])->toBe(1)->and($result['executed'])->not->toContain('TRUNCATE')
+        ->and(strpos($result['executed'], 'UPDATE graph_local_spikekill') !== false)->toBe($child !== 0);
+})->with(array(0, 1));

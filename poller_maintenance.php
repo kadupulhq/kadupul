@@ -30,6 +30,7 @@ require_once($config['library_path'] . '/api_device.php');
 require_once($config['library_path'] . '/api_graph.php');
 include_once($config['library_path'] . '/poller.php');
 require_once($config['library_path'] . '/rrd.php');
+require_once($config['library_path'] . '/rrd_maintenance.php');
 require_once($config['library_path'] . '/utility.php');
 
 /* let PHP run just as long as it has to */
@@ -535,6 +536,16 @@ function secpass_check_expired () {
 function remove_files($file_array) {
 	global $config, $debug, $archived, $purged;
 
+	$lease = null;
+	if (!read_config_option('storage_location') && ($config['cacti_server_os'] ?? '') !== 'win32') {
+		$lease = rrd_maintenance_acquire(true, false);
+		if ($lease === false) {
+			cacti_log('WARNING: RRDfile Maintenance deferred because storage is busy or untrusted; purge queue retained.', true, 'MAINT');
+			return false;
+		}
+	}
+	try {
+
 	maint_debug('RRDClean is now running on ' . cacti_sizeof($file_array) . ' items');
 
 	/* determine the location of the RRA files */
@@ -711,6 +722,9 @@ function remove_files($file_array) {
 	}
 
 	maint_debug('RRDClean has finished a purge pass of ' . cacti_sizeof($file_array) . ' items');
+	} finally {
+		rrd_maintenance_release($lease);
+	}
 }
 
 function rrdclean_create_path($path) {
