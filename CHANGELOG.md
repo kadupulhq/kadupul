@@ -11,6 +11,9 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Coordinate spike removal with synchronous, queued and tuning RRD writes so
+  replacement cannot discard samples written while maintenance prepares its dump.
+
 - Restart the installer correctly when upgrading a completed older version, and
   keep repeated CLI installation checks out of web-session log rendering.
 - Validate release upgrades and snapshot rollback with real polling, graph rendering,

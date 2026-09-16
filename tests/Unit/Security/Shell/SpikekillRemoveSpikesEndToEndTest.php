@@ -222,6 +222,8 @@ beforeEach(function () {
     putenv('RRDTOOL_STUB_DUMP_FIXTURE=' . $this->dump_fixture);
     putenv('RESTORE_STUB_EXIT=0');
 
+    $GLOBALS['config']['rra_path'] = $this->rrd_dir;
+
     spikekill_e2e_test_stub_config(array(
         'spikekill_backupdir' => $this->backup_dir,
         'path_rrdtool'        => $this->rrdtool_stub,
@@ -591,3 +593,49 @@ test('missing sample arrays preserve unavailable window statistics', function ($
         expect($text)->toMatch('/N\/A\s+N\/A\s*$/');
     }
 })->with(array(false, true));
+
+
+test('spike removal refuses active writers without touching data and releases its lock on failure', function () {
+    require_once dirname(__DIR__, 4) . '/lib/rrd_maintenance.php';
+    $writer = rrd_maintenance_acquire();
+    $instance = spikekill_e2e_instance($this->rrdfile);
+    try {
+        expect($instance->remove_spikes())->toBeFalse()
+            ->and($instance->get_errors())->toContain('storage is busy')
+            ->and(file_get_contents($this->rrdfile))->toBe('original-rrd-bytes')
+            ->and(glob($this->backup_dir . '/*'))->toBe([]);
+    } finally {
+        rrd_maintenance_release($writer);
+    }
+    putenv('RESTORE_STUB_EXIT=1');
+    $instance = spikekill_e2e_instance($this->rrdfile);
+    expect($instance->remove_spikes())->toBeFalse();
+    $exclusive = rrd_maintenance_acquire(true);
+    try {
+        expect(is_resource($exclusive))->toBeTrue();
+    } finally {
+        rrd_maintenance_release($exclusive);
+    }
+});
+
+test('spike removal refuses a cache daemon before dumping or changing the source', function () {
+    $previous = getenv('RRDCACHED_ADDRESS');
+    putenv('RRDCACHED_ADDRESS=unix:/unused/test.sock');
+    try {
+        $instance = spikekill_e2e_instance($this->rrdfile);
+        expect($instance->remove_spikes())->toBeFalse()
+            ->and($instance->get_errors())->toContain('RRDCACHED_ADDRESS')
+            ->and(file_get_contents($this->rrdfile))->toBe('original-rrd-bytes')
+            ->and(glob($this->backup_dir . '/*'))->toBe([]);
+    } finally {
+        putenv($previous === false ? 'RRDCACHED_ADDRESS' : 'RRDCACHED_ADDRESS=' . $previous);
+    }
+});
+
+test('spike command deadlines use the documented bounded configuration', function ($configured, $expected) {
+    $GLOBALS['__test_config_options']['spikekill_timeout'] = $configured;
+    $instance = spikekill_e2e_instance($this->rrdfile);
+    $method = new ReflectionMethod(spikekill::class, 'commandTimeout');
+    $method->setAccessible(true);
+    expect($method->invoke($instance))->toBe($expected);
+})->with(array(array(0, 3600), array(-1, 3600), array(1, 1), array(28800, 28800), array(PHP_INT_MAX, 28800)));
