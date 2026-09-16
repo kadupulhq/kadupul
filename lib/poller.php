@@ -707,6 +707,12 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 	$deferred = false;
 	$consumed = 0;
 
+	if ($rrdtool_pipe === false) {
+		cacti_log('ERROR: RRD initialization failed; pending poller samples were retained.', false, 'POLLER');
+		$deferred = true;
+		return 0;
+	}
+
 	static $rrd_field_names = array();
 	static $checked_bad     = false;
 

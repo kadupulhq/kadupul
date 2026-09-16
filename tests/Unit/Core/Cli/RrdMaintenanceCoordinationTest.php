@@ -33,6 +33,10 @@ function rrd_cli_merge_coverage($test, $dir) {
 }
 
 test('native maintenance CLI coordinates before touching an RRD', function ($scriptName, $cached, $busy = true, $failure = false) {
+    $signal = $failure === 'sigterm' ? 15 : ($failure === 'sigint' ? 2 : null);
+    if ($signal !== null && (!function_exists('pcntl_signal') || !is_dir('/proc/self/fd'))) {
+        $this->markTestSkipped('Native Linux signals and descriptor inspection are required.');
+    }
     $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
     if (!is_executable($binary)) { $this->markTestSkipped('Real RRDtool is required; CI provisions it.'); }
     $root = dirname(__DIR__, 4);
@@ -67,7 +71,7 @@ function cacti_escapeshellarg($value) { return escapeshellarg($value); }
 function cacti_escapeshellcmd($value) { return escapeshellcmd($value); }
 function cacti_log(...$args) {}
 function register_process_start(...$args) { return true; }
-function unregister_process(...$args) { touch(dirname(__DIR__) . "/unregistered"); }
+function unregister_process(...$args) { file_put_contents(dirname(__DIR__) . "/unregistered", json_encode($args)); }
 function db_fetch_cell(...$args) { return '1.3.0'; }
 function db_execute_prepared(...$args) { touch(dirname(__DIR__) . '/db-write'); return true; }
 function array_rekey($rows, $key, $value) { $out = array(); foreach ($rows as $row) { $out[$row[$key]] = $row[$value]; } return $out; }
@@ -88,9 +92,9 @@ FIXTURE;
         $args = array_merge(array(PHP_BINARY), rrd_cli_coverage_arguments($this, $dir, $root, $scriptName), array('-d', 'sys_temp_dir=' . $dir, $dir . '/cli/' . $scriptName));
         if ($scriptName === 'update_heartbeat.php') {
             $args = array_merge($args, array('--prev-heartbeat=600', '--new-heartbeat=900', '--force'));
-            $lock = rrd_maintenance_acquire(true);
+            $lock = rrd_maintenance_acquire();
         } elseif ($scriptName === 'float_rrdfiles.php') {
-            $args = array_merge($args, array('--type=child', '--child=1', '--force', '--start=1700000000', '--end=1700000060'));
+            $args = array_merge($args, array('--type=child', '--child=1', '--start=1700000000', '--end=1700000060'));
             $lock = rrd_maintenance_acquire();
         } else {
             $args = array_merge($args, array('--oldrrd=' . $rrd, '--newrrd=' . $rrd, '--finrrd=' . $dir . '/finished.rrd'));
@@ -106,7 +110,26 @@ FIXTURE;
                 ->and(file_exists($dir . '/rrd-command'))->toBeFalse()
                 ->and(file_exists($dir . '/db-write'))->toBeFalse()
                 ->and(file_get_contents($rrd))->toBe($before);
-            rrd_maintenance_release($lock);
+            if ($signal !== null) {
+                $pid = proc_get_status($process)['pid'];
+                $opened = false; $deadline = microtime(true) + 10;
+                // Confirm the child's new descriptor is waiting, rather than
+                // timing a signal against an assumed lock-acquisition delay.
+                while (!$opened && microtime(true) < $deadline) {
+                    foreach (glob('/proc/' . $pid . '/fd/*') as $fd) {
+                        $target = @readlink($fd);
+                        $info = @file_get_contents('/proc/' . $pid . '/fdinfo/' . basename($fd));
+                        if ($target === $dir . '/store' && is_string($info) && strpos($info, 'lock:') === false) { $opened = true; break; }
+                    }
+                    if (!$opened) { usleep(10000); }
+                }
+                expect($opened)->toBeTrue()->and(proc_terminate($process, $signal))->toBeTrue();
+                $deadline = microtime(true) + 10;
+                while (!file_exists($dir . '/unregistered') && microtime(true) < $deadline) { usleep(10000); }
+                expect(file_exists($dir . '/unregistered'))->toBeTrue();
+            } else {
+                rrd_maintenance_release($lock);
+            }
         }
         fclose($pipes[0]); $stdout = stream_get_contents($pipes[1]); $stderr = stream_get_contents($pipes[2]); fclose($pipes[1]); fclose($pipes[2]);
         $status = proc_close($process);
@@ -119,6 +142,10 @@ FIXTURE;
         } elseif ($failure) {
             expect($status)->toBe(1)->and(file_exists($dir . '/db-write'))->toBeFalse()
                 ->and(file_get_contents($rrd))->toBe($before);
+            if ($signal !== null) {
+                expect(json_decode(file_get_contents($dir . '/unregistered'), true))->toBe(array('rfloat', 'child', '1', $pid))
+                    ->and($stderr)->toBe('')->and(file_exists($dir . '/rrd-command'))->toBeFalse();
+            }
             if ($failure === 'storage') {
                 expect($stderr)->toContain('maintenance lock is unavailable')
                     ->and(file_exists($dir . '/unregistered'))->toBeTrue();
@@ -148,7 +175,7 @@ FIXTURE;
         $GLOBALS['config'] = $savedConfig;
         try { rrd_cli_merge_coverage($this, $dir); } finally { rrd_cli_fixture_remove($dir); }
     }
-})->with(array(array('update_heartbeat.php', false), array('float_rrdfiles.php', false), array('splice_rrd.php', false), array('float_rrdfiles.php', true), array('splice_rrd.php', true), array('update_heartbeat.php', true), array('splice_rrd.php', false, false), array('float_rrdfiles.php', false, true, 'storage'), array('float_rrdfiles.php', false, true, 'rewrite')));
+})->with(array(array('update_heartbeat.php', false), array('float_rrdfiles.php', false), array('splice_rrd.php', false), array('float_rrdfiles.php', true), array('splice_rrd.php', true), array('update_heartbeat.php', true), array('splice_rrd.php', false, false), array('float_rrdfiles.php', false, true, 'storage'), array('float_rrdfiles.php', false, true, 'rewrite'), array('float_rrdfiles.php', false, true, 'sigterm'), array('float_rrdfiles.php', false, true, 'sigint')));
 
 
 test('batch gap repair serializes queued files and reports worker outcomes', function ($threads, $failed = false, $cached = false, $childStatus = null) {

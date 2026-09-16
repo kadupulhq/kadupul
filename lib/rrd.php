@@ -62,10 +62,10 @@ function rrdtool_reset_language() {
 	putenv('LANG=' . $prev_lang);
 }
 
-function rrd_init($output_to_term = true) {
+function rrd_init($output_to_term = true, $exclusive = false) {
 	global $config;
 
-	$args = func_get_args();
+	$args = array_slice(func_get_args(), 0, 1);
 	$force_storage_location_local = (isset($config['force_storage_location_local']) && $config['force_storage_location_local'] === true ) ? true : false;
 	$function = ($force_storage_location_local === false && read_config_option('storage_location')) ? '__rrd_proxy_init' : '__rrd_init';
 	if ($function !== '__rrd_init') {
@@ -73,7 +73,11 @@ function rrd_init($output_to_term = true) {
 	}
 
 	require_once __DIR__ . '/rrd_maintenance.php';
-	$lock = rrd_maintenance_acquire();
+	if ($exclusive && getenv('RRDCACHED_ADDRESS')) {
+		cacti_log('ERROR: Disable RRDCACHED_ADDRESS before destructive RRD maintenance.');
+		return false;
+	}
+	$lock = rrd_maintenance_acquire($exclusive && ($config['cacti_server_os'] ?? '') !== 'win32');
 	if ($lock === false) {
 		cacti_log('ERROR: Unable to coordinate local RRD writes with maintenance.');
 		return false;
@@ -83,7 +87,7 @@ function rrd_init($output_to_term = true) {
 	try {
 		$pipe = call_user_func_array($function, $args);
 		if (is_resource($pipe)) {
-			rrd_maintenance_pipe($pipe, $lock);
+			rrd_maintenance_pipe($pipe, $lock, false, $exclusive);
 		}
 		return $pipe;
 	} finally {
@@ -221,7 +225,10 @@ function rrd_close() {
 
 /** Keep an owned writer pipe scoped to one operation, including early returns. */
 function rrd_with_pipe($operation) {
-	$pipe = rrd_init();
+	$pipe = rrd_init(true, true);
+	if ($pipe === false) {
+		return false;
+	}
 	try {
 		return $operation($pipe);
 	} finally {
@@ -515,6 +522,13 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 			while (1) {
 				if (fwrite($rrdtool_pipe, escape_command(" $command_line") . "\r\n") === false) {
 					cacti_log("ERROR: Detected RRDtool Crash on '$command_line'.  Last command was '$last_command'");
+
+					// Reopening would release the exclusive lease and invalidate the
+					// dump snapshot. Abort this rewrite instead of retrying it.
+					if (rrd_maintenance_pipe_is_exclusive($rrdtool_pipe)) {
+						rrd_close($rrdtool_pipe);
+						throw new RuntimeException('RRD rewrite pipe failed; the operation was aborted without retry.');
+					}
 
 					/* close the invalid pipe */
 					rrd_close($rrdtool_pipe);
@@ -1211,7 +1225,7 @@ function rrdtool_function_tune($rrd_tune_array) {
 			if (is_file(read_config_option('path_rrdtool')) && is_executable(read_config_option('path_rrdtool'))) {
 				$rrdtool_cmd = cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' tune ' . cacti_escapeshellarg($data_source_path) . $rrd_tune;
 				require_once __DIR__ . '/rrd_maintenance.php';
-				$lock = rrd_maintenance_acquire();
+				$lock = rrd_maintenance_acquire(($config['cacti_server_os'] ?? '') !== 'win32', true);
 				if ($lock === false) {
 					cacti_log('ERROR: Unable to coordinate RRD tuning with maintenance.');
 					return;

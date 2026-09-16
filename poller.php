@@ -618,14 +618,15 @@ while ($poller_runs_completed < $poller_runs) {
 		cacti_log("WARNING: Poller Output Table not Empty.  Issues: $count, $issue_list", true, 'POLLER');
 		admin_email(__('Cacti System Warning'), __('WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s.', $poller_id, $count, $issue_list));
 
+		// Valid pending samples belong to a retry, even after writer failure.
 		db_execute_prepared('DELETE po
 			FROM poller_output AS po
 			LEFT JOIN data_local AS dl
 			ON po.local_data_id = dl.id
 			LEFT JOIN host AS h
 			ON dl.host_id = h.id
-			WHERE h.poller_id = ?
-			OR h.id IS NULL',
+			WHERE (h.poller_id = ? OR h.id IS NULL)
+			AND dl.id IS NULL',
 			array($poller_id));
 	}
 
@@ -633,7 +634,8 @@ while ($poller_runs_completed < $poller_runs) {
 	 * adjust for recent memory table problems in MariaDB and memory tables
 	 * being pushed into swap
 	 */
-	if ($poller_id == 1 && read_config_option('poller_refresh_output_table') == 'on' && $total_pollers == 1) {
+	if ($poller_id == 1 && read_config_option('poller_refresh_output_table') == 'on' && $total_pollers == 1
+		&& (string) db_fetch_cell('SELECT COUNT(*) FROM poller_output') === '0') {
 		db_execute('CREATE TABLE IF NOT EXISTS po LIKE poller_output');
 		db_execute('RENAME TABLE poller_output TO poold, po TO poller_output');
 		db_execute('DROP TABLE IF EXISTS poold');
@@ -758,6 +760,9 @@ while ($poller_runs_completed < $poller_runs) {
 
 				// open a pipe to rrdtool for writing
 				$rrdtool_pipe = rrd_init();
+				if ($rrdtool_pipe === false) {
+					$rrd_write_initialization_failed = true;
+				}
 			}
 
 			$rrds_processed = 0;
@@ -922,6 +927,11 @@ while ($poller_runs_completed < $poller_runs) {
 		log_cacti_stats($loop_start, $method, $concurrent_processes, $max_threads,
 			($poller_id == '1' ? $total_polling_hosts - 1 : $total_polling_hosts), $hosts_per_process, $num_polling_items, $rrds_processed);
 	}
+}
+
+// Finish poller bookkeeping, but report an unavailable writer as a failed run.
+if (!empty($rrd_write_initialization_failed)) {
+	exit(1);
 }
 
 function poller_heartbeat_check() {

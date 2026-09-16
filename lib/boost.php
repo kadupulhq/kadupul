@@ -1209,7 +1209,17 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 	cacti_system_zone_set();
 
 	include_once($config['library_path'] . '/rrd.php');
+	$owned_rrd_pipe = !$rrdtool_pipe;
+	if ($owned_rrd_pipe) {
+		$rrdtool_pipe = rrd_init();
+	}
+	if ($rrdtool_pipe === false) {
+		cacti_log('ERROR: RRD initialization failed; pending on-demand Boost samples were retained.', false, 'BOOST');
+		return -1;
+	}
 	$previous_error_reporting = error_reporting();
+	$boost_handler_installed = false;
+	try {
 
 	/* suppress warnings */
 	if (defined('E_DEPRECATED')) {
@@ -1220,6 +1230,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 
 	/* install the boost error handler */
 	set_error_handler('boost_error_handler');
+	$boost_handler_installed = true;
 
 
 	$max_rows = (int) read_config_option('boost_rrd_update_max_records_per_select');
@@ -1290,7 +1301,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 
 	$boost_results   = 0;
 	$updates_ok      = true;
-	$rrdp_auto_close = false;
+	$rrdp_auto_close = $owned_rrd_pipe;
 	$cursor          = false;
 
 	/* Page through the rows so a long backlog is written in full without
@@ -1587,6 +1598,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 	if ($rrdp_auto_close) {
 		boost_rrdtool_pipe_creates('forget', $rrdtool_pipe);
 		rrd_close($rrdtool_pipe);
+		$owned_rrd_pipe = false;
 	}
 
 	/* Remove retry records only after RRD and archive forwarding acknowledgement. */
@@ -1644,11 +1656,17 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 		db_execute("SELECT RELEASE_LOCK('boost.single_ds.$local_data_id')");
 	}
 
-	/* restore original error handler */
-	restore_error_handler();
-	error_reporting($previous_error_reporting);
-
 	return $updates_ok ? $boost_results : -1;
+	} finally {
+		if ($boost_handler_installed) {
+			restore_error_handler();
+		}
+		error_reporting($previous_error_reporting);
+		if ($owned_rrd_pipe) {
+			boost_rrdtool_pipe_creates('forget', $rrdtool_pipe);
+			rrd_close($rrdtool_pipe);
+		}
+	}
 }
 
 function boost_rrdtool_get_last_update_time($rrd_path, &$rrdtool_pipe) {

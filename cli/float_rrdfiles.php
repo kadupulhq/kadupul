@@ -157,8 +157,8 @@ rrd_maintenance_cli_preflight();
 
 /* install signal handlers for UNIX only */
 if (function_exists('pcntl_signal')) {
-	pcntl_signal(SIGTERM, 'sig_handler');
-	pcntl_signal(SIGINT, 'sig_handler');
+	pcntl_signal(SIGTERM, 'sig_handler', false);
+	pcntl_signal(SIGINT, 'sig_handler', false);
 }
 
 if ($start_time == false || $end_time == false) {
@@ -816,7 +816,7 @@ function sig_handler($signo) {
 				float_kill_running_processes();
 			}
 
-			unregister_process('rfloat', 'rmaster', $thread_id, getmypid());
+			unregister_process('rfloat', $type, $thread_id, getmypid());
 
 			exit(1);
 			break;

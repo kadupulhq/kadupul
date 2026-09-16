@@ -20,6 +20,7 @@
  */
 
 $root = dirname(__DIR__, 4);
+require_once $root . '/lib/rrd_maintenance.php';
 
 foreach (array('RRDTOOL_OUTPUT_STDOUT' => 1, 'RRDTOOL_OUTPUT_STDERR' => 2, 'RRDTOOL_OUTPUT_GRAPH_DATA' => 3, 'RRDTOOL_OUTPUT_BOOLEAN' => 4, 'RRDTOOL_OUTPUT_RETURN_STDERR' => 5, 'POLLER_VERBOSITY_NONE' => 1, 'POLLER_VERBOSITY_HIGH' => 4, 'POLLER_VERBOSITY_DEBUG' => 5) as $name => $value) {
 	if (!defined($name)) {
@@ -291,7 +292,7 @@ test('creates queued on a closed pipe do not carry over to the next pipe', funct
 		->and($GLOBALS['boost_piped_create']['creates'])->toBe(2);
 });
 
-test('Boost forgets queued creates at both places it closes a pipe it opened', function () use ($root) {
+test('Boost forgets queued creates at every owned pipe close', function () use ($root) {
 	$source = file_get_contents($root . '/lib/boost.php');
 	$forget = "boost_rrdtool_pipe_creates('forget', \$rrdtool_pipe);";
 
@@ -299,10 +300,10 @@ test('Boost forgets queued creates at both places it closes a pipe it opened', f
 		$start = strpos($source, 'function ' . $name . '(');
 		$body  = substr($source, $start, strpos($source, "\nfunction ", $start + 1) - $start);
 
-		expect(preg_match('/' . preg_quote($forget, '/') . '\s*rrd_close\(\$rrdtool_pipe\);/', $body))->toBe(1, $name);
+		expect(preg_match_all('/' . preg_quote($forget, '/') . '\s*rrd_close\(\$rrdtool_pipe\);/', $body))->toBe(substr_count($body, 'rrd_close($rrdtool_pipe);'), $name)
+			->and(substr_count($body, 'rrd_close($rrdtool_pipe);'))->toBeGreaterThan(0);
 	}
 
-	expect(substr_count($source, $forget))->toBe(2);
 });
 
 test('a create that Boost refused still fails on the pipe', function () {
