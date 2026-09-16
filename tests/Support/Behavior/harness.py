@@ -634,26 +634,30 @@ class Harness:
                 base_image = self.base_image_digest()
             except (OSError, RuntimeError, subprocess.TimeoutExpired) as probe_error:
                 error = 'Cannot record runtime provenance: ' + str(probe_error)
+        missing = set()
         if error is None:
             try:
                 self.selected()
                 target_root = ROOT / 'tests/Golden' / self.args.target
                 orphans = set()
                 missing = set()
-                for golden_root in target_root.glob('php-*'):
+                current_root = target_root / ('php-' + runtime)
+                runtime_roots = set(target_root.glob('php-*')) | {current_root}
+                for golden_root in runtime_roots:
                     recorded = {str(path.relative_to(golden_root))[:-5] for path in golden_root.rglob('*.json')}
                     orphans.update(golden_root.name + '/' + name for name in recorded - set(self.observed))
                     missing.update(golden_root.name + '/' + name for name in set(self.observed) - recorded)
                 if orphans:
                     raise RuntimeError('Goldens have no observations: ' + ', '.join(sorted(orphans)))
-                if missing and not (self.args.update_golden and getattr(self.args, 'bootstrap_goldens', False)):
+                initial_capture = self.args.update_golden and not any(target_root.glob('php-*'))
+                if missing and not (initial_capture or (self.args.update_golden and getattr(self.args, 'bootstrap_goldens', False))):
                     raise RuntimeError('Runtime goldens are missing observations: ' + ', '.join(sorted(missing)))
             except RuntimeError as selection_error:
                 error = str(selection_error)
         manifest = {'format': 1, 'target': self.args.target, 'revision': run(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'])['stdout'].strip(),
                     'php': runtime, 'schema_sha256': hashlib.sha256((ROOT / 'cacti.sql').read_bytes()).hexdigest(),
                     'base_image': base_image,
-                    'complete': error is None, 'error': error, 'scenarios': self.observed}
+                    'complete': error is None and not missing, 'error': error, 'scenarios': self.observed}
         write_json(self.destination / 'observations.json', manifest)
         if error:
             return 2
@@ -671,6 +675,14 @@ class Harness:
                 failures.append(name + ': REGRESSION')
                 (self.destination / (name.replace('/', '--') + '.diff')).write_text(''.join(difflib.unified_diff(
                     path.read_text().splitlines(True), (json.dumps(value, indent=2, ensure_ascii=False) + '\n').splitlines(True), fromfile='golden', tofile='observed')))
+        # Capture permission does not certify the other runtime inventories.
+        missing_after = set()
+        for runtime_root in runtime_roots:
+            recorded = {str(path.relative_to(runtime_root))[:-5] for path in runtime_root.rglob('*.json')}
+            missing_after.update(runtime_root.name + '/' + name for name in set(self.observed) - recorded)
+        manifest['complete'] = not missing_after
+        manifest['inventory_missing'] = sorted(missing_after)
+        write_json(self.destination / 'observations.json', manifest)
         # The pre-recording inventory validation above owns orphan detection.
 
         if skipped:

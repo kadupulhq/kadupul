@@ -174,6 +174,11 @@ def recording_guards():
                 assert {str(p): p.read_bytes() for p in golden.parent.rglob('*.json')} == before, case
             else:
                 assert len(list(golden.rglob('*.json'))) == len(harness.EXPECTED_SCENARIOS)
+        recorder.args = types.SimpleNamespace(target='absent-runtime', only=None, update_golden=False)
+        recorder.destination = root / 'results/absent-runtime'
+        with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', return_value={'stdout': 'revision'}):
+            assert recorder.finish() == 2
+            assert json.loads((recorder.destination / 'observations.json').read_text())['complete'] is False
         recorder.args = types.SimpleNamespace(target='bootstrap', only=None, update_golden=True, bootstrap_goldens=True)
         recorder.destination = root / 'results/bootstrap'
         target = root / 'tests/Golden/bootstrap'
@@ -184,6 +189,7 @@ def recording_guards():
         recorder.command = lambda *a, **kw: {'stdout': '8.2', 'stderr': '', 'exit': 0}
         with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', return_value={'stdout': 'revision'}):
             assert recorder.finish() == 0
+            assert json.loads((recorder.destination / 'observations.json').read_text())['complete'] is False
             assert (target / 'php-8.2' / (names[-1] + '.json')).exists()
             assert not (target / 'php-8.3' / (names[-1] + '.json')).exists()
             recorder.args.update_golden = False
@@ -193,6 +199,7 @@ def recording_guards():
             assert recorder.finish() == 0
             recorder.args.update_golden = False
             assert recorder.finish() == 0
+            assert json.loads((recorder.destination / 'observations.json').read_text())['complete'] is True
             recorder.args.update_golden = True
             (target / 'php-8.2/removed.json').write_text('42')
             before = {str(p): p.read_bytes() for p in target.rglob('*.json')}

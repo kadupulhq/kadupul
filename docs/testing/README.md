@@ -146,7 +146,9 @@ suite meaningful.
    Repeat capture for every existing PHP runtime using its corresponding
    container configuration. Bootstrap permits missing entries during capture
    and writes only the current runtime; it still rejects orphaned scenarios.
-   Normal verification fails until every existing runtime inventory is complete.
+   A bootstrap manifest remains incomplete and cannot be compared until every
+   runtime inventory is complete. Normal verification also rejects an absent
+   current-runtime directory.
    Use `make test-update-golden` for updates to an already complete inventory.
    If a new file contains a value
    that varies between runs, normalize it in `normalize()` or stop recording
