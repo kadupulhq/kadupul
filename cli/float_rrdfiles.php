@@ -261,13 +261,14 @@ switch ($type) {
 			foreach($rrdfiles as $data) {
 				print '.';
 
-				/* Flush before the exclusive lease: Boost itself needs a shared lease. */
+				/* Flush Boost before locking: it needs a shared lease. The fetch values are
+                 * not a rewrite snapshot; float_rrdfile dumps afresh under the exclusive lease. */
 				$fetched = rrdtool_function_fetch($data['local_data_id'], time()-120, time());
 				if (empty($fetched)) {
 					throw new RuntimeException('Unable to fetch RRD data before floating.');
 				}
 
-				$rrd_rewrite_lock = rrd_maintenance_acquire(true, true, 5);
+				$rrd_rewrite_lock = rrd_maintenance_acquire_paths(array($data['rrd_path']), 5);
 				if ($rrd_rewrite_lock === false) {
 					fwrite(STDERR, "FATAL: RRD storage is busy or its maintenance lock is unavailable.\n");
 					$exit_status = 1;
@@ -319,22 +320,20 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 	global $seebug;
 
 	static $rrdtool_bin = false;
-	static $tmp_dir     = false;
 
 	if ($rrdtool_bin === false) {
 		$rrdtool_bin = read_config_option('path_rrdtool');
 	}
 
-	if ($tmp_dir === false) {
-		$tmp_dir = sys_get_temp_dir();
-	}
+	$tmp_dir = rrd_maintenance_workspace();
+	if ($tmp_dir === false) { return false; }
 
 	$delta_time = $end_time - $start_time;
 	$tmp_file   = $tmp_dir . '/' . $local_data_id . '.xml';
 
 	$return     = 0;
 	$output     = array();
-	$command    = "$rrdtool_bin dump $rrd_path";
+	$command    = cacti_escapeshellarg($rrdtool_bin) . ' dump ' . cacti_escapeshellarg($rrd_path);
 	$db_prefix  = '                       ';
 
 	if (file_exists($rrd_path)) {
@@ -346,10 +345,10 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 				return false;
 			}
 
-			$fp = fopen($tmp_file, 'w');
+			$fp = fopen($tmp_file, 'x');
 
 			if ($seebug) {
-				$lf = fopen('/tmp/clearer.log', 'a');
+				$lf = fopen($tmp_dir . '/clearer.log', 'x');
 			}
 
 			if (is_resource($fp)) {
@@ -441,6 +440,7 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 				}
 
 				fclose($fp);
+                if (isset($lf) && is_resource($lf)) { fclose($lf); }
 
                 if (rrd_maintenance_restore_command($rrdtool_bin, $tmp_file, $rrd_path)) {
                     cacti_log(sprintf('NOTE: Range floated for RRDfile %s', $rrd_path), false, 'RFLOAT');

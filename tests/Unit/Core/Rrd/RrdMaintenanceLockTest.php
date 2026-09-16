@@ -1147,7 +1147,7 @@ test('destructive commands cannot use a shared writer lease', function ($verb, $
     } finally {
         rrd_maintenance_release($lease);
     }
-})->with(array('tune','resize','restore'))->with(array(false,true));
+})->with(array('tune','resize','restore','unlink','archive'))->with(array(false,true));
 
 test('Windows acknowledgement sentinel uses synchronous responses and refuses exclusive rewrites', function () {
     $root = dirname(__DIR__, 4);
@@ -1169,7 +1169,7 @@ test('Windows acknowledgement sentinel uses synchronous responses and refuses ex
         '$create=rrdtool_execute(array("create",$file,"--start","1700000000","--step","60","DS:value:GAUGE:120:U:U","RRA:AVERAGE:0.5:1:10"),false,RRDTOOL_OUTPUT_BOOLEAN,$pipe);' .
         '$update=rrdtool_execute(array("update",$file,"1700000060:42"),false,RRDTOOL_OUTPUT_BOOLEAN,$pipe);' .
         '$bad=rrdtool_execute(array("update",$file,"invalid"),false,RRDTOOL_OUTPUT_BOOLEAN,$pipe);' .
-        '$exclusive=rrd_init(false,true,true);rrd_close($pipe);echo json_encode(array($pipe,$create,$update,$bad,$exclusive));';
+        '$reason=rrdtool_last_rejection();$exclusive=rrd_init(false,true,true);rrd_close($pipe);echo json_encode(array($pipe,$create,$update,$bad,$exclusive,is_string($reason)&&$reason!==""));';
     file_put_contents($this->dir . '/win.php', $bootstrap);
     $process = proc_open(array(PHP_BINARY,'-d','pcov.directory=' . $root,'-d','pcov.exclude=~/(include/vendor|tests)/~',$this->dir . '/win.php'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);
     $out = stream_get_contents($pipes[1]);
@@ -1177,7 +1177,7 @@ test('Windows acknowledgement sentinel uses synchronous responses and refuses ex
     fclose($pipes[1]);
     fclose($pipes[2]);
     expect(proc_close($process))->toBe(0)->and($error)->toBe('')
-        ->and(json_decode($out, true))->toBe(array(true,true,true,false,false));
+        ->and(json_decode($out, true))->toBe(array(true,true,true,false,false,true));
 });
 
 test('legacy Boost retries filter a committed timestamp after draining pending writes', function () {
@@ -1237,3 +1237,76 @@ test('proxy restores retain their existing remote protocol and propagate failure
     expect(proc_close($process))->toBe(0)->and($error)->toBe('')->and(json_decode($out, true))->toBe($acknowledged)
         ->and(file_get_contents($this->dir . '/command'))->toBe("restore -f 'recovery.xml' 'remote.rrd'");
 })->with(array(true,false));
+
+test('custom RRD paths coordinate with writers using an ancestor storage root', function () {
+    $external = sys_get_temp_dir() . '/rrd-external-' . bin2hex(random_bytes(8));
+    mkdir($external, 0700);
+    mkdir($external . '/nested', 0700);
+    $original = $GLOBALS['config'];
+    $writer = null;
+    $leases = false;
+    try {
+        $GLOBALS['config']['rra_path'] = $external;
+        $writer = rrd_maintenance_acquire(false);
+        $GLOBALS['config'] = $original;
+        expect(rrd_maintenance_acquire_paths(array($external . '/nested/custom.rrd')))->toBeFalse()
+            ->and($GLOBALS['config'])->toBe($original);
+        rrd_maintenance_release($writer);
+        $leases = rrd_maintenance_acquire_paths(array($external . '/nested/custom.rrd', $external . '/nested/custom.rrd'));
+        expect(is_array($leases))->toBeTrue()->and(count($leases))->toBeGreaterThan(1)
+            ->and(rrd_maintenance_acquire(false, false, 0))->toBeFalse()
+            ->and($GLOBALS['config'])->toBe($original);
+        $GLOBALS['config']['rra_path'] = $external;
+        expect(rrd_maintenance_acquire(false, false, 0))->toBeFalse();
+    } finally {
+        rrd_maintenance_release($writer);
+        rrd_maintenance_release($leases);
+        $GLOBALS['config'] = $original;
+        rmdir($external . '/nested');
+        rmdir($external);
+    }
+    $writer = rrd_maintenance_acquire(false, false, 0);
+    expect(is_resource($writer))->toBeTrue();
+    rrd_maintenance_release($writer);
+});
+
+test('path coordination rejects missing untrusted and unsupported storage', function () {
+    $original = $GLOBALS['config'];
+    expect(rrd_maintenance_acquire_paths(array($this->dir . '/missing/file.rrd')))->toBeFalse();
+    expect(rrd_maintenance_acquire_paths(array($this->dir . "/bad\nfile.rrd")))->toBeFalse();
+    chmod($this->dir, 0777);
+    expect(rrd_maintenance_acquire_paths(array($this->dir . '/file.rrd')))->toBeFalse();
+    chmod($this->dir, 0700);
+    $GLOBALS['config']['cacti_server_os'] = 'win32';
+    expect(rrd_maintenance_acquire_paths(array($this->dir . '/file.rrd')))->toBeFalse();
+    $GLOBALS['config'] = $original;
+});
+
+test('path coordination restores an implicit RRA configuration', function () {
+    mkdir($this->dir . '/rra', 0700);
+    $GLOBALS['config'] = array('cacti_server_os' => 'unix', 'base_path' => $this->dir);
+    try {
+        $leases = rrd_maintenance_acquire_paths(array($this->dir . '/rra/new.rrd'));
+        expect(is_array($leases))->toBeTrue()->and(isset($GLOBALS['config']['rra_path']))->toBeFalse();
+        rrd_maintenance_release($leases);
+    } finally {
+        rmdir($this->dir . '/rra');
+    }
+});
+
+test('rewrite workspaces are unpredictable private directories with isolated XML names', function () {
+    $one = rrd_maintenance_workspace();
+    $two = rrd_maintenance_workspace();
+    expect(is_string($one))->toBeTrue()->and(is_string($two))->toBeTrue();
+    try {
+        expect($one)->not->toBe($two)->and(fileperms($one) & 0777)->toBe(0700);
+        file_put_contents($one . '/1.xml', 'first');
+        file_put_contents($two . '/1.xml', 'second');
+        expect(file_get_contents($one . '/1.xml'))->toBe('first');
+    } finally {
+        unlink($one . '/1.xml');
+        unlink($two . '/1.xml');
+        rmdir($one);
+        rmdir($two);
+    }
+});

@@ -80,8 +80,9 @@ if (!$force) {
 	}
 }
 
+$purge_failed = false;
 if ($config['poller_id'] == 1) {
-	rrdfile_purge($force);
+	$purge_failed = rrdfile_purge($force) === false;
 
 	authcache_purge();
 
@@ -114,7 +115,7 @@ if (!$force) {
 	unregister_process('maintenance', 'master', $config['poller_id']);
 }
 
-exit(0);
+exit($purge_failed ? 1 : 0);
 
 function reindex_devices() {
 	global $config;
@@ -257,7 +258,7 @@ function rrdfile_purge($force) {
 
 			if (cacti_sizeof($file_array) || $force) {
 				/* there's something to do for us now */
-				remove_files($file_array);
+				if (remove_files($file_array) === false) { return false; }
 
 				if ($force) {
 					cleanup_ds_and_graphs();
@@ -531,7 +532,8 @@ function remove_files($file_array) {
 	}
 
 	if (read_config_option('storage_location')) {
-		$rrdtool_pipe = rrd_init();
+		$rrdtool_pipe = rrd_init(true, true, true);
+		if ($rrdtool_pipe === false) { return false; }
 
 		rrdtool_execute('setcnn timeout off', false, RRDTOOL_OUTPUT_NULL, $rrdtool_pipe, $logopt = 'POLLER');
 	} else {
@@ -546,6 +548,7 @@ function remove_files($file_array) {
 		rrdclean_create_path($rrd_archive);
 	}
 
+	try {
 	/* now scan the files */
 	foreach ($file_array as $file) {
 		/* the variables shouldn't be here, but I'm keeping them just in case */
@@ -558,7 +561,13 @@ function remove_files($file_array) {
 		$base_file = str_replace('<path_rra>', '', $file['name']);
 		$base_file = str_replace('<path_cacti>', '', $base_file);
 
-		if (read_config_option('storage_location') == 0) {
+		if (!read_config_option('storage_location')) {
+            $lease = rrd_maintenance_acquire_paths(array($real_file, $rrd_archive . '/.archive-root'));
+            if ($lease === false) {
+                cacti_log('WARNING: RRDfile maintenance deferred; purge queue retained.', true, 'MAINT');
+                return false;
+            }
+            try {
 			switch ($file['action']) {
 				case '1' :
 					if (file_exists($real_file) && strtolower(pathinfo($real_file, PATHINFO_EXTENSION)) === 'rrd') {
@@ -567,6 +576,7 @@ function remove_files($file_array) {
 							$purged++;
 						} else {
 							cacti_log("WARNING: RRDfile Maintenance is unable to remove $real_file from $rra_path!", true, 'MAINT');
+                            return false;
 						}
 					}
 
@@ -585,11 +595,13 @@ function remove_files($file_array) {
 							$archived++;
 						} else {
 							cacti_log("WARNING: RRDfile Maintenance is unable to move $real_file to $target_file!", true, 'MAINT');
+                            return false;
 						}
 					}
 
 					break;
 			}
+            } finally { rrd_maintenance_release($lease); }
 		} else {
 			switch($file['action']) {
 				case '1':
@@ -597,6 +609,7 @@ function remove_files($file_array) {
 						maint_debug('Deleted: ' . $file['name']);
 					} else {
 						cacti_log("WARNING RRDfile Maintenance is unable to remove {$file['name']} from the RRDproxy!", true, 'MAINT');
+                        return false;
 					}
 
 					$purged++;
@@ -607,6 +620,7 @@ function remove_files($file_array) {
 						maint_debug("Moved: {file['name']} to: RRDproxy Archive");
 					} else {
 						cacti_log("WARNING RRDfile Maintenance is unable to move {$file['name']} to the RRDproxy Archive!", true, 'MAINT');
+                        return false;
 					}
 
 					$archived++;
@@ -657,8 +671,8 @@ function remove_files($file_array) {
 		}
 	}
 
-	if (read_config_option('storage_location')) {
-		rrd_close($rrdtool_pipe);
+	} finally {
+		if (read_config_option('storage_location')) { rrd_close($rrdtool_pipe); }
 	}
 
 	maint_debug('RRDClean has finished a purge pass of ' . cacti_sizeof($file_array) . ' items');

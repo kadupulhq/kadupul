@@ -112,8 +112,87 @@ function rrd_maintenance_acquire($exclusive = false, $wait = false, $timeout = n
     return $handle;
 }
 
+/** Lock configured storage and every possible trusted root for custom RRD paths. */
+function rrd_maintenance_acquire_paths($files, $timeout = 0)
+{
+    global $config;
+    $had_path = array_key_exists('rra_path', $config);
+    $saved_path = $config['rra_path'] ?? null;
+    $original = $config['rra_path'] ?? (($config['base_path'] ?? '') . '/rra');
+    $base = realpath($original);
+    if ($base === false || !rrd_maintenance_directory_is_trusted($original)) {
+        return false;
+    }
+    $directories = array($base => true);
+    foreach ($files as $file) {
+        if (!is_string($file) || $file === '' || strpbrk($file, "\r\n\0") !== false) {
+            return false;
+        }
+        $parent = realpath(dirname($file));
+        if ($parent === false || !rrd_maintenance_directory_is_trusted(dirname($file))) {
+            return false;
+        }
+        if ($parent === $base || strpos($parent, $base . DIRECTORY_SEPARATOR) === 0) {
+            continue;
+        }
+        // A custom file's writer can configure any ancestor as its RRA root.
+        // Lock each trusted candidate, not just its immediate directory.
+        for ($directory = $parent; ; $directory = dirname($directory)) {
+            if (rrd_maintenance_directory_is_trusted($directory)) {
+                $directories[$directory] = true;
+            }
+            if (dirname($directory) === $directory) {
+                break;
+            }
+        }
+    }
+    ksort($directories, SORT_STRING);
+    $locks = array();
+    $deadline = microtime(true) + max(0, $timeout);
+    try {
+        foreach ($directories as $directory => $_) {
+            $config['rra_path'] = $directory;
+            $lock = rrd_maintenance_acquire(true, $timeout > 0, max(0, $deadline - microtime(true)));
+            if ($lock === false) {
+                rrd_maintenance_release($locks);
+                return false;
+            }
+            $locks[] = $lock;
+        }
+        return $locks;
+    } finally {
+        if ($had_path) {
+            $config['rra_path'] = $saved_path;
+        } else {
+            unset($config['rra_path']);
+        }
+    }
+}
+
+/** Private workspaces prevent shared-temp symlink substitution throughout a rewrite. */
+function rrd_maintenance_workspace()
+{
+    $directory = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) . '/kadupul-rrd-' . bin2hex(random_bytes(16));
+    if (!@mkdir($directory, 0700)) {
+        return false;
+    }
+    if (!rrd_maintenance_directory_is_trusted($directory)) {
+        @rmdir($directory);
+        return false;
+    }
+    register_shutdown_function(function () use ($directory) {
+        @rmdir($directory);
+    });
+    return $directory;
+}
+
 function rrd_maintenance_release($handle)
 {
+    if (is_array($handle)) {
+        foreach (array_reverse($handle) as $lock) {
+            rrd_maintenance_release($lock);
+        } return;
+    }
     if (is_resource($handle)) {
         flock($handle, LOCK_UN);
         fclose($handle);
@@ -296,11 +375,11 @@ function rrd_maintenance_restore_command($binary, $xml_file, $rrd_file, $range_c
         }
         $args[] = $xml_file;
         $args[] = $temporary;
-        exec(implode(' ', array_map('escapeshellarg', $args)), $output, $status);
+        exec(implode(' ', array_map('cacti_escapeshellarg', $args)), $output, $status);
         if ($status !== 0) {
             return false;
         }
-        exec(escapeshellarg($binary) . ' info ' . escapeshellarg($temporary), $info, $status);
+        exec(cacti_escapeshellarg($binary) . ' info ' . cacti_escapeshellarg($temporary), $info, $status);
         return $status === 0 && count($info) > 0;
     });
 }
