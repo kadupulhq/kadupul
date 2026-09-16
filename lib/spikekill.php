@@ -514,6 +514,13 @@ class spikekill {
 			$output[] = $line;
 		}
 
+		if (trim(implode('', $output)) === '') {
+			fclose($xmlfile_handle);
+			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
+			$this->set_error(__("FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"));
+			return false;
+		}
+
 		/* backup the rrdfile if requested */
 		if ($this->backup && !$this->dryrun) {
 			/* re-check the source identity initialize_spikekill() captured:
@@ -863,7 +870,7 @@ class spikekill {
 		fclose($xmlfile_handle);
 		$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
 
-		$this->unlinkOwnedFile($bakfile, $bakfile_stat);
+		/* A requested backup is a recovery artifact, not a temporary file. */
 
 		return $restored;
 	}
@@ -912,7 +919,7 @@ class spikekill {
 		$response = trim($result['stdout'] . $result['stderr']);
 
 		if ($response != '') {
-			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . $response . ($this->html ? "</p>\n":"\n");
+			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . ($this->html ? htmlspecialchars($response, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') : $response) . ($this->html ? "</p>\n":"\n");
 		}
 
 		return $result['exit'] === 0;
@@ -1025,6 +1032,7 @@ class spikekill {
 			return false;
 		}
 
+		$canonical_dir = $this->canonicalDir($dir);
 		if ($configured_dir !== null) {
 			$canonical_dir = $this->canonicalDir($configured_dir);
 
@@ -1033,9 +1041,21 @@ class spikekill {
 			}
 		}
 
+		// Open through the resolved directory, never through a mutable configured alias.
+		$resolved_dir = $canonical_dir;
+		if ($resolved_dir === false) {
+			return false;
+		}
+		$identity_dir = $configured_dir ?? $dir;
+		$dir = $resolved_dir;
+		$desired_path = cacti_join_dir_child($dir, $basename, DIRECTORY_SEPARATOR);
+
 		if (is_link($desired_path) || file_exists($desired_path)) {
 			$handle = false;
 		} else {
+			if ($this->canonicalDir($identity_dir) !== $resolved_dir) {
+				return false;
+			}
 			$old_umask = umask(0177);
 			$handle    = @fopen($desired_path, 'xb');
 			umask($old_umask);
@@ -1049,8 +1069,11 @@ class spikekill {
 			   the umask with no separate by-name permission or reopen
 			   step afterward. */
 			for ($i = 0; $i < 10; $i++) {
-				$candidate = cacti_join_dir_child($dir, $basename . '.' . bin2hex(random_bytes(8)), DIRECTORY_SEPARATOR);
+				$candidate = cacti_join_dir_child($dir, $basename . '.' . $this->randomFileSuffix(), DIRECTORY_SEPARATOR);
 
+				if ($this->canonicalDir($identity_dir) !== $resolved_dir) {
+					return false;
+				}
 				$old_umask = umask(0177);
 				$handle    = @fopen($candidate, 'xb');
 				umask($old_umask);
@@ -1064,6 +1087,13 @@ class spikekill {
 			if ($handle === false) {
 				return false;
 			}
+		}
+
+		if ($this->canonicalDir($identity_dir) !== $resolved_dir) {
+			$created_stat = fstat($handle);
+			fclose($handle);
+			$this->unlinkOwnedFile($desired_path, $created_stat);
+			return false;
 		}
 
 		$source_handle = fopen($source, 'rb');
@@ -1113,6 +1143,11 @@ class spikekill {
 		return array('path' => $desired_path, 'stat' => $fstat);
 	}
 
+	/** Generate an unpredictable suffix for an exclusively created file. */
+	protected function randomFileSuffix() {
+		return bin2hex(random_bytes(8));
+	}
+
 	/**
 	 * createXmlFileExclusively - create an empty file with a random name in
 	 * $tempdir, exclusively and under a restrictive umask, for the RRDtool
@@ -1143,10 +1178,10 @@ class spikekill {
 		}
 
 		for ($i = 0; $i < 10; $i++) {
-			$candidate = cacti_join_dir_child($tempdir, 'spikekill.' . bin2hex(random_bytes(8)) . '.xml', DIRECTORY_SEPARATOR);
+			$candidate = cacti_join_dir_child($canonical_dir, 'spikekill.' . $this->randomFileSuffix() . '.xml', DIRECTORY_SEPARATOR);
 
 			clearstatcache(true);
-			if (is_link($tempdir) || realpath($tempdir) !== $canonical_dir) {
+			if ($this->canonicalDir($tempdir) !== $canonical_dir) {
 				return false;
 			}
 
@@ -1155,6 +1190,12 @@ class spikekill {
 			umask($old_umask);
 
 			if ($handle !== false) {
+				if ($this->canonicalDir($tempdir) !== $canonical_dir) {
+					$created_stat = fstat($handle);
+					fclose($handle);
+					$this->unlinkOwnedFile($candidate, $created_stat);
+					return false;
+				}
 				return array('path' => $candidate, 'handle' => $handle, 'stat' => fstat($handle));
 			}
 		}
@@ -1214,7 +1255,7 @@ class spikekill {
 			$read   = $capture_stdout ? array($pipes[1], $pipes[2]) : array($pipes[2]);
 			$write  = array();
 			$except = array();
-			stream_select($read, $write, $except, 0, $remaining);
+			stream_select($read, $write, $except, intdiv($remaining, 1000000), $remaining % 1000000);
 
 			usleep(50000);
 
@@ -1348,11 +1389,18 @@ class spikekill {
 	 * @return (string|false)
 	 */
 	private function canonicalDir($configured_dir) {
+		clearstatcache(true);
+		$path = realpath($configured_dir);
+		$stat = $path === false ? false : @stat($path);
+		if ($stat === false || ($stat['mode'] & 0170000) !== 0040000 || is_link($configured_dir)) {
+			return false;
+		}
+		$identity = array('path' => $path, 'dev' => $stat['dev'], 'ino' => $stat['ino']);
 		if (!array_key_exists($configured_dir, $this->canonical_dirs)) {
-			$this->canonical_dirs[$configured_dir] = realpath($configured_dir);
+			$this->canonical_dirs[$configured_dir] = $identity;
 		}
 
-		return $this->canonical_dirs[$configured_dir];
+		return $this->canonical_dirs[$configured_dir] === $identity ? $path : false;
 	}
 
 	/**
@@ -1591,21 +1639,29 @@ class spikekill {
 				foreach($rra as $rra_key => $dses) {
 					if (cacti_sizeof($dses)) {
 						foreach($dses as $dskey => $ds) {
+							/* Empty or sparse RRAs use nonnumeric sentinels. Preserve
+							 * missing statistics instead of rounding or formatting them as zero. */
+							foreach (array('average', 'stddev', 'variance_avg', 'max_value', 'min_value', 'max_cutoff', 'min_cutoff') as $field) {
+								if (empty($ds['numsamples']) || !isset($ds[$field]) || !is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
+									$ds[$field] = 'N/A';
+								}
+							}
 							$this->strout .= sprintf('%10s %16s %10s %7s %7s ' .
-								($ds['average']    < 1E6 ? '%10s ' : ' %10.2e ') .
-								($ds['stddev']     < 1E6 ? '%10s ' : ' %10.2e ') .
-								($ds['max_value']  < 1E6 ? '%10s ' : ' %10.2e ') .
-								($ds['min_value']  < 1E6 ? '%10s ' : ' %10.2e ') .
-								($ds['max_cutoff'] < 1E6 ? '%10s ' : ' %10.2e ') .
-								($ds['min_cutoff'] < 1E6 ? '%10s ' : ' %10.2e ') .
-								'%10s %10s %10s %12s %10s' . PHP_EOL,
+								(!is_numeric($ds['average']) || abs($ds['average']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								(!is_numeric($ds['stddev']) || abs($ds['stddev']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								(!is_numeric($ds['variance_avg']) || abs($ds['variance_avg']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								(!is_numeric($ds['max_value']) || abs($ds['max_value']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								(!is_numeric($ds['min_value']) || abs($ds['min_value']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								(!is_numeric($ds['max_cutoff']) || abs($ds['max_cutoff']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								(!is_numeric($ds['min_cutoff']) || abs($ds['min_cutoff']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								'%10s %10s %12s %10s' . PHP_EOL,
 								$this->displayTime($this->rra_pdp[$rra_key]),
 								$this->ds_name[$dskey],
 								$this->rra_cf[$rra_key],
 								number_format_i18n($ds['totalsamples']),
 								(isset($ds['numsamples']) ? number_format_i18n($ds['numsamples']) : '0'),
 								($ds['average']         != 'N/A' ? round($ds['average'], 2)       : 'N/A'),
-								($ds['stddev']          != 'N/A' ? round($ds['stddev'], 2)        : 'N/A')
+								($ds['stddev']          != 'N/A' ? round($ds['stddev'], 2)        : 'N/A'),
 								($ds['variance_avg']    != 'N/A' ? round($ds['variance_avg'], 2)  : 'N/A'),
 								($ds['max_value']       != 'N/A' ? round($ds['max_value'], 2)     : 'N/A'),
 								($ds['min_value']       != 'N/A' ? round($ds['min_value'], 2)     : 'N/A'),
@@ -1628,19 +1684,26 @@ class spikekill {
 				foreach($rra as $rra_key => $dses) {
 					if (cacti_sizeof($dses)) {
 						foreach($dses as $dskey => $ds) {
+							/* Empty or sparse RRAs use nonnumeric sentinels. Preserve
+							 * missing statistics instead of rounding or formatting them as zero. */
+							foreach (array('average', 'stddev', 'variance_avg', 'max_value', 'min_value', 'max_cutoff', 'min_cutoff') as $field) {
+								if (empty($ds['numsamples']) || !isset($ds[$field]) || !is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
+									$ds[$field] = 'N/A';
+								}
+							}
 							$this->strout .= sprintf('<tr>' .
 								'<td class="nowrap">%s</td>' .
 								'<td>%s</td>' .
 								'<td class="right">%s</td>' .
 								'<td class="right">%s</td>' .
 								'<td class="right">%s</td>' .
-								($ds['average']      < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
-								($ds['stddev']       < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
-								($ds['variance_avg'] < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
-								($ds['max_value']    < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
-								($ds['min_value']    < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
-								($ds['max_cutoff']   < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
-								($ds['min_cutoff']   < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['average']) || abs($ds['average']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['stddev']) || abs($ds['stddev']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['variance_avg']) || abs($ds['variance_avg']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['max_value']) || abs($ds['max_value']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['min_value']) || abs($ds['min_value']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['max_cutoff']) || abs($ds['max_cutoff']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['min_cutoff']) || abs($ds['min_cutoff']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
 								'<td class="right">%s</td>' .
 								'<td class="right">%s</td>' .
 								'<td class="right">%s</td>' .
@@ -1650,7 +1713,7 @@ class spikekill {
 								$this->ds_name[$dskey],
 								$this->rra_cf[$rra_key],
 								($ds['totalsamples']    != 'N/A' ? number_format_i18n($ds['totalsamples']) : '0'),
-								($ds['numsamples']      != 'N/A' ? number_format_i18n($ds['numsamples'])   : '0'),
+								(isset($ds['numsamples']) && $ds['numsamples'] != 'N/A' ? number_format_i18n($ds['numsamples']) : '0'),
 								($ds['average']         != 'N/A' ? round($ds['average'], 2)       : __('N/A')),
 								($ds['stddev']          != 'N/A' ? round($ds['stddev'], 2)        : __('N/A')),
 								($ds['variance_avg']    != 'N/A' ? round($ds['variance_avg'], 2)  : __('N/A')),

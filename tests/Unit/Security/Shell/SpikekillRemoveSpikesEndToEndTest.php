@@ -451,3 +451,52 @@ test('remove_spikes refuses a requested backup when the RRD source is swapped du
 	/* afterEach() globs and unlinks everything left under rrd_dir (the
 	   symlink the stub planted) and dir (evil_target, the swap stub) */
 });
+
+if (!function_exists('number_format_i18n')) {
+    function number_format_i18n($value, $decimals = 0) { return number_format($value, $decimals); }
+}
+
+test('requested snapshots survive successful processing while dry runs leave no files', function ($dryrun, $html) {
+    $instance = spikekill_e2e_instance($this->rrdfile);
+    $instance->backup = true;
+    $instance->dryrun = $dryrun;
+    $instance->html = $html;
+    expect($instance->remove_spikes())->toBeTrue();
+    $snapshots = glob($this->backup_dir . '/source.backup.*.rrd');
+    expect($snapshots)->toHaveCount($dryrun ? 0 : 1)
+        ->and(glob($this->backup_dir . '/*.xml'))->toBe(array());
+    if (!$dryrun) {
+        expect(file_get_contents($snapshots[0]))->toBe('original-rrd-bytes');
+    } else {
+        expect(glob($this->backup_dir . '/*'))->toBe(array());
+    }
+})->with(array(array(false, false), array(false, true), array(true, false), array(true, true)));
+
+test('failed and empty dumps stop processing and remove transient XML files', function ($exit) {
+    file_put_contents($this->rrdtool_stub, "#!/bin/sh\nexit " . $exit . "\n");
+    $instance = spikekill_e2e_instance($this->rrdfile);
+    expect($instance->remove_spikes())->toBeFalse()
+        ->and(file_get_contents($this->rrdfile))->toBe('original-rrd-bytes')
+        ->and(glob($this->backup_dir . '/*'))->toBe(array())
+        ->and($instance->get_errors())->not->toBe('');
+})->with(array(0, 1));
+
+test('whitespace-only dumps fail before backup or restore', function () {
+    file_put_contents($this->dump_fixture, " \n\t\n");
+    $instance = spikekill_e2e_instance($this->rrdfile);
+    $instance->backup = true;
+    expect($instance->remove_spikes())->toBeFalse()
+        ->and(file_get_contents($this->rrdfile))->toBe('original-rrd-bytes')
+        ->and(glob($this->backup_dir . '/*'))->toBe(array());
+});
+
+test('restore diagnostics are escaped only in HTML output', function ($html) {
+    $diagnostic = '<img src=x onerror=alert(1)> & "failure"';
+    file_put_contents($this->rrdtool_stub, str_replace('stub restore failed', $diagnostic, file_get_contents($this->rrdtool_stub)));
+    putenv('RESTORE_STUB_EXIT=1');
+    $instance = spikekill_e2e_instance($this->rrdfile);
+    $instance->html = $html;
+    expect($instance->remove_spikes())->toBeFalse()
+        ->and($instance->get_output())->toContain($html ? htmlspecialchars($diagnostic, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') : $diagnostic);
+    if ($html) { expect($instance->get_output())->not->toContain('<img'); }
+})->with(array(false, true));
