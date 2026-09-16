@@ -106,6 +106,12 @@ jobs:
       - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3
         with:
           install_args: python@3.12.12
+      - name: Install PHP for native process-boundary self-tests
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: '8.2'
+          extensions: posix
+          coverage: none
       - name: Verify observation normalization and failure reporting
         run: mise exec python@3.12.12 -- python tests/Support/Behavior/selftest.py
       # This exercises runtime invariants without claiming parity with upstream.

@@ -185,14 +185,19 @@ def diagnostic_contracts():
 
     for size in (108, 4356):
         broken = f'09/16/2026 01:02:06 - ERROR PHP NOTICE: fwrite(): Write of {size} bytes failed with errno=32 Broken pipe in file: /var/www/html/lib/rrd.php on line: 334'
-        assert harness.application_diagnostics(broken) == [{'subsystem': 'ERROR', 'message': 'PHP NOTICE: fwrite(): Write of <BYTES> bytes failed with errno=32 Broken pipe in file: <APP>/lib/rrd.php on line: 334'}]
+        assert harness.application_diagnostics(broken) == [{'subsystem': 'ERROR', 'message': 'PHP NOTICE: fwrite(): Write of <BYTES> bytes failed with errno=32 Broken pipe in file: <APP>/lib/rrd.php on line: <LINE>'}]
         native = broken.replace('PHP NOTICE: fwrite', 'PHP Notice:  fwrite')
         assert 'Write of <BYTES> bytes failed with errno=32' in harness.normalize(native)
         command = harness.normalize({'stdout': broken, 'stderr': broken})
         assert 'Write of <BYTES> bytes failed with errno=32' in command['stdout']
         assert command['stdout'] == command['stderr']
-        assert command['stdout'].endswith('on line: 334')
+        assert command['stdout'].endswith('on line: <LINE>')
         assert 'errno=13 Permission denied' in harness.normalize_failed_write_size(broken.replace('errno=32 Broken pipe', 'errno=13 Permission denied'))
+    trace = '09/16/2026 01:02:06 - CMDPHP PHP ERROR Backtrace: (/var/www/html/lib/rrd.php[334]:update(), DS[12])'
+    assert harness.application_diagnostics(trace) == harness.application_diagnostics(trace.replace('[334]', '[900]'))
+    assert 'DS[12]' in harness.application_diagnostics(trace)[0]['message']
+    assert harness.application_diagnostics(broken) == harness.application_diagnostics(broken.replace('line: 334', 'line: 900'))
+    assert harness.normalize('ordinary DS[12] on line: 334') == 'ordinary DS[12] on line: 334'
     unrelated = '09/16/2026 01:02:06 - ERROR PHP WARNING: payload has 108 bytes'
     assert harness.application_diagnostics(unrelated)[0]['message'].endswith('108 bytes')
 
@@ -216,6 +221,15 @@ def diagnostic_contracts():
         else:
             assert expected_failure is None, after
             assert len(captured.observed['diagnostics/application-log']) == 2
+    captured = object.__new__(harness.Harness)
+    captured.command = lambda *args, **kwargs: {'stdout': ''}
+    captured.php = lambda *args: {'exit': 7, 'stderr': 'fixture failure'}
+    try:
+        captured.capture_application_diagnostics()
+    except RuntimeError as error:
+        assert 'Application handler calibration failed' in str(error)
+    else:
+        raise AssertionError('failed calibration must reject the recording')
     print('diagnostic scopes preserve severity, content, order and duplicate records')
 
 
@@ -227,6 +241,7 @@ def poller_acknowledgement_contract():
     before = contract(acknowledgement * 2 + other)
     after = contract(acknowledgement + other + acknowledgement)
     assert before == after
+    assert contract(acknowledgement.replace('\n', '\r\n') + other)['rrd_acknowledgements'] == 1
     assert before == {'exit': 7, 'stdout': other, 'stderr': 'error\n', 'rrd_acknowledgements': 2}
     assert contract(acknowledgement + other) != before
     assert contract('OK u:broken s:0.02 r:0.03\n' + other)['rrd_acknowledgements'] == 0

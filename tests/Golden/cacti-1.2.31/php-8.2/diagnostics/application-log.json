@@ -5,7 +5,7 @@
   },
   {
     "subsystem": "CMDPHP",
-    "message": "PHP ERROR Backtrace:  (<HARNESS>/probe.php[31]:sanitize_search_string(), /lib/functions.php[4479]:preg_replace(), {closure}(), <HARNESS>/errors.php[51]:CactiErrorHandler())"
+    "message": "PHP ERROR Backtrace:  (<HARNESS>/probe.php[<LINE>]:sanitize_search_string(), /lib/functions.php[4479]:preg_replace(), {closure}(), <HARNESS>/errors.php[<LINE>]:CactiErrorHandler())"
   },
   {
     "subsystem": "ERROR",
@@ -13,11 +13,11 @@
   },
   {
     "subsystem": "CMDPHP",
-    "message": "PHP ERROR WARNING Backtrace:  (<HARNESS>/probe.php[79]:trigger_error(), {closure}(), <HARNESS>/errors.php[51]:CactiErrorHandler())"
+    "message": "PHP ERROR WARNING Backtrace:  (<HARNESS>/probe.php[<LINE>]:trigger_error(), {closure}(), <HARNESS>/errors.php[<LINE>]:CactiErrorHandler())"
   },
   {
     "subsystem": "ERROR",
-    "message": "PHP NOTICE: fwrite(): Write of <BYTES> bytes failed with errno=32 Broken pipe in file: <APP>/lib/rrd.php  on line: 334"
+    "message": "PHP NOTICE: fwrite(): Write of <BYTES> bytes failed with errno=32 Broken pipe in file: <APP>/lib/rrd.php  on line: <LINE>"
   },
   {
     "subsystem": "CMDPHP",

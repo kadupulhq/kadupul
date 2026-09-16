@@ -6,14 +6,16 @@ follows [Semantic Versioning](VERSIONING.md).
 
 ## [Unreleased]
 
-- Require complete behavioral scenario inventories and capture application-handler PHP diagnostics separately from prepend-recorder events.
-
 Targeting `v1.3.0`, the first planned application release. See
 [VERSIONING.md](VERSIONING.md).
 
-### Fixed
+### Changed
+
+- Require complete behavioral scenario inventories and capture application-handler PHP diagnostics separately from prepend-recorder events.
 
 - Preserve reproducible behavioral baseline references and count RRDtool acknowledgements in the missing-file fault scenario.
+
+### Fixed
 
 - Preserve pending realtime and repair samples on writer, child-process, heartbeat, and database-count failures; support explicitly trusted separate RRD service accounts.
 
