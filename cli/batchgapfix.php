@@ -319,6 +319,12 @@ if ($child == 0) {
 			FROM graph_local_spikekill
 			WHERE ended = "0000-00-00"');
 
+		if ($not_finished > 0) {
+			// A worker that died cannot stamp its own rows, so reconcile them
+			// here or this loop waits on a count that can never reach zero.
+			batchgapfix_reap_dead_children();
+		}
+
 		$end = microtime(true);
 
 		$rate = ($rrdfiles - $not_finished) / ($end - $start);
@@ -444,6 +450,35 @@ function sig_handler($signo) {
 			break;
 		default:
 			/* ignore all other signals */
+	}
+}
+
+/** batchgapfix_reap_dead_children - closes out the queue rows of any child that
+ * exited without recording its own results, so the master stops waiting on it.
+ * @return - null */
+function batchgapfix_reap_dead_children() {
+	$children = db_fetch_assoc_prepared('SELECT *
+		FROM processes
+		WHERE tasktype = ?
+		AND taskname = ?',
+		array('batchgapfix', 'child'));
+
+	foreach($children as $c) {
+		if (cacti_process_still_running($c['pid'])) {
+			continue;
+		}
+
+		/* exit_code 1 is what a failing child would have written itself, so the
+		 * $failed tally below the wait loop counts these and retains the queue */
+		db_execute_prepared('UPDATE graph_local_spikekill
+			SET ended = NOW(), exit_code = 1
+			WHERE child = ?
+			AND ended = "0000-00-00"',
+			array($c['taskid']));
+
+		cacti_log(sprintf('WARNING: BATCHFIX child %s with PID %s exited without recording its results.  Its unfinished RRDfiles were marked failed.', $c['taskid'], cacti_process_pid_for_log($c['pid'])), false, 'SYSTEM');
+
+		unregister_process($c['tasktype'], $c['taskname'], $c['taskid'], $c['pid']);
 	}
 }
 

@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Close out the queue rows of a batchgapfix.php child that exited without recording its own results, instead of leaving the master waiting on a count that can never reach zero
 -issue: Unregister an interrupted float_rrdfiles.php child under its own type and thread id and release its RRD maintenance lock, instead of leaving the master waiting on a process that is already gone
 -issue: Coordinate spike removal with live and queued RRD writers to preserve new samples
 -issue: Run every LTS unit test in CI with isolated processes and verified result reports
