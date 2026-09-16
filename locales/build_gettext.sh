@@ -26,8 +26,7 @@ set -eu
 SCRIPT_NAME=`basename ${0}`
 
 # locate base directory of Cacti
-REALPATH_BIN=`which realpath 2>/dev/null`
-if [ $? -gt 0 ]
+if ! REALPATH_BIN=`command -v realpath`
 then
 	echo "ERROR: unable to locate realpath"
 	echo
@@ -39,8 +38,7 @@ fi
 BASE_PATH=`${REALPATH_BIN} ${0} | sed s#/locales/${SCRIPT_NAME}##`
 
 # locate xgettext for processing
-XGETTEXT_BIN=`which xgettext 2>/dev/null`
-if [ $? -gt 0 ]
+if ! XGETTEXT_BIN=`command -v xgettext`
 then
 	echo "ERROR: Unable to locate xgettext"
 	echo
