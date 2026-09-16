@@ -19,6 +19,10 @@ import urllib.error
 
 ROOT = Path(__file__).resolve().parents[3]
 
+# Explicit inventory: removing a capture must never shrink a recording silently.
+EXPECTED_SCENARIOS = frozenset(['api/ajax-hosts', 'api/datasource-invalid', 'api/php-errors', 'api/type-coercion', 'api/warning-calibration', 'auth/login-admin', 'auth/login-invalid', 'auth/missing-csrf', 'cli/device-help', 'cli/device-missing', 'database/fresh-schema', 'devices/create', 'devices/delete', 'diagnostics/application-log', 'diagnostics/visible-php-errors', 'faults/database-unreachable', 'faults/missing-rrd-file', 'graphs/create', 'graphs/datasource-create', 'graphs/definition', 'plugins/callbacks', 'plugins/disable', 'plugins/enable', 'plugins/hook', 'plugins/hook-disabled', 'plugins/install', 'plugins/poller-hooks', 'plugins/uninstall', 'poller/device-unreachable', 'poller/rrd-failure', 'poller/run-reachable', 'snmp/get', 'ui/devices', 'upgrade/install'])
+
+
 
 def run(args, *, data=None, check=True, timeout=180):
     p = subprocess.run(args, input=data, text=True, capture_output=True, timeout=timeout)
@@ -77,6 +81,25 @@ def normalize(value):
         value = INSTALL_TIMESTAMPS.sub(r'\g<1><TIMESTAMP>\g<2><TIMESTAMP>', value)
         return CLOCK.sub('[<TIME>]', value)
     return value
+
+def visible_diagnostics(events):
+    """Observed diagnostics enabled by both shipped and current reporting policy."""
+    return [event for event in events if event['severity'] == 'FATAL'
+            or (event.get('suppressed') is False and event.get('suppressed_here') is False)]
+
+
+def application_diagnostics(contents):
+    """Keep application-handler PHP records in log order; strip only log time."""
+    records = []
+    timestamp = re.compile(r'^(?:' + '|'.join(_POLLER_DATES) + r') \d{2}:\d{2}:\d{2}$')
+    for line in contents.splitlines():
+        prefix, separator, message = line.partition(' - ')
+        if not separator or not timestamp.fullmatch(prefix):
+            continue
+        match = re.match(r'([A-Z][A-Z0-9_]*) (PHP .*:.*)$', message)
+        if match:
+            records.append({'subsystem': match[1], 'message': normalize(match[2])})
+    return records
 
 
 class Forms(HTMLParser):
@@ -509,6 +532,18 @@ class Harness:
                                'the recorder is no longer reaching lib/')
 
         self.capture('api/php-errors', events)
+        self.capture('diagnostics/visible-php-errors', visible_diagnostics(events))
+
+        # This process leaves the application's handler installed. Its warning
+        # must arrive through the real log, independently of the prepend recorder.
+        calibration = self.php('-r', "chdir('/var/www/html'); $no_http_headers=true; include 'include/global.php'; trigger_error('behavior application-handler calibration', E_USER_WARNING);")
+        if calibration['exit']:
+            raise RuntimeError('Application handler calibration failed: ' + json.dumps(calibration))
+        log = self.command('cat', '/var/www/html/log/cacti.log', check=True)['stdout']
+        records = application_diagnostics(log)
+        if not any('behavior application-handler calibration' in row['message'] for row in records):
+            raise RuntimeError('The application log missed the post-bootstrap calibration warning')
+        self.capture('diagnostics/application-log', records)
 
     def base_image_digest(self):
         """The base image this run was built on.
@@ -532,6 +567,10 @@ class Harness:
     def finish(self, error=None):
         runtime = None
         base_image = None
+        if error is None and set(self.observed) != EXPECTED_SCENARIOS:
+            missing = sorted(EXPECTED_SCENARIOS - set(self.observed))
+            unexpected = sorted(set(self.observed) - EXPECTED_SCENARIOS)
+            error = f'Scenario inventory mismatch: missing={missing}, unexpected={unexpected}'
         if error is None:
             try:
                 result = self.command('php', '-r', 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;', check=True)
@@ -541,6 +580,16 @@ class Harness:
                 base_image = self.base_image_digest()
             except (OSError, RuntimeError, subprocess.TimeoutExpired) as probe_error:
                 error = 'Cannot record runtime provenance: ' + str(probe_error)
+        if error is None:
+            try:
+                self.selected()
+                golden_root = ROOT / 'tests/Golden' / self.args.target / ('php-' + runtime)
+                recorded = {str(path.relative_to(golden_root))[:-5] for path in golden_root.rglob('*.json')}
+                orphans = recorded - set(self.observed)
+                if orphans:
+                    raise RuntimeError('Goldens have no observations: ' + ', '.join(sorted(orphans)))
+            except RuntimeError as selection_error:
+                error = str(selection_error)
         manifest = {'format': 1, 'target': self.args.target, 'revision': run(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'])['stdout'].strip(),
                     'php': runtime, 'schema_sha256': hashlib.sha256((ROOT / 'cacti.sql').read_bytes()).hexdigest(),
                     'base_image': base_image,

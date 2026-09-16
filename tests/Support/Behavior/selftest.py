@@ -127,6 +127,56 @@ def unavailable_docker_failure():
 
 
 
+def recording_guards():
+    from unittest.mock import patch
+    import tempfile
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        (root / 'cacti.sql').write_text('schema')
+        for case in ('empty', 'missing', 'unexpected', 'orphan', 'complete'):
+            recorder = object.__new__(harness.Harness)
+            recorder.args = types.SimpleNamespace(target=case, only=None, update_golden=True)
+            recorder.destination = root / 'results' / case
+            recorder.observed = {name: {'value': name} for name in harness.EXPECTED_SCENARIOS}
+            if case == 'empty': recorder.observed = {}
+            if case == 'missing': recorder.observed.pop(next(iter(recorder.observed)))
+            if case == 'unexpected': recorder.observed['unknown/capture'] = 1
+            recorder.command = lambda *a, **kw: {'stdout': '8.2', 'stderr': '', 'exit': 0}
+            recorder.base_image_digest = lambda: {'ref': 'fixture'}
+            golden = root / 'tests/Golden' / case / 'php-8.2'
+            if case == 'orphan':
+                golden.mkdir(parents=True)
+                (golden / 'removed.json').write_text('42')
+            before = {str(p): p.read_bytes() for p in golden.rglob('*.json')}
+            with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', return_value={'stdout': 'revision'}):
+                status = recorder.finish()
+            manifest = json.loads((recorder.destination / 'observations.json').read_text())
+            assert (status == 0) == (case == 'complete'), case
+            assert manifest['complete'] == (case == 'complete'), case
+            if case != 'complete':
+                assert {str(p): p.read_bytes() for p in golden.rglob('*.json')} == before, case
+            else:
+                assert len(list(golden.rglob('*.json'))) == len(harness.EXPECTED_SCENARIOS)
+    print('recording rejects empty, missing, unexpected and orphaned scenarios before writing goldens')
+
+
+def diagnostic_contracts():
+    events = [dict(severity=8192, suppressed=True, suppressed_here=True),
+              dict(severity=512, suppressed=False, suppressed_here=True),
+              dict(severity=512, suppressed=False, suppressed_here=False),
+              dict(severity='FATAL')]
+    assert harness.visible_diagnostics(events) == events[2:]
+    log = ('09/16/2026 01:02:03 - ERROR PHP WARNING: first 2020-01-01 in /var/www/html/lib/x.php:42\n'
+           '09/16/2026 01:02:04 - ERROR PHP NOTICE: second\n'
+           '09/16/2026 01:02:05 - SYSTEM STATS: Time:1\n'
+           'ordinary message - ERROR PHP WARNING: not a log record\n')
+    assert harness.application_diagnostics(log) == [
+        {'subsystem': 'ERROR', 'message': 'PHP WARNING: first 2020-01-01 in <APP>/lib/x.php:42'},
+        {'subsystem': 'ERROR', 'message': 'PHP NOTICE: second'}]
+    assert harness.application_diagnostics(log + log) == harness.application_diagnostics(log) * 2
+    print('diagnostic scopes preserve severity, content, order and duplicate records')
+
+
 def main():
     failures = []
 
@@ -137,6 +187,8 @@ def main():
 
     print(f'{len(CASES) - len(failures)}/{len(CASES)} normalization cases pass')
 
+    recording_guards()
+    diagnostic_contracts()
     failed_setup_manifest()
     unavailable_docker_failure()
     print('setup failure records an incomplete manifest without probing containers')

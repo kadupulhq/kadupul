@@ -104,14 +104,24 @@ non-empty rrdtool source, and the database fault raises if the command failed to
 start. A hollow contract is worse than a missing one, because every green run
 makes it look more trustworthy.
 
-## What the diagnostics scenario does not see
+## Diagnostic scopes and recording completeness
 
-`include/global.php` installs `CactiErrorHandler`, which displaces the recorder
-in every process that bootstraps the application. The probe re-arms it by hand;
-`poller.php` and the workers it forks cannot, without editing production code.
+`api/php-errors` retains every event observed by the prepend recorder, including
+suppressed events and its calibration warning. `diagnostics/visible-php-errors`
+selects fatal events and events enabled by both recorded reporting masks.
+Neither changes the application's error-reporting policy.
 
-So `api/php-errors` covers diagnostics raised before or outside that swap, not
-every diagnostic in the run. The poller's own notices reach Cacti's log and show
-up in each scenario's captured stderr, which is where `poller/rrd-failure`
-records the broken-pipe notice. Reading the Cacti log as a normalized stream is
-the way to close this, and is not done yet.
+`include/global.php` replaces the prepend handler. The separate
+`diagnostics/application-log` contract captures PHP diagnostics emitted by the
+application's own handler, preserving subsystem, severity, message, order and
+duplicates while normalizing only the log timestamp and known environment paths.
+A warning emitted after application bootstrap calibrates this path; recording
+fails if it is missing. This is scoped PHP diagnostic coverage, not an assertion
+that every possible application log message is covered.
+
+A recording requires all 34 named scenarios. Empty, missing or unexpected
+observations, missing selected scenarios and orphan golden files fail before
+any golden is written. Failed runtime probes also leave an incomplete manifest.
+Legacy committed 32-contract baselines must be explicitly recaptured with the
+new harness before claiming the two new diagnostic contracts for that revision.
+A candidate capture and repeat run establish reproducibility, not upstream parity.
