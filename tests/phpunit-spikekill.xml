@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="./bootstrap-unit.php" colors="true">
+  <testsuites>
+    <testsuite name="Spikekill">
+      <file>./Unit/Security/Shell/SpikekillBackupSymlinkSafetyTest.php</file>
+      <file>./Unit/Security/Shell/SpikekillRemoveSpikesEndToEndTest.php</file>
+      <file>./Unit/Security/Shell/SpikekillXmlDirectoryRaceTest.php</file>
+      <file>./Unit/Security/Shell/SpikekillXmlDumpFileSafetyTest.php</file>
+      <file>./Unit/Core/Cli/RemoveSpikesBackupTest.php</file>
+      <file>./Unit/Security/Shell/SpikekillStatisticsTest.php</file>
+      <file>./Unit/Core/PathHelpersTest.php</file>
+    </testsuite>
+  </testsuites>
+</phpunit>

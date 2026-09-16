@@ -197,6 +197,8 @@ if ($dryrun) {
 	$spiker->dryrun = false;
 }
 
+$spiker->backup = $backup;
+
 $result = $spiker->remove_spikes();
 
 if (!$result) {

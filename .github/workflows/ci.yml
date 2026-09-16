@@ -81,6 +81,20 @@ jobs:
         # on every diagnostic, including CSV default-argument deprecations.
         run: php -d error_reporting=8191 vendor/bin/pest --bootstrap=bootstrap-unit.php Unit/CsvExplicitEscapeParityTest.php --colors=never
 
+      - name: Install RRDtool for spike-removal contracts
+        run: sudo apt-get update && sudo apt-get install -y rrdtool
+
+      - name: Verify spike-removal backups and filesystem safety
+        working-directory: tests
+        env:
+          RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
+        # Pest 1 emits dependency deprecations on PHP 8.4.
+        run: php -d error_reporting=24575 vendor/bin/pest --configuration=phpunit-spikekill.xml --colors=never
+
+      - name: Verify privileged spike-removal boundaries
+        working-directory: tests
+        run: sudo -- "$(command -v php)" -d error_reporting=24575 vendor/bin/pest --configuration=phpunit-spikekill.xml --colors=never
+
   application-smoke:
     name: Install, login and poller smoke
     runs-on: ubuntu-latest
