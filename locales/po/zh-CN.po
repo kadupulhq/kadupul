@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul Chinese Language File\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-13 13:22-0700\n"
+"POT-Creation-Date: 2026-09-15 18:58-0700\n"
 "PO-Revision-Date: 2024-06-23 04:09+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -43,7 +43,7 @@ msgstr "授权"
 msgid "Kadupul is licensed under the GNU GPL:"
 msgstr "Kadupul 根据GNU GPL 许可:"
 
-#: about.php:33 lib/installer.php:1751
+#: about.php:33 lib/installer.php:1821
 msgid "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
 msgstr "本程序是免费的软件; 您可以根据自由软件基金会发布的GNU 通用公共许可条款重新分发或修改它并以GPL v2及之后的许可证(根据您的选择)公布出来."
 
@@ -583,7 +583,7 @@ msgid "Included in Aggregate"
 msgstr "包含在聚合中"
 
 #: aggregate_graphs.php:1278 aggregate_graphs.php:1612 graph_templates.php:846
-#: graph_view.php:796 graph_view.php:809 graphs.php:2265 lib/spikekill.php:1022
+#: graph_view.php:796 graph_view.php:809 graphs.php:2265 lib/spikekill.php:1630
 msgid "Size"
 msgstr "大小"
 
@@ -609,7 +609,7 @@ msgstr "否"
 #: data_templates.php:1238 gprint_presets.php:428 graph_templates.php:886
 #: host_templates.php:963 include/global_settings.php:874
 #: include/global_settings.php:1897 lib/api_automation.php:1463
-#: lib/installer.php:1945 lib/installer.php:1973 lib/installer.php:3602
+#: lib/installer.php:2016 lib/installer.php:2044 lib/installer.php:3718
 #: links.php:400 tree.php:2327 tree.php:2328 user_admin.php:2326
 #: user_domains.php:752 user_domains.php:756 user_group_admin.php:2008
 #: vdef.php:916
@@ -744,7 +744,7 @@ msgstr "聚合模板"
 #: aggregate_templates.php:595 automation_templates.php:381
 #: automation_templates.php:468 color_templates.php:645
 #: include/global_arrays.php:998 include/global_arrays.php:1061
-#: lib/installer.php:2553 user_admin.php:2929 user_group_admin.php:2493
+#: lib/installer.php:2630 user_admin.php:2929 user_group_admin.php:2493
 msgid "Templates"
 msgstr "模板"
 
@@ -838,7 +838,7 @@ msgid "There are problems with the Change Password page.  Contact your Kadupul a
 msgstr "更改密码页面有问题。请立即联系您的Kadupul管理员。"
 
 #: auth_changepassword.php:317 auth_changepassword.php:324
-#: include/global_form.php:1556 lib/functions.php:3734 lib/html.php:2558
+#: include/global_form.php:1556 lib/functions.php:3736 lib/html.php:2558
 msgid "Change Password"
 msgstr "更改密码"
 
@@ -851,7 +851,7 @@ msgid "Please enter your new Kadupul password."
 msgstr "请输入您的Kadupul新密码."
 
 #: auth_changepassword.php:344 auth_login.php:311 auth_login.php:314
-#: include/global_settings.php:1806 lib/functions.php:5589
+#: include/global_settings.php:1806 lib/functions.php:5591
 msgid "Username"
 msgstr "用户名"
 
@@ -936,7 +936,7 @@ msgstr "用户登录"
 msgid "Enter your Username and Password below"
 msgstr "在下面输入您的用户名和密码"
 
-#: auth_login.php:319 include/global_form.php:1523 lib/functions.php:5590
+#: auth_login.php:319 include/global_form.php:1523 lib/functions.php:5592
 msgid "Password"
 msgstr "密码"
 
@@ -1170,7 +1170,7 @@ msgstr "联系人"
 #: automation_devices.php:270 include/global_form.php:1137
 #: include/global_form.php:1173 include/global_form.php:1367
 #: include/global_form.php:1743 lib/api_automation.php:273
-#: lib/api_automation.php:1229 lib/installer.php:1865 lib/installer.php:2554
+#: lib/api_automation.php:1229 lib/installer.php:1936 lib/installer.php:2631
 #: managers.php:202 user_admin.php:978 user_admin.php:1123
 #: user_group_admin.php:1010 user_group_admin.php:1996
 msgid "Description"
@@ -1196,7 +1196,7 @@ msgstr "SNMP"
 #: host.php:1671 host.php:1788 lib/api_automation.php:151
 #: lib/api_automation.php:275 lib/api_automation.php:568
 #: lib/api_automation.php:1089 lib/api_automation.php:1232
-#: lib/html_reports.php:1876 lib/installer.php:1865 managers.php:204
+#: lib/html_reports.php:1876 lib/installer.php:1936 managers.php:204
 #: package_import.php:537 package_import.php:622 plugins.php:467
 #: plugins.php:590 pollers.php:1005 templates_import.php:206
 #: templates_import.php:245 user_admin.php:1123 user_group_admin.php:1010
@@ -1250,13 +1250,13 @@ msgstr "清空已发现的设备"
 #: automation_snmp.php:550 automation_snmp.php:551 automation_snmp.php:552
 #: automation_snmp.php:553 automation_snmp.php:554 automation_snmp.php:555
 #: data_debug.php:607 data_source_profiles.php:56 host.php:1863
-#: lib/functions.php:5936 lib/functions.php:5940 lib/html.php:1261
+#: lib/functions.php:5938 lib/functions.php:5942 lib/html.php:1261
 #: lib/html.php:1333 lib/html_reports.php:1666 lib/html_reports.php:1692
 #: lib/html_reports.php:1763 lib/html_reports.php:1764
-#: lib/html_reports.php:1765 lib/spikekill.php:1051 lib/spikekill.php:1052
-#: lib/spikekill.php:1053 lib/spikekill.php:1054 lib/spikekill.php:1055
-#: lib/spikekill.php:1056 lib/spikekill.php:1057 lib/spikekill.php:1058
-#: lib/spikekill.php:1059 lib/spikekill.php:1060 lib/spikekill.php:1061
+#: lib/html_reports.php:1765 lib/spikekill.php:1666 lib/spikekill.php:1667
+#: lib/spikekill.php:1668 lib/spikekill.php:1669 lib/spikekill.php:1670
+#: lib/spikekill.php:1671 lib/spikekill.php:1672 lib/spikekill.php:1673
+#: lib/spikekill.php:1674 lib/spikekill.php:1675 lib/spikekill.php:1676
 #: plugins.php:739 pollers.php:1113 user_admin.php:2320 utilities.php:721
 #: utilities.php:1170 utilities.php:2638 utilities.php:2766 utilities.php:2774
 #: utilities.php:2785 utilities.php:2796 utilities.php:2819 utilities.php:2865
@@ -1562,8 +1562,8 @@ msgstr "通用设置"
 #: include/global_form.php:1331 include/global_form.php:1359
 #: include/global_form.php:1432 include/global_form.php:1460
 #: include/global_form.php:2105 include/global_form.php:2203
-#: include/global_form.php:2248 lib/installer.php:1865 lib/installer.php:1938
-#: lib/installer.php:1968 lib/installer.php:2554 lib/installer.php:2641
+#: include/global_form.php:2248 lib/installer.php:1936 lib/installer.php:2009
+#: lib/installer.php:2039 lib/installer.php:2631 lib/installer.php:2719
 #: lib/vdef.php:56 managers.php:554 pollers.php:44 sites.php:23
 #: user_admin.php:978 user_domains.php:309 utilities.php:847 utilities.php:3079
 msgid "Name"
@@ -2243,7 +2243,7 @@ msgstr "版本"
 msgid "Community"
 msgstr "团体名"
 
-#: automation_snmp.php:523 lib/functions.php:5585
+#: automation_snmp.php:523 lib/functions.php:5587
 msgid "Port"
 msgstr "端口"
 
@@ -2493,7 +2493,7 @@ msgstr "树创建标准"
 msgid "Change Leaf Type"
 msgstr "改变叶子类型"
 
-#: automation_tree_rules.php:715 lib/installer.php:3796 utilities.php:2633
+#: automation_tree_rules.php:715 lib/installer.php:3942 utilities.php:2633
 #: utilities.php:2634 utilities.php:2637 utilities.php:2638
 msgid "WARNING:"
 msgstr "WARNING:"
@@ -2540,8 +2540,8 @@ msgstr "ROOT"
 msgid "No Tree Rules Found"
 msgstr "未找到树规则"
 
-#: cactid.php:27 help.php:27 lib/functions.php:6217 lib/functions.php:6286
-#: lib/functions.php:6376 lib/functions.php:6983 poller.php:377 poller.php:527
+#: cactid.php:27 help.php:28 lib/functions.php:6219 lib/functions.php:6288
+#: lib/functions.php:6378 lib/functions.php:6985 poller.php:377 poller.php:527
 #: poller.php:592 poller.php:632 poller.php:774 poller.php:880
 #: poller_automation.php:36 poller_boost.php:359
 msgid "Kadupul System Warning"
@@ -3020,7 +3020,7 @@ msgstr "数据源内部ID."
 msgid "The Status of the Data Source Debug Check."
 msgstr "数据源调试检查的状态."
 
-#: data_debug.php:454 lib/installer.php:2316 lib/installer.php:2348
+#: data_debug.php:454 lib/installer.php:2390 lib/installer.php:2422
 #: package_import.php:591
 msgid "Writable"
 msgstr "可写"
@@ -3483,7 +3483,7 @@ msgstr "用于收集此数据输入方法信息的方法."
 #: data_input.php:954 host.php:1682 lib/api_automation.php:162
 #: lib/api_automation.php:1100 lib/auth.php:2445 lib/clog_webapi.php:829
 #: lib/html_utility.php:1214 lib/import.php:332 lib/plugins.php:1333
-#: lib/plugins.php:1334 lib/rrd.php:3290 lib/rrd.php:3302 lib/spikekill.php:263
+#: lib/plugins.php:1334 lib/rrd.php:3290 lib/rrd.php:3302 lib/spikekill.php:284
 #: package_import.php:517 package_import.php:595 utilities.php:194
 #: utilities.php:195 utilities.php:2634
 msgid "Unknown"
@@ -3767,7 +3767,7 @@ msgid "Steps"
 msgstr "跳数"
 
 #: data_source_profiles.php:622 graphs_new.php:449 include/global_form.php:281
-#: lib/html.php:566 lib/html_filter.php:55 lib/installer.php:2641
+#: lib/html.php:566 lib/html_filter.php:55 lib/installer.php:2719
 #: lib/rrd.php:3319 utilities.php:849 utilities.php:1771
 msgid "Rows"
 msgstr "行数"
@@ -4085,7 +4085,7 @@ msgstr "给这个数据模板的名字。 请注意，您只能将图形模板�
 #: data_sources.php:932 graph_view.php:781 graphs.php:1576
 #: include/global_arrays.php:950 include/global_arrays.php:999
 #: include/global_arrays.php:1683 include/global_arrays.php:1852
-#: lib/api_automation.php:420 lib/functions.php:5584 lib/html.php:2161
+#: lib/api_automation.php:420 lib/functions.php:5586 lib/html.php:2161
 #: lib/html.php:2193 lib/html_reports.php:1035 utilities.php:1862
 msgid "Device"
 msgstr "设备"
@@ -5228,12 +5228,12 @@ msgstr "选择默认"
 msgid "Set Default"
 msgstr "默认设置"
 
-#: help.php:27
+#: help.php:28
 #, php-format
 msgid "WARNING: Kadupul Page:%s for User:%s Generated a Fatal Error %d!"
 msgstr "警告：Kadupul Page：%s for User：%s 生成了致命错误%d！"
 
-#: help.php:49
+#: help.php:52
 #, php-format
 msgid "The document page '%s' could not be reached locally."
 msgstr ""
@@ -5446,7 +5446,7 @@ msgstr "将图形模板添加到设备"
 msgid "Data Query Debug Information"
 msgstr "数据查询调试信息"
 
-#: host.php:866 lib/functions.php:4353 tree.php:1741 tree.php:1815
+#: host.php:866 lib/functions.php:4355 tree.php:1741 tree.php:1815
 #: tree.php:1923 user_admin.php:12 user_group_admin.php:13
 msgid "Copy"
 msgstr "复制"
@@ -5486,7 +5486,7 @@ msgstr " [%d 个项目, %d 列]"
 msgid "Fail"
 msgstr "失败"
 
-#: host.php:950 lib/functions.php:5599 lib/functions.php:5604
+#: host.php:950 lib/functions.php:5601 lib/functions.php:5606
 msgid "Success"
 msgstr "成功"
 
@@ -5790,16 +5790,16 @@ msgstr "FATAL: 您必须先登录才能访问Kadupul 的那个区域."
 msgid "Login Again"
 msgstr "重新登录"
 
-#: include/auth.php:273 lib/functions.php:7584 permission_denied.php:29
+#: include/auth.php:273 lib/functions.php:7586 permission_denied.php:29
 #: permission_denied.php:36
 msgid "Permission Denied"
 msgstr "没有权限"
 
-#: include/auth.php:274 lib/functions.php:7585 permission_denied.php:38
+#: include/auth.php:274 lib/functions.php:7587 permission_denied.php:38
 msgid "If you feel that this is an error. Please contact your Kadupul Administrator."
 msgstr "如果您觉得这是一个报错,请联系Kadupul 管理员."
 
-#: include/auth.php:274 lib/functions.php:7585 permission_denied.php:38
+#: include/auth.php:274 lib/functions.php:7587 permission_denied.php:38
 msgid "You are not permitted to access this section of Kadupul."
 msgstr "您不能访问Kadupul 的这个部分."
 
@@ -7751,7 +7751,7 @@ msgid "List Mode"
 msgstr "列表模式"
 
 #: include/global_arrays.php:2057 include/global_arrays.php:2063
-#: lib/functions.php:3941 lib/html.php:1792 lib/html.php:1869 lib/html.php:2568
+#: lib/functions.php:3943 lib/html.php:1792 lib/html.php:1869 lib/html.php:2568
 #: links.php:340 user_admin.php:1530 user_group_admin.php:1415
 msgid "Console"
 msgstr "控制台"
@@ -9404,7 +9404,7 @@ msgstr "数据"
 msgid "Visual"
 msgstr "外观"
 
-#: include/global_settings.php:27 lib/functions.php:5588 lib/functions.php:5593
+#: include/global_settings.php:27 lib/functions.php:5590 lib/functions.php:5595
 msgid "Authentication"
 msgstr "认证"
 
@@ -9440,11 +9440,11 @@ msgstr "图形字体"
 msgid "PHP Mail() Function"
 msgstr "PHP Mail() 函数"
 
-#: include/global_settings.php:68 lib/functions.php:5569
+#: include/global_settings.php:68 lib/functions.php:5571
 msgid "Sendmail"
 msgstr "发送邮件"
 
-#: include/global_settings.php:69 lib/functions.php:5575
+#: include/global_settings.php:69 lib/functions.php:5577
 msgid "SMTP"
 msgstr "SMTP"
 
@@ -11343,7 +11343,7 @@ msgstr "这是在电子邮件中的一行被自动换行之前允许多少个字
 msgid "Sendmail Options"
 msgstr "Sendmail 选项"
 
-#: include/global_settings.php:1927 lib/functions.php:5569
+#: include/global_settings.php:1927 lib/functions.php:5571
 msgid "Sendmail Path"
 msgstr "Sendmail 路径"
 
@@ -12585,8 +12585,8 @@ msgstr "位置:"
 msgid "Contact:"
 msgstr "联系人:"
 
-#: lib/api_device.php:1621 lib/functions.php:5602 lib/functions.php:5604
-#: lib/functions.php:5608
+#: lib/api_device.php:1621 lib/functions.php:5604 lib/functions.php:5606
+#: lib/functions.php:5610
 msgid "Ping Results"
 msgstr "Ping 结果"
 
@@ -13358,186 +13358,186 @@ msgstr "未发现问题"
 msgid "RRDfile not created yet"
 msgstr "采集之后,RRD 文件未更新"
 
-#: lib/functions.php:433 settings.php:251
+#: lib/functions.php:435 settings.php:251
 #, php-format
 msgid "Settings save to Data Collector %d skipped due to heartbeat."
 msgstr "设置保存到数据采集器 %d 失败."
 
-#: lib/functions.php:445 settings.php:263
+#: lib/functions.php:447 settings.php:263
 #, php-format
 msgid "Settings save to Data Collector %d Failed."
 msgstr "设置保存到数据采集器 %d 失败."
 
-#: lib/functions.php:914 lib/functions.php:1005
+#: lib/functions.php:916 lib/functions.php:1007
 msgid "Message Not Found."
 msgstr "未找到警报消息。"
 
-#: lib/functions.php:1406
+#: lib/functions.php:1408
 #, php-format
 msgid "Error %s is not readable"
 msgstr "出错: %s 不可读"
 
-#: lib/functions.php:3712
+#: lib/functions.php:3714
 msgid "Logged in a Guest"
 msgstr "当前登录的用户为"
 
-#: lib/functions.php:3712 lib/functions.php:3728
+#: lib/functions.php:3714 lib/functions.php:3730
 msgid "Logged in as"
 msgstr "当前登录的用户为"
 
-#: lib/functions.php:3712
+#: lib/functions.php:3714
 msgid "Login as Regular User"
 msgstr "以普通用户身份登录"
 
-#: lib/functions.php:3712
+#: lib/functions.php:3714
 msgid "guest"
 msgstr "客户"
 
-#: lib/functions.php:3715 lib/functions.php:3738 lib/html.php:2574
+#: lib/functions.php:3717 lib/functions.php:3740 lib/html.php:2574
 msgid "User Community"
 msgstr "社区"
 
-#: lib/functions.php:3716 lib/functions.php:3739 lib/html.php:2576
+#: lib/functions.php:3718 lib/functions.php:3741 lib/html.php:2576
 #: lib/utility.php:1475
 msgid "Documentation"
 msgstr "文档"
 
-#: lib/functions.php:3731
+#: lib/functions.php:3733
 #, php-format
 msgid "Logged in as %s"
 msgstr "登入为 %s"
 
-#: lib/functions.php:3733 lib/html.php:2555
+#: lib/functions.php:3735 lib/html.php:2555
 msgid "Edit Profile"
 msgstr "编辑个人资料"
 
-#: lib/functions.php:3743 lib/html.php:2559
+#: lib/functions.php:3745 lib/html.php:2559
 msgid "Logout"
 msgstr "退出"
 
-#: lib/functions.php:3888
+#: lib/functions.php:3890
 msgid "Leaf"
 msgstr "叶子"
 
-#: lib/functions.php:3908 lib/html_tree.php:648 lib/html_tree.php:684
+#: lib/functions.php:3910 lib/html_tree.php:648 lib/html_tree.php:684
 #: lib/html_tree.php:913 lib/html_tree.php:921 lib/html_tree.php:1522
 msgid "Non Query Based"
 msgstr "非基于查询"
 
-#: lib/functions.php:3944
+#: lib/functions.php:3946
 #, php-format
 msgid "Link %s"
 msgstr "链接 %s"
 
-#: lib/functions.php:5165
+#: lib/functions.php:5167
 msgid "Mailer Error: No recipient address set!!<br>If using the <i>Test Mail</i> link, please set the <b>Alert e-mail</b> setting."
 msgstr "Mailer Error: 没有设置<b> 收件人 </b>地址!! 如果使用 <i>邮件测试</i> 链接,请设置<b> 报警邮件 </b>设置."
 
-#: lib/functions.php:5533
+#: lib/functions.php:5535
 #, php-format
 msgid "Authentication failed: %s"
 msgstr "认证失败: %s"
 
-#: lib/functions.php:5537
+#: lib/functions.php:5539
 #, php-format
 msgid "HELO failed: %s"
 msgstr "HELO 失败: %s"
 
-#: lib/functions.php:5540
+#: lib/functions.php:5542
 #, php-format
 msgid "Connect failed: %s"
 msgstr "连接失败: %s"
 
-#: lib/functions.php:5543
+#: lib/functions.php:5545
 msgid "SMTP error: "
 msgstr "SMTP error: "
 
-#: lib/functions.php:5556
+#: lib/functions.php:5558
 msgid "This is a test message generated from Kadupul.  This message was sent to test the configuration of your Mail Settings."
 msgstr "这是从Kadupul 生成的测试消息. 发送此邮件是为了测试您的邮件设置的配置."
 
-#: lib/functions.php:5557
+#: lib/functions.php:5559
 msgid "Your email settings are currently set as follows"
 msgstr "您的电子邮件设置目前设置如下"
 
-#: lib/functions.php:5558
+#: lib/functions.php:5560
 msgid "Method"
 msgstr "方法"
 
-#: lib/functions.php:5560
+#: lib/functions.php:5562
 msgid "Checking Configuration...<br>"
 msgstr "检查配置... <br>"
 
-#: lib/functions.php:5567
+#: lib/functions.php:5569
 msgid "PHP's Mailer Class"
 msgstr "PHP Mailer 的类"
 
-#: lib/functions.php:5573
+#: lib/functions.php:5575
 msgid "Method: SMTP"
 msgstr "方法: SMTP"
 
-#: lib/functions.php:5590
+#: lib/functions.php:5592
 msgid "Not Shown for Security Reasons"
 msgstr "由于安全原因没有显示"
 
-#: lib/functions.php:5591
+#: lib/functions.php:5593
 msgid "Security"
 msgstr "安全"
 
-#: lib/functions.php:5599
+#: lib/functions.php:5601
 msgid "Ping Results:"
 msgstr "Ping 结果:"
 
-#: lib/functions.php:5608
+#: lib/functions.php:5610
 msgid "Bypassed"
 msgstr "绕过"
 
-#: lib/functions.php:5617
+#: lib/functions.php:5619
 msgid "Creating Message Text..."
 msgstr "创建消息文本..."
 
-#: lib/functions.php:5620
+#: lib/functions.php:5622
 msgid "Sending Message..."
 msgstr "正在发送消息..."
 
-#: lib/functions.php:5624
+#: lib/functions.php:5626
 msgid "Kadupul Test Message"
 msgstr "Kadupul 测试消息"
 
-#: lib/functions.php:5626
+#: lib/functions.php:5628
 msgid "Success!"
 msgstr "成功!"
 
-#: lib/functions.php:5629
+#: lib/functions.php:5631
 msgid "Message Not Sent due to ping failure."
 msgstr "由于ping 失败,邮件未发送."
 
-#: lib/functions.php:6217 lib/functions.php:6286
+#: lib/functions.php:6219 lib/functions.php:6288
 #, php-format
 msgid "Kadupul disabled plugin %s due to the following error: %s!  See the Kadupul logfile for more details."
 msgstr "Kadupul 禁用了插件 %s 因为以下错误: %s! 更多详细信息,请参考Kadupul 日志文件."
 
-#: lib/functions.php:6376
+#: lib/functions.php:6378
 #, php-format
 msgid "WARNING: PollerID:%s has an invalid hostname:%s.  Is it not reachable via DNS!"
 msgstr "警告：PollerID：%s 的主机名无效：%s。 是否无法通过DNS访问！"
 
-#: lib/functions.php:6767 lib/functions.php:6769
+#: lib/functions.php:6769 lib/functions.php:6771
 #, php-format
 msgid "- Beta %s"
 msgstr "- Beta %s"
 
-#: lib/functions.php:6767
+#: lib/functions.php:6769
 #, php-format
 msgid "Version %s %s"
 msgstr "版本 %s %s"
 
-#: lib/functions.php:6769
+#: lib/functions.php:6771
 #, php-format
 msgid "%s %s"
 msgstr "%s %s"
 
-#: lib/functions.php:6983
+#: lib/functions.php:6985
 #, fuzzy, php-format
 msgid "WARNING:  Key Kadupul Include File %s missing.  Please locate and replace this file"
 msgstr "警告：缺少密钥Kadupul包含文件%s。 请找到并替换此文件"
@@ -13590,7 +13590,7 @@ msgstr "编辑设备"
 msgid "Kill Spikes in Graphs"
 msgstr "杀死图中的尖峰"
 
-#: lib/html.php:582 lib/html.php:614 lib/installer.php:1614
+#: lib/html.php:582 lib/html.php:614 lib/installer.php:1682
 msgid "Previous"
 msgstr "上一页"
 
@@ -13599,7 +13599,7 @@ msgstr "上一页"
 msgid "%d to %d of %s [ %s ]"
 msgstr "%d to %d of %s [ %s ]"
 
-#: lib/html.php:588 lib/html.php:620 lib/installer.php:1613
+#: lib/html.php:588 lib/html.php:620 lib/installer.php:1681
 msgid "Next"
 msgstr "下一页"
 
@@ -13663,7 +13663,7 @@ msgstr "删除标准设置"
 msgid "Gap Fill Range"
 msgstr "差距填充范围"
 
-#: lib/html.php:2377 lib/spikekill.php:259
+#: lib/html.php:2377 lib/spikekill.php:280
 msgid "Float Range"
 msgstr "浮动范围"
 
@@ -14722,7 +14722,7 @@ msgstr "UTF-8 偏移错误!"
 msgid "Down (Thold)"
 msgstr "下载"
 
-#: lib/html_utility.php:1211 lib/installer.php:1906 lib/installer.php:3718
+#: lib/html_utility.php:1211 lib/installer.php:1977 lib/installer.php:3858
 msgid "Error"
 msgstr "错误"
 
@@ -14825,1051 +14825,1051 @@ msgstr "查找依赖:"
 msgid "Unmet Dependency:"
 msgstr "取消设置依赖项:"
 
-#: lib/installer.php:557
+#: lib/installer.php:570
 msgid "Path was not writable"
 msgstr "路径不可写"
 
-#: lib/installer.php:567
+#: lib/installer.php:580
 msgid "Path is not writable"
 msgstr "路径不可写"
 
-#: lib/installer.php:694
+#: lib/installer.php:714
 #, php-format
 msgid "Failed to set specified %sRRDTool version: %s"
 msgstr "无法设置指定的 %sRRDTool版本: %s"
 
-#: lib/installer.php:740
+#: lib/installer.php:762
 msgid "Invalid Theme Specified"
 msgstr "指定的主题无效"
 
-#: lib/installer.php:794
+#: lib/installer.php:818
 msgid "Resource is not writable"
 msgstr "资源不可写"
 
-#: lib/installer.php:799
+#: lib/installer.php:823
 msgid "File not found"
 msgstr "文件未找到"
 
-#: lib/installer.php:811
+#: lib/installer.php:836
 msgid "PHP did not return expected result"
 msgstr "PHP 没有返回预期的结果"
 
-#: lib/installer.php:825
+#: lib/installer.php:850
 msgid "Unexpected path parameter"
 msgstr "意外的路径参数"
 
-#: lib/installer.php:859
+#: lib/installer.php:886
 #, php-format
 msgid "Failed to apply specified profile %s != %s"
 msgstr "未能应用指定的配置文件%s != %s"
 
-#: lib/installer.php:899
+#: lib/installer.php:928
 #, php-format
 msgid "Failed to apply specified mode: %s"
 msgstr "未能应用指定的模式:%s"
 
-#: lib/installer.php:921
+#: lib/installer.php:952
 #, php-format
 msgid "Failed to apply specified automation override: %s"
 msgstr "未能应用指定的自动化覆盖:%s"
 
-#: lib/installer.php:941
+#: lib/installer.php:973
 msgid "Failed to apply specified cron interval"
 msgstr "无法应用指定的cron 周期"
 
-#: lib/installer.php:985
+#: lib/installer.php:1019
 #, php-format
 msgid "Failed to apply '%s' as Automation Range"
 msgstr "无法应用'%s'为指定的自动化范围"
 
-#: lib/installer.php:1060
+#: lib/installer.php:1096
 msgid "No matching snmp option exists"
 msgstr "没有匹配的snmp 选项"
 
-#: lib/installer.php:1238
+#: lib/installer.php:1282
 msgid "No matching template exists"
 msgstr "没有匹配的模板"
 
-#: lib/installer.php:1560
+#: lib/installer.php:1625
 msgid "The Installer could not proceed due to an unexpected error."
 msgstr "由于意外错误,安装程序无法继续."
 
-#: lib/installer.php:1561
+#: lib/installer.php:1626
 msgid "Please report this to the Kadupul Group."
 msgstr "请向Kadupul Group 报告."
 
-#: lib/installer.php:1562
+#: lib/installer.php:1627
 #, php-format
 msgid "Unknown Reason: %s"
 msgstr "未知的原因:%s"
 
-#: lib/installer.php:1569
+#: lib/installer.php:1635
 #, php-format
 msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this can not be performed."
 msgstr "您正在尝试将Kadupul %s 安装到 0.6.x 数据库上.不幸的是,这不能执行."
 
-#: lib/installer.php:1570
+#: lib/installer.php:1636
 msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
 msgstr "为了能够继续,您<b>必须</b>创建一个新的数据库,导入\"cacti.sql\":"
 
-#: lib/installer.php:1572
+#: lib/installer.php:1638
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
 msgstr "然后,您<b>必须</b>更新 \"include/config.php\" 以指向新的数据库."
 
-#: lib/installer.php:1573
+#: lib/installer.php:1639
 msgid "NOTE: Your existing data will not be modified, nor will it or any history be available to the new install"
 msgstr "注意: 您的现有数据不会被修改,新安装也不会修改它或任何历史记录"
 
-#: lib/installer.php:1580
+#: lib/installer.php:1647
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
 msgstr "您已创建新数据库,但尚未导入 'cacti.sql' 文件.在命令行中,执行以下命令以继续:"
 
-#: lib/installer.php:1582
+#: lib/installer.php:1649
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Kadupul database. Please ensure that the Kadupul database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Kadupul database."
 msgstr "如果Kadupul 数据库用户对Kadupul 数据库没有正确的权限,也会造成这个错误.请确认Kadupul 数据库用户能够在Kadupul 数据库上进行SELECT,INSERT,DELETE,UPDATE,CREATE,ALTER,DROP,INDEX."
 
-#: lib/installer.php:1583
+#: lib/installer.php:1650
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"
 msgstr "您还<b>必须</b>将MySQL TimeZone 信息导入MySQL 并授予Kadupul 用户SELECT 访问mysql.time_zone_name 表的权限"
 
-#: lib/installer.php:1586
+#: lib/installer.php:1653
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
 msgstr "在Linux/UNIX 上,在shell 中以 'root' 身份运行以下命令:"
 
-#: lib/installer.php:1589
+#: lib/installer.php:1656
 msgid "On Windows, you must follow the instructions here <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>Time zone description table</a>.  Once that is complete, you can issue the following command to grant the Kadupul user access to the tables:"
 msgstr "在Windows 上,您必须按照 <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>时区描述表</a>中的说明进行操作. 一旦完成,您可以发出以下命令来授予Kadupul 用户访问表的权限:"
 
-#: lib/installer.php:1592
+#: lib/installer.php:1659
 msgid "Then run the following within MySQL as an administrator:"
 msgstr "然后在MySQL 中以管理员身份运行以下命令:"
 
-#: lib/installer.php:1610 pollers.php:671
+#: lib/installer.php:1678 pollers.php:671
 msgid "Test Connection"
 msgstr "测试连接"
 
-#: lib/installer.php:1621
+#: lib/installer.php:1689
 msgid "Begin"
 msgstr "开始"
 
-#: lib/installer.php:1627 lib/installer.php:2051 lib/installer.php:2061
-#: lib/installer.php:2694
+#: lib/installer.php:1695 lib/installer.php:2123 lib/installer.php:2133
+#: lib/installer.php:2773
 msgid "Upgrade"
 msgstr "升级"
 
-#: lib/installer.php:1629 lib/installer.php:2698
+#: lib/installer.php:1697 lib/installer.php:2777
 msgid "Downgrade"
 msgstr "降级"
 
-#: lib/installer.php:1730 utilities.php:255
+#: lib/installer.php:1800 utilities.php:255
 msgid "Kadupul Version"
 msgstr "Kadupul 版本"
 
-#: lib/installer.php:1730
+#: lib/installer.php:1800
 msgid "License Agreement"
 msgstr "许可协议"
 
-#: lib/installer.php:1733
+#: lib/installer.php:1803
 #, php-format
 msgid "This version of Kadupul (%s) does not appear to have a valid version code, please contact the Kadupul Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 msgstr "此版本的Kadupul (%s) 似乎没有有效的版本代码,请联系Kadupul开发团队以确保其受到管理. 如果您在发布中看到此错误,请立即在GitHub上提交报告"
 
-#: lib/installer.php:1736
+#: lib/installer.php:1806
 msgid "Thanks for taking the time to download and install Kadupul, the complete graphing solution for your network. Before you can start making cool graphs, there are a few pieces of data that Kadupul needs to know."
 msgstr "感谢您抽出时间下载并安装Kadupul, 这是为您的网络而准备的完整的画图解决方案. 在您开始绘制很酷的图形之前,Kadupul 需要知道一些数据."
 
-#: lib/installer.php:1737
+#: lib/installer.php:1807
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Kadupul before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
 msgstr "在继续之前，请确保您已经阅读并遵循了安装Kadupul所需的步骤。可以找到基于<a href=\"%s\">Unix</a>和<a href=\"%s\">Win32</a>的操作系统的安装信息。"
 
-#: lib/installer.php:1740
+#: lib/installer.php:1810
 #, php-format
 msgid "This process will guide you through the steps for upgrading from version '%s'. "
 msgstr "此过程将指导您完成从版本 '%s' 升级的步骤. "
 
-#: lib/installer.php:1741
+#: lib/installer.php:1811
 #, php-format
 msgid "Also, if this is an upgrade, be sure to read the <a href=\"%s\">Upgrade</a> information file."
 msgstr "另外,如果这是升级,请务必阅读<a href=\"%s\">升级</a>信息文件."
 
-#: lib/installer.php:1745
+#: lib/installer.php:1815
 msgid "It is NOT recommended to downgrade as the database structure may be inconsistent"
 msgstr "不建议降级,因为数据库结构可能不一致"
 
-#: lib/installer.php:1748
+#: lib/installer.php:1818
 msgid "Kadupul is licensed under the GNU General Public License, you must agree to its provisions before continuing:"
 msgstr "Kadupul 根据GNU GPL 许可证进行许可,您必须同意其规定,然后再继续:"
 
-#: lib/installer.php:1752
+#: lib/installer.php:1822
 msgid "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
 msgstr "本程序是基于帮助别人的想法而发布的,但它没有任何的保证; 甚至没对商用或特定用途的适用性有暗示性保证. 有关更多详细信息,请参阅GNU 通用公共许可证."
 
-#: lib/installer.php:1789
+#: lib/installer.php:1859
 msgid "Accept GPL License Agreement"
 msgstr "接受GPL 许可协议"
 
-#: lib/installer.php:1789
+#: lib/installer.php:1859
 msgid "Select default theme: "
 msgstr "选择默认主题: "
 
-#: lib/installer.php:1812
+#: lib/installer.php:1883
 msgid "Pre-installation Checks"
 msgstr "预安装检查"
 
-#: lib/installer.php:1813
+#: lib/installer.php:1884
 msgid "Location checks"
 msgstr "位置检查"
 
-#: lib/installer.php:1849 lib/installer.php:2000 lib/installer.php:2004
-#: lib/installer.php:2159 lib/installer.php:2164 lib/installer.php:3815
+#: lib/installer.php:1920 lib/installer.php:2071 lib/installer.php:2075
+#: lib/installer.php:2231 lib/installer.php:2236 lib/installer.php:3962
 msgid "ERROR:"
 msgstr "ERROR:"
 
-#: lib/installer.php:1849
+#: lib/installer.php:1920
 msgid "Please update config.php with the correct relative URI location of Kadupul (url_path)."
 msgstr "请使用正确的Kadupul 相对URI 位置(url_path)更新config.php."
 
-#: lib/installer.php:1852
+#: lib/installer.php:1923
 msgid "Your Kadupul configuration has the relative correct path (url_path) in config.php."
 msgstr "您的Kadupul 配置在config.php 中具有相对正确的路径(url_path)."
 
-#: lib/installer.php:1860
+#: lib/installer.php:1931
 #, php-format
 msgid "PHP - Recommendations (%s)"
 msgstr "PHP - 推荐配置(%s)"
 
-#: lib/installer.php:1864
+#: lib/installer.php:1935
 msgid "PHP Recommendations ("
 msgstr "PHP 推荐配置"
 
-#: lib/installer.php:1865
+#: lib/installer.php:1936
 msgid "Current"
 msgstr "当前"
 
-#: lib/installer.php:1865
+#: lib/installer.php:1936
 msgid "Recommended"
 msgstr "推荐"
 
-#: lib/installer.php:1872
+#: lib/installer.php:1943
 msgid "PHP Binary"
 msgstr "PHP 路径"
 
-#: lib/installer.php:1875
+#: lib/installer.php:1946
 msgid "The PHP binary location is not valid and must be updated."
 msgstr "PHP二进制位置无效，必须进行更新。"
 
-#: lib/installer.php:1882
+#: lib/installer.php:1953
 msgid "Update the path_php_binary value in the settings table."
 msgstr "更新设置表中的path_php_binary值。"
 
-#: lib/installer.php:1891
+#: lib/installer.php:1962
 msgid "Passed"
 msgstr "通过"
 
-#: lib/installer.php:1894
+#: lib/installer.php:1965
 msgid "Warning"
 msgstr "警告"
 
-#: lib/installer.php:1900
+#: lib/installer.php:1971
 msgid "Restart Required"
 msgstr "要求"
 
-#: lib/installer.php:1900
+#: lib/installer.php:1971
 #, fuzzy
 msgid "The specified value appears to be different in the running config versus the INI file."
 msgstr "在运行配置中，指定值与 INI 文件中的指定值似乎不同。"
 
-#: lib/installer.php:1930
+#: lib/installer.php:2001
 msgid "PHP - Module Support (Required)"
 msgstr "PHP - 模块支持 (必须)"
 
-#: lib/installer.php:1931
+#: lib/installer.php:2002
 msgid "Kadupul requires several PHP Modules to be installed to work properly. If any of these are not installed, you will be unable to continue the installation until corrected. In addition, for optimal system performance Kadupul should be run with certain MySQL system variables set.  Please follow the MySQL recommendations at your discretion.  Always seek the MySQL documentation if you have any questions."
 msgstr "Kadupul 的安装对一些PHP 模块有要求. 如果缺少其中任何一个,您将无法继续,直到条件满足.另外, 为了获得更佳的系统性能, Kadupul 应该运行在特定的MySQL 配置之下.请根据您的意愿遵循MySQL 配置建议. 如果您有任何问题, 请务必查阅MySQL 文档."
 
-#: lib/installer.php:1933
+#: lib/installer.php:2004
 msgid "The following PHP extensions are mandatory, and MUST be installed before continuing your Kadupul install."
 msgstr "以下PHP 扩展是强制性的, 必须在安装Kadupul 之前安装."
 
-#: lib/installer.php:1937
+#: lib/installer.php:2008
 msgid "Required PHP Modules"
 msgstr "所需的PHP 模块"
 
-#: lib/installer.php:1938 lib/installer.php:1968 plugins.php:25 plugins.php:474
+#: lib/installer.php:2009 lib/installer.php:2039 plugins.php:25 plugins.php:474
 msgid "Installed"
 msgstr "已安装"
 
-#: lib/installer.php:1938
+#: lib/installer.php:2009
 msgid "Required"
 msgstr "要求"
 
-#: lib/installer.php:1961
+#: lib/installer.php:2032
 msgid "PHP - Module Support (Optional)"
 msgstr "PHP - 模块支持(可选)"
 
-#: lib/installer.php:1963
+#: lib/installer.php:2034
 msgid "The following PHP extensions are recommended, and should be installed before continuing your Kadupul install.  NOTE: If you are planning on supporting SNMPv3 with IPv6, you should not install the php-snmp module at this time."
 msgstr "建议使用以下PHP 扩展,并应在继续安装Kadupul 之前安装.注意: 如果您计划使用IPv6支持的SNMPv3,则此时不应安装php-snmp 模块."
 
-#: lib/installer.php:1967
+#: lib/installer.php:2038
 msgid "Optional Modules"
 msgstr "可选模块"
 
-#: lib/installer.php:1968
+#: lib/installer.php:2039
 msgid "Optional"
 msgstr "可选的"
 
-#: lib/installer.php:1989
+#: lib/installer.php:2060
 msgid "MySQL - TimeZone Support"
 msgstr "MySQL - 时区支持"
 
-#: lib/installer.php:2000
+#: lib/installer.php:2071
 msgid "Your MySQL TimeZone database is not populated.  Please populate this database before proceeding."
 msgstr "您的MySQL TimeZone 数据库未被填充. 请在继续之前填入此数据库."
 
-#: lib/installer.php:2004
+#: lib/installer.php:2075
 msgid "Your Kadupul database login account does not have access to the MySQL TimeZone database.  Please provide the Kadupul database account \"select\" access to the \"time_zone_name\" table in the \"mysql\" database, and populate MySQL's TimeZone information before proceeding."
 msgstr "您的Kadupul 数据库登录帐户无权访问MySQL TimeZone 数据库. 请提供Kadupul 数据库帐户对 \"mysql\" 数据库中 \"time_zone_name\" 表的 \"select\" 访问权,并在继续之前填充MySQL 的TimeZone 信息."
 
-#: lib/installer.php:2009
+#: lib/installer.php:2080
 msgid "Your Kadupul database account has access to the MySQL TimeZone database and that database is populated with global TimeZone information."
 msgstr "您的Kadupul 数据库帐户可以访问MySQL TimeZone 数据库,并且该数据库使用全球时区信息填充."
 
-#: lib/installer.php:2014
+#: lib/installer.php:2085
 msgid "MySQL - Settings"
 msgstr "MySQL - 设置"
 
-#: lib/installer.php:2015
+#: lib/installer.php:2086
 msgid "These MySQL performance tuning settings will help your Kadupul system perform better without issues for a longer time."
 msgstr "这些MySQL 性能调整设置将帮助您的Kadupul 系统更好的长期运行."
 
-#: lib/installer.php:2017
+#: lib/installer.php:2088
 msgid "Recommended MySQL System Variable Settings"
 msgstr "推荐的MySQL 系统变量设置"
 
-#: lib/installer.php:2046
+#: lib/installer.php:2118
 msgid "Installation Type"
 msgstr "安装类型"
 
-#: lib/installer.php:2052
+#: lib/installer.php:2124
 #, php-format
 msgid "Upgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "从 <strong>%s</strong> 到 <strong>%s</strong> 升级"
 
-#: lib/installer.php:2054
+#: lib/installer.php:2126
 msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "如果出现问题,强烈建议您清除浏览器缓存,关闭然后重新打开浏览器(不只是 'Kadupul' 选项卡)并重试, 然后再向Kadupul Group 报告问题"
 
-#: lib/installer.php:2055
+#: lib/installer.php:2127
 msgid "On rare occasions, we have had reports from users who experience some minor issues due to changes in the code.  These issues are caused by the browser retaining pre-upgrade code and whilst we have taken steps to minimise the chances of this, it may still occur.  If you need instructions on how to clear your browser cache, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> is a good starting point."
 msgstr "在极少数情况下,我们收到了由于代码更改而遇到一些小问题的用户的报告.这些问题是由浏览器保留升级前代码引起的,虽然我们已采取措施尽量减少这种情况,但仍可能发生.如果您需要有关如何清除浏览器缓存的说明, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a>是一个很好的起点."
 
-#: lib/installer.php:2056
+#: lib/installer.php:2128
 msgid "If after clearing your cache and restarting your browser, you still experience issues, please raise the issue with us and we will try to identify the cause of it."
 msgstr "如果在清除缓存并重启浏览器后仍然遇到问题,请向我们提出问题,我们会尝试确定问题的原因."
 
-#: lib/installer.php:2062
+#: lib/installer.php:2134
 #, php-format
 msgid "Downgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "从<strong>%s</strong>降级为<strong>%s</strong>"
 
-#: lib/installer.php:2063
+#: lib/installer.php:2135
 msgid "You appear to be downgrading to a previous version.  Database changes made for the newer version will not be reversed and <i>could</i> cause issues."
 msgstr "您似乎正在降级到以前的版本.为较新版本所做的数据库更改不会被撤消,并<i>可能</i>导致问题."
 
-#: lib/installer.php:2068
+#: lib/installer.php:2140
 msgid "Please select the type of installation"
 msgstr "请选择安装类型"
 
-#: lib/installer.php:2069
+#: lib/installer.php:2141
 msgid "Installation options:"
 msgstr "安装选项:"
 
-#: lib/installer.php:2073
+#: lib/installer.php:2145
 msgid "Choose this for the Primary site."
 msgstr "为主站点选择此项."
 
-#: lib/installer.php:2073 lib/installer.php:2124
+#: lib/installer.php:2145 lib/installer.php:2196
 msgid "New Primary Server"
 msgstr "新的主要服务器"
 
-#: lib/installer.php:2074 lib/installer.php:2125
+#: lib/installer.php:2146 lib/installer.php:2197
 msgid "New Remote Poller"
 msgstr "新的远程poller"
 
-#: lib/installer.php:2074
+#: lib/installer.php:2146
 msgid "Remote Pollers are used to access networks that are not readily accessible to the Primary site."
 msgstr "远程poller 用于访问主站点无法访问的网络."
 
-#: lib/installer.php:2129
+#: lib/installer.php:2201
 msgid "The following information has been determined from Kadupul's configuration file. If it is not correct, please edit \"include/config.php\" before continuing."
 msgstr "以下信息已经从Kadupul 的配置文件中确定. 如果不正确,请在继续之前编辑 \"include/config.php\" ."
 
-#: lib/installer.php:2133
+#: lib/installer.php:2205
 msgid "Local Database Connection Information"
 msgstr "本地数据库连接信息"
 
-#: lib/installer.php:2136 lib/installer.php:2148
+#: lib/installer.php:2208 lib/installer.php:2220
 #, php-format
 msgid "Database: <b>%s</b>"
 msgstr "数据库:<b>%s</b>"
 
-#: lib/installer.php:2137 lib/installer.php:2149
+#: lib/installer.php:2209 lib/installer.php:2221
 #, php-format
 msgid "Database User: <b>%s</b>"
 msgstr "数据库用户: <b>%s</b>"
 
-#: lib/installer.php:2138 lib/installer.php:2150
+#: lib/installer.php:2210 lib/installer.php:2222
 #, php-format
 msgid "Database Hostname: <b>%s</b>"
 msgstr "数据库主机名称: <b>%s</b>"
 
-#: lib/installer.php:2139 lib/installer.php:2151
+#: lib/installer.php:2211 lib/installer.php:2223
 #, php-format
 msgid "Port: <b>%s</b>"
 msgstr "端口: <b>%s</b>"
 
-#: lib/installer.php:2140 lib/installer.php:2152
+#: lib/installer.php:2212 lib/installer.php:2224
 #, php-format
 msgid "Server Operating System Type: <b>%s</b>"
 msgstr "服务器操作系统类型: <b>%s</b>"
 
-#: lib/installer.php:2145
+#: lib/installer.php:2217
 msgid "Central Database Connection Information"
 msgstr "中央数据库连接信息"
 
-#: lib/installer.php:2157
+#: lib/installer.php:2229
 msgid "Configuration Readonly!"
 msgstr "配置只读!"
 
-#: lib/installer.php:2159
+#: lib/installer.php:2231
 msgid "Your config.php file must be writable by the web server during install in order to configure the Remote poller.  Once installation is complete, you must set this file to Read Only to prevent possible security issues."
 msgstr "要配置远程poller,安装期间,您的config.php 文件必须可由Web 服务器写入.安装完成后,您必须将此文件设置为只读以防止可能的安全问题."
 
-#: lib/installer.php:2163
+#: lib/installer.php:2235
 msgid "Configuration of Poller"
 msgstr "Poller 配置"
 
-#: lib/installer.php:2164
+#: lib/installer.php:2236
 msgid "Your Remote Kadupul Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Kadupul database server.  Correct this and try again."
 msgstr "您的Kadupul 远程poller 信息未包含在您的config.php 文件中. 请查看config.php.dist,并设置变量:<i> $ rdatabase_default,$ rdatabase_username </i>等.必须设置这些变量并指向您的主Kadupul 数据库服务器. 纠正这一点,然后再试一次."
 
-#: lib/installer.php:2168
+#: lib/installer.php:2240
 msgid "Remote Poller Variables"
 msgstr "远程poller 的变量"
 
-#: lib/installer.php:2170
+#: lib/installer.php:2242
 msgid "The variables that must be set in the config.php file include the following:"
 msgstr "必须在config.php 文件中设置的变量包括以下内容:"
 
-#: lib/installer.php:2181
+#: lib/installer.php:2253
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
 msgstr "安装程序自动分配 $poller_id 并将其添加到config.php 文件中."
 
-#: lib/installer.php:2183
+#: lib/installer.php:2255
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Kadupul database server.  Follow the same procedure you would with any other Kadupul install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
 msgstr "一旦变量全部在config.php 文件中设置,您还必须授予$ rdatabase_username访问主Kadupul 数据库服务器的权限.按照与任何其他Kadupul 安装相同的步骤进行操作.然后,您可以按 '测试连接' 按钮.如果测试成功,您将能够继续并完成安装."
 
-#: lib/installer.php:2187
+#: lib/installer.php:2259
 msgid "Additional Steps After Installation"
 msgstr "安装后的其他步骤"
 
-#: lib/installer.php:2189
+#: lib/installer.php:2261
 msgid "It is essential that the Central Kadupul server can communicate via MySQL to each remote Kadupul database server.  Once the install is complete, you must edit the Remote Data Collector and ensure the settings are correct.  You can verify using the 'Test Connection' when editing the Remote Data Collector."
 msgstr "中央Kadupul 服务器必须能够通过MySQL 与每个远程Kadupul 数据库服务器进行通信.安装完成后,您必须编辑远程数据采集器并确保设置正确.编辑远程数据采集器时,可以使用 '测试连接' 进行验证."
 
-#: lib/installer.php:2202
+#: lib/installer.php:2275
 msgid "Critical Binary Locations and Versions"
 msgstr "关键的可执行程序位置和版本"
 
-#: lib/installer.php:2203
+#: lib/installer.php:2276
 msgid "Make sure all of these values are correct before continuing."
 msgstr "在继续之前确保所有这些值都是正确的."
 
-#: lib/installer.php:2206
+#: lib/installer.php:2279
 msgid "One or more paths appear to be incorrect, unable to proceed"
 msgstr "一个或多个路径似乎不正确,无法继续"
 
-#: lib/installer.php:2283
+#: lib/installer.php:2357
 msgid "Directory Permission Checks"
 msgstr "目录权限检查"
 
-#: lib/installer.php:2284
+#: lib/installer.php:2358
 msgid "Please ensure the directory permissions below are correct before proceeding.  During the install, these directories need to be owned by the Web Server user.  These permission changes are required to allow the Installer to install Device Template packages which include XML and script files that will be placed in these directories.  If you choose not to install the packages, there is an 'install_package.php' cli script that can be used from the command line after the install is complete."
 msgstr "在继续之前,请确保以下目录权限是正确的. 在安装过程中,这些目录需要由Web 服务器用户拥有. 这些权限更改是必需的,以允许安装程序安装包含将放置在这些目录中的XML 和脚本文件的设备模板包. 如果您选择不安装软件包,则在安装完成后,会有一个可从命令行使用的 'install_package.php' 脚本."
 
-#: lib/installer.php:2287
+#: lib/installer.php:2361
 msgid "After the install is complete, you can make some of these directories read only to increase security."
 msgstr "安装完成后,您可以使这些目录中的某些只读,以提高安全性."
 
-#: lib/installer.php:2289
+#: lib/installer.php:2363
 msgid "These directories will be required to stay read writable after the install so that the Kadupul remote synchronization process can update them as the Main Kadupul Web Site changes"
 msgstr "在安装后,这些目录将被要求保持可读写状态,以便Kadupul 远程同步过程可以在主Kadupul 网站更改时更新它们"
 
-#: lib/installer.php:2293
+#: lib/installer.php:2367
 msgid "If you are installing packages, once the packages are installed, you should change the scripts directory back to read only as this presents some exposure to the web site."
 msgstr "如果您正在安装软件包,一旦安装了软件包,您应该将脚本目录更改为只读,因为这会暴露给网站."
 
-#: lib/installer.php:2295
+#: lib/installer.php:2369
 msgid "For remote pollers, it is critical that the paths that you will be updating frequently, including the plugins, scripts, and resources paths have read/write access as the data collector will have to update these paths from the main web server content."
 msgstr "对于远程poller 而言,频繁更新的路径(包括插件,脚本和资源路径)具有读取/写入访问权至关重要,因为数据采集器必须从主要Web服务器内容更新这些路径."
 
-#: lib/installer.php:2301
+#: lib/installer.php:2375
 msgid "Required Writable at Install Time Only"
 msgstr "仅在安装时需要可写"
 
-#: lib/installer.php:2320 lib/installer.php:2352 package_import.php:589
+#: lib/installer.php:2394 lib/installer.php:2426 package_import.php:589
 msgid "Not Writable"
 msgstr "不可写入"
 
-#: lib/installer.php:2332
+#: lib/installer.php:2406
 msgid "Required Writable after Install Complete"
 msgstr "安装完成后需要写入"
 
-#: lib/installer.php:2363
+#: lib/installer.php:2437
 msgid "Potential permission issues"
 msgstr "潜在的权限问题"
 
-#: lib/installer.php:2372
+#: lib/installer.php:2446
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
 msgstr "请确保您的web 服务器对以下显示出错的Kadupul 文件夹具有读/写权限."
 
-#: lib/installer.php:2375
+#: lib/installer.php:2449
 msgid "If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools."
 msgstr "如果您的服务器上开启了SELinux, 您可以永久禁用它,或临时关闭它,然后使用SELinux 命令行工具添加适当的权限."
 
-#: lib/installer.php:2384
+#: lib/installer.php:2458
 #, php-format
 msgid "The user '%s' should have MODIFY permission to enable read/write."
 msgstr "用户'%s '应该具有修改权限以启用读/写。"
 
-#: lib/installer.php:2393
+#: lib/installer.php:2467
 msgid "An example of how to set folder permissions is shown here, though you may need to adjust this depending on your operating system, user accounts and desired permissions."
 msgstr "此处显示了如何设置文件夹权限的示例,但您可能需要根据操作系统,用户帐户和所需权限进行调整."
 
-#: lib/installer.php:2394
+#: lib/installer.php:2468
 msgid "EXAMPLE:"
 msgstr "例子:"
 
-#: lib/installer.php:2395
+#: lib/installer.php:2469
 msgid "Once installation has completed the CSRF path, should be set to read-only."
 msgstr "安装完成后，CSRF路径应设置为只读。"
 
-#: lib/installer.php:2397
+#: lib/installer.php:2471
 msgid "All folders are writable"
 msgstr "所有文件夹都是可写的"
 
-#: lib/installer.php:2409
+#: lib/installer.php:2484
 msgid "Input Validation Whitelist Protection"
 msgstr "输入验证白名单保护"
 
-#: lib/installer.php:2410
+#: lib/installer.php:2485
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
 msgstr "可以以某种方式利用调用脚本的Kadupul数据输入法，即非管理员可以破坏轮询器帐户拥有的任何文件，并且在有人以root身份运行Kadupul轮询器的情况下，可以破坏操作系统，从而使攻击者能够利用您的基础架构。"
 
-#: lib/installer.php:2411
+#: lib/installer.php:2486
 msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 msgstr "因此，在多个版本之前，对Kadupul进行了增强，以针对这些类型的数据输入法提供白名单功能。尽管这样做确实可以更彻底地保护Kadupul，但是它确实增加了Kadupul管理员导入和管理模板和软件包所需的工作量。"
 
-#: lib/installer.php:2412
+#: lib/installer.php:2487
 #, fuzzy
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "白名单的工作方式是，当您首次导入数据输入法或重新导入数据输入法，并且脚本和/或参数以任何方式更改时，数据输入法以及所有相应的数据源都会立即禁用，直到管理员确认数据输入法有效。"
 
-#: lib/installer.php:2413
+#: lib/installer.php:2488
 msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
 msgstr "为了在这种状态下识别数据输入法，我们在Kadupul的CLI目录中提供了一个验证脚本，该脚本可以使用以下选项运行："
 
-#: lib/installer.php:2417
+#: lib/installer.php:2492
 msgid "This script option will search for any Data Input Methods that are currently banned and provide details as to why."
 msgstr "该脚本选项将搜索当前禁止的任何数据输入方法，并提供有关原因的详细信息。"
 
-#: lib/installer.php:2418
+#: lib/installer.php:2493
 msgid "This script option un-ban the Data Input Methods that are currently banned."
 msgstr "此脚本选项取消禁止当前禁止的数据输入法。"
 
-#: lib/installer.php:2419
+#: lib/installer.php:2494
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "此脚本选项将重新启用所有禁用的数据源。"
 
-#: lib/installer.php:2423
+#: lib/installer.php:2498
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
 msgstr "强烈建议您通过取消注释<b>$ input_whitelist</b>变量并在基于Web的安装完成后运行上面的三个CLI脚本选项来更新config.php以启用此功能。"
 
-#: lib/installer.php:2425
+#: lib/installer.php:2500
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
 msgstr "选中下面的复选框以确认您已阅读并了解此安全问题"
 
-#: lib/installer.php:2427
+#: lib/installer.php:2502
 msgid "I have read this statement"
 msgstr "我已阅读此声明"
 
-#: lib/installer.php:2443 lib/installer.php:2449
+#: lib/installer.php:2519 lib/installer.php:2525
 msgid "Default Profile"
 msgstr "默认配置文件"
 
-#: lib/installer.php:2444
+#: lib/installer.php:2520
 msgid "Please select the default Data Source Profile to be used for polling sources.  This is the maximum amount of time between scanning devices for information so the lower the polling interval, the more work is placed on the Kadupul Server host.  Also, select the intended, or configured Cron interval that you wish to use for Data Collection."
 msgstr "请选择用于采集器的默认数据源配置文件.这是扫描设备之间获取信息的最长时间,因此采集周期越短,Kadupul 服务器上的工作就越多.此外,选择要用于数据采集的预期或配置的Cron 周期."
 
-#: lib/installer.php:2455
+#: lib/installer.php:2531
 msgid "Cron Interval"
 msgstr "Cron 周期"
 
-#: lib/installer.php:2476
+#: lib/installer.php:2552
 msgid "Default Automation Network"
 msgstr "默认自动化网络"
 
-#: lib/installer.php:2477
+#: lib/installer.php:2553
 msgid "Kadupul can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
 msgstr "安装完成后, Kadupul 可以自动扫描网络.这将利用下面的网络范围来计算可扫描的IP 范围.为扫描定义了一组预定义的选项,包括使用 'public' 和 'private' 团体名."
 
-#: lib/installer.php:2478
+#: lib/installer.php:2554
 msgid "If your devices require a different set of options to be used first, you may define them below and they will be utilized before the defaults"
 msgstr "如果您的设备需要先使用一组不同的选项,您可以在下面定义它们,它们将在默认值之前使用"
 
-#: lib/installer.php:2479
+#: lib/installer.php:2555
 msgid "All options may be adjusted post installation"
 msgstr "所有选项可以在安装后调整"
 
-#: lib/installer.php:2483
+#: lib/installer.php:2559
 msgid "Default Options"
 msgstr "默认选项"
 
-#: lib/installer.php:2487
+#: lib/installer.php:2563
 msgid "Scan Mode"
 msgstr "扫描模式"
 
-#: lib/installer.php:2492
+#: lib/installer.php:2568
 msgid "Network Range"
 msgstr "网络范围"
 
-#: lib/installer.php:2498
+#: lib/installer.php:2574
 msgid "Additional Defaults"
 msgstr "附加默认值"
 
-#: lib/installer.php:2519
+#: lib/installer.php:2595
 msgid "Additional SNMP Options"
 msgstr "其他SNMP 选项"
 
-#: lib/installer.php:2532
+#: lib/installer.php:2608
 msgid "Error Locating Profiles"
 msgstr "查找配置文件时出错"
 
-#: lib/installer.php:2533
+#: lib/installer.php:2609
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "安装无法继续,因为未找到配置文件."
 
-#: lib/installer.php:2534
+#: lib/installer.php:2610
 msgid "This may occur if you have a blank database and have not yet imported the cacti.sql file"
 msgstr "如果您的数据库为空且尚未导入cacti.sql 文件,则可能会导致这种情况"
 
-#: lib/installer.php:2542
+#: lib/installer.php:2619
 msgid "Template Setup"
 msgstr "模板设置"
 
-#: lib/installer.php:2545
+#: lib/installer.php:2622
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
 msgstr "选择您希望从Kadupul 导出的模板类型."
 
-#: lib/installer.php:2546
+#: lib/installer.php:2623
 msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
 msgstr "不建议更新您已经修改过的模板。模板的升级不会删除对图形和数据模板的修改，并可能导致意外行为。但是，如果您没有对任何图形、数据查询或数据模板进行更改，则重新导入包应该没有任何影响。在这种情况下，您必须在更新后从模板“同步图表”。"
 
-#: lib/installer.php:2548
+#: lib/installer.php:2625
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "请在安装后选择您想要使用的设备模板. 如果您的操作系统是Windows,则需要确保选择 'Windows 设备' 模板.如果您的操作系统是Linux/UNIX,请确保选择 ' Local Linux Machine' 设备模板."
 
-#: lib/installer.php:2554 package_import.php:487 plugins.php:596
+#: lib/installer.php:2631 package_import.php:487 plugins.php:596
 msgid "Author"
 msgstr "作者"
 
-#: lib/installer.php:2554 package_import.php:490
+#: lib/installer.php:2631 package_import.php:490
 msgid "Homepage"
 msgstr "主页"
 
-#: lib/installer.php:2580
+#: lib/installer.php:2657
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
 msgstr "设备模板允许您监视和绘制Kadupul 内的大量数据. 选择所需的设备模板后,按'完成',安装完成. 请耐心等待,因为输入设备模板可能需要几分钟的时间."
 
-#: lib/installer.php:2588
+#: lib/installer.php:2666
 msgid "Server Collation"
 msgstr "服务器排序"
 
-#: lib/installer.php:2595
+#: lib/installer.php:2673
 msgid "Your server collation appears to be UTF8 compliant"
 msgstr "您的服务器排序规则似乎符合UTF8 标准"
 
-#: lib/installer.php:2598
+#: lib/installer.php:2676
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "您的服务器排序规则似乎不完全符合UTF8 标准. "
 
-#: lib/installer.php:2599
+#: lib/installer.php:2677
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
 msgstr "在[mysqld]部分下,找到名为 'character-set-server' 和 'collation-server' 的条目, 并按如下所示进行设置:"
 
-#: lib/installer.php:2606
+#: lib/installer.php:2684
 msgid "Database Collation"
 msgstr "数据库排序"
 
-#: lib/installer.php:2611
+#: lib/installer.php:2689
 msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "您的数据库默认排序规则似乎符合UTF8"
 
-#: lib/installer.php:2614
+#: lib/installer.php:2692
 msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
 msgstr "您的数据库默认排序规则似乎不符合UTF8标准. "
 
-#: lib/installer.php:2615
+#: lib/installer.php:2693
 msgid "Any tables created by plugins may have issues linked against Kadupul Core tables if the collation is not matched.   Please ensure your database is changed to 'utf8mb4_unicode_ci' by running the following: "
 msgstr "如果排序规则不匹配,则插件创建的任何表都可能存在与Kadupul Core 表链接的问题.   请运行以下命令,确保将数据库更改为 'utf8mb4_unicode_ci': "
 
-#: lib/installer.php:2622
+#: lib/installer.php:2700
 msgid "Table Setup"
 msgstr "表设置"
 
-#: lib/installer.php:2633
+#: lib/installer.php:2711
 #, php-format
 msgid "You have more tables than your PHP configuration will allow us to display/convert.  Please modify the max_input_vars setting in php.ini to a value above %s"
 msgstr "您的表数超过了PHP配置允许我们显示/转换的表数。请将php.ini中的max_input_vars设置修改为高于%s的值"
 
-#: lib/installer.php:2636
+#: lib/installer.php:2714
 msgid "Conversion of tables may take some time especially on larger tables.  The conversion of these tables will occur in the background but will not prevent the installer from completing.  This may slow down some servers if there are not enough resources for MySQL to handle the conversion."
 msgstr "表的转换可能需要一些时间,尤其是在较大的表上. 这些表的转换将在后台进行,但不会阻止安装程序完成.如果MySQL没有足够的资源来处理转换,这可能会降低某些服务器的速度."
 
-#: lib/installer.php:2640
+#: lib/installer.php:2718
 msgid "Tables"
 msgstr "表"
 
-#: lib/installer.php:2641 utilities.php:853
+#: lib/installer.php:2719 utilities.php:853
 msgid "Collation"
 msgstr "校验"
 
-#: lib/installer.php:2641 utilities.php:848
+#: lib/installer.php:2719 utilities.php:848
 msgid "Engine"
 msgstr "引擎"
 
-#: lib/installer.php:2641 utilities.php:854
+#: lib/installer.php:2719 utilities.php:854
 msgid "Row Format"
 msgstr "列格式"
 
-#: lib/installer.php:2673
+#: lib/installer.php:2751
 msgid "One or more tables are too large to convert during the installation.  You should use the cli/convert_tables.php script to perform the conversion, then refresh this page. For example: "
 msgstr "一个或多个表太大而无法在安装期间进行转换.  您应该使用脚本 cli/convert_tables.php 来执行转换,然后刷新此页面.例如: "
 
-#: lib/installer.php:2677
+#: lib/installer.php:2755
 msgid "The following tables should be converted to UTF8 and InnoDB with a Dynamic row format.  Please select the tables that you wish to convert during the installation process."
 msgstr "以下表格应转换为UTF8 和InnoDB. 请在安装过程中选择要转换的表."
 
-#: lib/installer.php:2683
+#: lib/installer.php:2761
 msgid "All your tables appear to be UTF8 and Dynamic row format compliant"
 msgstr "您的所有表格似乎都符合UTF8 标准"
 
-#: lib/installer.php:2693
+#: lib/installer.php:2772
 msgid "Confirm Upgrade"
 msgstr "确认升级"
 
-#: lib/installer.php:2697
+#: lib/installer.php:2776
 msgid "Confirm Downgrade"
 msgstr "确认降级"
 
-#: lib/installer.php:2701
+#: lib/installer.php:2780
 msgid "Confirm Installation"
 msgstr "确认安装"
 
-#: lib/installer.php:2702 plugins.php:13
+#: lib/installer.php:2781 plugins.php:13
 msgid "Install"
 msgstr "安装"
 
-#: lib/installer.php:2707
+#: lib/installer.php:2786
 msgid "DOWNGRADE DETECTED"
 msgstr "检测到降级"
 
-#: lib/installer.php:2708
+#: lib/installer.php:2787
 msgid "YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
 msgstr "您必须手动修改Kadupul 数据库以满足升级要求. <br/>安装程序无法为您自动做这件事"
 
-#: lib/installer.php:2709
+#: lib/installer.php:2788
 msgid "Downgrading should only be performed when absolutely necessary and doing so may break your installation"
 msgstr "降级只应在绝对必要时执行,这样做可能会破坏您的安装"
 
-#: lib/installer.php:2712
+#: lib/installer.php:2791
 msgid "Your Kadupul Server is almost ready.  Please check that you are happy to proceed."
 msgstr "您的Kadupul 服务器基本准备就绪. 请检查后确认是否继续."
 
-#: lib/installer.php:2715
+#: lib/installer.php:2794
 #, php-format
 msgid "Press '%s' then click '%s' to complete the installation process after selecting your Device Templates."
 msgstr "选择设备模板后，按'%s'，然后单击'%s'完成安装过程。"
 
-#: lib/installer.php:2731
+#: lib/installer.php:2811
 #, php-format
 msgid "Installing Kadupul Server v%s"
 msgstr "安装Kadupul 服务器 v%s"
 
-#: lib/installer.php:2732
+#: lib/installer.php:2812
 msgid "Your Kadupul Server is now installing"
 msgstr "您的Kadupul 服务器正在安装"
 
-#: lib/installer.php:2819
+#: lib/installer.php:2899
 #, php-format
 msgid "Spawning background process: %s %s"
 msgstr "产生后台进程：%s %s"
 
-#: lib/installer.php:2845
+#: lib/installer.php:2926
 msgid "Complete"
 msgstr "完成"
 
-#: lib/installer.php:2846
+#: lib/installer.php:2927
 #, php-format
 msgid "Your Kadupul Server v%s has been installed/updated.  You may now start using the software."
 msgstr "您的Kadupul 服务器 v%s 已安装/更新.您现在可以开始使用该软件."
 
-#: lib/installer.php:2850
+#: lib/installer.php:2931
 #, php-format
 msgid "Your Kadupul Server v%s has been installed/updated with errors"
 msgstr "您的Kadupul 服务器 v%s 在安装/更新时出错"
 
-#: lib/installer.php:2962
+#: lib/installer.php:3043
 msgid "Get Help"
 msgstr "获取帮助"
 
-#: lib/installer.php:2967
+#: lib/installer.php:3048
 msgid "Report Issue"
 msgstr "报告问题"
 
-#: lib/installer.php:2970
+#: lib/installer.php:3051
 msgid "Get Started"
 msgstr "开始使用"
 
-#: lib/installer.php:3022
+#: lib/installer.php:3107
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "为v%s启动%s流程"
 
-#: lib/installer.php:3048
+#: lib/installer.php:3133
 msgid "Unable to update application defaults."
 msgstr ""
 
-#: lib/installer.php:3051
+#: lib/installer.php:3136
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "已完成%s针对v%s的进程"
 
-#: lib/installer.php:3090
+#: lib/installer.php:3176
 #, php-format
 msgid "Found %s templates to install"
 msgstr "找到了要安装的%s模板"
 
-#: lib/installer.php:3100
+#: lib/installer.php:3186
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "即将导入软件包#%s '%s'。"
 
-#: lib/installer.php:3109
+#: lib/installer.php:3195
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "已成功在配置文件'%s'下导入软件包#%s '%s'"
 
-#: lib/installer.php:3115
+#: lib/installer.php:3201
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "在配置文件'%s'下导入软件包#%s '%s'失败"
 
-#: lib/installer.php:3130
+#: lib/installer.php:3218
 #, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "设备模板'%s'的映射自动化模板"
 
-#: lib/installer.php:3147
+#: lib/installer.php:3239
 msgid "No templates were selected for import"
 msgstr "未选择要导入的模板"
 
-#: lib/installer.php:3156
+#: lib/installer.php:3249
 msgid "Updating remote configuration file"
 msgstr "等待配置"
 
-#: lib/installer.php:3188
+#: lib/installer.php:3284
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "设置默认数据源配置文件%s (%s)"
 
-#: lib/installer.php:3210
+#: lib/installer.php:3312
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "找不到选定的配置文件(%s)，未进行任何更改"
 
-#: lib/installer.php:3219
+#: lib/installer.php:3321
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "更新自动化网络(%s)，模式\"%s =>'%s'，子网'%s' =>%s\""
 
-#: lib/installer.php:3229
+#: lib/installer.php:3331
 msgid "Failed to find automation network, no changes were made"
 msgstr "找不到自动化网络，未进行任何更改"
 
-#: lib/installer.php:3233
+#: lib/installer.php:3335
 msgid "Adding extra snmp settings for automation"
 msgstr "添加额外的snmp设置以实现自动化"
 
-#: lib/installer.php:3239
+#: lib/installer.php:3341
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "正在选择自动化选项集%s"
 
-#: lib/installer.php:3252
+#: lib/installer.php:3354
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "正在更新自动化选项集%s"
 
-#: lib/installer.php:3255
+#: lib/installer.php:3357
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "成功更新了自动化选项集%s"
 
-#: lib/installer.php:3257
+#: lib/installer.php:3359
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "重新排序自动化选项集%s"
 
-#: lib/installer.php:3263
+#: lib/installer.php:3367
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "无法更新自动化选项集%s"
 
-#: lib/installer.php:3266
+#: lib/installer.php:3370
 msgid "Failed to find any automation option set"
 msgstr "无法找到要复制的数据"
 
-#: lib/installer.php:3296
+#: lib/installer.php:3400
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "设备模板 [编辑: %s]"
 
-#: lib/installer.php:3322
+#: lib/installer.php:3430
 msgid "Creating Graphs for Default Device"
 msgstr "为设备创建图形"
 
-#: lib/installer.php:3329
+#: lib/installer.php:3437
 msgid "Adding Device to Default Tree"
 msgstr "设备默认值"
 
-#: lib/installer.php:3337
+#: lib/installer.php:3445
 msgid "No templated graphs for Default Device were found"
 msgstr "找不到默认设备的模板化图"
 
-#: lib/installer.php:3341
+#: lib/installer.php:3449
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "警告：找不到您的操作系统的设备模板。您将需要导入设备模板或Kadupul软件包以监视您的Kadupul服务器。"
 
-#: lib/installer.php:3348
+#: lib/installer.php:3456
 msgid "Running first-time data query for local host"
 msgstr "运行本地主机的首次数据查询"
 
-#: lib/installer.php:3356
+#: lib/installer.php:3464
 msgid "Repopulating poller cache"
 msgstr "重建poller 缓存"
 
-#: lib/installer.php:3361
+#: lib/installer.php:3469
 msgid "Repopulating SNMP Agent cache"
 msgstr "重建SNMPAgent 缓存"
 
-#: lib/installer.php:3366
+#: lib/installer.php:3474
 msgid "Generating RSA Key Pair"
 msgstr "生成RSA密钥对"
 
-#: lib/installer.php:3378
+#: lib/installer.php:3487
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "找到要转换的%s表"
 
-#: lib/installer.php:3385
+#: lib/installer.php:3494
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "转换表#%s '%s'"
 
-#: lib/installer.php:3400
+#: lib/installer.php:3509
 msgid "No tables where found or selected for conversion"
 msgstr "没有找到或选择要转换的表"
 
-#: lib/installer.php:3411
+#: lib/installer.php:3521
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "从%s切换到%s"
 
-#: lib/installer.php:3415
+#: lib/installer.php:3525
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "注意：使用临时文件进行数据库高速缓存：%s"
 
-#: lib/installer.php:3437
+#: lib/installer.php:3547
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "从v%s（数据库%s）升级到v%s"
 
-#: lib/installer.php:3445
+#: lib/installer.php:3555
 #, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "警告：无法找到v%s的升级功能"
 
-#: lib/installer.php:3504
+#: lib/installer.php:3616
 msgid "Install aborted due to no EULA acceptance"
 msgstr "由于未接受EULA，安装被中止"
 
-#: lib/installer.php:3527
+#: lib/installer.php:3640
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "后台已在%s开始，此尝试已在%s跳过"
 
-#: lib/installer.php:3550
+#: lib/installer.php:3664
 #, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "安装期间发生异常: #%s - %s"
 
-#: lib/installer.php:3569
+#: lib/installer.php:3683
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "安装在 %s 开始,在 %s 完成"
 
-#: lib/installer.php:3604
+#: lib/installer.php:3720
 msgid "Both"
 msgstr "两者"
 
-#: lib/installer.php:3604
+#: lib/installer.php:3720
 #, php-format
 msgid "No - %s"
 msgstr "否-%s"
 
-#: lib/installer.php:3609
+#: lib/installer.php:3725
 #, php-format
 msgid "%s - N/A"
 msgstr "%s-不适用"
 
-#: lib/installer.php:3609 lib/installer.php:3611
+#: lib/installer.php:3725 lib/installer.php:3727
 msgid "Web"
 msgstr "网页"
 
-#: lib/installer.php:3611 lib/installer.php:3614
+#: lib/installer.php:3727 lib/installer.php:3730
 #, php-format
 msgid "%s - No"
 msgstr "%s - 否"
 
-#: lib/installer.php:3614
+#: lib/installer.php:3730
 msgid "Cli"
 msgstr "如果您选择此选项，则将重新生成轮询缓存。如果在崩溃后遇到问题并且已经运行数据库修复工具，则只有在发生数据库崩溃的情况下才使用此选项;或者，如果您遇到问题 使用特定的设备，只需重新保存该设备以重建其轮询缓存即可。还有一个与此命令等效的命令行界面，建议用于大型系统。<i class = “deviceDown ”>注意：在大型系统 ，这个命令可能需要几分钟到几个小时才能完成，因此不应该从Kadupul UI运行。您可以在命令行运行'php -q cli / rebuild_poller_cache.php --help'以获取更多信息。</ i>"
 
-#: lib/installer.php:3619
+#: lib/installer.php:3736
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "设置PHP选项%s =%s"
 
-#: lib/installer.php:3625
+#: lib/installer.php:3742
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "无法设置PHP选项%s，为%s（应为%s）"
 
-#: lib/installer.php:3644
+#: lib/installer.php:3779
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "尝试同步时未找到数据采集器"
 
@@ -16105,37 +16105,37 @@ msgstr "(无图形模板)"
 msgid "(Non Query Based)"
 msgstr "Non Query Based"
 
-#: lib/reports.php:1816
+#: lib/reports.php:1814
 msgid "Add to Report"
 msgstr "添加到报告"
 
-#: lib/reports.php:1833
+#: lib/reports.php:1831
 msgid "Choose the Report to associate these graphs with.  The defaults for alignment will be used for each graph in the list below."
 msgstr "选择报告以将这些图形与之关联. 对齐的默认值将用于下面列表中的每个图形."
 
-#: lib/reports.php:1835
+#: lib/reports.php:1833
 msgid "Report:"
 msgstr "报告:"
 
-#: lib/reports.php:1843
+#: lib/reports.php:1841
 msgid "Graph Timespan:"
 msgstr "图形时间跨度:"
 
-#: lib/reports.php:1846
+#: lib/reports.php:1844
 msgid "Graph Alignment:"
 msgstr "图形对齐:"
 
-#: lib/reports.php:1934
+#: lib/reports.php:1932
 #, php-format
 msgid "Created Report Graph Item '<i>%s</i>'"
 msgstr "创建报表图项 '<i>%s</i>'"
 
-#: lib/reports.php:1936
+#: lib/reports.php:1934
 #, php-format
 msgid "Failed Adding Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "添加已存在报表图形项目'<i>%s</i>'失败"
 
-#: lib/reports.php:1939
+#: lib/reports.php:1937
 #, php-format
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "跳过已存在的报告图项目 '<i>%s</i>'"
@@ -16319,261 +16319,280 @@ msgstr "根目录"
 msgid "Unknown RRDtool Error"
 msgstr "未知的RRDtool 错误"
 
-#: lib/snmp.php:193 lib/snmp.php:293 lib/snmp.php:388 lib/snmp.php:720
-#: lib/snmp.php:735
+#: lib/snmp.php:194 lib/snmp.php:294 lib/snmp.php:389 lib/snmp.php:734
+#: lib/snmp.php:749
 #, fuzzy, php-format
 msgid "SNMP Command is: %s"
 msgstr "SNMP 选项 [编辑: %s]"
 
-#: lib/spikekill.php:167
+#: lib/spikekill.php:170
 msgid "FATAL: You must specify an RRDfile!"
 msgstr ""
 
-#: lib/spikekill.php:171
+#: lib/spikekill.php:174
 #, fuzzy, php-format
 msgid "FATAL: File '%s' does not exist."
 msgstr "XML: Kadupul 版本不存在."
 
-#: lib/spikekill.php:173
+#: lib/spikekill.php:186
+#, php-format
+msgid "FATAL: File '%s' is not a regular file."
+msgstr ""
+
+#: lib/spikekill.php:188
 #, php-format
 msgid "FATAL: File '%s' is not writable by '%s'."
 msgstr ""
 
-#: lib/spikekill.php:233
+#: lib/spikekill.php:254
 msgid "FATAL: Standard Deviation must be a positive integer."
 msgstr ""
 
-#: lib/spikekill.php:241 lib/spikekill.php:1022
+#: lib/spikekill.php:262 lib/spikekill.php:1630
 #, fuzzy
 msgid "StdDev"
 msgstr "删除标准设置"
 
-#: lib/spikekill.php:247 lib/spikekill.php:1022
+#: lib/spikekill.php:268 lib/spikekill.php:1630
 #, fuzzy
 msgid "Variance"
 msgstr "变量"
 
-#: lib/spikekill.php:253
+#: lib/spikekill.php:274
 #, fuzzy
 msgid "Gap Fill"
 msgstr "差距填充范围"
 
-#: lib/spikekill.php:265
+#: lib/spikekill.php:286
 msgid "FATAL: You must specify either 'stddev', 'variance', 'float', or 'fill' as methods."
 msgstr ""
 
-#: lib/spikekill.php:280
+#: lib/spikekill.php:301
 msgid "FATAL: The outlier-start and outlier-end arguments must be in the format of YYYY-MM-DD HH:MM or a unix timestamp."
 msgstr ""
 
-#: lib/spikekill.php:284
+#: lib/spikekill.php:305
 msgid "FATAL: The number of outliers to exclude must be a positive integer."
 msgstr ""
 
-#: lib/spikekill.php:292
+#: lib/spikekill.php:313
 msgid "FATAL: Percent deviation must be a positive floating point number."
 msgstr ""
 
-#: lib/spikekill.php:298
+#: lib/spikekill.php:319
 msgid "FATAL: Number of spikes to remove must be a positive integer"
 msgstr ""
 
-#: lib/spikekill.php:303
+#: lib/spikekill.php:324
 msgid "FATAL: Outlier time range requires outlier-start and outlier-end to be specified."
 msgstr ""
 
-#: lib/spikekill.php:309
+#: lib/spikekill.php:330
 msgid "FATAL: Outlier time range requires outlier-start to be less than outlier-end."
 msgstr ""
 
-#: lib/spikekill.php:314
+#: lib/spikekill.php:335
 msgid "FATAL: The 'float' removal method requires the specification of a start and end date."
 msgstr ""
 
-#: lib/spikekill.php:318
+#: lib/spikekill.php:339
 msgid "FATAL: The 'gapfill' removal method requires the specification of a start and end date."
 msgstr ""
 
-#: lib/spikekill.php:327
+#: lib/spikekill.php:348
 msgid "FATAL: You must specify either 'last', 'avg' or 'nan' as a replacement method."
 msgstr ""
 
-#: lib/spikekill.php:330
+#: lib/spikekill.php:351
 msgid "Spike Kill Settings Used for Analysis/Correction"
 msgstr ""
 
-#: lib/spikekill.php:336
+#: lib/spikekill.php:357
 #, php-format
 msgid "Method:        %s"
 msgstr ""
 
-#: lib/spikekill.php:337
+#: lib/spikekill.php:358
 #, fuzzy, php-format
 msgid "RRDfile:       %s"
 msgstr "RRD 文件"
 
-#: lib/spikekill.php:338
+#: lib/spikekill.php:359
 #, fuzzy, php-format
 msgid "Repair Type:   %s"
 msgstr "修复步骤[ %s ]"
 
-#: lib/spikekill.php:341
+#: lib/spikekill.php:362
 #, php-format
 msgid "Num Outliers:  %s"
 msgstr ""
 
-#: lib/spikekill.php:342
+#: lib/spikekill.php:363
 #, fuzzy, php-format
 msgid "Max Kills:     %s"
 msgstr "每个RRA 最大削除"
 
-#: lib/spikekill.php:344
+#: lib/spikekill.php:365
 msgid "Max Kills:     Unlimited"
 msgstr ""
 
-#: lib/spikekill.php:348
+#: lib/spikekill.php:369
 #, fuzzy, php-format
 msgid "Standard Devs: %s"
 msgstr "标准偏差"
 
-#: lib/spikekill.php:350
+#: lib/spikekill.php:371
 msgid "Variance %%%:    %s %%%"
 msgstr ""
 
-#: lib/spikekill.php:354
+#: lib/spikekill.php:375
 #, php-format
 msgid "Window Start:  %s (%s)"
 msgstr ""
 
-#: lib/spikekill.php:355
+#: lib/spikekill.php:376
 #, php-format
 msgid "Window End:    %s (%s)"
 msgstr ""
 
-#: lib/spikekill.php:357
+#: lib/spikekill.php:378
 #, fuzzy
 msgid "Window Range:  All"
 msgstr "Windows 相关"
 
-#: lib/spikekill.php:437
+#: lib/spikekill.php:429
+#, php-format
+msgid "FATAL: Unable to safely create a temporary XML file in '%s'!"
+msgstr ""
+
+#: lib/spikekill.php:478
+msgid "FATAL: RRD source identity changed or the source is not a regular file."
+msgstr ""
+
+#: lib/spikekill.php:486 lib/spikekill.php:502
 msgid "FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"
 msgstr ""
 
-#: lib/spikekill.php:446
+#: lib/spikekill.php:530
 #, php-format
 msgid "FATAL: RRDfile Backup of '%s' to '%s' FAILED!"
 msgstr ""
 
-#: lib/spikekill.php:653
+#: lib/spikekill.php:744
 #, php-format
 msgid "NOTE: Searching for Spikes in XML file '%s'"
 msgstr ""
 
-#: lib/spikekill.php:656
+#: lib/spikekill.php:747
 #, php-format
 msgid "NOTE: Limited to Time Window: %s through %s"
 msgstr ""
 
-#: lib/spikekill.php:663
+#: lib/spikekill.php:754
 msgid "NOTE: Dryrun requested.  No updates performed"
 msgstr ""
 
-#: lib/spikekill.php:699
+#: lib/spikekill.php:790
 #, php-format
 msgid "NOTE: No Window Spikes found in '%s'"
 msgstr ""
 
-#: lib/spikekill.php:702
+#: lib/spikekill.php:793
 #, php-format
 msgid "NOTE: No Spikes found in '%s'"
 msgstr ""
 
-#: lib/spikekill.php:713
+#: lib/spikekill.php:806
 #, php-format
 msgid "NOTE: Spikes Found and Remediated.  Total Spikes %s"
 msgstr ""
 
-#: lib/spikekill.php:716
+#: lib/spikekill.php:810
+#, php-format
+msgid "FATAL: Unable to restore '%s' from '%s'"
+msgstr ""
+
+#: lib/spikekill.php:820
 #, php-format
 msgid "FATAL: Unable to backup '%s'"
 msgstr ""
 
-#: lib/spikekill.php:720
+#: lib/spikekill.php:830
 #, php-format
 msgid "FATAL: Unable to write XML file '%s'"
 msgstr ""
 
-#: lib/spikekill.php:724
+#: lib/spikekill.php:839
 #, fuzzy
 msgid "NOTE: No Spikes Found."
 msgstr "未找到站点"
 
-#: lib/spikekill.php:752
+#: lib/spikekill.php:894
 #, php-format
 msgid "NOTE: Re-Importing '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:779
+#: lib/spikekill.php:958
 #, php-format
-msgid "NOTE: Backing Up '%s' to '%s/%s'"
+msgid "NOTE: Backing Up '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1022
+#: lib/spikekill.php:1630
 #, fuzzy
 msgid "Avg"
 msgstr "平均:"
 
-#: lib/spikekill.php:1022
+#: lib/spikekill.php:1630
 #, fuzzy
 msgid "CF"
 msgstr "CDEF"
 
-#: lib/spikekill.php:1022
+#: lib/spikekill.php:1630
 #, fuzzy
 msgid "DS"
 msgstr "DES"
 
-#: lib/spikekill.php:1022
+#: lib/spikekill.php:1630
 msgid "NonNan"
 msgstr ""
 
-#: lib/spikekill.php:1022
+#: lib/spikekill.php:1630
 #, fuzzy
 msgid "Samples"
 msgstr "简单"
 
-#: lib/spikekill.php:1023
+#: lib/spikekill.php:1631
 msgid "MaxStdDev"
 msgstr ""
 
-#: lib/spikekill.php:1023
+#: lib/spikekill.php:1631
 #, fuzzy
 msgid "MaxValue"
 msgstr "值"
 
-#: lib/spikekill.php:1023
+#: lib/spikekill.php:1631
 #, fuzzy
 msgid "MinStdDev"
 msgstr "干运行标准设置"
 
-#: lib/spikekill.php:1023
+#: lib/spikekill.php:1631
 #, fuzzy
 msgid "MinValue"
 msgstr "值"
 
-#: lib/spikekill.php:1023
+#: lib/spikekill.php:1631
 msgid "StdKilled"
 msgstr ""
 
-#: lib/spikekill.php:1023
+#: lib/spikekill.php:1631
 msgid "VarKilled"
 msgstr ""
 
-#: lib/spikekill.php:1023
+#: lib/spikekill.php:1631
 msgid "WindKilled"
 msgstr ""
 
-#: lib/spikekill.php:1023
+#: lib/spikekill.php:1631
 msgid "WindSamples"
 msgstr ""
 

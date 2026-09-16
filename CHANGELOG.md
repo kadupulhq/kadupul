@@ -11,6 +11,9 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Preserve requested spike-removal recovery snapshots and repair dry-run statistics.
+  Port the LTS filesystem and RRDtool failure safeguards to the main branch.
+
 - Preserve page context in online help and translated login legends in midwinter.
   Repair malformed midwinter links and two Portuguese translations.
 - Preserve meaningful dates in behavioral observations and record incomplete

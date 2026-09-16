@@ -5,6 +5,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+require_once __DIR__ . '/path_helpers.php';
+
 /**
  * title_trim - takes a string of text, truncates it to $max_length and appends
  * three periods onto the end
