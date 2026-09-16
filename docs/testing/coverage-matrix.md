@@ -126,8 +126,10 @@ observations, missing selected scenarios and orphan golden files fail before
 any golden is written. Failed runtime probes also leave an incomplete manifest.
 The committed PHP 8.2 baseline was recaptured and reproduced against application
 revision `6ce3572dab3264be563b765f25dcadd8cc046252` using the updated harness.
-Its prior 32 observations are unchanged except the calibration warning’s harness
-line number (86 to 79); the two diagnostic scopes are new. This is the documented
+The prior observations change in two places: the calibration warning’s harness
+line number (86 to 79), and removal of ten `config_settings` callbacks produced
+by seeded network-discovery workers. Fixture setup now disables that unrelated
+discovery network before polling. The two diagnostic scopes are new. This is the documented
 modified Kadupul baseline, not a claim of upstream parity. Other runtime baselines
 need their own explicit capture and repeat run. Orphan checks inspect every
 existing runtime directory for the selected target.

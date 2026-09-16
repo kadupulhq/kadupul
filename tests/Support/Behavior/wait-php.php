@@ -3,6 +3,15 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+// A separate completion channel distinguishes application exit 70 from a
+// supervisor failure. The caller supplies a fresh private filename per run.
+$completion = isset($argv[1]) ? @fopen($argv[1], 'x') : false;
+if ($completion === false) {
+    fwrite(STDERR, "Cannot create the poller observation completion file.\n");
+    exit(70);
+}
+chmod($argv[1], 0600);
+
 // Own a process group before launching PHP so shells and not-yet-execed descendants
 // are visible even after the application parent exits. Never match by name.
 $group = getmypid();
@@ -10,7 +19,7 @@ if (!function_exists('posix_setsid') || !is_dir('/proc') || (posix_getpgrp() !==
     fwrite(STDERR, "Cannot establish the poller observation process group.\n");
     exit(70);
 }
-$child = proc_open(array_merge(array(PHP_BINARY), array_slice($argv, 1)), array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
+$child = proc_open(array_merge(array(PHP_BINARY), array_slice($argv, 2)), array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
 if (!is_resource($child)) {
     fwrite(STDERR, "Cannot start the observed PHP process.\n");
     exit(70);
@@ -35,6 +44,10 @@ do {
         }
     }
     if (!$active) {
+        if (fwrite($completion, "complete\n") !== 9 || !fclose($completion)) {
+            fwrite(STDERR, "Cannot record the poller observation completion.\n");
+            exit(70);
+        }
         exit($status);
     }
     usleep(10000);

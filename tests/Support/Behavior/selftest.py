@@ -205,6 +205,27 @@ def diagnostic_contracts():
     print('diagnostic scopes preserve severity, content, order and duplicate records')
 
 
+def boundary_status_channel():
+    for completed in (True, False):
+        captured = object.__new__(harness.Harness)
+        calls = []
+        def command(*args, **kwargs):
+            calls.append(args)
+            if args[0] == 'cat':
+                return {'exit': 0, 'stdout': 'complete\n' if completed else '', 'stderr': ''}
+            return {'exit': 70, 'stdout': '', 'stderr': 'application output'}
+        captured.command = command
+        try:
+            result = captured.php('poller.php')
+        except RuntimeError as error:
+            assert not completed and 'boundary failed' in str(error)
+        else:
+            assert completed and result['exit'] == 70 and result['stderr'] == 'application output'
+        assert calls[-1][0:2] == ('rm', '-f')
+        assert calls[0][4] == calls[-1][2]
+    print('separate completion channel preserves application status and rejects incomplete observations')
+
+
 def native_worker_boundary():
     """Wait for delayed shells and grandchildren, including non-poller names."""
     if not sys.platform.startswith('linux') or shutil.which('php') is None:
@@ -219,12 +240,27 @@ def native_worker_boundary():
         parent = Path(directory) / 'parent.php'
         parent.write_text('<?php $command = "sleep 0.3; " . escapeshellarg(PHP_BINARY) . " -d auto_prepend_file= " . escapeshellarg(' +
                           json.dumps(str(worker)) + '); exec("( " . $command . " ) >/dev/null 2>&1 &"); exit(7);')
-        result = subprocess.run(['php', '-d', 'auto_prepend_file=', str(Path(__file__).with_name('wait-php.php')), '-d', 'auto_prepend_file=', str(parent)],
+        result = subprocess.run(['php', '-d', 'auto_prepend_file=', str(Path(__file__).with_name('wait-php.php')), str(Path(directory) / 'status'), '-d', 'auto_prepend_file=', str(parent)],
                                 capture_output=True, text=True, timeout=40)
         assert result.returncode == 7, result
         assert result.stderr == '', result.stderr
         assert marker.read_text() == 'done'
-    print('process-group boundary waits for delayed grandchildren and preserves parent exit status')
+        assert (Path(directory) / 'status').read_text() == 'complete\n'
+        # A real application exit of 70 must still have a completed boundary.
+        parent.write_text('<?php exit(70);')
+        (Path(directory) / 'status').unlink()
+        result = subprocess.run(['php', '-d', 'auto_prepend_file=', str(Path(__file__).with_name('wait-php.php')),
+                                 str(Path(directory) / 'status'), '-d', 'auto_prepend_file=', str(parent)],
+                                capture_output=True, text=True, timeout=40)
+        assert result.returncode == 70 and result.stderr == '', result
+        assert (Path(directory) / 'status').read_text() == 'complete\n'
+        # An existing file must never be overwritten or treated as success.
+        (Path(directory) / 'status').write_text('sentinel')
+        result = subprocess.run(['php', '-d', 'auto_prepend_file=', str(Path(__file__).with_name('wait-php.php')),
+                                 str(Path(directory) / 'status'), str(parent)], capture_output=True, text=True, timeout=40)
+        assert result.returncode == 70 and 'Cannot create' in result.stderr, result
+        assert (Path(directory) / 'status').read_text() == 'sentinel'
+    print('process-group boundary waits for delayed grandchildren and distinguishes application exit 70')
 
 
 def main():
@@ -237,6 +273,7 @@ def main():
 
     print(f'{len(CASES) - len(failures)}/{len(CASES)} normalization cases pass')
 
+    boundary_status_channel()
     native_worker_boundary()
     recording_guards()
     diagnostic_contracts()

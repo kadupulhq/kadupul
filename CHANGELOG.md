@@ -69,7 +69,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Unit test coverage reported to SonarQube Cloud from a PHP 8.1 run of the
   tests that pass without a database.
 - Update vendored phpseclib to 3.0.57 and constant_time_encoding to 3.1.3, and lock runtime dependencies.
-- Behavioral characterization harness recording 32 contracts from a running
+- Behavioral characterization harness recording 34 contracts from a running
   1.2.31 install, with a differential runner so a rewrite of the internals can
   be compared against what an administrator, plugin or script actually sees.
 - Repository scaffolding: continuous integration for PHP 8.1 through 8.4 and

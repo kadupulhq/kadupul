@@ -13,6 +13,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import uuid
 import urllib.parse
 import urllib.request
 import urllib.error
@@ -182,11 +183,16 @@ class Harness:
 
     def php(self, *args):
         if args and args[0] == 'poller.php':
-            result = self.command('php', '-d', 'auto_prepend_file=', '/harness/wait-php.php', '-d',
-                                  'auto_prepend_file=/harness/errors.php', *args)
-            if result['exit'] == 70:
-                raise RuntimeError('Poller observation boundary failed: ' + result['stderr'])
-            return result
+            completion = '/tmp/poller-observation-' + uuid.uuid4().hex
+            try:
+                result = self.command('php', '-d', 'auto_prepend_file=', '/harness/wait-php.php', completion, '-d',
+                                      'auto_prepend_file=/harness/errors.php', *args)
+                observed = self.command('cat', completion)
+                if observed['exit'] != 0 or observed['stdout'] != 'complete\n':
+                    raise RuntimeError('Poller observation boundary failed: ' + result['stderr'])
+                return result
+            finally:
+                self.command('rm', '-f', completion)
         return self.command('php', '-d', 'auto_prepend_file=/harness/errors.php', *args)
 
     def sql(self, sql):
