@@ -196,6 +196,13 @@ def diagnostic_contracts():
     trace = '09/16/2026 01:02:06 - CMDPHP PHP ERROR Backtrace: (/var/www/html/lib/rrd.php[334]:update(), DS[12])'
     assert harness.application_diagnostics(trace) == harness.application_diagnostics(trace.replace('[334]', '[900]'))
     assert 'DS[12]' in harness.application_diagnostics(trace)[0]['message']
+    for severity in ('DEPRECATED', 'USER_WARNING', 'USER_NOTICE', 'USER_ERROR', 'USER_DEPRECATED', 'STRICT'):
+        diagnostic = f'PHP {severity}: calibration in file: /harness/probe.php on line: 79'
+        assert harness.normalize_php_locations(diagnostic).endswith('on line: <LINE>')
+    relative_trace = 'PHP ERROR Backtrace: (/poller.php[764]:main(), /lib/functions.php[4479]:log(), DS[12])'
+    assert harness.normalize_php_locations(relative_trace) == 'PHP ERROR Backtrace: (/poller.php[<LINE>]:main(), /lib/functions.php[<LINE>]:log(), DS[12])'
+    assert harness.normalize_php_locations('ordinary /poller.php[764]') == 'ordinary /poller.php[764]'
+
     assert harness.application_diagnostics(broken) == harness.application_diagnostics(broken.replace('line: 334', 'line: 900'))
     assert harness.normalize('ordinary DS[12] on line: 334') == 'ordinary DS[12] on line: 334'
     unrelated = '09/16/2026 01:02:06 - ERROR PHP WARNING: payload has 108 bytes'
@@ -245,6 +252,8 @@ def poller_acknowledgement_contract():
     assert before == {'exit': 7, 'stdout': other, 'stderr': 'error\n', 'rrd_acknowledgements': 2}
     assert contract(acknowledgement + other) != before
     assert contract('OK u:broken s:0.02 r:0.03\n' + other)['rrd_acknowledgements'] == 0
+    assert contract('OK u:0 s:0 r:0\n' + other)['rrd_acknowledgements'] == 1
+    assert contract('OK u:1 s:0.2 r:3\n' + other)['rrd_acknowledgements'] == 1
     assert contract('line two\nline one\n')['stdout'] == 'line two\nline one\n'
     probe = object.__new__(harness.Harness)
     probe.observed = {}

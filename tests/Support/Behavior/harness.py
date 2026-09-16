@@ -69,10 +69,10 @@ def normalize_php_locations(value):
     lines = []
     root = r'(?:<APP>|<HARNESS>|/var/www/html|/harness)'
     for line in value.splitlines(keepends=True):
-        if re.search(r'\bPHP (?:NOTICE|WARNING|ERROR|Notice|Warning|Fatal error|Parse error)\b', line):
+        if re.search(r'\bPHP (?:(?:USER_)?(?:NOTICE|WARNING|ERROR|DEPRECATED)|STRICT|Notice|Warning|Deprecated|Fatal error|Parse error)\b', line):
             line = re.sub(r'(\bin(?: file:)?\s+' + root + r'/[^\r\n]*?\.php\s+on line:?\s*)\d+(?=\s*$)',
                           r'\1<LINE>', line)
-            line = re.sub(r'(' + root + r'/[^\s\[\]]+\.php)\[\d+\]', r'\1[<LINE>]', line)
+            line = re.sub(r'((?:' + root + r')?/[^\s\[\]]+\.php)\[\d+\]', r'\1[<LINE>]', line)
         lines.append(line)
     return ''.join(lines)
 
@@ -96,7 +96,7 @@ def normalize(value):
         # measurements do not. Both patterns are anchored to the poller's own
         # line shapes so an application message carrying the same tokens is
         # still compared.
-        value = re.sub(r'(?<=OK )u:\d+\.\d+ s:\d+\.\d+ r:\d+\.\d+', 'u:<T> s:<T> r:<T>', value)
+        value = re.sub(r'(?<=OK )u:\d+(?:\.\d+)? s:\d+(?:\.\d+)? r:\d+(?:\.\d+)?', 'u:<T> s:<T> r:<T>', value)
         value = re.sub(r'(?<=SYSTEM STATS: )Time:\d+\.\d+', 'Time:<T>', value)
         value = POLLER_TIMESTAMP.sub('<TIMESTAMP>', value)
         value = INSTALL_TIMESTAMPS.sub(r'\g<1><TIMESTAMP>\g<2><TIMESTAMP>', value)
@@ -109,7 +109,7 @@ def poller_command_contract(result):
     acknowledgements = 0
     output = []
     for line in command['stdout'].splitlines(keepends=True):
-        if re.fullmatch(r'OK u:\d+\.\d+ s:\d+\.\d+ r:\d+\.\d+\r?\n?', line):
+        if re.fullmatch(r'OK u:\d+(?:\.\d+)? s:\d+(?:\.\d+)? r:\d+(?:\.\d+)?\r?\n?', line):
             acknowledgements += 1
         else:
             output.append(line)

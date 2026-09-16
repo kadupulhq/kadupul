@@ -116,7 +116,10 @@ Neither changes the application's error-reporting policy.
 `include/global.php` replaces the prepend handler. The separate
 `diagnostics/application-log` contract captures PHP diagnostics emitted by the
 application's own handler, preserving subsystem, severity, message, order and
-duplicates while normalizing only the log timestamp and known environment paths.
+duplicates while normalizing the log timestamp, known environment paths, PHP
+diagnostic source-line locations (including backtrace frames), and failed-write
+byte counts. Error numbers, diagnostic text and unrelated numeric values remain
+part of the comparison.
 A warning emitted after application bootstrap calibrates this path; recording
 fails if it is missing. This is scoped PHP diagnostic coverage, not an assertion
 that every possible application log message is covered.

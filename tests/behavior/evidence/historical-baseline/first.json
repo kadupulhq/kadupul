@@ -1113,15 +1113,15 @@
     "diagnostics/application-log": [
       {
         "subsystem": "ERROR",
-        "message": "PHP DEPRECATED: preg_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated in file: <APP>/lib/functions.php  on line: 4479"
+        "message": "PHP DEPRECATED: preg_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated in file: <APP>/lib/functions.php  on line: <LINE>"
       },
       {
         "subsystem": "CMDPHP",
-        "message": "PHP ERROR Backtrace:  (<HARNESS>/probe.php[<LINE>]:sanitize_search_string(), /lib/functions.php[4479]:preg_replace(), {closure}(), <HARNESS>/errors.php[<LINE>]:CactiErrorHandler())"
+        "message": "PHP ERROR Backtrace:  (<HARNESS>/probe.php[<LINE>]:sanitize_search_string(), /lib/functions.php[<LINE>]:preg_replace(), {closure}(), <HARNESS>/errors.php[<LINE>]:CactiErrorHandler())"
       },
       {
         "subsystem": "ERROR",
-        "message": "PHP USER_WARNING: behavior capture calibration in file: <HARNESS>/probe.php  on line: 79"
+        "message": "PHP USER_WARNING: behavior capture calibration in file: <HARNESS>/probe.php  on line: <LINE>"
       },
       {
         "subsystem": "CMDPHP",
@@ -1133,7 +1133,7 @@
       },
       {
         "subsystem": "CMDPHP",
-        "message": "PHP ERROR NOTICE Backtrace:  (/poller.php[764]:process_poller_output(), /lib/poller.php[819]:rrdtool_function_update(), /lib/rrd.php[905]:rrdtool_execute(), /lib/rrd.php[252]:__rrd_execute(), /lib/rrd.php[334]:fwrite(), CactiErrorHandler())"
+        "message": "PHP ERROR NOTICE Backtrace:  (/poller.php[<LINE>]:process_poller_output(), /lib/poller.php[<LINE>]:rrdtool_function_update(), /lib/rrd.php[<LINE>]:rrdtool_execute(), /lib/rrd.php[<LINE>]:__rrd_execute(), /lib/rrd.php[<LINE>]:fwrite(), CactiErrorHandler())"
       },
       {
         "subsystem": "ERROR",
