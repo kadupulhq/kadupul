@@ -157,7 +157,7 @@ test('a random-named file is created exclusively in the tempdir', function () {
     $result = invoke_spikekill_xmldump_private('createXmlFileExclusively', [$this->dir]);
 
     expect($result)->toBeArray()
-        ->and(dirname($result['path']))->toBe($this->dir)
+        ->and(dirname($result['path']))->toBe(realpath($this->dir))
         ->and(basename($result['path']))->not->toBe(basename($this->dir))
         ->and(file_exists($result['path']))->toBeTrue()
         ->and(is_resource($result['handle']))->toBeTrue()

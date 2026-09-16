@@ -1007,6 +1007,7 @@ class spikekill {
 			return false;
 		}
 
+		$canonical_dir = realpath($dir);
 		if ($configured_dir !== null) {
 			$canonical_dir = $this->canonicalDir($configured_dir);
 
@@ -1014,6 +1015,14 @@ class spikekill {
 				return false;
 			}
 		}
+
+		// Open through the resolved directory, never through a mutable configured alias.
+		$resolved_dir = $canonical_dir;
+		if ($resolved_dir === false) {
+			return false;
+		}
+		$dir = $resolved_dir;
+		$desired_path = cacti_join_dir_child($dir, $basename, DIRECTORY_SEPARATOR);
 
 		if (is_link($desired_path) || file_exists($desired_path)) {
 			$handle = false;
@@ -1125,7 +1134,7 @@ class spikekill {
 		}
 
 		for ($i = 0; $i < 10; $i++) {
-			$candidate = cacti_join_dir_child($tempdir, 'spikekill.' . bin2hex(random_bytes(8)) . '.xml', DIRECTORY_SEPARATOR);
+			$candidate = cacti_join_dir_child($canonical_dir, 'spikekill.' . bin2hex(random_bytes(8)) . '.xml', DIRECTORY_SEPARATOR);
 
 			clearstatcache(true);
 			if (is_link($tempdir) || realpath($tempdir) !== $canonical_dir) {
@@ -1307,9 +1316,8 @@ class spikekill {
 	 * follows the final symlink to stat what it points at instead of the
 	 * link itself, so a symlinked backup directory would otherwise pass the
 	 * is_link() check it is meant to fail.  Delegates to
-	 * cacti_trim_dir_separator() (lib/functions.php), the same helper
-	 * poller_spikekill.php's purge_spike_backups() uses, so both trim the
-	 * same way on Windows too.
+	 * cacti_trim_dir_separator() (lib/path_helpers.php), which preserves
+	 * filesystem roots on both Unix and Windows.
 	 *
 	 * @param  (string) $dir
 	 *

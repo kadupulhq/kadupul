@@ -5,7 +5,7 @@
 
 // Execute the production path helpers without loading database globals.
 require_once dirname(__DIR__, 2) . '/lib/path_helpers.php';
-foreach (array('cacti_join_dir_child', 'cacti_path_is_within', 'cacti_normalize_windows_path') as $name) {
+foreach (array('cacti_trim_dir_separator', 'cacti_join_dir_child', 'cacti_path_is_within', 'cacti_normalize_windows_path') as $name) {
     if (function_exists($name)) {
         continue;
     }
