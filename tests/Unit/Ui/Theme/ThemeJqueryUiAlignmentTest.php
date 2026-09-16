@@ -53,5 +53,9 @@ test('shipped theme bundles match their reviewed reference content', function ($
 })->with(array(
     array('classic', 'fbf38a6a4caaeb6fe938c241f9f7e096a62a0a3b2c25da5eddd49d4e79987258'),
     array('modern', 'b41c951087c7eec66678b6e6ab54d6e27109e5c058b241ac4aa92d569f104dea'),
-    array('midwinter', 'c6b55b7b337d6b1eaaa870056eddd3c7712439e5db11dd13581353e4998025f1')
+    array('midwinter', 'c6b55b7b337d6b1eaaa870056eddd3c7712439e5db11dd13581353e4998025f1'),
+    array('paw', 'b895be0b91960fa951fd13dfbaa50adaae24427495a1f49bedce6a293e36f055'),
+    array('dark', 'f358625c8f5fb489ddd894010df50e3ff657f10c9b25cebab716be31c854852d'),
+    array('sunrise', 'c6b55b7b337d6b1eaaa870056eddd3c7712439e5db11dd13581353e4998025f1'),
+    array('paper-plane', '1806948ccae44528b12468559bd5b6ab29a735b00611c67b195029cbe86ea86b')
 ));
