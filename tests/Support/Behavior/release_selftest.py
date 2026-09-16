@@ -2,13 +2,43 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 import json
+import hashlib
+import subprocess
 from pathlib import Path
 import tempfile
 from unittest.mock import patch
 import release_readiness as release
 
 
+def recursive_rrd_manifest():
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        (root / 'rra/nested').mkdir(parents=True)
+        (root / 'rra/sample.rrd').write_bytes(b'root RRD')
+        (root / 'rra/nested/sample.rrd').write_bytes(b'nested RRD')
+        class LocalRuntime:
+            def php(self, *args):
+                result = subprocess.run(['php', *args], cwd=root, capture_output=True, text=True)
+                return dict(exit=result.returncode, stdout=result.stdout, stderr=result.stderr)
+        runtime = LocalRuntime()
+        before = release.rrd_manifest(runtime)
+        assert before == {name: hashlib.sha256((root / 'rra' / name).read_bytes()).hexdigest()
+                          for name in ('sample.rrd', 'nested/sample.rrd')}
+        (root / 'rra/nested/sample.rrd').write_bytes(b'changed nested RRD')
+        assert release.rrd_manifest(runtime) != before
+        (root / 'rra/nested/sample.rrd').unlink()
+        (root / 'rra/sample.rrd').unlink()
+        try:
+            release.rrd_manifest(runtime)
+        except RuntimeError as error:
+            assert 'No RRD files' in str(error)
+        else:
+            raise AssertionError('Empty RRD manifest accepted')
+    print('RRD manifests distinguish nested paths, detect nested changes, and reject empty stores')
+
+
 def main():
+    recursive_rrd_manifest()
     projects = []
     for missing_docker in (False, True):
         calls = []

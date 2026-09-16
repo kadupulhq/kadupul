@@ -30,7 +30,17 @@ def checked(result, label):
 
 
 def rrd_manifest(h):
-    result = checked(h.php('-r', '$r=[]; foreach (glob("rra/*.rrd") as $p) {$r[basename($p)]=hash_file("sha256",$p);} ksort($r); echo json_encode($r);'), 'RRD manifest')
+    code = '''$r=[];
+$files=new RecursiveIteratorIterator(new RecursiveDirectoryIterator("rra", FilesystemIterator::SKIP_DOTS));
+foreach ($files as $file) {
+    if (!$file->isFile() || strtolower($file->getExtension()) !== "rrd") { continue; }
+    if ($file->isLink()) { throw new RuntimeException("RRD snapshot cannot preserve an external symlink target"); }
+    $path=$file->getPathname(); $hash=hash_file("sha256",$path);
+    if ($hash === false) { throw new RuntimeException("Cannot hash RRD snapshot member"); }
+    $r[substr($path,4)]=$hash;
+}
+ksort($r); echo json_encode($r);'''
+    result = checked(h.php('-r', code), 'RRD manifest')
     values = json.loads(result['stdout'])
     require(isinstance(values, dict) and values, 'No RRD files were created')
     return values
@@ -127,6 +137,8 @@ def main():
             checked(h.php('cli/plugin_manage.php', '--plugin=compatibility_test', '--install'), 'Plugin install')
             checked(h.php('cli/plugin_manage.php', '--plugin=compatibility_test', '--enable'), 'Plugin enable')
             h.sql("REPLACE INTO settings(name,value) VALUES ('graph_watermark','Operations custom watermark');")
+            # Include a real nested RRD so the rehearsal exercises structured paths.
+            checked(h.php('-r', '$files=glob("rra/*.rrd"); if (!$files || !mkdir("rra/structured") || !copy($files[0], "rra/structured/fixture.rrd")) {exit(1);}'), 'Structured RRD fixture')
             before_rrd = rrd_manifest(h)
             before_domain = domain_state(h)
             evidence['steps']['baseline'] = {'version': h.sql('SELECT cacti FROM version').strip(),

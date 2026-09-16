@@ -20476,3 +20476,11 @@ msgstr "इस VDEF का उपयोग करके ग्राफ टे�
 #: vdef.php:923
 msgid "No VDEFs"
 msgstr "कोई VDEFs नहीं"
+
+#: lib/spikekill.php:393
+msgid "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal."
+msgstr ""
+
+#: lib/spikekill.php:399
+msgid "FATAL: RRD storage is busy or its maintenance lock is unavailable. Retry after polling completes."
+msgstr ""
