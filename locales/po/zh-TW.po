@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-15 20:21-0700\n"
+"POT-Creation-Date: 2026-09-15 20:53-0700\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -636,7 +636,7 @@ msgid "Included in Aggregate"
 msgstr "包含在Aggregate中"
 
 #: aggregate_graphs.php:1278 aggregate_graphs.php:1612 graph_templates.php:846
-#: graph_view.php:796 graph_view.php:809 graphs.php:2265 lib/spikekill.php:1752
+#: graph_view.php:796 graph_view.php:809 graphs.php:2265 lib/spikekill.php:1779
 #, fuzzy
 msgid "Size"
 msgstr "尺寸"
@@ -1408,11 +1408,11 @@ msgstr "清除發現的設備"
 #: lib/functions.php:5938 lib/functions.php:5942 lib/html.php:1261
 #: lib/html.php:1333 lib/html_reports.php:1666 lib/html_reports.php:1692
 #: lib/html_reports.php:1763 lib/html_reports.php:1764
-#: lib/html_reports.php:1765 lib/spikekill.php:1743 lib/spikekill.php:1744
-#: lib/spikekill.php:1788 lib/spikekill.php:1789 lib/spikekill.php:1790
-#: lib/spikekill.php:1791 lib/spikekill.php:1792 lib/spikekill.php:1793
-#: lib/spikekill.php:1794 lib/spikekill.php:1795 lib/spikekill.php:1796
-#: lib/spikekill.php:1797 lib/spikekill.php:1798 plugins.php:739
+#: lib/html_reports.php:1765 lib/spikekill.php:1770 lib/spikekill.php:1771
+#: lib/spikekill.php:1818 lib/spikekill.php:1819 lib/spikekill.php:1820
+#: lib/spikekill.php:1821 lib/spikekill.php:1822 lib/spikekill.php:1823
+#: lib/spikekill.php:1824 lib/spikekill.php:1825 lib/spikekill.php:1826
+#: lib/spikekill.php:1827 lib/spikekill.php:1828 plugins.php:739
 #: pollers.php:1113 user_admin.php:2320 utilities.php:721 utilities.php:1170
 #: utilities.php:2638 utilities.php:2766 utilities.php:2774 utilities.php:2785
 #: utilities.php:2796 utilities.php:2819 utilities.php:2865 utilities.php:3099
@@ -3675,7 +3675,7 @@ msgstr "重新運行分析"
 msgid "Check"
 msgstr "檢查"
 
-#: data_debug.php:809 include/global_form.php:1015 lib/rrd.php:3265
+#: data_debug.php:809 include/global_form.php:1015 lib/rrd.php:3342
 #: utilities.php:781 utilities.php:798 utilities.php:3079
 #, fuzzy
 msgid "Value"
@@ -4013,7 +4013,7 @@ msgstr "用於收集此數據輸入方法的信息的方法。"
 #: data_input.php:954 host.php:1682 lib/api_automation.php:162
 #: lib/api_automation.php:1100 lib/auth.php:2445 lib/clog_webapi.php:829
 #: lib/html_utility.php:1214 lib/import.php:332 lib/plugins.php:1333
-#: lib/plugins.php:1334 lib/rrd.php:3290 lib/rrd.php:3302 lib/spikekill.php:284
+#: lib/plugins.php:1334 lib/rrd.php:3367 lib/rrd.php:3379 lib/spikekill.php:284
 #: package_import.php:517 package_import.php:595 utilities.php:194
 #: utilities.php:195 utilities.php:2634
 #, fuzzy
@@ -4344,7 +4344,7 @@ msgstr "步驟"
 
 #: data_source_profiles.php:622 graphs_new.php:449 include/global_form.php:281
 #: lib/html.php:566 lib/html_filter.php:55 lib/installer.php:2723
-#: lib/rrd.php:3319 utilities.php:849 utilities.php:1771
+#: lib/rrd.php:3396 utilities.php:849 utilities.php:1771
 #, fuzzy
 msgid "Rows"
 msgstr "行"
@@ -5152,7 +5152,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool圖形語法"
 
 #: graph_image.php:164 graph_json.php:208 graph_realtime.php:228
-#: lib/rrd.php:1669
+#: lib/rrd.php:1746
 #, fuzzy
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller尚未運行。"
@@ -7608,7 +7608,7 @@ msgstr "自然排序"
 msgid "Numeric Ordering"
 msgstr "數字訂購"
 
-#: include/global_arrays.php:948 lib/rrd.php:3231
+#: include/global_arrays.php:948 lib/rrd.php:3308
 #, fuzzy
 msgid "Header"
 msgstr "頁首"
@@ -9488,7 +9488,7 @@ msgstr "從數據源收集數據的頻率？"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "在RRDtool記錄未知數據之前，數據可以丟失多長時間。如果您的數據源不穩定並且您希望繼承舊數據而不是在圖表中顯示間隙，請增加此值。此值乘以X-Files因子以確定實際的時間量。"
 
-#: include/global_form.php:223 lib/rrd.php:3322
+#: include/global_form.php:223 lib/rrd.php:3399
 #, fuzzy
 msgid "X-Files Factor"
 msgstr "X檔案因子"
@@ -10171,7 +10171,7 @@ msgstr "不透明度/ Alpha通道"
 msgid "The opacity/alpha channel of the color."
 msgstr "顏色的不透明度/ alpha通道。"
 
-#: include/global_form.php:986 lib/rrd.php:3318
+#: include/global_form.php:986 lib/rrd.php:3395
 #, fuzzy
 msgid "Consolidation Function"
 msgstr "合併功能"
@@ -14594,7 +14594,7 @@ msgstr "匹配設備"
 
 #: lib/api_automation.php:133 lib/api_automation.php:1071
 #: lib/clog_webapi.php:526 lib/html_reports.php:982 lib/html_reports.php:1645
-#: lib/html_reports.php:1985 lib/html_reports.php:1996 lib/rrd.php:3260
+#: lib/html_reports.php:1985 lib/html_reports.php:1996 lib/rrd.php:3337
 #: utilities.php:339 utilities.php:1432 utilities.php:3079
 #, fuzzy
 msgid "Type"
@@ -18935,200 +18935,200 @@ msgstr "添加報表圖項&#39; <i>%s</i> &#39;失敗已經存在"
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "已跳過的報告圖表項&#39; <i>%s</i> &#39;已存在"
 
-#: lib/rrd.php:1666
+#: lib/rrd.php:1743
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "錯誤：RRDfile%s不可寫"
 
-#: lib/rrd.php:3025
+#: lib/rrd.php:3102
 #, fuzzy, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "必需的RRD步長為&#39;%s&#39;"
 
-#: lib/rrd.php:3085
+#: lib/rrd.php:3162
 #, fuzzy, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "數據源&#39;%s&#39;的類型應為&#39;%s&#39;"
 
-#: lib/rrd.php:3091
+#: lib/rrd.php:3168
 #, fuzzy, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "數據源&#39;%s&#39;的心跳應為&#39;%s&#39;"
 
-#: lib/rrd.php:3103
+#: lib/rrd.php:3180
 #, fuzzy, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "數據源&#39;%s&#39;的RRD最小值應為&#39;%s&#39;"
 
-#: lib/rrd.php:3112
+#: lib/rrd.php:3189
 #, fuzzy, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "Kadupul定義中缺少DS&#39;%s&#39;"
 
-#: lib/rrd.php:3126 lib/rrd.php:3127
+#: lib/rrd.php:3203 lib/rrd.php:3204
 #, fuzzy, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA&#39;%s&#39;與&#39;%s&#39;具有相同的CF /步數（%s，%s）"
 
-#: lib/rrd.php:3140 lib/rrd.php:3141
+#: lib/rrd.php:3217 lib/rrd.php:3218
 #, fuzzy, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "文件RRA&#39;%s&#39;與&#39;%s&#39;具有相同的CF /步數（%s，%s）"
 
-#: lib/rrd.php:3173
+#: lib/rrd.php:3250
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr ""
 
-#: lib/rrd.php:3177
+#: lib/rrd.php:3254
 #, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "KadupulRRA id&#39;%s&#39;的XFF應為&#39;%s&#39;"
 
-#: lib/rrd.php:3181
+#: lib/rrd.php:3258
 #, fuzzy, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Kadupul RRA id&#39;%s&#39;的行數應為&#39;%s&#39;"
 
-#: lib/rrd.php:3198
+#: lib/rrd.php:3275
 #, fuzzy, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "RRD文件中缺少RRA&#39;%s&#39;"
 
-#: lib/rrd.php:3206
+#: lib/rrd.php:3283
 #, fuzzy, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "Kadupul定義中缺少RRA&#39;%s&#39;"
 
-#: lib/rrd.php:3227
+#: lib/rrd.php:3304
 #, fuzzy
 msgid "RRD File Information"
 msgstr "RRD文件信息"
 
-#: lib/rrd.php:3259
+#: lib/rrd.php:3336
 #, fuzzy
 msgid "Data Source Items"
 msgstr "數據源項目"
 
-#: lib/rrd.php:3261
+#: lib/rrd.php:3338
 #, fuzzy
 msgid "Minimal Heartbeat"
 msgstr "最小的心跳"
 
-#: lib/rrd.php:3262
+#: lib/rrd.php:3339
 #, fuzzy
 msgid "Min"
 msgstr "最小"
 
-#: lib/rrd.php:3263
+#: lib/rrd.php:3340
 #, fuzzy
 msgid "Max"
 msgstr "最大"
 
-#: lib/rrd.php:3264
+#: lib/rrd.php:3341
 #, fuzzy
 msgid "Last DS"
 msgstr "最後一個DS"
 
-#: lib/rrd.php:3266
+#: lib/rrd.php:3343
 #, fuzzy
 msgid "Unknown Sec"
 msgstr "未知的秒"
 
-#: lib/rrd.php:3317
+#: lib/rrd.php:3394
 #, fuzzy
 msgid "Round Robin Archive"
 msgstr "Round Robin Archive"
 
-#: lib/rrd.php:3320
+#: lib/rrd.php:3397
 #, fuzzy
 msgid "Cur Row"
 msgstr "Cur Row"
 
-#: lib/rrd.php:3321
+#: lib/rrd.php:3398
 #, fuzzy
 msgid "PDP per Row"
 msgstr "每行PDP"
 
-#: lib/rrd.php:3323
+#: lib/rrd.php:3400
 #, fuzzy
 msgid "CDP Prep Value (0)"
 msgstr "CDP準備值（0）"
 
-#: lib/rrd.php:3324
+#: lib/rrd.php:3401
 #, fuzzy
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP未知數據點（0）"
 
-#: lib/rrd.php:3382
+#: lib/rrd.php:3459
 msgid "Errors Found"
 msgstr "沒有 %s 找到"
 
-#: lib/rrd.php:3394
+#: lib/rrd.php:3471
 msgid "Optional Tuning Recommendations"
 msgstr "數據源字段"
 
-#: lib/rrd.php:3419 lib/rrd.php:3422
+#: lib/rrd.php:3496 lib/rrd.php:3499
 #, fuzzy, php-format
 msgid "rename %s to %s"
 msgstr "將%s重命名為%s"
 
-#: lib/rrd.php:3496
+#: lib/rrd.php:3573
 #, fuzzy
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "解析rrdtool轉儲的XML時出錯"
 
-#: lib/rrd.php:3528 lib/rrd.php:3585 lib/rrd.php:3643
+#: lib/rrd.php:3605 lib/rrd.php:3662 lib/rrd.php:3720
 #, fuzzy, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "編寫XML文件時出錯：%s"
 
-#: lib/rrd.php:3539 lib/rrd.php:3596 lib/rrd.php:3654
+#: lib/rrd.php:3616 lib/rrd.php:3673 lib/rrd.php:3731
 #, fuzzy, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "錯誤：RRDfile%s不可寫"
 
-#: lib/rrd.php:3568 lib/rrd.php:3626
+#: lib/rrd.php:3645 lib/rrd.php:3703
 #, fuzzy
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "解析rrdtool轉儲的XML時出錯"
 
-#: lib/rrd.php:3874
+#: lib/rrd.php:3951
 #, fuzzy, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "從RRD文件中刪除RRA（CF=%s，ROWS=%d，PDP_PER_ROW =%d，XFF =%1.2f）"
 
-#: lib/rrd.php:3911
+#: lib/rrd.php:3988
 #, fuzzy, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA（CF =%s，ROWS =%d，PDP_PER_ROW =%d，XFF =%1.2f）添加到RRD文件"
 
-#: lib/rrd.php:3941 lib/rrd.php:3955
+#: lib/rrd.php:4018 lib/rrd.php:4032
 #, fuzzy, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "網站沒有%s的寫入權限，可能無法創建/更新RRD"
 
-#: lib/rrd.php:3951
+#: lib/rrd.php:4028
 #, fuzzy
 msgid "(Custom)"
 msgstr "自訂"
 
-#: lib/rrd.php:3957
+#: lib/rrd.php:4034
 #, fuzzy
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "無法打開數據文件，輪詢器可能尚未運行"
 
-#: lib/rrd.php:3960
+#: lib/rrd.php:4037
 #, fuzzy
 msgid "RRA Folder"
 msgstr "RRA文件夾"
 
-#: lib/rrd.php:3960
+#: lib/rrd.php:4037
 #, fuzzy
 msgid "Root"
 msgstr "根部"
 
-#: lib/rrd.php:4072
+#: lib/rrd.php:4149
 #, fuzzy
 msgid "Unknown RRDtool Error"
 msgstr "未知的RRDtool錯誤"
@@ -19162,12 +19162,12 @@ msgstr ""
 msgid "FATAL: Standard Deviation must be a positive integer."
 msgstr ""
 
-#: lib/spikekill.php:262 lib/spikekill.php:1752
+#: lib/spikekill.php:262 lib/spikekill.php:1779
 #, fuzzy
 msgid "StdDev"
 msgstr "刪除StdDev"
 
-#: lib/spikekill.php:268 lib/spikekill.php:1752
+#: lib/spikekill.php:268 lib/spikekill.php:1779
 #, fuzzy
 msgid "Variance"
 msgstr "变数"
@@ -19273,143 +19273,151 @@ msgstr ""
 msgid "Window Range:  All"
 msgstr ""
 
-#: lib/spikekill.php:429
+#: lib/spikekill.php:393
+msgid "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal."
+msgstr ""
+
+#: lib/spikekill.php:399
+msgid "FATAL: RRD storage is busy or its maintenance lock is unavailable. Retry after polling completes."
+msgstr ""
+
+#: lib/spikekill.php:451
 #, php-format
 msgid "FATAL: Unable to safely create a temporary XML file in '%s'!"
 msgstr ""
 
-#: lib/spikekill.php:478 lib/spikekill.php:500
+#: lib/spikekill.php:500 lib/spikekill.php:522
 msgid "FATAL: RRD source identity changed or could not be verified safely."
 msgstr ""
 
-#: lib/spikekill.php:508
+#: lib/spikekill.php:530
 msgid "FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"
 msgstr ""
 
-#: lib/spikekill.php:524
+#: lib/spikekill.php:546
 msgid "FATAL: RRDtool returned an empty dump. The RRD file was not modified."
 msgstr ""
 
-#: lib/spikekill.php:552
+#: lib/spikekill.php:574
 #, php-format
 msgid "FATAL: RRDfile Backup of '%s' to '%s' FAILED!"
 msgstr ""
 
-#: lib/spikekill.php:766
+#: lib/spikekill.php:788
 #, php-format
 msgid "NOTE: Searching for Spikes in XML file '%s'"
 msgstr ""
 
-#: lib/spikekill.php:769
+#: lib/spikekill.php:791
 #, php-format
 msgid "NOTE: Limited to Time Window: %s through %s"
 msgstr ""
 
-#: lib/spikekill.php:776
+#: lib/spikekill.php:798
 msgid "NOTE: Dryrun requested.  No updates performed"
 msgstr ""
 
-#: lib/spikekill.php:812
+#: lib/spikekill.php:834
 #, php-format
 msgid "NOTE: No Window Spikes found in '%s'"
 msgstr ""
 
-#: lib/spikekill.php:815
+#: lib/spikekill.php:837
 #, php-format
 msgid "NOTE: No Spikes found in '%s'"
 msgstr ""
 
-#: lib/spikekill.php:828
+#: lib/spikekill.php:850
 #, php-format
 msgid "NOTE: Spikes Found and Remediated.  Total Spikes %s"
 msgstr ""
 
-#: lib/spikekill.php:832
+#: lib/spikekill.php:854
 #, php-format
 msgid "FATAL: Unable to restore '%s' from '%s'"
 msgstr ""
 
-#: lib/spikekill.php:842
+#: lib/spikekill.php:864
 #, php-format
 msgid "FATAL: Unable to backup '%s'"
 msgstr ""
 
-#: lib/spikekill.php:852
+#: lib/spikekill.php:874
 #, php-format
 msgid "FATAL: Unable to write XML file '%s'"
 msgstr ""
 
-#: lib/spikekill.php:861
+#: lib/spikekill.php:883
 #, fuzzy
 msgid "NOTE: No Spikes Found."
 msgstr "找不到網站"
 
-#: lib/spikekill.php:922
+#: lib/spikekill.php:944
 #, php-format
 msgid "NOTE: Re-Importing '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1013
+#: lib/spikekill.php:1035
 #, php-format
 msgid "NOTE: Backing Up '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1752
+#: lib/spikekill.php:1779
 #, fuzzy
 msgid "Avg"
 msgstr "平均："
 
-#: lib/spikekill.php:1752
+#: lib/spikekill.php:1779
 #, fuzzy
 msgid "CF"
 msgstr "CDEF"
 
-#: lib/spikekill.php:1752
+#: lib/spikekill.php:1779
 #, fuzzy
 msgid "DS"
 msgstr "DES"
 
-#: lib/spikekill.php:1752
+#: lib/spikekill.php:1779
 msgid "NonNan"
 msgstr ""
 
-#: lib/spikekill.php:1752
+#: lib/spikekill.php:1779
 #, fuzzy
 msgid "Samples"
 msgstr "簡單"
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1780
 msgid "MaxStdDev"
 msgstr ""
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1780
 #, fuzzy
 msgid "MaxValue"
 msgstr "值"
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1780
 #, fuzzy
 msgid "MinStdDev"
 msgstr "Dry Run StdDev"
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1780
 #, fuzzy
 msgid "MinValue"
 msgstr "值"
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1780
 msgid "StdKilled"
 msgstr ""
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1780
 msgid "VarKilled"
 msgstr ""
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1780
 msgid "WindKilled"
 msgstr ""
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1780
 msgid "WindSamples"
 msgstr ""
 

@@ -386,6 +386,28 @@ class spikekill {
 	}
 
 	public function remove_spikes() {
+		require_once __DIR__ . '/rrd_maintenance.php';
+		/* An external cache daemon can write after its client returns and
+		 * therefore does not participate in our local child lifetime lock. */
+		if (getenv('RRDCACHED_ADDRESS')) {
+			$this->set_error(__('FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal.'));
+			return false;
+		}
+
+		$lock = rrd_maintenance_acquire(true);
+		if ($lock === false) {
+			$this->set_error(__('FATAL: RRD storage is busy or its maintenance lock is unavailable. Retry after polling completes.'));
+			return false;
+		}
+
+		try {
+			return $this->remove_spikes_locked();
+		} finally {
+			rrd_maintenance_release($lock);
+		}
+	}
+
+	private function remove_spikes_locked() {
 		global $config;
 
 		$this->strout = '';
@@ -1294,7 +1316,9 @@ class spikekill {
 			$except = array();
 			stream_select($read, $write, $except, intdiv($remaining, 1000000), $remaining % 1000000);
 
-			usleep(50000);
+			if (feof($pipes[2]) && (!$capture_stdout || feof($pipes[1]))) {
+				usleep(1000);
+			}
 
 			$status = proc_get_status($process);
 
@@ -1392,7 +1416,7 @@ class spikekill {
 	private function commandTimeout() {
 		$configured = (int) read_config_option('spikekill_timeout');
 
-		return $configured > 0 ? $configured : 3600;
+		return $configured > 0 ? min($configured, 28800) : 3600;
 	}
 
 	/**
@@ -1712,6 +1736,9 @@ class spikekill {
 						foreach($dses as $dskey => $ds) {
 							/* Empty or sparse RRAs use nonnumeric sentinels. Preserve
 							 * missing statistics instead of rounding or formatting them as zero. */
+							if (!isset($ds['stddev']) || !is_numeric($ds['stddev']) || !is_finite((float) $ds['stddev'])) {
+								$ds['min_cutoff'] = $ds['max_cutoff'] = 'N/A';
+							}
 							foreach (array('average', 'stddev', 'variance_avg', 'max_value', 'min_value', 'max_cutoff', 'min_cutoff') as $field) {
 								if (empty($ds['numsamples']) || !isset($ds[$field]) || !is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
 									$ds[$field] = 'N/A';
@@ -1757,6 +1784,9 @@ class spikekill {
 						foreach($dses as $dskey => $ds) {
 							/* Empty or sparse RRAs use nonnumeric sentinels. Preserve
 							 * missing statistics instead of rounding or formatting them as zero. */
+							if (!isset($ds['stddev']) || !is_numeric($ds['stddev']) || !is_finite((float) $ds['stddev'])) {
+								$ds['min_cutoff'] = $ds['max_cutoff'] = 'N/A';
+							}
 							foreach (array('average', 'stddev', 'variance_avg', 'max_value', 'min_value', 'max_cutoff', 'min_cutoff') as $field) {
 								if (empty($ds['numsamples']) || !isset($ds[$field]) || !is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
 									$ds[$field] = 'N/A';
