@@ -1171,7 +1171,7 @@ test('Windows acknowledgement sentinel uses synchronous responses and refuses ex
         '$bad=rrdtool_execute(array("update",$file,"invalid"),false,RRDTOOL_OUTPUT_BOOLEAN,$pipe);' .
         '$exclusive=rrd_init(false,true,true);rrd_close($pipe);echo json_encode(array($pipe,$create,$update,$bad,$exclusive));';
     file_put_contents($this->dir . '/win.php', $bootstrap);
-    $process = proc_open(array(PHP_BINARY,$this->dir . '/win.php'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);
+    $process = proc_open(array(PHP_BINARY,'-d','pcov.directory=' . $root,'-d','pcov.exclude=~/(include/vendor|tests)/~',$this->dir . '/win.php'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);
     $out = stream_get_contents($pipes[1]);
     $error = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
@@ -1201,14 +1201,17 @@ test('legacy Boost retries filter a committed timestamp after draining pending w
         'require ' . var_export($root . '/lib/rrd.php', true) . ';require ' . var_export($root . '/lib/boost.php', true) . ';' .
         '$path=__DIR__."/legacy.rrd";$pipe=rrd_init(false);rrdtool_execute("update $path 1700000060:10",false,RRDTOOL_OUTPUT_NULL,$pipe);' .
         '$values="1700000060:999 1700000120:20";$result=boost_rrdtool_function_update(1,$path,"value",$values,$pipe);' .
-        '$again=boost_rrdtool_function_update(1,$path,"value",$values,$pipe);echo json_encode(array($result,$again,$values,$pipe));';
+        '$again=boost_rrdtool_function_update(1,$path,"value",$values,$pipe);$drained=$values;' .
+        '$values="1700000180:3\n1700000240:4";$invalid=boost_rrdtool_function_update(1,$path,"value",$values,$pipe);' .
+        '$values="invalid:5";$malformed=boost_rrdtool_function_update(1,$path,"value",$values,$pipe);' .
+        'echo json_encode(array($result,$again,$drained,$pipe,$invalid,$malformed,$values));';
     file_put_contents($this->dir . '/legacy.php', $bootstrap);
-    $process = proc_open(array(PHP_BINARY,$this->dir . '/legacy.php'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);
+    $process = proc_open(array(PHP_BINARY,'-d','pcov.directory=' . $root,'-d','pcov.exclude=~/(include/vendor|tests)/~',$this->dir . '/legacy.php'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);
     $out = stream_get_contents($pipes[1]);
     $error = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
     fclose($pipes[2]);
-    expect(proc_close($process))->toBe(0)->and($error)->toBe('')->and(json_decode($out, true))->toBe(array('OK','OK','',false));
+    expect(proc_close($process))->toBe(0)->and($error)->toBe('')->and(json_decode($out, true))->toBe(array('OK','OK','',false,'ERROR: Invalid legacy update values','ERROR: RRDtool did not acknowledge the update','invalid:5'));
     $archive = shell_exec(escapeshellarg($binary) . ' fetch ' . escapeshellarg($this->dir . '/legacy.rrd') . ' AVERAGE --resolution 20 --start 1700000040 --end 1700000140');
     expect(preg_match('/^1700000060:\s+([-+0-9.eE]+)/m', $archive, $sample))->toBe(1)->and((float) $sample[1])->toBe(10.0);
 });
@@ -1226,7 +1229,7 @@ test('proxy restores retain their existing remote protocol and propagate failure
         'require ' . var_export($root . '/lib/rrd_maintenance.php', true) . ';' .
         'echo json_encode(rrd_maintenance_restore("recovery.xml","remote.rrd",array("proxy")));';
     file_put_contents($this->dir . '/proxy.php', $bootstrap);
-    $process = proc_open(array(PHP_BINARY,$this->dir . '/proxy.php'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);
+    $process = proc_open(array(PHP_BINARY,'-d','pcov.directory=' . $root,'-d','pcov.exclude=~/(include/vendor|tests)/~',$this->dir . '/proxy.php'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);
     $out = stream_get_contents($pipes[1]);
     $error = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
