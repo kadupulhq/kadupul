@@ -206,30 +206,25 @@ def diagnostic_contracts():
 
 
 def native_worker_boundary():
-    """A real delayed PHP worker must finish before its callbacks are captured."""
+    """Wait for delayed shells and grandchildren, including non-poller names."""
     if not sys.platform.startswith('linux') or shutil.which('php') is None:
-        print('native worker boundary requires Linux /proc and PHP; covered in Linux validation')
+        print('native process-group boundary requires Linux /proc and PHP; covered in Linux validation')
         return
     import subprocess
     import tempfile
     with tempfile.TemporaryDirectory(prefix='behavior-worker-') as directory:
         marker = Path(directory) / 'complete'
-        child = subprocess.Popen(['php', '-r',
-            'usleep(500000); file_put_contents(' + json.dumps(str(marker)) + ', "done");',
-            '/tmp/poller_contract.php'])
-        recorder = object.__new__(harness.Harness)
-        def command(*args, **kwargs):
-            return subprocess.run(args, check=kwargs['check'], capture_output=True, text=True, timeout=40)
-        recorder.command = command
-        try:
-            recorder.wait_for_poller_workers()
-            assert marker.read_text() == 'done'
-            assert child.wait(timeout=2) == 0
-        finally:
-            if child.poll() is None:
-                child.terminate()
-                child.wait(timeout=2)
-    print('real background worker finishes before callback capture')
+        worker = Path(directory) / 'late-worker.php'
+        worker.write_text('<?php usleep(200000); file_put_contents(' + json.dumps(str(marker)) + ', "done");')
+        parent = Path(directory) / 'parent.php'
+        parent.write_text('<?php $command = "sleep 0.3; " . escapeshellarg(PHP_BINARY) . " -d auto_prepend_file= " . escapeshellarg(' +
+                          json.dumps(str(worker)) + '); exec("( " . $command . " ) >/dev/null 2>&1 &"); exit(7);')
+        result = subprocess.run(['php', '-d', 'auto_prepend_file=', str(Path(__file__).with_name('wait-php.php')), '-d', 'auto_prepend_file=', str(parent)],
+                                capture_output=True, text=True, timeout=40)
+        assert result.returncode == 7, result
+        assert result.stderr == '', result.stderr
+        assert marker.read_text() == 'done'
+    print('process-group boundary waits for delayed grandchildren and preserves parent exit status')
 
 
 def main():
