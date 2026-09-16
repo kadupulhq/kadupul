@@ -27,7 +27,7 @@ function read_theme_jquery_ui_css(string $theme): string {
 test('all in-tree theme jquery ui bundles are aligned to 1.14.x', function () {
     $directories = glob(dirname(__DIR__, 4) . '/include/themes/*', GLOB_ONLYDIR);
     $themes = array_map('basename', $directories);
-    expect($themes)->toContain('classic', 'modern', 'midwinter');
+    expect($themes)->toContain('classic')->toContain('modern')->toContain('midwinter');
 
 	foreach ($themes as $theme) {
 		$css = read_theme_jquery_ui_css($theme);
@@ -40,7 +40,7 @@ test('all in-tree theme jquery ui bundles are aligned to 1.14.x', function () {
 test('every shipped theme retains the widget selectors required by filters and dialogs', function () {
     foreach (glob(dirname(__DIR__, 4) . '/include/themes/*/jquery-ui.css') as $path) {
         $css = file_get_contents($path);
-        expect($css)->toContain('.ui-selectmenu-button', '.ui-dialog', '.ui-button', '.ui-menu')
+        expect($css)->toContain('.ui-selectmenu-button')->toContain('.ui-dialog')->toContain('.ui-button')->toContain('.ui-menu')
             ->and($css)->not->toContain('-webkit-tap-highlight-color: 1px solid');
     }
 });

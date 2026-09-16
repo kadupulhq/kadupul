@@ -25,6 +25,9 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: curl, dom, gd, gettext, gmp, intl, mbstring, mysqli, pdo_mysql, snmp, sockets, xml, zip
           coverage: none
+      - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3
+        with:
+          install_args: node@22.22.2
       - name: Install RRDtool
         run: |
           sudo apt-get update -o Acquire::Retries=3
@@ -37,7 +40,7 @@ jobs:
       - name: Run every unit file in an isolated process
         env:
           RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
-        run: python3 tests/run_unit_suite.py --output artifacts/unit-suite
+        run: mise exec node@22.22.2 -- python3 tests/run_unit_suite.py --output artifacts/unit-suite
       - name: Preserve all results and failure logs
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

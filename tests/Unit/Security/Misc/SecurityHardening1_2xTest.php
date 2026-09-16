@@ -16,17 +16,17 @@ $databaseSource     = file_get_contents(__DIR__ . '/../../../../lib/database.php
 
 test('auth_profile currentTheme uses json_encode not bare print', function () use ($authProfileSource) {
 	expect($authProfileSource)->not->toContain("var currentTheme = '<?php print get_selected_theme()");
-	expect($authProfileSource)->toContain('json_encode((string) get_selected_theme())');
+	expect($authProfileSource)->toContain('json_encode((string) get_selected_theme(), JSON_HEX_TAG');
 });
 
 test('auth_profile currentLang uses json_encode not bare print', function () use ($authProfileSource) {
 	expect($authProfileSource)->not->toContain("var currentLang  = '<?php print read_config_option('user_language')");
-	expect($authProfileSource)->toContain("json_encode((string) read_config_option('user_language'))");
+	expect($authProfileSource)->toContain("json_encode((string) read_config_option('user_language'), JSON_HEX_TAG");
 });
 
 test('auth_profile authMethod uses json_encode not bare print', function () use ($authProfileSource) {
 	expect($authProfileSource)->not->toContain("var authMethod   = '<?php print read_config_option('auth_method')");
-	expect($authProfileSource)->toContain("json_encode((string) read_config_option('auth_method'))");
+	expect($authProfileSource)->toContain("json_encode((string) read_config_option('auth_method'), JSON_HEX_TAG");
 });
 
 // M-2: sanitize_uri double-decode removed

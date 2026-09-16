@@ -38,3 +38,14 @@ test('CDEF selection preserves the valid reference selected while building DEFs'
 test('graph placeholders without a data-source reference keep the AVERAGE default', function () {
     expect(graph_cdef_selected_cf(array(), 1, null))->toBe(1);
 });
+
+
+test('DEF selection chooses an available consolidation function before CDEF references it', function ($available, $requested, $expected) {
+    $GLOBALS['cf_available'] = $available;
+    $reference = generate_graph_best_cf(10, $requested, 60);
+    expect($reference)->toBe($expected)
+        ->and(graph_cdef_selected_cf($available, $requested, $reference))->toBe($expected);
+})->with(array(
+    array(array(1), 4, 1), array(array(3, 2), 4, 3), array(array(2, 3), 4, 2),
+    array(array(4), 1, 4), array(array(1, 3), 3, 3), array(array(), 4, 1),
+));

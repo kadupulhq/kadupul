@@ -22,7 +22,7 @@ test('profile and graph template strings remain data for hostile and Unicode val
     foreach (array("'\"\\\n", '</script><script>alert(1)</script>', 'fr-CA & 日本語', '', 'modern') as $value) {
         $encoded = rendered_js_variable($path, $variable, $value);
         expect(json_decode($encoded, true, 512, JSON_THROW_ON_ERROR))->toBe($value)
-            ->and($encoded)->not->toContain('</script>', "\n");
+            ->and($encoded)->not->toContain('<')->not->toContain("\n");
     }
 })->with(array(
     array('auth_profile.php', 'currentTab'),

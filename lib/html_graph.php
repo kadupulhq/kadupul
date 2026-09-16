@@ -376,8 +376,8 @@ function html_graph_preview_filter($page, $action, $devices_where = '', $templat
 		var graph_start     = <?php print get_current_graph_start();?>;
 		var graph_end       = <?php print get_current_graph_end();?>;
 		var timeOffset      = <?php print date('Z');?>;
-		var pageAction      = <?php print json_encode($action);?>;
-		var graphPage       = <?php print json_encode($page);?>;
+		var pageAction      = <?php print json_encode($action, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
+		var graphPage       = <?php print json_encode($page, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
 		var date1Open       = false;
 		var date2Open       = false;
 

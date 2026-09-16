@@ -34,6 +34,7 @@ $htmlReportsPath     = __DIR__ . '/../../../../lib/html_reports.php';
 
 test('report headings escape each user-controlled component before concatenation', function () use ($reportsPath) {
     $contents = file_get_contents($reportsPath);
+    expect($contents)->not->toContain('<h3>$title</h3>');
     foreach (array("html_escape(\$report['name'])", 'html_escape($description)', 'html_escape($tree_name)', 'html_escape($leaf_name)', 'html_escape($host_name)', 'html_escape($graph_name)') as $escaped) {
         expect($contents)->toContain($escaped);
     }

@@ -55,3 +55,10 @@ test('existing data input counts retain their success and dependency messages', 
 })->with(array(array(0, 0, 'input', 1), array(1, 0, 'input', 'input_save_wo_ds'),
     array(1, 0, 'output', 'input_field_save_wo_ds'), array(1, 1, 'input', 'input_save_w_ds'),
     array(1, 1, 'output', 'input_field_save_w_ds')));
+
+
+test('missing data-input aggregates return NULL fields instead of a missing row', function () {
+    $GLOBALS['missing_rows'] = array(array('templates' => null, 'data_sources' => null));
+    data_input_save_message(999);
+    expect($GLOBALS['missing_row_messages'])->toBe(array(2));
+});

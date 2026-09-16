@@ -213,7 +213,7 @@ function data_input_save_message($data_input_id, $type = 'input') {
 		WHERE di.id = ?",
 		array($data_input_id));
 
-	if (!cacti_sizeof($counts)) {
+	if (!cacti_sizeof($counts) || !isset($counts['templates'], $counts['data_sources'])) {
 		raise_message(2);
 		return;
 	}

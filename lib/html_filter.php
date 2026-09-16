@@ -202,57 +202,32 @@ class CactiTableFilter {
 	}
 
 	private function create_javascript() {
-		$applyFilter = '"' . $this->form_action;
-		$clearFilter = $applyFilter;
-
-		if (strpos('?', $applyFilter) === false) {
-			$separator = '?';
-		} else {
-			$separator = '&';
-		}
-
-		$applyFilter .= $separator . 'header=false';
-		$clearFilter .= $separator . 'header=false&clear=true"';
-		$changeChain  = '';
-
-		$separator = "\"+\"&";
-
-		if (isset($this->filter_array['rows'])) {
-			foreach($this->filter_array['rows'] as $index => $row) {
-				foreach($row as $field_name => $field_array) {
-					switch($field_array['method']) {
-					case 'button':
-					case 'submit':
-						break;
-					case 'checkbox':
-						$applyFilter .= $separator . $field_name . "=\"+\"$(\'#" . $field_name . "').is(':checked')";
-						break;
-					case 'textbox':
-					case 'drop_array':
-					case 'drop_files':
-					case 'drop_sql':
-					case 'drop_callback':
-					case 'drop_multi':
-					case 'drop_color':
-					case 'drop_tree':
-						if ($field_array['method'] != 'textbox') {
-							$changeChain .= ($changeChain != '' ? ', ':'') . '#' . $field_name;
-						}
-						$applyFilter .= $separator . $field_name . "=\"+\"$(\'#" . $field_name . "').val()";
-						break;
-					default:
-					}
+		$json_flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+		$separator = strpos($this->form_action, '?') === false ? '?' : '&';
+		$base = $this->form_action . $separator . 'header=false';
+		$applyFilter = json_encode($base, $json_flags);
+		$clearFilter = json_encode($base . '&clear=true', $json_flags);
+		$changeFields = array();
+		foreach ($this->filter_array['rows'] ?? array() as $row) {
+			foreach ($row as $field_name => $field_array) {
+				$method = $field_array['method'];
+				if (!in_array($method, array('checkbox', 'textbox', 'drop_array', 'drop_files', 'drop_sql', 'drop_callback', 'drop_multi', 'drop_color', 'drop_tree'), true)) {
+					continue;
+				}
+				$element = '$(document.getElementById(' . json_encode((string) $field_name, $json_flags) . '))';
+				$value = $method === 'checkbox' ? $element . ".is(':checked')" : $element . '.val()';
+				$applyFilter .= ' + ' . json_encode('&' . rawurlencode($field_name) . '=', $json_flags) . ' + encodeURIComponent(' . $value . ')';
+				if ($method !== 'textbox' && $method !== 'checkbox') {
+					$changeFields[] = $field_name;
 				}
 			}
-
-			$applyFilter .= '";';
 		}
 
 		?>
 		<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 
 		function applyFilter() {
-			strURL = <?php print $applyFilter;?>
+			strURL = <?php print $applyFilter;?>;
 			loadPageNoHeader(strURL);
 		}
 
@@ -261,13 +236,13 @@ class CactiTableFilter {
 		}
 
 		$(function() {
-			$('#<?php print html_escape($this->form_id);?>').on('submit', function(event) {
+			$(document.getElementById(<?php print json_encode($this->form_id, $json_flags);?>)).on('submit', function(event) {
 				event.preventDefault();
 				applyFilter();
 			});
 
-			$('<?php print $changeChain;?>').on('change', function() {
-				applyFilter();
+			<?php print json_encode($changeFields, $json_flags);?>.forEach(function(id) {
+				$(document.getElementById(id)).on('change', function() { applyFilter(); });
 			});
 
 			$('#clear').on('click', function() {

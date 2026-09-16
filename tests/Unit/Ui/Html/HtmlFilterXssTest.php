@@ -37,3 +37,37 @@ test('selectable cell titles preserve quotes as data and cannot inject HTML', fu
     expect($span->getAttribute('title'))->toBe($title)
         ->and($document->getElementsByTagName('script')->length)->toBe(0);
 });
+
+if (!class_exists('CactiSecureHeaders')) {
+    class CactiSecureHeaders { public static function getNonceAttribute() { return ''; } }
+}
+
+test('filter JavaScript preserves hostile form IDs and encodes query values', function ($with_fields) {
+    $class = new ReflectionClass(CactiTableFilter::class);
+    $filter = $class->newInstanceWithoutConstructor();
+    $filter->form_id = "form'\\</script><script>alert(1)</script>";
+    $filter->form_action = '/filter.php?keep=1&title="</script>';
+    $fields = $with_fields ? array('rows' => array(array('name' => array('method' => 'textbox'),
+        'choice' => array('method' => 'drop_array'), 'enabled' => array('method' => 'checkbox')))) : array();
+    $property = $class->getProperty('filter_array'); $property->setAccessible(true); $property->setValue($filter, $fields);
+    $method = $class->getMethod('create_javascript'); $method->setAccessible(true);
+    ob_start();
+    try { $method->invoke($filter); $html = ob_get_contents(); } finally { ob_end_clean(); }
+    expect(substr_count($html, '<script'))->toBe(1)->and(substr_count($html, '</script>'))->toBe(1);
+    preg_match('/<script[^>]*>([\s\S]*)<\/script>/', $html, $match);
+    $javascript = 'const urls=[], bindings=[]; const document={getElementById:id=>({id})}; '
+        . 'function $(arg){if(typeof arg==="function"){arg();return;} return {on:(event,fn)=>bindings.push([arg.id || arg,event]),val:()=>"a & b=1",is:()=>true};} '
+        . 'function loadPageNoHeader(url){urls.push(url);} ' . $match[1]
+        . '\napplyFilter();clearFilter();console.log(JSON.stringify({urls,bindings}));';
+    $javascript = str_replace('\\napplyFilter', "\napplyFilter", $javascript);
+    $process = proc_open(array(getenv('NODE_BINARY') ?: 'node', '-e', $javascript), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    expect($process)->not->toBeFalse();
+    $stdout = stream_get_contents($pipes[1]); $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]); fclose($pipes[2]);
+    expect(proc_close($process))->toBe(0, $stderr);
+    $result = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
+    $base = $filter->form_action . '&header=false';
+    expect($result['urls'])->toBe(array($base . ($with_fields ? '&name=a%20%26%20b%3D1&choice=a%20%26%20b%3D1&enabled=true' : ''), $base . '&clear=true'))
+        ->and($result['bindings'][0])->toBe(array($filter->form_id, 'submit'));
+    if ($with_fields) { expect($result['bindings'])->toContain(array('choice', 'change')); }
+})->with(array(false, true));
