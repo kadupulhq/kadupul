@@ -14,10 +14,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        mariadb: ['10.6', '10.11', '11.8']
+        include:
+          - mariadb: '10.6'
+            image: mariadb:10.6@sha256:553351e202c5f01c9e703d7d1d2b037a0aedb43c4fed79b3615d9183655f02c5
+          - mariadb: '10.11'
+            image: mariadb:10.11@sha256:07c0aaff7396b74cb7975cba78257178d188e30f531a5db2b617c48beef13c41
+          - mariadb: '11.8'
+            image: mariadb:11.8@sha256:8b5f33ebd85d1775657e974ed10434128bb493c80e826ceaa54074fd1a92a112
     services:
       db:
-        image: mariadb:${{ matrix.mariadb }}
+        image: ${{ matrix.image }}
         env:
           MARIADB_ROOT_PASSWORD: cacti-contract-root
           MARIADB_USER: benchmark
