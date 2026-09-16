@@ -9,6 +9,9 @@ curl --fail --location --retry 3 https://codeload.github.com/oetiker/rrdtool-1.x
 printf '%s  %s\n' c125d6850c7b6a24a18676989c617e82f0e594444017c833b92da8ffa759d270 "$source_dir/source.tar.gz" | sha256sum --check
 tar xzf "$source_dir/source.tar.gz" -C "$source_dir" --strip-components=1
 cd "$source_dir"
+# Pin auxiliary output to this source tree; otherwise old libtoolize can
+# discover install-sh in the runner's shared parent temporary directory.
+sed -i '/^AM_INIT_AUTOMAKE/i AC_CONFIG_AUX_DIR([.])' configure.ac
 libtoolize --force --copy
 autoreconf -fi
 ./configure --prefix="$prefix" --disable-perl --disable-python --disable-ruby --disable-tcl --disable-lua --disable-libdbi --disable-rrdcached
