@@ -68,7 +68,29 @@ function rrd_init($output_to_term = true) {
 	$args = func_get_args();
 	$force_storage_location_local = (isset($config['force_storage_location_local']) && $config['force_storage_location_local'] === true ) ? true : false;
 	$function = ($force_storage_location_local === false && read_config_option('storage_location')) ? '__rrd_proxy_init' : '__rrd_init';
-	return call_user_func_array($function, $args);
+	if ($function !== '__rrd_init') {
+		return call_user_func_array($function, $args);
+	}
+
+	require_once __DIR__ . '/rrd_maintenance.php';
+	$lock = rrd_maintenance_acquire();
+	if ($lock === false) {
+		cacti_log('ERROR: Unable to coordinate local RRD writes with maintenance.');
+		return false;
+	}
+
+	$pipe = false;
+	try {
+		$pipe = call_user_func_array($function, $args);
+		if (is_resource($pipe)) {
+			rrd_maintenance_pipe($pipe, $lock);
+		}
+		return $pipe;
+	} finally {
+		if (!is_resource($pipe)) {
+			rrd_maintenance_release($lock);
+		}
+	}
 }
 
 function __rrd_init($output_to_term = true) {
@@ -187,7 +209,14 @@ function rrd_close() {
 	$args = func_get_args();
 	$force_storage_location_local = (isset($config['force_storage_location_local']) && $config['force_storage_location_local'] === true) ? true : false;
 	$function = ($force_storage_location_local === false && read_config_option('storage_location')) ? '__rrd_proxy_close' : '__rrd_close';
-	return call_user_func_array($function, $args);
+	try {
+		return call_user_func_array($function, $args);
+	} finally {
+		if ($function === '__rrd_close') {
+			require_once __DIR__ . '/rrd_maintenance.php';
+			rrd_maintenance_pipe($args[0], null, true);
+		}
+	}
 }
 
 function __rrd_close($rrdtool_pipe) {
@@ -298,7 +327,30 @@ function rrdtool_execute() {
 	$force_storage_location_local = (isset($config['force_storage_location_local']) && $config['force_storage_location_local'] === true) ? true : false;
 	$function = ($force_storage_location_local === false && read_config_option('storage_location')) ? '__rrd_proxy_execute' : '__rrd_execute';
 
-	return call_user_func_array($function, $args);
+	if ($function !== '__rrd_execute') {
+		return call_user_func_array($function, $args);
+	}
+
+	require_once __DIR__ . '/rrd_maintenance.php';
+	if (isset($args[3]) && is_resource($args[3])) {
+		if (!rrd_maintenance_pipe($args[3])) {
+			cacti_log('ERROR: Local RRD pipes must be opened with rrd_init for maintenance coordination.');
+			return false;
+		}
+		return call_user_func_array($function, $args);
+	}
+
+	$lock = rrd_maintenance_acquire();
+	if ($lock === false) {
+		cacti_log('ERROR: Unable to coordinate local RRD writes with maintenance.');
+		return false;
+	}
+
+	try {
+		return call_user_func_array($function, $args);
+	} finally {
+		rrd_maintenance_release($lock);
+	}
 }
 
 /**
@@ -536,6 +588,16 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 			break;
 		case RRDTOOL_OUTPUT_NULL:
 		default:
+			/* Even callers discarding output must wait for queued writes
+			 * before the maintenance lock can be released. Drain first so
+			 * the child cannot block on a full stdout pipe. */
+			while (!feof($fp)) {
+				fread($fp, 8192);
+			}
+			if (isset($process)) {
+				fclose($fp);
+				proc_close($process);
+			}
 			return;
 			break;
 	}
@@ -1128,8 +1190,23 @@ function rrdtool_function_tune($rrd_tune_array) {
 		if (file_exists($data_source_path) == true) {
 			if (is_file(read_config_option('path_rrdtool')) && is_executable(read_config_option('path_rrdtool'))) {
 				$rrdtool_cmd = cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' tune ' . cacti_escapeshellarg($data_source_path) . $rrd_tune;
-				$fp = popen($rrdtool_cmd, 'r');
-				pclose($fp);
+				require_once __DIR__ . '/rrd_maintenance.php';
+				$lock = rrd_maintenance_acquire();
+				if ($lock === false) {
+					cacti_log('ERROR: Unable to coordinate RRD tuning with maintenance.');
+					return;
+				}
+				try {
+					$fp = popen($rrdtool_cmd, 'r');
+					if (is_resource($fp)) {
+						while (!feof($fp)) {
+							fread($fp, 8192);
+						}
+						pclose($fp);
+					}
+				} finally {
+					rrd_maintenance_release($lock);
+				}
 
 				cacti_log('CACTI2RRD: ' . $rrdtool_cmd, false, 'WEBLOG', POLLER_VERBOSITY_DEBUG);
 			} else {

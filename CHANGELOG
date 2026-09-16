@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Coordinate spike removal with live and queued RRD writers to preserve new samples
 -issue: Run every LTS unit test in CI with isolated processes and verified result reports
 -issue: Preserve multi-column sorting and enforce the current table sort allowlist
 -security: Encode profile JavaScript values, password return attributes, and tooltip titles

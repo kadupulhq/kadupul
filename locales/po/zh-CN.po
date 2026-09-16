@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cacti Chinese Language File\n"
 "Report-Msgid-Bugs-To: developers@cacti.net\n"
-"POT-Creation-Date: 2026-09-15 20:30-0700\n"
+"POT-Creation-Date: 2026-09-15 20:53-0700\n"
 "PO-Revision-Date: 2024-06-23 04:09+0000\n"
 "Last-Translator: tql <fttx31@126.com>\n"
 "Language-Team: Chinese (Simplified) <http://translate.cacti.net/projects/cacti/core-v1-2-x/zh_Hans/>\n"
@@ -623,7 +623,7 @@ msgstr "包含在聚合中"
 
 #: aggregate_graphs.php:1296 aggregate_graphs.php:1630 graph_templates.php:871
 #: graph_view.php:814 graph_view.php:827 graphs.php:2332 lib/html_graph.php:351
-#: lib/html_tree.php:1170 lib/spikekill.php:1771
+#: lib/html_tree.php:1170 lib/spikekill.php:1798
 msgid "Size"
 msgstr "大小"
 
@@ -1293,11 +1293,11 @@ msgstr "清空已发现的设备"
 #: lib/functions.php:6102 lib/functions.php:6106 lib/html.php:1303
 #: lib/html.php:1375 lib/html_reports.php:1760 lib/html_reports.php:1786
 #: lib/html_reports.php:1857 lib/html_reports.php:1858
-#: lib/html_reports.php:1859 lib/spikekill.php:1762 lib/spikekill.php:1763
-#: lib/spikekill.php:1807 lib/spikekill.php:1808 lib/spikekill.php:1809
-#: lib/spikekill.php:1810 lib/spikekill.php:1811 lib/spikekill.php:1812
-#: lib/spikekill.php:1813 lib/spikekill.php:1814 lib/spikekill.php:1815
-#: lib/spikekill.php:1816 lib/spikekill.php:1817 plugins.php:765
+#: lib/html_reports.php:1859 lib/spikekill.php:1789 lib/spikekill.php:1790
+#: lib/spikekill.php:1837 lib/spikekill.php:1838 lib/spikekill.php:1839
+#: lib/spikekill.php:1840 lib/spikekill.php:1841 lib/spikekill.php:1842
+#: lib/spikekill.php:1843 lib/spikekill.php:1844 lib/spikekill.php:1845
+#: lib/spikekill.php:1846 lib/spikekill.php:1847 plugins.php:765
 #: pollers.php:1131 user_admin.php:2385 utilities.php:739 utilities.php:1188
 #: utilities.php:2656 utilities.php:2784 utilities.php:2792 utilities.php:2803
 #: utilities.php:2814 utilities.php:2837 utilities.php:2883 utilities.php:3117
@@ -3234,7 +3234,7 @@ msgstr "重新运行分析"
 msgid "Check"
 msgstr "检查"
 
-#: data_debug.php:826 include/global_form.php:1032 lib/rrd.php:3668
+#: data_debug.php:826 include/global_form.php:1032 lib/rrd.php:3745
 #: utilities.php:799 utilities.php:816 utilities.php:3097
 msgid "Value"
 msgstr "值"
@@ -3528,7 +3528,7 @@ msgstr "用于收集此数据输入方法信息的方法."
 #: data_input.php:1011 host.php:1756 lib/api_automation.php:179
 #: lib/api_automation.php:1117 lib/auth.php:2498 lib/clog_webapi.php:854
 #: lib/html_utility.php:1389 lib/import.php:423 lib/plugins.php:1243
-#: lib/plugins.php:1244 lib/rrd.php:3693 lib/rrd.php:3705 lib/spikekill.php:302
+#: lib/plugins.php:1244 lib/rrd.php:3770 lib/rrd.php:3782 lib/spikekill.php:302
 #: package_import.php:576 package_import.php:654 utilities.php:212
 #: utilities.php:213 utilities.php:2652
 msgid "Unknown"
@@ -3812,7 +3812,7 @@ msgstr "跳数"
 
 #: data_source_profiles.php:640 graphs_new.php:469 include/global_form.php:298
 #: lib/html.php:583 lib/html_filter.php:73 lib/installer.php:2751
-#: lib/rrd.php:3722 utilities.php:867 utilities.php:1789
+#: lib/rrd.php:3799 utilities.php:867 utilities.php:1789
 msgid "Rows"
 msgstr "行数"
 
@@ -4520,7 +4520,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool 图形语法"
 
 #: graph_image.php:186 graph_json.php:225 graph_realtime.php:306
-#: lib/rrd.php:1955
+#: lib/rrd.php:2032
 msgid "The Cacti Poller has not run yet."
 msgstr "Cacti Poller 尚未运行."
 
@@ -6667,7 +6667,7 @@ msgstr "自然排序"
 msgid "Numeric Ordering"
 msgstr "数字排序"
 
-#: include/global_arrays.php:970 lib/rrd.php:3634
+#: include/global_arrays.php:970 lib/rrd.php:3711
 msgid "Header"
 msgstr "头部"
 
@@ -8239,7 +8239,7 @@ msgstr "数据将从数据源采集的频率?"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "在RRDtool 记录未知数据之前数据可能会丢失多久. 如果您的数据源不稳定并且您希望继承旧数据而不是显示图形中的空白,请增加此值. 该值乘以X-Files Factor以确定实际时间量."
 
-#: include/global_form.php:240 lib/rrd.php:3725
+#: include/global_form.php:240 lib/rrd.php:3802
 msgid "X-Files Factor"
 msgstr "X Files 因子"
 
@@ -8793,7 +8793,7 @@ msgstr "不透明度/ Alpha通道"
 msgid "The opacity/alpha channel of the color."
 msgstr "颜色的不透明度/ Alpha通道."
 
-#: include/global_form.php:1003 lib/rrd.php:3721
+#: include/global_form.php:1003 lib/rrd.php:3798
 msgid "Consolidation Function"
 msgstr "合并功能"
 
@@ -12481,7 +12481,7 @@ msgstr "匹配设备"
 
 #: lib/api_automation.php:150 lib/api_automation.php:1088
 #: lib/clog_webapi.php:551 lib/html_reports.php:1067 lib/html_reports.php:1739
-#: lib/html_reports.php:2138 lib/html_reports.php:2149 lib/rrd.php:3663
+#: lib/html_reports.php:2138 lib/html_reports.php:2149 lib/rrd.php:3740
 #: utilities.php:357 utilities.php:1450 utilities.php:3097
 msgid "Type"
 msgstr "Type"
@@ -16292,187 +16292,187 @@ msgstr "添加已存在报表图形项目'<i>%s</i>'失败"
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "跳过已存在的报告图项目 '<i>%s</i>'"
 
-#: lib/rrd.php:1952
+#: lib/rrd.php:2029
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "ERROR: RRD 文件 %s 不可写入"
 
-#: lib/rrd.php:3428
+#: lib/rrd.php:3505
 #, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "所需的RRD文件步长为'%s'，但观察到的步长为'%s'"
 
-#: lib/rrd.php:3488
+#: lib/rrd.php:3565
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "数据源'%s' 的类型应该是'%s'"
 
-#: lib/rrd.php:3494
+#: lib/rrd.php:3571
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "数据源'%s' 的心跳应该是'%s'"
 
-#: lib/rrd.php:3506
+#: lib/rrd.php:3583
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "数据源'%s'的RRD最小值应为'%s'"
 
-#: lib/rrd.php:3515
+#: lib/rrd.php:3592
 #, php-format
 msgid "DS '%s' missing in Cacti definition"
 msgstr "DS'%s' 在Cacti 定义中缺失"
 
-#: lib/rrd.php:3529 lib/rrd.php:3530
+#: lib/rrd.php:3606 lib/rrd.php:3607
 #, php-format
 msgid "Cacti RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Cacti RRA '%s' 具有与 '%s' 相同的CF/步数(%s,%s)"
 
-#: lib/rrd.php:3543 lib/rrd.php:3544
+#: lib/rrd.php:3620 lib/rrd.php:3621
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "文件RRA '%s'具有相同的CF/步(%s,%s)为'%s'"
 
-#: lib/rrd.php:3576
+#: lib/rrd.php:3653
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Cacti to re-create RRDfile."
 msgstr "“%s”的pdp_per_row对于RRA“%s”应为“%s”无效。 请考虑删除并允许 Cacti 重新创建 RRDfile。"
 
-#: lib/rrd.php:3580
+#: lib/rrd.php:3657
 #, php-format
 msgid "The XFF for Cacti RRA id is '%s' but should be '%s'"
 msgstr "XAF的cacti RRA id'%s' '应该是'%s'"
 
-#: lib/rrd.php:3584
+#: lib/rrd.php:3661
 #, php-format
 msgid "The number of rows for Cacti RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Cacti RRA id'%s'的行数不正确。行数为'%s'，但应为'%s'"
 
-#: lib/rrd.php:3601
+#: lib/rrd.php:3678
 #, php-format
 msgid "The RRA '%s' missing in the existing Cacti RRDfile"
 msgstr "在RRDfile中缺少RRA '%s'"
 
-#: lib/rrd.php:3609
+#: lib/rrd.php:3686
 #, php-format
 msgid "RRA '%s' missing in Cacti definition"
 msgstr "在Cacti 定义中缺少RRA'%s'"
 
-#: lib/rrd.php:3630
+#: lib/rrd.php:3707
 msgid "RRD File Information"
 msgstr "RRD 文件信息"
 
-#: lib/rrd.php:3662
+#: lib/rrd.php:3739
 msgid "Data Source Items"
 msgstr "数据源的项目"
 
-#: lib/rrd.php:3664
+#: lib/rrd.php:3741
 msgid "Minimal Heartbeat"
 msgstr "最小心跳"
 
-#: lib/rrd.php:3665
+#: lib/rrd.php:3742
 msgid "Min"
 msgstr "最小"
 
-#: lib/rrd.php:3666
+#: lib/rrd.php:3743
 msgid "Max"
 msgstr "最大"
 
-#: lib/rrd.php:3667
+#: lib/rrd.php:3744
 msgid "Last DS"
 msgstr "上一个 DS"
 
-#: lib/rrd.php:3669
+#: lib/rrd.php:3746
 msgid "Unknown Sec"
 msgstr "未知"
 
-#: lib/rrd.php:3720
+#: lib/rrd.php:3797
 msgid "Round Robin Archive"
 msgstr "循环存档"
 
-#: lib/rrd.php:3723
+#: lib/rrd.php:3800
 msgid "Cur Row"
 msgstr "Cur 行"
 
-#: lib/rrd.php:3724
+#: lib/rrd.php:3801
 msgid "PDP per Row"
 msgstr "每行PDP"
 
-#: lib/rrd.php:3726
+#: lib/rrd.php:3803
 msgid "CDP Prep Value (0)"
 msgstr "CDP 预设值(0)"
 
-#: lib/rrd.php:3727
+#: lib/rrd.php:3804
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP 未知数据点(0)"
 
-#: lib/rrd.php:3790
+#: lib/rrd.php:3867
 msgid "Errors Found"
 msgstr "未找到 %s"
 
-#: lib/rrd.php:3802
+#: lib/rrd.php:3879
 msgid "Optional Tuning Recommendations"
 msgstr "数据源字段"
 
-#: lib/rrd.php:3829 lib/rrd.php:3832
+#: lib/rrd.php:3906 lib/rrd.php:3909
 #, php-format
 msgid "rename %s to %s"
 msgstr "将 %s 重命名为 %s"
 
-#: lib/rrd.php:3906 lib/rrd.php:3985 lib/rrd.php:4051
+#: lib/rrd.php:3983 lib/rrd.php:4062 lib/rrd.php:4128
 #, fuzzy
 msgid "ERROR: Invalid RRDfile path"
 msgstr "输入有效的文件路径"
 
-#: lib/rrd.php:3915
+#: lib/rrd.php:3992
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "解析rrdtool 转储的XML 时出错"
 
-#: lib/rrd.php:3947 lib/rrd.php:4012 lib/rrd.php:4078
+#: lib/rrd.php:4024 lib/rrd.php:4089 lib/rrd.php:4155
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "写入XML 文件时出错: %s"
 
-#: lib/rrd.php:3958 lib/rrd.php:4023 lib/rrd.php:4089
+#: lib/rrd.php:4035 lib/rrd.php:4100 lib/rrd.php:4166
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "ERROR: RRD 文件 %s 不可写入"
 
-#: lib/rrd.php:3994 lib/rrd.php:4060
+#: lib/rrd.php:4071 lib/rrd.php:4137
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "解析RRDtool 转储的XML 时出错"
 
-#: lib/rrd.php:4309
+#: lib/rrd.php:4386
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) 从RRD 文件中删除"
 
-#: lib/rrd.php:4347
+#: lib/rrd.php:4424
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f)添加到RRD 文件"
 
-#: lib/rrd.php:4379 lib/rrd.php:4393
+#: lib/rrd.php:4456 lib/rrd.php:4470
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "网站没有 %s 的写入权限,可能无法创建/更新RRD"
 
-#: lib/rrd.php:4389
+#: lib/rrd.php:4466
 msgid "(Custom)"
 msgstr "(自定义)"
 
-#: lib/rrd.php:4395
+#: lib/rrd.php:4472
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "无法打开数据文件,poller 可能尚未运行"
 
-#: lib/rrd.php:4398
+#: lib/rrd.php:4475
 msgid "RRA Folder"
 msgstr "RRA 文件夹"
 
-#: lib/rrd.php:4398
+#: lib/rrd.php:4475
 msgid "Root"
 msgstr "根目录"
 
-#: lib/rrd.php:4507
+#: lib/rrd.php:4584
 msgid "Unknown RRDtool Error"
 msgstr "未知的RRDtool 错误"
 
@@ -16505,12 +16505,12 @@ msgstr ""
 msgid "FATAL: Standard Deviation must be a positive integer."
 msgstr ""
 
-#: lib/spikekill.php:280 lib/spikekill.php:1771
+#: lib/spikekill.php:280 lib/spikekill.php:1798
 #, fuzzy
 msgid "StdDev"
 msgstr "删除标准设置"
 
-#: lib/spikekill.php:286 lib/spikekill.php:1771
+#: lib/spikekill.php:286 lib/spikekill.php:1798
 #, fuzzy
 msgid "Variance"
 msgstr "变量"
@@ -16617,143 +16617,151 @@ msgstr ""
 msgid "Window Range:  All"
 msgstr "Windows 相关"
 
-#: lib/spikekill.php:447
+#: lib/spikekill.php:411
+msgid "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal."
+msgstr ""
+
+#: lib/spikekill.php:417
+msgid "FATAL: RRD storage is busy or its maintenance lock is unavailable. Retry after polling completes."
+msgstr ""
+
+#: lib/spikekill.php:469
 #, php-format
 msgid "FATAL: Unable to safely create a temporary XML file in '%s'!"
 msgstr ""
 
-#: lib/spikekill.php:496 lib/spikekill.php:518
+#: lib/spikekill.php:518 lib/spikekill.php:540
 msgid "FATAL: RRD source identity changed or could not be verified safely."
 msgstr ""
 
-#: lib/spikekill.php:526
+#: lib/spikekill.php:548
 msgid "FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"
 msgstr ""
 
-#: lib/spikekill.php:542
+#: lib/spikekill.php:564
 msgid "FATAL: RRDtool returned an empty dump. The RRD file was not modified."
 msgstr ""
 
-#: lib/spikekill.php:570
+#: lib/spikekill.php:592
 #, php-format
 msgid "FATAL: RRDfile Backup of '%s' to '%s' FAILED!"
 msgstr ""
 
-#: lib/spikekill.php:784
+#: lib/spikekill.php:806
 #, php-format
 msgid "NOTE: Searching for Spikes in XML file '%s'"
 msgstr ""
 
-#: lib/spikekill.php:787
+#: lib/spikekill.php:809
 #, php-format
 msgid "NOTE: Limited to Time Window: %s through %s"
 msgstr ""
 
-#: lib/spikekill.php:794
+#: lib/spikekill.php:816
 msgid "NOTE: Dryrun requested.  No updates performed"
 msgstr ""
 
-#: lib/spikekill.php:830
+#: lib/spikekill.php:852
 #, php-format
 msgid "NOTE: No Window Spikes found in '%s'"
 msgstr ""
 
-#: lib/spikekill.php:833
+#: lib/spikekill.php:855
 #, php-format
 msgid "NOTE: No Spikes found in '%s'"
 msgstr ""
 
-#: lib/spikekill.php:846
+#: lib/spikekill.php:868
 #, php-format
 msgid "NOTE: Spikes Found and Remediated.  Total Spikes %s"
 msgstr ""
 
-#: lib/spikekill.php:850
+#: lib/spikekill.php:872
 #, php-format
 msgid "FATAL: Unable to restore '%s' from '%s'"
 msgstr ""
 
-#: lib/spikekill.php:860
+#: lib/spikekill.php:882
 #, php-format
 msgid "FATAL: Unable to backup '%s'"
 msgstr ""
 
-#: lib/spikekill.php:870
+#: lib/spikekill.php:892
 #, php-format
 msgid "FATAL: Unable to write XML file '%s'"
 msgstr ""
 
-#: lib/spikekill.php:879
+#: lib/spikekill.php:901
 #, fuzzy
 msgid "NOTE: No Spikes Found."
 msgstr "未找到站点"
 
-#: lib/spikekill.php:940
+#: lib/spikekill.php:962
 #, php-format
 msgid "NOTE: Re-Importing '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1031
+#: lib/spikekill.php:1053
 #, php-format
 msgid "NOTE: Backing Up '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1771
+#: lib/spikekill.php:1798
 #, fuzzy
 msgid "Avg"
 msgstr "平均:"
 
-#: lib/spikekill.php:1771
+#: lib/spikekill.php:1798
 #, fuzzy
 msgid "CF"
 msgstr "CDEF"
 
-#: lib/spikekill.php:1771
+#: lib/spikekill.php:1798
 #, fuzzy
 msgid "DS"
 msgstr "DES"
 
-#: lib/spikekill.php:1771
+#: lib/spikekill.php:1798
 msgid "NonNan"
 msgstr ""
 
-#: lib/spikekill.php:1771
+#: lib/spikekill.php:1798
 #, fuzzy
 msgid "Samples"
 msgstr "简单"
 
-#: lib/spikekill.php:1772
+#: lib/spikekill.php:1799
 msgid "MaxStdDev"
 msgstr ""
 
-#: lib/spikekill.php:1772
+#: lib/spikekill.php:1799
 #, fuzzy
 msgid "MaxValue"
 msgstr "值"
 
-#: lib/spikekill.php:1772
+#: lib/spikekill.php:1799
 #, fuzzy
 msgid "MinStdDev"
 msgstr "干运行标准设置"
 
-#: lib/spikekill.php:1772
+#: lib/spikekill.php:1799
 #, fuzzy
 msgid "MinValue"
 msgstr "值"
 
-#: lib/spikekill.php:1772
+#: lib/spikekill.php:1799
 msgid "StdKilled"
 msgstr ""
 
-#: lib/spikekill.php:1772
+#: lib/spikekill.php:1799
 msgid "VarKilled"
 msgstr ""
 
-#: lib/spikekill.php:1772
+#: lib/spikekill.php:1799
 msgid "WindKilled"
 msgstr ""
 
-#: lib/spikekill.php:1772
+#: lib/spikekill.php:1799
 msgid "WindSamples"
 msgstr ""
 

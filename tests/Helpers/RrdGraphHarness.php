@@ -162,6 +162,7 @@ define('CACTI_LOCALE', 'en-US');
 $config = array(
 	'cacti_server_os' => $scenario['os'] ?? 'unix',
 	'base_path'       => $scenario['root'],
+	'rra_path'        => $scenario['work'],
 	'library_path'    => $scenario['root'] . '/lib',
 	'include_path'    => $scenario['work'],
 	'is_web'          => false,
@@ -266,11 +267,13 @@ try {
 
 			break;
 		case 'execute_capture':
+			require_once $scenario['root'] . '/lib/rrd_maintenance.php';
 			/* the exact bytes __rrd_execute() writes to an open rrdtool pipe */
 			$out['written'] = array();
 
 			foreach ($scenario['calls'] as $call) {
 				$pipe = fopen('php://temp', 'w+');
+				rrd_maintenance_pipe($pipe, rrd_maintenance_acquire());
 
 				if ($call[0] == 'raw') {
 					rrdtool_execute($call[1], false, RRDTOOL_OUTPUT_NULL, $pipe);
@@ -282,6 +285,8 @@ try {
 
 				rewind($pipe);
 				$out['written'][] = stream_get_contents($pipe);
+				rrd_maintenance_pipe($pipe, null, true);
+				fclose($pipe);
 			}
 
 			break;
