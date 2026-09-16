@@ -1,0 +1,36 @@
+name: Release upgrade and rollback
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: release-rehearsal-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  rehearsal:
+    name: Upgrade, RRD preservation and rollback
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3
+        with:
+          install_args: python@3.12.12
+      - name: Fetch pinned baseline source
+        run: git fetch --no-tags https://github.com/Cacti/cacti.git 6482af547c204199e829b7a0df0b7a13db3e0a58
+      - name: Rehearse upgrade and restore the matching snapshot
+        env:
+          PHP_VERSION: '8.2'
+        run: mise exec python@3.12.12 -- python tests/Support/Behavior/release_readiness.py
+      - name: Preserve complete or failed observations
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: release-rehearsal
+          path: tests/behavior/results/release-readiness/
+          if-no-files-found: error

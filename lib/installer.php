@@ -162,7 +162,8 @@ class Installer implements JsonSerializable
 
             if (!cacti_version_compare(CACTI_VERSION, $install_version, '==')) {
                 log_install_debug('step', 'Does not match: ' . clean_up_lines(var_export(CACTI_VERSION, true)));
-                $this->stepError = Installer::STEP_WELCOME;
+                // A new version starts a new wizard; it is not a failed validation.
+                $step = Installer::STEP_WELCOME;
                 db_execute('DELETE FROM settings WHERE name LIKE \'install_%\'');
             } else {
                 $install_params = array();
@@ -3029,8 +3030,10 @@ class Installer implements JsonSerializable
             }
         }
 
-        $output .= $this->sectionSubTitle('Process Log');
-        $output .= Installer::getInstallLog();
+        if ($this->runtime != 'Cli') {
+            $output .= $this->sectionSubTitle('Process Log');
+            $output .= Installer::getInstallLog();
+        }
 
         $this->buttonPrevious->Visible = false;
         $this->buttonNext->Enabled = true;

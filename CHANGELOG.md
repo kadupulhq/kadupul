@@ -11,6 +11,11 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Restart the installer correctly when upgrading a completed older version, and
+  keep repeated CLI installation checks out of web-session log rendering.
+- Validate release upgrades and snapshot rollback with real polling, graph rendering,
+  plugin callbacks and checks that RRD bytes and database identities are preserved.
+
 - Preserve requested spike-removal recovery snapshots and repair dry-run statistics.
   Port the LTS filesystem and RRDtool failure safeguards to the main branch.
 
