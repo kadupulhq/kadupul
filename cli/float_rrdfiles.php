@@ -259,7 +259,13 @@ switch ($type) {
 			/* Update the rrdfile to current */
 			rrdtool_function_fetch($data['local_data_id'], time()-120, time());
 
-			float_rrdfile($data['rrd_path'], $data['local_data_id'], $step, $start_time, $end_time);
+			require_once __DIR__ . '/../lib/rrd_maintenance.php';
+			$rrd_rewrite_lock = rrd_maintenance_cli_lock(true, true);
+			try {
+				float_rrdfile($data['rrd_path'], $data['local_data_id'], $step, $start_time, $end_time);
+			} finally {
+				rrd_maintenance_release($rrd_rewrite_lock);
+			}
 
 			db_execute_prepared('DELETE FROM poller_float_rrdfiles_not_done
 				WHERE local_data_id = ?',

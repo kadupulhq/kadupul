@@ -290,6 +290,7 @@ function rrdtool_execute() {
 function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pipe = false, $logopt = 'WEBLOG') {
 	global $config;
 
+
 	if (is_array($command_line)) {
 		$cmd = array_shift($command_line);
 		$command_line = $cmd . ' ' . implode(' ', array_map('cacti_escapeshellarg', $command_line));
@@ -364,30 +365,41 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 
 		rrdtool_reset_language();
 	} else {
-		$i = 0;
-		while (1) {
-			if (fwrite($rrdtool_pipe, escape_command(" $command_line") . "\r\n") === false) {
-				cacti_log("ERROR: Detected RRDtool Crash on '$command_line'.  Last command was '$last_command'");
+		$original_rrdtool_pipe = $rrdtool_pipe;
+		try {
+			$i = 0;
+			while (1) {
+				if (fwrite($rrdtool_pipe, escape_command(" $command_line") . "\r\n") === false) {
+					cacti_log("ERROR: Detected RRDtool Crash on '$command_line'.  Last command was '$last_command'");
 
-				/* close the invalid pipe */
-				rrd_close($rrdtool_pipe);
+					/* close the invalid pipe */
+					rrd_close($rrdtool_pipe);
 
-				/* open a new rrdtool process */
-				$rrdtool_pipe = rrd_init();
+					if ($i > 4) {
+						cacti_log("FATAL: RRDtool Restart Attempts Exceeded. Giving up on '$command_line'.");
+						return false;
+					}
+					$i++;
 
-				if ($i > 4) {
-					cacti_log("FATAL: RRDtool Restart Attempts Exceeded. Giving up on '$command_line'.");
+					/* open a new rrdtool process */
+					$rrdtool_pipe = rrd_init();
+					if (!is_resource($rrdtool_pipe)) {
+						cacti_log("FATAL: RRDtool could not be restarted. Giving up on '$command_line'.");
+						return false;
+					}
+
+					continue;
+				} else {
+					fflush($rrdtool_pipe);
 
 					break;
-				} else {
-					$i++;
 				}
-
-				continue;
-			} else {
-				fflush($rrdtool_pipe);
-
-				break;
+			}
+		} finally {
+			/* A private recovery child must finish before returning. Later
+			 * calls with the closed original pipe use synchronous execution. */
+			if ($rrdtool_pipe !== $original_rrdtool_pipe && is_resource($rrdtool_pipe)) {
+				rrd_close($rrdtool_pipe);
 			}
 		}
 	}
