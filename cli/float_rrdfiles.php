@@ -125,6 +125,9 @@ if (cacti_sizeof($parms)) {
 	}
 }
 
+require_once __DIR__ . '/../lib/rrd_maintenance.php';
+rrd_maintenance_cli_preflight();
+
 /**
  * Types include
  *
@@ -259,7 +262,6 @@ switch ($type) {
 			/* Update the rrdfile to current */
 			rrdtool_function_fetch($data['local_data_id'], time()-120, time());
 
-			require_once __DIR__ . '/../lib/rrd_maintenance.php';
 			$rrd_rewrite_lock = rrd_maintenance_cli_lock(true, true);
 			try {
 				float_rrdfile($data['rrd_path'], $data['local_data_id'], $step, $start_time, $end_time);

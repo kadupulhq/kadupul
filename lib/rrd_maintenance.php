@@ -91,9 +91,8 @@ function rrd_maintenance_cli_lock($exclusive = false, $wait = false)
 {
     global $config;
 
-    if ($exclusive && getenv('RRDCACHED_ADDRESS')) {
-        fwrite(STDERR, "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before maintenance.\n");
-        exit(1);
+    if ($exclusive) {
+        rrd_maintenance_cli_preflight();
     }
 
     // Spike removal is unavailable on Windows; retain other CLI behavior there.
@@ -103,4 +102,14 @@ function rrd_maintenance_cli_lock($exclusive = false, $wait = false)
         exit(1);
     }
     return $lock;
+}
+
+/** Reject cache-daemon rewrites before flushing or modifying any data. */
+function rrd_maintenance_cli_preflight()
+{
+    if (getenv('RRDCACHED_ADDRESS')) {
+        fwrite(STDERR, "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before maintenance.\n");
+        exit(1);
+    }
+
 }
