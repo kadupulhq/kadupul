@@ -128,3 +128,8 @@ collection or worker processes, including after a code-only deployment. They exi
 nonzero, log the required configuration, and use the existing administrator
 notification settings. This prevents new collection from silently filling a
 queue that cannot be drained; existing queued samples remain intact.
+
+Local destructive rewrites fail closed on Windows because no exclusive storage
+lease is implemented there. Read-only graph and export calls remain available.
+Remote storage retains the proxy's existing restore protocol; the local atomic
+rename guarantee does not apply to remote proxy restores.

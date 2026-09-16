@@ -106,6 +106,9 @@ FIXTURE;
         } elseif ($failure === 'rewrite') {
             file_put_contents($wrapper, "#!/bin/sh\nexit 1\n");
         }
+        if ($failure === 'partial-restore') {
+            file_put_contents($wrapper, "#!/bin/sh\nif [ \"\$1\" = restore ]; then\n for target do :; done\n printf partial > \"\$target\"\n exit 1\nfi\nexec " . escapeshellarg($binary) . " \"\$@\"\n");
+        }
         if ($failure === 'fetch-empty' || $failure === 'fetch-throw') {
             $behavior = $failure === 'fetch-empty' ? 'return array();' : 'throw new RuntimeException("fetch failed");';
             file_put_contents($dir . '/lib/rrd.php', '<?php function rrdtool_function_fetch(...$args) { ' . $behavior . ' }');
@@ -225,7 +228,7 @@ FIXTURE;
             rrd_cli_fixture_remove($dir);
         }
     }
-})->with(array(array('update_heartbeat.php', false), array('float_rrdfiles.php', false), array('splice_rrd.php', false), array('float_rrdfiles.php', true), array('splice_rrd.php', true), array('update_heartbeat.php', true), array('splice_rrd.php', false, false), array('float_rrdfiles.php', false, true, 'storage'), array('float_rrdfiles.php', false, true, 'rewrite'), array('float_rrdfiles.php', false, true, 'sigterm'), array('float_rrdfiles.php', false, true, 'sigint'), array('float_rrdfiles.php', false, true, 'fetch-empty'), array('float_rrdfiles.php', false, true, 'fetch-throw'), array('update_heartbeat.php', false, true, 'rewrite'), array('update_heartbeat.php', false, true, 'missing-file')));
+})->with(array(array('update_heartbeat.php', false), array('float_rrdfiles.php', false), array('splice_rrd.php', false), array('float_rrdfiles.php', true), array('splice_rrd.php', true), array('update_heartbeat.php', true), array('splice_rrd.php', false, false), array('float_rrdfiles.php', false, true, 'storage'), array('float_rrdfiles.php', false, true, 'rewrite'), array('float_rrdfiles.php', false, true, 'sigterm'), array('float_rrdfiles.php', false, true, 'sigint'), array('float_rrdfiles.php', false, true, 'fetch-empty'), array('float_rrdfiles.php', false, true, 'fetch-throw'), array('update_heartbeat.php', false, true, 'rewrite'), array('update_heartbeat.php', false, true, 'missing-file'), array('float_rrdfiles.php', false, true, 'partial-restore'), array('splice_rrd.php', false, true, 'partial-restore')));
 
 
 test('batch gap repair serializes queued files and reports worker outcomes', function ($threads, $failed = false, $cached = false, $childStatus = null) {

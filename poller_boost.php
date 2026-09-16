@@ -126,7 +126,8 @@ if ($child == false) {
 
 	$seconds_offset = read_config_option('boost_rrd_update_interval') * 60;
 
-	$run_now = boost_time_to_run($forcerun, $current_time, $last_run_time, $next_run_time);
+	$pending_archives = boost_get_arch_table_names();
+	$run_now = boost_time_to_run($forcerun, $current_time, $last_run_time, $next_run_time) || cacti_sizeof($pending_archives);
 
 	if ($run_now) {
 		/**
@@ -149,7 +150,7 @@ if ($child == false) {
 		 * exit cleanly
 		 */
 		$poller_items = db_fetch_row('SELECT * FROM poller_output_boost LIMIT 1');
-		if (!cacti_sizeof($poller_items)) {
+		if (!cacti_sizeof($poller_items) && !cacti_sizeof($pending_archives)) {
 			cacti_log('INFO: Boost has no items in poller_output_boost to process during this cycle.', true, 'BOOST');
 			exit(0);
 		}

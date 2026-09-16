@@ -27,7 +27,7 @@ test('production Boost owns, supervises and reaps actual worker processes', func
     $bootstrap .= 'require ' . var_export($root . '/tests/Fixtures/boost-worker-bootstrap.php', true) . ';';
     file_put_contents($dir . '/include/cli_check.php', $bootstrap);
     try {
-        $process = proc_open(array(PHP_BINARY,'-d','pcov.directory=/','-d','pcov.exclude=~/(include/vendor|tests)/~',$dir . '/poller_boost.php',$mode === 'prepare-failure' ? '--force' : '--help'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes, null, array_merge(getenv(), array('BOOST_FIXTURE' => $dir,'BOOST_MODE' => $mode)));
+        $process = proc_open(array(PHP_BINARY,'-d','pcov.directory=/','-d','pcov.exclude=~/(include/vendor|tests)/~',$dir . '/poller_boost.php',in_array($mode, array('prepare-failure','archive-retry'), true) ? '--force' : '--help'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes, null, array_merge(getenv(), array('BOOST_FIXTURE' => $dir,'BOOST_MODE' => $mode)));
         $output = stream_get_contents($pipes[1]);
         $error = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
@@ -36,9 +36,9 @@ test('production Boost owns, supervises and reaps actual worker processes', func
         if ($error !== '') {
             throw new RuntimeException($error . $output);
         }
-        expect($status)->toBe($mode === 'prepare-failure' ? 1 : 0);
+        expect($status)->toBe(in_array($mode, array('prepare-failure','archive-retry'), true) ? 1 : 0);
         $result = json_decode(file_get_contents($dir . '/result.json'), true);
-        if ($mode === 'prepare-failure') {
+        if (in_array($mode, array('prepare-failure','archive-retry'), true)) {
             expect($result['boost_poller_status'])->toBe('failed - preparation');
             expect(file($dir . '/reaped'))->toHaveCount(1);
         } elseif (strpos($mode, 'output-') === 0) {
@@ -68,4 +68,4 @@ test('production Boost owns, supervises and reaps actual worker processes', func
             rmdir($dir . $suffix);
         }
     }
-})->with(array('success','early-crash','timeout','launch-failure','shutdown','output-init','output-archives','output-count','output-empty','output-ids','output-last','output-select','prepare-failure'));
+})->with(array('success','early-crash','timeout','launch-failure','shutdown','output-init','output-archives','output-count','output-empty','output-ids','output-last','output-select','prepare-failure','archive-retry'));

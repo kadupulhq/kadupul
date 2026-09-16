@@ -175,8 +175,8 @@ function rrd_maintenance_cli_lock($exclusive = false, $wait = false)
         rrd_maintenance_cli_preflight();
     }
 
-    // Spike removal is unavailable on Windows; retain other CLI behavior there.
-    $lock = rrd_maintenance_acquire($exclusive && ($config['cacti_server_os'] ?? '') !== 'win32', $wait);
+    // Destructive maintenance must fail closed where exclusive locks are unavailable.
+    $lock = rrd_maintenance_acquire($exclusive, $wait);
     if ($lock === false) {
         fwrite(STDERR, "FATAL: RRD storage is busy or its maintenance lock is unavailable.\n");
         exit(1);
@@ -212,17 +212,40 @@ function rrd_maintenance_configuration_error()
 /** Restore beside the original so a timeout cannot truncate the live RRD. */
 function rrd_maintenance_restore($xml_file, $rrd_file, $pipe)
 {
+    global $config;
+    if (is_array($pipe) && read_config_option('storage_location') && empty($config['force_storage_location_local'])) {
+        if (strpbrk($xml_file . $rrd_file, "\r\n\0") !== false) {
+            return false;
+        }
+        // Keep the existing remote restore protocol; local inode leases do not apply to a proxy.
+        return rrdtool_execute('restore -f ' . cacti_escapeshellarg($xml_file) . ' ' . cacti_escapeshellarg($rrd_file), false, RRDTOOL_OUTPUT_BOOLEAN, $pipe, 'UTIL') === true;
+    }
     if (!rrd_maintenance_pipe_is_exclusive($pipe) || is_link($rrd_file) || strpbrk($xml_file . $rrd_file, "\r\n\0") !== false) {
         cacti_log('ERROR: RRD restore requires an exclusive lease and safe regular-file paths.', false, 'UTIL');
         return false;
     }
+    return rrd_maintenance_restore_atomic($xml_file, $rrd_file, function ($temporary) use ($xml_file, $pipe) {
+        return rrdtool_execute(array('restore', '-f', $xml_file, $temporary), false, RRDTOOL_OUTPUT_BOOLEAN, $pipe, 'UTIL') === true;
+    });
+}
+
+/** Caller owns the exclusive storage lease throughout snapshot, restore and rename. */
+function rrd_maintenance_restore_atomic($xml_file, $rrd_file, $restore)
+{
+    if (is_link($rrd_file) || strpbrk($xml_file . $rrd_file, "\r\n\0") !== false) {
+        return false;
+    }
     $directory = realpath(dirname($rrd_file));
-    if ($directory === false || !is_writable($directory) || !is_writable($rrd_file)) {
+    if ($directory === false || !rrd_maintenance_directory_is_trusted($directory) || !is_writable($directory)
+        || (file_exists($rrd_file) && !is_writable($rrd_file))) {
         cacti_log('ERROR: RRD restore requires writable storage directory and file; recovery XML retained at ' . $xml_file, false, 'UTIL');
         return false;
     }
     $metadata = @stat($rrd_file);
-    $temporary = $metadata === false ? false : @tempnam($directory, '.rrd-restore-');
+    if (file_exists($rrd_file) && $metadata === false) {
+        return false;
+    }
+    $temporary = @tempnam($directory, '.rrd-restore-');
     if ($temporary === false) {
         cacti_log('ERROR: RRD restore could not create a temporary file; recovery XML retained at ' . $xml_file, false, 'UTIL');
         return false;
@@ -232,11 +255,18 @@ function rrd_maintenance_restore($xml_file, $rrd_file, $pipe)
             cacti_log('ERROR: RRD restore refused a temporary file outside storage.', false, 'UTIL');
             return false;
         }
-        if (rrdtool_execute(array('restore', '-f', $xml_file, $temporary), false, RRDTOOL_OUTPUT_BOOLEAN, $pipe, 'UTIL') !== true) {
+        if ($restore($temporary) !== true) {
             cacti_log('ERROR: RRD restore failed; original preserved and recovery XML retained at ' . $xml_file, false, 'UTIL');
             return false;
         }
         clearstatcache(true, $temporary);
+        if (!is_file($temporary) || is_link($temporary) || filesize($temporary) === 0) {
+            return false;
+        }
+        if ($metadata === false) {
+            $metadata = stat($temporary);
+            $metadata['mode'] = 0666 & ~umask();
+        }
         if ((fileowner($temporary) !== $metadata['uid'] && !@chown($temporary, $metadata['uid']))
             || (filegroup($temporary) !== $metadata['gid'] && !@chgrp($temporary, $metadata['gid']))
             || !@chmod($temporary, $metadata['mode'] & 0777)) {
@@ -255,6 +285,25 @@ function rrd_maintenance_restore($xml_file, $rrd_file, $pipe)
     }
 }
 
+
+/** Synchronous CLI restore; validate the restored file before replacing its destination. */
+function rrd_maintenance_restore_command($binary, $xml_file, $rrd_file, $range_check = false)
+{
+    return rrd_maintenance_restore_atomic($xml_file, $rrd_file, function ($temporary) use ($binary, $xml_file, $range_check) {
+        $args = array($binary, 'restore', '-f');
+        if ($range_check) {
+            $args[] = '-r';
+        }
+        $args[] = $xml_file;
+        $args[] = $temporary;
+        exec(implode(' ', array_map('escapeshellarg', $args)), $output, $status);
+        if ($status !== 0) {
+            return false;
+        }
+        exec(escapeshellarg($binary) . ' info ' . escapeshellarg($temporary), $info, $status);
+        return $status === 0 && count($info) > 0;
+    });
+}
 
 /** Stop collection before a bad storage configuration can fill the MEMORY queue. */
 function rrd_maintenance_poller_preflight()

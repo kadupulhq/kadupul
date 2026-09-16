@@ -28,7 +28,7 @@ function get_cacti_version()
 }
 function cacti_sizeof($value)
 {
-    return count($value);
+    return is_array($value) ? count($value) : 0;
 }
 function cacti_log(...$args) {}
 function boost_debug(...$args) {}
@@ -62,11 +62,14 @@ function rrd_close($pipe)
 }
 function boost_get_arch_table_names(...$args)
 {
-    return in_array(getenv('BOOST_MODE'), array('output-archives','prepare-failure'), true) ? array() : array('pending');
+    return in_array(getenv('BOOST_MODE'), array('output-archives','prepare-failure'), true) ? array() : array('poller_output_boost_arch_pending');
 }
 function db_fetch_cell_prepared($sql, $params = array())
 {
     $mode = getenv('BOOST_MODE');
+    if ($mode === 'archive-retry' && strpos($sql, 'TABLE_ROWS') !== false) {
+        return 0;
+    }
     if (strpos($sql, 'COUNT(at.local_data_id)') !== false) {
         return $mode === 'output-count' ? false : ($mode === 'output-empty' ? 0 : 1);
     }
@@ -111,7 +114,7 @@ function set_config_option($key, $value)
 }
 function db_fetch_row($sql)
 {
-    return strpos($sql, 'SHOW STATUS') === 0 ? array() : array('output' => 42);
+    return strpos($sql, 'SHOW STATUS') === 0 || getenv('BOOST_MODE') === 'archive-retry' ? array() : array('output' => 42);
 }
 function register_process_start(...$args)
 {
@@ -129,7 +132,7 @@ function db_execute_prepared(...$args)
     return true;
 }
 register_shutdown_function(function () use ($fixture, $mode) {
-    if ($mode === 'prepare-failure') {
+    if (in_array($mode, array('prepare-failure','archive-retry'), true)) {
         file_put_contents($fixture . '/result.json', json_encode($GLOBALS['settings_written']));
         return;
     }

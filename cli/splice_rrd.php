@@ -317,7 +317,7 @@ file_put_contents($newxmlfile, $new_xml);
 /* finally update the file XML file and Reprocess the RRDfile */
 if (!$dryrun) {
 	debug('Creating New RRDfile');
-	createRRDFileFromXML($newxmlfile, $finrrd);
+	if (!createRRDFileFromXML($newxmlfile, $finrrd)) { exit(1); }
 }
 
 /* remove the temp file */
@@ -832,24 +832,13 @@ function processXML(&$output) {
 
 /* All Functions */
 function createRRDFileFromXML($xmlfile, $rrdfile) {
-	global $rrdtool;
-
-	/* execute the dump command */
-	print 'NOTE: Re-Importing \'' . $xmlfile . '\' to \'' . $rrdfile . '\'' . PHP_EOL;
-	$return_code = 0;
-	$output      = array();
-	$command     = cacti_escapeshellcmd($rrdtool) . ' restore -f -r ' . cacti_escapeshellarg($xmlfile) . ' ' . cacti_escapeshellarg($rrdfile);
-	$result      = exec($command, $output, $return_var);
-
-	if ($return_var == 0) {
-		print "NOTE: File $rrdfile Restored Correctly" . PHP_EOL;
-	} else {
-		print "WARNING: File $rrdfile Encountered Errors.  Errors below:" . PHP_EOL;
-
-		foreach($output as $l) {
-			print "WARNING: $l" . PHP_EOL;
-		}
-	}
+    global $rrdtool;
+    if (!rrd_maintenance_restore_command($rrdtool, $xmlfile, $rrdfile, true)) {
+        print "ERROR: Restore failed; original and recovery XML preserved.\n";
+        return false;
+    }
+    print "NOTE: File $rrdfile Restored Correctly\n";
+    return true;
 }
 
 function XMLrip($tag, $line) {

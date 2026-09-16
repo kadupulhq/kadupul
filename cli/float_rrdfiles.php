@@ -267,7 +267,7 @@ switch ($type) {
 					throw new RuntimeException('Unable to fetch RRD data before floating.');
 				}
 
-				$rrd_rewrite_lock = rrd_maintenance_acquire(($config['cacti_server_os'] ?? '') !== 'win32', true, 5);
+				$rrd_rewrite_lock = rrd_maintenance_acquire(true, true, 5);
 				if ($rrd_rewrite_lock === false) {
 					fwrite(STDERR, "FATAL: RRD storage is busy or its maintenance lock is unavailable.\n");
 					$exit_status = 1;
@@ -442,25 +442,13 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 
 				fclose($fp);
 
-				/* restore the file */
-				$return  = 0;
-				$output  = array();
-				$command = "$rrdtool_bin restore -f $tmp_file $rrd_path";
-
-				$response = exec($command, $output, $return);
-
-				if ($return == 0) {
-					cacti_log(sprintf('NOTE: Range floated for RRDfile %s', $rrd_path), false, 'RFLOAT');
-					return true;
-				} else {
-					cacti_log(sprintf('WARNING: Range float FAILED for RRDfile %s.  Message is %s', $rrd_path, $response), false, 'RFLOAT');
-					return false;
-				}
-
-				if (!$seebug) {
-					unlink($tmp_file);
-					fclose($lf);
-				}
+                if (rrd_maintenance_restore_command($rrdtool_bin, $tmp_file, $rrd_path)) {
+                    cacti_log(sprintf('NOTE: Range floated for RRDfile %s', $rrd_path), false, 'RFLOAT');
+                    if (!$seebug) { unlink($tmp_file); }
+                    return true;
+                }
+                cacti_log(sprintf('WARNING: Range float FAILED for RRDfile %s; original and recovery XML preserved.', $rrd_path), false, 'RFLOAT');
+                return false;
 			} else {
 				cacti_log(sprintf('WARNING: Unable to open file %s for writing', $tmp_file), false, 'RFLOAT');
 				return false;
