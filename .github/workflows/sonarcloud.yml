@@ -38,6 +38,11 @@ jobs:
           coverage: pcov
           tools: composer
 
+      - name: Install RRDtool for native writer coverage
+        run: |
+          sudo apt-get update -o Acquire::Retries=3
+          sudo apt-get install -y --no-install-recommends rrdtool
+
       # composer install only warns when the lock is stale; validate exits
       # non-zero, so the run uses exactly the committed versions.
       - name: Install test dependencies
