@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Unregister an interrupted float_rrdfiles.php child under its own type and thread id and release its RRD maintenance lock, instead of leaving the master waiting on a process that is already gone
 -issue: Coordinate spike removal with live and queued RRD writers to preserve new samples
 -issue: Run every LTS unit test in CI with isolated processes and verified result reports
 -issue: Preserve multi-column sorting and enforce the current table sort allowlist

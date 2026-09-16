@@ -44,6 +44,7 @@ array_shift($parms);
 /* system controlled parameters */
 $type              = 'rmaster';
 $thread_id         = 0;
+$rrd_rewrite_lock  = false; /* held by sig_handler() if a child is interrupted mid-fetch */
 
 /* mandatory parameters */
 $start_time        = false;
@@ -805,7 +806,7 @@ function display_help () {
  * @return - null
  */
 function sig_handler($signo) {
-	global $type, $thread_id;
+	global $type, $thread_id, $rrd_rewrite_lock;
 
 	switch ($signo) {
 		case SIGTERM:
@@ -816,7 +817,13 @@ function sig_handler($signo) {
 				float_kill_running_processes();
 			}
 
+			/* a child interrupted mid-fetch still owns the row it registered under
+			 * its own type/thread id; unregistering as 'rmaster' would miss it and
+			 * leave float_processes_running() counting a process that is gone */
 			unregister_process('rfloat', $type, $thread_id, getmypid());
+
+			rrd_maintenance_release($rrd_rewrite_lock);
+
 
 			exit(1);
 			break;
