@@ -31,12 +31,20 @@ function db_fetch_assoc($sql)
             return array(array('name' => 'Partial', 'local_data_ids' => '7'));
         }
         if (!empty($GLOBALS['diagnostic_empty_selection'])) { return array(); }
-        return array($GLOBALS['cleanup_retry_rows'][$GLOBALS['diagnostic_probe_reads']++ === 0 ? 0 : 1]);
+        $GLOBALS['diagnostic_probe_reads']++;
+        return $GLOBALS['cleanup_retry_rows'];
     }
     return $GLOBALS['cleanup_retry_rows'] ?? array(array('local_data_id' => 7));
 }
-function db_fetch_assoc_prepared(...$args)
+function db_fetch_assoc_prepared($sql, $params = array())
 {
+    if (str_contains($sql, "FROM poller_output AS po")) {
+        if (isset($GLOBALS["pagination_probe"])) {
+            $GLOBALS["pagination_params"][] = $params;
+            return array_shift($GLOBALS["pagination_probe"]);
+        }
+        return db_fetch_assoc($sql);
+    }
     return array();
 }
 function array_rekey($rows, ...$args)
@@ -123,6 +131,7 @@ test('main poller skips subsequent drains and final drain after a deferred hando
 
 function poller_delete_output_rows($keys, &$failed) {
     $GLOBALS['cleanup_retry_keys'] = $keys;
+    if (isset($GLOBALS['pagination_deleted'])) { $GLOBALS['pagination_deleted'] = array_merge($GLOBALS['pagination_deleted'], $keys); }
     if (!empty($GLOBALS['diagnostic_probe'])) {
         $failed = false;
         return count($keys);
@@ -192,7 +201,7 @@ test('post-drain diagnostics preserve partial arrivals and fail closed on unread
             ->and($deferred)->toBe($lookup_fails)
             ->and($consumed)->toBe(1 + ($lookup_fails ? 0 : $orphan_count))
             ->and($GLOBALS['diagnostic_probe_ran'])->toBe(!$lookup_fails)
-            ->and($GLOBALS['diagnostic_orphan_queries'])->toBe($lookup_fails ? 1 : 3)
+            ->and($GLOBALS['diagnostic_orphan_queries'])->toBe($lookup_fails ? 1 : 2)
             ->and($GLOBALS['diagnostic_orphan_remaining'])->toBe(0);
         // db_execute() throws if either old broad diagnostic DELETE is reached.
     } finally {
@@ -274,3 +283,52 @@ test('an incomplete-only batch still diagnoses and cleans orphans without recurs
         rmdir($root);
     }
 });
+
+
+test('keyset draining reaches complete samples behind an incomplete page and completes boundary groups', function ($complete_boundary) {
+    $saved = $GLOBALS['config'] ?? null;
+    $root = sys_get_temp_dir() . '/pagination-' . bin2hex(random_bytes(6));
+    mkdir($root, 0700);
+    file_put_contents($root . '/rrd.php', '<?php');
+    $GLOBALS['config']['library_path'] = $root;
+    $row = array('local_data_id' => 1, 'output' => '10', 'time' => '2026-09-15 00:00:00', 'unix_time' => 1789430400,
+        'rrd_path' => '/1.rrd', 'rrd_name' => 'a', 'rrd_num' => 2, 'data_template_id' => 0);
+    $page = array();
+    for ($id = 1; $id <= 40000; $id++) {
+        $item = $row;
+        $item['local_data_id'] = $id;
+        $item['rrd_path'] = '/' . $id . '.rrd';
+        $page[] = $item;
+    }
+    $tail = $page[39999];
+    $tail['rrd_name'] = 'b';
+    $later = $row;
+    $later['local_data_id'] = 40001;
+    $later['rrd_path'] = '/40001.rrd';
+    $later['rrd_num'] = 1;
+    $GLOBALS['pagination_probe'] = array($page, $complete_boundary ? array($tail) : array(), array($later));
+    $GLOBALS['pagination_params'] = array();
+    $GLOBALS['pagination_deleted'] = array();
+    $GLOBALS['cleanup_retry_rows'] = array();
+    $GLOBALS['diagnostic_probe'] = true;
+    $GLOBALS['diagnostic_orphan_fail'] = false;
+    $GLOBALS['diagnostic_orphan_remaining'] = 0;
+    $GLOBALS['diagnostic_orphan_queries'] = 0;
+    try {
+        $pipe = null;
+        expect(process_poller_output($pipe, false, $deferred, $consumed))->toBe($complete_boundary ? 2 : 1)
+            ->and($deferred)->toBeFalse()
+            ->and($consumed)->toBe($complete_boundary ? 3 : 1)
+            ->and($GLOBALS['pagination_probe'])->toBe(array())
+            ->and($GLOBALS['pagination_params'])->toBe(array(array(), array(40000, $row['time'], 'a'), array(40000, $row['time'])))
+            ->and($GLOBALS['pagination_deleted'])->toHaveCount($complete_boundary ? 3 : 1)
+            ->and($GLOBALS['pagination_deleted'])->toContain(array(40001, 'a', $row['time']));
+    } finally {
+        unset($GLOBALS['pagination_deleted'], $GLOBALS['pagination_probe'], $GLOBALS['pagination_params'], $GLOBALS['cleanup_retry_rows'],
+            $GLOBALS['cleanup_retry_keys'], $GLOBALS['cleanup_retry_updates'], $GLOBALS['diagnostic_probe'],
+            $GLOBALS['diagnostic_orphan_fail'], $GLOBALS['diagnostic_orphan_remaining'], $GLOBALS['diagnostic_orphan_queries']);
+        $GLOBALS['config'] = $saved;
+        unlink($root . '/rrd.php');
+        rmdir($root);
+    }
+})->with(array(false, true));

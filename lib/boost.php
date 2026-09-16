@@ -2089,6 +2089,13 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 		return 'ERROR';
 	}
 
+	/* Legacy filtering needs on-disk truth. Closing the local write pipe waits
+	 * for pending commands; subsequent legacy creates and updates run synchronously. */
+	if (cacti_version_compare(get_rrdtool_version(), '1.5', '<') && is_resource($rrdtool_pipe)) {
+		rrd_close($rrdtool_pipe);
+		$rrdtool_pipe = false;
+	}
+
 	// create the rrd if one does not already exist
 	if (read_config_option('storage_location')) {
 		$file_exists = rrdtool_execute_path_command('file_exists', $rrd_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
