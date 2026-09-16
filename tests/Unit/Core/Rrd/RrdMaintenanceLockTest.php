@@ -483,8 +483,8 @@ test('untrusted symlink owners are rejected even beneath sticky directories', fu
 });
 
 test('another account cannot replace a directory after its lease is acquired', function () {
-    if (!function_exists('posix_geteuid') || posix_geteuid() !== 0 || !function_exists('pcntl_fork')) {
-        $this->markTestSkipped('Root and pcntl are required for an actual privilege-separated replacement attempt.');
+    if (!function_exists('posix_geteuid') || posix_geteuid() !== 0) {
+        $this->markTestSkipped('Root is required for an actual privilege-separated replacement attempt.');
     }
     chmod($this->dir, 0755);
     mkdir($this->dir . '/store', 0755);
@@ -493,18 +493,21 @@ test('another account cannot replace a directory after its lease is acquired', f
     $lease = rrd_maintenance_acquire();
     try {
         expect(is_resource($lease))->toBeTrue();
-        $pid = pcntl_fork();
-        if ($pid === 0) {
-            if (!posix_setgid(65534) || !posix_setuid(65534)) {
-                exit(2);
-            }
-            $renamed = @rename($this->dir . '/store', $this->dir . '/old');
-            $replaced = @mkdir($this->dir . '/store', 0755);
-            exit($renamed || $replaced ? 1 : 0);
-        }
-        expect($pid)->toBeGreaterThan(0);
-        pcntl_waitpid($pid, $status);
-        expect(pcntl_wifexited($status))->toBeTrue()->and(pcntl_wexitstatus($status))->toBe(0);
+        // A separate interpreter must not inherit the test runner's shutdown
+        // callbacks: those can require privileges dropped by this adversary.
+        $script = '$dir = ' . var_export($this->dir, true) . ';' .
+            'if (!posix_setgid(65534) || !posix_setuid(65534)) { exit(2); }' .
+            '$renamed = @rename($dir . "/store", $dir . "/old");' .
+            '$replaced = @mkdir($dir . "/store", 0755);' .
+            'exit($renamed || $replaced ? 1 : 0);';
+        $process = proc_open(array(PHP_BINARY, '-r', $script), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        expect(is_resource($process))->toBeTrue();
+        fclose($pipes[0]);
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        expect(proc_close($process))->toBe(0)->and($stdout)->toBe('')->and($stderr)->toBe('');
         expect(file_get_contents($this->dir . '/store/source.rrd'))->toBe('original samples');
         expect(rrd_maintenance_acquire(true))->toBeFalse();
     } finally {
