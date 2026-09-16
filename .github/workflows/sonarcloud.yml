@@ -61,8 +61,11 @@ jobs:
       # only tests/, so point it at the checkout.
       - name: Unit tests with coverage
         working-directory: tests
+        env:
+          RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
         run: |
           set -euo pipefail
+          test -x "$RRDTOOL_TEST_BINARY"
           php -d pcov.directory="$GITHUB_WORKSPACE" \
             -d pcov.exclude='~/(include/vendor|tests)/~' \
             vendor/bin/pest --configuration phpunit-coverage.xml

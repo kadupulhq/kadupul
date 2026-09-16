@@ -789,7 +789,7 @@ test('a separate web UID can coordinate a poller-owned shared store', function (
 
 test('queued samples require an actual RRDtool acknowledgement', function ($mode, $expected, $persistent) {
     $root = dirname(__DIR__, 4);
-    $binary = getenv('RRDTOOL_TEST_BINARY') ?: '/opt/homebrew/bin/rrdtool';
+    $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
     if (!is_executable($binary)) {
         $this->markTestSkipped('Real RRDtool is required.');
     }
@@ -831,7 +831,7 @@ test('queued samples require an actual RRDtool acknowledgement', function ($mode
 
 test('one persistent process consumes explicit rejects and continues subsequent timestamps', function ($web) {
     $root = dirname(__DIR__, 4);
-    $binary = getenv('RRDTOOL_TEST_BINARY') ?: '/opt/homebrew/bin/rrdtool';
+    $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
     if (!is_executable($binary)) {
         $this->markTestSkipped('Real RRDtool is required.');
     }
@@ -889,7 +889,7 @@ test('shared writer lock contention has a bounded deadline', function () {
 
 test('actual RRD utilities rewrite valid files and release their exclusive lease', function ($function, $debug) {
     $root = dirname(__DIR__, 4);
-    $binary = getenv('RRDTOOL_TEST_BINARY') ?: '/opt/homebrew/bin/rrdtool';
+    $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
     if (!is_executable($binary)) {
         $this->markTestSkipped('Real RRDtool is required.');
     }
@@ -933,7 +933,7 @@ test('actual RRD utilities rewrite valid files and release their exclusive lease
 
 test('read-only RRDtool commands remain available during maintenance and with group writable storage', function ($verb, $arguments) {
     $root = dirname(__DIR__, 4);
-    $binary = getenv('RRDTOOL_TEST_BINARY') ?: '/opt/homebrew/bin/rrdtool';
+    $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
     if (!is_executable($binary)) {
         $this->markTestSkipped('Real RRDtool is required.');
     }
