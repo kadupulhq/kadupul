@@ -80,7 +80,7 @@ function rrd_maintenance_pipe($pipe, $lock = null, $release = false)
             rrd_maintenance_release($pipes[$key][1]);
             unset($pipes[$key]);
         }
-    } elseif ($lock !== null) {
+    } elseif ($lock !== null && $lock !== false) {
         $pipes[$key] = array($pipe, $lock);
     }
 

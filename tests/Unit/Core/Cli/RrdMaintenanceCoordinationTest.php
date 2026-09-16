@@ -46,7 +46,7 @@ function rrd_cli_merge_coverage($test, $dir)
     $parent->merge($child);
 }
 
-test('native maintenance CLI coordinates before touching an RRD', function ($scriptName, $cached, $busy = true) {
+test('native maintenance CLI coordinates before touching an RRD', function ($scriptName, $cached, $busy = true, $failure = false) {
     $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
     if (!is_executable($binary)) {
         $this->markTestSkipped('Real RRDtool is required; CI provisions it.');
@@ -97,6 +97,11 @@ function db_fetch_assoc_prepared($sql, $params = array()) {
 }
 touch(dirname(__DIR__) . '/started');
 FIXTURE;
+        if ($failure === 'storage') {
+            $fixture .= "\n" . '$config["rra_path"] = dirname(__DIR__) . "/missing-store";';
+        } elseif ($failure === 'rewrite') {
+            file_put_contents($wrapper, "#!/bin/sh\nexit 1\n");
+        }
         file_put_contents($dir . '/include/cli_check.php', $fixture);
         $args = array_merge(array(PHP_BINARY), rrd_cli_coverage_arguments($this, $dir, $root, $scriptName), array('-d', 'sys_temp_dir=' . $dir, $dir . '/cli/' . $scriptName));
         if ($scriptName === 'update_heartbeat.php') {
@@ -115,7 +120,7 @@ FIXTURE;
             usleep(10000);
         }
         expect(file_exists($dir . '/started'))->toBeTrue();
-        if (!$cached && $scriptName !== 'splice_rrd.php') {
+        if (!$cached && $failure !== 'storage' && $scriptName !== 'splice_rrd.php') {
             usleep(100000);
             expect(proc_get_status($process)['running'])->toBeTrue()
                 ->and(file_exists($dir . '/rrd-command'))->toBeFalse()
@@ -135,6 +140,12 @@ FIXTURE;
                 ->and(file_exists($dir . '/rrd-command'))->toBeFalse()
                 ->and(file_exists($dir . '/db-write'))->toBeFalse()
                 ->and(file_get_contents($rrd))->toBe($before);
+        } elseif ($failure) {
+            expect($status)->toBe(1)->and(file_exists($dir . '/db-write'))->toBeFalse()
+                ->and(file_get_contents($rrd))->toBe($before);
+            if ($failure === 'storage') {
+                expect($stderr)->toContain('maintenance lock is unavailable');
+            }
         } elseif ($scriptName === 'splice_rrd.php' && $busy) {
             expect($status)->toBe(1)->and($stderr)->toContain('storage is busy')
                 ->and(file_exists($dir . '/rrd-command'))->toBeFalse()
@@ -168,7 +179,7 @@ FIXTURE;
             rrd_cli_fixture_remove($dir);
         }
     }
-})->with(array(array('update_heartbeat.php', false), array('float_rrdfiles.php', false), array('splice_rrd.php', false), array('float_rrdfiles.php', true), array('splice_rrd.php', true), array('update_heartbeat.php', true), array('splice_rrd.php', false, false)));
+})->with(array(array('update_heartbeat.php', false), array('float_rrdfiles.php', false), array('splice_rrd.php', false), array('float_rrdfiles.php', true), array('splice_rrd.php', true), array('update_heartbeat.php', true), array('splice_rrd.php', false, false), array('float_rrdfiles.php', false, true, 'storage'), array('float_rrdfiles.php', false, true, 'rewrite')));
 
 
 test('batch gap repair assigns every queued file to one maintenance worker', function ($threads, $failed = false, $cached = false) {
@@ -250,3 +261,61 @@ FIXTURE;
         }
     }
 })->with(array(array(0), array(1), array(5), array(40), array(1, true), array(1, false, true)));
+
+
+test('float master reports retained queue rows as a failed run', function ($remaining) {
+    $root = dirname(__DIR__, 4);
+    $dir = sys_get_temp_dir() . '/rrd-float-master-' . bin2hex(random_bytes(8));
+    foreach (array('', '/cli', '/include', '/lib') as $suffix) {
+        mkdir($dir . $suffix, 0700);
+    }
+    try {
+        copy($root . '/cli/float_rrdfiles.php', $dir . '/cli/float_rrdfiles.php');
+        symlink($root . '/lib/rrd_maintenance.php', $dir . '/lib/rrd_maintenance.php');
+        symlink($root . '/lib/maintenance_cli.php', $dir . '/lib/maintenance_cli.php');
+        file_put_contents($dir . '/lib/poller.php', '<?php');
+        file_put_contents($dir . '/lib/rrd.php', '<?php');
+        $fixture = <<<'FIXTURE'
+<?php
+$config = array('base_path' => dirname(__DIR__), 'rra_path' => dirname(__DIR__), 'poller_id' => 1, 'cacti_server_os' => 'unix');
+define('POLLER_VERBOSITY_MEDIUM', 3);
+function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+function read_config_option($name) { return $name === 'path_php_binary' ? PHP_BINARY : ''; }
+function cacti_escapeshellarg($value) { return escapeshellarg($value); }
+function cacti_escapeshellcmd($value) { return escapeshellcmd($value); }
+function register_process_start(...$args) { return true; }
+function unregister_process(...$args) { touch(dirname(__DIR__) . '/unregistered'); }
+function db_table_exists(...$args) { return true; }
+function db_execute($sql) { file_put_contents(dirname(__DIR__) . '/mutations', $sql . "\n", FILE_APPEND); return true; }
+function db_execute_prepared($sql, $args) { return db_execute($sql); }
+function db_fetch_cell($sql) {
+    static $queueReads = 0;
+    if (strpos($sql, 'FROM processes') !== false) { return 0; }
+    return $queueReads++ === 0 ? 1 : (int) getenv('TEST_FLOAT_REMAINING');
+}
+function db_fetch_cell_prepared(...$args) { return 1; }
+function exec_background(...$args) { touch(dirname(__DIR__) . '/launched'); }
+function cacti_log($message, ...$args) { file_put_contents(dirname(__DIR__) . '/messages', $message . "\n", FILE_APPEND); }
+FIXTURE;
+        file_put_contents($dir . '/include/cli_check.php', $fixture);
+        $args = array_merge(array(PHP_BINARY), rrd_cli_coverage_arguments($this, $dir, $root, 'float_rrdfiles.php'), array($dir . '/cli/float_rrdfiles.php', '--resume', '--threads=1', '--start=1700000000', '--end=1700000060'));
+        $process = proc_open($args, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, array_merge(getenv(), array('RRDCACHED_ADDRESS' => '', 'TEST_FLOAT_REMAINING' => (string) $remaining)));
+        stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        expect(proc_close($process))->toBe($remaining ? 1 : 0)->and($stderr)->toBe('')
+            ->and(file_exists($dir . '/launched'))->toBeTrue()
+            ->and(file_exists($dir . '/unregistered'))->toBeTrue()
+            ->and(file_get_contents($dir . '/mutations'))->not->toContain('DELETE')->not->toContain('TRUNCATE');
+        if ($remaining) {
+            expect(file_get_contents($dir . '/messages'))->toContain('left unprocessed files');
+        }
+    } finally {
+        try {
+            rrd_cli_merge_coverage($this, $dir);
+        } finally {
+            rrd_cli_fixture_remove($dir);
+        }
+    }
+})->with(array(0, 1));
