@@ -1164,6 +1164,11 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false) {
 function rrdtool_function_tune($rrd_tune_array) {
 	global $config, $data_source_types;
 
+	if (getenv('RRDCACHED_ADDRESS')) {
+		cacti_log('ERROR: Stop external RRD writers and disable RRDCACHED_ADDRESS before tuning.');
+		return;
+	}
+
 	include($config['include_path'] . '/global_arrays.php');
 
 	$data_source_name = get_data_source_item_name($rrd_tune_array['data_source_id']);
