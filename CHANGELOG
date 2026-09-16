@@ -1,6 +1,6 @@
 Cacti CHANGELOG
 
-1.2.x
+1.2.32
 -issue: Retain poller samples for retry when Boost handoff cleanup fails, without duplicate direct RRD updates
 -security: Preserve IPv6 Referer hosts before same-site validation and refuse hidden terminal input without signal support
 -issue: Honor explicit disabled authentication during template imports and isolate Windows shim test extensions
