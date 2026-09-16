@@ -287,12 +287,13 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 		foreach ($results as $item) {
 			$path = read_config_option('realtime_cache_path') . '/user_' . $poller_id . '_' . $item['local_data_id'] . '.rrd';
 			if (!isset($completed[$path][strtotime($item['time'])])) { continue; }
-			db_execute_prepared('DELETE FROM poller_output_realtime
+			if (db_execute_prepared('DELETE FROM poller_output_realtime
 				WHERE local_data_id = ?
 				AND rrd_name = ?
 				AND time = ?
-				AND poller_id = ?',
-				array($item['local_data_id'], $item['rrd_name'], $item['time'], $poller_id));
+				AND poller_id = ?
+				AND output = ?',
+				array($item['local_data_id'], $item['rrd_name'], $item['time'], $poller_id, $item['output'])) === false) { return false; }
 		}
 
 

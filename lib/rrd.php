@@ -401,16 +401,17 @@ function rrdtool_execute() {
 		return call_user_func_array($function, $args);
 	}
 
+	$destructive = in_array($verb, array('tune', 'resize', 'restore'), true);
 	require_once __DIR__ . '/rrd_maintenance.php';
 	if (isset($args[3]) && is_resource($args[3])) {
-		if (!rrd_maintenance_pipe($args[3])) {
+		if (!rrd_maintenance_pipe($args[3]) || ($destructive && !rrd_maintenance_pipe_is_exclusive($args[3]))) {
 			cacti_log('ERROR: Local RRD pipes must be opened with rrd_init for maintenance coordination.');
 			return false;
 		}
 		return call_user_func_array($function, $args);
 	}
 
-	$lock = rrd_maintenance_acquire();
+	$lock = rrd_maintenance_acquire($destructive && ($config['cacti_server_os'] ?? '') !== 'win32');
 	if ($lock === false) {
 		cacti_log('ERROR: Unable to coordinate local RRD writes with maintenance.');
 		return false;
@@ -1087,7 +1088,10 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 
 			if ($file_exists === false) {
 				$times = array_keys($rrd_fields['times']);
-				rrdtool_function_create($rrd_fields['local_data_id'], false, $rrdtool_pipe);
+				if (rrdtool_function_create($rrd_fields['local_data_id'], false, $rrdtool_pipe) === false) {
+					$failed = true;
+					continue;
+				}
 				$create_rrd_file = true;
 			}
 

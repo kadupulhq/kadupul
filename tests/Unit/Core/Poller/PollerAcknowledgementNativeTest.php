@@ -41,7 +41,7 @@ test('production poller files retain failed writes and preserve concurrent arriv
         if ($error !== '') {
             throw new RuntimeException($error . $output);
         }
-        expect(proc_close($process))->toBe($failed ? 1 : 0, $error . $output)->and($error)->toBe('');
+        expect(proc_close($process))->toBe($failed && $failed !== 'replace' ? 1 : 0, $error . $output)->and($error)->toBe('');
         $expected = is_string($failed) ? array(array('output' => '42', 'remaining' => $failed === 'page' ? 40001 : 1)) : ($failed ? array('42','43') : array('43'));
         if (in_array($failed, array('select', 'handoff', 'init'), true)) {
             $expected = array('42');
@@ -51,6 +51,12 @@ test('production poller files retain failed writes and preserve concurrent arriv
         }
         if ($failed === 'rejected') {
             $expected = array();
+        }
+        if ($failed === 'replace') {
+            $expected = array('99','43');
+        }
+        if ($failed === 'delete') {
+            $expected = array('42','43');
         }
         expect(json_decode(file_get_contents($dir . '/outcome.json'), true))->toBe($expected);
         if ($parent !== null) {
@@ -67,4 +73,4 @@ test('production poller files retain failed writes and preserve concurrent arriv
             } rmdir($dir . $suffix);
         }
     }
-})->with(array(array(false,false),array(false,true),array(true,false),array(true,true),array(false,'rejected'),array(true,'rejected'),array(false,'mixed'),array(false,'page'),array(false,'select'),array(false,'handoff'),array(false,'delete'),array(true,'init')));
+})->with(array(array(false,false),array(false,true),array(true,false),array(true,true),array(false,'replace'),array(true,'replace'),array(true,'delete'),array(false,'rejected'),array(true,'rejected'),array(false,'mixed'),array(false,'page'),array(false,'select'),array(false,'handoff'),array(false,'delete'),array(true,'init')));

@@ -12,7 +12,7 @@ foreach ($_SERVER['argv'] as $argument) {
         exit($mode === 'early-crash' ? 9 : 0);
     }
 }
-$config = array('base_path' => $fixture, 'library_path' => $fixture . '/lib');
+$config = array('base_path' => $fixture, 'library_path' => $fixture . '/lib', 'poller_id' => 1, 'cacti_server_os' => 'unix', 'rra_path' => $fixture);
 define('COPYRIGHT_YEARS', '2026');
 define('POLLER_VERBOSITY_MEDIUM', 2);
 define('BOOST_TIMER_START', 0);
@@ -37,6 +37,9 @@ function read_config_option($key)
     if ($key === 'path_php_binary') {
         return PHP_BINARY;
     }
+    if (in_array($key, array('boost_rrd_update_interval','boost_rrd_update_max_runtime','boost_rrd_update_max_records'), true)) {
+        return 1;
+    }
     if ($key === 'boost_parallel') {
         return 2;
     }
@@ -59,7 +62,7 @@ function rrd_close($pipe)
 }
 function boost_get_arch_table_names(...$args)
 {
-    return getenv('BOOST_MODE') === 'output-archives' ? array() : array('pending');
+    return in_array(getenv('BOOST_MODE'), array('output-archives','prepare-failure'), true) ? array() : array('pending');
 }
 function db_fetch_cell_prepared($sql, $params = array())
 {
@@ -97,7 +100,40 @@ function db_fetch_assoc(...$args)
     return false;
 }
 define('SQL_NO_CACHE', '');
+function boost_memory_limit() {}
+function boost_get_total_rows()
+{
+    return 1;
+}
+function set_config_option($key, $value)
+{
+    $GLOBALS['settings_written'][$key] = $value;
+}
+function db_fetch_row($sql)
+{
+    return strpos($sql, 'SHOW STATUS') === 0 ? array() : array('output' => 42);
+}
+function register_process_start(...$args)
+{
+    return true;
+}
+function db_execute($sql)
+{
+    if (strpos($sql, 'DROP TABLE') !== false) {
+        throw new RuntimeException('Archive cleanup after failed preparation');
+    }
+    return true;
+}
+function db_execute_prepared(...$args)
+{
+    return true;
+}
 register_shutdown_function(function () use ($fixture, $mode) {
+    if ($mode === 'prepare-failure') {
+        file_put_contents($fixture . '/result.json', json_encode($GLOBALS['settings_written']));
+        return;
+    }
+
     if (strpos($mode, 'output-') === 0) {
         $GLOBALS['start'] = time();
         $GLOBALS['archive_table'] = 'pending';

@@ -1072,3 +1072,79 @@ test('restore preflight preserves originals and logs unavailable ownership or st
     expect(file_get_contents($this->dir . '/messages'))->toContain(in_array($mode, array('file','directory'), true) ? 'writable storage directory and file' : 'exclusive lease and safe regular-file paths');
     expect(glob($this->dir . '/.rrd-restore-*'))->toBe(array());
 })->with(array('lease','symlink','directory','file'));
+
+
+test('poller storage preflight notifies administrators and fails closed on untrusted shared stores', function ($mode) {
+    if ($mode === 'readonly' && posix_geteuid() === 0) {
+        $this->markTestSkipped('Root bypasses write permissions.');
+    }
+    $root = dirname(__DIR__, 4);
+    $configuration = array('cacti_server_os' => 'unix','rra_path' => $this->dir);
+    if ($mode !== 'private') {
+        chmod($this->dir, 0770);
+    }
+    if ($mode === 'trusted-group') {
+        $configuration['rrd_maintenance_trusted_gids'] = array(posix_getegid());
+    }
+    $blocked = in_array($mode, array('untrusted-group','readonly'), true);
+    $bootstrap = '<?php ';
+    if ($this->getTestResultObject()->getCodeCoverage() !== null) {
+        $this->expectedChildReports = 1;
+        $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY",__DIR__);require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $bootstrap .= '$config=' . var_export($configuration, true) . ';$messages=array();$notifications=array();' .
+        'function read_config_option($key){return false;}function __($message){return $message;}' .
+        'function cacti_log($message,...$args){$GLOBALS["messages"][]=$message;}' .
+        'function admin_email($subject,$message){$GLOBALS["notifications"][]=array($subject,$message);}' .
+        'require ' . var_export($root . '/lib/rrd_maintenance.php', true) . ';' .
+        '$result=rrd_maintenance_poller_preflight();chmod(__DIR__,0700);echo json_encode(array($result,$messages,$notifications));';
+    file_put_contents($this->dir . '/preflight.php', $bootstrap);
+    if ($mode === 'readonly') {
+        chmod($this->dir, 0555);
+    }
+    $process = proc_open(array(PHP_BINARY,'-d','pcov.directory=/','-d','pcov.exclude=~/(include/vendor|tests)/~',$this->dir . '/preflight.php'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);
+    $output = stream_get_contents($pipes[1]);
+    $error = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    chmod($this->dir, 0700);
+    expect(proc_close($process))->toBe(0, $error)->and($error)->toBe('');
+    $result = json_decode($output, true);
+    expect($result[0])->toBe(!$blocked);
+    expect($result[1])->toHaveCount($blocked ? 1 : 0);
+    expect($result[2])->toHaveCount($blocked ? 1 : 0);
+    if ($blocked) {
+        expect($result[2][0][1])->toContain('rrd_maintenance_trusted_uids')->toContain('rrd_maintenance_trusted_gids');
+    }
+})->with(array('private','trusted-group','untrusted-group','readonly'));
+
+
+test('destructive commands cannot use a shared writer lease', function ($verb, $persistent) {
+    $root = dirname(__DIR__, 4);
+    $wrapper = $this->dir . '/rrd-writer';
+    file_put_contents($wrapper, '#!' . PHP_BINARY . "\n<?php if(fgets(STDIN)!==false){file_put_contents(__DIR__.\"/executed\",\"yes\");echo \"OK u:0 s:0 r:0\\n\";}");
+    chmod($wrapper, 0700);
+    $bootstrap = '<?php ';
+    if ($this->getTestResultObject()->getCodeCoverage() !== null) {
+        $this->expectedChildReports = 1;
+        $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY",__DIR__);require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $bootstrap .= '$config=' . var_export(array('cacti_server_os' => 'unix','rra_path' => $this->dir), true) . ';' .
+        'define("CACTI_LOCALE","en-US");define("RRDTOOL_OUTPUT_BOOLEAN",4);function cacti_session_close(){}function cacti_log(...$args){}' .
+        'function read_config_option($key){return $key==="path_rrdtool"?' . var_export($wrapper, true) . ':"";}' .
+        'require ' . var_export($root . '/lib/rrd.php', true) . ';$pipe=' . ($persistent ? 'rrd_init(false,false,true)' : 'false') . ';' .
+        '$result=rrdtool_execute(' . var_export($verb . ' fixture.rrd', true) . ',false,RRDTOOL_OUTPUT_BOOLEAN,$pipe);rrd_close($pipe);echo json_encode($result);';
+    file_put_contents($this->dir . '/destructive.php', $bootstrap);
+    $lease = rrd_maintenance_acquire();
+    try {
+        $process = proc_open(array(PHP_BINARY,'-d','pcov.directory=/','-d','pcov.exclude=~/(include/vendor|tests)/~',$this->dir . '/destructive.php'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);
+        $output = stream_get_contents($pipes[1]);
+        $error = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        expect(proc_close($process))->toBe(0, $error)->and($error)->toBe('')->and($output)->toBe('false');
+        expect(file_exists($this->dir . '/executed'))->toBeFalse();
+    } finally {
+        rrd_maintenance_release($lease);
+    }
+})->with(array('tune','resize','restore'))->with(array(false,true));

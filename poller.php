@@ -169,6 +169,13 @@ if ($total_pollers > 1) {
 // check to see if the poller is disabled
 poller_enabled_check($poller_id);
 
+// Validate the primary writer before launching producers, including code-only upgrades.
+if ((int) $poller_id === 1) {
+    require_once __DIR__ . '/lib/rrd_maintenance.php';
+    if (!rrd_maintenance_poller_preflight()) { exit(1); }
+}
+
+
 // install signal handlers for UNIX only
 if (function_exists('pcntl_signal')) {
 	pcntl_signal(SIGTERM, 'sig_handler');
@@ -727,9 +734,8 @@ while ($poller_runs_completed < $poller_runs) {
 
 				// open a pipe to rrdtool for writing
 				$rrdtool_pipe = rrd_init(true, false, true);
-				if ($rrdtool_pipe === false) {
-					$rrd_write_initialization_failed = true;
-				}
+				$rrd_write_initialization_failed = $rrdtool_pipe === false;
+				if ($rrd_write_initialization_failed) { $rrd_write_failed = true; }
 			}
 
 			$rrds_processed = 0;
@@ -752,7 +758,7 @@ while ($poller_runs_completed < $poller_runs) {
 						if (empty($rrd_write_initialization_failed)) {
 							$updated = process_poller_output($rrdtool_pipe, true);
 							if ($updated === false) {
-								$rrd_write_initialization_failed = true;
+								$rrd_write_failed = true;
 							} else {
 								$rrds_processed += $updated;
 							}
@@ -777,7 +783,7 @@ while ($poller_runs_completed < $poller_runs) {
 						if (empty($rrd_write_initialization_failed)) {
 							$updated = process_poller_output($rrdtool_pipe);
 							if ($updated === false) {
-								$rrd_write_initialization_failed = true;
+								$rrd_write_failed = true;
 							} else {
 								$rrds_processed += $updated;
 							}
@@ -906,7 +912,7 @@ while ($poller_runs_completed < $poller_runs) {
 }
 
 // Finish poller bookkeeping, but report an unavailable writer as a failed run.
-if (!empty($rrd_write_initialization_failed)) {
+if (!empty($rrd_write_initialization_failed) || !empty($rrd_write_failed)) {
 	exit(1);
 }
 

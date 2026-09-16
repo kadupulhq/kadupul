@@ -81,6 +81,9 @@ if (cacti_sizeof($parms)) {
 	}
 }
 
+require_once __DIR__ . '/lib/rrd_maintenance.php';
+if (!rrd_maintenance_poller_preflight()) { exit(1); }
+
 /* install signal handlers for UNIX only */
 if (function_exists('pcntl_signal')) {
 	pcntl_signal(SIGTERM, 'sig_handler');
@@ -230,6 +233,11 @@ if ($child == false) {
 
 				api_plugin_hook('boost_poller_bottom');
 			}
+		} else {
+			$run_failed = true;
+			set_config_option('boost_poller_status', 'failed - preparation');
+			set_config_option('boost_last_run_time', $last_run_time);
+			cacti_log('ERROR: Boost preparation failed; archives retained for retry.', true, 'BOOST');
 		}
 
 		cacti_log('INFO: Boost unregistering master process', true, 'BOOST');
