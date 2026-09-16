@@ -21,6 +21,8 @@
  * so the advisory it guards against remains traceable.
  */
 
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+
 $utilitiesSource      = file_get_contents(__DIR__ . '/../../../../utilities.php');
 $databaseSource       = file_get_contents(__DIR__ . '/../../../../lib/database.php');
 $graphViewSource      = file_get_contents(__DIR__ . '/../../../../graph_view.php');
@@ -43,11 +45,7 @@ test('GHSA-3p6w: utilities.php builds ORDER BY through get_order_string', functi
 });
 
 test('GHSA-3p6w: get_order_string validates the requested sort column and clamps direction', function () use ($htmlUtilitySource) {
-	$start = strpos($htmlUtilitySource, 'function get_order_string() {');
-	expect($start)->not->toBeFalse();
-
-	$end  = strpos($htmlUtilitySource, "\n}\n", $start);
-	$body = substr($htmlUtilitySource, $start, $end - $start);
+	$body = test_php_function_source($htmlUtilitySource, 'get_order_string');
 
 	expect($body)->toContain("cacti_normalize_sort_column(\$column)");
 	expect($body)->toContain('$column = validate_sort_column($column, $page);');
