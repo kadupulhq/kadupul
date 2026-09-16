@@ -1025,6 +1025,7 @@ class spikekill {
 			return false;
 		}
 
+		$canonical_dir = realpath($dir);
 		if ($configured_dir !== null) {
 			$canonical_dir = $this->canonicalDir($configured_dir);
 
@@ -1032,6 +1033,14 @@ class spikekill {
 				return false;
 			}
 		}
+
+		// Open through the resolved directory, never through a mutable configured alias.
+		$resolved_dir = $canonical_dir;
+		if ($resolved_dir === false) {
+			return false;
+		}
+		$dir = $resolved_dir;
+		$desired_path = cacti_join_dir_child($dir, $basename, DIRECTORY_SEPARATOR);
 
 		if (is_link($desired_path) || file_exists($desired_path)) {
 			$handle = false;
@@ -1143,7 +1152,7 @@ class spikekill {
 		}
 
 		for ($i = 0; $i < 10; $i++) {
-			$candidate = cacti_join_dir_child($tempdir, 'spikekill.' . bin2hex(random_bytes(8)) . '.xml', DIRECTORY_SEPARATOR);
+			$candidate = cacti_join_dir_child($canonical_dir, 'spikekill.' . bin2hex(random_bytes(8)) . '.xml', DIRECTORY_SEPARATOR);
 
 			clearstatcache(true);
 			if (is_link($tempdir) || realpath($tempdir) !== $canonical_dir) {
