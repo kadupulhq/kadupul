@@ -20509,3 +20509,7 @@ msgstr "VDEF 없음"
 
 #~ msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
 #~ msgstr "이 패키지 작성자를 신뢰하지 않았습니다. 가져오려면 자동 신뢰 작성자 확인란을 선택합니다."
+
+#: lib/rrd_maintenance.php
+msgid "RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading."
+msgstr ""

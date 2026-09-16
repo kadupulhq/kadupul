@@ -20664,3 +20664,7 @@ msgstr "Nav VDEF"
 
 #~ msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
 #~ msgstr "Jūs neesat uzticējies šim pakotnes autoram.  Ja vēlaties importēt, atzīmējiet izvēles rūtiņu Automātiski uzticēties autoram"
+
+#: lib/rrd_maintenance.php
+msgid "RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading."
+msgstr ""

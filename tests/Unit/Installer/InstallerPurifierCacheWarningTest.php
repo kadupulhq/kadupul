@@ -62,7 +62,8 @@ function clean_up_lines($string) {
 	return $string;
 }
 
-$config     = array('base_path' => '/cacti');
+function read_config_option($key) { return $key === 'storage_location' ? 1 : ''; }
+$config     = array('base_path' => '/cacti', 'rra_path' => '/cacti/rra');
 $unwritable = json_decode($argv[2], true);
 
 require $argv[1] . '/lib/installer.php';

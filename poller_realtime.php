@@ -158,7 +158,11 @@ if ($rrdtool_pipe === false) {
 }
 
 /* process poller output */
-process_poller_output_rt($rrdtool_pipe, $poller_id, $interval);
+if (process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) === false) {
+	rrd_close($rrdtool_pipe);
+	db_close();
+	exit(1);
+}
 
 /* close rrd */
 rrd_close($rrdtool_pipe);
@@ -317,6 +321,11 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 			}
 		}
 
+		$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe);
+		if ($rrds_processed === false) {
+			return false;
+		}
+
 		/* make sure each .rrd file has complete data */
 		foreach ($results as $item) {
 			db_execute_prepared('DELETE FROM poller_output_realtime
@@ -327,7 +336,7 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 				array($item['local_data_id'], $item['rrd_name'], $item['time'], $poller_id));
 		}
 
-		$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe);
+
 	}
 
 	return $rrds_processed;

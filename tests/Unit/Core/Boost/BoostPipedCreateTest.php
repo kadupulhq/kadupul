@@ -80,10 +80,11 @@ function boostPipedCreate_rrdtool_execute($command, $log = false, $output = null
 	$GLOBALS['boost_piped_create']['executed'][] = $command;
 
 	if (!empty($GLOBALS['boost_piped_create']['real_binary'])) {
-		return boostPipedCreateRealCommand(array_merge(array($GLOBALS['boost_piped_create']['real_binary']), preg_split('/\s+/', trim($command))));
+		$result = boostPipedCreateRealCommand(array_merge(array($GLOBALS['boost_piped_create']['real_binary']), preg_split('/\s+/', trim($command))));
+		return $output === RRDTOOL_OUTPUT_BOOLEAN ? trim($result) === '' : $result;
 	}
 
-	/* a piped command returns nothing once written */
+	/* The update contract requires explicit acknowledgement. */
 	return $GLOBALS['boost_piped_create']['execute_return'];
 }
 
@@ -217,7 +218,7 @@ beforeEach(function () use ($root) {
 		'create_return'      => null,
 		'create_writes_file' => false,
 		'executed'           => array(),
-		'execute_return'     => null,
+		'execute_return'     => true,
 		'closed'             => 0,
 		'init'               => 'dead',
 		'open_pipes'         => 0,

@@ -577,6 +577,14 @@ class Installer implements JsonSerializable {
 			}
 		}
 
+		require_once __DIR__ . '/rrd_maintenance.php';
+		$storage_error = rrd_maintenance_configuration_error();
+		$storage_path = $config['rra_path'] ?? ($config['base_path'] . '/rra');
+		$permissions['always'][$storage_path] = $storage_error === '';
+		if ($storage_error !== '') {
+			$this->addError(Installer::STEP_PERMISSION_CHECK, 'RRD storage', $storage_path, $storage_error);
+		}
+
 		return $permissions;
 	}
 
@@ -3092,6 +3100,11 @@ class Installer implements JsonSerializable {
 
 	private function install() {
 		global $config;
+		require_once __DIR__ . '/rrd_maintenance.php';
+		$storage_error = rrd_maintenance_configuration_error();
+		if ($storage_error !== '') {
+			throw new RuntimeException($storage_error);
+		}
 		$failure = '';
 
 		switch ($this->mode) {

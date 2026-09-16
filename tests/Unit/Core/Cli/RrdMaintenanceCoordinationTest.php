@@ -188,7 +188,7 @@ FIXTURE;
 })->with(array(array('update_heartbeat.php', false), array('float_rrdfiles.php', false), array('splice_rrd.php', false), array('float_rrdfiles.php', true), array('splice_rrd.php', true), array('update_heartbeat.php', true), array('splice_rrd.php', false, false), array('float_rrdfiles.php', false, true, 'storage'), array('float_rrdfiles.php', false, true, 'rewrite'), array('float_rrdfiles.php', false, true, 'sigterm'), array('float_rrdfiles.php', false, true, 'sigint'), array('float_rrdfiles.php', false, true, 'fetch-empty'), array('float_rrdfiles.php', false, true, 'fetch-throw'), array('update_heartbeat.php', false, true, 'rewrite'), array('update_heartbeat.php', false, true, 'missing-file')));
 
 
-test('batch gap repair serializes queued files and reports worker outcomes', function ($threads, $failed = false, $cached = false, $childStatus = null) {
+test('batch gap repair serializes queued files and reports worker outcomes', function ($threads, $failed = false, $cached = false, $childStatus = null, $stale = false) {
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/batch gap-lock-' . bin2hex(random_bytes(8));
     foreach (array('', '/cli', '/include', '/lib') as $suffix) { mkdir($dir . $suffix, 0700); }
@@ -213,15 +213,18 @@ function cacti_escapeshellcmd($value) { return escapeshellcmd($value); }
 function cacti_escapeshellarg($value) { return escapeshellarg($value); }
 function register_process_start(...$args) { return true; }
 function unregister_process(...$args) {}
-function db_table_exists(...$args) { return false; }
+function db_table_exists(...$args) { return getenv('TEST_BATCH_STALE') === '1'; }
+function cacti_process_still_running($pid) { return false; }
+function cacti_process_pid_for_log($pid) { return (string) $pid; }
 function db_execute($sql, ...$args) { file_put_contents(dirname(__DIR__) . '/mutations', $sql . "\n", FILE_APPEND); return true; }
 function db_affected_rows(...$args) { return 12; }
 define('COPYRIGHT_YEARS', '2026');
 function get_cacti_cli_version() { return '1.3.0'; }
-function db_fetch_cell($sql, ...$args) { return strpos($sql, 'exit_code != 0') !== false ? (getenv('TEST_BATCH_FAILED') === 'unknown' ? false : (int) getenv('TEST_BATCH_FAILED')) : 12; }
+function db_fetch_cell($sql, ...$args) { if (strpos($sql, 'WHERE ended =') !== false) { return file_exists(dirname(__DIR__) . '/reaped') ? 0 : 1; } return strpos($sql, 'exit_code != 0') !== false ? (getenv('TEST_BATCH_FAILED') === 'unknown' ? false : (int) getenv('TEST_BATCH_FAILED')) : 12; }
 function db_fetch_cell_prepared(...$args) { return getenv('TEST_BATCH_FAILED') === 'unfinished' ? 1 : 0; }
-function db_fetch_assoc_prepared(...$args) { return array(array('id' => 1, 'data_source_path' => dirname(__DIR__) . '/source.rrd')); }
+function db_fetch_assoc_prepared(...$args) { if (strpos($args[0], 'FROM processes') !== false) { return array(array('tasktype'=>'batchgapfix','taskname'=>'child','taskid'=>1,'pid'=>999999)); } return array(array('id' => 1, 'data_source_path' => dirname(__DIR__) . '/source.rrd')); }
 function db_execute_prepared($sql, $params) {
+    if (strpos($sql, 'SET ended = NOW(), exit_code = 1') !== false) {touch(dirname(__DIR__) . '/reaped');}
     if (strpos($sql, 'exit_code = ?') !== false) { file_put_contents(dirname(__DIR__) . '/child-exit', json_encode($params)); }
     if (strpos($sql, 'SET child = ?') !== false) {
         file_put_contents(dirname(__DIR__) . '/assignments', json_encode(array($sql, $params)) . "\n", FILE_APPEND);
@@ -232,10 +235,11 @@ function exec_background($binary, $args) { file_put_contents(dirname(__DIR__) . 
 function cacti_log($message, ...$args) { file_put_contents(dirname(__DIR__) . '/stats', $message); }
 FIXTURE;
         file_put_contents($dir . '/include/cli_check.php', $fixture);
-        $process = proc_open(array_merge(array(PHP_BINARY), rrd_cli_coverage_arguments($this, $dir, $root, 'batchgapfix.php'), ($threads === 0 ? array($dir . '/cli/batchgapfix.php', '--help') : array($dir . '/cli/batchgapfix.php', '--start=2026-01-01', '--end=2026-01-02', '--threads=' . $threads, '--child=' . ($childStatus === null ? 0 : 1)))), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, array_merge(getenv(), array('TEST_REPAIR_STATUS' => (string) $childStatus, 'TEST_BATCH_FAILED' => is_string($failed) ? $failed : ($failed ? '1' : '0'), 'RRDCACHED_ADDRESS' => $cached ? 'unix:/unavailable-test-cache' : '')));
+        $process = proc_open(array_merge(array(PHP_BINARY), rrd_cli_coverage_arguments($this, $dir, $root, 'batchgapfix.php'), ($threads === 0 ? array($dir . '/cli/batchgapfix.php', '--help') : array($dir . '/cli/batchgapfix.php', '--start=2026-01-01', '--end=2026-01-02', '--threads=' . $threads, '--child=' . ($childStatus === null ? 0 : 1)))), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, array_merge(getenv(), array('TEST_BATCH_STALE' => $stale ? '1' : '0', 'TEST_REPAIR_STATUS' => (string) $childStatus, 'TEST_BATCH_FAILED' => is_string($failed) ? $failed : ($failed ? '1' : '0'), 'RRDCACHED_ADDRESS' => $cached ? 'unix:/unavailable-test-cache' : '')));
         $stdout = stream_get_contents($pipes[1]); $stderr = stream_get_contents($pipes[2]);
         fclose($pipes[1]); fclose($pipes[2]);
         $status = proc_close($process);
+        if ($stale) { expect(file_exists($dir . '/reaped'))->toBeTrue(); }
         if ($childStatus !== null) {
             expect($status)->toBe($childStatus ? 1 : 0)->and($stderr)->toBe('')
                 ->and($stdout)->toContain($childStatus ? 'FAILED:' : 'SUCCESS:')
@@ -273,7 +277,7 @@ FIXTURE;
     } finally {
         try { rrd_cli_merge_coverage($this, $dir); } finally { rrd_cli_fixture_remove($dir); }
     }
-})->with(array(array(0), array(1), array(5), array(40), array(1, true), array(1, false, true), array(1, false, false, 0), array(1, false, false, 1), array(1, 'unknown'), array(1, 'unfinished'), array(1, 'crash'), array(1, 'killed')));
+})->with(array(array(0), array(1), array(5), array(40), array(1, true), array(1, false, true), array(1, false, false, 0), array(1, false, false, 1), array(1, 'unknown'), array(1, 'unfinished'), array(1, 'crash'), array(1, 'killed'), array(1, false, false, null, true)));
 
 
 test('float master reports retained queue rows as a failed run', function ($remaining) {

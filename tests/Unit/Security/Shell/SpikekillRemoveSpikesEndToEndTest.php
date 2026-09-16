@@ -575,6 +575,7 @@ test('missing sample arrays preserve unavailable window statistics', function ($
 
 
 test('spike removal refuses active writers without touching data and releases its lock on failure', function () {
+    $GLOBALS['__test_config_options']['spikekill_timeout'] = 1;
     require_once dirname(__DIR__, 4) . '/lib/rrd_maintenance.php';
     $writer = rrd_maintenance_acquire();
     $instance = spikekill_e2e_instance($this->rrdfile);
@@ -611,3 +612,28 @@ test('spike command deadlines use the documented bounded configuration', functio
     $method->setAccessible(true);
     expect($method->invoke($instance))->toBe($expected);
 })->with(array(array(0, 3600), array(-1, 3600), array(1, 1), array(28800, 28800), array(PHP_INT_MAX, 28800)));
+
+
+test('spike removal waits for a live writer and then completes', function () {
+    $root = dirname(__DIR__, 4);
+    $script = $this->dir . '/lease-writer.php';
+    $ready = $this->dir . '/lease-ready';
+    file_put_contents($script, '<?php require ' . var_export($root . '/lib/rrd_maintenance.php', true) . ';' .
+        '$config = ' . var_export($GLOBALS['config'], true) . ';' .
+        '$lock = rrd_maintenance_acquire(); if (!is_resource($lock)) { exit(2); }' .
+        'touch(' . var_export($ready, true) . '); usleep(400000); rrd_maintenance_release($lock);');
+    $process = proc_open(array(PHP_BINARY, $script), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    try {
+        $deadline = microtime(true) + 5;
+        while (!file_exists($ready) && microtime(true) < $deadline) { usleep(10000); }
+        expect(file_exists($ready))->toBeTrue();
+        $instance = spikekill_e2e_instance($this->rrdfile);
+        expect($instance->remove_spikes())->toBeTrue();
+        expect(stream_get_contents($pipes[2]))->toBe('');
+        fclose($pipes[1]); fclose($pipes[2]);
+        expect(proc_close($process))->toBe(0);
+    } finally {
+        if (is_resource($process)) { proc_terminate($process); proc_close($process); }
+        @unlink($ready); @unlink($script);
+    }
+});

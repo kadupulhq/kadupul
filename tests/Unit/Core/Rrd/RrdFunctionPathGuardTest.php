@@ -75,7 +75,7 @@ function rrdPathGuard_cacti_version_compare($a, $b, $operator) {
 function rrdPathGuard_rrdtool_execute($command) {
 	$GLOBALS['rrd_path_guard']['executed'][] = $command;
 
-	return 'OK';
+	return true;
 }
 
 function rrdPathGuardLoad($root) {
@@ -138,7 +138,7 @@ afterEach(function () {
 });
 
 test('the poller refuses to update an existing RRD reached through traversal', function () {
-	expect(rrdPathGuard_rrdtool_function_update(rrdPathGuardCache($this->tmp . '/rra/../outside/evil.rrd')))->toBe(0)
+	expect(rrdPathGuard_rrdtool_function_update(rrdPathGuardCache($this->tmp . '/rra/../outside/evil.rrd')))->toBeFalse()
 		->and($GLOBALS['rrd_path_guard']['executed'])->toBe(array())
 		->and($GLOBALS['rrd_path_guard']['logs'])->toBe(array('ERROR: Invalid RRD file path in poller cache for local_data_id: 12.'));
 });

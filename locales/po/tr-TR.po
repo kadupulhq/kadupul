@@ -20579,3 +20579,7 @@ msgstr "VDEF yok"
 
 #~ msgid "Variance Outliers"
 #~ msgstr "Varyans Aykırı Değerleri"
+
+#: lib/rrd_maintenance.php
+msgid "RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading."
+msgstr ""

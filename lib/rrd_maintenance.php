@@ -65,7 +65,7 @@ function rrd_maintenance_directory_is_trusted($path) {
  * for the child. Exclusive maintenance refuses active writers by default;
  * callers may explicitly wait when their operation permits it.
  */
-function rrd_maintenance_acquire($exclusive = false, $wait = false) {
+function rrd_maintenance_acquire($exclusive = false, $wait = false, $timeout = null) {
 	global $config;
 
 	if (($config['cacti_server_os'] ?? '') === 'win32') {
@@ -84,9 +84,14 @@ function rrd_maintenance_acquire($exclusive = false, $wait = false) {
 		return false;
 	}
 
-	if (!@flock($handle, $exclusive ? LOCK_EX | ($wait ? 0 : LOCK_NB) : LOCK_SH)) {
-		fclose($handle);
-		return false;
+	$flags = $exclusive ? LOCK_EX | (($wait && $timeout === null) ? 0 : LOCK_NB) : LOCK_SH;
+	$deadline = hrtime(true) + max(0, (float) $timeout) * 1000000000;
+	while (!@flock($handle, $flags)) {
+		if ($timeout === null || hrtime(true) >= $deadline) {
+			fclose($handle);
+			return false;
+		}
+		usleep(100000);
 	}
 
 	clearstatcache(true, $path);
@@ -175,4 +180,17 @@ function rrd_maintenance_cli_preflight() {
 		exit(1);
 	}
 
+}
+
+/** Refuse an upgrade before database changes when local storage needs migration. */
+function rrd_maintenance_configuration_error() {
+    global $config;
+    if (($config['cacti_server_os'] ?? '') === 'win32' || read_config_option('storage_location')) {
+        return '';
+    }
+    $path = $config['rra_path'] ?? (($config['base_path'] ?? '') . '/rra');
+    if (rrd_maintenance_directory_is_trusted($path) && is_readable($path)) {
+        return '';
+    }
+    return __('RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading.');
 }

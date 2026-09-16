@@ -614,3 +614,42 @@ test('a separate web UID can coordinate a poller-owned shared store', function (
         chmod($this->dir, 0700);
     }
 });
+
+test('queued samples require an actual RRDtool acknowledgement', function ($mode, $expected) {
+    require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+    $validation = '';
+    $functions = file_get_contents(dirname(__DIR__, 4) . '/lib/functions.php');
+    foreach (array('cacti_has_control_chars','cacti_rrdtool_valid_path','cacti_rrdtool_valid_ds_template','cacti_rrdtool_valid_ds_name') as $function) {
+        $validation .= test_php_function_source($functions, $function);
+    }
+    $root = dirname(__DIR__, 4);
+    $binary = getenv('RRDTOOL_TEST_BINARY') ?: '/opt/homebrew/bin/rrdtool';
+    if (!is_executable($binary)) { $this->markTestSkipped('Real RRDtool is required.'); }
+    $rrd = $this->dir . '/sample.rrd';
+    exec(escapeshellarg($binary) . ' create ' . escapeshellarg($rrd) . ' --start 1700000000 --step 60 DS:value:GAUGE:600:U:U RRA:AVERAGE:0.5:1:20', $out, $status);
+    expect($status)->toBe(0);
+    $wrapper = $this->dir . '/rrd-wrapper';
+    $response = $mode === 'silent' ? '' : ($mode === 'error' ? "ERROR: failed update\n" : "OK u:0 s:0 r:0\n");
+    if ($mode === 'real') {
+        file_put_contents($wrapper, "#!/bin/sh\nexec " . escapeshellarg($binary) . " \"\$@\"\n");
+    } else {
+        file_put_contents($wrapper, '#!' . PHP_BINARY . "\n<?php stream_get_contents(STDIN); echo " . var_export($response, true) . '; exit(' . ($mode === 'crash' ? 9 : 0) . ');');
+    }
+    chmod($wrapper, 0700);
+    $bootstrap = '<?php $config = ' . var_export(array('cacti_server_os' => 'unix', 'rra_path' => $this->dir, 'is_web' => false), true) . ';' .
+        'define("CACTI_LOCALE","en-US"); define("POLLER_VERBOSITY_DEBUG",5);' .
+        'define("RRDTOOL_OUTPUT_STDOUT",1); define("RRDTOOL_OUTPUT_STDERR",2); define("RRDTOOL_OUTPUT_GRAPH_DATA",3); define("RRDTOOL_OUTPUT_BOOLEAN",4); define("RRDTOOL_OUTPUT_RETURN_STDERR",5);' .
+        'function read_config_option($key) { return $key === "path_rrdtool" ? ' . var_export($wrapper, true) . ' : ""; }' .
+        'function cacti_log(...$args) {} function cacti_session_close() {} function cacti_sizeof($v) {return count($v);}' .
+        'function cacti_escapeshellarg($value){return escapeshellarg($value);} function get_rrdtool_version(){return "1.7";} function cacti_version_compare(...$args){return version_compare(...$args);}' . $validation .
+        'require ' . var_export($root . '/lib/rrd.php', true) . ';' .
+        '$updates = array(' . var_export($rrd, true) . ' => array("local_data_id"=>1,"data_template_id"=>0,"times"=>array(1700000060=>array("value"=>42))));' .
+        '$pipe=rrd_init(false); if (!is_resource($pipe)) {exit(2);} echo json_encode(rrdtool_function_update($updates,$pipe)); rrd_close($pipe);';
+    file_put_contents($this->dir . '/ack.php', $bootstrap);
+    $process = proc_open(array(PHP_BINARY, $this->dir . '/ack.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $output = stream_get_contents($pipes[1]); $error = stream_get_contents($pipes[2]);
+    fclose($pipes[1]); fclose($pipes[2]);
+    if ($error !== '') { throw new RuntimeException($error . $output); }
+    expect(proc_close($process))->toBe(0, $error . $output)->and($error)->toBe('')->and(json_decode($output,true))->toBe($expected);
+    if ($mode === 'real') { expect(shell_exec(escapeshellarg($binary) . ' lastupdate ' . escapeshellarg($rrd)))->toContain('42'); }
+})->with(array(array('real',1), array('silent',false), array('error',false), array('crash',false)));

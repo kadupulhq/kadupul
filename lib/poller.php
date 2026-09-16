@@ -692,6 +692,43 @@ function poller_cleanup_orphan_rows(&$failed = null) {
 	return $consumed;
 }
 
+/** Bound incomplete sample retention without discarding complete retry groups. */
+function poller_expire_incomplete_rows($before, &$failed = null) {
+	$failed = false;
+	$expired = 0;
+	do {
+		$rows = db_fetch_assoc_prepared('SELECT po.local_data_id, po.rrd_name, po.time
+			FROM poller_output AS po
+			INNER JOIN (
+				SELECT old.local_data_id, old.time
+				FROM poller_output AS old
+				LEFT JOIN poller_item AS pi ON pi.local_data_id = old.local_data_id AND pi.rrd_name = old.rrd_name
+				WHERE old.time < ?
+				GROUP BY old.local_data_id, old.time
+				HAVING MAX(pi.rrd_num) IS NULL OR COUNT(DISTINCT old.rrd_name) < MAX(pi.rrd_num)
+			) AS incomplete ON incomplete.local_data_id = po.local_data_id AND incomplete.time = po.time
+			LIMIT 40000', array($before));
+		if ($rows === false) {
+			$failed = true;
+			return $expired;
+		}
+		$keys = array();
+		foreach ($rows as $row) {
+			$keys[] = array($row['local_data_id'], $row['rrd_name'], $row['time']);
+		}
+		$deleted = poller_delete_output_rows($keys, $failed);
+		$expired += $deleted;
+		if ($failed || ($keys && $deleted === 0)) {
+			$failed = true;
+			return $expired;
+		}
+	} while (count($rows) === 40000);
+	if ($expired > 0) {
+		cacti_log(sprintf('WARNING: Expired %d incomplete poller samples older than the retention window; complete retry groups were retained.', $expired), false, 'POLLER');
+	}
+	return $expired;
+}
+
 /**
  * process_poller_output - grabs data from the 'poller_output' table and feeds the *completed*
  *   results to RRDtool for processing
@@ -1001,7 +1038,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 			}
 		}
 
-		$consumed += poller_delete_output_rows($output_keys, $deferred);
+
 
 		/* process dsstats information */
 		dsstats_poller_output($rrd_update_array);
@@ -1011,7 +1048,13 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 
 		if ($direct_rrd_update) {
 			$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe);
+			if ($rrds_processed === false) {
+				$deferred = true;
+				return 0;
+			}
 		}
+
+		$consumed += poller_delete_output_rows($output_keys, $deferred);
 
 		$results = NULL;
 		$rrd_update_array = NULL;
@@ -1052,6 +1095,11 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 				}
 
 				if (!$checked_bad) {
+					$retention = max(600, 2 * (int) read_config_option('poller_interval'));
+					$consumed += poller_expire_incomplete_rows(date('Y-m-d H:i:s', time() - $retention), $deferred);
+					if ($deferred) {
+						return $rrds_processed;
+					}
 					/* A new poller may have started since the running-count snapshot.
 					 * Diagnose incomplete samples, but retain them for later arrivals. */
 					// Identify data sources that are somehow not aligned
@@ -1087,6 +1135,10 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 		}
 	} elseif ($results === array()) {
 		$consumed += poller_cleanup_orphan_rows($deferred);
+		if (!$deferred) {
+			$retention = max(600, 2 * (int) read_config_option('poller_interval'));
+			$consumed += poller_expire_incomplete_rows(date('Y-m-d H:i:s', time() - $retention), $deferred);
+		}
 	}
 
 	return $rrds_processed;

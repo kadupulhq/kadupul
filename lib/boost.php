@@ -2132,7 +2132,8 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 				/* rrdtool create overwrites, so queue one create per file on a pipe */
 				$created = true;
 			} else {
-				$created = boost_rrdtool_function_create($local_data_id, false, $rrdtool_pipe);
+				$create_pipe = false;
+				$created = boost_rrdtool_function_create($local_data_id, false, $create_pipe);
 			}
 
 			if ($piped) {
@@ -2191,7 +2192,7 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 
 			cacti_log("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, 'BOOST', ($debug ? POLLER_VERBOSITY_NONE : POLLER_VERBOSITY_HIGH));
 
-			$result = rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'BOOST');
+			$result = rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
 		} else {
 			if (cacti_has_control_chars($rrd_update_values)) {
 				cacti_log("ERROR: Invalid RRD update value set for local_data_id: $local_data_id.", false, 'BOOST');
@@ -2201,10 +2202,10 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 
 			cacti_log("update $rrd_path $update_options $rrd_update_values", true, 'BOOST', ($debug ? POLLER_VERBOSITY_NONE : POLLER_VERBOSITY_HIGH));
 
-			$result = rrdtool_execute("update $rrd_path $update_options $rrd_update_values", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'BOOST');
+			$result = rrdtool_execute("update $rrd_path $update_options $rrd_update_values", false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
 		}
 
-		if ($result === false || preg_match('/(?:^|\b)(?:ERROR|Error)(?::|\b)/', trim((string) $result))) {
+		if ($result !== true) {
 			return is_string($result) && $result !== '' ? $result : 'ERROR: RRDtool did not acknowledge the update';
 		}
 

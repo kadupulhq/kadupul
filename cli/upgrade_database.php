@@ -84,6 +84,13 @@ if (cacti_sizeof($parms)) {
 	}
 }
 
+require_once __DIR__ . '/../lib/rrd_maintenance.php';
+$storage_error = rrd_maintenance_configuration_error();
+if ($storage_error !== '') {
+	fwrite(STDERR, $storage_error . PHP_EOL);
+	exit(1);
+}
+
 if (!$local && $config['poller_id'] > 1) {
 	db_switch_remote_to_main();
 

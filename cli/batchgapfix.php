@@ -216,6 +216,7 @@ if ($child == 0) {
 	}
 
 	if (db_table_exists('graph_local_spikekill')) {
+		batchgapfix_reap_dead_children();
 		$running = db_fetch_cell('SELECT COUNT(*) FROM graph_local_spikekill WHERE ended = "0000-00-00"');
 
 		if (!is_numeric($running) || ($running > 0 && !$force)) {
