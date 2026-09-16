@@ -5,6 +5,15 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+/** Failed workers may leave samples even when other children succeeded. */
+function boost_archive_is_empty($table) {
+	if (!preg_match('/^poller_output_boost_arch_[a-zA-Z0-9_]+$/D', $table)) {
+		return false;
+	}
+	$count = db_fetch_cell('SELECT COUNT(*) FROM `' . $table . '`');
+	return $count === 0 || $count === '0';
+}
+
 /**
  * boost_array_orderby - performs a multicolumn sort of an
  *   array
@@ -677,6 +686,17 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 	cacti_system_zone_set();
 
 	include_once($config['library_path'] . '/rrd.php');
+	$owned_rrd_pipe = !$rrdtool_pipe;
+	if ($owned_rrd_pipe) {
+		$rrdtool_pipe = rrd_init();
+	}
+	if ($rrdtool_pipe === false) {
+		cacti_log('ERROR: RRD initialization failed; pending on-demand Boost samples were retained.', false, 'BOOST');
+		return -1;
+	}
+	$previous_error_reporting = error_reporting();
+	$boost_handler_installed = false;
+	try {
 
 	/* suppress warnings */
 	if (defined('E_DEPRECATED')) {
@@ -687,6 +707,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 
 	/* install the boost error handler */
 	set_error_handler('boost_error_handler');
+	$boost_handler_installed = true;
 
 
 	$data_ids_to_get = read_config_option('boost_rrd_update_max_records_per_select');
@@ -800,7 +821,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 	}
 
 	if (cacti_sizeof($results)) {
-		$rrdp_auto_close = false;
+		$rrdp_auto_close = $owned_rrd_pipe;
 
 		if (!$rrdtool_pipe) {
 			$rrdtool_pipe    = rrd_init();
@@ -1097,13 +1118,20 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 
 		if ($rrdp_auto_close) {
 			rrd_close($rrdtool_pipe);
+			$owned_rrd_pipe = false;
 		}
 	}
 
-	/* restore original error handler */
-	restore_error_handler();
-
 	return cacti_sizeof($results);
+	} finally {
+		if ($boost_handler_installed) {
+			restore_error_handler();
+		}
+		error_reporting($previous_error_reporting);
+		if ($owned_rrd_pipe) {
+			rrd_close($rrdtool_pipe);
+		}
+	}
 }
 
 function boost_rrdtool_get_last_update_time($rrd_path, &$rrdtool_pipe) {
