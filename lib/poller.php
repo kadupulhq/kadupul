@@ -1004,19 +1004,21 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 			FROM poller_output');
 
 		/* to much records in poller_output, process in chunks */
-		if ($rows && $remainder == $max_rows && $consumed > 0) {
+		if ($rows) {
 			$running = db_fetch_cell('SELECT COUNT(*)
 				FROM poller_time
 				WHERE end_time = "0000-00-00"');
 
-			$rrds_processed += process_poller_output($rrdtool_pipe, $rows < $max_rows ? $rows : $max_rows, $deferred, $child_consumed);
-			$consumed += $child_consumed;
+			if ($remainder == $max_rows && $consumed > 0) {
+				$rrds_processed += process_poller_output($rrdtool_pipe, $rows < $max_rows ? $rows : $max_rows, $deferred, $child_consumed);
+				$consumed += $child_consumed;
 
-			if ($deferred) {
-				return $rrds_processed;
+				if ($deferred) {
+					return $rrds_processed;
+				}
 			}
 
-			if ($running == 0 && !$checked_bad) {
+			if ($running == 0) {
 				/* Purge only the exact orphan keys observed here, so arrivals for
 				 * a concurrently recreated data source cannot be swept away. */
 				$consumed += poller_cleanup_orphan_rows($deferred);
@@ -1024,36 +1026,38 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 					return $rrds_processed;
 				}
 
-				/* A new poller may have started since the running-count snapshot.
-				 * Diagnose incomplete samples, but retain them for later arrivals. */
-				// Identify data sources that are somehow not aligned
-				$items = db_fetch_assoc('SELECT rrd_num,
-					COUNT(DISTINCT po.local_data_id, po.rrd_name) AS ids, dt.name, dl.host_id,
-					GROUP_CONCAT(DISTINCT po.local_data_id) AS local_data_ids
-					FROM poller_output AS po
-					LEFT JOIN poller_item AS pi
-					ON po.local_data_id = pi.local_data_id
-					LEFT JOIN data_local AS dl
-					ON po.local_data_id = dl.id
-					LEFT JOIN data_template AS dt
-					ON dl.data_template_id = dt.id
-					GROUP BY po.local_data_id
-					HAVING rrd_num IS NULL OR rrd_num != ids
-					ORDER BY dt.name');
+				if (!$checked_bad) {
+					/* A new poller may have started since the running-count snapshot.
+					 * Diagnose incomplete samples, but retain them for later arrivals. */
+					// Identify data sources that are somehow not aligned
+					$items = db_fetch_assoc('SELECT rrd_num,
+						COUNT(DISTINCT po.local_data_id, po.rrd_name) AS ids, dt.name, dl.host_id,
+						GROUP_CONCAT(DISTINCT po.local_data_id) AS local_data_ids
+						FROM poller_output AS po
+						LEFT JOIN poller_item AS pi
+						ON po.local_data_id = pi.local_data_id
+						LEFT JOIN data_local AS dl
+						ON po.local_data_id = dl.id
+						LEFT JOIN data_template AS dt
+						ON dl.data_template_id = dt.id
+						GROUP BY po.local_data_id
+						HAVING rrd_num IS NULL OR rrd_num != ids
+						ORDER BY dt.name');
 
-				if (cacti_sizeof($items)) {
-					cacti_log(sprintf('WARNING: There are %s Data Sources not returning all data leaving rows in the poller output table.  Details to follow.', cacti_sizeof($items)), false, 'POLLER');
-					$prevName = '';
-					foreach($items as $item) {
-						if ($prevName != $item['name']) {
-							cacti_log(sprintf('WARNING: Data Template \'%s\' is impacted by lack of complete information', $item['name']), false, 'POLLER');
-							$prevName = $item['name'];
+					if (cacti_sizeof($items)) {
+						cacti_log(sprintf('WARNING: There are %s Data Sources not returning all data leaving rows in the poller output table.  Details to follow.', cacti_sizeof($items)), false, 'POLLER');
+						$prevName = '';
+						foreach($items as $item) {
+							if ($prevName != $item['name']) {
+								cacti_log(sprintf('WARNING: Data Template \'%s\' is impacted by lack of complete information', $item['name']), false, 'POLLER');
+								$prevName = $item['name'];
 
+							}
 						}
 					}
-				}
 
-				$checked_bad = true;
+					$checked_bad = true;
+				}
 			}
 		}
 	} elseif ($results === array()) {
