@@ -173,6 +173,9 @@ $datechar = array(0 => '-', 1 => '/', 2 => '.');
 $consolidation_functions = array(1 => 'AVERAGE', 2 => 'MIN', 3 => 'MAX', 4 => 'LAST');
 
 function read_config_option($name, $force = false) {
+	if (!empty($GLOBALS['scenario']['throw_config']) && isset($GLOBALS['pipe']) && is_resource($GLOBALS['pipe'])) {
+		throw new RuntimeException('fixture configuration failure');
+	}
 	return $GLOBALS['scenario']['config'][$name] ?? '';
 }
 
@@ -280,18 +283,21 @@ try {
 				}
 				rrd_maintenance_pipe($pipe, $lease);
 
-				if ($call[0] == 'raw') {
-					rrdtool_execute($call[1], false, RRDTOOL_OUTPUT_NULL, $pipe);
-				} elseif ($call[0] == 'path') {
-					rrdtool_execute_path_command($call[1], $call[2], '', false, RRDTOOL_OUTPUT_NULL, $pipe);
-				} elseif ($call[0] == 'restore') {
-					rrdtool_execute_restore_command($call[1], $call[2], false, RRDTOOL_OUTPUT_NULL, $pipe);
-				}
+				try {
+					if ($call[0] == 'raw') {
+						rrdtool_execute($call[1], false, RRDTOOL_OUTPUT_NULL, $pipe);
+					} elseif ($call[0] == 'path') {
+						rrdtool_execute_path_command($call[1], $call[2], '', false, RRDTOOL_OUTPUT_NULL, $pipe);
+					} elseif ($call[0] == 'restore') {
+						rrdtool_execute_restore_command($call[1], $call[2], false, RRDTOOL_OUTPUT_NULL, $pipe);
+					}
 
-				rewind($pipe);
-				$out['written'][] = stream_get_contents($pipe);
-				rrd_maintenance_pipe($pipe, null, true);
-				fclose($pipe);
+					rewind($pipe);
+					$out['written'][] = stream_get_contents($pipe);
+				} finally {
+					rrd_maintenance_pipe($pipe, null, true);
+					fclose($pipe);
+				}
 			}
 
 			break;
@@ -323,6 +329,11 @@ try {
 	}
 } catch (Throwable $e) {
 	$out['error'] = get_class($e) . ': ' . $e->getMessage();
+	if ($scenario['action'] === 'execute_capture') {
+		$check = rrd_maintenance_acquire(true);
+		$out['fixture_cleaned'] = !is_resource($pipe) && is_resource($check);
+		rrd_maintenance_release($check);
+	}
 }
 
 $out['warnings'] = $warnings;
