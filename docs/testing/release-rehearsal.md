@@ -32,5 +32,5 @@ installation; replacing application files alone is not a database rollback.
 
 Each invocation uses a unique Compose project, image tags and lock. Cleanup
 only removes that invocation’s resources. Invalid baseline revisions and
-unavailable Docker still produce `complete: false` observations. Use distinct
-`--output` paths when running multiple rehearsals concurrently.
+unavailable Docker still produce `complete: false` observations. Default evidence paths include the unique project name. If overriding
+`--output`, use distinct paths for concurrent rehearsals.

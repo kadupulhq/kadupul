@@ -82,11 +82,11 @@ def assert_poll(h, label):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--baseline', default='6482af547c204199e829b7a0df0b7a13db3e0a58')
-    parser.add_argument('--output', type=Path, default=ROOT / 'tests/behavior/results/release-readiness')
+    parser.add_argument('--output', type=Path)
     args = parser.parse_args()
-    output = args.output.resolve()
-    output.mkdir(parents=True, exist_ok=True)
     project = 'kadupul-release-' + uuid.uuid4().hex
+    output = (args.output or ROOT / 'tests/behavior/results/release-readiness' / project).resolve()
+    output.mkdir(parents=True, exist_ok=True)
     evidence = {'complete': False, 'baseline_requested': args.baseline,
                 'project': project, 'php_requested': os.environ.get('PHP_VERSION', '8.2'), 'steps': {}}
     h = None
@@ -185,7 +185,7 @@ def main():
             if ids:
                 harness.run(['docker', 'rm', '-fv', *ids], check=False)
             harness.run(['docker', 'network', 'rm', project + '_default'], check=False)
-            harness.run(['docker', 'image', 'rm', project + '-baseline:local', project + '-candidate:local'], check=False)
+            harness.run(['docker', 'image', 'rm', project + '-baseline:local', project + '-candidate:local', project + '-snmp:latest'], check=False)
         except Exception as error:
             evidence['cleanup_error'] = str(error)
             evidence['complete'] = False
