@@ -249,7 +249,8 @@ function form_actions() {
 
 			if (!cacti_sizeof($template_user)) {
 				raise_message(2);
-				return;
+				header('Location: user_admin.php?header=false');
+				exit;
 			}
 
 			$overwrite     = array( 'full_name' => get_nfilter_request_var('new_fullname') );
@@ -302,7 +303,8 @@ function form_actions() {
 
 					if (!cacti_sizeof($template)) {
 						raise_message(2);
-						return;
+						header('Location: user_admin.php?header=false');
+						exit;
 					}
 					$copy_users = array();
 					foreach ($selected_items as $selected_id) {
@@ -311,7 +313,8 @@ function form_actions() {
 							WHERE id = ?', array($selected_id));
 						if (!cacti_sizeof($user)) {
 							raise_message(2);
-							return;
+							header('Location: user_admin.php?header=false');
+							exit;
 						}
 						$copy_users[] = $user;
 					}

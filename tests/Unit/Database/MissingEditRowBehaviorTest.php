@@ -25,12 +25,23 @@ foreach (array('data_input_save_message', 'field_remove_confirm', 'field_remove'
 }
 eval(test_php_function_source(file_get_contents(dirname(__DIR__, 3) . '/color_templates_items.php'), 'aggregate_color_item_edit'));
 
-eval(test_php_function_source(file_get_contents(dirname(__DIR__, 3) . '/user_admin.php'), 'form_actions'));
+eval('namespace MissingUserAction; function header($value) { $GLOBALS["missing_row_headers"][] = $value; throw new \RuntimeException("captured redirect"); } ' . test_php_function_source(file_get_contents(dirname(__DIR__, 3) . '/user_admin.php'), 'form_actions'));
+function form_actions() {
+    try {
+        \MissingUserAction\form_actions();
+    } catch (RuntimeException $error) {
+        if ($error->getMessage() !== 'captured redirect') { throw $error; }
+        expect($GLOBALS['missing_row_headers'])->toBe(array('Location: user_admin.php?header=false'));
+        return;
+    }
+    throw new RuntimeException('Missing-row action did not redirect');
+}
 beforeEach(function () {
     $GLOBALS['missing_rows'] = array();
     $GLOBALS['missing_selected'] = array(1);
     $GLOBALS['missing_request'] = array('id' => 1, 'type' => 'in');
     $GLOBALS['missing_row_messages'] = array();
+    $GLOBALS['missing_row_headers'] = array();
 });
 
 test('missing edit rows report failure before rendering or mutation', function ($function) {

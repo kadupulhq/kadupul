@@ -26,6 +26,14 @@ if mode == 'missing': sys.exit(0)
 if mode == 'crash': sys.exit(255)
 if mode == 'malformed': report.write_text('<'); sys.exit(0)
 shapes = {
+    'wrapped-failure': '<testsuites><testsuite><testcase name="contract"><wrapper><failure/></wrapper></testcase></testsuite></testsuites>',
+    'suite-error': '<testsuites><testsuite><error/><testcase name="contract"/></testsuite></testsuites>',
+    'nested-status': '<testsuite><testcase name="contract"><skipped><failure/></skipped></testcase></testsuite>',
+    'bad-count': '<testsuite failures="1"><testcase name="contract"/></testsuite>',
+    'negative-count': '<testsuite tests="-1"><testcase name="contract"/></testsuite>',
+    'missing-name': '<testsuite><testcase/></testsuite>',
+    'conflicting-status': '<testsuite><testcase name="contract"><skipped/><failure/></testcase></testsuite>',
+    'metadata': '<testsuite tests="1" failures="0"><properties><property name="runtime" value="test"/></properties><testcase name="contract"><system-out>output</system-out></testcase></testsuite>',
     'wrong-root': '<not-junit><testcase/></not-junit>',
     'orphan-case': '<testsuites><testcase/></testsuites>',
     'wrapped-case': '<testsuites><testsuite><wrapper><testcase/></wrapper></testsuite></testsuites>',
@@ -58,7 +66,7 @@ if mode == 'warning' and '--fail-on-warning' in sys.argv: sys.exit(1)
         return result.returncode, results[0]
 
     def test_success_and_skips_have_valid_reports(self):
-        for mode in ['passed', 'skipped', 'single-suite', 'nested-suite']:
+        for mode in ['passed', 'skipped', 'single-suite', 'nested-suite', 'metadata']:
             with self.subTest(mode=mode):
                 status, result = self.run_suite(mode)
                 self.assertEqual(status, 0)
@@ -68,7 +76,7 @@ if mode == 'warning' and '--fail-on-warning' in sys.argv: sys.exit(1)
                 self.assertEqual(result['skipped'], int(mode == 'skipped'))
 
     def test_missing_empty_malformed_and_failure_reports_fail_closed(self):
-        for mode in ['missing', 'empty', 'malformed', 'failure', 'crash', 'timeout', 'wrong-root', 'orphan-case', 'wrapped-case', 'wrapped-suite', 'nested-collection', 'risky', 'warning']:
+        for mode in ['missing', 'empty', 'malformed', 'failure', 'crash', 'timeout', 'wrong-root', 'orphan-case', 'wrapped-case', 'wrapped-suite', 'nested-collection', 'risky', 'warning', 'wrapped-failure', 'suite-error', 'nested-status', 'bad-count', 'negative-count', 'missing-name', 'conflicting-status']:
             with self.subTest(mode=mode):
                 status, result = self.run_suite(mode)
                 self.assertEqual(status, 1)

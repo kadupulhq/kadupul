@@ -27,18 +27,32 @@ def run_file(command, cwd, log, timeout):
 
 
 def junit_suites(tree):
+    allowed = {
+        'testsuites': {'testsuite'},
+        'testsuite': {'testsuite', 'testcase', 'properties', 'system-out', 'system-err'},
+        'testcase': {'failure', 'error', 'skipped', 'properties', 'system-out', 'system-err'},
+        'properties': {'property'},
+        'property': set(), 'failure': set(), 'error': set(), 'skipped': set(),
+        'system-out': set(), 'system-err': set(),
+    }
     if tree.tag not in ('testsuites', 'testsuite'):
         raise ValueError('JUnit report root must be testsuites or testsuite')
     for parent in tree.iter():
-        for child in parent:
-            if child.tag == 'testcase' and parent.tag != 'testsuite':
-                raise ValueError('JUnit test cases must belong directly to a test suite')
-            if child.tag == 'testsuite' and parent.tag not in ('testsuites', 'testsuite'):
-                raise ValueError('JUnit test suites have an invalid parent')
-            if child.tag == 'testsuites':
-                raise ValueError('JUnit suite collections may appear only at the root')
-    if tree.tag == 'testsuites' and any(child.tag != 'testsuite' for child in tree):
-        raise ValueError('JUnit suite collection contains a non-suite child')
+        if parent.tag not in allowed or any(child.tag not in allowed[parent.tag] for child in parent):
+            raise ValueError('JUnit report contains an invalid child structure')
+        if parent.tag == 'testcase':
+            if not parent.get('name'):
+                raise ValueError('JUnit test case has no name')
+            if sum(parent.find(status) is not None for status in ('failure', 'error', 'skipped')) > 1:
+                raise ValueError('JUnit test case has conflicting statuses')
+        if parent.tag in ('testsuite', 'testsuites'):
+            cases = list(parent.iter('testcase'))
+            counts = {'tests': len(cases), 'failures': sum(c.find('failure') is not None for c in cases),
+                      'errors': sum(c.find('error') is not None for c in cases),
+                      'skipped': sum(c.find('skipped') is not None for c in cases)}
+            for name, actual in counts.items():
+                if name in parent.attrib and (not parent.attrib[name].isdigit() or int(parent.attrib[name]) != actual):
+                    raise ValueError('JUnit report has an inconsistent ' + name + ' count')
     return [tree] if tree.tag == 'testsuite' else list(tree)
 
 
