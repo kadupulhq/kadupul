@@ -126,10 +126,12 @@ observations, missing selected scenarios and orphan golden files fail before
 any golden is written. Failed runtime probes also leave an incomplete manifest.
 The committed PHP 8.2 baseline was recaptured and reproduced against application
 revision `6ce3572dab3264be563b765f25dcadd8cc046252` using the updated harness.
+The durable `test/behavior-baseline-1.2.31` branch retains this application
+revision; use this commit with the harness from the current test branch.
 The historical refresh changes the calibration warning’s harness
 line number (86 to 79), and removal of ten `config_settings` callbacks produced
 by seeded network-discovery workers. It also separates RRDtool acknowledgement
-counts in the three poller command contracts, as described below. Fixture setup
+counts in the four poller command contracts, as described below. Fixture setup
 now disables that unrelated
 discovery network before polling. The two diagnostic scopes are new. This is the documented
 modified Kadupul baseline, not a claim of upstream parity. Other runtime baselines
@@ -140,5 +142,10 @@ Poller command contracts retain exit status, stderr, and the exact order of
 non-acknowledgement stdout lines. Complete RRDtool `OK u:... s:... r:...`
 acknowledgements are counted separately: child writes can interleave with the
 parent statistics line in either order. Missing acknowledgements still change
-the contract. The three poller goldens explicitly adopt this representation;
+the contract. The four poller goldens explicitly adopt this representation;
 other output and diagnostic records are not sorted or discarded.
+
+The manifest `complete` flag means the evidence passed all completeness and
+inventory validation, including the target's golden inventory across runtimes.
+An orphaned golden is a validation failure even when every runtime probe ran.
+Temporary candidate goldens are local comparison artifacts, not baseline inputs.

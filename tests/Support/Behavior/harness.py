@@ -498,7 +498,7 @@ class Harness:
         self.truncate_artifacts('rrd-argv.log', 'rrd-stdin.log')
         missing = self.php('poller.php', '--force')
         self.capture('faults/missing-rrd-file', {
-            'command': {k: missing[k] for k in ('exit', 'stdout', 'stderr')},
+            'command': poller_command_contract(missing),
             'rrd_calls': self.rrd_calls(),
         })
 

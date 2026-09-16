@@ -13,6 +13,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Preserve reproducible behavioral baseline references and count RRDtool acknowledgements in the missing-file fault scenario.
+
 - Preserve pending realtime and repair samples on writer, child-process, heartbeat, and database-count failures; support explicitly trusted separate RRD service accounts.
 
 - Make RRD maintenance failure messages available for translation.
