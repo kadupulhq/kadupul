@@ -14,6 +14,9 @@ if (function_exists('pcntl_async_signals')) {
 
 ini_set('output_buffering', 'Off');
 
+// Isolate each worker and its RRDtool descendants for bounded master cleanup.
+if (in_array('--type=child', $_SERVER['argv'], true) && function_exists('posix_setsid') && posix_setsid() < 0) { exit(1); }
+
 require(__DIR__ . '/../include/cli_check.php');
 require_once($config['base_path'] . '/lib/poller.php');
 require_once($config['base_path'] . '/lib/rrd.php');
@@ -38,7 +41,7 @@ $local_graph_ids   = array();
 $step              = false;
 
 /* optional for threading and verbose display */
-$threads           = 20;
+$threads           = 1;
 $seebug            = false;
 
 /* optional for force handing and resume */
@@ -338,9 +341,11 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 
 	if (file_exists($rrd_path)) {
 		if (is_writable($rrd_path)) {
-			$response = exec($command, $output, $return);
+			$result = rrd_maintenance_run_command(array($rrdtool_bin, 'dump', $rrd_path), null, rrd_maintenance_command_timeout());
+			$return = $result['exit'];
+			$output = explode("\n", rtrim($result['stdout'], "\r\n"));
 
-			if ($return != 0) {
+			if ($return !== 0) {
 				cacti_log(sprintf('ERROR: Unable to dump file %s to XML', $rrd_path), false, 'RFLOAT');
 				return false;
 			}
@@ -544,6 +549,9 @@ function float_master_handler($forcerun, $resume, $host_id, $host_template_id, $
 		return false;
 	}
 
+	// Every rewrite owns the same exclusive store lease; parallel workers
+	// would time out waiting for each other on a healthy dataset.
+	$threads = 1;
 	$rrdfiles_per_process = ceil(db_fetch_cell_prepared('SELECT COUNT(*)/? FROM poller_float_rrdfiles_not_done', array($threads)));
 
 	print "There are $threads and $rrdfiles_per_process RRDfiles to process per thread" . PHP_EOL;
@@ -569,9 +577,24 @@ function float_master_handler($forcerun, $resume, $host_id, $host_template_id, $
 
 	// Own the child handles: a crash before registration cannot leave us
 	// waiting forever on stale (or missing) database process rows.
+	global $config;
+	$worker_timeout = $config['rrd_float_worker_timeout'] ?? 28800;
+	$worker_timeout = is_numeric($worker_timeout) && $worker_timeout > 0 ? min(28800, (float) $worker_timeout) : 28800;
+	$deadline = hrtime(true) + (int) ($worker_timeout * 1000000000);
 	while ($children) {
 		foreach ($children as $thread_id => $process) {
 			$status = proc_get_status($process);
+			if ($status['running'] && hrtime(true) >= $deadline) {
+				$child_failed = true;
+				if (function_exists('posix_getpgid') && posix_getpgid($status['pid']) === $status['pid']) {
+					posix_kill(-$status['pid'], SIGKILL);
+				}
+				proc_terminate($process, 9);
+				proc_close($process);
+				unregister_process('rfloat', 'child', $thread_id, $status['pid']);
+				unset($children[$thread_id]);
+				continue;
+			}
 			if (!$status['running']) {
 				$child_failed = $child_failed || $status['exitcode'] !== 0;
 				proc_close($process);
@@ -672,7 +695,7 @@ function display_help () {
 
 	print 'Kadupul\'s RRDfile Data Float Tool.  This CLI script will float a' . PHP_EOL;
 	print 'range in select Kadupul Graphs using the RRDtool dump/import utility.' . PHP_EOL . PHP_EOL;
-	print 'This utility will run in parallel with the given number of threads,' . PHP_EOL;
+	print 'This utility serializes rewrites under an exclusive storage lease,' . PHP_EOL;
 	print 'except in the case when you have specified specific --graph-ids as' . PHP_EOL;
 	print 'show with the optional settings below.' . PHP_EOL . PHP_EOL;
 
@@ -681,7 +704,7 @@ function display_help () {
 	print '    --end=TS    - The float range end time timestamp or date.' . PHP_EOL . PHP_EOL;
 
 	print 'Optional:' . PHP_EOL;
-	print '    --threads             - 20, The number of threads to use to update RRDfiles' . PHP_EOL;
+	print '    --threads             - Accepted for compatibility; exclusive rewrites use one worker' . PHP_EOL;
 	print '    --resume              - False, Resume a canceled float process' . PHP_EOL;
 	print '    --host-id=N           - N/A, Update a specific devices RRDfiles' . PHP_EOL;
 	print '    --host-template-id=N  - N/A, Update a specific Device Templates RRDfiles' . PHP_EOL;

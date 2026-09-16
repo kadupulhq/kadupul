@@ -3685,6 +3685,10 @@ function rrdtool_info2html($info_array, $diff=array()) {
  * @param (bool)   $show_source - only show text+commands or execute all commands, execute is for cli mode only!
  */
 function rrdtool_tune($rrd_file, $diff, $show_source = true) {
+    if (!$show_source && !empty($diff['resize']) && read_config_option('storage_location')) {
+        cacti_log('ERROR: Remote RRD resize is unavailable without atomic proxy replacement.', false, 'UTIL');
+        return false;
+    }
 	$rrd_path = read_config_option('path_rrdtool');
 
 	function print_leaves($array) {
@@ -3753,7 +3757,7 @@ function rrdtool_tune($rrd_file, $diff, $show_source = true) {
 			} else {
                 $resized = rrd_with_pipe(function ($pipe) use ($line, $rrd_file) {
                     if (rrdtool_execute("resize $line", true, RRDTOOL_OUTPUT_BOOLEAN, $pipe) !== true) { return false; }
-                    $resize_rrd = read_config_option('storage_location') ? dirname($rrd_file) . '/resize.rrd' : getcwd() . '/resize.rrd';
+                    $resize_rrd = getcwd() . '/resize.rrd';
                     return rename($resize_rrd, $rrd_file);
                 });
                 if ($resized !== true) { cacti_log('ERROR: RRD resize failed; original file retained.', false, 'UTIL'); return false; }

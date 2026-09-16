@@ -365,6 +365,102 @@ function rrd_maintenance_restore_atomic($xml_file, $rrd_file, $restore)
 }
 
 
+/** Bounded direct-argv RRDtool execution; drains both output streams. */
+function rrd_maintenance_run_command(array $argv, $stdout_handle, $timeout = 30)
+{
+    $capture_stdout = ($stdout_handle === null);
+
+    $descriptors = array(
+        0 => array('pipe', 'r'),
+        1 => $capture_stdout ? array('pipe', 'w') : $stdout_handle,
+        2 => array('pipe', 'w'),
+    );
+
+    $process = @proc_open($argv, $descriptors, $pipes);
+
+    if (!is_resource($process)) {
+        return array('exit' => false, 'stdout' => '', 'stderr' => '');
+    }
+
+    fclose($pipes[0]);
+
+    if ($capture_stdout) {
+        stream_set_blocking($pipes[1], false);
+    }
+
+    stream_set_blocking($pipes[2], false);
+
+    $stdout    = '';
+    $stderr    = '';
+    $remaining = (int) ($timeout * 1000000);
+    $exit      = null;
+
+    while ($remaining > 0) {
+        $start  = microtime(true);
+        $read   = $capture_stdout ? array($pipes[1], $pipes[2]) : array($pipes[2]);
+        $write  = array();
+        $except = array();
+        $ready = stream_select($read, $write, $except, intdiv($remaining, 1000000), $remaining % 1000000);
+
+        if ($ready === false || $ready === 0 || (feof($pipes[2]) && (!$capture_stdout || feof($pipes[1])))) {
+            usleep(1000);
+        }
+
+        $status = proc_get_status($process);
+
+        if ($capture_stdout) {
+            $stdout .= stream_get_contents($pipes[1]);
+        }
+
+        $stderr .= stream_get_contents($pipes[2]);
+
+        /* proc_get_status() returns false on a dead handle. Preserve a
+           valid exitcode while it is observable because a later status
+           read or proc_close() can return -1 after the child has
+           already been reaped. */
+        if (!is_array($status) || empty($status['running'])) {
+            if (is_array($status) && isset($status['exitcode']) && $status['exitcode'] >= 0) {
+                $exit = (int) $status['exitcode'];
+            }
+
+            break;
+        }
+
+        $remaining -= (int) ((microtime(true) - $start) * 1000000);
+    }
+
+    if ($capture_stdout) {
+        fclose($pipes[1]);
+    }
+
+    fclose($pipes[2]);
+
+    $status = proc_get_status($process);
+
+    if (is_array($status) && !empty($status['running'])) {
+        if (isset($status['pid']) && function_exists('posix_kill')) {
+            posix_kill($status['pid'], 9);
+        }
+
+        proc_terminate($process, 9);
+        proc_close($process);
+
+        return array('exit' => false, 'stdout' => $stdout, 'stderr' => $stderr);
+    }
+
+    if ($exit === null && is_array($status) && isset($status['exitcode']) && $status['exitcode'] >= 0) {
+        $exit = (int) $status['exitcode'];
+    }
+
+    $close_exit = proc_close($process);
+
+    if ($exit === null) {
+        $exit = $close_exit;
+    }
+
+    return array('exit' => $exit, 'stdout' => $stdout, 'stderr' => $stderr);
+}
+
 /** Synchronous CLI restore; validate the restored file before replacing its destination. */
 function rrd_maintenance_restore_command($binary, $xml_file, $rrd_file, $range_check = false)
 {
@@ -375,12 +471,13 @@ function rrd_maintenance_restore_command($binary, $xml_file, $rrd_file, $range_c
         }
         $args[] = $xml_file;
         $args[] = $temporary;
-        exec(implode(' ', array_map('cacti_escapeshellarg', $args)), $output, $status);
-        if ($status !== 0) {
+        $timeout = rrd_maintenance_command_timeout();
+        $result = rrd_maintenance_run_command($args, null, $timeout);
+        if ($result['exit'] !== 0) {
             return false;
         }
-        exec(cacti_escapeshellarg($binary) . ' info ' . cacti_escapeshellarg($temporary), $info, $status);
-        return $status === 0 && count($info) > 0;
+        $result = rrd_maintenance_run_command(array($binary, 'info', $temporary), null, $timeout);
+        return $result['exit'] === 0 && trim($result['stdout']) !== '';
     });
 }
 
@@ -396,4 +493,12 @@ function rrd_maintenance_poller_preflight()
         admin_email(__('RRD storage configuration requires attention'), $error);
     }
     return false;
+}
+
+/** Administrators may bound large maintenance commands, up to eight hours. */
+function rrd_maintenance_command_timeout()
+{
+    global $config;
+    $seconds = $config['rrd_maintenance_command_timeout'] ?? 300;
+    return is_numeric($seconds) && $seconds > 0 ? min(28800, (float) $seconds) : 300;
 }

@@ -226,7 +226,8 @@ if (!$force) {
 
 require_once __DIR__ . '/../lib/rrd_maintenance.php';
 rrd_maintenance_cli_preflight();
-$rrd_writer_lock = rrd_maintenance_cli_lock(true, true);
+$rrd_writer_lock = rrd_maintenance_acquire_paths(array_column($rrdfiles, 'rrd'), 5);
+if ($rrd_writer_lock === false) { print 'ERROR: RRD maintenance storage is busy or unsafe.' . PHP_EOL; exit(1); }
 register_shutdown_function(function () use ($rrd_writer_lock) { rrd_maintenance_release($rrd_writer_lock); });
 
 $i = 0;
