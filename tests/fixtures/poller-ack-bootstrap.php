@@ -111,7 +111,7 @@ function rrdtool_function_update($updates, $pipe = false, &$completed = null)
         foreach ($updates as $path => $fields) {
             if (in_array(getenv('ACK_FAIL'), array('mixed', 'page'), true) && $path === 'fixture.rrd') { continue; }
             foreach ($fields['times'] as $time => $values) {
-                $completed[$path][$time] = true;
+                $completed[$path][$time] = getenv('ACK_FAIL') !== 'rejected';
             }
         }
     }

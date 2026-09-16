@@ -691,13 +691,13 @@ test('one persistent process consumes explicit rejects and continues subsequent 
         '$updates=array($bad=>array("local_data_id"=>1,"data_template_id"=>0,"times"=>array(1700000060=>array("missing"=>42),1700000120=>array("value"=>43))),$good=>array("local_data_id"=>2,"data_template_id"=>0,"times"=>array()));' .
         'for($i=1;$i<=100;$i++){$updates[$good]["times"][1700000000+$i*60]=array("value"=>$i);}' .
         '$pipe=rrd_init(' . var_export($web,true) . ',false,true);$command="create ".__DIR__."/created.rrd --start 1700000000 --step 60".RRD_NL."DS:value:GAUGE:600:U:U".RRD_NL."RRA:AVERAGE:0.5:1:20";if(rrdtool_execute($command,false,RRDTOOL_OUTPUT_BOOLEAN,$pipe)!==true){exit(6);}$result=rrdtool_function_update($updates,$pipe,$completed);rrd_close($pipe);' .
-        'echo json_encode(array($result,count($completed[$bad]),count($completed[$good]),count(rrd_acknowledged_pipes())));';
+        'echo json_encode(array($result,count($completed[$bad]),count($completed[$good]),count(rrd_acknowledged_pipes()),$completed[$bad][1700000060],$completed[$bad][1700000120]));';
     file_put_contents($this->dir . '/persistent.php', $bootstrap);
     $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $this->dir . '/persistent.php'), array(1=>array('pipe','w'),2=>array('pipe','w')), $pipes);
     $output=stream_get_contents($pipes[1]);$error=stream_get_contents($pipes[2]);fclose($pipes[1]);fclose($pipes[2]);
     $status=proc_close($process);
     if ($error !== '') { throw new RuntimeException($error . $output); }
-    expect($status)->toBe(0)->and(json_decode($output,true))->toBe(array(false,2,100,0));
+    expect($status)->toBe(0)->and(json_decode($output,true))->toBe(array(false,2,100,0,false,true));
     expect(file($this->dir . '/children'))->toHaveCount(1);
     expect(trim(shell_exec(escapeshellarg($binary) . ' last ' . escapeshellarg($this->dir . '/bad.rrd'))))->toBe('1700000120');
     expect(trim(shell_exec(escapeshellarg($binary) . ' last ' . escapeshellarg($this->dir . '/good.rrd'))))->toBe('1700006000');

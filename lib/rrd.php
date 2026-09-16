@@ -1252,7 +1252,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 
 			foreach ($rrd_fields['times'] as $update_time => $field_array) {
 				cacti_log('ERROR: Invalid RRD sample path (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array)), false, 'POLLER');
-				$completed[$rrd_path][$update_time] = true;
+				$completed[$rrd_path][$update_time] = false;
 			}
 			$failed = true;
 			continue;
@@ -1311,7 +1311,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 					cacti_log("ERROR: Invalid RRD update time for local_data_id: {$rrd_fields['local_data_id']}.", false, 'POLLER');
 
 					cacti_log('ERROR: Invalid RRD sample (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array)), false, 'POLLER');
-					$completed[$rrd_path][$update_time] = true;
+					$completed[$rrd_path][$update_time] = false;
 					$failed = true;
 					continue;
 				}
@@ -1332,7 +1332,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 						cacti_log("ERROR: Invalid RRD update data source name for local_data_id: {$rrd_fields['local_data_id']}.", false, 'POLLER');
 
 						cacti_log('ERROR: Invalid RRD sample data source (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array)), false, 'POLLER');
-						$completed[$rrd_path][$update_time] = true;
+						$completed[$rrd_path][$update_time] = false;
 						$failed = true;
 						continue 2;
 					}
@@ -1368,7 +1368,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 					cacti_log("ERROR: Invalid RRD update template or value set for local_data_id: {$rrd_fields['local_data_id']}.", false, 'POLLER');
 
 					cacti_log('ERROR: Invalid RRD sample (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array)), false, 'POLLER');
-					$completed[$rrd_path][$update_time] = true;
+					$completed[$rrd_path][$update_time] = false;
 					$failed = true;
 					continue;
 				}
@@ -1380,7 +1380,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 						// values before consuming it, so a poisoned MEMORY queue cannot
 						// block every subsequent timestamp or exhaust the poller table.
 						cacti_log('ERROR: RRDtool rejected sample (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array, 'reason' => $rejection)), false, 'POLLER');
-						$completed[$rrd_path][$update_time] = true;
+						$completed[$rrd_path][$update_time] = false;
 						$failed = true;
 						continue;
 					}
