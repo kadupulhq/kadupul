@@ -184,16 +184,17 @@ test('real synchronous and queued updates retain their samples across maintenanc
     expect(shell_exec($rrdcmd . ' lastupdate ' . escapeshellarg($rrd)))->toContain('84');
     file_put_contents($script, $bootstrap . '$pipe = fopen("php://temp", "w+");' .
         '$unsafe = rrdtool_execute("update unused.rrd 1000000180:99", false, RRDTOOL_OUTPUT_STDOUT, $pipe);' .
-        '$config["rra_path"] = __DIR__ . "/missing"; $missingPipe = rrd_init();' .
+        '$config["rra_path"] = __DIR__ . "/missing"; $missingPipe = rrd_init(); rrd_close($missingPipe);' .
+        '$missingOperation = rrd_with_pipe(function ($owned) { return $owned; });' .
         '$missingCommand = rrdtool_execute("update unused.rrd 1000000180:99", false, RRDTOOL_OUTPUT_STDOUT);' .
-        'echo json_encode(array($unsafe, $missingPipe, $missingCommand)); fclose($pipe);');
+        'echo json_encode(array($unsafe, $missingPipe, $missingCommand, $missingOperation)); fclose($pipe);');
     $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . dirname(__DIR__, 4), '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $script), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     fclose($pipes[0]);
     $stdout = stream_get_contents($pipes[1]);
     $stderr = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
     fclose($pipes[2]);
-    expect($stderr)->toBe('')->and(proc_close($process))->toBe(0)->and(json_decode($stdout, true))->toBe(array(false, false, false));
+    expect($stderr)->toBe('')->and(proc_close($process))->toBe(0)->and(json_decode($stdout, true))->toBe(array(false, false, false, false));
     if (function_exists('pcntl_waitpid')) {
         if ($this->getTestResultObject()->getCodeCoverage() !== null) {
             $this->expectedChildReports++;
