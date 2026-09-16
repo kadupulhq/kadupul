@@ -22,16 +22,21 @@ jobs:
         options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=5s --health-timeout=5s --health-retries=20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.1'
+          extensions: pdo_mysql
+          coverage: none
       - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3
         with:
-          install_args: php@8.1.34
+          install: false
       - name: Install test dependencies
-        run: mise exec php@8.1.34 -- composer install --working-dir=tests --no-interaction --no-progress --prefer-dist
+        run: mise exec php@system -- composer install --working-dir=tests --no-interaction --no-progress --prefer-dist
       - name: Retain database handoff and exact deletion contracts
         working-directory: tests
-        run: mise exec php@8.1.34 -- php vendor/bin/pest --configuration=phpunit-boost-mariadb.xml --colors=never
+        run: mise exec php@system -- php vendor/bin/pest --configuration=phpunit-boost-mariadb.xml --colors=never
       - name: Measure million-row queries with identical selected samples
-        run: mise exec php@8.1.34 -- php tests/benchmarks/poller_queue.php > queue.json
+        run: mise exec php@system -- php tests/benchmarks/poller_queue.php > queue.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: queue-${{ matrix.mariadb }}
@@ -41,18 +46,23 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.1'
+          extensions: pdo_mysql
+          coverage: none
       - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3
         with:
-          install_args: php@8.1.34
+          install: false
       - name: Install build dependencies
         run: sudo apt-get update && sudo apt-get install -y autoconf automake libtool pkg-config libxml2-dev libpango1.0-dev libcairo2-dev libglib2.0-dev groff-base rrdtool
       - name: Build pinned RRDtool 1.4.9
         run: tests/benchmarks/build_rrd149.sh "$RUNNER_TEMP/rrd149"
       - name: Install test dependencies
-        run: mise exec php@8.1.34 -- composer install --working-dir=tests --no-interaction --no-progress --prefer-dist
+        run: mise exec php@system -- composer install --working-dir=tests --no-interaction --no-progress --prefer-dist
       - name: Verify modern retries and real legacy pending writes
         working-directory: tests
         env:
           RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
           RRDTOOL_LEGACY_TEST_BINARY: ${{ runner.temp }}/rrd149/bin/rrdtool
-        run: mise exec php@8.1.34 -- php vendor/bin/pest --configuration=phpunit-boost.xml --colors=never
+        run: mise exec php@system -- php vendor/bin/pest --configuration=phpunit-boost.xml --colors=never
