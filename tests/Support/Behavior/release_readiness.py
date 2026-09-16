@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Rehearse a real release upgrade and snapshot rollback in disposable containers."""
 import argparse
 import hashlib
