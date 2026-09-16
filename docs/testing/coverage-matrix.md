@@ -40,6 +40,8 @@ Priorities: **P0** blocks Kadupul compatibility, **P1** is important behavior,
 | PHP types | `get_request_var` memoization | yes | n/a | n/a | stale read after superglobal change | `api/type-coercion` | P0 |
 | PHP types | Empty result-set shapes | yes | n/a | yes | `db_fetch_row`, `_cell`, `_assoc` | `api/type-coercion` | P0 |
 | Diagnostics | Warnings, notices, deprecations raised outside Cacti's own handler | yes | n/a | yes | grouped and counted, suppression flagged | `api/php-errors` | P0 |
+| Diagnostics | Visible prepend PHP events | yes | yes | yes | fatal and suppression masks | `diagnostics/visible-php-errors` | P0 |
+| Diagnostics | Application-handler PHP log | yes | yes | yes | calibrated warning, ordered duplicate events | `diagnostics/application-log` | P0 |
 | Diagnostics | Handler calibration | yes | n/a | yes | `E_USER_WARNING`, `TypeError` | `api/warning-calibration` | P1 |
 | Poller | Full run against a device with data sources | yes | yes | no | exit status, stats line, poller cache, rrdtool argv | `poller/run-reachable` | P0 |
 | Poller | rrdtool exits non-zero mid-run | yes | n/a | yes | poller still exits 0; fwrite notice on the broken pipe | `poller/rrd-failure` | P0 |
@@ -122,6 +124,10 @@ that every possible application log message is covered.
 A recording requires all 34 named scenarios. Empty, missing or unexpected
 observations, missing selected scenarios and orphan golden files fail before
 any golden is written. Failed runtime probes also leave an incomplete manifest.
-Legacy committed 32-contract baselines must be explicitly recaptured with the
-new harness before claiming the two new diagnostic contracts for that revision.
-A candidate capture and repeat run establish reproducibility, not upstream parity.
+The committed PHP 8.2 baseline was recaptured and reproduced against application
+revision `6ce3572dab3264be563b765f25dcadd8cc046252` using the updated harness.
+Its prior 32 observations are unchanged except the calibration warning’s harness
+line number (86 to 79); the two diagnostic scopes are new. This is the documented
+modified Kadupul baseline, not a claim of upstream parity. Other runtime baselines
+need their own explicit capture and repeat run. Orphan checks inspect every
+existing runtime directory for the selected target.

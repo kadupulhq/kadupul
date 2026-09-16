@@ -583,9 +583,11 @@ class Harness:
         if error is None:
             try:
                 self.selected()
-                golden_root = ROOT / 'tests/Golden' / self.args.target / ('php-' + runtime)
-                recorded = {str(path.relative_to(golden_root))[:-5] for path in golden_root.rglob('*.json')}
-                orphans = recorded - set(self.observed)
+                target_root = ROOT / 'tests/Golden' / self.args.target
+                orphans = set()
+                for golden_root in target_root.glob('php-*'):
+                    recorded = {str(path.relative_to(golden_root))[:-5] for path in golden_root.rglob('*.json')}
+                    orphans.update(golden_root.name + '/' + name for name in recorded - set(self.observed))
                 if orphans:
                     raise RuntimeError('Goldens have no observations: ' + ', '.join(sorted(orphans)))
             except RuntimeError as selection_error:
@@ -695,7 +697,7 @@ def main():
     test.add_argument('--update-golden', action='store_true')
     test.add_argument('--keep', action='store_true')
     test.add_argument('--only', nargs='*', default=None, metavar='GROUP',
-                      help='Verify only these scenario groups (api, auth, devices, graphs, plugins, cli, poller, ui, database, upgrade, snmp). All scenarios still run, because later ones consume earlier fixtures.')
+                      help='Verify only these scenario groups (api, auth, devices, graphs, plugins, cli, poller, ui, database, upgrade, snmp, faults, diagnostics). All scenarios still run, because later ones consume earlier fixtures.')
     diff = sub.add_parser('compare')
     diff.add_argument('--baseline', required=True)
     diff.add_argument('--candidate', required=True)

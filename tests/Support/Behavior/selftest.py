@@ -133,7 +133,7 @@ def recording_guards():
     with tempfile.TemporaryDirectory() as directory:
         root = Path(directory)
         (root / 'cacti.sql').write_text('schema')
-        for case in ('empty', 'missing', 'unexpected', 'orphan', 'complete'):
+        for case in ('empty', 'missing', 'unexpected', 'orphan', 'other-runtime-orphan', 'complete'):
             recorder = object.__new__(harness.Harness)
             recorder.args = types.SimpleNamespace(target=case, only=None, update_golden=True)
             recorder.destination = root / 'results' / case
@@ -144,6 +144,10 @@ def recording_guards():
             recorder.command = lambda *a, **kw: {'stdout': '8.2', 'stderr': '', 'exit': 0}
             recorder.base_image_digest = lambda: {'ref': 'fixture'}
             golden = root / 'tests/Golden' / case / 'php-8.2'
+            if case == 'other-runtime-orphan':
+                other = golden.parent / 'php-8.3'
+                other.mkdir(parents=True)
+                (other / 'removed.json').write_text('42')
             if case == 'orphan':
                 golden.mkdir(parents=True)
                 (golden / 'removed.json').write_text('42')
