@@ -218,6 +218,14 @@ if ($child == 0) {
 	if (db_table_exists('graph_local_spikekill')) {
 		$running = db_fetch_cell('SELECT COUNT(*) FROM graph_local_spikekill WHERE ended = "0000-00-00"');
 
+		/* db_fetch_cell() answers false when the query fails, which compares as
+		 * an idle queue and drops into the TRUNCATE below, so an unreadable
+		 * count has to refuse the run instead. */
+		if (!is_numeric($running)) {
+			print "FATAL: Unable to determine whether a run is already in progress." . PHP_EOL;
+			exit(1);
+		}
+
 		if ($running > 0 && !$force) {
 			print "FATAL: You have requested a start run, and a run appears to be already running" . PHP_EOL;
 			print "FATAL: Check that no processes are running and use the --force option to override." . PHP_EOL;
@@ -353,6 +361,13 @@ if ($child == 0) {
 	cacti_log(sprintf('BATCHFIX STATS: Time:%s, RRDfiles:%s, Threads:%s, Rate:%s, Succeeded:%s, Failed:%s', round($end - $start, 2), $rrdfiles, $threads, round($rate,2), $succeeded, $failed), false, 'SYSTEM');
 
 	unregister_process('batchgapfix', $type, $child);
+
+	/* A false tally is a failed query, not a clean run.  Comparing it as a
+	 * number would truncate the queue the failure path below exists to keep. */
+	if (!is_numeric($succeeded) || !is_numeric($failed)) {
+		fwrite(STDERR, "ERROR: Unable to read the gap repair results; queue results retained.\n");
+		exit(1);
+	}
 
 	if ($failed > 0) {
 		fwrite(STDERR, "ERROR: Gap repair failed for some RRD files; queue results retained.\n");
