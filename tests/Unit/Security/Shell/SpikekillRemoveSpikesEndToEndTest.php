@@ -195,7 +195,8 @@ beforeEach(function () {
 		"  exit 0\n" .
 		"fi\n" .
 		"if [ \"\$1\" = 'restore' ]; then\n" .
-		"  restore_exit=\"\${RESTORE_STUB_EXIT:-0}\"\n" .
+		"  printf restored-rrd-bytes > \"\$5\"\n" .
+        "  restore_exit=\"\${RESTORE_STUB_EXIT:-0}\"\n" .
 		"  if [ \"\$restore_exit\" != '0' ]; then\n" .
 		"    echo 'stub restore failed' >&2\n" .
 		"  fi\n" .
@@ -500,3 +501,39 @@ test('restore diagnostics are escaped only in HTML output', function ($html) {
         ->and($instance->get_output())->toContain($html ? htmlspecialchars($diagnostic, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') : $diagnostic);
     if ($html) { expect($instance->get_output())->not->toContain('<img'); }
 })->with(array(false, true));
+
+test('restore never follows a live destination swapped during the command', function () {
+    $outside = $this->dir . '/outside.rrd';
+    file_put_contents($outside, 'unrelated bytes');
+    $stub = file_get_contents($this->rrdtool_stub);
+    $attack = 'rm -f ' . escapeshellarg($this->rrdfile) . '; ln -s ' . escapeshellarg($outside) . ' ' . escapeshellarg($this->rrdfile);
+    $stub = str_replace('printf restored-rrd-bytes', $attack . "\nprintf restored-rrd-bytes", $stub);
+    file_put_contents($this->rrdtool_stub, $stub);
+    $instance = spikekill_e2e_instance($this->rrdfile);
+    expect($instance->remove_spikes())->toBeFalse()
+        ->and(file_get_contents($outside))->toBe('unrelated bytes')
+        ->and(file_get_contents($this->backup_dir . '/source.rrd'))->toBe('original-rrd-bytes')
+        ->and(glob($this->rrd_dir . '/*.xml'))->toBe(array());
+});
+
+test('partial or empty restore preserves the live RRD', function ($empty) {
+    if ($empty) {
+        file_put_contents($this->rrdtool_stub, str_replace('printf restored-rrd-bytes', 'printf ""', file_get_contents($this->rrdtool_stub)));
+    } else { putenv('RESTORE_STUB_EXIT=1'); }
+    $instance = spikekill_e2e_instance($this->rrdfile);
+    expect($instance->remove_spikes())->toBeFalse()
+        ->and(file_get_contents($this->rrdfile))->toBe('original-rrd-bytes')
+        ->and(glob($this->rrd_dir . '/*.xml'))->toBe(array());
+})->with(array(false, true));
+
+test('atomic restore preserves RRD ownership and permissions', function () {
+    chmod($this->rrdfile, 0640);
+    $before = stat($this->rrdfile);
+    $instance = spikekill_e2e_instance($this->rrdfile);
+    expect($instance->remove_spikes())->toBeTrue();
+    clearstatcache(true);
+    $after = stat($this->rrdfile);
+    expect($after['uid'])->toBe($before['uid'])->and($after['gid'])->toBe($before['gid'])
+        ->and($after['mode'] & 0777)->toBe(0640)
+        ->and(file_get_contents($this->rrdfile))->toBe('restored-rrd-bytes');
+});

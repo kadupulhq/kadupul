@@ -45,7 +45,6 @@ msgstr "荣誉提名"
 
 #: about.php:62
 #, fuzzy
-#| msgid "Contributors to Docuemntation, QA, Packaging, the Forums and our YouTube page."
 msgid "Contributors to Documentation, QA, Packaging, the Forums and our YouTube page."
 msgstr "文档、质量检查、包装、论坛和 YouTube 页面的贡献者。"
 
@@ -371,7 +370,6 @@ msgstr "预览"
 
 #: aggregate_graphs.php:623
 #, fuzzy
-#| msgid "Aggregate Graphs Accessed does not Exist"
 msgid "Aggregate Graph Accessed does not Exist"
 msgstr "聚合图形设置"
 
@@ -756,7 +754,6 @@ msgstr "未找到聚合图形"
 
 #: aggregate_templates.php:119 aggregate_templates.php:364
 #, fuzzy
-#| msgid "No Aggregate Templates Found"
 msgid "Aggregate Template not found."
 msgstr "未找到聚合模板"
 
@@ -962,7 +959,6 @@ msgstr "如果您觉得这是一个报错,请联系Cacti 管理员."
 
 #: auth_login.php:219
 #, fuzzy
-#| msgid "Access Denied!  User account disabled."
 msgid "Access Denied! User account locked."
 msgstr "拒绝访问,用户帐号被禁用."
 
@@ -1575,7 +1571,6 @@ msgstr "每月的某一天"
 
 #: automation_networks.php:433
 #, fuzzy
-#| msgid "File not found"
 msgid "Network not found."
 msgstr "文件未找到"
 
@@ -2491,7 +2486,6 @@ msgstr ""
 
 #: automation_tree_rules.php:189
 #, fuzzy
-#| msgid "The Field Name that shall be used for this Rule Item."
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "应该用于此规则项目的字段名称."
 
@@ -2929,7 +2923,6 @@ msgstr "删除颜色项目"
 
 #: color_templates.php:389
 #, fuzzy
-#| msgid "No Color Templates Found"
 msgid "Color Template not found."
 msgstr "未找到颜色模板"
 
@@ -2967,7 +2960,6 @@ msgstr "未找到颜色模板"
 
 #: color_templates_items.php:277
 #, fuzzy
-#| msgid "Color Template Items"
 msgid "Color Template or Item not found."
 msgstr "颜色模板项目"
 
@@ -3475,7 +3467,6 @@ msgstr "删除数据输入字段"
 
 #: data_input.php:747
 #, fuzzy
-#| msgid "Update this Field"
 msgid "Update Whitelist"
 msgstr "更新这个字段"
 
@@ -4418,7 +4409,6 @@ msgstr "删除GPRINT 预设"
 
 #: gprint_presets.php:188
 #, fuzzy
-#| msgid "GPRINT Preset"
 msgid "GPRINT Preset not found."
 msgstr "GPRINT 预设"
 
@@ -4481,7 +4471,6 @@ msgstr "查看图形"
 
 #: graph.php:115
 #, fuzzy
-#| msgid "Data Source does not exist."
 msgid "The Graph you requested does not exist."
 msgstr "数据源不存在."
 
@@ -4641,7 +4630,6 @@ msgstr "无法导入"
 
 #: graph_templates.php:561
 #, fuzzy
-#| msgid "No Graph Templates Found"
 msgid "Graph Template not found."
 msgstr "未找到图形模板"
 
@@ -6106,7 +6094,6 @@ msgstr "无法确定密码字段的大小,请检查db用户的权限"
 
 #: include/global_arrays.php:313
 #, fuzzy
-#| msgid "Unable to increase size of password field, pleas check permission of db user"
 msgid "Unable to increase size of password field, please check permission of db user"
 msgstr "无法增加密码字段的大小,请检查数据库用户的权限"
 
@@ -6380,7 +6367,6 @@ msgstr "SHA-256"
 
 #: include/global_arrays.php:659
 #, fuzzy
-#| msgid "SHA-392"
 msgid "SHA-384"
 msgstr "SHA-392"
 
@@ -6442,7 +6428,6 @@ msgstr "TCP Ping"
 
 #: include/global_arrays.php:698
 #, fuzzy
-#| msgid "TCP Ping"
 msgid "TCP Ping Closed"
 msgstr "TCP Ping"
 
@@ -8949,7 +8934,6 @@ msgstr "Cacti 将使用该方法来确定主机是否可采集. <br> <i>注意: 
 
 #: include/global_form.php:1277
 #, fuzzy
-#| msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>"
 msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 msgstr "要发送的ping 包的类型. <br> <i>注意: Linux/UNIX 上的ICMP 需要root 权限.</i>"
 
@@ -9951,7 +9935,6 @@ msgstr "选中后, Cacti 的所有访问都将被重定向到HTTPS 以确保高�
 
 #: include/global_settings.php:501
 #, fuzzy
-#| msgid "Remote Data Collector Status:"
 msgid "Allow Unsafe Remote Data Collector HTTPS"
 msgstr "远程数据采集器状态:"
 
@@ -9961,7 +9944,6 @@ msgstr ""
 
 #: include/global_settings.php:507
 #, fuzzy
-#| msgid "The name of this Data Input Method."
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
 msgstr "此数据输入方法的名称."
 
@@ -9971,7 +9953,6 @@ msgstr ""
 
 #: include/global_settings.php:514
 #, fuzzy
-#| msgid "Content-Security Alternate Sources"
 msgid "Content-Security Script Policy"
 msgstr "内容安全替代来源"
 
@@ -9993,7 +9974,6 @@ msgstr ""
 
 #: include/global_settings.php:524 include/global_settings.php:539
 #, fuzzy
-#| msgid "Cacti Report"
 msgid "CSP Violation Report URI"
 msgstr "Cacti 报告"
 
@@ -10394,7 +10374,6 @@ msgstr "默认图形类型"
 
 #: include/global_settings.php:962
 #, fuzzy
-#| msgid "When creating graphs, what Graph Type would you like pre-selected?"
 msgid "When creating graphs, what Graph Type would you like preselected?"
 msgstr "在创建图形时,您想要预先选择哪种图形类型?"
 
@@ -11092,7 +11071,6 @@ msgstr "历史密码"
 
 #: include/global_settings.php:1641
 #, fuzzy
-#| msgid "Remember this number of old passwords and disallow re-using them."
 msgid "Remember this number of old passwords and disallow reusing them."
 msgstr "记住旧密码的个数,不允许重新使用它们."
 
@@ -14122,7 +14100,6 @@ msgstr "检测到未保存的更改"
 
 #: lib/html_form.php:1529
 #, fuzzy
-#| msgid "You have unsaved changes on this form.  If you press &#39;Continue&#39; these changes will be discarded.  Press &#39;Cancel&#39; to continue editing the form."
 msgid "You have unsaved changes on this form.  If you press 'Continue' these changes will be discarded.  Press 'Cancel' to continue editing the form."
 msgstr "您在此表单上有未保存的更改.如果按&#39;继续&#39;,这些更改将被丢弃.按&#39;取消&#39;继续编辑表单."
 
@@ -15145,7 +15122,6 @@ msgstr "要求"
 
 #: lib/installer.php:1917
 #, fuzzy
-#| msgid "The specificed value appears to be different in the running config versus the INI file."
 msgid "The specified value appears to be different in the running config versus the INI file."
 msgstr "在运行配置中，指定值与 INI 文件中的指定值似乎不同。"
 
@@ -15443,7 +15419,6 @@ msgstr "因此，在多个版本之前，对Cacti进行了增强，以针对这�
 
 #: lib/installer.php:2429
 #, fuzzy
-#| msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediatly disabled until the administrator validates that the Data Input Method is valid."
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "白名单的工作方式是，当您首次导入数据输入法或重新导入数据输入法，并且脚本和/或参数以任何方式更改时，数据输入法以及所有相应的数据源都会立即禁用，直到管理员确认数据输入法有效。"
 
@@ -16067,19 +16042,16 @@ msgstr "UDP Ping 成功 (%s ms)"
 
 #: lib/ping.php:554
 #, fuzzy, php-format
-#| msgid "TCP Ping Success (%s ms)"
 msgid "TCP Ping Success Connection Refused (%s ms)"
 msgstr "TCP Ping 成功 (%s ms)"
 
 #: lib/ping.php:557
 #, fuzzy, php-format
-#| msgid "TCP ping: socket_connect(), reason: %s"
 msgid "TCP Ping Failed: socket_connect(), reason: %s"
 msgstr "TCP ping: socket_connect(), 原因: %s"
 
 #: lib/ping.php:580
 #, fuzzy, php-format
-#| msgid "TCP ping: socket_select() failed, reason: %s"
 msgid "TCP Ping Failed: socket_select() failed, reason: %s"
 msgstr "TCP ping: socket_select()失败, 原因: %s"
 
@@ -16211,7 +16183,6 @@ msgstr "跳过已存在的报告图项目 '<i>%s</i>'"
 
 #: lib/rrd.php:1680
 #, fuzzy, php-format
-#| msgid "ERROR: RRDfile %s not writeable"
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "ERROR: RRD 文件 %s 不可写入"
 
@@ -16392,7 +16363,6 @@ msgstr "未知的RRDtool 错误"
 #: lib/snmp.php:211 lib/snmp.php:311 lib/snmp.php:406 lib/snmp.php:738
 #: lib/snmp.php:753
 #, fuzzy, php-format
-#| msgid "SNMP Options [edit: %s]"
 msgid "SNMP Command is: %s"
 msgstr "SNMP 选项 [编辑: %s]"
 
@@ -16402,7 +16372,6 @@ msgstr ""
 
 #: lib/spikekill.php:189
 #, fuzzy, php-format
-#| msgid "XML: Cacti version does not exist."
 msgid "FATAL: File '%s' does not exist."
 msgstr "XML: Cacti 版本不存在."
 
@@ -16417,19 +16386,16 @@ msgstr ""
 
 #: lib/spikekill.php:259 lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Remove StdDev"
 msgid "StdDev"
 msgstr "删除标准设置"
 
 #: lib/spikekill.php:265 lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Variable"
 msgid "Variance"
 msgstr "变量"
 
 #: lib/spikekill.php:271
 #, fuzzy
-#| msgid "Gap Fill Range"
 msgid "Gap Fill"
 msgstr "差距填充范围"
 
@@ -16484,13 +16450,11 @@ msgstr ""
 
 #: lib/spikekill.php:355
 #, fuzzy, php-format
-#| msgid "RRDfiles"
 msgid "RRDfile:       %s"
 msgstr "RRD 文件"
 
 #: lib/spikekill.php:356
 #, fuzzy, php-format
-#| msgid "Repair Steps [ %s ]"
 msgid "Repair Type:   %s"
 msgstr "修复步骤[ %s ]"
 
@@ -16501,7 +16465,6 @@ msgstr ""
 
 #: lib/spikekill.php:360
 #, fuzzy, php-format
-#| msgid "Max Kills Per RRA"
 msgid "Max Kills:     %s"
 msgstr "每个RRA 最大削除"
 
@@ -16511,7 +16474,6 @@ msgstr ""
 
 #: lib/spikekill.php:366
 #, fuzzy, php-format
-#| msgid "Standard Deviations"
 msgid "Standard Devs: %s"
 msgstr "标准偏差"
 
@@ -16531,7 +16493,6 @@ msgstr ""
 
 #: lib/spikekill.php:375
 #, fuzzy
-#| msgid "Windows Related"
 msgid "Window Range:  All"
 msgstr "Windows 相关"
 
@@ -16585,7 +16546,6 @@ msgstr ""
 
 #: lib/spikekill.php:742
 #, fuzzy
-#| msgid "No Sites Found"
 msgid "NOTE: No Spikes Found."
 msgstr "未找到站点"
 
@@ -16601,19 +16561,16 @@ msgstr ""
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Avg:"
 msgid "Avg"
 msgstr "平均:"
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "CDEF"
 msgid "CF"
 msgstr "CDEF"
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "DES"
 msgid "DS"
 msgstr "DES"
 
@@ -16623,7 +16580,6 @@ msgstr ""
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Simple"
 msgid "Samples"
 msgstr "简单"
 
@@ -16633,19 +16589,16 @@ msgstr ""
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MaxValue"
 msgstr "值"
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Dry Run StdDev"
 msgid "MinStdDev"
 msgstr "干运行标准设置"
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MinValue"
 msgstr "值"
 
@@ -16761,7 +16714,6 @@ msgstr "InnoDB将在系统内存中保存尽可能多的表和索引。 因此�
 
 #: lib/utility.php:1347
 #, fuzzy
-#| msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accomodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "除非您的Cacti实例在ZFS或FusionI / O上运行，并且两者都具有内部日记功能以适应突然的系统崩溃，否则此设置应保持为ON。但是，如果您的电源非常好，并且系统很少宕机并且有备份，那么将此设置设置为OFF可以使数据库性能提高近50％。"
 
@@ -17226,7 +17178,6 @@ msgstr "包%s导入失败"
 
 #: package_import.php:318
 #, fuzzy
-#| msgid "Enter a valid file path"
 msgid "Error: Invalid file path."
 msgstr "输入有效的文件路径"
 
@@ -17573,7 +17524,6 @@ msgstr "注意：已添加第二个仙人掌数据收集器。因此，自动启
 
 #: poller_automation.php:53
 #, fuzzy, php-format
-#| msgid "WARNING: Main Cacti database offline or in recovery"
 msgid "WARNING: Main Cacti database %s offline or in recovery"
 msgstr "警告：主 Cacti 数据库离线或正在恢复"
 
@@ -18318,7 +18268,6 @@ msgstr[0] "重复站点"
 
 #: sites.php:432
 #, fuzzy
-#| msgid "File not found"
 msgid "Site not found."
 msgstr "文件未找到"
 
@@ -18526,7 +18475,6 @@ msgstr "数字"
 
 #: tree.php:508
 #, fuzzy
-#| msgid "Permission Denied.  You do not have permission to the requested action."
 msgid "You do not have permission to modify this tree."
 msgstr "没有权限。您无权执行所请求的操作。"
 
@@ -19019,7 +18967,6 @@ msgstr "树权限"
 
 #: user_admin.php:1852
 #, fuzzy
-#| msgid "File not found"
 msgid "User not found."
 msgstr "文件未找到"
 
@@ -19034,7 +18981,6 @@ msgstr "用户管理"
 
 #: user_admin.php:2165
 #, fuzzy
-#| msgid "Groups"
 msgid "Group"
 msgstr "组"
 
@@ -19044,7 +18990,6 @@ msgstr "上次登录"
 
 #: user_admin.php:2192
 #, fuzzy
-#| msgid "1 Week"
 msgid "< 1 Week Ago"
 msgstr "1周"
 
@@ -19058,13 +19003,11 @@ msgstr ""
 
 #: user_admin.php:2195
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 2 Months Ago"
 msgstr "%d 月"
 
 #: user_admin.php:2196
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 4 Months Ago"
 msgstr "%d 月"
 
@@ -20253,7 +20196,6 @@ msgstr "严重级别: %s"
 
 #: vdef.php:163 vdef.php:570
 #, fuzzy
-#| msgid "File not found"
 msgid "VDEF not found."
 msgstr "文件未找到"
 
@@ -20363,6 +20305,15 @@ msgstr "没有VDEF"
 #~ msgid "Access Denied! Login failed."
 #~ msgstr "拒绝访问,用户帐号被禁用."
 
+#~ msgid "Attempted SQL Injection found in Tree Automation for the field variable."
+#~ msgstr "尝试在 Tree Automation 中发现字段变量的 SQL 注入。"
+
+#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
+#~ msgstr "某些Cacti插件需要使用不安全的JavaScript eval（）调用。如果选择此选项，则仙人掌中将允许它们。"
+
+#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
+#~ msgstr "允许不安全的JavaScript eval（）调用"
+
 #, fuzzy
 #~| msgid "Data Input Field"
 #~ msgid "Data Input Field not found."
@@ -20373,20 +20324,11 @@ msgstr "没有VDEF"
 #~ msgid "Data Input Method not found."
 #~ msgstr "未找到数据输入方法"
 
-#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
-#~ msgstr "允许不安全的JavaScript eval（）调用"
-
-#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
-#~ msgstr "某些Cacti插件需要使用不安全的JavaScript eval（）调用。如果选择此选项，则仙人掌中将允许它们。"
-
-#~ msgid "Variance Outliers"
-#~ msgstr "差异异常值"
+#~ msgid "Dry Run Variance"
+#~ msgstr "干运行差异"
 
 #~ msgid "Remove Variance"
 #~ msgstr "消除差异"
 
-#~ msgid "Dry Run Variance"
-#~ msgstr "干运行差异"
-
-#~ msgid "Attempted SQL Injection found in Tree Automation for the field variable."
-#~ msgstr "尝试在 Tree Automation 中发现字段变量的 SQL 注入。"
+#~ msgid "Variance Outliers"
+#~ msgstr "差异异常值"

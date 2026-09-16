@@ -45,7 +45,6 @@ msgstr "Τμήμα μενού κονσόλας"
 
 #: about.php:62
 #, fuzzy
-#| msgid "Contributors to Docuemntation, QA, Packaging, the Forums and our YouTube page."
 msgid "Contributors to Documentation, QA, Packaging, the Forums and our YouTube page."
 msgstr "Συνεισφέροντες στην Τεκμηρίωση, τη Διασφάλιση Ποιότητας, τη Συσκευασία, τα Φόρουμ και τη σελίδα μας στο YouTube."
 
@@ -371,7 +370,6 @@ msgstr "Προεπισκόπηση"
 
 #: aggregate_graphs.php:623
 #, fuzzy
-#| msgid "Aggregate Graphs Accessed does not Exist"
 msgid "Aggregate Graph Accessed does not Exist"
 msgstr "Συγκεντρωτικές ρυθμίσεις γραφήματος"
 
@@ -756,7 +754,6 @@ msgstr "Δεν βρέθηκαν συγκεντρωτικά γραφήματα"
 
 #: aggregate_templates.php:119 aggregate_templates.php:364
 #, fuzzy
-#| msgid "No Aggregate Templates Found"
 msgid "Aggregate Template not found."
 msgstr "Δεν βρέθηκαν σύνολα προτύπων"
 
@@ -962,7 +959,6 @@ msgstr "Αν νομίζετε ότι αυτό είναι λάθος. Επικο�
 
 #: auth_login.php:219
 #, fuzzy
-#| msgid "Access Denied!  User account disabled."
 msgid "Access Denied! User account locked."
 msgstr "Δεν επιτρέπεται η πρόσβαση, ο λογαριασμός χρήστη είναι απενεργοποιημένος."
 
@@ -1575,7 +1571,6 @@ msgstr "Μηνιαία την ημέρα"
 
 #: automation_networks.php:433
 #, fuzzy
-#| msgid "File not found"
 msgid "Network not found."
 msgstr "Το αρχείο δε βρέθηκε"
 
@@ -2491,7 +2486,6 @@ msgstr ""
 
 #: automation_tree_rules.php:189
 #, fuzzy
-#| msgid "The Field Name that shall be used for this Rule Item."
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "Το όνομα πεδίου που θα χρησιμοποιηθεί για αυτό το στοιχείο του κανόνα."
 
@@ -2941,7 +2935,6 @@ msgstr "Διαγραφή στοιχείου χρώματος"
 
 #: color_templates.php:389
 #, fuzzy
-#| msgid "No Color Templates Found"
 msgid "Color Template not found."
 msgstr "Δεν βρέθηκαν πρότυπα χρώματος"
 
@@ -2979,7 +2972,6 @@ msgstr "Δεν βρέθηκαν πρότυπα χρώματος"
 
 #: color_templates_items.php:277
 #, fuzzy
-#| msgid "Color Template Items"
 msgid "Color Template or Item not found."
 msgstr "Στοιχεία πρότυπου χρώματος"
 
@@ -3490,7 +3482,6 @@ msgstr "Διαγραφή πεδίου εισαγωγής δεδομένων"
 
 #: data_input.php:747
 #, fuzzy
-#| msgid "Update this Field"
 msgid "Update Whitelist"
 msgstr "Ενημερώστε αυτό το πεδίο"
 
@@ -4454,7 +4445,6 @@ msgstr "Διαγραφή προκαθορισμένων παραμέτρων GPR
 
 #: gprint_presets.php:188
 #, fuzzy
-#| msgid "GPRINT Preset"
 msgid "GPRINT Preset not found."
 msgstr "Προεπιλεγμένη ρύθμιση GPRINT"
 
@@ -4517,7 +4507,6 @@ msgstr "Προβολή γραφήματος"
 
 #: graph.php:115
 #, fuzzy
-#| msgid "Data Source does not exist."
 msgid "The Graph you requested does not exist."
 msgstr "Δεν υπάρχει πηγή δεδομένων."
 
@@ -4677,7 +4666,6 @@ msgstr "Δεν υπάρχουν είσοδοι"
 
 #: graph_templates.php:561
 #, fuzzy
-#| msgid "No Graph Templates Found"
 msgid "Graph Template not found."
 msgstr "Δεν βρέθηκαν πρότυπα γραφήματος"
 
@@ -6143,7 +6131,6 @@ msgstr "Δεν είναι δυνατός ο προσδιορισμός του μ
 
 #: include/global_arrays.php:313
 #, fuzzy
-#| msgid "Unable to increase size of password field, pleas check permission of db user"
 msgid "Unable to increase size of password field, please check permission of db user"
 msgstr "Δεν είναι δυνατή η αύξηση του μεγέθους του πεδίου κωδικού πρόσβασης, δικαίωμα ελέγχου πρόσβασης του χρήστη db"
 
@@ -6417,7 +6404,6 @@ msgstr "SHA-256"
 
 #: include/global_arrays.php:659
 #, fuzzy
-#| msgid "SHA-392"
 msgid "SHA-384"
 msgstr "SHA-392"
 
@@ -6479,7 +6465,6 @@ msgstr "TCP Ping"
 
 #: include/global_arrays.php:698
 #, fuzzy
-#| msgid "TCP Ping"
 msgid "TCP Ping Closed"
 msgstr "TCP Ping"
 
@@ -8986,7 +8971,6 @@ msgstr "Η μέθοδος Cacti θα χρησιμοποιήσει για να κ
 
 #: include/global_form.php:1277
 #, fuzzy
-#| msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>"
 msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 msgstr "Ο τύπος πακέτου ping που αποστέλλεται. <br> <i>ΣΗΜΕΙΩΣΗ: Το ICMP σε Linux / UNIX απαιτεί δικαιώματα root.</i>"
 
@@ -9988,7 +9972,6 @@ msgstr "Όταν επιλεγεί, οι προσπάθειες πρόσβαση�
 
 #: include/global_settings.php:501
 #, fuzzy
-#| msgid "Remote Data Collector Status:"
 msgid "Allow Unsafe Remote Data Collector HTTPS"
 msgstr "Κατάσταση απομακρυσμένης συλλογής δεδομένων:"
 
@@ -9998,7 +9981,6 @@ msgstr ""
 
 #: include/global_settings.php:507
 #, fuzzy
-#| msgid "The name of this Data Input Method."
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
 msgstr "Το όνομα αυτής της μεθόδου εισαγωγής δεδομένων."
 
@@ -10008,7 +9990,6 @@ msgstr ""
 
 #: include/global_settings.php:514
 #, fuzzy
-#| msgid "Content-Security Alternate Sources"
 msgid "Content-Security Script Policy"
 msgstr "Εναλλακτικές πηγές περιεχομένου-ασφάλειας"
 
@@ -10030,7 +10011,6 @@ msgstr ""
 
 #: include/global_settings.php:524 include/global_settings.php:539
 #, fuzzy
-#| msgid "Cacti Report"
 msgid "CSP Violation Report URI"
 msgstr "Έκθεση Cacti"
 
@@ -10431,7 +10411,6 @@ msgstr "Προεπιλεγμένος τύπος γράφου"
 
 #: include/global_settings.php:962
 #, fuzzy
-#| msgid "When creating graphs, what Graph Type would you like pre-selected?"
 msgid "When creating graphs, what Graph Type would you like preselected?"
 msgstr "Κατά τη δημιουργία γραφημάτων, ποιο είδος γραφήματος θα θέλατε προεπιλεγμένο;"
 
@@ -11130,7 +11109,6 @@ msgstr "Ιστορικό κωδικού πρόσβασης"
 
 #: include/global_settings.php:1641
 #, fuzzy
-#| msgid "Remember this number of old passwords and disallow re-using them."
 msgid "Remember this number of old passwords and disallow reusing them."
 msgstr "Θυμηθείτε αυτόν τον αριθμό των παλιών κωδικών πρόσβασης και αποκλείστε την επαναχρησιμοποίησή τους."
 
@@ -14160,7 +14138,6 @@ msgstr "Ανιχνεύθηκαν μη αποθηκευμένες αλλαγές"
 
 #: lib/html_form.php:1529
 #, fuzzy
-#| msgid "You have unsaved changes on this form.  If you press &#39;Continue&#39; these changes will be discarded.  Press &#39;Cancel&#39; to continue editing the form."
 msgid "You have unsaved changes on this form.  If you press 'Continue' these changes will be discarded.  Press 'Cancel' to continue editing the form."
 msgstr "Έχετε μη αποθηκευμένες αλλαγές σε αυτήν τη φόρμα. Εάν πατήσετε &#39;Συνέχεια&#39;, αυτές οι αλλαγές θα απορριφθούν. Πατήστε &#39;Ακύρωση&#39; για να συνεχίσετε την επεξεργασία της φόρμας."
 
@@ -15183,7 +15160,6 @@ msgstr "Απαιτείται"
 
 #: lib/installer.php:1917
 #, fuzzy
-#| msgid "The specificed value appears to be different in the running config versus the INI file."
 msgid "The specified value appears to be different in the running config versus the INI file."
 msgstr "Η συγκεκριμένη τιμή φαίνεται να είναι διαφορετική στην τρέχουσα διαμόρφωση έναντι του αρχείου INI."
 
@@ -15481,7 +15457,6 @@ msgstr "Επομένως, πριν από αρκετές εκδόσεις, το 
 
 #: lib/installer.php:2429
 #, fuzzy
-#| msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediatly disabled until the administrator validates that the Data Input Method is valid."
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "Ο τρόπος με τον οποίο λειτουργεί η λίστα επιτρεπόμενων είναι ότι όταν εισαγάγετε για πρώτη φορά μια μέθοδο εισαγωγής δεδομένων ή επαναλάβετε την εισαγωγή μιας μεθόδου εισαγωγής δεδομένων και το σενάριο ή / και τα αρχεία αλλάζουν με οποιονδήποτε τρόπο, η μέθοδος εισαγωγής δεδομένων και όλες οι αντίστοιχες πηγές δεδομένων απενεργοποιηθεί αμέσως έως ότου ο διαχειριστής επιβεβαιώσει ότι η μέθοδος εισαγωγής δεδομένων είναι έγκυρη."
 
@@ -16105,19 +16080,16 @@ msgstr "UDP επιτυχία Ping ( %s ms)"
 
 #: lib/ping.php:554
 #, fuzzy, php-format
-#| msgid "TCP Ping Success (%s ms)"
 msgid "TCP Ping Success Connection Refused (%s ms)"
 msgstr "Επιτυχία TCP Ping ( %s ms)"
 
 #: lib/ping.php:557
 #, fuzzy, php-format
-#| msgid "TCP ping: socket_connect(), reason: %s"
 msgid "TCP Ping Failed: socket_connect(), reason: %s"
 msgstr "TCP ping: socket_connect (), λόγος: %s"
 
 #: lib/ping.php:580
 #, fuzzy, php-format
-#| msgid "TCP ping: socket_select() failed, reason: %s"
 msgid "TCP Ping Failed: socket_select() failed, reason: %s"
 msgstr "TCP ping: socket_select () απέτυχε, λόγος: %s"
 
@@ -16249,7 +16221,6 @@ msgstr "Παράλειψη του στοιχείου γραφήματος ανα
 
 #: lib/rrd.php:1680
 #, fuzzy, php-format
-#| msgid "ERROR: RRDfile %s not writeable"
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "ΣΦΆΛΜΑ: ΤΟ αρχείο RRD %s δεν μπορεί να εγγραφεί"
 
@@ -16430,7 +16401,6 @@ msgstr "Άγνωστο σφάλμα RRDtool"
 #: lib/snmp.php:211 lib/snmp.php:311 lib/snmp.php:406 lib/snmp.php:738
 #: lib/snmp.php:753
 #, fuzzy, php-format
-#| msgid "SNMP Options [edit: %s]"
 msgid "SNMP Command is: %s"
 msgstr "Επιλογές SNMP [επεξεργασία: %s]"
 
@@ -16440,7 +16410,6 @@ msgstr ""
 
 #: lib/spikekill.php:189
 #, fuzzy, php-format
-#| msgid "XML: Cacti version does not exist."
 msgid "FATAL: File '%s' does not exist."
 msgstr "XML: Η έκδοση Cacti δεν υπάρχει."
 
@@ -16455,19 +16424,16 @@ msgstr ""
 
 #: lib/spikekill.php:259 lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Remove StdDev"
 msgid "StdDev"
 msgstr "Καταργήστε το StdDev"
 
 #: lib/spikekill.php:265 lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Variable"
 msgid "Variance"
 msgstr "Μεταβλητή"
 
 #: lib/spikekill.php:271
 #, fuzzy
-#| msgid "Gap Fill Range"
 msgid "Gap Fill"
 msgstr "Εύρος πλήρωσης χάσματος"
 
@@ -16522,13 +16488,11 @@ msgstr ""
 
 #: lib/spikekill.php:355
 #, fuzzy, php-format
-#| msgid "RRDfiles"
 msgid "RRDfile:       %s"
 msgstr "RRDfiles"
 
 #: lib/spikekill.php:356
 #, fuzzy, php-format
-#| msgid "Repair Steps [ %s ]"
 msgid "Repair Type:   %s"
 msgstr "Βήματα επιδιόρθωσης [ %s]"
 
@@ -16539,7 +16503,6 @@ msgstr ""
 
 #: lib/spikekill.php:360
 #, fuzzy, php-format
-#| msgid "Max Kills Per RRA"
 msgid "Max Kills:     %s"
 msgstr "Max Kills ανά RRA"
 
@@ -16549,7 +16512,6 @@ msgstr ""
 
 #: lib/spikekill.php:366
 #, fuzzy, php-format
-#| msgid "Standard Deviations"
 msgid "Standard Devs: %s"
 msgstr "Τυπικές αποκλίσεις"
 
@@ -16569,7 +16531,6 @@ msgstr ""
 
 #: lib/spikekill.php:375
 #, fuzzy
-#| msgid "Windows Related"
 msgid "Window Range:  All"
 msgstr "Σχετικά με τα Windows"
 
@@ -16623,7 +16584,6 @@ msgstr ""
 
 #: lib/spikekill.php:742
 #, fuzzy
-#| msgid "No Sites Found"
 msgid "NOTE: No Spikes Found."
 msgstr "Δεν βρέθηκαν ιστότοποι"
 
@@ -16639,19 +16599,16 @@ msgstr ""
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Avg:"
 msgid "Avg"
 msgstr "Μέσος όρος:"
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "CDEF"
 msgid "CF"
 msgstr "CDEF"
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "DES"
 msgid "DS"
 msgstr "DES"
 
@@ -16661,7 +16618,6 @@ msgstr ""
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Simple"
 msgid "Samples"
 msgstr "Απλό"
 
@@ -16671,19 +16627,16 @@ msgstr ""
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MaxValue"
 msgstr "Αξία"
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Dry Run StdDev"
 msgid "MinStdDev"
 msgstr "Dry Run StdDev"
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MinValue"
 msgstr "Αξία"
 
@@ -16799,7 +16752,6 @@ msgstr "Το InnoDB θα κρατήσει όσο το δυνατόν περισ�
 
 #: lib/utility.php:1347
 #, fuzzy
-#| msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accomodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Αυτές οι ρυθμίσεις θα πρέπει να παραμείνουν ΕΝΕΡΓΟ, εκτός εάν οι παρουσίες Cacti εκτελούνται είτε σε ZFS είτε σε FusionI / O, τα οποία έχουν και τα δύο εσωτερικά περιοδικά για να εξυπηρετήσουν απότομες διακοπές λειτουργίας του συστήματος. Ωστόσο, εάν έχετε πολύ καλή ισχύ και τα συστήματά σας σπάνια κατεβαίνουν και έχετε αντίγραφα ασφαλείας, η απενεργοποίηση αυτής της ρύθμισης μπορεί να σας οδηγήσει σε αύξηση σχεδόν 50% στην απόδοση της βάσης δεδομένων."
 
@@ -17267,7 +17219,6 @@ msgstr "Η εισαγωγή του πακέτου %s απέτυχε"
 
 #: package_import.php:318
 #, fuzzy
-#| msgid "Enter a valid file path"
 msgid "Error: Invalid file path."
 msgstr "Εισαγάγετε μια έγκυρη διαδρομή αρχείου"
 
@@ -17614,7 +17565,6 @@ msgstr "ΣΗΜΕΙΩΣΗ: Προστέθηκε ένας δεύτερος συλ�
 
 #: poller_automation.php:53
 #, fuzzy, php-format
-#| msgid "WARNING: Main Cacti database offline or in recovery"
 msgid "WARNING: Main Cacti database %s offline or in recovery"
 msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ: Κύρια βάση δεδομένων Cacti εκτός σύνδεσης ή σε ανάκτηση"
 
@@ -18372,7 +18322,6 @@ msgstr[1] "Αντιγραφή"
 
 #: sites.php:432
 #, fuzzy
-#| msgid "File not found"
 msgid "Site not found."
 msgstr "Το αρχείο δε βρέθηκε"
 
@@ -18580,7 +18529,6 @@ msgstr "αριθμητικός"
 
 #: tree.php:508
 #, fuzzy
-#| msgid "Permission Denied.  You do not have permission to the requested action."
 msgid "You do not have permission to modify this tree."
 msgstr "Η άδεια απορρίφθηκε. Δεν έχετε άδεια για την ενέργεια που ζητήσατε."
 
@@ -19081,7 +19029,6 @@ msgstr "Tree Perms"
 
 #: user_admin.php:1852
 #, fuzzy
-#| msgid "File not found"
 msgid "User not found."
 msgstr "Το αρχείο δε βρέθηκε"
 
@@ -19096,7 +19043,6 @@ msgstr "Διαχείριση χρηστών"
 
 #: user_admin.php:2165
 #, fuzzy
-#| msgid "Groups"
 msgid "Group"
 msgstr "Ομάδες"
 
@@ -19106,7 +19052,6 @@ msgstr "Τελευταία Σύνδεση"
 
 #: user_admin.php:2192
 #, fuzzy
-#| msgid "1 Week"
 msgid "< 1 Week Ago"
 msgstr "1 Εβδομάδα"
 
@@ -19120,13 +19065,11 @@ msgstr ""
 
 #: user_admin.php:2195
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 2 Months Ago"
 msgstr "% d Μήνας"
 
 #: user_admin.php:2196
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 4 Months Ago"
 msgstr "% d Μήνας"
 
@@ -20329,7 +20272,6 @@ msgstr "Επίπεδο σοβαρότητας: %s"
 
 #: vdef.php:163 vdef.php:570
 #, fuzzy
-#| msgid "File not found"
 msgid "VDEF not found."
 msgstr "Το αρχείο δε βρέθηκε"
 
@@ -20443,6 +20385,15 @@ msgstr "Δεν υπάρχουν VDEF"
 #~ msgid "Access Denied! Login failed."
 #~ msgstr "Δεν επιτρέπεται η πρόσβαση, ο λογαριασμός χρήστη είναι απενεργοποιημένος."
 
+#~ msgid "Attempted SQL Injection found in Tree Automation for the field variable."
+#~ msgstr "Η απόπειρα έγχυσης SQL βρέθηκε στο Tree Automation για τη μεταβλητή πεδίου."
+
+#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
+#~ msgstr "Ορισμένες προσθήκες Cacti απαιτούν τη χρήση μη ασφαλών κλήσεις JavaScript eval (). Εάν ορίσετε αυτήν την επιλογή, θα επιτρέπονται στο Cacti."
+
+#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
+#~ msgstr "Να επιτρέπονται μη ασφαλείς κλήσεις JavaScript eval ()"
+
 #, fuzzy
 #~| msgid "Data Input Field"
 #~ msgid "Data Input Field not found."
@@ -20453,20 +20404,11 @@ msgstr "Δεν υπάρχουν VDEF"
 #~ msgid "Data Input Method not found."
 #~ msgstr "Δεν βρέθηκαν μέθοδοι εισαγωγής δεδομένων"
 
-#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
-#~ msgstr "Να επιτρέπονται μη ασφαλείς κλήσεις JavaScript eval ()"
-
-#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
-#~ msgstr "Ορισμένες προσθήκες Cacti απαιτούν τη χρήση μη ασφαλών κλήσεις JavaScript eval (). Εάν ορίσετε αυτήν την επιλογή, θα επιτρέπονται στο Cacti."
-
-#~ msgid "Variance Outliers"
-#~ msgstr "Απόκλιση απόκλισης"
+#~ msgid "Dry Run Variance"
+#~ msgstr "Διακύμανση ξηρής λειτουργίας"
 
 #~ msgid "Remove Variance"
 #~ msgstr "Αφαιρέστε την Απόκλιση"
 
-#~ msgid "Dry Run Variance"
-#~ msgstr "Διακύμανση ξηρής λειτουργίας"
-
-#~ msgid "Attempted SQL Injection found in Tree Automation for the field variable."
-#~ msgstr "Η απόπειρα έγχυσης SQL βρέθηκε στο Tree Automation για τη μεταβλητή πεδίου."
+#~ msgid "Variance Outliers"
+#~ msgstr "Απόκλιση απόκλισης"

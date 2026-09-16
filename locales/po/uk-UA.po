@@ -369,7 +369,6 @@ msgstr "Попередній перегляд"
 
 #: aggregate_graphs.php:623
 #, fuzzy
-#| msgid "Aggregate Graphs Accessed does not Exist"
 msgid "Aggregate Graph Accessed does not Exist"
 msgstr "Доступні Агреговані Графіки не існують"
 
@@ -754,7 +753,6 @@ msgstr "Не знайдено Агрегованих Графіків"
 
 #: aggregate_templates.php:119 aggregate_templates.php:364
 #, fuzzy
-#| msgid "No Aggregate Templates Found"
 msgid "Aggregate Template not found."
 msgstr "Не знайдено Шаблонів Агрегування"
 
@@ -960,7 +958,6 @@ msgstr "Ви не маєте доступу до жодної частини Cac
 
 #: auth_login.php:219
 #, fuzzy
-#| msgid "Access Denied!  User account disabled."
 msgid "Access Denied! User account locked."
 msgstr "Обліковий запис користувача Вимкнено"
 
@@ -1573,7 +1570,6 @@ msgstr "Щомісяця вдень"
 
 #: automation_networks.php:433
 #, fuzzy
-#| msgid "No Networks Found"
 msgid "Network not found."
 msgstr "Мереж не знайдено"
 
@@ -2949,7 +2945,6 @@ msgstr "Видалити Елемент Кольору"
 
 #: color_templates.php:389
 #, fuzzy
-#| msgid "No Color Templates Found"
 msgid "Color Template not found."
 msgstr "Не знайдено Шаблонів Кольору"
 
@@ -2987,7 +2982,6 @@ msgstr "Не знайдено Шаблонів Кольору"
 
 #: color_templates_items.php:277
 #, fuzzy
-#| msgid "Color Template Items [new]"
 msgid "Color Template or Item not found."
 msgstr "Елементи Шаблону Кольору [новий]"
 
@@ -3499,7 +3493,6 @@ msgstr "Видалити Поле Введення Даних"
 
 #: data_input.php:747
 #, fuzzy
-#| msgid "Update this Field"
 msgid "Update Whitelist"
 msgstr "Оновити це Поле"
 
@@ -4484,7 +4477,6 @@ msgstr "Видалити Пресети GPRINT"
 
 #: gprint_presets.php:188
 #, fuzzy
-#| msgid "GPRINT Presets"
 msgid "GPRINT Preset not found."
 msgstr "Пресети GPRINT"
 
@@ -4547,7 +4539,6 @@ msgstr "Перегляд Графіка"
 
 #: graph.php:115
 #, fuzzy
-#| msgid "Aggregate Graphs Accessed does not Exist"
 msgid "The Graph you requested does not exist."
 msgstr "Доступні Агреговані Графіки не існують"
 
@@ -4707,7 +4698,6 @@ msgstr "Немає Введень"
 
 #: graph_templates.php:561
 #, fuzzy
-#| msgid "No Graph Templates Found"
 msgid "Graph Template not found."
 msgstr "Не знайдено Шаблонів Графіків"
 
@@ -10017,7 +10007,6 @@ msgstr ""
 
 #: include/global_settings.php:507
 #, fuzzy
-#| msgid "The name of this Data Input Method."
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
 msgstr "Ім'я цього Методу Введення Даних."
 
@@ -16430,7 +16419,6 @@ msgstr ""
 #: lib/snmp.php:211 lib/snmp.php:311 lib/snmp.php:406 lib/snmp.php:738
 #: lib/snmp.php:753
 #, fuzzy, php-format
-#| msgid "SNMP Options [edit: %s]"
 msgid "SNMP Command is: %s"
 msgstr "Опції SNMP [редагування: %s]"
 
@@ -16520,7 +16508,6 @@ msgstr ""
 
 #: lib/spikekill.php:356
 #, fuzzy, php-format
-#| msgid "Repair Steps [ %s ]"
 msgid "Repair Type:   %s"
 msgstr "Кроки Ремонту [ %s ]"
 
@@ -16611,7 +16598,6 @@ msgstr ""
 
 #: lib/spikekill.php:742
 #, fuzzy
-#| msgid "No Devices Found"
 msgid "NOTE: No Spikes Found."
 msgstr "Пристроїв не знайдено"
 
@@ -16627,13 +16613,11 @@ msgstr ""
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Avg:"
 msgid "Avg"
 msgstr "Avg:"
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "CDEF"
 msgid "CF"
 msgstr "CDEF"
 
@@ -16655,7 +16639,6 @@ msgstr ""
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MaxValue"
 msgstr "Значення"
 
@@ -16665,7 +16648,6 @@ msgstr ""
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MinValue"
 msgstr "Значення"
 
@@ -17250,7 +17232,6 @@ msgstr ""
 
 #: package_import.php:318
 #, fuzzy
-#| msgid "ERROR: Invalid Device ID."
 msgid "Error: Invalid file path."
 msgstr "ERROR: Невірний ID Пристрою."
 
@@ -19093,7 +19074,6 @@ msgstr ""
 
 #: user_admin.php:2165
 #, fuzzy
-#| msgid "User Groups"
 msgid "Group"
 msgstr "Групи Користувачів"
 
@@ -19103,7 +19083,6 @@ msgstr ""
 
 #: user_admin.php:2192
 #, fuzzy
-#| msgid "1 Week"
 msgid "< 1 Week Ago"
 msgstr "%d Тиждень"
 
@@ -19117,13 +19096,11 @@ msgstr ""
 
 #: user_admin.php:2195
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 2 Months Ago"
 msgstr "%d Місяців"
 
 #: user_admin.php:2196
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 4 Months Ago"
 msgstr "%d Місяців"
 

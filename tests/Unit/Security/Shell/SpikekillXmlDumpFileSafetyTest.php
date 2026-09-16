@@ -121,7 +121,8 @@ beforeEach(function () {
 		"  if [ -n \"\$RESTORE_STUB_STDERR_BYTES\" ]; then\n" .
 		"    head -c \"\$RESTORE_STUB_STDERR_BYTES\" /dev/zero | tr '\\0' 'e' >&2\n" .
 		"  fi\n" .
-		"  restore_exit=\"\${RESTORE_STUB_EXIT:-0}\"\n" .
+		"  printf restored-rrd-bytes > \"\$5\"\n" .
+        "  restore_exit=\"\${RESTORE_STUB_EXIT:-0}\"\n" .
 		"  if [ \"\$restore_exit\" != '0' ]; then\n" .
 		"    echo 'stub restore failed' >&2\n" .
 		"  fi\n" .

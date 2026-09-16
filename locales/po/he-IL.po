@@ -45,7 +45,6 @@ msgstr "מסוף תפריט סעיף"
 
 #: about.php:62
 #, fuzzy
-#| msgid "Contributors to Docuemntation, QA, Packaging, the Forums and our YouTube page."
 msgid "Contributors to Documentation, QA, Packaging, the Forums and our YouTube page."
 msgstr "תורמים ל - Docuemntation, ל - QA, ל - Packaging, לפורומים ולדף ה - YouTube שלנו."
 
@@ -371,7 +370,6 @@ msgstr "תצוגה מקדימה"
 
 #: aggregate_graphs.php:623
 #, fuzzy
-#| msgid "Aggregate Graphs Accessed does not Exist"
 msgid "Aggregate Graph Accessed does not Exist"
 msgstr "הגדרות גרף מצטברות"
 
@@ -756,7 +754,6 @@ msgstr "לא נמצאו גרפים מצטברים"
 
 #: aggregate_templates.php:119 aggregate_templates.php:364
 #, fuzzy
-#| msgid "No Aggregate Templates Found"
 msgid "Aggregate Template not found."
 msgstr "לא נמצאו תבניות מצטברות"
 
@@ -962,7 +959,6 @@ msgstr "אם אתה מרגיש שזאת טעות. אנא צור קשר עם מנ
 
 #: auth_login.php:219
 #, fuzzy
-#| msgid "Access Denied!  User account disabled."
 msgid "Access Denied! User account locked."
 msgstr "הגישה נדחתה, חשבון המשתמש מושבת."
 
@@ -1575,7 +1571,6 @@ msgstr "חודשי ביום"
 
 #: automation_networks.php:433
 #, fuzzy
-#| msgid "File not found"
 msgid "Network not found."
 msgstr "קובץ לא נמצא"
 
@@ -2491,7 +2486,6 @@ msgstr ""
 
 #: automation_tree_rules.php:189
 #, fuzzy
-#| msgid "The Field Name that shall be used for this Rule Item."
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "שם השדה שישמש לפריט זה."
 
@@ -2965,7 +2959,6 @@ msgstr "מחק פריט צבע"
 
 #: color_templates.php:389
 #, fuzzy
-#| msgid "No Color Templates Found"
 msgid "Color Template not found."
 msgstr "לא נמצאו תבניות צבע"
 
@@ -3003,7 +2996,6 @@ msgstr "לא נמצאו תבניות צבע"
 
 #: color_templates_items.php:277
 #, fuzzy
-#| msgid "Color Template Items"
 msgid "Color Template or Item not found."
 msgstr "פריטים תבנית צבע"
 
@@ -3517,7 +3509,6 @@ msgstr "מחק שדה קלט נתונים"
 
 #: data_input.php:747
 #, fuzzy
-#| msgid "Update this Field"
 msgid "Update Whitelist"
 msgstr "עדכן שדה זה"
 
@@ -4523,7 +4514,6 @@ msgstr "מחק הגדרות GPRINT קבועות מראש"
 
 #: gprint_presets.php:188
 #, fuzzy
-#| msgid "GPRINT Preset"
 msgid "GPRINT Preset not found."
 msgstr "GPRINT מראש"
 
@@ -4586,7 +4576,6 @@ msgstr "הצגת תרשים"
 
 #: graph.php:115
 #, fuzzy
-#| msgid "Data Source does not exist."
 msgid "The Graph you requested does not exist."
 msgstr "מקור הנתונים אינו קיים."
 
@@ -4746,7 +4735,6 @@ msgstr "אין תשומות"
 
 #: graph_templates.php:561
 #, fuzzy
-#| msgid "No Graph Templates Found"
 msgid "Graph Template not found."
 msgstr "לא נמצאו תבניות גרפים"
 
@@ -6212,7 +6200,6 @@ msgstr "לא ניתן לקבוע את גודל שדה הסיסמה, בדוק ה�
 
 #: include/global_arrays.php:313
 #, fuzzy
-#| msgid "Unable to increase size of password field, pleas check permission of db user"
 msgid "Unable to increase size of password field, please check permission of db user"
 msgstr "לא ניתן להגדיל את גודל שדה הסיסמה, התחנונים בודקים את הרשאת המשתמש db"
 
@@ -6486,7 +6473,6 @@ msgstr "SHA-256"
 
 #: include/global_arrays.php:659
 #, fuzzy
-#| msgid "SHA-392"
 msgid "SHA-384"
 msgstr "SHA-392"
 
@@ -6548,7 +6534,6 @@ msgstr "TCP Ping"
 
 #: include/global_arrays.php:698
 #, fuzzy
-#| msgid "TCP Ping"
 msgid "TCP Ping Closed"
 msgstr "TCP Ping"
 
@@ -9055,7 +9040,6 @@ msgstr "השיטה Cacti ישתמשו כדי לקבוע אם המארח זמין
 
 #: include/global_form.php:1277
 #, fuzzy
-#| msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>"
 msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 msgstr "סוג חבילת ping שנשלח. <br> <i>הערה: ICMP ב- Linux / UNIX מחייב הרשאות בסיס.</i>"
 
@@ -10057,7 +10041,6 @@ msgstr "כאשר מסומן, כל הניסיונות לגשת Cacti ינותבו
 
 #: include/global_settings.php:501
 #, fuzzy
-#| msgid "Remote Data Collector Status:"
 msgid "Allow Unsafe Remote Data Collector HTTPS"
 msgstr "נתונים מרוחקים מצב אספן:"
 
@@ -10067,7 +10050,6 @@ msgstr ""
 
 #: include/global_settings.php:507
 #, fuzzy
-#| msgid "The name of this Data Input Method."
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
 msgstr "השם של שיטת קלט נתונים זו."
 
@@ -10077,7 +10059,6 @@ msgstr ""
 
 #: include/global_settings.php:514
 #, fuzzy
-#| msgid "Content-Security Alternate Sources"
 msgid "Content-Security Script Policy"
 msgstr "מקורות חלופיים של אבטחת תוכן"
 
@@ -10099,7 +10080,6 @@ msgstr ""
 
 #: include/global_settings.php:524 include/global_settings.php:539
 #, fuzzy
-#| msgid "Cacti Report"
 msgid "CSP Violation Report URI"
 msgstr "דו&quot;ח קקט"
 
@@ -10500,7 +10480,6 @@ msgstr "סוג גרף ברירת מחדל"
 
 #: include/global_settings.php:962
 #, fuzzy
-#| msgid "When creating graphs, what Graph Type would you like pre-selected?"
 msgid "When creating graphs, what Graph Type would you like preselected?"
 msgstr "בעת יצירת גרפים, איזה סוג גרף תרצה לבחור מראש?"
 
@@ -11199,7 +11178,6 @@ msgstr "היסטוריית סיסמאות"
 
 #: include/global_settings.php:1641
 #, fuzzy
-#| msgid "Remember this number of old passwords and disallow re-using them."
 msgid "Remember this number of old passwords and disallow reusing them."
 msgstr "זכור מספר זה של סיסמאות ישנות וחסר שימוש חוזר בהן."
 
@@ -14229,7 +14207,6 @@ msgstr "התגלו שינויים שלא נשמרו"
 
 #: lib/html_form.php:1529
 #, fuzzy
-#| msgid "You have unsaved changes on this form.  If you press &#39;Continue&#39; these changes will be discarded.  Press &#39;Cancel&#39; to continue editing the form."
 msgid "You have unsaved changes on this form.  If you press 'Continue' these changes will be discarded.  Press 'Cancel' to continue editing the form."
 msgstr "יש לך שינויים שלא נשמרו בטופס זה. אם תלחץ על &#39;המשך&#39;, השינויים ימחקו. לחץ על &#39;ביטול&#39; כדי להמשיך לערוך את הטופס."
 
@@ -15252,7 +15229,6 @@ msgstr "נדרש"
 
 #: lib/installer.php:1917
 #, fuzzy
-#| msgid "The specificed value appears to be different in the running config versus the INI file."
 msgid "The specified value appears to be different in the running config versus the INI file."
 msgstr "נראה שהערך הספציפי שונה בתצורת ההפעלה לעומת קובץ ה - INI."
 
@@ -15550,7 +15526,6 @@ msgstr "לפיכך, לפני מספר גרסאות, שופרו הקקטוסים 
 
 #: lib/installer.php:2429
 #, fuzzy
-#| msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediatly disabled until the administrator validates that the Data Input Method is valid."
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "הדרך בה פועל רשימת ההיתרים היא שכאשר מייבאים לראשונה שיטת הזנת נתונים, או מייבאים מחדש שיטת הזנת נתונים, והתסריט או האזכורות משתנים בכל דרך שהיא, שיטת הזנת הנתונים וכל מקורות הנתונים המתאימים הושבת מייד עד שמנהל המערכת מאמת ששיטת הזנת הנתונים תקפה."
 
@@ -16174,19 +16149,16 @@ msgstr "UDP Ping הצלחה ( %s ms)"
 
 #: lib/ping.php:554
 #, fuzzy, php-format
-#| msgid "TCP Ping Success (%s ms)"
 msgid "TCP Ping Success Connection Refused (%s ms)"
 msgstr "TCP Ping הצלחה ( %s ms)"
 
 #: lib/ping.php:557
 #, fuzzy, php-format
-#| msgid "TCP ping: socket_connect(), reason: %s"
 msgid "TCP Ping Failed: socket_connect(), reason: %s"
 msgstr "TCP Ping: socket_connect (), סיבה: %s"
 
 #: lib/ping.php:580
 #, fuzzy, php-format
-#| msgid "TCP ping: socket_select() failed, reason: %s"
 msgid "TCP Ping Failed: socket_select() failed, reason: %s"
 msgstr "TCP ping: socket_select () נכשל, סיבה: %s"
 
@@ -16318,7 +16290,6 @@ msgstr "דלג על דוח גרף פריט &#39; <i> %s</i> &#39; כבר קיי�
 
 #: lib/rrd.php:1680
 #, fuzzy, php-format
-#| msgid "ERROR: RRDfile %s not writeable"
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "שגיאה: RRDfile %s לא ניתן לכתוב"
 
@@ -16499,7 +16470,6 @@ msgstr "שגיאת RRDtool לא ידועה"
 #: lib/snmp.php:211 lib/snmp.php:311 lib/snmp.php:406 lib/snmp.php:738
 #: lib/snmp.php:753
 #, fuzzy, php-format
-#| msgid "SNMP Options [edit: %s]"
 msgid "SNMP Command is: %s"
 msgstr "אפשרויות SNMP [עריכה: %s]"
 
@@ -16509,7 +16479,6 @@ msgstr ""
 
 #: lib/spikekill.php:189
 #, fuzzy, php-format
-#| msgid "XML: Cacti version does not exist."
 msgid "FATAL: File '%s' does not exist."
 msgstr "XML: גרסת Cacti אינה קיימת."
 
@@ -16524,19 +16493,16 @@ msgstr ""
 
 #: lib/spikekill.php:259 lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Remove StdDev"
 msgid "StdDev"
 msgstr "הסר את StdDev"
 
 #: lib/spikekill.php:265 lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Variable"
 msgid "Variance"
 msgstr "משתנה"
 
 #: lib/spikekill.php:271
 #, fuzzy
-#| msgid "Gap Fill Range"
 msgid "Gap Fill"
 msgstr "מילוי הפער טווח"
 
@@ -16591,13 +16557,11 @@ msgstr ""
 
 #: lib/spikekill.php:355
 #, fuzzy, php-format
-#| msgid "RRDfiles"
 msgid "RRDfile:       %s"
 msgstr "RRDfiles"
 
 #: lib/spikekill.php:356
 #, fuzzy, php-format
-#| msgid "Repair Steps [ %s ]"
 msgid "Repair Type:   %s"
 msgstr "שלבי תיקון [ %s]"
 
@@ -16608,7 +16572,6 @@ msgstr ""
 
 #: lib/spikekill.php:360
 #, fuzzy, php-format
-#| msgid "Max Kills Per RRA"
 msgid "Max Kills:     %s"
 msgstr "מקסימום הורג RRA"
 
@@ -16618,7 +16581,6 @@ msgstr ""
 
 #: lib/spikekill.php:366
 #, fuzzy, php-format
-#| msgid "Standard Deviations"
 msgid "Standard Devs: %s"
 msgstr "סטיות תקן"
 
@@ -16638,7 +16600,6 @@ msgstr ""
 
 #: lib/spikekill.php:375
 #, fuzzy
-#| msgid "Windows Related"
 msgid "Window Range:  All"
 msgstr "קשור לחלונות"
 
@@ -16692,7 +16653,6 @@ msgstr ""
 
 #: lib/spikekill.php:742
 #, fuzzy
-#| msgid "No Sites Found"
 msgid "NOTE: No Spikes Found."
 msgstr "לא נמצאו אתרים"
 
@@ -16708,19 +16668,16 @@ msgstr ""
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Avg:"
 msgid "Avg"
 msgstr "ממוצע:"
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "CDEF"
 msgid "CF"
 msgstr "CDEF"
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "DES"
 msgid "DS"
 msgstr "DES"
 
@@ -16730,7 +16687,6 @@ msgstr ""
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Simple"
 msgid "Samples"
 msgstr "פשוט"
 
@@ -16740,19 +16696,16 @@ msgstr ""
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MaxValue"
 msgstr "ערך"
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Dry Run StdDev"
 msgid "MinStdDev"
 msgstr "יבש לרוץ StdDev"
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MinValue"
 msgstr "ערך"
 
@@ -16868,7 +16821,6 @@ msgstr "InnoDB תקיים כמה טבלאות ואינדקסים בזיכרון 
 
 #: lib/utility.php:1347
 #, fuzzy
-#| msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accomodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "הגדרות אלה צריכות להישאר פועלות אלא אם כן מופעי הקקטוסים שלך פועלים בשני ZFS או ב- FusionI / O, שלשניהם יש יומן פנימי כדי לאפשר קריסות מערכת פתאומיות. עם זאת, אם יש לך כוח טוב מאוד, והמערכות שלך לעתים נדירות נופלות ויש לך גיבויים, הפיכת הגדרה זו למצב OFF יכולה להביא לעלייה כמעט של 50% בביצועי מסד הנתונים."
 
@@ -17342,7 +17294,6 @@ msgstr "הייבוא של החבילה %s נכשל"
 
 #: package_import.php:318
 #, fuzzy
-#| msgid "Enter a valid file path"
 msgid "Error: Invalid file path."
 msgstr "הזן נתיב קובץ חוקי"
 
@@ -17690,7 +17641,6 @@ msgstr "הערה: נוסף אספן נתונים של קקטוסים. לפיכך
 
 #: poller_automation.php:53
 #, fuzzy, php-format
-#| msgid "WARNING: Main Cacti database offline or in recovery"
 msgid "WARNING: Main Cacti database %s offline or in recovery"
 msgstr "אזהרה: מסד הנתונים הראשי של קקטוסים לא מקוון או בשחזור"
 
@@ -18474,7 +18424,6 @@ msgstr[3] "שכפל"
 
 #: sites.php:432
 #, fuzzy
-#| msgid "File not found"
 msgid "Site not found."
 msgstr "קובץ לא נמצא"
 
@@ -18682,7 +18631,6 @@ msgstr "מספריים"
 
 #: tree.php:508
 #, fuzzy
-#| msgid "Permission Denied.  You do not have permission to the requested action."
 msgid "You do not have permission to modify this tree."
 msgstr "ההרשאה נדחתה. אין לך הרשאה לפעולה המבוקשת."
 
@@ -19199,7 +19147,6 @@ msgstr "עץ"
 
 #: user_admin.php:1852
 #, fuzzy
-#| msgid "File not found"
 msgid "User not found."
 msgstr "קובץ לא נמצא"
 
@@ -19214,7 +19161,6 @@ msgstr "משתמש"
 
 #: user_admin.php:2165
 #, fuzzy
-#| msgid "Groups"
 msgid "Group"
 msgstr "קבוצות"
 
@@ -19224,7 +19170,6 @@ msgstr "התחברות אחרונה"
 
 #: user_admin.php:2192
 #, fuzzy
-#| msgid "1 Week"
 msgid "< 1 Week Ago"
 msgstr "שבוע"
 
@@ -19238,13 +19183,11 @@ msgstr ""
 
 #: user_admin.php:2195
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 2 Months Ago"
 msgstr "%d חודשים"
 
 #: user_admin.php:2196
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 4 Months Ago"
 msgstr "%d חודשים"
 
@@ -20474,7 +20417,6 @@ msgstr "רמת חומרה: %s"
 
 #: vdef.php:163 vdef.php:570
 #, fuzzy
-#| msgid "File not found"
 msgid "VDEF not found."
 msgstr "קובץ לא נמצא"
 
@@ -20596,6 +20538,15 @@ msgstr "אין VDEFs"
 #~ msgid "Access Denied! Login failed."
 #~ msgstr "הגישה נדחתה, חשבון המשתמש מושבת."
 
+#~ msgid "Attempted SQL Injection found in Tree Automation for the field variable."
+#~ msgstr "ניסיון הזרקת SQL נמצא באוטומציית עץ עבור משתנה השדה."
+
+#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
+#~ msgstr "תוספי קקטוסים מסוימים מחייבים שימוש בשיחות eval (JavaScript) לא בטוחות. אם תבחר באפשרות זו, הם יתאפשרו בקקטוסים."
+
+#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
+#~ msgstr "אפשר שיחות eval (JavaScript) לא בטוחות"
+
 #, fuzzy
 #~| msgid "Data Input Field"
 #~ msgid "Data Input Field not found."
@@ -20606,20 +20557,11 @@ msgstr "אין VDEFs"
 #~ msgid "Data Input Method not found."
 #~ msgstr "לא נמצאו שיטות קלט נתונים"
 
-#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
-#~ msgstr "אפשר שיחות eval (JavaScript) לא בטוחות"
-
-#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
-#~ msgstr "תוספי קקטוסים מסוימים מחייבים שימוש בשיחות eval (JavaScript) לא בטוחות. אם תבחר באפשרות זו, הם יתאפשרו בקקטוסים."
-
-#~ msgid "Variance Outliers"
-#~ msgstr "שונות חריגים"
+#~ msgid "Dry Run Variance"
+#~ msgstr "יבש"
 
 #~ msgid "Remove Variance"
 #~ msgstr "הסר שונות"
 
-#~ msgid "Dry Run Variance"
-#~ msgstr "יבש"
-
-#~ msgid "Attempted SQL Injection found in Tree Automation for the field variable."
-#~ msgstr "ניסיון הזרקת SQL נמצא באוטומציית עץ עבור משתנה השדה."
+#~ msgid "Variance Outliers"
+#~ msgstr "שונות חריגים"

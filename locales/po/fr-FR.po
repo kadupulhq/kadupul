@@ -40,7 +40,6 @@ msgstr "Mentions Honorables"
 
 #: about.php:62
 #, fuzzy
-#| msgid "Contributors to Docuemntation, QA, Packaging, the Forums and our YouTube page."
 msgid "Contributors to Documentation, QA, Packaging, the Forums and our YouTube page."
 msgstr "Contributeurs à la Documentation, à l'Assurance/Qualité, Distribution, aux Forums et à notre page YouTube."
 
@@ -366,7 +365,6 @@ msgstr "Aperçu"
 
 #: aggregate_graphs.php:623
 #, fuzzy
-#| msgid "Aggregate Graphs Accessed does not Exist"
 msgid "Aggregate Graph Accessed does not Exist"
 msgstr "Réglages du graphique agrégé"
 
@@ -751,7 +749,6 @@ msgstr "Aucun graphique agrégé trouvé"
 
 #: aggregate_templates.php:119 aggregate_templates.php:364
 #, fuzzy
-#| msgid "No Aggregate Templates Found"
 msgid "Aggregate Template not found."
 msgstr "Aucun modèle d'agrégat trouvé"
 
@@ -957,7 +954,6 @@ msgstr "Si vous pensez que c'est une erreur. Veuillez contacter votre administra
 
 #: auth_login.php:219
 #, fuzzy
-#| msgid "Access Denied!  User account disabled."
 msgid "Access Denied! User account locked."
 msgstr "Accès refusé, compte d'utilisateur désactivé."
 
@@ -1570,7 +1566,6 @@ msgstr "Mensuel le jour"
 
 #: automation_networks.php:433
 #, fuzzy
-#| msgid "File not found"
 msgid "Network not found."
 msgstr "Fichier non trouvé"
 
@@ -2486,7 +2481,6 @@ msgstr ""
 
 #: automation_tree_rules.php:189
 #, fuzzy
-#| msgid "The Field Name that shall be used for this Rule Item."
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "Le nom du champ qui doit être utilisé pour cet élément de règle."
 
@@ -2936,7 +2930,6 @@ msgstr "Supprimer un élément de couleur"
 
 #: color_templates.php:389
 #, fuzzy
-#| msgid "No Color Templates Found"
 msgid "Color Template not found."
 msgstr "Aucun modèle de couleur trouvé"
 
@@ -2974,7 +2967,6 @@ msgstr "Aucun modèle de couleur trouvé"
 
 #: color_templates_items.php:277
 #, fuzzy
-#| msgid "Color Template Items"
 msgid "Color Template or Item not found."
 msgstr "Éléments de modèle de couleur"
 
@@ -3484,7 +3476,6 @@ msgstr "Supprimer le champ de saisie des données"
 
 #: data_input.php:747
 #, fuzzy
-#| msgid "Update this Field"
 msgid "Update Whitelist"
 msgstr "Mettre à jour ce champ"
 
@@ -4448,7 +4439,6 @@ msgstr "Supprimer le(s) Preset(s) GPRINT(s)"
 
 #: gprint_presets.php:188
 #, fuzzy
-#| msgid "GPRINT Preset"
 msgid "GPRINT Preset not found."
 msgstr "GPRINT Préréglage"
 
@@ -4511,7 +4501,6 @@ msgstr "Voir le graphique"
 
 #: graph.php:115
 #, fuzzy
-#| msgid "Data Source does not exist."
 msgid "The Graph you requested does not exist."
 msgstr "La source de données n'existe pas."
 
@@ -4671,7 +4660,6 @@ msgstr "Pas d'entrées"
 
 #: graph_templates.php:561
 #, fuzzy
-#| msgid "No Graph Templates Found"
 msgid "Graph Template not found."
 msgstr "Aucun modèle de graphique trouvé"
 
@@ -6136,7 +6124,6 @@ msgstr "Impossible de déterminer la taille du champ mot de passe, veuillez vér
 
 #: include/global_arrays.php:313
 #, fuzzy
-#| msgid "Unable to increase size of password field, pleas check permission of db user"
 msgid "Unable to increase size of password field, please check permission of db user"
 msgstr "Impossible d'augmenter la taille du champ du mot de passe, veuillez vérifier la permission de l'utilisateur db"
 
@@ -6410,7 +6397,6 @@ msgstr "SHA-256"
 
 #: include/global_arrays.php:659
 #, fuzzy
-#| msgid "SHA-392"
 msgid "SHA-384"
 msgstr "SHA-392"
 
@@ -6472,7 +6458,6 @@ msgstr "Ping TCP"
 
 #: include/global_arrays.php:698
 #, fuzzy
-#| msgid "TCP Ping"
 msgid "TCP Ping Closed"
 msgstr "Ping TCP"
 
@@ -8979,7 +8964,6 @@ msgstr "C'est la méthode que Cacti utilisera pour vérifier qu'un hôte est dis
 
 #: include/global_form.php:1277
 #, fuzzy
-#| msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>"
 msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 msgstr "Le type de paquet ping à envoyer.  <br><i>NOTE : ICMP sous Linux/UNIX nécessite les privilèges root.</i>"
 
@@ -9981,7 +9965,6 @@ msgstr "Une fois cochée, toute tentative d'accès à Cacti sera redirigée vers
 
 #: include/global_settings.php:501
 #, fuzzy
-#| msgid "Remote Data Collector Status:"
 msgid "Allow Unsafe Remote Data Collector HTTPS"
 msgstr "État du collecteur de données à distance :"
 
@@ -9991,7 +9974,6 @@ msgstr ""
 
 #: include/global_settings.php:507
 #, fuzzy
-#| msgid "The name of this Data Input Method."
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
 msgstr "Le nom de cette méthode d'acquisition des données."
 
@@ -10001,7 +9983,6 @@ msgstr ""
 
 #: include/global_settings.php:514
 #, fuzzy
-#| msgid "Content-Security Alternate Sources"
 msgid "Content-Security Script Policy"
 msgstr "Sources alternatives de sécurité du contenu"
 
@@ -10023,7 +10004,6 @@ msgstr ""
 
 #: include/global_settings.php:524 include/global_settings.php:539
 #, fuzzy
-#| msgid "Cacti Report"
 msgid "CSP Violation Report URI"
 msgstr "Rapport Cacti"
 
@@ -10424,7 +10404,6 @@ msgstr "Type de graphique par défaut"
 
 #: include/global_settings.php:962
 #, fuzzy
-#| msgid "When creating graphs, what Graph Type would you like pre-selected?"
 msgid "When creating graphs, what Graph Type would you like preselected?"
 msgstr "Lors de la création de graphiques, quel type de graphique souhaitez-vous présélectionner ?"
 
@@ -11123,7 +11102,6 @@ msgstr "Historique de mot de passe"
 
 #: include/global_settings.php:1641
 #, fuzzy
-#| msgid "Remember this number of old passwords and disallow re-using them."
 msgid "Remember this number of old passwords and disallow reusing them."
 msgstr "Rappelez-vous ce nombre d'anciens mots de passe et n'autorisez pas leur réutilisation."
 
@@ -14153,7 +14131,6 @@ msgstr "Changements non sauvegardés détectés"
 
 #: lib/html_form.php:1529
 #, fuzzy
-#| msgid "You have unsaved changes on this form.  If you press &#39;Continue&#39; these changes will be discarded.  Press &#39;Cancel&#39; to continue editing the form."
 msgid "You have unsaved changes on this form.  If you press 'Continue' these changes will be discarded.  Press 'Cancel' to continue editing the form."
 msgstr "Vous avez des modifications non sauvegardées dans ce formulaire.  Si vous appuyez sur &#39;Continuer&#39; ces changements seront perdus.  Appuyez sur &#39;Annuler&#39; pour continuer l&#39;édition du formulaire."
 
@@ -15176,7 +15153,6 @@ msgstr "Requis"
 
 #: lib/installer.php:1917
 #, fuzzy
-#| msgid "The specificed value appears to be different in the running config versus the INI file."
 msgid "The specified value appears to be different in the running config versus the INI file."
 msgstr "La valeur spécifiée semble être différente dans la configuration en cours d'exécution par rapport au fichier INI."
 
@@ -15474,7 +15450,6 @@ msgstr "Par conséquent, il y a plusieurs versions, Cacti a été amélioré pou
 
 #: lib/installer.php:2429
 #, fuzzy
-#| msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediatly disabled until the administrator validates that the Data Input Method is valid."
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "La façon dont fonctionne la liste blanche est que lorsque vous importez pour la première fois une méthode d'entrée de données, ou que vous réimportez une méthode d'entrée de données, et que le script et / ou les aguments changent de quelque manière que ce soit, la méthode d'entrée de données et toutes les sources de données correspondantes être immédiatement désactivé jusqu'à ce que l'administrateur valide la validité de la méthode de saisie des données."
 
@@ -16098,19 +16073,16 @@ msgstr "UDP Ping Success (%s ms)"
 
 #: lib/ping.php:554
 #, fuzzy, php-format
-#| msgid "TCP Ping Success (%s ms)"
 msgid "TCP Ping Success Connection Refused (%s ms)"
 msgstr "TCP Ping Success (%s ms)"
 
 #: lib/ping.php:557
 #, fuzzy, php-format
-#| msgid "TCP ping: socket_connect(), reason: %s"
 msgid "TCP Ping Failed: socket_connect(), reason: %s"
 msgstr "TCP ping : socket_connect(), raison : %s"
 
 #: lib/ping.php:580
 #, fuzzy, php-format
-#| msgid "TCP ping: socket_select() failed, reason: %s"
 msgid "TCP Ping Failed: socket_select() failed, reason: %s"
 msgstr "TCP ping : socket_select() a échoué, raison : %s"
 
@@ -16242,7 +16214,6 @@ msgstr "Élément du graphique du rapport sauté'<i>%s</i>' Existe déjà"
 
 #: lib/rrd.php:1680
 #, fuzzy, php-format
-#| msgid "ERROR: RRDfile %s not writeable"
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "ERREUR : le fichier RRD %s n'est pas inscriptible"
 
@@ -16423,7 +16394,6 @@ msgstr "Inconnu Erreur RRDtool"
 #: lib/snmp.php:211 lib/snmp.php:311 lib/snmp.php:406 lib/snmp.php:738
 #: lib/snmp.php:753
 #, fuzzy, php-format
-#| msgid "SNMP Options [edit: %s]"
 msgid "SNMP Command is: %s"
 msgstr "Options SNMP [modifier : %s]"
 
@@ -16433,7 +16403,6 @@ msgstr ""
 
 #: lib/spikekill.php:189
 #, fuzzy, php-format
-#| msgid "XML: Cacti version does not exist."
 msgid "FATAL: File '%s' does not exist."
 msgstr "XML : La version Cacti n'existe pas."
 
@@ -16448,19 +16417,16 @@ msgstr ""
 
 #: lib/spikekill.php:259 lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Remove StdDev"
 msgid "StdDev"
 msgstr "Supprimer StdDev"
 
 #: lib/spikekill.php:265 lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Variable"
 msgid "Variance"
 msgstr "Variable"
 
 #: lib/spikekill.php:271
 #, fuzzy
-#| msgid "Gap Fill Range"
 msgid "Gap Fill"
 msgstr "Plage de remplissage de l'espace"
 
@@ -16515,13 +16481,11 @@ msgstr ""
 
 #: lib/spikekill.php:355
 #, fuzzy, php-format
-#| msgid "RRDfiles"
 msgid "RRDfile:       %s"
 msgstr "Fichiers RRD"
 
 #: lib/spikekill.php:356
 #, fuzzy, php-format
-#| msgid "Repair Steps [ %s ]"
 msgid "Repair Type:   %s"
 msgstr "Etapes de réparation [ %s ]"
 
@@ -16532,7 +16496,6 @@ msgstr ""
 
 #: lib/spikekill.php:360
 #, fuzzy, php-format
-#| msgid "Max Kills Per RRA"
 msgid "Max Kills:     %s"
 msgstr "Max tue par RRA"
 
@@ -16542,7 +16505,6 @@ msgstr ""
 
 #: lib/spikekill.php:366
 #, fuzzy, php-format
-#| msgid "Standard Deviations"
 msgid "Standard Devs: %s"
 msgstr "Écart type"
 
@@ -16562,7 +16524,6 @@ msgstr ""
 
 #: lib/spikekill.php:375
 #, fuzzy
-#| msgid "Windows Related"
 msgid "Window Range:  All"
 msgstr "Lié à Windows"
 
@@ -16616,7 +16577,6 @@ msgstr ""
 
 #: lib/spikekill.php:742
 #, fuzzy
-#| msgid "No Sites Found"
 msgid "NOTE: No Spikes Found."
 msgstr "Aucun site trouvé"
 
@@ -16632,19 +16592,16 @@ msgstr ""
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Avg:"
 msgid "Avg"
 msgstr "Moy.:"
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "CDEF"
 msgid "CF"
 msgstr "CDEF"
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "DES"
 msgid "DS"
 msgstr "DES"
 
@@ -16654,7 +16611,6 @@ msgstr ""
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Simple"
 msgid "Samples"
 msgstr "Simple"
 
@@ -16664,19 +16620,16 @@ msgstr ""
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MaxValue"
 msgstr "Valeur"
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Dry Run StdDev"
 msgid "MinStdDev"
 msgstr "Marche à sec StdDev"
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MinValue"
 msgstr "Valeur"
 
@@ -16792,7 +16745,6 @@ msgstr ""
 
 #: lib/utility.php:1347
 #, fuzzy
-#| msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accomodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Ces paramètres doivent rester activés à moins que vos instances Cacti ne s'exécutent sur ZFS ou FusionI / O qui ont tous deux une journalisation interne pour s'adapter aux pannes brusques du système. Cependant, si vous avez une très bonne alimentation et que vos systèmes tombent rarement en panne et que vous avez des sauvegardes, la désactivation de ce paramètre peut vous permettre d'augmenter de près de 50% les performances de la base de données."
 
@@ -17260,7 +17212,6 @@ msgstr "L'importation du package %s a échoué"
 
 #: package_import.php:318
 #, fuzzy
-#| msgid "Enter a valid file path"
 msgid "Error: Invalid file path."
 msgstr "Entrez un chemin d'accès valide"
 
@@ -17607,7 +17558,6 @@ msgstr "REMARQUE: Un deuxième collecteur de données Cacti a été ajouté. Par
 
 #: poller_automation.php:53
 #, fuzzy, php-format
-#| msgid "WARNING: Main Cacti database offline or in recovery"
 msgid "WARNING: Main Cacti database %s offline or in recovery"
 msgstr "AVERTISSEMENT : Base de données principale Cacti hors ligne ou en récupération"
 
@@ -18365,7 +18315,6 @@ msgstr[1] "Dupliquer"
 
 #: sites.php:432
 #, fuzzy
-#| msgid "File not found"
 msgid "Site not found."
 msgstr "Fichier non trouvé"
 
@@ -18573,7 +18522,6 @@ msgstr "numérique"
 
 #: tree.php:508
 #, fuzzy
-#| msgid "Permission Denied.  You do not have permission to the requested action."
 msgid "You do not have permission to modify this tree."
 msgstr "Permission refusée. Vous n'êtes pas autorisé à exécuter l'action demandée."
 
@@ -19074,7 +19022,6 @@ msgstr "Pérme d'arbre"
 
 #: user_admin.php:1852
 #, fuzzy
-#| msgid "File not found"
 msgid "User not found."
 msgstr "Fichier non trouvé"
 
@@ -19089,7 +19036,6 @@ msgstr "Gestion utilisateurs"
 
 #: user_admin.php:2165
 #, fuzzy
-#| msgid "Groups"
 msgid "Group"
 msgstr "Groupes"
 
@@ -19099,7 +19045,6 @@ msgstr "Dernière connection"
 
 #: user_admin.php:2192
 #, fuzzy
-#| msgid "1 Week"
 msgid "< 1 Week Ago"
 msgstr "1 Semaine"
 
@@ -19113,13 +19058,11 @@ msgstr ""
 
 #: user_admin.php:2195
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 2 Months Ago"
 msgstr "%d mois"
 
 #: user_admin.php:2196
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 4 Months Ago"
 msgstr "%d mois"
 
@@ -20321,7 +20264,6 @@ msgstr "Niveau de gravité : %s"
 
 #: vdef.php:163 vdef.php:570
 #, fuzzy
-#| msgid "File not found"
 msgid "VDEF not found."
 msgstr "Fichier non trouvé"
 
@@ -20435,6 +20377,15 @@ msgstr "Pas de VDEF"
 #~ msgid "Access Denied! Login failed."
 #~ msgstr "Accès refusé, compte d'utilisateur désactivé."
 
+#~ msgid "Attempted SQL Injection found in Tree Automation for the field variable."
+#~ msgstr "Tentative d'injection SQL trouvée dans Tree Automation pour la variable de champ."
+
+#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
+#~ msgstr "Certains plugins Cacti nécessitent l'utilisation d'appels JavaScript eval () non sécurisés. Si vous sélectionnez cette option, ils seront autorisés dans Cacti."
+
+#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
+#~ msgstr "Autoriser les appels eval () JavaScript non sécurisés"
+
 #, fuzzy
 #~| msgid "Data Input Field"
 #~ msgid "Data Input Field not found."
@@ -20445,20 +20396,11 @@ msgstr "Pas de VDEF"
 #~ msgid "Data Input Method not found."
 #~ msgstr "Aucune méthode d'acquisition de données trouvée"
 
-#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
-#~ msgstr "Autoriser les appels eval () JavaScript non sécurisés"
-
-#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
-#~ msgstr "Certains plugins Cacti nécessitent l'utilisation d'appels JavaScript eval () non sécurisés. Si vous sélectionnez cette option, ils seront autorisés dans Cacti."
-
-#~ msgid "Variance Outliers"
-#~ msgstr "Écart Valeurs aberrantes"
+#~ msgid "Dry Run Variance"
+#~ msgstr "Écart de marche à vide"
 
 #~ msgid "Remove Variance"
 #~ msgstr "Supprimer l'écart"
 
-#~ msgid "Dry Run Variance"
-#~ msgstr "Écart de marche à vide"
-
-#~ msgid "Attempted SQL Injection found in Tree Automation for the field variable."
-#~ msgstr "Tentative d'injection SQL trouvée dans Tree Automation pour la variable de champ."
+#~ msgid "Variance Outliers"
+#~ msgstr "Écart Valeurs aberrantes"

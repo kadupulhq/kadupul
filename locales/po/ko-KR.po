@@ -45,7 +45,6 @@ msgstr "콘솔 메뉴 섹션"
 
 #: about.php:62
 #, fuzzy
-#| msgid "Contributors to Docuemntation, QA, Packaging, the Forums and our YouTube page."
 msgid "Contributors to Documentation, QA, Packaging, the Forums and our YouTube page."
 msgstr "문서, QA, 포장, 포럼 및 YouTube 페이지의 기여자."
 
@@ -371,7 +370,6 @@ msgstr "미리보기"
 
 #: aggregate_graphs.php:623
 #, fuzzy
-#| msgid "Aggregate Graphs Accessed does not Exist"
 msgid "Aggregate Graph Accessed does not Exist"
 msgstr "그래프 설정 집계"
 
@@ -756,7 +754,6 @@ msgstr "누적 된 그래프 없음"
 
 #: aggregate_templates.php:119 aggregate_templates.php:364
 #, fuzzy
-#| msgid "No Aggregate Templates Found"
 msgid "Aggregate Template not found."
 msgstr "누적 된 템플릿 없음"
 
@@ -962,7 +959,6 @@ msgstr "이것이 오류라고 생각하면. Cacti 관리자에게 문의하십�
 
 #: auth_login.php:219
 #, fuzzy
-#| msgid "Access Denied!  User account disabled."
 msgid "Access Denied! User account locked."
 msgstr "액세스가 거부되었으며 사용자 계정이 비활성화되었습니다."
 
@@ -1575,7 +1571,6 @@ msgstr "매월 매일"
 
 #: automation_networks.php:433
 #, fuzzy
-#| msgid "File not found"
 msgid "Network not found."
 msgstr "파일을 찾을 수 없습니다."
 
@@ -2491,7 +2486,6 @@ msgstr ""
 
 #: automation_tree_rules.php:189
 #, fuzzy
-#| msgid "The Field Name that shall be used for this Rule Item."
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "이 규칙 항목에 사용될 필드 이름."
 
@@ -2929,7 +2923,6 @@ msgstr "색상 항목 삭제"
 
 #: color_templates.php:389
 #, fuzzy
-#| msgid "No Color Templates Found"
 msgid "Color Template not found."
 msgstr "색상 템플릿을 찾을 수 없음"
 
@@ -2967,7 +2960,6 @@ msgstr "색상 템플릿을 찾을 수 없음"
 
 #: color_templates_items.php:277
 #, fuzzy
-#| msgid "Color Template Items"
 msgid "Color Template or Item not found."
 msgstr "색상 템플릿 항목"
 
@@ -3475,7 +3467,6 @@ msgstr "데이터 입력 필드 삭제"
 
 #: data_input.php:747
 #, fuzzy
-#| msgid "Update this Field"
 msgid "Update Whitelist"
 msgstr "이 입력란 업데이트"
 
@@ -4418,7 +4409,6 @@ msgstr "GPRINT 프리셋 삭제"
 
 #: gprint_presets.php:188
 #, fuzzy
-#| msgid "GPRINT Preset"
 msgid "GPRINT Preset not found."
 msgstr "GPRINT 프리셋"
 
@@ -4481,7 +4471,6 @@ msgstr "그래프보기"
 
 #: graph.php:115
 #, fuzzy
-#| msgid "Data Source does not exist."
 msgid "The Graph you requested does not exist."
 msgstr "데이터 소스가 없습니다."
 
@@ -4641,7 +4630,6 @@ msgstr "입력 없음"
 
 #: graph_templates.php:561
 #, fuzzy
-#| msgid "No Graph Templates Found"
 msgid "Graph Template not found."
 msgstr "그래프 템플릿 없음"
 
@@ -6107,7 +6095,6 @@ msgstr "암호 필드의 크기를 확인할 수 없습니다. db 사용자의 �
 
 #: include/global_arrays.php:313
 #, fuzzy
-#| msgid "Unable to increase size of password field, pleas check permission of db user"
 msgid "Unable to increase size of password field, please check permission of db user"
 msgstr "암호 필드의 크기를 늘릴 수 없습니다. db 사용자의 허가를 확인하십시오."
 
@@ -6381,7 +6368,6 @@ msgstr "SHA-256"
 
 #: include/global_arrays.php:659
 #, fuzzy
-#| msgid "SHA-392"
 msgid "SHA-384"
 msgstr "SHA-392"
 
@@ -6443,7 +6429,6 @@ msgstr "TCP Ping"
 
 #: include/global_arrays.php:698
 #, fuzzy
-#| msgid "TCP Ping"
 msgid "TCP Ping Closed"
 msgstr "TCP Ping"
 
@@ -8950,7 +8935,6 @@ msgstr "Cacti가 호스트를 폴링에 사용할 수 있는지 확인하는 방
 
 #: include/global_form.php:1277
 #, fuzzy
-#| msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>"
 msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 msgstr "전송할 ping 패킷 유형입니다. <br> <i>참고 : Linux / UNIX의 ICMP에는 루트 권한이 필요합니다.</i>"
 
@@ -9952,7 +9936,6 @@ msgstr "이 옵션을 선택하면 Cacti에 액세스하려는 모든 시도가 
 
 #: include/global_settings.php:501
 #, fuzzy
-#| msgid "Remote Data Collector Status:"
 msgid "Allow Unsafe Remote Data Collector HTTPS"
 msgstr "원격 데이터 수집기 상태 :"
 
@@ -9962,7 +9945,6 @@ msgstr ""
 
 #: include/global_settings.php:507
 #, fuzzy
-#| msgid "The name of this Data Input Method."
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
 msgstr "이 데이터 입력 메소드의 이름."
 
@@ -9972,7 +9954,6 @@ msgstr ""
 
 #: include/global_settings.php:514
 #, fuzzy
-#| msgid "Content-Security Alternate Sources"
 msgid "Content-Security Script Policy"
 msgstr "콘텐츠 보안 대체 소스"
 
@@ -9994,7 +9975,6 @@ msgstr ""
 
 #: include/global_settings.php:524 include/global_settings.php:539
 #, fuzzy
-#| msgid "Cacti Report"
 msgid "CSP Violation Report URI"
 msgstr "선인장 보고서"
 
@@ -10395,7 +10375,6 @@ msgstr "기본 그래프 유형"
 
 #: include/global_settings.php:962
 #, fuzzy
-#| msgid "When creating graphs, what Graph Type would you like pre-selected?"
 msgid "When creating graphs, what Graph Type would you like preselected?"
 msgstr "그래프를 만들 때 어떤 그래프 유형을 미리 선택 하시겠습니까?"
 
@@ -11095,7 +11074,6 @@ msgstr "비밀번호 기록"
 
 #: include/global_settings.php:1641
 #, fuzzy
-#| msgid "Remember this number of old passwords and disallow re-using them."
 msgid "Remember this number of old passwords and disallow reusing them."
 msgstr "이 이전 암호 수를 기억하고 암호를 다시 사용하지 못하게하십시오."
 
@@ -14125,7 +14103,6 @@ msgstr "저장되지 않은 변경 사항이 감지되었습니다."
 
 #: lib/html_form.php:1529
 #, fuzzy
-#| msgid "You have unsaved changes on this form.  If you press &#39;Continue&#39; these changes will be discarded.  Press &#39;Cancel&#39; to continue editing the form."
 msgid "You have unsaved changes on this form.  If you press 'Continue' these changes will be discarded.  Press 'Cancel' to continue editing the form."
 msgstr "이 양식에 변경 사항을 저장하지 않았습니다. &#39;계속&#39;을 누르면 이러한 변경 사항이 삭제됩니다. 양식 편집을 계속하려면 &#39;취소&#39;를 누르십시오."
 
@@ -15148,7 +15125,6 @@ msgstr "필수"
 
 #: lib/installer.php:1917
 #, fuzzy
-#| msgid "The specificed value appears to be different in the running config versus the INI file."
 msgid "The specified value appears to be different in the running config versus the INI file."
 msgstr "지정된 값은 INI 파일과 달리 실행 중인 구성에서 다른 것으로 나타납니다."
 
@@ -15446,7 +15422,6 @@ msgstr "따라서 여러 버전 전에 Cacti는 이러한 유형의 데이터 �
 
 #: lib/installer.php:2429
 #, fuzzy
-#| msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediatly disabled until the administrator validates that the Data Input Method is valid."
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "허용 목록이 작동하는 방식은 데이터 입력 방법을 처음 가져 오거나 데이터 입력 방법을 다시 가져 오면 스크립트 및 / 또는 인수가 어떤 식 으로든 데이터 입력 방법과 해당하는 모든 데이터 소스가 변경되는 방식입니다 관리자가 데이터 입력 방법이 유효한지 확인할 때까지 즉시 비활성화하십시오."
 
@@ -16070,19 +16045,16 @@ msgstr "UDP Ping 성공 ( %s 밀리 초)"
 
 #: lib/ping.php:554
 #, fuzzy, php-format
-#| msgid "TCP Ping Success (%s ms)"
 msgid "TCP Ping Success Connection Refused (%s ms)"
 msgstr "TCP Ping 성공 ( %s 밀리 초)"
 
 #: lib/ping.php:557
 #, fuzzy, php-format
-#| msgid "TCP ping: socket_connect(), reason: %s"
 msgid "TCP Ping Failed: socket_connect(), reason: %s"
 msgstr "TCP ping : socket_connect (), 이유 :  %s"
 
 #: lib/ping.php:580
 #, fuzzy, php-format
-#| msgid "TCP ping: socket_select() failed, reason: %s"
 msgid "TCP Ping Failed: socket_select() failed, reason: %s"
 msgstr "TCP ping : socket_select ()가 실패했습니다. 이유는  %s입니다."
 
@@ -16214,7 +16186,6 @@ msgstr "건너 뛴 보고서 그래프 항목 &#39; <i> %s</i> &#39;이 (가) �
 
 #: lib/rrd.php:1680
 #, fuzzy, php-format
-#| msgid "ERROR: RRDfile %s not writeable"
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "오류 : RRD 파일  %s을 (를) 쓸 수 없습니다."
 
@@ -16395,7 +16366,6 @@ msgstr "알 수없는 RRDtool 오류"
 #: lib/snmp.php:211 lib/snmp.php:311 lib/snmp.php:406 lib/snmp.php:738
 #: lib/snmp.php:753
 #, fuzzy, php-format
-#| msgid "SNMP Options [edit: %s]"
 msgid "SNMP Command is: %s"
 msgstr "SNMP 옵션 [편집 :  %s]"
 
@@ -16405,7 +16375,6 @@ msgstr ""
 
 #: lib/spikekill.php:189
 #, fuzzy, php-format
-#| msgid "XML: Cacti version does not exist."
 msgid "FATAL: File '%s' does not exist."
 msgstr "XML : Cacti 버전이 존재하지 않습니다."
 
@@ -16420,19 +16389,16 @@ msgstr ""
 
 #: lib/spikekill.php:259 lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Remove StdDev"
 msgid "StdDev"
 msgstr "StdDev 제거"
 
 #: lib/spikekill.php:265 lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Variable"
 msgid "Variance"
 msgstr "변수"
 
 #: lib/spikekill.php:271
 #, fuzzy
-#| msgid "Gap Fill Range"
 msgid "Gap Fill"
 msgstr "갭 필 범위"
 
@@ -16487,13 +16453,11 @@ msgstr ""
 
 #: lib/spikekill.php:355
 #, fuzzy, php-format
-#| msgid "RRDfiles"
 msgid "RRDfile:       %s"
 msgstr "RRD 파일"
 
 #: lib/spikekill.php:356
 #, fuzzy, php-format
-#| msgid "Repair Steps [ %s ]"
 msgid "Repair Type:   %s"
 msgstr "복구 단계 [ %s]"
 
@@ -16504,7 +16468,6 @@ msgstr ""
 
 #: lib/spikekill.php:360
 #, fuzzy, php-format
-#| msgid "Max Kills Per RRA"
 msgid "Max Kills:     %s"
 msgstr "RRA 당 최대 사망자 수"
 
@@ -16514,7 +16477,6 @@ msgstr ""
 
 #: lib/spikekill.php:366
 #, fuzzy, php-format
-#| msgid "Standard Deviations"
 msgid "Standard Devs: %s"
 msgstr "표준 편차"
 
@@ -16534,7 +16496,6 @@ msgstr ""
 
 #: lib/spikekill.php:375
 #, fuzzy
-#| msgid "Windows Related"
 msgid "Window Range:  All"
 msgstr "Windows 관련"
 
@@ -16588,7 +16549,6 @@ msgstr ""
 
 #: lib/spikekill.php:742
 #, fuzzy
-#| msgid "No Sites Found"
 msgid "NOTE: No Spikes Found."
 msgstr "찾을 수있는 사이트가 없습니다."
 
@@ -16604,19 +16564,16 @@ msgstr ""
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Avg:"
 msgid "Avg"
 msgstr "평균 :"
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "CDEF"
 msgid "CF"
 msgstr "CDEF"
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "DES"
 msgid "DS"
 msgstr "DES"
 
@@ -16626,7 +16583,6 @@ msgstr ""
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Simple"
 msgid "Samples"
 msgstr "단순"
 
@@ -16636,19 +16592,16 @@ msgstr ""
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MaxValue"
 msgstr "값"
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Dry Run StdDev"
 msgid "MinStdDev"
 msgstr "드라이 런 StdDev"
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MinValue"
 msgstr "값"
 
@@ -16764,7 +16717,6 @@ msgstr "InnoDB는 가능한 많은 테이블과 인덱스를 시스템 메모리
 
 #: lib/utility.php:1347
 #, fuzzy
-#| msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accomodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "갑작스러운 시스템 충돌을 수용하기 위해 내부 저널링이있는 ZFS 또는 FusionI / O에서 Cacti 인스턴스를 실행하지 않는 한이 설정은 ON으로 유지되어야합니다. 그러나 전원이 매우 양호하고 시스템이 거의 다운되지 않고 백업이있는 경우이 설정을 끄면 데이터베이스 성능이 거의 50 % 향상 될 수 있습니다."
 
@@ -17229,7 +17181,6 @@ msgstr "패키지 %s 가져오기 실패"
 
 #: package_import.php:318
 #, fuzzy
-#| msgid "Enter a valid file path"
 msgid "Error: Invalid file path."
 msgstr "유효한 파일 경로를 입력하십시오."
 
@@ -17576,7 +17527,6 @@ msgstr "참고 : 두 번째 Cacti 데이터 수집기가 추가되었습니다. 
 
 #: poller_automation.php:53
 #, fuzzy, php-format
-#| msgid "WARNING: Main Cacti database offline or in recovery"
 msgid "WARNING: Main Cacti database %s offline or in recovery"
 msgstr "경고: 주요 Cacti 데이터베이스가 오프라인이거나 복구 중입니다."
 
@@ -18321,7 +18271,6 @@ msgstr[0] "사이트 복제하기"
 
 #: sites.php:432
 #, fuzzy
-#| msgid "File not found"
 msgid "Site not found."
 msgstr "파일을 찾을 수 없습니다."
 
@@ -18529,7 +18478,6 @@ msgstr "숫자"
 
 #: tree.php:508
 #, fuzzy
-#| msgid "Permission Denied.  You do not have permission to the requested action."
 msgid "You do not have permission to modify this tree."
 msgstr "권한이 거부되었습니다. 요청한 작업에 대한 권한이 없습니다."
 
@@ -19022,7 +18970,6 @@ msgstr "트리 퍼밋"
 
 #: user_admin.php:1852
 #, fuzzy
-#| msgid "File not found"
 msgid "User not found."
 msgstr "파일을 찾을 수 없습니다."
 
@@ -19037,7 +18984,6 @@ msgstr "사용자 관리"
 
 #: user_admin.php:2165
 #, fuzzy
-#| msgid "Groups"
 msgid "Group"
 msgstr "그룹"
 
@@ -19047,7 +18993,6 @@ msgstr "최근 로그인"
 
 #: user_admin.php:2192
 #, fuzzy
-#| msgid "1 Week"
 msgid "< 1 Week Ago"
 msgstr "1주"
 
@@ -19061,13 +19006,11 @@ msgstr ""
 
 #: user_admin.php:2195
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 2 Months Ago"
 msgstr "개월 % d 개월"
 
 #: user_admin.php:2196
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 4 Months Ago"
 msgstr "개월 % d 개월"
 
@@ -20257,7 +20200,6 @@ msgstr "심각도 수준 :  %s"
 
 #: vdef.php:163 vdef.php:570
 #, fuzzy
-#| msgid "File not found"
 msgid "VDEF not found."
 msgstr "파일을 찾을 수 없습니다."
 
@@ -20367,6 +20309,15 @@ msgstr "VDEF 없음"
 #~ msgid "Access Denied! Login failed."
 #~ msgstr "액세스가 거부되었으며 사용자 계정이 비활성화되었습니다."
 
+#~ msgid "Attempted SQL Injection found in Tree Automation for the field variable."
+#~ msgstr "필드 변수에 대한 트리 자동화에서 시도된 SQL 주입이 발견되었습니다."
+
+#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
+#~ msgstr "특정 Cacti 플러그인은 안전하지 않은 JavaScript eval () 호출을 사용해야합니다. 이 옵션을 선택하면 Cacti에서 허용됩니다."
+
+#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
+#~ msgstr "안전하지 않은 JavaScript eval () 호출 허용"
+
 #, fuzzy
 #~| msgid "Data Input Field"
 #~ msgid "Data Input Field not found."
@@ -20377,20 +20328,11 @@ msgstr "VDEF 없음"
 #~ msgid "Data Input Method not found."
 #~ msgstr "데이터 입력 방법을 찾을 수 없음"
 
-#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
-#~ msgstr "안전하지 않은 JavaScript eval () 호출 허용"
-
-#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
-#~ msgstr "특정 Cacti 플러그인은 안전하지 않은 JavaScript eval () 호출을 사용해야합니다. 이 옵션을 선택하면 Cacti에서 허용됩니다."
-
-#~ msgid "Variance Outliers"
-#~ msgstr "분산 이상 치"
+#~ msgid "Dry Run Variance"
+#~ msgstr "드라이 런 차이"
 
 #~ msgid "Remove Variance"
 #~ msgstr "차이 제거"
 
-#~ msgid "Dry Run Variance"
-#~ msgstr "드라이 런 차이"
-
-#~ msgid "Attempted SQL Injection found in Tree Automation for the field variable."
-#~ msgstr "필드 변수에 대한 트리 자동화에서 시도된 SQL 주입이 발견되었습니다."
+#~ msgid "Variance Outliers"
+#~ msgstr "분산 이상 치"

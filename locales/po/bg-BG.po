@@ -40,7 +40,6 @@ msgstr "Секция на менюто на конзолата"
 
 #: about.php:62
 #, fuzzy
-#| msgid "Contributors to Docuemntation, QA, Packaging, the Forums and our YouTube page."
 msgid "Contributors to Documentation, QA, Packaging, the Forums and our YouTube page."
 msgstr "Сътрудници на Docuemntation, QA, Packaging, форумите и страницата ни в YouTube."
 
@@ -366,7 +365,6 @@ msgstr "Преглед"
 
 #: aggregate_graphs.php:623
 #, fuzzy
-#| msgid "Aggregate Graphs Accessed does not Exist"
 msgid "Aggregate Graph Accessed does not Exist"
 msgstr "Общи настройки на графиката"
 
@@ -751,7 +749,6 @@ msgstr "Не са намерени общи графики"
 
 #: aggregate_templates.php:119 aggregate_templates.php:364
 #, fuzzy
-#| msgid "No Aggregate Templates Found"
 msgid "Aggregate Template not found."
 msgstr "Не са намерени общи шаблони"
 
@@ -957,7 +954,6 @@ msgstr "Ако смятате, че това е грешка. Моля, свър
 
 #: auth_login.php:219
 #, fuzzy
-#| msgid "Access Denied!  User account disabled."
 msgid "Access Denied! User account locked."
 msgstr "Отказан достъп, потребителският профил е деактивиран."
 
@@ -1570,7 +1566,6 @@ msgstr "Месечно на ден"
 
 #: automation_networks.php:433
 #, fuzzy
-#| msgid "File not found"
 msgid "Network not found."
 msgstr "Файлът не е открит"
 
@@ -2486,7 +2481,6 @@ msgstr ""
 
 #: automation_tree_rules.php:189
 #, fuzzy
-#| msgid "The Field Name that shall be used for this Rule Item."
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "Името на полето, което ще се използва за това правило."
 
@@ -2936,7 +2930,6 @@ msgstr "Изтриване на цвят"
 
 #: color_templates.php:389
 #, fuzzy
-#| msgid "No Color Templates Found"
 msgid "Color Template not found."
 msgstr "Няма намерени шаблони за цвят"
 
@@ -2974,7 +2967,6 @@ msgstr "Няма намерени шаблони за цвят"
 
 #: color_templates_items.php:277
 #, fuzzy
-#| msgid "Color Template Items"
 msgid "Color Template or Item not found."
 msgstr "Елементи на цветни шаблони"
 
@@ -3484,7 +3476,6 @@ msgstr "Изтриване на полето за въвеждане на дан
 
 #: data_input.php:747
 #, fuzzy
-#| msgid "Update this Field"
 msgid "Update Whitelist"
 msgstr "Актуализирайте това поле"
 
@@ -4448,7 +4439,6 @@ msgstr "Изтриване на предварителните настройк�
 
 #: gprint_presets.php:188
 #, fuzzy
-#| msgid "GPRINT Preset"
 msgid "GPRINT Preset not found."
 msgstr "Предварително зададени GPRINT"
 
@@ -4511,7 +4501,6 @@ msgstr "Преглед на графиката"
 
 #: graph.php:115
 #, fuzzy
-#| msgid "Data Source does not exist."
 msgid "The Graph you requested does not exist."
 msgstr "Източникът на данни не съществува."
 
@@ -4671,7 +4660,6 @@ msgstr "Няма входни данни"
 
 #: graph_templates.php:561
 #, fuzzy
-#| msgid "No Graph Templates Found"
 msgid "Graph Template not found."
 msgstr "Не са намерени шаблони на графиките"
 
@@ -6136,7 +6124,6 @@ msgstr "Не може да се определи полето за размер�
 
 #: include/global_arrays.php:313
 #, fuzzy
-#| msgid "Unable to increase size of password field, pleas check permission of db user"
 msgid "Unable to increase size of password field, please check permission of db user"
 msgstr "Невъзможно е да се увеличи полето за размера на паролата, да се провери разрешението на db потребител"
 
@@ -6410,7 +6397,6 @@ msgstr "SHA-256"
 
 #: include/global_arrays.php:659
 #, fuzzy
-#| msgid "SHA-392"
 msgid "SHA-384"
 msgstr "SHA-392"
 
@@ -6472,7 +6458,6 @@ msgstr "TCP Ping"
 
 #: include/global_arrays.php:698
 #, fuzzy
-#| msgid "TCP Ping"
 msgid "TCP Ping Closed"
 msgstr "TCP Ping"
 
@@ -8979,7 +8964,6 @@ msgstr "Методът Cacti ще използва, за да определи �
 
 #: include/global_form.php:1277
 #, fuzzy
-#| msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>"
 msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 msgstr "Типът на изпратения ping пакет. <br> <i>ЗАБЕЛЕЖКА: ICMP на Linux / UNIX изисква привилегии на root.</i>"
 
@@ -9981,7 +9965,6 @@ msgstr "Когато е отметнато, всички опити за дос�
 
 #: include/global_settings.php:501
 #, fuzzy
-#| msgid "Remote Data Collector Status:"
 msgid "Allow Unsafe Remote Data Collector HTTPS"
 msgstr "Състояние на колектора за отдалечени данни:"
 
@@ -9991,7 +9974,6 @@ msgstr ""
 
 #: include/global_settings.php:507
 #, fuzzy
-#| msgid "The name of this Data Input Method."
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
 msgstr "Името на този метод за въвеждане на данни."
 
@@ -10001,7 +9983,6 @@ msgstr ""
 
 #: include/global_settings.php:514
 #, fuzzy
-#| msgid "Content-Security Alternate Sources"
 msgid "Content-Security Script Policy"
 msgstr "Алтернативни източници за защита на съдържанието"
 
@@ -10023,7 +10004,6 @@ msgstr ""
 
 #: include/global_settings.php:524 include/global_settings.php:539
 #, fuzzy
-#| msgid "Cacti Report"
 msgid "CSP Violation Report URI"
 msgstr "Cacti Report"
 
@@ -10424,7 +10404,6 @@ msgstr "Тип на графиката по подразбиране"
 
 #: include/global_settings.php:962
 #, fuzzy
-#| msgid "When creating graphs, what Graph Type would you like pre-selected?"
 msgid "When creating graphs, what Graph Type would you like preselected?"
 msgstr "Когато създавате графики, какъв тип графика бихте искали предварително избрани?"
 
@@ -11123,7 +11102,6 @@ msgstr "История на паролите"
 
 #: include/global_settings.php:1641
 #, fuzzy
-#| msgid "Remember this number of old passwords and disallow re-using them."
 msgid "Remember this number of old passwords and disallow reusing them."
 msgstr "Запомни този брой стари пароли и забрани повторното им използване."
 
@@ -14153,7 +14131,6 @@ msgstr "Открити са незапазени промени"
 
 #: lib/html_form.php:1529
 #, fuzzy
-#| msgid "You have unsaved changes on this form.  If you press &#39;Continue&#39; these changes will be discarded.  Press &#39;Cancel&#39; to continue editing the form."
 msgid "You have unsaved changes on this form.  If you press 'Continue' these changes will be discarded.  Press 'Cancel' to continue editing the form."
 msgstr "Имате незапазени промени в този формуляр. Ако натиснете „Напред“, тези промени ще бъдат отхвърлени. Натиснете &quot;Отказ&quot;, за да продължите редактирането на формуляра."
 
@@ -15176,7 +15153,6 @@ msgstr "Задължително"
 
 #: lib/installer.php:1917
 #, fuzzy
-#| msgid "The specificed value appears to be different in the running config versus the INI file."
 msgid "The specified value appears to be different in the running config versus the INI file."
 msgstr "Специфичната стойност изглежда е различна в текущия конфигурационен файл спрямо файла INI."
 
@@ -15474,7 +15450,6 @@ msgstr "Ето защо, преди няколко версии, Cacti беше 
 
 #: lib/installer.php:2429
 #, fuzzy
-#| msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediatly disabled until the administrator validates that the Data Input Method is valid."
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "Начинът, по който работи белият списък, е, че когато за първи път импортирате метод за въвеждане на данни или повторно импортирате метод за въвеждане на данни и скриптът и / или аргументите се променят по някакъв начин, методът за въвеждане на данни и всички съответни източници на данни ще да бъдат незабавно деактивирани, докато администраторът потвърди, че методът за въвеждане на данни е валиден."
 
@@ -16098,19 +16073,16 @@ msgstr "Успех на UDP пинг ( %s ms)"
 
 #: lib/ping.php:554
 #, fuzzy, php-format
-#| msgid "TCP Ping Success (%s ms)"
 msgid "TCP Ping Success Connection Refused (%s ms)"
 msgstr "TCP Ping Success ( %s ms)"
 
 #: lib/ping.php:557
 #, fuzzy, php-format
-#| msgid "TCP ping: socket_connect(), reason: %s"
 msgid "TCP Ping Failed: socket_connect(), reason: %s"
 msgstr "TCP ping: socket_connect (), причина: %s"
 
 #: lib/ping.php:580
 #, fuzzy, php-format
-#| msgid "TCP ping: socket_select() failed, reason: %s"
 msgid "TCP Ping Failed: socket_select() failed, reason: %s"
 msgstr "TCP ping: socket_select () се провали, причината: %s"
 
@@ -16242,7 +16214,6 @@ msgstr "Елементът на графиката „Пропуснати“ �
 
 #: lib/rrd.php:1680
 #, fuzzy, php-format
-#| msgid "ERROR: RRDfile %s not writeable"
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "ГРЕШКА: RRDfile %s не може да се запише"
 
@@ -16423,7 +16394,6 @@ msgstr "Неизвестна грешка на RRDtool"
 #: lib/snmp.php:211 lib/snmp.php:311 lib/snmp.php:406 lib/snmp.php:738
 #: lib/snmp.php:753
 #, fuzzy, php-format
-#| msgid "SNMP Options [edit: %s]"
 msgid "SNMP Command is: %s"
 msgstr "Опции на SNMP [редактиране: %s]"
 
@@ -16433,7 +16403,6 @@ msgstr ""
 
 #: lib/spikekill.php:189
 #, fuzzy, php-format
-#| msgid "XML: Cacti version does not exist."
 msgid "FATAL: File '%s' does not exist."
 msgstr "XML: Cacti версия не съществува."
 
@@ -16448,19 +16417,16 @@ msgstr ""
 
 #: lib/spikekill.php:259 lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Remove StdDev"
 msgid "StdDev"
 msgstr "Премахване на StdDev"
 
 #: lib/spikekill.php:265 lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Variable"
 msgid "Variance"
 msgstr "Вариация"
 
 #: lib/spikekill.php:271
 #, fuzzy
-#| msgid "Gap Fill Range"
 msgid "Gap Fill"
 msgstr "Диапазон за запълване на пролуките"
 
@@ -16515,13 +16481,11 @@ msgstr ""
 
 #: lib/spikekill.php:355
 #, fuzzy, php-format
-#| msgid "RRDfiles"
 msgid "RRDfile:       %s"
 msgstr "RRDfiles"
 
 #: lib/spikekill.php:356
 #, fuzzy, php-format
-#| msgid "Repair Steps [ %s ]"
 msgid "Repair Type:   %s"
 msgstr "Ремонтни стъпки [ %s]"
 
@@ -16532,7 +16496,6 @@ msgstr ""
 
 #: lib/spikekill.php:360
 #, fuzzy, php-format
-#| msgid "Max Kills Per RRA"
 msgid "Max Kills:     %s"
 msgstr "Макс убийства на RRA"
 
@@ -16542,7 +16505,6 @@ msgstr ""
 
 #: lib/spikekill.php:366
 #, fuzzy, php-format
-#| msgid "Standard Deviations"
 msgid "Standard Devs: %s"
 msgstr "Стандартни отклонения"
 
@@ -16562,7 +16524,6 @@ msgstr ""
 
 #: lib/spikekill.php:375
 #, fuzzy
-#| msgid "Windows Related"
 msgid "Window Range:  All"
 msgstr "Свързани с Windows"
 
@@ -16616,7 +16577,6 @@ msgstr ""
 
 #: lib/spikekill.php:742
 #, fuzzy
-#| msgid "No Sites Found"
 msgid "NOTE: No Spikes Found."
 msgstr "Няма намерени сайтове"
 
@@ -16632,19 +16592,16 @@ msgstr ""
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Avg:"
 msgid "Avg"
 msgstr "Средно:"
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "CDEF"
 msgid "CF"
 msgstr "CDEF"
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "DES"
 msgid "DS"
 msgstr "DES"
 
@@ -16654,7 +16611,6 @@ msgstr ""
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Simple"
 msgid "Samples"
 msgstr "Обикновен"
 
@@ -16664,19 +16620,16 @@ msgstr ""
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MaxValue"
 msgstr "Стойност"
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Dry Run StdDev"
 msgid "MinStdDev"
 msgstr "Dry Run StdDev"
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MinValue"
 msgstr "Стойност"
 
@@ -16792,7 +16745,6 @@ msgstr "InnoDB ще държи колкото се може повече таб�
 
 #: lib/utility.php:1347
 #, fuzzy
-#| msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accomodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Тези настройки трябва да останат ВКЛЮЧЕНИ, освен ако вашите екземпляри на Cacti не се изпълняват нито на ZFS, нито на FusionI / O, които и двата имат вътрешно журналиране, за да се съберат внезапни сривове на системата. Ако обаче имате много добра мощност и системите ви рядко се сриват и имате резервни копия, превключването на тази настройка в положение OFF може да ви осигури почти 50% увеличение на производителността на базата данни."
 
@@ -17260,7 +17212,6 @@ msgstr "Неуспешно импортиране на пакет %s"
 
 #: package_import.php:318
 #, fuzzy
-#| msgid "Enter a valid file path"
 msgid "Error: Invalid file path."
 msgstr "Въведете валиден път на файла"
 
@@ -17607,7 +17558,6 @@ msgstr "ЗАБЕЛЕЖКА: Добавен е втори колектор за �
 
 #: poller_automation.php:53
 #, fuzzy, php-format
-#| msgid "WARNING: Main Cacti database offline or in recovery"
 msgid "WARNING: Main Cacti database %s offline or in recovery"
 msgstr "ВНИМАНИЕ: Основната база данни за кактуси е офлайн или се възстановява"
 
@@ -18365,7 +18315,6 @@ msgstr[1] "Дублирай"
 
 #: sites.php:432
 #, fuzzy
-#| msgid "File not found"
 msgid "Site not found."
 msgstr "Файлът не е открит"
 
@@ -18573,7 +18522,6 @@ msgstr "цифров"
 
 #: tree.php:508
 #, fuzzy
-#| msgid "Permission Denied.  You do not have permission to the requested action."
 msgid "You do not have permission to modify this tree."
 msgstr "Разрешението е отказано. Нямате разрешение за исканото действие."
 
@@ -19074,7 +19022,6 @@ msgstr "Дървесни перми"
 
 #: user_admin.php:1852
 #, fuzzy
-#| msgid "File not found"
 msgid "User not found."
 msgstr "Файлът не е открит"
 
@@ -19089,7 +19036,6 @@ msgstr "Права на потребители"
 
 #: user_admin.php:2165
 #, fuzzy
-#| msgid "Groups"
 msgid "Group"
 msgstr "Групи"
 
@@ -19099,7 +19045,6 @@ msgstr "Последно влизане"
 
 #: user_admin.php:2192
 #, fuzzy
-#| msgid "1 Week"
 msgid "< 1 Week Ago"
 msgstr "1 Седмица"
 
@@ -19113,13 +19058,11 @@ msgstr ""
 
 #: user_admin.php:2195
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 2 Months Ago"
 msgstr "% d Месеци"
 
 #: user_admin.php:2196
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 4 Months Ago"
 msgstr "% d Месеци"
 
@@ -20322,7 +20265,6 @@ msgstr "Ниво на сериозност: %s"
 
 #: vdef.php:163 vdef.php:570
 #, fuzzy
-#| msgid "File not found"
 msgid "VDEF not found."
 msgstr "Файлът не е открит"
 
@@ -20436,6 +20378,15 @@ msgstr "Няма VDEF"
 #~ msgid "Access Denied! Login failed."
 #~ msgstr "Отказан достъп, потребителският профил е деактивиран."
 
+#~ msgid "Attempted SQL Injection found in Tree Automation for the field variable."
+#~ msgstr "Опит за SQL инжектиране, намерен в Tree Automation за променливата на полето."
+
+#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
+#~ msgstr "Някои приставки за кактуси изискват използването на небезопасни JavaScript извиквания eval (). Ако изберете тази опция, те ще бъдат разрешени в кактусите."
+
+#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
+#~ msgstr "Разрешаване на небезопасни JavaScript извиквания eval ()"
+
 #, fuzzy
 #~| msgid "Data Input Field"
 #~ msgid "Data Input Field not found."
@@ -20446,20 +20397,11 @@ msgstr "Няма VDEF"
 #~ msgid "Data Input Method not found."
 #~ msgstr "Няма намерени методи за въвеждане на данни"
 
-#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
-#~ msgstr "Разрешаване на небезопасни JavaScript извиквания eval ()"
-
-#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
-#~ msgstr "Някои приставки за кактуси изискват използването на небезопасни JavaScript извиквания eval (). Ако изберете тази опция, те ще бъдат разрешени в кактусите."
-
-#~ msgid "Variance Outliers"
-#~ msgstr "Отклонения от разликата"
+#~ msgid "Dry Run Variance"
+#~ msgstr "Вариант на суха работа"
 
 #~ msgid "Remove Variance"
 #~ msgstr "Премахване на вариацията"
 
-#~ msgid "Dry Run Variance"
-#~ msgstr "Вариант на суха работа"
-
-#~ msgid "Attempted SQL Injection found in Tree Automation for the field variable."
-#~ msgstr "Опит за SQL инжектиране, намерен в Tree Automation за променливата на полето."
+#~ msgid "Variance Outliers"
+#~ msgstr "Отклонения от разликата"

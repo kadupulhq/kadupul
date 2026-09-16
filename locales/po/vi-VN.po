@@ -369,7 +369,6 @@ msgstr "Xem trước"
 
 #: aggregate_graphs.php:623
 #, fuzzy
-#| msgid "Aggregate Graphs Accessed does not Exist"
 msgid "Aggregate Graph Accessed does not Exist"
 msgstr "Cài đặt đồ thị tổng hợp"
 
@@ -754,7 +753,6 @@ msgstr "Không tìm thấy đồ thị tổng hợp"
 
 #: aggregate_templates.php:119 aggregate_templates.php:364
 #, fuzzy
-#| msgid "No Aggregate Templates Found"
 msgid "Aggregate Template not found."
 msgstr "Không tìm thấy mẫu tổng hợp"
 
@@ -960,7 +958,6 @@ msgstr "Nếu bạn cảm thấy rằng đây là một lỗi. Vui lòng liên h
 
 #: auth_login.php:219
 #, fuzzy
-#| msgid "Access Denied!  User account disabled."
 msgid "Access Denied! User account locked."
 msgstr "Truy cập bị từ chối, tài khoản người dùng bị vô hiệu hóa."
 
@@ -1573,7 +1570,6 @@ msgstr "Hàng tháng vào ngày"
 
 #: automation_networks.php:433
 #, fuzzy
-#| msgid "File not found"
 msgid "Network not found."
 msgstr "Không tìm thấy tập tin"
 
@@ -2489,7 +2485,6 @@ msgstr ""
 
 #: automation_tree_rules.php:189
 #, fuzzy
-#| msgid "The Field Name that shall be used for this Rule Item."
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "Tên trường sẽ được sử dụng cho Mục quy tắc này."
 
@@ -2927,7 +2922,6 @@ msgstr "Xóa mục màu"
 
 #: color_templates.php:389
 #, fuzzy
-#| msgid "No Color Templates Found"
 msgid "Color Template not found."
 msgstr "Không tìm thấy mẫu màu nào"
 
@@ -2965,7 +2959,6 @@ msgstr "Không tìm thấy mẫu màu nào"
 
 #: color_templates_items.php:277
 #, fuzzy
-#| msgid "Color Template Items"
 msgid "Color Template or Item not found."
 msgstr "Mục mẫu màu"
 
@@ -3473,7 +3466,6 @@ msgstr "Xóa trường nhập dữ liệu"
 
 #: data_input.php:747
 #, fuzzy
-#| msgid "Update this Field"
 msgid "Update Whitelist"
 msgstr "Cập nhật trường này"
 
@@ -4416,7 +4408,6 @@ msgstr "Xóa cài đặt trước GPRINT"
 
 #: gprint_presets.php:188
 #, fuzzy
-#| msgid "GPRINT Preset"
 msgid "GPRINT Preset not found."
 msgstr "GPRINT cài sẵn"
 
@@ -4479,7 +4470,6 @@ msgstr "Xem biểu đồ"
 
 #: graph.php:115
 #, fuzzy
-#| msgid "Data Source does not exist."
 msgid "The Graph you requested does not exist."
 msgstr "Nguồn dữ liệu không tồn tại."
 
@@ -4639,7 +4629,6 @@ msgstr "Không có đầu vào"
 
 #: graph_templates.php:561
 #, fuzzy
-#| msgid "No Graph Templates Found"
 msgid "Graph Template not found."
 msgstr "Không tìm thấy mẫu đồ thị"
 
@@ -6104,7 +6093,6 @@ msgstr "Không thể xác định kích thước của trường mật khẩu, v
 
 #: include/global_arrays.php:313
 #, fuzzy
-#| msgid "Unable to increase size of password field, pleas check permission of db user"
 msgid "Unable to increase size of password field, please check permission of db user"
 msgstr "Không thể tăng kích thước của trường mật khẩu, xin vui lòng kiểm tra quyền của người dùng db"
 
@@ -6378,7 +6366,6 @@ msgstr "SHA-256"
 
 #: include/global_arrays.php:659
 #, fuzzy
-#| msgid "SHA-392"
 msgid "SHA-384"
 msgstr "SHA-392"
 
@@ -6440,7 +6427,6 @@ msgstr "Ping Ping"
 
 #: include/global_arrays.php:698
 #, fuzzy
-#| msgid "TCP Ping"
 msgid "TCP Ping Closed"
 msgstr "Ping Ping"
 
@@ -8947,7 +8933,6 @@ msgstr "Phương pháp Cacti sẽ sử dụng để xác định xem máy chủ 
 
 #: include/global_form.php:1277
 #, fuzzy
-#| msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>"
 msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 msgstr "Các loại gói ping để gửi. <br> <i>LƯU Ý: ICMP trên Linux / UNIX yêu cầu quyền root.</i>"
 
@@ -9949,7 +9934,6 @@ msgstr "Khi được chọn, mọi nỗ lực truy cập Cacti sẽ được chu
 
 #: include/global_settings.php:501
 #, fuzzy
-#| msgid "Remote Data Collector Status:"
 msgid "Allow Unsafe Remote Data Collector HTTPS"
 msgstr "Trạng thái thu thập dữ liệu từ xa:"
 
@@ -9959,7 +9943,6 @@ msgstr ""
 
 #: include/global_settings.php:507
 #, fuzzy
-#| msgid "The name of this Data Input Method."
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
 msgstr "Tên của Phương thức nhập dữ liệu này."
 
@@ -9969,7 +9952,6 @@ msgstr ""
 
 #: include/global_settings.php:514
 #, fuzzy
-#| msgid "Content-Security Alternate Sources"
 msgid "Content-Security Script Policy"
 msgstr "Nguồn thay thế bảo mật nội dung"
 
@@ -9991,7 +9973,6 @@ msgstr ""
 
 #: include/global_settings.php:524 include/global_settings.php:539
 #, fuzzy
-#| msgid "Cacti Report"
 msgid "CSP Violation Report URI"
 msgstr "Báo cáo xương rồng"
 
@@ -10392,7 +10373,6 @@ msgstr "Loại đồ thị mặc định"
 
 #: include/global_settings.php:962
 #, fuzzy
-#| msgid "When creating graphs, what Graph Type would you like pre-selected?"
 msgid "When creating graphs, what Graph Type would you like preselected?"
 msgstr "Khi tạo biểu đồ, bạn muốn chọn loại biểu đồ nào?"
 
@@ -11090,7 +11070,6 @@ msgstr "Lịch sử mật khẩu"
 
 #: include/global_settings.php:1641
 #, fuzzy
-#| msgid "Remember this number of old passwords and disallow re-using them."
 msgid "Remember this number of old passwords and disallow reusing them."
 msgstr "Ghi nhớ số mật khẩu cũ này và không cho phép sử dụng lại chúng."
 
@@ -14120,7 +14099,6 @@ msgstr "Đã phát hiện thay đổi chưa lưu"
 
 #: lib/html_form.php:1529
 #, fuzzy
-#| msgid "You have unsaved changes on this form.  If you press &#39;Continue&#39; these changes will be discarded.  Press &#39;Cancel&#39; to continue editing the form."
 msgid "You have unsaved changes on this form.  If you press 'Continue' these changes will be discarded.  Press 'Cancel' to continue editing the form."
 msgstr "Bạn có những thay đổi chưa được lưu trong mẫu này. Nếu bạn nhấn &#39;Tiếp tục&#39;, những thay đổi này sẽ bị loại bỏ. Bấm &#39;Hủy&#39; để tiếp tục chỉnh sửa biểu mẫu."
 
@@ -15439,7 +15417,6 @@ msgstr "Do đó, một số phiên bản trước đây, Cacti đã được c�
 
 #: lib/installer.php:2429
 #, fuzzy
-#| msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediatly disabled until the administrator validates that the Data Input Method is valid."
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "Cách thức hoạt động của Danh sách trắng là khi bạn lần đầu tiên nhập Phương thức nhập dữ liệu hoặc bạn nhập lại Phương thức nhập dữ liệu và tập lệnh và hoặc thay đổi theo bất kỳ cách nào, Phương thức nhập dữ liệu và tất cả các nguồn dữ liệu tương ứng sẽ bị vô hiệu hóa ngay lập tức cho đến khi quản trị viên xác nhận rằng Phương thức nhập dữ liệu hợp lệ."
 
@@ -16063,19 +16040,16 @@ msgstr "Thành công Ping UDP ( %s ms)"
 
 #: lib/ping.php:554
 #, fuzzy, php-format
-#| msgid "TCP Ping Success (%s ms)"
 msgid "TCP Ping Success Connection Refused (%s ms)"
 msgstr "TCP Ping thành công ( %s ms)"
 
 #: lib/ping.php:557
 #, fuzzy, php-format
-#| msgid "TCP ping: socket_connect(), reason: %s"
 msgid "TCP Ping Failed: socket_connect(), reason: %s"
 msgstr "TCP ping: socket_connect (), lý do: %s"
 
 #: lib/ping.php:580
 #, fuzzy, php-format
-#| msgid "TCP ping: socket_select() failed, reason: %s"
 msgid "TCP Ping Failed: socket_select() failed, reason: %s"
 msgstr "TCP ping: socket_select () không thành công, lý do: %s"
 
@@ -16207,7 +16181,6 @@ msgstr "Mục biểu đồ bị bỏ qua &#39; <i> %s</i> &#39; đã tồn tại
 
 #: lib/rrd.php:1680
 #, fuzzy, php-format
-#| msgid "ERROR: RRDfile %s not writeable"
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "LRI: RRDfile %s không thể ghi"
 
@@ -16388,7 +16361,6 @@ msgstr "Lỗi RRDtool không xác định"
 #: lib/snmp.php:211 lib/snmp.php:311 lib/snmp.php:406 lib/snmp.php:738
 #: lib/snmp.php:753
 #, fuzzy, php-format
-#| msgid "SNMP Options [edit: %s]"
 msgid "SNMP Command is: %s"
 msgstr "Tùy chọn SNMP [chỉnh sửa: %s]"
 
@@ -16398,7 +16370,6 @@ msgstr ""
 
 #: lib/spikekill.php:189
 #, fuzzy, php-format
-#| msgid "XML: Cacti version does not exist."
 msgid "FATAL: File '%s' does not exist."
 msgstr "XML: Phiên bản Cacti không tồn tại."
 
@@ -16413,19 +16384,16 @@ msgstr ""
 
 #: lib/spikekill.php:259 lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Remove StdDev"
 msgid "StdDev"
 msgstr "Xóa StdDev"
 
 #: lib/spikekill.php:265 lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Variable"
 msgid "Variance"
 msgstr "Biến thể"
 
 #: lib/spikekill.php:271
 #, fuzzy
-#| msgid "Gap Fill Range"
 msgid "Gap Fill"
 msgstr "Khoảng cách điền vào"
 
@@ -16480,13 +16448,11 @@ msgstr ""
 
 #: lib/spikekill.php:355
 #, fuzzy, php-format
-#| msgid "RRDfiles"
 msgid "RRDfile:       %s"
 msgstr "RRDfiles"
 
 #: lib/spikekill.php:356
 #, fuzzy, php-format
-#| msgid "Repair Steps [ %s ]"
 msgid "Repair Type:   %s"
 msgstr "Các bước sửa chữa [ %s]"
 
@@ -16497,7 +16463,6 @@ msgstr ""
 
 #: lib/spikekill.php:360
 #, fuzzy, php-format
-#| msgid "Max Kills Per RRA"
 msgid "Max Kills:     %s"
 msgstr "Tối đa giết chết mỗi RRA"
 
@@ -16507,7 +16472,6 @@ msgstr ""
 
 #: lib/spikekill.php:366
 #, fuzzy, php-format
-#| msgid "Standard Deviations"
 msgid "Standard Devs: %s"
 msgstr "Độ lệch chuẩn"
 
@@ -16579,7 +16543,6 @@ msgstr ""
 
 #: lib/spikekill.php:742
 #, fuzzy
-#| msgid "No Sites Found"
 msgid "NOTE: No Spikes Found."
 msgstr "Không tìm thấy trang nào"
 
@@ -16595,19 +16558,16 @@ msgstr ""
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Avg:"
 msgid "Avg"
 msgstr "Trung bình:"
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "CDEF"
 msgid "CF"
 msgstr "CDEF"
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "DES"
 msgid "DS"
 msgstr "MÔ TẢ"
 
@@ -16617,7 +16577,6 @@ msgstr ""
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Simple"
 msgid "Samples"
 msgstr "Đơn giản"
 
@@ -16627,19 +16586,16 @@ msgstr ""
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MaxValue"
 msgstr "Giá trị"
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Dry Run StdDev"
 msgid "MinStdDev"
 msgstr "Chạy khô StdDev"
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MinValue"
 msgstr "Giá trị"
 
@@ -16755,7 +16711,6 @@ msgstr "InnoDB sẽ giữ càng nhiều bảng và chỉ mục trong bộ nhớ 
 
 #: lib/utility.php:1347
 #, fuzzy
-#| msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accomodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Cài đặt này sẽ duy trì BẬT trừ khi các phiên bản Cacti của bạn đang chạy trên ZFS hoặc FusionI / O, cả hai đều có nhật ký nội bộ để khắc phục sự cố hệ thống đột ngột. Tuy nhiên, nếu bạn có sức mạnh rất tốt và hệ thống của bạn hiếm khi ngừng hoạt động và bạn có các bản sao lưu, việc chuyển cài đặt này thành TẮT có thể giúp bạn tăng hiệu suất cơ sở dữ liệu lên gần 50%."
 
@@ -17220,7 +17175,6 @@ msgstr ""
 
 #: package_import.php:318
 #, fuzzy
-#| msgid "Enter a valid file path"
 msgid "Error: Invalid file path."
 msgstr "Nhập đường dẫn tệp hợp lệ"
 
@@ -17567,7 +17521,6 @@ msgstr "LƯU Ý: Một bộ thu thập dữ liệu Cacti thứ hai đã được
 
 #: poller_automation.php:53
 #, fuzzy, php-format
-#| msgid "WARNING: Main Cacti database offline or in recovery"
 msgid "WARNING: Main Cacti database %s offline or in recovery"
 msgstr "CẢNH BÁO: Cơ sở dữ liệu chính của Cacti ngoại tuyến hoặc đang trong quá trình phục hồi"
 
@@ -18312,7 +18265,6 @@ msgstr[0] "Bản sao"
 
 #: sites.php:432
 #, fuzzy
-#| msgid "File not found"
 msgid "Site not found."
 msgstr "Không tìm thấy tập tin"
 
@@ -18520,7 +18472,6 @@ msgstr "Số"
 
 #: tree.php:508
 #, fuzzy
-#| msgid "Permission Denied.  You do not have permission to the requested action."
 msgid "You do not have permission to modify this tree."
 msgstr "Quyền bị từ chối. Bạn không có quyền đối với hành động được yêu cầu."
 
@@ -19013,7 +18964,6 @@ msgstr "Cây uốn"
 
 #: user_admin.php:1852
 #, fuzzy
-#| msgid "File not found"
 msgid "User not found."
 msgstr "Không tìm thấy tập tin"
 
@@ -19028,7 +18978,6 @@ msgstr "Quản lý Người dùng"
 
 #: user_admin.php:2165
 #, fuzzy
-#| msgid "Groups"
 msgid "Group"
 msgstr "Nhóm"
 
@@ -19038,7 +18987,6 @@ msgstr "Lân đăng nhập cuối"
 
 #: user_admin.php:2192
 #, fuzzy
-#| msgid "1 Week"
 msgid "< 1 Week Ago"
 msgstr "1 Tuần"
 
@@ -19052,13 +19000,11 @@ msgstr ""
 
 #: user_admin.php:2195
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 2 Months Ago"
 msgstr "% d Tháng"
 
 #: user_admin.php:2196
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 4 Months Ago"
 msgstr "% d Tháng"
 
@@ -20247,7 +20193,6 @@ msgstr "Mức độ nghiêm trọng: %s"
 
 #: vdef.php:163 vdef.php:570
 #, fuzzy
-#| msgid "File not found"
 msgid "VDEF not found."
 msgstr "Không tìm thấy tập tin"
 
@@ -20357,6 +20302,12 @@ msgstr "Không có VDEF"
 #~ msgid "Access Denied! Login failed."
 #~ msgstr "Truy cập bị từ chối, tài khoản người dùng bị vô hiệu hóa."
 
+#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
+#~ msgstr "Một số plugin Cacti yêu cầu sử dụng các lệnh gọi eval () JavaScript không an toàn. Nếu bạn chọn tùy chọn này, chúng sẽ được cho phép trong Cacti."
+
+#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
+#~ msgstr "Cho phép các lệnh gọi eval () JavaScript không an toàn"
+
 #, fuzzy
 #~| msgid "Data Input Field"
 #~ msgid "Data Input Field not found."
@@ -20367,17 +20318,11 @@ msgstr "Không có VDEF"
 #~ msgid "Data Input Method not found."
 #~ msgstr "Không tìm thấy phương thức nhập dữ liệu"
 
-#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
-#~ msgstr "Cho phép các lệnh gọi eval () JavaScript không an toàn"
-
-#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
-#~ msgstr "Một số plugin Cacti yêu cầu sử dụng các lệnh gọi eval () JavaScript không an toàn. Nếu bạn chọn tùy chọn này, chúng sẽ được cho phép trong Cacti."
-
-#~ msgid "Variance Outliers"
-#~ msgstr "Ngoại lệ phương sai"
+#~ msgid "Dry Run Variance"
+#~ msgstr "Phương pháp chạy khô"
 
 #~ msgid "Remove Variance"
 #~ msgstr "Xóa phương sai"
 
-#~ msgid "Dry Run Variance"
-#~ msgstr "Phương pháp chạy khô"
+#~ msgid "Variance Outliers"
+#~ msgstr "Ngoại lệ phương sai"

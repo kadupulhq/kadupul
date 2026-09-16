@@ -78,3 +78,32 @@ test('directory identity rejects replacement before and during exclusive creatio
         unlink($root . '/source.rrd'); rmdir($root);
     }
 })->with(array(array('createXmlFileExclusively', false), array('copyFileSafely', false), array('createXmlFileExclusively', true), array('copyFileSafely', true)));
+
+test('writable leaf directories and ancestors are refused before file creation', function ($leaf) {
+    $root = sys_get_temp_dir() . '/spike-trust-' . bin2hex(random_bytes(6));
+    mkdir($root . '/target', 0700, true);
+    $writable = $leaf ? $root . '/target' : $root;
+    chmod($writable, 0777);
+    $class = new ReflectionClass(spikekill::class);
+    $instance = $class->newInstanceWithoutConstructor();
+    $method = $class->getMethod('createXmlFileExclusively');
+    $method->setAccessible(true);
+    try {
+        expect($method->invoke($instance, $root . '/target'))->toBeFalse()
+            ->and(glob($root . '/target/*'))->toBe(array());
+    } finally { chmod($writable, 0700); rmdir($root . '/target'); rmdir($root); }
+})->with(array(false, true));
+
+test('another account cannot supply a privileged work directory', function () {
+    if (!function_exists('posix_geteuid') || posix_geteuid() !== 0) {
+        test()->markTestSkipped('Requires the root-run Linux security job');
+    }
+    $root = sys_get_temp_dir() . '/spike-owner-' . bin2hex(random_bytes(6));
+    mkdir($root, 0700);
+    chown($root, 65534);
+    $class = new ReflectionClass(spikekill::class);
+    $method = $class->getMethod('canonicalDir');
+    $method->setAccessible(true);
+    try { expect($method->invoke($class->newInstanceWithoutConstructor(), $root))->toBeFalse(); }
+    finally { rmdir($root); }
+});

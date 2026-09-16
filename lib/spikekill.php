@@ -517,7 +517,7 @@ class spikekill {
 		if (trim(implode('', $output)) === '') {
 			fclose($xmlfile_handle);
 			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
-			$this->set_error(__("FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"));
+			$this->set_error(__("FATAL: RRDtool returned an empty dump. The RRD file was not modified."));
 			return false;
 		}
 
@@ -877,35 +877,24 @@ class spikekill {
 
 	/* All Functions */
 	private function createRRDFileFromXML($xmlfile, $rrdfile, $stat) {
-		/* rrdtool restore has to read the XML by path.  Re-check right
-		   before running it that the name still refers to the file this
-		   call wrote through: nothing stops the name from being swapped
-		   between the write above and rrdtool's own open() here, so this
-		   narrows but does not close the window.  Accepted residual for
-		   1.2. */
-		/* PHP caches the last lstat() of a path for the whole run, so an
-		   earlier lookup of this name would otherwise answer for it */
-		clearstatcache(true, $xmlfile);
-
-		$lstat = @lstat($xmlfile);
-
-		if ($lstat === false || $lstat['dev'] !== $stat['dev'] || $lstat['ino'] !== $stat['ino']) {
+		clearstatcache(true);
+		$xml_stat = @lstat($xmlfile);
+		$current = @lstat($rrdfile);
+		if ($xml_stat === false || $stat === false || $current === false || $this->rrdfile_stat === false
+			|| ($xml_stat['mode'] & 0170000) !== 0100000 || ($current['mode'] & 0170000) !== 0100000
+			|| $xml_stat['dev'] !== $stat['dev'] || $xml_stat['ino'] !== $stat['ino']
+			|| $current['dev'] !== $this->rrdfile_stat['dev'] || $current['ino'] !== $this->rrdfile_stat['ino']
+			|| $this->canonicalDir(dirname($xmlfile)) === false || $this->canonicalDir(dirname($rrdfile)) === false) {
 			return false;
 		}
 
-		/* likewise for the restore destination: re-check it against the
-		   identity initialize_spikekill() captured, right before rrdtool
-		   restore opens it by name */
-		clearstatcache(true, $rrdfile);
-
-		$rrdfile_lstat = @lstat($rrdfile);
-
-		if ($rrdfile_lstat === false || $this->rrdfile_stat === false
-			|| $rrdfile_lstat['dev'] !== $this->rrdfile_stat['dev']
-			|| $rrdfile_lstat['ino'] !== $this->rrdfile_stat['ino']) {
-
+		// RRDtool never opens the live destination for writing. The restored
+		// sibling replaces its directory entry atomically only after validation.
+		$temporary = $this->createXmlFileExclusively(dirname($rrdfile));
+		if ($temporary === false) {
 			return false;
 		}
+		fclose($temporary['handle']);
 
 		/* execute the restore command */
 		$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
@@ -913,7 +902,7 @@ class spikekill {
 
 		/* argv array through runRRDCommand(), the same as runRRDDump(),
 		   instead of a shell string whose exit status went unchecked */
-		$argv   = array(read_config_option('path_rrdtool'), 'restore', '-f', '-r', $xmlfile, $rrdfile);
+		$argv   = array(read_config_option('path_rrdtool'), 'restore', '-f', '-r', $xmlfile, $temporary['path']);
 		$result = $this->runRRDCommand($argv, null, $this->commandTimeout());
 
 		$response = trim($result['stdout'] . $result['stderr']);
@@ -922,7 +911,30 @@ class spikekill {
 			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . ($this->html ? htmlspecialchars($response, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') : $response) . ($this->html ? "</p>\n":"\n");
 		}
 
-		return $result['exit'] === 0;
+		clearstatcache(true);
+		$restored_stat = @lstat($temporary['path']);
+		$current = @lstat($rrdfile);
+		$valid = $result['exit'] === 0 && $restored_stat !== false && $current !== false
+			&& ($restored_stat['mode'] & 0170000) === 0100000 && $restored_stat['size'] > 0
+			&& $restored_stat['dev'] === $temporary['stat']['dev'] && $restored_stat['ino'] === $temporary['stat']['ino']
+			&& $current['dev'] === $this->rrdfile_stat['dev'] && $current['ino'] === $this->rrdfile_stat['ino']
+			&& $this->canonicalDir(dirname($rrdfile)) !== false;
+		if ($valid && $restored_stat['uid'] !== $current['uid']) {
+			$valid = chown($temporary['path'], $current['uid']);
+		}
+		if ($valid && $restored_stat['gid'] !== $current['gid']) {
+			$valid = chgrp($temporary['path'], $current['gid']);
+		}
+		if ($valid) {
+			$valid = chmod($temporary['path'], $current['mode'] & 0777);
+		}
+		if ($valid && rename($temporary['path'], $rrdfile)) {
+			clearstatcache(true, $rrdfile);
+			$this->rrdfile_stat = lstat($rrdfile);
+			return true;
+		}
+		$this->unlinkOwnedFile($temporary['path'], $temporary['stat']);
+		return false;
 	}
 
 	private function writeXMLFile($output, $handle) {
@@ -1379,6 +1391,40 @@ class spikekill {
 	}
 
 	/**
+	 * Refuse ancestors an unprivileged account can rename during a root run.
+	 * File identity checks cannot make an attacker-writable directory path an
+	 * atomic capability. Sticky temporary roots are safe only when the child
+	 * belongs to the current account or root. Windows needs ACL-aware support.
+	 */
+	private function directoryPathIsTrusted($path) {
+		if (!function_exists('posix_geteuid') || DIRECTORY_SEPARATOR === '\\') {
+			return false;
+		}
+		$uid = posix_geteuid();
+		$child = @stat($path);
+		if ($child === false || !in_array($child['uid'], array(0, $uid), true) || ($child['mode'] & 0022) !== 0) {
+			return false;
+		}
+		while ($child !== false) {
+			$parent_path = dirname($path);
+			$parent = @stat($parent_path);
+			if ($parent === false || !in_array($parent['uid'], array(0, $uid), true)) {
+				return false;
+			}
+			if (($parent['mode'] & 0022) !== 0
+				&& (!(($parent['mode'] & 01000) !== 0) || !in_array($child['uid'], array(0, $uid), true))) {
+				return false;
+			}
+			if ($parent_path === $path) {
+				return true;
+			}
+			$path = $parent_path;
+			$child = $parent;
+		}
+		return false;
+	}
+
+	/**
 	 * canonicalDir - resolve a configured directory's real path once and
 	 * cache it, so every copyFileSafely() call for that directory compares
 	 * against the same trusted value instead of re-resolving a path whose
@@ -1392,7 +1438,8 @@ class spikekill {
 		clearstatcache(true);
 		$path = realpath($configured_dir);
 		$stat = $path === false ? false : @stat($path);
-		if ($stat === false || ($stat['mode'] & 0170000) !== 0040000 || is_link($configured_dir)) {
+		if ($stat === false || ($stat['mode'] & 0170000) !== 0040000 || is_link($configured_dir)
+			|| !$this->directoryPathIsTrusted($path)) {
 			return false;
 		}
 		$identity = array('path' => $path, 'dev' => $stat['dev'], 'ino' => $stat['ino']);

@@ -1,5 +1,17 @@
 msgid ""
-msgstr "Project-Id-Version: \nReport-Msgid-Bugs-To: developers@cacti.net\nPOT-Creation-Date: 2026-05-26 07:05-0400\nPO-Revision-Date: 2026-09-12 08:18+0000\nLast-Translator: Daniel Nylander <daniel@danielnylander.se>\nLanguage-Team: Swedish <https://translate.cacti.net/projects/cacti/core-v1-2-x/sv/>\nLanguage: sv-SE\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nPlural-Forms: nplurals=2; plural=n != 1;\nX-Generator: Weblate 5.11.4\n"
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: developers@cacti.net\n"
+"POT-Creation-Date: 2026-05-26 07:05-0400\n"
+"PO-Revision-Date: 2026-09-12 08:18+0000\n"
+"Last-Translator: Daniel Nylander <daniel@danielnylander.se>\n"
+"Language-Team: Swedish <https://translate.cacti.net/projects/cacti/core-v1-2-x/sv/>\n"
+"Language: sv-SE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.11.4\n"
 
 #: about.php:29 include/global_arrays.php:2638 lib/html.php:2606
 msgid "About Cacti"
@@ -352,7 +364,6 @@ msgstr "Förhandsvisa"
 
 #: aggregate_graphs.php:623
 #, fuzzy
-#| msgid "Aggregate Graphs Accessed does not Exist"
 msgid "Aggregate Graph Accessed does not Exist"
 msgstr "Aggregate Graphs Accessed existerar inte"
 
@@ -737,7 +748,6 @@ msgstr "Inga aggregerade grafer hittades"
 
 #: aggregate_templates.php:119 aggregate_templates.php:364
 #, fuzzy
-#| msgid "No Aggregate Templates Found"
 msgid "Aggregate Template not found."
 msgstr "Inga aggregerade mallar hittades"
 
@@ -943,7 +953,6 @@ msgstr "Om du känner att detta är ett fel. Vänligen kontakta din Cacti Admini
 
 #: auth_login.php:219
 #, fuzzy
-#| msgid "Access Denied!  User account disabled."
 msgid "Access Denied! User account locked."
 msgstr "Åtkomst nekad!  Användarkontot är inaktiverat."
 
@@ -1556,7 +1565,6 @@ msgstr "Månadligen på dagen"
 
 #: automation_networks.php:433
 #, fuzzy
-#| msgid "File not found"
 msgid "Network not found."
 msgstr "Filen hittades inte"
 
@@ -2472,7 +2480,6 @@ msgstr "Ett försök gjordes att utföra en SQL-injektion i Tree Automation"
 
 #: automation_tree_rules.php:189
 #, fuzzy
-#| msgid "The Field Name that shall be used for this Rule Item."
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "Det fältnamn som ska användas för denna Rule Item."
 
@@ -2922,7 +2929,6 @@ msgstr "Ta bort färgartikel"
 
 #: color_templates.php:389
 #, fuzzy
-#| msgid "No Color Templates Found"
 msgid "Color Template not found."
 msgstr "Inga färgmallar hittades"
 
@@ -2960,7 +2966,6 @@ msgstr "Inga färgmallar hittades"
 
 #: color_templates_items.php:277
 #, fuzzy
-#| msgid "Color Template Items"
 msgid "Color Template or Item not found."
 msgstr "Färgmallar Artiklar"
 
@@ -3470,7 +3475,6 @@ msgstr "Radera datainmatningsfältet"
 
 #: data_input.php:747
 #, fuzzy
-#| msgid "Update this Field"
 msgid "Update Whitelist"
 msgstr "Uppdatera detta fält"
 
@@ -4434,7 +4438,6 @@ msgstr "Radera GPRINT-förinställningar"
 
 #: gprint_presets.php:188
 #, fuzzy
-#| msgid "GPRINT Preset"
 msgid "GPRINT Preset not found."
 msgstr "GPRINT Förinställning"
 
@@ -4497,7 +4500,6 @@ msgstr "Visa graf"
 
 #: graph.php:115
 #, fuzzy
-#| msgid "Data Source does not exist."
 msgid "The Graph you requested does not exist."
 msgstr "Datakällan finns inte."
 
@@ -4657,7 +4659,6 @@ msgstr "Inga ingångar"
 
 #: graph_templates.php:561
 #, fuzzy
-#| msgid "No Graph Templates Found"
 msgid "Graph Template not found."
 msgstr "Inga grafmallar hittades"
 
@@ -6122,7 +6123,6 @@ msgstr "Det går inte att bestämma storlek på lösenordsfältet, kolla behöri
 
 #: include/global_arrays.php:313
 #, fuzzy
-#| msgid "Unable to increase size of password field, pleas check permission of db user"
 msgid "Unable to increase size of password field, please check permission of db user"
 msgstr "Kan inte öka storleken på lösenordsfältet, vädjar kontrollera behörigheten för db-användare"
 
@@ -9961,7 +9961,6 @@ msgstr "När de är markerade försöker alla försök att komma åt Cacti till 
 
 #: include/global_settings.php:501
 #, fuzzy
-#| msgid "Remote Data Collector Status:"
 msgid "Allow Unsafe Remote Data Collector HTTPS"
 msgstr "Fjärrstyrd datainsamlare Status:"
 
@@ -9971,7 +9970,6 @@ msgstr ""
 
 #: include/global_settings.php:507
 #, fuzzy
-#| msgid "The name of this Data Input Method."
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
 msgstr "Namnet på denna metod för datainmatning."
 
@@ -9981,7 +9979,6 @@ msgstr ""
 
 #: include/global_settings.php:514
 #, fuzzy
-#| msgid "Content-Security Alternate Sources"
 msgid "Content-Security Script Policy"
 msgstr "Innehåll-Säkerhet Alternativa källor"
 
@@ -10003,7 +10000,6 @@ msgstr ""
 
 #: include/global_settings.php:524 include/global_settings.php:539
 #, fuzzy
-#| msgid "Cacti Report"
 msgid "CSP Violation Report URI"
 msgstr "Cacti-rapport"
 
@@ -10404,7 +10400,6 @@ msgstr "Standard graftyp"
 
 #: include/global_settings.php:962
 #, fuzzy
-#| msgid "When creating graphs, what Graph Type would you like pre-selected?"
 msgid "When creating graphs, what Graph Type would you like preselected?"
 msgstr "När du skapar grafer, vilken graftyp vill du ha förvald?"
 
@@ -11102,7 +11097,6 @@ msgstr "Lösenordshistorik"
 
 #: include/global_settings.php:1641
 #, fuzzy
-#| msgid "Remember this number of old passwords and disallow re-using them."
 msgid "Remember this number of old passwords and disallow reusing them."
 msgstr "Kom ihåg detta antal gamla lösenord och tillåt inte att de används igen."
 
@@ -15153,7 +15147,6 @@ msgstr "Obligatorisk"
 
 #: lib/installer.php:1917
 #, fuzzy
-#| msgid "The specificed value appears to be different in the running config versus the INI file."
 msgid "The specified value appears to be different in the running config versus the INI file."
 msgstr "Det specificerade värdet verkar vara annorlunda i den körande konfigurationen jämfört med INI-filen."
 
@@ -15451,7 +15444,6 @@ msgstr "Därför förbättrades Cacti för flera versioner sedan för att ge whi
 
 #: lib/installer.php:2429
 #, fuzzy
-#| msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediatly disabled until the administrator validates that the Data Input Method is valid."
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "Så som vitlistningen fungerar är att när du först importerar en datainmatningsmetod, eller om du importerar en datainmatningsmetod igen, och skriptet och / eller arkiven ändras på något sätt kommer datainmatningsmetoden och alla motsvarande datakällor att vara direkt inaktiverad tills administratören validerar att datainmatningsmetoden är giltig."
 
@@ -16216,7 +16208,6 @@ msgstr "Hopp över rapportgränsen &#39; <i> %s</i> &#39; finns redan"
 
 #: lib/rrd.php:1680
 #, fuzzy, php-format
-#| msgid "ERROR: RRDfile %s not writeable"
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "FEL: RRDfile %s inte skrivbar"
 
@@ -16736,7 +16727,6 @@ msgstr "InnoDB kommer att hålla så mycket tabeller och index i systemminnet so
 
 #: lib/utility.php:1347
 #, fuzzy
-#| msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accomodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Dessa inställningar bör förbli PÅ om inte dina Cacti-instanser körs på antingen ZFS eller FusionI / O, som båda har intern journalföring för att hantera plötsliga systemkrasch. Men om du har väldigt bra ström och dina system sällan går ner och du har säkerhetskopieringar, kan du stänga av denna inställning till OFF för nästan 50% ökning av databasprestanda."
 
@@ -17204,7 +17194,6 @@ msgstr "Import av paketet %s misslyckades"
 
 #: package_import.php:318
 #, fuzzy
-#| msgid "Enter a valid file path"
 msgid "Error: Invalid file path."
 msgstr "Ange en giltig filsökväg"
 
@@ -18308,7 +18297,6 @@ msgstr[1] "Duplicera"
 
 #: sites.php:432
 #, fuzzy
-#| msgid "File not found"
 msgid "Site not found."
 msgstr "Filen hittades inte"
 
@@ -18516,7 +18504,6 @@ msgstr "numeriska"
 
 #: tree.php:508
 #, fuzzy
-#| msgid "Permission Denied.  You do not have permission to the requested action."
 msgid "You do not have permission to modify this tree."
 msgstr "Tillstånd nekat.  Du har inte behörighet att utföra den begärda åtgärden."
 
@@ -19017,7 +19004,6 @@ msgstr "Träd perm"
 
 #: user_admin.php:1852
 #, fuzzy
-#| msgid "File not found"
 msgid "User not found."
 msgstr "Filen hittades inte"
 
@@ -20256,7 +20242,6 @@ msgstr "Allvarighetsnivå: %s"
 
 #: vdef.php:163 vdef.php:570
 #, fuzzy
-#| msgid "File not found"
 msgid "VDEF not found."
 msgstr "Filen hittades inte"
 
@@ -20370,6 +20355,15 @@ msgstr "Inga VDEFs"
 #~ msgid "Access Denied! Login failed."
 #~ msgstr "Åtkomst nekad! Inloggningen misslyckades."
 
+#~ msgid "Attempted SQL Injection found in Tree Automation for the field variable."
+#~ msgstr "Försök till SQL-injektion upptäcktes i Tree Automation för fältvariabeln."
+
+#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
+#~ msgstr "Vissa Cacti-insticksmoduler kräver användning av osäkra JavaScript eval()-anrop.  Om du väljer det här alternativet kommer de att tillåtas i Cacti."
+
+#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
+#~ msgstr "Innehåll-säkerhet Tillåt osäkra JavaScript eval()-anrop"
+
 #, fuzzy
 #~| msgid "Data Input Field"
 #~ msgid "Data Input Field not found."
@@ -20380,20 +20374,11 @@ msgstr "Inga VDEFs"
 #~ msgid "Data Input Method not found."
 #~ msgstr "Inga metoder för datainmatning hittades"
 
-#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
-#~ msgstr "Innehåll-säkerhet Tillåt osäkra JavaScript eval()-anrop"
-
-#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
-#~ msgstr "Vissa Cacti-insticksmoduler kräver användning av osäkra JavaScript eval()-anrop.  Om du väljer det här alternativet kommer de att tillåtas i Cacti."
-
-#~ msgid "Variance Outliers"
-#~ msgstr "Varians Utropstecken"
+#~ msgid "Dry Run Variance"
+#~ msgstr "Varians i torrkörning"
 
 #~ msgid "Remove Variance"
 #~ msgstr "Ta bort avvikelse"
 
-#~ msgid "Dry Run Variance"
-#~ msgstr "Varians i torrkörning"
-
-#~ msgid "Attempted SQL Injection found in Tree Automation for the field variable."
-#~ msgstr "Försök till SQL-injektion upptäcktes i Tree Automation för fältvariabeln."
+#~ msgid "Variance Outliers"
+#~ msgstr "Varians Utropstecken"

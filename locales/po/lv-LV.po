@@ -45,7 +45,6 @@ msgstr "Godājami pieminēt"
 
 #: about.php:62
 #, fuzzy
-#| msgid "Contributors to Docuemntation, QA, Packaging, the Forums and our YouTube page."
 msgid "Contributors to Documentation, QA, Packaging, the Forums and our YouTube page."
 msgstr "Dokumentācijas, QA un iepakojuma līdzautori, forumi un mūsu YouTube lapa."
 
@@ -371,7 +370,6 @@ msgstr "Priekšskatījums"
 
 #: aggregate_graphs.php:623
 #, fuzzy
-#| msgid "Aggregate Graphs Accessed does not Exist"
 msgid "Aggregate Graph Accessed does not Exist"
 msgstr "Apkopotie grafiki, kuriem piekļūts, nepastāv"
 
@@ -756,7 +754,6 @@ msgstr "Nav atrasts neviens apkopots grafiks"
 
 #: aggregate_templates.php:119 aggregate_templates.php:364
 #, fuzzy
-#| msgid "No Aggregate Templates Found"
 msgid "Aggregate Template not found."
 msgstr "Nav atrasta neviena apkopotā veidne"
 
@@ -1574,7 +1571,6 @@ msgstr "Katru mēnesi dienā"
 
 #: automation_networks.php:433
 #, fuzzy
-#| msgid "File not found"
 msgid "Network not found."
 msgstr "Fails nav atrasts"
 
@@ -2490,7 +2486,6 @@ msgstr ""
 
 #: automation_tree_rules.php:189
 #, fuzzy
-#| msgid "The Field Name that shall be used for this Rule Item."
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "Lauka nosaukums, kas jāizmanto šim kārtulas elementam."
 
@@ -2954,7 +2949,6 @@ msgstr "Dzēst krāsu elementu"
 
 #: color_templates.php:389
 #, fuzzy
-#| msgid "No Color Templates Found"
 msgid "Color Template not found."
 msgstr "Netika atrasta neviena krāsu veidne"
 
@@ -2992,7 +2986,6 @@ msgstr "Netika atrasta neviena krāsu veidne"
 
 #: color_templates_items.php:277
 #, fuzzy
-#| msgid "Color Template Items"
 msgid "Color Template or Item not found."
 msgstr "Krāsu veidņu vienumi"
 
@@ -3504,7 +3497,6 @@ msgstr "Dzēst datu ievades lauku"
 
 #: data_input.php:747
 #, fuzzy
-#| msgid "Update this Field"
 msgid "Update Whitelist"
 msgstr "Atsvaidzināt šo lauku"
 
@@ -4492,7 +4484,6 @@ msgstr "Dzēst GPRINT sākotnējo(-s)"
 
 #: gprint_presets.php:188
 #, fuzzy
-#| msgid "GPRINT Preset"
 msgid "GPRINT Preset not found."
 msgstr "GPRINT iepriekš iestatīts"
 
@@ -4555,7 +4546,6 @@ msgstr "Grafika apskate"
 
 #: graph.php:115
 #, fuzzy
-#| msgid "Data Source does not exist."
 msgid "The Graph you requested does not exist."
 msgstr "Datu avots nepastāv."
 
@@ -6178,7 +6168,6 @@ msgstr "Nevar noteikt paroles lauka lielumu, lūdzu, pārbaudiet db lietotāja a
 
 #: include/global_arrays.php:313
 #, fuzzy
-#| msgid "Unable to increase size of password field, pleas check permission of db user"
 msgid "Unable to increase size of password field, please check permission of db user"
 msgstr "Nevar palielināt paroles lauka lielumu, lūdzu, pārbaudiet db lietotāja atļauju"
 
@@ -6452,7 +6441,6 @@ msgstr "SHA-256"
 
 #: include/global_arrays.php:659
 #, fuzzy
-#| msgid "SHA-392"
 msgid "SHA-384"
 msgstr "SHA-392"
 
@@ -6514,7 +6502,6 @@ msgstr "TCP Ping"
 
 #: include/global_arrays.php:698
 #, fuzzy
-#| msgid "TCP Ping"
 msgid "TCP Ping Closed"
 msgstr "TCP Ping"
 
@@ -9023,7 +9010,6 @@ msgstr "Metode Cacti izmantos, lai noteiktu, vai resursdators ir pieejams aptauj
 
 #: include/global_form.php:1277
 #, fuzzy
-#| msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>"
 msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 msgstr "Nosūtāmās ping pakotnes veids.<br> <i>PIEZĪME. ICMP operētājsistēmā Linux/UNIX ir nepieciešamas root tiesības.</i>"
 
@@ -10033,7 +10019,6 @@ msgstr ""
 
 #: include/global_settings.php:507
 #, fuzzy
-#| msgid "The name of this Data Input Method."
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
 msgstr "Šīs datu ievades metodes nosaukums."
 
@@ -10043,7 +10028,6 @@ msgstr ""
 
 #: include/global_settings.php:514
 #, fuzzy
-#| msgid "Content-Security Alternate Sources"
 msgid "Content-Security Script Policy"
 msgstr "Satura drošības alternatīvie avoti"
 
@@ -10065,7 +10049,6 @@ msgstr ""
 
 #: include/global_settings.php:524 include/global_settings.php:539
 #, fuzzy
-#| msgid "Cacti Report"
 msgid "CSP Violation Report URI"
 msgstr "Kaktusu ziņojums"
 
@@ -10466,7 +10449,6 @@ msgstr "Noklusējuma diagrammas veids"
 
 #: include/global_settings.php:962
 #, fuzzy
-#| msgid "When creating graphs, what Graph Type would you like pre-selected?"
 msgid "When creating graphs, what Graph Type would you like preselected?"
 msgstr "Veidojot grafikus, kādu diagrammas veidu vēlaties iepriekš atlasīt?"
 
@@ -11164,7 +11146,6 @@ msgstr "Paroles vēsture"
 
 #: include/global_settings.php:1641
 #, fuzzy
-#| msgid "Remember this number of old passwords and disallow re-using them."
 msgid "Remember this number of old passwords and disallow reusing them."
 msgstr "Atcerieties šo veco paroļu skaitu un neļaujiet tās atkārtoti izmantot."
 
@@ -14198,7 +14179,6 @@ msgstr "Konstatētas nesaglabātas izmaiņas"
 
 #: lib/html_form.php:1529
 #, fuzzy
-#| msgid "You have unsaved changes on this form.  If you press &#39;Continue&#39; these changes will be discarded.  Press &#39;Cancel&#39; to continue editing the form."
 msgid "You have unsaved changes on this form.  If you press 'Continue' these changes will be discarded.  Press 'Cancel' to continue editing the form."
 msgstr "Šajā veidlapā ir nesaglabātas izmaiņas. Ja nospiedīsiet \"Turpināt\", šīs izmaiņas tiks atmestas. Nospiediet \"Atcelt\", lai turpinātu veidlapas rediģēšanu."
 
@@ -15221,7 +15201,6 @@ msgstr "Nepieciešams"
 
 #: lib/installer.php:1917
 #, fuzzy
-#| msgid "The specificed value appears to be different in the running config versus the INI file."
 msgid "The specified value appears to be different in the running config versus the INI file."
 msgstr "Konkrētā vērtība, šķiet, atšķiras palaistajā konfigurācijā no INI faila."
 
@@ -15519,7 +15498,6 @@ msgstr "Tāpēc pirms vairākām versijām Cacti tika uzlabots, lai nodrošināt
 
 #: lib/installer.php:2429
 #, fuzzy
-#| msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediatly disabled until the administrator validates that the Data Input Method is valid."
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "Baltais saraksts darbojas šādi: kad pirmo reizi importējat datu ievades metodi vai atkārtoti importējat datu ievades metodi un skripts un/vai argumenti jebkādā veidā mainās, datu ievades metode un visi atbilstošie datu avoti nekavējoties atspējot, līdz administrators apstiprinās, ka datu ievades metode ir derīga."
 
@@ -16143,13 +16121,11 @@ msgstr "UDP Ping sekmīga (%s ms)"
 
 #: lib/ping.php:554
 #, fuzzy, php-format
-#| msgid "TCP Ping Success (%s ms)"
 msgid "TCP Ping Success Connection Refused (%s ms)"
 msgstr "TCP ping veiksmīga (%s ms)"
 
 #: lib/ping.php:557
 #, fuzzy, php-format
-#| msgid "TCP ping: socket_connect(), reason: %s"
 msgid "TCP Ping Failed: socket_connect(), reason: %s"
 msgstr "TCP ping: socket_connect(), iemesls: %s"
 
@@ -16286,7 +16262,6 @@ msgstr "Izlaistā pārskata grafikas elements “ <i>%s</i> ” jau pastāv"
 
 #: lib/rrd.php:1680
 #, fuzzy, php-format
-#| msgid "ERROR: RRDfile %s not writeable"
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "KĻŪDA: RRDfails %s nav ierakstāms"
 
@@ -16467,7 +16442,6 @@ msgstr "Nezināma RRDtool kļūda"
 #: lib/snmp.php:211 lib/snmp.php:311 lib/snmp.php:406 lib/snmp.php:738
 #: lib/snmp.php:753
 #, fuzzy, php-format
-#| msgid "SNMP Options [edit: %s]"
 msgid "SNMP Command is: %s"
 msgstr "SNMP opcijas [labot: %s]"
 
@@ -16491,19 +16465,16 @@ msgstr ""
 
 #: lib/spikekill.php:259 lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Remove StdDev"
 msgid "StdDev"
 msgstr "Noņemiet StdDev"
 
 #: lib/spikekill.php:265 lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Variable"
 msgid "Variance"
 msgstr "Variable"
 
 #: lib/spikekill.php:271
 #, fuzzy
-#| msgid "Gap Fill Range"
 msgid "Gap Fill"
 msgstr "Atstarpes aizpildīšanas diapazons"
 
@@ -16558,13 +16529,11 @@ msgstr ""
 
 #: lib/spikekill.php:355
 #, fuzzy, php-format
-#| msgid "RRDfiles"
 msgid "RRDfile:       %s"
 msgstr "RRD faili"
 
 #: lib/spikekill.php:356
 #, fuzzy, php-format
-#| msgid "Repair Steps [ %s ]"
 msgid "Repair Type:   %s"
 msgstr "Labošanas darbības [%s]"
 
@@ -16575,7 +16544,6 @@ msgstr ""
 
 #: lib/spikekill.php:360
 #, fuzzy, php-format
-#| msgid "Max Kills Per RRA"
 msgid "Max Kills:     %s"
 msgstr "Max Kills uz RRA"
 
@@ -16585,7 +16553,6 @@ msgstr ""
 
 #: lib/spikekill.php:366
 #, fuzzy, php-format
-#| msgid "Standard Deviations"
 msgid "Standard Devs: %s"
 msgstr "Standarta novirzes: %s"
 
@@ -16605,7 +16572,6 @@ msgstr ""
 
 #: lib/spikekill.php:375
 #, fuzzy
-#| msgid "Windows Related"
 msgid "Window Range:  All"
 msgstr "Windows saistīta"
 
@@ -16659,7 +16625,6 @@ msgstr ""
 
 #: lib/spikekill.php:742
 #, fuzzy
-#| msgid "No Sites Found"
 msgid "NOTE: No Spikes Found."
 msgstr "Nav atrasta neviena vietne"
 
@@ -16683,7 +16648,6 @@ msgstr "CF"
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "DES"
 msgid "DS"
 msgstr "DES"
 
@@ -16693,7 +16657,6 @@ msgstr ""
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Simple"
 msgid "Samples"
 msgstr "Vienkāršs"
 
@@ -16703,19 +16666,16 @@ msgstr ""
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MaxValue"
 msgstr "Vērtība"
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Dry Run StdDev"
 msgid "MinStdDev"
 msgstr "MinStdDev"
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MinValue"
 msgstr "Vērtība"
 
@@ -16831,7 +16791,6 @@ msgstr "InnoDB sistēmas atmiņā glabās pēc iespējas vairāk tabulu un indek
 
 #: lib/utility.php:1347
 #, fuzzy
-#| msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accomodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "Šiem iestatījumiem ir jāpaliek IESLĒGTA, ja vien jūsu Cacti gadījumi nedarbojas ar ZFS vai FusionI/O, kuriem abiem ir iekšēja žurnāla ierakstīšana, lai pielāgotos pēkšņām sistēmas avārijām. Tomēr, ja jums ir ļoti laba jauda un jūsu sistēmas reti pazūd un jums ir dublējumkopijas, izslēdzot šo iestatījumu uz IZSLĒGTS, varat gandrīz par 50% ipalielināt datu bāzes veiktspēju."
 
@@ -17303,7 +17262,6 @@ msgstr "Neizdevās ievietot %s pakotni"
 
 #: package_import.php:318
 #, fuzzy
-#| msgid "Enter a valid file path"
 msgid "Error: Invalid file path."
 msgstr "Ievadiet derīgu faila ceļu"
 
@@ -18421,7 +18379,6 @@ msgstr[2] "Dublēt vietnes"
 
 #: sites.php:432
 #, fuzzy
-#| msgid "File not found"
 msgid "Site not found."
 msgstr "Fails nav atrasts"
 
@@ -18629,7 +18586,6 @@ msgstr "ciparu"
 
 #: tree.php:508
 #, fuzzy
-#| msgid "Permission Denied.  You do not have permission to the requested action."
 msgid "You do not have permission to modify this tree."
 msgstr "Atļauja liegta. Jums nav atļaujas veikt pieprasīto darbību."
 
@@ -19159,7 +19115,6 @@ msgstr "Pēdējā Vizīte"
 
 #: user_admin.php:2192
 #, fuzzy
-#| msgid "1 Week"
 msgid "< 1 Week Ago"
 msgstr "1 nedēļa"
 
@@ -19173,13 +19128,11 @@ msgstr ""
 
 #: user_admin.php:2195
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 2 Months Ago"
 msgstr "%d mēneši"
 
 #: user_admin.php:2196
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 4 Months Ago"
 msgstr "%d mēneši"
 
@@ -20511,6 +20464,15 @@ msgstr "Nav VDEF"
 #~ msgid "Access Denied! Login failed."
 #~ msgstr "Pieeja noliegta! Pieslēgšanās neizdevās."
 
+#~ msgid "Attempted SQL Injection found in Tree Automation for the field variable."
+#~ msgstr "Lauka mainīgā koka automatizācijā atrasts SQL injekcijas mēģinājums."
+
+#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
+#~ msgstr "Dažiem Cacti spraudņiem ir jāizmanto nedroši JavaScript eval() izsaukumi. Ja atlasīsit šo opciju, tie tiks atļauti kaktusos."
+
+#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
+#~ msgstr "Satura drošība Atļaut nedrošus JavaScript eval() zvanus"
+
 #, fuzzy
 #~| msgid "Data Input Field"
 #~ msgid "Data Input Field not found."
@@ -20521,20 +20483,11 @@ msgstr "Nav VDEF"
 #~ msgid "Data Input Method not found."
 #~ msgstr "Nav atrasta neviena datu ievades metode"
 
-#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
-#~ msgstr "Satura drošība Atļaut nedrošus JavaScript eval() zvanus"
-
-#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
-#~ msgstr "Dažiem Cacti spraudņiem ir jāizmanto nedroši JavaScript eval() izsaukumi. Ja atlasīsit šo opciju, tie tiks atļauti kaktusos."
-
-#~ msgid "Variance Outliers"
-#~ msgstr "Izkliedes novirzes"
+#~ msgid "Dry Run Variance"
+#~ msgstr "Dry Run Variance"
 
 #~ msgid "Remove Variance"
 #~ msgstr "Noņemt dispersiju"
 
-#~ msgid "Dry Run Variance"
-#~ msgstr "Dry Run Variance"
-
-#~ msgid "Attempted SQL Injection found in Tree Automation for the field variable."
-#~ msgstr "Lauka mainīgā koka automatizācijā atrasts SQL injekcijas mēģinājums."
+#~ msgid "Variance Outliers"
+#~ msgstr "Izkliedes novirzes"

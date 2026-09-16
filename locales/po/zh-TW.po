@@ -1056,7 +1056,6 @@ msgstr "如果你覺得這是一個錯誤。請聯繫您的Cacti管理員。"
 
 #: auth_login.php:219
 #, fuzzy
-#| msgid "Access Denied!  User account disabled."
 msgid "Access Denied! User account locked."
 msgstr "拒絕訪問，禁用用戶帳戶。"
 
@@ -7376,7 +7375,6 @@ msgstr "SHA-256"
 
 #: include/global_arrays.php:659
 #, fuzzy
-#| msgid "SHA-392"
 msgid "SHA-384"
 msgstr "SHA-392"
 
@@ -10464,7 +10462,6 @@ msgstr "Cacti將使用該方法確定主機是否可用於輪詢。 <br> <i>注�
 
 #: include/global_form.php:1277
 #, fuzzy
-#| msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>"
 msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 msgstr "要發送的ping數據包的類型。 <br> <i>注意：Linux / UNIX上的ICMP需要root權限。</i>"
 
@@ -11706,7 +11703,6 @@ msgstr ""
 
 #: include/global_settings.php:514
 #, fuzzy
-#| msgid "Content-Security Alternate Sources"
 msgid "Content-Security Script Policy"
 msgstr "內容安全替代來源"
 
@@ -18127,7 +18123,6 @@ msgstr "因此，在多個版本之前，Cacti進行了增強，可以在這些�
 
 #: lib/installer.php:2429
 #, fuzzy
-#| msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediatly disabled until the administrator validates that the Data Input Method is valid."
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "白名單的工作方式是，當您首次導入數據輸入法或重新導入數據輸入法，並且腳本和/或參數以任何方式發生變化時，數據輸入法以及所有相應的數據源都會立即禁用，直到管理員確認數據輸入法有效。"
 
@@ -18842,13 +18837,11 @@ msgstr "TCP Ping成功（%s ms）"
 
 #: lib/ping.php:557
 #, fuzzy, php-format
-#| msgid "TCP ping: socket_connect(), reason: %s"
 msgid "TCP Ping Failed: socket_connect(), reason: %s"
 msgstr "TCP ping：socket_connect（），原因：％s"
 
 #: lib/ping.php:580
 #, fuzzy, php-format
-#| msgid "TCP ping: socket_select() failed, reason: %s"
 msgid "TCP Ping Failed: socket_select() failed, reason: %s"
 msgstr "TCP ping：socket_select（）失敗，原因：％s"
 
@@ -19553,7 +19546,6 @@ msgstr "InnoDB將盡可能多地保存系統內存中的表和索引。因此，
 
 #: lib/utility.php:1347
 #, fuzzy
-#| msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accomodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "除非您的Cacti實例在ZFS或FusionI / O上運行，並且兩者都具有內部日記功能以適應突然的系統崩潰，否則此設置應保持為ON。但是，如果您的電源非常好，並且系統很少宕機並且有備份，那麼將此設置設置為OFF可以使數據庫性能提高近50％。"
 
@@ -20468,7 +20460,6 @@ msgstr "注意：已添加第二個仙人掌數據收集器。因此，自動啟
 
 #: poller_automation.php:53
 #, fuzzy, php-format
-#| msgid "WARNING: Main Cacti database offline or in recovery"
 msgid "WARNING: Main Cacti database %s offline or in recovery"
 msgstr "警告：主 Cacti 數據庫離線或正在恢復"
 
@@ -23737,6 +23728,14 @@ msgstr "沒有VDEF"
 #~ msgstr "拒絕訪問，禁用用戶帳戶。"
 
 #, fuzzy
+#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
+#~ msgstr "某些Cacti插件需要使用不安全的JavaScript eval（）調用。如果選擇此選項，則仙人掌中將允許它們。"
+
+#, fuzzy
+#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
+#~ msgstr "允許不安全的JavaScript eval（）調用"
+
+#, fuzzy
 #~ msgid "Data Input Field not found."
 #~ msgstr "數據輸入字段"
 
@@ -23745,21 +23744,13 @@ msgstr "沒有VDEF"
 #~ msgstr "找不到數據輸入方法"
 
 #, fuzzy
-#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
-#~ msgstr "允許不安全的JavaScript eval（）調用"
-
-#, fuzzy
-#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
-#~ msgstr "某些Cacti插件需要使用不安全的JavaScript eval（）調用。如果選擇此選項，則仙人掌中將允許它們。"
-
-#, fuzzy
-#~ msgid "Variance Outliers"
-#~ msgstr "方差異常值"
+#~ msgid "Dry Run Variance"
+#~ msgstr "幹運行方差"
 
 #, fuzzy
 #~ msgid "Remove Variance"
 #~ msgstr "刪除差異"
 
 #, fuzzy
-#~ msgid "Dry Run Variance"
-#~ msgstr "幹運行方差"
+#~ msgid "Variance Outliers"
+#~ msgstr "方差異常值"

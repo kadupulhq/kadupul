@@ -45,7 +45,6 @@ msgstr "कंसोल मेनू अनुभाग"
 
 #: about.php:62
 #, fuzzy
-#| msgid "Contributors to Docuemntation, QA, Packaging, the Forums and our YouTube page."
 msgid "Contributors to Documentation, QA, Packaging, the Forums and our YouTube page."
 msgstr "डॉक्यूमेंटेशन, QA, पैकेजिंग, फ़ोरम और हमारे यूट्यूब पेज के योगदानकर्ता।"
 
@@ -371,7 +370,6 @@ msgstr "पूर्वावलोकन"
 
 #: aggregate_graphs.php:623
 #, fuzzy
-#| msgid "Aggregate Graphs Accessed does not Exist"
 msgid "Aggregate Graph Accessed does not Exist"
 msgstr "ग्राफ़ सेटिंग्स को अलग करें"
 
@@ -756,7 +754,6 @@ msgstr "कोई सकल रेखांकन नहीं मिला"
 
 #: aggregate_templates.php:119 aggregate_templates.php:364
 #, fuzzy
-#| msgid "No Aggregate Templates Found"
 msgid "Aggregate Template not found."
 msgstr "कोई सकल टेम्पलेट नहीं मिला"
 
@@ -962,7 +959,6 @@ msgstr "यदि आपको लगता है कि यह एक त्�
 
 #: auth_login.php:219
 #, fuzzy
-#| msgid "Access Denied!  User account disabled."
 msgid "Access Denied! User account locked."
 msgstr "प्रवेश निषेध, उपयोगकर्ता खाता अक्षम।"
 
@@ -1575,7 +1571,6 @@ msgstr "मासिक दिवस पर"
 
 #: automation_networks.php:433
 #, fuzzy
-#| msgid "File not found"
 msgid "Network not found."
 msgstr "फाइल नहीं मिली"
 
@@ -2491,7 +2486,6 @@ msgstr ""
 
 #: automation_tree_rules.php:189
 #, fuzzy
-#| msgid "The Field Name that shall be used for this Rule Item."
 msgid "Invalid Field Name specified for Tree Rule Item."
 msgstr "फ़ील्ड नाम जो इस नियम आइटम के लिए उपयोग किया जाएगा।"
 
@@ -2941,7 +2935,6 @@ msgstr "रंग आइटम हटाएँ"
 
 #: color_templates.php:389
 #, fuzzy
-#| msgid "No Color Templates Found"
 msgid "Color Template not found."
 msgstr "कोई रंग टेम्पलेट नहीं मिला"
 
@@ -2979,7 +2972,6 @@ msgstr "कोई रंग टेम्पलेट नहीं मिला"
 
 #: color_templates_items.php:277
 #, fuzzy
-#| msgid "Color Template Items"
 msgid "Color Template or Item not found."
 msgstr "रंग टेम्पलेट आइटम"
 
@@ -3489,7 +3481,6 @@ msgstr "डेटा इनपुट फ़ील्ड हटाएं"
 
 #: data_input.php:747
 #, fuzzy
-#| msgid "Update this Field"
 msgid "Update Whitelist"
 msgstr "इस फील्ड को अपडेट करें"
 
@@ -4453,7 +4444,6 @@ msgstr "GPRINT प्रीसेट हटाएँ"
 
 #: gprint_presets.php:188
 #, fuzzy
-#| msgid "GPRINT Preset"
 msgid "GPRINT Preset not found."
 msgstr "GPRINT पूर्व निर्धारित"
 
@@ -4516,7 +4506,6 @@ msgstr "ग्राफ देखना"
 
 #: graph.php:115
 #, fuzzy
-#| msgid "Data Source does not exist."
 msgid "The Graph you requested does not exist."
 msgstr "डेटा स्रोत मौजूद नहीं है।"
 
@@ -4676,7 +4665,6 @@ msgstr "कोई इनपुट नहीं"
 
 #: graph_templates.php:561
 #, fuzzy
-#| msgid "No Graph Templates Found"
 msgid "Graph Template not found."
 msgstr "कोई ग्राफ़ टेम्पलेट नहीं मिला"
 
@@ -6141,7 +6129,6 @@ msgstr "पासवर्ड फ़ील्ड का आकार निर�
 
 #: include/global_arrays.php:313
 #, fuzzy
-#| msgid "Unable to increase size of password field, pleas check permission of db user"
 msgid "Unable to increase size of password field, please check permission of db user"
 msgstr "पासवर्ड फ़ील्ड का आकार बढ़ाने में असमर्थ, db उपयोगकर्ता की अनुमति की जाँच करें"
 
@@ -6415,7 +6402,6 @@ msgstr "एसएचए-256"
 
 #: include/global_arrays.php:659
 #, fuzzy
-#| msgid "SHA-392"
 msgid "SHA-384"
 msgstr "SHA-392"
 
@@ -6477,7 +6463,6 @@ msgstr "टीसीपी पिंग"
 
 #: include/global_arrays.php:698
 #, fuzzy
-#| msgid "TCP Ping"
 msgid "TCP Ping Closed"
 msgstr "टीसीपी पिंग"
 
@@ -8984,7 +8969,6 @@ msgstr "यदि कोई होस्ट मतदान के लिए उ
 
 #: include/global_form.php:1277
 #, fuzzy
-#| msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>"
 msgid "The type of ping packet to sent.  <br><i>NOTE: ICMP on Linux/UNIX requires root privileges.</i>  <br><i>NOTE: TCP Ping Closed - Even if the tcp ping is not successful, the device can be considered UP.</i>"
 msgstr "भेजने के लिए पिंग पैकेट का प्रकार। <br> <i>नोट: Linux / UNIX पर ICMP को रूट विशेषाधिकार की आवश्यकता होती है।</i>"
 
@@ -9986,7 +9970,6 @@ msgstr "जब जाँच की जाती है, तो उच्च स�
 
 #: include/global_settings.php:501
 #, fuzzy
-#| msgid "Remote Data Collector Status:"
 msgid "Allow Unsafe Remote Data Collector HTTPS"
 msgstr "दूरस्थ डेटा संग्राहक स्थिति:"
 
@@ -9996,7 +9979,6 @@ msgstr ""
 
 #: include/global_settings.php:507
 #, fuzzy
-#| msgid "The name of this Data Input Method."
 msgid "Allow Unsafe Metacharacters in Data Input Methods"
 msgstr "इस डेटा इनपुट विधि का नाम।"
 
@@ -10006,7 +9988,6 @@ msgstr ""
 
 #: include/global_settings.php:514
 #, fuzzy
-#| msgid "Content-Security Alternate Sources"
 msgid "Content-Security Script Policy"
 msgstr "सामग्री-सुरक्षा वैकल्पिक स्रोत"
 
@@ -10028,7 +10009,6 @@ msgstr ""
 
 #: include/global_settings.php:524 include/global_settings.php:539
 #, fuzzy
-#| msgid "Cacti Report"
 msgid "CSP Violation Report URI"
 msgstr "कैक्ट्टी रिपोर्ट"
 
@@ -10429,7 +10409,6 @@ msgstr "डिफ़ॉल्ट ग्राफ़ प्रकार"
 
 #: include/global_settings.php:962
 #, fuzzy
-#| msgid "When creating graphs, what Graph Type would you like pre-selected?"
 msgid "When creating graphs, what Graph Type would you like preselected?"
 msgstr "ग्राफ़ बनाते समय, आप पहले से चयनित किस ग्राफ़ प्रकार को पसंद करेंगे?"
 
@@ -11128,7 +11107,6 @@ msgstr "पासवर्ड इतिहास"
 
 #: include/global_settings.php:1641
 #, fuzzy
-#| msgid "Remember this number of old passwords and disallow re-using them."
 msgid "Remember this number of old passwords and disallow reusing them."
 msgstr "पुराने पासवर्ड की इस संख्या को याद रखें और उन्हें फिर से उपयोग न करें।"
 
@@ -14158,7 +14136,6 @@ msgstr "अनवांटेड परिवर्तन"
 
 #: lib/html_form.php:1529
 #, fuzzy
-#| msgid "You have unsaved changes on this form.  If you press &#39;Continue&#39; these changes will be discarded.  Press &#39;Cancel&#39; to continue editing the form."
 msgid "You have unsaved changes on this form.  If you press 'Continue' these changes will be discarded.  Press 'Cancel' to continue editing the form."
 msgstr "आपने इस फॉर्म में परिवर्तन नहीं किए हैं। यदि आप &#39;जारी रखें&#39; दबाते हैं तो ये परिवर्तन छोड़ दिए जाएंगे। प्रपत्र संपादित करना जारी रखने के लिए &#39;रद्द करें&#39; दबाएँ।"
 
@@ -15181,7 +15158,6 @@ msgstr "आवश्यकता"
 
 #: lib/installer.php:1917
 #, fuzzy
-#| msgid "The specificed value appears to be different in the running config versus the INI file."
 msgid "The specified value appears to be different in the running config versus the INI file."
 msgstr "विशिष्ट मान चल रहे कॉन्फ़िगरेशन बनाम INI फ़ाइल में अलग प्रतीत होता है।"
 
@@ -15479,7 +15455,6 @@ msgstr "इसलिए, कई संस्करणों से पहले,
 
 #: lib/installer.php:2429
 #, fuzzy
-#| msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediatly disabled until the administrator validates that the Data Input Method is valid."
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "जिस तरह से श्वेतसूची में काम करता है वह यह है कि जब आप पहली बार किसी डेटा इनपुट विधि को आयात करते हैं, या आप किसी डेटा इनपुट विधि को फिर से आयात करते हैं, और स्क्रिप्ट और या किसी भी तरह से परिवर्तन होता है, डेटा इनपुट विधि और सभी संबंधित डेटा स्रोत होंगे जब तक कि व्यवस्थापक मान्य नहीं करता कि डेटा इनपुट विधि मान्य नहीं है, तुरंत अक्षम हो जाएं।"
 
@@ -16103,19 +16078,16 @@ msgstr "यूडीपी पिंग सफलता ( %s एमएस)"
 
 #: lib/ping.php:554
 #, fuzzy, php-format
-#| msgid "TCP Ping Success (%s ms)"
 msgid "TCP Ping Success Connection Refused (%s ms)"
 msgstr "टीसीपी पिंग सफलता ( %s एमएस)"
 
 #: lib/ping.php:557
 #, fuzzy, php-format
-#| msgid "TCP ping: socket_connect(), reason: %s"
 msgid "TCP Ping Failed: socket_connect(), reason: %s"
 msgstr "टीसीपी पिंग: सॉकेट_कनेक्ट (), कारण: %s"
 
 #: lib/ping.php:580
 #, fuzzy, php-format
-#| msgid "TCP ping: socket_select() failed, reason: %s"
 msgid "TCP Ping Failed: socket_select() failed, reason: %s"
 msgstr "TCP पिंग: socket_select () विफल, कारण: %s"
 
@@ -16247,7 +16219,6 @@ msgstr "छोड़ी गई रिपोर्ट ग्राफ की व�
 
 #: lib/rrd.php:1680
 #, fuzzy, php-format
-#| msgid "ERROR: RRDfile %s not writeable"
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "त्रुटि: RRDfile %s लिखने योग्य नहीं है"
 
@@ -16428,7 +16399,6 @@ msgstr "अज्ञात RRDtool त्रुटि"
 #: lib/snmp.php:211 lib/snmp.php:311 lib/snmp.php:406 lib/snmp.php:738
 #: lib/snmp.php:753
 #, fuzzy, php-format
-#| msgid "SNMP Options [edit: %s]"
 msgid "SNMP Command is: %s"
 msgstr "SNMP विकल्प [संपादित करें: %s]"
 
@@ -16438,7 +16408,6 @@ msgstr ""
 
 #: lib/spikekill.php:189
 #, fuzzy, php-format
-#| msgid "XML: Cacti version does not exist."
 msgid "FATAL: File '%s' does not exist."
 msgstr "XML: Cacti संस्करण मौजूद नहीं है।"
 
@@ -16453,19 +16422,16 @@ msgstr ""
 
 #: lib/spikekill.php:259 lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Remove StdDev"
 msgid "StdDev"
 msgstr "StdDev निकालें"
 
 #: lib/spikekill.php:265 lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Variable"
 msgid "Variance"
 msgstr "परिवर्तनशील"
 
 #: lib/spikekill.php:271
 #, fuzzy
-#| msgid "Gap Fill Range"
 msgid "Gap Fill"
 msgstr "गैप भराव रेंज"
 
@@ -16520,13 +16486,11 @@ msgstr ""
 
 #: lib/spikekill.php:355
 #, fuzzy, php-format
-#| msgid "RRDfiles"
 msgid "RRDfile:       %s"
 msgstr "RRDfiles"
 
 #: lib/spikekill.php:356
 #, fuzzy, php-format
-#| msgid "Repair Steps [ %s ]"
 msgid "Repair Type:   %s"
 msgstr "मरम्मत के कदम [ %s]"
 
@@ -16537,7 +16501,6 @@ msgstr ""
 
 #: lib/spikekill.php:360
 #, fuzzy, php-format
-#| msgid "Max Kills Per RRA"
 msgid "Max Kills:     %s"
 msgstr "मैक्स प्रति आरआरए को मारता है"
 
@@ -16547,7 +16510,6 @@ msgstr ""
 
 #: lib/spikekill.php:366
 #, fuzzy, php-format
-#| msgid "Standard Deviations"
 msgid "Standard Devs: %s"
 msgstr "मानक विचलन"
 
@@ -16567,7 +16529,6 @@ msgstr ""
 
 #: lib/spikekill.php:375
 #, fuzzy
-#| msgid "Windows Related"
 msgid "Window Range:  All"
 msgstr "विंडोज से संबंधित"
 
@@ -16621,7 +16582,6 @@ msgstr ""
 
 #: lib/spikekill.php:742
 #, fuzzy
-#| msgid "No Sites Found"
 msgid "NOTE: No Spikes Found."
 msgstr "कोई साइट नहीं मिली"
 
@@ -16637,19 +16597,16 @@ msgstr ""
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Avg:"
 msgid "Avg"
 msgstr "औसत:"
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "CDEF"
 msgid "CF"
 msgstr "CDEF"
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "DES"
 msgid "DS"
 msgstr "डेस"
 
@@ -16659,7 +16616,6 @@ msgstr ""
 
 #: lib/spikekill.php:1040
 #, fuzzy
-#| msgid "Simple"
 msgid "Samples"
 msgstr "सरल"
 
@@ -16669,19 +16625,16 @@ msgstr ""
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MaxValue"
 msgstr "मूल्य"
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Dry Run StdDev"
 msgid "MinStdDev"
 msgstr "सूखा रन StdDev"
 
 #: lib/spikekill.php:1041
 #, fuzzy
-#| msgid "Value"
 msgid "MinValue"
 msgstr "मूल्य"
 
@@ -16797,7 +16750,6 @@ msgstr "InnoDB जितना संभव हो उतना सिस्ट�
 
 #: lib/utility.php:1347
 #, fuzzy
-#| msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accomodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgid "This settings should remain ON unless your Cacti instances is running on either ZFS or FusionI/O which both have internal journaling to accommodate abrupt system crashes.  However, if you have very good power, and your systems rarely go down and you have backups, turning this setting to OFF can net you almost a 50% increase in database performance."
 msgstr "जब तक आपका Cacti इंस्टेंसेस ZFS या FusionI / O पर नहीं चल रहा हो, तब तक यह सेटिंग ऑन रहना चाहिए, जिसमें दोनों के पास अचानक सिस्टम क्रैश होने की आंतरिक जर्नलिंग हो। हालाँकि, यदि आपके पास बहुत अच्छी शक्ति है, और आपके सिस्टम शायद ही कभी चलते हैं और आपके पास बैकअप है, तो इस सेटिंग को बंद करने से आप डेटाबेस प्रदर्शन में लगभग 50% की वृद्धि कर सकते हैं।"
 
@@ -17265,7 +17217,6 @@ msgstr "पैकेज %s इम्पोर्ट नहीं हो सक�
 
 #: package_import.php:318
 #, fuzzy
-#| msgid "Enter a valid file path"
 msgid "Error: Invalid file path."
 msgstr "एक मान्य फ़ाइल पथ दर्ज करें"
 
@@ -17613,7 +17564,6 @@ msgstr "नोट: एक दूसरा कैक्टि डेटा कल
 
 #: poller_automation.php:53
 #, fuzzy, php-format
-#| msgid "WARNING: Main Cacti database offline or in recovery"
 msgid "WARNING: Main Cacti database %s offline or in recovery"
 msgstr "चेतावनी: मुख्य कैक्टि डेटाबेस ऑफ़लाइन या पुनर्प्राप्ति में है"
 
@@ -18371,7 +18321,6 @@ msgstr[1] "प्रतिलिपि"
 
 #: sites.php:432
 #, fuzzy
-#| msgid "File not found"
 msgid "Site not found."
 msgstr "फाइल नहीं मिली"
 
@@ -18579,7 +18528,6 @@ msgstr "संख्यावाचक"
 
 #: tree.php:508
 #, fuzzy
-#| msgid "Permission Denied.  You do not have permission to the requested action."
 msgid "You do not have permission to modify this tree."
 msgstr "अनुमति नहीं मिली। आपके पास अनुरोधित कार्रवाई की अनुमति नहीं है।"
 
@@ -19080,7 +19028,6 @@ msgstr "पेड़ की अनुमति"
 
 #: user_admin.php:1852
 #, fuzzy
-#| msgid "File not found"
 msgid "User not found."
 msgstr "फाइल नहीं मिली"
 
@@ -19095,7 +19042,6 @@ msgstr "उपयोगकर्ता प्रबंधन"
 
 #: user_admin.php:2165
 #, fuzzy
-#| msgid "Groups"
 msgid "Group"
 msgstr "समूहों"
 
@@ -19105,7 +19051,6 @@ msgstr "अंतिम लॉगइन"
 
 #: user_admin.php:2192
 #, fuzzy
-#| msgid "1 Week"
 msgid "< 1 Week Ago"
 msgstr "% d वीक"
 
@@ -19119,13 +19064,11 @@ msgstr ""
 
 #: user_admin.php:2195
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 2 Months Ago"
 msgstr "% d माह"
 
 #: user_admin.php:2196
 #, fuzzy
-#| msgid "%d Months"
 msgid "> 4 Months Ago"
 msgstr "% d माह"
 
@@ -20327,7 +20270,6 @@ msgstr "गंभीरता का स्तर: %s"
 
 #: vdef.php:163 vdef.php:570
 #, fuzzy
-#| msgid "File not found"
 msgid "VDEF not found."
 msgstr "फाइल नहीं मिली"
 
@@ -20441,6 +20383,15 @@ msgstr "कोई VDEFs नहीं"
 #~ msgid "Access Denied! Login failed."
 #~ msgstr "प्रवेश निषेध, उपयोगकर्ता खाता अक्षम।"
 
+#~ msgid "Attempted SQL Injection found in Tree Automation for the field variable."
+#~ msgstr "फील्ड वेरिएबल के लिए ट्री ऑटोमेशन में पाया गया SQL इंजेक्शन का प्रयास किया गया।"
+
+#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
+#~ msgstr "कुछ Cacti प्लगइन्स को असुरक्षित JavaScript eval () कॉल के उपयोग की आवश्यकता होती है। यदि आप इस विकल्प का चयन करते हैं, तो उन्हें कैक्टि में अनुमति दी जाएगी।"
+
+#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
+#~ msgstr "Unsafe JavaScript eval () कॉल की अनुमति दें"
+
 #, fuzzy
 #~| msgid "Data Input Field"
 #~ msgid "Data Input Field not found."
@@ -20451,20 +20402,11 @@ msgstr "कोई VDEFs नहीं"
 #~ msgid "Data Input Method not found."
 #~ msgstr "कोई डेटा इनपुट विधियाँ नहीं मिलीं"
 
-#~ msgid "Content-Security Allow Unsafe JavaScript eval() calls"
-#~ msgstr "Unsafe JavaScript eval () कॉल की अनुमति दें"
-
-#~ msgid "Certain Cacti plugins require the use of unsafe JavaScript eval() calls.  If you select this option, they will be allowed in Cacti."
-#~ msgstr "कुछ Cacti प्लगइन्स को असुरक्षित JavaScript eval () कॉल के उपयोग की आवश्यकता होती है। यदि आप इस विकल्प का चयन करते हैं, तो उन्हें कैक्टि में अनुमति दी जाएगी।"
-
-#~ msgid "Variance Outliers"
-#~ msgstr "वैरिएंट आउटलेर"
+#~ msgid "Dry Run Variance"
+#~ msgstr "ड्राई रन वैरिएस"
 
 #~ msgid "Remove Variance"
 #~ msgstr "दूर करो"
 
-#~ msgid "Dry Run Variance"
-#~ msgstr "ड्राई रन वैरिएस"
-
-#~ msgid "Attempted SQL Injection found in Tree Automation for the field variable."
-#~ msgstr "फील्ड वेरिएबल के लिए ट्री ऑटोमेशन में पाया गया SQL इंजेक्शन का प्रयास किया गया।"
+#~ msgid "Variance Outliers"
+#~ msgstr "वैरिएंट आउटलेर"
