@@ -69,7 +69,7 @@ def normalize_php_locations(value):
     lines = []
     root = r'(?:<APP>|<HARNESS>|/var/www/html|/harness)'
     for line in value.splitlines(keepends=True):
-        if re.search(r'\bPHP (?:(?:USER_)?(?:NOTICE|WARNING|ERROR|DEPRECATED)|(?:CORE|COMPILE)_(?:ERROR|WARNING)|RECOVERABLE_ERROR|PARSE|ALL|STRICT|Notice|Warning|Deprecated|Fatal error|Parse error)\b', line):
+        if re.search(r'\bPHP (?:(?:USER_)?(?:NOTICE|WARNING|ERROR|DEPRECATED)|(?:CORE|COMPILE)_(?:ERROR|WARNING)|RECOVERABLE_ERROR|PARSE|ALL|STRICT|Notice|Warning|Deprecated|Fatal error|Parse error|Unknown Error)\b', line):
             line = re.sub(r'(\bin(?: file:)?\s+' + root + r'/[^\r\n]*?\.php\s+on line:?\s*)\d+(?=\s*$)',
                           r'\1<LINE>', line)
         # cacti_debug_backtrace emits a distinct record, with comma-separated
@@ -646,7 +646,7 @@ class Harness:
                     missing.update(golden_root.name + '/' + name for name in set(self.observed) - recorded)
                 if orphans:
                     raise RuntimeError('Goldens have no observations: ' + ', '.join(sorted(orphans)))
-                if missing:
+                if missing and not (self.args.update_golden and getattr(self.args, 'bootstrap_goldens', False)):
                     raise RuntimeError('Runtime goldens are missing observations: ' + ', '.join(sorted(missing)))
             except RuntimeError as selection_error:
                 error = str(selection_error)
@@ -748,6 +748,8 @@ def main():
     test = sub.add_parser('run')
     test.add_argument('--target', default=os.environ.get('TARGET', 'kadupul'))
     test.add_argument('--update-golden', action='store_true')
+    test.add_argument('--bootstrap-goldens', action='store_true',
+                      help='Allow missing runtime entries during an explicit full capture; verification still requires complete inventories.')
     test.add_argument('--keep', action='store_true')
     test.add_argument('--only', nargs='*', default=None, metavar='GROUP',
                       help='Verify only these scenario groups (api, auth, devices, graphs, plugins, cli, poller, ui, database, upgrade, snmp, faults, diagnostics). All scenarios still run, because later ones consume earlier fixtures.')
@@ -764,6 +766,8 @@ def main():
         parser.error('Target must be a safe artifact label')
     if args.only and args.update_golden:
         parser.error('--update-golden records every scenario; it cannot be scoped with --only')
+    if args.bootstrap_goldens and (not args.update_golden or args.only is not None):
+        parser.error('--bootstrap-goldens requires --update-golden without --only')
     harness = Harness(args)
     error = None
     status = 2

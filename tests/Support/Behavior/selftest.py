@@ -174,7 +174,31 @@ def recording_guards():
                 assert {str(p): p.read_bytes() for p in golden.parent.rglob('*.json')} == before, case
             else:
                 assert len(list(golden.rglob('*.json'))) == len(harness.EXPECTED_SCENARIOS)
-    print('recording rejects empty, missing, unexpected and orphaned scenarios before writing goldens')
+        recorder.args = types.SimpleNamespace(target='bootstrap', only=None, update_golden=True, bootstrap_goldens=True)
+        recorder.destination = root / 'results/bootstrap'
+        target = root / 'tests/Golden/bootstrap'
+        names = sorted(harness.EXPECTED_SCENARIOS)
+        for version in ('8.2', '8.3'):
+            for name in names[:-1]:
+                harness.write_json(target / ('php-' + version) / (name + '.json'), {'value': name})
+        recorder.command = lambda *a, **kw: {'stdout': '8.2', 'stderr': '', 'exit': 0}
+        with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', return_value={'stdout': 'revision'}):
+            assert recorder.finish() == 0
+            assert (target / 'php-8.2' / (names[-1] + '.json')).exists()
+            assert not (target / 'php-8.3' / (names[-1] + '.json')).exists()
+            recorder.args.update_golden = False
+            assert recorder.finish() == 2, 'Verification must reject an incomplete other runtime even with bootstrap set'
+            recorder.args.update_golden = True
+            recorder.command = lambda *a, **kw: {'stdout': '8.3', 'stderr': '', 'exit': 0}
+            assert recorder.finish() == 0
+            recorder.args.update_golden = False
+            assert recorder.finish() == 0
+            recorder.args.update_golden = True
+            (target / 'php-8.2/removed.json').write_text('42')
+            before = {str(p): p.read_bytes() for p in target.rglob('*.json')}
+            assert recorder.finish() == 2, 'Bootstrap must still reject orphaned contracts'
+            assert {str(p): p.read_bytes() for p in target.rglob('*.json')} == before
+    print('recording guards reject incomplete inventories; explicit bootstrap captures each runtime without weakening verification')
 
 
 def diagnostic_contracts():
@@ -211,7 +235,7 @@ def diagnostic_contracts():
     trace = '09/16/2026 01:02:06 - CMDPHP PHP ERROR Backtrace: (/var/www/html/lib/rrd.php[334]:update(), DS[12])'
     assert harness.application_diagnostics(trace) == harness.application_diagnostics(trace.replace('[334]', '[900]'))
     assert 'DS[12]' in harness.application_diagnostics(trace)[0]['message']
-    for severity in ('ERROR', 'WARNING', 'NOTICE', 'DEPRECATED', 'USER_WARNING', 'USER_NOTICE', 'USER_ERROR', 'USER_DEPRECATED', 'STRICT', 'PARSE', 'CORE_ERROR', 'CORE_WARNING', 'COMPILE_ERROR', 'COMPILE_WARNING', 'RECOVERABLE_ERROR', 'ALL'):
+    for severity in ('ERROR', 'WARNING', 'NOTICE', 'DEPRECATED', 'USER_WARNING', 'USER_NOTICE', 'USER_ERROR', 'USER_DEPRECATED', 'STRICT', 'PARSE', 'CORE_ERROR', 'CORE_WARNING', 'COMPILE_ERROR', 'COMPILE_WARNING', 'RECOVERABLE_ERROR', 'ALL', 'Unknown Error'):
         diagnostic = f'PHP {severity}: calibration in file: /harness/probe.php on line: 79'
         assert harness.normalize_php_locations(diagnostic).endswith('on line: <LINE>')
     relative_trace = 'PHP ERROR Backtrace: (/poller.php[764]:main(), /lib/functions.php[4479]:log(), DS[12])'
@@ -222,7 +246,7 @@ def diagnostic_contracts():
     assert harness.normalize(payload) != harness.normalize(payload.replace('[123]', '[124]'))
     disguised = 'PHP WARNING: payload PHP ERROR Backtrace: (/some/message.php[123]:read())'
     assert harness.normalize_php_locations(disguised) == disguised
-    for severity in ('PARSE', 'CORE_WARNING', 'COMPILE_ERROR', 'RECOVERABLE_ERROR'):
+    for severity in ('PARSE', 'CORE_WARNING', 'COMPILE_ERROR', 'RECOVERABLE_ERROR', 'Unknown Error'):
         diagnostic = f'09/16/2026 01:02:06 - ERROR PHP {severity}: payload /some/message.php[123] in file: /harness/probe.php on line: 79'
         observed = harness.application_diagnostics(diagnostic)
         assert observed == harness.application_diagnostics(diagnostic.replace('line: 79', 'line: 80'))

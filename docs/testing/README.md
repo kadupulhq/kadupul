@@ -140,7 +140,15 @@ suite meaningful.
 
 1. Add a scenario in `Harness.scenarios()`, capturing both the application's
    response and the resulting database state.
-2. Run `make test-update-golden` and read the new file. If it contains a value
+2. To add scenarios to an existing inventory, run
+   `mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py run --target cacti --update-golden --bootstrap-goldens`
+   and read the new files. Use your intended target label in place of `cacti`.
+   Repeat capture for every existing PHP runtime using its corresponding
+   container configuration. Bootstrap permits missing entries during capture
+   and writes only the current runtime; it still rejects orphaned scenarios.
+   Normal verification fails until every existing runtime inventory is complete.
+   Use `make test-update-golden` for updates to an already complete inventory.
+   If a new file contains a value
    that varies between runs, normalize it in `normalize()` or stop recording
    it. Do not normalize a value that carries meaning.
 3. Run `make test-characterization` twice and confirm both pass, which is what
