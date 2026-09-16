@@ -56,7 +56,7 @@ test('native maintenance CLI coordinates before touching an RRD', function ($scr
         symlink($root . '/lib/rrd_maintenance.php', $dir . '/lib/rrd_maintenance.php');
         symlink($root . '/lib/maintenance_cli.php', $dir . '/lib/maintenance_cli.php');
         file_put_contents($dir . '/lib/poller.php', '<?php');
-        file_put_contents($dir . '/lib/rrd.php', '<?php function rrdtool_function_fetch(...$args) { touch(dirname(__DIR__) . "/fetch"); }');
+        file_put_contents($dir . '/lib/rrd.php', '<?php function rrdtool_function_fetch(...$args) { touch(dirname(__DIR__) . "/fetch"); return array("data_source_names" => array("value")); }');
         $wrapper = $dir . '/rrdtool';
         file_put_contents($wrapper, "#!/bin/sh\ntouch " . escapeshellarg($dir . '/rrd-command') . "\nexec " . escapeshellarg($binary) . " \"\$@\"\n");
         chmod($wrapper, 0700);
@@ -88,6 +88,13 @@ FIXTURE;
         } elseif ($failure === 'rewrite') {
             file_put_contents($wrapper, "#!/bin/sh\nexit 1\n");
         }
+        if ($failure === 'fetch-empty' || $failure === 'fetch-throw') {
+            $behavior = $failure === 'fetch-empty' ? 'return array();' : 'throw new RuntimeException("fetch failed");';
+            file_put_contents($dir . '/lib/rrd.php', '<?php function rrdtool_function_fetch(...$args) { ' . $behavior . ' }');
+        }
+        if ($failure === 'missing-file') {
+            $fixture = str_replace("'rrd' => \$rrd", "'rrd' => \$rrd . '.missing'", $fixture);
+        }
         file_put_contents($dir . '/include/cli_check.php', $fixture);
         $args = array_merge(array(PHP_BINARY), rrd_cli_coverage_arguments($this, $dir, $root, $scriptName), array('-d', 'sys_temp_dir=' . $dir, $dir . '/cli/' . $scriptName));
         if ($scriptName === 'update_heartbeat.php') {
@@ -104,7 +111,7 @@ FIXTURE;
         $deadline = microtime(true) + 10;
         while (!file_exists($dir . '/started') && microtime(true) < $deadline) { usleep(10000); }
         expect(file_exists($dir . '/started'))->toBeTrue();
-        if (!$cached && $failure !== 'storage' && $scriptName !== 'splice_rrd.php') {
+        if (!$cached && !in_array($failure, array('storage', 'fetch-empty', 'fetch-throw'), true) && $scriptName !== 'splice_rrd.php') {
             usleep(100000);
             expect(proc_get_status($process)['running'])->toBeTrue()
                 ->and(file_exists($dir . '/rrd-command'))->toBeFalse()
@@ -146,6 +153,9 @@ FIXTURE;
                 expect(json_decode(file_get_contents($dir . '/unregistered'), true))->toBe(array('rfloat', 'child', '1', $pid))
                     ->and($stderr)->toBe('')->and(file_exists($dir . '/rrd-command'))->toBeFalse();
             }
+            if ($scriptName === 'float_rrdfiles.php') {
+                expect(file_exists($dir . '/unregistered'))->toBeTrue();
+            }
             if ($failure === 'storage') {
                 expect($stderr)->toContain('maintenance lock is unavailable')
                     ->and(file_exists($dir . '/unregistered'))->toBeTrue();
@@ -175,12 +185,12 @@ FIXTURE;
         $GLOBALS['config'] = $savedConfig;
         try { rrd_cli_merge_coverage($this, $dir); } finally { rrd_cli_fixture_remove($dir); }
     }
-})->with(array(array('update_heartbeat.php', false), array('float_rrdfiles.php', false), array('splice_rrd.php', false), array('float_rrdfiles.php', true), array('splice_rrd.php', true), array('update_heartbeat.php', true), array('splice_rrd.php', false, false), array('float_rrdfiles.php', false, true, 'storage'), array('float_rrdfiles.php', false, true, 'rewrite'), array('float_rrdfiles.php', false, true, 'sigterm'), array('float_rrdfiles.php', false, true, 'sigint')));
+})->with(array(array('update_heartbeat.php', false), array('float_rrdfiles.php', false), array('splice_rrd.php', false), array('float_rrdfiles.php', true), array('splice_rrd.php', true), array('update_heartbeat.php', true), array('splice_rrd.php', false, false), array('float_rrdfiles.php', false, true, 'storage'), array('float_rrdfiles.php', false, true, 'rewrite'), array('float_rrdfiles.php', false, true, 'sigterm'), array('float_rrdfiles.php', false, true, 'sigint'), array('float_rrdfiles.php', false, true, 'fetch-empty'), array('float_rrdfiles.php', false, true, 'fetch-throw'), array('update_heartbeat.php', false, true, 'rewrite'), array('update_heartbeat.php', false, true, 'missing-file')));
 
 
 test('batch gap repair serializes queued files and reports worker outcomes', function ($threads, $failed = false, $cached = false, $childStatus = null) {
     $root = dirname(__DIR__, 4);
-    $dir = sys_get_temp_dir() . '/batch-gap-lock-' . bin2hex(random_bytes(8));
+    $dir = sys_get_temp_dir() . '/batch gap-lock-' . bin2hex(random_bytes(8));
     foreach (array('', '/cli', '/include', '/lib') as $suffix) { mkdir($dir . $suffix, 0700); }
     try {
         copy($root . '/cli/batchgapfix.php', $dir . '/cli/batchgapfix.php');
@@ -190,6 +200,13 @@ test('batch gap repair serializes queued files and reports worker outcomes', fun
         $fixture = <<<'FIXTURE'
 <?php
 $config = array('base_path' => dirname(__DIR__), 'rra_path' => dirname(__DIR__), 'poller_id' => 1);
+if (in_array('--child=1', $argv, true) && (string) getenv('TEST_REPAIR_STATUS') === '') {
+    file_put_contents(dirname(__DIR__) . '/launches', json_encode($argv) . "\n", FILE_APPEND);
+    if (getenv('TEST_BATCH_FAILED') === 'crash') { exit(9); }
+    if (getenv('TEST_BATCH_FAILED') === 'killed') { posix_kill(getmypid(), SIGKILL); }
+    exit(0);
+}
+
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function read_config_option($name) { return $name === 'path_php_binary' ? PHP_BINARY : ''; }
 function cacti_escapeshellcmd($value) { return escapeshellcmd($value); }
@@ -201,8 +218,8 @@ function db_execute($sql, ...$args) { file_put_contents(dirname(__DIR__) . '/mut
 function db_affected_rows(...$args) { return 12; }
 define('COPYRIGHT_YEARS', '2026');
 function get_cacti_cli_version() { return '1.3.0'; }
-function db_fetch_cell($sql, ...$args) { return strpos($sql, 'exit_code != 0') !== false ? (int) getenv('TEST_BATCH_FAILED') : 12; }
-function db_fetch_cell_prepared(...$args) { return 0; }
+function db_fetch_cell($sql, ...$args) { return strpos($sql, 'exit_code != 0') !== false ? (getenv('TEST_BATCH_FAILED') === 'unknown' ? false : (int) getenv('TEST_BATCH_FAILED')) : 12; }
+function db_fetch_cell_prepared(...$args) { return getenv('TEST_BATCH_FAILED') === 'unfinished' ? 1 : 0; }
 function db_fetch_assoc_prepared(...$args) { return array(array('id' => 1, 'data_source_path' => dirname(__DIR__) . '/source.rrd')); }
 function db_execute_prepared($sql, $params) {
     if (strpos($sql, 'exit_code = ?') !== false) { file_put_contents(dirname(__DIR__) . '/child-exit', json_encode($params)); }
@@ -215,7 +232,7 @@ function exec_background($binary, $args) { file_put_contents(dirname(__DIR__) . 
 function cacti_log($message, ...$args) { file_put_contents(dirname(__DIR__) . '/stats', $message); }
 FIXTURE;
         file_put_contents($dir . '/include/cli_check.php', $fixture);
-        $process = proc_open(array_merge(array(PHP_BINARY), rrd_cli_coverage_arguments($this, $dir, $root, 'batchgapfix.php'), ($threads === 0 ? array($dir . '/cli/batchgapfix.php', '--help') : array($dir . '/cli/batchgapfix.php', '--start=2026-01-01', '--end=2026-01-02', '--threads=' . $threads, '--child=' . ($childStatus === null ? 0 : 1)))), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, array_merge(getenv(), array('TEST_REPAIR_STATUS' => (string) $childStatus, 'TEST_BATCH_FAILED' => $failed ? '1' : '0', 'RRDCACHED_ADDRESS' => $cached ? 'unix:/unavailable-test-cache' : '')));
+        $process = proc_open(array_merge(array(PHP_BINARY), rrd_cli_coverage_arguments($this, $dir, $root, 'batchgapfix.php'), ($threads === 0 ? array($dir . '/cli/batchgapfix.php', '--help') : array($dir . '/cli/batchgapfix.php', '--start=2026-01-01', '--end=2026-01-02', '--threads=' . $threads, '--child=' . ($childStatus === null ? 0 : 1)))), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, array_merge(getenv(), array('TEST_REPAIR_STATUS' => (string) $childStatus, 'TEST_BATCH_FAILED' => is_string($failed) ? $failed : ($failed ? '1' : '0'), 'RRDCACHED_ADDRESS' => $cached ? 'unix:/unavailable-test-cache' : '')));
         $stdout = stream_get_contents($pipes[1]); $stderr = stream_get_contents($pipes[2]);
         fclose($pipes[1]); fclose($pipes[2]);
         $status = proc_close($process);
@@ -256,7 +273,7 @@ FIXTURE;
     } finally {
         try { rrd_cli_merge_coverage($this, $dir); } finally { rrd_cli_fixture_remove($dir); }
     }
-})->with(array(array(0), array(1), array(5), array(40), array(1, true), array(1, false, true), array(1, false, false, 0), array(1, false, false, 1)));
+})->with(array(array(0), array(1), array(5), array(40), array(1, true), array(1, false, true), array(1, false, false, 0), array(1, false, false, 1), array(1, 'unknown'), array(1, 'unfinished'), array(1, 'crash'), array(1, 'killed')));
 
 
 test('float master reports retained queue rows as a failed run', function ($remaining) {
@@ -275,6 +292,13 @@ test('float master reports retained queue rows as a failed run', function ($rema
 <?php
 $config = array('base_path' => dirname(__DIR__), 'rra_path' => dirname(__DIR__), 'poller_id' => 1, 'cacti_server_os' => 'unix');
 define('POLLER_VERBOSITY_MEDIUM', 3);
+if (in_array('--type=child', $argv, true)) {
+    touch(dirname(__DIR__) . '/launched');
+    if (getenv('TEST_FLOAT_REMAINING') === 'crash') { exit(9); }
+    if (getenv('TEST_FLOAT_REMAINING') === 'killed') { posix_kill(getmypid(), SIGKILL); }
+    exit(0);
+}
+
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function read_config_option($name) { return $name === 'path_php_binary' ? PHP_BINARY : ''; }
 function cacti_escapeshellarg($value) { return escapeshellarg($value); }
@@ -314,4 +338,4 @@ FIXTURE;
             rrd_cli_fixture_remove($dir);
         }
     }
-})->with(array(0, 1, 'unknown'));
+})->with(array(0, 1, 'unknown', 'crash', 'killed'));

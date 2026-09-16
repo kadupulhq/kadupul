@@ -282,3 +282,14 @@ $i18n_log = null;
  * locations under /tmp/systemd<uniqueid>/tmp
  */
 $i18n_text_log = null;
+
+/**
+ * RRD storage shared by separate web and poller Unix accounts requires an
+ * explicit trust list, identical in every process that accesses the store.
+ * Use numeric Unix IDs, for example array(33, 1001), after checking local IDs.
+ * Trusted accounts may replace storage paths; quiesce all writers before doing
+ * so. Only list a group when ALL its members are trusted storage administrators.
+ * World-writable storage is always rejected. Empty lists trust root/current UID.
+ */
+$config['rrd_maintenance_trusted_uids'] = array();
+$config['rrd_maintenance_trusted_gids'] = array();

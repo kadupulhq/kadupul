@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Preserve pending realtime and repair samples on writer, child-process, heartbeat, and database-count failures; support explicitly trusted separate RRD service accounts.
 -issue: Unregister an interrupted float_rrdfiles.php child under its own type and thread id and release its RRD maintenance lock, instead of leaving the master waiting on a process that is already gone
 -issue: Coordinate spike removal with live and queued RRD writers to preserve new samples
 -issue: Run every LTS unit test in CI with isolated processes and verified result reports

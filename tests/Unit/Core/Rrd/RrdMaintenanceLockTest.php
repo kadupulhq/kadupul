@@ -199,7 +199,7 @@ test('a storage directory replaced while a writer waits is rejected', function (
     fclose($pipes[0]); $stdout = stream_get_contents($pipes[1]); $stderr = stream_get_contents($pipes[2]); fclose($pipes[1]); fclose($pipes[2]);
     $status = proc_close($process);
     rmdir($path); rmdir($this->dir . '/old-store');
-    expect($status)->toBe(0)->and($stderr)->toBe('')->and($stdout)->toBe('true');
+    expect($stderr)->toBe('')->and($status)->toBe(0)->and($stdout)->toBe('true');
 })->with(array(false, true));
 
 test('CLI rewrite locks exclude writers and preserve Windows CLI behavior', function () {
@@ -420,13 +420,14 @@ test('failed writer initialization preserves normal and Boost queues before any 
         'require ' . var_export($root . '/lib/boost.php', true) . ';' . $match[0] .
         '$pipe = rrd_init(); $normal = process_poller_output($pipe);' .
         '$daemon = boost_output_rrd_data(1); $ondemand = boost_process_poller_output(1);' .
-        'echo json_encode(array($pipe, $normal, $daemon, $ondemand, file_get_contents(__DIR__ . "/source.rrd")));';
+        'function cacti_rrdtool_valid_path($path) { return is_file($path); } function cacti_escapeshellarg($value) { return escapeshellarg($value); } define("RRDTOOL_OUTPUT_STDOUT", 1); $fetch = rrdtool_function_fetch(1, 1700000000, 1700000060, 60, false, __DIR__ . "/source.rrd");' .
+        'echo json_encode(array($pipe, $normal, $daemon, $ondemand, $fetch, file_get_contents(__DIR__ . "/source.rrd")));';
     file_put_contents($this->dir . '/queue-init.php', $bootstrap);
     $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $this->dir . '/queue-init.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     $stdout = stream_get_contents($pipes[1]); $stderr = stream_get_contents($pipes[2]); fclose($pipes[1]); fclose($pipes[2]);
     $status = proc_close($process); chmod($this->dir, 0700);
-    expect($status)->toBe(0)->and($stderr)->toBe('')
-        ->and(json_decode($stdout, true))->toBe(array(false, 0, -1, -1, 'retained samples'));
+    expect($stderr)->toBe('')->and($status)->toBe(0, $stdout)
+        ->and(json_decode($stdout, true))->toBe(array(false, 0, -1, -1, array(), 'retained samples'));
 })->with(array('missing', 'untrusted'));
 
 test('utility rewrite ownership excludes shared writers and refuses busy or cached storage', function ($mode) {
@@ -503,4 +504,113 @@ test('a broken exclusive rewrite pipe aborts without retrying a stale snapshot',
     $stdout = stream_get_contents($pipes[1]); $stderr = stream_get_contents($pipes[2]); fclose($pipes[1]); fclose($pipes[2]);
     expect(proc_close($process))->toBe(0)->and($stderr)->toBe('')
         ->and(json_decode($stdout, true))->toBe(array(true, true, false, 'retained samples'));
+});
+
+test('a failed realtime writer keeps its queued samples and reports the failure', function ($mode) {
+    $root = dirname(__DIR__, 4);
+    $bootstrap = '<?php ';
+    if ($this->getTestResultObject()->getCodeCoverage() !== null) {
+        $this->expectedChildReports = 1;
+        $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); require ' . var_export($root . '/tests/fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $source = file_get_contents($root . '/poller_realtime.php');
+    preg_match('/^function process_poller_output_rt\(.*?^}\R/ms', $source, $match);
+    expect($match)->not->toBeEmpty();
+    if ($mode === 'untrusted') {
+        chmod($this->dir, 0777);
+    }
+    $bootstrap .= '$logged = array(); $config = ' . var_export(array('cacti_server_os' => 'unix', 'rra_path' => $this->dir . ($mode === 'missing' ? '/missing' : ''), 'library_path' => $root . '/lib'), true) . ';' .
+        'function read_config_option($name) { return ""; } function cacti_log($message, ...$args) { $GLOBALS["logged"][] = $message; }' .
+        'function db_fetch_assoc_prepared(...$args) { throw new RuntimeException("realtime queue read after failed initialization"); }' .
+        'function db_execute_prepared(...$args) { throw new RuntimeException("realtime queue mutation after failed initialization"); }' .
+        'require ' . var_export($root . '/lib/rrd.php', true) . ';' . $match[0] .
+        '$pipe = rrd_init(); $processed = process_poller_output_rt($pipe, "abcd", 1);' .
+        'echo json_encode(array($pipe, $processed, $GLOBALS["logged"]));';
+    file_put_contents($this->dir . '/realtime-init.php', $bootstrap);
+    $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $this->dir . '/realtime-init.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    $status = proc_close($process);
+    chmod($this->dir, 0700);
+    $result = json_decode($stdout, true);
+    expect($stderr)->toBe('')->and($status)->toBe(0)
+        ->and(array($result[0], $result[1]))->toBe(array(false, 0))
+        ->and($result[2])->toContain('ERROR: RRD initialization failed; pending realtime samples were retained.');
+})->with(array('missing', 'untrusted'));
+
+
+
+test('explicit storage group trust permits shared accounts but never world write', function () {
+    chmod($this->dir, 0770);
+    expect(rrd_maintenance_acquire())->toBeFalse();
+    $GLOBALS['config']['rrd_maintenance_trusted_gids'] = array(filegroup($this->dir));
+    $lock = rrd_maintenance_acquire();
+    try {
+        expect(is_resource($lock))->toBeTrue()->and(rrd_maintenance_acquire(true))->toBeFalse();
+    } finally {
+        rrd_maintenance_release($lock);
+    }
+    chmod($this->dir, 0777);
+    expect(rrd_maintenance_acquire())->toBeFalse();
+    chmod($this->dir, 0700);
+});
+
+test('malformed administrator trust lists fail closed', function ($uids, $gids) {
+    $GLOBALS['config']['rrd_maintenance_trusted_uids'] = $uids;
+    $GLOBALS['config']['rrd_maintenance_trusted_gids'] = $gids;
+    expect(rrd_maintenance_acquire())->toBeFalse();
+})->with(array(array('33', array()), array(array(), '33'), array(array(-1), array()), array(array(), array('33')), array(array(true), array())));
+
+test('a separate configured storage owner is trusted only explicitly', function () {
+    if (!function_exists('posix_geteuid') || posix_geteuid() !== 0) {
+        $this->markTestSkipped('Root is required to exercise a separate service UID; CI runs the privileged suite.');
+    }
+    try {
+        expect(chown($this->dir, 65534))->toBeTrue();
+        chmod($this->dir, 0755);
+        expect(rrd_maintenance_acquire())->toBeFalse();
+        $GLOBALS['config']['rrd_maintenance_trusted_uids'] = array(65534);
+        $lock = rrd_maintenance_acquire();
+        try {
+            expect(is_resource($lock))->toBeTrue();
+        } finally {
+            rrd_maintenance_release($lock);
+        }
+    } finally {
+        chown($this->dir, 0);
+        chmod($this->dir, 0700);
+    }
+});
+
+
+test('a separate web UID can coordinate a poller-owned shared store', function () {
+    if (!function_exists('posix_geteuid') || posix_geteuid() !== 0) {
+        $this->markTestSkipped('Root is required to switch service identities; CI runs this privileged case.');
+    }
+    $script = '<?php require ' . var_export(dirname(__DIR__, 4) . '/lib/rrd_maintenance.php', true) . ';' .
+        'if (!posix_setgid(65533) || !posix_setuid(65533)) { exit(2); }' .
+        '$config = array("cacti_server_os" => "unix", "rra_path" => __DIR__);' .
+        '$untrusted = rrd_maintenance_acquire();' .
+        '$config["rrd_maintenance_trusted_uids"] = array(65534);' .
+        '$untrusted_group = rrd_maintenance_acquire();' .
+        '$config["rrd_maintenance_trusted_gids"] = array(65533);' .
+        '$lock = rrd_maintenance_acquire();' .
+        'echo json_encode(array($untrusted, $untrusted_group, is_resource($lock))); rrd_maintenance_release($lock);';
+    file_put_contents($this->dir . '/web-user.php', $script);
+    try {
+        expect(chown($this->dir, 65534))->toBeTrue()->and(chgrp($this->dir, 65533))->toBeTrue();
+        chmod($this->dir, 0770);
+        $process = proc_open(array(PHP_BINARY, $this->dir . '/web-user.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $output = stream_get_contents($pipes[1]);
+        $error = stream_get_contents($pipes[2]);
+        fclose($pipes[1]); fclose($pipes[2]);
+        expect(proc_close($process))->toBe(0)->and($error)->toBe('')
+            ->and(json_decode($output, true))->toBe(array(false, false, true));
+    } finally {
+        chown($this->dir, 0);
+        chgrp($this->dir, 0);
+        chmod($this->dir, 0700);
+    }
 });
