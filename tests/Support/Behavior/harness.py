@@ -104,8 +104,8 @@ def normalize(value):
         # line shapes so an application message carrying the same tokens is
         # still compared.
         value = re.sub(r'^OK u:\d+(?:\.\d+)? s:\d+(?:\.\d+)? r:\d+(?:\.\d+)?(?=\r?$)', 'OK u:<T> s:<T> r:<T>', value, flags=re.MULTILINE)
-        value = re.sub(r'(?<=SYSTEM STATS: )Time:\d+\.\d+', 'Time:<T>', value)
         value = POLLER_TIMESTAMP.sub('<TIMESTAMP>', value)
+        value = re.sub(r'^(?P<prefix>(?:<TIMESTAMP> - )?SYSTEM STATS: )Time:\d+(?:\.\d+)?(?=\s|$)', r'\g<prefix>Time:<T>', value, flags=re.MULTILINE)
         value = INSTALL_TIMESTAMPS.sub(r'\g<1><TIMESTAMP>\g<2><TIMESTAMP>', value)
         return CLOCK.sub('[<TIME>]', value)
     return value
@@ -639,11 +639,15 @@ class Harness:
                 self.selected()
                 target_root = ROOT / 'tests/Golden' / self.args.target
                 orphans = set()
+                missing = set()
                 for golden_root in target_root.glob('php-*'):
                     recorded = {str(path.relative_to(golden_root))[:-5] for path in golden_root.rglob('*.json')}
                     orphans.update(golden_root.name + '/' + name for name in recorded - set(self.observed))
+                    missing.update(golden_root.name + '/' + name for name in set(self.observed) - recorded)
                 if orphans:
                     raise RuntimeError('Goldens have no observations: ' + ', '.join(sorted(orphans)))
+                if missing:
+                    raise RuntimeError('Runtime goldens are missing observations: ' + ', '.join(sorted(missing)))
             except RuntimeError as selection_error:
                 error = str(selection_error)
         manifest = {'format': 1, 'target': self.args.target, 'revision': run(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'])['stdout'].strip(),

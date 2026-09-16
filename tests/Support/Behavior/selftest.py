@@ -134,7 +134,7 @@ def recording_guards():
     with tempfile.TemporaryDirectory() as directory:
         root = Path(directory)
         (root / 'cacti.sql').write_text('schema')
-        for case in ('empty', 'missing', 'unexpected', 'orphan', 'other-runtime-orphan', 'complete'):
+        for case in ('empty', 'missing', 'unexpected', 'orphan', 'other-runtime-orphan', 'other-runtime-missing', 'other-runtime-empty', 'current-runtime-missing', 'other-runtime-complete', 'complete'):
             recorder = object.__new__(harness.Harness)
             recorder.args = types.SimpleNamespace(target=case, only=None, update_golden=True)
             recorder.destination = root / 'results' / case
@@ -152,14 +152,26 @@ def recording_guards():
             if case == 'orphan':
                 golden.mkdir(parents=True)
                 (golden / 'removed.json').write_text('42')
-            before = {str(p): p.read_bytes() for p in golden.rglob('*.json')}
+            if case in ('other-runtime-missing', 'other-runtime-empty', 'other-runtime-complete', 'current-runtime-missing'):
+                for name in harness.EXPECTED_SCENARIOS:
+                    harness.write_json(golden / (name + '.json'), {'value': name})
+                other = golden if case == 'current-runtime-missing' else golden.parent / 'php-8.3'
+                other.mkdir(parents=True, exist_ok=True)
+                names = sorted(harness.EXPECTED_SCENARIOS)
+                if case == 'other-runtime-empty': names = []
+                elif case != 'other-runtime-complete': names = names[:-1]
+                if case == 'current-runtime-missing':
+                    (other / (sorted(harness.EXPECTED_SCENARIOS)[-1] + '.json')).unlink()
+                else:
+                    for name in names: harness.write_json(other / (name + '.json'), {'value': name})
+            before = {str(p): p.read_bytes() for p in golden.parent.rglob('*.json')}
             with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', return_value={'stdout': 'revision'}):
                 status = recorder.finish()
             manifest = json.loads((recorder.destination / 'observations.json').read_text())
-            assert (status == 0) == (case == 'complete'), case
-            assert manifest['complete'] == (case == 'complete'), case
-            if case != 'complete':
-                assert {str(p): p.read_bytes() for p in golden.rglob('*.json')} == before, case
+            assert (status == 0) == (case in ('complete', 'other-runtime-complete')), case
+            assert manifest['complete'] == (case in ('complete', 'other-runtime-complete')), case
+            if case not in ('complete', 'other-runtime-complete'):
+                assert {str(p): p.read_bytes() for p in golden.parent.rglob('*.json')} == before, case
             else:
                 assert len(list(golden.rglob('*.json'))) == len(harness.EXPECTED_SCENARIOS)
     print('recording rejects empty, missing, unexpected and orphaned scenarios before writing goldens')
@@ -180,6 +192,9 @@ def diagnostic_contracts():
         {'subsystem': 'ERROR', 'message': 'PHP NOTICE: second'}]
     assert harness.application_diagnostics(log + log) == harness.application_diagnostics(log) * 2
     timing_warning = 'PHP WARNING: OK u:1.23 s:2.34 r:3.45 SYSTEM STATS: Time:1.23 in /harness/probe.php:7'
+    assert harness.normalize('PHP WARNING: payload SYSTEM STATS: Time:1.23') == 'PHP WARNING: payload SYSTEM STATS: Time:1.23'
+    assert harness.normalize('SYSTEM STATS: Time:1.23 DataSources:5') == 'SYSTEM STATS: Time:<T> DataSources:5'
+    assert harness.normalize('09/16/2026 01:02:05 - SYSTEM STATS: Time:1.23 DataSources:5') == '<TIMESTAMP> - SYSTEM STATS: Time:<T> DataSources:5'
     assert harness.application_diagnostics('09/16/2026 01:02:06 - ERROR ' + timing_warning) == [
         {'subsystem': 'ERROR', 'message': timing_warning.replace('/harness', '<HARNESS>')}]
 
