@@ -475,11 +475,33 @@ class spikekill {
 			|| $dump_stat['ino'] !== $this->rrdfile_stat['ino']) {
 			fclose($xmlfile_handle);
 			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
-			$this->set_error(__('FATAL: RRD source identity changed or the source is not a regular file.'));
+			$this->set_error(__('FATAL: RRD source identity changed or could not be verified safely.'));
 			return false;
 		}
 
-		if (!$this->runRRDDump($this->rrdfile, $xmlfile_handle)) {
+		// Hold the source inode until the child finishes, then reject any
+		// pathname replacement before even a dry run parses its dump.
+		$source_handle = @fopen($this->rrdfile, 'rb');
+		$source_stat = $source_handle === false ? false : fstat($source_handle);
+		$source_valid = $source_stat !== false && $source_stat['dev'] === $dump_stat['dev']
+			&& $source_stat['ino'] === $dump_stat['ino']
+			&& $this->canonicalDir(dirname($this->rrdfile)) !== false;
+		$dump_ok = $source_valid && $this->runRRDDump($this->rrdfile, $xmlfile_handle);
+		clearstatcache(true);
+		$after_dump = @lstat($this->rrdfile);
+		$source_valid = $source_valid && $after_dump !== false
+			&& ($after_dump['mode'] & 0170000) === 0100000
+			&& $after_dump['dev'] === $dump_stat['dev'] && $after_dump['ino'] === $dump_stat['ino']
+			&& $this->canonicalDir(dirname($this->rrdfile)) !== false;
+		if (is_resource($source_handle)) { fclose($source_handle); }
+		if (!$source_valid) {
+			fclose($xmlfile_handle);
+			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
+			$this->set_error(__('FATAL: RRD source identity changed or could not be verified safely.'));
+			return false;
+		}
+
+		if (!$dump_ok) {
 			fclose($xmlfile_handle);
 			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
 
@@ -859,6 +881,11 @@ class spikekill {
 
 	/* All Functions */
 	private function createRRDFileFromXML($xmlfile, $rrdfile, $stat) {
+		$directory = $this->canonicalDir(dirname($rrdfile));
+		if ($directory === false) {
+			return false;
+		}
+		$rrdfile = $directory . DIRECTORY_SEPARATOR . basename($rrdfile);
 		clearstatcache(true);
 		$xml_stat = @lstat($xmlfile);
 		$current = @lstat($rrdfile);
@@ -1713,8 +1740,8 @@ class spikekill {
 								($ds['min_cutoff']      != 'N/A' ? round($ds['min_cutoff'], 2)    : 'N/A'),
 								($ds['stddev_killed']   != 'N/A' ? number_format_i18n($ds['stddev_killed'])   : 'N/A'),
 								($ds['variance_killed'] != 'N/A' ? number_format_i18n($ds['variance_killed']) : 'N/A'),
-								number_format_i18n($ds['outwind_samples']),
-								number_format_i18n($ds['outwind_killed']));
+								(is_numeric($ds['outwind_samples']) ? number_format_i18n($ds['outwind_samples']) : __('N/A')),
+								(is_numeric($ds['outwind_killed']) ? number_format_i18n($ds['outwind_killed']) : __('N/A')));
 						}
 					}
 				}
