@@ -45,6 +45,16 @@ def recursive_rrd_manifest():
         else:
             raise AssertionError('External RRD directory symlink accepted')
         (root / 'rra/directory-link').unlink()
+        (root / 'rra').rename(root / 'real-rra')
+        (root / 'rra').symlink_to(root / 'real-rra', target_is_directory=True)
+        try:
+            release.rrd_manifest(runtime)
+        except RuntimeError as error:
+            assert 'symlink target' in str(error)
+        else:
+            raise AssertionError('External RRD root symlink accepted')
+        (root / 'rra').unlink()
+        (root / 'real-rra').rename(root / 'rra')
         (root / 'rra/nested/sample.rrd').unlink()
         (root / 'rra/sample.rrd').unlink()
         try:

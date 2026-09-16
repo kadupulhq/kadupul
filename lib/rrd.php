@@ -307,6 +307,11 @@ function rrdtool_execute() {
 function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pipe = false, $logopt = 'WEBLOG') {
 	global $config;
 
+	/* Write-only persistent pipes cannot acknowledge individual updates. */
+	if ((defined('RRDTOOL_OUTPUT_BOOLEAN') && $output_flag === RRDTOOL_OUTPUT_BOOLEAN)) {
+		$rrdtool_pipe = false;
+	}
+
 
 	if (is_array($command_line)) {
 		$cmd = array_shift($command_line);
@@ -432,7 +437,21 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 	$last_command = $command_line;
 
 	if (!isset($fp)) {
-		return;
+		return (defined('RRDTOOL_OUTPUT_BOOLEAN') && $output_flag === RRDTOOL_OUTPUT_BOOLEAN) ? false : null;
+	}
+
+	if ((defined('RRDTOOL_OUTPUT_BOOLEAN') && $output_flag === RRDTOOL_OUTPUT_BOOLEAN)) {
+		stream_set_timeout($fp, 60);
+		$output = stream_get_contents($fp);
+		$metadata = stream_get_meta_data($fp);
+		if ($metadata['timed_out']) {
+			proc_terminate($process);
+		}
+		fclose($fp);
+		$status = proc_close($process);
+		return !$metadata['timed_out'] && $status === 0 && is_string($output)
+			&& preg_match('/^OK(?: u:[^\r\n]+)?\r?$/m', $output) === 1
+			&& preg_match('/^ERROR:/m', $output) !== 1;
 	}
 
 	switch ($output_flag) {
@@ -908,7 +927,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false) {
 
 			if ($file_exists === false) {
 				$times = array_keys($rrd_fields['times']);
-				rrdtool_function_create($rrd_fields['local_data_id'], false, $rrdtool_pipe);
+				rrdtool_function_create($rrd_fields['local_data_id'], false, false);
 				$create_rrd_file = true;
 			}
 
@@ -983,7 +1002,10 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false) {
 					$rrd_update_template = $rrd_fields['template'];
 				}
 
-				rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER');
+				if (rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== true) {
+					cacti_log('ERROR: RRD update was not acknowledged; pending samples retained for retry.', false, 'POLLER');
+					return false;
+				}
 				$rrds_processed++;
 			}
 		}
@@ -1123,7 +1145,7 @@ function rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolut
 	}
 
 	$output = rrdtool_execute($cmd_line, false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe);
-	if ($output === false || trim($output) === '') {
+	if (!is_string($output) || trim($output) === '') {
 		return array();
 	}
 	$output = explode("\n", $output);

@@ -2,6 +2,7 @@
 <phpunit bootstrap="./bootstrap-unit.php" colors="true">
   <testsuites>
     <testsuite name="Spikekill">
+      <file>./Unit/Installer/InstallerRrdStoragePreflightTest.php</file>
       <file>./Unit/Core/Cli/BoostMasterFailureTest.php</file>
       <file>./Unit/Core/Cli/RrdMaintenanceCoordinationTest.php</file>
       <file>./Unit/Core/Rrd/RrdMaintenanceLockTest.php</file>
@@ -12,6 +13,7 @@
       <file>./Unit/Core/Cli/RemoveSpikesBackupTest.php</file>
       <file>./Unit/Security/Shell/SpikekillStatisticsTest.php</file>
       <file>./Unit/Core/PathHelpersTest.php</file>
-    </testsuite>
+    <file>Unit/Core/Poller/PollerAcknowledgementTest.php</file>
+        </testsuite>
   </testsuites>
 </phpunit>

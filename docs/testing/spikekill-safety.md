@@ -22,9 +22,10 @@ Requested recovery snapshots remain available after success or failure.
 Local RRDtool writers hold a shared advisory lock on the configured RRA directory
 inode. Synchronous commands release it only after the child exits; piped commands
 retain it until `rrd_close()` drains and waits for RRDtool (also at PHP shutdown).
-Spike removal takes an exclusive, nonblocking lock before its dump and holds it
-through backup and atomic replacement. An active writer causes a safe refusal;
-retry after polling finishes. A new writer waits until maintenance completes.
+Spike removal waits for an exclusive lock before its dump and holds it
+through backup and atomic replacement. It retries brief contention for up to
+60 seconds, bounded further by spikekill_timeout, then safely refuses if polling
+still owns the store; retry after polling finishes. A new writer waits until maintenance completes.
 Before opening a lease, all local writers validate the configured directory,
 its symlink entries, its canonical target, and their ancestors against the same
 ownership and permission policy, with explicitly configured service-account
@@ -71,3 +72,22 @@ Do not infer trust from the directory's current owner or from group membership.
 World-writable storage remains rejected, as do unlisted owners and writable
 ancestor groups. Stop all participating processes before changing storage paths.
 The stricter spike backup filesystem checks remain in effect independently.
+
+### Upgrade prerequisite
+
+Before upgrading an existing split-account installation, identify the numeric
+UIDs of the web and poller accounts and the groups allowed to modify RRD storage.
+Set the explicit trust lists in the existing `include/config.php` on every
+participating collector; changing `config.php.dist` does not update an installed
+configuration. PHP's POSIX extension is required for local Unix RRD storage.
+For example, a `0775 cacti:apache` store requires the actual numeric UID of
+`cacti` (and the web account) and the numeric GID of `apache` in those lists.
+Use the IDs from the installation, not example numbers from another server.
+Do not make the storage world-writable to work around a permissions error.
+
+The web/CLI installer permission step reports this prerequisite, and the actual
+installation/upgrade operation checks again before schema or version changes.
+`cli/upgrade_database.php` also refuses an unsafe storage configuration before
+running upgrades. The force option cannot bypass the storage prerequisite.
+Run the check as both service accounts before putting the upgraded code in
+service. Remote RRDtool proxy storage and Windows retain their existing paths.

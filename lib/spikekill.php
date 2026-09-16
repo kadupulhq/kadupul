@@ -394,7 +394,8 @@ class spikekill {
 			return false;
 		}
 
-		$lock = rrd_maintenance_acquire(true);
+		// Wait through brief polling contention, with a bounded deadline.
+		$lock = rrd_maintenance_acquire(true, false, min(60, $this->commandTimeout()));
 		if ($lock === false) {
 			$this->set_error(__('FATAL: RRD storage is busy or its maintenance lock is unavailable. Retry after polling completes.'));
 			return false;

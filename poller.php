@@ -749,7 +749,14 @@ while ($poller_runs_completed < $poller_runs) {
 					}
 
 					if ($poller_id == 1) {
-						$rrds_processed = $rrds_processed + process_poller_output($rrdtool_pipe, true);
+						if (empty($rrd_write_initialization_failed)) {
+							$updated = process_poller_output($rrdtool_pipe, true);
+							if ($updated === false) {
+								$rrd_write_initialization_failed = true;
+							} else {
+								$rrds_processed += $updated;
+							}
+						}
 					} elseif ($config['connection'] != 'online') {
 						/* truncate until formal remote management is supported */
 						db_execute('TRUNCATE poller_output');
@@ -767,7 +774,14 @@ while ($poller_runs_completed < $poller_runs) {
 					$mtb = microtime(true);
 
 					if ($poller_id == 1) {
-						$rrds_processed = $rrds_processed + process_poller_output($rrdtool_pipe);
+						if (empty($rrd_write_initialization_failed)) {
+							$updated = process_poller_output($rrdtool_pipe);
+							if ($updated === false) {
+								$rrd_write_initialization_failed = true;
+							} else {
+								$rrds_processed += $updated;
+							}
+						}
 					} elseif ($config['connection'] != 'online') {
 						/* truncate until formal remote management is supported */
 						db_execute('TRUNCATE poller_output');

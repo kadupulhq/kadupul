@@ -190,7 +190,10 @@ function boost_poller_on_demand(&$results) {
 						// already buffered? Or was it just the temp buffer that overflowed
 						// things?
 						if ($out_length > 0) {
-							db_execute($sql_prefix . $out_buffer . $sql_suffix, true, $conn);
+							if (db_execute($sql_prefix . $out_buffer . $sql_suffix, true, $conn) === false) {
+								restore_error_handler();
+								return null;
+							}
 						}
 
 						// Make the temp buffer the starting point for the output buffer, but
@@ -216,7 +219,10 @@ function boost_poller_on_demand(&$results) {
 
 				// output buffer had something left, lets flush it
 				if ($out_buffer != '') {
-					db_execute($sql_prefix . $out_buffer . $sql_suffix, true, $conn);
+					if (db_execute($sql_prefix . $out_buffer . $sql_suffix, true, $conn) === false) {
+								restore_error_handler();
+								return null;
+							}
 				}
 			}
 
@@ -713,6 +719,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 	$data_ids_to_get = read_config_option('boost_rrd_update_max_records_per_select');
 
 	$archive_tables = boost_get_arch_table_names($archive_table);
+	if ($archive_tables === false) { return -1; }
 
 	$results = array();
 
@@ -776,6 +783,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 
 	boost_timer('get_records', BOOST_TIMER_START);
 	$results = db_fetch_assoc_prepared($query_string, $sql_params);
+	if ($results === false) { return -1; }
 	boost_timer('get_records', BOOST_TIMER_END);
 
 	$boost_results = cacti_sizeof($results);
@@ -786,30 +794,6 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 
 	cacti_log('Local Data ID: ' . $local_data_id . ', Boost Results: ' . $boost_results, false, 'BOOST', POLLER_VERBOSITY_MEDIUM);
 
-	/* remove the entries from the table */
-	boost_timer('delete', BOOST_TIMER_START);
-
-	if (cacti_count($archive_tables)) {
-		foreach($archive_tables as $table) {
-			db_execute_prepared("DELETE IGNORE
-				FROM $table
-				WHERE local_data_id = ?",
-				array($local_data_id), false);
-		}
-	}
-
-	if (cacti_sizeof($results)) {
-		db_execute_prepared('DELETE FROM poller_output_boost
-			WHERE local_data_id = ?
-			AND time < FROM_UNIXTIME(?)',
-			array($local_data_id, $timestamp), false);
-	}
-
-	boost_timer('delete', BOOST_TIMER_END);
-
-	if (cacti_version_compare(get_rrdtool_version(), '1.5', '<')) {
-		db_execute("SELECT RELEASE_LOCK('boost.single_ds.$local_data_id')");
-	}
 
 	/* log memory */
 	if ($get_memory) {
@@ -913,8 +897,9 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 					$vals_in_buffer = 0;
 
 					/* check return status for delete operation */
-					if (strpos(trim($return_value), 'OK') === false && $return_value != '') {
+					if (trim((string) $return_value) !== 'OK') {
 						cacti_log("WARNING: RRD Update Warning '" . $return_value . "' for Local Data ID '$local_data_id'", false, 'BOOST');
+						return -1;
 					}
 				}
 
@@ -1109,8 +1094,9 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 			boost_timer('rrdupdate', BOOST_TIMER_END);
 
 			/* check return status for delete operation */
-			if (strpos(trim($return_value), 'OK') === false && $return_value != '') {
+			if (trim((string) $return_value) !== 'OK') {
 				cacti_log("WARNING: RRD Update Warning '" . $return_value . "' for Local Data ID '$local_data_id'", false, 'BOOST');
+						return -1;
 			}
 		}
 
@@ -1119,6 +1105,16 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 		if ($rrdp_auto_close) {
 			rrd_close($rrdtool_pipe);
 			$owned_rrd_pipe = false;
+		}
+	}
+
+	/* Delete only the exact samples whose updates were acknowledged. */
+	foreach (array_merge(array('poller_output_boost'), (array) $archive_tables) as $table) {
+		foreach ($results as $row) {
+			if (db_execute_prepared("DELETE FROM $table WHERE local_data_id = ? AND rrd_name = ? AND time = FROM_UNIXTIME(?) AND output = ?",
+				array($row['local_data_id'], $row['rrd_name'], $row['timestamp'], $row['output'])) === false) {
+				return -1;
+			}
 		}
 	}
 
@@ -1496,7 +1492,8 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 
 		// Check for a Data Source that has been removed
 		if ($ds_exists) {
-			$valid_entry = boost_rrdtool_function_create($local_data_id, false, $rrdtool_pipe);
+			$create_pipe = false;
+			$valid_entry = boost_rrdtool_function_create($local_data_id, false, $create_pipe);
 		} else {
 			return 'OK';
 		}
@@ -1512,14 +1509,14 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 		if ($rrd_update_template != '') {
 			cacti_log("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, 'BOOST', ($debug ? POLLER_VERBOSITY_NONE:POLLER_VERBOSITY_HIGH));
 
-			rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'BOOST');
+			$result = rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
 		} else {
 			cacti_log("update $rrd_path $update_options $rrd_update_values", true, 'BOOST', ($debug ? POLLER_VERBOSITY_NONE:POLLER_VERBOSITY_HIGH));
 
-			rrdtool_execute("update $rrd_path $update_options $rrd_update_values", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'BOOST');
+			$result = rrdtool_execute("update $rrd_path $update_options $rrd_update_values", false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
 		}
 
-		return 'OK';
+		return $result === true ? 'OK' : 'ERROR: RRDtool did not acknowledge the update';
 	}
 }
 
