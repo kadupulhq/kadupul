@@ -87,7 +87,10 @@ function rrd_maintenance_acquire($exclusive = false, $wait = false, $timeout = n
         return false;
     }
 
-    $flags = $exclusive ? LOCK_EX | (($wait && $timeout === null) ? 0 : LOCK_NB) : LOCK_SH;
+    if (!$exclusive && $timeout === null) {
+        $timeout = 5;
+    }
+    $flags = ($exclusive ? LOCK_EX : LOCK_SH) | (($wait && $timeout === null) ? 0 : LOCK_NB);
     $deadline = hrtime(true) + max(0, (float) $timeout) * 1000000000;
     while (!@flock($handle, $flags)) {
         if ($timeout === null || hrtime(true) >= $deadline) {

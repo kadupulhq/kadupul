@@ -128,7 +128,7 @@ if (!is_dir($cache_dir)) {
 shell_exec("$command_string $extra_args");
 
 /* open a pipe to rrdtool for writing */
-$rrdtool_pipe = rrd_init();
+$rrdtool_pipe = rrd_init(true, false, true);
 if ($rrdtool_pipe === false) {
 	cacti_log('ERROR: RRD initialization failed; realtime samples were retained.');
 	db_close();
@@ -281,13 +281,12 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 			}
 		}
 
-		$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe);
-		if ($rrds_processed === false) {
-			return false;
-		}
+		$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe, $completed);
 
 		/* make sure each .rrd file has complete data */
 		foreach ($results as $item) {
+			$path = read_config_option('realtime_cache_path') . '/user_' . $poller_id . '_' . $item['local_data_id'] . '.rrd';
+			if (!isset($completed[$path][strtotime($item['time'])])) { continue; }
 			db_execute_prepared('DELETE FROM poller_output_realtime
 				WHERE local_data_id = ?
 				AND rrd_name = ?

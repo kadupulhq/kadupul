@@ -57,10 +57,18 @@ function db_execute_prepared($sql, $params)
     $statement = $GLOBALS['ack_db']->prepare($sql);
     return $statement->execute($params);
 }
-function rrdtool_function_update($updates, ...$args)
+function rrdtool_function_update($updates, $pipe = false, &$completed = null)
 {
     // A new timestamp arrives after selection but before the write completes.
     $GLOBALS['ack_db']->exec("INSERT INTO " . $GLOBALS['ack_table'] . " VALUES (1,'value','2020-01-02','43'" . ($GLOBALS['ack_table'] === 'poller_output_realtime' ? ',1' : '') . ")");
+    $completed = array();
+    if ($GLOBALS['ack_result'] !== false) {
+        foreach ($updates as $path => $fields) {
+            foreach ($fields['times'] as $time => $values) {
+                $completed[$path][$time] = true;
+            }
+        }
+    }
     return $GLOBALS['ack_result'];
 }
 beforeEach(function () {

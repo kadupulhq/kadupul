@@ -485,6 +485,16 @@ function boost_launch_children() {
 	$php_binary    = read_config_option('path_php_binary');
 	$boost_log     = read_config_option('path_boost_log');
 	$children = array();
+	// The master owns native children even if it exits before supervision.
+	register_shutdown_function(function () use (&$children) {
+		foreach ($children as $child) {
+			if (is_resource($child['process'])) {
+				proc_terminate($child['process'], 9);
+				proc_close($child['process']);
+				unregister_process('boost', 'child', $child['child'], $child['pid']);
+			}
+		}
+	});
 	$php_binary = $php_binary ?: PHP_BINARY;
 	$descriptors = array(0 => STDIN, 1 => STDOUT, 2 => STDERR);
 
@@ -627,7 +637,7 @@ function boost_output_rrd_data($child) {
 	global $start, $archive_table, $max_run_duration, $config, $database_default, $debug, $get_memory, $memory_used;
 
 	$rrd_updates       = 0;
-	$rrdtool_pipe      = rrd_init();
+	$rrdtool_pipe      = rrd_init(true, false, true);
 	if ($rrdtool_pipe === false) {
 		cacti_log('ERROR: RRD initialization failed; pending Boost samples were retained.', true, 'BOOST');
 		return -1;

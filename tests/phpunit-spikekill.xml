@@ -4,6 +4,8 @@
     <testsuite name="Spikekill">
       <file>./Unit/Installer/InstallerRrdStoragePreflightTest.php</file>
       <file>./Unit/Core/Cli/BoostMasterFailureTest.php</file>
+      <file>./Unit/Core/Cli/BoostWorkerNativeTest.php</file>
+      <file>./Unit/Core/Cli/PollerDrainNativeTest.php</file>
       <file>./Unit/Core/Cli/RrdMaintenanceCoordinationTest.php</file>
       <file>./Unit/Core/Rrd/RrdMaintenanceLockTest.php</file>
       <file>./Unit/Security/Shell/SpikekillBackupSymlinkSafetyTest.php</file>
@@ -14,6 +16,7 @@
       <file>./Unit/Security/Shell/SpikekillStatisticsTest.php</file>
       <file>./Unit/Core/PathHelpersTest.php</file>
     <file>Unit/Core/Poller/PollerAcknowledgementTest.php</file>
+    <file>Unit/Core/Poller/PollerAcknowledgementNativeTest.php</file>
         <file>Unit/Core/Rrd/RrdProxyAcknowledgementTest.php</file>
         </testsuite>
   </testsuites>
