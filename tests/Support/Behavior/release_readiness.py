@@ -154,8 +154,12 @@ def main():
             plugin = assert_plugin(h)
             repeat = checked(h.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=3', '--force'), 'Repeated upgrade')
             require(rrd_manifest(h) == before_rrd and domain_state(h) == before_domain, 'Repeated upgrade changed persisted data')
+            # The completed web wizard removes these transient settings.
+            h.sql("DELETE FROM settings WHERE name LIKE 'install_%'")
+            after_cleanup = checked(h.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=3', '--force'), 'Repeated upgrade after web completion cleanup')
+            require(rrd_manifest(h) == before_rrd and domain_state(h) == before_domain, 'Post-completion repeat changed persisted data')
             poll = assert_poll(h, 'Candidate poller')
-            evidence['steps']['upgrade'] = {'command': upgrade, 'repeat': repeat, 'graph': graph, 'plugin': plugin,
+            evidence['steps']['upgrade'] = {'command': upgrade, 'repeat': repeat, 'after_web_cleanup': after_cleanup, 'graph': graph, 'plugin': plugin,
                                             'poller': poll, 'rrd_preserved_before_poll': True}
             # Restore the old code AND its matching DB/RRD snapshot. A code-only
             # downgrade is not an acceptable rollback of a schema upgrade.

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-15 20:19-0700\n"
+"POT-Creation-Date: 2026-09-15 20:21-0700\n"
 "PO-Revision-Date: 2026-01-16 03:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -46,7 +46,7 @@ msgstr "授權"
 msgid "Kadupul is licensed under the GNU GPL:"
 msgstr "Kadupul根據GNU GPL許可："
 
-#: about.php:33 lib/installer.php:1822
+#: about.php:33 lib/installer.php:1825
 #, fuzzy
 msgid "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
 msgstr "這個程序是免費軟件;您可以根據自由軟件基金會發布的GNU通用公共許可證的條款重新分發和/或修改它;許可證的第2版，或（根據您的選擇）任何更高版本。"
@@ -664,7 +664,7 @@ msgstr "否"
 #: data_templates.php:1238 gprint_presets.php:428 graph_templates.php:886
 #: host_templates.php:963 include/global_settings.php:874
 #: include/global_settings.php:1897 lib/api_automation.php:1463
-#: lib/installer.php:2017 lib/installer.php:2045 lib/installer.php:3721
+#: lib/installer.php:2020 lib/installer.php:2048 lib/installer.php:3724
 #: links.php:400 tree.php:2327 tree.php:2328 user_admin.php:2326
 #: user_domains.php:752 user_domains.php:756 user_group_admin.php:2008
 #: vdef.php:916
@@ -813,7 +813,7 @@ msgstr "聚合模板"
 #: aggregate_templates.php:595 automation_templates.php:381
 #: automation_templates.php:468 color_templates.php:645
 #: include/global_arrays.php:998 include/global_arrays.php:1061
-#: lib/installer.php:2631 user_admin.php:2929 user_group_admin.php:2493
+#: lib/installer.php:2634 user_admin.php:2929 user_group_admin.php:2493
 #, fuzzy
 msgid "Templates"
 msgstr "模板"
@@ -1310,7 +1310,7 @@ msgstr "聯絡"
 #: automation_devices.php:270 include/global_form.php:1137
 #: include/global_form.php:1173 include/global_form.php:1367
 #: include/global_form.php:1743 lib/api_automation.php:273
-#: lib/api_automation.php:1229 lib/installer.php:1937 lib/installer.php:2632
+#: lib/api_automation.php:1229 lib/installer.php:1940 lib/installer.php:2635
 #: managers.php:202 user_admin.php:978 user_admin.php:1123
 #: user_group_admin.php:1010 user_group_admin.php:1996
 #, fuzzy
@@ -1340,7 +1340,7 @@ msgstr "SNMP"
 #: host.php:1671 host.php:1788 lib/api_automation.php:151
 #: lib/api_automation.php:275 lib/api_automation.php:568
 #: lib/api_automation.php:1089 lib/api_automation.php:1232
-#: lib/html_reports.php:1876 lib/installer.php:1937 managers.php:204
+#: lib/html_reports.php:1876 lib/installer.php:1940 managers.php:204
 #: package_import.php:537 package_import.php:622 plugins.php:467
 #: plugins.php:590 pollers.php:1005 templates_import.php:206
 #: templates_import.php:245 user_admin.php:1123 user_group_admin.php:1010
@@ -1746,8 +1746,8 @@ msgstr "一般設定"
 #: include/global_form.php:1331 include/global_form.php:1359
 #: include/global_form.php:1432 include/global_form.php:1460
 #: include/global_form.php:2105 include/global_form.php:2203
-#: include/global_form.php:2248 lib/installer.php:1937 lib/installer.php:2010
-#: lib/installer.php:2040 lib/installer.php:2632 lib/installer.php:2720
+#: include/global_form.php:2248 lib/installer.php:1940 lib/installer.php:2013
+#: lib/installer.php:2043 lib/installer.php:2635 lib/installer.php:2723
 #: lib/vdef.php:56 managers.php:554 pollers.php:44 sites.php:23
 #: user_admin.php:978 user_domains.php:309 utilities.php:847 utilities.php:3079
 #, fuzzy
@@ -2847,7 +2847,7 @@ msgstr "樹創建標準"
 msgid "Change Leaf Type"
 msgstr "改變葉子類型"
 
-#: automation_tree_rules.php:715 lib/installer.php:3945 utilities.php:2633
+#: automation_tree_rules.php:715 lib/installer.php:3948 utilities.php:2633
 #: utilities.php:2634 utilities.php:2637 utilities.php:2638
 #, fuzzy
 msgid "WARNING:"
@@ -3464,7 +3464,7 @@ msgstr "數據源內部ID。"
 msgid "The Status of the Data Source Debug Check."
 msgstr "數據源調試檢查的狀態。"
 
-#: data_debug.php:454 lib/installer.php:2391 lib/installer.php:2423
+#: data_debug.php:454 lib/installer.php:2394 lib/installer.php:2426
 #: package_import.php:591
 #, fuzzy
 msgid "Writable"
@@ -4343,7 +4343,7 @@ msgid "Steps"
 msgstr "步驟"
 
 #: data_source_profiles.php:622 graphs_new.php:449 include/global_form.php:281
-#: lib/html.php:566 lib/html_filter.php:55 lib/installer.php:2720
+#: lib/html.php:566 lib/html_filter.php:55 lib/installer.php:2723
 #: lib/rrd.php:3319 utilities.php:849 utilities.php:1771
 #, fuzzy
 msgid "Rows"
@@ -15951,7 +15951,7 @@ msgstr "編輯設備"
 msgid "Kill Spikes in Graphs"
 msgstr "殺死圖表中的尖峰"
 
-#: lib/html.php:582 lib/html.php:614 lib/installer.php:1683
+#: lib/html.php:582 lib/html.php:614 lib/installer.php:1686
 #, fuzzy
 msgid "Previous"
 msgstr "上一個"
@@ -15961,7 +15961,7 @@ msgstr "上一個"
 msgid "%d to %d of %s [ %s ]"
 msgstr "%s的%d到%d [%s]"
 
-#: lib/html.php:588 lib/html.php:620 lib/installer.php:1682
+#: lib/html.php:588 lib/html.php:620 lib/installer.php:1685
 #, fuzzy
 msgid "Next"
 msgstr "下一頁"
@@ -17292,7 +17292,7 @@ msgstr "錯誤的UTF-8偏移錯誤！"
 msgid "Down (Thold)"
 msgstr "下載"
 
-#: lib/html_utility.php:1211 lib/installer.php:1978 lib/installer.php:3861
+#: lib/html_utility.php:1211 lib/installer.php:1981 lib/installer.php:3864
 #, fuzzy
 msgid "Error"
 msgstr "錯誤"
@@ -17417,1229 +17417,1229 @@ msgstr "找到依賴關係："
 msgid "Unmet Dependency:"
 msgstr "未滿足的依賴關係："
 
-#: lib/installer.php:571
+#: lib/installer.php:574
 #, fuzzy
 msgid "Path was not writable"
 msgstr "路徑不可寫"
 
-#: lib/installer.php:581
+#: lib/installer.php:584
 msgid "Path is not writable"
 msgstr "路徑不可寫"
 
-#: lib/installer.php:715
+#: lib/installer.php:718
 #, fuzzy, php-format
 msgid "Failed to set specified %sRRDTool version: %s"
 msgstr "無法設置指定的%sRRDTool版本：%s"
 
-#: lib/installer.php:763
+#: lib/installer.php:766
 #, fuzzy
 msgid "Invalid Theme Specified"
 msgstr "指定的主題無效"
 
-#: lib/installer.php:819
+#: lib/installer.php:822
 #, fuzzy
 msgid "Resource is not writable"
 msgstr "資源不可寫"
 
-#: lib/installer.php:824
+#: lib/installer.php:827
 #, fuzzy
 msgid "File not found"
 msgstr "找不到檔案"
 
-#: lib/installer.php:837
+#: lib/installer.php:840
 #, fuzzy
 msgid "PHP did not return expected result"
 msgstr "PHP沒有返回預期的結果"
 
-#: lib/installer.php:851
+#: lib/installer.php:854
 #, fuzzy
 msgid "Unexpected path parameter"
 msgstr "意外的路徑參數"
 
-#: lib/installer.php:887
+#: lib/installer.php:890
 #, fuzzy, php-format
 msgid "Failed to apply specified profile %s != %s"
 msgstr "無法應用指定的配置文件%s！=%s"
 
-#: lib/installer.php:929
+#: lib/installer.php:932
 #, fuzzy, php-format
 msgid "Failed to apply specified mode: %s"
 msgstr "無法應用指定的模式：%s"
 
-#: lib/installer.php:953
+#: lib/installer.php:956
 #, fuzzy, php-format
 msgid "Failed to apply specified automation override: %s"
 msgstr "無法應用指定的自動覆蓋：%s"
 
-#: lib/installer.php:974
+#: lib/installer.php:977
 #, fuzzy
 msgid "Failed to apply specified cron interval"
 msgstr "無法應用指定的cron間隔"
 
-#: lib/installer.php:1020
+#: lib/installer.php:1023
 #, fuzzy, php-format
 msgid "Failed to apply '%s' as Automation Range"
 msgstr "無法應用指定的自動化範圍"
 
-#: lib/installer.php:1097
+#: lib/installer.php:1100
 #, fuzzy
 msgid "No matching snmp option exists"
 msgstr "沒有匹配的snmp選項"
 
-#: lib/installer.php:1283
+#: lib/installer.php:1286
 #, fuzzy
 msgid "No matching template exists"
 msgstr "沒有匹配的模板"
 
-#: lib/installer.php:1626
+#: lib/installer.php:1629
 #, fuzzy
 msgid "The Installer could not proceed due to an unexpected error."
 msgstr "由於意外錯誤，安裝程序無法繼續。"
 
-#: lib/installer.php:1627
+#: lib/installer.php:1630
 #, fuzzy
 msgid "Please report this to the Kadupul Group."
 msgstr "請向Kadupul集團報告。"
 
-#: lib/installer.php:1628
+#: lib/installer.php:1631
 #, fuzzy, php-format
 msgid "Unknown Reason: %s"
 msgstr "未知原因：%s"
 
-#: lib/installer.php:1636
+#: lib/installer.php:1639
 #, fuzzy, php-format
 msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this can not be performed."
 msgstr "您正在嘗試將Kadupul%s安裝到0.6.x數據庫上。不幸的是，這不能執行。"
 
-#: lib/installer.php:1637
+#: lib/installer.php:1640
 #, fuzzy
 msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
 msgstr "為了能夠繼續，你<b>必須</b>創建一個新的數據庫，導入“cacti.sql”："
 
-#: lib/installer.php:1639
+#: lib/installer.php:1642
 #, fuzzy
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
 msgstr "然後，您<b>必須</b>更新“include / config.php”以指向新數據庫。"
 
-#: lib/installer.php:1640
+#: lib/installer.php:1643
 #, fuzzy
 msgid "NOTE: Your existing data will not be modified, nor will it or any history be available to the new install"
 msgstr "注意：您的現有數據不會被修改，新安裝也不會修改它或任何歷史記錄"
 
-#: lib/installer.php:1648
+#: lib/installer.php:1651
 #, fuzzy
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
 msgstr "您已創建新數據庫，但尚未導入&#39;cacti.sql&#39;文件。在命令行中，執行以下命令以繼續："
 
-#: lib/installer.php:1650
+#: lib/installer.php:1653
 #, fuzzy
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Kadupul database. Please ensure that the Kadupul database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Kadupul database."
 msgstr "如果Kadupul數據庫用戶對Kadupul數據庫沒有正確的權限，也可能會生成此錯誤。請確保Kadupul數據庫用戶能夠在Kadupul數據庫上進行SELECT，INSERT，DELETE，UPDATE，CREATE，ALTER，DROP，INDEX。"
 
-#: lib/installer.php:1651
+#: lib/installer.php:1654
 #, fuzzy
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"
 msgstr "您還<b>必須</b>將MySQL TimeZone信息導入MySQL並授予Kadupul用戶SELECT訪問mysql.time_zone_name表的權限"
 
-#: lib/installer.php:1654
+#: lib/installer.php:1657
 #, fuzzy
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
 msgstr "在Linux / UNIX上，在shell中以“root”身份運行以下命令："
 
-#: lib/installer.php:1657
+#: lib/installer.php:1660
 #, fuzzy
 msgid "On Windows, you must follow the instructions here <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>Time zone description table</a>.  Once that is complete, you can issue the following command to grant the Kadupul user access to the tables:"
 msgstr "在Windows上，您必須按照此處的說明進行<a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>時區說明表</a> 。完成後，您可以發出以下命令以授予Kadupul用戶對錶的訪問權限："
 
-#: lib/installer.php:1660
+#: lib/installer.php:1663
 #, fuzzy
 msgid "Then run the following within MySQL as an administrator:"
 msgstr "然後在MySQL中以管理員身份運行以下命令："
 
-#: lib/installer.php:1679 pollers.php:671
+#: lib/installer.php:1682 pollers.php:671
 #, fuzzy
 msgid "Test Connection"
 msgstr "測試連結"
 
-#: lib/installer.php:1690
+#: lib/installer.php:1693
 #, fuzzy
 msgid "Begin"
 msgstr "開始"
 
-#: lib/installer.php:1696 lib/installer.php:2124 lib/installer.php:2134
-#: lib/installer.php:2774
+#: lib/installer.php:1699 lib/installer.php:2127 lib/installer.php:2137
+#: lib/installer.php:2777
 #, fuzzy
 msgid "Upgrade"
 msgstr "升級"
 
-#: lib/installer.php:1698 lib/installer.php:2778
+#: lib/installer.php:1701 lib/installer.php:2781
 #, fuzzy
 msgid "Downgrade"
 msgstr "降級"
 
-#: lib/installer.php:1801 utilities.php:255
+#: lib/installer.php:1804 utilities.php:255
 #, fuzzy
 msgid "Kadupul Version"
 msgstr "Kadupul版"
 
-#: lib/installer.php:1801
+#: lib/installer.php:1804
 #, fuzzy
 msgid "License Agreement"
 msgstr "使用授權協議"
 
-#: lib/installer.php:1804
+#: lib/installer.php:1807
 #, fuzzy, php-format
 msgid "This version of Kadupul (%s) does not appear to have a valid version code, please contact the Kadupul Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 msgstr "此版本的Kadupul（%s）似乎沒有有效的版本代碼，請聯繫Kadupul開發團隊以確保其受到管理。如果您在發布中看到此錯誤，請立即在GitHub上提交報告"
 
-#: lib/installer.php:1807
+#: lib/installer.php:1810
 #, fuzzy
 msgid "Thanks for taking the time to download and install Kadupul, the complete graphing solution for your network. Before you can start making cool graphs, there are a few pieces of data that Kadupul needs to know."
 msgstr "感謝您抽出寶貴時間下載並安裝Kadupul，這是您網絡的完整圖形解決方案。在開始製作酷圖之前，Kadupul需要了解一些數據。"
 
-#: lib/installer.php:1808
+#: lib/installer.php:1811
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Kadupul before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
 msgstr "確保您已閱讀並遵循安裝Kadupul所需的步驟，然後再繼續。可以在基於<a href=\"%1$s\">Unix</a>和<a href=\"%2$s\">Win32</a>的操作系統中找到安裝信息。"
 
-#: lib/installer.php:1811
+#: lib/installer.php:1814
 #, fuzzy, php-format
 msgid "This process will guide you through the steps for upgrading from version '%s'. "
 msgstr "此過程將指導您完成從版本&#39;%s&#39;升級的步驟。 "
 
-#: lib/installer.php:1812
+#: lib/installer.php:1815
 #, fuzzy, php-format
 msgid "Also, if this is an upgrade, be sure to read the <a href=\"%s\">Upgrade</a> information file."
 msgstr "此外，如果這是升級，請務必閱讀<a href=\"%s\">升級</a>信息文件。"
 
-#: lib/installer.php:1816
+#: lib/installer.php:1819
 #, fuzzy
 msgid "It is NOT recommended to downgrade as the database structure may be inconsistent"
 msgstr "不建議降級，因為數據庫結構可能不一致"
 
-#: lib/installer.php:1819
+#: lib/installer.php:1822
 #, fuzzy
 msgid "Kadupul is licensed under the GNU General Public License, you must agree to its provisions before continuing:"
 msgstr "Kadupul根據GNU通用公共許可證獲得許可，您必須在繼續之前同意其條款："
 
-#: lib/installer.php:1823
+#: lib/installer.php:1826
 #, fuzzy
 msgid "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
 msgstr "本程序的發布是希望它有用，但沒有任何擔保;甚至沒有適銷性或特定用途適用性的暗示保證。有關更多詳細信息，請參閱GNU通用公共許可證。"
 
-#: lib/installer.php:1860
+#: lib/installer.php:1863
 #, fuzzy
 msgid "Accept GPL License Agreement"
 msgstr "接受GPL許可協議"
 
-#: lib/installer.php:1860
+#: lib/installer.php:1863
 #, fuzzy
 msgid "Select default theme: "
 msgstr "選擇默認主題： "
 
-#: lib/installer.php:1884
+#: lib/installer.php:1887
 #, fuzzy
 msgid "Pre-installation Checks"
 msgstr "安裝前檢查"
 
-#: lib/installer.php:1885
+#: lib/installer.php:1888
 #, fuzzy
 msgid "Location checks"
 msgstr "位置檢查"
 
-#: lib/installer.php:1921 lib/installer.php:2072 lib/installer.php:2076
-#: lib/installer.php:2232 lib/installer.php:2237 lib/installer.php:3965
+#: lib/installer.php:1924 lib/installer.php:2075 lib/installer.php:2079
+#: lib/installer.php:2235 lib/installer.php:2240 lib/installer.php:3968
 #, fuzzy
 msgid "ERROR:"
 msgstr "錯誤:"
 
-#: lib/installer.php:1921
+#: lib/installer.php:1924
 #, fuzzy
 msgid "Please update config.php with the correct relative URI location of Kadupul (url_path)."
 msgstr "請使用Kadupul（url_path）的正確相對URI位置更新config.php。"
 
-#: lib/installer.php:1924
+#: lib/installer.php:1927
 #, fuzzy
 msgid "Your Kadupul configuration has the relative correct path (url_path) in config.php."
 msgstr "您的Kadupul配置在config.php中具有相對正確的路徑（url_path）。"
 
-#: lib/installer.php:1932
+#: lib/installer.php:1935
 #, fuzzy, php-format
 msgid "PHP - Recommendations (%s)"
 msgstr "PHP  - 推薦"
 
-#: lib/installer.php:1936
+#: lib/installer.php:1939
 msgid "PHP Recommendations ("
 msgstr "PHP建議"
 
-#: lib/installer.php:1937
+#: lib/installer.php:1940
 #, fuzzy
 msgid "Current"
 msgstr "當前"
 
-#: lib/installer.php:1937
+#: lib/installer.php:1940
 #, fuzzy
 msgid "Recommended"
 msgstr "推薦"
 
-#: lib/installer.php:1944
+#: lib/installer.php:1947
 #, fuzzy
 msgid "PHP Binary"
 msgstr "PHP二進制路徑"
 
-#: lib/installer.php:1947
+#: lib/installer.php:1950
 #, fuzzy
 msgid "The PHP binary location is not valid and must be updated."
 msgstr "PHP二進制位置無效，必須進行更新。"
 
-#: lib/installer.php:1954
+#: lib/installer.php:1957
 #, fuzzy
 msgid "Update the path_php_binary value in the settings table."
 msgstr "更新設置表中的path_php_binary值。"
 
-#: lib/installer.php:1963
+#: lib/installer.php:1966
 #, fuzzy
 msgid "Passed"
 msgstr "通過"
 
-#: lib/installer.php:1966
+#: lib/installer.php:1969
 #, fuzzy
 msgid "Warning"
 msgstr "警告"
 
-#: lib/installer.php:1972
+#: lib/installer.php:1975
 msgid "Restart Required"
 msgstr "必须"
 
-#: lib/installer.php:1972
+#: lib/installer.php:1975
 msgid "The specified value appears to be different in the running config versus the INI file."
 msgstr ""
 
-#: lib/installer.php:2002
+#: lib/installer.php:2005
 #, fuzzy
 msgid "PHP - Module Support (Required)"
 msgstr "PHP  - 模塊支持（必填）"
 
-#: lib/installer.php:2003
+#: lib/installer.php:2006
 #, fuzzy
 msgid "Kadupul requires several PHP Modules to be installed to work properly. If any of these are not installed, you will be unable to continue the installation until corrected. In addition, for optimal system performance Kadupul should be run with certain MySQL system variables set.  Please follow the MySQL recommendations at your discretion.  Always seek the MySQL documentation if you have any questions."
 msgstr "Kadupul需要安裝幾個PHP模塊才能正常工作。如果未安裝任何這些，則在更正之前，您將無法繼續安裝。此外，為了獲得最佳系統性能，Kadupul應該與某些MySQL系統變量集一起運行。請自行決定遵循MySQL建議。如果您有任何疑問，請始終查找MySQL文檔。"
 
-#: lib/installer.php:2005
+#: lib/installer.php:2008
 #, fuzzy
 msgid "The following PHP extensions are mandatory, and MUST be installed before continuing your Kadupul install."
 msgstr "以下PHP擴展是必需的，必須在繼續Kadupul安裝之前安裝。"
 
-#: lib/installer.php:2009
+#: lib/installer.php:2012
 #, fuzzy
 msgid "Required PHP Modules"
 msgstr "必需的PHP模塊"
 
-#: lib/installer.php:2010 lib/installer.php:2040 plugins.php:25 plugins.php:474
+#: lib/installer.php:2013 lib/installer.php:2043 plugins.php:25 plugins.php:474
 #, fuzzy
 msgid "Installed"
 msgstr "已安裝"
 
-#: lib/installer.php:2010
+#: lib/installer.php:2013
 #, fuzzy
 msgid "Required"
 msgstr "必须"
 
-#: lib/installer.php:2033
+#: lib/installer.php:2036
 #, fuzzy
 msgid "PHP - Module Support (Optional)"
 msgstr "PHP  - 模塊支持（可選）"
 
-#: lib/installer.php:2035
+#: lib/installer.php:2038
 #, fuzzy
 msgid "The following PHP extensions are recommended, and should be installed before continuing your Kadupul install.  NOTE: If you are planning on supporting SNMPv3 with IPv6, you should not install the php-snmp module at this time."
 msgstr "建議使用以下PHP擴展，並應在繼續安裝Kadupul之前安裝。注意：如果您計劃使用IPv6支持SNMPv3，則此時不應安裝php-snmp模塊。"
 
-#: lib/installer.php:2039
+#: lib/installer.php:2042
 #, fuzzy
 msgid "Optional Modules"
 msgstr "可選模塊"
 
-#: lib/installer.php:2040
+#: lib/installer.php:2043
 #, fuzzy
 msgid "Optional"
 msgstr "可選的"
 
-#: lib/installer.php:2061
+#: lib/installer.php:2064
 #, fuzzy
 msgid "MySQL - TimeZone Support"
 msgstr "MySQL  -  TimeZone支持"
 
-#: lib/installer.php:2072
+#: lib/installer.php:2075
 #, fuzzy
 msgid "Your MySQL TimeZone database is not populated.  Please populate this database before proceeding."
 msgstr "您的MySQL TimeZone數據庫未填充。請在繼續之前填充此數據庫。"
 
-#: lib/installer.php:2076
+#: lib/installer.php:2079
 #, fuzzy
 msgid "Your Kadupul database login account does not have access to the MySQL TimeZone database.  Please provide the Kadupul database account \"select\" access to the \"time_zone_name\" table in the \"mysql\" database, and populate MySQL's TimeZone information before proceeding."
 msgstr "您的Kadupul數據庫登錄帳戶無權訪問MySQL TimeZone數據庫。請提供Kadupul數據庫帳戶“select”訪問“mysql”數據庫中的“time_zone_name”表，並在繼續之前填充MySQL的TimeZone信息。"
 
-#: lib/installer.php:2081
+#: lib/installer.php:2084
 #, fuzzy
 msgid "Your Kadupul database account has access to the MySQL TimeZone database and that database is populated with global TimeZone information."
 msgstr "您的Kadupul數據庫帳戶可以訪問MySQL TimeZone數據庫，該數據庫使用全局TimeZone信息填充。"
 
-#: lib/installer.php:2086
+#: lib/installer.php:2089
 #, fuzzy
 msgid "MySQL - Settings"
 msgstr "MySQL  - 設置"
 
-#: lib/installer.php:2087
+#: lib/installer.php:2090
 #, fuzzy
 msgid "These MySQL performance tuning settings will help your Kadupul system perform better without issues for a longer time."
 msgstr "這些MySQL性能調整設置將幫助您的Kadupul系統更好地執行，而不會出現問題。"
 
-#: lib/installer.php:2089
+#: lib/installer.php:2092
 #, fuzzy
 msgid "Recommended MySQL System Variable Settings"
 msgstr "推薦的MySQL系統變量設置"
 
-#: lib/installer.php:2119
+#: lib/installer.php:2122
 #, fuzzy
 msgid "Installation Type"
 msgstr "安裝類型"
 
-#: lib/installer.php:2125
+#: lib/installer.php:2128
 #, fuzzy, php-format
 msgid "Upgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "從<strong>%s</strong>升級到<strong>%s</strong>"
 
-#: lib/installer.php:2127
+#: lib/installer.php:2130
 #, fuzzy
 msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "如果出現問題，強烈建議您清除瀏覽器緩存，關閉然後重新打開瀏覽器（不只是“Kadupul”選項卡）並重試，然後再向Kadupul提出問題"
 
-#: lib/installer.php:2128
+#: lib/installer.php:2131
 #, fuzzy
 msgid "On rare occasions, we have had reports from users who experience some minor issues due to changes in the code.  These issues are caused by the browser retaining pre-upgrade code and whilst we have taken steps to minimise the chances of this, it may still occur.  If you need instructions on how to clear your browser cache, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> is a good starting point."
 msgstr "在極少數情況下，我們收到了由於代碼更改而遇到一些小問題的用戶的報告。這些問題是由瀏覽器保留升級前代碼引起的，雖然我們已採取措施盡量減少這種情況，但仍可能發生。如果您需要有關如何清除瀏覽器緩存的說明， <a href='https://www.refreshyourcache.com' target='_blank'>https：//www.refreshyourcache.com/</a>是一個很好的起點。"
 
-#: lib/installer.php:2129
+#: lib/installer.php:2132
 #, fuzzy
 msgid "If after clearing your cache and restarting your browser, you still experience issues, please raise the issue with us and we will try to identify the cause of it."
 msgstr "如果在清除緩存並重新啟動瀏覽器後仍然遇到問題，請向我們提出問題，我們會嘗試確定問題的原因。"
 
-#: lib/installer.php:2135
+#: lib/installer.php:2138
 #, fuzzy, php-format
 msgid "Downgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "從<strong>%s</strong>降級到<strong>%s</strong>"
 
-#: lib/installer.php:2136
+#: lib/installer.php:2139
 #, fuzzy
 msgid "You appear to be downgrading to a previous version.  Database changes made for the newer version will not be reversed and <i>could</i> cause issues."
 msgstr "您似乎正在降級到以前的版本。為較新版本所做的數據庫更改不會被撤消，並<i>可能</i>導致問題。"
 
-#: lib/installer.php:2141
+#: lib/installer.php:2144
 #, fuzzy
 msgid "Please select the type of installation"
 msgstr "請選擇安裝類型"
 
-#: lib/installer.php:2142
+#: lib/installer.php:2145
 #, fuzzy
 msgid "Installation options:"
 msgstr "安裝選項："
 
-#: lib/installer.php:2146
+#: lib/installer.php:2149
 #, fuzzy
 msgid "Choose this for the Primary site."
 msgstr "為主站點選擇此選項。"
 
-#: lib/installer.php:2146 lib/installer.php:2197
+#: lib/installer.php:2149 lib/installer.php:2200
 #, fuzzy
 msgid "New Primary Server"
 msgstr "新的主服務器"
 
-#: lib/installer.php:2147 lib/installer.php:2198
+#: lib/installer.php:2150 lib/installer.php:2201
 #, fuzzy
 msgid "New Remote Poller"
 msgstr "新的遠程輪詢器"
 
-#: lib/installer.php:2147
+#: lib/installer.php:2150
 #, fuzzy
 msgid "Remote Pollers are used to access networks that are not readily accessible to the Primary site."
 msgstr "遠程輪詢器用於訪問主站點不易訪問的網絡。"
 
-#: lib/installer.php:2202
+#: lib/installer.php:2205
 #, fuzzy
 msgid "The following information has been determined from Kadupul's configuration file. If it is not correct, please edit \"include/config.php\" before continuing."
 msgstr "以下信息已從Kadupul的配置文件中確定。如果不正確，請在繼續之前編輯“include / config.php”。"
 
-#: lib/installer.php:2206
+#: lib/installer.php:2209
 #, fuzzy
 msgid "Local Database Connection Information"
 msgstr "本地數據庫連接信息"
 
-#: lib/installer.php:2209 lib/installer.php:2221
+#: lib/installer.php:2212 lib/installer.php:2224
 #, fuzzy, php-format
 msgid "Database: <b>%s</b>"
 msgstr "數據庫： <b>%s</b>"
 
-#: lib/installer.php:2210 lib/installer.php:2222
+#: lib/installer.php:2213 lib/installer.php:2225
 #, fuzzy, php-format
 msgid "Database User: <b>%s</b>"
 msgstr "數據庫用戶： <b>%s</b>"
 
-#: lib/installer.php:2211 lib/installer.php:2223
+#: lib/installer.php:2214 lib/installer.php:2226
 #, fuzzy, php-format
 msgid "Database Hostname: <b>%s</b>"
 msgstr "數據庫主機名： <b>%s</b>"
 
-#: lib/installer.php:2212 lib/installer.php:2224
+#: lib/installer.php:2215 lib/installer.php:2227
 #, fuzzy, php-format
 msgid "Port: <b>%s</b>"
 msgstr "端口： <b>%s</b>"
 
-#: lib/installer.php:2213 lib/installer.php:2225
+#: lib/installer.php:2216 lib/installer.php:2228
 #, fuzzy, php-format
 msgid "Server Operating System Type: <b>%s</b>"
 msgstr "服務器操作系統類型： <b>%s</b>"
 
-#: lib/installer.php:2218
+#: lib/installer.php:2221
 #, fuzzy
 msgid "Central Database Connection Information"
 msgstr "中央數據庫連接信息"
 
-#: lib/installer.php:2230
+#: lib/installer.php:2233
 #, fuzzy
 msgid "Configuration Readonly!"
 msgstr "配置只讀！"
 
-#: lib/installer.php:2232
+#: lib/installer.php:2235
 #, fuzzy
 msgid "Your config.php file must be writable by the web server during install in order to configure the Remote poller.  Once installation is complete, you must set this file to Read Only to prevent possible security issues."
 msgstr "在安裝期間，您的config.php文件必須可由Web服務器寫入，以便配置遠程輪詢器。安裝完成後，必須將此文件設置為只讀以防止可能的安全問題。"
 
-#: lib/installer.php:2236
+#: lib/installer.php:2239
 #, fuzzy
 msgid "Configuration of Poller"
 msgstr "Poller的配置"
 
-#: lib/installer.php:2237
+#: lib/installer.php:2240
 #, fuzzy
 msgid "Your Remote Kadupul Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Kadupul database server.  Correct this and try again."
 msgstr "您的config.php文件中未包含您的遠程Kadupul Poller信息。請查看config.php.dist，並設置變量： <i>$ rdatabase_default，$ rdatabase_username</i>等。必須設置這些變量並指回主Kadupul數據庫服務器。糾正這個並再試一次。"
 
-#: lib/installer.php:2241
+#: lib/installer.php:2244
 #, fuzzy
 msgid "Remote Poller Variables"
 msgstr "遠程輪詢變量"
 
-#: lib/installer.php:2243
+#: lib/installer.php:2246
 #, fuzzy
 msgid "The variables that must be set in the config.php file include the following:"
 msgstr "必須在config.php文件中設置的變量包括以下內容："
 
-#: lib/installer.php:2254
+#: lib/installer.php:2257
 #, fuzzy
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
 msgstr "安裝程序自動分配$ poller_id並將其添加到config.php文件中。"
 
-#: lib/installer.php:2256
+#: lib/installer.php:2259
 #, fuzzy
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Kadupul database server.  Follow the same procedure you would with any other Kadupul install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
 msgstr "一旦變量全部在config.php文件中設置，您還必須授予$ rdatabase_username訪問主Kadupul數據庫服務器的權限。按照與任何其他Kadupul安裝相同的步驟進行操作。然後，您可以按“測試連接”按鈕。如果測試成功，您將能夠繼續並完成安裝。"
 
-#: lib/installer.php:2260
+#: lib/installer.php:2263
 #, fuzzy
 msgid "Additional Steps After Installation"
 msgstr "安裝後的其他步驟"
 
-#: lib/installer.php:2262
+#: lib/installer.php:2265
 #, fuzzy
 msgid "It is essential that the Central Kadupul server can communicate via MySQL to each remote Kadupul database server.  Once the install is complete, you must edit the Remote Data Collector and ensure the settings are correct.  You can verify using the 'Test Connection' when editing the Remote Data Collector."
 msgstr "Central Kadupul服務器必須能夠通過MySQL與每個遠程Kadupul數據庫服務器進行通信。安裝完成後，您必須編輯遠程數據收集器並確保設置正確。編輯遠程數據收集器時，可以使用“測試連接”進行驗證。"
 
-#: lib/installer.php:2276
+#: lib/installer.php:2279
 #, fuzzy
 msgid "Critical Binary Locations and Versions"
 msgstr "關鍵二進制位置和版本"
 
-#: lib/installer.php:2277
+#: lib/installer.php:2280
 #, fuzzy
 msgid "Make sure all of these values are correct before continuing."
 msgstr "在繼續之前，請確保所有這些值都正確無誤。"
 
-#: lib/installer.php:2280
+#: lib/installer.php:2283
 #, fuzzy
 msgid "One or more paths appear to be incorrect, unable to proceed"
 msgstr "一條或多條路徑似乎不正確，無法繼續"
 
-#: lib/installer.php:2358
+#: lib/installer.php:2361
 #, fuzzy
 msgid "Directory Permission Checks"
 msgstr "目錄權限檢查"
 
-#: lib/installer.php:2359
+#: lib/installer.php:2362
 #, fuzzy
 msgid "Please ensure the directory permissions below are correct before proceeding.  During the install, these directories need to be owned by the Web Server user.  These permission changes are required to allow the Installer to install Device Template packages which include XML and script files that will be placed in these directories.  If you choose not to install the packages, there is an 'install_package.php' cli script that can be used from the command line after the install is complete."
 msgstr "在繼續之前，請確保以下目錄權限正確無誤。在安裝過程中，這些目錄需要由Web Server用戶擁有。需要更改這些權限才能允許安裝程序安裝設備模板包，其中包含將放置在這些目錄中的XML和腳本文件。如果您選擇不安裝軟件包，則可以在安裝完成後從命令行使用“install_package.php”cli腳本。"
 
-#: lib/installer.php:2362
+#: lib/installer.php:2365
 #, fuzzy
 msgid "After the install is complete, you can make some of these directories read only to increase security."
 msgstr "安裝完成後，您可以將其中一些目錄設置為只讀以提高安全性。"
 
-#: lib/installer.php:2364
+#: lib/installer.php:2367
 #, fuzzy
 msgid "These directories will be required to stay read writable after the install so that the Kadupul remote synchronization process can update them as the Main Kadupul Web Site changes"
 msgstr "這些目錄在安裝後需要保持可讀寫狀態，以便Kadupul遠程同步過程可以在主要Kadupul網站更改時更新它們"
 
-#: lib/installer.php:2368
+#: lib/installer.php:2371
 #, fuzzy
 msgid "If you are installing packages, once the packages are installed, you should change the scripts directory back to read only as this presents some exposure to the web site."
 msgstr "如果要安裝軟件包，則在安裝軟件包後，應將腳本目錄更改為只讀，因為這會顯示網站的一些風險。"
 
-#: lib/installer.php:2370
+#: lib/installer.php:2373
 #, fuzzy
 msgid "For remote pollers, it is critical that the paths that you will be updating frequently, including the plugins, scripts, and resources paths have read/write access as the data collector will have to update these paths from the main web server content."
 msgstr "對於遠程輪詢器，關鍵是您將頻繁更新的路徑（包括插件，腳本和資源路徑）具有讀/寫訪問權限，因為數據收集器必須從主Web服務器內容更新這些路徑。"
 
-#: lib/installer.php:2376
+#: lib/installer.php:2379
 #, fuzzy
 msgid "Required Writable at Install Time Only"
 msgstr "僅在安裝時可寫"
 
-#: lib/installer.php:2395 lib/installer.php:2427 package_import.php:589
+#: lib/installer.php:2398 lib/installer.php:2430 package_import.php:589
 #, fuzzy
 msgid "Not Writable"
 msgstr "可寫入"
 
-#: lib/installer.php:2407
+#: lib/installer.php:2410
 #, fuzzy
 msgid "Required Writable after Install Complete"
 msgstr "安裝完成後需要可寫"
 
-#: lib/installer.php:2438
+#: lib/installer.php:2441
 #, fuzzy
 msgid "Potential permission issues"
 msgstr "潛在的許可問題"
 
-#: lib/installer.php:2447
+#: lib/installer.php:2450
 #, fuzzy
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
 msgstr "請確保您的網絡服務器對以下顯示錯誤的Kadupul文件夾具有讀/寫權限。"
 
-#: lib/installer.php:2450
+#: lib/installer.php:2453
 msgid "If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools."
 msgstr "如果您的服務器上啟用了SELinux，您可以永久禁用它，或者暫時禁用它，然後使用SELinux命令行工具添加適當的權限。"
 
-#: lib/installer.php:2459
+#: lib/installer.php:2462
 #, fuzzy, php-format
 msgid "The user '%s' should have MODIFY permission to enable read/write."
 msgstr "用戶&#39;%s&#39;應具有MODIFY權限以啟用讀/寫。"
 
-#: lib/installer.php:2468
+#: lib/installer.php:2471
 #, fuzzy
 msgid "An example of how to set folder permissions is shown here, though you may need to adjust this depending on your operating system, user accounts and desired permissions."
 msgstr "此處顯示瞭如何設置文件夾權限的示例，但您可能需要根據操作系統，用戶帳戶和所需權限進行調整"
 
-#: lib/installer.php:2469
+#: lib/installer.php:2472
 #, fuzzy
 msgid "EXAMPLE:"
 msgstr "例："
 
-#: lib/installer.php:2470
+#: lib/installer.php:2473
 #, fuzzy
 msgid "Once installation has completed the CSRF path, should be set to read-only."
 msgstr "安裝完成後，CSRF路徑應設置為只讀。"
 
-#: lib/installer.php:2472
+#: lib/installer.php:2475
 #, fuzzy
 msgid "All folders are writable"
 msgstr "所有文件夾都是可寫的"
 
-#: lib/installer.php:2485
+#: lib/installer.php:2488
 #, fuzzy
 msgid "Input Validation Whitelist Protection"
 msgstr "輸入驗證白名單保護"
 
-#: lib/installer.php:2486
+#: lib/installer.php:2489
 #, fuzzy
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
 msgstr "可以以某種方式利用調用腳本的Kadupul Data Input方法，使非管理員可以破壞輪詢器帳戶擁有的任何文件，並且在有人以root用戶身份運行Kadupul輪詢器的情況下，可以破壞操作系統，使攻擊者能夠利用您的基礎架構。"
 
-#: lib/installer.php:2487
+#: lib/installer.php:2490
 msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 msgstr "因此，在多個版本之前，Kadupul進行了增強，可以在這些類型的數據輸入法上提供白名單功能。儘管這樣做確實可以更徹底地保護Kadupul，但是它確實增加了Kadupul管理員導入和管理模板和軟件包所需的工作量。"
 
-#: lib/installer.php:2488
+#: lib/installer.php:2491
 #, fuzzy
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "白名單的工作方式是，當您首次導入數據輸入法或重新導入數據輸入法，並且腳本和/或參數以任何方式發生變化時，數據輸入法以及所有相應的數據源都會立即禁用，直到管理員確認數據輸入法有效。"
 
-#: lib/installer.php:2489
+#: lib/installer.php:2492
 #, fuzzy
 msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
 msgstr "為了在此狀態下識別數據輸入法，我們在Kadupul的CLI目錄中提供了一個驗證腳本，該腳本可以使用以下選項運行："
 
-#: lib/installer.php:2493
+#: lib/installer.php:2496
 #, fuzzy
 msgid "This script option will search for any Data Input Methods that are currently banned and provide details as to why."
 msgstr "該腳本選項將搜索當前禁止的任何數據輸入方法，並提供有關原因的詳細信息。"
 
-#: lib/installer.php:2494
+#: lib/installer.php:2497
 #, fuzzy
 msgid "This script option un-ban the Data Input Methods that are currently banned."
 msgstr "此腳本選項取消禁止當前禁止的數據輸入法。"
 
-#: lib/installer.php:2495
+#: lib/installer.php:2498
 #, fuzzy
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "此腳本選項將重新啟用所有禁用的數據源。"
 
-#: lib/installer.php:2499
+#: lib/installer.php:2502
 #, fuzzy
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
 msgstr "強烈建議您通過取消註釋<b>$ input_whitelist</b>變量並在基於Web的安裝完成後運行上面的三個CLI腳本選項來更新config.php以啟用此功能。"
 
-#: lib/installer.php:2501
+#: lib/installer.php:2504
 #, fuzzy
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
 msgstr "選中下面的複選框以確認您已閱讀並理解此安全問題"
 
-#: lib/installer.php:2503
+#: lib/installer.php:2506
 #, fuzzy
 msgid "I have read this statement"
 msgstr "我已閱讀此聲明"
 
-#: lib/installer.php:2520 lib/installer.php:2526
+#: lib/installer.php:2523 lib/installer.php:2529
 #, fuzzy
 msgid "Default Profile"
 msgstr "默認配置文件"
 
-#: lib/installer.php:2521
+#: lib/installer.php:2524
 #, fuzzy
 msgid "Please select the default Data Source Profile to be used for polling sources.  This is the maximum amount of time between scanning devices for information so the lower the polling interval, the more work is placed on the Kadupul Server host.  Also, select the intended, or configured Cron interval that you wish to use for Data Collection."
 msgstr "請選擇用於輪詢源的默認數據源配置文件。這是掃描設備之間獲取信息的最長時間，因此輪詢間隔越小，Kadupul Server主機上的工作就越多。此外，選擇要用於數據收集的預期或配置的Cron間隔。"
 
-#: lib/installer.php:2532
+#: lib/installer.php:2535
 #, fuzzy
 msgid "Cron Interval"
 msgstr "Cron 間隔"
 
-#: lib/installer.php:2553
+#: lib/installer.php:2556
 #, fuzzy
 msgid "Default Automation Network"
 msgstr "默認自動化網絡"
 
-#: lib/installer.php:2554
+#: lib/installer.php:2557
 #, fuzzy
 msgid "Kadupul can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
 msgstr "安裝完成後，Kadupul可以自動掃描網絡。這將利用下面的網絡範圍來計算可掃描的IP範圍。為掃描定義了一組預定義的選項，包括使用“公共”和“私人”社區。"
 
-#: lib/installer.php:2555
+#: lib/installer.php:2558
 #, fuzzy
 msgid "If your devices require a different set of options to be used first, you may define them below and they will be utilized before the defaults"
 msgstr "如果您的設備需要先使用一組不同的選項，您可以在下面定義它們，它們將在默認值之前使用"
 
-#: lib/installer.php:2556
+#: lib/installer.php:2559
 #, fuzzy
 msgid "All options may be adjusted post installation"
 msgstr "安裝後可以調整所有選項"
 
-#: lib/installer.php:2560
+#: lib/installer.php:2563
 #, fuzzy
 msgid "Default Options"
 msgstr "默認選項"
 
-#: lib/installer.php:2564
+#: lib/installer.php:2567
 #, fuzzy
 msgid "Scan Mode"
 msgstr "掃描模式"
 
-#: lib/installer.php:2569
+#: lib/installer.php:2572
 #, fuzzy
 msgid "Network Range"
 msgstr "網絡範圍"
 
-#: lib/installer.php:2575
+#: lib/installer.php:2578
 #, fuzzy
 msgid "Additional Defaults"
 msgstr "附加默認值"
 
-#: lib/installer.php:2596
+#: lib/installer.php:2599
 #, fuzzy
 msgid "Additional SNMP Options"
 msgstr "其他SNMP選項"
 
-#: lib/installer.php:2609
+#: lib/installer.php:2612
 #, fuzzy
 msgid "Error Locating Profiles"
 msgstr "查找配置文件時出錯"
 
-#: lib/installer.php:2610
+#: lib/installer.php:2613
 #, fuzzy
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "安裝無法繼續，因為找不到配置文件。"
 
-#: lib/installer.php:2611
+#: lib/installer.php:2614
 #, fuzzy
 msgid "This may occur if you have a blank database and have not yet imported the cacti.sql file"
 msgstr "如果您有一個空數據庫並且尚未導入cacti.sql文件，則可能會發生這種情況"
 
-#: lib/installer.php:2620
+#: lib/installer.php:2623
 #, fuzzy
 msgid "Template Setup"
 msgstr "模板設置"
 
-#: lib/installer.php:2623
+#: lib/installer.php:2626
 #, fuzzy
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
 msgstr "選擇要從Kadupul導出的模板類型。"
 
-#: lib/installer.php:2624
+#: lib/installer.php:2627
 msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
 msgstr "不建議更新您已經修改過的模板。模板的升級不會刪除對圖形和數據模板的修改，並可能導致意外行為。但是，如果您沒有對任何圖形、數據查詢或數據模板進行更改，則重新導入包應該沒有任何影響。在這種情況下，您必須在更新後從模板“同步圖表”。"
 
-#: lib/installer.php:2626
+#: lib/installer.php:2629
 #, fuzzy
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "請在安裝後選擇您要使用的設備模板。如果操作系統是Windows，則需要確保選擇“Windows設備”模板。如果您的操作系統是Linux / UNIX，請確保選擇“本地Linux計算機”設備模板。"
 
-#: lib/installer.php:2632 package_import.php:487 plugins.php:596
+#: lib/installer.php:2635 package_import.php:487 plugins.php:596
 #, fuzzy
 msgid "Author"
 msgstr "作者"
 
-#: lib/installer.php:2632 package_import.php:490
+#: lib/installer.php:2635 package_import.php:490
 #, fuzzy
 msgid "Homepage"
 msgstr "首頁"
 
-#: lib/installer.php:2658
+#: lib/installer.php:2661
 #, fuzzy
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
 msgstr "設備模板允許您監視和繪製Kadupul中的各種數據。選擇所需的設備模板後，按“完成”，安裝將完成。請耐心等待此步驟，因為輸入設備模板可能需要幾分鐘時間。"
 
-#: lib/installer.php:2667
+#: lib/installer.php:2670
 #, fuzzy
 msgid "Server Collation"
 msgstr "服務器整理"
 
-#: lib/installer.php:2674
+#: lib/installer.php:2677
 #, fuzzy
 msgid "Your server collation appears to be UTF8 compliant"
 msgstr "您的服務器排序規則似乎符合UTF8標準"
 
-#: lib/installer.php:2677
+#: lib/installer.php:2680
 #, fuzzy
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "您的服務器排序規則似乎不完全符合UTF8標準。 "
 
-#: lib/installer.php:2678
+#: lib/installer.php:2681
 #, fuzzy
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
 msgstr "在[mysqld]部分下，找到名為&#39;character-set-server&#39;和&#39;collation-server&#39;的條目，並按如下所示進行設置："
 
-#: lib/installer.php:2685
+#: lib/installer.php:2688
 #, fuzzy
 msgid "Database Collation"
 msgstr "資料庫整理"
 
-#: lib/installer.php:2690
+#: lib/installer.php:2693
 #, fuzzy
 msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "您的數據庫默認排序規則似乎符合UTF8"
 
-#: lib/installer.php:2693
+#: lib/installer.php:2696
 #, fuzzy
 msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
 msgstr "您的數據庫默認排序規則似乎不符合UTF8標準。 "
 
-#: lib/installer.php:2694
+#: lib/installer.php:2697
 #, fuzzy
 msgid "Any tables created by plugins may have issues linked against Kadupul Core tables if the collation is not matched.   Please ensure your database is changed to 'utf8mb4_unicode_ci' by running the following: "
 msgstr "如果排序規則不匹配，則插件創建的任何表都可能存在與Kadupul Core錶鍊接的問題。請運行以下命令，確保將數據庫更改為“utf8mb4_unicode_ci”： "
 
-#: lib/installer.php:2701
+#: lib/installer.php:2704
 #, fuzzy
 msgid "Table Setup"
 msgstr "表設置"
 
-#: lib/installer.php:2712
+#: lib/installer.php:2715
 #, fuzzy, php-format
 msgid "You have more tables than your PHP configuration will allow us to display/convert.  Please modify the max_input_vars setting in php.ini to a value above %s"
 msgstr "您的表數量超出了PHP配置所允許的顯示/轉換數量。請修改php.ini中的max_input_vars設置為%s以上的值"
 
-#: lib/installer.php:2715
+#: lib/installer.php:2718
 #, fuzzy
 msgid "Conversion of tables may take some time especially on larger tables.  The conversion of these tables will occur in the background but will not prevent the installer from completing.  This may slow down some servers if there are not enough resources for MySQL to handle the conversion."
 msgstr "表的轉換可能需要一些時間，尤其是在較大的表上。這些表的轉換將在後台進行，但不會阻止安裝程序完成。如果MySQL沒有足夠的資源來處理轉換，這可能會降低某些服務器的速度。"
 
-#: lib/installer.php:2719
+#: lib/installer.php:2722
 #, fuzzy
 msgid "Tables"
 msgstr "表格"
 
-#: lib/installer.php:2720 utilities.php:853
+#: lib/installer.php:2723 utilities.php:853
 #, fuzzy
 msgid "Collation"
 msgstr "整理"
 
-#: lib/installer.php:2720 utilities.php:848
+#: lib/installer.php:2723 utilities.php:848
 #, fuzzy
 msgid "Engine"
 msgstr "引擎"
 
-#: lib/installer.php:2720 utilities.php:854
+#: lib/installer.php:2723 utilities.php:854
 #, fuzzy
 msgid "Row Format"
 msgstr "格式"
 
-#: lib/installer.php:2752
+#: lib/installer.php:2755
 #, fuzzy
 msgid "One or more tables are too large to convert during the installation.  You should use the cli/convert_tables.php script to perform the conversion, then refresh this page. For example: "
 msgstr "一個或多個表太大而無法在安裝期間進行轉換。您應該使用cli / convert_tables.php腳本來執行轉換，然後刷新此頁面。例如： "
 
-#: lib/installer.php:2756
+#: lib/installer.php:2759
 #, fuzzy
 msgid "The following tables should be converted to UTF8 and InnoDB with a Dynamic row format.  Please select the tables that you wish to convert during the installation process."
 msgstr "以下表格應轉換為UTF8和InnoDB。請在安裝過程中選擇要轉換的表。"
 
-#: lib/installer.php:2762
+#: lib/installer.php:2765
 #, fuzzy
 msgid "All your tables appear to be UTF8 and Dynamic row format compliant"
 msgstr "您的所有表格似乎都符合UTF8標準"
 
-#: lib/installer.php:2773
+#: lib/installer.php:2776
 #, fuzzy
 msgid "Confirm Upgrade"
 msgstr "確認升級"
 
-#: lib/installer.php:2777
+#: lib/installer.php:2780
 #, fuzzy
 msgid "Confirm Downgrade"
 msgstr "確認降級"
 
-#: lib/installer.php:2781
+#: lib/installer.php:2784
 #, fuzzy
 msgid "Confirm Installation"
 msgstr "確認安裝"
 
-#: lib/installer.php:2782 plugins.php:13
+#: lib/installer.php:2785 plugins.php:13
 #, fuzzy
 msgid "Install"
 msgstr "安裝"
 
-#: lib/installer.php:2787
+#: lib/installer.php:2790
 #, fuzzy
 msgid "DOWNGRADE DETECTED"
 msgstr "DOWNGRADE被檢測到"
 
-#: lib/installer.php:2788
+#: lib/installer.php:2791
 msgid "YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
 msgstr "您必須手動更改Kadupul數據庫以修改已經進行的任何升級更改。 <br/>安裝人員沒有辦法自動為您做這件事"
 
-#: lib/installer.php:2789
+#: lib/installer.php:2792
 msgid "Downgrading should only be performed when absolutely necessary and doing so may break your installation"
 msgstr "降級只應在絕對必要時執行，這樣做可能會破壞您的安裝"
 
-#: lib/installer.php:2792
+#: lib/installer.php:2795
 #, fuzzy
 msgid "Your Kadupul Server is almost ready.  Please check that you are happy to proceed."
 msgstr "您的Kadupul服務器幾乎準備就緒。請檢查您是否樂意繼續。"
 
-#: lib/installer.php:2795
+#: lib/installer.php:2798
 #, fuzzy, php-format
 msgid "Press '%s' then click '%s' to complete the installation process after selecting your Device Templates."
 msgstr "選擇設備模板後，按“%s”，然後單擊“%s”以完成安裝過程。"
 
-#: lib/installer.php:2812
+#: lib/installer.php:2815
 #, fuzzy, php-format
 msgid "Installing Kadupul Server v%s"
 msgstr "安裝Kadupul Server v%s"
 
-#: lib/installer.php:2813
+#: lib/installer.php:2816
 #, fuzzy
 msgid "Your Kadupul Server is now installing"
 msgstr "您的Kadupul服務器現在正在安裝"
 
-#: lib/installer.php:2900
+#: lib/installer.php:2903
 #, fuzzy, php-format
 msgid "Spawning background process: %s %s"
 msgstr "產生後台進程：%s%s"
 
-#: lib/installer.php:2927
+#: lib/installer.php:2930
 #, fuzzy
 msgid "Complete"
 msgstr "完成"
 
-#: lib/installer.php:2928
+#: lib/installer.php:2931
 #, fuzzy, php-format
 msgid "Your Kadupul Server v%s has been installed/updated.  You may now start using the software."
 msgstr "您的Kadupul Server v%s已安裝/更新。您現在可以開始使用該軟件。"
 
-#: lib/installer.php:2932
+#: lib/installer.php:2935
 #, fuzzy, php-format
 msgid "Your Kadupul Server v%s has been installed/updated with errors"
 msgstr "您的Kadupul Server v%s已安裝/更新時出錯"
 
-#: lib/installer.php:3046
+#: lib/installer.php:3049
 #, fuzzy
 msgid "Get Help"
 msgstr "取得說明"
 
-#: lib/installer.php:3051
+#: lib/installer.php:3054
 #, fuzzy
 msgid "Report Issue"
 msgstr "報告問題"
 
-#: lib/installer.php:3054
+#: lib/installer.php:3057
 #, fuzzy
 msgid "Get Started"
 msgstr "開始使用"
 
-#: lib/installer.php:3110
+#: lib/installer.php:3113
 #, fuzzy, php-format
 msgid "Starting %s Process for v%s"
 msgstr "為v%s啟動%s流程"
 
-#: lib/installer.php:3136
+#: lib/installer.php:3139
 msgid "Unable to update application defaults."
 msgstr ""
 
-#: lib/installer.php:3139
+#: lib/installer.php:3142
 #, fuzzy, php-format
 msgid "Finished %s Process for v%s"
 msgstr "v%s完成的%s處理"
 
-#: lib/installer.php:3179
+#: lib/installer.php:3182
 #, fuzzy, php-format
 msgid "Found %s templates to install"
 msgstr "找到了要安裝的%s模板"
 
-#: lib/installer.php:3189
+#: lib/installer.php:3192
 #, fuzzy, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "即將導入軟件包＃%s'%s'。"
 
-#: lib/installer.php:3198
+#: lib/installer.php:3201
 #, fuzzy, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "已成功在配置文件'%s'下導入軟件包＃%s'%s'"
 
-#: lib/installer.php:3204
+#: lib/installer.php:3207
 #, fuzzy, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "在配置文件“%s”下導入軟件包＃%s“%s”失敗"
 
-#: lib/installer.php:3221
+#: lib/installer.php:3224
 #, fuzzy, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "[已刪除模板]的自動化模板"
 
-#: lib/installer.php:3242
+#: lib/installer.php:3245
 #, fuzzy
 msgid "No templates were selected for import"
 msgstr "未選擇要導入的模板"
 
-#: lib/installer.php:3252
+#: lib/installer.php:3255
 #, fuzzy
 msgid "Updating remote configuration file"
 msgstr "等待配置"
 
-#: lib/installer.php:3287
+#: lib/installer.php:3290
 #, fuzzy, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "此數據模板的默認數據源配置文件。"
 
-#: lib/installer.php:3315
+#: lib/installer.php:3318
 #, fuzzy, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "無法應用指定的配置文件%s！=%s"
 
-#: lib/installer.php:3324
+#: lib/installer.php:3327
 #, fuzzy, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "更新自動化網絡（%s），模式“%s” =>“%s”，子網“%s” =>%s“"
 
-#: lib/installer.php:3334
+#: lib/installer.php:3337
 #, fuzzy
 msgid "Failed to find automation network, no changes were made"
 msgstr "找不到自動化網絡，未進行任何更改"
 
-#: lib/installer.php:3338
+#: lib/installer.php:3341
 #, fuzzy
 msgid "Adding extra snmp settings for automation"
 msgstr "添加額外的snmp設置以實現自動化"
 
-#: lib/installer.php:3344
+#: lib/installer.php:3347
 #, fuzzy, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "刪除自動化模板"
 
-#: lib/installer.php:3357
+#: lib/installer.php:3360
 #, fuzzy, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "自動化SNMP選項"
 
-#: lib/installer.php:3360
+#: lib/installer.php:3363
 #, fuzzy, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "成功更新了自動化選項集%s"
 
-#: lib/installer.php:3362
+#: lib/installer.php:3365
 #, fuzzy, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "在設備上運行自動化"
 
-#: lib/installer.php:3370
+#: lib/installer.php:3373
 #, fuzzy, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "無法應用指定的自動化範圍"
 
-#: lib/installer.php:3373
+#: lib/installer.php:3376
 #, fuzzy
 msgid "Failed to find any automation option set"
 msgstr "無法找到要復制的數據！"
 
-#: lib/installer.php:3403
+#: lib/installer.php:3406
 #, fuzzy, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "設備模板[編輯：%s]"
 
-#: lib/installer.php:3433
+#: lib/installer.php:3436
 #, fuzzy
 msgid "Creating Graphs for Default Device"
 msgstr "為此設備創建圖表"
 
-#: lib/installer.php:3440
+#: lib/installer.php:3443
 #, fuzzy
 msgid "Adding Device to Default Tree"
 msgstr "設備默認值"
 
-#: lib/installer.php:3448
+#: lib/installer.php:3451
 #, fuzzy
 msgid "No templated graphs for Default Device were found"
 msgstr "找不到默認設備的模板化圖"
 
-#: lib/installer.php:3452
+#: lib/installer.php:3455
 #, fuzzy
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "警告：找不到您的操作系統的設備模板。您將需要導入設備模板或Kadupul軟件包來監視您的Kadupul服務器。"
 
-#: lib/installer.php:3459
+#: lib/installer.php:3462
 #, fuzzy
 msgid "Running first-time data query for local host"
 msgstr "運行本地主機的首次數據查詢"
 
-#: lib/installer.php:3467
+#: lib/installer.php:3470
 #, fuzzy
 msgid "Repopulating poller cache"
 msgstr "重建輪詢器緩存"
 
-#: lib/installer.php:3472
+#: lib/installer.php:3475
 #, fuzzy
 msgid "Repopulating SNMP Agent cache"
 msgstr "重建SNMPAgent緩存"
 
-#: lib/installer.php:3477
+#: lib/installer.php:3480
 #, fuzzy
 msgid "Generating RSA Key Pair"
 msgstr "生成RSA密鑰對"
 
-#: lib/installer.php:3490
+#: lib/installer.php:3493
 #, fuzzy, php-format
 msgid "Found %s tables to convert"
 msgstr "找到要轉換的%s表"
 
-#: lib/installer.php:3497
+#: lib/installer.php:3500
 #, fuzzy, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "轉換錶＃%s'%s'"
 
-#: lib/installer.php:3512
+#: lib/installer.php:3515
 #, fuzzy
 msgid "No tables where found or selected for conversion"
 msgstr "沒有找到或選擇要轉換的表"
 
-#: lib/installer.php:3524
+#: lib/installer.php:3527
 #, fuzzy, php-format
 msgid "Switched from %s to %s"
 msgstr "從%s切換到%s"
 
-#: lib/installer.php:3528
+#: lib/installer.php:3531
 #, fuzzy, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "注意：使用臨時文件進行數據庫高速緩存：%s"
 
-#: lib/installer.php:3550
+#: lib/installer.php:3553
 #, fuzzy, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "從v%s（數據庫%s）升級到v%s"
 
-#: lib/installer.php:3558
+#: lib/installer.php:3561
 #, fuzzy, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "警告：無法找到v%s的升級功能"
 
-#: lib/installer.php:3619
+#: lib/installer.php:3622
 #, fuzzy
 msgid "Install aborted due to no EULA acceptance"
 msgstr "由於未接受EULA，安裝被中止"
 
-#: lib/installer.php:3643
+#: lib/installer.php:3646
 #, fuzzy, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "後台已在%s開始，此嘗試已在%s跳過"
 
-#: lib/installer.php:3667
+#: lib/installer.php:3670
 #, fuzzy, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "安裝期間發生異常：＃"
 
-#: lib/installer.php:3686
+#: lib/installer.php:3689
 #, fuzzy, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "安裝在%s開始，在%s完成"
 
-#: lib/installer.php:3723
+#: lib/installer.php:3726
 #, fuzzy
 msgid "Both"
 msgstr "兩者"
 
-#: lib/installer.php:3723
+#: lib/installer.php:3726
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "%s Minutes"
 
-#: lib/installer.php:3728
+#: lib/installer.php:3731
 #, php-format
 msgid "%s - N/A"
 msgstr "%s Minutes"
 
-#: lib/installer.php:3728 lib/installer.php:3730
+#: lib/installer.php:3731 lib/installer.php:3733
 #, fuzzy
 msgid "Web"
 msgstr "網頁"
 
-#: lib/installer.php:3730 lib/installer.php:3733
+#: lib/installer.php:3733 lib/installer.php:3736
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "%s Minutes"
 
-#: lib/installer.php:3733
+#: lib/installer.php:3736
 #, fuzzy
 msgid "Cli"
 msgstr "經典"
 
-#: lib/installer.php:3739
+#: lib/installer.php:3742
 #, fuzzy, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "設置PHP選項%s =%s"
 
-#: lib/installer.php:3745
+#: lib/installer.php:3748
 #, fuzzy, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "無法設置PHP選項%s，為%s（應為%s）"
 
-#: lib/installer.php:3782
+#: lib/installer.php:3785
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "嘗試同步時找不到數據收集器"
 

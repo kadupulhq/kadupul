@@ -158,6 +158,9 @@ class Installer implements JsonSerializable
             }
         } elseif ($step >= Installer::STEP_COMPLETE) {
             $install_version = read_config_option('install_version', true);
+            if (empty($install_version)) {
+                $install_version = $this->old_cacti_version;
+            }
             log_install_high('step', 'Previously complete: ' . clean_up_lines(var_export($install_version, true)));
 
             if (!cacti_version_compare(CACTI_VERSION, $install_version, '==')) {

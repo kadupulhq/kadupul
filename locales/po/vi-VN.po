@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-15 20:19-0700\n"
+"POT-Creation-Date: 2026-09-15 20:21-0700\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -44,7 +44,7 @@ msgstr "Giấy phép"
 msgid "Kadupul is licensed under the GNU GPL:"
 msgstr "Kadupul được cấp phép theo GPL GNU:"
 
-#: about.php:33 lib/installer.php:1822
+#: about.php:33 lib/installer.php:1825
 msgid "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
 msgstr "Chương trình này là phần mềm miễn phí; bạn có thể phân phối lại và / hoặc sửa đổi nó theo các điều khoản của Giấy phép Công cộng GNU do Tổ chức Phần mềm Tự do xuất bản; phiên bản 2 của Giấy phép hoặc (tùy chọn của bạn) bất kỳ phiên bản mới hơn."
 
@@ -610,7 +610,7 @@ msgstr "Không"
 #: data_templates.php:1238 gprint_presets.php:428 graph_templates.php:886
 #: host_templates.php:963 include/global_settings.php:874
 #: include/global_settings.php:1897 lib/api_automation.php:1463
-#: lib/installer.php:2017 lib/installer.php:2045 lib/installer.php:3721
+#: lib/installer.php:2020 lib/installer.php:2048 lib/installer.php:3724
 #: links.php:400 tree.php:2327 tree.php:2328 user_admin.php:2326
 #: user_domains.php:752 user_domains.php:756 user_group_admin.php:2008
 #: vdef.php:916
@@ -745,7 +745,7 @@ msgstr "Mẫu tổng hợp"
 #: aggregate_templates.php:595 automation_templates.php:381
 #: automation_templates.php:468 color_templates.php:645
 #: include/global_arrays.php:998 include/global_arrays.php:1061
-#: lib/installer.php:2631 user_admin.php:2929 user_group_admin.php:2493
+#: lib/installer.php:2634 user_admin.php:2929 user_group_admin.php:2493
 msgid "Templates"
 msgstr "Giao diện"
 
@@ -1173,7 +1173,7 @@ msgstr "Liên hệ"
 #: automation_devices.php:270 include/global_form.php:1137
 #: include/global_form.php:1173 include/global_form.php:1367
 #: include/global_form.php:1743 lib/api_automation.php:273
-#: lib/api_automation.php:1229 lib/installer.php:1937 lib/installer.php:2632
+#: lib/api_automation.php:1229 lib/installer.php:1940 lib/installer.php:2635
 #: managers.php:202 user_admin.php:978 user_admin.php:1123
 #: user_group_admin.php:1010 user_group_admin.php:1996
 msgid "Description"
@@ -1199,7 +1199,7 @@ msgstr "SNMP"
 #: host.php:1671 host.php:1788 lib/api_automation.php:151
 #: lib/api_automation.php:275 lib/api_automation.php:568
 #: lib/api_automation.php:1089 lib/api_automation.php:1232
-#: lib/html_reports.php:1876 lib/installer.php:1937 managers.php:204
+#: lib/html_reports.php:1876 lib/installer.php:1940 managers.php:204
 #: package_import.php:537 package_import.php:622 plugins.php:467
 #: plugins.php:590 pollers.php:1005 templates_import.php:206
 #: templates_import.php:245 user_admin.php:1123 user_group_admin.php:1010
@@ -1565,8 +1565,8 @@ msgstr "Cài đặt chung"
 #: include/global_form.php:1331 include/global_form.php:1359
 #: include/global_form.php:1432 include/global_form.php:1460
 #: include/global_form.php:2105 include/global_form.php:2203
-#: include/global_form.php:2248 lib/installer.php:1937 lib/installer.php:2010
-#: lib/installer.php:2040 lib/installer.php:2632 lib/installer.php:2720
+#: include/global_form.php:2248 lib/installer.php:1940 lib/installer.php:2013
+#: lib/installer.php:2043 lib/installer.php:2635 lib/installer.php:2723
 #: lib/vdef.php:56 managers.php:554 pollers.php:44 sites.php:23
 #: user_admin.php:978 user_domains.php:309 utilities.php:847 utilities.php:3079
 msgid "Name"
@@ -2496,7 +2496,7 @@ msgstr "Tiêu chí tạo cây"
 msgid "Change Leaf Type"
 msgstr "Thay đổi loại lá"
 
-#: automation_tree_rules.php:715 lib/installer.php:3945 utilities.php:2633
+#: automation_tree_rules.php:715 lib/installer.php:3948 utilities.php:2633
 #: utilities.php:2634 utilities.php:2637 utilities.php:2638
 msgid "WARNING:"
 msgstr "LƯU Ý:"
@@ -3021,7 +3021,7 @@ msgstr "ID nội bộ của Nguồn dữ liệu."
 msgid "The Status of the Data Source Debug Check."
 msgstr "Trạng thái của Kiểm tra gỡ lỗi nguồn dữ liệu."
 
-#: data_debug.php:454 lib/installer.php:2391 lib/installer.php:2423
+#: data_debug.php:454 lib/installer.php:2394 lib/installer.php:2426
 #: package_import.php:591
 msgid "Writable"
 msgstr "Có thể ghi"
@@ -3767,7 +3767,7 @@ msgid "Steps"
 msgstr "Bước"
 
 #: data_source_profiles.php:622 graphs_new.php:449 include/global_form.php:281
-#: lib/html.php:566 lib/html_filter.php:55 lib/installer.php:2720
+#: lib/html.php:566 lib/html_filter.php:55 lib/installer.php:2723
 #: lib/rrd.php:3319 utilities.php:849 utilities.php:1771
 msgid "Rows"
 msgstr "Hàng"
@@ -13591,7 +13591,7 @@ msgstr "Chỉnh sửa thiết bị"
 msgid "Kill Spikes in Graphs"
 msgstr "Tiêu diệt gai trong đồ thị"
 
-#: lib/html.php:582 lib/html.php:614 lib/installer.php:1683
+#: lib/html.php:582 lib/html.php:614 lib/installer.php:1686
 msgid "Previous"
 msgstr "Trước"
 
@@ -13600,7 +13600,7 @@ msgstr "Trước"
 msgid "%d to %d of %s [ %s ]"
 msgstr "% d đến% d của %s [ %s]"
 
-#: lib/html.php:588 lib/html.php:620 lib/installer.php:1682
+#: lib/html.php:588 lib/html.php:620 lib/installer.php:1685
 msgid "Next"
 msgstr "Tiếp"
 
@@ -14727,7 +14727,7 @@ msgstr "Lỗi bù UTF-8 xấu!"
 msgid "Down (Thold)"
 msgstr "Tải xuống"
 
-#: lib/html_utility.php:1211 lib/installer.php:1978 lib/installer.php:3861
+#: lib/html_utility.php:1211 lib/installer.php:1981 lib/installer.php:3864
 msgid "Error"
 msgstr "Lỗi"
 
@@ -14830,1051 +14830,1051 @@ msgstr "Tìm thấy phụ thuộc:"
 msgid "Unmet Dependency:"
 msgstr "Phụ thuộc chưa được đáp ứng:"
 
-#: lib/installer.php:571
+#: lib/installer.php:574
 msgid "Path was not writable"
 msgstr "Con đường không thể ghi"
 
-#: lib/installer.php:581
+#: lib/installer.php:584
 msgid "Path is not writable"
 msgstr "Đường dẫn không thể ghi"
 
-#: lib/installer.php:715
+#: lib/installer.php:718
 #, php-format
 msgid "Failed to set specified %sRRDTool version: %s"
 msgstr "Không thể đặt phiên bản %sRRDTool được chỉ định: %s"
 
-#: lib/installer.php:763
+#: lib/installer.php:766
 msgid "Invalid Theme Specified"
 msgstr "Chủ đề không hợp lệ được chỉ định"
 
-#: lib/installer.php:819
+#: lib/installer.php:822
 msgid "Resource is not writable"
 msgstr "Tài nguyên không thể ghi"
 
-#: lib/installer.php:824
+#: lib/installer.php:827
 msgid "File not found"
 msgstr "Không tìm thấy tập tin"
 
-#: lib/installer.php:837
+#: lib/installer.php:840
 msgid "PHP did not return expected result"
 msgstr "PHP đã không trả lại kết quả mong đợi"
 
-#: lib/installer.php:851
+#: lib/installer.php:854
 msgid "Unexpected path parameter"
 msgstr "Tham số đường dẫn không mong đợi"
 
-#: lib/installer.php:887
+#: lib/installer.php:890
 #, php-format
 msgid "Failed to apply specified profile %s != %s"
 msgstr "Không thể áp dụng hồ sơ được chỉ định %s! = %s"
 
-#: lib/installer.php:929
+#: lib/installer.php:932
 #, php-format
 msgid "Failed to apply specified mode: %s"
 msgstr "Không thể áp dụng chế độ được chỉ định: %s"
 
-#: lib/installer.php:953
+#: lib/installer.php:956
 #, php-format
 msgid "Failed to apply specified automation override: %s"
 msgstr "Không thể áp dụng ghi đè tự động hóa được chỉ định: %s"
 
-#: lib/installer.php:974
+#: lib/installer.php:977
 msgid "Failed to apply specified cron interval"
 msgstr "Không thể áp dụng khoảng thời gian xác định"
 
-#: lib/installer.php:1020
+#: lib/installer.php:1023
 #, fuzzy, php-format
 msgid "Failed to apply '%s' as Automation Range"
 msgstr "Không thể áp dụng Phạm vi tự động hóa được chỉ định"
 
-#: lib/installer.php:1097
+#: lib/installer.php:1100
 msgid "No matching snmp option exists"
 msgstr "Không có tùy chọn snmp phù hợp tồn tại"
 
-#: lib/installer.php:1283
+#: lib/installer.php:1286
 msgid "No matching template exists"
 msgstr "Không có mẫu phù hợp tồn tại"
 
-#: lib/installer.php:1626
+#: lib/installer.php:1629
 msgid "The Installer could not proceed due to an unexpected error."
 msgstr "Trình cài đặt không thể tiến hành do một lỗi không mong muốn."
 
-#: lib/installer.php:1627
+#: lib/installer.php:1630
 msgid "Please report this to the Kadupul Group."
 msgstr "Vui lòng báo cáo điều này với Tập đoàn Kadupul."
 
-#: lib/installer.php:1628
+#: lib/installer.php:1631
 #, php-format
 msgid "Unknown Reason: %s"
 msgstr "Lý do không xác định: %s"
 
-#: lib/installer.php:1636
+#: lib/installer.php:1639
 #, php-format
 msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this can not be performed."
 msgstr "Bạn đang cố gắng cài đặt Kadupul %s vào cơ sở dữ liệu 0.6.x. Thật không may, điều này không thể được thực hiện."
 
-#: lib/installer.php:1637
+#: lib/installer.php:1640
 msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
 msgstr "Để có thể tiếp tục, bạn <b>PHẢI</b> tạo một cơ sở dữ liệu mới, nhập &quot;cacti.sql&quot; vào đó:"
 
-#: lib/installer.php:1639
+#: lib/installer.php:1642
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
 msgstr "Sau đó, bạn <b>PHẢI</b> cập nhật &quot;include / config.php&quot; để trỏ đến cơ sở dữ liệu mới."
 
-#: lib/installer.php:1640
+#: lib/installer.php:1643
 msgid "NOTE: Your existing data will not be modified, nor will it or any history be available to the new install"
 msgstr "LƯU Ý: Dữ liệu hiện tại của bạn sẽ không được sửa đổi, cũng như sẽ không có bất kỳ lịch sử nào có sẵn cho cài đặt mới"
 
-#: lib/installer.php:1648
+#: lib/installer.php:1651
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
 msgstr "Bạn đã tạo một cơ sở dữ liệu mới, nhưng chưa nhập tệp &#39;cacti.sql&#39;. Tại dòng lệnh, thực hiện như sau để tiếp tục:"
 
-#: lib/installer.php:1650
+#: lib/installer.php:1653
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Kadupul database. Please ensure that the Kadupul database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Kadupul database."
 msgstr "Lỗi này cũng có thể được tạo ra nếu người dùng cơ sở dữ liệu Kadupul không có quyền chính xác trên cơ sở dữ liệu Kadupul. Vui lòng đảm bảo rằng người dùng cơ sở dữ liệu Kadupul có khả năng CHỌN, CHERTN, XÓA, CẬP NHẬT, TẠO, THAY ĐỔI, DROP, INDEX trên cơ sở dữ liệu Kadupul."
 
-#: lib/installer.php:1651
+#: lib/installer.php:1654
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"
 msgstr "Bạn cũng <b>phải</b> nhập thông tin TimeZone của MySQL vào MySQL và cấp cho người dùng Kadupul quyền truy cập vào bảng mysql.time_zone_name"
 
-#: lib/installer.php:1654
+#: lib/installer.php:1657
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
 msgstr "Trên Linux / UNIX, hãy chạy phần sau dưới dạng &#39;root&#39; trong shell:"
 
-#: lib/installer.php:1657
+#: lib/installer.php:1660
 msgid "On Windows, you must follow the instructions here <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>Time zone description table</a>.  Once that is complete, you can issue the following command to grant the Kadupul user access to the tables:"
 msgstr "Trên Windows, bạn phải làm theo các hướng dẫn ở đây <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>Bảng mô tả múi giờ</a> . Khi đã hoàn tất, bạn có thể ban hành lệnh sau để cấp quyền truy cập cho người dùng Kadupul vào các bảng:"
 
-#: lib/installer.php:1660
+#: lib/installer.php:1663
 msgid "Then run the following within MySQL as an administrator:"
 msgstr "Sau đó chạy phần sau trong MySQL với tư cách quản trị viên:"
 
-#: lib/installer.php:1679 pollers.php:671
+#: lib/installer.php:1682 pollers.php:671
 msgid "Test Connection"
 msgstr "Kiểm tra kết nối"
 
-#: lib/installer.php:1690
+#: lib/installer.php:1693
 msgid "Begin"
 msgstr "Bắt đầu"
 
-#: lib/installer.php:1696 lib/installer.php:2124 lib/installer.php:2134
-#: lib/installer.php:2774
+#: lib/installer.php:1699 lib/installer.php:2127 lib/installer.php:2137
+#: lib/installer.php:2777
 msgid "Upgrade"
 msgstr "Nâng cấp"
 
-#: lib/installer.php:1698 lib/installer.php:2778
+#: lib/installer.php:1701 lib/installer.php:2781
 msgid "Downgrade"
 msgstr "Downgrade"
 
-#: lib/installer.php:1801 utilities.php:255
+#: lib/installer.php:1804 utilities.php:255
 #, fuzzy
 msgid "Kadupul Version"
 msgstr "Phiên bản Kadupul"
 
-#: lib/installer.php:1801
+#: lib/installer.php:1804
 msgid "License Agreement"
 msgstr "Äiá»u kiá»n giáº¥y phÃ©p"
 
-#: lib/installer.php:1804
+#: lib/installer.php:1807
 #, php-format
 msgid "This version of Kadupul (%s) does not appear to have a valid version code, please contact the Kadupul Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 msgstr "Phiên bản Kadupul ( %s) này dường như không có mã phiên bản hợp lệ, vui lòng liên hệ với Nhóm phát triển Kadupul để đảm bảo điều này được thực hiện. Nếu bạn thấy lỗi này trong một bản phát hành, vui lòng đưa ra báo cáo ngay lập tức trên GitHub"
 
-#: lib/installer.php:1807
+#: lib/installer.php:1810
 msgid "Thanks for taking the time to download and install Kadupul, the complete graphing solution for your network. Before you can start making cool graphs, there are a few pieces of data that Kadupul needs to know."
 msgstr "Cảm ơn bạn đã dành thời gian để tải xuống và cài đặt Kadupul, giải pháp đồ họa hoàn chỉnh cho mạng của bạn. Trước khi bạn có thể bắt đầu tạo các biểu đồ thú vị, có một vài phần dữ liệu mà Kadupul cần biết."
 
-#: lib/installer.php:1808
+#: lib/installer.php:1811
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Kadupul before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
 msgstr "Hãy chắc chắn rằng bạn đã đọc và làm theo các bước cần thiết để cài đặt Kadupul trước khi tiếp tục. Thông tin cài đặt có thể được tìm thấy cho <a href=\"%1$s\">các</a> hệ điều hành dựa trên <a href=\"%1$s\">Unix</a> và <a href=\"%2$s\">Win32</a> ."
 
-#: lib/installer.php:1811
+#: lib/installer.php:1814
 #, php-format
 msgid "This process will guide you through the steps for upgrading from version '%s'. "
 msgstr "Quá trình này sẽ hướng dẫn bạn các bước để nâng cấp từ phiên bản &#39; %s&#39;."
 
-#: lib/installer.php:1812
+#: lib/installer.php:1815
 #, php-format
 msgid "Also, if this is an upgrade, be sure to read the <a href=\"%s\">Upgrade</a> information file."
 msgstr "Ngoài ra, nếu đây là bản nâng cấp, hãy nhớ đọc tệp thông tin <a href=\"%s\">Nâng cấp</a> ."
 
-#: lib/installer.php:1816
+#: lib/installer.php:1819
 msgid "It is NOT recommended to downgrade as the database structure may be inconsistent"
 msgstr "KHÔNG nên hạ cấp vì cấu trúc cơ sở dữ liệu có thể không nhất quán"
 
-#: lib/installer.php:1819
+#: lib/installer.php:1822
 msgid "Kadupul is licensed under the GNU General Public License, you must agree to its provisions before continuing:"
 msgstr "Kadupul được cấp phép theo Giấy phép Công cộng GNU, bạn phải đồng ý với các quy định của nó trước khi tiếp tục:"
 
-#: lib/installer.php:1823
+#: lib/installer.php:1826
 msgid "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
 msgstr "Chương trình này được phân phối với hy vọng nó sẽ hữu ích, nhưng KHÔNG CÓ BẤT K WAR ĐẢM BẢO NÀO; thậm chí không có bảo hành ngụ ý của MERCHANTABILITY hoặc FITNESS CHO MỘT MỤC ĐÍCH THAM GIA. Xem Giấy phép Công cộng GNU để biết thêm chi tiết."
 
-#: lib/installer.php:1860
+#: lib/installer.php:1863
 msgid "Accept GPL License Agreement"
 msgstr "Chấp nhận Thỏa thuận cấp phép GPL"
 
-#: lib/installer.php:1860
+#: lib/installer.php:1863
 msgid "Select default theme: "
 msgstr "Chọn chủ đề mặc định:"
 
-#: lib/installer.php:1884
+#: lib/installer.php:1887
 msgid "Pre-installation Checks"
 msgstr "Kiểm tra trước khi cài đặt"
 
-#: lib/installer.php:1885
+#: lib/installer.php:1888
 msgid "Location checks"
 msgstr "Kiểm tra vị trí"
 
-#: lib/installer.php:1921 lib/installer.php:2072 lib/installer.php:2076
-#: lib/installer.php:2232 lib/installer.php:2237 lib/installer.php:3965
+#: lib/installer.php:1924 lib/installer.php:2075 lib/installer.php:2079
+#: lib/installer.php:2235 lib/installer.php:2240 lib/installer.php:3968
 msgid "ERROR:"
 msgstr "Lỗi:"
 
-#: lib/installer.php:1921
+#: lib/installer.php:1924
 msgid "Please update config.php with the correct relative URI location of Kadupul (url_path)."
 msgstr "Vui lòng cập nhật config.php với vị trí URI tương đối chính xác của Kadupul (url_path)."
 
-#: lib/installer.php:1924
+#: lib/installer.php:1927
 msgid "Your Kadupul configuration has the relative correct path (url_path) in config.php."
 msgstr "Cấu hình Kadupul của bạn có đường dẫn chính xác tương đối (url_path) trong config.php."
 
-#: lib/installer.php:1932
+#: lib/installer.php:1935
 #, fuzzy, php-format
 msgid "PHP - Recommendations (%s)"
 msgstr "PHP - Khuyến nghị"
 
-#: lib/installer.php:1936
+#: lib/installer.php:1939
 msgid "PHP Recommendations ("
 msgstr "Khuyến nghị về PHP"
 
-#: lib/installer.php:1937
+#: lib/installer.php:1940
 msgid "Current"
 msgstr "Hiện hành"
 
-#: lib/installer.php:1937
+#: lib/installer.php:1940
 msgid "Recommended"
 msgstr "Đề nghị"
 
-#: lib/installer.php:1944
+#: lib/installer.php:1947
 msgid "PHP Binary"
 msgstr "Đường dẫn nhị phân PHP"
 
-#: lib/installer.php:1947
+#: lib/installer.php:1950
 msgid "The PHP binary location is not valid and must be updated."
 msgstr "Vị trí nhị phân PHP không hợp lệ và phải được cập nhật."
 
-#: lib/installer.php:1954
+#: lib/installer.php:1957
 msgid "Update the path_php_binary value in the settings table."
 msgstr "Cập nhật giá trị path_php_binary trong bảng cài đặt."
 
-#: lib/installer.php:1963
+#: lib/installer.php:1966
 msgid "Passed"
 msgstr "Đã vượt qua"
 
-#: lib/installer.php:1966
+#: lib/installer.php:1969
 msgid "Warning"
 msgstr "Cảnh báo"
 
-#: lib/installer.php:1972
+#: lib/installer.php:1975
 msgid "Restart Required"
 msgstr "Cần thiết"
 
-#: lib/installer.php:1972
+#: lib/installer.php:1975
 msgid "The specified value appears to be different in the running config versus the INI file."
 msgstr ""
 
-#: lib/installer.php:2002
+#: lib/installer.php:2005
 msgid "PHP - Module Support (Required)"
 msgstr "PHP - Hỗ trợ mô-đun (Bắt buộc)"
 
-#: lib/installer.php:2003
+#: lib/installer.php:2006
 msgid "Kadupul requires several PHP Modules to be installed to work properly. If any of these are not installed, you will be unable to continue the installation until corrected. In addition, for optimal system performance Kadupul should be run with certain MySQL system variables set.  Please follow the MySQL recommendations at your discretion.  Always seek the MySQL documentation if you have any questions."
 msgstr "Kadupul yêu cầu một số Mô-đun PHP được cài đặt để hoạt động đúng. Nếu bất kỳ thứ nào trong số này không được cài đặt, bạn sẽ không thể tiếp tục cài đặt cho đến khi được sửa. Ngoài ra, để có hiệu năng hệ thống tối ưu, Kadupul nên được chạy với một số biến hệ thống MySQL nhất định. Vui lòng làm theo các khuyến nghị của MySQL theo quyết định của bạn. Luôn luôn tìm tài liệu MySQL nếu bạn có bất kỳ câu hỏi nào."
 
-#: lib/installer.php:2005
+#: lib/installer.php:2008
 msgid "The following PHP extensions are mandatory, and MUST be installed before continuing your Kadupul install."
 msgstr "Các phần mở rộng PHP sau là bắt buộc và PHẢI được cài đặt trước khi tiếp tục cài đặt Kadupul của bạn."
 
-#: lib/installer.php:2009
+#: lib/installer.php:2012
 msgid "Required PHP Modules"
 msgstr "Các mô-đun PHP cần thiết"
 
-#: lib/installer.php:2010 lib/installer.php:2040 plugins.php:25 plugins.php:474
+#: lib/installer.php:2013 lib/installer.php:2043 plugins.php:25 plugins.php:474
 msgid "Installed"
 msgstr "Đã lắp đặt"
 
-#: lib/installer.php:2010
+#: lib/installer.php:2013
 msgid "Required"
 msgstr "Cần thiết"
 
-#: lib/installer.php:2033
+#: lib/installer.php:2036
 msgid "PHP - Module Support (Optional)"
 msgstr "PHP - Hỗ trợ mô-đun (Tùy chọn)"
 
-#: lib/installer.php:2035
+#: lib/installer.php:2038
 msgid "The following PHP extensions are recommended, and should be installed before continuing your Kadupul install.  NOTE: If you are planning on supporting SNMPv3 with IPv6, you should not install the php-snmp module at this time."
 msgstr "Các phần mở rộng PHP sau được khuyến nghị và nên được cài đặt trước khi tiếp tục cài đặt Kadupul của bạn. LƯU Ý: Nếu bạn dự định hỗ trợ SNMPv3 với IPv6, bạn không nên cài đặt mô-đun php-snmp tại thời điểm này."
 
-#: lib/installer.php:2039
+#: lib/installer.php:2042
 msgid "Optional Modules"
 msgstr "Các module tùy chọn"
 
-#: lib/installer.php:2040
+#: lib/installer.php:2043
 msgid "Optional"
 msgstr "Tuỳ chọn"
 
-#: lib/installer.php:2061
+#: lib/installer.php:2064
 msgid "MySQL - TimeZone Support"
 msgstr "MySQL - Hỗ trợ TimeZone"
 
-#: lib/installer.php:2072
+#: lib/installer.php:2075
 msgid "Your MySQL TimeZone database is not populated.  Please populate this database before proceeding."
 msgstr "Cơ sở dữ liệu TimeZone MySQL của bạn không được điền. Vui lòng điền cơ sở dữ liệu này trước khi tiếp tục."
 
-#: lib/installer.php:2076
+#: lib/installer.php:2079
 msgid "Your Kadupul database login account does not have access to the MySQL TimeZone database.  Please provide the Kadupul database account \"select\" access to the \"time_zone_name\" table in the \"mysql\" database, and populate MySQL's TimeZone information before proceeding."
 msgstr "Tài khoản đăng nhập cơ sở dữ liệu Kadupul của bạn không có quyền truy cập vào cơ sở dữ liệu MySQL TimeZone. Vui lòng cung cấp quyền truy cập &quot;chọn&quot; tài khoản cơ sở dữ liệu Kadupul vào bảng &quot;time_zone_name&quot; trong cơ sở dữ liệu &quot;mysql&quot; và điền thông tin TimeZone của MySQL trước khi tiếp tục."
 
-#: lib/installer.php:2081
+#: lib/installer.php:2084
 msgid "Your Kadupul database account has access to the MySQL TimeZone database and that database is populated with global TimeZone information."
 msgstr "Tài khoản cơ sở dữ liệu Kadupul của bạn có quyền truy cập vào cơ sở dữ liệu TimeZone của MySQL và cơ sở dữ liệu đó được cung cấp thông tin TimeZone toàn cầu."
 
-#: lib/installer.php:2086
+#: lib/installer.php:2089
 msgid "MySQL - Settings"
 msgstr "MySQL - Cài đặt"
 
-#: lib/installer.php:2087
+#: lib/installer.php:2090
 msgid "These MySQL performance tuning settings will help your Kadupul system perform better without issues for a longer time."
 msgstr "Các cài đặt điều chỉnh hiệu suất MySQL này sẽ giúp hệ thống Kadupul của bạn hoạt động tốt hơn mà không gặp sự cố trong thời gian dài hơn."
 
-#: lib/installer.php:2089
+#: lib/installer.php:2092
 msgid "Recommended MySQL System Variable Settings"
 msgstr "Đề xuất cài đặt biến hệ thống MySQL"
 
-#: lib/installer.php:2119
+#: lib/installer.php:2122
 msgid "Installation Type"
 msgstr "Loại cài đặt"
 
-#: lib/installer.php:2125
+#: lib/installer.php:2128
 #, php-format
 msgid "Upgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "Nâng cấp từ <strong> %s</strong> lên <strong> %s</strong>"
 
-#: lib/installer.php:2127
+#: lib/installer.php:2130
 msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "Trong trường hợp xảy ra sự cố, chúng tôi khuyên bạn nên xóa bộ nhớ cache của trình duyệt, đóng lại sau đó mở lại trình duyệt của bạn (không chỉ tab Kadupul đang bật) và thử lại, trước khi đưa ra vấn đề với Nhóm Kadupul"
 
-#: lib/installer.php:2128
+#: lib/installer.php:2131
 msgid "On rare occasions, we have had reports from users who experience some minor issues due to changes in the code.  These issues are caused by the browser retaining pre-upgrade code and whilst we have taken steps to minimise the chances of this, it may still occur.  If you need instructions on how to clear your browser cache, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> is a good starting point."
 msgstr "Trong các trường hợp hiếm hoi, chúng tôi đã có báo cáo từ những người dùng gặp phải một số vấn đề nhỏ do thay đổi trong mã. Những vấn đề này là do trình duyệt giữ lại mã nâng cấp trước và trong khi chúng tôi đã thực hiện các bước để giảm thiểu khả năng này, thì nó vẫn có thể xảy ra. Nếu bạn cần hướng dẫn về cách xóa bộ nhớ cache của trình duyệt, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> là điểm khởi đầu tốt."
 
-#: lib/installer.php:2129
+#: lib/installer.php:2132
 msgid "If after clearing your cache and restarting your browser, you still experience issues, please raise the issue with us and we will try to identify the cause of it."
 msgstr "Nếu sau khi xóa bộ nhớ cache và khởi động lại trình duyệt của bạn, bạn vẫn gặp sự cố, vui lòng nêu vấn đề với chúng tôi và chúng tôi sẽ cố gắng xác định nguyên nhân của nó."
 
-#: lib/installer.php:2135
+#: lib/installer.php:2138
 #, php-format
 msgid "Downgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "Hạ cấp từ <strong> %s</strong> xuống <strong> %s</strong>"
 
-#: lib/installer.php:2136
+#: lib/installer.php:2139
 msgid "You appear to be downgrading to a previous version.  Database changes made for the newer version will not be reversed and <i>could</i> cause issues."
 msgstr "Bạn dường như đang hạ cấp xuống phiên bản trước. Thay đổi cơ sở dữ liệu được thực hiện cho phiên bản mới hơn sẽ không bị đảo ngược và <i>có thể</i> gây ra sự cố."
 
-#: lib/installer.php:2141
+#: lib/installer.php:2144
 msgid "Please select the type of installation"
 msgstr "Vui lòng chọn loại cài đặt"
 
-#: lib/installer.php:2142
+#: lib/installer.php:2145
 msgid "Installation options:"
 msgstr "Tùy chọn cài đặt:"
 
-#: lib/installer.php:2146
+#: lib/installer.php:2149
 msgid "Choose this for the Primary site."
 msgstr "Chọn mục này cho trang web Chính."
 
-#: lib/installer.php:2146 lib/installer.php:2197
+#: lib/installer.php:2149 lib/installer.php:2200
 msgid "New Primary Server"
 msgstr "Máy chủ chính mới"
 
-#: lib/installer.php:2147 lib/installer.php:2198
+#: lib/installer.php:2150 lib/installer.php:2201
 msgid "New Remote Poller"
 msgstr "Xe đẩy từ xa mới"
 
-#: lib/installer.php:2147
+#: lib/installer.php:2150
 msgid "Remote Pollers are used to access networks that are not readily accessible to the Primary site."
 msgstr "Pollers từ xa được sử dụng để truy cập các mạng không thể truy cập vào trang web Chính."
 
-#: lib/installer.php:2202
+#: lib/installer.php:2205
 msgid "The following information has been determined from Kadupul's configuration file. If it is not correct, please edit \"include/config.php\" before continuing."
 msgstr "Thông tin sau đây đã được xác định từ tệp cấu hình của Kadupul. Nếu nó không đúng, vui lòng chỉnh sửa &quot;include / config.php&quot; trước khi tiếp tục."
 
-#: lib/installer.php:2206
+#: lib/installer.php:2209
 msgid "Local Database Connection Information"
 msgstr "Thông tin kết nối cơ sở dữ liệu cục bộ"
 
-#: lib/installer.php:2209 lib/installer.php:2221
+#: lib/installer.php:2212 lib/installer.php:2224
 #, php-format
 msgid "Database: <b>%s</b>"
 msgstr "Cơ sở dữ liệu: <b> %s</b>"
 
-#: lib/installer.php:2210 lib/installer.php:2222
+#: lib/installer.php:2213 lib/installer.php:2225
 #, php-format
 msgid "Database User: <b>%s</b>"
 msgstr "Người dùng cơ sở dữ liệu: <b> %s</b>"
 
-#: lib/installer.php:2211 lib/installer.php:2223
+#: lib/installer.php:2214 lib/installer.php:2226
 #, php-format
 msgid "Database Hostname: <b>%s</b>"
 msgstr "Tên máy chủ cơ sở dữ liệu: <b> %s</b>"
 
-#: lib/installer.php:2212 lib/installer.php:2224
+#: lib/installer.php:2215 lib/installer.php:2227
 #, php-format
 msgid "Port: <b>%s</b>"
 msgstr "Cổng: <b> %s</b>"
 
-#: lib/installer.php:2213 lib/installer.php:2225
+#: lib/installer.php:2216 lib/installer.php:2228
 #, php-format
 msgid "Server Operating System Type: <b>%s</b>"
 msgstr "Loại hệ điều hành máy chủ: <b> %s</b>"
 
-#: lib/installer.php:2218
+#: lib/installer.php:2221
 msgid "Central Database Connection Information"
 msgstr "Thông tin kết nối cơ sở dữ liệu trung tâm"
 
-#: lib/installer.php:2230
+#: lib/installer.php:2233
 msgid "Configuration Readonly!"
 msgstr "Cấu hình chỉ đọc!"
 
-#: lib/installer.php:2232
+#: lib/installer.php:2235
 msgid "Your config.php file must be writable by the web server during install in order to configure the Remote poller.  Once installation is complete, you must set this file to Read Only to prevent possible security issues."
 msgstr "Tập tin config.php của bạn phải được ghi bởi máy chủ web trong khi cài đặt để định cấu hình Trình đẩy từ xa. Sau khi cài đặt hoàn tất, bạn phải đặt tệp này thành Chỉ đọc để ngăn các sự cố bảo mật có thể xảy ra."
 
-#: lib/installer.php:2236
+#: lib/installer.php:2239
 msgid "Configuration of Poller"
 msgstr "Cấu hình của Poller"
 
-#: lib/installer.php:2237
+#: lib/installer.php:2240
 msgid "Your Remote Kadupul Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Kadupul database server.  Correct this and try again."
 msgstr "Thông tin về Kadupul từ xa của bạn chưa được đưa vào tệp config.php. Vui lòng xem lại config.php.dist và đặt các biến: <i>$ rdatabase_default, $ rdatabase_username</i> , v.v. Các biến này phải được đặt và trỏ về máy chủ cơ sở dữ liệu Kadupul chính của bạn. Sửa lỗi này và thử lại."
 
-#: lib/installer.php:2241
+#: lib/installer.php:2244
 msgid "Remote Poller Variables"
 msgstr "Biến Pug từ xa"
 
-#: lib/installer.php:2243
+#: lib/installer.php:2246
 msgid "The variables that must be set in the config.php file include the following:"
 msgstr "Các biến phải được đặt trong tệp config.php bao gồm:"
 
-#: lib/installer.php:2254
+#: lib/installer.php:2257
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
 msgstr "Trình cài đặt tự động gán một $ poller_id và thêm nó vào tệp config.php."
 
-#: lib/installer.php:2256
+#: lib/installer.php:2259
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Kadupul database server.  Follow the same procedure you would with any other Kadupul install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
 msgstr "Khi tất cả các biến được đặt trong tệp config.php, bạn cũng phải cấp quyền truy cập $ rdatabase_username cho máy chủ cơ sở dữ liệu Kadupul chính. Thực hiện theo cùng một quy trình bạn sẽ làm với bất kỳ cài đặt Kadupul nào khác. Sau đó, bạn có thể nhấn nút &#39;Kiểm tra kết nối&#39;. Nếu thử nghiệm thành công, bạn sẽ có thể tiến hành và hoàn tất cài đặt."
 
-#: lib/installer.php:2260
+#: lib/installer.php:2263
 msgid "Additional Steps After Installation"
 msgstr "Các bước bổ sung sau khi cài đặt"
 
-#: lib/installer.php:2262
+#: lib/installer.php:2265
 msgid "It is essential that the Central Kadupul server can communicate via MySQL to each remote Kadupul database server.  Once the install is complete, you must edit the Remote Data Collector and ensure the settings are correct.  You can verify using the 'Test Connection' when editing the Remote Data Collector."
 msgstr "Điều cần thiết là máy chủ Kadupul trung tâm có thể giao tiếp qua MySQL đến từng máy chủ cơ sở dữ liệu Kadupul từ xa. Sau khi cài đặt hoàn tất, bạn phải chỉnh sửa Trình thu thập dữ liệu từ xa và đảm bảo các cài đặt là chính xác. Bạn có thể xác minh bằng cách sử dụng &#39;Kiểm tra kết nối&#39; khi chỉnh sửa Trình thu thập dữ liệu từ xa."
 
-#: lib/installer.php:2276
+#: lib/installer.php:2279
 msgid "Critical Binary Locations and Versions"
 msgstr "Các vị trí và phiên bản nhị phân quan trọng"
 
-#: lib/installer.php:2277
+#: lib/installer.php:2280
 msgid "Make sure all of these values are correct before continuing."
 msgstr "Hãy chắc chắn rằng tất cả các giá trị này là chính xác trước khi tiếp tục."
 
-#: lib/installer.php:2280
+#: lib/installer.php:2283
 msgid "One or more paths appear to be incorrect, unable to proceed"
 msgstr "Một hoặc nhiều đường dẫn có vẻ không chính xác, không thể tiếp tục"
 
-#: lib/installer.php:2358
+#: lib/installer.php:2361
 msgid "Directory Permission Checks"
 msgstr "Kiểm tra quyền hạn thư mục"
 
-#: lib/installer.php:2359
+#: lib/installer.php:2362
 msgid "Please ensure the directory permissions below are correct before proceeding.  During the install, these directories need to be owned by the Web Server user.  These permission changes are required to allow the Installer to install Device Template packages which include XML and script files that will be placed in these directories.  If you choose not to install the packages, there is an 'install_package.php' cli script that can be used from the command line after the install is complete."
 msgstr "Vui lòng đảm bảo các quyền của thư mục bên dưới là chính xác trước khi tiếp tục. Trong quá trình cài đặt, các thư mục này cần được sở hữu bởi người dùng Máy chủ Web. Những thay đổi quyền này được yêu cầu để cho phép Trình cài đặt cài đặt các gói Mẫu thiết bị bao gồm các tệp XML và tập lệnh sẽ được đặt trong các thư mục này. Nếu bạn chọn không cài đặt các gói, có một tập lệnh cli &#39;install_package.php&#39; có thể được sử dụng từ dòng lệnh sau khi cài đặt hoàn tất."
 
-#: lib/installer.php:2362
+#: lib/installer.php:2365
 msgid "After the install is complete, you can make some of these directories read only to increase security."
 msgstr "Sau khi cài đặt hoàn tất, bạn có thể làm cho một số thư mục này chỉ đọc để tăng tính bảo mật."
 
-#: lib/installer.php:2364
+#: lib/installer.php:2367
 msgid "These directories will be required to stay read writable after the install so that the Kadupul remote synchronization process can update them as the Main Kadupul Web Site changes"
 msgstr "Các thư mục này sẽ được yêu cầu ở lại có thể ghi được sau khi cài đặt để quá trình đồng bộ hóa từ xa Kadupul có thể cập nhật chúng khi Trang web chính của Kadupul thay đổi"
 
-#: lib/installer.php:2368
+#: lib/installer.php:2371
 msgid "If you are installing packages, once the packages are installed, you should change the scripts directory back to read only as this presents some exposure to the web site."
 msgstr "Nếu bạn đang cài đặt các gói, một khi các gói được cài đặt, bạn nên thay đổi thư mục script trở lại để chỉ đọc vì điều này thể hiện một số tiếp xúc với trang web."
 
-#: lib/installer.php:2370
+#: lib/installer.php:2373
 msgid "For remote pollers, it is critical that the paths that you will be updating frequently, including the plugins, scripts, and resources paths have read/write access as the data collector will have to update these paths from the main web server content."
 msgstr "Đối với người thăm dò từ xa, điều quan trọng là các đường dẫn mà bạn sẽ cập nhật thường xuyên, bao gồm các plugin, tập lệnh và đường dẫn tài nguyên có quyền truy cập đọc / ghi vì trình thu thập dữ liệu sẽ phải cập nhật các đường dẫn này từ nội dung máy chủ web chính."
 
-#: lib/installer.php:2376
+#: lib/installer.php:2379
 msgid "Required Writable at Install Time Only"
 msgstr "Yêu cầu có thể ghi tại thời gian cài đặt"
 
-#: lib/installer.php:2395 lib/installer.php:2427 package_import.php:589
+#: lib/installer.php:2398 lib/installer.php:2430 package_import.php:589
 msgid "Not Writable"
 msgstr "Có thể ghi"
 
-#: lib/installer.php:2407
+#: lib/installer.php:2410
 msgid "Required Writable after Install Complete"
 msgstr "Yêu cầu ghi được sau khi cài đặt hoàn tất"
 
-#: lib/installer.php:2438
+#: lib/installer.php:2441
 msgid "Potential permission issues"
 msgstr "Vấn đề cho phép tiềm năng"
 
-#: lib/installer.php:2447
+#: lib/installer.php:2450
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
 msgstr "Vui lòng đảm bảo rằng máy chủ web của bạn có quyền truy cập đọc / ghi vào các thư mục Kadupul hiển thị lỗi bên dưới."
 
-#: lib/installer.php:2450
+#: lib/installer.php:2453
 msgid "If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools."
 msgstr "Nếu SELinux được bật trên máy chủ của bạn, bạn có thể vô hiệu hóa vĩnh viễn điều này hoặc tạm thời vô hiệu hóa nó và sau đó thêm các quyền thích hợp bằng cách sử dụng các công cụ dòng lệnh của SELinux."
 
-#: lib/installer.php:2459
+#: lib/installer.php:2462
 #, php-format
 msgid "The user '%s' should have MODIFY permission to enable read/write."
 msgstr "Người dùng &#39; %s&#39; nên có quyền MODIFY để cho phép đọc / ghi."
 
-#: lib/installer.php:2468
+#: lib/installer.php:2471
 msgid "An example of how to set folder permissions is shown here, though you may need to adjust this depending on your operating system, user accounts and desired permissions."
 msgstr "Một ví dụ về cách đặt quyền thư mục được hiển thị ở đây, mặc dù bạn có thể cần điều chỉnh tùy thuộc vào hệ điều hành, tài khoản người dùng và quyền mong muốn của bạn"
 
-#: lib/installer.php:2469
+#: lib/installer.php:2472
 msgid "EXAMPLE:"
 msgstr "THÍ DỤ:"
 
-#: lib/installer.php:2470
+#: lib/installer.php:2473
 msgid "Once installation has completed the CSRF path, should be set to read-only."
 msgstr "Khi quá trình cài đặt đã hoàn tất đường dẫn CSRF, nên được đặt thành chỉ đọc."
 
-#: lib/installer.php:2472
+#: lib/installer.php:2475
 msgid "All folders are writable"
 msgstr "Tất cả các thư mục đều có thể ghi"
 
-#: lib/installer.php:2485
+#: lib/installer.php:2488
 msgid "Input Validation Whitelist Protection"
 msgstr "Bảo vệ danh sách xác thực đầu vào"
 
-#: lib/installer.php:2486
+#: lib/installer.php:2489
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
 msgstr "Các phương thức Nhập dữ liệu của Kadupul có thể được khai thác theo cách mà một người không phải là quản trị viên có thể gây thiệt hại cho các tệp do tài khoản pug sở hữu và trong trường hợp ai đó chạy trình đẩy Kadupul với quyền root, có thể làm tổn hại hệ điều hành cho phép kẻ tấn công khai thác cơ sở hạ tầng của bạn."
 
-#: lib/installer.php:2487
+#: lib/installer.php:2490
 msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 msgstr "Do đó, một số phiên bản trước đây, Kadupul đã được cải tiến để cung cấp các khả năng của Danh sách trắng về các loại Phương thức nhập dữ liệu này. Mặc dù điều này không bảo mật Kadupul nhiều hơn, nhưng nó sẽ tăng số lượng công việc mà quản trị viên Kadupul yêu cầu để nhập và quản lý Mẫu và Gói."
 
-#: lib/installer.php:2488
+#: lib/installer.php:2491
 #, fuzzy
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "Cách thức hoạt động của Danh sách trắng là khi bạn lần đầu tiên nhập Phương thức nhập dữ liệu hoặc bạn nhập lại Phương thức nhập dữ liệu và tập lệnh và hoặc thay đổi theo bất kỳ cách nào, Phương thức nhập dữ liệu và tất cả các nguồn dữ liệu tương ứng sẽ bị vô hiệu hóa ngay lập tức cho đến khi quản trị viên xác nhận rằng Phương thức nhập dữ liệu hợp lệ."
 
-#: lib/installer.php:2489
+#: lib/installer.php:2492
 msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
 msgstr "Để xác định Phương thức nhập dữ liệu ở trạng thái này, chúng tôi đã cung cấp tập lệnh xác thực trong thư mục CLI của Kadupul có thể chạy với các tùy chọn sau:"
 
-#: lib/installer.php:2493
+#: lib/installer.php:2496
 msgid "This script option will search for any Data Input Methods that are currently banned and provide details as to why."
 msgstr "Tùy chọn tập lệnh này sẽ tìm kiếm bất kỳ Phương thức nhập dữ liệu nào hiện đang bị cấm và cung cấp chi tiết về lý do tại sao."
 
-#: lib/installer.php:2494
+#: lib/installer.php:2497
 msgid "This script option un-ban the Data Input Methods that are currently banned."
 msgstr "Tùy chọn tập lệnh này hủy bỏ các Phương thức nhập dữ liệu hiện đang bị cấm."
 
-#: lib/installer.php:2495
+#: lib/installer.php:2498
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "Tùy chọn tập lệnh này sẽ kích hoạt lại mọi Nguồn dữ liệu bị vô hiệu hóa."
 
-#: lib/installer.php:2499
+#: lib/installer.php:2502
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
 msgstr "Chúng tôi khuyên bạn nên cập nhật config.php để kích hoạt tính năng này bằng cách bỏ qua biến <b>$ input_whlistist</b> và sau đó chạy ba tùy chọn tập lệnh CLI ở trên sau khi quá trình cài đặt dựa trên web hoàn tất."
 
-#: lib/installer.php:2501
+#: lib/installer.php:2504
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
 msgstr "Kiểm tra Hộp kiểm bên dưới để xác nhận rằng bạn đã đọc và hiểu mối quan tâm bảo mật này"
 
-#: lib/installer.php:2503
+#: lib/installer.php:2506
 msgid "I have read this statement"
 msgstr "Tôi đã đọc tuyên bố này"
 
-#: lib/installer.php:2520 lib/installer.php:2526
+#: lib/installer.php:2523 lib/installer.php:2529
 msgid "Default Profile"
 msgstr "Cấu hình mặc định"
 
-#: lib/installer.php:2521
+#: lib/installer.php:2524
 msgid "Please select the default Data Source Profile to be used for polling sources.  This is the maximum amount of time between scanning devices for information so the lower the polling interval, the more work is placed on the Kadupul Server host.  Also, select the intended, or configured Cron interval that you wish to use for Data Collection."
 msgstr "Vui lòng chọn Hồ sơ nguồn dữ liệu mặc định sẽ được sử dụng cho các nguồn bỏ phiếu. Đây là lượng thời gian tối đa giữa các thiết bị quét để tìm thông tin vì vậy khoảng thời gian bỏ phiếu càng thấp, càng nhiều công việc được đặt trên máy chủ Kadupul Server. Ngoài ra, chọn khoảng Cron dự định hoặc được định cấu hình mà bạn muốn sử dụng cho Thu thập dữ liệu."
 
-#: lib/installer.php:2532
+#: lib/installer.php:2535
 msgid "Cron Interval"
 msgstr "Khoảng thời gian"
 
-#: lib/installer.php:2553
+#: lib/installer.php:2556
 msgid "Default Automation Network"
 msgstr "Mạng tự động mặc định"
 
-#: lib/installer.php:2554
+#: lib/installer.php:2557
 msgid "Kadupul can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
 msgstr "Kadupul có thể tự động quét mạng sau khi cài đặt hoàn tất. Điều này sẽ sử dụng phạm vi mạng bên dưới để tìm ra dải IP có thể được quét. Một bộ tùy chọn được xác định trước được xác định để quét bao gồm sử dụng cả cộng đồng &#39;công khai&#39; và &#39;riêng tư&#39;."
 
-#: lib/installer.php:2555
+#: lib/installer.php:2558
 msgid "If your devices require a different set of options to be used first, you may define them below and they will be utilized before the defaults"
 msgstr "Nếu thiết bị của bạn yêu cầu một bộ tùy chọn khác được sử dụng trước tiên, bạn có thể xác định chúng bên dưới và chúng sẽ được sử dụng trước khi mặc định"
 
-#: lib/installer.php:2556
+#: lib/installer.php:2559
 msgid "All options may be adjusted post installation"
 msgstr "Tất cả các tùy chọn có thể được điều chỉnh cài đặt bài"
 
-#: lib/installer.php:2560
+#: lib/installer.php:2563
 msgid "Default Options"
 msgstr "Tùy chọn mặc định"
 
-#: lib/installer.php:2564
+#: lib/installer.php:2567
 msgid "Scan Mode"
 msgstr "Chế độ quét"
 
-#: lib/installer.php:2569
+#: lib/installer.php:2572
 msgid "Network Range"
 msgstr "Phạm vi mạng"
 
-#: lib/installer.php:2575
+#: lib/installer.php:2578
 msgid "Additional Defaults"
 msgstr "Mặc định bổ sung"
 
-#: lib/installer.php:2596
+#: lib/installer.php:2599
 msgid "Additional SNMP Options"
 msgstr "Tùy chọn SNMP bổ sung"
 
-#: lib/installer.php:2609
+#: lib/installer.php:2612
 msgid "Error Locating Profiles"
 msgstr "Lỗi định vị hồ sơ"
 
-#: lib/installer.php:2610
+#: lib/installer.php:2613
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "Việc cài đặt không thể tiếp tục vì không thể tìm thấy hồ sơ."
 
-#: lib/installer.php:2611
+#: lib/installer.php:2614
 msgid "This may occur if you have a blank database and have not yet imported the cacti.sql file"
 msgstr "Điều này có thể xảy ra nếu bạn có cơ sở dữ liệu trống và chưa nhập tệp cacti.sql"
 
-#: lib/installer.php:2620
+#: lib/installer.php:2623
 msgid "Template Setup"
 msgstr "Thiết lập mẫu"
 
-#: lib/installer.php:2623
+#: lib/installer.php:2626
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
 msgstr "Chọn loại Mẫu mà bạn muốn xuất từ Kadupul."
 
-#: lib/installer.php:2624
+#: lib/installer.php:2627
 msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
 msgstr "Không nên cập nhật các Mẫu mà bạn đã thực hiện sửa đổi. Việc Nâng cấp Mẫu sẽ KHÔNG xóa các sửa đổi đối với Mẫu Đồ thị và Dữ liệu, đồng thời có thể dẫn đến hành vi không mong muốn. Tuy nhiên, nếu bạn chưa thực hiện thay đổi đối với bất kỳ Biểu đồ, Truy vấn Dữ liệu hoặc Mẫu Dữ liệu nào, việc nhập lại Gói sẽ không có bất kỳ ảnh hưởng nào. Trong trường hợp đó, bạn sẽ phải 'Đồng bộ hóa Đồ thị' từ Mẫu sau khi cập nhật."
 
-#: lib/installer.php:2626
+#: lib/installer.php:2629
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "Vui lòng chọn Mẫu thiết bị bạn muốn sử dụng sau khi cài đặt. Nếu Hệ điều hành của bạn là Windows, bạn cần đảm bảo rằng bạn chọn Mẫu &#39;Thiết bị Windows&#39;. Nếu Hệ điều hành của bạn là Linux / UNIX, hãy đảm bảo bạn chọn Mẫu thiết bị &#39;Máy Linux cục bộ&#39;."
 
-#: lib/installer.php:2632 package_import.php:487 plugins.php:596
+#: lib/installer.php:2635 package_import.php:487 plugins.php:596
 msgid "Author"
 msgstr "Tác giả"
 
-#: lib/installer.php:2632 package_import.php:490
+#: lib/installer.php:2635 package_import.php:490
 msgid "Homepage"
 msgstr "Trang chủ"
 
-#: lib/installer.php:2658
+#: lib/installer.php:2661
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
 msgstr "Mẫu thiết bị cho phép bạn giám sát và vẽ biểu đồ một loại dữ liệu khổng lồ trong Kadupul. Sau khi bạn chọn Mẫu thiết bị mong muốn, bấm &#39;Hoàn tất&#39; và quá trình cài đặt sẽ hoàn tất. Hãy kiên nhẫn trong bước này, vì việc nhập Mẫu thiết bị có thể mất vài phút."
 
-#: lib/installer.php:2667
+#: lib/installer.php:2670
 msgid "Server Collation"
 msgstr "Đối chiếu máy chủ"
 
-#: lib/installer.php:2674
+#: lib/installer.php:2677
 msgid "Your server collation appears to be UTF8 compliant"
 msgstr "Đối chiếu máy chủ của bạn dường như tuân thủ UTF8"
 
-#: lib/installer.php:2677
+#: lib/installer.php:2680
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "Đối chiếu máy chủ của bạn dường như KHÔNG tuân thủ đầy đủ UTF8."
 
-#: lib/installer.php:2678
+#: lib/installer.php:2681
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
 msgstr "Trong phần [mysqld], định vị các mục có tên &#39;ký tự ‑ đặt ‑ máy chủ&#39; và &#39;đối chiếu ‑ máy chủ&#39; và đặt chúng như sau:"
 
-#: lib/installer.php:2685
+#: lib/installer.php:2688
 msgid "Database Collation"
 msgstr "Đối chiếu cơ sở dữ liệu"
 
-#: lib/installer.php:2690
+#: lib/installer.php:2693
 msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "Đối chiếu cơ sở dữ liệu của bạn dường như tuân thủ UTF8"
 
-#: lib/installer.php:2693
+#: lib/installer.php:2696
 msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
 msgstr "Đối chiếu cơ sở dữ liệu của bạn dường như KHÔNG tuân thủ đầy đủ UTF8."
 
-#: lib/installer.php:2694
+#: lib/installer.php:2697
 msgid "Any tables created by plugins may have issues linked against Kadupul Core tables if the collation is not matched.   Please ensure your database is changed to 'utf8mb4_unicode_ci' by running the following: "
 msgstr "Bất kỳ bảng nào được tạo bởi các plugin đều có thể có các vấn đề được liên kết với các bảng Kadupul Core nếu đối chiếu không khớp. Vui lòng đảm bảo cơ sở dữ liệu của bạn được thay đổi thành &#39;utf8mb4_unicode_ci&#39; bằng cách chạy như sau:"
 
-#: lib/installer.php:2701
+#: lib/installer.php:2704
 msgid "Table Setup"
 msgstr "Thiết lập bảng"
 
-#: lib/installer.php:2712
+#: lib/installer.php:2715
 #, php-format
 msgid "You have more tables than your PHP configuration will allow us to display/convert.  Please modify the max_input_vars setting in php.ini to a value above %s"
 msgstr "Bạn có nhiều bảng hơn cấu hình PHP của bạn sẽ cho phép chúng tôi hiển thị / chuyển đổi. Vui lòng sửa đổi cài đặt max_input_vars trong php.ini thành giá trị trên%s"
 
-#: lib/installer.php:2715
+#: lib/installer.php:2718
 msgid "Conversion of tables may take some time especially on larger tables.  The conversion of these tables will occur in the background but will not prevent the installer from completing.  This may slow down some servers if there are not enough resources for MySQL to handle the conversion."
 msgstr "Chuyển đổi các bảng có thể mất một thời gian đặc biệt là trên các bảng lớn hơn. Việc chuyển đổi các bảng này sẽ diễn ra trong nền nhưng sẽ không ngăn trình cài đặt hoàn tất. Điều này có thể làm chậm một số máy chủ nếu không có đủ tài nguyên để MySQL xử lý chuyển đổi."
 
-#: lib/installer.php:2719
+#: lib/installer.php:2722
 msgid "Tables"
 msgstr "Những cái bàn"
 
-#: lib/installer.php:2720 utilities.php:853
+#: lib/installer.php:2723 utilities.php:853
 msgid "Collation"
 msgstr "Đối chiếu"
 
-#: lib/installer.php:2720 utilities.php:848
+#: lib/installer.php:2723 utilities.php:848
 msgid "Engine"
 msgstr "Đông cơ"
 
-#: lib/installer.php:2720 utilities.php:854
+#: lib/installer.php:2723 utilities.php:854
 msgid "Row Format"
 msgstr "Định dạng"
 
-#: lib/installer.php:2752
+#: lib/installer.php:2755
 msgid "One or more tables are too large to convert during the installation.  You should use the cli/convert_tables.php script to perform the conversion, then refresh this page. For example: "
 msgstr "Một hoặc nhiều bảng quá lớn để chuyển đổi trong khi cài đặt. Bạn nên sử dụng tập lệnh cli / convert_tables.php để thực hiện chuyển đổi, sau đó làm mới trang này. Ví dụ:"
 
-#: lib/installer.php:2756
+#: lib/installer.php:2759
 msgid "The following tables should be converted to UTF8 and InnoDB with a Dynamic row format.  Please select the tables that you wish to convert during the installation process."
 msgstr "Các bảng sau nên được chuyển đổi thành UTF8 và InnoDB. Vui lòng chọn các bảng mà bạn muốn chuyển đổi trong quá trình cài đặt."
 
-#: lib/installer.php:2762
+#: lib/installer.php:2765
 msgid "All your tables appear to be UTF8 and Dynamic row format compliant"
 msgstr "Tất cả các bảng của bạn dường như tuân thủ UTF8"
 
-#: lib/installer.php:2773
+#: lib/installer.php:2776
 msgid "Confirm Upgrade"
 msgstr "Xác nhận nâng cấp"
 
-#: lib/installer.php:2777
+#: lib/installer.php:2780
 msgid "Confirm Downgrade"
 msgstr "Xác nhận hạ cấp"
 
-#: lib/installer.php:2781
+#: lib/installer.php:2784
 msgid "Confirm Installation"
 msgstr "Xác nhận cài đặt"
 
-#: lib/installer.php:2782 plugins.php:13
+#: lib/installer.php:2785 plugins.php:13
 msgid "Install"
 msgstr "Cài đặt"
 
-#: lib/installer.php:2787
+#: lib/installer.php:2790
 msgid "DOWNGRADE DETECTED"
 msgstr "DOWNGRADE PHÁT HIỆN"
 
-#: lib/installer.php:2788
+#: lib/installer.php:2791
 msgid "YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
 msgstr "BẠN PHẢI THAY ĐỔI SỰ THAY ĐỔI Kadupul ĐỂ TÌM HIỂU BẤT K CH SỰ THAY ĐỔI NÀO NÀO ĐÃ ĐƯỢC THỰC HIỆN. <br/> CÀI ĐẶT KHÔNG CÓ PHƯƠNG PHÁP NÀO ĐỂ TỰ ĐỘNG NÀY CHO BẠN"
 
-#: lib/installer.php:2789
+#: lib/installer.php:2792
 msgid "Downgrading should only be performed when absolutely necessary and doing so may break your installation"
 msgstr "Việc hạ cấp chỉ nên được thực hiện khi thực sự cần thiết và làm như vậy có thể phá vỡ sự cài đặt của bạn"
 
-#: lib/installer.php:2792
+#: lib/installer.php:2795
 msgid "Your Kadupul Server is almost ready.  Please check that you are happy to proceed."
 msgstr "Máy chủ Kadupul của bạn gần như đã sẵn sàng. Vui lòng kiểm tra xem bạn có vui lòng tiếp tục không."
 
-#: lib/installer.php:2795
+#: lib/installer.php:2798
 #, php-format
 msgid "Press '%s' then click '%s' to complete the installation process after selecting your Device Templates."
 msgstr "Nhấn &#39; %s&#39;, sau đó nhấp vào &#39; %s&#39; để hoàn tất quá trình cài đặt sau khi chọn Mẫu thiết bị của bạn."
 
-#: lib/installer.php:2812
+#: lib/installer.php:2815
 #, php-format
 msgid "Installing Kadupul Server v%s"
 msgstr "Cài đặt máy chủ Kadupul v %s"
 
-#: lib/installer.php:2813
+#: lib/installer.php:2816
 msgid "Your Kadupul Server is now installing"
 msgstr "Máy chủ Kadupul của bạn hiện đang cài đặt"
 
-#: lib/installer.php:2900
+#: lib/installer.php:2903
 #, php-format
 msgid "Spawning background process: %s %s"
 msgstr "Quá trình sinh sản nền tảng:%s%s"
 
-#: lib/installer.php:2927
+#: lib/installer.php:2930
 msgid "Complete"
 msgstr "Hoàn thành"
 
-#: lib/installer.php:2928
+#: lib/installer.php:2931
 #, php-format
 msgid "Your Kadupul Server v%s has been installed/updated.  You may now start using the software."
 msgstr "Máy chủ Kadupul của bạn v %s đã được cài đặt / cập nhật. Bây giờ bạn có thể bắt đầu sử dụng phần mềm."
 
-#: lib/installer.php:2932
+#: lib/installer.php:2935
 #, php-format
 msgid "Your Kadupul Server v%s has been installed/updated with errors"
 msgstr "Máy chủ Kadupul của bạn v %s đã được cài đặt / cập nhật có lỗi"
 
-#: lib/installer.php:3046
+#: lib/installer.php:3049
 msgid "Get Help"
 msgstr "Hỗ trợ"
 
-#: lib/installer.php:3051
+#: lib/installer.php:3054
 msgid "Report Issue"
 msgstr "Báo cáo vấn đề"
 
-#: lib/installer.php:3054
+#: lib/installer.php:3057
 msgid "Get Started"
 msgstr "Bắt đầu"
 
-#: lib/installer.php:3110
+#: lib/installer.php:3113
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "Bắt đầu quá trình%s cho v%s"
 
-#: lib/installer.php:3136
+#: lib/installer.php:3139
 msgid "Unable to update application defaults."
 msgstr ""
 
-#: lib/installer.php:3139
+#: lib/installer.php:3142
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "Đã hoàn thành%s Quá trình cho v%s"
 
-#: lib/installer.php:3179
+#: lib/installer.php:3182
 #, php-format
 msgid "Found %s templates to install"
 msgstr "Đã tìm thấy mẫu%s để cài đặt"
 
-#: lib/installer.php:3189
+#: lib/installer.php:3192
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "Sắp nhập Gói #%s '%s'."
 
-#: lib/installer.php:3198
+#: lib/installer.php:3201
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "Nhập gói #%s '%s' trong Hồ sơ '%s' đã thành công"
 
-#: lib/installer.php:3204
+#: lib/installer.php:3207
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "Nhập gói #%s '%s' trong Hồ sơ '%s' không thành công"
 
-#: lib/installer.php:3221
+#: lib/installer.php:3224
 #, fuzzy, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "Mẫu tự động hóa cho [Mẫu đã xóa]"
 
-#: lib/installer.php:3242
+#: lib/installer.php:3245
 msgid "No templates were selected for import"
 msgstr "Không có mẫu nào được chọn để nhập"
 
-#: lib/installer.php:3252
+#: lib/installer.php:3255
 msgid "Updating remote configuration file"
 msgstr "Đang chờ cấu hình"
 
-#: lib/installer.php:3287
+#: lib/installer.php:3290
 #, fuzzy, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "Hồ sơ nguồn dữ liệu mặc định cho mẫu dữ liệu này."
 
-#: lib/installer.php:3315
+#: lib/installer.php:3318
 #, fuzzy, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "Không thể áp dụng hồ sơ được chỉ định %s! = %s"
 
-#: lib/installer.php:3324
+#: lib/installer.php:3327
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "Cập nhật mạng tự động (%s), chế độ \"%s\" => \"%s\", mạng con \"%s\" =>%s \""
 
-#: lib/installer.php:3334
+#: lib/installer.php:3337
 msgid "Failed to find automation network, no changes were made"
 msgstr "Không thể tìm thấy mạng tự động, không có thay đổi nào được thực hiện"
 
-#: lib/installer.php:3338
+#: lib/installer.php:3341
 msgid "Adding extra snmp settings for automation"
 msgstr "Thêm cài đặt snmp bổ sung cho tự động hóa"
 
-#: lib/installer.php:3344
+#: lib/installer.php:3347
 #, fuzzy, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "Xóa (các) Mẫu tự động hóa"
 
-#: lib/installer.php:3357
+#: lib/installer.php:3360
 #, fuzzy, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "Tùy chọn SNMP tự động hóa"
 
-#: lib/installer.php:3360
+#: lib/installer.php:3363
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "Tùy chọn tự động cập nhật thành công Đặt%s"
 
-#: lib/installer.php:3362
+#: lib/installer.php:3365
 #, fuzzy, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "Chạy tự động hóa trên thiết bị"
 
-#: lib/installer.php:3370
+#: lib/installer.php:3373
 #, fuzzy, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "Không thể áp dụng Phạm vi tự động hóa được chỉ định"
 
-#: lib/installer.php:3373
+#: lib/installer.php:3376
 msgid "Failed to find any automation option set"
 msgstr "Không thể tìm thấy dữ liệu để sao chép!"
 
-#: lib/installer.php:3403
+#: lib/installer.php:3406
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "Mẫu thiết bị [chỉnh sửa: %s]"
 
-#: lib/installer.php:3433
+#: lib/installer.php:3436
 msgid "Creating Graphs for Default Device"
 msgstr "Tạo đồ thị cho thiết bị này"
 
-#: lib/installer.php:3440
+#: lib/installer.php:3443
 msgid "Adding Device to Default Tree"
 msgstr "Mặc định thiết bị"
 
-#: lib/installer.php:3448
+#: lib/installer.php:3451
 msgid "No templated graphs for Default Device were found"
 msgstr "Không tìm thấy biểu đồ khuôn mẫu cho Thiết bị mặc định"
 
-#: lib/installer.php:3452
+#: lib/installer.php:3455
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "CẢNH BÁO: Không tìm thấy Mẫu thiết bị cho Hệ điều hành của bạn. Bạn sẽ cần nhập Mẫu thiết bị hoặc Gói Kadupul để theo dõi máy chủ Kadupul của bạn."
 
-#: lib/installer.php:3459
+#: lib/installer.php:3462
 msgid "Running first-time data query for local host"
 msgstr "Chạy truy vấn dữ liệu lần đầu cho máy chủ cục bộ"
 
-#: lib/installer.php:3467
+#: lib/installer.php:3470
 msgid "Repopulating poller cache"
 msgstr "Rebuild Pug Cache"
 
-#: lib/installer.php:3472
+#: lib/installer.php:3475
 msgid "Repopulating SNMP Agent cache"
 msgstr "Xây dựng lại bộ nhớ cache SNMPAgent"
 
-#: lib/installer.php:3477
+#: lib/installer.php:3480
 msgid "Generating RSA Key Pair"
 msgstr "Tạo cặp khóa RSA"
 
-#: lib/installer.php:3490
+#: lib/installer.php:3493
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "Đã tìm thấy bảng%s để chuyển đổi"
 
-#: lib/installer.php:3497
+#: lib/installer.php:3500
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "Bảng chuyển đổi #%s '%s'"
 
-#: lib/installer.php:3512
+#: lib/installer.php:3515
 msgid "No tables where found or selected for conversion"
 msgstr "Không có bảng nơi tìm thấy hoặc được chọn để chuyển đổi"
 
-#: lib/installer.php:3524
+#: lib/installer.php:3527
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "Chuyển từ%s sang%s"
 
-#: lib/installer.php:3528
+#: lib/installer.php:3531
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "LƯU Ý: Sử dụng tệp tạm thời cho bộ đệm db:%s"
 
-#: lib/installer.php:3550
+#: lib/installer.php:3553
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "Nâng cấp từ v%s (DB%s) lên v%s"
 
-#: lib/installer.php:3558
+#: lib/installer.php:3561
 #, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "CẢNH BÁO: Không thể tìm thấy chức năng nâng cấp cho v%s"
 
-#: lib/installer.php:3619
+#: lib/installer.php:3622
 msgid "Install aborted due to no EULA acceptance"
 msgstr "Cài đặt bị hủy bỏ do không chấp nhận EULA"
 
-#: lib/installer.php:3643
+#: lib/installer.php:3646
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "Bối cảnh đã được bắt đầu ở%s, lần thử này ở%s đã bị bỏ qua"
 
-#: lib/installer.php:3667
+#: lib/installer.php:3670
 #, fuzzy, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "Ngoại lệ xảy ra trong khi cài đặt: #"
 
-#: lib/installer.php:3686
+#: lib/installer.php:3689
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "Cài đặt đã được bắt đầu ở %s, hoàn thành ở %s"
 
-#: lib/installer.php:3723
+#: lib/installer.php:3726
 msgid "Both"
 msgstr "Cả hai"
 
-#: lib/installer.php:3723
+#: lib/installer.php:3726
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "Phút"
 
-#: lib/installer.php:3728
+#: lib/installer.php:3731
 #, fuzzy, php-format
 msgid "%s - N/A"
 msgstr "Phút"
 
-#: lib/installer.php:3728 lib/installer.php:3730
+#: lib/installer.php:3731 lib/installer.php:3733
 msgid "Web"
 msgstr "Web"
 
-#: lib/installer.php:3730 lib/installer.php:3733
+#: lib/installer.php:3733 lib/installer.php:3736
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "Phút"
 
-#: lib/installer.php:3733
+#: lib/installer.php:3736
 msgid "Cli"
 msgstr "Cổ điển"
 
-#: lib/installer.php:3739
+#: lib/installer.php:3742
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "Đặt tùy chọn PHP%s =%s"
 
-#: lib/installer.php:3745
+#: lib/installer.php:3748
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "Không thể đặt tùy chọn PHP%s, là%s (nên là%s)"
 
-#: lib/installer.php:3782
+#: lib/installer.php:3785
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "Không tìm thấy (các) Trình thu thập dữ liệu khi thử đồng bộ hóa"
 
