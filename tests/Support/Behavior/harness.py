@@ -98,7 +98,7 @@ def application_diagnostics(contents):
             continue
         match = re.match(r'([A-Z][A-Z0-9_]*) (PHP .*:.*)$', message)
         if match:
-            records.append({'subsystem': match[1], 'message': normalize(match[2])})
+            records.append({'subsystem': match[1], 'message': match[2].replace('/var/www/html', '<APP>').replace('/harness', '<HARNESS>')})
     return records
 
 
