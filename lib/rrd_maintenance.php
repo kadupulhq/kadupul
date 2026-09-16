@@ -3,6 +3,48 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+/** Refuse directory paths another account can replace while a lease is held.
+ * Root and the service account remain trusted and must quiesce all users before
+ * changing storage paths. Check lexical symlink entries as well as their targets.
+ */
+function rrd_maintenance_directory_is_trusted($path)
+{
+    if (!function_exists('posix_geteuid') || DIRECTORY_SEPARATOR === '\\' || $path === '') {
+        return false;
+    }
+    if ($path[0] !== '/') {
+        $path = getcwd() . '/' . $path;
+    }
+    $owners = array(0, posix_geteuid());
+    $pending = array(array(rtrim($path, '/') ?: '/', true));
+    $checked = array();
+    while ($pending) {
+        list($candidate, $leaf) = array_pop($pending);
+        $key = $candidate . ($leaf ? ':leaf' : ':ancestor');
+        if (isset($checked[$key])) {
+            continue;
+        }
+        $checked[$key] = true;
+        clearstatcache(true, $candidate);
+        $entry = @lstat($candidate);
+        $directory = @stat($candidate);
+        $canonical = realpath($candidate);
+        if (!$entry || !$directory || $canonical === false || ($directory['mode'] & 0170000) !== 0040000
+            || !in_array($entry['uid'], $owners, true) || !in_array($directory['uid'], $owners, true)
+            || (($directory['mode'] & 0022) !== 0 && ($leaf || ($directory['mode'] & 01000) === 0))) {
+            return false;
+        }
+        if ($canonical !== $candidate) {
+            $pending[] = array($canonical, $leaf);
+        }
+        $parent = dirname($candidate);
+        if ($parent !== $candidate) {
+            $pending[] = array($parent, false);
+        }
+    }
+    return true;
+}
+
 /** Coordinate local RRDtool children and destructive maintenance.
  * Lock the existing RRA directory inode, not a removable lock file. All
  * processes accessing this store must use the same configured RRA directory.
@@ -20,7 +62,7 @@ function rrd_maintenance_acquire($exclusive = false, $wait = false)
 
     $path = $config['rra_path'] ?? (($config['base_path'] ?? '') . '/rra');
     $canonical = realpath($path);
-    if ($canonical === false || !is_dir($canonical)) {
+    if ($canonical === false || !rrd_maintenance_directory_is_trusted($path)) {
         return false;
     }
 

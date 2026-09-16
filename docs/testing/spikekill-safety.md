@@ -25,6 +25,13 @@ retain it until `rrd_close()` drains and waits for RRDtool (also at PHP shutdown
 Spike removal takes an exclusive, nonblocking lock before its dump and holds it
 through backup and atomic replacement. An active writer causes a safe refusal;
 retry after polling finishes. A new writer waits until maintenance completes.
+Before opening a lease, all local writers validate the configured directory,
+its symlink entries, its canonical target, and their ancestors against the same
+ownership and permission policy used for backups. PHP's POSIX extension is
+required on Unix; unsafe or unverifiable storage fails closed. Root and the
+service account are trusted: this does not protect against either changing
+permissions or replacing directories during an operation. They must stop all
+writers and maintenance before changing the storage namespace.
 The piped hot path reuses its existing lock without reopening or statting storage.
 
 All Kadupul processes sharing RRD files must configure the same RRA directory,
