@@ -1,6 +1,6 @@
 {
   "application_revision": "6ce3572dab3264be563b765f25dcadd8cc046252",
-  "harness": "current branch, narrow failed-write byte-count normalization",
+  "harness": "current branch, consistent narrow failed-write byte-count normalization",
   "php": "8.2",
   "base_image": {
     "ref": "php@sha256:0970c7c14b21003bce8178af2985b491a65b71e800ff5366053de544306ed2a1",
@@ -11,6 +11,6 @@
   "contracts": 34,
   "complete": true,
   "identical_scenarios": true,
-  "first_sha256": "305bc9aea546051ca39ff62d6cdf622b3fd1512e9fd97029dca6635d6a232b3a",
-  "repeat_sha256": "305bc9aea546051ca39ff62d6cdf622b3fd1512e9fd97029dca6635d6a232b3a"
+  "first_sha256": "0358182fd936a6bc5a5ca594c64fddf030e0a901610116118624598df21a1a3a",
+  "repeat_sha256": "0358182fd936a6bc5a5ca594c64fddf030e0a901610116118624598df21a1a3a"
 }

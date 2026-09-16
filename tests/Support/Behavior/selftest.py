@@ -186,6 +186,13 @@ def diagnostic_contracts():
     for size in (108, 4356):
         broken = f'09/16/2026 01:02:06 - ERROR PHP NOTICE: fwrite(): Write of {size} bytes failed with errno=32 Broken pipe in file: /var/www/html/lib/rrd.php on line: 334'
         assert harness.application_diagnostics(broken) == [{'subsystem': 'ERROR', 'message': 'PHP NOTICE: fwrite(): Write of <BYTES> bytes failed with errno=32 Broken pipe in file: <APP>/lib/rrd.php on line: 334'}]
+        native = broken.replace('PHP NOTICE: fwrite', 'PHP Notice:  fwrite')
+        assert 'Write of <BYTES> bytes failed with errno=32' in harness.normalize(native)
+        command = harness.normalize({'stdout': broken, 'stderr': broken})
+        assert 'Write of <BYTES> bytes failed with errno=32' in command['stdout']
+        assert command['stdout'] == command['stderr']
+        assert command['stdout'].endswith('on line: 334')
+        assert 'errno=13 Permission denied' in harness.normalize_failed_write_size(broken.replace('errno=32 Broken pipe', 'errno=13 Permission denied'))
     unrelated = '09/16/2026 01:02:06 - ERROR PHP WARNING: payload has 108 bytes'
     assert harness.application_diagnostics(unrelated)[0]['message'].endswith('108 bytes')
 

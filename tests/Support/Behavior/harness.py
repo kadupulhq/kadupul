@@ -58,6 +58,12 @@ INSTALL_TIMESTAMPS = re.compile(
     + _DATE + r'(, completed at )' + _DATE + r'$', re.MULTILINE)
 
 
+def normalize_failed_write_size(value):
+    """Normalize only the variable write size; retain errno and diagnostic text."""
+    return re.sub(r'(\bPHP (?:NOTICE|WARNING|Notice|Warning):\s+fwrite\(\): Write of )\d+( bytes failed with errno=\d+\b)',
+                  r'\1<BYTES>\2', value)
+
+
 def normalize(value):
     """Explicit environment and wall-clock substitutions only.
 
@@ -70,6 +76,7 @@ def normalize(value):
     if isinstance(value, list):
         return [normalize(v) for v in value]
     if isinstance(value, str):
+        value = normalize_failed_write_size(value)
         value = value.replace('/var/www/html', '<APP>').replace('/harness', '<HARNESS>')
         # Poller timing lines report per-process CPU and wall clock, which differ
         # on every run. The line's presence and count still matter, its
@@ -114,7 +121,7 @@ def application_diagnostics(contents):
             continue
         match = re.match(r'([A-Z][A-Z0-9_]*) (PHP .*:.*)$', message)
         if match:
-            detail = re.sub(r'^(PHP (?:NOTICE|WARNING): fwrite\(\): Write of )\d+( bytes failed with errno=\d+\b)', r'\1<BYTES>\2', match[2])
+            detail = normalize_failed_write_size(match[2])
             records.append({'subsystem': match[1], 'message': detail.replace('/var/www/html', '<APP>').replace('/harness', '<HARNESS>')})
     return records
 

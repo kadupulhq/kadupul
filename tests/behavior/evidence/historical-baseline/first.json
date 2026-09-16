@@ -950,7 +950,7 @@
       "command": {
         "exit": 0,
         "stdout": "<TIMESTAMP> - SYSTEM STATS: Time:<T> Method:cmd.php Processes:1 Threads:1 Hosts:1 HostsPerProcess:1 DataSources:5 RRDsProcessed:5\n",
-        "stderr": "ERROR: injected rrdtool failure\nPHP Notice:  fwrite(): Write of 108 bytes failed with errno=32 Broken pipe in <APP>/lib/rrd.php on line 334\nERROR: injected rrdtool failure\nERROR: injected rrdtool failure\nERROR: injected rrdtool failure\nERROR: injected rrdtool failure\nERROR: injected rrdtool failure\n",
+        "stderr": "ERROR: injected rrdtool failure\nPHP Notice:  fwrite(): Write of <BYTES> bytes failed with errno=32 Broken pipe in <APP>/lib/rrd.php on line 334\nERROR: injected rrdtool failure\nERROR: injected rrdtool failure\nERROR: injected rrdtool failure\nERROR: injected rrdtool failure\nERROR: injected rrdtool failure\n",
         "rrd_acknowledgements": 0
       },
       "database": {
