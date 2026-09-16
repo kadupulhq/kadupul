@@ -5,11 +5,12 @@
  +-------------------------------------------------------------------------+
 */
 
+require_once dirname(__DIR__, 4) . '/lib/functions.php';
 require_once dirname(__DIR__, 4) . '/lib/html_utility.php';
 
 test('validate_redirect_url allows safe local URLs', function () {
 	expect(validate_redirect_url('index.php'))->toBe('index.php');
-	expect(validate_redirect_url('/graph_view.php?id=1'))->toBe('/graph_view.php?id=1');
+	expect(validate_redirect_url('/host.php?id=1'))->toBe('/host.php?id=1');
 	expect(validate_redirect_url('host.php'))->toBe('host.php');
 });
 
@@ -38,4 +39,18 @@ test('validate_redirect_url handles url-encoded input', function () {
 	
 	$encoded_local = urlencode('/index.php?id=1');
 	expect(validate_redirect_url($encoded_local))->toBe('/index.php?id=1');
+});
+
+
+test('same-host IPv6 redirects accept bare and bracketed server names', function () {
+    $saved = $_SERVER;
+    try {
+        foreach (array('::1', '[::1]', '[::1]:8443') as $host) {
+            $_SERVER['SERVER_NAME'] = $host;
+            expect(validate_redirect_url('http://[::1]/graphs.php'))->toBe('/graphs.php')
+                ->and(validate_redirect_url('http://[::2]/graphs.php'))->toBe('index.php');
+        }
+    } finally {
+        $_SERVER = $saved;
+    }
 });

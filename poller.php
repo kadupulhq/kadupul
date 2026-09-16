@@ -762,6 +762,7 @@ while ($poller_runs_completed < $poller_runs) {
 
 			$rrds_processed = 0;
 			$poller_finishing_dispatched = false;
+			$poller_output_deferred = false;
 			while (1) {
 				$finished_processes = db_fetch_cell_prepared('SELECT ' . SQL_NO_CACHE . " count(*)
 					FROM poller_time
@@ -777,7 +778,9 @@ while ($poller_runs_completed < $poller_runs) {
 					}
 
 					if ($poller_id == 1) {
-						$rrds_processed = $rrds_processed + process_poller_output($rrdtool_pipe, true);
+						if (!$poller_output_deferred) {
+							$rrds_processed += process_poller_output($rrdtool_pipe, true, $poller_output_deferred);
+						}
 					} elseif ($config['connection'] != 'online') {
 						/* truncate until formal remote management is supported */
 						db_execute('TRUNCATE poller_output');
@@ -795,7 +798,9 @@ while ($poller_runs_completed < $poller_runs) {
 					$mtb = microtime(true);
 
 					if ($poller_id == 1) {
-						$rrds_processed = $rrds_processed + process_poller_output($rrdtool_pipe);
+						if (!$poller_output_deferred) {
+							$rrds_processed += process_poller_output($rrdtool_pipe, false, $poller_output_deferred);
+						}
 					} elseif ($config['connection'] != 'online') {
 						/* truncate until formal remote management is supported */
 						db_execute('TRUNCATE poller_output');

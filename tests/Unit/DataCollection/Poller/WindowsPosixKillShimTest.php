@@ -62,7 +62,7 @@ function windows_posix_kill_shim_run($terminate_results, $signal) {
 		. 'echo json_encode(array("result" => posix_kill(4242, ' . (int) $signal . ')));';
 
 	$pipes   = array();
-	$process = proc_open(array(PHP_BINARY, '-d', 'disable_functions=posix_kill', '-r', $code), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+	$process = proc_open(array(PHP_BINARY, '-n', '-d', 'disable_functions=posix_kill', '-r', $code), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
 
 	expect($process)->not->toBeFalse();
 

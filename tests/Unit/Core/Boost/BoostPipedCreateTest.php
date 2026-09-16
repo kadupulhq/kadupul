@@ -55,7 +55,7 @@ function boostPipedCreate_boost_rrdtool_function_create($local_data_id, $show_so
 }
 
 function boostPipedCreate_get_rrdtool_version() {
-	return '1.7';
+	return $GLOBALS['boost_piped_create']['version'] ?? '1.7';
 }
 
 function boostPipedCreate_cacti_version_compare($a, $b, $operator) {
@@ -74,8 +74,13 @@ function boostPipedCreate_cacti_log($message) {
 	$GLOBALS['boost_piped_create']['logs'][] = $message;
 }
 
-function boostPipedCreate_rrdtool_execute($command) {
+function boostPipedCreate_rrdtool_execute($command, $log = false, $output = null, $pipe = false) {
+	$GLOBALS['boost_piped_create']['last_execute_pipe'] = $pipe;
 	$GLOBALS['boost_piped_create']['executed'][] = $command;
+
+	if (!empty($GLOBALS['boost_piped_create']['real_binary'])) {
+		return boostPipedCreateRealCommand(array_merge(array($GLOBALS['boost_piped_create']['real_binary']), preg_split('/\s+/', trim($command))));
+	}
 
 	/* a piped command returns nothing once written */
 	return $GLOBALS['boost_piped_create']['execute_return'];
@@ -85,7 +90,11 @@ function boostPipedCreate_rrd_close($rrdtool_pipe) {
 	$GLOBALS['boost_piped_create']['closed']++;
 
 	if (is_resource($rrdtool_pipe)) {
-		fclose($rrdtool_pipe);
+		if (!empty($GLOBALS['boost_piped_create']['real_pipe'])) {
+			pclose($rrdtool_pipe);
+		} else {
+			fclose($rrdtool_pipe);
+		}
 	}
 }
 
@@ -186,7 +195,7 @@ function boostPipedCreateLoad($root) {
 }
 
 function boostPipedCreateEval($code) {
-	eval(preg_replace('/\b(boost_rrdtool_pipe_creates|boost_rrdtool_function_update|boost_rrdtool_function_create|rrdtool_execute_path_command|rrdtool_execute|cacti_rrdtool_valid_ds_template|cacti_rrdtool_valid_path|cacti_has_control_chars|cacti_version_compare|get_rrdtool_version|read_config_option|db_fetch_cell_prepared|cacti_log)\(/', 'boostPipedCreate_$1(', $code));
+	eval(preg_replace('/\b(rrd_close|boost_rrdtool_pipe_creates|boost_rrdtool_get_last_update_time|boost_rrdtool_function_update|boost_rrdtool_function_create|rrdtool_execute_path_command|rrdtool_execute|cacti_rrdtool_valid_ds_template|cacti_rrdtool_valid_path|cacti_has_control_chars|cacti_version_compare|get_rrdtool_version|read_config_option|db_fetch_cell_prepared|cacti_log)\(/', 'boostPipedCreate_$1(', $code));
 }
 
 /* The acknowledgement test Boost applies to this return value. */
@@ -361,4 +370,94 @@ test('no restarted rrdtool pipe is left open once rrdtool_execute gives up', fun
 		->and($GLOBALS['boost_piped_create']['closed'])->toBe(6)
 		->and(is_resource($dead))->toBeFalse()
 		->and($GLOBALS['boost_piped_create']['open_pipes'])->toBe(0);
+});
+
+
+function boostPipedCreateRealCommand($args) {
+	$process = proc_open($args, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+	$stdout = stream_get_contents($pipes[1]);
+	$stderr = stream_get_contents($pipes[2]);
+	fclose($pipes[1]);
+	fclose($pipes[2]);
+	$status = proc_close($process);
+	if ($status !== 0) {
+		throw new RuntimeException($stderr);
+	}
+	return $stdout;
+}
+
+test('Boost retries skip consumed timestamps and still apply newer samples in a real RRD', function ($version) {
+	$GLOBALS['boost_piped_create']['version'] = $version;
+	$binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
+	if (!is_executable($binary)) {
+		$this->markTestSkipped('RRDtool is required for the real replay check');
+	}
+	$path = $GLOBALS['boost_piped_create']['path'];
+	boostPipedCreateRealCommand(array($binary, 'create', $path, '--start', '1700000000', '--step', '60', 'DS:value:GAUGE:120:U:U', 'RRA:AVERAGE:0.5:1:10'));
+	$GLOBALS['boost_piped_create']['real_binary'] = $binary;
+	$pipe = false;
+	$values = '1700000060:10';
+	expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, 'value', $values, $pipe))->toBe('OK');
+	$before = boostPipedCreateRealCommand(array($binary, 'lastupdate', $path));
+	$values = '1700000060:999';
+	expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, 'value', $values, $pipe))->toBe('OK')
+		->and(boostPipedCreateRealCommand(array($binary, 'lastupdate', $path)))->toBe($before);
+	$values = '1700000060:999 1700000120:20';
+	expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, 'value', $values, $pipe))->toBe('OK')
+		->and(boostPipedCreateRealCommand(array($binary, 'lastupdate', $path)))->toContain('1700000120: 20');
+})->with(array('1.7', '1.4'));
+
+function boostPipedCreate_boost_rrdtool_get_last_update_time($path, &$pipe) {
+	if (!empty($GLOBALS['boost_piped_create']['real_binary'])) {
+		return trim(boostPipedCreateRealCommand(array($GLOBALS['boost_piped_create']['real_binary'], 'last', $path)));
+	}
+	return $GLOBALS['boost_piped_create']['last_update'] ?? '0';
+}
+
+test('legacy retry refuses to discard samples when the last-update query is unreadable', function () {
+	$GLOBALS['boost_piped_create']['version'] = '1.4';
+	$GLOBALS['boost_piped_create']['last_update'] = 'ERROR';
+	$path = $GLOBALS['boost_piped_create']['path'];
+	touch($path);
+	$pipe = false;
+	$values = '1700000060:10';
+	expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, 'value', $values, $pipe))->toContain('ERROR:')
+		->and($values)->toBe('1700000060:10')
+		->and($GLOBALS['boost_piped_create']['executed'])->toBe(array());
+});
+
+
+test('legacy filtering preserves rejection of control characters before tokenizing values', function () {
+	$GLOBALS['boost_piped_create']['version'] = '1.4';
+	$path = $GLOBALS['boost_piped_create']['path'];
+	touch($path);
+	$pipe = false;
+	$values = "1700000060:10\n1700000120:20";
+	expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, 'value', $values, $pipe))->toContain('ERROR:')
+		->and($values)->toBe("1700000060:10\n1700000120:20")
+		->and($GLOBALS['boost_piped_create']['executed'])->toBe(array());
+});
+
+
+test('legacy updates wait for pending real pipe writes before filtering retained samples', function () {
+	$binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
+	if (!is_executable($binary)) { $this->markTestSkipped('RRDtool is required'); }
+	$path = $GLOBALS['boost_piped_create']['path'];
+	boostPipedCreateRealCommand(array($binary, 'create', $path, '--start', '1700000000', '--step', '60', 'DS:value:GAUGE:120:U:U', 'RRA:AVERAGE:0.5:1:10'));
+	$GLOBALS['boost_piped_create']['version'] = '1.4';
+	$GLOBALS['boost_piped_create']['real_binary'] = $binary;
+	$GLOBALS['boost_piped_create']['real_pipe'] = true;
+	$pipe = popen(escapeshellarg($binary) . ' - > /dev/null', 'w');
+	fwrite($pipe, 'update ' . $path . " 1700000060:10\n");
+	$values = '1700000060:999 1700000120:20';
+	try {
+		expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, 'value', $values, $pipe))->toBe('OK')
+			->and($pipe)->toBeFalse()
+			->and($GLOBALS['boost_piped_create']['closed'])->toBe(1)
+			->and($GLOBALS['boost_piped_create']['last_execute_pipe'])->toBeFalse()
+			->and($values)->toBe('1700000120:20')
+			->and(boostPipedCreateRealCommand(array($binary, 'lastupdate', $path)))->toContain('1700000120: 20');
+	} finally {
+		if (is_resource($pipe)) { pclose($pipe); }
+	}
 });

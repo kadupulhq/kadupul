@@ -91,9 +91,18 @@ jobs:
       working-directory: tests
       run: composer install --no-interaction --no-progress --prefer-dist
 
+    - name: Install RRDtool for the retry contract
+      run: |
+        sudo apt-get update -o Acquire::Retries=3
+        sudo apt-get install -y --no-install-recommends rrdtool
+
     - name: Run Boost contracts
       working-directory: tests
-      run: php vendor/bin/pest --configuration=phpunit-boost.xml --colors=never
+      env:
+        RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
+      run: |
+        test -x "$RRDTOOL_TEST_BINARY"
+        php vendor/bin/pest --configuration=phpunit-boost.xml --colors=never
 
   javascript-contracts:
     name: JavaScript contracts
@@ -375,7 +384,13 @@ jobs:
     # root task it finds registered, treats it as exited, and logs a warning
     # that fails the page check. Nothing after this point needs the daemon.
     - name: Stop Cacti Daemon
-      run: sudo systemctl stop cactid
+      run: |
+        sudo systemctl stop cactid
+        sudo systemctl reset-failed cactid
+        test "$(sudo systemctl show cactid --property=ActiveState --value)" = inactive
+        # Only this job's disposable database is cleared after the service stops.
+        mysql --defaults-file="$HOME/.my.cnf" cacti -e 'DELETE FROM processes; DELETE FROM poller_time WHERE end_time = "0000-00-00 00:00:00";'
+
 
     - name: Run Cacti poller
       run: |

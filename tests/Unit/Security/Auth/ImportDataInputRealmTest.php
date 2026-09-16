@@ -53,6 +53,10 @@ function db_fetch_cell_prepared($sql, $params = array()) {
 }
 
 /* upgrades from before 1.x may lack the group tables */
+function read_config_option($name) {
+	return $GLOBALS['idr_auth_method'] ?? 1;
+}
+
 function db_table_exists($table) {
 	return $GLOBALS['idr_group_tables'];
 }
@@ -162,6 +166,7 @@ beforeEach(function () {
 
 	$_SESSION = array('sess_user_id' => 5);
 
+	$GLOBALS['idr_auth_method']   = 1;
 	$GLOBALS['idr_realm_row']     = false;
 	$GLOBALS['idr_realm_queries'] = array();
 	$GLOBALS['idr_realm_sql']     = array();
@@ -331,4 +336,12 @@ test('import_xml_data evaluates the realm once before the import and passes it o
 		->and($call)->not->toBeFalse()
 		->and(substr_count($body, 'import_data_input_realm_allowed('))->toBe(1)
 		->and(substr_count($body, ' is_realm_allowed('))->toBe(0);
+});
+
+
+test('explicit no-auth mode does not require a session realm', function () {
+    $GLOBALS['idr_auth_method'] = 0;
+    $_SESSION = array();
+    expect(import_data_input_realm_allowed())->toBeTrue()
+        ->and($GLOBALS['idr_realm_queries'])->toBe(array());
 });
