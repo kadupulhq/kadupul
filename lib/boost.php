@@ -386,7 +386,12 @@ function boost_graph_cache_check($local_graph_id, $rra_id, $rrdtool_pipe, &$grap
 		if (cacti_sizeof($local_data_ids)) {
 			$updates = 0;
 			foreach($local_data_ids as $local_data_id) {
-				$updates += boost_process_poller_output($local_data_id['local_data_id'], $rrdtool_pipe);
+				$result = boost_process_poller_output($local_data_id['local_data_id'], $rrdtool_pipe);
+				if ($result < 0) {
+					restore_error_handler();
+					return false;
+				}
+				$updates += $result;
 			}
 
 			if ($updates) {
@@ -1480,8 +1485,10 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 		return 'OK';
 	}
 
-    // Legacy retries must see every pending update before reading the last timestamp.
-    if (cacti_version_compare(get_rrdtool_version(), '1.5', '<') && is_resource($rrdtool_pipe)) {
+    // Only old unacknowledged streams need draining: acknowledged writers have
+    // already committed preceding commands and must remain reusable by callers.
+    if (cacti_version_compare(get_rrdtool_version(), '1.5', '<') && is_resource($rrdtool_pipe)
+        && !isset(rrd_acknowledged_pipes()[(int) $rrdtool_pipe])) {
         rrd_close($rrdtool_pipe);
         $rrdtool_pipe = false;
     }

@@ -252,6 +252,7 @@ if (in_array('--child=1', $argv, true) && (string) getenv('TEST_REPAIR_STATUS') 
     exit(0);
 }
 
+$config['rrd_float_worker_timeout'] = 0.2;
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function read_config_option($name) { return $name === 'path_php_binary' ? PHP_BINARY : ''; }
 function cacti_escapeshellcmd($value) { return escapeshellcmd($value); }
@@ -347,11 +348,13 @@ $config = array('base_path' => dirname(__DIR__), 'rra_path' => dirname(__DIR__),
 define('POLLER_VERBOSITY_MEDIUM', 3);
 if (in_array('--type=child', $argv, true)) {
     touch(dirname(__DIR__) . '/launched');
+    if (getenv('TEST_FLOAT_REMAINING') === 'timeout') { file_put_contents(dirname(__DIR__) . '/child-pid', getmypid()); sleep(10); touch(dirname(__DIR__) . '/late-write'); }
     if (getenv('TEST_FLOAT_REMAINING') === 'crash') { exit(9); }
     if (getenv('TEST_FLOAT_REMAINING') === 'killed') { posix_kill(getmypid(), SIGKILL); }
     exit(0);
 }
 
+$config['rrd_float_worker_timeout'] = 0.2;
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function read_config_option($name) { return $name === 'path_php_binary' ? PHP_BINARY : ''; }
 function cacti_escapeshellarg($value) { return escapeshellarg($value); }
@@ -371,7 +374,7 @@ function exec_background(...$args) { touch(dirname(__DIR__) . '/launched'); }
 function cacti_log($message, ...$args) { file_put_contents(dirname(__DIR__) . '/messages', $message . "\n", FILE_APPEND); }
 FIXTURE;
         file_put_contents($dir . '/include/cli_check.php', $fixture);
-        $args = array_merge(array(PHP_BINARY), rrd_cli_coverage_arguments($this, $dir, $root, 'float_rrdfiles.php'), array($dir . '/cli/float_rrdfiles.php', '--resume', '--threads=1', '--start=1700000000', '--end=1700000060'));
+        $args = array_merge(array(PHP_BINARY), rrd_cli_coverage_arguments($this, $dir, $root, 'float_rrdfiles.php'), array($dir . '/cli/float_rrdfiles.php', '--resume', '--threads=20', '--start=1700000000', '--end=1700000060'));
         $process = proc_open($args, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, array_merge(getenv(), array('RRDCACHED_ADDRESS' => '', 'TEST_FLOAT_REMAINING' => (string) $remaining)));
         stream_get_contents($pipes[1]);
         $stderr = stream_get_contents($pipes[2]);
@@ -381,6 +384,10 @@ FIXTURE;
             ->and(file_exists($dir . '/launched'))->toBeTrue()
             ->and(file_exists($dir . '/unregistered'))->toBeTrue()
             ->and(file_get_contents($dir . '/mutations'))->not->toContain('DELETE')->not->toContain('TRUNCATE');
+        if ($remaining === 'timeout') {
+            expect(file_exists($dir . '/late-write'))->toBeFalse();
+            expect(posix_kill((int) file_get_contents($dir . '/child-pid'), 0))->toBeFalse();
+        }
         if ($remaining) {
             expect(file_get_contents($dir . '/messages'))->toContain('left unprocessed files');
         }
@@ -391,4 +398,4 @@ FIXTURE;
             rrd_cli_fixture_remove($dir);
         }
     }
-})->with(array(0, 1, 'unknown', 'crash', 'killed'));
+})->with(array(0, 1, 'unknown', 'crash', 'killed', 'timeout'));

@@ -13,7 +13,7 @@ foreach (array('rrd_with_pipe', 'rrdtool_tune') as $name) {
 }
 function read_config_option($key)
 {
-    return $key === 'path_rrdtool' ? 'rrdtool' : 0;
+    return $key === 'path_rrdtool' ? 'rrdtool' : ($GLOBALS['resize_remote'] ?? 0);
 }
 function cacti_log(...$args) {}
 function cacti_sizeof($value)
@@ -77,5 +77,16 @@ test('resize holds the exclusive lease through replacement and stops after a fai
         unlink($directory . '/live.rrd');
         rmdir($directory);
         unset($GLOBALS['resize_commands'], $GLOBALS['resize_renames']);
+    }
+});
+
+test('remote resize fails before sending commands or renaming local files', function () {
+    $GLOBALS['resize_remote'] = 1;
+    $GLOBALS['resize_commands'] = $GLOBALS['resize_renames'] = 0;
+    try {
+        expect(rrdtool_tune('/remote/live.rrd', array('resize' => array('first')), false))->toBeFalse()
+            ->and($GLOBALS['resize_commands'])->toBe(0)->and($GLOBALS['resize_renames'])->toBe(0);
+    } finally {
+        unset($GLOBALS['resize_remote'], $GLOBALS['resize_commands'], $GLOBALS['resize_renames']);
     }
 });

@@ -135,3 +135,23 @@ Remote storage retains the proxy's existing restore protocol; the local atomic
 rename guarantee does not apply to remote proxy restores.
 
 Float and splice keep XML intermediates in random owner-only workspaces; failed restores retain recovery XML there. Custom RRD paths are coordinated against their trusted ancestor directories as well as the configured store, so a writer using an ancestor as its RRA root is excluded. These conservative custom-path locks can serialize otherwise unrelated maintenance operations. Resize holds its exclusive lease through replacement. Local purge/archive releases the file lease before metadata cleanup and retains queued work when coordination or the filesystem operation fails.
+
+## Bounded CLI maintenance
+
+Floating uses one worker even when `--threads` requests more, because every
+rewrite takes the same exclusive storage lease. The master owns and reaps its
+worker and terminates the isolated worker process group at its deadline. Queue
+rows remain available for `--resume`. `$config['rrd_float_worker_timeout']`
+defaults to eight hours and may be lowered by the administrator.
+
+Float dump and atomic restore/info commands use the same bounded, concurrently
+drained process supervisor as spike removal. CLI commands default to 300 seconds;
+`$config['rrd_maintenance_command_timeout']` may override that up to eight hours.
+Failed or timed-out restores preserve the original RRD and recovery XML.
+Heartbeat tuning and spike removal coordinate the selected custom RRD paths as
+well as the configured store. Remote resize is refused before commands are sent
+because the proxy protocol has no verified atomic replacement operation.
+
+Legacy Boost streams are drained before checking the last committed timestamp.
+Acknowledged streams already provide that ordering and remain reusable across
+updates. No successful queue deletion relies solely on a pipe write.

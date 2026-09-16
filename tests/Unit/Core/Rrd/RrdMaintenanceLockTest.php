@@ -1180,7 +1180,7 @@ test('Windows acknowledgement sentinel uses synchronous responses and refuses ex
         ->and(json_decode($out, true))->toBe(array(true,true,true,false,false,true));
 });
 
-test('legacy Boost retries filter a committed timestamp after draining pending writes', function () {
+test('legacy Boost retries drain old streams and preserve acknowledged writers', function ($acknowledged) {
     $root = dirname(__DIR__, 4);
     $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
     if (!is_executable($binary)) {
@@ -1199,22 +1199,22 @@ test('legacy Boost retries filter a committed timestamp after draining pending w
         'function cacti_version_compare($a,$b,$c){return version_compare($a,$b,$c);}function cacti_escapeshellarg($v){return escapeshellarg($v);}' .
         'function cacti_log(...$args){}function cacti_session_close(){}' .
         'require ' . var_export($root . '/lib/rrd.php', true) . ';require ' . var_export($root . '/lib/boost.php', true) . ';' .
-        '$path=__DIR__."/legacy.rrd";$pipe=rrd_init(false);rrdtool_execute("update $path 1700000060:10",false,RRDTOOL_OUTPUT_NULL,$pipe);' .
+        '$path=__DIR__."/legacy.rrd";$pipe=rrd_init(false,false,' . var_export($acknowledged, true) . ');rrdtool_execute("update $path 1700000060:10",false,RRDTOOL_OUTPUT_NULL,$pipe);' .
         '$values="1700000060:999 1700000120:20";$result=boost_rrdtool_function_update(1,$path,"value",$values,$pipe);' .
         '$again=boost_rrdtool_function_update(1,$path,"value",$values,$pipe);$drained=$values;' .
         '$values="1700000180:3\n1700000240:4";$invalid=boost_rrdtool_function_update(1,$path,"value",$values,$pipe);' .
         '$values="invalid:5";$malformed=boost_rrdtool_function_update(1,$path,"value",$values,$pipe);' .
-        'echo json_encode(array($result,$again,$drained,$pipe,$invalid,$malformed,$values));';
+        'echo json_encode(array($result,$again,$drained,is_resource($pipe),$invalid,$malformed,$values));rrd_close($pipe);';
     file_put_contents($this->dir . '/legacy.php', $bootstrap);
     $process = proc_open(array(PHP_BINARY,'-d','pcov.directory=' . $root,'-d','pcov.exclude=~/(include/vendor|tests)/~',$this->dir . '/legacy.php'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);
     $out = stream_get_contents($pipes[1]);
     $error = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
     fclose($pipes[2]);
-    expect(proc_close($process))->toBe(0)->and($error)->toBe('')->and(json_decode($out, true))->toBe(array('OK','OK','',false,'ERROR: Invalid legacy update values','ERROR: RRDtool did not acknowledge the update','invalid:5'));
+    expect(proc_close($process))->toBe(0)->and($error)->toBe('')->and(json_decode($out, true))->toBe(array('OK','OK','',$acknowledged,'ERROR: Invalid legacy update values','ERROR: RRDtool did not acknowledge the update','invalid:5'));
     $archive = shell_exec(escapeshellarg($binary) . ' fetch ' . escapeshellarg($this->dir . '/legacy.rrd') . ' AVERAGE --resolution 20 --start 1700000040 --end 1700000140');
     expect(preg_match('/^1700000060:\s+([-+0-9.eE]+)/m', $archive, $sample))->toBe(1)->and((float) $sample[1])->toBe(10.0);
-});
+})->with(array(false, true));
 
 test('proxy restores retain their existing remote protocol and propagate failure', function ($acknowledged) {
     $root = dirname(__DIR__, 4);
@@ -1310,3 +1310,42 @@ test('rewrite workspaces are unpredictable private directories with isolated XML
         rmdir($two);
     }
 });
+
+test('bounded restore preserves the original on timeout and validates success', function ($mode) {
+    $script = $this->dir . '/rrdtool-fixture';
+    $xml = $this->dir . '/recovery.xml';
+    $rrd = $this->dir . '/live.rrd';
+    file_put_contents($xml, 'recovery');
+    file_put_contents($rrd, 'original');
+    $program = <<<'PHP'
+#!/usr/bin/env php
+<?php
+file_put_contents(__DIR__ . '/command-pid', getmypid());
+$mode = trim(file_get_contents(__DIR__ . '/mode'));
+if (($mode === 'restore-timeout' && $argv[1] === 'restore') || ($mode === 'info-timeout' && $argv[1] === 'info')) { sleep(10); file_put_contents(__DIR__ . '/late-write', 'late'); }
+if ($argv[1] === 'restore') { file_put_contents(end($argv), 'replacement'); }
+if ($argv[1] === 'info') { if ($mode === 'info-error') { exit(2); } echo "filename = fixture\n"; }
+PHP;
+    file_put_contents($script, $program);
+    chmod($script, 0700);
+    file_put_contents($this->dir . '/mode', $mode);
+    $GLOBALS['config']['rrd_maintenance_command_timeout'] = 0.2;
+    $lease = rrd_maintenance_acquire(true);
+    $start = microtime(true);
+    try {
+        expect(rrd_maintenance_restore_command($script, $xml, $rrd))->toBe($mode === 'success');
+    } finally {
+        rrd_maintenance_release($lease);
+    }
+    expect(microtime(true) - $start)->toBeLessThan(3)
+        ->and(file_get_contents($rrd))->toBe($mode === 'success' ? 'replacement' : 'original')
+        ->and(file_get_contents($xml))->toBe('recovery')
+        ->and(file_exists($this->dir . '/late-write'))->toBeFalse()
+        ->and(glob($this->dir . '/.rrd-restore-*'))->toBe(array());
+    if (function_exists('posix_kill')) {
+        expect(posix_kill((int) file_get_contents($this->dir . '/command-pid'), 0))->toBeFalse();
+    }
+    $writer = rrd_maintenance_acquire(false, false, 0);
+    expect(is_resource($writer))->toBeTrue();
+    rrd_maintenance_release($writer);
+})->with(array('restore-timeout', 'info-timeout', 'info-error', 'success'));

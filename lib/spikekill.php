@@ -395,7 +395,7 @@ class spikekill {
 		}
 
 		// Wait through brief polling contention, with a bounded deadline.
-		$lock = rrd_maintenance_acquire(true, false, min(60, $this->commandTimeout()));
+		$lock = rrd_maintenance_acquire_paths(array($this->rrdfile), min(60, $this->commandTimeout()));
 		if ($lock === false) {
 			$this->set_error(__('FATAL: RRD storage is busy or its maintenance lock is unavailable. Retry after polling completes.'));
 			return false;
@@ -1283,97 +1283,7 @@ class spikekill {
 	 * @return (array) array('exit' => int|false, 'stdout' => string, 'stderr' => string)
 	 */
 	private function runRRDCommand(array $argv, $stdout_handle, $timeout = 30) {
-		$capture_stdout = ($stdout_handle === null);
-
-		$descriptors = array(
-			0 => array('pipe', 'r'),
-			1 => $capture_stdout ? array('pipe', 'w') : $stdout_handle,
-			2 => array('pipe', 'w'),
-		);
-
-		$process = @proc_open($argv, $descriptors, $pipes);
-
-		if (!is_resource($process)) {
-			return array('exit' => false, 'stdout' => '', 'stderr' => '');
-		}
-
-		fclose($pipes[0]);
-
-		if ($capture_stdout) {
-			stream_set_blocking($pipes[1], false);
-		}
-
-		stream_set_blocking($pipes[2], false);
-
-		$stdout    = '';
-		$stderr    = '';
-		$remaining = (int) $timeout * 1000000;
-		$exit      = null;
-
-		while ($remaining > 0) {
-			$start  = microtime(true);
-			$read   = $capture_stdout ? array($pipes[1], $pipes[2]) : array($pipes[2]);
-			$write  = array();
-			$except = array();
-			$ready = stream_select($read, $write, $except, intdiv($remaining, 1000000), $remaining % 1000000);
-
-			if ($ready === false || $ready === 0 || (feof($pipes[2]) && (!$capture_stdout || feof($pipes[1])))) {
-				usleep(1000);
-			}
-
-			$status = proc_get_status($process);
-
-			if ($capture_stdout) {
-				$stdout .= stream_get_contents($pipes[1]);
-			}
-
-			$stderr .= stream_get_contents($pipes[2]);
-
-			/* proc_get_status() returns false on a dead handle. Preserve a
-			   valid exitcode while it is observable because a later status
-			   read or proc_close() can return -1 after the child has
-			   already been reaped. */
-			if (!is_array($status) || empty($status['running'])) {
-				if (is_array($status) && isset($status['exitcode']) && $status['exitcode'] >= 0) {
-					$exit = (int) $status['exitcode'];
-				}
-
-				break;
-			}
-
-			$remaining -= (int) ((microtime(true) - $start) * 1000000);
-		}
-
-		if ($capture_stdout) {
-			fclose($pipes[1]);
-		}
-
-		fclose($pipes[2]);
-
-		$status = proc_get_status($process);
-
-		if (is_array($status) && !empty($status['running'])) {
-			if (isset($status['pid']) && function_exists('posix_kill')) {
-				posix_kill($status['pid'], 9);
-			}
-
-			proc_terminate($process, 9);
-			proc_close($process);
-
-			return array('exit' => false, 'stdout' => $stdout, 'stderr' => $stderr);
-		}
-
-		if ($exit === null && is_array($status) && isset($status['exitcode']) && $status['exitcode'] >= 0) {
-			$exit = (int) $status['exitcode'];
-		}
-
-		$close_exit = proc_close($process);
-
-		if ($exit === null) {
-			$exit = $close_exit;
-		}
-
-		return array('exit' => $exit, 'stdout' => $stdout, 'stderr' => $stderr);
+		return rrd_maintenance_run_command($argv, $stdout_handle, $timeout);
 	}
 
 	/**
