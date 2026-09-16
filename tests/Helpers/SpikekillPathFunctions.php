@@ -3,7 +3,8 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-2.0-or-later
 
-// Execute the production pure path helper without loading database globals.
+// Execute the production path helpers without loading database globals.
+require_once dirname(__DIR__, 2) . '/lib/path_helpers.php';
 foreach (array('cacti_join_dir_child', 'cacti_path_is_within', 'cacti_normalize_windows_path') as $name) {
     if (function_exists($name)) {
         continue;

@@ -11,6 +11,8 @@
  +-------------------------------------------------------------------------+
 */
 
+require_once dirname(__DIR__, 4) . '/lib/path_helpers.php';
+
 /*
  * cli/removespikes.php and cli/batchgapfix.php run lib/spikekill.php's
  * remove_spikes() as root. It copies the RRD being processed to a backup
@@ -39,6 +41,8 @@
    guard in this same Pest process, so only this one pure function is
    extracted by source, the same technique the eval() blocks elsewhere in
    this suite use */
+require_once dirname(__DIR__, 4) . '/lib/path_helpers.php';
+
 if (!function_exists('cacti_trim_dir_separator')) {
     $spikekill_functions_source = file_get_contents(dirname(__DIR__, 4) . '/lib/functions.php');
 

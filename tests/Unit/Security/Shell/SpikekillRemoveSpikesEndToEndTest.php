@@ -11,6 +11,8 @@
  +-------------------------------------------------------------------------+
 */
 
+require_once dirname(__DIR__, 4) . '/lib/path_helpers.php';
+
 /*
  * remove_spikes() ties together the dump (runRRDDump), the stddev
  * detection pass (calculateOverallStatistics/updateXML), the pre-restore
@@ -45,6 +47,8 @@
    define the real read_config_option(), cacti_log() and cacti_sizeof()
    ahead of every stub below and every other test file's function_exists()
    guard in this same Pest process */
+require_once dirname(__DIR__, 4) . '/lib/path_helpers.php';
+
 if (!function_exists('cacti_trim_dir_separator')) {
     $spikekill_functions_source = file_get_contents(dirname(__DIR__, 4) . '/lib/functions.php');
 

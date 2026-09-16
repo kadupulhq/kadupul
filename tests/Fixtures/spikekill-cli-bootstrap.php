@@ -36,8 +36,3 @@ function get_execution_user()
 }
 define('POLLER_VERBOSITY_DEBUG', 0);
 require getenv('SPIKE_TEST_ROOT') . '/tests/Helpers/SpikekillPathFunctions.php';
-$source = file_get_contents(getenv('SPIKE_TEST_ROOT') . '/lib/functions.php');
-if (!preg_match('/^function cacti_trim_dir_separator\(.*?^}\n/ms', $source, $match)) {
-    throw new RuntimeException('Missing production path helper');
-}
-eval($match[0]); // nosemgrep: php.lang.security.eval-use.eval-use
