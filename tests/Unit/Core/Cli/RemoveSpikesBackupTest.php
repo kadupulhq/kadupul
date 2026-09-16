@@ -14,7 +14,15 @@ function spikeBackupCommand($args, $env = null)
 }
 
 beforeEach(function () {
-    $this->binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
+    $this->binary = getenv('RRDTOOL_TEST_BINARY') ?: '';
+    if ($this->binary === '') {
+        foreach (array('/usr/bin/rrdtool', '/opt/homebrew/bin/rrdtool', '/usr/local/bin/rrdtool') as $candidate) {
+            if (is_executable($candidate)) {
+                $this->binary = $candidate;
+                break;
+            }
+        }
+    }
     if (!is_executable($this->binary)) {
         $this->markTestSkipped('RRDtool is required for CLI backup contracts');
     }
