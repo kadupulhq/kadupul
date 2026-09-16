@@ -863,7 +863,7 @@ class spikekill {
 		fclose($xmlfile_handle);
 		$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
 
-		$this->unlinkOwnedFile($bakfile, $bakfile_stat);
+		/* A requested backup is a recovery artifact, not a temporary file. */
 
 		return $restored;
 	}
@@ -1594,18 +1594,19 @@ class spikekill {
 							$this->strout .= sprintf('%10s %16s %10s %7s %7s ' .
 								($ds['average']    < 1E6 ? '%10s ' : ' %10.2e ') .
 								($ds['stddev']     < 1E6 ? '%10s ' : ' %10.2e ') .
+								($ds['variance_avg'] < 1E6 ? '%10s ' : ' %10.2e ') .
 								($ds['max_value']  < 1E6 ? '%10s ' : ' %10.2e ') .
 								($ds['min_value']  < 1E6 ? '%10s ' : ' %10.2e ') .
 								($ds['max_cutoff'] < 1E6 ? '%10s ' : ' %10.2e ') .
 								($ds['min_cutoff'] < 1E6 ? '%10s ' : ' %10.2e ') .
-								'%10s %10s %10s %12s %10s' . PHP_EOL,
+								'%10s %10s %12s %10s' . PHP_EOL,
 								$this->displayTime($this->rra_pdp[$rra_key]),
 								$this->ds_name[$dskey],
 								$this->rra_cf[$rra_key],
 								number_format_i18n($ds['totalsamples']),
 								(isset($ds['numsamples']) ? number_format_i18n($ds['numsamples']) : '0'),
 								($ds['average']         != 'N/A' ? round($ds['average'], 2)       : 'N/A'),
-								($ds['stddev']          != 'N/A' ? round($ds['stddev'], 2)        : 'N/A')
+								($ds['stddev']          != 'N/A' ? round($ds['stddev'], 2)        : 'N/A'),
 								($ds['variance_avg']    != 'N/A' ? round($ds['variance_avg'], 2)  : 'N/A'),
 								($ds['max_value']       != 'N/A' ? round($ds['max_value'], 2)     : 'N/A'),
 								($ds['min_value']       != 'N/A' ? round($ds['min_value'], 2)     : 'N/A'),
