@@ -42,10 +42,15 @@ Report vulnerabilities through [SECURITY.md](SECURITY.md).
 [GPL-3.0-or-later](LICENSE). Dependencies retain their own license terms.
 See the [licensing documentation](https://kadupul.org/project/license/).
 
-### Spike-removal platform requirement
+### RRD storage platform requirements
 
-Spike removal currently requires a POSIX system with the PHP POSIX extension.
-Its filesystem safety checks refuse Windows and other systems without POSIX
-account identity. Windows ACL validation is not implemented, so spike removal
-is unavailable there; this restriction does not disable other application features.
+Local Unix RRD storage requires PHP's POSIX extension for account identity and
+filesystem trust checks. This applies to ordinary poller writes as well as
+exclusive maintenance. Without it, local writers fail closed and retain queued
+samples; enable the extension for both CLI and web PHP before running collection.
+
+Spike removal and exclusive RRD maintenance are unavailable on Windows because
+Windows ACL validation is not implemented. Ordinary Windows updates use
+synchronous RRDtool acknowledgements; Unix capacity evidence does not establish
+Windows throughput. Remote RRDtool proxy storage retains its existing path.
 See [filesystem requirements](docs/testing/spikekill-safety.md).
