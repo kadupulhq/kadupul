@@ -38,6 +38,8 @@ if mode in shapes: report.write_text(shapes[mode]); sys.exit(0)
 if mode == 'empty': report.write_text('<testsuites/>'); sys.exit(0)
 case = '<skipped/>' if mode == 'skipped' else '<failure/>' if mode == 'failure' else ''
 report.write_text('<testsuites><testsuite><testcase name="contract">' + case + '</testcase></testsuite></testsuites>')
+if mode == 'risky' and '--fail-on-risky' in sys.argv: sys.exit(1)
+if mode == 'warning' and '--fail-on-warning' in sys.argv: sys.exit(1)
 ''')
         self.php.chmod(0o700)
 
@@ -66,7 +68,7 @@ report.write_text('<testsuites><testsuite><testcase name="contract">' + case + '
                 self.assertEqual(result['skipped'], int(mode == 'skipped'))
 
     def test_missing_empty_malformed_and_failure_reports_fail_closed(self):
-        for mode in ['missing', 'empty', 'malformed', 'failure', 'crash', 'timeout', 'wrong-root', 'orphan-case', 'wrapped-case', 'wrapped-suite', 'nested-collection']:
+        for mode in ['missing', 'empty', 'malformed', 'failure', 'crash', 'timeout', 'wrong-root', 'orphan-case', 'wrapped-case', 'wrapped-suite', 'nested-collection', 'risky', 'warning']:
             with self.subTest(mode=mode):
                 status, result = self.run_suite(mode)
                 self.assertEqual(status, 1)
