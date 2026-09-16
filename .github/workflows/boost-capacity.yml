@@ -8,6 +8,9 @@ jobs:
   queue:
     runs-on: ubuntu-22.04
     timeout-minutes: 20
+    env:
+      BOOST_DB_USER: benchmark
+      BOOST_DB_PASSWORD: benchmark
     strategy:
       fail-fast: false
       matrix:
@@ -16,7 +19,9 @@ jobs:
       db:
         image: mariadb:${{ matrix.mariadb }}
         env:
-          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: '1'
+          MARIADB_ROOT_PASSWORD: cacti-contract-root
+          MARIADB_USER: benchmark
+          MARIADB_PASSWORD: benchmark
           MARIADB_DATABASE: cacti_boost_contract
         ports: ['3306:3306']
         options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=5s --health-timeout=5s --health-retries=20
