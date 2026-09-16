@@ -31,7 +31,7 @@ function socket_read(...$args)
     return $value;
 }
 test('proxy acknowledgements reject missing responses and error responses even when they contain OK', function ($response, $expected) {
-    foreach (array('RRDTOOL_OUTPUT_NULL' => 0,'RRDTOOL_OUTPUT_STDOUT' => 1,'RRDTOOL_OUTPUT_STDERR' => 2,'RRDTOOL_OUTPUT_GRAPH_DATA' => 3,'RRDTOOL_OUTPUT_BOOLEAN' => 4,'RRDTOOL_OUTPUT_RETURN_STDERR' => 5,'POLLER_VERBOSITY_LOW' => 2,'POLLER_VERBOSITY_DEBUG' => 5) as $name => $value) {
+    foreach (array('PHP_BINARY_READ' => 2, 'RRDTOOL_OUTPUT_NULL' => 0,'RRDTOOL_OUTPUT_STDOUT' => 1,'RRDTOOL_OUTPUT_STDERR' => 2,'RRDTOOL_OUTPUT_GRAPH_DATA' => 3,'RRDTOOL_OUTPUT_BOOLEAN' => 4,'RRDTOOL_OUTPUT_RETURN_STDERR' => 5,'POLLER_VERBOSITY_LOW' => 2,'POLLER_VERBOSITY_DEBUG' => 5) as $name => $value) {
         if (!defined($name)) {
             define($name, $value);
         }

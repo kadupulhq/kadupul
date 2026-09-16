@@ -44,7 +44,7 @@ function rrdtool_reset_language() {
 	putenv('LANG=' . $prev_lang);
 }
 
-function rrd_init($output_to_term = true, $exclusive = false) {
+function rrd_init($output_to_term = true, $exclusive = false, $acknowledged = false) {
 	global $config;
 
 	$args = array_slice(func_get_args(), 0, 1);
@@ -54,6 +54,7 @@ function rrd_init($output_to_term = true, $exclusive = false) {
 		return call_user_func_array($function, $args);
 	}
 
+	$args = array($output_to_term, $acknowledged);
 	require_once __DIR__ . '/rrd_maintenance.php';
 	if ($exclusive && getenv('RRDCACHED_ADDRESS')) {
 		cacti_log('ERROR: Disable RRDCACHED_ADDRESS before destructive RRD maintenance.');
@@ -79,7 +80,7 @@ function rrd_init($output_to_term = true, $exclusive = false) {
 	}
 }
 
-function __rrd_init($output_to_term = true) {
+function __rrd_init($output_to_term = true, $acknowledged = false) {
 	global $config;
 
 	/* set the rrdtool default font */
@@ -88,6 +89,29 @@ function __rrd_init($output_to_term = true) {
 	}
 
 	rrdtool_set_language();
+	if ($acknowledged && $config['cacti_server_os'] !== 'win32') {
+		$process = proc_open(array(read_config_option('path_rrdtool'), '-'),
+			array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('redirect', 1)), $streams);
+		if (!is_resource($process)) {
+			rrdtool_reset_language();
+			return false;
+		}
+		stream_set_blocking($streams[0], false);
+		stream_set_blocking($streams[1], false);
+		$owned =& rrd_acknowledged_pipes();
+		$owned[(int) $streams[0]] = array('write' => $streams[0], 'read' => $streams[1],
+			'process' => $process, 'echo' => $output_to_term, 'failed' => false);
+		static $shutdown_registered = false;
+		if (!$shutdown_registered) {
+			register_shutdown_function(function () {
+				foreach (rrd_acknowledged_pipes() as $state) {
+					rrd_close($state['write']);
+				}
+			});
+			$shutdown_registered = true;
+		}
+		return $streams[0];
+	}
 
 	if ($output_to_term) {
 		$command = read_config_option('path_rrdtool') . ' - ';
@@ -98,6 +122,60 @@ function __rrd_init($output_to_term = true) {
 	}
 
 	return popen($command, 'w');
+}
+
+/** Native response pipes are owned by the same lifetime as their writer lease. */
+function &rrd_acknowledged_pipes() {
+	static $pipes = array();
+	return $pipes;
+}
+
+/** Exchange one command without treating a successful write as persistence. */
+function rrd_acknowledged_command($pipe, $command) {
+	global $config;
+	$pipes =& rrd_acknowledged_pipes();
+	$state =& $pipes[(int) $pipe];
+	if ($state['failed']) {
+		return array(false, '');
+	}
+	$timeout = max(1, min(60, (int) ($config['rrd_command_timeout'] ?? 60)));
+	$deadline = hrtime(true) + $timeout * 1000000000;
+	$input = escape_command($command) . "\r\n";
+	$offset = 0;
+	$output = '';
+	while (hrtime(true) < $deadline) {
+		$read = array($state['read']);
+		$write = $offset < strlen($input) ? array($pipe) : array();
+		$except = null;
+		$selected = @stream_select($read, $write, $except, 0, 100000);
+		if ($selected === false) {
+			break;
+		}
+		if ($write) {
+			$written = @fwrite($pipe, substr($input, $offset, 8192));
+			if ($written === false) {
+				break;
+			}
+			$offset += $written;
+		}
+		if ($read) {
+			$chunk = fread($state['read'], 8192);
+			if ($chunk === false || ($chunk === '' && feof($state['read']))) {
+				break;
+			}
+			$output .= $chunk;
+			if (preg_match('/^ERROR:[^\r\n]*\r?\n/m', $output)) {
+				return array(false, $output);
+			}
+			if ($offset === strlen($input) && preg_match('/^OK(?: u:[^\r\n]+)?\r?\n/m', $output)) {
+				return array(true, $output);
+			}
+		}
+	}
+	$state['failed'] = true;
+	proc_terminate($state['process']);
+	cacti_log('ERROR: RRDtool response was unavailable or timed out; samples retained for retry.');
+	return array(false, $output);
 }
 
 function __rrd_proxy_init($logopt = 'WEBLOG') {
@@ -196,7 +274,7 @@ function rrd_close() {
 
 /** Keep an owned writer pipe scoped to one operation, including early returns. */
 function rrd_with_pipe($operation) {
-	$pipe = rrd_init(true, true);
+	$pipe = rrd_init(true, true, true);
 	if ($pipe === false) {
 		return false;
 	}
@@ -208,6 +286,25 @@ function rrd_with_pipe($operation) {
 }
 
 function __rrd_close($rrdtool_pipe) {
+	$owned =& rrd_acknowledged_pipes();
+	if (isset($owned[(int) $rrdtool_pipe])) {
+		$state = $owned[(int) $rrdtool_pipe];
+		unset($owned[(int) $rrdtool_pipe]);
+		if (is_resource($state['write'])) { fclose($state['write']); }
+		// Commands have already been acknowledged. EOF asks the idle child to exit.
+		$deadline = hrtime(true) + 1000000000;
+		do {
+			$status = proc_get_status($state['process']);
+			if (!$status['running']) { break; }
+			usleep(10000);
+		} while (hrtime(true) < $deadline);
+		if ($status['running']) { proc_terminate($state['process'], 9); }
+		fclose($state['read']);
+		proc_close($state['process']);
+		rrdtool_reset_language();
+		return;
+	}
+
 	/* close the rrdtool file descriptor */
 	if (is_resource($rrdtool_pipe)) {
 		pclose($rrdtool_pipe);
@@ -307,15 +404,37 @@ function rrdtool_execute() {
 function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pipe = false, $logopt = 'WEBLOG') {
 	global $config;
 
-	/* Write-only persistent pipes cannot acknowledge individual updates. */
-	if ((defined('RRDTOOL_OUTPUT_BOOLEAN') && $output_flag === RRDTOOL_OUTPUT_BOOLEAN)) {
-		$rrdtool_pipe = false;
-	}
+
 
 
 	if (is_array($command_line)) {
 		$cmd = array_shift($command_line);
 		$command_line = $cmd . ' ' . implode(' ', array_map('cacti_escapeshellarg', $command_line));
+	}
+
+	$owned =& rrd_acknowledged_pipes();
+	if (is_resource($rrdtool_pipe) && isset($owned[(int) $rrdtool_pipe])) {
+		list($acknowledged, $response) = rrd_acknowledged_command($rrdtool_pipe, $command_line);
+		if ($owned[(int) $rrdtool_pipe]['echo']) { print $response; }
+		if ($output_flag === RRDTOOL_OUTPUT_BOOLEAN) { return $acknowledged; }
+		if (!$acknowledged) { return false; }
+		rrdtool_trim_output($response);
+		return $output_flag === RRDTOOL_OUTPUT_NULL ? null : $response;
+	}
+	// Callers without a response pipe use the synchronous fallback.
+	if (defined('RRDTOOL_OUTPUT_BOOLEAN') && $output_flag === RRDTOOL_OUTPUT_BOOLEAN) {
+		if ($config['cacti_server_os'] !== 'win32') {
+			$temporary = __rrd_init(false, true);
+			if (!is_resource($temporary)) {
+				return false;
+			}
+			try {
+				return __rrd_execute($command_line, $log_to_stdout, $output_flag, $temporary, $logopt);
+			} finally {
+				__rrd_close($temporary);
+			}
+		}
+		$rrdtool_pipe = false;
 	}
 
 	static $last_command;
@@ -908,9 +1027,11 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 	}
 }
 
-function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false) {
+function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$completed = null) {
 	/* lets count the number of rrd files processed */
 	$rrds_processed = 0;
+	$completed = array();
+	$failed = false;
 
 	foreach ($update_cache_array as $rrd_path => $rrd_fields) {
 		$create_rrd_file = false;
@@ -927,7 +1048,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false) {
 
 			if ($file_exists === false) {
 				$times = array_keys($rrd_fields['times']);
-				rrdtool_function_create($rrd_fields['local_data_id'], false, false);
+				rrdtool_function_create($rrd_fields['local_data_id'], false, $rrdtool_pipe);
 				$create_rrd_file = true;
 			}
 
@@ -1003,15 +1124,17 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false) {
 				}
 
 				if (rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== true) {
-					cacti_log('ERROR: RRD update was not acknowledged; pending samples retained for retry.', false, 'POLLER');
-					return false;
+					if (!$failed) { cacti_log('ERROR: RRD update was not acknowledged; pending samples retained for retry.', false, 'POLLER'); }
+					$failed = true;
+					break;
 				}
+				$completed[$rrd_path][$update_time] = true;
 				$rrds_processed++;
 			}
 		}
 	}
 
-	return $rrds_processed;
+	return $failed ? false : $rrds_processed;
 }
 
 function rrdtool_function_tune($rrd_tune_array) {
@@ -3673,7 +3796,9 @@ function rrd_datasource_add($file_array, $ds_array, $debug) {
 					/* are we allowed to write the rrd file? */
 					if (is_writable($file)) {
 						/* restore the modified XML to rrd */
-						rrdtool_execute("restore -f $xml_file $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+						if (rrdtool_execute("restore -f $xml_file $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL') === false) {
+							return array('err_msg' => __('RRDtool rejected the restored file'));
+						}
 						/* scratch that XML file to avoid filling up the disk */
 						unlink($xml_file);
 						cacti_log('Added Data Source(s) to RRDfile: ' . $file, false, 'UTIL');
@@ -3729,7 +3854,9 @@ function rrd_rra_delete($file_array, $rra_array, $debug) {
 					/* are we allowed to write the rrd file? */
 					if (is_writable($file)) {
 						/* restore the modified XML to rrd */
-						rrdtool_execute("restore -f $xml_file $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+						if (rrdtool_execute("restore -f $xml_file $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL') === false) {
+							return array('err_msg' => __('RRDtool rejected the restored file'));
+						}
 						/* scratch that XML file to avoid filling up the disk */
 						unlink($xml_file);
 						cacti_log('Deleted RRA(s) from RRDfile: ' . $file, false, 'UTIL');
@@ -3786,7 +3913,9 @@ function rrd_rra_clone($file_array, $cf, $rra_array, $debug) {
 					/* are we allowed to write the rrd file? */
 					if (is_writable($file)) {
 						/* restore the modified XML to rrd */
-						rrdtool_execute("restore -f $xml_file $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+						if (rrdtool_execute("restore -f $xml_file $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL') === false) {
+							return array('err_msg' => __('RRDtool rejected the restored file'));
+						}
 						/* scratch that XML file to avoid filling up the disk */
 						unlink($xml_file);
 						cacti_log('Cloned RRA(s) in RRDfile: ' . $file, false, 'UTIL');
@@ -3924,7 +4053,7 @@ function rrd_append_compute_ds($dom, $version, $name, $type, $cdef) {
 function rrd_append_cdp_prep_ds($dom, $version) {
 	/* get all <cdp_prep><ds> entries */
 	#$cdp_prep_list = $xpath->query('/rrd/rra/cdp_prep');
-	$cdp_prep_list = $dom->getElementsByTagName('rra')->item(0)->getElementsByTagName('cdp_prep');
+	$cdp_prep_list = $dom->getElementsByTagName('cdp_prep');
 
 	/* get XPATH notation required for positioning */
 	#$xpath = new DOMXPath($dom);
@@ -3951,7 +4080,7 @@ function rrd_append_cdp_prep_ds($dom, $version) {
 		foreach ($cdp_prep_list as $cdp_prep) {
 			/* $cdp_prep now points to the next <cdp_prep> XML Element
 			 * and append new ds entry at end of <cdp_prep> child list */
-			$cdp_prep->appendChild($new_ds);
+			$cdp_prep->appendChild($new_ds->cloneNode(true));
 		}
 	}
 }
@@ -3979,7 +4108,7 @@ function rrd_append_value($dom) {
 		foreach ($itemList as $item) {
 			/* $item now points to the next <cdp_prep> XML Element
 			 * and append new ds entry at end of <cdp_prep> child list */
-			$item->appendChild($new_v);
+			$item->appendChild($new_v->cloneNode(true));
 		}
 	}
 }

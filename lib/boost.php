@@ -286,7 +286,7 @@ function boost_fetch_cache_check($local_data_id, $rrdtool_pipe = false) {
 
 		/* process input parameters */
 		if (!is_resource($rrdtool_pipe)) {
-			$rrdtool_pipe = rrd_init();
+			$rrdtool_pipe = rrd_init(true, false, true);
 			$close_pipe = true;
 		} else {
 			$close_pipe = false;
@@ -694,7 +694,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 	include_once($config['library_path'] . '/rrd.php');
 	$owned_rrd_pipe = !$rrdtool_pipe;
 	if ($owned_rrd_pipe) {
-		$rrdtool_pipe = rrd_init();
+		$rrdtool_pipe = rrd_init(true, false, true);
 	}
 	if ($rrdtool_pipe === false) {
 		cacti_log('ERROR: RRD initialization failed; pending on-demand Boost samples were retained.', false, 'BOOST');
@@ -808,7 +808,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 		$rrdp_auto_close = $owned_rrd_pipe;
 
 		if (!$rrdtool_pipe) {
-			$rrdtool_pipe    = rrd_init();
+			$rrdtool_pipe    = rrd_init(true, false, true);
 			$rrdp_auto_close = true;
 		}
 
@@ -1492,7 +1492,7 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 
 		// Check for a Data Source that has been removed
 		if ($ds_exists) {
-			$create_pipe = false;
+			$create_pipe = $rrdtool_pipe;
 			$valid_entry = boost_rrdtool_function_create($local_data_id, false, $create_pipe);
 		} else {
 			return 'OK';
