@@ -8,7 +8,7 @@ set_error_handler(function ($severity, $message, $file, $line) {
     return false;
 });
 
-$config = array('base_path' => getenv('SPIKE_TEST_ROOT'), 'rra_path' => getenv('SPIKE_TEST_BACKUP'), 'poller_id' => 1, 'cacti_server_os' => 'unix');
+$config = array('base_path' => getenv('SPIKE_TEST_ROOT'), 'rra_path' => getenv('SPIKE_TEST_RRA'), 'poller_id' => 1, 'cacti_server_os' => 'unix');
 function read_config_option($name, $default = '') {
     $options = array('path_rrdtool' => getenv('SPIKE_TEST_RRDTOOL'), 'spikekill_backupdir' => getenv('SPIKE_TEST_BACKUP'));
     return $options[$name] ?? $default;

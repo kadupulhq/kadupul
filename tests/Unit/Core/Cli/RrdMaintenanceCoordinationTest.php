@@ -10,7 +10,7 @@ function rrd_cli_fixture_remove($path) {
     } else { unlink($path); }
 }
 
-test('native maintenance CLI coordinates before touching an RRD', function ($scriptName) {
+test('native maintenance CLI coordinates before touching an RRD', function ($scriptName, $cached) {
     $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
     if (!is_executable($binary)) { $this->markTestSkipped('Real RRDtool is required; CI provisions it.'); }
     $root = dirname(__DIR__, 4);
@@ -30,7 +30,7 @@ test('native maintenance CLI coordinates before touching an RRD', function ($scr
         symlink($root . '/lib/rrd_maintenance.php', $dir . '/lib/rrd_maintenance.php');
         symlink($root . '/lib/maintenance_cli.php', $dir . '/lib/maintenance_cli.php');
         file_put_contents($dir . '/lib/poller.php', '<?php');
-        file_put_contents($dir . '/lib/rrd.php', '<?php function rrdtool_function_fetch(...$args) {}');
+        file_put_contents($dir . '/lib/rrd.php', '<?php function rrdtool_function_fetch(...$args) { touch(dirname(__DIR__) . "/fetch"); }');
         $wrapper = $dir . '/rrdtool';
         file_put_contents($wrapper, "#!/bin/sh\ntouch " . escapeshellarg($dir . '/rrd-command') . "\nexec " . escapeshellarg($binary) . " \"\$@\"\n");
         chmod($wrapper, 0700);
@@ -69,11 +69,11 @@ FIXTURE;
             $args = array_merge($args, array('--oldrrd=' . $rrd, '--newrrd=' . $rrd, '--finrrd=' . $dir . '/finished.rrd'));
             $lock = rrd_maintenance_acquire();
         }
-        $process = proc_open($args, array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $process = proc_open($args, array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, array_merge(getenv(), array('RRDCACHED_ADDRESS' => $cached ? 'unix:/unavailable-test-cache' : '')));
         $deadline = microtime(true) + 10;
         while (!file_exists($dir . '/started') && microtime(true) < $deadline) { usleep(10000); }
         expect(file_exists($dir . '/started'))->toBeTrue();
-        if ($scriptName !== 'splice_rrd.php') {
+        if (!$cached && $scriptName !== 'splice_rrd.php') {
             usleep(100000);
             expect(proc_get_status($process)['running'])->toBeTrue()
                 ->and(file_exists($dir . '/rrd-command'))->toBeFalse()
@@ -83,7 +83,13 @@ FIXTURE;
         }
         fclose($pipes[0]); $stdout = stream_get_contents($pipes[1]); $stderr = stream_get_contents($pipes[2]); fclose($pipes[1]); fclose($pipes[2]);
         $status = proc_close($process);
-        if ($scriptName === 'splice_rrd.php') {
+        if ($cached) {
+            expect($status)->toBe(1)->and($stderr)->toContain('disable RRDCACHED_ADDRESS')
+                ->and(file_exists($dir . '/fetch'))->toBeFalse()
+                ->and(file_exists($dir . '/rrd-command'))->toBeFalse()
+                ->and(file_exists($dir . '/db-write'))->toBeFalse()
+                ->and(file_get_contents($rrd))->toBe($before);
+        } elseif ($scriptName === 'splice_rrd.php') {
             expect($status)->toBe(1)->and($stderr)->toContain('storage is busy')
                 ->and(file_exists($dir . '/rrd-command'))->toBeFalse()
                 ->and(file_get_contents($rrd))->toBe($before);
@@ -103,4 +109,4 @@ FIXTURE;
         $GLOBALS['config'] = $savedConfig;
         rrd_cli_fixture_remove($dir);
     }
-})->with(array('update_heartbeat.php', 'float_rrdfiles.php', 'splice_rrd.php'));
+})->with(array(array('update_heartbeat.php', false), array('float_rrdfiles.php', false), array('splice_rrd.php', false), array('float_rrdfiles.php', true), array('splice_rrd.php', true)));
