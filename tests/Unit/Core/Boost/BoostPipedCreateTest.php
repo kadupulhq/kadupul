@@ -403,12 +403,14 @@ function boostPipedCreateRealCommand($args) {
 	return $stdout;
 }
 
-test('Boost retries skip consumed timestamps and still apply newer samples in a real RRD', function ($version) {
-	$GLOBALS['boost_piped_create']['version'] = $version;
+test('Boost retries skip consumed timestamps and still apply newer samples in a real RRD', function () {
 	$binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
 	if (!is_executable($binary)) {
 		$this->markTestSkipped('RRDtool is required for the real replay check');
 	}
+	$version_output = boostPipedCreateRealCommand(array($binary, '--version'));
+	expect(preg_match('/RRDtool ([0-9]+\.[0-9]+\.[0-9]+)/', $version_output, $match))->toBe(1);
+	$GLOBALS['boost_piped_create']['version'] = $match[1];
 	$path = $GLOBALS['boost_piped_create']['path'];
 	boostPipedCreateRealCommand(array($binary, 'create', $path, '--start', '1700000000', '--step', '60', 'DS:value:GAUGE:120:U:U', 'RRA:AVERAGE:0.5:1:10'));
 	$GLOBALS['boost_piped_create']['real_binary'] = $binary;
@@ -422,7 +424,7 @@ test('Boost retries skip consumed timestamps and still apply newer samples in a 
 	$values = '1700000060:999 1700000120:20';
 	expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, 'value', $values, $pipe))->toBe('OK')
 		->and(boostPipedCreateRealCommand(array($binary, 'lastupdate', $path)))->toContain('1700000120: 20');
-})->with(array('1.7', '1.4'));
+});
 
 function boostPipedCreate_boost_rrdtool_get_last_update_time($path, &$pipe) {
 	if (!empty($GLOBALS['boost_piped_create']['real_binary'])) {
@@ -457,8 +459,11 @@ test('legacy filtering preserves rejection of control characters before tokenizi
 
 
 test('legacy updates wait for pending real pipe writes before filtering retained samples', function () {
-	$binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
-	if (!is_executable($binary)) { $this->markTestSkipped('RRDtool is required'); }
+	$binary = getenv('RRDTOOL_LEGACY_TEST_BINARY') ?: '';
+	if ($binary === '') { $this->markTestSkipped('Set RRDTOOL_LEGACY_TEST_BINARY for real RRDtool 1.3/1.4'); }
+	expect(is_executable($binary))->toBeTrue();
+	$version = boostPipedCreateRealCommand(array($binary, '--version'));
+	expect($version)->toMatch('/RRDtool 1\.[34]\./');
 	$path = $GLOBALS['boost_piped_create']['path'];
 	boostPipedCreateRealCommand(array($binary, 'create', $path, '--start', '1700000000', '--step', '60', 'DS:value:GAUGE:120:U:U', 'RRA:AVERAGE:0.5:1:10'));
 	$GLOBALS['boost_piped_create']['version'] = '1.4';
