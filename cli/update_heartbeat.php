@@ -241,6 +241,10 @@ if (!$force) {
 	printf('This is a forced run, impacted Data Source Profiles will have their Heartbeats updated as well' . PHP_EOL);
 }
 
+require_once __DIR__ . '/../lib/rrd_maintenance.php';
+$rrd_writer_lock = rrd_maintenance_cli_lock();
+register_shutdown_function(function () use ($rrd_writer_lock) { rrd_maintenance_release($rrd_writer_lock); });
+
 $i = 0;
 
 $rrdtool_bin = read_config_option('path_rrdtool');

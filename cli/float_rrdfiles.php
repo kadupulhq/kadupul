@@ -282,10 +282,16 @@ switch ($type) {
 			 * temporary XML file is created exclusively, so one left by a killed
 			 * child is refused rather than overwritten, and deleting the row
 			 * anyway would drop that RRD from the queue unfloated. */
-			if (float_rrdfile($data['rrd_path'], $data['local_data_id'], $step, $start_time, $end_time)) {
-				db_execute_prepared('DELETE FROM poller_float_rrdfiles_not_done
-					WHERE local_data_id = ?',
-					array($data['local_data_id']));
+			require_once __DIR__ . '/../lib/rrd_maintenance.php';
+			$rrd_rewrite_lock = rrd_maintenance_cli_lock(true, true);
+			try {
+				if (float_rrdfile($data['rrd_path'], $data['local_data_id'], $step, $start_time, $end_time)) {
+					db_execute_prepared('DELETE FROM poller_float_rrdfiles_not_done
+						WHERE local_data_id = ?',
+						array($data['local_data_id']));
+				}
+			} finally {
+				rrd_maintenance_release($rrd_rewrite_lock);
 			}
 		}
 

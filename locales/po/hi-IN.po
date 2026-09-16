@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: developers@cacti.net\n"
-"POT-Creation-Date: 2026-09-15 20:53-0700\n"
+"POT-Creation-Date: 2026-09-15 21:19-0700\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Anonymous <anonymous@cacti.net>\n"
 "Language-Team: Hindi <http://translate.cacti.net/projects/cacti/core-v1-2-x/hi/>\n"
@@ -3246,7 +3246,7 @@ msgstr "रेरन विश्लेषण"
 msgid "Check"
 msgstr "जाँच करें"
 
-#: data_debug.php:826 include/global_form.php:1032 lib/rrd.php:3745
+#: data_debug.php:826 include/global_form.php:1032 lib/rrd.php:3750
 #: utilities.php:799 utilities.php:816 utilities.php:3097
 msgid "Value"
 msgstr "मूल्य"
@@ -3542,7 +3542,7 @@ msgstr "इस डेटा इनपुट विधि के लिए जा
 #: data_input.php:1011 host.php:1756 lib/api_automation.php:179
 #: lib/api_automation.php:1117 lib/auth.php:2498 lib/clog_webapi.php:854
 #: lib/html_utility.php:1389 lib/import.php:423 lib/plugins.php:1243
-#: lib/plugins.php:1244 lib/rrd.php:3770 lib/rrd.php:3782 lib/spikekill.php:302
+#: lib/plugins.php:1244 lib/rrd.php:3775 lib/rrd.php:3787 lib/spikekill.php:302
 #: package_import.php:576 package_import.php:654 utilities.php:212
 #: utilities.php:213 utilities.php:2652
 msgid "Unknown"
@@ -3834,7 +3834,7 @@ msgstr "चरण"
 
 #: data_source_profiles.php:640 graphs_new.php:469 include/global_form.php:298
 #: lib/html.php:583 lib/html_filter.php:73 lib/installer.php:2751
-#: lib/rrd.php:3799 utilities.php:867 utilities.php:1789
+#: lib/rrd.php:3804 utilities.php:867 utilities.php:1789
 msgid "Rows"
 msgstr "पंक्तियाँ"
 
@@ -4555,7 +4555,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool ग्राफ़ सिंटैक्स"
 
 #: graph_image.php:186 graph_json.php:225 graph_realtime.php:306
-#: lib/rrd.php:2032
+#: lib/rrd.php:2037
 msgid "The Cacti Poller has not run yet."
 msgstr "कैक्टि पोलर अभी तक नहीं चला है।"
 
@@ -6702,7 +6702,7 @@ msgstr "प्राकृतिक आदेश"
 msgid "Numeric Ordering"
 msgstr "न्यूमेरिक ऑर्डरिंग"
 
-#: include/global_arrays.php:970 lib/rrd.php:3711
+#: include/global_arrays.php:970 lib/rrd.php:3716
 msgid "Header"
 msgstr "हेडर"
 
@@ -8274,7 +8274,7 @@ msgstr "वह आवृत्ति जो डेटा डेटा स्र�
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "RRDtool अज्ञात डेटा रिकॉर्ड करने से पहले कितनी देर तक डेटा गायब हो सकता है। यदि आपका डेटा स्रोत अस्थिर है और आप अपने ग्राफ़ में अंतराल दिखाने के बजाय पुराने डेटा को ले जाना चाहते हैं, तो यह मान बढ़ाएँ वास्तविक समय की वास्तविक मात्रा निर्धारित करने के लिए यह मान X-Files फैक्टर से गुणा किया जाता है।"
 
-#: include/global_form.php:240 lib/rrd.php:3802
+#: include/global_form.php:240 lib/rrd.php:3807
 msgid "X-Files Factor"
 msgstr "एक्स-फाइल्स फैक्टर"
 
@@ -8828,7 +8828,7 @@ msgstr "अपारदर्शिता / अल्फा चैनल"
 msgid "The opacity/alpha channel of the color."
 msgstr "रंग की अस्पष्टता / अल्फा चैनल।"
 
-#: include/global_form.php:1003 lib/rrd.php:3798
+#: include/global_form.php:1003 lib/rrd.php:3803
 msgid "Consolidation Function"
 msgstr "समेकन समारोह"
 
@@ -12517,7 +12517,7 @@ msgstr "मिलान उपकरण"
 
 #: lib/api_automation.php:150 lib/api_automation.php:1088
 #: lib/clog_webapi.php:551 lib/html_reports.php:1067 lib/html_reports.php:1739
-#: lib/html_reports.php:2138 lib/html_reports.php:2149 lib/rrd.php:3740
+#: lib/html_reports.php:2138 lib/html_reports.php:2149 lib/rrd.php:3745
 #: utilities.php:357 utilities.php:1450 utilities.php:3097
 msgid "Type"
 msgstr "प्रकार"
@@ -16328,187 +16328,187 @@ msgstr "रिपोर्ट ग्राफ़ आइटम &#39; <i> %s</i> &
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "छोड़ी गई रिपोर्ट ग्राफ की वस्तु &#39; <i> %s</i> &#39; पहले से ही मौजूद है"
 
-#: lib/rrd.php:2029
+#: lib/rrd.php:2034
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "त्रुटि: RRDfile %s लिखने योग्य नहीं है"
 
-#: lib/rrd.php:3505
+#: lib/rrd.php:3510
 #, fuzzy, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "आवश्यक RRDfile चरण का आकार '{ 0 }' है, लेकिन देखा गया चरण '{ 1 }' है"
 
-#: lib/rrd.php:3565
+#: lib/rrd.php:3570
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "डेटा स्रोत &#39; %s&#39; के लिए टाइप &#39; %s&#39; होना चाहिए"
 
-#: lib/rrd.php:3571
+#: lib/rrd.php:3576
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "डेटा स्रोत &#39; %s&#39; के लिए दिल की धड़कन &#39; %s&#39; होनी चाहिए"
 
-#: lib/rrd.php:3583
+#: lib/rrd.php:3588
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "डेटा स्रोत &#39; %s&#39; के लिए RRD न्यूनतम &#39; %s&#39; होना चाहिए"
 
-#: lib/rrd.php:3592
+#: lib/rrd.php:3597
 #, php-format
 msgid "DS '%s' missing in Cacti definition"
 msgstr "Cacti की परिभाषा में डीएस &#39; %s&#39; गायब है"
 
-#: lib/rrd.php:3606 lib/rrd.php:3607
+#: lib/rrd.php:3611 lib/rrd.php:3612
 #, php-format
 msgid "Cacti RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Cacti RRA &#39; %s&#39; में &#39; %s&#39; के समान CF / चरण ( %s, %s) हैं"
 
-#: lib/rrd.php:3620 lib/rrd.php:3621
+#: lib/rrd.php:3625 lib/rrd.php:3626
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "फ़ाइल RRA &#39; %s&#39; में &#39; %s&#39; के समान CF / चरण ( %s, %s) है"
 
-#: lib/rrd.php:3653
+#: lib/rrd.php:3658
 #, fuzzy, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Cacti to re-create RRDfile."
 msgstr "'{ 0 }' का pdp_per_row RRA '{ 1 }' के लिए अमान्य है '{ 2 }' होना चाहिए। कैक्टि को RRDfile को फिर से बनाने के लिए हटाने और अनुमति देने पर विचार करें।"
 
-#: lib/rrd.php:3657
+#: lib/rrd.php:3662
 #, php-format
 msgid "The XFF for Cacti RRA id is '%s' but should be '%s'"
 msgstr "Cacti RRA आईडी &#39; %s&#39; के लिए XFF &#39; %s&#39; होना चाहिए"
 
-#: lib/rrd.php:3661
+#: lib/rrd.php:3666
 #, fuzzy, php-format
 msgid "The number of rows for Cacti RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Cacti RRA id '{ 0 }' के लिए पंक्तियों की संख्या गलत है। पंक्तियों की संख्या '{ 1 }' है लेकिन '{ 2 }' होनी चाहिए"
 
-#: lib/rrd.php:3678
+#: lib/rrd.php:3683
 #, php-format
 msgid "The RRA '%s' missing in the existing Cacti RRDfile"
 msgstr "आरआरडीएफाइल में आरआरए &#39; %s&#39; गायब है"
 
-#: lib/rrd.php:3686
+#: lib/rrd.php:3691
 #, php-format
 msgid "RRA '%s' missing in Cacti definition"
 msgstr "Ract &#39; %s&#39; कैक्टि परिभाषा में गायब है"
 
-#: lib/rrd.php:3707
+#: lib/rrd.php:3712
 msgid "RRD File Information"
 msgstr "आरआरडी फ़ाइल जानकारी"
 
-#: lib/rrd.php:3739
+#: lib/rrd.php:3744
 msgid "Data Source Items"
 msgstr "डेटा स्रोत आइटम"
 
-#: lib/rrd.php:3741
+#: lib/rrd.php:3746
 msgid "Minimal Heartbeat"
 msgstr "मिनिमल हार्टबीट"
 
-#: lib/rrd.php:3742
+#: lib/rrd.php:3747
 msgid "Min"
 msgstr "कम से कम"
 
-#: lib/rrd.php:3743
+#: lib/rrd.php:3748
 msgid "Max"
 msgstr "अधिकतम"
 
-#: lib/rrd.php:3744
+#: lib/rrd.php:3749
 msgid "Last DS"
 msgstr "अंतिम डी.एस."
 
-#: lib/rrd.php:3746
+#: lib/rrd.php:3751
 msgid "Unknown Sec"
 msgstr "अज्ञात सेक"
 
-#: lib/rrd.php:3797
+#: lib/rrd.php:3802
 msgid "Round Robin Archive"
 msgstr "राउंड रॉबिन आर्काइव"
 
-#: lib/rrd.php:3800
+#: lib/rrd.php:3805
 msgid "Cur Row"
 msgstr "कर रो"
 
-#: lib/rrd.php:3801
+#: lib/rrd.php:3806
 msgid "PDP per Row"
 msgstr "प्रति पंक्ति पीडीपी"
 
-#: lib/rrd.php:3803
+#: lib/rrd.php:3808
 msgid "CDP Prep Value (0)"
 msgstr "सीडीपी तैयारी मूल्य (0)"
 
-#: lib/rrd.php:3804
+#: lib/rrd.php:3809
 msgid "CDP Unknown Data points (0)"
 msgstr "सीडीपी अज्ञात डेटा अंक (0)"
 
-#: lib/rrd.php:3867
+#: lib/rrd.php:3872
 msgid "Errors Found"
 msgstr "कोई %s मिला"
 
-#: lib/rrd.php:3879
+#: lib/rrd.php:3884
 msgid "Optional Tuning Recommendations"
 msgstr "डेटा स्रोत फ़ील्ड"
 
-#: lib/rrd.php:3906 lib/rrd.php:3909
+#: lib/rrd.php:3911 lib/rrd.php:3914
 #, php-format
 msgid "rename %s to %s"
 msgstr "%s का नाम बदलकर %s करें"
 
-#: lib/rrd.php:3983 lib/rrd.php:4062 lib/rrd.php:4128
+#: lib/rrd.php:3988 lib/rrd.php:4067 lib/rrd.php:4133
 #, fuzzy
 msgid "ERROR: Invalid RRDfile path"
 msgstr "एक मान्य फ़ाइल पथ दर्ज करें"
 
-#: lib/rrd.php:3992
+#: lib/rrd.php:3997
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "Rrdtool डंप के XML को पार्स करते समय त्रुटि"
 
-#: lib/rrd.php:4024 lib/rrd.php:4089 lib/rrd.php:4155
+#: lib/rrd.php:4029 lib/rrd.php:4094 lib/rrd.php:4160
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "XML फ़ाइल लिखते समय ERROR: %s"
 
-#: lib/rrd.php:4035 lib/rrd.php:4100 lib/rrd.php:4166
+#: lib/rrd.php:4040 lib/rrd.php:4105 lib/rrd.php:4171
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "त्रुटि: RRDfile %s लिखने योग्य नहीं है"
 
-#: lib/rrd.php:4071 lib/rrd.php:4137
+#: lib/rrd.php:4076 lib/rrd.php:4142
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "RRDtool डंप के XML को पार्स करते समय त्रुटि"
 
-#: lib/rrd.php:4386
+#: lib/rrd.php:4391
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "आरआरडी फ़ाइल से हटाए गए RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f)"
 
-#: lib/rrd.php:4424
+#: lib/rrd.php:4429
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f) RRD फाइल में जोड़"
 
-#: lib/rrd.php:4456 lib/rrd.php:4470
+#: lib/rrd.php:4461 lib/rrd.php:4475
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "वेबसाइट में %s तक लिखने की सुविधा नहीं है, RRDs बनाने / अपडेट करने में असमर्थ हो सकता है"
 
-#: lib/rrd.php:4466
+#: lib/rrd.php:4471
 msgid "(Custom)"
 msgstr "(अनुकूलित)"
 
-#: lib/rrd.php:4472
+#: lib/rrd.php:4477
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "डेटा फ़ाइल खोलने में विफल, पराग अभी तक नहीं चला है"
 
-#: lib/rrd.php:4475
+#: lib/rrd.php:4480
 msgid "RRA Folder"
 msgstr "आरआरए फोल्डर"
 
-#: lib/rrd.php:4475
+#: lib/rrd.php:4480
 msgid "Root"
 msgstr "जड़"
 
-#: lib/rrd.php:4584
+#: lib/rrd.php:4589
 msgid "Unknown RRDtool Error"
 msgstr "अज्ञात RRDtool त्रुटि"
 

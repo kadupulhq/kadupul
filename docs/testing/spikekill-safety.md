@@ -34,3 +34,12 @@ not participate in this protocol: quiesce them before maintenance. Spike removal
 refuses a configured `RRDCACHED_ADDRESS`. Use local POSIX storage with working
 cross-process directory `flock`; unsupported locking fails closed. No lock file is
 created or removed, so a user cannot split the lock by unlinking a sidecar file.
+
+The heartbeat CLI holds a shared writer lease. Splicing and floating take an
+exclusive lease before reading and rewriting their RRDs; floating first flushes
+through the regular backend, then waits for its rewrite lease. Float workers
+therefore serialize the rewrite phase rather than racing each other or polling.
+A busy splice exits before dumping. Cache-daemon rewrites are refused. Windows
+retains its existing non-spike CLI behavior because spike removal remains disabled.
+Private replacement pipes opened during crash recovery are drained and closed
+before returning; later calls with the closed original pipe use synchronous I/O.

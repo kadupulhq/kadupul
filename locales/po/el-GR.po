@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: developers@cacti.net\n"
-"POT-Creation-Date: 2026-09-15 20:53-0700\n"
+"POT-Creation-Date: 2026-09-15 21:19-0700\n"
 "PO-Revision-Date: 2024-04-20 18:31-0400\n"
 "Last-Translator: Anonymous <anonymous@cacti.net>\n"
 "Language-Team: Greek <http://translate.cacti.net/projects/cacti/core-v1-2-x/el/>\n"
@@ -3246,7 +3246,7 @@ msgstr "Ανάλυση αναστροφής"
 msgid "Check"
 msgstr "Ελεγχος"
 
-#: data_debug.php:826 include/global_form.php:1032 lib/rrd.php:3745
+#: data_debug.php:826 include/global_form.php:1032 lib/rrd.php:3750
 #: utilities.php:799 utilities.php:816 utilities.php:3097
 msgid "Value"
 msgstr "Αξία"
@@ -3543,7 +3543,7 @@ msgstr "Η μέθοδος που χρησιμοποιείται για τη συ
 #: data_input.php:1011 host.php:1756 lib/api_automation.php:179
 #: lib/api_automation.php:1117 lib/auth.php:2498 lib/clog_webapi.php:854
 #: lib/html_utility.php:1389 lib/import.php:423 lib/plugins.php:1243
-#: lib/plugins.php:1244 lib/rrd.php:3770 lib/rrd.php:3782 lib/spikekill.php:302
+#: lib/plugins.php:1244 lib/rrd.php:3775 lib/rrd.php:3787 lib/spikekill.php:302
 #: package_import.php:576 package_import.php:654 utilities.php:212
 #: utilities.php:213 utilities.php:2652
 msgid "Unknown"
@@ -3835,7 +3835,7 @@ msgstr "Βήματα"
 
 #: data_source_profiles.php:640 graphs_new.php:469 include/global_form.php:298
 #: lib/html.php:583 lib/html_filter.php:73 lib/installer.php:2751
-#: lib/rrd.php:3799 utilities.php:867 utilities.php:1789
+#: lib/rrd.php:3804 utilities.php:867 utilities.php:1789
 msgid "Rows"
 msgstr "Σειρές"
 
@@ -4556,7 +4556,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool Σύνταξη γραφήματος"
 
 #: graph_image.php:186 graph_json.php:225 graph_realtime.php:306
-#: lib/rrd.php:2032
+#: lib/rrd.php:2037
 msgid "The Cacti Poller has not run yet."
 msgstr "Ο Cacti Poller δεν έχει τρέξει ακόμα."
 
@@ -6704,7 +6704,7 @@ msgstr "Φυσική παραγγελία"
 msgid "Numeric Ordering"
 msgstr "Αριθμητική παραγγελία"
 
-#: include/global_arrays.php:970 lib/rrd.php:3711
+#: include/global_arrays.php:970 lib/rrd.php:3716
 msgid "Header"
 msgstr "Κεφαλίδα"
 
@@ -8276,7 +8276,7 @@ msgstr "Η συχνότητα που θα συλλέγονται τα δεδομ
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "Πόσο καιρό μπορεί να λείπουν δεδομένα πριν το RRDtool καταγράψει άγνωστα δεδομένα. Αυξήστε αυτήν την τιμή εάν η πηγή δεδομένων σας είναι ασταθής και θέλετε να μεταφέρετε παλιά δεδομένα αντί να εμφανίσετε κενά στα γραφήματα. Αυτή η τιμή πολλαπλασιάζεται με το συντελεστή αρχείων X για να προσδιοριστεί το πραγματικό χρονικό διάστημα."
 
-#: include/global_form.php:240 lib/rrd.php:3802
+#: include/global_form.php:240 lib/rrd.php:3807
 msgid "X-Files Factor"
 msgstr "X-Files Factor"
 
@@ -8830,7 +8830,7 @@ msgstr "Κανάλι αδιαφάνειας / άλφα"
 msgid "The opacity/alpha channel of the color."
 msgstr "Το κανάλι αδιαφάνειας / άλφα του χρώματος."
 
-#: include/global_form.php:1003 lib/rrd.php:3798
+#: include/global_form.php:1003 lib/rrd.php:3803
 msgid "Consolidation Function"
 msgstr "Λειτουργία ενοποίησης"
 
@@ -12519,7 +12519,7 @@ msgstr "Συσκευές αντιστοίχισης"
 
 #: lib/api_automation.php:150 lib/api_automation.php:1088
 #: lib/clog_webapi.php:551 lib/html_reports.php:1067 lib/html_reports.php:1739
-#: lib/html_reports.php:2138 lib/html_reports.php:2149 lib/rrd.php:3740
+#: lib/html_reports.php:2138 lib/html_reports.php:2149 lib/rrd.php:3745
 #: utilities.php:357 utilities.php:1450 utilities.php:3097
 msgid "Type"
 msgstr "Τύπος"
@@ -16330,187 +16330,187 @@ msgstr "Αποτυχία προσθήκης στοιχείου γραφήματ�
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Παράλειψη του στοιχείου γραφήματος αναφοράς &#39; <i> %s</i> &#39; υπάρχει ήδη"
 
-#: lib/rrd.php:2029
+#: lib/rrd.php:2034
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "ΣΦΆΛΜΑ: ΤΟ αρχείο RRD %s δεν μπορεί να εγγραφεί"
 
-#: lib/rrd.php:3505
+#: lib/rrd.php:3510
 #, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "Το απαιτούμενο μέγεθος βήματος αρχείου RRD είναι '%s' αλλά το βήμα που παρατηρήθηκε είναι '%s'"
 
-#: lib/rrd.php:3565
+#: lib/rrd.php:3570
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "Τύπος για την προέλευση δεδομένων &#39; %s&#39; θα πρέπει να είναι &#39; %s&#39;"
 
-#: lib/rrd.php:3571
+#: lib/rrd.php:3576
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "Καρδιά για την προέλευση δεδομένων &#39; %s&#39; θα πρέπει να είναι &#39; %s&#39;"
 
-#: lib/rrd.php:3583
+#: lib/rrd.php:3588
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "Το ελάχιστο RRD για την προέλευση δεδομένων &#39; %s&#39; θα πρέπει να είναι &#39; %s&#39;"
 
-#: lib/rrd.php:3592
+#: lib/rrd.php:3597
 #, php-format
 msgid "DS '%s' missing in Cacti definition"
 msgstr "Το DS &#39; %s&#39; λείπει από τον ορισμό του Cacti"
 
-#: lib/rrd.php:3606 lib/rrd.php:3607
+#: lib/rrd.php:3611 lib/rrd.php:3612
 #, php-format
 msgid "Cacti RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Το Cacti RRA &#39; %s&#39; έχει τα ίδια CF / βήματα ( %s, %s) ως &#39; %s&#39;"
 
-#: lib/rrd.php:3620 lib/rrd.php:3621
+#: lib/rrd.php:3625 lib/rrd.php:3626
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Το αρχείο RRA &#39; %s&#39; έχει τα ίδια CF / βήματα ( %s, %s) ως &#39; %s&#39;"
 
-#: lib/rrd.php:3653
+#: lib/rrd.php:3658
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Cacti to re-create RRDfile."
 msgstr "Το pdp_per_row του '%s' δεν είναι έγκυρο για το RRA '%s' θα πρέπει να είναι '%s'.  Εξετάστε το ενδεχόμενο να διαγράψετε και να επιτρέψετε στους Κάκτους να δημιουργήσουν ξανά το αρχείο RRD."
 
-#: lib/rrd.php:3657
+#: lib/rrd.php:3662
 #, php-format
 msgid "The XFF for Cacti RRA id is '%s' but should be '%s'"
 msgstr "Το XFF για τον κάτοχο RRA id &#39; %s&#39; θα πρέπει να είναι &#39; %s&#39;"
 
-#: lib/rrd.php:3661
+#: lib/rrd.php:3666
 #, php-format
 msgid "The number of rows for Cacti RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Ο αριθμός των σειρών για το αναγνωριστικό RRA Cacti '%s' είναι λανθασμένος.  Ο αριθμός των σειρών είναι '%s' αλλά πρέπει να είναι '%s'"
 
-#: lib/rrd.php:3678
+#: lib/rrd.php:3683
 #, php-format
 msgid "The RRA '%s' missing in the existing Cacti RRDfile"
 msgstr "Το RRA &#39; %s&#39; λείπει στο αρχείο RRD"
 
-#: lib/rrd.php:3686
+#: lib/rrd.php:3691
 #, php-format
 msgid "RRA '%s' missing in Cacti definition"
 msgstr "Το RRA &#39; %s&#39; λείπει από τον ορισμό του Cacti"
 
-#: lib/rrd.php:3707
+#: lib/rrd.php:3712
 msgid "RRD File Information"
 msgstr "Πληροφορίες αρχείου RRD"
 
-#: lib/rrd.php:3739
+#: lib/rrd.php:3744
 msgid "Data Source Items"
 msgstr "Στοιχεία πηγής δεδομένων"
 
-#: lib/rrd.php:3741
+#: lib/rrd.php:3746
 msgid "Minimal Heartbeat"
 msgstr "Ελάχιστη καρδιακή αρρυθμία"
 
-#: lib/rrd.php:3742
+#: lib/rrd.php:3747
 msgid "Min"
 msgstr "Ελάχιστο"
 
-#: lib/rrd.php:3743
+#: lib/rrd.php:3748
 msgid "Max"
 msgstr "Μέγιστο"
 
-#: lib/rrd.php:3744
+#: lib/rrd.php:3749
 msgid "Last DS"
 msgstr "Τελευταίο DS"
 
-#: lib/rrd.php:3746
+#: lib/rrd.php:3751
 msgid "Unknown Sec"
 msgstr "Άγνωστη ενότητα"
 
-#: lib/rrd.php:3797
+#: lib/rrd.php:3802
 msgid "Round Robin Archive"
 msgstr "Αρχείο Robin Round"
 
-#: lib/rrd.php:3800
+#: lib/rrd.php:3805
 msgid "Cur Row"
 msgstr "Cur Row"
 
-#: lib/rrd.php:3801
+#: lib/rrd.php:3806
 msgid "PDP per Row"
 msgstr "PDP ανά σειρά"
 
-#: lib/rrd.php:3803
+#: lib/rrd.php:3808
 msgid "CDP Prep Value (0)"
 msgstr "Τιμή προεπιλογής CDP (0)"
 
-#: lib/rrd.php:3804
+#: lib/rrd.php:3809
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP Άγνωστα Σημεία δεδομένων (0)"
 
-#: lib/rrd.php:3867
+#: lib/rrd.php:3872
 msgid "Errors Found"
 msgstr "Δεν βρέθηκαν %s"
 
-#: lib/rrd.php:3879
+#: lib/rrd.php:3884
 msgid "Optional Tuning Recommendations"
 msgstr "Πεδία προέλευσης δεδομένων"
 
-#: lib/rrd.php:3906 lib/rrd.php:3909
+#: lib/rrd.php:3911 lib/rrd.php:3914
 #, php-format
 msgid "rename %s to %s"
 msgstr "μετονομάστε %s σε %s"
 
-#: lib/rrd.php:3983 lib/rrd.php:4062 lib/rrd.php:4128
+#: lib/rrd.php:3988 lib/rrd.php:4067 lib/rrd.php:4133
 #, fuzzy
 msgid "ERROR: Invalid RRDfile path"
 msgstr "Εισαγάγετε μια έγκυρη διαδρομή αρχείου"
 
-#: lib/rrd.php:3992
+#: lib/rrd.php:3997
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "Παρουσιάστηκε σφάλμα κατά την ανάλυση της XML της σφαλτικής μνήμης rrdtool"
 
-#: lib/rrd.php:4024 lib/rrd.php:4089 lib/rrd.php:4155
+#: lib/rrd.php:4029 lib/rrd.php:4094 lib/rrd.php:4160
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "Σφάλμα κατά την εγγραφή αρχείου XML: %s"
 
-#: lib/rrd.php:4035 lib/rrd.php:4100 lib/rrd.php:4166
+#: lib/rrd.php:4040 lib/rrd.php:4105 lib/rrd.php:4171
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "ΣΦΆΛΜΑ: ΤΟ αρχείο RRD %s δεν μπορεί να εγγραφεί"
 
-#: lib/rrd.php:4071 lib/rrd.php:4137
+#: lib/rrd.php:4076 lib/rrd.php:4142
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "Σφάλμα κατά την ανάλυση της XML της απόρριψης RRDtool"
 
-#: lib/rrd.php:4386
+#: lib/rrd.php:4391
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f) αφαιρεθεί από το αρχείο RRD"
 
-#: lib/rrd.php:4424
+#: lib/rrd.php:4429
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f) προσθήκη στο αρχείο RRD"
 
-#: lib/rrd.php:4456 lib/rrd.php:4470
+#: lib/rrd.php:4461 lib/rrd.php:4475
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "Ο ιστότοπος δεν έχει πρόσβαση εγγραφής στο %s, ίσως δεν είναι δυνατή η δημιουργία / ενημέρωση RRD"
 
-#: lib/rrd.php:4466
+#: lib/rrd.php:4471
 msgid "(Custom)"
 msgstr "Προσαρμογή"
 
-#: lib/rrd.php:4472
+#: lib/rrd.php:4477
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "Δεν ήταν δυνατή η εκκίνηση αρχείου δεδομένων, ενδέχεται να μην έχει εκτελεστεί ακόμα το poller"
 
-#: lib/rrd.php:4475
+#: lib/rrd.php:4480
 msgid "RRA Folder"
 msgstr "Φάκελος RRA"
 
-#: lib/rrd.php:4475
+#: lib/rrd.php:4480
 msgid "Root"
 msgstr "Ρίζα"
 
-#: lib/rrd.php:4584
+#: lib/rrd.php:4589
 msgid "Unknown RRDtool Error"
 msgstr "Άγνωστο σφάλμα RRDtool"
 

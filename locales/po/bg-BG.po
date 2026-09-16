@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Cacti\n"
 "Report-Msgid-Bugs-To: developers@cacti.net\n"
-"POT-Creation-Date: 2026-09-15 20:53-0700\n"
+"POT-Creation-Date: 2026-09-15 21:19-0700\n"
 "PO-Revision-Date: 2024-04-20 18:23-0400\n"
 "Last-Translator: Anonymous <anonymous@cacti.net>\n"
 "Language-Team: Bulgarian <http://translate.cacti.net/projects/cacti/core-v1-2-x/bg/>\n"
@@ -3241,7 +3241,7 @@ msgstr "Повторно анализиране"
 msgid "Check"
 msgstr "Проверка"
 
-#: data_debug.php:826 include/global_form.php:1032 lib/rrd.php:3745
+#: data_debug.php:826 include/global_form.php:1032 lib/rrd.php:3750
 #: utilities.php:799 utilities.php:816 utilities.php:3097
 msgid "Value"
 msgstr "Стойност"
@@ -3537,7 +3537,7 @@ msgstr "Методът, използван за събиране на инфор
 #: data_input.php:1011 host.php:1756 lib/api_automation.php:179
 #: lib/api_automation.php:1117 lib/auth.php:2498 lib/clog_webapi.php:854
 #: lib/html_utility.php:1389 lib/import.php:423 lib/plugins.php:1243
-#: lib/plugins.php:1244 lib/rrd.php:3770 lib/rrd.php:3782 lib/spikekill.php:302
+#: lib/plugins.php:1244 lib/rrd.php:3775 lib/rrd.php:3787 lib/spikekill.php:302
 #: package_import.php:576 package_import.php:654 utilities.php:212
 #: utilities.php:213 utilities.php:2652
 msgid "Unknown"
@@ -3829,7 +3829,7 @@ msgstr "Стъпки при Приготвяне"
 
 #: data_source_profiles.php:640 graphs_new.php:469 include/global_form.php:298
 #: lib/html.php:583 lib/html_filter.php:73 lib/installer.php:2751
-#: lib/rrd.php:3799 utilities.php:867 utilities.php:1789
+#: lib/rrd.php:3804 utilities.php:867 utilities.php:1789
 msgid "Rows"
 msgstr "Редове"
 
@@ -4550,7 +4550,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "Синтаксис на графиката RRDtool"
 
 #: graph_image.php:186 graph_json.php:225 graph_realtime.php:306
-#: lib/rrd.php:2032
+#: lib/rrd.php:2037
 msgid "The Cacti Poller has not run yet."
 msgstr "Cacti Poller все още не работи."
 
@@ -6697,7 +6697,7 @@ msgstr "Естествен ред"
 msgid "Numeric Ordering"
 msgstr "Цифрова поръчка"
 
-#: include/global_arrays.php:970 lib/rrd.php:3711
+#: include/global_arrays.php:970 lib/rrd.php:3716
 msgid "Header"
 msgstr "Хедър"
 
@@ -8269,7 +8269,7 @@ msgstr "Честотата, която данните ще се събират �
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "Колко време може да липсват данни, преди RRDtool да запише неизвестни данни. Увеличете тази стойност, ако вашият източник на данни е нестабилен и искате да пренесете стари данни, вместо да показвате пропуски в графиките си. Тази стойност се умножава по X-Files Factor, за да се определи действителното време."
 
-#: include/global_form.php:240 lib/rrd.php:3802
+#: include/global_form.php:240 lib/rrd.php:3807
 msgid "X-Files Factor"
 msgstr "Фактор на Х-Файлове"
 
@@ -8823,7 +8823,7 @@ msgstr "Непрозрачност / Алфа канал"
 msgid "The opacity/alpha channel of the color."
 msgstr "Непрозрачността / алфа каналът на цвета."
 
-#: include/global_form.php:1003 lib/rrd.php:3798
+#: include/global_form.php:1003 lib/rrd.php:3803
 msgid "Consolidation Function"
 msgstr "Консолидационна функция"
 
@@ -12512,7 +12512,7 @@ msgstr "Съответстващи устройства"
 
 #: lib/api_automation.php:150 lib/api_automation.php:1088
 #: lib/clog_webapi.php:551 lib/html_reports.php:1067 lib/html_reports.php:1739
-#: lib/html_reports.php:2138 lib/html_reports.php:2149 lib/rrd.php:3740
+#: lib/html_reports.php:2138 lib/html_reports.php:2149 lib/rrd.php:3745
 #: utilities.php:357 utilities.php:1450 utilities.php:3097
 msgid "Type"
 msgstr "Тип"
@@ -16323,187 +16323,187 @@ msgstr "Неуспешно добавяне на елемент от графи�
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Елементът на графиката „Пропуснати“ „ <i> %s</i> “ вече е налице"
 
-#: lib/rrd.php:2029
+#: lib/rrd.php:2034
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "ГРЕШКА: RRDfile %s не може да се запише"
 
-#: lib/rrd.php:3505
+#: lib/rrd.php:3510
 #, fuzzy, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "Необходимият размер на RRD файла е „{ 0 }“, но наблюдаваната стъпка е „{ 1 }“"
 
-#: lib/rrd.php:3565
+#: lib/rrd.php:3570
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "Типът за източник на данни „ %s“ трябва да бъде „ %s“"
 
-#: lib/rrd.php:3571
+#: lib/rrd.php:3576
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "Сърцето за източник на данни „ %s“ трябва да бъде „ %s“"
 
-#: lib/rrd.php:3583
+#: lib/rrd.php:3588
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "RRD минимум за източник на данни &#39; %s&#39; трябва да бъде &#39; %s&#39;"
 
-#: lib/rrd.php:3592
+#: lib/rrd.php:3597
 #, php-format
 msgid "DS '%s' missing in Cacti definition"
 msgstr "DS &#39; %s&#39; липсва в определението Cacti"
 
-#: lib/rrd.php:3606 lib/rrd.php:3607
+#: lib/rrd.php:3611 lib/rrd.php:3612
 #, php-format
 msgid "Cacti RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Cacti RRA &#39; %s&#39; има същите CF / стъпки ( %s, %s) като &#39; %s&#39;"
 
-#: lib/rrd.php:3620 lib/rrd.php:3621
+#: lib/rrd.php:3625 lib/rrd.php:3626
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Файлът RRA &#39; %s&#39; има същите стъпки ( %s, %s) като &#39; %s&#39;"
 
-#: lib/rrd.php:3653
+#: lib/rrd.php:3658
 #, fuzzy, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Cacti to re-create RRDfile."
 msgstr "Pdp_per_row на „{ 0 }“ е невалиден за RRA „{ 1 }“ трябва да бъде „{ 2 }“. Помислете дали да не изтриете и позволите на кактусите да пресъздадат RRD файла."
 
-#: lib/rrd.php:3657
+#: lib/rrd.php:3662
 #, php-format
 msgid "The XFF for Cacti RRA id is '%s' but should be '%s'"
 msgstr "XFF за id cacti RRA &#39; %s&#39; трябва да бъде &#39; %s&#39;"
 
-#: lib/rrd.php:3661
+#: lib/rrd.php:3666
 #, fuzzy, php-format
 msgid "The number of rows for Cacti RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Броят редове за Cacti RRA ID '{ 0 }' е неправилен.  Броят на редовете е „{ 1 }“, но трябва да бъде „{ 2 }“"
 
-#: lib/rrd.php:3678
+#: lib/rrd.php:3683
 #, php-format
 msgid "The RRA '%s' missing in the existing Cacti RRDfile"
 msgstr "RRA &#39; %s&#39; липсва в RRDfile"
 
-#: lib/rrd.php:3686
+#: lib/rrd.php:3691
 #, php-format
 msgid "RRA '%s' missing in Cacti definition"
 msgstr "RRA &#39; %s&#39; липсва в дефиницията на Cacti"
 
-#: lib/rrd.php:3707
+#: lib/rrd.php:3712
 msgid "RRD File Information"
 msgstr "Информация за RRD файла"
 
-#: lib/rrd.php:3739
+#: lib/rrd.php:3744
 msgid "Data Source Items"
 msgstr "Елементи на източника на данни"
 
-#: lib/rrd.php:3741
+#: lib/rrd.php:3746
 msgid "Minimal Heartbeat"
 msgstr "Минимален пулс"
 
-#: lib/rrd.php:3742
+#: lib/rrd.php:3747
 msgid "Min"
 msgstr "мин."
 
-#: lib/rrd.php:3743
+#: lib/rrd.php:3748
 msgid "Max"
 msgstr "Максимум"
 
-#: lib/rrd.php:3744
+#: lib/rrd.php:3749
 msgid "Last DS"
 msgstr "Последен DS"
 
-#: lib/rrd.php:3746
+#: lib/rrd.php:3751
 msgid "Unknown Sec"
 msgstr "Неизвестен раздел"
 
-#: lib/rrd.php:3797
+#: lib/rrd.php:3802
 msgid "Round Robin Archive"
 msgstr "Кръг Робин Архив"
 
-#: lib/rrd.php:3800
+#: lib/rrd.php:3805
 msgid "Cur Row"
 msgstr "Cur Row"
 
-#: lib/rrd.php:3801
+#: lib/rrd.php:3806
 msgid "PDP per Row"
 msgstr "PDP на ред"
 
-#: lib/rrd.php:3803
+#: lib/rrd.php:3808
 msgid "CDP Prep Value (0)"
 msgstr "CDP Предварителна стойност (0)"
 
-#: lib/rrd.php:3804
+#: lib/rrd.php:3809
 msgid "CDP Unknown Data points (0)"
 msgstr "Точки на неизвестни данни за CDP (0)"
 
-#: lib/rrd.php:3867
+#: lib/rrd.php:3872
 msgid "Errors Found"
 msgstr "Няма намерени %s"
 
-#: lib/rrd.php:3879
+#: lib/rrd.php:3884
 msgid "Optional Tuning Recommendations"
 msgstr "Полета на източника на данни"
 
-#: lib/rrd.php:3906 lib/rrd.php:3909
+#: lib/rrd.php:3911 lib/rrd.php:3914
 #, php-format
 msgid "rename %s to %s"
 msgstr "преименувайте %s на %s"
 
-#: lib/rrd.php:3983 lib/rrd.php:4062 lib/rrd.php:4128
+#: lib/rrd.php:3988 lib/rrd.php:4067 lib/rrd.php:4133
 #, fuzzy
 msgid "ERROR: Invalid RRDfile path"
 msgstr "Въведете валиден път на файла"
 
-#: lib/rrd.php:3992
+#: lib/rrd.php:3997
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "Грешка при анализирането на XML на dump на rrdtool"
 
-#: lib/rrd.php:4024 lib/rrd.php:4089 lib/rrd.php:4155
+#: lib/rrd.php:4029 lib/rrd.php:4094 lib/rrd.php:4160
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "ГРЕШКА при писане на XML файл: %s"
 
-#: lib/rrd.php:4035 lib/rrd.php:4100 lib/rrd.php:4166
+#: lib/rrd.php:4040 lib/rrd.php:4105 lib/rrd.php:4171
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "ГРЕШКА: RRDfile %s не може да се запише"
 
-#: lib/rrd.php:4071 lib/rrd.php:4137
+#: lib/rrd.php:4076 lib/rrd.php:4142
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "Грешка при анализиране на XML на RRDtool"
 
-#: lib/rrd.php:4386
+#: lib/rrd.php:4391
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f) са премахнати от RRD файла"
 
-#: lib/rrd.php:4424
+#: lib/rrd.php:4429
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f) добавяне към RRD файла"
 
-#: lib/rrd.php:4456 lib/rrd.php:4470
+#: lib/rrd.php:4461 lib/rrd.php:4475
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "Уебсайтът няма достъп за запис до %s, може да не е в състояние да създаде / актуализира RRD"
 
-#: lib/rrd.php:4466
+#: lib/rrd.php:4471
 msgid "(Custom)"
 msgstr "(Потребителска)"
 
-#: lib/rrd.php:4472
+#: lib/rrd.php:4477
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "Неуспешно отваряне на файл с данни, полърът може да не е стартирал още"
 
-#: lib/rrd.php:4475
+#: lib/rrd.php:4480
 msgid "RRA Folder"
 msgstr "RRA Папка"
 
-#: lib/rrd.php:4475
+#: lib/rrd.php:4480
 msgid "Root"
 msgstr "Root"
 
-#: lib/rrd.php:4584
+#: lib/rrd.php:4589
 msgid "Unknown RRDtool Error"
 msgstr "Неизвестна грешка на RRDtool"
 

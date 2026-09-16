@@ -8,7 +8,7 @@
  * Shared locks outlive queued commands: release only after pclose has waited
  * for the child. Maintenance never waits for an active writer.
  */
-function rrd_maintenance_acquire($exclusive = false) {
+function rrd_maintenance_acquire($exclusive = false, $wait = false) {
 	global $config;
 
 	if (($config['cacti_server_os'] ?? '') === 'win32') {
@@ -21,12 +21,13 @@ function rrd_maintenance_acquire($exclusive = false) {
 		return false;
 	}
 
+	$expected = @stat($canonical);
 	$handle = @fopen($canonical, 'r');
 	if (!is_resource($handle)) {
 		return false;
 	}
 
-	if (!@flock($handle, $exclusive ? LOCK_EX | LOCK_NB : LOCK_SH)) {
+	if (!@flock($handle, $exclusive ? LOCK_EX | ($wait ? 0 : LOCK_NB) : LOCK_SH)) {
 		fclose($handle);
 		return false;
 	}
@@ -35,7 +36,7 @@ function rrd_maintenance_acquire($exclusive = false) {
 	clearstatcache(true, $canonical);
 	$opened = fstat($handle);
 	$current = @stat($path);
-	if (!$opened || !$current || $opened['dev'] !== $current['dev'] || $opened['ino'] !== $current['ino']) {
+	if (!$expected || !$opened || !$current || ($expected['mode'] & 0170000) !== 0040000 || $opened['dev'] !== $expected['dev'] || $opened['ino'] !== $expected['ino'] || $opened['dev'] !== $current['dev'] || $opened['ino'] !== $current['ino']) {
 		fclose($handle);
 		return false;
 	}
@@ -79,4 +80,22 @@ function rrd_maintenance_pipe($pipe, $lock = null, $release = false) {
 	}
 
 	return isset($pipes[$key]) && $pipes[$key][0] === $pipe && is_resource($pipe);
+}
+
+/** A CLI must stop before touching data when its lock cannot be obtained. */
+function rrd_maintenance_cli_lock($exclusive = false, $wait = false) {
+	global $config;
+
+	if ($exclusive && getenv('RRDCACHED_ADDRESS')) {
+		fwrite(STDERR, "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before maintenance.\n");
+		exit(1);
+	}
+
+	// Spike removal is unavailable on Windows; retain other CLI behavior there.
+	$lock = rrd_maintenance_acquire($exclusive && ($config['cacti_server_os'] ?? '') !== 'win32', $wait);
+	if ($lock === false) {
+		fwrite(STDERR, "FATAL: RRD storage is busy or its maintenance lock is unavailable.\n");
+		exit(1);
+	}
+	return $lock;
 }
