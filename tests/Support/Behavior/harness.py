@@ -96,7 +96,7 @@ def normalize(value):
         # measurements do not. Both patterns are anchored to the poller's own
         # line shapes so an application message carrying the same tokens is
         # still compared.
-        value = re.sub(r'(?<=OK )u:\d+(?:\.\d+)? s:\d+(?:\.\d+)? r:\d+(?:\.\d+)?', 'u:<T> s:<T> r:<T>', value)
+        value = re.sub(r'^OK u:\d+(?:\.\d+)? s:\d+(?:\.\d+)? r:\d+(?:\.\d+)?(?=\r?$)', 'OK u:<T> s:<T> r:<T>', value, flags=re.MULTILINE)
         value = re.sub(r'(?<=SYSTEM STATS: )Time:\d+\.\d+', 'Time:<T>', value)
         value = POLLER_TIMESTAMP.sub('<TIMESTAMP>', value)
         value = INSTALL_TIMESTAMPS.sub(r'\g<1><TIMESTAMP>\g<2><TIMESTAMP>', value)

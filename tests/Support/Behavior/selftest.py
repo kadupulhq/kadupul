@@ -259,7 +259,11 @@ def poller_acknowledgement_contract():
     probe.observed = {}
     probe.capture('faults/missing-rrd-file', {'command': before})
     assert probe.observed['faults/missing-rrd-file']['command']['rrd_acknowledgements'] == 2
-    assert probe.observed['faults/missing-rrd-file']['command']['stdout'] == harness.normalize(other)
+    assert probe.observed['faults/missing-rrd-file']['command']['stdout'] == other
+    assert harness.normalize(other) == other
+    assert harness.normalize('prefix OK u:1 s:2 r:3') == 'prefix OK u:1 s:2 r:3'
+    assert harness.normalize('OK u:1 s:2 r:3 suffix') == 'OK u:1 s:2 r:3 suffix'
+    assert harness.normalize('OK u:1 s:2 r:3\r\n') == 'OK u:<T> s:<T> r:<T>\r\n'
     for golden in (harness.ROOT / 'tests/Golden/cacti-1.2.31').glob('php-*/*/*.json'):
         command = json.loads(golden.read_text()).get('command', {}) if isinstance(json.loads(golden.read_text()), dict) else {}
         if 'rrd_acknowledgements' in command:
