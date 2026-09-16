@@ -43,6 +43,12 @@ test('production poller files retain failed writes and preserve concurrent arriv
         }
         expect(proc_close($process))->toBe($failed ? 1 : 0, $error . $output)->and($error)->toBe('');
         $expected = is_string($failed) ? array(array('output' => '42', 'remaining' => $failed === 'page' ? 40001 : 1)) : ($failed ? array('42','43') : array('43'));
+        if (in_array($failed, array('select', 'handoff'), true)) {
+            $expected = array('42');
+        }
+        if ($failed === 'delete') {
+            $expected = array('42', '43');
+        }
         expect(json_decode(file_get_contents($dir . '/outcome.json'), true))->toBe($expected);
         if ($parent !== null) {
             $reports = glob($dir . '/*.coverage');
@@ -58,4 +64,4 @@ test('production poller files retain failed writes and preserve concurrent arriv
             } rmdir($dir . $suffix);
         }
     }
-})->with(array(array(false,false),array(false,true),array(true,false),array(true,true),array(false,'mixed'),array(false,'page')));
+})->with(array(array(false,false),array(false,true),array(true,false),array(true,true),array(false,'mixed'),array(false,'page'),array(false,'select'),array(false,'handoff'),array(false,'delete')));

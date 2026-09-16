@@ -71,7 +71,7 @@ function dsdebug_poller_output(...$args) {}
 function api_plugin_hook_function(...$args) {}
 function boost_poller_on_demand(...$args)
 {
-    return true;
+    return getenv('ACK_FAIL') === 'handoff' ? null : true;
 }
 function rrd_init()
 {
@@ -82,6 +82,9 @@ function db_fetch_assoc_prepared($sql, $params = array())
 {
     if (strpos($sql, 'poller_data_template_field_mappings') !== false) {
         return array();
+    }
+    if (getenv('ACK_FAIL') === 'select' && strpos($sql, 'FROM poller_output AS po') !== false) {
+        return false;
     }
     $query = $GLOBALS['ack_db']->prepare($sql);
     $query->execute($params);
@@ -97,6 +100,9 @@ function db_fetch_cell($sql)
 }
 function db_execute_prepared($sql, $params)
 {
+    if (getenv('ACK_FAIL') === 'delete') {
+        return false;
+    }
     if (getenv('ACK_FAIL') === '1') {
         throw new RuntimeException('Deletion before acknowledgement');
     }
@@ -119,7 +125,7 @@ function rrdtool_function_update($updates, $pipe = false, &$completed = null)
             }
         }
     }
-    return getenv('ACK_FAIL') !== '0' ? false : 1;
+    return in_array(getenv('ACK_FAIL'), array('1', 'mixed', 'page'), true) ? false : 1;
 }
 function db_close()
 {

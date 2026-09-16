@@ -788,7 +788,7 @@ test('a separate web UID can coordinate a poller-owned shared store', function (
     }
 });
 
-test('queued samples require an actual RRDtool acknowledgement', function ($mode, $expected) {
+test('queued samples require an actual RRDtool acknowledgement', function ($mode, $expected, $persistent) {
     $root = dirname(__DIR__, 4);
     $binary = getenv('RRDTOOL_TEST_BINARY') ?: '/opt/homebrew/bin/rrdtool';
     if (!is_executable($binary)) {
@@ -813,7 +813,7 @@ test('queued samples require an actual RRDtool acknowledgement', function ($mode
         'function get_rrdtool_version(){return "1.7";} function cacti_version_compare(...$args){return version_compare(...$args);}' .
         'require ' . var_export($root . '/lib/rrd.php', true) . ';' .
         '$updates = array(' . var_export($rrd, true) . ' => array("local_data_id"=>1,"data_template_id"=>0,"times"=>array(1700000060=>array("value"=>42))));' .
-        '$pipe=rrd_init(false,false,true); if (!is_resource($pipe)) {exit(2);} echo json_encode(rrdtool_function_update($updates,$pipe)); rrd_close($pipe);';
+        '$pipe=' . ($persistent ? 'rrd_init(false,false,true)' : 'false') . '; if (' . var_export($persistent, true) . ' && !is_resource($pipe)) {exit(2);} $result=rrdtool_function_update($updates,$pipe); echo json_encode($result); if($result===false){if(rrdtool_function_update($updates,$pipe)!==false){exit(3);}} rrd_close($pipe);';
     if ($this->getTestResultObject()->getCodeCoverage() !== null) {
         $this->expectedChildReports = 1;
         $bootstrap = '<?php define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';' . substr($bootstrap, 5);
@@ -828,7 +828,7 @@ test('queued samples require an actual RRDtool acknowledgement', function ($mode
     if ($mode === 'real') {
         expect(shell_exec(escapeshellarg($binary) . ' lastupdate ' . escapeshellarg($rrd)))->toContain('42');
     }
-})->with(array(array('real',1), array('silent',false), array('error',false), array('crash',false), array('hung',false)));
+})->with(array(array('real',1), array('silent',false), array('error',false), array('crash',false), array('hung',false)))->with(array(true,false));
 
 test('one persistent process continues past rejected files and preserves timestamp ordering', function () {
     $root = dirname(__DIR__, 4);
