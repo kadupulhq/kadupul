@@ -55,7 +55,7 @@ jobs:
         with:
           install: false
       - name: Install build dependencies
-        run: sudo apt-get update && sudo apt-get install -y autoconf automake libtool pkg-config libxml2-dev libpango1.0-dev libcairo2-dev libglib2.0-dev groff-base rrdtool
+        run: sudo apt-get update && sudo apt-get install -y autoconf automake autopoint gettext libtool pkg-config libxml2-dev libpango1.0-dev libcairo2-dev libglib2.0-dev groff-base rrdtool
       - name: Build pinned RRDtool 1.4.9
         run: tests/benchmarks/build_rrd149.sh "$RUNNER_TEMP/rrd149"
       - name: Install test dependencies
