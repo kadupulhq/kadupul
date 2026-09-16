@@ -514,7 +514,7 @@ class spikekill {
 			$output[] = $line;
 		}
 
-		if (!$output) {
+		if (trim(implode('', $output)) === '') {
 			fclose($xmlfile_handle);
 			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
 			$this->set_error(__("FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"));
@@ -919,7 +919,7 @@ class spikekill {
 		$response = trim($result['stdout'] . $result['stderr']);
 
 		if ($response != '') {
-			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . $response . ($this->html ? "</p>\n":"\n");
+			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . ($this->html ? htmlspecialchars($response, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') : $response) . ($this->html ? "</p>\n":"\n");
 		}
 
 		return $result['exit'] === 0;
@@ -1032,7 +1032,7 @@ class spikekill {
 			return false;
 		}
 
-		$canonical_dir = realpath($dir);
+		$canonical_dir = $this->canonicalDir($dir);
 		if ($configured_dir !== null) {
 			$canonical_dir = $this->canonicalDir($configured_dir);
 
@@ -1046,12 +1046,16 @@ class spikekill {
 		if ($resolved_dir === false) {
 			return false;
 		}
+		$identity_dir = $configured_dir ?? $dir;
 		$dir = $resolved_dir;
 		$desired_path = cacti_join_dir_child($dir, $basename, DIRECTORY_SEPARATOR);
 
 		if (is_link($desired_path) || file_exists($desired_path)) {
 			$handle = false;
 		} else {
+			if ($this->canonicalDir($identity_dir) !== $resolved_dir) {
+				return false;
+			}
 			$old_umask = umask(0177);
 			$handle    = @fopen($desired_path, 'xb');
 			umask($old_umask);
@@ -1065,8 +1069,11 @@ class spikekill {
 			   the umask with no separate by-name permission or reopen
 			   step afterward. */
 			for ($i = 0; $i < 10; $i++) {
-				$candidate = cacti_join_dir_child($dir, $basename . '.' . bin2hex(random_bytes(8)), DIRECTORY_SEPARATOR);
+				$candidate = cacti_join_dir_child($dir, $basename . '.' . $this->randomFileSuffix(), DIRECTORY_SEPARATOR);
 
+				if ($this->canonicalDir($identity_dir) !== $resolved_dir) {
+					return false;
+				}
 				$old_umask = umask(0177);
 				$handle    = @fopen($candidate, 'xb');
 				umask($old_umask);
@@ -1080,6 +1087,13 @@ class spikekill {
 			if ($handle === false) {
 				return false;
 			}
+		}
+
+		if ($this->canonicalDir($identity_dir) !== $resolved_dir) {
+			$created_stat = fstat($handle);
+			fclose($handle);
+			$this->unlinkOwnedFile($desired_path, $created_stat);
+			return false;
 		}
 
 		$source_handle = fopen($source, 'rb');
@@ -1129,6 +1143,11 @@ class spikekill {
 		return array('path' => $desired_path, 'stat' => $fstat);
 	}
 
+	/** Generate an unpredictable suffix for an exclusively created file. */
+	protected function randomFileSuffix() {
+		return bin2hex(random_bytes(8));
+	}
+
 	/**
 	 * createXmlFileExclusively - create an empty file with a random name in
 	 * $tempdir, exclusively and under a restrictive umask, for the RRDtool
@@ -1159,10 +1178,10 @@ class spikekill {
 		}
 
 		for ($i = 0; $i < 10; $i++) {
-			$candidate = cacti_join_dir_child($canonical_dir, 'spikekill.' . bin2hex(random_bytes(8)) . '.xml', DIRECTORY_SEPARATOR);
+			$candidate = cacti_join_dir_child($canonical_dir, 'spikekill.' . $this->randomFileSuffix() . '.xml', DIRECTORY_SEPARATOR);
 
 			clearstatcache(true);
-			if (is_link($tempdir) || realpath($tempdir) !== $canonical_dir) {
+			if ($this->canonicalDir($tempdir) !== $canonical_dir) {
 				return false;
 			}
 
@@ -1171,6 +1190,12 @@ class spikekill {
 			umask($old_umask);
 
 			if ($handle !== false) {
+				if ($this->canonicalDir($tempdir) !== $canonical_dir) {
+					$created_stat = fstat($handle);
+					fclose($handle);
+					$this->unlinkOwnedFile($candidate, $created_stat);
+					return false;
+				}
 				return array('path' => $candidate, 'handle' => $handle, 'stat' => fstat($handle));
 			}
 		}
@@ -1364,11 +1389,18 @@ class spikekill {
 	 * @return (string|false)
 	 */
 	private function canonicalDir($configured_dir) {
+		clearstatcache(true);
+		$path = realpath($configured_dir);
+		$stat = $path === false ? false : @stat($path);
+		if ($stat === false || ($stat['mode'] & 0170000) !== 0040000 || is_link($configured_dir)) {
+			return false;
+		}
+		$identity = array('path' => $path, 'dev' => $stat['dev'], 'ino' => $stat['ino']);
 		if (!array_key_exists($configured_dir, $this->canonical_dirs)) {
-			$this->canonical_dirs[$configured_dir] = realpath($configured_dir);
+			$this->canonical_dirs[$configured_dir] = $identity;
 		}
 
-		return $this->canonical_dirs[$configured_dir];
+		return $this->canonical_dirs[$configured_dir] === $identity ? $path : false;
 	}
 
 	/**
@@ -1610,7 +1642,7 @@ class spikekill {
 							/* Empty or sparse RRAs use nonnumeric sentinels. Preserve
 							 * missing statistics instead of rounding or formatting them as zero. */
 							foreach (array('average', 'stddev', 'variance_avg', 'max_value', 'min_value', 'max_cutoff', 'min_cutoff') as $field) {
-								if (!isset($ds[$field]) || !is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
+								if (empty($ds['numsamples']) || !isset($ds[$field]) || !is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
 									$ds[$field] = 'N/A';
 								}
 							}
@@ -1655,7 +1687,7 @@ class spikekill {
 							/* Empty or sparse RRAs use nonnumeric sentinels. Preserve
 							 * missing statistics instead of rounding or formatting them as zero. */
 							foreach (array('average', 'stddev', 'variance_avg', 'max_value', 'min_value', 'max_cutoff', 'min_cutoff') as $field) {
-								if (!isset($ds[$field]) || !is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
+								if (empty($ds['numsamples']) || !isset($ds[$field]) || !is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
 									$ds[$field] = 'N/A';
 								}
 							}

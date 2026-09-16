@@ -40,3 +40,41 @@ test('XML and backup creation bind returned paths to the resolved directory', fu
         foreach (array('/trusted/backup', '/outside/backup', '/trusted', '/outside', '') as $suffix) { rmdir($root . $suffix); }
     }
 })->with(array(array('createXmlFileExclusively', false), array('copyFileSafely', false), array('copyFileSafely', true)));
+
+class SpikeDirectorySwap extends spikekill {
+    public $swapDirectory;
+    protected function randomFileSuffix() {
+        rename($this->swapDirectory, $this->swapDirectory . '.original');
+        mkdir($this->swapDirectory, 0700);
+        return parent::randomFileSuffix();
+    }
+}
+
+test('directory identity rejects replacement before and during exclusive creation', function ($operation, $during) {
+    $root = sys_get_temp_dir() . '/spike-inode-' . bin2hex(random_bytes(6));
+    mkdir($root . '/target', 0700, true);
+    file_put_contents($root . '/source.rrd', 'original bytes');
+    $class = new ReflectionClass($during ? SpikeDirectorySwap::class : spikekill::class);
+    $instance = $class->newInstanceWithoutConstructor();
+    if ($during) { $instance->swapDirectory = $root . '/target'; }
+    $method = new ReflectionMethod(spikekill::class, $operation);
+    $method->setAccessible(true);
+    $canonical = new ReflectionMethod(spikekill::class, 'canonicalDir');
+    $canonical->setAccessible(true);
+    $canonical->invoke($instance, $root . '/target');
+    if ($operation === 'copyFileSafely') { file_put_contents($root . '/target/copy.rrd', 'collision'); }
+    if (!$during) { rename($root . '/target', $root . '/target.original'); mkdir($root . '/target', 0700); }
+    $args = $operation === 'copyFileSafely' ? array($root . '/source.rrd', $root . '/target/copy.rrd', $root . '/target') : array($root . '/target');
+    try {
+        expect($method->invokeArgs($instance, $args))->toBeFalse()
+            ->and(glob($root . '/target/*'))->toBe(array());
+    } finally {
+        foreach (array('/target', '/target.original') as $dir) {
+            if (is_dir($root . $dir)) {
+                foreach (glob($root . $dir . '/*') as $file) { unlink($file); }
+                rmdir($root . $dir);
+            }
+        }
+        unlink($root . '/source.rrd'); rmdir($root);
+    }
+})->with(array(array('createXmlFileExclusively', false), array('copyFileSafely', false), array('createXmlFileExclusively', true), array('copyFileSafely', true)));
