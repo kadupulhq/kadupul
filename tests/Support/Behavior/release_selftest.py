@@ -26,6 +26,15 @@ def recursive_rrd_manifest():
                           for name in ('sample.rrd', 'nested/sample.rrd')}
         (root / 'rra/nested/sample.rrd').write_bytes(b'changed nested RRD')
         assert release.rrd_manifest(runtime) != before
+        (root / 'external.rrd').write_bytes(b'external RRD')
+        (root / 'rra/nested/link.rrd').symlink_to(root / 'external.rrd')
+        try:
+            release.rrd_manifest(runtime)
+        except RuntimeError as error:
+            assert 'symlink target' in str(error)
+        else:
+            raise AssertionError('External RRD symlink accepted')
+        (root / 'rra/nested/link.rrd').unlink()
         (root / 'rra/nested/sample.rrd').unlink()
         (root / 'rra/sample.rrd').unlink()
         try:

@@ -442,7 +442,7 @@ function display_help() {
 
 	print PHP_EOL . 'This utility will fill gaps in graphs based upon a time range.' . PHP_EOL;
 	print 'Gap repairs run serially to preserve exclusive RRD maintenance. The threads option is retained ' . PHP_EOL;
-	print 'selected by the user.' . PHP_EOL . PHP_EOL;
+	print 'for command-line compatibility.' . PHP_EOL . PHP_EOL;
 	print 'usage: batchgapfix.php --start=\'YYYY-MM-DD HH:MM:SS\' --end=\'YYYY-MM-DD HH:MM:SS\' [--threads=N]' . PHP_EOL;
 	print '       [--method=fill|float] [--avgnan=last|avg] [--host-ids=N,N,N,...]' . PHP_EOL;
 	print '       [-f|--force] [-d|--debug]' . PHP_EOL . PHP_EOL;
