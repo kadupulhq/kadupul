@@ -252,6 +252,13 @@ if ($child == 0) {
 
 	print "NOTE: There are $rrdfiles RRDfiles that will be checked for gaps and fixed" . PHP_EOL;
 
+	// All rewrites share one exclusive storage lease; parallel children would
+	// reject one another and mark untouched files as failed.
+	if ($threads > 1) {
+		print 'NOTE: Serializing gap repair to preserve exclusive RRD maintenance.' . PHP_EOL;
+		$threads = 1;
+	}
+
 	$rrds_per_thread = ceil($rrdfiles/$threads);
 
 	// Distributing RRDfiles into tasks
@@ -434,7 +441,7 @@ function display_help() {
 	display_version();
 
 	print PHP_EOL . 'This utility will fill gaps in graphs based upon a time range.' . PHP_EOL;
-	print 'It will perform this process in parallel to increase performance based upon the number of threads ' . PHP_EOL;
+	print 'Gap repairs run serially to preserve exclusive RRD maintenance. The threads option is retained ' . PHP_EOL;
 	print 'selected by the user.' . PHP_EOL . PHP_EOL;
 	print 'usage: batchgapfix.php --start=\'YYYY-MM-DD HH:MM:SS\' --end=\'YYYY-MM-DD HH:MM:SS\' [--threads=N]' . PHP_EOL;
 	print '       [--method=fill|float] [--avgnan=last|avg] [--host-ids=N,N,N,...]' . PHP_EOL;
@@ -443,7 +450,7 @@ function display_help() {
 	print '   --start=\'YYYY-MM-DD HH:MM:SS\' - The start date to check and remove gaps.' . PHP_EOL;
 	print '   --end=\'YYYY-MM-DD HH:MM:SS\'   - The end date to check and remove gaps.' . PHP_EOL . PHP_EOL;
 	print 'Optional:' . PHP_EOL;
-	print '   --threads=N                     - Default is 5.  The number of parallel threads [1..40]' . PHP_EOL;
+	print '   --threads=N                     - Accepted range [1..40]; maintenance currently uses one worker' . PHP_EOL;
 	print '   --method=fill|float             - Default is \'fill\'.  The method to fill gaps.' . PHP_EOL;
 	print '   --avgnan=last|avg               - Default is \'last\'.  The number to use to fill gaps.' . PHP_EOL;
 	print '   --host-ids=N,N,N,...            - A comma delimited list of Kadupul Device ID\'s to process.' . PHP_EOL;

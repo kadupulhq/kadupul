@@ -131,4 +131,58 @@ FIXTURE;
         $GLOBALS['config'] = $savedConfig;
         rrd_cli_fixture_remove($dir);
     }
-})->with(array(array('update_heartbeat.php', false), array('float_rrdfiles.php', false), array('splice_rrd.php', false), array('float_rrdfiles.php', true), array('splice_rrd.php', true)));
+})->with(array(array('update_heartbeat.php', false), array('float_rrdfiles.php', false), array('splice_rrd.php', false), array('float_rrdfiles.php', true), array('splice_rrd.php', true), array('update_heartbeat.php', true)));
+
+
+test('batch gap repair assigns every queued file to one maintenance worker', function ($threads) {
+    $root = dirname(__DIR__, 4);
+    $dir = sys_get_temp_dir() . '/batch-gap-lock-' . bin2hex(random_bytes(8));
+    foreach (array('', '/cli', '/include', '/lib') as $suffix) {
+        mkdir($dir . $suffix, 0700);
+    }
+    try {
+        copy($root . '/cli/batchgapfix.php', $dir . '/cli/batchgapfix.php');
+        file_put_contents($dir . '/lib/poller.php', '<?php');
+        $fixture = <<<'FIXTURE'
+<?php
+$config = array('base_path' => dirname(__DIR__), 'rra_path' => dirname(__DIR__), 'poller_id' => 1);
+function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+function read_config_option($name) { return $name === 'path_php_binary' ? PHP_BINARY : ''; }
+function cacti_escapeshellcmd($value) { return escapeshellcmd($value); }
+function cacti_escapeshellarg($value) { return escapeshellarg($value); }
+function register_process_start(...$args) { return true; }
+function unregister_process(...$args) {}
+function db_table_exists(...$args) { return false; }
+function db_execute(...$args) { return true; }
+function db_affected_rows(...$args) { return 12; }
+function db_fetch_cell(...$args) { return 12; }
+function db_fetch_cell_prepared(...$args) { return 0; }
+function db_execute_prepared($sql, $params) {
+    if (strpos($sql, 'SET child = ?') !== false) {
+        file_put_contents(dirname(__DIR__) . '/assignments', json_encode(array($sql, $params)) . "\n", FILE_APPEND);
+    }
+    return true;
+}
+function exec_background($binary, $args) { file_put_contents(dirname(__DIR__) . '/launches', json_encode(array($binary, $args)) . "\n", FILE_APPEND); }
+function cacti_log($message, ...$args) { file_put_contents(dirname(__DIR__) . '/stats', $message); }
+FIXTURE;
+        file_put_contents($dir . '/include/cli_check.php', $fixture);
+        $process = proc_open(array(PHP_BINARY, $dir . '/cli/batchgapfix.php', '--start=2026-01-01', '--end=2026-01-02', '--threads=' . $threads), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        expect(proc_close($process))->toBe(0)->and($stderr)->toBe('');
+        $assignments = file($dir . '/assignments', FILE_IGNORE_NEW_LINES);
+        $launches = file($dir . '/launches', FILE_IGNORE_NEW_LINES);
+        expect($assignments)->toHaveCount(1)->and($launches)->toHaveCount(1);
+        $assignment = json_decode($assignments[0], true);
+        expect($assignment[0])->toContain('LIMIT 12')->and($assignment[1])->toBe(array(1))
+            ->and(file_get_contents($dir . '/stats'))->toContain('Threads:1');
+        if ($threads > 1) {
+            expect($stdout)->toContain('Serializing gap repair');
+        }
+    } finally {
+        rrd_cli_fixture_remove($dir);
+    }
+})->with(array(1, 5, 40));

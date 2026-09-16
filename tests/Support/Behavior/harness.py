@@ -158,6 +158,12 @@ class Harness:
         return self.compose('exec', '-T', '-u', 'www-data', 'web', *args, check=check)
 
     def php(self, *args):
+        if args and args[0] == 'poller.php':
+            result = self.command('php', '-d', 'auto_prepend_file=', '/harness/wait-php.php', '-d',
+                                  'auto_prepend_file=/harness/errors.php', *args)
+            if result['exit'] == 70:
+                raise RuntimeError('Poller observation boundary failed: ' + result['stderr'])
+            return result
         return self.command('php', '-d', 'auto_prepend_file=/harness/errors.php', *args)
 
     def sql(self, sql):
