@@ -97,10 +97,24 @@ function rrd_maintenance_release($handle)
     }
 }
 
-/** Retain both resources until the child has consumed its queued writes. */
-function rrd_maintenance_pipe($pipe, $lock = null, $release = false)
+/** One registry owns child pipes, their leases, and their rewrite mode. */
+function &rrd_maintenance_pipes()
 {
     static $pipes = array();
+    return $pipes;
+}
+
+function rrd_maintenance_pipe_is_exclusive($pipe)
+{
+    $pipes = &rrd_maintenance_pipes();
+    $key = (int) $pipe;
+    return isset($pipes[$key]) && $pipes[$key][0] === $pipe && !empty($pipes[$key][2]);
+}
+
+/** Retain both resources until the child has consumed its queued writes. */
+function rrd_maintenance_pipe($pipe, $lock = null, $release = false, $exclusive = false)
+{
+    $pipes = &rrd_maintenance_pipes();
     static $registered = false;
 
     if (!$registered) {
@@ -123,7 +137,7 @@ function rrd_maintenance_pipe($pipe, $lock = null, $release = false)
             unset($pipes[$key]);
         }
     } elseif ($lock !== null && $lock !== false) {
-        $pipes[$key] = array($pipe, $lock);
+        $pipes[$key] = array($pipe, $lock, $exclusive);
     }
 
     return isset($pipes[$key]) && $pipes[$key][0] === $pipe && is_resource($pipe);

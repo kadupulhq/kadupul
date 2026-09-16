@@ -221,7 +221,11 @@ if ($child == false) {
 					foreach($tables as $table) {
 						cacti_log('INFO: Boost removing archive table: ' . $table['name'], true, 'BOOST');
 
-						db_execute('DROP TABLE IF EXISTS ' . $table['name']);
+						if (boost_archive_is_empty($table['name'])) {
+							db_execute('DROP TABLE IF EXISTS `' . $table['name'] . '`');
+						} else {
+							cacti_log('WARNING: Retaining a nonempty or unverifiable Boost archive.', true, 'BOOST');
+						}
 					}
 				}
 
@@ -273,7 +277,7 @@ if ($child == false) {
 
 	unregister_process('boost', 'child', $child);
 
-	exit(0);
+	exit($rrd_updates < 0 ? 1 : 0);
 }
 
 function sig_handler($signo) {
@@ -588,6 +592,11 @@ function boost_output_rrd_data($child) {
 
 	$rrd_updates       = 0;
 	$rrdtool_pipe      = rrd_init();
+	if ($rrdtool_pipe === false) {
+		cacti_log('ERROR: RRD initialization failed; pending Boost samples were retained.', true, 'BOOST');
+		return -1;
+	}
+
 	$runtime_exceeded  = false;
 
 	/* let's set and track memory usage will we */

@@ -91,6 +91,24 @@ def assert_poll(h, label):
     return {'command': result, 'rrd_calls': calls, 'plugin_events': events}
 
 
+def assert_failed_writer_retains_queue(h):
+    row = h.sql("SELECT local_data_id,rrd_name FROM poller_item WHERE rrd_name != '' ORDER BY local_data_id LIMIT 1").strip().split('\t')
+    require(len(row) == 2 and row[0].isdigit() and row[1].replace('_', '').isalnum(), 'No safe queue fixture key')
+    predicate = "local_data_id=" + row[0] + " AND rrd_name='" + row[1] + "' AND time='2001-01-01 00:00:00'"
+    h.sql("INSERT INTO poller_output(local_data_id,rrd_name,time,output) VALUES (" + row[0] + ",'" + row[1] + "','2001-01-01 00:00:00','8675309')")
+    h.sql("REPLACE INTO settings(name,value) VALUES ('poller_refresh_output_table','on')")
+    before = rrd_manifest(h)
+    checked(h.php('-r', 'if (!chmod("rra",0777)) {exit(1);}'), 'Unsafe storage fixture')
+    try:
+        result = h.php('poller.php', '--force')
+        require(result['exit'] == 1, 'Unavailable writer did not fail the poller run')
+        require(h.sql("SELECT output FROM poller_output WHERE " + predicate).strip() == '8675309', 'Unavailable writer consumed pending samples')
+        require(rrd_manifest(h) == before, 'Unavailable writer changed RRD samples')
+        return {'exit': result['exit'], 'queue_retained': True, 'rrd_unchanged': True}
+    finally:
+        checked(h.php('-r', 'if (!chmod("rra",0755)) {exit(1);}'), 'Restore storage permissions')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--baseline', default='6482af547c204199e829b7a0df0b7a13db3e0a58')
@@ -175,6 +193,7 @@ def main():
             poll = assert_poll(h, 'Candidate poller')
             evidence['steps']['upgrade'] = {'command': upgrade, 'repeat': repeat, 'after_web_cleanup': after_cleanup, 'graph': graph, 'plugin': plugin,
                                             'poller': poll, 'rrd_preserved_before_poll': True}
+            evidence['steps']['unavailable_writer'] = assert_failed_writer_retains_queue(h)
             # Restore the old code AND its matching DB/RRD snapshot. A code-only
             # downgrade is not an acceptable rollback of a schema upgrade.
             h.compose('stop', 'web')
@@ -186,6 +205,7 @@ def main():
             h.compose('exec', '-T', 'web', 'chown', '-R', 'www-data:www-data', '/var/www/html/rra')
             require(rrd_manifest(h) == before_rrd and domain_state(h) == before_domain, 'Rollback did not restore snapshot')
             require(h.sql('SELECT cacti FROM version').strip() == evidence['steps']['baseline']['version'], 'Rollback version mismatch')
+            require(h.sql("SELECT value FROM settings WHERE name='graph_watermark'").strip() == 'Operations custom watermark', 'Rollback lost custom watermark')
             authenticate(h)
             evidence['steps']['rollback'] = {'graph': assert_graph(h), 'plugin': assert_plugin(h),
                                              'poller': assert_poll(h, 'Rollback poller'),

@@ -42,7 +42,7 @@ refuses a configured `RRDCACHED_ADDRESS`. Use local POSIX storage with working
 cross-process directory `flock`; unsupported locking fails closed. No lock file is
 created or removed, so a user cannot split the lock by unlinking a sidecar file.
 
-The heartbeat CLI holds a shared writer lease. Splicing and floating take an
+Heartbeat tuning holds an exclusive lease and waits for active writers. XML rewrite utilities hold an exclusive lease from before their dump through child completion and refuse contention or a configured cache daemon. Splicing and floating take an
 exclusive lease before reading and rewriting their RRDs; floating first flushes
 through the regular backend, then waits for its rewrite lease. Float workers
 therefore serialize the rewrite phase rather than racing each other or polling.
@@ -52,3 +52,7 @@ Private replacement pipes opened during crash recovery are drained and closed
 before returning; later calls with the closed original pipe use synchronous I/O.
 
 Batch gap repair uses one worker even when multiple threads are requested, so its own children cannot reject one another under the global exclusive maintenance lease. A repair refuses an already-active polling writer and requires a retry; normal polling writers wait behind active exclusive maintenance. An unavailable or replaced storage directory fails closed. Heartbeat tuning also requires the external cache daemon to be disabled.
+
+Float children handle SIGTERM and SIGINT while waiting for a lease, unregister their own task identity, and leave queued samples intact. Failed writer initialization prevents normal and on-demand Boost queue consumption; main Boost cleanup retains nonempty or unverifiable archive tables.
+
+An exclusive rewrite aborts after a broken pipe; it cannot release its lease and retry a now-stale dump snapshot. Ordinary writer recovery remains available.
