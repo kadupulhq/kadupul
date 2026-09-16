@@ -653,6 +653,7 @@ function float_master_handler($forcerun, $resume, $host_id, $host_template_id, $
 	}
 
 	$starting = true;
+	$reaped   = 0;
 
 	while (true) {
 		if ($starting) {
@@ -665,6 +666,11 @@ function float_master_handler($forcerun, $resume, $host_id, $host_template_id, $
 		$rrds = db_fetch_cell('SELECT COUNT(*) FROM poller_float_rrdfiles_not_done');
 
 		if ($running > 0) {
+			/* A child killed outright never reaches sig_handler(), so its row
+			 * has to be cleared here or this loop waits on a count that can
+			 * never reach zero. */
+			$reaped += float_reap_dead_children();
+
 			float_debug(sprintf('%s Processes Running, %s RRDfiles Remaining, Sleeping for 2 seconds.', $running, $rrds));
 			sleep(2);
 		} else {
@@ -672,7 +678,9 @@ function float_master_handler($forcerun, $resume, $host_id, $host_template_id, $
 		}
 	}
 
-	if (!is_numeric($rrds) || (int) $rrds !== 0) {
+	/* A reaped child did not finish its own work, so the run fails even in the
+	 * case where its queue rows happen to have been deleted already. */
+	if ($reaped > 0 || !is_numeric($rrds) || (int) $rrds !== 0) {
 		cacti_log('ERROR: RRD floating left unprocessed files; use --resume after correcting the failure.', true, 'RFLOAT');
 		return false;
 	}
@@ -739,6 +747,37 @@ function float_processes_running() {
 	}
 
 	return $running;
+}
+
+/**
+ * float_reap_dead_children - removes the process table rows of any child that
+ *   exited without unregistering itself, so the rmaster's wait loop stops
+ *   counting a worker that is already gone
+ *
+ * @return - (int) The number of children that were reaped
+ */
+function float_reap_dead_children() {
+	$reaped = 0;
+
+	$children = db_fetch_assoc_prepared('SELECT *
+		FROM processes
+		WHERE tasktype = ?
+		AND taskname = ?',
+		array('rfloat', 'child'));
+
+	foreach($children as $c) {
+		if (cacti_process_still_running($c['pid'])) {
+			continue;
+		}
+
+		cacti_log(sprintf('WARNING: Float Data Process Number %s with PID %s exited without unregistering itself.  Its unprocessed RRDfiles remain queued for --resume.', $c['taskid'], cacti_process_pid_for_log($c['pid'])), false, 'RFLOAT');
+
+		unregister_process($c['tasktype'], $c['taskname'], $c['taskid'], $c['pid']);
+
+		$reaped++;
+	}
+
+	return $reaped;
 }
 
 /**
