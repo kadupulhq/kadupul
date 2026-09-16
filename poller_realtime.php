@@ -326,6 +326,7 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 		/* make sure each .rrd file has complete data */
 		foreach ($results as $item) {
 			$path = read_config_option('realtime_cache_path') . '/user_' . $poller_id . '_' . $item['local_data_id'] . '.rrd';
+			// Present false means permanently rejected and logged; absent means retry.
 			if (!isset($completed[$path][strtotime($item['time'])])) { continue; }
 			if (db_execute_prepared('DELETE FROM poller_output_realtime
 				WHERE local_data_id = ?

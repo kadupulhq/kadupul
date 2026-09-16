@@ -23,7 +23,7 @@ function db_fetch_assoc($sql)
             $GLOBALS['diagnostic_orphan_remaining'] -= $count;
             $orphans = array();
             for ($id = 1; $id <= $count; $id++) {
-                $orphans[] = array('local_data_id' => $id + 100000 + $GLOBALS['diagnostic_orphan_remaining'], 'rrd_name' => 'value', 'time' => '2026-09-15 00:00:00');
+                $orphans[] = array('local_data_id' => $id + 100000 + $GLOBALS['diagnostic_orphan_remaining'], 'rrd_name' => 'value', 'time' => '2026-09-15 00:00:00', 'output' => '10');
             }
             return $orphans;
         }
@@ -150,6 +150,7 @@ function dsstats_poller_output($rows) {}
 function dsdebug_poller_output($rows) {}
 function api_plugin_hook_function($name, $rows) {}
 function db_fetch_cell($sql) {
+    if (!empty($GLOBALS['diagnostic_count_fail']) && str_contains($sql, 'FROM poller_time')) {return false;}
     if (!empty($GLOBALS['writer_failed'])) { return 0; }
     if (!empty($GLOBALS['diagnostic_probe'])) { return str_contains($sql, 'FROM poller_time') ? 0 : 1; }
     throw new \RuntimeException('Cleanup failure must stop further drain queries');
@@ -185,7 +186,8 @@ test('write or cleanup failure defers remaining samples without premature deleti
 })->with(array(false, true));
 
 
-test('post-drain diagnostics preserve partial arrivals and fail closed on unreadable orphans', function ($lookup_fails, $orphan_count) {
+test('post-drain diagnostics preserve partial arrivals and fail closed on unreadable orphans', function ($lookup_fails, $orphan_count, $count_fails = false) {
+    $GLOBALS['diagnostic_count_fail'] = $count_fails;
     $saved = $GLOBALS['config'] ?? null;
     $root = sys_get_temp_dir() . '/diagnostic-retry-' . bin2hex(random_bytes(6));
     mkdir($root, 0700);
@@ -207,20 +209,20 @@ test('post-drain diagnostics preserve partial arrivals and fail closed on unread
     try {
         $pipe = null;
         expect(process_poller_output($pipe, false, $deferred, $consumed))->toBe(1)
-            ->and($deferred)->toBe($lookup_fails)
-            ->and($consumed)->toBe(1 + ($lookup_fails ? 0 : $orphan_count))
-            ->and($GLOBALS['diagnostic_probe_ran'])->toBe(!$lookup_fails)
-            ->and($GLOBALS['diagnostic_orphan_queries'])->toBe($lookup_fails ? 1 : 2)
+            ->and($deferred)->toBe($lookup_fails || $count_fails)
+            ->and($consumed)->toBe(1 + (($lookup_fails || $count_fails) ? 0 : $orphan_count))
+            ->and($GLOBALS['diagnostic_probe_ran'])->toBe(!$lookup_fails && !$count_fails)
+            ->and($GLOBALS['diagnostic_orphan_queries'])->toBe($count_fails ? 0 : ($lookup_fails ? 1 : 2))
             ->and($GLOBALS['diagnostic_orphan_remaining'])->toBe(0);
         // db_execute() throws if either old broad diagnostic DELETE is reached.
     } finally {
         unset($GLOBALS['cleanup_retry_rows'], $GLOBALS['cleanup_retry_keys'], $GLOBALS['cleanup_retry_updates'],
-            $GLOBALS['diagnostic_probe'], $GLOBALS['diagnostic_probe_reads'], $GLOBALS['diagnostic_probe_ran'], $GLOBALS['diagnostic_orphan_fail'], $GLOBALS['diagnostic_orphan_remaining'], $GLOBALS['diagnostic_orphan_queries']);
+            $GLOBALS['diagnostic_count_fail'], $GLOBALS['diagnostic_probe'], $GLOBALS['diagnostic_probe_reads'], $GLOBALS['diagnostic_probe_ran'], $GLOBALS['diagnostic_orphan_fail'], $GLOBALS['diagnostic_orphan_remaining'], $GLOBALS['diagnostic_orphan_queries']);
         $GLOBALS['config'] = $saved;
         unlink($root . '/rrd.php');
         rmdir($root);
     }
-})->with(array(array(true, 0), array(false, 40003)));
+})->with(array(array(true, 0), array(false, 40003), array(false, 0, true)));
 
 
 test('an orphan-only queue is drained or explicitly deferred on lookup failure', function ($lookup_fails) {
@@ -285,7 +287,7 @@ test('an incomplete-only batch still diagnoses and cleans orphans without recurs
             ->and($GLOBALS['diagnostic_probe_reads'])->toBe(2);
     } finally {
         unset($GLOBALS['cleanup_retry_rows'], $GLOBALS['cleanup_retry_keys'], $GLOBALS['cleanup_retry_updates'],
-            $GLOBALS['diagnostic_probe'], $GLOBALS['diagnostic_probe_reads'], $GLOBALS['diagnostic_probe_ran'],
+            $GLOBALS['diagnostic_count_fail'], $GLOBALS['diagnostic_probe'], $GLOBALS['diagnostic_probe_reads'], $GLOBALS['diagnostic_probe_ran'],
             $GLOBALS['diagnostic_orphan_fail'], $GLOBALS['diagnostic_orphan_remaining'], $GLOBALS['diagnostic_orphan_queries']);
         $GLOBALS['config'] = $saved;
         unlink($root . '/rrd.php');

@@ -19,12 +19,13 @@ function db_fetch_assoc_prepared($sql, $parameters = array()) {
     $statement = $GLOBALS['retention_db']->prepare($sql);
     $statement->execute($parameters);
     $rows = $statement->fetchAll(\PDO::FETCH_ASSOC);
-    if (strpos($sql, 'AS incomplete') !== false && $GLOBALS['retention_arrival']) {
+    if ((strpos($sql, 'AS incomplete') !== false || strpos($sql, 'dl.id IS NULL') !== false) && $GLOBALS['retention_arrival']) {
         $GLOBALS['retention_db']->exec($GLOBALS['retention_arrival']);
         $GLOBALS['retention_arrival'] = '';
     }
     return $rows;
 }
+function db_fetch_cell($sql) { return $GLOBALS['retention_running']; }
 function db_fetch_assoc($sql) { return db_fetch_assoc_prepared($sql); }
 function db_execute_prepared($sql, $parameters) {
     if ($GLOBALS['retention_fail'] === 'delete') { return false; }
@@ -41,6 +42,7 @@ beforeEach(function () {
     $GLOBALS['retention_db']->exec('CREATE TABLE poller_output(local_data_id INTEGER, rrd_name TEXT, time TEXT, output TEXT)');
     $GLOBALS['retention_db']->exec('CREATE TABLE poller_item(local_data_id INTEGER, rrd_name TEXT, rrd_num INTEGER, rrd_path TEXT)');
     $GLOBALS['retention_db']->exec('CREATE TABLE data_local(id INTEGER, data_template_id INTEGER)');
+    $GLOBALS['retention_running'] = 0;
     $GLOBALS['retention_fail'] = ''; $GLOBALS['retention_arrival'] = ''; $GLOBALS['retention_logs'] = array();
 });
 
@@ -80,3 +82,28 @@ test('the production processor expires old incomplete rows only after a writer i
 afterEach(function () {
     if (isset($this->dependency_dir)) { unlink($this->dependency_dir . '/rrd.php'); rmdir($this->dependency_dir); }
 });
+
+test('cleanup preserves a selected key replaced before deletion', function ($orphan) {
+    $db = $GLOBALS['retention_db'];
+    $db->exec("INSERT INTO poller_output VALUES(1,'a','2001-01-01','original')");
+    if (!$orphan) { $db->exec("INSERT INTO poller_item VALUES(1,'a',2,'')"); }
+    $GLOBALS['retention_arrival'] = "UPDATE poller_output SET output='replacement'";
+    $deleted = $orphan ? poller_cleanup_orphan_rows($failed) : poller_expire_incomplete_rows('2020-01-01', $failed);
+    expect($deleted)->toBe(0)->and($failed)->toBeTrue()
+        ->and($db->query('SELECT output FROM poller_output')->fetchColumn())->toBe('replacement');
+})->with(array(true, false));
+
+test('empty-result cleanup waits for a verified idle poller', function ($running) {
+    if (!defined('SQL_NO_CACHE')) { define('SQL_NO_CACHE', ''); }
+    if (!defined('POLLER_VERBOSITY_HIGH')) { define('POLLER_VERBOSITY_HIGH', 4); }
+    $this->dependency_dir = sys_get_temp_dir() . '/poller-retention-' . bin2hex(random_bytes(8));
+    mkdir($this->dependency_dir);
+    file_put_contents($this->dependency_dir . '/rrd.php', '<?php');
+    $GLOBALS['config'] = array('library_path' => $this->dependency_dir);
+    $GLOBALS['retention_running'] = $running;
+    $GLOBALS['retention_db']->exec("INSERT INTO poller_output VALUES(1,'a','2001-01-01','saved')");
+    $pipe = true;
+    expect(process_poller_output($pipe, 0, $deferred, $consumed))->toBe(0)
+        ->and($deferred)->toBe($running === false)->and($consumed)->toBe(0)
+        ->and($GLOBALS['retention_db']->query('SELECT output FROM poller_output')->fetchColumn())->toBe('saved');
+})->with(array(false, 1));

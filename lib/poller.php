@@ -646,16 +646,16 @@ function poller_delete_output_rows($keys, &$failed = null) {
 
 	$consumed = 0;
 	foreach (array_chunk($keys, 10000) as $chunk) {
-		$with_output = count($chunk[0]) === 4;
 		$params = array();
 		foreach ($chunk as $key) {
+			if (count($key) !== 4) { $failed = true; return $consumed; }
 			$params[] = (int) $key[0];
 			$params[] = (string) $key[1];
 			$params[] = (string) $key[2];
-			if ($with_output) { $params[] = (string) $key[3]; }
+			$params[] = (string) $key[3];
 		}
-		$placeholders = implode(',', array_fill(0, cacti_sizeof($chunk), $with_output ? '(?,?,?,?)' : '(?,?,?)'));
-		if (db_execute_prepared("DELETE FROM poller_output WHERE (local_data_id, rrd_name, time" . ($with_output ? ", output" : "") . ") IN ($placeholders)", $params) === false) {
+		$placeholders = implode(',', array_fill(0, cacti_sizeof($chunk), '(?,?,?,?)'));
+		if (db_execute_prepared("DELETE FROM poller_output WHERE (local_data_id, rrd_name, time, output) IN ($placeholders)", $params) === false) {
 			$failed = true;
 			break;
 		}
@@ -670,7 +670,7 @@ function poller_cleanup_orphan_rows(&$failed = null) {
 	$failed = false;
 	$consumed = 0;
 	do {
-		$orphans = db_fetch_assoc('SELECT po.local_data_id, po.rrd_name, po.time
+		$orphans = db_fetch_assoc('SELECT po.local_data_id, po.rrd_name, po.time, po.output
 			FROM poller_output AS po
 			LEFT JOIN data_local AS dl ON dl.id = po.local_data_id
 			WHERE dl.id IS NULL LIMIT 40000');
@@ -681,7 +681,7 @@ function poller_cleanup_orphan_rows(&$failed = null) {
 		}
 		$orphan_keys = array();
 		foreach ($orphans as $orphan) {
-			$orphan_keys[] = array($orphan['local_data_id'], $orphan['rrd_name'], $orphan['time']);
+			$orphan_keys[] = array($orphan['local_data_id'], $orphan['rrd_name'], $orphan['time'], $orphan['output']);
 		}
 		$orphan_consumed = poller_delete_output_rows($orphan_keys, $orphan_failed);
 		$consumed += $orphan_consumed;
@@ -699,7 +699,7 @@ function poller_expire_incomplete_rows($before, &$failed = null) {
 	$failed = false;
 	$expired = 0;
 	do {
-		$rows = db_fetch_assoc_prepared('SELECT po.local_data_id, po.rrd_name, po.time
+		$rows = db_fetch_assoc_prepared('SELECT po.local_data_id, po.rrd_name, po.time, po.output
 			FROM poller_output AS po
 			INNER JOIN (
 				SELECT old.local_data_id, old.time
@@ -716,7 +716,7 @@ function poller_expire_incomplete_rows($before, &$failed = null) {
 		}
 		$keys = array();
 		foreach ($rows as $row) {
-			$keys[] = array($row['local_data_id'], $row['rrd_name'], $row['time']);
+			$keys[] = array($row['local_data_id'], $row['rrd_name'], $row['time'], $row['output']);
 		}
 		$deleted = poller_delete_output_rows($keys, $failed);
 		$expired += $deleted;
@@ -1054,6 +1054,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 			$write_failed = $rrds_processed === false;
 			$rrds_processed = array_sum(array_map(function ($samples) { return count(array_filter($samples)); }, $completed));
 			$output_keys = array();
+			// Present false means permanently rejected and logged; absent means retry.
 			foreach ($results as $item) {
 				if (isset($completed[$item['rrd_path']][$item['unix_time']])) {
 					$output_keys[] = array($item['local_data_id'], $item['rrd_name'], $item['time'], $item['output']);
@@ -1093,7 +1094,8 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 				}
 			}
 
-			if ($running == 0) {
+			if (!is_numeric($running)) { $deferred = true; return $rrds_processed; }
+			if ((int) $running === 0) {
 				/* Purge only the exact orphan keys observed here, so arrivals for
 				 * a concurrently recreated data source cannot be swept away. */
 				$consumed += poller_cleanup_orphan_rows($deferred);
@@ -1141,6 +1143,9 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 			}
 		}
 	} elseif ($results === array()) {
+		$running = db_fetch_cell('SELECT COUNT(*) FROM poller_time WHERE end_time = "0000-00-00"');
+		if (!is_numeric($running)) { $deferred = true; return $rrds_processed; }
+		if ((int) $running > 0) { return $rrds_processed; }
 		$consumed += poller_cleanup_orphan_rows($deferred);
 		if (!$deferred) {
 			$retention = max(600, 2 * (int) read_config_option('poller_interval'));
