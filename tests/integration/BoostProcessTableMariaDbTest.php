@@ -301,7 +301,7 @@ test('poller deletes only its selected sample keys when newer rows arrive before
 	try {
 		$insert = $db->prepare('INSERT INTO poller_output VALUES (?,?,?,?)');
 		$insert->execute(array(7, 'traffic_in', '2026-09-15 00:00:00', '10'));
-		$selected = $db->query('SELECT local_data_id,rrd_name,time FROM poller_output')->fetchAll(PDO::FETCH_NUM);
+		$selected = $db->query('SELECT local_data_id,rrd_name,time,output FROM poller_output')->fetchAll(PDO::FETCH_NUM);
 		// Deterministic interleaving: these rows arrive after the drain's SELECT.
 		$insert->execute(array(7, 'traffic_in', '2026-09-15 00:01:00', '11'));
 		$insert->execute(array(7, 'traffic_out', '2026-09-15 00:00:00', '12'));
@@ -310,6 +310,12 @@ test('poller deletes only its selected sample keys when newer rows arrive before
 			->and(boostMariaDbDeleteOutputRows($selected))->toBe(0)
 			->and(boostMariaDbDeleteOutputRows(array()))->toBe(0);
 		expect($db->query('SELECT output FROM poller_output ORDER BY output')->fetchAll(PDO::FETCH_COLUMN))->toBe(array('11', '12'));
+        $insert->execute(array(7, 'traffic_in', '2026-09-15 00:00:00', '99'));
+        expect(boostMariaDbDeleteOutputRows($selected))->toBe(0)
+            ->and($db->query("SELECT output FROM poller_output WHERE output='99'")->fetchColumn())->toBe('99');
+        expect(boostMariaDbDeleteOutputRows(array(array(7, 'traffic_in', '2026-09-15 00:00:00')), $failed))->toBe(0)
+            ->and($failed)->toBeTrue();
+
 	} finally {
 		$db->exec('DROP TEMPORARY TABLE poller_output');
 	}
@@ -327,13 +333,13 @@ function boostMariaDbLoadDeleteRows($root) {
 test('poller reports failed source deletion even after earlier chunks made progress', function ($fail_at) use ($root) {
 	boostMariaDbLoadDeleteRows($root);
 	$db = $GLOBALS['boost_mariadb_pdo'];
-	$db->exec('CREATE TEMPORARY TABLE poller_output (local_data_id INT, rrd_name VARCHAR(19), time TIMESTAMP, PRIMARY KEY(local_data_id,rrd_name,time)) ENGINE=MEMORY');
+	$db->exec('CREATE TEMPORARY TABLE poller_output (local_data_id INT, rrd_name VARCHAR(19), time TIMESTAMP, output VARCHAR(32), PRIMARY KEY(local_data_id,rrd_name,time)) ENGINE=MEMORY');
 	try {
 		$values = array();
 		$keys = array();
 		for ($id = 1; $id <= 10001; $id++) {
-			$values[] = "($id,'value','2026-09-15 00:00:00')";
-			$keys[] = array($id, 'value', '2026-09-15 00:00:00');
+			$values[] = "($id,'value','2026-09-15 00:00:00','10')";
+			$keys[] = array($id, 'value', '2026-09-15 00:00:00', '10');
 		}
 		$db->exec('INSERT INTO poller_output VALUES ' . implode(',', $values));
 		$GLOBALS['boost_delete_fail_at'] = $fail_at;
