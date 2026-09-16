@@ -97,6 +97,12 @@ def assert_failed_writer_retains_queue(h):
     predicate = "local_data_id=" + row[0] + " AND rrd_name='" + row[1] + "' AND time='2001-01-01 00:00:00'"
     h.sql("INSERT INTO poller_output(local_data_id,rrd_name,time,output) VALUES (" + row[0] + ",'" + row[1] + "','2001-01-01 00:00:00','8675309')")
     h.sql("REPLACE INTO settings(name,value) VALUES ('poller_refresh_output_table','on')")
+    # Hostless data sources are valid. Deleted-host and deleted-source rows are not.
+    fixture_ids = '16000000,16000001,16000002'
+    require(h.sql("SELECT COUNT(*) FROM data_local WHERE id IN (" + fixture_ids + ")").strip() == '0', 'Queue fixture IDs already exist')
+    require(h.sql("SELECT COUNT(*) FROM host WHERE id=16000001").strip() == '0', 'Deleted-device fixture already exists')
+    h.sql("INSERT INTO data_local(id,host_id,data_template_id) VALUES (16000000,0,0),(16000001,16000001,0)")
+    h.sql("INSERT INTO poller_output(local_data_id,rrd_name,time,output) VALUES (16000000,'fixture','2001-01-01','1'),(16000001,'fixture','2001-01-01','2'),(16000002,'fixture','2001-01-01','3')")
     before = rrd_manifest(h)
     checked(h.php('-r', 'if (!chmod("rra",0777)) {exit(1);}'), 'Unsafe storage fixture')
     try:
@@ -104,9 +110,12 @@ def assert_failed_writer_retains_queue(h):
         require(result['exit'] == 1, 'Unavailable writer did not fail the poller run')
         require(h.sql("SELECT output FROM poller_output WHERE " + predicate).strip() == '8675309', 'Unavailable writer consumed pending samples')
         require(rrd_manifest(h) == before, 'Unavailable writer changed RRD samples')
+        require(h.sql("SELECT local_data_id FROM poller_output WHERE local_data_id IN (" + fixture_ids + ") ORDER BY local_data_id").strip() == '16000000', 'Orphan cleanup removed a hostless source or retained a deleted device/source')
         return {'exit': result['exit'], 'queue_retained': True, 'rrd_unchanged': True}
     finally:
         checked(h.php('-r', 'if (!chmod("rra",0755)) {exit(1);}'), 'Restore storage permissions')
+        h.sql("DELETE FROM poller_output WHERE local_data_id IN (" + fixture_ids + ")")
+        h.sql("DELETE FROM data_local WHERE id IN (" + fixture_ids + ")")
 
 
 def main():

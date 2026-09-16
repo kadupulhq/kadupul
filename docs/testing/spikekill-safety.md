@@ -27,7 +27,8 @@ through backup and atomic replacement. An active writer causes a safe refusal;
 retry after polling finishes. A new writer waits until maintenance completes.
 Before opening a lease, all local writers validate the configured directory,
 its symlink entries, its canonical target, and their ancestors against the same
-ownership and permission policy used for backups. PHP's POSIX extension is
+ownership and permission policy, with explicitly configured service-account
+trust for split web/poller deployments (see below). PHP's POSIX extension is
 required on Unix; unsafe or unverifiable storage fails closed. Root and the
 service account are trusted: this does not protect against either changing
 permissions or replacing directories during an operation. They must stop all
@@ -56,3 +57,17 @@ Batch gap repair uses one worker even when multiple threads are requested, so it
 Float children handle SIGTERM and SIGINT while waiting for a lease, unregister their own task identity, and leave queued samples intact. Failed writer initialization prevents normal and on-demand Boost queue consumption; main Boost cleanup retains nonempty or unverifiable archive tables.
 
 An exclusive rewrite aborts after a broken pipe; it cannot release its lease and retry a now-stale dump snapshot. Ordinary writer recovery remains available.
+
+### Separate web and poller accounts
+
+When the web server and poller run as different Unix users, configure
+`$config['rrd_maintenance_trusted_uids']` in `include/config.php` with the numeric
+UIDs of both service accounts (including any account owning a storage ancestor).
+Use identical configuration for every process sharing the store. If the storage
+is group-writable, also explicitly list its numeric GID in
+`$config['rrd_maintenance_trusted_gids']`; every member of that group must be trusted
+to administer the storage. Normal filesystem access permissions still apply.
+Do not infer trust from the directory's current owner or from group membership.
+World-writable storage remains rejected, as do unlisted owners and writable
+ancestor groups. Stop all participating processes before changing storage paths.
+The stricter spike backup filesystem checks remain in effect independently.

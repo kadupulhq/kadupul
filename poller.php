@@ -599,7 +599,7 @@ while ($poller_runs_completed < $poller_runs) {
 			LEFT JOIN host AS h
 			ON dl.host_id = h.id
 			WHERE (h.poller_id = ? OR h.id IS NULL)
-			AND dl.id IS NULL',
+			AND (dl.id IS NULL OR (dl.host_id > 0 AND h.id IS NULL))',
 			array($poller_id));
 	}
 
