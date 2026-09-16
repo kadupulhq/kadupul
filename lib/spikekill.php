@@ -475,11 +475,33 @@ class spikekill {
 			|| $dump_stat['ino'] !== $this->rrdfile_stat['ino']) {
 			fclose($xmlfile_handle);
 			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
-			$this->set_error(__('FATAL: RRD source identity changed or the source is not a regular file.'));
+			$this->set_error(__('FATAL: RRD source identity changed or could not be verified safely.'));
 			return false;
 		}
 
-		if (!$this->runRRDDump($this->rrdfile, $xmlfile_handle)) {
+		// Hold the source inode until the child finishes, then reject any
+		// pathname replacement before even a dry run parses its dump.
+		$source_handle = @fopen($this->rrdfile, 'rb');
+		$source_stat = $source_handle === false ? false : fstat($source_handle);
+		$source_valid = $source_stat !== false && $source_stat['dev'] === $dump_stat['dev']
+			&& $source_stat['ino'] === $dump_stat['ino']
+			&& $this->canonicalDir(dirname($this->rrdfile)) !== false;
+		$dump_ok = $source_valid && $this->runRRDDump($this->rrdfile, $xmlfile_handle);
+		clearstatcache(true);
+		$after_dump = @lstat($this->rrdfile);
+		$source_valid = $source_valid && $after_dump !== false
+			&& ($after_dump['mode'] & 0170000) === 0100000
+			&& $after_dump['dev'] === $dump_stat['dev'] && $after_dump['ino'] === $dump_stat['ino']
+			&& $this->canonicalDir(dirname($this->rrdfile)) !== false;
+		if (is_resource($source_handle)) { fclose($source_handle); }
+		if (!$source_valid) {
+			fclose($xmlfile_handle);
+			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
+			$this->set_error(__('FATAL: RRD source identity changed or could not be verified safely.'));
+			return false;
+		}
+
+		if (!$dump_ok) {
 			fclose($xmlfile_handle);
 			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
 
@@ -859,6 +881,11 @@ class spikekill {
 
 	/* All Functions */
 	private function createRRDFileFromXML($xmlfile, $rrdfile, $stat) {
+		$directory = $this->canonicalDir(dirname($rrdfile));
+		if ($directory === false) {
+			return false;
+		}
+		$rrdfile = $directory . DIRECTORY_SEPARATOR . basename($rrdfile);
 		clearstatcache(true);
 		$xml_stat = @lstat($xmlfile);
 		$current = @lstat($rrdfile);
@@ -870,53 +897,69 @@ class spikekill {
 			return false;
 		}
 
-		// RRDtool never opens the live destination for writing. The restored
-		// sibling replaces its directory entry atomically only after validation.
-		$temporary = $this->createXmlFileExclusively(dirname($rrdfile));
-		if ($temporary === false) {
+		// Keep the original inode allocated throughout restore: an unlink and
+		// replacement can otherwise reuse its inode number on some filesystems.
+		$original = @fopen($rrdfile, 'rb');
+		if ($original === false) {
 			return false;
 		}
-		fclose($temporary['handle']);
-
-		/* execute the restore command */
-		$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
-			__esc("NOTE: Re-Importing '%s' to '%s'", $xmlfile, $rrdfile) . ($this->html ? "</p>\n":"\n");
-
-		/* argv array through runRRDCommand(), the same as runRRDDump(),
-		   instead of a shell string whose exit status went unchecked */
-		$argv   = array(read_config_option('path_rrdtool'), 'restore', '-f', '-r', $xmlfile, $temporary['path']);
-		$result = $this->runRRDCommand($argv, null, $this->commandTimeout());
-
-		$response = trim($result['stdout'] . $result['stderr']);
-
-		if ($response != '') {
-			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . ($this->html ? htmlspecialchars($response, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') : $response) . ($this->html ? "</p>\n":"\n");
+		$opened = fstat($original);
+		if ($opened === false || $opened['dev'] !== $current['dev'] || $opened['ino'] !== $current['ino']) {
+			fclose($original);
+			return false;
 		}
+		try {
+			// RRDtool never opens the live destination for writing. The restored
+			// sibling replaces its directory entry atomically only after validation.
+			$temporary = $this->createXmlFileExclusively(dirname($rrdfile));
+			if ($temporary === false) {
+				return false;
+			}
+			fclose($temporary['handle']);
 
-		clearstatcache(true);
-		$restored_stat = @lstat($temporary['path']);
-		$current = @lstat($rrdfile);
-		$valid = $result['exit'] === 0 && $restored_stat !== false && $current !== false
-			&& ($restored_stat['mode'] & 0170000) === 0100000 && $restored_stat['size'] > 0
-			&& $restored_stat['dev'] === $temporary['stat']['dev'] && $restored_stat['ino'] === $temporary['stat']['ino']
-			&& $current['dev'] === $this->rrdfile_stat['dev'] && $current['ino'] === $this->rrdfile_stat['ino']
-			&& $this->canonicalDir(dirname($rrdfile)) !== false;
-		if ($valid && $restored_stat['uid'] !== $current['uid']) {
-			$valid = chown($temporary['path'], $current['uid']);
+			/* execute the restore command */
+			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
+				__esc("NOTE: Re-Importing '%s' to '%s'", $xmlfile, $rrdfile) . ($this->html ? "</p>\n":"\n");
+
+			/* argv array through runRRDCommand(), the same as runRRDDump(),
+			   instead of a shell string whose exit status went unchecked */
+			$argv   = array(read_config_option('path_rrdtool'), 'restore', '-f', '-r', $xmlfile, $temporary['path']);
+			$result = $this->runRRDCommand($argv, null, $this->commandTimeout());
+
+			$response = trim($result['stdout'] . $result['stderr']);
+
+			if ($response != '') {
+				$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . ($this->html ? htmlspecialchars($response, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') : $response) . ($this->html ? "</p>\n":"\n");
+			}
+
+			clearstatcache(true);
+			$restored_stat = @lstat($temporary['path']);
+			$current = @lstat($rrdfile);
+			$valid = $result['exit'] === 0 && $restored_stat !== false && $current !== false
+				&& ($restored_stat['mode'] & 0170000) === 0100000 && $restored_stat['size'] > 0
+				&& $restored_stat['dev'] === $temporary['stat']['dev'] && $restored_stat['ino'] === $temporary['stat']['ino']
+				&& ($current['mode'] & 0170000) === 0100000
+				&& $current['dev'] === $this->rrdfile_stat['dev'] && $current['ino'] === $this->rrdfile_stat['ino']
+				&& $this->canonicalDir(dirname($rrdfile)) !== false;
+			if ($valid && $restored_stat['uid'] !== $current['uid']) {
+				$valid = chown($temporary['path'], $current['uid']);
+			}
+			if ($valid && $restored_stat['gid'] !== $current['gid']) {
+				$valid = chgrp($temporary['path'], $current['gid']);
+			}
+			if ($valid) {
+				$valid = chmod($temporary['path'], $current['mode'] & 0777);
+			}
+			if ($valid && rename($temporary['path'], $rrdfile)) {
+				clearstatcache(true, $rrdfile);
+				$this->rrdfile_stat = lstat($rrdfile);
+				return true;
+			}
+			$this->unlinkOwnedFile($temporary['path'], $temporary['stat']);
+			return false;
+		} finally {
+			fclose($original);
 		}
-		if ($valid && $restored_stat['gid'] !== $current['gid']) {
-			$valid = chgrp($temporary['path'], $current['gid']);
-		}
-		if ($valid) {
-			$valid = chmod($temporary['path'], $current['mode'] & 0777);
-		}
-		if ($valid && rename($temporary['path'], $rrdfile)) {
-			clearstatcache(true, $rrdfile);
-			$this->rrdfile_stat = lstat($rrdfile);
-			return true;
-		}
-		$this->unlinkOwnedFile($temporary['path'], $temporary['stat']);
-		return false;
 	}
 
 	private function writeXMLFile($output, $handle) {
@@ -1697,8 +1740,8 @@ class spikekill {
 								($ds['min_cutoff']      != 'N/A' ? round($ds['min_cutoff'], 2)    : 'N/A'),
 								($ds['stddev_killed']   != 'N/A' ? number_format_i18n($ds['stddev_killed'])   : 'N/A'),
 								($ds['variance_killed'] != 'N/A' ? number_format_i18n($ds['variance_killed']) : 'N/A'),
-								number_format_i18n($ds['outwind_samples']),
-								number_format_i18n($ds['outwind_killed']));
+								(is_numeric($ds['outwind_samples']) ? number_format_i18n($ds['outwind_samples']) : __('N/A')),
+								(is_numeric($ds['outwind_killed']) ? number_format_i18n($ds['outwind_killed']) : __('N/A')));
 						}
 					}
 				}

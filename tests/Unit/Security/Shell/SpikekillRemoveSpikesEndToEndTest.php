@@ -302,7 +302,7 @@ test('remove_spikes reports failure and cleans up the temp XML when the restore 
     unlink($backup);
 });
 
-test('remove_spikes reports failure and cleans up the temp XML when the backup fails', function () {
+test('remove_spikes refuses an unreadable source and cleans up the temp XML', function () {
     if (function_exists('posix_geteuid') && posix_geteuid() === 0) {
         $this->markTestSkipped('file permissions have no effect running as root');
     }
@@ -330,7 +330,7 @@ test('remove_spikes reports failure and cleans up the temp XML when the backup f
     restore_error_handler();
 
     expect($ok)->toBeFalse()
-        ->and($instance->get_errors())->toContain('Unable to backup')
+        ->and($instance->get_errors())->toContain('could not be verified safely')
         ->and(glob($this->backup_dir . '/*'))->toBe([])
         ->and(glob($this->backup_dir . '/spikekill.*.xml'))->toBe([]);
 });
@@ -356,7 +356,7 @@ test('remove_spikes refuses a symlinked RRD source', function () {
        covers both the symlink at the original name and real-source.rrd */
 });
 
-test('remove_spikes refuses when the RRD source is swapped for a different file during the dump', function () {
+test('remove_spikes refuses when the RRD source is swapped for a different file during the dump', function ($dryrun) {
     /* the rrdtool 'dump' stub itself performs the swap, so it lands inside
        the window between initialize_spikekill() capturing the source
        identity and backupRRDFile()'s re-check of it, the same as an
@@ -387,17 +387,18 @@ test('remove_spikes refuses when the RRD source is swapped for a different file 
 
     $instance = spikekill_e2e_instance($this->rrdfile);
 
+    $instance->dryrun = $dryrun;
     $ok = $instance->remove_spikes();
 
     putenv('SPIKEKILL_TEST_EVIL_TARGET');
 
     expect($ok)->toBeFalse()
-        ->and($instance->get_errors())->toContain('Unable to backup')
+        ->and($instance->get_errors())->toContain('identity changed')
         ->and(glob($this->backup_dir . '/*'))->toBe([]);
 
     /* afterEach() globs and unlinks everything left under rrd_dir (the
        symlink the stub planted) and dir (evil_target, the swap stub) */
-});
+})->with(array(false, true));
 
 test('remove_spikes refuses a requested backup when the RRD source is swapped during the dump', function () {
     /* a fixture with no outlier row: std_kills/out_kills/var_kills all
@@ -461,7 +462,7 @@ test('remove_spikes refuses a requested backup when the RRD source is swapped du
     putenv('SPIKEKILL_TEST_EVIL_TARGET');
 
     expect($ok)->toBeFalse()
-        ->and($instance->get_errors())->toContain('FAILED')
+        ->and($instance->get_errors())->toContain('identity changed')
         ->and(glob($this->backup_dir . '/*'))->toBe([]);
 
     /* afterEach() globs and unlinks everything left under rrd_dir (the
@@ -559,3 +560,34 @@ test('atomic restore preserves RRD ownership and permissions', function () {
         ->and($after['mode'] & 0777)->toBe(0640)
         ->and(file_get_contents($this->rrdfile))->toBe('restored-rrd-bytes');
 });
+
+
+test('missing sample arrays preserve unavailable window statistics', function ($html) {
+    $instance = spikekill_e2e_instance($this->rrdfile);
+    $instance->html = $html;
+    $class = new ReflectionClass(spikekill::class);
+    foreach (array('rra_pdp' => array(1), 'rra_cf' => array('AVERAGE'), 'ds_name' => array('value')) as $name => $value) {
+        $property = $class->getProperty($name);
+        $property->setAccessible(true);
+        $property->setValue($instance, $value);
+    }
+    $rra = array(array(array('totalsamples' => 0, 'numsamples' => 0)));
+    $samples = array();
+    $calculate = $class->getMethod('calculateOverallStatistics');
+    $calculate->setAccessible(true);
+    $calculate->invokeArgs($instance, array(&$rra, &$samples));
+    expect($rra[0][0]['outwind_samples'])->toBe('N/A')
+        ->and($rra[0][0]['outwind_killed'])->toBe('N/A');
+    $output = $class->getMethod('outputStatistics');
+    $output->setAccessible(true);
+    $output->invoke($instance, $rra);
+    $property = $class->getProperty('strout');
+    $property->setAccessible(true);
+    $text = $property->getValue($instance);
+    if ($html) {
+        preg_match_all('/<td[^>]*>(.*?)<\/td>/', $text, $matches);
+        expect(array_slice($matches[1], -2))->toBe(array('N/A', 'N/A'));
+    } else {
+        expect($text)->toMatch('/N\/A\s+N\/A\s*$/');
+    }
+})->with(array(false, true));

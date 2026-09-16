@@ -41,3 +41,11 @@ Report vulnerabilities through [SECURITY.md](SECURITY.md).
 
 [GPL-3.0-or-later](LICENSE). Dependencies retain their own license terms.
 See the [licensing documentation](https://kadupul.org/project/license/).
+
+### Spike-removal platform requirement
+
+Spike removal currently requires a POSIX system with the PHP POSIX extension.
+Its filesystem safety checks refuse Windows and other systems without POSIX
+account identity. Windows ACL validation is not implemented, so spike removal
+is unavailable there; this restriction does not disable other application features.
+See [filesystem requirements](docs/testing/spikekill-safety.md).

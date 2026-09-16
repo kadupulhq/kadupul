@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.31\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-15 19:41-0700\n"
+"POT-Creation-Date: 2026-09-15 20:19-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -583,7 +583,7 @@ msgid "Included in Aggregate"
 msgstr ""
 
 #: aggregate_graphs.php:1278 aggregate_graphs.php:1612 graph_templates.php:846
-#: graph_view.php:796 graph_view.php:809 graphs.php:2265 lib/spikekill.php:1709
+#: graph_view.php:796 graph_view.php:809 graphs.php:2265 lib/spikekill.php:1752
 msgid "Size"
 msgstr ""
 
@@ -1251,14 +1251,14 @@ msgstr ""
 #: lib/functions.php:5938 lib/functions.php:5942 lib/html.php:1261
 #: lib/html.php:1333 lib/html_reports.php:1666 lib/html_reports.php:1692
 #: lib/html_reports.php:1763 lib/html_reports.php:1764
-#: lib/html_reports.php:1765 lib/spikekill.php:1745 lib/spikekill.php:1746
-#: lib/spikekill.php:1747 lib/spikekill.php:1748 lib/spikekill.php:1749
-#: lib/spikekill.php:1750 lib/spikekill.php:1751 lib/spikekill.php:1752
-#: lib/spikekill.php:1753 lib/spikekill.php:1754 lib/spikekill.php:1755
-#: plugins.php:739 pollers.php:1113 user_admin.php:2320 utilities.php:721
-#: utilities.php:1170 utilities.php:2638 utilities.php:2766 utilities.php:2774
-#: utilities.php:2785 utilities.php:2796 utilities.php:2819 utilities.php:2865
-#: utilities.php:3099
+#: lib/html_reports.php:1765 lib/spikekill.php:1743 lib/spikekill.php:1744
+#: lib/spikekill.php:1788 lib/spikekill.php:1789 lib/spikekill.php:1790
+#: lib/spikekill.php:1791 lib/spikekill.php:1792 lib/spikekill.php:1793
+#: lib/spikekill.php:1794 lib/spikekill.php:1795 lib/spikekill.php:1796
+#: lib/spikekill.php:1797 lib/spikekill.php:1798 plugins.php:739
+#: pollers.php:1113 user_admin.php:2320 utilities.php:721 utilities.php:1170
+#: utilities.php:2638 utilities.php:2766 utilities.php:2774 utilities.php:2785
+#: utilities.php:2796 utilities.php:2819 utilities.php:2865 utilities.php:3099
 msgid "N/A"
 msgstr ""
 
@@ -16349,11 +16349,11 @@ msgstr ""
 msgid "FATAL: Standard Deviation must be a positive integer."
 msgstr ""
 
-#: lib/spikekill.php:262 lib/spikekill.php:1709
+#: lib/spikekill.php:262 lib/spikekill.php:1752
 msgid "StdDev"
 msgstr ""
 
-#: lib/spikekill.php:268 lib/spikekill.php:1709
+#: lib/spikekill.php:268 lib/spikekill.php:1752
 msgid "Variance"
 msgstr ""
 
@@ -16462,130 +16462,130 @@ msgstr ""
 msgid "FATAL: Unable to safely create a temporary XML file in '%s'!"
 msgstr ""
 
-#: lib/spikekill.php:478
-msgid "FATAL: RRD source identity changed or the source is not a regular file."
+#: lib/spikekill.php:478 lib/spikekill.php:500
+msgid "FATAL: RRD source identity changed or could not be verified safely."
 msgstr ""
 
-#: lib/spikekill.php:486
+#: lib/spikekill.php:508
 msgid "FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"
 msgstr ""
 
-#: lib/spikekill.php:502
+#: lib/spikekill.php:524
 msgid "FATAL: RRDtool returned an empty dump. The RRD file was not modified."
 msgstr ""
 
-#: lib/spikekill.php:530
+#: lib/spikekill.php:552
 #, php-format
 msgid "FATAL: RRDfile Backup of '%s' to '%s' FAILED!"
 msgstr ""
 
-#: lib/spikekill.php:744
+#: lib/spikekill.php:766
 #, php-format
 msgid "NOTE: Searching for Spikes in XML file '%s'"
 msgstr ""
 
-#: lib/spikekill.php:747
+#: lib/spikekill.php:769
 #, php-format
 msgid "NOTE: Limited to Time Window: %s through %s"
 msgstr ""
 
-#: lib/spikekill.php:754
+#: lib/spikekill.php:776
 msgid "NOTE: Dryrun requested.  No updates performed"
 msgstr ""
 
-#: lib/spikekill.php:790
+#: lib/spikekill.php:812
 #, php-format
 msgid "NOTE: No Window Spikes found in '%s'"
 msgstr ""
 
-#: lib/spikekill.php:793
+#: lib/spikekill.php:815
 #, php-format
 msgid "NOTE: No Spikes found in '%s'"
 msgstr ""
 
-#: lib/spikekill.php:806
+#: lib/spikekill.php:828
 #, php-format
 msgid "NOTE: Spikes Found and Remediated.  Total Spikes %s"
 msgstr ""
 
-#: lib/spikekill.php:810
+#: lib/spikekill.php:832
 #, php-format
 msgid "FATAL: Unable to restore '%s' from '%s'"
 msgstr ""
 
-#: lib/spikekill.php:820
+#: lib/spikekill.php:842
 #, php-format
 msgid "FATAL: Unable to backup '%s'"
 msgstr ""
 
-#: lib/spikekill.php:830
+#: lib/spikekill.php:852
 #, php-format
 msgid "FATAL: Unable to write XML file '%s'"
 msgstr ""
 
-#: lib/spikekill.php:839
+#: lib/spikekill.php:861
 msgid "NOTE: No Spikes Found."
 msgstr ""
 
-#: lib/spikekill.php:883
+#: lib/spikekill.php:922
 #, php-format
 msgid "NOTE: Re-Importing '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:970
+#: lib/spikekill.php:1013
 #, php-format
 msgid "NOTE: Backing Up '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1709
+#: lib/spikekill.php:1752
 msgid "Avg"
 msgstr ""
 
-#: lib/spikekill.php:1709
+#: lib/spikekill.php:1752
 msgid "CF"
 msgstr ""
 
-#: lib/spikekill.php:1709
+#: lib/spikekill.php:1752
 msgid "DS"
 msgstr ""
 
-#: lib/spikekill.php:1709
+#: lib/spikekill.php:1752
 msgid "NonNan"
 msgstr ""
 
-#: lib/spikekill.php:1709
+#: lib/spikekill.php:1752
 msgid "Samples"
 msgstr ""
 
-#: lib/spikekill.php:1710
+#: lib/spikekill.php:1753
 msgid "MaxStdDev"
 msgstr ""
 
-#: lib/spikekill.php:1710
+#: lib/spikekill.php:1753
 msgid "MaxValue"
 msgstr ""
 
-#: lib/spikekill.php:1710
+#: lib/spikekill.php:1753
 msgid "MinStdDev"
 msgstr ""
 
-#: lib/spikekill.php:1710
+#: lib/spikekill.php:1753
 msgid "MinValue"
 msgstr ""
 
-#: lib/spikekill.php:1710
+#: lib/spikekill.php:1753
 msgid "StdKilled"
 msgstr ""
 
-#: lib/spikekill.php:1710
+#: lib/spikekill.php:1753
 msgid "VarKilled"
 msgstr ""
 
-#: lib/spikekill.php:1710
+#: lib/spikekill.php:1753
 msgid "WindKilled"
 msgstr ""
 
-#: lib/spikekill.php:1710
+#: lib/spikekill.php:1753
 msgid "WindSamples"
 msgstr ""
 

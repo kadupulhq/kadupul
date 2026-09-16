@@ -9,6 +9,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import uuid
 from types import SimpleNamespace
 
 import harness
@@ -81,16 +82,18 @@ def assert_poll(h, label):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--baseline', default='6482af547c204199e829b7a0df0b7a13db3e0a58')
-    parser.add_argument('--output', type=Path, default=ROOT / 'tests/behavior/results/release-readiness')
+    parser.add_argument('--output', type=Path)
     args = parser.parse_args()
-    output = args.output.resolve()
+    project = 'kadupul-release-' + uuid.uuid4().hex
+    output = (args.output or ROOT / 'tests/behavior/results/release-readiness' / project).resolve()
     output.mkdir(parents=True, exist_ok=True)
-    baseline_revision = harness.run(['git', '-C', str(ROOT), 'rev-parse', args.baseline + '^{commit}'])['stdout'].strip()
-    evidence = {'complete': False, 'baseline': baseline_revision,
-                'candidate': harness.run(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'])['stdout'].strip(),
-                'php_requested': os.environ.get('PHP_VERSION', '8.2'), 'steps': {}}
+    evidence = {'complete': False, 'baseline_requested': args.baseline,
+                'project': project, 'php_requested': os.environ.get('PHP_VERSION', '8.2'), 'steps': {}}
     h = None
     try:
+        baseline_revision = checked(harness.run(['git', '-C', str(ROOT), 'rev-parse', '--verify', '--end-of-options', args.baseline + '^{commit}'], check=False), 'Baseline revision')['stdout'].strip()
+        evidence['baseline'] = baseline_revision
+        evidence['candidate'] = checked(harness.run(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'], check=False), 'Candidate revision')['stdout'].strip()
         with tempfile.TemporaryDirectory(prefix='kadupul-release-') as temporary:
             temp = Path(temporary)
             baseline = temp / 'baseline'
@@ -108,14 +111,14 @@ def main():
                             ignore=shutil.ignore_patterns('results', '__pycache__'))
             shutil.copy2(ROOT / '.dockerignore', baseline / '.dockerignore')
             harness.ROOT = baseline
-            h = harness.Harness(SimpleNamespace(target='release-readiness', only=None, update_golden=False))
+            h = harness.Harness(SimpleNamespace(target='release-readiness', only=None, update_golden=False, project=project))
             # Use a dedicated project and keep the baseline image for rollback.
-            h.dc = ['docker', 'compose', '-p', 'kadupul-release', '-f', str(baseline / 'tests/behavior/compose.yml')]
+            h.dc = ['docker', 'compose', '-p', project, '-f', str(baseline / 'tests/behavior/compose.yml')]
             override = temp / 'phase.json'
             def phase(tree, image):
                 override.write_text(json.dumps({'services': {'web': {'image': image, 'build': {'context': str(tree)}}}}))
                 h.dc = h.dc[:6] + ['-f', str(override)]
-            phase(baseline, 'kadupul-release-baseline:local')
+            phase(baseline, project + '-baseline:local')
             h.setup()
             authenticate(h)
             h.poller_scenarios()
@@ -135,7 +138,7 @@ def main():
             snapshot = temp / 'rra'
             h.compose('cp', 'web:/var/www/html/rra', str(snapshot))
             evidence['snapshot_sha256'] = hashlib.sha256(dump.encode()).hexdigest()
-            phase(ROOT, 'kadupul-release-candidate:local')
+            phase(ROOT, project + '-candidate:local')
             h.compose('up', '-d', '--build', '--wait', '--no-deps', 'web', timeout=1200)
             h.compose('cp', str(snapshot) + '/.', 'web:/var/www/html/rra')
             h.compose('exec', '-T', 'web', 'chown', '-R', 'www-data:www-data', '/var/www/html/rra')
@@ -159,7 +162,7 @@ def main():
             h.compose('stop', 'web')
             h.sql('DROP DATABASE cacti; CREATE DATABASE cacti CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;')
             h.sql(dump)
-            phase(baseline, 'kadupul-release-baseline:local')
+            phase(baseline, project + '-baseline:local')
             h.compose('up', '-d', '--no-build', '--wait', '--no-deps', 'web', timeout=180)
             h.compose('cp', str(snapshot) + '/.', 'web:/var/www/html/rra')
             h.compose('exec', '-T', 'web', 'chown', '-R', 'www-data:www-data', '/var/www/html/rra')
@@ -176,11 +179,16 @@ def main():
     finally:
         # The temporary compose tree can be gone after an exception. Project
         # containers are removed directly using their dedicated project label.
-        cleanup = harness.run(['docker', 'ps', '-aq', '--filter', 'label=com.docker.compose.project=kadupul-release'], check=False)
-        ids = cleanup['stdout'].split()
-        if ids:
-            harness.run(['docker', 'rm', '-fv', *ids], check=False)
-        harness.run(['docker', 'network', 'rm', 'kadupul-release_default'], check=False)
+        try:
+            cleanup = harness.run(['docker', 'ps', '-aq', '--filter', 'label=com.docker.compose.project=' + project], check=False)
+            ids = cleanup['stdout'].split()
+            if ids:
+                harness.run(['docker', 'rm', '-fv', *ids], check=False)
+            harness.run(['docker', 'network', 'rm', project + '_default'], check=False)
+            harness.run(['docker', 'image', 'rm', project + '-baseline:local', project + '-candidate:local', project + '-snmp:latest'], check=False)
+        except Exception as error:
+            evidence['cleanup_error'] = str(error)
+            evidence['complete'] = False
         if h is not None:
             evidence['baseline_observations'] = h.observed
         harness.write_json(output / 'observations.json', evidence)

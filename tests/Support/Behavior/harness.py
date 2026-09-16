@@ -160,14 +160,15 @@ class Harness:
         # One stable project name. Keying it to the pid built a fresh image set on
         # every run, which accumulated to tens of gigabytes locally and would do
         # the same on CI.
-        self.dc = ['docker', 'compose', '-p', 'kadupul-behavior', '-f', str(ROOT / 'tests/behavior/compose.yml')]
+        project = getattr(args, 'project', 'kadupul-behavior')
+        self.dc = ['docker', 'compose', '-p', project, '-f', str(ROOT / 'tests/behavior/compose.yml')]
         # The shared project name means a second concurrent run would tear down
         # the first one's containers in setup(). Refuse it instead.
-        self.lock = open(Path(tempfile.gettempdir()) / 'kadupul-behavior.lock', 'w')
+        self.lock = open(Path(tempfile.gettempdir()) / (project + '.lock'), 'w')
         try:
             fcntl.flock(self.lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
-            raise RuntimeError('Another behavioral harness run holds the kadupul-behavior project') from None
+            raise RuntimeError('Another behavioral harness run holds the ' + project + ' project') from None
         self.observed = {}
         self.destination = ROOT / 'tests/behavior/results' / args.target
 
