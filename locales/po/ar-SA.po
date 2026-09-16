@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-15 20:19-0700\n"
+"POT-Creation-Date: 2026-09-15 20:21-0700\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -44,7 +44,7 @@ msgstr "الترخيص"
 msgid "Kadupul is licensed under the GNU GPL:"
 msgstr "Kadupul مرخص تحت GNU GPL:"
 
-#: about.php:33 lib/installer.php:1822
+#: about.php:33 lib/installer.php:1825
 msgid "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
 msgstr "هذا البرنامج هو برنامج مجاني. يمكنك إعادة توزيعها و / أو تعديلها بموجب شروط رخصة جنو العمومية كما نشرتها مؤسسة البرمجيات الحرة ؛ إما الإصدار 2 من الترخيص ، أو (حسب اختيارك) أي إصدار لاحق."
 
@@ -610,7 +610,7 @@ msgstr "لا"
 #: data_templates.php:1238 gprint_presets.php:428 graph_templates.php:886
 #: host_templates.php:963 include/global_settings.php:874
 #: include/global_settings.php:1897 lib/api_automation.php:1463
-#: lib/installer.php:2017 lib/installer.php:2045 lib/installer.php:3721
+#: lib/installer.php:2020 lib/installer.php:2048 lib/installer.php:3724
 #: links.php:400 tree.php:2327 tree.php:2328 user_admin.php:2326
 #: user_domains.php:752 user_domains.php:756 user_group_admin.php:2008
 #: vdef.php:916
@@ -745,7 +745,7 @@ msgstr "قوالب التجميع"
 #: aggregate_templates.php:595 automation_templates.php:381
 #: automation_templates.php:468 color_templates.php:645
 #: include/global_arrays.php:998 include/global_arrays.php:1061
-#: lib/installer.php:2631 user_admin.php:2929 user_group_admin.php:2493
+#: lib/installer.php:2634 user_admin.php:2929 user_group_admin.php:2493
 msgid "Templates"
 msgstr "القوالب"
 
@@ -1175,7 +1175,7 @@ msgstr "جهة الاتصال"
 #: automation_devices.php:270 include/global_form.php:1137
 #: include/global_form.php:1173 include/global_form.php:1367
 #: include/global_form.php:1743 lib/api_automation.php:273
-#: lib/api_automation.php:1229 lib/installer.php:1937 lib/installer.php:2632
+#: lib/api_automation.php:1229 lib/installer.php:1940 lib/installer.php:2635
 #: managers.php:202 user_admin.php:978 user_admin.php:1123
 #: user_group_admin.php:1010 user_group_admin.php:1996
 msgid "Description"
@@ -1201,7 +1201,7 @@ msgstr "SNMP"
 #: host.php:1671 host.php:1788 lib/api_automation.php:151
 #: lib/api_automation.php:275 lib/api_automation.php:568
 #: lib/api_automation.php:1089 lib/api_automation.php:1232
-#: lib/html_reports.php:1876 lib/installer.php:1937 managers.php:204
+#: lib/html_reports.php:1876 lib/installer.php:1940 managers.php:204
 #: package_import.php:537 package_import.php:622 plugins.php:467
 #: plugins.php:590 pollers.php:1005 templates_import.php:206
 #: templates_import.php:245 user_admin.php:1123 user_group_admin.php:1010
@@ -1567,8 +1567,8 @@ msgstr "الاعدادات العامة"
 #: include/global_form.php:1331 include/global_form.php:1359
 #: include/global_form.php:1432 include/global_form.php:1460
 #: include/global_form.php:2105 include/global_form.php:2203
-#: include/global_form.php:2248 lib/installer.php:1937 lib/installer.php:2010
-#: lib/installer.php:2040 lib/installer.php:2632 lib/installer.php:2720
+#: include/global_form.php:2248 lib/installer.php:1940 lib/installer.php:2013
+#: lib/installer.php:2043 lib/installer.php:2635 lib/installer.php:2723
 #: lib/vdef.php:56 managers.php:554 pollers.php:44 sites.php:23
 #: user_admin.php:978 user_domains.php:309 utilities.php:847 utilities.php:3079
 msgid "Name"
@@ -2499,7 +2499,7 @@ msgstr "معايير إنشاء الشجرة"
 msgid "Change Leaf Type"
 msgstr "تغيير نوع ورقة"
 
-#: automation_tree_rules.php:715 lib/installer.php:3945 utilities.php:2633
+#: automation_tree_rules.php:715 lib/installer.php:3948 utilities.php:2633
 #: utilities.php:2634 utilities.php:2637 utilities.php:2638
 msgid "WARNING:"
 msgstr "تحذير:"
@@ -3091,7 +3091,7 @@ msgstr "معرف داخلي لمصدر البيانات."
 msgid "The Status of the Data Source Debug Check."
 msgstr "حالة التحقق من بيانات مصدر البيانات."
 
-#: data_debug.php:454 lib/installer.php:2391 lib/installer.php:2423
+#: data_debug.php:454 lib/installer.php:2394 lib/installer.php:2426
 #: package_import.php:591
 msgid "Writable"
 msgstr "قابل للكتابة"
@@ -3890,7 +3890,7 @@ msgid "Steps"
 msgstr "خطوات"
 
 #: data_source_profiles.php:622 graphs_new.php:449 include/global_form.php:281
-#: lib/html.php:566 lib/html_filter.php:55 lib/installer.php:2720
+#: lib/html.php:566 lib/html_filter.php:55 lib/installer.php:2723
 #: lib/rrd.php:3319 utilities.php:849 utilities.php:1771
 msgid "Rows"
 msgstr "الصفوف"
@@ -13808,7 +13808,7 @@ msgstr "تحرير الجهاز"
 msgid "Kill Spikes in Graphs"
 msgstr "قتل المسامير في الرسوم البيانية"
 
-#: lib/html.php:582 lib/html.php:614 lib/installer.php:1683
+#: lib/html.php:582 lib/html.php:614 lib/installer.php:1686
 msgid "Previous"
 msgstr "السابق"
 
@@ -13817,7 +13817,7 @@ msgstr "السابق"
 msgid "%d to %d of %s [ %s ]"
 msgstr "%d إلى %d من %s [ %s ]"
 
-#: lib/html.php:588 lib/html.php:620 lib/installer.php:1682
+#: lib/html.php:588 lib/html.php:620 lib/installer.php:1685
 msgid "Next"
 msgstr "التالي"
 
@@ -14946,7 +14946,7 @@ msgstr "سوء UTF-8 خطأ إزاحة!"
 msgid "Down (Thold)"
 msgstr "أسفل (قال)"
 
-#: lib/html_utility.php:1211 lib/installer.php:1978 lib/installer.php:3861
+#: lib/html_utility.php:1211 lib/installer.php:1981 lib/installer.php:3864
 msgid "Error"
 msgstr "خطأ"
 
@@ -15052,1053 +15052,1053 @@ msgstr "وجدت التبعية:"
 msgid "Unmet Dependency:"
 msgstr "الإعالة غير الملباة:"
 
-#: lib/installer.php:571
+#: lib/installer.php:574
 msgid "Path was not writable"
 msgstr "كان المسار غير قابل للكتابة"
 
-#: lib/installer.php:581
+#: lib/installer.php:584
 msgid "Path is not writable"
 msgstr "المسار غير قابل للكتابة"
 
-#: lib/installer.php:715
+#: lib/installer.php:718
 #, php-format
 msgid "Failed to set specified %sRRDTool version: %s"
 msgstr "فشل تعيين إصدار %sRRDTool المحدد: %s"
 
-#: lib/installer.php:763
+#: lib/installer.php:766
 msgid "Invalid Theme Specified"
 msgstr "سمة غير صالحة محددة"
 
-#: lib/installer.php:819
+#: lib/installer.php:822
 msgid "Resource is not writable"
 msgstr "المورد غير قابل للكتابة"
 
-#: lib/installer.php:824
+#: lib/installer.php:827
 msgid "File not found"
 msgstr "الملف غير موجود"
 
-#: lib/installer.php:837
+#: lib/installer.php:840
 msgid "PHP did not return expected result"
 msgstr "لم تعيد PHP النتيجة المتوقعة"
 
-#: lib/installer.php:851
+#: lib/installer.php:854
 msgid "Unexpected path parameter"
 msgstr "معلمة مسار غير متوقعة"
 
-#: lib/installer.php:887
+#: lib/installer.php:890
 #, php-format
 msgid "Failed to apply specified profile %s != %s"
 msgstr "فشل تطبيق ملف التعريف المحدد %s != %s"
 
-#: lib/installer.php:929
+#: lib/installer.php:932
 #, php-format
 msgid "Failed to apply specified mode: %s"
 msgstr "فشل تطبيق الوضع المحدد: %s"
 
-#: lib/installer.php:953
+#: lib/installer.php:956
 #, php-format
 msgid "Failed to apply specified automation override: %s"
 msgstr "فشل تطبيق تجاوز التنفيذ التلقائي المحدد: %s"
 
-#: lib/installer.php:974
+#: lib/installer.php:977
 msgid "Failed to apply specified cron interval"
 msgstr "فشل في تطبيق الفاصل الزمني cron المحدد"
 
-#: lib/installer.php:1020
+#: lib/installer.php:1023
 #, php-format
 msgid "Failed to apply '%s' as Automation Range"
 msgstr "فشل تطبيق \"%s\" كنطاق أتمتة"
 
-#: lib/installer.php:1097
+#: lib/installer.php:1100
 msgid "No matching snmp option exists"
 msgstr "لا يوجد خيار snmp مطابق موجود"
 
-#: lib/installer.php:1283
+#: lib/installer.php:1286
 msgid "No matching template exists"
 msgstr "لا يوجد قالب مطابق"
 
-#: lib/installer.php:1626
+#: lib/installer.php:1629
 msgid "The Installer could not proceed due to an unexpected error."
 msgstr "تعذر على برنامج التثبيت المتابعة بسبب خطأ غير متوقع."
 
-#: lib/installer.php:1627
+#: lib/installer.php:1630
 msgid "Please report this to the Kadupul Group."
 msgstr "يرجى الإبلاغ عن هذا إلى Kadupul Group."
 
-#: lib/installer.php:1628
+#: lib/installer.php:1631
 #, php-format
 msgid "Unknown Reason: %s"
 msgstr "سبب غير معروف: %s"
 
-#: lib/installer.php:1636
+#: lib/installer.php:1639
 #, fuzzy, php-format
 msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this can not be performed."
 msgstr "تحاول تثبيت %s Kadupul على قاعدة بيانات 0.6.x. لسوء الحظ ، لا يمكن تنفيذ هذا."
 
-#: lib/installer.php:1637
+#: lib/installer.php:1640
 msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
 msgstr "لتكون قادرًا على المتابعة ، <b>يجب</b> عليك إنشاء قاعدة بيانات جديدة ، استيراد &quot;cacti.sql&quot; إلى ذلك:"
 
-#: lib/installer.php:1639
+#: lib/installer.php:1642
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
 msgstr "<b>يجب</b> عليك تحديث &quot;include / config.php&quot; للإشارة إلى قاعدة البيانات الجديدة."
 
-#: lib/installer.php:1640
+#: lib/installer.php:1643
 msgid "NOTE: Your existing data will not be modified, nor will it or any history be available to the new install"
 msgstr "ملاحظة: لن يتم تعديل بياناتك الحالية ، ولن يكون متاحًا أو أي سجل للتثبيت الجديد"
 
-#: lib/installer.php:1648
+#: lib/installer.php:1651
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
 msgstr "لقد قمت بإنشاء قاعدة بيانات جديدة ، ولكنك لم تقم بعد باستيراد الملف &#39;cacti.sql&#39;. في سطر الأوامر ، قم بتنفيذ التالي للمتابعة:"
 
-#: lib/installer.php:1650
+#: lib/installer.php:1653
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Kadupul database. Please ensure that the Kadupul database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Kadupul database."
 msgstr "قد يتم إنشاء هذا الخطأ أيضًا إذا لم يكن لدى مستخدم قاعدة بيانات Kadupul الأذونات الصحيحة على قاعدة بيانات Kadupul. الرجاء التأكد من أن مستخدم قاعدة بيانات Kadupul لديه القدرة على SELECT أو INSERT أو DELETE أو UPDATE أو CREATE أو ALTER أو DROP أو INDEX على قاعدة بيانات Kadupul."
 
-#: lib/installer.php:1651
+#: lib/installer.php:1654
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"
 msgstr "<b>يجب</b> أيضًا استيراد معلومات MySQL TimeZone إلى MySQL ومنح المستخدم Kadupul SELECT الدخول إلى جدول mysql.time_zone_name"
 
-#: lib/installer.php:1654
+#: lib/installer.php:1657
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
 msgstr "في Linux / UNIX ، شغّل ما يلي كجذر في shell:"
 
-#: lib/installer.php:1657
+#: lib/installer.php:1660
 msgid "On Windows, you must follow the instructions here <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>Time zone description table</a>.  Once that is complete, you can issue the following command to grant the Kadupul user access to the tables:"
 msgstr "في Windows ، يجب أن تتبع الإرشادات الواردة هنا <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>جدول وصف المنطقة الزمنية</a> . بمجرد اكتمال ذلك ، يمكنك إصدار الأمر التالي لمنح وصول المستخدم Kadupul إلى الجداول:"
 
-#: lib/installer.php:1660
+#: lib/installer.php:1663
 msgid "Then run the following within MySQL as an administrator:"
 msgstr "ثم قم بتشغيل ما يلي داخل MySQL كمسؤول:"
 
-#: lib/installer.php:1679 pollers.php:671
+#: lib/installer.php:1682 pollers.php:671
 msgid "Test Connection"
 msgstr "اختبار الاتصال"
 
-#: lib/installer.php:1690
+#: lib/installer.php:1693
 msgid "Begin"
 msgstr "بدأ"
 
-#: lib/installer.php:1696 lib/installer.php:2124 lib/installer.php:2134
-#: lib/installer.php:2774
+#: lib/installer.php:1699 lib/installer.php:2127 lib/installer.php:2137
+#: lib/installer.php:2777
 msgid "Upgrade"
 msgstr "ترقية"
 
-#: lib/installer.php:1698 lib/installer.php:2778
+#: lib/installer.php:1701 lib/installer.php:2781
 msgid "Downgrade"
 msgstr "تخفيض"
 
-#: lib/installer.php:1801 utilities.php:255
+#: lib/installer.php:1804 utilities.php:255
 #, fuzzy
 msgid "Kadupul Version"
 msgstr "نسخة Kadupul"
 
-#: lib/installer.php:1801
+#: lib/installer.php:1804
 msgid "License Agreement"
 msgstr "اتفاقية الترخيص"
 
-#: lib/installer.php:1804
+#: lib/installer.php:1807
 #, php-format
 msgid "This version of Kadupul (%s) does not appear to have a valid version code, please contact the Kadupul Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 msgstr "لا يبدو أن هذا الإصدار من Kadupul (%s) يحتوي على رمز إصدار صالح ، يرجى الاتصال بفريق تطوير Kadupul للتأكد من تصحيح ذلك.  إذا كنت ترى هذا الخطأ في إصدار ، فيرجى رفع تقرير على الفور على GitHub"
 
-#: lib/installer.php:1807
+#: lib/installer.php:1810
 msgid "Thanks for taking the time to download and install Kadupul, the complete graphing solution for your network. Before you can start making cool graphs, there are a few pieces of data that Kadupul needs to know."
 msgstr "نشكرك على الوقت الذي قضيته في تنزيل وتثبيت Kadupul ، وهو حل الرسوم البيانية الكامل لشبكتك. قبل أن تتمكن من البدء في عمل الرسوم البيانية الرائعة ، هناك بضع أجزاء من البيانات تحتاج Kadupul إلى معرفتها."
 
-#: lib/installer.php:1808
+#: lib/installer.php:1811
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Kadupul before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
 msgstr "تأكد من قراءة واتباع الخطوات المطلوبة اللازمة لتثبيت Kadupul قبل المتابعة. يمكن العثور على معلومات التثبيت لأنظمة التشغيل المستندة إلى <a href=\"%s\">Unix</a> و <a href=\"%s\">Win32</a>."
 
-#: lib/installer.php:1811
+#: lib/installer.php:1814
 #, php-format
 msgid "This process will guide you through the steps for upgrading from version '%s'. "
 msgstr "ستوجهك هذه العملية خلال خطوات الترقية من الإصدار \"%s\". "
 
-#: lib/installer.php:1812
+#: lib/installer.php:1815
 #, php-format
 msgid "Also, if this is an upgrade, be sure to read the <a href=\"%s\">Upgrade</a> information file."
 msgstr "أيضًا ، إذا كانت هذه ترقية ، فتأكد من قراءة ملف معلومات <a href=\"%s\">الترقية</a> ."
 
-#: lib/installer.php:1816
+#: lib/installer.php:1819
 msgid "It is NOT recommended to downgrade as the database structure may be inconsistent"
 msgstr "لا ننصح بالرجوع إلى إصدار سابق حيث أن بنية قاعدة البيانات قد تكون غير متناسقة"
 
-#: lib/installer.php:1819
+#: lib/installer.php:1822
 msgid "Kadupul is licensed under the GNU General Public License, you must agree to its provisions before continuing:"
 msgstr "Kadupul مرخص بموجب رخصة جنو العمومية العامة ، يجب عليك الموافقة على أحكامه قبل المتابعة:"
 
-#: lib/installer.php:1823
+#: lib/installer.php:1826
 msgid "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
 msgstr "يتم توزيع هذا البرنامج على أمل أن يكون مفيدا ، ولكن دون أي ضمان. دون حتى الضمان الضمني للرواج أو الملاءمة لغرض معين. انظر رخصة جنو العمومية العامة لمزيد من التفاصيل."
 
-#: lib/installer.php:1860
+#: lib/installer.php:1863
 msgid "Accept GPL License Agreement"
 msgstr "قبول اتفاقية ترخيص GPL"
 
-#: lib/installer.php:1860
+#: lib/installer.php:1863
 msgid "Select default theme: "
 msgstr "حدد المظهر الافتراضي:"
 
-#: lib/installer.php:1884
+#: lib/installer.php:1887
 msgid "Pre-installation Checks"
 msgstr "الشيكات قبل التثبيت"
 
-#: lib/installer.php:1885
+#: lib/installer.php:1888
 msgid "Location checks"
 msgstr "الشيكات الموقع"
 
-#: lib/installer.php:1921 lib/installer.php:2072 lib/installer.php:2076
-#: lib/installer.php:2232 lib/installer.php:2237 lib/installer.php:3965
+#: lib/installer.php:1924 lib/installer.php:2075 lib/installer.php:2079
+#: lib/installer.php:2235 lib/installer.php:2240 lib/installer.php:3968
 msgid "ERROR:"
 msgstr "خطأ:"
 
-#: lib/installer.php:1921
+#: lib/installer.php:1924
 msgid "Please update config.php with the correct relative URI location of Kadupul (url_path)."
 msgstr "الرجاء تحديث config.php باستخدام موقع URI النسبي الصحيح لـ Kadupul (url_path)."
 
-#: lib/installer.php:1924
+#: lib/installer.php:1927
 msgid "Your Kadupul configuration has the relative correct path (url_path) in config.php."
 msgstr "يحتوي تكوين Kadupul على المسار الصحيح النسبي (url_path) في config.php."
 
-#: lib/installer.php:1932
+#: lib/installer.php:1935
 #, php-format
 msgid "PHP - Recommendations (%s)"
 msgstr "PHP - توصيات (%s)"
 
-#: lib/installer.php:1936
+#: lib/installer.php:1939
 #, fuzzy
 msgid "PHP Recommendations ("
 msgstr "توصيات PHP"
 
-#: lib/installer.php:1937
+#: lib/installer.php:1940
 msgid "Current"
 msgstr "بريدك الإلكتروني الحالي غير مسموح"
 
-#: lib/installer.php:1937
+#: lib/installer.php:1940
 msgid "Recommended"
 msgstr "مستحسن"
 
-#: lib/installer.php:1944
+#: lib/installer.php:1947
 msgid "PHP Binary"
 msgstr "PHP Binary Path"
 
-#: lib/installer.php:1947
+#: lib/installer.php:1950
 msgid "The PHP binary location is not valid and must be updated."
 msgstr "موقع PHP الثنائي غير صالح ويجب تحديثه."
 
-#: lib/installer.php:1954
+#: lib/installer.php:1957
 msgid "Update the path_php_binary value in the settings table."
 msgstr "قم بتحديث قيمة path_php_binary في جدول الإعدادات."
 
-#: lib/installer.php:1963
+#: lib/installer.php:1966
 msgid "Passed"
 msgstr "اجتياز"
 
-#: lib/installer.php:1966
+#: lib/installer.php:1969
 msgid "Warning"
 msgstr "تحذير"
 
-#: lib/installer.php:1972
+#: lib/installer.php:1975
 msgid "Restart Required"
 msgstr "إعادة التشغيل مطلوبة"
 
-#: lib/installer.php:1972
+#: lib/installer.php:1975
 #, fuzzy
 msgid "The specified value appears to be different in the running config versus the INI file."
 msgstr "يبدو أن القيمة المحددة مختلفة في التكوين قيد التشغيل مقابل ملف INI."
 
-#: lib/installer.php:2002
+#: lib/installer.php:2005
 msgid "PHP - Module Support (Required)"
 msgstr "PHP - دعم الوحدة (مطلوب)"
 
-#: lib/installer.php:2003
+#: lib/installer.php:2006
 msgid "Kadupul requires several PHP Modules to be installed to work properly. If any of these are not installed, you will be unable to continue the installation until corrected. In addition, for optimal system performance Kadupul should be run with certain MySQL system variables set.  Please follow the MySQL recommendations at your discretion.  Always seek the MySQL documentation if you have any questions."
 msgstr "يتطلب Kadupul تثبيت عدة وحدات من PHP للعمل بشكل صحيح. إذا لم يتم تثبيت أي منها ، فلن تتمكن من متابعة التثبيت حتى يتم تصحيحه. بالإضافة إلى ذلك ، لأداء النظام الأمثل يجب تشغيل Kadupul مع مجموعة معينة من متغيرات نظام MySQL. يرجى اتباع توصيات MySQL حسب تقديرك. ابحث دائمًا عن مستندات MySQL إذا كان لديك أي أسئلة."
 
-#: lib/installer.php:2005
+#: lib/installer.php:2008
 msgid "The following PHP extensions are mandatory, and MUST be installed before continuing your Kadupul install."
 msgstr "ملحقات PHP التالية إلزامية ، ويجب تثبيتها قبل متابعة تثبيت Kadupul."
 
-#: lib/installer.php:2009
+#: lib/installer.php:2012
 msgid "Required PHP Modules"
 msgstr "وحدات PHP المطلوبة"
 
-#: lib/installer.php:2010 lib/installer.php:2040 plugins.php:25 plugins.php:474
+#: lib/installer.php:2013 lib/installer.php:2043 plugins.php:25 plugins.php:474
 msgid "Installed"
 msgstr "المثبتة"
 
-#: lib/installer.php:2010
+#: lib/installer.php:2013
 msgid "Required"
 msgstr "مطلوب"
 
-#: lib/installer.php:2033
+#: lib/installer.php:2036
 msgid "PHP - Module Support (Optional)"
 msgstr "PHP - دعم الوحدة (اختياري)"
 
-#: lib/installer.php:2035
+#: lib/installer.php:2038
 msgid "The following PHP extensions are recommended, and should be installed before continuing your Kadupul install.  NOTE: If you are planning on supporting SNMPv3 with IPv6, you should not install the php-snmp module at this time."
 msgstr "ينصح باستخدام امتدادات PHP التالية ، ويجب تثبيتها قبل متابعة تثبيت Kadupul. ملاحظة: إذا كنت تخطط لدعم SNMPv3 مع IPv6 ، فلا يجب عليك تثبيت وحدة php-snmp في هذا الوقت."
 
-#: lib/installer.php:2039
+#: lib/installer.php:2042
 msgid "Optional Modules"
 msgstr "أختياري"
 
-#: lib/installer.php:2040
+#: lib/installer.php:2043
 msgid "Optional"
 msgstr "اختياري"
 
-#: lib/installer.php:2061
+#: lib/installer.php:2064
 msgid "MySQL - TimeZone Support"
 msgstr "MySQL - دعم TimeZone"
 
-#: lib/installer.php:2072
+#: lib/installer.php:2075
 msgid "Your MySQL TimeZone database is not populated.  Please populate this database before proceeding."
 msgstr "لا يتم ملء قاعدة بيانات MySQL TimeZone الخاصة بك. يرجى ملء قاعدة البيانات هذه قبل المتابعة."
 
-#: lib/installer.php:2076
+#: lib/installer.php:2079
 msgid "Your Kadupul database login account does not have access to the MySQL TimeZone database.  Please provide the Kadupul database account \"select\" access to the \"time_zone_name\" table in the \"mysql\" database, and populate MySQL's TimeZone information before proceeding."
 msgstr "ليس لدى حساب تسجيل الدخول إلى قاعدة بيانات Kadupul حق الوصول إلى قاعدة بيانات MySQL TimeZone. يرجى تقديم حساب قاعدة البيانات Kadupul &quot;select&quot; الوصول إلى جدول &quot;time_zone_name&quot; في قاعدة البيانات &quot;mysql&quot; ، وملء معلومات MySQL&#39;s TimeZone قبل المتابعة."
 
-#: lib/installer.php:2081
+#: lib/installer.php:2084
 msgid "Your Kadupul database account has access to the MySQL TimeZone database and that database is populated with global TimeZone information."
 msgstr "حساب قاعدة البيانات Kadupul الخاص بك لديه حق الوصول إلى قاعدة بيانات MySQL TimeZone ويتم ملؤها قاعدة البيانات مع معلومات TimeZone العالمية."
 
-#: lib/installer.php:2086
+#: lib/installer.php:2089
 msgid "MySQL - Settings"
 msgstr "MySQL - الإعدادات"
 
-#: lib/installer.php:2087
+#: lib/installer.php:2090
 msgid "These MySQL performance tuning settings will help your Kadupul system perform better without issues for a longer time."
 msgstr "تساعد إعدادات ضبط الأداء MySQL هذه على تحسين أداء نظام Kadupul الخاص بك دون مشاكل لفترة أطول."
 
-#: lib/installer.php:2089
+#: lib/installer.php:2092
 msgid "Recommended MySQL System Variable Settings"
 msgstr "أوصى إعدادات متغير النظام MySQL"
 
-#: lib/installer.php:2119
+#: lib/installer.php:2122
 msgid "Installation Type"
 msgstr "نوع التثبيت"
 
-#: lib/installer.php:2125
+#: lib/installer.php:2128
 #, php-format
 msgid "Upgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "الترقية من <strong>%s</strong> إلى <strong>%s</strong>"
 
-#: lib/installer.php:2127
+#: lib/installer.php:2130
 msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "في حالة حدوث مشكلات ، يوصى بشدة بمسح ذاكرة التخزين المؤقت للمتصفح وإغلاقه ثم إعادة فتحه (ليس فقط علامة التبويب Kadupul قيد التشغيل) وإعادة المحاولة ، قبل إثارة مشكلة مع مجموعة Kadupul Group"
 
-#: lib/installer.php:2128
+#: lib/installer.php:2131
 msgid "On rare occasions, we have had reports from users who experience some minor issues due to changes in the code.  These issues are caused by the browser retaining pre-upgrade code and whilst we have taken steps to minimise the chances of this, it may still occur.  If you need instructions on how to clear your browser cache, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> is a good starting point."
 msgstr "في مناسبات نادرة ، كان لدينا تقارير من المستخدمين الذين يواجهون بعض المشكلات الطفيفة بسبب التغييرات في الشفرة. تحدث هذه المشكلات بسبب قيام المتصفح بالاحتفاظ برمز ما قبل الترقية ، وفي الوقت الذي اتخذنا فيه خطوات لتقليل فرص حدوث ذلك ، فقد يستمر حدوثه. إذا كنت بحاجة إلى تعليمات حول كيفية مسح ذاكرة التخزين المؤقت للمتصفح ، فإن <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> يعد نقطة بداية جيدة."
 
-#: lib/installer.php:2129
+#: lib/installer.php:2132
 msgid "If after clearing your cache and restarting your browser, you still experience issues, please raise the issue with us and we will try to identify the cause of it."
 msgstr "إذا كنت لا تزال تواجه مشكلات بعد مسح ذاكرة التخزين المؤقت وإعادة تشغيل المتصفح ، فيُرجى طرح المشكلة معنا وسنحاول تحديد سببها."
 
-#: lib/installer.php:2135
+#: lib/installer.php:2138
 #, php-format
 msgid "Downgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "الرجوع إلى إصدار أقدم من <strong>%s</strong> إلى <strong>%s</strong>"
 
-#: lib/installer.php:2136
+#: lib/installer.php:2139
 msgid "You appear to be downgrading to a previous version.  Database changes made for the newer version will not be reversed and <i>could</i> cause issues."
 msgstr "يبدو أنك تريد الرجوع إلى إصدار سابق. لن يتم عكس تغييرات قاعدة البيانات التي تم إجراؤها للإصدار الأحدث <i>وقد</i> تتسبب في حدوث مشكلات."
 
-#: lib/installer.php:2141
+#: lib/installer.php:2144
 msgid "Please select the type of installation"
 msgstr "يرجى تحديد نوع التثبيت"
 
-#: lib/installer.php:2142
+#: lib/installer.php:2145
 msgid "Installation options:"
 msgstr "خيارات التثبيت:"
 
-#: lib/installer.php:2146
+#: lib/installer.php:2149
 msgid "Choose this for the Primary site."
 msgstr "اختر هذا للموقع الأساسي."
 
-#: lib/installer.php:2146 lib/installer.php:2197
+#: lib/installer.php:2149 lib/installer.php:2200
 msgid "New Primary Server"
 msgstr "الخادم الأساسي الجديد"
 
-#: lib/installer.php:2147 lib/installer.php:2198
+#: lib/installer.php:2150 lib/installer.php:2201
 msgid "New Remote Poller"
 msgstr "جديد بولير عن بعد"
 
-#: lib/installer.php:2147
+#: lib/installer.php:2150
 msgid "Remote Pollers are used to access networks that are not readily accessible to the Primary site."
 msgstr "يتم استخدام Pollers البعيد للوصول إلى الشبكات التي لا يمكن الوصول إليها بسهولة إلى الموقع الأساسي."
 
-#: lib/installer.php:2202
+#: lib/installer.php:2205
 msgid "The following information has been determined from Kadupul's configuration file. If it is not correct, please edit \"include/config.php\" before continuing."
 msgstr "تم تحديد المعلومات التالية من ملف تكوين Kadupul. إذا لم يكن صحيحًا ، فيرجى تعديل &quot;include / config.php&quot; قبل المتابعة."
 
-#: lib/installer.php:2206
+#: lib/installer.php:2209
 msgid "Local Database Connection Information"
 msgstr "معلومات اتصال قاعدة البيانات المحلية"
 
-#: lib/installer.php:2209 lib/installer.php:2221
+#: lib/installer.php:2212 lib/installer.php:2224
 #, php-format
 msgid "Database: <b>%s</b>"
 msgstr "قاعدة بيانات: <b>%s</b>"
 
-#: lib/installer.php:2210 lib/installer.php:2222
+#: lib/installer.php:2213 lib/installer.php:2225
 #, php-format
 msgid "Database User: <b>%s</b>"
 msgstr "مستخدم قاعدة البيانات: <b>%s</b>"
 
-#: lib/installer.php:2211 lib/installer.php:2223
+#: lib/installer.php:2214 lib/installer.php:2226
 #, php-format
 msgid "Database Hostname: <b>%s</b>"
 msgstr "اسم مضيف قاعدة البيانات: <b>%s</b>"
 
-#: lib/installer.php:2212 lib/installer.php:2224
+#: lib/installer.php:2215 lib/installer.php:2227
 #, php-format
 msgid "Port: <b>%s</b>"
 msgstr "ميناء: <b>%s</b>"
 
-#: lib/installer.php:2213 lib/installer.php:2225
+#: lib/installer.php:2216 lib/installer.php:2228
 #, php-format
 msgid "Server Operating System Type: <b>%s</b>"
 msgstr "نوع نظام تشغيل الخادم: <b>%s</b>"
 
-#: lib/installer.php:2218
+#: lib/installer.php:2221
 msgid "Central Database Connection Information"
 msgstr "معلومات اتصال قاعدة البيانات المركزية"
 
-#: lib/installer.php:2230
+#: lib/installer.php:2233
 msgid "Configuration Readonly!"
 msgstr "التكوين للقراءة فقط!"
 
-#: lib/installer.php:2232
+#: lib/installer.php:2235
 msgid "Your config.php file must be writable by the web server during install in order to configure the Remote poller.  Once installation is complete, you must set this file to Read Only to prevent possible security issues."
 msgstr "يجب أن يكون ملف config.php قابل للكتابة بواسطة خادم الويب أثناء التثبيت لتكوين جهاز التلقيم عن بعد. بمجرد اكتمال التثبيت ، يجب تعيين هذا الملف للقراءة فقط لمنع مشاكل الأمان المحتملة."
 
-#: lib/installer.php:2236
+#: lib/installer.php:2239
 msgid "Configuration of Poller"
 msgstr "تكوين بولير"
 
-#: lib/installer.php:2237
+#: lib/installer.php:2240
 msgid "Your Remote Kadupul Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Kadupul database server.  Correct this and try again."
 msgstr "لم يتم تضمين معلومات مستضد Kadupul عن بعد في ملف config.php الخاص بك. الرجاء مراجعة config.php.dist وتعيين المتغيرات: <i>$ rdatabase_default ، $ rdatabase_username</i> ، الخ. يجب تعيين هذه المتغيرات ثم الرجوع إلى خادم قاعدة البيانات الرئيسية Kadupul. قم بتصحيح هذا وحاول مرة أخرى."
 
-#: lib/installer.php:2241
+#: lib/installer.php:2244
 msgid "Remote Poller Variables"
 msgstr "متغيرات المستقطب عن بعد"
 
-#: lib/installer.php:2243
+#: lib/installer.php:2246
 msgid "The variables that must be set in the config.php file include the following:"
 msgstr "تتضمن المتغيرات التي يجب تعيينها في ملف config.php ما يلي:"
 
-#: lib/installer.php:2254
+#: lib/installer.php:2257
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
 msgstr "يقوم برنامج Installer تلقائيًا بتعيين $ poller_id وإضافته إلى ملف config.php."
 
-#: lib/installer.php:2256
+#: lib/installer.php:2259
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Kadupul database server.  Follow the same procedure you would with any other Kadupul install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
 msgstr "بمجرد أن يتم تعيين جميع المتغيرات في ملف config.php ، يجب أيضًا منح حق الوصول إلى $ rdatabase_username إلى خادم قاعدة البيانات الرئيسية Kadupul. اتبع نفس الإجراء الذي تريده مع أي تثبيت Kadupul آخر. يمكنك بعد ذلك الضغط على زر &quot;اختبار الاتصال&quot;. إذا نجح الاختبار ، فستتمكن من متابعة التثبيت وإكماله."
 
-#: lib/installer.php:2260
+#: lib/installer.php:2263
 msgid "Additional Steps After Installation"
 msgstr "خطوات إضافية بعد التثبيت"
 
-#: lib/installer.php:2262
+#: lib/installer.php:2265
 msgid "It is essential that the Central Kadupul server can communicate via MySQL to each remote Kadupul database server.  Once the install is complete, you must edit the Remote Data Collector and ensure the settings are correct.  You can verify using the 'Test Connection' when editing the Remote Data Collector."
 msgstr "من الضروري أن يتصل خادم Kadupul المركزي عبر MySQL بكل خادم قاعدة بيانات Kadupul عن بعد. بمجرد اكتمال التثبيت ، يجب عليك تحرير جامع البيانات البعيد والتأكد من صحة الإعدادات. يمكنك التحقق من استخدام &quot;Test Test&quot; (اختبار الاتصال) عند تحرير جامع البيانات البعيد."
 
-#: lib/installer.php:2276
+#: lib/installer.php:2279
 msgid "Critical Binary Locations and Versions"
 msgstr "المواقع الثنائية الحرجة والإصدارات"
 
-#: lib/installer.php:2277
+#: lib/installer.php:2280
 msgid "Make sure all of these values are correct before continuing."
 msgstr "تأكد من صحة كل هذه القيم قبل المتابعة."
 
-#: lib/installer.php:2280
+#: lib/installer.php:2283
 msgid "One or more paths appear to be incorrect, unable to proceed"
 msgstr "يبدو أن مسارًا واحدًا أو أكثر غير صحيح ، غير قادر على المتابعة"
 
-#: lib/installer.php:2358
+#: lib/installer.php:2361
 msgid "Directory Permission Checks"
 msgstr "دليل التحقق من الشيكات"
 
-#: lib/installer.php:2359
+#: lib/installer.php:2362
 msgid "Please ensure the directory permissions below are correct before proceeding.  During the install, these directories need to be owned by the Web Server user.  These permission changes are required to allow the Installer to install Device Template packages which include XML and script files that will be placed in these directories.  If you choose not to install the packages, there is an 'install_package.php' cli script that can be used from the command line after the install is complete."
 msgstr "الرجاء التأكد من صحة أذونات الدليل أدناه قبل المتابعة. أثناء التثبيت ، يجب أن تكون هذه الدلائل مملوكة لمستخدم خادم الويب. مطلوب هذه التغييرات إذن للسماح المثبت لتثبيت حزم &quot;قالب الجهاز&quot; التي تتضمن XML وملفات البرامج النصية التي سيتم وضعها في هذه الدلائل. إذا اخترت عدم تثبيت الحزم ، فهناك برنامج نصي &quot;install_package.php&quot; يمكن استخدامه من سطر الأوامر بعد اكتمال التثبيت."
 
-#: lib/installer.php:2362
+#: lib/installer.php:2365
 msgid "After the install is complete, you can make some of these directories read only to increase security."
 msgstr "بعد اكتمال التثبيت ، يمكنك جعل بعض هذه الأدلة للقراءة فقط لزيادة الأمان."
 
-#: lib/installer.php:2364
+#: lib/installer.php:2367
 msgid "These directories will be required to stay read writable after the install so that the Kadupul remote synchronization process can update them as the Main Kadupul Web Site changes"
 msgstr "سوف تكون هذه الدلائل مطلوبة للبقاء قراءة قابلة للكتابة بعد التثبيت بحيث يمكن لعملية Kadupul المزامنة عن بُعد تحديثها مع تغيير موقع Kadupul Web Site"
 
-#: lib/installer.php:2368
+#: lib/installer.php:2371
 msgid "If you are installing packages, once the packages are installed, you should change the scripts directory back to read only as this presents some exposure to the web site."
 msgstr "إذا كنت تقوم بتثبيت الحزم ، بمجرد تثبيت الحزم ، يجب عليك تغيير دليل البرامج النصية للقراءة فقط لأن هذا يعرض بعض التعرض لموقع الويب."
 
-#: lib/installer.php:2370
+#: lib/installer.php:2373
 msgid "For remote pollers, it is critical that the paths that you will be updating frequently, including the plugins, scripts, and resources paths have read/write access as the data collector will have to update these paths from the main web server content."
 msgstr "بالنسبة للناخبين عن بعد ، من الأهمية بمكان أن تكون المسارات التي ستقوم بتحديثها بشكل متكرر ، بما في ذلك المكونات الإضافية ، والنصوص البرمجية ، ومسارات الموارد ، لها حق الوصول للقراءة / الكتابة حيث سيحتاج جامع البيانات إلى تحديث هذه المسارات من محتوى خادم الويب الرئيسي."
 
-#: lib/installer.php:2376
+#: lib/installer.php:2379
 msgid "Required Writable at Install Time Only"
 msgstr "مطلوب للكتابة في وقت التثبيت فقط"
 
-#: lib/installer.php:2395 lib/installer.php:2427 package_import.php:589
+#: lib/installer.php:2398 lib/installer.php:2430 package_import.php:589
 msgid "Not Writable"
 msgstr "قابل للكتابة"
 
-#: lib/installer.php:2407
+#: lib/installer.php:2410
 msgid "Required Writable after Install Complete"
 msgstr "مطلوب للكتابة بعد اكتمال التثبيت"
 
-#: lib/installer.php:2438
+#: lib/installer.php:2441
 msgid "Potential permission issues"
 msgstr "مشكلات الإذن المحتملة"
 
-#: lib/installer.php:2447
+#: lib/installer.php:2450
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
 msgstr "يرجى التأكد من أن خادم الويب لديه حق الوصول للقراءة / الكتابة إلى مجلدات Kadupul التي تعرض الأخطاء أدناه."
 
-#: lib/installer.php:2450
+#: lib/installer.php:2453
 msgid "If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools."
 msgstr "إذا تم تمكين SELinux على الخادم الخاص بك ، فيمكنك إما تعطيل هذا بشكل دائم ، أو تعطيله مؤقتا ثم إضافة الأذونات المناسبة باستخدام أدوات سطر الأوامر SELinux."
 
-#: lib/installer.php:2459
+#: lib/installer.php:2462
 #, php-format
 msgid "The user '%s' should have MODIFY permission to enable read/write."
 msgstr "يجب أن يكون لدى المستخدم \"%s\" إذن تعديل لتمكين القراءة / الكتابة."
 
-#: lib/installer.php:2468
+#: lib/installer.php:2471
 msgid "An example of how to set folder permissions is shown here, though you may need to adjust this depending on your operating system, user accounts and desired permissions."
 msgstr "يظهر هنا مثال على كيفية تعيين أذونات المجلد ، على الرغم من أنك قد تحتاج إلى ضبط هذا بناءً على نظام التشغيل وحسابات المستخدمين والأذونات المرغوبة."
 
-#: lib/installer.php:2469
+#: lib/installer.php:2472
 msgid "EXAMPLE:"
 msgstr "مثال:"
 
-#: lib/installer.php:2470
+#: lib/installer.php:2473
 msgid "Once installation has completed the CSRF path, should be set to read-only."
 msgstr "بمجرد اكتمال التثبيت لمسار CSRF ، يجب ضبطه على للقراءة فقط."
 
-#: lib/installer.php:2472
+#: lib/installer.php:2475
 msgid "All folders are writable"
 msgstr "جميع المجلدات قابلة للكتابة"
 
-#: lib/installer.php:2485
+#: lib/installer.php:2488
 msgid "Input Validation Whitelist Protection"
 msgstr "حماية القائمة البيضاء للتحقق من صحة المدخلات"
 
-#: lib/installer.php:2486
+#: lib/installer.php:2489
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
 msgstr "يمكن استغلال طرق إدخال بيانات Kadupul التي تستدعي نصًا برمجيًا بطرق يمكن لغير المسؤول من خلالها إلحاق الضرر بأي من الملفات التي يمتلكها حساب المستطلع ، وفي الحالات التي يقوم فيها شخص ما بتشغيل أداة الاقتراع Kadupul كجذر ، يمكن أن يعرض نظام التشغيل للخطر مما يسمح للمهاجمين استغلال بنيتك التحتية."
 
-#: lib/installer.php:2487
+#: lib/installer.php:2490
 msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 msgstr "لذلك ، منذ عدة إصدارات ، تم تحسين Kadupul لتوفير إمكانات القائمة البيضاء على هذه الأنواع من أساليب إدخال البيانات.  على الرغم من أن هذا يؤمن Kadupul بشكل أكثر شمولا ، إلا أنه يزيد من مقدار العمل المطلوب من قبل مسؤول Kadupul لاستيراد القوالب والحزم وإدارتها."
 
-#: lib/installer.php:2488
+#: lib/installer.php:2491
 #, fuzzy
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "الطريقة التي تعمل بها القائمة البيضاء هي أنه عند استيراد أسلوب إدخال البيانات لأول مرة ، أو إعادة استيراد أسلوب إدخال بيانات ، وتغيير البرنامج النصي و / أو الوسيطات بأي شكل من الأشكال ، سيتم تعطيل أسلوب إدخال البيانات وجميع مصادر البيانات المقابلة على الفور حتى يتحقق المسؤول من صحة أسلوب إدخال البيانات."
 
-#: lib/installer.php:2489
+#: lib/installer.php:2492
 msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
 msgstr "لتحديد طرق إدخال البيانات في هذه الحالة ، قدمنا برنامجًا نصيًا للتحقق من صحة دليل Kadupul's CLI يمكن تشغيله بالخيارات التالية:"
 
-#: lib/installer.php:2493
+#: lib/installer.php:2496
 msgid "This script option will search for any Data Input Methods that are currently banned and provide details as to why."
 msgstr "سيبحث خيار البرنامج النصي هذا عن أي من أساليب إدخال البيانات المحظورة حاليًا ويقدم تفاصيل عن السبب."
 
-#: lib/installer.php:2494
+#: lib/installer.php:2497
 msgid "This script option un-ban the Data Input Methods that are currently banned."
 msgstr "يقوم خيار البرنامج النصي هذا بإلغاء حظر أساليب إدخال البيانات المحظورة حاليًا."
 
-#: lib/installer.php:2495
+#: lib/installer.php:2498
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "سيعيد خيار البرنامج النصي هذا تمكين أي مصادر بيانات معطلة."
 
-#: lib/installer.php:2499
+#: lib/installer.php:2502
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
 msgstr "يُقترح بشدة أن تقوم بتحديث config.php الخاص بك لتمكين هذه الميزة عن طريق إلغاء <b>التعليق على</b> المتغير <b>$ input_whitelist</b> ثم تشغيل خيارات البرنامج النصي CLI الثلاثة أعلاه بعد اكتمال التثبيت المستند إلى الويب."
 
-#: lib/installer.php:2501
+#: lib/installer.php:2504
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
 msgstr "حدد خانة الاختيار أدناه للإقرار بأنك قد قرأت وفهمت مشكلة الأمان هذه"
 
-#: lib/installer.php:2503
+#: lib/installer.php:2506
 msgid "I have read this statement"
 msgstr "لقد قرأت هذا البيان"
 
-#: lib/installer.php:2520 lib/installer.php:2526
+#: lib/installer.php:2523 lib/installer.php:2529
 msgid "Default Profile"
 msgstr "ملف التعريف الافتراضي"
 
-#: lib/installer.php:2521
+#: lib/installer.php:2524
 msgid "Please select the default Data Source Profile to be used for polling sources.  This is the maximum amount of time between scanning devices for information so the lower the polling interval, the more work is placed on the Kadupul Server host.  Also, select the intended, or configured Cron interval that you wish to use for Data Collection."
 msgstr "يرجى تحديد ملف تعريف مصدر البيانات الافتراضي ليتم استخدامه لمصادر الاستطلاع. هذا هو الحد الأقصى لمقدار الوقت بين فحص الأجهزة للحصول على معلومات بحيث يتم تقليل الفاصل الزمني للاستقصاء ، يتم وضع المزيد من العمل على مضيف خادم Kadupul. أيضا ، حدد الفاصل الزمني Cron المقصود أو المكوّن الذي ترغب في استخدامه لجمع البيانات."
 
-#: lib/installer.php:2532
+#: lib/installer.php:2535
 msgid "Cron Interval"
 msgstr "كرون الفاصل"
 
-#: lib/installer.php:2553
+#: lib/installer.php:2556
 msgid "Default Automation Network"
 msgstr "افتراضي شبكة الأتمتة"
 
-#: lib/installer.php:2554
+#: lib/installer.php:2557
 msgid "Kadupul can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
 msgstr "Kadupul يمكنه فحص الشبكة تلقائيًا بمجرد اكتمال التثبيت. سيستخدم هذا نطاق الشبكة أدناه لتحديد نطاق عناوين IP التي يمكن مسحها ضوئيًا. يتم تعريف مجموعة محددة مسبقًا من الخيارات للمسح والتي تشمل استخدام كل من &quot;العامة&quot; و &quot;الخاصة&quot;."
 
-#: lib/installer.php:2555
+#: lib/installer.php:2558
 msgid "If your devices require a different set of options to be used first, you may define them below and they will be utilized before the defaults"
 msgstr "إذا كانت أجهزتك تتطلب مجموعة مختلفة من الخيارات ليتم استخدامها أولاً ، فيمكنك تعريفها أدناه وسيتم استخدامها قبل الإعدادات الافتراضية"
 
-#: lib/installer.php:2556
+#: lib/installer.php:2559
 msgid "All options may be adjusted post installation"
 msgstr "جميع الخيارات يمكن تعديلها بعد التثبيت"
 
-#: lib/installer.php:2560
+#: lib/installer.php:2563
 msgid "Default Options"
 msgstr "الخيارات الافتراضية"
 
-#: lib/installer.php:2564
+#: lib/installer.php:2567
 msgid "Scan Mode"
 msgstr "وضع المسح."
 
-#: lib/installer.php:2569
+#: lib/installer.php:2572
 msgid "Network Range"
 msgstr "نطاق الشبكة"
 
-#: lib/installer.php:2575
+#: lib/installer.php:2578
 msgid "Additional Defaults"
 msgstr "افتراضيات إضافية"
 
-#: lib/installer.php:2596
+#: lib/installer.php:2599
 msgid "Additional SNMP Options"
 msgstr "خيارات SNMP إضافية"
 
-#: lib/installer.php:2609
+#: lib/installer.php:2612
 msgid "Error Locating Profiles"
 msgstr "خطأ في تحديد موقع الملفات الشخصية"
 
-#: lib/installer.php:2610
+#: lib/installer.php:2613
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "لا يمكن متابعة التثبيت بسبب عدم العثور على ملفات تعريف."
 
-#: lib/installer.php:2611
+#: lib/installer.php:2614
 msgid "This may occur if you have a blank database and have not yet imported the cacti.sql file"
 msgstr "قد يحدث هذا إذا كان لديك قاعدة بيانات فارغة ولم تقم باستيراد الملف cacti.sql حتى الآن"
 
-#: lib/installer.php:2620
+#: lib/installer.php:2623
 msgid "Template Setup"
 msgstr "إعداد القالب"
 
-#: lib/installer.php:2623
+#: lib/installer.php:2626
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
 msgstr "حدد نوع القالب الذي ترغب في تصديره من Kadupul."
 
-#: lib/installer.php:2624
+#: lib/installer.php:2627
 msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
 msgstr "لا يُنصح بتحديث القوالب التي قمت بالفعل بإجراء تعديلات عليها. لن تؤدي ترقية القوالب إلى إزالة التعديلات التي تم إجراؤها على قوالب الرسم البياني والبيانات ، ويمكن أن تؤدي إلى سلوك غير متوقع. ومع ذلك ، إذا لم تكن قد أجريت تغييرات على أي رسم بياني أو استعلام بيانات أو قالب بيانات ، فلن يكون لإعادة استيراد الحزمة أي تأثير. في هذه الحالة ، يجب عليك \"مزامنة الرسوم البيانية\" من القوالب بعد التحديث."
 
-#: lib/installer.php:2626
+#: lib/installer.php:2629
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "يرجى تحديد قوالب الأجهزة التي ترغب في استخدامها بعد التثبيت. إذا كان نظام التشغيل هو Windows ، فأنت بحاجة إلى التأكد من تحديد قالب &quot;جهاز Windows&quot;. إذا كان نظام التشغيل هو Linux / UNIX ، فتأكد من تحديد &quot;Device Local Machine Machine&quot;."
 
-#: lib/installer.php:2632 package_import.php:487 plugins.php:596
+#: lib/installer.php:2635 package_import.php:487 plugins.php:596
 msgid "Author"
 msgstr "المؤلف"
 
-#: lib/installer.php:2632 package_import.php:490
+#: lib/installer.php:2635 package_import.php:490
 msgid "Homepage"
 msgstr "الصفحة الرئيسية"
 
-#: lib/installer.php:2658
+#: lib/installer.php:2661
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
 msgstr "تسمح لك &quot;القوالب الأجهزة&quot; بمراقبة مجموعة كبيرة من البيانات في Kadupul ورسم بياني لها. بعد تحديد &quot;قوالب الأجهزة&quot; المطلوبة ، اضغط على &quot;إنهاء&quot; وستكتمل عملية التثبيت. الرجاء التحلي بالصبر في هذه الخطوة ، نظرًا لأن استيراد &quot;نماذج الأجهزة&quot; قد يستغرق بضع دقائق."
 
-#: lib/installer.php:2667
+#: lib/installer.php:2670
 msgid "Server Collation"
 msgstr "تجميع الخادم"
 
-#: lib/installer.php:2674
+#: lib/installer.php:2677
 msgid "Your server collation appears to be UTF8 compliant"
 msgstr "يظهر ترتيب الخادم الخاص بك متوافقًا مع UTF8"
 
-#: lib/installer.php:2677
+#: lib/installer.php:2680
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "لا يظهر ترتيب الخادم الخاص بك متوافقًا تمامًا مع UTF8."
 
-#: lib/installer.php:2678
+#: lib/installer.php:2681
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
 msgstr "ضمن المقطع [mysqld] ، حدد موقع الإدخالات المسماة &quot;character ‑ set ‑ server&quot; و &quot;collation ‑ server&quot; وقم بتعيينها كالتالي:"
 
-#: lib/installer.php:2685
+#: lib/installer.php:2688
 msgid "Database Collation"
 msgstr "تجميع قاعدة البيانات"
 
-#: lib/installer.php:2690
+#: lib/installer.php:2693
 msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "يبدو أن الترتيب الافتراضي لقاعدة البيانات الخاص بك متوافقًا مع UTF8"
 
-#: lib/installer.php:2693
+#: lib/installer.php:2696
 msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
 msgstr "لا يظهر الترتيب الافتراضي لقاعدة البيانات الخاص بك على أنه متوافق تمامًا مع UTF8."
 
-#: lib/installer.php:2694
+#: lib/installer.php:2697
 msgid "Any tables created by plugins may have issues linked against Kadupul Core tables if the collation is not matched.   Please ensure your database is changed to 'utf8mb4_unicode_ci' by running the following: "
 msgstr "قد تحتوي أي جداول تم إنشاؤها بواسطة المكونات الإضافية على مشكلات مرتبطة بجداول Kadupul Core في حالة عدم مطابقة الترتيب. الرجاء التأكد من تغيير قاعدة البيانات الخاصة بك إلى &quot;utf8mb4_unicode_ci&quot; عن طريق تشغيل ما يلي:"
 
-#: lib/installer.php:2701
+#: lib/installer.php:2704
 msgid "Table Setup"
 msgstr "إعداد الجدول"
 
-#: lib/installer.php:2712
+#: lib/installer.php:2715
 #, php-format
 msgid "You have more tables than your PHP configuration will allow us to display/convert.  Please modify the max_input_vars setting in php.ini to a value above %s"
 msgstr "لديك جداول أكثر مما سيسمح لنا تكوين PHP بعرضه / تحويله.  يرجى تعديل إعداد max_input_vars php.ini إلى قيمة أعلى %s"
 
-#: lib/installer.php:2715
+#: lib/installer.php:2718
 msgid "Conversion of tables may take some time especially on larger tables.  The conversion of these tables will occur in the background but will not prevent the installer from completing.  This may slow down some servers if there are not enough resources for MySQL to handle the conversion."
 msgstr "قد يستغرق تحويل الجداول بعض الوقت خاصة على جداول أكبر. سيحدث تحويل هذه الجداول في الخلفية ولكن لن يمنع المثبّت من الاكتمال. قد يؤدي هذا إلى إبطاء بعض الخوادم إذا لم تكن هناك موارد كافية لـ MySQL للتعامل مع التحويل."
 
-#: lib/installer.php:2719
+#: lib/installer.php:2722
 msgid "Tables"
 msgstr "الجداول"
 
-#: lib/installer.php:2720 utilities.php:853
+#: lib/installer.php:2723 utilities.php:853
 msgid "Collation"
 msgstr "الترتيب"
 
-#: lib/installer.php:2720 utilities.php:848
+#: lib/installer.php:2723 utilities.php:848
 msgid "Engine"
 msgstr "مكنة، ماكنة، محرك"
 
-#: lib/installer.php:2720 utilities.php:854
+#: lib/installer.php:2723 utilities.php:854
 msgid "Row Format"
 msgstr "تنسيق الصف"
 
-#: lib/installer.php:2752
+#: lib/installer.php:2755
 msgid "One or more tables are too large to convert during the installation.  You should use the cli/convert_tables.php script to perform the conversion, then refresh this page. For example: "
 msgstr "جدول واحد أو أكثر كبير جدًا بحيث لا يمكن تحويله أثناء التثبيت. يجب عليك استخدام البرنامج النصي cli / convert_tables.php لتنفيذ التحويل ، ثم تحديث هذه الصفحة. فمثلا:"
 
-#: lib/installer.php:2756
+#: lib/installer.php:2759
 msgid "The following tables should be converted to UTF8 and InnoDB with a Dynamic row format.  Please select the tables that you wish to convert during the installation process."
 msgstr "يجب تحويل الجداول التالية إلى UTF8 و InnoDB. يرجى تحديد الجداول التي ترغب في تحويلها أثناء عملية التثبيت."
 
-#: lib/installer.php:2762
+#: lib/installer.php:2765
 msgid "All your tables appear to be UTF8 and Dynamic row format compliant"
 msgstr "يبدو أن جميع الجداول الخاصة بك متوافقة مع UTF8"
 
-#: lib/installer.php:2773
+#: lib/installer.php:2776
 msgid "Confirm Upgrade"
 msgstr "تأكيد الترقية"
 
-#: lib/installer.php:2777
+#: lib/installer.php:2780
 msgid "Confirm Downgrade"
 msgstr "تأكيد خفض"
 
-#: lib/installer.php:2781
+#: lib/installer.php:2784
 msgid "Confirm Installation"
 msgstr "تأكيد التثبيت"
 
-#: lib/installer.php:2782 plugins.php:13
+#: lib/installer.php:2785 plugins.php:13
 msgid "Install"
 msgstr "تثبيت"
 
-#: lib/installer.php:2787
+#: lib/installer.php:2790
 msgid "DOWNGRADE DETECTED"
 msgstr "تم الكشف عن DOWNECTED"
 
-#: lib/installer.php:2788
+#: lib/installer.php:2791
 msgid "YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
 msgstr "يجب تغيير قاعدة بيانات Kadupul يدويا للتراجع عن أية تغييرات ترقية تم إجراؤها.<br/>ليس لدى المثبت طريقة للقيام بذلك تلقائيا نيابة عنك"
 
-#: lib/installer.php:2789
+#: lib/installer.php:2792
 msgid "Downgrading should only be performed when absolutely necessary and doing so may break your installation"
 msgstr "يجب إجراء الرجوع إلى إصدار أقدم فقط عند الضرورة القصوى وقد يؤدي القيام بذلك إلى تعطيل التثبيت"
 
-#: lib/installer.php:2792
+#: lib/installer.php:2795
 msgid "Your Kadupul Server is almost ready.  Please check that you are happy to proceed."
 msgstr "خادم Kadupul جاهز تقريبًا. يرجى التحقق من أنك سعيد بالمتابعة."
 
-#: lib/installer.php:2795
+#: lib/installer.php:2798
 #, php-format
 msgid "Press '%s' then click '%s' to complete the installation process after selecting your Device Templates."
 msgstr "اضغط على \"%s\" ثم انقر فوق \"%s\" لإكمال عملية التثبيت بعد تحديد قوالب الجهاز."
 
-#: lib/installer.php:2812
+#: lib/installer.php:2815
 #, fuzzy, php-format
 msgid "Installing Kadupul Server v%s"
 msgstr "تثبيت خادم Kadupul v%s"
 
-#: lib/installer.php:2813
+#: lib/installer.php:2816
 msgid "Your Kadupul Server is now installing"
 msgstr "يتم تثبيت خادم Kadupul الآن"
 
-#: lib/installer.php:2900
+#: lib/installer.php:2903
 #, php-format
 msgid "Spawning background process: %s %s"
 msgstr "عملية تفريخ الخلفية: %s %s"
 
-#: lib/installer.php:2927
+#: lib/installer.php:2930
 msgid "Complete"
 msgstr "مكتمّل"
 
-#: lib/installer.php:2928
+#: lib/installer.php:2931
 #, fuzzy, php-format
 msgid "Your Kadupul Server v%s has been installed/updated.  You may now start using the software."
 msgstr "تم تثبيت / تحديث خادم Kadupul v%s الخاص بك.  يمكنك الآن البدء في استخدام البرنامج."
 
-#: lib/installer.php:2932
+#: lib/installer.php:2935
 #, php-format
 msgid "Your Kadupul Server v%s has been installed/updated with errors"
 msgstr "تم تثبيت/تحديث ملف Kadupul Server v%s مع وجود أخطاء"
 
-#: lib/installer.php:3046
+#: lib/installer.php:3049
 msgid "Get Help"
 msgstr "احصل على مساعدة"
 
-#: lib/installer.php:3051
+#: lib/installer.php:3054
 msgid "Report Issue"
 msgstr "إبلاغ عن مشكلة"
 
-#: lib/installer.php:3054
+#: lib/installer.php:3057
 msgid "Get Started"
 msgstr "البدء"
 
-#: lib/installer.php:3110
+#: lib/installer.php:3113
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "بدء عملية %s ل v%s"
 
-#: lib/installer.php:3136
+#: lib/installer.php:3139
 msgid "Unable to update application defaults."
 msgstr ""
 
-#: lib/installer.php:3139
+#: lib/installer.php:3142
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "انتهت عملية %s ل v%s"
 
-#: lib/installer.php:3179
+#: lib/installer.php:3182
 #, php-format
 msgid "Found %s templates to install"
 msgstr "العثور على قوالب %s للتثبيت"
 
-#: lib/installer.php:3189
+#: lib/installer.php:3192
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "على وشك استيراد الحزمة # %s '%s'."
 
-#: lib/installer.php:3198
+#: lib/installer.php:3201
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "نجح استيراد الحزمة # %s '%s' ضمن الملف الشخصي \"%s\""
 
-#: lib/installer.php:3204
+#: lib/installer.php:3207
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "فشل استيراد الحزمة # %s '%s' ضمن الملف الشخصي '%s'"
 
-#: lib/installer.php:3221
+#: lib/installer.php:3224
 #, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "قالب أتمتة التعيين لقالب الجهاز '%s'"
 
-#: lib/installer.php:3242
+#: lib/installer.php:3245
 msgid "No templates were selected for import"
 msgstr "لم يتم تحديد أي قوالب للاستيراد"
 
-#: lib/installer.php:3252
+#: lib/installer.php:3255
 msgid "Updating remote configuration file"
 msgstr "في انتظار التكوين"
 
-#: lib/installer.php:3287
+#: lib/installer.php:3290
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "تعيين ملف تعريف مصدر البيانات الافتراضي إلى %s (%s)"
 
-#: lib/installer.php:3315
+#: lib/installer.php:3318
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "فشل في العثور على ملف التعريف المحدد (%s) ، لم يتم إجراء أي تغييرات"
 
-#: lib/installer.php:3324
+#: lib/installer.php:3327
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "تحديث شبكة الأتمتة (%s) ، الوضع \"%s\" = > \"%s\" ، الشبكة الفرعية \"%s\" = > %s\""
 
-#: lib/installer.php:3334
+#: lib/installer.php:3337
 msgid "Failed to find automation network, no changes were made"
 msgstr "فشل العثور على شبكة الأتمتة ، ولم يتم إجراء أي تغييرات"
 
-#: lib/installer.php:3338
+#: lib/installer.php:3341
 msgid "Adding extra snmp settings for automation"
 msgstr "إضافة إعدادات snmp إضافية للأتمتة"
 
-#: lib/installer.php:3344
+#: lib/installer.php:3347
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "تحديد تعيين خيار التنفيذ التلقائي %s"
 
-#: lib/installer.php:3357
+#: lib/installer.php:3360
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "تحديث مجموعة خيارات التنفيذ التلقائي %s"
 
-#: lib/installer.php:3360
+#: lib/installer.php:3363
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "تم تحديث مجموعة خيارات التنفيذ التلقائي بنجاح %s"
 
-#: lib/installer.php:3362
+#: lib/installer.php:3365
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "تعيين خيار أتمتة إعادة التسلسل %s"
 
-#: lib/installer.php:3370
+#: lib/installer.php:3373
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "فشل تحديث مجموعة خيارات التنفيذ التلقائي %s"
 
-#: lib/installer.php:3373
+#: lib/installer.php:3376
 msgid "Failed to find any automation option set"
 msgstr "تعذّر العثور على البيانات لنسخها!"
 
-#: lib/installer.php:3403
+#: lib/installer.php:3406
 #, fuzzy, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "قالب الجهاز لجهاز Kadupul الأول هو %s"
 
-#: lib/installer.php:3433
+#: lib/installer.php:3436
 msgid "Creating Graphs for Default Device"
 msgstr "إنشاء الرسوم البيانية لهذا الجهاز"
 
-#: lib/installer.php:3440
+#: lib/installer.php:3443
 msgid "Adding Device to Default Tree"
 msgstr "افتراضيات الجهاز"
 
-#: lib/installer.php:3448
+#: lib/installer.php:3451
 msgid "No templated graphs for Default Device were found"
 msgstr "لم يتم العثور على الرسوم البيانية القوالب للجهاز الافتراضي"
 
-#: lib/installer.php:3452
+#: lib/installer.php:3455
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "تحذير: لم يتم العثور على نموذج الجهاز لنظام التشغيل الخاص بك. ستحتاج إلى استيراد قوالب الأجهزة أو حزم Kadupul لمراقبة خادم Kadupul."
 
-#: lib/installer.php:3459
+#: lib/installer.php:3462
 msgid "Running first-time data query for local host"
 msgstr "تشغيل استعلام بيانات لأول مرة للمضيف المحلي"
 
-#: lib/installer.php:3467
+#: lib/installer.php:3470
 msgid "Repopulating poller cache"
 msgstr "إعادة بناء بولير"
 
-#: lib/installer.php:3472
+#: lib/installer.php:3475
 msgid "Repopulating SNMP Agent cache"
 msgstr "إعادة بناء SNMPAgent ذاكرة التخزين المؤقت"
 
-#: lib/installer.php:3477
+#: lib/installer.php:3480
 msgid "Generating RSA Key Pair"
 msgstr "توليد زوج مفاتيح RSA"
 
-#: lib/installer.php:3490
+#: lib/installer.php:3493
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "تم العثور على جداول %s للتحويل"
 
-#: lib/installer.php:3497
+#: lib/installer.php:3500
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "تحويل الجدول # %s '%s'"
 
-#: lib/installer.php:3512
+#: lib/installer.php:3515
 msgid "No tables where found or selected for conversion"
 msgstr "لم يتم العثور على جداول أو تحديدها للتحويل"
 
-#: lib/installer.php:3524
+#: lib/installer.php:3527
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "تم التبديل من %s إلى %s"
 
-#: lib/installer.php:3528
+#: lib/installer.php:3531
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "ملاحظة: استخدام ملف مؤقت لذاكرة التخزين المؤقت ديسيبل: %s"
 
-#: lib/installer.php:3550
+#: lib/installer.php:3553
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "الترقية من v%s (DB %s) إلى v%s"
 
-#: lib/installer.php:3558
+#: lib/installer.php:3561
 #, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "تحذير: فشل العثور على وظيفة الترقية ل v%s"
 
-#: lib/installer.php:3619
+#: lib/installer.php:3622
 msgid "Install aborted due to no EULA acceptance"
 msgstr "تم إحباط التثبيت بسبب عدم قبول اتفاقية ترخيص المستخدم النهائي"
 
-#: lib/installer.php:3643
+#: lib/installer.php:3646
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "بدأت الخلفية بالفعل في %s ، وتم تخطي هذه المحاولة في %s"
 
-#: lib/installer.php:3667
+#: lib/installer.php:3670
 #, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "حدث استثناء أثناء التثبيت: # %s - %s"
 
-#: lib/installer.php:3686
+#: lib/installer.php:3689
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "بدأ التثبيت في %s ، واكتمل في %s"
 
-#: lib/installer.php:3723
+#: lib/installer.php:3726
 msgid "Both"
 msgstr "كلاهما"
 
-#: lib/installer.php:3723
+#: lib/installer.php:3726
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "%s %s"
 
-#: lib/installer.php:3728
+#: lib/installer.php:3731
 #, php-format
 msgid "%s - N/A"
 msgstr "%s - غير متوفر"
 
-#: lib/installer.php:3728 lib/installer.php:3730
+#: lib/installer.php:3731 lib/installer.php:3733
 msgid "Web"
 msgstr "شبكة الويب"
 
-#: lib/installer.php:3730 lib/installer.php:3733
+#: lib/installer.php:3733 lib/installer.php:3736
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "%s %s"
 
-#: lib/installer.php:3733
+#: lib/installer.php:3736
 msgid "Cli"
 msgstr "كلاسيكي"
 
-#: lib/installer.php:3739
+#: lib/installer.php:3742
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "إعداد خيار PHP %s = %s"
 
-#: lib/installer.php:3745
+#: lib/installer.php:3748
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "فشل في تعيين خيار PHP %s ، هل %s (يجب أن يكون %s)"
 
-#: lib/installer.php:3782
+#: lib/installer.php:3785
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "لم يتم العثور على جامعي البيانات عن بعد للمزامنة الكاملة"
 
