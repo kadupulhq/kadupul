@@ -252,9 +252,11 @@ def boundary_status_channel():
 
 def native_worker_boundary():
     """Wait for delayed shells and grandchildren, including non-poller names."""
-    if not sys.platform.startswith('linux') or shutil.which('php') is None:
-        print('native process-group boundary requires Linux /proc and PHP; covered in Linux validation')
+    if not sys.platform.startswith('linux'):
+        print('native process-group boundary requires Linux /proc; covered in Linux validation')
         return
+    if shutil.which('php') is None:
+        raise RuntimeError('Linux worker-boundary validation requires PHP')
     import subprocess
     import tempfile
     with tempfile.TemporaryDirectory(prefix='behavior-worker-') as directory:
@@ -299,6 +301,13 @@ def main():
 
     poller_acknowledgement_contract()
     boundary_status_channel()
+    with patch('sys.platform', 'linux'), patch('shutil.which', return_value=None):
+        try:
+            native_worker_boundary()
+        except RuntimeError as error:
+            assert 'requires PHP' in str(error)
+        else:
+            raise AssertionError('Linux validation silently skipped PHP')
     native_worker_boundary()
     recording_guards()
     diagnostic_contracts()

@@ -650,12 +650,7 @@ class Harness:
                 failures.append(name + ': REGRESSION')
                 (self.destination / (name.replace('/', '--') + '.diff')).write_text(''.join(difflib.unified_diff(
                     path.read_text().splitlines(True), (json.dumps(value, indent=2, ensure_ascii=False) + '\n').splitlines(True), fromfile='golden', tofile='observed')))
-        # A golden with no observation means a scenario was renamed or removed.
-        # Walking only what ran would let that disappear silently.
-        if not self.args.update_golden and golden_root.exists():
-            recorded = {str(p.relative_to(golden_root))[:-5] for p in golden_root.rglob('*.json')}
-            for orphan in sorted(recorded - set(self.observed)):
-                failures.append(orphan + ': GOLDEN HAS NO OBSERVATION (scenario removed or renamed)')
+        # The pre-recording inventory validation above owns orphan detection.
 
         if skipped:
             print(f'{len(skipped)} scenarios ran but were not verified (--only {" ".join(self.args.only)})')
