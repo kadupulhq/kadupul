@@ -758,6 +758,37 @@ function float_processes_running() {
 }
 
 /**
+ * float_reap_dead_children - removes the process table rows of any child that
+ *   exited without unregistering itself, so the rmaster's wait loop stops
+ *   counting a worker that is already gone
+ *
+ * @return - (int) The number of children that were reaped
+ */
+function float_reap_dead_children() {
+	$reaped = 0;
+
+	$children = db_fetch_assoc_prepared('SELECT *
+		FROM processes
+		WHERE tasktype = ?
+		AND taskname = ?',
+		array('rfloat', 'child'));
+
+	foreach($children as $c) {
+		if (cacti_process_still_running($c['pid'])) {
+			continue;
+		}
+
+		cacti_log(sprintf('WARNING: Float Data Process Number %s with PID %s exited without unregistering itself.  Its unprocessed RRDfiles remain queued for --resume.', $c['taskid'], cacti_process_pid_for_log($c['pid'])), false, 'RFLOAT');
+
+		unregister_process($c['tasktype'], $c['taskname'], $c['taskid'], $c['pid']);
+
+		$reaped++;
+	}
+
+	return $reaped;
+}
+
+/**
  * float_debug - this simple routine prints a standard message to the console
  *   when running in debug mode.
  *
