@@ -286,7 +286,12 @@ switch ($type) {
 			 * temporary XML file is created exclusively, so one left by a killed
 			 * child is refused rather than overwritten, and deleting the row
 			 * anyway would drop that RRD from the queue unfloated. */
-			$rrd_rewrite_lock = rrd_maintenance_cli_lock(true, true);
+			$rrd_rewrite_lock = rrd_maintenance_acquire(($config['cacti_server_os'] ?? '') !== 'win32', true);
+			if ($rrd_rewrite_lock === false) {
+				fwrite(STDERR, "FATAL: RRD storage is busy or its maintenance lock is unavailable.\n");
+				$exit_status = 1;
+				break; // Leave the row queued, then unregister this child below.
+			}
 			try {
 				if (float_rrdfile($data['rrd_path'], $data['local_data_id'], $step, $start_time, $end_time)) {
 					db_execute_prepared('DELETE FROM poller_float_rrdfiles_not_done
@@ -666,7 +671,7 @@ function float_master_handler($forcerun, $resume, $host_id, $host_template_id, $
 		}
 	}
 
-	if ($rrds > 0) {
+	if (!is_numeric($rrds) || (int) $rrds !== 0) {
 		cacti_log('ERROR: RRD floating left unprocessed files; use --resume after correcting the failure.', true, 'RFLOAT');
 		return false;
 	}
