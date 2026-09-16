@@ -126,10 +126,19 @@ observations, missing selected scenarios and orphan golden files fail before
 any golden is written. Failed runtime probes also leave an incomplete manifest.
 The committed PHP 8.2 baseline was recaptured and reproduced against application
 revision `6ce3572dab3264be563b765f25dcadd8cc046252` using the updated harness.
-The prior observations change in two places: the calibration warning’s harness
+The historical refresh changes the calibration warning’s harness
 line number (86 to 79), and removal of ten `config_settings` callbacks produced
-by seeded network-discovery workers. Fixture setup now disables that unrelated
+by seeded network-discovery workers. It also separates RRDtool acknowledgement
+counts in the three poller command contracts, as described below. Fixture setup
+now disables that unrelated
 discovery network before polling. The two diagnostic scopes are new. This is the documented
 modified Kadupul baseline, not a claim of upstream parity. Other runtime baselines
 need their own explicit capture and repeat run. Orphan checks inspect every
 existing runtime directory for the selected target.
+
+Poller command contracts retain exit status, stderr, and the exact order of
+non-acknowledgement stdout lines. Complete RRDtool `OK u:... s:... r:...`
+acknowledgements are counted separately: child writes can interleave with the
+parent statistics line in either order. Missing acknowledgements still change
+the contract. The three poller goldens explicitly adopt this representation;
+other output and diagnostic records are not sorted or discarded.

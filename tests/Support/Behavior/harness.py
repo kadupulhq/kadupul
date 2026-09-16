@@ -83,6 +83,21 @@ def normalize(value):
         return CLOCK.sub('[<TIME>]', value)
     return value
 
+def poller_command_contract(result):
+    """Count RRD child acknowledgements independently of parent stdout timing."""
+    command = {key: result[key] for key in ('exit', 'stdout', 'stderr')}
+    acknowledgements = 0
+    output = []
+    for line in command['stdout'].splitlines(keepends=True):
+        if re.fullmatch(r'OK u:\d+\.\d+ s:\d+\.\d+ r:\d+\.\d+\r?\n?', line):
+            acknowledgements += 1
+        else:
+            output.append(line)
+    command['stdout'] = ''.join(output)
+    command['rrd_acknowledgements'] = acknowledgements
+    return command
+
+
 def visible_diagnostics(events):
     """Observed diagnostics enabled by both shipped and current reporting policy."""
     return [event for event in events if event['severity'] == 'FATAL'
@@ -426,7 +441,7 @@ class Harness:
         if not any(call.startswith('update ') for call in rrd_calls):
             raise RuntimeError('Poller made no RRD updates; refusing to record a hollow run')
         self.capture('poller/run-reachable', {
-            'command': {k: run[k] for k in ('exit', 'stdout', 'stderr')},
+            'command': poller_command_contract(run),
             'database': state,
             'rrd_calls': rrd_calls,
         })
@@ -454,7 +469,7 @@ class Harness:
             raise RuntimeError('rrdtool failure was never injected; the scenario would record a normal poll')
 
         self.capture('poller/rrd-failure', {
-            'command': {k: failed[k] for k in ('exit', 'stdout', 'stderr')},
+            'command': poller_command_contract(failed),
             'database': self.poller_state(),
             'rrd_calls': self.rrd_calls(),
         })
@@ -465,7 +480,7 @@ class Harness:
         self.truncate_artifacts('rrd-argv.log', 'rrd-stdin.log')
         unreachable = self.php('poller.php', '--force')
         self.capture('poller/device-unreachable', {
-            'command': {k: unreachable[k] for k in ('exit', 'stdout', 'stderr')},
+            'command': poller_command_contract(unreachable),
             'database': self.poller_state(),
         })
         self.sql("UPDATE host SET hostname='127.0.0.1', availability_method=0 WHERE id=" + device + ";")

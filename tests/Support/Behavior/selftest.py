@@ -205,6 +205,21 @@ def diagnostic_contracts():
     print('diagnostic scopes preserve severity, content, order and duplicate records')
 
 
+def poller_acknowledgement_contract():
+    acknowledgement = 'OK u:0.01 s:0.02 r:0.03\n'
+    other = 'statistics\nwarning containing OK u:0.01 s:0.02 r:0.03\n'
+    def contract(stdout):
+        return harness.poller_command_contract({'exit': 7, 'stdout': stdout, 'stderr': 'error\n'})
+    before = contract(acknowledgement * 2 + other)
+    after = contract(acknowledgement + other + acknowledgement)
+    assert before == after
+    assert before == {'exit': 7, 'stdout': other, 'stderr': 'error\n', 'rrd_acknowledgements': 2}
+    assert contract(acknowledgement + other) != before
+    assert contract('OK u:broken s:0.02 r:0.03\n' + other)['rrd_acknowledgements'] == 0
+    assert contract('line two\nline one\n')['stdout'] == 'line two\nline one\n'
+    print('poller acknowledgement counts remain stable without erasing errors or other output order')
+
+
 def boundary_status_channel():
     for completed in (True, False):
         captured = object.__new__(harness.Harness)
@@ -273,6 +288,7 @@ def main():
 
     print(f'{len(CASES) - len(failures)}/{len(CASES)} normalization cases pass')
 
+    poller_acknowledgement_contract()
     boundary_status_channel()
     native_worker_boundary()
     recording_guards()
