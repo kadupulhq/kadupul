@@ -89,6 +89,8 @@ function db_fetch_cell($sql)
 }
 function db_execute_prepared($sql, $params)
 {
+    if (getenv('ACK_FAIL') === 'delete') { return false; }
+
     if (getenv('ACK_FAIL') === '1') {
         throw new RuntimeException('Deletion before acknowledgement');
     }
@@ -97,6 +99,10 @@ function db_execute_prepared($sql, $params)
 }
 function rrdtool_function_update($updates, $pipe = false, &$completed = null)
 {
+    if (getenv('ACK_FAIL') === 'replace') {
+        $GLOBALS['ack_db']->exec("UPDATE " . $GLOBALS['ack_table'] . " SET output='99' WHERE time='2020-01-01'");
+    }
+
     if (!in_array(getenv('ACK_FAIL'), array('mixed', 'page', 'rejected'), true)) {
     $GLOBALS['ack_db']->exec('INSERT INTO ' . $GLOBALS['ack_table'] . " VALUES(1,'value','2020-01-02','43'" . (getenv('ACK_REALTIME') === '1' ? ',1' : '') . ')');
     }
@@ -109,7 +115,7 @@ function rrdtool_function_update($updates, $pipe = false, &$completed = null)
             }
         }
     }
-    return getenv('ACK_FAIL') !== '0' ? false : 1;
+    return in_array(getenv('ACK_FAIL'), array('0','replace'), true) ? 1 : false;
 }
 function db_close()
 {

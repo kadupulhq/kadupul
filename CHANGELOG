@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Before code-only upgrades, configure explicit RRD service UID/GID trust for shared stores as documented in docs/testing/spikekill-safety.md; poller startup now refuses unsafe storage and notifies the configured administrator before spawning workers
 -security: Shared RRD stores may explicitly trust service owners and groups while retaining writer leases; world-writable stores still fail closed so maintenance cannot race uncoordinated writes
 -issue: Unregister a float_rrdfiles.php child whose process is gone so the master stops waiting on it and reports the retained queue, instead of waiting forever on a child that was killed outright
 -issue: Retain the batchgapfix.php queue and exit non-zero when a result tally or the in-progress count cannot be read, instead of treating the failed query as zero and truncating the table

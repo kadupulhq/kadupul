@@ -117,9 +117,9 @@ function pollerDeferredProbe(&$pipe, $remainder, &$deferred)
     return 0;
 }
 
-test('main poller skips subsequent drains and final drain after a deferred handoff', function () {
+test('main poller retries subsequent and final drains while preserving a failure result', function () {
     $source = file_get_contents(dirname(__DIR__, 4) . '/poller.php');
-    preg_match_all('/if \(\$poller_id == 1\) \{\s*if \(!\$poller_output_deferred\) \{.*?\n\t{5}\}/s', $source, $matches);
+    preg_match_all('/if \(\$poller_id == 1\) \{\s*if \(empty\(\$rrd_write_initialization_failed\)\) \{.*?\n\t{5}\}/s', $source, $matches);
     expect($matches[0])->toHaveCount(2);
     $poller_id = 1;
     $poller_output_deferred = false;
@@ -130,8 +130,8 @@ test('main poller skips subsequent drains and final drain after a deferred hando
     foreach (array($matches[0][1], $matches[0][1], $matches[0][0]) as $guard) {
         eval(str_replace('process_poller_output(', '\\' . __NAMESPACE__ . '\\pollerDeferredProbe(', $guard)); // nosemgrep: php.lang.security.eval-use.eval-use
     }
-    expect($GLOBALS['deferred_probe_calls'])->toBe(1)
-        ->and($poller_output_deferred)->toBeTrue();
+    expect($GLOBALS['deferred_probe_calls'])->toBe(3)
+        ->and($poller_output_deferred)->toBeTrue()->and($rrd_write_failed)->toBeTrue();
 });
 
 
@@ -174,7 +174,7 @@ test('write or cleanup failure defers remaining samples without premature deleti
         expect(process_poller_output($pipe, false, $deferred, $consumed))->toBe($writer_failed ? 0 : 2)
             ->and($deferred)->toBeTrue()
             ->and($consumed)->toBe($writer_failed ? 0 : 1)
-            ->and($GLOBALS['cleanup_retry_keys'] ?? array())->toBe($writer_failed ? array() : array(array(7, 'value', $row['time']), array(7, 'value', $next['time'])))
+            ->and($GLOBALS['cleanup_retry_keys'] ?? array())->toBe($writer_failed ? array() : array(array(7, 'value', $row['time'], $row['output']), array(7, 'value', $next['time'], $next['output'])))
             ->and($GLOBALS['cleanup_retry_updates']['/example.rrd']['times'])->toBe(array($row['unix_time'] => array('value' => '10'), $next['unix_time'] => array('value' => '11')));
     } finally {
         unset($GLOBALS['writer_failed'], $GLOBALS['cleanup_retry_rows'], $GLOBALS['cleanup_retry_keys'], $GLOBALS['cleanup_retry_updates']);
@@ -331,7 +331,7 @@ test('keyset draining reaches complete samples behind an incomplete page and com
             ->and($GLOBALS['pagination_probe'])->toBe(array())
             ->and($GLOBALS['pagination_params'])->toBe(array(array(), array(40000, $row['time'], 'a'), array(40000, $row['time'])))
             ->and($GLOBALS['pagination_deleted'])->toHaveCount($complete_boundary ? 3 : 1)
-            ->and($GLOBALS['pagination_deleted'])->toContain(array(40001, 'a', $row['time']));
+            ->and($GLOBALS['pagination_deleted'])->toContain(array(40001, 'a', $row['time'], $row['output']));
     } finally {
         unset($GLOBALS['pagination_deleted'], $GLOBALS['pagination_probe'], $GLOBALS['pagination_params'], $GLOBALS['cleanup_retry_rows'],
             $GLOBALS['cleanup_retry_keys'], $GLOBALS['cleanup_retry_updates'], $GLOBALS['diagnostic_probe'],

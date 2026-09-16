@@ -467,16 +467,17 @@ function rrdtool_execute() {
 		return call_user_func_array($function, $args);
 	}
 
+	$destructive = in_array($verb, array('tune', 'resize', 'restore'), true);
 	require_once __DIR__ . '/rrd_maintenance.php';
 	if (isset($args[3]) && is_resource($args[3])) {
-		if (!rrd_maintenance_pipe($args[3])) {
+		if (!rrd_maintenance_pipe($args[3]) || ($destructive && !rrd_maintenance_pipe_is_exclusive($args[3]))) {
 			cacti_log('ERROR: Local RRD pipes must be opened with rrd_init for maintenance coordination.');
 			return false;
 		}
 		return call_user_func_array($function, $args);
 	}
 
-	$lock = rrd_maintenance_acquire();
+	$lock = rrd_maintenance_acquire($destructive && ($config['cacti_server_os'] ?? '') !== 'win32');
 	if ($lock === false) {
 		cacti_log('ERROR: Unable to coordinate local RRD writes with maintenance.');
 		return false;
@@ -1249,6 +1250,10 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 		if (!cacti_rrdtool_valid_path($rrd_path) || !rrd_check_path($rrd_path)) {
 			cacti_log("ERROR: Invalid RRD file path in poller cache for local_data_id: {$rrd_fields['local_data_id']}.", false, 'POLLER');
 
+			foreach ($rrd_fields['times'] as $update_time => $field_array) {
+				cacti_log('ERROR: Invalid RRD sample path (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array)), false, 'POLLER');
+				$completed[$rrd_path][$update_time] = true;
+			}
 			$failed = true;
 			continue;
 		}
@@ -1265,7 +1270,10 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 
 			if ($file_exists === false) {
 				$times = array_keys($rrd_fields['times']);
-				rrdtool_function_create($rrd_fields['local_data_id'], false, $rrdtool_pipe);
+				if (rrdtool_function_create($rrd_fields['local_data_id'], false, $rrdtool_pipe) === false) {
+					$failed = true;
+					continue;
+				}
 				$create_rrd_file = true;
 			}
 
@@ -1302,8 +1310,10 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 				} else {
 					cacti_log("ERROR: Invalid RRD update time for local_data_id: {$rrd_fields['local_data_id']}.", false, 'POLLER');
 
+					cacti_log('ERROR: Invalid RRD sample (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array)), false, 'POLLER');
+					$completed[$rrd_path][$update_time] = true;
 					$failed = true;
-					break;
+					continue;
 				}
 
 				$rrd_update_template = '';
@@ -1321,8 +1331,10 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 					if (!cacti_rrdtool_valid_ds_name($field_name)) {
 						cacti_log("ERROR: Invalid RRD update data source name for local_data_id: {$rrd_fields['local_data_id']}.", false, 'POLLER');
 
+						cacti_log('ERROR: Invalid RRD sample data source (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array)), false, 'POLLER');
+						$completed[$rrd_path][$update_time] = true;
 						$failed = true;
-						break 2;
+						continue 2;
 					}
 
 					$rrd_update_template .= $field_name;
@@ -1355,8 +1367,10 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 				if (!cacti_rrdtool_valid_ds_template($rrd_update_template) || cacti_has_control_chars($rrd_update_values)) {
 					cacti_log("ERROR: Invalid RRD update template or value set for local_data_id: {$rrd_fields['local_data_id']}.", false, 'POLLER');
 
+					cacti_log('ERROR: Invalid RRD sample (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array)), false, 'POLLER');
+					$completed[$rrd_path][$update_time] = true;
 					$failed = true;
-					break;
+					continue;
 				}
 
 				if (rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== true) {

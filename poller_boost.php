@@ -112,6 +112,9 @@ if (cacti_sizeof($parms)) {
 	}
 }
 
+require_once __DIR__ . '/lib/rrd_maintenance.php';
+if (!rrd_maintenance_poller_preflight()) { exit(1); }
+
 /* install signal handlers for UNIX only */
 if (function_exists('pcntl_signal')) {
 	pcntl_signal(SIGTERM, 'sig_handler');

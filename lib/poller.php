@@ -646,14 +646,16 @@ function poller_delete_output_rows($keys, &$failed = null) {
 
 	$consumed = 0;
 	foreach (array_chunk($keys, 10000) as $chunk) {
+		$with_output = count($chunk[0]) === 4;
 		$params = array();
 		foreach ($chunk as $key) {
 			$params[] = (int) $key[0];
 			$params[] = (string) $key[1];
 			$params[] = (string) $key[2];
+			if ($with_output) { $params[] = (string) $key[3]; }
 		}
-		$placeholders = implode(',', array_fill(0, cacti_sizeof($chunk), '(?,?,?)'));
-		if (db_execute_prepared("DELETE FROM poller_output WHERE (local_data_id, rrd_name, time) IN ($placeholders)", $params) === false) {
+		$placeholders = implode(',', array_fill(0, cacti_sizeof($chunk), $with_output ? '(?,?,?,?)' : '(?,?,?)'));
+		if (db_execute_prepared("DELETE FROM poller_output WHERE (local_data_id, rrd_name, time" . ($with_output ? ", output" : "") . ") IN ($placeholders)", $params) === false) {
 			$failed = true;
 			break;
 		}
@@ -1031,7 +1033,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 				 * those data sources from the $rrd_update_array yet.
 				 */
 				if ($item['rrd_num'] <= cacti_sizeof($rrd_update_array[$rrd_path]['times'][$unix_time])) {
-					$output_keys[] = array($item['local_data_id'], $item['rrd_name'], $item['time']);
+					$output_keys[] = array($item['local_data_id'], $item['rrd_name'], $item['time'], $item['output']);
 
 				} else {
 					unset($rrd_update_array[$rrd_path]['times'][$unix_time]);
@@ -1054,7 +1056,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 			$output_keys = array();
 			foreach ($results as $item) {
 				if (isset($completed[$item['rrd_path']][$item['unix_time']])) {
-					$output_keys[] = array($item['local_data_id'], $item['rrd_name'], $item['time']);
+					$output_keys[] = array($item['local_data_id'], $item['rrd_name'], $item['time'], $item['output']);
 				}
 			}
 		}

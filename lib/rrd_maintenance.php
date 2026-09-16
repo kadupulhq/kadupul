@@ -192,7 +192,7 @@ function rrd_maintenance_configuration_error() {
         return '';
     }
     $path = $config['rra_path'] ?? (($config['base_path'] ?? '') . '/rra');
-    if (rrd_maintenance_directory_is_trusted($path) && is_readable($path)) {
+    if (rrd_maintenance_directory_is_trusted($path) && is_readable($path) && is_writable($path)) {
         return '';
     }
     return __('RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading.');
@@ -242,4 +242,18 @@ function rrd_maintenance_restore($xml_file, $rrd_file, $pipe) {
             unlink($temporary);
         }
     }
+}
+
+
+/** Stop collection before a bad storage configuration can fill the MEMORY queue. */
+function rrd_maintenance_poller_preflight() {
+    $error = rrd_maintenance_configuration_error();
+    if ($error === '') {
+        return true;
+    }
+    cacti_log('ERROR: Poller refused unsafe RRD storage: ' . $error, true, 'POLLER');
+    if (function_exists('admin_email')) {
+        admin_email(__('RRD storage configuration requires attention'), $error);
+    }
+    return false;
 }
