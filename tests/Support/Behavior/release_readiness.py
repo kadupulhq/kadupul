@@ -111,6 +111,9 @@ def assert_failed_writer_retains_queue(h):
         require(result['exit'] == 1, 'Unavailable writer did not fail the poller run')
         require(h.sql("SELECT output FROM poller_output WHERE " + predicate).strip() == '8675309', 'Unavailable writer consumed pending samples')
         require(rrd_manifest(h) == before, 'Unavailable writer changed RRD samples')
+        require(h.sql("SELECT COUNT(*) FROM poller_output WHERE local_data_id IN (" + fixture_ids + ")").strip() == '3', 'Failed storage preflight changed the pending queue')
+        checked(h.php('-r', 'if (!chmod("rra",0755)) {exit(1);}'), 'Restore storage before orphan cleanup')
+        checked(h.php('poller.php', '--force'), 'Poll after restoring writer configuration')
         require(h.sql("SELECT local_data_id FROM poller_output WHERE local_data_id IN (" + fixture_ids + ") ORDER BY local_data_id").strip() == '16000000', 'Orphan cleanup removed a hostless source or retained a deleted device/source')
         return {'exit': result['exit'], 'queue_retained': True, 'rrd_unchanged': True}
     finally:
