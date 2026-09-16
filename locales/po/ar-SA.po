@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-15 19:45-0700\n"
+"POT-Creation-Date: 2026-09-15 19:58-0700\n"
 "PO-Revision-Date: 2024-05-25 11:07-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -584,7 +584,7 @@ msgid "Included in Aggregate"
 msgstr "المدرجة في التجميع"
 
 #: aggregate_graphs.php:1278 aggregate_graphs.php:1612 graph_templates.php:846
-#: graph_view.php:796 graph_view.php:809 graphs.php:2265 lib/spikekill.php:1725
+#: graph_view.php:796 graph_view.php:809 graphs.php:2265 lib/spikekill.php:1730
 msgid "Size"
 msgstr "مداخل خلفية الحجم"
 
@@ -1258,14 +1258,14 @@ msgstr "أجهزة تطهير اكتشفت"
 #: lib/functions.php:5938 lib/functions.php:5942 lib/html.php:1261
 #: lib/html.php:1333 lib/html_reports.php:1666 lib/html_reports.php:1692
 #: lib/html_reports.php:1763 lib/html_reports.php:1764
-#: lib/html_reports.php:1765 lib/spikekill.php:1761 lib/spikekill.php:1762
-#: lib/spikekill.php:1763 lib/spikekill.php:1764 lib/spikekill.php:1765
+#: lib/html_reports.php:1765 lib/spikekill.php:1721 lib/spikekill.php:1722
 #: lib/spikekill.php:1766 lib/spikekill.php:1767 lib/spikekill.php:1768
 #: lib/spikekill.php:1769 lib/spikekill.php:1770 lib/spikekill.php:1771
-#: plugins.php:739 pollers.php:1113 user_admin.php:2320 utilities.php:721
-#: utilities.php:1170 utilities.php:2638 utilities.php:2766 utilities.php:2774
-#: utilities.php:2785 utilities.php:2796 utilities.php:2819 utilities.php:2865
-#: utilities.php:3099
+#: lib/spikekill.php:1772 lib/spikekill.php:1773 lib/spikekill.php:1774
+#: lib/spikekill.php:1775 lib/spikekill.php:1776 plugins.php:739
+#: pollers.php:1113 user_admin.php:2320 utilities.php:721 utilities.php:1170
+#: utilities.php:2638 utilities.php:2766 utilities.php:2774 utilities.php:2785
+#: utilities.php:2796 utilities.php:2819 utilities.php:2865 utilities.php:3099
 msgid "N/A"
 msgstr "N/A"
 
@@ -16577,12 +16577,12 @@ msgstr ""
 msgid "FATAL: Standard Deviation must be a positive integer."
 msgstr ""
 
-#: lib/spikekill.php:262 lib/spikekill.php:1725
+#: lib/spikekill.php:262 lib/spikekill.php:1730
 #, fuzzy
 msgid "StdDev"
 msgstr "إزالة StdDev"
 
-#: lib/spikekill.php:268 lib/spikekill.php:1725
+#: lib/spikekill.php:268 lib/spikekill.php:1730
 #, fuzzy
 msgid "Variance"
 msgstr "متغير"
@@ -16760,72 +16760,72 @@ msgstr ""
 msgid "NOTE: No Spikes Found."
 msgstr "لم يتم العثور على مواقع"
 
-#: lib/spikekill.php:895
+#: lib/spikekill.php:900
 #, php-format
 msgid "NOTE: Re-Importing '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:986
+#: lib/spikekill.php:991
 #, php-format
 msgid "NOTE: Backing Up '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1725
+#: lib/spikekill.php:1730
 #, fuzzy
 msgid "Avg"
 msgstr "متوسط:"
 
-#: lib/spikekill.php:1725
+#: lib/spikekill.php:1730
 #, fuzzy
 msgid "CF"
 msgstr "CDEF"
 
-#: lib/spikekill.php:1725
+#: lib/spikekill.php:1730
 #, fuzzy
 msgid "DS"
 msgstr "DES"
 
-#: lib/spikekill.php:1725
+#: lib/spikekill.php:1730
 msgid "NonNan"
 msgstr ""
 
-#: lib/spikekill.php:1725
+#: lib/spikekill.php:1730
 #, fuzzy
 msgid "Samples"
 msgstr "منتج بسيط"
 
-#: lib/spikekill.php:1726
+#: lib/spikekill.php:1731
 msgid "MaxStdDev"
 msgstr ""
 
-#: lib/spikekill.php:1726
+#: lib/spikekill.php:1731
 #, fuzzy
 msgid "MaxValue"
 msgstr "القيمة"
 
-#: lib/spikekill.php:1726
+#: lib/spikekill.php:1731
 #, fuzzy
 msgid "MinStdDev"
 msgstr "جاف تشغيل StdDev"
 
-#: lib/spikekill.php:1726
+#: lib/spikekill.php:1731
 #, fuzzy
 msgid "MinValue"
 msgstr "القيمة"
 
-#: lib/spikekill.php:1726
+#: lib/spikekill.php:1731
 msgid "StdKilled"
 msgstr ""
 
-#: lib/spikekill.php:1726
+#: lib/spikekill.php:1731
 msgid "VarKilled"
 msgstr ""
 
-#: lib/spikekill.php:1726
+#: lib/spikekill.php:1731
 msgid "WindKilled"
 msgstr ""
 
-#: lib/spikekill.php:1726
+#: lib/spikekill.php:1731
 msgid "WindSamples"
 msgstr ""
 
