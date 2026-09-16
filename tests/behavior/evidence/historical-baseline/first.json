@@ -1,0 +1,1148 @@
+{
+  "format": 1,
+  "target": "cacti-1.2.31",
+  "revision": "6ce3572dab3264be563b765f25dcadd8cc046252",
+  "php": "8.2",
+  "schema_sha256": "162581247df6fe0f33508e44848244e6e65798cd108afcfb306a558dd58a320e",
+  "base_image": {
+    "ref": "php@sha256:0970c7c14b21003bce8178af2985b491a65b71e800ff5366053de544306ed2a1",
+    "db_ref": "mariadb@sha256:07c0aaff7396b74cb7975cba78257178d188e30f531a5db2b617c48beef13c41",
+    "packages": "rrdtool=1.7.2-4.2+b5\nsnmp=5.9.4+dfsg-2+deb13u1\nsnmpd=5.9.4+dfsg-2+deb13u1",
+    "runtime": "PRETTY_NAME=\"Debian GNU/Linux 13 (trixie)\"\nNAME=\"Debian GNU/Linux\"\nPHP 8.2.33 (cli) (built: Aug 25 2026 00:40:46) (NTS)"
+  },
+  "complete": true,
+  "error": null,
+  "scenarios": {
+    "database/fresh-schema": {
+      "version": "new_install\n",
+      "tables": "aggregate_graph_templates\naggregate_graph_templates_graph\naggregate_graph_templates_item\naggregate_graphs\naggregate_graphs_graph_item\naggregate_graphs_items\nautomation_devices\nautomation_graph_rule_items\nautomation_graph_rules\nautomation_ips\nautomation_match_rule_items\nautomation_networks\nautomation_processes\nautomation_snmp\nautomation_snmp_items\nautomation_templates\nautomation_tree_rule_items\nautomation_tree_rules\ncdef\ncdef_items\ncolor_template_items\ncolor_templates\ncolors\ndata_debug\ndata_input\ndata_input_data\ndata_input_fields\ndata_local\ndata_source_profiles\ndata_source_profiles_cf\ndata_source_profiles_rra\ndata_source_purge_action\ndata_source_purge_temp\ndata_source_stats_daily\ndata_source_stats_hourly\ndata_source_stats_hourly_cache\ndata_source_stats_hourly_last\ndata_source_stats_monthly\ndata_source_stats_weekly\ndata_source_stats_yearly\ndata_template\ndata_template_data\ndata_template_rrd\nexternal_links\ngraph_local\ngraph_template_input\ngraph_template_input_defs\ngraph_templates\ngraph_templates_gprint\ngraph_templates_graph\ngraph_templates_item\ngraph_tree\ngraph_tree_items\nhost\nhost_graph\nhost_snmp_cache\nhost_snmp_query\nhost_template\nhost_template_graph\nhost_template_snmp_query\nplugin_config\nplugin_db_changes\nplugin_hooks\nplugin_realms\npoller\npoller_command\npoller_data_template_field_mappings\npoller_item\npoller_output\npoller_output_boost\npoller_output_boost_local_data_ids\npoller_output_boost_processes\npoller_output_realtime\npoller_reindex\npoller_resource_cache\npoller_time\nprocesses\nreports\nreports_items\nrrdcheck\nsessions\nsettings\nsettings_tree\nsettings_user\nsettings_user_group\nsites\nsnmp_query\nsnmp_query_graph\nsnmp_query_graph_rrd\nsnmp_query_graph_rrd_sv\nsnmp_query_graph_sv\nsnmpagent_cache\nsnmpagent_cache_notifications\nsnmpagent_cache_textual_conventions\nsnmpagent_managers\nsnmpagent_managers_notifications\nsnmpagent_mibs\nsnmpagent_notifications_log\nuser_auth\nuser_auth_cache\nuser_auth_group\nuser_auth_group_members\nuser_auth_group_perms\nuser_auth_group_realm\nuser_auth_perms\nuser_auth_realm\nuser_auth_row_cache\nuser_domains\nuser_domains_ldap\nuser_log\nvdef\nvdef_items\nversion\n",
+      "devices": [],
+      "columns": "id\tmediumint(8) unsigned\tNO\tPRI\tNULL\tauto_increment\npoller_id\tint(10) unsigned\tNO\tMUL\t1\t\nsite_id\tint(10) unsigned\tNO\tMUL\t1\t\nhost_template_id\tmediumint(8) unsigned\tNO\t\t0\t\ndescription\tvarchar(150)\tNO\t\t\t\nhostname\tvarchar(100)\tYES\tMUL\tNULL\t\nlocation\tvarchar(40)\tYES\t\tNULL\t\nnotes\ttext\tYES\t\tNULL\t\nexternal_id\tvarchar(40)\tYES\tMUL\tNULL\t\nsnmp_community\tvarchar(100)\tYES\t\tNULL\t\nsnmp_version\ttinyint(3) unsigned\tNO\t\t1\t\nsnmp_username\tvarchar(50)\tYES\t\tNULL\t\nsnmp_password\tvarchar(50)\tYES\t\tNULL\t\nsnmp_auth_protocol\tchar(6)\tYES\t\t\t\nsnmp_priv_passphrase\tvarchar(200)\tYES\t\t\t\nsnmp_priv_protocol\tchar(7)\tYES\t\t\t\nsnmp_context\tvarchar(64)\tYES\t\t\t\nsnmp_engine_id\tvarchar(64)\tYES\t\t\t\nsnmp_port\tmediumint(8) unsigned\tNO\t\t161\t\nsnmp_timeout\tmediumint(8) unsigned\tNO\t\t500\t\nsnmp_sysDescr\tvarchar(300)\tNO\t\t\t\nsnmp_sysObjectID\tvarchar(128)\tNO\t\t\t\nsnmp_sysUpTimeInstance\tbigint(20) unsigned\tNO\t\t0\t\nsnmp_sysContact\tvarchar(300)\tNO\t\t\t\nsnmp_sysName\tvarchar(300)\tNO\t\t\t\nsnmp_sysLocation\tvarchar(300)\tNO\t\t\t\navailability_method\tsmallint(5) unsigned\tNO\t\t1\t\nping_method\tsmallint(5) unsigned\tYES\t\t0\t\nping_port\tint(10) unsigned\tYES\t\t0\t\nping_timeout\tint(10) unsigned\tYES\t\t500\t\nping_retries\tint(10) unsigned\tYES\t\t2\t\nmax_oids\tint(10) unsigned\tYES\t\t10\t\nbulk_walk_size\tint(11)\tYES\t\t-1\t\ndevice_threads\ttinyint(3) unsigned\tNO\t\t1\t\ndeleted\tchar(2)\tNO\t\t\t\ndisabled\tchar(2)\tNO\tMUL\t\t\nstatus\ttinyint(3) unsigned\tNO\tMUL\t0\t\nstatus_event_count\tmediumint(8) unsigned\tNO\t\t0\t\nstatus_fail_date\ttimestamp\tNO\t\t0000-00-00 00:00:00\t\nstatus_rec_date\ttimestamp\tNO\t\t0000-00-00 00:00:00\t\nstatus_last_error\tvarchar(255)\tYES\t\t\t\nmin_time\tdecimal(10,5)\tYES\t\t9.99999\t\nmax_time\tdecimal(10,5)\tYES\t\t0.00000\t\ncur_time\tdecimal(10,5)\tYES\t\t0.00000\t\navg_time\tdecimal(10,5)\tYES\t\t0.00000\t\npolling_time\tdouble\tYES\t\t0\t\ntotal_polls\tint(10) unsigned\tYES\t\t0\t\nfailed_polls\tint(10) unsigned\tYES\t\t0\t\navailability\tdecimal(8,5)\tNO\t\t100.00000\t\nlast_updated\ttimestamp\tYES\t\tcurrent_timestamp()\ton update current_timestamp()\n"
+    },
+    "upgrade/install": {
+      "exit": 0,
+      "stdout": "Cacti Install Utility, Version 1.2.31 (DB: new_install), Copyright (C) 2004-2026 The Cacti Group\n[<TIME>] [       templates always  ] getDefaultTemplate(): Default Device Template is ''\n[<TIME>] [       templates always  ] getDefaultTemplate(): Default Device Template is ''\n[<TIME>] [       templates always  ] getDefaultTemplate(): Default Device Template is ''\n[<TIME>] [       templates always  ] getDefaultTemplate(): Default Device Template is ''\n[<TIME>] [       templates always  ] getDefaultTemplate(): Default Device Template is ''\n[<TIME>] [       templates always  ] getDefaultTemplate(): Default Device Template is ''\n[<TIME>] [        template always  ] setDefaultTemplate(): Device default template is ''\n[<TIME>] [             cli always  ] Installer prepared for INSTALL CORE action\n[<TIME>] [             cli always  ] Starting installation...\n[<TIME>] [          global always  ] Setting PHP Option max_execution_time = 0\n[<TIME>] [          global always  ] Setting PHP Option memory_limit = -1\n[<TIME>] [       templates always  ] getDefaultTemplate(): Default Device Template is ''\n[<TIME>] [       templates always  ] getDefaultTemplate(): Default Device Template is ''\n[<TIME>] [       templates always  ] getDefaultTemplate(): Default Device Template is ''\n[<TIME>] [       templates always  ] getDefaultTemplate(): Default Device Template is ''\n[<TIME>] [       templates always  ] getDefaultTemplate(): Default Device Template is ''\n[<TIME>] [       templates always  ] getDefaultTemplate(): Default Device Template is ''\n[<TIME>] [        template always  ] setDefaultTemplate(): Device default template is ''\n[<TIME>] [          global always  ] Starting INSTALL Process for v1.2.31\n[<TIME>] [          global always  ] No tables where found or selected for conversion\n[<TIME>] [          global always  ] Found 30 templates to install\n[<TIME>] [          global always  ] About to import Package #1 'ACME.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #1 'ACME.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #2 'AKCP_Device.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #2 'AKCP_Device.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #3 'Apache_Webserver.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #3 'Apache_Webserver.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #4 'APC_InfraStruXure_InRow_CRAC.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #4 'APC_InfraStruXure_InRow_CRAC.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #5 'APC_InfraStruXure_PDU.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #5 'APC_InfraStruXure_PDU.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #6 'Aruba_Instant_AP_Cluster.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #6 'Aruba_Instant_AP_Cluster.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #7 'Aruba_OSCX_switch_6x00.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #7 'Aruba_OSCX_switch_6x00.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #8 'Aruba_Wireless_Controller.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #8 'Aruba_Wireless_Controller.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #9 'ArubaOS_switch.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #9 'ArubaOS_switch.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #10 'BayTech_PDU.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #10 'BayTech_PDU.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #11 'Cacti_Stats.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #11 'Cacti_Stats.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #12 'Cisco_Router.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #12 'Cisco_Router.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #13 'Citrix_NetScaler_VPX.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #13 'Citrix_NetScaler_VPX.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #14 'Clearpass_policy_manager.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #14 'Clearpass_policy_manager.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #15 'Dell_iDrac.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #15 'Dell_iDrac.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #16 'ESXi_Device.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #16 'ESXi_Device.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #17 'Fortigate.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #17 'Fortigate.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #18 'Generic_SNMP_Device.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #18 'Generic_SNMP_Device.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #19 'HPE_iLO.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #19 'HPE_iLO.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #20 'HPE_NimbleAlletra_storage.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #20 'HPE_NimbleAlletra_storage.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #21 'Local_Linux_Machine.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #21 'Local_Linux_Machine.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #22 'MikroTik_Device.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #22 'MikroTik_Device.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #23 'MikroTik_Switch_SWOS.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #23 'MikroTik_Switch_SWOS.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #24 'Motorola_SB6141.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #24 'Motorola_SB6141.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #25 'NetSNMP_Device.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #25 'NetSNMP_Device.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #26 'PING_Advanced_Ping.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #26 'PING_Advanced_Ping.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #27 'SNMP_Printer.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #27 'SNMP_Printer.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #28 'SNMP_UPS.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #28 'SNMP_UPS.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #29 'Synology_NAS.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #29 'Synology_NAS.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] About to import Package #30 'Windows_Device.xml.gz'.\n[<TIME>] [          global always  ] Import of Package #30 'Windows_Device.xml.gz' under Profile '1' succeeded\n[<TIME>] [          global always  ] Repairing Automation Rules\n[<TIME>] [          global always  ] Mapping Automation Template for Device Template 'Net-SNMP Device'\n[<TIME>] [          global always  ] Mapping Automation Template for Device Template 'Windows Device'\n[<TIME>] [          global always  ] Mapping Automation Template for Device Template 'Cisco Router'\n[<TIME>] [      automation always  ] Setting default data source profile to 5 Minute Collection (1)\n[<TIME>] [          global always  ] Updating automation network (1), mode \"on\" => \"on\", subnet \"192.168.1.0/24\" => 192.168.1.0/24\"\n[<TIME>] [          global always  ] Device Template for First Cacti Device is 21\n[<TIME>] [          global always  ] Creating Graphs for Default Device\n[<TIME>] [          global always  ] Adding Device to Default Tree\n[<TIME>] [          global always  ] Repopulating poller cache\n[<TIME>] [          global always  ] Repopulating SNMP Agent cache\n[<TIME>] [          global always  ] Generating RSA Key Pair\n[<TIME>] [          global always  ] Finished INSTALL Process for v1.2.31\n[<TIME>] [            sync always  ] Found 0 poller(s) to sync\n[<TIME>] [            sync always  ] No Remote Data Collectors found for full synchronization\n[<TIME>] [          global always  ] Installation was started at <TIMESTAMP>, completed at <TIMESTAMP>\n[<TIME>] [             cli always  ] Finished installation...\n[<TIME>] [             cli always  ] Installation has now completed, you may launch the web console\n\n",
+      "stderr": ""
+    },
+    "auth/login-invalid": {
+      "status": 200,
+      "url": "<BASE>/index.php",
+      "content_type": "text/html; charset=UTF-8",
+      "inputs": [
+        {
+          "name": "__csrf_magic",
+          "type": "hidden"
+        },
+        {
+          "name": "action",
+          "type": "hidden"
+        },
+        {
+          "name": "login_username",
+          "type": "text"
+        },
+        {
+          "name": "login_password",
+          "type": "password"
+        },
+        {
+          "name": "remember_me",
+          "type": "checkbox"
+        },
+        {
+          "type": "submit"
+        }
+      ],
+      "title": "Login to Cacti",
+      "login_form": true,
+      "admin_layout": false,
+      "messages": [
+        "Access Denied!  Login Failed."
+      ]
+    },
+    "auth/login-admin": {
+      "status": 200,
+      "url": "<BASE>/index.php",
+      "content_type": "text/html; charset=UTF-8",
+      "inputs": [],
+      "title": "Console ",
+      "login_form": false,
+      "admin_layout": true,
+      "messages": []
+    },
+    "ui/devices": {
+      "status": 200,
+      "url": "<BASE>/host.php",
+      "content_type": "text/html; charset=UTF-8",
+      "inputs": [
+        {
+          "type": "submit"
+        },
+        {
+          "type": "button"
+        },
+        {
+          "type": "button"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "name": "__csrf_magic",
+          "type": "hidden"
+        },
+        {
+          "type": "checkbox"
+        },
+        {
+          "name": "chk_1",
+          "type": "checkbox"
+        },
+        {
+          "type": "submit"
+        },
+        {
+          "name": "action",
+          "type": "hidden"
+        }
+      ],
+      "title": "Console > Devices ",
+      "login_form": false,
+      "admin_layout": true,
+      "messages": []
+    },
+    "auth/missing-csrf": {
+      "status": 200,
+      "url": "<BASE>/index.php",
+      "content_type": "text/html; charset=UTF-8",
+      "inputs": [
+        {
+          "name": "__csrf_magic",
+          "type": "hidden"
+        },
+        {
+          "name": "action",
+          "type": "hidden"
+        },
+        {
+          "name": "login_username",
+          "type": "text"
+        },
+        {
+          "name": "login_password",
+          "type": "password"
+        },
+        {
+          "name": "remember_me",
+          "type": "checkbox"
+        },
+        {
+          "type": "submit"
+        }
+      ],
+      "title": "Login to Cacti",
+      "login_form": true,
+      "admin_layout": false,
+      "messages": [
+        ""
+      ]
+    },
+    "cli/device-help": {
+      "exit": 0,
+      "stdout": "Cacti Add Device Utility, Version 1.2.31 (DB: 1.2.31), Copyright (C) 2004-2026 The Cacti Group\n\nusage: add_device.php --description=[description] --ip=[IP] --template=[ID] [--notes=\"[]\"] [--disable]\n    [--poller=[id]] [--site=[id] [--external-id=[S]] [--proxy] [--threads=[1]\n    [--avail=[ping]] --ping_method=[icmp] --ping_port=[N/A, 1-65534] --ping_timeout=[N] --ping_retries=[2]\n    [--version=[0|1|2|3]] [--community=] [--port=161] [--timeout=500]\n    [--username= --password=] [--authproto=] [--privpass= --privproto=] [--context=] [--engineid=]\n    [--quiet]\n\nRequired:\n    --description  the name that will be displayed by Cacti in the graphs\n    --ip           self explanatory (can also be a FQDN)\n\nOptional:\n    --proxy        if specified, allows adding a second host with same ip address\n    --template     0, is a number (read below to get a list of templates)\n    --location     '', The physical location of the Device.\n    --notes        '', General information about this host.  Must be enclosed using double quotes.\n    --external-id  '', An external ID to align Cacti devices with devices from other systems.\n    --disable      0, 1 to add this host but to disable checks and 0 to enable it\n    --poller       0, numeric poller id that will perform data collection for the device.\n    --site         0, numeric site id that will be associated with the device.\n    --threads      1, numeric number of threads to poll device with.\n    --avail        pingsnmp, [ping][none, snmp, pingsnmp, pingorsnmp]\n    --ping_method  tcp, icmp|tcp|udp\n    --ping_port    '', 1-65534\n    --ping_retries 2, the number of time to attempt to communicate with a host\n    --ping_timeout N, the ping timeout in milliseconds.  Defaults to database setting.\n    --version      1, 0|1|2|3, snmp version.  0 for no snmp\n    --community    '', snmp community string for snmpv1 and snmpv2.  Leave blank for no community\n    --port         161\n    --timeout      500\n    --username     '', snmp username for snmpv3\n    --password     '', snmp password for snmpv3\n    --authproto    '', snmp authentication protocol for snmpv3\n    --privpass     '', snmp privacy passphrase for snmpv3\n    --privproto    '', snmp privacy protocol for snmpv3\n    --context      '', snmp context for snmpv3\n    --engineid     '', snmp engineid for snmpv3\n    --max_oids     10, 1-60, the number of OIDs that can be obtained in a single SNMP Get request\n\n    --bulk_walk    -1, 1-60, the bulk walk chunk size that will be used for bulk walks.  Use -1 for auto-tune.\n\nList Options:\n    --list-host-templates\n    --list-communities\n    --quiet - batch mode value return\n\n",
+      "stderr": ""
+    },
+    "cli/device-missing": {
+      "exit": 1,
+      "stdout": "ERROR: You must supply an IP address for all hosts!\n",
+      "stderr": ""
+    },
+    "api/datasource-invalid": {
+      "exit": 1,
+      "stdout": "ERROR: You must supply a valid host-id to run this script!\n",
+      "stderr": ""
+    },
+    "devices/create": {
+      "command": {
+        "exit": 0,
+        "stdout": "Adding compat-device (snmp) as \"None\" using SNMP v2 with community \"public\"\nSuccess - new device-id: (2)\n",
+        "stderr": ""
+      },
+      "database": [
+        {
+          "id": 1,
+          "description": "Local Linux Machine",
+          "hostname": "localhost",
+          "disabled": "on",
+          "snmp_version": 0,
+          "availability_method": 0,
+          "host_template_id": 21,
+          "status": 0
+        },
+        {
+          "id": 2,
+          "description": "compat-device",
+          "hostname": "snmp",
+          "disabled": "",
+          "snmp_version": 2,
+          "availability_method": 0,
+          "host_template_id": 0,
+          "status": 0
+        }
+      ]
+    },
+    "api/ajax-hosts": {
+      "status": 200,
+      "url": "<BASE>/utilities.php?action=ajax_hosts&term=compat",
+      "content_type": "text/html; charset=UTF-8",
+      "inputs": [],
+      "title": null,
+      "login_form": false,
+      "admin_layout": false,
+      "json": [
+        {
+          "label": "compat-device",
+          "value": "compat-device",
+          "id": 2
+        }
+      ]
+    },
+    "snmp/get": {
+      "result": {
+        ".1.3.6.1.2.1.1.1.0": "Kadupul deterministic SNMP fixture",
+        ".1.3.6.1.4.1.8072.9999.1": "42"
+      },
+      "stdout": "\n",
+      "stderr": "",
+      "exit": 0
+    },
+    "api/type-coercion": {
+      "result": [
+        {
+          "input": null,
+          "cacti_sizeof": {
+            "value": 0
+          },
+          "sanitize_search_string": {
+            "value": ""
+          },
+          "request": "",
+          "missing": ""
+        },
+        {
+          "input": false,
+          "cacti_sizeof": {
+            "value": 0
+          },
+          "sanitize_search_string": {
+            "value": ""
+          },
+          "request": false,
+          "missing": ""
+        },
+        {
+          "input": true,
+          "cacti_sizeof": {
+            "value": 0
+          },
+          "sanitize_search_string": {
+            "value": "1"
+          },
+          "request": true,
+          "missing": ""
+        },
+        {
+          "input": "",
+          "cacti_sizeof": {
+            "value": 0
+          },
+          "sanitize_search_string": {
+            "value": ""
+          },
+          "request": "",
+          "missing": ""
+        },
+        {
+          "input": "0",
+          "cacti_sizeof": {
+            "value": 0
+          },
+          "sanitize_search_string": {
+            "value": "0"
+          },
+          "request": "0",
+          "missing": ""
+        },
+        {
+          "input": 0,
+          "cacti_sizeof": {
+            "value": 0
+          },
+          "sanitize_search_string": {
+            "value": "0"
+          },
+          "request": 0,
+          "missing": ""
+        },
+        {
+          "input": "1",
+          "cacti_sizeof": {
+            "value": 0
+          },
+          "sanitize_search_string": {
+            "value": "1"
+          },
+          "request": "1",
+          "missing": ""
+        },
+        {
+          "input": 1,
+          "cacti_sizeof": {
+            "value": 0
+          },
+          "sanitize_search_string": {
+            "value": "1"
+          },
+          "request": 1,
+          "missing": ""
+        },
+        {
+          "input": "12.5",
+          "cacti_sizeof": {
+            "value": 0
+          },
+          "sanitize_search_string": {
+            "value": "12.5"
+          },
+          "request": "12.5",
+          "missing": ""
+        },
+        {
+          "input": "12oops",
+          "cacti_sizeof": {
+            "value": 0
+          },
+          "sanitize_search_string": {
+            "value": "12oops"
+          },
+          "request": "12oops",
+          "missing": ""
+        },
+        {
+          "input": [],
+          "cacti_sizeof": {
+            "value": 0
+          },
+          "sanitize_search_string": {
+            "value": []
+          },
+          "request": [],
+          "missing": ""
+        },
+        {
+          "input": {
+            "unexpected": 1
+          },
+          "cacti_sizeof": {
+            "value": 1
+          },
+          "sanitize_search_string": {
+            "value": {
+              "unexpected": "1"
+            }
+          },
+          "request": {
+            "unexpected": 1
+          },
+          "missing": ""
+        },
+        {
+          "request_var_cache": {
+            "first_read": "first",
+            "after_superglobal_change": "first"
+          }
+        },
+        {
+          "db_empty_row": [],
+          "db_empty_cell": false,
+          "db_empty_assoc": []
+        }
+      ],
+      "stdout": "\n",
+      "stderr": "",
+      "exit": 0
+    },
+    "api/warning-calibration": {
+      "result": {
+        "exception": "TypeError",
+        "message": "strlen(): Argument #1 ($string) must be of type string, array given"
+      },
+      "stdout": "\n",
+      "stderr": "PHP Warning:  behavior capture calibration in <HARNESS>/probe.php on line 79\n",
+      "exit": 0
+    },
+    "graphs/datasource-create": {
+      "command": {
+        "exit": 0,
+        "stdout": "DS Added - DS[6]\n",
+        "stderr": ""
+      },
+      "database": "1\t309\t1\t0\t\t0\n2\t310\t1\t0\t\t0\n3\t311\t1\t0\t\t0\n4\t312\t1\t0\t\t0\n5\t313\t1\t0\t\t0\n6\t1\t2\t0\t\t0\n"
+    },
+    "graphs/create": {
+      "command": {
+        "exit": 0,
+        "stdout": "Graph Added - Graph[5] - DS[7]\n",
+        "stderr": ""
+      },
+      "database": "1\t247\t1\t0\t0\t\n2\t248\t1\t0\t0\t\n3\t249\t1\t0\t0\t\n4\t250\t1\t0\t0\t\n5\t4\t2\t0\t0\t\n"
+    },
+    "plugins/install": {
+      "command": {
+        "exit": 0,
+        "stdout": "NOTE: 1 Plugins to be acted on.\nNOTE: Plugin 'compatibility_test' processing started\nNOTE: Plugin directory for Plugin compatibility_test exists\nNOTE: Plugin compatibility_test installed successfully.\n",
+        "stderr": ""
+      },
+      "database": {
+        "config": [
+          {
+            "directory": "compatibility_test",
+            "status": 4,
+            "version": "1.0.0"
+          }
+        ],
+        "hooks": [
+          {
+            "hook": "compatibility_event",
+            "function": "compatibility_test_event",
+            "status": 0,
+            "file": "setup.php"
+          },
+          {
+            "hook": "compatibility_filter",
+            "function": "compatibility_test_filter",
+            "status": 0,
+            "file": "setup.php"
+          },
+          {
+            "hook": "config_settings",
+            "function": "compatibility_test_filter",
+            "status": 1,
+            "file": "setup.php"
+          },
+          {
+            "hook": "draw_navigation_text",
+            "function": "compatibility_test_filter",
+            "status": 0,
+            "file": "setup.php"
+          },
+          {
+            "hook": "poller_bottom",
+            "function": "compatibility_test_event",
+            "status": 0,
+            "file": "setup.php"
+          },
+          {
+            "hook": "poller_top",
+            "function": "compatibility_test_event",
+            "status": 0,
+            "file": "setup.php"
+          }
+        ]
+      }
+    },
+    "plugins/enable": {
+      "command": {
+        "exit": 0,
+        "stdout": "NOTE: 1 Plugins to be acted on.\nNOTE: Plugin 'compatibility_test' processing started\nNOTE: Enabling Plugin compatibility_test.\n",
+        "stderr": ""
+      },
+      "database": {
+        "config": [
+          {
+            "directory": "compatibility_test",
+            "status": 1,
+            "version": "1.0.0"
+          }
+        ],
+        "hooks": [
+          {
+            "hook": "compatibility_event",
+            "function": "compatibility_test_event",
+            "status": 1,
+            "file": "setup.php"
+          },
+          {
+            "hook": "compatibility_filter",
+            "function": "compatibility_test_filter",
+            "status": 1,
+            "file": "setup.php"
+          },
+          {
+            "hook": "config_settings",
+            "function": "compatibility_test_filter",
+            "status": 1,
+            "file": "setup.php"
+          },
+          {
+            "hook": "draw_navigation_text",
+            "function": "compatibility_test_filter",
+            "status": 1,
+            "file": "setup.php"
+          },
+          {
+            "hook": "poller_bottom",
+            "function": "compatibility_test_event",
+            "status": 1,
+            "file": "setup.php"
+          },
+          {
+            "hook": "poller_top",
+            "function": "compatibility_test_event",
+            "status": 1,
+            "file": "setup.php"
+          }
+        ]
+      }
+    },
+    "plugins/hook": {
+      "result": {
+        "event": [
+          "compatibility_event",
+          "payload",
+          {
+            "value": 42
+          }
+        ],
+        "filter": [
+          {
+            "input": null,
+            "result": null
+          },
+          {
+            "input": false,
+            "result": false
+          },
+          {
+            "input": "",
+            "result": ""
+          },
+          {
+            "input": "0",
+            "result": "0"
+          },
+          {
+            "input": 0,
+            "result": 0
+          },
+          {
+            "input": [],
+            "result": []
+          },
+          {
+            "input": {
+              "value": 42
+            },
+            "result": {
+              "value": 42
+            }
+          }
+        ],
+        "callbacks_observed": 8,
+        "registered_hooks": [
+          {
+            "hook": "compatibility_event",
+            "function": "compatibility_test_event",
+            "status": 1
+          },
+          {
+            "hook": "compatibility_filter",
+            "function": "compatibility_test_filter",
+            "status": 1
+          },
+          {
+            "hook": "config_settings",
+            "function": "compatibility_test_filter",
+            "status": 1
+          },
+          {
+            "hook": "draw_navigation_text",
+            "function": "compatibility_test_filter",
+            "status": 1
+          },
+          {
+            "hook": "poller_bottom",
+            "function": "compatibility_test_event",
+            "status": 1
+          },
+          {
+            "hook": "poller_top",
+            "function": "compatibility_test_event",
+            "status": 1
+          }
+        ],
+        "plugin_status": 1
+      },
+      "stdout": "\n",
+      "stderr": "",
+      "exit": 0
+    },
+    "plugins/poller-hooks": {
+      "command": {
+        "exit": 0
+      },
+      "events_in_order": [
+        "poller_top",
+        "poller_bottom"
+      ],
+      "other_callbacks_seen": [
+        "filter"
+      ]
+    },
+    "plugins/disable": {
+      "command": {
+        "exit": 0,
+        "stdout": "NOTE: 1 Plugins to be acted on.\nNOTE: Plugin 'compatibility_test' processing started\nNOTE: Disabling Plugin compatibility_test.\n",
+        "stderr": ""
+      },
+      "database": {
+        "config": [
+          {
+            "directory": "compatibility_test",
+            "status": 4,
+            "version": "1.0.0"
+          }
+        ],
+        "hooks": [
+          {
+            "hook": "compatibility_event",
+            "function": "compatibility_test_event",
+            "status": 4,
+            "file": "setup.php"
+          },
+          {
+            "hook": "compatibility_filter",
+            "function": "compatibility_test_filter",
+            "status": 4,
+            "file": "setup.php"
+          },
+          {
+            "hook": "config_settings",
+            "function": "compatibility_test_filter",
+            "status": 1,
+            "file": "setup.php"
+          },
+          {
+            "hook": "draw_navigation_text",
+            "function": "compatibility_test_filter",
+            "status": 4,
+            "file": "setup.php"
+          },
+          {
+            "hook": "poller_bottom",
+            "function": "compatibility_test_event",
+            "status": 4,
+            "file": "setup.php"
+          },
+          {
+            "hook": "poller_top",
+            "function": "compatibility_test_event",
+            "status": 4,
+            "file": "setup.php"
+          }
+        ]
+      }
+    },
+    "plugins/hook-disabled": {
+      "result": {
+        "event": [
+          "compatibility_event",
+          "payload",
+          {
+            "value": 42
+          }
+        ],
+        "filter": [
+          {
+            "input": null,
+            "result": null
+          },
+          {
+            "input": false,
+            "result": false
+          },
+          {
+            "input": "",
+            "result": ""
+          },
+          {
+            "input": "0",
+            "result": "0"
+          },
+          {
+            "input": 0,
+            "result": 0
+          },
+          {
+            "input": [],
+            "result": []
+          },
+          {
+            "input": {
+              "value": 42
+            },
+            "result": {
+              "value": 42
+            }
+          }
+        ],
+        "callbacks_observed": 0,
+        "registered_hooks": [
+          {
+            "hook": "compatibility_event",
+            "function": "compatibility_test_event",
+            "status": 4
+          },
+          {
+            "hook": "compatibility_filter",
+            "function": "compatibility_test_filter",
+            "status": 4
+          },
+          {
+            "hook": "config_settings",
+            "function": "compatibility_test_filter",
+            "status": 1
+          },
+          {
+            "hook": "draw_navigation_text",
+            "function": "compatibility_test_filter",
+            "status": 4
+          },
+          {
+            "hook": "poller_bottom",
+            "function": "compatibility_test_event",
+            "status": 4
+          },
+          {
+            "hook": "poller_top",
+            "function": "compatibility_test_event",
+            "status": 4
+          }
+        ],
+        "plugin_status": 4
+      },
+      "stdout": "\n",
+      "stderr": "",
+      "exit": 0
+    },
+    "plugins/uninstall": {
+      "command": {
+        "exit": 0,
+        "stdout": "NOTE: 1 Plugins to be acted on.\nNOTE: Plugin 'compatibility_test' processing started\nNOTE: Uninstalling Plugin compatibility_test.\n",
+        "stderr": ""
+      },
+      "database": {
+        "config": [],
+        "hooks": []
+      }
+    },
+    "plugins/callbacks": [
+      {
+        "callback": "install",
+        "args": []
+      },
+      {
+        "callback": "filter",
+        "args": [
+          [
+            "config_settings"
+          ]
+        ]
+      },
+      {
+        "callback": "filter",
+        "args": [
+          [
+            "config_settings"
+          ]
+        ]
+      },
+      {
+        "callback": "event",
+        "args": [
+          [
+            "compatibility_event",
+            "payload",
+            {
+              "value": 42
+            }
+          ]
+        ]
+      },
+      {
+        "callback": "filter",
+        "args": [
+          null
+        ]
+      },
+      {
+        "callback": "filter",
+        "args": [
+          false
+        ]
+      },
+      {
+        "callback": "filter",
+        "args": [
+          ""
+        ]
+      },
+      {
+        "callback": "filter",
+        "args": [
+          "0"
+        ]
+      },
+      {
+        "callback": "filter",
+        "args": [
+          0
+        ]
+      },
+      {
+        "callback": "filter",
+        "args": [
+          []
+        ]
+      },
+      {
+        "callback": "filter",
+        "args": [
+          {
+            "value": 42
+          }
+        ]
+      },
+      {
+        "callback": "filter",
+        "args": [
+          [
+            "config_settings"
+          ]
+        ]
+      },
+      {
+        "callback": "filter",
+        "args": [
+          [
+            "config_settings"
+          ]
+        ]
+      },
+      {
+        "callback": "filter",
+        "args": [
+          [
+            "config_settings"
+          ]
+        ]
+      },
+      {
+        "callback": "uninstall",
+        "args": []
+      }
+    ],
+    "devices/delete": {
+      "command": {
+        "exit": 0,
+        "stdout": "      id |                           host |                    description\n       2 |                           snmp |                  compat-device\n\nRemoving devices with ids: 2\nSuccess - removed device-ids: 2\n",
+        "stderr": ""
+      },
+      "database": [
+        {
+          "id": 1,
+          "description": "Local Linux Machine",
+          "hostname": "localhost",
+          "disabled": "on",
+          "snmp_version": 0,
+          "availability_method": 0,
+          "host_template_id": 21,
+          "status": 0
+        }
+      ],
+      "data_local": "1\t309\t1\t0\t\t0\n2\t310\t1\t0\t\t0\n3\t311\t1\t0\t\t0\n4\t312\t1\t0\t\t0\n5\t313\t1\t0\t\t0\n6\t1\t2\t0\t\t0\n",
+      "graph_local": "1\t247\t1\t0\t0\t\n2\t248\t1\t0\t0\t\n3\t249\t1\t0\t0\t\n4\t250\t1\t0\t0\t\n"
+    },
+    "poller/run-reachable": {
+      "command": {
+        "exit": 0,
+        "stdout": "<TIMESTAMP> - SYSTEM STATS: Time:<T> Method:cmd.php Processes:1 Threads:1 Hosts:1 HostsPerProcess:1 DataSources:5 RRDsProcessed:5\n",
+        "stderr": "",
+        "rrd_acknowledgements": 10
+      },
+      "database": {
+        "poller_item": [
+          {
+            "host_id": 1,
+            "action": 1,
+            "rrd_name": "proc",
+            "rrd_path": "<APP>/rra/local_linux_machine_proc_1.rrd"
+          },
+          {
+            "host_id": 1,
+            "action": 1,
+            "rrd_name": "",
+            "rrd_path": "<APP>/rra/local_linux_machine_load_1min_2.rrd"
+          },
+          {
+            "host_id": 1,
+            "action": 1,
+            "rrd_name": "users",
+            "rrd_path": "<APP>/rra/local_linux_machine_users_3.rrd"
+          },
+          {
+            "host_id": 1,
+            "action": 1,
+            "rrd_name": "mem_buffers",
+            "rrd_path": "<APP>/rra/local_linux_machine_mem_buffers_4.rrd"
+          },
+          {
+            "host_id": 1,
+            "action": 1,
+            "rrd_name": "mem_swap",
+            "rrd_path": "<APP>/rra/local_linux_machine_mem_swap_5.rrd"
+          }
+        ],
+        "poller_output_rows": "0",
+        "host_status": [
+          {
+            "description": "Local Linux Machine",
+            "status": 3,
+            "status_event_count": 0,
+            "availability_method": 0
+          }
+        ]
+      },
+      "rrd_calls": [
+        "ARGV -",
+        "create <APP>/rra/local_linux_machine_proc_1.rrd   --start <TIME> --step 300   DS:proc:GAUGE:600:0:U  RRA:AVERAGE:0.5:1:600  RRA:AVERAGE:0.5:6:700  RRA:AVERAGE:0.5:24:775  RRA:AVERAGE:0.5:288:797  RRA:MIN:0.5:1:600  RRA:MIN:0.5:6:700  RRA:MIN:0.5:24:775  RRA:MIN:0.5:288:797  RRA:MAX:0.5:1:600  RRA:MAX:0.5:6:700  RRA:MAX:0.5:24:775  RRA:MAX:0.5:288:797  RRA:LAST:0.5:1:600  RRA:LAST:0.5:6:700  RRA:LAST:0.5:24:775  RRA:LAST:0.5:288:797",
+        "update <APP>/rra/local_linux_machine_proc_1.rrd --skip-past-updates --template proc <EPOCH>:<V>",
+        "create <APP>/rra/local_linux_machine_load_1min_2.rrd   --start <TIME> --step 300   DS:load_1min:GAUGE:600:0:U  DS:load_5min:GAUGE:600:0:U  DS:load_15min:GAUGE:600:0:U  RRA:AVERAGE:0.5:1:600  RRA:AVERAGE:0.5:6:700  RRA:AVERAGE:0.5:24:775  RRA:AVERAGE:0.5:288:797  RRA:MIN:0.5:1:600  RRA:MIN:0.5:6:700  RRA:MIN:0.5:24:775  RRA:MIN:0.5:288:797  RRA:MAX:0.5:1:600  RRA:MAX:0.5:6:700  RRA:MAX:0.5:24:775  RRA:MAX:0.5:288:797  RRA:LAST:0.5:1:600  RRA:LAST:0.5:6:700  RRA:LAST:0.5:24:775  RRA:LAST:0.5:288:797",
+        "update <APP>/rra/local_linux_machine_load_1min_2.rrd --skip-past-updates --template load_1min:load_5min:load_15min <EPOCH>:<V>:<V>:<V>",
+        "create <APP>/rra/local_linux_machine_users_3.rrd   --start <TIME> --step 300   DS:users:GAUGE:600:0:U  RRA:AVERAGE:0.5:1:600  RRA:AVERAGE:0.5:6:700  RRA:AVERAGE:0.5:24:775  RRA:AVERAGE:0.5:288:797  RRA:MIN:0.5:1:600  RRA:MIN:0.5:6:700  RRA:MIN:0.5:24:775  RRA:MIN:0.5:288:797  RRA:MAX:0.5:1:600  RRA:MAX:0.5:6:700  RRA:MAX:0.5:24:775  RRA:MAX:0.5:288:797  RRA:LAST:0.5:1:600  RRA:LAST:0.5:6:700  RRA:LAST:0.5:24:775  RRA:LAST:0.5:288:797",
+        "update <APP>/rra/local_linux_machine_users_3.rrd --skip-past-updates --template users <EPOCH>:<V>",
+        "create <APP>/rra/local_linux_machine_mem_buffers_4.rrd   --start <TIME> --step 300   DS:mem_buffers:GAUGE:600:0:U  RRA:AVERAGE:0.5:1:600  RRA:AVERAGE:0.5:6:700  RRA:AVERAGE:0.5:24:775  RRA:AVERAGE:0.5:288:797  RRA:MIN:0.5:1:600  RRA:MIN:0.5:6:700  RRA:MIN:0.5:24:775  RRA:MIN:0.5:288:797  RRA:MAX:0.5:1:600  RRA:MAX:0.5:6:700  RRA:MAX:0.5:24:775  RRA:MAX:0.5:288:797  RRA:LAST:0.5:1:600  RRA:LAST:0.5:6:700  RRA:LAST:0.5:24:775  RRA:LAST:0.5:288:797",
+        "update <APP>/rra/local_linux_machine_mem_buffers_4.rrd --skip-past-updates --template mem_buffers <EPOCH>:<V>",
+        "create <APP>/rra/local_linux_machine_mem_swap_5.rrd   --start <TIME> --step 300   DS:mem_swap:GAUGE:600:0:U  RRA:AVERAGE:0.5:1:600  RRA:AVERAGE:0.5:6:700  RRA:AVERAGE:0.5:24:775  RRA:AVERAGE:0.5:288:797  RRA:MIN:0.5:1:600  RRA:MIN:0.5:6:700  RRA:MIN:0.5:24:775  RRA:MIN:0.5:288:797  RRA:MAX:0.5:1:600  RRA:MAX:0.5:6:700  RRA:MAX:0.5:24:775  RRA:MAX:0.5:288:797  RRA:LAST:0.5:1:600  RRA:LAST:0.5:6:700  RRA:LAST:0.5:24:775  RRA:LAST:0.5:288:797",
+        "update <APP>/rra/local_linux_machine_mem_swap_5.rrd --skip-past-updates --template mem_swap <EPOCH>:<V>"
+      ]
+    },
+    "graphs/definition": {
+      "result": {
+        "result": null,
+        "source": "<pre>/usr/bin/rrdtool graph - \\\n--imgformat=SVG \\\n--start=&apos;1700000000&apos; \\\n--end=&apos;1700003600&apos; \\\n--pango-markup  \\\n--title=&apos;Local Linux Machine - Processes&apos; \\\n--vertical-label=&apos;processes&apos; \\\n--slope-mode \\\n--base=1000 \\\n--height=200 \\\n--width=700 \\\n--tabwidth &apos;40&apos; \\\n--alt-autoscale-max \\\n--lower-limit=&apos;0&apos; \\\nCOMMENT:&quot;From 2023-11-14 22\\:13\\:20 To 2023-11-14 23\\:13\\:20\\c&quot; \\\nCOMMENT:&quot;  \\n&quot; \\\n--color BACK#F3F3F3 \\\n--color CANVAS#FDFDFD \\\n--color SHADEA#CBCBCB \\\n--color SHADEB#999999 \\\n--color FONT#000000 \\\n--color AXIS#2C4D43 \\\n--color ARROW#2C4D43 \\\n--color FRAME#2C4D43 \\\n--border 1 \\\n--font TITLE:11:&apos;Arial&apos; \\\n--font AXIS:8:&apos;Arial&apos; \\\n--font LEGEND:8:&apos;Courier&apos; \\\n--font UNIT:8:&apos;Arial&apos; \\\n--font WATERMARK:6:&apos;Arial&apos; \\\n--watermark &apos;Generated by Cacti®&apos; \\\nDEF:a=&apos;<APP>/rra/local_linux_machine_proc_1.rrd&apos;:&apos;proc&apos;:AVERAGE \\\nDEF:b=&apos;<APP>/rra/local_linux_machine_proc_1.rrd&apos;:&apos;proc&apos;:MAX \\\nAREA:a#F51D307F:&apos;Running Processes&lt;&gt;&apos;  \\\nGPRINT:a:AVERAGE:&apos;Average\\:%8.0lf&apos;  \\\nGPRINT:a:MAX:&apos;Maximum\\:%8.0lf\\n&apos;  \\\nLINE1:b#F51D30FF:</pre><span class=\"textInfo\">RRDtool Command lengths = 994 characters.</span><br>"
+      },
+      "stdout": "\n",
+      "stderr": "",
+      "exit": 0
+    },
+    "poller/rrd-failure": {
+      "command": {
+        "exit": 0,
+        "stdout": "<TIMESTAMP> - SYSTEM STATS: Time:<T> Method:cmd.php Processes:1 Threads:1 Hosts:1 HostsPerProcess:1 DataSources:5 RRDsProcessed:5\n",
+        "stderr": "ERROR: injected rrdtool failure\nPHP Notice:  fwrite(): Write of 108 bytes failed with errno=32 Broken pipe in <APP>/lib/rrd.php on line 334\nERROR: injected rrdtool failure\nERROR: injected rrdtool failure\nERROR: injected rrdtool failure\nERROR: injected rrdtool failure\nERROR: injected rrdtool failure\n",
+        "rrd_acknowledgements": 0
+      },
+      "database": {
+        "poller_item": [
+          {
+            "host_id": 1,
+            "action": 1,
+            "rrd_name": "proc",
+            "rrd_path": "<APP>/rra/local_linux_machine_proc_1.rrd"
+          },
+          {
+            "host_id": 1,
+            "action": 1,
+            "rrd_name": "",
+            "rrd_path": "<APP>/rra/local_linux_machine_load_1min_2.rrd"
+          },
+          {
+            "host_id": 1,
+            "action": 1,
+            "rrd_name": "users",
+            "rrd_path": "<APP>/rra/local_linux_machine_users_3.rrd"
+          },
+          {
+            "host_id": 1,
+            "action": 1,
+            "rrd_name": "mem_buffers",
+            "rrd_path": "<APP>/rra/local_linux_machine_mem_buffers_4.rrd"
+          },
+          {
+            "host_id": 1,
+            "action": 1,
+            "rrd_name": "mem_swap",
+            "rrd_path": "<APP>/rra/local_linux_machine_mem_swap_5.rrd"
+          }
+        ],
+        "poller_output_rows": "0",
+        "host_status": [
+          {
+            "description": "Local Linux Machine",
+            "status": 3,
+            "status_event_count": 0,
+            "availability_method": 0
+          }
+        ]
+      },
+      "rrd_calls": [
+        "ARGV -",
+        "ARGV -",
+        "ARGV -",
+        "ARGV -",
+        "ARGV -",
+        "ARGV -"
+      ]
+    },
+    "poller/device-unreachable": {
+      "command": {
+        "exit": 0,
+        "stdout": "<TIMESTAMP> - SYSTEM STATS: Time:<T> Method:cmd.php Processes:1 Threads:1 Hosts:1 HostsPerProcess:1 DataSources:5 RRDsProcessed:0\n",
+        "stderr": "",
+        "rrd_acknowledgements": 0
+      },
+      "database": {
+        "poller_item": [
+          {
+            "host_id": 1,
+            "action": 1,
+            "rrd_name": "proc",
+            "rrd_path": "<APP>/rra/local_linux_machine_proc_1.rrd"
+          },
+          {
+            "host_id": 1,
+            "action": 1,
+            "rrd_name": "",
+            "rrd_path": "<APP>/rra/local_linux_machine_load_1min_2.rrd"
+          },
+          {
+            "host_id": 1,
+            "action": 1,
+            "rrd_name": "users",
+            "rrd_path": "<APP>/rra/local_linux_machine_users_3.rrd"
+          },
+          {
+            "host_id": 1,
+            "action": 1,
+            "rrd_name": "mem_buffers",
+            "rrd_path": "<APP>/rra/local_linux_machine_mem_buffers_4.rrd"
+          },
+          {
+            "host_id": 1,
+            "action": 1,
+            "rrd_name": "mem_swap",
+            "rrd_path": "<APP>/rra/local_linux_machine_mem_swap_5.rrd"
+          }
+        ],
+        "poller_output_rows": "0",
+        "host_status": [
+          {
+            "description": "Local Linux Machine",
+            "status": 3,
+            "status_event_count": 1,
+            "availability_method": 1
+          }
+        ]
+      }
+    },
+    "faults/missing-rrd-file": {
+      "command": {
+        "exit": 0,
+        "stdout": "<TIMESTAMP> - SYSTEM STATS: Time:<T> Method:cmd.php Processes:1 Threads:1 Hosts:1 HostsPerProcess:1 DataSources:5 RRDsProcessed:5\n",
+        "stderr": "",
+        "rrd_acknowledgements": 10
+      },
+      "rrd_calls": [
+        "ARGV -",
+        "create <APP>/rra/local_linux_machine_proc_1.rrd   --start <TIME> --step 300   DS:proc:GAUGE:600:0:U  RRA:AVERAGE:0.5:1:600  RRA:AVERAGE:0.5:6:700  RRA:AVERAGE:0.5:24:775  RRA:AVERAGE:0.5:288:797  RRA:MIN:0.5:1:600  RRA:MIN:0.5:6:700  RRA:MIN:0.5:24:775  RRA:MIN:0.5:288:797  RRA:MAX:0.5:1:600  RRA:MAX:0.5:6:700  RRA:MAX:0.5:24:775  RRA:MAX:0.5:288:797  RRA:LAST:0.5:1:600  RRA:LAST:0.5:6:700  RRA:LAST:0.5:24:775  RRA:LAST:0.5:288:797",
+        "update <APP>/rra/local_linux_machine_proc_1.rrd --skip-past-updates --template proc <EPOCH>:<V>",
+        "create <APP>/rra/local_linux_machine_load_1min_2.rrd   --start <TIME> --step 300   DS:load_1min:GAUGE:600:0:U  DS:load_5min:GAUGE:600:0:U  DS:load_15min:GAUGE:600:0:U  RRA:AVERAGE:0.5:1:600  RRA:AVERAGE:0.5:6:700  RRA:AVERAGE:0.5:24:775  RRA:AVERAGE:0.5:288:797  RRA:MIN:0.5:1:600  RRA:MIN:0.5:6:700  RRA:MIN:0.5:24:775  RRA:MIN:0.5:288:797  RRA:MAX:0.5:1:600  RRA:MAX:0.5:6:700  RRA:MAX:0.5:24:775  RRA:MAX:0.5:288:797  RRA:LAST:0.5:1:600  RRA:LAST:0.5:6:700  RRA:LAST:0.5:24:775  RRA:LAST:0.5:288:797",
+        "update <APP>/rra/local_linux_machine_load_1min_2.rrd --skip-past-updates --template load_1min:load_5min:load_15min <EPOCH>:<V>:<V>:<V>",
+        "create <APP>/rra/local_linux_machine_users_3.rrd   --start <TIME> --step 300   DS:users:GAUGE:600:0:U  RRA:AVERAGE:0.5:1:600  RRA:AVERAGE:0.5:6:700  RRA:AVERAGE:0.5:24:775  RRA:AVERAGE:0.5:288:797  RRA:MIN:0.5:1:600  RRA:MIN:0.5:6:700  RRA:MIN:0.5:24:775  RRA:MIN:0.5:288:797  RRA:MAX:0.5:1:600  RRA:MAX:0.5:6:700  RRA:MAX:0.5:24:775  RRA:MAX:0.5:288:797  RRA:LAST:0.5:1:600  RRA:LAST:0.5:6:700  RRA:LAST:0.5:24:775  RRA:LAST:0.5:288:797",
+        "update <APP>/rra/local_linux_machine_users_3.rrd --skip-past-updates --template users <EPOCH>:<V>",
+        "create <APP>/rra/local_linux_machine_mem_buffers_4.rrd   --start <TIME> --step 300   DS:mem_buffers:GAUGE:600:0:U  RRA:AVERAGE:0.5:1:600  RRA:AVERAGE:0.5:6:700  RRA:AVERAGE:0.5:24:775  RRA:AVERAGE:0.5:288:797  RRA:MIN:0.5:1:600  RRA:MIN:0.5:6:700  RRA:MIN:0.5:24:775  RRA:MIN:0.5:288:797  RRA:MAX:0.5:1:600  RRA:MAX:0.5:6:700  RRA:MAX:0.5:24:775  RRA:MAX:0.5:288:797  RRA:LAST:0.5:1:600  RRA:LAST:0.5:6:700  RRA:LAST:0.5:24:775  RRA:LAST:0.5:288:797",
+        "update <APP>/rra/local_linux_machine_mem_buffers_4.rrd --skip-past-updates --template mem_buffers <EPOCH>:<V>",
+        "create <APP>/rra/local_linux_machine_mem_swap_5.rrd   --start <TIME> --step 300   DS:mem_swap:GAUGE:600:0:U  RRA:AVERAGE:0.5:1:600  RRA:AVERAGE:0.5:6:700  RRA:AVERAGE:0.5:24:775  RRA:AVERAGE:0.5:288:797  RRA:MIN:0.5:1:600  RRA:MIN:0.5:6:700  RRA:MIN:0.5:24:775  RRA:MIN:0.5:288:797  RRA:MAX:0.5:1:600  RRA:MAX:0.5:6:700  RRA:MAX:0.5:24:775  RRA:MAX:0.5:288:797  RRA:LAST:0.5:1:600  RRA:LAST:0.5:6:700  RRA:LAST:0.5:24:775  RRA:LAST:0.5:288:797",
+        "update <APP>/rra/local_linux_machine_mem_swap_5.rrd --skip-past-updates --template mem_swap <EPOCH>:<V>"
+      ]
+    },
+    "faults/database-unreachable": {
+      "exit": 0,
+      "stdout": "FATAL: Connection to Cacti database failed. Please ensure: \n\n  - the PHP MySQL module is installed and enabled.\n  - the database is running.\n  - the credentials in config.php are valid.\n",
+      "stderr": ""
+    },
+    "api/php-errors": [
+      {
+        "severity": 512,
+        "message": "behavior capture calibration",
+        "file": "<HARNESS>/probe.php",
+        "count": 1,
+        "suppressed": false,
+        "suppressed_here": false
+      },
+      {
+        "severity": 8192,
+        "message": "preg_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated",
+        "file": "<APP>/lib/functions.php",
+        "count": 1,
+        "suppressed": true,
+        "suppressed_here": true
+      }
+    ],
+    "diagnostics/visible-php-errors": [
+      {
+        "severity": 512,
+        "message": "behavior capture calibration",
+        "file": "<HARNESS>/probe.php",
+        "count": 1,
+        "suppressed": false,
+        "suppressed_here": false
+      }
+    ],
+    "diagnostics/application-log": [
+      {
+        "subsystem": "ERROR",
+        "message": "PHP DEPRECATED: preg_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated in file: <APP>/lib/functions.php  on line: 4479"
+      },
+      {
+        "subsystem": "CMDPHP",
+        "message": "PHP ERROR Backtrace:  (<HARNESS>/probe.php[31]:sanitize_search_string(), /lib/functions.php[4479]:preg_replace(), {closure}(), <HARNESS>/errors.php[51]:CactiErrorHandler())"
+      },
+      {
+        "subsystem": "ERROR",
+        "message": "PHP USER_WARNING: behavior capture calibration in file: <HARNESS>/probe.php  on line: 79"
+      },
+      {
+        "subsystem": "CMDPHP",
+        "message": "PHP ERROR WARNING Backtrace:  (<HARNESS>/probe.php[79]:trigger_error(), {closure}(), <HARNESS>/errors.php[51]:CactiErrorHandler())"
+      },
+      {
+        "subsystem": "ERROR",
+        "message": "PHP NOTICE: fwrite(): Write of 108 bytes failed with errno=32 Broken pipe in file: <APP>/lib/rrd.php  on line: 334"
+      },
+      {
+        "subsystem": "CMDPHP",
+        "message": "PHP ERROR NOTICE Backtrace:  (/poller.php[764]:process_poller_output(), /lib/poller.php[819]:rrdtool_function_update(), /lib/rrd.php[905]:rrdtool_execute(), /lib/rrd.php[252]:__rrd_execute(), /lib/rrd.php[334]:fwrite(), CactiErrorHandler())"
+      },
+      {
+        "subsystem": "ERROR",
+        "message": "PHP USER_WARNING: behavior application-handler calibration in file: Command line code  on line: 1"
+      },
+      {
+        "subsystem": "CMDPHP",
+        "message": "PHP ERROR WARNING Backtrace:  (Command line code[1]:trigger_error(), CactiErrorHandler())"
+      }
+    ]
+  }
+}

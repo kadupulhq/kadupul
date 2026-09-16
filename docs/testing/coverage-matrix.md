@@ -128,6 +128,9 @@ The committed PHP 8.2 baseline was recaptured and reproduced against application
 revision `6ce3572dab3264be563b765f25dcadd8cc046252` using the updated harness.
 The durable `test/behavior-baseline-1.2.31` branch retains this application
 revision; use this commit with the harness from the current test branch.
+Two complete manifests and their comparison are retained under
+`tests/behavior/evidence/historical-baseline/`. Both runs verified all 34
+committed contracts and produced identical scenario observations.
 The historical refresh changes the calibration warning’s harness
 line number (86 to 79), and removal of ten `config_settings` callbacks produced
 by seeded network-discovery workers. It also separates RRDtool acknowledgement

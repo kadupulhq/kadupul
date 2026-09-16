@@ -217,6 +217,15 @@ def poller_acknowledgement_contract():
     assert contract(acknowledgement + other) != before
     assert contract('OK u:broken s:0.02 r:0.03\n' + other)['rrd_acknowledgements'] == 0
     assert contract('line two\nline one\n')['stdout'] == 'line two\nline one\n'
+    probe = object.__new__(harness.Harness)
+    probe.observed = {}
+    probe.capture('faults/missing-rrd-file', {'command': before})
+    assert probe.observed['faults/missing-rrd-file']['command']['rrd_acknowledgements'] == 2
+    assert probe.observed['faults/missing-rrd-file']['command']['stdout'] == harness.normalize(other)
+    for golden in (harness.ROOT / 'tests/Golden/cacti-1.2.31').glob('php-*/*/*.json'):
+        command = json.loads(golden.read_text()).get('command', {}) if isinstance(json.loads(golden.read_text()), dict) else {}
+        if 'rrd_acknowledgements' in command:
+            assert not any(line.startswith('OK u:') for line in command['stdout'].splitlines()), str(golden)
     print('poller acknowledgement counts remain stable without erasing errors or other output order')
 
 

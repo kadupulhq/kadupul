@@ -1,0 +1,16 @@
+{
+  "application_revision": "6ce3572dab3264be563b765f25dcadd8cc046252",
+  "harness_revision": "a16960d54 (with corrected missing-rrd-file golden)",
+  "php": "8.2",
+  "base_image": {
+    "ref": "php@sha256:0970c7c14b21003bce8178af2985b491a65b71e800ff5366053de544306ed2a1",
+    "db_ref": "mariadb@sha256:07c0aaff7396b74cb7975cba78257178d188e30f531a5db2b617c48beef13c41",
+    "packages": "rrdtool=1.7.2-4.2+b5\nsnmp=5.9.4+dfsg-2+deb13u1\nsnmpd=5.9.4+dfsg-2+deb13u1",
+    "runtime": "PRETTY_NAME=\"Debian GNU/Linux 13 (trixie)\"\nNAME=\"Debian GNU/Linux\"\nPHP 8.2.33 (cli) (built: Aug 25 2026 00:40:46) (NTS)"
+  },
+  "contracts": 34,
+  "complete": true,
+  "identical_scenarios": true,
+  "first_sha256": "e654a9f087de34414a4617d92cac74db92e031a1b5fbd43498d58e1a612d4bae",
+  "repeat_sha256": "e654a9f087de34414a4617d92cac74db92e031a1b5fbd43498d58e1a612d4bae"
+}

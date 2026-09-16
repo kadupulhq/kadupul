@@ -1,9 +1,9 @@
 {
   "command": {
     "exit": 0,
-    "stdout": "OK u:<T> s:<T> r:<T>\nOK u:<T> s:<T> r:<T>\nOK u:<T> s:<T> r:<T>\nOK u:<T> s:<T> r:<T>\nOK u:<T> s:<T> r:<T>\nOK u:<T> s:<T> r:<T>\nOK u:<T> s:<T> r:<T>\nOK u:<T> s:<T> r:<T>\nOK u:<T> s:<T> r:<T>\nOK u:<T> s:<T> r:<T>\n<TIMESTAMP> - SYSTEM STATS: Time:<T> Method:cmd.php Processes:1 Threads:1 Hosts:1 HostsPerProcess:1 DataSources:5 RRDsProcessed:5\n",
+    "stdout": "<TIMESTAMP> - SYSTEM STATS: Time:<T> Method:cmd.php Processes:1 Threads:1 Hosts:1 HostsPerProcess:1 DataSources:5 RRDsProcessed:5\n",
     "stderr": "",
-    "rrd_acknowledgements": 0
+    "rrd_acknowledgements": 10
   },
   "rrd_calls": [
     "ARGV -",
