@@ -407,3 +407,109 @@ test('Boost releases a native writer when archive discovery or row selection is 
     $outcome = json_decode(file_get_contents($this->dir . '/outcome'), true);
     expect($outcome[0] === false || $outcome[0] === -1)->toBeTrue()->and($outcome[1])->toBeTrue();
 })->with(array(true, false));
+
+
+test('unsafe directory permissions refuse both writers and maintenance', function ($mode, $ancestor) {
+    mkdir($this->dir . '/store', 0700);
+    $GLOBALS['config']['rra_path'] = $this->dir . '/store';
+    chmod($ancestor ? $this->dir : $this->dir . '/store', $mode);
+    try {
+        expect(rrd_maintenance_acquire())->toBeFalse()->and(rrd_maintenance_acquire(true))->toBeFalse();
+    } finally {
+        chmod($this->dir, 0700);
+        chmod($this->dir . '/store', 0700);
+        rmdir($this->dir . '/store');
+    }
+})->with([[0770, false], [0777, false], [01777, false], [0770, true], [0777, true]]);
+
+test('trusted children beneath sticky directories and relative aliases remain usable', function () {
+    mkdir($this->dir . '/store', 0700);
+    chmod($this->dir, 01777);
+    symlink($this->dir . '/store', $this->dir . '/alias');
+    $cwd = getcwd();
+    chdir($this->dir);
+    $GLOBALS['config']['rra_path'] = 'alias/';
+    $lease = rrd_maintenance_acquire();
+    try {
+        expect(is_resource($lease))->toBeTrue()->and(rrd_maintenance_acquire(true))->toBeFalse();
+        expect(rrd_maintenance_directory_is_trusted(''))->toBeFalse();
+        expect(rrd_maintenance_directory_is_trusted('missing'))->toBeFalse();
+        file_put_contents('regular', 'data');
+        expect(rrd_maintenance_directory_is_trusted('regular'))->toBeFalse();
+    } finally {
+        rrd_maintenance_release($lease);
+        chdir($cwd);
+        unlink($this->dir . '/alias');
+        rmdir($this->dir . '/store');
+        chmod($this->dir, 0700);
+    }
+});
+
+test('a nested symlink cannot hide an unsafe target ancestor', function () {
+    mkdir($this->dir . '/unsafe', 0777);
+    chmod($this->dir . '/unsafe', 0777);
+    mkdir($this->dir . '/unsafe/intermediate', 0700);
+    mkdir($this->dir . '/safe', 0700);
+    symlink($this->dir . '/safe', $this->dir . '/unsafe/intermediate/target');
+    symlink($this->dir . '/unsafe/intermediate', $this->dir . '/alias');
+    $GLOBALS['config']['rra_path'] = $this->dir . '/alias/target';
+    try {
+        expect(rrd_maintenance_acquire())->toBeFalse();
+    } finally {
+        unlink($this->dir . '/alias');
+        unlink($this->dir . '/unsafe/intermediate/target');
+        rmdir($this->dir . '/unsafe/intermediate');
+        rmdir($this->dir . '/unsafe');
+        rmdir($this->dir . '/safe');
+    }
+});
+
+test('untrusted symlink owners are rejected even beneath sticky directories', function () {
+    if (!function_exists('posix_geteuid') || posix_geteuid() !== 0) {
+        $this->markTestSkipped('Root is required to assign an adversarial symlink owner.');
+    }
+    mkdir($this->dir . '/store', 0700);
+    chmod($this->dir, 01777);
+    symlink($this->dir . '/store', $this->dir . '/alias');
+    expect(lchown($this->dir . '/alias', 65534))->toBeTrue();
+    $GLOBALS['config']['rra_path'] = $this->dir . '/alias/';
+    try {
+        expect(rrd_maintenance_acquire())->toBeFalse();
+    } finally {
+        unlink($this->dir . '/alias');
+        rmdir($this->dir . '/store');
+        chmod($this->dir, 0700);
+    }
+});
+
+test('another account cannot replace a directory after its lease is acquired', function () {
+    if (!function_exists('posix_geteuid') || posix_geteuid() !== 0 || !function_exists('pcntl_fork')) {
+        $this->markTestSkipped('Root and pcntl are required for an actual privilege-separated replacement attempt.');
+    }
+    chmod($this->dir, 0755);
+    mkdir($this->dir . '/store', 0755);
+    file_put_contents($this->dir . '/store/source.rrd', 'original samples');
+    $GLOBALS['config']['rra_path'] = $this->dir . '/store';
+    $lease = rrd_maintenance_acquire();
+    try {
+        expect(is_resource($lease))->toBeTrue();
+        $pid = pcntl_fork();
+        if ($pid === 0) {
+            if (!posix_setgid(65534) || !posix_setuid(65534)) {
+                exit(2);
+            }
+            $renamed = @rename($this->dir . '/store', $this->dir . '/old');
+            $replaced = @mkdir($this->dir . '/store', 0755);
+            exit($renamed || $replaced ? 1 : 0);
+        }
+        expect($pid)->toBeGreaterThan(0);
+        pcntl_waitpid($pid, $status);
+        expect(pcntl_wifexited($status))->toBeTrue()->and(pcntl_wexitstatus($status))->toBe(0);
+        expect(file_get_contents($this->dir . '/store/source.rrd'))->toBe('original samples');
+        expect(rrd_maintenance_acquire(true))->toBeFalse();
+    } finally {
+        rrd_maintenance_release($lease);
+        unlink($this->dir . '/store/source.rrd');
+        rmdir($this->dir . '/store');
+    }
+});

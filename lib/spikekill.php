@@ -1445,31 +1445,8 @@ class spikekill {
 	 * belongs to the current account or root. Windows needs ACL-aware support.
 	 */
 	private function directoryPathIsTrusted($path) {
-		if (!function_exists('posix_geteuid') || DIRECTORY_SEPARATOR === '\\') {
-			return false;
-		}
-		$uid = posix_geteuid();
-		$child = @stat($path);
-		if ($child === false || !in_array($child['uid'], array(0, $uid), true) || ($child['mode'] & 0022) !== 0) {
-			return false;
-		}
-		while ($child !== false) {
-			$parent_path = dirname($path);
-			$parent = @stat($parent_path);
-			if ($parent === false || !in_array($parent['uid'], array(0, $uid), true)) {
-				return false;
-			}
-			if (($parent['mode'] & 0022) !== 0
-				&& (!(($parent['mode'] & 01000) !== 0) || !in_array($child['uid'], array(0, $uid), true))) {
-				return false;
-			}
-			if ($parent_path === $path) {
-				return true;
-			}
-			$path = $parent_path;
-			$child = $parent;
-		}
-		return false;
+		require_once __DIR__ . '/rrd_maintenance.php';
+		return rrd_maintenance_directory_is_trusted($path);
 	}
 
 	/**
