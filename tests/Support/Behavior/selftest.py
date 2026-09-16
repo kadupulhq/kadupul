@@ -315,6 +315,30 @@ def native_worker_boundary():
                                  str(Path(directory) / 'status'), str(parent)], capture_output=True, text=True, timeout=40)
         assert result.returncode == 70 and 'Cannot create' in result.stderr, result
         assert (Path(directory) / 'status').read_text() == 'sentinel'
+        # The deadline covers both a hanging application and an orphan worker.
+        import os
+        import time
+        for descendant in (False, True):
+            late = Path(directory) / 'late-timeout'
+            pidfile = Path(directory) / 'timeout-pid'
+            late.unlink(missing_ok=True)
+            pidfile.unlink(missing_ok=True)
+            (Path(directory) / 'status').unlink()
+            worker.write_text('<?php file_put_contents(' + json.dumps(str(pidfile)) + ', getmypid()); sleep(3); file_put_contents(' + json.dumps(str(late)) + ', "unexpected");')
+            if descendant:
+                parent.write_text('<?php exec(escapeshellarg(PHP_BINARY) . " " . escapeshellarg(' + json.dumps(str(worker)) + ') . " >/dev/null 2>&1 &");')
+            else:
+                parent.write_text(worker.read_text())
+            result = subprocess.run(['php', '-d', 'auto_prepend_file=', str(Path(__file__).with_name('wait-php.php')),
+                                     str(Path(directory) / 'status'), str(parent)], capture_output=True, text=True, timeout=10,
+                                    env={**os.environ, 'HARNESS_OBSERVATION_TIMEOUT': '1'})
+            assert result.returncode == 70 and 'workers terminated' in result.stderr, result
+            assert (Path(directory) / 'status').read_text() == ''
+            pid = int(pidfile.read_text())
+            stat = Path('/proc') / str(pid) / 'stat'
+            assert not stat.exists() or stat.read_text().rsplit(')', 1)[1].split()[0] == 'Z'
+            time.sleep(2.2)
+            assert not late.exists(), 'timed-out worker continued mutating artifacts'
     print('process-group boundary waits for delayed grandchildren and distinguishes application exit 70')
 
 
