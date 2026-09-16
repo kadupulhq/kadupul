@@ -26,6 +26,22 @@ def run_file(command, cwd, log, timeout):
             return process.returncode, True
 
 
+def junit_suites(tree):
+    if tree.tag not in ('testsuites', 'testsuite'):
+        raise ValueError('JUnit report root must be testsuites or testsuite')
+    for parent in tree.iter():
+        for child in parent:
+            if child.tag == 'testcase' and parent.tag != 'testsuite':
+                raise ValueError('JUnit test cases must belong directly to a test suite')
+            if child.tag == 'testsuite' and parent.tag not in ('testsuites', 'testsuite'):
+                raise ValueError('JUnit test suites have an invalid parent')
+            if child.tag == 'testsuites':
+                raise ValueError('JUnit suite collections may appear only at the root')
+    if tree.tag == 'testsuites' and any(child.tag != 'testsuite' for child in tree):
+        raise ValueError('JUnit suite collection contains a non-suite child')
+    return [tree] if tree.tag == 'testsuite' else list(tree)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--php', default='php')
@@ -56,13 +72,14 @@ def main():
                       failures=0, errors=0, log=str(log))
         try:
             tree = ET.parse(report).getroot()
+            suites = junit_suites(tree)
             cases = list(tree.iter('testcase'))
             result.update(tests=len(cases), skipped=sum(c.find('skipped') is not None for c in cases),
                           failures=sum(c.find('failure') is not None for c in cases),
                           errors=sum(c.find('error') is not None for c in cases))
             if not cases:
                 raise ValueError('JUnit report contains no test cases')
-            for suite in tree.findall('testsuite'):
+            for suite in suites:
                 combined.append(suite)
         except (OSError, ET.ParseError, ValueError) as error:
             result['report_error'] = str(error)

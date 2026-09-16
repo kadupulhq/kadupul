@@ -6,6 +6,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 
 
 class RunnerTest(unittest.TestCase):
@@ -24,6 +25,16 @@ if mode == 'timeout': time.sleep(10)
 if mode == 'missing': sys.exit(0)
 if mode == 'crash': sys.exit(255)
 if mode == 'malformed': report.write_text('<'); sys.exit(0)
+shapes = {
+    'wrong-root': '<not-junit><testcase/></not-junit>',
+    'orphan-case': '<testsuites><testcase/></testsuites>',
+    'wrapped-case': '<testsuites><testsuite><wrapper><testcase/></wrapper></testsuite></testsuites>',
+    'wrapped-suite': '<testsuites><wrapper><testsuite><testcase/></testsuite></wrapper></testsuites>',
+    'nested-collection': '<testsuites><testsuite><testsuites><testsuite><testcase/></testsuite></testsuites></testsuite></testsuites>',
+    'single-suite': '<testsuite><testcase name="contract"/></testsuite>',
+    'nested-suite': '<testsuites><testsuite><testsuite><testcase name="contract"/></testsuite></testsuite></testsuites>',
+}
+if mode in shapes: report.write_text(shapes[mode]); sys.exit(0)
 if mode == 'empty': report.write_text('<testsuites/>'); sys.exit(0)
 case = '<skipped/>' if mode == 'skipped' else '<failure/>' if mode == 'failure' else ''
 report.write_text('<testsuites><testsuite><testcase name="contract">' + case + '</testcase></testsuite></testsuites>')
@@ -45,15 +56,17 @@ report.write_text('<testsuites><testsuite><testcase name="contract">' + case + '
         return result.returncode, results[0]
 
     def test_success_and_skips_have_valid_reports(self):
-        for mode in ['passed', 'skipped']:
+        for mode in ['passed', 'skipped', 'single-suite', 'nested-suite']:
             with self.subTest(mode=mode):
                 status, result = self.run_suite(mode)
                 self.assertEqual(status, 0)
                 self.assertEqual(result['tests'], 1)
+                combined = ET.parse(self.root / 'results/junit.xml').getroot()
+                self.assertEqual(len(list(combined.iter('testcase'))), 2)
                 self.assertEqual(result['skipped'], int(mode == 'skipped'))
 
     def test_missing_empty_malformed_and_failure_reports_fail_closed(self):
-        for mode in ['missing', 'empty', 'malformed', 'failure', 'crash', 'timeout']:
+        for mode in ['missing', 'empty', 'malformed', 'failure', 'crash', 'timeout', 'wrong-root', 'orphan-case', 'wrapped-case', 'wrapped-suite', 'nested-collection']:
             with self.subTest(mode=mode):
                 status, result = self.run_suite(mode)
                 self.assertEqual(status, 1)
