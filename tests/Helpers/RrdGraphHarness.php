@@ -273,7 +273,12 @@ try {
 
 			foreach ($scenario['calls'] as $call) {
 				$pipe = fopen('php://temp', 'w+');
-				rrd_maintenance_pipe($pipe, rrd_maintenance_acquire());
+				$lease = rrd_maintenance_acquire();
+				if ($lease === false) {
+					fclose($pipe);
+					throw new RuntimeException('RRD graph fixture storage is unavailable');
+				}
+				rrd_maintenance_pipe($pipe, $lease);
 
 				if ($call[0] == 'raw') {
 					rrdtool_execute($call[1], false, RRDTOOL_OUTPUT_NULL, $pipe);

@@ -5,8 +5,8 @@ cmd_exec	./cli/audit_database.php:1161				exec(cacti_escapeshellarg($db_shell) .
 cmd_exec	./cli/audit_database.php:246		exec(cacti_escapeshellarg($php_binary) . ' ' .
 cmd_exec	./cli/audit_database.php:339								exec(cacti_escapeshellarg($php_binary) . ' ' .
 cmd_exec	./cli/batchgapfix.php:401			exec($command, $output, $return_var);
-cmd_exec	./cli/float_rrdfiles.php:351				$response = exec($command, $output, $return);
-cmd_exec	./cli/float_rrdfiles.php:514					$response = exec($command, $output, $return);
+cmd_exec	./cli/float_rrdfiles.php:354				$response = exec($command, $output, $return);
+cmd_exec	./cli/float_rrdfiles.php:517					$response = exec($command, $output, $return);
 cmd_exec	./cli/push_out_hosts.php:67		passthru($command, $exit_code);
 cmd_exec	./cli/remove_broken_graphs.php:47		$stty = shell_exec('stty size');
 cmd_exec	./cli/reset_password.php:149		shell_exec('stty -echo');
@@ -426,7 +426,7 @@ dynamic_include	./lib/rrd.php:1700		include_once($config['library_path'] . '/xml
 dynamic_include	./lib/rrd.php:1701		include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/rrd.php:3019			include($rrdtheme);
 dynamic_include	./lib/rrd.php:3715		include_once($config['library_path'] . '/time.php');
-dynamic_include	./lib/rrd.php:4527			include($themefile);
+dynamic_include	./lib/rrd.php:4533			include($themefile);
 dynamic_include	./lib/rrd.php:808		include ($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/rrdcheck.php:724			include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/rrdcheck.php:754			include_once($config['library_path'] . '/poller.php');

@@ -254,9 +254,10 @@ if (!$forcerun) {
 }
 
 /* Collect data as determined by the type */
+$exit_status = 0;
 switch ($type) {
 	case 'rmaster':
-		float_master_handler($forcerun, $resume, $host_id, $host_template_id, $graph_template_id, $local_graph_ids, $threads, $step, $start_time, $end_time);
+		$exit_status = float_master_handler($forcerun, $resume, $host_id, $host_template_id, $graph_template_id, $local_graph_ids, $threads, $step, $start_time, $end_time) ? 0 : 1;
 
 		unregister_process('rfloat', 'rmaster', 0);
 
@@ -291,6 +292,8 @@ switch ($type) {
 					db_execute_prepared('DELETE FROM poller_float_rrdfiles_not_done
 						WHERE local_data_id = ?',
 						array($data['local_data_id']));
+				} else {
+					$exit_status = 1;
 				}
 			} finally {
 				rrd_maintenance_release($rrd_rewrite_lock);
@@ -306,7 +309,7 @@ switch ($type) {
 
 float_debug('Polling Ending');
 
-exit(0);
+exit($exit_status);
 
 /**
  * float_rrdfile - Takes the last known data for a data range
@@ -661,6 +664,11 @@ function float_master_handler($forcerun, $resume, $host_id, $host_template_id, $
 		} else {
 			break;
 		}
+	}
+
+	if ($rrds > 0) {
+		cacti_log('ERROR: RRD floating left unprocessed files; use --resume after correcting the failure.', true, 'RFLOAT');
+		return false;
 	}
 
 	return true;
