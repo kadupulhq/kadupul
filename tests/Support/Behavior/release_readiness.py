@@ -31,6 +31,7 @@ def checked(result, label):
 
 def rrd_manifest(h):
     code = '''$r=[];
+if (is_link("rra")) { throw new RuntimeException("RRD snapshot cannot preserve an external symlink target"); }
 $files=new RecursiveIteratorIterator(new RecursiveDirectoryIterator("rra", FilesystemIterator::SKIP_DOTS));
 foreach ($files as $file) {
     if ($file->isLink()) { throw new RuntimeException("RRD snapshot cannot preserve an external symlink target"); }
@@ -167,6 +168,7 @@ def main():
             # Include a real nested RRD so the rehearsal exercises structured paths.
             checked(h.php('-r', '$files=glob("rra/*.rrd"); if (!$files || !mkdir("rra/structured") || !copy($files[0], "rra/structured/fixture.rrd")) {exit(1);}'), 'Structured RRD fixture')
             before_rrd = rrd_manifest(h)
+            require(len(before_rrd) == 6 and 'structured/fixture.rrd' in before_rrd, 'Expected six RRD snapshot members including the structured fixture')
             before_domain = domain_state(h)
             evidence['steps']['baseline'] = {'version': h.sql('SELECT cacti FROM version').strip(),
                                             'rrd': before_rrd, 'graph': assert_graph(h),

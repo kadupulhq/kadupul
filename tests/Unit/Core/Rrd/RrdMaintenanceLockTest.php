@@ -405,7 +405,7 @@ test('Boost releases a native writer when archive discovery or row selection is 
     fclose($pipes[2]);
     expect(proc_close($process))->toBe(0)->and($stderr)->toBe('');
     $outcome = json_decode(file_get_contents($this->dir . '/outcome'), true);
-    expect($outcome[0] === false || $outcome[0] === -1)->toBeTrue()->and($outcome[1])->toBeTrue();
+    expect($outcome[0])->toBe($emptyArchives ? -1 : 0)->and($outcome[1])->toBeTrue();
 })->with(array(true, false));
 
 
@@ -555,7 +555,7 @@ test('failed writer initialization preserves normal and Boost queues before any 
     $status = proc_close($process);
     chmod($this->dir, 0700);
     expect($stderr)->toBe('')->and($status)->toBe(0, $stdout)
-        ->and(json_decode($stdout, true))->toBe(array(false, 0, -1, -1, array(), 'retained samples'));
+        ->and(json_decode($stdout, true))->toBe(array(false, false, -1, -1, array(), 'retained samples'));
 })->with(array('missing', 'untrusted'));
 
 test('a failed realtime writer keeps its queued samples and reports the failure', function ($mode) {
@@ -787,3 +787,41 @@ test('a separate web UID can coordinate a poller-owned shared store', function (
         chmod($this->dir, 0700);
     }
 });
+
+test('queued samples require an actual RRDtool acknowledgement', function ($mode, $expected) {
+    $root = dirname(__DIR__, 4);
+    $binary = getenv('RRDTOOL_TEST_BINARY') ?: '/opt/homebrew/bin/rrdtool';
+    if (!is_executable($binary)) {
+        $this->markTestSkipped('Real RRDtool is required.');
+    }
+    $rrd = $this->dir . '/sample.rrd';
+    exec(escapeshellarg($binary) . ' create ' . escapeshellarg($rrd) . ' --start 1700000000 --step 60 DS:value:GAUGE:600:U:U RRA:AVERAGE:0.5:1:20', $out, $status);
+    expect($status)->toBe(0);
+    $wrapper = $this->dir . '/rrd-wrapper';
+    $response = $mode === 'silent' ? '' : ($mode === 'error' ? "ERROR: failed update\n" : "OK u:0 s:0 r:0\n");
+    if ($mode === 'real') {
+        file_put_contents($wrapper, "#!/bin/sh\nexec " . escapeshellarg($binary) . " \"\$@\"\n");
+    } else {
+        file_put_contents($wrapper, '#!' . PHP_BINARY . "\n<?php stream_get_contents(STDIN); echo " . var_export($response, true) . '; exit(' . ($mode === 'crash' ? 9 : 0) . ');');
+    }
+    chmod($wrapper, 0700);
+    $bootstrap = '<?php $config = ' . var_export(array('cacti_server_os' => 'unix', 'rra_path' => $this->dir, 'is_web' => false), true) . ';' .
+        'define("CACTI_LOCALE","en-US"); define("POLLER_VERBOSITY_DEBUG",5);' .
+        'define("RRDTOOL_OUTPUT_STDOUT",1); define("RRDTOOL_OUTPUT_STDERR",2); define("RRDTOOL_OUTPUT_GRAPH_DATA",3); define("RRDTOOL_OUTPUT_BOOLEAN",4); define("RRDTOOL_OUTPUT_RETURN_STDERR",5);' .
+        'function read_config_option($key) { return $key === "path_rrdtool" ? ' . var_export($wrapper, true) . ' : ""; }' .
+        'function cacti_log(...$args) {} function cacti_session_close() {} function cacti_sizeof($v) {return count($v);}' .
+        'function get_rrdtool_version(){return "1.7";} function cacti_version_compare(...$args){return version_compare(...$args);}' .
+        'require ' . var_export($root . '/lib/rrd.php', true) . ';' .
+        '$updates = array(' . var_export($rrd, true) . ' => array("local_data_id"=>1,"data_template_id"=>0,"times"=>array(1700000060=>array("value"=>42))));' .
+        '$pipe=rrd_init(false); if (!is_resource($pipe)) {exit(2);} echo json_encode(rrdtool_function_update($updates,$pipe)); rrd_close($pipe);';
+    file_put_contents($this->dir . '/ack.php', $bootstrap);
+    $process = proc_open(array(PHP_BINARY, $this->dir . '/ack.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $output = stream_get_contents($pipes[1]);
+    $error = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    expect(proc_close($process))->toBe(0)->and($error)->toBe('')->and(json_decode($output, true))->toBe($expected);
+    if ($mode === 'real') {
+        expect(shell_exec(escapeshellarg($binary) . ' lastupdate ' . escapeshellarg($rrd)))->toContain('42');
+    }
+})->with(array(array('real',1), array('silent',false), array('error',false), array('crash',false)));

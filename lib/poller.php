@@ -522,10 +522,15 @@ function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$re
 function process_poller_output(&$rrdtool_pipe, $remainder = 0) {
 	global $config, $debug;
 
+	static $writer_failure_logged = false;
 	if ($rrdtool_pipe === false) {
-		cacti_log('ERROR: RRD initialization failed; pending poller samples were retained.', false, 'POLLER');
-		return 0;
+		if (!$writer_failure_logged) {
+			cacti_log('ERROR: RRD initialization failed; pending poller samples were retained.', false, 'POLLER');
+			$writer_failure_logged = true;
+		}
+		return false;
 	}
+	$writer_failure_logged = false;
 
 	static $rrd_field_names = array();
 	static $checked_bad     = false;
@@ -556,6 +561,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0) {
 		ON dl.id = po.local_data_id
 		ORDER BY po.local_data_id
 		$limit");
+	if ($results === false) { return false; }
 
 	if (!cacti_sizeof($rrd_field_names)) {
 		$rrd_field_names = array_rekey(
@@ -764,37 +770,20 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0) {
 			}
 		}
 
-		/* make sure each .rrd file has complete data */
-		$k        = 0;
-		$data_ids = array();
-
+		/* Only complete timestamp groups may be written or acknowledged. */
+		$output_keys = array();
 		foreach ($results as $item) {
-			$unix_time = $item['unix_time'];
-			$rrd_path  = $item['rrd_path'];
-			$rrd_name  = $item['rrd_name'];
-
-			if (isset($rrd_update_array[$rrd_path]['times'][$unix_time])) {
-				/**
-				 * Check to see if we have partial data sources.  If so
-				 * we did not get a full update, so we should not be removing
-				 * those data sources from the $rrd_update_array yet.
-				 */
-				if ($item['rrd_num'] <= cacti_sizeof($rrd_update_array[$rrd_path]['times'][$unix_time])) {
-					$data_ids[] = $item['local_data_id'];
-					$k++;
-					if ($k % 10000 == 0) {
-						db_execute('DELETE FROM poller_output WHERE local_data_id IN (' . implode(',', $data_ids) . ')');
-						$data_ids = array();
-						$k = 0;
-					}
-				} else {
-					unset($rrd_update_array[$rrd_path]['times'][$unix_time]);
-				}
+			$path = $item['rrd_path'];
+			$time = $item['unix_time'];
+			if (isset($rrd_update_array[$path]['times'][$time])
+				&& $item['rrd_num'] > cacti_sizeof($rrd_update_array[$path]['times'][$time])) {
+				unset($rrd_update_array[$path]['times'][$time]);
 			}
 		}
-
-		if ($k > 0) {
-			db_execute('DELETE FROM poller_output WHERE local_data_id IN (' . implode(',', $data_ids) . ')');
+		foreach ($results as $item) {
+			if (isset($rrd_update_array[$item['rrd_path']]['times'][$item['unix_time']])) {
+				$output_keys[] = array($item['local_data_id'], $item['rrd_name'], $item['time']);
+			}
 		}
 
 		/* process dsstats information */
@@ -803,8 +792,24 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0) {
 
 		api_plugin_hook_function('poller_output', $rrd_update_array);
 
-		if (boost_poller_on_demand($results)) {
+		$direct_update = boost_poller_on_demand($results);
+		if ($direct_update === null) { return false; }
+		if ($direct_update) {
 			$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe);
+			if ($rrds_processed === false) {
+				return false;
+			}
+		}
+
+		foreach (array_chunk($output_keys, 1000) as $chunk) {
+			$params = array();
+			foreach ($chunk as $key) {
+				array_push($params, ...$key);
+			}
+			$placeholders = implode(',', array_fill(0, count($chunk), '(?,?,?)'));
+			if (db_execute_prepared("DELETE FROM poller_output WHERE (local_data_id, rrd_name, time) IN ($placeholders)", $params) === false) {
+				return false;
+			}
 		}
 
 		$results = NULL;
@@ -820,7 +825,11 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0) {
 				FROM poller_time
 				WHERE end_time = "0000-00-00"');
 
-			$rrds_processed += process_poller_output($rrdtool_pipe, $rows < $max_rows ? $rows : $max_rows);
+			$child_updates = process_poller_output($rrdtool_pipe, $rows < $max_rows ? $rows : $max_rows);
+			if ($child_updates === false) {
+				return false;
+			}
+			$rrds_processed += $child_updates;
 
 			if ($running == 0 && !$checked_bad) {
 				// Remove recently deleted items from the poller_output table

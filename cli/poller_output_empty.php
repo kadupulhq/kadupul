@@ -51,11 +51,22 @@ $start = microtime(true);
 
 /* open a pipe to rrdtool for writing */
 $rrdtool_pipe = rrd_init();
+if ($rrdtool_pipe === false) {
+	fwrite(STDERR, "ERROR: RRD initialization failed; queued samples retained for retry.\n");
+	exit(1);
+}
 
 $rrds_processed = 0;
 
-while (db_fetch_cell('SELECT count(*) FROM poller_output') > 0) {
-	$rrds_processed = $rrds_processed + process_poller_output($rrdtool_pipe, false);
+while (($pending = db_fetch_cell('SELECT count(*) FROM poller_output')) > 0) {
+	$updated = process_poller_output($rrdtool_pipe, false);
+	$remaining = db_fetch_cell('SELECT count(*) FROM poller_output');
+	if ($updated === false || $remaining === false || $remaining >= $pending) {
+		fwrite(STDERR, "ERROR: Poller output made no progress; remaining samples retained for retry.\n");
+		rrd_close($rrdtool_pipe);
+		exit(1);
+	}
+	$rrds_processed += $updated;
 }
 
 print "There were $rrds_processed RRD updates made this pass\n";
