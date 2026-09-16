@@ -204,7 +204,9 @@ class Harness:
     def capture(self, name, value):
         if name in self.observed:
             raise RuntimeError('Duplicate scenario ' + name)
-        self.observed[name] = normalize(value)
+        # Application log messages have already had only known roots replaced.
+        # The general timing normalizer would erase meaningful warning text.
+        self.observed[name] = value if name == 'diagnostics/application-log' else normalize(value)
         print('CAPTURE ' + name, flush=True)
 
     def probe(self, name):
@@ -299,6 +301,7 @@ class Harness:
         self.compose('down', '--volumes', '--remove-orphans', check=False, timeout=120)
         self.compose('up', '-d', '--build', '--wait', 'db', 'web', 'snmp', timeout=1200)
         self.truncate_artifacts('php-errors.jsonl', 'plugin.jsonl', 'rrd-argv.log', 'rrd-stdin.log')
+        self.command('sh', '-c', ': > /var/www/html/log/cacti.log', check=True)
         self.sql((ROOT / 'cacti.sql').read_text())
         self.capture('database/fresh-schema', {'version': self.sql('SELECT * FROM version'),
                      'tables': self.sql('SHOW TABLES'), 'devices': self.devices(),
@@ -535,16 +538,22 @@ class Harness:
         self.capture('api/php-errors', events)
         self.capture('diagnostics/visible-php-errors', visible_diagnostics(events))
 
+        self.capture_application_diagnostics()
+
+    def capture_application_diagnostics(self):
+        before_log = self.command('cat', '/var/www/html/log/cacti.log', check=True)['stdout']
         # This process leaves the application's handler installed. Its warning
         # must arrive through the real log, independently of the prepend recorder.
         calibration = self.php('-r', "chdir('/var/www/html'); $no_http_headers=true; include 'include/global.php'; trigger_error('behavior application-handler calibration', E_USER_WARNING);")
         if calibration['exit']:
             raise RuntimeError('Application handler calibration failed: ' + json.dumps(calibration))
         log = self.command('cat', '/var/www/html/log/cacti.log', check=True)['stdout']
-        records = application_diagnostics(log)
-        if not any('behavior application-handler calibration' in row['message'] for row in records):
+        if not log.startswith(before_log):
+            raise RuntimeError('Application log rotated or truncated during calibration')
+        appended = application_diagnostics(log[len(before_log):])
+        if not any('behavior application-handler calibration' in row['message'] for row in appended):
             raise RuntimeError('The application log missed the post-bootstrap calibration warning')
-        self.capture('diagnostics/application-log', records)
+        self.capture('diagnostics/application-log', application_diagnostics(log))
 
     def base_image_digest(self):
         """The base image this run was built on.

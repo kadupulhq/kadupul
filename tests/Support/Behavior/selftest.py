@@ -182,6 +182,26 @@ def diagnostic_contracts():
     assert harness.application_diagnostics('09/16/2026 01:02:06 - ERROR ' + timing_warning) == [
         {'subsystem': 'ERROR', 'message': timing_warning.replace('/harness', '<HARNESS>')}]
 
+    captured = object.__new__(harness.Harness)
+    captured.observed = {}
+    captured.capture('diagnostics/application-log', harness.application_diagnostics(
+        '09/16/2026 01:02:06 - ERROR ' + timing_warning))
+    assert captured.observed['diagnostics/application-log'][0]['message'] == timing_warning.replace('/harness', '<HARNESS>')
+    stale = '09/16/2026 01:02:01 - ERROR PHP WARNING: behavior application-handler calibration\n'
+    fresh = '09/16/2026 01:02:07 - ERROR PHP WARNING: behavior application-handler calibration\n'
+    for after, expected_failure in ((stale, 'missed'), (fresh, 'rotated'), (stale + fresh, None)):
+        captured = object.__new__(harness.Harness)
+        captured.observed = {}
+        reads = iter((stale, after))
+        captured.command = lambda *args, **kwargs: {'stdout': next(reads)}
+        captured.php = lambda *args: {'exit': 0}
+        try:
+            captured.capture_application_diagnostics()
+        except RuntimeError as error:
+            assert expected_failure and expected_failure in str(error), (after, error)
+        else:
+            assert expected_failure is None, after
+            assert len(captured.observed['diagnostics/application-log']) == 2
     print('diagnostic scopes preserve severity, content, order and duplicate records')
 
 
