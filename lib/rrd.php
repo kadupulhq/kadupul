@@ -77,10 +77,17 @@ function rrd_init($output_to_term = true, $exclusive = false) {
 		cacti_log('ERROR: Disable RRDCACHED_ADDRESS before destructive RRD maintenance.');
 		return false;
 	}
-	$lock = rrd_maintenance_acquire($exclusive && ($config['cacti_server_os'] ?? '') !== 'win32');
+	$degraded = false;
+	$lock = ($exclusive && ($config['cacti_server_os'] ?? '') !== 'win32') ? rrd_maintenance_acquire(true) : rrd_maintenance_writer_lease($degraded);
 	if ($lock === false) {
 		cacti_log('ERROR: Unable to coordinate local RRD writes with maintenance.');
 		return false;
+	}
+
+	static $degraded_logged = false;
+	if ($degraded && !$degraded_logged) {
+		$degraded_logged = true;
+		cacti_log('WARNING: RRD storage is writable by, or owned by, another account; local RRD writes continue without a maintenance lease.');
 	}
 
 	$pipe = false;

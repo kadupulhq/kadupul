@@ -407,7 +407,6 @@ test('failed writer initialization preserves normal and Boost queues before any 
     preg_match('/^function boost_output_rrd_data\(.*?^}\R/ms', $source, $match);
     expect($match)->not->toBeEmpty();
     file_put_contents($this->dir . '/source.rrd', 'retained samples');
-    if ($mode === 'untrusted') { chmod($this->dir, 0777); }
     $bootstrap .= '$config = ' . var_export(array('cacti_server_os' => 'unix', 'rra_path' => $this->dir . ($mode === 'missing' ? '/missing' : ''), 'library_path' => $root . '/lib'), true) . ';' .
         'function read_config_option($name) { return ""; } function cacti_log(...$args) {} function cacti_system_zone_set() {}' .
         'function db_fetch_assoc(...$args) { throw new RuntimeException("queue read after failed initialization"); }' .
@@ -424,10 +423,40 @@ test('failed writer initialization preserves normal and Boost queues before any 
     file_put_contents($this->dir . '/queue-init.php', $bootstrap);
     $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $this->dir . '/queue-init.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     $stdout = stream_get_contents($pipes[1]); $stderr = stream_get_contents($pipes[2]); fclose($pipes[1]); fclose($pipes[2]);
-    $status = proc_close($process); chmod($this->dir, 0700);
+    $status = proc_close($process);
     expect($status)->toBe(0)->and($stderr)->toBe('')
         ->and(json_decode($stdout, true))->toBe(array(false, 0, -1, -1, 'retained samples'));
-})->with(array('missing', 'untrusted'));
+})->with(array('missing'));
+
+test('shared storage keeps ordinary writers running while destructive maintenance still refuses', function ($mode) {
+    if ($mode === 'foreign' && (!function_exists('posix_geteuid') || posix_geteuid() !== 0)) {
+        $this->markTestSkipped('Root is required to assign a foreign storage owner.');
+    }
+    $root = dirname(__DIR__, 4);
+    $bootstrap = '<?php ';
+    if ($this->getTestResultObject()->getCodeCoverage() !== null) {
+        $this->expectedChildReports = 1;
+        $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); require ' . var_export($root . '/tests/fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    mkdir($this->dir . '/store', 0700);
+    if ($mode === 'foreign') { chmod($this->dir . '/store', 0755); expect(chown($this->dir . '/store', 65534))->toBeTrue(); } else { chmod($this->dir . '/store', 0777); }
+    $bootstrap .= '$config = ' . var_export(array('cacti_server_os' => 'unix', 'rra_path' => $this->dir . '/store'), true) . '; define("CACTI_LOCALE", "en-US");' .
+        'function read_config_option($name) { return ""; } function cacti_escapeshellarg($value) { return escapeshellarg($value); }' .
+        '$logged = array(); function cacti_log($message, ...$rest) { $GLOBALS["logged"][] = $message; }' .
+        'require ' . var_export($root . '/lib/rrd.php', true) . ';' .
+        '$first = rrd_init(false); $second = rrd_init(false); $destructive = rrd_with_pipe(function ($pipe) { return true; });' .
+        'echo json_encode(array(is_resource($first), is_resource($second), $destructive, $logged));';
+    file_put_contents($this->dir . '/degraded-lease.php', $bootstrap);
+    try {
+        $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $this->dir . '/degraded-lease.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $stdout = stream_get_contents($pipes[1]); $stderr = stream_get_contents($pipes[2]); fclose($pipes[1]); fclose($pipes[2]);
+        expect(proc_close($process))->toBe(0)->and($stderr)->toBe('')
+            ->and(json_decode($stdout, true))->toBe(array(true, true, false, array(
+                'WARNING: RRD storage is writable by, or owned by, another account; local RRD writes continue without a maintenance lease.',
+                'ERROR: Unable to coordinate local RRD writes with maintenance.',
+            )));
+    } finally { rmdir($this->dir . '/store'); }
+})->with(array('world', 'foreign'));
 
 test('utility rewrite ownership excludes shared writers and refuses busy or cached storage', function ($mode) {
     $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');

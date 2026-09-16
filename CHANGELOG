@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-security: Keep the RRD storage trust check as a gate on destructive maintenance only, so a poll whose RRA directory is world writable or owned by another account writes its samples without a maintenance lease instead of failing the whole cycle
 -issue: Unregister a float_rrdfiles.php child whose process is gone so the master stops waiting on it and reports the retained queue, instead of waiting forever on a child that was killed outright
 -issue: Retain the batchgapfix.php queue and exit non-zero when a result tally or the in-progress count cannot be read, instead of treating the failed query as zero and truncating the table
 -issue: Close out the queue rows of a batchgapfix.php child that exited without recording its own results, instead of leaving the master waiting on a count that can never reach zero

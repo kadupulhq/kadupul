@@ -86,6 +86,30 @@ function rrd_maintenance_acquire($exclusive = false, $wait = false) {
 	return $handle;
 }
 
+/** Ordinary RRD writes predate this lease and must keep working when the store
+ * is shared with the web account or left world writable. Report that degraded
+ * case to the caller instead of refusing it; missing storage and a lease that
+ * fails against a trusted directory still fail closed.
+ */
+function rrd_maintenance_writer_lease(&$degraded) {
+	global $config;
+
+	$degraded = false;
+	$lock = rrd_maintenance_acquire();
+	if ($lock !== false) {
+		return $lock;
+	}
+
+	$path = $config['rra_path'] ?? (($config['base_path'] ?? '') . '/rra');
+	$canonical = realpath($path);
+	if ($canonical === false || !is_dir($canonical) || rrd_maintenance_directory_is_trusted($path)) {
+		return false;
+	}
+
+	$degraded = true;
+	return true;
+}
+
 function rrd_maintenance_release($handle) {
 	if (is_resource($handle)) {
 		flock($handle, LOCK_UN);
