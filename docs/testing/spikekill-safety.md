@@ -100,3 +100,10 @@ observed keys from older incomplete groups and logs the expired count. Complete
 groups awaiting a writer retry are retained regardless of age. Failed writer
 initialization bypasses expiry as well as normal queue consumption. New arrivals
 and complete sibling timestamps are not swept away by a source-wide deletion.
+
+Queued poller and realtime samples are deleted only after RRDtool acknowledges
+every selected update. Local updates use synchronous response pipes because a
+write-only persistent pipe cannot confirm that a command succeeded. A failed
+update keeps the selected group for retry; deletion uses selected sample keys
+so newer arrivals remain queued. This prioritizes retention over update
+throughput and is included in Boost capacity validation.

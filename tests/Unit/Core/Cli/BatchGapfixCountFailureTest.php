@@ -80,7 +80,7 @@ test('the master keeps the queue when a result tally cannot be read', function (
 	$result = run(
 		block('/^\t\$succeeded = db_fetch_cell\(.*?^\texit\(0\);\R/ms'),
 		$stubs,
-		'$start = microtime(true); $end = $start + 1; $rate = 1; $rrdfiles = 4; $threads = 2; $type = "master"; $child = 0;',
+		'$child_status = 0; $not_finished = 0; $start = microtime(true); $end = $start + 1; $rate = 1; $rrdfiles = 4; $threads = 2; $type = "master"; $child = 0;',
 		array($succeeded, $failed)
 	);
 

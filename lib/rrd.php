@@ -804,7 +804,7 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp=
 			}
 			break;
 		case RRDTOOL_OUTPUT_BOOLEAN :
-			return (substr_count($output, 'OK u')) ? true : false;
+			return strpos($output, 'ERROR:') === false && preg_match('/^OK u:[^\r\n]+\r?$/m', $output) === 1;
 			break;
 	}
 }

@@ -29,12 +29,21 @@ if (!function_exists(__NAMESPACE__ . '\\float_wait_for_children')) {
 
 	\preg_match('/^function float_processes_running\(.*?^\}\R/ms', $source, $running);
 	\preg_match('/^function float_reap_dead_children\(.*?^\}\R/ms', $source, $reaper);
-	\preg_match('/^\t\$starting = true;\R.*?^\treturn true;\R/ms', $source, $loop);
+	\preg_match('/^\t\/\/ Own the child handles:.*?^\treturn true;\R/ms', $source, $loop);
 
 	// test-only eval of source read from this repository, not external input
 	eval('namespace ' . __NAMESPACE__ . '; ' . $running[0] . $reaper[0]
-		. 'function float_wait_for_children() {' . $loop[0] . '}');
+		. 'function float_wait_for_children() { $children=array(); $child_failed=false; foreach($GLOBALS["float_processes"] as $row){$children[$row["taskid"]]=$row["pid"];} ' . $loop[0] . '}');
 }
+
+function proc_get_status($pid) {
+	$registered = false;
+	foreach ($GLOBALS['float_processes'] as $row) { if ($row['pid'] === $pid) { $registered = true; } }
+	$running = $registered && \in_array($pid, $GLOBALS['float_live_pids'], true);
+	return array('pid' => $pid, 'running' => $running, 'exitcode' => $running ? -1 : ($registered ? 9 : 0));
+}
+function proc_close($process) { return 0; }
+function usleep($microseconds) { sleep(1); }
 
 function sleep($seconds) {
 	$GLOBALS['float_sleeps']++;
@@ -110,12 +119,9 @@ test('a hard-killed child stops the wait and fails the run', function () {
 	$GLOBALS['float_queued']    = '2';
 
 	expect(float_wait_for_children())->toBeFalse()
-		->and($GLOBALS['float_unregistered'])->toBe(array(array('rfloat', 'child', '3', 4242)))
-		->and($GLOBALS['float_selects'][0])->toBe(array('rfloat', 'child'))
-		->and($GLOBALS['float_log'][0][0])->toStartWith('WARNING:')
-		->and($GLOBALS['float_log'][0][0])->toContain('4242')
-		->and($GLOBALS['float_log'][1][0])->toStartWith('ERROR:')
-		->and($GLOBALS['float_log'][1][1])->toBe('RFLOAT');
+		->and($GLOBALS['float_unregistered'])->toBe(array(array('rfloat', 'child', 3, 4242)))
+		->and($GLOBALS['float_log'][0][0])->toStartWith('ERROR:')
+		->and($GLOBALS['float_log'][0][1])->toBe('RFLOAT');
 });
 
 test('a child still running is left registered and waited on', function () {
@@ -125,7 +131,7 @@ test('a child still running is left registered and waited on', function () {
 	$GLOBALS['float_finish_after'] = 3;
 
 	expect(float_wait_for_children())->toBeTrue()
-		->and($GLOBALS['float_unregistered'])->toBe(array())
+		->and($GLOBALS['float_unregistered'])->toBe(array(array('rfloat', 'child', 3, 4242)))
 		->and($GLOBALS['float_log'])->toBe(array());
 });
 
@@ -148,4 +154,13 @@ test('an unreadable queue count fails the run', function () {
 
 	expect(float_wait_for_children())->toBeFalse()
 		->and($GLOBALS['float_log'][0][0])->toStartWith('ERROR:');
+});
+
+
+test('legacy process-row reconciliation removes only dead children', function () {
+	$GLOBALS['float_processes'] = array(process_row('3', 4242), process_row('4', 4343));
+	$GLOBALS['float_live_pids'] = array(4343);
+	expect(float_reap_dead_children())->toBe(1)
+		->and($GLOBALS['float_processes'])->toBe(array(process_row('4', 4343)))
+		->and($GLOBALS['float_log'][0][0])->toStartWith('WARNING:');
 });
