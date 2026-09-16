@@ -288,7 +288,7 @@ test('remove_spikes reports failure and cleans up the temp XML when the restore 
 	unlink($backup);
 });
 
-test('remove_spikes reports failure and cleans up the temp XML when the backup fails', function () {
+test('remove_spikes refuses an unreadable source and cleans up the temp XML', function () {
 	if (function_exists('posix_geteuid') && posix_geteuid() === 0) {
 		$this->markTestSkipped('file permissions have no effect running as root');
 	}
@@ -316,7 +316,7 @@ test('remove_spikes reports failure and cleans up the temp XML when the backup f
 	restore_error_handler();
 
 	expect($ok)->toBeFalse()
-		->and($instance->get_errors())->toContain('Unable to backup')
+		->and($instance->get_errors())->toContain('could not be verified safely')
 		->and(glob($this->backup_dir . '/*'))->toBe([])
 		->and(glob($this->backup_dir . '/spikekill.*.xml'))->toBe([]);
 });
@@ -342,7 +342,7 @@ test('remove_spikes refuses a symlinked RRD source', function () {
 	   covers both the symlink at the original name and real-source.rrd */
 });
 
-test('remove_spikes refuses when the RRD source is swapped for a different file during the dump', function () {
+test('remove_spikes refuses when the RRD source is swapped for a different file during the dump', function ($dryrun) {
 	/* the rrdtool 'dump' stub itself performs the swap, so it lands inside
 	   the window between initialize_spikekill() capturing the source
 	   identity and backupRRDFile()'s re-check of it, the same as an
@@ -373,17 +373,18 @@ test('remove_spikes refuses when the RRD source is swapped for a different file 
 
 	$instance = spikekill_e2e_instance($this->rrdfile);
 
-	$ok = $instance->remove_spikes();
+	$instance->dryrun = $dryrun;
+    $ok = $instance->remove_spikes();
 
 	putenv('SPIKEKILL_TEST_EVIL_TARGET');
 
 	expect($ok)->toBeFalse()
-		->and($instance->get_errors())->toContain('Unable to backup')
+		->and($instance->get_errors())->toContain('identity changed')
 		->and(glob($this->backup_dir . '/*'))->toBe([]);
 
 	/* afterEach() globs and unlinks everything left under rrd_dir (the
 	   symlink the stub planted) and dir (evil_target, the swap stub) */
-});
+})->with(array(false, true));
 
 test('remove_spikes refuses a requested backup when the RRD source is swapped during the dump', function () {
 	/* a fixture with no outlier row: std_kills/out_kills/var_kills all
@@ -446,7 +447,7 @@ test('remove_spikes refuses a requested backup when the RRD source is swapped du
 	putenv('SPIKEKILL_TEST_EVIL_TARGET');
 
 	expect($ok)->toBeFalse()
-		->and($instance->get_errors())->toContain('FAILED')
+		->and($instance->get_errors())->toContain('identity changed')
 		->and(glob($this->backup_dir . '/*'))->toBe([]);
 
 	/* afterEach() globs and unlinks everything left under rrd_dir (the
