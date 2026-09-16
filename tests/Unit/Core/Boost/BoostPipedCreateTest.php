@@ -463,10 +463,10 @@ test('legacy updates wait for pending real pipe writes before filtering retained
 	if ($binary === '') { $this->markTestSkipped('Set RRDTOOL_LEGACY_TEST_BINARY for real RRDtool 1.3/1.4'); }
 	expect(is_executable($binary))->toBeTrue();
 	$version = boostPipedCreateRealCommand(array($binary, '--version'));
-	expect($version)->toMatch('/RRDtool 1\.[34]\./');
+	expect(preg_match('/RRDtool (1\.[34]\.[0-9]+)/', $version, $versionMatch))->toBe(1);
 	$path = $GLOBALS['boost_piped_create']['path'];
 	boostPipedCreateRealCommand(array($binary, 'create', $path, '--start', '1700000000', '--step', '20', 'DS:value:GAUGE:120:U:U', 'RRA:AVERAGE:0.5:1:10'));
-	$GLOBALS['boost_piped_create']['version'] = '1.4';
+	$GLOBALS['boost_piped_create']['version'] = $versionMatch[1];
 	$GLOBALS['boost_piped_create']['real_binary'] = $binary;
 	$GLOBALS['boost_piped_create']['real_pipe'] = true;
 	$pipe = popen(escapeshellarg($binary) . ' - > /dev/null', 'w');
@@ -479,10 +479,10 @@ test('legacy updates wait for pending real pipe writes before filtering retained
 			->and($GLOBALS['boost_piped_create']['last_execute_pipe'])->toBeFalse()
 			->and($values)->toBe('1700000120:20')
 			->and(boostPipedCreateRealCommand(array($binary, 'lastupdate', $path)))->toContain('1700000120: 20');
-        // Twenty-second boundaries preserve these exact timestamps in the archive.
-        $archive = boostPipedCreateRealCommand(array($binary, 'fetch', $path, 'AVERAGE', '--resolution', '20', '--start', '1700000040', '--end', '1700000120'));
-        expect(preg_match('/^1700000060:\s+([-+0-9.eE]+)/m', $archive, $sample))->toBe(1);
-        expect((float) $sample[1])->toBe(10.0);
+		// Twenty-second boundaries preserve these exact timestamps in the archive.
+		$archive = boostPipedCreateRealCommand(array($binary, 'fetch', $path, 'AVERAGE', '--resolution', '20', '--start', '1700000040', '--end', '1700000120'));
+		expect(preg_match('/^1700000060:\s+([-+0-9.eE]+)/m', $archive, $sample))->toBe(1);
+		expect((float) $sample[1])->toBe(10.0);
 	} finally {
 		if (is_resource($pipe)) { pclose($pipe); }
 	}
