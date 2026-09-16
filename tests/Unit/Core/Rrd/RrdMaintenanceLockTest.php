@@ -8,12 +8,25 @@ function maintenance_wait_file($path) {
     expect(file_exists($path))->toBeTrue();
 }
 beforeEach(function () {
+    $this->expectedChildReports = 0;
     $this->oldConfig = $GLOBALS['config'] ?? null;
     $this->dir = sys_get_temp_dir() . '/rrd-maintenance-' . bin2hex(random_bytes(8));
     mkdir($this->dir, 0700);
     $GLOBALS['config'] = array('cacti_server_os' => 'unix', 'rra_path' => $this->dir);
 });
 afterEach(function () {
+    $parentCoverage = $this->getTestResultObject()->getCodeCoverage();
+    $childReports = glob($this->dir . '/*.coverage');
+    if ($parentCoverage !== null) {
+        expect($childReports)->toHaveCount($this->expectedChildReports);
+        foreach ($childReports as $report) {
+            // Reports are written by our own PHP children in the owned 0700
+            // fixture directory; this is PHPUnit's native coverage object.
+            $childCoverage = unserialize(file_get_contents($report));
+            expect($childCoverage)->toBeInstanceOf(SebastianBergmann\CodeCoverage\CodeCoverage::class);
+            $parentCoverage->merge($childCoverage);
+        }
+    }
     $GLOBALS['config'] = $this->oldConfig;
     foreach (glob($this->dir . '/*') as $file) { unlink($file); }
     rmdir($this->dir);
@@ -57,14 +70,22 @@ test('real synchronous and queued updates retain their samples across maintenanc
         'function read_config_option($name) { return $name === "path_rrdtool" ? ' . var_export($binary, true) . ' : ""; }' .
         'function cacti_log(...$args) {} function cacti_session_close() {} function cacti_escapeshellarg($value) { return escapeshellarg($value); }' .
         'require ' . var_export(dirname(__DIR__, 4) . '/lib/rrd.php', true) . ';';
+    if ($this->getTestResultObject()->getCodeCoverage() !== null) {
+        $this->expectedChildReports = 4;
+        $bootstrap = '<?php require ' . var_export(dirname(__DIR__, 3) . '/fixtures/rrd-process-coverage.php', true) . ';' . substr($bootstrap, 5);
+    }
     $script = $this->dir . '/writer.php';
     file_put_contents($script, $bootstrap . 'touch(__DIR__ . "/started"); rrdtool_execute(array("update", __DIR__ . "/source.rrd", "1000000060:42"), false, ' . $outputFlag . '); touch(__DIR__ . "/finished");');
     $lock = rrd_maintenance_acquire(true);
-    $process = proc_open(array(PHP_BINARY, $script), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . dirname(__DIR__, 4), '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $script), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     try {
         maintenance_wait_file($this->dir . '/started'); usleep(100000);
         expect(file_exists($this->dir . '/finished'))->toBeFalse();
         expect(trim(shell_exec($rrdcmd . ' last ' . escapeshellarg($rrd))))->toBe('1000000000');
+        $originalInode = stat($rrd)['ino'];
+        copy($rrd, $rrd . '.replacement'); rename($rrd . '.replacement', $rrd);
+        clearstatcache(true, $rrd);
+        expect(stat($rrd)['ino'])->not->toBe($originalInode);
     } finally { rrd_maintenance_release($lock); }
     maintenance_wait_file($this->dir . '/finished');
     fclose($pipes[0]); stream_get_contents($pipes[1]); $stderr = stream_get_contents($pipes[2]); fclose($pipes[1]); fclose($pipes[2]);
@@ -75,7 +96,7 @@ test('real synchronous and queued updates retain their samples across maintenanc
     file_put_contents($wrapper, "#!/bin/sh\nwhile [ ! -f " . escapeshellarg($this->dir . '/gate') . " ]; do sleep 0.01; done\nexec " . $rrdcmd . " \"\$@\"\n"); chmod($wrapper, 0700);
     file_put_contents($script, str_replace(var_export($binary, true), var_export($wrapper, true), $bootstrap) .
         '$pipe = rrd_init(false); rrdtool_execute(array("update", __DIR__ . "/source.rrd", "1000000120:84"), false, RRDTOOL_OUTPUT_STDOUT, $pipe); touch(__DIR__ . "/queued");' . ($explicitClose ? 'rrd_close($pipe); touch(__DIR__ . "/closed");' : ''));
-    $process = proc_open(array(PHP_BINARY, $script), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . dirname(__DIR__, 4), '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $script), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     try {
         maintenance_wait_file($this->dir . '/queued');
         expect(rrd_maintenance_acquire(true))->toBeFalse()->and(file_exists($this->dir . '/closed'))->toBeFalse();
@@ -95,7 +116,7 @@ test('real synchronous and queued updates retain their samples across maintenanc
         'function get_data_source_item_name($id) { return "value"; } function get_data_source_path($id, $expand) { return __DIR__ . "/source.rrd"; }' .
         'touch(__DIR__ . "/tune-started"); rrdtool_function_tune(' . var_export($tune, true) . '); touch(__DIR__ . "/tune-finished");');
     $lock = rrd_maintenance_acquire(true);
-    $process = proc_open(array(PHP_BINARY, $script), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . dirname(__DIR__, 4), '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $script), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     try {
         maintenance_wait_file($this->dir . '/tune-started'); usleep(100000);
         expect(file_exists($this->dir . '/tune-finished'))->toBeFalse();
@@ -111,7 +132,54 @@ test('real synchronous and queued updates retain their samples across maintenanc
         '$config["rra_path"] = __DIR__ . "/missing"; $missingPipe = rrd_init();' .
         '$missingCommand = rrdtool_execute("update unused.rrd 1000000180:99", false, RRDTOOL_OUTPUT_STDOUT);' .
         'echo json_encode(array($unsafe, $missingPipe, $missingCommand)); fclose($pipe);');
-    $process = proc_open(array(PHP_BINARY, $script), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . dirname(__DIR__, 4), '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $script), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     fclose($pipes[0]); $stdout = stream_get_contents($pipes[1]); $stderr = stream_get_contents($pipes[2]); fclose($pipes[1]); fclose($pipes[2]);
     expect(proc_close($process))->toBe(0)->and($stderr)->toBe('')->and(json_decode($stdout, true))->toBe(array(false, false, false));
 })->with(array(array(true, 1), array(false, 1), array(true, 0), array(false, 0)));
+
+test('an unreadable RRA directory fails closed', function () {
+    if (function_exists('posix_geteuid') && posix_geteuid() === 0) {
+        $this->markTestSkipped('Root bypasses directory read permissions; the unprivileged CI run covers this case.');
+    }
+    $path = $this->dir . '/unreadable'; mkdir($path, 0000);
+    $GLOBALS['config']['rra_path'] = $path;
+    try { expect(rrd_maintenance_acquire())->toBeFalse()->and(rrd_maintenance_acquire(true))->toBeFalse(); }
+    finally { chmod($path, 0700); rmdir($path); }
+});
+
+test('a storage directory replaced while a writer waits is rejected', function () {
+    if (!is_dir('/proc/self/fd')) { $this->markTestSkipped('Linux descriptor inspection synchronizes this directory replacement test.'); }
+    $path = $this->dir . '/store'; mkdir($path, 0700);
+    $GLOBALS['config']['rra_path'] = $path;
+    $lock = rrd_maintenance_acquire(true);
+    $script = $this->dir . '/waiting-writer.php';
+    $bootstrap = '<?php ';
+    if ($this->getTestResultObject()->getCodeCoverage() !== null) {
+        $this->expectedChildReports = 1;
+        $bootstrap .= 'require ' . var_export(dirname(__DIR__, 3) . '/fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    file_put_contents($script, $bootstrap . '$config = ' . var_export($GLOBALS['config'], true) . ';' .
+        'require ' . var_export(dirname(__DIR__, 4) . '/lib/rrd_maintenance.php', true) . ';' .
+        '$lock = rrd_maintenance_acquire(); echo json_encode($lock === false); rrd_maintenance_release($lock);');
+    $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . dirname(__DIR__, 4), '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $script), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $pid = proc_get_status($process)['pid'];
+    $opened = false; $deadline = microtime(true) + 10;
+    try {
+        // Wait for the child's own open descriptor, not an inherited parent
+        // exclusive lock. No sleep-based assumption decides the race ordering.
+        while (!$opened && microtime(true) < $deadline) {
+            foreach (glob('/proc/' . $pid . '/fd/*') as $fd) {
+                $target = @readlink($fd);
+                $info = @file_get_contents('/proc/' . $pid . '/fdinfo/' . basename($fd));
+                if ($target === $path && is_string($info) && strpos($info, 'lock:') === false) { $opened = true; break; }
+            }
+            if (!$opened) { usleep(10000); }
+        }
+        expect($opened)->toBeTrue();
+        rename($path, $this->dir . '/old-store'); mkdir($path, 0700);
+    } finally { rrd_maintenance_release($lock); }
+    fclose($pipes[0]); $stdout = stream_get_contents($pipes[1]); $stderr = stream_get_contents($pipes[2]); fclose($pipes[1]); fclose($pipes[2]);
+    $status = proc_close($process);
+    rmdir($path); rmdir($this->dir . '/old-store');
+    expect($status)->toBe(0)->and($stderr)->toBe('')->and($stdout)->toBe('true');
+});
