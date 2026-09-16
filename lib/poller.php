@@ -757,6 +757,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 
 	/* let's count the number of rrd files we processed */
 	$rrds_processed = 0;
+	$write_failed = false;
 	$max_rows = 40000;
 
 	if ($remainder == 0) {
@@ -1047,10 +1048,14 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 		api_plugin_hook_function('poller_output', $rrd_update_array);
 
 		if ($direct_rrd_update) {
-			$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe);
-			if ($rrds_processed === false) {
-				$deferred = true;
-				return 0;
+			$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe, $completed);
+			$write_failed = $rrds_processed === false;
+			$rrds_processed = array_sum(array_map('count', $completed));
+			$output_keys = array();
+			foreach ($results as $item) {
+				if (isset($completed[$item['rrd_path']][$item['unix_time']])) {
+					$output_keys[] = array($item['local_data_id'], $item['rrd_name'], $item['time']);
+				}
 			}
 		}
 
@@ -1141,6 +1146,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 		}
 	}
 
+	$deferred = $deferred || $write_failed;
 	return $rrds_processed;
 }
 

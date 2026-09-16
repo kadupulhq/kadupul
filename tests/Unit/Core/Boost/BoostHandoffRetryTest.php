@@ -61,15 +61,18 @@ function db_execute(...$args)
 {
     throw new \RuntimeException('Source samples must survive a failed handoff');
 }
-function rrdtool_function_update(...$args)
+function rrdtool_function_update($updates, $pipe = false, &$completed = null)
 {
+    $completed = array();
     if (isset($GLOBALS['cleanup_retry_rows'])) {
-        $GLOBALS['cleanup_retry_updates'] = $args[0];
+        $GLOBALS['cleanup_retry_updates'] = $updates;
         if (!empty($GLOBALS['writer_failed'])) {return false;}
-        if (!empty($GLOBALS['diagnostic_probe'])) {
-            return count(array_filter($args[0], function ($row) { return !empty($row['times']); }));
+        foreach ($updates as $path => $fields) {
+            foreach ($fields['times'] as $time => $values) {
+                $completed[$path][$time] = true;
+            }
         }
-        return 1;
+        return array_sum(array_map('count', $completed));
     }
     throw new \RuntimeException('A failed handoff must not write an RRD');
 }
@@ -134,6 +137,7 @@ test('main poller skips subsequent drains and final drain after a deferred hando
 
 function poller_delete_output_rows($keys, &$failed) {
     $GLOBALS['cleanup_retry_keys'] = $keys;
+    if (!$keys) { $failed = false; return 0; }
     if (isset($GLOBALS['pagination_deleted'])) { $GLOBALS['pagination_deleted'] = array_merge($GLOBALS['pagination_deleted'], $keys); }
     if (!empty($GLOBALS['diagnostic_probe'])) {
         $failed = false;
@@ -146,6 +150,7 @@ function dsstats_poller_output($rows) {}
 function dsdebug_poller_output($rows) {}
 function api_plugin_hook_function($name, $rows) {}
 function db_fetch_cell($sql) {
+    if (!empty($GLOBALS['writer_failed'])) { return 0; }
     if (!empty($GLOBALS['diagnostic_probe'])) { return str_contains($sql, 'FROM poller_time') ? 0 : 1; }
     throw new \RuntimeException('Cleanup failure must stop further drain queries');
 }
@@ -166,7 +171,7 @@ test('write or cleanup failure defers remaining samples without premature deleti
     $GLOBALS['cleanup_retry_rows'] = array($row, $next);
     try {
         $pipe = null;
-        expect(process_poller_output($pipe, false, $deferred, $consumed))->toBe($writer_failed ? 0 : 1)
+        expect(process_poller_output($pipe, false, $deferred, $consumed))->toBe($writer_failed ? 0 : 2)
             ->and($deferred)->toBeTrue()
             ->and($consumed)->toBe($writer_failed ? 0 : 1)
             ->and($GLOBALS['cleanup_retry_keys'] ?? array())->toBe($writer_failed ? array() : array(array(7, 'value', $row['time']), array(7, 'value', $next['time'])))

@@ -20,6 +20,8 @@
  */
 
 $root = dirname(__DIR__, 4);
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+eval(str_replace('rrd_acknowledged_pipes', 'boostPipedCreate_rrd_acknowledged_pipes', test_php_function_source(file_get_contents($root . '/lib/rrd.php'), 'rrd_acknowledged_pipes')));
 require_once $root . '/lib/rrd_maintenance.php';
 
 foreach (array('RRDTOOL_OUTPUT_STDOUT' => 1, 'RRDTOOL_OUTPUT_STDERR' => 2, 'RRDTOOL_OUTPUT_GRAPH_DATA' => 3, 'RRDTOOL_OUTPUT_BOOLEAN' => 4, 'RRDTOOL_OUTPUT_RETURN_STDERR' => 5, 'POLLER_VERBOSITY_NONE' => 1, 'POLLER_VERBOSITY_HIGH' => 4, 'POLLER_VERBOSITY_DEBUG' => 5) as $name => $value) {
@@ -152,7 +154,7 @@ function boostPipedCreateRrdExecute($root, $command, $rrdtool_pipe) {
 		expect($start)->not->toBeFalse()
 			->and($end)->not->toBeFalse();
 
-		eval(preg_replace('/\b(__rrd_execute|rrd_close|rrd_init|escape_command|read_config_option|cacti_log)\(/', 'boostPipedCreate_$1(', substr($source, $start, $end - $start)));
+		eval(preg_replace('/\b(__rrd_execute|rrd_acknowledged_pipes|rrd_close|rrd_init|escape_command|read_config_option|cacti_log)\(/', 'boostPipedCreate_$1(', substr($source, $start, $end - $start)));
 	}
 
 	$saved = isset($GLOBALS['config']) ? $GLOBALS['config'] : null;
