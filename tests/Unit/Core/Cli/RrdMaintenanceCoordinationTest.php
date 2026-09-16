@@ -70,7 +70,7 @@ function db_fetch_assoc_prepared($sql, $params = array()) {
 touch(dirname(__DIR__) . '/started');
 FIXTURE;
         file_put_contents($dir . '/include/cli_check.php', $fixture);
-        $args = array(PHP_BINARY, $dir . '/cli/' . $scriptName);
+        $args = array(PHP_BINARY, '-d', 'sys_temp_dir=' . $dir, $dir . '/cli/' . $scriptName);
         if ($scriptName === 'update_heartbeat.php') {
             $args = array_merge($args, array('--prev-heartbeat=600', '--new-heartbeat=900', '--force'));
             $lock = rrd_maintenance_acquire(true);
