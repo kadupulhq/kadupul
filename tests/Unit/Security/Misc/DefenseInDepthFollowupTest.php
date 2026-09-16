@@ -48,15 +48,13 @@ test('cacti_path_is_within helper exists in functions.php', function () use ($fu
 });
 
 test('cacti_path_is_within uses realpath for both candidate and base', function () use ($funcSource) {
-	$start = strpos($funcSource, 'function cacti_path_is_within(');
-	$body = substr($funcSource, $start, 800);
+	$body = test_php_function_source($funcSource, 'cacti_path_is_within');
 	expect($body)->toContain('realpath($candidate)');
 	expect($body)->toContain('realpath($base)');
 });
 
 test('cacti_path_is_within handles Windows case-insensitive comparison', function () use ($funcSource) {
-	$start = strpos($funcSource, 'function cacti_path_is_within(');
-	$body = substr($funcSource, $start, 800);
+	$body = test_php_function_source($funcSource, 'cacti_path_is_within');
 	expect($body)->toContain("DIRECTORY_SEPARATOR === '\\\\'");
 	expect($body)->toContain('cacti_normalize_windows_path($resolved)');
 });

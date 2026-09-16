@@ -12,6 +12,7 @@ beforeEach(function () {
     $GLOBALS['config'] = array('is_web' => false, 'config_options_array' => array('allow_unsafe_metachars' => ''));
     $_SESSION = array();
     $_REQUEST = array();
+    $GLOBALS['_CACTI_REQUEST'] = array();
     $_GET = array();
     $_POST = array();
     $_SERVER['SCRIPT_NAME'] = 'sort-contract.php';
