@@ -2,15 +2,21 @@
 
 The benchmark uses one million MEMORY queue rows, 250,000 sources, two RRD fields
 and two timestamps per source. It runs the production-shaped joined first-page
-and retained-page cursor queries three times with 40,000-row pages. Tables are
+and retained-page cursor queries with 40,000-row pages. Independent queue tables
+are populated before measurement. Each query and variant receives one warm-up;
+six paired warm rounds alternate which index runs first. Warm-up times are
+reported separately and are not cold-cache measurements. Tables are
 connection-local temporary tables; it does not modify application tables.
 The schema deliberately models the existing `(local_data_id, rrd_name, time)`
 BTREE and compares an additional `(local_data_id, time, rrd_name)` BTREE.
-Latin1 is explicit: other character sets, row sizes, concurrent writers and
+Latin1 and its collation are explicit on both joined name columns: other character sets, row sizes, concurrent writers and
 hardware need separate measurements. SHA-256 comparisons require identical
 ordered samples across every run and index variant.
 
-Local Docker diagnostics (seconds, all three repetitions; not production capacity):
+Historical Docker diagnostics from the earlier sequential single-table method
+(seconds, all three repetitions; not production capacity). These runs did not
+control warm-up order, so the timing difference cannot be attributed solely
+to the index. New CI artifacts use the paired warm method above:
 
 | MariaDB | Query | Existing index | Matching secondary index |
 |---|---|---|---|
