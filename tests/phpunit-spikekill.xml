@@ -14,6 +14,7 @@
       <file>./Unit/Security/Shell/SpikekillStatisticsTest.php</file>
       <file>./Unit/Core/PathHelpersTest.php</file>
     <file>Unit/Core/Poller/PollerAcknowledgementTest.php</file>
+        <file>Unit/Core/Rrd/RrdProxyAcknowledgementTest.php</file>
         </testsuite>
   </testsuites>
 </phpunit>

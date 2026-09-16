@@ -91,3 +91,11 @@ installation/upgrade operation checks again before schema or version changes.
 running upgrades. The force option cannot bypass the storage prerequisite.
 Run the check as both service accounts before putting the upgraded code in
 service. Remote RRDtool proxy storage and Windows retain their existing paths.
+
+Queued poller and realtime samples are deleted only after RRDtool acknowledges
+every selected update. Local updates use synchronous response pipes because a
+write-only persistent pipe cannot confirm that a command succeeded. A failed
+update keeps the selected group for retry; deletion uses selected sample keys
+so newer arrivals remain queued. This prioritizes retention over update
+throughput. The queue-query benchmark does not measure synchronous RRD
+throughput.
