@@ -1573,14 +1573,21 @@ class spikekill {
 				foreach($rra as $rra_key => $dses) {
 					if (cacti_sizeof($dses)) {
 						foreach($dses as $dskey => $ds) {
+							/* Empty or sparse RRAs use nonnumeric sentinels. Preserve
+							 * missing statistics instead of rounding or formatting them as zero. */
+							foreach (array('average', 'stddev', 'variance_avg', 'max_value', 'min_value', 'max_cutoff', 'min_cutoff') as $field) {
+								if (!is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
+									$ds[$field] = 'N/A';
+								}
+							}
 							$this->strout .= sprintf('%10s %16s %10s %7s %7s ' .
-								($ds['average']    < 1E6 ? '%10s ' : ' %10.2e ') .
-								($ds['stddev']     < 1E6 ? '%10s ' : ' %10.2e ') .
-								($ds['variance_avg'] < 1E6 ? '%10s ' : ' %10.2e ') .
-								($ds['max_value']  < 1E6 ? '%10s ' : ' %10.2e ') .
-								($ds['min_value']  < 1E6 ? '%10s ' : ' %10.2e ') .
-								($ds['max_cutoff'] < 1E6 ? '%10s ' : ' %10.2e ') .
-								($ds['min_cutoff'] < 1E6 ? '%10s ' : ' %10.2e ') .
+								(!is_numeric($ds['average']) || abs($ds['average']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								(!is_numeric($ds['stddev']) || abs($ds['stddev']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								(!is_numeric($ds['variance_avg']) || abs($ds['variance_avg']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								(!is_numeric($ds['max_value']) || abs($ds['max_value']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								(!is_numeric($ds['min_value']) || abs($ds['min_value']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								(!is_numeric($ds['max_cutoff']) || abs($ds['max_cutoff']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								(!is_numeric($ds['min_cutoff']) || abs($ds['min_cutoff']) < 1E6 ? '%10s ' : ' %10.2e ') .
 								'%10s %10s %12s %10s' . PHP_EOL,
 								$this->displayTime($this->rra_pdp[$rra_key]),
 								$this->ds_name[$dskey],
@@ -1611,19 +1618,26 @@ class spikekill {
 				foreach($rra as $rra_key => $dses) {
 					if (cacti_sizeof($dses)) {
 						foreach($dses as $dskey => $ds) {
+							/* Empty or sparse RRAs use nonnumeric sentinels. Preserve
+							 * missing statistics instead of rounding or formatting them as zero. */
+							foreach (array('average', 'stddev', 'variance_avg', 'max_value', 'min_value', 'max_cutoff', 'min_cutoff') as $field) {
+								if (!is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
+									$ds[$field] = 'N/A';
+								}
+							}
 							$this->strout .= sprintf('<tr>' .
 								'<td class="nowrap">%s</td>' .
 								'<td>%s</td>' .
 								'<td class="right">%s</td>' .
 								'<td class="right">%s</td>' .
 								'<td class="right">%s</td>' .
-								($ds['average']      < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
-								($ds['stddev']       < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
-								($ds['variance_avg'] < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
-								($ds['max_value']    < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
-								($ds['min_value']    < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
-								($ds['max_cutoff']   < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
-								($ds['min_cutoff']   < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['average']) || abs($ds['average']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['stddev']) || abs($ds['stddev']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['variance_avg']) || abs($ds['variance_avg']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['max_value']) || abs($ds['max_value']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['min_value']) || abs($ds['min_value']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['max_cutoff']) || abs($ds['max_cutoff']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['min_cutoff']) || abs($ds['min_cutoff']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
 								'<td class="right">%s</td>' .
 								'<td class="right">%s</td>' .
 								'<td class="right">%s</td>' .

@@ -119,3 +119,30 @@ test('repeated requested backups preserve every snapshot including a no-spike ru
         ->and(file_get_contents(array_values(array_diff($snapshots, array($first)))[0]))->toBe($after)
         ->and(file_get_contents($this->rrd))->toBe($after);
 });
+
+
+test('dry-run statistics handle empty sparse and large-value RRAs without inventing zero values', function ($count, $scale, $html) {
+    unlink($this->rrd);
+    expect(spikeBackupCommand(array($this->binary, 'create', $this->rrd, '--start', '1700000000', '--step', '60', 'DS:value:GAUGE:120:0:U', 'RRA:AVERAGE:0.5:1:100'))[0])->toBe(0);
+    if ($count) {
+        $samples = array();
+        for ($i = 1; $i <= $count; $i++) {
+            $samples[] = (1700000000 + $i * 60) . ':' . ($scale * $i);
+        }
+        expect(spikeBackupCommand(array_merge(array($this->binary, 'update', $this->rrd), $samples))[0])->toBe(0);
+    }
+    $before = file_get_contents($this->rrd);
+    $args = array_merge($this->args, array('--backup', '--dryrun'));
+    if ($html) {
+        $args[] = '--html';
+    }
+    [$status, $out, $err] = spikeBackupCommand($args, $this->env);
+    $this->assertSame(0, $status, $out . $err);
+    expect(file_get_contents($this->rrd))->toBe($before)
+        ->and(glob($this->dir . '/backup/*'))->toBe(array());
+    if ($count < 3) {
+        expect($out)->toContain('N/A');
+    } else {
+        expect($out)->toMatch('/[0-9]\.[0-9]{2}e\+[0-9]+/i');
+    }
+})->with(array(array(0, 10, false), array(0, 10, true), array(2, 10, false), array(2, 10, true), array(60, 100000000, false), array(60, 100000000, true)));
