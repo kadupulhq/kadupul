@@ -1173,7 +1173,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 						// values before consuming it, so a poisoned MEMORY queue cannot
 						// block every subsequent timestamp or exhaust the poller table.
 						cacti_log('ERROR: RRDtool rejected sample (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array, 'reason' => $rejection)), false, 'POLLER');
-						$completed[$rrd_path][$update_time] = true;
+						$completed[$rrd_path][$update_time] = false;
 						$failed = true;
 						continue;
 					}

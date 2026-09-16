@@ -860,7 +860,7 @@ test('one persistent process consumes explicit rejects and continues subsequent 
         'define("POLLER_VERBOSITY_HIGH",4);' . 'require ' . var_export($root . '/lib/boost.php', true) . ';' .
         'for($i=1;$i<=100;$i++){$updates[$good]["times"][1700000000+$i*60]=array("value"=>$i);}' .
         '$pipe=rrd_init(' . var_export($web, true) . ',false,true);$command="create ".__DIR__."/created.rrd --start 1700000000 --step 60".RRD_NL."DS:value:GAUGE:600:U:U".RRD_NL."RRA:AVERAGE:0.5:1:20";if(rrdtool_execute($command,false,RRDTOOL_OUTPUT_BOOLEAN,$pipe)!==true){exit(6);}$result=rrdtool_function_update($updates,$pipe,$completed);$values="1700006060:101";$boost=boost_rrdtool_function_update(2,$good,"value",$values,$pipe);$values="1700006120:102";$plain=boost_rrdtool_function_update(2,$good,"",$values,$pipe);$values="1700006180:103";$badboost=boost_rrdtool_function_update(2,$good,"missing",$values,$pipe);if($boost!=="OK"||$plain!=="OK"||strpos($badboost,"ERROR")!==0){exit(5);}rrd_close($pipe);' .
-        'echo json_encode(array($result,count($completed[$bad]),count($completed[$good]),count(rrd_acknowledged_pipes())));';
+        'echo json_encode(array($result,count($completed[$bad]),count($completed[$good]),count(rrd_acknowledged_pipes()),$completed[$bad][1700000060],$completed[$bad][1700000120]));';
     file_put_contents($this->dir . '/persistent.php', $bootstrap);
     $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $this->dir . '/persistent.php'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);
     $output = stream_get_contents($pipes[1]);
@@ -871,7 +871,7 @@ test('one persistent process consumes explicit rejects and continues subsequent 
     if ($error !== '') {
         throw new RuntimeException($error . $output);
     }
-    expect($status)->toBe(0)->and(json_decode($output, true))->toBe(array(false,2,100,0));
+    expect($status)->toBe(0)->and(json_decode($output, true))->toBe(array(false,2,100,0,false,true));
     expect(file($this->dir . '/children'))->toHaveCount(1);
     expect(trim(shell_exec(escapeshellarg($binary) . ' last ' . escapeshellarg($this->dir . '/bad.rrd'))))->toBe('1700000120');
     expect(trim(shell_exec(escapeshellarg($binary) . ' last ' . escapeshellarg($this->dir . '/good.rrd'))))->toBe('1700006120');
