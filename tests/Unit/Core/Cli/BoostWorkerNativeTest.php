@@ -37,13 +37,17 @@ test('production Boost owns, supervises and reaps actual worker processes', func
         }
         expect($status)->toBe(0);
         $result = json_decode(file_get_contents($dir . '/result.json'), true);
-        expect($result[0])->toBe($mode === 'shutdown' ? null : $mode === 'success');
-        expect(file($dir . '/reaped'))->toHaveCount(2);
-        foreach ($result[1] as $pid) {
-            expect(posix_kill($pid, 0))->toBeFalse();
-        }
-        if ($mode !== 'shutdown') {
-            expect($result[2])->toBeLessThan(5.0)->and($result[3])->toBe($mode === 'success');
+        if (strpos($mode, 'output-') === 0) {
+            expect($result)->toBe(array($mode === 'output-empty' ? 0 : -1, $mode !== 'output-init'));
+        } else {
+            expect($result[0])->toBe($mode === 'shutdown' ? null : $mode === 'success');
+            expect(file($dir . '/reaped'))->toHaveCount(2);
+            foreach ($result[1] as $pid) {
+                expect(posix_kill($pid, 0))->toBeFalse();
+            }
+            if ($mode !== 'shutdown') {
+                expect($result[2])->toBeLessThan(5.0)->and($result[3])->toBe($mode === 'success');
+            }
         }
         if ($parent !== null) {
             $reports = glob($dir . '/*.coverage');
@@ -60,4 +64,4 @@ test('production Boost owns, supervises and reaps actual worker processes', func
             rmdir($dir . $suffix);
         }
     }
-})->with(array('success','early-crash','timeout','launch-failure','shutdown'));
+})->with(array('success','early-crash','timeout','launch-failure','shutdown','output-init','output-archives','output-count','output-empty','output-ids','output-last','output-select'));

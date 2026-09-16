@@ -12,7 +12,7 @@ foreach ($_SERVER['argv'] as $argument) {
         exit($mode === 'early-crash' ? 9 : 0);
     }
 }
-$config = array('base_path' => $fixture);
+$config = array('base_path' => $fixture, 'library_path' => $fixture . '/lib');
 define('COPYRIGHT_YEARS', '2026');
 define('POLLER_VERBOSITY_MEDIUM', 2);
 define('BOOST_TIMER_START', 0);
@@ -49,7 +49,64 @@ function unregister_process($type, $name, $child, $pid)
 {
     file_put_contents(getenv('BOOST_FIXTURE') . '/reaped', json_encode(array($child, $pid)) . "\n", FILE_APPEND);
 }
+function rrd_init(...$args)
+{
+    return getenv('BOOST_MODE') !== 'output-init';
+}
+function rrd_close($pipe)
+{
+    $GLOBALS['closed_writer'] = true;
+}
+function boost_get_arch_table_names(...$args)
+{
+    return getenv('BOOST_MODE') === 'output-archives' ? array() : array('pending');
+}
+function db_fetch_cell_prepared($sql, $params = array())
+{
+    $mode = getenv('BOOST_MODE');
+    if (strpos($sql, 'COUNT(at.local_data_id)') !== false) {
+        return $mode === 'output-count' ? false : ($mode === 'output-empty' ? 0 : 1);
+    }
+    if (strpos($sql, 'MAX(local_data_id)') !== false) {
+        return $mode === 'output-last' ? false : 1;
+    }
+    return $mode === 'output-ids' ? false : 1;
+}
+function get_installed_rrdtool_version()
+{
+    return '1.7';
+}
+function get_rrdtool_version(...$args)
+{
+    return '1.7';
+}
+function boost_error_handler(...$args)
+{
+    throw new RuntimeException('Unexpected Boost error');
+}
+function array_rekey($values, ...$args)
+{
+    return $values;
+}
+function db_fetch_assoc_prepared(...$args)
+{
+    return array();
+}
+function db_fetch_assoc(...$args)
+{
+    return false;
+}
+define('SQL_NO_CACHE', '');
 register_shutdown_function(function () use ($fixture, $mode) {
+    if (strpos($mode, 'output-') === 0) {
+        $GLOBALS['start'] = time();
+        $GLOBALS['archive_table'] = 'pending';
+        $GLOBALS['max_run_duration'] = 60;
+        $result = boost_output_rrd_data(1);
+        file_put_contents($fixture . '/result.json', json_encode(array($result, !empty($GLOBALS['closed_writer']))));
+        return;
+    }
+
     $GLOBALS['debug'] = true;
     $children = boost_launch_children();
     $pids = array_column($children, 'pid');
