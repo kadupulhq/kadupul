@@ -112,9 +112,11 @@ throughput and is included in Boost capacity validation.
 ### Acknowledged updates and bounded waits
 
 Local Unix pollers reuse one full-duplex RRDtool process for acknowledged updates.
-An explicit `ERROR:` response means the sample was rejected, not written: the
-poller logs its path, timestamp, values, and reason and consumes that exact queue
-key before continuing with later timestamps. This prevents a permanently invalid
+Only recognized permanent sample errors (unknown data-source name, wrong value
+count, or an already-written timestamp) consume an unwritten queue key. The
+poller logs its path, timestamp, values, and reason before continuing with later
+timestamps. Filesystem, cache-daemon, resource, and unrecognized errors remain
+queued for retry. This prevents a permanently invalid
 sample from filling the MEMORY queue. Timeouts, crashes, and missing responses
 retain samples for retry. Rejected data can be recovered from the logged values
 after correcting the underlying storage or template problem; monitor these errors.

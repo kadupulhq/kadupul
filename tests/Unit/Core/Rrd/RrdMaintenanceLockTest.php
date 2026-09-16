@@ -628,7 +628,8 @@ test('queued samples require an actual RRDtool acknowledgement', function ($mode
     exec(escapeshellarg($binary) . ' create ' . escapeshellarg($rrd) . ' --start 1700000000 --step 60 DS:value:GAUGE:600:U:U RRA:AVERAGE:0.5:1:20', $out, $status);
     expect($status)->toBe(0);
     $wrapper = $this->dir . '/rrd-wrapper';
-    $response = in_array($mode, array('silent', 'crash', 'hung'), true) ? '' : ($mode === 'error' ? "ERROR: failed update\n" : "OK u:0 s:0 r:0\n");
+    $error_responses = array('error' => "ERROR: failed update\n", 'permission' => "ERROR: opening 'x.rrd': Permission denied\n", 'disk' => "ERROR: No space left on device\n", 'missing' => "ERROR: opening 'x.rrd': No such file or directory\n");
+    $response = in_array($mode, array('silent', 'crash', 'hung'), true) ? '' : ($error_responses[$mode] ?? "OK u:0 s:0 r:0\n");
     if ($mode === 'real') {
         file_put_contents($wrapper, "#!/bin/sh\nexec " . escapeshellarg($binary) . " \"\$@\"\n");
     } else {
@@ -643,7 +644,7 @@ test('queued samples require an actual RRDtool acknowledgement', function ($mode
         'function cacti_escapeshellarg($value){return escapeshellarg($value);} function get_rrdtool_version(){return "1.7";} function cacti_version_compare(...$args){return version_compare(...$args);}' . $validation .
         'require ' . var_export($root . '/lib/rrd.php', true) . ';' .
         '$updates = array(' . var_export($rrd, true) . ' => array("local_data_id"=>1,"data_template_id"=>0,"times"=>array(1700000060=>array("value"=>42))));' .
-        '$pipe=' . ($persistent ? 'rrd_init(false,false,true)' : 'false') . '; if (' . var_export($persistent,true) . ' && !is_resource($pipe)) {exit(2);} $result=rrdtool_function_update($updates,$pipe); echo json_encode($result); if($result===false){if(rrdtool_function_update($updates,$pipe)!==false){exit(3);}} rrd_close($pipe);';
+        '$pipe=' . ($persistent ? 'rrd_init(false,false,true)' : 'false') . '; if (' . var_export($persistent,true) . ' && !is_resource($pipe)) {exit(2);} $result=rrdtool_function_update($updates,$pipe,$completed); echo json_encode(array($result,!empty($completed))); if($result===false){if(rrdtool_function_update($updates,$pipe)!==false){exit(3);}} rrd_close($pipe);';
     if ($this->getTestResultObject()->getCodeCoverage() !== null) {
         $this->expectedChildReports = 1;
         $bootstrap = '<?php define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); require ' . var_export($root . '/tests/fixtures/rrd-process-coverage.php', true) . ';' . substr($bootstrap, 5);
@@ -653,9 +654,9 @@ test('queued samples require an actual RRDtool acknowledgement', function ($mode
     $output = stream_get_contents($pipes[1]); $error = stream_get_contents($pipes[2]);
     fclose($pipes[1]); fclose($pipes[2]);
     if ($error !== '') { throw new RuntimeException($error . $output); }
-    expect(proc_close($process))->toBe(0, $error . $output)->and($error)->toBe('')->and(json_decode($output,true))->toBe($expected);
+    expect(proc_close($process))->toBe(0, $error . $output)->and($error)->toBe('')->and(json_decode($output,true))->toBe(array($expected, $mode === 'real'));
     if ($mode === 'real') { expect(shell_exec(escapeshellarg($binary) . ' lastupdate ' . escapeshellarg($rrd)))->toContain('42'); }
-})->with(array(array('real',1), array('silent',false), array('error',false), array('crash',false), array('hung',false)))->with(array(true,false));
+})->with(array(array('real',1), array('silent',false), array('error',false), array('permission',false), array('disk',false), array('missing',false), array('crash',false), array('hung',false)))->with(array(true,false));
 
 test('one persistent process consumes explicit rejects and continues subsequent timestamps', function ($web) {
     require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
@@ -832,3 +833,53 @@ test('a timed out restore preserves the live RRD and recovery XML', function () 
     expect(file_get_contents($this->dir.'/messages'))->toContain('original preserved')->toContain($this->dir.'/recovery.xml');
     expect(glob($this->dir.'/.rrd-restore-*'))->toBe(array());
 });
+
+
+test('only deterministic sample errors are consumed while storage failures remain retryable', function () {
+    $root = dirname(__DIR__, 4);
+    $reasons = array(null, '', 'failed update', 'opening sample.rrd: Permission denied', 'No space left on device', 'rrdcached: connection refused', 'unknown DS name \'missing\'', 'expected 2 data source readings (got 1) from 123:4', 'illegal attempt to update using time 123 when last update time is 124 (minimum one second step)', 'io error containing unknown DS name \'missing\'');
+    $bootstrap = '<?php ';
+    if ($this->getTestResultObject()->getCodeCoverage() !== null) {
+        $this->expectedChildReports = 1;
+        $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); require ' . var_export($root . '/tests/fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $bootstrap .= 'function read_config_option($key){return "";} require ' . var_export($root . '/lib/rrd.php',true) . '; echo json_encode(array_map("rrdtool_rejection_is_permanent",' . var_export($reasons,true) . '));';
+    file_put_contents($this->dir.'/classify.php',$bootstrap);
+    $process=proc_open(array(PHP_BINARY,'-d','pcov.directory=/','-d','pcov.exclude=~/(include/vendor|tests)/~',$this->dir.'/classify.php'),array(1=>array('pipe','w'),2=>array('pipe','w')),$pipes);
+    $output=stream_get_contents($pipes[1]);$error=stream_get_contents($pipes[2]);fclose($pipes[1]);fclose($pipes[2]);
+    expect(proc_close($process))->toBe(0)->and($error)->toBe('');
+    expect(json_decode($output,true))->toBe(array(false,false,false,false,false,false,true,true,true,false));
+});
+
+
+test('restore preflight preserves originals and logs unavailable ownership or storage', function ($mode) {
+    if (in_array($mode, array('directory','file'), true) && posix_geteuid() === 0) {
+        $this->markTestSkipped('Root bypasses ordinary write permissions.');
+    }
+    $root = dirname(__DIR__, 4);
+    $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
+    if (!is_executable($binary)) { $this->markTestSkipped('Real RRDtool is required.'); }
+    file_put_contents($this->dir.'/live.rrd','original data');
+    file_put_contents($this->dir.'/recovery.xml','recovery data');
+    touch($this->dir.'/messages');
+    $bootstrap='<?php ';
+    if ($this->getTestResultObject()->getCodeCoverage() !== null) {
+        $this->expectedChildReports = 1;
+        $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); require ' . var_export($root . '/tests/fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $bootstrap.='$config='.var_export(array('cacti_server_os'=>'unix','rra_path'=>$this->dir),true).';'.
+        'define("CACTI_LOCALE","en-US");function cacti_session_close(){}function read_config_option($key){return $key==="path_rrdtool"?'.var_export($binary,true).':"";}'.
+        'function cacti_log($msg,...$args){file_put_contents(__DIR__."/messages",$msg."\n",FILE_APPEND);}'.
+        'require '.var_export($root.'/lib/rrd.php',true).';$pipe=rrd_init(false,true,true);$file=__DIR__."/live.rrd";';
+    if ($mode === 'directory') { $bootstrap .= 'chmod(__DIR__,0500);'; }
+    if ($mode === 'file') { $bootstrap .= 'chmod($file,0400);'; }
+    if ($mode === 'symlink') { $bootstrap .= 'symlink($file,__DIR__."/alias.rrd");$file=__DIR__."/alias.rrd";'; }
+    $bootstrap .= '$result=rrd_maintenance_restore(__DIR__."/recovery.xml",$file,'.($mode === 'lease' ? 'false' : '$pipe').');chmod(__DIR__,0700);rrd_close($pipe);echo json_encode($result);';
+    file_put_contents($this->dir.'/preflight.php',$bootstrap);
+    $process=proc_open(array(PHP_BINARY,'-d','pcov.directory=/','-d','pcov.exclude=~/(include/vendor|tests)/~',$this->dir.'/preflight.php'),array(1=>array('pipe','w'),2=>array('pipe','w')),$pipes);
+    $output=stream_get_contents($pipes[1]);$error=stream_get_contents($pipes[2]);fclose($pipes[1]);fclose($pipes[2]);chmod($this->dir,0700);
+    expect(proc_close($process))->toBe(0,$error)->and($error)->toBe('')->and($output)->toBe('false');
+    expect(file_get_contents($this->dir.'/live.rrd'))->toBe('original data');
+    expect(file_get_contents($this->dir.'/messages'))->toContain(in_array($mode,array('file','directory'),true)?'writable storage directory and file':'exclusive lease and safe regular-file paths');
+    expect(glob($this->dir.'/.rrd-restore-*'))->toBe(array());
+})->with(array('lease','symlink','directory','file'));
