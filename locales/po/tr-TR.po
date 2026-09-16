@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-15 18:58-0700\n"
+"POT-Creation-Date: 2026-09-15 19:31-0700\n"
 "PO-Revision-Date: 2024-04-20 19:24-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -583,7 +583,7 @@ msgid "Included in Aggregate"
 msgstr "Toplamda Bulunan"
 
 #: aggregate_graphs.php:1278 aggregate_graphs.php:1612 graph_templates.php:846
-#: graph_view.php:796 graph_view.php:809 graphs.php:2265 lib/spikekill.php:1630
+#: graph_view.php:796 graph_view.php:809 graphs.php:2265 lib/spikekill.php:1709
 msgid "Size"
 msgstr "Boyut"
 
@@ -1255,10 +1255,10 @@ msgstr "Keşfedilen Cihazları Temizle"
 #: lib/functions.php:5938 lib/functions.php:5942 lib/html.php:1261
 #: lib/html.php:1333 lib/html_reports.php:1666 lib/html_reports.php:1692
 #: lib/html_reports.php:1763 lib/html_reports.php:1764
-#: lib/html_reports.php:1765 lib/spikekill.php:1666 lib/spikekill.php:1667
-#: lib/spikekill.php:1668 lib/spikekill.php:1669 lib/spikekill.php:1670
-#: lib/spikekill.php:1671 lib/spikekill.php:1672 lib/spikekill.php:1673
-#: lib/spikekill.php:1674 lib/spikekill.php:1675 lib/spikekill.php:1676
+#: lib/html_reports.php:1765 lib/spikekill.php:1745 lib/spikekill.php:1746
+#: lib/spikekill.php:1747 lib/spikekill.php:1748 lib/spikekill.php:1749
+#: lib/spikekill.php:1750 lib/spikekill.php:1751 lib/spikekill.php:1752
+#: lib/spikekill.php:1753 lib/spikekill.php:1754 lib/spikekill.php:1755
 #: plugins.php:739 pollers.php:1113 user_admin.php:2320 utilities.php:721
 #: utilities.php:1170 utilities.php:2638 utilities.php:2766 utilities.php:2774
 #: utilities.php:2785 utilities.php:2796 utilities.php:2819 utilities.php:2865
@@ -16429,12 +16429,12 @@ msgstr ""
 msgid "FATAL: Standard Deviation must be a positive integer."
 msgstr ""
 
-#: lib/spikekill.php:262 lib/spikekill.php:1630
+#: lib/spikekill.php:262 lib/spikekill.php:1709
 #, fuzzy
 msgid "StdDev"
 msgstr "StdDev Kaldır"
 
-#: lib/spikekill.php:268 lib/spikekill.php:1630
+#: lib/spikekill.php:268 lib/spikekill.php:1709
 #, fuzzy
 msgid "Variance"
 msgstr "Değişken"
@@ -16550,8 +16550,12 @@ msgstr ""
 msgid "FATAL: RRD source identity changed or the source is not a regular file."
 msgstr ""
 
-#: lib/spikekill.php:486 lib/spikekill.php:502
+#: lib/spikekill.php:486
 msgid "FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"
+msgstr ""
+
+#: lib/spikekill.php:502
+msgid "FATAL: RRDtool returned an empty dump. The RRD file was not modified."
 msgstr ""
 
 #: lib/spikekill.php:530
@@ -16608,72 +16612,72 @@ msgstr ""
 msgid "NOTE: No Spikes Found."
 msgstr "Site Bulunamadı"
 
-#: lib/spikekill.php:894
+#: lib/spikekill.php:883
 #, php-format
 msgid "NOTE: Re-Importing '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:958
+#: lib/spikekill.php:970
 #, php-format
 msgid "NOTE: Backing Up '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1630
+#: lib/spikekill.php:1709
 #, fuzzy
 msgid "Avg"
 msgstr "Ort:"
 
-#: lib/spikekill.php:1630
+#: lib/spikekill.php:1709
 #, fuzzy
 msgid "CF"
 msgstr "CDEF"
 
-#: lib/spikekill.php:1630
+#: lib/spikekill.php:1709
 #, fuzzy
 msgid "DS"
 msgstr "DES"
 
-#: lib/spikekill.php:1630
+#: lib/spikekill.php:1709
 msgid "NonNan"
 msgstr ""
 
-#: lib/spikekill.php:1630
+#: lib/spikekill.php:1709
 #, fuzzy
 msgid "Samples"
 msgstr "Basit"
 
-#: lib/spikekill.php:1631
+#: lib/spikekill.php:1710
 msgid "MaxStdDev"
 msgstr ""
 
-#: lib/spikekill.php:1631
+#: lib/spikekill.php:1710
 #, fuzzy
 msgid "MaxValue"
 msgstr "Değer"
 
-#: lib/spikekill.php:1631
+#: lib/spikekill.php:1710
 #, fuzzy
 msgid "MinStdDev"
 msgstr "Kuru Çalıştırma StdDev"
 
-#: lib/spikekill.php:1631
+#: lib/spikekill.php:1710
 #, fuzzy
 msgid "MinValue"
 msgstr "Değer"
 
-#: lib/spikekill.php:1631
+#: lib/spikekill.php:1710
 msgid "StdKilled"
 msgstr ""
 
-#: lib/spikekill.php:1631
+#: lib/spikekill.php:1710
 msgid "VarKilled"
 msgstr ""
 
-#: lib/spikekill.php:1631
+#: lib/spikekill.php:1710
 msgid "WindKilled"
 msgstr ""
 
-#: lib/spikekill.php:1631
+#: lib/spikekill.php:1710
 msgid "WindSamples"
 msgstr ""
 
