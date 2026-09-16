@@ -369,6 +369,11 @@ function aggregate_color_item_edit() {
 			WHERE color_template_item_id = ?',
 			array(get_request_var('color_template_item_id')));
 
+		if (!cacti_sizeof($template_item)) {
+			raise_message(2);
+			return;
+		}
+
 		$header_label = __esc('Color Template Items [edit Report Item: %s]', $template['name']);
 	} else {
 		$template_item = array();

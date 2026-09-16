@@ -9,8 +9,10 @@ function get_request_var($name) { return $GLOBALS['missing_request'][$name] ?? 1
 function isempty_request_var($name) { return empty($GLOBALS['missing_request'][$name]); }
 function get_nonsystem_data_input($id) { return $id; }
 function db_fetch_row_prepared(...$args) { return array_shift($GLOBALS['missing_rows']) ?? false; }
-function isset_request_var($name) { return $name === 'selected_items'; }
-function get_nfilter_request_var($name, $default = '') { return $name === 'drp_action' ? '2' : ($name === 'new_username' ? 'copied' : 1); }
+function isset_request_var($name) { return $name === 'selected_items' || !empty($GLOBALS['missing_request'][$name]); }
+function get_nfilter_request_var($name, $default = '') { return $name === 'drp_action' ? ($GLOBALS['missing_request'][$name] ?? '2') : ($name === 'new_username' ? 'copied' : 1); }
+function cacti_count($value) { return is_array($value) ? count($value) : 0; }
+function sanitize_unserialize_selected_items($value) { return array(1); }
 function user_copy(...$args) { throw new RuntimeException('Must not copy a missing user'); }
 function raise_message($message) { $GLOBALS['missing_row_messages'][] = $message; }
 function db_execute_prepared(...$args) { throw new RuntimeException('Must not write when the selected row is missing'); }
@@ -62,3 +64,18 @@ test('missing data-input aggregates return NULL fields instead of a missing row'
     data_input_save_message(999);
     expect($GLOBALS['missing_row_messages'])->toBe(array(2));
 });
+
+
+test('existing color parent with a missing requested item stops before rendering', function () {
+    $GLOBALS['missing_rows'] = array(array('name' => 'Palette'), false);
+    $GLOBALS['missing_request']['color_template_item_id'] = 99;
+    aggregate_color_item_edit();
+    expect($GLOBALS['missing_row_messages'])->toBe(array(2));
+});
+
+test('batch user copy refuses missing source and destination users', function ($template, $user) {
+    $GLOBALS['missing_request']['drp_action'] = '5';
+    $GLOBALS['missing_rows'] = array($template, $user);
+    form_actions();
+    expect($GLOBALS['missing_row_messages'])->toBe(array(2));
+})->with(array(array(false, array('username' => 'target', 'realm' => 0)), array(array('username' => 'source', 'realm' => 0), false), array(false, false)));

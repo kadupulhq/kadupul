@@ -39,3 +39,15 @@ test('password return destinations are encoded as HTML attributes before the cli
         ->and($source)->toContain("var url = $(this).data('location');")
         ->and($source)->toContain('document.location = url;');
 });
+
+
+test('profile referer stays a string in the emitted navigation expression', function () {
+    $source = file_get_contents(dirname(__DIR__, 4) . '/auth_profile.php');
+    expect(preg_match('/document\.location = <\?php print (.*?);\?>;/', $source, $match))->toBe(1);
+    foreach (array('</script><script>alert(1)</script>', "'\"\\\n", 'fr-CA & 日本語') as $value) {
+        $_SESSION['profile_referer'] = $value;
+        $encoded = eval('return ' . $match[1] . ';');
+        expect(json_decode($encoded, true, 512, JSON_THROW_ON_ERROR))->toBe($value)
+            ->and($encoded)->not->toContain('<')->not->toContain("\n");
+    }
+});

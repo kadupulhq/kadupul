@@ -12,7 +12,11 @@ function test_php_function_source(string $source, string $name): string {
         $cursor = $start + 1;
         while (isset($tokens[$cursor])) {
             $candidate = $tokens[$cursor];
-            if (is_array($candidate) && in_array($candidate[0], array(T_WHITESPACE, T_COMMENT, T_DOC_COMMENT, T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG), true)) {
+            if (is_array($candidate) && in_array($candidate[0], array(T_WHITESPACE, T_COMMENT, T_DOC_COMMENT), true)) {
+                $cursor++;
+                continue;
+            }
+            if ($candidate === '&' || (is_array($candidate) && $candidate[1] === '&')) {
                 $cursor++;
                 continue;
             }

@@ -306,7 +306,11 @@ function form_actions() {
 							WHERE id = ?',
 							array($selected_items[$i]));
 
-						if ((isset($user)) && (isset($template))) {
+						if (!cacti_sizeof($user) || !cacti_sizeof($template)) {
+							raise_message(2);
+							return;
+						}
+						if (cacti_sizeof($user) && cacti_sizeof($template)) {
 							if (user_copy($template['username'], $user['username'], $template['realm'], $user['realm'], true) === false) {
 								$copy_error = true;
 							}

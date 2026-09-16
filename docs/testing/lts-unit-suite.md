@@ -3,7 +3,7 @@
 Run every unit file from the repository root:
 
 ```sh
-mise exec php@8.1.34 python@3.12.12 -- python tests/run_unit_suite.py
+mise exec php@8.1.34 python@3.12.12 node@22.22.2 -- python tests/run_unit_suite.py
 ```
 
 Install the locked test dependencies from `tests/composer.json` first. RRDtool,

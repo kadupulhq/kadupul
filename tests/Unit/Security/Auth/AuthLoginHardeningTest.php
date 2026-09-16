@@ -70,8 +70,9 @@ test('auth_display_custom_error_message escapes custom_message with html_escape'
 });
 
 test('auth_login_redirect validates both explicit redirect and referer inputs', function () use ($authSource) {
-    expect($authSource)->toContain('validate_redirect_url($redirect_url)')
-        ->and($authSource)->toContain("validate_redirect_url(\$_SERVER['HTTP_REFERER'])");
+    $body = test_php_function_source($authSource, 'auth_login_redirect');
+    expect($body)->toContain('validate_redirect_url($redirect_url)')
+        ->and($body)->toContain("validate_redirect_url(\$_SERVER['HTTP_REFERER'])");
 });
 
 test('auth_login performs auth transition hardening on successful login', function () use ($authLoginSource) {
