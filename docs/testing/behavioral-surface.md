@@ -154,3 +154,5 @@ Inventory was collected before adding scenarios. A machine-readable companion is
 - `cli/structure_rra_paths.php`
 - `cli/update_heartbeat.php`
 - `cli/upgrade_database.php`
+
+The fixture disables seeded discovery networks after recording the untouched schema and installer result. Plugin poller observations wait for background PHP poller workers to finish (30-second limit); configuration callbacks from discovery workers must not leak into later plugin lifecycle captures. The historical plugin callback golden was refreshed for this fixture change: ten extra configuration callbacks were removed, with lifecycle events and payloads unchanged. A Linux self-test starts a real delayed PHP worker to verify the observation boundary.

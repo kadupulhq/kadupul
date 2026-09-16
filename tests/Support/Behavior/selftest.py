@@ -205,6 +205,33 @@ def diagnostic_contracts():
     print('diagnostic scopes preserve severity, content, order and duplicate records')
 
 
+def native_worker_boundary():
+    """A real delayed PHP worker must finish before its callbacks are captured."""
+    if not sys.platform.startswith('linux') or shutil.which('php') is None:
+        print('native worker boundary requires Linux /proc and PHP; covered in Linux validation')
+        return
+    import subprocess
+    import tempfile
+    with tempfile.TemporaryDirectory(prefix='behavior-worker-') as directory:
+        marker = Path(directory) / 'complete'
+        child = subprocess.Popen(['php', '-r',
+            'usleep(500000); file_put_contents(' + json.dumps(str(marker)) + ', "done");',
+            '/tmp/poller_contract.php'])
+        recorder = object.__new__(harness.Harness)
+        def command(*args, **kwargs):
+            return subprocess.run(args, check=kwargs['check'], capture_output=True, text=True, timeout=40)
+        recorder.command = command
+        try:
+            recorder.wait_for_poller_workers()
+            assert marker.read_text() == 'done'
+            assert child.wait(timeout=2) == 0
+        finally:
+            if child.poll() is None:
+                child.terminate()
+                child.wait(timeout=2)
+    print('real background worker finishes before callback capture')
+
+
 def main():
     failures = []
 
@@ -215,6 +242,7 @@ def main():
 
     print(f'{len(CASES) - len(failures)}/{len(CASES)} normalization cases pass')
 
+    native_worker_boundary()
     recording_guards()
     diagnostic_contracts()
     failed_setup_manifest()

@@ -316,7 +316,7 @@ class Harness:
         # Fixture changes after installer evidence. Never connect to a developer DB.
         password = self.php('-r', 'echo password_hash("behavior-admin", PASSWORD_BCRYPT);')['stdout'].strip()
         self.sql("UPDATE user_auth SET password='" + password + "', must_change_password='', password_change='', enabled='on' WHERE username='admin';")
-        self.sql("REPLACE INTO settings(name,value) VALUES ('path_php_binary','/usr/local/bin/php'),('path_rrdtool','/usr/bin/rrdtool'),('path_snmpget','/usr/bin/snmpget'),('path_snmpwalk','/usr/bin/snmpwalk'); UPDATE host SET disabled='on';")
+        self.sql("REPLACE INTO settings(name,value) VALUES ('path_php_binary','/usr/local/bin/php'),('path_rrdtool','/usr/bin/rrdtool'),('path_snmpget','/usr/bin/snmpget'),('path_snmpwalk','/usr/bin/snmpwalk'); UPDATE host SET disabled='on'; UPDATE automation_networks SET enabled='';")
         port = self.compose('port', 'web', '80')['stdout'].strip()
         self.base = 'http://' + port
 
@@ -357,6 +357,7 @@ class Harness:
         self.truncate_artifacts('plugin-poller.jsonl')
         poller_hooks_before = len(self.jsonl('/artifacts/plugin.jsonl'))
         poller_pass = self.php('poller.php', '--force')
+        self.wait_for_poller_workers()
         poller_hooks = self.jsonl('/artifacts/plugin.jsonl')[poller_hooks_before:]
         poller_hooks_after = poller_hooks_before + len(poller_hooks)
         if not any(h.get('callback') == 'event' for h in poller_hooks):
@@ -385,6 +386,30 @@ class Harness:
         self.capture('plugins/callbacks', callbacks[:poller_hooks_before] + callbacks[poller_hooks_after:])
         self.capture('devices/delete', {'command': self.php('cli/remove_device.php', '--id=' + device, '--confirm'),
             'database': self.devices(), 'data_local': self.sql('SELECT * FROM data_local ORDER BY id'), 'graph_local': self.sql('SELECT * FROM graph_local ORDER BY id')})
+
+    def wait_for_poller_workers(self):
+        """Keep asynchronously spawned callbacks inside the poller observation."""
+        self.command('php', '-r', r'''
+$deadline = microtime(true) + 30;
+$quietSince = null;
+do {
+    $active = false;
+    foreach (glob('/proc/[0-9]*/cmdline') as $path) {
+        if ((int) basename(dirname($path)) === getmypid()) { continue; }
+        $command = @file_get_contents($path);
+        if ($command !== false && preg_match('~(?:^|[ /])(poller(?:_[a-z_]+)?|cmd|script_server)\.php(?:\x00| )~', $command)) {
+            $active = true;
+            break;
+        }
+    }
+    if ($active) { $quietSince = null; }
+    elseif ($quietSince === null) { $quietSince = microtime(true); }
+    elseif (microtime(true) - $quietSince >= 0.2) { exit(0); }
+    usleep(10000);
+} while (microtime(true) < $deadline);
+fwrite(STDERR, "Poller workers did not finish before callback capture.\n");
+exit(1);
+''', check=True)
 
     def poller_scenarios(self):
         """The poller is the compatibility boundary most likely to break under a
