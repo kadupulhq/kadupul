@@ -160,7 +160,9 @@ test('real synchronous and queued updates retain their samples across maintenanc
     file_put_contents($script, $bootstrap . '$config["include_path"] = __DIR__;' .
         'function cacti_escapeshellcmd($value) { return escapeshellcmd($value); }' .
         'function get_data_source_item_name($id) { return "value"; } function get_data_source_path($id, $expand) { return __DIR__ . "/source.rrd"; }' .
-        'touch(__DIR__ . "/tune-started"); rrdtool_function_tune(' . var_export($tune, true) . '); touch(__DIR__ . "/tune-finished");');
+        'touch(__DIR__ . "/tune-started"); rrdtool_function_tune(' . var_export($tune, true) . ');' .
+        'putenv("RRDCACHED_ADDRESS=unix:/unavailable-test-cache"); rrdtool_function_tune(array("heartbeat" => 999));' .
+        'touch(__DIR__ . "/tune-finished");');
     $lock = rrd_maintenance_acquire(true);
     $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . dirname(__DIR__, 4), '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $script), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     try {
