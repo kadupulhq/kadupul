@@ -2,6 +2,12 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-2.0-or-later
 
+error_reporting(E_ALL);
+set_error_handler(function ($severity, $message, $file, $line) {
+    if (error_reporting() & $severity) { throw new ErrorException($message, 0, $severity, $file, $line); }
+    return false;
+});
+
 $config = array('base_path' => getenv('SPIKE_TEST_ROOT'), 'poller_id' => 1, 'cacti_server_os' => 'unix');
 function read_config_option($name, $default = '') {
     $options = array('path_rrdtool' => getenv('SPIKE_TEST_RRDTOOL'), 'spikekill_backupdir' => getenv('SPIKE_TEST_BACKUP'));

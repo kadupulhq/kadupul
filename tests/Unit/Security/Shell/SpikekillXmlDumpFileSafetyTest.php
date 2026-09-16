@@ -401,32 +401,31 @@ test('commandTimeout falls back to one hour, not 30 seconds, when spikekill_time
 	expect(invoke_spikekill_xmldump_private('commandTimeout', []))->toBe(3600);
 });
 
-test('runRRDDump and createRRDFileFromXML pass commandTimeout() to runRRDCommand instead of leaving it at the 30 second default', function () {
-	$source = file_get_contents(dirname(__DIR__, 4) . '/lib/spikekill.php');
+test('dump and restore enforce the configured command timeout', function ($operation) {
+    file_put_contents($this->rrdtool_stub, "#!/bin/sh\nexec sleep 6\n");
+    spikekill_xmldump_test_stub_config(array(
+        'path_rrdtool' => $this->rrdtool_stub,
+        'spikekill_timeout' => '1',
+    ));
+    $xmlfile = $this->dir . '/timeout.xml';
+    $started = microtime(true);
 
-	$dump_start = strpos($source, 'private function runRRDDump(');
-	$dump_end   = strpos($source, "\n\t}\n", $dump_start);
-	$dump_body  = substr($source, $dump_start, $dump_end - $dump_start);
+    if ($operation === 'dump') {
+        $handle = fopen($xmlfile, 'xb+');
+        try {
+            $ok = invoke_spikekill_xmldump_private('runRRDDump', [$this->dir . '/target.rrd', $handle]);
+        } finally {
+            fclose($handle);
+        }
+    } else {
+        file_put_contents($xmlfile, '<xml/>');
+        $result = spikekill_xmldump_create_rrd_from_xml($xmlfile, $this->dir . '/target.rrd', lstat($xmlfile));
+        $ok = $result['ok'];
+    }
 
-	$restore_start = strpos($source, 'private function createRRDFileFromXML(');
-	$restore_end   = strpos($source, "\n\t}\n", $restore_start);
-	$restore_body  = substr($source, $restore_start, $restore_end - $restore_start);
-
-	expect($dump_body)->toContain('$this->commandTimeout()')
-		->and($restore_body)->toContain('$this->commandTimeout()');
-});
-
-/* remove_spikes() only reaches its restore/backup/write-XML tail once a
-   real rrdtool dump has been parsed into statistics that trip std_kills,
-   out_kills or var_kills, which needs read_user_setting(), cacti_sizeof(),
-   number_format_i18n() and friends beyond what this file already stubs.
-   Driving that end to end is disproportionate to the bug: remove_spikes()
-   returning true past a failure was a control-flow mistake in how it read
-   the return value of writeXMLFile() and backupRRDFile(), not a bug in
-   either method itself. writeXMLFile() failing here, backupRRDFile()
-   failing in SpikekillBackupSymlinkSafetyTest.php, and
-   createRRDFileFromXML() failing above are the same three false returns
-   remove_spikes() now checks. */
+    expect($ok)->toBeFalse()
+        ->and(microtime(true) - $started)->toBeLessThan(4.0);
+})->with(['dump', 'restore']);
 
 test('writeXMLFile returns false when the handle is already closed', function () {
 	$xmlfile = $this->dir . '/writexml-target.xml';

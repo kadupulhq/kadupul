@@ -1214,7 +1214,7 @@ class spikekill {
 			$read   = $capture_stdout ? array($pipes[1], $pipes[2]) : array($pipes[2]);
 			$write  = array();
 			$except = array();
-			stream_select($read, $write, $except, 0, $remaining);
+			stream_select($read, $write, $except, intdiv($remaining, 1000000), $remaining % 1000000);
 
 			usleep(50000);
 
@@ -1594,7 +1594,7 @@ class spikekill {
 							/* Empty or sparse RRAs use nonnumeric sentinels. Preserve
 							 * missing statistics instead of rounding or formatting them as zero. */
 							foreach (array('average', 'stddev', 'variance_avg', 'max_value', 'min_value', 'max_cutoff', 'min_cutoff') as $field) {
-								if (!is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
+								if (!isset($ds[$field]) || !is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
 									$ds[$field] = 'N/A';
 								}
 							}
@@ -1639,7 +1639,7 @@ class spikekill {
 							/* Empty or sparse RRAs use nonnumeric sentinels. Preserve
 							 * missing statistics instead of rounding or formatting them as zero. */
 							foreach (array('average', 'stddev', 'variance_avg', 'max_value', 'min_value', 'max_cutoff', 'min_cutoff') as $field) {
-								if (!is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
+								if (!isset($ds[$field]) || !is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
 									$ds[$field] = 'N/A';
 								}
 							}
@@ -1665,7 +1665,7 @@ class spikekill {
 								$this->ds_name[$dskey],
 								$this->rra_cf[$rra_key],
 								($ds['totalsamples']    != 'N/A' ? number_format_i18n($ds['totalsamples']) : '0'),
-								($ds['numsamples']      != 'N/A' ? number_format_i18n($ds['numsamples'])   : '0'),
+								(isset($ds['numsamples']) && $ds['numsamples'] != 'N/A' ? number_format_i18n($ds['numsamples']) : '0'),
 								($ds['average']         != 'N/A' ? round($ds['average'], 2)       : __('N/A')),
 								($ds['stddev']          != 'N/A' ? round($ds['stddev'], 2)        : __('N/A')),
 								($ds['variance_avg']    != 'N/A' ? round($ds['variance_avg'], 2)  : __('N/A')),
