@@ -797,7 +797,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null) {
 		}
 		foreach ($results as $item) {
 			if (isset($rrd_update_array[$item['rrd_path']]['times'][$item['unix_time']])) {
-				$output_keys[] = array($item['local_data_id'], $item['rrd_name'], $item['time']);
+				$output_keys[] = array($item['local_data_id'], $item['rrd_name'], $item['time'], $item['output']);
 			}
 		}
 
@@ -816,7 +816,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null) {
 			$output_keys = array();
 			foreach ($results as $item) {
 				if (isset($completed[$item['rrd_path']][$item['unix_time']])) {
-					$output_keys[] = array($item['local_data_id'], $item['rrd_name'], $item['time']);
+					$output_keys[] = array($item['local_data_id'], $item['rrd_name'], $item['time'], $item['output']);
 				}
 			}
 		}
@@ -826,8 +826,8 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null) {
 			foreach ($chunk as $key) {
 				array_push($params, ...$key);
 			}
-			$placeholders = implode(',', array_fill(0, count($chunk), '(?,?,?)'));
-			if (db_execute_prepared("DELETE FROM poller_output WHERE (local_data_id, rrd_name, time) IN ($placeholders)", $params) === false) {
+			$placeholders = implode(',', array_fill(0, count($chunk), '(?,?,?,?)'));
+			if (db_execute_prepared("DELETE FROM poller_output WHERE (local_data_id, rrd_name, time, output) IN ($placeholders)", $params) === false) {
 				return false;
 			}
 		}

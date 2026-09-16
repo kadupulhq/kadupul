@@ -401,16 +401,17 @@ function rrdtool_execute() {
 		return call_user_func_array($function, $args);
 	}
 
+	$destructive = in_array($verb, array('tune', 'resize', 'restore'), true);
 	require_once __DIR__ . '/rrd_maintenance.php';
 	if (isset($args[3]) && is_resource($args[3])) {
-		if (!rrd_maintenance_pipe($args[3])) {
+		if (!rrd_maintenance_pipe($args[3]) || ($destructive && !rrd_maintenance_pipe_is_exclusive($args[3]))) {
 			cacti_log('ERROR: Local RRD pipes must be opened with rrd_init for maintenance coordination.');
 			return false;
 		}
 		return call_user_func_array($function, $args);
 	}
 
-	$lock = rrd_maintenance_acquire();
+	$lock = rrd_maintenance_acquire($destructive && ($config['cacti_server_os'] ?? '') !== 'win32');
 	if ($lock === false) {
 		cacti_log('ERROR: Unable to coordinate local RRD writes with maintenance.');
 		return false;
@@ -1056,6 +1057,16 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 	}
 }
 
+/** Only deterministic sample/schema errors may consume an unwritten sample.
+ * Filesystem, cache-daemon, resource and unrecognized errors remain retryable.
+ */
+function rrdtool_rejection_is_permanent($reason) {
+	return is_string($reason) && (bool) preg_match(
+		'/^(?:unknown DS name [\'"]|expected \d+ data source readings \(got \d+\)|illegal attempt to update using time \d+ when last update time is \d+)/',
+		$reason
+	);
+}
+
 function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$completed = null) {
 	/* lets count the number of rrd files processed */
 	$rrds_processed = 0;
@@ -1077,7 +1088,10 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 
 			if ($file_exists === false) {
 				$times = array_keys($rrd_fields['times']);
-				rrdtool_function_create($rrd_fields['local_data_id'], false, $rrdtool_pipe);
+				if (rrdtool_function_create($rrd_fields['local_data_id'], false, $rrdtool_pipe) === false) {
+					$failed = true;
+					continue;
+				}
 				$create_rrd_file = true;
 			}
 
@@ -1154,8 +1168,8 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 
 				if (rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== true) {
 					$rejection = rrdtool_last_rejection();
-					if ($rejection !== null) {
-						// RRDtool explicitly refused this sample. Log its identity and
+					if (rrdtool_rejection_is_permanent($rejection)) {
+						// RRDtool permanently refused this sample. Log its identity and
 						// values before consuming it, so a poisoned MEMORY queue cannot
 						// block every subsequent timestamp or exhaust the poller table.
 						cacti_log('ERROR: RRDtool rejected sample (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array, 'reason' => $rejection)), false, 'POLLER');
@@ -3836,7 +3850,7 @@ function rrd_datasource_add($file_array, $ds_array, $debug) {
 					if (is_writable($file)) {
 						/* restore the modified XML to rrd */
 						if (!rrd_maintenance_restore($xml_file, $file, $rrdtool_pipe)) {
-							return array('err_msg' => __('RRDtool rejected the restored file'));
+							return array('err_msg' => __('RRD restore failed; original and recovery XML preserved. See application log.'));
 						}
 						/* scratch that XML file to avoid filling up the disk */
 						unlink($xml_file);
@@ -3894,7 +3908,7 @@ function rrd_rra_delete($file_array, $rra_array, $debug) {
 					if (is_writable($file)) {
 						/* restore the modified XML to rrd */
 						if (!rrd_maintenance_restore($xml_file, $file, $rrdtool_pipe)) {
-							return array('err_msg' => __('RRDtool rejected the restored file'));
+							return array('err_msg' => __('RRD restore failed; original and recovery XML preserved. See application log.'));
 						}
 						/* scratch that XML file to avoid filling up the disk */
 						unlink($xml_file);
@@ -3953,7 +3967,7 @@ function rrd_rra_clone($file_array, $cf, $rra_array, $debug) {
 					if (is_writable($file)) {
 						/* restore the modified XML to rrd */
 						if (!rrd_maintenance_restore($xml_file, $file, $rrdtool_pipe)) {
-							return array('err_msg' => __('RRDtool rejected the restored file'));
+							return array('err_msg' => __('RRD restore failed; original and recovery XML preserved. See application log.'));
 						}
 						/* scratch that XML file to avoid filling up the disk */
 						unlink($xml_file);

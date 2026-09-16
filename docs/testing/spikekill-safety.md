@@ -44,9 +44,9 @@ refuses a configured `RRDCACHED_ADDRESS`. Use local POSIX storage with working
 cross-process directory `flock`; unsupported locking fails closed. No lock file is
 created or removed, so a user cannot split the lock by unlinking a sidecar file.
 
-Heartbeat tuning holds an exclusive lease and waits for active writers. XML rewrite utilities hold an exclusive lease from before their dump through child completion and refuse contention or a configured cache daemon. Splicing and floating take an
-exclusive lease before reading and rewriting their RRDs; floating first flushes
-through the regular backend, then waits for its rewrite lease. Float workers
+Heartbeat tuning holds an exclusive lease and waits for active writers. XML rewrite utilities hold an exclusive lease from before their dump through child completion and refuse contention or a configured cache daemon. Splicing takes an exclusive lease before reading and rewriting its RRDs. Floating
+first flushes through the regular backend and fetches its inspection data, then
+waits for an exclusive lease before dumping and rewriting. Float workers
 therefore serialize the rewrite phase rather than racing each other or polling.
 A busy splice exits before dumping. Cache-daemon rewrites are refused. Windows
 retains its existing non-spike CLI behavior because spike removal remains disabled.
@@ -99,9 +99,11 @@ The queue-query benchmark does not measure acknowledged RRD write throughput.
 ### Acknowledged updates and bounded waits
 
 Local Unix pollers reuse one full-duplex RRDtool process for acknowledged updates.
-An explicit `ERROR:` response means the sample was rejected, not written: the
-poller logs its path, timestamp, values, and reason and consumes that exact queue
-key before continuing with later timestamps. This prevents a permanently invalid
+Only recognized permanent sample errors (unknown data-source name, wrong value
+count, or an already-written timestamp) consume an unwritten queue key. The
+poller logs its path, timestamp, values, and reason before continuing with later
+timestamps. Filesystem, cache-daemon, resource, and unrecognized errors remain
+queued for retry. This prevents a permanently invalid
 sample from filling the MEMORY queue. Timeouts, crashes, and missing responses
 retain samples for retry. Rejected data can be recovered from the logged values
 after correcting the underlying storage or template problem; monitor these errors.
@@ -120,3 +122,9 @@ or timed-out restores leave the original file and recovery XML intact.
 Windows uses synchronous per-command acknowledgements; persistent nonblocking
 RRDtool pipes are POSIX-only. Windows poller throughput has not been validated by
 this change. Do not treat the Unix capacity evidence as Windows capacity evidence.
+
+The primary poller and Boost master also check this prerequisite before launching
+collection or worker processes, including after a code-only deployment. They exit
+nonzero, log the required configuration, and use the existing administrator
+notification settings. This prevents new collection from silently filling a
+queue that cannot be drained; existing queued samples remain intact.

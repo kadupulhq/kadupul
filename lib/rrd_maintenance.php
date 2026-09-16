@@ -202,7 +202,7 @@ function rrd_maintenance_configuration_error()
         return '';
     }
     $path = $config['rra_path'] ?? (($config['base_path'] ?? '') . '/rra');
-    if (rrd_maintenance_directory_is_trusted($path) && is_readable($path)) {
+    if (rrd_maintenance_directory_is_trusted($path) && is_readable($path) && is_writable($path)) {
         return '';
     }
     return __('RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading.');
@@ -212,30 +212,60 @@ function rrd_maintenance_configuration_error()
 /** Restore beside the original so a timeout cannot truncate the live RRD. */
 function rrd_maintenance_restore($xml_file, $rrd_file, $pipe)
 {
-    if (!rrd_maintenance_pipe_is_exclusive($pipe) || is_link($rrd_file)) {
+    if (!rrd_maintenance_pipe_is_exclusive($pipe) || is_link($rrd_file) || strpbrk($xml_file . $rrd_file, "\r\n\0") !== false) {
+        cacti_log('ERROR: RRD restore requires an exclusive lease and safe regular-file paths.', false, 'UTIL');
+        return false;
+    }
+    $directory = realpath(dirname($rrd_file));
+    if ($directory === false || !is_writable($directory) || !is_writable($rrd_file)) {
+        cacti_log('ERROR: RRD restore requires writable storage directory and file; recovery XML retained at ' . $xml_file, false, 'UTIL');
         return false;
     }
     $metadata = @stat($rrd_file);
-    $temporary = $metadata === false ? false : tempnam(dirname($rrd_file), '.rrd-restore-');
+    $temporary = $metadata === false ? false : @tempnam($directory, '.rrd-restore-');
     if ($temporary === false) {
+        cacti_log('ERROR: RRD restore could not create a temporary file; recovery XML retained at ' . $xml_file, false, 'UTIL');
         return false;
     }
     try {
+        if (realpath(dirname($temporary)) !== $directory) {
+            cacti_log('ERROR: RRD restore refused a temporary file outside storage.', false, 'UTIL');
+            return false;
+        }
         if (rrdtool_execute(array('restore', '-f', $xml_file, $temporary), false, RRDTOOL_OUTPUT_BOOLEAN, $pipe, 'UTIL') !== true) {
             cacti_log('ERROR: RRD restore failed; original preserved and recovery XML retained at ' . $xml_file, false, 'UTIL');
             return false;
         }
         clearstatcache(true, $temporary);
-        if ((fileowner($temporary) !== $metadata['uid'] && !chown($temporary, $metadata['uid']))
-            || (filegroup($temporary) !== $metadata['gid'] && !chgrp($temporary, $metadata['gid']))
-            || !chmod($temporary, $metadata['mode'] & 0777)) {
+        if ((fileowner($temporary) !== $metadata['uid'] && !@chown($temporary, $metadata['uid']))
+            || (filegroup($temporary) !== $metadata['gid'] && !@chgrp($temporary, $metadata['gid']))
+            || !@chmod($temporary, $metadata['mode'] & 0777)) {
             cacti_log('ERROR: RRD restore could not preserve ownership; recovery XML retained at ' . $xml_file, false, 'UTIL');
             return false;
         }
-        return rename($temporary, $rrd_file);
+        if (!@rename($temporary, $rrd_file)) {
+            cacti_log('ERROR: RRD restore could not replace original; recovery XML retained at ' . $xml_file, false, 'UTIL');
+            return false;
+        }
+        return true;
     } finally {
         if (file_exists($temporary)) {
             unlink($temporary);
         }
     }
+}
+
+
+/** Stop collection before a bad storage configuration can fill the MEMORY queue. */
+function rrd_maintenance_poller_preflight()
+{
+    $error = rrd_maintenance_configuration_error();
+    if ($error === '') {
+        return true;
+    }
+    cacti_log('ERROR: Poller refused unsafe RRD storage: ' . $error, true, 'POLLER');
+    if (function_exists('admin_email')) {
+        admin_email(__('RRD storage configuration requires attention'), $error);
+    }
+    return false;
 }

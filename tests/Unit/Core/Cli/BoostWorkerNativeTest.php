@@ -12,12 +12,13 @@ test('production Boost owns, supervises and reaps actual worker processes', func
     foreach (array('poller','boost','dsstats','rrdcheck','rrd') as $lib) {
         file_put_contents($dir . '/lib/' . $lib . '.php', '<?php');
     }
+    copy($root . '/lib/rrd_maintenance.php', $dir . '/lib/rrd_maintenance.php');
     touch($dir . '/workers.log');
     copy($root . '/poller_boost.php', $dir . '/poller_boost.php');
     $parent = $this->getTestResultObject()->getCodeCoverage();
     $bootstrap = '<?php ';
     if ($parent !== null) {
-        $bootstrap .= 'if (in_array("--help",$_SERVER["argv"],true)) {' .
+        $bootstrap .= 'if (in_array("--help",$_SERVER["argv"],true) || in_array("--force",$_SERVER["argv"],true)) {' .
             'define("RRD_TEST_COVERAGE_DIRECTORY",' . var_export($dir, true) . ');' .
             'define("RRD_TEST_CLI_COVERAGE_COPY",' . var_export($dir . '/poller_boost.php', true) . ');' .
             'define("RRD_TEST_CLI_COVERAGE_SOURCE",' . var_export($root . '/poller_boost.php', true) . ');' .
@@ -26,7 +27,7 @@ test('production Boost owns, supervises and reaps actual worker processes', func
     $bootstrap .= 'require ' . var_export($root . '/tests/Fixtures/boost-worker-bootstrap.php', true) . ';';
     file_put_contents($dir . '/include/cli_check.php', $bootstrap);
     try {
-        $process = proc_open(array(PHP_BINARY,'-d','pcov.directory=/','-d','pcov.exclude=~/(include/vendor|tests)/~',$dir . '/poller_boost.php','--help'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes, null, array_merge(getenv(), array('BOOST_FIXTURE' => $dir,'BOOST_MODE' => $mode)));
+        $process = proc_open(array(PHP_BINARY,'-d','pcov.directory=/','-d','pcov.exclude=~/(include/vendor|tests)/~',$dir . '/poller_boost.php',$mode === 'prepare-failure' ? '--force' : '--help'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes, null, array_merge(getenv(), array('BOOST_FIXTURE' => $dir,'BOOST_MODE' => $mode)));
         $output = stream_get_contents($pipes[1]);
         $error = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
@@ -35,15 +36,22 @@ test('production Boost owns, supervises and reaps actual worker processes', func
         if ($error !== '') {
             throw new RuntimeException($error . $output);
         }
-        expect($status)->toBe(0);
+        expect($status)->toBe($mode === 'prepare-failure' ? 1 : 0);
         $result = json_decode(file_get_contents($dir . '/result.json'), true);
-        expect($result[0])->toBe($mode === 'shutdown' ? null : $mode === 'success');
-        expect(file($dir . '/reaped'))->toHaveCount(2);
-        foreach ($result[1] as $pid) {
-            expect(posix_kill($pid, 0))->toBeFalse();
-        }
-        if ($mode !== 'shutdown') {
-            expect($result[2])->toBeLessThan(5.0)->and($result[3])->toBe($mode === 'success');
+        if ($mode === 'prepare-failure') {
+            expect($result['boost_poller_status'])->toBe('failed - preparation');
+            expect(file($dir . '/reaped'))->toHaveCount(1);
+        } elseif (strpos($mode, 'output-') === 0) {
+            expect($result)->toBe(array($mode === 'output-empty' ? 0 : -1, $mode !== 'output-init'));
+        } else {
+            expect($result[0])->toBe($mode === 'shutdown' ? null : $mode === 'success');
+            expect(file($dir . '/reaped'))->toHaveCount(2);
+            foreach ($result[1] as $pid) {
+                expect(posix_kill($pid, 0))->toBeFalse();
+            }
+            if ($mode !== 'shutdown') {
+                expect($result[2])->toBeLessThan(5.0)->and($result[3])->toBe($mode === 'success');
+            }
         }
         if ($parent !== null) {
             $reports = glob($dir . '/*.coverage');
@@ -60,4 +68,4 @@ test('production Boost owns, supervises and reaps actual worker processes', func
             rmdir($dir . $suffix);
         }
     }
-})->with(array('success','early-crash','timeout','launch-failure','shutdown'));
+})->with(array('success','early-crash','timeout','launch-failure','shutdown','output-init','output-archives','output-count','output-empty','output-ids','output-last','output-select','prepare-failure'));
