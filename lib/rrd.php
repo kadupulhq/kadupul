@@ -100,7 +100,7 @@ function __rrd_init($output_to_term = true, $acknowledged = false) {
 		stream_set_blocking($streams[1], false);
 		$owned =& rrd_acknowledged_pipes();
 		$owned[(int) $streams[0]] = array('write' => $streams[0], 'read' => $streams[1],
-			'process' => $process, 'echo' => $output_to_term, 'failed' => false);
+			'process' => $process, 'echo' => $output_to_term && empty($config['is_web']), 'failed' => false);
 		static $shutdown_registered = false;
 		if (!$shutdown_registered) {
 			register_shutdown_function(function () {
@@ -143,20 +143,14 @@ function rrd_acknowledged_command($pipe, $command) {
 	$input = escape_command($command) . "\r\n";
 	$offset = 0;
 	$output = '';
+	$write_failed = false;
 	while (hrtime(true) < $deadline) {
 		$read = array($state['read']);
-		$write = $offset < strlen($input) ? array($pipe) : array();
+		$write = !$write_failed && $offset < strlen($input) ? array($pipe) : array();
 		$except = null;
 		$selected = @stream_select($read, $write, $except, 0, 100000);
 		if ($selected === false) {
 			break;
-		}
-		if ($write) {
-			$written = @fwrite($pipe, substr($input, $offset, 8192));
-			if ($written === false) {
-				break;
-			}
-			$offset += $written;
 		}
 		if ($read) {
 			$chunk = fread($state['read'], 8192);
@@ -165,10 +159,20 @@ function rrd_acknowledged_command($pipe, $command) {
 			}
 			$output .= $chunk;
 			if (preg_match('/^ERROR:[^\r\n]*\r?\n/m', $output)) {
+				$state['failed'] = $write_failed || $offset !== strlen($input);
 				return array(false, $output);
 			}
 			if ($offset === strlen($input) && preg_match('/^OK(?: u:[^\r\n]+)?\r?\n/m', $output)) {
 				return array(true, $output);
+			}
+		}
+		if ($write) {
+			$written = @fwrite($pipe, substr($input, $offset, 8192));
+			if ($written === false) {
+				// Read the child's final diagnostic before treating EOF as failure.
+				$write_failed = true;
+			} else {
+				$offset += $written;
 			}
 		}
 	}
@@ -368,14 +372,32 @@ function decrypt($input) {
 	}
 }
 
+/** Last local command rejection, distinct from an unavailable response. */
+function &rrdtool_last_rejection() {
+	static $rejection = null;
+	return $rejection;
+}
+
 function rrdtool_execute() {
 	global $config;
+	$rejection =& rrdtool_last_rejection();
+	$rejection = null;
 
 	$args = func_get_args();
 	$force_storage_location_local = (isset($config['force_storage_location_local']) && $config['force_storage_location_local'] === true) ? true : false;
 	$function = ($force_storage_location_local === false && read_config_option('storage_location')) ? '__rrd_proxy_execute' : '__rrd_execute';
 
 	if ($function !== '__rrd_execute') {
+		return call_user_func_array($function, $args);
+	}
+
+	// Readers do not mutate RRD files and must remain available to separate
+	// web users and while an administrator owns the maintenance lease.
+	$command = $args[0] ?? '';
+	$verb = is_array($command) ? ($command[0] ?? '') : strtok(ltrim($command), " \t\r\n");
+	if (in_array($verb, array('graph', 'graphv', 'xport', 'fetch', 'info', 'last', 'lastupdate', 'first'), true)
+		&& strpbrk(is_array($command) ? implode(' ', $command) : str_replace("\\\n", ' ', $command), "\r\n") === false
+		&& (!isset($args[3]) || $args[3] === false)) {
 		return call_user_func_array($function, $args);
 	}
 
@@ -412,9 +434,16 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 		$command_line = $cmd . ' ' . implode(' ', array_map('cacti_escapeshellarg', $command_line));
 	}
 
+	// Fold continuation lines before sending a single IPC command.
+	$command_line = str_replace("\\\n", ' ', $command_line);
+
 	$owned =& rrd_acknowledged_pipes();
 	if (is_resource($rrdtool_pipe) && isset($owned[(int) $rrdtool_pipe])) {
 		list($acknowledged, $response) = rrd_acknowledged_command($rrdtool_pipe, $command_line);
+		if (!$acknowledged && !$owned[(int) $rrdtool_pipe]['failed'] && preg_match('/^ERROR:([^\r\n]*)\r?\n/m', $response, $error)) {
+			$rejection =& rrdtool_last_rejection();
+			$rejection = trim($error[1]);
+		}
 		if ($owned[(int) $rrdtool_pipe]['echo']) { print $response; }
 		if ($output_flag === RRDTOOL_OUTPUT_BOOLEAN) { return $acknowledged; }
 		if (!$acknowledged) { return false; }
@@ -1124,6 +1153,16 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 				}
 
 				if (rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== true) {
+					$rejection = rrdtool_last_rejection();
+					if ($rejection !== null) {
+						// RRDtool explicitly refused this sample. Log its identity and
+						// values before consuming it, so a poisoned MEMORY queue cannot
+						// block every subsequent timestamp or exhaust the poller table.
+						cacti_log('ERROR: RRDtool rejected sample (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array, 'reason' => $rejection)), false, 'POLLER');
+						$completed[$rrd_path][$update_time] = true;
+						$failed = true;
+						continue;
+					}
 					if (!$failed) { cacti_log('ERROR: RRD update was not acknowledged; pending samples retained for retry.', false, 'POLLER'); }
 					$failed = true;
 					break;
@@ -3796,7 +3835,7 @@ function rrd_datasource_add($file_array, $ds_array, $debug) {
 					/* are we allowed to write the rrd file? */
 					if (is_writable($file)) {
 						/* restore the modified XML to rrd */
-						if (rrdtool_execute("restore -f $xml_file $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL') === false) {
+						if (!rrd_maintenance_restore($xml_file, $file, $rrdtool_pipe)) {
 							return array('err_msg' => __('RRDtool rejected the restored file'));
 						}
 						/* scratch that XML file to avoid filling up the disk */
@@ -3854,7 +3893,7 @@ function rrd_rra_delete($file_array, $rra_array, $debug) {
 					/* are we allowed to write the rrd file? */
 					if (is_writable($file)) {
 						/* restore the modified XML to rrd */
-						if (rrdtool_execute("restore -f $xml_file $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL') === false) {
+						if (!rrd_maintenance_restore($xml_file, $file, $rrdtool_pipe)) {
 							return array('err_msg' => __('RRDtool rejected the restored file'));
 						}
 						/* scratch that XML file to avoid filling up the disk */
@@ -3913,7 +3952,7 @@ function rrd_rra_clone($file_array, $cf, $rra_array, $debug) {
 					/* are we allowed to write the rrd file? */
 					if (is_writable($file)) {
 						/* restore the modified XML to rrd */
-						if (rrdtool_execute("restore -f $xml_file $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL') === false) {
+						if (!rrd_maintenance_restore($xml_file, $file, $rrdtool_pipe)) {
 							return array('err_msg' => __('RRDtool rejected the restored file'));
 						}
 						/* scratch that XML file to avoid filling up the disk */

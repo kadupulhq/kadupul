@@ -43,7 +43,7 @@ test('production Boost owns, supervises and reaps actual worker processes', func
             expect(posix_kill($pid, 0))->toBeFalse();
         }
         if ($mode !== 'shutdown') {
-            expect($result[2])->toBeLessThan(5.0);
+            expect($result[2])->toBeLessThan(5.0)->and($result[3])->toBe($mode === 'success');
         }
         if ($parent !== null) {
             $reports = glob($dir . '/*.coverage');

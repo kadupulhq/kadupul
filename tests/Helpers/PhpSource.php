@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
-// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 /** Extract a complete named function without counting braces in comments or strings. */
 function test_php_function_source(string $source, string $name): string

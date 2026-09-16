@@ -207,3 +207,35 @@ function rrd_maintenance_configuration_error()
     }
     return __('RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading.');
 }
+
+
+/** Restore beside the original so a timeout cannot truncate the live RRD. */
+function rrd_maintenance_restore($xml_file, $rrd_file, $pipe)
+{
+    if (!rrd_maintenance_pipe_is_exclusive($pipe) || is_link($rrd_file)) {
+        return false;
+    }
+    $metadata = @stat($rrd_file);
+    $temporary = $metadata === false ? false : tempnam(dirname($rrd_file), '.rrd-restore-');
+    if ($temporary === false) {
+        return false;
+    }
+    try {
+        if (rrdtool_execute(array('restore', '-f', $xml_file, $temporary), false, RRDTOOL_OUTPUT_BOOLEAN, $pipe, 'UTIL') !== true) {
+            cacti_log('ERROR: RRD restore failed; original preserved and recovery XML retained at ' . $xml_file, false, 'UTIL');
+            return false;
+        }
+        clearstatcache(true, $temporary);
+        if ((fileowner($temporary) !== $metadata['uid'] && !chown($temporary, $metadata['uid']))
+            || (filegroup($temporary) !== $metadata['gid'] && !chgrp($temporary, $metadata['gid']))
+            || !chmod($temporary, $metadata['mode'] & 0777)) {
+            cacti_log('ERROR: RRD restore could not preserve ownership; recovery XML retained at ' . $xml_file, false, 'UTIL');
+            return false;
+        }
+        return rename($temporary, $rrd_file);
+    } finally {
+        if (file_exists($temporary)) {
+            unlink($temporary);
+        }
+    }
+}

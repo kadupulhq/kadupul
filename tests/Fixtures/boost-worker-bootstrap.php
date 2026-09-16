@@ -15,6 +15,13 @@ foreach ($_SERVER['argv'] as $argument) {
 $config = array('base_path' => $fixture);
 define('COPYRIGHT_YEARS', '2026');
 define('POLLER_VERBOSITY_MEDIUM', 2);
+define('BOOST_TIMER_START', 0);
+define('BOOST_TIMER_END', 1);
+function boost_timer(...$args) {}
+function boost_rrdtool_function_update(...$args)
+{
+    return getenv('BOOST_MODE') === 'success' ? 'OK' : 'ERROR';
+}
 function get_cacti_version()
 {
     return 'fixture';
@@ -55,5 +62,6 @@ register_shutdown_function(function () use ($fixture, $mode) {
     }
     $start = hrtime(true);
     $result = boost_wait_children($children, 1);
-    file_put_contents($fixture . '/result.json', json_encode(array($result, $pids, (hrtime(true) - $start) / 1000000000)));
+    $write = boost_process_output(1, array(array(1700000060, 42)), 'fixture.rrd', array('value' => true), false);
+    file_put_contents($fixture . '/result.json', json_encode(array($result, $pids, (hrtime(true) - $start) / 1000000000, $write)));
 });

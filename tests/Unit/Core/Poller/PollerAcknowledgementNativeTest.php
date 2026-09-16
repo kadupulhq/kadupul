@@ -30,7 +30,7 @@ test('production poller files retain failed writes and preserve concurrent arriv
             file_put_contents($dir . '/include/cli_check.php', $bootstrap);
             $arguments = array($dir . '/poller_realtime.php', '--graph=1', '--interval=5', '--poller_id=1');
         } else {
-            file_put_contents($dir . '/run.php', $bootstrap . 'require ' . var_export($root . '/lib/poller.php', true) . ';$pipe=true;$result=process_poller_output($pipe,1);db_close();exit($result===false?1:0);');
+            file_put_contents($dir . '/run.php', $bootstrap . 'require ' . var_export($root . '/lib/poller.php', true) . ';$pipe=true;$result=process_poller_output($pipe,1);if(getenv("ACK_FAIL")==="rejected"){process_poller_output($pipe,1);}db_close();exit($result===false?1:0);');
             $arguments = array($dir . '/run.php');
         }
         $process = proc_open(array_merge(array(PHP_BINARY, '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~'), $arguments), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes, null, array_merge(getenv(), array('ACK_FIXTURE' => $dir,'ACK_REALTIME' => $realtime ? '1' : '0','ACK_FAIL' => is_string($failed) ? $failed : ($failed ? '1' : '0'))));
@@ -43,11 +43,14 @@ test('production poller files retain failed writes and preserve concurrent arriv
         }
         expect(proc_close($process))->toBe($failed ? 1 : 0, $error . $output)->and($error)->toBe('');
         $expected = is_string($failed) ? array(array('output' => '42', 'remaining' => $failed === 'page' ? 40001 : 1)) : ($failed ? array('42','43') : array('43'));
-        if (in_array($failed, array('select', 'handoff'), true)) {
+        if (in_array($failed, array('select', 'handoff', 'init'), true)) {
             $expected = array('42');
         }
         if ($failed === 'delete') {
             $expected = array('42', '43');
+        }
+        if ($failed === 'rejected') {
+            $expected = array();
         }
         expect(json_decode(file_get_contents($dir . '/outcome.json'), true))->toBe($expected);
         if ($parent !== null) {
@@ -64,4 +67,4 @@ test('production poller files retain failed writes and preserve concurrent arriv
             } rmdir($dir . $suffix);
         }
     }
-})->with(array(array(false,false),array(false,true),array(true,false),array(true,true),array(false,'mixed'),array(false,'page'),array(false,'select'),array(false,'handoff'),array(false,'delete')));
+})->with(array(array(false,false),array(false,true),array(true,false),array(true,true),array(false,'rejected'),array(true,'rejected'),array(false,'mixed'),array(false,'page'),array(false,'select'),array(false,'handoff'),array(false,'delete'),array(true,'init')));
