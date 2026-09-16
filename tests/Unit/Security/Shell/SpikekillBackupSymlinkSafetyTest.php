@@ -201,7 +201,7 @@ test('a normal backup is created with the expected content and name', function (
 	$result  = invoke_spikekill_private('copyFileSafely', [$this->rrdfile, $desired]);
 	$written = spikekill_copy_path($result);
 
-	expect($written)->toBe($desired)
+	expect($written)->toBe(realpath($desired))
 		->and($result['stat'])->toBeArray()
 		->and(is_link($desired))->toBeFalse()
 		->and(file_get_contents($desired))->toBe('rrd-bytes')
@@ -290,7 +290,7 @@ test('the fallback name is created in the same directory, not the system temp di
 	$written = spikekill_copy_path(invoke_spikekill_private('copyFileSafely', [$this->rrdfile, $desired]));
 
 	expect($written)->not->toBeFalse()
-		->and(dirname($written))->toBe($this->dir)
+		->and(dirname($written))->toBe(realpath($this->dir))
 		->and(dirname($written))->not->toBe(sys_get_temp_dir());
 
 	unlink($written);
@@ -415,7 +415,8 @@ test('a directory resolved once through a symlinked ancestor refuses a later anc
 	$instance   = $reflection->newInstanceWithoutConstructor();
 
 	$primed = spikekill_copy_path(invoke_spikekill_private_on($instance, 'copyFileSafely', [$this->rrdfile, $configured . '/backup1.rrd', $configured]));
-	expect($primed)->toBe($configured . '/backup1.rrd');
+	$expected_primed = realpath($configured . '/backup1.rrd');
+	expect($primed)->toBe($expected_primed);
 
 	/* an attacker with write access to the parent directory repoints it
 	   at a different real directory after that first, legitimate
@@ -598,6 +599,7 @@ test('copyFileSafely does not trust a cached realpath() after another process sw
 	$instance   = $reflection->newInstanceWithoutConstructor();
 
 	$primed = spikekill_copy_path(invoke_spikekill_private_on($instance, 'copyFileSafely', [$this->rrdfile, $configured . '/backup1.rrd', $configured]));
+	$expected_primed = realpath($configured . '/backup1.rrd');
 
 	/* unlike the in-process swap above, unlink() and symlink() are not
 	   called here, so PHP's realpath cache still maps the configured
@@ -617,7 +619,7 @@ test('copyFileSafely does not trust a cached realpath() after another process sw
 	rmdir($real_b);
 	unlink($parent);
 
-	expect($primed)->toBe($configured . '/backup1.rrd')
+	expect($primed)->toBe($expected_primed)
 		->and($swap['exit'])->toBe(0)
 		->and($written)->toBeFalse()
 		->and($leaked)->toBe([]);

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 // Execute the production pure path helper without loading database globals.
-foreach (array('cacti_join_dir_child', 'cacti_path_is_within', 'cacti_normalize_windows_path') as $name) {
+foreach (array('cacti_trim_dir_separator', 'cacti_join_dir_child', 'cacti_path_is_within', 'cacti_normalize_windows_path') as $name) {
 	if (function_exists($name)) {
 		continue;
 	}

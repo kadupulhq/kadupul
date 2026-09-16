@@ -493,11 +493,33 @@ class spikekill {
 			|| $dump_stat['ino'] !== $this->rrdfile_stat['ino']) {
 			fclose($xmlfile_handle);
 			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
-			$this->set_error(__('FATAL: RRD source identity changed or the source is not a regular file.'));
+			$this->set_error(__('FATAL: RRD source identity changed or could not be verified safely.'));
 			return false;
 		}
 
-		if (!$this->runRRDDump($this->rrdfile, $xmlfile_handle)) {
+		// Hold the source inode until the child finishes, then reject any
+		// pathname replacement before even a dry run parses its dump.
+		$source_handle = @fopen($this->rrdfile, 'rb');
+		$source_stat = $source_handle === false ? false : fstat($source_handle);
+		$source_valid = $source_stat !== false && $source_stat['dev'] === $dump_stat['dev']
+			&& $source_stat['ino'] === $dump_stat['ino']
+			&& $this->canonicalDir(dirname($this->rrdfile)) !== false;
+		$dump_ok = $source_valid && $this->runRRDDump($this->rrdfile, $xmlfile_handle);
+		clearstatcache(true);
+		$after_dump = @lstat($this->rrdfile);
+		$source_valid = $source_valid && $after_dump !== false
+			&& ($after_dump['mode'] & 0170000) === 0100000
+			&& $after_dump['dev'] === $dump_stat['dev'] && $after_dump['ino'] === $dump_stat['ino']
+			&& $this->canonicalDir(dirname($this->rrdfile)) !== false;
+		if (is_resource($source_handle)) { fclose($source_handle); }
+		if (!$source_valid) {
+			fclose($xmlfile_handle);
+			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
+			$this->set_error(__('FATAL: RRD source identity changed or could not be verified safely.'));
+			return false;
+		}
+
+		if (!$dump_ok) {
 			fclose($xmlfile_handle);
 			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
 
@@ -512,6 +534,13 @@ class spikekill {
 
 		while (($line = fgets($xmlfile_handle)) !== false) {
 			$output[] = $line;
+		}
+
+		if (trim(implode('', $output)) === '') {
+			fclose($xmlfile_handle);
+			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
+			$this->set_error(__("FATAL: RRDtool returned an empty dump. The RRD file was not modified."));
+			return false;
 		}
 
 		/* backup the rrdfile if requested */
@@ -863,59 +892,92 @@ class spikekill {
 		fclose($xmlfile_handle);
 		$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
 
-		$this->unlinkOwnedFile($bakfile, $bakfile_stat);
+		/* A requested backup is a recovery artifact, not a temporary file. */
 
 		return $restored;
 	}
 
 	/* All Functions */
 	private function createRRDFileFromXML($xmlfile, $rrdfile, $stat) {
-		/* rrdtool restore has to read the XML by path.  Re-check right
-		   before running it that the name still refers to the file this
-		   call wrote through: nothing stops the name from being swapped
-		   between the write above and rrdtool's own open() here, so this
-		   narrows but does not close the window.  Accepted residual for
-		   1.2. */
-		/* PHP caches the last lstat() of a path for the whole run, so an
-		   earlier lookup of this name would otherwise answer for it */
-		clearstatcache(true, $xmlfile);
-
-		$lstat = @lstat($xmlfile);
-
-		if ($lstat === false || $lstat['dev'] !== $stat['dev'] || $lstat['ino'] !== $stat['ino']) {
+		$directory = $this->canonicalDir(dirname($rrdfile));
+		if ($directory === false) {
+			return false;
+		}
+		$rrdfile = $directory . DIRECTORY_SEPARATOR . basename($rrdfile);
+		clearstatcache(true);
+		$xml_stat = @lstat($xmlfile);
+		$current = @lstat($rrdfile);
+		if ($xml_stat === false || $stat === false || $current === false || $this->rrdfile_stat === false
+			|| ($xml_stat['mode'] & 0170000) !== 0100000 || ($current['mode'] & 0170000) !== 0100000
+			|| $xml_stat['dev'] !== $stat['dev'] || $xml_stat['ino'] !== $stat['ino']
+			|| $current['dev'] !== $this->rrdfile_stat['dev'] || $current['ino'] !== $this->rrdfile_stat['ino']
+			|| $this->canonicalDir(dirname($xmlfile)) === false || $this->canonicalDir(dirname($rrdfile)) === false) {
 			return false;
 		}
 
-		/* likewise for the restore destination: re-check it against the
-		   identity initialize_spikekill() captured, right before rrdtool
-		   restore opens it by name */
-		clearstatcache(true, $rrdfile);
-
-		$rrdfile_lstat = @lstat($rrdfile);
-
-		if ($rrdfile_lstat === false || $this->rrdfile_stat === false
-			|| $rrdfile_lstat['dev'] !== $this->rrdfile_stat['dev']
-			|| $rrdfile_lstat['ino'] !== $this->rrdfile_stat['ino']) {
-
+		// Keep the original inode allocated throughout restore: an unlink and
+		// replacement can otherwise reuse its inode number on some filesystems.
+		$original = @fopen($rrdfile, 'rb');
+		if ($original === false) {
 			return false;
 		}
-
-		/* execute the restore command */
-		$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
-			__esc("NOTE: Re-Importing '%s' to '%s'", $xmlfile, $rrdfile) . ($this->html ? "</p>\n":"\n");
-
-		/* argv array through runRRDCommand(), the same as runRRDDump(),
-		   instead of a shell string whose exit status went unchecked */
-		$argv   = array(read_config_option('path_rrdtool'), 'restore', '-f', '-r', $xmlfile, $rrdfile);
-		$result = $this->runRRDCommand($argv, null, $this->commandTimeout());
-
-		$response = trim($result['stdout'] . $result['stderr']);
-
-		if ($response != '') {
-			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . $response . ($this->html ? "</p>\n":"\n");
+		$opened = fstat($original);
+		if ($opened === false || $opened['dev'] !== $current['dev'] || $opened['ino'] !== $current['ino']) {
+			fclose($original);
+			return false;
 		}
+		try {
+			// RRDtool never opens the live destination for writing. The restored
+			// sibling replaces its directory entry atomically only after validation.
+			$temporary = $this->createXmlFileExclusively(dirname($rrdfile));
+			if ($temporary === false) {
+				return false;
+			}
+			fclose($temporary['handle']);
 
-		return $result['exit'] === 0;
+			/* execute the restore command */
+			$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') .
+				__esc("NOTE: Re-Importing '%s' to '%s'", $xmlfile, $rrdfile) . ($this->html ? "</p>\n":"\n");
+
+			/* argv array through runRRDCommand(), the same as runRRDDump(),
+			   instead of a shell string whose exit status went unchecked */
+			$argv   = array(read_config_option('path_rrdtool'), 'restore', '-f', '-r', $xmlfile, $temporary['path']);
+			$result = $this->runRRDCommand($argv, null, $this->commandTimeout());
+
+			$response = trim($result['stdout'] . $result['stderr']);
+
+			if ($response != '') {
+				$this->strout .= ($this->html ? "<p class='spikekillNote'>":'') . ($this->html ? htmlspecialchars($response, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') : $response) . ($this->html ? "</p>\n":"\n");
+			}
+
+			clearstatcache(true);
+			$restored_stat = @lstat($temporary['path']);
+			$current = @lstat($rrdfile);
+			$valid = $result['exit'] === 0 && $restored_stat !== false && $current !== false
+				&& ($restored_stat['mode'] & 0170000) === 0100000 && $restored_stat['size'] > 0
+				&& $restored_stat['dev'] === $temporary['stat']['dev'] && $restored_stat['ino'] === $temporary['stat']['ino']
+				&& ($current['mode'] & 0170000) === 0100000
+				&& $current['dev'] === $this->rrdfile_stat['dev'] && $current['ino'] === $this->rrdfile_stat['ino']
+				&& $this->canonicalDir(dirname($rrdfile)) !== false;
+			if ($valid && $restored_stat['uid'] !== $current['uid']) {
+				$valid = chown($temporary['path'], $current['uid']);
+			}
+			if ($valid && $restored_stat['gid'] !== $current['gid']) {
+				$valid = chgrp($temporary['path'], $current['gid']);
+			}
+			if ($valid) {
+				$valid = chmod($temporary['path'], $current['mode'] & 0777);
+			}
+			if ($valid && rename($temporary['path'], $rrdfile)) {
+				clearstatcache(true, $rrdfile);
+				$this->rrdfile_stat = lstat($rrdfile);
+				return true;
+			}
+			$this->unlinkOwnedFile($temporary['path'], $temporary['stat']);
+			return false;
+		} finally {
+			fclose($original);
+		}
 	}
 
 	private function writeXMLFile($output, $handle) {
@@ -1025,6 +1087,7 @@ class spikekill {
 			return false;
 		}
 
+		$canonical_dir = $this->canonicalDir($dir);
 		if ($configured_dir !== null) {
 			$canonical_dir = $this->canonicalDir($configured_dir);
 
@@ -1033,9 +1096,21 @@ class spikekill {
 			}
 		}
 
+		// Open through the resolved directory, never through a mutable configured alias.
+		$resolved_dir = $canonical_dir;
+		if ($resolved_dir === false) {
+			return false;
+		}
+		$identity_dir = $configured_dir ?? $dir;
+		$dir = $resolved_dir;
+		$desired_path = cacti_join_dir_child($dir, $basename, DIRECTORY_SEPARATOR);
+
 		if (is_link($desired_path) || file_exists($desired_path)) {
 			$handle = false;
 		} else {
+			if ($this->canonicalDir($identity_dir) !== $resolved_dir) {
+				return false;
+			}
 			$old_umask = umask(0177);
 			$handle    = @fopen($desired_path, 'xb');
 			umask($old_umask);
@@ -1049,8 +1124,11 @@ class spikekill {
 			   the umask with no separate by-name permission or reopen
 			   step afterward. */
 			for ($i = 0; $i < 10; $i++) {
-				$candidate = cacti_join_dir_child($dir, $basename . '.' . bin2hex(random_bytes(8)), DIRECTORY_SEPARATOR);
+				$candidate = cacti_join_dir_child($dir, $basename . '.' . $this->randomFileSuffix(), DIRECTORY_SEPARATOR);
 
+				if ($this->canonicalDir($identity_dir) !== $resolved_dir) {
+					return false;
+				}
 				$old_umask = umask(0177);
 				$handle    = @fopen($candidate, 'xb');
 				umask($old_umask);
@@ -1064,6 +1142,13 @@ class spikekill {
 			if ($handle === false) {
 				return false;
 			}
+		}
+
+		if ($this->canonicalDir($identity_dir) !== $resolved_dir) {
+			$created_stat = fstat($handle);
+			fclose($handle);
+			$this->unlinkOwnedFile($desired_path, $created_stat);
+			return false;
 		}
 
 		$source_handle = fopen($source, 'rb');
@@ -1113,6 +1198,11 @@ class spikekill {
 		return array('path' => $desired_path, 'stat' => $fstat);
 	}
 
+	/** Generate an unpredictable suffix for an exclusively created file. */
+	protected function randomFileSuffix() {
+		return bin2hex(random_bytes(8));
+	}
+
 	/**
 	 * createXmlFileExclusively - create an empty file with a random name in
 	 * $tempdir, exclusively and under a restrictive umask, for the RRDtool
@@ -1143,10 +1233,10 @@ class spikekill {
 		}
 
 		for ($i = 0; $i < 10; $i++) {
-			$candidate = cacti_join_dir_child($tempdir, 'spikekill.' . bin2hex(random_bytes(8)) . '.xml', DIRECTORY_SEPARATOR);
+			$candidate = cacti_join_dir_child($canonical_dir, 'spikekill.' . $this->randomFileSuffix() . '.xml', DIRECTORY_SEPARATOR);
 
 			clearstatcache(true);
-			if (is_link($tempdir) || realpath($tempdir) !== $canonical_dir) {
+			if ($this->canonicalDir($tempdir) !== $canonical_dir) {
 				return false;
 			}
 
@@ -1155,6 +1245,12 @@ class spikekill {
 			umask($old_umask);
 
 			if ($handle !== false) {
+				if ($this->canonicalDir($tempdir) !== $canonical_dir) {
+					$created_stat = fstat($handle);
+					fclose($handle);
+					$this->unlinkOwnedFile($candidate, $created_stat);
+					return false;
+				}
 				return array('path' => $candidate, 'handle' => $handle, 'stat' => fstat($handle));
 			}
 		}
@@ -1214,7 +1310,7 @@ class spikekill {
 			$read   = $capture_stdout ? array($pipes[1], $pipes[2]) : array($pipes[2]);
 			$write  = array();
 			$except = array();
-			stream_select($read, $write, $except, 0, $remaining);
+			stream_select($read, $write, $except, intdiv($remaining, 1000000), $remaining % 1000000);
 
 			usleep(50000);
 
@@ -1338,6 +1434,40 @@ class spikekill {
 	}
 
 	/**
+	 * Refuse ancestors an unprivileged account can rename during a root run.
+	 * File identity checks cannot make an attacker-writable directory path an
+	 * atomic capability. Sticky temporary roots are safe only when the child
+	 * belongs to the current account or root. Windows needs ACL-aware support.
+	 */
+	private function directoryPathIsTrusted($path) {
+		if (!function_exists('posix_geteuid') || DIRECTORY_SEPARATOR === '\\') {
+			return false;
+		}
+		$uid = posix_geteuid();
+		$child = @stat($path);
+		if ($child === false || !in_array($child['uid'], array(0, $uid), true) || ($child['mode'] & 0022) !== 0) {
+			return false;
+		}
+		while ($child !== false) {
+			$parent_path = dirname($path);
+			$parent = @stat($parent_path);
+			if ($parent === false || !in_array($parent['uid'], array(0, $uid), true)) {
+				return false;
+			}
+			if (($parent['mode'] & 0022) !== 0
+				&& (!(($parent['mode'] & 01000) !== 0) || !in_array($child['uid'], array(0, $uid), true))) {
+				return false;
+			}
+			if ($parent_path === $path) {
+				return true;
+			}
+			$path = $parent_path;
+			$child = $parent;
+		}
+		return false;
+	}
+
+	/**
 	 * canonicalDir - resolve a configured directory's real path once and
 	 * cache it, so every copyFileSafely() call for that directory compares
 	 * against the same trusted value instead of re-resolving a path whose
@@ -1348,11 +1478,19 @@ class spikekill {
 	 * @return (string|false)
 	 */
 	private function canonicalDir($configured_dir) {
+		clearstatcache(true);
+		$path = realpath($configured_dir);
+		$stat = $path === false ? false : @stat($path);
+		if ($stat === false || ($stat['mode'] & 0170000) !== 0040000 || is_link($configured_dir)
+			|| !$this->directoryPathIsTrusted($path)) {
+			return false;
+		}
+		$identity = array('path' => $path, 'dev' => $stat['dev'], 'ino' => $stat['ino']);
 		if (!array_key_exists($configured_dir, $this->canonical_dirs)) {
-			$this->canonical_dirs[$configured_dir] = realpath($configured_dir);
+			$this->canonical_dirs[$configured_dir] = $identity;
 		}
 
-		return $this->canonical_dirs[$configured_dir];
+		return $this->canonical_dirs[$configured_dir] === $identity ? $path : false;
 	}
 
 	/**
@@ -1591,21 +1729,29 @@ class spikekill {
 				foreach($rra as $rra_key => $dses) {
 					if (cacti_sizeof($dses)) {
 						foreach($dses as $dskey => $ds) {
+							/* Empty or sparse RRAs use nonnumeric sentinels. Preserve
+							 * missing statistics instead of rounding or formatting them as zero. */
+							foreach (array('average', 'stddev', 'variance_avg', 'max_value', 'min_value', 'max_cutoff', 'min_cutoff') as $field) {
+								if (empty($ds['numsamples']) || !isset($ds[$field]) || !is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
+									$ds[$field] = 'N/A';
+								}
+							}
 							$this->strout .= sprintf('%10s %16s %10s %7s %7s ' .
-								($ds['average']    < 1E6 ? '%10s ' : ' %10.2e ') .
-								($ds['stddev']     < 1E6 ? '%10s ' : ' %10.2e ') .
-								($ds['max_value']  < 1E6 ? '%10s ' : ' %10.2e ') .
-								($ds['min_value']  < 1E6 ? '%10s ' : ' %10.2e ') .
-								($ds['max_cutoff'] < 1E6 ? '%10s ' : ' %10.2e ') .
-								($ds['min_cutoff'] < 1E6 ? '%10s ' : ' %10.2e ') .
-								'%10s %10s %10s %12s %10s' . PHP_EOL,
+								(!is_numeric($ds['average']) || abs($ds['average']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								(!is_numeric($ds['stddev']) || abs($ds['stddev']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								(!is_numeric($ds['variance_avg']) || abs($ds['variance_avg']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								(!is_numeric($ds['max_value']) || abs($ds['max_value']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								(!is_numeric($ds['min_value']) || abs($ds['min_value']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								(!is_numeric($ds['max_cutoff']) || abs($ds['max_cutoff']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								(!is_numeric($ds['min_cutoff']) || abs($ds['min_cutoff']) < 1E6 ? '%10s ' : ' %10.2e ') .
+								'%10s %10s %12s %10s' . PHP_EOL,
 								$this->displayTime($this->rra_pdp[$rra_key]),
 								$this->ds_name[$dskey],
 								$this->rra_cf[$rra_key],
 								number_format_i18n($ds['totalsamples']),
 								(isset($ds['numsamples']) ? number_format_i18n($ds['numsamples']) : '0'),
 								($ds['average']         != 'N/A' ? round($ds['average'], 2)       : 'N/A'),
-								($ds['stddev']          != 'N/A' ? round($ds['stddev'], 2)        : 'N/A')
+								($ds['stddev']          != 'N/A' ? round($ds['stddev'], 2)        : 'N/A'),
 								($ds['variance_avg']    != 'N/A' ? round($ds['variance_avg'], 2)  : 'N/A'),
 								($ds['max_value']       != 'N/A' ? round($ds['max_value'], 2)     : 'N/A'),
 								($ds['min_value']       != 'N/A' ? round($ds['min_value'], 2)     : 'N/A'),
@@ -1613,8 +1759,8 @@ class spikekill {
 								($ds['min_cutoff']      != 'N/A' ? round($ds['min_cutoff'], 2)    : 'N/A'),
 								($ds['stddev_killed']   != 'N/A' ? number_format_i18n($ds['stddev_killed'])   : 'N/A'),
 								($ds['variance_killed'] != 'N/A' ? number_format_i18n($ds['variance_killed']) : 'N/A'),
-								number_format_i18n($ds['outwind_samples']),
-								number_format_i18n($ds['outwind_killed']));
+								(is_numeric($ds['outwind_samples']) ? number_format_i18n($ds['outwind_samples']) : __('N/A')),
+								(is_numeric($ds['outwind_killed']) ? number_format_i18n($ds['outwind_killed']) : __('N/A')));
 						}
 					}
 				}
@@ -1628,19 +1774,26 @@ class spikekill {
 				foreach($rra as $rra_key => $dses) {
 					if (cacti_sizeof($dses)) {
 						foreach($dses as $dskey => $ds) {
+							/* Empty or sparse RRAs use nonnumeric sentinels. Preserve
+							 * missing statistics instead of rounding or formatting them as zero. */
+							foreach (array('average', 'stddev', 'variance_avg', 'max_value', 'min_value', 'max_cutoff', 'min_cutoff') as $field) {
+								if (empty($ds['numsamples']) || !isset($ds[$field]) || !is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
+									$ds[$field] = 'N/A';
+								}
+							}
 							$this->strout .= sprintf('<tr>' .
 								'<td class="nowrap">%s</td>' .
 								'<td>%s</td>' .
 								'<td class="right">%s</td>' .
 								'<td class="right">%s</td>' .
 								'<td class="right">%s</td>' .
-								($ds['average']      < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
-								($ds['stddev']       < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
-								($ds['variance_avg'] < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
-								($ds['max_value']    < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
-								($ds['min_value']    < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
-								($ds['max_cutoff']   < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
-								($ds['min_cutoff']   < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['average']) || abs($ds['average']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['stddev']) || abs($ds['stddev']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['variance_avg']) || abs($ds['variance_avg']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['max_value']) || abs($ds['max_value']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['min_value']) || abs($ds['min_value']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['max_cutoff']) || abs($ds['max_cutoff']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
+								(!is_numeric($ds['min_cutoff']) || abs($ds['min_cutoff']) < 1000000 ? '<td class="right">%s</td>' : '<td class="right">%.2e</td>') .
 								'<td class="right">%s</td>' .
 								'<td class="right">%s</td>' .
 								'<td class="right">%s</td>' .
@@ -1650,7 +1803,7 @@ class spikekill {
 								$this->ds_name[$dskey],
 								$this->rra_cf[$rra_key],
 								($ds['totalsamples']    != 'N/A' ? number_format_i18n($ds['totalsamples']) : '0'),
-								($ds['numsamples']      != 'N/A' ? number_format_i18n($ds['numsamples'])   : '0'),
+								(isset($ds['numsamples']) && $ds['numsamples'] != 'N/A' ? number_format_i18n($ds['numsamples']) : '0'),
 								($ds['average']         != 'N/A' ? round($ds['average'], 2)       : __('N/A')),
 								($ds['stddev']          != 'N/A' ? round($ds['stddev'], 2)        : __('N/A')),
 								($ds['variance_avg']    != 'N/A' ? round($ds['variance_avg'], 2)  : __('N/A')),
