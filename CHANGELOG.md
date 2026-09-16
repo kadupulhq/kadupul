@@ -11,6 +11,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Make RRD maintenance failure messages available for translation.
+
 - Coordinate spike removal with synchronous, queued and tuning RRD writes so
   replacement cannot discard samples written while maintenance prepares its dump.
 

@@ -20309,3 +20309,11 @@ msgstr "이 VDEF를 사용하는 그래프 템플릿 수입니다."
 #: vdef.php:923
 msgid "No VDEFs"
 msgstr "VDEF 없음"
+
+#: lib/spikekill.php:393
+msgid "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal."
+msgstr ""
+
+#: lib/spikekill.php:399
+msgid "FATAL: RRD storage is busy or its maintenance lock is unavailable. Retry after polling completes."
+msgstr ""

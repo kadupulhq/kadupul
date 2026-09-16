@@ -20375,3 +20375,11 @@ msgstr "Il numero di modelli di grafici che utilizzano questo VDEF."
 #: vdef.php:923
 msgid "No VDEFs"
 msgstr "Nessun VDEF"
+
+#: lib/spikekill.php:393
+msgid "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal."
+msgstr ""
+
+#: lib/spikekill.php:399
+msgid "FATAL: RRD storage is busy or its maintenance lock is unavailable. Retry after polling completes."
+msgstr ""
