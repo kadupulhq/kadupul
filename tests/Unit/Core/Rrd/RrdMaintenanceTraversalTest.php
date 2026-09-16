@@ -306,3 +306,11 @@ test('purge loop returns failure after one deferred batch and retains queued fil
             ->and(file_get_contents($this->rra . '/keep.rrd'))->toBe('rrd');
     } finally { \rrd_maintenance_release($lease); }
 });
+
+test('Windows local purge and archive retain files and queue when exclusive coordination is unavailable', function ($action) use ($purge) {
+    $GLOBALS['config']['cacti_server_os'] = 'win32';
+    $purge('keep.rrd', $action);
+    expect(file_get_contents($this->rra . '/keep.rrd'))->toBe('rrd')
+        ->and($GLOBALS['rmt_dropped'])->toBe(array())
+        ->and($GLOBALS['rmt_log'][0])->toContain('purge queue retained');
+})->with(array('1', '3'));

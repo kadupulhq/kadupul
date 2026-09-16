@@ -540,7 +540,7 @@ function remove_files($file_array) {
 	global $config, $debug, $archived, $purged;
 
 	$lease = null;
-	if (!read_config_option('storage_location') && ($config['cacti_server_os'] ?? '') !== 'win32') {
+	if (!read_config_option('storage_location')) {
 		$lease = rrd_maintenance_acquire(true, false);
 		if ($lease === false) {
 			cacti_log('WARNING: RRDfile Maintenance deferred because storage is busy or untrusted; purge queue retained.', true, 'MAINT');
