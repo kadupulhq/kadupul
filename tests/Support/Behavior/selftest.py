@@ -196,12 +196,24 @@ def diagnostic_contracts():
     trace = '09/16/2026 01:02:06 - CMDPHP PHP ERROR Backtrace: (/var/www/html/lib/rrd.php[334]:update(), DS[12])'
     assert harness.application_diagnostics(trace) == harness.application_diagnostics(trace.replace('[334]', '[900]'))
     assert 'DS[12]' in harness.application_diagnostics(trace)[0]['message']
-    for severity in ('DEPRECATED', 'USER_WARNING', 'USER_NOTICE', 'USER_ERROR', 'USER_DEPRECATED', 'STRICT'):
+    for severity in ('ERROR', 'WARNING', 'NOTICE', 'DEPRECATED', 'USER_WARNING', 'USER_NOTICE', 'USER_ERROR', 'USER_DEPRECATED', 'STRICT', 'PARSE', 'CORE_ERROR', 'CORE_WARNING', 'COMPILE_ERROR', 'COMPILE_WARNING', 'RECOVERABLE_ERROR', 'ALL'):
         diagnostic = f'PHP {severity}: calibration in file: /harness/probe.php on line: 79'
         assert harness.normalize_php_locations(diagnostic).endswith('on line: <LINE>')
     relative_trace = 'PHP ERROR Backtrace: (/poller.php[764]:main(), /lib/functions.php[4479]:log(), DS[12])'
     assert harness.normalize_php_locations(relative_trace) == 'PHP ERROR Backtrace: (/poller.php[<LINE>]:main(), /lib/functions.php[<LINE>]:log(), DS[12])'
     assert harness.normalize_php_locations('ordinary /poller.php[764]') == 'ordinary /poller.php[764]'
+    payload = 'PHP WARNING: payload /some/message.php[123] and /lib/file.php[456]:read()'
+    assert harness.normalize_php_locations(payload) == payload
+    assert harness.normalize(payload) != harness.normalize(payload.replace('[123]', '[124]'))
+    disguised = 'PHP WARNING: payload PHP ERROR Backtrace: (/some/message.php[123]:read())'
+    assert harness.normalize_php_locations(disguised) == disguised
+    for severity in ('PARSE', 'CORE_WARNING', 'COMPILE_ERROR', 'RECOVERABLE_ERROR'):
+        diagnostic = f'09/16/2026 01:02:06 - ERROR PHP {severity}: payload /some/message.php[123] in file: /harness/probe.php on line: 79'
+        observed = harness.application_diagnostics(diagnostic)
+        assert observed == harness.application_diagnostics(diagnostic.replace('line: 79', 'line: 80'))
+        assert observed != harness.application_diagnostics(diagnostic.replace('[123]', '[124]'))
+    assert harness.normalize_php_locations(relative_trace.replace('Backtrace:', 'message:')) == relative_trace.replace('Backtrace:', 'message:')
+
 
     assert harness.application_diagnostics(broken) == harness.application_diagnostics(broken.replace('line: 334', 'line: 900'))
     assert harness.normalize('ordinary DS[12] on line: 334') == 'ordinary DS[12] on line: 334'

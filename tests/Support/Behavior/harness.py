@@ -69,10 +69,17 @@ def normalize_php_locations(value):
     lines = []
     root = r'(?:<APP>|<HARNESS>|/var/www/html|/harness)'
     for line in value.splitlines(keepends=True):
-        if re.search(r'\bPHP (?:(?:USER_)?(?:NOTICE|WARNING|ERROR|DEPRECATED)|STRICT|Notice|Warning|Deprecated|Fatal error|Parse error)\b', line):
+        if re.search(r'\bPHP (?:(?:USER_)?(?:NOTICE|WARNING|ERROR|DEPRECATED)|(?:CORE|COMPILE)_(?:ERROR|WARNING)|RECOVERABLE_ERROR|PARSE|ALL|STRICT|Notice|Warning|Deprecated|Fatal error|Parse error)\b', line):
             line = re.sub(r'(\bin(?: file:)?\s+' + root + r'/[^\r\n]*?\.php\s+on line:?\s*)\d+(?=\s*$)',
                           r'\1<LINE>', line)
-            line = re.sub(r'((?:' + root + r')?/[^\s\[\]]+\.php)\[\d+\]', r'\1[<LINE>]', line)
+        # cacti_debug_backtrace emits a distinct record, with comma-separated
+        # file[line]:function() frames. A path-shaped warning payload is data.
+        log_prefix = r'(?:(?:' + '|'.join(_POLLER_DATES) + r') \d{2}:\d{2}:\d{2} - [A-Z][A-Z0-9_]* )?'
+        trace = re.fullmatch(log_prefix + r'(PHP ERROR(?: [A-Z_]+)? Backtrace:\s*\()(.*)(\)\s*)', line)
+        if trace:
+            frames = re.sub(r'(^|, )((?:' + root + r')?/[^\s\[\]]+\.php)\[\d+\](?=:[^(),\r\n]+\(\)(?:, |$))',
+                            r'\1\2[<LINE>]', trace[2])
+            line = line[:trace.start(2)] + frames + line[trace.end(2):]
         lines.append(line)
     return ''.join(lines)
 
@@ -553,29 +560,18 @@ class Harness:
         self.capture('faults/database-unreachable', {k: broken[k] for k in ('exit', 'stdout', 'stderr')})
 
     def diagnostics_scenario(self):
-        """PHP diagnostics the recorder sees during the run.
+        """Capture two diagnostic contracts after all application scenarios.
 
-        This has to be captured last. When it ran at the end of scenarios() it
-        saw only the probe's own process, so the poller's fwrite notice on the
-        broken rrdtool pipe went unrecorded while the scenario claimed to
-        characterize PHP diagnostics.
+        The prepend recorder observes diagnostics before or outside the
+        application's handler swap. The independent application-log capture
+        observes post-bootstrap diagnostics from pollers and workers, including
+        the broken RRDtool pipe. Both paths have their own calibration control.
         """
         events = self.diagnostics()
 
-        # Negative control: a diagnostic raised outside the probe must arrive.
-        # Without it, a recorder that silently stops working still looks green.
-        # Scope, stated rather than implied. include/global.php calls
-        # set_error_handler('CactiErrorHandler'), which displaces this recorder in
-        # every process that bootstraps the application. probe.php re-arms it
-        # explicitly; poller.php and its workers cannot without editing
-        # production code, so their diagnostics go to Cacti's own log instead and
-        # are visible in each scenario's stderr, not here.
-        #
-        # What this scenario therefore covers is diagnostics raised before or
-        # outside that handler swap. The control below keeps it honest: at least
-        # one event must come from application code rather than the probe, so a
-        # recorder that silently stops working still fails.
-        # Events are still raw here; normalize() only rewrites /harness later.
+        # The prepend recorder must see an event from application code, not
+        # merely its probe. The application-log control below separately proves
+        # that the installed CactiErrorHandler records post-bootstrap warnings.
         outside_probe = [e for e in events
                          if not any(m in str(e.get('file', '')) for m in ('/harness/', '<HARNESS>'))]
 
