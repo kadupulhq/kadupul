@@ -13,6 +13,7 @@ import shutil
 import sys
 import types
 import uuid
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[3]
 spec = importlib.util.spec_from_file_location('harness', Path(__file__).with_name('harness.py'))
