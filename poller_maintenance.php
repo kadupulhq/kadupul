@@ -99,8 +99,9 @@ if (!$force) {
 	}
 }
 
+$purge_failed = false;
 if ($config['poller_id'] == 1) {
-	rrdfile_purge($force);
+	$purge_failed = rrdfile_purge($force) === false;
 
 	authcache_purge();
 
@@ -133,7 +134,7 @@ if (!$force) {
 	unregister_process('maintenance', 'master', $config['poller_id']);
 }
 
-exit(0);
+exit($purge_failed ? 1 : 0);
 
 function reindex_devices() {
 	global $config;
@@ -276,7 +277,9 @@ function rrdfile_purge($force) {
 
 			if (cacti_sizeof($file_array) || $force) {
 				/* there's something to do for us now */
-				remove_files($file_array);
+				if (remove_files($file_array) === false) {
+					return false;
+				}
 
 				if ($force) {
 					cleanup_ds_and_graphs();

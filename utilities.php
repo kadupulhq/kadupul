@@ -1143,7 +1143,7 @@ function utilities_view_user_log() {
 		RIGHT JOIN user_log AS ul
 		ON ua.username=ul.username
 		$sql_where
-		" . get_order_string() . "
+		" . get_order_string(array('username', 'full_name', 'realm', 'time', 'result', 'ip')) . "
 		LIMIT " . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$user_log = db_fetch_assoc_prepared($user_log_sql, $params);
@@ -2189,7 +2189,7 @@ function utilities_view_poller_cache() {
 
 	$total_rows = get_total_row_data($_SESSION['sess_user_id'], $sql, $params, 'poller_item');
 
-	$order_string = get_order_string();
+	$order_string = get_order_string(array('dtd.name_cache', 'h.description'));
 	if ($order_string == '') {
 		$order_string = 'ORDER BY action ASC';
 	} else {

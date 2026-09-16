@@ -824,7 +824,7 @@ function template() {
 			$sql_having
 		) AS rs");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('name', 'gt.id', 'graphs', 'size', 'image_format_id', 'vertical_label'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$template_list = db_fetch_assoc("SELECT

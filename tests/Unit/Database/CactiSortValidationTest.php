@@ -131,3 +131,17 @@ test('malformed stored sorts fall back to a safe request and empty sorts produce
     set_request_var('sort_column', '');
     expect(get_order_string())->toBe('');
 });
+
+
+test('explicit server columns preserve first request default sorting', function () {
+    set_request_var('sort_column', 'name');
+    set_request_var('sort_direction', 'ASC');
+    expect(get_order_string(array('name', 'id')))->toBe('ORDER BY `name` ASC');
+});
+
+test('explicit columns constrain stored multi-column sorting for this query', function () {
+    $page = get_order_string_page(false);
+    $_SESSION['valid_sort_columns'][$page] = array('secret_column');
+    $_SESSION['sort_data'][$page] = array('name' => 'DESC', 'id' => 'ASC', 'secret_column' => 'DESC');
+    expect(get_order_string(array('name', 'id')))->toBe('ORDER BY `name` DESC, `id` ASC');
+});

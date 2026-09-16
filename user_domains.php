@@ -737,7 +737,7 @@ function domains() {
 	$domains = db_fetch_assoc_prepared("SELECT *
 		FROM user_domains
 		$sql_where
-		" . get_order_string() . "
+		" . get_order_string(array('domain_name', 'type', 'defdomain', 'user_id', 'cn_full_name', 'cn_email', 'enabled')) . "
 		LIMIT " . ($rows*(get_request_var('page')-1)) . ',' . $rows, $params);
 
 	$nav = html_nav_bar('user_user_domains.php?filter=' . get_request_var('filter'), MAX_DISPLAY_PAGES, get_request_var('page'), $rows, $total_rows, 8, __('User Domains'), 'page', 'main');

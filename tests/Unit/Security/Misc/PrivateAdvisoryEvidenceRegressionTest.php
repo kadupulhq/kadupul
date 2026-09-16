@@ -22,13 +22,13 @@ test('GHSA-6gr7-53g8-vchq: auth login redirect path no longer relies on referer 
 test('GHSA-84q3-92xc-c3pf: ORDER BY inputs pass through allowlist validation helper', function () {
 	$src = file_get_contents(__DIR__ . '/../../../../utilities.php');
 
-	expect($src)->toMatch('/\$sql_where\s+" \. get_order_string\(\) \. "\s+LIMIT/');
+	expect($src)->toMatch('/\$sql_where\s+" \. get_order_string\(array\([^\n]*\)\) \. "\s+LIMIT/');
 });
 
 test('GHSA-84q3-92xc-c3pf: user_group_admin ORDER BY inputs pass through allowlist validation helper', function () {
 	$src = file_get_contents(__DIR__ . '/../../../../user_group_admin.php');
 
-	expect($src)->toMatch('/GROUP BY uag\.id\s+" \. get_order_string\(\) \. "/');
+	expect($src)->toMatch('/GROUP BY uag\.id\s+" \. get_order_string\(array\([^\n]*\)\) \. "/');
 });
 
 test('GHSA-8522-5p3m-754c: script-server PHP binary path is shell-escaped before execution', function () {

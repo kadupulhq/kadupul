@@ -463,7 +463,7 @@ function get_discovery_results(&$total_rows = 0, $rows = 0, $export = false) {
 
 		$page = get_request_var('page');
 
-		$sql_order = get_order_string();
+		$sql_order = get_order_string(array('hostname', 'ip', 'sysName', 'sysLocation', 'sysContact', 'sysDescr', 'os', 'time', 'snmp', 'up', 'mytime'));
 		$sql_limit = ' LIMIT ' . ($rows*($page-1)) . ',' . $rows;
 
 		$sql_query = "SELECT *,sysUptime snmp_sysUpTimeInstance, FROM_UNIXTIME(time) AS mytime

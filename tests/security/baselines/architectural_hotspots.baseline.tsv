@@ -446,8 +446,8 @@ dynamic_include	./lib/utility.php:182		include_once($config['library_path'] . '/
 dynamic_include	./lib/utility.php:46		include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./lib/utility.php:837		include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./link.php:73					include_once($file);
-dynamic_include	./poller.php:1120	    include_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./poller.php:1271	    include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./poller.php:1125	    include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./poller.php:1276	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:36	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:37	require_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./poller.php:38	require_once($config['base_path'] . '/lib/rrd.php');
@@ -539,8 +539,8 @@ dynamic_include	./scripts/ss_netsnmp_lmsensors.php:24		include($config['base_pat
 dynamic_include	./snmpagent_persist.php:165				include( $path_mibcache );
 dynamic_include	./spikekill.php:26	include_once($config['base_path'] . '/lib/spikekill.php');
 host_header	./include/global.php:435					$_SERVER['HTTP_HOST'] ?? '',
-host_header	./lib/html_utility.php:1087		} elseif (isset($_SERVER['HTTP_HOST']) && cacti_trusted_host_header($_SERVER['HTTP_HOST'], $config['trusted_hosts'] ?? array()) !== '') {
-host_header	./lib/html_utility.php:1090			$srv_host = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST']);
+host_header	./lib/html_utility.php:1090		} elseif (isset($_SERVER['HTTP_HOST']) && cacti_trusted_host_header($_SERVER['HTTP_HOST'], $config['trusted_hosts'] ?? array()) !== '') {
+host_header	./lib/html_utility.php:1093			$srv_host = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST']);
 sort_order_input	./automation_snmp.php:533				ORDER BY sequence', array(get_request_var('id')));
 sort_order_input	./data_queries.php:884						ORDER BY field_name, sequence', array(get_request_var('id'), $data_template['id']));
 sort_order_input	./graph_templates.php:504			ORDER BY name', array(get_request_var('id')));

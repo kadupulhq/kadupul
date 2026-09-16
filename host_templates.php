@@ -901,7 +901,7 @@ function template() {
 			$sql_having
 		) AS rs");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('name', 'ht.class', 'ht.id', 'hosts'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$template_list = db_fetch_assoc("SELECT

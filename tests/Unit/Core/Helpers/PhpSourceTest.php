@@ -1,7 +1,7 @@
 <?php
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-2.0-or-later
-require_once dirname(__DIR__, 2) . '/Helpers/PhpSource.php';
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
 test('function extraction handles comments strings interpolation and nested closures', function () {
     $body = <<<'CODE'

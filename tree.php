@@ -2209,7 +2209,7 @@ function tree() {
 		$sql_where = '';
 	}
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('name', 'id', 'enabled', 'locked', 'user_id', 'sequence', 'last_modified', 'modified_by', 'sites', 'branches', 'hosts', 'graphs'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$trees = db_fetch_assoc("SELECT t.*,

@@ -956,7 +956,7 @@ function automation_tree_rules() {
 		ON atr.id=gt.id
 		$sql_where");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('name', 'id', 'tree_name', 'subtree_name', 'leaf_type', 'host_grouping_type', 'enabled'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$automation_tree_rules = db_fetch_assoc("SELECT atr.id, atr.name, atr.tree_id, atr.tree_item_id,

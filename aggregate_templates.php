@@ -678,7 +678,7 @@ function aggregate_template() {
 		ON gt.id=pgt.graph_template_id
 		$sql_where");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('pgt.name', 'graphs.graphs', 'graph_template_name'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$template_list = db_fetch_assoc("SELECT pgt.*, graphs.graphs, gt.name AS graph_template_name

@@ -614,7 +614,7 @@ function aggregate_color_template() {
 		ON ct.color_template_id=graphs.color_template
 		$sql_where");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('name', 'graphs', 'templates'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$template_list = db_fetch_assoc("SELECT

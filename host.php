@@ -1586,7 +1586,7 @@ function get_device_records(&$total_rows, $rows) {
 
 	$poller_interval = read_config_option('poller_interval');
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('description', 'hostname', 'id', 'graphs', 'data_sources', 'status', 'instate', 'snmp_sysUpTimeInstance', 'polling_time', 'cur_time', 'avg_time', 'availability'));
 	$sql_limit = 'LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$sql_query = "SELECT host.*, gl.graphs, dl.data_sources,

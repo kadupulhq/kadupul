@@ -935,7 +935,7 @@ function data() {
 		FROM data_input AS di
 		$sql_where");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('name', 'id', 'data_sources', 'templates', 'type_id'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$data_inputs = db_fetch_assoc("SELECT di.*,

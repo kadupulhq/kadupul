@@ -550,7 +550,7 @@ function debug_wizard() {
 		ON dl.id = dd.datasource
 		$sql_where");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('name_cache', 'username', 'started', 'local_data_id'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$checks = db_fetch_assoc("SELECT dd.*, dtd.local_data_id, dtd.name_cache, u.username

@@ -39,8 +39,8 @@ $htmlUtilitySource    = file_get_contents(__DIR__ . '/../../../../lib/html_utili
 test('GHSA-3p6w: utilities.php builds ORDER BY through get_order_string', function () use ($utilitiesSource) {
 	expect($utilitiesSource)->not->toBeFalse();
 	// view_user_log and view_poller_cache
-	expect($utilitiesSource)->toContain("\t\t\" . get_order_string() . \"\n");
-	expect($utilitiesSource)->toContain('$order_string = get_order_string();');
+	expect($utilitiesSource)->toContain("\t\t\" . get_order_string(array('username', 'full_name', 'realm', 'time', 'result', 'ip')) . \"\n");
+	expect($utilitiesSource)->toContain("\$order_string = get_order_string(array('dtd.name_cache', 'h.description'));");
 	expect($utilitiesSource)->not->toMatch('/ORDER BY[^;]*get_(nfilter_|filter_)?request_var\(\'sort_(column|direction)\'\)/');
 });
 

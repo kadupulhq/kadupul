@@ -2340,7 +2340,7 @@ function user() {
 		ON ua.id = ug.user_id
 		$sql_where");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('username', 'id', 'full_name', 'enabled', 'realm', 'policy_graphs', 'policy_hosts', 'policy_graph_templates', 'dtime'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$user_list = db_fetch_assoc("SELECT ua.id, ua.username, ua.full_name,

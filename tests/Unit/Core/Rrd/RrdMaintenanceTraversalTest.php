@@ -32,6 +32,7 @@ if (!function_exists(__NAMESPACE__ . '\remove_files')) {
 	$root = dirname(__DIR__, 4);
 
 	$source = file_get_contents($root . '/poller_maintenance.php');
+	preg_match('/^function rrdfile_purge\(.*?^}\n/ms', $source, $purgeFunction);
 	preg_match('/^function remove_files\(.*?^}\n/ms', $source, $remove);
 	preg_match('/^function rrdclean_create_path\(.*?^}\n/ms', $source, $create);
 
@@ -39,7 +40,7 @@ if (!function_exists(__NAMESPACE__ . '\remove_files')) {
 	preg_match('/^function rrd_check_path\(.*?^}\n/ms', $source, $check);
 
 	// test-only eval of source read from this repository, not external input
-	eval('namespace ' . __NAMESPACE__ . '; ' . $remove[0] . $create[0] . $check[0]);
+	eval('namespace ' . __NAMESPACE__ . '; ' . $remove[0] . $create[0] . $check[0] . $purgeFunction[0]);
 }
 
 function read_config_option($name, $force = false) {
@@ -285,3 +286,23 @@ test('does not send a .. path to the RRDproxy for archiving', function () use ($
     expect(is_resource($exclusive))->toBeTrue();
     \rrd_maintenance_release($exclusive);
 })->with(array('1', '3'));
+
+
+function db_fetch_cell($sql) { return 1; }
+function db_fetch_assoc($sql) {
+    $GLOBALS['rmt_reads']++;
+    if ($GLOBALS['rmt_reads'] > 1) { throw new \RuntimeException('deferred purge was retried in a tight loop'); }
+    return array(array('id' => 1, 'name' => 'keep.rrd', 'local_data_id' => 0, 'action' => '1'));
+}
+
+test('purge loop returns failure after one deferred batch and retains queued files', function () {
+    $GLOBALS['rmt_reads'] = 0;
+    $lease = \rrd_maintenance_acquire(false, false);
+    expect(is_resource($lease))->toBeTrue();
+    try {
+        expect(rrdfile_purge(false))->toBeFalse()
+            ->and($GLOBALS['rmt_reads'])->toBe(1)
+            ->and($GLOBALS['rmt_dropped'])->toBe(array())
+            ->and(file_get_contents($this->rra . '/keep.rrd'))->toBe('rrd');
+    } finally { \rrd_maintenance_release($lease); }
+});

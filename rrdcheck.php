@@ -129,7 +129,7 @@ function rrdcheck_display_problems() {
 		FROM rrdcheck
 		$sql_where");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('description', 'name_cache', 'local_data_id', 'message', 'test_date'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$problems = db_fetch_assoc("SELECT h.description, dtd.name_cache, rc.local_data_id, rc.test_date, rc.message

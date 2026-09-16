@@ -15,7 +15,7 @@ test('sort order uses normalized column helper before session sql generation', f
 });
 
 test('get_order_string normalizes, validates and builds the sort fragment', function () use ($htmlUtilitySource) {
-	$start = strpos($htmlUtilitySource, 'function get_order_string()');
+	$start = strpos($htmlUtilitySource, 'function get_order_string(');
 	expect($start)->not->toBeFalse();
 
 	$next = strpos($htmlUtilitySource, "\nfunction ", $start + 1);

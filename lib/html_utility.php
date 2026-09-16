@@ -919,8 +919,11 @@ function update_order_string($inplace = false) {
 
 /* get_order_string - returns a valid order string for a table
    @returns - the order string */
-function get_order_string() {
+function get_order_string($allowed_columns = null) {
 	$page = get_order_string_page(true);
+	if (is_array($allowed_columns)) {
+		$_SESSION['valid_sort_columns'][$page] = $allowed_columns;
+	}
 	$columns = $_SESSION['sort_data'][$page] ?? array();
 
 	if (!is_array($columns) || !$columns) {
