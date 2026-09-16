@@ -27,16 +27,16 @@ test('filter form attributes round-trip quotes tags and Unicode without creating
         ->and($document->getElementsByTagName('script')->length)->toBe(0);
 })->with(array("a' onfocus='alert(1)", 'a" onfocus="alert(1)', '<script>alert(1)</script>', 'français 日本語 & filter'));
 
-test('selectable cell titles preserve quotes as data and cannot inject HTML', function () {
+test('selectable cell titles preserve quotes as data and cannot inject HTML', function ($alreadyEscaped) {
     $title = "\"' ><script>alert(1)</script>";
     ob_start();
-    try { form_selectable_cell('visible', 1, '', '', $title); $html = ob_get_contents(); } finally { ob_end_clean(); }
+    try { form_selectable_cell('visible', 1, '', '', $alreadyEscaped ? html_escape($title) : $title); $html = ob_get_contents(); } finally { ob_end_clean(); }
     $document = new DOMDocument();
     $document->loadHTML('<table><tr>' . $html . '</tr></table>');
     $span = $document->getElementsByTagName('span')->item(0);
     expect($span->getAttribute('title'))->toBe($title)
         ->and($document->getElementsByTagName('script')->length)->toBe(0);
-});
+})->with(array(false, true));
 
 if (!class_exists('CactiSecureHeaders')) {
     class CactiSecureHeaders { public static function getNonceAttribute() { return ''; } }

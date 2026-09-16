@@ -43,3 +43,5 @@ A busy splice exits before dumping. Cache-daemon rewrites are refused. Windows
 retains its existing non-spike CLI behavior because spike removal remains disabled.
 Private replacement pipes opened during crash recovery are drained and closed
 before returning; later calls with the closed original pipe use synchronous I/O.
+
+Batch gap repair uses one worker even when multiple threads are requested, so its own children cannot reject one another under the global exclusive maintenance lease. Normal polling contention still fails closed and requires a retry. Heartbeat tuning also requires the external cache daemon to be disabled.

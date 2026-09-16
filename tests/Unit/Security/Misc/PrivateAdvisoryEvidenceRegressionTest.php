@@ -63,3 +63,18 @@ test('GHSA-pf37-v86f-5xwp: reports graph_name_regexp filter uses db_qstr_rlike h
 
 	expect($src)->toContain("db_qstr_rlike(\$item['graph_name_regexp'])");
 });
+
+
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+function __($message) { return $message; }
+
+test('sorting pages pass their server-defined column maps to the registering header', function ($path, $function, $columns) {
+    $body = test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/' . $path), $function);
+    expect(preg_match('/\$display_text\s*=\s*(array\(.*?\));\s+html_header_sort(?:_checkbox)?\(\$display_text,\s*get_request_var\(\'sort_column\'\),\s*get_request_var\(\'sort_direction\'\)/s', $body, $match))->toBe(1);
+    $actual = eval('return ' . $match[1] . ';');
+    expect(array_keys($actual))->toBe($columns);
+})->with(array(
+    array('utilities.php', 'utilities_view_user_log', array('username', 'full_name', 'realm', 'time', 'result', 'ip')),
+    array('utilities.php', 'utilities_view_poller_cache', array('dtd.name_cache', 'h.description', 'nosort')),
+    array('user_group_admin.php', 'user_group', array('name', 'members', 'description', 'policy_graphs', 'policy_hosts', 'policy_graph_templates', 'enabled')),
+));
