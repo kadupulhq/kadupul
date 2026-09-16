@@ -7,7 +7,8 @@
  * Lock the existing RRA directory inode, not a removable lock file. All
  * processes accessing this store must use the same configured RRA directory.
  * Shared locks outlive queued commands: release only after pclose has waited
- * for the child. Maintenance never waits for an active writer.
+ * for the child. Exclusive maintenance refuses active writers by default;
+ * callers may explicitly wait when their operation permits it.
  */
 function rrd_maintenance_acquire($exclusive = false, $wait = false)
 {

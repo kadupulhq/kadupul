@@ -171,7 +171,7 @@ FIXTURE;
 })->with(array(array('update_heartbeat.php', false), array('float_rrdfiles.php', false), array('splice_rrd.php', false), array('float_rrdfiles.php', true), array('splice_rrd.php', true), array('update_heartbeat.php', true), array('splice_rrd.php', false, false)));
 
 
-test('batch gap repair assigns every queued file to one maintenance worker', function ($threads) {
+test('batch gap repair assigns every queued file to one maintenance worker', function ($threads, $failed = false, $cached = false) {
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/batch-gap-lock-' . bin2hex(random_bytes(8));
     foreach (array('', '/cli', '/include', '/lib') as $suffix) {
@@ -179,6 +179,7 @@ test('batch gap repair assigns every queued file to one maintenance worker', fun
     }
     try {
         copy($root . '/cli/batchgapfix.php', $dir . '/cli/batchgapfix.php');
+        symlink($root . '/lib/rrd_maintenance.php', $dir . '/lib/rrd_maintenance.php');
         file_put_contents($dir . '/lib/poller.php', '<?php');
         $fixture = <<<'FIXTURE'
 <?php
@@ -190,11 +191,11 @@ function cacti_escapeshellarg($value) { return escapeshellarg($value); }
 function register_process_start(...$args) { return true; }
 function unregister_process(...$args) {}
 function db_table_exists(...$args) { return false; }
-function db_execute(...$args) { return true; }
+function db_execute($sql, ...$args) { file_put_contents(dirname(__DIR__) . '/mutations', $sql . "\n", FILE_APPEND); return true; }
 function db_affected_rows(...$args) { return 12; }
 define('COPYRIGHT_YEARS', '2026');
 function get_cacti_cli_version() { return '1.3.0'; }
-function db_fetch_cell(...$args) { return 12; }
+function db_fetch_cell($sql, ...$args) { return strpos($sql, 'exit_code != 0') !== false ? (int) getenv('TEST_BATCH_FAILED') : 12; }
 function db_fetch_cell_prepared(...$args) { return 0; }
 function db_execute_prepared($sql, $params) {
     if (strpos($sql, 'SET child = ?') !== false) {
@@ -206,12 +207,28 @@ function exec_background($binary, $args) { file_put_contents(dirname(__DIR__) . 
 function cacti_log($message, ...$args) { file_put_contents(dirname(__DIR__) . '/stats', $message); }
 FIXTURE;
         file_put_contents($dir . '/include/cli_check.php', $fixture);
-        $process = proc_open(array_merge(array(PHP_BINARY), rrd_cli_coverage_arguments($this, $dir, $root, 'batchgapfix.php'), ($threads === 0 ? array($dir . '/cli/batchgapfix.php', '--help') : array($dir . '/cli/batchgapfix.php', '--start=2026-01-01', '--end=2026-01-02', '--threads=' . $threads))), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $process = proc_open(array_merge(array(PHP_BINARY), rrd_cli_coverage_arguments($this, $dir, $root, 'batchgapfix.php'), ($threads === 0 ? array($dir . '/cli/batchgapfix.php', '--help') : array($dir . '/cli/batchgapfix.php', '--start=2026-01-01', '--end=2026-01-02', '--threads=' . $threads))), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, array_merge(getenv(), array('TEST_BATCH_FAILED' => $failed ? '1' : '0', 'RRDCACHED_ADDRESS' => $cached ? 'unix:/unavailable-test-cache' : '')));
         $stdout = stream_get_contents($pipes[1]);
         $stderr = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
-        expect(proc_close($process))->toBe(0)->and($stderr)->toBe('');
+        $status = proc_close($process);
+        if ($cached) {
+            expect($status)->toBe(1)->and($stderr)->toContain('disable RRDCACHED_ADDRESS')
+                ->and(file_exists($dir . '/mutations'))->toBeFalse()
+                ->and(file_exists($dir . '/launches'))->toBeFalse();
+            return;
+        }
+        expect($status)->toBe($failed ? 1 : 0);
+        if ($failed) {
+            expect($stderr)->toContain('queue results retained')
+                ->and(file_get_contents($dir . '/mutations'))->not->toContain('TRUNCATE');
+        } else {
+            expect($stderr)->toBe('');
+            if ($threads !== 0) {
+                expect(file_get_contents($dir . '/mutations'))->toContain('TRUNCATE');
+            }
+        }
         if ($threads === 0) {
             expect($stdout)->toContain('maintenance currently uses one worker')->toContain('for command-line compatibility.');
             return;
@@ -232,4 +249,4 @@ FIXTURE;
             rrd_cli_fixture_remove($dir);
         }
     }
-})->with(array(0, 1, 5, 40));
+})->with(array(array(0), array(1), array(5), array(40), array(1, true), array(1, false, true)));

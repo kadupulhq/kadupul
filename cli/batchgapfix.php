@@ -171,6 +171,8 @@ $end_date   = date('Y-m-d H:i:s', $end_time);
 
 // Parent Process, prep table insert records
 if ($child == 0) {
+	require_once __DIR__ . '/../lib/rrd_maintenance.php';
+	rrd_maintenance_cli_preflight();
 	$type = 'master';
 
 	if ($force) {
@@ -329,6 +331,11 @@ if ($child == 0) {
 	cacti_log(sprintf('BATCHFIX STATS: Time:%s, RRDfiles:%s, Threads:%s, Rate:%s, Succeeded:%s, Failed:%s', round($end - $start, 2), $rrdfiles, $threads, round($rate,2), $succeeded, $failed), false, 'SYSTEM');
 
 	unregister_process('batchgapfix', $type, $child);
+
+	if ($failed > 0) {
+		fwrite(STDERR, "ERROR: Gap repair failed for some RRD files; queue results retained.\n");
+		exit(1);
+	}
 
 	db_execute('TRUNCATE TABLE graph_local_spikekill');
 

@@ -33,8 +33,8 @@ def rrd_manifest(h):
     code = '''$r=[];
 $files=new RecursiveIteratorIterator(new RecursiveDirectoryIterator("rra", FilesystemIterator::SKIP_DOTS));
 foreach ($files as $file) {
-    if (!$file->isFile() || strtolower($file->getExtension()) !== "rrd") { continue; }
     if ($file->isLink()) { throw new RuntimeException("RRD snapshot cannot preserve an external symlink target"); }
+    if (!$file->isFile() || strtolower($file->getExtension()) !== "rrd") { continue; }
     $path=$file->getPathname(); $hash=hash_file("sha256",$path);
     if ($hash === false) { throw new RuntimeException("Cannot hash RRD snapshot member"); }
     $r[substr($path,4)]=$hash;
