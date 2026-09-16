@@ -32,13 +32,32 @@ $htmlReportsPath     = __DIR__ . '/../../../../lib/html_reports.php';
 // GHSA-6233: Stored XSS in report tree titles
 // ---------------------------------------------------------------------------
 
-test('report headings escape each user-controlled component before concatenation', function () use ($reportsPath) {
-    $contents = file_get_contents($reportsPath);
-    expect($contents)->not->toContain('<h3>$title</h3>');
-    foreach (array("html_escape(\$report['name'])", 'html_escape($description)', 'html_escape($tree_name)', 'html_escape($leaf_name)', 'html_escape($host_name)', 'html_escape($graph_name)') as $escaped) {
-        expect($contents)->toContain($escaped);
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+eval(test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/html.php'), 'html_escape'));
+function __($message) { return $message; }
+
+test('report heading expressions render hostile components as text', function ($component) use ($reportsPath) {
+    $source = file_get_contents($reportsPath);
+    $token = $component === 'report' ? "\$report['name']" : '$' . $component;
+    $assignments = array();
+    foreach (explode("\n", $source) as $line) {
+        if (preg_match('/^\s*\$(title|outstr)\s*\.?=/', $line) && strpos($line, $token) !== false) {
+            $assignments[] = trim($line);
+        }
     }
-});
+    expect($assignments)->toHaveCount(1);
+    foreach (array("<script>alert(1)</script>\"' &", 'français 日本語') as $payload) {
+        $description = $tree_name = $leaf_name = $host_name = $graph_name = $payload;
+        $report = array('name' => $payload);
+        $title = $outstr = $title_delimiter = '';
+        eval($assignments[0]);
+        $html = $component === 'report' ? $outstr : $title;
+        $document = new DOMDocument();
+        $document->loadHTML('<?xml encoding="UTF-8"><h3>' . $html . '</h3>');
+        expect($document->getElementsByTagName('script')->length)->toBe(0)
+            ->and($document->getElementsByTagName('h3')->item(0)->textContent)->toContain($payload);
+    }
+})->with(array('report', 'description', 'tree_name', 'leaf_name', 'host_name', 'graph_name'));
 
 // ---------------------------------------------------------------------------
 // GHSA-fwh3: Reflected XSS via rfilter in aggregate_graphs.php
