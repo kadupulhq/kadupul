@@ -2143,7 +2143,7 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 		 * modern skip-past-updates behavior before submitting retained rows. */
 		$last_update = boost_rrdtool_get_last_update_time($rrd_path, $rrdtool_pipe);
 		if (!ctype_digit((string) $last_update)) {
-			return 'ERROR: Unable to read the last RRD update for a legacy retry';
+			return 'ERROR: Unable to read the last RRD timestamp for a legacy RRD update';
 		}
 		$samples = preg_split('/\s+/', trim($rrd_update_values), -1, PREG_SPLIT_NO_EMPTY);
 		$samples = array_filter($samples, function($sample) use ($last_update) {
