@@ -12,7 +12,7 @@ function db_fetch_row_prepared(...$args) { return array_shift($GLOBALS['missing_
 function isset_request_var($name) { return $name === 'selected_items' || !empty($GLOBALS['missing_request'][$name]); }
 function get_nfilter_request_var($name, $default = '') { return $name === 'drp_action' ? ($GLOBALS['missing_request'][$name] ?? '2') : ($name === 'new_username' ? 'copied' : 1); }
 function cacti_count($value) { return is_array($value) ? count($value) : 0; }
-function sanitize_unserialize_selected_items($value) { return array(1); }
+function sanitize_unserialize_selected_items($value) { return $GLOBALS['missing_selected'] ?? array(1); }
 function user_copy(...$args) { throw new RuntimeException('Must not copy a missing user'); }
 function raise_message($message) { $GLOBALS['missing_row_messages'][] = $message; }
 function db_execute_prepared(...$args) { throw new RuntimeException('Must not write when the selected row is missing'); }
@@ -28,6 +28,7 @@ eval(test_php_function_source(file_get_contents(dirname(__DIR__, 3) . '/color_te
 eval(test_php_function_source(file_get_contents(dirname(__DIR__, 3) . '/user_admin.php'), 'form_actions'));
 beforeEach(function () {
     $GLOBALS['missing_rows'] = array();
+    $GLOBALS['missing_selected'] = array(1);
     $GLOBALS['missing_request'] = array('id' => 1, 'type' => 'in');
     $GLOBALS['missing_row_messages'] = array();
 });
@@ -79,3 +80,13 @@ test('batch user copy refuses missing source and destination users', function ($
     form_actions();
     expect($GLOBALS['missing_row_messages'])->toBe(array(2));
 })->with(array(array(false, array('username' => 'target', 'realm' => 0)), array(array('username' => 'source', 'realm' => 0), false), array(false, false)));
+
+
+test('batch copy preflights a later missing user before changing an earlier valid user', function () {
+    $GLOBALS['missing_selected'] = array(1, 2);
+    $GLOBALS['missing_request']['drp_action'] = '5';
+    $GLOBALS['missing_rows'] = array(array('username' => 'source', 'realm' => 0), array('username' => 'valid', 'realm' => 0), false);
+    // The user_copy stub throws if any mutation is attempted.
+    form_actions();
+    expect($GLOBALS['missing_row_messages'])->toBe(array(2));
+});

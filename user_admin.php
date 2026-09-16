@@ -300,20 +300,25 @@ function form_actions() {
 						WHERE id = ?',
 						array(get_nfilter_request_var('template_user')));
 
-					for ($i=0;($i<cacti_count($selected_items));$i++) {
+					if (!cacti_sizeof($template)) {
+						raise_message(2);
+						return;
+					}
+					$copy_users = array();
+					foreach ($selected_items as $selected_id) {
 						$user = db_fetch_row_prepared('SELECT username, realm
 							FROM user_auth
-							WHERE id = ?',
-							array($selected_items[$i]));
-
-						if (!cacti_sizeof($user) || !cacti_sizeof($template)) {
+							WHERE id = ?', array($selected_id));
+						if (!cacti_sizeof($user)) {
 							raise_message(2);
 							return;
 						}
-						if (cacti_sizeof($user) && cacti_sizeof($template)) {
-							if (user_copy($template['username'], $user['username'], $template['realm'], $user['realm'], true) === false) {
-								$copy_error = true;
-							}
+						$copy_users[] = $user;
+					}
+					// Validate the entire selection before changing any account.
+					foreach ($copy_users as $user) {
+						if (user_copy($template['username'], $user['username'], $template['realm'], $user['realm'], true) === false) {
+							$copy_error = true;
 						}
 					}
 

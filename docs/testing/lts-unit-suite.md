@@ -22,7 +22,7 @@ application warnings and errors remain failures. Tests explicitly targeting
 runtime diagnostics retain their own error handlers. Skips are reported, never
 counted as executed assertions: some tests describe helpers absent on LTS, and
 others require Linux or optional extensions. CI installs RRDtool and the PHP
-extensions and runs the suite on PHP 8.1–8.4.
+extensions and runs the suite on PHP 8.0–8.4.
 
 A passing full suite proves that all discovered tests ran or reported an
 explicit skip. It is not a statement of 100% application code coverage. Static
