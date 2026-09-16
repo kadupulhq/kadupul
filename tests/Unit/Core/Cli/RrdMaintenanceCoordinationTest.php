@@ -10,7 +10,29 @@ function rrd_cli_fixture_remove($path) {
     } else { unlink($path); }
 }
 
-test('native maintenance CLI coordinates before touching an RRD', function ($scriptName, $cached) {
+/** Collect real subprocess coverage without changing the copied CLI source. */
+function rrd_cli_coverage_arguments($test, $dir, $root, $scriptName) {
+    if ($test->getTestResultObject()->getCodeCoverage() === null) { return array(); }
+    $bootstrap = '<?php define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__);' .
+        'define("RRD_TEST_CLI_COVERAGE_COPY", ' . var_export($dir . '/cli/' . $scriptName, true) . ');' .
+        'define("RRD_TEST_CLI_COVERAGE_SOURCE", ' . var_export($root . '/cli/' . $scriptName, true) . ');' .
+        'require ' . var_export($root . '/tests/fixtures/rrd-process-coverage.php', true) . ';';
+    file_put_contents($dir . '/coverage.php', $bootstrap);
+    return array('-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-d', 'auto_prepend_file=' . $dir . '/coverage.php');
+}
+
+function rrd_cli_merge_coverage($test, $dir) {
+    $parent = $test->getTestResultObject()->getCodeCoverage();
+    if ($parent === null || !file_exists($dir . '/coverage.php')) { return; }
+    $reports = glob($dir . '/*.coverage');
+    expect($reports)->toHaveCount(1);
+    // Only our child can write in this owned 0700 fixture directory.
+    $child = unserialize(file_get_contents($reports[0]));
+    expect($child)->toBeInstanceOf(SebastianBergmann\CodeCoverage\CodeCoverage::class);
+    $parent->merge($child);
+}
+
+test('native maintenance CLI coordinates before touching an RRD', function ($scriptName, $cached, $busy = true) {
     $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
     if (!is_executable($binary)) { $this->markTestSkipped('Real RRDtool is required; CI provisions it.'); }
     $root = dirname(__DIR__, 4);
@@ -58,7 +80,7 @@ function db_fetch_assoc_prepared($sql, $params = array()) {
 touch(dirname(__DIR__) . '/started');
 FIXTURE;
         file_put_contents($dir . '/include/cli_check.php', $fixture);
-        $args = array(PHP_BINARY, '-d', 'sys_temp_dir=' . $dir, $dir . '/cli/' . $scriptName);
+        $args = array_merge(array(PHP_BINARY), rrd_cli_coverage_arguments($this, $dir, $root, $scriptName), array('-d', 'sys_temp_dir=' . $dir, $dir . '/cli/' . $scriptName));
         if ($scriptName === 'update_heartbeat.php') {
             $args = array_merge($args, array('--prev-heartbeat=600', '--new-heartbeat=900', '--force'));
             $lock = rrd_maintenance_acquire(true);
@@ -67,7 +89,7 @@ FIXTURE;
             $lock = rrd_maintenance_acquire();
         } else {
             $args = array_merge($args, array('--oldrrd=' . $rrd, '--newrrd=' . $rrd, '--finrrd=' . $dir . '/finished.rrd'));
-            $lock = rrd_maintenance_acquire();
+            $lock = $busy ? rrd_maintenance_acquire() : null;
         }
         $process = proc_open($args, array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, array_merge(getenv(), array('RRDCACHED_ADDRESS' => $cached ? 'unix:/unavailable-test-cache' : '')));
         $deadline = microtime(true) + 10;
@@ -89,7 +111,7 @@ FIXTURE;
                 ->and(file_exists($dir . '/rrd-command'))->toBeFalse()
                 ->and(file_exists($dir . '/db-write'))->toBeFalse()
                 ->and(file_get_contents($rrd))->toBe($before);
-        } elseif ($scriptName === 'splice_rrd.php') {
+        } elseif ($scriptName === 'splice_rrd.php' && $busy) {
             expect($status)->toBe(1)->and($stderr)->toContain('storage is busy')
                 ->and(file_exists($dir . '/rrd-command'))->toBeFalse()
                 ->and(file_get_contents($rrd))->toBe($before);
@@ -97,6 +119,11 @@ FIXTURE;
             expect($status)->toBe(0)->and($stderr)->toBe('')->and(file_exists($dir . '/rrd-command'))->toBeTrue();
             if ($scriptName === 'update_heartbeat.php') {
                 expect(shell_exec(escapeshellarg($binary) . ' info ' . escapeshellarg($rrd)))->toContain('minimal_heartbeat = 900');
+            } elseif ($scriptName === 'splice_rrd.php') {
+                expect(file_exists($dir . '/finished.rrd'))->toBeTrue();
+                $lastUpdate = shell_exec(escapeshellarg($binary) . ' lastupdate ' . escapeshellarg($dir . '/finished.rrd'));
+                expect($lastUpdate)->toContain('value')->toMatch('/1700000060:\s+42(?:\.0+)?(?:e[+]0+)?\s/i');
+                expect(file_get_contents($rrd))->toBe($before);
             }
         }
     } finally {
@@ -107,9 +134,9 @@ FIXTURE;
             proc_close($process);
         }
         $GLOBALS['config'] = $savedConfig;
-        rrd_cli_fixture_remove($dir);
+        try { rrd_cli_merge_coverage($this, $dir); } finally { rrd_cli_fixture_remove($dir); }
     }
-})->with(array(array('update_heartbeat.php', false), array('float_rrdfiles.php', false), array('splice_rrd.php', false), array('float_rrdfiles.php', true), array('splice_rrd.php', true), array('update_heartbeat.php', true)));
+})->with(array(array('update_heartbeat.php', false), array('float_rrdfiles.php', false), array('splice_rrd.php', false), array('float_rrdfiles.php', true), array('splice_rrd.php', true), array('update_heartbeat.php', true), array('splice_rrd.php', false, false)));
 
 
 test('batch gap repair assigns every queued file to one maintenance worker', function ($threads) {
@@ -131,6 +158,8 @@ function unregister_process(...$args) {}
 function db_table_exists(...$args) { return false; }
 function db_execute(...$args) { return true; }
 function db_affected_rows(...$args) { return 12; }
+define('COPYRIGHT_YEARS', '2026');
+function get_cacti_cli_version() { return '1.3.0'; }
 function db_fetch_cell(...$args) { return 12; }
 function db_fetch_cell_prepared(...$args) { return 0; }
 function db_execute_prepared($sql, $params) {
@@ -143,10 +172,14 @@ function exec_background($binary, $args) { file_put_contents(dirname(__DIR__) . 
 function cacti_log($message, ...$args) { file_put_contents(dirname(__DIR__) . '/stats', $message); }
 FIXTURE;
         file_put_contents($dir . '/include/cli_check.php', $fixture);
-        $process = proc_open(array(PHP_BINARY, $dir . '/cli/batchgapfix.php', '--start=2026-01-01', '--end=2026-01-02', '--threads=' . $threads), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $process = proc_open(array_merge(array(PHP_BINARY), rrd_cli_coverage_arguments($this, $dir, $root, 'batchgapfix.php'), ($threads === 0 ? array($dir . '/cli/batchgapfix.php', '--help') : array($dir . '/cli/batchgapfix.php', '--start=2026-01-01', '--end=2026-01-02', '--threads=' . $threads))), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
         $stdout = stream_get_contents($pipes[1]); $stderr = stream_get_contents($pipes[2]);
         fclose($pipes[1]); fclose($pipes[2]);
         expect(proc_close($process))->toBe(0)->and($stderr)->toBe('');
+        if ($threads === 0) {
+            expect($stdout)->toContain('maintenance currently uses one worker')->toContain('for command-line compatibility.');
+            return;
+        }
         $assignments = file($dir . '/assignments', FILE_IGNORE_NEW_LINES);
         $launches = file($dir . '/launches', FILE_IGNORE_NEW_LINES);
         expect($assignments)->toHaveCount(1)->and($launches)->toHaveCount(1);
@@ -155,6 +188,6 @@ FIXTURE;
             ->and(file_get_contents($dir . '/stats'))->toContain('Threads:1');
         if ($threads > 1) { expect($stdout)->toContain('Serializing gap repair'); }
     } finally {
-        rrd_cli_fixture_remove($dir);
+        try { rrd_cli_merge_coverage($this, $dir); } finally { rrd_cli_fixture_remove($dir); }
     }
-})->with(array(1, 5, 40));
+})->with(array(0, 1, 5, 40));
