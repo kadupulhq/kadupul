@@ -76,7 +76,7 @@ cmd_exec	./lib/snmp.php:197			exec($command, $snmp_value);
 cmd_exec	./lib/snmp.php:297			exec($command, $snmp_value);
 cmd_exec	./lib/snmp.php:392			exec($command, $snmp_value);
 cmd_exec	./lib/snmpagent.php:642		/* add pollers of a distributed system (future) */
-cmd_exec	./lib/spikekill.php:1216			$process = @proc_open($argv, $descriptors, $pipes);
+cmd_exec	./lib/spikekill.php:1228			$process = @proc_open($argv, $descriptors, $pipes);
 cmd_exec	./lib/utility.php:1691						$nproc = system('nproc');
 cmd_exec	./lib/utility.php:1810			exec('wmic os get FreePhysicalMemory', $memInfo['FreePhysicalMemory']);
 cmd_exec	./lib/utility.php:1811			exec('wmic os get FreeSpaceInPagingFiles', $memInfo['FreeSpaceInPagingFiles']);

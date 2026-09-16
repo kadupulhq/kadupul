@@ -91,6 +91,10 @@ jobs:
         # Pest 1 emits dependency deprecations on PHP 8.4.
         run: php -d error_reporting=24575 vendor/bin/pest --configuration=phpunit-spikekill.xml --colors=never
 
+      - name: Verify privileged spike-removal boundaries
+        working-directory: tests
+        run: sudo -- "$(command -v php)" -d error_reporting=24575 vendor/bin/pest --configuration=phpunit-spikekill.xml --colors=never
+
   application-smoke:
     name: Install, login and poller smoke
     runs-on: ubuntu-latest
