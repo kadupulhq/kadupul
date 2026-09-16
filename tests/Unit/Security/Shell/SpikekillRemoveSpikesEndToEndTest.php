@@ -135,6 +135,7 @@ beforeEach(function () {
 
 	$spikekill_e2e_test_log = array();
 
+	$_SESSION = $_SESSION ?? array();
 	unset($_SESSION['sess_user_id']);
 
 	$GLOBALS['config']['cacti_server_os'] = 'unix';

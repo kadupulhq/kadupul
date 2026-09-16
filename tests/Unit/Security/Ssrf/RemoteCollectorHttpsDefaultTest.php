@@ -133,6 +133,7 @@ function run_install_flow($version, array $stored, $prime, $upgrade) {
 		),
 	);
 
+	$_SESSION = $_SESSION ?? array();
 	unset($_SESSION['settings_primed']);
 
 	if ($prime) {
