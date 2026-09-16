@@ -29,3 +29,8 @@ This verifies the fixture upgrade path and compatibility plugin. It does not
 establish compatibility with every external plugin or every historical schema.
 A production rollout still needs a quiesced, restorable backup from that specific
 installation; replacing application files alone is not a database rollback.
+
+Each invocation uses a unique Compose project, image tags and lock. Cleanup
+only removes that invocation’s resources. Invalid baseline revisions and
+unavailable Docker still produce `complete: false` observations. Use distinct
+`--output` paths when running multiple rehearsals concurrently.
