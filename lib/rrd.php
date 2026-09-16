@@ -4209,7 +4209,9 @@ function rrd_datasource_add($file_array, $ds_array, $debug) {
 					/* are we allowed to write the rrd file? */
 					if (is_writable($file)) {
 						// restore the modified XML to rrd
-						rrdtool_execute_restore_command($xml_file, $file, false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+						if (rrdtool_execute_restore_command($xml_file, $file, false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL') === false) {
+							return array('err_msg' => __('RRDtool rejected the restored file'));
+						}
 						// scratch that XML file to avoid filling up the disk
 						unlink($xml_file);
 						cacti_log('Added Data Source(s) to RRDfile: ' . $file, false, 'UTIL');
@@ -4273,7 +4275,9 @@ function rrd_rra_delete($file_array, $rra_array, $debug) {
 					/* are we allowed to write the rrd file? */
 					if (is_writable($file)) {
 						// restore the modified XML to rrd
-						rrdtool_execute_restore_command($xml_file, $file, false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+						if (rrdtool_execute_restore_command($xml_file, $file, false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL') === false) {
+							return array('err_msg' => __('RRDtool rejected the restored file'));
+						}
 						// scratch that XML file to avoid filling up the disk
 						unlink($xml_file);
 						cacti_log('Deleted RRA(s) from RRDfile: ' . $file, false, 'UTIL');
@@ -4338,7 +4342,9 @@ function rrd_rra_clone($file_array, $cf, $rra_array, $debug) {
 					/* are we allowed to write the rrd file? */
 					if (is_writable($file)) {
 						// restore the modified XML to rrd
-						rrdtool_execute_restore_command($xml_file, $file, false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+						if (rrdtool_execute_restore_command($xml_file, $file, false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL') === false) {
+							return array('err_msg' => __('RRDtool rejected the restored file'));
+						}
 						// scratch that XML file to avoid filling up the disk
 						unlink($xml_file);
 						cacti_log('Cloned RRA(s) in RRDfile: ' . $file, false, 'UTIL');

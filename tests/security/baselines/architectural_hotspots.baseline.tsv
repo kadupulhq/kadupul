@@ -430,7 +430,7 @@ dynamic_include	./lib/rrd.php:1873		include_once($config['library_path'] . '/xml
 dynamic_include	./lib/rrd.php:1874		include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/rrd.php:3192			include($rrdtheme);
 dynamic_include	./lib/rrd.php:3888		include_once($config['library_path'] . '/time.php');
-dynamic_include	./lib/rrd.php:4696			include($themefile);
+dynamic_include	./lib/rrd.php:4702			include($themefile);
 dynamic_include	./lib/rrd.php:970		include ($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/rrdcheck.php:724			include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/rrdcheck.php:754			include_once($config['library_path'] . '/poller.php');
