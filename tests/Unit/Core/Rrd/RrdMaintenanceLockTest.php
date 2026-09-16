@@ -287,7 +287,7 @@ test('a storage directory replaced while a writer waits is rejected', function (
     expect($stderr)->toBe('')->and($status)->toBe(0)->and($stdout)->toBe('true');
 })->with(array(false, true));
 
-test('CLI rewrite locks exclude writers and preserve Windows CLI behavior', function () {
+test('CLI rewrite locks exclude writers and Windows exclusive acquisition fails closed', function () {
     $lock = rrd_maintenance_cli_lock(true);
     try {
         expect(is_resource($lock))->toBeTrue()->and(rrd_maintenance_acquire(true))->toBeFalse();
@@ -295,7 +295,7 @@ test('CLI rewrite locks exclude writers and preserve Windows CLI behavior', func
         rrd_maintenance_release($lock);
     }
     $GLOBALS['config']['cacti_server_os'] = 'win32';
-    expect(rrd_maintenance_cli_lock(true))->toBeTrue();
+    expect(rrd_maintenance_acquire(true))->toBeFalse();
 });
 
 test('CLI maintenance stops before writing when storage is busy or externally cached', function ($cached) {
@@ -932,7 +932,7 @@ test('actual RRD utilities rewrite valid files and release their exclusive lease
 })->with(array('rrd_datasource_add','rrd_rra_delete','rrd_rra_clone'))->with(array(false,true));
 
 
-test('read-only RRDtool commands remain available during maintenance and with group writable storage', function ($verb, $arguments) {
+test('read-only RRDtool commands remain available during maintenance and with group writable storage', function ($verb, $arguments, $sentinel) {
     $root = dirname(__DIR__, 4);
     $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
     if (!is_executable($binary)) {
@@ -951,7 +951,7 @@ test('read-only RRDtool commands remain available during maintenance and with gr
         'function read_config_option($key){return $key==="path_rrdtool"?' . var_export($binary, true) . ':"";}' .
         'function cacti_log(...$args){}function cacti_session_close(){}' .
         'require ' . var_export($root . '/lib/rrd.php', true) . ';' .
-        'echo json_encode(rrdtool_execute(' . var_export($command, true) . ',false,RRDTOOL_OUTPUT_BOOLEAN));';
+        'echo json_encode(rrdtool_execute(' . var_export($command, true) . ',false,RRDTOOL_OUTPUT_BOOLEAN,' . var_export($sentinel, true) . '));';
     file_put_contents($this->dir . '/reader.php', $bootstrap);
     $lease = rrd_maintenance_acquire(true);
     expect(is_resource($lease))->toBeTrue();
@@ -973,7 +973,7 @@ test('read-only RRDtool commands remain available during maintenance and with gr
     array('graph', '/dev/null --start 1700000000 --end 1700000120 DEF:v={rrd}:value:AVERAGE LINE1:v#FF0000'),
     array('graphv', '/dev/null --start 1700000000 --end 1700000120 DEF:v={rrd}:value:AVERAGE LINE1:v#FF0000'),
     array('xport', '--start 1700000000 --end 1700000120 DEF:v={rrd}:value:AVERAGE XPORT:v:value'),
-));
+))->with(array(false, null, ''));
 
 
 test('a timed out restore preserves the live RRD and recovery XML', function () {
@@ -1148,3 +1148,89 @@ test('destructive commands cannot use a shared writer lease', function ($verb, $
         rrd_maintenance_release($lease);
     }
 })->with(array('tune','resize','restore'))->with(array(false,true));
+
+test('Windows acknowledgement sentinel uses synchronous responses and refuses exclusive rewrites', function () {
+    $root = dirname(__DIR__, 4);
+    $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
+    if (!is_executable($binary)) {
+        $this->markTestSkipped('Real RRDtool is required.');
+    }
+    $bootstrap = '<?php ';
+    if ($this->getTestResultObject()->getCodeCoverage() !== null) {
+        $this->expectedChildReports = 1;
+        $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY",__DIR__);require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $bootstrap .= '$config=array("cacti_server_os"=>"win32","rra_path"=>__DIR__,"is_web"=>false);' .
+        'require ' . var_export($root . '/include/global_constants.php', true) . ';define("CACTI_LOCALE","en-US");' .
+        'function read_config_option($k){return $k==="path_rrdtool"?' . var_export($binary, true) . ':"";}' .
+        'function cacti_log(...$args){}function cacti_session_close(){}function cacti_escapeshellarg($v){return escapeshellarg($v);}' .
+        'require ' . var_export($root . '/lib/rrd.php', true) . ';' .
+        '$pipe=rrd_init(false,false,true);$file=__DIR__."/win.rrd";' .
+        '$create=rrdtool_execute(array("create",$file,"--start","1700000000","--step","60","DS:value:GAUGE:120:U:U","RRA:AVERAGE:0.5:1:10"),false,RRDTOOL_OUTPUT_BOOLEAN,$pipe);' .
+        '$update=rrdtool_execute(array("update",$file,"1700000060:42"),false,RRDTOOL_OUTPUT_BOOLEAN,$pipe);' .
+        '$bad=rrdtool_execute(array("update",$file,"invalid"),false,RRDTOOL_OUTPUT_BOOLEAN,$pipe);' .
+        '$exclusive=rrd_init(false,true,true);rrd_close($pipe);echo json_encode(array($pipe,$create,$update,$bad,$exclusive));';
+    file_put_contents($this->dir . '/win.php', $bootstrap);
+    $process = proc_open(array(PHP_BINARY,$this->dir . '/win.php'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);
+    $out = stream_get_contents($pipes[1]);
+    $error = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    expect(proc_close($process))->toBe(0)->and($error)->toBe('')
+        ->and(json_decode($out, true))->toBe(array(true,true,true,false,false));
+});
+
+test('legacy Boost retries filter a committed timestamp after draining pending writes', function () {
+    $root = dirname(__DIR__, 4);
+    $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
+    if (!is_executable($binary)) {
+        $this->markTestSkipped('Real RRDtool is required.');
+    }
+    exec(escapeshellarg($binary) . ' create ' . escapeshellarg($this->dir . '/legacy.rrd') . ' --start 1700000000 --step 20 DS:value:GAUGE:120:U:U RRA:AVERAGE:0.5:1:20', $out, $status);
+    expect($status)->toBe(0);
+    $bootstrap = '<?php ';
+    if ($this->getTestResultObject()->getCodeCoverage() !== null) {
+        $this->expectedChildReports = 1;
+        $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY",__DIR__);require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $bootstrap .= '$config=array("cacti_server_os"=>"unix","rra_path"=>__DIR__,"is_web"=>false);$debug=false;' .
+        'require ' . var_export($root . '/include/global_constants.php', true) . ';define("CACTI_LOCALE","en-US");' .
+        'function read_config_option($k){return $k==="path_rrdtool"?' . var_export($binary, true) . ':"";}function get_rrdtool_version(){return "1.4";}' .
+        'function cacti_version_compare($a,$b,$c){return version_compare($a,$b,$c);}function cacti_escapeshellarg($v){return escapeshellarg($v);}' .
+        'function cacti_log(...$args){}function cacti_session_close(){}' .
+        'require ' . var_export($root . '/lib/rrd.php', true) . ';require ' . var_export($root . '/lib/boost.php', true) . ';' .
+        '$path=__DIR__."/legacy.rrd";$pipe=rrd_init(false);rrdtool_execute("update $path 1700000060:10",false,RRDTOOL_OUTPUT_NULL,$pipe);' .
+        '$values="1700000060:999 1700000120:20";$result=boost_rrdtool_function_update(1,$path,"value",$values,$pipe);' .
+        '$again=boost_rrdtool_function_update(1,$path,"value",$values,$pipe);echo json_encode(array($result,$again,$values,$pipe));';
+    file_put_contents($this->dir . '/legacy.php', $bootstrap);
+    $process = proc_open(array(PHP_BINARY,$this->dir . '/legacy.php'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);
+    $out = stream_get_contents($pipes[1]);
+    $error = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    expect(proc_close($process))->toBe(0)->and($error)->toBe('')->and(json_decode($out, true))->toBe(array('OK','OK','',false));
+    $archive = shell_exec(escapeshellarg($binary) . ' fetch ' . escapeshellarg($this->dir . '/legacy.rrd') . ' AVERAGE --resolution 20 --start 1700000040 --end 1700000140');
+    expect(preg_match('/^1700000060:\s+([-+0-9.eE]+)/m', $archive, $sample))->toBe(1)->and((float) $sample[1])->toBe(10.0);
+});
+
+test('proxy restores retain their existing remote protocol and propagate failure', function ($acknowledged) {
+    $root = dirname(__DIR__, 4);
+    $bootstrap = '<?php ';
+    if ($this->getTestResultObject()->getCodeCoverage() !== null) {
+        $this->expectedChildReports = 1;
+        $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY",__DIR__);require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $bootstrap .= '$config=array();define("RRDTOOL_OUTPUT_BOOLEAN",4);function read_config_option($k){return 1;}' .
+        'function cacti_escapeshellarg($v){return escapeshellarg($v);}function rrdtool_execute($command,$echo,$flag,$pipe){' .
+        'if($pipe!==array("proxy")){throw new RuntimeException("Wrong proxy");}file_put_contents(__DIR__."/command",$command);return ' . var_export($acknowledged, true) . ';}' .
+        'require ' . var_export($root . '/lib/rrd_maintenance.php', true) . ';' .
+        'echo json_encode(rrd_maintenance_restore("recovery.xml","remote.rrd",array("proxy")));';
+    file_put_contents($this->dir . '/proxy.php', $bootstrap);
+    $process = proc_open(array(PHP_BINARY,$this->dir . '/proxy.php'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);
+    $out = stream_get_contents($pipes[1]);
+    $error = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    expect(proc_close($process))->toBe(0)->and($error)->toBe('')->and(json_decode($out, true))->toBe($acknowledged)
+        ->and(file_get_contents($this->dir . '/command'))->toBe("restore -f 'recovery.xml' 'remote.rrd'");
+})->with(array(true,false));

@@ -60,7 +60,7 @@ function rrd_init($output_to_term = true, $exclusive = false, $acknowledged = fa
 		cacti_log('ERROR: Disable RRDCACHED_ADDRESS before destructive RRD maintenance.');
 		return false;
 	}
-	$lock = rrd_maintenance_acquire($exclusive && ($config['cacti_server_os'] ?? '') !== 'win32');
+	$lock = rrd_maintenance_acquire($exclusive);
 	if ($lock === false) {
 		cacti_log('ERROR: Unable to coordinate local RRD writes with maintenance.');
 		return false;
@@ -89,7 +89,11 @@ function __rrd_init($output_to_term = true, $acknowledged = false) {
 	}
 
 	rrdtool_set_language();
-	if ($acknowledged && $config['cacti_server_os'] !== 'win32') {
+	if ($acknowledged && $config['cacti_server_os'] === 'win32') {
+		rrdtool_reset_language();
+		return true; // Boolean writes use the synchronous response-reading fallback.
+	}
+	if ($acknowledged) {
 		$process = proc_open(array(read_config_option('path_rrdtool'), '-'),
 			array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('redirect', 1)), $streams);
 		if (!is_resource($process)) {
@@ -397,7 +401,7 @@ function rrdtool_execute() {
 	$verb = is_array($command) ? ($command[0] ?? '') : strtok(ltrim($command), " \t\r\n");
 	if (in_array($verb, array('graph', 'graphv', 'xport', 'fetch', 'info', 'last', 'lastupdate', 'first'), true)
 		&& strpbrk(is_array($command) ? implode(' ', $command) : str_replace("\\\n", ' ', $command), "\r\n") === false
-		&& (!isset($args[3]) || $args[3] === false)) {
+		&& (!isset($args[3]) || $args[3] === false || $args[3] === '')) {
 		return call_user_func_array($function, $args);
 	}
 
@@ -411,7 +415,7 @@ function rrdtool_execute() {
 		return call_user_func_array($function, $args);
 	}
 
-	$lock = rrd_maintenance_acquire($destructive && ($config['cacti_server_os'] ?? '') !== 'win32');
+	$lock = rrd_maintenance_acquire($destructive);
 	if ($lock === false) {
 		cacti_log('ERROR: Unable to coordinate local RRD writes with maintenance.');
 		return false;

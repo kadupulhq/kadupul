@@ -31,6 +31,7 @@ function boost_launch_children() { return array(1); }
 function boost_wait_children(...$args) { return true; }
 function boost_processes_running() { return 0; }
 function boost_log_statistics(...$args) { $GLOBALS['effects'][] = 'statistics'; }
+function boost_get_arch_table_names() { return array('poller_output_boost_arch_test'); }
 function boost_archive_is_empty($name) { return true; }
 function dsstats_boost_bottom() { $GLOBALS['effects'][] = 'bottom'; }
 function rrdcheck_boost_bottom() {}

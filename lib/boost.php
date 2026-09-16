@@ -1480,6 +1480,12 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 		return 'OK';
 	}
 
+    // Legacy retries must see every pending update before reading the last timestamp.
+    if (cacti_version_compare(get_rrdtool_version(), '1.5', '<') && is_resource($rrdtool_pipe)) {
+        rrd_close($rrdtool_pipe);
+        $rrdtool_pipe = false;
+    }
+
 	/* create the rrd if one does not already exist */
 	if (read_config_option('storage_location')) {
 		$file_exists = rrdtool_execute("file_exists $rrd_path" , true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
@@ -1503,6 +1509,16 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 		$update_options = '--skip-past-updates';
 	} else {
 		$update_options = '';
+        if (strpbrk($rrd_update_values, "\r\n\0") !== false) { return 'ERROR: Invalid legacy update values'; }
+        $last_update = rrdtool_execute('last ' . cacti_escapeshellarg($rrd_path), false, RRDTOOL_OUTPUT_STDOUT, false, 'BOOST');
+        if (!is_string($last_update) || !ctype_digit(trim($last_update))) { return 'ERROR: Unable to read last RRD timestamp'; }
+        $samples = preg_split('/\s+/', trim($rrd_update_values), -1, PREG_SPLIT_NO_EMPTY);
+        $samples = array_filter($samples, function ($sample) use ($last_update) {
+            $timestamp = explode(':', $sample, 2)[0];
+            return !ctype_digit($timestamp) || (int) $timestamp > (int) $last_update;
+        });
+        $rrd_update_values = implode(' ', $samples);
+        if ($rrd_update_values === '') { return 'OK'; }
 	}
 
 	if ($valid_entry) {
