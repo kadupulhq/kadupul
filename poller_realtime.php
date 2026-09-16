@@ -129,6 +129,11 @@ shell_exec("$command_string $extra_args");
 
 /* open a pipe to rrdtool for writing */
 $rrdtool_pipe = rrd_init();
+if ($rrdtool_pipe === false) {
+	cacti_log('ERROR: RRD initialization failed; realtime samples were retained.');
+	db_close();
+	exit(1);
+}
 
 /* process poller output */
 process_poller_output_rt($rrdtool_pipe, $poller_id, $interval);
@@ -163,6 +168,12 @@ function display_help() {
 /* process_poller_output REAL TIME MODIFIED */
 function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 	global $config;
+
+	if ($rrdtool_pipe === false) {
+		cacti_log('ERROR: RRD initialization failed; pending realtime samples were retained.');
+
+		return 0;
+	}
 
 	include_once($config['library_path'] . '/rrd.php');
 

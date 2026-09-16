@@ -11,6 +11,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Preserve pending realtime and repair samples on writer, child-process, heartbeat, and database-count failures; support explicitly trusted separate RRD service accounts.
+
 - Make RRD maintenance failure messages available for translation.
 
 - Coordinate spike removal with synchronous, queued and tuning RRD writes so

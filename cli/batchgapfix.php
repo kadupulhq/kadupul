@@ -41,7 +41,8 @@ $method     = 'fill';
 $avgnan     = 'last';
 $start_time = false;
 $end_time   = false;
-$php_bin    = read_config_option('path_php_binary');
+$php_bin    = (string) read_config_option('path_php_binary');
+if ($php_bin === '') { $php_bin = PHP_BINARY; }
 
 /* install signal handlers for UNIX types only */
 if (function_exists('pcntl_signal')) {
@@ -210,7 +211,7 @@ if ($child == 0) {
 	if (db_table_exists('graph_local_spikekill')) {
 		$running = db_fetch_cell('SELECT COUNT(*) FROM graph_local_spikekill WHERE ended = "0000-00-00"');
 
-		if ($running > 0 && !$force) {
+		if (!is_numeric($running) || ($running > 0 && !$force)) {
 			print "FATAL: You have requested a start run, and a run appears to be already running" . PHP_EOL;
 			print "FATAL: Check that no processes are running and use the --force option to override." . PHP_EOL;
 			exit(1);
@@ -276,54 +277,25 @@ if ($child == 0) {
 
 	printf("NOTE: %s, Database primed for batch gap fill." . PHP_EOL, $now);
 
-	// Fork Child Binaries
-	for($i = 1; $i <= $threads; $i++) {
-		$command = sprintf("%s/cli/batchgapfix.php --start='%s' --end='%s' --method=%s --avgnan=%s --child=%s" . ($force ? ' --force':'') . ($debug ? ' --debug':''),
-			$config['base_path'],
-			$start_date,
-			$end_date,
-			$method,
-			$avgnan,
-			$i
-		);
-
-		$now = date('H:i:s');
-
-		printf("NOTE: %s, Exec in Background: %s %s" . PHP_EOL, $now, $php_bin, $command);
-
-		exec_background($php_bin, $command);
-	}
-
+	// Maintenance is serialized. Own and wait for the actual child rather
+	// than waiting on rows a crashed child can never mark as finished.
 	$start = microtime(true);
-
-	while (true) {
-		sleep(1);
-
-		$not_finished = db_fetch_cell_prepared('SELECT COUNT(*)
-			FROM graph_local_spikekill
-			WHERE ended = "0000-00-00"');
-
-		$end = microtime(true);
-
-		$rate = ($rrdfiles - $not_finished) / ($end - $start);
-
-		if ($rate > 0) {
-			$estimate = round($rrdfiles / $rate, 0);
-			$complete = ($end - $start) - $estimate;
-		} else {
-			$estimate = 'unknown';
-		}
-
-		$now = date('H:i:s');
-
-		if ($not_finished > 0) {
-			printf("NOTE: %s, Status %s of %s RRDfiles processed. Total Time is %.0f." . PHP_EOL, $now, number_format($rrdfiles - $not_finished), number_format($rrdfiles), $end - $start);
-			printf("NOTE: %s, Processing Rate: %s RRDfiles per/second, Estimated Complete in: %s seconds, Sleeping 1 seconds." . PHP_EOL, $now, round($rate, 2), $estimate);
-		} else {
-			printf("NOTE: All RRDfiles processed.  Total Time was %.2f seconds." . PHP_EOL, $end - $start);
-			break;
-		}
+	$args = array($php_bin, $config['base_path'] . '/cli/batchgapfix.php',
+		'--start=' . $start_date, '--end=' . $end_date, '--method=' . $method,
+		'--avgnan=' . $avgnan, '--child=1');
+	if ($force) { $args[] = '--force'; }
+	if ($debug) { $args[] = '--debug'; }
+	$process = proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
+	$child_status = 1;
+	if (is_resource($process)) {
+		$child_process = proc_get_status($process);
+		$closed_status = proc_close($process);
+		$child_status = $child_process['running'] ? $closed_status : $child_process['exitcode'];
+		unregister_process('batchgapfix', 'child', 1, $child_process['pid']);
 	}
+	$not_finished = db_fetch_cell_prepared('SELECT COUNT(*) FROM graph_local_spikekill WHERE ended = "0000-00-00"');
+	$end = microtime(true);
+	$rate = is_numeric($not_finished) ? ($rrdfiles - $not_finished) / max($end - $start, 0.000001) : 0;
 
 	$succeeded = db_fetch_cell('SELECT COUNT(*) FROM graph_local_spikekill WHERE exit_code = 0');
 	$failed    = db_fetch_cell('SELECT COUNT(*) FROM graph_local_spikekill WHERE exit_code != 0');
@@ -332,7 +304,8 @@ if ($child == 0) {
 
 	unregister_process('batchgapfix', $type, $child);
 
-	if ($failed > 0) {
+	if ($child_status !== 0 || !($not_finished === 0 || $not_finished === '0')
+		|| !($failed === 0 || $failed === '0')) {
 		fwrite(STDERR, "ERROR: Gap repair failed for some RRD files; queue results retained.\n");
 		exit(1);
 	}
@@ -364,14 +337,14 @@ if ($child == 0) {
 		$return_var = 0;
 
 		// Format the command
-		$command = sprintf("%s -q %s/cli/removespikes.php --rrdfile='%s' --outlier-start='%s' --outlier-end='%s' --method=%s --avgnan=%s",
-			$php_bin,
-			$config['base_path'],
-			$rrdfile['data_source_path'],
-			$start_date,
-			$end_date,
-			$method,
-			$avgnan
+		$command = sprintf('%s -q %s --rrdfile=%s --outlier-start=%s --outlier-end=%s --method=%s --avgnan=%s',
+			cacti_escapeshellarg($php_bin),
+			cacti_escapeshellarg($config['base_path'] . '/cli/removespikes.php'),
+			cacti_escapeshellarg($rrdfile['data_source_path']),
+			cacti_escapeshellarg($start_date),
+			cacti_escapeshellarg($end_date),
+			cacti_escapeshellarg($method),
+			cacti_escapeshellarg($avgnan)
 		);
 
 		db_execute_prepared('UPDATE graph_local_spikekill

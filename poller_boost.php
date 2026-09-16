@@ -91,6 +91,7 @@ if (function_exists('pcntl_signal')) {
 $start = microtime(true);
 $start_time = time();
 $rrd_updates = -1;
+$run_failed = false;
 
 /* let's give this script lot of time to run for ever */
 ini_set('max_execution_time', '0');
@@ -189,26 +190,24 @@ if ($child == false) {
 
 			cacti_log('INFO: Boost last child processes ended.', true, 'BOOST');
 
-			/* tell the main poller that we are done */
-			set_config_option('boost_poller_status', 'complete - end time:' . date('Y-m-d H:i:s'));
-
-			/* Finish processing post */
-			set_config_option('boost_last_run_time', $current_time);
-
-			/* output all the rrd data to the rrd files */
+			/* A sum alone hides a failed child behind successful updates. */
+			$failed_children = db_fetch_cell('SELECT COUNT(*) FROM poller_output_boost_processes WHERE status < 0');
 			$rrd_updates = db_fetch_cell('SELECT SUM(status) FROM poller_output_boost_processes');
+			$run_failed = !($failed_children === 0 || $failed_children === '0')
+				|| !is_numeric($rrd_updates) || $rrd_updates < 0;
 
-			if ($rrd_updates > 0) {
+			if ($run_failed) {
+				set_config_option('boost_poller_status', 'failed - end time:' . date('Y-m-d H:i:s'));
+				set_config_option('boost_last_run_time', $last_run_time);
+				cacti_log('ERROR: Boost child failure or unverifiable results; archives retained for retry.', true, 'BOOST');
+			} else {
+				set_config_option('boost_poller_status', 'complete - end time:' . date('Y-m-d H:i:s'));
+				set_config_option('boost_last_run_time', $current_time);
 				boost_log_statistics($rrd_updates);
 				$next_run_time = $current_time + $seconds_offset;
-			} elseif ($rrd_updates == -1) {
-				boost_log_statistics(0);
-				$next_run_time = $current_time + $seconds_offset;
-			} else { /* rollback last run time */
-				set_config_option('boost_last_run_time', $last_run_time);
 			}
 
-			if ($rrd_updates > 0) {
+			if (!$run_failed && $rrd_updates > 0) {
 				cacti_log('INFO: Boost removing archive tables ...', true, 'BOOST');
 
 				/* cleanup - remove empty arch tables*/
@@ -247,7 +246,7 @@ if ($child == false) {
 	}
 
 	/* store the next run time so that people understand */
-	if ($rrd_updates > 0 || $rrd_updates == -1) {
+	if (!$run_failed && ($rrd_updates > 0 || $rrd_updates == -1)) {
 		if (empty($next_run_time)) {
 			$next_run_time = time() + $seconds_offset;
 		}
@@ -257,7 +256,7 @@ if ($child == false) {
 
 	boost_purge_cached_png_files($forcerun);
 
-	exit(0);
+	exit($run_failed ? 1 : 0);
 } else {
 	cacti_log('INFO: Boost register child process ' . $child, true, 'BOOST');
 

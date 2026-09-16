@@ -15,7 +15,20 @@ function rrd_maintenance_directory_is_trusted($path)
     if ($path[0] !== '/') {
         $path = getcwd() . '/' . $path;
     }
+    global $config;
     $owners = array(0, posix_geteuid());
+    $groups = $config['rrd_maintenance_trusted_gids'] ?? array();
+    $additional_owners = $config['rrd_maintenance_trusted_uids'] ?? array();
+    // Trust is an administrator decision, never inferred from file ownership.
+    if (!is_array($groups) || !is_array($additional_owners)) {
+        return false;
+    }
+    foreach (array_merge($groups, $additional_owners) as $id) {
+        if (!is_int($id) || $id < 0) {
+            return false;
+        }
+    }
+    $owners = array_merge($owners, $additional_owners);
     $pending = array(array(rtrim($path, '/') ?: '/', true));
     $checked = array();
     while ($pending) {
@@ -31,7 +44,9 @@ function rrd_maintenance_directory_is_trusted($path)
         $canonical = realpath($candidate);
         if (!$entry || !$directory || $canonical === false || ($directory['mode'] & 0170000) !== 0040000
             || !in_array($entry['uid'], $owners, true) || !in_array($directory['uid'], $owners, true)
-            || (($directory['mode'] & 0022) !== 0 && ($leaf || ($directory['mode'] & 01000) === 0))) {
+            || ((($directory['mode'] & 0002) !== 0
+            || (($directory['mode'] & 0020) !== 0 && !in_array($directory['gid'], $groups, true)))
+            && ($leaf || ($directory['mode'] & 01000) === 0))) {
             return false;
         }
         if ($canonical !== $candidate) {

@@ -230,6 +230,7 @@ $rrd_writer_lock = rrd_maintenance_cli_lock(true, true);
 register_shutdown_function(function () use ($rrd_writer_lock) { rrd_maintenance_release($rrd_writer_lock); });
 
 $i = 0;
+$tune_failed = false;
 $rrdtool_bin = read_config_option('path_rrdtool');
 if ($rrdtool_bin == '') { $rrdtool_bin = 'rrdtool'; }
 if (cacti_sizeof($rrdfiles)) {
@@ -254,6 +255,7 @@ if (cacti_sizeof($rrdfiles)) {
 			$result = exec($command, $output, $return_code);
 
 			if ($return_code != 0) {
+				$tune_failed = true;
 				printf("Warning Error Occurred: " . implode(', ', $output) . PHP_EOL);
 			} else {
 				db_execute_prepared('UPDATE data_template_rrd
@@ -262,7 +264,8 @@ if (cacti_sizeof($rrdfiles)) {
 					array($new_heartbeat, $f['local_data_id']));
 			}
 		} else {
-			printf('WARNING: RRDfile \'%s\' does not exist!' . PHP_EOL);
+			$tune_failed = true;
+			printf('WARNING: RRDfile \'%s\' does not exist!' . PHP_EOL, $f['rrd']);
 		}
 
 		$i++;
@@ -273,6 +276,11 @@ if (cacti_sizeof($rrdfiles)) {
 	}
 
 	printf("Processed a Total of %s RRDfiles" . PHP_EOL, $i);
+
+	if ($tune_failed) {
+		fwrite(STDERR, "ERROR: Heartbeat updates failed; aggregate metadata was retained for retry.\n");
+		exit(1);
+	}
 
 	if ($data_template_id > 0) {
 		db_execute_prepared('UPDATE data_template_rrd
