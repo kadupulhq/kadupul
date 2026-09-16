@@ -537,3 +537,34 @@ test('atomic restore preserves RRD ownership and permissions', function () {
         ->and($after['mode'] & 0777)->toBe(0640)
         ->and(file_get_contents($this->rrdfile))->toBe('restored-rrd-bytes');
 });
+
+
+test('missing sample arrays preserve unavailable window statistics', function ($html) {
+    $instance = spikekill_e2e_instance($this->rrdfile);
+    $instance->html = $html;
+    $class = new ReflectionClass(spikekill::class);
+    foreach (array('rra_pdp' => array(1), 'rra_cf' => array('AVERAGE'), 'ds_name' => array('value')) as $name => $value) {
+        $property = $class->getProperty($name);
+        $property->setAccessible(true);
+        $property->setValue($instance, $value);
+    }
+    $rra = array(array(array('totalsamples' => 0, 'numsamples' => 0)));
+    $samples = array();
+    $calculate = $class->getMethod('calculateOverallStatistics');
+    $calculate->setAccessible(true);
+    $calculate->invokeArgs($instance, array(&$rra, &$samples));
+    expect($rra[0][0]['outwind_samples'])->toBe('N/A')
+        ->and($rra[0][0]['outwind_killed'])->toBe('N/A');
+    $output = $class->getMethod('outputStatistics');
+    $output->setAccessible(true);
+    $output->invoke($instance, $rra);
+    $property = $class->getProperty('strout');
+    $property->setAccessible(true);
+    $text = $property->getValue($instance);
+    if ($html) {
+        preg_match_all('/<td[^>]*>(.*?)<\/td>/', $text, $matches);
+        expect(array_slice($matches[1], -2))->toBe(array('N/A', 'N/A'));
+    } else {
+        expect($text)->toMatch('/N\/A\s+N\/A\s*$/');
+    }
+})->with(array(false, true));

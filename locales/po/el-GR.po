@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: developers@cacti.net\n"
-"POT-Creation-Date: 2026-09-15 19:45-0700\n"
+"POT-Creation-Date: 2026-09-15 19:58-0700\n"
 "PO-Revision-Date: 2024-04-20 18:31-0400\n"
 "Last-Translator: Anonymous <anonymous@cacti.net>\n"
 "Language-Team: Greek <http://translate.cacti.net/projects/cacti/core-v1-2-x/el/>\n"
@@ -623,7 +623,7 @@ msgstr "Συμπεριλαμβάνεται στο Σύνολο"
 
 #: aggregate_graphs.php:1296 aggregate_graphs.php:1630 graph_templates.php:871
 #: graph_view.php:814 graph_view.php:827 graphs.php:2332 lib/html_graph.php:351
-#: lib/html_tree.php:1170 lib/spikekill.php:1744
+#: lib/html_tree.php:1170 lib/spikekill.php:1749
 msgid "Size"
 msgstr "Μέγεθος"
 
@@ -1293,14 +1293,14 @@ msgstr "Κατεβάστε τις ανακαλυφθείσες συσκευές"
 #: lib/functions.php:6102 lib/functions.php:6106 lib/html.php:1303
 #: lib/html.php:1375 lib/html_reports.php:1760 lib/html_reports.php:1786
 #: lib/html_reports.php:1857 lib/html_reports.php:1858
-#: lib/html_reports.php:1859 lib/spikekill.php:1780 lib/spikekill.php:1781
-#: lib/spikekill.php:1782 lib/spikekill.php:1783 lib/spikekill.php:1784
+#: lib/html_reports.php:1859 lib/spikekill.php:1740 lib/spikekill.php:1741
 #: lib/spikekill.php:1785 lib/spikekill.php:1786 lib/spikekill.php:1787
 #: lib/spikekill.php:1788 lib/spikekill.php:1789 lib/spikekill.php:1790
-#: plugins.php:765 pollers.php:1131 user_admin.php:2371 utilities.php:739
-#: utilities.php:1188 utilities.php:2656 utilities.php:2784 utilities.php:2792
-#: utilities.php:2803 utilities.php:2814 utilities.php:2837 utilities.php:2883
-#: utilities.php:3117
+#: lib/spikekill.php:1791 lib/spikekill.php:1792 lib/spikekill.php:1793
+#: lib/spikekill.php:1794 lib/spikekill.php:1795 plugins.php:765
+#: pollers.php:1131 user_admin.php:2371 utilities.php:739 utilities.php:1188
+#: utilities.php:2656 utilities.php:2784 utilities.php:2792 utilities.php:2803
+#: utilities.php:2814 utilities.php:2837 utilities.php:2883 utilities.php:3117
 msgid "N/A"
 msgstr "Μη Διαθέσιμο"
 
@@ -16543,12 +16543,12 @@ msgstr ""
 msgid "FATAL: Standard Deviation must be a positive integer."
 msgstr ""
 
-#: lib/spikekill.php:280 lib/spikekill.php:1744
+#: lib/spikekill.php:280 lib/spikekill.php:1749
 #, fuzzy
 msgid "StdDev"
 msgstr "Καταργήστε το StdDev"
 
-#: lib/spikekill.php:286 lib/spikekill.php:1744
+#: lib/spikekill.php:286 lib/spikekill.php:1749
 #, fuzzy
 msgid "Variance"
 msgstr "Μεταβλητή"
@@ -16726,72 +16726,72 @@ msgstr ""
 msgid "NOTE: No Spikes Found."
 msgstr "Δεν βρέθηκαν ιστότοποι"
 
-#: lib/spikekill.php:913
+#: lib/spikekill.php:918
 #, php-format
 msgid "NOTE: Re-Importing '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1004
+#: lib/spikekill.php:1009
 #, php-format
 msgid "NOTE: Backing Up '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1744
+#: lib/spikekill.php:1749
 #, fuzzy
 msgid "Avg"
 msgstr "Μέσος όρος:"
 
-#: lib/spikekill.php:1744
+#: lib/spikekill.php:1749
 #, fuzzy
 msgid "CF"
 msgstr "CDEF"
 
-#: lib/spikekill.php:1744
+#: lib/spikekill.php:1749
 #, fuzzy
 msgid "DS"
 msgstr "DES"
 
-#: lib/spikekill.php:1744
+#: lib/spikekill.php:1749
 msgid "NonNan"
 msgstr ""
 
-#: lib/spikekill.php:1744
+#: lib/spikekill.php:1749
 #, fuzzy
 msgid "Samples"
 msgstr "Απλό"
 
-#: lib/spikekill.php:1745
+#: lib/spikekill.php:1750
 msgid "MaxStdDev"
 msgstr ""
 
-#: lib/spikekill.php:1745
+#: lib/spikekill.php:1750
 #, fuzzy
 msgid "MaxValue"
 msgstr "Αξία"
 
-#: lib/spikekill.php:1745
+#: lib/spikekill.php:1750
 #, fuzzy
 msgid "MinStdDev"
 msgstr "Dry Run StdDev"
 
-#: lib/spikekill.php:1745
+#: lib/spikekill.php:1750
 #, fuzzy
 msgid "MinValue"
 msgstr "Αξία"
 
-#: lib/spikekill.php:1745
+#: lib/spikekill.php:1750
 msgid "StdKilled"
 msgstr ""
 
-#: lib/spikekill.php:1745
+#: lib/spikekill.php:1750
 msgid "VarKilled"
 msgstr ""
 
-#: lib/spikekill.php:1745
+#: lib/spikekill.php:1750
 msgid "WindKilled"
 msgstr ""
 
-#: lib/spikekill.php:1745
+#: lib/spikekill.php:1750
 msgid "WindSamples"
 msgstr ""
 

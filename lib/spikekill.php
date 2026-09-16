@@ -877,6 +877,11 @@ class spikekill {
 
 	/* All Functions */
 	private function createRRDFileFromXML($xmlfile, $rrdfile, $stat) {
+		$directory = $this->canonicalDir(dirname($rrdfile));
+		if ($directory === false) {
+			return false;
+		}
+		$rrdfile = $directory . DIRECTORY_SEPARATOR . basename($rrdfile);
 		clearstatcache(true);
 		$xml_stat = @lstat($xmlfile);
 		$current = @lstat($rrdfile);
@@ -1732,8 +1737,8 @@ class spikekill {
 								($ds['min_cutoff']      != 'N/A' ? round($ds['min_cutoff'], 2)    : 'N/A'),
 								($ds['stddev_killed']   != 'N/A' ? number_format_i18n($ds['stddev_killed'])   : 'N/A'),
 								($ds['variance_killed'] != 'N/A' ? number_format_i18n($ds['variance_killed']) : 'N/A'),
-								number_format_i18n($ds['outwind_samples']),
-								number_format_i18n($ds['outwind_killed']));
+								(is_numeric($ds['outwind_samples']) ? number_format_i18n($ds['outwind_samples']) : __('N/A')),
+								(is_numeric($ds['outwind_killed']) ? number_format_i18n($ds['outwind_killed']) : __('N/A')));
 						}
 					}
 				}
