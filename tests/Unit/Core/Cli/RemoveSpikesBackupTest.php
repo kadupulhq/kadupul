@@ -148,6 +148,17 @@ test('dry-run statistics handle empty sparse and large-value RRAs without invent
     $this->assertSame(0, $status, $out . $err);
     expect(file_get_contents($this->rrd))->toBe($before)
         ->and(glob($this->dir . '/backup/*'))->toBe(array());
+    if ($count === 0) {
+        if ($html) {
+            preg_match_all('/<td[^>]*>(.*?)<\/td>/', $out, $matches);
+            $cells = $matches[1];
+        } else {
+            preg_match('/^\s*1 mins\s+value.*$/m', $out, $match);
+            expect($match)->not->toBeEmpty();
+            $cells = array_merge(array('1 mins'), preg_split('/\s+/', trim(preg_replace('/^\s*1 mins\s+/', '', $match[0]))));
+        }
+        expect(array_slice($cells, 5, 7))->toBe(array_fill(0, 7, 'N/A'));
+    }
     if ($count < 3) {
         expect($out)->toContain('N/A');
     } else {

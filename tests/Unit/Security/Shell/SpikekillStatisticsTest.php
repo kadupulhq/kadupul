@@ -38,6 +38,12 @@ test('statistics preserve unavailable values and align all sixteen columns', fun
             $row[$field] = $value;
         }
     }
+    if ($value === '__empty__') {
+        $row['numsamples'] = 0;
+        foreach (array('average', 'stddev', 'variance_avg', 'max_value', 'min_value', 'max_cutoff', 'min_cutoff') as $field) {
+            $row[$field] = 0;
+        }
+    }
     $method = $class->getMethod('outputStatistics');
     $method->setAccessible(true);
     $method->invoke($object, array(array($row)));
@@ -54,7 +60,7 @@ test('statistics preserve unavailable values and align all sixteen columns', fun
         ->and(array_slice($cells, 5, 7))->toBe(array_fill(0, 7, $expected))
         ->and(array_slice($cells, 12))->toBe(array('1', '2', '3', '4'));
 })->with(array(
-    array('__missing__', 'N/A', false), array('__missing__', 'N/A', true),
+    array('__empty__', 'N/A', false), array('__empty__', 'N/A', true), array('__missing__', 'N/A', false), array('__missing__', 'N/A', true),
     array('NAN', 'N/A', false), array('NAN', 'N/A', true),
     array(NAN, 'N/A', false), array(NAN, 'N/A', true),
     array(INF, 'N/A', false), array(-INF, 'N/A', true),
