@@ -53,7 +53,7 @@ retains its existing non-spike CLI behavior because spike removal remains disabl
 Private replacement pipes opened during crash recovery are drained and closed
 before returning; later calls with the closed original pipe use synchronous I/O.
 
-Batch gap repair uses one worker even when multiple threads are requested, so its own children cannot reject one another under the global exclusive maintenance lease. A repair refuses an already-active polling writer and requires a retry; normal polling writers wait behind active exclusive maintenance. An unavailable or replaced storage directory fails closed. Heartbeat tuning also requires the external cache daemon to be disabled.
+Batch gap repair uses one worker even when multiple threads are requested, so its own children cannot reject one another under the global exclusive maintenance lease. A repair refuses an already-active polling writer and requires a retry; normal polling writers wait up to five seconds behind active exclusive maintenance. An unavailable or replaced storage directory fails closed. Heartbeat tuning also requires the external cache daemon to be disabled.
 
 Float children handle SIGTERM and SIGINT while waiting for a lease, unregister their own task identity, and leave queued samples intact. Failed writer initialization prevents normal and on-demand Boost queue consumption; main Boost cleanup retains nonempty or unverifiable archive tables.
 
@@ -90,12 +90,33 @@ installation/upgrade operation checks again before schema or version changes.
 `cli/upgrade_database.php` also refuses an unsafe storage configuration before
 running upgrades. The force option cannot bypass the storage prerequisite.
 Run the check as both service accounts before putting the upgraded code in
-service. Remote RRDtool proxy storage and Windows retain their existing paths.
+service. Remote RRDtool proxy storage retains its existing path. See the Windows acknowledgement limitation below.
 
-Queued poller and realtime samples are deleted only after RRDtool acknowledges
-every selected update. Local updates use synchronous response pipes because a
-write-only persistent pipe cannot confirm that a command succeeded. A failed
-update keeps the selected group for retry; deletion uses selected sample keys
-so newer arrivals remain queued. This prioritizes retention over update
-throughput. The queue-query benchmark does not measure synchronous RRD
-throughput.
+Queue deletion uses exact selected sample keys so newer timestamps remain queued.
+The queue-query benchmark does not measure acknowledged RRD write throughput.
+
+
+### Acknowledged updates and bounded waits
+
+Local Unix pollers reuse one full-duplex RRDtool process for acknowledged updates.
+An explicit `ERROR:` response means the sample was rejected, not written: the
+poller logs its path, timestamp, values, and reason and consumes that exact queue
+key before continuing with later timestamps. This prevents a permanently invalid
+sample from filling the MEMORY queue. Timeouts, crashes, and missing responses
+retain samples for retry. Rejected data can be recovered from the logged values
+after correcting the underlying storage or template problem; monitor these errors.
+A rejected update still makes the drain report failure. It is never counted as a
+successful write. RRDtool protocol output is suppressed in web requests.
+
+Read-only graph, graphv, xport, fetch, info, first, last, and lastupdate commands
+do not acquire a writer lease or require writer trust configuration. Their normal
+filesystem read permissions still apply. Writers wait at most five seconds for
+shared access; float workers also have a five-second exclusive acquisition bound.
+Contention fails the operation and retains queued samples for a later retry.
+Utility XML restores write to a temporary file beside the original and replace it
+only after RRDtool acknowledges success and ownership/mode are preserved. Failed
+or timed-out restores leave the original file and recovery XML intact.
+
+Windows uses synchronous per-command acknowledgements; persistent nonblocking
+RRDtool pipes are POSIX-only. Windows poller throughput has not been validated by
+this change. Do not treat the Unix capacity evidence as Windows capacity evidence.

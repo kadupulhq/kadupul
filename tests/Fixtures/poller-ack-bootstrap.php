@@ -75,7 +75,7 @@ function boost_poller_on_demand(...$args)
 }
 function rrd_init()
 {
-    return true;
+    return getenv('ACK_FAIL') !== 'init';
 }
 function rrd_close($pipe) {}
 function db_fetch_assoc_prepared($sql, $params = array())
@@ -111,7 +111,7 @@ function db_execute_prepared($sql, $params)
 }
 function rrdtool_function_update($updates, $pipe = false, &$completed = null)
 {
-    if (!in_array(getenv('ACK_FAIL'), array('mixed', 'page'), true)) {
+    if (!in_array(getenv('ACK_FAIL'), array('mixed', 'page', 'rejected'), true)) {
         $GLOBALS['ack_db']->exec('INSERT INTO ' . $GLOBALS['ack_table'] . " VALUES(1,'value','2020-01-02','43'" . (getenv('ACK_REALTIME') === '1' ? ',1' : '') . ')');
     }
     $completed = array();
@@ -125,7 +125,7 @@ function rrdtool_function_update($updates, $pipe = false, &$completed = null)
             }
         }
     }
-    return in_array(getenv('ACK_FAIL'), array('1', 'mixed', 'page'), true) ? false : 1;
+    return in_array(getenv('ACK_FAIL'), array('1', 'mixed', 'page', 'rejected'), true) ? false : 1;
 }
 function db_close()
 {

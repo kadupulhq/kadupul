@@ -267,7 +267,7 @@ switch ($type) {
 					throw new RuntimeException('Unable to fetch RRD data before floating.');
 				}
 
-				$rrd_rewrite_lock = rrd_maintenance_acquire(($config['cacti_server_os'] ?? '') !== 'win32', true);
+				$rrd_rewrite_lock = rrd_maintenance_acquire(($config['cacti_server_os'] ?? '') !== 'win32', true, 5);
 				if ($rrd_rewrite_lock === false) {
 					fwrite(STDERR, "FATAL: RRD storage is busy or its maintenance lock is unavailable.\n");
 					$exit_status = 1;

@@ -176,7 +176,7 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 	if ($rrdtool_pipe === false) {
 		cacti_log('ERROR: RRD initialization failed; pending realtime samples were retained.');
 
-		return 0;
+		return false;
 	}
 
 	include_once($config['library_path'] . '/rrd.php');

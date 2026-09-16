@@ -1315,9 +1315,9 @@ class spikekill {
 			$read   = $capture_stdout ? array($pipes[1], $pipes[2]) : array($pipes[2]);
 			$write  = array();
 			$except = array();
-			stream_select($read, $write, $except, intdiv($remaining, 1000000), $remaining % 1000000);
+			$ready = stream_select($read, $write, $except, intdiv($remaining, 1000000), $remaining % 1000000);
 
-			if (feof($pipes[2]) && (!$capture_stdout || feof($pipes[1]))) {
+			if ($ready === false || $ready === 0 || (feof($pipes[2]) && (!$capture_stdout || feof($pipes[1])))) {
 				usleep(1000);
 			}
 
