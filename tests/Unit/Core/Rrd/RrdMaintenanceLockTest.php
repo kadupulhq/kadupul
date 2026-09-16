@@ -117,7 +117,7 @@ test('real synchronous and queued updates retain their samples across maintenanc
         'touch(__DIR__ . "/tune-started"); rrdtool_function_tune(' . var_export($tune, true) . ');' .
         'putenv("RRDCACHED_ADDRESS=unix:/unavailable-test-cache"); rrdtool_function_tune(array("heartbeat" => 999));' .
         'touch(__DIR__ . "/tune-finished");');
-    $lock = rrd_maintenance_acquire(true);
+    $lock = rrd_maintenance_acquire();
     $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . dirname(__DIR__, 4), '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $script), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     try {
         maintenance_wait_file($this->dir . '/tune-started'); usleep(100000);
@@ -393,4 +393,114 @@ test('another account cannot replace a directory after its lease is acquired', f
     } finally {
         rrd_maintenance_release($lease); unlink($this->dir . '/store/source.rrd'); rmdir($this->dir . '/store');
     }
+});
+
+
+test('failed writer initialization preserves normal and Boost queues before any database access', function ($mode) {
+    $root = dirname(__DIR__, 4);
+    $bootstrap = '<?php ';
+    if ($this->getTestResultObject()->getCodeCoverage() !== null) {
+        $this->expectedChildReports = 1;
+        $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); require ' . var_export($root . '/tests/fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $source = file_get_contents($root . '/poller_boost.php');
+    preg_match('/^function boost_output_rrd_data\(.*?^}\R/ms', $source, $match);
+    expect($match)->not->toBeEmpty();
+    file_put_contents($this->dir . '/source.rrd', 'retained samples');
+    if ($mode === 'untrusted') { chmod($this->dir, 0777); }
+    $bootstrap .= '$config = ' . var_export(array('cacti_server_os' => 'unix', 'rra_path' => $this->dir . ($mode === 'missing' ? '/missing' : ''), 'library_path' => $root . '/lib'), true) . ';' .
+        'function read_config_option($name) { return ""; } function cacti_log(...$args) {} function cacti_system_zone_set() {}' .
+        'function db_fetch_assoc(...$args) { throw new RuntimeException("queue read after failed initialization"); }' .
+        'function db_fetch_assoc_prepared(...$args) { return db_fetch_assoc(...$args); }' .
+        'function db_fetch_cell(...$args) { return db_fetch_assoc(...$args); }' .
+        'function db_execute(...$args) { throw new RuntimeException("queue mutation after failed initialization"); }' .
+        'function db_execute_prepared(...$args) { return db_execute(...$args); }' .
+        'require ' . var_export($root . '/lib/rrd.php', true) . ';' .
+        'require ' . var_export($root . '/lib/poller.php', true) . ';' .
+        'require ' . var_export($root . '/lib/boost.php', true) . ';' . $match[0] .
+        '$pipe = rrd_init(); $normal = process_poller_output($pipe);' .
+        '$daemon = boost_output_rrd_data(1); $ondemand = boost_process_poller_output(1);' .
+        'echo json_encode(array($pipe, $normal, $daemon, $ondemand, file_get_contents(__DIR__ . "/source.rrd")));';
+    file_put_contents($this->dir . '/queue-init.php', $bootstrap);
+    $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $this->dir . '/queue-init.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $stdout = stream_get_contents($pipes[1]); $stderr = stream_get_contents($pipes[2]); fclose($pipes[1]); fclose($pipes[2]);
+    $status = proc_close($process); chmod($this->dir, 0700);
+    expect($status)->toBe(0)->and($stderr)->toBe('')
+        ->and(json_decode($stdout, true))->toBe(array(false, 0, -1, -1, 'retained samples'));
+})->with(array('missing', 'untrusted'));
+
+test('utility rewrite ownership excludes shared writers and refuses busy or cached storage', function ($mode) {
+    $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
+    if (!is_executable($binary)) { $this->markTestSkipped('Real RRDtool is required; CI provisions it.'); }
+    $root = dirname(__DIR__, 4);
+    $bootstrap = '<?php ';
+    if ($this->getTestResultObject()->getCodeCoverage() !== null) {
+        $this->expectedChildReports = 1;
+        $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); require ' . var_export($root . '/tests/fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $bootstrap .= '$config = array("cacti_server_os" => "unix", "rra_path" => __DIR__, "is_web" => false); define("CACTI_LOCALE", "en-US");' .
+        'function read_config_option($name) { return $name === "path_rrdtool" ? ' . var_export($binary, true) . ' : ""; }' .
+        'function cacti_log(...$args) {} function cacti_escapeshellarg($value) { return escapeshellarg($value); } require ' . var_export($root . '/lib/rrd.php', true) . ';' .
+        'if (' . var_export($mode === 'cached', true) . ') { putenv("RRDCACHED_ADDRESS=unix:/unavailable-test-cache"); }' .
+        '$called = false; $exclusive = false; $result = rrd_with_pipe(function ($pipe) use (&$called, &$exclusive) {' .
+        '$called = true; $probe = fopen(__DIR__, "r"); $exclusive = !flock($probe, LOCK_SH | LOCK_NB); fclose($probe); return true; });' .
+        'echo json_encode(array($called, $exclusive, $result));';
+    file_put_contents($this->dir . '/utility-lock.php', $bootstrap);
+    $writer = $mode === 'busy' ? rrd_maintenance_acquire() : null;
+    try {
+        $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $this->dir . '/utility-lock.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $stdout = stream_get_contents($pipes[1]); $stderr = stream_get_contents($pipes[2]); fclose($pipes[1]); fclose($pipes[2]);
+        expect(proc_close($process))->toBe(0)->and($stderr)->toBe('')
+            ->and(json_decode($stdout, true))->toBe($mode === 'available' ? array(true, true, true) : array(false, false, false));
+    } finally { rrd_maintenance_release($writer); }
+})->with(array('available', 'busy', 'cached'));
+
+
+test('on-demand Boost restores caller state and closes only its own writer after an exception', function ($supplied) {
+    $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
+    if (!is_executable($binary)) { $this->markTestSkipped('Real RRDtool is required; CI provisions it.'); }
+    $root = dirname(__DIR__, 4); $bootstrap = '<?php ';
+    if ($this->getTestResultObject()->getCodeCoverage() !== null) {
+        $this->expectedChildReports = 1;
+        $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); require ' . var_export($root . '/tests/fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $bootstrap .= '$config = array("cacti_server_os" => "unix", "rra_path" => __DIR__, "library_path" => ' . var_export($root . '/lib', true) . '); define("CACTI_LOCALE", "en-US");' .
+        'function read_config_option($name) { return $name === "path_rrdtool" ? ' . var_export($binary, true) . ' : ""; }' .
+        'function cacti_escapeshellarg($value) { return escapeshellarg($value); } function cacti_log(...$args) {} function cacti_system_zone_set() {}' .
+        'function db_fetch_assoc(...$args) { throw new RuntimeException("fixture query failed"); }' .
+        'require ' . var_export($root . '/lib/rrd.php', true) . '; require ' . var_export($root . '/lib/boost.php', true) . ';' .
+        '$pipe = ' . ($supplied ? 'rrd_init()' : 'false') . '; $handler = function () { return true; }; set_error_handler($handler); error_reporting(E_ALL);' .
+        '$caught = false; try { boost_process_poller_output(1, $pipe); } catch (RuntimeException $e) { $caught = $e->getMessage() === "fixture query failed"; }' .
+        '$level = error_reporting() === E_ALL; $restored = set_error_handler($handler) === $handler; restore_error_handler(); restore_error_handler();' .
+        '$lease = rrd_maintenance_acquire(true); $available = is_resource($lease); rrd_maintenance_release($lease);' .
+        'if (is_resource($pipe)) { rrd_close($pipe); } $lease = rrd_maintenance_acquire(true);' .
+        'echo json_encode(array($caught, $restored, $level, $available, is_resource($lease))); rrd_maintenance_release($lease);';
+    file_put_contents($this->dir . '/ondemand-owner.php', $bootstrap);
+    $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $this->dir . '/ondemand-owner.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $stdout = stream_get_contents($pipes[1]); $stderr = stream_get_contents($pipes[2]); fclose($pipes[1]); fclose($pipes[2]);
+    expect(proc_close($process))->toBe(0)->and($stderr)->toBe('')->and(json_decode($stdout, true))->toBe(array(true, true, true, !$supplied, true));
+})->with(array(false, true));
+
+test('a broken exclusive rewrite pipe aborts without retrying a stale snapshot', function () {
+    if (!function_exists('pcntl_waitpid')) { $this->markTestSkipped('pcntl is required to synchronize a real broken pipe.'); }
+    $root = dirname(__DIR__, 4); $bootstrap = '<?php ';
+    if ($this->getTestResultObject()->getCodeCoverage() !== null) {
+        $this->expectedChildReports = 1;
+        $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); require ' . var_export($root . '/tests/fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    file_put_contents($this->dir . '/source.rrd', 'retained samples');
+    $bootstrap .= '$config = array("cacti_server_os" => "unix", "rra_path" => __DIR__);' .
+        'define("RRDTOOL_OUTPUT_STDOUT",1); define("RRDTOOL_OUTPUT_STDERR",3); define("RRDTOOL_OUTPUT_RETURN_STDERR",4); define("POLLER_VERBOSITY_DEBUG",5);' .
+        'function read_config_option($name) { return ""; } function cacti_log(...$args) {}' .
+        'require ' . var_export($root . '/lib/rrd.php', true) . '; require_once ' . var_export($root . '/lib/rrd_maintenance.php', true) . ';' .
+        '$pipe = popen("exec false", "w"); if (pcntl_waitpid(-1, $status) < 1) { exit(2); }' .
+        'rrd_maintenance_pipe($pipe, rrd_maintenance_acquire(true), false, true); set_error_handler(function () { return true; });' .
+        '$caught = false; try { rrdtool_execute("update " . __DIR__ . "/source.rrd 1000000060:42", false, 1, $pipe); }' .
+        'catch (RuntimeException $e) { $caught = strpos($e->getMessage(), "aborted without retry") !== false; } finally { restore_error_handler(); }' .
+        '$lease = rrd_maintenance_acquire(true); echo json_encode(array($caught, is_resource($lease), rrd_maintenance_pipe_is_exclusive($pipe), file_get_contents(__DIR__ . "/source.rrd"))); rrd_maintenance_release($lease);';
+    file_put_contents($this->dir . '/exclusive-failure.php', $bootstrap);
+    $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $this->dir . '/exclusive-failure.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $stdout = stream_get_contents($pipes[1]); $stderr = stream_get_contents($pipes[2]); fclose($pipes[1]); fclose($pipes[2]);
+    expect(proc_close($process))->toBe(0)->and($stderr)->toBe('')
+        ->and(json_decode($stdout, true))->toBe(array(true, true, false, 'retained samples'));
 });

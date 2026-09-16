@@ -243,7 +243,7 @@ if (!$force) {
 
 require_once __DIR__ . '/../lib/rrd_maintenance.php';
 rrd_maintenance_cli_preflight();
-$rrd_writer_lock = rrd_maintenance_cli_lock();
+$rrd_writer_lock = rrd_maintenance_cli_lock(true, true);
 register_shutdown_function(function () use ($rrd_writer_lock) { rrd_maintenance_release($rrd_writer_lock); });
 
 $i = 0;

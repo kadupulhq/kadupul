@@ -762,6 +762,11 @@ function boost_output_rrd_data($child) {
 	$rrd_updates       = 0;
 	$processed_rows    = 0;
 	$rrdtool_pipe      = rrd_init();
+	if ($rrdtool_pipe === false) {
+		cacti_log('ERROR: RRD initialization failed; pending Boost samples were retained.', true, 'BOOST');
+		return -1;
+	}
+
 	$runtime_exceeded  = false;
 
 	/* let's set and track memory usage will we */
