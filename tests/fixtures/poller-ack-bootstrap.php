@@ -97,7 +97,7 @@ function db_execute_prepared($sql, $params)
 }
 function rrdtool_function_update($updates, $pipe = false, &$completed = null)
 {
-    if (!in_array(getenv('ACK_FAIL'), array('mixed', 'page'), true)) {
+    if (!in_array(getenv('ACK_FAIL'), array('mixed', 'page', 'rejected'), true)) {
     $GLOBALS['ack_db']->exec('INSERT INTO ' . $GLOBALS['ack_table'] . " VALUES(1,'value','2020-01-02','43'" . (getenv('ACK_REALTIME') === '1' ? ',1' : '') . ')');
     }
     $completed = array();
