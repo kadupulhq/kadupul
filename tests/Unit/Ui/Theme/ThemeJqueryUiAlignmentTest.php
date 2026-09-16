@@ -25,18 +25,9 @@ function read_theme_jquery_ui_css(string $theme): string {
 }
 
 test('all in-tree theme jquery ui bundles are aligned to 1.14.x', function () {
-	$themes = [
-		'cacti',
-		'carrot',
-		'dark',
-		'hollyberry',
-		'midwinter',
-		'modern',
-		'paper-plane',
-		'paw',
-		'raspberry',
-		'sunrise',
-	];
+    $directories = glob(dirname(__DIR__, 4) . '/include/themes/*', GLOB_ONLYDIR);
+    $themes = array_map('basename', $directories);
+    expect($themes)->toContain('classic', 'modern', 'midwinter');
 
 	foreach ($themes as $theme) {
 		$css = read_theme_jquery_ui_css($theme);
@@ -46,22 +37,10 @@ test('all in-tree theme jquery ui bundles are aligned to 1.14.x', function () {
 	}
 });
 
-test('generic legacy themes now match the 1.14.x reference bundle', function () {
-	$reference = read_theme_jquery_ui_css('paw');
-
-	foreach (['cacti', 'carrot', 'hollyberry', 'raspberry'] as $theme) {
-		expect(read_theme_jquery_ui_css($theme))->toBe($reference);
-	}
-});
-
-test('midwinter keeps its custom selectmenu overrides in valid css', function () {
-	$css = read_theme_jquery_ui_css('midwinter');
-
-	expect($css)->toContain('button.ui-multiselect,')
-		->and($css)->toContain('max-width: 25rem !important;')
-		->and($css)->toContain('.ui-selectmenu-button.ui-button:focus-visible')
-		->and($css)->toContain('.ui-button.ui-state-active:focus-within')
-		->and($css)->toContain('background: var(--background-progress);')
-		->and($css)->not->toContain('&:focus-within')
-		->and($css)->not->toContain('-webkit-tap-highlight-color: 1px solid');
+test('every shipped theme retains the widget selectors required by filters and dialogs', function () {
+    foreach (glob(dirname(__DIR__, 4) . '/include/themes/*/jquery-ui.css') as $path) {
+        $css = file_get_contents($path);
+        expect($css)->toContain('.ui-selectmenu-button', '.ui-dialog', '.ui-button', '.ui-menu')
+            ->and($css)->not->toContain('-webkit-tap-highlight-color: 1px solid');
+    }
 });

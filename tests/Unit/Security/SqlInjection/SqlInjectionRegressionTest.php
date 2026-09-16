@@ -49,9 +49,9 @@ test('GHSA-3p6w: get_order_string validates the requested sort column and clamps
 	$end  = strpos($htmlUtilitySource, "\n}\n", $start);
 	$body = substr($htmlUtilitySource, $start, $end - $start);
 
-	expect($body)->toContain("\$sort_column = cacti_normalize_sort_column(get_nfilter_request_var('sort_column'));");
-	expect($body)->toContain('$column    = validate_sort_column($request_column, $page);');
-	expect($body)->toContain("(strtoupper((string)\$direction_raw) == 'DESC' ? 'DESC' : 'ASC')");
+	expect($body)->toContain("cacti_normalize_sort_column(\$column)");
+	expect($body)->toContain('$column = validate_sort_column($column, $page);');
+	expect($body)->toContain("cacti_normalize_sort_direction(\$direction)");
 	expect($htmlUtilitySource)->toContain("preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(?:\\.[a-zA-Z][a-zA-Z0-9_]*)*\$/', \$column)");
 });
 

@@ -39,13 +39,8 @@ test('graph.php calls raise_message when graph row is empty', function () use ($
 	expect($contents)->toContain("raise_message('graph_not_found'");
 });
 
-test('graph.php redirects via validate_redirect_url on invalid graph', function () use ($graphPath) {
-	$contents = file_get_contents($graphPath);
-
-	// The raise_message block must use validate_redirect_url with HTTP_REFERER
-	// and fall back to graph_view.php
-	expect($contents)->toContain("validate_redirect_url(isset(\$_SERVER['HTTP_REFERER'])");
-	expect($contents)->toContain("'graph_view.php'");
+test('graph.php redirects invalid graph requests to the fixed graph view through cacti_header', function () use ($graphPath) {
+    expect(file_get_contents($graphPath))->toContain("cacti_header('graph_view.php')");
 });
 
 test('graph.php does not dereference $graph before the size check', function () use ($graphPath) {

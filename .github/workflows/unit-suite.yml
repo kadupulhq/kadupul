@@ -1,0 +1,47 @@
+name: Complete LTS unit suite
+on:
+  pull_request:
+    branches: [lts/1.2]
+  push:
+    branches: [lts/1.2]
+permissions:
+  contents: read
+concurrency:
+  group: unit-suite-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  unit:
+    name: Unit suite PHP ${{ matrix.php }}
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.1', '8.2', '8.3', '8.4']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: curl, dom, gd, gettext, gmp, intl, mbstring, mysqli, pdo_mysql, snmp, sockets, xml, zip
+          coverage: none
+      - name: Install RRDtool
+        run: |
+          sudo apt-get update -o Acquire::Retries=3
+          sudo apt-get install -y --no-install-recommends rrdtool
+      - name: Install test dependencies
+        working-directory: tests
+        run: composer install --no-interaction --no-progress --prefer-dist
+      - name: Test runner failure handling
+        run: python3 -m unittest discover -s tests/runner_tests -v
+      - name: Run every unit file in an isolated process
+        env:
+          RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
+        run: python3 tests/run_unit_suite.py --output artifacts/unit-suite
+      - name: Preserve all results and failure logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: unit-suite-php-${{ matrix.php }}
+          path: artifacts/unit-suite/
+          if-no-files-found: error

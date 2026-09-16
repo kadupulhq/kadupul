@@ -18,7 +18,7 @@
  * only logs and does not assign $output. Without an explicit reset the
  * assert comparison further down compares the new index against the
  * previous iteration's $output, leading to spurious assert pass/fail
- * decisions. The fix unsets $output at the top of the body, after
+ * decisions. The fix initializes $output at the top of the body, after
  * $assert_fail is reset, and before the action switch.
  */
 
@@ -29,16 +29,16 @@ test('cmd.php parses and still contains the reindex foreach', function () use ($
 	expect($source)->toContain('switch ($index_item[\'action\'])');
 });
 
-test('unset($output) sits inside the reindex foreach before the action switch', function () use ($source) {
+test('Output initialization sits inside the reindex foreach before the action switch', function () use ($source) {
 	$loopStart   = strpos($source, 'foreach ($reindex as $index_item)');
 	expect($loopStart)->not->toBeFalse();
 
 	$switchStart = strpos($source, 'switch ($index_item[\'action\'])', $loopStart);
 	expect($switchStart)->not->toBeFalse();
 
-	$unsetPos    = strpos($source, 'unset($output)', $loopStart);
-	expect($unsetPos)->not->toBeFalse('unset($output) must be present inside the reindex body');
-	expect($unsetPos < $switchStart)->toBeTrue('unset($output) must precede the action switch');
+	$unsetPos    = strpos($source, "\$output = '';", $loopStart);
+	expect($unsetPos)->not->toBeFalse('Output initialization must be present inside the reindex body');
+	expect($unsetPos < $switchStart)->toBeTrue('Output initialization must precede the action switch');
 
 	/* The assert_fail reset must remain. */
 	expect($source)->toContain('$assert_fail = false;');

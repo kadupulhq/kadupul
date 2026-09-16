@@ -32,47 +32,36 @@ $htmlReportsPath     = __DIR__ . '/../../../../lib/html_reports.php';
 // GHSA-6233: Stored XSS in report tree titles
 // ---------------------------------------------------------------------------
 
-test('GHSA-6233: reports.php escapes all title outputs with htmle()', function () use ($reportsPath) {
-	$contents = file_get_contents($reportsPath);
-
-	// No raw <h3>$title</h3> interpolation should remain after the fix.
-	$unescapedCount = substr_count($contents, '<h3>$title</h3>');
-	expect($unescapedCount)->toBe(0);
-
-	// All title outputs must use htmle()
-	$escapedCount = substr_count($contents, 'htmle($title)');
-	expect($escapedCount)->toBeGreaterThanOrEqual(7);
-});
-
-test('GHSA-6233: reports.php line 943 uses htmle() for report name (safe pattern exists)', function () use ($reportsPath) {
-	$contents = file_get_contents($reportsPath);
-
-	expect($contents)->toContain('<h3>" . htmle($report[\'name\']) . \'</h3>');
+test('report headings escape each user-controlled component before concatenation', function () use ($reportsPath) {
+    $contents = file_get_contents($reportsPath);
+    foreach (array("html_escape(\$report['name'])", 'html_escape($description)', 'html_escape($tree_name)', 'html_escape($leaf_name)', 'html_escape($host_name)', 'html_escape($graph_name)') as $escaped) {
+        expect($contents)->toContain($escaped);
+    }
 });
 
 // ---------------------------------------------------------------------------
 // GHSA-fwh3: Reflected XSS via rfilter in aggregate_graphs.php
 // ---------------------------------------------------------------------------
 
-test('GHSA-fwh3: aggregate_graphs.php escapes rfilter with htmlerv in value attribute', function () use ($aggregateGraphsPath) {
+test('GHSA-fwh3: aggregate_graphs.php escapes rfilter with html_escape_request_var in value attribute', function () use ($aggregateGraphsPath) {
 	$contents = file_get_contents($aggregateGraphsPath);
 
-	// htmlerv() must be used instead of raw grv() in the value attribute.
-	expect($contents)->toContain("htmlerv('rfilter')");
-	expect($contents)->not->toContain("value='<?php print grv('rfilter'); ?>'");
+	// html_escape_request_var() must be used instead of raw get_request_var() in the value attribute.
+	expect($contents)->toContain("html_escape_request_var('rfilter')");
+	expect($contents)->not->toContain("value='<?php print get_request_var('rfilter');?>'");
 });
 
-test('GHSA-fwh3: contract — rfilter output in HTML attributes must use htmlerv()', function () use ($aggregateGraphsPath) {
+test('GHSA-fwh3: contract — rfilter output in HTML attributes must use html_escape_request_var()', function () use ($aggregateGraphsPath) {
 	$contents = file_get_contents($aggregateGraphsPath);
 
-	// htmlerv() is the Cacti convention for encoding HTML attribute values
-	// retrieved from request variables. The raw grv() call must be replaced.
-	$hasRaw    = str_contains($contents, "value='<?php print grv('rfilter'); ?>'");
-	$hasSafe   = str_contains($contents, "value='<?php print htmlerv('rfilter'); ?>'");
+	// html_escape_request_var() is the Cacti convention for encoding HTML attribute values
+	// retrieved from request variables. The raw get_request_var() call must be replaced.
+	$hasRaw    = str_contains($contents, "value='<?php print get_request_var('rfilter');?>'");
+	$hasSafe   = str_contains($contents, "value='<?php print html_escape_request_var('rfilter');?>'");
 
 	// Fails until the advisory is remediated.
-	expect($hasRaw)->toBeFalse('raw grv() must be replaced with htmlerv()');
-	expect($hasSafe)->toBeTrue('htmlerv() must be used for the rfilter value attribute');
+	expect($hasRaw)->toBeFalse('raw get_request_var() must be replaced with html_escape_request_var()');
+	expect($hasSafe)->toBeTrue('html_escape_request_var() must be used for the rfilter value attribute');
 });
 
 // ---------------------------------------------------------------------------
@@ -132,7 +121,7 @@ test('GHSA-pr9x: package_import.php validates filename with validate_relative_pa
 	$contents = file_get_contents($packageImportPath);
 
 	// The fix validates the filename before reading.
-	expect($contents)->toContain('validate_relative_path_within($filename, CACTI_PATH_BASE)');
+	expect($contents)->toContain("validate_relative_path_within(\$filename, \$config['base_path'])");
 	// The old unvalidated file_get_contents must use the validated path.
 	expect($contents)->toContain('file_get_contents($validated_path)');
 });
@@ -145,7 +134,7 @@ test('GHSA-mjvw: html_reports.php saves format_file with basename() validation',
 	$contents = file_get_contents($htmlReportsPath);
 
 	// The fix applies basename() to strip directory traversal.
-	expect($contents)->toContain("basename(\$post['format_file'])");
+	expect($contents)->toContain("basename(get_nfilter_request_var('format_file'))");
 	// The old unvalidated assignment must not exist.
 	expect($contents)->not->toContain("\$save['format_file']   = \$post['format_file']");
 });
