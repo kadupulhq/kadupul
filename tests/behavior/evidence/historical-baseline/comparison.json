@@ -1,6 +1,6 @@
 {
   "application_revision": "6ce3572dab3264be563b765f25dcadd8cc046252",
-  "harness_revision": "a16960d54 (with corrected missing-rrd-file golden)",
+  "harness": "current branch, narrow failed-write byte-count normalization",
   "php": "8.2",
   "base_image": {
     "ref": "php@sha256:0970c7c14b21003bce8178af2985b491a65b71e800ff5366053de544306ed2a1",
@@ -11,6 +11,6 @@
   "contracts": 34,
   "complete": true,
   "identical_scenarios": true,
-  "first_sha256": "e654a9f087de34414a4617d92cac74db92e031a1b5fbd43498d58e1a612d4bae",
-  "repeat_sha256": "e654a9f087de34414a4617d92cac74db92e031a1b5fbd43498d58e1a612d4bae"
+  "first_sha256": "305bc9aea546051ca39ff62d6cdf622b3fd1512e9fd97029dca6635d6a232b3a",
+  "repeat_sha256": "305bc9aea546051ca39ff62d6cdf622b3fd1512e9fd97029dca6635d6a232b3a"
 }

@@ -152,3 +152,8 @@ The manifest `complete` flag means the evidence passed all completeness and
 inventory validation, including the target's golden inventory across runtimes.
 An orphaned golden is a validation failure even when every runtime probe ran.
 Temporary candidate goldens are local comparison artifacts, not baseline inputs.
+
+Failed `fwrite()` diagnostics normalize only the requested byte count to
+`<BYTES>`: buffer length depends on which poller commands reach the broken pipe.
+The errno, failure description, severity, source location, order and duplicate
+records remain part of the contract. Other diagnostic numbers are preserved.

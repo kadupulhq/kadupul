@@ -105,7 +105,7 @@ def visible_diagnostics(events):
 
 
 def application_diagnostics(contents):
-    """Keep application-handler PHP records in log order; strip only log time."""
+    """Keep PHP diagnostics in order; normalize log time and failed write size."""
     records = []
     timestamp = re.compile(r'^(?:' + '|'.join(_POLLER_DATES) + r') \d{2}:\d{2}:\d{2}$')
     for line in contents.splitlines():
@@ -114,7 +114,8 @@ def application_diagnostics(contents):
             continue
         match = re.match(r'([A-Z][A-Z0-9_]*) (PHP .*:.*)$', message)
         if match:
-            records.append({'subsystem': match[1], 'message': match[2].replace('/var/www/html', '<APP>').replace('/harness', '<HARNESS>')})
+            detail = re.sub(r'^(PHP (?:NOTICE|WARNING): fwrite\(\): Write of )\d+( bytes failed with errno=\d+\b)', r'\1<BYTES>\2', match[2])
+            records.append({'subsystem': match[1], 'message': detail.replace('/var/www/html', '<APP>').replace('/harness', '<HARNESS>')})
     return records
 
 

@@ -183,6 +183,12 @@ def diagnostic_contracts():
     assert harness.application_diagnostics('09/16/2026 01:02:06 - ERROR ' + timing_warning) == [
         {'subsystem': 'ERROR', 'message': timing_warning.replace('/harness', '<HARNESS>')}]
 
+    for size in (108, 4356):
+        broken = f'09/16/2026 01:02:06 - ERROR PHP NOTICE: fwrite(): Write of {size} bytes failed with errno=32 Broken pipe in file: /var/www/html/lib/rrd.php on line: 334'
+        assert harness.application_diagnostics(broken) == [{'subsystem': 'ERROR', 'message': 'PHP NOTICE: fwrite(): Write of <BYTES> bytes failed with errno=32 Broken pipe in file: <APP>/lib/rrd.php on line: 334'}]
+    unrelated = '09/16/2026 01:02:06 - ERROR PHP WARNING: payload has 108 bytes'
+    assert harness.application_diagnostics(unrelated)[0]['message'].endswith('108 bytes')
+
     captured = object.__new__(harness.Harness)
     captured.observed = {}
     captured.capture('diagnostics/application-log', harness.application_diagnostics(

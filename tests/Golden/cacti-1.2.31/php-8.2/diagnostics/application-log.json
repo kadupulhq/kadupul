@@ -17,7 +17,7 @@
   },
   {
     "subsystem": "ERROR",
-    "message": "PHP NOTICE: fwrite(): Write of 108 bytes failed with errno=32 Broken pipe in file: <APP>/lib/rrd.php  on line: 334"
+    "message": "PHP NOTICE: fwrite(): Write of <BYTES> bytes failed with errno=32 Broken pipe in file: <APP>/lib/rrd.php  on line: 334"
   },
   {
     "subsystem": "CMDPHP",
