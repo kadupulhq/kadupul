@@ -1,4 +1,5 @@
 <?php
+// SPDX-FileCopyrightText: 2004-2026 The Cacti Group
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-2.0-or-later
 require_once dirname(__DIR__, 4) . '/lib/functions.php';
