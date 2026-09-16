@@ -18,7 +18,7 @@ beforeEach(function () {
     $this->dir = sys_get_temp_dir() . '/spike-cli-' . bin2hex(random_bytes(6));
     foreach (array('', '/cli', '/include', '/backup') as $suffix) { mkdir($this->dir . $suffix, 0700); }
     copy($this->root . '/cli/removespikes.php', $this->dir . '/cli/removespikes.php');
-    copy($this->root . '/tests/Fixtures/spikekill-cli-bootstrap.php', $this->dir . '/include/cli_check.php');
+    copy($this->root . '/tests/fixtures/spikekill-cli-bootstrap.php', $this->dir . '/include/cli_check.php');
     $this->rrd = $this->dir . '/source.rrd';
     expect(spikeBackupCommand(array($this->binary, 'create', $this->rrd, '--start', '1700000000', '--step', '60', 'DS:value:GAUGE:120:0:U', 'RRA:AVERAGE:0.5:1:100'))[0])->toBe(0);
     $samples = array();
