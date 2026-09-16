@@ -514,6 +514,13 @@ class spikekill {
 			$output[] = $line;
 		}
 
+		if (!$output) {
+			fclose($xmlfile_handle);
+			$this->unlinkOwnedFile($xmlfile, $xmlfile_stat);
+			$this->set_error(__("FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"));
+			return false;
+		}
+
 		/* backup the rrdfile if requested */
 		if ($this->backup && !$this->dryrun) {
 			/* re-check the source identity initialize_spikekill() captured:
