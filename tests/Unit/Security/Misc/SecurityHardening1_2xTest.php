@@ -31,12 +31,12 @@ test('auth_profile authMethod uses json_encode not bare print', function () use 
 
 // M-2: sanitize_uri double-decode removed
 
-test('sanitize_uri does not call urldecode', function () use ($functionsSource) {
-	$start = strpos($functionsSource, 'function sanitize_uri(');
-	expect($start)->not->toBeFalse();
-
-	$body = substr($functionsSource, $start, 600);
-	expect($body)->not->toContain('urldecode(');
+test('redirect validation rejects encoded protocol-relative and external destinations', function () {
+    require_once dirname(__DIR__, 4) . '/lib/functions.php';
+    require_once dirname(__DIR__, 4) . '/lib/html_utility.php';
+    foreach (array('//evil.example', '%2f%2fevil.example', '%252f%252fevil.example', 'https%3a%2f%2fevil.example') as $url) {
+        expect(validate_redirect_url($url, 'index.php'))->toBe('index.php');
+    }
 });
 
 // M-3/M-4: validate_redirect_url trusts HTTP_HOST only when SERVER_NAME is empty and it is listed in $trusted_hosts
@@ -77,10 +77,8 @@ test('validate_redirect_url does not trust an unlisted HTTP_HOST', function () {
 	}
 });
 
-test('validate_redirect_url rejects protocol-relative URLs after sanitize_uri', function () use ($htmlUtilitySource) {
-	$start = strpos($htmlUtilitySource, 'function validate_redirect_url(');
-	$body = substr($htmlUtilitySource, $start, 3000);
-	expect($body)->toContain("strpos(\$safe, '//') === 0");
+test('redirect validation rejects slash normalization bypasses', function () {
+    expect(validate_redirect_url(chr(92) . chr(92) . 'evil.example', 'index.php'))->toBe('index.php');
 });
 
 // H-4: db_dump_data wraps credential values with cacti_escapeshellarg

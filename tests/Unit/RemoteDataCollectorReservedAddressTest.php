@@ -225,5 +225,5 @@ test('a valid collector name, IPv4 literal and bracketed IPv6 literal still conn
 	'host name'      => array('collector.example.net', array('collector.example.net' => '10.1.2.3'), 'https://10.1.2.3/remote_agent.php?action=ping', 'Host: collector.example.net'),
 	'underscore name' => array('my_collector', array('my_collector' => '10.1.2.3'), 'https://10.1.2.3/remote_agent.php?action=ping', 'Host: my_collector'),
 	'IPv4'           => array('10.20.30.40', array(), 'https://10.20.30.40/remote_agent.php?action=ping', null),
-	'bracketed IPv6' => array('[2001:db8::10]', array(), 'https://[2001:db8::10]/remote_agent.php?action=ping', null),
+	'bracketed IPv6' => array('[fd00::10]', array(), 'https://[fd00::10]/remote_agent.php?action=ping', null),
 ));

@@ -258,7 +258,7 @@ function form_selectable_cell($contents, $id, $width = '', $style_or_class = '',
 	}
 
 	if ($title != '') {
-		$wrapper = "<span class='cactiTooltipHint' style='padding:0px;margin:0px;' title='" . str_replace(array('"', "'"), '', $title) . "'>" . $contents . "</span>";
+		$wrapper = "<span class='cactiTooltipHint' style='padding:0px;margin:0px;' title='" . html_escape($title) . "'>" . $contents . "</span>";
 	} else {
 		$wrapper = $contents;
 	}
@@ -761,12 +761,20 @@ function validate_store_request_vars($filters, $sess_prefix = '') {
 }
 
 function cacti_normalize_sort_direction($direction) {
+	if (!is_scalar($direction)) {
+		return 'ASC';
+	}
+
 	$direction = strtoupper((string) $direction);
 
 	return ($direction === 'DESC') ? 'DESC' : 'ASC';
 }
 
 function cacti_normalize_sort_column($column) {
+	if (!is_scalar($column)) {
+		return '';
+	}
+
 	$column = trim((string) $column);
 
 	if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(?:\.[a-zA-Z][a-zA-Z0-9_]*)*$/', $column)) {
@@ -912,37 +920,33 @@ function update_order_string($inplace = false) {
 /* get_order_string - returns a valid order string for a table
    @returns - the order string */
 function get_order_string() {
-	$page        = get_order_string_page(true);
-	$sort_column = cacti_normalize_sort_column(get_nfilter_request_var('sort_column'));
-	$sort_dir    = cacti_normalize_sort_direction(get_nfilter_request_var('sort_direction'));
+	$page = get_order_string_page(true);
+	$columns = $_SESSION['sort_data'][$page] ?? array();
 
-	$request_column = get_request_var('sort_column');
-	if (!is_scalar($request_column)) {
-		$request_column = '';
-	}
-
-	if (strpos((string)$request_column, '(') === false && strpos((string)$request_column, '`') === false) {
-		$del = '`';
-	} else {
-		$del = '';
-	}
-
-	if ($sort_column != '') {
-		return cacti_build_sort_fragment($sort_column, $sort_dir) !== ''
-			? 'ORDER BY ' . cacti_build_sort_fragment($sort_column, $sort_dir)
-			: '';
-	} else {
-		$column    = validate_sort_column($request_column, $page);
-		$direction_raw = get_nfilter_request_var('sort_direction');
-		if (!is_scalar($direction_raw)) $direction_raw = '';
-		$direction = (strtoupper((string)$direction_raw) == 'DESC' ? 'DESC' : 'ASC');
-
-		if ($column == '') {
+	if (!is_array($columns) || !$columns) {
+		$requested = get_request_var('sort_column');
+		if (!is_scalar($requested)) {
 			return '';
 		}
-
-		return 'ORDER BY ' . $del . implode($del . '.' . $del, explode('.', $column)) . $del . ' ' . $direction;
+		$columns = array((string) $requested => get_nfilter_request_var('sort_direction'));
 	}
+
+	$parts = array();
+	foreach ($columns as $column => $direction) {
+		$column = validate_sort_column($column, $page);
+		if ($column === '') {
+			continue;
+		}
+		$direction = cacti_normalize_sort_direction($direction);
+		if (cacti_normalize_sort_column($column) !== '') {
+			$parts[] = cacti_build_sort_fragment($column, $direction);
+		} elseif (isset($_SESSION['valid_sort_columns'][$page]) && in_array($column, $_SESSION['valid_sort_columns'][$page], true)) {
+			// Only a server-defined allowlist may authorize an SQL expression.
+			$parts[] = $column . ' ' . $direction;
+		}
+	}
+
+	return $parts ? 'ORDER BY ' . implode(', ', $parts) : '';
 }
 
 /**

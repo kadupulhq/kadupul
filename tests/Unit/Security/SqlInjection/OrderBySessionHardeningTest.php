@@ -20,7 +20,7 @@ test('get_order_string normalizes, validates and builds the sort fragment', func
 
 	$next = strpos($htmlUtilitySource, "\nfunction ", $start + 1);
 	$body = $next === false ? substr($htmlUtilitySource, $start) : substr($htmlUtilitySource, $start, $next - $start);
-	expect($body)->toContain("cacti_normalize_sort_column(get_nfilter_request_var('sort_column'))");
-	expect($body)->toContain('cacti_build_sort_fragment($sort_column, $sort_dir)');
-	expect($body)->toContain('validate_sort_column($request_column, $page)');
+	expect($body)->toContain('cacti_normalize_sort_column($column)');
+	expect($body)->toContain('cacti_build_sort_fragment($column, $direction)');
+	expect($body)->toContain('validate_sort_column($column, $page)');
 });

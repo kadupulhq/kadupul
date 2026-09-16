@@ -247,6 +247,11 @@ function form_actions() {
 				WHERE id = ?',
 				array(get_nfilter_request_var('selected_items')));
 
+			if (!cacti_sizeof($template_user)) {
+				raise_message(2);
+				return;
+			}
+
 			$overwrite     = array( 'full_name' => get_nfilter_request_var('new_fullname') );
 
 			if ($new_username != '') {

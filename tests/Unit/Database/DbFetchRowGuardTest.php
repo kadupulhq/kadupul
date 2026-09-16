@@ -46,12 +46,20 @@ foreach ($files as $file) {
 		// Find each db_fetch_row assignment
 		preg_match_all('/(\$\w+)\s*=\s*db_fetch_row/', $contents, $matches, PREG_OFFSET_CAPTURE);
 
+		expect($contents)->toBeString()->not->toBeEmpty();
 		foreach ($matches[1] as $match) {
 			$var = $match[0];
 			$pos = $match[1];
 
-			// Look at next 500 chars
-			$chunk = substr($contents, $pos, 500);
+            // Start after the complete assignment: query arguments may legitimately
+            // reference the previous row (for example while walking tree parents).
+            $offset = $pos;
+            foreach (token_get_all('<?php ' . substr($contents, $pos)) as $token) {
+                if (is_array($token) && $token[0] === T_OPEN_TAG) { continue; }
+                $offset += strlen(is_array($token) ? $token[1] : $token);
+                if ($token === ';') { break; }
+            }
+            $chunk = substr($contents, $offset, 700);
 
 			// Find first dereference
 			$derefPattern = '/' . preg_quote($var, '/') . '\[\s*[\'\"]/';
@@ -59,10 +67,10 @@ foreach ($files as $file) {
 				continue;
 			}
 
-			$beforeDeref = substr($chunk, 0, $dm[0][1]);
+			$beforeDeref = substr($chunk, 0, $dm[0][1] + strlen($var));
 
 			// Must have a guard
-			$guardPattern = '/cacti_sizeof|isset|empty|!\s*' . preg_quote($var, '/') . '\b/';
+			$guardPattern = '/(?:cacti_sizeof|isset|empty)\s*\(\s*' . preg_quote($var, '/') . '\b|if\s*\(\s*!?\s*' . preg_quote($var, '/') . '\s*\)/';
 			expect(preg_match($guardPattern, $beforeDeref))
 				->toBeGreaterThan(0, "$file: $var dereferenced without cacti_sizeof/isset/empty guard");
 		}

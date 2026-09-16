@@ -30,9 +30,7 @@ test('help.php uses basename for page parameter', function () use ($helpPath) {
 	expect($contents)->toContain('basename(');
 });
 
-test('help.php enables SSL peer verification', function () use ($helpPath) {
-	$contents = file_get_contents($helpPath);
-
-	expect($contents)->toContain("'verify_peer'       => true");
-	expect($contents)->toContain("'verify_peer_name'  => true");
+test('help.php fetches documentation through the TLS and redirect policy gateway', function () use ($helpPath) {
+    $contents = file_get_contents($helpPath);
+    expect($contents)->toContain("cacti_http('https://docs.cacti.net/' . \$page, 2, array('docs.cacti.net'), \$response_code)");
 });

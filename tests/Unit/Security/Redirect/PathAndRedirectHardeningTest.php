@@ -49,8 +49,8 @@ test('validate_relative_path_within enforces canonical containment checks', func
 	expect($body)->toContain('cacti_path_is_within($parent, $base_real)');
 });
 
-test('import path policy is anchored to scripts/resource prefixes', function () use ($importSource) {
-	expect($importSource)->toContain("preg_match('/^(scripts|resource)\\/[A-Za-z0-9._\\/-]+$/', \$normalized_name)");
+test('import path policy permits only base or plugin scripts and resources', function () use ($importSource) {
+    expect($importSource)->toContain("preg_match('#^(plugins/[A-Za-z0-9_-]+/)?(scripts|resource)/#', \$normalized_name)");
 });
 
 test('validate_redirect_url normalizes backslashes before validation', function () use ($htmlUtilitySource) {

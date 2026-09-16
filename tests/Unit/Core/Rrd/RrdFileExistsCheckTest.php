@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__DIR__, 3) . "/Helpers/PhpSource.php";
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -40,11 +41,7 @@ function getRrdFileExistsBlock(): string {
 	expect($rrdPhp)->not->toBeFalse('Failed to read lib/rrd.php');
 
 	/* extract the rrdtool_function_graph function body */
-	$start = strpos($rrdPhp, 'function rrdtool_function_graph(');
-	expect($start)->not->toBeFalse('rrdtool_function_graph() must exist in lib/rrd.php');
-
-	/* grab a region around the file-existence check (lines 1800-1850 area) */
-	$region = substr($rrdPhp, $start, 20000);
+	$region = test_php_function_source($rrdPhp, 'rrdtool_function_graph');
 
 	return $region;
 }

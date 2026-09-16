@@ -123,3 +123,6 @@ docs/superpowers/
 CLAUDE.md
 reproduce_ghsa_*.php
 verify_task*.php
+
+# Complete unit-suite reports
+/artifacts/unit-suite/

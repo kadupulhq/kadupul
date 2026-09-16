@@ -1,6 +1,10 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Run every LTS unit test in CI with isolated processes and verified result reports
+-issue: Preserve multi-column sorting and enforce the current table sort allowlist
+-security: Encode profile JavaScript values, password return attributes, and tooltip titles
+-issue: Handle missing graph, data input, color template, and user-copy rows before reading fields or mutating data
 -issue: Retain poller samples for retry when Boost handoff cleanup fails, without duplicate direct RRD updates
 -security: Preserve IPv6 Referer hosts before same-site validation and refuse hidden terminal input without signal support
 -issue: Honor explicit disabled authentication during template imports and isolate Windows shim test extensions

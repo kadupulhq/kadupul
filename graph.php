@@ -288,6 +288,12 @@ case 'view':
 
 	break;
 case 'zoom':
+	if (!cacti_sizeof($rras)) {
+		raise_message('graph_not_found', __('The Graph you requested does not exist.'), MESSAGE_LEVEL_ERROR);
+		cacti_header('graph_view.php');
+		exit;
+	}
+
 	/* find the maximum time span a graph can show */
 	$max_timespan=1;
 	if (cacti_sizeof($rras)) {
@@ -306,6 +312,12 @@ case 'zoom':
 			ON dsp.id=dspr.data_source_profile_id
 			WHERE dspr.id = ?', array(get_request_var('rra_id')));
 
+		if (!cacti_sizeof($rra)) {
+			raise_message('graph_not_found', __('The Graph you requested does not exist.'), MESSAGE_LEVEL_ERROR);
+			cacti_header('graph_view.php');
+			exit;
+		}
+
 		$rra['timespan'] = $rra['steps'] * $rra['step'] * $rra['rows'];
 	} else {
 		$rra = db_fetch_row_prepared('SELECT dspr.id, step, steps, dspr.name, `rows`
@@ -313,6 +325,12 @@ case 'zoom':
 			INNER JOIN data_source_profiles AS dsp
 			ON dsp.id=dspr.data_source_profile_id
 			WHERE dspr.id = ?', array($rras[0]['id']));
+
+		if (!cacti_sizeof($rra)) {
+			raise_message('graph_not_found', __('The Graph you requested does not exist.'), MESSAGE_LEVEL_ERROR);
+			cacti_header('graph_view.php');
+			exit;
+		}
 
 		$rra['timespan'] = $rra['steps'] * $rra['step'] * $rra['rows'];
 	}
@@ -362,6 +380,12 @@ case 'zoom':
 		ON gl.host_id = h.id
 		WHERE gtg.local_graph_id = ?',
 		array(get_request_var('local_graph_id')));
+
+	if (!cacti_sizeof($graph)) {
+		raise_message('graph_not_found', __('The Graph you requested does not exist.'), MESSAGE_LEVEL_ERROR);
+		cacti_header('graph_view.php');
+		exit;
+	}
 
 	$graph_height      = $graph['height'];
 	$graph_width       = $graph['width'];
