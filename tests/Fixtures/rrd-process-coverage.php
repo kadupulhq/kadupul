@@ -9,6 +9,9 @@ require_once $coverageRoot . '/tests/vendor/autoload.php';
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
 $coverageFilter->includeFile($coverageRoot . '/lib/rrd.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/rrd_maintenance.php');
+if (defined('RRD_TEST_CLI_COVERAGE_COPY')) {
+    $coverageFilter->includeFile(RRD_TEST_CLI_COVERAGE_COPY);
+}
 $childCoverage = new SebastianBergmann\CodeCoverage\CodeCoverage(
     (new SebastianBergmann\CodeCoverage\Driver\Selector())->forLineCoverage($coverageFilter),
     $coverageFilter
@@ -20,6 +23,18 @@ register_shutdown_function(function () use ($childCoverage, $childCoverageFile) 
     // close/drain is measured too, not just the main body of the child script.
     register_shutdown_function(function () use ($childCoverage, $childCoverageFile) {
         $childCoverage->stop();
+        if (defined('RRD_TEST_CLI_COVERAGE_COPY')) {
+            // Measure the real copied CLI, then map only its filename. Refuse
+            // attribution unless every source byte (and thus line) is identical.
+            $copyHash = hash_file('sha256', RRD_TEST_CLI_COVERAGE_COPY);
+            $sourceHash = hash_file('sha256', RRD_TEST_CLI_COVERAGE_SOURCE);
+            if ($copyHash === false || $sourceHash === false || !hash_equals($sourceHash, $copyHash)) {
+                throw new RuntimeException('Copied CLI changed while measuring coverage');
+            }
+            $childCoverage->getData(true)->renameFile(RRD_TEST_CLI_COVERAGE_COPY, RRD_TEST_CLI_COVERAGE_SOURCE);
+            $childCoverage->filter()->excludeFile(RRD_TEST_CLI_COVERAGE_COPY);
+            $childCoverage->filter()->includeFile(RRD_TEST_CLI_COVERAGE_SOURCE);
+        }
         if (file_put_contents($childCoverageFile, serialize($childCoverage)) === false) {
             throw new RuntimeException('Unable to preserve child process coverage');
         }
