@@ -133,3 +133,5 @@ Local destructive rewrites fail closed on Windows because no exclusive storage
 lease is implemented there. Read-only graph and export calls remain available.
 Remote storage retains the proxy's existing restore protocol; the local atomic
 rename guarantee does not apply to remote proxy restores.
+
+Float and splice keep XML intermediates in random owner-only workspaces; failed restores retain recovery XML there. Custom RRD paths are coordinated against their trusted ancestor directories as well as the configured store, so a writer using an ancestor as its RRA root is excluded. These conservative custom-path locks can serialize otherwise unrelated maintenance operations. Resize holds its exclusive lease through replacement. Local purge/archive releases the file lease before metadata cleanup and retains queued work when coordination or the filesystem operation fails.

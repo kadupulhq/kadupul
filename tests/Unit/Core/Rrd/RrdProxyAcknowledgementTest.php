@@ -7,6 +7,8 @@ namespace RrdProxyAcknowledgement;
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/rrd.php'), '__rrd_proxy_execute'));
+eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/rrd.php'), 'rrdtool_last_rejection'));
+eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/rrd.php'), 'rrdtool_rejection_is_permanent'));
 function cacti_log(...$args) {}
 function read_config_option($key)
 {
@@ -36,7 +38,20 @@ test('proxy acknowledgements reject missing responses and error responses even w
             define($name, $value);
         }
     }
+    $rejection = & rrdtool_last_rejection();
+    $rejection = null;
     $GLOBALS['config'] = array('rra_path' => '/fixture');
     $GLOBALS['proxy_reply'] = $response === false ? false : $response . "_EOP_\r\n_EOT_\r\n";
     expect(__rrd_proxy_execute('update /fixture/test.rrd 100:1', false, RRDTOOL_OUTPUT_BOOLEAN, array(true,'test-public')))->toBe($expected);
-})->with(array(array("OK u:0.01 s:0.02 r:0.03\n",true),array(false,false),array("ERROR: failed\n",false),array("ERROR: expected OK u:0\n",false),array("ERROR: failed\nOK u:0 s:0 r:0\n",false)));
+    if (is_string($response) && preg_match('/^ERROR:([^\r\n]*)/m', $response, $error)) {
+        expect($rejection)->toBe(trim($error[1]));
+        if (strpos($response, 'unknown DS name') !== false) {
+            expect(rrdtool_rejection_is_permanent($rejection))->toBeTrue();
+        }
+        if (strpos($response, 'Permission denied') !== false) {
+            expect(rrdtool_rejection_is_permanent($rejection))->toBeFalse();
+        }
+    } else {
+        expect($rejection)->toBeNull();
+    }
+})->with(array(array("OK u:0.01 s:0.02 r:0.03\n",true),array(false,false),array("ERROR: failed\n",false),array("ERROR: unknown DS name 'missing'\n",false),array("ERROR: opening file: Permission denied\n",false),array("ERROR: expected OK u:0\n",false),array("ERROR: failed\nOK u:0 s:0 r:0\n",false)));

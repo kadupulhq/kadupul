@@ -194,7 +194,9 @@ if ($finrrd == '') {
 }
 
 require_once __DIR__ . '/../lib/rrd_maintenance.php';
-$rrd_rewrite_lock = rrd_maintenance_cli_lock(true);
+rrd_maintenance_cli_preflight();
+$rrd_rewrite_lock = rrd_maintenance_acquire_paths(array($oldrrd, $newrrd, $finrrd));
+if ($rrd_rewrite_lock === false) { fwrite(STDERR, "FATAL: RRD storage is busy or its maintenance lock is unavailable.\n"); exit(1); }
 register_shutdown_function(function () use ($rrd_rewrite_lock) { rrd_maintenance_release($rrd_rewrite_lock); });
 
 debug('Entering Mainline');
@@ -233,20 +235,12 @@ if (strlen($response)) {
 	exit(-1);
 }
 
-/* determine the temporary file name */
-$seed = mt_rand();
-
-if (substr_count(PHP_OS, 'WIN')) {
-	$tempdir    = getenv('TEMP');
-	$oldxmlfile = $tempdir . '/' . str_replace('.rrd', '', basename($oldrrd)) . '.dump.' . $seed;
-	$seed++;
-	$newxmlfile = $tempdir . '/' . str_replace('.rrd', '', basename($newrrd)) . '.dump.' . $seed;
-} else {
-	$tempdir    = '/tmp';
-	$oldxmlfile = '/tmp/' . str_replace('.rrd', '', basename($oldrrd)) . '.dump.' . $seed;
-	$seed++;
-	$newxmlfile = '/tmp/' . str_replace('.rrd', '', basename($newrrd)) . '.dump.' . $seed;
-}
+/* All XML and SQLite intermediates stay in an owner-only random workspace. */
+$seed = bin2hex(random_bytes(8));
+$tempdir = rrd_maintenance_workspace();
+if ($tempdir === false) { fwrite(STDERR, "FATAL: Unable to create private RRD workspace.\n"); exit(1); }
+$oldxmlfile = $tempdir . '/old.xml';
+$newxmlfile = $tempdir . '/new.xml';
 
 if ($finrrd == '') {
 	$finrrd = dirname($newrrd) . '/' . basename($newrrd) . '.new';

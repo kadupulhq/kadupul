@@ -405,7 +405,7 @@ function rrdtool_execute() {
 		return call_user_func_array($function, $args);
 	}
 
-	$destructive = in_array($verb, array('tune', 'resize', 'restore'), true);
+	$destructive = in_array($verb, array('tune', 'resize', 'restore', 'unlink', 'archive'), true);
 	require_once __DIR__ . '/rrd_maintenance.php';
 	if (isset($args[3]) && is_resource($args[3])) {
 		if (!rrd_maintenance_pipe($args[3]) || ($destructive && !rrd_maintenance_pipe_is_exclusive($args[3]))) {
@@ -602,6 +602,9 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 		}
 		fclose($fp);
 		$status = proc_close($process);
+        if (!$metadata['timed_out'] && is_string($output) && preg_match('/^ERROR:([^\r\n]*)\r?$/m', $output, $error)) {
+            $rejection =& rrdtool_last_rejection(); $rejection = trim($error[1]);
+        }
 		return !$metadata['timed_out'] && $status === 0 && is_string($output)
 			&& preg_match('/^OK(?: u:[^\r\n]+)?\r?$/m', $output) === 1
 			&& preg_match('/^ERROR:/m', $output) !== 1;
@@ -804,6 +807,9 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp=
 			}
 			break;
 		case RRDTOOL_OUTPUT_BOOLEAN :
+            if (preg_match('/^ERROR:([^\r\n]*)\r?$/m', $output, $error)) {
+                $rejection =& rrdtool_last_rejection(); $rejection = trim($error[1]);
+            }
 			return strpos($output, 'ERROR:') === false && preg_match('/^OK u:[^\r\n]+\r?$/m', $output) === 1;
 			break;
 	}
@@ -1234,7 +1240,7 @@ function rrdtool_function_tune($rrd_tune_array) {
 			if (is_file(read_config_option('path_rrdtool')) && is_executable(read_config_option('path_rrdtool'))) {
 				$rrdtool_cmd = cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' tune ' . cacti_escapeshellarg($data_source_path) . $rrd_tune;
 				require_once __DIR__ . '/rrd_maintenance.php';
-				$lock = rrd_maintenance_acquire(($config['cacti_server_os'] ?? '') !== 'win32', true);
+				$lock = rrd_maintenance_acquire(true, true);
 				if ($lock === false) {
 					cacti_log('ERROR: Unable to coordinate RRD tuning with maintenance.');
 					return;
@@ -3745,17 +3751,12 @@ function rrdtool_tune($rrd_file, $diff, $show_source = true) {
 					print '<tr><td>' . __('rename %s to %s', dirname($rrd_file) . '/resize.rrd', $rrd_file) . '</td></tr>';
 				}
 			} else {
-				rrdtool_execute("resize $line", true, RRDTOOL_OUTPUT_STDOUT);
-
-				/* when run locally rrdtool writes resize.rrd to the PHP process cwd; under a
-				   storage_location proxy it runs remotely, so keep the legacy path next to the rrd */
-				if (read_config_option('storage_location')) {
-					$resize_rrd = dirname($rrd_file) . '/resize.rrd';
-				} else {
-					$resize_rrd = getcwd() . '/resize.rrd';
-				}
-
-				rename($resize_rrd, $rrd_file);
+                $resized = rrd_with_pipe(function ($pipe) use ($line, $rrd_file) {
+                    if (rrdtool_execute("resize $line", true, RRDTOOL_OUTPUT_BOOLEAN, $pipe) !== true) { return false; }
+                    $resize_rrd = read_config_option('storage_location') ? dirname($rrd_file) . '/resize.rrd' : getcwd() . '/resize.rrd';
+                    return rename($resize_rrd, $rrd_file);
+                });
+                if ($resized !== true) { cacti_log('ERROR: RRD resize failed; original file retained.', false, 'UTIL'); return false; }
 			}
 		}
 	}
