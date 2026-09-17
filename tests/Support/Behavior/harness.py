@@ -179,8 +179,8 @@ def poller_command_contract(result):
 
 def normalize_known_roots(value):
     roots = {'/var/www/html': '<APP>', '/harness': '<HARNESS>'}
-    return re.sub(r'(?<![\w./-])(?:/var/www/html|/harness)(?=/|$)',
-                  lambda match: roots[match[0]], value)
+    return re.sub(r'(?<![\w./-])(?:/var/www/html|/harness)(?=/|\r?$)',
+                  lambda match: roots[match[0]], value, flags=re.MULTILINE)
 
 
 def visible_diagnostics(events):
@@ -790,6 +790,10 @@ class Harness:
                 return 2
         write_json(self.destination / 'observations.json', manifest)
         # The pre-recording inventory validation above owns orphan detection.
+        if not manifest['complete']:
+            print('Incomplete capture; runtime goldens are missing observations: '
+                  + ', '.join(manifest['inventory_missing']), file=sys.stderr)
+            return 2
 
         if skipped:
             print(f'{len(skipped)} scenarios ran but were not verified (--only {" ".join(self.args.only)})')

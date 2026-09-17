@@ -418,7 +418,11 @@ def recording_guards():
                 harness.write_json(target / ('php-' + version) / (name + '.json'), {'value': name})
         recorder.command = lambda *a, **kw: {'stdout': '8.2', 'stderr': '', 'exit': 0}
         with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', return_value={'stdout': 'revision'}):
-            assert recorder.finish() == 0
+            with patch('builtins.print') as output:
+                assert recorder.finish() == 2, 'Partial bootstrap must not report successful verification'
+            output.assert_called_once_with(
+                'Incomplete capture; runtime goldens are missing observations: php-8.3/' + names[-1],
+                file=sys.stderr)
             assert json.loads((recorder.destination / 'observations.json').read_text())['complete'] is False
             assert (target / 'php-8.2' / (names[-1] + '.json')).exists()
             assert not (target / 'php-8.3' / (names[-1] + '.json')).exists()
@@ -463,6 +467,10 @@ def diagnostic_contracts():
     assert harness.normalize_known_roots('/var/www/html') == '<APP>'
     assert harness.normalize_known_roots('file /harness/probe.php') == 'file <HARNESS>/probe.php'
     assert harness.normalize_known_roots('file /var/www/html/index.php') == 'file <APP>/index.php'
+    for newline in ('\n', '\r\n'):
+        value = newline.join(('a /var/www/html', '/harness', '/harnessed', 'prefix/var/www/html', 'b'))
+        expected = newline.join(('a <APP>', '<HARNESS>', '/harnessed', 'prefix/var/www/html', 'b'))
+        assert harness.normalize_known_roots(value) == expected
 
     recorder = harness.Harness.__new__(harness.Harness)
     paths = ['/var/www/html/rra/a.rrd', '/var/www/htmlish/a.rrd', '/tmp/var/www/html/a.rrd']

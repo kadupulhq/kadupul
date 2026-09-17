@@ -163,7 +163,9 @@ suite meaningful.
    container configuration. Bootstrap permits missing entries during capture
    and writes only the current runtime; it still rejects orphaned scenarios.
    A bootstrap manifest remains incomplete and cannot be compared until every
-   runtime inventory is complete. Normal verification also rejects an absent
+   runtime inventory is complete. Partial bootstrap writes the current runtime's
+   goldens, lists the missing observations, and exits 2; capture the remaining
+   runtimes before expecting success. Normal verification also rejects an absent
    current-runtime directory.
    Use `make test-update-golden` for updates to an already complete inventory.
    If a new file contains a value
