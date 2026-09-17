@@ -79,7 +79,7 @@ function rrd_init($output_to_term = true, $exclusive = false, $acknowledged = fa
 		cacti_log('ERROR: Disable RRDCACHED_ADDRESS before destructive RRD maintenance.');
 		return false;
 	}
-	$lock = rrd_maintenance_acquire($exclusive && ($config['cacti_server_os'] ?? '') !== 'win32', false, $lease_timeout, $lease_busy);
+	$lock = rrd_maintenance_acquire($exclusive, false, $lease_timeout, $lease_busy);
 	if ($lock === false) {
 		if ((!$lease_busy || $lease_timeout !== 0) && (empty($config['is_web']) || debounce_run_notification('rrd_initialization_failure', 1800))) {
 			cacti_log('ERROR: Unable to coordinate local RRD writes with maintenance.');
@@ -110,7 +110,11 @@ function __rrd_init($output_to_term = true, $acknowledged = false) {
 	}
 
 	rrdtool_set_language();
-	if ($acknowledged && $config['cacti_server_os'] !== 'win32') {
+	if ($acknowledged && $config['cacti_server_os'] === 'win32') {
+		rrdtool_reset_language();
+		return true; // Boolean writes use the synchronous response-reading fallback.
+	}
+	if ($acknowledged) {
 		$process = proc_open(array(read_config_option('path_rrdtool'), '-'),
 			array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('redirect', 1)), $streams);
 		if (!is_resource($process)) {
@@ -470,7 +474,7 @@ function rrdtool_execute() {
 		return call_user_func_array($function, $args);
 	}
 
-	$destructive = in_array($verb, array('tune', 'resize', 'restore'), true);
+	$destructive = in_array($verb, array('tune', 'resize', 'restore', 'unlink', 'archive'), true);
 	require_once __DIR__ . '/rrd_maintenance.php';
 	if (isset($args[3]) && is_resource($args[3])) {
 		if (!rrd_maintenance_pipe($args[3]) || ($destructive && !rrd_maintenance_pipe_is_exclusive($args[3]))) {
@@ -480,7 +484,7 @@ function rrdtool_execute() {
 		return call_user_func_array($function, $args);
 	}
 
-	$lock = rrd_maintenance_acquire($destructive && ($config['cacti_server_os'] ?? '') !== 'win32');
+	$lock = rrd_maintenance_acquire($destructive);
 	if ($lock === false) {
 		cacti_log('ERROR: Unable to coordinate local RRD writes with maintenance.');
 		return false;
@@ -735,6 +739,10 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 		}
 		fclose($fp);
 		$status = proc_close($process);
+		if (!$metadata['timed_out'] && is_string($output) && preg_match('/^ERROR:([^\r\n]*)\r?$/m', $output, $error)) {
+			$rejection =& rrdtool_last_rejection();
+			$rejection = trim($error[1]);
+		}
 		return !$metadata['timed_out'] && $status === 0 && is_string($output)
 			&& preg_match('/^OK(?: u:[^\r\n]+)?\r?$/m', $output) === 1
 			&& preg_match('/^ERROR:/m', $output) !== 1;

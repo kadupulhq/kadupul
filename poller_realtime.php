@@ -296,17 +296,19 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 				/* multiple value output */
 				$values = preg_split('/\s+/', $value);
 
-				$rrd_field_names = array_rekey(
-					db_fetch_assoc_prepared('SELECT DISTINCT dtr.data_source_name, dif.data_name
+				$field_rows = db_fetch_assoc_prepared('SELECT DISTINCT dtr.data_source_name, dif.data_name
 						FROM graph_templates_item AS gti
 						INNER JOIN data_template_rrd AS dtr
 						ON gti.task_item_id = dtr.id
 						INNER JOIN data_input_fields AS dif
 						ON dtr.data_input_field_id = dif.id
 						AND dtr.local_data_id = ?',
-						array($item['local_data_id'])),
-					'data_name', 'data_source_name'
-				);
+						array($item['local_data_id']));
+				if ($field_rows === false) {
+					cacti_log('ERROR: Unable to read realtime field mapping; pending samples retained.', false, 'POLLER');
+					return false;
+				}
+				$rrd_field_names = array_rekey($field_rows, 'data_name', 'data_source_name');
 
 				if (cacti_sizeof($values)) {
 					foreach($values as $value) {

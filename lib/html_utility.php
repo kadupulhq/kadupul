@@ -925,6 +925,13 @@ function get_order_string($allowed_columns = null) {
 		$_SESSION['valid_sort_columns'][$page] = $allowed_columns;
 	}
 	$columns = $_SESSION['sort_data'][$page] ?? array();
+	if (is_array($columns) && get_nfilter_request_var('add') === 'true') {
+		$requested = get_request_var('sort_column');
+		$requested = is_scalar($requested) ? validate_sort_column((string) $requested, $page) : '';
+		if ($requested !== '') {
+			$columns[$requested] = get_nfilter_request_var('sort_direction');
+		}
+	}
 
 	if (!is_array($columns) || !$columns) {
 		$requested = get_request_var('sort_column');

@@ -989,3 +989,35 @@ test('web writer and on-demand Boost share a throttled initialization diagnostic
     expect($result[0])->toBe(array(-1,-1,-1))->and($result[1])->toHaveCount(1);
     expect($result[1][0])->toContain('Unable to coordinate local RRD writes');
 });
+
+
+test('Windows acknowledgement sentinel uses synchronous responses and refuses exclusive rewrites', function () {
+    $root = dirname(__DIR__, 4);
+    $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
+    if (!is_executable($binary)) {
+        $this->markTestSkipped('Real RRDtool is required.');
+    }
+    $bootstrap = '<?php ';
+    if ($this->getTestResultObject()->getCodeCoverage() !== null) {
+        $this->expectedChildReports = 1;
+        $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY",__DIR__);require ' . var_export($root . '/tests/fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $bootstrap .= '$config=array("cacti_server_os"=>"win32","rra_path"=>__DIR__,"is_web"=>false);' .
+        'require ' . var_export($root . '/include/global_constants.php', true) . ';define("CACTI_LOCALE","en-US");' .
+        'function read_config_option($k){return $k==="path_rrdtool"?' . var_export($binary, true) . ':"";}' .
+        'function cacti_log(...$args){}function cacti_session_close(){}function cacti_escapeshellarg($v){return escapeshellarg($v);}' .
+        'require ' . var_export($root . '/lib/rrd.php', true) . ';' .
+        '$pipe=rrd_init(false,false,true);$file=__DIR__."/win.rrd";' .
+        '$create=rrdtool_execute(array("create",$file,"--start","1700000000","--step","60","DS:value:GAUGE:120:U:U","RRA:AVERAGE:0.5:1:10"),false,RRDTOOL_OUTPUT_BOOLEAN,$pipe);' .
+        '$update=rrdtool_execute(array("update",$file,"1700000060:42"),false,RRDTOOL_OUTPUT_BOOLEAN,$pipe);' .
+        '$bad=rrdtool_execute(array("update",$file,"invalid"),false,RRDTOOL_OUTPUT_BOOLEAN,$pipe);' .
+        '$reason=rrdtool_last_rejection();$exclusive=rrd_init(false,true,true);rrd_close($pipe);echo json_encode(array($pipe,$create,$update,$bad,$exclusive,is_string($reason)&&$reason!==""));';
+    file_put_contents($this->dir . '/win.php', $bootstrap);
+    $process = proc_open(array(PHP_BINARY,'-d','pcov.directory=' . $root,'-d','pcov.exclude=~/(include/vendor|tests)/~',$this->dir . '/win.php'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);
+    $out = stream_get_contents($pipes[1]);
+    $error = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    expect(proc_close($process))->toBe(0)->and($error)->toBe('')
+        ->and(json_decode($out, true))->toBe(array(true,true,true,false,false,true));
+});

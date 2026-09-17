@@ -72,10 +72,10 @@ cmd_exec	./lib/poller.php:53			$output = shell_exec($command);
 cmd_exec	./lib/poller.php:64	 *                    of the proc_open() and proc_close() functions (php 4.3+)
 cmd_exec	./lib/poller.php:65	 * @param  (array)    $pipes - the array of r/w pipes returned from proc_open()
 cmd_exec	./lib/poller.php:66	 * @param  (resource) $proc_fd - the file descriptor returned from proc_open()
-cmd_exec	./lib/rrd.php:114			$process = proc_open(array(read_config_option('path_rrdtool'), '-'),
-cmd_exec	./lib/rrd.php:1453						$fp = popen($rrdtool_cmd, 'r');
-cmd_exec	./lib/rrd.php:147		return popen($command, 'w');
-cmd_exec	./lib/rrd.php:661				$process = proc_open(cacti_escapeshellarg(read_config_option('path_rrdtool')) . ' - ' . $debug, $descriptorspec, $pipes);
+cmd_exec	./lib/rrd.php:118			$process = proc_open(array(read_config_option('path_rrdtool'), '-'),
+cmd_exec	./lib/rrd.php:1461						$fp = popen($rrdtool_cmd, 'r');
+cmd_exec	./lib/rrd.php:151		return popen($command, 'w');
+cmd_exec	./lib/rrd.php:665				$process = proc_open(cacti_escapeshellarg(read_config_option('path_rrdtool')) . ' - ' . $debug, $descriptorspec, $pipes);
 cmd_exec	./lib/rrdcheck.php:806		$process = proc_open($command, $fds, $pipes);
 cmd_exec	./lib/snmp.php:250			exec($command, $snmp_value);
 cmd_exec	./lib/snmp.php:350			exec($command, $snmp_value);
@@ -419,19 +419,19 @@ dynamic_include	./lib/reports.php:408		include_once($config['base_path'] . '/lib
 dynamic_include	./lib/reports.php:409		include_once($config['base_path'] . '/lib/html_reports.php');
 dynamic_include	./lib/reports.php:691		include_once($config['library_path'] . '/html_tree.php');
 dynamic_include	./lib/reports.php:768		include_once($config['base_path'] . '/lib/time.php');
-dynamic_include	./lib/rrd.php:1007		include ($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:1415		include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:1592		include_once($config['library_path'] . '/boost.php');
-dynamic_include	./lib/rrd.php:1644		include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:1939		include_once($config['library_path'] . '/cdef.php');
-dynamic_include	./lib/rrd.php:1940		include_once($config['library_path'] . '/vdef.php');
-dynamic_include	./lib/rrd.php:1941		include_once($config['library_path'] . '/graph_variables.php');
-dynamic_include	./lib/rrd.php:1942		include_once($config['library_path'] . '/boost.php');
-dynamic_include	./lib/rrd.php:1943		include_once($config['library_path'] . '/xml.php');
-dynamic_include	./lib/rrd.php:1944		include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:3262			include($rrdtheme);
-dynamic_include	./lib/rrd.php:3958		include_once($config['library_path'] . '/time.php');
-dynamic_include	./lib/rrd.php:4772			include($themefile);
+dynamic_include	./lib/rrd.php:1015		include ($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/rrd.php:1423		include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/rrd.php:1600		include_once($config['library_path'] . '/boost.php');
+dynamic_include	./lib/rrd.php:1652		include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/rrd.php:1947		include_once($config['library_path'] . '/cdef.php');
+dynamic_include	./lib/rrd.php:1948		include_once($config['library_path'] . '/vdef.php');
+dynamic_include	./lib/rrd.php:1949		include_once($config['library_path'] . '/graph_variables.php');
+dynamic_include	./lib/rrd.php:1950		include_once($config['library_path'] . '/boost.php');
+dynamic_include	./lib/rrd.php:1951		include_once($config['library_path'] . '/xml.php');
+dynamic_include	./lib/rrd.php:1952		include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/rrd.php:3270			include($rrdtheme);
+dynamic_include	./lib/rrd.php:3966		include_once($config['library_path'] . '/time.php');
+dynamic_include	./lib/rrd.php:4780			include($themefile);
 dynamic_include	./lib/rrdcheck.php:724			include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/rrdcheck.php:754			include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/snmp.php:50		include_once($config['include_path'] . '/vendor/phpsnmp/extension.php');
@@ -539,8 +539,8 @@ dynamic_include	./scripts/ss_netsnmp_lmsensors.php:24		include($config['base_pat
 dynamic_include	./snmpagent_persist.php:165				include( $path_mibcache );
 dynamic_include	./spikekill.php:26	include_once($config['base_path'] . '/lib/spikekill.php');
 host_header	./include/global.php:435					$_SERVER['HTTP_HOST'] ?? '',
-host_header	./lib/html_utility.php:1097		} elseif (isset($_SERVER['HTTP_HOST']) && cacti_trusted_host_header($_SERVER['HTTP_HOST'], $config['trusted_hosts'] ?? array()) !== '') {
-host_header	./lib/html_utility.php:1100			$srv_host = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST']);
+host_header	./lib/html_utility.php:1104		} elseif (isset($_SERVER['HTTP_HOST']) && cacti_trusted_host_header($_SERVER['HTTP_HOST'], $config['trusted_hosts'] ?? array()) !== '') {
+host_header	./lib/html_utility.php:1107			$srv_host = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST']);
 sort_order_input	./automation_snmp.php:533				ORDER BY sequence', array(get_request_var('id')));
 sort_order_input	./data_queries.php:884						ORDER BY field_name, sequence', array(get_request_var('id'), $data_template['id']));
 sort_order_input	./graph_templates.php:504			ORDER BY name', array(get_request_var('id')));

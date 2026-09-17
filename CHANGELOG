@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Acknowledge Windows updates synchronously, retain realtime samples on field-lookup failure, and preserve shift-click sorting after allowlist registration
 -issue: Refuse Windows splice, heartbeat tuning, and float rewrites when exclusive maintenance coordination is unavailable
 -issue: Bound shutdown orphan reads, retain failed proxy cleanup requests, normalize quoted link sorting, and disable obsolete volatile queue swaps
 -issue: Validate Windows storage access and report failed purge reads, realtime preparation failures, and runner timeout races without losing pending work

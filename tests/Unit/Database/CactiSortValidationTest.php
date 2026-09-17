@@ -183,3 +183,17 @@ test('automation matching graphs retain the default title order on first render'
     set_request_var('sort_direction', 'ASC');
     expect(get_order_string($columns))->toBe('ORDER BY `title_cache` ASC');
 });
+
+test('late allowlist registration preserves shift-click sorting without admitting unknown columns', function ($column, $expected) {
+    $page = get_order_string_page(false);
+    $_SESSION['sort_data'][$page] = array('description' => 'ASC');
+    set_request_var('sort_column', $column);
+    set_request_var('sort_direction', 'DESC');
+    set_request_var('add', 'true');
+    update_order_string();
+    expect(get_order_string(array('description', 'id')))->toBe($expected);
+})->with(array(
+    array('id', 'ORDER BY `description` ASC, `id` DESC'),
+    array('description', 'ORDER BY `description` DESC'),
+    array('unknown_column', 'ORDER BY `description` ASC'),
+));
