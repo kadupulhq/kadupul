@@ -506,3 +506,10 @@ function rrd_maintenance_command_timeout()
     $seconds = $config['rrd_maintenance_command_timeout'] ?? 300;
     return is_numeric($seconds) && $seconds > 0 ? min(28800, (float) $seconds) : 300;
 }
+
+/** Windows has no validated exclusive local storage lease for automatic cleanup. */
+function rrd_maintenance_cleanup_supported()
+{
+    global $config;
+    return ($config['cacti_server_os'] ?? '') !== 'win32' || read_config_option('storage_location');
+}

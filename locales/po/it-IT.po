@@ -20395,3 +20395,7 @@ msgstr "Il numero di modelli di grafici che utilizzano questo VDEF."
 #: vdef.php:923
 msgid "No VDEFs"
 msgstr "Nessun VDEF"
+
+#: rrdcleaner.php:28 rrdcleaner.php:427 rrdcleaner.php:462
+msgid "Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup."
+msgstr ""

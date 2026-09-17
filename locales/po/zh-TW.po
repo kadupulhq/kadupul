@@ -23717,3 +23717,7 @@ msgstr "使用此VDEF的圖表模板數。"
 #, fuzzy
 msgid "No VDEFs"
 msgstr "沒有VDEF"
+
+#: rrdcleaner.php:28 rrdcleaner.php:427 rrdcleaner.php:462
+msgid "Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup."
+msgstr ""

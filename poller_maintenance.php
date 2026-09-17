@@ -240,6 +240,11 @@ function rrdfile_purge($force) {
 		FROM data_source_purge_action');
 
 	/* if the table that holds the actions is present, work on it */
+	if ($purge && !rrd_maintenance_cleanup_supported()) {
+		cacti_log('WARNING: Windows automatic local RRD cleanup is unsupported; existing requests retained for manual cleanup.', true, 'MAINT');
+		return true;
+	}
+
 	if ($purge) {
 		maint_debug("Purging Required - Files Found $purge");
 
@@ -523,6 +528,11 @@ function secpass_check_expired () {
  */
 function remove_files($file_array) {
 	global $config, $debug, $archived, $purged;
+
+	if (!rrd_maintenance_cleanup_supported()) {
+		cacti_log('WARNING: Windows automatic local RRD cleanup is unsupported; files and purge queue retained for manual cleanup.', true, 'MAINT');
+		return false;
+	}
 
 	maint_debug('RRDClean is now running on ' . cacti_sizeof($file_array) . ' items');
 

@@ -244,6 +244,16 @@ if ($tempdir === false) {
 }
 $oldxmlfile = $tempdir . '/old.xml';
 $newxmlfile = $tempdir . '/new.xml';
+$discard_dumps = static function () use ($oldxmlfile, $newxmlfile, $tempdir) {
+	foreach (array($oldxmlfile, $newxmlfile) as $dumpfile) {
+		if (file_exists($dumpfile)) {
+			@unlink($dumpfile);
+		}
+	}
+	if (!@rmdir($tempdir)) {
+		fwrite(STDERR, 'Partial dumps retained for manual cleanup in ' . $tempdir . PHP_EOL);
+	}
+};
 
 
 /* Require successful bounded dumps before parsing any intermediate output. */
@@ -253,6 +263,7 @@ foreach (array($oldxmlfile, $newxmlfile) as $index => $xmlfile) {
 	debug("Creating XML file '$xmlfile' from '$source'");
 	$handle = fopen($xmlfile, 'x');
 	if ($handle === false) {
+		$discard_dumps();
 		fwrite(STDERR, "FATAL: Unable to create dump file.\n");
 		exit(1);
 	}
@@ -262,6 +273,7 @@ foreach (array($oldxmlfile, $newxmlfile) as $index => $xmlfile) {
 		fclose($handle);
 	}
 	if ($result['exit'] !== 0) {
+		$discard_dumps();
 		fwrite(STDERR, "FATAL: RRDtool dump failed; inputs preserved.\n");
 		exit(1);
 	}
@@ -1025,7 +1037,7 @@ function display_help() {
 	print 'so long as the new RRDfile already has the correct step.' . PHP_EOL . PHP_EOL;
 
 	print 'The Old and New input parameters are mandatory.  If the finrrd option is' . PHP_EOL;
-	print 'not specified, it will be the newrrd plus a timestamp.' . PHP_EOL . PHP_EOL;
+	print 'not specified, it will be the newrrd path plus .new.' . PHP_EOL . PHP_EOL;
 
 	print '--oldrrd=file    - The old RRDfile that contains old data.' . PHP_EOL;
 	print '--newrrd=file    - The new RRDfile that contains more recent data.' . PHP_EOL;

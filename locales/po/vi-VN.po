@@ -20311,3 +20311,7 @@ msgstr "Số lượng mẫu biểu đồ sử dụng VDEF này."
 #: vdef.php:923
 msgid "No VDEFs"
 msgstr "Không có VDEF"
+
+#: rrdcleaner.php:28 rrdcleaner.php:427 rrdcleaner.php:462
+msgid "Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup."
+msgstr ""

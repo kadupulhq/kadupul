@@ -155,3 +155,26 @@ because the proxy protocol has no verified atomic replacement operation.
 Legacy Boost streams are drained before checking the last committed timestamp.
 Acknowledged streams already provide that ordering and remain reusable across
 updates. No successful queue deletion relies solely on a pipe write.
+
+
+## Windows automatic cleanup
+
+Automatic **local** RRD purge and archive are unsupported on Windows until a
+validated exclusive storage lease is available. Data-source deletion still
+removes database metadata, but retains its RRD files and logs that manual
+cleanup is required. It does not enqueue automatic cleanup. RRDCleaner rejects
+delete/archive requests; rescanning can inventory orphaned files and preserves
+existing purge requests. Scheduled maintenance skips this unsupported task with
+a warning, so it does not continually fail the whole maintenance cycle.
+Remote proxy storage keeps its existing cleanup behavior.
+
+For manual cleanup, disable automatic cleanup (`rrd_autoclean`) and stop every
+poller, Boost worker, web-triggered writer and external RRDtool/rrdcached writer
+that can access the store. Back up the RRD directory and export
+`data_source_purge_action` before making changes. Review each orphaned file or
+queued request against current data-source metadata. Archive or remove only
+confirmed unused files while writers remain stopped. Remove only the specific
+completed request IDs from `data_source_purge_action`; do not truncate the queue
+or discard requests for files whose cleanup failed. Keep the export until the
+files and corresponding completed requests have been verified, then restart
+writers. Ordinary acknowledged Windows updates remain available.
