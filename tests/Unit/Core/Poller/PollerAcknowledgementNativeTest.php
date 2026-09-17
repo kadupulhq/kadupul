@@ -44,7 +44,7 @@ test('production poller files retain failed writes and preserve concurrent arriv
         if ($error !== '') {
             throw new RuntimeException($error . $output);
         }
-        expect(proc_close($process))->toBe($failed && !in_array($failed, array('replace', 'busy', 'field-success', 'incomplete', 'page-success'), true) ? 1 : 0, $error . $output)->and($error)->toBe('');
+        expect(proc_close($process))->toBe($failed && !in_array($failed, array('replace', 'replace-space', 'busy', 'field-success', 'incomplete', 'page-success'), true) ? 1 : 0, $error . $output)->and($error)->toBe('');
         $expected = is_string($failed) ? array(array('output' => '42', 'remaining' => $failed === 'page' ? 40001 : 1)) : ($failed ? array('42','43') : array('43'));
         if (in_array($failed, array('select', 'handoff', 'init', 'init-function', 'busy', 'count'), true)) {
             $expected = array('42');
@@ -54,6 +54,9 @@ test('production poller files retain failed writes and preserve concurrent arriv
         }
         if ($failed === 'rejected') {
             $expected = array();
+        }
+        if ($failed === 'replace-space') {
+            $expected = array('42 ', '43');
         }
         if ($failed === 'replace') {
             $expected = array('99','43');
@@ -103,4 +106,4 @@ test('production poller files retain failed writes and preserve concurrent arriv
             } rmdir($dir . $suffix);
         }
     }
-})->with(array(array(false,false),array(false,true),array(true,false),array(true,true),array(false,'replace'),array(true,'replace'),array(true,'delete'),array(false,'rejected'),array(true,'rejected'),array(false,'mixed'),array(false,'page'),array(false,'select'),array(false,'handoff'),array(false,'delete'),array(true,'init'),array(false,'init'),array(false,'busy'),array(false,'count'),array(false,false,true),array(false,true,true),array(false,'init',true),array(false,'rejected',true),array(true,'select'),array(true,'init-function'),array(true,'field-failure'),array(true,'field-success'),array(false,'incomplete'),array(false,'tail-failure'),array(false,'page-success')));
+})->with(array(array(false,false),array(false,true),array(true,false),array(true,true),array(false,'replace-space'),array(true,'replace-space'),array(false,'replace'),array(true,'replace'),array(true,'delete'),array(false,'rejected'),array(true,'rejected'),array(false,'mixed'),array(false,'page'),array(false,'select'),array(false,'handoff'),array(false,'delete'),array(true,'init'),array(false,'init'),array(false,'busy'),array(false,'count'),array(false,false,true),array(false,true,true),array(false,'init',true),array(false,'rejected',true),array(true,'select'),array(true,'init-function'),array(true,'field-failure'),array(true,'field-success'),array(false,'incomplete'),array(false,'tail-failure'),array(false,'page-success')));

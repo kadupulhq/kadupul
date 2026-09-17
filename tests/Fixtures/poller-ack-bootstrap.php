@@ -7,11 +7,13 @@ $config = array('base_path' => $fixture, 'library_path' => $fixture . '/lib');
 $ack_table = getenv('ACK_REALTIME') === '1' ? 'poller_output_realtime' : 'poller_output';
 $ack_db = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 $ack_db->sqliteCreateFunction('UNIX_TIMESTAMP', 'strtotime', 1);
+// Model the queue's case-insensitive, PAD SPACE collation.
+$ack_db->sqliteCreateCollation('queue_output', static fn($a, $b) => strcasecmp(rtrim($a, ' '), rtrim($b, ' ')));
 $ack_db->exec('CREATE TABLE data_local(id INTEGER,data_template_id INTEGER)');
 $ack_db->exec('INSERT INTO data_local VALUES(1,0)');
 $ack_db->exec("CREATE TABLE poller_item(local_data_id INTEGER,rrd_name TEXT,rrd_num INTEGER,rrd_path TEXT); INSERT INTO poller_item VALUES(1,'value',1,'fixture.rrd')");
-$ack_db->exec('CREATE TABLE poller_output(local_data_id INTEGER,rrd_name TEXT,time TEXT,output TEXT)');
-$ack_db->exec('CREATE TABLE poller_output_realtime(local_data_id INTEGER,rrd_name TEXT,time TEXT,output TEXT,poller_id INTEGER)');
+$ack_db->exec('CREATE TABLE poller_output(local_data_id INTEGER,rrd_name TEXT,time TEXT,output TEXT COLLATE queue_output)');
+$ack_db->exec('CREATE TABLE poller_output_realtime(local_data_id INTEGER,rrd_name TEXT,time TEXT,output TEXT COLLATE queue_output,poller_id INTEGER)');
 $ack_db->exec("INSERT INTO $ack_table VALUES(1,'value','2020-01-01','42'" . ($ack_table === 'poller_output_realtime' ? ',1' : '') . ')');
 if (in_array(getenv('ACK_FAIL'), array('field-failure', 'field-success'), true)) {
     $ack_db->exec("UPDATE poller_output_realtime SET output='value:42'");
@@ -109,6 +111,8 @@ function db_fetch_assoc_prepared($sql, $params = array())
     if (getenv('ACK_FAIL') === 'select' && (strpos($sql, 'FROM poller_output AS po') !== false || strpos($sql, 'FROM poller_output_realtime AS port') !== false)) {
         return false;
     }
+    // SQLite expresses MySQL's binary cast as a BLOB cast.
+    $sql = preg_replace('/\bCAST\((output|\?) AS BINARY\)/', 'CAST($1 AS BLOB)', $sql);
     $query = $GLOBALS['ack_db']->prepare($sql);
     $query->execute($params);
     return $query->fetchAll(PDO::FETCH_ASSOC);
@@ -136,12 +140,17 @@ function db_execute_prepared($sql, $params)
     if (getenv('ACK_FAIL') === '1') {
         throw new RuntimeException('Deletion before acknowledgement');
     }
+    // SQLite expresses MySQL's binary cast as a BLOB cast.
+    $sql = preg_replace('/\bCAST\((output|\?) AS BINARY\)/', 'CAST($1 AS BLOB)', $sql);
     $query = $GLOBALS['ack_db']->prepare($sql);
     return $query->execute($params);
 }
 function rrdtool_function_update($updates, $pipe = false, &$completed = null)
 {
     file_put_contents(getenv('ACK_FIXTURE') . '/updates.json', json_encode($updates));
+    if (getenv('ACK_FAIL') === 'replace-space') {
+        $GLOBALS['ack_db']->exec("UPDATE " . $GLOBALS['ack_table'] . " SET output='42 ' WHERE time='2020-01-01'");
+    }
     if (getenv('ACK_FAIL') === 'replace') {
         $GLOBALS['ack_db']->exec("UPDATE " . $GLOBALS['ack_table'] . " SET output='99' WHERE time='2020-01-01'");
     }

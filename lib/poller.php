@@ -827,13 +827,15 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null) {
 			}
 		}
 
-		foreach (array_chunk($output_keys, 1000) as $chunk) {
+		foreach (array_chunk($output_keys, 500) as $chunk) {
 			$params = array();
 			foreach ($chunk as $key) {
 				array_push($params, ...$key);
 			}
-			$placeholders = implode(',', array_fill(0, count($chunk), '(?,?,?,?)'));
-			if (db_execute_prepared("DELETE FROM poller_output WHERE (local_data_id, rrd_name, time, output) IN ($placeholders)", $params) === false) {
+			// Preserve replacements that differ only by case or trailing spaces.
+			$placeholders = implode(' OR ', array_fill(0, count($chunk), '(local_data_id = ? AND rrd_name = ? AND time = ? AND CAST(output AS BINARY) = CAST(? AS BINARY))'));
+			// Explicit key equalities retain range access on both MySQL and MariaDB.
+			if (db_execute_prepared("DELETE FROM poller_output WHERE $placeholders", $params) === false) {
 				return false;
 			}
 		}

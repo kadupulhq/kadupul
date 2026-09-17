@@ -60,6 +60,8 @@ function db_fetch_cell($sql)
 }
 function db_execute_prepared($sql, $params)
 {
+    // SQLite expresses MySQL's binary cast as a BLOB cast.
+    $sql = preg_replace('/\bCAST\((output|\?) AS BINARY\)/', 'CAST($1 AS BLOB)', $sql);
     if ($GLOBALS['ack_result'] === false) {
         throw new \RuntimeException('Deleted samples without acknowledgement');
     }
