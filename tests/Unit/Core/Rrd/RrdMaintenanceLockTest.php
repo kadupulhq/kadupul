@@ -202,16 +202,17 @@ test('a storage directory replaced while a writer waits is rejected', function (
     expect($stderr)->toBe('')->and($status)->toBe(0)->and($stdout)->toBe('true');
 })->with(array(false, true));
 
-test('CLI rewrite locks exclude writers and preserve Windows CLI behavior', function () {
+test('CLI rewrite locks exclude writers and reject Windows exclusive acquisition', function () {
     $lock = rrd_maintenance_cli_lock(true);
     try { expect(is_resource($lock))->toBeTrue()->and(rrd_maintenance_acquire(true))->toBeFalse(); }
     finally { rrd_maintenance_release($lock); }
     $GLOBALS['config']['cacti_server_os'] = 'win32';
-    expect(rrd_maintenance_cli_lock(true))->toBeTrue();
+    expect(rrd_maintenance_acquire(true))->toBeFalse();
 });
 
-test('CLI maintenance stops before writing when storage is busy or externally cached', function ($cached) {
+test('CLI maintenance stops before writing when storage is busy or externally cached', function ($cached, $windows) {
     $lock = rrd_maintenance_acquire();
+    if ($windows) { $GLOBALS['config']['cacti_server_os'] = 'win32'; }
     $script = $this->dir . '/cli-maintenance.php';
     $bootstrap = '<?php ';
     if ($this->getTestResultObject()->getCodeCoverage() !== null) {
@@ -229,7 +230,7 @@ test('CLI maintenance stops before writing when storage is busy or externally ca
             ->and($stderr)->toContain($cached ? 'RRDCACHED_ADDRESS' : 'storage is busy')
             ->and(file_exists($this->dir . '/should-not-write'))->toBeFalse();
     } finally { rrd_maintenance_release($lock); }
-})->with(array(false, true));
+})->with(array(array(false, false), array(true, false), array(false, true)));
 
 
 test('failed acquisitions cannot register an uncoordinated pipe', function () {

@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 test('installer rejects unsafe storage before database upgrades even when forced', function ($mode, $ready) {
-    if ($mode === 'windows-readonly' && posix_geteuid() === 0) { $this->markTestSkipped('Root bypasses write permissions.'); }
+    if ($mode === 'windows-readonly' && function_exists('posix_geteuid') && posix_geteuid() === 0) { $this->markTestSkipped('Root bypasses write permissions.'); }
     $root = dirname(__DIR__, 3);
     $dir = sys_get_temp_dir() . '/installer-rrd-' . bin2hex(random_bytes(8));
     mkdir($dir, 0700);

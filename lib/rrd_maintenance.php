@@ -170,8 +170,8 @@ function rrd_maintenance_cli_lock($exclusive = false, $wait = false) {
 		rrd_maintenance_cli_preflight();
 	}
 
-	// Spike removal is unavailable on Windows; retain other CLI behavior there.
-	$lock = rrd_maintenance_acquire($exclusive && ($config['cacti_server_os'] ?? '') !== 'win32', $wait);
+	// Destructive maintenance must fail closed where exclusive locks are unavailable.
+	$lock = rrd_maintenance_acquire($exclusive, $wait);
 	if ($lock === false) {
 		fwrite(STDERR, "FATAL: RRD storage is busy or its maintenance lock is unavailable.\n");
 		exit(1);

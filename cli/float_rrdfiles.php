@@ -291,7 +291,7 @@ switch ($type) {
 				 * temporary XML file is created exclusively, so one left by a killed
 				 * child is refused rather than overwritten, and deleting the row
 				 * anyway would drop that RRD from the queue unfloated. */
-				$rrd_rewrite_lock = rrd_maintenance_acquire(($config['cacti_server_os'] ?? '') !== 'win32', true, 5);
+				$rrd_rewrite_lock = rrd_maintenance_acquire(true, true, 5);
 				if ($rrd_rewrite_lock === false) {
 					fwrite(STDERR, "FATAL: RRD storage is busy or its maintenance lock is unavailable.\n");
 					$exit_status = 1;
