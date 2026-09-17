@@ -330,10 +330,10 @@ function boostMariaDbLoadDeleteRows($root) {
 	}
 }
 
-test('poller acknowledgement preserves byte-distinct replacement values and uses the primary key', function ($observed, $replacement, $batch_size) use ($root) {
+test('poller acknowledgement preserves byte-distinct replacement values and uses the primary key', function ($observed, $replacement, $batch_size, $collation) use ($root) {
 	boostMariaDbLoadDeleteRows($root);
 	$db = $GLOBALS['boost_mariadb_pdo'];
-	$db->exec('CREATE TEMPORARY TABLE poller_output (local_data_id INT, rrd_name VARCHAR(19), time TIMESTAMP, output VARCHAR(512), PRIMARY KEY(local_data_id,rrd_name,time)) ENGINE=InnoDB COLLATE=utf8mb4_unicode_ci');
+	$db->exec('CREATE TEMPORARY TABLE poller_output (local_data_id INT, rrd_name VARCHAR(19), time TIMESTAMP, output VARCHAR(512), PRIMARY KEY(local_data_id,rrd_name,time)) ENGINE=InnoDB COLLATE=' . $collation);
 	try {
 		$rows = $keys = array();
 		for ($id = 1; $id <= 10000; $id++) {
@@ -352,7 +352,7 @@ test('poller acknowledgement preserves byte-distinct replacement values and uses
 	} finally {
 		$db->exec('DROP TEMPORARY TABLE poller_output');
 	}
-})->with(array(array('U', 'u'), array('42', '42 ')))->with(array(2, 500));
+})->with(array(array('U', 'u'), array('42', '42 '), array('café', 'CAFÉ'), array('café', 'café ')))->with(array(2, 500))->with(array('utf8mb4_unicode_ci', 'latin1_swedish_ci'));
 
 
 test('poller reports failed source deletion even after earlier chunks made progress', function ($fail_at) use ($root) {

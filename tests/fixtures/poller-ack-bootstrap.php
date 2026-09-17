@@ -91,7 +91,7 @@ function db_fetch_cell($sql)
 function db_execute_prepared($sql, $params)
 {
     // SQLite expresses MySQL's binary cast as a BLOB cast.
-    $sql = preg_replace('/\bCAST\((output|\?) AS BINARY\)/', 'CAST($1 AS BLOB)', $sql);
+    $sql = preg_replace('/\bCAST\(CONVERT\((output|\?) USING utf8mb4\) AS BINARY\)/', 'CAST($1 AS BLOB)', $sql);
     if (getenv('ACK_FAIL') === 'delete') { return false; }
 
     if (getenv('ACK_FAIL') === '1') {

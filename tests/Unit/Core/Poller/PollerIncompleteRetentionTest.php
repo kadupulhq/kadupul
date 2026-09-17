@@ -29,7 +29,7 @@ function db_fetch_cell($sql) { return $GLOBALS['retention_running']; }
 function db_fetch_assoc($sql) { return db_fetch_assoc_prepared($sql); }
 function db_execute_prepared($sql, $parameters) {
     // SQLite expresses MySQL's binary cast as a BLOB cast.
-    $sql = preg_replace('/\bCAST\((output|\?) AS BINARY\)/', 'CAST($1 AS BLOB)', $sql);
+    $sql = preg_replace('/\bCAST\(CONVERT\((output|\?) USING utf8mb4\) AS BINARY\)/', 'CAST($1 AS BLOB)', $sql);
     if ($GLOBALS['retention_fail'] === 'delete') { return false; }
     $statement = $GLOBALS['retention_db']->prepare($sql); $statement->execute($parameters);
     $GLOBALS['retention_affected'] = $statement->rowCount();
