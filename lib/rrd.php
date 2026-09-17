@@ -63,7 +63,7 @@ function rrd_init($output_to_term = true, $exclusive = false, $acknowledged = fa
 	}
 	$lock = rrd_maintenance_acquire($exclusive, false, $lease_timeout, $lease_busy);
 	if ($lock === false) {
-		if (!$lease_busy || $lease_timeout !== 0) {
+		if ((!$lease_busy || $lease_timeout !== 0) && (empty($config['is_web']) || debounce_run_notification('rrd_initialization_failure', 1800))) {
 			cacti_log('ERROR: Unable to coordinate local RRD writes with maintenance.');
 		}
 		return false;
@@ -1089,7 +1089,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
  */
 function rrdtool_rejection_is_permanent($reason) {
 	return is_string($reason) && (bool) preg_match(
-		'/^(?:unknown DS name [\'"]|expected \d+ data source readings \(got \d+\)|illegal attempt to update using time \d+ when last update time is \d+)/',
+		'/^(?:[^\r\n]+: )?(?:found extra data on update argument:|unknown DS name [\'"]|expected \d+ data source readings \(got \d+\)|illegal attempt to update using time \d+ when last update time is \d+)/',
 		$reason
 	);
 }

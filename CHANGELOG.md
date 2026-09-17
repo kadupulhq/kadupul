@@ -11,6 +11,9 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Preserve retryable poller samples in InnoDB. Before code-only deployment, stop collectors, back up the database, run `php cli/upgrade_database.php --migrate-poller-queue`, and run `--check-rrd-storage` under every web and poller service account.
+- Back off failed drains, throttle repeated notifications, distinguish untrusted storage from lock contention, and classify native proxy sample errors.
+
 - Finish poller post-run services before reporting failed writes, and release writer leases between collection batches so maintenance can proceed.
 
 - Keep Windows local RRD cleanup explicitly manual, preserve queued requests during rescans, and discard partial splice dumps after command failure.

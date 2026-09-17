@@ -45,7 +45,7 @@ test('proxy acknowledgements reject missing responses and error responses even w
     expect(__rrd_proxy_execute('update /fixture/test.rrd 100:1', false, RRDTOOL_OUTPUT_BOOLEAN, array(true,'test-public')))->toBe($expected);
     if (is_string($response) && preg_match('/^ERROR:([^\r\n]*)/m', $response, $error)) {
         expect($rejection)->toBe(trim($error[1]));
-        if (strpos($response, 'unknown DS name') !== false) {
+        if (strpos($response, 'unknown DS name') !== false || strpos($response, 'found extra data') !== false) {
             expect(rrdtool_rejection_is_permanent($rejection))->toBeTrue();
         }
         if (strpos($response, 'Permission denied') !== false) {
@@ -54,4 +54,4 @@ test('proxy acknowledgements reject missing responses and error responses even w
     } else {
         expect($rejection)->toBeNull();
     }
-})->with(array(array("OK\n",true),array("OK\r\n",true),array("ERROR: failed\nOK\n",false),array("OK u:0.01 s:0.02 r:0.03\n",true),array(false,false),array("ERROR: failed\n",false),array("ERROR: unknown DS name 'missing'\n",false),array("ERROR: opening file: Permission denied\n",false),array("ERROR: expected OK u:0\n",false),array("ERROR: failed\nOK u:0 s:0 r:0\n",false)));
+})->with(array(array("OK\n",true),array("OK\r\n",true),array("ERROR: failed\nOK\n",false),array("OK u:0.01 s:0.02 r:0.03\n",true),array(false,false),array("ERROR: /fixture/test.rrd: found extra data on update argument: 43\n",false),array("ERROR: failed\n",false),array("ERROR: unknown DS name 'missing'\n",false),array("ERROR: opening file: Permission denied\n",false),array("ERROR: expected OK u:0\n",false),array("ERROR: failed\nOK u:0 s:0 r:0\n",false)));

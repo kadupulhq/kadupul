@@ -66,6 +66,9 @@ function boost_get_arch_table_names(...$args)
 }
 function db_fetch_cell_prepared($sql, $params = array())
 {
+    if (str_contains($sql, 'SELECT ENGINE FROM information_schema.TABLES')) {
+        return 'InnoDB';
+    }
     $mode = getenv('BOOST_MODE');
     if ($mode === 'archive-retry' && strpos($sql, 'TABLE_ROWS') !== false) {
         return 0;

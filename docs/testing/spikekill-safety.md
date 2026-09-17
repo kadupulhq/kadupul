@@ -206,3 +206,29 @@ until access recovers. It preserves pending samples without marking the collecto
 run failed. Untrusted storage, unavailable writers and unreadable queues remain
 errors. Failure logging resumes after recovery. Proxy storage reuses one connection
 across output batches and closes it at the end of the collector cycle or on failure.
+
+
+### Durable retry queue and service-account probe
+
+The normal `poller_output` queue now requires InnoDB, matching the existing Boost
+queue. Run `php cli/upgrade_database.php --migrate-poller-queue` to convert it without deleting retained rows. Before a
+code-only deployment, stop collectors, back up the database, and run that migration
+(or `ALTER TABLE poller_output ENGINE=InnoDB ROW_FORMAT=Dynamic`). Do not restart
+collection until the queue is InnoDB; the startup preflight rejects MEMORY or an
+unreadable engine. InnoDB retains samples across restarts under the configured database durability settings. Disk capacity must
+be monitored; durability does not provide unlimited retention capacity.
+
+Run `php cli/upgrade_database.php --check-rrd-storage` under each actual service
+account, including the web user, before cutover. For example, use
+`sudo -u www-data php cli/upgrade_database.php --check-rrd-storage` on systems with
+that account. The check reports the invoking UID/GID, makes no upgrade, and exits
+nonzero for unsafe storage or an unsuitable queue. Configure the exact
+`$config['rrd_maintenance_trusted_uids']` and
+`$config['rrd_maintenance_trusted_gids']` keys in `include/config.php` for all
+participating accounts and writable groups. Root-only validation cannot establish
+that the web account has access.
+
+After a real batch write failure, interim attempts stop until the final drain;
+maintenance contention remains retryable between batches. Retained-queue warning
+mail is limited to once per 30 minutes per poller. Samples are preserved for repair,
+not expired merely because a writer remains unavailable.

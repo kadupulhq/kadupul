@@ -116,9 +116,10 @@ function rrd_maintenance_acquire($exclusive = false, $wait = false, $timeout = n
 }
 
 /** Lock configured storage and every possible trusted root for custom RRD paths. */
-function rrd_maintenance_acquire_paths($files, $timeout = 0)
+function rrd_maintenance_acquire_paths($files, $timeout = 0, &$busy = null)
 {
     global $config;
+    $busy = false;
     $had_path = array_key_exists('rra_path', $config);
     $saved_path = $config['rra_path'] ?? null;
     $original = $config['rra_path'] ?? (($config['base_path'] ?? '') . '/rra');
@@ -159,7 +160,7 @@ function rrd_maintenance_acquire_paths($files, $timeout = 0)
     try {
         foreach ($directories as $directory => $_) {
             $config['rra_path'] = $directory;
-            $lock = rrd_maintenance_acquire(true, $timeout > 0, max(0, $deadline - microtime(true)));
+            $lock = rrd_maintenance_acquire(true, $timeout > 0, max(0, $deadline - microtime(true)), $busy);
             if ($lock === false) {
                 rrd_maintenance_release($locks);
                 return false;
@@ -488,10 +489,23 @@ function rrd_maintenance_restore_command($binary, $xml_file, $rrd_file, $range_c
     });
 }
 
-/** Stop collection before a bad storage configuration can fill the MEMORY queue. */
+/** Require durable storage before accepting retryable collector samples. */
+function rrd_maintenance_queue_configuration_error()
+{
+    $engine = db_fetch_cell_prepared('SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?', array('poller_output'));
+    if (is_string($engine) && strtolower($engine) === 'innodb') {
+        return '';
+    }
+    return 'The poller_output queue must use InnoDB before collection. Stop collectors and run cli/upgrade_database.php --migrate-poller-queue (or convert poller_output to InnoDB after a backup). Observed engine: ' . (is_string($engine) && $engine !== '' ? $engine : 'unavailable') . '. Retained samples must not be discarded to clear this condition.';
+}
+
+/** Stop collection before unsafe storage or a volatile retry queue can lose samples. */
 function rrd_maintenance_poller_preflight()
 {
     $error = rrd_maintenance_configuration_error();
+    if ($error === '') {
+        $error = rrd_maintenance_queue_configuration_error();
+    }
     if ($error === '') {
         return true;
     }
