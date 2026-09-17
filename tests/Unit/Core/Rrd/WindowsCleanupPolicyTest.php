@@ -103,11 +103,11 @@ function with_policy($platform, $remote, $operation)
     }
 }
 
-test('data-source deletion enqueues only supported automatic cleanup', function ($multiple, $platform, $remote, $supported) {
+test('data-source deletion keeps cleanup requests even when automatic execution is unsupported', function ($multiple, $platform, $remote, $supported) {
     with_policy($platform, $remote, function () use ($multiple, $supported) {
         $multiple ? api_data_source_remove_multi(array(1, 2)) : api_data_source_remove(1);
         $queries = $GLOBALS['windows_cleanup_queries'];
-        expect(count(array_filter($queries, fn($q) => str_contains($q, 'INSERT INTO data_source_purge_action'))))->toBe($supported ? 1 : 0);
+        expect(count(array_filter($queries, fn($q) => str_contains($q, 'INSERT INTO data_source_purge_action'))))->toBe(1);
         expect(count(array_filter($queries, fn($q) => str_contains($q, 'DELETE FROM data_local'))))->toBe(1);
         if (!$supported) {
             expect(implode(' ', $GLOBALS['windows_cleanup_logs']))->toContain('retained for manual cleanup');

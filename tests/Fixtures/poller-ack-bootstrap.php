@@ -112,7 +112,7 @@ function db_fetch_assoc_prepared($sql, $params = array())
         return false;
     }
     // SQLite expresses MySQL's binary cast as a BLOB cast.
-    $sql = preg_replace('/\bCAST\((output|\?) AS BINARY\)/', 'CAST($1 AS BLOB)', $sql);
+    $sql = preg_replace('/\bCAST\(CONVERT\((output|\?) USING utf8mb4\) AS BINARY\)/', 'CAST($1 AS BLOB)', $sql);
     $query = $GLOBALS['ack_db']->prepare($sql);
     $query->execute($params);
     return $query->fetchAll(PDO::FETCH_ASSOC);
@@ -141,7 +141,7 @@ function db_execute_prepared($sql, $params)
         throw new RuntimeException('Deletion before acknowledgement');
     }
     // SQLite expresses MySQL's binary cast as a BLOB cast.
-    $sql = preg_replace('/\bCAST\((output|\?) AS BINARY\)/', 'CAST($1 AS BLOB)', $sql);
+    $sql = preg_replace('/\bCAST\(CONVERT\((output|\?) USING utf8mb4\) AS BINARY\)/', 'CAST($1 AS BLOB)', $sql);
     $query = $GLOBALS['ack_db']->prepare($sql);
     return $query->execute($params);
 }

@@ -23,7 +23,7 @@ function cacti_log($message, ...$args)
 }
 function db_fetch_cell_prepared($sql)
 {
-    expect($sql)->toBe('SELECT  COUNT(*) FROM poller_output');
+    expect($sql)->toBe('SELECT  EXISTS(SELECT 1 FROM poller_output LIMIT 1)');
     return $GLOBALS['batch']['mode'] === 'empty' ? 0 : ($GLOBALS['batch']['mode'] === 'query-failed' ? false : 3);
 }
 function rrd_init($output, $exclusive, $acknowledged, $timeout = null, &$busy = null)

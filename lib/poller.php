@@ -519,6 +519,36 @@ function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$re
  *
  * @return (int) - The number of rrdfiles processed
  */
+/** Delete only the selected source samples, preserving concurrent arrivals. */
+function poller_delete_output_rows($keys, &$failed = null) {
+	$failed = false;
+	if (!$keys) {
+		return 0;
+	}
+
+	$consumed = 0;
+	foreach (array_chunk($keys, 500) as $chunk) {
+		$params = array();
+		foreach ($chunk as $key) {
+			if (count($key) !== 4) { $failed = true; return $consumed; }
+			$params[] = (int) $key[0];
+			$params[] = (string) $key[1];
+			$params[] = (string) $key[2];
+			$params[] = (string) $key[3];
+		}
+		// Compare exact values in one charset, preserving case and trailing spaces.
+		$placeholders = implode(' OR ', array_fill(0, count($chunk), '(local_data_id = ? AND rrd_name = ? AND time = ? AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY))'));
+		// Explicit key equalities retain range access on both MySQL and MariaDB.
+		if (db_execute_prepared("DELETE FROM poller_output WHERE $placeholders", $params) === false) {
+			$failed = true;
+			break;
+		}
+		$consumed += (int) db_affected_rows();
+	}
+
+	return $consumed;
+}
+
 function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null) {
 	global $config, $debug;
 
@@ -827,17 +857,9 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null) {
 			}
 		}
 
-		foreach (array_chunk($output_keys, 500) as $chunk) {
-			$params = array();
-			foreach ($chunk as $key) {
-				array_push($params, ...$key);
-			}
-			// Preserve replacements that differ only by case or trailing spaces.
-			$placeholders = implode(' OR ', array_fill(0, count($chunk), '(local_data_id = ? AND rrd_name = ? AND time = ? AND CAST(output AS BINARY) = CAST(? AS BINARY))'));
-			// Explicit key equalities retain range access on both MySQL and MariaDB.
-			if (db_execute_prepared("DELETE FROM poller_output WHERE $placeholders", $params) === false) {
-				return false;
-			}
+		poller_delete_output_rows($output_keys, $delete_failed);
+		if ($delete_failed) {
+			return false;
 		}
 
 		if ($full_page) {
@@ -2537,10 +2559,10 @@ function process_poller_output_batch(&$deferred, &$proxy_pipe) {
 	global $config;
 	static $reported = array();
 	$deferred = false;
-	$pending = db_fetch_cell_prepared('SELECT ' . SQL_NO_CACHE . ' COUNT(*) FROM poller_output');
+	$pending = db_fetch_cell_prepared('SELECT ' . SQL_NO_CACHE . ' EXISTS(SELECT 1 FROM poller_output LIMIT 1)');
 	if (!is_numeric($pending)) {
 		if (empty($reported['count'])) {
-			cacti_log('ERROR: Unable to read pending poller output count; samples retained for retry.', false, 'POLLER');
+			cacti_log('ERROR: Unable to inspect pending poller output; samples retained for retry.', false, 'POLLER');
 			$reported['count'] = true;
 		}
 		$deferred = true;

@@ -6,6 +6,11 @@
 namespace PollerAcknowledgement;
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/poller.php'), 'poller_delete_output_rows'));
+function db_affected_rows()
+{
+    return $GLOBALS['ack_db']->query('SELECT changes()')->fetchColumn();
+}
 eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/poller.php'), 'process_poller_output'));
 eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/poller_realtime.php'), 'process_poller_output_rt'));
 function cacti_sizeof($v)
@@ -61,7 +66,7 @@ function db_fetch_cell($sql)
 function db_execute_prepared($sql, $params)
 {
     // SQLite expresses MySQL's binary cast as a BLOB cast.
-    $sql = preg_replace('/\bCAST\((output|\?) AS BINARY\)/', 'CAST($1 AS BLOB)', $sql);
+    $sql = preg_replace('/\bCAST\(CONVERT\((output|\?) USING utf8mb4\) AS BINARY\)/', 'CAST($1 AS BLOB)', $sql);
     if ($GLOBALS['ack_result'] === false) {
         throw new \RuntimeException('Deleted samples without acknowledgement');
     }

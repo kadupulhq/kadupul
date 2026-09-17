@@ -298,7 +298,7 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 				AND rrd_name = ?
 				AND time = ?
 				AND poller_id = ?
-				AND CAST(output AS BINARY) = CAST(? AS BINARY)',
+				AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY)',
 				array($item['local_data_id'], $item['rrd_name'], $item['time'], $poller_id, $item['output'])) === false) { return false; }
 		}
 
