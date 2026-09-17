@@ -60,13 +60,59 @@ for separator in ('-', '/', '.'):
 
 
 def comparable_manifest():
-    return {'complete': True, 'php': '8.2', 'base_image': {},
+    return {'format': 1, 'target': 'fixture', 'error': None, 'complete': True, 'php': '8.2',
+            'base_image': {'ref': 'php@sha256:' + '1' * 64, 'db_ref': 'mariadb@sha256:' + '2' * 64,
+                           'packages': 'rrdtool=1.7', 'runtime': 'PHP 8.2; fixture Linux'},
             'revision': 'a' * 40, 'schema_sha256': 'b' * 64,
             'provenance': {'harness_revision': 'c' * 40, 'harness_sha256': 'd' * 64,
                            'harness_dirty': False, 'application_dirty': False,
-                           'harness_inputs_sha256': {'.dockerignore': 'e' * 64},
-                           'application_inputs_sha256': {'.dockerignore': 'e' * 64}},
+                           'harness_inputs_sha256': {name: ('d' if name == 'tests/Support/Behavior/harness.py' else 'e') * 64 for name in harness.REQUIRED_INPUTS},
+                           'application_inputs_sha256': {name: ('d' if name == 'tests/Support/Behavior/harness.py' else 'e') * 64 for name in harness.REQUIRED_INPUTS}},
             'scenarios': {name: 1 for name in harness.EXPECTED_SCENARIOS}}
+
+
+def bootstrap_repeat_provenance():
+    """A clean checkout bootstrap must record the state seen by its repeat."""
+    import subprocess
+    with tempfile.TemporaryDirectory(prefix='bootstrap provenance ') as directory:
+        root = Path(directory)
+        for name in harness.REQUIRED_INPUTS:
+            path = root / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text('fixture ' + name)
+        (root / 'cacti.sql').write_text('fixture schema')
+        def git(*args):
+            subprocess.run(['git', '-C', str(root), '-c', 'user.name=Harness Fixture',
+                            '-c', 'user.email=fixture@example.invalid', '-c', 'commit.gpgsign=false',
+                            '-c', 'core.hooksPath=' + str(root / 'no-hooks'), *args], check=True, capture_output=True)
+        git('init', '-q')
+        git('add', '.')
+        git('commit', '-q', '-s', '-m', 'Create bootstrap provenance fixture')
+        recorder = object.__new__(harness.Harness)
+        recorder.args = types.SimpleNamespace(target='fixture', only=None, update_golden=True, bootstrap_goldens=True)
+        recorder.destination = root / 'tests/behavior/results/first'
+        recorder.observed = comparable_manifest()['scenarios']
+        recorder.command = lambda *a, **kw: {'stdout': '8.2', 'stderr': '', 'exit': 0}
+        recorder.base_image_digest = lambda: comparable_manifest()['base_image']
+        with patch.object(harness, 'ROOT', root), patch.object(harness, '__file__', str(root / 'tests/Support/Behavior/harness.py')):
+            assert harness.source_provenance()['application_dirty'] is False
+            assert recorder.finish() == 0
+            first = json.loads((recorder.destination / 'observations.json').read_text())
+            assert first['provenance']['application_dirty'] is True
+            assert first['provenance']['harness_dirty'] is True
+            recorder.destination = root / 'tests/behavior/results/repeat'
+            recorder.args.update_golden = False
+            assert recorder.finish() == 0
+            repeat = json.loads((recorder.destination / 'observations.json').read_text())
+            assert first == repeat
+            assert harness.compare(types.SimpleNamespace(results_root=root / 'tests/behavior/results',
+                baseline='first', candidate='repeat', repeat=None, approvals=None, output=None)) == 0
+            recorder.args.update_golden = True
+            with patch.object(harness, 'source_provenance', side_effect=[first['provenance'], OSError('final probe failed')]):
+                assert recorder.finish() == 2
+            failed = json.loads((recorder.destination / 'observations.json').read_text())
+            assert failed['complete'] is False and 'final source provenance' in failed['error']
+    print('clean bootstrap and repeat preserve identical final provenance; final probe failures fail closed')
 
 
 def separate_results_root():
@@ -90,7 +136,7 @@ def separate_results_root():
             assert report['captures'][role]['provenance'] == manifest['provenance']
         assert report['controller']['harness_sha256'] == hashlib.sha256(Path(harness.__file__).read_bytes()).hexdigest()
         for key, changed in (('revision', 'f' * 40), ('schema_sha256', 'f' * 64),
-                             ('php', '8.3'), ('base_image', {'ref': 'different'}),
+                             ('php', '8.3'), ('base_image', {**manifest['base_image'], 'ref': 'php@sha256:' + 'f' * 64}),
                              ('provenance', {**manifest['provenance'], 'application_dirty': True})):
             (results / 'repeat/observations.json').write_text(json.dumps({**manifest, key: changed}))
             with patch('sys.argv', command):
@@ -120,7 +166,11 @@ def comparison_inventory_failure():
                                      repeat=str(paths['repeat']), approvals=None, output=None)
         for role, path in paths.items():
             for fault in ('missing', 'unexpected', 'empty', 'wrong-type', 'false-complete',
-                          'revision', 'schema_sha256', 'provenance', 'harness-hash', 'dirty-type', 'input-hash', 'dockerignore'):
+                          'revision', 'schema_sha256', 'provenance', 'harness-hash', 'dirty-type', 'input-hash', 'dockerignore',
+                          'format', 'format-boolean', 'target', 'php', 'php-invalid', 'base_image',
+                          'image-unpinned', 'packages', 'runtime', 'error', 'error-present', 'inventory-missing', 'hash-mismatch') + tuple(
+                              key + ':' + name for key in ('harness_inputs_sha256', 'application_inputs_sha256')
+                              for name in sorted(harness.REQUIRED_INPUTS)):
                 broken = json.loads(json.dumps(valid))
                 if fault == 'missing':
                     broken['scenarios'].pop(sorted(harness.EXPECTED_SCENARIOS)[0])
@@ -140,8 +190,27 @@ def comparison_inventory_failure():
                     broken['provenance']['application_dirty'] = 'false'
                 elif fault == 'input-hash':
                     broken['provenance']['application_inputs_sha256']['.dockerignore'] = 'invalid'
-                else:
+                elif fault == 'dockerignore':
                     broken['provenance']['harness_inputs_sha256'].pop('.dockerignore')
+                elif fault in ('format', 'target', 'php', 'base_image', 'error'):
+                    broken.pop(fault)
+                elif fault == 'format-boolean':
+                    broken['format'] = True
+                elif fault == 'php-invalid':
+                    broken['php'] = 'unknown'
+                elif fault == 'image-unpinned':
+                    broken['base_image']['ref'] = 'php:latest'
+                elif fault in ('packages', 'runtime'):
+                    broken['base_image'].pop(fault)
+                elif fault == 'error-present':
+                    broken['error'] = 'capture failed'
+                elif fault == 'inventory-missing':
+                    broken['inventory_missing'] = ['api/missing']
+                elif fault == 'hash-mismatch':
+                    broken['provenance']['harness_inputs_sha256']['tests/Support/Behavior/harness.py'] = 'f' * 64
+                else:
+                    key, name = fault.split(':', 1)
+                    broken['provenance'][key].pop(name)
                 path.write_text(json.dumps(broken))
                 try:
                     harness.compare(args)
@@ -705,6 +774,7 @@ def main():
     comparison_inventory_failure()
     print("compare rejects missing, unexpected and malformed inventories for every role")
     separate_results_root()
+    bootstrap_repeat_provenance()
     print('compare honors a separate results directory and repeat control')
     repeat_failure = incomplete_repeat_failure()
     if repeat_failure:

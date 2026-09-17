@@ -185,6 +185,14 @@ input hashes are rejected. Older captures without these fields must be recapture
 with the current harness. Repeat runs must also match the candidate runtime and
 provenance.
 
+Comparison requires format 1, a target, a valid PHP version, pinned PHP/database
+image references, package/runtime details, and no capture error. Both input hash
+maps must contain every required helper, plugin/SNMP fixture, Dockerfile, compose
+file and `.dockerignore`; the controller hash must agree with its file entry.
+Bootstrap records final provenance after writing golden files, so a clean
+checkout's first capture and its verification repeat report the same dirty state.
+Failure to record that final state leaves the capture incomplete.
+
 To reproduce the historical runs, create separate clean checkouts of
 `captures.baseline.revision` and
 `captures.baseline.provenance.harness_revision` recorded in `comparison.json`.

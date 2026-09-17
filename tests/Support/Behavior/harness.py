@@ -23,6 +23,18 @@ ROOT = Path(__file__).resolve().parents[3]
 # Explicit inventory: removing a capture must never shrink a recording silently.
 EXPECTED_SCENARIOS = frozenset(['api/ajax-hosts', 'api/datasource-invalid', 'api/php-errors', 'api/type-coercion', 'api/warning-calibration', 'auth/login-admin', 'auth/login-invalid', 'auth/missing-csrf', 'cli/device-help', 'cli/device-missing', 'database/fresh-schema', 'devices/create', 'devices/delete', 'diagnostics/application-log', 'diagnostics/visible-php-errors', 'faults/database-unreachable', 'faults/missing-rrd-file', 'graphs/create', 'graphs/datasource-create', 'graphs/definition', 'plugins/callbacks', 'plugins/disable', 'plugins/enable', 'plugins/hook', 'plugins/hook-disabled', 'plugins/install', 'plugins/poller-hooks', 'plugins/uninstall', 'poller/device-unreachable', 'poller/rrd-failure', 'poller/run-reachable', 'snmp/get', 'ui/devices', 'upgrade/install'])
 
+# Minimum supported input inventory. Extra inputs remain hashed and compared.
+# Keep old captures readable when adding optional helpers; a required runtime
+# dependency must be added here and old captures lacking it must be recaptured.
+REQUIRED_INPUTS = frozenset(
+    ['tests/Support/Behavior/' + name for name in (
+        'coverage.php', 'coverage_selftest.py', 'errors.php', 'harness.py', 'inventory.py',
+        'merge_poller_coverage.php', 'poller_coverage.py', 'probe.php', 'release_readiness.py',
+        'release_selftest.py', 'selftest.py', 'wait-php.php')]
+    + ['tests/Fixtures/plugins/compatibility_test/INFO', 'tests/Fixtures/plugins/compatibility_test/setup.php',
+       'tests/Fixtures/snmp/snmpd.conf', 'tests/Fixtures/snmp/value.sh',
+       'tests/behavior/compose.yml', 'tests/behavior/Dockerfile', '.dockerignore'])
+
 
 
 def run(args, *, data=None, check=True, timeout=180):
@@ -745,6 +757,16 @@ class Harness:
         # with the retained historical evidence.
         if missing_after:
             manifest['inventory_missing'] = sorted(missing_after)
+        if self.args.update_golden:
+            # Golden writes can change both working-tree dirty flags. Record the
+            # resulting state so a bootstrap followed by verification agrees.
+            try:
+                manifest['provenance'] = source_provenance()
+            except (OSError, RuntimeError, subprocess.TimeoutExpired) as probe_error:
+                manifest['complete'] = False
+                manifest['error'] = 'Cannot record final source provenance: ' + str(probe_error)
+                write_json(self.destination / 'observations.json', manifest)
+                return 2
         write_json(self.destination / 'observations.json', manifest)
         # The pre-recording inventory validation above owns orphan detection.
 
@@ -793,6 +815,20 @@ def compare(args):
     for role, manifest in manifests:
         if not isinstance(manifest, dict) or manifest.get('complete') is not True:
             raise RuntimeError(f'Cannot compare incomplete {role} run')
+        if type(manifest.get('format')) is not int or manifest['format'] != 1:
+            raise RuntimeError(f'Missing or unsupported {role} manifest format')
+        if not isinstance(manifest.get('target'), str) or not manifest['target'].strip():
+            raise RuntimeError(f'Missing or invalid {role} target')
+        if 'error' not in manifest or manifest['error'] is not None or manifest.get('inventory_missing'):
+            raise RuntimeError(f'Cannot compare failed {role} run')
+        if not isinstance(manifest.get('php'), str) or not re.fullmatch(r'\d+\.\d+', manifest['php']):
+            raise RuntimeError(f'Missing or invalid {role} PHP runtime')
+        base_image = manifest.get('base_image')
+        if not isinstance(base_image, dict) or any(not isinstance(base_image.get(key), str) or not base_image[key].strip()
+                                                  for key in ('ref', 'db_ref', 'packages', 'runtime')):
+            raise RuntimeError(f'Missing or invalid {role} base image provenance')
+        if any(not re.fullmatch(r'[^\s@]+@sha256:[0-9a-f]{64}', base_image[key]) for key in ('ref', 'db_ref')):
+            raise RuntimeError(f'Unpinned {role} base image provenance')
         scenarios = manifest.get('scenarios')
         if not isinstance(scenarios, dict) or set(scenarios) != EXPECTED_SCENARIOS:
             names = set(scenarios) if isinstance(scenarios, dict) else set()
@@ -809,8 +845,10 @@ def compare(args):
                 raise RuntimeError(f'Missing or invalid {role} provenance {key}')
         for key in ('harness_inputs_sha256', 'application_inputs_sha256'):
             inputs = provenance.get(key)
-            if not isinstance(inputs, dict) or '.dockerignore' not in inputs or not all(isinstance(name, str) and name and digest(value) for name, value in inputs.items()):
+            if not isinstance(inputs, dict) or not REQUIRED_INPUTS.issubset(inputs) or not all(isinstance(name, str) and name and digest(value) for name, value in inputs.items()):
                 raise RuntimeError(f'Missing or invalid {role} provenance {key}')
+        if provenance['harness_inputs_sha256']['tests/Support/Behavior/harness.py'] != provenance['harness_sha256']:
+            raise RuntimeError(f'Inconsistent {role} harness source hash')
     approvals = json.loads(Path(args.approvals).read_text()) if args.approvals else {}
     report = []
     # Matching scenarios prove little if the runs used different runtimes or packages.
