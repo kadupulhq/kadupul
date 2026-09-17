@@ -75,7 +75,7 @@ The stricter spike backup filesystem checks remain in effect independently.
 
 ### Upgrade prerequisite
 
-Before upgrading an existing split-account installation, identify the numeric
+Before upgrading any local Unix installation, identify the numeric
 UIDs of the web and poller accounts and the groups allowed to modify RRD storage.
 Set the explicit trust lists in the existing `include/config.php` on every
 participating collector; changing `config.php.dist` does not update an installed
@@ -179,3 +179,15 @@ LTS floating, like the main branch, uses one worker even if `--threads` requests
 more. Multiple float workers cannot concurrently own the same exclusive lease.
 The documented storage trust migration remains mandatory before upgrading:
 implicit trust or a warn-only bypass would permit uncoordinated destructive access.
+
+This prerequisite also applies to a single-account `0770 cacti:cacti` store: list
+the storage GID explicitly even when it equals the process effective GID. Every
+group-writable store requires that explicit group trust. A missing POSIX extension
+must be installed/enabled before upgrade; trust lists cannot substitute for it.
+An empty output queue starts no RRDtool child. Unknown counts defer work, and the
+final status retains any earlier write failure even if a later retry succeeds.
+
+Boost logs and consumes only recognized permanent sample/schema rejections. If a
+bulk command encounters one, it retries individual samples so later valid samples
+are still written; transient or unknown errors retain the page. Retries use the
+existing timestamp protections to avoid rewriting already committed values.

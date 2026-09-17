@@ -463,7 +463,7 @@ function rrdtool_execute() {
 	$verb = is_array($command) ? ($command[0] ?? '') : strtok(ltrim($command), " \t\r\n");
 	if (in_array($verb, array('graph', 'graphv', 'xport', 'fetch', 'info', 'last', 'lastupdate', 'first'), true)
 		&& strpbrk(is_array($command) ? implode(' ', $command) : str_replace("\\\n", ' ', $command), "\r\n") === false
-		&& (!isset($args[3]) || $args[3] === false)) {
+		&& (!isset($args[3]) || $args[3] === false || $args[3] === '')) {
 		return call_user_func_array($function, $args);
 	}
 
@@ -1233,7 +1233,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
  */
 function rrdtool_rejection_is_permanent($reason) {
 	return is_string($reason) && (bool) preg_match(
-		'/^(?:unknown DS name [\'"]|expected \d+ data source readings \(got \d+\)|illegal attempt to update using time \d+ when last update time is \d+)/',
+		'/^(?:unknown DS name [\'"]|found extra data on update argument:|expected \d+ data source readings \(got \d+\)|illegal attempt to update using time \d+ when last update time is \d+)/',
 		$reason
 	);
 }

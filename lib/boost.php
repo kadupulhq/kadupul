@@ -2206,6 +2206,25 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 		}
 
 		if ($result !== true) {
+			$reason = rrdtool_last_rejection();
+			if (is_string($reason) && strpos($reason, $rrd_path . ': ') === 0) {
+				$reason = substr($reason, strlen($rrd_path) + 2);
+			}
+			if (rrdtool_rejection_is_permanent($reason)) {
+				$samples = preg_split('/\s+/', trim($rrd_update_values), -1, PREG_SPLIT_NO_EMPTY);
+				if (count($samples) > 1) {
+					// A bulk rejection must not discard valid samples after the bad one.
+					foreach ($samples as $sample) {
+						$status = boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_template, $sample, $rrdtool_pipe);
+						if ($status !== 'OK') {
+							return $status;
+						}
+					}
+				} else {
+					cacti_log("ERROR: Permanently rejected Boost sample for local_data_id $local_data_id, path $rrd_path, template $rrd_update_template, values $rrd_update_values: $reason", false, 'BOOST');
+				}
+				return 'OK';
+			}
 			return is_string($result) && $result !== '' ? $result : 'ERROR: RRDtool did not acknowledge the update';
 		}
 

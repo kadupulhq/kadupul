@@ -195,7 +195,7 @@ function rrd_maintenance_configuration_error() {
     if (rrd_maintenance_directory_is_trusted($path) && is_readable($path) && is_writable($path)) {
         return '';
     }
-    return __('RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading.');
+    return __('RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading.') . sprintf(' [path=%s; uid=%s; gid=%s]', $path, function_exists('posix_geteuid') ? posix_geteuid() : 'POSIX unavailable', function_exists('posix_getegid') ? posix_getegid() : 'POSIX unavailable');
 }
 
 

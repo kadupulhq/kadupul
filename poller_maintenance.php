@@ -25,6 +25,7 @@
 */
 
 require(__DIR__ . '/include/cli_check.php');
+require_once($config['library_path'] . '/rrd_maintenance.php');
 require_once($config['library_path'] . '/api_data_source.php');
 require_once($config['library_path'] . '/api_device.php');
 require_once($config['library_path'] . '/api_graph.php');
@@ -260,7 +261,9 @@ function rrdfile_purge($force) {
 
 	/* if the table that holds the actions is present, work on it */
 	if ($purge && !rrd_maintenance_cleanup_supported()) {
-		cacti_log('WARNING: Windows automatic local RRD cleanup is unsupported; existing requests retained for manual cleanup.', true, 'MAINT');
+		if (debounce_run_notification('rrd_cleanup_unsupported', 86400)) {
+			cacti_log('WARNING: Windows automatic local RRD cleanup is unsupported; existing requests retained for manual cleanup.', true, 'MAINT');
+		}
 		return true;
 	}
 

@@ -23,6 +23,10 @@ $root = dirname(__DIR__, 4);
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 eval(str_replace('rrd_acknowledged_pipes', 'boostPipedCreate_rrd_acknowledged_pipes', test_php_function_source(file_get_contents($root . '/lib/rrd.php'), 'rrd_acknowledged_pipes')));
 require_once $root . '/lib/rrd_maintenance.php';
+foreach (array('rrdtool_last_rejection', 'rrdtool_rejection_is_permanent') as $function) {
+    if (!function_exists($function)) { eval(test_php_function_source(file_get_contents($root . '/lib/rrd.php'), $function)); }
+}
+
 
 foreach (array('RRDTOOL_OUTPUT_STDOUT' => 1, 'RRDTOOL_OUTPUT_STDERR' => 2, 'RRDTOOL_OUTPUT_GRAPH_DATA' => 3, 'RRDTOOL_OUTPUT_BOOLEAN' => 4, 'RRDTOOL_OUTPUT_RETURN_STDERR' => 5, 'POLLER_VERBOSITY_NONE' => 1, 'POLLER_VERBOSITY_HIGH' => 4, 'POLLER_VERBOSITY_DEBUG' => 5) as $name => $value) {
 	if (!defined($name)) {
@@ -82,7 +86,14 @@ function boostPipedCreate_rrdtool_execute($command, $log = false, $output = null
 	$GLOBALS['boost_piped_create']['executed'][] = $command;
 
 	if (!empty($GLOBALS['boost_piped_create']['real_binary'])) {
-		$result = boostPipedCreateRealCommand(array_merge(array($GLOBALS['boost_piped_create']['real_binary']), preg_split('/\s+/', trim($command))));
+		$reason =& rrdtool_last_rejection();
+		$reason = null;
+		try {
+			$result = boostPipedCreateRealCommand(array_merge(array($GLOBALS['boost_piped_create']['real_binary']), preg_split('/\s+/', trim($command))));
+		} catch (RuntimeException $error) {
+			$reason = preg_replace('/^ERROR:\s*/', '', trim($error->getMessage()));
+			return false;
+		}
 		return $output === RRDTOOL_OUTPUT_BOOLEAN ? trim($result) === '' : $result;
 	}
 
@@ -208,6 +219,8 @@ function boostPipedCreateFails($return_value) {
 }
 
 beforeEach(function () use ($root) {
+    $reason =& rrdtool_last_rejection();
+    $reason = null;
 	boostPipedCreateLoad($root);
 
 	$this->tmp  = sys_get_temp_dir() . '/boost-piped-create-' . bin2hex(random_bytes(4));
@@ -465,3 +478,25 @@ test('legacy updates wait for pending real pipe writes before filtering retained
 		if (is_resource($pipe)) { pclose($pipe); }
 	}
 });
+
+
+test('permanent Boost rejections cannot stall valid later samples in a real RRD', function ($version, $template) {
+    $GLOBALS['boost_piped_create']['version'] = $version;
+    $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
+    if (!is_executable($binary)) { $this->markTestSkipped('RRDtool is required.'); }
+    $path = $GLOBALS['boost_piped_create']['path'];
+    boostPipedCreateRealCommand(array($binary, 'create', $path, '--start', '1700000000', '--step', '60', 'DS:value:GAUGE:120:U:U', 'RRA:AVERAGE:0.5:1:10'));
+    $GLOBALS['boost_piped_create']['real_binary'] = $binary;
+    $pipe = false;
+    $values = $template === 'value' ? '1700000060:1:2 1700000120:20' : '1700000060:10 1700000120:20';
+    expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, $template, $values, $pipe))->toBe('OK');
+    expect(implode("\n", $GLOBALS['boost_piped_create']['logs']))->toContain('Permanently rejected Boost sample')->toContain('local_data_id 12');
+    if ($template === 'value') {
+        expect(boostPipedCreateRealCommand(array($binary, 'lastupdate', $path)))->toContain('1700000120: 20');
+    } else {
+        expect(trim(boostPipedCreateRealCommand(array($binary, 'last', $path))))->toBe('1700000000');
+    }
+    $values = '1700000180:30';
+    expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, 'value', $values, $pipe))->toBe('OK');
+    expect(boostPipedCreateRealCommand(array($binary, 'lastupdate', $path)))->toContain('1700000180: 30');
+})->with(array('1.7', '1.4'))->with(array('value', 'stale'));

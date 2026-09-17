@@ -20,6 +20,10 @@ foreach (array(
 const MESSAGE_LEVEL_ERROR = 2;
 function read_config_option($key, ...$args) { return $GLOBALS['windows_cleanup_options'][$key] ?? ''; }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+function debounce_run_notification($key, $seconds) {
+    expect($key)->toBe('rrd_cleanup_unsupported')->and($seconds)->toBe(86400);
+    return $GLOBALS['windows_notification_available'] ?? true;
+}
 function cacti_log(...$args) { $GLOBALS['windows_cleanup_logs'][] = $args[0]; }
 function raise_message(...$args) { $GLOBALS['windows_cleanup_messages'][] = $args; }
 function __($text) { return $text; }
@@ -73,6 +77,11 @@ test('Windows cleaner rejects mutations and rescans preserve existing requests',
 test('Windows maintenance skips the unsupported queue without reporting a transient failure', function () {
     with_policy('win32', 0, function () {
         expect(rrdfile_purge(false))->toBeTrue();
+        $before = $GLOBALS['windows_cleanup_logs'];
+        $GLOBALS['windows_notification_available'] = false;
+        try {
+            expect(rrdfile_purge(false))->toBeTrue()->and($GLOBALS['windows_cleanup_logs'])->toBe($before);
+        } finally { unset($GLOBALS['windows_notification_available']); }
         expect(remove_files(array(array('name' => 'sample.rrd', 'action' => '1'))))->toBeFalse();
         expect($GLOBALS['windows_cleanup_queries'])->toBe(array());
         expect(implode(' ', $GLOBALS['windows_cleanup_logs']))->toContain('existing requests retained for manual cleanup');

@@ -762,7 +762,7 @@ test('actual RRD utilities rewrite valid files and release their exclusive lease
 })->with(array('rrd_datasource_add','rrd_rra_delete','rrd_rra_clone'))->with(array(false,true));
 
 
-test('read-only RRDtool commands remain available during maintenance and with group writable storage', function ($verb, $arguments) {
+test('read-only RRDtool commands remain available during maintenance and with group writable storage', function ($verb, $arguments, $sentinel) {
     $root = dirname(__DIR__, 4);
     $binary = getenv('RRDTOOL_TEST_BINARY') ?: '/opt/homebrew/bin/rrdtool';
     if (!is_executable($binary)) {
@@ -781,7 +781,7 @@ test('read-only RRDtool commands remain available during maintenance and with gr
         'function read_config_option($key){return $key==="path_rrdtool"?' . var_export($binary, true) . ':"";}' .
         'function cacti_log(...$args){}function cacti_session_close(){}' .
         'require ' . var_export($root . '/lib/rrd.php', true) . ';' .
-        'echo json_encode(rrdtool_execute(' . var_export($command, true) . ',false,RRDTOOL_OUTPUT_BOOLEAN));';
+        'echo json_encode(rrdtool_execute(' . var_export($command, true) . ',false,RRDTOOL_OUTPUT_BOOLEAN,' . var_export($sentinel, true) . '));';
     file_put_contents($this->dir . '/reader.php', $bootstrap);
     $lease = rrd_maintenance_acquire(true);
     expect(is_resource($lease))->toBeTrue();
@@ -802,7 +802,7 @@ test('read-only RRDtool commands remain available during maintenance and with gr
     array('graph', '/dev/null --start 1700000000 --end 1700000120 DEF:v={rrd}:value:AVERAGE LINE1:v#FF0000'),
     array('graphv', '/dev/null --start 1700000000 --end 1700000120 DEF:v={rrd}:value:AVERAGE LINE1:v#FF0000'),
     array('xport', '--start 1700000000 --end 1700000120 DEF:v={rrd}:value:AVERAGE XPORT:v:value'),
-));
+))->with(array(false, null, ''));
 
 
 test('a timed out restore preserves the live RRD and recovery XML', function () {
