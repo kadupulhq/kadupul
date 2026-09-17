@@ -18,16 +18,19 @@ if (in_array(getenv('ACK_FAIL'), array('field-failure', 'field-success'), true))
 }
 $ack_db->exec('CREATE TABLE poller_time(end_time TEXT)');
 $ack_db->exec("INSERT INTO poller_time VALUES('0000-00-00')");
-if (in_array(getenv('ACK_FAIL'), array('mixed', 'page'), true)) {
+if (in_array(getenv('ACK_FAIL'), array('mixed', 'page', 'tail-failure', 'page-success'), true)) {
     $ack_db->exec('DELETE FROM poller_output');
     $ack_db->exec("INSERT INTO data_local VALUES(2,0); INSERT INTO poller_item VALUES(2,'value',1,'good.rrd')");
     $insert = $ack_db->prepare("INSERT INTO poller_output VALUES(1,'value',?,'42')");
     $ack_db->beginTransaction();
-    for ($i = 0; $i < (getenv('ACK_FAIL') === 'page' ? 40001 : 1); $i++) {
+    for ($i = 0; $i < (in_array(getenv('ACK_FAIL'), array('page', 'tail-failure', 'page-success'), true) ? 40001 : 1); $i++) {
         $insert->execute(array(date('Y-m-d H:i:s', 1577836800 + $i)));
     }
     $ack_db->exec("INSERT INTO poller_output VALUES(2,'value','2020-01-01','44')");
     $ack_db->commit();
+}
+if (getenv('ACK_FAIL') === 'incomplete') {
+    $ack_db->exec('UPDATE poller_item SET rrd_num=2');
 }
 function is_hexadecimal($value)
 {
@@ -94,6 +97,9 @@ function rrd_close($pipe)
 }
 function db_fetch_assoc_prepared($sql, $params = array())
 {
+    if (getenv('ACK_FAIL') === 'tail-failure' && strpos($sql, 'WHERE po.local_data_id = ? AND po.time = ?') !== false) {
+        return false;
+    }
     if (strpos($sql, 'SELECT DISTINCT dtr.data_source_name') !== false) {
         return getenv('ACK_FAIL') === 'field-failure' ? false : array(array('data_source_name' => 'value', 'data_name' => 'value'));
     }
@@ -140,7 +146,7 @@ function rrdtool_function_update($updates, $pipe = false, &$completed = null)
         $GLOBALS['ack_db']->exec("UPDATE " . $GLOBALS['ack_table'] . " SET output='99' WHERE time='2020-01-01'");
     }
 
-    if (!in_array(getenv('ACK_FAIL'), array('mixed', 'page', 'rejected'), true)) {
+    if (!in_array(getenv('ACK_FAIL'), array('mixed', 'page', 'rejected', 'incomplete', 'tail-failure', 'page-success'), true)) {
         $GLOBALS['ack_db']->exec('INSERT INTO ' . $GLOBALS['ack_table'] . " VALUES(1,'value','2020-01-02','43'" . (getenv('ACK_REALTIME') === '1' ? ',1' : '') . ')');
     }
     $completed = array();
@@ -158,7 +164,7 @@ function rrdtool_function_update($updates, $pipe = false, &$completed = null)
 }
 function db_close()
 {
-    if (in_array(getenv('ACK_FAIL'), array('mixed', 'page'), true)) {
+    if (in_array(getenv('ACK_FAIL'), array('mixed', 'page', 'tail-failure', 'page-success'), true)) {
         file_put_contents(getenv('ACK_FIXTURE') . '/outcome.json', json_encode($GLOBALS['ack_db']->query('SELECT output, COUNT(*) AS remaining FROM poller_output GROUP BY output')->fetchAll(PDO::FETCH_ASSOC)));
         return;
     }
