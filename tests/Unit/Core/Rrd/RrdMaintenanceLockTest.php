@@ -1364,3 +1364,31 @@ test('path-aware maintenance refuses final symlinks without leaking its configur
         expect(file_get_contents($target))->toBe('original');
     }
 })->with(array(false, true));
+
+
+test('nonblocking RRD initialization identifies a busy maintenance lease without an error', function () {
+    $root = dirname(__DIR__, 4);
+    $bootstrap = '<?php ';
+    if ($this->getTestResultObject()->getCodeCoverage() !== null) {
+        $this->expectedChildReports = 1;
+        $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY",__DIR__); require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $bootstrap .= '$config=' . var_export(array('cacti_server_os' => 'unix', 'rra_path' => $this->dir), true) . ';$logs=array();';
+    $bootstrap .= 'function read_config_option($key){return "";}function cacti_log($message,...$args){$GLOBALS["logs"][]=$message;}';
+    $bootstrap .= 'require ' . var_export($root . '/lib/rrd.php', true) . ';$start=microtime(true);$pipe=rrd_init(true,false,true,0,$busy);echo json_encode(array($pipe,$busy,$logs,microtime(true)-$start));';
+    file_put_contents($this->dir . '/busy-reader.php', $bootstrap);
+    $lease = rrd_maintenance_acquire(true, false, 0);
+    expect(is_resource($lease))->toBeTrue();
+    try {
+        $process = proc_open(array(PHP_BINARY, $this->dir . '/busy-reader.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $output = stream_get_contents($pipes[1]);
+        $error = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        expect(proc_close($process))->toBe(0)->and($error)->toBe('');
+        $result = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+        expect(array_slice($result, 0, 3))->toBe(array(false, true, array()))->and($result[3])->toBeLessThan(1.0);
+    } finally {
+        rrd_maintenance_release($lease);
+    }
+});

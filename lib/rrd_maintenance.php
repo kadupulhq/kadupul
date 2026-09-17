@@ -67,9 +67,10 @@ function rrd_maintenance_directory_is_trusted($path)
  * for the child. Exclusive maintenance refuses active writers by default;
  * callers may explicitly wait when their operation permits it.
  */
-function rrd_maintenance_acquire($exclusive = false, $wait = false, $timeout = null)
+function rrd_maintenance_acquire($exclusive = false, $wait = false, $timeout = null, &$busy = null)
 {
     global $config;
+    $busy = false;
 
     if (($config['cacti_server_os'] ?? '') === 'win32') {
         return $exclusive ? false : true;
@@ -92,8 +93,10 @@ function rrd_maintenance_acquire($exclusive = false, $wait = false, $timeout = n
     }
     $flags = ($exclusive ? LOCK_EX : LOCK_SH) | (($wait && $timeout === null) ? 0 : LOCK_NB);
     $deadline = hrtime(true) + max(0, (float) $timeout) * 1000000000;
-    while (!@flock($handle, $flags)) {
+    $would_block = 0;
+    while (!@flock($handle, $flags, $would_block)) {
         if ($timeout === null || hrtime(true) >= $deadline) {
+            $busy = $would_block === 1;
             fclose($handle);
             return false;
         }

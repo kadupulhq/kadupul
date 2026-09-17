@@ -184,7 +184,7 @@ writers. Ordinary acknowledged Windows updates remain available.
 
 An RRD failure retains retryable samples and sets a nonzero poller exit status,
 but does not skip post-poll services, maintenance, reports, recovery flushes or
-plugin hooks. The poller releases its writer pipe and shared storage lease after
+plugin hooks. For local storage the poller releases its writer pipe and shared lease after
 each output batch, before sleeping while collectors finish. Exclusive maintenance
 can use the gaps between batches. Active writers still take priority over unsafe
 file replacement; stop writers when an operation requires a guaranteed window.
@@ -200,3 +200,9 @@ The final exit status intentionally records any write failure during the run, ev
 if a later batch succeeds; successful retries do not hide an earlier rejected sample
 or intermittent storage failure. Logs identify the failure and operators can verify
 that the queue drained.
+
+A busy local maintenance lease is probed without waiting and records one NOTE
+until access recovers. It preserves pending samples without marking the collector
+run failed. Untrusted storage, unavailable writers and unreadable queues remain
+errors. Failure logging resumes after recovery. Proxy storage reuses one connection
+across output batches and closes it at the end of the collector cycle or on failure.

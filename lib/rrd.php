@@ -44,8 +44,9 @@ function rrdtool_reset_language() {
 	putenv('LANG=' . $prev_lang);
 }
 
-function rrd_init($output_to_term = true, $exclusive = false, $acknowledged = false) {
+function rrd_init($output_to_term = true, $exclusive = false, $acknowledged = false, $lease_timeout = null, &$lease_busy = null) {
 	global $config;
+	$lease_busy = false;
 
 	$args = array_slice(func_get_args(), 0, 1);
 	$force_storage_location_local = (isset($config['force_storage_location_local']) && $config['force_storage_location_local'] === true ) ? true : false;
@@ -60,9 +61,11 @@ function rrd_init($output_to_term = true, $exclusive = false, $acknowledged = fa
 		cacti_log('ERROR: Disable RRDCACHED_ADDRESS before destructive RRD maintenance.');
 		return false;
 	}
-	$lock = rrd_maintenance_acquire($exclusive);
+	$lock = rrd_maintenance_acquire($exclusive, false, $lease_timeout, $lease_busy);
 	if ($lock === false) {
-		cacti_log('ERROR: Unable to coordinate local RRD writes with maintenance.');
+		if (!$lease_busy || $lease_timeout !== 0) {
+			cacti_log('ERROR: Unable to coordinate local RRD writes with maintenance.');
+		}
 		return false;
 	}
 

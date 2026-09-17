@@ -56,6 +56,9 @@ function cacti_escapeshellarg($value)
 }
 function read_config_option($key)
 {
+    if ($key === 'storage_location') {
+        return getenv('ACK_PROXY') === '1' ? 1 : '';
+    }
     return $key === 'realtime_cache_path' ? getenv('ACK_FIXTURE') : ($key === 'path_php_binary' ? PHP_BINARY : '');
 }
 function get_data_source_path(...$args)
@@ -73,11 +76,16 @@ function boost_poller_on_demand(...$args)
 {
     return getenv('ACK_FAIL') === 'handoff' ? null : true;
 }
-function rrd_init()
+function rrd_init($output = true, $exclusive = false, $acknowledged = false, $timeout = null, &$busy = null)
 {
-    return getenv('ACK_FAIL') !== 'init';
+    $GLOBALS['ack_opens'] = ($GLOBALS['ack_opens'] ?? 0) + 1;
+    $busy = getenv('ACK_FAIL') === 'busy';
+    return !in_array(getenv('ACK_FAIL'), array('init', 'busy'), true);
 }
-function rrd_close($pipe) {}
+function rrd_close($pipe)
+{
+    $GLOBALS['ack_closes'] = ($GLOBALS['ack_closes'] ?? 0) + 1;
+}
 function db_fetch_assoc_prepared($sql, $params = array())
 {
     if (strpos($sql, 'poller_data_template_field_mappings') !== false) {
@@ -93,6 +101,13 @@ function db_fetch_assoc_prepared($sql, $params = array())
 function db_fetch_assoc($sql)
 {
     return db_fetch_assoc_prepared($sql);
+}
+function db_fetch_cell_prepared($sql, $params = array())
+{
+    if (getenv('ACK_FAIL') === 'count') {
+        return false;
+    }
+    return db_fetch_cell($sql);
 }
 function db_fetch_cell($sql)
 {

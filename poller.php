@@ -739,6 +739,7 @@ while ($poller_runs_completed < $poller_runs) {
 
 			$rrds_processed = 0;
 			$poller_output_deferred = false;
+			$rrdtool_pipe = false;
 			$poller_finishing_dispatched = false;
 			while (1) {
 				$finished_processes = db_fetch_cell_prepared('SELECT ' . SQL_NO_CACHE . " count(*)
@@ -755,7 +756,7 @@ while ($poller_runs_completed < $poller_runs) {
 					}
 
 					if ($poller_id == 1) {
-						$rrds_processed += process_poller_output_batch($poller_output_deferred);
+						$rrds_processed += process_poller_output_batch($poller_output_deferred, $rrdtool_pipe);
 						if ($poller_output_deferred) {
 							$rrd_write_failed = true;
 						}
@@ -776,7 +777,7 @@ while ($poller_runs_completed < $poller_runs) {
 					$mtb = microtime(true);
 
 					if ($poller_id == 1) {
-						$rrds_processed += process_poller_output_batch($poller_output_deferred);
+						$rrds_processed += process_poller_output_batch($poller_output_deferred, $rrdtool_pipe);
 						if ($poller_output_deferred) {
 							$rrd_write_failed = true;
 						}
@@ -803,6 +804,10 @@ while ($poller_runs_completed < $poller_runs) {
 						sleep(1);
 					}
 				}
+			}
+
+			if ($rrdtool_pipe !== false) {
+				rrd_close($rrdtool_pipe);
 			}
 
 		}
