@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 test('remote production poller checks its actual queue before continuing collection', function ($connection, $engine) {
-    $root = dirname(__DIR__, 2);
+    $root = dirname(__DIR__, 4);
     $directory = sys_get_temp_dir() . '/remote-queue-' . bin2hex(random_bytes(8));
     mkdir($directory, 0700);
     mkdir($directory . '/include', 0700);
