@@ -215,9 +215,10 @@ test('rejected saved columns fall back to the current allowlisted sort request',
     array(array('description'), '', array()),
 ));
 
-test('domain listing sorts LDAP attributes while retaining domains without LDAP settings', function ($column, $direction, $expected) {
+test('domain listing sorts LDAP attributes while retaining domains without LDAP settings', function ($column, $direction, $expected, $stringify) {
     $pdo = new PDO(getenv('SORT_TEST_DSN') ?: 'sqlite::memory:', getenv('SORT_TEST_USER') ?: null, getenv('SORT_TEST_PASSWORD') ?: null);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, $stringify);
     $pdo->exec('CREATE TEMPORARY TABLE user_domains (domain_id INTEGER PRIMARY KEY, domain_name TEXT, type INTEGER, defdomain INTEGER, user_id INTEGER, enabled TEXT)');
     $pdo->exec('CREATE TEMPORARY TABLE user_domains_ldap (domain_id INTEGER PRIMARY KEY, cn_full_name TEXT, cn_email TEXT)');
     $pdo->exec("INSERT INTO user_domains VALUES (1, 'local', 0, 1, 0, 'on'), (2, 'ldap-a', 1, 0, 0, 'on'), (3, 'ldap-z', 1, 0, 0, 'on')");
@@ -232,11 +233,12 @@ test('domain listing sorts LDAP attributes while retaining domains without LDAP 
     // Execute the actual page's SQL expression, including its live allowlist.
     $sql = eval('return ' . $match[1] . ';');
     $domains = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-    expect(array_column($domains, 'domain_id'))->toBe($expected);
+    // PDO 8.0 returns numeric IDs as strings; ordering must be identical on both driver modes.
+    expect(array_map('strval', array_column($domains, 'domain_id')))->toBe(array_map('strval', $expected));
     expect(array_column($domains, 'cn_full_name', 'domain_id')[1])->toBeNull();
 })->with(array(
     array('cn_full_name', 'ASC', array(1, 2, 3)),
     array('cn_full_name', 'DESC', array(3, 2, 1)),
     array('cn_email', 'ASC', array(1, 3, 2)),
     array('cn_email', 'DESC', array(2, 3, 1)),
-));
+))->with(array(false, true));
