@@ -60,15 +60,70 @@ for separator in ('-', '/', '.'):
 
 
 def comparable_manifest():
-    return {'format': 1, 'target': 'fixture', 'error': None, 'complete': True, 'php': '8.2',
+    return {'format': 2, 'target': 'fixture', 'error': None, 'complete': True, 'php': '8.2',
             'base_image': {'ref': 'php@sha256:' + '1' * 64, 'db_ref': 'mariadb@sha256:' + '2' * 64,
                            'packages': 'rrdtool=1.7', 'runtime': 'PHP 8.2; fixture Linux'},
+            'application_images': {'web': 'sha256:' + '3' * 64, 'snmp': 'sha256:' + '3' * 64},
             'revision': 'a' * 40, 'schema_sha256': 'b' * 64,
             'provenance': {'harness_revision': 'c' * 40, 'harness_sha256': 'd' * 64,
                            'harness_dirty': False, 'application_dirty': False,
                            'harness_inputs_sha256': {name: ('d' if name == 'tests/Support/Behavior/harness.py' else 'e') * 64 for name in harness.REQUIRED_INPUTS},
                            'application_inputs_sha256': {name: ('d' if name == 'tests/Support/Behavior/harness.py' else 'e') * 64 for name in harness.REQUIRED_INPUTS}},
             'scenarios': {name: 1 for name in harness.EXPECTED_SCENARIOS}}
+
+
+def application_image_contract():
+    recorder = object.__new__(harness.Harness)
+    recorder.compose = lambda *args: {'stdout': ('a' if args[-1] == 'web' else 'b') * 64}
+    calls = []
+    def inspect(args):
+        calls.append(args)
+        assert args[:5] == ['docker', 'container', 'inspect', '--format', '{{.Image}}']
+        return {'stdout': 'sha256:' + args[-1]}
+    with patch.object(harness, 'run', side_effect=inspect):
+        assert recorder.application_image_digests() == {'web': 'sha256:' + 'a' * 64, 'snmp': 'sha256:' + 'b' * 64}
+    assert len(calls) == 2
+    for container, image in (('', 'sha256:' + 'a' * 64), ('a' * 64 + '\n' + 'b' * 64, 'sha256:' + 'a' * 64),
+                             ('a' * 64, ''), ('a' * 64, 'php:mutable')):
+        recorder.compose = lambda *args: {'stdout': container}
+        with patch.object(harness, 'run', return_value={'stdout': image}):
+            try:
+                recorder.application_image_digests()
+            except RuntimeError:
+                pass
+            else:
+                raise AssertionError('Incomplete application image identity was accepted')
+    # The same revision, dirty flags, helper hashes and observations cannot
+    # certify a repeat when the built application content has changed.
+    with tempfile.TemporaryDirectory(prefix='dirty application builds ') as directory:
+        root = Path(directory)
+        manifest = comparable_manifest()
+        manifest['provenance']['application_dirty'] = True
+        for role in ('baseline', 'candidate', 'repeat'):
+            (root / role).mkdir()
+            (root / role / 'observations.json').write_text(json.dumps(manifest))
+        repeat = json.loads(json.dumps(manifest))
+        repeat['application_images']['web'] = 'sha256:' + 'f' * 64
+        (root / 'repeat/observations.json').write_text(json.dumps(repeat))
+        args = types.SimpleNamespace(results_root=root, baseline='baseline', candidate='candidate',
+                                     repeat=str(root / 'repeat/observations.json'), approvals=None, output=None)
+        assert harness.compare(args) == 1
+        differences = json.loads((root / 'comparison.json').read_text())['differences']
+        assert [row['scenario'] for row in differences if row['status'] != 'IDENTICAL'] == ['<repeat-environment>/application_images']
+        recorder.args = types.SimpleNamespace(target='fixture', only=None, update_golden=True)
+        recorder.observed = manifest['scenarios']
+        recorder.destination = root / 'failed-capture'
+        recorder.command = lambda *args, **kwargs: {'stdout': '8.2'}
+        recorder.base_image_digest = lambda: manifest['base_image']
+        recorder.compose = lambda *args: {'stdout': ''}
+        (root / 'cacti.sql').write_text('schema')
+        with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', return_value={'stdout': 'a' * 40}), patch.object(harness, 'source_provenance', return_value=manifest['provenance']):
+            assert recorder.finish() == 2
+        failed = json.loads((recorder.destination / 'observations.json').read_text())
+        assert failed['complete'] is False and failed['application_images'] is None
+        assert 'Cannot identify application container' in failed['error']
+        assert not (root / 'tests/Golden').exists()
+    print('running image identity rejects different dirty application builds and incomplete inspection')
 
 
 def bootstrap_repeat_provenance():
@@ -94,6 +149,7 @@ def bootstrap_repeat_provenance():
         recorder.observed = comparable_manifest()['scenarios']
         recorder.command = lambda *a, **kw: {'stdout': '8.2', 'stderr': '', 'exit': 0}
         recorder.base_image_digest = lambda: comparable_manifest()['base_image']
+        recorder.application_image_digests = lambda: comparable_manifest()['application_images']
         with patch.object(harness, 'ROOT', root), patch.object(harness, '__file__', str(root / 'tests/Support/Behavior/harness.py')):
             assert harness.source_provenance()['application_dirty'] is False
             assert recorder.finish() == 0
@@ -136,6 +192,7 @@ def separate_results_root():
             assert report['captures'][role]['provenance'] == manifest['provenance']
         assert report['controller']['harness_sha256'] == hashlib.sha256(Path(harness.__file__).read_bytes()).hexdigest()
         for key, changed in (('revision', 'f' * 40), ('schema_sha256', 'f' * 64),
+                             ('application_images', {'web': 'sha256:' + 'f' * 64, 'snmp': 'sha256:' + '3' * 64}),
                              ('php', '8.3'), ('base_image', {**manifest['base_image'], 'ref': 'php@sha256:' + 'f' * 64}),
                              ('provenance', {**manifest['provenance'], 'application_dirty': True})):
             (results / 'repeat/observations.json').write_text(json.dumps({**manifest, key: changed}))
@@ -167,7 +224,7 @@ def comparison_inventory_failure():
         for role, path in paths.items():
             for fault in ('missing', 'unexpected', 'empty', 'wrong-type', 'false-complete',
                           'revision', 'schema_sha256', 'provenance', 'harness-hash', 'dirty-type', 'input-hash', 'dockerignore',
-                          'format', 'format-boolean', 'target', 'php', 'php-invalid', 'base_image',
+                          'format', 'format-boolean', 'format-old', 'application_images', 'image-service-missing', 'image-id-invalid', 'target', 'php', 'php-invalid', 'base_image',
                           'image-unpinned', 'packages', 'runtime', 'error', 'error-present', 'inventory-missing', 'hash-mismatch') + tuple(
                               key + ':' + name for key in ('harness_inputs_sha256', 'application_inputs_sha256')
                               for name in sorted(harness.REQUIRED_INPUTS)):
@@ -192,8 +249,14 @@ def comparison_inventory_failure():
                     broken['provenance']['application_inputs_sha256']['.dockerignore'] = 'invalid'
                 elif fault == 'dockerignore':
                     broken['provenance']['harness_inputs_sha256'].pop('.dockerignore')
-                elif fault in ('format', 'target', 'php', 'base_image', 'error'):
+                elif fault in ('format', 'application_images', 'target', 'php', 'base_image', 'error'):
                     broken.pop(fault)
+                elif fault == 'format-old':
+                    broken['format'] = 1
+                elif fault == 'image-service-missing':
+                    broken['application_images'].pop('snmp')
+                elif fault == 'image-id-invalid':
+                    broken['application_images']['web'] = 'mutable:tag'
                 elif fault == 'format-boolean':
                     broken['format'] = True
                 elif fault == 'php-invalid':
@@ -308,6 +371,7 @@ def recording_guards():
             if case == 'unexpected': recorder.observed['unknown/capture'] = 1
             recorder.command = lambda *a, **kw: {'stdout': '8.2', 'stderr': '', 'exit': 0}
             recorder.base_image_digest = lambda: {'ref': 'fixture'}
+            recorder.application_image_digests = lambda: comparable_manifest()['application_images']
             golden = root / 'tests/Golden' / case / 'php-8.2'
             if case == 'other-runtime-orphan':
                 other = golden.parent / 'php-8.3'
@@ -335,7 +399,7 @@ def recording_guards():
             assert (status == 0) == (case in ('complete', 'other-runtime-complete')), case
             assert manifest['complete'] == (case in ('complete', 'other-runtime-complete')), case
             if manifest['complete']:
-                assert 'inventory_missing' not in manifest, 'Successful format-1 manifests retain their historical schema'
+                assert 'inventory_missing' not in manifest, 'Successful captures have no missing-inventory detail'
             if case not in ('complete', 'other-runtime-complete'):
                 assert {str(p): p.read_bytes() for p in golden.parent.rglob('*.json')} == before, case
             else:
@@ -641,6 +705,7 @@ def source_provenance_failure_contract():
             recorder.observed = {name: {'value': name} for name in harness.EXPECTED_SCENARIOS}
             recorder.command = lambda *a, **kw: {'stdout': '8.2', 'stderr': '', 'exit': 0}
             recorder.base_image_digest = lambda: {'ref': 'fixture'}
+            recorder.application_image_digests = lambda: comparable_manifest()['application_images']
             with patch.object(harness, 'ROOT', root):
                 if failure == 'not-git':
                     assert recorder.finish() == 2
@@ -766,6 +831,7 @@ def main():
     recording_guards()
     source_provenance_failure_contract()
     provenance_contract()
+    application_image_contract()
     diagnostic_contracts()
     failed_setup_manifest()
     unavailable_docker_failure()

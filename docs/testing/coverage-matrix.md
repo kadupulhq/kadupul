@@ -185,13 +185,25 @@ input hashes are rejected. Older captures without these fields must be recapture
 with the current harness. Repeat runs must also match the candidate runtime and
 provenance.
 
-Comparison requires format 1, a target, a valid PHP version, pinned PHP/database
+Comparison requires format 2, a target, a valid PHP version, pinned PHP/database
 image references, package/runtime details, and no capture error. Both input hash
 maps must contain every required helper, plugin/SNMP fixture, Dockerfile, compose
 file and `.dockerignore`; the controller hash must agree with its file entry.
 Bootstrap records final provenance after writing golden files, so a clean
 checkout's first capture and its verification repeat report the same dirty state.
 Failure to record that final state leaves the capture incomplete.
+
+`application_images` records the content-addressed image IDs inspected from the
+actual web and SNMP containers. This covers all files Docker copied into each
+application build, including dirty and untracked application files that are not
+in the mounted-helper inventory. Candidate and repeat image IDs must agree even
+when their Git revisions, dirty flags, and scenario observations are identical.
+Different application images between baseline and candidate are expected; the
+repeat check is what establishes that the candidate ran the same build twice.
+A rebuild with changed layers or image configuration requires another repeat.
+Missing, ambiguous, or invalid image identities leave a capture incomplete.
+Format-1 captures cannot satisfy this contract and must be captured again; do not
+add image IDs retrospectively to retained manifests.
 
 To reproduce the historical runs, create separate clean checkouts of
 `captures.baseline.revision` and

@@ -681,9 +681,29 @@ class Harness:
                 'packages': (packages['stdout'] or '').strip(),
                 'runtime': (result['stdout'] or '').strip()}
 
+    def application_image_digests(self):
+        """Identify the immutable images actually used, including COPY build inputs.
+
+        Git revision and dirty flags cannot identify different uncommitted builds.
+        Container image IDs include all layers and their configuration; inspecting
+        the running containers also avoids resolving a tag that moved after setup.
+        Mounted helpers remain covered by the separate input hash inventories.
+        """
+        images = {}
+        for service in ('web', 'snmp'):
+            container = self.compose('ps', '-q', service)['stdout'].strip()
+            if not re.fullmatch(r'[0-9a-f]{12,64}', container):
+                raise RuntimeError('Cannot identify application container: ' + service)
+            image = run(['docker', 'container', 'inspect', '--format', '{{.Image}}', container])['stdout'].strip()
+            if not re.fullmatch(r'sha256:[0-9a-f]{64}', image):
+                raise RuntimeError('Cannot identify application image: ' + service)
+            images[service] = image
+        return images
+
     def finish(self, error=None):
         runtime = None
         base_image = None
+        application_images = None
         if error is None and set(self.observed) != EXPECTED_SCENARIOS:
             missing = sorted(EXPECTED_SCENARIOS - set(self.observed))
             unexpected = sorted(set(self.observed) - EXPECTED_SCENARIOS)
@@ -695,6 +715,7 @@ class Harness:
                 if not re.fullmatch(r'\d+\.\d+', runtime):
                     raise RuntimeError('Web container did not report a valid PHP runtime')
                 base_image = self.base_image_digest()
+                application_images = self.application_image_digests()
             except (OSError, RuntimeError, subprocess.TimeoutExpired) as probe_error:
                 error = 'Cannot record runtime provenance: ' + str(probe_error)
         missing = set()
@@ -725,9 +746,10 @@ class Harness:
         except (OSError, RuntimeError, subprocess.TimeoutExpired) as probe_error:
             detail = 'Cannot record source provenance: ' + str(probe_error)
             error = error + '; ' + detail if error else detail
-        manifest = {'format': 1, 'target': self.args.target, 'revision': revision,
+        manifest = {'format': 2, 'target': self.args.target, 'revision': revision,
                     'php': runtime, 'schema_sha256': schema_hash,
                     'base_image': base_image,
+                    'application_images': application_images,
                     'complete': error is None and not missing, 'error': error, 'scenarios': self.observed,
                     'provenance': provenance}
         write_json(self.destination / 'observations.json', manifest)
@@ -753,8 +775,7 @@ class Harness:
             recorded = {str(path.relative_to(runtime_root))[:-5] for path in runtime_root.rglob('*.json')}
             missing_after.update(runtime_root.name + '/' + name for name in set(self.observed) - recorded)
         manifest['complete'] = not missing_after
-        # Optional failure detail keeps successful format-1 manifests compatible
-        # with the retained historical evidence.
+        # Successful manifests need no partial-inventory failure detail.
         if missing_after:
             manifest['inventory_missing'] = sorted(missing_after)
         if self.args.update_golden:
@@ -815,7 +836,7 @@ def compare(args):
     for role, manifest in manifests:
         if not isinstance(manifest, dict) or manifest.get('complete') is not True:
             raise RuntimeError(f'Cannot compare incomplete {role} run')
-        if type(manifest.get('format')) is not int or manifest['format'] != 1:
+        if type(manifest.get('format')) is not int or manifest['format'] != 2:
             raise RuntimeError(f'Missing or unsupported {role} manifest format')
         if not isinstance(manifest.get('target'), str) or not manifest['target'].strip():
             raise RuntimeError(f'Missing or invalid {role} target')
@@ -829,6 +850,11 @@ def compare(args):
             raise RuntimeError(f'Missing or invalid {role} base image provenance')
         if any(not re.fullmatch(r'[^\s@]+@sha256:[0-9a-f]{64}', base_image[key]) for key in ('ref', 'db_ref')):
             raise RuntimeError(f'Unpinned {role} base image provenance')
+        images = manifest.get('application_images')
+        if not isinstance(images, dict) or set(images) != {'web', 'snmp'} or any(
+                not isinstance(value, str) or not re.fullmatch(r'sha256:[0-9a-f]{64}', value)
+                for value in images.values()):
+            raise RuntimeError(f'Missing or invalid {role} application image provenance')
         scenarios = manifest.get('scenarios')
         if not isinstance(scenarios, dict) or set(scenarios) != EXPECTED_SCENARIOS:
             names = set(scenarios) if isinstance(scenarios, dict) else set()
@@ -857,7 +883,7 @@ def compare(args):
             report.append({'scenario': '<environment>/' + key, 'status': 'NEEDS_REVIEW', 'digest': '',
                            'baseline': baseline.get(key), 'candidate': candidate.get(key)})
     if repeat:
-        for key in ('php', 'base_image', 'revision', 'schema_sha256', 'provenance'):
+        for key in ('php', 'base_image', 'application_images', 'revision', 'schema_sha256', 'provenance'):
             if candidate.get(key) != repeat.get(key):
                 report.append({'scenario': '<repeat-environment>/' + key, 'status': 'NEEDS_REVIEW', 'digest': '',
                                'baseline': candidate.get(key), 'candidate': repeat.get(key)})
@@ -880,7 +906,7 @@ def compare(args):
         'baseline': args.baseline, 'candidate': args.candidate, 'differences': report,
         'contracts': len(EXPECTED_SCENARIOS), 'controller': source_provenance(),
         'manifest_sha256': {role: hashlib.sha256(payload).hexdigest() for role, payload in payloads.items()},
-        'captures': {role: {key: manifest[key] for key in ('revision', 'schema_sha256', 'provenance')}
+        'captures': {role: {key: manifest[key] for key in ('revision', 'schema_sha256', 'provenance', 'application_images')}
                      for role, manifest in manifests},
     })
     output.with_suffix('.md').write_text('# Behavioral comparison\n\n' + '\n'.join(f"- {r['status']}: `{r['scenario']}`" for r in report) + '\n')
