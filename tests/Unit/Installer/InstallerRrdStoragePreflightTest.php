@@ -17,6 +17,7 @@ test('installer rejects unsafe storage before database changes even when forced'
         $coverage = 'define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); define("RRD_TEST_INSTALLER_COVERAGE", true); require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
     }
     $bootstrap = <<<'FIXTURE'
+if ($mode === 'windows-attribute') { function is_writable($path) { return false; } }
 function __($message, ...$args) { return $args ? vsprintf($message, $args) : $message; }
 function read_config_option($key, ...$args) { return $key === 'storage_location' && strpos($GLOBALS['mode'], 'proxy') === 0; }
 function db_fetch_cell_prepared(...$args) { if ($GLOBALS['mode'] === 'fresh') { throw new LogicException('fresh install queried a queue that does not exist yet'); } return in_array($GLOBALS['mode'], array('memory', 'memory-string'), true) ? 'MEMORY' : ($GLOBALS['mode'] === 'queue-unavailable' ? false : 'InnoDB'); }
@@ -62,6 +63,9 @@ FIXTURE;
         if ($mode === 'no-posix') {
             $args = array_merge($args, array('-d', 'disable_functions=posix_geteuid'));
         }
+        if ($mode === 'windows-attribute') {
+            $args = array_merge($args, array('-d', 'disable_functions=is_writable'));
+        }
         $args[] = $dir . '/probe.php';
         $process = proc_open($args, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
         $output = stream_get_contents($pipes[1]);
@@ -96,4 +100,4 @@ FIXTURE;
         rmdir($dir . '/rra');
         rmdir($dir);
     }
-})->with(array(array('memory-string', false), array('fresh', true), array('memory', false), array('queue-unavailable', false), array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true), array('proxy-local-private', true), array('proxy-local-group', false), array('proxy-local-missing', false)))->with(array('upgrade', 'downgrade', 'downgrade-string', 'auto-upgrade', 'auto-downgrade'));
+})->with(array(array('memory-string', false), array('fresh', true), array('memory', false), array('queue-unavailable', false), array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-attribute', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true), array('proxy-local-private', true), array('proxy-local-group', false), array('proxy-local-missing', false)))->with(array('upgrade', 'downgrade', 'downgrade-string', 'auto-upgrade', 'auto-downgrade'));

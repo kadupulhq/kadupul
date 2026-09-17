@@ -69,7 +69,7 @@ cmd_exec	./lib/rrd.php:102			$process = proc_open(array(read_config_option('path
 cmd_exec	./lib/rrd.php:1315						$fp = popen($rrdtool_cmd, 'r');
 cmd_exec	./lib/rrd.php:133		return popen($command, 'w');
 cmd_exec	./lib/rrd.php:547				$process = proc_open(read_config_option('path_rrdtool') . ' - ' . $debug, $descriptorspec, $pipes);
-cmd_exec	./lib/rrd_maintenance.php:391	    $process = @proc_open($argv, $descriptors, $pipes);
+cmd_exec	./lib/rrd_maintenance.php:406	    $process = @proc_open($argv, $descriptors, $pipes);
 cmd_exec	./lib/rrdcheck.php:781		$process = proc_open($command, $fds, $pipes);
 cmd_exec	./lib/snmp.php:197			exec($command, $snmp_value);
 cmd_exec	./lib/snmp.php:297			exec($command, $snmp_value);
@@ -260,7 +260,7 @@ dynamic_include	./cli/upgrade_database.php:10	require_once($config['base_path'] 
 dynamic_include	./cli/upgrade_database.php:11	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/upgrade_database.php:12	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/upgrade_database.php:13	require_once($config['base_path'] . '/install/functions.php');
-dynamic_include	./cli/upgrade_database.php:163			include($upgrade_file);
+dynamic_include	./cli/upgrade_database.php:177			include($upgrade_file);
 dynamic_include	./cmd.php:101	require_once($config['base_path'] . '/lib/snmp.php');
 dynamic_include	./cmd.php:102	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cmd.php:103	require_once($config['base_path'] . '/lib/rrd.php');

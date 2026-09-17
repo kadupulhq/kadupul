@@ -88,7 +88,9 @@ if ($storage_error !== '') {
 	exit(1);
 }
 
-if (!$local && $config['poller_id'] > 1) {
+// Queue cutover commands diagnose and migrate this collector's own queue.
+// Ordinary schema upgrades retain their existing main-database default.
+if (!$local && !$check_rrd_storage && !$migrate_poller_queue && $config['poller_id'] > 1) {
 	db_switch_remote_to_main();
 
 	print 'NOTE: Targeting Main Database' . PHP_EOL;
@@ -97,6 +99,18 @@ if (!$local && $config['poller_id'] > 1) {
 }
 
 if ($migrate_poller_queue) {
+    $queue_engine = db_fetch_cell_prepared(
+        'SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?',
+        array('poller_output')
+    );
+    if (!is_string($queue_engine) || $queue_engine === '') {
+        fwrite(STDERR, "Cannot inspect the local poller queue; no migration was attempted.\n");
+        exit(1);
+    }
+    if (strtolower($queue_engine) === 'innodb') {
+        print "Local poller queue already uses InnoDB; no migration was needed.\n";
+        exit(0);
+    }
     if (!db_execute_prepared('ALTER TABLE poller_output ENGINE=InnoDB ROW_FORMAT=Dynamic')) {
         fwrite(STDERR, "Poller queue migration failed; collectors must remain stopped.\n");
         exit(1);

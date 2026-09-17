@@ -109,8 +109,11 @@ FIXTURE;
         if ($failure === 'partial-restore') {
             file_put_contents($wrapper, "#!/bin/sh\nif [ \"\$1\" = restore ]; then\n for target do :; done\n printf partial > \"\$target\"\n exit 1\nfi\nexec " . escapeshellarg($binary) . " \"\$@\"\n");
         }
-        if ($failure === 'dump-failure') {
+        if ($failure === 'dump-failure' || $failure === 'dump-cleanup') {
             file_put_contents($wrapper, "#!/bin/sh\n" . escapeshellarg($binary) . " \"\$@\"\nexit 1\n");
+        }
+        if ($failure === 'dump-cleanup') {
+            file_put_contents($wrapper, "#!/bin/sh\n" . escapeshellarg($binary) . " \"\$@\"\nfor workspace in " . escapeshellarg($dir) . "/kadupul-rrd-*; do chmod 0500 \"\$workspace\"; done\nexit 1\n");
         }
         if ($failure === 'fetch-empty' || $failure === 'fetch-throw') {
             $behavior = $failure === 'fetch-empty' ? 'return array();' : 'throw new RuntimeException("fetch failed");';
@@ -188,6 +191,12 @@ FIXTURE;
                 ->and(file_exists($dir . '/db-write'))->toBeFalse()
                 ->and(file_get_contents($rrd))->toBe($before);
         } elseif ($failure) {
+            if ($failure === 'dump-cleanup') {
+                expect($stderr)->toContain('Partial dumps retained for manual cleanup');
+                $workspaces = glob($dir . '/kadupul-rrd-*');
+                expect($workspaces)->toHaveCount(1);
+                expect(file_exists($workspaces[0] . '/old.xml'))->toBeTrue();
+            }
             if ($failure === 'dump-failure') {
                 expect($stderr)->toContain('dump failed; inputs preserved')->and(file_exists($dir . '/finished.rrd'))->toBeFalse();
                 expect(glob($dir . '/kadupul-rrd-*'))->toBe(array());
@@ -236,10 +245,13 @@ FIXTURE;
         try {
             rrd_cli_merge_coverage($this, $dir);
         } finally {
+            foreach (glob($dir . '/kadupul-rrd-*') as $workspace) {
+                chmod($workspace, 0700);
+            }
             rrd_cli_fixture_remove($dir);
         }
     }
-})->with(array(array('update_heartbeat.php', false), array('float_rrdfiles.php', false), array('splice_rrd.php', false), array('float_rrdfiles.php', true), array('splice_rrd.php', true), array('update_heartbeat.php', true), array('splice_rrd.php', false, false), array('float_rrdfiles.php', false, true, 'storage'), array('float_rrdfiles.php', false, true, 'rewrite'), array('float_rrdfiles.php', false, true, 'sigterm'), array('float_rrdfiles.php', false, true, 'sigint'), array('float_rrdfiles.php', false, true, 'fetch-empty'), array('float_rrdfiles.php', false, true, 'fetch-throw'), array('update_heartbeat.php', false, true, 'rewrite'), array('update_heartbeat.php', false, true, 'missing-file'), array('float_rrdfiles.php', false, true, 'partial-restore'), array('splice_rrd.php', false, false, 'partial-restore'), array('splice_rrd.php', false, false, 'dump-failure'), array('splice_rrd.php', false, false, false, true)));
+})->with(array(array('update_heartbeat.php', false), array('float_rrdfiles.php', false), array('splice_rrd.php', false), array('float_rrdfiles.php', true), array('splice_rrd.php', true), array('update_heartbeat.php', true), array('splice_rrd.php', false, false), array('float_rrdfiles.php', false, true, 'storage'), array('float_rrdfiles.php', false, true, 'rewrite'), array('float_rrdfiles.php', false, true, 'sigterm'), array('float_rrdfiles.php', false, true, 'sigint'), array('float_rrdfiles.php', false, true, 'fetch-empty'), array('float_rrdfiles.php', false, true, 'fetch-throw'), array('update_heartbeat.php', false, true, 'rewrite'), array('update_heartbeat.php', false, true, 'missing-file'), array('float_rrdfiles.php', false, true, 'partial-restore'), array('splice_rrd.php', false, false, 'partial-restore'), array('splice_rrd.php', false, false, 'dump-failure'), array('splice_rrd.php', false, false, 'dump-cleanup'), array('splice_rrd.php', false, false, false, true)));
 
 
 test('batch gap repair serializes queued files and reports worker outcomes', function ($threads, $failed = false, $cached = false, $childStatus = null) {
@@ -438,10 +450,16 @@ test('storage probe and explicit queue migration preserve the cutover contract',
         $error = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
-        $accepted = !$combined && $trusted && ($migrate ? $success : (($remote && !$local) || $engine === 'InnoDB'));
+        $accepted = !$combined && $trusted && ($migrate ? (is_string($engine) && ($engine === 'InnoDB' || $success)) : $engine === 'InnoDB');
         expect(proc_close($process))->toBe($accepted ? 0 : 1, $error . $output);
         if ($combined) {
             expect($error)->toContain('Do not combine')->and($output)->toBe('');
+        } elseif ($trusted && $migrate && $engine === 'InnoDB') {
+            expect($error)->toBe('')->and($output)->toContain('already uses InnoDB');
+            expect(file_exists($dir . '/mutation'))->toBeFalse();
+        } elseif ($trusted && $migrate && !is_string($engine)) {
+            expect($error)->toContain('no migration was attempted');
+            expect(file_exists($dir . '/mutation'))->toBeFalse();
         } elseif ($trusted && $migrate) {
             expect(file_get_contents($dir . '/mutation'))->toBe('ALTER TABLE poller_output ENGINE=InnoDB ROW_FORMAT=Dynamic');
             expect($success ? $output : $error)->toContain($success ? 'retained samples preserved' : 'collectors must remain stopped');
@@ -453,12 +471,12 @@ test('storage probe and explicit queue migration preserve the cutover contract',
         if (!$migrate || !$trusted || $combined) {
             expect(file_exists($dir . '/mutation'))->toBeFalse();
         }
-        expect(file_exists($dir . '/main-database'))->toBe(!$combined && $trusted && $remote && !$local);
+        expect(file_exists($dir . '/main-database'))->toBeFalse();
         rrd_cli_merge_coverage($this, $dir);
     } finally {
         rrd_cli_fixture_remove($dir);
     }
-})->with(array(array('InnoDB', true), array('MEMORY', true), array(false, true), array('InnoDB', false), array('MEMORY', true, true), array('MEMORY', true, true, false), array('MEMORY', false, true), array('MEMORY', true, false, true, true, false), array('MEMORY', true, false, true, true, true), array('MEMORY', true, true, true, true, false), array('MEMORY', true, true, true, true, true), array('InnoDB', true, true, true, true, false, true)));
+})->with(array(array('InnoDB', true), array('MEMORY', true), array(false, true), array('InnoDB', false), array('MEMORY', true, true), array('MEMORY', true, true, false), array('MEMORY', false, true), array('MEMORY', true, false, true, true, false), array('MEMORY', true, false, true, true, true), array('MEMORY', true, true, true, true, false), array('MEMORY', true, true, true, true, true), array('InnoDB', true, true, true, true, false, true), array('InnoDB', true, true), array('InnoDB', true, true, false, true), array(false, true, true), array(false, true, true, true, true)));
 
 
 test('remote schema upgrades do not require local RRD storage unless explicitly checked', function ($missing, $probe, $local) {

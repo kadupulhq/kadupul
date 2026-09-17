@@ -245,12 +245,16 @@ if ($tempdir === false) {
 $oldxmlfile = $tempdir . '/old.xml';
 $newxmlfile = $tempdir . '/new.xml';
 $discard_dumps = static function () use ($oldxmlfile, $newxmlfile, $tempdir) {
+	$retained = false;
 	foreach (array($oldxmlfile, $newxmlfile) as $dumpfile) {
 		if (file_exists($dumpfile)) {
-			@unlink($dumpfile);
+			if (!@unlink($dumpfile)) {
+				$retained = true;
+			}
 		}
 	}
-	if (!@rmdir($tempdir)) {
+	$removed = @rmdir($tempdir);
+	if ($retained || !$removed) {
 		fwrite(STDERR, 'Partial dumps retained for manual cleanup in ' . $tempdir . PHP_EOL);
 	}
 };
