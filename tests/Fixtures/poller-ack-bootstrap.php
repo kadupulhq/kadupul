@@ -13,6 +13,9 @@ $ack_db->exec("CREATE TABLE poller_item(local_data_id INTEGER,rrd_name TEXT,rrd_
 $ack_db->exec('CREATE TABLE poller_output(local_data_id INTEGER,rrd_name TEXT,time TEXT,output TEXT)');
 $ack_db->exec('CREATE TABLE poller_output_realtime(local_data_id INTEGER,rrd_name TEXT,time TEXT,output TEXT,poller_id INTEGER)');
 $ack_db->exec("INSERT INTO $ack_table VALUES(1,'value','2020-01-01','42'" . ($ack_table === 'poller_output_realtime' ? ',1' : '') . ')');
+if (in_array(getenv('ACK_FAIL'), array('field-failure', 'field-success'), true)) {
+    $ack_db->exec("UPDATE poller_output_realtime SET output='value:42'");
+}
 $ack_db->exec('CREATE TABLE poller_time(end_time TEXT)');
 $ack_db->exec("INSERT INTO poller_time VALUES('0000-00-00')");
 if (in_array(getenv('ACK_FAIL'), array('mixed', 'page'), true)) {
@@ -65,9 +68,12 @@ function get_data_source_path(...$args)
 {
     return getenv('ACK_FIXTURE') . '/user_1_1.rrd';
 }
-function array_rekey($rows, ...$args)
+function array_rekey($rows, $key, $value)
 {
-    return $rows;
+    if (!$rows) {
+        return array();
+    }
+    return array_column($rows, $value, $key);
 }
 function dsstats_poller_output(...$args) {}
 function dsdebug_poller_output(...$args) {}
@@ -88,10 +94,13 @@ function rrd_close($pipe)
 }
 function db_fetch_assoc_prepared($sql, $params = array())
 {
+    if (strpos($sql, 'SELECT DISTINCT dtr.data_source_name') !== false) {
+        return getenv('ACK_FAIL') === 'field-failure' ? false : array(array('data_source_name' => 'value', 'data_name' => 'value'));
+    }
     if (strpos($sql, 'poller_data_template_field_mappings') !== false) {
         return array();
     }
-    if (getenv('ACK_FAIL') === 'select' && strpos($sql, 'FROM poller_output AS po') !== false) {
+    if (getenv('ACK_FAIL') === 'select' && (strpos($sql, 'FROM poller_output AS po') !== false || strpos($sql, 'FROM poller_output_realtime AS port') !== false)) {
         return false;
     }
     $query = $GLOBALS['ack_db']->prepare($sql);
@@ -126,6 +135,7 @@ function db_execute_prepared($sql, $params)
 }
 function rrdtool_function_update($updates, $pipe = false, &$completed = null)
 {
+    file_put_contents(getenv('ACK_FIXTURE') . '/updates.json', json_encode($updates));
     if (getenv('ACK_FAIL') === 'replace') {
         $GLOBALS['ack_db']->exec("UPDATE " . $GLOBALS['ack_table'] . " SET output='99' WHERE time='2020-01-01'");
     }
