@@ -47,8 +47,9 @@ retention work, producer contention, batch deletion and end-to-end drain time.
 source. `RRDTOOL_LEGACY_TEST_BINARY` must identify a real 1.3/1.4 executable;
 an incorrect executable fails its version assertion. The normal retry test
 uses the detected binary version instead of pretending a modern binary is old.
-A dedicated CI job tests pending pipe writes, stale retries and newer samples
-against the legacy executable, alongside the complete Boost contracts.
+The dedicated pending-pipe test and the `legacy`/`legacy-unknown` rejected-field
+cases run against RRDtool 1.4.9. The complete Boost contracts use the system
+RRDtool binary, including their stale-timestamp and newer-sample retry cases.
 The existing incomplete-leading-page and split-timestamp-group cases remain.
 
 Keep the synchronous legacy update path: a successful pipe write is not an
