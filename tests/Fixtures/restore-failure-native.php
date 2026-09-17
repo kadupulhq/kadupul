@@ -30,6 +30,13 @@ file_put_contents($xml, 'retained recovery');
 file_put_contents($rrd, 'retained original');
 // Inject syscall failures only in dedicated child processes. Production restore
 // code and cleanup execute unchanged; these are not real disk-exhaustion tests.
+if ($mode === 'metadata-failure') {
+    function stat($path)
+    {
+        // Directory trust still uses real metadata; fail only the live-file lookup.
+        return $path === $GLOBALS['rrd'] ? false : lstat($path);
+    }
+}
 if (in_array($mode, array('temporary-failure', 'temporary-outside'), true)) {
     function tempnam($path, $prefix)
     {

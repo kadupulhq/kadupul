@@ -12,7 +12,7 @@ test('production restore rejects unsafe outputs and preserves recovery evidence'
         $temporaryRoot = $mode === 'workspace-failure' ? $directory . '/missing' : $directory;
         $command = array(PHP_BINARY, '-d', 'sys_temp_dir=' . $temporaryRoot, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~');
         $disabled = array('no-posix' => 'posix_geteuid,posix_getegid', 'temporary-failure' => 'tempnam',
-            'temporary-outside' => 'tempnam', 'mode-failure' => 'chmod', 'process-failure' => 'proc_open');
+            'temporary-outside' => 'tempnam', 'mode-failure' => 'chmod', 'process-failure' => 'proc_open', 'metadata-failure' => 'stat');
         if (isset($disabled[$mode])) {
             $command = array_merge($command, array('-d', 'disable_functions=' . $disabled[$mode]));
         }
@@ -58,4 +58,4 @@ test('production restore rejects unsafe outputs and preserves recovery evidence'
     }
 })->with(array('no-posix', 'workspace-untrusted', 'remote-unsafe', 'unsafe-path', 'symlink-target',
     'empty-output', 'missing-output', 'symlink-output', 'rename-failure', 'workspace-failure',
-    'temporary-failure', 'temporary-outside', 'mode-failure', 'process-failure'));
+    'temporary-failure', 'temporary-outside', 'mode-failure', 'process-failure', 'metadata-failure'));
