@@ -734,12 +734,7 @@ while ($poller_runs_completed < $poller_runs) {
 				// insert the current date/time for graphs
 				set_config_option('date', date('Y-m-d H:i:s'));
 
-				// open a pipe to rrdtool for writing
-				$rrdtool_pipe = rrd_init(true, false, true);
-				$rrd_write_initialization_failed = $rrdtool_pipe === false;
-				if ($rrd_write_initialization_failed) {
-					$rrd_write_failed = true;
-				}
+
 			}
 
 			$rrds_processed = 0;
@@ -759,13 +754,9 @@ while ($poller_runs_completed < $poller_runs) {
 					}
 
 					if ($poller_id == 1) {
-						if (empty($rrd_write_initialization_failed)) {
-							$updated = process_poller_output($rrdtool_pipe, true);
-							if ($updated === false) {
-								$rrd_write_failed = true;
-							} else {
-								$rrds_processed += $updated;
-							}
+						$rrds_processed += process_poller_output_batch(true, $poller_output_deferred);
+						if ($poller_output_deferred) {
+							$rrd_write_failed = true;
 						}
 					} elseif ($config['connection'] != 'online') {
 						/* truncate until formal remote management is supported */
@@ -784,13 +775,9 @@ while ($poller_runs_completed < $poller_runs) {
 					$mtb = microtime(true);
 
 					if ($poller_id == 1) {
-						if (empty($rrd_write_initialization_failed)) {
-							$updated = process_poller_output($rrdtool_pipe);
-							if ($updated === false) {
-								$rrd_write_failed = true;
-							} else {
-								$rrds_processed += $updated;
-							}
+						$rrds_processed += process_poller_output_batch(false, $poller_output_deferred);
+						if ($poller_output_deferred) {
+							$rrd_write_failed = true;
 						}
 					} elseif ($config['connection'] != 'online') {
 						/* truncate until formal remote management is supported */
@@ -817,9 +804,6 @@ while ($poller_runs_completed < $poller_runs) {
 				}
 			}
 
-			if ($poller_id == 1) {
-				rrd_close($rrdtool_pipe);
-			}
 		}
 
 
@@ -916,9 +900,6 @@ while ($poller_runs_completed < $poller_runs) {
 }
 
 // Finish poller bookkeeping, but report an unavailable writer as a failed run.
-if (!empty($rrd_write_initialization_failed) || !empty($rrd_write_failed)) {
-	exit(1);
-}
 
 function poller_heartbeat_check() {
 	$poller_interval = read_config_option('poller_interval');
@@ -971,6 +952,10 @@ if ($poller_id == 1) {
 	automation_poller_bottom();
 	poller_maintenance();
 	api_plugin_hook('poller_bottom');
+}
+
+if (!empty($rrd_write_failed)) {
+	exit(1);
 }
 
 function host_status_cache_check() {

@@ -178,3 +178,18 @@ completed request IDs from `data_source_purge_action`; do not truncate the queue
 or discard requests for files whose cleanup failed. Keep the export until the
 files and corresponding completed requests have been verified, then restart
 writers. Ordinary acknowledged Windows updates remain available.
+
+
+## Poller completion and maintenance opportunities
+
+An RRD failure retains retryable samples and sets a nonzero poller exit status,
+but does not skip post-poll services, maintenance, reports, recovery flushes or
+plugin hooks. The poller releases its writer pipe and shared storage lease after
+each output batch, before sleeping while collectors finish. Exclusive maintenance
+can use the gaps between batches. Active writers still take priority over unsafe
+file replacement; stop writers when an operation requires a guaranteed window.
+
+LTS floating, like the main branch, uses one worker even if `--threads` requests
+more. Multiple float workers cannot concurrently own the same exclusive lease.
+The documented storage trust migration remains mandatory before upgrading:
+implicit trust or a warn-only bypass would permit uncoordinated destructive access.
