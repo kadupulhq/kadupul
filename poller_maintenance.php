@@ -706,9 +706,7 @@ function remove_files($file_array) {
 	}
 
 	maint_debug('RRDClean has finished a purge pass of ' . cacti_sizeof($file_array) . ' items');
-	if ($failed) {
-		return false;
-	}
+	return !$failed;
 }
 
 function rrdclean_create_path($path) {

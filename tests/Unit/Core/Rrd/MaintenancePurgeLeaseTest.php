@@ -90,6 +90,7 @@ test('purge and archive defer once under a writer lease then complete on retry',
         }
         expect(rrdfile_purge(false))->not->toBeFalse()->and($GLOBALS['purge_fixture_queue'])->toBe(array())
             ->and(file_exists($directory . '/sample.rrd'))->toBeFalse();
+        expect(remove_files(array()))->toBeTrue();
         if ($action === '3') {
             expect(file_get_contents($directory . '/archive/sample.rrd'))->toBe('original');
         }
