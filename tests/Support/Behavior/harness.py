@@ -59,9 +59,12 @@ INSTALL_TIMESTAMPS = re.compile(
 
 
 def normalize_failed_write_size(value):
-    """Normalize only the variable write size; retain errno and diagnostic text."""
-    return re.sub(r'(\bPHP (?:NOTICE|WARNING|Notice|Warning):\s+fwrite\(\): Write of )\d+( bytes failed with errno=\d+\b)',
-                  r'\1<BYTES>\2', value)
+    """Normalize write sizes only at the start of a complete diagnostic record."""
+    prefix = r'(?:(?:' + '|'.join(_POLLER_DATES) + r') \d{2}:\d{2}:\d{2} - [A-Z][A-Z0-9_]* )?'
+    location = r' in(?: file:)? (?:/var/www/html|/harness|<APP>|<HARNESS>)/[^\r\n]*\.php\s+on line:? \d+'
+    return re.sub(r'^(' + prefix + r'PHP (?:NOTICE|WARNING|Notice|Warning):[ \t]+fwrite\(\): Write of )'
+                  + r'\d+( bytes failed with errno=\d+[^\r\n]*' + location + r')(?=\r?$)',
+                  r'\1<BYTES>\2', value, flags=re.MULTILINE)
 
 
 def normalize_php_locations(value):
@@ -686,7 +689,10 @@ class Harness:
             recorded = {str(path.relative_to(runtime_root))[:-5] for path in runtime_root.rglob('*.json')}
             missing_after.update(runtime_root.name + '/' + name for name in set(self.observed) - recorded)
         manifest['complete'] = not missing_after
-        manifest['inventory_missing'] = sorted(missing_after)
+        # Optional failure detail keeps successful format-1 manifests compatible
+        # with the retained historical evidence.
+        if missing_after:
+            manifest['inventory_missing'] = sorted(missing_after)
         write_json(self.destination / 'observations.json', manifest)
         # The pre-recording inventory validation above owns orphan detection.
 

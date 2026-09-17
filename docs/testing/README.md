@@ -63,8 +63,9 @@ Containers are torn down afterwards unless `--keep` is passed.
 ## Golden files
 
 Goldens are the compatibility contract. They never update as a side effect of
-a normal run: a scenario with no golden is reported as `MISSING GOLDEN` and
-fails. Only explicit `make test-update-golden` or `make test-bootstrap-golden` writes them; both refuse to
+a normal run: missing scenarios fail the inventory check with
+`Runtime goldens are missing observations`. Only explicit `make test-update-golden`
+or `make test-bootstrap-golden` writes them; both refuse to
 run scoped, so a partial capture cannot leave the rest stale.
 
 Normalization is deliberately narrow. Filesystem roots become `<APP>` and

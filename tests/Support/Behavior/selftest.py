@@ -170,6 +170,8 @@ def recording_guards():
             manifest = json.loads((recorder.destination / 'observations.json').read_text())
             assert (status == 0) == (case in ('complete', 'other-runtime-complete')), case
             assert manifest['complete'] == (case in ('complete', 'other-runtime-complete')), case
+            if manifest['complete']:
+                assert 'inventory_missing' not in manifest, 'Successful format-1 manifests retain their historical schema'
             if case not in ('complete', 'other-runtime-complete'):
                 assert {str(p): p.read_bytes() for p in golden.parent.rglob('*.json')} == before, case
             else:
@@ -239,6 +241,13 @@ def diagnostic_contracts():
         assert command['stdout'] == command['stderr']
         assert command['stdout'].endswith('on line: <LINE>')
         assert 'errno=13 Permission denied' in harness.normalize_failed_write_size(broken.replace('errno=32 Broken pipe', 'errno=13 Permission denied'))
+        diagnostic = broken.split(' - ERROR ', 1)[1]
+        for payload in ('quoted ' + diagnostic, 'PHP WARNING: payload quotes ' + diagnostic,
+                        '09/16/2026 01:02:06 - ERROR PHP WARNING: payload quotes ' + diagnostic):
+            assert harness.normalize_failed_write_size(payload) == payload
+            assert harness.normalize(payload) != harness.normalize(payload.replace(str(size), str(size + 1), 1))
+        assert harness.normalize_failed_write_size(diagnostic + ' trailing payload') == diagnostic + ' trailing payload'
+        assert harness.normalize_failed_write_size(diagnostic + '\n' + broken).count('<BYTES>') == 2
     trace = '09/16/2026 01:02:06 - CMDPHP PHP ERROR Backtrace: (/var/www/html/lib/rrd.php[334]:update(), DS[12])'
     assert harness.application_diagnostics(trace) == harness.application_diagnostics(trace.replace('[334]', '[900]'))
     assert 'DS[12]' in harness.application_diagnostics(trace)[0]['message']
