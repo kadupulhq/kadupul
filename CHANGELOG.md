@@ -18,6 +18,8 @@ Targeting `v1.3.0`, the first planned application release. See
 ### Fixed
 
 - Compare behavioral captures from an explicit results directory when the controller and application use separate checkouts; document the Linux native self-test PHP prerequisite.
+- Retain realtime samples when their field mapping cannot be read.
+
 - Guard installer test POSIX checks on Windows runtimes.
 
 - Honor forced-local Windows cleanup policy and disable the obsolete volatile queue swap.

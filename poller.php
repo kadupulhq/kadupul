@@ -598,8 +598,8 @@ while ($poller_runs_completed < $poller_runs) {
 		}
 
 		if (debounce_run_notification('poller_output_retained_' . $poller_id, 1800)) {
-		cacti_log("WARNING: Poller Output Table not Empty.  Issues: $count, $issue_list", true, 'POLLER');
-		admin_email(__('Kadupul System Warning'), __('WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s.', $poller_id, $count, $issue_list));
+			cacti_log("WARNING: Poller Output Table not Empty.  Issues: $count, $issue_list", true, 'POLLER');
+			admin_email(__('Kadupul System Warning'), __('WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s.', $poller_id, $count, $issue_list));
 		}
 
 		// Valid pending samples belong to a retry, even after writer failure.
