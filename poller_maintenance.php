@@ -242,7 +242,9 @@ function rrdfile_purge($force) {
 
 	/* if the table that holds the actions is present, work on it */
 	if ($purge && !rrd_maintenance_cleanup_supported()) {
-		cacti_log('WARNING: Windows automatic local RRD cleanup is unsupported; existing requests retained for manual cleanup.', true, 'MAINT');
+		if (debounce_run_notification('rrd_cleanup_unsupported', 86400)) {
+			cacti_log('WARNING: Windows automatic local RRD cleanup is unsupported; existing requests retained for manual cleanup.', true, 'MAINT');
+		}
 		return true;
 	}
 

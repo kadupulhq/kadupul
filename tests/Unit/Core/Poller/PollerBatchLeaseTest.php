@@ -8,6 +8,11 @@ namespace PollerBatchLeaseTest;
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 require_once dirname(__DIR__, 4) . '/lib/rrd_maintenance.php';
 eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/poller.php'), 'process_poller_output_batch'));
+$GLOBALS['batch_failure_logs'] = array();
+function cacti_log($message, ...$args)
+{
+    $GLOBALS['batch_failure_logs'][] = $message;
+}
 function db_fetch_cell($sql)
 {
     expect($sql)->toBe('SELECT COUNT(*) FROM poller_output');
@@ -23,10 +28,9 @@ function rrd_close($lease)
 {
     \rrd_maintenance_release($lease);
 }
-function process_poller_output(&$lease, $final)
+function process_poller_output(&$lease)
 {
     expect(\rrd_maintenance_acquire(true, false, 0))->toBeFalse();
-    expect($final)->toBeTrue();
     if ($GLOBALS['batch_mode'] === 'exception') {
         throw new \RuntimeException('drain failed');
     }
@@ -42,12 +46,19 @@ test('batch writer lease is released before the next collector wait even on fail
     try {
         $deferred = false;
         if ($mode === 'exception') {
-            expect(fn() => process_poller_output_batch(true, $deferred))->toThrow(\RuntimeException::class, 'drain failed');
+            expect(fn() => process_poller_output_batch($deferred))->toThrow(\RuntimeException::class, 'drain failed');
         } else {
-            expect(process_poller_output_batch(true, $deferred))->toBe(in_array($mode, array('init-failed', 'retry', 'empty', 'query-failed'), true) ? 0 : 3);
+            expect(process_poller_output_batch($deferred))->toBe(in_array($mode, array('init-failed', 'retry', 'empty', 'query-failed'), true) ? 0 : 3);
             expect($deferred)->toBe(!in_array($mode, array('success', 'empty'), true));
         }
         expect($GLOBALS['batch_opened'])->toBe(!in_array($mode, array('empty', 'query-failed'), true));
+        if (in_array($mode, array('init-failed', 'query-failed'), true)) {
+            $message = $mode === 'init-failed' ? 'Unable to start the RRD batch writer' : 'Unable to read pending poller output count';
+            $logs = implode("\n", $GLOBALS['batch_failure_logs']);
+            expect(substr_count($logs, $message))->toBe(1);
+            process_poller_output_batch($deferred);
+            expect(implode("\n", $GLOBALS['batch_failure_logs']))->toBe($logs);
+        }
         $exclusive = \rrd_maintenance_acquire(true, false, 0);
         expect(is_resource($exclusive))->toBeTrue();
         \rrd_maintenance_release($exclusive);

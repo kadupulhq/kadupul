@@ -18,6 +18,7 @@ test('native data-source API retains Windows files without queuing unsupported c
 $queries = $messages = array();
 function read_config_option($key) { return $GLOBALS['options'][$key] ?? ''; }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+function debounce_run_notification(...$args) { return true; }
 function cacti_log($message, ...$args) { $GLOBALS['messages'][] = $message; }
 function api_plugin_hook_function(...$args) {}
 function poller_push_to_remote_db_connect(...$args) { return false; }
@@ -80,6 +81,7 @@ $queries = $messages = array();
 define('MESSAGE_LEVEL_ERROR', 2);
 function read_config_option($key) { return ''; }
 function __($message) { return $message; }
+function debounce_run_notification(...$args) { return true; }
 function cacti_log($message, ...$args) { $GLOBALS['messages'][] = $message; }
 function raise_message(...$args) { $GLOBALS['messages'][] = $args[1]; }
 function db_fetch_cell(...$args) { return 1; }
