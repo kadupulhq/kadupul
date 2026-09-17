@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('installer rejects unsafe storage before database upgrades even when forced', function ($mode, $ready) {
+test('installer rejects unsafe storage before database changes even when forced', function ($mode, $ready, $operation) {
     if ($mode === 'windows-readonly' && function_exists('posix_geteuid') && posix_geteuid() === 0) {
         $this->markTestSkipped('Root bypasses write permissions.');
     }
@@ -35,7 +35,9 @@ if ($mode === 'trusted-group') { $config['rrd_maintenance_trusted_gids'] = array
 require $root . '/lib/installer.php';
 $reflection = new ReflectionClass('Installer');
 $installer = $reflection->newInstanceWithoutConstructor();
-$property = $reflection->getProperty('mode'); if (PHP_VERSION_ID < 80100) { $property->setAccessible(true); } $property->setValue($installer, $mode === 'fresh' ? Installer::MODE_INSTALL : ($mode === 'memory-string' ? (string)Installer::MODE_UPGRADE : Installer::MODE_UPGRADE));
+$installerMode = strpos($operation, 'downgrade') === 0 ? Installer::MODE_DOWNGRADE : Installer::MODE_UPGRADE;
+if ($operation === 'downgrade-string' || $mode === 'memory-string') { $installerMode = (string)$installerMode; }
+$property = $reflection->getProperty('mode'); if (PHP_VERSION_ID < 80100) { $property->setAccessible(true); } $property->setValue($installer, $mode === 'fresh' ? Installer::MODE_INSTALL : $installerMode);
 $method = $reflection->getMethod('getPermissions'); if (PHP_VERSION_ID < 80100) { $method->setAccessible(true); }
 $permissions = $method->invoke($installer);
 $method = $reflection->getMethod('install'); if (PHP_VERSION_ID < 80100) { $method->setAccessible(true); }
@@ -45,7 +47,7 @@ catch (LogicException $error) { $outcome = $error->getMessage(); }
 echo json_encode(array($permissions['always'][$config['rra_path']], $outcome));
 FIXTURE;
     try {
-        file_put_contents($dir . '/probe.php', '<?php ' . $coverage . '$root = ' . var_export($root, true) . '; $mode = ' . var_export($mode, true) . ';' . $bootstrap);
+        file_put_contents($dir . '/probe.php', '<?php ' . $coverage . '$root = ' . var_export($root, true) . '; $mode = ' . var_export($mode, true) . '; $operation = ' . var_export($operation, true) . ';' . $bootstrap);
         $args = array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~');
         if ($mode === 'no-posix') {
             $args = array_merge($args, array('-d', 'disable_functions=posix_geteuid'));
@@ -84,4 +86,4 @@ FIXTURE;
         rmdir($dir . '/rra');
         rmdir($dir);
     }
-})->with(array(array('memory-string', false), array('fresh', true), array('memory', false), array('queue-unavailable', false), array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true)));
+})->with(array(array('memory-string', false), array('fresh', true), array('memory', false), array('queue-unavailable', false), array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true)))->with(array('upgrade', 'downgrade', 'downgrade-string'));
