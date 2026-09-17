@@ -2531,10 +2531,11 @@ function timeout_kill_registered_processes($tasktype = '', $taskname = '', $task
 
 
 /** Hold the writer lease only while draining a batch, never while waiting for collectors. */
-function process_poller_output_batch(&$deferred) {
+function process_poller_output_batch(&$deferred, &$proxy_pipe) {
+	global $config;
 	static $reported = array();
 	$deferred = false;
-	$pending = db_fetch_cell('SELECT COUNT(*) FROM poller_output');
+	$pending = db_fetch_cell_prepared('SELECT ' . SQL_NO_CACHE . ' COUNT(*) FROM poller_output');
 	if (!is_numeric($pending)) {
 		if (empty($reported['count'])) {
 			cacti_log('ERROR: Unable to read pending poller output count; samples retained for retry.', false, 'POLLER');
@@ -2543,10 +2544,29 @@ function process_poller_output_batch(&$deferred) {
 		$deferred = true;
 		return 0;
 	}
+	$reported['count'] = false;
 	if ((int) $pending === 0) {
+		$reported = array();
 		return 0;
 	}
-	$pipe = rrd_init(true, false, true);
+	$proxy = ($config['force_storage_location_local'] ?? false) !== true && read_config_option('storage_location');
+	$busy = false;
+	if ($proxy) {
+		if ($proxy_pipe === false) {
+			$proxy_pipe = rrd_init(true, false, true);
+		}
+		$pipe = $proxy_pipe;
+	} else {
+		$pipe = rrd_init(true, false, true, 0, $busy);
+	}
+	if ($busy) {
+		if (empty($reported['busy'])) {
+			cacti_log('NOTE: RRD maintenance is active; pending poller samples retained for a later batch.', false, 'POLLER');
+			$reported['busy'] = true;
+		}
+		return 0;
+	}
+	$reported['busy'] = false;
 	if ($pipe === false) {
 		if (empty($reported['writer'])) {
 			cacti_log('ERROR: Unable to start the RRD batch writer; pending samples retained for retry.', false, 'POLLER');
@@ -2555,11 +2575,17 @@ function process_poller_output_batch(&$deferred) {
 		$deferred = true;
 		return 0;
 	}
+	$reported['writer'] = false;
+	$failed = true;
 	try {
 		$updated = process_poller_output($pipe);
 		$deferred = $updated === false;
+		$failed = $deferred;
 		return $deferred ? 0 : $updated;
 	} finally {
-		rrd_close($pipe);
+		if (!$proxy || $failed) {
+			rrd_close($pipe);
+			$proxy_pipe = false;
+		}
 	}
 }
