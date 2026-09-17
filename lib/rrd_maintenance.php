@@ -494,21 +494,21 @@ function rrd_maintenance_restore_command($binary, $xml_file, $rrd_file, $range_c
 }
 
 /** Require durable storage before accepting retryable collector samples. */
-function rrd_maintenance_queue_configuration_error()
+function rrd_maintenance_queue_configuration_error($queue_connection = false)
 {
-    $engine = db_fetch_cell_prepared('SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?', array('poller_output'));
+    $engine = db_fetch_cell_prepared('SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?', array('poller_output'), '', true, $queue_connection);
     if (is_string($engine) && strtolower($engine) === 'innodb') {
         return '';
     }
-    return 'The poller_output queue must use InnoDB before collection. Stop collectors and run cli/upgrade_database.php --migrate-poller-queue (or convert poller_output to InnoDB after a backup). Observed engine: ' . (is_string($engine) && $engine !== '' ? $engine : 'unavailable') . '. Retained samples must not be discarded to clear this condition.';
+    return 'The poller_output queue must use InnoDB before collection. Stop all collectors, including remote collectors, and run cli/upgrade_database.php --migrate-poller-queue (or convert poller_output to InnoDB after a backup). Observed engine: ' . (is_string($engine) && $engine !== '' ? $engine : 'unavailable') . '. Retained samples must not be discarded to clear this condition.';
 }
 
 /** Stop collection before unsafe storage or a volatile retry queue can lose samples. */
-function rrd_maintenance_poller_preflight()
+function rrd_maintenance_poller_preflight($check_storage = true, $queue_connection = false)
 {
-    $error = rrd_maintenance_configuration_error();
+    $error = $check_storage ? rrd_maintenance_configuration_error() : '';
     if ($error === '') {
-        $error = rrd_maintenance_queue_configuration_error();
+        $error = rrd_maintenance_queue_configuration_error($queue_connection);
     }
     if ($error === '') {
         return true;

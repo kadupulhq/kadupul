@@ -23,9 +23,11 @@
       <file>./Unit/Core/Rrd/WindowsCleanupPolicyTest.php</file>
       <file>./Unit/Core/Rrd/RealtimeFieldLookupFailureTest.php</file>
       <file>./Unit/Core/Rrd/DsdebugRepairResultTest.php</file>
+      <file>./Unit/Core/Rrd/BoostReadFailureNativeTest.php</file>
       <file>./Unit/Core/Rrd/WindowsCleanupNativeTest.php</file>
       <file>./Unit/Core/Poller/PollerAcknowledgementTest.php</file>
       <file>./Unit/Core/Poller/PollerAcknowledgementNativeTest.php</file>
+      <file>./Unit/Core/Poller/RemoteQueuePreflightNativeTest.php</file>
       <file>./Unit/Core/Rrd/RrdProxyAcknowledgementTest.php</file>
     </testsuite>
   </testsuites>
