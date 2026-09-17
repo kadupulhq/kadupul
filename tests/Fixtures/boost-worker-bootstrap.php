@@ -118,9 +118,26 @@ function db_fetch_assoc_prepared(...$args)
 {
     return array();
 }
-function db_fetch_assoc(...$args)
+function db_fetch_assoc($sql)
 {
-    return false;
+    return strpos($sql, 'information_schema.tables') !== false && strpos(getenv('BOOST_MODE'), 'master-success') === 0
+        ? array(array('name' => 'poller_output_boost_arch_fixture')) : false;
+}
+function boost_archive_is_empty($table)
+{
+    return getenv('BOOST_MODE') === 'master-success-empty';
+}
+function dsstats_boost_bottom()
+{
+    $GLOBALS['settings_written']['dsstats_called'] = true;
+}
+function rrdcheck_boost_bottom()
+{
+    $GLOBALS['settings_written']['rrdcheck_called'] = true;
+}
+function api_plugin_hook($name)
+{
+    $GLOBALS['settings_written']['plugin_hook'] = $name;
 }
 define('SQL_NO_CACHE', '');
 function boost_memory_limit() {}
@@ -143,6 +160,10 @@ function register_process_start(...$args)
 function db_execute($sql)
 {
     if (strpos($sql, 'DROP TABLE') !== false) {
+        if (getenv('BOOST_MODE') === 'master-success-empty') {
+            $GLOBALS['settings_written']['dropped_archive'] = $sql;
+            return true;
+        }
         throw new RuntimeException('Archive cleanup after failed preparation');
     }
     return true;
