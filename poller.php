@@ -614,23 +614,9 @@ while ($poller_runs_completed < $poller_runs) {
 			array($poller_id));
 	}
 
-	/**
-	 * adjust for recent memory table problems in MariaDB and memory tables
-	 * being pushed into swap
-	 */
-	if ($poller_id == 1 && read_config_option('poller_refresh_output_table') == 'on' && $total_pollers == 1
-		&& (string) db_fetch_cell('SELECT COUNT(*) FROM poller_output') === '0') {
-		db_execute('CREATE TABLE IF NOT EXISTS po LIKE poller_output');
-		db_execute('RENAME TABLE poller_output TO poold, po TO poller_output');
-		db_execute('DROP TABLE IF EXISTS poold');
-		db_execute('ALTER TABLE poller_output ENGINE=MEMORY');
+	// InnoDB queues do not need the legacy MEMORY-table swap.
+	// Never replace a live queue after an empty-count snapshot.
 
-		// catch the unlikely event that the poller_output_boost is missing
-		if (!db_table_exists('poller_output_boost')) {
-			db_execute('CREATE TABLE poller_output_boost LIKE poller_output');
-			db_execute('ALTER TABLE poller_output_boost ENGINE=InnoDB');
-		}
-	}
 
 	// mainline
 	if (read_config_option('poller_enabled') == 'on') {
