@@ -275,7 +275,8 @@ def diagnostic_contracts():
     assert 'DS[12]' in harness.application_diagnostics(trace)[0]['message']
     for severity in ('ERROR', 'WARNING', 'NOTICE', 'DEPRECATED', 'USER_WARNING', 'USER_NOTICE', 'USER_ERROR', 'USER_DEPRECATED', 'STRICT', 'PARSE', 'CORE_ERROR', 'CORE_WARNING', 'COMPILE_ERROR', 'COMPILE_WARNING', 'RECOVERABLE_ERROR', 'ALL', 'Unknown Error'):
         diagnostic = f'PHP {severity}: calibration in file: /harness/probe.php on line: 79'
-        assert harness.normalize_php_locations(diagnostic).endswith('on line: <LINE>')
+        assert harness.normalize_php_locations(diagnostic) == diagnostic
+        assert harness.normalize_php_locations('09/16/2026 01:02:06 - ERROR ' + diagnostic).endswith('on line: <LINE>')
     relative_trace = 'PHP ERROR Backtrace: (/poller.php[764]:main(), /lib/functions.php[4479]:log(), DS[12])'
     assert harness.normalize_php_locations(relative_trace) == 'PHP ERROR Backtrace: (/poller.php[<LINE>]:main(), /lib/functions.php[<LINE>]:log(), DS[12])'
     assert harness.normalize_php_locations('ordinary /poller.php[764]') == 'ordinary /poller.php[764]'
@@ -298,13 +299,20 @@ def diagnostic_contracts():
         assert harness.normalize(payload) != harness.normalize(payload.replace('123', '124'))
     for gap in (' ', '  '):
         for plugin in ('', " in  Plugin 'fixture'"):
-            actual = f'PHP USER_WARNING{plugin}: calibration in file: /harness/probe.php{gap}on line: 79'
+            actual = f'09/16/2026 01:02:06 - ERROR PHP USER_WARNING{plugin}: calibration in file: /harness/probe.php{gap}on line: 79'
             assert harness.normalize(actual) == harness.normalize(actual.replace('79', '80'))
     native = 'PHP Warning: actual diagnostic in /var/www/html/lib/file.php on line 123'
     assert harness.normalize(native) == harness.normalize(native.replace('123', '124'))
-    cacti = 'PHP WARNING: payload in /var/www/html/lib/file.php on line: 123 in file: /var/www/html/lib/handler.php on line: 45'
+    cacti = '09/16/2026 01:02:06 - ERROR PHP WARNING: payload in /var/www/html/lib/file.php on line: 123 in file: /var/www/html/lib/handler.php on line: 45'
     assert harness.normalize(cacti) != harness.normalize(cacti.replace('123', '124'))
     assert harness.normalize(cacti) == harness.normalize(cacti.replace('45', '46'))
+    for payload in ('PHP WARNING: payload in file: /harness/probe.php on line: 79',
+                    'quoted PHP Warning: payload in /harness/probe.php on line 79'):
+        assert harness.normalize_php_locations(payload) == payload
+        assert harness.normalize(payload) != harness.normalize(payload.replace('79', '80'))
+    wrapped = '09/16/2026 01:02:06 - ERROR PHP WARNING: payload in file: /harness/probe.php on line: 79 in file: /harness/handler.php on line: 90'
+    assert harness.normalize(wrapped) != harness.normalize(wrapped.replace('79', '80'))
+    assert harness.normalize(wrapped) == harness.normalize(wrapped.replace('90', '91'))
     assert harness.normalize('ordinary DS[12] on line: 334') == 'ordinary DS[12] on line: 334'
     unrelated = '09/16/2026 01:02:06 - ERROR PHP WARNING: payload has 108 bytes'
     assert harness.application_diagnostics(unrelated)[0]['message'].endswith('108 bytes')

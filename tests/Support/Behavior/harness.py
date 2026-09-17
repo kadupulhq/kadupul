@@ -93,14 +93,16 @@ def normalize_php_locations(value):
     lines = []
     root = r'(?:<APP>|<HARNESS>|/var/www/html|/harness)'
     for line in value.splitlines(keepends=True):
-        if re.search(r'\bPHP (?:(?:USER_)?(?:NOTICE|WARNING|ERROR|DEPRECATED)|(?:CORE|COMPILE)_(?:ERROR|WARNING)|RECOVERABLE_ERROR|PARSE|ALL|STRICT|Unknown Error)\b', line):
-            # CactiErrorHandler emits both literal colons. Do not combine
-            # fragments of this format with PHP's native location format.
-            line = re.sub(r'(\bin file:\s+' + root + r'/[^\r\n]*?\.php\s+on line:\s*)\d+(?=\s*$)',
-                          r'\1<LINE>', line)
-        elif re.search(r'\bPHP (?:Notice|Warning|Deprecated|Fatal error|Parse error):', line):
-            line = re.sub(r'(\bin ' + root + r'/[^\r\n]*?\.php on line )\d+(?=\s*$)',
-                          r'\1<LINE>', line)
+        log_prefix = r'(?:(?:' + '|'.join(_POLLER_DATES) + r') \d{2}:\d{2}:\d{2} - [A-Z][A-Z0-9_]* |Total\[\d+\.\d+\] )'
+        severity = r'PHP (?:(?:USER_)?(?:NOTICE|WARNING|ERROR|DEPRECATED)|(?:CORE|COMPILE)_(?:ERROR|WARNING)|RECOVERABLE_ERROR|PARSE|ALL|STRICT|Unknown Error)'
+        cacti_record = (r'^(' + log_prefix + severity + r"(?: in  Plugin '[^\r\n']+')?:[^\r\n]* in file:\s+"
+                        + root + r'/[^\r\n]*?\.php\s+on line:\s*)\d+(\s*)$')
+        # Raw uppercase severity text can be a warning payload. Cacti records
+        # require their logger prefix; native PHP diagnostics have a separate shape.
+        line = re.sub(cacti_record, r'\1<LINE>\2', line)
+        native_record = (r'^((?:' + log_prefix + r')?PHP (?:Notice|Warning|Deprecated|Fatal error|Parse error):[^\r\n]* in '
+                         + root + r'/[^\r\n]*?\.php on line )\d+(\s*)$')
+        line = re.sub(native_record, r'\1<LINE>\2', line)
         # cacti_debug_backtrace emits a distinct record, with comma-separated
         # file[line]:function() frames. A path-shaped warning payload is data.
         log_prefix = r'(?:(?:' + '|'.join(_POLLER_DATES) + r') \d{2}:\d{2}:\d{2} - [A-Z][A-Z0-9_]* )?'
@@ -176,7 +178,8 @@ def application_diagnostics(contents):
             continue
         match = re.match(r'([A-Z][A-Z0-9_]*) (PHP .*:.*)$', message)
         if match:
-            detail = normalize_php_locations(normalize_failed_write_size(match[2]))
+            normalized = normalize_php_locations(normalize_failed_write_size(line))
+            detail = normalized.partition(' - ')[2].partition(' ')[2]
             records.append({'subsystem': match[1], 'message': normalize_known_roots(detail)})
     return records
 
