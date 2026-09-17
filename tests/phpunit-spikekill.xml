@@ -27,6 +27,7 @@
       <file>./Unit/Core/Rrd/WindowsCleanupNativeTest.php</file>
       <file>./Unit/Core/Poller/PollerAcknowledgementTest.php</file>
       <file>./Unit/Core/Poller/PollerAcknowledgementNativeTest.php</file>
+      <file>./Unit/Core/Poller/RemoteQueuePreflightNativeTest.php</file>
       <file>./Unit/Core/Rrd/RrdProxyAcknowledgementTest.php</file>
     </testsuite>
   </testsuites>
