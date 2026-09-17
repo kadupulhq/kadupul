@@ -1116,56 +1116,56 @@
     ],
     "diagnostics/application-log": [
       {
-        "subsystem": "ERROR",
-        "message": "PHP DEPRECATED: preg_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated in file: <APP>/lib/functions.php  on line: <LINE>"
-      },
-      {
         "subsystem": "CMDPHP",
         "message": "PHP ERROR Backtrace:  (<HARNESS>/probe.php[<LINE>]:sanitize_search_string(), /lib/functions.php[<LINE>]:preg_replace(), {closure}(), <HARNESS>/errors.php[<LINE>]:CactiErrorHandler())"
-      },
-      {
-        "subsystem": "ERROR",
-        "message": "PHP USER_WARNING: behavior capture calibration in file: <HARNESS>/probe.php  on line: <LINE>"
-      },
-      {
-        "subsystem": "CMDPHP",
-        "message": "PHP ERROR WARNING Backtrace:  (<HARNESS>/probe.php[<LINE>]:trigger_error(), {closure}(), <HARNESS>/errors.php[<LINE>]:CactiErrorHandler())"
-      },
-      {
-        "subsystem": "ERROR",
-        "message": "PHP NOTICE: fwrite(): Write of <BYTES> bytes failed with errno=32 Broken pipe in file: <APP>/lib/rrd.php  on line: <LINE>"
       },
       {
         "subsystem": "CMDPHP",
         "message": "PHP ERROR NOTICE Backtrace:  (/poller.php[<LINE>]:process_poller_output(), /lib/poller.php[<LINE>]:rrdtool_function_update(), /lib/rrd.php[<LINE>]:rrdtool_execute(), /lib/rrd.php[<LINE>]:__rrd_execute(), /lib/rrd.php[<LINE>]:fwrite(), CactiErrorHandler())"
       },
       {
-        "subsystem": "ERROR",
-        "message": "PHP USER_WARNING: behavior application-handler calibration in file: Command line code  on line: 1"
+        "subsystem": "CMDPHP",
+        "message": "PHP ERROR WARNING Backtrace:  (<HARNESS>/probe.php[<LINE>]:trigger_error(), {closure}(), <HARNESS>/errors.php[<LINE>]:CactiErrorHandler())"
       },
       {
         "subsystem": "CMDPHP",
         "message": "PHP ERROR WARNING Backtrace:  (Command line code[1]:trigger_error(), CactiErrorHandler())"
+      },
+      {
+        "subsystem": "ERROR",
+        "message": "PHP DEPRECATED: preg_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated in file: <APP>/lib/functions.php  on line: <LINE>"
+      },
+      {
+        "subsystem": "ERROR",
+        "message": "PHP NOTICE: fwrite(): Write of <BYTES> bytes failed with errno=32 Broken pipe in file: <APP>/lib/rrd.php  on line: <LINE>"
+      },
+      {
+        "subsystem": "ERROR",
+        "message": "PHP USER_WARNING: behavior application-handler calibration in file: Command line code  on line: 1"
+      },
+      {
+        "subsystem": "ERROR",
+        "message": "PHP USER_WARNING: behavior capture calibration in file: <HARNESS>/probe.php  on line: <LINE>"
       }
     ]
   },
   "provenance": {
-    "harness_revision": "7afa08740ac87eaaf210ff2a39444b3c54e75e71",
+    "harness_revision": "92c7c3962f5eda66436cb626b8529104a6b76aca",
     "harness_dirty": false,
     "application_dirty": true,
-    "harness_sha256": "b1225a1c660568c970c5774f45c98ab6fef563a33165510604f4af98c0def88d",
+    "harness_sha256": "465ebddde542a71b43f0bb1fda6934ebc230a1489e647bb89dd41ec4e35c614c",
     "harness_inputs_sha256": {
       "tests/Support/Behavior/coverage.php": "e23fd8e8b958497c587db9ca28dbea6efdba14aa6c116cc8e90537f406d2c190",
       "tests/Support/Behavior/coverage_selftest.py": "7c8537998e8013b0ebed8a9133f666eea60be4339ec37f95a62cdad1a20d8262",
       "tests/Support/Behavior/errors.php": "884c7e1c794498717f97b5d3e5e92062526db29062c5a5fdab114ffda94a3f7e",
-      "tests/Support/Behavior/harness.py": "b1225a1c660568c970c5774f45c98ab6fef563a33165510604f4af98c0def88d",
+      "tests/Support/Behavior/harness.py": "465ebddde542a71b43f0bb1fda6934ebc230a1489e647bb89dd41ec4e35c614c",
       "tests/Support/Behavior/inventory.py": "1afc3c37ce3512502cf0748904b64b83ed812c1bdb0ca701246816132613a8c8",
       "tests/Support/Behavior/merge_poller_coverage.php": "0083909100e11f37e7e14065ecc20ff9ce96a86a80819abd9bbceb8c1ecc1cab",
       "tests/Support/Behavior/poller_coverage.py": "189d4de22147f40a2977ad5e3456c583a4dea90d9fa9615894dc1c1506155fab",
       "tests/Support/Behavior/probe.php": "b58002db5b6e3d4f3efc02adac5935996d1d14cd5006046818fdb4471ed7223b",
       "tests/Support/Behavior/release_readiness.py": "3f84dfc3cc736f73977cc44ff95379b8b32eb5834bf3e25e409a220088f0b53b",
       "tests/Support/Behavior/release_selftest.py": "a26dd07267749101e39499df7bc351037354d06db42b2e3dfe2f139b9b4bac61",
-      "tests/Support/Behavior/selftest.py": "6dee72074d615769029d8d29765abf5a3184b0b67d00ae133da6b8d2073245af",
+      "tests/Support/Behavior/selftest.py": "4d14bc753543c4c7aa73811c975736408398af033aa75111f6c69f5023462515",
       "tests/Support/Behavior/wait-php.php": "1d300ec4f8baab11ec3cc708e20106644e07e6c54b5d3ae4521a09801533bd3b",
       "tests/Fixtures/plugins/compatibility_test/INFO": "ecba2c2fbf1fcb5d839789c23fa61c1c8f57a0377dac46ab754eaf72ac88c2c3",
       "tests/Fixtures/plugins/compatibility_test/setup.php": "a48cadbb4a7fc3d61e30aecd2163b72d15ded864bb9abe653c9b063dbaa578e7",
@@ -1179,14 +1179,14 @@
       "tests/Support/Behavior/coverage.php": "e23fd8e8b958497c587db9ca28dbea6efdba14aa6c116cc8e90537f406d2c190",
       "tests/Support/Behavior/coverage_selftest.py": "7c8537998e8013b0ebed8a9133f666eea60be4339ec37f95a62cdad1a20d8262",
       "tests/Support/Behavior/errors.php": "884c7e1c794498717f97b5d3e5e92062526db29062c5a5fdab114ffda94a3f7e",
-      "tests/Support/Behavior/harness.py": "b1225a1c660568c970c5774f45c98ab6fef563a33165510604f4af98c0def88d",
+      "tests/Support/Behavior/harness.py": "465ebddde542a71b43f0bb1fda6934ebc230a1489e647bb89dd41ec4e35c614c",
       "tests/Support/Behavior/inventory.py": "1afc3c37ce3512502cf0748904b64b83ed812c1bdb0ca701246816132613a8c8",
       "tests/Support/Behavior/merge_poller_coverage.php": "0083909100e11f37e7e14065ecc20ff9ce96a86a80819abd9bbceb8c1ecc1cab",
       "tests/Support/Behavior/poller_coverage.py": "189d4de22147f40a2977ad5e3456c583a4dea90d9fa9615894dc1c1506155fab",
       "tests/Support/Behavior/probe.php": "b58002db5b6e3d4f3efc02adac5935996d1d14cd5006046818fdb4471ed7223b",
       "tests/Support/Behavior/release_readiness.py": "3f84dfc3cc736f73977cc44ff95379b8b32eb5834bf3e25e409a220088f0b53b",
       "tests/Support/Behavior/release_selftest.py": "a26dd07267749101e39499df7bc351037354d06db42b2e3dfe2f139b9b4bac61",
-      "tests/Support/Behavior/selftest.py": "6dee72074d615769029d8d29765abf5a3184b0b67d00ae133da6b8d2073245af",
+      "tests/Support/Behavior/selftest.py": "4d14bc753543c4c7aa73811c975736408398af033aa75111f6c69f5023462515",
       "tests/Support/Behavior/wait-php.php": "1d300ec4f8baab11ec3cc708e20106644e07e6c54b5d3ae4521a09801533bd3b",
       "tests/Fixtures/plugins/compatibility_test/INFO": "ecba2c2fbf1fcb5d839789c23fa61c1c8f57a0377dac46ab754eaf72ac88c2c3",
       "tests/Fixtures/plugins/compatibility_test/setup.php": "a48cadbb4a7fc3d61e30aecd2163b72d15ded864bb9abe653c9b063dbaa578e7",
