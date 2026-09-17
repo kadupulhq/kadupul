@@ -195,7 +195,7 @@ checkout's first capture and its verification repeat report the same dirty state
 Failure to record that final state leaves the capture incomplete.
 
 `application_images` records the content-addressed image IDs inspected from the
-actual web and SNMP containers. This covers all files Docker copied into each
+actual web, SNMP, and database containers. This covers all files Docker copied into each
 application build, including dirty and untracked application files that are not
 in the mounted-helper inventory. Candidate and repeat image IDs must agree even
 when their Git revisions, dirty flags, and scenario observations are identical.
