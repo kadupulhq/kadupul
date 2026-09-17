@@ -18,6 +18,8 @@ Targeting `v1.3.0`, the first planned application release. See
 ### Fixed
 
 - Compare behavioral captures from an explicit results directory when the controller and application use separate checkouts; document the Linux native self-test PHP prerequisite.
+- Preserve hyphenated RRD data sources, verify durable queues after legacy upgrades, and allow remote database upgrades without unrelated local storage.
+
 - Refuse web upgrades when the poller queue is volatile or unreadable, before changing the database.
 - Recover valid fields from rejected RRD groups without stalling later timestamps; report refused RRD repairs as failures.
 

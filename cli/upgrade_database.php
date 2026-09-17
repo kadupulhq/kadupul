@@ -81,7 +81,8 @@ if ($check_rrd_storage && $migrate_poller_queue) {
 }
 
 require_once __DIR__ . '/../lib/rrd_maintenance.php';
-$storage_error = rrd_maintenance_configuration_error();
+$storage_error = (!$check_rrd_storage && (int) ($config['poller_id'] ?? 1) > 1)
+	? '' : rrd_maintenance_configuration_error();
 if ($storage_error !== '') {
 	fwrite(STDERR, $storage_error . PHP_EOL);
 	exit(1);

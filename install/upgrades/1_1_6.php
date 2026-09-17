@@ -27,7 +27,7 @@ function upgrade_to_1_1_6() {
 
 	db_install_execute("ALTER TABLE poller_output
 		MODIFY COLUMN output VARCHAR(512) NOT NULL default '',
-		ENGINE=MEMORY"
+		ENGINE=InnoDB ROW_FORMAT=Dynamic"
 	);
 
 	db_install_add_key('graph_templates_gprint', 'key', 'name', array('name'));
