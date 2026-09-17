@@ -126,7 +126,7 @@ def normalize(value):
         return [normalize(v) for v in value]
     if isinstance(value, str):
         value = normalize_php_locations(normalize_failed_write_size(value))
-        value = value.replace('/var/www/html', '<APP>').replace('/harness', '<HARNESS>')
+        value = normalize_known_roots(value)
         # Poller timing lines report per-process CPU and wall clock, which differ
         # on every run. The line's presence and count still matter, its
         # measurements do not. Both patterns are anchored to the poller's own
@@ -154,6 +154,12 @@ def poller_command_contract(result):
     return command
 
 
+def normalize_known_roots(value):
+    roots = {'/var/www/html': '<APP>', '/harness': '<HARNESS>'}
+    return re.sub(r'(?<![\w./-])(?:/var/www/html|/harness)(?=/|$)',
+                  lambda match: roots[match[0]], value)
+
+
 def visible_diagnostics(events):
     """Observed diagnostics enabled by both shipped and current reporting policy."""
     return [event for event in events if event['severity'] == 'FATAL'
@@ -171,7 +177,7 @@ def application_diagnostics(contents):
         match = re.match(r'([A-Z][A-Z0-9_]*) (PHP .*:.*)$', message)
         if match:
             detail = normalize_php_locations(normalize_failed_write_size(match[2]))
-            records.append({'subsystem': match[1], 'message': detail.replace('/var/www/html', '<APP>').replace('/harness', '<HARNESS>')})
+            records.append({'subsystem': match[1], 'message': normalize_known_roots(detail)})
     return records
 
 
@@ -346,7 +352,7 @@ class Harness:
                 continue
             # The first token is the subcommand; keep it and the file it acts on,
             # drop absolute paths and epoch arguments that move every run.
-            call = re.sub(r'/var/www/html', '<APP>', line)
+            call = normalize_known_roots(line)
             # Only the update timestamp, which is followed by the value colon.
             # A bare ten-digit run is a DS maximum or an RRA row count.
             call = re.sub(r'(?<=\s)1[0-9]{9}(?=:)', '<EPOCH>', call)

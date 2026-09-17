@@ -224,6 +224,18 @@ def diagnostic_contracts():
         {'subsystem': 'ERROR', 'message': 'PHP WARNING: first 2020-01-01 in <APP>/lib/x.php:42'},
         {'subsystem': 'ERROR', 'message': 'PHP NOTICE: second'}]
     assert harness.application_diagnostics(log + log) == harness.application_diagnostics(log) * 2
+    for payload in ('/harnessed', '/var/www/htmlish', '/harnessed/file.php',
+                    '/var/www/htmlish/file.php', '/tmp/harness/file.php',
+                    'prefix/var/www/html/file.php'):
+        warning = 'PHP WARNING: payload ' + payload
+        assert harness.normalize(warning) == warning
+        assert harness.application_diagnostics('09/16/2026 01:02:06 - ERROR ' + warning) == [
+            {'subsystem': 'ERROR', 'message': warning}]
+    assert harness.normalize_known_roots('/harness') == '<HARNESS>'
+    assert harness.normalize_known_roots('/var/www/html') == '<APP>'
+    assert harness.normalize_known_roots('file /harness/probe.php') == 'file <HARNESS>/probe.php'
+    assert harness.normalize_known_roots('file /var/www/html/index.php') == 'file <APP>/index.php'
+
     timing_warning = 'PHP WARNING: OK u:1.23 s:2.34 r:3.45 SYSTEM STATS: Time:1.23 in /harness/probe.php:7'
     assert harness.normalize('PHP WARNING: payload SYSTEM STATS: Time:1.23') == 'PHP WARNING: payload SYSTEM STATS: Time:1.23'
     assert harness.normalize('SYSTEM STATS: Time:1.23 DataSources:5') == 'SYSTEM STATS: Time:<T> DataSources:5'
