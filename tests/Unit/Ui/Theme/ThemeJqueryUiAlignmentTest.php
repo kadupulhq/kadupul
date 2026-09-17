@@ -59,3 +59,10 @@ test('shipped theme bundles match their reviewed reference content', function ($
     array('sunrise', 'c6b55b7b337d6b1eaaa870056eddd3c7712439e5db11dd13581353e4998025f1'),
     array('paper-plane', '1806948ccae44528b12468559bd5b6ab29a735b00611c67b195029cbe86ea86b')
 ));
+
+// The imported override stylesheet is a separate part of Midwinter's widget skin.
+test('Midwinter widget overrides retain their reviewed content and import', function () {
+    $root = dirname(__DIR__, 4);
+    expect(file_get_contents($root . '/include/themes/midwinter/main.css'))->toContain('jquery-ui.midwinter.css');
+    expect(hash_file('sha256', $root . '/include/themes/midwinter/jquery-ui.midwinter.css'))->toBe('69ea09d77affa1182dfeb5930ca47bac195b99a61d82423092648e26d37d2a64');
+});

@@ -933,12 +933,19 @@ function get_order_string($allowed_columns = null) {
 		}
 	}
 
+	// Discard obsolete saved columns before deciding whether a request fallback is needed.
+	if (is_array($columns)) {
+		foreach (array_keys($columns) as $column) {
+			if (validate_sort_column($column, $page) === '') {
+				unset($columns[$column]);
+			}
+		}
+	}
 	if (!is_array($columns) || !$columns) {
 		$requested = get_request_var('sort_column');
-		if (!is_scalar($requested)) {
-			return '';
-		}
-		$columns = array((string) $requested => get_nfilter_request_var('sort_direction'));
+		$columns = is_scalar($requested)
+			? array((string) $requested => get_nfilter_request_var('sort_direction'))
+			: array();
 	}
 
 	$parts = array();

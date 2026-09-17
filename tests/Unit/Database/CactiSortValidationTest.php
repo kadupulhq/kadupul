@@ -197,3 +197,46 @@ test('late allowlist registration preserves shift-click sorting without admittin
     array('description', 'ORDER BY `description` DESC'),
     array('unknown_column', 'ORDER BY `description` ASC'),
 ));
+
+test('rejected saved columns fall back to the current allowlisted sort request', function ($requested, $expected, $saved) {
+    $page = get_order_string_page(false);
+    $_SESSION['valid_sort_columns'][$page] = array('removed_column');
+    $_SESSION['sort_data'][$page] = array('removed_column' => 'DESC', 'secret_column' => 'ASC');
+    set_request_var('sort_column', $requested);
+    set_request_var('sort_direction', 'DESC');
+    expect(get_order_string(array('description', 'LENGTH(description)')))->toBe($expected);
+    expect($_SESSION['sort_data'][$page])->toBe($saved);
+    expect($_SESSION['sort_string'][$page])->toBe($expected);
+})->with(array(
+    array('description', 'ORDER BY `description` DESC', array('description' => 'DESC')),
+    array('LENGTH(description)', 'ORDER BY LENGTH(description) DESC', array('LENGTH(description)' => 'DESC')),
+    array('secret_column', '', array()),
+    array('description; DROP TABLE host', '', array()),
+    array(array('description'), '', array()),
+));
+
+test('domain listing sorts LDAP attributes while retaining domains without LDAP settings', function ($column, $direction, $expected) {
+    $pdo = new PDO(getenv('SORT_TEST_DSN') ?: 'sqlite::memory:', getenv('SORT_TEST_USER') ?: null, getenv('SORT_TEST_PASSWORD') ?: null);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->exec('CREATE TEMPORARY TABLE user_domains (domain_id INTEGER PRIMARY KEY, domain_name TEXT, type INTEGER, defdomain INTEGER, user_id INTEGER, enabled TEXT)');
+    $pdo->exec('CREATE TEMPORARY TABLE user_domains_ldap (domain_id INTEGER PRIMARY KEY, cn_full_name TEXT, cn_email TEXT)');
+    $pdo->exec("INSERT INTO user_domains VALUES (1, 'local', 0, 1, 0, 'on'), (2, 'ldap-a', 1, 0, 0, 'on'), (3, 'ldap-z', 1, 0, 0, 'on')");
+    $pdo->exec("INSERT INTO user_domains_ldap VALUES (2, 'Alpha', 'z@example.invalid'), (3, 'Zulu', 'a@example.invalid')");
+    set_request_var('sort_column', $column);
+    set_request_var('sort_direction', $direction);
+    set_request_var('page', 1);
+    $rows = 30;
+    $sql_where = '';
+    $source = file_get_contents(dirname(__DIR__, 3) . '/user_domains.php');
+    expect(preg_match('/\$domains = db_fetch_assoc_prepared\((.*?), \$params\);/s', $source, $match))->toBe(1);
+    // Execute the actual page's SQL expression, including its live allowlist.
+    $sql = eval('return ' . $match[1] . ';');
+    $domains = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    expect(array_column($domains, 'domain_id'))->toBe($expected);
+    expect(array_column($domains, 'cn_full_name', 'domain_id')[1])->toBeNull();
+})->with(array(
+    array('cn_full_name', 'ASC', array(1, 2, 3)),
+    array('cn_full_name', 'DESC', array(3, 2, 1)),
+    array('cn_email', 'ASC', array(1, 3, 2)),
+    array('cn_email', 'DESC', array(2, 3, 1)),
+));
