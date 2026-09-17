@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Preserve hyphenated RRD fields, verify durable queues after legacy upgrades, and allow remote database upgrades without unrelated local storage
 -issue: Preserve float and cleanup queues when worker discovery or local filesystem operations fail
 -issue: Recover valid fields from rejected RRD groups without stalling later timestamps; never report refused RRD repairs as successful
 -issue: Acknowledge Windows updates synchronously, retain realtime samples on field-lookup failure, and preserve shift-click sorting after allowlist registration

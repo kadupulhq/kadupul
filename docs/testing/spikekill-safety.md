@@ -49,7 +49,7 @@ first flushes through the regular backend and fetches its inspection data, then
 waits for an exclusive lease before dumping and rewriting. Float workers
 therefore serialize the rewrite phase rather than racing each other or polling.
 A busy splice exits before dumping. Cache-daemon rewrites are refused. Windows
-retains its existing non-spike CLI behavior because spike removal remains disabled.
+refuses destructive local rewrites because exclusive maintenance coordination is unavailable.
 Private replacement pipes opened during crash recovery are drained and closed
 before returning; later calls with the closed original pipe use synchronous I/O.
 
@@ -87,8 +87,10 @@ Do not make the storage world-writable to work around a permissions error.
 
 The web/CLI installer permission step reports this prerequisite, and the actual
 installation/upgrade operation checks again before schema or version changes.
-`cli/upgrade_database.php` also refuses an unsafe storage configuration before
-running upgrades. The force option cannot bypass the storage prerequisite.
+`cli/upgrade_database.php` refuses unsafe local storage before local upgrades.
+A remote collector upgrading either database does not need a local RRD store;
+`--check-rrd-storage` always checks the invoking account and local storage.
+The force option cannot bypass a required storage check.
 Run the check as both service accounts before putting the upgraded code in
 service. Remote RRDtool proxy storage retains its existing path. See the Windows acknowledgement limitation below.
 
@@ -117,7 +119,7 @@ count, or an already-written timestamp) consume an unwritten queue key. The
 poller logs its path, timestamp, values, and reason before continuing with later
 timestamps. Filesystem, cache-daemon, resource, and unrecognized errors remain
 queued for retry. This prevents a permanently invalid
-sample from filling the MEMORY queue. Timeouts, crashes, and missing responses
+sample from indefinitely blocking the durable queue. Timeouts, crashes, and missing responses
 retain samples for retry. Rejected data can be recovered from the logged values
 after correcting the underlying storage or template problem; monitor these errors.
 A rejected update still makes the drain report failure. It is never counted as a
@@ -231,3 +233,30 @@ not expired merely because a writer remains unavailable.
 On remote collectors, add `--local` when checking or migrating that collector’s queue.
 Without it, `upgrade_database.php` keeps its established main-database target.
 The storage permission probe always runs as the invoking service account.
+
+### Review evidence and recovery policy
+
+Complete samples remain retryable when a file is corrupt, unavailable, or returns
+an unrecognized error. Expiring those rows would lose collected data that can be
+replayed after repair. The poller returns failure and its retained-output warning
+reports the total row count and affected data-source IDs, throttled to once per
+30 minutes. Monitor that count and database capacity; if necessary pause the
+affected collector while repairing storage, then drain its retained samples.
+Recognized unknown fields are removed only after validation or confirmation from
+RRDtool's diagnostic/on-disk schema, so valid siblings continue to be written.
+
+The Windows per-command process cost is an intentional tradeoff for acknowledged
+writes, not a claim of unchanged throughput relative to the pre-PR poller. The
+native Windows measurement above is the available capacity evidence; deployments
+must validate their own complete collection cycle.
+
+A MariaDB 10.11.19 diagnostic used one million InnoDB rows and a 10,000-tuple
+four-column delete predicate `(local_data_id, rrd_name, time, output) IN (...)`.
+`EXPLAIN DELETE` selected `type=range`, `key=PRIMARY`, and `rows=10000`.
+This checks that plan and fixture, not every database version or distribution.
+
+RRDproxy's `setcnn timeout off` response is `% Timeout disabled.` followed by
+`OK u:0.00`. The encrypted-channel regression test uses that exact response.
+The upstream definitions were checked in
+[client.php](https://github.com/Cacti/rrdproxy/blob/2af67f634f4b93b3f501837340a8c417374175c5/lib/client.php#L266)
+and [global.php](https://github.com/Cacti/rrdproxy/blob/2af67f634f4b93b3f501837340a8c417374175c5/include/global.php#L32).

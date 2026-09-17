@@ -261,7 +261,7 @@ dynamic_include	./cli/repair_templates.php:27	require_once($config['base_path'] 
 dynamic_include	./cli/repair_templates.php:28	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/repair_templates.php:29	require_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./cli/sqltable_to_php.php:87		include_once($config['library_path'] . '/database.php');
-dynamic_include	./cli/upgrade_database.php:161			include($upgrade_file);
+dynamic_include	./cli/upgrade_database.php:162			include($upgrade_file);
 dynamic_include	./cli/upgrade_database.php:27	require_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./cli/upgrade_database.php:28	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/upgrade_database.php:29	require_once($config['base_path'] . '/lib/utility.php');

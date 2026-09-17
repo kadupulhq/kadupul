@@ -169,7 +169,9 @@ while (($raw = proxy_read_message($client)) !== false) {
 	 * and call_user_func_array($cmd, $options); include/global.php: RRD_OK 'OK u:0.00', RRD_ERROR 'ERROR:' */
 	$parts = explode(' ', trim($command), 2);
 
-	if ($parts[0] === 'file_exists') {
+	if ($command === 'setcnn timeout off') {
+		$reply = "% Timeout disabled.\nOK u:0.00";
+	} elseif ($parts[0] === 'file_exists') {
 		$status = call_user_func_array('file_exists', explode(' ', $parts[1] ?? ''));
 		$reply  = ($status === true) ? 'OK u:0.00' : 'ERROR:';
 	} elseif (in_array($parts[0], array('fetch', 'update'), true) && $keys['rrdtool'] !== '') {
@@ -397,3 +399,11 @@ test('native proxy errors preserve permanent rejection reasons and clear them af
     expect($run['client']['calls'][1]['ok'])->toBeFalse()->and($run['client']['calls'][1]['permanent'])->toBeTrue(json_encode($run['client']['calls']));
     expect($run['client']['calls'][2])->toBe(array('ok' => true, 'reason' => null, 'permanent' => false));
 })->skip(!extension_loaded('sockets') || cacti_test_rrdtool_binary() === '', 'Native RRDtool and sockets are required');
+
+
+test('the upstream setcnn timeout response is acknowledged over the encrypted proxy channel', function () use ($rrdProxyRoot) {
+    $run = rrd_proxy_channel_run($rrdProxyRoot, array(array('update', 'setcnn timeout off')));
+    expect($run['client']['calls'])->toBe(array(array('ok' => true, 'reason' => null, 'permanent' => false)));
+    expect(array_column($run['packets'], 'command'))->toContain('setcnn timeout off');
+    foreach ($run['packets'] as $packet) { expect($packet['encrypted'])->toBeTrue(); }
+})->skip(!extension_loaded('sockets'), 'the sockets extension is not loaded');

@@ -3616,7 +3616,9 @@ class Installer implements JsonSerializable {
 		if (cacti_version_compare($orig_cacti_version, $cacti_upgrade_version, '<')) {
 			db_execute("UPDATE version SET cacti = '" . $cacti_upgrade_version . "'");
 		}
-		return false;
+		require_once __DIR__ . '/rrd_maintenance.php';
+		$queue_error = rrd_maintenance_queue_configuration_error();
+		return $queue_error !== '' ? $queue_error : false;
 	}
 
 	private function checkDatabaseUpgrade($cacti_upgrade_version) {

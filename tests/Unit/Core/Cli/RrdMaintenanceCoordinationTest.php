@@ -380,3 +380,41 @@ test('storage probe checks the invoking account and queue without starting an up
         rrd_cli_merge_coverage($this, $dir);
     } finally { rrd_cli_fixture_remove($dir); }
 })->with(array(array('InnoDB', true), array('MEMORY', true), array(false, true), array('InnoDB', false), array('MEMORY', true, true, false), array('MEMORY', true, true, true)));
+
+
+test('remote schema upgrades do not require local RRD storage unless explicitly checked', function ($missing, $probe, $local) {
+    $root = dirname(__DIR__, 4);
+    $dir = sys_get_temp_dir() . '/remote-upgrade-' . bin2hex(random_bytes(8));
+    foreach (array('', '/cli', '/include', '/lib', '/install', '/install/upgrades') as $suffix) { mkdir($dir . $suffix, 0700); }
+    try {
+        if (!$missing) { mkdir($dir . '/store', 0770); chmod($dir . '/store', 0770); }
+        copy($root . '/cli/upgrade_database.php', $dir . '/cli/upgrade_database.php');
+        symlink($root . '/lib/rrd_maintenance.php', $dir . '/lib/rrd_maintenance.php');
+        foreach (array('lib/data_query.php', 'lib/poller.php', 'lib/utility.php', 'install/functions.php') as $file) { file_put_contents($dir . '/' . $file, '<?php'); }
+        file_put_contents($dir . '/install/upgrades/1_2_31.php', '<?php function upgrade_to_1_2_31(){touch(dirname(__DIR__,2)."/upgraded");}');
+        $bootstrap = <<<'REMOTE'
+<?php
+$config=array('base_path'=>dirname(__DIR__),'rra_path'=>dirname(__DIR__).'/store','cacti_server_os'=>'unix','poller_id'=>2);
+define('CACTI_VERSION','1.2.31'); define('DB_STATUS_SKIPPED',2); define('DB_STATUS_ERROR',0);
+$cacti_version_codes=array('1.2.30'=>'old','1.2.31'=>'new');
+function __($message,...$args){return $args?vsprintf($message,$args):$message;}
+function read_config_option($key){return false;}
+function cacti_sizeof($value){return is_array($value)?count($value):0;}
+function db_switch_remote_to_main(){touch(dirname(__DIR__).'/main-db');}
+function get_cacti_version(){return '1.2.30';}
+function cacti_version_compare($a,$b,$op){return version_compare($a,$b,$op);}
+function db_execute_prepared($sql,$params){if (strpos($sql,'UPDATE version')===false){throw new RuntimeException('Unexpected mutation');} file_put_contents(dirname(__DIR__).'/version',$params[0]);return true;}
+REMOTE;
+        file_put_contents($dir . '/include/cli_check.php', $bootstrap);
+        $args = array_merge(array(PHP_BINARY), rrd_cli_coverage_arguments($this, $dir, $root, 'upgrade_database.php'), array($dir . '/cli/upgrade_database.php', '--forcever=1.2.30'), $probe ? array('--check-rrd-storage') : array(), $local ? array('--local') : array());
+        $process = proc_open($args, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $out = stream_get_contents($pipes[1]); $err = stream_get_contents($pipes[2]); fclose($pipes[1]); fclose($pipes[2]);
+        $accepted = !$probe;
+        expect(proc_close($process))->toBe($accepted ? 0 : 1, $out . $err)
+            ->and(file_exists($dir . '/upgraded'))->toBe($accepted)
+            ->and(file_exists($dir . '/main-db'))->toBe($accepted && !$local);
+        if ($accepted) { expect(file_get_contents($dir . '/version'))->toBe('1.2.31')->and($err)->toBe(''); }
+        else { expect($err)->toContain('RRD storage is not ready'); }
+        rrd_cli_merge_coverage($this, $dir);
+    } finally { rrd_cli_fixture_remove($dir); }
+})->with(array(array(true,false,false),array(false,false,false),array(true,true,false),array(false,true,false),array(true,false,true),array(false,false,true)));
