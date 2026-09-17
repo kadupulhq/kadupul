@@ -118,7 +118,7 @@ def application_image_contract():
         recorder.base_image_digest = lambda: manifest['base_image']
         recorder.compose = lambda *args: {'stdout': ''}
         (root / 'cacti.sql').write_text('schema')
-        with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', return_value={'stdout': 'a' * 40}), patch.object(harness, 'source_provenance', return_value=manifest['provenance']):
+        with patch.object(harness, 'ROOT', root), patch.object(harness, 'CONTROLLER_ROOT', root), patch.object(harness, 'run', return_value={'stdout': 'a' * 40}), patch.object(harness, 'source_provenance', return_value=manifest['provenance']):
             assert recorder.finish() == 2
         failed = json.loads((recorder.destination / 'observations.json').read_text())
         assert failed['complete'] is False and failed['application_images'] is None
@@ -145,7 +145,7 @@ def application_input_boundary_contract():
             recorder = object.__new__(harness.Harness)
             recorder.setup_started = False
             recorder.compose = Mock(side_effect=AssertionError('Invalid inputs must not touch Docker'))
-            with patch.object(harness, 'ROOT', root), patch.object(harness, 'source_provenance', return_value=provenance), patch.object(harness, 'run', side_effect=RuntimeError('not a checkout') if fault == 'non-git' else None, return_value={'stdout': 'a' * 40}):
+            with patch.object(harness, 'ROOT', root), patch.object(harness, 'CONTROLLER_ROOT', root), patch.object(harness, 'source_provenance', return_value=provenance), patch.object(harness, 'run', side_effect=RuntimeError('not a checkout') if fault == 'non-git' else None, return_value={'stdout': 'a' * 40}):
                 try:
                     recorder.setup()
                 except RuntimeError:
@@ -157,7 +157,7 @@ def application_input_boundary_contract():
     with tempfile.TemporaryDirectory() as directory:
         root = Path(directory)
         (root / 'cacti.sql').write_text('schema')
-        with patch.object(harness, 'ROOT', root), patch.object(harness, 'source_provenance', return_value=comparable_manifest()['provenance']), patch.object(harness, 'run', return_value={'stdout': 'a' * 40}):
+        with patch.object(harness, 'ROOT', root), patch.object(harness, 'CONTROLLER_ROOT', root), patch.object(harness, 'source_provenance', return_value=comparable_manifest()['provenance']), patch.object(harness, 'run', return_value={'stdout': 'a' * 40}):
             harness.validate_application_inputs()
     print('application input validation rejects missing and mismatched overlays before Docker')
 
@@ -177,7 +177,7 @@ def base_image_failure_contract():
                 recorder.command = lambda *a, **kw: {'stdout': '8.2', 'exit': 0}
                 recorder.base_image_digest = lambda: {**valid['base_image'], key: value}
                 recorder.application_image_digests = lambda: valid['application_images']
-                with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', return_value={'stdout': 'a' * 40}), patch.object(harness, 'source_provenance', return_value=valid['provenance']):
+                with patch.object(harness, 'ROOT', root), patch.object(harness, 'CONTROLLER_ROOT', root), patch.object(harness, 'run', return_value={'stdout': 'a' * 40}), patch.object(harness, 'source_provenance', return_value=valid['provenance']):
                     assert recorder.finish() == 2, (key, value)
                 failed = json.loads((recorder.destination / 'observations.json').read_text())
                 assert failed['complete'] is False
@@ -224,7 +224,7 @@ def bootstrap_repeat_provenance():
         recorder.command = lambda *a, **kw: {'stdout': '8.2', 'stderr': '', 'exit': 0}
         recorder.base_image_digest = lambda: comparable_manifest()['base_image']
         recorder.application_image_digests = lambda: comparable_manifest()['application_images']
-        with patch.object(harness, 'ROOT', root), patch.object(harness, '__file__', str(root / 'tests/Support/Behavior/harness.py')):
+        with patch.object(harness, 'ROOT', root), patch.object(harness, 'CONTROLLER_ROOT', root), patch.object(harness, '__file__', str(root / 'tests/Support/Behavior/harness.py')):
             assert harness.source_provenance()['application_dirty'] is False
             assert recorder.finish() == 0
             first = json.loads((recorder.destination / 'observations.json').read_text())
@@ -445,6 +445,48 @@ def unavailable_docker_failure():
 
 
 
+def retained_controller_inputs():
+    actual = harness.source_provenance()['harness_inputs_sha256']
+    for label in ('first', 'repeat'):
+        path = ROOT / 'tests/behavior/evidence/historical-baseline' / (label + '.json')
+        recorded = json.loads(path.read_text())['provenance']['harness_inputs_sha256']
+        changed = sorted(key for key in set(actual) | set(recorded) if actual.get(key) != recorded.get(key))
+        assert not changed, 'Recapture historical evidence after changing controller inputs: ' + ', '.join(changed)
+    print('retained baseline evidence matches the current controller inputs')
+
+
+def separate_application_outputs():
+    with tempfile.TemporaryDirectory(prefix='controller artifacts ') as directory:
+        controller = Path(directory) / 'controller'
+        application = Path(directory) / 'application'
+        application.mkdir()
+        (application / 'cacti.sql').write_text('schema')
+        args = types.SimpleNamespace(target='fixture', only=None, update_golden=True,
+                                     project='artifact-routing-' + Path(directory).name.replace(' ', '-'))
+        with patch.object(harness, 'ROOT', application), patch.object(harness, 'CONTROLLER_ROOT', controller), patch.object(harness, 'run', return_value={'stdout': 'a' * 40}), patch.object(harness, 'source_provenance', return_value=comparable_manifest()['provenance']):
+            recorder = harness.Harness(args)
+            try:
+                assert recorder.destination == controller / 'tests/behavior/results/fixture'
+                assert recorder.dc[-1] == str(application / 'tests/behavior/compose.yml')
+                recorder.observed = comparable_manifest()['scenarios']
+                recorder.command = lambda *a, **kw: {'stdout': '8.2', 'stderr': '', 'exit': 0}
+                recorder.base_image_digest = lambda: comparable_manifest()['base_image']
+                recorder.application_image_digests = lambda: comparable_manifest()['application_images']
+                golden = controller / 'tests/Golden/fixture/php-8.2'
+                harness.write_json(golden / 'removed.json', {})
+                assert recorder.finish() == 2, 'Application mode must validate existing controller goldens'
+                (golden / 'removed.json').unlink()
+                for name, value in recorder.observed.items():
+                    harness.write_json(golden / (name + '.json'), value)
+                assert recorder.finish() == 0
+                assert not (application / 'tests').exists(), 'Artifacts must not modify the application checkout'
+                assert harness.compare(types.SimpleNamespace(results_root=None, baseline='fixture',
+                    candidate='fixture', repeat=None, approvals=None, output=None)) == 0
+            finally:
+                recorder.lock.close()
+    print('separate applications preserve controller golden checks and default comparison paths')
+
+
 def recording_guards():
     from unittest.mock import patch
     import tempfile
@@ -483,7 +525,7 @@ def recording_guards():
                 else:
                     for name in names: harness.write_json(other / (name + '.json'), {'value': name})
             before = {str(p): p.read_bytes() for p in golden.parent.rglob('*.json')}
-            with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', return_value={'stdout': 'revision'}):
+            with patch.object(harness, 'ROOT', root), patch.object(harness, 'CONTROLLER_ROOT', root), patch.object(harness, 'run', return_value={'stdout': 'revision'}):
                 status = recorder.finish()
             manifest = json.loads((recorder.destination / 'observations.json').read_text())
             assert (status == 0) == (case in ('complete', 'other-runtime-complete')), case
@@ -496,7 +538,7 @@ def recording_guards():
                 assert len(list(golden.rglob('*.json'))) == len(harness.EXPECTED_SCENARIOS)
         recorder.args = types.SimpleNamespace(target='absent-runtime', only=None, update_golden=False)
         recorder.destination = root / 'results/absent-runtime'
-        with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', return_value={'stdout': 'revision'}):
+        with patch.object(harness, 'ROOT', root), patch.object(harness, 'CONTROLLER_ROOT', root), patch.object(harness, 'run', return_value={'stdout': 'revision'}):
             assert recorder.finish() == 2
             assert json.loads((recorder.destination / 'observations.json').read_text())['complete'] is False
         recorder.args = types.SimpleNamespace(target='bootstrap', only=None, update_golden=True, bootstrap_goldens=True)
@@ -507,7 +549,7 @@ def recording_guards():
             for name in names[:-1]:
                 harness.write_json(target / ('php-' + version) / (name + '.json'), {'value': name})
         recorder.command = lambda *a, **kw: {'stdout': '8.2', 'stderr': '', 'exit': 0}
-        with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', return_value={'stdout': 'revision'}):
+        with patch.object(harness, 'ROOT', root), patch.object(harness, 'CONTROLLER_ROOT', root), patch.object(harness, 'run', return_value={'stdout': 'revision'}):
             with patch('builtins.print') as output:
                 assert recorder.finish() == 2, 'Partial bootstrap must not report successful verification'
             output.assert_called_once_with(
@@ -824,7 +866,7 @@ def source_provenance_failure_contract():
             recorder.command = lambda *a, **kw: {'stdout': '8.2', 'stderr': '', 'exit': 0}
             recorder.base_image_digest = lambda: comparable_manifest()['base_image']
             recorder.application_image_digests = lambda: comparable_manifest()['application_images']
-            with patch.object(harness, 'ROOT', root):
+            with patch.object(harness, 'ROOT', root), patch.object(harness, 'CONTROLLER_ROOT', root):
                 if failure == 'not-git':
                     assert recorder.finish() == 2
                 else:
@@ -850,19 +892,19 @@ def provenance_contract():
         def git_result(arguments, **kwargs):
             return {'stdout': status if 'status' in arguments else 'committed-harness-revision'}
         for status in ('', ' M tests/Support/Behavior/harness.py\n', '?? tests/Support/Behavior/harness.py\n'):
-            with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', side_effect=git_result):
+            with patch.object(harness, 'ROOT', root), patch.object(harness, 'CONTROLLER_ROOT', root), patch.object(harness, 'run', side_effect=git_result):
                 provenance = harness.source_provenance()
             assert provenance['harness_revision'] == 'committed-harness-revision'
             assert provenance['harness_dirty'] is bool(status)
             assert provenance['application_dirty'] is bool(status)
             assert len(provenance['harness_sha256']) == 64
         (root / '.dockerignore').write_text('cache/\nlog/')
-        with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', side_effect=git_result):
+        with patch.object(harness, 'ROOT', root), patch.object(harness, 'CONTROLLER_ROOT', root), patch.object(harness, 'run', side_effect=git_result):
             ignored = harness.source_provenance()
         assert ignored['application_inputs_sha256']['.dockerignore'] != provenance['application_inputs_sha256']['.dockerignore']
         assert ignored['harness_inputs_sha256'] == provenance['harness_inputs_sha256']
         fixture.write_text('<?php echo 2;')
-        with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', side_effect=git_result):
+        with patch.object(harness, 'ROOT', root), patch.object(harness, 'CONTROLLER_ROOT', root), patch.object(harness, 'run', side_effect=git_result):
             changed = harness.source_provenance()
         assert changed['application_inputs_sha256'] != provenance['application_inputs_sha256']
         assert changed['harness_inputs_sha256'] == provenance['harness_inputs_sha256']
@@ -947,12 +989,14 @@ def main():
             raise AssertionError('Linux validation silently skipped PHP')
     native_worker_boundary()
     recording_guards()
+    separate_application_outputs()
     source_provenance_failure_contract()
     provenance_contract()
     application_input_boundary_contract()
     base_image_failure_contract()
     application_image_contract()
     diagnostic_contracts()
+    retained_controller_inputs()
     failed_setup_manifest()
     unavailable_docker_failure()
     print('setup failure records an incomplete manifest without probing containers')

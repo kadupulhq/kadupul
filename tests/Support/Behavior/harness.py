@@ -18,7 +18,8 @@ import urllib.parse
 import urllib.request
 import urllib.error
 
-ROOT = Path(__file__).resolve().parents[3]
+CONTROLLER_ROOT = Path(__file__).resolve().parents[3]
+ROOT = CONTROLLER_ROOT
 
 # Explicit inventory: removing a capture must never shrink a recording silently.
 EXPECTED_SCENARIOS = frozenset(['api/ajax-hosts', 'api/datasource-invalid', 'api/php-errors', 'api/type-coercion', 'api/warning-calibration', 'auth/login-admin', 'auth/login-invalid', 'auth/missing-csrf', 'cli/device-help', 'cli/device-missing', 'database/fresh-schema', 'devices/create', 'devices/delete', 'diagnostics/application-log', 'diagnostics/visible-php-errors', 'faults/database-unreachable', 'faults/missing-rrd-file', 'graphs/create', 'graphs/datasource-create', 'graphs/definition', 'plugins/callbacks', 'plugins/disable', 'plugins/enable', 'plugins/hook', 'plugins/hook-disabled', 'plugins/install', 'plugins/poller-hooks', 'plugins/uninstall', 'poller/device-unreachable', 'poller/rrd-failure', 'poller/run-reachable', 'snmp/get', 'ui/devices', 'upgrade/install'])
@@ -300,7 +301,7 @@ class Harness:
             raise RuntimeError('Another behavioral harness run holds the ' + project + ' project') from None
         self.setup_started = False
         self.observed = {}
-        self.destination = ROOT / 'tests/behavior/results' / args.target
+        self.destination = CONTROLLER_ROOT / 'tests/behavior/results' / args.target
 
     def compose(self, *args, **kwargs):
         return run(self.dc + list(args), **kwargs)
@@ -752,7 +753,7 @@ class Harness:
         if error is None:
             try:
                 self.selected()
-                target_root = ROOT / 'tests/Golden' / self.args.target
+                target_root = CONTROLLER_ROOT / 'tests/Golden' / self.args.target
                 orphans = set()
                 missing = set()
                 current_root = target_root / ('php-' + runtime)
@@ -785,7 +786,7 @@ class Harness:
         write_json(self.destination / 'observations.json', manifest)
         if error:
             return 2
-        golden_root = ROOT / 'tests/Golden' / self.args.target / ('php-' + runtime)
+        golden_root = CONTROLLER_ROOT / 'tests/Golden' / self.args.target / ('php-' + runtime)
         failures = []
         selected = self.selected()
         skipped = [n for n in self.observed if n not in selected]
@@ -865,7 +866,7 @@ def validate_base_image(base_image, role):
 
 
 def compare(args):
-    root = Path(getattr(args, 'results_root', None) or ROOT / 'tests/behavior/results')
+    root = Path(getattr(args, 'results_root', None) or CONTROLLER_ROOT / 'tests/behavior/results')
     paths = {'baseline': root / args.baseline / 'observations.json',
              'candidate': root / args.candidate / 'observations.json'}
     if args.repeat:
@@ -965,7 +966,7 @@ def main():
     sub = parser.add_subparsers(dest='action', required=True)
     test = sub.add_parser('run')
     test.add_argument('--target', default=os.environ.get('TARGET', 'kadupul'))
-    test.add_argument('--application-root', type=Path, default=ROOT,
+    test.add_argument('--application-root', type=Path, default=CONTROLLER_ROOT,
                       help='Application checkout to exercise; harness provenance still identifies this controller checkout.')
     test.add_argument('--update-golden', action='store_true')
     test.add_argument('--bootstrap-goldens', action='store_true',

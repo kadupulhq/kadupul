@@ -211,8 +211,9 @@ To reproduce the historical runs, create separate clean checkouts of
 `captures.baseline.provenance.harness_revision` recorded in `comparison.json`.
 Overlay the harness checkout's tracked `tests/Support/Behavior`,
 `tests/Fixtures/plugins/compatibility_test`, `tests/Fixtures/snmp`,
-`tests/behavior/compose.yml`, `tests/behavior/Dockerfile`, and
-`tests/Golden/cacti-1.2.31` paths onto the application checkout. Keep its tracked
+`tests/behavior/compose.yml`, and `tests/behavior/Dockerfile` paths onto the
+application checkout. Golden files and capture results stay in the controller
+checkout, including when `--application-root` selects another application. Keep its tracked
 application files unchanged. Verify that `.dockerignore` is byte-identical in
 both checkouts before building; it is a hashed build input. Stop if it differs
 rather than changing the historical application. Run these commands from the clean controller:
@@ -222,11 +223,11 @@ cmp .dockerignore /path/to/application/.dockerignore || exit 1
 mkdir -p /path/to/results/first /path/to/results/repeat
 mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py run \
   --application-root /path/to/application --target cacti-1.2.31 --update-golden
-cp /path/to/application/tests/behavior/results/cacti-1.2.31/observations.json \
+cp /path/to/controller/tests/behavior/results/cacti-1.2.31/observations.json \
   /path/to/results/first/observations.json
 mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py run \
   --application-root /path/to/application --target cacti-1.2.31
-cp /path/to/application/tests/behavior/results/cacti-1.2.31/observations.json \
+cp /path/to/controller/tests/behavior/results/cacti-1.2.31/observations.json \
   /path/to/results/repeat/observations.json
 mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py compare \
   --results-root /path/to/results --baseline first --candidate repeat \
@@ -246,3 +247,7 @@ Before touching Docker, the runner requires a Git application checkout with
 Both inventories remain recorded; mismatched mounted helpers or build inputs
 fail setup. Baseline/candidate controller input changes require review. Application
 diagnostics retain duplicates but sort records to tolerate process interleaving.
+
+The harness selftest verifies that retained historical evidence matches current
+controller input hashes. Changes to controller helpers or fixtures require fresh
+first and repeat captures before the evidence can pass again.
