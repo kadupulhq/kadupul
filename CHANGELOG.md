@@ -11,6 +11,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Honor forced-local Windows cleanup policy and disable the obsolete volatile queue swap.
 - Validate Windows storage access, fail on unreadable maintenance queues, and clarify exclusive queue migration/probe modes.
 
 - Preserve retryable poller samples in InnoDB. Before code-only deployment, stop collectors, back up the database, run `php cli/upgrade_database.php --migrate-poller-queue`, and run `--check-rrd-storage` under every web and poller service account.

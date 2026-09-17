@@ -532,5 +532,6 @@ function rrd_maintenance_command_timeout()
 function rrd_maintenance_cleanup_supported()
 {
     global $config;
-    return ($config['cacti_server_os'] ?? '') !== 'win32' || read_config_option('storage_location');
+    return ($config['cacti_server_os'] ?? '') !== 'win32' ||
+        (read_config_option('storage_location') && ($config['force_storage_location_local'] ?? false) !== true);
 }
