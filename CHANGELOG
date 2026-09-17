@@ -1,7 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
--test: Measure InnoDB and legacy MEMORY million-row queues across MariaDB and MySQL LTS versions and verify retries against real legacy RRDtool
+-test: Measure InnoDB and legacy MEMORY million-row queues across MariaDB and MySQL LTS versions and verify close-before-timestamp ordering against real legacy RRDtool
 -issue: Stop Boost fetch preparation after writer initialization fails; restore caller error settings and release only owned writers on exceptions
 -issue: Check remote collectors against their actual queue before collecting; plugin list pages must pass a column allowlist to get_order_string() for first-render sorting
 -issue: Preserve hyphenated RRD fields, verify durable queues after legacy upgrades, and allow remote database upgrades without unrelated local storage

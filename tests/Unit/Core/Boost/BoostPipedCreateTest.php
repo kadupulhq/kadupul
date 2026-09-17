@@ -427,6 +427,10 @@ test('Boost retries skip consumed timestamps and still apply newer samples in a 
 });
 
 function boostPipedCreate_boost_rrdtool_get_last_update_time($path, &$pipe) {
+	if (!empty($GLOBALS['boost_piped_create']['real_pipe'])) {
+		expect($pipe)->toBeFalse('Pending legacy writes must be closed before reading the last timestamp');
+		expect($GLOBALS['boost_piped_create']['closed'])->toBe(1);
+	}
 	if (!empty($GLOBALS['boost_piped_create']['real_binary'])) {
 		return trim(boostPipedCreateRealCommand(array($GLOBALS['boost_piped_create']['real_binary'], 'last', $path)));
 	}
