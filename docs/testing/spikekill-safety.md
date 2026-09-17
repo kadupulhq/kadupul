@@ -227,3 +227,7 @@ After a real batch write failure, interim attempts stop until the final drain;
 maintenance contention remains retryable between batches. Retained-queue warning
 mail is limited to once per 30 minutes per poller. Samples are preserved for repair,
 not expired merely because a writer remains unavailable.
+
+On remote collectors, add `--local` when checking or migrating that collector’s queue.
+Without it, `upgrade_database.php` keeps its established main-database target.
+The storage permission probe always runs as the invoking service account.

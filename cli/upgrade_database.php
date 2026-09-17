@@ -95,6 +95,14 @@ if ($storage_error !== '') {
 	exit(1);
 }
 
+if (!$local && $config['poller_id'] > 1) {
+	db_switch_remote_to_main();
+
+	print 'NOTE: Repairing Tables for Main Database' . PHP_EOL;
+} else {
+	print 'NOTE: Repairing Tables for Local Database' . PHP_EOL;
+}
+
 if ($check_rrd_storage) {
 	$queue_error = rrd_maintenance_queue_configuration_error();
 	if ($queue_error !== '') {
@@ -103,14 +111,6 @@ if ($check_rrd_storage) {
 	}
 	printf("RRD storage and durable queue checks passed for UID %s, GID %s. No upgrade was performed.\n", function_exists('posix_geteuid') ? posix_geteuid() : 'Windows', function_exists('posix_getegid') ? posix_getegid() : 'Windows');
 	exit(0);
-}
-
-if (!$local && $config['poller_id'] > 1) {
-	db_switch_remote_to_main();
-
-	print 'NOTE: Repairing Tables for Main Database' . PHP_EOL;
-} else {
-	print 'NOTE: Repairing Tables for Local Database' . PHP_EOL;
 }
 
 /* we need to rerun the upgrade, force the current version */
