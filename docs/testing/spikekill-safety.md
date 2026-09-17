@@ -101,14 +101,15 @@ The queue-query benchmark does not measure acknowledged RRD write throughput.
 ### Acknowledged updates and bounded waits
 
 Local Unix pollers reuse one full-duplex RRDtool process for acknowledged updates.
-Only recognized permanent sample errors (unknown data-source name, wrong value
-count, or an already-written timestamp) consume an unwritten queue key. The
-poller logs its path, timestamp, values, and reason before continuing with later
-timestamps. Filesystem, cache-daemon, resource, and unrecognized errors remain
-queued for retry. This prevents a permanently invalid
-sample from indefinitely blocking the durable queue. Timeouts, crashes, and missing responses
-retain samples for retry. Rejected data can be recovered from the logged values
-after correcting the underlying storage or template problem; monitor these errors.
+Only already-past timestamps are recognized permanent RRDtool errors. Schema
+mismatches retain the complete sample for repair and replay; they never write a
+shortened value list. The affected RRD stays blocked across pages of a drain,
+while healthy RRDs continue. The wait loop retries transient failures on its next
+iteration. Successful writes remain counted even when another sample is deferred.
+Operators must repair the reported schema mismatch and monitor queue growth;
+valid observations are not silently expired to hide the error. A bounded archival
+retention policy remains an operational design requirement. Timeouts, crashes,
+and missing responses also retain samples for retry.
 A rejected update still makes the drain report failure. It is never counted as a
 successful write. RRDtool protocol output is suppressed in web requests.
 

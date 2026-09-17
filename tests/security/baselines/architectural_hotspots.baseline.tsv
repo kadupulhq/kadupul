@@ -6,7 +6,7 @@ cmd_exec	./cli/audit_database.php:963				$db_shell = shell_exec('which mysql');
 cmd_exec	./cli/audit_database.php:972				exec($db_shell .
 cmd_exec	./cli/batchgapfix.php:294		$process = proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
 cmd_exec	./cli/batchgapfix.php:364			exec($command, $output, $return_var);
-cmd_exec	./cli/float_rrdfiles.php:656		return proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
+cmd_exec	./cli/float_rrdfiles.php:665		return proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
 cmd_exec	./cli/push_out_hosts.php:50		passthru($command, $exit_code);
 cmd_exec	./cli/remove_broken_graphs.php:30		$stty = shell_exec('stty size');
 cmd_exec	./cli/splice_rrd.php:227	$response = shell_exec($rrdtool);
