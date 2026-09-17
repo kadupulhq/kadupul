@@ -188,13 +188,6 @@ def main():
             h.compose('up', '-d', '--build', '--wait', '--no-deps', 'web', timeout=1200)
             h.compose('cp', str(snapshot) + '/.', 'web:/var/www/html/rra')
             h.compose('exec', '-T', 'web', 'chown', '-R', 'www-data:www-data', '/var/www/html/rra')
-            upgrade = checked(h.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=3', '--force'), 'Upgrade')
-            actual_version = h.sql('SELECT cacti FROM version').strip()
-            evidence['steps']['upgrade_attempt'] = {'command': upgrade, 'database_version': actual_version, 'source_version': checked(h.php('-r', 'echo file_get_contents("include/cacti_version");'), 'Source version')['stdout'].strip()}
-            require(actual_version == (ROOT / 'include/cacti_version').read_text().strip(), 'Upgrade version mismatch: ' + actual_version)
-            require(rrd_manifest(h) == before_rrd, 'Upgrade modified RRD bytes')
-            require(domain_state(h) == before_domain, 'Upgrade changed device, source, graph or plugin identities')
-            require(h.sql("SELECT value FROM settings WHERE name='graph_watermark'").strip() == 'Operations custom watermark', 'Upgrade changed custom watermark')
             # A code-only cutover must explicitly migrate the old volatile queue
             # before either the web or collector account resumes writes.
             h.sql("INSERT INTO poller_output(local_data_id,rrd_name,time,output) VALUES (16000003,'migration','2001-01-01','42')")
@@ -210,6 +203,13 @@ def main():
             evidence['steps']['queue_migration'] = {'before_engine': old_engine, 'refused_volatile_queue': probe_before,
                                                    'commands': migrations, 'retained_samples_preserved': True}
             h.sql("DELETE FROM poller_output WHERE local_data_id=16000003 AND rrd_name='migration' AND time='2001-01-01' AND output='42'")
+            upgrade = checked(h.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=3', '--force'), 'Upgrade')
+            actual_version = h.sql('SELECT cacti FROM version').strip()
+            evidence['steps']['upgrade_attempt'] = {'command': upgrade, 'database_version': actual_version, 'source_version': checked(h.php('-r', 'echo file_get_contents("include/cacti_version");'), 'Source version')['stdout'].strip()}
+            require(actual_version == (ROOT / 'include/cacti_version').read_text().strip(), 'Upgrade version mismatch: ' + actual_version)
+            require(rrd_manifest(h) == before_rrd, 'Upgrade modified RRD bytes')
+            require(domain_state(h) == before_domain, 'Upgrade changed device, source, graph or plugin identities')
+            require(h.sql("SELECT value FROM settings WHERE name='graph_watermark'").strip() == 'Operations custom watermark', 'Upgrade changed custom watermark')
             authenticate(h)
             graph = assert_graph(h)
             plugin = assert_plugin(h)
