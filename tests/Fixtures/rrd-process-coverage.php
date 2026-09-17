@@ -15,6 +15,7 @@ $coverageFilter->includeFile($coverageRoot . '/lib/boost.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/api_data_source.php');
 if (defined('RRD_TEST_INSTALLER_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/installer.php');
+    $coverageFilter->includeFile($coverageRoot . '/install/upgrades/1_1_6.php');
 }
 if (defined('RRD_TEST_CLI_COVERAGE_COPY')) {
     $coverageFilter->includeFile(RRD_TEST_CLI_COVERAGE_COPY);

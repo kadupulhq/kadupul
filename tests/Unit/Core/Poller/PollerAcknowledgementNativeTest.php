@@ -24,6 +24,9 @@ test('production poller files retain failed writes and preserve concurrent arriv
         $coverage .= 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
     }
     $bootstrap = '<?php ' . $coverage . 'require ' . var_export($root . '/tests/Fixtures/poller-ack-bootstrap.php', true) . ';';
+    if ($failed === 'init-function') {
+        $bootstrap .= '$result=process_poller_output_rt(false,1,5);db_close();exit($result===false?1:0);';
+    }
     try {
         if ($realtime) {
             copy($root . '/poller_realtime.php', $dir . '/poller_realtime.php');
@@ -41,9 +44,9 @@ test('production poller files retain failed writes and preserve concurrent arriv
         if ($error !== '') {
             throw new RuntimeException($error . $output);
         }
-        expect(proc_close($process))->toBe($failed && !in_array($failed, array('replace', 'busy'), true) ? 1 : 0, $error . $output)->and($error)->toBe('');
+        expect(proc_close($process))->toBe($failed && !in_array($failed, array('replace', 'busy', 'field-success'), true) ? 1 : 0, $error . $output)->and($error)->toBe('');
         $expected = is_string($failed) ? array(array('output' => '42', 'remaining' => $failed === 'page' ? 40001 : 1)) : ($failed ? array('42','43') : array('43'));
-        if (in_array($failed, array('select', 'handoff', 'init', 'busy', 'count'), true)) {
+        if (in_array($failed, array('select', 'handoff', 'init', 'init-function', 'busy', 'count'), true)) {
             $expected = array('42');
         }
         if ($failed === 'delete') {
@@ -64,6 +67,14 @@ test('production poller files retain failed writes and preserve concurrent arriv
             }
             expect(json_decode(file_get_contents($dir . '/transport.json'), true))->toBe(array(1, $failed === 'init' ? 0 : 1));
         }
+        if ($failed === 'field-failure') {
+            $expected = array('value:42');
+            expect(file_exists($dir . '/updates.json'))->toBeFalse();
+        } elseif ($failed === 'field-success') {
+            $expected = array('43');
+            $updates = json_decode(file_get_contents($dir . '/updates.json'), true);
+            expect(array_values($updates)[0]['times'][strtotime('2020-01-01')])->toBe(array('value' => '42'));
+        }
         expect(json_decode(file_get_contents($dir . '/outcome.json'), true))->toBe($expected);
         if ($parent !== null) {
             $reports = glob($dir . '/*.coverage');
@@ -79,4 +90,4 @@ test('production poller files retain failed writes and preserve concurrent arriv
             } rmdir($dir . $suffix);
         }
     }
-})->with(array(array(false,false),array(false,true),array(true,false),array(true,true),array(false,'replace'),array(true,'replace'),array(true,'delete'),array(false,'rejected'),array(true,'rejected'),array(false,'mixed'),array(false,'page'),array(false,'select'),array(false,'handoff'),array(false,'delete'),array(true,'init'),array(false,'init'),array(false,'busy'),array(false,'count'),array(false,false,true),array(false,true,true),array(false,'init',true),array(false,'rejected',true)));
+})->with(array(array(false,false),array(false,true),array(true,false),array(true,true),array(false,'replace'),array(true,'replace'),array(true,'delete'),array(false,'rejected'),array(true,'rejected'),array(false,'mixed'),array(false,'page'),array(false,'select'),array(false,'handoff'),array(false,'delete'),array(true,'init'),array(false,'init'),array(false,'busy'),array(false,'count'),array(false,false,true),array(false,true,true),array(false,'init',true),array(false,'rejected',true),array(true,'select'),array(true,'init-function'),array(true,'field-failure'),array(true,'field-success')));
