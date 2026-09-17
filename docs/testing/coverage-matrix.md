@@ -173,35 +173,43 @@ that all captured working trees are clean.
 The historical application revision predates the harness. For these two runs,
 its tracked application files were unchanged and the test directories were
 overlaid from the recorded harness commit. Thus `application_dirty` is true,
-while the controller checkout has `harness_dirty: false`. The observations and
-fixture hashes from the two fresh runs are identical. The checked-in historical
-`comparison.json` is a separately assembled summary of those retained captures,
-including their controller commit and manifest hashes; it is not the output
-schema of the comparison command. It remains unchanged as historical evidence.
+while the controller checkout has `harness_dirty: false`. All 34 observations
+from the two fresh runs are identical. The retained `comparison.json` is the
+unaltered output of the comparison command, with hashes of the exact retained
+`first.json` and `repeat.json` manifests.
 
-Current comparison output records `contracts`, `controller` provenance,
+Comparison output records `contracts`, `controller` provenance,
 `manifest_sha256` for baseline/candidate/repeat, and each capture's application
 revision, schema hash, and provenance in `captures`. Missing provenance or build
 input hashes are rejected. Older captures without these fields must be recaptured
-with the current harness; use their pinned controller to reproduce historical
-results. Repeat runs must also match the candidate runtime and provenance.
+with the current harness. Repeat runs must also match the candidate runtime and
+provenance.
 
-To reproduce a historical run, create separate clean checkouts of the
-`application_revision` and `harness_revision` recorded in `comparison.json`.
+To reproduce the historical runs, create separate clean checkouts of
+`captures.baseline.revision` and
+`captures.baseline.provenance.harness_revision` recorded in `comparison.json`.
 Overlay the harness checkout's tracked `tests/Support/Behavior`,
 `tests/Fixtures/plugins/compatibility_test`, `tests/Fixtures/snmp`,
 `tests/behavior/compose.yml`, `tests/behavior/Dockerfile`, and
 `tests/Golden/cacti-1.2.31` paths onto the application checkout. Keep its tracked
-application files unchanged. Then run the controller directly:
+application files unchanged. Run these commands from the clean controller:
 
 ```sh
-mise exec python@3.12.12 -- python /path/to/harness/tests/Support/Behavior/harness.py run \
+mkdir -p /path/to/results/first /path/to/results/repeat
+mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py run \
+  --application-root /path/to/application --target cacti-1.2.31 --update-golden
+cp /path/to/application/tests/behavior/results/cacti-1.2.31/observations.json \
+  /path/to/results/first/observations.json
+mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py run \
   --application-root /path/to/application --target cacti-1.2.31
-# After capturing both labels, compare from the controller checkout:
-./tests/bin/compare --results-root /path/to/application/tests/behavior/results \
-  --baseline cacti-1.2.31 --candidate kadupul
+cp /path/to/application/tests/behavior/results/cacti-1.2.31/observations.json \
+  /path/to/results/repeat/observations.json
+mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py compare \
+  --results-root /path/to/results --baseline first --candidate repeat \
+  --output /path/to/results/comparison
 ```
 
-The manifest is written beneath the application checkout's
-`tests/behavior/results/cacti-1.2.31/`. Repeat the command and compare the full
-manifests. No import-time root override or hand-edited provenance is required.
+The second run verifies the first run's captured golden observations. Keep the
+manifests and generated comparison together; no hand-edited provenance or
+import-time root override is required. This establishes historical repeatability,
+not a claim that a candidate application is equivalent or superior.
