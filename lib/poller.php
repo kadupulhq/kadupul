@@ -2533,6 +2533,14 @@ function timeout_kill_registered_processes($tasktype = '', $taskname = '', $task
 /** Hold the writer lease only while draining a batch, never while waiting for collectors. */
 function process_poller_output_batch($final, &$deferred) {
 	$deferred = false;
+	$pending = db_fetch_cell('SELECT COUNT(*) FROM poller_output');
+	if (!is_numeric($pending)) {
+		$deferred = true;
+		return 0;
+	}
+	if ((int) $pending === 0) {
+		return 0;
+	}
 	$pipe = rrd_init(true, false, true);
 	if ($pipe === false) {
 		$deferred = true;

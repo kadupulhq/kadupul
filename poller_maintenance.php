@@ -7,6 +7,7 @@
  */
 
 require(__DIR__ . '/include/cli_check.php');
+require_once($config['library_path'] . '/rrd_maintenance.php');
 require_once($config['library_path'] . '/api_data_source.php');
 require_once($config['library_path'] . '/api_device.php');
 require_once($config['library_path'] . '/api_graph.php');

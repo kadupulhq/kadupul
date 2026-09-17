@@ -193,3 +193,10 @@ LTS floating, like the main branch, uses one worker even if `--threads` requests
 more. Multiple float workers cannot concurrently own the same exclusive lease.
 The documented storage trust migration remains mandatory before upgrading:
 implicit trust or a warn-only bypass would permit uncoordinated destructive access.
+
+An empty output queue does not start an RRDtool child or acquire a writer lease.
+An unreadable queue count defers work instead of treating an unknown count as zero.
+The final exit status intentionally records any write failure during the run, even
+if a later batch succeeds; successful retries do not hide an earlier rejected sample
+or intermittent storage failure. Logs identify the failure and operators can verify
+that the queue drained.
