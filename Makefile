@@ -29,6 +29,10 @@ test-characterization: ## Verify observed behavior against the committed goldens
 test-update-golden: ## Re-record goldens. Review the diff before committing.
 	$(BEHAVIOR) --target $(TARGET) --update-golden
 
+.PHONY: test-bootstrap-golden
+test-bootstrap-golden: ## Capture added scenarios/runtimes; incomplete inventories cannot be compared.
+	$(BEHAVIOR) --target $(TARGET) --update-golden --bootstrap-goldens
+
 .PHONY: test-keep
 test-keep: ## Run the behavioral suite and leave containers up for inspection
 	$(BEHAVIOR) --target $(TARGET) --keep

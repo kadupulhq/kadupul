@@ -43,7 +43,7 @@ Pick a PHP version with `PHP_VERSION`. Goldens are stored per version, so a
 capture on one version never overwrites another.
 
 ```sh
-PHP_VERSION=8.3 make test-update-golden
+PHP_VERSION=8.3 make test-bootstrap-golden
 ```
 
 ## What a run does
@@ -64,7 +64,7 @@ Containers are torn down afterwards unless `--keep` is passed.
 
 Goldens are the compatibility contract. They never update as a side effect of
 a normal run: a scenario with no golden is reported as `MISSING GOLDEN` and
-fails. Only `make test-update-golden` writes them, and that target refuses to
+fails. Only explicit `make test-update-golden` or `make test-bootstrap-golden` writes them; both refuse to
 run scoped, so a partial capture cannot leave the rest stale.
 
 Normalization is deliberately narrow. Filesystem roots become `<APP>` and
@@ -80,8 +80,8 @@ explicitly through the differential runner, never by re-recording silently.
 The point of the harness is comparing a baseline against a candidate.
 
 ```sh
-make test-update-golden TARGET=cacti-1.2.31
-make test-update-golden TARGET=kadupul
+make test-bootstrap-golden TARGET=cacti-1.2.31
+make test-bootstrap-golden TARGET=kadupul
 make compare BASELINE=cacti-1.2.31 CANDIDATE=kadupul
 ```
 
@@ -139,9 +139,10 @@ suite meaningful.
 ## Recording new behavior
 
 1. Add a scenario in `Harness.scenarios()`, capturing both the application's
-   response and the resulting database state.
+   response and the resulting database state. Add its exact name to
+   `EXPECTED_SCENARIOS` in `harness.py` as part of the same change.
 2. To add scenarios to an existing inventory, run
-   `mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py run --target cacti --update-golden --bootstrap-goldens`
+   `make test-bootstrap-golden TARGET=cacti PHP_VERSION=8.2`
    and read the new files. Use your intended target label in place of `cacti`.
    Repeat capture for every existing PHP runtime using its corresponding
    container configuration. Bootstrap permits missing entries during capture

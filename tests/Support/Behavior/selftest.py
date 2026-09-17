@@ -262,6 +262,14 @@ def diagnostic_contracts():
 
 
     assert harness.application_diagnostics(broken) == harness.application_diagnostics(broken.replace('line: 334', 'line: 900'))
+    for severity in ('WARNING', 'Warning'):
+        payload = f'PHP {severity}: payload in /var/www/html/lib/file.php on line: 123'
+        assert harness.normalize(payload) != harness.normalize(payload.replace('123', '124'))
+    native = 'PHP Warning: actual diagnostic in /var/www/html/lib/file.php on line 123'
+    assert harness.normalize(native) == harness.normalize(native.replace('123', '124'))
+    cacti = 'PHP WARNING: payload in /var/www/html/lib/file.php on line: 123 in file: /var/www/html/lib/handler.php on line: 45'
+    assert harness.normalize(cacti) != harness.normalize(cacti.replace('123', '124'))
+    assert harness.normalize(cacti) == harness.normalize(cacti.replace('45', '46'))
     assert harness.normalize('ordinary DS[12] on line: 334') == 'ordinary DS[12] on line: 334'
     unrelated = '09/16/2026 01:02:06 - ERROR PHP WARNING: payload has 108 bytes'
     assert harness.application_diagnostics(unrelated)[0]['message'].endswith('108 bytes')
