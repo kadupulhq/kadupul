@@ -82,7 +82,9 @@ function rrd_init($output_to_term = true, $exclusive = false, $acknowledged = fa
 	$lock = rrd_maintenance_acquire($exclusive, false, $lease_timeout, $lease_busy);
 	if ($lock === false) {
 		if ((!$lease_busy || $lease_timeout !== 0) && (empty($config['is_web']) || debounce_run_notification('rrd_initialization_failure', 1800))) {
-			cacti_log('ERROR: Unable to coordinate local RRD writes with maintenance.');
+			cacti_log($exclusive && ($config['cacti_server_os'] ?? '') === 'win32'
+			? 'ERROR: Destructive local RRD maintenance is unsupported on Windows; no changes were made.'
+			: 'ERROR: Unable to coordinate local RRD writes with maintenance.');
 		}
 		return false;
 	}
@@ -486,7 +488,9 @@ function rrdtool_execute() {
 
 	$lock = rrd_maintenance_acquire($destructive);
 	if ($lock === false) {
-		cacti_log('ERROR: Unable to coordinate local RRD writes with maintenance.');
+		cacti_log($destructive && ($config['cacti_server_os'] ?? '') === 'win32'
+			? 'ERROR: Destructive local RRD maintenance is unsupported on Windows; no changes were made.'
+			: 'ERROR: Unable to coordinate local RRD writes with maintenance.');
 		return false;
 	}
 
@@ -1347,8 +1351,11 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 						cacti_log("ERROR: Invalid RRD update data source name for local_data_id: {$rrd_fields['local_data_id']}.", false, 'POLLER');
 
 						cacti_log('ERROR: Invalid RRD sample data source (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array)), false, 'POLLER');
-						$completed[$rrd_path][$update_time] = false;
 						$failed = true;
+						if (count($field_array) > 1) {
+							break 2;
+						}
+						$completed[$rrd_path][$update_time] = false;
 						continue 2;
 					}
 
@@ -1383,6 +1390,10 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 					cacti_log("ERROR: Invalid RRD update template or value set for local_data_id: {$rrd_fields['local_data_id']}.", false, 'POLLER');
 
 					cacti_log('ERROR: Invalid RRD sample (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array)), false, 'POLLER');
+					if (count($field_array) > 1) {
+						$failed = true;
+						break;
+					}
 					$completed[$rrd_path][$update_time] = false;
 					$failed = true;
 					continue;
@@ -1391,12 +1402,16 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 				if (rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== true) {
 					$rejection = rrdtool_last_rejection();
 					if (rrdtool_rejection_is_permanent($rejection)) {
-						// RRDtool permanently refused this sample. Log its identity and
-						// values before consuming it, so a poisoned MEMORY queue cannot
-						// block every subsequent timestamp or exhaust the poller table.
+						// Record the rejected update before deciding whether its
+						// timestamp can be consumed safely.
 						cacti_log('ERROR: RRDtool rejected sample (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array, 'reason' => $rejection)), false, 'POLLER');
-						$completed[$rrd_path][$update_time] = false;
 						$failed = true;
+						// One rejected field must not consume valid siblings or let later
+						// timestamps advance past samples that remain unwritten.
+						if (count($field_array) > 1) {
+							break;
+						}
+						$completed[$rrd_path][$update_time] = false;
 						continue;
 					}
 					if (!$failed) { cacti_log('ERROR: RRD update was not acknowledged; pending samples retained for retry.', false, 'POLLER'); }

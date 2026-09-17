@@ -631,6 +631,7 @@ function remove_files($file_array) {
 							$purged++;
 						} else {
 							cacti_log("WARNING: RRDfile Maintenance is unable to remove $real_file from $rra_path!", true, 'MAINT');
+							return false;
 						}
 					}
 
@@ -656,6 +657,7 @@ function remove_files($file_array) {
 							$archived++;
 						} else {
 							cacti_log("WARNING: RRDfile Maintenance is unable to move $real_file to $target_file!", true, 'MAINT');
+							return false;
 						}
 					}
 

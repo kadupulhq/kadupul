@@ -164,3 +164,11 @@ test('legacy process-row reconciliation removes only dead children', function ()
 		->and($GLOBALS['float_processes'])->toBe(array(process_row('4', 4343)))
 		->and($GLOBALS['float_log'][0][0])->toStartWith('WARNING:');
 });
+
+
+test('failed worker discovery retains registrations and reports failure', function () {
+    $GLOBALS['float_processes'] = false;
+    expect(float_reap_dead_children())->toBeFalse()
+        ->and($GLOBALS['float_unregistered'])->toBe(array())
+        ->and($GLOBALS['float_log'][0][0])->toContain('queue retained without modification');
+});

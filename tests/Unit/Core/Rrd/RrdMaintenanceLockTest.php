@@ -1005,13 +1005,13 @@ test('Windows acknowledgement sentinel uses synchronous responses and refuses ex
     $bootstrap .= '$config=array("cacti_server_os"=>"win32","rra_path"=>__DIR__,"is_web"=>false);' .
         'require ' . var_export($root . '/include/global_constants.php', true) . ';define("CACTI_LOCALE","en-US");' .
         'function read_config_option($k){return $k==="path_rrdtool"?' . var_export($binary, true) . ':"";}' .
-        'function cacti_log(...$args){}function cacti_session_close(){}function cacti_escapeshellarg($v){return escapeshellarg($v);}' .
+        'function cacti_log($message,...$args){$GLOBALS["windows_logs"][]=$message;}function cacti_session_close(){}function cacti_escapeshellarg($v){return escapeshellarg($v);}' .
         'require ' . var_export($root . '/lib/rrd.php', true) . ';' .
         '$pipe=rrd_init(false,false,true);$file=__DIR__."/win.rrd";' .
         '$create=rrdtool_execute(array("create",$file,"--start","1700000000","--step","60","DS:value:GAUGE:120:U:U","RRA:AVERAGE:0.5:1:10"),false,RRDTOOL_OUTPUT_BOOLEAN,$pipe);' .
         '$update=rrdtool_execute(array("update",$file,"1700000060:42"),false,RRDTOOL_OUTPUT_BOOLEAN,$pipe);' .
         '$bad=rrdtool_execute(array("update",$file,"invalid"),false,RRDTOOL_OUTPUT_BOOLEAN,$pipe);' .
-        '$reason=rrdtool_last_rejection();$exclusive=rrd_init(false,true,true);rrd_close($pipe);echo json_encode(array($pipe,$create,$update,$bad,$exclusive,is_string($reason)&&$reason!==""));';
+        '$reason=rrdtool_last_rejection();$tune=rrdtool_execute(array("tune",$file,"--minimum","value:0"),false,RRDTOOL_OUTPUT_RETURN_STDERR);$exclusive=rrd_init(false,true,true);rrd_close($pipe);echo json_encode(array($pipe,$create,$update,$bad,$exclusive,is_string($reason)&&$reason!=="",$tune,strpos(implode(";",$GLOBALS["windows_logs"]),"unsupported on Windows")!==false));';
     file_put_contents($this->dir . '/win.php', $bootstrap);
     $process = proc_open(array(PHP_BINARY,'-d','pcov.directory=' . $root,'-d','pcov.exclude=~/(include/vendor|tests)/~',$this->dir . '/win.php'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes);
     $out = stream_get_contents($pipes[1]);
@@ -1019,5 +1019,58 @@ test('Windows acknowledgement sentinel uses synchronous responses and refuses ex
     fclose($pipes[1]);
     fclose($pipes[2]);
     expect(proc_close($process))->toBe(0)->and($error)->toBe('')
-        ->and(json_decode($out, true))->toBe(array(true,true,true,false,false,true));
+        ->and(json_decode($out, true))->toBe(array(true,true,true,false,false,true,false,true));
 });
+
+
+test('rejected grouped updates retain valid siblings and prevent later timestamps advancing', function ($invalidField) {
+    $root = dirname(__DIR__, 4);
+    $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
+    if (!is_executable($binary)) { $this->markTestSkipped('Real RRDtool is required.'); }
+    $bootstrap = '<?php ';
+    if ($this->getTestResultObject()->getCodeCoverage() !== null) {
+        $this->expectedChildReports = 1;
+        $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY",__DIR__);require ' . var_export($root . '/tests/fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $bootstrap .= '$root=' . var_export($root, true) . ';$binary=' . var_export($binary, true) . ';$invalidField=' . var_export($invalidField, true) . ';';
+    $bootstrap .= <<<'PROBE'
+$config=array('cacti_server_os'=>'unix','rra_path'=>__DIR__,'is_web'=>false);
+require $root.'/include/global_constants.php';
+define('CACTI_LOCALE','en-US');
+function read_config_option($key){return $key==='path_rrdtool'?$GLOBALS['binary']:'';}
+function get_rrdtool_version(){return '1.5';}
+function cacti_log(...$args){}
+function cacti_session_close(){}
+require $root.'/tests/Helpers/PhpSource.php';
+$functions=file_get_contents($root.'/lib/functions.php');
+foreach(array('cacti_has_control_chars','cacti_rrdtool_valid_path','cacti_rrdtool_valid_ds_name','cacti_rrdtool_valid_ds_template','cacti_escapeshellarg','cacti_escapeshellcmd','cacti_version_compare','version_to_decimal','cacti_sizeof') as $name){
+    if (strpos($functions,'function '.$name.'(')!==false) { eval(test_php_function_source($functions,$name)); }
+}
+require $root.'/lib/rrd.php';
+$file=__DIR__.'/group.rrd';
+$pipe=rrd_init(false,false,true);
+$created=rrdtool_execute(array('create',$file,'--start','1700000000','--step','60','DS:a:GAUGE:120:U:U','DS:b:GAUGE:120:U:U','RRA:AVERAGE:0.5:1:10'),false,RRDTOOL_OUTPUT_BOOLEAN,$pipe);
+$updates=array($file=>array('local_data_id'=>1,'data_template_id'=>0,'times'=>array(1700000060=>array('a'=>10,'b'=>20,$invalidField=>99),1700000120=>array('a'=>30,'b'=>40))));
+$failed=rrdtool_function_update($updates,$pipe,$completed);
+$last=rrdtool_execute(array('last',$file),false,RRDTOOL_OUTPUT_STDOUT,$pipe);
+$firstCompleted=$completed;
+unset($updates[$file]['times'][1700000060][$invalidField],$updates[$file]['times'][1700000120]);
+$retried=rrdtool_function_update($updates,$pipe,$completed);
+$readback=rrdtool_execute(array('lastupdate',$file),false,RRDTOOL_OUTPUT_STDOUT,$pipe);
+$updates[$file]['times']=array(1700000120=>array('a'=>30,'b'=>40));
+$later=rrdtool_function_update($updates,$pipe,$completed);
+$final=rrdtool_execute(array('lastupdate',$file),false,RRDTOOL_OUTPUT_STDOUT,$pipe);
+rrd_close($pipe);
+echo json_encode(array($created,$failed,$firstCompleted,trim($last),$retried,$readback,$later,$final));
+PROBE;
+    file_put_contents($this->dir . '/group.php', $bootstrap);
+    $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $this->dir . '/group.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $out = stream_get_contents($pipes[1]); $error = stream_get_contents($pipes[2]);
+    fclose($pipes[1]); fclose($pipes[2]);
+    expect(proc_close($process))->toBe(0, $error)->and($error)->toBe('');
+    $result = json_decode($out, true);
+    expect(array_slice($result, 0, 5))->toBe(array(true, false, array(), '1700000000', 1))
+        ->and($result[5])->toMatch('/1700000060:\s+10\s+20/')
+        ->and($result[6])->toBe(1)
+        ->and($result[7])->toMatch('/1700000120:\s+30\s+40/');
+})->with(array('unknown', 'bad-name'));

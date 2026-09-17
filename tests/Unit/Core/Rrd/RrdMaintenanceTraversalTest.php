@@ -335,3 +335,22 @@ test('proxy failures retain cleanup requests and close initialized pipes', funct
         ->and($GLOBALS['purged'])->toBe(0)->and($GLOBALS['archived'])->toBe(0)
         ->and($GLOBALS['rmt_closed'])->toBe($failure === 'init' ? array() : array('proxy-pipe'));
 })->with(array(array('init', '1'), array('setup', '1'), array('command', '1'), array('command', '3')));
+
+
+function unlink($path) { return empty($GLOBALS['rmt_filesystem_failure']) ? \unlink($path) : false; }
+function rename($source, $target) { return empty($GLOBALS['rmt_filesystem_failure']) ? \rename($source, $target) : false; }
+
+test('local filesystem failures retain cleanup requests and source files', function ($action) {
+    $GLOBALS['rmt_filesystem_failure'] = true;
+    $GLOBALS['rmt_settings']['rrd_archive'] = $this->base . '/archive';
+    $file = $this->rra . '/5/local_5.rrd';
+    try {
+        expect(remove_files(array(array('id' => 1, 'name' => '5/local_5.rrd', 'local_data_id' => 0, 'action' => $action))))->toBeFalse()
+            ->and(file_exists($file))->toBeTrue()
+            ->and($GLOBALS['rmt_dropped'])->toBe(array())
+            ->and($GLOBALS['archived'])->toBe(0)
+            ->and($GLOBALS['purged'])->toBe(0);
+    } finally {
+        unset($GLOBALS['rmt_filesystem_failure']);
+    }
+})->with(array('1', '3'));

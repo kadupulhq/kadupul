@@ -566,7 +566,9 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 function float_master_handler($forcerun, $resume, $host_id, $host_template_id, $graph_template_id, $local_graph_ids, $threads, $step, $start_time, $end_time) {
 	global $type;
 
-	float_reap_dead_children();
+	if (float_reap_dead_children() === false) {
+		return false;
+	}
 
 	/* Create table if first time use */
 	if (!db_table_exists('poller_float_rrdfiles_not_done')) {
@@ -777,6 +779,11 @@ function float_reap_dead_children() {
 		WHERE tasktype = ?
 		AND taskname = ?',
 		array('rfloat', 'child'));
+
+	if ($children === false) {
+		cacti_log('ERROR: Unable to inspect float workers; queue retained without modification.', false, 'RFLOAT');
+		return false;
+	}
 
 	foreach($children as $c) {
 		if (cacti_process_still_running($c['pid'])) {
