@@ -172,7 +172,9 @@ poller_enabled_check($poller_id);
 // Validate the primary writer before launching producers, including code-only upgrades.
 if ((int) $poller_id === 1) {
     require_once __DIR__ . '/lib/rrd_maintenance.php';
-    if (!rrd_maintenance_poller_preflight()) { exit(1); }
+    if (!rrd_maintenance_poller_preflight()) {
+        exit(1);
+    }
 }
 
 
@@ -735,7 +737,9 @@ while ($poller_runs_completed < $poller_runs) {
 				// open a pipe to rrdtool for writing
 				$rrdtool_pipe = rrd_init(true, false, true);
 				$rrd_write_initialization_failed = $rrdtool_pipe === false;
-				if ($rrd_write_initialization_failed) { $rrd_write_failed = true; }
+				if ($rrd_write_initialization_failed) {
+					$rrd_write_failed = true;
+				}
 			}
 
 			$rrds_processed = 0;

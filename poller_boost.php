@@ -82,7 +82,9 @@ if (cacti_sizeof($parms)) {
 }
 
 require_once __DIR__ . '/lib/rrd_maintenance.php';
-if (!rrd_maintenance_poller_preflight()) { exit(1); }
+if (!rrd_maintenance_poller_preflight()) {
+    exit(1);
+}
 
 /* install signal handlers for UNIX only */
 if (function_exists('pcntl_signal')) {
@@ -526,7 +528,9 @@ function boost_launch_children() {
 		cacti_log('NOTE: Launching Boost Process Number ' . $i, true, 'BOOST', POLLER_VERBOSITY_MEDIUM);
 
 		$arguments = array($php_binary, $config['base_path'] . '/poller_boost.php', '--child=' . $i);
-		if ($debug) { $arguments[] = '--debug'; }
+		if ($debug) {
+			$arguments[] = '--debug';
+		}
 		$process = proc_open($arguments, $descriptors, $pipes);
 		$status = is_resource($process) ? proc_get_status($process) : array();
 		$children[] = array('process' => $process, 'pid' => $status['pid'] ?? 0, 'child' => $i, 'exit' => $status['exitcode'] ?? -1);
@@ -549,7 +553,9 @@ function boost_wait_children($children, $timeout) {
 				continue;
 			}
 			$status = proc_get_status($process);
-			if ($status['running'] && hrtime(true) < $deadline) { continue; }
+			if ($status['running'] && hrtime(true) < $deadline) {
+				continue;
+			}
 			if ($status['running']) {
 				proc_terminate($process, 9);
 				$success = false;
@@ -560,7 +566,9 @@ function boost_wait_children($children, $timeout) {
 			unregister_process('boost', 'child', $child['child'], $child['pid']);
 			unset($children[$key]);
 		}
-		if ($children) { usleep(100000); }
+		if ($children) {
+			usleep(100000);
+		}
 	}
 	return $success;
 }
@@ -682,7 +690,10 @@ function boost_output_rrd_data($child) {
 			ON at.local_data_id = bpt.local_data_id
 			AND bpt.process_handler = ?",
 			array($child));
-		if (!is_numeric($table_rows)) { rrd_close($rrdtool_pipe); return -1; }
+		if (!is_numeric($table_rows)) {
+			rrd_close($rrdtool_pipe);
+			return -1;
+		}
 		$total_rows += (int) $table_rows;
 	}
 
@@ -701,7 +712,10 @@ function boost_output_rrd_data($child) {
 		WHERE process_handler = ?",
 		array($child));
 
-	if (!is_numeric($data_ids)) { rrd_close($rrdtool_pipe); return -1; }
+	if (!is_numeric($data_ids)) {
+		rrd_close($rrdtool_pipe);
+		return -1;
+	}
 	$max_per_select = max(1, (int) $max_per_select);
 
 	$passes       = ceil($total_rows / $max_per_select);
@@ -738,7 +752,10 @@ function boost_output_rrd_data($child) {
 			WHERE process_handler = ?',
 			array($child));
 
-		if (!is_numeric($data_ids)) { rrd_close($rrdtool_pipe); return -1; }
+		if (!is_numeric($data_ids)) {
+			rrd_close($rrdtool_pipe);
+			return -1;
+		}
 
 		if (((time()-$start) > $max_run_duration) && (!$runtime_exceeded)) {
 			cacti_log('WARNING: RRD On Demand Updater Exceeded Runtime Limits. Continuing to Process!!!', true, 'BOOST');
@@ -848,7 +865,10 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe) {
 
 	boost_timer('get_records', BOOST_TIMER_START);
 	$results = db_fetch_assoc($query_string);
-	if ($results === false) { restore_error_handler(); return false; }
+	if ($results === false) {
+		restore_error_handler();
+		return false;
+	}
 	boost_timer('get_records', BOOST_TIMER_END);
 
 	/* log memory */
@@ -946,7 +966,9 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe) {
 
 					/* new process output function */
 					if (!boost_process_output($local_data_id, $outarray, $rrd_path, $rrd_tmplp, $rrdtool_pipe)) {
-						if ($current_lock !== false) { db_execute("SELECT RELEASE_LOCK('boost.single_ds.$current_lock')"); }
+						if ($current_lock !== false) {
+							db_execute("SELECT RELEASE_LOCK('boost.single_ds.$current_lock')");
+						}
 						restore_error_handler();
 						return false;
 					}
@@ -1014,7 +1036,9 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe) {
 				if ($buflen > $upd_string_len) {
 					/* new process output function */
 					if (!boost_process_output($local_data_id, $outarray, $rrd_path, $rrd_tmplp, $rrdtool_pipe)) {
-						if ($current_lock !== false) { db_execute("SELECT RELEASE_LOCK('boost.single_ds.$current_lock')"); }
+						if ($current_lock !== false) {
+							db_execute("SELECT RELEASE_LOCK('boost.single_ds.$current_lock')");
+						}
 						restore_error_handler();
 						return false;
 					}
@@ -1240,7 +1264,9 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe) {
 			$outarray[] = $tv_tmpl;
 
 			if (!boost_process_output($local_data_id, $outarray, $rrd_path, $rrd_tmplp, $rrdtool_pipe)) {
-						if ($current_lock !== false) { db_execute("SELECT RELEASE_LOCK('boost.single_ds.$current_lock')"); }
+						if ($current_lock !== false) {
+							db_execute("SELECT RELEASE_LOCK('boost.single_ds.$current_lock')");
+						}
 						restore_error_handler();
 						return false;
 					}

@@ -812,7 +812,9 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null) {
 		api_plugin_hook_function('poller_output', $rrd_update_array);
 
 		$direct_update = boost_poller_on_demand($results);
-		if ($direct_update === null) { return false; }
+		if ($direct_update === null) {
+			return false;
+		}
 		if ($direct_update) {
 			$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe, $completed);
 			$write_failed = $rrds_processed === false;
@@ -838,7 +840,9 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null) {
 
 		if ($full_page) {
 			$child_updates = process_poller_output($rrdtool_pipe, $max_rows, $next);
-			if ($child_updates === false) { $write_failed = true; }
+			if ($child_updates === false) {
+				$write_failed = true;
+			}
 			else { $rrds_processed += $child_updates; }
 		}
 	}

@@ -240,6 +240,11 @@ function rrdfile_purge($force) {
 		FROM data_source_purge_action');
 
 	/* if the table that holds the actions is present, work on it */
+	if ($purge && !rrd_maintenance_cleanup_supported()) {
+		cacti_log('WARNING: Windows automatic local RRD cleanup is unsupported; existing requests retained for manual cleanup.', true, 'MAINT');
+		return true;
+	}
+
 	if ($purge) {
 		maint_debug("Purging Required - Files Found $purge");
 
@@ -258,7 +263,9 @@ function rrdfile_purge($force) {
 
 			if (cacti_sizeof($file_array) || $force) {
 				/* there's something to do for us now */
-				if (remove_files($file_array) === false) { return false; }
+				if (remove_files($file_array) === false) {
+					return false;
+				}
 
 				if ($force) {
 					cleanup_ds_and_graphs();
@@ -522,6 +529,11 @@ function secpass_check_expired () {
 function remove_files($file_array) {
 	global $config, $debug, $archived, $purged;
 
+	if (!rrd_maintenance_cleanup_supported()) {
+		cacti_log('WARNING: Windows automatic local RRD cleanup is unsupported; files and purge queue retained for manual cleanup.', true, 'MAINT');
+		return false;
+	}
+
 	maint_debug('RRDClean is now running on ' . cacti_sizeof($file_array) . ' items');
 
 	/* determine the location of the RRA files */
@@ -533,7 +545,9 @@ function remove_files($file_array) {
 
 	if (read_config_option('storage_location')) {
 		$rrdtool_pipe = rrd_init(true, true, true);
-		if ($rrdtool_pipe === false) { return false; }
+		if ($rrdtool_pipe === false) {
+			return false;
+		}
 
 		rrdtool_execute('setcnn timeout off', false, RRDTOOL_OUTPUT_NULL, $rrdtool_pipe, $logopt = 'POLLER');
 	} else {
@@ -672,7 +686,9 @@ function remove_files($file_array) {
 	}
 
 	} finally {
-		if (read_config_option('storage_location')) { rrd_close($rrdtool_pipe); }
+		if (read_config_option('storage_location')) {
+			rrd_close($rrdtool_pipe);
+		}
 	}
 
 	maint_debug('RRDClean has finished a purge pass of ' . cacti_sizeof($file_array) . ' items');

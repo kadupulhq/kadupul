@@ -3,13 +3,13 @@ cmd_exec	./cactid.php:85		exec('pgrep -a php | grep cactid.php', $output);
 cmd_exec	./cli/audit_database.php:131		exec('php ' . $config['base_path'] . '/cli/upgrade_database.php --debug', $output, $return_var);
 cmd_exec	./cli/audit_database.php:963				$db_shell = shell_exec('which mysql');
 cmd_exec	./cli/audit_database.php:972				exec($db_shell .
-cmd_exec	./cli/batchgapfix.php:288		$process = proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
-cmd_exec	./cli/batchgapfix.php:358			exec($command, $output, $return_var);
-cmd_exec	./cli/float_rrdfiles.php:642		return proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
+cmd_exec	./cli/batchgapfix.php:294		$process = proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
+cmd_exec	./cli/batchgapfix.php:364			exec($command, $output, $return_var);
+cmd_exec	./cli/float_rrdfiles.php:656		return proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
 cmd_exec	./cli/push_out_hosts.php:50		passthru($command, $exit_code);
 cmd_exec	./cli/remove_broken_graphs.php:30		$stty = shell_exec('stty size');
-cmd_exec	./cli/splice_rrd.php:224	$response = shell_exec($rrdtool);
-cmd_exec	./cli/update_heartbeat.php:256				$result = exec($command, $output, $return_code);
+cmd_exec	./cli/splice_rrd.php:227	$response = shell_exec($rrdtool);
+cmd_exec	./cli/update_heartbeat.php:261				$result = exec($command, $output, $return_code);
 cmd_exec	./cmd.php:295			$cactiphp = proc_open($command, $cactides, $pipes);
 cmd_exec	./cmd_realtime.php:98				$cactiphp = proc_open(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/script_server.php') . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
 cmd_exec	./data_input.php:66			$output = shell_exec($php . ' -q ' . $script . ' --update --push ' . $id_arg);
@@ -47,7 +47,7 @@ cmd_exec	./lib/ping.php:167					$result = shell_exec('chcp 437 && ping -w ' . $t
 cmd_exec	./lib/ping.php:174						$result = shell_exec('ping -6 -W ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' -p ' . $pattern . ' ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:176						$result = shell_exec('ping -W ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' -p ' . $pattern . ' ' . cacti_escapeshellarg($this->host['hostname']) . ' 2>&1');
 cmd_exec	./lib/ping.php:187							$result = shell_exec($ping_path . ' -W ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' -p ' . $pattern . ' ' . cacti_escapeshellarg($this->host['hostname']));
-cmd_exec	./lib/poller.php:1263										$output = system($php_path . ' -l ' . $tmpfile, $exit);
+cmd_exec	./lib/poller.php:1267										$output = system($php_path . ' -l ' . $tmpfile, $exit);
 cmd_exec	./lib/poller.php:139					pclose(popen('start "Cactiplus" /I ' . $filename . ' ' . $args, 'r'));
 cmd_exec	./lib/poller.php:141					pclose(popen('start "Cactiplus" /I ' . $filename . ' ' . $args . ' ' . $redirect_args, 'r'));
 cmd_exec	./lib/poller.php:144				exec($filename . ' ' . $args . ' > /dev/null 2>&1 &');
@@ -64,9 +64,9 @@ cmd_exec	./lib/poller.php:48	 * @param  (resource) $proc_fd - the file descripto
 cmd_exec	./lib/poller.php:83					$fp = popen($command, 'r');
 cmd_exec	./lib/poller.php:85					$fp = popen($command, 'rb');
 cmd_exec	./lib/poller.php:98				$output = shell_exec($command);
-cmd_exec	./lib/rrd.php:1249						$fp = popen($rrdtool_cmd, 'r');
+cmd_exec	./lib/rrd.php:1265						$fp = popen($rrdtool_cmd, 'r');
 cmd_exec	./lib/rrd.php:128		return popen($command, 'w');
-cmd_exec	./lib/rrd.php:528				$process = proc_open(read_config_option('path_rrdtool') . ' - ' . $debug, $descriptorspec, $pipes);
+cmd_exec	./lib/rrd.php:540				$process = proc_open(read_config_option('path_rrdtool') . ' - ' . $debug, $descriptorspec, $pipes);
 cmd_exec	./lib/rrd.php:97			$process = proc_open(array(read_config_option('path_rrdtool'), '-'),
 cmd_exec	./lib/rrd_maintenance.php:383	    $process = @proc_open($argv, $descriptors, $pipes);
 cmd_exec	./lib/rrdcheck.php:781		$process = proc_open($command, $fds, $pipes);
@@ -85,9 +85,9 @@ cmd_exec	./lib/utility.php:1847				exec('/usr/bin/free', $output, $exit_code);
 cmd_exec	./lib/utility.php:1898		$json     = shell_exec($php . ' -q ' . $php_file);
 cmd_exec	./lib/utility.php:1966		$json     = shell_exec($php . ' -q ' . $php_file);
 cmd_exec	./lib/utility.php:2098		$json     = shell_exec($php . ' -q ' . $php_file);
-cmd_exec	./poller_boost.php:530			$process = proc_open($arguments, $descriptors, $pipes);
+cmd_exec	./poller_boost.php:534			$process = proc_open($arguments, $descriptors, $pipes);
 cmd_exec	./poller_realtime.php:128	shell_exec("$command_string $extra_args");
-cmd_exec	./poller_realtime.php:228					shell_exec($command);
+cmd_exec	./poller_realtime.php:230					shell_exec($command);
 cmd_exec	./poller_spikekill.php:230				$response = exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./remote_agent.php:481								$cactiphp = proc_open($php_bin . ' -q ' . $srv_path . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
 cmd_exec	./script_server.php:168					exec("TASKLIST /FO LIST /FI \"PID eq $parent_pid\"", $out);
@@ -168,8 +168,8 @@ dynamic_include	./cli/change_device.php:16	require_once($config['base_path'] . '
 dynamic_include	./cli/change_device.php:17	require_once($config['base_path'] . '/lib/snmp.php');
 dynamic_include	./cli/change_device.php:18	require_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./cli/change_device.php:19	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./cli/float_rrdfiles.php:21	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./cli/float_rrdfiles.php:22	require_once($config['base_path'] . '/lib/rrd.php');
+dynamic_include	./cli/float_rrdfiles.php:23	require_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./cli/float_rrdfiles.php:24	require_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./cli/host_update_template.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/host_update_template.php:11	require_once($config['base_path'] . '/lib/api_automation.php');
 dynamic_include	./cli/host_update_template.php:12	require_once($config['base_path'] . '/lib/api_data_source.php');
@@ -347,8 +347,8 @@ dynamic_include	./lib/api_automation.php:2369		include_once($config['base_path']
 dynamic_include	./lib/api_device.php:929		include_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./lib/api_device.php:930		include_once($config['base_path'] . '/lib/variables.php');
 dynamic_include	./lib/api_device.php:931		include_once($config['base_path'] . '/lib/data_query.php');
-dynamic_include	./lib/boost.php:1266		include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/boost.php:1560			include_once($config['library_path'] . '/poller.php');
+dynamic_include	./lib/boost.php:1270		include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/boost.php:1570			include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:270			include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:332		include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:699		include_once($config['library_path'] . '/rrd.php');
@@ -412,19 +412,19 @@ dynamic_include	./lib/reports.php:661		include_once($config['library_path'] . '/
 dynamic_include	./lib/reports.php:738		include_once($config['base_path'] . '/lib/time.php');
 dynamic_include	./lib/reports.php:998		include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/reports.php:999		include_once($config['library_path'] . '/data_query.php');
-dynamic_include	./lib/rrd.php:1211		include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:1300		include_once($config['library_path'] . '/boost.php');
-dynamic_include	./lib/rrd.php:1387		include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:1659		include_once($config['library_path'] . '/cdef.php');
-dynamic_include	./lib/rrd.php:1660		include_once($config['library_path'] . '/vdef.php');
-dynamic_include	./lib/rrd.php:1661		include_once($config['library_path'] . '/graph_variables.php');
-dynamic_include	./lib/rrd.php:1662		include_once($config['library_path'] . '/boost.php');
-dynamic_include	./lib/rrd.php:1663		include_once($config['library_path'] . '/xml.php');
-dynamic_include	./lib/rrd.php:1664		include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/rrd.php:2948			include($rrdtheme);
-dynamic_include	./lib/rrd.php:3554		include_once($config['library_path'] . '/time.php');
-dynamic_include	./lib/rrd.php:4332			include($themefile);
-dynamic_include	./lib/rrd.php:857		include ($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/rrd.php:1227		include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/rrd.php:1316		include_once($config['library_path'] . '/boost.php');
+dynamic_include	./lib/rrd.php:1403		include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/rrd.php:1675		include_once($config['library_path'] . '/cdef.php');
+dynamic_include	./lib/rrd.php:1676		include_once($config['library_path'] . '/vdef.php');
+dynamic_include	./lib/rrd.php:1677		include_once($config['library_path'] . '/graph_variables.php');
+dynamic_include	./lib/rrd.php:1678		include_once($config['library_path'] . '/boost.php');
+dynamic_include	./lib/rrd.php:1679		include_once($config['library_path'] . '/xml.php');
+dynamic_include	./lib/rrd.php:1680		include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/rrd.php:2964			include($rrdtheme);
+dynamic_include	./lib/rrd.php:3570		include_once($config['library_path'] . '/time.php');
+dynamic_include	./lib/rrd.php:4351			include($themefile);
+dynamic_include	./lib/rrd.php:871		include ($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/rrdcheck.php:699			include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/rrdcheck.php:729			include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/snmp.php:32		include_once($config['include_path'] . '/vendor/phpsnmp/extension.php');
@@ -438,8 +438,8 @@ dynamic_include	./lib/utility.php:165		include_once($config['library_path'] . '/
 dynamic_include	./lib/utility.php:29		include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./lib/utility.php:820		include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./link.php:55					include_once($file);
-dynamic_include	./poller.php:1055	    include_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./poller.php:1206	    include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./poller.php:1059	    include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./poller.php:1210	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:18	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:19	require_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./poller.php:20	require_once($config['base_path'] . '/lib/rrd.php');
@@ -465,7 +465,7 @@ dynamic_include	./poller_boost.php:19	require_once($config['base_path'] . '/lib/
 dynamic_include	./poller_boost.php:20	require_once($config['base_path'] . '/lib/dsstats.php');
 dynamic_include	./poller_boost.php:21	require_once($config['base_path'] . '/lib/rrdcheck.php');
 dynamic_include	./poller_boost.php:22	require_once($config['base_path'] . '/lib/rrd.php');
-dynamic_include	./poller_boost.php:777		include_once($config['library_path'] . '/rrd.php');
+dynamic_include	./poller_boost.php:794		include_once($config['library_path'] . '/rrd.php');
 dynamic_include	./poller_commands.php:23	require_once($config['base_path'] . '/lib/api_device.php');
 dynamic_include	./poller_commands.php:24	require_once($config['base_path'] . '/lib/api_data_source.php');
 dynamic_include	./poller_commands.php:25	require_once($config['base_path'] . '/lib/api_graph.php');
@@ -531,18 +531,18 @@ dynamic_include	./snmpagent_persist.php:147				include( $path_mibcache );
 dynamic_include	./spikekill.php:8	include_once($config['base_path'] . '/lib/spikekill.php');
 fs_write	./cactid.php:82		$STDERR = fopen('/dev/null', 'wb');
 fs_write	./cactid.php:93		$STDERR = fopen('null', 'wb');
-fs_write	./cli/float_rrdfiles.php:353				$fp = fopen($tmp_file, 'x');
-fs_write	./cli/float_rrdfiles.php:356					$lf = fopen($tmp_dir . '/clearer.log', 'x');
+fs_write	./cli/float_rrdfiles.php:357				$fp = fopen($tmp_file, 'x');
+fs_write	./cli/float_rrdfiles.php:360					$lf = fopen($tmp_dir . '/clearer.log', 'x');
 fs_write	./cli/import_package.php:143				$fp   = fopen($filename, 'r'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 fs_write	./cli/import_template.php:105				$fp = fopen($filename,'r'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 fs_write	./cli/input_whitelist.php:171			file_put_contents($config['input_whitelist'], json_encode($input));
 fs_write	./cli/md5sum.php:163		if (file_put_contents($md5_file,$output) === false) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 fs_write	./cli/refresh_csrf.php:67		$fh = fopen($path_csrf_secret, 'w');
-fs_write	./cli/splice_rrd.php:248		$handle = fopen($xmlfile, 'x');
+fs_write	./cli/splice_rrd.php:264		$handle = fopen($xmlfile, 'x');
 fs_write	./cli/splice_rrd.php:30				if (($f = @fopen($path, 'a'))) {
-fs_write	./cli/splice_rrd.php:311	file_put_contents($newxmlfile, $new_xml);
+fs_write	./cli/splice_rrd.php:335	file_put_contents($newxmlfile, $new_xml);
 fs_write	./cli/splice_rrd.php:39			if (($f = @fopen($path, 'w'))) {
-fs_write	./cli/splice_rrd.php:845		return file_put_contents($xmlfile, $output);
+fs_write	./cli/splice_rrd.php:871		return file_put_contents($xmlfile, $output);
 fs_write	./host.php:574		$stdout = fopen('php://output', 'w');
 fs_write	./include/global_languages.php:939			file_put_contents($config['i18n_log'], $text . $eol, $mode);
 fs_write	./include/global_languages.php:947			file_put_contents($config['i18n_text_log'], $text . $eol, $mode);
@@ -573,12 +573,12 @@ fs_write	./lib/functions.php:7110				file_put_contents($tmp_file, 'cacti');
 fs_write	./lib/import.php:408		$f   = fopen($filename, 'r');
 fs_write	./lib/import.php:589							$file = fopen($filename, 'wb');
 fs_write	./lib/installer.php:2965	            $file = fopen($cacheFile, "r");
-fs_write	./lib/poller.php:1262									if (file_put_contents($tmpfile, $contents) !== false) {
-fs_write	./lib/poller.php:1269												file_put_contents($mypath, $contents);
-fs_write	./lib/poller.php:1298								file_put_contents($mypath, $contents);
+fs_write	./lib/poller.php:1266									if (file_put_contents($tmpfile, $contents) !== false) {
+fs_write	./lib/poller.php:1273												file_put_contents($mypath, $contents);
+fs_write	./lib/poller.php:1302								file_put_contents($mypath, $contents);
 fs_write	./lib/reports.php:1687			$f = fopen($fn, 'wb');
 fs_write	./lib/reports.php:1727			$f = fopen($fn, 'wb');
-fs_write	./lib/rrd.php:2832					if ($fp = fopen($graph_data_array['export_realtime'], 'w')) {
+fs_write	./lib/rrd.php:2848					if ($fp = fopen($graph_data_array['export_realtime'], 'w')) {
 fs_write	./lib/rrd_maintenance.php:85	    $handle = @fopen($canonical, 'r');
 fs_write	./lib/spikekill.php:1126				$handle    = @fopen($desired_path, 'xb');
 fs_write	./lib/spikekill.php:1144					$handle    = @fopen($candidate, 'xb');

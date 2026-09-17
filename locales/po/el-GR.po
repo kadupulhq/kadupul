@@ -20382,3 +20382,7 @@ msgstr "Ο αριθμός των προτύπων γραφημάτων που χ
 #: vdef.php:923
 msgid "No VDEFs"
 msgstr "Δεν υπάρχουν VDEF"
+
+#: rrdcleaner.php:28 rrdcleaner.php:427 rrdcleaner.php:462
+msgid "Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup."
+msgstr ""

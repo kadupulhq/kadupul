@@ -190,6 +190,7 @@ FIXTURE;
         } elseif ($failure) {
             if ($failure === 'dump-failure') {
                 expect($stderr)->toContain('dump failed; inputs preserved')->and(file_exists($dir . '/finished.rrd'))->toBeFalse();
+                expect(glob($dir . '/kadupul-rrd-*'))->toBe(array());
             }
             expect($status)->toBe(1)->and(file_exists($dir . '/db-write'))->toBeFalse()
                 ->and(file_get_contents($rrd))->toBe($before);
