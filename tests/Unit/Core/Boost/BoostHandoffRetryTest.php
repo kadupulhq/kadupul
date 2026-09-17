@@ -110,7 +110,7 @@ test('failed Boost handoff retains source samples and skips direct RRD writes', 
     }
 });
 
-function pollerDeferredProbe(&$pipe, $remainder, &$deferred)
+function pollerDeferredProbe($remainder, &$deferred)
 {
     $GLOBALS['deferred_probe_calls']++;
     $deferred = true;
@@ -119,7 +119,7 @@ function pollerDeferredProbe(&$pipe, $remainder, &$deferred)
 
 test('main poller retries subsequent and final drains while preserving a failure result', function () {
     $source = file_get_contents(dirname(__DIR__, 4) . '/poller.php');
-    preg_match_all('/if \(\$poller_id == 1\) \{\s*if \(empty\(\$rrd_write_initialization_failed\)\) \{.*?\n\t{5}\}/s', $source, $matches);
+    preg_match_all('/if \(\$poller_id == 1\) \{\s*\$rrds_processed \+= process_poller_output_batch\(.*?\n\t{5}\}/s', $source, $matches);
     expect($matches[0])->toHaveCount(2);
     $poller_id = 1;
     $poller_output_deferred = false;
@@ -128,7 +128,7 @@ test('main poller retries subsequent and final drains while preserving a failure
     $GLOBALS['deferred_probe_calls'] = 0;
     // Execute the actual waiting-loop guard twice, then the completion guard.
     foreach (array($matches[0][1], $matches[0][1], $matches[0][0]) as $guard) {
-        eval(str_replace('process_poller_output(', '\\' . __NAMESPACE__ . '\\pollerDeferredProbe(', $guard)); // nosemgrep: php.lang.security.eval-use.eval-use
+        eval(str_replace('process_poller_output_batch(', '\\' . __NAMESPACE__ . '\\pollerDeferredProbe(', $guard)); // nosemgrep: php.lang.security.eval-use.eval-use
     }
     expect($GLOBALS['deferred_probe_calls'])->toBe(3)
         ->and($poller_output_deferred)->toBeTrue()->and($rrd_write_failed)->toBeTrue();

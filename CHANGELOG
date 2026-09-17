@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Finish poller post-run services before reporting write failure, release writer leases between batches, and serialize float repair workers with stale-child reaping
 -issue: Keep Windows local RRD cleanup explicitly manual; prevent automatic enqueue and preserve existing requests during rescans without failing every maintenance cycle
 -issue: Before code-only upgrades, configure explicit RRD service UID/GID trust for shared stores as documented in docs/testing/spikekill-safety.md; poller startup now refuses unsafe storage and notifies the configured administrator before spawning workers
 -security: Shared RRD stores may explicitly trust service owners and groups while retaining writer leases; world-writable stores still fail closed so maintenance cannot race uncoordinated writes

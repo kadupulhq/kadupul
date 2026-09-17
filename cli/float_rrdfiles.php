@@ -58,7 +58,7 @@ $local_graph_ids   = array();
 $step              = false;
 
 /* optional for threading and verbose display */
-$threads           = 20;
+$threads           = 1;
 $seebug            = false;
 
 /* optional for force handing and resume */
@@ -566,6 +566,8 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 function float_master_handler($forcerun, $resume, $host_id, $host_template_id, $graph_template_id, $local_graph_ids, $threads, $step, $start_time, $end_time) {
 	global $type;
 
+	float_reap_dead_children();
+
 	/* Create table if first time use */
 	if (!db_table_exists('poller_float_rrdfiles_not_done')) {
 		db_execute("CREATE TABLE `poller_float_rrdfiles_not_done` (
@@ -644,6 +646,8 @@ function float_master_handler($forcerun, $resume, $host_id, $host_template_id, $
 		return false;
 	}
 
+	// Every rewrite takes one directory-wide exclusive lease; siblings cannot run concurrently.
+	$threads = 1;
 	$rrdfiles_per_process = ceil(db_fetch_cell_prepared('SELECT COUNT(*)/? FROM poller_float_rrdfiles_not_done', array($threads)));
 
 	print "There are $threads and $rrdfiles_per_process RRDfiles to process per thread" . PHP_EOL;
@@ -823,7 +827,7 @@ function display_help () {
 
 	print 'Cacti\'s RRDfile Data Float Tool.  This CLI script will float a' . PHP_EOL;
 	print 'range in select Cacti Graphs using the RRDtool dump/import utility.' . PHP_EOL . PHP_EOL;
-	print 'This utility will run in parallel with the given number of threads,' . PHP_EOL;
+	print 'This utility serializes rewrites under the exclusive storage lease,' . PHP_EOL;
 	print 'except in the case when you have specified specific --graph-ids as' . PHP_EOL;
 	print 'show with the optional settings below.' . PHP_EOL . PHP_EOL;
 
@@ -832,7 +836,7 @@ function display_help () {
 	print '    --end=TS    - The float range end time timestamp or date.' . PHP_EOL . PHP_EOL;
 
 	print 'Optional:' . PHP_EOL;
-	print '    --threads             - 20, The number of threads to use to update RRDfiles' . PHP_EOL;
+	print '    --threads             - Accepted for compatibility; rewrites use one worker' . PHP_EOL;
 	print '    --resume              - False, Resume a canceled float process' . PHP_EOL;
 	print '    --host-id=N           - N/A, Update a specific devices RRDfiles' . PHP_EOL;
 	print '    --host-template-id=N  - N/A, Update a specific Device Templates RRDfiles' . PHP_EOL;

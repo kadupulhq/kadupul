@@ -323,6 +323,7 @@ function db_fetch_cell($sql) {
     if (strpos($sql, 'FROM processes') !== false) { return 0; }
     return $queueReads++ === 0 ? 1 : (getenv('TEST_FLOAT_REMAINING') === 'unknown' ? false : (int) getenv('TEST_FLOAT_REMAINING'));
 }
+function db_fetch_assoc_prepared(...$args) { return array(); }
 function db_fetch_cell_prepared(...$args) { return 1; }
 function exec_background(...$args) { touch(dirname(__DIR__) . '/launched'); }
 function cacti_log($message, ...$args) { file_put_contents(dirname(__DIR__) . '/messages', $message . "\n", FILE_APPEND); }

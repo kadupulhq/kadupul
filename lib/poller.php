@@ -3213,3 +3213,19 @@ function timeout_kill_registered_processes($tasktype = '', $taskname = '', $task
 		}
 	}
 }
+
+
+/** Hold the writer lease only while draining a batch, never while waiting for collectors. */
+function process_poller_output_batch($final, &$deferred) {
+	$deferred = false;
+	$pipe = rrd_init(true, false, true);
+	if ($pipe === false) {
+		$deferred = true;
+		return 0;
+	}
+	try {
+		return process_poller_output($pipe, $final, $deferred);
+	} finally {
+		rrd_close($pipe);
+	}
+}

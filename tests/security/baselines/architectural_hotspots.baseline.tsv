@@ -8,7 +8,7 @@ cmd_exec	./cli/batchgapfix.php:310		$process = proc_open($args, array(0 => STDIN
 cmd_exec	./cli/batchgapfix.php:387			exec($command, $output, $return_var);
 cmd_exec	./cli/float_rrdfiles.php:368				$response = exec($command, $output, $return);
 cmd_exec	./cli/float_rrdfiles.php:531					$response = exec($command, $output, $return);
-cmd_exec	./cli/float_rrdfiles.php:738		return proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
+cmd_exec	./cli/float_rrdfiles.php:742		return proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
 cmd_exec	./cli/push_out_hosts.php:67		passthru($command, $exit_code);
 cmd_exec	./cli/remove_broken_graphs.php:47		$stty = shell_exec('stty size');
 cmd_exec	./cli/reset_password.php:149		shell_exec('stty -echo');
@@ -446,8 +446,8 @@ dynamic_include	./lib/utility.php:182		include_once($config['library_path'] . '/
 dynamic_include	./lib/utility.php:46		include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./lib/utility.php:837		include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./link.php:73					include_once($file);
-dynamic_include	./poller.php:1125	    include_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./poller.php:1276	    include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./poller.php:1120	    include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./poller.php:1271	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:36	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:37	require_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./poller.php:38	require_once($config['base_path'] . '/lib/rrd.php');
