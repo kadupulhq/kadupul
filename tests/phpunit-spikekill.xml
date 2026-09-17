@@ -3,6 +3,7 @@
   <testsuites>
     <testsuite name="Spikekill">
       <file>./Unit/Installer/InstallerRrdStoragePreflightTest.php</file>
+      <file>./Unit/Installer/LegacyQueueUpgradeTest.php</file>
       <file>./Unit/Core/Cli/BoostMasterFailureTest.php</file>
       <file>./Unit/Core/Cli/BoostWorkerNativeTest.php</file>
       <file>./Unit/Core/Cli/PollerDrainNativeTest.php</file>

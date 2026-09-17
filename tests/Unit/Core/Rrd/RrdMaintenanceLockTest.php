@@ -1427,6 +1427,27 @@ test('rejected fields are removed while valid siblings and later timestamps are 
     if ($invalidField === 'legacy') {
         $binary = getenv('RRDTOOL_LEGACY_TEST_BINARY') ?: '';
     }
+    if (strpos($invalidField, 'info-') === 0) {
+        $binary = $this->dir . '/rrd-fixture';
+        $server = <<<'SERVER'
+while (($line = fgets(STDIN)) !== false) {
+    $verb = strtok(trim($line), ' ');
+    if ($verb === 'quit') { break; }
+    if ($verb === 'create') { file_put_contents(__DIR__.'/group.rrd','fixture'); echo "OK u:0.00 s:0.00 r:0.00\n"; }
+    elseif ($verb === 'update') { file_put_contents(__DIR__.'/updates','1',FILE_APPEND); echo "ERROR: tmplt contains more DS definitions than RRD\n"; }
+    elseif ($verb === 'info') {
+        echo $mode === 'info-error' ? "ERROR: unavailable\n" : ($mode === 'info-empty' ? "OK u:0.00 s:0.00 r:0.00\n" : "unrecognized schema\nOK u:0.00 s:0.00 r:0.00\n");
+    }
+    elseif ($verb === 'last') { echo "1700000000\nOK u:0.00 s:0.00 r:0.00\n"; }
+    elseif ($verb === 'lastupdate') { echo " a b\n1700000000: U U\nOK u:0.00 s:0.00 r:0.00\n"; }
+    else { echo "ERROR: unexpected command\n"; }
+    fflush(STDOUT);
+}
+SERVER;
+        file_put_contents($binary, '#!' . PHP_BINARY . "\n<?php $" . 'mode=' . var_export($invalidField, true) . ';' . $server);
+        chmod($binary, 0700);
+    }
+
     if (!is_executable($binary)) {
         $this->markTestSkipped('Real RRDtool is required.');
     }
@@ -1460,6 +1481,7 @@ $updates=array($file=>array('local_data_id'=>1,'data_template_id'=>0,'times'=>ar
 if ($invalidField === 'single') { unset($updates[$file]['times'][1700000060]['b'], $updates[$file]['times'][1700000060][$invalidField]); }
 if ($invalidField === 'legacy') { unset($updates[$file]['times'][1700000060][$invalidField]); }
 if ($invalidField === 'multiple') { $updates[$file]['times'][1700000060]['another_unknown']=88; }
+if (strpos($invalidField,'info-')===0) { $updates[$file]['times'][1700000120]=array('in-octets'=>30,'b'=>40); }
 $failed=rrdtool_function_update($updates,$pipe,$completed);$failureReason=rrdtool_last_rejection();
 $last=rrdtool_execute(array('last',$file),false,RRDTOOL_OUTPUT_STDOUT,$pipe);
 $firstCompleted=$completed[$file] ?? array();
@@ -1482,7 +1504,15 @@ PROBE;
     fclose($pipes[2]);
     expect(proc_close($process))->toBe(0, $error)->and($error)->toBe('');
     $result = json_decode($out, true);
-    expect($result[8])->toBeNull();
+    if (strpos($invalidField, 'info-') !== 0) {
+        expect($result[8])->toBeNull();
+    }
+    if (strpos($invalidField, 'info-') === 0) {
+        expect(array_slice($result, 0, 5))->toBe(array(true, false, array(), '1700000000', false))
+            ->and($result[6])->toBeFalse()
+            ->and(file_get_contents($this->dir . '/updates'))->toBe('111');
+        return;
+    }
     expect(array_slice($result, 0, 5))->toBe(array(true, 1, array(1700000060 => true), '1700000060', 0), $out)
         ->and($result[5])->toMatch($invalidField === 'single' ? '/1700000060:\s+10\s+U/' : '/1700000060:\s+10\s+20/')
         ->and($result[6])->toBe(1)
@@ -1490,4 +1520,4 @@ PROBE;
     if ($invalidField === 'legacy') {
         expect($result[9])->toBe(array(false, array(1700000060 => false)));
     }
-})->with(array('unknown', 'bad-name', 'missing', 'multiple', 'bad:name', 'field_name_too_long1234', 'single', 'legacy'));
+})->with(array('unknown', 'bad-name', 'missing', 'multiple', 'bad:name', 'field_name_too_long1234', 'single', 'legacy', 'info-error', 'info-empty', 'info-garbage'));
