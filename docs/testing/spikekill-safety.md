@@ -130,6 +130,13 @@ do not acquire a writer lease or require writer trust configuration. Their norma
 filesystem read permissions still apply. Writers wait at most five seconds for
 shared access; float workers also have a five-second exclusive acquisition bound.
 Contention fails the operation and retains queued samples for a later retry.
+For callers of `rrd_maintenance_acquire`, a shared lease with a null timeout uses
+that five-second bound even when `$wait` is false. Pass an explicit timeout of
+zero for an immediate attempt; `$busy` distinguishes contention from unavailable
+storage. Exclusive leases with the default arguments return immediately on
+contention. `$wait` permits an unbounded exclusive wait only when no timeout is
+specified; explicit timeouts always bound the wait. Native tests verify immediate
+refusal, the default shared deadline, and successful acquisition after release.
 Utility XML restores write to a temporary file beside the original and replace it
 only after RRDtool acknowledges success and ownership/mode are preserved. Failed
 or timed-out restores leave the original file and recovery XML intact.
