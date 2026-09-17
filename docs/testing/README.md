@@ -75,9 +75,14 @@ or `make test-bootstrap-golden` writes them; both refuse to
 run scoped, so a partial capture cannot leave the rest stale.
 
 Normalization is deliberately narrow. Filesystem roots become `<APP>` and
-`<HARNESS>`, and the base URL becomes `<BASE>`. Known diagnostic log clocks and installer/poller timestamps are
-normalized. Dates in database values, UI output and plugin messages are preserved. Identifiers, row counts, scalar types, ordering and message
-text are all preserved, because a change in any of them is a behavioral change.
+`<HARNESS>`, and the base URL becomes `<BASE>`. Known diagnostic clocks,
+installer/poller timestamps, PHP diagnostic source-line locations and the byte
+count in a recognized failed-write diagnostic are normalized. Dates and arbitrary
+numbers in database values, UI output and plugin messages remain unchanged.
+Diagnostic records are sorted because processes can interleave log writes;
+duplicate records remain present so lost or added diagnostics still change the
+comparison. Other observation ordering, identifiers, row counts, scalar types,
+and diagnostic message content remain part of the contract.
 
 When a golden changes, read the diff. A legitimate change is approved
 explicitly through the differential runner, never by re-recording silently.
@@ -191,10 +196,9 @@ harness records the deprecation rather than suppressing it.
 Main has renamed Cacti to Kadupul in visible output, so six scenarios no longer
 match these 1.2.31 goldens: `upgrade/install`, `cli/device-help`,
 `auth/login-invalid`, `auth/missing-csrf`, `faults/database-unreachable` and
-`graphs/definition`, whose default watermark still reads Cacti. A seventh,
-`poller/rrd-failure`, differs because the warning it records moved from
-`lib/rrd.php` line 334 to 327. The goldens stay the 1.2.31 contract, so a run
-against main reports these seven until they are approved as intended changes.
+`graphs/definition`, whose default watermark still reads Cacti. PHP diagnostic source-line moves are normalized and no longer count as
+a separate behavioral difference. The goldens stay the 1.2.31 contract, so a run
+against main reports these six until they are approved as intended changes.
 
 `get_request_var()` memoizes each name into the `$_CACTI_REQUEST` global. Once
 a name is read, later changes to `$_REQUEST` are ignored for the rest of the

@@ -239,3 +239,9 @@ there are two independent captures, not three. Keep the
 manifests and generated comparison together; no hand-edited provenance or
 import-time root override is required. This establishes historical repeatability,
 not a claim that a candidate application is equivalent or superior.
+
+Before touching Docker, the runner requires a Git application checkout with
+`cacti.sql` and a complete harness overlay matching the controller input hashes.
+Both inventories remain recorded; mismatched mounted helpers or build inputs
+fail setup. Baseline/candidate controller input changes require review. Application
+diagnostics retain duplicates but sort records to tolerate process interleaving.

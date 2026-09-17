@@ -126,6 +126,41 @@ def application_image_contract():
     print('running image identity rejects different dirty application builds and incomplete inspection')
 
 
+def application_input_boundary_contract():
+    from unittest.mock import Mock
+    for fault in ('missing-root', 'missing-schema', 'non-git', 'missing-helper', 'different-helper', 'different-build-input'):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / 'application'
+            if fault != 'missing-root':
+                root.mkdir()
+            if fault not in ('missing-root', 'missing-schema'):
+                (root / 'cacti.sql').write_text('schema')
+            provenance = comparable_manifest()['provenance']
+            if fault == 'missing-helper':
+                provenance['application_inputs_sha256'].pop('tests/Support/Behavior/probe.php')
+            if fault in ('different-helper', 'different-build-input'):
+                key = 'tests/Support/Behavior/probe.php' if fault == 'different-helper' else '.dockerignore'
+                provenance['application_inputs_sha256'][key] = 'f' * 64
+            recorder = object.__new__(harness.Harness)
+            recorder.setup_started = False
+            recorder.compose = Mock(side_effect=AssertionError('Invalid inputs must not touch Docker'))
+            with patch.object(harness, 'ROOT', root), patch.object(harness, 'source_provenance', return_value=provenance), patch.object(harness, 'run', side_effect=RuntimeError('not a checkout') if fault == 'non-git' else None, return_value={'stdout': 'a' * 40}):
+                try:
+                    recorder.setup()
+                except RuntimeError:
+                    pass
+                else:
+                    raise AssertionError(('Invalid application inputs accepted', fault))
+            assert recorder.setup_started is False
+            recorder.compose.assert_not_called()
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        (root / 'cacti.sql').write_text('schema')
+        with patch.object(harness, 'ROOT', root), patch.object(harness, 'source_provenance', return_value=comparable_manifest()['provenance']), patch.object(harness, 'run', return_value={'stdout': 'a' * 40}):
+            harness.validate_application_inputs()
+    print('application input validation rejects missing and mismatched overlays before Docker')
+
+
 def base_image_failure_contract():
     import subprocess
     valid = comparable_manifest()
@@ -241,6 +276,20 @@ def separate_results_root():
             assert any(row['scenario'] == '<repeat-environment>/' + key and row['status'] == 'NEEDS_REVIEW'
                        for row in mismatch['differences']), key
             assert all(row['status'] == 'NEEDS_REVIEW' for row in mismatch['differences']), key
+        for key in ('harness_sha256', 'harness_inputs_sha256'):
+            different = json.loads(json.dumps(manifest))
+            if key == 'harness_sha256':
+                different['provenance'][key] = 'f' * 64
+                different['provenance']['harness_inputs_sha256']['tests/Support/Behavior/harness.py'] = 'f' * 64
+            else:
+                different['provenance'][key]['tests/Support/Behavior/probe.php'] = 'f' * 64
+            (results / 'baseline/observations.json').write_text(json.dumps(different))
+            (results / 'repeat/observations.json').write_text(json.dumps(manifest))
+            with patch('sys.argv', command):
+                assert harness.main() == 1
+            mismatch = json.loads((results / 'comparison.json').read_text())
+            assert any(row['scenario'] == '<environment>/' + key and row['status'] == 'NEEDS_REVIEW' for row in mismatch['differences'])
+        (results / 'baseline/observations.json').write_text(json.dumps(manifest))
         (results / 'repeat/observations.json').write_text(json.dumps(manifest))
         manifest['scenarios'][sorted(harness.EXPECTED_SCENARIOS)[0]] = 2
         (results / 'candidate/observations.json').write_text(json.dumps(manifest))
@@ -493,9 +542,10 @@ def diagnostic_contracts():
            '09/16/2026 01:02:05 - SYSTEM STATS: Time:1\n'
            'ordinary message - ERROR PHP WARNING: not a log record\n')
     assert harness.application_diagnostics(log) == [
-        {'subsystem': 'ERROR', 'message': 'PHP WARNING: first 2020-01-01 in <APP>/lib/x.php:42'},
-        {'subsystem': 'ERROR', 'message': 'PHP NOTICE: second'}]
-    assert harness.application_diagnostics(log + log) == harness.application_diagnostics(log) * 2
+        {'subsystem': 'ERROR', 'message': 'PHP NOTICE: second'},
+        {'subsystem': 'ERROR', 'message': 'PHP WARNING: first 2020-01-01 in <APP>/lib/x.php:42'}]
+    assert harness.application_diagnostics(log + log) == sorted(harness.application_diagnostics(log) * 2, key=lambda row: (row['subsystem'], row['message']))
+    assert harness.application_diagnostics('\n'.join(reversed(log.splitlines()))) == harness.application_diagnostics(log)
     for payload in ('/harnessed', '/var/www/htmlish', '/harnessed/file.php',
                     '/var/www/htmlish/file.php', '/tmp/harness/file.php',
                     'prefix/var/www/html/file.php'):
@@ -879,6 +929,7 @@ def main():
     recording_guards()
     source_provenance_failure_contract()
     provenance_contract()
+    application_input_boundary_contract()
     base_image_failure_contract()
     application_image_contract()
     diagnostic_contracts()

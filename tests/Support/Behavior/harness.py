@@ -74,6 +74,21 @@ def source_provenance():
             'application_inputs_sha256': input_hashes(ROOT)}
 
 
+def validate_application_inputs():
+    """Require the mounted application helpers to match the recorded controller."""
+    if not ROOT.is_dir() or not (ROOT / 'cacti.sql').is_file():
+        raise RuntimeError('Application root must be a checkout containing cacti.sql')
+    run(['git', '-C', str(ROOT), 'rev-parse', '--verify', 'HEAD'])
+    provenance = source_provenance()
+    controller = provenance['harness_inputs_sha256']
+    application = provenance['application_inputs_sha256']
+    if not REQUIRED_INPUTS.issubset(controller) or not REQUIRED_INPUTS.issubset(application):
+        raise RuntimeError('Application or controller is missing required harness inputs')
+    mismatched = sorted(name for name, digest in controller.items() if application.get(name) != digest)
+    if mismatched:
+        raise RuntimeError('Application harness overlay differs from controller: ' + ', '.join(mismatched))
+
+
 # Normalize only timestamps in known diagnostic line shapes. Arbitrary dates
 # in database rows, UI output, or plugin messages are part of the contract.
 _Y = r'(?:19|20)\d{2}'
@@ -190,7 +205,7 @@ def visible_diagnostics(events):
 
 
 def application_diagnostics(contents):
-    """Keep PHP diagnostics in order; normalize log time and failed write size."""
+    """Retain diagnostic multiplicity without unstable cross-process log order."""
     records = []
     timestamp = re.compile(r'^(?:' + '|'.join(_POLLER_DATES) + r') \d{2}:\d{2}:\d{2}$')
     for line in contents.splitlines():
@@ -202,7 +217,7 @@ def application_diagnostics(contents):
             normalized = normalize_php_locations(normalize_failed_write_size(line))
             detail = normalized.partition(' - ')[2].partition(' ')[2]
             records.append({'subsystem': match[1], 'message': normalize_known_roots(detail)})
-    return records
+    return sorted(records, key=lambda row: (row['subsystem'], row['message']))
 
 
 class Forms(HTMLParser):
@@ -272,6 +287,7 @@ class Harness:
             fcntl.flock(self.lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
             raise RuntimeError('Another behavioral harness run holds the ' + project + ' project') from None
+        self.setup_started = False
         self.observed = {}
         self.destination = ROOT / 'tests/behavior/results' / args.target
 
@@ -413,6 +429,8 @@ class Harness:
                 'hooks': self.rows("SELECT JSON_OBJECT('hook',hook,'function',`function`,'status',status,'file',file) FROM plugin_hooks WHERE name='compatibility_test' ORDER BY hook")}
 
     def setup(self):
+        validate_application_inputs()
+        self.setup_started = True
         # The project name is stable so images are reused, which means a previous
         # run's database and append-only artifacts survive. Drop them first, or a
         # baseline can be recorded against state this run never created.
@@ -890,6 +908,10 @@ def compare(args):
         if baseline.get(key) != candidate.get(key):
             report.append({'scenario': '<environment>/' + key, 'status': 'NEEDS_REVIEW', 'digest': '',
                            'baseline': baseline.get(key), 'candidate': candidate.get(key)})
+    for key in ('harness_sha256', 'harness_inputs_sha256'):
+        if baseline['provenance'][key] != candidate['provenance'][key]:
+            report.append({'scenario': '<environment>/' + key, 'status': 'NEEDS_REVIEW', 'digest': '',
+                           'baseline': baseline['provenance'][key], 'candidate': candidate['provenance'][key]})
     repeat_environment_matches = True
     if repeat:
         for key in ('php', 'base_image', 'application_images', 'revision', 'schema_sha256', 'provenance'):
@@ -973,13 +995,13 @@ def main():
         try:
             status = harness.finish(error)
         finally:
-            if not args.keep:
+            if not args.keep and getattr(harness, 'setup_started', True):
                 try:
                     harness.compose('down', '--volumes', '--remove-orphans', timeout=120)
                 except (OSError, RuntimeError, subprocess.TimeoutExpired) as cleanup_error:
                     print('Container cleanup failed: ' + str(cleanup_error), file=sys.stderr)
                     status = status or 2
-            else:
+            elif args.keep:
                 print('Kept project: ' + ' '.join(harness.dc))
     return status
 
