@@ -517,7 +517,7 @@ function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$re
  * @param  (resource) $rrdtool_pipe - the array of pipes containing the file descriptor for rrdtool
  * @param  (int)      $remainder - don't use LIMIT if true
  *
- * @return (int) - The number of rrdfiles processed
+ * @return (int|false) - Acknowledged sample updates, or false when retry is required
  */
 /** Delete only the selected source samples, preserving concurrent arrivals. */
 function poller_delete_output_rows($keys, &$failed = null) {

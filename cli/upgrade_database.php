@@ -81,28 +81,29 @@ if ($check_rrd_storage && $migrate_poller_queue) {
 }
 
 require_once __DIR__ . '/../lib/rrd_maintenance.php';
-$storage_error = (!$check_rrd_storage && (int) ($config['poller_id'] ?? 1) > 1)
+$storage_error = ($migrate_poller_queue || (!$check_rrd_storage && (int) ($config['poller_id'] ?? 1) > 1))
 	? '' : rrd_maintenance_configuration_error();
 if ($storage_error !== '') {
 	fwrite(STDERR, $storage_error . PHP_EOL);
 	exit(1);
 }
 
-// Check the collector's own queue before switching a remote schema upgrade
-// to the main database. Explicit migration is the remediation for this gate.
+// Online remote producers write to the primary database; offline/recovery
+// producers use their own database. --local explicitly selects the latter.
+$queue_connection = !$local && (int) ($config['poller_id'] ?? 1) > 1
+	&& ($config['connection'] ?? 'online') === 'online' ? $remote_db_cnn_id : false;
 if (!$migrate_poller_queue && !$check_rrd_storage) {
-	$queue_error = rrd_maintenance_queue_configuration_error();
+	$queue_error = rrd_maintenance_queue_configuration_error($queue_connection);
 	if ($queue_error !== '') {
 		fwrite(STDERR, $queue_error . PHP_EOL);
 		exit(1);
 	}
 }
 
-// Queue cutover commands diagnose and migrate this collector's own queue.
-// Ordinary schema upgrades retain their existing main-database default.
-if (!$local && !$check_rrd_storage && !$migrate_poller_queue && $config['poller_id'] > 1) {
+if ($check_rrd_storage || $migrate_poller_queue) {
+	print 'NOTE: Targeting ' . ($queue_connection === false ? 'Local' : 'Main') . ' Poller Queue' . PHP_EOL;
+} elseif (!$local && $config['poller_id'] > 1) {
 	db_switch_remote_to_main();
-
 	print 'NOTE: Targeting Main Database' . PHP_EOL;
 } else {
 	print 'NOTE: Targeting Local Database' . PHP_EOL;
@@ -111,17 +112,17 @@ if (!$local && !$check_rrd_storage && !$migrate_poller_queue && $config['poller_
 if ($migrate_poller_queue) {
     $queue_engine = db_fetch_cell_prepared(
         'SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?',
-        array('poller_output')
+        array('poller_output'), '', true, $queue_connection
     );
     if (!is_string($queue_engine) || $queue_engine === '') {
-        fwrite(STDERR, "Cannot inspect the local poller queue; no migration was attempted.\n");
+        fwrite(STDERR, "Cannot inspect the selected poller queue; no migration was attempted.\n");
         exit(1);
     }
     if (strtolower($queue_engine) === 'innodb') {
-        print "Local poller queue already uses InnoDB; no migration was needed.\n";
+        print "Selected poller queue already uses InnoDB; no migration was needed.\n";
         exit(0);
     }
-    if (!db_execute_prepared('ALTER TABLE poller_output ENGINE=InnoDB ROW_FORMAT=Dynamic')) {
+    if (!db_execute_prepared('ALTER TABLE poller_output ENGINE=InnoDB ROW_FORMAT=Dynamic', array(), true, $queue_connection)) {
         fwrite(STDERR, "Poller queue migration failed; collectors must remain stopped.\n");
         exit(1);
     }
@@ -130,7 +131,7 @@ if ($migrate_poller_queue) {
 }
 
 if ($check_rrd_storage) {
-    $queue_error = rrd_maintenance_queue_configuration_error();
+    $queue_error = rrd_maintenance_queue_configuration_error($queue_connection);
     if ($queue_error !== '') {
         fwrite(STDERR, $queue_error . PHP_EOL);
         exit(1);

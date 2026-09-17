@@ -1,10 +1,16 @@
 # Release-readiness review dispositions
 
-The 2026-09-17 local review identified two queue-command defects on remote
-collectors. `--check-rrd-storage` and `--migrate-poller-queue` now retain the local
-database connection. Ordinary schema upgrades retain their existing default.
-Migration checks the engine first, skips DDL for InnoDB, and rejects unavailable
-engine metadata. Native CLI regressions cover these cases and explicit `--local`.
+Queue diagnostics, explicit migration and ordinary CLI upgrades resolve the same
+queue destination as producers: the primary connection for online remote
+collectors, otherwise local. `--local` explicitly overrides that choice. Native
+CLI tests record the actual connection argument, require migration to use that
+same connection, and cover unavailable engine metadata and idempotent InnoDB
+migration. Queue migration does not require RRD filesystem access.
+
+Offline/recovery remotes retain their authoritative backlog in the Boost queue;
+their transient `poller_output` table is cleared by the existing collector loop.
+The normal-queue durability gate therefore applies to primary and online remote
+collectors, not that transient offline table.
 
 Windows preflight now probes actual create/read/write/delete access instead of
 using `is_writable()` as a directory ACL test. PHP 8.1's
@@ -33,8 +39,7 @@ logged, while a subsequent healthy sample drains during the same cycle. Native
 regressions cover both local and proxy writers; transient and database failures
 still retain samples and defer retries.
 
-Ordinary CLI upgrades now check the collector's local queue before switching a
-remote collector to the main database. MEMORY or unavailable engine metadata
+Ordinary CLI upgrades check the selected producer queue before schema changes. MEMORY or unavailable engine metadata
 fails before any version mutation and gives the explicit migration command.
 
 Local writers intentionally close after each nonempty batch to release the
@@ -48,3 +53,23 @@ block maintenance; any future caching must separate transport from lease ownersh
 The malformed-key deletion path reports failure together with the count of prior
 committed chunks; callers honor that failure and retain remaining samples. It
 must not report prior successful chunks as unconsumed.
+
+Unknown data-source names, template-size mismatches and extra-value rejections
+are retryable schema errors. No shortened sample is written: the complete input
+remains queued and that RRD's timestamp stays unchanged. Native tests repair the
+schema and replay the original values, including RRDtool 1.4. Another healthy RRD
+continues processing in the same batch. Only already-past timestamps are terminal
+RRDtool errors; syntactically invalid field names remain explicitly diagnosed.
+
+A boolean command supplied with a legacy write-only pipe now returns false without
+submitting it through a second process. Native tests verify that a queued create
+completes, the rejected update never changes its timestamp, and acknowledged pipes
+still execute both commands in order.
+
+Failed dump commands return maintenance errors before XML parsing. Native tests
+cover adding ordinary and computed data sources, cloning/deleting archives,
+debug output, read-only files, failed dumps and failed restores.
+
+`RRDsProcessed` counts acknowledged sample updates. The old implementation also
+incremented per timestamp, despite the file-count wording in its docblock. Failed
+or rejected writes are now excluded rather than reported as successful updates.

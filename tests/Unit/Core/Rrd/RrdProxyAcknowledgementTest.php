@@ -46,7 +46,7 @@ test('proxy acknowledgements reject missing responses and error responses even w
     if (is_string($response) && preg_match('/^ERROR:([^\r\n]*)/m', $response, $error)) {
         expect($rejection)->toBe(trim($error[1]));
         if (strpos($response, 'unknown DS name') !== false || strpos($response, 'found extra data') !== false) {
-            expect(rrdtool_rejection_is_permanent($rejection))->toBeTrue();
+            expect(rrdtool_rejection_is_permanent($rejection))->toBeFalse();
         }
         if (strpos($response, 'Permission denied') !== false) {
             expect(rrdtool_rejection_is_permanent($rejection))->toBeFalse();

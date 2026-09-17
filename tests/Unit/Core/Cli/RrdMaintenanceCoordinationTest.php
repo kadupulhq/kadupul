@@ -438,11 +438,11 @@ test('storage probe and explicit queue migration preserve the cutover contract',
         if (!$trusted) {
             chmod($dir . '/store', 0770);
         }
-        $bootstrap = '<?php ini_set("display_errors", "stderr"); $config = ' . var_export(array('base_path' => $dir, 'rra_path' => $dir . '/store', 'cacti_server_os' => 'unix', 'poller_id' => $remote ? 2 : 1), true) . ';' .
-            'function __($message) { return $message; } function cacti_sizeof($value) { return count($value); } function read_config_option($key) { return false; }' .
+        $bootstrap = '<?php ini_set("display_errors", "stderr"); $config = ' . var_export(array('base_path' => $dir, 'rra_path' => $dir . '/store', 'cacti_server_os' => 'unix', 'poller_id' => $remote ? 2 : 1, 'connection' => 'online'), true) . ';' .
+            '$remote_db_cnn_id = "primary-database"; function __($message) { return $message; } function cacti_sizeof($value) { return count($value); } function read_config_option($key) { return false; }' .
             'function db_switch_remote_to_main() { $GLOBALS["main_database"] = true; touch(dirname(__DIR__)."/main-database"); }' .
-            'function db_fetch_cell_prepared($sql, $params) { if (!empty($GLOBALS["main_database"])) { return "InnoDB"; } if ($params !== array("poller_output")) { throw new RuntimeException("Wrong queue"); } return ' . var_export($engine, true) . '; }' .
-            'function db_execute_prepared($sql, ...$args) { file_put_contents(dirname(__DIR__)."/mutation",$sql); return ' . var_export($success, true) . '; }';
+            'function db_fetch_cell_prepared($sql, $params, $column = "", $log = true, $connection = false) { file_put_contents(dirname(__DIR__)."/queue-connection", json_encode($connection)); if ($params !== array("poller_output")) { throw new RuntimeException("Wrong queue"); } return ' . var_export($engine, true) . '; }' .
+            'function db_execute_prepared($sql, $params = array(), $log = true, $connection = false) { if (json_decode(file_get_contents(dirname(__DIR__)."/queue-connection"),true) !== $connection) { throw new RuntimeException("Migration connection differs from probe"); } file_put_contents(dirname(__DIR__)."/mutation",$sql); return ' . var_export($success, true) . '; }';
         file_put_contents($dir . '/include/cli_check.php', $bootstrap);
         $arguments = rrd_cli_coverage_arguments($this, $dir, $root, 'upgrade_database.php');
         $process = proc_open(array_merge(array(PHP_BINARY), $arguments, array_merge(array($dir . '/cli/upgrade_database.php', $migrate ? '--migrate-poller-queue' : '--check-rrd-storage'), $local ? array('--local') : array(), $combined ? array('--check-rrd-storage') : array())), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
@@ -450,17 +450,17 @@ test('storage probe and explicit queue migration preserve the cutover contract',
         $error = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
-        $accepted = !$combined && $trusted && ($migrate ? (is_string($engine) && ($engine === 'InnoDB' || $success)) : $engine === 'InnoDB');
+        $accepted = !$combined && ($trusted || $migrate) && ($migrate ? (is_string($engine) && ($engine === 'InnoDB' || $success)) : $engine === 'InnoDB');
         expect(proc_close($process))->toBe($accepted ? 0 : 1, $error . $output);
         if ($combined) {
             expect($error)->toContain('Do not combine')->and($output)->toBe('');
-        } elseif ($trusted && $migrate && $engine === 'InnoDB') {
+        } elseif ($migrate && $engine === 'InnoDB') {
             expect($error)->toBe('')->and($output)->toContain('already uses InnoDB');
             expect(file_exists($dir . '/mutation'))->toBeFalse();
-        } elseif ($trusted && $migrate && !is_string($engine)) {
+        } elseif ($migrate && !is_string($engine)) {
             expect($error)->toContain('no migration was attempted');
             expect(file_exists($dir . '/mutation'))->toBeFalse();
-        } elseif ($trusted && $migrate) {
+        } elseif ($migrate) {
             expect(file_get_contents($dir . '/mutation'))->toBe('ALTER TABLE poller_output ENGINE=InnoDB ROW_FORMAT=Dynamic');
             expect($success ? $output : $error)->toContain($success ? 'retained samples preserved' : 'collectors must remain stopped');
         } elseif ($accepted) {
@@ -468,10 +468,13 @@ test('storage probe and explicit queue migration preserve the cutover contract',
         } else {
             expect($error)->toContain($trusted ? 'must use InnoDB' : 'rrd_maintenance_trusted_gids');
         }
-        if (!$migrate || !$trusted || $combined) {
+        if (!$migrate || $combined) {
             expect(file_exists($dir . '/mutation'))->toBeFalse();
         }
         expect(file_exists($dir . '/main-database'))->toBeFalse();
+        if (is_file($dir . '/queue-connection')) {
+            expect(json_decode(file_get_contents($dir . '/queue-connection'), true))->toBe($remote && !$local ? 'primary-database' : false);
+        }
         rrd_cli_merge_coverage($this, $dir);
     } finally {
         rrd_cli_fixture_remove($dir);
@@ -500,6 +503,7 @@ test('remote schema upgrades do not require local RRD storage unless explicitly 
 <?php
 $config=array('base_path'=>dirname(__DIR__),'rra_path'=>dirname(__DIR__).'/store','cacti_server_os'=>'unix','poller_id'=>2);
 define('CACTI_VERSION','1.2.31'); define('DB_STATUS_SKIPPED',2); define('DB_STATUS_ERROR',0);
+$remote_db_cnn_id='primary-database';
 $cacti_version_codes=array('1.2.30'=>'old','1.2.31'=>'new');
 function __($message,...$args){return $args?vsprintf($message,$args):$message;}
 function read_config_option($key){return false;}
