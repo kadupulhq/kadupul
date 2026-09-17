@@ -19,7 +19,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Compare behavioral captures from an explicit results directory when the controller and application use separate checkouts; document the Linux native self-test PHP prerequisite.
 - Refuse web upgrades when the poller queue is volatile or unreadable, before changing the database.
-- Retain rejected multi-field RRD timestamp groups and later samples until corrected; report refused RRD repairs as failures.
+- Recover valid fields from rejected RRD groups without stalling later timestamps; report refused RRD repairs as failures.
 
 - Retain realtime samples when their field mapping cannot be read.
 

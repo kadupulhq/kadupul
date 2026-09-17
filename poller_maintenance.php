@@ -539,6 +539,7 @@ function secpass_check_expired () {
  */
 function remove_files($file_array) {
 	global $config, $debug, $archived, $purged;
+	$failed = false;
 
 	if (!rrd_maintenance_cleanup_supported()) {
 		cacti_log('WARNING: Windows automatic local RRD cleanup is unsupported; files and purge queue retained for manual cleanup.', true, 'MAINT');
@@ -601,7 +602,8 @@ function remove_files($file_array) {
 							$purged++;
 						} else {
 							cacti_log("WARNING: RRDfile Maintenance is unable to remove $real_file from $rra_path!", true, 'MAINT');
-                            return false;
+							$failed = true;
+							continue 2;
 						}
 					}
 
@@ -620,7 +622,8 @@ function remove_files($file_array) {
 							$archived++;
 						} else {
 							cacti_log("WARNING: RRDfile Maintenance is unable to move $real_file to $target_file!", true, 'MAINT');
-                            return false;
+							$failed = true;
+							continue 2;
 						}
 					}
 
@@ -703,6 +706,9 @@ function remove_files($file_array) {
 	}
 
 	maint_debug('RRDClean has finished a purge pass of ' . cacti_sizeof($file_array) . ' items');
+	if ($failed) {
+		return false;
+	}
 }
 
 function rrdclean_create_path($path) {
