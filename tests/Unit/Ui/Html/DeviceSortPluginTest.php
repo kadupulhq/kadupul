@@ -20,6 +20,9 @@ function api_plugin_hook_function($hook, $value) {
         $GLOBALS['device_sort_hook_calls']++;
         $value['plugin_rank'] = array('display' => 'Rank', 'sort' => 'ASC');
         $value['nosort_action'] = array('display' => 'Action');
+        foreach (array('host.plugin_rank', 'LENGTH(description)', 'description`', 'description, (SELECT 1)') as $column) {
+            $value[$column] = array('display' => 'Plugin column', 'sort' => 'ASC');
+        }
     }
     return $value;
 }
@@ -36,13 +39,13 @@ test('device display and export preserve plugin sorting with a fresh session', f
     $total = 0;
     get_device_records($total, 30, $columns);
     expect($GLOBALS['device_sort_hook_calls'])->toBe(1);
-    if (in_array($column, array('description', 'plugin_rank'), true)) {
-        expect($GLOBALS['device_sort_sql'])->toContain('ORDER BY `' . $column . '` DESC');
+    if (in_array($column, array('description', 'plugin_rank', 'host.plugin_rank'), true)) {
+        expect($GLOBALS['device_sort_sql'])->toContain('ORDER BY `' . str_replace('.', '`.`', $column) . '` DESC');
     } else {
         expect($GLOBALS['device_sort_sql'])->not->toContain('ORDER BY');
     }
     unset($GLOBALS['device_sort_sql'], $GLOBALS['device_sort_hook_calls']);
-})->with(array('description', 'plugin_rank', 'nosort_action', 'unknown_column'))->with(array(false, true));
+})->with(array('description', 'plugin_rank', 'host.plugin_rank', 'nosort_action', 'unknown_column', 'LENGTH(description)', 'description`', 'description, (SELECT 1)'))->with(array(false, true));
 
 test('links keep sortorder ascending while preserving other requested directions', function ($column, $expected) {
     $GLOBALS['config'] = array('is_web' => false, 'config_options_array' => array('allow_unsafe_metachars' => ''));

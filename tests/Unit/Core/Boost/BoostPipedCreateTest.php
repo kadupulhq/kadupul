@@ -500,3 +500,26 @@ test('permanent Boost rejections cannot stall valid later samples in a real RRD'
     expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, 'value', $values, $pipe))->toBe('OK');
     expect(boostPipedCreateRealCommand(array($binary, 'lastupdate', $path)))->toContain('1700000180: 30');
 })->with(array('1.7', '1.4'))->with(array('value', 'stale'));
+
+test('Boost recovery bounds commands while preserving valid later samples', function ($version, $failure) {
+    $GLOBALS['boost_piped_create']['version'] = $version;
+    $binary = $version === '1.4' ? getenv('RRDTOOL_LEGACY_TEST_BINARY') : getenv('RRDTOOL_TEST_BINARY');
+    if (!$binary || !is_executable($binary)) { $this->markTestSkipped('Requested real RRDtool binary is required.'); }
+    $path = $GLOBALS['boost_piped_create']['path'];
+    boostPipedCreateRealCommand(array($binary, 'create', $path, '--start', '1700000000', '--step', '60', 'DS:value:GAUGE:120:U:U', 'RRA:AVERAGE:0.5:1:1024'));
+    $GLOBALS['boost_piped_create']['real_binary'] = $binary;
+    $samples = array();
+    for ($i = 1; $i <= 512; $i++) {
+        $samples[] = (1700000000 + 60 * $i) . (($failure === 'all' || ($failure === 'one' && $i === 1)) ? ':1:2' : ':20');
+    }
+    $values = implode(' ', $samples);
+    $pipe = false;
+    $status = boostPipedCreate_boost_rrdtool_function_update(12, $path, $failure === 'schema' ? 'missing' : 'value', $values, $pipe);
+    expect(count($GLOBALS['boost_piped_create']['executed']))->toBeLessThanOrEqual($failure === 'schema' ? 1 : ($failure === 'one' ? 19 : 65));
+    if ($failure === 'all') {
+        expect($status)->toContain('retain samples for retry');
+    } else {
+        expect($status)->toBe('OK');
+    }
+    expect(trim(boostPipedCreateRealCommand(array($binary, 'last', $path))))->toBe($failure === 'one' ? '1700030720' : '1700000000');
+})->with(array('1.7', '1.4'))->with(array('schema', 'one', 'all'));

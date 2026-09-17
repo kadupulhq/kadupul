@@ -7,11 +7,12 @@ $config = array('base_path' => $fixture, 'library_path' => $fixture . '/lib');
 $ack_table = getenv('ACK_REALTIME') === '1' ? 'poller_output_realtime' : 'poller_output';
 $ack_db = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 $ack_db->sqliteCreateFunction('UNIX_TIMESTAMP', 'strtotime', 1);
+$ack_db->sqliteCreateCollation('queue_output', static fn ($a, $b) => strcasecmp(rtrim($a, ' '), rtrim($b, ' ')));
 $ack_db->exec('CREATE TABLE data_local(id INTEGER,data_template_id INTEGER)');
 $ack_db->exec('INSERT INTO data_local VALUES(1,0)');
 $ack_db->exec("CREATE TABLE poller_item(local_data_id INTEGER,rrd_name TEXT,rrd_num INTEGER,rrd_path TEXT); INSERT INTO poller_item VALUES(1,'value',1,'fixture.rrd')");
-$ack_db->exec('CREATE TABLE poller_output(local_data_id INTEGER,rrd_name TEXT,time TEXT,output TEXT)');
-$ack_db->exec('CREATE TABLE poller_output_realtime(local_data_id INTEGER,rrd_name TEXT,time TEXT,output TEXT,poller_id INTEGER)');
+$ack_db->exec('CREATE TABLE poller_output(local_data_id INTEGER,rrd_name TEXT,time TEXT,output TEXT COLLATE queue_output)');
+$ack_db->exec('CREATE TABLE poller_output_realtime(local_data_id INTEGER,rrd_name TEXT,time TEXT,output TEXT COLLATE queue_output,poller_id INTEGER)');
 $ack_db->exec("INSERT INTO $ack_table VALUES(1,'value','2020-01-01','42'" . ($ack_table === 'poller_output_realtime' ? ',1' : '') . ')');
 $ack_db->exec('CREATE TABLE poller_time(end_time TEXT)');
 $ack_db->exec("INSERT INTO poller_time VALUES('0000-00-00')");
@@ -89,6 +90,8 @@ function db_fetch_cell($sql)
 }
 function db_execute_prepared($sql, $params)
 {
+    // SQLite expresses MySQL's binary cast as a BLOB cast.
+    $sql = preg_replace('/\bBINARY (output|\?)/', 'CAST($1 AS BLOB)', $sql);
     if (getenv('ACK_FAIL') === 'delete') { return false; }
 
     if (getenv('ACK_FAIL') === '1') {
@@ -99,6 +102,9 @@ function db_execute_prepared($sql, $params)
 }
 function rrdtool_function_update($updates, $pipe = false, &$completed = null)
 {
+    if (getenv('ACK_FAIL') === 'replace-space') {
+        $GLOBALS['ack_db']->exec("UPDATE " . $GLOBALS['ack_table'] . " SET output='42 ' WHERE time='2020-01-01'");
+    }
     if (getenv('ACK_FAIL') === 'replace') {
         $GLOBALS['ack_db']->exec("UPDATE " . $GLOBALS['ack_table'] . " SET output='99' WHERE time='2020-01-01'");
     }
@@ -115,7 +121,7 @@ function rrdtool_function_update($updates, $pipe = false, &$completed = null)
             }
         }
     }
-    return in_array(getenv('ACK_FAIL'), array('0','replace'), true) ? 1 : false;
+    return in_array(getenv('ACK_FAIL'), array('0','replace','replace-space'), true) ? 1 : false;
 }
 function db_close()
 {

@@ -27,6 +27,11 @@ test('first-request sorting persists after late allowlist registration', functio
     expect(get_order_string(array('description', 'id')))->toBe('ORDER BY `description` DESC');
     expect($_SESSION['sort_data'][$page])->toBe(array('description' => 'DESC'));
 
+    // A later table with no registered columns cannot erase this table's sort.
+    expect(get_order_string())->toBe('');
+    expect($_SESSION['sort_data'][$page])->toBe(array('description' => 'DESC'));
+    expect($_SESSION['sort_string'][$page])->toBe('ORDER BY `description` DESC');
+
     // Transfer the persisted page state to the next invocation's table key.
     // The helper's static counter normally resets at the next HTTP request.
     $next = get_order_string_page(false);

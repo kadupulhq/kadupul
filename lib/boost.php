@@ -2080,8 +2080,15 @@ function boost_rrdtool_pipe_creates($action, $rrdtool_pipe, $rrd_path = '') {
    @arg $rrd_path      - the path to the RRD file
    @arg $rrd_update_template  - the order in which values need to be added
    @arg $rrd_update_values    - values to include in the database */
-function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_template, &$rrd_update_values, &$rrdtool_pipe) {
+function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_template, &$rrd_update_values, &$rrdtool_pipe, &$retry_budget = null) {
 	global $debug;
+
+	// Bound synchronous recovery work while retaining any unacknowledged rows.
+	if ($retry_budget === null) {
+		$retry_budget = 64;
+	} elseif ($retry_budget-- <= 0) {
+		return 'ERROR: Boost recovery command limit reached; retain samples for retry';
+	}
 
 	/* lets count the number of rrd files processed */
 	$rrds_processed = 0;
@@ -2213,11 +2220,17 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 				$reason = substr($reason, strlen($rrd_path) + 2);
 			}
 			if (rrdtool_rejection_is_permanent($reason)) {
+				// A missing template DS rejects every sample in the same command.
+				if (strpos($reason, 'unknown DS name ') === 0) {
+					cacti_log("ERROR: Permanently rejected Boost samples for local_data_id $local_data_id, path $rrd_path, template $rrd_update_template: $reason", false, 'BOOST');
+					return 'OK';
+				}
 				$samples = preg_split('/\s+/', trim($rrd_update_values), -1, PREG_SPLIT_NO_EMPTY);
 				if (count($samples) > 1) {
-					// A bulk rejection must not discard valid samples after the bad one.
-					foreach ($samples as $sample) {
-						$status = boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_template, $sample, $rrdtool_pipe);
+					// Bisect to isolate malformed samples without retrying every good row.
+					foreach (array_chunk($samples, (int) ceil(count($samples) / 2)) as $half) {
+						$sample = implode(' ', $half);
+						$status = boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_template, $sample, $rrdtool_pipe, $retry_budget);
 						if ($status !== 'OK') {
 							return $status;
 						}

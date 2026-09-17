@@ -1668,7 +1668,10 @@ function get_device_records(&$total_rows, $rows, $display_columns = null) {
 
 	$poller_interval = read_config_option('poller_interval');
 
-	$sort_columns = array_filter(array_keys($display_columns), function ($column) { return strpos($column, 'nosort') !== 0; });
+	// Plugin display keys may name columns, but cannot authorize SQL expressions.
+	$sort_columns = array_filter(array_keys($display_columns), function ($column) {
+		return strpos($column, 'nosort') !== 0 && cacti_normalize_sort_column($column) !== '';
+	});
 	$sql_order = get_order_string($sort_columns);
 	$sql_limit = 'LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 

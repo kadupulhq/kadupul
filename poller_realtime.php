@@ -341,7 +341,7 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 				AND rrd_name = ?
 				AND time = ?
 				AND poller_id = ?
-				AND output = ?',
+				AND BINARY output = BINARY ?',
 				array($item['local_data_id'], $item['rrd_name'], $item['time'], $poller_id, $item['output'])) === false) { return false; }
 		}
 

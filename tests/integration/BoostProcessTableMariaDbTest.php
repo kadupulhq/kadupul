@@ -276,6 +276,7 @@ test('runtime repair clears duplicate legacy rows before adding the run-child ke
 });
 
 function boostMariaDbDeletePrepared($sql, $params) {
+	$GLOBALS['boost_delete_statement'] = array($sql, $params);
 	if (++$GLOBALS['boost_delete_calls'] === $GLOBALS['boost_delete_fail_at']) {
 		return false;
 	}
@@ -328,6 +329,29 @@ function boostMariaDbLoadDeleteRows($root) {
 		eval(str_replace(array('poller_delete_output_rows(', 'db_execute_prepared(', 'db_affected_rows(', 'cacti_sizeof('), array('boostMariaDbDeleteOutputRows(', 'boostMariaDbDeletePrepared(', 'boostMariaDbDeleteAffected(', 'count('), $match[0]));
 	}
 }
+
+test('poller acknowledgement preserves byte-distinct replacement values and uses the primary key', function ($observed, $replacement) use ($root) {
+	boostMariaDbLoadDeleteRows($root);
+	$db = $GLOBALS['boost_mariadb_pdo'];
+	$db->exec('CREATE TEMPORARY TABLE poller_output (local_data_id INT, rrd_name VARCHAR(19), time TIMESTAMP, output VARCHAR(512), PRIMARY KEY(local_data_id,rrd_name,time)) ENGINE=InnoDB COLLATE=utf8mb4_unicode_ci');
+	try {
+		$insert = $db->prepare('INSERT INTO poller_output VALUES (?,?,?,?)');
+		for ($id = 1; $id <= 1000; $id++) {
+			$insert->execute(array($id, 'value', '2026-09-15 00:00:00', $observed));
+		}
+		$keys = array(array(1, 'value', '2026-09-15 00:00:00', $observed), array(2, 'value', '2026-09-15 00:00:00', $observed));
+		$db->prepare('UPDATE poller_output SET output=? WHERE local_data_id=1')->execute(array($replacement));
+		expect(boostMariaDbDeleteOutputRows($keys, $failed))->toBe(1)->and($failed)->toBeFalse();
+		expect($db->query('SELECT output FROM poller_output WHERE local_data_id=1')->fetchColumn())->toBe($replacement);
+		list($sql, $params) = $GLOBALS['boost_delete_statement'];
+		$explain = $db->prepare('EXPLAIN ' . $sql);
+		$explain->execute($params);
+		$plan = $explain->fetch(PDO::FETCH_ASSOC);
+		expect($plan['key'])->toBe('PRIMARY')->and($plan['type'])->toBe('range');
+	} finally {
+		$db->exec('DROP TEMPORARY TABLE poller_output');
+	}
+})->with(array(array('U', 'u'), array('42', '42 ')));
 
 
 test('poller reports failed source deletion even after earlier chunks made progress', function ($fail_at) use ($root) {
