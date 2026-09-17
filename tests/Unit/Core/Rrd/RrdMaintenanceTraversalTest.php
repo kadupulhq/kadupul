@@ -351,6 +351,9 @@ test('local filesystem failures retain cleanup requests and source files', funct
             ->and(file_exists($this->rra . '/keep.rrd'))->toBeFalse()
             ->and($GLOBALS['archived'])->toBe($action === '3' ? 1 : 0)
             ->and($GLOBALS['purged'])->toBe($action === '1' ? 1 : 0);
+        unset($GLOBALS['rmt_filesystem_failure']);
+        expect(remove_files(array(array('id' => 1, 'name' => '5/local_5.rrd', 'local_data_id' => 0, 'action' => $action))))->toBeTrue()
+            ->and(file_exists($file))->toBeFalse();
     } finally {
         unset($GLOBALS['rmt_filesystem_failure']);
     }
