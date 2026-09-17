@@ -278,5 +278,6 @@ function rrd_maintenance_poller_preflight() {
 /** Windows has no validated exclusive local storage lease for automatic cleanup. */
 function rrd_maintenance_cleanup_supported() {
     global $config;
-    return ($config['cacti_server_os'] ?? '') !== 'win32' || read_config_option('storage_location');
+    return ($config['cacti_server_os'] ?? '') !== 'win32' ||
+        (read_config_option('storage_location') && ($config['force_storage_location_local'] ?? false) !== true);
 }

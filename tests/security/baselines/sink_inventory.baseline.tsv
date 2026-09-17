@@ -444,8 +444,8 @@ dynamic_include	./lib/utility.php:182		include_once($config['library_path'] . '/
 dynamic_include	./lib/utility.php:46		include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./lib/utility.php:837		include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./link.php:73					include_once($file);
-dynamic_include	./poller.php:1129	    include_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./poller.php:1280	    include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./poller.php:1119	    include_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./poller.php:1270	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:36	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:37	require_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./poller.php:38	require_once($config['base_path'] . '/lib/rrd.php');

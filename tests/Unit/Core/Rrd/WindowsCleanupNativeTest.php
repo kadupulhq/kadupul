@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('native data-source API retains Windows files without queuing unsupported cleanup', function ($platform, $remote) {
+test('native data-source API retains Windows files without queuing unsupported cleanup', function ($platform, $remote, $forced = false) {
     $root = dirname(__DIR__, 4);
     $directory = sys_get_temp_dir() . '/windows-cleanup-api-' . bin2hex(random_bytes(8));
     mkdir($directory, 0700);
@@ -12,7 +12,7 @@ test('native data-source API retains Windows files without queuing unsupported c
     if ($coverage !== null) {
         $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); require ' . var_export($root . '/tests/fixtures/rrd-process-coverage.php', true) . ';';
     }
-    $bootstrap .= '$config=' . var_export(array('cacti_server_os' => $platform), true) . ';';
+    $bootstrap .= '$config=' . var_export(array('cacti_server_os' => $platform, 'force_storage_location_local' => $forced), true) . ';';
     $bootstrap .= '$options=' . var_export(array('storage_location' => $remote, 'rrd_autoclean' => 'on', 'rrd_autoclean_method' => '1'), true) . ';';
     $bootstrap .= <<<'SOURCE'
 $queries = $messages = array();
@@ -40,7 +40,7 @@ SOURCE;
         fclose($pipes[2]);
         expect(proc_close($process))->toBe(0, $error)->and($error)->toBe('');
         list($queries, $messages) = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
-        $supported = $platform !== 'win32' || $remote;
+        $supported = $platform !== 'win32' || ($remote && !$forced);
         expect(count(array_filter($queries, fn($q) => str_contains($q, 'INSERT INTO data_source_purge_action'))))->toBe($supported ? 2 : 0);
         expect(count(array_filter($queries, fn($q) => str_contains($q, 'DELETE FROM data_local'))))->toBe(2);
         if (!$supported) {
@@ -57,4 +57,4 @@ SOURCE;
         }
         rmdir($directory);
     }
-})->with(array(array('win32', 0), array('unix', 0), array('win32', 1)));
+})->with(array(array('win32', 0), array('unix', 0), array('win32', 1), array('win32', 1, true)));

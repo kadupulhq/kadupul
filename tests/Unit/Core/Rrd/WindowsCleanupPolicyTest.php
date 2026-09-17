@@ -112,3 +112,15 @@ test('cleanup refuses a failed queue read without reporting an empty queue', fun
         });
     } finally { unset($GLOBALS['cleanup_read_failure']); }
 });
+
+
+test('forced local Windows storage cannot use a configured proxy to enable cleanup', function () {
+    with_policy('win32', 1, function () {
+        $GLOBALS['config']['force_storage_location_local'] = true;
+        expect(rrd_maintenance_cleanup_supported())->toBeFalse();
+        expect(do_rrd())->toBeFalse()->and(remove_all_rrds())->toBeFalse();
+        expect(rrdfile_purge(false))->toBeTrue();
+        expect(remove_files(array(array('name' => 'sample.rrd', 'action' => '1'))))->toBeFalse();
+        expect($GLOBALS['windows_cleanup_queries'])->toBe(array());
+    });
+});

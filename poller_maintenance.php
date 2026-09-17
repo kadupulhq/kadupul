@@ -559,8 +559,10 @@ function remove_files($file_array) {
 		return false;
 	}
 
+	$remote = read_config_option('storage_location') && ($config['force_storage_location_local'] ?? false) !== true;
+	$rrdtool_pipe = false;
 	$lease = null;
-	if (!read_config_option('storage_location')) {
+	if (!$remote) {
 		$lease = rrd_maintenance_acquire(true, false);
 		if ($lease === false) {
 			cacti_log('WARNING: RRDfile Maintenance deferred because storage is busy or untrusted; purge queue retained.', true, 'MAINT');
@@ -578,10 +580,15 @@ function remove_files($file_array) {
 		$rra_path = $config['base_path'] . '/rra';
 	}
 
-	if (read_config_option('storage_location')) {
+	if ($remote) {
 		$rrdtool_pipe = rrd_init();
+		if ($rrdtool_pipe === false) {
+			return false;
+		}
 
-		rrdtool_execute('setcnn timeout off', false, RRDTOOL_OUTPUT_NULL, $rrdtool_pipe, $logopt = 'POLLER');
+		if (rrdtool_execute('setcnn timeout off', false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') === false) {
+			return false;
+		}
 	} else {
 		/* let's prepare the archive directory */
 		$rrd_archive = read_config_option('rrd_archive', true);
@@ -612,7 +619,7 @@ function remove_files($file_array) {
 		$base_file = str_replace('<path_rra>', '', $file['name']);
 		$base_file = str_replace('<path_cacti>', '', $base_file);
 
-		if (read_config_option('storage_location') == 0) {
+		if (!$remote) {
 			switch ($file['action']) {
 				case '1' :
 					/* files outside the RRA path are still removed as in 1.2.31, but not through a .. segment */
@@ -674,6 +681,7 @@ function remove_files($file_array) {
 						maint_debug('Deleted: ' . $file['name']);
 					} else {
 						cacti_log("WARNING RRDfile Maintenance is unable to remove {$file['name']} from the RRDproxy!", true, 'MAINT');
+						return false;
 					}
 
 					$purged++;
@@ -690,6 +698,7 @@ function remove_files($file_array) {
 						maint_debug("Moved: {file['name']} to: RRDproxy Archive");
 					} else {
 						cacti_log("WARNING RRDfile Maintenance is unable to move {$file['name']} to the RRDproxy Archive!", true, 'MAINT');
+						return false;
 					}
 
 					$archived++;
@@ -740,12 +749,12 @@ function remove_files($file_array) {
 		}
 	}
 
-	if (read_config_option('storage_location')) {
-		rrd_close($rrdtool_pipe);
-	}
 
 	maint_debug('RRDClean has finished a purge pass of ' . cacti_sizeof($file_array) . ' items');
 	} finally {
+		if ($remote && $rrdtool_pipe !== false) {
+			rrd_close($rrdtool_pipe);
+		}
 		rrd_maintenance_release($lease);
 	}
 }

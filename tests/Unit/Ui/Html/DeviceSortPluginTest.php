@@ -43,3 +43,16 @@ test('device display and export preserve plugin sorting with a fresh session', f
     }
     unset($GLOBALS['device_sort_sql'], $GLOBALS['device_sort_hook_calls']);
 })->with(array('description', 'plugin_rank', 'nosort_action', 'unknown_column'))->with(array(false, true));
+
+test('links keep sortorder ascending while preserving other requested directions', function ($column, $expected) {
+    $GLOBALS['config'] = array('is_web' => false, 'config_options_array' => array('allow_unsafe_metachars' => ''));
+    $_SESSION = array('sess_user_id' => 1); $_REQUEST = $_GET = $_POST = array();
+    $GLOBALS['_CACTI_REQUEST'] = array(); $_SERVER['SCRIPT_NAME'] = 'links.php';
+    \set_request_var('sort_column', $column);
+    \set_request_var('sort_direction', 'DESC');
+    $source = file_get_contents(dirname(__DIR__, 4) . '/links.php');
+    $start = strpos($source, '$sql_order = get_order_string(');
+    $end = strpos($source, '$sql_limit =', $start);
+    eval('namespace ' . __NAMESPACE__ . '; ' . substr($source, $start, $end - $start));
+    expect($sql_order)->toContain($expected);
+})->with(array(array('sortorder', '`sortorder` ASC'), array('title', '`title` DESC')));

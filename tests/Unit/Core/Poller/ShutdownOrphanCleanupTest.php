@@ -5,12 +5,14 @@ namespace ShutdownOrphanCleanupTest;
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 $root = dirname(__DIR__, 4);
 $source = file_get_contents($root . '/poller.php');
-$start = strpos($source, '$orphan_rows = db_fetch_assoc_prepared(');
-$end = strpos($source, 'poller_delete_output_rows($orphan_keys);', $start);
-$cleanup = substr($source, $start, $end - $start) . 'poller_delete_output_rows($orphan_keys);';
+$start = strpos($source, "\t\tdo {", strpos($source, '// Valid pending samples'));
+$end = strpos($source, '} while (count($orphan_rows) === 40000);', $start);
+$cleanup = substr($source, $start, $end - $start) . '} while (count($orphan_rows) === 40000);';
 eval('namespace ' . __NAMESPACE__ . '; ' . \test_php_function_source(file_get_contents($root . '/lib/poller.php'), 'poller_delete_output_rows'));
 function cacti_sizeof($rows) { return count($rows); }
 function db_fetch_assoc_prepared($sql, $params) {
+    $GLOBALS['shutdown_selects']++;
+    if ($GLOBALS['shutdown_query_fail'] ?? false) { return false; }
     $pdo = $GLOBALS['shutdown_orphan_pdo'];
     $query = $pdo->prepare($sql); $query->execute($params);
     $rows = $query->fetchAll(\PDO::FETCH_ASSOC);
@@ -19,11 +21,14 @@ function db_fetch_assoc_prepared($sql, $params) {
     return $rows;
 }
 function db_execute_prepared($sql, $params) {
+    if ($GLOBALS['shutdown_delete_fail'] ?? false) { return false; }
     $query = $GLOBALS['shutdown_orphan_pdo']->prepare($sql);
     $query->execute($params); $GLOBALS['shutdown_orphan_affected'] = $query->rowCount();
     return true;
 }
 function db_affected_rows() { return $GLOBALS['shutdown_orphan_affected']; }
+
+beforeEach(function () { $GLOBALS['shutdown_selects'] = 0; $GLOBALS['shutdown_query_fail'] = false; $GLOBALS['shutdown_delete_fail'] = false; });
 
 test('shutdown removes observed orphans but retains replacements and hostless samples', function () use ($cleanup) {
     $pdo = new \PDO('sqlite::memory:');
@@ -41,3 +46,23 @@ test('shutdown removes observed orphans but retains replacements and hostless sa
         ->and($pdo->query('SELECT output FROM poller_output WHERE local_data_id = 5')->fetchColumn())->toBe('99');
     unset($GLOBALS['shutdown_orphan_pdo'], $GLOBALS['shutdown_orphan_affected']);
 });
+
+
+test('shutdown pages large queues and terminates safely on database failure', function ($failure) use ($cleanup) {
+    $pdo = new \PDO('sqlite::memory:');
+    $GLOBALS['shutdown_orphan_pdo'] = $pdo;
+    $pdo->exec('CREATE TABLE poller_output (local_data_id INTEGER, rrd_name TEXT, time TEXT, output TEXT)');
+    $pdo->exec('CREATE TABLE data_local (id INTEGER, host_id INTEGER)');
+    $pdo->exec('CREATE TABLE host (id INTEGER, poller_id INTEGER)');
+    $pdo->beginTransaction();
+    $insert = $pdo->prepare("INSERT INTO poller_output VALUES (?, 'v', 'now', '10')");
+    for ($i = 10; $i < 40011; $i++) { $insert->execute(array($i)); }
+    $pdo->commit();
+    $GLOBALS['shutdown_query_fail'] = $failure === 'query';
+    $GLOBALS['shutdown_delete_fail'] = $failure === 'delete';
+    $poller_id = 1; $rrd_write_failed = false;
+    eval('namespace ' . __NAMESPACE__ . '; ' . $cleanup);
+    expect((int) $pdo->query('SELECT COUNT(*) FROM poller_output')->fetchColumn())->toBe($failure ? 40001 : 0)
+        ->and($GLOBALS['shutdown_selects'])->toBe($failure ? 1 : 2)
+        ->and($rrd_write_failed)->toBe((bool) $failure);
+})->with(array('', 'query', 'delete'));

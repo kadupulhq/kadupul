@@ -628,45 +628,35 @@ while ($poller_runs_completed < $poller_runs) {
 		}
 
 		// Valid pending samples belong to a retry, even after writer failure.
-		$orphan_rows = db_fetch_assoc_prepared('SELECT po.local_data_id, po.rrd_name, po.time, po.output
-			FROM poller_output AS po
-			LEFT JOIN data_local AS dl
-			ON po.local_data_id = dl.id
-			LEFT JOIN host AS h
-			ON dl.host_id = h.id
-			WHERE (h.poller_id = ? OR h.id IS NULL)
-			AND (dl.id IS NULL OR (dl.host_id > 0 AND h.id IS NULL))',
-			array($poller_id));
-		$orphan_keys = array();
-		foreach ((array) $orphan_rows as $orphan) {
-			$orphan_keys[] = array($orphan['local_data_id'], $orphan['rrd_name'], $orphan['time'], $orphan['output']);
-		}
-		poller_delete_output_rows($orphan_keys);
+		do {
+			$orphan_rows = db_fetch_assoc_prepared('SELECT po.local_data_id, po.rrd_name, po.time, po.output
+				FROM poller_output AS po
+				LEFT JOIN data_local AS dl
+				ON po.local_data_id = dl.id
+				LEFT JOIN host AS h
+				ON dl.host_id = h.id
+				WHERE (h.poller_id = ? OR h.id IS NULL)
+				AND (dl.id IS NULL OR (dl.host_id > 0 AND h.id IS NULL)) LIMIT 40000',
+				array($poller_id));
+			if ($orphan_rows === false) {
+				$rrd_write_failed = true;
+				break;
+			}
+			$orphan_keys = array();
+			foreach ((array) $orphan_rows as $orphan) {
+				$orphan_keys[] = array($orphan['local_data_id'], $orphan['rrd_name'], $orphan['time'], $orphan['output']);
+			}
+			$removed = poller_delete_output_rows($orphan_keys, $delete_failed);
+			if ($delete_failed || ($orphan_keys && $removed === 0)) {
+				$rrd_write_failed = true;
+				break;
+			}
+		} while (count($orphan_rows) === 40000);
 	}
 
-	/**
-	 * adjust for recent memory table problems in MariaDB and memory tables
-	 * being pushed into swap
-	 */
-	if ($poller_id == 1 && read_config_option('poller_refresh_output_table') == 'on' && $total_pollers == 1
-		&& (string) db_fetch_cell('SELECT COUNT(*) FROM poller_output') === '0') {
-		db_execute('CREATE TABLE IF NOT EXISTS po LIKE poller_output');
-		db_execute('RENAME TABLE poller_output TO poold, po TO poller_output');
-		db_execute('DROP TABLE IF EXISTS poold');
+	// InnoDB queues do not need the legacy MEMORY-table swap.
+	// Never replace a live queue after an empty-count snapshot.
 
-		// The swapped-in copy inherits the engine, so only convert when it is
-		// not already MEMORY. This drops a metadata-locking ALTER from every
-		// poll cycle in the steady state.
-		if (db_fetch_cell("SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'poller_output'") != 'MEMORY') {
-			db_execute('ALTER TABLE poller_output ENGINE=MEMORY');
-		}
-
-		// catch the unlikely event that the poller_output_boost is missing
-		if (!db_table_exists('poller_output_boost')) {
-			db_execute('CREATE TABLE poller_output_boost LIKE poller_output');
-			db_execute('ALTER TABLE poller_output_boost ENGINE=InnoDB');
-		}
-	}
 
 	// mainline
 	if (read_config_option('poller_enabled') == 'on') {

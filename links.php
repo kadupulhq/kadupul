@@ -367,7 +367,7 @@ function pages() {
 	}
 
 	$sql_order = get_order_string(array('contentfile', 'title', 'style', 'disabled', 'sortorder'));
-	$sql_order = str_replace('sortorder DESC', 'sortorder ASC', $sql_order);
+	$sql_order = str_replace('`sortorder` DESC', '`sortorder` ASC', $sql_order);
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$pages = db_fetch_assoc("SELECT *
