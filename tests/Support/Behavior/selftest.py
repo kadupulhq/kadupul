@@ -256,7 +256,7 @@ def diagnostic_contracts():
     for size in (108, 4356):
         broken = f'09/16/2026 01:02:06 - ERROR PHP NOTICE: fwrite(): Write of {size} bytes failed with errno=32 Broken pipe in file: /var/www/html/lib/rrd.php on line: 334'
         assert harness.application_diagnostics(broken) == [{'subsystem': 'ERROR', 'message': 'PHP NOTICE: fwrite(): Write of <BYTES> bytes failed with errno=32 Broken pipe in file: <APP>/lib/rrd.php on line: <LINE>'}]
-        native = broken.replace('PHP NOTICE: fwrite', 'PHP Notice:  fwrite')
+        native = broken.replace('PHP NOTICE: fwrite', 'PHP Notice:  fwrite').replace(' in file: ', ' in ').replace('on line: ', 'on line ')
         assert 'Write of <BYTES> bytes failed with errno=32' in harness.normalize(native)
         command = harness.normalize({'stdout': broken, 'stderr': broken})
         assert 'Write of <BYTES> bytes failed with errno=32' in command['stdout']
@@ -269,7 +269,8 @@ def diagnostic_contracts():
             assert harness.normalize_failed_write_size(payload) == payload
             assert harness.normalize(payload) != harness.normalize(payload.replace(str(size), str(size + 1), 1))
         assert harness.normalize_failed_write_size(diagnostic + ' trailing payload') == diagnostic + ' trailing payload'
-        assert harness.normalize_failed_write_size(diagnostic + '\n' + broken).count('<BYTES>') == 2
+        assert harness.normalize_failed_write_size(diagnostic) == diagnostic
+        assert harness.normalize_failed_write_size(diagnostic + '\n' + broken).count('<BYTES>') == 1
     trace = '09/16/2026 01:02:06 - CMDPHP PHP ERROR Backtrace: (/var/www/html/lib/rrd.php[334]:update(), DS[12])'
     assert harness.application_diagnostics(trace) == harness.application_diagnostics(trace.replace('[334]', '[900]'))
     assert 'DS[12]' in harness.application_diagnostics(trace)[0]['message']

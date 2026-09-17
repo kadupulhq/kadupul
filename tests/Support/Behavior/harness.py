@@ -80,12 +80,18 @@ INSTALL_TIMESTAMPS = re.compile(
 
 
 def normalize_failed_write_size(value):
-    """Normalize write sizes only at the start of a complete diagnostic record."""
-    prefix = r'(?:(?:' + '|'.join(_POLLER_DATES) + r') \d{2}:\d{2}:\d{2} - [A-Z][A-Z0-9_]* )?'
-    location = r' in(?: file:)? (?:/var/www/html|/harness|<APP>|<HARNESS>)/[^\r\n]*\.php\s+on line:? \d+'
-    return re.sub(r'^(' + prefix + r'PHP (?:NOTICE|WARNING|Notice|Warning):[ \t]+fwrite\(\): Write of )'
-                  + r'\d+( bytes failed with errno=\d+[^\r\n]*' + location + r')(?=\r?$)',
-                  r'\1<BYTES>\2', value, flags=re.MULTILINE)
+    """Normalize write sizes only in complete Cacti or native PHP records."""
+    prefix = r'(?:(?:' + '|'.join(_POLLER_DATES) + r') \d{2}:\d{2}:\d{2} - [A-Z][A-Z0-9_]* |Total\[\d+\.\d+\] )'
+    root = r'(?:/var/www/html|/harness|<APP>|<HARNESS>)/[^\r\n]*\.php'
+    shapes = (
+        (prefix + r'PHP (?:NOTICE|WARNING):', r' in file: ' + root + r'\s+on line: \d+'),
+        (r'(?:' + prefix + r')?PHP (?:Notice|Warning):', r' in ' + root + r' on line \d+'),
+    )
+    for start, location in shapes:
+        value = re.sub(r'^(' + start + r'[ \t]+fwrite\(\): Write of )\d+'
+                       + r'( bytes failed with errno=\d+[^\r\n]*' + location + r')(?=\r?$)',
+                       r'\1<BYTES>\2', value, flags=re.MULTILINE)
+    return value
 
 
 def normalize_php_locations(value):
