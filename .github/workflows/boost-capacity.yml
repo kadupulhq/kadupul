@@ -99,3 +99,9 @@ jobs:
           RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
           RRDTOOL_LEGACY_TEST_BINARY: ${{ runner.temp }}/rrd149/bin/rrdtool
         run: mise exec php@system -- php vendor/bin/pest --configuration=phpunit-boost.xml --colors=never
+      - name: Verify grouped sample recovery and legacy timestamp retries
+        working-directory: tests
+        env:
+          RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
+          RRDTOOL_LEGACY_TEST_BINARY: ${{ runner.temp }}/rrd149/bin/rrdtool
+        run: mise exec php@system -- php vendor/bin/pest --configuration=phpunit-spikekill.xml --filter 'rejected fields' --colors=never
