@@ -265,6 +265,10 @@ def diagnostic_contracts():
     for severity in ('WARNING', 'Warning'):
         payload = f'PHP {severity}: payload in /var/www/html/lib/file.php on line: 123'
         assert harness.normalize(payload) != harness.normalize(payload.replace('123', '124'))
+    for gap in (' ', '  '):
+        for plugin in ('', " in  Plugin 'fixture'"):
+            actual = f'PHP USER_WARNING{plugin}: calibration in file: /harness/probe.php{gap}on line: 79'
+            assert harness.normalize(actual) == harness.normalize(actual.replace('79', '80'))
     native = 'PHP Warning: actual diagnostic in /var/www/html/lib/file.php on line 123'
     assert harness.normalize(native) == harness.normalize(native.replace('123', '124'))
     cacti = 'PHP WARNING: payload in /var/www/html/lib/file.php on line: 123 in file: /var/www/html/lib/handler.php on line: 45'

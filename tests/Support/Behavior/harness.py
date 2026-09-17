@@ -69,10 +69,10 @@ def normalize_php_locations(value):
     lines = []
     root = r'(?:<APP>|<HARNESS>|/var/www/html|/harness)'
     for line in value.splitlines(keepends=True):
-        if re.search(r'\bPHP (?:(?:USER_)?(?:NOTICE|WARNING|ERROR|DEPRECATED)|(?:CORE|COMPILE)_(?:ERROR|WARNING)|RECOVERABLE_ERROR|PARSE|ALL|STRICT|Unknown Error):', line):
+        if re.search(r'\bPHP (?:(?:USER_)?(?:NOTICE|WARNING|ERROR|DEPRECATED)|(?:CORE|COMPILE)_(?:ERROR|WARNING)|RECOVERABLE_ERROR|PARSE|ALL|STRICT|Unknown Error)\b', line):
             # CactiErrorHandler emits both literal colons. Do not combine
             # fragments of this format with PHP's native location format.
-            line = re.sub(r'(\bin file: ' + root + r'/[^\r\n]*?\.php on line: )\d+(?=\s*$)',
+            line = re.sub(r'(\bin file:\s+' + root + r'/[^\r\n]*?\.php\s+on line:\s*)\d+(?=\s*$)',
                           r'\1<LINE>', line)
         elif re.search(r'\bPHP (?:Notice|Warning|Deprecated|Fatal error|Parse error):', line):
             line = re.sub(r'(\bin ' + root + r'/[^\r\n]*?\.php on line )\d+(?=\s*$)',
