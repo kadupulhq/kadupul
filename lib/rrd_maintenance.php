@@ -500,7 +500,7 @@ function rrd_maintenance_queue_configuration_error($queue_connection = false)
     if (is_string($engine) && strtolower($engine) === 'innodb') {
         return '';
     }
-    return 'The poller_output queue must use InnoDB before collection. Stop all collectors, including remote collectors, and run cli/upgrade_database.php --migrate-poller-queue (or convert poller_output to InnoDB after a backup). Observed engine: ' . (is_string($engine) && $engine !== '' ? $engine : 'unavailable') . '. Retained samples must not be discarded to clear this condition.';
+    return sprintf(__('The poller_output queue must use InnoDB before collection. Stop all collectors, including remote collectors, and run cli/upgrade_database.php --migrate-poller-queue (or convert poller_output to InnoDB after a backup). Observed engine: %s. Retained samples must not be discarded to clear this condition.'), is_string($engine) && $engine !== '' ? $engine : __('unavailable'));
 }
 
 /** Stop collection before unsafe storage or a volatile retry queue can lose samples. */

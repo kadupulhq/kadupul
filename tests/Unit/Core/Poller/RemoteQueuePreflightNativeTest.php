@@ -27,7 +27,8 @@ test('remote production poller checks its actual queue before continuing collect
 $config = array('poller_id' => 2, 'connection' => $connection, 'base_path' => dirname(__DIR__), 'rra_path' => '/missing-remote-rrds', 'cacti_server_os' => 'unix');
 $remote_db_cnn_id = 'primary-database';
 $database_hostname = 'fixture';
-$observed = array('probes' => array(), 'logs' => array(), 'continued' => false);
+$observed = array('probes' => array(), 'logs' => array(), 'continued' => false, 'translations' => array());
+function __($message) { $GLOBALS['observed']['translations'][] = $message; return $message; }
 function cacti_sizeof($value) { return count($value); }
 function db_column_exists(...$args) { return true; }
 function db_fetch_cell_prepared($sql, $params = array(), $column = '', $log = true, $connection = false) {
@@ -64,6 +65,10 @@ PROBE;
             ->and($observed['logs'])->toHaveCount($safe ? 0 : 1);
         if (!$safe) {
             expect($observed['logs'][0])->toContain('including remote collectors')->toContain('must not be discarded');
+            expect(implode(' ', $observed['translations']))->toContain('Observed engine: %s.');
+            if ($engine === false) {
+                expect($observed['translations'])->toContain('unavailable');
+            }
         }
         if ($coverage !== null) {
             $reports = glob($directory . '/*.coverage');

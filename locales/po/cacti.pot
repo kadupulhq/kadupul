@@ -20326,3 +20326,12 @@ msgstr ""
 #: rrdcleaner.php:28 rrdcleaner.php:427 rrdcleaner.php:462
 msgid "Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup."
 msgstr ""
+
+#: lib/rrd_maintenance.php
+#, php-format
+msgid "The poller_output queue must use InnoDB before collection. Stop all collectors, including remote collectors, and run cli/upgrade_database.php --migrate-poller-queue (or convert poller_output to InnoDB after a backup). Observed engine: %s. Retained samples must not be discarded to clear this condition."
+msgstr ""
+
+#: lib/rrd_maintenance.php
+msgid "unavailable"
+msgstr ""

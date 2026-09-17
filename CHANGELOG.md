@@ -11,6 +11,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Make unsafe poller queue diagnostics available for translation.
+
 - Preserve hyphenated RRD data sources, verify durable queues after legacy upgrades, and allow remote database upgrades without unrelated local storage.
 
 - Refuse web upgrades when the poller queue is volatile or unreadable, before changing the database.
