@@ -236,6 +236,16 @@ def diagnostic_contracts():
     assert harness.normalize_known_roots('file /harness/probe.php') == 'file <HARNESS>/probe.php'
     assert harness.normalize_known_roots('file /var/www/html/index.php') == 'file <APP>/index.php'
 
+    recorder = harness.Harness.__new__(harness.Harness)
+    paths = ['/var/www/html/rra/a.rrd', '/var/www/htmlish/a.rrd', '/tmp/var/www/html/a.rrd']
+    def poller_rows(query):
+        assert 'REPLACE(' not in query, 'SQL must preserve raw path boundaries'
+        return [{'rrd_path': path} for path in paths] if 'FROM poller_item' in query else []
+    recorder.rows = poller_rows
+    recorder.sql = lambda query: '0'
+    assert [item['rrd_path'] for item in recorder.poller_state()['poller_item']] == [
+        '<APP>/rra/a.rrd', paths[1], paths[2]]
+
     timing_warning = 'PHP WARNING: OK u:1.23 s:2.34 r:3.45 SYSTEM STATS: Time:1.23 in /harness/probe.php:7'
     assert harness.normalize('PHP WARNING: payload SYSTEM STATS: Time:1.23') == 'PHP WARNING: payload SYSTEM STATS: Time:1.23'
     assert harness.normalize('SYSTEM STATS: Time:1.23 DataSources:5') == 'SYSTEM STATS: Time:<T> DataSources:5'

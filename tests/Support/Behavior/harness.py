@@ -371,8 +371,12 @@ class Harness:
             self.command('sh', '-c', 'rm -f /artifacts/' + name, check=True)
 
     def poller_state(self):
+        items = self.rows("SELECT JSON_OBJECT('host_id',host_id,'action',action,'rrd_name',rrd_name,'rrd_path',rrd_path) FROM poller_item ORDER BY local_data_id, rrd_name")
+        for item in items:
+            if isinstance(item.get('rrd_path'), str):
+                item['rrd_path'] = normalize_known_roots(item['rrd_path'])
         return {
-            'poller_item': self.rows("SELECT JSON_OBJECT('host_id',host_id,'action',action,'rrd_name',rrd_name,'rrd_path',REPLACE(rrd_path,'/var/www/html','<APP>')) FROM poller_item ORDER BY local_data_id, rrd_name"),
+            'poller_item': items,
             'poller_output_rows': self.sql('SELECT COUNT(*) FROM poller_output').strip(),
             'host_status': self.rows("SELECT JSON_OBJECT('description',description,'status',status,'status_event_count',status_event_count,'availability_method',availability_method) FROM host ORDER BY id"),
         }
