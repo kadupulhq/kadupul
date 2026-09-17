@@ -18,7 +18,7 @@ test('installer rejects unsafe storage before database changes even when forced'
     }
     $bootstrap = <<<'FIXTURE'
 function __($message, ...$args) { return $args ? vsprintf($message, $args) : $message; }
-function read_config_option($key, ...$args) { return $key === 'storage_location' && $GLOBALS['mode'] === 'proxy'; }
+function read_config_option($key, ...$args) { return $key === 'storage_location' && strpos($GLOBALS['mode'], 'proxy') === 0; }
 function db_fetch_cell_prepared(...$args) { if ($GLOBALS['mode'] === 'fresh') { throw new LogicException('fresh install queried a queue that does not exist yet'); } return in_array($GLOBALS['mode'], array('memory', 'memory-string'), true) ? 'MEMORY' : ($GLOBALS['mode'] === 'queue-unavailable' ? false : 'InnoDB'); }
 function is_resource_writable($path) { return true; }
 function log_install_debug(...$args) {}
@@ -29,7 +29,9 @@ function log_install_always(...$args) { throw new LogicException('upgrade bounda
 function clean_up_lines($text) { return $text; }
 define('CACTI_VERSION', '1.3.0');
 $config = array('base_path' => $root, 'rra_path' => __DIR__ . '/rra', 'cacti_server_os' => strpos($mode, 'windows') === 0 ? 'win32' : 'unix');
-if ($mode === 'missing' || $mode === 'windows-missing') { $config['rra_path'] .= '/missing'; }
+if (strpos($mode, 'proxy-local') === 0) { $config['force_storage_location_local'] = true; }
+if ($mode === 'proxy-local-group') { chmod(__DIR__ . '/rra', 0770); }
+if ($mode === 'proxy-local-missing' || $mode === 'missing' || $mode === 'windows-missing') { $config['rra_path'] .= '/missing'; }
 if ($mode === 'windows-file') { $config['rra_path'] = __FILE__; }
 if ($mode === 'windows-readonly') { chmod(__DIR__ . '/rra', 0555); }
 if ($mode === 'group' || $mode === 'trusted-group') { chmod(__DIR__ . '/rra', 0770); }
@@ -94,4 +96,4 @@ FIXTURE;
         rmdir($dir . '/rra');
         rmdir($dir);
     }
-})->with(array(array('memory-string', false), array('fresh', true), array('memory', false), array('queue-unavailable', false), array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true)))->with(array('upgrade', 'downgrade', 'downgrade-string', 'auto-upgrade', 'auto-downgrade'));
+})->with(array(array('memory-string', false), array('fresh', true), array('memory', false), array('queue-unavailable', false), array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true), array('proxy-local-private', true), array('proxy-local-group', false), array('proxy-local-missing', false)))->with(array('upgrade', 'downgrade', 'downgrade-string', 'auto-upgrade', 'auto-downgrade'));
