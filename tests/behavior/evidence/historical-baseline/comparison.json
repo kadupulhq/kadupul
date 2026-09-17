@@ -11,9 +11,10 @@
   "contracts": 34,
   "complete": true,
   "identical_scenarios": true,
-  "first_sha256": "121a9429e36fe374b7e1b0c0d40618f5f25db2178a363586d38fd7a82f9c6cc3",
-  "repeat_sha256": "121a9429e36fe374b7e1b0c0d40618f5f25db2178a363586d38fd7a82f9c6cc3",
-  "harness_revision": "d78c6bcd992efba912377e33c1e0b8dbeb778c3a",
-  "harness_sha256": "54c2959808778cc03d146e40139029a886ad3ff13f0d106790d3a3987d922b90",
-  "application_overlay": "Application tracked files unchanged; harness fixtures overlaid from harness_revision. application_dirty=true records those untracked files."
+  "first_sha256": "fe6b0d296d5a3b75816b2ecea3a882cc69b9313491150aefbef7b0db5136ce75",
+  "repeat_sha256": "fe6b0d296d5a3b75816b2ecea3a882cc69b9313491150aefbef7b0db5136ce75",
+  "harness_revision": "26dfc179f734e4cdcaae9ac0f659effa86627362",
+  "harness_sha256": "5614a439b0c09f5f17d53aa1cc4abaf9197aaf2066de7f79e0affef56d08b539",
+  "application_overlay": "Application tracked files unchanged; harness fixtures overlaid from harness_revision. application_dirty=true records those untracked files.",
+  "invocation": "harness.py run --application-root APPLICATION_CHECKOUT --target cacti-1.2.31"
 }

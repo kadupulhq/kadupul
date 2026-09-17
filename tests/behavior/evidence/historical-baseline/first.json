@@ -1146,18 +1146,18 @@
     ]
   },
   "provenance": {
-    "harness_revision": "d78c6bcd992efba912377e33c1e0b8dbeb778c3a",
+    "harness_revision": "26dfc179f734e4cdcaae9ac0f659effa86627362",
     "harness_dirty": false,
     "application_dirty": true,
-    "harness_sha256": "54c2959808778cc03d146e40139029a886ad3ff13f0d106790d3a3987d922b90",
+    "harness_sha256": "5614a439b0c09f5f17d53aa1cc4abaf9197aaf2066de7f79e0affef56d08b539",
     "harness_inputs_sha256": {
       "tests/Support/Behavior/errors.php": "884c7e1c794498717f97b5d3e5e92062526db29062c5a5fdab114ffda94a3f7e",
-      "tests/Support/Behavior/harness.py": "54c2959808778cc03d146e40139029a886ad3ff13f0d106790d3a3987d922b90",
+      "tests/Support/Behavior/harness.py": "5614a439b0c09f5f17d53aa1cc4abaf9197aaf2066de7f79e0affef56d08b539",
       "tests/Support/Behavior/inventory.py": "1afc3c37ce3512502cf0748904b64b83ed812c1bdb0ca701246816132613a8c8",
       "tests/Support/Behavior/probe.php": "b58002db5b6e3d4f3efc02adac5935996d1d14cd5006046818fdb4471ed7223b",
       "tests/Support/Behavior/release_readiness.py": "90aa559e43d5dd7666384f92551872f8f6c37e54d2b49c664b6867f3bf94e7ed",
       "tests/Support/Behavior/release_selftest.py": "a26dd07267749101e39499df7bc351037354d06db42b2e3dfe2f139b9b4bac61",
-      "tests/Support/Behavior/selftest.py": "ff690695184f94ea56a757820cd96c361c742ff20b4cf5fd30017af07ffccb0d",
+      "tests/Support/Behavior/selftest.py": "c41611747db4256a1d8a3c03756af692dc3522e3db047d94e2b1dbc871f4d5ef",
       "tests/Support/Behavior/wait-php.php": "1d300ec4f8baab11ec3cc708e20106644e07e6c54b5d3ae4521a09801533bd3b",
       "tests/Fixtures/plugins/compatibility_test/INFO": "ecba2c2fbf1fcb5d839789c23fa61c1c8f57a0377dac46ab754eaf72ac88c2c3",
       "tests/Fixtures/plugins/compatibility_test/setup.php": "a48cadbb4a7fc3d61e30aecd2163b72d15ded864bb9abe653c9b063dbaa578e7",
