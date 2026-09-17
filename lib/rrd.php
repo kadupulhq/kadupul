@@ -1336,6 +1336,19 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 				}
 
 				$rrd_update_template = '';
+				foreach ($field_array as $field_name => $value) {
+					if (!preg_match('/^[a-zA-Z0-9_]{1,19}$/D', (string)$field_name)) {
+						cacti_log('ERROR: Invalid RRD field discarded (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'field' => $field_name, 'value' => $value)), false, 'POLLER');
+						unset($field_array[$field_name]);
+					}
+				}
+				if (!$field_array) {
+					cacti_log('ERROR: RRD sample has no valid fields (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time)), false, 'POLLER');
+					$completed[$rrd_path][$update_time] = false;
+					$failed = true;
+					continue;
+				}
+
 
 				foreach ($field_array as $field_name => $value) {
 					if (cacti_sizeof($unused_data_source_names) && isset($unused_data_source_names[$field_name])) {
@@ -1352,9 +1365,6 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 
 						cacti_log('ERROR: Invalid RRD sample data source (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array)), false, 'POLLER');
 						$failed = true;
-						if (count($field_array) > 1) {
-							break 2;
-						}
 						$completed[$rrd_path][$update_time] = false;
 						continue 2;
 					}
@@ -1390,27 +1400,50 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 					cacti_log("ERROR: Invalid RRD update template or value set for local_data_id: {$rrd_fields['local_data_id']}.", false, 'POLLER');
 
 					cacti_log('ERROR: Invalid RRD sample (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array)), false, 'POLLER');
-					if (count($field_array) > 1) {
-						$failed = true;
-						break;
-					}
 					$completed[$rrd_path][$update_time] = false;
 					$failed = true;
 					continue;
 				}
 
-				if (rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== true) {
+				// Retry only a field explicitly identified by RRDtool as unknown.
+				// Each retry removes one sent field, so this loop is bounded.
+				do {
+					$updated = rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
+					if ($updated === true) {
+						break;
+					}
+					$rejection = rrdtool_last_rejection();
+					$sent_fields = explode(':', $rrd_update_template);
+					$sent_values = explode(':', $rrd_update_values);
+					$unknown = array();
+					$named_rejection = is_string($rejection) && preg_match('/^(?:[^\r\n]+: )?unknown DS name [\'\"]([a-zA-Z0-9_]{1,19})[\'\"]/', $rejection, $unknown);
+					if ($rejection === 'tmplt contains more DS definitions than RRD') {
+						$info = rrdtool_execute("info $rrd_path", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER');
+						if (is_string($info) && preg_match_all('/^ds\[([a-zA-Z0-9_]{1,19})\]\.index\s*=\s*\d+\s*$/m', $info, $schema)) {
+							$missing_fields = array_values(array_diff($sent_fields, $schema[1]));
+							if ($missing_fields) {
+								$unknown[1] = $missing_fields[0];
+								$named_rejection = true;
+							}
+						}
+					}
+					if (!$named_rejection || count($sent_fields) < 2 || count($sent_values) !== count($sent_fields) + 1
+						|| ($index = array_search($unknown[1], $sent_fields, true)) === false) {
+						break;
+					}
+					cacti_log('ERROR: Unknown RRD field discarded: ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'field' => $unknown[1], 'value' => $sent_values[$index + 1], 'reason' => $rejection)), false, 'POLLER');
+					unset($sent_fields[$index], $sent_values[$index + 1]);
+					$rrd_update_template = implode(':', $sent_fields);
+					$rrd_update_values = implode(':', $sent_values);
+				} while (true);
+
+				if ($updated !== true) {
 					$rejection = rrdtool_last_rejection();
 					if (rrdtool_rejection_is_permanent($rejection)) {
 						// Record the rejected update before deciding whether its
 						// timestamp can be consumed safely.
 						cacti_log('ERROR: RRDtool rejected sample (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array, 'reason' => $rejection)), false, 'POLLER');
 						$failed = true;
-						// One rejected field must not consume valid siblings or let later
-						// timestamps advance past samples that remain unwritten.
-						if (count($field_array) > 1) {
-							break;
-						}
 						$completed[$rrd_path][$update_time] = false;
 						continue;
 					}

@@ -269,7 +269,7 @@ function rrd_maintenance_poller_preflight() {
         return true;
     }
     cacti_log('ERROR: Poller refused unsafe RRD storage: ' . $error, true, 'POLLER');
-    if (function_exists('admin_email')) {
+    if (function_exists('admin_email') && debounce_run_notification('rrd_preflight_refused', 1800)) {
         admin_email(__('RRD storage configuration requires attention'), $error);
     }
     return false;

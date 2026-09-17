@@ -900,11 +900,11 @@ test('poller storage preflight notifies administrators and fails closed on untru
         $bootstrap.='define("RRD_TEST_COVERAGE_DIRECTORY",__DIR__);require '.var_export($root.'/tests/fixtures/rrd-process-coverage.php',true).';';
     }
     $bootstrap.='$config='.var_export($configuration,true).';$messages=array();$notifications=array();'.
-        'function read_config_option($key){return false;}function __($message){return $message;}'.
+        'function debounce_run_notification($key,$seconds){static $seen=false; $first=!$seen;$seen=true;return $first;}function read_config_option($key){return false;}function __($message){return $message;}'.
         'function cacti_log($message,...$args){$GLOBALS["messages"][]=$message;}'.
         'function db_fetch_cell_prepared(...$args){return '.var_export($engine,true).';}function admin_email($subject,$message){$GLOBALS["notifications"][]=array($subject,$message);}'.
         'require '.var_export($root.'/lib/rrd_maintenance.php',true).';'.
-        '$result=rrd_maintenance_poller_preflight();chmod(__DIR__,0700);echo json_encode(array($result,$messages,$notifications));';
+        '$result=rrd_maintenance_poller_preflight();rrd_maintenance_poller_preflight();chmod(__DIR__,0700);echo json_encode(array($result,$messages,$notifications));';
     file_put_contents($this->dir.'/preflight.php',$bootstrap);
     if ($mode === 'readonly') { chmod($this->dir,0555); }
     $process=proc_open(array(PHP_BINARY,'-d','pcov.directory=/','-d','pcov.exclude=~/(include/vendor|tests)/~',$this->dir.'/preflight.php'),array(1=>array('pipe','w'),2=>array('pipe','w')),$pipes);
@@ -912,7 +912,7 @@ test('poller storage preflight notifies administrators and fails closed on untru
     expect(proc_close($process))->toBe(0,$error)->and($error)->toBe('');
     $result=json_decode($output,true);
     expect($result[0])->toBe(!$blocked);
-    expect($result[1])->toHaveCount($blocked?1:0);
+    expect($result[1])->toHaveCount($blocked?2:0);
     expect($result[2])->toHaveCount($blocked?1:0);
     if (in_array($mode,array('memory','unknown','unreadable'),true)) { expect($result[2][0][1])->toContain('must use InnoDB')->toContain('must not be discarded'); }
     elseif ($blocked) { expect($result[2][0][1])->toContain('rrd_maintenance_trusted_uids')->toContain('rrd_maintenance_trusted_gids'); }
@@ -1023,9 +1023,10 @@ test('Windows acknowledgement sentinel uses synchronous responses and refuses ex
 });
 
 
-test('rejected grouped updates retain valid siblings and prevent later timestamps advancing', function ($invalidField) {
+test('rejected fields are removed while valid siblings and later timestamps are written', function ($invalidField) {
     $root = dirname(__DIR__, 4);
     $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
+    if ($invalidField === 'legacy') { $binary = getenv('RRDTOOL_LEGACY_TEST_BINARY') ?: ''; }
     if (!is_executable($binary)) { $this->markTestSkipped('Real RRDtool is required.'); }
     $bootstrap = '<?php ';
     if ($this->getTestResultObject()->getCodeCoverage() !== null) {
@@ -1038,7 +1039,7 @@ $config=array('cacti_server_os'=>'unix','rra_path'=>__DIR__,'is_web'=>false);
 require $root.'/include/global_constants.php';
 define('CACTI_LOCALE','en-US');
 function read_config_option($key){return $key==='path_rrdtool'?$GLOBALS['binary']:'';}
-function get_rrdtool_version(){return '1.5';}
+function get_rrdtool_version(){return $GLOBALS['invalidField']==='legacy'?'1.4':'1.5';}
 function cacti_log(...$args){}
 function cacti_session_close(){}
 require $root.'/tests/Helpers/PhpSource.php';
@@ -1049,19 +1050,26 @@ foreach(array('cacti_has_control_chars','cacti_rrdtool_valid_path','cacti_rrdtoo
 require $root.'/lib/rrd.php';
 $file=__DIR__.'/group.rrd';
 $pipe=rrd_init(false,false,true);
-$created=rrdtool_execute(array('create',$file,'--start','1700000000','--step','60','DS:a:GAUGE:120:U:U','DS:b:GAUGE:120:U:U','RRA:AVERAGE:0.5:1:10'),false,RRDTOOL_OUTPUT_BOOLEAN,$pipe);
-$updates=array($file=>array('local_data_id'=>1,'data_template_id'=>0,'times'=>array(1700000060=>array('a'=>10,'b'=>20,$invalidField=>99),1700000120=>array('a'=>30,'b'=>40))));
-$failed=rrdtool_function_update($updates,$pipe,$completed);
+$create=array('create',$file,'--start','1700000000','--step','60','DS:a:GAUGE:120:U:U','DS:b:GAUGE:120:U:U');
+if ($invalidField === 'missing') { $create[]='DS:c:GAUGE:120:U:U'; }
+$create[]='RRA:AVERAGE:0.5:1:10';
+$created=rrdtool_execute($create,false,RRDTOOL_OUTPUT_BOOLEAN,$pipe);
+$updates=array($file=>array('local_data_id'=>1,'data_template_id'=>0,'times'=>array(1700000060=>array('a'=>10,'b'=>20,$invalidField=>99))));
+if ($invalidField === 'legacy') { unset($updates[$file]['times'][1700000060][$invalidField]); }
+if ($invalidField === 'multiple') { $updates[$file]['times'][1700000060]['another_unknown']=88; }
+$failed=rrdtool_function_update($updates,$pipe,$completed);$failureReason=rrdtool_last_rejection();
 $last=rrdtool_execute(array('last',$file),false,RRDTOOL_OUTPUT_STDOUT,$pipe);
-$firstCompleted=$completed;
-unset($updates[$file]['times'][1700000060][$invalidField],$updates[$file]['times'][1700000120]);
+$firstCompleted=$completed[$file] ?? array();
+$legacyRetry=null;
+if ($invalidField === 'legacy') { $retry=rrdtool_function_update($updates,$pipe,$completed);$legacyRetry=array($retry,$completed[$file] ?? array()); }
+foreach ($completed[$file] ?? array() as $time => $status) { unset($updates[$file]['times'][$time]); }
 $retried=rrdtool_function_update($updates,$pipe,$completed);
 $readback=rrdtool_execute(array('lastupdate',$file),false,RRDTOOL_OUTPUT_STDOUT,$pipe);
 $updates[$file]['times']=array(1700000120=>array('a'=>30,'b'=>40));
 $later=rrdtool_function_update($updates,$pipe,$completed);
 $final=rrdtool_execute(array('lastupdate',$file),false,RRDTOOL_OUTPUT_STDOUT,$pipe);
 rrd_close($pipe);
-echo json_encode(array($created,$failed,$firstCompleted,trim($last),$retried,$readback,$later,$final));
+echo json_encode(array($created,$failed,$firstCompleted,trim($last),$retried,$readback,$later,$final,$failureReason,$legacyRetry));
 PROBE;
     file_put_contents($this->dir . '/group.php', $bootstrap);
     $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $this->dir . '/group.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
@@ -1069,8 +1077,9 @@ PROBE;
     fclose($pipes[1]); fclose($pipes[2]);
     expect(proc_close($process))->toBe(0, $error)->and($error)->toBe('');
     $result = json_decode($out, true);
-    expect(array_slice($result, 0, 5))->toBe(array(true, false, array(), '1700000000', 1))
+    expect(array_slice($result, 0, 5))->toBe(array(true, 1, array(1700000060 => true), '1700000060', 0), $out)
         ->and($result[5])->toMatch('/1700000060:\s+10\s+20/')
         ->and($result[6])->toBe(1)
         ->and($result[7])->toMatch('/1700000120:\s+30\s+40/');
-})->with(array('unknown', 'bad-name'));
+    if ($invalidField === 'legacy') { expect($result[9])->toBe(array(false, array(1700000060 => false))); }
+})->with(array('unknown', 'bad-name', 'missing', 'multiple', 'bad:name', 'legacy'));

@@ -2,7 +2,7 @@ Cacti CHANGELOG
 
 1.2.32
 -issue: Preserve float and cleanup queues when worker discovery or local filesystem operations fail
--issue: Retain rejected multi-field RRD timestamp groups and later samples until corrected; never report refused RRD repairs as successful
+-issue: Recover valid fields from rejected RRD groups without stalling later timestamps; never report refused RRD repairs as successful
 -issue: Acknowledge Windows updates synchronously, retain realtime samples on field-lookup failure, and preserve shift-click sorting after allowlist registration
 -issue: Refuse Windows splice, heartbeat tuning, and float rewrites when exclusive maintenance coordination is unavailable
 -issue: Bound shutdown orphan reads, retain failed proxy cleanup requests, normalize quoted link sorting, and disable obsolete volatile queue swaps
