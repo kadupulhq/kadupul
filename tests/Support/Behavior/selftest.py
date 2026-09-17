@@ -533,7 +533,8 @@ def provenance_contract():
         fixture.write_text('<?php echo 2;')
         with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', side_effect=git_result):
             changed = harness.source_provenance()
-        assert changed['harness_inputs_sha256'] != provenance['harness_inputs_sha256']
+        assert changed['application_inputs_sha256'] != provenance['application_inputs_sha256']
+        assert changed['harness_inputs_sha256'] == provenance['harness_inputs_sha256']
     with tempfile.TemporaryDirectory() as directory:
         parent = Path(directory)
         controller, application = parent / 'controller', parent / 'application'
@@ -546,13 +547,18 @@ def provenance_contract():
             repo.mkdir()
             git(repo, 'init', '-q')
             (repo / 'fixture').write_text(repo.name)
-            if repo == controller:
-                source.parent.mkdir(parents=True)
-                source.write_text('# committed fixture controller')
+            fixture_source = repo / 'tests/Support/Behavior/harness.py'
+            fixture_source.parent.mkdir(parents=True)
+            fixture_source.write_text('# committed fixture ' + repo.name)
             git(repo, 'add', '.')
             git(repo, 'commit', '-q', '-s', '-m', 'Create isolated provenance fixture')
         with patch.object(harness, 'ROOT', application), patch.object(harness, '__file__', str(source)):
             clean = harness.source_provenance()
+        import hashlib
+        key = 'tests/Support/Behavior/harness.py'
+        assert clean['harness_inputs_sha256'][key] == hashlib.sha256(source.read_bytes()).hexdigest()
+        assert clean['application_inputs_sha256'][key] == hashlib.sha256((application / key).read_bytes()).hexdigest()
+        assert clean['harness_inputs_sha256'][key] != clean['application_inputs_sha256'][key]
         for repo in (controller, application):
             output = repo / 'tests/behavior/results/repeat/observations.json'
             output.parent.mkdir(parents=True)

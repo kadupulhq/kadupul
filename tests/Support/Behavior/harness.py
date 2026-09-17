@@ -44,19 +44,22 @@ def source_provenance():
     harness_root = source.parents[3]
     def git(root, *arguments):
         return run(['git', '-C', str(root), *arguments])['stdout'].strip()
-    inputs = {}
-    for relative in ('tests/Support/Behavior', 'tests/Fixtures/plugins/compatibility_test',
-                     'tests/Fixtures/snmp', 'tests/behavior/compose.yml', 'tests/behavior/Dockerfile'):
-        path = ROOT / relative
-        paths = path.rglob('*') if path.is_dir() else [path]
-        for item in sorted(paths):
-            if item.is_file() and '__pycache__' not in item.parts:
-                inputs[str(item.relative_to(ROOT))] = hashlib.sha256(item.read_bytes()).hexdigest()
+    def input_hashes(root):
+        inputs = {}
+        for relative in ('tests/Support/Behavior', 'tests/Fixtures/plugins/compatibility_test',
+                         'tests/Fixtures/snmp', 'tests/behavior/compose.yml', 'tests/behavior/Dockerfile'):
+            path = root / relative
+            paths = path.rglob('*') if path.is_dir() else [path]
+            for item in sorted(paths):
+                if item.is_file() and '__pycache__' not in item.parts:
+                    inputs[str(item.relative_to(root))] = hashlib.sha256(item.read_bytes()).hexdigest()
+        return inputs
     return {'harness_revision': git(harness_root, 'rev-parse', 'HEAD'),
             'harness_dirty': bool(git(harness_root, 'status', '--porcelain', '--untracked-files=all', '--', '.', ':(exclude)tests/behavior/results/**')),
             'application_dirty': bool(git(ROOT, 'status', '--porcelain', '--untracked-files=all', '--', '.', ':(exclude)tests/behavior/results/**')),
             'harness_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
-            'harness_inputs_sha256': inputs}
+            'harness_inputs_sha256': input_hashes(harness_root),
+            'application_inputs_sha256': input_hashes(ROOT)}
 
 
 # Normalize only timestamps in known diagnostic line shapes. Arbitrary dates
