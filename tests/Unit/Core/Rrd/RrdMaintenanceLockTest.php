@@ -1452,11 +1452,12 @@ foreach(array('cacti_has_control_chars','cacti_rrdtool_valid_path','cacti_rrdtoo
 require $root.'/lib/rrd.php';
 $file=__DIR__.'/group.rrd';
 $pipe=rrd_init(false,false,true);
-$create=array('create',$file,'--start','1700000000','--step','60','DS:a:GAUGE:120:U:U','DS:b:GAUGE:120:U:U');
+$create=array('create',$file,'--start','1700000000','--step','60','DS:in-octets:GAUGE:120:U:U','DS:b:GAUGE:120:U:U');
 if ($invalidField === 'missing') { $create[]='DS:c:GAUGE:120:U:U'; }
 $create[]='RRA:AVERAGE:0.5:1:10';
 $created=rrdtool_execute($create,false,RRDTOOL_OUTPUT_BOOLEAN,$pipe);
-$updates=array($file=>array('local_data_id'=>1,'data_template_id'=>0,'times'=>array(1700000060=>array('a'=>10,'b'=>20,$invalidField=>99))));
+$updates=array($file=>array('local_data_id'=>1,'data_template_id'=>0,'times'=>array(1700000060=>array('in-octets'=>10,'b'=>20,$invalidField=>99))));
+if ($invalidField === 'single') { unset($updates[$file]['times'][1700000060]['b'], $updates[$file]['times'][1700000060][$invalidField]); }
 if ($invalidField === 'legacy') { unset($updates[$file]['times'][1700000060][$invalidField]); }
 if ($invalidField === 'multiple') { $updates[$file]['times'][1700000060]['another_unknown']=88; }
 $failed=rrdtool_function_update($updates,$pipe,$completed);$failureReason=rrdtool_last_rejection();
@@ -1467,7 +1468,7 @@ if ($invalidField === 'legacy') { $retry=rrdtool_function_update($updates,$pipe,
 foreach ($completed[$file] ?? array() as $time => $status) { unset($updates[$file]['times'][$time]); }
 $retried=rrdtool_function_update($updates,$pipe,$completed);
 $readback=rrdtool_execute(array('lastupdate',$file),false,RRDTOOL_OUTPUT_STDOUT,$pipe);
-$updates[$file]['times']=array(1700000120=>array('a'=>30,'b'=>40));
+$updates[$file]['times']=array(1700000120=>array('in-octets'=>30,'b'=>40));
 $later=rrdtool_function_update($updates,$pipe,$completed);
 $final=rrdtool_execute(array('lastupdate',$file),false,RRDTOOL_OUTPUT_STDOUT,$pipe);
 rrd_close($pipe);
@@ -1483,10 +1484,10 @@ PROBE;
     $result = json_decode($out, true);
     expect($result[8])->toBeNull();
     expect(array_slice($result, 0, 5))->toBe(array(true, 1, array(1700000060 => true), '1700000060', 0), $out)
-        ->and($result[5])->toMatch('/1700000060:\s+10\s+20/')
+        ->and($result[5])->toMatch($invalidField === 'single' ? '/1700000060:\s+10\s+U/' : '/1700000060:\s+10\s+20/')
         ->and($result[6])->toBe(1)
         ->and($result[7])->toMatch('/1700000120:\s+30\s+40/');
     if ($invalidField === 'legacy') {
         expect($result[9])->toBe(array(false, array(1700000060 => false)));
     }
-})->with(array('unknown', 'bad-name', 'missing', 'multiple', 'bad:name', 'legacy'));
+})->with(array('unknown', 'bad-name', 'missing', 'multiple', 'bad:name', 'field_name_too_long1234', 'single', 'legacy'));
