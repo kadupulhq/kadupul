@@ -783,13 +783,18 @@ def compare(args):
     root = Path(getattr(args, 'results_root', None) or ROOT / 'tests/behavior/results')
     baseline = json.loads((root / args.baseline / 'observations.json').read_text())
     candidate = json.loads((root / args.candidate / 'observations.json').read_text())
-    if not baseline['complete'] or not candidate['complete']:
-        raise RuntimeError('Cannot compare incomplete runs')
-    approvals = json.loads(Path(args.approvals).read_text()) if args.approvals else {}
     repeat = json.loads(Path(args.repeat).read_text()) if args.repeat else None
-    # A partial control run would label every later difference NONDETERMINISTIC.
-    if repeat is not None and not repeat['complete']:
-        raise RuntimeError('Cannot use an incomplete run as the repeat control')
+    manifests = [('baseline', baseline), ('candidate', candidate)]
+    if args.repeat:
+        manifests.append(('repeat', repeat))
+    for role, manifest in manifests:
+        if not isinstance(manifest, dict) or manifest.get('complete') is not True:
+            raise RuntimeError(f'Cannot compare incomplete {role} run')
+        scenarios = manifest.get('scenarios')
+        if not isinstance(scenarios, dict) or set(scenarios) != EXPECTED_SCENARIOS:
+            names = set(scenarios) if isinstance(scenarios, dict) else set()
+            raise RuntimeError(f'Invalid {role} scenario inventory: missing={sorted(EXPECTED_SCENARIOS - names)}; unexpected={sorted(names - EXPECTED_SCENARIOS)}')
+    approvals = json.loads(Path(args.approvals).read_text()) if args.approvals else {}
     report = []
     # Matching scenarios prove little if the runs used different runtimes or packages.
     for key in ('php', 'base_image'):

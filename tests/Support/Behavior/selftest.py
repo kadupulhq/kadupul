@@ -63,7 +63,7 @@ def separate_results_root():
     """Compare real capture files outside the controller, including repeat checks."""
     with tempfile.TemporaryDirectory(prefix='harness separate results ') as directory:
         results = Path(directory)
-        manifest = {'complete': True, 'php': '8.2', 'base_image': {}, 'scenarios': {'x': 1}}
+        manifest = {'complete': True, 'php': '8.2', 'base_image': {}, 'scenarios': {name: 1 for name in harness.EXPECTED_SCENARIOS}}
         for label in ('baseline', 'candidate', 'repeat'):
             (results / label).mkdir()
             (results / label / 'observations.json').write_text(json.dumps(manifest))
@@ -73,11 +73,48 @@ def separate_results_root():
             assert harness.main() == 0
         report = json.loads((results / 'comparison.json').read_text())
         assert report['differences'][0]['status'] == 'IDENTICAL'
-        manifest['scenarios']['x'] = 2
+        manifest['scenarios'][sorted(harness.EXPECTED_SCENARIOS)[0]] = 2
         (results / 'candidate/observations.json').write_text(json.dumps(manifest))
         with patch('sys.argv', command):
             assert harness.main() == 1
         assert json.loads((results / 'comparison.json').read_text())['differences'][0]['status'] == 'NONDETERMINISTIC'
+
+
+def comparison_inventory_failure():
+    """A complete flag cannot make partial or malformed evidence comparable."""
+    with tempfile.TemporaryDirectory(prefix='harness invalid inventory ') as directory:
+        results = Path(directory)
+        valid = {'complete': True, 'php': '8.2', 'base_image': {},
+                 'scenarios': {name: 1 for name in harness.EXPECTED_SCENARIOS}}
+        paths = {}
+        for role in ('baseline', 'candidate', 'repeat'):
+            paths[role] = results / role / 'observations.json'
+            paths[role].parent.mkdir()
+            paths[role].write_text(json.dumps(valid))
+        args = types.SimpleNamespace(results_root=results, baseline='baseline', candidate='candidate',
+                                     repeat=str(paths['repeat']), approvals=None, output=None)
+        for role, path in paths.items():
+            for fault in ('missing', 'unexpected', 'empty', 'wrong-type', 'false-complete'):
+                broken = json.loads(json.dumps(valid))
+                if fault == 'missing':
+                    broken['scenarios'].pop(sorted(harness.EXPECTED_SCENARIOS)[0])
+                elif fault == 'unexpected':
+                    broken['scenarios']['unrecognized/extra'] = 1
+                elif fault == 'empty':
+                    broken['scenarios'] = {}
+                elif fault == 'wrong-type':
+                    broken['scenarios'] = list(harness.EXPECTED_SCENARIOS)
+                else:
+                    broken['complete'] = 'true'
+                path.write_text(json.dumps(broken))
+                try:
+                    harness.compare(args)
+                except RuntimeError as error:
+                    assert role in str(error), str(error)
+                else:
+                    raise AssertionError(f'Accepted {role} with {fault} evidence')
+                assert not (results / 'comparison.json').exists()
+                path.write_text(json.dumps(valid))
 
 
 def incomplete_repeat_failure():
@@ -91,7 +128,7 @@ def incomplete_repeat_failure():
             dirs[role] = results / f'{tag}-{role}'
             dirs[role].mkdir(parents=True)
             (dirs[role] / 'observations.json').write_text(json.dumps(
-                {'complete': complete, 'php': '8.2', 'base_image': {}, 'scenarios': {'x': 1}}))
+                {'complete': complete, 'php': '8.2', 'base_image': {}, 'scenarios': {name: 1 for name in harness.EXPECTED_SCENARIOS}}))
         args = types.SimpleNamespace(baseline=dirs['baseline'].name, candidate=dirs['candidate'].name,
                                      approvals=None, repeat=str(dirs['repeat'] / 'observations.json'),
                                      output=str(dirs['baseline'] / 'comparison'))
@@ -623,6 +660,8 @@ def main():
     unavailable_docker_failure()
     print('setup failure records an incomplete manifest without probing containers')
 
+    comparison_inventory_failure()
+    print("compare rejects missing, unexpected and malformed inventories for every role")
     separate_results_root()
     print('compare honors a separate results directory and repeat control')
     repeat_failure = incomplete_repeat_failure()
