@@ -1160,7 +1160,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 
 				$rrd_update_template = '';
 				foreach ($field_array as $field_name => $value) {
-					if (!preg_match('/^[a-zA-Z0-9_]{1,19}$/D', (string)$field_name)) {
+					if (!preg_match('/^[a-zA-Z0-9_-]{1,19}$/D', (string)$field_name)) {
 						cacti_log('ERROR: Invalid RRD field discarded (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'field' => $field_name, 'value' => $value)), false, 'POLLER');
 						unset($field_array[$field_name]);
 					}
@@ -1220,10 +1220,10 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 					$sent_fields = explode(':', $rrd_update_template);
 					$sent_values = explode(':', $rrd_update_values);
 					$unknown = array();
-					$named_rejection = is_string($rejection) && preg_match('/^(?:[^\r\n]+: )?unknown DS name [\'\"]([a-zA-Z0-9_]{1,19})[\'\"]/', $rejection, $unknown);
+					$named_rejection = is_string($rejection) && preg_match('/^(?:[^\r\n]+: )?unknown DS name [\'\"]([a-zA-Z0-9_-]{1,19})[\'\"]/', $rejection, $unknown);
 					if ($rejection === 'tmplt contains more DS definitions than RRD') {
 						$info = rrdtool_execute("info $rrd_path", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER');
-						if (is_string($info) && preg_match_all('/^ds\[([a-zA-Z0-9_]{1,19})\]\.index\s*=\s*\d+\s*$/m', $info, $schema)) {
+						if (is_string($info) && preg_match_all('/^ds\[([a-zA-Z0-9_-]{1,19})\]\.index\s*=\s*\d+\s*$/m', $info, $schema)) {
 							$missing_fields = array_values(array_diff($sent_fields, $schema[1]));
 							if ($missing_fields) {
 								$unknown[1] = $missing_fields[0];
