@@ -434,6 +434,29 @@ def native_worker_boundary():
     print('process-group boundary waits for delayed grandchildren and distinguishes application exit 70')
 
 
+def provenance_contract():
+    import tempfile
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        fixture = root / 'tests/Support/Behavior/probe.php'
+        fixture.parent.mkdir(parents=True)
+        fixture.write_text('<?php echo 1;')
+        def git_result(arguments, **kwargs):
+            return {'stdout': status if 'status' in arguments else 'committed-harness-revision'}
+        for status in ('', ' M tests/Support/Behavior/harness.py\n', '?? tests/Support/Behavior/harness.py\n'):
+            with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', side_effect=git_result):
+                provenance = harness.source_provenance()
+            assert provenance['harness_revision'] == 'committed-harness-revision'
+            assert provenance['harness_dirty'] is bool(status)
+            assert provenance['application_dirty'] is bool(status)
+            assert len(provenance['harness_sha256']) == 64
+        fixture.write_text('<?php echo 2;')
+        with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', side_effect=git_result):
+            changed = harness.source_provenance()
+        assert changed['harness_inputs_sha256'] != provenance['harness_inputs_sha256']
+    print('provenance records modified and untracked harnesses and hashes the actual fixture inputs')
+
+
 def main():
     failures = []
 
@@ -455,6 +478,7 @@ def main():
             raise AssertionError('Linux validation silently skipped PHP')
     native_worker_boundary()
     recording_guards()
+    provenance_contract()
     diagnostic_contracts()
     failed_setup_manifest()
     unavailable_docker_failure()

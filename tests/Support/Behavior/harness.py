@@ -38,6 +38,27 @@ def write_json(path, value):
     path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + '\n')
 
 
+def source_provenance():
+    """Identify the executing harness independently from the application tree."""
+    source = Path(__file__).resolve()
+    harness_root = source.parents[3]
+    def git(root, *arguments):
+        return run(['git', '-C', str(root), *arguments])['stdout'].strip()
+    inputs = {}
+    for relative in ('tests/Support/Behavior', 'tests/Fixtures/plugins/compatibility_test',
+                     'tests/Fixtures/snmp', 'tests/behavior/compose.yml', 'tests/behavior/Dockerfile'):
+        path = ROOT / relative
+        paths = path.rglob('*') if path.is_dir() else [path]
+        for item in sorted(paths):
+            if item.is_file() and '__pycache__' not in item.parts:
+                inputs[str(item.relative_to(ROOT))] = hashlib.sha256(item.read_bytes()).hexdigest()
+    return {'harness_revision': git(harness_root, 'rev-parse', 'HEAD'),
+            'harness_dirty': bool(git(harness_root, 'status', '--porcelain', '--untracked-files=all')),
+            'application_dirty': bool(git(ROOT, 'status', '--porcelain', '--untracked-files=all')),
+            'harness_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
+            'harness_inputs_sha256': inputs}
+
+
 # Normalize only timestamps in known diagnostic line shapes. Arbitrary dates
 # in database rows, UI output, or plugin messages are part of the contract.
 _Y = r'(?:19|20)\d{2}'
@@ -666,6 +687,7 @@ class Harness:
                     'php': runtime, 'schema_sha256': hashlib.sha256((ROOT / 'cacti.sql').read_bytes()).hexdigest(),
                     'base_image': base_image,
                     'complete': error is None and not missing, 'error': error, 'scenarios': self.observed}
+        manifest['provenance'] = source_provenance()
         write_json(self.destination / 'observations.json', manifest)
         if error:
             return 2
