@@ -9,9 +9,7 @@ cmd_exec	./cli/batchgapfix.php:358			exec($command, $output, $return_var);
 cmd_exec	./cli/float_rrdfiles.php:642		return proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
 cmd_exec	./cli/push_out_hosts.php:50		passthru($command, $exit_code);
 cmd_exec	./cli/remove_broken_graphs.php:30		$stty = shell_exec('stty size');
-cmd_exec	./cli/splice_rrd.php:227	$response = shell_exec($rrdtool);
-cmd_exec	./cli/splice_rrd.php:251	shell_exec(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($oldrrd) . ' > ' . cacti_escapeshellarg($oldxmlfile));
-cmd_exec	./cli/splice_rrd.php:254	shell_exec(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($newrrd) . ' > ' . cacti_escapeshellarg($newxmlfile));
+cmd_exec	./cli/splice_rrd.php:224	$response = shell_exec($rrdtool);
 cmd_exec	./cli/update_heartbeat.php:256				$result = exec($command, $output, $return_code);
 cmd_exec	./cmd.php:295			$cactiphp = proc_open($command, $cactides, $pipes);
 cmd_exec	./cmd_realtime.php:98				$cactiphp = proc_open(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/script_server.php') . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
@@ -50,7 +48,7 @@ cmd_exec	./lib/ping.php:167					$result = shell_exec('chcp 437 && ping -w ' . $t
 cmd_exec	./lib/ping.php:174						$result = shell_exec('ping -6 -W ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' -p ' . $pattern . ' ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:176						$result = shell_exec('ping -W ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' -p ' . $pattern . ' ' . cacti_escapeshellarg($this->host['hostname']) . ' 2>&1');
 cmd_exec	./lib/ping.php:187							$result = shell_exec($ping_path . ' -W ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' -p ' . $pattern . ' ' . cacti_escapeshellarg($this->host['hostname']));
-cmd_exec	./lib/poller.php:1259										$output = system($php_path . ' -l ' . $tmpfile, $exit);
+cmd_exec	./lib/poller.php:1263										$output = system($php_path . ' -l ' . $tmpfile, $exit);
 cmd_exec	./lib/poller.php:139					pclose(popen('start "Cactiplus" /I ' . $filename . ' ' . $args, 'r'));
 cmd_exec	./lib/poller.php:141					pclose(popen('start "Cactiplus" /I ' . $filename . ' ' . $args . ' ' . $redirect_args, 'r'));
 cmd_exec	./lib/poller.php:144				exec($filename . ' ' . $args . ' > /dev/null 2>&1 &');
@@ -71,7 +69,7 @@ cmd_exec	./lib/rrd.php:1249						$fp = popen($rrdtool_cmd, 'r');
 cmd_exec	./lib/rrd.php:128		return popen($command, 'w');
 cmd_exec	./lib/rrd.php:528				$process = proc_open(read_config_option('path_rrdtool') . ' - ' . $debug, $descriptorspec, $pipes);
 cmd_exec	./lib/rrd.php:97			$process = proc_open(array(read_config_option('path_rrdtool'), '-'),
-cmd_exec	./lib/rrd_maintenance.php:379	    $process = @proc_open($argv, $descriptors, $pipes);
+cmd_exec	./lib/rrd_maintenance.php:383	    $process = @proc_open($argv, $descriptors, $pipes);
 cmd_exec	./lib/rrdcheck.php:781		$process = proc_open($command, $fds, $pipes);
 cmd_exec	./lib/snmp.php:197			exec($command, $snmp_value);
 cmd_exec	./lib/snmp.php:297			exec($command, $snmp_value);

@@ -187,10 +187,7 @@ if ($overwrite && $finrrd == '') {
 }
 
 if ($finrrd == '') {
-	print 'FATAL: You must specify a New RRDfile or use the overwrite option!' . PHP_EOL . PHP_EOL;
-	display_help();
-
-	exit(-2);
+	$finrrd = dirname($newrrd) . '/' . basename($newrrd) . '.new';
 }
 
 require_once __DIR__ . '/../lib/rrd_maintenance.php';
@@ -242,16 +239,19 @@ if ($tempdir === false) { fwrite(STDERR, "FATAL: Unable to create private RRD wo
 $oldxmlfile = $tempdir . '/old.xml';
 $newxmlfile = $tempdir . '/new.xml';
 
-if ($finrrd == '') {
-	$finrrd = dirname($newrrd) . '/' . basename($newrrd) . '.new';
+
+/* Require successful bounded dumps before parsing any intermediate output. */
+foreach (array(array($oldrrd, $oldxmlfile), array($newrrd, $newxmlfile)) as $dump) {
+	debug("Creating XML file '$dump[1]' from '$dump[0]'");
+	$handle = fopen($dump[1], 'x');
+	if ($handle === false) { fwrite(STDERR, "FATAL: Unable to create dump file.\n"); exit(1); }
+	try {
+		$result = rrd_maintenance_run_command(array($rrdtool, 'dump', $dump[0]), $handle, rrd_maintenance_command_timeout());
+	} finally {
+		fclose($handle);
+	}
+	if ($result['exit'] !== 0) { fwrite(STDERR, "FATAL: RRDtool dump failed; inputs preserved.\n"); exit(1); }
 }
-
-/* execute the dump commands */
-debug("Creating XML file '$oldxmlfile' from '$oldrrd'");
-shell_exec(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($oldrrd) . ' > ' . cacti_escapeshellarg($oldxmlfile));
-
-debug("Creating XML file '$newxmlfile' from '$newrrd'");
-shell_exec(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($newrrd) . ' > ' . cacti_escapeshellarg($newxmlfile));
 
 /* read the xml files into arrays */
 if (file_exists($oldxmlfile)) {

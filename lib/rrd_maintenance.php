@@ -128,6 +128,10 @@ function rrd_maintenance_acquire_paths($files, $timeout = 0)
         if (!is_string($file) || $file === '' || strpbrk($file, "\r\n\0") !== false) {
             return false;
         }
+        clearstatcache(true, $file);
+        if (is_link($file)) {
+            return false;
+        }
         $parent = realpath(dirname($file));
         if ($parent === false || !rrd_maintenance_directory_is_trusted(dirname($file))) {
             return false;
