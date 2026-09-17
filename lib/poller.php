@@ -2553,7 +2553,7 @@ function process_poller_output_batch(&$deferred, &$proxy_pipe) {
 	$busy = false;
 	if ($proxy) {
 		if ($proxy_pipe === false) {
-			$proxy_pipe = rrd_init(true, false, true);
+			$proxy_pipe = rrd_init('POLLER', false, true);
 		}
 		$pipe = $proxy_pipe;
 	} else {

@@ -28,7 +28,7 @@ function db_fetch_cell_prepared($sql)
 }
 function rrd_init($output, $exclusive, $acknowledged, $timeout = null, &$busy = null)
 {
-    expect(array($output, $exclusive, $acknowledged))->toBe(array(true, false, true));
+    expect(array($output, $exclusive, $acknowledged))->toBe(array(remote_backend() ? 'POLLER' : true, false, true));
     $GLOBALS['batch']['opens']++;
     $busy = false;
     if ($GLOBALS['batch']['mode'] === 'init-failed') {

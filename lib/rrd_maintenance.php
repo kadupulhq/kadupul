@@ -285,10 +285,14 @@ function rrd_maintenance_cli_preflight()
 function rrd_maintenance_configuration_error()
 {
     global $config;
-    if (($config['cacti_server_os'] ?? '') === 'win32' || read_config_option('storage_location')) {
+    if (read_config_option('storage_location') && ($config['force_storage_location_local'] ?? false) !== true) {
         return '';
     }
     $path = $config['rra_path'] ?? (($config['base_path'] ?? '') . '/rra');
+    if (($config['cacti_server_os'] ?? '') === 'win32') {
+        return is_dir($path) && is_readable($path) && is_writable($path) ? '' :
+            __('RRD storage is not ready: the configured directory must exist and be readable and writable by this service account.') . ' [path=' . $path . ']';
+    }
     if (rrd_maintenance_directory_is_trusted($path) && is_readable($path) && is_writable($path)) {
         return '';
     }
@@ -300,7 +304,7 @@ function rrd_maintenance_configuration_error()
 function rrd_maintenance_restore($xml_file, $rrd_file, $pipe)
 {
     global $config;
-    if (is_array($pipe) && read_config_option('storage_location') && empty($config['force_storage_location_local'])) {
+    if (is_array($pipe) && read_config_option('storage_location') && ($config['force_storage_location_local'] ?? false) !== true) {
         if (strpbrk($xml_file . $rrd_file, "\r\n\0") !== false) {
             return false;
         }
