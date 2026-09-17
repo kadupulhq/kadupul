@@ -75,6 +75,11 @@ if (cacti_sizeof($parms)) {
 	}
 }
 
+if ($check_rrd_storage && $migrate_poller_queue) {
+	fwrite(STDERR, "ERROR: Do not combine --check-rrd-storage and --migrate-poller-queue; run them separately.\n");
+	exit(1);
+}
+
 require_once __DIR__ . '/../lib/rrd_maintenance.php';
 $storage_error = rrd_maintenance_configuration_error();
 if ($storage_error !== '') {
@@ -85,12 +90,12 @@ if ($storage_error !== '') {
 if (!$local && $config['poller_id'] > 1) {
 	db_switch_remote_to_main();
 
-	print 'NOTE: Repairing Tables for Main Database' . PHP_EOL;
+	print 'NOTE: Targeting Main Database' . PHP_EOL;
 } else {
-	print 'NOTE: Repairing Tables for Local Database' . PHP_EOL;
+	print 'NOTE: Targeting Local Database' . PHP_EOL;
 }
 
-if ($migrate_poller_queue && !$check_rrd_storage) {
+if ($migrate_poller_queue) {
     if (!db_execute_prepared('ALTER TABLE poller_output ENGINE=InnoDB ROW_FORMAT=Dynamic')) {
         fwrite(STDERR, "Poller queue migration failed; collectors must remain stopped.\n");
         exit(1);

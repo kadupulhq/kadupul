@@ -59,12 +59,13 @@ function db_fetch_cell_prepared(...$args)
 }
 function db_fetch_cell(...$args)
 {
-    return 1;
+    return array_key_exists('windows_cleanup_count', $GLOBALS) ? $GLOBALS['windows_cleanup_count'] : 1;
 }
 function db_fetch_assoc(...$args)
 {
-    return array();
+    return empty($GLOBALS['cleanup_read_failure']) ? array() : false;
 }
+function maint_debug(...$args) {}
 function db_fetch_row_prepared(...$args)
 {
     return array('local_data_id' => 1, 'data_source_path' => '<path_rra>/sample.rrd');
@@ -142,4 +143,32 @@ test('Windows maintenance skips the unsupported queue without reporting a transi
         expect($GLOBALS['windows_cleanup_queries'])->toBe(array());
         expect(implode(' ', $GLOBALS['windows_cleanup_logs']))->toContain('existing requests retained for manual cleanup');
     });
+});
+
+
+test('cleanup fails closed on unreadable counts before platform policy', function ($count, $platform) {
+    $GLOBALS['windows_cleanup_count'] = $count;
+    try {
+        with_policy($platform, 0, function () {
+            expect(rrdfile_purge(false))->toBeFalse();
+            expect($GLOBALS['windows_cleanup_queries'])->toBe(array());
+            expect(implode(' ', $GLOBALS['windows_cleanup_logs']))->toContain('Unable to count the RRD cleanup queue');
+        });
+    } finally {
+        unset($GLOBALS['windows_cleanup_count']);
+    }
+})->with(array(array(false, 'win32'), array(false, 'unix'), array('', 'win32'), array(-1, 'unix')));
+
+
+test('cleanup refuses a failed queue read without reporting an empty queue', function () {
+    $GLOBALS['cleanup_read_failure'] = true;
+    try {
+        with_policy('unix', 0, function () {
+            expect(rrdfile_purge(false))->toBeFalse();
+            expect($GLOBALS['windows_cleanup_queries'])->toBe(array());
+            expect(implode(' ', $GLOBALS['windows_cleanup_logs']))->toContain('Unable to read the RRD cleanup queue');
+        });
+    } finally {
+        unset($GLOBALS['cleanup_read_failure']);
+    }
 });

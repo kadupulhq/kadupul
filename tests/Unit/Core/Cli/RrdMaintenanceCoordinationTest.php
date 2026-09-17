@@ -411,7 +411,7 @@ FIXTURE;
     }
 })->with(array(0, 1, 'unknown', 'crash', 'killed', 'timeout'));
 
-test('storage probe and explicit queue migration preserve the cutover contract', function ($engine, $trusted, $migrate = false, $success = true, $remote = false, $local = false) {
+test('storage probe and explicit queue migration preserve the cutover contract', function ($engine, $trusted, $migrate = false, $success = true, $remote = false, $local = false, $combined = false) {
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/rrd-probe-' . bin2hex(random_bytes(8));
     foreach (array('', '/cli', '/include', '/lib', '/install', '/store') as $suffix) {
@@ -433,14 +433,16 @@ test('storage probe and explicit queue migration preserve the cutover contract',
             'function db_execute_prepared($sql, ...$args) { file_put_contents(dirname(__DIR__)."/mutation",$sql); return ' . var_export($success, true) . '; }';
         file_put_contents($dir . '/include/cli_check.php', $bootstrap);
         $arguments = rrd_cli_coverage_arguments($this, $dir, $root, 'upgrade_database.php');
-        $process = proc_open(array_merge(array(PHP_BINARY), $arguments, array_merge(array($dir . '/cli/upgrade_database.php', $migrate ? '--migrate-poller-queue' : '--check-rrd-storage'), $local ? array('--local') : array())), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $process = proc_open(array_merge(array(PHP_BINARY), $arguments, array_merge(array($dir . '/cli/upgrade_database.php', $migrate ? '--migrate-poller-queue' : '--check-rrd-storage'), $local ? array('--local') : array(), $combined ? array('--check-rrd-storage') : array())), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
         $output = stream_get_contents($pipes[1]);
         $error = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
-        $accepted = $trusted && ($migrate ? $success : (($remote && !$local) || $engine === 'InnoDB'));
+        $accepted = !$combined && $trusted && ($migrate ? $success : (($remote && !$local) || $engine === 'InnoDB'));
         expect(proc_close($process))->toBe($accepted ? 0 : 1, $error . $output);
-        if ($trusted && $migrate) {
+        if ($combined) {
+            expect($error)->toContain('Do not combine')->and($output)->toBe('');
+        } elseif ($trusted && $migrate) {
             expect(file_get_contents($dir . '/mutation'))->toBe('ALTER TABLE poller_output ENGINE=InnoDB ROW_FORMAT=Dynamic');
             expect($success ? $output : $error)->toContain($success ? 'retained samples preserved' : 'collectors must remain stopped');
         } elseif ($accepted) {
@@ -448,12 +450,12 @@ test('storage probe and explicit queue migration preserve the cutover contract',
         } else {
             expect($error)->toContain($trusted ? 'must use InnoDB' : 'rrd_maintenance_trusted_gids');
         }
-        if (!$migrate || !$trusted) {
+        if (!$migrate || !$trusted || $combined) {
             expect(file_exists($dir . '/mutation'))->toBeFalse();
         }
-        expect(file_exists($dir . '/main-database'))->toBe($trusted && $remote && !$local);
+        expect(file_exists($dir . '/main-database'))->toBe(!$combined && $trusted && $remote && !$local);
         rrd_cli_merge_coverage($this, $dir);
     } finally {
         rrd_cli_fixture_remove($dir);
     }
-})->with(array(array('InnoDB', true), array('MEMORY', true), array(false, true), array('InnoDB', false), array('MEMORY', true, true), array('MEMORY', true, true, false), array('MEMORY', false, true), array('MEMORY', true, false, true, true, false), array('MEMORY', true, false, true, true, true), array('MEMORY', true, true, true, true, false), array('MEMORY', true, true, true, true, true)));
+})->with(array(array('InnoDB', true), array('MEMORY', true), array(false, true), array('InnoDB', false), array('MEMORY', true, true), array('MEMORY', true, true, false), array('MEMORY', false, true), array('MEMORY', true, false, true, true, false), array('MEMORY', true, false, true, true, true), array('MEMORY', true, true, true, true, false), array('MEMORY', true, true, true, true, true), array('InnoDB', true, true, true, true, false, true)));

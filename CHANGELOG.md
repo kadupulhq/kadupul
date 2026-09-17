@@ -11,6 +11,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Validate Windows storage access, fail on unreadable maintenance queues, and clarify exclusive queue migration/probe modes.
+
 - Preserve retryable poller samples in InnoDB. Before code-only deployment, stop collectors, back up the database, run `php cli/upgrade_database.php --migrate-poller-queue`, and run `--check-rrd-storage` under every web and poller service account.
 - Back off failed drains, throttle repeated notifications, distinguish untrusted storage from lock contention, and classify native proxy sample errors.
 
