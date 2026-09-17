@@ -742,7 +742,7 @@ function poller_expire_incomplete_rows($retention, &$failed = null) {
  *
  * @return (int) - The number of rrdfiles processed
  */
-function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null, &$consumed = null, $after = null) {
+function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null, &$consumed = null, $after = null, $blocked_paths = array()) {
 	global $config, $debug;
 
 	$deferred = false;
@@ -1052,6 +1052,10 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 		api_plugin_hook_function('poller_output', $rrd_update_array);
 
 		if ($direct_rrd_update) {
+			// Never advance an RRD past a retained sample from an earlier page.
+			foreach ($blocked_paths as $path => $blocked) {
+				unset($rrd_update_array[$path]);
+			}
 			$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe, $completed);
 			// A terminal rejection is recorded as false in $completed and consumed.
 			// Only absent acknowledgements require deferring subsequent batches.
@@ -1059,6 +1063,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 				foreach ($fields['times'] as $time => $values) {
 					if (!isset($completed[$path][$time])) {
 						$write_failed = true;
+						$blocked_paths[$path] = true;
 					}
 				}
 			}
@@ -1096,7 +1101,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 				WHERE end_time = "0000-00-00"');
 
 			if ($full_page) {
-				$rrds_processed += process_poller_output($rrdtool_pipe, $max_rows, $deferred, $child_consumed, $next);
+				$rrds_processed += process_poller_output($rrdtool_pipe, $max_rows, $deferred, $child_consumed, $next, $blocked_paths);
 				$consumed += $child_consumed;
 
 				if ($deferred) {

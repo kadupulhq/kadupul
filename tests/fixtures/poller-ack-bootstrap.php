@@ -103,6 +103,8 @@ function db_execute_prepared($sql, $params)
 }
 function rrdtool_function_update($updates, $pipe = false, &$completed = null)
 {
+    static $calls = 0;
+    $calls++;
     if (getenv('ACK_FAIL') === 'replace-space') {
         $GLOBALS['ack_db']->exec("UPDATE " . $GLOBALS['ack_table'] . " SET output='42 ' WHERE time='2020-01-01'");
     }
@@ -116,7 +118,7 @@ function rrdtool_function_update($updates, $pipe = false, &$completed = null)
     $completed = array();
     if (getenv('ACK_FAIL') !== '1') {
         foreach ($updates as $path => $fields) {
-            if (in_array(getenv('ACK_FAIL'), array('mixed', 'page'), true) && $path === 'fixture.rrd') { continue; }
+            if ((getenv('ACK_FAIL') === 'mixed' || (getenv('ACK_FAIL') === 'page' && $calls === 1)) && $path === 'fixture.rrd') { continue; }
             foreach ($fields['times'] as $time => $values) {
                 $completed[$path][$time] = getenv('ACK_FAIL') !== 'rejected';
             }

@@ -117,7 +117,7 @@ function pollerDeferredProbe($remainder, &$deferred)
     return 0;
 }
 
-test('main poller backs off a failed waiting drain and retries the final drain', function () {
+test('main poller retries failed waiting drains and the final drain', function () {
     $source = file_get_contents(dirname(__DIR__, 4) . '/poller.php');
     preg_match_all('/if \(\$poller_id == 1\) \{\s*(?:if \(empty\(\$poller_output_deferred\)\) \{\s*)?\$rrds_processed \+= process_poller_output_batch\(.*?\n\t{5}\}/s', $source, $matches);
     expect($matches[0])->toHaveCount(2);
@@ -130,7 +130,7 @@ test('main poller backs off a failed waiting drain and retries the final drain',
     foreach (array($matches[0][1], $matches[0][1], $matches[0][0]) as $guard) {
         eval(str_replace('process_poller_output_batch(', '\\' . __NAMESPACE__ . '\\pollerDeferredProbe(', $guard)); // nosemgrep: php.lang.security.eval-use.eval-use
     }
-    expect($GLOBALS['deferred_probe_calls'])->toBe(2)
+    expect($GLOBALS['deferred_probe_calls'])->toBe(3)
         ->and($poller_output_deferred)->toBeTrue()->and($rrd_write_failed)->toBeTrue();
 });
 
