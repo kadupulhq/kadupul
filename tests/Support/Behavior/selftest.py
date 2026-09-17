@@ -510,6 +510,20 @@ def provenance_contract():
                 source.write_text('# committed fixture controller')
             git(repo, 'add', '.')
             git(repo, 'commit', '-q', '-s', '-m', 'Create isolated provenance fixture')
+        with patch.object(harness, 'ROOT', application), patch.object(harness, '__file__', str(source)):
+            clean = harness.source_provenance()
+        for repo in (controller, application):
+            output = repo / 'tests/behavior/results/repeat/observations.json'
+            output.parent.mkdir(parents=True)
+            output.write_text('{}')
+        with patch.object(harness, 'ROOT', application), patch.object(harness, '__file__', str(source)):
+            assert harness.source_provenance() == clean, 'Generated results changed source provenance'
+        # Similar directory names are source inputs, not generated outputs.
+        adjacent = application / 'tests/behavior/results-source.php'
+        adjacent.write_text('<?php')
+        with patch.object(harness, 'ROOT', application), patch.object(harness, '__file__', str(source)):
+            assert harness.source_provenance()['application_dirty'] is True
+        adjacent.unlink()
         (application / 'untracked-input').write_text('changed application')
         with patch.object(harness, 'ROOT', application), patch.object(harness, '__file__', str(source)):
             provenance = harness.source_provenance()

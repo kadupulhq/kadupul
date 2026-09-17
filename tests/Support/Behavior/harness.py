@@ -53,8 +53,8 @@ def source_provenance():
             if item.is_file() and '__pycache__' not in item.parts:
                 inputs[str(item.relative_to(ROOT))] = hashlib.sha256(item.read_bytes()).hexdigest()
     return {'harness_revision': git(harness_root, 'rev-parse', 'HEAD'),
-            'harness_dirty': bool(git(harness_root, 'status', '--porcelain', '--untracked-files=all')),
-            'application_dirty': bool(git(ROOT, 'status', '--porcelain', '--untracked-files=all')),
+            'harness_dirty': bool(git(harness_root, 'status', '--porcelain', '--untracked-files=all', '--', '.', ':(exclude)tests/behavior/results/**')),
+            'application_dirty': bool(git(ROOT, 'status', '--porcelain', '--untracked-files=all', '--', '.', ':(exclude)tests/behavior/results/**')),
             'harness_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
             'harness_inputs_sha256': inputs}
 
