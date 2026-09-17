@@ -1,6 +1,6 @@
 {
   "application_revision": "6ce3572dab3264be563b765f25dcadd8cc046252",
-  "harness": "current branch, PHP severity and backtrace location normalization; integer and decimal RRD acknowledgements",
+  "harness": "Committed harness controller with recorded runtime fixture hashes",
   "php": "8.2",
   "base_image": {
     "ref": "php@sha256:0970c7c14b21003bce8178af2985b491a65b71e800ff5366053de544306ed2a1",
@@ -11,6 +11,9 @@
   "contracts": 34,
   "complete": true,
   "identical_scenarios": true,
-  "first_sha256": "faaa82f7c4f6e8f6bb23cb613c91a824ba5961d80b721a497d03ec962a5e6f9c",
-  "repeat_sha256": "faaa82f7c4f6e8f6bb23cb613c91a824ba5961d80b721a497d03ec962a5e6f9c"
+  "first_sha256": "121a9429e36fe374b7e1b0c0d40618f5f25db2178a363586d38fd7a82f9c6cc3",
+  "repeat_sha256": "121a9429e36fe374b7e1b0c0d40618f5f25db2178a363586d38fd7a82f9c6cc3",
+  "harness_revision": "d78c6bcd992efba912377e33c1e0b8dbeb778c3a",
+  "harness_sha256": "54c2959808778cc03d146e40139029a886ad3ff13f0d106790d3a3987d922b90",
+  "application_overlay": "Application tracked files unchanged; harness fixtures overlaid from harness_revision. application_dirty=true records those untracked files."
 }

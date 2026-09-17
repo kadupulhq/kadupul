@@ -160,3 +160,19 @@ Failed `fwrite()` diagnostics normalize only the requested byte count to
 `<BYTES>`: buffer length depends on which poller commands reach the broken pipe.
 The errno, failure description, severity, source location, order and duplicate
 records remain part of the contract. Other diagnostic numbers are preserved.
+
+
+### Historical harness provenance
+
+The retained manifests record the application revision separately from the
+executing `harness_revision` and `harness_sha256`. `harness_inputs_sha256` hashes
+the actual mounted behavior helpers, plugin/SNMP fixtures, compose file and
+Dockerfile. Dirty flags include untracked files; they are evidence, not a claim
+that all captured working trees are clean.
+
+The historical application revision predates the harness. For these two runs,
+its tracked application files were unchanged and the test directories were
+overlaid from the recorded harness commit. Thus `application_dirty` is true,
+while the controller checkout has `harness_dirty: false`. The observations and
+fixture hashes from the two fresh runs are identical. `comparison.json` records
+the exact controller commit and hashes of both manifests.
