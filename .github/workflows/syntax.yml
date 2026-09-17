@@ -37,11 +37,15 @@ concurrency:
 
 jobs:
   boost-mariadb:
-    name: Boost MariaDB contracts
+    name: Database contracts (${{ matrix.database }})
     runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        database: ['mariadb:10.6', 'mariadb:10.11', 'mariadb:11.8', 'mysql:8.0', 'mysql:8.4', 'mysql:9.7']
     services:
       mysql:
-        image: mariadb:10.6
+        image: ${{ matrix.database }}
         env:
           MYSQL_DATABASE: cacti_boost_contract
           MYSQL_USER: cactiuser
@@ -49,7 +53,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: cactiroot
         ports:
         - 3306:3306
-        options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=5s --health-timeout=5s --health-retries=10
+        options: --health-cmd="mysqladmin ping -h 127.0.0.1 --silent || mariadb-admin ping -h 127.0.0.1 --silent" --health-interval=5s --health-timeout=5s --health-retries=30
     steps:
     - name: Checkout
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -67,14 +71,17 @@ jobs:
       working-directory: tests
       run: composer install --no-interaction --no-progress --prefer-dist
 
-    - name: Run Boost MariaDB contracts
+    - name: Record database behavior and run contracts
       working-directory: tests
       env:
         BOOST_DB_HOST: 127.0.0.1
         BOOST_DB_NAME: cacti_boost_contract
         BOOST_DB_USER: cactiuser
         BOOST_DB_PASSWORD: cactiuser
-      run: php vendor/bin/pest --configuration=phpunit-boost-mariadb.xml --colors=never
+      run: |
+        # shellcheck disable=SC2016
+        php -r '$db = new PDO("mysql:host=" . getenv("BOOST_DB_HOST") . ";dbname=" . getenv("BOOST_DB_NAME"), getenv("BOOST_DB_USER"), getenv("BOOST_DB_PASSWORD")); echo json_encode($db->query("SELECT VERSION() AS version, @@version_comment AS vendor, @@sql_mode AS sql_mode, @@collation_server AS collation, @@default_storage_engine AS storage_engine")->fetch(PDO::FETCH_ASSOC), JSON_PRETTY_PRINT), PHP_EOL;'
+        php vendor/bin/pest --configuration=phpunit-boost-mariadb.xml --colors=never
 
   boost-contracts:
     name: Boost contracts

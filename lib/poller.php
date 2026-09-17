@@ -645,7 +645,7 @@ function poller_delete_output_rows($keys, &$failed = null) {
 	}
 
 	$consumed = 0;
-	foreach (array_chunk($keys, 10000) as $chunk) {
+	foreach (array_chunk($keys, 500) as $chunk) {
 		$params = array();
 		foreach ($chunk as $key) {
 			if (count($key) !== 4) { $failed = true; return $consumed; }
@@ -655,8 +655,9 @@ function poller_delete_output_rows($keys, &$failed = null) {
 			$params[] = (string) $key[3];
 		}
 		// Compare the observed payload byte-for-byte, regardless of table collation.
-		$placeholders = implode(',', array_fill(0, cacti_sizeof($chunk), '(?,?,?,BINARY ?)'));
-		if (db_execute_prepared("DELETE FROM poller_output WHERE (local_data_id, rrd_name, time, BINARY output) IN ($placeholders)", $params) === false) {
+		$placeholders = implode(' OR ', array_fill(0, cacti_sizeof($chunk), '(local_data_id = ? AND rrd_name = ? AND time = ? AND CAST(output AS BINARY) = CAST(? AS BINARY))'));
+		// Explicit key equalities retain range access on both MySQL and MariaDB.
+		if (db_execute_prepared("DELETE FROM poller_output WHERE $placeholders", $params) === false) {
 			$failed = true;
 			break;
 		}

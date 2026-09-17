@@ -330,28 +330,29 @@ function boostMariaDbLoadDeleteRows($root) {
 	}
 }
 
-test('poller acknowledgement preserves byte-distinct replacement values and uses the primary key', function ($observed, $replacement) use ($root) {
+test('poller acknowledgement preserves byte-distinct replacement values and uses the primary key', function ($observed, $replacement, $batch_size) use ($root) {
 	boostMariaDbLoadDeleteRows($root);
 	$db = $GLOBALS['boost_mariadb_pdo'];
 	$db->exec('CREATE TEMPORARY TABLE poller_output (local_data_id INT, rrd_name VARCHAR(19), time TIMESTAMP, output VARCHAR(512), PRIMARY KEY(local_data_id,rrd_name,time)) ENGINE=InnoDB COLLATE=utf8mb4_unicode_ci');
 	try {
-		$insert = $db->prepare('INSERT INTO poller_output VALUES (?,?,?,?)');
-		for ($id = 1; $id <= 1000; $id++) {
-			$insert->execute(array($id, 'value', '2026-09-15 00:00:00', $observed));
+		$rows = $keys = array();
+		for ($id = 1; $id <= 10000; $id++) {
+			$rows[] = "($id,'value','2026-09-15 00:00:00'," . $db->quote($observed) . ')';
+			if ($id <= $batch_size) { $keys[] = array($id, 'value', '2026-09-15 00:00:00', $observed); }
 		}
-		$keys = array(array(1, 'value', '2026-09-15 00:00:00', $observed), array(2, 'value', '2026-09-15 00:00:00', $observed));
+		$db->exec('INSERT INTO poller_output VALUES ' . implode(',', $rows));
 		$db->prepare('UPDATE poller_output SET output=? WHERE local_data_id=1')->execute(array($replacement));
-		expect(boostMariaDbDeleteOutputRows($keys, $failed))->toBe(1)->and($failed)->toBeFalse();
+		expect(boostMariaDbDeleteOutputRows($keys, $failed))->toBe($batch_size - 1)->and($failed)->toBeFalse();
 		expect($db->query('SELECT output FROM poller_output WHERE local_data_id=1')->fetchColumn())->toBe($replacement);
 		list($sql, $params) = $GLOBALS['boost_delete_statement'];
-		$explain = $db->prepare('EXPLAIN ' . $sql);
+		$explain = $db->prepare('EXPLAIN FORMAT=TRADITIONAL ' . $sql);
 		$explain->execute($params);
 		$plan = $explain->fetch(PDO::FETCH_ASSOC);
 		expect($plan['key'])->toBe('PRIMARY')->and($plan['type'])->toBe('range');
 	} finally {
 		$db->exec('DROP TEMPORARY TABLE poller_output');
 	}
-})->with(array(array('U', 'u'), array('42', '42 ')));
+})->with(array(array('U', 'u'), array('42', '42 ')))->with(array(2, 500));
 
 
 test('poller reports failed source deletion even after earlier chunks made progress', function ($fail_at) use ($root) {
@@ -361,7 +362,7 @@ test('poller reports failed source deletion even after earlier chunks made progr
 	try {
 		$values = array();
 		$keys = array();
-		for ($id = 1; $id <= 10001; $id++) {
+		for ($id = 1; $id <= 501; $id++) {
 			$values[] = "($id,'value','2026-09-15 00:00:00','10')";
 			$keys[] = array($id, 'value', '2026-09-15 00:00:00', '10');
 		}
@@ -369,8 +370,8 @@ test('poller reports failed source deletion even after earlier chunks made progr
 		$GLOBALS['boost_delete_fail_at'] = $fail_at;
 		$consumed = boostMariaDbDeleteOutputRows($keys, $failed);
 		expect($failed)->toBeTrue()
-			->and($consumed)->toBe($fail_at === 1 ? 0 : 10000)
-			->and((int) $db->query('SELECT count(*) FROM poller_output')->fetchColumn())->toBe(10001 - $consumed);
+			->and($consumed)->toBe($fail_at === 1 ? 0 : 500)
+			->and((int) $db->query('SELECT count(*) FROM poller_output')->fetchColumn())->toBe(501 - $consumed);
 	} finally {
 		$db->exec('DROP TEMPORARY TABLE poller_output');
 	}

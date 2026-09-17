@@ -22,7 +22,7 @@ function db_fetch_assoc_prepared($sql, $params) {
 }
 function db_execute_prepared($sql, $params) {
     // SQLite expresses MySQL's binary cast as a BLOB cast.
-    $sql = preg_replace('/\bBINARY (output|\?)/', 'CAST($1 AS BLOB)', $sql);
+    $sql = preg_replace('/\bCAST\((output|\?) AS BINARY\)/', 'CAST($1 AS BLOB)', $sql);
     if ($GLOBALS['shutdown_delete_fail'] ?? false) { return false; }
     $query = $GLOBALS['shutdown_orphan_pdo']->prepare($sql);
     $query->execute($params); $GLOBALS['shutdown_orphan_affected'] = $query->rowCount();
