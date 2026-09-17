@@ -73,3 +73,19 @@ debug output, read-only files, failed dumps and failed restores.
 `RRDsProcessed` counts acknowledged sample updates. The old implementation also
 incremented per timestamp, despite the file-count wording in its docblock. Failed
 or rejected writes are now excluded rather than reported as successful updates.
+
+
+The wait loop re-evaluates a failed batch on its next iteration rather than
+latching off until collectors finish. Successful acknowledgements are counted
+even when another RRD is deferred, including across the 40,000-row page boundary.
+A failed RRD remains blocked across subsequent pages of that drain so a newer
+sample cannot invalidate the retained sample's eventual replay. Regression tests
+exercise transient recovery, partial progress and a failure limited to page one.
+
+Retryable schema errors deliberately retain valid observations until repair;
+they are not silently expired to hide a persistent failure. Operators must repair
+the reported schema mismatch and monitor queue growth during an outage. The
+nonzero exit still signals unresolved writes while healthy RRDs continue draining.
+A bounded archival/retention policy remains an operational design requirement.
+The Windows storage probe is run by `.github/workflows/ci.yml` in the
+`windows-storage-preflight` job; it is not a standalone unexecuted fixture.

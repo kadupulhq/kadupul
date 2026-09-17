@@ -836,9 +836,7 @@ while ($poller_runs_completed < $poller_runs) {
                     $mtb = microtime(true);
 
                     if ($poller_id == 1) {
-                        if (empty($poller_output_deferred)) {
-                            $rrds_processed += process_poller_output_batch($poller_output_deferred, $rrdtool_pipe);
-                        }
+                        $rrds_processed += process_poller_output_batch($poller_output_deferred, $rrdtool_pipe);
                         if ($poller_output_deferred) {
                             $rrd_write_failed = true;
                         }

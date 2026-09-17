@@ -549,7 +549,8 @@ function poller_delete_output_rows($keys, &$failed = null) {
 	return $consumed;
 }
 
-function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null) {
+function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null, &$acknowledged = null, $blocked_paths = array()) {
+	$acknowledged = 0;
 	global $config, $debug;
 
 	static $writer_failure_logged = false;
@@ -846,6 +847,10 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null) {
 			return false;
 		}
 		if ($direct_update) {
+			// Never advance an RRD past a retained sample from an earlier page.
+			foreach ($blocked_paths as $path => $blocked) {
+				unset($rrd_update_array[$path]);
+			}
 			$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe, $completed);
 			// A terminal rejection is recorded as false in $completed and consumed.
 			// Only absent acknowledgements require deferring subsequent batches.
@@ -853,6 +858,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null) {
 				foreach ($fields['times'] as $time => $values) {
 					if (!isset($completed[$path][$time])) {
 						$write_failed = true;
+						$blocked_paths[$path] = true;
 					}
 				}
 			}
@@ -865,13 +871,15 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null) {
 			}
 		}
 
+		$acknowledged = $rrds_processed;
 		poller_delete_output_rows($output_keys, $delete_failed);
 		if ($delete_failed) {
 			return false;
 		}
 
 		if ($full_page) {
-			$child_updates = process_poller_output($rrdtool_pipe, $max_rows, $next);
+			$child_updates = process_poller_output($rrdtool_pipe, $max_rows, $next, $child_acknowledged, $blocked_paths);
+			$acknowledged += $child_acknowledged;
 			if ($child_updates === false) {
 				$write_failed = true;
 			}
@@ -2610,10 +2618,10 @@ function process_poller_output_batch(&$deferred, &$proxy_pipe) {
 	$reported['writer'] = false;
 	$failed = true;
 	try {
-		$updated = process_poller_output($pipe);
+		$updated = process_poller_output($pipe, 0, null, $acknowledged);
 		$deferred = $updated === false;
 		$failed = $deferred;
-		return $deferred ? 0 : $updated;
+		return $acknowledged;
 	} finally {
 		if (!$proxy || $failed) {
 			rrd_close($pipe);

@@ -95,6 +95,9 @@ test('production poller files retain failed writes and preserve concurrent arriv
             $expected = array();
             expect(json_decode(file_get_contents($dir . '/batch-result.json'), true))->toBe(array(40002, false));
         }
+        if (in_array($failed, array('mixed', 'page'), true)) {
+            expect(json_decode(file_get_contents($dir . '/batch-result.json'), true))->toBe(array(1, true));
+        }
         expect(json_decode(file_get_contents($dir . '/outcome.json'), true))->toBe($expected);
         if ($parent !== null) {
             $reports = glob($dir . '/*.coverage');
