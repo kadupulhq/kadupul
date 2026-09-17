@@ -136,3 +136,29 @@ test('poller reports failed source deletion even after earlier chunks made progr
         $db->exec('DROP TEMPORARY TABLE poller_output');
     }
 })->with(array(1, 2));
+
+// Exercise the exact production statement on real engine collations; native
+// consumer tests separately verify which observed rows reach this boundary.
+test('Boost retains byte-distinct replacements in live and archive queues', function ($observed, $replacement, $collation, $consumer) use ($root) {
+    $source = file_get_contents($root . '/' . $consumer);
+    preg_match('/db_execute_prepared\("(DELETE FROM \$table WHERE local_data_id = \? AND rrd_name = \? AND time = FROM_UNIXTIME\(\?\)[^"]+)"/', $source, $match);
+    expect($match)->not->toBeEmpty();
+    $db = $GLOBALS['poller_contract_pdo'];
+    foreach (array('poller_output_boost', 'poller_output_boost_arch_fixture') as $table) {
+        $db->exec("CREATE TEMPORARY TABLE $table (local_data_id INT, rrd_name VARCHAR(19), time TIMESTAMP, output VARCHAR(512), PRIMARY KEY(local_data_id,rrd_name,time)) ENGINE=InnoDB COLLATE=" . $collation);
+        try {
+            $insert = $db->prepare("INSERT INTO $table VALUES (?, 'value', FROM_UNIXTIME(?), ?)");
+            $insert->execute(array(1, 1700000000, $replacement));
+            $insert->execute(array(2, 1700000000, $observed));
+            $delete = $db->prepare(str_replace('$table', $table, $match[1]));
+            $delete->execute(array(1, 'value', 1700000000, $observed));
+            expect($delete->rowCount())->toBe(0);
+            expect($db->query("SELECT output FROM $table WHERE local_data_id=1")->fetchColumn())->toBe($replacement);
+            $delete->execute(array(2, 'value', 1700000000, $observed));
+            expect($delete->rowCount())->toBe(1);
+            expect((int) $db->query("SELECT COUNT(*) FROM $table")->fetchColumn())->toBe(1);
+        } finally {
+            $db->exec("DROP TEMPORARY TABLE $table");
+        }
+    }
+})->with(array(array('U', 'u'), array('42', '42 '), array('café', 'CAFÉ'), array('café', 'café ')))->with(array('utf8mb4_unicode_ci', 'latin1_swedish_ci'))->with(array('lib/boost.php', 'poller_boost.php'));

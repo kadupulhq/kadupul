@@ -1481,13 +1481,15 @@ $updates=array($file=>array('local_data_id'=>1,'data_template_id'=>0,'times'=>ar
 if ($invalidField === 'single') { unset($updates[$file]['times'][1700000060]['b'], $updates[$file]['times'][1700000060][$invalidField]); }
 if ($invalidField === 'legacy') { unset($updates[$file]['times'][1700000060][$invalidField]); }
 if ($invalidField === 'multiple') { $updates[$file]['times'][1700000060]['another_unknown']=88; }
+if ($invalidField === 'all-invalid') { $updates[$file]['times'][1700000060]=array('bad:name'=>99); }
+if ($invalidField === 'empty-fields') { $updates[$file]['times'][1700000060]=array(); }
 if (strpos($invalidField,'info-')===0) { $updates[$file]['times'][1700000120]=array('in-octets'=>30,'b'=>40); }
 $failed=rrdtool_function_update($updates,$pipe,$completed);$failureReason=rrdtool_last_rejection();
 $last=rrdtool_execute(array('last',$file),false,RRDTOOL_OUTPUT_STDOUT,$pipe);
 $firstCompleted=$completed[$file] ?? array();
 $legacyRetry=null;
 if ($invalidField === 'legacy') { $retry=rrdtool_function_update($updates,$pipe,$completed);$legacyRetry=array($retry,$completed[$file] ?? array()); }
-foreach ($completed[$file] ?? array() as $time => $status) { unset($updates[$file]['times'][$time]); }
+foreach ($firstCompleted as $time => $status) { if ($status === true) { unset($updates[$file]['times'][$time]); } }
 $retried=rrdtool_function_update($updates,$pipe,$completed);
 $readback=rrdtool_execute(array('lastupdate',$file),false,RRDTOOL_OUTPUT_STDOUT,$pipe);
 $updates[$file]['times']=array(1700000120=>array('in-octets'=>30,'b'=>40));
@@ -1513,6 +1515,12 @@ PROBE;
             ->and(file_get_contents($this->dir . '/updates'))->toBe('111');
         return;
     }
+    if (in_array($invalidField, array('all-invalid', 'empty-fields'), true)) {
+        expect(array_slice($result, 0, 5))->toBe(array(true, false, array(1700000060 => false), '1700000000', false))
+            ->and($result[6])->toBe(1)
+            ->and($result[7])->toMatch('/1700000120:\s+30\s+40/');
+        return;
+    }
     expect(array_slice($result, 0, 5))->toBe(array(true, 1, array(1700000060 => true), '1700000060', 0), $out)
         ->and($result[5])->toMatch($invalidField === 'single' ? '/1700000060:\s+10\s+U/' : '/1700000060:\s+10\s+20/')
         ->and($result[6])->toBe(1)
@@ -1520,4 +1528,4 @@ PROBE;
     if ($invalidField === 'legacy') {
         expect($result[9])->toBe(array(false, array(1700000060 => false)));
     }
-})->with(array('unknown', 'bad-name', 'missing', 'multiple', 'bad:name', 'field_name_too_long1234', 'single', 'legacy','legacy-unknown', 'info-error', 'info-empty', 'info-garbage'));
+})->with(array('unknown', 'bad-name', 'missing', 'multiple', 'bad:name', 'field_name_too_long1234', 'single', 'legacy','legacy-unknown', 'info-error', 'info-empty', 'info-garbage', 'all-invalid', 'empty-fields'));

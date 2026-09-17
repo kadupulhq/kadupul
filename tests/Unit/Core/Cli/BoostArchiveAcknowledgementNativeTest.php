@@ -44,7 +44,7 @@ test('production Boost archive consumer deletes only after acknowledgement and r
             'last-failure' => 0, 'delete-failure' => 1, 'assignment-failure' => 3, 'success' => 3)[$mode];
         expect($deletes)->toHaveCount($count)->and($result['updates'])->toHaveCount($mode === 'archive-failure' ? 0 : 1);
         foreach (array_slice($deletes, 0, 2) as $index => $delete) {
-            expect($delete[0])->toBe('DELETE FROM poller_output_boost_arch_fixture WHERE local_data_id = ? AND rrd_name = ? AND time = FROM_UNIXTIME(?) AND output = ?');
+            expect($delete[0])->toBe('DELETE FROM poller_output_boost_arch_fixture WHERE local_data_id = ? AND rrd_name = ? AND time = FROM_UNIXTIME(?) AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY)');
             expect($delete[1])->toBe(array(42, 'value', $index === 0 ? '1699999800' : '1699999860', $index === 0 ? '21' : '22'));
         }
         if ($count === 3) {

@@ -1125,7 +1125,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 	/* Delete only the exact samples whose updates were acknowledged. */
 	foreach (array_merge(array('poller_output_boost'), (array) $archive_tables) as $table) {
 		foreach ($results as $row) {
-			if (db_execute_prepared("DELETE FROM $table WHERE local_data_id = ? AND rrd_name = ? AND time = FROM_UNIXTIME(?) AND output = ?",
+			if (db_execute_prepared("DELETE FROM $table WHERE local_data_id = ? AND rrd_name = ? AND time = FROM_UNIXTIME(?) AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY)",
 				array($row['local_data_id'], $row['rrd_name'], $row['timestamp'], $row['output'])) === false) {
 				return -1;
 			}

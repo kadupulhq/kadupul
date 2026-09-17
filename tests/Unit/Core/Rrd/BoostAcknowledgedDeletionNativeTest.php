@@ -35,7 +35,7 @@ test('production on-demand Boost deletes only acknowledged sample tuples and pre
         expect($observed['deletes'])->toHaveCount($expectedDeletes)->and($observed['updates'])->toHaveCount(1);
         foreach ($observed['deletes'] as $index => $delete) {
             $table = $index < 2 ? 'poller_output_boost' : 'poller_output_boost_arch_fixture';
-            expect($delete[0])->toBe("DELETE FROM $table WHERE local_data_id = ? AND rrd_name = ? AND time = FROM_UNIXTIME(?) AND output = ?");
+            expect($delete[0])->toBe("DELETE FROM $table WHERE local_data_id = ? AND rrd_name = ? AND time = FROM_UNIXTIME(?) AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY)");
             expect($delete[1])->toBe($index % 2 === 0 ? array(42, 'value', 1699999800, '21') : array(42, 'value', 1699999860, '22'));
         }
         expect($observed['updates'][0])->toContain('--template value')->toContain('1699999800:21');
