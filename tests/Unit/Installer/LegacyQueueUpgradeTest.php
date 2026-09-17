@@ -62,8 +62,14 @@ $cacti_version_codes=array('1.1.6'=>'fixture');
 $reflection=new ReflectionClass('Installer');$installer=$reflection->newInstanceWithoutConstructor();
 $property=$reflection->getProperty('old_cacti_version');$property->setAccessible(true);$property->setValue($installer,'1.1.5');
 $method=$reflection->getMethod('upgradeDatabase');$method->setAccessible(true);
-ob_start();try{$result=$method->invoke($installer);}finally{ob_end_clean();if(isset($cache_file)){unlink($cache_file);}}
-echo json_encode(array($result,$statements));
+ob_start();
+try { $result=$method->invoke($installer); }
+finally {
+    ob_end_clean();
+    $cacheCreated=isset($GLOBALS['cache_file']) && is_file($GLOBALS['cache_file']);
+    $cacheRemoved=$cacheCreated && unlink($GLOBALS['cache_file']);
+}
+echo json_encode(array($result,$statements,$cacheRemoved));
 INSTALLER;
     try {
         file_put_contents($dir . '/probe.php', $script);
@@ -74,6 +80,7 @@ INSTALLER;
         fclose($pipes[2]);
         expect(proc_close($process))->toBe(0)->and($err)->toBe('');
         $result = json_decode($out, true);
+        expect($result[2])->toBeTrue('The installer cache file must be created and removed by the native probe.');
         if ($engine === 'InnoDB') {
             expect($result[0])->toBeFalse();
         } else {

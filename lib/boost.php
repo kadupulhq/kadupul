@@ -274,6 +274,8 @@ function boost_fetch_cache_check($local_data_id, $rrdtool_pipe = false) {
 			return false;
 		}
 
+		$previous_error_reporting = error_reporting();
+
 		/* suppress warnings */
 		if (defined('E_DEPRECATED')) {
 			error_reporting(E_ALL ^ E_DEPRECATED);
@@ -284,25 +286,26 @@ function boost_fetch_cache_check($local_data_id, $rrdtool_pipe = false) {
 		/* install the boost error handler */
 		set_error_handler('boost_error_handler');
 
-		/* process input parameters */
-		if (!is_resource($rrdtool_pipe)) {
-			$rrdtool_pipe = rrd_init(true, false, true);
-			$close_pipe = true;
-		} else {
-			$close_pipe = false;
-		}
+		$close_pipe = false;
+		try {
+			if (!is_resource($rrdtool_pipe)) {
+				$rrdtool_pipe = rrd_init(true, false, true);
+				if ($rrdtool_pipe === false) {
+					cacti_log('ERROR: Boost fetch writer initialization failed; pending samples retained.', false, 'BOOST');
+					return false;
+				}
+				$close_pipe = true;
+			}
 
-		/* get the information to populate into the rrd files */
-		if (boost_check_correct_enabled()) {
-			boost_process_poller_output($local_data_id, $rrdtool_pipe);
-		}
-
-		/* restore original error handler */
-		restore_error_handler();
-
-		/* close rrdtool */
-		if ($close_pipe) {
-			rrd_close($rrdtool_pipe);
+			if (boost_check_correct_enabled()) {
+				boost_process_poller_output($local_data_id, $rrdtool_pipe);
+			}
+		} finally {
+			restore_error_handler();
+			error_reporting($previous_error_reporting);
+			if ($close_pipe) {
+				rrd_close($rrdtool_pipe);
+			}
 		}
 	}
 }

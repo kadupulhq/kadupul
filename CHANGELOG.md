@@ -11,6 +11,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Stop Boost fetch preparation after writer initialization fails; restore caller error settings and release only owned writers on exceptions.
 - Make unsafe poller queue diagnostics available for translation.
 - Include measured poller and dependency-failure integration execution in Sonar coverage, rejecting stale or incomplete evidence.
 
