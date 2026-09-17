@@ -1,6 +1,8 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Preserve retryable poller samples in InnoDB; upgrade retained rows without deletion and refuse collection against volatile MEMORY queues
+-issue: Before cutover set rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php and run --check-rrd-storage as every poller and web service account
 -issue: Log and consume recognized permanent Boost sample rejections without discarding valid later samples; retain transient errors for retry
 -issue: Preserve the empty-string no-pipe convention used by web graph readers during RRD maintenance
 -issue: Every group-writable Unix RRD store, including single-account 0770 layouts, requires explicit trusted GIDs before upgrade; PHP POSIX must be enabled

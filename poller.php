@@ -622,8 +622,10 @@ while ($poller_runs_completed < $poller_runs) {
 			$issue_list .= ", Additional Issues Remain.  Only showing first $issues_limit";
 		}
 
-		cacti_log("WARNING: Poller Output Table not Empty.  Issues: $count, $issue_list", true, 'POLLER');
-		admin_email(__('Cacti System Warning'), __('WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s.', $poller_id, $count, $issue_list));
+		if (debounce_run_notification('poller_output_retained_' . $poller_id, 1800)) {
+			cacti_log("WARNING: Poller Output Table not Empty.  Issues: $count, $issue_list", true, 'POLLER');
+			admin_email(__('Cacti System Warning'), __('WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s.', $poller_id, $count, $issue_list));
+		}
 
 		// Valid pending samples belong to a retry, even after writer failure.
 		$orphan_rows = db_fetch_assoc_prepared('SELECT po.local_data_id, po.rrd_name, po.time, po.output
@@ -774,6 +776,7 @@ while ($poller_runs_completed < $poller_runs) {
 			}
 
 			$rrds_processed = 0;
+			$rrdtool_pipe = false;
 			$poller_finishing_dispatched = false;
 			$poller_output_deferred = false;
 			while (1) {
@@ -791,7 +794,7 @@ while ($poller_runs_completed < $poller_runs) {
 					}
 
 					if ($poller_id == 1) {
-						$rrds_processed += process_poller_output_batch(true, $poller_output_deferred);
+						$rrds_processed += process_poller_output_batch(true, $poller_output_deferred, $rrdtool_pipe);
 						if ($poller_output_deferred) {
 							$rrd_write_failed = true;
 						}
@@ -812,9 +815,11 @@ while ($poller_runs_completed < $poller_runs) {
 					$mtb = microtime(true);
 
 					if ($poller_id == 1) {
-						$rrds_processed += process_poller_output_batch(false, $poller_output_deferred);
-						if ($poller_output_deferred) {
-							$rrd_write_failed = true;
+						if (empty($poller_output_deferred)) {
+							$rrds_processed += process_poller_output_batch(false, $poller_output_deferred, $rrdtool_pipe);
+							if ($poller_output_deferred) {
+								$rrd_write_failed = true;
+							}
 						}
 					} elseif ($config['connection'] != 'online') {
 						/* truncate until formal remote management is supported */
@@ -839,6 +844,10 @@ while ($poller_runs_completed < $poller_runs) {
 						sleep(1);
 					}
 				}
+			}
+
+			if ($rrdtool_pipe !== false) {
+				rrd_close($rrdtool_pipe);
 			}
 
 		}

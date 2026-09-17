@@ -65,8 +65,9 @@ function rrd_maintenance_directory_is_trusted($path) {
  * for the child. Exclusive maintenance refuses active writers by default;
  * callers may explicitly wait when their operation permits it.
  */
-function rrd_maintenance_acquire($exclusive = false, $wait = false, $timeout = null) {
+function rrd_maintenance_acquire($exclusive = false, $wait = false, $timeout = null, &$busy = null) {
 	global $config;
+	$busy = false;
 
 	if (($config['cacti_server_os'] ?? '') === 'win32') {
 		return $exclusive ? false : true;
@@ -89,8 +90,10 @@ function rrd_maintenance_acquire($exclusive = false, $wait = false, $timeout = n
 	}
 	$flags = ($exclusive ? LOCK_EX : LOCK_SH) | (($wait && $timeout === null) ? 0 : LOCK_NB);
 	$deadline = hrtime(true) + max(0, (float) $timeout) * 1000000000;
-	while (!@flock($handle, $flags)) {
+	$would_block = 0;
+	while (!@flock($handle, $flags, $would_block)) {
 		if ($timeout === null || hrtime(true) >= $deadline) {
+			$busy = $would_block === 1;
 			fclose($handle);
 			return false;
 		}
@@ -245,9 +248,19 @@ function rrd_maintenance_restore($xml_file, $rrd_file, $pipe) {
 }
 
 
-/** Stop collection before a bad storage configuration can fill the MEMORY queue. */
+/** Require durable storage before accepting retryable collector samples. */
+function rrd_maintenance_queue_configuration_error() {
+    $engine = db_fetch_cell_prepared('SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?', array('poller_output'));
+    if (is_string($engine) && strtolower($engine) === 'innodb') {
+        return '';
+    }
+    return 'The poller_output queue must use InnoDB before collection. Stop collectors and run cli/upgrade_database.php (or convert poller_output to InnoDB after a backup). Observed engine: ' . (is_string($engine) && $engine !== '' ? $engine : 'unavailable') . '. Retained samples must not be discarded to clear this condition.';
+}
+
+/** Stop collection before unsafe storage or a volatile retry queue can lose samples. */
 function rrd_maintenance_poller_preflight() {
     $error = rrd_maintenance_configuration_error();
+    if ($error === '') { $error = rrd_maintenance_queue_configuration_error(); }
     if ($error === '') {
         return true;
     }

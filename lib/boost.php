@@ -1214,7 +1214,9 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 		$rrdtool_pipe = rrd_init(true, false, true);
 	}
 	if ($rrdtool_pipe === false) {
-		cacti_log('ERROR: RRD initialization failed; pending on-demand Boost samples were retained.', false, 'BOOST');
+		if (empty($config['is_web']) || debounce_run_notification('rrd_initialization_failure', 1800)) {
+			cacti_log('ERROR: RRD initialization failed; pending on-demand Boost samples were retained.', false, 'BOOST');
+		}
 		return -1;
 	}
 	$previous_error_reporting = error_reporting();

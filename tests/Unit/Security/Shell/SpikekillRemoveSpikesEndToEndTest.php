@@ -637,3 +637,14 @@ test('spike removal waits for a live writer and then completes', function () {
         @unlink($ready); @unlink($script);
     }
 });
+
+test('web spike removal identifies untrusted storage without suggesting polling contention', function () {
+    chmod($this->rrd_dir, 0770);
+    try {
+        $instance = spikekill_e2e_instance($this->rrdfile);
+        expect($instance->remove_spikes())->toBeFalse()
+            ->and($instance->get_errors())->toContain('storage is untrusted or unavailable')
+            ->not->toContain('storage is busy')
+            ->and(file_get_contents($this->rrdfile))->toBe('original-rrd-bytes');
+    } finally { chmod($this->rrd_dir, 0700); }
+});

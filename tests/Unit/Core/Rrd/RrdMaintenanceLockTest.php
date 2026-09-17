@@ -889,9 +889,10 @@ test('poller storage preflight notifies administrators and fails closed on untru
     if ($mode === 'readonly' && posix_geteuid() === 0) { $this->markTestSkipped('Root bypasses write permissions.'); }
     $root = dirname(__DIR__, 4);
     $configuration = array('cacti_server_os'=>'unix','rra_path'=>$this->dir);
-    if ($mode !== 'private') { chmod($this->dir,0770); }
+    if (in_array($mode,array('trusted-group','untrusted-group'),true)) { chmod($this->dir,0770); }
     if ($mode === 'trusted-group') { $configuration['rrd_maintenance_trusted_gids']=array(posix_getegid()); }
-    $blocked = in_array($mode,array('untrusted-group','readonly'),true);
+    $blocked = in_array($mode,array('untrusted-group','readonly','memory','unknown','unreadable'),true);
+    $engine = array('memory'=>'MEMORY','unknown'=>'','unreadable'=>false)[$mode] ?? 'InnoDB';
     $bootstrap='<?php ';
     if ($this->getTestResultObject()->getCodeCoverage() !== null) {
         $this->expectedChildReports=1;
@@ -900,7 +901,7 @@ test('poller storage preflight notifies administrators and fails closed on untru
     $bootstrap.='$config='.var_export($configuration,true).';$messages=array();$notifications=array();'.
         'function read_config_option($key){return false;}function __($message){return $message;}'.
         'function cacti_log($message,...$args){$GLOBALS["messages"][]=$message;}'.
-        'function admin_email($subject,$message){$GLOBALS["notifications"][]=array($subject,$message);}'.
+        'function db_fetch_cell_prepared(...$args){return '.var_export($engine,true).';}function admin_email($subject,$message){$GLOBALS["notifications"][]=array($subject,$message);}'.
         'require '.var_export($root.'/lib/rrd_maintenance.php',true).';'.
         '$result=rrd_maintenance_poller_preflight();chmod(__DIR__,0700);echo json_encode(array($result,$messages,$notifications));';
     file_put_contents($this->dir.'/preflight.php',$bootstrap);
@@ -912,8 +913,9 @@ test('poller storage preflight notifies administrators and fails closed on untru
     expect($result[0])->toBe(!$blocked);
     expect($result[1])->toHaveCount($blocked?1:0);
     expect($result[2])->toHaveCount($blocked?1:0);
-    if ($blocked) { expect($result[2][0][1])->toContain('rrd_maintenance_trusted_uids')->toContain('rrd_maintenance_trusted_gids'); }
-})->with(array('private','trusted-group','untrusted-group','readonly'));
+    if (in_array($mode,array('memory','unknown','unreadable'),true)) { expect($result[2][0][1])->toContain('must use InnoDB')->toContain('must not be discarded'); }
+    elseif ($blocked) { expect($result[2][0][1])->toContain('rrd_maintenance_trusted_uids')->toContain('rrd_maintenance_trusted_gids'); }
+})->with(array('private','trusted-group','untrusted-group','readonly','memory','unknown','unreadable'));
 
 
 test('destructive commands cannot use a shared writer lease', function ($verb, $persistent) {
@@ -939,3 +941,50 @@ test('destructive commands cannot use a shared writer lease', function ($verb, $
         expect(file_exists($this->dir.'/executed'))->toBeFalse();
     } finally { rrd_maintenance_release($lease); }
 })->with(array('tune','resize','restore'))->with(array(false,true));
+
+test('nonblocking RRD initialization identifies a busy maintenance lease without an error', function () {
+    $root = dirname(__DIR__, 4);
+    $bootstrap = '<?php ';
+    if ($this->getTestResultObject()->getCodeCoverage() !== null) {
+        $this->expectedChildReports = 1;
+        $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY",__DIR__); require ' . var_export($root . '/tests/fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $bootstrap .= '$config=' . var_export(array('cacti_server_os' => 'unix', 'rra_path' => $this->dir), true) . ';$logs=array();';
+    $bootstrap .= 'function read_config_option($key){return "";}function cacti_log($message,...$args){$GLOBALS["logs"][]=$message;}';
+    $bootstrap .= 'require ' . var_export($root . '/lib/rrd.php', true) . ';$start=microtime(true);$pipe=rrd_init(true,false,true,0,$busy);echo json_encode(array($pipe,$busy,$logs,microtime(true)-$start));';
+    file_put_contents($this->dir . '/busy-reader.php', $bootstrap);
+    $lease = rrd_maintenance_acquire(true, false, 0);
+    expect(is_resource($lease))->toBeTrue();
+    try {
+        $process = proc_open(array(PHP_BINARY, $this->dir . '/busy-reader.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $output = stream_get_contents($pipes[1]);
+        $error = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        expect(proc_close($process))->toBe(0)->and($error)->toBe('');
+        $result = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
+        expect(array_slice($result, 0, 3))->toBe(array(false, true, array()))->and($result[3])->toBeLessThan(1.0);
+    } finally {
+        rrd_maintenance_release($lease);
+    }
+});
+
+test('web writer and on-demand Boost share a throttled initialization diagnostic', function () {
+    $root = dirname(__DIR__, 4);
+    chmod($this->dir, 0770);
+    $bootstrap = '<?php $config=' . var_export(array('cacti_server_os'=>'unix','is_web'=>true,'rra_path'=>$this->dir,'library_path'=>$root.'/lib'),true) . ';' .
+        'function read_config_option($key){return false;}function cacti_system_zone_set(){}' .
+        'function cacti_log($message,...$args){$GLOBALS["messages"][]=$message;}' .
+        'function debounce_run_notification($key,$frequency){if(isset($GLOBALS["debounced"][$key])){return false;}$GLOBALS["debounced"][$key]=true;return true;}' .
+        'require '.var_export($root.'/tests/Helpers/PhpSource.php',true).';require '.var_export($root.'/lib/rrd.php',true).';' .
+        'eval(test_php_function_source(file_get_contents('.var_export($root.'/lib/boost.php',true).'),"boost_process_poller_output"));' .
+        '$messages=array();$results=array();for($i=0;$i<3;$i++){$results[]=boost_process_poller_output(7);}' .
+        'echo json_encode(array($results,$messages));';
+    file_put_contents($this->dir.'/web.php',$bootstrap);
+    $process=proc_open(array(PHP_BINARY,$this->dir.'/web.php'),array(1=>array('pipe','w'),2=>array('pipe','w')),$pipes);
+    $output=stream_get_contents($pipes[1]);$error=stream_get_contents($pipes[2]);fclose($pipes[1]);fclose($pipes[2]);chmod($this->dir,0700);
+    expect(proc_close($process))->toBe(0,$error)->and($error)->toBe('');
+    $result=json_decode($output,true);
+    expect($result[0])->toBe(array(-1,-1,-1))->and($result[1])->toHaveCount(1);
+    expect($result[1][0])->toContain('Unable to coordinate local RRD writes');
+});

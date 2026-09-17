@@ -413,9 +413,10 @@ class spikekill {
 		}
 
 		// Wait through brief polling contention, with a bounded deadline.
-		$lock = rrd_maintenance_acquire(true, false, min(60, $this->commandTimeout()));
+		$lock = rrd_maintenance_acquire(true, false, min(60, $this->commandTimeout()), $busy);
 		if ($lock === false) {
-			$this->set_error(__('FATAL: RRD storage is busy or its maintenance lock is unavailable. Retry after polling completes.'));
+			$this->set_error($busy ? __('FATAL: RRD storage is busy. Retry after polling completes.') :
+				__('FATAL: RRD storage is untrusted or unavailable. Run cli/upgrade_database.php --check-rrd-storage as the web service account and correct its storage configuration.'));
 			return false;
 		}
 

@@ -62,8 +62,9 @@ function rrdtool_reset_language() {
 	putenv('LANG=' . $prev_lang);
 }
 
-function rrd_init($output_to_term = true, $exclusive = false, $acknowledged = false) {
+function rrd_init($output_to_term = true, $exclusive = false, $acknowledged = false, $lease_timeout = null, &$lease_busy = null) {
 	global $config;
+	$lease_busy = false;
 
 	$args = array_slice(func_get_args(), 0, 1);
 	$force_storage_location_local = (isset($config['force_storage_location_local']) && $config['force_storage_location_local'] === true ) ? true : false;
@@ -78,9 +79,11 @@ function rrd_init($output_to_term = true, $exclusive = false, $acknowledged = fa
 		cacti_log('ERROR: Disable RRDCACHED_ADDRESS before destructive RRD maintenance.');
 		return false;
 	}
-	$lock = rrd_maintenance_acquire($exclusive && ($config['cacti_server_os'] ?? '') !== 'win32');
+	$lock = rrd_maintenance_acquire($exclusive && ($config['cacti_server_os'] ?? '') !== 'win32', false, $lease_timeout, $lease_busy);
 	if ($lock === false) {
-		cacti_log('ERROR: Unable to coordinate local RRD writes with maintenance.');
+		if ((!$lease_busy || $lease_timeout !== 0) && (empty($config['is_web']) || debounce_run_notification('rrd_initialization_failure', 1800))) {
+			cacti_log('ERROR: Unable to coordinate local RRD writes with maintenance.');
+		}
 		return false;
 	}
 
@@ -953,6 +956,10 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp=
 			}
 			break;
 		case RRDTOOL_OUTPUT_BOOLEAN :
+			if (preg_match('/^ERROR:\s*(.+)$/m', $output, $error)) {
+				$rejection =& rrdtool_last_rejection();
+				$rejection = trim($error[1]);
+			}
 			return strpos($output, 'ERROR:') === false && preg_match('/^OK u:[^\r\n]+\r?$/m', $output) === 1;
 			break;
 	}
@@ -1233,7 +1240,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
  */
 function rrdtool_rejection_is_permanent($reason) {
 	return is_string($reason) && (bool) preg_match(
-		'/^(?:unknown DS name [\'"]|found extra data on update argument:|expected \d+ data source readings \(got \d+\)|illegal attempt to update using time \d+ when last update time is \d+)/',
+		'/^(?:[^\r\n]+: )?(?:unknown DS name [\'"]|found extra data on update argument:|expected \d+ data source readings \(got \d+\)|illegal attempt to update using time \d+ when last update time is \d+)/',
 		$reason
 	);
 }

@@ -45,6 +45,7 @@ $cli_upgrade = true;
 $local       = false;
 $session     = array();
 $forcever    = '';
+$check_rrd_storage = false;
 
 if (cacti_sizeof($parms)) {
 	foreach($parms as $parameter) {
@@ -56,6 +57,9 @@ if (cacti_sizeof($parms)) {
 		}
 
 		switch ($arg) {
+			case '--check-rrd-storage':
+				$check_rrd_storage = true;
+				break;
 			case '--local':
 				$local = true;
 				break;
@@ -89,6 +93,16 @@ $storage_error = rrd_maintenance_configuration_error();
 if ($storage_error !== '') {
 	fwrite(STDERR, $storage_error . PHP_EOL);
 	exit(1);
+}
+
+if ($check_rrd_storage) {
+	$queue_error = rrd_maintenance_queue_configuration_error();
+	if ($queue_error !== '') {
+		fwrite(STDERR, $queue_error . PHP_EOL);
+		exit(1);
+	}
+	printf("RRD storage and durable queue checks passed for UID %s, GID %s. No upgrade was performed.\n", function_exists('posix_geteuid') ? posix_geteuid() : 'Windows', function_exists('posix_getegid') ? posix_getegid() : 'Windows');
+	exit(0);
 }
 
 if (!$local && $config['poller_id'] > 1) {
@@ -229,6 +243,7 @@ function display_help () {
 	print 'Typically, this user account will be apache, www-run, or root.' . PHP_EOL . PHP_EOL;
 	print 'If you are running a beta or alpha version of Cacti and need to rerun' . PHP_EOL;
 	print 'the upgrade script, simply set the forcever to the previous release.' . PHP_EOL . PHP_EOL;
+	print '--check-rrd-storage - Check storage and queue access as this service account without upgrading' . PHP_EOL;
 	print '--forcever - Force the starting version, say ' . CACTI_VERSION . PHP_EOL;
 	print '--local    - Perform the action on the Remote Data Collector if run from there' . PHP_EOL;
 	print '--debug    - Display verbose output during execution' . PHP_EOL . PHP_EOL;

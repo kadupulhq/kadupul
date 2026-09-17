@@ -8,55 +8,138 @@ namespace PollerBatchLeaseTest;
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 require_once dirname(__DIR__, 4) . '/lib/rrd_maintenance.php';
 eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/poller.php'), 'process_poller_output_batch'));
-$GLOBALS['batch_failure_logs'] = array();
-function cacti_log($message, ...$args) { $GLOBALS['batch_failure_logs'][] = $message; }
-function db_fetch_cell($sql) {
-    expect($sql)->toBe('SELECT COUNT(*) FROM poller_output');
-    return $GLOBALS['batch_mode'] === 'empty' ? 0 : ($GLOBALS['batch_mode'] === 'query-failed' ? false : 3);
-}
-function rrd_init($output, $local, $acknowledged)
+const SQL_NO_CACHE = '';
+function remote_backend()
 {
-    $GLOBALS['batch_opened'] = true;
-    expect(array($output, $local, $acknowledged))->toBe(array(true, false, true));
-    return $GLOBALS['batch_mode'] === 'init-failed' ? false : \rrd_maintenance_acquire(false, false, 0);
+    return ($GLOBALS['config']['force_storage_location_local'] ?? false) !== true && $GLOBALS['batch']['proxy'];
 }
-function rrd_close($lease) { \rrd_maintenance_release($lease); }
-function process_poller_output(&$lease, $final, &$deferred)
+function read_config_option($key)
 {
-    expect(\rrd_maintenance_acquire(true, false, 0))->toBeFalse();
-    expect($final)->toBeTrue();
-    if ($GLOBALS['batch_mode'] === 'exception') { throw new \RuntimeException('drain failed'); }
-    $deferred = $GLOBALS['batch_mode'] === 'retry';
+    return $GLOBALS['batch']['proxy'];
+}
+function cacti_log($message, ...$args)
+{
+    $GLOBALS['batch']['logs'][] = $message;
+}
+function db_fetch_cell_prepared($sql)
+{
+    expect($sql)->toBe('SELECT  COUNT(*) FROM poller_output');
+    return $GLOBALS['batch']['mode'] === 'empty' ? 0 : ($GLOBALS['batch']['mode'] === 'query-failed' ? false : 3);
+}
+function rrd_init($output, $exclusive, $acknowledged, $timeout = null, &$busy = null)
+{
+    expect(array($output, $exclusive, $acknowledged))->toBe(array(true, false, true));
+    $GLOBALS['batch']['opens']++;
+    $busy = false;
+    if ($GLOBALS['batch']['mode'] === 'init-failed') {
+        return false;
+    }
+    if (remote_backend()) {
+        return fopen('php://temp', 'r+');
+    }
+    expect($timeout)->toBe(0);
+    return \rrd_maintenance_acquire(false, false, 0, $busy);
+}
+function rrd_close($pipe)
+{
+    $GLOBALS['batch']['closes']++;
+    \rrd_maintenance_release($pipe);
+}
+function process_poller_output(&$pipe, $final, &$deferred)
+{
+    if (!remote_backend()) {
+        expect(\rrd_maintenance_acquire(true, false, 0))->toBeFalse();
+    }
+    if ($GLOBALS['batch']['mode'] === 'exception') {
+        throw new \RuntimeException('drain failed');
+    }
+    $deferred = $GLOBALS['batch']['mode'] === 'retry';
     return 3;
 }
-test('batch writer lease is released before the next collector wait even on failure', function ($mode) {
-    $saved = $GLOBALS['config'] ?? null;
-    $directory = sys_get_temp_dir() . '/poller-batch-lease-' . bin2hex(random_bytes(8));
-    mkdir($directory, 0700);
-    $GLOBALS['config'] = array('cacti_server_os' => 'unix', 'rra_path' => $directory);
-    $GLOBALS['batch_mode'] = $mode;
-    $GLOBALS['batch_opened'] = false;
+beforeEach(function () {
+    $this->savedConfig = $GLOBALS['config'] ?? null;
+    $this->directory = sys_get_temp_dir() . '/poller-batch-lease-' . bin2hex(random_bytes(8));
+    mkdir($this->directory, 0700);
+    $GLOBALS['config'] = array('cacti_server_os' => 'unix', 'rra_path' => $this->directory);
+    $GLOBALS['batch'] = array('mode' => 'empty', 'proxy' => false, 'opens' => 0, 'closes' => 0, 'logs' => array());
+    $proxy = false;
+    process_poller_output_batch(true, $deferred, $proxy); // Reset dedupe after recovery.
+});
+afterEach(function () {
+    $GLOBALS['config'] = $this->savedConfig;
+    rmdir($this->directory);
+});
+
+test('local batches release leases and defer busy maintenance without errors or delays', function ($mode) {
+    $GLOBALS['batch']['mode'] = $mode;
+    $held = $mode === 'busy' ? \rrd_maintenance_acquire(true, false, 0) : false;
+    $proxy = false;
     try {
-        $deferred = false;
+        $start = microtime(true);
         if ($mode === 'exception') {
-            expect(fn() => process_poller_output_batch(true, $deferred))->toThrow(\RuntimeException::class, 'drain failed');
+            expect(function () use (&$deferred, &$proxy) {
+                return process_poller_output_batch(true, $deferred, $proxy);
+            })->toThrow(\RuntimeException::class, 'drain failed');
         } else {
-            expect(process_poller_output_batch(true, $deferred))->toBe(in_array($mode, array('init-failed', 'empty', 'query-failed'), true) ? 0 : 3);
-            expect($deferred)->toBe(!in_array($mode, array('success', 'empty'), true));
+            expect(process_poller_output_batch(true, $deferred, $proxy))->toBe(in_array($mode, array('success', 'retry'), true) ? 3 : 0);
+            expect($deferred)->toBe(in_array($mode, array('retry', 'init-failed', 'query-failed'), true));
         }
-        expect($GLOBALS['batch_opened'])->toBe(!in_array($mode, array('empty', 'query-failed'), true));
-        if (in_array($mode, array('init-failed', 'query-failed'), true)) {
-            $message = $mode === 'init-failed' ? 'Unable to start the RRD batch writer' : 'Unable to read pending poller output count';
-            $logs = implode("\n", $GLOBALS['batch_failure_logs']);
-            expect(substr_count($logs, $message))->toBe(1);
-            process_poller_output_batch(true, $deferred);
-            expect(implode("\n", $GLOBALS['batch_failure_logs']))->toBe($logs);
+        if ($mode === 'busy') {
+            expect(microtime(true) - $start)->toBeLessThan(1.0);
+            expect(implode(' ', $GLOBALS['batch']['logs']))->toContain('NOTE: RRD maintenance is active')->not->toContain('ERROR');
         }
-        $exclusive = \rrd_maintenance_acquire(true, false, 0);
-        expect(is_resource($exclusive))->toBeTrue();
-        \rrd_maintenance_release($exclusive);
+        if (in_array($mode, array('empty', 'query-failed'), true)) {
+            expect($GLOBALS['batch']['opens'])->toBe(0);
+        }
     } finally {
-        $GLOBALS['config'] = $saved;
-        rmdir($directory);
+        \rrd_maintenance_release($held);
     }
-})->with(array('success', 'retry', 'init-failed', 'exception', 'empty', 'query-failed'));
+    $exclusive = \rrd_maintenance_acquire(true, false, 0);
+    expect(is_resource($exclusive))->toBeTrue();
+    \rrd_maintenance_release($exclusive);
+})->with(array('success', 'retry', 'init-failed', 'exception', 'empty', 'query-failed', 'busy'));
+
+test('batch failure logs deduplicate while failing and resume after recovery', function ($mode) {
+    $proxy = false;
+    $GLOBALS['batch']['mode'] = $mode;
+    process_poller_output_batch(true, $deferred, $proxy);
+    process_poller_output_batch(true, $deferred, $proxy);
+    expect($GLOBALS['batch']['logs'])->toHaveCount(1);
+    $GLOBALS['batch']['mode'] = 'success';
+    process_poller_output_batch(true, $deferred, $proxy);
+    $GLOBALS['batch']['mode'] = $mode;
+    process_poller_output_batch(true, $deferred, $proxy);
+    expect($GLOBALS['batch']['logs'])->toHaveCount(2);
+})->with(array('init-failed', 'query-failed'));
+
+test('proxy batches reuse a connection until failure or the collector cycle ends', function ($failure) {
+    $GLOBALS['batch']['proxy'] = true;
+    $GLOBALS['batch']['mode'] = 'success';
+    $proxy = false;
+    process_poller_output_batch(true, $deferred, $proxy);
+    process_poller_output_batch(true, $deferred, $proxy);
+    expect($GLOBALS['batch']['opens'])->toBe(1)->and($GLOBALS['batch']['closes'])->toBe(0);
+    $GLOBALS['batch']['mode'] = $failure;
+    if ($failure === 'exception') {
+        expect(function () use (&$deferred, &$proxy) {
+            return process_poller_output_batch(true, $deferred, $proxy);
+        })->toThrow(\RuntimeException::class);
+    } else {
+        expect(process_poller_output_batch(true, $deferred, $proxy))->toBe(3)->and($deferred)->toBeTrue();
+    }
+    expect($GLOBALS['batch']['closes'])->toBe(1)->and($proxy)->toBeFalse();
+    $GLOBALS['batch']['mode'] = 'success';
+    process_poller_output_batch(true, $deferred, $proxy);
+    expect($GLOBALS['batch']['opens'])->toBe(2);
+    rrd_close($proxy);
+})->with(array('retry', 'exception'));
+
+test('forced local storage ignores the configured proxy and Windows boolean writers close safely', function ($windows) {
+    $GLOBALS['batch']['proxy'] = true;
+    $GLOBALS['batch']['mode'] = 'success';
+    $GLOBALS['config']['force_storage_location_local'] = true;
+    $GLOBALS['config']['cacti_server_os'] = $windows ? 'win32' : 'unix';
+    $proxy = false;
+    expect(process_poller_output_batch(true, $deferred, $proxy))->toBe(3)->and($deferred)->toBeFalse();
+    expect($GLOBALS['batch']['opens'])->toBe(1)->and($GLOBALS['batch']['closes'])->toBe(1)->and($proxy)->toBeFalse();
+})->with(array(false, true));

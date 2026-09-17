@@ -172,7 +172,7 @@ while (($raw = proxy_read_message($client)) !== false) {
 	if ($parts[0] === 'file_exists') {
 		$status = call_user_func_array('file_exists', explode(' ', $parts[1] ?? ''));
 		$reply  = ($status === true) ? 'OK u:0.00' : 'ERROR:';
-	} elseif ($parts[0] === 'fetch' && $keys['rrdtool'] !== '') {
+	} elseif (in_array($parts[0], array('fetch', 'update'), true) && $keys['rrdtool'] !== '') {
 		/* Cacti/rrdproxy lib/client.php: an $rrdtool_cmds verb is written to the proxy's
 		 * own 'rrdtool -' pipe as $cmd . ' ' . $cmd_options . "\r\n" */
 		$process = proc_open(array($keys['rrdtool'], '-'), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $keys['work']);
@@ -236,7 +236,13 @@ $calls  = array();
 
 foreach ($keys['calls'] as $call) {
 	try {
-		if ($call[0] == 'array') {
+		if ($call[0] == 'update') {
+            $argv = str_replace('{work}', $keys['work'], $call[1]);
+            $ok = rrdtool_execute($argv, false, RRDTOOL_OUTPUT_BOOLEAN, $rrdp);
+            $calls[] = array('ok' => $ok, 'reason' => rrdtool_last_rejection(), 'permanent' => rrdtool_rejection_is_permanent(rrdtool_last_rejection()));
+            continue;
+        }
+        if ($call[0] == 'array') {
 			$argv = str_replace('{work}', $keys['work'], $call[1]);
 			$calls[] = rrdtool_execute($argv, false, RRDTOOL_OUTPUT_STDOUT, $rrdp, 'RRDCHECK');
 
@@ -379,3 +385,15 @@ test('RRDproxy array fetch commands arrive as one quoted rrdtool command, includ
 		expect($packet['encrypted'])->toBeTrue();
 	}
 })->skip(!extension_loaded('sockets') || cacti_test_rrdtool_binary() === '', 'the sockets extension or rrdtool is not available');
+
+
+test('native proxy errors preserve permanent rejection reasons and clear them after recovery', function () use ($rrdProxyRoot) {
+    $run = rrd_proxy_channel_run($rrdProxyRoot, array(
+        array('update', array('update', '{work}/sample.rrd', '--template', 'missing', '1700000300:42')),
+        array('update', array('update', '{work}/sample.rrd', '1700000300:42:43')),
+        array('update', array('update', '{work}/sample.rrd', '1700000300:42')),
+    ), array(), array('sample.rrd'));
+    expect($run['client']['calls'][0]['ok'])->toBeFalse()->and($run['client']['calls'][0]['permanent'])->toBeTrue();
+    expect($run['client']['calls'][1]['ok'])->toBeFalse()->and($run['client']['calls'][1]['permanent'])->toBeTrue(json_encode($run['client']['calls']));
+    expect($run['client']['calls'][2])->toBe(array('ok' => true, 'reason' => null, 'permanent' => false));
+})->skip(!extension_loaded('sockets') || cacti_test_rrdtool_binary() === '', 'Native RRDtool and sockets are required');

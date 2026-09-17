@@ -133,8 +133,13 @@ only after RRDtool acknowledges success and ownership/mode are preserved. Failed
 or timed-out restores leave the original file and recovery XML intact.
 
 Windows uses synchronous per-command acknowledgements; persistent nonblocking
-RRDtool pipes are POSIX-only. Windows poller throughput has not been validated by
-this change. Do not treat the Unix capacity evidence as Windows capacity evidence.
+RRDtool pipes are POSIX-only. A native Windows Server 2022 measurement (PHP 8.1.34, RRDtool 1.9.0, application
+`7880c90949f63c9cdb8c14ddda54d4f07165760d`) verified all 1,000 acknowledged
+writes in 37.7 seconds (26.6 samples/second). The 100-write case took 3.8 seconds.
+[Workflow and artifact](https://github.com/kadupulhq/kadupul/actions/runs/35175217097)
+record binary/source hashes and readback checks. This is a local writer measurement;
+it excludes collection, database load, proxy traffic and concurrent maintenance.
+Size deployments against their full polling interval; it is not a universal capacity guarantee.
 
 The primary poller and Boost master also check this prerequisite before launching
 collection or worker processes, including after a code-only deployment. They exit
@@ -170,7 +175,7 @@ writers. Ordinary acknowledged Windows updates remain available.
 
 An RRD failure retains retryable samples and sets a nonzero poller exit status,
 but does not skip post-poll services, maintenance, reports, recovery flushes or
-plugin hooks. The poller releases its writer pipe and shared storage lease after
+plugin hooks. For local storage the poller releases its writer pipe and shared lease after
 each output batch, before sleeping while collectors finish. Exclusive maintenance
 can use the gaps between batches. Active writers still take priority over unsafe
 file replacement; stop writers when an operation requires a guaranteed window.
@@ -191,3 +196,34 @@ Boost logs and consumes only recognized permanent sample/schema rejections. If a
 bulk command encounters one, it retries individual samples so later valid samples
 are still written; transient or unknown errors retain the page. Retries use the
 existing timestamp protections to avoid rewriting already committed values.
+
+Local batches probe maintenance locks without waiting and log a NOTE while busy.
+Planned maintenance preserves queued samples without marking the collector run
+failed. Real storage, writer and database failures remain errors; logging resumes
+after recovery. Proxy batches reuse one connection until cycle completion or error.
+
+
+### Durable retry queue and service-account probe
+
+The normal `poller_output` queue now requires InnoDB, matching the existing Boost
+queue. The 1.2.32 upgrade converts it without deleting retained rows. Before a
+code-only deployment, stop collectors, back up the database, and run the upgrade
+(or `ALTER TABLE poller_output ENGINE=InnoDB ROW_FORMAT=Dynamic`). Do not restart
+collection until the queue is InnoDB; the startup preflight rejects MEMORY or an
+unreadable engine. InnoDB retains samples across restarts under the configured database durability settings. Disk capacity must
+be monitored; durability does not provide unlimited retention capacity.
+
+Run `php cli/upgrade_database.php --check-rrd-storage` under each actual service
+account, including the web user, before cutover. For example, use
+`sudo -u www-data php cli/upgrade_database.php --check-rrd-storage` on systems with
+that account. The check reports the invoking UID/GID, makes no upgrade, and exits
+nonzero for unsafe storage or an unsuitable queue. Configure the exact
+`$config['rrd_maintenance_trusted_uids']` and
+`$config['rrd_maintenance_trusted_gids']` keys in `include/config.php` for all
+participating accounts and writable groups. Root-only validation cannot establish
+that the web account has access.
+
+After a real batch write failure, interim attempts stop until the final drain;
+maintenance contention remains retryable between batches. Retained-queue warning
+mail is limited to once per 30 minutes per poller. Samples are preserved for repair,
+not expired merely because a writer remains unavailable.
