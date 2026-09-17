@@ -410,3 +410,48 @@ FIXTURE;
         }
     }
 })->with(array(0, 1, 'unknown', 'crash', 'killed', 'timeout'));
+
+test('storage probe and explicit queue migration preserve the cutover contract', function ($engine, $trusted, $migrate = false, $success = true) {
+    $root = dirname(__DIR__, 4);
+    $dir = sys_get_temp_dir() . '/rrd-probe-' . bin2hex(random_bytes(8));
+    foreach (array('', '/cli', '/include', '/lib', '/install', '/store') as $suffix) {
+        mkdir($dir . $suffix, 0700);
+    }
+    try {
+        copy($root . '/cli/upgrade_database.php', $dir . '/cli/upgrade_database.php');
+        symlink($root . '/lib/rrd_maintenance.php', $dir . '/lib/rrd_maintenance.php');
+        foreach (array('lib/data_query.php', 'lib/poller.php', 'lib/utility.php', 'install/functions.php') as $file) {
+            file_put_contents($dir . '/' . $file, '<?php');
+        }
+        if (!$trusted) {
+            chmod($dir . '/store', 0770);
+        }
+        $bootstrap = '<?php ini_set("display_errors", "stderr"); $config = ' . var_export(array('base_path' => $dir, 'rra_path' => $dir . '/store', 'cacti_server_os' => 'unix', 'poller_id' => 1), true) . ';' .
+            'function __($message) { return $message; } function cacti_sizeof($value) { return count($value); } function read_config_option($key) { return false; }' .
+            'function db_fetch_cell_prepared($sql, $params) { if ($params !== array("poller_output")) { throw new RuntimeException("Wrong queue"); } return ' . var_export($engine, true) . '; }' .
+            'function db_execute_prepared($sql, ...$args) { file_put_contents(dirname(__DIR__)."/mutation",$sql); return ' . var_export($success, true) . '; }';
+        file_put_contents($dir . '/include/cli_check.php', $bootstrap);
+        $arguments = rrd_cli_coverage_arguments($this, $dir, $root, 'upgrade_database.php');
+        $process = proc_open(array_merge(array(PHP_BINARY), $arguments, array($dir . '/cli/upgrade_database.php', $migrate ? '--migrate-poller-queue' : '--check-rrd-storage')), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $output = stream_get_contents($pipes[1]);
+        $error = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        $accepted = $trusted && ($migrate ? $success : $engine === 'InnoDB');
+        expect(proc_close($process))->toBe($accepted ? 0 : 1, $error . $output);
+        if ($trusted && $migrate) {
+            expect(file_get_contents($dir . '/mutation'))->toBe('ALTER TABLE poller_output ENGINE=InnoDB ROW_FORMAT=Dynamic');
+            expect($success ? $output : $error)->toContain($success ? 'retained samples preserved' : 'collectors must remain stopped');
+        } elseif ($accepted) {
+            expect($error)->toBe('')->and($output)->toContain('No upgrade was performed')->toContain('UID ' . posix_geteuid());
+        } else {
+            expect($error)->toContain($trusted ? 'must use InnoDB' : 'rrd_maintenance_trusted_gids');
+        }
+        if (!$migrate || !$trusted) {
+            expect(file_exists($dir . '/mutation'))->toBeFalse();
+        }
+        rrd_cli_merge_coverage($this, $dir);
+    } finally {
+        rrd_cli_fixture_remove($dir);
+    }
+})->with(array(array('InnoDB', true), array('MEMORY', true), array(false, true), array('InnoDB', false), array('MEMORY', true, true), array('MEMORY', true, true, false), array('MEMORY', false, true)));
