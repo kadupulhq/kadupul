@@ -1,0 +1,44 @@
+name: Native Windows RRD writer evidence
+on:
+  push:
+    branches: [chore/windows-rrd-evidence]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  writer:
+    runs-on: windows-2022
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: 7880c90949f63c9cdb8c14ddda54d4f07165760d
+          path: application
+          persist-credentials: false
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240
+        with:
+          php-version: '8.1'
+          coverage: none
+      - name: Install checksum-pinned upstream Windows RRDtool
+        shell: pwsh
+        run: |
+          $archive = Join-Path $env:RUNNER_TEMP 'rrdtool.zip'
+          Invoke-WebRequest 'https://github.com/oetiker/rrdtool-1.x/releases/download/v1.9.0/rrdtool-1.9.0-x64_vcpkg.zip' -OutFile $archive
+          if ((Get-FileHash $archive -Algorithm SHA256).Hash.ToLowerInvariant() -ne 'cd67253186cf58aa57a764b0aa3d9cdf4b4107f0116e67a4a4ee6885e42b1f37') { throw 'RRDtool checksum mismatch' }
+          $destination = Join-Path $env:RUNNER_TEMP 'rrdtool'
+          Expand-Archive $archive -DestinationPath $destination
+          $binary = @(Get-ChildItem $destination -Recurse -Filter rrdtool.exe)
+          if ($binary.Count -ne 1) { throw 'Expected exactly one RRDtool executable' }
+          "RRDTOOL_TEST_BINARY=$($binary[0].FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+      - name: Measure and verify every written sample
+        shell: pwsh
+        run: php tests/diagnostics/windows_rrd_writer.php application windows-rrd-writer.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-windows-rrd-writer
+          path: windows-rrd-writer.json
+          if-no-files-found: error
