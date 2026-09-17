@@ -1464,7 +1464,7 @@ define('CACTI_LOCALE','en-US');
 function read_config_option($key){return $key==='path_rrdtool'?$GLOBALS['binary']:'';}
 function get_rrdtool_version(){return strpos($GLOBALS['invalidField'],'legacy')===0?'1.4':'1.5';}
 function __($message,...$args){return $args?vsprintf($message,$args):$message;}
-function cacti_log(...$args){}
+function cacti_log(...$args){$GLOBALS['retryLogs'][]=$args[0];}
 function cacti_session_close(){}
 require $root.'/tests/Helpers/PhpSource.php';
 $functions=file_get_contents($root.'/lib/functions.php');
@@ -1485,7 +1485,7 @@ if ($invalidField === 'multiple') { $updates[$file]['times'][1700000060]['anothe
 if ($invalidField === 'all-invalid') { $updates[$file]['times'][1700000060]=array('bad:name'=>99); }
 if ($invalidField === 'empty-fields') { $updates[$file]['times'][1700000060]=array(); }
 if (strpos($invalidField,'info-')===0) { $updates[$file]['times'][1700000120]=array('in-octets'=>30,'b'=>40); }
-$failed=rrdtool_function_update($updates,$pipe,$completed);$failureReason=rrdtool_last_rejection();
+$failed=rrdtool_function_update($updates,$pipe,$completed);$failureReason=rrdtool_last_rejection();$firstLogs=$GLOBALS['retryLogs']??array();
 $last=rrdtool_execute(array('last',$file),false,RRDTOOL_OUTPUT_STDOUT,$pipe);
 $firstCompleted=$completed[$file] ?? array();
 $legacyRetry=null;
@@ -1510,7 +1510,7 @@ $updates[$file]['times']=array(1700000120=>array('in-octets'=>30,'b'=>40));
 $later=rrdtool_function_update($updates,$pipe,$completed);
 $final=rrdtool_execute(array('lastupdate',$file),false,RRDTOOL_OUTPUT_STDOUT,$pipe);
 rrd_close($pipe);
-echo json_encode(array($created,$failed,$firstCompleted,trim($last),$retried,$readback,$later,$final,$failureReason,$legacyRetry));
+echo json_encode(array($created,$failed,$firstCompleted,trim($last),$retried,$readback,$later,$final,$failureReason,$legacyRetry,$firstLogs));
 PROBE;
     file_put_contents($this->dir . '/group.php', $bootstrap);
     $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $this->dir . '/group.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
@@ -1525,6 +1525,13 @@ PROBE;
         expect($result[8])->toBeNull();
     }
     if ($schemaMismatch) {
+        $logs = array_values(array_filter($result[10], function ($line) {
+            return strpos($line, 'RRD pending sample retained for retry:') !== false;
+        }));
+        expect($logs)->toHaveCount(1);
+        $diagnostic = json_decode(substr($logs[0], strpos($logs[0], '{')), true);
+        expect($diagnostic['path'])->toEndWith('/group.rrd')->and($diagnostic['time'])->toBe(1700000060)
+            ->and($diagnostic['reason'])->toBe($result[8])->and($diagnostic['action'])->toContain('Repair');
         expect(array_slice($result, 0, 5))->toBe(array(true, false, array(), '1700000000', 1));
         expect($result[5])->toMatch('/1700000060:.*99/')->and($result[6])->toBe(1);
         if ($invalidField === 'multiple') {

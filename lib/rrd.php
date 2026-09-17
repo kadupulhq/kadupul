@@ -1237,9 +1237,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 						$completed[$rrd_path][$update_time] = false;
 						continue;
 					}
-					if (!$failed) {
-						cacti_log('ERROR: RRD update was not acknowledged; pending samples retained for retry.', false, 'POLLER');
-					}
+					cacti_log('ERROR: RRD pending sample retained for retry: ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'reason' => $rejection ?: 'No acknowledgement received', 'action' => 'Repair the reported schema or storage error before replay; monitor queue growth.')), false, 'POLLER');
 					$failed = true;
 					break;
 				}
