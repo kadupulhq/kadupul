@@ -1,0 +1,41 @@
+<?php
+
+// SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+
+test('RRD write failure preserves poller post-run services and only changes exit status', function ($pollerId, $recovery, $failed) {
+    $source = file_get_contents(dirname(__DIR__, 4) . '/poller.php');
+    $start = strpos($source, '// Finish poller bookkeeping');
+    $end = strpos($source, 'function host_status_cache_check()');
+    expect($start)->not->toBeFalse()->and($end)->not->toBeFalse();
+    $postRun = substr($source, $start, $end - $start);
+    $postRun = str_replace(test_php_function_source($source, 'poller_heartbeat_check'), '', $postRun);
+    $main = array('multiple_poller_boost_check', 'poller_replicate_check', 'snmpagent_poller_bottom', 'boost_poller_bottom', 'dsstats_poller_bottom', 'dsdebug_poller_bottom', 'reports_poller_bottom', 'spikekill_poller_bottom', 'automation_poller_bottom', 'poller_maintenance', 'rrdcheck_poller_bottom', 'api_plugin_hook', 'bad_index_check', 'host_status_cache_check', 'poller_heartbeat_check');
+    $all = array_merge($main, array('cacti_log', 'poller_recovery_flush_boost'));
+    $program = '<?php namespace PollerPostRunProbe; $events=array();';
+    foreach ($all as $name) {
+        $program .= 'function ' . $name . '(...$args){$GLOBALS["events"][]="' . $name . '";}';
+    }
+    $program .= '$poller_id=' . $pollerId . ';$mibs=false;$config=array("connection"=>' . var_export($recovery ? 'recovery' : 'online', true) . ');';
+    $program .= '$rrd_write_failed=' . ($failed ? 'true' : 'false') . ';register_shutdown_function(function(){echo json_encode($GLOBALS["events"]);});' . $postRun;
+    $file = tempnam(sys_get_temp_dir(), 'poller-post-run-');
+    file_put_contents($file, $program);
+    try {
+        $process = proc_open(array(PHP_BINARY, $file), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        expect(is_resource($process))->toBeTrue();
+        $output = stream_get_contents($pipes[1]);
+        $error = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        expect(proc_close($process))->toBe($failed ? 1 : 0, $error)->and($error)->toBe('');
+        $remote = array('automation_poller_bottom', 'poller_maintenance', 'api_plugin_hook');
+        if ($recovery) {
+            $remote = array_merge(array('cacti_log', 'poller_recovery_flush_boost'), $remote);
+        }
+        expect(json_decode($output, true, 512, JSON_THROW_ON_ERROR))->toBe($pollerId === 1 ? $main : $remote);
+    } finally {
+        unlink($file);
+    }
+})->with(array(array(1, false, false), array(1, false, true), array(2, false, true), array(2, true, true)));

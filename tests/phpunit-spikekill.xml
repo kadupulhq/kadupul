@@ -17,6 +17,10 @@
       <file>./Unit/Core/Cli/RemoveSpikesBackupTest.php</file>
       <file>./Unit/Security/Shell/SpikekillStatisticsTest.php</file>
       <file>./Unit/Core/PathHelpersTest.php</file>
+      <file>./Unit/Core/Poller/PollerBatchLeaseTest.php</file>
+      <file>./Unit/Core/Poller/PollerPostRunFailureTest.php</file>
+      <file>./Unit/Core/Rrd/WindowsCleanupPolicyTest.php</file>
+      <file>./Unit/Core/Rrd/WindowsCleanupNativeTest.php</file>
       <file>./Unit/Core/Poller/PollerAcknowledgementTest.php</file>
       <file>./Unit/Core/Poller/PollerAcknowledgementNativeTest.php</file>
       <file>./Unit/Core/Rrd/RrdProxyAcknowledgementTest.php</file>

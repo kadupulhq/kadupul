@@ -17,6 +17,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Finish poller post-run services before reporting failed writes, and release writer leases between collection batches so maintenance can proceed.
+
 - Keep Windows local RRD cleanup explicitly manual, preserve queued requests during rescans, and discard partial splice dumps after command failure.
 
 - Require explicit RRD service UID/GID trust before collection after code-only upgrades; refuse unsafe storage and notify the configured administrator before spawning poller workers. Configure shared stores as documented in `docs/testing/spikekill-safety.md`.
