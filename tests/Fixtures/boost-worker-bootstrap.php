@@ -34,6 +34,9 @@ function cacti_log(...$args) {}
 function boost_debug(...$args) {}
 function read_config_option($key)
 {
+    if ($key === 'boost_last_run_time' && strpos(getenv('BOOST_MODE'), 'master-') === 0) {
+        return 1700000000;
+    }
     if ($key === 'path_php_binary') {
         return PHP_BINARY;
     }
@@ -63,6 +66,20 @@ function rrd_close($pipe)
 function boost_get_arch_table_names(...$args)
 {
     return in_array(getenv('BOOST_MODE'), array('output-archives','prepare-failure'), true) ? array() : array('poller_output_boost_arch_pending');
+}
+function db_fetch_cell($sql)
+{
+    $mode = getenv('BOOST_MODE');
+    if (strpos($sql, 'WHERE status < 0') !== false) {
+        return $mode === 'master-failed-count' ? false : ($mode === 'master-child-failed' ? 1 : 0);
+    }
+    if (strpos($sql, 'SUM(status)') !== false) {
+        return $mode === 'master-invalid-total' ? false : 5;
+    }
+    if (strpos($sql, 'FROM poller_output_boost_processes') !== false) {
+        return $mode === 'master-missing-child' ? 1 : 2;
+    }
+    return 2;
 }
 function db_fetch_cell_prepared($sql, $params = array())
 {
@@ -135,7 +152,7 @@ function db_execute_prepared(...$args)
     return true;
 }
 register_shutdown_function(function () use ($fixture, $mode) {
-    if (in_array($mode, array('prepare-failure','archive-retry'), true)) {
+    if (in_array($mode, array('prepare-failure','archive-retry'), true) || strpos($mode, 'master-') === 0) {
         file_put_contents($fixture . '/result.json', json_encode($GLOBALS['settings_written']));
         return;
     }
