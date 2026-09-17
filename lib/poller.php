@@ -697,7 +697,7 @@ function poller_cleanup_orphan_rows(&$failed = null) {
 }
 
 /** Bound incomplete sample retention without discarding complete retry groups. */
-function poller_expire_incomplete_rows($before, &$failed = null) {
+function poller_expire_incomplete_rows($retention, &$failed = null) {
 	$failed = false;
 	$expired = 0;
 	do {
@@ -707,11 +707,11 @@ function poller_expire_incomplete_rows($before, &$failed = null) {
 				SELECT old.local_data_id, old.time
 				FROM poller_output AS old
 				LEFT JOIN poller_item AS pi ON pi.local_data_id = old.local_data_id AND pi.rrd_name = old.rrd_name
-				WHERE old.time < ?
+				WHERE old.time < FROM_UNIXTIME(UNIX_TIMESTAMP() - ?)
 				GROUP BY old.local_data_id, old.time
 				HAVING MAX(pi.rrd_num) IS NULL OR COUNT(DISTINCT old.rrd_name) < MAX(pi.rrd_num)
 			) AS incomplete ON incomplete.local_data_id = po.local_data_id AND incomplete.time = po.time
-			LIMIT 40000', array($before));
+			LIMIT 40000', array(max(0, (int) $retention)));
 		if ($rows === false) {
 			$failed = true;
 			return $expired;
@@ -1107,7 +1107,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 
 				if (!$checked_bad) {
 					$retention = max(600, 2 * (int) read_config_option('poller_interval'));
-					$consumed += poller_expire_incomplete_rows(date('Y-m-d H:i:s', time() - $retention), $deferred);
+					$consumed += poller_expire_incomplete_rows($retention, $deferred);
 					if ($deferred) {
 						return $rrds_processed;
 					}
@@ -1151,7 +1151,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 		$consumed += poller_cleanup_orphan_rows($deferred);
 		if (!$deferred) {
 			$retention = max(600, 2 * (int) read_config_option('poller_interval'));
-			$consumed += poller_expire_incomplete_rows(date('Y-m-d H:i:s', time() - $retention), $deferred);
+			$consumed += poller_expire_incomplete_rows($retention, $deferred);
 		}
 	}
 

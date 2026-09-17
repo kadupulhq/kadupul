@@ -96,7 +96,8 @@ if ($storage_error !== '') {
 	exit(1);
 }
 
-if (!$local && $config['poller_id'] > 1) {
+// The storage probe must inspect this collector's queue, like poller preflight.
+if (!$local && !$check_rrd_storage && $config['poller_id'] > 1) {
 	db_switch_remote_to_main();
 
 	print 'NOTE: Targeting Main Database' . PHP_EOL;

@@ -196,8 +196,23 @@ function rrd_maintenance_configuration_error() {
     }
     $path = $config['rra_path'] ?? (($config['base_path'] ?? '') . '/rra');
     if (($config['cacti_server_os'] ?? '') === 'win32') {
-        return is_dir($path) && is_readable($path) && is_writable($path) ? '' :
-            __('RRD storage is not ready: the configured directory must exist and be readable and writable by this service account.') . ' [path=' . $path . ']';
+        // Windows directory read-only attributes do not establish ACL access.
+        // Probe the actual service account's create/read/write/delete capability.
+        if (is_dir($path) && is_readable($path)) {
+            $probe = $path . DIRECTORY_SEPARATOR . '.kadupul-write-' . bin2hex(random_bytes(16));
+            $handle = @fopen($probe, 'x+b');
+            if ($handle !== false) {
+                $writable = fwrite($handle, '1') === 1 && fflush($handle)
+                    && rewind($handle) && fread($handle, 1) === '1';
+                $closed = fclose($handle);
+                $removed = @unlink($probe);
+                if ($writable && $closed && $removed) {
+                    return '';
+                }
+            }
+        }
+        return __('RRD storage is not ready: the configured directory must exist and allow this service account to create, read, write and remove files.')
+            . ' [path=' . $path . ']';
     }
     if (rrd_maintenance_directory_is_trusted($path) && is_readable($path) && is_writable($path)) {
         return '';

@@ -28,15 +28,19 @@ A binary cast alone compares storage bytes against connection bytes. With a lati
 ## Verified queue-contract matrix
 
 Local disposable-server runs on 2026-09-17 passed the following matrix. Main ran
-19 queue acknowledgement contracts per engine; LTS ran 25 contracts, including
+35 queue acknowledgement contracts per engine; LTS ran 28 contracts, including
 its additional Boost and migration checks. These results cover these contracts,
 not full installation or application certification.
 
 | Engine | Exact server version | Main | LTS |
 | --- | --- | --- | --- |
-| MariaDB 10.6 | 10.6.28 | 19 passed | 25 passed |
-| MariaDB 10.11 | 10.11.19 | 19 passed | 25 passed |
-| MariaDB 11.8 | 11.8.8 | 19 passed | 25 passed |
-| MySQL 8.0 | 8.0.46 | 19 passed | 25 passed |
-| MySQL 8.4 | 8.4.11 | 19 passed | 25 passed |
-| MySQL 9.7 | 9.7.2 | 19 passed | 25 passed |
+| MariaDB 10.6 | 10.6.28 | 35 passed | 28 passed |
+| MariaDB 10.11 | 10.11.19 | 35 passed | 28 passed |
+| MariaDB 11.8 | 11.8.8 | 35 passed | 28 passed |
+| MySQL 8.0 | 8.0.46 | 35 passed | 28 passed |
+| MySQL 8.4 | 8.4.11 | 35 passed | 28 passed |
+| MySQL 9.7 | 9.7.2 | 35 passed | 28 passed |
+
+The LTS expiry contracts deliberately use different PHP and database timezones.
+Incomplete samples expire using database-time arithmetic; complete unwritten
+samples and samples exactly at the retention boundary remain queued.

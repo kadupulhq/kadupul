@@ -31,6 +31,7 @@ function boostMariaDbReset() {
 	);
 	$GLOBALS['boost_mariadb_cache'] = array('tables' => array(), 'columns' => array());
 	$GLOBALS['boost_mariadb_logs']  = array();
+	$GLOBALS['boost_retention_tables'] = array();
 	$GLOBALS['boost_delete_calls'] = 0;
 	$GLOBALS['boost_delete_fail_at'] = 0;
 }
@@ -276,6 +277,7 @@ test('runtime repair clears duplicate legacy rows before adding the run-child ke
 });
 
 function boostMariaDbDeletePrepared($sql, $params) {
+	$sql = strtr($sql, $GLOBALS['boost_retention_tables'] ?? array());
 	$GLOBALS['boost_delete_statement'] = array($sql, $params);
 	if (++$GLOBALS['boost_delete_calls'] === $GLOBALS['boost_delete_fail_at']) {
 		return false;
@@ -376,3 +378,41 @@ test('poller reports failed source deletion even after earlier chunks made progr
 		$db->exec('DROP TEMPORARY TABLE poller_output');
 	}
 })->with(array(1, 2));
+
+function boostMariaDbRetentionRows($sql, $params) {
+    $sql = strtr($sql, $GLOBALS['boost_retention_tables']);
+    $statement = $GLOBALS['boost_mariadb_pdo']->prepare($sql);
+    $statement->execute($params);
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+
+test('incomplete retention uses database time across PHP and database timezone differences', function ($zone) use ($root) {
+    boostMariaDbLoadDeleteRows($root);
+    if (!function_exists('boostMariaDbExpireIncomplete')) {
+        preg_match('/^function poller_expire_incomplete_rows\(.*?^}\n/ms', file_get_contents($root . '/lib/poller.php'), $match);
+        expect($match)->not->toBeEmpty();
+        eval(str_replace(array('poller_expire_incomplete_rows(', 'db_fetch_assoc_prepared(', 'poller_delete_output_rows(', 'cacti_log('), array('boostMariaDbExpireIncomplete(', 'boostMariaDbRetentionRows(', 'boostMariaDbDeleteOutputRows(', 'boostMariaDbLog('), $match[0]));
+    }
+    $db = $GLOBALS['boost_mariadb_pdo'];
+    $suffix = bin2hex(random_bytes(6));
+    $tables = array('poller_output' => 'retention_output_' . $suffix, 'poller_item' => 'retention_item_' . $suffix);
+    $GLOBALS['boost_retention_tables'] = $tables;
+    $execute = function ($sql) use ($db, $tables) { return $db->exec(strtr($sql, $tables)); };
+    $previousZone = date_default_timezone_get();
+    date_default_timezone_set('Asia/Tokyo');
+    try {
+        $db->exec('SET time_zone=' . $db->quote($zone));
+        $db->exec('SET timestamp=1700000000');
+        $execute('CREATE TABLE poller_output (local_data_id INT, rrd_name VARCHAR(19), time TIMESTAMP, output VARCHAR(32), PRIMARY KEY(local_data_id,rrd_name,time)) ENGINE=InnoDB');
+        $execute('CREATE TABLE poller_item (local_data_id INT, rrd_name VARCHAR(19), rrd_num INT)');
+        $execute("INSERT INTO poller_item VALUES (1,'a',2),(1,'b',2),(2,'a',2),(3,'a',2),(4,'a',2)");
+        $execute("INSERT INTO poller_output VALUES (1,'a',FROM_UNIXTIME(1699999100),'complete-a'),(1,'b',FROM_UNIXTIME(1699999100),'complete-b'),(2,'a',FROM_UNIXTIME(1699999100),'expired'),(3,'a',FROM_UNIXTIME(1699999700),'recent'),(4,'a',FROM_UNIXTIME(1699999400),'boundary')");
+        expect(boostMariaDbExpireIncomplete(600, $failed))->toBe(1)->and($failed)->toBeFalse();
+        expect($db->query('SELECT output FROM ' . $tables['poller_output'] . ' ORDER BY output')->fetchAll(PDO::FETCH_COLUMN))->toBe(array('boundary','complete-a','complete-b','recent'));
+    } finally {
+        date_default_timezone_set($previousZone);
+        $execute('DROP TABLE IF EXISTS poller_output, poller_item');
+        $GLOBALS['boost_retention_tables'] = array();
+        $db->exec('SET timestamp=0');
+    }
+})->with(array('+00:00', '-08:00', '+05:30'));

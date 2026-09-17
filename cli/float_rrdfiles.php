@@ -718,22 +718,6 @@ function float_launch_child($thread_id, $step, $start_time, $end_time) {
 		$php_binary = PHP_BINARY;
 	}
 
-	$args       = array(
-		$config['base_path'] . '/cli/float_rrdfiles.php',
-		'--type=child',
-		'--child=' . $thread_id,
-		'--start=' . $start_time,
-		'--end=' . $end_time
-	);
-
-	if ($step !== false) {
-		$args[] = '--step=' . $step;
-	}
-
-	if ($seebug) {
-		$args[] = '--debug';
-	}
-
 	float_debug(sprintf('Launching Float Data Process Number %s for Type %s', $thread_id, 'child'));
 
 	cacti_log(sprintf('NOTE: Launching Float Data Number %s for Type %s', $thread_id, 'child'), false, 'RFLOAT', POLLER_VERBOSITY_MEDIUM);

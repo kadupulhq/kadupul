@@ -369,14 +369,14 @@ test('storage probe checks the invoking account and queue without starting an up
         $arguments = rrd_cli_coverage_arguments($this, $dir, $root, 'upgrade_database.php');
         $process = proc_open(array_merge(array(PHP_BINARY), $arguments, array_merge(array($dir . '/cli/upgrade_database.php', '--check-rrd-storage'), $local ? array('--local') : array())), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
         $output = stream_get_contents($pipes[1]); $error = stream_get_contents($pipes[2]); fclose($pipes[1]); fclose($pipes[2]);
-        $accepted = $trusted && (($remote && !$local) || $engine === 'InnoDB');
+        $accepted = $trusted && $engine === 'InnoDB';
         expect(proc_close($process))->toBe($accepted ? 0 : 1, $error . $output);
         if ($accepted) {
             expect($error)->toBe('')->and($output)->toContain('No upgrade was performed')->toContain('UID ' . posix_geteuid());
         } else {
             expect($error)->toContain($trusted ? 'must use InnoDB' : 'rrd_maintenance_trusted_gids');
         }
-        expect(file_exists($dir . '/main-database'))->toBe($trusted && $remote && !$local);
+        expect(file_exists($dir . '/main-database'))->toBeFalse();
         rrd_cli_merge_coverage($this, $dir);
     } finally { rrd_cli_fixture_remove($dir); }
 })->with(array(array('InnoDB', true), array('MEMORY', true), array(false, true), array('InnoDB', false), array('MEMORY', true, true, false), array('MEMORY', true, true, true)));

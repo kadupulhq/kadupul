@@ -167,11 +167,12 @@ function rrd_acknowledged_command($pipe, $command) {
 	if ($state['failed']) {
 		return array(false, '');
 	}
-	$timeout = max(1, min(60, (int) ($config['rrd_command_timeout'] ?? 60)));
+	$timeout = max(1, min(3600, (int) ($config['rrd_command_timeout'] ?? 60)));
 	$deadline = hrtime(true) + $timeout * 1000000000;
 	$input = escape_command($command) . "\r\n";
 	$offset = 0;
 	$output = '';
+	$response_scan = 0;
 	$write_failed = false;
 	while (hrtime(true) < $deadline) {
 		$read = array($state['read']);
@@ -187,12 +188,19 @@ function rrd_acknowledged_command($pipe, $command) {
 				break;
 			}
 			$output .= $chunk;
-			if (preg_match('/^ERROR:[^\r\n]*\r?\n/m', $output)) {
-				$state['failed'] = $write_failed || $offset !== strlen($input);
-				return array(false, $output);
-			}
-			if ($offset === strlen($input) && preg_match('/^OK(?: u:[^\r\n]+)?\r?\n/m', $output)) {
-				return array(true, $output);
+			// Scan each completed response line once, including split terminators.
+			$last_newline = strrpos($chunk, "\n");
+			if ($last_newline !== false) {
+				$end = strlen($output) - strlen($chunk) + $last_newline + 1;
+				$lines = substr($output, $response_scan, $end - $response_scan);
+				$response_scan = $end;
+				if (preg_match('/^ERROR:[^\r\n]*\r?\n/m', $lines)) {
+					$state['failed'] = $write_failed || $offset !== strlen($input);
+					return array(false, $output);
+				}
+				if ($offset === strlen($input) && preg_match('/^OK(?: u:[^\r\n]+)?\r?\n/m', $lines)) {
+					return array(true, $output);
+				}
 			}
 		}
 		if ($write) {

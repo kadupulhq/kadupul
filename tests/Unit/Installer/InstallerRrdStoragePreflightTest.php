@@ -15,6 +15,7 @@ test('installer rejects unsafe storage before database upgrades even when forced
         $coverage = 'define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); define("RRD_TEST_INSTALLER_COVERAGE", true); require ' . var_export($root . '/tests/fixtures/rrd-process-coverage.php', true) . ';';
     }
     $bootstrap = <<<'FIXTURE'
+if ($mode === 'windows-attribute') { function is_writable($path) { return false; } }
 function __($message, ...$args) { return $args ? vsprintf($message, $args) : $message; }
 function read_config_option($key, ...$args) { return $key === 'storage_location' && $GLOBALS['mode'] === 'proxy'; }
 function is_resource_writable($path) { return true; }
@@ -45,6 +46,7 @@ FIXTURE;
         file_put_contents($dir . '/probe.php', '<?php ' . $coverage . '$root = ' . var_export($root, true) . '; $mode = ' . var_export($mode, true) . ';' . $bootstrap);
         $args = array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~');
         if ($mode === 'no-posix') { $args = array_merge($args, array('-d', 'disable_functions=posix_geteuid')); }
+        if ($mode === 'windows-attribute') { $args = array_merge($args, array('-d', 'disable_functions=is_writable')); }
         $args[] = $dir . '/probe.php';
         $process = proc_open($args, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
         $output = stream_get_contents($pipes[1]); $error = stream_get_contents($pipes[2]);
@@ -67,4 +69,4 @@ FIXTURE;
         foreach (glob($dir . '/*') as $file) { if (is_file($file)) { unlink($file); } }
         chmod($dir . '/rra', 0700); rmdir($dir . '/rra'); rmdir($dir);
     }
-})->with(array(array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true)));
+})->with(array(array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-attribute', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true)));
