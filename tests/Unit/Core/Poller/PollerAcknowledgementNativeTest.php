@@ -33,7 +33,7 @@ test('production poller files retain failed writes and preserve concurrent arriv
             file_put_contents($dir . '/include/cli_check.php', $bootstrap);
             $arguments = array($dir . '/poller_realtime.php', '--graph=1', '--interval=5', '--poller_id=1');
         } else {
-            file_put_contents($dir . '/run.php', $bootstrap . 'require ' . var_export($root . '/lib/poller.php', true) . ';$deferred=false;$proxy=false;$result=process_poller_output_batch($deferred,$proxy);file_put_contents(getenv("ACK_FIXTURE")."/batch-result.json",json_encode(array($result,$deferred)));$failed=$deferred;if(getenv("ACK_FAIL")==="rejected"){process_poller_output_batch($deferred,$proxy);}if(getenv("ACK_PROXY")==="1"&&!$deferred&&getenv("ACK_FAIL")==="0"){process_poller_output_batch($deferred,$proxy);}if($proxy!==false){rrd_close($proxy);}file_put_contents(getenv("ACK_FIXTURE")."/transport.json",json_encode(array($GLOBALS["ack_opens"]??0,$GLOBALS["ack_closes"]??0)));db_close();exit($failed||$deferred?1:0);');
+            file_put_contents($dir . '/run.php', $bootstrap . 'require ' . var_export($root . '/lib/poller.php', true) . ';$deferred=false;$proxy=false;$result=process_poller_output_batch($deferred,$proxy);file_put_contents(getenv("ACK_FIXTURE")."/batch-result.json",json_encode(array($result,$deferred)));$failed=$deferred;if(getenv("ACK_FAIL")==="rejected"&&!$deferred){$GLOBALS["ack_db"]->exec("INSERT INTO poller_output VALUES(1, \'value\', \'2020-01-03\', \'45\')");putenv("ACK_FAIL=page-success");$next=process_poller_output_batch($deferred,$proxy);file_put_contents(getenv("ACK_FIXTURE")."/after-rejection.json",json_encode(array($next,$deferred)));putenv("ACK_FAIL=rejected");}if(getenv("ACK_PROXY")==="1"&&!$deferred&&getenv("ACK_FAIL")==="0"){process_poller_output_batch($deferred,$proxy);}if($proxy!==false){rrd_close($proxy);}file_put_contents(getenv("ACK_FIXTURE")."/transport.json",json_encode(array($GLOBALS["ack_opens"]??0,$GLOBALS["ack_closes"]??0)));db_close();exit($failed||$deferred?1:0);');
             $arguments = array($dir . '/run.php');
         }
         $process = proc_open(array_merge(array(PHP_BINARY, '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~'), $arguments), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes, null, array_merge(getenv(), array('ACK_PROXY' => $remote ? '1' : '0','ACK_FIXTURE' => $dir,'ACK_REALTIME' => $realtime ? '1' : '0','ACK_FAIL' => is_string($failed) ? $failed : ($failed ? '1' : '0'))));
@@ -44,7 +44,7 @@ test('production poller files retain failed writes and preserve concurrent arriv
         if ($error !== '') {
             throw new RuntimeException($error . $output);
         }
-        expect(proc_close($process))->toBe($failed && !in_array($failed, array('replace', 'replace-space', 'busy', 'field-success', 'incomplete', 'page-success'), true) ? 1 : 0, $error . $output)->and($error)->toBe('');
+        expect(proc_close($process))->toBe(($failed && !(!$realtime && $failed === 'rejected')) && !in_array($failed, array('replace', 'replace-space', 'busy', 'field-success', 'incomplete', 'page-success'), true) ? 1 : 0, $error . $output)->and($error)->toBe('');
         $expected = is_string($failed) ? array(array('output' => '42', 'remaining' => $failed === 'page' ? 40001 : 1)) : ($failed ? array('42','43') : array('43'));
         if (in_array($failed, array('select', 'handoff', 'init', 'init-function', 'busy', 'count'), true)) {
             $expected = array('42');
@@ -54,6 +54,10 @@ test('production poller files retain failed writes and preserve concurrent arriv
         }
         if ($failed === 'rejected') {
             $expected = array();
+            if (!$realtime) {
+                expect(json_decode(file_get_contents($dir . '/batch-result.json'), true))->toBe(array(0, false));
+                expect(json_decode(file_get_contents($dir . '/after-rejection.json'), true))->toBe(array(1, false));
+            }
         }
         if ($failed === 'replace-space') {
             $expected = array('42 ', '43');

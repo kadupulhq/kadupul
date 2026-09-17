@@ -479,7 +479,7 @@ test('storage probe and explicit queue migration preserve the cutover contract',
 })->with(array(array('InnoDB', true), array('MEMORY', true), array(false, true), array('InnoDB', false), array('MEMORY', true, true), array('MEMORY', true, true, false), array('MEMORY', false, true), array('MEMORY', true, false, true, true, false), array('MEMORY', true, false, true, true, true), array('MEMORY', true, true, true, true, false), array('MEMORY', true, true, true, true, true), array('InnoDB', true, true, true, true, false, true), array('InnoDB', true, true), array('InnoDB', true, true, false, true), array(false, true, true), array(false, true, true, true, true)));
 
 
-test('remote schema upgrades do not require local RRD storage unless explicitly checked', function ($missing, $probe, $local) {
+test('remote schema upgrades do not require local RRD storage unless explicitly checked', function ($missing, $probe, $local, $engine = 'InnoDB') {
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/remote-upgrade-' . bin2hex(random_bytes(8));
     foreach (array('', '/cli', '/include', '/lib', '/install', '/install/upgrades') as $suffix) {
@@ -509,6 +509,7 @@ function get_cacti_version(){return '1.2.30';}
 function cacti_version_compare($a,$b,$op){return version_compare($a,$b,$op);}
 function db_execute_prepared($sql,$params){if (strpos($sql,'UPDATE version')===false){throw new RuntimeException('Unexpected mutation');} file_put_contents(dirname(__DIR__).'/version',$params[0]);return true;}
 REMOTE;
+        $bootstrap .= "\n" . 'function db_fetch_cell_prepared(...$args){return ' . var_export($engine, true) . ';}';
         file_put_contents($dir . '/include/cli_check.php', $bootstrap);
         $args = array_merge(array(PHP_BINARY), rrd_cli_coverage_arguments($this, $dir, $root, 'upgrade_database.php'), array($dir . '/cli/upgrade_database.php', '--forcever=1.2.30'), $probe ? array('--check-rrd-storage') : array(), $local ? array('--local') : array());
         $process = proc_open($args, array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
@@ -516,17 +517,17 @@ REMOTE;
         $err = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
-        $accepted = !$probe;
+        $accepted = !$probe && $engine === 'InnoDB';
         expect(proc_close($process))->toBe($accepted ? 0 : 1, $out . $err)
             ->and(file_exists($dir . '/upgraded'))->toBe($accepted)
             ->and(file_exists($dir . '/main-db'))->toBe($accepted && !$local);
         if ($accepted) {
             expect(file_get_contents($dir . '/version'))->toBe('1.2.31')->and($err)->toBe('');
         } else {
-            expect($err)->toContain('RRD storage is not ready');
+            expect($err)->toContain($probe ? 'RRD storage is not ready' : 'queue must use InnoDB');
         }
         rrd_cli_merge_coverage($this, $dir);
     } finally {
         rrd_cli_fixture_remove($dir);
     }
-})->with(array(array(true,false,false),array(false,false,false),array(true,true,false),array(false,true,false),array(true,false,true),array(false,false,true)));
+})->with(array(array(true,false,false),array(false,false,false),array(true,true,false),array(false,true,false),array(true,false,true),array(false,false,true),array(false,false,false,'MEMORY'),array(false,false,true,'MEMORY'),array(false,false,false,false)));

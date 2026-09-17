@@ -25,3 +25,26 @@ rewrite already-reviewed history merely to make the aggregate diff smaller.
 Splice cleanup now explicitly records unlink failures as well as directory-removal
 failures. A native permission-denial regression requires the retained-artifact
 warning and verifies that the recovery XML remains available.
+
+The next review found that a terminal rejection incorrectly latched the poller
+cycle into deferred mode. Batch draining now distinguishes an absent
+acknowledgement from a recorded terminal rejection: rejected samples remain
+logged, while a subsequent healthy sample drains during the same cycle. Native
+regressions cover both local and proxy writers; transient and database failures
+still retain samples and defer retries.
+
+Ordinary CLI upgrades now check the collector's local queue before switching a
+remote collector to the main database. MEMORY or unavailable engine metadata
+fails before any version mutation and gives the explicit migration command.
+
+Local writers intentionally close after each nonempty batch to release the
+maintenance lease. Empty queue checks open no process. A local Docker PHP 8.1 /
+RRDtool diagnostic on 2026-09-17 measured 300 production `rrd_init`/`rrd_close`
+pairs: 4.084 seconds total, 13.873 ms median, 15.181 ms p95, 15.378 ms maximum.
+This measures process/lease overhead without updates on this machine, not a fleet
+performance guarantee. Reusing a lease-holding local pipe across waits would
+block maintenance; any future caching must separate transport from lease ownership.
+
+The malformed-key deletion path reports failure together with the count of prior
+committed chunks; callers honor that failure and retain remaining samples. It
+must not report prior successful chunks as unconsumed.

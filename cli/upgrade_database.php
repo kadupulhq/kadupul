@@ -88,6 +88,16 @@ if ($storage_error !== '') {
 	exit(1);
 }
 
+// Check the collector's own queue before switching a remote schema upgrade
+// to the main database. Explicit migration is the remediation for this gate.
+if (!$migrate_poller_queue && !$check_rrd_storage) {
+	$queue_error = rrd_maintenance_queue_configuration_error();
+	if ($queue_error !== '') {
+		fwrite(STDERR, $queue_error . PHP_EOL);
+		exit(1);
+	}
+}
+
 // Queue cutover commands diagnose and migrate this collector's own queue.
 // Ordinary schema upgrades retain their existing main-database default.
 if (!$local && !$check_rrd_storage && !$migrate_poller_queue && $config['poller_id'] > 1) {

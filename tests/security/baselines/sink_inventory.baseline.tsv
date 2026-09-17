@@ -47,7 +47,7 @@ cmd_exec	./lib/ping.php:167					$result = shell_exec('chcp 437 && ping -w ' . $t
 cmd_exec	./lib/ping.php:174						$result = shell_exec('ping -6 -W ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' -p ' . $pattern . ' ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:176						$result = shell_exec('ping -W ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' -p ' . $pattern . ' ' . cacti_escapeshellarg($this->host['hostname']) . ' 2>&1');
 cmd_exec	./lib/ping.php:187							$result = shell_exec($ping_path . ' -W ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' -p ' . $pattern . ' ' . cacti_escapeshellarg($this->host['hostname']));
-cmd_exec	./lib/poller.php:1291										$output = system($php_path . ' -l ' . $tmpfile, $exit);
+cmd_exec	./lib/poller.php:1299										$output = system($php_path . ' -l ' . $tmpfile, $exit);
 cmd_exec	./lib/poller.php:139					pclose(popen('start "Cactiplus" /I ' . $filename . ' ' . $args, 'r'));
 cmd_exec	./lib/poller.php:141					pclose(popen('start "Cactiplus" /I ' . $filename . ' ' . $args . ' ' . $redirect_args, 'r'));
 cmd_exec	./lib/poller.php:144				exec($filename . ' ' . $args . ' > /dev/null 2>&1 &');
@@ -260,7 +260,7 @@ dynamic_include	./cli/upgrade_database.php:10	require_once($config['base_path'] 
 dynamic_include	./cli/upgrade_database.php:11	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cli/upgrade_database.php:12	require_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./cli/upgrade_database.php:13	require_once($config['base_path'] . '/install/functions.php');
-dynamic_include	./cli/upgrade_database.php:177			include($upgrade_file);
+dynamic_include	./cli/upgrade_database.php:187			include($upgrade_file);
 dynamic_include	./cmd.php:101	require_once($config['base_path'] . '/lib/snmp.php');
 dynamic_include	./cmd.php:102	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./cmd.php:103	require_once($config['base_path'] . '/lib/rrd.php');
@@ -574,9 +574,9 @@ fs_write	./lib/functions.php:7110				file_put_contents($tmp_file, 'cacti');
 fs_write	./lib/import.php:408		$f   = fopen($filename, 'r');
 fs_write	./lib/import.php:589							$file = fopen($filename, 'wb');
 fs_write	./lib/installer.php:2968	            $file = fopen($cacheFile, "r");
-fs_write	./lib/poller.php:1290									if (file_put_contents($tmpfile, $contents) !== false) {
-fs_write	./lib/poller.php:1297												file_put_contents($mypath, $contents);
-fs_write	./lib/poller.php:1326								file_put_contents($mypath, $contents);
+fs_write	./lib/poller.php:1298									if (file_put_contents($tmpfile, $contents) !== false) {
+fs_write	./lib/poller.php:1305												file_put_contents($mypath, $contents);
+fs_write	./lib/poller.php:1334								file_put_contents($mypath, $contents);
 fs_write	./lib/reports.php:1687			$f = fopen($fn, 'wb');
 fs_write	./lib/reports.php:1727			$f = fopen($fn, 'wb');
 fs_write	./lib/rrd.php:2906					if ($fp = fopen($graph_data_array['export_realtime'], 'w')) {
