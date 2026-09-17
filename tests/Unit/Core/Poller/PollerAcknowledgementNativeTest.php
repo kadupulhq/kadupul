@@ -30,7 +30,7 @@ test('production poller files retain failed writes and preserve concurrent arriv
             file_put_contents($dir . '/include/cli_check.php', $bootstrap);
             $arguments = array($dir . '/poller_realtime.php', '--graph=1', '--interval=5', '--poller_id=1');
         } else {
-            file_put_contents($dir . '/run.php', $bootstrap . 'require ' . var_export($root . '/lib/poller.php', true) . ';$pipe=true;$result=process_poller_output($pipe,1,$deferred);if(getenv("ACK_FAIL")==="rejected"){if($result!==0){exit(4);}process_poller_output($pipe,1,$secondDeferred);}db_close();exit($deferred?1:0);');
+            file_put_contents($dir . '/run.php', $bootstrap . 'require ' . var_export($root . '/lib/poller.php', true) . ';$pipe=true;$result=process_poller_output($pipe,1,$deferred);if(getenv("ACK_FAIL")==="rejected"){if($result!==0||$deferred){exit(4);}$GLOBALS["ack_db"]->exec("INSERT INTO poller_output VALUES(1, \'value\', \'2020-01-03\', \'45\')");putenv("ACK_FAIL=after-rejection");$next=process_poller_output($pipe,1,$secondDeferred);if($next!==1||$secondDeferred){exit(5);}putenv("ACK_FAIL=rejected");}db_close();exit($deferred?1:0);');
             $arguments = array($dir . '/run.php');
         }
         $process = proc_open(array_merge(array(PHP_BINARY, '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~'), $arguments), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes, null, array_merge(getenv(), array('ACK_FIXTURE' => $dir,'ACK_REALTIME' => $realtime ? '1' : '0','ACK_FAIL' => is_string($failed) ? $failed : ($failed ? '1' : '0'))));
@@ -39,7 +39,7 @@ test('production poller files retain failed writes and preserve concurrent arriv
         fclose($pipes[1]);
         fclose($pipes[2]);
         if ($error !== '') { throw new RuntimeException($error . $output); }
-        expect(proc_close($process))->toBe($failed && !in_array($failed, array('replace', 'replace-space'), true) ? 1 : 0, $error . $output)->and($error)->toBe('');
+        expect(proc_close($process))->toBe(($failed && !(!$realtime && $failed === 'rejected')) && !in_array($failed, array('replace', 'replace-space'), true) ? 1 : 0, $error . $output)->and($error)->toBe('');
         $expected = is_string($failed) ? array(array('output' => '42', 'remaining' => $failed === 'page' ? 40001 : 1)) : ($failed ? array('42','43') : array('43'));
         if ($failed === 'rejected') { $expected = array(); }
         if ($failed === 'replace-space') { $expected = array('42 ', '43'); }

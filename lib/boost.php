@@ -2220,11 +2220,6 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 				$reason = substr($reason, strlen($rrd_path) + 2);
 			}
 			if (rrdtool_rejection_is_permanent($reason)) {
-				// A missing template DS rejects every sample in the same command.
-				if (strpos($reason, 'unknown DS name ') === 0) {
-					cacti_log("ERROR: Permanently rejected Boost samples for local_data_id $local_data_id, path $rrd_path, template $rrd_update_template: $reason", false, 'BOOST');
-					return 'OK';
-				}
 				$samples = preg_split('/\s+/', trim($rrd_update_values), -1, PREG_SPLIT_NO_EMPTY);
 				if (count($samples) > 1) {
 					// Bisect to isolate malformed samples without retrying every good row.
@@ -2240,7 +2235,7 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 				}
 				return 'OK';
 			}
-			return is_string($result) && $result !== '' ? $result : 'ERROR: RRDtool did not acknowledge the update';
+			return is_string($reason) && $reason !== '' ? 'ERROR: ' . $reason . '; retain samples for retry' : 'ERROR: RRDtool did not acknowledge the update';
 		}
 
 		return 'OK';

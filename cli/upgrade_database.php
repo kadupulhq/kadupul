@@ -46,6 +46,7 @@ $local       = false;
 $session     = array();
 $forcever    = '';
 $check_rrd_storage = false;
+$migrate_poller_queue = false;
 
 if (cacti_sizeof($parms)) {
 	foreach($parms as $parameter) {
@@ -57,6 +58,9 @@ if (cacti_sizeof($parms)) {
 		}
 
 		switch ($arg) {
+			case '--migrate-poller-queue':
+				$migrate_poller_queue = true;
+				break;
 			case '--check-rrd-storage':
 				$check_rrd_storage = true;
 				break;
@@ -88,25 +92,63 @@ if (cacti_sizeof($parms)) {
 	}
 }
 
+if ($check_rrd_storage && $migrate_poller_queue) {
+	fwrite(STDERR, "ERROR: Do not combine --check-rrd-storage and --migrate-poller-queue; run them separately.\n");
+	exit(1);
+}
+
 require_once __DIR__ . '/../lib/rrd_maintenance.php';
-$storage_error = (!$check_rrd_storage && (int) ($config['poller_id'] ?? 1) > 1)
+$storage_error = ($migrate_poller_queue || (!$check_rrd_storage && (int) ($config['poller_id'] ?? 1) > 1))
 	? '' : rrd_maintenance_configuration_error();
 if ($storage_error !== '') {
 	fwrite(STDERR, $storage_error . PHP_EOL);
 	exit(1);
 }
 
-// The storage probe must inspect this collector's queue, like poller preflight.
-if (!$local && !$check_rrd_storage && $config['poller_id'] > 1) {
-	db_switch_remote_to_main();
+// Online remote producers write to the primary database; offline/recovery
+// producers use their own database. --local explicitly selects the latter.
+$queue_connection = !$local && (int) ($config['poller_id'] ?? 1) > 1
+	&& ($config['connection'] ?? 'online') === 'online' ? $remote_db_cnn_id : false;
+if (!$migrate_poller_queue && !$check_rrd_storage) {
+	$queue_error = rrd_maintenance_queue_configuration_error($queue_connection);
+	if ($queue_error !== '') {
+		fwrite(STDERR, $queue_error . PHP_EOL);
+		exit(1);
+	}
+}
 
+if ($check_rrd_storage || $migrate_poller_queue) {
+	print 'NOTE: Targeting ' . ($queue_connection === false ? 'Local' : 'Main') . ' Poller Queue' . PHP_EOL;
+} elseif (!$local && $config['poller_id'] > 1) {
+	db_switch_remote_to_main();
 	print 'NOTE: Targeting Main Database' . PHP_EOL;
 } else {
 	print 'NOTE: Targeting Local Database' . PHP_EOL;
 }
 
+if ($migrate_poller_queue) {
+	$queue_engine = db_fetch_cell_prepared(
+		'SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?',
+		array('poller_output'), '', true, $queue_connection
+	);
+	if (!is_string($queue_engine) || $queue_engine === '') {
+		fwrite(STDERR, "Cannot inspect the selected poller queue; no migration was attempted.\n");
+		exit(1);
+	}
+	if (strtolower($queue_engine) === 'innodb') {
+		print "Selected poller queue already uses InnoDB; no migration was needed.\n";
+		exit(0);
+	}
+	if (!db_execute_prepared('ALTER TABLE poller_output ENGINE=InnoDB ROW_FORMAT=Dynamic', array(), true, $queue_connection)) {
+		fwrite(STDERR, "Poller queue migration failed; collectors must remain stopped.\n");
+		exit(1);
+	}
+	print "Poller queue converted to InnoDB; retained samples preserved.\n";
+	exit(0);
+}
+
 if ($check_rrd_storage) {
-	$queue_error = rrd_maintenance_queue_configuration_error();
+	$queue_error = rrd_maintenance_queue_configuration_error($queue_connection);
 	if ($queue_error !== '') {
 		fwrite(STDERR, $queue_error . PHP_EOL);
 		exit(1);
@@ -246,7 +288,9 @@ function display_help () {
 	print 'If you are running a beta or alpha version of Cacti and need to rerun' . PHP_EOL;
 	print 'the upgrade script, simply set the forcever to the previous release.' . PHP_EOL . PHP_EOL;
 	print '--check-rrd-storage - Check storage and queue access as this service account without upgrading' . PHP_EOL;
+	print '--migrate-poller-queue - Convert the selected queue to InnoDB; use --local on remote collectors' . PHP_EOL;
 	print '--forcever - Force the starting version, say ' . CACTI_VERSION . PHP_EOL;
 	print '--local    - Perform the action on the Remote Data Collector if run from there' . PHP_EOL;
 	print '--debug    - Display verbose output during execution' . PHP_EOL . PHP_EOL;
+
 }

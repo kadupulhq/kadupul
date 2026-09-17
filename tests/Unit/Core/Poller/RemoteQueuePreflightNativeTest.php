@@ -56,11 +56,11 @@ PROBE;
         $error = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
-        $safe = $engine === 'InnoDB';
+        $safe = $connection !== 'online' || $engine === 'InnoDB';
         $status = proc_close($process);
         expect($error)->toBe('')->and($output)->toBe('')->and($status)->toBe($safe ? 42 : 1);
         $observed = json_decode(file_get_contents($directory . '/observed.json'), true, 512, JSON_THROW_ON_ERROR);
-        expect($observed['probes'])->toBe(array(array(array('poller_output'), $connection === 'online' ? 'primary-database' : false)))
+        expect($observed['probes'])->toBe($connection === 'online' ? array(array(array('poller_output'), 'primary-database')) : array())
             ->and($observed['continued'])->toBe($safe)
             ->and($observed['logs'])->toHaveCount($safe ? 0 : 1);
         if (!$safe) {
@@ -85,4 +85,4 @@ PROBE;
             rmdir($directory . $suffix);
         }
     }
-})->with(array(array('online', 'MEMORY'), array('online', false), array('online', 'InnoDB'), array('offline', 'MEMORY'), array('offline', false), array('offline', 'InnoDB')));
+})->with(array(array('online', 'MEMORY'), array('online', false), array('online', 'InnoDB'), array('offline', 'MEMORY'), array('offline', false), array('offline', 'InnoDB'), array('recovery', 'MEMORY'), array('recovery', false)));

@@ -1053,7 +1053,15 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 
 		if ($direct_rrd_update) {
 			$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe, $completed);
-			$write_failed = $rrds_processed === false;
+			// A terminal rejection is recorded as false in $completed and consumed.
+			// Only absent acknowledgements require deferring subsequent batches.
+			foreach ($rrd_update_array as $path => $fields) {
+				foreach ($fields['times'] as $time => $values) {
+					if (!isset($completed[$path][$time])) {
+						$write_failed = true;
+					}
+				}
+			}
 			$rrds_processed = array_sum(array_map(function ($samples) { return count(array_filter($samples)); }, $completed));
 			$output_keys = array();
 			// Present false means permanently rejected and logged; absent means retry.

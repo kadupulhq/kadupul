@@ -67,7 +67,7 @@ function boostRrdGuard_rrdtool_rejection_is_permanent($reason) { return false; }
 function boostRrdGuard_rrdtool_execute($command) {
 	$GLOBALS['boost_rrd_guard']['executed'][] = $command;
 
-	return 'OK';
+	return true;
 }
 
 function boostRrdGuardLoad($root) {

@@ -480,7 +480,7 @@ test('legacy updates wait for pending real pipe writes before filtering retained
 });
 
 
-test('permanent Boost rejections cannot stall valid later samples in a real RRD', function ($version, $template) {
+test('Boost retains schema mismatches and replays buffered timestamps after repair', function ($version, $template) {
     $GLOBALS['boost_piped_create']['version'] = $version;
     $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
     if (!is_executable($binary)) { $this->markTestSkipped('RRDtool is required.'); }
@@ -489,16 +489,17 @@ test('permanent Boost rejections cannot stall valid later samples in a real RRD'
     $GLOBALS['boost_piped_create']['real_binary'] = $binary;
     $pipe = false;
     $values = $template === 'value' ? '1700000060:1:2 1700000120:20' : '1700000060:10 1700000120:20';
-    expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, $template, $values, $pipe))->toBe('OK');
-    expect(implode("\n", $GLOBALS['boost_piped_create']['logs']))->toContain('Permanently rejected Boost sample')->toContain('local_data_id 12');
-    if ($template === 'value') {
-        expect(boostPipedCreateRealCommand(array($binary, 'lastupdate', $path)))->toContain('1700000120: 20');
+    expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, $template, $values, $pipe))->toContain('retain samples for retry');
+    expect(trim(boostPipedCreateRealCommand(array($binary, 'last', $path))))->toBe('1700000000');
+    expect(implode("\n", $GLOBALS['boost_piped_create']['logs']))->not->toContain('Permanently rejected');
+    if ($template === 'stale') {
+        boostPipedCreateRealCommand(array($binary, 'tune', $path, '--data-source-rename', 'value:stale'));
     } else {
-        expect(trim(boostPipedCreateRealCommand(array($binary, 'last', $path))))->toBe('1700000000');
+        // Explicitly repair malformed fixture values; a schema mismatch reuses the original buffer.
+        $values = '1700000060:10 1700000120:20';
     }
-    $values = '1700000180:30';
-    expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, 'value', $values, $pipe))->toBe('OK');
-    expect(boostPipedCreateRealCommand(array($binary, 'lastupdate', $path)))->toContain('1700000180: 30');
+    expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, $template, $values, $pipe))->toBe('OK');
+    expect(boostPipedCreateRealCommand(array($binary, 'lastupdate', $path)))->toContain('1700000120: 20');
 })->with(array('1.7', '1.4'))->with(array('value', 'stale'));
 
 test('Boost recovery bounds commands while preserving valid later samples', function ($version, $failure) {
@@ -516,10 +517,11 @@ test('Boost recovery bounds commands while preserving valid later samples', func
     $pipe = false;
     $status = boostPipedCreate_boost_rrdtool_function_update(12, $path, $failure === 'schema' ? 'missing' : 'value', $values, $pipe);
     expect(count($GLOBALS['boost_piped_create']['executed']))->toBeLessThanOrEqual($failure === 'schema' ? 1 : ($failure === 'one' ? 19 : 65));
-    if ($failure === 'all') {
-        expect($status)->toContain('retain samples for retry');
-    } else {
-        expect($status)->toBe('OK');
+    expect($status)->toContain('retain samples for retry');
+    expect(trim(boostPipedCreateRealCommand(array($binary, 'last', $path))))->toBe('1700000000');
+    if ($failure === 'schema') {
+        boostPipedCreateRealCommand(array($binary, 'tune', $path, '--data-source-rename', 'value:missing'));
+        expect(boostPipedCreate_boost_rrdtool_function_update(12, $path, 'missing', $values, $pipe))->toBe('OK');
+        expect(trim(boostPipedCreateRealCommand(array($binary, 'last', $path))))->toBe('1700030720');
     }
-    expect(trim(boostPipedCreateRealCommand(array($binary, 'last', $path))))->toBe($failure === 'one' ? '1700030720' : '1700000000');
 })->with(array('1.7', '1.4'))->with(array('schema', 'one', 'all'));

@@ -659,7 +659,7 @@ test('queued samples require an actual RRDtool acknowledgement', function ($mode
     if ($mode === 'real') { expect(shell_exec(escapeshellarg($binary) . ' lastupdate ' . escapeshellarg($rrd)))->toContain('42'); }
 })->with(array(array('real',1), array('silent',false), array('error',false), array('permission',false), array('disk',false), array('missing',false), array('crash',false), array('hung',false)))->with(array(true,false));
 
-test('one persistent process consumes explicit rejects and continues subsequent timestamps', function ($web) {
+test('one persistent process retains schema failures and continues other RRD files', function ($web) {
     require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
     $validation = '';
     $functions = file_get_contents(dirname(__DIR__, 4) . '/lib/functions.php');
@@ -692,15 +692,15 @@ test('one persistent process consumes explicit rejects and continues subsequent 
         '$updates=array($bad=>array("local_data_id"=>1,"data_template_id"=>0,"times"=>array(1700000060=>array("missing"=>42),1700000120=>array("value"=>43))),$good=>array("local_data_id"=>2,"data_template_id"=>0,"times"=>array()));' .
         'for($i=1;$i<=100;$i++){$updates[$good]["times"][1700000000+$i*60]=array("value"=>$i);}' .
         '$pipe=rrd_init(' . var_export($web,true) . ',false,true);$command="create ".__DIR__."/created.rrd --start 1700000000 --step 60".RRD_NL."DS:value:GAUGE:600:U:U".RRD_NL."RRA:AVERAGE:0.5:1:20";if(rrdtool_execute($command,false,RRDTOOL_OUTPUT_BOOLEAN,$pipe)!==true){exit(6);}$result=rrdtool_function_update($updates,$pipe,$completed);rrd_close($pipe);' .
-        'echo json_encode(array($result,count($completed[$bad]),count($completed[$good]),count(rrd_acknowledged_pipes()),$completed[$bad][1700000060],$completed[$bad][1700000120]));';
+        'echo json_encode(array($result,count($completed[$bad] ?? array()),count($completed[$good]),count(rrd_acknowledged_pipes()),isset($completed[$bad][1700000060]),isset($completed[$bad][1700000120])));';
     file_put_contents($this->dir . '/persistent.php', $bootstrap);
     $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $this->dir . '/persistent.php'), array(1=>array('pipe','w'),2=>array('pipe','w')), $pipes);
     $output=stream_get_contents($pipes[1]);$error=stream_get_contents($pipes[2]);fclose($pipes[1]);fclose($pipes[2]);
     $status=proc_close($process);
     if ($error !== '') { throw new RuntimeException($error . $output); }
-    expect($status)->toBe(0)->and(json_decode($output,true))->toBe(array(false,2,100,0,false,true));
+    expect($status)->toBe(0)->and(json_decode($output,true))->toBe(array(false,0,100,0,false,false));
     expect(file($this->dir . '/children'))->toHaveCount(1);
-    expect(trim(shell_exec(escapeshellarg($binary) . ' last ' . escapeshellarg($this->dir . '/bad.rrd'))))->toBe('1700000120');
+    expect(trim(shell_exec(escapeshellarg($binary) . ' last ' . escapeshellarg($this->dir . '/bad.rrd'))))->toBe('1700000000');
     expect(trim(shell_exec(escapeshellarg($binary) . ' last ' . escapeshellarg($this->dir . '/good.rrd'))))->toBe('1700006000');
 })->with(array(false, true));
 
@@ -849,7 +849,7 @@ test('only deterministic sample errors are consumed while storage failures remai
     $process=proc_open(array(PHP_BINARY,'-d','pcov.directory=/','-d','pcov.exclude=~/(include/vendor|tests)/~',$this->dir.'/classify.php'),array(1=>array('pipe','w'),2=>array('pipe','w')),$pipes);
     $output=stream_get_contents($pipes[1]);$error=stream_get_contents($pipes[2]);fclose($pipes[1]);fclose($pipes[2]);
     expect(proc_close($process))->toBe(0)->and($error)->toBe('');
-    expect(json_decode($output,true))->toBe(array(false,false,false,false,false,false,true,true,true,false));
+    expect(json_decode($output,true))->toBe(array(false,false,false,false,false,false,false,false,true,false));
 });
 
 
@@ -1023,7 +1023,7 @@ test('Windows acknowledgement sentinel uses synchronous responses and refuses ex
 });
 
 
-test('rejected fields are removed while valid siblings and later timestamps are written', function ($invalidField) {
+test('schema mismatches retain full samples until repair while invalid names are rejected', function ($invalidField) {
     $root = dirname(__DIR__, 4);
     $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
     if (in_array($invalidField, array('legacy', 'legacy-unknown'), true)) {
@@ -1065,11 +1065,12 @@ require $root.'/include/global_constants.php';
 define('CACTI_LOCALE','en-US');
 function read_config_option($key){return $key==='path_rrdtool'?$GLOBALS['binary']:'';}
 function get_rrdtool_version(){return strpos($GLOBALS['invalidField'],'legacy')===0?'1.4':'1.5';}
+function __($message,...$args){return $args?vsprintf($message,$args):$message;}
 function cacti_log(...$args){}
 function cacti_session_close(){}
 require $root.'/tests/Helpers/PhpSource.php';
 $functions=file_get_contents($root.'/lib/functions.php');
-foreach(array('cacti_has_control_chars','cacti_rrdtool_valid_path','cacti_rrdtool_valid_ds_name','cacti_rrdtool_valid_ds_template','cacti_escapeshellarg','cacti_escapeshellcmd','cacti_version_compare','version_to_decimal','cacti_sizeof') as $name){
+foreach(array('cacti_has_control_chars','cacti_rrdtool_valid_path','cacti_rrdtool_valid_path_token','cacti_rrdtool_valid_ds_name','cacti_rrdtool_valid_ds_template','cacti_escapeshellarg','cacti_escapeshellcmd','cacti_version_compare','version_to_decimal','cacti_sizeof') as $name){
     if (strpos($functions,'function '.$name.'(')!==false) { eval(test_php_function_source($functions,$name)); }
 }
 require $root.'/lib/rrd.php';
@@ -1083,13 +1084,28 @@ $updates=array($file=>array('local_data_id'=>1,'data_template_id'=>0,'times'=>ar
 if ($invalidField === 'single') { unset($updates[$file]['times'][1700000060]['b'], $updates[$file]['times'][1700000060][$invalidField]); }
 if ($invalidField === 'legacy') { unset($updates[$file]['times'][1700000060][$invalidField]); }
 if ($invalidField === 'multiple') { $updates[$file]['times'][1700000060]['another_unknown']=88; }
+if ($invalidField === 'all-invalid') { $updates[$file]['times'][1700000060]=array('bad:name'=>99); }
+if ($invalidField === 'empty-fields') { $updates[$file]['times'][1700000060]=array(); }
 if (strpos($invalidField,'info-')===0) { $updates[$file]['times'][1700000120]=array('in-octets'=>30,'b'=>40); }
 $failed=rrdtool_function_update($updates,$pipe,$completed);$failureReason=rrdtool_last_rejection();
 $last=rrdtool_execute(array('last',$file),false,RRDTOOL_OUTPUT_STDOUT,$pipe);
 $firstCompleted=$completed[$file] ?? array();
 $legacyRetry=null;
+$schemaMismatch=in_array($invalidField,array('unknown','bad-name','missing','multiple','legacy-unknown'),true);
+if($schemaMismatch){
+    rrd_close($pipe);
+    $data_source_types=array(5=>'COMPUTE');
+    $newFields=array_diff(array_keys($updates[$file]['times'][1700000060]),array('in-octets','b','c'));
+    $definitions=array();
+    foreach($newFields as $name){$definitions[]=array('name'=>$name,'type'=>'GAUGE','heartbeat'=>120,'min'=>'NaN','max'=>'NaN');}
+    ob_start();
+    $repaired=rrd_datasource_add(array($file),$definitions,false);
+    ob_end_clean();
+    if($repaired!==true){throw new RuntimeException('Schema repair failed');}
+    $pipe=rrd_init(false,false,true);
+}
 if ($invalidField === 'legacy') { $retry=rrdtool_function_update($updates,$pipe,$completed);$legacyRetry=array($retry,$completed[$file] ?? array()); }
-foreach ($completed[$file] ?? array() as $time => $status) { unset($updates[$file]['times'][$time]); }
+foreach ($firstCompleted as $time => $status) { if ($status === true) { unset($updates[$file]['times'][$time]); } }
 $retried=rrdtool_function_update($updates,$pipe,$completed);
 $readback=rrdtool_execute(array('lastupdate',$file),false,RRDTOOL_OUTPUT_STDOUT,$pipe);
 $updates[$file]['times']=array(1700000120=>array('in-octets'=>30,'b'=>40));
@@ -1106,11 +1122,28 @@ PROBE;
     fclose($pipes[2]);
     expect(proc_close($process))->toBe(0, $error)->and($error)->toBe('');
     $result = json_decode($out, true);
-    if (strpos($invalidField, 'info-') !== 0) { expect($result[8])->toBeNull(); }
+    $schemaMismatch = in_array($invalidField, array('unknown', 'bad-name', 'missing', 'multiple', 'legacy-unknown'), true);
+    if (!$schemaMismatch && strpos($invalidField, 'info-') !== 0) {
+        expect($result[8])->toBeNull();
+    }
+    if ($schemaMismatch) {
+        expect(array_slice($result, 0, 5))->toBe(array(true, false, array(), '1700000000', 1));
+        expect($result[5])->toMatch('/1700000060:.*99/')->and($result[6])->toBe(1);
+        if ($invalidField === 'multiple') {
+            expect($result[5])->toMatch('/1700000060:.*99.*88/');
+        }
+        return;
+    }
     if (strpos($invalidField, 'info-') === 0) {
         expect(array_slice($result, 0, 5))->toBe(array(true, false, array(), '1700000000', false))
             ->and($result[6])->toBeFalse()
             ->and(file_get_contents($this->dir . '/updates'))->toBe('111');
+        return;
+    }
+    if (in_array($invalidField, array('all-invalid', 'empty-fields'), true)) {
+        expect(array_slice($result, 0, 5))->toBe(array(true, false, array(1700000060 => false), '1700000000', false))
+            ->and($result[6])->toBe(1)
+            ->and($result[7])->toMatch('/1700000120:\s+30\s+40/');
         return;
     }
     expect(array_slice($result, 0, 5))->toBe(array(true, 1, array(1700000060 => true), '1700000060', 0), $out)
@@ -1120,4 +1153,4 @@ PROBE;
     if ($invalidField === 'legacy') {
         expect($result[9])->toBe(array(false, array(1700000060 => false)));
     }
-})->with(array('unknown', 'bad-name', 'missing', 'multiple', 'bad:name', 'field_name_too_long1234', 'single', 'legacy','legacy-unknown', 'info-error', 'info-empty', 'info-garbage'));
+})->with(array('unknown', 'bad-name', 'missing', 'multiple', 'bad:name', 'field_name_too_long1234', 'single', 'legacy','legacy-unknown', 'info-error', 'info-empty', 'info-garbage', 'all-invalid', 'empty-fields'));

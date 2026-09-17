@@ -389,14 +389,14 @@ test('RRDproxy array fetch commands arrive as one quoted rrdtool command, includ
 })->skip(!extension_loaded('sockets') || cacti_test_rrdtool_binary() === '', 'the sockets extension or rrdtool is not available');
 
 
-test('native proxy errors preserve permanent rejection reasons and clear them after recovery', function () use ($rrdProxyRoot) {
+test('native proxy errors preserve retryable rejection reasons and clear them after recovery', function () use ($rrdProxyRoot) {
     $run = rrd_proxy_channel_run($rrdProxyRoot, array(
         array('update', array('update', '{work}/sample.rrd', '--template', 'missing', '1700000300:42')),
         array('update', array('update', '{work}/sample.rrd', '1700000300:42:43')),
         array('update', array('update', '{work}/sample.rrd', '1700000300:42')),
     ), array(), array('sample.rrd'));
-    expect($run['client']['calls'][0]['ok'])->toBeFalse()->and($run['client']['calls'][0]['permanent'])->toBeTrue();
-    expect($run['client']['calls'][1]['ok'])->toBeFalse()->and($run['client']['calls'][1]['permanent'])->toBeTrue(json_encode($run['client']['calls']));
+    expect($run['client']['calls'][0]['ok'])->toBeFalse()->and($run['client']['calls'][0]['permanent'])->toBeFalse();
+    expect($run['client']['calls'][1]['ok'])->toBeFalse()->and($run['client']['calls'][1]['permanent'])->toBeFalse();
     expect($run['client']['calls'][2])->toBe(array('ok' => true, 'reason' => null, 'permanent' => false));
 })->skip(!extension_loaded('sockets') || cacti_test_rrdtool_binary() === '', 'Native RRDtool and sockets are required');
 

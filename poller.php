@@ -191,7 +191,8 @@ poller_enabled_check($poller_id);
 // Validate the actual queue before launching producers, including remote collectors.
 // Only the primary writer requires local RRD storage; online remotes use its database.
 require_once __DIR__ . '/lib/rrd_maintenance.php';
-if (!rrd_maintenance_poller_preflight((int) $poller_id === 1, $poller_db_cnn_id)) {
+if (((int) $poller_id === 1 || $config['connection'] === 'online')
+	&& !rrd_maintenance_poller_preflight((int) $poller_id === 1, $poller_db_cnn_id)) {
     exit(1);
 }
 

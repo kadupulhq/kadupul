@@ -19,3 +19,22 @@ acknowledgements; deterministic clock tests cover long and clamped deadlines.
 
 Windows storage preflight probes actual file access. Its new native Windows CI
 job must pass before that platform-specific behavior is considered verified.
+
+Schema mismatches now retain complete samples until the RRD is repaired. Direct
+writer tests replay the original values after extending the schema; Boost tests
+replay a 512-timestamp buffer after repairing its data-source name. Unknown names,
+extra values and template-size errors no longer return success without a write.
+Terminal old timestamps do not defer later drains; transient errors still do.
+
+Boolean commands on a supplied legacy write-only pipe fail without submission,
+avoiding a separate process overtaking queued commands. Native acknowledged-pipe
+and legacy-pipe cases verify ordering and unchanged timestamps. Failed RRD dumps
+return maintenance errors before XML parsing, preserving the original file.
+
+Queue diagnostics and explicit migration resolve the producer's actual destination:
+primary for online remote collectors, local otherwise, with an explicit `--local`
+override. Ordinary schema upgrades check that selected queue first. The new
+`--migrate-poller-queue` command is idempotent and independent of filesystem access.
+Offline/recovery collectors' transient normal queue is excluded from that gate;
+their authoritative backlog is in Boost. Native tests record connection identity
+and verify that the probe and ALTER use the same connection.
