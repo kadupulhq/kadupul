@@ -1,9 +1,12 @@
-# Retained-sample drain capacity diagnostics
+# Retained-sample first-SELECT diagnostics
 
 The benchmark defaults to one million InnoDB queue rows. CI also runs the legacy
 MEMORY fixture separately. Each fixture has 250,000 sources, two RRD fields
 and two timestamps per source. It runs the production-shaped joined first-page
-and retained-page cursor queries with 40,000-row pages. Independent queue tables
+and retained-page cursor SELECTs with 40,000-row pages. It does not execute or
+time the production tail query that completes a boundary timestamp group after
+a full page. These measurements therefore describe only the first SELECT, not
+complete page retrieval or timestamp-group completion. Independent queue tables
 are populated before measurement. Each query and variant receives one warm-up;
 six paired warm rounds alternate which index runs first. Warm-up times are
 reported separately and are not cold-cache measurements. Tables are
@@ -38,7 +41,7 @@ secondary key during a controlled upgrade. Do not change the primary-key
 identity or timestamp-group pagination. Index creation can take metadata locks and consume additional resources;
 production migration needs an engine-specific measured resource budget and
 quiesced pollers. Temporary-table timings do not measure production ALTER locking. This PR measures that candidate rather than
-silently altering deployed queue tables. Query time alone excludes RRD I/O,
+silently altering deployed queue tables. These SELECT timings also exclude the timestamp-group tail query, RRD I/O,
 retention work, producer contention, batch deletion and end-to-end drain time.
 
 ## Real legacy RRDtool

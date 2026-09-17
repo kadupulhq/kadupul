@@ -1,7 +1,7 @@
 <?php
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Synthetic query diagnostics only: not end-to-end poller capacity evidence.
+// Synthetic first-SELECT diagnostics only: excludes timestamp-group tail completion and draining.
 $rows = (int) (getenv('QUEUE_ROWS') ?: 1000000);
 if ($rows < 80000 || $rows % 4 !== 0) {
 	throw new RuntimeException('QUEUE_ROWS must be a multiple of four, at least 80000');
@@ -42,6 +42,8 @@ $db->exec('ALTER TABLE poller_output_secondary ADD INDEX drain_order USING BTREE
 $report['index_build_seconds'] = (hrtime(true) - $start) / 1e9;
 $report['method'] = 'independent queue tables; one warm-up per query and variant; six alternating paired warm rounds';
 $report['cold_cache_measured'] = false;
+$report['query_scope'] = 'first limited SELECT only; excludes the production timestamp-group tail query';
+$report['timestamp_group_completion_measured'] = false;
 $expected = array();
 $variants = array('existing_primary' => 'poller_output', 'matching_secondary' => 'poller_output_secondary');
 $measure = function ($index, $name, $query, $phase) use ($db, &$expected, &$report) {
