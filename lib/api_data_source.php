@@ -26,6 +26,8 @@
    remote pollers to update their caches
    @arg $poller_id - the id of the poller impacted by hash update
    @arg $variable  - the hash variable prefix for the replication setting. */
+
+require_once __DIR__ . '/rrd_maintenance.php';
 function api_data_source_cache_crc_update($poller_id, $variable = 'poller_replicate_data_source_cache_crc') {
 	$hash = hash('ripemd160', date('Y-m-d H:i:s') . rand() . $poller_id);
 
@@ -63,6 +65,11 @@ function api_data_source_remove($local_data_id) {
 
 	$autoclean = read_config_option('rrd_autoclean');
 	$acmethod  = read_config_option('rrd_autoclean_method');
+	if ($autoclean == 'on' && !rrd_maintenance_cleanup_supported()) {
+		$autoclean = '';
+		cacti_log('WARNING: Windows automatic local RRD cleanup is unsupported; data-source files retained for manual cleanup.', false, 'MAINT');
+	}
+
 
 	if ($autoclean == 'on') {
 		$dsinfo = db_fetch_row_prepared('SELECT local_data_id, data_source_path
@@ -184,6 +191,11 @@ function api_data_source_remove_multi($local_data_ids) {
 
 	$autoclean = read_config_option('rrd_autoclean');
 	$acmethod  = read_config_option('rrd_autoclean_method');
+	if ($autoclean == 'on' && !rrd_maintenance_cleanup_supported()) {
+		$autoclean = '';
+		cacti_log('WARNING: Windows automatic local RRD cleanup is unsupported; data-source files retained for manual cleanup.', false, 'MAINT');
+	}
+
 
 	$local_data_ids_chunks = array_chunk($local_data_ids, 1000);
 	foreach ($local_data_ids_chunks as $ids_to_delete) {

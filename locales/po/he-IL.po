@@ -20742,3 +20742,7 @@ msgstr "אין VDEFs"
 #: lib/rrd_maintenance.php
 msgid "RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading."
 msgstr ""
+
+#: rrdcleaner.php:48 rrdcleaner.php:447 rrdcleaner.php:482
+msgid "Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup."
+msgstr ""

@@ -31,6 +31,10 @@ require_once dirname(__DIR__, 4) . '/lib/rrd_maintenance.php';
 if (!function_exists(__NAMESPACE__ . '\remove_files')) {
 	$root = dirname(__DIR__, 4);
 
+	$maintenance = file_get_contents($root . '/lib/rrd_maintenance.php');
+	preg_match('/^function rrd_maintenance_cleanup_supported\(.*?^}\n/ms', $maintenance, $support);
+	eval('namespace ' . __NAMESPACE__ . '; ' . $support[0]);
+
 	$source = file_get_contents($root . '/poller_maintenance.php');
 	preg_match('/^function rrdfile_purge\(.*?^}\n/ms', $source, $purgeFunction);
 	preg_match('/^function remove_files\(.*?^}\n/ms', $source, $remove);
