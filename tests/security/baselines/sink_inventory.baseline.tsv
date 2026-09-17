@@ -538,11 +538,11 @@ fs_write	./cli/import_template.php:105				$fp = fopen($filename,'r'); // nosemgr
 fs_write	./cli/input_whitelist.php:171			file_put_contents($config['input_whitelist'], json_encode($input));
 fs_write	./cli/md5sum.php:163		if (file_put_contents($md5_file,$output) === false) { // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 fs_write	./cli/refresh_csrf.php:67		$fh = fopen($path_csrf_secret, 'w');
-fs_write	./cli/splice_rrd.php:246		$handle = fopen($dump[1], 'x');
+fs_write	./cli/splice_rrd.php:248		$handle = fopen($xmlfile, 'x');
 fs_write	./cli/splice_rrd.php:30				if (($f = @fopen($path, 'a'))) {
-fs_write	./cli/splice_rrd.php:309	file_put_contents($newxmlfile, $new_xml);
+fs_write	./cli/splice_rrd.php:311	file_put_contents($newxmlfile, $new_xml);
 fs_write	./cli/splice_rrd.php:39			if (($f = @fopen($path, 'w'))) {
-fs_write	./cli/splice_rrd.php:843		return file_put_contents($xmlfile, $output);
+fs_write	./cli/splice_rrd.php:845		return file_put_contents($xmlfile, $output);
 fs_write	./host.php:574		$stdout = fopen('php://output', 'w');
 fs_write	./include/global_languages.php:939			file_put_contents($config['i18n_log'], $text . $eol, $mode);
 fs_write	./include/global_languages.php:947			file_put_contents($config['i18n_text_log'], $text . $eol, $mode);
