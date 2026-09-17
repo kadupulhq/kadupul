@@ -1349,3 +1349,18 @@ PHP;
     expect(is_resource($writer))->toBeTrue();
     rrd_maintenance_release($writer);
 })->with(array('restore-timeout', 'info-timeout', 'info-error', 'success'));
+
+test('path-aware maintenance refuses final symlinks without leaking its configured lease', function ($dangling) {
+    $target = $this->dir . '/target.rrd';
+    if (!$dangling) {
+        file_put_contents($target, 'original');
+    }
+    symlink($target, $this->dir . '/alias.rrd');
+    expect(rrd_maintenance_acquire_paths(array($this->dir . '/alias.rrd')))->toBeFalse();
+    $writer = rrd_maintenance_acquire(false, false, 0);
+    expect(is_resource($writer))->toBeTrue();
+    rrd_maintenance_release($writer);
+    if (!$dangling) {
+        expect(file_get_contents($target))->toBe('original');
+    }
+})->with(array(false, true));

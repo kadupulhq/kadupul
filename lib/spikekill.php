@@ -394,6 +394,12 @@ class spikekill {
 			return false;
 		}
 
+		clearstatcache(true, $this->rrdfile);
+		if (is_link($this->rrdfile)) {
+			$this->set_error(__esc("FATAL: File '%s' is not a regular file.", $this->rrdfile));
+			return false;
+		}
+
 		// Wait through brief polling contention, with a bounded deadline.
 		$lock = rrd_maintenance_acquire_paths(array($this->rrdfile), min(60, $this->commandTimeout()));
 		if ($lock === false) {

@@ -810,7 +810,7 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp=
             if (preg_match('/^ERROR:([^\r\n]*)\r?$/m', $output, $error)) {
                 $rejection =& rrdtool_last_rejection(); $rejection = trim($error[1]);
             }
-			return strpos($output, 'ERROR:') === false && preg_match('/^OK u:[^\r\n]+\r?$/m', $output) === 1;
+			return strpos($output, 'ERROR:') === false && preg_match('/^OK(?: u:[^\r\n]+)?\r?$/m', $output) === 1;
 			break;
 	}
 }

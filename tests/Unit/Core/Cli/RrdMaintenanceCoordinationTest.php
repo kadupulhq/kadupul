@@ -46,7 +46,7 @@ function rrd_cli_merge_coverage($test, $dir)
     $parent->merge($child);
 }
 
-test('native maintenance CLI coordinates before touching an RRD', function ($scriptName, $cached, $busy = true, $failure = false) {
+test('native maintenance CLI coordinates before touching an RRD', function ($scriptName, $cached, $busy = true, $failure = false, $defaultDestination = false) {
     $signal = $failure === 'sigterm' ? 15 : ($failure === 'sigint' ? 2 : null);
     if ($signal !== null && (!function_exists('pcntl_signal') || !is_dir('/proc/self/fd'))) {
         $this->markTestSkipped('Native Linux signals and descriptor inspection are required.');
@@ -109,6 +109,9 @@ FIXTURE;
         if ($failure === 'partial-restore') {
             file_put_contents($wrapper, "#!/bin/sh\nif [ \"\$1\" = restore ]; then\n for target do :; done\n printf partial > \"\$target\"\n exit 1\nfi\nexec " . escapeshellarg($binary) . " \"\$@\"\n");
         }
+        if ($failure === 'dump-failure') {
+            file_put_contents($wrapper, "#!/bin/sh\n" . escapeshellarg($binary) . " \"\$@\"\nexit 1\n");
+        }
         if ($failure === 'fetch-empty' || $failure === 'fetch-throw') {
             $behavior = $failure === 'fetch-empty' ? 'return array();' : 'throw new RuntimeException("fetch failed");';
             file_put_contents($dir . '/lib/rrd.php', '<?php function rrdtool_function_fetch(...$args) { ' . $behavior . ' }');
@@ -125,7 +128,10 @@ FIXTURE;
             $args = array_merge($args, array('--type=child', '--child=1', '--start=1700000000', '--end=1700000060'));
             $lock = rrd_maintenance_acquire();
         } else {
-            $args = array_merge($args, array('--oldrrd=' . $rrd, '--newrrd=' . $rrd, '--finrrd=' . $dir . '/finished.rrd'));
+            $args = array_merge($args, array('--oldrrd=' . $rrd, '--newrrd=' . $rrd));
+            if (!$defaultDestination) {
+                $args[] = '--finrrd=' . $dir . '/finished.rrd';
+            }
             $lock = $busy ? rrd_maintenance_acquire() : null;
         }
         $process = proc_open($args, array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, array_merge(getenv(), array('RRDCACHED_ADDRESS' => $cached ? 'unix:/unavailable-test-cache' : '')));
@@ -182,6 +188,9 @@ FIXTURE;
                 ->and(file_exists($dir . '/db-write'))->toBeFalse()
                 ->and(file_get_contents($rrd))->toBe($before);
         } elseif ($failure) {
+            if ($failure === 'dump-failure') {
+                expect($stderr)->toContain('dump failed; inputs preserved')->and(file_exists($dir . '/finished.rrd'))->toBeFalse();
+            }
             expect($status)->toBe(1)->and(file_exists($dir . '/db-write'))->toBeFalse()
                 ->and(file_get_contents($rrd))->toBe($before);
             if ($signal !== null) {
@@ -204,8 +213,9 @@ FIXTURE;
             if ($scriptName === 'update_heartbeat.php') {
                 expect(shell_exec(escapeshellarg($binary) . ' info ' . escapeshellarg($rrd)))->toContain('minimal_heartbeat = 900');
             } elseif ($scriptName === 'splice_rrd.php') {
-                expect(file_exists($dir . '/finished.rrd'))->toBeTrue();
-                $lastUpdate = shell_exec(escapeshellarg($binary) . ' lastupdate ' . escapeshellarg($dir . '/finished.rrd'));
+                $destination = $defaultDestination ? $rrd . '.new' : $dir . '/finished.rrd';
+                expect(file_exists($destination))->toBeTrue();
+                $lastUpdate = shell_exec(escapeshellarg($binary) . ' lastupdate ' . escapeshellarg($destination));
                 expect($lastUpdate)->toContain('value')->toMatch('/1700000060:\s+42(?:\.0+)?(?:e[+]0+)?\s/i');
                 expect(file_get_contents($rrd))->toBe($before);
             }
@@ -228,7 +238,7 @@ FIXTURE;
             rrd_cli_fixture_remove($dir);
         }
     }
-})->with(array(array('update_heartbeat.php', false), array('float_rrdfiles.php', false), array('splice_rrd.php', false), array('float_rrdfiles.php', true), array('splice_rrd.php', true), array('update_heartbeat.php', true), array('splice_rrd.php', false, false), array('float_rrdfiles.php', false, true, 'storage'), array('float_rrdfiles.php', false, true, 'rewrite'), array('float_rrdfiles.php', false, true, 'sigterm'), array('float_rrdfiles.php', false, true, 'sigint'), array('float_rrdfiles.php', false, true, 'fetch-empty'), array('float_rrdfiles.php', false, true, 'fetch-throw'), array('update_heartbeat.php', false, true, 'rewrite'), array('update_heartbeat.php', false, true, 'missing-file'), array('float_rrdfiles.php', false, true, 'partial-restore'), array('splice_rrd.php', false, true, 'partial-restore')));
+})->with(array(array('update_heartbeat.php', false), array('float_rrdfiles.php', false), array('splice_rrd.php', false), array('float_rrdfiles.php', true), array('splice_rrd.php', true), array('update_heartbeat.php', true), array('splice_rrd.php', false, false), array('float_rrdfiles.php', false, true, 'storage'), array('float_rrdfiles.php', false, true, 'rewrite'), array('float_rrdfiles.php', false, true, 'sigterm'), array('float_rrdfiles.php', false, true, 'sigint'), array('float_rrdfiles.php', false, true, 'fetch-empty'), array('float_rrdfiles.php', false, true, 'fetch-throw'), array('update_heartbeat.php', false, true, 'rewrite'), array('update_heartbeat.php', false, true, 'missing-file'), array('float_rrdfiles.php', false, true, 'partial-restore'), array('splice_rrd.php', false, false, 'partial-restore'), array('splice_rrd.php', false, false, 'dump-failure'), array('splice_rrd.php', false, false, false, true)));
 
 
 test('batch gap repair serializes queued files and reports worker outcomes', function ($threads, $failed = false, $cached = false, $childStatus = null) {

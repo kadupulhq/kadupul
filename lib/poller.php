@@ -587,6 +587,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null) {
 	}
 
 	if (cacti_sizeof($results)) {
+		$rrd_expected_fields = array();
 		/* create an array keyed off of each .rrd file */
 		foreach ($results as $item) {
 			/* trim the default characters, but add single and double quotes */
@@ -597,6 +598,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null) {
 			$local_data_id    = $item['local_data_id'];
 			$data_template_id = $item['data_template_id'];
 			$rrd_tmpl         = '';
+			$unused_data_source_names = array();
 
 			$rrd_update_array[$rrd_path]['local_data_id'] = $local_data_id;
 
@@ -777,6 +779,8 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null) {
 				cacti_log(sprintf('WARNING: Invalid output! MULTI DS[%d] Encountered [%s] Expected[%s]', $item['local_data_id'], $value, $expected), false, 'POLLER');
 			}
 
+			$rrd_expected_fields[$rrd_path][$unix_time] = max(0, (int) $item['rrd_num'] - cacti_sizeof($unused_data_source_names));
+
 			/* fallback values */
 			if ((!isset($rrd_update_array[$rrd_path]['times'][$unix_time])) && ($rrd_name != '')) {
 				$rrd_update_array[$rrd_path]['times'][$unix_time][$rrd_name] = 'U';
@@ -791,7 +795,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null) {
 			$path = $item['rrd_path'];
 			$time = $item['unix_time'];
 			if (isset($rrd_update_array[$path]['times'][$time])
-				&& $item['rrd_num'] > cacti_sizeof($rrd_update_array[$path]['times'][$time])) {
+				&& $rrd_expected_fields[$path][$time] > cacti_sizeof($rrd_update_array[$path]['times'][$time])) {
 				unset($rrd_update_array[$path]['times'][$time]);
 			}
 		}
