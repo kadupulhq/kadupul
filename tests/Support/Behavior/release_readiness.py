@@ -7,9 +7,7 @@ import json
 import os
 from pathlib import Path
 import shutil
-import subprocess
 import sys
-import tarfile
 import tempfile
 import uuid
 from types import SimpleNamespace
@@ -122,6 +120,19 @@ def assert_failed_writer_retains_queue(h):
         h.sql("DELETE FROM data_local WHERE id IN (" + fixture_ids + ")")
 
 
+def prepare_baseline(baseline_revision, baseline):
+    """Keep real revision metadata for the same validation used by normal captures."""
+    harness.run(['git', 'clone', '--shared', '--no-checkout', '--', str(ROOT), str(baseline)])
+    harness.run(['git', '-C', str(baseline), 'checkout', '--detach', baseline_revision])
+    # The test infrastructure is candidate-owned; the application and
+    # schema are the exact baseline revision checked out above.
+    shutil.copytree(ROOT / 'tests/Support/Behavior', baseline / 'tests/Support/Behavior', dirs_exist_ok=True)
+    shutil.copytree(ROOT / 'tests/Fixtures', baseline / 'tests/Fixtures', dirs_exist_ok=True)
+    shutil.copytree(ROOT / 'tests/behavior', baseline / 'tests/behavior', dirs_exist_ok=True,
+            ignore=shutil.ignore_patterns('results', '__pycache__'))
+    shutil.copy2(ROOT / '.dockerignore', baseline / '.dockerignore')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--baseline', default='6482af547c204199e829b7a0df0b7a13db3e0a58')
@@ -140,19 +151,7 @@ def main():
         with tempfile.TemporaryDirectory(prefix='kadupul-release-') as temporary:
             temp = Path(temporary)
             baseline = temp / 'baseline'
-            baseline.mkdir()
-            archive = temp / 'baseline.tar'
-            with archive.open('wb') as stream:
-                subprocess.run(['git', '-C', str(ROOT), 'archive', baseline_revision], stdout=stream, check=True)
-            with tarfile.open(archive) as source:
-                source.extractall(baseline, filter='data')
-            # The test infrastructure is candidate-owned; the application and
-            # schema are the exact baseline revision exported above.
-            shutil.copytree(ROOT / 'tests/Support/Behavior', baseline / 'tests/Support/Behavior', dirs_exist_ok=True)
-            shutil.copytree(ROOT / 'tests/Fixtures', baseline / 'tests/Fixtures', dirs_exist_ok=True)
-            shutil.copytree(ROOT / 'tests/behavior', baseline / 'tests/behavior', dirs_exist_ok=True,
-                            ignore=shutil.ignore_patterns('results', '__pycache__'))
-            shutil.copy2(ROOT / '.dockerignore', baseline / '.dockerignore')
+            prepare_baseline(baseline_revision, baseline)
             harness.ROOT = baseline
             h = harness.Harness(SimpleNamespace(target='release-readiness', only=None, update_golden=False, project=project))
             # Use a dedicated project and keep the baseline image for rollback.

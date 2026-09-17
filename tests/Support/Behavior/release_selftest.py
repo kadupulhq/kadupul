@@ -66,7 +66,23 @@ def recursive_rrd_manifest():
     print('RRD manifests distinguish nested paths, detect nested changes, and reject empty stores')
 
 
+def baseline_checkout_metadata():
+    revision = subprocess.check_output(['git', '-C', str(release.ROOT), 'rev-parse', 'HEAD'], text=True).strip()
+    with tempfile.TemporaryDirectory(prefix='release baseline checkout ') as directory:
+        baseline = Path(directory) / 'baseline'
+        release.prepare_baseline(revision, baseline)
+        actual = subprocess.check_output(['git', '-C', str(baseline), 'rev-parse', 'HEAD'], text=True).strip()
+        assert actual == revision
+        assert (baseline / '.git').is_dir()
+        expected_schema = subprocess.check_output(['git', '-C', str(release.ROOT), 'show', revision + ':cacti.sql'])
+        assert (baseline / 'cacti.sql').read_bytes() == expected_schema
+        with patch.object(release.harness, 'ROOT', baseline):
+            release.harness.validate_application_inputs()
+    print('Release baseline preserves revision metadata, schema and validated controller overlay')
+
+
 def main():
+    baseline_checkout_metadata()
     recursive_rrd_manifest()
     projects = []
     for missing_docker in (False, True):
