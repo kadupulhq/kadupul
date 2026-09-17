@@ -777,7 +777,7 @@ class Harness:
 
 
 def compare(args):
-    root = ROOT / 'tests/behavior/results'
+    root = Path(getattr(args, 'results_root', None) or ROOT / 'tests/behavior/results')
     baseline = json.loads((root / args.baseline / 'observations.json').read_text())
     candidate = json.loads((root / args.candidate / 'observations.json').read_text())
     if not baseline['complete'] or not candidate['complete']:
@@ -807,7 +807,7 @@ def compare(args):
         else:
             status = 'REGRESSION'
         report.append({'scenario': name, 'status': status, 'digest': digest, 'baseline': b, 'candidate': c})
-    output = Path(args.output)
+    output = Path(args.output) if args.output else root / 'comparison'
     write_json(output.with_suffix('.json'), {'baseline': args.baseline, 'candidate': args.candidate, 'differences': report})
     output.with_suffix('.md').write_text('# Behavioral comparison\n\n' + '\n'.join(f"- {r['status']}: `{r['scenario']}`" for r in report) + '\n')
     print(output.with_suffix('.md').read_text())
@@ -829,11 +829,12 @@ def main():
     test.add_argument('--only', nargs='*', default=None, metavar='GROUP',
                       help='Verify only these scenario groups (api, auth, devices, graphs, plugins, cli, poller, ui, database, upgrade, snmp, faults, diagnostics). All scenarios still run, because later ones consume earlier fixtures.')
     diff = sub.add_parser('compare')
+    diff.add_argument('--results-root', type=Path, help='Directory containing capture labels; defaults to this checkout tests/behavior/results.')
     diff.add_argument('--baseline', required=True)
     diff.add_argument('--candidate', required=True)
     diff.add_argument('--repeat')
     diff.add_argument('--approvals')
-    diff.add_argument('--output', default=str(ROOT / 'tests/behavior/results/comparison'))
+    diff.add_argument('--output', help='Report path prefix; defaults to comparison under the selected results root.')
     args = parser.parse_args()
     if args.action == 'compare':
         return compare(args)

@@ -188,6 +188,9 @@ application files unchanged. Then run the controller directly:
 ```sh
 mise exec python@3.12.12 -- python /path/to/harness/tests/Support/Behavior/harness.py run \
   --application-root /path/to/application --target cacti-1.2.31
+# After capturing both labels, compare from the controller checkout:
+./tests/bin/compare --results-root /path/to/application/tests/behavior/results \
+  --baseline cacti-1.2.31 --candidate kadupul
 ```
 
 The manifest is written beneath the application checkout's
