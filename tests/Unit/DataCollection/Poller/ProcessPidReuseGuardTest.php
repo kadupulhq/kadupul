@@ -41,6 +41,30 @@ $stillRunning = function ($pid) {
 	}
 };
 
+// proc_open can return while the child still has the parent's PHP identity.
+// Wait for native exec independently of the identity guard being tested.
+$withNativeSleep = function ($assertion) {
+    $proc = proc_open(array('sleep', '30'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    expect($proc)->not->toBeFalse();
+    $pid = proc_get_status($proc)['pid'];
+    try {
+        $deadline = microtime(true) + 5;
+        do {
+            $command = @file_get_contents('/proc/' . $pid . '/comm');
+            if (trim((string)$command) === 'sleep') {
+                $assertion($pid);
+                return $pid;
+            }
+            usleep(1000);
+        } while (microtime(true) < $deadline && proc_get_status($proc)['running']);
+        throw new RuntimeException('Native child did not finish exec before the identity assertion');
+    } finally {
+        proc_terminate($proc, SIGKILL);
+        foreach ($pipes as $pipe) { fclose($pipe); }
+        proc_close($proc);
+    }
+};
+
 test('rejects non-positive pids outright', function () use ($stillRunning) {
 	expect($stillRunning(0))->toBeFalse();
 	expect($stillRunning(-1))->toBeFalse();
@@ -60,67 +84,24 @@ test('returns true for the currently running process (self)', function () use ($
 	expect($stillRunning(getmypid()))->toBeTrue();
 });
 
-test('rejects a recycled pid running a readable native command', function () use ($stillRunning) {
-	if (!is_dir('/proc/' . getmypid())) {
-		test()->markTestSkipped('command identity is available only on procfs platforms');
-	}
-
-	$descriptors = array(1 => array('pipe', 'w'), 2 => array('pipe', 'w'));
-	$proc        = proc_open('sleep 5', $descriptors, $pipes);
-
-	expect($proc)->not->toBeFalse();
-
-	$status = proc_get_status($proc);
-	$pid    = $status['pid'];
-
-	expect(cacti_process_identity_matches($pid))->toBeFalse()
-		->and($stillRunning($pid))->toBeFalse();
-
-	posix_kill($pid, SIGKILL);
-
-	foreach ($pipes as $pipe) {
-		fclose($pipe);
-	}
-
-	proc_close($proc);
-
-	// Give the OS a moment to reap the pid before asserting it is gone.
-	$deadline = microtime(true) + 2;
-
-	while (posix_kill($pid, 0) && microtime(true) < $deadline) {
-		usleep(50000);
-	}
-
-	expect($stillRunning($pid))->toBeFalse();
+test('rejects a recycled pid running a readable native command', function () use ($stillRunning, $withNativeSleep) {
+    if (!is_dir('/proc/' . getmypid())) {
+        test()->markTestSkipped('command identity is available only on procfs platforms');
+    }
+    $pid = $withNativeSleep(function ($pid) use ($stillRunning) {
+        expect(cacti_process_identity_matches($pid))->toBeFalse()
+            ->and($stillRunning($pid))->toBeFalse();
+    });
+    expect($stillRunning($pid))->toBeFalse();
 });
 
-test('cacti_process_kill_denied does not keep the row of a pid reused by an unrelated process', function () {
-	if (!is_dir('/proc/' . getmypid())) {
-		test()->markTestSkipped('command identity is available only on procfs platforms');
-	}
-
-	// cacti_process_kill_denied() used to fall back to cacti_process_signalable(),
-	// which only asks whether the pid exists. A registered task that exited and
-	// whose pid was recycled by an unrelated program then read as "denied", not
-	// "gone", and its row was kept forever. Routing it through
-	// cacti_process_still_running() instead means the identity mismatch, not
-	// mere existence, decides the row's fate.
-	$descriptors = array(1 => array('pipe', 'w'), 2 => array('pipe', 'w'));
-	$proc        = proc_open('sleep 5', $descriptors, $pipes);
-
-	expect($proc)->not->toBeFalse();
-
-	$pid = proc_get_status($proc)['pid'];
-
-	expect(cacti_process_kill_denied($pid))->toBeFalse();
-
-	posix_kill($pid, SIGKILL);
-
-	foreach ($pipes as $pipe) {
-		fclose($pipe);
-	}
-
-	proc_close($proc);
+test('cacti_process_kill_denied does not keep the row of a pid reused by an unrelated process', function () use ($withNativeSleep) {
+    if (!is_dir('/proc/' . getmypid())) {
+        test()->markTestSkipped('command identity is available only on procfs platforms');
+    }
+    $withNativeSleep(function ($pid) {
+        expect(cacti_process_kill_denied($pid))->toBeFalse();
+    });
 });
 
 test('falls back to the bare existence check when /proc is unavailable', function () use ($stillRunning) {
