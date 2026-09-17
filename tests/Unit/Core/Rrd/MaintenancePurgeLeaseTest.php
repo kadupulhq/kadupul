@@ -45,12 +45,22 @@ function db_execute_prepared(...$args)
     $writer = \rrd_maintenance_acquire(false, false, 0);
     expect(is_resource($writer))->toBeTrue();
     \rrd_maintenance_release($writer);
-    $GLOBALS['purge_fixture_queue'] = array();
+    $GLOBALS['purge_fixture_queue'] = array_values(array_filter($GLOBALS['purge_fixture_queue'], static function ($row) use ($args) {
+        return $row['name'] !== $args[1][0];
+    }));
     return true;
 }
 function set_config_option(...$args) {}
+function unlink($path)
+{
+    return !empty($GLOBALS['purge_fixture_failure']) && basename($path) === 'sample.rrd' ? false : \unlink($path);
+}
+function rename($source, $target)
+{
+    return !empty($GLOBALS['purge_fixture_failure']) && basename($source) === 'sample.rrd' ? false : \rename($source, $target);
+}
 
-test('purge and archive defer once under a writer lease then complete on retry', function ($action) {
+test('purge and archive defer once under a writer lease then complete on retry', function ($action, $filesystemFailure) {
     $saved = $GLOBALS['config'] ?? null;
     $directory = sys_get_temp_dir() . '/purge-lease-' . bin2hex(random_bytes(8));
     mkdir($directory, 0700);
@@ -67,6 +77,17 @@ test('purge and archive defer once under a writer lease then complete on retry',
             ->and($GLOBALS['purge_fixture_queue'])->toHaveCount(1);
         \rrd_maintenance_release($writer);
         $GLOBALS['purge_fixture_reads'] = 0;
+        if ($filesystemFailure) {
+            file_put_contents($directory . '/good.rrd', 'valid sibling');
+            $GLOBALS['purge_fixture_queue'][] = array('id' => 2, 'name' => 'good.rrd', 'local_data_id' => 0, 'action' => $action);
+            $GLOBALS['purge_fixture_failure'] = true;
+            expect(rrdfile_purge(false))->toBeFalse()
+                ->and($GLOBALS['purge_fixture_queue'])->toHaveCount(1)
+                ->and(file_exists($directory . '/sample.rrd'))->toBeTrue()
+                ->and(file_exists($directory . '/good.rrd'))->toBeFalse();
+            unset($GLOBALS['purge_fixture_failure']);
+            $GLOBALS['purge_fixture_reads'] = 0;
+        }
         expect(rrdfile_purge(false))->not->toBeFalse()->and($GLOBALS['purge_fixture_queue'])->toBe(array())
             ->and(file_exists($directory . '/sample.rrd'))->toBeFalse();
         if ($action === '3') {
@@ -74,6 +95,7 @@ test('purge and archive defer once under a writer lease then complete on retry',
         }
     } finally {
         \rrd_maintenance_release($writer);
+        unset($GLOBALS['purge_fixture_failure']);
         $GLOBALS['config'] = $saved;
         $paths = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($paths as $path) {
@@ -82,4 +104,4 @@ test('purge and archive defer once under a writer lease then complete on retry',
         rmdir($directory);
         unset($GLOBALS['purge_fixture_queue'], $GLOBALS['purge_fixture_reads']);
     }
-})->with(array('1', '3'));
+})->with(array('1', '3'))->with(array(false, true));
