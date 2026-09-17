@@ -587,6 +587,9 @@ class Installer implements JsonSerializable
 
         require_once __DIR__ . '/rrd_maintenance.php';
         $storage_error = rrd_maintenance_configuration_error();
+        if ($storage_error === '' && in_array($this->mode, array(Installer::MODE_UPGRADE, Installer::MODE_DOWNGRADE), true)) {
+            $storage_error = rrd_maintenance_queue_configuration_error();
+        }
         $storage_path = $config['rra_path'] ?? ($config['base_path'] . '/rra');
         $permissions['always'][$storage_path] = $storage_error === '';
         if ($storage_error !== '') {
@@ -3106,6 +3109,9 @@ class Installer implements JsonSerializable
         global $config;
         require_once __DIR__ . '/rrd_maintenance.php';
         $storage_error = rrd_maintenance_configuration_error();
+        if ($storage_error === '' && in_array($this->mode, array(Installer::MODE_UPGRADE, Installer::MODE_DOWNGRADE), true)) {
+            $storage_error = rrd_maintenance_queue_configuration_error();
+        }
         if ($storage_error !== '') {
             throw new RuntimeException($storage_error);
         }
