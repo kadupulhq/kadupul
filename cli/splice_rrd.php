@@ -241,12 +241,14 @@ $newxmlfile = $tempdir . '/new.xml';
 
 
 /* Require successful bounded dumps before parsing any intermediate output. */
-foreach (array(array($oldrrd, $oldxmlfile), array($newrrd, $newxmlfile)) as $dump) {
-	debug("Creating XML file '$dump[1]' from '$dump[0]'");
-	$handle = fopen($dump[1], 'x');
+$dump_sources = array($oldrrd, $newrrd);
+foreach (array($oldxmlfile, $newxmlfile) as $index => $xmlfile) {
+	$source = $dump_sources[$index];
+	debug("Creating XML file '$xmlfile' from '$source'");
+	$handle = fopen($xmlfile, 'x');
 	if ($handle === false) { fwrite(STDERR, "FATAL: Unable to create dump file.\n"); exit(1); }
 	try {
-		$result = rrd_maintenance_run_command(array($rrdtool, 'dump', $dump[0]), $handle, rrd_maintenance_command_timeout());
+		$result = rrd_maintenance_run_command(array($rrdtool, 'dump', $source), $handle, rrd_maintenance_command_timeout());
 	} finally {
 		fclose($handle);
 	}
