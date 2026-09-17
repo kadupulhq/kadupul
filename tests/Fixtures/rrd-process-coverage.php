@@ -11,6 +11,7 @@ $coverageFilter->includeFile($coverageRoot . '/lib/rrd.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/rrd_maintenance.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/poller.php');
 $coverageFilter->includeFile($coverageRoot . '/lib/boost.php');
+$coverageFilter->includeFile($coverageRoot . '/lib/api_data_source.php');
 if (defined('RRD_TEST_INSTALLER_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/installer.php');
 }
