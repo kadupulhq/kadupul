@@ -1424,7 +1424,7 @@ test('web writer and on-demand Boost share a throttled initialization diagnostic
 test('rejected fields are removed while valid siblings and later timestamps are written', function ($invalidField) {
     $root = dirname(__DIR__, 4);
     $binary = getenv('RRDTOOL_TEST_BINARY') ?: (is_executable('/usr/bin/rrdtool') ? '/usr/bin/rrdtool' : '/opt/homebrew/bin/rrdtool');
-    if ($invalidField === 'legacy') {
+    if (in_array($invalidField, array('legacy', 'legacy-unknown'), true)) {
         $binary = getenv('RRDTOOL_LEGACY_TEST_BINARY') ?: '';
     }
     if (strpos($invalidField, 'info-') === 0) {
@@ -1462,7 +1462,7 @@ $config=array('cacti_server_os'=>'unix','rra_path'=>__DIR__,'is_web'=>false);
 require $root.'/include/global_constants.php';
 define('CACTI_LOCALE','en-US');
 function read_config_option($key){return $key==='path_rrdtool'?$GLOBALS['binary']:'';}
-function get_rrdtool_version(){return $GLOBALS['invalidField']==='legacy'?'1.4':'1.5';}
+function get_rrdtool_version(){return strpos($GLOBALS['invalidField'],'legacy')===0?'1.4':'1.5';}
 function cacti_log(...$args){}
 function cacti_session_close(){}
 require $root.'/tests/Helpers/PhpSource.php';
@@ -1520,4 +1520,4 @@ PROBE;
     if ($invalidField === 'legacy') {
         expect($result[9])->toBe(array(false, array(1700000060 => false)));
     }
-})->with(array('unknown', 'bad-name', 'missing', 'multiple', 'bad:name', 'field_name_too_long1234', 'single', 'legacy', 'info-error', 'info-empty', 'info-garbage'));
+})->with(array('unknown', 'bad-name', 'missing', 'multiple', 'bad:name', 'field_name_too_long1234', 'single', 'legacy','legacy-unknown', 'info-error', 'info-empty', 'info-garbage'));
