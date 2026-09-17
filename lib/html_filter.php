@@ -217,7 +217,7 @@ class CactiTableFilter {
 				$element = '$(document.getElementById(' . json_encode((string) $field_name, $json_flags) . '))';
 				$value = $method === 'checkbox' ? $element . ".is(':checked')" : $element . '.val()';
 				$applyFilter .= ' + ' . json_encode('&' . rawurlencode($field_name) . '=', $json_flags) . ' + encodeURIComponent(' . $value . ')';
-				if ($method !== 'textbox' && $method !== 'checkbox') {
+				if ($method !== 'textbox') {
 					$changeFields[] = $field_name;
 				}
 			}

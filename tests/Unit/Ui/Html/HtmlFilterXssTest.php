@@ -56,10 +56,10 @@ test('filter JavaScript preserves hostile form IDs and encodes query values', fu
     try { $method->invoke($filter); $html = ob_get_contents(); } finally { ob_end_clean(); }
     expect(substr_count($html, '<script'))->toBe(1)->and(substr_count($html, '</script>'))->toBe(1);
     preg_match('/<script[^>]*>([\s\S]*)<\/script>/', $html, $match);
-    $javascript = 'const urls=[], bindings=[]; const document={getElementById:id=>({id})}; '
-        . 'function $(arg){if(typeof arg==="function"){arg();return;} return {on:(event,fn)=>bindings.push([arg.id || arg,event]),val:()=>"a & b=1",is:()=>true};} '
+    $javascript = 'const urls=[], bindings=[], handlers={}; const document={getElementById:id=>({id})}; '
+        . 'function $(arg){if(typeof arg==="function"){arg();return;} return {on:(event,fn)=>{bindings.push([arg.id || arg,event]);handlers[(arg.id || arg)+":"+event]=fn;},val:()=>"a & b=1",is:()=>true};} '
         . 'function loadPageNoHeader(url){urls.push(url);} ' . $match[1]
-        . '\napplyFilter();clearFilter();console.log(JSON.stringify({urls,bindings}));';
+        . '\napplyFilter();clearFilter();if(handlers["enabled:change"])handlers["enabled:change"]();console.log(JSON.stringify({urls,bindings}));';
     $javascript = str_replace('\\napplyFilter', "\napplyFilter", $javascript);
     $process = proc_open(array(getenv('NODE_BINARY') ?: 'node', '-e', $javascript), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
     expect($process)->not->toBeFalse();
@@ -68,7 +68,10 @@ test('filter JavaScript preserves hostile form IDs and encodes query values', fu
     expect(proc_close($process))->toBe(0, $stderr);
     $result = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
     $base = $filter->form_action . '&header=false';
-    expect($result['urls'])->toBe(array($base . ($with_fields ? '&name=a%20%26%20b%3D1&choice=a%20%26%20b%3D1&enabled=true' : ''), $base . '&clear=true'))
+    $applied = $base . ($with_fields ? '&name=a%20%26%20b%3D1&choice=a%20%26%20b%3D1&enabled=true' : '');
+    $expectedUrls = array($applied, $base . '&clear=true');
+    if ($with_fields) { $expectedUrls[] = $applied; }
+    expect($result['urls'])->toBe($expectedUrls)
         ->and($result['bindings'][0])->toBe(array($filter->form_id, 'submit'));
-    if ($with_fields) { expect($result['bindings'])->toContain(array('choice', 'change')); }
+    if ($with_fields) { expect($result['bindings'])->toContain(array('choice', 'change'))->toContain(array('enabled', 'change'))->not->toContain(array('name', 'change')); }
 })->with(array(false, true));
