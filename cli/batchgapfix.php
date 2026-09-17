@@ -42,7 +42,9 @@ $avgnan     = 'last';
 $start_time = false;
 $end_time   = false;
 $php_bin    = (string) read_config_option('path_php_binary');
-if ($php_bin === '') { $php_bin = PHP_BINARY; }
+if ($php_bin === '') {
+    $php_bin = PHP_BINARY;
+}
 
 /* install signal handlers for UNIX types only */
 if (function_exists('pcntl_signal')) {
@@ -283,8 +285,12 @@ if ($child == 0) {
 	$args = array($php_bin, $config['base_path'] . '/cli/batchgapfix.php',
 		'--start=' . $start_date, '--end=' . $end_date, '--method=' . $method,
 		'--avgnan=' . $avgnan, '--child=1');
-	if ($force) { $args[] = '--force'; }
-	if ($debug) { $args[] = '--debug'; }
+	if ($force) {
+		$args[] = '--force';
+	}
+	if ($debug) {
+		$args[] = '--debug';
+	}
 	$process = proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
 	$child_status = 1;
 	if (is_resource($process)) {

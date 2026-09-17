@@ -298,15 +298,21 @@ function __rrd_close($rrdtool_pipe) {
 	if (isset($owned[(int) $rrdtool_pipe])) {
 		$state = $owned[(int) $rrdtool_pipe];
 		unset($owned[(int) $rrdtool_pipe]);
-		if (is_resource($state['write'])) { fclose($state['write']); }
+		if (is_resource($state['write'])) {
+			fclose($state['write']);
+		}
 		// Commands have already been acknowledged. EOF asks the idle child to exit.
 		$deadline = hrtime(true) + 1000000000;
 		do {
 			$status = proc_get_status($state['process']);
-			if (!$status['running']) { break; }
+			if (!$status['running']) {
+				break;
+			}
 			usleep(10000);
 		} while (hrtime(true) < $deadline);
-		if ($status['running']) { proc_terminate($state['process'], 9); }
+		if ($status['running']) {
+			proc_terminate($state['process'], 9);
+		}
 		fclose($state['read']);
 		proc_close($state['process']);
 		rrdtool_reset_language();
@@ -449,9 +455,15 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 			$rejection =& rrdtool_last_rejection();
 			$rejection = trim($error[1]);
 		}
-		if ($owned[(int) $rrdtool_pipe]['echo']) { print $response; }
-		if ($output_flag === RRDTOOL_OUTPUT_BOOLEAN) { return $acknowledged; }
-		if (!$acknowledged) { return false; }
+		if ($owned[(int) $rrdtool_pipe]['echo']) {
+			print $response;
+		}
+		if ($output_flag === RRDTOOL_OUTPUT_BOOLEAN) {
+			return $acknowledged;
+		}
+		if (!$acknowledged) {
+			return false;
+		}
 		rrdtool_trim_output($response);
 		return $output_flag === RRDTOOL_OUTPUT_NULL ? null : $response;
 	}
@@ -603,7 +615,8 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 		fclose($fp);
 		$status = proc_close($process);
         if (!$metadata['timed_out'] && is_string($output) && preg_match('/^ERROR:([^\r\n]*)\r?$/m', $output, $error)) {
-            $rejection =& rrdtool_last_rejection(); $rejection = trim($error[1]);
+            $rejection =& rrdtool_last_rejection();
+            $rejection = trim($error[1]);
         }
 		return !$metadata['timed_out'] && $status === 0 && is_string($output)
 			&& preg_match('/^OK(?: u:[^\r\n]+)?\r?$/m', $output) === 1
@@ -808,7 +821,8 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp=
 			break;
 		case RRDTOOL_OUTPUT_BOOLEAN :
             if (preg_match('/^ERROR:([^\r\n]*)\r?$/m', $output, $error)) {
-                $rejection =& rrdtool_last_rejection(); $rejection = trim($error[1]);
+                $rejection =& rrdtool_last_rejection();
+                $rejection = trim($error[1]);
             }
 			return strpos($output, 'ERROR:') === false && preg_match('/^OK(?: u:[^\r\n]+)?\r?$/m', $output) === 1;
 			break;
@@ -1187,7 +1201,9 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 						$failed = true;
 						continue;
 					}
-					if (!$failed) { cacti_log('ERROR: RRD update was not acknowledged; pending samples retained for retry.', false, 'POLLER'); }
+					if (!$failed) {
+						cacti_log('ERROR: RRD update was not acknowledged; pending samples retained for retry.', false, 'POLLER');
+					}
 					$failed = true;
 					break;
 				}
@@ -3760,7 +3776,10 @@ function rrdtool_tune($rrd_file, $diff, $show_source = true) {
                     $resize_rrd = getcwd() . '/resize.rrd';
                     return rename($resize_rrd, $rrd_file);
                 });
-                if ($resized !== true) { cacti_log('ERROR: RRD resize failed; original file retained.', false, 'UTIL'); return false; }
+                if ($resized !== true) {
+                    cacti_log('ERROR: RRD resize failed; original file retained.', false, 'UTIL');
+                    return false;
+                }
 			}
 		}
 	}

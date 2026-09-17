@@ -193,7 +193,10 @@ if ($finrrd == '') {
 require_once __DIR__ . '/../lib/rrd_maintenance.php';
 rrd_maintenance_cli_preflight();
 $rrd_rewrite_lock = rrd_maintenance_acquire_paths(array($oldrrd, $newrrd, $finrrd));
-if ($rrd_rewrite_lock === false) { fwrite(STDERR, "FATAL: RRD storage is busy or its maintenance lock is unavailable.\n"); exit(1); }
+if ($rrd_rewrite_lock === false) {
+    fwrite(STDERR, "FATAL: RRD storage is busy or its maintenance lock is unavailable.\n");
+    exit(1);
+}
 register_shutdown_function(function () use ($rrd_rewrite_lock) { rrd_maintenance_release($rrd_rewrite_lock); });
 
 debug('Entering Mainline');
@@ -235,7 +238,10 @@ if (strlen($response)) {
 /* All XML and SQLite intermediates stay in an owner-only random workspace. */
 $seed = bin2hex(random_bytes(8));
 $tempdir = rrd_maintenance_workspace();
-if ($tempdir === false) { fwrite(STDERR, "FATAL: Unable to create private RRD workspace.\n"); exit(1); }
+if ($tempdir === false) {
+    fwrite(STDERR, "FATAL: Unable to create private RRD workspace.\n");
+    exit(1);
+}
 $oldxmlfile = $tempdir . '/old.xml';
 $newxmlfile = $tempdir . '/new.xml';
 
@@ -246,13 +252,19 @@ foreach (array($oldxmlfile, $newxmlfile) as $index => $xmlfile) {
 	$source = $dump_sources[$index];
 	debug("Creating XML file '$xmlfile' from '$source'");
 	$handle = fopen($xmlfile, 'x');
-	if ($handle === false) { fwrite(STDERR, "FATAL: Unable to create dump file.\n"); exit(1); }
+	if ($handle === false) {
+		fwrite(STDERR, "FATAL: Unable to create dump file.\n");
+		exit(1);
+	}
 	try {
 		$result = rrd_maintenance_run_command(array($rrdtool, 'dump', $source), $handle, rrd_maintenance_command_timeout());
 	} finally {
 		fclose($handle);
 	}
-	if ($result['exit'] !== 0) { fwrite(STDERR, "FATAL: RRDtool dump failed; inputs preserved.\n"); exit(1); }
+	if ($result['exit'] !== 0) {
+		fwrite(STDERR, "FATAL: RRDtool dump failed; inputs preserved.\n");
+		exit(1);
+	}
 }
 
 /* read the xml files into arrays */
@@ -313,7 +325,9 @@ file_put_contents($newxmlfile, $new_xml);
 /* finally update the file XML file and Reprocess the RRDfile */
 if (!$dryrun) {
 	debug('Creating New RRDfile');
-	if (!createRRDFileFromXML($newxmlfile, $finrrd)) { exit(1); }
+	if (!createRRDFileFromXML($newxmlfile, $finrrd)) {
+		exit(1);
+	}
 }
 
 /* remove the temp file */

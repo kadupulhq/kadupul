@@ -15,7 +15,9 @@ if (function_exists('pcntl_async_signals')) {
 ini_set('output_buffering', 'Off');
 
 // Isolate each worker and its RRDtool descendants for bounded master cleanup.
-if (in_array('--type=child', $_SERVER['argv'], true) && function_exists('posix_setsid') && posix_setsid() < 0) { exit(1); }
+if (in_array('--type=child', $_SERVER['argv'], true) && function_exists('posix_setsid') && posix_setsid() < 0) {
+    exit(1);
+}
 
 require(__DIR__ . '/../include/cli_check.php');
 require_once($config['base_path'] . '/lib/poller.php');
@@ -329,7 +331,9 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 	}
 
 	$tmp_dir = rrd_maintenance_workspace();
-	if ($tmp_dir === false) { return false; }
+	if ($tmp_dir === false) {
+		return false;
+	}
 
 	$delta_time = $end_time - $start_time;
 	$tmp_file   = $tmp_dir . '/' . $local_data_id . '.xml';
@@ -445,11 +449,15 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 				}
 
 				fclose($fp);
-                if (isset($lf) && is_resource($lf)) { fclose($lf); }
+                if (isset($lf) && is_resource($lf)) {
+                    fclose($lf);
+                }
 
                 if (rrd_maintenance_restore_command($rrdtool_bin, $tmp_file, $rrd_path)) {
                     cacti_log(sprintf('NOTE: Range floated for RRDfile %s', $rrd_path), false, 'RFLOAT');
-                    if (!$seebug) { unlink($tmp_file); }
+                    if (!$seebug) {
+                        unlink($tmp_file);
+                    }
                     return true;
                 }
                 cacti_log(sprintf('WARNING: Range float FAILED for RRDfile %s; original and recovery XML preserved.', $rrd_path), false, 'RFLOAT');
@@ -630,15 +638,21 @@ function float_launch_child($thread_id, $step, $start_time, $end_time) {
 	global $config, $seebug;
 
 	$php_binary = (string) read_config_option('path_php_binary');
-	if ($php_binary === '') { $php_binary = PHP_BINARY; }
+	if ($php_binary === '') {
+		$php_binary = PHP_BINARY;
+	}
 
 	float_debug(sprintf('Launching Float Data Process Number %s for Type %s', $thread_id, 'child'));
 
 	cacti_log(sprintf('NOTE: Launching Float Data Number %s for Type %s', $thread_id, 'child'), false, 'RFLOAT', POLLER_VERBOSITY_MEDIUM);
 
 	$args = array($php_binary, $config['base_path'] . '/cli/float_rrdfiles.php', '--type=child', '--child=' . $thread_id, '--start=' . $start_time, '--end=' . $end_time);
-	if ($step !== false) { $args[] = '--step=' . $step; }
-	if ($seebug) { $args[] = '--debug'; }
+	if ($step !== false) {
+		$args[] = '--step=' . $step;
+	}
+	if ($seebug) {
+		$args[] = '--debug';
+	}
 	return proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
 }
 

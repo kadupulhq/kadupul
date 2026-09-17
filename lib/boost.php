@@ -724,7 +724,9 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 	$data_ids_to_get = read_config_option('boost_rrd_update_max_records_per_select');
 
 	$archive_tables = boost_get_arch_table_names($archive_table);
-	if ($archive_tables === false) { return -1; }
+	if ($archive_tables === false) {
+		return -1;
+	}
 
 	$results = array();
 
@@ -788,7 +790,9 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 
 	boost_timer('get_records', BOOST_TIMER_START);
 	$results = db_fetch_assoc_prepared($query_string, $sql_params);
-	if ($results === false) { return -1; }
+	if ($results === false) {
+		return -1;
+	}
 	boost_timer('get_records', BOOST_TIMER_END);
 
 	$boost_results = cacti_sizeof($results);
@@ -1516,16 +1520,22 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 		$update_options = '--skip-past-updates';
 	} else {
 		$update_options = '';
-        if (strpbrk($rrd_update_values, "\r\n\0") !== false) { return 'ERROR: Invalid legacy update values'; }
+        if (strpbrk($rrd_update_values, "\r\n\0") !== false) {
+            return 'ERROR: Invalid legacy update values';
+        }
         $last_update = rrdtool_execute('last ' . cacti_escapeshellarg($rrd_path), false, RRDTOOL_OUTPUT_STDOUT, false, 'BOOST');
-        if (!is_string($last_update) || !ctype_digit(trim($last_update))) { return 'ERROR: Unable to read last RRD timestamp'; }
+        if (!is_string($last_update) || !ctype_digit(trim($last_update))) {
+            return 'ERROR: Unable to read last RRD timestamp';
+        }
         $samples = preg_split('/\s+/', trim($rrd_update_values), -1, PREG_SPLIT_NO_EMPTY);
         $samples = array_filter($samples, function ($sample) use ($last_update) {
             $timestamp = explode(':', $sample, 2)[0];
             return !ctype_digit($timestamp) || (int) $timestamp > (int) $last_update;
         });
         $rrd_update_values = implode(' ', $samples);
-        if ($rrd_update_values === '') { return 'OK'; }
+        if ($rrd_update_values === '') {
+            return 'OK';
+        }
 	}
 
 	if ($valid_entry) {

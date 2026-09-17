@@ -258,7 +258,9 @@ function rrdfile_purge($force) {
 
 			if (cacti_sizeof($file_array) || $force) {
 				/* there's something to do for us now */
-				if (remove_files($file_array) === false) { return false; }
+				if (remove_files($file_array) === false) {
+					return false;
+				}
 
 				if ($force) {
 					cleanup_ds_and_graphs();
@@ -533,7 +535,9 @@ function remove_files($file_array) {
 
 	if (read_config_option('storage_location')) {
 		$rrdtool_pipe = rrd_init(true, true, true);
-		if ($rrdtool_pipe === false) { return false; }
+		if ($rrdtool_pipe === false) {
+			return false;
+		}
 
 		rrdtool_execute('setcnn timeout off', false, RRDTOOL_OUTPUT_NULL, $rrdtool_pipe, $logopt = 'POLLER');
 	} else {
@@ -672,7 +676,9 @@ function remove_files($file_array) {
 	}
 
 	} finally {
-		if (read_config_option('storage_location')) { rrd_close($rrdtool_pipe); }
+		if (read_config_option('storage_location')) {
+			rrd_close($rrdtool_pipe);
+		}
 	}
 
 	maint_debug('RRDClean has finished a purge pass of ' . cacti_sizeof($file_array) . ' items');
