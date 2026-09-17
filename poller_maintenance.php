@@ -31,7 +31,6 @@ require_once($config['library_path'] . '/api_device.php');
 require_once($config['library_path'] . '/api_graph.php');
 include_once($config['library_path'] . '/poller.php');
 require_once($config['library_path'] . '/rrd.php');
-require_once($config['library_path'] . '/rrd_maintenance.php');
 require_once($config['library_path'] . '/utility.php');
 
 /* let PHP run just as long as it has to */
@@ -258,6 +257,10 @@ function rrdfile_purge($force) {
 	/* are my tables already present? */
 	$purge = db_fetch_cell('SELECT COUNT(*)
 		FROM data_source_purge_action');
+	if (!is_numeric($purge) || $purge < 0) {
+		cacti_log('ERROR: Unable to count the RRD cleanup queue; requests retained.', true, 'MAINT');
+		return false;
+	}
 
 	/* if the table that holds the actions is present, work on it */
 	if ($purge && !rrd_maintenance_cleanup_supported()) {
@@ -279,6 +282,10 @@ function rrdfile_purge($force) {
 				ORDER BY name
 				LIMIT 1000');
 
+			if ($file_array === false) {
+				cacti_log('ERROR: Unable to read the RRD cleanup queue; requests retained.', true, 'MAINT');
+				return false;
+			}
 			if (cacti_sizeof($file_array) == 0) {
 				break;
 			}

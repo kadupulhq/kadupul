@@ -191,10 +191,14 @@ function rrd_maintenance_cli_preflight() {
 /** Refuse an upgrade before database changes when local storage needs migration. */
 function rrd_maintenance_configuration_error() {
     global $config;
-    if (($config['cacti_server_os'] ?? '') === 'win32' || read_config_option('storage_location')) {
+    if (read_config_option('storage_location') && ($config['force_storage_location_local'] ?? false) !== true) {
         return '';
     }
     $path = $config['rra_path'] ?? (($config['base_path'] ?? '') . '/rra');
+    if (($config['cacti_server_os'] ?? '') === 'win32') {
+        return is_dir($path) && is_readable($path) && is_writable($path) ? '' :
+            __('RRD storage is not ready: the configured directory must exist and be readable and writable by this service account.') . ' [path=' . $path . ']';
+    }
     if (rrd_maintenance_directory_is_trusted($path) && is_readable($path) && is_writable($path)) {
         return '';
     }

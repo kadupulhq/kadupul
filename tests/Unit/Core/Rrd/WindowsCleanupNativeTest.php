@@ -10,7 +10,7 @@ test('native data-source API retains Windows files without queuing unsupported c
     $bootstrap = '<?php ';
     $coverage = $this->getTestResultObject()->getCodeCoverage();
     if ($coverage !== null) {
-        $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+        $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); require ' . var_export($root . '/tests/fixtures/rrd-process-coverage.php', true) . ';';
     }
     $bootstrap .= '$config=' . var_export(array('cacti_server_os' => $platform), true) . ';';
     $bootstrap .= '$options=' . var_export(array('storage_location' => $remote, 'rrd_autoclean' => 'on', 'rrd_autoclean_method' => '1'), true) . ';';

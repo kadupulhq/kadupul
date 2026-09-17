@@ -1,5 +1,6 @@
 """Regression checks for the all-files runner's fail-closed result handling."""
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -10,6 +11,23 @@ import xml.etree.ElementTree as ET
 
 
 class RunnerTest(unittest.TestCase):
+    @unittest.skipUnless(os.name == 'posix', 'POSIX process-group exit race')
+    def test_timeout_exit_race_is_recorded_and_next_process_runs(self):
+        import importlib.util
+        from unittest.mock import Mock, patch
+        spec = importlib.util.spec_from_file_location('runner_under_test', Path(__file__).resolve().parents[1] / 'run_unit_suite.py')
+        runner = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(runner)
+        expired = Mock(pid=12345, returncode=0)
+        expired.wait.side_effect = [subprocess.TimeoutExpired(['fixture'], 0.1), 0]
+        next_process = Mock(returncode=0)
+        next_process.wait.return_value = 0
+        with tempfile.TemporaryDirectory() as directory, patch.object(runner.subprocess, 'Popen', side_effect=[expired, next_process]), patch.object(runner.os, 'killpg', side_effect=ProcessLookupError()):
+            root = Path(directory)
+            self.assertEqual(runner.run_file(['fixture'], root, root / 'expired.log', 0.1), (0, True))
+            self.assertEqual(runner.run_file(['fixture'], root, root / 'next.log', 0.1), (0, False))
+        self.assertEqual(expired.wait.call_count, 2)
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)

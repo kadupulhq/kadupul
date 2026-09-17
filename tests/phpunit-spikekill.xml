@@ -11,7 +11,8 @@
       <file>./Unit/Security/Shell/SpikekillXmlDumpFileSafetyTest.php</file>
       <file>./Unit/Core/Cli/RemoveSpikesBackupTest.php</file>
       <file>./Unit/Security/Shell/SpikekillStatisticsTest.php</file>
-    <file>Unit/Core/Poller/PollerIncompleteRetentionTest.php</file>
-        </testsuite>
+      <file>./Unit/Core/Poller/PollerIncompleteRetentionTest.php</file>
+      <file>./Unit/Core/Rrd/RealtimeCompletionTest.php</file>
+    </testsuite>
   </testsuites>
 </phpunit>

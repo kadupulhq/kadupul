@@ -98,9 +98,9 @@ if ($storage_error !== '') {
 if (!$local && $config['poller_id'] > 1) {
 	db_switch_remote_to_main();
 
-	print 'NOTE: Repairing Tables for Main Database' . PHP_EOL;
+	print 'NOTE: Targeting Main Database' . PHP_EOL;
 } else {
-	print 'NOTE: Repairing Tables for Local Database' . PHP_EOL;
+	print 'NOTE: Targeting Local Database' . PHP_EOL;
 }
 
 if ($check_rrd_storage) {

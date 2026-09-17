@@ -204,6 +204,8 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 
 	/* let's count the number of rrd files we processed */
 	$rrds_processed = 0;
+	$skipped = false;
+	$rrd_update_array = array();
 
 	/* create/update the rrd files */
 	$results = db_fetch_assoc_prepared('SELECT port.output, port.time, port.local_data_id,
@@ -217,6 +219,8 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 		WHERE port.poller_id = ?',
 		array($poller_id));
 
+	if ($results === false) { return false; }
+
 	if (cacti_sizeof($results)) {
 		/* create an array keyed off of each .rrd file */
 		foreach ($results as $item) {
@@ -226,6 +230,7 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 			if (!cacti_rrdtool_valid_path($rt_graph_path) || !cacti_rrdtool_valid_path($data_source_path)) {
 				cacti_log('ERROR: Realtime rejected invalid RRD path for local_data_id ' . (int) $item['local_data_id'] . ', realtime path: ' . cacti_log_safe_value($rt_graph_path) . ', source path: ' . cacti_log_safe_value($data_source_path) . '.', false, 'POLLER');
 
+				$skipped = true;
 				continue;
 			}
 
@@ -235,6 +240,7 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 				$command = @rrdtool_function_create($item['local_data_id'], true);
 
 				if ($command === false) {
+					$skipped = true;
 					continue;
 				}
 
@@ -340,5 +346,5 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 
 	}
 
-	return $rrds_processed;
+	return $skipped ? false : $rrds_processed;
 }

@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 test('installer rejects unsafe storage before database upgrades even when forced', function ($mode, $ready) {
+    if ($mode === 'windows-readonly' && posix_geteuid() === 0) { $this->markTestSkipped('Root bypasses write permissions.'); }
     $root = dirname(__DIR__, 3);
     $dir = sys_get_temp_dir() . '/installer-rrd-' . bin2hex(random_bytes(8));
     mkdir($dir, 0700);
@@ -22,8 +23,10 @@ function log_install_medium(...$args) {}
 function log_install_always(...$args) { throw new LogicException('upgrade boundary reached'); }
 function clean_up_lines($text) { return $text; }
 define('CACTI_VERSION', 'test');
-$config = array('base_path' => $root, 'rra_path' => __DIR__ . '/rra', 'cacti_server_os' => $mode === 'windows' ? 'win32' : 'unix');
-if ($mode === 'missing') { $config['rra_path'] .= '/missing'; }
+$config = array('base_path' => $root, 'rra_path' => __DIR__ . '/rra', 'cacti_server_os' => strpos($mode, 'windows') === 0 ? 'win32' : 'unix');
+if ($mode === 'missing' || $mode === 'windows-missing') { $config['rra_path'] .= '/missing'; }
+if ($mode === 'windows-file') { $config['rra_path'] = __FILE__; }
+if ($mode === 'windows-readonly') { chmod(__DIR__ . '/rra', 0555); }
 if ($mode === 'group' || $mode === 'trusted-group') { chmod(__DIR__ . '/rra', 0770); }
 if ($mode === 'trusted-group') { $config['rrd_maintenance_trusted_gids'] = array(filegroup(__DIR__ . '/rra')); }
 require $root . '/lib/installer.php';
@@ -52,7 +55,8 @@ FIXTURE;
         if ($ready) {
             expect($result[1])->toBe('upgrade boundary reached');
         } else {
-            expect($result[1])->toContain('RRD storage is not ready')->toContain('rrd_maintenance_trusted_uids')->toContain('rrd_maintenance_trusted_gids');
+            expect($result[1])->toContain('RRD storage is not ready');
+            if (strpos($mode, 'windows') !== 0) { expect($result[1])->toContain('rrd_maintenance_trusted_uids')->toContain('rrd_maintenance_trusted_gids'); }
         }
         if ($parentCoverage !== null) {
             $reports = glob($dir . '/*.coverage');
@@ -61,6 +65,6 @@ FIXTURE;
         }
     } finally {
         foreach (glob($dir . '/*') as $file) { if (is_file($file)) { unlink($file); } }
-        rmdir($dir . '/rra'); rmdir($dir);
+        chmod($dir . '/rra', 0700); rmdir($dir . '/rra'); rmdir($dir);
     }
-})->with(array(array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('proxy', true)));
+})->with(array(array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true)));

@@ -18,10 +18,13 @@ def run_file(command, cwd, log, timeout):
         try:
             return process.wait(timeout=timeout), False
         except subprocess.TimeoutExpired:
-            if os.name == 'posix':
-                os.killpg(process.pid, signal.SIGKILL)
-            else:
-                process.kill()
+            try:
+                if os.name == 'posix':
+                    os.killpg(process.pid, signal.SIGKILL)
+                else:
+                    process.kill()
+            except ProcessLookupError:
+                pass  # The timed-out process exited before termination reached it.
             process.wait()
             return process.returncode, True
 

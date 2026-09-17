@@ -1,6 +1,8 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Validate Windows storage access and report failed purge reads, realtime preparation failures, and runner timeout races without losing pending work
+-issue: Correct proxy log labels and distinguish storage probe targets from full database upgrades
 -issue: Preserve retryable poller samples in InnoDB; upgrade retained rows without deletion and refuse collection against volatile MEMORY queues
 -issue: Before cutover set rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php and run --check-rrd-storage as every poller and web service account
 -issue: Log and consume recognized permanent Boost sample rejections without discarding valid later samples; retain transient errors for retry
