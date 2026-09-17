@@ -6,10 +6,14 @@ $rows = (int) (getenv('QUEUE_ROWS') ?: 1000000);
 if ($rows < 80000 || $rows % 4 !== 0) {
 	throw new RuntimeException('QUEUE_ROWS must be a multiple of four, at least 80000');
 }
+$engine = getenv('QUEUE_ENGINE') ?: 'InnoDB';
+if (!in_array($engine, array('InnoDB', 'MEMORY'), true)) {
+    throw new RuntimeException('QUEUE_ENGINE must be InnoDB or MEMORY');
+}
 $db = new PDO('mysql:host=' . (getenv('BOOST_DB_HOST') ?: '127.0.0.1') . ';port=' . (getenv('BOOST_DB_PORT') ?: '3306') . ';dbname=' . (getenv('BOOST_DB_NAME') ?: 'cacti_boost_contract'), getenv('BOOST_DB_USER') ?: 'root', getenv('BOOST_DB_PASSWORD') ?: '', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 $db->exec("SET SESSION time_zone='+00:00', max_heap_table_size=2147483648");
 // Temporary tables cannot replace another connection's application tables.
-$db->exec('CREATE TEMPORARY TABLE poller_output (local_data_id INT UNSIGNED NOT NULL, rrd_name VARCHAR(19) NOT NULL, time TIMESTAMP NOT NULL, output VARCHAR(512) NOT NULL, PRIMARY KEY USING BTREE(local_data_id,rrd_name,time)) ENGINE=MEMORY CHARSET=latin1 COLLATE=latin1_swedish_ci');
+$db->exec('CREATE TEMPORARY TABLE poller_output (local_data_id INT UNSIGNED NOT NULL, rrd_name VARCHAR(19) NOT NULL, time TIMESTAMP NOT NULL, output VARCHAR(512) NOT NULL, PRIMARY KEY USING BTREE(local_data_id,rrd_name,time)) ENGINE=' . $engine . ' CHARSET=latin1 COLLATE=latin1_swedish_ci');
 $db->exec('CREATE TEMPORARY TABLE poller_item (local_data_id INT UNSIGNED NOT NULL, rrd_name VARCHAR(19) NOT NULL, rrd_path VARCHAR(255), rrd_num INT, PRIMARY KEY(local_data_id,rrd_name)) ENGINE=InnoDB CHARSET=latin1 COLLATE=latin1_swedish_ci');
 $db->exec('CREATE TEMPORARY TABLE data_local (id INT UNSIGNED PRIMARY KEY, data_template_id INT) ENGINE=InnoDB');
 for ($first = 1; $first <= $rows / 4; $first += 1000) {
@@ -29,7 +33,7 @@ for ($first = 1; $first <= $rows / 4; $first += 1000) {
 }
 $select = 'SELECT po.output, po.time, UNIX_TIMESTAMP(po.time) AS unix_time, po.local_data_id, dl.data_template_id, pi.rrd_path, pi.rrd_name, pi.rrd_num FROM poller_output po INNER JOIN poller_item pi ON po.local_data_id=pi.local_data_id AND po.rrd_name=pi.rrd_name INNER JOIN data_local dl ON dl.id=po.local_data_id';
 $queries = array('first' => $select . ' ORDER BY po.local_data_id, po.time, po.rrd_name LIMIT 40000', 'after_retained_page' => $select . " WHERE (po.local_data_id,po.time) > (10000,'2026-01-01 00:01:00') ORDER BY po.local_data_id,po.time,po.rrd_name LIMIT 40000");
-$report = array('kind' => 'synthetic query diagnostic', 'version' => $db->query('SELECT VERSION()')->fetchColumn(), 'rows' => $rows, 'sources' => $rows / 4, 'engine' => 'MEMORY', 'charset' => 'latin1', 'page_rows' => 40000, 'runs' => array());
+$report = array('kind' => 'synthetic query diagnostic', 'version' => $db->query('SELECT VERSION()')->fetchColumn(), 'rows' => $rows, 'sources' => $rows / 4, 'engine' => $engine, 'charset' => 'latin1', 'page_rows' => 40000, 'runs' => array());
 // Keep both fixtures intact so changing variants never rebuilds a timed table.
 $db->exec('CREATE TEMPORARY TABLE poller_output_secondary LIKE poller_output');
 $db->exec('INSERT INTO poller_output_secondary SELECT * FROM poller_output');

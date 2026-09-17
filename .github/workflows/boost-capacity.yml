@@ -18,22 +18,35 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - mariadb: '10.6'
+          - database: '10.6'
+            health: 'healthcheck.sh --connect --innodb_initialized'
             image: mariadb:10.6@sha256:553351e202c5f01c9e703d7d1d2b037a0aedb43c4fed79b3615d9183655f02c5
-          - mariadb: '10.11'
+          - database: '10.11'
+            health: 'healthcheck.sh --connect --innodb_initialized'
             image: mariadb:10.11@sha256:07c0aaff7396b74cb7975cba78257178d188e30f531a5db2b617c48beef13c41
-          - mariadb: '11.8'
+          - database: '11.8'
+            health: 'healthcheck.sh --connect --innodb_initialized'
             image: mariadb:11.8@sha256:8b5f33ebd85d1775657e974ed10434128bb493c80e826ceaa54074fd1a92a112
+          - database: 'mysql-8.4'
+            image: mysql:8.4@sha256:85b9bf2e29cf836ecb8c2a15a935d4ba0c606631dff1dd79531a11983c638f2a
+            health: 'mysqladmin ping --host=127.0.0.1 --silent'
+          - database: 'mysql-9.7'
+            image: mysql:9.7@sha256:29abb0a179982e4a8928138bfc7f918af9eda64e7eeb1b1d084c1720a20159e6
+            health: 'mysqladmin ping --host=127.0.0.1 --silent'
     services:
       db:
         image: ${{ matrix.image }}
         env:
+          MYSQL_ROOT_PASSWORD: cacti-contract-root
+          MYSQL_USER: benchmark
+          MYSQL_PASSWORD: benchmark
+          MYSQL_DATABASE: cacti_boost_contract
           MARIADB_ROOT_PASSWORD: cacti-contract-root
           MARIADB_USER: benchmark
           MARIADB_PASSWORD: benchmark
           MARIADB_DATABASE: cacti_boost_contract
         ports: ['3306:3306']
-        options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=5s --health-timeout=5s --health-retries=20
+        options: --health-cmd="${{ matrix.health }}" --health-interval=5s --health-timeout=5s --health-retries=20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -52,11 +65,13 @@ jobs:
         working-directory: tests
         run: mise exec php@system -- php vendor/bin/pest --configuration=phpunit-boost-mariadb.xml --colors=never
       - name: Measure million-row queries with identical selected samples
-        run: mise exec php@system -- php tests/benchmarks/poller_queue.php > queue.json
+        run: |
+          QUEUE_ENGINE=InnoDB mise exec php@system -- php tests/benchmarks/poller_queue.php > queue-innodb.json
+          QUEUE_ENGINE=MEMORY mise exec php@system -- php tests/benchmarks/poller_queue.php > queue-memory.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: queue-${{ matrix.mariadb }}
-          path: queue.json
+          name: queue-${{ matrix.database }}
+          path: queue-*.json
   legacy:
     runs-on: ubuntu-22.04
     timeout-minutes: 20

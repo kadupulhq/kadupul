@@ -1,6 +1,7 @@
 # Retained-sample drain capacity diagnostics
 
-The benchmark uses one million MEMORY queue rows, 250,000 sources, two RRD fields
+The benchmark defaults to one million InnoDB queue rows. CI also runs the legacy
+MEMORY fixture separately. Each fixture has 250,000 sources, two RRD fields
 and two timestamps per source. It runs the production-shaped joined first-page
 and retained-page cursor queries with 40,000-row pages. Independent queue tables
 are populated before measurement. Each query and variant receives one warm-up;
@@ -13,7 +14,7 @@ Latin1 and its collation are explicit on both joined name columns: other charact
 hardware need separate measurements. SHA-256 comparisons require identical
 ordered samples across every run and index variant.
 
-Historical Docker diagnostics from the earlier sequential single-table method
+Historical MEMORY Docker diagnostics from the earlier sequential single-table method
 (seconds, all three repetitions; not production capacity). These runs did not
 control warm-up order, so the timing difference cannot be attributed solely
 to the index. New CI artifacts use the paired warm method above:
@@ -27,15 +28,16 @@ to the index. New CI artifacts use the paired warm method above:
 
 Both servers used filesort with the existing key and selected `drain_order`
 without filesort when the secondary index was available. CI repeats the
-million-row diagnostic on MariaDB 10.6, 10.11 and 11.8 and uploads raw timings,
+million-row diagnostic for both engines on MariaDB 10.6, 10.11 and 11.8 and
+MySQL 8.4 and 9.7 LTS, and uploads separate raw timings,
 EXPLAIN plans and ordered result hashes. Timing thresholds are deliberately
 not CI assertions; ordering and page contents are.
 
 Recommendation: retain the current primary key and evaluate adding the
 secondary key during a controlled upgrade. Do not change the primary-key
-identity or timestamp-group pagination. MEMORY ALTER TABLE can block writers
-and consumes additional memory; production migration needs a measured memory
-budget and quiesced pollers. This PR measures that candidate rather than
+identity or timestamp-group pagination. Index creation can take metadata locks and consume additional resources;
+production migration needs an engine-specific measured resource budget and
+quiesced pollers. Temporary-table timings do not measure production ALTER locking. This PR measures that candidate rather than
 silently altering deployed queue tables. Query time alone excludes RRD I/O,
 retention work, producer contention, batch deletion and end-to-end drain time.
 
@@ -56,10 +58,14 @@ boundaries and only delete successfully committed source keys. The measured
 query-index benefit can be pursued without weakening those guarantees; no
 unacknowledged pipe optimization is enabled by these diagnostics.
 
-Run locally with an isolated MariaDB database and credentials supplied through
+These queue contracts do not establish full application compatibility with every
+database release; installer, upgrade, and end-to-end coverage remain separate.
+
+Run locally with an isolated MariaDB or MySQL database and credentials supplied through
 `BOOST_DB_HOST`, `BOOST_DB_PORT`, `BOOST_DB_NAME`, `BOOST_DB_USER` and
 `BOOST_DB_PASSWORD`:
 
 ```sh
-mise exec php@8.1.34 -- php tests/benchmarks/poller_queue.php > queue.json
+QUEUE_ENGINE=InnoDB mise exec php@8.1.34 -- php tests/benchmarks/poller_queue.php > queue-innodb.json
+QUEUE_ENGINE=MEMORY mise exec php@8.1.34 -- php tests/benchmarks/poller_queue.php > queue-memory.json
 ```
