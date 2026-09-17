@@ -10,6 +10,7 @@ import importlib.util
 import json
 from pathlib import Path
 import shutil
+import subprocess
 import sys
 import types
 import tempfile
@@ -532,6 +533,25 @@ def recording_guards():
 
 
 def diagnostic_contracts():
+    tracked = subprocess.check_output(['git', 'ls-files', 'tests/Golden/*/php-*/diagnostics/application-log.json'], cwd=ROOT, text=True).splitlines()
+    assert tracked, 'No committed diagnostic goldens'
+    for name in tracked:
+        golden = ROOT / name
+        records = json.loads(golden.read_text())
+        assert records == sorted(records, key=lambda row: (row['subsystem'], row['message'])), golden
+        fixture = '\n'.join('09/17/2026 01:02:03 - ' + row['subsystem'] + ' ' + row['message']
+                            for row in reversed(records))
+        recorder = object.__new__(harness.Harness)
+        recorder.observed = {}
+        recorder.capture('diagnostics/application-log', harness.application_diagnostics(fixture))
+        assert recorder.observed['diagnostics/application-log'] == records, golden
+    for manifest in (ROOT / 'tests/behavior/evidence/historical-baseline').glob('*json'):
+        data = json.loads(manifest.read_text())
+        if 'scenarios' not in data:
+            continue
+        for name, value in data['scenarios'].items():
+            golden = ROOT / 'tests/Golden' / data['target'] / ('php-' + data['php']) / (name + '.json')
+            assert json.loads(golden.read_text()) == value, (manifest, name)
     events = [dict(severity=8192, suppressed=True, suppressed_here=True),
               dict(severity=512, suppressed=False, suppressed_here=True),
               dict(severity=512, suppressed=False, suppressed_here=False),

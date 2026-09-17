@@ -115,8 +115,8 @@ Neither changes the application's error-reporting policy.
 
 `include/global.php` replaces the prepend handler. The separate
 `diagnostics/application-log` contract captures PHP diagnostics emitted by the
-application's own handler, preserving subsystem, severity, message, order and
-duplicates while normalizing the log timestamp, known environment paths, PHP
+application's own handler, preserving subsystem, severity, message and duplicate multiplicity. Records
+are sorted by subsystem and message to tolerate cross-process log interleaving while normalizing the log timestamp, known environment paths, PHP
 diagnostic source-line locations (including backtrace frames), and failed-write
 byte counts. Error numbers, diagnostic text and unrelated numeric values remain
 part of the comparison.
@@ -132,8 +132,9 @@ revision `6ce3572dab3264be563b765f25dcadd8cc046252` using the updated harness.
 The durable `test/behavior-baseline-1.2.31` branch retains this application
 revision; use this commit with the harness from the current test branch.
 Two complete manifests and their comparison are retained under
-`tests/behavior/evidence/historical-baseline/`. Both runs verified all 34
-committed contracts and produced identical scenario observations.
+`tests/behavior/evidence/historical-baseline/`. The first run recorded all 34 contracts; the second verified that recording
+and produced identical scenario observations. A self-test compares both retained
+manifests with every committed golden, including diagnostic ordering.
 The historical refresh changes the calibration warning’s harness
 line number (86 to 79), and removal of ten `config_settings` callbacks produced
 by seeded network-discovery workers. It also separates RRDtool acknowledgement
