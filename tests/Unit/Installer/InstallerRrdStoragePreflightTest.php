@@ -19,6 +19,7 @@ test('installer rejects unsafe storage before database upgrades even when forced
     $bootstrap = <<<'FIXTURE'
 function __($message, ...$args) { return $args ? vsprintf($message, $args) : $message; }
 function read_config_option($key, ...$args) { return $key === 'storage_location' && $GLOBALS['mode'] === 'proxy'; }
+function db_fetch_cell_prepared(...$args) { return $GLOBALS['mode'] === 'memory' ? 'MEMORY' : ($GLOBALS['mode'] === 'queue-unavailable' ? false : 'InnoDB'); }
 function is_resource_writable($path) { return true; }
 function log_install_debug(...$args) {}
 function log_install_medium(...$args) {}
@@ -60,6 +61,8 @@ FIXTURE;
         expect($result[0])->toBe($ready);
         if ($ready) {
             expect($result[1])->toBe('upgrade boundary reached');
+        } elseif ($mode === 'memory' || $mode === 'queue-unavailable') {
+            expect($result[1])->toContain('poller_output queue must use InnoDB')->toContain('--migrate-poller-queue');
         } else {
             expect($result[1])->toContain('RRD storage is not ready');
             if (strpos($mode, 'windows') !== 0) {
@@ -81,4 +84,4 @@ FIXTURE;
         rmdir($dir . '/rra');
         rmdir($dir);
     }
-})->with(array(array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true)));
+})->with(array(array('memory', false), array('queue-unavailable', false), array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true)));
