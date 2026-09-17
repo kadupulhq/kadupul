@@ -38,7 +38,18 @@ REQUIRED_INPUTS = frozenset(
 
 
 def run(args, *, data=None, check=True, timeout=180):
-    p = subprocess.run(args, input=data, text=True, capture_output=True, timeout=timeout)
+    env = None
+    if args[0] == 'git':
+        # Hooks export repository-local settings that override even git -C.
+        # A baseline command must never reuse the candidate's index or gitdir.
+        local_names = {'GIT_ALTERNATE_OBJECT_DIRECTORIES', 'GIT_CONFIG',
+                       'GIT_CONFIG_PARAMETERS', 'GIT_CONFIG_COUNT', 'GIT_OBJECT_DIRECTORY',
+                       'GIT_DIR', 'GIT_WORK_TREE', 'GIT_IMPLICIT_WORK_TREE',
+                       'GIT_GRAFT_FILE', 'GIT_INDEX_FILE', 'GIT_NO_REPLACE_OBJECTS',
+                       'GIT_REPLACE_REF_BASE', 'GIT_PREFIX', 'GIT_SHALLOW_FILE', 'GIT_COMMON_DIR'}
+        env = {key: value for key, value in os.environ.items()
+               if key not in local_names and not key.startswith(('GIT_CONFIG_KEY_', 'GIT_CONFIG_VALUE_'))}
+    p = subprocess.run(args, input=data, text=True, capture_output=True, timeout=timeout, env=env)
     result = dict(exit=p.returncode, stdout=p.stdout, stderr=p.stderr)
     if check and p.returncode:
         raise RuntimeError(f'{args!r}: {result}')

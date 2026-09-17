@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 import json
+import os
 import hashlib
 import subprocess
 from pathlib import Path
@@ -67,14 +68,26 @@ def recursive_rrd_manifest():
 
 
 def baseline_checkout_metadata():
-    revision = subprocess.check_output(['git', '-C', str(release.ROOT), 'rev-parse', 'HEAD'], text=True).strip()
+    revision = release.harness.run(['git', '-C', str(release.ROOT), 'rev-parse', 'HEAD'])['stdout'].strip()
     with tempfile.TemporaryDirectory(prefix='release baseline checkout ') as directory:
         baseline = Path(directory) / 'baseline'
-        release.prepare_baseline(revision, baseline)
-        actual = subprocess.check_output(['git', '-C', str(baseline), 'rev-parse', 'HEAD'], text=True).strip()
+        # Reproduce the Git environment inherited by a pre-push hook, but
+        # point it at a disposable repository so a regression cannot damage ROOT.
+        decoy = Path(directory) / 'caller'
+        release.harness.run(['git', 'init', str(decoy)])
+        before = (decoy / '.git/HEAD').read_bytes()
+        hook_env = {'GIT_DIR': str(decoy / '.git'), 'GIT_WORK_TREE': str(decoy),
+                    'GIT_COMMON_DIR': str(decoy / '.git'), 'GIT_INDEX_FILE': str(decoy / '.git/index')}
+        with patch.dict(os.environ, hook_env):
+            release.prepare_baseline(revision, baseline)
+            assert release.harness.run(['git', '-C', str(baseline), 'rev-parse', 'HEAD'])['stdout'].strip() == revision
+        assert (decoy / '.git/HEAD').read_bytes() == before
+        assert not (decoy / '.git/index').exists()
+        assert release.harness.run(['git', '-C', str(release.ROOT), 'rev-parse', 'HEAD'])['stdout'].strip() == revision
+        actual = release.harness.run(['git', '-C', str(baseline), 'rev-parse', 'HEAD'])['stdout'].strip()
         assert actual == revision
         assert (baseline / '.git').is_dir()
-        expected_schema = subprocess.check_output(['git', '-C', str(release.ROOT), 'show', revision + ':cacti.sql'])
+        expected_schema = release.harness.run(['git', '-C', str(release.ROOT), 'show', revision + ':cacti.sql'])['stdout'].encode()
         assert (baseline / 'cacti.sql').read_bytes() == expected_schema
         with patch.object(release.harness, 'ROOT', baseline):
             release.harness.validate_application_inputs()

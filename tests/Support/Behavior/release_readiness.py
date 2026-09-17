@@ -124,6 +124,10 @@ def prepare_baseline(baseline_revision, baseline):
     """Keep real revision metadata for the same validation used by normal captures."""
     harness.run(['git', 'clone', '--shared', '--no-checkout', '--', str(ROOT), str(baseline)])
     harness.run(['git', '-C', str(baseline), 'checkout', '--detach', baseline_revision])
+    gitdir = Path(harness.run(['git', '-C', str(baseline), 'rev-parse', '--absolute-git-dir'])['stdout'].strip())
+    require(gitdir.resolve() == (baseline / '.git').resolve(), 'Baseline must own its Git metadata')
+    require(not harness.run(['git', '-C', str(baseline), 'status', '--porcelain'])['stdout'].strip(),
+            'Baseline checkout must be complete and clean before applying test inputs')
     # The test infrastructure is candidate-owned; the application and
     # schema are the exact baseline revision checked out above.
     shutil.copytree(ROOT / 'tests/Support/Behavior', baseline / 'tests/Support/Behavior', dirs_exist_ok=True)
