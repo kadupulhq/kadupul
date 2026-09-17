@@ -12,6 +12,7 @@ Targeting `v1.3.0`, the first planned application release. See
 ### Fixed
 
 - Make unsafe poller queue diagnostics available for translation.
+- Include measured poller and dependency-failure integration execution in Sonar coverage, rejecting stale or incomplete evidence.
 
 - Preserve hyphenated RRD data sources, verify durable queues after legacy upgrades, and allow remote database upgrades without unrelated local storage.
 
