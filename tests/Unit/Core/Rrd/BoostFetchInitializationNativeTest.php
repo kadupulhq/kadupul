@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('production Boost fetch stops at failed writer initialization and restores caller state', function ($mode) {
+test('production Boost fetch and queue consumers preserve writer ownership and caller state', function ($mode) {
     $root = dirname(__DIR__, 4);
     $directory = sys_get_temp_dir() . '/boost-fetch-init-' . bin2hex(random_bytes(8));
     mkdir($directory, 0700);
@@ -28,7 +28,7 @@ test('production Boost fetch stops at failed writer initialization and restores 
         $exception = $mode === 'init-exception' ? 'Injected initialization exception' :
             (str_ends_with($mode, '-exception') ? 'Injected database exception' : null);
         expect($result['exception'])->toBe($exception)
-            ->and($result['result'])->toBe(in_array($mode, array('failure', 'remote'), true) ? false : null)
+            ->and($result['result'])->toBe(str_starts_with($mode, 'consumer-') ? 0 : (in_array($mode, array('failure', 'remote'), true) ? false : null))
             ->and($result['opens'])->toBe(in_array($mode, array('failure', 'owned-exception', 'owned-empty', 'init-exception'), true) ? 1 : 0)
             ->and($result['closed'])->toBe(str_starts_with($mode, 'owned-') ? 1 : 0)
             ->and($result['borrowed_open'])->toBeTrue()
@@ -50,4 +50,4 @@ test('production Boost fetch stops at failed writer initialization and restores 
         }
         rmdir($directory);
     }
-})->with(array('failure', 'disabled', 'remote', 'owned-exception', 'borrowed-exception', 'init-exception', 'owned-empty', 'borrowed-empty'));
+})->with(array('failure', 'disabled', 'remote', 'owned-exception', 'borrowed-exception', 'init-exception', 'owned-empty', 'borrowed-empty', 'consumer-boolean-empty', 'consumer-proxy-empty'));

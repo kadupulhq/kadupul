@@ -69,15 +69,21 @@ set_error_handler($handler);
 error_reporting(E_ALL);
 $result = $exception = null;
 $borrowed = str_starts_with($mode, 'borrowed-') ? fopen('php://temp', 'r+') : false;
+if ($mode === 'consumer-boolean-empty') {
+    $borrowed = true; // Windows synchronous writer marker.
+} elseif ($mode === 'consumer-proxy-empty') {
+    $borrowed = array('proxy connection', 'proxy public key');
+}
 try {
-    $result = boost_fetch_cache_check(42, $borrowed);
+    $result = str_starts_with($mode, 'consumer-')
+        ? boost_process_poller_output(42, $borrowed) : boost_fetch_cache_check(42, $borrowed);
 } catch (Throwable $error) {
     $exception = $error->getMessage();
 }
 $restored = set_error_handler($handler) === $handler;
 restore_error_handler();
 echo json_encode(array('result' => $result, 'exception' => $exception, 'opens' => $opens, 'closed' => $closed,
-    'borrowed_open' => $borrowed === false || is_resource($borrowed),
+    'borrowed_open' => $borrowed === false || is_resource($borrowed) || $borrowed === true || is_array($borrowed),
     'messages' => $messages, 'handler_restored' => $restored, 'reporting_restored' => error_reporting() === E_ALL), JSON_THROW_ON_ERROR);
 if (is_resource($borrowed)) {
     fclose($borrowed);
