@@ -12,6 +12,7 @@ function db_install_execute($sql, $params = array()) {
     }
     return 0;
 }
+function __($message) { return $message; }
 function db_table_exists($table) { return false; }
 function db_install_add_column(...$args) {}
 function db_install_add_key(...$args) {}
