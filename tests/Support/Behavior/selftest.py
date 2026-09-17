@@ -436,6 +436,7 @@ def native_worker_boundary():
 
 def provenance_contract():
     import tempfile
+    import subprocess
     with tempfile.TemporaryDirectory() as directory:
         root = Path(directory)
         fixture = root / 'tests/Support/Behavior/probe.php'
@@ -454,6 +455,44 @@ def provenance_contract():
         with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', side_effect=git_result):
             changed = harness.source_provenance()
         assert changed['harness_inputs_sha256'] != provenance['harness_inputs_sha256']
+    with tempfile.TemporaryDirectory() as directory:
+        parent = Path(directory)
+        controller, application = parent / 'controller', parent / 'application'
+        def git(root, *args):
+            return subprocess.check_output(['git', '-C', str(root), '-c', 'user.name=Harness Fixture',
+                                            '-c', 'user.email=fixture@example.invalid', '-c', 'commit.gpgsign=false',
+                                            '-c', 'core.hooksPath=' + str(parent / 'no-hooks'), *args], text=True).strip()
+        source = controller / 'tests/Support/Behavior/harness.py'
+        for repo in (controller, application):
+            repo.mkdir()
+            git(repo, 'init', '-q')
+            (repo / 'fixture').write_text(repo.name)
+            if repo == controller:
+                source.parent.mkdir(parents=True)
+                source.write_text('# committed fixture controller')
+            git(repo, 'add', '.')
+            git(repo, 'commit', '-q', '-s', '-m', 'Create isolated provenance fixture')
+        (application / 'untracked-input').write_text('changed application')
+        with patch.object(harness, 'ROOT', application), patch.object(harness, '__file__', str(source)):
+            provenance = harness.source_provenance()
+        assert provenance['harness_revision'] == git(controller, 'rev-parse', 'HEAD')
+        assert provenance['harness_revision'] != git(application, 'rev-parse', 'HEAD')
+        assert provenance['harness_dirty'] is False and provenance['application_dirty'] is True
+        (application / 'untracked-input').unlink()
+        source.write_text('# modified fixture controller')
+        with patch.object(harness, 'ROOT', application), patch.object(harness, '__file__', str(source)):
+            provenance = harness.source_provenance()
+        assert provenance['harness_dirty'] is True and provenance['application_dirty'] is False
+        git(controller, 'restore', 'tests/Support/Behavior/harness.py')
+        untracked = source.with_name('untracked.py')
+        untracked.write_text('# untracked controller')
+        with patch.object(harness, 'ROOT', application), patch.object(harness, '__file__', str(untracked)):
+            provenance = harness.source_provenance()
+        assert provenance['harness_dirty'] is True and provenance['application_dirty'] is False
+    evidence = ROOT / 'tests/behavior/evidence/historical-baseline'
+    for path in (evidence / 'first.json', evidence / 'repeat.json'):
+        recorded = json.loads(path.read_text())['provenance']
+        assert recorded['harness_sha256'] == recorded['harness_inputs_sha256']['tests/Support/Behavior/harness.py']
     print('provenance records modified and untracked harnesses and hashes the actual fixture inputs')
 
 

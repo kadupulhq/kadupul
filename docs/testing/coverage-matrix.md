@@ -176,3 +176,20 @@ overlaid from the recorded harness commit. Thus `application_dirty` is true,
 while the controller checkout has `harness_dirty: false`. The observations and
 fixture hashes from the two fresh runs are identical. `comparison.json` records
 the exact controller commit and hashes of both manifests.
+
+To reproduce a historical run, create separate clean checkouts of the
+`application_revision` and `harness_revision` recorded in `comparison.json`.
+Overlay the harness checkout's tracked `tests/Support/Behavior`,
+`tests/Fixtures/plugins/compatibility_test`, `tests/Fixtures/snmp`,
+`tests/behavior/compose.yml`, `tests/behavior/Dockerfile`, and
+`tests/Golden/cacti-1.2.31` paths onto the application checkout. Keep its tracked
+application files unchanged. Then run the controller directly:
+
+```sh
+mise exec python@3.12.12 -- python /path/to/harness/tests/Support/Behavior/harness.py run \
+  --application-root /path/to/application --target cacti-1.2.31
+```
+
+The manifest is written beneath the application checkout's
+`tests/behavior/results/cacti-1.2.31/`. Repeat the command and compare the full
+manifests. No import-time root override or hand-edited provenance is required.

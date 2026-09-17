@@ -788,10 +788,13 @@ def compare(args):
 
 
 def main():
+    global ROOT
     parser = argparse.ArgumentParser()
     sub = parser.add_subparsers(dest='action', required=True)
     test = sub.add_parser('run')
     test.add_argument('--target', default=os.environ.get('TARGET', 'kadupul'))
+    test.add_argument('--application-root', type=Path, default=ROOT,
+                      help='Application checkout to exercise; harness provenance still identifies this controller checkout.')
     test.add_argument('--update-golden', action='store_true')
     test.add_argument('--bootstrap-goldens', action='store_true',
                       help='Allow missing runtime entries during an explicit full capture; verification still requires complete inventories.')
@@ -807,6 +810,7 @@ def main():
     args = parser.parse_args()
     if args.action == 'compare':
         return compare(args)
+    ROOT = args.application_root.resolve()
     if not re.fullmatch(r'[a-zA-Z0-9_.-]+', args.target) or args.target in ('.', '..'):
         parser.error('Target must be a safe artifact label')
     if args.only and args.update_golden:
