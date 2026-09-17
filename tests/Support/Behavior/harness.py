@@ -683,11 +683,19 @@ class Harness:
                     raise RuntimeError('Runtime goldens are missing observations: ' + ', '.join(sorted(missing)))
             except RuntimeError as selection_error:
                 error = str(selection_error)
-        manifest = {'format': 1, 'target': self.args.target, 'revision': run(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'])['stdout'].strip(),
-                    'php': runtime, 'schema_sha256': hashlib.sha256((ROOT / 'cacti.sql').read_bytes()).hexdigest(),
+        revision = schema_hash = provenance = None
+        try:
+            revision = run(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'])['stdout'].strip()
+            schema_hash = hashlib.sha256((ROOT / 'cacti.sql').read_bytes()).hexdigest()
+            provenance = source_provenance()
+        except (OSError, RuntimeError, subprocess.TimeoutExpired) as probe_error:
+            detail = 'Cannot record source provenance: ' + str(probe_error)
+            error = error + '; ' + detail if error else detail
+        manifest = {'format': 1, 'target': self.args.target, 'revision': revision,
+                    'php': runtime, 'schema_sha256': schema_hash,
                     'base_image': base_image,
-                    'complete': error is None and not missing, 'error': error, 'scenarios': self.observed}
-        manifest['provenance'] = source_provenance()
+                    'complete': error is None and not missing, 'error': error, 'scenarios': self.observed,
+                    'provenance': provenance}
         write_json(self.destination / 'observations.json', manifest)
         if error:
             return 2

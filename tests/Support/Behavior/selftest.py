@@ -434,6 +434,32 @@ def native_worker_boundary():
     print('process-group boundary waits for delayed grandchildren and distinguishes application exit 70')
 
 
+def source_provenance_failure_contract():
+    import tempfile
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        (root / 'cacti.sql').write_text('schema')
+        for failure in ('not-git', 'provenance'):
+            recorder = object.__new__(harness.Harness)
+            recorder.args = types.SimpleNamespace(target=failure, only=None, update_golden=True)
+            recorder.destination = root / 'results' / failure
+            recorder.observed = {name: {'value': name} for name in harness.EXPECTED_SCENARIOS}
+            recorder.command = lambda *a, **kw: {'stdout': '8.2', 'stderr': '', 'exit': 0}
+            recorder.base_image_digest = lambda: {'ref': 'fixture'}
+            with patch.object(harness, 'ROOT', root):
+                if failure == 'not-git':
+                    assert recorder.finish() == 2
+                else:
+                    with patch.object(harness, 'run', return_value={'stdout': 'revision'}), patch.object(harness, 'source_provenance', side_effect=OSError('unreadable source')):
+                        assert recorder.finish() == 2
+            manifest = json.loads((recorder.destination / 'observations.json').read_text())
+            assert manifest['complete'] is False
+            assert 'Cannot record source provenance:' in manifest['error']
+            assert manifest['provenance'] is None
+            assert not (root / 'tests/Golden' / failure).exists()
+    print('source provenance failures retain an incomplete manifest without writing goldens')
+
+
 def provenance_contract():
     import tempfile
     import subprocess
@@ -517,6 +543,7 @@ def main():
             raise AssertionError('Linux validation silently skipped PHP')
     native_worker_boundary()
     recording_guards()
+    source_provenance_failure_contract()
     provenance_contract()
     diagnostic_contracts()
     failed_setup_manifest()
