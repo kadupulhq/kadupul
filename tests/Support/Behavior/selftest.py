@@ -64,7 +64,7 @@ def comparable_manifest():
     return {'format': 2, 'target': 'fixture', 'error': None, 'complete': True, 'php': '8.2',
             'base_image': {'ref': 'php@sha256:' + '1' * 64, 'db_ref': 'mariadb@sha256:' + '2' * 64,
                            'packages': 'rrdtool=1.7', 'runtime': 'PHP 8.2; fixture Linux'},
-            'application_images': {'web': 'sha256:' + '3' * 64, 'snmp': 'sha256:' + '3' * 64},
+            'application_images': {'web': 'sha256:' + '3' * 64, 'snmp': 'sha256:' + '3' * 64, 'db': 'sha256:' + '4' * 64},
             'revision': 'a' * 40, 'schema_sha256': 'b' * 64,
             'provenance': {'harness_revision': 'c' * 40, 'harness_sha256': 'd' * 64,
                            'harness_dirty': False, 'application_dirty': False,
@@ -75,15 +75,15 @@ def comparable_manifest():
 
 def application_image_contract():
     recorder = object.__new__(harness.Harness)
-    recorder.compose = lambda *args: {'stdout': ('a' if args[-1] == 'web' else 'b') * 64}
+    recorder.compose = lambda *args: {'stdout': {'web': 'a', 'snmp': 'b', 'db': 'c'}[args[-1]] * 64}
     calls = []
     def inspect(args):
         calls.append(args)
         assert args[:5] == ['docker', 'container', 'inspect', '--format', '{{.Image}}']
         return {'stdout': 'sha256:' + args[-1]}
     with patch.object(harness, 'run', side_effect=inspect):
-        assert recorder.application_image_digests() == {'web': 'sha256:' + 'a' * 64, 'snmp': 'sha256:' + 'b' * 64}
-    assert len(calls) == 2
+        assert recorder.application_image_digests() == {'web': 'sha256:' + 'a' * 64, 'snmp': 'sha256:' + 'b' * 64, 'db': 'sha256:' + 'c' * 64}
+    assert len(calls) == 3
     for container, image in (('', 'sha256:' + 'a' * 64), ('a' * 64 + '\n' + 'b' * 64, 'sha256:' + 'a' * 64),
                              ('a' * 64, ''), ('a' * 64, 'php:mutable')):
         recorder.compose = lambda *args: {'stdout': container}
@@ -104,7 +104,7 @@ def application_image_contract():
             (root / role).mkdir()
             (root / role / 'observations.json').write_text(json.dumps(manifest))
         repeat = json.loads(json.dumps(manifest))
-        repeat['application_images']['web'] = 'sha256:' + 'f' * 64
+        repeat['application_images']['db'] = 'sha256:' + 'f' * 64
         (root / 'repeat/observations.json').write_text(json.dumps(repeat))
         args = types.SimpleNamespace(results_root=root, baseline='baseline', candidate='candidate',
                                      repeat=str(root / 'repeat/observations.json'), approvals=None, output=None)
@@ -266,7 +266,7 @@ def separate_results_root():
             assert report['captures'][role]['provenance'] == manifest['provenance']
         assert report['controller']['harness_sha256'] == hashlib.sha256(Path(harness.__file__).read_bytes()).hexdigest()
         for key, changed in (('revision', 'f' * 40), ('schema_sha256', 'f' * 64),
-                             ('application_images', {'web': 'sha256:' + 'f' * 64, 'snmp': 'sha256:' + '3' * 64}),
+                             ('application_images', {'web': 'sha256:' + 'f' * 64, 'snmp': 'sha256:' + '3' * 64, 'db': 'sha256:' + '4' * 64}),
                              ('php', '8.3'), ('base_image', {**manifest['base_image'], 'ref': 'php@sha256:' + 'f' * 64}),
                              ('provenance', {**manifest['provenance'], 'application_dirty': True})):
             broken = {**manifest, key: changed, 'scenarios': {**manifest['scenarios'], sorted(harness.EXPECTED_SCENARIOS)[0]: 2}}

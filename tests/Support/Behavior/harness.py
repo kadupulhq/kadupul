@@ -708,7 +708,7 @@ class Harness:
         Mounted helpers remain covered by the separate input hash inventories.
         """
         images = {}
-        for service in ('web', 'snmp'):
+        for service in ('web', 'snmp', 'db'):
             container = self.compose('ps', '-q', service)['stdout'].strip()
             if not re.fullmatch(r'[0-9a-f]{12,64}', container):
                 raise RuntimeError('Cannot identify application container: ' + service)
@@ -877,7 +877,7 @@ def compare(args):
             raise RuntimeError(f'Missing or invalid {role} PHP runtime')
         validate_base_image(manifest.get('base_image'), role)
         images = manifest.get('application_images')
-        if not isinstance(images, dict) or set(images) != {'web', 'snmp'} or any(
+        if not isinstance(images, dict) or set(images) != {'web', 'snmp', 'db'} or any(
                 not isinstance(value, str) or not re.fullmatch(r'sha256:[0-9a-f]{64}', value)
                 for value in images.values()):
             raise RuntimeError(f'Missing or invalid {role} application image provenance')
