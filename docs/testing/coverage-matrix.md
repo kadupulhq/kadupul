@@ -167,15 +167,24 @@ records remain part of the contract. Other diagnostic numbers are preserved.
 The retained manifests record the application revision separately from the
 executing `harness_revision` and `harness_sha256`. `harness_inputs_sha256` hashes
 the actual mounted behavior helpers, plugin/SNMP fixtures, compose file and
-Dockerfile. Dirty flags include untracked files; they are evidence, not a claim
+Dockerfile. Current captures also hash `.dockerignore` in each checkout. Dirty flags include untracked files; they are evidence, not a claim
 that all captured working trees are clean.
 
 The historical application revision predates the harness. For these two runs,
 its tracked application files were unchanged and the test directories were
 overlaid from the recorded harness commit. Thus `application_dirty` is true,
 while the controller checkout has `harness_dirty: false`. The observations and
-fixture hashes from the two fresh runs are identical. `comparison.json` records
-the exact controller commit and hashes of both manifests.
+fixture hashes from the two fresh runs are identical. The checked-in historical
+`comparison.json` is a separately assembled summary of those retained captures,
+including their controller commit and manifest hashes; it is not the output
+schema of the comparison command. It remains unchanged as historical evidence.
+
+Current comparison output records `contracts`, `controller` provenance,
+`manifest_sha256` for baseline/candidate/repeat, and each capture's application
+revision, schema hash, and provenance in `captures`. Missing provenance or build
+input hashes are rejected. Older captures without these fields must be recaptured
+with the current harness; use their pinned controller to reproduce historical
+results. Repeat runs must also match the candidate runtime and provenance.
 
 To reproduce a historical run, create separate clean checkouts of the
 `application_revision` and `harness_revision` recorded in `comparison.json`.

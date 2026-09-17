@@ -47,7 +47,7 @@ def source_provenance():
     def input_hashes(root):
         inputs = {}
         for relative in ('tests/Support/Behavior', 'tests/Fixtures/plugins/compatibility_test',
-                         'tests/Fixtures/snmp', 'tests/behavior/compose.yml', 'tests/behavior/Dockerfile'):
+                         'tests/Fixtures/snmp', 'tests/behavior/compose.yml', 'tests/behavior/Dockerfile', '.dockerignore'):
             path = root / relative
             paths = path.rglob('*') if path.is_dir() else [path]
             for item in sorted(paths):
@@ -781,12 +781,15 @@ class Harness:
 
 def compare(args):
     root = Path(getattr(args, 'results_root', None) or ROOT / 'tests/behavior/results')
-    baseline = json.loads((root / args.baseline / 'observations.json').read_text())
-    candidate = json.loads((root / args.candidate / 'observations.json').read_text())
-    repeat = json.loads(Path(args.repeat).read_text()) if args.repeat else None
-    manifests = [('baseline', baseline), ('candidate', candidate)]
+    paths = {'baseline': root / args.baseline / 'observations.json',
+             'candidate': root / args.candidate / 'observations.json'}
     if args.repeat:
-        manifests.append(('repeat', repeat))
+        paths['repeat'] = Path(args.repeat)
+    payloads = {role: path.read_bytes() for role, path in paths.items()}
+    captures = {role: json.loads(payload) for role, payload in payloads.items()}
+    baseline, candidate = captures['baseline'], captures['candidate']
+    repeat = captures.get('repeat')
+    manifests = list(captures.items())
     for role, manifest in manifests:
         if not isinstance(manifest, dict) or manifest.get('complete') is not True:
             raise RuntimeError(f'Cannot compare incomplete {role} run')
@@ -794,6 +797,20 @@ def compare(args):
         if not isinstance(scenarios, dict) or set(scenarios) != EXPECTED_SCENARIOS:
             names = set(scenarios) if isinstance(scenarios, dict) else set()
             raise RuntimeError(f'Invalid {role} scenario inventory: missing={sorted(EXPECTED_SCENARIOS - names)}; unexpected={sorted(names - EXPECTED_SCENARIOS)}')
+        def digest(value, lengths=(64,)):
+            return isinstance(value, str) and len(value) in lengths and re.fullmatch(r'[0-9a-f]+', value)
+        provenance = manifest.get('provenance')
+        if not digest(manifest.get('revision'), (40, 64)) or not digest(manifest.get('schema_sha256')) or not isinstance(provenance, dict):
+            raise RuntimeError(f'Missing or invalid {role} application provenance')
+        if not digest(provenance.get('harness_revision'), (40, 64)) or not digest(provenance.get('harness_sha256')):
+            raise RuntimeError(f'Missing or invalid {role} harness provenance')
+        for key in ('harness_dirty', 'application_dirty'):
+            if not isinstance(provenance.get(key), bool):
+                raise RuntimeError(f'Missing or invalid {role} provenance {key}')
+        for key in ('harness_inputs_sha256', 'application_inputs_sha256'):
+            inputs = provenance.get(key)
+            if not isinstance(inputs, dict) or '.dockerignore' not in inputs or not all(isinstance(name, str) and name and digest(value) for name, value in inputs.items()):
+                raise RuntimeError(f'Missing or invalid {role} provenance {key}')
     approvals = json.loads(Path(args.approvals).read_text()) if args.approvals else {}
     report = []
     # Matching scenarios prove little if the runs used different runtimes or packages.
@@ -801,6 +818,11 @@ def compare(args):
         if baseline.get(key) != candidate.get(key):
             report.append({'scenario': '<environment>/' + key, 'status': 'NEEDS_REVIEW', 'digest': '',
                            'baseline': baseline.get(key), 'candidate': candidate.get(key)})
+    if repeat:
+        for key in ('php', 'base_image', 'revision', 'schema_sha256', 'provenance'):
+            if candidate.get(key) != repeat.get(key):
+                report.append({'scenario': '<repeat-environment>/' + key, 'status': 'NEEDS_REVIEW', 'digest': '',
+                               'baseline': candidate.get(key), 'candidate': repeat.get(key)})
     for name in sorted(baseline['scenarios'].keys() | candidate['scenarios'].keys()):
         b, c = baseline['scenarios'].get(name), candidate['scenarios'].get(name)
         digest = hashlib.sha256(json.dumps({'baseline': b, 'candidate': c}, sort_keys=True).encode()).hexdigest()
@@ -816,7 +838,13 @@ def compare(args):
             status = 'REGRESSION'
         report.append({'scenario': name, 'status': status, 'digest': digest, 'baseline': b, 'candidate': c})
     output = Path(args.output) if args.output else root / 'comparison'
-    write_json(output.with_suffix('.json'), {'baseline': args.baseline, 'candidate': args.candidate, 'differences': report})
+    write_json(output.with_suffix('.json'), {
+        'baseline': args.baseline, 'candidate': args.candidate, 'differences': report,
+        'contracts': len(EXPECTED_SCENARIOS), 'controller': source_provenance(),
+        'manifest_sha256': {role: hashlib.sha256(payload).hexdigest() for role, payload in payloads.items()},
+        'captures': {role: {key: manifest[key] for key in ('revision', 'schema_sha256', 'provenance')}
+                     for role, manifest in manifests},
+    })
     output.with_suffix('.md').write_text('# Behavioral comparison\n\n' + '\n'.join(f"- {r['status']}: `{r['scenario']}`" for r in report) + '\n')
     print(output.with_suffix('.md').read_text())
     return int(any(r['status'] not in ('IDENTICAL', 'INTENTIONAL_CHANGE') for r in report))

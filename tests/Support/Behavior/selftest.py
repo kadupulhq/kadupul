@@ -59,11 +59,21 @@ for separator in ('-', '/', '.'):
 
 
 
+def comparable_manifest():
+    return {'complete': True, 'php': '8.2', 'base_image': {},
+            'revision': 'a' * 40, 'schema_sha256': 'b' * 64,
+            'provenance': {'harness_revision': 'c' * 40, 'harness_sha256': 'd' * 64,
+                           'harness_dirty': False, 'application_dirty': False,
+                           'harness_inputs_sha256': {'.dockerignore': 'e' * 64},
+                           'application_inputs_sha256': {'.dockerignore': 'e' * 64}},
+            'scenarios': {name: 1 for name in harness.EXPECTED_SCENARIOS}}
+
+
 def separate_results_root():
     """Compare real capture files outside the controller, including repeat checks."""
     with tempfile.TemporaryDirectory(prefix='harness separate results ') as directory:
         results = Path(directory)
-        manifest = {'complete': True, 'php': '8.2', 'base_image': {}, 'scenarios': {name: 1 for name in harness.EXPECTED_SCENARIOS}}
+        manifest = comparable_manifest()
         for label in ('baseline', 'candidate', 'repeat'):
             (results / label).mkdir()
             (results / label / 'observations.json').write_text(json.dumps(manifest))
@@ -73,6 +83,22 @@ def separate_results_root():
             assert harness.main() == 0
         report = json.loads((results / 'comparison.json').read_text())
         assert report['differences'][0]['status'] == 'IDENTICAL'
+        import hashlib
+        assert report['contracts'] == len(harness.EXPECTED_SCENARIOS)
+        for role in ('baseline', 'candidate', 'repeat'):
+            assert report['manifest_sha256'][role] == hashlib.sha256((results / role / 'observations.json').read_bytes()).hexdigest()
+            assert report['captures'][role]['provenance'] == manifest['provenance']
+        assert report['controller']['harness_sha256'] == hashlib.sha256(Path(harness.__file__).read_bytes()).hexdigest()
+        for key, changed in (('revision', 'f' * 40), ('schema_sha256', 'f' * 64),
+                             ('php', '8.3'), ('base_image', {'ref': 'different'}),
+                             ('provenance', {**manifest['provenance'], 'application_dirty': True})):
+            (results / 'repeat/observations.json').write_text(json.dumps({**manifest, key: changed}))
+            with patch('sys.argv', command):
+                assert harness.main() == 1, key
+            mismatch = json.loads((results / 'comparison.json').read_text())
+            assert any(row['scenario'] == '<repeat-environment>/' + key and row['status'] == 'NEEDS_REVIEW'
+                       for row in mismatch['differences']), key
+        (results / 'repeat/observations.json').write_text(json.dumps(manifest))
         manifest['scenarios'][sorted(harness.EXPECTED_SCENARIOS)[0]] = 2
         (results / 'candidate/observations.json').write_text(json.dumps(manifest))
         with patch('sys.argv', command):
@@ -84,8 +110,7 @@ def comparison_inventory_failure():
     """A complete flag cannot make partial or malformed evidence comparable."""
     with tempfile.TemporaryDirectory(prefix='harness invalid inventory ') as directory:
         results = Path(directory)
-        valid = {'complete': True, 'php': '8.2', 'base_image': {},
-                 'scenarios': {name: 1 for name in harness.EXPECTED_SCENARIOS}}
+        valid = comparable_manifest()
         paths = {}
         for role in ('baseline', 'candidate', 'repeat'):
             paths[role] = results / role / 'observations.json'
@@ -94,7 +119,8 @@ def comparison_inventory_failure():
         args = types.SimpleNamespace(results_root=results, baseline='baseline', candidate='candidate',
                                      repeat=str(paths['repeat']), approvals=None, output=None)
         for role, path in paths.items():
-            for fault in ('missing', 'unexpected', 'empty', 'wrong-type', 'false-complete'):
+            for fault in ('missing', 'unexpected', 'empty', 'wrong-type', 'false-complete',
+                          'revision', 'schema_sha256', 'provenance', 'harness-hash', 'dirty-type', 'input-hash', 'dockerignore'):
                 broken = json.loads(json.dumps(valid))
                 if fault == 'missing':
                     broken['scenarios'].pop(sorted(harness.EXPECTED_SCENARIOS)[0])
@@ -104,8 +130,18 @@ def comparison_inventory_failure():
                     broken['scenarios'] = {}
                 elif fault == 'wrong-type':
                     broken['scenarios'] = list(harness.EXPECTED_SCENARIOS)
-                else:
+                elif fault == 'false-complete':
                     broken['complete'] = 'true'
+                elif fault in ('revision', 'schema_sha256', 'provenance'):
+                    broken.pop(fault)
+                elif fault == 'harness-hash':
+                    broken['provenance']['harness_sha256'] = 'not-a-hash'
+                elif fault == 'dirty-type':
+                    broken['provenance']['application_dirty'] = 'false'
+                elif fault == 'input-hash':
+                    broken['provenance']['application_inputs_sha256']['.dockerignore'] = 'invalid'
+                else:
+                    broken['provenance']['harness_inputs_sha256'].pop('.dockerignore')
                 path.write_text(json.dumps(broken))
                 try:
                     harness.compare(args)
@@ -128,7 +164,7 @@ def incomplete_repeat_failure():
             dirs[role] = results / f'{tag}-{role}'
             dirs[role].mkdir(parents=True)
             (dirs[role] / 'observations.json').write_text(json.dumps(
-                {'complete': complete, 'php': '8.2', 'base_image': {}, 'scenarios': {name: 1 for name in harness.EXPECTED_SCENARIOS}}))
+                {**comparable_manifest(), 'complete': complete}))
         args = types.SimpleNamespace(baseline=dirs['baseline'].name, candidate=dirs['candidate'].name,
                                      approvals=None, repeat=str(dirs['repeat'] / 'observations.json'),
                                      output=str(dirs['baseline'] / 'comparison'))
@@ -558,6 +594,7 @@ def provenance_contract():
         fixture = root / 'tests/Support/Behavior/probe.php'
         fixture.parent.mkdir(parents=True)
         fixture.write_text('<?php echo 1;')
+        (root / '.dockerignore').write_text('cache/')
         def git_result(arguments, **kwargs):
             return {'stdout': status if 'status' in arguments else 'committed-harness-revision'}
         for status in ('', ' M tests/Support/Behavior/harness.py\n', '?? tests/Support/Behavior/harness.py\n'):
@@ -567,6 +604,11 @@ def provenance_contract():
             assert provenance['harness_dirty'] is bool(status)
             assert provenance['application_dirty'] is bool(status)
             assert len(provenance['harness_sha256']) == 64
+        (root / '.dockerignore').write_text('cache/\nlog/')
+        with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', side_effect=git_result):
+            ignored = harness.source_provenance()
+        assert ignored['application_inputs_sha256']['.dockerignore'] != provenance['application_inputs_sha256']['.dockerignore']
+        assert ignored['harness_inputs_sha256'] == provenance['harness_inputs_sha256']
         fixture.write_text('<?php echo 2;')
         with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', side_effect=git_result):
             changed = harness.source_provenance()
