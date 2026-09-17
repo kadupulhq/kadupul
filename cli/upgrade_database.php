@@ -82,6 +82,14 @@ if ($storage_error !== '') {
 	exit(1);
 }
 
+if (!$local && $config['poller_id'] > 1) {
+	db_switch_remote_to_main();
+
+	print 'NOTE: Repairing Tables for Main Database' . PHP_EOL;
+} else {
+	print 'NOTE: Repairing Tables for Local Database' . PHP_EOL;
+}
+
 if ($migrate_poller_queue && !$check_rrd_storage) {
     if (!db_execute_prepared('ALTER TABLE poller_output ENGINE=InnoDB ROW_FORMAT=Dynamic')) {
         fwrite(STDERR, "Poller queue migration failed; collectors must remain stopped.\n");
@@ -99,14 +107,6 @@ if ($check_rrd_storage) {
     }
     printf("RRD storage and durable queue checks passed for UID %s, GID %s. No upgrade was performed.\n", function_exists('posix_geteuid') ? posix_geteuid() : 'Windows', function_exists('posix_getegid') ? posix_getegid() : 'Windows');
     exit(0);
-}
-
-if (!$local && $config['poller_id'] > 1) {
-	db_switch_remote_to_main();
-
-	print 'NOTE: Repairing Tables for Main Database' . PHP_EOL;
-} else {
-	print 'NOTE: Repairing Tables for Local Database' . PHP_EOL;
 }
 
 /* we need to rerun the upgrade, force the current version */
@@ -240,7 +240,7 @@ function display_help () {
 	print 'If you are running a beta or alpha version of Kadupul and need to rerun' . PHP_EOL;
 	print 'the upgrade script, simply set the forcever to the previous release.' . PHP_EOL . PHP_EOL;
 	print '--check-rrd-storage - Check storage and queue access as this service account without upgrading' . PHP_EOL;
-	print '--migrate-poller-queue - Convert the local queue to InnoDB; stop collectors and back up first' . PHP_EOL;
+	print '--migrate-poller-queue - Convert the selected queue to InnoDB; use --local on remote collectors' . PHP_EOL;
 	print '--forcever - Force the starting version, say ' . CACTI_VERSION . PHP_EOL;
 	print '--local    - Perform the action on the Remote Data Collector if run from there' . PHP_EOL;
 	print '--debug    - Display verbose output during execution' . PHP_EOL . PHP_EOL;

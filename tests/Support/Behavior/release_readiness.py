@@ -195,6 +195,21 @@ def main():
             require(rrd_manifest(h) == before_rrd, 'Upgrade modified RRD bytes')
             require(domain_state(h) == before_domain, 'Upgrade changed device, source, graph or plugin identities')
             require(h.sql("SELECT value FROM settings WHERE name='graph_watermark'").strip() == 'Operations custom watermark', 'Upgrade changed custom watermark')
+            # A code-only cutover must explicitly migrate the old volatile queue
+            # before either the web or collector account resumes writes.
+            h.sql("INSERT INTO poller_output(local_data_id,rrd_name,time,output) VALUES (16000003,'migration','2001-01-01','42')")
+            queue_before = h.sql('SELECT local_data_id,rrd_name,time,output FROM poller_output ORDER BY local_data_id,rrd_name,time')
+            old_engine = h.sql("SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='poller_output'").strip()
+            probe_before = h.php('cli/upgrade_database.php', '--check-rrd-storage')
+            require(old_engine.upper() == 'MEMORY' and probe_before['exit'] == 1, 'Baseline volatile queue was not refused')
+            migrations = []
+            for attempt in range(2):
+                migrations.append(checked(h.php('cli/upgrade_database.php', '--migrate-poller-queue'), 'Durable queue migration'))
+                require(h.sql('SELECT local_data_id,rrd_name,time,output FROM poller_output ORDER BY local_data_id,rrd_name,time') == queue_before, 'Queue migration changed retained samples')
+                checked(h.php('cli/upgrade_database.php', '--check-rrd-storage'), 'Storage and durable queue probe')
+            evidence['steps']['queue_migration'] = {'before_engine': old_engine, 'refused_volatile_queue': probe_before,
+                                                   'commands': migrations, 'retained_samples_preserved': True}
+            h.sql("DELETE FROM poller_output WHERE local_data_id=16000003 AND rrd_name='migration' AND time='2001-01-01' AND output='42'")
             authenticate(h)
             graph = assert_graph(h)
             plugin = assert_plugin(h)
