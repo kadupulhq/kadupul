@@ -212,9 +212,12 @@ Overlay the harness checkout's tracked `tests/Support/Behavior`,
 `tests/Fixtures/plugins/compatibility_test`, `tests/Fixtures/snmp`,
 `tests/behavior/compose.yml`, `tests/behavior/Dockerfile`, and
 `tests/Golden/cacti-1.2.31` paths onto the application checkout. Keep its tracked
-application files unchanged. Run these commands from the clean controller:
+application files unchanged. Verify that `.dockerignore` is byte-identical in
+both checkouts before building; it is a hashed build input. Stop if it differs
+rather than changing the historical application. Run these commands from the clean controller:
 
 ```sh
+cmp .dockerignore /path/to/application/.dockerignore || exit 1
 mkdir -p /path/to/results/first /path/to/results/repeat
 mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py run \
   --application-root /path/to/application --target cacti-1.2.31 --update-golden
@@ -226,10 +229,13 @@ cp /path/to/application/tests/behavior/results/cacti-1.2.31/observations.json \
   /path/to/results/repeat/observations.json
 mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py compare \
   --results-root /path/to/results --baseline first --candidate repeat \
+  --repeat /path/to/results/first/observations.json \
   --output /path/to/results/comparison
 ```
 
-The second run verifies the first run's captured golden observations. Keep the
+The second run verifies the first run's captured golden observations. The first
+capture serves as both baseline and repeat control in this historical self-comparison;
+there are two independent captures, not three. Keep the
 manifests and generated comparison together; no hand-edited provenance or
 import-time root override is required. This establishes historical repeatability,
 not a claim that a candidate application is equivalent or superior.

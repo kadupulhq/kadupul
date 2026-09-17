@@ -109,7 +109,7 @@ def application_image_contract():
                                      repeat=str(root / 'repeat/observations.json'), approvals=None, output=None)
         assert harness.compare(args) == 1
         differences = json.loads((root / 'comparison.json').read_text())['differences']
-        assert [row['scenario'] for row in differences if row['status'] != 'IDENTICAL'] == ['<repeat-environment>/application_images']
+        assert all(row['status'] == 'NEEDS_REVIEW' for row in differences)
         recorder.args = types.SimpleNamespace(target='fixture', only=None, update_golden=True)
         recorder.observed = manifest['scenarios']
         recorder.destination = root / 'failed-capture'
@@ -124,6 +124,44 @@ def application_image_contract():
         assert 'Cannot identify application container' in failed['error']
         assert not (root / 'tests/Golden').exists()
     print('running image identity rejects different dirty application builds and incomplete inspection')
+
+
+def base_image_failure_contract():
+    import subprocess
+    valid = comparable_manifest()
+    for key in ('ref', 'db_ref', 'packages', 'runtime'):
+        for value in (None, '', '   ', 'unresolved') if key in ('ref', 'db_ref') else (None, '', '   '):
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                (root / 'cacti.sql').write_text('schema')
+                recorder = object.__new__(harness.Harness)
+                recorder.args = types.SimpleNamespace(target='fixture', only=None, update_golden=True)
+                recorder.destination = root / 'results'
+                recorder.observed = valid['scenarios']
+                recorder.command = lambda *a, **kw: {'stdout': '8.2', 'exit': 0}
+                recorder.base_image_digest = lambda: {**valid['base_image'], key: value}
+                recorder.application_image_digests = lambda: valid['application_images']
+                with patch.object(harness, 'ROOT', root), patch.object(harness, 'run', return_value={'stdout': 'a' * 40}), patch.object(harness, 'source_provenance', return_value=valid['provenance']):
+                    assert recorder.finish() == 2, (key, value)
+                failed = json.loads((recorder.destination / 'observations.json').read_text())
+                assert failed['complete'] is False
+                assert 'base image provenance' in failed['error']
+                assert not (root / 'tests/Golden').exists()
+    # Exercise the real probes: nonzero exits with plausible stdout must fail.
+    for failed_probe in range(4):
+        recorder = object.__new__(harness.Harness)
+        recorder.command = lambda *args, **kw: harness.run(list(args), **kw)
+        responses = [subprocess.CompletedProcess([], 0, output, '') for output in
+                     ('Debian PHP 8.2', valid['base_image']['ref'], valid['base_image']['db_ref'], 'rrdtool=1.7')]
+        responses[failed_probe].returncode = 1
+        with patch.object(harness.subprocess, 'run', side_effect=responses):
+            try:
+                recorder.base_image_digest()
+            except RuntimeError:
+                pass
+            else:
+                raise AssertionError(('Failed probe accepted', failed_probe))
+    print('invalid base image metadata fails capture without writing goldens')
 
 
 def bootstrap_repeat_provenance():
@@ -195,12 +233,14 @@ def separate_results_root():
                              ('application_images', {'web': 'sha256:' + 'f' * 64, 'snmp': 'sha256:' + '3' * 64}),
                              ('php', '8.3'), ('base_image', {**manifest['base_image'], 'ref': 'php@sha256:' + 'f' * 64}),
                              ('provenance', {**manifest['provenance'], 'application_dirty': True})):
-            (results / 'repeat/observations.json').write_text(json.dumps({**manifest, key: changed}))
+            broken = {**manifest, key: changed, 'scenarios': {**manifest['scenarios'], sorted(harness.EXPECTED_SCENARIOS)[0]: 2}}
+            (results / 'repeat/observations.json').write_text(json.dumps(broken))
             with patch('sys.argv', command):
                 assert harness.main() == 1, key
             mismatch = json.loads((results / 'comparison.json').read_text())
             assert any(row['scenario'] == '<repeat-environment>/' + key and row['status'] == 'NEEDS_REVIEW'
                        for row in mismatch['differences']), key
+            assert all(row['status'] == 'NEEDS_REVIEW' for row in mismatch['differences']), key
         (results / 'repeat/observations.json').write_text(json.dumps(manifest))
         manifest['scenarios'][sorted(harness.EXPECTED_SCENARIOS)[0]] = 2
         (results / 'candidate/observations.json').write_text(json.dumps(manifest))
@@ -370,7 +410,7 @@ def recording_guards():
             if case == 'missing': recorder.observed.pop(next(iter(recorder.observed)))
             if case == 'unexpected': recorder.observed['unknown/capture'] = 1
             recorder.command = lambda *a, **kw: {'stdout': '8.2', 'stderr': '', 'exit': 0}
-            recorder.base_image_digest = lambda: {'ref': 'fixture'}
+            recorder.base_image_digest = lambda: comparable_manifest()['base_image']
             recorder.application_image_digests = lambda: comparable_manifest()['application_images']
             golden = root / 'tests/Golden' / case / 'php-8.2'
             if case == 'other-runtime-orphan':
@@ -712,7 +752,7 @@ def source_provenance_failure_contract():
             recorder.destination = root / 'results' / failure
             recorder.observed = {name: {'value': name} for name in harness.EXPECTED_SCENARIOS}
             recorder.command = lambda *a, **kw: {'stdout': '8.2', 'stderr': '', 'exit': 0}
-            recorder.base_image_digest = lambda: {'ref': 'fixture'}
+            recorder.base_image_digest = lambda: comparable_manifest()['base_image']
             recorder.application_image_digests = lambda: comparable_manifest()['application_images']
             with patch.object(harness, 'ROOT', root):
                 if failure == 'not-git':
@@ -839,6 +879,7 @@ def main():
     recording_guards()
     source_provenance_failure_contract()
     provenance_contract()
+    base_image_failure_contract()
     application_image_contract()
     diagnostic_contracts()
     failed_setup_manifest()

@@ -670,13 +670,13 @@ class Harness:
         the rest, so record what was actually used instead: a base refresh then
         shows up as a diff in the manifest rather than silently moving a golden.
         """
-        result = self.command('sh', '-c', 'cat /etc/os-release | head -2; php -v | head -1', check=False)
+        result = self.command('sh', '-c', 'cat /etc/os-release | head -2; php -v | head -1', check=True)
         image = run(['docker', 'image', 'inspect', '--format', '{{index .RepoDigests 0}}',
-                     f'php:{os.environ.get("PHP_VERSION", "8.2")}-apache'], check=False)
-        db = run(['docker', 'image', 'inspect', '--format', '{{index .RepoDigests 0}}', 'mariadb:10.11'], check=False)
-        packages = self.command('sh', '-c', "dpkg-query -W -f='${Package}=${Version}\\n' rrdtool snmp snmpd", check=False)
-        return {'ref': (image['stdout'] or '').strip() or 'unresolved',
-                'db_ref': (db['stdout'] or '').strip() or 'unresolved',
+                     f'php:{os.environ.get("PHP_VERSION", "8.2")}-apache'], check=True)
+        db = run(['docker', 'image', 'inspect', '--format', '{{index .RepoDigests 0}}', 'mariadb:10.11'], check=True)
+        packages = self.command('sh', '-c', "dpkg-query -W -f='${Package}=${Version}\\n' rrdtool snmp snmpd", check=True)
+        return {'ref': (image['stdout'] or '').strip(),
+                'db_ref': (db['stdout'] or '').strip(),
                 # The base digest does not pin apt, so a rebuild can change these.
                 'packages': (packages['stdout'] or '').strip(),
                 'runtime': (result['stdout'] or '').strip()}
@@ -715,6 +715,7 @@ class Harness:
                 if not re.fullmatch(r'\d+\.\d+', runtime):
                     raise RuntimeError('Web container did not report a valid PHP runtime')
                 base_image = self.base_image_digest()
+                validate_base_image(base_image, 'capture')
                 application_images = self.application_image_digests()
             except (OSError, RuntimeError, subprocess.TimeoutExpired) as probe_error:
                 error = 'Cannot record runtime provenance: ' + str(probe_error)
@@ -826,6 +827,14 @@ class Harness:
         return chosen
 
 
+def validate_base_image(base_image, role):
+    if not isinstance(base_image, dict) or any(not isinstance(base_image.get(key), str) or not base_image[key].strip()
+                                              for key in ('ref', 'db_ref', 'packages', 'runtime')):
+        raise RuntimeError(f'Missing or invalid {role} base image provenance')
+    if any(not re.fullmatch(r'[^\s@]+@sha256:[0-9a-f]{64}', base_image[key]) for key in ('ref', 'db_ref')):
+        raise RuntimeError(f'Unpinned {role} base image provenance')
+
+
 def compare(args):
     root = Path(getattr(args, 'results_root', None) or ROOT / 'tests/behavior/results')
     paths = {'baseline': root / args.baseline / 'observations.json',
@@ -848,12 +857,7 @@ def compare(args):
             raise RuntimeError(f'Cannot compare failed {role} run')
         if not isinstance(manifest.get('php'), str) or not re.fullmatch(r'\d+\.\d+', manifest['php']):
             raise RuntimeError(f'Missing or invalid {role} PHP runtime')
-        base_image = manifest.get('base_image')
-        if not isinstance(base_image, dict) or any(not isinstance(base_image.get(key), str) or not base_image[key].strip()
-                                                  for key in ('ref', 'db_ref', 'packages', 'runtime')):
-            raise RuntimeError(f'Missing or invalid {role} base image provenance')
-        if any(not re.fullmatch(r'[^\s@]+@sha256:[0-9a-f]{64}', base_image[key]) for key in ('ref', 'db_ref')):
-            raise RuntimeError(f'Unpinned {role} base image provenance')
+        validate_base_image(manifest.get('base_image'), role)
         images = manifest.get('application_images')
         if not isinstance(images, dict) or set(images) != {'web', 'snmp'} or any(
                 not isinstance(value, str) or not re.fullmatch(r'sha256:[0-9a-f]{64}', value)
@@ -886,15 +890,19 @@ def compare(args):
         if baseline.get(key) != candidate.get(key):
             report.append({'scenario': '<environment>/' + key, 'status': 'NEEDS_REVIEW', 'digest': '',
                            'baseline': baseline.get(key), 'candidate': candidate.get(key)})
+    repeat_environment_matches = True
     if repeat:
         for key in ('php', 'base_image', 'application_images', 'revision', 'schema_sha256', 'provenance'):
             if candidate.get(key) != repeat.get(key):
+                repeat_environment_matches = False
                 report.append({'scenario': '<repeat-environment>/' + key, 'status': 'NEEDS_REVIEW', 'digest': '',
                                'baseline': candidate.get(key), 'candidate': repeat.get(key)})
     for name in sorted(baseline['scenarios'].keys() | candidate['scenarios'].keys()):
         b, c = baseline['scenarios'].get(name), candidate['scenarios'].get(name)
         digest = hashlib.sha256(json.dumps({'baseline': b, 'candidate': c}, sort_keys=True).encode()).hexdigest()
         if name not in baseline['scenarios'] or name not in candidate['scenarios']:
+            status = 'NEEDS_REVIEW'
+        elif not repeat_environment_matches:
             status = 'NEEDS_REVIEW'
         elif repeat and (name not in repeat['scenarios'] or c != repeat['scenarios'][name]):
             status = 'NONDETERMINISTIC'
