@@ -22,10 +22,12 @@ function read_config_option($key, ...$args) { return $key === 'storage_location'
 function db_fetch_cell_prepared(...$args) { if ($GLOBALS['mode'] === 'fresh') { throw new LogicException('fresh install queried a queue that does not exist yet'); } return in_array($GLOBALS['mode'], array('memory', 'memory-string'), true) ? 'MEMORY' : ($GLOBALS['mode'] === 'queue-unavailable' ? false : 'InnoDB'); }
 function is_resource_writable($path) { return true; }
 function log_install_debug(...$args) {}
+function log_install_high(...$args) {}
+function cacti_version_compare($a, $b, $operator) { return version_compare($a, $b, $operator); }
 function log_install_medium(...$args) {}
 function log_install_always(...$args) { throw new LogicException('upgrade boundary reached'); }
 function clean_up_lines($text) { return $text; }
-define('CACTI_VERSION', 'test');
+define('CACTI_VERSION', '1.3.0');
 $config = array('base_path' => $root, 'rra_path' => __DIR__ . '/rra', 'cacti_server_os' => strpos($mode, 'windows') === 0 ? 'win32' : 'unix');
 if ($mode === 'missing' || $mode === 'windows-missing') { $config['rra_path'] .= '/missing'; }
 if ($mode === 'windows-file') { $config['rra_path'] = __FILE__; }
@@ -37,7 +39,13 @@ $reflection = new ReflectionClass('Installer');
 $installer = $reflection->newInstanceWithoutConstructor();
 $installerMode = strpos($operation, 'downgrade') === 0 ? Installer::MODE_DOWNGRADE : Installer::MODE_UPGRADE;
 if ($operation === 'downgrade-string' || $mode === 'memory-string') { $installerMode = (string)$installerMode; }
-$property = $reflection->getProperty('mode'); if (PHP_VERSION_ID < 80100) { $property->setAccessible(true); } $property->setValue($installer, $mode === 'fresh' ? Installer::MODE_INSTALL : $installerMode);
+if (strpos($operation, 'auto-') === 0 && $mode !== 'fresh') {
+    // Match the constructor's preflight state: old version known, mode not set.
+    $property = $reflection->getProperty('old_cacti_version'); if (PHP_VERSION_ID < 80100) { $property->setAccessible(true); }
+    $property->setValue($installer, $operation === 'auto-upgrade' ? '1.2.0' : '1.4.0');
+} else {
+    $property = $reflection->getProperty('mode'); if (PHP_VERSION_ID < 80100) { $property->setAccessible(true); } $property->setValue($installer, $mode === 'fresh' ? Installer::MODE_INSTALL : $installerMode);
+}
 $method = $reflection->getMethod('getPermissions'); if (PHP_VERSION_ID < 80100) { $method->setAccessible(true); }
 $permissions = $method->invoke($installer);
 $method = $reflection->getMethod('install'); if (PHP_VERSION_ID < 80100) { $method->setAccessible(true); }
@@ -86,4 +94,4 @@ FIXTURE;
         rmdir($dir . '/rra');
         rmdir($dir);
     }
-})->with(array(array('memory-string', false), array('fresh', true), array('memory', false), array('queue-unavailable', false), array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true)))->with(array('upgrade', 'downgrade', 'downgrade-string'));
+})->with(array(array('memory-string', false), array('fresh', true), array('memory', false), array('queue-unavailable', false), array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true)))->with(array('upgrade', 'downgrade', 'downgrade-string', 'auto-upgrade', 'auto-downgrade'));
