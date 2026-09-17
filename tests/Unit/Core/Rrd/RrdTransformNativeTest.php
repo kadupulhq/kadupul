@@ -16,6 +16,7 @@ test('native RRD transformations preserve originals on failure and verify restor
 <?php
 while (($command = fgets(STDIN)) !== false) {
     if (trim($command) === 'quit') { break; }
+    if (getenv('RRD_TRANSFORM_MODE') === 'bad-dump' && strpos($command, 'dump ') === 0) { echo "ERROR: injected dump failure\n"; fflush(STDOUT); continue; }
     if (strpos($command, 'restore ') === 0) { echo "ERROR: injected restore failure\n"; fflush(STDOUT); continue; }
     $process = proc_open(array(getenv('RRDTOOL_TEST_BINARY'), '-'), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('redirect', 1)), $streams);
     fwrite($streams[0], $command . "quit\n"); fclose($streams[0]);
@@ -30,11 +31,12 @@ SERVER;
     }
     $program .= '$root=' . var_export($root, true) . ';$operation=' . var_export($operation, true) . ';$mode=' . var_export($mode, true) . ';';
     $program .= <<<'SOURCE'
+putenv('RRD_TRANSFORM_MODE='.$mode);
 $config=array('cacti_server_os'=>'unix','rra_path'=>__DIR__,'is_web'=>false);
 require $root.'/include/global_constants.php';
 define('CACTI_LOCALE','en-US');
 $data_source_types=array(5=>'COMPUTE');
-function read_config_option($key){return $key==='path_rrdtool'?($GLOBALS['mode']==='restore-failed'?__DIR__.'/fail-restore':getenv('RRDTOOL_TEST_BINARY')):'';}
+function read_config_option($key){return $key==='path_rrdtool'?(in_array($GLOBALS['mode'],array('restore-failed','bad-dump'),true)?__DIR__.'/fail-restore':getenv('RRDTOOL_TEST_BINARY')):'';}
 function cacti_log(...$args){}
 function cacti_session_close(){}
 function cacti_escapeshellarg($value){return escapeshellarg($value);}
@@ -49,8 +51,8 @@ $before=hash_file('sha256',$file);
 if($mode==='readonly'){chmod($file,0400);}
 $rra=array('cf'=>'AVERAGE','pdp_per_row'=>1,'xff'=>0.5,'rows'=>10);
 ob_start();
-if($operation==='add'){
- $result=rrd_datasource_add(array($file),array(array('name'=>'added','type'=>'GAUGE','heartbeat'=>120,'min'=>'NaN','max'=>'NaN')),$mode==='debug');
+if($operation==='add'||$operation==='compute'){
+ $result=rrd_datasource_add(array($file),array(array('name'=>'added','type'=>$operation==='compute'?'COMPUTE':'GAUGE','cdef'=>'value,2,*','heartbeat'=>120,'min'=>'NaN','max'=>'NaN')),$mode==='debug');
 }elseif($operation==='delete'){
  $result=rrd_rra_delete(array($file),array($rra),$mode==='debug');
 }else{
@@ -82,7 +84,7 @@ SOURCE;
         expect($result['released'])->toBeTrue();
         if ($mode === 'success') {
             expect($result['result'])->toBeTrue()->and($result['unchanged'])->toBeFalse()->and($result['xml'])->toBeFalse();
-            if ($operation === 'add') {
+            if (in_array($operation, array('add', 'compute'), true)) {
                 expect($result['info'])->toContain('ds[added].index = 1');
             } elseif ($operation === 'delete') {
                 expect($result['info'])->not->toContain('"AVERAGE"')->toContain('"MAX"');
@@ -92,7 +94,7 @@ SOURCE;
         } elseif ($mode === 'debug') {
             expect($result['result'])->toBeTrue()->and($result['unchanged'])->toBeTrue()->and($result['xml'])->toBeFalse()->and($result['printed'])->toContain('<rrd>');
         } else {
-            expect($result['result'])->toBeArray()->and($result['unchanged'])->toBeTrue()->and($result['xml'])->toBeTrue();
+            expect($result['result'])->toBeArray()->and($result['unchanged'])->toBeTrue()->and($result['xml'])->toBe($mode !== 'bad-dump');
         }
         if ($coverage !== null) {
             $reports = glob($directory . '/*.coverage');
@@ -105,4 +107,4 @@ SOURCE;
         }
         rmdir($directory);
     }
-})->with(array('add', 'delete', 'clone'))->with(array('success', 'debug', 'readonly', 'restore-failed'));
+})->with(array('add', 'delete', 'clone', 'compute'))->with(array('success', 'debug', 'readonly', 'restore-failed', 'bad-dump'));

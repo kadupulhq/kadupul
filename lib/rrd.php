@@ -3896,7 +3896,8 @@ function rrd_datasource_add($file_array, $ds_array, $debug) {
 		foreach ($file_array as $file) {
 			/* create a DOM object from an rrdtool dump */
 			$dom = new domDocument;
-			if ($dom->loadXML(rrdtool_execute("dump $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL')) === false) {
+			$xml = rrdtool_execute("dump $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+			if (!is_string($xml) || $xml === '' || $dom->loadXML($xml) === false) {
 				$check['err_msg'] = __('Error while parsing the XML of rrdtool dump');
 				return $check;
 			}
@@ -3969,7 +3970,8 @@ function rrd_rra_delete($file_array, $rra_array, $debug) {
 		foreach ($file_array as $file) {
 			/* create a DOM document from an rrdtool dump */
 			$dom = new domDocument;
-			if ($dom->loadXML(rrdtool_execute("dump $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL')) === false) {
+			$xml = rrdtool_execute("dump $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+			if (!is_string($xml) || $xml === '' || $dom->loadXML($xml) === false) {
 				$check['err_msg'] = __('Error while parsing the XML of RRDtool dump');
 				return $check;
 			}
@@ -4028,7 +4030,8 @@ function rrd_rra_clone($file_array, $cf, $rra_array, $debug) {
 		foreach ($file_array as $file) {
 			/* create a DOM document from an rrdtool dump */
 			$dom = new domDocument;
-			if ($dom->loadXML(rrdtool_execute("dump $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL')) === false) {
+			$xml = rrdtool_execute("dump $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+			if (!is_string($xml) || $xml === '' || $dom->loadXML($xml) === false) {
 				$check['err_msg'] = __('Error while parsing the XML of RRDtool dump');
 				return $check;
 			}
