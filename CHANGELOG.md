@@ -18,6 +18,9 @@ Targeting `v1.3.0`, the first planned application release. See
 ### Fixed
 
 - Compare behavioral captures from an explicit results directory when the controller and application use separate checkouts; document the Linux native self-test PHP prerequisite.
+- Make unsafe poller queue diagnostics available for translation.
+- Include measured poller and dependency-failure integration execution in Sonar coverage, rejecting stale or incomplete evidence.
+
 - Preserve hyphenated RRD data sources, verify durable queues after legacy upgrades, and allow remote database upgrades without unrelated local storage.
 
 - Refuse web upgrades when the poller queue is volatile or unreadable, before changing the database.

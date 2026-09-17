@@ -68,11 +68,25 @@ jobs:
           test -x "$RRDTOOL_TEST_BINARY"
           php -d pcov.directory="$GITHUB_WORKSPACE" \
             -d pcov.exclude='~/(include/vendor|tests)/~' \
-            vendor/bin/pest --configuration phpunit-coverage.xml
+            vendor/bin/pest --configuration phpunit-coverage.xml --coverage-php coverage.php
           test -s coverage.xml
           # PHP variables must remain literal until PHP parses the expression.
           # shellcheck disable=SC2016
           php -r '$m = simplexml_load_file("coverage.xml")->project->metrics; echo "Covered statements: {$m["coveredstatements"]} of {$m["statements"]}", PHP_EOL; exit((int) $m["coveredstatements"] > 0 ? 0 : 1);'
+
+      - name: Set up integration runner
+        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3
+        with:
+          install_args: python@3.12.12
+
+      - name: Poller integration coverage
+        env:
+          PHP_VERSION: '8.2'
+        run: |
+          set -euo pipefail
+          mise exec python@3.12.12 -- python tests/Support/Behavior/poller_coverage.py --output "$RUNNER_TEMP/poller-coverage"
+          mise exec python@3.12.12 -- python tests/Support/Behavior/coverage_selftest.py --unit tests/coverage.php --integration "$RUNNER_TEMP/poller-coverage"
+          php tests/Support/Behavior/merge_poller_coverage.php tests/coverage.php "$RUNNER_TEMP/poller-coverage" tests/coverage.xml
 
       - name: Scan
         uses: SonarSource/sonarqube-scan-action@22918119ff8e1ca75a623e15c8296b6ea4fbe28f # v8.2.1
