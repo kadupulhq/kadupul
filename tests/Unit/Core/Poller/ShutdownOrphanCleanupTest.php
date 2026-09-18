@@ -106,7 +106,7 @@ test('shutdown pages large queues and terminates safely on database failure', fu
         ->and($rrd_cleanup_failed)->toBe((bool) $failure);
 })->with(array('', 'query', 'delete', 'replace'));
 
-test('samples of data sources without poller items expire only after several cycles', function () use ($cleanup) {
+test('device samples without poller items expire only after several cycles', function () use ($cleanup) {
     $pdo = new \PDO('sqlite::memory:');
     $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     $GLOBALS['shutdown_orphan_pdo'] = $pdo;
@@ -116,20 +116,20 @@ test('samples of data sources without poller items expire only after several cyc
     $pdo->exec('CREATE TABLE poller_item (local_data_id INTEGER, rrd_name TEXT)');
     $pdo->sqliteCreateFunction('FROM_UNIXTIME', static fn($time) => gmdate('Y-m-d H:i:s', $time), 1);
     $pdo->exec('INSERT INTO host VALUES (1, 1), (2, 2)');
-    $pdo->exec('INSERT INTO data_local VALUES (10, 1), (11, 1), (12, 1), (13, 2)');
-    // 10 is polled; 11 and 12 were disabled; 13 belongs to another poller.
+    $pdo->exec('INSERT INTO data_local VALUES (10, 1), (11, 1), (12, 1), (13, 2), (14, 0)');
+    // 10 is polled; 11 and 12 were disabled; 13 belongs to another poller; 14 is hostless.
     $pdo->exec("INSERT INTO poller_item VALUES (10, 'v')");
     $old = gmdate('Y-m-d H:i:s', time() - 3600);
     $recent = gmdate('Y-m-d H:i:s', time() - 60);
     $insert = $pdo->prepare("INSERT INTO poller_output VALUES (?, 'v', ?, '10')");
-    foreach (array(array(10, $old), array(11, $old), array(12, $recent), array(13, $old)) as $row) {
+    foreach (array(array(10, $old), array(11, $old), array(12, $recent), array(13, $old), array(14, $old)) as $row) {
         $insert->execute($row);
     }
     $poller_id = 1;
     $poller_interval = 300;
     $rrd_cleanup_failed = false;
     eval('namespace ' . __NAMESPACE__ . '; ' . $cleanup);
-    expect(array_map('intval', $pdo->query('SELECT local_data_id FROM poller_output ORDER BY local_data_id')->fetchAll(\PDO::FETCH_COLUMN)))->toBe(array(10, 12, 13))
+    expect(array_map('intval', $pdo->query('SELECT local_data_id FROM poller_output ORDER BY local_data_id')->fetchAll(\PDO::FETCH_COLUMN)))->toBe(array(10, 12, 13, 14))
         ->and($rrd_cleanup_failed)->toBeFalse();
     unset($GLOBALS['shutdown_orphan_pdo'], $GLOBALS['shutdown_orphan_affected']);
 });

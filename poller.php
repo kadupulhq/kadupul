@@ -665,9 +665,9 @@ while ($poller_runs_completed < $poller_runs) {
         }
 
         // Valid pending samples belong to a retry, even after writer failure.
-        // Samples without a poller item (a disabled data source) are never
-        // written; expire them only after a few cycles so a poller cache
-        // rebuild in progress cannot lose them.
+        // A device's samples without a poller item (a disabled data source)
+        // are never written; expire them only after a few cycles so a poller
+        // cache rebuild in progress cannot lose them.  Hostless sources stay.
         do {
             $orphan_rows = db_fetch_assoc_prepared(
                 'SELECT po.local_data_id, po.rrd_name, po.time, po.output
@@ -678,7 +678,7 @@ while ($poller_runs_completed < $poller_runs) {
                 ON dl.host_id = h.id
                 WHERE (h.poller_id = ? OR h.id IS NULL)
                 AND (dl.id IS NULL OR (dl.host_id > 0 AND h.id IS NULL)
-                OR (po.time < FROM_UNIXTIME(?) AND NOT EXISTS (
+                OR (dl.host_id > 0 AND po.time < FROM_UNIXTIME(?) AND NOT EXISTS (
                     SELECT 1 FROM poller_item AS pi
                     WHERE pi.local_data_id = po.local_data_id
                     AND pi.rrd_name = po.rrd_name))) LIMIT 40000',
