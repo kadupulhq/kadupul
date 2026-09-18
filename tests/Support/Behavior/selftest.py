@@ -693,6 +693,20 @@ def diagnostic_contracts():
     trace = '09/16/2026 01:02:06 - CMDPHP PHP ERROR Backtrace: (/var/www/html/lib/rrd.php[334]:update(), DS[12])'
     assert harness.application_diagnostics(trace) == harness.application_diagnostics(trace.replace('[334]', '[900]'))
     assert 'DS[12]' in harness.application_diagnostics(trace)[0]['message']
+    multiline = ('09/16/2026 01:02:06 - ERROR PHP WARNING: first part in file: /var/www/html/lib/x.php  on line: 42\n'
+                 'continued /var/www/html/lib/y.php\n'
+                 '09/16/2026 01:02:07 - SYSTEM STATS: Time:1\n'
+                 'not part of a diagnostic\n')
+    assert harness.application_diagnostics(multiline) == [
+        {'subsystem': 'ERROR', 'message': 'PHP WARNING: first part in file: <APP>/lib/x.php  on line: <LINE>\ncontinued <APP>/lib/y.php'}]
+    assert harness.application_diagnostics('orphan continuation\n' + multiline) == harness.application_diagnostics(multiline)
+    poller = '09/16/2026 01:02:06 - POLLER: Poller[1] PID[{}] PHP WARNING: late in file: /var/www/html/poller.php  on line: 90'
+    assert harness.application_diagnostics(poller.format(123)) == harness.application_diagnostics(poller.format(456)) == [
+        {'subsystem': 'POLLER', 'message': 'PHP WARNING: late in file: <APP>/poller.php  on line: <LINE>'}]
+    unknown = '09/16/2026 01:02:06 - lower-case prefix PHP WARNING: kept /var/www/html/x.php'
+    assert harness.application_diagnostics(unknown) == [
+        {'subsystem': '<UNPARSED>', 'message': 'lower-case prefix PHP WARNING: kept <APP>/x.php'}]
+    assert harness.application_diagnostics('09/16/2026 01:02:06 - POLLER: Poller[1] PID[7] Time:1') == []
     for severity in ('ERROR', 'WARNING', 'NOTICE', 'DEPRECATED', 'USER_WARNING', 'USER_NOTICE', 'USER_ERROR', 'USER_DEPRECATED', 'STRICT', 'PARSE', 'CORE_ERROR', 'CORE_WARNING', 'COMPILE_ERROR', 'COMPILE_WARNING', 'RECOVERABLE_ERROR', 'ALL', 'Unknown Error'):
         diagnostic = f'PHP {severity}: calibration in file: /harness/probe.php on line: 79'
         assert harness.normalize_php_locations(diagnostic) == diagnostic

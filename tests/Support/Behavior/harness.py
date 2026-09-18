@@ -218,17 +218,29 @@ def visible_diagnostics(events):
 
 def application_diagnostics(contents):
     """Retain diagnostic multiplicity without unstable cross-process log order."""
-    records = []
     timestamp = re.compile(r'^(?:' + '|'.join(_POLLER_DATES) + r') \d{2}:\d{2}:\d{2}$')
+    entries = []
     for line in contents.splitlines():
         prefix, separator, message = line.partition(' - ')
-        if not separator or not timestamp.fullmatch(prefix):
-            continue
-        match = re.match(r'([A-Z][A-Z0-9_]*) (PHP .*:.*)$', message)
+        if separator and timestamp.fullmatch(prefix):
+            entries.append([prefix, message])
+        elif entries:
+            # A multi-line diagnostic continues until the next timestamped record.
+            entries[-1][1] += '\n' + line
+    records = []
+    for prefix, message in entries:
+        # POLLER records carry a per-process PID; dropping that prefix keeps
+        # the subsystem and message comparable across runs.
+        message = re.sub(r'^(POLLER): Poller\[\d+\] PID\[\d+\] ', r'\1 ', message)
+        match = re.fullmatch(r'([A-Z][A-Z0-9_]*) (PHP [^\n]*:.*)', message, re.DOTALL)
         if match:
-            normalized = normalize_php_locations(normalize_failed_write_size(line))
+            normalized = normalize_php_locations(normalize_failed_write_size(prefix + ' - ' + message))
             detail = normalized.partition(' - ')[2].partition(' ')[2]
             records.append({'subsystem': match[1], 'message': normalize_known_roots(detail)})
+        elif re.search(r'\bPHP [A-Z][A-Za-z_ ]*:', message.partition('\n')[0]):
+            # An unrecognized logger prefix must surface as a contract change,
+            # not disappear from the capture.
+            records.append({'subsystem': '<UNPARSED>', 'message': normalize_known_roots(message)})
     return sorted(records, key=lambda row: (row['subsystem'], row['message']))
 
 
