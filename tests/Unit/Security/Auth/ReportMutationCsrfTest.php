@@ -344,7 +344,7 @@ if (empty($match['body'])) {
 }
 
 function get_request_var($name) {
-    $values = array('action' => $GLOBALS['action'], 'id' => '7', 'item_id' => '11', 'tab' => 'items');
+    $values = array('action' => $GLOBALS['action'], 'id' => '7', 'item_id' => '11', 'tab' => "items\"\r\nSet-Cookie: bad=1&x=");
     return $values[$name] ?? '1';
 }
 function get_filter_request_var($name) { return get_request_var($name); }
@@ -401,6 +401,12 @@ PHP;
                 ->and($stdout)->toContain('HEADER:Location: realm_reports.php')
                 ->and($stdout)->toContain('header=false')
                 ->and($stdout)->not->toContain('reports_admin.php?action=edit');
+
+            if ($action === 'send') {
+                expect($stdout)->toContain('tab=items%22%0D%0ASet-Cookie%3A%20bad%3D1%26x%3D')
+                    ->and($stdout)->not->toContain("items\"\r\nSet-Cookie")
+                    ->and($stdout)->not->toContain('&x=&id=');
+            }
         }
     }
 });

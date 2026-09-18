@@ -36,7 +36,7 @@ switch (get_request_var('action')) {
 
 		reports_send(get_request_var('id'));
 
-		header('Location: ' . get_reports_page() . '?action=edit&tab=' . get_request_var('tab') . '&id=' . get_request_var('id') . '&header=false');
+		header('Location: ' . get_reports_page() . '?action=edit&tab=' . rawurlencode((string) get_request_var('tab')) . '&id=' . get_request_var('id') . '&header=false');
 		break;
 	case 'ajax_dnd':
 		reports_require_post('ajax_dnd');

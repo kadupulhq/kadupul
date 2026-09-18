@@ -16,6 +16,7 @@ get_filter_request_var('site_id');
 get_filter_request_var('host_id');
 get_filter_request_var('host_template_id');
 get_filter_request_var('graph_template_id');
+get_filter_request_var('tab', FILTER_CALLBACK, array('options' => 'sanitize_search_string'));
 
 /* set a longer execution time for large reports */
 ini_set('max_execution_time', '300');
@@ -35,7 +36,7 @@ switch (get_request_var('action')) {
 
 		reports_send(get_request_var('id'));
 
-		header('Location: ' . get_reports_page() . '?action=edit&tab=' . get_request_var('tab') . '&id=' . get_request_var('id') . '&header=false');
+		header('Location: ' . get_reports_page() . '?action=edit&tab=' . rawurlencode((string) get_request_var('tab')) . '&id=' . get_request_var('id') . '&header=false');
 		break;
 	case 'ajax_dnd':
 		reports_require_post('ajax_dnd');
