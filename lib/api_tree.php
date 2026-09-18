@@ -105,6 +105,11 @@ function api_tree_copy_node($tree_id, $node_id, $new_parent, $new_position) {
 		return;
 	}
 
+	if (!api_tree_leaf_in_tree($tree_id, $pdata['leaf_id'])) {
+		cacti_log("ERROR: Parent '" . (int) $pdata['leaf_id'] . "' is not in TreeID: '$tree_id', Function copy_node", false);
+		return;
+	}
+
 	// Check to see if the node already exists
 	$title = '';
 	if ($data['host'] > 0) {
@@ -146,7 +151,8 @@ function api_tree_copy_node($tree_id, $node_id, $new_parent, $new_position) {
 	} else {
 		$title = db_fetch_cell_prepared('SELECT title
 			FROM graph_tree_items
-			WHERE id = ?', array($data['leaf_id']));
+			WHERE id = ?
+			AND graph_tree_id = ?', array($data['leaf_id'], $tree_id));
 	}
 
 	$save = array();
@@ -237,6 +243,11 @@ function api_tree_create_node($tree_id, $node_id, $position, $title = '') {
 
 	if ($data['leaf_id'] < 0) {
 		cacti_log("ERROR: Invalid BranchID: '" . (isset($data['leaf_id']) ? $data['leaf_id']:'-') . "', Function create_node", false);
+		return;
+	}
+
+	if (!api_tree_leaf_in_tree($tree_id, $data['leaf_id'])) {
+		cacti_log("ERROR: Parent '" . (int) $data['leaf_id'] . "' is not in TreeID: '$tree_id', Function create_node", false);
 		return;
 	}
 
@@ -438,6 +449,23 @@ function api_tree_delete_node_content($tree_id, $leaf_id) {
 	}
 }
 
+/* api_tree_leaf_in_tree - whether a branch or leaf belongs to a tree. 0 is
+ * the tree's root, which every tree has.
+ * @arg $tree_id - the tree id
+ * @arg $leaf_id - the graph_tree_items id
+ * @returns - true or false */
+function api_tree_leaf_in_tree($tree_id, $leaf_id) {
+	if ($leaf_id == 0) {
+		return true;
+	}
+
+	return db_fetch_cell_prepared('SELECT id
+		FROM graph_tree_items
+		WHERE id = ?
+		AND graph_tree_id = ?',
+		array($leaf_id, $tree_id)) > 0;
+}
+
 /* api_tree_move_node - given the current node information and it's new branch, move it.
  * @arg $variable - The request variable to parse
  * @returns - array of information about the variable */
@@ -475,6 +503,11 @@ function api_tree_move_node($tree_id, $node_id, $new_parent, $new_position) {
 
 	$data  = api_tree_parse_node_data($node_id);
 
+	if (empty($data['leaf_id']) || !api_tree_leaf_in_tree($tree_id, $data['leaf_id']) || !api_tree_leaf_in_tree($tree_id, $pdata['leaf_id'])) {
+		cacti_log("ERROR: Branch '" . (int) $data['leaf_id'] . "' or Parent '" . (int) $pdata['leaf_id'] . "' is not in TreeID: '$tree_id', Function move_node", false);
+		return;
+	}
+
 	if ($data['parent'] != $pdata['leaf_id']) {
 		db_execute_prepared('UPDATE graph_tree_items
 			SET parent = ?, position = ?
@@ -485,13 +518,14 @@ function api_tree_move_node($tree_id, $node_id, $new_parent, $new_position) {
 		$others = db_fetch_assoc_prepared('SELECT id
 			FROM graph_tree_items
 			WHERE parent = ?
+			AND graph_tree_id = ?
 			AND id != ?
-			AND position >= ?', array($pdata['leaf_id'], $data['leaf_id'], $new_position));
+			AND position >= ?', array($pdata['leaf_id'], $tree_id, $data['leaf_id'], $new_position));
 
 		$position = $new_position + 1;
 		if (cacti_sizeof($others)) {
 			foreach($others as $other) {
-				db_execute_prepared('UPDATE graph_tree_items SET position = ? WHERE id = ?', array($position, $other['id']));
+				db_execute_prepared('UPDATE graph_tree_items SET position = ? WHERE id = ? AND graph_tree_id = ?', array($position, $other['id'], $tree_id));
 				$position++;
 			}
 		}
@@ -507,13 +541,14 @@ function api_tree_move_node($tree_id, $node_id, $new_parent, $new_position) {
 		$others = db_fetch_assoc_prepared('SELECT id
 			FROM graph_tree_items
 			WHERE parent = ?
+			AND graph_tree_id = ?
 			AND id != ? AND
-			position >= ?', array($pdata['leaf_id'], $data['leaf_id'], $new_position));
+			position >= ?', array($pdata['leaf_id'], $tree_id, $data['leaf_id'], $new_position));
 
 		$position = $new_position + 1;
 		if (cacti_sizeof($others)) {
 			foreach($others as $other) {
-				db_execute_prepared('UPDATE graph_tree_items SET position = ? WHERE id = ?', array($position, $other['id']));
+				db_execute_prepared('UPDATE graph_tree_items SET position = ? WHERE id = ? AND graph_tree_id = ?', array($position, $other['id'], $tree_id));
 				$position++;
 			}
 		}
@@ -1001,8 +1036,9 @@ function api_tree_sort_branch($leaf_id, $tree_id = 0, $lock = true) {
 				$first_child = db_fetch_cell_prepared('SELECT id
 					FROM graph_tree_items
 					WHERE parent = ?
+					AND graph_tree_id = ?
 					ORDER BY position
-					LIMIT 1', array($id));
+					LIMIT 1', array($id, $tree_id));
 
 				if (!empty($first_child)) {
 					$level++;
@@ -1061,9 +1097,10 @@ function api_tree_sort_branch($leaf_id, $tree_id = 0, $lock = true) {
 				$first_child = db_fetch_cell_prepared('SELECT id
 					FROM graph_tree_items
 					WHERE parent = ?
+					AND graph_tree_id = ?
 					ORDER BY position
 					LIMIT 1',
-					array($id));
+					array($id, $tree_id));
 
 				if (!empty($first_child)) {
 					$level++;
