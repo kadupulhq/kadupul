@@ -35,7 +35,8 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'item_remove':
-		get_filter_request_var('local_graph_id');
+		csrf_require_post(true);
+		graphs_items_require_graph_item('item_remove');
 
 		item_remove();
 
@@ -49,14 +50,16 @@ switch (get_request_var('action')) {
 		bottom_footer();
 		break;
 	case 'item_movedown':
-		get_filter_request_var('local_graph_id');
+		csrf_require_post(true);
+		graphs_items_require_graph_item('item_movedown');
 
 		item_movedown();
 
 		header('Location: graphs.php?header=false&action=graph_edit&id=' . get_request_var('local_graph_id'));
 		break;
 	case 'item_moveup':
-		get_filter_request_var('local_graph_id');
+		csrf_require_post(true);
+		graphs_items_require_graph_item('item_moveup');
 
 		item_moveup();
 
@@ -84,6 +87,29 @@ switch (get_request_var('action')) {
 		get_allowed_ajax_graph_items(true, $sql_where);
 
 		break;
+}
+
+/* The item functions act on the item id alone, and graph template items live
+   in the same table with local_graph_id 0, so the item must belong to the
+   graph the request names. */
+function graphs_items_require_graph_item($action) {
+	$id             = get_filter_request_var('id');
+	$local_graph_id = get_filter_request_var('local_graph_id');
+
+	$owned = db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM graph_templates_item AS gti
+		INNER JOIN graph_local AS gl
+		ON gl.id = gti.local_graph_id
+		WHERE gti.id = ?
+		AND gti.local_graph_id = ?',
+		array($id, $local_graph_id));
+
+	if (empty($owned)) {
+		cacti_log('WARNING: Rejected graphs_items.php?action=' . $action . ' for item ' . (int) $id . ' outside graph ' . (int) $local_graph_id, false, 'AUTH');
+
+		header('Location: graphs.php?header=false');
+		exit;
+	}
 }
 
 /* --------------------------

@@ -123,3 +123,33 @@ test('graph bulk actions refuse any GET that carries selected_items', function (
 	expect(run_graphs('graphs.php', 'POST', 'actions', array('selected_items' => 'a:1:{i:0;i:3;}', 'drp_action' => '1', 'delete_type' => '2')))->toBe('actions')
 		->and(run_graphs('graphs.php', 'GET', 'actions', array('drp_action' => '1'), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('actions');
 });
+
+/**
+ * @return array<int, string>
+ */
+function graph_item_mutations() {
+	return array('item_remove', 'item_moveup', 'item_movedown');
+}
+
+test('graph item mutations refuse any GET, including a same-site one', function () {
+	foreach (graph_item_mutations() as $action) {
+		expect_refused('graphs_items.php', $action, array('id' => '7', 'local_graph_id' => '3'), 3);
+	}
+});
+
+test('graph item mutations refuse an item that belongs to another graph or to a template', function () {
+	foreach (graph_item_mutations() as $action) {
+		foreach (array(array('3', 9), array('3', 0), array('0', 0), array('3', null)) as $case) {
+			list($local_graph_id, $owner) = $case;
+
+			expect(run_graphs('graphs_items.php', 'POST', $action, array('id' => '7', 'local_graph_id' => $local_graph_id), array(), $owner))
+				->toBe('log:AUTH:WARNING: Rejected graphs_items.php?action=' . $action . ' for item 7 outside graph ' . (int) $local_graph_id, $action);
+		}
+	}
+});
+
+test('graph item mutations still run on POST for an item of the graph named', function () {
+	foreach (graph_item_mutations() as $action) {
+		expect(run_graphs('graphs_items.php', 'POST', $action, array('id' => '7', 'local_graph_id' => '3'), array(), 3))->toBe($action, $action);
+	}
+});
