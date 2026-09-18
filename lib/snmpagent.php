@@ -829,12 +829,14 @@ function snmpagent_notification($notification, $mib, $varbinds, $severity = SNMP
 		$specific_trap_number = array_pop($branches);
 	}
 
-	/* generate a list of SNMP notification receivers listening for this notification */
+	/* generate a list of SNMP notification receivers listening for this notification.
+	 * disabled holds '' or 'on' (NULL on rows not saved by the form); MySQL coerces
+	 * both strings to 0, so 'disabled = 0' matched disabled receivers too. */
 	$notification_managers = db_fetch_assoc_prepared('SELECT snmpagent_managers.*
 		FROM snmpagent_managers_notifications
 		INNER JOIN snmpagent_managers
 		ON (snmpagent_managers.id = snmpagent_managers_notifications.manager_id)
-		WHERE snmpagent_managers.disabled = 0
+		WHERE COALESCE(snmpagent_managers.disabled, \'\') = \'\'
 		AND snmpagent_managers_notifications.notification = ?
 		AND snmpagent_managers_notifications.mib = ?',
 		array($notification, $mib));
@@ -883,7 +885,8 @@ function snmpagent_notification($notification, $mib, $varbinds, $severity = SNMP
 			FROM snmpagent_managers_notifications AS smn
 			INNER JOIN snmpagent_managers AS sm
 			ON sm.id = smn.manager_id
-			WHERE smn.notification = ?
+			WHERE COALESCE(sm.disabled, \'\') = \'\'
+			AND smn.notification = ?
 			AND smn.mib = ?
 			ORDER BY sm.snmp_message_type', array($notification, $mib));
 
