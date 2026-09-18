@@ -26,14 +26,9 @@ function importPkgDest_import_validate_signature($xmlfile)
 
 function importPkgDest_import_read_package_data($xmlfile, &$public_key)
 {
-    $public_key = str_repeat('k', 300);
+    $public_key = openssl_pkey_get_details($GLOBALS['import_pkg_dest']['key'])['key'];
 
     return $GLOBALS['import_pkg_dest']['data'];
-}
-
-function importPkgDest_openssl_verify($data, $signature, $key, $algo)
-{
-    return 1;
 }
 
 function importPkgDest_cacti_log($message)
@@ -86,7 +81,7 @@ function importPkgDestLoad($root)
     expect($start)->not->toBeFalse()
         ->and($end)->not->toBeFalse();
 
-    eval(preg_replace('/\b(import_package|import_validate_signature|import_read_package_data|openssl_verify|cacti_log|__|cacti_sizeof|import_xml_data|import_data_input_realm_allowed)\(/', 'importPkgDest_$1(', substr($source, $start, $end - $start)));
+    eval(preg_replace('/\b(import_package|import_validate_signature|import_read_package_data|cacti_log|__|cacti_sizeof|import_xml_data|import_data_input_realm_allowed)\(/', 'importPkgDest_$1(', substr($source, $start, $end - $start)));
 }
 
 function importPkgDestRun($names, $preview = false)
@@ -94,11 +89,13 @@ function importPkgDestRun($names, $preview = false)
     $files = array();
 
     foreach ($names as $name) {
-        $files[] = array('name' => $name, 'data' => base64_encode('payload for ' . $name), 'filesignature' => '');
+        openssl_sign('payload for ' . $name, $signature, $GLOBALS['import_pkg_dest']['key'], OPENSSL_ALGO_SHA256);
+        $files[] = array('name' => $name, 'data' => base64_encode('payload for ' . $name), 'filesignature' => base64_encode($signature));
     }
 
     /* every real package carries its template, and import_package() needs one */
-    $files[] = array('name' => 'Test_Template.xml', 'data' => base64_encode('<template/>'), 'filesignature' => '');
+    openssl_sign('<template/>', $signature, $GLOBALS['import_pkg_dest']['key'], OPENSSL_ALGO_SHA256);
+    $files[] = array('name' => 'Test_Template.xml', 'data' => base64_encode('<template/>'), 'filesignature' => base64_encode($signature));
 
     $GLOBALS['import_pkg_dest']['data'] = array('info' => array(), 'files' => array('file' => $files));
 
@@ -108,7 +105,10 @@ function importPkgDestRun($names, $preview = false)
 beforeEach(function () use ($root) {
     importPkgDestLoad($root);
 
-    $GLOBALS['import_pkg_dest'] = array('logs' => array(), 'xml' => array());
+    static $key;
+    $key = $key ?: openssl_pkey_new(array('private_key_bits' => 2048, 'private_key_type' => OPENSSL_KEYTYPE_RSA));
+    expect($key)->not->toBeFalse();
+    $GLOBALS['import_pkg_dest'] = array('logs' => array(), 'xml' => array(), 'key' => $key);
 
     $this->saved_config = isset($GLOBALS['config']) ? $GLOBALS['config'] : null;
     $this->tmp          = realpath(sys_get_temp_dir()) . '/import-pkg-dest-' . bin2hex(random_bytes(4));
@@ -128,7 +128,14 @@ beforeEach(function () use ($root) {
 afterEach(function () {
     $GLOBALS['config'] = $this->saved_config;
 
-    exec('rm -rf ' . escapeshellarg($this->tmp));
+    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->tmp, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST) as $entry) {
+        if ($entry->isDir() && !$entry->isLink()) {
+            rmdir($entry->getPathname());
+        } else {
+            unlink($entry->getPathname());
+        }
+    }
+    rmdir($this->tmp);
 });
 
 test('writes script and resource files at the Cacti base and in a plugin', function () {
