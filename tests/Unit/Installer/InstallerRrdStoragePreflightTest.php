@@ -37,6 +37,12 @@ if ($mode === 'windows-file') { $config['rra_path'] = __FILE__; }
 if ($mode === 'windows-readonly') { chmod(__DIR__ . '/rra', 0555); }
 if ($mode === 'group' || $mode === 'trusted-group') { chmod(__DIR__ . '/rra', 0770); }
 if ($mode === 'trusted-group') { $config['rrd_maintenance_trusted_gids'] = array(filegroup(__DIR__ . '/rra')); }
+if (strpos($mode, 'collector-') === 0) {
+    chmod(__DIR__ . '/rra', 0777);
+    $config['poller_id'] = $mode === 'collector-install' ? 1 : 2;
+    $config['connection'] = $mode === 'collector-offline' ? 'recovery' : 'online';
+    $remote_db_cnn_id = 'primary-connection';
+}
 require $root . '/lib/installer.php';
 $reflection = new ReflectionClass('Installer');
 $installer = $reflection->newInstanceWithoutConstructor();
@@ -49,6 +55,7 @@ if (strpos($operation, 'auto-') === 0 && $mode !== 'fresh') {
 } else {
     $property = $reflection->getProperty('mode'); if (PHP_VERSION_ID < 80100) { $property->setAccessible(true); } $property->setValue($installer, $mode === 'fresh' ? Installer::MODE_INSTALL : $installerMode);
 }
+if ($mode === 'collector-install') { $property = $reflection->getProperty('mode'); $property->setAccessible(true); $property->setValue($installer, Installer::MODE_POLLER); }
 $method = $reflection->getMethod('getPermissions'); if (PHP_VERSION_ID < 80100) { $method->setAccessible(true); }
 $permissions = $method->invoke($installer);
 $method = $reflection->getMethod('install'); if (PHP_VERSION_ID < 80100) { $method->setAccessible(true); }
@@ -100,4 +107,4 @@ FIXTURE;
         rmdir($dir . '/rra');
         rmdir($dir);
     }
-})->with(array(array('memory-string', false), array('fresh', true), array('memory', false), array('queue-unavailable', false), array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-attribute', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true), array('proxy-local-private', true), array('proxy-local-group', false), array('proxy-local-missing', false)))->with(array('upgrade', 'downgrade', 'downgrade-string', 'auto-upgrade', 'auto-downgrade'));
+})->with(array(array('collector-install', true), array('collector-online', true), array('collector-offline', true), array('memory-string', false), array('fresh', true), array('memory', false), array('queue-unavailable', false), array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-attribute', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true), array('proxy-local-private', true), array('proxy-local-group', false), array('proxy-local-missing', false)))->with(array('upgrade', 'downgrade', 'downgrade-string', 'auto-upgrade', 'auto-downgrade'));

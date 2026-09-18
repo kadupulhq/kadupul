@@ -32,7 +32,7 @@ test('the pre-1.1.6 upgrade keeps the poller queue durable', function () {
 });
 
 
-test('legacy upgrade completion verifies the final queue engine', function ($engine) {
+test('legacy upgrade completion verifies the final queue engine', function ($engine, $collector) {
     $root = dirname(__DIR__, 3);
     $dir = sys_get_temp_dir() . '/legacy-installer-' . bin2hex(random_bytes(8));
     mkdir($dir, 0700);
@@ -42,8 +42,9 @@ test('legacy upgrade completion verifies the final queue engine', function ($eng
         $script .= 'define("RRD_TEST_INSTALLER_COVERAGE",true);define("RRD_TEST_COVERAGE_DIRECTORY",__DIR__);require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
     }
     $script .= '$root=' . var_export($root, true) . ';$engine=' . var_export($engine, true) . ';';
+    $script .= '$collector=' . var_export($collector, true) . ';';
     $script .= <<<'INSTALLER'
-$config=array('base_path'=>$root);
+$config=array('base_path'=>$root, 'poller_id'=>$collector==='local'?1:2, 'connection'=>$collector);$remote_db_cnn_id='primary-connection';
 require $root.'/include/global_constants.php';
 function __($message,...$args){return $args?vsprintf($message,$args):$message;}
 function read_config_option(...$args){return '';}
@@ -56,7 +57,7 @@ function db_install_execute($sql){$GLOBALS['statements'][]=$sql;}
 function db_install_add_key(...$args){}
 function db_index_exists(...$args){return true;}
 function db_execute(...$args){}
-function db_fetch_cell_prepared(...$args){return $GLOBALS['engine'];}
+function db_fetch_cell_prepared(...$args){if(($args[4]??false)!==($GLOBALS['collector']==='online'?'primary-connection':false)){throw new RuntimeException('Queue checked on wrong collector database');}return $GLOBALS['engine'];}
 require $root.'/lib/installer.php';
 $cacti_version_codes=array('1.1.6'=>'fixture');
 $reflection=new ReflectionClass('Installer');$installer=$reflection->newInstanceWithoutConstructor();
@@ -97,4 +98,4 @@ INSTALLER;
             unlink($file);
         }rmdir($dir);
     }
-})->with(array('InnoDB','MEMORY',false));
+})->with(array('InnoDB','MEMORY',false))->with(array('local', 'online', 'recovery'));
