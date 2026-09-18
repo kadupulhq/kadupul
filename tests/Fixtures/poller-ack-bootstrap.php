@@ -13,6 +13,8 @@ $ack_db->exec('CREATE TABLE data_local(id INTEGER,data_template_id INTEGER)');
 $ack_db->exec('INSERT INTO data_local VALUES(1,0)');
 $ack_db->exec("CREATE TABLE poller_item(local_data_id INTEGER,rrd_name TEXT,rrd_num INTEGER,rrd_path TEXT); INSERT INTO poller_item VALUES(1,'value',1,'fixture.rrd')");
 $ack_db->exec('CREATE TABLE poller_output(local_data_id INTEGER,rrd_name TEXT,time TEXT,output TEXT COLLATE queue_output)');
+// Match production key lookup performance without imposing additional fixture uniqueness.
+$ack_db->exec('CREATE INDEX poller_output_sample ON poller_output(local_data_id,rrd_name,time)');
 $ack_db->exec('CREATE TABLE poller_output_realtime(local_data_id INTEGER,rrd_name TEXT,time TEXT,output TEXT COLLATE queue_output,poller_id INTEGER)');
 $ack_db->exec("INSERT INTO $ack_table VALUES(1,'value','2020-01-01','42'" . ($ack_table === 'poller_output_realtime' ? ',1' : '') . ')');
 if (in_array(getenv('ACK_FAIL'), array('field-failure', 'field-success'), true)) {
@@ -25,7 +27,7 @@ if (in_array(getenv('ACK_FAIL'), array('mixed', 'page', 'tail-failure', 'page-su
     $ack_db->exec("INSERT INTO data_local VALUES(2,0); INSERT INTO poller_item VALUES(2,'value',1,'good.rrd')");
     $insert = $ack_db->prepare("INSERT INTO poller_output VALUES(1,'value',?,'42')");
     $ack_db->beginTransaction();
-    for ($i = 0; $i < (in_array(getenv('ACK_FAIL'), array('page', 'tail-failure', 'page-success'), true) ? 40001 : 1); $i++) {
+    for ($i = 0; $i < (in_array(getenv('ACK_FAIL'), array('page', 'tail-failure', 'page-success'), true) ? (getenv('ACK_FAIL') === 'tail-failure' ? 40001 : 120001) : 1); $i++) {
         $insert->execute(array(date('Y-m-d H:i:s', 1577836800 + $i)));
     }
     $ack_db->exec("INSERT INTO poller_output VALUES(2,'value','2020-01-01','44')");
@@ -124,7 +126,12 @@ function db_fetch_assoc_prepared($sql, $params = array())
     $sql = preg_replace('/\bCAST\(CONVERT\((output|\?) USING utf8mb4\) AS BINARY\)/', 'CAST($1 AS BLOB)', $sql);
     $query = $GLOBALS['ack_db']->prepare($sql);
     $query->execute($params);
-    return $query->fetchAll(PDO::FETCH_ASSOC);
+    $rows = $query->fetchAll(PDO::FETCH_ASSOC);
+    if (strpos($sql, 'FROM poller_output AS po') !== false) {
+        $depth = count(array_filter(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), static fn($frame) => in_array($frame['function'], array('process_poller_output', 'process_poller_output_page'), true)));
+        file_put_contents(getenv('ACK_FIXTURE') . '/pages.jsonl', json_encode(array('rows' => count($rows), 'depth' => $depth)) . PHP_EOL, FILE_APPEND);
+    }
+    return $rows;
 }
 function db_fetch_assoc($sql)
 {

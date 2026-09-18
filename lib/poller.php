@@ -558,6 +558,24 @@ function poller_delete_output_rows($keys, &$failed = null) {
 
 function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null, &$acknowledged = null, $blocked_paths = array()) {
 	$acknowledged = 0;
+	$failed = false;
+	do {
+		$page_acknowledged = 0;
+		$next = null;
+		$result = process_poller_output_page($rrdtool_pipe, $remainder, $after, $page_acknowledged, $blocked_paths, $next);
+		$acknowledged += $page_acknowledged;
+		$failed = $failed || $result === false;
+		$after = $next;
+		$remainder = 40000;
+	} while ($next !== null);
+
+	return $failed ? false : $acknowledged;
+}
+
+// A separate page frame releases sample arrays before selecting the next page.
+function process_poller_output_page(&$rrdtool_pipe, $remainder, $after, &$acknowledged, &$blocked_paths, &$next) {
+	$next = null;
+	$acknowledged = 0;
 	global $config, $debug;
 
 	static $writer_failure_logged = false;
@@ -597,16 +615,20 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null, &$
 		ON dl.id = po.local_data_id";
 	$params = $after === null ? array() : $after;
 	$where = $after === null ? '' : ' WHERE (po.local_data_id, po.time) > (?, ?)';
+	if ($blocked_paths) {
+		$where .= ($where === '' ? ' WHERE ' : ' AND ') . 'pi.rrd_path NOT IN (' . implode(',', array_fill(0, count($blocked_paths), '?')) . ')';
+		$params = array_merge($params, array_keys($blocked_paths));
+	}
 	$results = db_fetch_assoc_prepared($select . $where . '
 		ORDER BY po.local_data_id, po.time, po.rrd_name LIMIT ' . $max_rows, $params);
 	if ($results === false) {
 		return false;
 	}
 	$full_page = cacti_sizeof($results) === $max_rows;
-	$next = null;
+	$page_next = null;
 	if ($full_page) {
 		$last = end($results);
-		$next = array($last['local_data_id'], $last['time']);
+		$page_next = array($last['local_data_id'], $last['time']);
 		$tail = db_fetch_assoc_prepared($select . '
 			WHERE po.local_data_id = ? AND po.time = ? AND po.rrd_name > ?
 			ORDER BY po.rrd_name', array($last['local_data_id'], $last['time'], $last['rrd_name']));
@@ -895,14 +917,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null, &$
 			return false;
 		}
 
-		if ($full_page) {
-			$child_updates = process_poller_output($rrdtool_pipe, $max_rows, $next, $child_acknowledged, $blocked_paths);
-			$acknowledged += $child_acknowledged;
-			if ($child_updates === false) {
-				$write_failed = true;
-			}
-			else { $rrds_processed += $child_updates; }
-		}
+		$next = $page_next;
 	}
 	return $write_failed ? false : $rrds_processed;
 }

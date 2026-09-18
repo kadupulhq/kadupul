@@ -45,7 +45,7 @@ test('production poller files retain failed writes and preserve concurrent arriv
             throw new RuntimeException($error . $output);
         }
         expect(proc_close($process))->toBe(($failed && !(!$realtime && $failed === 'rejected')) && !in_array($failed, array('replace', 'replace-space', 'field-success', 'incomplete', 'page-success'), true) ? 1 : 0, $error . $output)->and($error)->toBe('');
-        $expected = is_string($failed) ? array(array('output' => '42', 'remaining' => $failed === 'page' ? 40001 : 1)) : ($failed ? array('42','43') : array('43'));
+        $expected = is_string($failed) ? array(array('output' => '42', 'remaining' => $failed === 'page' ? 120001 : 1)) : ($failed ? array('42','43') : array('43'));
         if (in_array($failed, array('select', 'handoff', 'init', 'init-function', 'busy', 'count'), true)) {
             $expected = array('42');
         }
@@ -93,30 +93,35 @@ test('production poller files retain failed writes and preserve concurrent arriv
             expect(json_decode(file_get_contents($dir . '/batch-result.json'), true))->toBe(array(0, true));
         } elseif ($failed === 'page-success') {
             $expected = array();
-            expect(json_decode(file_get_contents($dir . '/batch-result.json'), true))->toBe(array(40002, false));
+            expect(json_decode(file_get_contents($dir . '/batch-result.json'), true))->toBe(array(120002, false));
         }
         if (in_array($failed, array('mixed', 'page'), true)) {
             expect(json_decode(file_get_contents($dir . '/batch-result.json'), true))->toBe(array(1, true));
+        }
+        if (in_array($failed, array('page', 'page-success'), true)) {
+            $pages = array_map(static fn($line) => json_decode($line, true), file($dir . '/pages.jsonl', FILE_IGNORE_NEW_LINES));
+            expect(max(array_column($pages, 'depth')))->toBeLessThanOrEqual(2);
+            expect(array_sum(array_column($pages, 'rows')))->toBe($failed === 'page' ? 40001 : 120002);
         }
         expect(json_decode(file_get_contents($dir . '/outcome.json'), true))->toBe($expected);
         if (!$realtime) {
             foreach (array('dsstats_poller_output', 'dsdebug_poller_output', 'api_plugin_hook_function') as $hook) {
                 $file = $dir . '/' . $hook . '.jsonl';
-                $events = is_file($file) ? array_map(static fn($line) => json_decode($line, true), file($file, FILE_IGNORE_NEW_LINES)) : array();
+                unset($events);
+                $events = is_file($file) ? array_map(static function ($line) use ($failed) {
+                    $event = json_decode($line, true);
+                    return $failed === 'page-success'
+                        ? array_sum(array_map(static fn($fields) => count($fields['times']), $event))
+                        : $event;
+                }, file($file, FILE_IGNORE_NEW_LINES)) : array();
                 if ($failed === true || in_array($failed, array('select', 'handoff', 'init', 'busy', 'count', 'incomplete', 'tail-failure'), true)) {
                     expect($events)->toBe(array());
                 } elseif (in_array($failed, array('mixed', 'page'), true)) {
                     expect($events)->toHaveCount(1);
                     expect(array_keys($events[0]))->toBe(array('good.rrd'));
                 } elseif ($failed === 'page-success') {
-                    expect($events)->toHaveCount(2);
-                    $samples = 0;
-                    foreach ($events as $event) {
-                        foreach ($event as $fields) {
-                            $samples += count($fields['times']);
-                        }
-                    }
-                    expect($samples)->toBe(40002);
+                    expect($events)->toHaveCount(4);
+                    expect(array_sum($events))->toBe(120002);
                 } elseif ($remote && $failed === false) {
                     expect($events)->toHaveCount(2);
                     expect(array_values($events[0]['fixture.rrd']['times']))->toBe(array(array('value' => '42')));
