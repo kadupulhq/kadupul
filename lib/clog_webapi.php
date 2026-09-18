@@ -148,7 +148,7 @@ function clog_purge_logfile() {
 }
 
 function clog_view_logfile() {
-	global $config;
+	global $config, $log_tail_lines;
 
 	$exclude_reported = false;
 
@@ -197,6 +197,14 @@ function clog_view_logfile() {
 
 	validate_store_request_vars($filters, 'sess_clog');
 	/* ================= input validation ================= */
+
+	/* tail_file() keeps every requested line in memory and each one is parsed
+	 * again on render, so cap requests at the largest choice the filter offers. */
+	$max_tail_lines = max(array_keys($log_tail_lines));
+
+	if (get_request_var('tail_lines') > $max_tail_lines) {
+		set_request_var('tail_lines', $max_tail_lines);
+	}
 
 	/* enable page refreshes */
 	kill_session_var('custom');
