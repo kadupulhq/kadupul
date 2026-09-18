@@ -251,3 +251,10 @@ diagnostics retain duplicates but sort records to tolerate process interleaving.
 The harness selftest verifies that retained historical evidence matches current
 controller input hashes. Changes to controller helpers or fixtures require fresh
 first and repeat captures before the evidence can pass again.
+
+The release upgrade/rollback rehearsal uses an older baseline that predates
+`.dockerignore`. It records that absence and the SHA-256 of the candidate-owned
+file added for the test build in `baseline_dockerignore`. An existing baseline
+file must match byte-for-byte; a mismatch stops the rehearsal before Docker
+builds. This exception is specific to that rehearsal, not the historical
+self-comparison procedure above.

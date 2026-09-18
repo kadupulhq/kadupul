@@ -132,6 +132,12 @@ def prepare_baseline(baseline_revision, baseline):
     require(gitdir.resolve() == (baseline / '.git').resolve(), 'Baseline must own its Git metadata')
     require(not harness.run(['git', '-C', str(baseline), 'status', '--porcelain'])['stdout'].strip(),
             'Baseline checkout must be complete and clean before applying test inputs')
+    original_ignore = baseline / '.dockerignore'
+    candidate_ignore = (ROOT / '.dockerignore').read_bytes()
+    require(not original_ignore.is_symlink(), 'Baseline .dockerignore must not be a symlink')
+    original_bytes = original_ignore.read_bytes() if original_ignore.exists() else None
+    require(original_bytes is None or original_bytes == candidate_ignore,
+            'Baseline .dockerignore differs from the controller; refusing to overwrite it')
     # The test infrastructure is candidate-owned; the application and
     # schema are the exact baseline revision checked out above.
     # Replace candidate-owned inputs; merging leaves deleted baseline helpers active.
@@ -146,6 +152,9 @@ def prepare_baseline(baseline_revision, baseline):
     shutil.copytree(ROOT / 'tests/behavior', baseline / 'tests/behavior', dirs_exist_ok=True,
             ignore=shutil.ignore_patterns('results', '__pycache__'))
     shutil.copy2(ROOT / '.dockerignore', baseline / '.dockerignore')
+    return {'baseline_sha256': hashlib.sha256(original_bytes).hexdigest() if original_bytes is not None else None,
+            'applied_sha256': hashlib.sha256(candidate_ignore).hexdigest(),
+            'added': original_bytes is None}
 
 
 def main():
@@ -166,7 +175,7 @@ def main():
         with tempfile.TemporaryDirectory(prefix='kadupul-release-') as temporary:
             temp = Path(temporary)
             baseline = temp / 'baseline'
-            prepare_baseline(baseline_revision, baseline)
+            evidence['baseline_dockerignore'] = prepare_baseline(baseline_revision, baseline)
             harness.ROOT = baseline
             h = harness.Harness(SimpleNamespace(target='release-readiness', only=None, update_golden=False, project=project))
             # Use a dedicated project and keep the baseline image for rollback.

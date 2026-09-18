@@ -125,6 +125,43 @@ def baseline_overlay_replacement():
     print('Baseline overlays remove obsolete helpers without changing application data')
 
 
+def baseline_ignore_contract():
+    for original in (None, '.git', 'different/'):
+        with tempfile.TemporaryDirectory(prefix='release ignore ') as directory:
+            source = Path(directory) / 'source'
+            source.mkdir()
+            def git(*args):
+                return release.harness.run(['git', '-C', str(source), '-c', 'user.name=Harness Fixture',
+                    '-c', 'user.email=fixture@example.invalid', '-c', 'commit.gpgsign=false',
+                    '-c', 'core.hooksPath=/dev/null', *args])['stdout'].strip()
+            git('init', '-q')
+            (source / 'cacti.sql').write_text('schema')
+            if original is not None:
+                (source / '.dockerignore').write_text(original)
+            git('add', '.')
+            git('commit', '-qm', 'Baseline')
+            revision = git('rev-parse', 'HEAD')
+            for relative in ('tests/Support/Behavior', 'tests/Fixtures', 'tests/behavior'):
+                (source / relative).mkdir(parents=True)
+            (source / '.dockerignore').write_text('.git')
+            baseline = Path(directory) / 'baseline'
+            with patch.object(release, 'ROOT', source):
+                if original == 'different/':
+                    try:
+                        release.prepare_baseline(revision, baseline)
+                    except RuntimeError as error:
+                        assert 'refusing to overwrite' in str(error)
+                    else:
+                        raise AssertionError('Changed baseline build inputs accepted')
+                    assert (baseline / '.dockerignore').read_text() == original
+                else:
+                    evidence = release.prepare_baseline(revision, baseline)
+                    assert evidence['added'] == (original is None)
+                    assert (evidence['baseline_sha256'] is None) == (original is None)
+                    assert (baseline / '.dockerignore').read_text() == '.git'
+    print('Baseline build exclusions are preserved; absent historical inputs are explicitly recorded')
+
+
 def shallow_fetched_baseline():
     with tempfile.TemporaryDirectory(prefix='release shallow baseline ') as directory:
         remote = Path(directory) / 'remote'
@@ -159,6 +196,7 @@ def shallow_fetched_baseline():
 
 
 def main():
+    baseline_ignore_contract()
     baseline_checkout_metadata()
     baseline_overlay_replacement()
     shallow_fetched_baseline()

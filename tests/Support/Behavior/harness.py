@@ -700,7 +700,11 @@ class Harness:
         the rest, so record what was actually used instead: a base refresh then
         shows up as a diff in the manifest rather than silently moving a golden.
         """
-        result = self.command('sh', '-c', 'cat /etc/os-release | head -2; php -v | head -1', check=True)
+        operating_system = self.command('cat', '/etc/os-release', check=True)['stdout'].strip()
+        php_version = self.command('php', '-v', check=True)['stdout'].strip()
+        if not operating_system or not php_version.startswith('PHP '):
+            raise RuntimeError('Missing or invalid runtime provenance')
+        runtime = '\n'.join(operating_system.splitlines()[:2] + php_version.splitlines()[:1])
         image = run(['docker', 'image', 'inspect', '--format', '{{index .RepoDigests 0}}',
                      f'php:{os.environ.get("PHP_VERSION", "8.2")}-apache'], check=True)
         db = run(['docker', 'image', 'inspect', '--format', '{{index .RepoDigests 0}}', 'mariadb:10.11'], check=True)
@@ -709,7 +713,7 @@ class Harness:
                 'db_ref': (db['stdout'] or '').strip(),
                 # The base digest does not pin apt, so a rebuild can change these.
                 'packages': (packages['stdout'] or '').strip(),
-                'runtime': (result['stdout'] or '').strip()}
+                'runtime': runtime}
 
     def application_image_digests(self):
         """Identify the immutable images actually used, including COPY build inputs.
@@ -931,6 +935,15 @@ def compare(args):
             raise RuntimeError(f'Inconsistent {role} application/controller input hashes')
     approvals = json.loads(Path(args.approvals).read_text()) if args.approvals else {}
     report = []
+    controller = source_provenance()
+    controller_matches = True
+    for role, manifest in manifests:
+        for key in ('harness_sha256', 'harness_inputs_sha256'):
+            if manifest['provenance'][key] != controller[key]:
+                controller_matches = False
+                report.append({'scenario': '<controller>/' + role + '/' + key,
+                               'status': 'NEEDS_REVIEW', 'digest': '',
+                               'baseline': manifest['provenance'][key], 'candidate': controller[key]})
     # Matching scenarios prove little if the runs used different runtimes or packages.
     for key in ('php', 'base_image'):
         if baseline.get(key) != candidate.get(key):
@@ -952,7 +965,7 @@ def compare(args):
         digest = hashlib.sha256(json.dumps({'baseline': b, 'candidate': c}, sort_keys=True).encode()).hexdigest()
         if name not in baseline['scenarios'] or name not in candidate['scenarios']:
             status = 'NEEDS_REVIEW'
-        elif not repeat_environment_matches:
+        elif not controller_matches or not repeat_environment_matches:
             status = 'NEEDS_REVIEW'
         elif repeat and (name not in repeat['scenarios'] or c != repeat['scenarios'][name]):
             status = 'NONDETERMINISTIC'
@@ -966,7 +979,7 @@ def compare(args):
     output = Path(args.output) if args.output else root / 'comparison'
     write_json(output.with_suffix('.json'), {
         'baseline': args.baseline, 'candidate': args.candidate, 'differences': report,
-        'contracts': len(EXPECTED_SCENARIOS), 'controller': source_provenance(),
+        'contracts': len(EXPECTED_SCENARIOS), 'controller': controller,
         'manifest_sha256': {role: hashlib.sha256(payload).hexdigest() for role, payload in payloads.items()},
         'captures': {role: {key: manifest[key] for key in ('revision', 'schema_sha256', 'provenance', 'application_images')}
                      for role, manifest in manifests},

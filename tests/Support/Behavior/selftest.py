@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[3]
 spec = importlib.util.spec_from_file_location('harness', Path(__file__).with_name('harness.py'))
 harness = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(harness)
+CONTROLLER_INPUTS = harness.source_provenance()['harness_inputs_sha256']
 
 # (label, input, expected). Anything not listed as changing must survive intact.
 CASES = [
@@ -61,15 +62,16 @@ for separator in ('-', '/', '.'):
 
 
 def comparable_manifest():
+    inputs = CONTROLLER_INPUTS
     return {'format': 2, 'target': 'fixture', 'error': None, 'complete': True, 'php': '8.2',
             'base_image': {'ref': 'php@sha256:' + '1' * 64, 'db_ref': 'mariadb@sha256:' + '2' * 64,
                            'packages': 'rrdtool=1.7', 'runtime': 'PHP 8.2; fixture Linux'},
             'application_images': {'web': 'sha256:' + '3' * 64, 'snmp': 'sha256:' + '3' * 64, 'db': 'sha256:' + '4' * 64},
             'revision': 'a' * 40, 'schema_sha256': 'b' * 64,
-            'provenance': {'harness_revision': 'c' * 40, 'harness_sha256': 'd' * 64,
+            'provenance': {'harness_revision': 'c' * 40, 'harness_sha256': inputs['tests/Support/Behavior/harness.py'],
                            'harness_dirty': False, 'application_dirty': False,
-                           'harness_inputs_sha256': {name: ('d' if name == 'tests/Support/Behavior/harness.py' else 'e') * 64 for name in harness.REQUIRED_INPUTS},
-                           'application_inputs_sha256': {name: ('d' if name == 'tests/Support/Behavior/harness.py' else 'e') * 64 for name in harness.REQUIRED_INPUTS}},
+                           'harness_inputs_sha256': dict(inputs),
+                           'application_inputs_sha256': dict(inputs)},
             'scenarios': {name: 1 for name in harness.EXPECTED_SCENARIOS}}
 
 
@@ -186,11 +188,11 @@ def base_image_failure_contract():
                 assert 'base image provenance' in failed['error']
                 assert not (root / 'tests/Golden').exists()
     # Exercise the real probes: nonzero exits with plausible stdout must fail.
-    for failed_probe in range(4):
+    for failed_probe in range(5):
         recorder = object.__new__(harness.Harness)
         recorder.command = lambda *args, **kw: harness.run(list(args), **kw)
         responses = [subprocess.CompletedProcess([], 0, output, '') for output in
-                     ('Debian PHP 8.2', valid['base_image']['ref'], valid['base_image']['db_ref'], 'rrdtool=1.7')]
+                     ('NAME=Debian', 'PHP 8.2', valid['base_image']['ref'], valid['base_image']['db_ref'], 'rrdtool=1.7')]
         responses[failed_probe].returncode = 1
         with patch.object(harness.subprocess, 'run', side_effect=responses):
             try:
@@ -199,6 +201,15 @@ def base_image_failure_contract():
                 pass
             else:
                 raise AssertionError(('Failed probe accepted', failed_probe))
+    for os_output, php_output in (('', 'PHP 8.2'), ('NAME=Debian', ''), ('NAME=Debian', 'command unavailable')):
+        recorder = object.__new__(harness.Harness)
+        recorder.command = lambda *args, **kwargs: {'stdout': os_output if args[0] == 'cat' else php_output}
+        try:
+            recorder.base_image_digest()
+        except RuntimeError as error:
+            assert 'runtime provenance' in str(error)
+        else:
+            raise AssertionError('Missing runtime identification accepted')
     print('invalid base image metadata fails capture without writing goldens')
 
 
@@ -300,8 +311,16 @@ def separate_results_root():
                 assert harness.main() == 1
             mismatch = json.loads((results / 'comparison.json').read_text())
             assert any(row['scenario'] == '<environment>/' + key and row['status'] == 'NEEDS_REVIEW' for row in mismatch['differences'])
-        (results / 'baseline/observations.json').write_text(json.dumps(manifest))
-        (results / 'repeat/observations.json').write_text(json.dumps(manifest))
+        # Mutually consistent old captures must not pass under a changed controller.
+        for role in ('baseline', 'candidate', 'repeat'):
+            (results / role / 'observations.json').write_text(json.dumps(different))
+        with patch('sys.argv', command):
+            assert harness.main() == 1
+        stale = json.loads((results / 'comparison.json').read_text())
+        assert all(row['status'] == 'NEEDS_REVIEW' for row in stale['differences'])
+        assert any(row['scenario'].startswith('<controller>/') for row in stale['differences'])
+        for role in ('baseline', 'candidate', 'repeat'):
+            (results / role / 'observations.json').write_text(json.dumps(manifest))
         manifest['scenarios'][sorted(harness.EXPECTED_SCENARIOS)[0]] = 2
         (results / 'candidate/observations.json').write_text(json.dumps(manifest))
         with patch('sys.argv', command):
