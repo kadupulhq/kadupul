@@ -204,6 +204,23 @@ $fields_reports_edit = array(
 		),
 );
 
+
+function reports_sanitize_tab($tab) {
+	if (!is_scalar($tab)) {
+		return '';
+	}
+
+	return sanitize_search_string((string) $tab);
+}
+
+function reports_tab_request_var() {
+	if (isset_request_var('tab')) {
+		set_request_var('tab', reports_sanitize_tab(get_nfilter_request_var('tab')));
+	}
+
+	return reports_sanitize_tab(get_request_var('tab'));
+}
+
 function reports_require_post($action) {
 	if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
 		cacti_log('WARNING: Rejected non-POST request to ' . get_reports_page() . '?action=' . $action, false, 'AUTH');
@@ -1465,7 +1482,7 @@ function reports_tabs($report_id) {
 		set_request_var('tab', 'details');
 	}
 
-	$current_tab = get_request_var('tab');
+	$current_tab = reports_tab_request_var();
 
 	if (cacti_sizeof($tabs) && isset_request_var('id')) {
 		$i = 0;
@@ -1485,7 +1502,7 @@ function reports_tabs($report_id) {
 
 
 		if (!isempty_request_var('id')) {
-			$report_tab = json_encode((string) get_request_var('tab'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
+			$report_tab = json_encode($current_tab, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_INVALID_UTF8_SUBSTITUTE);
 
 			print "<li style='float:right;position:relative;'><a class='tab' href='#' onclick='loadPageUsingPost(\"" . html_escape(get_reports_page()) . "\", {action:\"send\", id:" . (int) get_request_var('id') . ", tab:" . $report_tab . ", __csrf_magic:csrfMagicToken}); return false;'>" . __('Send Report') . "</a></li>\n";
 		}

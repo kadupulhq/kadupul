@@ -248,23 +248,40 @@ test('send report tab encodes hostile tab values inside POST onclick data', func
     $program = <<<'PHP'
 namespace ReportTabsRuntime;
 
+$case = $argv[1];
 $GLOBALS['config'] = array('url_path' => '/cacti/');
-$_REQUEST = array('id' => '7', 'tab' => 'items";alert(1);//<script>&\'');
+$_REQUEST = array('id' => '7');
+if ($case === 'hostile') {
+    $_REQUEST['tab'] = 'items";alert(1);//<script>&\'';
+} elseif ($case === 'invalid-utf8') {
+    $_REQUEST['tab'] = 'items' . chr(195) . '&next';
+} elseif ($case === 'array-tab') {
+    $_REQUEST['tab'] = array('items');
+}
 
 function __($text, ...$args) { return $args ? vsprintf($text, $args) : $text; }
 function isset_request_var($name) { return isset($_REQUEST[$name]); }
 function set_request_var($name, $value) { $_REQUEST[$name] = $value; }
 function get_request_var($name) { return $_REQUEST[$name] ?? null; }
+function get_nfilter_request_var($name) { return $_REQUEST[$name] ?? null; }
 function isempty_request_var($name) { return empty($_REQUEST[$name]); }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function get_reports_page() { return 'reports_user.php'; }
 function html_escape($text) { return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
+function sanitize_search_string($string) {
+    $drop = array('(',')','^', '$', '<', '>', '`', '\'', '"', '|', ',', '?', '+', '[', ']', '{', '}', '#', ';', '!', '=', '*');
+    $replace = array('','',' ', ' ', ' ', ' ', '', '', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
+    $string = preg_replace('/[\n\r]/is', ' ', $string);
+    return str_replace($drop, $replace, $string);
+}
 
 $source = file_get_contents(getcwd() . '/lib/html_reports.php');
+preg_match('/^function reports_sanitize_tab\(.*?^}\n\nfunction reports_require_post\(/ms', $source, $helperMatch);
 preg_match('/^function reports_tabs\(.*?^}\n\nfunction reports_edit\(/ms', $source, $match);
-if (empty($match)) { exit(2); }
+if (empty($helperMatch) || empty($match)) { exit(2); }
+$helpers = preg_replace('/\nfunction reports_require_post\($/m', '', $helperMatch[0]);
 $tabs = preg_replace('/\nfunction reports_edit\($/m', '', $match[0]);
-eval('namespace ReportTabsRuntime; ' . $tabs);
+eval('namespace ReportTabsRuntime; ' . $helpers . "\n" . $tabs);
 
 ob_start();
 reports_tabs(7);
@@ -272,28 +289,36 @@ $html = ob_get_clean();
 echo $html;
 PHP;
 
-    $process = proc_open(
-        array(PHP_BINARY, '-r', $program),
-        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
-        $pipes,
-        $root
-    );
+    foreach (array('hostile', 'invalid-utf8', 'array-tab') as $case) {
+        $process = proc_open(
+            array(PHP_BINARY, '-r', $program, $case),
+            array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+            $pipes,
+            $root
+        );
 
-    expect(is_resource($process))->toBeTrue();
+        expect(is_resource($process))->toBeTrue();
 
-    $stdout = stream_get_contents($pipes[1]);
-    $stderr = stream_get_contents($pipes[2]);
-    fclose($pipes[1]);
-    fclose($pipes[2]);
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
 
-    $exit = proc_close($process);
+        $exit = proc_close($process);
 
-    expect($exit)->toBe(0, $stderr)
-        ->and($stdout)->toContain('loadPageUsingPost')
-        ->and($stdout)->toContain('\\u0022')
-        ->and($stdout)->toContain('\\u003Cscript\\u003E')
-        ->and($stdout)->not->toContain('items";alert(1)')
-        ->and($stdout)->not->toContain('<script>');
+        expect($exit)->toBe(0, $stderr)
+            ->and($stdout)->toContain('loadPageUsingPost')
+            ->and($stdout)->not->toContain('items";alert(1)')
+            ->and($stdout)->not->toContain('<script>');
+
+        if ($case === 'hostile') {
+            expect($stdout)->toContain('\\u0026');
+        } elseif ($case === 'invalid-utf8') {
+            expect($stdout)->toContain('items\\ufffd\\u0026next');
+        } elseif ($case === 'array-tab') {
+            expect($stdout)->toContain('tab:""');
+        }
+    }
 });
 
 test('csrf middleware rejects empty-body POST mutations without a token', function () use ($root) {
@@ -348,6 +373,7 @@ function get_request_var($name) {
 }
 function get_filter_request_var($name) { return get_request_var($name); }
 function get_reports_page() { return 'realm_reports.php'; }
+function reports_tab_request_var() { return (string) get_request_var('tab'); }
 function reports_require_post($action) {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         throw new \RuntimeException('POST_REQUIRED:' . $action);
