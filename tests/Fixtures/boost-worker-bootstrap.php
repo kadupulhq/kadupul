@@ -154,6 +154,8 @@ function api_plugin_hook($name)
     $GLOBALS['settings_written']['plugin_hook'] = $name;
 }
 define('SQL_NO_CACHE', '');
+require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
+eval(test_php_function_source(file_get_contents(dirname(__DIR__, 2) . '/lib/boost.php'), 'boost_delete_samples'));
 function boost_memory_limit() {}
 function boost_get_total_rows()
 {

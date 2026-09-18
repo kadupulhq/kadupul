@@ -46,12 +46,14 @@ test('production Boost archive consumer deletes only acknowledged samples and is
         $first = array(42, 'value', '1699999800', '21');
         $second = array($mode === 'next-id-failure' ? 43 : 42, 'value', '1699999860', '22');
         // Samples of a failed data source stay queued; later data sources are still acknowledged.
-        $expectedArchive = array('delete-failure' => array($first), 'assignment-failure' => array($first, $second),
+        $expectedArchive = array('delete-failure' => array($first, $second), 'assignment-failure' => array($first, $second),
             'success' => array($first, $second), 'next-id-failure' => array($second))[$mode] ?? array();
-        expect(array_column($archive, 1))->toBe($expectedArchive)
+        // Every acknowledged tuple of a table is removed by one statement.
+        expect($archive)->toHaveCount($expectedArchive ? 1 : 0)
             ->and($result['updates'])->toHaveCount(array('archive-failure' => 0, 'next-id-failure' => 2)[$mode] ?? 1);
-        foreach ($archive as $delete) {
-            expect($delete[0])->toBe('DELETE FROM poller_output_boost_arch_fixture WHERE local_data_id = ? AND rrd_name = ? AND time = FROM_UNIXTIME(?) AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY)');
+        if ($expectedArchive) {
+            expect($archive[0][0])->toBe('DELETE FROM poller_output_boost_arch_fixture WHERE ' . implode(' OR ', array_fill(0, count($expectedArchive), '(local_data_id = ? AND rrd_name = ? AND time = FROM_UNIXTIME(?) AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY))')))
+                ->and($archive[0][1])->toBe(array_merge(...$expectedArchive));
         }
         if (!in_array($mode, array('archive-failure', 'delete-failure'), true)) {
             expect(end($deletes)[0])->toContain('DELETE FROM poller_output_boost_local_data_ids')

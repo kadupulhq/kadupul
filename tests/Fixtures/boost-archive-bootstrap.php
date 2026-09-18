@@ -13,6 +13,9 @@ define('COPYRIGHT_YEARS', '2026');
 define('BOOST_TIMER_START', 0);
 define('BOOST_TIMER_END', 1);
 define('SQL_NO_CACHE', '');
+// The batched delete is production code, not a fixture boundary.
+require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
+eval(test_php_function_source(file_get_contents(dirname(__DIR__, 2) . '/lib/boost.php'), 'boost_delete_samples'));
 function get_cacti_version()
 {
     return 'fixture';

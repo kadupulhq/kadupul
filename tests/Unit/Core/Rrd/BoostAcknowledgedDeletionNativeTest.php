@@ -31,12 +31,14 @@ test('production on-demand Boost deletes only acknowledged sample tuples and pre
             ->and($observed['borrowed_open'])->toBeTrue()
             ->and($observed['handler_restored'])->toBeTrue()
             ->and($observed['reporting_restored'])->toBeTrue();
-        $expectedDeletes = array('first-ack' => 0, 'last-ack' => 0, 'delete-first' => 1, 'delete-later' => 3, 'success' => 4)[$mode];
+        // One statement per queue table removes every acknowledged tuple.
+        $expectedDeletes = array('first-ack' => 0, 'last-ack' => 0, 'delete-first' => 1, 'delete-later' => 2, 'success' => 2)[$mode];
         expect($observed['deletes'])->toHaveCount($expectedDeletes)->and($observed['updates'])->toHaveCount(1);
+        $tuple = '(local_data_id = ? AND rrd_name = ? AND time = FROM_UNIXTIME(?) AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY))';
         foreach ($observed['deletes'] as $index => $delete) {
-            $table = $index < 2 ? 'poller_output_boost' : 'poller_output_boost_arch_fixture';
-            expect($delete[0])->toBe("DELETE FROM $table WHERE local_data_id = ? AND rrd_name = ? AND time = FROM_UNIXTIME(?) AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY)");
-            expect($delete[1])->toBe($index % 2 === 0 ? array(42, 'value', 1699999800, '21') : array(42, 'value', 1699999860, '22'));
+            $table = $index === 0 ? 'poller_output_boost' : 'poller_output_boost_arch_fixture';
+            expect($delete[0])->toBe("DELETE FROM $table WHERE $tuple OR $tuple");
+            expect($delete[1])->toBe(array(42, 'value', 1699999800, '21', 42, 'value', 1699999860, '22'));
         }
         expect($observed['updates'][0])->toContain('--template value')->toContain('1699999800:21');
         if ($mode !== 'first-ack') {
