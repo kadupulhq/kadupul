@@ -238,7 +238,7 @@ function package_file_get_contents($filename) {
 		$fdata = false;
 
 		foreach ($data['files']['file'] as $file) {
-			if ($file['name'] == $filename) {
+			if (package_import_file_name_matches($file['name'], $filename)) {
 				$binary_signature = base64_decode($file['filesignature']);
 
 				$fdata = base64_decode($file['data']);
@@ -266,17 +266,36 @@ function package_file_get_contents($filename) {
 }
 
 function package_import_normalize_selected_file($pfile) {
-	$parts = explode('/', str_replace('\\', '/', $pfile));
+	global $config;
+
+	$normalized = str_replace('\\', '/', $pfile);
+
+	if (isset($config['base_path']) && $config['base_path'] !== '') {
+		$base_path = rtrim(str_replace('\\', '/', $config['base_path']), '/');
+
+		if ($normalized === $base_path) {
+			$normalized = '';
+		} elseif (strpos($normalized, $base_path . '/') === 0) {
+			$normalized = substr($normalized, strlen($base_path) + 1);
+		}
+	}
+
+	$parts = explode('/', ltrim($normalized, '/'));
 
 	foreach($parts as $index => $p) {
-		if ($p == 'plugins' && isset($parts[$index + 2]) && ($parts[$index + 2] == 'scripts' || $parts[$index + 2] == 'resource')) {
-			return implode('/', array_slice($parts, $index));
-		} elseif ($p == 'scripts' || $p == 'resource') {
-			return implode('/', array_slice($parts, $index));
+		if ($index == 0 && $p == 'plugins' && isset($parts[$index + 2]) && ($parts[$index + 2] == 'scripts' || $parts[$index + 2] == 'resource')) {
+			return implode('/', $parts);
+		} elseif ($index == 0 && ($p == 'scripts' || $p == 'resource')) {
+			return implode('/', $parts);
 		}
 	}
 
 	return implode('/', $parts);
+}
+
+function package_import_file_name_matches($package_name, $filename) {
+	return $package_name == $filename ||
+		package_import_normalize_selected_file($package_name) == package_import_normalize_selected_file($filename);
 }
 
 function package_diff_file() {
