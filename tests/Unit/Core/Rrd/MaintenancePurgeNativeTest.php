@@ -39,11 +39,13 @@ function read_config_option($key, ...$args) { return $key === 'rrd_archive' ? di
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function cacti_log($message, ...$args) { $GLOBALS['messages'][] = $message; }
 function db_fetch_cell($sql) { return $GLOBALS['mode'] === 'count' ? false : count($GLOBALS['queue']); }
-function db_fetch_assoc($sql) {
+function db_fetch_assoc_prepared($sql, $params = array()) {
+    if (strpos($sql, 'FROM data_source_purge_action') === false) { return array(); }
     if (++$GLOBALS['reads'] > 2) { throw new RuntimeException('Cleanup retried a failed batch indefinitely'); }
-    return $GLOBALS['mode'] === 'read' ? false : $GLOBALS['queue'];
+    if ($GLOBALS['mode'] === 'read') { return false; }
+    // Model the keyset page after the last request seen.
+    return array_values(array_filter($GLOBALS['queue'], fn($row) => $row['name'] > $params[0] || ($row['name'] === $params[1] && $row['id'] > $params[2])));
 }
-function db_fetch_assoc_prepared(...$args) { return array(); }
 function db_execute_prepared($sql, $params) {
     $writer = rrd_maintenance_acquire(false, false, 0);
     if (!is_resource($writer)) { throw new RuntimeException('Metadata mutation retained the exclusive lease'); }
@@ -93,7 +95,8 @@ SOURCE;
             expect($result['result'])->toBeFalse()
                 ->and(file_get_contents($directory . '/bad/sample.rrd'))->toBe('retained original');
             if ($mode === 'filesystem') {
-                expect($result['deleted'])->toBe(array('good.rrd'))->and($result['warnings'])->toHaveCount(1);
+                expect($result['deleted'])->toBe(array('good.rrd'))->and($result['warnings'])->toHaveCount(1)
+                    ->and($result['messages'])->toContain('WARNING: RRDfile Maintenance retained 1 cleanup requests for retry.');
             } else {
                 expect($result['warnings'])->toBe(array());
             }
