@@ -63,10 +63,14 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'rrd_add':
+		csrf_require_post(true);
+
 		ds_rrd_add();
 
 		break;
 	case 'rrd_remove':
+		csrf_require_post(true);
+
 		ds_rrd_remove();
 
 		break;
@@ -78,9 +82,13 @@ switch (get_request_var('action')) {
 		bottom_footer();
 		break;
 	case 'ds_disable':
+		csrf_require_post(true);
+
 		ds_disable();
 		break;
 	case 'ds_enable':
+		csrf_require_post(true);
+
 		ds_enable();
 		break;
 	case 'ds_remove':
@@ -880,7 +888,7 @@ function ds_edit() {
 							?><span class='linkMarker'>*</span><a class='hyperLink' href='<?php print html_escape('data_templates.php?action=template_edit&id=' . (isset($data_template['id']) ? $data_template['id'] : '0'));?>'><?php print __('Edit Data Template.');?></a><br><?php
 						}
 						if (isset_request_var('id') && get_request_var('id') > 0) {
-							?><span class='linkMarker'>*</span><a class='hyperLink' href='<?php print html_escape('data_sources.php?action=ds_' . ($data['active'] == 'on' ? 'dis' : 'en') . 'able&id=' . get_request_var('id')) ?>'><?php print ($data['active'] == 'on' ? __('Disable Data Source.') : __('Enable Data Source.'));?></a><br>
+							?><span class='linkMarker'>*</span><a class='hyperLink cactiPostAction' href='#' data-url='<?php print html_escape('data_sources.php?action=ds_' . ($data['active'] == 'on' ? 'dis' : 'en') . 'able&id=' . get_request_var('id')) ?>'><?php print ($data['active'] == 'on' ? __('Disable Data Source.') : __('Enable Data Source.'));?></a><br>
 					<?php
 						}
 					?>

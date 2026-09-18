@@ -105,3 +105,32 @@ test('data source bulk actions refuse any GET that carries selected_items', func
 	expect(run_data_sources('POST', 'actions', array('selected_items' => 'a:1:{i:0;i:3;}', 'drp_action' => '1')))->toBe('actions')
 		->and(run_data_sources('GET', 'actions', array('drp_action' => '1'), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('actions');
 });
+
+/**
+ * @return array<int, string>
+ */
+function data_source_mutations() {
+	return array('ds_enable', 'ds_disable', 'rrd_add', 'rrd_remove');
+}
+
+test('per-data-source mutations refuse any GET, including a same-site one', function () {
+	foreach (data_source_mutations() as $action) {
+		expect_refused($action, array('id' => '3', 'local_data_id' => '3'));
+	}
+});
+
+test('per-data-source mutations still run on POST', function () {
+	foreach (data_source_mutations() as $action) {
+		expect(run_data_sources('POST', $action, array('id' => '3', 'local_data_id' => '3')))->toBe($action, $action);
+	}
+});
+
+test('data source edit page sends its mutations by POST with the csrf token', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/data_sources.php');
+
+	expect($source)->toContain("<a class='hyperLink cactiPostAction' href='#' data-url='<?php print html_escape('data_sources.php?action=ds_' . (\$data['active'] == 'on' ? 'dis' : 'en') . 'able&id='")
+		->and($source)->toContain("<a class='pic deleteMarker fa fa-times cactiPostAction' href='#' data-url='\" . html_escape('data_sources.php?action=rrd_remove&id='")
+		->and($source)->toContain("<a class='linkOverDark cactiPostAction' href='#' data-url='\" . html_escape('data_sources.php?action=rrd_add&id='")
+		->and($source)->not->toContain("href='<?php print html_escape('data_sources.php?action=ds_'")
+		->and($source)->not->toContain("href='\" . html_escape('data_sources.php?action=rrd_");
+});
