@@ -241,7 +241,22 @@ def application_diagnostics(contents):
             # An unrecognized logger prefix must surface as a contract change,
             # not disappear from the capture.
             records.append({'subsystem': '<UNPARSED>', 'message': normalize_known_roots(message)})
-    return sorted(records, key=lambda row: (row['subsystem'], row['message']))
+    # The injected rrdtool failure exits without reading stdin, so each write
+    # races the respawned shim. How many writes hit EPIPE follows scheduling
+    # (one to five under CPU load), so only that notice and its backtrace are
+    # collapsed. Every other diagnostic keeps its multiplicity.
+    racing = ('PHP NOTICE: fwrite(): Write of <BYTES> bytes failed with errno=32 Broken pipe in file: <APP>/lib/rrd.php  on line: <LINE>',
+              'PHP ERROR NOTICE Backtrace:  (/poller.php[<LINE>]:process_poller_output(), /lib/poller.php[<LINE>]:rrdtool_function_update(), '
+              '/lib/rrd.php[<LINE>]:rrdtool_execute(), /lib/rrd.php[<LINE>]:__rrd_execute(), /lib/rrd.php[<LINE>]:fwrite(), CactiErrorHandler())')
+    seen = set()
+    unique = []
+    for row in records:
+        key = (row['subsystem'], row['message'])
+        if row['message'] in racing and key in seen:
+            continue
+        seen.add(key)
+        unique.append(row)
+    return sorted(unique, key=lambda row: (row['subsystem'], row['message']))
 
 
 class Forms(HTMLParser):
