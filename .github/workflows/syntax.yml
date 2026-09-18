@@ -84,7 +84,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: cactiroot
         ports:
         - 3306:3306
-        options: --health-cmd="mysqladmin ping -h 127.0.0.1 --user=cactiuser --password=cactiuser --silent || mariadb-admin ping -h 127.0.0.1 --user=cactiuser --password=cactiuser --silent" --health-interval=5s --health-timeout=5s --health-retries=30
+        options: --health-cmd='MYSQL_PWD="$MYSQL_PASSWORD" mysqladmin ping -h 127.0.0.1 --user="$MYSQL_USER" --silent || MYSQL_PWD="$MYSQL_PASSWORD" mariadb-admin ping -h 127.0.0.1 --user="$MYSQL_USER" --silent' --health-interval=5s --health-timeout=5s --health-retries=30
     steps:
     - name: Checkout
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
