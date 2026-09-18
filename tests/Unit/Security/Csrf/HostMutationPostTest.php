@@ -112,3 +112,42 @@ test('device bulk actions refuse any GET that carries selected_items', function 
 	expect(run_host('POST', 'actions', $selected))->toBe('actions')
 		->and(run_host('GET', 'actions', array('drp_action' => '1'), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('actions');
 });
+
+/**
+ * @return array<int, string>
+ */
+function device_mutations() {
+	return array(
+		'gt_add', 'gt_remove', 'query_add', 'query_remove', 'query_change',
+		'query_reload', 'query_verbose', 'enable_debug', 'disable_debug', 'repopulate',
+	);
+}
+
+test('per-device mutations refuse any GET, including a same-site one', function () {
+	foreach (device_mutations() as $action) {
+		expect_refused($action, array('host_id' => '3'));
+	}
+});
+
+test('per-device mutations still run on POST', function () {
+	foreach (device_mutations() as $action) {
+		expect(run_host('POST', $action, array('host_id' => '3')))->toBe($action === 'query_verbose' ? 'query_reload' : $action, $action);
+	}
+});
+
+test('device edit page sends per-device mutations by POST with the csrf token', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/host.php');
+
+	expect($source)->not->toContain('function hostPageLoad(')
+		->and($source)->not->toContain("strURL = 'host.php?action=query_reload")
+		->and($source)->not->toContain("'host.php?action=query_verbose&id='")
+		->and($source)->not->toContain("urlPath+'host.php?action=query_change")
+		->and($source)->toContain('postData.__csrf_magic = csrfMagicToken;')
+		->and($source)->toContain("hostPagePost('host.php?action=query_reload', {")
+		->and($source)->toContain("hostPagePost('host.php?action=query_verbose', {")
+		->and($source)->toContain("hostPagePost('host.php?action=query_change', {");
+
+	foreach (array('enable_debug', 'disable_debug', 'repopulate') as $action) {
+		expect($source)->toContain("<a class='hyperLink cactiPostAction' href='#' data-url='\" . html_escape('host.php?action=" . $action . '&host_id=');
+	}
+});
