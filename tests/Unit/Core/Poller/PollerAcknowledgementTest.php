@@ -124,7 +124,7 @@ test('normal and realtime processors delete only acknowledged samples and retain
     expect($values)->toBe($result === false ? array('42','43') : array('43'));
 })->with(array(array(false,false),array(false,1),array(true,false),array(true,1)));
 
-test('MULTI completeness counts active fields while retaining genuinely partial timestamps', function ($unused) {
+test('MULTI completeness counts active fields while retaining genuinely partial timestamps', function ($unused, $recent) {
     $db = $GLOBALS['ack_db'];
     $GLOBALS['debug'] = false;
     $GLOBALS['ack_table'] = 'poller_output';
@@ -136,11 +136,13 @@ test('MULTI completeness counts active fields while retaining genuinely partial 
     if (!$unused) {
         $db->exec('INSERT INTO graph_templates_item VALUES(2)');
     }
-    $db->exec("INSERT INTO poller_output VALUES(1,'','2020-01-01','value:42')");
+    // A partial group is retained while it may still complete, then discarded.
+    $time = $recent ? date('Y-m-d H:i:s', time() - 60) : '2020-01-01';
+    $db->exec("INSERT INTO poller_output VALUES(1,'','$time','value:42')");
     $pipe = true;
     process_poller_output($pipe, 1);
-    $remaining = (int) $db->query("SELECT COUNT(*) FROM poller_output WHERE time='2020-01-01'")->fetchColumn();
-    expect($remaining)->toBe($unused ? 0 : 1);
-    $sample = $GLOBALS['ack_updates']['fixture.rrd']['times'][strtotime('2020-01-01')] ?? null;
+    $remaining = (int) $db->query("SELECT COUNT(*) FROM poller_output WHERE time='$time'")->fetchColumn();
+    expect($remaining)->toBe($unused || !$recent ? 0 : 1);
+    $sample = $GLOBALS['ack_updates']['fixture.rrd']['times'][strtotime($time)] ?? null;
     expect($sample)->toBe($unused ? array('value' => '42') : null);
-})->with(array(true, false));
+})->with(array(true, false))->with(array('recent' => true, 'expired' => false));

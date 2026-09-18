@@ -33,8 +33,11 @@ if (in_array(getenv('ACK_FAIL'), array('mixed', 'page', 'tail-failure', 'page-su
     $ack_db->exec("INSERT INTO poller_output VALUES(2,'value','2020-01-01','44')");
     $ack_db->commit();
 }
-if (getenv('ACK_FAIL') === 'incomplete') {
+if (in_array(getenv('ACK_FAIL'), array('incomplete', 'incomplete-recent'), true)) {
     $ack_db->exec('UPDATE poller_item SET rrd_num=2');
+}
+if (getenv('ACK_FAIL') === 'incomplete-recent') {
+    $ack_db->exec("UPDATE poller_output SET time='" . date('Y-m-d H:i:s') . "'");
 }
 function is_hexadecimal($value)
 {
@@ -173,7 +176,7 @@ function rrdtool_function_update($updates, $pipe = false, &$completed = null)
         $GLOBALS['ack_db']->exec("UPDATE " . $GLOBALS['ack_table'] . " SET output='99' WHERE time='2020-01-01'");
     }
 
-    if (!in_array(getenv('ACK_FAIL'), array('mixed', 'page', 'rejected', 'incomplete', 'tail-failure', 'page-success'), true)) {
+    if (!in_array(getenv('ACK_FAIL'), array('mixed', 'page', 'rejected', 'incomplete', 'incomplete-recent', 'tail-failure', 'page-success'), true)) {
         $GLOBALS['ack_db']->exec('INSERT INTO ' . $GLOBALS['ack_table'] . " VALUES(1,'value','2020-01-02','43'" . (getenv('ACK_REALTIME') === '1' ? ',1' : '') . ')');
     }
     $completed = array();
