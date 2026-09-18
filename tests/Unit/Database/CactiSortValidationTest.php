@@ -247,3 +247,21 @@ test('domain listing sorts LDAP attributes while retaining domains without LDAP 
     array('cn_email', 'ASC', array(1, 3, 2)),
     array('cn_email', 'DESC', array(2, 3, 1)),
 ))->with(array(false, true));
+
+
+test('poller cache preserves action ordering until a user selects a permitted sort', function ($column, $expected) {
+    if ($column !== null) {
+        set_request_var('sort_column', $column);
+        set_request_var('sort_direction', 'DESC');
+    }
+    $source = file_get_contents(dirname(__DIR__, 3) . '/utilities.php');
+    $start = strpos($source, "$" . "order_string = get_order_string(array('action',");
+    $end = strpos($source, '$poller_sql =', $start);
+    eval(substr($source, $start, $end - $start));
+    expect($order_string)->toBe($expected);
+})->with(array(
+    array(null, 'ORDER BY `action` ASC'),
+    array('dtd.name_cache', 'ORDER BY `dtd`.`name_cache` DESC, action ASC'),
+    array('h.description', 'ORDER BY `h`.`description` DESC, action ASC'),
+    array('unapproved', 'ORDER BY `action` ASC'),
+));

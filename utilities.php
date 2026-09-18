@@ -2189,10 +2189,8 @@ function utilities_view_poller_cache() {
 
 	$total_rows = get_total_row_data($_SESSION['sess_user_id'], $sql, $params, 'poller_item');
 
-	$order_string = get_order_string(array('dtd.name_cache', 'h.description'));
-	if ($order_string == '') {
-		$order_string = 'ORDER BY action ASC';
-	} else {
+	$order_string = get_order_string(array('action', 'dtd.name_cache', 'h.description'));
+	if ($order_string !== 'ORDER BY `action` ASC') {
 		$order_string .= ', action ASC';
 	}
 
