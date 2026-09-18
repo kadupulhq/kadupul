@@ -587,7 +587,7 @@ function remove_files($file_array) {
 			return false;
 		}
 
-		if (rrdtool_execute('setcnn timeout off', false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') === false) {
+		if (rrdtool_execute('setcnn timeout off', false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== true) {
 			return false;
 		}
 	} else {

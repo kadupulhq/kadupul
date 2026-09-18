@@ -97,7 +97,7 @@ function rrd_close($rrdtool_pipe) {
 }
 
 function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pipe = false, $logopt = 'WEBLOG') {
-    return $GLOBALS['rmt_setup_result'] ?? true;
+    return array_key_exists('rmt_setup_result', $GLOBALS) ? $GLOBALS['rmt_setup_result'] : true;
 }
 
 function cacti_rrdtool_valid_path($path) {
@@ -328,13 +328,13 @@ test('Windows local purge and archive retain files and queue when exclusive coor
 test('proxy failures retain cleanup requests and close initialized pipes', function ($failure, $action) {
     $GLOBALS['rmt_settings']['storage_location'] = 1;
     $GLOBALS['rmt_init_result'] = $failure === 'init' ? false : 'proxy-pipe';
-    $GLOBALS['rmt_setup_result'] = $failure !== 'setup';
+    $GLOBALS['rmt_setup_result'] = $failure === 'unknown' ? null : ($failure !== 'setup');
     $GLOBALS['rmt_proxy_result'] = $failure !== 'command';
     expect(remove_files(array(array('name' => 'keep.rrd', 'action' => $action, 'local_data_id' => 0))))->toBeFalse()
         ->and($GLOBALS['rmt_dropped'])->toBe(array())
         ->and($GLOBALS['purged'])->toBe(0)->and($GLOBALS['archived'])->toBe(0)
         ->and($GLOBALS['rmt_closed'])->toBe($failure === 'init' ? array() : array('proxy-pipe'));
-})->with(array(array('init', '1'), array('setup', '1'), array('command', '1'), array('command', '3')));
+})->with(array(array('init', '1'), array('setup', '1'), array('unknown', '1'), array('unknown', '3'), array('command', '1'), array('command', '3')));
 
 
 function unlink($path) { return empty($GLOBALS['rmt_filesystem_failure']) || basename($path) === 'keep.rrd' ? \unlink($path) : false; }
