@@ -82,7 +82,10 @@ if (cacti_sizeof($parms)) {
 }
 
 require_once __DIR__ . '/lib/rrd_maintenance.php';
-if (!rrd_maintenance_poller_preflight()) {
+$queue_remote = (int) ($config['poller_id'] ?? 1) > 1;
+$queue_online = ($config['connection'] ?? 'online') === 'online';
+if ((!$queue_remote || $queue_online)
+    && !rrd_maintenance_poller_preflight(!$queue_remote, $queue_remote ? $remote_db_cnn_id : false)) {
     exit(1);
 }
 
