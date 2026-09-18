@@ -561,7 +561,10 @@ function remove_files($file_array) {
 			return false;
 		}
 
-		rrdtool_execute('setcnn timeout off', false, RRDTOOL_OUTPUT_NULL, $rrdtool_pipe, $logopt = 'POLLER');
+		if (rrdtool_execute('setcnn timeout off', false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== true) {
+			rrd_close($rrdtool_pipe);
+			return false;
+		}
 	} else {
 		/* let's prepare the archive directory */
 		$rrd_archive = read_config_option('rrd_archive', true);

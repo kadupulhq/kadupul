@@ -92,7 +92,8 @@ if ($storage_error !== '') {
 // producers use their own database. --local explicitly selects the latter.
 $queue_connection = !$local && (int) ($config['poller_id'] ?? 1) > 1
 	&& ($config['connection'] ?? 'online') === 'online' ? $remote_db_cnn_id : false;
-if (!$migrate_poller_queue && !$check_rrd_storage) {
+if (!$migrate_poller_queue && !$check_rrd_storage
+	&& ((int) ($config['poller_id'] ?? 1) === 1 || ($config['connection'] ?? 'online') === 'online')) {
 	$queue_error = rrd_maintenance_queue_configuration_error($queue_connection);
 	if ($queue_error !== '') {
 		fwrite(STDERR, $queue_error . PHP_EOL);

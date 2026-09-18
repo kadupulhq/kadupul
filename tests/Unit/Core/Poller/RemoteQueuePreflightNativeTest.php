@@ -3,13 +3,13 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('remote production poller checks its actual queue before continuing collection', function ($connection, $engine) {
+test('remote production poller checks its actual queue before continuing collection', function ($connection, $engine, $entry) {
     $root = dirname(__DIR__, 4);
     $directory = sys_get_temp_dir() . '/remote-queue-' . bin2hex(random_bytes(8));
     mkdir($directory, 0700);
     mkdir($directory . '/include', 0700);
     mkdir($directory . '/lib', 0700);
-    copy($root . '/poller.php', $directory . '/poller.php');
+    copy($root . '/' . $entry, $directory . '/poller.php');
     foreach (array('poller', 'data_query', 'rrd', 'dsstats', 'dsdebug', 'boost', 'reports', 'rrdcheck') as $library) {
         file_put_contents($directory . '/lib/' . $library . '.php', '<?php');
     }
@@ -19,7 +19,7 @@ test('remote production poller checks its actual queue before continuing collect
     if ($coverage !== null) {
         $script .= 'define("RRD_TEST_COVERAGE_DIRECTORY",dirname(__DIR__));' .
             'define("RRD_TEST_CLI_COVERAGE_COPY",dirname(__DIR__)."/poller.php");' .
-            'define("RRD_TEST_CLI_COVERAGE_SOURCE",' . var_export($root . '/poller.php', true) . ');' .
+            'define("RRD_TEST_CLI_COVERAGE_SOURCE",' . var_export($root . '/' . $entry, true) . ');' .
             'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
     }
     $script .= '$connection=' . var_export($connection, true) . ';$engine=' . var_export($engine, true) . ';';
@@ -42,6 +42,7 @@ function db_fetch_cell(...$args) { return 2; }
 function set_config_option(...$args) {}
 function read_config_option($key) { return $key === 'poller_enabled' ? 'on' : ''; }
 function cacti_log($message, ...$args) { $GLOBALS['observed']['logs'][] = $message; }
+function boost_memory_limit() { $GLOBALS['observed']['continued'] = true; exit(42); }
 function db_table_exists($table) {
     // First operation after preflight: stop before any real collection work.
     $GLOBALS['observed']['continued'] = true;
@@ -85,4 +86,4 @@ PROBE;
             rmdir($directory . $suffix);
         }
     }
-})->with(array(array('online', 'MEMORY'), array('online', false), array('online', 'InnoDB'), array('offline', 'MEMORY'), array('offline', false), array('offline', 'InnoDB'), array('recovery', 'MEMORY'), array('recovery', false)));
+})->with(array(array('online', 'MEMORY'), array('online', false), array('online', 'InnoDB'), array('offline', 'MEMORY'), array('offline', false), array('offline', 'InnoDB'), array('recovery', 'MEMORY'), array('recovery', false)))->with(array('poller.php', 'poller_boost.php'));

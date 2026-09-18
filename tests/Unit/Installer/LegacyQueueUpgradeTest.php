@@ -57,7 +57,7 @@ function db_install_execute($sql){$GLOBALS['statements'][]=$sql;}
 function db_install_add_key(...$args){}
 function db_index_exists(...$args){return true;}
 function db_execute(...$args){}
-function db_fetch_cell_prepared(...$args){if(($args[4]??false)!==($GLOBALS['collector']==='online'?'primary-connection':false)){throw new RuntimeException('Queue checked on wrong collector database');}return $GLOBALS['engine'];}
+function db_fetch_cell_prepared(...$args){if($GLOBALS['collector']==='recovery'){throw new RuntimeException('Recovery collector must use Boost backlog');}if(($args[4]??false)!==($GLOBALS['collector']==='online'?'primary-connection':false)){throw new RuntimeException('Queue checked on wrong collector database');}return $GLOBALS['engine'];}
 require $root.'/lib/installer.php';
 $cacti_version_codes=array('1.1.6'=>'fixture');
 $reflection=new ReflectionClass('Installer');$installer=$reflection->newInstanceWithoutConstructor();
@@ -82,7 +82,7 @@ INSTALLER;
         expect(proc_close($process))->toBe(0)->and($err)->toBe('');
         $result = json_decode($out, true);
         expect($result[2])->toBeTrue('The installer cache file must be created and removed by the native probe.');
-        if ($engine === 'InnoDB') {
+        if ($engine === 'InnoDB' || $collector === 'recovery') {
             expect($result[0])->toBeFalse();
         } else {
             expect($result[0])->toContain('poller_output queue must use InnoDB');
