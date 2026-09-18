@@ -66,6 +66,8 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'reindex':
+		csrf_require_post(true);
+
 		host_reindex();
 
 		header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
@@ -215,9 +217,21 @@ switch (get_request_var('action')) {
 function host_reindex() {
 	global $config;
 
+	$host_id = get_filter_request_var('host_id');
+
+	/* The CLI registers its run with a read then a write, so two requests for
+	   one device could both start a full re-index. GET_LOCK is atomic, and
+	   releasing it at shutdown also covers a run that hits the time limit. */
+	if (db_fetch_cell_prepared('SELECT GET_LOCK(?, 0)', array('host.reindex.' . $host_id)) != 1) {
+		raise_message('host_reindex_running', __('A Re-Index of this Device is already running.  Try again after it finishes.'), MESSAGE_LEVEL_WARN);
+
+		return false;
+	}
+
+	register_shutdown_function('host_reindex_release', $host_id);
+
 	$start = microtime(true);
 
-	$host_id = get_filter_request_var('host_id');
 	shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/cli/poller_reindex_hosts.php') . ' --qid=all --id=' . cacti_escapeshellarg((string) $host_id));
 
 	$end = microtime(true);
@@ -230,6 +244,12 @@ function host_reindex() {
 		array($host_id));
 
 	raise_message('host_reindex', __('Device Reindex Completed in %0.2f seconds.  There were %d items updated.', $total_time, $items), MESSAGE_LEVEL_INFO);
+
+	return true;
+}
+
+function host_reindex_release($host_id) {
+	db_execute_prepared('DO RELEASE_LOCK(?)', array('host.reindex.' . $host_id));
 }
 
 function add_tree_names_to_actions_array() {
@@ -760,7 +780,7 @@ function host_edit() {
 				<td rowspan='2' class='textInfo right' style='vertical-align:top'>
 					<span class='linkMarker'>*</span><a class='hyperLink' href='<?php print html_escape('host.php?action=edit');?>'><?php print __('Create New Device');?></a><br>
 					<span class='linkMarker'>*</span><a class='hyperLink' href='<?php print html_escape('graphs_new.php?reset=true&host_id=' . $host['id']);?>'><?php print __('Create Graphs for this Device');?></a><br>
-					<span class='linkMarker'>*</span><a class='hyperLink' href='<?php print html_escape('host.php?action=reindex&host_id=' . $host['id']);?>'><?php print __('Re-Index Device');?></a><br>
+					<span class='linkMarker'>*</span><a class='hyperLink cactiPostAction' href='#' data-url='<?php print html_escape('host.php?action=reindex&host_id=' . $host['id']);?>'><?php print __('Re-Index Device');?></a><br>
 					<?php print $debug_link;?>
 					<?php print $repop_link;?>
 					<span class='linkMarker'>*</span><a class='hyperLink' href='<?php print html_escape('data_sources.php?reset=true&host_id=' . $host['id'] . '&ds_rows=30&filter=&template_id=-1&method_id=-1&page=1');?>'><?php print __('Data Source List');?></a><br>

@@ -151,3 +151,106 @@ test('device edit page sends per-device mutations by POST with the csrf token', 
 		expect($source)->toContain("<a class='hyperLink cactiPostAction' href='#' data-url='\" . html_escape('host.php?action=" . $action . '&host_id=');
 	}
 });
+
+test('device re-index refuses any GET, including a same-site one', function () {
+	expect_refused('reindex', array('host_id' => '3'));
+
+	expect(run_host('POST', 'reindex', array('host_id' => '3')))->toBe('reindex');
+});
+
+test('device edit page posts the re-index link with the csrf token', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/host.php');
+
+	expect($source)->toContain("<a class='hyperLink cactiPostAction' href='#' data-url='<?php print html_escape('host.php?action=reindex&host_id=");
+});
+
+/**
+ * Runs the production host_reindex() in a child process, with the database
+ * answering GET_LOCK as given, and returns every call in order, including
+ * those made at shutdown. shell_exec is renamed to a stub.
+ *
+ * @param string $lock The GET_LOCK answer.
+ * @param bool   $dies Whether the re-index exits part way.
+ *
+ * @return array<int, string>
+ */
+function run_reindex($lock, $dies = false) {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/host.php');
+
+	expect(preg_match('/^function host_reindex\(\).*?^}\n/ms', $source, $reindex))->toBe(1);
+	preg_match('/^function host_reindex_release\(.*?^}\n/ms', $source, $release);
+
+	$functions = str_replace('shell_exec(', 'test_shell_exec(', $reindex[0]) . (empty($release[0]) ? '' : $release[0]);
+
+	$script = '<?php
+		$calls  = array();
+		$lock   = ' . var_export($lock, true) . ';
+		$dies   = ' . var_export($dies, true) . ';
+		$config = array("base_path" => "/base");
+		define("MESSAGE_LEVEL_INFO", 1);
+		define("MESSAGE_LEVEL_WARN", 2);
+		function record($call) { $GLOBALS["calls"][] = $call; }
+		function __($text) { return $text; }
+		function get_filter_request_var($name) { return "7"; }
+		function read_config_option($name) { return "/usr/bin/php"; }
+		function cacti_escapeshellcmd($value) { return $value; }
+		function cacti_escapeshellarg($value) { return "\'" . $value . "\'"; }
+		function db_fetch_cell_prepared($sql, $params) {
+			record("cell:" . $sql . ":" . implode(",", $params));
+			return strpos($sql, "GET_LOCK") !== false ? $GLOBALS["lock"] : 0;
+		}
+		function db_execute_prepared($sql, $params) { record("execute:" . $sql . ":" . implode(",", $params)); return true; }
+		function raise_message($id, $message, $level) { record("message:" . $id . ":" . $level); }
+		function test_shell_exec($command) {
+			record("exec");
+			if ($GLOBALS["dies"]) {
+				register_shutdown_function(function () { print json_encode($GLOBALS["calls"]); });
+				exit(0);
+			}
+		}
+		' . $functions . '
+		$result = host_reindex();
+		record("returned:" . var_export($result, true));
+		register_shutdown_function(function () { print json_encode($GLOBALS["calls"]); });';
+
+	$file = tempnam(sys_get_temp_dir(), 'reindex');
+	file_put_contents($file, $script);
+
+	try {
+		$output = (string) shell_exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($file) . ' 2>&1');
+	} finally {
+		unlink($file);
+	}
+
+	$calls = json_decode($output, true);
+	expect($calls)->toBeArray($output);
+
+	return $calls;
+}
+
+test('a device re-index is refused while another one for the device holds the lock', function () {
+	foreach (array('0', '') as $lock) {
+		expect(run_reindex($lock))->toBe(array(
+			'cell:SELECT GET_LOCK(?, 0):host.reindex.7',
+			'message:host_reindex_running:2',
+			'returned:false',
+		));
+	}
+});
+
+test('a device re-index holding the lock runs once and then releases the lock', function () {
+	$calls = run_reindex('1');
+	$count = array_count_values($calls);
+
+	expect($calls[0])->toBe('cell:SELECT GET_LOCK(?, 0):host.reindex.7')
+		->and($count['exec'])->toBe(1)
+		->and($calls)->toContain('message:host_reindex:1')
+		->and(array_slice($calls, -2))->toBe(array('returned:true', 'execute:DO RELEASE_LOCK(?):host.reindex.7'));
+});
+
+test('a device re-index that dies part way still releases the lock', function () {
+	$calls = run_reindex('1', true);
+
+	expect($calls)->toContain('execute:DO RELEASE_LOCK(?):host.reindex.7')
+		->and($calls)->not->toContain('returned:true');
+});
