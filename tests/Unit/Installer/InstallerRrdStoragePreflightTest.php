@@ -18,6 +18,7 @@ test('installer rejects unsafe storage before database upgrades even when forced
 if ($mode === 'windows-attribute') { function is_writable($path) { return false; } }
 function __($message, ...$args) { return $args ? vsprintf($message, $args) : $message; }
 function read_config_option($key, ...$args) { return $key === 'storage_location' && $GLOBALS['mode'] === 'proxy'; }
+function db_fetch_cell_prepared(...$args) { return $GLOBALS['mode'] === 'memory' ? 'MEMORY' : 'InnoDB'; }
 function is_resource_writable($path) { return true; }
 function log_install_debug(...$args) {}
 function log_install_high(...$args) {}
@@ -64,6 +65,8 @@ FIXTURE;
         expect($result[0])->toBe($ready);
         if ($ready) {
             expect($result[1])->toBe('upgrade boundary reached');
+        } elseif ($mode === 'memory') {
+            expect($result[1])->toContain('poller_output queue must use InnoDB');
         } else {
             expect($result[1])->toContain('RRD storage is not ready');
             if (strpos($mode, 'windows') !== 0) { expect($result[1])->toContain('rrd_maintenance_trusted_uids')->toContain('rrd_maintenance_trusted_gids'); }
@@ -77,4 +80,4 @@ FIXTURE;
         foreach (glob($dir . '/*') as $file) { if (is_file($file)) { unlink($file); } }
         chmod($dir . '/rra', 0700); rmdir($dir . '/rra'); rmdir($dir);
     }
-})->with(array(array('collector-install', true), array('collector-online', true), array('collector-offline', true), array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-attribute', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true)));
+})->with(array(array('memory', false), array('collector-install', true), array('collector-online', true), array('collector-offline', true), array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-attribute', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true)));
