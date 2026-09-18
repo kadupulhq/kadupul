@@ -165,7 +165,9 @@ updates. No successful queue deletion relies solely on a pipe write.
 Automatic **local** RRD purge and archive are unsupported on Windows until a
 validated exclusive storage lease is available. Data-source deletion still
 removes database metadata, but retains its RRD files and logs that manual
-cleanup is required. It does not enqueue automatic cleanup. RRDCleaner rejects
+cleanup is required. When `rrd_autoclean` is enabled, deletion still records a
+pending purge request; automatic maintenance leaves it for manual handling.
+RRDCleaner rejects
 delete/archive requests; rescanning can inventory orphaned files and preserves
 existing purge requests. Scheduled maintenance skips this unsupported task with
 a warning, so it does not continually fail the whole maintenance cycle.
