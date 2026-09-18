@@ -5,7 +5,7 @@ Cacti CHANGELOG
 -issue: Check remote collectors against their actual queue before collecting; plugin list pages must pass a column allowlist to get_order_string() for first-render sorting
 -issue: Preserve hyphenated RRD fields, verify durable queues after legacy upgrades, and allow remote database upgrades without unrelated local storage
 -issue: Preserve float and cleanup queues when worker discovery or local filesystem operations fail
--issue: Recover valid fields from rejected RRD groups without stalling later timestamps; never report refused RRD repairs as successful
+-issue: Retain complete rejected RRD groups until schema repair; never report refused RRD repairs as successful
 -issue: Acknowledge Windows updates synchronously, retain realtime samples on field-lookup failure, and preserve shift-click sorting after allowlist registration
 -issue: Refuse Windows splice, heartbeat tuning, and float rewrites when exclusive maintenance coordination is unavailable
 -issue: Bound shutdown orphan reads, retain failed proxy cleanup requests, normalize quoted link sorting, and disable obsolete volatile queue swaps
