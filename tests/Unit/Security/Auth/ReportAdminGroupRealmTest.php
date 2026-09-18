@@ -396,6 +396,7 @@ test('report item edits require an authorized existing parent and matching item'
     array(5, 7, 70, true),
     array(16, 7, 70, false),
     array(5, 7, 80, false),
+    array(5, 7, -1, false),
     array(12, 999, 70, false),
     array(12, 7, 999, false),
     array(12, 7, 80, false),

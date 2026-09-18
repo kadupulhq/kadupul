@@ -66,13 +66,87 @@ test('report controllers redirect mutations through the realm-aware reports page
         ->and(substr_count($reportsUser, "&header=false'"))->toBe(5);
 });
 
-test('report data query labels are escaped before generated html output', function () use ($reportsGenerator) {
-    expect($reportsGenerator)->toContain("__('Data Query:') . ' ' . html_escape(\$data_query['name'])")
-        ->and($reportsGenerator)->not->toContain("__('Data Query:') . ' ' . \$data_query['name']");
+test('report data query labels are escaped before generated html output', function () use ($reportsGenerator, $root) {
+    expect($reportsGenerator)->toContain('reports_data_query_label($data_query[\'name\'])');
+
+    $program = <<<'PHP'
+namespace ReportMutationRuntime;
+function __($text, ...$args) { return $args ? vsprintf($text, $args) : $text; }
+function html_escape($text) { return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
+$source = file_get_contents(getcwd() . '/lib/reports.php');
+preg_match('/^function reports_data_query_label\(.*?^}\n/ms', $source, $match);
+if (empty($match)) { exit(2); }
+eval('namespace ReportMutationRuntime; ' . $match[0]);
+echo reports_data_query_label('<script>alert(1)</script>');
+PHP;
+
+    $process = proc_open(
+        array(PHP_BINARY, '-r', $program),
+        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+        $pipes,
+        $root
+    );
+
+    expect(is_resource($process))->toBeTrue();
+
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+
+    $exit = proc_close($process);
+
+    expect($exit)->toBe(0, $stderr)
+        ->and($stdout)->toBe('Data Query: &lt;script&gt;alert(1)&lt;/script&gt;');
 });
 
-test('report image conversion uses unpredictable temporary files with cleanup', function () use ($reportsGenerator) {
+test('report image conversion uses unpredictable temporary files with cleanup', function () use ($reportsGenerator, $root) {
     expect($reportsGenerator)->toContain("tempnam(sys_get_temp_dir(), 'cacti-report-')")
         ->and($reportsGenerator)->toContain('finally')
         ->and($reportsGenerator)->not->toContain("'/tmp/' . time() . '.png'");
+
+    $program = <<<'PHP'
+namespace ReportPngRuntime;
+$GLOBALS['tmpdir'] = \sys_get_temp_dir() . '/report-png-' . bin2hex(random_bytes(4));
+mkdir($GLOBALS['tmpdir']);
+function sys_get_temp_dir() { return $GLOBALS['tmpdir']; }
+function imagecreatefrompng($file) { return $GLOBALS['decode_ok'] ? 'image' : false; }
+function ImageCreate($width, $height) { return 'fallback'; }
+function ImageColorAllocate($image, $red, $green, $blue) { return 'color'; }
+function ImageFilledRectangle($image, $x1, $y1, $x2, $y2, $color) {}
+function ImageString($image, $font, $x, $y, $string, $color) {}
+function imagejpeg($image) { echo 'jpeg'; }
+function imagegif($image) { echo 'gif'; }
+$source = file_get_contents(getcwd() . '/lib/reports.php');
+preg_match('/^function png2jpeg .*?^}\n/ms', $source, $jpeg);
+preg_match('/^function png2gif .*?^}\n/ms', $source, $gif);
+if (empty($jpeg) || empty($gif)) { exit(2); }
+eval('namespace ReportPngRuntime; ' . $jpeg[0] . $gif[0]);
+$GLOBALS['decode_ok'] = true;
+$jpegData = png2jpeg('png-data');
+$GLOBALS['decode_ok'] = false;
+$gifData = png2gif('bad-data');
+$remaining = glob($GLOBALS['tmpdir'] . '/cacti-report-*');
+rmdir($GLOBALS['tmpdir']);
+echo json_encode(array($jpegData, $gifData, $remaining));
+PHP;
+
+    $process = proc_open(
+        array(PHP_BINARY, '-r', $program),
+        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+        $pipes,
+        $root
+    );
+
+    expect(is_resource($process))->toBeTrue();
+
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+
+    $exit = proc_close($process);
+
+    expect($exit)->toBe(0, $stderr)
+        ->and(json_decode($stdout, true))->toBe(array('jpeg', 'gif', array()));
 });

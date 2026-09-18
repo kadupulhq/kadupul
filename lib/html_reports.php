@@ -921,7 +921,7 @@ function reports_item_edit() {
 	   move already require, and the report itself must exist */
 	if (!cacti_authorize_resource($_SESSION['sess_user_id'], $report_id, 'reports') ||
 		!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ?', array($report_id)) ||
-		($item_id > 0 && (!cacti_authorize_resource($_SESSION['sess_user_id'], $item_id, 'report_item') ||
+		($item_id != 0 && (!cacti_authorize_resource($_SESSION['sess_user_id'], $item_id, 'report_item') ||
 		db_fetch_cell_prepared('SELECT report_id FROM reports_items WHERE id = ?', array($item_id)) != $report_id))) {
 		/* the caller has already printed the page header */
 		raise_message('permission_denied');

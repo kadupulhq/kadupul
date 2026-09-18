@@ -1496,11 +1496,11 @@ function reports_expand_tree(&$report, $item, $parent, $output, $format_ok, $the
 
 									$outstr .= "\t\t<tr class='text_row'>" . PHP_EOL;
 									if ($format_ok) {
-										$outstr .= "\t\t\t<td class='text'>" . __('Data Query:') . ' ' . html_escape($data_query['name']) . PHP_EOL;
+										$outstr .= "\t\t\t<td class='text'>" . reports_data_query_label($data_query['name']) . PHP_EOL;
 										$outstr .= "\t\t\t</td>" . PHP_EOL;
 										$outstr .= "\t\t</tr>" . PHP_EOL;
 									} else {
-										$outstr .= "\t\t\t<td class='text' style='text-align:" . $alignment[$item['align']] . ";font-size: " . $item['font_size'] . "pt;'>" . __('Data Query:') . ' ' . html_escape($data_query['name']) . PHP_EOL;
+										$outstr .= "\t\t\t<td class='text' style='text-align:" . $alignment[$item['align']] . ";font-size: " . $item['font_size'] . "pt;'>" . reports_data_query_label($data_query['name']) . PHP_EOL;
 										$outstr .= "\t\t\t</td>" . PHP_EOL;
 										$outstr .= "\t\t</tr>" . PHP_EOL;
 									}
@@ -1588,6 +1588,10 @@ function reports_expand_tree(&$report, $item, $parent, $output, $format_ok, $the
 	}
 
 	return $outstr;
+}
+
+function reports_data_query_label($name) {
+	return __('Data Query:') . ' ' . html_escape($name);
 }
 
 /**
