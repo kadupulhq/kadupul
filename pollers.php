@@ -452,6 +452,12 @@ function form_actions() {
 	if (isset_request_var('selected_items')) {
 		$selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
 
+		if ($selected_items != false && get_nfilter_request_var('drp_action') == '1') {
+			$selected_items = pollers_without_main($selected_items, 'delete');
+		} elseif ($selected_items != false && get_nfilter_request_var('drp_action') == '2') {
+			$selected_items = pollers_without_main($selected_items, 'disable');
+		}
+
 		if ($selected_items != false) {
 			if (get_nfilter_request_var('drp_action') == '1') { // delete
 				db_execute('DELETE FROM poller WHERE ' . array_to_sql_or($selected_items, 'id'));
@@ -630,6 +636,30 @@ function form_actions() {
 /* ---------------------
     Site Functions
    --------------------- */
+
+/* Devices from a deleted collector move to the main one (id 1), and the list
+   offers no control to re-enable it, so deleting or disabling it stops data
+   collection.  The disabled checkbox in the list is only a hint. */
+function pollers_without_main($selected_items, $verb) {
+	$remote  = array();
+	$refused = false;
+
+	foreach ($selected_items as $item) {
+		/* Loose on purpose: MySQL also reads '1e0' or ' 1' as id 1. */
+		if ($item == 1) {
+			$refused = true;
+		} else {
+			$remote[] = $item;
+		}
+	}
+
+	if ($refused) {
+		cacti_log('WARNING: Refused to ' . $verb . ' the main Data Collector for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+		raise_message('poller_keep_main', __('The Main Data Collector can not be deleted or disabled.'), MESSAGE_LEVEL_ERROR);
+	}
+
+	return $remote;
+}
 
 function poller_edit() {
 	global $fields_poller_edit;
