@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('production Boost archive consumer deletes only after acknowledgement and retains failed assignments', function ($mode) {
+test('production Boost archive consumer deletes only acknowledged samples and isolates failed data sources', function ($mode) {
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/boost-archive-' . bin2hex(random_bytes(8));
     mkdir($dir, 0700);
@@ -37,20 +37,29 @@ test('production Boost archive consumer deletes only after acknowledgement and r
         fclose($pipes[2]);
         expect(proc_close($process))->toBe(0, $error . $output)->and($error)->toBe('');
         $result = json_decode(file_get_contents($dir . '/result.json'), true, 512, JSON_THROW_ON_ERROR);
-        expect($result['result'])->toBe($mode === 'success' ? 2 : false)
+        $expectedResult = array('archive-failure' => false, 'next-id-failure' => 1, 'split-failure' => 0,
+            'last-failure' => 0, 'delete-failure' => false, 'assignment-failure' => false, 'success' => 2)[$mode];
+        expect($result['result'])->toBe($expectedResult)
             ->and($result['handler_restored'])->toBeTrue();
         $deletes = array_values(array_filter($result['writes'], fn($write) => str_starts_with($write[0], 'DELETE')));
-        $count = array('archive-failure' => 0, 'next-id-failure' => 0, 'split-failure' => 0,
-            'last-failure' => 0, 'delete-failure' => 1, 'assignment-failure' => 3, 'success' => 3)[$mode];
-        expect($deletes)->toHaveCount($count)->and($result['updates'])->toHaveCount($mode === 'archive-failure' ? 0 : 1);
-        foreach (array_slice($deletes, 0, 2) as $index => $delete) {
+        $archive = array_values(array_filter($deletes, fn($write) => str_contains($write[0], 'poller_output_boost_arch_')));
+        $first = array(42, 'value', '1699999800', '21');
+        $second = array($mode === 'next-id-failure' ? 43 : 42, 'value', '1699999860', '22');
+        // Samples of a failed data source stay queued; later data sources are still acknowledged.
+        $expectedArchive = array('delete-failure' => array($first), 'assignment-failure' => array($first, $second),
+            'success' => array($first, $second), 'next-id-failure' => array($second))[$mode] ?? array();
+        expect(array_column($archive, 1))->toBe($expectedArchive)
+            ->and($result['updates'])->toHaveCount(array('archive-failure' => 0, 'next-id-failure' => 2)[$mode] ?? 1);
+        foreach ($archive as $delete) {
             expect($delete[0])->toBe('DELETE FROM poller_output_boost_arch_fixture WHERE local_data_id = ? AND rrd_name = ? AND time = FROM_UNIXTIME(?) AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY)');
-            expect($delete[1])->toBe(array(42, 'value', $index === 0 ? '1699999800' : '1699999860', $index === 0 ? '21' : '22'));
         }
-        if ($count === 3) {
-            expect($deletes[2][0])->toContain('DELETE FROM poller_output_boost_local_data_ids')
-                ->and($deletes[2][1])->toBe(array(43, 2));
+        if (!in_array($mode, array('archive-failure', 'delete-failure'), true)) {
+            expect(end($deletes)[0])->toContain('DELETE FROM poller_output_boost_local_data_ids')
+                ->and(end($deletes)[1])->toBe(array(43, 2));
         }
+        $retained = array_values(array_filter($result['messages'], fn($message) => str_contains($message, 'retained samples')));
+        expect($retained)->toBe(in_array($mode, array('next-id-failure', 'split-failure', 'last-failure'), true)
+            ? array('WARNING: Boost retained samples for Local Data IDs 42 after RRD update failures.') : array());
         if ($coverage !== null) {
             $reports = glob($dir . '/*.coverage');
             expect($reports)->toHaveCount(1);

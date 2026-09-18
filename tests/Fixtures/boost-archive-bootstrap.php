@@ -8,6 +8,7 @@ $mode = getenv('BOOST_MODE');
 $config = array('base_path' => $fixture, 'library_path' => $fixture . '/lib');
 $writes = array();
 $updates = array();
+$messages = array();
 define('COPYRIGHT_YEARS', '2026');
 define('BOOST_TIMER_START', 0);
 define('BOOST_TIMER_END', 1);
@@ -20,7 +21,10 @@ function cacti_sizeof($value)
 {
     return is_array($value) ? count($value) : 0;
 }
-function cacti_log(...$args) {}
+function cacti_log($message, ...$args)
+{
+    $GLOBALS['messages'][] = $message;
+}
 function boost_debug(...$args) {}
 function boost_timer(...$args) {}
 function read_config_option($key)
@@ -86,7 +90,8 @@ function db_execute_prepared($sql, $params)
 function boost_rrdtool_function_update($id, $path, $template, $output, $pipe)
 {
     $GLOBALS['updates'][] = array($id, $template, $output);
-    return in_array($GLOBALS['mode'], array('next-id-failure', 'split-failure', 'last-failure'), true) ? 'ERROR injected' : 'OK';
+    // Only the first data source fails; a later one must still be written.
+    return in_array($GLOBALS['mode'], array('next-id-failure', 'split-failure', 'last-failure'), true) && $id === 42 ? 'ERROR injected' : 'OK';
 }
 register_shutdown_function(function () use ($fixture) {
     $GLOBALS['archive_table'] = 'fixture';
@@ -99,6 +104,7 @@ register_shutdown_function(function () use ($fixture) {
     $restored = set_error_handler($handler) === $handler;
     restore_error_handler();
     file_put_contents($fixture . '/result.json', json_encode(array(
-        'result' => $result, 'writes' => $GLOBALS['writes'], 'updates' => $GLOBALS['updates'], 'handler_restored' => $restored
+        'result' => $result, 'writes' => $GLOBALS['writes'], 'updates' => $GLOBALS['updates'], 'handler_restored' => $restored,
+        'messages' => $GLOBALS['messages']
     )));
 });

@@ -228,6 +228,8 @@ if ($child == false) {
 
 						if (boost_archive_is_empty($table['name'])) {
 							db_execute('DROP TABLE IF EXISTS `' . $table['name'] . '`');
+						} elseif (boost_requeue_archive($table['name'])) {
+							cacti_log('WARNING: Boost returned retained samples from ' . $table['name'] . ' to poller_output_boost for retry.', true, 'BOOST');
 						} else {
 							cacti_log('WARNING: Retaining a nonempty or unverifiable Boost archive.', true, 'BOOST');
 						}
@@ -898,11 +900,18 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe) {
 		/* we are going to blow away all record if ok */
 		$vals_in_buffer = 0;
 
+		/* One unwritable RRD must not hold back the rest of the pass. */
+		$failed_ids = array();
+
 		boost_timer('results_cycle', BOOST_TIMER_START);
 
 		/* go through each poller_output_boost entries and process */
 		foreach ($results as $item) {
 			if ($local_data_id == $item['local_data_id'] && cacti_sizeof($unused_data_source_names) && isset($unused_data_source_names[$item['rrd_name']])) {
+				continue;
+			}
+
+			if (isset($failed_ids[$item['local_data_id']])) {
 				continue;
 			}
 
@@ -969,11 +978,7 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe) {
 
 					/* new process output function */
 					if (!boost_process_output($local_data_id, $outarray, $rrd_path, $rrd_tmplp, $rrdtool_pipe)) {
-						if ($current_lock !== false) {
-							db_execute("SELECT RELEASE_LOCK('boost.single_ds.$current_lock')");
-						}
-						restore_error_handler();
-						return false;
+						$failed_ids[$local_data_id] = true;
 					}
 
 					$buflen = 0;
@@ -1038,17 +1043,16 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe) {
 
 				if ($buflen > $upd_string_len) {
 					/* new process output function */
-					if (!boost_process_output($local_data_id, $outarray, $rrd_path, $rrd_tmplp, $rrdtool_pipe)) {
-						if ($current_lock !== false) {
-							db_execute("SELECT RELEASE_LOCK('boost.single_ds.$current_lock')");
-						}
-						restore_error_handler();
-						return false;
-					}
+					$written = boost_process_output($local_data_id, $outarray, $rrd_path, $rrd_tmplp, $rrdtool_pipe);
 
 					$buflen         = 0;
 					$vals_in_buffer = 0;
 					$outarray       = array();
+
+					if (!$written) {
+						$failed_ids[$local_data_id] = true;
+						continue;
+					}
 				}
 
 				$time = $item['timestamp'];
@@ -1267,12 +1271,8 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe) {
 			$outarray[] = $tv_tmpl;
 
 			if (!boost_process_output($local_data_id, $outarray, $rrd_path, $rrd_tmplp, $rrdtool_pipe)) {
-						if ($current_lock !== false) {
-							db_execute("SELECT RELEASE_LOCK('boost.single_ds.$current_lock')");
-						}
-						restore_error_handler();
-						return false;
-					}
+				$failed_ids[$local_data_id] = true;
+			}
 		}
 
 		/* release the last lock */
@@ -1283,6 +1283,14 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe) {
 		$current_lock = false;
 
 		boost_timer('results_cycle', BOOST_TIMER_END);
+
+		if (cacti_sizeof($failed_ids)) {
+			cacti_log('WARNING: Boost retained samples for Local Data IDs ' . implode(', ', array_keys($failed_ids)) . ' after RRD update failures.', true, 'BOOST');
+
+			$results = array_values(array_filter($results, function ($row) use ($failed_ids) {
+				return !isset($failed_ids[$row['local_data_id']]);
+			}));
+		}
 	}
 
 	/* Archive samples are immutable, but delete only observed keys after writes. */

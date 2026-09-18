@@ -133,6 +133,14 @@ function boost_archive_is_empty($table)
 {
     return getenv('BOOST_MODE') === 'master-success-empty';
 }
+function boost_requeue_archive($table)
+{
+    if (getenv('BOOST_MODE') !== 'master-success-requeued') {
+        return false;
+    }
+    $GLOBALS['settings_written']['requeued_archive'] = $table;
+    return true;
+}
 function dsstats_boost_bottom()
 {
     $GLOBALS['settings_written']['dsstats_called'] = true;

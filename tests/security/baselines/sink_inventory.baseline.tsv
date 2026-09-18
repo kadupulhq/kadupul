@@ -85,7 +85,7 @@ cmd_exec	./lib/utility.php:1847				exec('/usr/bin/free', $output, $exit_code);
 cmd_exec	./lib/utility.php:1898		$json     = shell_exec($php . ' -q ' . $php_file);
 cmd_exec	./lib/utility.php:1966		$json     = shell_exec($php . ' -q ' . $php_file);
 cmd_exec	./lib/utility.php:2098		$json     = shell_exec($php . ' -q ' . $php_file);
-cmd_exec	./poller_boost.php:537			$process = proc_open($arguments, $descriptors, $pipes);
+cmd_exec	./poller_boost.php:539			$process = proc_open($arguments, $descriptors, $pipes);
 cmd_exec	./poller_realtime.php:128	shell_exec("$command_string $extra_args");
 cmd_exec	./poller_realtime.php:230					shell_exec($command);
 cmd_exec	./poller_spikekill.php:230				$response = exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
@@ -347,11 +347,11 @@ dynamic_include	./lib/api_automation.php:2369		include_once($config['base_path']
 dynamic_include	./lib/api_device.php:929		include_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./lib/api_device.php:930		include_once($config['base_path'] . '/lib/variables.php');
 dynamic_include	./lib/api_device.php:931		include_once($config['base_path'] . '/lib/data_query.php');
-dynamic_include	./lib/boost.php:1275		include($config['include_path'] . '/global_arrays.php');
-dynamic_include	./lib/boost.php:1579			include_once($config['library_path'] . '/poller.php');
-dynamic_include	./lib/boost.php:270			include_once($config['library_path'] . '/poller.php');
-dynamic_include	./lib/boost.php:335		include_once($config['library_path'] . '/poller.php');
-dynamic_include	./lib/boost.php:702		include_once($config['library_path'] . '/rrd.php');
+dynamic_include	./lib/boost.php:1295		include($config['include_path'] . '/global_arrays.php');
+dynamic_include	./lib/boost.php:1599			include_once($config['library_path'] . '/poller.php');
+dynamic_include	./lib/boost.php:290			include_once($config['library_path'] . '/poller.php');
+dynamic_include	./lib/boost.php:355		include_once($config['library_path'] . '/poller.php');
+dynamic_include	./lib/boost.php:722		include_once($config['library_path'] . '/rrd.php');
 dynamic_include	./lib/data_query.php:1946		include_once($config['library_path'] . '/sort.php');
 dynamic_include	./lib/data_query.php:2355		include_once($config['library_path'] . '/variables.php');
 dynamic_include	./lib/data_query.php:585		include_once($config['library_path'] . '/xml.php');
@@ -465,7 +465,7 @@ dynamic_include	./poller_boost.php:19	require_once($config['base_path'] . '/lib/
 dynamic_include	./poller_boost.php:20	require_once($config['base_path'] . '/lib/dsstats.php');
 dynamic_include	./poller_boost.php:21	require_once($config['base_path'] . '/lib/rrdcheck.php');
 dynamic_include	./poller_boost.php:22	require_once($config['base_path'] . '/lib/rrd.php');
-dynamic_include	./poller_boost.php:797		include_once($config['library_path'] . '/rrd.php');
+dynamic_include	./poller_boost.php:799		include_once($config['library_path'] . '/rrd.php');
 dynamic_include	./poller_commands.php:23	require_once($config['base_path'] . '/lib/api_device.php');
 dynamic_include	./poller_commands.php:24	require_once($config['base_path'] . '/lib/api_data_source.php');
 dynamic_include	./poller_commands.php:25	require_once($config['base_path'] . '/lib/api_graph.php');
@@ -554,8 +554,8 @@ fs_write	./install/functions.php:348			file_put_contents($cacheFile, '<[version]
 fs_write	./install/functions.php:55				$fh = fopen($file, 'w');
 fs_write	./install/functions.php:839						$fp = fopen($config_file, 'w');
 fs_write	./lib/api_device.php:2620							file_put_contents($new_xmlfile, $data);
-fs_write	./lib/boost.php:455								if ($fileptr = fopen($cache_file, 'rb')) {
-fs_write	./lib/boost.php:578							if ($fileptr = fopen($cache_file, 'w')) {
+fs_write	./lib/boost.php:475								if ($fileptr = fopen($cache_file, 'rb')) {
+fs_write	./lib/boost.php:598							if ($fileptr = fopen($cache_file, 'w')) {
 fs_write	./lib/clog_webapi.php:102					$log_fh = fopen($logfile, 'w');
 fs_write	./lib/csp_report_endpoint.php:145		/* Bucket names are predictable, and fopen() follows symlinks, so a bucket in
 fs_write	./lib/csp_report_endpoint.php:162		$fh = @fopen($bucket, 'c+'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename

@@ -15,6 +15,26 @@ function boost_archive_is_empty($table) {
 }
 
 /**
+ * Retained samples go back to the live queue so a persistently failing RRD
+ * does not leave one more archive table behind on every cycle.
+ */
+function boost_requeue_archive($table) {
+	if (!preg_match('/^poller_output_boost_arch_[a-zA-Z0-9_]+$/D', $table)) {
+		return false;
+	}
+
+	/* A live sample with the same key supersedes the retained copy, as in recovery. */
+	if (!db_execute('INSERT IGNORE INTO poller_output_boost
+		(local_data_id, rrd_name, time, output)
+		SELECT local_data_id, rrd_name, time, output
+		FROM `' . $table . '`')) {
+		return false;
+	}
+
+	return (bool) db_execute('DROP TABLE IF EXISTS `' . $table . '`');
+}
+
+/**
  * boost_array_orderby - performs a multicolumn sort of an
  *   array
  */
