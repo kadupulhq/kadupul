@@ -35,7 +35,7 @@ function boost_get_unused_data_source_names($id) { return array(); }
 function boost_get_rrd_filename_and_template($id) { return array('rrd_template' => 'value', 'rrd_path' => "/rra/$id.rrd"); }
 function boost_rrdtool_function_update($id, $path, $template, $values, $pipe) {
     $GLOBALS['isolation_updates'][] = array($id, $values);
-    return $id == 2 ? 'ERROR: permission denied; retain samples for retry' : 'OK';
+    return $id == 2 || $GLOBALS['isolation_all_fail'] ? 'ERROR: permission denied; retain samples for retry' : 'OK';
 }
 function db_fetch_assoc_prepared($sql, $params = array()) {
     if (strpos($sql, 'poller_data_template_field_mappings') !== false) { return array(); }
@@ -69,6 +69,7 @@ beforeEach(function () {
     $GLOBALS['archive_table'] = 'poller_output_boost_arch_1';
     $GLOBALS['current_lock'] = false;
     $GLOBALS['isolation_fail'] = '';
+    $GLOBALS['isolation_all_fail'] = false;
     $GLOBALS['isolation_logs'] = $GLOBALS['isolation_updates'] = array();
     $GLOBALS['config'] = array('library_path' => sys_get_temp_dir() . '/boost-isolation-' . bin2hex(random_bytes(8)));
     mkdir($GLOBALS['config']['library_path']);
@@ -100,3 +101,14 @@ test('a failed handback retains the whole page', function ($statement) {
         ->and($db->query('SELECT COUNT(*) FROM poller_output_boost_local_data_ids WHERE cursor_time IS NULL')->fetchColumn())->toBe(2)
         ->and($db->query('SELECT COUNT(*) FROM poller_output_boost_local_data_ids')->fetchColumn())->toBe(3);
 })->with(array('INSERT IGNORE INTO poller_output_boost', 'DELETE FROM poller_output_boost_local_data_ids'));
+
+test('a page where every RRD fails is retained instead of requeued', function () {
+    $GLOBALS['isolation_all_fail'] = true;
+    $db = $GLOBALS['isolation_db'];
+    expect(boost_process_local_data_ids(1, false, 100))->toBe(-1)
+        ->and(array_column($GLOBALS['isolation_updates'], 0))->toBe(array(1, 2, 3))
+        ->and($db->query('SELECT COUNT(*) FROM poller_output_boost')->fetchColumn())->toBe(0)
+        ->and($db->query('SELECT COUNT(*) FROM poller_output_boost_local_data_ids WHERE cursor_time IS NULL')->fetchColumn())->toBe(2)
+        ->and($db->query('SELECT COUNT(*) FROM poller_output_boost_local_data_ids')->fetchColumn())->toBe(3)
+        ->and(implode("\n", $GLOBALS['isolation_logs']))->toContain('failed for every data source');
+});

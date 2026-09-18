@@ -1012,6 +1012,7 @@ function boost_process_local_data_ids($child, $rrdtool_pipe, $max_rows) {
 
 		/* A failed RRD is set aside so the rest of the shard still advances. */
 		$blocked = array();
+		$flushed = array();
 
 		/* we are going to blow away all record if ok */
 		$vals_in_buffer = 0;
@@ -1041,6 +1042,7 @@ function boost_process_local_data_ids($child, $rrdtool_pipe, $max_rows) {
 				if ($vals_in_buffer) {
 					$outarray[] = $tv_tmpl;
 					$flush_ok   = boost_process_output($local_data_id, $outarray, $rrd_path, $rrd_tmplp, $rrdtool_pipe);
+					$flushed[$local_data_id] = true;
 
 					$buflen         = 0;
 					$vals_in_buffer = 0;
@@ -1150,6 +1152,7 @@ function boost_process_local_data_ids($child, $rrdtool_pipe, $max_rows) {
 				if ($buflen > $upd_string_len) {
 					/* new process output function */
 					$flush_ok = boost_process_output($local_data_id, $outarray, $rrd_path, $rrd_tmplp, $rrdtool_pipe);
+					$flushed[$local_data_id] = true;
 
 					$buflen         = 0;
 					$vals_in_buffer = 0;
@@ -1324,6 +1327,16 @@ function boost_process_local_data_ids($child, $rrdtool_pipe, $max_rows) {
 			if (!boost_process_output($local_data_id, $outarray, $rrd_path, $rrd_tmplp, $rrdtool_pipe)) {
 				$blocked[$local_data_id] = true;
 			}
+
+			$flushed[$local_data_id] = true;
+		}
+
+		/* Every RRD failing points at RRDtool or storage, not one file. Requeuing
+		 * would report success, so retain the page and fail the child instead. */
+		if (cacti_sizeof($blocked) > 1 && cacti_sizeof($blocked) == cacti_sizeof($flushed)) {
+			cacti_log('ERROR: Boost RRD updates failed for every data source in the page; the page was retained.', true, 'BOOST');
+			$updates_ok = false;
+			$blocked    = array();
 		}
 
 		/* Hand unacknowledged samples back to the live table and drop the data
