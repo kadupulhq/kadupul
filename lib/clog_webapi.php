@@ -100,6 +100,14 @@ function clog_validate_filename(&$file, &$filepath, &$filename, $filecheck = fal
 function clog_purge_logfile() {
 	global $config;
 
+	/* csrf-magic only checks the token on POST, so a GET here would let a
+	 * forged link purge or delete logs as the signed-in administrator. */
+	if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+		cacti_log('WARNING: Rejected non-POST request to purge a log file', false, 'AUTH');
+
+		return;
+	}
+
 	$filename = get_nfilter_request_var('filename');
 
 	if (!clog_validate_filename($filename, $logpath, $logname)) {
@@ -241,8 +249,12 @@ function clog_view_logfile() {
 				<input type='button' class='ui-button ui-corner-all ui-widget' id='pc' name='purge_continue' value='" . __esc('Continue') . "' title='" . __esc('Purge Log') . "'>
 				<script type='text/javascript' " . CactiSecureHeaders::getNonceAttribute() . ">
 				$('#pc').on('click', function() {
-					strURL = location.pathname+'?purge_continue=1&header=false&filename=" . basename($logfile) . "';
-					loadPageNoHeader(strURL);
+					loadPageUsingPost(location.pathname, {
+						purge_continue: 1,
+						header: 'false',
+						filename: '" . basename($logfile) . "',
+						__csrf_magic: csrfMagicToken
+					});
 				});
 
 				$('#cancel').on('click', function() {

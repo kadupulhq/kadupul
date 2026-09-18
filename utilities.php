@@ -1342,8 +1342,12 @@ function utilities_view_logfile() {
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 
 	function purgeLog() {
-		strURL = urlPath+'utilities.php?action=purge_logfile&header=false&filename='+$('#filename').val();
-		loadPageNoHeader(strURL);
+		loadPageUsingPost(urlPath+'utilities.php', {
+			action: 'purge_logfile',
+			header: 'false',
+			filename: $('#filename').val(),
+			__csrf_magic: csrfMagicToken
+		});
 	}
 
 	$(function() {
