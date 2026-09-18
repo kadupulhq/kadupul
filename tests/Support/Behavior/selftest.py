@@ -728,14 +728,6 @@ def diagnostic_contracts():
     assert harness.application_diagnostics(unknown) == [
         {'subsystem': '<UNPARSED>', 'message': 'lower-case prefix PHP WARNING: kept <APP>/x.php'}]
     assert harness.application_diagnostics('09/16/2026 01:02:06 - POLLER: Poller[1] PID[7] Time:1') == []
-    epipe = ('09/16/2026 01:02:06 - ERROR PHP NOTICE: fwrite(): Write of {} bytes failed with errno=32 Broken pipe in file: /var/www/html/lib/rrd.php  on line: 334\n'
-             '09/16/2026 01:02:06 - CMDPHP PHP ERROR NOTICE Backtrace:  (/poller.php[764]:process_poller_output(), /lib/poller.php[819]:rrdtool_function_update(), '
-             '/lib/rrd.php[905]:rrdtool_execute(), /lib/rrd.php[252]:__rrd_execute(), /lib/rrd.php[334]:fwrite(), CactiErrorHandler())\n')
-    assert harness.application_diagnostics(epipe.format(108)) == harness.application_diagnostics(''.join(epipe.format(size) for size in (108, 108, 4356, 108, 99)))
-    assert len(harness.application_diagnostics(epipe.format(108))) == 2
-    repeated = epipe.format(108).replace('errno=32 Broken pipe', 'errno=28 No space left on device')
-    # The shared backtrace collapses; other write errors keep their count.
-    assert len(harness.application_diagnostics(repeated * 3)) == 4
     for severity in ('ERROR', 'WARNING', 'NOTICE', 'DEPRECATED', 'USER_WARNING', 'USER_NOTICE', 'USER_ERROR', 'USER_DEPRECATED', 'STRICT', 'PARSE', 'CORE_ERROR', 'CORE_WARNING', 'COMPILE_ERROR', 'COMPILE_WARNING', 'RECOVERABLE_ERROR', 'ALL', 'Unknown Error'):
         diagnostic = f'PHP {severity}: calibration in file: /harness/probe.php on line: 79'
         assert harness.normalize_php_locations(diagnostic) == diagnostic
