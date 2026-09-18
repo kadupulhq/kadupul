@@ -25,6 +25,39 @@ test('report item controls post mutations with the csrf token', function () use 
         ->and($htmlReports)->not->toContain('?action=item_remove&item_id=');
 });
 
+test('csrf middleware rejects empty-body POST mutations without a token', function () use ($root) {
+    $program = <<<'PHP'
+function csrf_startup() {
+    csrf_conf('defer', true);
+    csrf_conf('rewrite', false);
+    csrf_conf('auto-session', false);
+}
+$_SERVER['REQUEST_METHOD'] = 'POST';
+$_POST = array();
+require __DIR__ . '/../include/vendor/csrf/csrf-magic.php';
+echo csrf_check(false) ? 'accepted' : 'rejected';
+PHP;
+
+    $process = proc_open(
+        array(PHP_BINARY, '-r', $program),
+        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+        $pipes,
+        $root . '/tests'
+    );
+
+    expect(is_resource($process))->toBeTrue();
+
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+
+    $exit = proc_close($process);
+
+    expect($exit)->toBe(0, $stderr)
+        ->and($stdout)->toBe('rejected');
+});
+
 test('report controllers redirect mutations through the realm-aware reports page', function () use ($reportsAdmin, $reportsUser) {
     expect($reportsUser)->not->toContain("header('Location: reports_admin.php?action=edit&tab=items&id='")
         ->and($reportsAdmin)->toContain("header('Location: ' . get_reports_page()")

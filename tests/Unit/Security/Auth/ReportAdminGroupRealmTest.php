@@ -382,6 +382,7 @@ test('report item saves require an authorized existing parent and matching item'
     array(5, 7, 70, true),
     array(16, 7, 70, false),
     array(5, 7, 80, false),
+    array(5, 7, -1, false),
     array(12, 999, 0, false),
     array(12, 7, 999, false),
 ));
@@ -427,3 +428,9 @@ test('report item removes require authorization to the owning report', function 
     array(5, 80, false),
     array(12, 999, false),
 ));
+
+test('report item removes require the owning report to exist', function () {
+    $GLOBALS['rg_db']->exec('INSERT INTO reports_items VALUES (90,99,1)');
+    remove_item_as(12, 90);
+    expect($GLOBALS['rg_deleted'])->toBe(array());
+});
