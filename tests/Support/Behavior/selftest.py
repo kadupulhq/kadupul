@@ -129,7 +129,7 @@ def application_image_contract():
 
 def application_input_boundary_contract():
     from unittest.mock import Mock
-    for fault in ('missing-root', 'missing-schema', 'non-git', 'missing-helper', 'different-helper', 'different-build-input'):
+    for fault in ('missing-root', 'missing-schema', 'non-git', 'missing-helper', 'different-helper', 'different-build-input', 'extra-helper'):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory) / 'application'
             if fault != 'missing-root':
@@ -137,6 +137,8 @@ def application_input_boundary_contract():
             if fault not in ('missing-root', 'missing-schema'):
                 (root / 'cacti.sql').write_text('schema')
             provenance = comparable_manifest()['provenance']
+            if fault == 'extra-helper':
+                provenance['application_inputs_sha256']['tests/Support/Behavior/obsolete.php'] = 'e' * 64
             if fault == 'missing-helper':
                 provenance['application_inputs_sha256'].pop('tests/Support/Behavior/probe.php')
             if fault in ('different-helper', 'different-build-input'):

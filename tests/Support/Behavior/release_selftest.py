@@ -94,8 +94,40 @@ def baseline_checkout_metadata():
     print('Release baseline preserves revision metadata, schema and validated controller overlay')
 
 
+def baseline_overlay_replacement():
+    with tempfile.TemporaryDirectory(prefix='release obsolete inputs ') as directory:
+        source = Path(directory) / 'source'
+        source.mkdir()
+        def git(*arguments):
+            return release.harness.run(['git', '-C', str(source), '-c', 'user.name=Harness Fixture',
+                '-c', 'user.email=fixture@example.invalid', '-c', 'commit.gpgsign=false',
+                '-c', 'core.hooksPath=/dev/null', *arguments])['stdout'].strip()
+        git('init', '-q')
+        for relative in ('tests/Support/Behavior', 'tests/Fixtures', 'tests/behavior'):
+            (source / relative).mkdir(parents=True)
+            (source / relative / 'current').write_text('candidate input')
+            (source / relative / 'obsolete').write_text('baseline-only input')
+        (source / 'cacti.sql').write_text('unchanged schema')
+        (source / '.dockerignore').write_text('.git')
+        git('add', '.')
+        git('commit', '-q', '-s', '-m', 'Create baseline fixture')
+        revision = git('rev-parse', 'HEAD')
+        for path in source.rglob('obsolete'):
+            path.unlink()
+        git('add', '-u')
+        git('commit', '-q', '-s', '-m', 'Remove obsolete controller inputs')
+        baseline = Path(directory) / 'baseline'
+        with patch.object(release, 'ROOT', source):
+            release.prepare_baseline(revision, baseline)
+        assert not list(baseline.rglob('obsolete'))
+        assert len(list((baseline / 'tests').rglob('current'))) == 3
+        assert (baseline / 'cacti.sql').read_text() == 'unchanged schema'
+    print('Baseline overlays remove obsolete helpers without changing application data')
+
+
 def main():
     baseline_checkout_metadata()
+    baseline_overlay_replacement()
     recursive_rrd_manifest()
     projects = []
     for missing_docker in (False, True):

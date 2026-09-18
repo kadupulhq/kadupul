@@ -96,7 +96,7 @@ def validate_application_inputs():
     application = provenance['application_inputs_sha256']
     if not REQUIRED_INPUTS.issubset(controller) or not REQUIRED_INPUTS.issubset(application):
         raise RuntimeError('Application or controller is missing required harness inputs')
-    mismatched = sorted(name for name, digest in controller.items() if application.get(name) != digest)
+    mismatched = sorted(name for name in set(controller) | set(application) if application.get(name) != controller.get(name))
     if mismatched:
         raise RuntimeError('Application harness overlay differs from controller: ' + ', '.join(mismatched))
 
@@ -920,7 +920,7 @@ def compare(args):
         if baseline.get(key) != candidate.get(key):
             report.append({'scenario': '<environment>/' + key, 'status': 'NEEDS_REVIEW', 'digest': '',
                            'baseline': baseline.get(key), 'candidate': candidate.get(key)})
-    for key in ('harness_sha256', 'harness_inputs_sha256'):
+    for key in ('harness_sha256', 'harness_inputs_sha256', 'application_inputs_sha256'):
         if baseline['provenance'][key] != candidate['provenance'][key]:
             report.append({'scenario': '<environment>/' + key, 'status': 'NEEDS_REVIEW', 'digest': '',
                            'baseline': baseline['provenance'][key], 'candidate': candidate['provenance'][key]})

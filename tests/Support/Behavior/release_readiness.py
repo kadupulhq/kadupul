@@ -123,13 +123,20 @@ def assert_failed_writer_retains_queue(h):
 def prepare_baseline(baseline_revision, baseline):
     """Keep real revision metadata for the same validation used by normal captures."""
     harness.run(['git', 'clone', '--shared', '--no-checkout', '--', str(ROOT), str(baseline)])
-    harness.run(['git', '-C', str(baseline), 'checkout', '--detach', baseline_revision])
+    harness.run(['git', '-C', str(baseline), 'checkout', '--detach', '--force', baseline_revision])
     gitdir = Path(harness.run(['git', '-C', str(baseline), 'rev-parse', '--absolute-git-dir'])['stdout'].strip())
     require(gitdir.resolve() == (baseline / '.git').resolve(), 'Baseline must own its Git metadata')
     require(not harness.run(['git', '-C', str(baseline), 'status', '--porcelain'])['stdout'].strip(),
             'Baseline checkout must be complete and clean before applying test inputs')
     # The test infrastructure is candidate-owned; the application and
     # schema are the exact baseline revision checked out above.
+    # Replace candidate-owned inputs; merging leaves deleted baseline helpers active.
+    for relative in ('tests/Support/Behavior', 'tests/Fixtures', 'tests/behavior'):
+        destination = baseline / relative
+        if destination.is_symlink():
+            destination.unlink()
+        elif destination.exists():
+            shutil.rmtree(destination)
     shutil.copytree(ROOT / 'tests/Support/Behavior', baseline / 'tests/Support/Behavior', dirs_exist_ok=True)
     shutil.copytree(ROOT / 'tests/Fixtures', baseline / 'tests/Fixtures', dirs_exist_ok=True)
     shutil.copytree(ROOT / 'tests/behavior', baseline / 'tests/behavior', dirs_exist_ok=True,
