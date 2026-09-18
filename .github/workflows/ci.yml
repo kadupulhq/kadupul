@@ -194,6 +194,8 @@ jobs:
         run: mise exec python@3.12.12 -- python tests/Support/Behavior/selftest.py
       # This exercises runtime invariants without claiming parity with upstream.
       # Observations are ephemeral CI artifacts; committed goldens stay untouched.
+      - name: Load PHP base image for runtime provenance
+        run: docker pull php:8.2-apache
       - name: Exercise fresh install, authentication and collection
         env:
           PHP_VERSION: '8.2'
