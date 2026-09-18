@@ -32,7 +32,7 @@ $rrdProxyRoot = dirname(__DIR__, 4);
  * @param array<int, string>            $touch - empty files to create in the work directory first
  * @param array<int, string>            $rrds  - RRD files to create in the work directory first
  */
-function rrd_proxy_channel_run(string $root, array $calls = array(), array $touch = array(), array $rrds = array()) : array {
+function rrd_proxy_channel_run(string $root, array $calls = array(), array $touch = array(), array $rrds = array(), $existsReply = null) : array {
 	require_once $root . '/include/vendor/autoload.php';
 
 	$work = sys_get_temp_dir() . '/cacti-rrdp-' . bin2hex(random_bytes(6));
@@ -63,6 +63,7 @@ function rrd_proxy_channel_run(string $root, array $calls = array(), array $touc
 		'work'           => $work,
 		'calls'          => $calls,
 		'rrdtool'        => cacti_test_rrdtool_binary(),
+		'exists_reply'   => $existsReply,
 	);
 
 	file_put_contents($work . '/keys.json', json_encode($keys));
@@ -173,7 +174,7 @@ while (($raw = proxy_read_message($client)) !== false) {
 		$reply = "% Timeout disabled.\nOK u:0.00";
 	} elseif ($parts[0] === 'file_exists') {
 		$status = call_user_func_array('file_exists', explode(' ', $parts[1] ?? ''));
-		$reply  = ($status === true) ? 'OK u:0.00' : 'ERROR:';
+		$reply  = $keys['exists_reply'] ?? (($status === true) ? 'OK u:0.00' : 'ERROR:');
 	} elseif (in_array($parts[0], array('fetch', 'update'), true) && $keys['rrdtool'] !== '') {
 		/* Cacti/rrdproxy lib/client.php: an $rrdtool_cmds verb is written to the proxy's
 		 * own 'rrdtool -' pipe as $cmd . ' ' . $cmd_options . "\r\n" */
@@ -406,4 +407,10 @@ test('the upstream setcnn timeout response is acknowledged over the encrypted pr
     expect($run['client']['calls'])->toBe(array(array('ok' => true, 'reason' => null, 'permanent' => false)));
     expect(array_column($run['packets'], 'command'))->toContain('setcnn timeout off');
     foreach ($run['packets'] as $packet) { expect($packet['encrypted'])->toBeTrue(); }
+})->skip(!extension_loaded('sockets'), 'the sockets extension is not loaded');
+
+
+test('a malformed proxy existence reply is unknown rather than evidence to recreate an RRD', function () use ($rrdProxyRoot) {
+    $run = rrd_proxy_channel_run($rrdProxyRoot, array(array('path', 'file_exists', '{work}/plain.rrd')), array('plain.rrd'), array(), 'invalid OK u:0.00');
+    expect($run['client']['calls'])->toBe(array(null));
 })->skip(!extension_loaded('sockets'), 'the sockets extension is not loaded');
