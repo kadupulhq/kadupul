@@ -265,6 +265,26 @@ test('user_admin.php and user_group_admin.php refuse a GET default policy change
 	}
 });
 
+test('user, group and domain bulk actions refuse any GET that carries selected_items', function () {
+	/* The global guard lets a same-site GET through, but selected_items is the
+	   request that deletes, copies, enables or disables. The confirmation page
+	   posts it, so no legitimate GET carries it. */
+	foreach (array('user_admin.php', 'user_group_admin.php', 'user_domains.php') as $page) {
+		$source = file_get_contents(dirname(__DIR__, 4) . '/' . $page);
+
+		expect(preg_match("/case 'actions':\n(.*?)\t*form_actions\(\);/s", $source, $matches))->toBe(1, $page);
+
+		$check    = $matches[1] . "\nset_request_var('action', 'ran');";
+		$selected = array('selected_items' => 'a:1:{i:0;i:3;}', 'drp_action' => '1');
+
+		expect(run_checked($check, 'GET', $selected))->toBe('405', $page)
+			->and(run_checked($check, 'GET', $selected, array(), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('405', $page)
+			->and(run_checked($check, 'HEAD', $selected))->toBe('405', $page)
+			->and(run_checked($check, 'POST', $selected, array('__csrf_magic' => 'sid:x'), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('pass:ran', $page)
+			->and(run_checked($check, 'GET', array('drp_action' => '1'), array(), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('pass:ran', $page);
+	}
+});
+
 test('only a GET gets the same-site relaxation; HEAD, PUT, DELETE and PATCH get 405', function () {
 	$wrong = array();
 
