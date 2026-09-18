@@ -65,6 +65,7 @@ function top_header() {}
 function bottom_footer() {}
 function tree() {}
 function tree_edit($partial = false) {}
+function tree_require_lock($tree_id, $action, $held = true) {}
 
 $handlers = array(
 	'form_save', 'form_actions', 'tree_sort_name_asc', 'tree_sort_name_desc',

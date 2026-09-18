@@ -146,6 +146,7 @@ switch (get_request_var('action')) {
 	case 'lock':
 		csrf_require_post(true);
 		tree_require_access(get_filter_request_var('id'), 'lock');
+		tree_require_lock(get_filter_request_var('id'), 'lock', false);
 
 		api_tree_lock(get_request_var('id'), $_SESSION['sess_user_id']);
 		tree_edit(true);
@@ -160,30 +161,35 @@ switch (get_request_var('action')) {
 	case 'copy_node':
 		csrf_require_post(true);
 		tree_require_access(get_request_var('tree_id'), 'copy_node');
+		tree_require_lock(get_request_var('tree_id'), 'copy_node');
 
 		api_tree_copy_node(get_request_var('tree_id'), get_request_var('id'), get_request_var('parent'), get_request_var('position'));
 		break;
 	case 'create_node':
 		csrf_require_post(true);
 		tree_require_access(get_request_var('tree_id'), 'create_node');
+		tree_require_lock(get_request_var('tree_id'), 'create_node');
 
 		api_tree_create_node(get_request_var('tree_id'), get_request_var('id'), get_request_var('position'), get_nfilter_request_var('text'));
 		break;
 	case 'delete_node':
 		csrf_require_post(true);
 		tree_require_access(get_request_var('tree_id'), 'delete_node');
+		tree_require_lock(get_request_var('tree_id'), 'delete_node');
 
 		api_tree_delete_node(get_request_var('tree_id'), get_request_var('id'));
 		break;
 	case 'move_node':
 		csrf_require_post(true);
 		tree_require_access(get_request_var('tree_id'), 'move_node');
+		tree_require_lock(get_request_var('tree_id'), 'move_node');
 
 		api_tree_move_node(get_request_var('tree_id'), get_request_var('id'), get_request_var('parent'), get_request_var('position'));
 		break;
 	case 'rename_node':
 		csrf_require_post(true);
 		tree_require_access(get_request_var('tree_id'), 'rename_node');
+		tree_require_lock(get_request_var('tree_id'), 'rename_node');
 
 		api_tree_rename_node(get_request_var('tree_id'), get_request_var('id'), get_nfilter_request_var('text'));
 		break;
@@ -196,6 +202,7 @@ switch (get_request_var('action')) {
 	case 'set_host_sort':
 		csrf_require_post(true);
 		tree_require_access(tree_branch_tree_id(get_request_var('nodeid')), 'set_host_sort');
+		tree_require_lock(tree_branch_tree_id(get_request_var('nodeid')), 'set_host_sort');
 
 		set_host_sort_type();
 		break;
@@ -205,6 +212,7 @@ switch (get_request_var('action')) {
 	case 'set_branch_sort':
 		csrf_require_post(true);
 		tree_require_access(tree_branch_tree_id(get_request_var('nodeid')), 'set_branch_sort');
+		tree_require_lock(tree_branch_tree_id(get_request_var('nodeid')), 'set_branch_sort');
 
 		set_branch_sort_type();
 		break;
@@ -227,6 +235,32 @@ function tree_require_access($tree_ids, $action) {
 			exit;
 		}
 	}
+}
+
+/* tree_edit() offers these changes only to the user holding the tree's lock,
+   and offers the lock only while no one else holds it. $held is false for
+   the requests that need only that no one else holds it. */
+function tree_require_lock($tree_id, $action, $held = true) {
+	$tree = db_fetch_row_prepared('SELECT locked, locked_date, modified_by
+		FROM graph_tree
+		WHERE id = ?',
+		array((int) $tree_id));
+
+	if (!cacti_sizeof($tree)) {
+		$message = __('To Edit this tree, you must first lock it by pressing the Edit Tree button.');
+	} elseif ($tree['locked'] == 1 && $tree['modified_by'] != $_SESSION['sess_user_id']) {
+		$message = __('This tree has been locked for Editing on %s by %s.', $tree['locked_date'], html_escape(get_username($tree['modified_by']))) . ' ' . __('To edit the tree, you must first unlock it and then lock it as yourself');
+	} elseif ($held && $tree['locked'] != 1) {
+		$message = __('To Edit this tree, you must first lock it by pressing the Edit Tree button.');
+	} else {
+		return;
+	}
+
+	cacti_log('WARNING: Rejected tree.php?action=' . $action . ' on Tree ' . (int) $tree_id . ' without its lock for User ' . $_SESSION['sess_user_id'], false, 'AUTH');
+
+	raise_message('tree_locked', $message, MESSAGE_LEVEL_ERROR);
+	header('Location: tree.php?header=false');
+	exit;
 }
 
 /* The sort type routes name only a branch, so the tree comes from the branch. */
@@ -586,6 +620,10 @@ function form_save() {
 			raise_message('tree_idor', __('You do not have permission to modify this tree.'), MESSAGE_LEVEL_ERROR);
 			header('Location: tree.php');
 			exit;
+		}
+
+		if (get_filter_request_var('id') > 0) {
+			tree_require_lock(get_request_var('id'), 'save', false);
 		}
 
 		if (get_filter_request_var('id') > 0) {

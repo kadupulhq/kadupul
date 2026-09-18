@@ -70,6 +70,7 @@ function run_tree($method, $action, array $server = array()) {
 		function tree() {}
 		function tree_edit($partial = false) {}
 		function tree_require_access($tree_ids, $action) {}
+		function tree_require_lock($tree_id, $action, $held = true) {}
 		function tree_branch_tree_id($nodeid) { return 3; }
 		function db_fetch_assoc($sql) { return array(); }
 		' . $source . '
