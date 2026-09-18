@@ -492,6 +492,8 @@ db_execute('REPLACE INTO poller_data_template_field_mappings
 	AND gti.local_graph_id = 0
 	GROUP BY dtr.data_template_id, dif.data_name');
 
+// Each run resets its own write state; a failure in any run fails the process.
+$rrd_runs_failed = false;
 while ($poller_runs_completed < $poller_runs) {
     // record the start time for this loop
     $loop_start = microtime(true);
@@ -940,6 +942,7 @@ while ($poller_runs_completed < $poller_runs) {
         cacti_log('WARNING: The Kadupul Data Collector is currently disabled!', true, 'POLLER');
     }
 
+    $rrd_runs_failed = $rrd_runs_failed || !empty($rrd_write_failed);
     $poller_runs_completed++;
 
     // push records updates to the main poller
@@ -1070,7 +1073,7 @@ if ($poller_id == 1) {
     api_plugin_hook('poller_bottom');
 }
 
-if (!empty($rrd_write_failed) || !empty($rrd_cleanup_failed)) {
+if (!empty($rrd_runs_failed) || !empty($rrd_cleanup_failed)) {
     exit(1);
 }
 

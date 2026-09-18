@@ -19,7 +19,7 @@ test('RRD write failure preserves poller post-run services and only changes exit
         $program .= 'function ' . $name . '(...$args){$GLOBALS["events"][]="' . $name . '";}';
     }
     $program .= '$poller_id=' . $pollerId . ';$mibs=false;$config=array("connection"=>' . var_export($recovery ? 'recovery' : 'online', true) . ');';
-    $program .= '$rrd_write_failed=' . ($failed ? 'true' : 'false') . ';register_shutdown_function(function(){echo json_encode($GLOBALS["events"]);});' . $postRun;
+    $program .= '$rrd_runs_failed=' . ($failed ? 'true' : 'false') . ';register_shutdown_function(function(){echo json_encode($GLOBALS["events"]);});' . $postRun;
     $file = tempnam(sys_get_temp_dir(), 'poller-post-run-');
     file_put_contents($file, $program);
     try {
@@ -79,3 +79,38 @@ test('the final drain reports current failure state after a recovered waiting at
     expect(proc_close($process))->toBe(0)->and($error)->toBe('');
     expect(json_decode($output, true))->toBe(array(3, $failed));
 })->with(array(false, true));
+
+
+test('a failed drain in an earlier run still fails a multi-run poller process', function () {
+    $source = file_get_contents(dirname(__DIR__, 4) . '/poller.php');
+    $loop = strpos($source, 'while ($poller_runs_completed < $poller_runs) {');
+    $init = strpos($source, '$rrd_runs_failed = false;');
+    $accumulate = '$rrd_runs_failed = $rrd_runs_failed || !empty($rrd_write_failed);';
+    $position = strpos($source, $accumulate);
+    $start = strpos($source, '// Finish poller bookkeeping');
+    $end = strpos($source, 'function host_status_cache_check()');
+    // Initialised once before the run loop and accumulated at the end of each run.
+    expect($init)->not->toBeFalse()->and($init)->toBeLessThan($loop)
+        ->and($position)->toBeGreaterThan($loop)->and($position)->toBeLessThan($start);
+    $postRun = substr($source, $start, $end - $start);
+    $postRun = str_replace(test_php_function_source($source, 'poller_heartbeat_check'), '', $postRun);
+    $program = '<?php namespace PollerRunsProbe;';
+    foreach (array('multiple_poller_boost_check', 'poller_replicate_check', 'snmpagent_poller_bottom', 'boost_poller_bottom', 'dsstats_poller_bottom', 'dsdebug_poller_bottom', 'reports_poller_bottom', 'spikekill_poller_bottom', 'automation_poller_bottom', 'poller_maintenance', 'rrdcheck_poller_bottom', 'api_plugin_hook', 'bad_index_check', 'host_status_cache_check', 'poller_heartbeat_check', 'cacti_log', 'poller_recovery_flush_boost') as $name) {
+        $program .= 'function ' . $name . '(...$args){}';
+    }
+    // The first run's drain fails; the second run's drain succeeds.
+    $program .= '$poller_id=1;$mibs=false;$config=array("connection"=>"online");$rrd_runs_failed=false;'
+        . 'foreach (array(true, false) as $rrd_write_failed) {' . $accumulate . '}' . $postRun;
+    $file = tempnam(sys_get_temp_dir(), 'poller-runs-');
+    file_put_contents($file, $program);
+    try {
+        $process = proc_open(array(PHP_BINARY, $file), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        stream_get_contents($pipes[1]);
+        $error = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        expect(proc_close($process))->toBe(1, $error)->and($error)->toBe('');
+    } finally {
+        unlink($file);
+    }
+});
