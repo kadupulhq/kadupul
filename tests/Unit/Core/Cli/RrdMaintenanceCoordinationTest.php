@@ -113,7 +113,9 @@ FIXTURE;
             file_put_contents($wrapper, "#!/bin/sh\n" . escapeshellarg($binary) . " \"\$@\"\nexit 1\n");
         }
         if ($failure === 'dump-cleanup') {
-            file_put_contents($wrapper, "#!/bin/sh\n" . escapeshellarg($binary) . " \"\$@\"\nfor workspace in " . escapeshellarg($dir) . "/kadupul-rrd-*; do chmod 0500 \"\$workspace\"; done\nexit 1\n");
+            // A non-empty directory cannot be unlinked, even by root. Preserve
+            // the real dump inside it so manual-recovery assertions stay meaningful.
+            file_put_contents($wrapper, "#!/bin/sh\n" . escapeshellarg($binary) . " \"\$@\"\nif [ \"\$1\" = dump ]; then\nfor workspace in " . escapeshellarg($dir) . "/kadupul-rrd-*; do\n [ -f \"\$workspace/old.xml\" ] || continue\n mv \"\$workspace/old.xml\" \"\$workspace/retained.xml\"\n mkdir \"\$workspace/old.xml\"\n mv \"\$workspace/retained.xml\" \"\$workspace/old.xml/retained.xml\"\ndone\nfi\nexit 1\n");
         }
         if ($failure === 'fetch-empty' || $failure === 'fetch-throw') {
             $behavior = $failure === 'fetch-empty' ? 'return array();' : 'throw new RuntimeException("fetch failed");';
@@ -195,7 +197,7 @@ FIXTURE;
                 expect($stderr)->toContain('Partial dumps retained for manual cleanup');
                 $workspaces = glob($dir . '/kadupul-rrd-*');
                 expect($workspaces)->toHaveCount(1);
-                expect(file_exists($workspaces[0] . '/old.xml'))->toBeTrue();
+                expect(file_get_contents($workspaces[0] . '/old.xml/retained.xml'))->toContain('<rrd>');
             }
             if ($failure === 'dump-failure') {
                 expect($stderr)->toContain('dump failed; inputs preserved')->and(file_exists($dir . '/finished.rrd'))->toBeFalse();
