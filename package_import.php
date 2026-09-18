@@ -165,25 +165,7 @@ function form_save() {
 				$id = base64_decode(str_replace('chk_file_', '', $var));
 				$id = json_decode($id, true);
 
-				if (strpos($id['pfile'], '/') !== false) {
-					$parts = explode('/', $id['pfile']);
-				} elseif (strpos($id['pfile'], '\\') !== false) {
-					$parts = explode('\\', $id['pfile']);
-				} else {
-					$parts = array($id['pfile']);
-				}
-
-				foreach($parts as $index => $p) {
-					if ($p == 'scripts') {
-						break;
-					} elseif ($p == 'resource') {
-						break;
-					} else {
-						unset($parts[$index]);
-					}
-				}
-
-				$id['pfile'] = implode('/', $parts);
+				$id['pfile'] = package_import_normalize_selected_file($id['pfile']);
 
 				$files[] = $id['pfile'];
 			}
@@ -281,6 +263,20 @@ function package_file_get_contents($filename) {
 	}
 
 	return false;
+}
+
+function package_import_normalize_selected_file($pfile) {
+	$parts = explode('/', str_replace('\\', '/', $pfile));
+
+	foreach($parts as $index => $p) {
+		if ($p == 'plugins' && isset($parts[$index + 2]) && ($parts[$index + 2] == 'scripts' || $parts[$index + 2] == 'resource')) {
+			return implode('/', array_slice($parts, $index));
+		} elseif ($p == 'scripts' || $p == 'resource') {
+			return implode('/', array_slice($parts, $index));
+		}
+	}
+
+	return implode('/', $parts);
 }
 
 function package_diff_file() {

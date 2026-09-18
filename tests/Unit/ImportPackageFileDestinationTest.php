@@ -102,6 +102,20 @@ function importPkgDestRun($names, $preview = false, $importFiles = array())
     return importPkgDest_import_package('package.xml.gz', 1, false, false, $preview, false, false, array(), $importFiles);
 }
 
+function importPkgDestNormalizeSelectedFile($root, $pfile)
+{
+    if (!function_exists('importPkgDest_package_import_normalize_selected_file')) {
+        $source = file_get_contents($root . '/package_import.php');
+        preg_match('/^function package_import_normalize_selected_file\(.*?^}\n/ms', $source, $match);
+
+        expect($match)->not->toBeEmpty();
+
+        eval(str_replace('function package_import_normalize_selected_file', 'function importPkgDest_package_import_normalize_selected_file', $match[0]));
+    }
+
+    return importPkgDest_package_import_normalize_selected_file($pfile);
+}
+
 beforeEach(function () use ($root) {
     importPkgDestLoad($root);
 
@@ -166,6 +180,12 @@ test('matches selective import files after normalizing package destinations', fu
     expect(file_get_contents($this->base . '/scripts/selective.php'))->toBe('payload for scripts\\selective.php')
         ->and($result[1][$this->base . '/scripts/selective.php'])->toBe('written')
         ->and(file_exists($this->base . '/scripts/skipped.php'))->toBeFalse();
+});
+
+test('normalizes selected package files without dropping plugin prefixes', function () use ($root) {
+    expect(importPkgDestNormalizeSelectedFile($root, '/var/www/cacti/scripts/base.php'))->toBe('scripts/base.php')
+        ->and(importPkgDestNormalizeSelectedFile($root, '/var/www/cacti/plugins/thold/scripts/plugin.php'))->toBe('plugins/thold/scripts/plugin.php')
+        ->and(importPkgDestNormalizeSelectedFile($root, 'C:\\cacti\\plugins\\thold\\resource\\plugin.xml'))->toBe('plugins/thold/resource/plugin.xml');
 });
 
 test('previews an existing script file', function () {
