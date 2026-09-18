@@ -34,6 +34,7 @@ $archived = $purged = $reads = 0;
 $poller_start = microtime(true);
 $queue = array(array('id'=>1, 'name'=>'bad/sample.rrd', 'local_data_id'=>0, 'action'=>$action),
     array('id'=>2, 'name'=>'good.rrd', 'local_data_id'=>0, 'action'=>$action));
+if ($mode === 'empty') { $queue = array(); }
 $messages = $warnings = $deleted = array();
 function read_config_option($key, ...$args) { return $key === 'rrd_archive' ? dirname(__DIR__).'/archive' : 0; }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
@@ -78,14 +79,17 @@ SOURCE;
         $result = json_decode($output, true, 512, JSON_THROW_ON_ERROR);
         $completed = $mode === 'success' ? 2 : ($mode === 'filesystem' ? 1 : 0);
         expect($result['deleted'])->toHaveCount($completed)
-            ->and($result['queue'])->toHaveCount(2 - $completed)
+            ->and($result['queue'])->toHaveCount($mode === 'empty' ? 0 : 2 - $completed)
             ->and($result[$action === '1' ? 'purged' : 'archived'])->toBe($completed);
         if ($mode === 'success') {
-            expect($result['result'])->not->toBeFalse()->and($result['warnings'])->toBe(array());
+            expect($result['result'])->toBeTrue()->and($result['warnings'])->toBe(array());
             expect(file_exists($directory . '/bad/sample.rrd'))->toBeFalse();
             if ($action === '3') {
                 expect(file_get_contents($directory . '/archive/bad/sample.rrd'))->toBe('retained original');
             }
+        } elseif ($mode === 'empty') {
+            expect($result['result'])->toBeTrue()->and($result['warnings'])->toBe(array());
+            expect(file_get_contents($directory . '/bad/sample.rrd'))->toBe('retained original');
         } else {
             expect($result['result'])->toBeFalse()
                 ->and(file_get_contents($directory . '/bad/sample.rrd'))->toBe('retained original');
@@ -108,4 +112,4 @@ SOURCE;
         }
         rmdir($directory);
     }
-})->with(array('count', 'read', 'lease', 'filesystem', 'success'))->with(array('1', '3'));
+})->with(array('count', 'read', 'lease', 'filesystem', 'success', 'empty'))->with(array('1', '3'));

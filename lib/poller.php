@@ -3289,6 +3289,7 @@ function process_poller_output_batch($final, &$deferred, &$proxy_pipe) {
 			cacti_log('NOTE: RRD maintenance is active; pending poller samples retained for a later batch.', false, 'POLLER');
 			$reported['busy'] = true;
 		}
+		$deferred = true;
 		return 0;
 	}
 	$reported['busy'] = false;
