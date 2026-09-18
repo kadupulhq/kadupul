@@ -191,8 +191,11 @@ poller_enabled_check($poller_id);
 
 // Validate the actual queue before launching producers, including remote collectors.
 // Only the primary writer requires local RRD storage; online remotes use its database.
+// Offline/recovery remotes retain their authoritative samples in the Boost queue;
+// their transient poller_output table is cleared and is not the durable queue.
 require_once __DIR__ . '/lib/rrd_maintenance.php';
-if (!rrd_maintenance_poller_preflight((int) $poller_id === 1, $poller_db_cnn_id)) {
+if (((int) $poller_id === 1 || $config['connection'] === 'online')
+    && !rrd_maintenance_poller_preflight((int) $poller_id === 1, $poller_db_cnn_id)) {
     exit(1);
 }
 
@@ -781,6 +784,7 @@ while ($poller_runs_completed < $poller_runs) {
             }
 
             $rrds_processed = 0;
+            $rrd_write_failed = false;
             $poller_output_deferred = false;
             $rrdtool_pipe = false;
             $poller_finishing_dispatched = false;
@@ -805,9 +809,7 @@ while ($poller_runs_completed < $poller_runs) {
 
                     if ($poller_id == 1) {
                         $rrds_processed += process_poller_output_batch($poller_output_deferred, $rrdtool_pipe);
-                        if ($poller_output_deferred) {
-                            $rrd_write_failed = true;
-                        }
+                        $rrd_write_failed = $poller_output_deferred;
                     } elseif ($config['connection'] != 'online') {
                         /* truncate until formal remote management is supported */
                         db_execute('TRUNCATE poller_output');
@@ -833,9 +835,7 @@ while ($poller_runs_completed < $poller_runs) {
                     $mtb = microtime(true);
 
                     if ($poller_id == 1) {
-                        if (empty($poller_output_deferred)) {
-                            $rrds_processed += process_poller_output_batch($poller_output_deferred, $rrdtool_pipe);
-                        }
+                        $rrds_processed += process_poller_output_batch($poller_output_deferred, $rrdtool_pipe);
                         if ($poller_output_deferred) {
                             $rrd_write_failed = true;
                         }

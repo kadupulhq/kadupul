@@ -87,6 +87,9 @@ function db_fetch_cell_prepared($sql, $params = array())
         return 'InnoDB';
     }
     $mode = getenv('BOOST_MODE');
+    if ($mode === 'output-next-count' && strpos($sql, 'SELECT COUNT(*)') !== false) {
+        return false;
+    }
     if ($mode === 'archive-retry' && strpos($sql, 'TABLE_ROWS') !== false) {
         return 0;
     }
@@ -120,6 +123,9 @@ function db_fetch_assoc_prepared(...$args)
 }
 function db_fetch_assoc($sql)
 {
+    if (getenv('BOOST_MODE') === 'output-next-count') {
+        return array();
+    }
     return strpos($sql, 'information_schema.tables') !== false && strpos(getenv('BOOST_MODE'), 'master-success') === 0
         ? array(array('name' => 'poller_output_boost_arch_fixture')) : false;
 }
@@ -172,6 +178,14 @@ function db_execute_prepared(...$args)
 {
     return true;
 }
+if ($mode === 'shutdown') {
+    // Launch during normal execution, as the master does, so its registered
+    // cleanup precedes the final coverage collector and owns live children.
+    $debug = true;
+    $children = boost_launch_children();
+    file_put_contents($fixture . '/result.json', json_encode(array(null, array_column($children, 'pid'))));
+    return;
+}
 register_shutdown_function(function () use ($fixture, $mode) {
     if (in_array($mode, array('prepare-failure','archive-retry'), true) || strpos($mode, 'master-') === 0) {
         file_put_contents($fixture . '/result.json', json_encode($GLOBALS['settings_written']));
@@ -190,10 +204,6 @@ register_shutdown_function(function () use ($fixture, $mode) {
     $GLOBALS['debug'] = true;
     $children = boost_launch_children();
     $pids = array_column($children, 'pid');
-    if ($mode === 'shutdown') {
-        file_put_contents($fixture . '/result.json', json_encode(array(null, $pids)));
-        return;
-    }
     if ($mode === 'launch-failure') {
         $children[] = array('process' => false, 'child' => 3, 'pid' => 0);
     }

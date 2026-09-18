@@ -13,6 +13,84 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  windows-storage-preflight:
+    name: Windows storage access
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.1'
+          coverage: none
+      - name: Verify a writable directory with the read-only attribute
+        shell: pwsh
+        run: |
+          $fixture = Join-Path $env:RUNNER_TEMP ('kadupul-storage-' + [guid]::NewGuid())
+          New-Item -ItemType Directory -Path $fixture | Out-Null
+          $env:WINDOWS_STORAGE_TEST_ROOT = $fixture
+          try {
+            $item = Get-Item $fixture
+            $item.Attributes = $item.Attributes -bor [System.IO.FileAttributes]::ReadOnly
+            if (-not ((Get-Item $fixture).Attributes -band [System.IO.FileAttributes]::ReadOnly)) {
+              throw 'The fixture must have the read-only directory attribute'
+            }
+            php tests/integration/windows_storage_preflight.php
+            if ($LASTEXITCODE -ne 0) { throw 'Windows storage preflight regression failed' }
+          } finally {
+            $item = Get-Item $fixture
+            $item.Attributes = $item.Attributes -band (-bnot [System.IO.FileAttributes]::ReadOnly)
+            Remove-Item -LiteralPath $fixture -Recurse -Force
+          }
+
+  database-contracts:
+    name: Database contracts (${{ matrix.database }})
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        database: ['mariadb:10.6', 'mariadb:10.11', 'mariadb:11.8', 'mysql:8.0', 'mysql:8.4', 'mysql:9.7']
+    services:
+      mysql:
+        image: ${{ matrix.database }}
+        env:
+          MYSQL_DATABASE: cacti_boost_contract
+          MYSQL_USER: cactiuser
+          MYSQL_PASSWORD: cactiuser
+          MYSQL_ROOT_PASSWORD: cactiroot
+        ports:
+        - 3306:3306
+        options: --health-cmd="mysqladmin ping -h 127.0.0.1 --silent || mariadb-admin ping -h 127.0.0.1 --silent" --health-interval=5s --health-timeout=5s --health-retries=30
+    steps:
+    - name: Checkout
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+
+    - name: Install PHP 8.1
+      uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+      with:
+        php-version: '8.1'
+        extensions: pdo_mysql
+        coverage: none
+
+    - name: Install test dependencies
+      working-directory: tests
+      run: composer install --no-interaction --no-progress --prefer-dist
+
+    - name: Record database behavior and run contracts
+      working-directory: tests
+      env:
+        BOOST_DB_HOST: 127.0.0.1
+        BOOST_DB_NAME: cacti_boost_contract
+        BOOST_DB_USER: cactiuser
+        BOOST_DB_PASSWORD: cactiuser
+      run: |
+        # shellcheck disable=SC2016
+        php -r '$db = new PDO("mysql:host=" . getenv("BOOST_DB_HOST") . ";dbname=" . getenv("BOOST_DB_NAME"), getenv("BOOST_DB_USER"), getenv("BOOST_DB_PASSWORD")); echo json_encode($db->query("SELECT VERSION() AS version, @@version_comment AS vendor, @@sql_mode AS sql_mode, @@collation_server AS collation, @@default_storage_engine AS storage_engine")->fetch(PDO::FETCH_ASSOC), JSON_PRETTY_PRINT), PHP_EOL;'
+        php vendor/bin/pest --configuration=phpunit-database.xml --colors=never
+
   php:
     name: PHP ${{ matrix.php }}
     runs-on: ubuntu-latest

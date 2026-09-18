@@ -49,8 +49,7 @@ function api_data_source_remove($local_data_id) {
 	$autoclean = read_config_option('rrd_autoclean');
 	$acmethod  = read_config_option('rrd_autoclean_method');
 	if ($autoclean == 'on' && !rrd_maintenance_cleanup_supported()) {
-		$autoclean = '';
-		cacti_log('WARNING: Windows automatic local RRD cleanup is unsupported; data-source files retained for manual cleanup.', false, 'MAINT');
+		cacti_log('WARNING: Windows automatic local RRD cleanup is unsupported; files and cleanup requests retained for manual cleanup.', false, 'MAINT');
 	}
 
 
@@ -175,8 +174,7 @@ function api_data_source_remove_multi($local_data_ids) {
 	$autoclean = read_config_option('rrd_autoclean');
 	$acmethod  = read_config_option('rrd_autoclean_method');
 	if ($autoclean == 'on' && !rrd_maintenance_cleanup_supported()) {
-		$autoclean = '';
-		cacti_log('WARNING: Windows automatic local RRD cleanup is unsupported; data-source files retained for manual cleanup.', false, 'MAINT');
+		cacti_log('WARNING: Windows automatic local RRD cleanup is unsupported; files and cleanup requests retained for manual cleanup.', false, 'MAINT');
 	}
 
 

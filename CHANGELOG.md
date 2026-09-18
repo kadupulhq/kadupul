@@ -20,13 +20,14 @@ Targeting `v1.3.0`, the first planned application release. See
 - Validate comparison provenance, hash Docker build exclusions, and emit exact capture hashes in behavioral reports.
 
 - Compare behavioral captures from an explicit results directory when the controller and application use separate checkouts; document the Linux native self-test PHP prerequisite.
+- Stop Boost fetch preparation after writer initialization fails; restore caller error settings and release only owned writers on exceptions.
 - Make unsafe poller queue diagnostics available for translation.
 - Include measured poller and dependency-failure integration execution in Sonar coverage, rejecting stale or incomplete evidence.
 
 - Preserve hyphenated RRD data sources, verify durable queues after legacy upgrades, and allow remote database upgrades without unrelated local storage.
 
 - Refuse web upgrades when the poller queue is volatile or unreadable, before changing the database.
-- Recover valid fields from rejected RRD groups without stalling later timestamps; report refused RRD repairs as failures.
+- Retain complete rejected RRD groups for replay after schema repair, preserve timestamp ordering, and report refused RRD repairs as failures.
 
 - Retain realtime samples when their field mapping cannot be read.
 

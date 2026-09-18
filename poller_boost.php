@@ -1285,7 +1285,7 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe) {
 	/* Archive samples are immutable, but delete only observed keys after writes. */
 	foreach ($archive_tables as $table) {
 		foreach ($results as $row) {
-			if (db_execute_prepared("DELETE FROM $table WHERE local_data_id = ? AND rrd_name = ? AND time = FROM_UNIXTIME(?) AND output = ?",
+			if (db_execute_prepared("DELETE FROM $table WHERE local_data_id = ? AND rrd_name = ? AND time = FROM_UNIXTIME(?) AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY)",
 				array($row['local_data_id'], $row['rrd_name'], $row['timestamp'], $row['output'])) === false) {
 				restore_error_handler();
 				return false;

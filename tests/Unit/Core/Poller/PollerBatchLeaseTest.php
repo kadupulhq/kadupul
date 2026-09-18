@@ -23,7 +23,7 @@ function cacti_log($message, ...$args)
 }
 function db_fetch_cell_prepared($sql)
 {
-    expect($sql)->toBe('SELECT  COUNT(*) FROM poller_output');
+    expect($sql)->toBe('SELECT  EXISTS(SELECT 1 FROM poller_output LIMIT 1)');
     return $GLOBALS['batch']['mode'] === 'empty' ? 0 : ($GLOBALS['batch']['mode'] === 'query-failed' ? false : 3);
 }
 function rrd_init($output, $exclusive, $acknowledged, $timeout = null, &$busy = null)
@@ -45,7 +45,7 @@ function rrd_close($pipe)
     $GLOBALS['batch']['closes']++;
     \rrd_maintenance_release($pipe);
 }
-function process_poller_output(&$pipe)
+function process_poller_output(&$pipe, $remainder = 0, $after = null, &$acknowledged = null)
 {
     if (!remote_backend()) {
         expect(\rrd_maintenance_acquire(true, false, 0))->toBeFalse();
@@ -53,7 +53,8 @@ function process_poller_output(&$pipe)
     if ($GLOBALS['batch']['mode'] === 'exception') {
         throw new \RuntimeException('drain failed');
     }
-    return $GLOBALS['batch']['mode'] === 'retry' ? false : 3;
+    $acknowledged = $GLOBALS['batch']['mode'] === 'retry' ? 0 : 3;
+    return in_array($GLOBALS['batch']['mode'], array('retry', 'partial'), true) ? false : 3;
 }
 beforeEach(function () {
     $this->savedConfig = $GLOBALS['config'] ?? null;
@@ -142,3 +143,12 @@ test('forced local storage ignores the configured proxy and Windows boolean writ
     expect(process_poller_output_batch($deferred, $proxy))->toBe(3)->and($deferred)->toBeFalse();
     expect($GLOBALS['batch']['opens'])->toBe(1)->and($GLOBALS['batch']['closes'])->toBe(1)->and($proxy)->toBeFalse();
 })->with(array(false, true));
+
+
+test('partial batch failures preserve successful update counts and recover on retry', function () {
+    $GLOBALS['batch']['mode'] = 'partial';
+    $proxy = false;
+    expect(process_poller_output_batch($deferred, $proxy))->toBe(3)->and($deferred)->toBeTrue();
+    $GLOBALS['batch']['mode'] = 'success';
+    expect(process_poller_output_batch($deferred, $proxy))->toBe(3)->and($deferred)->toBeFalse();
+});

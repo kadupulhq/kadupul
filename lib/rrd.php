@@ -147,11 +147,12 @@ function rrd_acknowledged_command($pipe, $command) {
 	if ($state['failed']) {
 		return array(false, '');
 	}
-	$timeout = max(1, min(60, (int) ($config['rrd_command_timeout'] ?? 60)));
+	$timeout = max(1, min(3600, (int) ($config['rrd_command_timeout'] ?? 60)));
 	$deadline = hrtime(true) + $timeout * 1000000000;
 	$input = escape_command($command) . "\r\n";
 	$offset = 0;
 	$output = '';
+	$response_scan = 0;
 	$write_failed = false;
 	while (hrtime(true) < $deadline) {
 		$read = array($state['read']);
@@ -167,12 +168,19 @@ function rrd_acknowledged_command($pipe, $command) {
 				break;
 			}
 			$output .= $chunk;
-			if (preg_match('/^ERROR:[^\r\n]*\r?\n/m', $output)) {
-				$state['failed'] = $write_failed || $offset !== strlen($input);
-				return array(false, $output);
-			}
-			if ($offset === strlen($input) && preg_match('/^OK(?: u:[^\r\n]+)?\r?\n/m', $output)) {
-				return array(true, $output);
+			// Scan each completed response line once, including split terminators.
+			$last_newline = strrpos($chunk, "\n");
+			if ($last_newline !== false) {
+				$end = strlen($output) - strlen($chunk) + $last_newline + 1;
+				$lines = substr($output, $response_scan, $end - $response_scan);
+				$response_scan = $end;
+				if (preg_match('/^ERROR:[^\r\n]*\r?\n/m', $lines)) {
+					$state['failed'] = $write_failed || $offset !== strlen($input);
+					return array(false, $output);
+				}
+				if ($offset === strlen($input) && preg_match('/^OK(?: u:[^\r\n]+)?\r?\n/m', $lines)) {
+					return array(true, $output);
+				}
 			}
 		}
 		if ($write) {
@@ -473,6 +481,12 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 		}
 		rrdtool_trim_output($response);
 		return $output_flag === RRDTOOL_OUTPUT_NULL ? null : $response;
+	}
+	// A legacy write-only pipe cannot acknowledge a boolean request. Running it
+	// through another process could overtake commands already queued on this pipe.
+	if (defined('RRDTOOL_OUTPUT_BOOLEAN') && $output_flag === RRDTOOL_OUTPUT_BOOLEAN && is_resource($rrdtool_pipe)) {
+		cacti_log('ERROR: Boolean RRD commands require an acknowledged pipe; command not submitted.', false, $logopt);
+		return false;
 	}
 	// Callers without a response pipe use the synchronous fallback.
 	if (defined('RRDTOOL_OUTPUT_BOOLEAN') && $output_flag === RRDTOOL_OUTPUT_BOOLEAN) {
@@ -831,7 +845,9 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp=
                 $rejection =& rrdtool_last_rejection();
                 $rejection = trim($error[1]);
             }
-			return strpos($output, 'ERROR:') === false && preg_match('/^OK(?: u:[^\r\n]+)?\r?$/m', $output) === 1;
+			if (strpos($output, 'ERROR:') !== false) { return false; }
+			// Incomplete replies cannot authorize recreating an existing proxy RRD.
+			return preg_match('/^OK(?: u:[^\r\n]+)?\r?$/m', $output) === 1 ? true : null;
 			break;
 	}
 }
@@ -1088,12 +1104,12 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 	}
 }
 
-/** Only deterministic sample/schema errors may consume an unwritten sample.
- * Filesystem, cache-daemon, resource and unrecognized errors remain retryable.
+/** Only timestamps that RRDtool can no longer accept are terminal.
+ * Schema mismatches remain retryable until the RRD definition is repaired.
  */
 function rrdtool_rejection_is_permanent($reason) {
 	return is_string($reason) && (bool) preg_match(
-		'/^(?:[^\r\n]+: )?(?:found extra data on update argument:|unknown DS name [\'"]|expected \d+ data source readings \(got \d+\)|illegal attempt to update using time \d+ when last update time is \d+)/',
+		'/^(?:[^\r\n]+: )?illegal attempt to update using time \d+ when last update time is \d+/',
 		$reason
 	);
 }
@@ -1209,37 +1225,9 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 					$rrd_update_template = $rrd_fields['template'];
 				}
 
-				// Retry only a field explicitly identified by RRDtool as unknown.
-				// Each retry removes one sent field, so this loop is bounded.
-				do {
-					$updated = rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
-					if ($updated === true) {
-						break;
-					}
-					$rejection = rrdtool_last_rejection();
-					$sent_fields = explode(':', $rrd_update_template);
-					$sent_values = explode(':', $rrd_update_values);
-					$unknown = array();
-					$named_rejection = is_string($rejection) && preg_match('/^(?:[^\r\n]+: )?unknown DS name [\'\"]([a-zA-Z0-9_-]{1,19})[\'\"]/', $rejection, $unknown);
-					if ($rejection === 'tmplt contains more DS definitions than RRD') {
-						$info = rrdtool_execute("info $rrd_path", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER');
-						if (is_string($info) && preg_match_all('/^ds\[([a-zA-Z0-9_-]{1,19})\]\.index\s*=\s*\d+\s*$/m', $info, $schema)) {
-							$missing_fields = array_values(array_diff($sent_fields, $schema[1]));
-							if ($missing_fields) {
-								$unknown[1] = $missing_fields[0];
-								$named_rejection = true;
-							}
-						}
-					}
-					if (!$named_rejection || count($sent_fields) < 2 || count($sent_values) !== count($sent_fields) + 1
-						|| ($index = array_search($unknown[1], $sent_fields, true)) === false) {
-						break;
-					}
-					cacti_log('ERROR: Unknown RRD field discarded: ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'field' => $unknown[1], 'value' => $sent_values[$index + 1], 'reason' => $rejection)), false, 'POLLER');
-					unset($sent_fields[$index], $sent_values[$index + 1]);
-					$rrd_update_template = implode(':', $sent_fields);
-					$rrd_update_values = implode(':', $sent_values);
-				} while (true);
+				// Never advance this RRD's timestamp after dropping a valid field.
+				// A schema mismatch must retain the full sample for replay after repair.
+				$updated = rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
 
 				if ($updated !== true) {
 					$rejection = rrdtool_last_rejection();
@@ -1251,9 +1239,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 						$completed[$rrd_path][$update_time] = false;
 						continue;
 					}
-					if (!$failed) {
-						cacti_log('ERROR: RRD update was not acknowledged; pending samples retained for retry.', false, 'POLLER');
-					}
+					cacti_log('ERROR: RRD pending sample retained for retry: ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'reason' => $rejection ?: 'No acknowledgement received', 'action' => 'Repair the reported schema or storage error before replay; monitor queue growth.')), false, 'POLLER');
 					$failed = true;
 					break;
 				}
@@ -3888,7 +3874,8 @@ function rrd_datasource_add($file_array, $ds_array, $debug) {
 		foreach ($file_array as $file) {
 			/* create a DOM object from an rrdtool dump */
 			$dom = new domDocument;
-			if ($dom->loadXML(rrdtool_execute("dump $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL')) === false) {
+			$xml = rrdtool_execute("dump $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+			if (!is_string($xml) || $xml === '' || $dom->loadXML($xml) === false) {
 				$check['err_msg'] = __('Error while parsing the XML of rrdtool dump');
 				return $check;
 			}
@@ -3961,7 +3948,8 @@ function rrd_rra_delete($file_array, $rra_array, $debug) {
 		foreach ($file_array as $file) {
 			/* create a DOM document from an rrdtool dump */
 			$dom = new domDocument;
-			if ($dom->loadXML(rrdtool_execute("dump $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL')) === false) {
+			$xml = rrdtool_execute("dump $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+			if (!is_string($xml) || $xml === '' || $dom->loadXML($xml) === false) {
 				$check['err_msg'] = __('Error while parsing the XML of RRDtool dump');
 				return $check;
 			}
@@ -4020,7 +4008,8 @@ function rrd_rra_clone($file_array, $cf, $rra_array, $debug) {
 		foreach ($file_array as $file) {
 			/* create a DOM document from an rrdtool dump */
 			$dom = new domDocument;
-			if ($dom->loadXML(rrdtool_execute("dump $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL')) === false) {
+			$xml = rrdtool_execute("dump $file", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+			if (!is_string($xml) || $xml === '' || $dom->loadXML($xml) === false) {
 				$check['err_msg'] = __('Error while parsing the XML of RRDtool dump');
 				return $check;
 			}

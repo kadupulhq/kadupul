@@ -85,4 +85,4 @@ test('production Boost owns, supervises and reaps actual worker processes', func
             rmdir($dir . $suffix);
         }
     }
-})->with(array('success','early-crash','timeout','launch-failure','shutdown','output-init','output-archives','output-count','output-empty','output-ids','output-last','output-select','prepare-failure','archive-retry','master-failed-count','master-child-failed','master-invalid-total','master-missing-child','master-success-empty','master-success-retained'));
+})->with(array('success','early-crash','timeout','launch-failure','shutdown','output-init','output-archives','output-count','output-empty','output-ids','output-last','output-select','output-next-count','prepare-failure','archive-retry','master-failed-count','master-child-failed','master-invalid-total','master-missing-child','master-success-empty','master-success-retained'));

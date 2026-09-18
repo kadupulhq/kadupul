@@ -232,3 +232,8 @@ $i18n_text_log = null;
  */
 $config['rrd_maintenance_trusted_uids'] = array();
 $config['rrd_maintenance_trusted_gids'] = array();
+
+// Maximum time for one acknowledged RRDtool command, including large dumps.
+// Default: 60 seconds. Accepted range: 1 through 3600 seconds. Timeouts retain
+// queued samples and invalidate the failed pipe; a new operation opens a new one.
+// $config['rrd_command_timeout'] = 60;

@@ -517,9 +517,40 @@ function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$re
  * @param  (resource) $rrdtool_pipe - the array of pipes containing the file descriptor for rrdtool
  * @param  (int)      $remainder - don't use LIMIT if true
  *
- * @return (int) - The number of rrdfiles processed
+ * @return (int|false) - Acknowledged sample updates, or false when retry is required
  */
-function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null) {
+/** Delete only the selected source samples, preserving concurrent arrivals. */
+function poller_delete_output_rows($keys, &$failed = null) {
+	$failed = false;
+	if (!$keys) {
+		return 0;
+	}
+
+	$consumed = 0;
+	foreach (array_chunk($keys, 500) as $chunk) {
+		$params = array();
+		foreach ($chunk as $key) {
+			if (count($key) !== 4) { $failed = true; return $consumed; }
+			$params[] = (int) $key[0];
+			$params[] = (string) $key[1];
+			$params[] = (string) $key[2];
+			$params[] = (string) $key[3];
+		}
+		// Compare exact values in one charset, preserving case and trailing spaces.
+		$placeholders = implode(' OR ', array_fill(0, count($chunk), '(local_data_id = ? AND rrd_name = ? AND time = ? AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY))'));
+		// Explicit key equalities retain range access on both MySQL and MariaDB.
+		if (db_execute_prepared("DELETE FROM poller_output WHERE $placeholders", $params) === false) {
+			$failed = true;
+			break;
+		}
+		$consumed += (int) db_affected_rows();
+	}
+
+	return $consumed;
+}
+
+function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null, &$acknowledged = null, $blocked_paths = array()) {
+	$acknowledged = 0;
 	global $config, $debug;
 
 	static $writer_failure_logged = false;
@@ -805,19 +836,26 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null) {
 			}
 		}
 
-		/* process dsstats information */
-		dsstats_poller_output($rrd_update_array);
-		dsdebug_poller_output($rrd_update_array);
-
-		api_plugin_hook_function('poller_output', $rrd_update_array);
-
 		$direct_update = boost_poller_on_demand($results);
 		if ($direct_update === null) {
 			return false;
 		}
 		if ($direct_update) {
+			// Never advance an RRD past a retained sample from an earlier page.
+			foreach ($blocked_paths as $path => $blocked) {
+				unset($rrd_update_array[$path]);
+			}
 			$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe, $completed);
-			$write_failed = $rrds_processed === false;
+			// A terminal rejection is recorded as false in $completed and consumed.
+			// Only absent acknowledgements require deferring subsequent batches.
+			foreach ($rrd_update_array as $path => $fields) {
+				foreach ($fields['times'] as $time => $values) {
+					if (!isset($completed[$path][$time])) {
+						$write_failed = true;
+						$blocked_paths[$path] = true;
+					}
+				}
+			}
 			$rrds_processed = array_sum(array_map(function ($samples) { return count(array_filter($samples)); }, $completed));
 			$output_keys = array();
 			foreach ($results as $item) {
@@ -827,19 +865,32 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null) {
 			}
 		}
 
-		foreach (array_chunk($output_keys, 1000) as $chunk) {
-			$params = array();
-			foreach ($chunk as $key) {
-				array_push($params, ...$key);
+		// Publish only accepted samples; retained writes must not replay side effects.
+		if ($direct_update) {
+			foreach ($rrd_update_array as $path => $fields) {
+				foreach ($fields['times'] as $time => $values) {
+					if (($completed[$path][$time] ?? null) !== true) {
+						unset($rrd_update_array[$path]['times'][$time]);
+					}
+				}
+				if (empty($rrd_update_array[$path]['times'])) { unset($rrd_update_array[$path]); }
 			}
-			$placeholders = implode(',', array_fill(0, count($chunk), '(?,?,?,?)'));
-			if (db_execute_prepared("DELETE FROM poller_output WHERE (local_data_id, rrd_name, time, output) IN ($placeholders)", $params) === false) {
-				return false;
-			}
+		}
+		if ($rrd_update_array) {
+			dsstats_poller_output($rrd_update_array);
+			dsdebug_poller_output($rrd_update_array);
+			api_plugin_hook_function('poller_output', $rrd_update_array);
+		}
+
+		$acknowledged = $rrds_processed;
+		poller_delete_output_rows($output_keys, $delete_failed);
+		if ($delete_failed) {
+			return false;
 		}
 
 		if ($full_page) {
-			$child_updates = process_poller_output($rrdtool_pipe, $max_rows, $next);
+			$child_updates = process_poller_output($rrdtool_pipe, $max_rows, $next, $child_acknowledged, $blocked_paths);
+			$acknowledged += $child_acknowledged;
 			if ($child_updates === false) {
 				$write_failed = true;
 			}
@@ -2535,10 +2586,10 @@ function process_poller_output_batch(&$deferred, &$proxy_pipe) {
 	global $config;
 	static $reported = array();
 	$deferred = false;
-	$pending = db_fetch_cell_prepared('SELECT ' . SQL_NO_CACHE . ' COUNT(*) FROM poller_output');
+	$pending = db_fetch_cell_prepared('SELECT ' . SQL_NO_CACHE . ' EXISTS(SELECT 1 FROM poller_output LIMIT 1)');
 	if (!is_numeric($pending)) {
 		if (empty($reported['count'])) {
-			cacti_log('ERROR: Unable to read pending poller output count; samples retained for retry.', false, 'POLLER');
+			cacti_log('ERROR: Unable to inspect pending poller output; samples retained for retry.', false, 'POLLER');
 			$reported['count'] = true;
 		}
 		$deferred = true;
@@ -2578,10 +2629,10 @@ function process_poller_output_batch(&$deferred, &$proxy_pipe) {
 	$reported['writer'] = false;
 	$failed = true;
 	try {
-		$updated = process_poller_output($pipe);
+		$updated = process_poller_output($pipe, 0, null, $acknowledged);
 		$deferred = $updated === false;
 		$failed = $deferred;
-		return $deferred ? 0 : $updated;
+		return $acknowledged;
 	} finally {
 		if (!$proxy || $failed) {
 			rrd_close($pipe);

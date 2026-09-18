@@ -32,7 +32,7 @@ test('the pre-1.1.6 upgrade keeps the poller queue durable', function () {
 });
 
 
-test('legacy upgrade completion verifies the final queue engine', function ($engine) {
+test('legacy upgrade completion verifies the final queue engine', function ($engine, $collector) {
     $root = dirname(__DIR__, 3);
     $dir = sys_get_temp_dir() . '/legacy-installer-' . bin2hex(random_bytes(8));
     mkdir($dir, 0700);
@@ -42,8 +42,9 @@ test('legacy upgrade completion verifies the final queue engine', function ($eng
         $script .= 'define("RRD_TEST_INSTALLER_COVERAGE",true);define("RRD_TEST_COVERAGE_DIRECTORY",__DIR__);require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
     }
     $script .= '$root=' . var_export($root, true) . ';$engine=' . var_export($engine, true) . ';';
+    $script .= '$collector=' . var_export($collector, true) . ';';
     $script .= <<<'INSTALLER'
-$config=array('base_path'=>$root);
+$config=array('base_path'=>$root, 'poller_id'=>$collector==='local'?1:2, 'connection'=>$collector);$remote_db_cnn_id='primary-connection';
 require $root.'/include/global_constants.php';
 function __($message,...$args){return $args?vsprintf($message,$args):$message;}
 function read_config_option(...$args){return '';}
@@ -56,14 +57,20 @@ function db_install_execute($sql){$GLOBALS['statements'][]=$sql;}
 function db_install_add_key(...$args){}
 function db_index_exists(...$args){return true;}
 function db_execute(...$args){}
-function db_fetch_cell_prepared(...$args){return $GLOBALS['engine'];}
+function db_fetch_cell_prepared(...$args){if(($args[4]??false)!==($GLOBALS['collector']==='online'?'primary-connection':false)){throw new RuntimeException('Queue checked on wrong collector database');}return $GLOBALS['engine'];}
 require $root.'/lib/installer.php';
 $cacti_version_codes=array('1.1.6'=>'fixture');
 $reflection=new ReflectionClass('Installer');$installer=$reflection->newInstanceWithoutConstructor();
 $property=$reflection->getProperty('old_cacti_version');$property->setAccessible(true);$property->setValue($installer,'1.1.5');
 $method=$reflection->getMethod('upgradeDatabase');$method->setAccessible(true);
-ob_start();try{$result=$method->invoke($installer);}finally{ob_end_clean();if(isset($cache_file)){unlink($cache_file);}}
-echo json_encode(array($result,$statements));
+ob_start();
+try { $result=$method->invoke($installer); }
+finally {
+    ob_end_clean();
+    $cacheCreated=isset($GLOBALS['cache_file']) && is_file($GLOBALS['cache_file']);
+    $cacheRemoved=$cacheCreated && unlink($GLOBALS['cache_file']);
+}
+echo json_encode(array($result,$statements,$cacheRemoved));
 INSTALLER;
     try {
         file_put_contents($dir . '/probe.php', $script);
@@ -74,6 +81,7 @@ INSTALLER;
         fclose($pipes[2]);
         expect(proc_close($process))->toBe(0)->and($err)->toBe('');
         $result = json_decode($out, true);
+        expect($result[2])->toBeTrue('The installer cache file must be created and removed by the native probe.');
         if ($engine === 'InnoDB') {
             expect($result[0])->toBeFalse();
         } else {
@@ -90,4 +98,4 @@ INSTALLER;
             unlink($file);
         }rmdir($dir);
     }
-})->with(array('InnoDB','MEMORY',false));
+})->with(array('InnoDB','MEMORY',false))->with(array('local', 'online', 'recovery'));

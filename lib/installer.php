@@ -586,9 +586,10 @@ class Installer implements JsonSerializable
         }
 
         require_once __DIR__ . '/rrd_maintenance.php';
-        $storage_error = rrd_maintenance_configuration_error();
+        $storage_error = ((int) $this->getMode() === Installer::MODE_POLLER || (int) ($config['poller_id'] ?? 1) > 1)
+            ? '' : rrd_maintenance_configuration_error();
         if ($storage_error === '' && in_array((int) $this->getMode(), array(Installer::MODE_UPGRADE, Installer::MODE_DOWNGRADE), true)) {
-            $storage_error = rrd_maintenance_queue_configuration_error();
+            $storage_error = rrd_maintenance_queue_configuration_error($this->pollerQueueConnection());
         }
         $storage_path = $config['rra_path'] ?? ($config['base_path'] . '/rra');
         $permissions['always'][$storage_path] = $storage_error === '';
@@ -3104,13 +3105,22 @@ class Installer implements JsonSerializable
         return $success;
     }
 
+    /** Match the database used by online and recovery collector producers. */
+    private function pollerQueueConnection()
+    {
+        global $config, $remote_db_cnn_id;
+        return (int) ($config['poller_id'] ?? 1) > 1
+            && ($config['connection'] ?? 'online') === 'online' ? $remote_db_cnn_id : false;
+    }
+
     private function install()
     {
         global $config;
         require_once __DIR__ . '/rrd_maintenance.php';
-        $storage_error = rrd_maintenance_configuration_error();
+        $storage_error = ((int) $this->getMode() === Installer::MODE_POLLER || (int) ($config['poller_id'] ?? 1) > 1)
+            ? '' : rrd_maintenance_configuration_error();
         if ($storage_error === '' && in_array((int) $this->getMode(), array(Installer::MODE_UPGRADE, Installer::MODE_DOWNGRADE), true)) {
-            $storage_error = rrd_maintenance_queue_configuration_error();
+            $storage_error = rrd_maintenance_queue_configuration_error($this->pollerQueueConnection());
         }
         if ($storage_error !== '') {
             throw new RuntimeException($storage_error);
@@ -3609,7 +3619,7 @@ class Installer implements JsonSerializable
             db_execute("UPDATE version SET cacti = '" . $cacti_upgrade_version . "'");
         }
         require_once __DIR__ . '/rrd_maintenance.php';
-        $queue_error = rrd_maintenance_queue_configuration_error();
+        $queue_error = rrd_maintenance_queue_configuration_error($this->pollerQueueConnection());
         return $queue_error !== '' ? $queue_error : false;
     }
 
