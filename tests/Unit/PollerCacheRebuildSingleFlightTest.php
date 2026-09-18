@@ -52,3 +52,54 @@ test('a poller cache rebuild takes the lock and releases it when done', function
         "SELECT RELEASE_LOCK('kadupul.poller_cache_rebuild')",
     ));
 });
+
+// Run the production CLI rebuild flow from its timing setup to the final exit.
+function pollerCacheCliProgram(): string
+{
+    $source = file_get_contents(dirname(__DIR__, 2) . '/cli/rebuild_poller_cache.php');
+    $start  = strpos($source, '/* take time and log performance data */');
+    $end    = strpos($source, "\nfunction pushout_master_handler");
+
+    $program = <<<'CODE'
+$type = 'rmaster';
+$thread_id = 0;
+$forcerun = false;
+$debug = false;
+$host_id = $host_template_id = $data_template_id = false;
+$threads = 5;
+$calls = array();
+// Drop the script's console text so only the recorded calls reach stdout.
+register_shutdown_function(function () { while (ob_get_level()) { ob_end_clean(); } echo json_encode($GLOBALS['calls']); });
+ob_start();
+function pushout_debug($message) {}
+function register_process_start() { $GLOBALS['calls'][] = 'register'; return true; }
+function unregister_process() { $GLOBALS['calls'][] = 'unregister'; }
+function pushout_master_handler() { $GLOBALS['calls'][] = 'rebuild'; }
+function db_fetch_cell($sql) { $GLOBALS['calls'][] = $sql; return $GLOBALS['input']['lock']; }
+function db_execute($sql) { $GLOBALS['calls'][] = $sql; }
+CODE;
+
+    return $program . substr($source, $start, $end - $start);
+}
+
+test('the CLI rebuild exits non-zero while the web rebuild holds the lock', function () {
+    $calls = clogRunProduction(pollerCacheCliProgram(), array('lock' => '0'), 1);
+
+    expect($calls)->toBe(array(
+        'register',
+        "SELECT GET_LOCK('kadupul.poller_cache_rebuild', 0)",
+        'unregister',
+    ));
+});
+
+test('the CLI rebuild takes the shared lock and releases it when done', function () {
+    $calls = clogRunProduction(pollerCacheCliProgram(), array('lock' => '1'));
+
+    expect($calls)->toBe(array(
+        'register',
+        "SELECT GET_LOCK('kadupul.poller_cache_rebuild', 0)",
+        'rebuild',
+        'unregister',
+        "SELECT RELEASE_LOCK('kadupul.poller_cache_rebuild')",
+    ));
+});

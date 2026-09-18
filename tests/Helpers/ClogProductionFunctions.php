@@ -19,7 +19,7 @@ function clogProductionFunction(string $file, string $name): string
     throw new RuntimeException('Missing production function: ' . $name);
 }
 
-function clogRunProduction(string $program, array $input): array
+function clogRunProduction(string $program, array $input, int $exit = 0): array
 {
     $program = 'set_error_handler(function ($level, $message) { throw new RuntimeException($message); });'
         . '$input = json_decode(stream_get_contents(STDIN), true, 512, JSON_THROW_ON_ERROR);' . $program;
@@ -30,7 +30,7 @@ function clogRunProduction(string $program, array $input): array
     $error = stream_get_contents($pipes[2]);
     fclose($pipes[1]);
     fclose($pipes[2]);
-    expect(proc_close($process))->toBe(0, $error . $output);
+    expect(proc_close($process))->toBe($exit, $error . $output);
 
     return json_decode($output, true, 512, JSON_THROW_ON_ERROR);
 }
