@@ -84,11 +84,11 @@ afterEach(function () {
 test('a failing RRD is requeued without holding back the rest of the shard', function () {
     $db = $GLOBALS['isolation_db'];
     expect(boost_process_local_data_ids(1, false, 100))->toBe(5)
-        ->and(array_column($GLOBALS['isolation_updates'], 0))->toBe(array(1, 2, 3))
+        ->and(array_map('intval', array_column($GLOBALS['isolation_updates'], 0)))->toBe(array(1, 2, 3))
         ->and($db->query('SELECT local_data_id, time, output FROM poller_output_boost')->fetchAll(\PDO::FETCH_NUM))
-            ->toBe(array(array(2, '2020-01-01 00:05:00', '21')))
+            ->toEqual(array(array(2, '2020-01-01 00:05:00', '21')))
         ->and($db->query('SELECT local_data_id, cursor_time FROM poller_output_boost_local_data_ids ORDER BY local_data_id')->fetchAll(\PDO::FETCH_NUM))
-            ->toBe(array(array(1, '2020-01-01 00:05:00'), array(3, '2020-01-01 00:05:00')))
+            ->toEqual(array(array(1, '2020-01-01 00:05:00'), array(3, '2020-01-01 00:05:00')))
         ->and(implode("\n", $GLOBALS['isolation_logs']))->toContain("requeued Local Data ID '2'");
     expect(boost_process_local_data_ids(1, false, 100))->toBe(0)
         ->and(count($GLOBALS['isolation_updates']))->toBe(3);
@@ -98,17 +98,17 @@ test('a failed handback retains the whole page', function ($statement) {
     $GLOBALS['isolation_fail'] = $statement;
     $db = $GLOBALS['isolation_db'];
     expect(boost_process_local_data_ids(1, false, 100))->toBe(-1)
-        ->and($db->query('SELECT COUNT(*) FROM poller_output_boost_local_data_ids WHERE cursor_time IS NULL')->fetchColumn())->toBe(2)
-        ->and($db->query('SELECT COUNT(*) FROM poller_output_boost_local_data_ids')->fetchColumn())->toBe(3);
+        ->and($db->query('SELECT COUNT(*) FROM poller_output_boost_local_data_ids WHERE cursor_time IS NULL')->fetchColumn())->toEqual(2)
+        ->and($db->query('SELECT COUNT(*) FROM poller_output_boost_local_data_ids')->fetchColumn())->toEqual(3);
 })->with(array('INSERT IGNORE INTO poller_output_boost', 'DELETE FROM poller_output_boost_local_data_ids'));
 
 test('a page where every RRD fails is retained instead of requeued', function () {
     $GLOBALS['isolation_all_fail'] = true;
     $db = $GLOBALS['isolation_db'];
     expect(boost_process_local_data_ids(1, false, 100))->toBe(-1)
-        ->and(array_column($GLOBALS['isolation_updates'], 0))->toBe(array(1, 2, 3))
-        ->and($db->query('SELECT COUNT(*) FROM poller_output_boost')->fetchColumn())->toBe(0)
-        ->and($db->query('SELECT COUNT(*) FROM poller_output_boost_local_data_ids WHERE cursor_time IS NULL')->fetchColumn())->toBe(2)
-        ->and($db->query('SELECT COUNT(*) FROM poller_output_boost_local_data_ids')->fetchColumn())->toBe(3)
+        ->and(array_map('intval', array_column($GLOBALS['isolation_updates'], 0)))->toBe(array(1, 2, 3))
+        ->and($db->query('SELECT COUNT(*) FROM poller_output_boost')->fetchColumn())->toEqual(0)
+        ->and($db->query('SELECT COUNT(*) FROM poller_output_boost_local_data_ids WHERE cursor_time IS NULL')->fetchColumn())->toEqual(2)
+        ->and($db->query('SELECT COUNT(*) FROM poller_output_boost_local_data_ids')->fetchColumn())->toEqual(3)
         ->and(implode("\n", $GLOBALS['isolation_logs']))->toContain('failed for every data source');
 });
