@@ -416,7 +416,12 @@ test('Boost retries skip consumed timestamps and still apply newer samples in a 
 	}
 	$version_output = boostPipedCreateRealCommand(array($binary, '--version'));
 	expect(preg_match('/RRDtool ([0-9]+\.[0-9]+\.[0-9]+)/', $version_output, $match))->toBe(1);
-	expect(version_compare($match[1], '1.5', '<'))->toBe($legacy);
+	if ($legacy) {
+		expect(preg_match('/^1\.[34]\./', $match[1]))->toBe(1);
+	} elseif (version_compare($match[1], '1.5', '<')) {
+		// A supported 1.3/1.4 system binary is exercised by the legacy dataset instead.
+		$this->markTestSkipped('System RRDtool ' . $match[1] . ' is legacy; set RRDTOOL_LEGACY_TEST_BINARY');
+	}
 	$GLOBALS['boost_piped_create']['version'] = $match[1];
 	$path = $GLOBALS['boost_piped_create']['path'];
 	boostPipedCreateRealCommand(array($binary, 'create', $path, '--start', '1700000000', '--step', '60', 'DS:value:GAUGE:120:U:U', 'RRA:AVERAGE:0.5:1:10'));
