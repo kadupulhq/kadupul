@@ -25,6 +25,7 @@ set_default_action();
 
 switch (get_request_var('action')) {
 	case 'save':
+		reports_require_post('save');
 		reports_form_save();
 
 		break;
@@ -110,6 +111,7 @@ switch (get_request_var('action')) {
 
         break;
 	case 'actions':
+		reports_require_post('actions');
 		reports_form_actions();
 
 		break;

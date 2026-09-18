@@ -9,10 +9,78 @@ $reportsUser      = file_get_contents($root . '/reports_user.php');
 $htmlReports      = file_get_contents($root . '/lib/html_reports.php');
 $reportsGenerator = file_get_contents($root . '/lib/reports.php');
 
-test('report mutation actions reject non-POST requests in both report controllers', function () use ($reportsAdmin, $reportsUser) {
-    foreach (array('send', 'ajax_dnd', 'item_movedown', 'item_moveup', 'item_remove') as $action) {
-        expect($reportsAdmin)->toMatch('/case\s+\'' . preg_quote($action, '/') . '\':\s+reports_require_post\(\'' . preg_quote($action, '/') . '\'\);/s');
-        expect($reportsUser)->toMatch('/case\s+\'' . preg_quote($action, '/') . '\':\s+reports_require_post\(\'' . preg_quote($action, '/') . '\'\);/s');
+test('report mutation actions reject non-POST requests in both report controllers', function () use ($root) {
+    $program = <<<'PHP'
+namespace ReportControllerRuntime;
+
+$controller = $argv[1];
+$action     = $argv[2];
+$source     = file_get_contents(getcwd() . '/' . $controller);
+
+preg_match('/switch \(get_request_var\(\'action\'\)\) \{(?P<body>.*?)^}$/ms', $source, $match);
+if (empty($match['body'])) {
+    exit(2);
+}
+
+function get_request_var($name) { return $name === 'action' ? $GLOBALS['action']:'1'; }
+function get_filter_request_var($name) { return get_request_var($name); }
+function get_reports_page() { return 'reports_user.php'; }
+function reports_require_post($action) {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        throw new \RuntimeException('POST_REQUIRED:' . $action);
+    }
+}
+function reports_form_save() { echo 'HANDLER:save'; }
+function reports_send($id) { echo 'HANDLER:send'; }
+function reports_item_dnd() { echo 'HANDLER:ajax_dnd'; }
+function reports_form_actions() { echo 'HANDLER:actions'; }
+function reports_item_movedown() { echo 'HANDLER:item_movedown'; }
+function reports_item_moveup() { echo 'HANDLER:item_moveup'; }
+function reports_item_remove() { echo 'HANDLER:item_remove'; }
+function reports_item_validate() {}
+function reports_get_branch_select($tree_id) {}
+function get_allowed_ajax_hosts() {}
+function get_allowed_ajax_graphs() {}
+function get_allowed_ajax_graph_templates() {}
+function general_header() {}
+function reports_item_edit() {}
+function reports_edit() {}
+function reports() {}
+function bottom_footer() {}
+function header($value) {}
+
+$_SERVER['REQUEST_METHOD'] = 'GET';
+$GLOBALS['action'] = $action;
+
+try {
+    eval("namespace ReportControllerRuntime; switch (get_request_var('action')) {" . $match['body'] . '}');
+    echo 'accepted';
+} catch (\RuntimeException $e) {
+    echo $e->getMessage();
+}
+PHP;
+
+    foreach (array($root . '/reports_admin.php', $root . '/reports_user.php') as $controller) {
+        foreach (array('save', 'send', 'ajax_dnd', 'actions', 'item_movedown', 'item_moveup', 'item_remove') as $action) {
+            $process = proc_open(
+                array(PHP_BINARY, '-r', $program, basename($controller), $action),
+                array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+                $pipes,
+                $root
+            );
+
+            expect(is_resource($process))->toBeTrue();
+
+            $stdout = stream_get_contents($pipes[1]);
+            $stderr = stream_get_contents($pipes[2]);
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+
+            $exit = proc_close($process);
+
+            expect($exit)->toBe(0, $stderr)
+                ->and($stdout)->toBe('POST_REQUIRED:' . $action);
+        }
     }
 });
 
@@ -66,18 +134,86 @@ test('report controllers redirect mutations through the realm-aware reports page
         ->and(substr_count($reportsUser, "&header=false'"))->toBe(5);
 });
 
-test('report data query labels are escaped before generated html output', function () use ($reportsGenerator, $root) {
-    expect($reportsGenerator)->toContain('reports_data_query_label($data_query[\'name\'])');
-
+test('report data query labels are escaped before generated html output', function () use ($root) {
     $program = <<<'PHP'
-namespace ReportMutationRuntime;
+namespace ReportTreeRuntime;
+
+define(__NAMESPACE__ . '\HOST_GROUPING_DATA_QUERY_INDEX', 2);
+define(__NAMESPACE__ . '\HOST_GROUPING_GRAPH_TEMPLATE', 1);
+$tmp = \sys_get_temp_dir() . '/report-tree-' . bin2hex(random_bytes(4));
+mkdir($tmp);
+file_put_contents($tmp . '/global_arrays.php', '<?php');
+file_put_contents($tmp . '/data_query.php', '<?php');
+file_put_contents($tmp . '/html_tree.php', '<?php');
+file_put_contents($tmp . '/html_utility.php', '<?php');
+
+$GLOBALS['config'] = array('include_path' => $tmp, 'library_path' => $tmp);
+$GLOBALS['alignment'] = array('left' => 'left');
+
 function __($text, ...$args) { return $args ? vsprintf($text, $args) : $text; }
 function html_escape($text) { return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
+function read_user_setting($name) { return 1; }
+function get_timespan(&$timespan) { $timespan = array('begin_now' => 1, 'end_now' => 2); }
+function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+function db_qstr_rlike($value) { return '= ' . var_export($value, true); }
+function array_rekey($array) { return $array; }
+function is_device_allowed($id, $user) { return true; }
+function is_graph_allowed($id, $user) { return true; }
+function is_graph_template_allowed($id, $user) { return true; }
+function get_formatted_data_query_indexes($hostId, $queryId) { return array('idx1' => 'Index 1'); }
+function reports_graph_area() { return '<tr><td>graph</td></tr>'; }
+function necturally_sort_graphs($a, $b) { return 0; }
+function db_fetch_cell_prepared($sql, $params = array()) {
+    if (strpos($sql, 'SELECT host_id') !== false) { return 5; }
+    if (strpos($sql, 'FROM graph_tree ') !== false) { return 'Tree'; }
+    if (strpos($sql, 'SELECT title') !== false) { return 'Leaf'; }
+    if (strpos($sql, 'h.description') !== false) { return 'Host'; }
+    return 0;
+}
+function db_fetch_assoc_prepared($sql, $params = array()) {
+    if (strpos($sql, 'FROM graph_tree_items') !== false) {
+        return array(array('id' => 9, 'local_graph_id' => 0, 'host_id' => 5, 'host_grouping_type' => HOST_GROUPING_DATA_QUERY_INDEX));
+    }
+
+    if (strpos($sql, 'snmp_query AS sq') !== false) {
+        return array(array('id' => 7, 'name' => '<script>alert(1)</script>'));
+    }
+
+    return array();
+}
+function db_fetch_assoc($sql) {
+    if (strpos($sql, 'gl.snmp_query_id=7') !== false) {
+        return array(array('title_cache' => 'Graph', 'local_graph_id' => 77, 'snmp_index' => 'idx1'));
+    }
+
+    return array();
+}
+
 $source = file_get_contents(getcwd() . '/lib/reports.php');
-preg_match('/^function reports_data_query_label\(.*?^}\n/ms', $source, $match);
-if (empty($match)) { exit(2); }
-eval('namespace ReportMutationRuntime; ' . $match[0]);
-echo reports_data_query_label('<script>alert(1)</script>');
+preg_match('/^function reports_expand_tree\(.*?^}\n\nfunction reports_data_query_label\(.*?^}\n/ms', $source, $match);
+if (empty($match)) { exit(3); }
+
+$runtimeSource = str_replace("'necturally_sort_graphs'", "__NAMESPACE__ . '\\\\necturally_sort_graphs'", $match[0]);
+eval('namespace ReportTreeRuntime; ' . $runtimeSource);
+
+$report = array('user_id' => 1);
+$item = array(
+    'tree_id' => 1,
+    'branch_id' => 9,
+    'timespan' => 1,
+    'align' => 'left',
+    'font_size' => 10,
+    'graph_name_regexp' => '',
+    'tree_cascade' => 'on',
+);
+
+$formatted = reports_expand_tree($report, $item, 9, 0, true);
+$plain     = reports_expand_tree($report, $item, 9, 0, false);
+
+array_map('\unlink', glob($tmp . '/*.php'));
+rmdir($tmp);
+
+echo json_encode(array($formatted, $plain));
 PHP;
 
     $process = proc_open(
@@ -96,8 +232,14 @@ PHP;
 
     $exit = proc_close($process);
 
+    $rendered = json_decode($stdout, true);
+
     expect($exit)->toBe(0, $stderr)
-        ->and($stdout)->toBe('Data Query: &lt;script&gt;alert(1)&lt;/script&gt;');
+        ->and($rendered)->toBeArray()
+        ->and($rendered[0])->toContain('Data Query: &lt;script&gt;alert(1)&lt;/script&gt;')
+        ->and($rendered[1])->toContain('Data Query: &lt;script&gt;alert(1)&lt;/script&gt;')
+        ->and($rendered[0])->not->toContain('<script>')
+        ->and($rendered[1])->not->toContain('<script>');
 });
 
 test('report image conversion uses unpredictable temporary files with cleanup', function () use ($reportsGenerator, $root) {
