@@ -3218,7 +3218,10 @@ function snmpagent_utilities_run_eventlog(){
 	}
 	/* ==================================================== */
 
-	if (isset_request_var('purge')) {
+	/* csrf-magic only checks the token on POST, so a GET must not purge */
+	if (isset_request_var('purge') && (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST')) {
+		cacti_log('WARNING: Rejected non-POST request to purge the SNMP Agent notification log', false, 'AUTH');
+	} elseif (isset_request_var('purge')) {
 		db_execute('TRUNCATE table snmpagent_notifications_log');
 
 		/* reset filters */
@@ -3280,8 +3283,12 @@ function snmpagent_utilities_run_eventlog(){
 	}
 
 	function purgeFilter() {
-		strURL = 'utilities.php?action=view_snmpagent_events&purge=1&header=false';
-		loadPageNoHeader(strURL);
+		loadPageUsingPost('utilities.php', {
+			action: 'view_snmpagent_events',
+			purge: 1,
+			header: 'false',
+			__csrf_magic: csrfMagicToken
+		});
 	}
 
 	$(function() {
