@@ -103,7 +103,8 @@ if (!$migrate_poller_queue && !$check_rrd_storage
 
 if ($check_rrd_storage || $migrate_poller_queue) {
 	print 'NOTE: Targeting ' . ($queue_connection === false ? 'Local' : 'Main') . ' Poller Queue' . PHP_EOL;
-} elseif (!$local && $config['poller_id'] > 1) {
+} elseif ($queue_connection !== false) {
+	/* Only an online collector upgrades the primary; offline/recovery stay local. */
 	db_switch_remote_to_main();
 	print 'NOTE: Targeting Main Database' . PHP_EOL;
 } else {

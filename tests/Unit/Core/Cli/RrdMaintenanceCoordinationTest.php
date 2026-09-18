@@ -527,7 +527,8 @@ REMOTE;
         $accepted = !$probe && ($engine === 'InnoDB' || $connection !== 'online');
         expect(proc_close($process))->toBe($accepted ? 0 : 1, $out . $err)
             ->and(file_exists($dir . '/upgraded'))->toBe($accepted)
-            ->and(file_exists($dir . '/main-db'))->toBe($accepted && !$local);
+            // Only an online collector upgrades the primary; offline/recovery stay local.
+            ->and(file_exists($dir . '/main-db'))->toBe($accepted && !$local && $connection === 'online');
         if ($accepted) {
             expect(file_get_contents($dir . '/version'))->toBe('1.2.31')->and($err)->toBe('');
         } else {
@@ -537,4 +538,4 @@ REMOTE;
     } finally {
         rrd_cli_fixture_remove($dir);
     }
-})->with(array(array(true,false,false),array(false,false,false),array(true,true,false),array(false,true,false),array(true,false,true),array(false,false,true),array(false,false,false,'MEMORY'),array(false,false,true,'MEMORY'),array(false,false,false,false),array(true,false,true,'MEMORY','offline'),array(true,false,true,false,'recovery')));
+})->with(array(array(true,false,false),array(false,false,false),array(true,true,false),array(false,true,false),array(true,false,true),array(false,false,true),array(false,false,false,'MEMORY'),array(false,false,true,'MEMORY'),array(false,false,false,false),array(true,false,true,'MEMORY','offline'),array(true,false,true,false,'recovery'),array(true,false,false,'MEMORY','offline'),array(true,false,false,false,'recovery')));
