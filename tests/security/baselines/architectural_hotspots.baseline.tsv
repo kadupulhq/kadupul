@@ -77,9 +77,9 @@ cmd_exec	./lib/rrd.php:1509						$fp = popen($rrdtool_cmd, 'r');
 cmd_exec	./lib/rrd.php:153		return popen($command, 'w');
 cmd_exec	./lib/rrd.php:669				$process = proc_open(cacti_escapeshellarg(read_config_option('path_rrdtool')) . ' - ' . $debug, $descriptorspec, $pipes);
 cmd_exec	./lib/rrdcheck.php:806		$process = proc_open($command, $fds, $pipes);
-cmd_exec	./lib/snmp.php:250			exec($command, $snmp_value);
-cmd_exec	./lib/snmp.php:350			exec($command, $snmp_value);
-cmd_exec	./lib/snmp.php:445			exec($command, $snmp_value);
+cmd_exec	./lib/snmp.php:250			exec(snmp_exec_prefix() . $command, $snmp_value);
+cmd_exec	./lib/snmp.php:350			exec(snmp_exec_prefix() . $command, $snmp_value);
+cmd_exec	./lib/snmp.php:445			exec(snmp_exec_prefix() . $command, $snmp_value);
 cmd_exec	./lib/snmpagent.php:660		/* add pollers of a distributed system (future) */
 cmd_exec	./lib/spikekill.php:1313			$process = @proc_open($argv, $descriptors, $pipes);
 cmd_exec	./lib/utility.php:1711						$nproc = system('nproc');

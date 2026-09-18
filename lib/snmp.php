@@ -247,7 +247,7 @@ function cacti_snmp_get($hostname, $community, $oid, $version, $auth_user = '', 
 			debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_redact_snmp_command($command)));
 		}
 
-		exec($command, $snmp_value);
+		exec(snmp_exec_prefix() . $command, $snmp_value);
 
 		/* fix for multi-line snmp output */
 		if (is_array($snmp_value)) {
@@ -347,7 +347,7 @@ function cacti_snmp_get_raw($hostname, $community, $oid, $version, $auth_user = 
 			debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_redact_snmp_command($command)));
 		}
 
-		exec($command, $snmp_value);
+		exec(snmp_exec_prefix() . $command, $snmp_value);
 
 		/* fix for multi-line snmp output */
 		if (is_array($snmp_value)) {
@@ -442,7 +442,7 @@ function cacti_snmp_getnext($hostname, $community, $oid, $version, $auth_user = 
 			debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_redact_snmp_command($command)));
 		}
 
-		exec($command, $snmp_value);
+		exec(snmp_exec_prefix() . $command, $snmp_value);
 
 		/* fix for multi-line snmp output */
 		if (is_array($snmp_value)) {
@@ -877,7 +877,7 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $auth_user = '',
 				debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_redact_snmp_command($command)));
 			}
 
-			$temp_array = exec_into_array($command);
+			$temp_array = exec_into_array(snmp_exec_prefix() . $command);
 		} else {
 			$command = cacti_escapeshellcmd(read_config_option('path_snmpwalk')) .
 				' -O QnU' . ($value_output_format == SNMP_STRING_OUTPUT_HEX ? 'x ':' ') . $snmp_auth .
@@ -892,7 +892,7 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $auth_user = '',
 				debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_redact_snmp_command($command)));
 			}
 
-			$temp_array = exec_into_array($command);
+			$temp_array = exec_into_array(snmp_exec_prefix() . $command);
 		}
 
 		if (strpos(implode(' ', $temp_array), 'Timeout') !== false) {
@@ -1183,6 +1183,24 @@ function snmp_escape_string($string) {
 	}
 
 	return cacti_escapeshellarg($string);
+}
+
+/**
+ * snmp_exec_prefix - net-snmp blanks the -c, -A and -X values in its own argv
+ * once parsed, but a /bin/sh that forks rather than execs (dash) keeps the
+ * whole command line in its argv, readable through ps and /proc, for as long
+ * as the child runs.  Prefixing 'exec' makes the shell replace itself.
+ *
+ * @return string 'exec ' on POSIX shells, empty for cmd.exe
+ */
+function snmp_exec_prefix() {
+	global $config;
+
+	if ($config['cacti_server_os'] == 'win32') {
+		return '';
+	}
+
+	return 'exec ';
 }
 
 function snmp_get_method($type = 'walk', $version = 1, $context = '', $engineid = '',
