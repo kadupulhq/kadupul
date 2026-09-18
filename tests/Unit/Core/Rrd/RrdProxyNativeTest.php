@@ -65,7 +65,8 @@ SOURCE;
 })->with(array(
     array("OK u:0.01 s:0.02 r:0.03\n", true, null),
     array("OK\r\n", true, null),
-    array(null, false, null),
+    array(null, null, null),
+    array("invalid OK u:0.00", null, null),
     array("ERROR: unknown DS name 'missing'\n", false, "unknown DS name 'missing'"),
     array("ERROR: Permission denied\r\n", false, 'Permission denied'),
     array("ERROR: failed\nOK u:0 s:0 r:0\n", false, 'failed'),

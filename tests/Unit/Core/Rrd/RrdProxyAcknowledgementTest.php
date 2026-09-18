@@ -54,4 +54,4 @@ test('proxy acknowledgements reject missing responses and error responses even w
     } else {
         expect($rejection)->toBeNull();
     }
-})->with(array(array("OK\n",true),array("OK\r\n",true),array("ERROR: failed\nOK\n",false),array("OK u:0.01 s:0.02 r:0.03\n",true),array(false,false),array("ERROR: /fixture/test.rrd: found extra data on update argument: 43\n",false),array("ERROR: failed\n",false),array("ERROR: unknown DS name 'missing'\n",false),array("ERROR: opening file: Permission denied\n",false),array("ERROR: expected OK u:0\n",false),array("ERROR: failed\nOK u:0 s:0 r:0\n",false)));
+})->with(array(array("OK\n",true),array("OK\r\n",true),array("ERROR: failed\nOK\n",false),array("OK u:0.01 s:0.02 r:0.03\n",true),array(false,null),array("invalid OK u:0.00",null),array("ERROR: /fixture/test.rrd: found extra data on update argument: 43\n",false),array("ERROR: failed\n",false),array("ERROR: unknown DS name 'missing'\n",false),array("ERROR: opening file: Permission denied\n",false),array("ERROR: expected OK u:0\n",false),array("ERROR: failed\nOK u:0 s:0 r:0\n",false)));

@@ -845,7 +845,9 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp=
                 $rejection =& rrdtool_last_rejection();
                 $rejection = trim($error[1]);
             }
-			return strpos($output, 'ERROR:') === false && preg_match('/^OK(?: u:[^\r\n]+)?\r?$/m', $output) === 1;
+			if (strpos($output, 'ERROR:') !== false) { return false; }
+			// Incomplete replies cannot authorize recreating an existing proxy RRD.
+			return preg_match('/^OK(?: u:[^\r\n]+)?\r?$/m', $output) === 1 ? true : null;
 			break;
 	}
 }
