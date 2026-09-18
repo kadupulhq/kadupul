@@ -625,6 +625,12 @@ while ($poller_runs_completed < $poller_runs) {
         $issues = array();
     }
 
+    // A failed inspection is not an empty queue; do not launch producers.
+    if ($issues === false) {
+        cacti_log('ERROR: Unable to inspect retained poller output; collection stopped.', true, 'POLLER');
+        exit(1);
+    }
+
     if (cacti_sizeof($issues)) {
         $count  = db_fetch_cell_prepared(
             'SELECT ' . SQL_NO_CACHE . ' COUNT(*)
@@ -659,17 +665,32 @@ while ($poller_runs_completed < $poller_runs) {
         }
 
         // Valid pending samples belong to a retry, even after writer failure.
-        db_execute_prepared(
-            'DELETE po
-			FROM poller_output AS po
-			LEFT JOIN data_local AS dl
-			ON po.local_data_id = dl.id
-			LEFT JOIN host AS h
-			ON dl.host_id = h.id
-			WHERE (h.poller_id = ? OR h.id IS NULL)
-			AND (dl.id IS NULL OR (dl.host_id > 0 AND h.id IS NULL))',
-            array($poller_id)
-        );
+        do {
+            $orphan_rows = db_fetch_assoc_prepared(
+                'SELECT po.local_data_id, po.rrd_name, po.time, po.output
+                FROM poller_output AS po
+                LEFT JOIN data_local AS dl
+                ON po.local_data_id = dl.id
+                LEFT JOIN host AS h
+                ON dl.host_id = h.id
+                WHERE (h.poller_id = ? OR h.id IS NULL)
+                AND (dl.id IS NULL OR (dl.host_id > 0 AND h.id IS NULL)) LIMIT 40000',
+                array($poller_id)
+            );
+            if ($orphan_rows === false) {
+                $rrd_cleanup_failed = true;
+                break;
+            }
+            $orphan_keys = array();
+            foreach ((array) $orphan_rows as $orphan) {
+                $orphan_keys[] = array($orphan['local_data_id'], $orphan['rrd_name'], $orphan['time'], $orphan['output']);
+            }
+            $removed = poller_delete_output_rows($orphan_keys, $delete_failed);
+            if ($delete_failed || $removed !== cacti_sizeof($orphan_keys)) {
+                $rrd_cleanup_failed = true;
+                break;
+            }
+        } while (count($orphan_rows) === 40000);
     }
 
     // InnoDB queues do not need the legacy MEMORY-table swap.
@@ -1042,7 +1063,7 @@ if ($poller_id == 1) {
     api_plugin_hook('poller_bottom');
 }
 
-if (!empty($rrd_write_failed)) {
+if (!empty($rrd_write_failed) || !empty($rrd_cleanup_failed)) {
     exit(1);
 }
 

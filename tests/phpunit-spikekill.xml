@@ -20,6 +20,8 @@
       <file>./Unit/Core/PathHelpersTest.php</file>
       <file>./Unit/Core/Poller/PollerBatchLeaseTest.php</file>
       <file>./Unit/Core/Poller/PollerPostRunFailureTest.php</file>
+      <file>./Unit/Core/Poller/ShutdownOrphanCleanupTest.php</file>
+      <file>./Unit/Core/Poller/QueueInspectionFailureTest.php</file>
       <file>./Unit/Core/Rrd/WindowsCleanupPolicyTest.php</file>
       <file>./Unit/Core/Rrd/RealtimeFieldLookupFailureTest.php</file>
       <file>./Unit/Core/Rrd/DsdebugRepairResultTest.php</file>
