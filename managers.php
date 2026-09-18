@@ -55,6 +55,10 @@ switch (get_request_var('action')) {
 		form_actions();
 		break;
 	case 'edit':
+		if (isset_request_var('purge')) {
+			managers_require_post('purge');
+		}
+
 		top_header();
 		manager_edit();
 		bottom_footer();
@@ -744,6 +748,17 @@ function manager_logs($id, $header_label) {
 
 		$('#form_snmpagent_manager_logs').on('submit', function() {
 			applyFilter();
+		});
+
+		$('#purge').on('click', function() {
+			loadPageUsingPost('managers.php', {
+				action: 'edit',
+				tab: 'logs',
+				id: $('#id').val(),
+				purge: 1,
+				header: 'false',
+				__csrf_magic: csrfMagicToken
+			});
 		});
 	});
 

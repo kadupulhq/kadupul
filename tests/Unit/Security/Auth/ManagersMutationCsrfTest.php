@@ -77,3 +77,36 @@ test('notification receiver bulk actions still run on POST', function () use ($r
         ->and($stdout)->toContain('HANDLER:actions')
         ->and($stdout)->not->toContain('Rejected non-POST');
 });
+
+test('notification log purge is refused unless the request is a POST', function () use ($runController) {
+    foreach (array('GET', 'HEAD') as $method) {
+        list($exit, $stdout, $stderr) = $runController($method, 'edit', true);
+
+        expect($exit)->toBe(0, $stderr)
+            ->and($stdout)->toContain('LOG:AUTH:WARNING: Rejected non-POST request to managers.php?action=purge')
+            ->and($stdout)->not->toContain('HANDLER:')
+            ->and($stdout)->not->toContain('accepted');
+    }
+});
+
+test('notification log viewing by GET and purge by POST still work', function () use ($runController) {
+    list($exit, $stdout, $stderr) = $runController('GET', 'edit');
+
+    expect($exit)->toBe(0, $stderr)
+        ->and($stdout)->toContain('HANDLER:edit')
+        ->and($stdout)->not->toContain('Rejected non-POST');
+
+    list($exit, $stdout, $stderr) = $runController('POST', 'edit', true);
+
+    expect($exit)->toBe(0, $stderr)
+        ->and($stdout)->toContain('HANDLER:edit:purge')
+        ->and($stdout)->not->toContain('Rejected non-POST');
+});
+
+test('the purge button posts with the csrf token', function () use ($root) {
+    $source = file_get_contents($root . '/managers.php');
+
+    expect($source)->toContain("\$('#purge').on('click', function() {")
+        ->and($source)->toContain("loadPageUsingPost('managers.php', {")
+        ->and($source)->toContain('__csrf_magic: csrfMagicToken');
+});
