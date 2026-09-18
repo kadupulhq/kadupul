@@ -907,7 +907,9 @@ function process_poller_output_page(&$rrdtool_pipe, $remainder, $after, &$acknow
 						unset($rrd_update_array[$path]['times'][$time]);
 					}
 				}
-				if (empty($rrd_update_array[$path]['times'])) { unset($rrd_update_array[$path]); }
+				if (empty($rrd_update_array[$path]['times'])) {
+					unset($rrd_update_array[$path]);
+				}
 			}
 		}
 		if ($rrd_update_array) {

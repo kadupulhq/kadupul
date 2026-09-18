@@ -841,11 +841,13 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp=
 			}
 			break;
 		case RRDTOOL_OUTPUT_BOOLEAN :
-            if (preg_match('/^ERROR:([^\r\n]*)\r?$/m', $output, $error)) {
-                $rejection =& rrdtool_last_rejection();
-                $rejection = trim($error[1]);
-            }
-			if (strpos($output, 'ERROR:') !== false) { return false; }
+			if (preg_match('/^ERROR:([^\r\n]*)\r?$/m', $output, $error)) {
+				$rejection =& rrdtool_last_rejection();
+				$rejection = trim($error[1]);
+			}
+			if (strpos($output, 'ERROR:') !== false) {
+				return false;
+			}
 			// Incomplete replies cannot authorize recreating an existing proxy RRD.
 			return preg_match('/^OK(?: u:[^\r\n]+)?\r?$/m', $output) === 1 ? true : null;
 			break;
