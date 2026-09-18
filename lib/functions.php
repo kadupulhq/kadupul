@@ -7432,7 +7432,7 @@ function get_debug_prefix() {
 }
 
 function get_client_addr() {
-	global $config, $allowed_proxy_headers, $trusted_proxies;
+	global $config, $allowed_proxy_headers, $trusted_proxies, $database_sessions, $database_hostname, $database_port, $database_default;
 
 	/* $trusted_proxies is opt-in; without it keep the original header handling */
 	if (!empty($trusted_proxies)) {
@@ -7451,12 +7451,17 @@ function get_client_addr() {
 		$proxy_headers = [];
 	}
 
-	/* the lookup runs several times per request, so warn once per process */
-	static $warned = false;
+	/* the lookup runs several times per request and on every request, so
+	 * check once per process and log at most once a day. Early callers can
+	 * run before the database is connected; they skip the warning. */
+	static $checked = false;
 
-	if (!$warned && cacti_sizeof(array_diff($proxy_headers, array('REMOTE_ADDR')))) {
-		$warned = true;
-		cacti_log('WARNING: $proxy_headers is set without $trusted_proxies, so client address headers are trusted from any client.  Set $trusted_proxies in include/config.php to your reverse proxy addresses.', false, 'AUTH');
+	if (!$checked && cacti_sizeof(array_diff($proxy_headers, array('REMOTE_ADDR')))) {
+		$checked = true;
+
+		if (!empty($database_sessions["$database_hostname:$database_port:$database_default"]) && debounce_run_notification('proxy_headers_untrusted', 86400)) {
+			cacti_log('WARNING: $proxy_headers is set without $trusted_proxies, so client address headers are trusted from any client.  Set $trusted_proxies in include/config.php to your reverse proxy addresses.', false, 'AUTH');
+		}
 	}
 
 	if (!in_array('REMOTE_ADDR', $proxy_headers)) {

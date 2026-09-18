@@ -2,7 +2,7 @@ Cacti CHANGELOG
 
 1.2.32
 -security: Ping, poll, query and discover through the remote agent only for devices and networks of its own Data Collector
--security: Log a warning when $proxy_headers is set without $trusted_proxies, since any client can then choose its address
+-security: Log a daily warning when $proxy_headers is set without $trusted_proxies, since any client can then choose its address
 -security: Check graph permissions before a Remote Data Collector proxies a graph, and refuse remote graph requests that name no user
 -test: Measure InnoDB and legacy MEMORY million-row queues across MariaDB and MySQL LTS versions and verify close-before-timestamp ordering against real legacy RRDtool
 -issue: Stop Boost fetch preparation after writer initialization fails; restore caller error settings and release only owned writers on exceptions
