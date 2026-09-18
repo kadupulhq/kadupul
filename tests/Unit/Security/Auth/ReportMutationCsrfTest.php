@@ -5,6 +5,48 @@
 
 $root = dirname(__DIR__, 4);
 
+test('report POST helper rejects non-POST requests with a logged redirect', function () use ($root) {
+    $program = <<<'PHP'
+namespace ReportPostHelperRuntime;
+
+$method = $argv[1];
+$_SERVER['REQUEST_METHOD'] = $method;
+
+function cacti_log($message, $output = false, $facility = '') { echo 'LOG:' . $facility . ':' . $message . "\n"; }
+function get_reports_page() { return 'realm_reports.php'; }
+function header($value) { echo 'HEADER:' . $value . "\n"; }
+
+$source = file_get_contents(getcwd() . '/lib/html_reports.php');
+preg_match('/^function reports_require_post\(.*?^}\n/ms', $source, $match);
+if (empty($match)) { exit(2); }
+
+eval('namespace ReportPostHelperRuntime; ' . $match[0]);
+reports_require_post('actions');
+echo 'OK';
+PHP;
+
+    foreach (array('GET' => "LOG:AUTH:WARNING: Rejected non-POST request to realm_reports.php?action=actions\nHEADER:Location: realm_reports.php\n", 'POST' => 'OK') as $method => $expected) {
+        $process = proc_open(
+            array(PHP_BINARY, '-r', $program, $method),
+            array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+            $pipes,
+            $root
+        );
+
+        expect(is_resource($process))->toBeTrue();
+
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+
+        $exit = proc_close($process);
+
+        expect($exit)->toBe(0, $stderr)
+            ->and($stdout)->toBe($expected);
+    }
+});
+
 test('report mutation actions reject non-POST requests in both report controllers', function () use ($root) {
     $program = <<<'PHP'
 namespace ReportControllerRuntime;
