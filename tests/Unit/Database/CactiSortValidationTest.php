@@ -45,9 +45,9 @@ test('late registration never persists rejected sort columns', function () {
     set_request_var('sort_direction', 'DESC');
     $page = get_order_string_page(false);
     update_order_string();
-    expect(get_order_string(array('description', 'id')))->toBe('');
-    expect($_SESSION['sort_data'][$page])->toBe(array());
-    expect($_SESSION['sort_string'][$page])->toBe('');
+    expect(get_order_string(array('description', 'id')))->toBe('ORDER BY `description` ASC');
+    expect($_SESSION['sort_data'][$page])->toBe(array('description' => 'ASC'));
+    expect($_SESSION['sort_string'][$page])->toBe('ORDER BY `description` ASC');
 });
 
 test('sanitize_sql_column() allows valid columns', function () {
@@ -215,9 +215,9 @@ test('rejected saved columns fall back to the current allowlisted sort request',
 })->with(array(
     array('description', 'ORDER BY `description` DESC', array('description' => 'DESC')),
     array('LENGTH(description)', 'ORDER BY LENGTH(description) DESC', array('LENGTH(description)' => 'DESC')),
-    array('secret_column', '', array()),
-    array('description; DROP TABLE host', '', array()),
-    array(array('description'), '', array()),
+    array('secret_column', 'ORDER BY `description` ASC', array('description' => 'ASC')),
+    array('description; DROP TABLE host', 'ORDER BY `description` ASC', array('description' => 'ASC')),
+    array(array('description'), 'ORDER BY `description` ASC', array('description' => 'ASC')),
 ));
 
 test('domain listing sorts LDAP attributes while retaining domains without LDAP settings', function ($column, $direction, $expected, $stringify) {

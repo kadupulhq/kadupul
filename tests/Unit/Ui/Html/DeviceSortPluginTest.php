@@ -42,7 +42,7 @@ test('device display and export preserve plugin sorting with a fresh session', f
     if (in_array($column, array('description', 'plugin_rank', 'host.plugin_rank'), true)) {
         expect($GLOBALS['device_sort_sql'])->toContain('ORDER BY `' . str_replace('.', '`.`', $column) . '` DESC');
     } else {
-        expect($GLOBALS['device_sort_sql'])->not->toContain('ORDER BY');
+        expect($GLOBALS['device_sort_sql'])->toContain('ORDER BY `description` ASC')->not->toContain('ORDER BY ' . $column);
     }
     unset($GLOBALS['device_sort_sql'], $GLOBALS['device_sort_hook_calls']);
 })->with(array('description', 'plugin_rank', 'host.plugin_rank', 'nosort_action', 'unknown_column', 'LENGTH(description)', 'description`', 'description, (SELECT 1)'))->with(array(false, true));

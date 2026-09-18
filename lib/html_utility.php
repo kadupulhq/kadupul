@@ -966,6 +966,19 @@ function get_order_string($allowed_columns = null) {
 		}
 	}
 
+	// Invalid or obsolete saved sorts must not leave paginated queries unordered.
+	if (!$parts && isset($_SESSION['valid_sort_columns'][$page])) {
+		foreach ($_SESSION['valid_sort_columns'][$page] as $default) {
+			if (!is_string($default) || trim($default) === '') {
+				continue;
+			}
+			$parts[] = cacti_normalize_sort_column($default) !== ''
+				? cacti_build_sort_fragment($default, 'ASC') : $default . ' ASC';
+			$validated_columns[$default] = 'ASC';
+			break;
+		}
+	}
+
 	// Request-state processing can precede the first registration of this map.
 	// Persist only the columns validated here so pagination retains that sort.
 	$_SESSION['sort_data'][$page] = $validated_columns;
