@@ -836,12 +836,6 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null, &$
 			}
 		}
 
-		/* process dsstats information */
-		dsstats_poller_output($rrd_update_array);
-		dsdebug_poller_output($rrd_update_array);
-
-		api_plugin_hook_function('poller_output', $rrd_update_array);
-
 		$direct_update = boost_poller_on_demand($results);
 		if ($direct_update === null) {
 			return false;
@@ -869,6 +863,23 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, $after = null, &$
 					$output_keys[] = array($item['local_data_id'], $item['rrd_name'], $item['time'], $item['output']);
 				}
 			}
+		}
+
+		// Publish only accepted samples; retained writes must not replay side effects.
+		if ($direct_update) {
+			foreach ($rrd_update_array as $path => $fields) {
+				foreach ($fields['times'] as $time => $values) {
+					if (($completed[$path][$time] ?? null) !== true) {
+						unset($rrd_update_array[$path]['times'][$time]);
+					}
+				}
+				if (empty($rrd_update_array[$path]['times'])) { unset($rrd_update_array[$path]); }
+			}
+		}
+		if ($rrd_update_array) {
+			dsstats_poller_output($rrd_update_array);
+			dsdebug_poller_output($rrd_update_array);
+			api_plugin_hook_function('poller_output', $rrd_update_array);
 		}
 
 		$acknowledged = $rrds_processed;

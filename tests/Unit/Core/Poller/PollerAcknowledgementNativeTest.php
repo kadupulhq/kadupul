@@ -99,6 +99,37 @@ test('production poller files retain failed writes and preserve concurrent arriv
             expect(json_decode(file_get_contents($dir . '/batch-result.json'), true))->toBe(array(1, true));
         }
         expect(json_decode(file_get_contents($dir . '/outcome.json'), true))->toBe($expected);
+        if (!$realtime) {
+            foreach (array('dsstats_poller_output', 'dsdebug_poller_output', 'api_plugin_hook_function') as $hook) {
+                $file = $dir . '/' . $hook . '.jsonl';
+                $events = is_file($file) ? array_map(static fn($line) => json_decode($line, true), file($file, FILE_IGNORE_NEW_LINES)) : array();
+                if ($failed === true || in_array($failed, array('select', 'handoff', 'init', 'busy', 'count', 'incomplete', 'tail-failure'), true)) {
+                    expect($events)->toBe(array());
+                } elseif (in_array($failed, array('mixed', 'page'), true)) {
+                    expect($events)->toHaveCount(1);
+                    expect(array_keys($events[0]))->toBe(array('good.rrd'));
+                } elseif ($failed === 'page-success') {
+                    expect($events)->toHaveCount(2);
+                    $samples = 0;
+                    foreach ($events as $event) {
+                        foreach ($event as $fields) {
+                            $samples += count($fields['times']);
+                        }
+                    }
+                    expect($samples)->toBe(40002);
+                } elseif ($remote && $failed === false) {
+                    expect($events)->toHaveCount(2);
+                    expect(array_values($events[0]['fixture.rrd']['times']))->toBe(array(array('value' => '42')));
+                    expect(array_values($events[1]['fixture.rrd']['times']))->toBe(array(array('value' => '43')));
+                } elseif ($failed === 'rejected') {
+                    expect($events)->toHaveCount(1);
+                    expect(array_values($events[0]['fixture.rrd']['times']))->toBe(array(array('value' => '45')));
+                } else {
+                    expect($events)->toHaveCount(1);
+                    expect(array_values($events[0]['fixture.rrd']['times']))->toBe(array(array('value' => '42')));
+                }
+            }
+        }
         if ($parent !== null) {
             $reports = glob($dir . '/*.coverage');
             expect($reports)->toHaveCount(1);

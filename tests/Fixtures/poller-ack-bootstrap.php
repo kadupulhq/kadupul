@@ -80,9 +80,18 @@ function array_rekey($rows, $key, $value)
     }
     return array_column($rows, $value, $key);
 }
-function dsstats_poller_output(...$args) {}
-function dsdebug_poller_output(...$args) {}
-function api_plugin_hook_function(...$args) {}
+function dsstats_poller_output(...$args)
+{
+    file_put_contents(getenv('ACK_FIXTURE') . '/dsstats_poller_output.jsonl', json_encode($args[count($args) - 1]) . PHP_EOL, FILE_APPEND);
+}
+function dsdebug_poller_output(...$args)
+{
+    file_put_contents(getenv('ACK_FIXTURE') . '/dsdebug_poller_output.jsonl', json_encode($args[count($args) - 1]) . PHP_EOL, FILE_APPEND);
+}
+function api_plugin_hook_function(...$args)
+{
+    file_put_contents(getenv('ACK_FIXTURE') . '/api_plugin_hook_function.jsonl', json_encode($args[count($args) - 1]) . PHP_EOL, FILE_APPEND);
+}
 function boost_poller_on_demand(...$args)
 {
     return getenv('ACK_FAIL') === 'handoff' ? null : true;
