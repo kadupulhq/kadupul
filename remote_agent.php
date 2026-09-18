@@ -305,11 +305,12 @@ function get_graph_data() {
 		$graph_data_array['graph_theme'] = cacti_validate_theme(get_request_var('graph_theme'));
 	}
 
-	/* set the theme */
-	if (isset_request_var('effective_user')) {
-		$user = get_request_var('effective_user');
-	} else {
-		$user = 0;
+	/* rrdtool_function_graph() skips the permission check for user 0 */
+	$user = get_request_var('effective_user');
+
+	if (empty($user) || $user < 1) {
+		print 'GRAPH ACCESS DENIED';
+		return false;
 	}
 
 	$graph_data_array['graphv'] = true;
