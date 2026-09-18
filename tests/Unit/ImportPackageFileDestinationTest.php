@@ -149,6 +149,17 @@ test('writes script and resource files at the Cacti base and in a plugin', funct
     }
 });
 
+test('normalizes backslash package destinations before dispatching writes', function () {
+    $names = array('scripts\\ss_backslash.php', 'plugins\\thold\\resource\\backslash.xml');
+
+    $result = importPkgDestRun($names);
+
+    expect(file_get_contents($this->base . '/scripts/ss_backslash.php'))->toBe('payload for scripts\\ss_backslash.php')
+        ->and($result[1][$this->base . '/scripts/ss_backslash.php'])->toBe('written')
+        ->and(file_get_contents($this->base . '/plugins/thold/resource/backslash.xml'))->toBe('payload for plugins\\thold\\resource\\backslash.xml')
+        ->and($result[1][$this->base . '/plugins/thold/resource/backslash.xml'])->toBe('written');
+});
+
 test('previews an existing script file', function () {
     file_put_contents($this->base . '/scripts/ss_test.php', 'payload for scripts/ss_test.php');
 

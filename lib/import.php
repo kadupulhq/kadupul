@@ -596,7 +596,7 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 			continue;
 		}
 
-		if (strpos($name, 'scripts/') !== false || strpos($name, 'resource/') !== false) {
+		if (strpos($normalized_name, 'scripts/') !== false || strpos($normalized_name, 'resource/') !== false) {
 			/* Packages ship scripts and resources for the base or a plugin only.
 			 * A name such as 'evil/scripts/x.php' or a symlink under the base
 			 * would otherwise place the write or preview read anywhere. */
