@@ -62,12 +62,15 @@ switch (get_request_var('action')) {
 			header('Location: utilities.php?action=view_poller_cache');exit;
 		}
 
+		/* a persistent database connection keeps a named lock after PHP dies,
+		 * so release it at shutdown whether or not the rebuild finishes */
+		register_shutdown_function('utilities_poller_cache_release');
+
 		/* obtain timeout settings */
 		$max_execution = ini_get('max_execution_time');
 		ini_set('max_execution_time', '0');
 		repopulate_poller_cache();
 		ini_set('max_execution_time', $max_execution);
-		db_execute_prepared('DO RELEASE_LOCK(?)', array('kadupul.poller_cache_rebuild'));
 		header('Location: utilities.php?action=view_poller_cache');exit;
 		break;
 	case 'rebuild_resource_cache':
@@ -151,6 +154,10 @@ switch (get_request_var('action')) {
 /* -----------------------
     Utilities Functions
    ----------------------- */
+
+function utilities_poller_cache_release() {
+	db_execute_prepared('DO RELEASE_LOCK(?)', array('kadupul.poller_cache_rebuild'));
+}
 
 function rebuild_resource_cache() {
 	db_execute('DELETE FROM settings WHERE name LIKE "md5dirsum%"');

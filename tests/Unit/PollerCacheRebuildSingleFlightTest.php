@@ -20,7 +20,8 @@ $_SERVER = array('REQUEST_METHOD' => 'POST');
 $_REQUEST = array('action' => 'clear_poller_cache');
 define('MESSAGE_LEVEL_WARN', 2);
 $calls = array();
-register_shutdown_function(function () { echo json_encode($GLOBALS['calls']); });
+// Report after every shutdown function the dispatch registers has run.
+register_shutdown_function(function () { register_shutdown_function(function () { echo json_encode($GLOBALS['calls']); }); });
 function set_default_action() {}
 function get_request_var($name) { return $_REQUEST[$name] ?? ''; }
 function cacti_log($message) {}
@@ -28,14 +29,15 @@ function __($text) { return $text; }
 function raise_message($id) { $GLOBALS['calls'][] = 'message:' . $id; }
 function db_fetch_cell_prepared($sql, $params = array(), $col_name = '', $log = true, $db_conn = false) { $GLOBALS['calls'][] = array($sql, $params); return $GLOBALS['input']['lock']; }
 function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = false, $execute_name = 'Exec', $default_value = true, $return_func = 'no_return_function', $return_params = array()) { $GLOBALS['calls'][] = array($sql, $params); return true; }
-function repopulate_poller_cache() { $GLOBALS['calls'][] = 'rebuild'; }
+function repopulate_poller_cache() { $GLOBALS['calls'][] = 'rebuild'; if ($GLOBALS['input']['dies']) { exit(1); } }
 CODE;
 
-    return $program . substr($source, $start, $end - $start);
+    return $program . clogProductionFunction('utilities.php', 'utilities_poller_cache_release')
+        . substr($source, $start, $end - $start);
 }
 
 test('a poller cache rebuild is refused while another holds the lock', function () {
-    $calls = clogRunProduction(pollerCacheRebuildProgram(), array('lock' => '0'));
+    $calls = clogRunProduction(pollerCacheRebuildProgram(), array('lock' => '0', 'dies' => false));
 
     expect($calls)->toBe(array(
         array('SELECT GET_LOCK(?, 0)', array('kadupul.poller_cache_rebuild')),
@@ -44,7 +46,17 @@ test('a poller cache rebuild is refused while another holds the lock', function 
 });
 
 test('a poller cache rebuild takes the lock and releases it when done', function () {
-    $calls = clogRunProduction(pollerCacheRebuildProgram(), array('lock' => '1'));
+    $calls = clogRunProduction(pollerCacheRebuildProgram(), array('lock' => '1', 'dies' => false));
+
+    expect($calls)->toBe(array(
+        array('SELECT GET_LOCK(?, 0)', array('kadupul.poller_cache_rebuild')),
+        'rebuild',
+        array('DO RELEASE_LOCK(?)', array('kadupul.poller_cache_rebuild')),
+    ));
+});
+
+test('a poller cache rebuild that dies part way still releases the lock at shutdown', function () {
+    $calls = clogRunProduction(pollerCacheRebuildProgram(), array('lock' => '1', 'dies' => true), 1);
 
     expect($calls)->toBe(array(
         array('SELECT GET_LOCK(?, 0)', array('kadupul.poller_cache_rebuild')),
@@ -101,5 +113,30 @@ test('the CLI rebuild takes the shared lock and releases it when done', function
         'rebuild',
         'unregister',
         array('DO RELEASE_LOCK(?)', array('kadupul.poller_cache_rebuild')),
+    ));
+});
+
+test('an interrupted CLI rebuild stops its children and then releases the lock', function () {
+    $program = <<<'CODE'
+// Images built without pcntl lack the signal constants sig_handler() uses.
+defined('SIGTERM') || define('SIGTERM', 15);
+defined('SIGINT') || define('SIGINT', 2);
+$type = 'rmaster';
+$thread_id = 0;
+$calls = array();
+register_shutdown_function(function () { echo json_encode($GLOBALS['calls']); });
+function cacti_log($message) { $GLOBALS['calls'][] = 'log'; }
+function pushout_kill_running_processes() { $GLOBALS['calls'][] = 'kill'; }
+function unregister_process() { $GLOBALS['calls'][] = 'unregister'; }
+function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = false, $execute_name = 'Exec', $default_value = true, $return_func = 'no_return_function', $return_params = array()) { $GLOBALS['calls'][] = array($sql, $params); return true; }
+CODE;
+
+    $program .= clogProductionFunction('cli/rebuild_poller_cache.php', 'sig_handler') . 'sig_handler(SIGTERM);';
+
+    expect(clogRunProduction($program, array(), 1))->toBe(array(
+        'log',
+        'kill',
+        array('DO RELEASE_LOCK(?)', array('kadupul.poller_cache_rebuild')),
+        'unregister',
     ));
 });
