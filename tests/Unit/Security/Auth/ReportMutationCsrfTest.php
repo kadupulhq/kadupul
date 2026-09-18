@@ -189,6 +189,114 @@ PHP;
         ->and($stdout)->not->toContain('?action=item_remove&item_id=');
 });
 
+test('report drag and drop consumes POST item order for the authorized report', function () use ($root) {
+    $program = <<<'PHP'
+namespace ReportDndRuntime;
+
+parse_str('id=7&__csrf_magic=token&report_item%5B%5D=line13&report_item%5B%5D=line11&report_item%5B%5D=line12', $_POST);
+$_SERVER['REQUEST_METHOD'] = 'POST';
+$_SESSION['sess_user_id'] = 5;
+$GLOBALS['updates'] = array();
+
+function get_filter_request_var($name) { return $_POST[$name] ?? null; }
+function get_request_var($name) { return $_POST[$name] ?? null; }
+function isset_request_var($name) { return isset($_POST[$name]); }
+function get_nfilter_request_var($name) { return $_POST[$name] ?? null; }
+function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+function cacti_authorize_resource($user, $resource, $type) { return $user === 5 && $resource === 7 && $type === 'reports'; }
+function input_validate_input_number($value) {
+    if (!preg_match('/^[0-9]+$/', (string) $value)) {
+        throw new \RuntimeException('bad number');
+    }
+}
+function db_execute_prepared($sql, $params = array()) { $GLOBALS['updates'][] = $params; }
+
+$source = file_get_contents(getcwd() . '/lib/html_reports.php');
+preg_match('/^function reports_item_dnd\(.*?^}\n\nfunction reports_form_save\(/ms', $source, $match);
+if (empty($match)) { exit(2); }
+$dnd = preg_replace('/\nfunction reports_form_save\($/m', '', $match[0]);
+eval('namespace ReportDndRuntime; ' . $dnd);
+
+reports_item_dnd();
+echo json_encode($GLOBALS['updates']);
+PHP;
+
+    $process = proc_open(
+        array(PHP_BINARY, '-r', $program),
+        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+        $pipes,
+        $root
+    );
+
+    expect(is_resource($process))->toBeTrue();
+
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+
+    $exit = proc_close($process);
+
+    expect($exit)->toBe(0, $stderr)
+        ->and(json_decode($stdout, true))->toBe(array(
+            array(1, '13', '7'),
+            array(2, '11', '7'),
+            array(3, '12', '7'),
+        ));
+});
+
+test('send report tab encodes hostile tab values inside POST onclick data', function () use ($root) {
+    $program = <<<'PHP'
+namespace ReportTabsRuntime;
+
+$GLOBALS['config'] = array('url_path' => '/cacti/');
+$_REQUEST = array('id' => '7', 'tab' => 'items";alert(1);//<script>&\'');
+
+function __($text, ...$args) { return $args ? vsprintf($text, $args) : $text; }
+function isset_request_var($name) { return isset($_REQUEST[$name]); }
+function set_request_var($name, $value) { $_REQUEST[$name] = $value; }
+function get_request_var($name) { return $_REQUEST[$name] ?? null; }
+function isempty_request_var($name) { return empty($_REQUEST[$name]); }
+function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+function get_reports_page() { return 'reports_user.php'; }
+function html_escape($text) { return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
+
+$source = file_get_contents(getcwd() . '/lib/html_reports.php');
+preg_match('/^function reports_tabs\(.*?^}\n\nfunction reports_edit\(/ms', $source, $match);
+if (empty($match)) { exit(2); }
+$tabs = preg_replace('/\nfunction reports_edit\($/m', '', $match[0]);
+eval('namespace ReportTabsRuntime; ' . $tabs);
+
+ob_start();
+reports_tabs(7);
+$html = ob_get_clean();
+echo $html;
+PHP;
+
+    $process = proc_open(
+        array(PHP_BINARY, '-r', $program),
+        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+        $pipes,
+        $root
+    );
+
+    expect(is_resource($process))->toBeTrue();
+
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+
+    $exit = proc_close($process);
+
+    expect($exit)->toBe(0, $stderr)
+        ->and($stdout)->toContain('loadPageUsingPost')
+        ->and($stdout)->toContain('\\u0022')
+        ->and($stdout)->toContain('\\u003Cscript\\u003E')
+        ->and($stdout)->not->toContain('items";alert(1)')
+        ->and($stdout)->not->toContain('<script>');
+});
+
 test('csrf middleware rejects empty-body POST mutations without a token', function () use ($root) {
     $program = <<<'PHP'
 function csrf_startup() {
