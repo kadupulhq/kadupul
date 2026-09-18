@@ -716,7 +716,7 @@ function poller_expire_incomplete_rows($retention, &$failed = null) {
 				LEFT JOIN poller_item AS pi ON pi.local_data_id = old.local_data_id AND pi.rrd_name = old.rrd_name
 				WHERE old.time < FROM_UNIXTIME(UNIX_TIMESTAMP() - ?)
 				GROUP BY old.local_data_id, old.time
-				HAVING MAX(pi.rrd_num) IS NULL OR COUNT(DISTINCT old.rrd_name) < MAX(pi.rrd_num)
+				HAVING MAX(pi.rrd_num) IS NULL OR COUNT(DISTINCT pi.rrd_name) < MAX(pi.rrd_num)
 			) AS incomplete ON incomplete.local_data_id = po.local_data_id AND incomplete.time = po.time
 			LIMIT 40000', array(max(0, (int) $retention)));
 		if ($rows === false) {
@@ -828,6 +828,9 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 			$deferred = true;
 			return 0;
 		}
+
+		$unmapped_keys      = array();
+		$unmapped_retention = max(600, 2 * (int) read_config_option('poller_interval'));
 
 		/* create an array keyed off of each .rrd file */
 		foreach ($results as $item) {
@@ -1023,7 +1026,17 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 			if ((!isset($rrd_update_array[$rrd_path]['times'][$unix_time])) && ($rrd_name != '')) {
 				$rrd_update_array[$rrd_path]['times'][$unix_time][$rrd_name] = 'U';
 			} elseif ((!isset($rrd_update_array[$rrd_path]['times'][$unix_time])) && ($rrd_name == '')) {
-				unset($rrd_update_array[$rrd_path]);
+				// Other samples for this file are still valid; drop only the unusable one.
+				if (empty($rrd_update_array[$rrd_path]['times'])) {
+					unset($rrd_update_array[$rrd_path]);
+				}
+
+				/* A MULTI row carries the whole sample, so nothing can arrive to
+				 * complete it. Retention leaves room for a transient mapping failure. */
+				if ($unix_time < time() - $unmapped_retention) {
+					cacti_log(sprintf('WARNING: Discarded unmapped MULTI output for DS[%d] at %s', $local_data_id, $item['time']), false, 'POLLER');
+					$unmapped_keys[] = array($local_data_id, $rrd_name, $item['time'], $item['output']);
+				}
 			}
 		}
 
@@ -1095,7 +1108,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 			api_plugin_hook_function('poller_output', $rrd_update_array);
 		}
 
-		$consumed += poller_delete_output_rows($output_keys, $deferred);
+		$consumed += poller_delete_output_rows(array_merge($output_keys, $unmapped_keys), $deferred);
 
 		$results = NULL;
 		$rrd_update_array = NULL;
