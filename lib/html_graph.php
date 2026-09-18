@@ -341,8 +341,11 @@ function html_graph_preview_filter($page, $action, $devices_where = '', $templat
 					<td>
 						<select name='ds_step' id='ds_step'>
 							<?php
+							$min_refresh = read_config_option('realtime_interval');
 							foreach ($realtime_refresh as $interval => $text) {
-								printf('<option value="%d"%s>%s</option>', $interval, $interval == $_SESSION['sess_realtime_dsstep'] ? ' selected="selected"' : '', $text);
+								if ($interval >= $min_refresh) {
+									printf('<option value="%d"%s>%s</option>', $interval, $interval == $_SESSION['sess_realtime_dsstep'] ? ' selected="selected"' : '', $text);
+								}
 							}
 							?>
 						</select>

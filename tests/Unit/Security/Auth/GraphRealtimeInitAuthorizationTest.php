@@ -220,13 +220,13 @@ test('an allowed graph costs one permission query per request', function () use 
 	}
 });
 
-test('a stored interval with a space reaches the poller as one argument', function () use ($realtimeRequest) {
+test('a stored interval with a space reaches the poller as one numeric argument', function () use ($realtimeRequest) {
 	$request = $realtimeRequest;
 	unset($request['ds_step']);
 
 	$run = graph_realtime_init_run(array('request' => $request, 'allowed' => array(5), 'user' => array('realtime_interval' => '10 --force'), 'config' => array('realtime_enabled' => 'on')));
 
-	expect($run['polls'])->toBe(array('[-q][/opt/kadupul/poller_realtime.php][--graph=5][--interval=10 --force][--poller_id=abc123]'));
+	expect($run['polls'])->toBe(array('[-q][/opt/kadupul/poller_realtime.php][--graph=5][--interval=10][--poller_id=abc123]'));
 });
 
 test('a graph the user may not view is not polled', function () use ($realtimeRequest) {

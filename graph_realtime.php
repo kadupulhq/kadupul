@@ -44,6 +44,23 @@ get_filter_request_var('top');
 get_filter_request_var('left');
 /* ==================================================== */
 
+/* The interval list offers only steps at or above the administrator's minimum
+ * refresh interval. The step also sets the real-time RRD step and is saved as a
+ * preference, so hold request and stored values to the same floor. */
+function graph_realtime_ds_step($ds_step) {
+	$floor = (int)read_config_option('realtime_interval');
+
+	if ($floor < 1) {
+		$floor = 1;
+	}
+
+	if (empty($ds_step) || !is_numeric($ds_step)) {
+		$ds_step = read_user_setting('realtime_interval', 10);
+	}
+
+	return max($floor, (int)$ds_step);
+}
+
 if (!isset($_SESSION['sess_realtime_hash'])) {
 	$_SESSION['sess_realtime_hash'] = generate_hash();
 }
@@ -84,11 +101,7 @@ case 'countdown':
 			$graph_contents = file_get_contents(__DIR__ . '/images/cacti_error_image.png');
 		}
 
-		$ds_step = get_request_var('ds_step');
-
-		if (empty($ds_step) || $ds_step < 1) {
-			$ds_step = read_user_setting('realtime_interval', 10);
-		}
+		$ds_step = graph_realtime_ds_step(get_request_var('ds_step'));
 
 		$graph_start = get_request_var('graph_start');
 
@@ -153,6 +166,8 @@ case 'countdown':
 
 		break;
 	}
+
+	set_request_var('ds_step', graph_realtime_ds_step(get_request_var('ds_step')));
 
 	$graph_data_array = array();
 
@@ -409,6 +424,8 @@ if (!isset($_SESSION['sess_realtime_ds_step'])) {
 } else {
 	set_request_var('ds_step', $_SESSION['sess_realtime_ds_step']);
 }
+
+set_request_var('ds_step', graph_realtime_ds_step(get_request_var('ds_step')));
 
 if (!isset($_SESSION['sess_realtime_graph_start'])) {
 	load_current_session_value('graph_start', 'sess_realtime_graph_start', read_user_setting('realtime_gwindow', 60));

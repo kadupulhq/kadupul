@@ -1160,8 +1160,11 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 					<td>
 						<select id='ds_step'>
 							<?php
+							$min_refresh = read_config_option('realtime_interval');
 							foreach ($realtime_refresh as $interval => $text) {
-								printf('<option value="%d"%s>%s</option>', $interval, $interval == $_SESSION['sess_realtime_dsstep'] ? ' selected="selected"' : '', $text);
+								if ($interval >= $min_refresh) {
+									printf('<option value="%d"%s>%s</option>', $interval, $interval == $_SESSION['sess_realtime_dsstep'] ? ' selected="selected"' : '', $text);
+								}
 							}
 							?>
 						</select>
