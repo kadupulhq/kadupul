@@ -913,6 +913,8 @@ def compare(args):
                 raise RuntimeError(f'Missing or invalid {role} provenance {key}')
         if provenance['harness_inputs_sha256']['tests/Support/Behavior/harness.py'] != provenance['harness_sha256']:
             raise RuntimeError(f'Inconsistent {role} harness source hash')
+        if provenance['harness_inputs_sha256'] != provenance['application_inputs_sha256']:
+            raise RuntimeError(f'Inconsistent {role} application/controller input hashes')
     approvals = json.loads(Path(args.approvals).read_text()) if args.approvals else {}
     report = []
     # Matching scenarios prove little if the runs used different runtimes or packages.

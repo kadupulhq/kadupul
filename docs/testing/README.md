@@ -97,10 +97,10 @@ make test-bootstrap-golden TARGET=kadupul
 make compare BASELINE=cacti-1.2.31 CANDIDATE=kadupul
 ```
 
-For captures produced with a separate application checkout, select its results directory:
+For captures produced with a separate application checkout, use the controller's results directory:
 
 ```sh
-make compare BASELINE=cacti-1.2.31 CANDIDATE=kadupul RESULTS_ROOT=/path/to/application/tests/behavior/results
+make compare BASELINE=cacti-1.2.31 CANDIDATE=kadupul RESULTS_ROOT=/path/to/controller/tests/behavior/results
 ```
 
 The underlying `tests/bin/compare` accepts `--results-root` too. The default report is written into that directory; `--output` can select a different report prefix. A repeat manifest remains an explicit path passed with `--repeat`.

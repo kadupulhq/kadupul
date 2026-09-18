@@ -286,6 +286,7 @@ def separate_results_root():
                 different['provenance']['harness_inputs_sha256']['tests/Support/Behavior/harness.py'] = 'f' * 64
             else:
                 different['provenance'][key]['tests/Support/Behavior/probe.php'] = 'f' * 64
+            different['provenance']['application_inputs_sha256'] = dict(different['provenance']['harness_inputs_sha256'])
             (results / 'baseline/observations.json').write_text(json.dumps(different))
             (results / 'repeat/observations.json').write_text(json.dumps(manifest))
             with patch('sys.argv', command):
@@ -315,7 +316,7 @@ def comparison_inventory_failure():
                                      repeat=str(paths['repeat']), approvals=None, output=None)
         for role, path in paths.items():
             for fault in ('missing', 'unexpected', 'empty', 'wrong-type', 'false-complete',
-                          'revision', 'schema_sha256', 'provenance', 'harness-hash', 'dirty-type', 'input-hash', 'dockerignore',
+                          'revision', 'schema_sha256', 'provenance', 'harness-hash', 'dirty-type', 'input-hash', 'dockerignore', 'cross-map-mismatch',
                           'format', 'format-boolean', 'format-old', 'application_images', 'image-service-missing', 'image-id-invalid', 'target', 'php', 'php-invalid', 'base_image',
                           'image-unpinned', 'packages', 'runtime', 'error', 'error-present', 'inventory-missing', 'hash-mismatch') + tuple(
                               key + ':' + name for key in ('harness_inputs_sha256', 'application_inputs_sha256')
@@ -341,6 +342,8 @@ def comparison_inventory_failure():
                     broken['provenance']['application_inputs_sha256']['.dockerignore'] = 'invalid'
                 elif fault == 'dockerignore':
                     broken['provenance']['harness_inputs_sha256'].pop('.dockerignore')
+                elif fault == 'cross-map-mismatch':
+                    broken['provenance']['application_inputs_sha256']['.dockerignore'] = 'f' * 64
                 elif fault in ('format', 'application_images', 'target', 'php', 'base_image', 'error'):
                     broken.pop(fault)
                 elif fault == 'format-old':
