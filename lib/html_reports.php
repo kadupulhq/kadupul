@@ -346,10 +346,25 @@ function reports_form_save() {
 
 		unset($_SESSION['sess_error_fields']);
 
+		$report_id = (int) get_request_var('report_id');
+		$item_id   = (int) get_request_var('id');
+
+		/* sql_save() overwrites whatever row carries this id, so an existing
+		   item must already sit in a report the caller may change.  Failing
+		   here skips the save, and item_edit then refuses the same ids.  A report
+		   admin passes the ownership check for any id, so the report must exist. */
+		if (!cacti_authorize_resource($_SESSION['sess_user_id'], $report_id, 'reports') ||
+			!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ?', array($report_id)) ||
+			($item_id > 0 && db_fetch_cell_prepared('SELECT report_id FROM reports_items WHERE id = ?', array($item_id)) != $report_id)) {
+			raise_message('permission_denied');
+
+			$_SESSION['sess_error_fields']['report_id'] = 'report_id';
+		}
+
 		$save = array();
 
-		$save['id']                = get_nfilter_request_var('id');
-		$save['report_id']         = form_input_validate(get_nfilter_request_var('report_id'), 'report_id', '^[0-9]+$', false, 3);
+		$save['id']                = $item_id;
+		$save['report_id']         = $report_id;
 
 		if (isempty_request_var('id')) {
 			$save['sequence'] = db_fetch_cell_prepared('SELECT MAX(sequence)+1
@@ -878,10 +893,25 @@ function reports_item_edit() {
 	$report_item['host_id']           = -1;
 	$report_item['tree_id']           = -1;
 
-	if (isset_request_var('item_id') && get_filter_request_var('item_id') > 0) {
+	$report_id = (int) get_filter_request_var('id');
+	$item_id   = (isset_request_var('item_id') ? (int) get_filter_request_var('item_id') : 0);
+
+	/* the item is drawn under $report_id, so it must be filed there, as save and
+	   move already require, and the report itself must exist */
+	if (!cacti_authorize_resource($_SESSION['sess_user_id'], $report_id, 'reports') ||
+		!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ?', array($report_id)) ||
+		($item_id > 0 && (!cacti_authorize_resource($_SESSION['sess_user_id'], $item_id, 'report_item') ||
+		db_fetch_cell_prepared('SELECT report_id FROM reports_items WHERE id = ?', array($item_id)) != $report_id))) {
+		/* the caller has already printed the page header */
+		raise_message('permission_denied');
+
+		return;
+	}
+
+	if ($item_id > 0) {
 		$report_item = db_fetch_row_prepared('SELECT *
 			FROM reports_items WHERE id = ?',
-			array(get_request_var('item_id')));
+			array($item_id));
 	} else {
 		$report_item['report_id']      = get_request_var('id');
 		$report_item['local_graph_id'] = 0;

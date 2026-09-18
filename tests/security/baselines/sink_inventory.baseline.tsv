@@ -881,13 +881,13 @@ header_redirect	./lib/clog_webapi.php:82			header('Location: ' . get_current_pag
 header_redirect	./lib/functions.php:8106		header('Location: ' . $save_url);
 header_redirect	./lib/functions.php:8129		header('Location: ' . $safe_url, true, $status);
 header_redirect	./lib/html_graph.php:480			header('Location: ' . $page . '?host_id=' . $host_id . '&header=false');
-header_redirect	./lib/html_reports.php:1490				header('Location: reports.php');
+header_redirect	./lib/html_reports.php:1520				header('Location: reports.php');
 header_redirect	./lib/html_reports.php:257					header('Location: reports.php');
 header_redirect	./lib/html_reports.php:338			header('Location: ' . get_reports_page() . '?action=edit&header=false&id=' . (empty($id) ? get_nfilter_request_var('id') : $id));
-header_redirect	./lib/html_reports.php:390			header('Location: ' . get_reports_page() . '?action=item_edit&id=' . get_nfilter_request_var('report_id') . '&item_id=' . (empty($item_id) ? get_nfilter_request_var('id') : $item_id));
-header_redirect	./lib/html_reports.php:392			header('Location: ' . get_reports_page() . '?header=false');
-header_redirect	./lib/html_reports.php:477			header('Location: ' . get_reports_page() . '?header=false');
-header_redirect	./lib/html_reports.php:506			header('Location: ' . get_reports_page() . '?header=false');
+header_redirect	./lib/html_reports.php:405			header('Location: ' . get_reports_page() . '?action=item_edit&id=' . get_nfilter_request_var('report_id') . '&item_id=' . (empty($item_id) ? get_nfilter_request_var('id') : $item_id));
+header_redirect	./lib/html_reports.php:407			header('Location: ' . get_reports_page() . '?header=false');
+header_redirect	./lib/html_reports.php:492			header('Location: ' . get_reports_page() . '?header=false');
+header_redirect	./lib/html_reports.php:521			header('Location: ' . get_reports_page() . '?header=false');
 header_redirect	./lib/index.php:7	header("Location:../index.php");
 header_redirect	./lib/plugins.php:689			header('Location: plugins.php?header=false');
 header_redirect	./link.php:17		header('Location: index.php');
