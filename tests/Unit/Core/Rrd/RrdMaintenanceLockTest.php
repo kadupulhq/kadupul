@@ -1093,6 +1093,8 @@ $firstCompleted=$completed[$file] ?? array();
 $legacyRetry=null;
 $schemaMismatch=in_array($invalidField,array('unknown','bad-name','missing','multiple','legacy-unknown'),true);
 if($schemaMismatch){
+    for($attempt=0;$attempt<3;$attempt++){if(rrdtool_function_update($updates,$pipe,$completed)!==false){throw new RuntimeException('Unrepaired sample was acknowledged');}}
+    $firstLogs=$GLOBALS['retryLogs']??array();
     rrd_close($pipe);
     $data_source_types=array(5=>'COMPUTE');
     $newFields=array_diff(array_keys($updates[$file]['times'][1700000060]),array('in-octets','b','c'));

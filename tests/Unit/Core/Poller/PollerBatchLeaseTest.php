@@ -9,6 +9,7 @@ require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 require_once dirname(__DIR__, 4) . '/lib/rrd_maintenance.php';
 eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/poller.php'), 'process_poller_output_batch'));
 const SQL_NO_CACHE = '';
+function hrtime($asNumber) { return $GLOBALS['batch']['clock'] ?? \hrtime($asNumber); }
 function remote_backend()
 {
     return ($GLOBALS['config']['force_storage_location_local'] ?? false) !== true && $GLOBALS['batch']['proxy'];
@@ -47,6 +48,7 @@ function rrd_close($pipe)
 }
 function process_poller_output(&$pipe, $final, &$deferred)
 {
+    $GLOBALS['batch']['drains'] = ($GLOBALS['batch']['drains'] ?? 0) + 1;
     if (!remote_backend()) {
         expect(\rrd_maintenance_acquire(true, false, 0))->toBeFalse();
     }
@@ -142,4 +144,29 @@ test('forced local storage ignores the configured proxy and Windows boolean writ
     $proxy = false;
     expect(process_poller_output_batch(true, $deferred, $proxy))->toBe(3)->and($deferred)->toBeFalse();
     expect($GLOBALS['batch']['opens'])->toBe(1)->and($GLOBALS['batch']['closes'])->toBe(1)->and($proxy)->toBeFalse();
+})->with(array(false, true));
+
+
+test('failed background batches back off while final drains bypass the delay', function ($remote) {
+    $GLOBALS['batch']['clock'] = 100000000000;
+    $GLOBALS['batch']['mode'] = 'retry';
+    $GLOBALS['batch']['proxy'] = $remote;
+    $proxy = false;
+    $final = false;
+    expect(process_poller_output_batch($final, $deferred, $proxy))->toBe(3)->and($deferred)->toBeTrue();
+    for ($second = 1; $second < 5; $second++) {
+        $GLOBALS['batch']['clock'] = (100 + $second) * 1000000000;
+        expect(process_poller_output_batch($final, $deferred, $proxy))->toBe(0)->and($deferred)->toBeTrue();
+    }
+    expect($GLOBALS['batch']['opens'])->toBe(1)->and($GLOBALS['batch']['drains'])->toBe(1);
+    $GLOBALS['batch']['clock'] = 105000000000;
+    expect(process_poller_output_batch($final, $deferred, $proxy))->toBe(3)->and($deferred)->toBeTrue();
+    expect($GLOBALS['batch']['opens'])->toBe(2);
+    $GLOBALS['batch']['mode'] = 'success';
+    $final = true;
+    expect(process_poller_output_batch($final, $deferred, $proxy))->toBe(3)->and($deferred)->toBeFalse();
+    $final = false;
+    expect(process_poller_output_batch($final, $deferred, $proxy))->toBe(3)->and($deferred)->toBeFalse();
+    expect($GLOBALS['batch']['drains'])->toBe(4);
+    if ($proxy !== false) { rrd_close($proxy); }
 })->with(array(false, true));

@@ -3245,7 +3245,13 @@ function timeout_kill_registered_processes($tasktype = '', $taskname = '', $task
 function process_poller_output_batch($final, &$deferred, &$proxy_pipe) {
 	global $config;
 	static $reported = array();
+	static $retry_after = 0;
 	$deferred = false;
+	// Bound background retries; final drains bypass the delay after collection.
+	if (!$final && hrtime(true) < $retry_after) {
+		$deferred = true;
+		return 0;
+	}
 	$pending = db_fetch_cell_prepared('SELECT ' . SQL_NO_CACHE . ' COUNT(*) FROM poller_output');
 	if (!is_numeric($pending)) {
 		if (empty($reported['count'])) {
@@ -3258,6 +3264,7 @@ function process_poller_output_batch($final, &$deferred, &$proxy_pipe) {
 	$reported['count'] = false;
 	if ((int) $pending === 0) {
 		$reported = array();
+		$retry_after = 0;
 		return 0;
 	}
 	$proxy = ($config['force_storage_location_local'] ?? false) !== true && read_config_option('storage_location');
@@ -3293,6 +3300,7 @@ function process_poller_output_batch($final, &$deferred, &$proxy_pipe) {
 		$failed = $deferred;
 		return $updated;
 	} finally {
+		$retry_after = $failed ? hrtime(true) + 5000000000 : 0;
 		if (!$proxy || $failed) {
 			rrd_close($pipe);
 			$proxy_pipe = false;

@@ -38,3 +38,12 @@ override. Ordinary schema upgrades check that selected queue first. The new
 Offline/recovery collectors' transient normal queue is excluded from that gate;
 their authoritative backlog is in Boost. Native tests record connection identity
 and verify that the probe and ALTER use the same connection.
+
+Failed background drains wait five seconds before opening another writer or scanning
+the pending queue again. The final drain bypasses this delay, and a successful
+drain clears it. New samples can wait up to five seconds during a failure; they
+remain queued. Per-path retained-sample errors repeat at most once per minute
+within a process unless the reason changes or a successful write clears the
+suppression. The existing retained-output warning also sends a debounced
+administrator email. These bounds do not expire valid measurements or provide
+an unlimited storage guarantee.

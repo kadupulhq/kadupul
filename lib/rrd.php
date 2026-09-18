@@ -1274,6 +1274,7 @@ function rrdtool_rejection_is_permanent($reason) {
 }
 
 function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$completed = null) {
+	static $retained_logs = array();
 	/* lets count the number of rrd files processed */
 	$rrds_processed = 0;
 	$completed = array();
@@ -1435,10 +1436,16 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
 						$completed[$rrd_path][$update_time] = false;
 						continue;
 					}
-					cacti_log('ERROR: RRD pending sample retained for retry: ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'reason' => $rejection ?: 'No acknowledgement received', 'action' => 'Repair the reported schema or storage error before replay; monitor queue growth.')), false, 'POLLER');
+					$now = hrtime(true);
+					$previous = $retained_logs[$rrd_path] ?? null;
+					if ($previous === null || $previous['reason'] !== $rejection || $now - $previous['time'] >= 60000000000) {
+						$retained_logs[$rrd_path] = array('time' => $now, 'reason' => $rejection);
+						cacti_log('ERROR: RRD pending sample retained for retry: ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'reason' => $rejection ?: 'No acknowledgement received', 'action' => 'Repair the reported schema or storage error before replay; monitor queue growth.')), false, 'POLLER');
+					}
 					$failed = true;
 					break;
 				}
+				unset($retained_logs[$rrd_path]);
 				$completed[$rrd_path][$update_time] = true;
 				$rrds_processed++;
 			}
