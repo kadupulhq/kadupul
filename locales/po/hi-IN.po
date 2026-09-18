@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: developers@cacti.net\n"
-"POT-Creation-Date: 2026-09-15 21:19-0700\n"
+"POT-Creation-Date: 2026-09-17 18:08-0700\n"
 "PO-Revision-Date: 2024-04-20 18:56-0400\n"
 "Last-Translator: Anonymous <anonymous@cacti.net>\n"
 "Language-Team: Hindi <http://translate.cacti.net/projects/cacti/core-v1-2-x/hi/>\n"
@@ -81,7 +81,7 @@ msgstr "लाइसेंस"
 msgid "Cacti is licensed under the GNU GPL:"
 msgstr "Cacti को GNU GPL के तहत लाइसेंस प्राप्त है:"
 
-#: about.php:100 lib/installer.php:1852
+#: about.php:100 lib/installer.php:1864
 msgid "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
 msgstr "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
 
@@ -173,8 +173,8 @@ msgstr "निम्नलिखित एग्रीगेट ग्राफ 
 #: managers.php:1036 managers.php:1097 plugins.php:693 pollers.php:565
 #: pollers.php:574 pollers.php:583 pollers.php:592 pollers.php:601
 #: sites.php:383 sites.php:393 tree.php:721 tree.php:730 tree.php:739
-#: tree.php:748 user_admin.php:372 user_admin.php:412 user_admin.php:423
-#: user_admin.php:434 user_admin.php:457 user_domains.php:235
+#: tree.php:748 user_admin.php:375 user_admin.php:415 user_admin.php:426
+#: user_admin.php:437 user_admin.php:460 user_domains.php:235
 #: user_domains.php:244 user_domains.php:253 user_domains.php:262
 #: user_group_admin.php:472 user_group_admin.php:491 user_group_admin.php:502
 #: user_group_admin.php:513 vdef.php:279 vdef.php:289 vdef.php:353
@@ -209,8 +209,8 @@ msgstr "कैंसिल करें"
 #: links.php:202 links.php:211 links.php:220 managers.php:1036
 #: managers.php:1097 pollers.php:565 pollers.php:574 pollers.php:583
 #: pollers.php:592 pollers.php:601 sites.php:383 sites.php:393 tree.php:721
-#: tree.php:730 tree.php:739 tree.php:748 user_admin.php:372 user_admin.php:412
-#: user_admin.php:423 user_admin.php:434 user_admin.php:457
+#: tree.php:730 tree.php:739 tree.php:748 user_admin.php:375 user_admin.php:415
+#: user_admin.php:426 user_admin.php:437 user_admin.php:460
 #: user_domains.php:235 user_domains.php:244 user_domains.php:253
 #: user_domains.php:262 user_group_admin.php:472 user_group_admin.php:491
 #: user_group_admin.php:502 user_group_admin.php:513 vdef.php:279 vdef.php:289
@@ -345,7 +345,7 @@ msgid "Place Graph(s) on Tree"
 msgstr "ट्री पर ग्राफ (ओं) रखें"
 
 #: aggregate_graphs.php:595 data_sources.php:1076 lib/html_reports.php:1585
-#: user_admin.php:1900
+#: user_admin.php:1903
 #, php-format
 msgid "[edit: %s]"
 msgstr "[संपादित करें: %s]"
@@ -455,18 +455,18 @@ msgstr "मिलान रेखांकन"
 #: color.php:520 color_templates.php:538 data_debug.php:1123 data_input.php:854
 #: data_queries.php:1321 data_source_profiles.php:914 data_sources.php:1463
 #: data_templates.php:1051 gprint_presets.php:271 graph_templates.php:720
-#: graph_view.php:654 graphs.php:2116 graphs_new.php:463 host.php:1739
+#: graph_view.php:654 graphs.php:2116 graphs_new.php:463 host.php:1825
 #: host_templates.php:782 lib/api_automation.php:144 lib/api_automation.php:485
 #: lib/api_automation.php:719 lib/api_automation.php:1082
 #: lib/clog_webapi.php:616 lib/html.php:266 lib/html_filter.php:64
 #: lib/html_graph.php:214 lib/html_reports.php:2023 lib/html_tree.php:136
 #: lib/html_tree.php:984 links.php:323 managers.php:153 managers.php:503
 #: managers.php:745 plugins.php:482 pollers.php:885 rrdcheck.php:229
-#: rrdcleaner.php:514 settings.php:557 settings.php:574 settings.php:633
+#: rrdcleaner.php:531 settings.php:557 settings.php:574 settings.php:633
 #: sites.php:509 tree.php:894 tree.php:929 tree.php:964 tree.php:2166
-#: user_admin.php:2205 user_admin.php:2656 user_admin.php:2775
-#: user_admin.php:2873 user_admin.php:2988 user_admin.php:3085
-#: user_admin.php:3182 user_domains.php:658 user_group_admin.php:1963
+#: user_admin.php:2208 user_admin.php:2659 user_admin.php:2778
+#: user_admin.php:2876 user_admin.php:2991 user_admin.php:3088
+#: user_admin.php:3185 user_domains.php:658 user_group_admin.php:1963
 #: user_group_admin.php:2295 user_group_admin.php:2415
 #: user_group_admin.php:2530 user_group_admin.php:2627
 #: user_group_admin.php:2724 utilities.php:1092 utilities.php:1488
@@ -478,12 +478,12 @@ msgstr "खोजें"
 #: aggregate_graphs.php:1245 aggregate_graphs.php:1288
 #: aggregate_graphs.php:1545 color_templates.php:658 data_sources.php:1644
 #: data_sources.php:1778 graph_view.php:492 graph_view.php:724
-#: graph_view.php:785 graphs.php:2133 graphs.php:2298 host.php:1850
+#: graph_view.php:785 graphs.php:2133 graphs.php:2298 host.php:1539
 #: include/global_arrays.php:1011 include/global_arrays.php:1246
 #: include/global_arrays.php:2040 lib/api_automation.php:295 lib/html.php:1843
 #: lib/html.php:1845 lib/html.php:1923 lib/html_graph.php:220
 #: lib/html_tree.php:1039 lib/html_tree.php:1414 tree.php:873 tree.php:2312
-#: user_admin.php:914 user_admin.php:1181 user_admin.php:2684
+#: user_admin.php:917 user_admin.php:1184 user_admin.php:2687
 #: user_group_admin.php:899 user_group_admin.php:1053 user_group_admin.php:2323
 #: utilities.php:321
 msgid "Graphs"
@@ -498,16 +498,16 @@ msgstr "रेखांकन"
 #: data_queries.php:1331 data_source_profiles.php:924
 #: data_source_profiles.php:1043 data_sources.php:1473 data_templates.php:1077
 #: gprint_presets.php:281 graph_templates.php:730 graph_view.php:728
-#: graphs.php:2137 graphs_new.php:473 host.php:1764 host_templates.php:792
+#: graphs.php:2137 graphs_new.php:473 host.php:1850 host_templates.php:792
 #: include/global_form.php:256 lib/api_automation.php:187
 #: lib/api_automation.php:495 lib/api_automation.php:729
 #: lib/api_automation.php:1125 lib/html_reports.php:2043 links.php:333
 #: managers.php:163 managers.php:513 plugins.php:506 pollers.php:895
-#: rrdcheck.php:252 rrdcleaner.php:540 sites.php:519 tree.php:2176
-#: user_admin.php:2263 user_admin.php:2688 user_admin.php:2785
-#: user_admin.php:2901 user_admin.php:2998 user_admin.php:3095
-#: user_admin.php:3192 user_domains.php:33 user_domains.php:668
-#: user_domains.php:754 user_group_admin.php:1973 user_group_admin.php:2327
+#: rrdcheck.php:252 rrdcleaner.php:557 sites.php:519 tree.php:2176
+#: user_admin.php:2266 user_admin.php:2691 user_admin.php:2788
+#: user_admin.php:2904 user_admin.php:3001 user_admin.php:3098
+#: user_admin.php:3195 user_domains.php:33 user_domains.php:668
+#: user_domains.php:755 user_group_admin.php:1973 user_group_admin.php:2327
 #: user_group_admin.php:2443 user_group_admin.php:2540
 #: user_group_admin.php:2637 user_group_admin.php:2734 utilities.php:1070
 #: utilities.php:1793 utilities.php:2101 utilities.php:3040 utilities.php:3309
@@ -527,16 +527,16 @@ msgstr "एग्रीगेट का हिस्सा"
 #: color_templates.php:576 data_debug.php:1051 data_input.php:876
 #: data_queries.php:1343 data_source_profiles.php:942 data_sources.php:1416
 #: data_templates.php:1095 gprint_presets.php:299 graph_templates.php:748
-#: graph_view.php:662 graphs.php:2107 graphs_new.php:452 host.php:1729
+#: graph_view.php:662 graphs.php:2107 graphs_new.php:452 host.php:1815
 #: host_templates.php:773 lib/api_automation.php:199 lib/api_automation.php:476
 #: lib/api_automation.php:741 lib/api_automation.php:1137
 #: lib/clog_webapi.php:541 lib/html.php:1691 lib/html_filter.php:81
 #: lib/html_graph.php:201 lib/html_reports.php:2054 lib/html_tree.php:1026
 #: links.php:343 managers.php:175 managers.php:525 managers.php:765
 #: plugins.php:518 pollers.php:930 sites.php:531 tree.php:2188
-#: user_admin.php:2275 user_admin.php:2706 user_admin.php:2803
-#: user_admin.php:2919 user_admin.php:3016 user_admin.php:3113
-#: user_admin.php:3210
+#: user_admin.php:2278 user_admin.php:2709 user_admin.php:2806
+#: user_admin.php:2922 user_admin.php:3019 user_admin.php:3116
+#: user_admin.php:3213
 msgid "Go"
 msgstr "जाएं"
 
@@ -546,12 +546,12 @@ msgstr "जाएं"
 #: data_input.php:876 data_queries.php:1343 data_source_profiles.php:942
 #: data_sources.php:1416 data_templates.php:1095 gprint_presets.php:299
 #: graph_templates.php:748 graph_view.php:662 graphs.php:2107
-#: graphs_new.php:452 host.php:1729 host_templates.php:773
+#: graphs_new.php:452 host.php:1815 host_templates.php:773
 #: lib/html_graph.php:201 managers.php:175 managers.php:525 managers.php:765
 #: plugins.php:518 pollers.php:930 sites.php:531 tree.php:2188
-#: user_admin.php:2275 user_admin.php:2706 user_admin.php:2803
-#: user_admin.php:2919 user_admin.php:3016 user_admin.php:3113
-#: user_admin.php:3210 user_domains.php:680 user_group_admin.php:1985
+#: user_admin.php:2278 user_admin.php:2709 user_admin.php:2806
+#: user_admin.php:2922 user_admin.php:3019 user_admin.php:3116
+#: user_admin.php:3213 user_domains.php:680 user_group_admin.php:1985
 #: user_group_admin.php:2345 user_group_admin.php:2461
 #: user_group_admin.php:2558 user_group_admin.php:2655
 #: user_group_admin.php:2752 utilities.php:1082 utilities.php:1440
@@ -567,16 +567,16 @@ msgstr "सेट / फ़िल्टर ताज़ा करें"
 #: color_templates.php:577 data_debug.php:1052 data_input.php:877
 #: data_queries.php:1344 data_source_profiles.php:943 data_sources.php:1417
 #: data_templates.php:1096 gprint_presets.php:300 graph_templates.php:749
-#: graph_view.php:663 graphs.php:2108 graphs_new.php:453 host.php:1730
+#: graph_view.php:663 graphs.php:2108 graphs_new.php:453 host.php:1816
 #: host_templates.php:774 lib/api_automation.php:200 lib/api_automation.php:477
 #: lib/api_automation.php:742 lib/api_automation.php:1138
 #: lib/clog_webapi.php:542 lib/html_filter.php:86 lib/html_graph.php:202
 #: lib/html_graph.php:319 lib/html_reports.php:2055 lib/html_tree.php:1027
 #: lib/html_tree.php:1138 links.php:344 managers.php:176 managers.php:526
 #: managers.php:766 plugins.php:519 pollers.php:931 sites.php:532 tree.php:2189
-#: user_admin.php:2276 user_admin.php:2707 user_admin.php:2804
-#: user_admin.php:2920 user_admin.php:3017 user_admin.php:3114
-#: user_admin.php:3211 user_domains.php:681
+#: user_admin.php:2279 user_admin.php:2710 user_admin.php:2807
+#: user_admin.php:2923 user_admin.php:3020 user_admin.php:3117
+#: user_admin.php:3214 user_domains.php:681
 msgid "Clear"
 msgstr "明确"
 
@@ -585,12 +585,12 @@ msgstr "明确"
 #: data_input.php:877 data_queries.php:1344 data_source_profiles.php:943
 #: data_sources.php:1417 data_templates.php:1096 gprint_presets.php:300
 #: graph_templates.php:749 graph_view.php:663 graphs.php:2108
-#: graphs_new.php:453 host.php:1730 host_templates.php:774
+#: graphs_new.php:453 host.php:1816 host_templates.php:774
 #: lib/html_graph.php:202 lib/html_tree.php:1027 managers.php:176
 #: managers.php:526 managers.php:766 plugins.php:519 pollers.php:931
-#: sites.php:532 tree.php:2189 user_admin.php:2276 user_admin.php:2707
-#: user_admin.php:2804 user_admin.php:2920 user_admin.php:3017
-#: user_admin.php:3114 user_admin.php:3211 user_domains.php:681
+#: sites.php:532 tree.php:2189 user_admin.php:2279 user_admin.php:2710
+#: user_admin.php:2807 user_admin.php:2923 user_admin.php:3020
+#: user_admin.php:3117 user_admin.php:3214 user_domains.php:681
 #: user_group_admin.php:1986 user_group_admin.php:2346
 #: user_group_admin.php:2462 user_group_admin.php:2559
 #: user_group_admin.php:2656 user_group_admin.php:2753 utilities.php:1083
@@ -600,7 +600,7 @@ msgid "Clear Filters"
 msgstr "साफ फिल्टर"
 
 #: aggregate_graphs.php:1293 aggregate_graphs.php:1627 graphs.php:1271
-#: lib/api_automation.php:586 user_admin.php:922 user_group_admin.php:907
+#: lib/api_automation.php:586 user_admin.php:925 user_group_admin.php:907
 msgid "Graph Title"
 msgstr "ग्राफ शीर्षक"
 
@@ -608,10 +608,10 @@ msgstr "ग्राफ शीर्षक"
 #: automation_graph_rules.php:961 automation_tree_rules.php:984
 #: data_debug.php:459 data_input.php:963 data_queries.php:1429
 #: data_sources.php:1638 data_templates.php:1204 graph_templates.php:854
-#: graphs.php:2314 host.php:1844 host_templates.php:933
+#: graphs.php:2314 host.php:1533 host_templates.php:933
 #: lib/api_automation.php:294 pollers.php:1011 sites.php:611 tree.php:2252
-#: user_admin.php:922 user_admin.php:1036 user_admin.php:1181
-#: user_admin.php:1328 user_admin.php:1467 user_group_admin.php:705
+#: user_admin.php:925 user_admin.php:1039 user_admin.php:1184
+#: user_admin.php:1331 user_admin.php:1470 user_group_admin.php:705
 #: user_group_admin.php:907 user_group_admin.php:1053 user_group_admin.php:1198
 #: user_group_admin.php:1330
 msgid "ID"
@@ -623,7 +623,7 @@ msgstr "एग्रीगेट में शामिल"
 
 #: aggregate_graphs.php:1296 aggregate_graphs.php:1630 graph_templates.php:871
 #: graph_view.php:814 graph_view.php:827 graphs.php:2332 lib/html_graph.php:351
-#: lib/html_tree.php:1170 lib/spikekill.php:1798
+#: lib/html_tree.php:1170 lib/spikekill.php:1777
 msgid "Size"
 msgstr "आकार"
 
@@ -635,7 +635,7 @@ msgstr "आकार"
 #: gprint_presets.php:446 graph_templates.php:911 host_templates.php:981
 #: include/global_settings.php:893 include/global_settings.php:1918
 #: lib/api_automation.php:1480 links.php:417 tree.php:2345 tree.php:2346
-#: user_admin.php:2393 user_domains.php:773 user_group_admin.php:2053
+#: user_admin.php:2396 user_domains.php:774 user_group_admin.php:2053
 #: vdef.php:934
 msgid "No"
 msgstr "नहीं"
@@ -649,9 +649,9 @@ msgstr "नहीं"
 #: data_templates.php:1265 gprint_presets.php:446 graph_templates.php:911
 #: host_templates.php:981 include/global_settings.php:892
 #: include/global_settings.php:1917 lib/api_automation.php:1480
-#: lib/installer.php:2046 lib/installer.php:2074 lib/installer.php:3733
-#: links.php:417 tree.php:2345 tree.php:2346 user_admin.php:2391
-#: user_domains.php:769 user_domains.php:773 user_group_admin.php:2051
+#: lib/installer.php:2058 lib/installer.php:2086 lib/installer.php:3767
+#: links.php:417 tree.php:2345 tree.php:2346 user_admin.php:2394
+#: user_domains.php:770 user_domains.php:774 user_group_admin.php:2051
 #: vdef.php:934
 msgid "Yes"
 msgstr "हाँ"
@@ -670,10 +670,10 @@ msgid "Aggregate Graphs"
 msgstr "सकल रेखांकन"
 
 #: aggregate_graphs.php:1523 data_debug.php:1025 data_sources.php:1390
-#: graph_view.php:686 graphs.php:2072 host.php:1680
+#: graph_view.php:686 graphs.php:2072 host.php:1766
 #: include/global_arrays.php:2920 include/global_settings.php:627
 #: lib/api_automation.php:454 lib/html_graph.php:164 lib/html_tree.php:990
-#: rrdcleaner.php:386 user_admin.php:2662 user_admin.php:2879
+#: rrdcleaner.php:393 user_admin.php:2665 user_admin.php:2882
 #: user_group_admin.php:2301 user_group_admin.php:2421 utilities.php:2031
 msgid "Template"
 msgstr "खाका"
@@ -683,15 +683,15 @@ msgstr "खाका"
 #: automation_devices.php:561 automation_graph_rules.php:816
 #: automation_graph_rules.php:838 automation_tree_rules.php:868
 #: data_debug.php:1029 data_sources.php:1394 graph_templates_items.php:543
-#: graphs.php:2076 graphs_items.php:357 host.php:1649 host.php:1667
-#: host.php:1684 host.php:1749 lib/api_automation.php:154
+#: graphs.php:2076 graphs_items.php:357 host.php:1735 host.php:1753
+#: host.php:1770 host.php:1835 lib/api_automation.php:154
 #: lib/api_automation.php:172 lib/api_automation.php:441
 #: lib/api_automation.php:458 lib/api_automation.php:1092
 #: lib/api_automation.php:1110 lib/auth.php:3299 lib/auth.php:3347
 #: lib/html.php:2207 lib/html.php:2230 lib/html.php:2268 lib/html.php:2298
 #: lib/html_reports.php:988 lib/html_reports.php:992 lib/html_reports.php:1107
 #: lib/html_reports.php:1117 lib/html_reports.php:2033 managers.php:492
-#: managers.php:755 user_admin.php:2666 user_admin.php:2883
+#: managers.php:755 user_admin.php:2669 user_admin.php:2886
 #: user_group_admin.php:2305 user_group_admin.php:2425 utilities.php:1058
 #: utilities.php:1742 utilities.php:2035 utilities.php:2080 utilities.php:2090
 #: utilities.php:3025 utilities.php:3283 utilities.php:3296
@@ -704,8 +704,8 @@ msgstr "कोई भी@ label"
 #: data_debug.php:1030 data_sources.php:954 data_sources.php:1395
 #: data_sources.php:1699 data_templates.php:1267 graph_templates_items.php:66
 #: graphs.php:1637 graphs.php:1646 graphs.php:2077 graphs_items.php:358
-#: graphs_items.php:470 host.php:257 host.php:1174 host.php:1185 host.php:1650
-#: host.php:1685 include/global_arrays.php:541 include/global_arrays.php:599
+#: graphs_items.php:470 host.php:257 host.php:1174 host.php:1185 host.php:1736
+#: host.php:1771 include/global_arrays.php:541 include/global_arrays.php:599
 #: include/global_arrays.php:691 include/global_arrays.php:903
 #: include/global_arrays.php:1769 include/global_form.php:588
 #: include/global_form.php:897 include/global_form.php:905
@@ -729,7 +729,7 @@ msgstr "कोई भी@ label"
 #: lib/html_reports.php:1410 lib/html_reports.php:1415
 #: lib/html_reports.php:1420 package_import.php:753 settings.php:550
 #: settings.php:572 settings.php:603 templates_import.php:344
-#: templates_import.php:376 user_admin.php:2667 user_admin.php:2884
+#: templates_import.php:376 user_admin.php:2670 user_admin.php:2887
 #: user_group_admin.php:2306 user_group_admin.php:2426 utilities.php:2036
 msgid "None"
 msgstr "कोई नहीं"
@@ -784,7 +784,7 @@ msgstr "अलग-अलग टेम्प्लेट"
 #: aggregate_templates.php:613 automation_templates.php:406
 #: automation_templates.php:493 color_templates.php:663
 #: include/global_arrays.php:1020 include/global_arrays.php:1083
-#: lib/installer.php:2663 user_admin.php:2994 user_group_admin.php:2536
+#: lib/installer.php:2675 user_admin.php:2997 user_group_admin.php:2536
 msgid "Templates"
 msgstr "टेम्पलेट्स"
 
@@ -918,19 +918,19 @@ msgstr "सेव करें"
 msgid "Version %s | %s"
 msgstr "संस्करण %s %s"
 
-#: auth_changepassword.php:402 user_admin.php:1966
+#: auth_changepassword.php:402 user_admin.php:1969
 msgid "Password Too Short"
 msgstr "पासवर्ड बहुत छोटा है"
 
-#: auth_changepassword.php:408 user_admin.php:1971
+#: auth_changepassword.php:408 user_admin.php:1974
 msgid "Password Validation Passes"
 msgstr "पासवर्ड सत्यापन पास"
 
-#: auth_changepassword.php:424 user_admin.php:1985
+#: auth_changepassword.php:424 user_admin.php:1988
 msgid "Passwords do Not Match"
 msgstr "पासवर्ड मेल नहीं खाते"
 
-#: auth_changepassword.php:428 user_admin.php:1988
+#: auth_changepassword.php:428 user_admin.php:1991
 msgid "Passwords Match"
 msgstr "पासवर्ड का मिलान हो गया"
 
@@ -981,7 +981,7 @@ msgid "Password"
 msgstr "पासवर्ड"
 
 #: auth_login.php:361 include/global_settings.php:2315 lib/auth.php:592
-#: lib/auth.php:614 lib/auth.php:624 lib/auth.php:629 user_admin.php:2252
+#: lib/auth.php:614 lib/auth.php:624 lib/auth.php:629 user_admin.php:2255
 msgid "Local"
 msgstr "स्थानीय"
 
@@ -990,7 +990,7 @@ msgstr "स्थानीय"
 msgid "LDAP"
 msgstr "एलडीएपी"
 
-#: auth_login.php:383 user_admin.php:2247 user_admin.php:2373
+#: auth_login.php:383 user_admin.php:2250 user_admin.php:2376
 #: user_group_admin.php:705
 msgid "Realm"
 msgstr "फ्रेम"
@@ -1005,7 +1005,7 @@ msgstr "लॉगिन"
 
 #: auth_profile.php:76 include/global_settings.php:39
 #: include/global_settings.php:1201 include/global_settings.php:1510
-#: lib/html.php:2613 managers.php:39 user_admin.php:1867
+#: lib/html.php:2613 managers.php:39 user_admin.php:1870
 #: user_group_admin.php:1737
 msgid "General"
 msgstr "सामान्य"
@@ -1030,7 +1030,7 @@ msgstr "सूची दृश्य"
 msgid "Preview View"
 msgstr "पूर्वद्रिश्श द्रिश्श"
 
-#: auth_profile.php:317 include/global_form.php:1516 user_admin.php:2369
+#: auth_profile.php:317 include/global_form.php:1516 user_admin.php:2372
 msgid "User Name"
 msgstr "उपयोगकर्ता नाम"
 
@@ -1039,7 +1039,7 @@ msgid "The login name for this user."
 msgstr "इस उपयोगकर्ता के लिए लॉगिन नाम।"
 
 #: auth_profile.php:325 include/global_form.php:1524
-#: include/global_settings.php:1862 user_admin.php:2371 user_domains.php:497
+#: include/global_settings.php:1862 user_admin.php:2374 user_domains.php:497
 #: user_group_admin.php:705 utilities.php:1159
 msgid "Full Name"
 msgstr "पूरा नाम"
@@ -1080,7 +1080,7 @@ msgstr "हर जगह लॉगआउट करें"
 msgid "Clear all your Login Session Tokens."
 msgstr "अपने सभी लॉगिन सत्र साफ़ करें।"
 
-#: auth_profile.php:381 user_admin.php:1874 user_group_admin.php:1744
+#: auth_profile.php:381 user_admin.php:1877 user_group_admin.php:1744
 msgid "User Settings"
 msgstr "उपयोक्ता विन्यास"
 
@@ -1114,17 +1114,17 @@ msgstr "उपकरण हटाएं"
 
 #: automation_devices.php:54 automation_devices.php:307
 #: automation_devices.php:417 automation_devices.php:428
-#: automation_devices.php:673 automation_devices.php:674 host.php:1754
+#: automation_devices.php:673 automation_devices.php:674 host.php:1840
 #: lib/api_automation.php:177 lib/api_automation.php:1115
-#: lib/html_utility.php:1377 pollers.php:48
+#: lib/html_utility.php:1415 pollers.php:48
 msgid "Down"
 msgstr "नीचे"
 
 #: automation_devices.php:55 automation_devices.php:307
 #: automation_devices.php:419 automation_devices.php:430
-#: automation_devices.php:673 automation_devices.php:674 host.php:1753
+#: automation_devices.php:673 automation_devices.php:674 host.php:1839
 #: lib/api_automation.php:176 lib/api_automation.php:1114
-#: lib/html_utility.php:1383
+#: lib/html_utility.php:1421
 msgid "Up"
 msgstr "ऊपर"
 
@@ -1175,13 +1175,13 @@ msgstr "निम्नलिखित डिस्कवर डिवाइस 
 msgid "Delete Device(s)"
 msgstr "उपकरण हटाएं"
 
-#: automation_devices.php:275 automation_devices.php:572 host.php:1635
-#: host.php:1760 host.php:1910 include/global_arrays.php:1008
+#: automation_devices.php:275 automation_devices.php:572 host.php:1721
+#: host.php:1846 host.php:1923 include/global_arrays.php:1008
 #: include/global_arrays.php:1064 include/global_arrays.php:2354
 #: lib/api_automation.php:183 lib/api_automation.php:283
 #: lib/api_automation.php:491 lib/api_automation.php:575
 #: lib/api_automation.php:1239 pollers.php:1047 sites.php:612 tree.php:872
-#: tree.php:2306 user_admin.php:1173 user_admin.php:2897
+#: tree.php:2306 user_admin.php:1176 user_admin.php:2900
 #: user_group_admin.php:1045 user_group_admin.php:2439 utilities.php:316
 msgid "Devices"
 msgstr "डिवाइस"
@@ -1198,7 +1198,7 @@ msgstr "IP"
 msgid "SNMP Name"
 msgstr "SNMP का नाम"
 
-#: automation_devices.php:287 host.php:1701 include/global_form.php:1205
+#: automation_devices.php:287 host.php:1787 include/global_form.php:1205
 #: include/global_settings.php:2310 lib/html.php:2294
 msgid "Location"
 msgstr "स्थान"
@@ -1210,8 +1210,8 @@ msgstr "संपर्क करें"
 #: automation_devices.php:289 include/global_form.php:1154
 #: include/global_form.php:1190 include/global_form.php:1384
 #: include/global_form.php:1760 lib/api_automation.php:290
-#: lib/api_automation.php:1246 lib/installer.php:1966 lib/installer.php:2664
-#: managers.php:220 user_admin.php:1036 user_admin.php:1181
+#: lib/api_automation.php:1246 lib/installer.php:1978 lib/installer.php:2676
+#: managers.php:220 user_admin.php:1039 user_admin.php:1184
 #: user_group_admin.php:1053 user_group_admin.php:2039
 msgid "Description"
 msgstr "विवरण"
@@ -1220,7 +1220,7 @@ msgstr "विवरण"
 msgid "OS"
 msgstr "OS"
 
-#: automation_devices.php:291 host.php:1874 include/global_arrays.php:542
+#: automation_devices.php:291 host.php:1563 include/global_arrays.php:542
 msgid "Uptime"
 msgstr "चालू रहने का समय"
 
@@ -1233,13 +1233,13 @@ msgstr "SNMP"
 #: automation_graph_rules.php:834 automation_networks.php:1093
 #: automation_tree_rules.php:864 data_debug.php:465 data_debug.php:1078
 #: data_sources.php:1442 data_templates.php:1233 host.php:781 host.php:906
-#: host.php:1745 host.php:1862 lib/api_automation.php:168
+#: host.php:1551 host.php:1831 lib/api_automation.php:168
 #: lib/api_automation.php:292 lib/api_automation.php:585
 #: lib/api_automation.php:1106 lib/api_automation.php:1249
-#: lib/html_reports.php:2029 lib/installer.php:1966 managers.php:222
+#: lib/html_reports.php:2029 lib/installer.php:1978 managers.php:222
 #: package_import.php:596 package_import.php:681 plugins.php:488
 #: plugins.php:611 pollers.php:1023 templates_import.php:238
-#: templates_import.php:277 user_admin.php:1181 user_group_admin.php:1053
+#: templates_import.php:277 user_admin.php:1184 user_group_admin.php:1053
 #: utilities.php:2076
 msgid "Status"
 msgstr "ऑर्डर स्थिति"
@@ -1252,7 +1252,7 @@ msgstr "अंतिम जांच"
 msgid "Not Detected"
 msgstr "पता नहीं लगा"
 
-#: automation_devices.php:331 host.php:1968
+#: automation_devices.php:331 host.php:1981
 msgid "No Devices Found"
 msgstr "कोई यंत्र नहीं मिले"
 
@@ -1268,7 +1268,7 @@ msgstr "नैट्टवर्क"
 msgid "Reset fields to defaults"
 msgstr "फ़ील्ड को डिफ़ॉल्ट पर रीसेट करें"
 
-#: automation_devices.php:518 color.php:561 host.php:1731
+#: automation_devices.php:518 color.php:561 host.php:1817
 #: lib/html_form.php:1437
 msgid "Export"
 msgstr "एक्सपोर्ट"
@@ -1289,16 +1289,16 @@ msgstr "खोजे गए उपकरण"
 #: automation_devices.php:695 automation_networks.php:1167
 #: automation_snmp.php:568 automation_snmp.php:569 automation_snmp.php:570
 #: automation_snmp.php:571 automation_snmp.php:572 automation_snmp.php:573
-#: data_debug.php:624 data_source_profiles.php:74 host.php:1937
+#: data_debug.php:624 data_source_profiles.php:74 host.php:1950
 #: lib/functions.php:6102 lib/functions.php:6106 lib/html.php:1303
 #: lib/html.php:1375 lib/html_reports.php:1760 lib/html_reports.php:1786
 #: lib/html_reports.php:1857 lib/html_reports.php:1858
-#: lib/html_reports.php:1859 lib/spikekill.php:1789 lib/spikekill.php:1790
-#: lib/spikekill.php:1837 lib/spikekill.php:1838 lib/spikekill.php:1839
-#: lib/spikekill.php:1840 lib/spikekill.php:1841 lib/spikekill.php:1842
-#: lib/spikekill.php:1843 lib/spikekill.php:1844 lib/spikekill.php:1845
-#: lib/spikekill.php:1846 lib/spikekill.php:1847 plugins.php:765
-#: pollers.php:1131 user_admin.php:2385 utilities.php:739 utilities.php:1188
+#: lib/html_reports.php:1859 lib/spikekill.php:1768 lib/spikekill.php:1769
+#: lib/spikekill.php:1816 lib/spikekill.php:1817 lib/spikekill.php:1818
+#: lib/spikekill.php:1819 lib/spikekill.php:1820 lib/spikekill.php:1821
+#: lib/spikekill.php:1822 lib/spikekill.php:1823 lib/spikekill.php:1824
+#: lib/spikekill.php:1825 lib/spikekill.php:1826 plugins.php:765
+#: pollers.php:1131 user_admin.php:2388 utilities.php:739 utilities.php:1188
 #: utilities.php:2656 utilities.php:2784 utilities.php:2792 utilities.php:2803
 #: utilities.php:2814 utilities.php:2837 utilities.php:2883 utilities.php:3117
 msgid "N/A"
@@ -1428,14 +1428,14 @@ msgstr "डेटा क्वेरी"
 #: automation_graph_rules.php:980 automation_networks.php:550
 #: automation_tree_rules.php:869 automation_tree_rules.php:989
 #: automation_tree_rules.php:1007 data_debug.php:1084 data_sources.php:1447
-#: host.php:1750 include/global_arrays.php:935 include/global_form.php:1548
+#: host.php:1836 include/global_arrays.php:935 include/global_form.php:1548
 #: include/global_settings.php:362 include/global_settings.php:378
 #: lib/api_automation.php:173 lib/api_automation.php:1111
 #: lib/html_reports.php:2034 lib/html_reports.php:2139
 #: lib/html_reports.php:2150 lib/html_reports.php:2186 links.php:396
-#: links.php:574 managers.php:247 managers.php:608 user_admin.php:1036
-#: user_admin.php:1048 user_admin.php:2372 user_domains.php:350
-#: user_domains.php:758 user_group_admin.php:88 user_group_admin.php:705
+#: links.php:574 managers.php:247 managers.php:608 user_admin.php:1039
+#: user_admin.php:1051 user_admin.php:2375 user_domains.php:350
+#: user_domains.php:759 user_group_admin.php:88 user_group_admin.php:705
 #: user_group_admin.php:720 user_group_admin.php:2043 utilities.php:2081
 #: utilities.php:2901
 msgid "Enabled"
@@ -1444,7 +1444,7 @@ msgstr "सक्षम"
 #: automation_graph_rules.php:840 automation_graph_rules.php:980
 #: automation_networks.php:1108 automation_tree_rules.php:870
 #: automation_tree_rules.php:1007 data_debug.php:1085 data_sources.php:1448
-#: data_templates.php:1269 host.php:1751 include/global_arrays.php:934
+#: data_templates.php:1269 host.php:1837 include/global_arrays.php:934
 #: include/global_arrays.php:1590 include/global_arrays.php:1893
 #: include/global_settings.php:361 include/global_settings.php:377
 #: include/global_settings.php:1361 include/global_settings.php:1621
@@ -1453,8 +1453,8 @@ msgstr "सक्षम"
 #: include/global_settings.php:1777 include/global_settings.php:2541
 #: lib/api_automation.php:174 lib/api_automation.php:1112 lib/html.php:2690
 #: lib/html_reports.php:2035 lib/html_reports.php:2186
-#: lib/html_utility.php:1367 links.php:513 managers.php:247 managers.php:608
-#: pollers.php:49 user_admin.php:1048 user_domains.php:412
+#: lib/html_utility.php:1405 links.php:513 managers.php:247 managers.php:608
+#: pollers.php:49 user_admin.php:1051 user_domains.php:412
 #: user_group_admin.php:720 utilities.php:2082 utilities.php:2598
 #: utilities.php:2901
 msgid "Disabled"
@@ -1602,10 +1602,10 @@ msgstr "सामान्य सेटिंग्स"
 #: include/global_form.php:1348 include/global_form.php:1376
 #: include/global_form.php:1449 include/global_form.php:1477
 #: include/global_form.php:2122 include/global_form.php:2220
-#: include/global_form.php:2265 lib/installer.php:1966 lib/installer.php:2039
-#: lib/installer.php:2069 lib/installer.php:2664 lib/installer.php:2751
+#: include/global_form.php:2265 lib/installer.php:1978 lib/installer.php:2051
+#: lib/installer.php:2081 lib/installer.php:2676 lib/installer.php:2763
 #: lib/vdef.php:74 managers.php:572 pollers.php:62 sites.php:41
-#: user_admin.php:1036 user_domains.php:326 utilities.php:865
+#: user_admin.php:1039 user_domains.php:326 utilities.php:865
 #: utilities.php:3097
 msgid "Name"
 msgstr "नाम"
@@ -1618,7 +1618,7 @@ msgstr "इस नेटवर्क को एक सार्थक नाम 
 msgid "New Network Discovery Range"
 msgstr "नई नेटवर्क डिस्कवरी रेंज"
 
-#: automation_networks.php:462 automation_networks.php:1090 host.php:1663
+#: automation_networks.php:462 automation_networks.php:1090 host.php:1749
 msgid "Data Collector"
 msgstr "जानकारी संग्रहकर्ता"
 
@@ -2143,7 +2143,7 @@ msgstr "आइडल"
 
 #: automation_networks.php:1168 include/global_arrays.php:909
 #: include/global_arrays.php:1227 include/global_settings.php:2567
-#: lib/html_reports.php:2181 user_admin.php:2243
+#: lib/html_reports.php:2181 user_admin.php:2246
 msgid "Never"
 msgstr "कभी नहीं"
 
@@ -2463,7 +2463,7 @@ msgid "Device Automation Templates"
 msgstr "डिवाइस स्वचालन टेम्पलेट्स"
 
 #: automation_templates.php:502 data_sources.php:1668 package_import.php:678
-#: templates_import.php:274 user_admin.php:1328 user_group_admin.php:1198
+#: templates_import.php:274 user_admin.php:1331 user_group_admin.php:1198
 msgid "Template Name"
 msgstr "टेम्पलेट का नाम"
 
@@ -2535,7 +2535,7 @@ msgstr "ट्री क्रिएशन क्राइटेरिया"
 msgid "Change Leaf Type"
 msgstr "पत्ता प्रकार बदलें"
 
-#: automation_tree_rules.php:754 lib/installer.php:3942 utilities.php:2651
+#: automation_tree_rules.php:754 lib/installer.php:3976 utilities.php:2651
 #: utilities.php:2652 utilities.php:2655 utilities.php:2656
 msgid "WARNING:"
 msgstr "चेतावनी:"
@@ -2583,9 +2583,9 @@ msgid "No Tree Rules Found"
 msgstr "कोई ट्री नियम नहीं मिला"
 
 #: cactid.php:44 help.php:71 lib/functions.php:6389 lib/functions.php:6458
-#: lib/functions.php:6564 lib/functions.php:7235 poller.php:401 poller.php:551
-#: poller.php:619 poller.php:665 poller.php:812 poller.php:918
-#: poller_automation.php:54 poller_boost.php:499
+#: lib/functions.php:6564 lib/functions.php:7235 poller.php:410 poller.php:560
+#: poller.php:629 poller.php:673 poller.php:821 poller.php:928
+#: poller_automation.php:54 poller_boost.php:505
 msgid "Cacti System Warning"
 msgstr "कैक्टि सिस्टम वार्निंग"
 
@@ -3072,7 +3072,7 @@ msgstr "डेटा स्रोत आंतरिक आईडी।"
 msgid "The Status of the Data Source Debug Check."
 msgstr "डेटा स्रोत डिबग चेक की स्थिति।"
 
-#: data_debug.php:471 lib/installer.php:2417 lib/installer.php:2449
+#: data_debug.php:471 lib/installer.php:2429 lib/installer.php:2461
 #: package_import.php:650
 msgid "Writable"
 msgstr "लिखने योग्य"
@@ -3131,9 +3131,9 @@ msgid "Summary of issues found for the Data Source."
 msgstr "डेटा स्रोत के लिए कोई सारांश समस्याएँ मिलीं।"
 
 #: data_debug.php:572 data_debug.php:1129 data_sources.php:1469
-#: data_sources.php:1622 host.php:1856 include/global_arrays.php:1012
+#: data_sources.php:1622 host.php:1545 include/global_arrays.php:1012
 #: include/global_arrays.php:1058 include/global_arrays.php:2336
-#: lib/api_automation.php:296 user_admin.php:1181 user_group_admin.php:1053
+#: lib/api_automation.php:296 user_admin.php:1184 user_group_admin.php:1053
 #: utilities.php:326
 msgid "Data Sources"
 msgstr "डाटा के स्रोत"
@@ -3246,7 +3246,7 @@ msgstr "रेरन विश्लेषण"
 msgid "Check"
 msgstr "जाँच करें"
 
-#: data_debug.php:826 include/global_form.php:1032 lib/rrd.php:3750
+#: data_debug.php:826 include/global_form.php:1032 lib/rrd.php:4049
 #: utilities.php:799 utilities.php:816 utilities.php:3097
 msgid "Value"
 msgstr "मूल्य"
@@ -3325,11 +3325,11 @@ msgstr "प्रोफाइल"
 
 #: data_debug.php:1066 data_debug.php:1082 data_debug.php:1093
 #: data_sources.php:1429 data_sources.php:1446 data_templates.php:1061
-#: graphs.php:2126 graphs_new.php:430 host.php:1705 host_templates.php:708
+#: graphs.php:2126 graphs_new.php:430 host.php:1791 host_templates.php:708
 #: host_templates.php:723 lib/clog_webapi.php:557 lib/html.php:225
 #: lib/html_reports.php:1088 lib/html_reports.php:2277 plugins.php:492
 #: settings.php:549 settings.php:571 settings.php:602 tree.php:870
-#: user_admin.php:2215 user_admin.php:2237 user_admin.php:2251
+#: user_admin.php:2218 user_admin.php:2240 user_admin.php:2254
 #: utilities.php:1040 utilities.php:1454
 msgid "All"
 msgstr "所有"
@@ -3539,10 +3539,10 @@ msgstr "डेटा इनपुट विधि"
 msgid "The method used to gather information for this Data Input Method."
 msgstr "इस डेटा इनपुट विधि के लिए जानकारी इकट्ठा करने के लिए उपयोग की जाने वाली विधि।"
 
-#: data_input.php:1011 host.php:1756 lib/api_automation.php:179
+#: data_input.php:1011 host.php:1842 lib/api_automation.php:179
 #: lib/api_automation.php:1117 lib/auth.php:2498 lib/clog_webapi.php:854
-#: lib/html_utility.php:1389 lib/import.php:423 lib/plugins.php:1243
-#: lib/plugins.php:1244 lib/rrd.php:3775 lib/rrd.php:3787 lib/spikekill.php:302
+#: lib/html_utility.php:1427 lib/import.php:423 lib/plugins.php:1243
+#: lib/plugins.php:1244 lib/rrd.php:4074 lib/rrd.php:4086 lib/spikekill.php:302
 #: package_import.php:576 package_import.php:654 utilities.php:212
 #: utilities.php:213 utilities.php:2652
 msgid "Unknown"
@@ -3833,8 +3833,8 @@ msgid "Steps"
 msgstr "चरण"
 
 #: data_source_profiles.php:640 graphs_new.php:469 include/global_form.php:298
-#: lib/html.php:583 lib/html_filter.php:73 lib/installer.php:2751
-#: lib/rrd.php:3804 utilities.php:867 utilities.php:1789
+#: lib/html.php:583 lib/html_filter.php:73 lib/installer.php:2763
+#: lib/rrd.php:4103 utilities.php:867 utilities.php:1789
 msgid "Rows"
 msgstr "पंक्तियाँ"
 
@@ -3875,7 +3875,7 @@ msgid "1 Year"
 msgstr "1 वर्ष"
 
 #: data_source_profiles.php:826 include/global_arrays.php:799
-#: include/global_arrays.php:1482 rrdcleaner.php:528
+#: include/global_arrays.php:1482 rrdcleaner.php:545
 #, php-format
 msgid "%d Month"
 msgstr "% d महीना"
@@ -3884,15 +3884,15 @@ msgstr "% d महीना"
 #: include/global_arrays.php:801 include/global_arrays.php:802
 #: include/global_arrays.php:803 include/global_arrays.php:1483
 #: include/global_arrays.php:1484 include/global_arrays.php:1485
-#: include/global_arrays.php:1486 rrdcleaner.php:529 rrdcleaner.php:530
-#: rrdcleaner.php:531
+#: include/global_arrays.php:1486 rrdcleaner.php:546 rrdcleaner.php:547
+#: rrdcleaner.php:548
 #, php-format
 msgid "%d Months"
 msgstr "% d माह"
 
 #: data_source_profiles.php:835 include/global_arrays.php:740
 #: include/global_arrays.php:796 include/global_arrays.php:1480
-#: rrdcleaner.php:524 rrdcleaner.php:525
+#: rrdcleaner.php:541 rrdcleaner.php:542
 #, php-format
 msgid "%d Week"
 msgstr "% d वीक"
@@ -3900,7 +3900,7 @@ msgstr "% d वीक"
 #: data_source_profiles.php:835 include/global_arrays.php:797
 #: include/global_arrays.php:798 include/global_arrays.php:1481
 #: include/global_settings.php:2921 include/global_settings.php:2922
-#: include/global_settings.php:2923 rrdcleaner.php:526 rrdcleaner.php:527
+#: include/global_settings.php:2923 rrdcleaner.php:543 rrdcleaner.php:544
 #, php-format
 msgid "%d Weeks"
 msgstr "%d सप्ताह"
@@ -4555,7 +4555,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool ग्राफ़ सिंटैक्स"
 
 #: graph_image.php:186 graph_json.php:225 graph_realtime.php:306
-#: lib/rrd.php:2037
+#: lib/rrd.php:2336
 msgid "The Cacti Poller has not run yet."
 msgstr "कैक्टि पोलर अभी तक नहीं चला है।"
 
@@ -4701,7 +4701,7 @@ msgstr "यदि आप उपयोगकर्ता को ग्राफ�
 
 #: graph_templates.php:711 graph_templates.php:726 graph_templates.php:890
 #: graphs_new.php:568 include/global_arrays.php:1253
-#: include/global_arrays.php:2264 lib/html_tree.php:558 user_admin.php:1320
+#: include/global_arrays.php:2264 lib/html_tree.php:558 user_admin.php:1323
 #: user_group_admin.php:1190
 msgid "Graph Templates"
 msgstr "ग्राफ टेम्पलेट"
@@ -5267,7 +5267,7 @@ msgstr "(बनाने के लिए एक ग्राफ प्रका
 msgid "Create"
 msgstr "बनाएं"
 
-#: graphs_new.php:572 graphs_new.php:870 lib/html.php:1107 user_admin.php:1539
+#: graphs_new.php:572 graphs_new.php:870 lib/html.php:1107 user_admin.php:1542
 #: user_group_admin.php:1407
 msgid "Select All"
 msgstr "सभी का चयन करें"
@@ -5664,107 +5664,107 @@ msgstr "SNMP GetNext"
 msgid "Delete Item from Device"
 msgstr "उपकरण टेम्पलेट हटाएं"
 
-#: host.php:1490 host.php:1531 host.php:1713
+#: host.php:1490 host.php:1613 host.php:1799
 msgid "Undefined"
 msgstr "अपरिभाशत"
 
-#: host.php:1645 include/global_settings.php:635 lib/html.php:2264
-#: lib/html_reports.php:1101
-msgid "Site"
-msgstr "साइट"
-
-#: host.php:1731
-msgid "Export Devices"
-msgstr "निर्यात उपकरण"
-
-#: host.php:1752 lib/api_automation.php:175 lib/api_automation.php:1113
-msgid "Not Up"
-msgstr "उठा नहीं"
-
-#: host.php:1755 lib/api_automation.php:178 lib/api_automation.php:1116
-#: lib/html.php:81 lib/html_utility.php:1380 pollers.php:50
-msgid "Recovering"
-msgstr "पुन: प्राप्त करना"
-
-#: host.php:1832 lib/api_automation.php:582 tree.php:943 utilities.php:2221
+#: host.php:1521 lib/api_automation.php:582 tree.php:943 utilities.php:2221
 msgid "Device Description"
 msgstr "यन्त्र की विशेषताएं"
 
-#: host.php:1835
+#: host.php:1524
 msgid "The name by which this Device will be referred to."
 msgstr "वह नाम जिसके द्वारा इस उपकरण को संदर्भित किया जाएगा।"
 
-#: host.php:1838 include/global_form.php:1197 include/global_form.php:1768
+#: host.php:1527 include/global_form.php:1197 include/global_form.php:1768
 #: lib/api_automation.php:291 lib/api_automation.php:583
 #: lib/api_automation.php:896 lib/api_automation.php:1247 managers.php:223
-#: pollers.php:131 pollers.php:1017 user_admin.php:1181
+#: pollers.php:131 pollers.php:1017 user_admin.php:1184
 #: user_group_admin.php:1053
 msgid "Hostname"
 msgstr "होस्टनांऽ"
 
-#: host.php:1841
+#: host.php:1530
 msgid "Either an IP address, or hostname.  If a hostname, it must be resolvable by either DNS, or from your hosts file."
 msgstr "या तो एक आईपी पता, या hostname। यदि कोई होस्टनाम है, तो उसे DNS या आपकी होस्ट फ़ाइल से फिर से शुरू किया जाना चाहिए।"
 
-#: host.php:1847
+#: host.php:1536
 msgid "The internal database ID for this Device.  Useful when performing automation or debugging."
 msgstr "इस डिवाइस के लिए आंतरिक डेटाबेस आईडी। स्वचालन या डिबगिंग करते समय उपयोगी।"
 
-#: host.php:1853
+#: host.php:1542
 msgid "The total number of Graphs generated from this Device."
 msgstr "इस डिवाइस से उत्पन्न कुल ग्राफ़ की संख्या।"
 
-#: host.php:1859
+#: host.php:1548
 msgid "The total number of Data Sources generated from this Device."
 msgstr "इस डिवाइस से उत्पन्न कुल डेटा स्रोत।"
 
-#: host.php:1865
+#: host.php:1554
 msgid "The monitoring status of the Device based upon ping results.  If this Device is a special type Device, by using the hostname \"localhost\", or due to the setting to not perform an Availability Check, it will always remain Up.  When using cmd.php data collector, a Device with no Graphs, is not pinged by the data collector and will remain in an \"Unknown\" state."
 msgstr "पिंग परिणामों के आधार पर डिवाइस की निगरानी स्थिति। यदि यह डिवाइस एक विशेष प्रकार का डिवाइस है, तो होस्टनाम &quot;लोकलहोस्ट&quot; का उपयोग करके, या उपलब्धता की जांच नहीं करने के लिए सेटिंग के कारण, यह हमेशा ऊपर रहेगा। Cmd.php डेटा कलेक्टर का उपयोग करते समय, बिना ग्राफ़ वाला एक उपकरण, डेटा कलेक्टर द्वारा पिंग नहीं किया जाता है और &quot;अज्ञात&quot; स्थिति में रहेगा।"
 
-#: host.php:1868
+#: host.php:1557
 msgid "In State"
 msgstr "राज्य"
 
-#: host.php:1871
+#: host.php:1560
 msgid "The amount of time that this Device has been in its current state."
 msgstr "यह डिवाइस जितनी बार चालू अवस्था में है।"
 
-#: host.php:1877
+#: host.php:1566
 msgid "The current amount of time that the host has been up."
 msgstr "समय की वर्तमान राशि जो होस्ट की गई है।"
 
-#: host.php:1880
+#: host.php:1569
 msgid "Poll Time"
 msgstr "मतदान का समय"
 
-#: host.php:1883
+#: host.php:1572
 msgid "The amount of time it takes to collect data from this Device."
 msgstr "इस उपकरण से डेटा एकत्र करने में जितना समय लगता है।"
 
-#: host.php:1886
+#: host.php:1575
 msgid "Current (ms)"
 msgstr "वर्तमान (एमएस)"
 
-#: host.php:1889
+#: host.php:1578
 msgid "The current ping time in milliseconds to reach the Device."
 msgstr "डिवाइस तक पहुंचने के लिए मिलीसेकंड में वर्तमान पिंग समय।"
 
-#: host.php:1892
+#: host.php:1581
 msgid "Average (ms)"
 msgstr "औसत (एमएस)"
 
-#: host.php:1895
+#: host.php:1584
 msgid "The average ping time in milliseconds to reach the Device since the counters were cleared for this Device."
 msgstr "डिवाइस तक पहुंचने के लिए मिलीसेकंड में औसत पिंग का समय क्योंकि इस डिवाइस के लिए काउंटरों को मंजूरी दी गई थी।"
 
-#: host.php:1898
+#: host.php:1587
 msgid "Availability"
 msgstr "उपलब्धता"
 
-#: host.php:1901
+#: host.php:1590
 msgid "The availability percentage based upon ping results since the counters were cleared for this Device."
 msgstr "इस डिवाइस के लिए काउंटर क्लियर होने के बाद से पिंग के परिणाम के आधार पर उपलब्धता प्रतिशत।"
+
+#: host.php:1731 include/global_settings.php:635 lib/html.php:2264
+#: lib/html_reports.php:1101
+msgid "Site"
+msgstr "साइट"
+
+#: host.php:1817
+msgid "Export Devices"
+msgstr "निर्यात उपकरण"
+
+#: host.php:1838 lib/api_automation.php:175 lib/api_automation.php:1113
+msgid "Not Up"
+msgstr "उठा नहीं"
+
+#: host.php:1841 lib/api_automation.php:178 lib/api_automation.php:1116
+#: lib/html.php:81 lib/html_utility.php:1418 pollers.php:50
+msgid "Recovering"
+msgstr "पुन: प्राप्त करना"
 
 #: host_templates.php:37
 msgid "Sync Devices"
@@ -5948,11 +5948,11 @@ msgstr ""
 msgid "Return to Cacti: %s"
 msgstr "आवश्यकता है: कैक्टि&gt; = %s"
 
-#: include/global.php:561
+#: include/global.php:564
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "पिछली बार इस डेटा कलेक्टर को मुख्य कैक्टि साइट के साथ पूरा किया गया था।"
 
-#: include/global.php:565
+#: include/global.php:568
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "मुख्य डेटा कलेक्टर ऑफ़लाइन या रिकवरी स्टेटस पर चला गया है"
 
@@ -6595,7 +6595,7 @@ msgid "%0.1f Minutes"
 msgstr "घंटे"
 
 #: include/global_arrays.php:804 include/global_arrays.php:1487
-#: include/global_settings.php:1626 rrdcleaner.php:532
+#: include/global_settings.php:1626 rrdcleaner.php:549
 #, php-format
 msgid "%d Year"
 msgstr "% d वष"
@@ -6648,7 +6648,7 @@ msgstr "मुश्किल"
 msgid "Demand"
 msgstr "माँग"
 
-#: include/global_arrays.php:912 user_admin.php:766 user_group_admin.php:758
+#: include/global_arrays.php:912 user_admin.php:769 user_group_admin.php:758
 msgid "Allow"
 msgstr "अनुमति दें"
 
@@ -6702,7 +6702,7 @@ msgstr "प्राकृतिक आदेश"
 msgid "Numeric Ordering"
 msgstr "न्यूमेरिक ऑर्डरिंग"
 
-#: include/global_arrays.php:970 lib/rrd.php:3716
+#: include/global_arrays.php:970 lib/rrd.php:4015
 msgid "Header"
 msgstr "हेडर"
 
@@ -6796,8 +6796,8 @@ msgid "Sites"
 msgstr "साइटां"
 
 #: include/global_arrays.php:1010 include/global_arrays.php:1247 tree.php:2157
-#: tree.php:2172 tree.php:2236 user_admin.php:1459 user_admin.php:3091
-#: user_admin.php:3188 user_group_admin.php:1322 user_group_admin.php:2633
+#: tree.php:2172 tree.php:2236 user_admin.php:1462 user_admin.php:3094
+#: user_admin.php:3191 user_group_admin.php:1322 user_group_admin.php:2633
 msgid "Trees"
 msgstr "पेड़"
 
@@ -6872,7 +6872,7 @@ msgid "Settings"
 msgstr "सेटिंग्स"
 
 #: include/global_arrays.php:1049 include/global_arrays.php:2606
-#: user_admin.php:2259 user_admin.php:2360 user_group_admin.php:697
+#: user_admin.php:2262 user_admin.php:2363 user_group_admin.php:697
 #: user_group_admin.php:2730
 msgid "Users"
 msgstr "उपयोगकर्ता"
@@ -6882,7 +6882,7 @@ msgid "User Groups"
 msgstr "यूसर समूह"
 
 #: include/global_arrays.php:1051 include/global_arrays.php:2624
-#: user_domains.php:649 user_domains.php:743
+#: user_domains.php:649 user_domains.php:744
 msgid "User Domains"
 msgstr "उपयोगकर्ता डोमेन"
 
@@ -6898,7 +6898,7 @@ msgstr "प्रणाली उपयोगिता"
 #: include/global_arrays.php:1055 include/global_arrays.php:1089
 #: include/global_arrays.php:1132 include/global_arrays.php:1235
 #: include/global_arrays.php:2240 links.php:96 links.php:315 links.php:385
-#: links.php:416 links.php:498 user_admin.php:1617 user_group_admin.php:1487
+#: links.php:416 links.php:498 user_admin.php:1620 user_group_admin.php:1487
 msgid "External Links"
 msgstr "बाहरी कड़ियाँ"
 
@@ -7889,7 +7889,7 @@ msgstr "सूची मोड"
 
 #: include/global_arrays.php:2090 include/global_arrays.php:2096
 #: lib/functions.php:4062 lib/html.php:1834 lib/html.php:1911 lib/html.php:2610
-#: links.php:357 user_admin.php:1588 user_group_admin.php:1458
+#: links.php:357 user_admin.php:1591 user_group_admin.php:1458
 msgid "Console"
 msgstr "कंसोल"
 
@@ -7958,7 +7958,7 @@ msgid "(Remove Item)"
 msgstr "(वस्तु निकालो)"
 
 #: include/global_arrays.php:2456 include/global_settings.php:234
-#: rrdcleaner.php:328
+#: rrdcleaner.php:335
 msgid "RRD Cleaner"
 msgstr "आरआरडी क्लीनर"
 
@@ -8274,7 +8274,7 @@ msgstr "वह आवृत्ति जो डेटा डेटा स्र�
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "RRDtool अज्ञात डेटा रिकॉर्ड करने से पहले कितनी देर तक डेटा गायब हो सकता है। यदि आपका डेटा स्रोत अस्थिर है और आप अपने ग्राफ़ में अंतराल दिखाने के बजाय पुराने डेटा को ले जाना चाहते हैं, तो यह मान बढ़ाएँ वास्तविक समय की वास्तविक मात्रा निर्धारित करने के लिए यह मान X-Files फैक्टर से गुणा किया जाता है।"
 
-#: include/global_form.php:240 lib/rrd.php:3807
+#: include/global_form.php:240 lib/rrd.php:4106
 msgid "X-Files Factor"
 msgstr "एक्स-फाइल्स फैक्टर"
 
@@ -8828,7 +8828,7 @@ msgstr "अपारदर्शिता / अल्फा चैनल"
 msgid "The opacity/alpha channel of the color."
 msgstr "रंग की अस्पष्टता / अल्फा चैनल।"
 
-#: include/global_form.php:1003 lib/rrd.php:3803
+#: include/global_form.php:1003 lib/rrd.php:4102
 msgid "Consolidation Function"
 msgstr "समेकन समारोह"
 
@@ -12517,7 +12517,7 @@ msgstr "मिलान उपकरण"
 
 #: lib/api_automation.php:150 lib/api_automation.php:1088
 #: lib/clog_webapi.php:551 lib/html_reports.php:1067 lib/html_reports.php:1739
-#: lib/html_reports.php:2138 lib/html_reports.php:2149 lib/rrd.php:3745
+#: lib/html_reports.php:2138 lib/html_reports.php:2149 lib/rrd.php:4044
 #: utilities.php:357 utilities.php:1450 utilities.php:3097
 msgid "Type"
 msgstr "प्रकार"
@@ -13701,7 +13701,7 @@ msgstr "उपकरण संपादित करें"
 msgid "Kill Spikes in Graphs"
 msgstr "ग्राफ में स्पाइक्स को मारें"
 
-#: lib/html.php:599 lib/html.php:631 lib/installer.php:1715
+#: lib/html.php:599 lib/html.php:631 lib/installer.php:1727
 msgid "Previous"
 msgstr "पिछला"
 
@@ -13710,7 +13710,7 @@ msgstr "पिछला"
 msgid "%d to %d of %s [ %s ]"
 msgstr "%s [%s] का %d से %d"
 
-#: lib/html.php:605 lib/html.php:637 lib/installer.php:1714
+#: lib/html.php:605 lib/html.php:637 lib/installer.php:1726
 msgid "Next"
 msgstr "अगला"
 
@@ -14605,7 +14605,7 @@ msgstr "घटनाक्रम"
 msgid "Send Report"
 msgstr "रिपोर्ट भेजो"
 
-#: lib/html_reports.php:1597 lib/import.php:3138 user_admin.php:1902
+#: lib/html_reports.php:1597 lib/import.php:3138 user_admin.php:1905
 msgid "[new]"
 msgstr "[नया]"
 
@@ -14800,48 +14800,48 @@ msgstr "चुनिंदा"
 msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "खोज शब्द &quot; %s&quot; मान्य नहीं है। त्रुटि %s है"
 
-#: lib/html_utility.php:1273
+#: lib/html_utility.php:1311
 msgid "Cacti regular expressions are limited to 50 characters only for security reasons."
 msgstr "कैक्टि रेगुलर एक्सप्रेशन सिर्फ़ सुरक्षा कारणों से 50 कैरेक्टर तक सीमित होते हैं।"
 
-#: lib/html_utility.php:1277
+#: lib/html_utility.php:1315
 msgid "Cacti regular expressions can not includes the semi-color character."
 msgstr "कैक्टि रेगुलर एक्सप्रेशन में सेमी - कलर कैरेक्टर शामिल नहीं हो सकता।"
 
-#: lib/html_utility.php:1294
+#: lib/html_utility.php:1332
 #, fuzzy
 msgid "Invalid regular expression."
 msgstr "एक नियमित अभिव्यक्ति दर्ज करें"
 
-#: lib/html_utility.php:1297
+#: lib/html_utility.php:1335
 msgid "There was an internal error!"
 msgstr "एक आंतरिक त्रुटि थी!"
 
-#: lib/html_utility.php:1298
+#: lib/html_utility.php:1336
 msgid "Backtrack limit was exhausted!"
 msgstr "पीछे की सीमा समाप्त हो गई थी!"
 
-#: lib/html_utility.php:1299
+#: lib/html_utility.php:1337
 msgid "Recursion limit was exhausted!"
 msgstr "पुनरावृत्ति की सीमा समाप्त हो गई थी!"
 
-#: lib/html_utility.php:1300
+#: lib/html_utility.php:1338
 msgid "Bad UTF-8 error!"
 msgstr "खराब UTF-8 त्रुटि!"
 
-#: lib/html_utility.php:1301
+#: lib/html_utility.php:1339
 msgid "Bad UTF-8 offset error!"
 msgstr "खराब UTF-8 ऑफसेट त्रुटि!"
 
-#: lib/html_utility.php:1332
+#: lib/html_utility.php:1370
 msgid "Cacti RLIKE filters do not support alternation or bounded-repeat characters."
 msgstr ""
 
-#: lib/html_utility.php:1371
+#: lib/html_utility.php:1409
 msgid "Down (Thold)"
 msgstr "डाउनलोड"
 
-#: lib/html_utility.php:1386 lib/installer.php:2007 lib/installer.php:3864
+#: lib/html_utility.php:1424 lib/installer.php:2019 lib/installer.php:3898
 msgid "Error"
 msgstr "त्रुटि"
 
@@ -14976,1088 +14976,1088 @@ msgstr ""
 msgid "Path is not writable"
 msgstr "पथ लेखन योग्य नहीं है"
 
-#: lib/installer.php:675
+#: lib/installer.php:687
 msgid "The external CSRF secret must be outside the Cacti document root"
 msgstr ""
 
-#: lib/installer.php:686
+#: lib/installer.php:698
 #, fuzzy
 msgid "Unable to create the external CSRF secret"
 msgstr "तालिका स्थिति पुनः प्राप्त करने में असमर्थ"
 
-#: lib/installer.php:703
+#: lib/installer.php:715
 msgid "Unable to persist the CSRF secret"
 msgstr ""
 
-#: lib/installer.php:730
+#: lib/installer.php:742
 #, php-format
 msgid "Failed to set specified %sRRDTool version: %s"
 msgstr "निर्दिष्ट %sRRDTool संस्करण सेट करने में विफल: %s"
 
-#: lib/installer.php:776
+#: lib/installer.php:788
 msgid "Invalid Theme Specified"
 msgstr "अमान्य थीम निर्दिष्ट किया गया"
 
-#: lib/installer.php:830
+#: lib/installer.php:842
 msgid "Resource is not writable"
 msgstr "संसाधन लेखन योग्य नहीं है"
 
-#: lib/installer.php:835
+#: lib/installer.php:847
 msgid "File not found"
 msgstr "फाइल नहीं मिली"
 
-#: lib/installer.php:847
+#: lib/installer.php:859
 msgid "PHP did not return expected result"
 msgstr "PHP ने अपेक्षित परिणाम नहीं दिया"
 
-#: lib/installer.php:861
+#: lib/installer.php:873
 msgid "Unexpected path parameter"
 msgstr "अप्रत्याशित पथ पैरामीटर"
 
-#: lib/installer.php:895
+#: lib/installer.php:907
 #, php-format
 msgid "Failed to apply specified profile %s != %s"
 msgstr "निर्दिष्ट प्रोफ़ाइल %s लागू करने में विफल! = %s"
 
-#: lib/installer.php:935
+#: lib/installer.php:947
 #, php-format
 msgid "Failed to apply specified mode: %s"
 msgstr "निर्दिष्ट मोड लागू करने में विफल: %s"
 
-#: lib/installer.php:957
+#: lib/installer.php:969
 #, php-format
 msgid "Failed to apply specified automation override: %s"
 msgstr "निर्दिष्ट स्वचालन ओवरराइड लागू करने में विफल: %s"
 
-#: lib/installer.php:977
+#: lib/installer.php:989
 msgid "Failed to apply specified cron interval"
 msgstr "निर्दिष्ट क्रोन अंतराल लागू करने में विफल"
 
-#: lib/installer.php:1021
+#: lib/installer.php:1033
 #, fuzzy, php-format
 msgid "Failed to apply '%s' as Automation Range"
 msgstr "'{ 0 }' को ऑटोमेशन रेंज के रूप में लागू करने में विफल"
 
-#: lib/installer.php:1096
+#: lib/installer.php:1108
 msgid "No matching snmp option exists"
 msgstr "कोई मेल खाने वाला स्निप विकल्प मौजूद नहीं है"
 
-#: lib/installer.php:1277
+#: lib/installer.php:1289
 #, fuzzy
 msgid "Unable to load the available templates"
 msgstr "तालिका स्थिति पुनः प्राप्त करने में असमर्थ"
 
-#: lib/installer.php:1287
+#: lib/installer.php:1299
 msgid "The template selection was incomplete. Reload this installer step and select the templates again."
 msgstr ""
 
-#: lib/installer.php:1320
+#: lib/installer.php:1332
 msgid "No matching template exists"
 msgstr "कोई मेल खाका मौजूद नहीं है"
 
-#: lib/installer.php:1402
+#: lib/installer.php:1414
 msgid "Unable to load the tables requiring conversion"
 msgstr ""
 
-#: lib/installer.php:1414
+#: lib/installer.php:1426
 msgid "The table selection was incomplete. Reload this installer step and select the tables again."
 msgstr ""
 
-#: lib/installer.php:1661
+#: lib/installer.php:1673
 msgid "The Installer could not proceed due to an unexpected error."
 msgstr "अनपेक्षित त्रुटि के कारण इंस्टॉलर आगे नहीं बढ़ सका।"
 
-#: lib/installer.php:1662
+#: lib/installer.php:1674
 msgid "Please report this to the Cacti Group."
 msgstr "कृपया कैक्टि ग्रुप को इसकी सूचना दें।"
 
-#: lib/installer.php:1663
+#: lib/installer.php:1675
 #, php-format
 msgid "Unknown Reason: %s"
 msgstr "अज्ञात कारण: %s"
 
-#: lib/installer.php:1670
+#: lib/installer.php:1682
 #, php-format
 msgid "You are attempting to install Cacti %s onto a 0.6.x database. Unfortunately, this can not be performed."
 msgstr "आप 0.6.x डेटाबेस पर Cacti %s को स्थापित करने का प्रयास कर रहे हैं। दुर्भाग्य से, यह प्रदर्शन नहीं किया जा सकता है।"
 
-#: lib/installer.php:1671
+#: lib/installer.php:1683
 msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
 msgstr "सक्षम जारी रखने के लिए, आप इसे में एक नया डेटाबेस, आयात &quot;cacti.sql&quot; बनाना <b>होगा</b> होने के लिए:"
 
-#: lib/installer.php:1673
+#: lib/installer.php:1685
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
 msgstr "फिर आप को अपडेट <b>करना होगा</b> नए डेटाबेस को इंगित करने के लिए &quot;/ config.php में शामिल हैं&quot;।"
 
-#: lib/installer.php:1674
+#: lib/installer.php:1686
 msgid "NOTE: Your existing data will not be modified, nor will it or any history be available to the new install"
 msgstr "नोट: आपका मौजूदा डेटा संशोधित नहीं किया जाएगा, न ही यह या कोई इतिहास नए इंस्टॉल के लिए उपलब्ध होगा"
 
-#: lib/installer.php:1681
+#: lib/installer.php:1693
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
 msgstr "आपने एक नया डेटाबेस बनाया है, लेकिन अभी तक &#39;cacti.sql&#39; फ़ाइल आयात नहीं की है। कमांड लाइन पर, जारी रखने के लिए निम्नलिखित पर अमल करें:"
 
-#: lib/installer.php:1683
+#: lib/installer.php:1695
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Cacti database. Please ensure that the Cacti database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Cacti database."
 msgstr "यह त्रुटि भी उत्पन्न हो सकती है यदि कैक्टि डेटाबेस उपयोगकर्ता कैक्टि डेटाबेस पर सही अनुमति नहीं है। कृपया सुनिश्चित करें कि Cacti डेटाबेस उपयोगकर्ता के पास Cacti डेटाबेस पर SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX की क्षमता है।"
 
-#: lib/installer.php:1684
+#: lib/installer.php:1696
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Cacti user SELECT access to the mysql.time_zone_name table"
 msgstr "तुम भी MySQL में MySQL समयक्षेत्र जानकारी आयात और कैक्टस उपयोगकर्ता mysql.time_zone_name मेज पर चयन ऐक्सेस देनी <b>होगी</b>"
 
-#: lib/installer.php:1687
+#: lib/installer.php:1699
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
 msgstr "Linux / UNIX पर, शेल में &#39;रूट&#39; के रूप में निम्नलिखित चलाएँ:"
 
-#: lib/installer.php:1690
+#: lib/installer.php:1702
 msgid "On Windows, you must follow the instructions here <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>Time zone description table</a>.  Once that is complete, you can issue the following command to grant the Cacti user access to the tables:"
 msgstr "विंडोज पर, आपको यहां <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>समय क्षेत्र विवरण तालिका</a> के निर्देशों का पालन करना चाहिए। एक बार पूरा होने के बाद, आप कैक्टि उपयोगकर्ता को तालिकाओं तक पहुँच प्रदान करने के लिए निम्न आदेश जारी कर सकते हैं:"
 
-#: lib/installer.php:1693
+#: lib/installer.php:1705
 msgid "Then run the following within MySQL as an administrator:"
 msgstr "फिर एक व्यवस्थापक के रूप में MySQL के भीतर निम्नलिखित चलाएँ:"
 
-#: lib/installer.php:1711 pollers.php:689
+#: lib/installer.php:1723 pollers.php:689
 msgid "Test Connection"
 msgstr "कनेक्शन जांचें"
 
-#: lib/installer.php:1722
+#: lib/installer.php:1734
 msgid "Begin"
 msgstr "आरंभ@ action End of document"
 
-#: lib/installer.php:1728 lib/installer.php:2152 lib/installer.php:2162
-#: lib/installer.php:2804
+#: lib/installer.php:1740 lib/installer.php:2164 lib/installer.php:2174
+#: lib/installer.php:2816
 msgid "Upgrade"
 msgstr "अपग्रेड  करो"
 
-#: lib/installer.php:1730 lib/installer.php:2808
+#: lib/installer.php:1742 lib/installer.php:2820
 msgid "Downgrade"
 msgstr "अवनयन"
 
-#: lib/installer.php:1831 utilities.php:273
+#: lib/installer.php:1843 utilities.php:273
 msgid "Cacti Version"
 msgstr "कैक्टि संस्करण"
 
-#: lib/installer.php:1831
+#: lib/installer.php:1843
 msgid "License Agreement"
 msgstr "लाइसेंस अनुबंध"
 
-#: lib/installer.php:1834
+#: lib/installer.php:1846
 #, php-format
 msgid "This version of Cacti (%s) does not appear to have a valid version code, please contact the Cacti Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 msgstr "Cacti ( %s) के इस संस्करण में एक मान्य संस्करण कोड नहीं है, कृपया यह सुनिश्चित करने के लिए Cacti Development Team से संपर्क करें। यदि आप इस त्रुटि को किसी रिलीज़ में देख रहे हैं, तो कृपया तुरंत GitHub पर एक रिपोर्ट बढ़ाएँ"
 
-#: lib/installer.php:1837
+#: lib/installer.php:1849
 msgid "Thanks for taking the time to download and install Cacti, the complete graphing solution for your network. Before you can start making cool graphs, there are a few pieces of data that Cacti needs to know."
 msgstr "Cacti को डाउनलोड करने और स्थापित करने के लिए समय निकालने के लिए धन्यवाद, आपके नेटवर्क के लिए पूर्ण रेखांकन समाधान। इससे पहले कि आप शांत रेखांकन बनाना शुरू कर सकें, डेटा के कुछ टुकड़े हैं जिन्हें कैक्टि को जानना होगा।"
 
-#: lib/installer.php:1838
+#: lib/installer.php:1850
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Cacti before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
 msgstr "सुनिश्चित करें कि आपने जारी रखने से पहले कैक्टि को स्थापित करने के लिए आवश्यक आवश्यक चरणों को पढ़ा है और उनका पालन किया है। इंस्टॉल की गई जानकारी <a href=\"%1$s\">यूनिक्स</a> और <a href=\"%2$s\">Win32-</a> आधारित ऑपरेटिंग सिस्टम के लिए पाई जा सकती है।"
 
-#: lib/installer.php:1841
+#: lib/installer.php:1853
 #, php-format
 msgid "This process will guide you through the steps for upgrading from version '%s'. "
 msgstr "यह प्रक्रिया आपको संस्करण &#39; %s&#39; से अपग्रेड करने के चरणों के माध्यम से मार्गदर्शन करेगी।"
 
-#: lib/installer.php:1842
+#: lib/installer.php:1854
 #, php-format
 msgid "Also, if this is an upgrade, be sure to read the <a href=\"%s\">Upgrade</a> information file."
 msgstr "इसके अलावा, अगर यह एक अपग्रेड है, तो <a href=\"%s\">अपग्रेड</a> जानकारी फ़ाइल को पढ़ना सुनिश्चित करें।"
 
-#: lib/installer.php:1846
+#: lib/installer.php:1858
 msgid "It is NOT recommended to downgrade as the database structure may be inconsistent"
 msgstr "यह डाउनग्रेड करने के लिए अनुशंसित नहीं है क्योंकि डेटाबेस संरचना असंगत हो सकती है"
 
-#: lib/installer.php:1849
+#: lib/installer.php:1861
 msgid "Cacti is licensed under the GNU General Public License, you must agree to its provisions before continuing:"
 msgstr "कैक्टि को GNU जनरल पब्लिक लाइसेंस के तहत लाइसेंस प्राप्त है, आपको जारी रखने से पहले इसके प्रावधानों से सहमत होना चाहिए:"
 
-#: lib/installer.php:1853
+#: lib/installer.php:1865
 msgid "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
 msgstr "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details."
 
-#: lib/installer.php:1890
+#: lib/installer.php:1902
 msgid "Accept GPL License Agreement"
 msgstr "GPL लाइसेंस अनुबंध स्वीकार करें"
 
-#: lib/installer.php:1890
+#: lib/installer.php:1902
 msgid "Select default theme: "
 msgstr "डिफ़ॉल्ट विषय चुनें:"
 
-#: lib/installer.php:1913
+#: lib/installer.php:1925
 msgid "Pre-installation Checks"
 msgstr "प्री-इंस्टॉलेशन चेक"
 
-#: lib/installer.php:1914
+#: lib/installer.php:1926
 msgid "Location checks"
 msgstr "स्थान की जाँच"
 
-#: lib/installer.php:1950 lib/installer.php:2101 lib/installer.php:2105
-#: lib/installer.php:2260 lib/installer.php:2265 lib/installer.php:3961
+#: lib/installer.php:1962 lib/installer.php:2113 lib/installer.php:2117
+#: lib/installer.php:2272 lib/installer.php:2277 lib/installer.php:3995
 msgid "ERROR:"
 msgstr "त्रुटि:"
 
-#: lib/installer.php:1950
+#: lib/installer.php:1962
 msgid "Please update config.php with the correct relative URI location of Cacti (url_path)."
 msgstr "कृपया Cacti (url_path) के सही सापेक्ष URI स्थान के साथ config.php को अपडेट करें।"
 
-#: lib/installer.php:1953
+#: lib/installer.php:1965
 msgid "Your Cacti configuration has the relative correct path (url_path) in config.php."
 msgstr "आपके Cacti कॉन्फ़िगरेशन को config.php में सापेक्ष सही पथ (url_path) है।"
 
-#: lib/installer.php:1961
+#: lib/installer.php:1973
 #, php-format
 msgid "PHP - Recommendations (%s)"
 msgstr "PHP - सिफारिशें (%s)"
 
-#: lib/installer.php:1965
+#: lib/installer.php:1977
 msgid "PHP Recommendations ("
 msgstr "PHP अनुशंसाएँ"
 
-#: lib/installer.php:1966
+#: lib/installer.php:1978
 msgid "Current"
 msgstr "वर्तमान"
 
-#: lib/installer.php:1966
+#: lib/installer.php:1978
 msgid "Recommended"
 msgstr "सफारशशुदा"
 
-#: lib/installer.php:1973
+#: lib/installer.php:1985
 msgid "PHP Binary"
 msgstr "PHP बाइनरी पथ"
 
-#: lib/installer.php:1976
+#: lib/installer.php:1988
 msgid "The PHP binary location is not valid and must be updated."
 msgstr "PHP बाइनरी स्थान मान्य नहीं है और इसे अपडेट किया जाना चाहिए।"
 
-#: lib/installer.php:1983
+#: lib/installer.php:1995
 msgid "Update the path_php_binary value in the settings table."
 msgstr "सेटिंग तालिका में path_php_binary मान अपडेट करें।"
 
-#: lib/installer.php:1992
+#: lib/installer.php:2004
 msgid "Passed"
 msgstr "पास कीता"
 
-#: lib/installer.php:1995
+#: lib/installer.php:2007
 msgid "Warning"
 msgstr "चेतावनी"
 
-#: lib/installer.php:2001
+#: lib/installer.php:2013
 msgid "Restart Required"
 msgstr "आवश्यकता"
 
-#: lib/installer.php:2001
+#: lib/installer.php:2013
 #, fuzzy
 msgid "The specified value appears to be different in the running config versus the INI file."
 msgstr "विशिष्ट मान चल रहे कॉन्फ़िगरेशन बनाम INI फ़ाइल में अलग प्रतीत होता है।"
 
-#: lib/installer.php:2031
+#: lib/installer.php:2043
 msgid "PHP - Module Support (Required)"
 msgstr "PHP - मॉड्यूल समर्थन (आवश्यक)"
 
-#: lib/installer.php:2032
+#: lib/installer.php:2044
 msgid "Cacti requires several PHP Modules to be installed to work properly. If any of these are not installed, you will be unable to continue the installation until corrected. In addition, for optimal system performance Cacti should be run with certain MySQL system variables set.  Please follow the MySQL recommendations at your discretion.  Always seek the MySQL documentation if you have any questions."
 msgstr "Cacti को ठीक से काम करने के लिए कई PHP मॉड्यूल की आवश्यकता होती है। यदि इनमें से कोई भी स्थापित नहीं है, तो आप सही होने तक स्थापना जारी रखने में असमर्थ होंगे। इसके अलावा, इष्टतम सिस्टम प्रदर्शन के लिए Cacti को कुछ MySQL सिस्टम चर सेट के साथ चलाया जाना चाहिए। कृपया अपने विवेक पर MySQL सिफारिशों का पालन करें। यदि आपके कोई प्रश्न हैं, तो हमेशा MySQL प्रलेखन की तलाश करें।"
 
-#: lib/installer.php:2034
+#: lib/installer.php:2046
 msgid "The following PHP extensions are mandatory, and MUST be installed before continuing your Cacti install."
 msgstr "निम्नलिखित PHP एक्सटेंशन अनिवार्य हैं, और आपके Cacti इंस्टॉल को जारी रखने से पहले स्थापित होना चाहिए।"
 
-#: lib/installer.php:2038
+#: lib/installer.php:2050
 msgid "Required PHP Modules"
 msgstr "आवश्यक PHP मॉड्यूल"
 
-#: lib/installer.php:2039 lib/installer.php:2069 plugins.php:43 plugins.php:495
+#: lib/installer.php:2051 lib/installer.php:2081 plugins.php:43 plugins.php:495
 msgid "Installed"
 msgstr "इंस्‍टॉल हो गया"
 
-#: lib/installer.php:2039
+#: lib/installer.php:2051
 msgid "Required"
 msgstr "आवश्यकता"
 
-#: lib/installer.php:2062
+#: lib/installer.php:2074
 msgid "PHP - Module Support (Optional)"
 msgstr "PHP - मॉड्यूल समर्थन (वैकल्पिक)"
 
-#: lib/installer.php:2064
+#: lib/installer.php:2076
 msgid "The following PHP extensions are recommended, and should be installed before continuing your Cacti install.  NOTE: If you are planning on supporting SNMPv3 with IPv6, you should not install the php-snmp module at this time."
 msgstr "निम्नलिखित PHP एक्सटेंशन की सिफारिश की जाती है, और आपके कैक्टि इंस्टॉल को जारी रखने से पहले स्थापित किया जाना चाहिए। नोट: यदि आप IPv6 के साथ SNMPv3 का समर्थन करने की योजना बना रहे हैं, तो आपको इस समय php-snmp मॉड्यूल को स्थापित नहीं करना चाहिए।"
 
-#: lib/installer.php:2068
+#: lib/installer.php:2080
 msgid "Optional Modules"
 msgstr "वैकल्पिक मॉड्यूल"
 
-#: lib/installer.php:2069
+#: lib/installer.php:2081
 msgid "Optional"
 msgstr "वैकल्पिक"
 
-#: lib/installer.php:2090
+#: lib/installer.php:2102
 msgid "MySQL - TimeZone Support"
 msgstr "MySQL - टाइमजोन सपोर्ट"
 
-#: lib/installer.php:2101
+#: lib/installer.php:2113
 msgid "Your MySQL TimeZone database is not populated.  Please populate this database before proceeding."
 msgstr "आपका MySQL TimeZone डेटाबेस आबाद नहीं है। कृपया आगे बढ़ने से पहले इस डेटाबेस को आबाद करें।"
 
-#: lib/installer.php:2105
+#: lib/installer.php:2117
 msgid "Your Cacti database login account does not have access to the MySQL TimeZone database.  Please provide the Cacti database account \"select\" access to the \"time_zone_name\" table in the \"mysql\" database, and populate MySQL's TimeZone information before proceeding."
 msgstr "आपके Cacti डेटाबेस लॉगिन खाते की MySQL TimeZone डेटाबेस तक पहुँच नहीं है। कृपया &quot;mysql&quot; डेटाबेस में &quot;time_zone_name&quot; तालिका में कैक्टि डेटाबेस खाता &quot;चुनें&quot; एक्सेस प्रदान करें, और आगे बढ़ने से पहले MySQL के टाइमज़ोन जानकारी को पॉप्युलेट करें।"
 
-#: lib/installer.php:2110
+#: lib/installer.php:2122
 msgid "Your Cacti database account has access to the MySQL TimeZone database and that database is populated with global TimeZone information."
 msgstr "आपके Cacti डेटाबेस खाते की MySQL TimeZone डेटाबेस तक पहुँच है और वह डेटाबेस वैश्विक TimeZone जानकारी से आबाद है।"
 
-#: lib/installer.php:2115
+#: lib/installer.php:2127
 msgid "MySQL - Settings"
 msgstr "MySQL - सेटिंग्स"
 
-#: lib/installer.php:2116
+#: lib/installer.php:2128
 msgid "These MySQL performance tuning settings will help your Cacti system perform better without issues for a longer time."
 msgstr "ये MySQL प्रदर्शन ट्यूनिंग सेटिंग्स आपके कैक्टि सिस्टम को अधिक समय तक मुद्दों के बिना बेहतर प्रदर्शन करने में मदद करेंगे।"
 
-#: lib/installer.php:2118
+#: lib/installer.php:2130
 msgid "Recommended MySQL System Variable Settings"
 msgstr "अनुशंसित MySQL सिस्टम परिवर्तनीय सेटिंग्स"
 
-#: lib/installer.php:2147
+#: lib/installer.php:2159
 msgid "Installation Type"
 msgstr "स्थापना प्रकार"
 
-#: lib/installer.php:2153
+#: lib/installer.php:2165
 #, php-format
 msgid "Upgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "<strong> %s</strong> <strong>से %s</strong> से अपग्रेड"
 
-#: lib/installer.php:2155
+#: lib/installer.php:2167
 msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Cacti is on) and retrying, before raising an issue with The Cacti Group"
 msgstr "मुद्दों की स्थिति में, यह अत्यधिक अनुशंसा की जाती है कि आप अपना ब्राउज़र कैश साफ़ करें, बंद करना फिर अपना ब्राउज़र फिर से खोलना (न केवल टैब कैक्टि चालू है) और फिर से प्रयास करना, कैक्टि समूह के साथ एक मुद्दा उठाने से पहले।"
 
-#: lib/installer.php:2156
+#: lib/installer.php:2168
 msgid "On rare occasions, we have had reports from users who experience some minor issues due to changes in the code.  These issues are caused by the browser retaining pre-upgrade code and whilst we have taken steps to minimise the chances of this, it may still occur.  If you need instructions on how to clear your browser cache, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> is a good starting point."
 msgstr "दुर्लभ अवसरों पर, हमारे पास उन उपयोगकर्ताओं की रिपोर्टें होती हैं जो कोड में परिवर्तन के कारण कुछ मामूली समस्याओं का अनुभव करते हैं। ये समस्याएँ ब्राउज़र के पूर्व-अपग्रेड कोड को बनाए रखने के कारण होती हैं और जब तक हम इस के अवसरों को कम करने के लिए कदम उठाते हैं, तब भी हो सकता है। यदि आपको अपने ब्राउज़र कैश को साफ़ करने के लिए निर्देशों की आवश्यकता है, तो <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> एक अच्छा प्रारंभिक बिंदु है।"
 
-#: lib/installer.php:2157
+#: lib/installer.php:2169
 msgid "If after clearing your cache and restarting your browser, you still experience issues, please raise the issue with us and we will try to identify the cause of it."
 msgstr "यदि आपके कैश को साफ़ करने और अपने ब्राउज़र को पुनरारंभ करने के बाद, आप अभी भी समस्याओं का अनुभव करते हैं, तो कृपया हमारे साथ समस्या को उठाएं और हम इसके कारण की पहचान करने का प्रयास करेंगे।"
 
-#: lib/installer.php:2163
+#: lib/installer.php:2175
 #, php-format
 msgid "Downgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "<strong>%s</strong> से <strong>%s</strong> में डाउनग्रेड करें"
 
-#: lib/installer.php:2164
+#: lib/installer.php:2176
 msgid "You appear to be downgrading to a previous version.  Database changes made for the newer version will not be reversed and <i>could</i> cause issues."
 msgstr "आप पिछले संस्करण में अपग्रेड होते दिख रहे हैं। डाटाबेस नए संस्करण के लिए किए गए परिवर्तनों को वापस नहीं लिया जाएगा और समस्याओं का कारण बन <i>सकता है।</i>"
 
-#: lib/installer.php:2169
+#: lib/installer.php:2181
 msgid "Please select the type of installation"
 msgstr "कृपया स्थापना का प्रकार चुनें"
 
-#: lib/installer.php:2170
+#: lib/installer.php:2182
 msgid "Installation options:"
 msgstr "संस्थापन विकल्प:"
 
-#: lib/installer.php:2174
+#: lib/installer.php:2186
 msgid "Choose this for the Primary site."
 msgstr "इसे प्राथमिक साइट के लिए चुनें।"
 
-#: lib/installer.php:2174 lib/installer.php:2225
+#: lib/installer.php:2186 lib/installer.php:2237
 msgid "New Primary Server"
 msgstr "नया प्राथमिक सर्वर"
 
-#: lib/installer.php:2175 lib/installer.php:2226
+#: lib/installer.php:2187 lib/installer.php:2238
 msgid "New Remote Poller"
 msgstr "नया रिमोट पोलर"
 
-#: lib/installer.php:2175
+#: lib/installer.php:2187
 msgid "Remote Pollers are used to access networks that are not readily accessible to the Primary site."
 msgstr "रिमोट पोलर्स का उपयोग उन नेटवर्क तक पहुंचने के लिए किया जाता है जो प्राथमिक साइट पर आसानी से उपलब्ध नहीं हैं।"
 
-#: lib/installer.php:2230
+#: lib/installer.php:2242
 msgid "The following information has been determined from Cacti's configuration file. If it is not correct, please edit \"include/config.php\" before continuing."
 msgstr "निम्नलिखित जानकारी कैक्टि की कॉन्फ़िगरेशन फ़ाइल से निर्धारित की गई है। यदि यह सही नहीं है, तो कृपया जारी रखने से पहले &quot;शामिल / config.php&quot; को संपादित करें।"
 
-#: lib/installer.php:2234
+#: lib/installer.php:2246
 msgid "Local Database Connection Information"
 msgstr "स्थानीय डेटाबेस कनेक्शन जानकारी"
 
-#: lib/installer.php:2237 lib/installer.php:2249
+#: lib/installer.php:2249 lib/installer.php:2261
 #, php-format
 msgid "Database: <b>%s</b>"
 msgstr "डेटाबेस: <b> %s</b>"
 
-#: lib/installer.php:2238 lib/installer.php:2250
+#: lib/installer.php:2250 lib/installer.php:2262
 #, php-format
 msgid "Database User: <b>%s</b>"
 msgstr "डेटाबेस उपयोगकर्ता: <b> %s</b>"
 
-#: lib/installer.php:2239 lib/installer.php:2251
+#: lib/installer.php:2251 lib/installer.php:2263
 #, php-format
 msgid "Database Hostname: <b>%s</b>"
 msgstr "डेटाबेस होस्टनाम: <b> %s</b>"
 
-#: lib/installer.php:2240 lib/installer.php:2252
+#: lib/installer.php:2252 lib/installer.php:2264
 #, php-format
 msgid "Port: <b>%s</b>"
 msgstr "पोर्ट: <b> %s</b>"
 
-#: lib/installer.php:2241 lib/installer.php:2253
+#: lib/installer.php:2253 lib/installer.php:2265
 #, php-format
 msgid "Server Operating System Type: <b>%s</b>"
 msgstr "सर्वर ऑपरेटिंग सिस्टम का प्रकार: <b> %s</b>"
 
-#: lib/installer.php:2246
+#: lib/installer.php:2258
 msgid "Central Database Connection Information"
 msgstr "केंद्रीय डेटाबेस कनेक्शन जानकारी"
 
-#: lib/installer.php:2258
+#: lib/installer.php:2270
 msgid "Configuration Readonly!"
 msgstr "विन्यास Readonly!"
 
-#: lib/installer.php:2260
+#: lib/installer.php:2272
 msgid "Your config.php file must be writable by the web server during install in order to configure the Remote poller.  Once installation is complete, you must set this file to Read Only to prevent possible security issues."
 msgstr "दूरस्थ पोलर को कॉन्फ़िगर करने के लिए स्थापित करने के दौरान आपकी config.php फ़ाइल को वेब सर्वर द्वारा लिखने योग्य होना चाहिए। एक बार इंस्टॉलेशन पूरा हो जाने पर, आपको इस फाइल को संभावित सुरक्षा समस्याओं से बचाव के लिए रीड ओनली पर सेट करना होगा।"
 
-#: lib/installer.php:2264
+#: lib/installer.php:2276
 msgid "Configuration of Poller"
 msgstr "पोलर का विन्यास"
 
-#: lib/installer.php:2265
+#: lib/installer.php:2277
 msgid "Your Remote Cacti Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Cacti database server.  Correct this and try again."
 msgstr "आपकी दूरस्थ कैक्टि पोलर जानकारी को आपकी config.php फ़ाइल में शामिल नहीं किया गया है। कृपया config.php.dist की समीक्षा करें, और चर सेट करें: <i>$ rdatabase_default, $ rdatabase_username</i> , आदि। ये चर सेट होने चाहिए और आपके प्राथमिक कैक्टि डेटाबेस सर्वर पर वापस इंगित करें। इसे ठीक करें और पुनः प्रयास करें।"
 
-#: lib/installer.php:2269
+#: lib/installer.php:2281
 msgid "Remote Poller Variables"
 msgstr "दूरस्थ पोल चर"
 
-#: lib/installer.php:2271
+#: lib/installer.php:2283
 msgid "The variables that must be set in the config.php file include the following:"
 msgstr "Config.php फ़ाइल में सेट किए जाने वाले चर में निम्नलिखित शामिल हैं:"
 
-#: lib/installer.php:2282
+#: lib/installer.php:2294
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
 msgstr "इंस्टॉलर स्वतः एक $ poller_id असाइन करता है और इसे config.php फ़ाइल में जोड़ता है।"
 
-#: lib/installer.php:2284
+#: lib/installer.php:2296
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Cacti database server.  Follow the same procedure you would with any other Cacti install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
 msgstr "एक बार चर सभी config.php फ़ाइल में सेट हो जाने के बाद, आपको मुख्य कैक्टि डेटाबेस सर्वर में $ rdatabase_username एक्सेस भी देना होगा। उसी प्रक्रिया का पालन करें जो आप किसी अन्य कैक्टि स्थापित के साथ करेंगे। फिर आप &#39;टेस्ट कनेक्शन&#39; बटन दबा सकते हैं। यदि परीक्षण सफल होता है, तो आप इंस्टॉल को पूरा करने में सक्षम होंगे।"
 
-#: lib/installer.php:2288
+#: lib/installer.php:2300
 msgid "Additional Steps After Installation"
 msgstr "स्थापना के बाद अतिरिक्त कदम"
 
-#: lib/installer.php:2290
+#: lib/installer.php:2302
 msgid "It is essential that the Central Cacti server can communicate via MySQL to each remote Cacti database server.  Once the install is complete, you must edit the Remote Data Collector and ensure the settings are correct.  You can verify using the 'Test Connection' when editing the Remote Data Collector."
 msgstr "यह आवश्यक है कि केंद्रीय Cacti सर्वर MySQL के माध्यम से प्रत्येक दूरस्थ Cacti डेटाबेस सर्वर से संवाद कर सकता है। एक बार इंस्टॉल पूरा होने के बाद, आपको दूरस्थ डेटा कलेक्टर को संपादित करना होगा और यह सुनिश्चित करना होगा कि सेटिंग्स सही हैं। आप दूरस्थ डेटा संग्राहक का संपादन करते समय &#39;टेस्ट कनेक्शन&#39; का उपयोग करके सत्यापित कर सकते हैं।"
 
-#: lib/installer.php:2303
+#: lib/installer.php:2315
 msgid "Critical Binary Locations and Versions"
 msgstr "महत्वपूर्ण द्विआधारी स्थान और संस्करण"
 
-#: lib/installer.php:2304
+#: lib/installer.php:2316
 msgid "Make sure all of these values are correct before continuing."
 msgstr "सुनिश्चित करें कि इन सभी मूल्यों को जारी रखने से पहले सही हैं।"
 
-#: lib/installer.php:2307
+#: lib/installer.php:2319
 msgid "One or more paths appear to be incorrect, unable to proceed"
 msgstr "एक या अधिक पथ गलत प्रतीत होते हैं, आगे बढ़ने में असमर्थ हैं"
 
-#: lib/installer.php:2384
+#: lib/installer.php:2396
 msgid "Directory Permission Checks"
 msgstr "निर्देशिका अनुमति जाँच"
 
-#: lib/installer.php:2385
+#: lib/installer.php:2397
 msgid "Please ensure the directory permissions below are correct before proceeding.  During the install, these directories need to be owned by the Web Server user.  These permission changes are required to allow the Installer to install Device Template packages which include XML and script files that will be placed in these directories.  If you choose not to install the packages, there is an 'install_package.php' cli script that can be used from the command line after the install is complete."
 msgstr "कृपया सुनिश्चित करें कि आगे बढ़ने से पहले नीचे दी गई निर्देशिका अनुमति सही है। इंस्टॉल के दौरान, इन निर्देशिकाओं को वेब सर्वर उपयोगकर्ता के स्वामित्व की आवश्यकता होती है। इंस्टॉलर को डिवाइस टेम्पलेट पैकेज स्थापित करने की अनुमति देने के लिए इन अनुमति परिवर्तनों की आवश्यकता होती है जिसमें XML और स्क्रिप्ट फाइलें शामिल होती हैं जिन्हें इन निर्देशिकाओं में रखा जाएगा। यदि आप संकुल को स्थापित करने के लिए नहीं चुनते हैं, तो एक &#39;install_package.php&#39; क्ली स्क्रिप्ट है जो कि कमांड लाइन से अधिष्ठापन पूरा होने के बाद इस्तेमाल किया जा सकता है।"
 
-#: lib/installer.php:2388
+#: lib/installer.php:2400
 msgid "After the install is complete, you can make some of these directories read only to increase security."
 msgstr "इंस्टॉल पूरा होने के बाद, आप इनमें से कुछ निर्देशिकाओं को केवल सुरक्षा बढ़ाने के लिए पढ़ सकते हैं।"
 
-#: lib/installer.php:2390
+#: lib/installer.php:2402
 msgid "These directories will be required to stay read writable after the install so that the Cacti remote synchronization process can update them as the Main Cacti Web Site changes"
 msgstr "इन निर्देशिकाओं को स्थापित होने के बाद पढ़ने योग्य बने रहने की आवश्यकता होगी ताकि कैक्टि रिमोट सिंक्रोनाइज़ेशन प्रक्रिया उन्हें मुख्य कैक्टि वेब साइट परिवर्तनों के रूप में अपडेट कर सके"
 
-#: lib/installer.php:2394
+#: lib/installer.php:2406
 msgid "If you are installing packages, once the packages are installed, you should change the scripts directory back to read only as this presents some exposure to the web site."
 msgstr "यदि आप पैकेज स्थापित कर रहे हैं, एक बार पैकेज स्थापित हो जाने के बाद, आपको स्क्रिप्ट निर्देशिका को केवल पढ़ने के लिए बदलना चाहिए क्योंकि यह वेब साइट पर कुछ जोखिम प्रस्तुत करता है।"
 
-#: lib/installer.php:2396
+#: lib/installer.php:2408
 msgid "For remote pollers, it is critical that the paths that you will be updating frequently, including the plugins, scripts, and resources paths have read/write access as the data collector will have to update these paths from the main web server content."
 msgstr "दूरदराज के मतदाताओं के लिए, यह महत्वपूर्ण है कि जिस पथ को आप बार-बार अपडेट करते रहेंगे, जिसमें प्लगइन्स, स्क्रिप्ट और संसाधन पथ पढ़े / लिखे होंगे क्योंकि डेटा कलेक्टर को मुख्य वेब सर्वर सामग्री से इन पथों को अपडेट करना होगा।"
 
-#: lib/installer.php:2402
+#: lib/installer.php:2414
 msgid "Required Writable at Install Time Only"
 msgstr "केवल समय स्थापित करने पर आवश्यक लेखन"
 
-#: lib/installer.php:2421 lib/installer.php:2454 lib/installer.php:2462
+#: lib/installer.php:2433 lib/installer.php:2466 lib/installer.php:2474
 #: package_import.php:648
 msgid "Not Writable"
 msgstr "लिखने योग्य"
 
-#: lib/installer.php:2433
+#: lib/installer.php:2445
 msgid "Required Writable after Install Complete"
 msgstr "इंस्टॉल पूरा होने के बाद आवश्यक लेखन"
 
-#: lib/installer.php:2473
+#: lib/installer.php:2485
 msgid "Potential permission issues"
 msgstr "संभावित अनुमति के मुद्दे"
 
-#: lib/installer.php:2482
+#: lib/installer.php:2494
 msgid "Please make sure that your webserver has read/write access to the cacti folders that show errors below."
 msgstr "कृपया सुनिश्चित करें कि आपके वेबसर्वर ने कैक्टि फ़ोल्डर तक पहुंच को पढ़ा / लिखा है जो नीचे त्रुटियां दिखाते हैं।"
 
-#: lib/installer.php:2485
+#: lib/installer.php:2497
 msgid "If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools."
 msgstr "यदि आपके सर्वर पर SELinux सक्षम है, तो आप इसे या तो अनुमत रूप से अक्षम कर सकते हैं, या इसे अस्थायी रूप से अक्षम कर सकते हैं और फिर SELinux कमांड-लाइन टूल्स का उपयोग करके उपयुक्त अनुमतियाँ जोड़ सकते हैं।"
 
-#: lib/installer.php:2494
+#: lib/installer.php:2506
 #, php-format
 msgid "The user '%s' should have MODIFY permission to enable read/write."
 msgstr "उपयोगकर्ता &#39; %s&#39; को पढ़ने / लिखने में सक्षम करने के लिए MODIFY अनुमति होनी चाहिए।"
 
-#: lib/installer.php:2503
+#: lib/installer.php:2515
 msgid "An example of how to set folder permissions is shown here, though you may need to adjust this depending on your operating system, user accounts and desired permissions."
 msgstr "फ़ोल्डर अनुमतियाँ कैसे सेट की जाए, इसका एक उदाहरण यहाँ दिखाया गया है, हालाँकि आपको अपने ऑपरेटिंग सिस्टम, उपयोगकर्ता खातों और वांछित अनुमतियों के आधार पर इसे समायोजित करने की आवश्यकता हो सकती है"
 
-#: lib/installer.php:2504
+#: lib/installer.php:2516
 msgid "EXAMPLE:"
 msgstr "उदाहरण:"
 
-#: lib/installer.php:2505
+#: lib/installer.php:2517
 msgid "Once installation has completed the CSRF path, should be set to read-only."
 msgstr "एक बार इंस्टॉलेशन CSRF पथ पूरा कर लेने के बाद, केवल पढ़ने के लिए सेट किया जाना चाहिए।"
 
-#: lib/installer.php:2507
+#: lib/installer.php:2519
 msgid "All folders are writable"
 msgstr "सभी फ़ोल्डर लेखन योग्य हैं"
 
-#: lib/installer.php:2519
+#: lib/installer.php:2531
 msgid "Input Validation Whitelist Protection"
 msgstr "इनपुट सत्यापन श्वेतसूची संरक्षण"
 
-#: lib/installer.php:2520
+#: lib/installer.php:2532
 msgid "Cacti Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Cacti poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
 msgstr "एक स्क्रिप्ट को कॉल करने वाली कैक्टि डेटा इनपुट विधियों का उन तरीकों से शोषण किया जा सकता है जो एक गैर-प्रशासक या तो मतदाता खाते के स्वामित्व वाली फाइलों को नुकसान पहुंचा सकते हैं, और ऐसे मामलों में जहां कोई कैक्टी पोलर को रूट के रूप में चलाता है, ऑपरेटिंग सिस्टम को अनुमति दे सकता है जो मतदाताओं को अनुमति देता है। अपने बुनियादी ढांचे का शोषण करें।"
 
-#: lib/installer.php:2521
+#: lib/installer.php:2533
 msgid "Therefore, several versions ago, Cacti was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Cacti more thoroughly, it does increase the amount of work required by the Cacti administrator to import and manage Templates and Packages."
 msgstr "इसलिए, कई संस्करणों से पहले, इन प्रकार के डेटा इनपुट विधियों पर व्हिटेलिस्ट क्षमताओं को प्रदान करने के लिए कैक्टि को बढ़ाया गया था। हालांकि यह कैक्टि को अधिक सुरक्षित रूप से सुरक्षित करता है, लेकिन यह टेम्प्लेट और पैकेजों को आयात और प्रबंधित करने के लिए कैक्टि व्यवस्थापक द्वारा आवश्यक कार्य की मात्रा को बढ़ाता है।"
 
-#: lib/installer.php:2522
+#: lib/installer.php:2534
 #, fuzzy
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "जिस तरह से श्वेतसूची में काम करता है वह यह है कि जब आप पहली बार किसी डेटा इनपुट विधि को आयात करते हैं, या आप किसी डेटा इनपुट विधि को फिर से आयात करते हैं, और स्क्रिप्ट और या किसी भी तरह से परिवर्तन होता है, डेटा इनपुट विधि और सभी संबंधित डेटा स्रोत होंगे जब तक कि व्यवस्थापक मान्य नहीं करता कि डेटा इनपुट विधि मान्य नहीं है, तुरंत अक्षम हो जाएं।"
 
-#: lib/installer.php:2523
+#: lib/installer.php:2535
 msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Cacti's CLI directory that can be run with the following options:"
 msgstr "इस स्थिति में डेटा इनपुट विधियों की पहचान करने के लिए, हमने कैक्टि के सीएलआई निर्देशिका में एक सत्यापन स्क्रिप्ट प्रदान की है जिसे निम्नलिखित विकल्पों के साथ चलाया जा सकता है:"
 
-#: lib/installer.php:2527
+#: lib/installer.php:2539
 msgid "This script option will search for any Data Input Methods that are currently banned and provide details as to why."
 msgstr "यह स्क्रिप्ट विकल्प किसी भी डेटा इनपुट विधियों की खोज करेगा जो वर्तमान में प्रतिबंधित हैं और क्यों के रूप में विवरण प्रदान करते हैं।"
 
-#: lib/installer.php:2528
+#: lib/installer.php:2540
 msgid "This script option un-ban the Data Input Methods that are currently banned."
 msgstr "यह स्क्रिप्ट विकल्प उन डेटा इनपुट विधियों पर प्रतिबंध नहीं लगाता है जो वर्तमान में प्रतिबंधित हैं।"
 
-#: lib/installer.php:2529
+#: lib/installer.php:2541
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "यह स्क्रिप्ट विकल्प किसी भी अक्षम डेटा स्रोत को फिर से सक्षम करेगा।"
 
-#: lib/installer.php:2533
+#: lib/installer.php:2545
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
 msgstr "यह दृढ़ता से सुझाव दिया जाता है कि आप इस <b>इनपुट</b> को <b>$ input_whitelist</b> वैरिएबल को <b>अनइंस्टॉल करने</b> और फिर वेब आधारित इंस्टॉल पूरा होने के बाद ऊपर दिए तीन CLI स्क्रिप्ट विकल्पों को चलाने के लिए अपने config.php को अपडेट करें।"
 
-#: lib/installer.php:2535
+#: lib/installer.php:2547
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
 msgstr "इस सुरक्षा चिंता को पढ़ने और समझने के लिए स्वीकार करने के लिए नीचे दिया गया चेकबॉक्स देखें"
 
-#: lib/installer.php:2537
+#: lib/installer.php:2549
 msgid "I have read this statement"
 msgstr "मैंने इस कथन को पढ़ा है"
 
-#: lib/installer.php:2553 lib/installer.php:2559
+#: lib/installer.php:2565 lib/installer.php:2571
 msgid "Default Profile"
 msgstr "डिफॉल्ट प्रोफ़ाइल"
 
-#: lib/installer.php:2554
+#: lib/installer.php:2566
 msgid "Please select the default Data Source Profile to be used for polling sources.  This is the maximum amount of time between scanning devices for information so the lower the polling interval, the more work is placed on the Cacti Server host.  Also, select the intended, or configured Cron interval that you wish to use for Data Collection."
 msgstr "कृपया मतदान स्रोतों के लिए उपयोग किए जाने वाले डिफ़ॉल्ट डेटा स्रोत प्रोफ़ाइल का चयन करें। यह जानकारी के लिए स्कैनिंग उपकरणों के बीच अधिकतम समय होता है इसलिए मतदान अंतराल कम होता है, अधिक काम कैक्टस सर्वर होस्ट पर रखा जाता है। इसके अलावा, इच्छित या चयनित क्रोन अंतराल का चयन करें जिसे आप डेटा संग्रह के लिए उपयोग करना चाहते हैं।"
 
-#: lib/installer.php:2565
+#: lib/installer.php:2577
 msgid "Cron Interval"
 msgstr "क्रोन अंतराल"
 
-#: lib/installer.php:2586
+#: lib/installer.php:2598
 msgid "Default Automation Network"
 msgstr "डिफ़ॉल्ट स्वचालन नेटवर्क"
 
-#: lib/installer.php:2587
+#: lib/installer.php:2599
 msgid "Cacti can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
 msgstr "एक बार इंस्टॉलेशन पूरा हो जाने पर कैक्टि अपने आप नेटवर्क को स्कैन कर सकता है। यह स्कैन किए जा सकने वाले IPs की श्रेणी का पता लगाने के लिए नीचे दी गई नेटवर्क श्रेणी का उपयोग करेगा। विकल्प के एक पूर्वनिर्धारित सेट को स्कैनिंग के लिए परिभाषित किया गया है जिसमें &#39;सार्वजनिक&#39; और &#39;निजी&#39; दोनों समुदायों का उपयोग करना शामिल है।"
 
-#: lib/installer.php:2588
+#: lib/installer.php:2600
 msgid "If your devices require a different set of options to be used first, you may define them below and they will be utilized before the defaults"
 msgstr "यदि आपके उपकरणों को पहले उपयोग किए जाने वाले विकल्पों के एक अलग सेट की आवश्यकता होती है, तो आप उन्हें नीचे परिभाषित कर सकते हैं और उनका उपयोग चूक से पहले किया जाएगा"
 
-#: lib/installer.php:2589
+#: lib/installer.php:2601
 msgid "All options may be adjusted post installation"
 msgstr "सभी विकल्पों को पोस्ट इंस्टॉलेशन समायोजित किया जा सकता है"
 
-#: lib/installer.php:2593
+#: lib/installer.php:2605
 msgid "Default Options"
 msgstr "डिफ़ॉल्ट विकल्प"
 
-#: lib/installer.php:2597
+#: lib/installer.php:2609
 msgid "Scan Mode"
 msgstr "बारीकी से जांच करने की प्रणाली"
 
-#: lib/installer.php:2602
+#: lib/installer.php:2614
 msgid "Network Range"
 msgstr "नेटवर्क रेंज"
 
-#: lib/installer.php:2608
+#: lib/installer.php:2620
 msgid "Additional Defaults"
 msgstr "अतिरिक्त चूक"
 
-#: lib/installer.php:2629
+#: lib/installer.php:2641
 msgid "Additional SNMP Options"
 msgstr "अतिरिक्त SNMP विकल्प"
 
-#: lib/installer.php:2642
+#: lib/installer.php:2654
 msgid "Error Locating Profiles"
 msgstr "प्रोफाइल का पता लगाने में त्रुटि"
 
-#: lib/installer.php:2643
+#: lib/installer.php:2655
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "स्थापना जारी नहीं रह सकती क्योंकि कोई प्रोफ़ाइल नहीं मिली।"
 
-#: lib/installer.php:2644
+#: lib/installer.php:2656
 msgid "This may occur if you have a blank database and have not yet imported the cacti.sql file"
 msgstr "यदि आपके पास कोई रिक्त डेटाबेस है और अभी तक cacti.sql फ़ाइल आयात नहीं की है, तो यह हो सकता है"
 
-#: lib/installer.php:2652
+#: lib/installer.php:2664
 msgid "Template Setup"
 msgstr "टेम्पलेट सेटअप"
 
-#: lib/installer.php:2655
+#: lib/installer.php:2667
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
 msgstr "उस टेम्पलेट प्रकार का चयन करें जिसे आप Cacti से निर्यात करना चाहते हैं।"
 
-#: lib/installer.php:2656
+#: lib/installer.php:2668
 msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
 msgstr "उन टेम्प्लेट को अपडेट करना जिनमें आपने पहले ही संशोधन कर लिया है, उचित नहीं है। टेम्प्लेट का अपग्रेड ग्राफ़ और डेटा टेम्प्लेट में संशोधन को नहीं हटाएगा, और इससे अप्रत्याशित व्यवहार हो सकता है। हालाँकि, यदि आपने किसी ग्राफ़, डेटा क्वेरी या डेटा टेम्प्लेट में परिवर्तन नहीं किया है, तो पैकेज को फिर से आयात करने से कोई प्रभाव नहीं पड़ेगा। उस स्थिति में, आपको अपडेट के बाद टेम्प्लेट से 'सिंक ग्राफ़' करना होगा।"
 
-#: lib/installer.php:2658
+#: lib/installer.php:2670
 #, fuzzy
 msgid "Please select the Device Templates that you wish to use after the Install.  If your Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "कृपया उस इंस्ट्रूमेंट टेम्प्लेट को चुनें, जिसे आप इंस्टाल के बाद इस्तेमाल करना चाहते हैं। यदि आप ऑपरेटिंग सिस्टम विंडोज हैं, तो आपको यह सुनिश्चित करने की आवश्यकता है कि आप &#39;विंडोज डिवाइस&#39; टेम्पलेट का चयन करें। यदि आपका ऑपरेटिंग सिस्टम लिनक्स / यूनिक्स है, तो सुनिश्चित करें कि आप &#39;स्थानीय लिनक्स मशीन&#39; डिवाइस टेम्पलेट का चयन करें।"
 
-#: lib/installer.php:2664 package_import.php:546 plugins.php:617
+#: lib/installer.php:2676 package_import.php:546 plugins.php:617
 msgid "Author"
 msgstr "लेखक "
 
-#: lib/installer.php:2664 package_import.php:549
+#: lib/installer.php:2676 package_import.php:549
 msgid "Homepage"
 msgstr "होम पेज"
 
-#: lib/installer.php:2690
+#: lib/installer.php:2702
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Cacti.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
 msgstr "डिवाइस टेम्प्लेट आपको कैक्टि के भीतर डेटा के एक विशाल वर्गीकरण की निगरानी और ग्राफ़ करने की अनुमति देते हैं। इच्छित डिवाइस टेम्पलेट का चयन करने के बाद, &#39;समाप्त करें&#39; दबाएँ और इंस्टॉलेशन पूरा हो जाएगा। कृपया इस चरण पर धैर्य रखें, क्योंकि डिवाइस टेम्प्लेट के आयात में कुछ मिनट लग सकते हैं।"
 
-#: lib/installer.php:2698
+#: lib/installer.php:2710
 msgid "Server Collation"
 msgstr "सर्वर Collation"
 
-#: lib/installer.php:2705
+#: lib/installer.php:2717
 msgid "Your server collation appears to be UTF8 compliant"
 msgstr "आपका सर्वर टकराव UTF8 के अनुरूप प्रतीत होता है"
 
-#: lib/installer.php:2708
+#: lib/installer.php:2720
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "आपका सर्वर टकराव पूरी तरह से UTF8 के अनुरूप प्रतीत नहीं होता है।"
 
-#: lib/installer.php:2709
+#: lib/installer.php:2721
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
 msgstr "[Mysqld] सेक्शन के तहत, &#39;कैरेक्टर&#39; सेट &#39;सर्वर&#39; और &#39;कॉलेशन&#39; सर्वर &#39;नाम की प्रविष्टियाँ खोजें और उन्हें निम्नानुसार सेट करें:"
 
-#: lib/installer.php:2716
+#: lib/installer.php:2728
 msgid "Database Collation"
 msgstr "डेटाबेस कोलेशन"
 
-#: lib/installer.php:2721
+#: lib/installer.php:2733
 msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "आपका डेटाबेस डिफ़ॉल्ट टकराव UTF8 अनुरूप प्रतीत होता है"
 
-#: lib/installer.php:2724
+#: lib/installer.php:2736
 msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
 msgstr "आपका डेटाबेस डिफ़ॉल्ट टकराव पूर्ण UTF8 अनुरूप प्रतीत नहीं होता है।"
 
-#: lib/installer.php:2725
+#: lib/installer.php:2737
 msgid "Any tables created by plugins may have issues linked against Cacti Core tables if the collation is not matched.   Please ensure your database is changed to 'utf8mb4_unicode_ci' by running the following: "
 msgstr "अगर तालमेल का मिलान नहीं होता है, तो प्लगइन्स द्वारा बनाई गई किसी भी तालिका में कैक्टि कोर तालिकाओं के खिलाफ जुड़े मुद्दे हो सकते हैं। कृपया सुनिश्चित करें कि आपका डेटाबेस निम्नलिखित को चलाकर &#39;utf8mb4_unicode_ci&#39; में बदल गया है:"
 
-#: lib/installer.php:2732
+#: lib/installer.php:2744
 msgid "Table Setup"
 msgstr "टेबल सेटअप"
 
-#: lib/installer.php:2743
+#: lib/installer.php:2755
 #, php-format
 msgid "You have more tables than your PHP configuration will allow us to display/convert.  Please modify the max_input_vars setting in php.ini to a value above %s"
 msgstr "आपके पास अपने PHP कॉन्फ़िगरेशन की तुलना में अधिक टेबल हैं जो हमें प्रदर्शित / परिवर्तित करने की अनुमति देगा। कृपया%s के ऊपर php.ini में max_input_vars सेटिंग को संशोधित करें"
 
-#: lib/installer.php:2746
+#: lib/installer.php:2758
 msgid "Conversion of tables may take some time especially on larger tables.  The conversion of these tables will occur in the background but will not prevent the installer from completing.  This may slow down some servers if there are not enough resources for MySQL to handle the conversion."
 msgstr "तालिकाओं के रूपांतरण में विशेष रूप से बड़ी तालिकाओं पर कुछ समय लग सकता है। इन तालिकाओं का रूपांतरण पृष्ठभूमि में होगा, लेकिन इंस्टॉलर को पूरा होने से नहीं रोकेगा। यदि रूपांतरण को संभालने के लिए MySQL के लिए पर्याप्त संसाधन नहीं हैं तो यह कुछ सर्वरों को धीमा कर सकता है।"
 
-#: lib/installer.php:2750
+#: lib/installer.php:2762
 msgid "Tables"
 msgstr "टेबल"
 
-#: lib/installer.php:2751 utilities.php:871
+#: lib/installer.php:2763 utilities.php:871
 msgid "Collation"
 msgstr "वर्णानुक्रमण"
 
-#: lib/installer.php:2751 utilities.php:866
+#: lib/installer.php:2763 utilities.php:866
 msgid "Engine"
 msgstr "इंजन"
 
-#: lib/installer.php:2751 utilities.php:872
+#: lib/installer.php:2763 utilities.php:872
 msgid "Row Format"
 msgstr "स्वरूप"
 
-#: lib/installer.php:2783
+#: lib/installer.php:2795
 msgid "One or more tables are too large to convert during the installation.  You should use the cli/convert_tables.php script to perform the conversion, then refresh this page. For example: "
 msgstr "स्थापना के दौरान परिवर्तित करने के लिए एक या अधिक तालिकाएँ बहुत बड़ी हैं। रूपांतरण करने के लिए आपको cli / convert_tables.php स्क्रिप्ट का उपयोग करना चाहिए, फिर इस पृष्ठ को ताज़ा करें उदाहरण के लिए:"
 
-#: lib/installer.php:2787
+#: lib/installer.php:2799
 msgid "The following tables should be converted to UTF8 and InnoDB with a Dynamic row format.  Please select the tables that you wish to convert during the installation process."
 msgstr "निम्न तालिकाओं को UTF8 और InnoDB में परिवर्तित किया जाना चाहिए। कृपया उन तालिकाओं का चयन करें जिन्हें आप स्थापना प्रक्रिया के दौरान बदलना चाहते हैं।"
 
-#: lib/installer.php:2793
+#: lib/installer.php:2805
 msgid "All your tables appear to be UTF8 and Dynamic row format compliant"
 msgstr "आपके सभी टेबल UTF8 के अनुरूप प्रतीत होते हैं"
 
-#: lib/installer.php:2803
+#: lib/installer.php:2815
 msgid "Confirm Upgrade"
 msgstr "अपग्रेड की पुष्टि करें"
 
-#: lib/installer.php:2807
+#: lib/installer.php:2819
 msgid "Confirm Downgrade"
 msgstr "डाउनग्रेड की पुष्टि करें"
 
-#: lib/installer.php:2811
+#: lib/installer.php:2823
 msgid "Confirm Installation"
 msgstr "स्थापना की पुष्टि करें"
 
-#: lib/installer.php:2812 plugins.php:31
+#: lib/installer.php:2824 plugins.php:31
 msgid "Install"
 msgstr "इन्स्टाल करें "
 
-#: lib/installer.php:2817
+#: lib/installer.php:2829
 msgid "DOWNGRADE DETECTED"
 msgstr "डाउनलोड किए गए विवरण"
 
-#: lib/installer.php:2818
+#: lib/installer.php:2830
 msgid "YOU MUST MANUALLY CHANGE THE CACTI DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
 msgstr "आप निश्चित रूप से किसी भी UPGRADE परिवर्तन को देखने के लिए CACTI डेटा को बदलना होगा। <br/> आपके लिए स्वचालित रूप से ऐसा करने के लिए INSTALLER कोई विधि नहीं है"
 
-#: lib/installer.php:2819
+#: lib/installer.php:2831
 msgid "Downgrading should only be performed when absolutely necessary and doing so may break your installation"
 msgstr "डाउनग्रेडिंग केवल तभी किया जाना चाहिए जब पूरी तरह से आवश्यक हो और ऐसा करने से आपका इंस्टालेशन टूट जाए"
 
-#: lib/installer.php:2822
+#: lib/installer.php:2834
 msgid "Your Cacti Server is almost ready.  Please check that you are happy to proceed."
 msgstr "आपका कैक्टि सर्वर लगभग तैयार है। कृपया जांचें कि आप आगे बढ़ने के लिए खुश हैं।"
 
-#: lib/installer.php:2825
+#: lib/installer.php:2837
 #, php-format
 msgid "Press '%s' then click '%s' to complete the installation process after selecting your Device Templates."
 msgstr "&#39; %s&#39; दबाएं और फिर अपने डिवाइस टेम्पलेट का चयन करने के बाद स्थापना प्रक्रिया को पूरा करने के लिए &#39; %s&#39; पर क्लिक करें।"
 
-#: lib/installer.php:2841
+#: lib/installer.php:2853
 #, php-format
 msgid "Installing Cacti Server v%s"
 msgstr "Cacti Server v %s को संस्थापित करना"
 
-#: lib/installer.php:2842
+#: lib/installer.php:2854
 msgid "Your Cacti Server is now installing"
 msgstr "अब आपका Cacti Server इंस्टॉल हो रहा है"
 
-#: lib/installer.php:2929
+#: lib/installer.php:2941
 #, php-format
 msgid "Spawning background process: %s %s"
 msgstr "स्पॉनिंग बैकग्राउंड प्रोसेस:%s%s"
 
-#: lib/installer.php:2955
+#: lib/installer.php:2967
 msgid "Complete"
 msgstr "पूर्ण"
 
-#: lib/installer.php:2956
+#: lib/installer.php:2968
 #, php-format
 msgid "Your Cacti Server v%s has been installed/updated.  You may now start using the software."
 msgstr "आपका Cacti Server v %s इंस्टॉल / अपडेट हो चुका है। अब आप सॉफ़्टवेयर का उपयोग शुरू कर सकते हैं।"
 
-#: lib/installer.php:2960
+#: lib/installer.php:2972
 #, php-format
 msgid "Your Cacti Server v%s has been installed/updated with errors"
 msgstr "आपका Cacti Server v %s त्रुटियों के साथ स्थापित / अद्यतन किया गया है"
 
-#: lib/installer.php:3072
+#: lib/installer.php:3084
 msgid "Get Help"
 msgstr "मदद लें"
 
-#: lib/installer.php:3077
+#: lib/installer.php:3089
 msgid "Report Issue"
 msgstr "रिपोर्ट जारी करना"
 
-#: lib/installer.php:3080
+#: lib/installer.php:3092
 msgid "Get Started"
 msgstr "शुरू होई जाओ"
 
-#: lib/installer.php:3109
+#: lib/installer.php:3141
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "V%s के लिए%s प्रक्रिया शुरू करना"
 
-#: lib/installer.php:3133
+#: lib/installer.php:3165
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "V%s के लिए%s प्रक्रिया समाप्त"
 
-#: lib/installer.php:3177
+#: lib/installer.php:3209
 msgid "WARNING: Unable to validate the installed database because cacti.sql could not be read"
 msgstr ""
 
-#: lib/installer.php:3183
+#: lib/installer.php:3215
 msgid "WARNING: Unable to validate the installed database because cacti.sql contains no table definitions"
 msgstr ""
 
-#: lib/installer.php:3192
+#: lib/installer.php:3224
 msgid "WARNING: Unable to query the installed database schema"
 msgstr ""
 
-#: lib/installer.php:3199
+#: lib/installer.php:3231
 #, php-format
 msgid "WARNING: Core database tables are missing: %s"
 msgstr ""
 
-#: lib/installer.php:3216
+#: lib/installer.php:3248
 #, php-format
 msgid "Found %s templates to install"
 msgstr "%s टेम्प्लेट स्थापित करने के लिए मिला"
 
-#: lib/installer.php:3226
+#: lib/installer.php:3258
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "पैकेज #%s '%s' आयात करने के बारे में।"
 
-#: lib/installer.php:3239
+#: lib/installer.php:3271
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "प्रोफ़ाइल '%s' के तहत पैकेज #%s '%s' का आयात सफल रहा"
 
-#: lib/installer.php:3245
+#: lib/installer.php:3277
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "प्रोफ़ाइल '%s' के तहत पैकेज #%s '%s' का आयात विफल रहा"
 
-#: lib/installer.php:3260
+#: lib/installer.php:3292
 #, fuzzy, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "डिवाइस टेम्पलेट '{ 0 }' के लिए मैपिंग ऑटोमेशन टेम्पलेट"
 
-#: lib/installer.php:3277
+#: lib/installer.php:3309
 msgid "No templates were selected for import"
 msgstr "आयात के लिए कोई टेम्पलेट नहीं चुना गया था"
 
-#: lib/installer.php:3286
+#: lib/installer.php:3318
 msgid "Updating remote configuration file"
 msgstr "कॉन्फ़िगरेशन की प्रतीक्षा कर रहा है"
 
-#: lib/installer.php:3318
+#: lib/installer.php:3350
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "%s (%s) में डिफ़ॉल्ट डेटा स्रोत प्रोफ़ाइल सेट करना"
 
-#: lib/installer.php:3340
+#: lib/installer.php:3372
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "चयनित प्रोफ़ाइल (%s) खोजने में विफल, कोई बदलाव नहीं किया गया"
 
-#: lib/installer.php:3349
+#: lib/installer.php:3381
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "ऑटोमेशन नेटवर्क (%s), मोड \"%s\" => \"%s\", सबनेट \"%s\" = =%s \""
 
-#: lib/installer.php:3359
+#: lib/installer.php:3391
 msgid "Failed to find automation network, no changes were made"
 msgstr "स्वचालन नेटवर्क खोजने में विफल, कोई परिवर्तन नहीं किए गए थे"
 
-#: lib/installer.php:3363
+#: lib/installer.php:3395
 msgid "Adding extra snmp settings for automation"
 msgstr "स्वचालन के लिए अतिरिक्त स्निप सेटिंग्स जोड़ना"
 
-#: lib/installer.php:3369
+#: lib/installer.php:3401
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "स्वचालन विकल्प सेट %s का चयन करना"
 
-#: lib/installer.php:3382
+#: lib/installer.php:3414
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "ऑटोमेशन विकल्प सेट %s को अपडेट किया जा रहा है"
 
-#: lib/installer.php:3385
+#: lib/installer.php:3417
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "सफलतापूर्वक अपडेट किया गया स्वचालन विकल्प सेट%s"
 
-#: lib/installer.php:3387
+#: lib/installer.php:3419
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "ऑटोमेशन विकल्प सेट %s को फिर से सेट किया जा रहा है"
 
-#: lib/installer.php:3393
+#: lib/installer.php:3425
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "ऑटोमेशन विकल्प सेट %s को अपडेट नहीं किया जा सका"
 
-#: lib/installer.php:3396
+#: lib/installer.php:3428
 msgid "Failed to find any automation option set"
 msgstr "कॉपी करने के लिए डेटा खोजने में विफल!"
 
-#: lib/installer.php:3426
+#: lib/installer.php:3458
 #, php-format
 msgid "Device Template for First Cacti Device is %s"
 msgstr "डिवाइस टेम्पलेट [संपादित करें: %s]"
 
-#: lib/installer.php:3452
+#: lib/installer.php:3484
 msgid "Creating Graphs for Default Device"
 msgstr "इस उपकरण के लिए रेखांकन बनाएँ"
 
-#: lib/installer.php:3459
+#: lib/installer.php:3491
 msgid "Adding Device to Default Tree"
 msgstr "डिवाइस की कमी"
 
-#: lib/installer.php:3467
+#: lib/installer.php:3499
 msgid "No templated graphs for Default Device were found"
 msgstr "डिफ़ॉल्ट डिवाइस के लिए कोई अस्थायी ग्राफ़ नहीं मिले"
 
-#: lib/installer.php:3471
+#: lib/installer.php:3503
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Cacti Packages to monitor your Cacti server."
 msgstr "चेतावनी: आपके ऑपरेटिंग सिस्टम के लिए डिवाइस टेम्पलेट नहीं मिला। आपको अपने Cacti सर्वर की निगरानी के लिए डिवाइस टेम्प्लेट या कैक्टि पैकेज आयात करने की आवश्यकता होगी।"
 
-#: lib/installer.php:3478
+#: lib/installer.php:3510
 msgid "Running first-time data query for local host"
 msgstr "स्थानीय होस्ट के लिए पहली बार डेटा क्वेरी चलाना"
 
-#: lib/installer.php:3486
+#: lib/installer.php:3518
 msgid "Repopulating poller cache"
 msgstr "पोलर कैश का पुनर्निर्माण करें"
 
-#: lib/installer.php:3491
+#: lib/installer.php:3523
 msgid "Repopulating SNMP Agent cache"
 msgstr "SNMPAgent Cache का पुनर्निर्माण करें"
 
-#: lib/installer.php:3496
+#: lib/installer.php:3528
 msgid "Generating RSA Key Pair"
 msgstr "आरएसए कुंजी जोड़ी उत्पन्न करना"
 
-#: lib/installer.php:3508
+#: lib/installer.php:3540
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "%s तालिकाओं को परिवर्तित करने के लिए मिला"
 
-#: lib/installer.php:3515
+#: lib/installer.php:3547
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "परिवर्तित तालिका #%s '%s'"
 
-#: lib/installer.php:3530
+#: lib/installer.php:3562
 msgid "No tables where found or selected for conversion"
 msgstr "कोई तालिका नहीं मिली है या रूपांतरण के लिए चयनित है"
 
-#: lib/installer.php:3541
+#: lib/installer.php:3573
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "%s से%s पर स्विच किया गया"
 
-#: lib/installer.php:3545
+#: lib/installer.php:3577
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "नोट: db कैश के लिए अस्थायी फ़ाइल का उपयोग करना:%s"
 
-#: lib/installer.php:3567
+#: lib/installer.php:3599
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "V%s (DB%s) से v%s में अपग्रेड करना"
 
-#: lib/installer.php:3575
+#: lib/installer.php:3607
 #, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "चेतावनी: v%s के लिए अपग्रेड फंक्शन खोजने में विफल"
 
-#: lib/installer.php:3634
+#: lib/installer.php:3668
 msgid "Install aborted due to no EULA acceptance"
 msgstr "EULA स्वीकृति नहीं होने के कारण गर्भपात कराएं"
 
-#: lib/installer.php:3657
+#: lib/installer.php:3691
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "पृष्ठभूमि को%s पर पहले ही शुरू कर दिया गया था,%s पर यह प्रयास छोड़ दिया गया था"
 
-#: lib/installer.php:3683
+#: lib/installer.php:3717
 #, fuzzy, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "इंस्टॉलेशन के दौरान अपवाद हुआ: #{ 0} - %s"
 
-#: lib/installer.php:3699
+#: lib/installer.php:3733
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "%s पर संस्थापन आरंभ किया गया था, %s पर पूरा हुआ"
 
-#: lib/installer.php:3735
+#: lib/installer.php:3769
 msgid "Both"
 msgstr "दोनों"
 
-#: lib/installer.php:3735
+#: lib/installer.php:3769
 #, php-format
 msgid "No - %s"
 msgstr "के रूप में दाखिल%s"
 
-#: lib/installer.php:3740
+#: lib/installer.php:3774
 #, php-format
 msgid "%s - N/A"
 msgstr "के रूप में दाखिल%s"
 
-#: lib/installer.php:3740 lib/installer.php:3742
+#: lib/installer.php:3774 lib/installer.php:3776
 msgid "Web"
 msgstr "वेब"
 
-#: lib/installer.php:3742 lib/installer.php:3745
+#: lib/installer.php:3776 lib/installer.php:3779
 #, php-format
 msgid "%s - No"
 msgstr "के रूप में दाखिल%s"
 
-#: lib/installer.php:3745
+#: lib/installer.php:3779
 msgid "Cli"
 msgstr "प्रतिष्टित"
 
-#: lib/installer.php:3750
+#: lib/installer.php:3784
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "PHP विकल्प%s =%s को सेट करना"
 
-#: lib/installer.php:3756
+#: lib/installer.php:3790
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "PHP विकल्प%s सेट करने में विफल,%s है (%s होना चाहिए)"
 
-#: lib/installer.php:3790
+#: lib/installer.php:3824
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "सिंक्रनाइज़ेशन का प्रयास करते समय डेटा कलेक्टर (ओं) को नहीं मिला"
 
@@ -16328,189 +16328,215 @@ msgstr "रिपोर्ट ग्राफ़ आइटम &#39; <i> %s</i> &
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "छोड़ी गई रिपोर्ट ग्राफ की वस्तु &#39; <i> %s</i> &#39; पहले से ही मौजूद है"
 
-#: lib/rrd.php:2034
+#: lib/rrd.php:2333
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "त्रुटि: RRDfile %s लिखने योग्य नहीं है"
 
-#: lib/rrd.php:3510
+#: lib/rrd.php:3809
 #, fuzzy, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "आवश्यक RRDfile चरण का आकार '{ 0 }' है, लेकिन देखा गया चरण '{ 1 }' है"
 
-#: lib/rrd.php:3570
+#: lib/rrd.php:3869
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "डेटा स्रोत &#39; %s&#39; के लिए टाइप &#39; %s&#39; होना चाहिए"
 
-#: lib/rrd.php:3576
+#: lib/rrd.php:3875
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "डेटा स्रोत &#39; %s&#39; के लिए दिल की धड़कन &#39; %s&#39; होनी चाहिए"
 
-#: lib/rrd.php:3588
+#: lib/rrd.php:3887
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "डेटा स्रोत &#39; %s&#39; के लिए RRD न्यूनतम &#39; %s&#39; होना चाहिए"
 
-#: lib/rrd.php:3597
+#: lib/rrd.php:3896
 #, php-format
 msgid "DS '%s' missing in Cacti definition"
 msgstr "Cacti की परिभाषा में डीएस &#39; %s&#39; गायब है"
 
-#: lib/rrd.php:3611 lib/rrd.php:3612
+#: lib/rrd.php:3910 lib/rrd.php:3911
 #, php-format
 msgid "Cacti RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Cacti RRA &#39; %s&#39; में &#39; %s&#39; के समान CF / चरण ( %s, %s) हैं"
 
-#: lib/rrd.php:3625 lib/rrd.php:3626
+#: lib/rrd.php:3924 lib/rrd.php:3925
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "फ़ाइल RRA &#39; %s&#39; में &#39; %s&#39; के समान CF / चरण ( %s, %s) है"
 
-#: lib/rrd.php:3658
+#: lib/rrd.php:3957
 #, fuzzy, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Cacti to re-create RRDfile."
 msgstr "'{ 0 }' का pdp_per_row RRA '{ 1 }' के लिए अमान्य है '{ 2 }' होना चाहिए। कैक्टि को RRDfile को फिर से बनाने के लिए हटाने और अनुमति देने पर विचार करें।"
 
-#: lib/rrd.php:3662
+#: lib/rrd.php:3961
 #, php-format
 msgid "The XFF for Cacti RRA id is '%s' but should be '%s'"
 msgstr "Cacti RRA आईडी &#39; %s&#39; के लिए XFF &#39; %s&#39; होना चाहिए"
 
-#: lib/rrd.php:3666
+#: lib/rrd.php:3965
 #, fuzzy, php-format
 msgid "The number of rows for Cacti RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Cacti RRA id '{ 0 }' के लिए पंक्तियों की संख्या गलत है। पंक्तियों की संख्या '{ 1 }' है लेकिन '{ 2 }' होनी चाहिए"
 
-#: lib/rrd.php:3683
+#: lib/rrd.php:3982
 #, php-format
 msgid "The RRA '%s' missing in the existing Cacti RRDfile"
 msgstr "आरआरडीएफाइल में आरआरए &#39; %s&#39; गायब है"
 
-#: lib/rrd.php:3691
+#: lib/rrd.php:3990
 #, php-format
 msgid "RRA '%s' missing in Cacti definition"
 msgstr "Ract &#39; %s&#39; कैक्टि परिभाषा में गायब है"
 
-#: lib/rrd.php:3712
+#: lib/rrd.php:4011
 msgid "RRD File Information"
 msgstr "आरआरडी फ़ाइल जानकारी"
 
-#: lib/rrd.php:3744
+#: lib/rrd.php:4043
 msgid "Data Source Items"
 msgstr "डेटा स्रोत आइटम"
 
-#: lib/rrd.php:3746
+#: lib/rrd.php:4045
 msgid "Minimal Heartbeat"
 msgstr "मिनिमल हार्टबीट"
 
-#: lib/rrd.php:3747
+#: lib/rrd.php:4046
 msgid "Min"
 msgstr "कम से कम"
 
-#: lib/rrd.php:3748
+#: lib/rrd.php:4047
 msgid "Max"
 msgstr "अधिकतम"
 
-#: lib/rrd.php:3749
+#: lib/rrd.php:4048
 msgid "Last DS"
 msgstr "अंतिम डी.एस."
 
-#: lib/rrd.php:3751
+#: lib/rrd.php:4050
 msgid "Unknown Sec"
 msgstr "अज्ञात सेक"
 
-#: lib/rrd.php:3802
+#: lib/rrd.php:4101
 msgid "Round Robin Archive"
 msgstr "राउंड रॉबिन आर्काइव"
 
-#: lib/rrd.php:3805
+#: lib/rrd.php:4104
 msgid "Cur Row"
 msgstr "कर रो"
 
-#: lib/rrd.php:3806
+#: lib/rrd.php:4105
 msgid "PDP per Row"
 msgstr "प्रति पंक्ति पीडीपी"
 
-#: lib/rrd.php:3808
+#: lib/rrd.php:4107
 msgid "CDP Prep Value (0)"
 msgstr "सीडीपी तैयारी मूल्य (0)"
 
-#: lib/rrd.php:3809
+#: lib/rrd.php:4108
 msgid "CDP Unknown Data points (0)"
 msgstr "सीडीपी अज्ञात डेटा अंक (0)"
 
-#: lib/rrd.php:3872
+#: lib/rrd.php:4171
 msgid "Errors Found"
 msgstr "कोई %s मिला"
 
-#: lib/rrd.php:3884
+#: lib/rrd.php:4183
 msgid "Optional Tuning Recommendations"
 msgstr "डेटा स्रोत फ़ील्ड"
 
-#: lib/rrd.php:3911 lib/rrd.php:3914
+#: lib/rrd.php:4210 lib/rrd.php:4213
 #, php-format
 msgid "rename %s to %s"
 msgstr "%s का नाम बदलकर %s करें"
 
-#: lib/rrd.php:3988 lib/rrd.php:4067 lib/rrd.php:4133
+#: lib/rrd.php:4286 lib/rrd.php:4367 lib/rrd.php:4435
 #, fuzzy
 msgid "ERROR: Invalid RRDfile path"
 msgstr "एक मान्य फ़ाइल पथ दर्ज करें"
 
-#: lib/rrd.php:3997
+#: lib/rrd.php:4296
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "Rrdtool डंप के XML को पार्स करते समय त्रुटि"
 
-#: lib/rrd.php:4029 lib/rrd.php:4094 lib/rrd.php:4160
+#: lib/rrd.php:4328 lib/rrd.php:4395 lib/rrd.php:4463
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "XML फ़ाइल लिखते समय ERROR: %s"
 
-#: lib/rrd.php:4040 lib/rrd.php:4105 lib/rrd.php:4171
+#: lib/rrd.php:4335 lib/rrd.php:4402 lib/rrd.php:4470
+msgid "RRD restore failed; original and recovery XML preserved. See application log."
+msgstr ""
+
+#: lib/rrd.php:4341 lib/rrd.php:4408 lib/rrd.php:4476
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "त्रुटि: RRDfile %s लिखने योग्य नहीं है"
 
-#: lib/rrd.php:4076 lib/rrd.php:4142
+#: lib/rrd.php:4377 lib/rrd.php:4445
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "RRDtool डंप के XML को पार्स करते समय त्रुटि"
 
-#: lib/rrd.php:4391
+#: lib/rrd.php:4695
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "आरआरडी फ़ाइल से हटाए गए RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f)"
 
-#: lib/rrd.php:4429
+#: lib/rrd.php:4733
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_ROW =% d, XFF =% 1.2f) RRD फाइल में जोड़"
 
-#: lib/rrd.php:4461 lib/rrd.php:4475
+#: lib/rrd.php:4765 lib/rrd.php:4779
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "वेबसाइट में %s तक लिखने की सुविधा नहीं है, RRDs बनाने / अपडेट करने में असमर्थ हो सकता है"
 
-#: lib/rrd.php:4471
+#: lib/rrd.php:4775
 msgid "(Custom)"
 msgstr "(अनुकूलित)"
 
-#: lib/rrd.php:4477
+#: lib/rrd.php:4781
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "डेटा फ़ाइल खोलने में विफल, पराग अभी तक नहीं चला है"
 
-#: lib/rrd.php:4480
+#: lib/rrd.php:4784
 msgid "RRA Folder"
 msgstr "आरआरए फोल्डर"
 
-#: lib/rrd.php:4480
+#: lib/rrd.php:4784
 msgid "Root"
 msgstr "जड़"
 
-#: lib/rrd.php:4589
+#: lib/rrd.php:4893
 msgid "Unknown RRDtool Error"
 msgstr "अज्ञात RRDtool त्रुटि"
+
+#: lib/rrd_maintenance.php:214
+msgid "RRD storage is not ready: the configured directory must exist and allow this service account to create, read, write and remove files."
+msgstr ""
+
+#: lib/rrd_maintenance.php:220
+msgid "RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading."
+msgstr ""
+
+#: lib/rrd_maintenance.php:276
+#, php-format
+msgid "The poller_output queue must use InnoDB before collection. Stop all collectors, including remote collectors, and run cli/upgrade_database.php --migrate-poller-queue (or convert poller_output to InnoDB after a backup). Observed engine: %s. Retained samples must not be discarded to clear this condition."
+msgstr ""
+
+#: lib/rrd_maintenance.php:276
+#, fuzzy
+msgid "unavailable"
+msgstr "अनुपलब्ध"
+
+#: lib/rrd_maintenance.php:288
+msgid "RRD storage configuration requires attention"
+msgstr ""
 
 #: lib/snmp.php:247 lib/snmp.php:347 lib/snmp.php:442 lib/snmp.php:877
 #: lib/snmp.php:892
@@ -16541,12 +16567,12 @@ msgstr ""
 msgid "FATAL: Standard Deviation must be a positive integer."
 msgstr ""
 
-#: lib/spikekill.php:280 lib/spikekill.php:1798
+#: lib/spikekill.php:280 lib/spikekill.php:1777
 #, fuzzy
 msgid "StdDev"
 msgstr "StdDev निकालें"
 
-#: lib/spikekill.php:286 lib/spikekill.php:1798
+#: lib/spikekill.php:286 lib/spikekill.php:1777
 #, fuzzy
 msgid "Variance"
 msgstr "परिवर्तनशील"
@@ -16657,147 +16683,151 @@ msgstr "विंडोज से संबंधित"
 msgid "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal."
 msgstr ""
 
-#: lib/spikekill.php:417
-msgid "FATAL: RRD storage is busy or its maintenance lock is unavailable. Retry after polling completes."
+#: lib/spikekill.php:418
+msgid "FATAL: RRD storage is busy. Retry after polling completes."
 msgstr ""
 
-#: lib/spikekill.php:469
+#: lib/spikekill.php:419
+msgid "FATAL: RRD storage is untrusted or unavailable. Run cli/upgrade_database.php --check-rrd-storage as the web service account and correct its storage configuration."
+msgstr ""
+
+#: lib/spikekill.php:471
 #, php-format
 msgid "FATAL: Unable to safely create a temporary XML file in '%s'!"
 msgstr ""
 
-#: lib/spikekill.php:518 lib/spikekill.php:540
+#: lib/spikekill.php:520 lib/spikekill.php:542
 msgid "FATAL: RRD source identity changed or could not be verified safely."
 msgstr ""
 
-#: lib/spikekill.php:548
+#: lib/spikekill.php:550
 msgid "FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"
 msgstr ""
 
-#: lib/spikekill.php:564
+#: lib/spikekill.php:566
 msgid "FATAL: RRDtool returned an empty dump. The RRD file was not modified."
 msgstr ""
 
-#: lib/spikekill.php:592
+#: lib/spikekill.php:594
 #, php-format
 msgid "FATAL: RRDfile Backup of '%s' to '%s' FAILED!"
 msgstr ""
 
-#: lib/spikekill.php:806
+#: lib/spikekill.php:808
 #, php-format
 msgid "NOTE: Searching for Spikes in XML file '%s'"
 msgstr ""
 
-#: lib/spikekill.php:809
+#: lib/spikekill.php:811
 #, php-format
 msgid "NOTE: Limited to Time Window: %s through %s"
 msgstr ""
 
-#: lib/spikekill.php:816
+#: lib/spikekill.php:818
 msgid "NOTE: Dryrun requested.  No updates performed"
 msgstr ""
 
-#: lib/spikekill.php:852
+#: lib/spikekill.php:854
 #, php-format
 msgid "NOTE: No Window Spikes found in '%s'"
 msgstr ""
 
-#: lib/spikekill.php:855
+#: lib/spikekill.php:857
 #, php-format
 msgid "NOTE: No Spikes found in '%s'"
 msgstr ""
 
-#: lib/spikekill.php:868
+#: lib/spikekill.php:870
 #, php-format
 msgid "NOTE: Spikes Found and Remediated.  Total Spikes %s"
 msgstr ""
 
-#: lib/spikekill.php:872
+#: lib/spikekill.php:874
 #, php-format
 msgid "FATAL: Unable to restore '%s' from '%s'"
 msgstr ""
 
-#: lib/spikekill.php:882
+#: lib/spikekill.php:884
 #, php-format
 msgid "FATAL: Unable to backup '%s'"
 msgstr ""
 
-#: lib/spikekill.php:892
+#: lib/spikekill.php:894
 #, php-format
 msgid "FATAL: Unable to write XML file '%s'"
 msgstr ""
 
-#: lib/spikekill.php:901
+#: lib/spikekill.php:903
 #, fuzzy
 msgid "NOTE: No Spikes Found."
 msgstr "कोई साइट नहीं मिली"
 
-#: lib/spikekill.php:962
+#: lib/spikekill.php:964
 #, php-format
 msgid "NOTE: Re-Importing '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1053
+#: lib/spikekill.php:1055
 #, php-format
 msgid "NOTE: Backing Up '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1798
+#: lib/spikekill.php:1777
 #, fuzzy
 msgid "Avg"
 msgstr "औसत:"
 
-#: lib/spikekill.php:1798
+#: lib/spikekill.php:1777
 #, fuzzy
 msgid "CF"
 msgstr "CDEF"
 
-#: lib/spikekill.php:1798
+#: lib/spikekill.php:1777
 #, fuzzy
 msgid "DS"
 msgstr "डेस"
 
-#: lib/spikekill.php:1798
+#: lib/spikekill.php:1777
 msgid "NonNan"
 msgstr ""
 
-#: lib/spikekill.php:1798
+#: lib/spikekill.php:1777
 #, fuzzy
 msgid "Samples"
 msgstr "सरल"
 
-#: lib/spikekill.php:1799
+#: lib/spikekill.php:1778
 msgid "MaxStdDev"
 msgstr ""
 
-#: lib/spikekill.php:1799
+#: lib/spikekill.php:1778
 #, fuzzy
 msgid "MaxValue"
 msgstr "मूल्य"
 
-#: lib/spikekill.php:1799
+#: lib/spikekill.php:1778
 #, fuzzy
 msgid "MinStdDev"
 msgstr "सूखा रन StdDev"
 
-#: lib/spikekill.php:1799
+#: lib/spikekill.php:1778
 #, fuzzy
 msgid "MinValue"
 msgstr "मूल्य"
 
-#: lib/spikekill.php:1799
+#: lib/spikekill.php:1778
 msgid "StdKilled"
 msgstr ""
 
-#: lib/spikekill.php:1799
+#: lib/spikekill.php:1778
 msgid "VarKilled"
 msgstr ""
 
-#: lib/spikekill.php:1799
+#: lib/spikekill.php:1778
 msgid "WindKilled"
 msgstr ""
 
-#: lib/spikekill.php:1799
+#: lib/spikekill.php:1778
 msgid "WindSamples"
 msgstr ""
 
@@ -17065,15 +17095,15 @@ msgstr "फ़िल्टर्स लागू करें (p) View - >"
 msgid "Reset filters"
 msgstr "रीसेट फिल्टर"
 
-#: links.php:358 links.php:526 user_admin.php:1589 user_group_admin.php:1459
+#: links.php:358 links.php:526 user_admin.php:1592 user_group_admin.php:1459
 msgid "Top Tab"
 msgstr "शीर्ष टैब"
 
-#: links.php:359 user_admin.php:1590 user_group_admin.php:1460
+#: links.php:359 user_admin.php:1593 user_group_admin.php:1460
 msgid "Bottom Console"
 msgstr "नीचे का कंसोल"
 
-#: links.php:360 user_admin.php:1591 user_group_admin.php:1461
+#: links.php:360 user_admin.php:1594 user_group_admin.php:1461
 msgid "Top Console"
 msgstr "शीर्ष सांत्वना"
 
@@ -17655,49 +17685,49 @@ msgstr "प्लगइन संगत नहीं है"
 msgid "Enable Plugin Locally"
 msgstr "प्लगिन सक्षम करें"
 
-#: poller.php:401
+#: poller.php:410
 #, php-format
 msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
 msgstr "चेतावनी: %s पोलर आईडी %d के लिए पोलर इंटरवल के साथ सिंक नहीं है!  पोलर इंटरवल %d सेकंड का होता है, जिसमें अधिकतम %d सेकंड होते हैं, लेकिन पिछले पोल के बाद से %d सेकंड बीत चुके हैं!"
 
-#: poller.php:551
+#: poller.php:560
 #, php-format
 msgid "WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate."
 msgstr "चेतावनी: पोलर आईडी %d के लिए मतदान चक्र को ओवररनिंग करने के रूप में %d प्रक्रियाओं का पता चला है, कृपया जांच करें।"
 
-#: poller.php:619
+#: poller.php:629
 #, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
 msgstr "चेतावनी: पोलर आउटपुट तालिका पोलर आईडी %d के लिए खाली नहीं है।  समस्याएँ: %d, %s।"
 
-#: poller.php:665
+#: poller.php:673
 #, php-format
 msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
 msgstr "त्रुटि: रीढ़ की हड्डी का पथ: %s परागक आईडी %d के लिए अमान्य है।  पोलर जारी नहीं रख सकते!"
 
-#: poller.php:812
+#: poller.php:821
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "परागकण आईडी %d के लिए %d सेकंड का अधिकतम रनटाइम पार हो गया। बाहर हो रहा है।"
 
-#: poller.php:918
+#: poller.php:928
 msgid "WARNING: Cacti Polling Cycle Exceeded Poller Interval by "
 msgstr "चेतावनी: कैक्टि पोलिंग साइकिल पोलर इंटरवल को पार कर गया"
 
-#: poller.php:943
+#: poller.php:955
 #, php-format
 msgid "WARNING: PollerID:%s with Name:%s is in Heartbeat Status"
 msgstr "चेतावनी: PollerID:%s नाम के साथ:%s दिल की धड़कन की स्थिति में है"
 
-#: poller.php:945
+#: poller.php:957
 msgid "Poller in Heartbeat Mode"
 msgstr "दिल की धड़कन मोड में पोलर"
 
-#: poller.php:1241
+#: poller.php:1257
 msgid "Cacti System Notification"
 msgstr "कैक्टि सिस्टम यूटिलिटीज"
 
-#: poller.php:1241
+#: poller.php:1257
 msgid "NOTE: A second Cacti data collector has been added.  Therefore, enabling boost automatically!"
 msgstr "नोट: एक दूसरा कैक्टि डेटा कलेक्टर जोड़ा गया है। आगे, स्वचालित रूप से बढ़ावा देने में सक्षम!"
 
@@ -17714,7 +17744,7 @@ msgstr "कैक्टि प्राथमिक प्रशासन"
 msgid "Cacti Automation Report requires an html based Email client"
 msgstr "Cacti स्वचालन रिपोर्ट के लिए HTML आधारित ईमेल क्लाइंट की आवश्यकता होती है"
 
-#: poller_boost.php:499
+#: poller_boost.php:505
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
 msgstr "चेतावनी: पता चला पोलर बूस्ट ओवररन, संभावित बूस्ट पोलर क्रैश"
 
@@ -18084,7 +18114,7 @@ msgstr "मान्य डेटा"
 msgid "Message"
 msgstr "संदेश"
 
-#: rrdcheck.php:187 rrdcheck.php:191 rrdcleaner.php:399 rrdcleaner.php:400
+#: rrdcheck.php:187 rrdcheck.php:191 rrdcleaner.php:406 rrdcleaner.php:407
 msgid "Deleted"
 msgstr "म्हेसेआ"
 
@@ -18115,7 +18145,7 @@ msgstr "%d दिन"
 msgid "Messages"
 msgstr "संदेश"
 
-#: rrdcheck.php:264 rrdcleaner.php:552 user_domains.php:680
+#: rrdcheck.php:264 rrdcleaner.php:569 user_domains.php:680
 #: user_group_admin.php:1985 user_group_admin.php:2345
 #: user_group_admin.php:2461 user_group_admin.php:2558
 #: user_group_admin.php:2655 user_group_admin.php:2752
@@ -18123,7 +18153,7 @@ msgctxt "filter: use"
 msgid "Go"
 msgstr "जाएं"
 
-#: rrdcheck.php:265 rrdcleaner.php:553 user_group_admin.php:1986
+#: rrdcheck.php:265 rrdcleaner.php:570 user_group_admin.php:1986
 #: user_group_admin.php:2346 user_group_admin.php:2462
 #: user_group_admin.php:2559 user_group_admin.php:2656
 msgctxt "filter: reset"
@@ -18135,81 +18165,85 @@ msgctxt "filter: purge"
 msgid "Purge"
 msgstr "सफाई"
 
-#: rrdcleaner.php:31 tree.php:32
+#: rrdcleaner.php:32 tree.php:32
 msgctxt "dropdown action"
 msgid "Delete"
 msgstr "हटाएं"
 
-#: rrdcleaner.php:32
+#: rrdcleaner.php:33
 msgctxt "dropdown action"
 msgid "Archive"
 msgstr "विकिपीडिया:अवरोधित सदस्य"
 
-#: rrdcleaner.php:373
+#: rrdcleaner.php:48 rrdcleaner.php:447 rrdcleaner.php:482
+msgid "Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup."
+msgstr ""
+
+#: rrdcleaner.php:380
 msgid "RRD Files"
 msgstr "आरआरडी फाइलें"
 
-#: rrdcleaner.php:382
+#: rrdcleaner.php:389
 msgid "RRD File Name"
 msgstr "आरआरडी फ़ाइल नाम"
 
-#: rrdcleaner.php:383
+#: rrdcleaner.php:390
 msgid "DS Name"
 msgstr "डीएस नाम"
 
-#: rrdcleaner.php:384
+#: rrdcleaner.php:391
 msgid "DS ID"
 msgstr "डीएस आईडी"
 
-#: rrdcleaner.php:385
+#: rrdcleaner.php:392
 msgid "Template ID"
 msgstr "टेम्पलेट आईडी"
 
-#: rrdcleaner.php:387
+#: rrdcleaner.php:394
 msgid "Last Modified"
 msgstr "पिछली मर्तबा परिवर्धित"
 
-#: rrdcleaner.php:388
+#: rrdcleaner.php:395
 msgid "Size [KB]"
 msgstr "आकार [KB]"
 
-#: rrdcleaner.php:408
+#: rrdcleaner.php:415
 msgid "No unused RRD Files"
 msgstr "कोई अप्रयुक्त RRD फ़ाइलें नहीं"
 
-#: rrdcleaner.php:430
+#: rrdcleaner.php:437
 msgid "Total Size [MB]:"
 msgstr "कुल आकार [एमबी]:"
 
-#: rrdcleaner.php:432
+#: rrdcleaner.php:439
 msgid "Last Scan:"
 msgstr "अंतिम जाँच:"
 
-#: rrdcleaner.php:520
+#: rrdcleaner.php:537
 msgid "Time Since Update"
 msgstr "अपडेट के बाद का समय"
 
-#: rrdcleaner.php:536
+#: rrdcleaner.php:553
 msgid "RRDfiles"
 msgstr "RRDfiles"
 
-#: rrdcleaner.php:554
+#: rrdcleaner.php:571
 msgid "Rescan"
 msgstr "री- स्कैन"
 
-#: rrdcleaner.php:559
+#: rrdcleaner.php:576
 msgid "Delete All"
 msgstr "सभी को हटाएं"
 
-#: rrdcleaner.php:559
+#: rrdcleaner.php:576
 msgid "Delete All Unknown RRDfiles"
 msgstr "सभी अज्ञात RRDfiles हटाएँ"
 
-#: rrdcleaner.php:560
+#: rrdcleaner.php:577
 msgid "Archive All"
 msgstr "सभी को पुरालेख करें"
 
-#: rrdcleaner.php:560
+#: rrdcleaner.php:577
 msgid "Archive All Unknown RRDfiles"
 msgstr "सभी अज्ञात RRDfiles को संग्रहीत करें"
 
@@ -18812,7 +18846,7 @@ msgstr "क्रमबद्ध पेड़ बढ़ते हैं"
 msgid "Sort Trees Descending"
 msgstr "क्रमबद्ध पेड़ों की छंटाई"
 
-#: tree.php:2246 user_admin.php:1467 user_group_admin.php:1330
+#: tree.php:2246 user_admin.php:1470 user_group_admin.php:1330
 msgid "Tree Name"
 msgstr "वृक्ष का नाम"
 
@@ -18888,134 +18922,134 @@ msgstr "कोई पेड़ नहीं मिला"
 msgid "Batch Copy"
 msgstr "बैच कॉपी"
 
-#: user_admin.php:277
+#: user_admin.php:278
 msgid "You are not allowed to delete the current login account"
 msgstr "आपको अपना पासवर्ड बदलने की अनुमति नहीं है।"
 
-#: user_admin.php:289
+#: user_admin.php:290
 msgid "You are not allowed to disable the current login account"
 msgstr "आपको अपना पासवर्ड बदलने की अनुमति नहीं है।"
 
-#: user_admin.php:367
+#: user_admin.php:370
 msgid "Click 'Continue' to delete the selected User(s)."
 msgstr "चयनित उपयोगकर्ता को हटाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
 
-#: user_admin.php:372
+#: user_admin.php:375
 msgid "Delete User(s)"
 msgstr "उपयोगकर्ता हटाएं"
 
-#: user_admin.php:382
+#: user_admin.php:385
 msgid "Click 'Continue' to copy the selected User to a new User below."
 msgstr "नीचे दिए गए उपयोगकर्ता को एक नए उपयोगकर्ता की प्रतिलिपि बनाने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
 
-#: user_admin.php:387
+#: user_admin.php:390
 msgid "Template Username:"
 msgstr "टेम्प्लेट उपयोगकर्ता नाम:"
 
-#: user_admin.php:392
+#: user_admin.php:395
 msgid "Username:"
 msgstr "बरतूनी-नांऽ::"
 
-#: user_admin.php:399
+#: user_admin.php:402
 msgid "Full Name:"
 msgstr "पूरा नामः"
 
-#: user_admin.php:406
+#: user_admin.php:409
 msgid "Realm:"
 msgstr "फ्रेम"
 
-#: user_admin.php:412
+#: user_admin.php:415
 msgid "Copy User"
 msgstr "उपयोगकर्ता की प्रतिलिपि बनाएँ"
 
-#: user_admin.php:418
+#: user_admin.php:421
 msgid "Click 'Continue' to enable the selected User(s)."
 msgstr "चयनित उपयोगकर्ता को सक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
 
-#: user_admin.php:423
+#: user_admin.php:426
 msgid "Enable User(s)"
 msgstr "उपयोगकर्ता सक्षम करें"
 
-#: user_admin.php:429
+#: user_admin.php:432
 msgid "Click 'Continue' to disable the selected User(s)."
 msgstr "चयनित उपयोगकर्ता को अक्षम करने के लिए &#39;जारी रखें&#39; पर क्लिक करें।"
 
-#: user_admin.php:434
+#: user_admin.php:437
 msgid "Disable User(s)"
 msgstr "उपयोगकर्ता अक्षम करें"
 
-#: user_admin.php:442
+#: user_admin.php:445
 msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original users Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
 msgstr "चयनित टेम्पलेट उपयोगकर्ता सेटिंग्स और अनुमतियों के साथ उपयोगकर्ता (ओं) की सेटिंग्स को अधिलेखित करने के लिए &#39;जारी रखें&#39; पर क्लिक करें। मूल उपयोगकर्ता पूर्ण नाम, पासवर्ड, दायरे और सक्षम स्थिति को बनाए रखा जाएगा, अन्य सभी फ़ील्ड टेम्पलेट उपयोगकर्ता से अधिलेखित हो जाएंगे।"
 
-#: user_admin.php:446
+#: user_admin.php:449
 msgid "Template User:"
 msgstr "टेम्प्लेट उपयोगकर्ता:"
 
-#: user_admin.php:452
+#: user_admin.php:455
 msgid "User(s) to update:"
 msgstr "अपडेट करने के लिए उपयोगकर्ता (उपयोगकर्ता):"
 
-#: user_admin.php:457
+#: user_admin.php:460
 msgid "Reset User(s) Settings"
 msgstr "उपयोगकर्ता रीसेट करें"
 
-#: user_admin.php:767 user_group_admin.php:759
+#: user_admin.php:770 user_group_admin.php:759
 msgid "Deny"
 msgstr "अस्वीकृत किया"
 
-#: user_admin.php:798 user_group_admin.php:776
+#: user_admin.php:801 user_group_admin.php:776
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
 msgstr "<b>नोट:</b> सिस्टम ग्राफ़ नीति &#39;अनुमेय&#39; है जिसका अर्थ है कि उपयोगकर्ता को ग्राफ़ तक पहुँचने के लिए कम से कम एक ग्राफ़, डिवाइस या ग्राफ़ टेम्पलेट तक पहुँच प्राप्त करनी चाहिए"
 
-#: user_admin.php:800 user_group_admin.php:778
+#: user_admin.php:803 user_group_admin.php:778
 msgid "<b>Note:</b> System Graph Policy is 'Restrictive' meaning the User must have access to either the Graph or the Device and Graph Template to gain access to the Graph"
 msgstr "<b>नोट:</b> सिस्टम ग्राफ़ नीति &#39;प्रतिबंधात्मक&#39; है जिसका अर्थ है कि उपयोगकर्ता को ग्राफ़ तक पहुँचने के लिए ग्राफ़ या डिवाइस और ग्राफ़ टेम्पलेट दोनों की पहुँच होनी चाहिए"
 
-#: user_admin.php:802 user_group_admin.php:780
+#: user_admin.php:805 user_group_admin.php:780
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
 msgstr "<b>नोट:</b> सिस्टम ग्राफ़ नीति &#39;प्रतिबंधात्मक&#39; है जिसका अर्थ है कि उपयोगकर्ता को ग्राफ़ तक पहुँचने के लिए ग्राफ़ या डिवाइस और ग्राफ़ टेम्पलेट दोनों की पहुँच होनी चाहिए"
 
-#: user_admin.php:804 user_group_admin.php:782
+#: user_admin.php:807 user_group_admin.php:782
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
 msgstr "<b>नोट:</b> सिस्टम ग्राफ़ नीति &#39;अनुमेय&#39; है जिसका अर्थ है कि उपयोगकर्ता को ग्राफ़ तक पहुँचने के लिए कम से कम एक ग्राफ़, डिवाइस या ग्राफ़ टेम्पलेट तक पहुँच प्राप्त करनी चाहिए"
 
-#: user_admin.php:808 user_group_admin.php:790
+#: user_admin.php:811 user_group_admin.php:790
 msgid "Default Graph Policy"
 msgstr "डिफ़ॉल्ट ग्राफ़ नीति"
 
-#: user_admin.php:813
+#: user_admin.php:816
 msgid "Default Graph Policy for this User"
 msgstr "इस उपयोगकर्ता के लिए डिफ़ॉल्ट ग्राफ़ नीति"
 
-#: user_admin.php:818 user_admin.php:1098 user_admin.php:1263
-#: user_admin.php:1407 user_group_admin.php:800 user_group_admin.php:983
+#: user_admin.php:821 user_admin.php:1101 user_admin.php:1266
+#: user_admin.php:1410 user_group_admin.php:800 user_group_admin.php:983
 #: user_group_admin.php:1131 user_group_admin.php:1274
 msgid "Update"
 msgstr "अपडेट करें"
 
-#: user_admin.php:922 user_admin.php:1181 user_admin.php:1328
-#: user_admin.php:1467 user_group_admin.php:907 user_group_admin.php:1053
+#: user_admin.php:925 user_admin.php:1184 user_admin.php:1331
+#: user_admin.php:1470 user_group_admin.php:907 user_group_admin.php:1053
 #: user_group_admin.php:1198 user_group_admin.php:1330
 msgid "Effective Policy"
 msgstr "प्रभावी नीति"
 
-#: user_admin.php:936 user_group_admin.php:921
+#: user_admin.php:939 user_group_admin.php:921
 msgid "No Matching Graphs Found"
 msgstr "कोई मिलान ग्राफ़ नहीं मिला"
 
-#: user_admin.php:951 user_admin.php:957 user_admin.php:1226
-#: user_admin.php:1232 user_admin.php:1370 user_admin.php:1376
-#: user_admin.php:1508 user_admin.php:1514 user_group_admin.php:936
+#: user_admin.php:954 user_admin.php:960 user_admin.php:1229
+#: user_admin.php:1235 user_admin.php:1373 user_admin.php:1379
+#: user_admin.php:1511 user_admin.php:1517 user_group_admin.php:936
 #: user_group_admin.php:942 user_group_admin.php:1097 user_group_admin.php:1103
 #: user_group_admin.php:1240 user_group_admin.php:1246
 #: user_group_admin.php:1370 user_group_admin.php:1376
 msgid "Revoke Access"
 msgstr "अनुमति समाप्त करना"
 
-#: user_admin.php:952 user_admin.php:956 user_admin.php:1227
-#: user_admin.php:1231 user_admin.php:1371 user_admin.php:1375
-#: user_admin.php:1509 user_admin.php:1513 user_group_admin.php:63
+#: user_admin.php:955 user_admin.php:959 user_admin.php:1230
+#: user_admin.php:1234 user_admin.php:1374 user_admin.php:1378
+#: user_admin.php:1512 user_admin.php:1516 user_group_admin.php:63
 #: user_group_admin.php:937 user_group_admin.php:941 user_group_admin.php:1098
 #: user_group_admin.php:1102 user_group_admin.php:1241
 #: user_group_admin.php:1245 user_group_admin.php:1371
@@ -19023,261 +19057,261 @@ msgstr "अनुमति समाप्त करना"
 msgid "Grant Access"
 msgstr "अनुदान पहुँच"
 
-#: user_admin.php:1028 user_admin.php:2781 user_group_admin.php:1969
+#: user_admin.php:1031 user_admin.php:2784 user_group_admin.php:1969
 #: user_group_admin.php:2028
 msgid "Groups"
 msgstr "समूहों"
 
-#: user_admin.php:1036 user_admin.php:1045
+#: user_admin.php:1039 user_admin.php:1048
 msgid "Member"
 msgstr "सदस्य"
 
-#: user_admin.php:1036
+#: user_admin.php:1039
 msgid "Policies (Graph/Device/Template)"
 msgstr "नीतियां (ग्राफ़ / डिवाइस / टेम्प्लेट)"
 
-#: user_admin.php:1045 user_group_admin.php:718
+#: user_admin.php:1048 user_group_admin.php:718
 msgid "Non Member"
 msgstr "गैर - सदस्य"
 
-#: user_admin.php:1047 user_admin.php:2415 user_admin.php:2416
-#: user_admin.php:2417 user_group_admin.php:2060 user_group_admin.php:2061
+#: user_admin.php:1050 user_admin.php:2418 user_admin.php:2419
+#: user_admin.php:2420 user_group_admin.php:2060 user_group_admin.php:2061
 #: user_group_admin.php:2062
 msgid "ALLOW"
 msgstr "अनुमति दें"
 
-#: user_admin.php:1047 user_admin.php:2415 user_admin.php:2416
-#: user_admin.php:2417 user_group_admin.php:2060 user_group_admin.php:2061
+#: user_admin.php:1050 user_admin.php:2418 user_admin.php:2419
+#: user_admin.php:2420 user_group_admin.php:2060 user_group_admin.php:2061
 #: user_group_admin.php:2062
 msgid "DENY"
 msgstr "अस्वीकृत करें"
 
-#: user_admin.php:1053
+#: user_admin.php:1056
 msgid "No Matching User Groups Found"
 msgstr "कोई मिलान उपयोगकर्ता समूह नहीं मिला"
 
-#: user_admin.php:1067
+#: user_admin.php:1070
 msgid "Assign Membership"
 msgstr "सदस्यता सौंपें"
 
-#: user_admin.php:1068
+#: user_admin.php:1071
 msgid "Remove Membership"
 msgstr "सदस्यता को हटा दें"
 
-#: user_admin.php:1088 user_group_admin.php:973
+#: user_admin.php:1091 user_group_admin.php:973
 msgid "Default Device Policy"
 msgstr "डिफ़ॉल्ट डिवाइस नीति"
 
-#: user_admin.php:1093
+#: user_admin.php:1096
 msgid "Default Device Policy for this User"
 msgstr "इस उपयोगकर्ता के लिए डिफ़ॉल्ट डिवाइस नीति"
 
-#: user_admin.php:1192 user_admin.php:1200 user_admin.php:1339
-#: user_admin.php:1347 user_admin.php:1478 user_admin.php:1486
+#: user_admin.php:1195 user_admin.php:1203 user_admin.php:1342
+#: user_admin.php:1350 user_admin.php:1481 user_admin.php:1489
 #: user_group_admin.php:1064 user_group_admin.php:1072
 #: user_group_admin.php:1209 user_group_admin.php:1217
 #: user_group_admin.php:1341 user_group_admin.php:1349
 msgid "Access Granted"
 msgstr "प्रवेश करने की अनुमति है"
 
-#: user_admin.php:1194 user_admin.php:1198 user_admin.php:1341
-#: user_admin.php:1345 user_admin.php:1480 user_admin.php:1484
+#: user_admin.php:1197 user_admin.php:1201 user_admin.php:1344
+#: user_admin.php:1348 user_admin.php:1483 user_admin.php:1487
 #: user_group_admin.php:1066 user_group_admin.php:1070
 #: user_group_admin.php:1211 user_group_admin.php:1215
 #: user_group_admin.php:1343 user_group_admin.php:1347
 msgid "Access Restricted"
 msgstr "प्रवेश प्रतिबंधित"
 
-#: user_admin.php:1211 user_group_admin.php:1083
+#: user_admin.php:1214 user_group_admin.php:1083
 msgid "No Matching Devices Found"
 msgstr "कोई मिलान उपकरण नहीं मिला"
 
-#: user_admin.php:1253 user_group_admin.php:1121
+#: user_admin.php:1256 user_group_admin.php:1121
 msgid "Default Graph Template Policy"
 msgstr "डिफ़ॉल्ट ग्राफ़ टेम्पलेट नीति"
 
-#: user_admin.php:1258
+#: user_admin.php:1261
 msgid "Default Graph Template Policy for this User"
 msgstr "इस उपयोगकर्ता के लिए डिफ़ॉल्ट ग्राफ़ टेम्पलेट नीति"
 
-#: user_admin.php:1328 user_group_admin.php:1198
+#: user_admin.php:1331 user_group_admin.php:1198
 msgid "Total Graphs"
 msgstr "कुल रेखांकन"
 
-#: user_admin.php:1355 user_group_admin.php:1225
+#: user_admin.php:1358 user_group_admin.php:1225
 msgid "No Matching Graph Templates Found"
 msgstr "कोई मिलान ग्राफ़ टेम्पलेट नहीं मिला"
 
-#: user_admin.php:1397 user_group_admin.php:1264
+#: user_admin.php:1400 user_group_admin.php:1264
 msgid "Default Tree Policy"
 msgstr "डिफ़ॉल्ट ट्री नीति"
 
-#: user_admin.php:1402
+#: user_admin.php:1405
 msgid "Default Tree Policy for this User"
 msgstr "इस उपयोगकर्ता के लिए डिफ़ॉल्ट ट्री नीति"
 
-#: user_admin.php:1493 user_group_admin.php:1356
+#: user_admin.php:1496 user_group_admin.php:1356
 msgid "No Matching Trees Found"
 msgstr "कोई मिलान पेड़ नहीं मिला"
 
-#: user_admin.php:1538 user_group_admin.php:1406
+#: user_admin.php:1541 user_group_admin.php:1406
 msgid "User Permissions"
 msgstr "उपयोगकर्ता"
 
-#: user_admin.php:1595 user_group_admin.php:1465
+#: user_admin.php:1598 user_group_admin.php:1465
 msgid "External Link Permissions"
 msgstr "बाहरी लिंक अनुमतियाँ"
 
-#: user_admin.php:1674 user_group_admin.php:1542
+#: user_admin.php:1677 user_group_admin.php:1542
 msgid "Plugin Permissions"
 msgstr "प्लगइन्स अनुमतियाँ"
 
-#: user_admin.php:1691 user_group_admin.php:1559
+#: user_admin.php:1694 user_group_admin.php:1559
 msgid "Legacy Permissions"
 msgstr "उपयोगकर्ता"
 
-#: user_admin.php:1753 user_group_admin.php:1623
+#: user_admin.php:1756 user_group_admin.php:1623
 #, php-format
 msgid "User Settings %s"
 msgstr "उपयोगकर्ता सेटिंग %s"
 
-#: user_admin.php:1868 user_group_admin.php:1739
+#: user_admin.php:1871 user_group_admin.php:1739
 msgid "Permissions"
 msgstr "अनुमतियां"
 
-#: user_admin.php:1869
+#: user_admin.php:1872
 msgid "Group Membership"
 msgstr "समूह की सदस्यता"
 
-#: user_admin.php:1870 user_group_admin.php:1740
+#: user_admin.php:1873 user_group_admin.php:1740
 msgid "Graph Perms"
 msgstr "ग्राफ परमिट"
 
-#: user_admin.php:1871 user_group_admin.php:1741
+#: user_admin.php:1874 user_group_admin.php:1741
 msgid "Device Perms"
 msgstr "डिवाइस की अनुमति"
 
-#: user_admin.php:1872 user_group_admin.php:1742
+#: user_admin.php:1875 user_group_admin.php:1742
 msgid "Template Perms"
 msgstr "टेम्पलेट की अनुमति"
 
-#: user_admin.php:1873 user_group_admin.php:1743
+#: user_admin.php:1876 user_group_admin.php:1743
 msgid "Tree Perms"
 msgstr "पेड़ की अनुमति"
 
-#: user_admin.php:1893
+#: user_admin.php:1896
 #, fuzzy
 msgid "User not found."
 msgstr "फाइल नहीं मिली"
 
-#: user_admin.php:1932
+#: user_admin.php:1935
 #, php-format
 msgid "User Management %s"
 msgstr "उपयोगकर्ता प्रबंधन %s"
 
-#: user_admin.php:2190
+#: user_admin.php:2193
 msgid "User Management"
 msgstr "उपयोगकर्ता प्रबंधन"
 
-#: user_admin.php:2211
+#: user_admin.php:2214
 #, fuzzy
 msgid "Group"
 msgstr "समूहों"
 
-#: user_admin.php:2233 user_admin.php:2377
+#: user_admin.php:2236 user_admin.php:2380
 msgid "Last Login"
 msgstr "अंतिम लॉगइन"
 
-#: user_admin.php:2238
+#: user_admin.php:2241
 #, fuzzy
 msgid "< 1 Week Ago"
 msgstr "% d वीक"
 
-#: user_admin.php:2239
+#: user_admin.php:2242
 msgid "< 1 Month Ago"
 msgstr ""
 
-#: user_admin.php:2240
+#: user_admin.php:2243
 msgid "> 1 Month Ago"
 msgstr ""
 
-#: user_admin.php:2241
+#: user_admin.php:2244
 #, fuzzy
 msgid "> 2 Months Ago"
 msgstr "% d माह"
 
-#: user_admin.php:2242
+#: user_admin.php:2245
 #, fuzzy
 msgid "> 4 Months Ago"
 msgstr "% d माह"
 
-#: user_admin.php:2253
+#: user_admin.php:2256
 msgid "Basic"
 msgstr "वेब बेसिक"
 
-#: user_admin.php:2254
+#: user_admin.php:2257
 msgid "LDAP/AD"
 msgstr "एलडीएपी"
 
-#: user_admin.php:2255
+#: user_admin.php:2258
 msgid "Domain"
 msgstr "डोमेन"
 
-#: user_admin.php:2370
+#: user_admin.php:2373
 msgid "User ID"
 msgstr "उपयोगकर्ता "
 
-#: user_admin.php:2374 user_group_admin.php:2040
+#: user_admin.php:2377 user_group_admin.php:2040
 msgid "Graph Policy"
 msgstr "ग्राफ नीति"
 
-#: user_admin.php:2375 user_group_admin.php:2041
+#: user_admin.php:2378 user_group_admin.php:2041
 msgid "Device Policy"
 msgstr "डिवाइस नीति"
 
-#: user_admin.php:2376 user_group_admin.php:2042
+#: user_admin.php:2379 user_group_admin.php:2042
 msgid "Template Policy"
 msgstr "खाका नीति"
 
-#: user_admin.php:2399
+#: user_admin.php:2402
 msgid "Unavailable"
 msgstr "अनुपलब्ध"
 
-#: user_admin.php:2424
+#: user_admin.php:2427
 msgid "No Users Found"
 msgstr "कोई उपयोग्कर्ता नहीं मिले"
 
-#: user_admin.php:2647 user_group_admin.php:2286
+#: user_admin.php:2650 user_group_admin.php:2286
 #, php-format
 msgid "Graph Permissions %s"
 msgstr "ग्राफ अनुमतियाँ %s"
 
-#: user_admin.php:2701 user_admin.php:2798
+#: user_admin.php:2704 user_admin.php:2801
 msgid "Show All"
 msgstr "सभी दिखाएँ"
 
-#: user_admin.php:2766
+#: user_admin.php:2769
 #, php-format
 msgid "Group Membership %s"
 msgstr "समूह सदस्यता %s"
 
-#: user_admin.php:2864 user_group_admin.php:2406
+#: user_admin.php:2867 user_group_admin.php:2406
 #, php-format
 msgid "Devices Permission %s"
 msgstr "उपकरण अनुमति %s"
 
-#: user_admin.php:2914 user_admin.php:3011 user_admin.php:3108
-#: user_admin.php:3205 user_group_admin.php:2340 user_group_admin.php:2456
+#: user_admin.php:2917 user_admin.php:3014 user_admin.php:3111
+#: user_admin.php:3208 user_group_admin.php:2340 user_group_admin.php:2456
 #: user_group_admin.php:2553 user_group_admin.php:2650
 msgid "Only Show Exceptions"
 msgstr "अपवाद दिखाएं"
 
-#: user_admin.php:2979 user_group_admin.php:2521
+#: user_admin.php:2982 user_group_admin.php:2521
 #, php-format
 msgid "Template Permission %s"
 msgstr "टेम्पलेट अनुमति %s"
 
-#: user_admin.php:3076 user_admin.php:3173 user_group_admin.php:2618
+#: user_admin.php:3079 user_admin.php:3176 user_group_admin.php:2618
 #, php-format
 msgid "Tree Permission %s"
 msgstr "वृक्ष की अनुमति %s"
@@ -19397,31 +19431,31 @@ msgstr "डोमेन गुण"
 msgid "Domains"
 msgstr "डोमेन"
 
-#: user_domains.php:752
+#: user_domains.php:753
 msgid "Domain Name"
 msgstr "डोमेन नाम"
 
-#: user_domains.php:753
+#: user_domains.php:754
 msgid "Domain Type"
 msgstr "डोमेन प्रकार"
 
-#: user_domains.php:755
+#: user_domains.php:756
 msgid "Effective User"
 msgstr "प्रभावी उपयोगकर्ता"
 
-#: user_domains.php:756
+#: user_domains.php:757
 msgid "CN FullName"
 msgstr "CN FullName"
 
-#: user_domains.php:757
+#: user_domains.php:758
 msgid "CN eMail"
 msgstr "CN ई-मेल"
 
-#: user_domains.php:770
+#: user_domains.php:771
 msgid "None Selected"
 msgstr "कोई वस्तु चुना नहीं गया"
 
-#: user_domains.php:778
+#: user_domains.php:779
 msgid "No User Domains Found"
 msgstr "कोई उपयोगकर्ता डोमेन नहीं मिला"
 
@@ -20583,11 +20617,3 @@ msgstr "कोई VDEFs नहीं"
 
 #~ msgid "You have not Trusted this Package Author.  If you wish to import, check the Automatically Trust Author checkbox"
 #~ msgstr "आपने इस पैकेज लेखक पर भरोसा नहीं किया है।  अगर आप इम्पोर्ट करना चाहते हैं, तो ऑटोमैटिकली ट्रस्ट ऑथर चेकबॉक्स पर जाएँ"
-
-#: lib/rrd_maintenance.php
-msgid "RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading."
-msgstr ""
-
-#: rrdcleaner.php:48 rrdcleaner.php:447 rrdcleaner.php:482
-msgid "Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup."
-msgstr ""
