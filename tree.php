@@ -90,13 +90,22 @@ switch (get_request_var('action')) {
 		form_save();
 		break;
 	case 'actions':
+		/* Without selected_items this only renders the confirmation page. */
+		if (isset_request_var('selected_items')) {
+			csrf_require_post(true);
+		}
+
         form_actions();
         break;
 	case 'sortasc':
+		csrf_require_post(true);
+
 		tree_sort_name_asc();
 		header('Location: tree.php?header=false');
 		break;
 	case 'sortdesc':
+		csrf_require_post(true);
+
 		tree_sort_name_desc();
 		header('Location: tree.php?header=false');
 		break;
@@ -115,35 +124,55 @@ switch (get_request_var('action')) {
 		display_graphs();
 		break;
 	case 'tree_up':
+		csrf_require_post(true);
+
 		tree_up();
 		break;
 	case 'tree_down':
+		csrf_require_post(true);
+
 		tree_down();
 		break;
 	case 'ajax_dnd':
+		csrf_require_post(true);
+
 		tree_dnd();
 		break;
 	case 'lock':
+		csrf_require_post(true);
+
 		api_tree_lock(get_request_var('id'), $_SESSION['sess_user_id']);
 		tree_edit(true);
 		break;
 	case 'unlock':
+		csrf_require_post(true);
+
 		api_tree_unlock(get_request_var('id'), $_SESSION['sess_user_id']);
 		tree_edit(true);
 		break;
 	case 'copy_node':
+		csrf_require_post(true);
+
 		api_tree_copy_node(get_request_var('tree_id'), get_request_var('id'), get_request_var('parent'), get_request_var('position'));
 		break;
 	case 'create_node':
+		csrf_require_post(true);
+
 		api_tree_create_node(get_request_var('tree_id'), get_request_var('id'), get_request_var('position'), get_nfilter_request_var('text'));
 		break;
 	case 'delete_node':
+		csrf_require_post(true);
+
 		api_tree_delete_node(get_request_var('tree_id'), get_request_var('id'));
 		break;
 	case 'move_node':
+		csrf_require_post(true);
+
 		api_tree_move_node(get_request_var('tree_id'), get_request_var('id'), get_request_var('parent'), get_request_var('position'));
 		break;
 	case 'rename_node':
+		csrf_require_post(true);
+
 		api_tree_rename_node(get_request_var('tree_id'), get_request_var('id'), get_nfilter_request_var('text'));
 		break;
 	case 'get_node':
@@ -153,12 +182,16 @@ switch (get_request_var('action')) {
 		get_host_sort_type();
 		break;
 	case 'set_host_sort':
+		csrf_require_post(true);
+
 		set_host_sort_type();
 		break;
 	case 'get_branch_sort':
 		get_branch_sort_type();
 		break;
 	case 'set_branch_sort':
+		csrf_require_post(true);
+
 		set_branch_sort_type();
 		break;
 	default:
@@ -1117,7 +1150,7 @@ function tree_edit($partial = false) {
 		}
 
 		function setBranchSortOrder(type, nodeid) {
-			$.get('tree.php?action=set_branch_sort&type='+type+'&nodeid='+nodeid)
+			$.post('tree.php', { 'action' : 'set_branch_sort', 'type' : type, 'nodeid' : nodeid, '__csrf_magic' : csrfMagicToken })
 			.done(function(data) {
 				branchSortInfo[nodeid] = type;
 			})
@@ -1127,7 +1160,7 @@ function tree_edit($partial = false) {
 		}
 
 		function setHostSortOrder(type, nodeid) {
-			$.get('tree.php?action=set_host_sort&type='+type+'&nodeid='+nodeid)
+			$.post('tree.php', { 'action' : 'set_host_sort', 'type' : type, 'nodeid' : nodeid, '__csrf_magic' : csrfMagicToken })
 			.done(function(data) {
 				hostSortInfo[nodeid] = type;
 			})
@@ -2116,12 +2149,13 @@ function tree() {
 			clearFilter();
 		});
 
-		$('#sorta').on('click', function() {
-			loadPageNoHeader('tree.php?action=sortasc');
-		});
+		$('#sorta, #sortd').on('click', function(event) {
+			event.preventDefault();
 
-		$('#sortd').on('click', function() {
-			loadPageNoHeader('tree.php?action=sortdesc');
+			loadPageUsingPost('tree.php', {
+				action: $(this).attr('id') == 'sorta' ? 'sortasc' : 'sortdesc',
+				__csrf_magic: csrfMagicToken
+			});
 		});
 
 		$('#form_tree').on('submit', function(event) {
@@ -2141,13 +2175,15 @@ function tree() {
 			'class'    => 'fa fa-plus'
 		),
 		array(
-			'href'     => 'tree.php?action=sortasc',
+			'href'     => '#',
+			'id'       => 'sorta',
 			'callback' => true,
 			'title'    => __esc('Sort Trees Ascending'),
 			'class'    => 'fa fa-sort-alpha-down'
 		),
 		array(
-			'href'     => 'tree.php?action=sortdesc',
+			'href'     => '#',
+			'id'       => 'sortd',
 			'callback' => true,
 			'title'    => __esc('Sort Trees Descending'),
 			'class'    => 'fa fa-sort-alpha-up'
@@ -2382,7 +2418,7 @@ function tree() {
 
 			$('#tree_ids').tableDnD({
 				onDrop: function(table, row) {
-					loadPageNoHeader('tree.php?action=ajax_dnd&'+$.tableDnD.serialize());
+					loadPageUsingPost('tree.php?action=ajax_dnd', $.tableDnD.serialize() + '&__csrf_magic=' + encodeURIComponent(csrfMagicToken));
 				}
 			});
 			<?php } ?>
