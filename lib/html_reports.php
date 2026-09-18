@@ -202,7 +202,7 @@ $fields_reports_edit = array(
 		'value' => '|arg1:attachment_type|',
 		'array' => $attach_types
 		),
-	);
+);
 
 function reports_require_post($action) {
 	if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -1022,7 +1022,7 @@ function reports_item_edit() {
 		$branches = array_rekey(
 			get_allowed_branches($sql_where),
 			'id', 'name'
-);
+		);
 	} else {
 		$branches = array();
 	}
