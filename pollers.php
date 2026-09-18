@@ -26,9 +26,12 @@
 require('./include/auth.php');
 require_once($config['base_path'] . '/lib/poller.php');
 
-/* performing a full sync can take a lot of memory and time */
-ini_set('memory_limit', '-1');
-ini_set('max_execution_time', '900');
+/* performing a full sync can take a lot of memory and time, but a
+   connection test must not hold a web worker that long */
+if (get_nfilter_request_var('action') != 'ping') {
+	ini_set('memory_limit', '-1');
+	ini_set('max_execution_time', '900');
+}
 
 $poller_actions = array(
 	1 => __('Delete'),
@@ -252,6 +255,8 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'ping':
+		csrf_require_post(true);
+
 		test_database_connection();
 
 		break;
@@ -834,6 +839,16 @@ function test_database_connection($poller = array()) {
 				return false;
 			}
 		}
+
+		/* The values come from the edit form, so the host must not carry a
+		   scheme, path or socket, and each retry holds the worker for up to
+		   the 2 second connect timeout in db_connect_real(). */
+		if (!pollers_valid_db_endpoint($poller['dbhost'], $poller['dbport'])) {
+			print __('Invalid Database Hostname or Port');
+			return false;
+		}
+
+		$poller['dbretries'] = min(max((int) $poller['dbretries'], 0), 3);
 	}
 
 	$connection = db_connect_real(
@@ -856,6 +871,18 @@ function test_database_connection($poller = array()) {
     } else {
         print __('Connection Failed');
     }
+}
+
+function pollers_valid_db_endpoint($host, $port) {
+	if (!is_string($host) || $host === '' || strlen($host) > 100) {
+		return false;
+	}
+
+	if (filter_var($host, FILTER_VALIDATE_IP) === false && filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false) {
+		return false;
+	}
+
+	return is_string($port) && ctype_digit($port) && $port >= 1 && $port <= 65535;
 }
 
 function pollers() {

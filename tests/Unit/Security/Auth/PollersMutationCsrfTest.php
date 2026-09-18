@@ -92,3 +92,21 @@ test('the data collector confirmation step without selected items is left to ren
         ->and($stdout)->toContain('HANDLER:actions')
         ->and($stdout)->not->toContain('Allow: POST');
 });
+
+test('the database connection test refuses any GET, even from the same site', function () use ($runController) {
+    foreach (array('same-origin', 'none', 'cross-site') as $site) {
+        foreach (array('GET', 'HEAD', 'PUT') as $method) {
+            list($exit, $stdout, $stderr) = $runController($method, 'ping', false, $site);
+
+            expect($exit)->toBe(0, $stderr)
+                ->and($stdout)->toContain('HEADER:Allow: POST')
+                ->and($stdout)->not->toContain('HANDLER:')
+                ->and($stdout)->not->toContain('accepted');
+        }
+    }
+
+    list($exit, $stdout, $stderr) = $runController('POST', 'ping', false);
+
+    expect($exit)->toBe(0, $stderr)
+        ->and($stdout)->toContain('HANDLER:ping');
+});
