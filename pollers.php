@@ -878,7 +878,13 @@ function pollers_valid_db_endpoint($host, $port) {
 		return false;
 	}
 
-	if (filter_var($host, FILTER_VALIDATE_IP) === false && filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false) {
+	/* FILTER_FLAG_HOSTNAME rejects underscores, which container and cloud
+	   database names such as db_primary use. Labels stay alphanumeric with
+	   inner hyphens, so a scheme, path, socket, credential or DSN option
+	   still fails, and an optional trailing dot keeps absolute names. */
+	$label = '[A-Za-z0-9_](?:[A-Za-z0-9_-]{0,61}[A-Za-z0-9_])?';
+
+	if (filter_var($host, FILTER_VALIDATE_IP) === false && !preg_match('/^' . $label . '(?:\\.' . $label . ')*\\.?$/D', $host)) {
 		return false;
 	}
 

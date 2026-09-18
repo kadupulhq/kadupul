@@ -78,6 +78,14 @@ test('the connection test refuses hosts that are not a bare name or address', fu
         'db2.example.com;port=22',
         '',
         str_repeat('a', 60) . '.' . str_repeat('b', 60),
+        '[2001:db8::10]',
+        'db_primary:3306',
+        "db_primary\n",
+        'db2..example.com',
+        '.db2.example.com',
+        '-db2.example.com',
+        'db2-.example.com',
+        str_repeat('a', 64) . '.example.com',
     );
 
     foreach ($hosts as $host) {
@@ -110,7 +118,7 @@ test('the connection test caps the number of retries', function () use ($runPing
 });
 
 test('the connection test still reaches names and addresses', function () use ($runPing, $request) {
-    foreach (array('db2.example.com', 'db2', '192.0.2.10', '2001:db8::10') as $host) {
+    foreach (array('db2.example.com', 'db2', '192.0.2.10', '2001:db8::10', 'db_primary', 'project_db_1', 'db2.example.com.') as $host) {
         list($exit, $stdout, $stderr) = $runPing($request(array('dbhost' => $host)));
 
         expect($exit)->toBe(0, $stderr)
