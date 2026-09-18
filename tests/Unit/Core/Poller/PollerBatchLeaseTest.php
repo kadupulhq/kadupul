@@ -87,7 +87,7 @@ test('local batches release leases and defer busy maintenance without errors or 
             })->toThrow(\RuntimeException::class, 'drain failed');
         } else {
             expect(process_poller_output_batch($deferred, $proxy, true))->toBe($mode === 'success' ? 3 : 0);
-            expect($deferred)->toBe(in_array($mode, array('retry', 'init-failed', 'query-failed'), true));
+            expect($deferred)->toBe(in_array($mode, array('retry', 'init-failed', 'query-failed', 'busy'), true));
         }
         if ($mode === 'busy') {
             expect(microtime(true) - $start)->toBeLessThan(1.0);

@@ -294,6 +294,7 @@ function rrdfile_purge($force) {
 	} else {
 		maint_debug('No RRDfiles scheduled for arching or removal');
 	}
+	return true;
 }
 
 /**

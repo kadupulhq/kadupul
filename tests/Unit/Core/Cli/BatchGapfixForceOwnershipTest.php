@@ -25,7 +25,8 @@ function cacti_process_still_running($pid) {
 function cacti_process_kill(...$args) { return $GLOBALS['mode'] !== 'denied'; }
 function cacti_process_kill_denied($pid) { return $GLOBALS['mode'] === 'denied'; }
 function posix_kill($pid, $signal) {
-    return $signal === 0 ? cacti_process_still_running($pid) : cacti_process_kill($pid);
+    if ($signal !== 0) { throw new \RuntimeException('Cannot signal an unverified process identity'); }
+    return cacti_process_still_running($pid);
 }
 function posix_get_last_error() { return $GLOBALS['mode'] === 'denied' ? 1 : 3; }
 function unregister_process(...$args) { echo "UNREGISTER\n"; }
@@ -39,7 +40,7 @@ PHP;
         fclose($pipes[1]);
         fclose($pipes[2]);
         $status = proc_close($process);
-        $safe = in_array($mode, array('dead','stopped'), true);
+        $safe = $mode === 'dead';
         if ($status === 255) {
             throw new RuntimeException($error . $output);
         }

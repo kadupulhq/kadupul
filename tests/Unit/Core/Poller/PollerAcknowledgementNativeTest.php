@@ -44,7 +44,7 @@ test('production poller files retain failed writes and preserve concurrent arriv
         if ($error !== '') {
             throw new RuntimeException($error . $output);
         }
-        expect(proc_close($process))->toBe(($failed && !(!$realtime && $failed === 'rejected')) && !in_array($failed, array('replace', 'replace-space', 'busy', 'field-success', 'incomplete', 'page-success'), true) ? 1 : 0, $error . $output)->and($error)->toBe('');
+        expect(proc_close($process))->toBe(($failed && !(!$realtime && $failed === 'rejected')) && !in_array($failed, array('replace', 'replace-space', 'field-success', 'incomplete', 'page-success'), true) ? 1 : 0, $error . $output)->and($error)->toBe('');
         $expected = is_string($failed) ? array(array('output' => '42', 'remaining' => $failed === 'page' ? 40001 : 1)) : ($failed ? array('42','43') : array('43'));
         if (in_array($failed, array('select', 'handoff', 'init', 'init-function', 'busy', 'count'), true)) {
             $expected = array('42');

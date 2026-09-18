@@ -179,7 +179,7 @@ if ($child == 0) {
 	$type = 'master';
 
 	if ($force) {
-		printf("NOTE: Looking for and killing running processes." . PHP_EOL);
+		printf("NOTE: Checking for running processes; stop live workers before retrying." . PHP_EOL);
 
 		$running = db_fetch_assoc('SELECT *
 			FROM processes
@@ -190,10 +190,7 @@ if ($child == 0) {
 
 			foreach($running as $r) {
 				$alive = @posix_kill($r['pid'], 0);
-				if ($alive) {
-					@posix_kill($r['pid'], SIGTERM);
-					$alive = @posix_kill($r['pid'], 0);
-				}
+				// A stale PID can belong to another process; stop workers manually.
 				// Only ESRCH proves absence. EPERM and other probe failures retain ownership.
 				if ($alive || posix_get_last_error() !== 3) {
 					fwrite(STDERR, "FATAL: Previous repair worker has not exited; queue and registration retained.\n");
