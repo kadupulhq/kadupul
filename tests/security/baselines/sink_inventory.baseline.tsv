@@ -881,7 +881,7 @@ header_redirect	./lib/clog_webapi.php:82			header('Location: ' . get_current_pag
 header_redirect	./lib/functions.php:8106		header('Location: ' . $save_url);
 header_redirect	./lib/functions.php:8129		header('Location: ' . $safe_url, true, $status);
 header_redirect	./lib/html_graph.php:480			header('Location: ' . $page . '?host_id=' . $host_id . '&header=false');
-header_redirect	./lib/html_reports.php:1520				header('Location: reports.php');
+header_redirect	./lib/html_reports.php:1526				header('Location: reports.php');
 header_redirect	./lib/html_reports.php:257					header('Location: reports.php');
 header_redirect	./lib/html_reports.php:338			header('Location: ' . get_reports_page() . '?action=edit&header=false&id=' . (empty($id) ? get_nfilter_request_var('id') : $id));
 header_redirect	./lib/html_reports.php:405			header('Location: ' . get_reports_page() . '?action=item_edit&id=' . get_nfilter_request_var('report_id') . '&item_id=' . (empty($item_id) ? get_nfilter_request_var('id') : $item_id));

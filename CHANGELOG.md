@@ -11,7 +11,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
-- Enforce enabled-group report realms and authorize report item saves and edits against their existing parent (#111).
+- Enforce enabled-group report realms and authorize report item saves, edits and moves against their existing parent (#111).
 
 - Stop Boost fetch preparation after writer initialization fails; restore caller error settings and release only owned writers on exceptions.
 - Make unsafe poller queue diagnostics available for translation.

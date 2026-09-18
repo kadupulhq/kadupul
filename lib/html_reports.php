@@ -636,7 +636,10 @@ function reports_item_movedown() {
 	get_filter_request_var('id');
 	/* ==================================================== */
 
-	if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) get_request_var('id'), 'reports')) {
+	/* move_item_down() rewrites the item row by id alone */
+	if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) get_request_var('id'), 'reports') ||
+		!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ?', array(get_request_var('id'))) ||
+		db_fetch_cell_prepared('SELECT report_id FROM reports_items WHERE id = ?', array(get_request_var('item_id'))) != get_request_var('id')) {
 		return;
 	}
 
@@ -649,7 +652,10 @@ function reports_item_moveup() {
 	get_filter_request_var('id');
 	/* ==================================================== */
 
-	if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) get_request_var('id'), 'reports')) {
+	/* move_item_up() rewrites the item row by id alone */
+	if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) get_request_var('id'), 'reports') ||
+		!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ?', array(get_request_var('id'))) ||
+		db_fetch_cell_prepared('SELECT report_id FROM reports_items WHERE id = ?', array(get_request_var('item_id'))) != get_request_var('id')) {
 		return;
 	}
 

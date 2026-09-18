@@ -385,3 +385,19 @@ test('report item edits require an authorized existing parent and matching item'
     array(12, 7, 999, false),
     array(12, 7, 80, false),
 ));
+
+test('report item moves require an authorized existing parent and matching item', function ($user, $report, $item, $allowed) {
+    $GLOBALS['rg_db']->exec('INSERT INTO reports VALUES (8,16); INSERT INTO reports_items VALUES (80,8,1)');
+    as_user($user, array('id' => (string) $report, 'item_id' => (string) $item));
+    reports_item_movedown();
+    reports_item_moveup();
+    expect($GLOBALS['rg_moves'])->toBe($allowed ? array(array('down', (string) $item), array('up', (string) $item)) : array());
+})->with(array(
+    array(5, 7, 70, true),
+    array(12, 7, 70, true),
+    array(16, 7, 70, false),
+    array(5, 7, 80, false),
+    array(12, 999, 70, false),
+    array(12, 7, 999, false),
+    array(12, 7, 80, false),
+));
