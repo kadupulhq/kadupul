@@ -1495,10 +1495,12 @@ function rrdtool_function_tune($rrd_tune_array) {
 			if (is_file(read_config_option('path_rrdtool')) && is_executable(read_config_option('path_rrdtool'))) {
 				$rrdtool_cmd = cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' tune ' . cacti_escapeshellarg($data_source_path) . $rrd_tune;
 				require_once __DIR__ . '/rrd_maintenance.php';
-				$lock = rrd_maintenance_acquire(($config['cacti_server_os'] ?? '') !== 'win32', true);
+				/* A web request must not wait indefinitely behind a polling cycle. */
+				$lock = rrd_maintenance_acquire(($config['cacti_server_os'] ?? '') !== 'win32', true, 5, $busy);
 				if ($lock === false) {
-					cacti_log('ERROR: Unable to coordinate RRD tuning with maintenance.');
-					return;
+					cacti_log($busy ? 'ERROR: RRD storage is busy; retry RRD tuning after polling completes.' :
+						'ERROR: Unable to coordinate RRD tuning with maintenance.');
+					return false;
 				}
 				try {
 					$fp = popen($rrdtool_cmd, 'r');
