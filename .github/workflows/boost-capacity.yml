@@ -1,6 +1,28 @@
 name: Boost capacity diagnostics
 on:
   pull_request:
+    paths:
+      - '.github/workflows/boost-capacity.yml'
+      - 'cli/poller_output_empty.php'
+      - 'install/upgrades/1_2_32.php'
+      - 'lib/boost.php'
+      - 'lib/poller.php'
+      - 'lib/rrd.php'
+      - 'lib/rrd_maintenance.php'
+      - 'poller.php'
+      - 'poller_boost.php'
+      - 'poller_recovery.php'
+      - 'tests/composer.json'
+      - 'tests/composer.lock'
+      - 'tests/phpunit-boost.xml'
+      - 'tests/phpunit-boost-mariadb.xml'
+      - 'tests/phpunit-spikekill.xml'
+      - 'tests/benchmarks/**'
+      - 'tests/Helpers/PhpSource.php'
+      - 'tests/HandOff/BoostDataHandOffTest.php'
+      - 'tests/integration/BoostProcessTableMariaDbTest.php'
+      - 'tests/integration/DurablePollerQueueMariaDbTest.php'
+      - 'tests/Unit/Core/Boost/**'
   workflow_dispatch:
 permissions:
   contents: read
@@ -69,6 +91,7 @@ jobs:
           QUEUE_ENGINE=InnoDB mise exec php@system -- php tests/benchmarks/poller_queue.php > queue-innodb.json
           QUEUE_ENGINE=MEMORY mise exec php@system -- php tests/benchmarks/poller_queue.php > queue-memory.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
         with:
           name: queue-${{ matrix.database }}
           path: queue-*.json
