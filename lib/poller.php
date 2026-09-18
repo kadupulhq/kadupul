@@ -648,6 +648,8 @@ function process_poller_output_page(&$rrdtool_pipe, $remainder, $after, &$acknow
 
 	if (cacti_sizeof($results)) {
 		$rrd_expected_fields = array();
+		$rrd_incomplete      = array();
+		$rrd_unparseable     = array();
 		/* create an array keyed off of each .rrd file */
 		foreach ($results as $item) {
 			/* trim the default characters, but add single and double quotes */
@@ -845,7 +847,11 @@ function process_poller_output_page(&$rrdtool_pipe, $remainder, $after, &$acknow
 			if ((!isset($rrd_update_array[$rrd_path]['times'][$unix_time])) && ($rrd_name != '')) {
 				$rrd_update_array[$rrd_path]['times'][$unix_time][$rrd_name] = 'U';
 			} elseif ((!isset($rrd_update_array[$rrd_path]['times'][$unix_time])) && ($rrd_name == '')) {
-				unset($rrd_update_array[$rrd_path]);
+				/* Only this sample is unusable; earlier complete groups for the file stay. */
+				$rrd_unparseable[$rrd_path][$unix_time] = true;
+				if (empty($rrd_update_array[$rrd_path]['times'])) {
+					unset($rrd_update_array[$rrd_path]);
+				}
 			}
 		}
 
@@ -857,16 +863,23 @@ function process_poller_output_page(&$rrdtool_pipe, $remainder, $after, &$acknow
 			if (isset($rrd_update_array[$path]['times'][$time])
 				&& $rrd_expected_fields[$path][$time] > cacti_sizeof($rrd_update_array[$path]['times'][$time])) {
 				unset($rrd_update_array[$path]['times'][$time]);
+				$rrd_incomplete[$path][$time] = true;
 			}
 		}
-		// A group still incomplete after several cycles will never complete.
+		// A group still incomplete or unparseable after several cycles never will be written.
 		$expired_keys  = array();
+		$expired_unparseable = 0;
 		$expire_before = time() - 5 * max(60, (int) read_config_option('poller_interval'));
 		foreach ($results as $item) {
-			if (isset($rrd_update_array[$item['rrd_path']]['times'][$item['unix_time']])) {
+			$path = $item['rrd_path'];
+			$time = $item['unix_time'];
+			if (isset($rrd_update_array[$path]['times'][$time])) {
 				$output_keys[] = array($item['local_data_id'], $item['rrd_name'], $item['time'], $item['output']);
-			} elseif ($item['unix_time'] < $expire_before) {
+			} elseif ($time < $expire_before && (isset($rrd_incomplete[$path][$time]) || isset($rrd_unparseable[$path][$time]))) {
 				$expired_keys[] = array($item['local_data_id'], $item['rrd_name'], $item['time'], $item['output']);
+				if (isset($rrd_unparseable[$path][$time])) {
+					$expired_unparseable++;
+				}
 			}
 		}
 
@@ -920,7 +933,12 @@ function process_poller_output_page(&$rrdtool_pipe, $remainder, $after, &$acknow
 
 		$acknowledged = $rrds_processed;
 		if (cacti_sizeof($expired_keys)) {
-			cacti_log('WARNING: Discarding ' . cacti_sizeof($expired_keys) . ' poller samples from timestamp groups that never completed.', false, 'POLLER');
+			if (cacti_sizeof($expired_keys) > $expired_unparseable) {
+				cacti_log('WARNING: Discarding ' . (cacti_sizeof($expired_keys) - $expired_unparseable) . ' poller samples from timestamp groups that never completed.', false, 'POLLER');
+			}
+			if ($expired_unparseable > 0) {
+				cacti_log('WARNING: Discarding ' . $expired_unparseable . ' MULTI poller samples with no mapped fields.', false, 'POLLER');
+			}
 			$output_keys = array_merge($output_keys, $expired_keys);
 		}
 		poller_delete_output_rows($output_keys, $delete_failed);
