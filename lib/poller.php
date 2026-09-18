@@ -145,7 +145,10 @@ function exec_background($filename, $args = '', $redirect_args = '') {
 		$redirect_args = '';
 	}
 
-	cacti_log("DEBUG: About to Spawn a Remote Process [CMD: $filename, ARGS: $args]", true, 'POLLER', ($debug ? POLLER_VERBOSITY_NONE:POLLER_VERBOSITY_DEBUG));
+	/* snmptrap receives communities and v3 passphrases as -c, -A and -X */
+	$log_args = (stripos(basename(trim($filename, '\'"')), 'snmp') === 0) ? cacti_redact_snmp_command($args) : $args;
+
+	cacti_log("DEBUG: About to Spawn a Remote Process [CMD: $filename, ARGS: $log_args]", true, 'POLLER', ($debug ? POLLER_VERBOSITY_NONE:POLLER_VERBOSITY_DEBUG));
 
 	if (file_exists($filename)) {
 		if ($config['cacti_server_os'] == 'win32') {
