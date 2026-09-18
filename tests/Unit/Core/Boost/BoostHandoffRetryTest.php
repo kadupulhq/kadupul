@@ -125,6 +125,9 @@ test('main poller retries failed waiting drains and the final drain', function (
     $poller_output_deferred = false;
     $rrds_processed = 0;
     $rrdtool_pipe = null;
+    // The guards pass the collector deadline to the writer.
+    if (!defined('MAX_POLLER_RUNTIME')) { define('MAX_POLLER_RUNTIME', 298); }
+    $poller_start = microtime(true);
     $GLOBALS['deferred_probe_calls'] = 0;
     // Execute the actual waiting-loop guard twice, then the completion guard.
     foreach (array($matches[0][1], $matches[0][1], $matches[0][0]) as $guard) {
