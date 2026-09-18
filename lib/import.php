@@ -612,8 +612,8 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 				continue;
 			}
 
-			if (!$preview) {
-				if (!cacti_sizeof($import_files) || in_array($name, $import_files)) {
+				if (!$preview) {
+					if (!cacti_sizeof($import_files) || in_array($name, $import_files, true) || in_array($normalized_name, $import_files, true)) {
 					cacti_log('Writing file: ' . $filename, false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 
 					if ((is_writeable(dirname($filename)) && !file_exists($filename)) || is_writable($filename)) {

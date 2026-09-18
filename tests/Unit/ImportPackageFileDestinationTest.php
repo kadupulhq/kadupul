@@ -84,7 +84,7 @@ function importPkgDestLoad($root)
     eval(preg_replace('/\b(import_package|import_validate_signature|import_read_package_data|cacti_log|__|cacti_sizeof|import_xml_data|import_data_input_realm_allowed)\(/', 'importPkgDest_$1(', substr($source, $start, $end - $start)));
 }
 
-function importPkgDestRun($names, $preview = false)
+function importPkgDestRun($names, $preview = false, $importFiles = array())
 {
     $files = array();
 
@@ -99,7 +99,7 @@ function importPkgDestRun($names, $preview = false)
 
     $GLOBALS['import_pkg_dest']['data'] = array('info' => array(), 'files' => array('file' => $files));
 
-    return importPkgDest_import_package('package.xml.gz', 1, false, false, $preview, false, false);
+    return importPkgDest_import_package('package.xml.gz', 1, false, false, $preview, false, false, array(), $importFiles);
 }
 
 beforeEach(function () use ($root) {
@@ -158,6 +158,14 @@ test('normalizes backslash package destinations before dispatching writes', func
         ->and($result[1][$this->base . '/scripts/ss_backslash.php'])->toBe('written')
         ->and(file_get_contents($this->base . '/plugins/thold/resource/backslash.xml'))->toBe('payload for plugins\\thold\\resource\\backslash.xml')
         ->and($result[1][$this->base . '/plugins/thold/resource/backslash.xml'])->toBe('written');
+});
+
+test('matches selective import files after normalizing package destinations', function () {
+    $result = importPkgDestRun(array('scripts\\selective.php', 'scripts\\skipped.php'), false, array('scripts/selective.php'));
+
+    expect(file_get_contents($this->base . '/scripts/selective.php'))->toBe('payload for scripts\\selective.php')
+        ->and($result[1][$this->base . '/scripts/selective.php'])->toBe('written')
+        ->and(file_exists($this->base . '/scripts/skipped.php'))->toBeFalse();
 });
 
 test('previews an existing script file', function () {
