@@ -248,8 +248,14 @@ replayed after repair. The poller returns failure and its retained-output warnin
 reports the total row count and affected data-source IDs, throttled to once per
 30 minutes. Monitor that count and database capacity; if necessary pause the
 affected collector while repairing storage, then drain its retained samples.
-Recognized unknown fields are removed only after validation or confirmation from
-RRDtool's diagnostic/on-disk schema, so valid siblings continue to be written.
+Schema mismatches retain the complete timestamp, including valid sibling fields.
+Before a template change adds data sources, stop affected collectors and writers,
+back up the RRDs and database, and extend existing RRD schemas through the
+application's `rrd_datasource_add` repair path. Verify the on-disk data-source names
+and counts before resuming collection. After repair, confirm the retained queue
+drains and timestamps advance. Do not delete queue rows merely to clear alerts.
+There is currently no automatic backlog capacity limit: pause collection before
+database capacity is exhausted if repair cannot be completed promptly.
 
 The Windows per-command process cost is an intentional tradeoff for acknowledged
 writes, not a claim of unchanged throughput relative to the pre-PR poller. The

@@ -526,11 +526,18 @@ function poller_delete_output_rows($keys, &$failed = null) {
 		return 0;
 	}
 
+	// Validate the entire selection before any chunk can delete rows.
+	foreach ($keys as $key) {
+		if (!is_array($key) || array_keys($key) !== array(0, 1, 2, 3)) {
+			$failed = true;
+			return 0;
+		}
+	}
+
 	$consumed = 0;
 	foreach (array_chunk($keys, 500) as $chunk) {
 		$params = array();
 		foreach ($chunk as $key) {
-			if (count($key) !== 4) { $failed = true; return $consumed; }
 			$params[] = (int) $key[0];
 			$params[] = (string) $key[1];
 			$params[] = (string) $key[2];
