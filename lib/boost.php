@@ -1836,7 +1836,7 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
 			$file_exists = file_exists($data_source_path);
 		}
 
-		if ($file_exists == true) {
+		if ($file_exists !== false) {
 			return -1;
 		}
 	}
@@ -2130,7 +2130,11 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 		$file_exists = file_exists($rrd_path);
 	}
 
-	if ($file_exists == false) {
+	if ($file_exists === null) {
+		return 'ERROR: Unable to confirm RRD existence';
+	}
+
+	if ($file_exists === false) {
 		$ds_exists = db_fetch_cell_prepared('SELECT id FROM data_local WHERE id = ?', array($local_data_id));
 
 		// Check for a Data Source that has been removed
