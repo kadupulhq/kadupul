@@ -677,8 +677,12 @@ function reports_item_remove() {
 	/* ==================================================== */
 
 	$item_id = (int) get_request_var('item_id');
+	$report_id = db_fetch_cell_prepared('SELECT report_id
+		FROM reports_items
+		WHERE id = ?',
+		array($item_id));
 
-	if (!cacti_authorize_resource($_SESSION['sess_user_id'], $item_id, 'report_item')) {
+	if ($report_id === false || !cacti_authorize_resource($_SESSION['sess_user_id'], (int) $report_id, 'reports')) {
 		return;
 	}
 

@@ -34,13 +34,13 @@ switch (get_request_var('action')) {
 
 		reports_send(get_request_var('id'));
 
-		header('Location: ' . get_reports_page() . '?action=edit&tab=' . get_request_var('tab') . '&id=' . get_request_var('id'));
+		header('Location: ' . get_reports_page() . '?action=edit&tab=' . get_request_var('tab') . '&id=' . get_request_var('id') . '&header=false');
 		break;
 	case 'ajax_dnd':
 		reports_require_post('ajax_dnd');
 		reports_item_dnd();
 
-		header('Location: ' . get_reports_page() . '?action=edit&tab=items&id=' . get_request_var('id'));
+		header('Location: ' . get_reports_page() . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
 		break;
 	case 'setvar':
 		$changed = reports_item_validate();
@@ -119,7 +119,7 @@ switch (get_request_var('action')) {
 
 		reports_item_movedown();
 
-		header('Location: ' . get_reports_page() . '?action=edit&tab=items&id=' . get_request_var('id'));
+		header('Location: ' . get_reports_page() . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
 		break;
 	case 'item_moveup':
 		reports_require_post('item_moveup');
@@ -127,7 +127,7 @@ switch (get_request_var('action')) {
 
 		reports_item_moveup();
 
-		header('Location: ' . get_reports_page() . '?action=edit&tab=items&id=' . get_request_var('id'));
+		header('Location: ' . get_reports_page() . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
 		break;
 	case 'item_remove':
 		reports_require_post('item_remove');
@@ -135,7 +135,7 @@ switch (get_request_var('action')) {
 
 		reports_item_remove();
 
-		header('Location: ' . get_reports_page() . '?action=edit&tab=items&id=' . get_request_var('id'));
+		header('Location: ' . get_reports_page() . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
 		break;
 	case 'item_edit':
 		general_header();

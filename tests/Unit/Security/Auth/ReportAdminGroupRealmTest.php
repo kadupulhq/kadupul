@@ -36,7 +36,7 @@ if (!function_exists(__NAMESPACE__ . '\cacti_authorize_resource')) {
     $code    = '';
     $sources = array(
         'lib/auth.php'         => array('cacti_authorize_resource', 'cacti_authorize_has_realm', 'cacti_authorize_is_admin', 'is_realm_allowed'),
-        'lib/html_reports.php' => array('reports_form_save', 'reports_address_malformed', 'reports_from_allowed', 'reports_item_movedown', 'reports_item_moveup', 'reports_item_edit'),
+        'lib/html_reports.php' => array('reports_form_save', 'reports_address_malformed', 'reports_from_allowed', 'reports_item_movedown', 'reports_item_moveup', 'reports_item_remove', 'reports_item_edit'),
     );
 
     // release/1.2.31 and lts/1.2 have no address or From check
@@ -191,6 +191,13 @@ function sql_save($save, $table_name)
     return (int) $save['id'];
 }
 
+function db_execute_prepared($sql, $params = array(), $db_conn = false)
+{
+    $GLOBALS['rg_deleted'][] = array_map('intval', $params);
+
+    return true;
+}
+
 function reports_item_resequence($report_id) {}
 
 function get_reports_page()
@@ -248,6 +255,12 @@ function move_items_as($user_id)
     reports_item_moveup();
 }
 
+function remove_item_as($user_id, $item_id = 70)
+{
+    as_user($user_id, array('item_id' => (string) $item_id));
+    reports_item_remove();
+}
+
 function edit_item_as($user_id, $report_id = 7, $item_id = 70)
 {
     as_user($user_id, array('id' => (string) $report_id, 'item_id' => (string) $item_id));
@@ -265,6 +278,7 @@ beforeEach(function () {
     $GLOBALS['rg_messages'] = array();
     $GLOBALS['rg_saved']    = array();
     $GLOBALS['rg_moves']    = array();
+    $GLOBALS['rg_deleted']  = array();
     $GLOBALS['rg_loaded']   = array();
 });
 
@@ -400,4 +414,16 @@ test('report item moves require an authorized existing parent and matching item'
     array(12, 999, 70, false),
     array(12, 7, 999, false),
     array(12, 7, 80, false),
+));
+
+test('report item removes require authorization to the owning report', function ($user, $item, $allowed) {
+    $GLOBALS['rg_db']->exec('INSERT INTO reports VALUES (8,16); INSERT INTO reports_items VALUES (80,8,1)');
+    remove_item_as($user, $item);
+    expect($GLOBALS['rg_deleted'])->toBe($allowed ? array(array($item)) : array());
+})->with(array(
+    array(5, 70, true),
+    array(12, 70, true),
+    array(16, 70, false),
+    array(5, 80, false),
+    array(12, 999, false),
 ));

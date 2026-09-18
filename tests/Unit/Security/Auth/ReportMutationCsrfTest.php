@@ -28,7 +28,9 @@ test('report item controls post mutations with the csrf token', function () use 
 test('report controllers redirect mutations through the realm-aware reports page', function () use ($reportsAdmin, $reportsUser) {
     expect($reportsUser)->not->toContain("header('Location: reports_admin.php?action=edit&tab=items&id='")
         ->and($reportsAdmin)->toContain("header('Location: ' . get_reports_page()")
-        ->and($reportsUser)->toContain("header('Location: ' . get_reports_page()");
+        ->and($reportsUser)->toContain("header('Location: ' . get_reports_page()")
+        ->and(substr_count($reportsAdmin, "&header=false'"))->toBe(5)
+        ->and(substr_count($reportsUser, "&header=false'"))->toBe(5);
 });
 
 test('report data query labels are escaped before generated html output', function () use ($reportsGenerator) {
