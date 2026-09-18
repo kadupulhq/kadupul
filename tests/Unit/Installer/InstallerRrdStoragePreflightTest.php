@@ -20,6 +20,7 @@ function __($message, ...$args) { return $args ? vsprintf($message, $args) : $me
 function read_config_option($key, ...$args) { return $key === 'storage_location' && $GLOBALS['mode'] === 'proxy'; }
 function is_resource_writable($path) { return true; }
 function log_install_debug(...$args) {}
+function log_install_high(...$args) {}
 function log_install_medium(...$args) {}
 function log_install_always(...$args) { throw new LogicException('upgrade boundary reached'); }
 function clean_up_lines($text) { return $text; }
@@ -30,10 +31,17 @@ if ($mode === 'windows-file') { $config['rra_path'] = __FILE__; }
 if ($mode === 'windows-readonly') { chmod(__DIR__ . '/rra', 0555); }
 if ($mode === 'group' || $mode === 'trusted-group') { chmod(__DIR__ . '/rra', 0770); }
 if ($mode === 'trusted-group') { $config['rrd_maintenance_trusted_gids'] = array(filegroup(__DIR__ . '/rra')); }
+if (strpos($mode, 'collector-') === 0) {
+    chmod(__DIR__ . '/rra', 0777);
+    $config['poller_id'] = $mode === 'collector-install' ? 1 : 2;
+    $config['connection'] = $mode === 'collector-offline' ? 'recovery' : 'online';
+    $remote_db_cnn_id = 'primary-connection';
+}
 require $root . '/lib/installer.php';
 $reflection = new ReflectionClass('Installer');
 $installer = $reflection->newInstanceWithoutConstructor();
 $property = $reflection->getProperty('mode'); if (PHP_VERSION_ID < 80100) { $property->setAccessible(true); } $property->setValue($installer, Installer::MODE_UPGRADE);
+if ($mode === 'collector-install') { $property = $reflection->getProperty('mode'); $property->setAccessible(true); $property->setValue($installer, Installer::MODE_POLLER); }
 $method = $reflection->getMethod('getPermissions'); if (PHP_VERSION_ID < 80100) { $method->setAccessible(true); }
 $permissions = $method->invoke($installer);
 $method = $reflection->getMethod('install'); if (PHP_VERSION_ID < 80100) { $method->setAccessible(true); }
@@ -69,4 +77,4 @@ FIXTURE;
         foreach (glob($dir . '/*') as $file) { if (is_file($file)) { unlink($file); } }
         chmod($dir . '/rra', 0700); rmdir($dir . '/rra'); rmdir($dir);
     }
-})->with(array(array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-attribute', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true)));
+})->with(array(array('collector-install', true), array('collector-online', true), array('collector-offline', true), array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-attribute', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true)));
