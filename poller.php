@@ -808,7 +808,7 @@ while ($poller_runs_completed < $poller_runs) {
                     }
 
                     if ($poller_id == 1) {
-                        $rrds_processed += process_poller_output_batch($poller_output_deferred, $rrdtool_pipe);
+                        $rrds_processed += process_poller_output_batch($poller_output_deferred, $rrdtool_pipe, true);
                         $rrd_write_failed = $poller_output_deferred;
                     } elseif ($config['connection'] != 'online') {
                         /* truncate until formal remote management is supported */

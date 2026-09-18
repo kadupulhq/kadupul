@@ -89,3 +89,12 @@ nonzero exit still signals unresolved writes while healthy RRDs continue drainin
 A bounded archival/retention policy remains an operational design requirement.
 The Windows storage probe is run by `.github/workflows/ci.yml` in the
 `windows-storage-preflight` job; it is not a standalone unexecuted fixture.
+
+Failed background drains wait five seconds before opening another writer or scanning
+the pending queue again. The final drain bypasses this delay, and a successful
+drain clears it. New samples can wait up to five seconds during a failure; they
+remain queued. Per-path retained-sample errors repeat at most once per minute
+within a process unless the reason changes or a successful write clears the
+suppression. The existing retained-output warning also sends a debounced
+administrator email. These bounds do not expire valid measurements or provide
+an unlimited storage guarantee.
