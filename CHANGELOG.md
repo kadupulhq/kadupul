@@ -12,6 +12,7 @@ Targeting `v1.3.0`, the first planned application release. See
 ### Fixed
 
 - Reject traversal, absolute paths and symlink escapes in package file writes and previews while preserving supported script, resource and plugin destinations (#108).
+- Package import now rejects files for a plugin whose directory is a symlink; install such plugins as real directories under `plugins/` (#108).
 
 - Stop Boost fetch preparation after writer initialization fails; restore caller error settings and release only owned writers on exceptions.
 - Make unsafe poller queue diagnostics available for translation.
