@@ -244,7 +244,7 @@ function cacti_snmp_get($hostname, $community, $oid, $version, $auth_user = '', 
 			' '    . cacti_escapeshellarg($oid);
 
 		if (isset($_SESSION)) {
-			debug_log_insert('data_query', __esc('SNMP Command is: %s', $command));
+			debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_redact_snmp_command($command)));
 		}
 
 		exec($command, $snmp_value);
@@ -344,7 +344,7 @@ function cacti_snmp_get_raw($hostname, $community, $oid, $version, $auth_user = 
 			' '    . cacti_escapeshellarg($oid);
 
 		if (isset($_SESSION)) {
-			debug_log_insert('data_query', __esc('SNMP Command is: %s', $command));
+			debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_redact_snmp_command($command)));
 		}
 
 		exec($command, $snmp_value);
@@ -439,7 +439,7 @@ function cacti_snmp_getnext($hostname, $community, $oid, $version, $auth_user = 
 			' '    . cacti_escapeshellarg($oid);
 
 		if (isset($_SESSION)) {
-			debug_log_insert('data_query', __esc('SNMP Command is: %s', $command));
+			debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_redact_snmp_command($command)));
 		}
 
 		exec($command, $snmp_value);
@@ -874,7 +874,7 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $auth_user = '',
 				cacti_escapeshellarg($oid);
 
 			if (isset($_SESSION)) {
-				debug_log_insert('data_query', __esc('SNMP Command is: %s', $command));
+				debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_redact_snmp_command($command)));
 			}
 
 			$temp_array = exec_into_array($command);
@@ -889,7 +889,7 @@ function cacti_snmp_walk($hostname, $community, $oid, $version, $auth_user = '',
 				' '        . cacti_escapeshellarg($oid);
 
 			if (isset($_SESSION)) {
-				debug_log_insert('data_query', __esc('SNMP Command is: %s', $command));
+				debug_log_insert('data_query', __esc('SNMP Command is: %s', cacti_redact_snmp_command($command)));
 			}
 
 			$temp_array = exec_into_array($command);

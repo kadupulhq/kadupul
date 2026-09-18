@@ -8745,6 +8745,22 @@ function cacti_redact_value($key, $value) {
 }
 
 /**
+ * cacti_redact_snmp_command - Replaces the community (-c), auth passphrase
+ * (-A) and privacy passphrase (-X) values in a net-snmp command line.
+ *
+ * The value may be joined to the flag or separated by whitespace, and may
+ * be single quoted (POSIX escapeshellarg, including the '\'' form) or
+ * double quoted with backslash escapes (win32 snmp_escape_string).
+ */
+function cacti_redact_snmp_command($command) {
+	return preg_replace(
+		'/(^|\s)(-[cAX])(\s*)(?:\'[^\']*\'|"(?:\\\\.|[^"\\\\])*"|\\\\.|[^\s\'"\\\\])+/',
+		'$1$2$3[REDACTED]',
+		(string) $command
+	);
+}
+
+/**
  * cacti_temp_file - Execute a callback with a temporary file, then clean up.
  *
  * Creates a temp file via tempnam(), passes its path to $callback,
