@@ -17,6 +17,9 @@ set -euo pipefail
 base=${1:-origin/main}
 fixer=${PHP_CS_FIXER:-php-cs-fixer}
 
+# shellcheck source=tests/tools/php_style_lib.sh
+. "$(cd "$(dirname "$0")" && pwd)/php_style_lib.sh"
+
 cd "$(git rev-parse --show-toplevel)"
 
 # Same precedence the fixer uses when no --config is given, and the same two
@@ -126,15 +129,13 @@ done < <(git diff -z --name-status -M --diff-filter=R "$merge_base" -- '*.php')
 # Paths the config's Finder covers (it excludes include/vendor and
 # tests/Fixtures). The merge-base copy is checked with --path-mode=override,
 # which would otherwise bypass those exclusions.
-included=$("$fixer_path" list-files --config="$config" | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##' -e "s/'[\\\\]''/'/g")
+included=$(php_style_list_files "$fixer_path" "$config")
 
 # Paths the Finder covered at the merge base. A file the merge-base Finder
 # excluded was never held to the rules, so it is checked as new even when this
 # config now includes it. list-files runs on a placeholder tree because a
 # rename source no longer exists in the working tree; the Finder only looks at
-# names, so empty placeholder files are enough. list-files quotes each path
-# like escapeshellarg(), so an embedded quote is unescaped after the outer
-# quotes are removed.
+# names, so empty placeholder files are enough.
 base_included=
 base_tree="$tmp/.merge-base-tree"
 mkdir -p "$base_tree"
@@ -161,7 +162,7 @@ done < "$tmp/.merge-base-files" | sort -zu > "$tmp/.merge-base-dirs"
 		xargs -0 touch -- < "$tmp/.merge-base-files"
 	fi
 )
-base_included=$(cd "$base_tree" && "$fixer_path" list-files --config="$config" | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##' -e "s/'[\\\\]''/'/g")
+base_included=$(cd "$base_tree" && php_style_list_files "$fixer_path" "$config")
 
 for f in "${files[@]}"; do
 	if ! printf '%s\n' "$included" | grep -Fqx -- "$f"; then

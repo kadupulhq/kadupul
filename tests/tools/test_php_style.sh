@@ -2,8 +2,8 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# Exercises check_php_style.sh against throwaway repositories that use this
-# repository's fixer config. Needs php and php-cs-fixer (or PHP_CS_FIXER).
+# Exercises check_php_style.sh and convert_php_style.sh against throwaway
+# repositories that use this repository's fixer config. Needs php and php-cs-fixer (or PHP_CS_FIXER).
 
 # The PHP written below contains $name, which is PHP, not a shell variable.
 # shellcheck disable=SC2016
@@ -113,5 +113,69 @@ new_repo regressed
 legacy "'hello '" > lib/clean.php
 git commit -q -am 'fix: indent clean greeting with tabs'
 fails 'a formatted file lost its formatting'
+
+convert() {
+	bash "$root/tests/tools/convert_php_style.sh" "$@" > "$scratch/log" 2>&1
+}
+
+# Branch, index and working tree, for proving a refusal changed nothing.
+state() {
+	git rev-parse HEAD
+	git ls-files -s
+	git status --porcelain --untracked-files=all
+	git diff --no-ext-diff
+}
+
+# Convert an unconverted file under a pending behaviour change: the conversion
+# commit changes whitespace only and the change that remains is the real one.
+new_repo converted
+legacy "'hi '" > lib/legacy.php
+git add lib/legacy.php
+if ! convert lib/legacy.php; then
+	cat "$scratch/log" >&2
+	echo 'FAIL: conversion of an unconverted file failed' >&2
+	exit 1
+fi
+test "$(git rev-parse HEAD^)" = "$(git rev-parse base)"
+test "$(git log -1 --format=%s)" = 'style: convert lib/legacy.php to PER-CS 2.0'
+git log -1 --format=%B | grep -q '^Signed-off-by: Style Test'
+test "$(git diff-tree --no-commit-id --name-only -r HEAD)" = 'lib/legacy.php'
+test -z "$(git diff --no-ext-diff -w base HEAD)"
+git show base:lib/legacy.php > "$scratch/before.php"
+git show HEAD:lib/legacy.php > "$scratch/after.php"
+formatted "'hello '" | cmp -s - "$scratch/after.php"
+(. "$root/tests/tools/php_style_lib.sh" && same_tokens "$scratch/before.php" "$scratch/after.php")
+formatted "'hi '" | cmp -s - lib/legacy.php
+git show :lib/legacy.php | cmp -s - lib/legacy.php
+git commit -q -m 'fix: shorten greeting'
+passes 'a converted file with a behaviour change was rejected'
+
+# A file the Finder excludes is refused, even alongside a valid one, and the
+# refusal leaves everything as it was.
+new_repo outside
+mkdir -p tests/Fixtures
+legacy "'fixture '" > tests/Fixtures/sample.php
+git add tests/Fixtures/sample.php
+git commit -q -m 'test: add fixture'
+legacy "'hi '" > lib/legacy.php
+git add lib/legacy.php
+state > "$scratch/state.before"
+if convert lib/legacy.php tests/Fixtures/sample.php; then
+	echo 'FAIL: a file outside the Finder was converted' >&2
+	exit 1
+fi
+grep -q 'Refusing tests/Fixtures/sample.php: the Finder' "$scratch/log"
+state | cmp -s - "$scratch/state.before"
+
+# Unrelated staged work stays staged and out of the conversion commit. The
+# helper takes paths relative to the current directory.
+new_repo unrelated
+formatted "'bye '" > lib/other.php
+formatted "'hi '" > lib/clean.php
+git add lib/other.php lib/clean.php
+(cd lib && bash "$root/tests/tools/convert_php_style.sh" legacy.php) > "$scratch/log" 2>&1
+test "$(git diff-tree --no-commit-id --name-only -r HEAD)" = 'lib/legacy.php'
+test "$(git diff --cached --name-only)" = "$(printf 'lib/clean.php\nlib/other.php')"
+test -z "$(git diff --no-ext-diff)"
 
 echo 'PHP style checks behave as expected.'
