@@ -1353,6 +1353,8 @@ function utilities_view_logfile() {
 	validate_store_request_vars($filters, 'sess_log');
 	/* ================= input validation ================= */
 
+	clog_limit_tail_lines();
+
 	$page_nr = get_request_var('page');
 
 	$page = 'utilities.php?action=view_logfile&header=false';
