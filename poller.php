@@ -598,6 +598,12 @@ while ($poller_runs_completed < $poller_runs) {
 		$issues = array();
 	}
 
+	// A failed inspection is not an empty queue; do not launch producers.
+	if ($issues === false) {
+		cacti_log('ERROR: Unable to inspect retained poller output; collection stopped.', true, 'POLLER');
+		exit(1);
+	}
+
 	if (cacti_sizeof($issues)) {
 		$count  = db_fetch_cell_prepared('SELECT ' . SQL_NO_CACHE . ' COUNT(*)
 			FROM poller_output AS po
