@@ -18,6 +18,7 @@ function db_fetch_assoc_prepared($sql, $params) {
     $rows = $query->fetchAll(\PDO::FETCH_ASSOC);
     // A concurrent arrival replaces a selected orphan before the DELETE.
     $pdo->exec("UPDATE poller_output SET output = '99' WHERE local_data_id = 5");
+    if ($GLOBALS['shutdown_partial_replace'] ?? false) { $pdo->exec("UPDATE poller_output SET output = '99' WHERE local_data_id = 10"); }
     return $rows;
 }
 function db_execute_prepared($sql, $params) {
@@ -30,13 +31,14 @@ function db_execute_prepared($sql, $params) {
 }
 function db_affected_rows() { return $GLOBALS['shutdown_orphan_affected']; }
 
-beforeEach(function () { $GLOBALS['shutdown_selects'] = 0; $GLOBALS['shutdown_query_fail'] = false; $GLOBALS['shutdown_delete_fail'] = false; });
+beforeEach(function () { $GLOBALS['shutdown_selects'] = 0; $GLOBALS['shutdown_query_fail'] = false; $GLOBALS['shutdown_delete_fail'] = false; $GLOBALS['shutdown_partial_replace'] = false; });
 
 test('shutdown removes observed orphans but retains replacements and hostless samples', function () use ($cleanup) {
     $pdo = new \PDO('sqlite::memory:');
     $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     $GLOBALS['shutdown_orphan_pdo'] = $pdo;
     $pdo->exec('CREATE TABLE poller_output (local_data_id INTEGER, rrd_name TEXT, time TEXT, output TEXT)');
+    $pdo->exec('CREATE INDEX sample_key ON poller_output(local_data_id,rrd_name,time)');
     $pdo->exec('CREATE TABLE data_local (id INTEGER, host_id INTEGER)');
     $pdo->exec('CREATE TABLE host (id INTEGER, poller_id INTEGER)');
     $pdo->exec('INSERT INTO host VALUES (1, 1), (2, 2)');
@@ -54,17 +56,19 @@ test('shutdown pages large queues and terminates safely on database failure', fu
     $pdo = new \PDO('sqlite::memory:');
     $GLOBALS['shutdown_orphan_pdo'] = $pdo;
     $pdo->exec('CREATE TABLE poller_output (local_data_id INTEGER, rrd_name TEXT, time TEXT, output TEXT)');
+    $pdo->exec('CREATE INDEX sample_key ON poller_output(local_data_id,rrd_name,time)');
     $pdo->exec('CREATE TABLE data_local (id INTEGER, host_id INTEGER)');
     $pdo->exec('CREATE TABLE host (id INTEGER, poller_id INTEGER)');
     $pdo->beginTransaction();
     $insert = $pdo->prepare("INSERT INTO poller_output VALUES (?, 'v', 'now', '10')");
     for ($i = 10; $i < 40011; $i++) { $insert->execute(array($i)); }
     $pdo->commit();
+    $GLOBALS['shutdown_partial_replace'] = $failure === 'replace';
     $GLOBALS['shutdown_query_fail'] = $failure === 'query';
     $GLOBALS['shutdown_delete_fail'] = $failure === 'delete';
     $poller_id = 1; $rrd_cleanup_failed = false;
     eval('namespace ' . __NAMESPACE__ . '; ' . $cleanup);
-    expect((int) $pdo->query('SELECT COUNT(*) FROM poller_output')->fetchColumn())->toBe($failure ? 40001 : 0)
+    expect((int) $pdo->query('SELECT COUNT(*) FROM poller_output')->fetchColumn())->toBe($failure === 'replace' ? 2 : ($failure ? 40001 : 0))
         ->and($GLOBALS['shutdown_selects'])->toBe($failure ? 1 : 2)
         ->and($rrd_cleanup_failed)->toBe((bool) $failure);
-})->with(array('', 'query', 'delete'));
+})->with(array('', 'query', 'delete', 'replace'));

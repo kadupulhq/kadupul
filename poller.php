@@ -649,7 +649,7 @@ while ($poller_runs_completed < $poller_runs) {
 				$orphan_keys[] = array($orphan['local_data_id'], $orphan['rrd_name'], $orphan['time'], $orphan['output']);
 			}
 			$removed = poller_delete_output_rows($orphan_keys, $delete_failed);
-			if ($delete_failed || ($orphan_keys && $removed === 0)) {
+			if ($delete_failed || $removed !== cacti_sizeof($orphan_keys)) {
 				$rrd_cleanup_failed = true;
 				break;
 			}
