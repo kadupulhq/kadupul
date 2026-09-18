@@ -53,21 +53,19 @@ namespace ReportControllerRuntime;
 
 $controller = $argv[1];
 $action     = $argv[2];
-$source     = file_get_contents(getcwd() . '/' . $controller);
+$source       = file_get_contents(getcwd() . '/' . $controller);
+$helperSource = file_get_contents(getcwd() . '/lib/html_reports.php');
 
 preg_match('/switch \(get_request_var\(\'action\'\)\) \{(?P<body>.*?)^}$/ms', $source, $match);
-if (empty($match['body'])) {
+preg_match('/^function reports_require_post\(.*?^}\n/ms', $helperSource, $helperMatch);
+if (empty($match['body']) || empty($helperMatch[0])) {
     exit(2);
 }
 
 function get_request_var($name) { return $name === 'action' ? $GLOBALS['action']:'1'; }
 function get_filter_request_var($name) { return get_request_var($name); }
 function get_reports_page() { return 'reports_user.php'; }
-function reports_require_post($action) {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        throw new \RuntimeException('POST_REQUIRED:' . $action);
-    }
-}
+function cacti_log($message, $output = false, $facility = '') { echo 'LOG:' . $facility . ':' . $message . "\n"; }
 function reports_form_save() { echo 'HANDLER:save'; }
 function reports_send($id) { echo 'HANDLER:send'; }
 function reports_item_dnd() { echo 'HANDLER:ajax_dnd'; }
@@ -85,17 +83,15 @@ function reports_item_edit() {}
 function reports_edit() {}
 function reports() {}
 function bottom_footer() {}
-function header($value) {}
+function header($value) { echo 'HEADER:' . $value . "\n"; }
+
+eval('namespace ReportControllerRuntime; ' . $helperMatch[0]);
 
 $_SERVER['REQUEST_METHOD'] = 'GET';
 $GLOBALS['action'] = $action;
 
-try {
-    eval("namespace ReportControllerRuntime; switch (get_request_var('action')) {" . $match['body'] . '}');
-    echo 'accepted';
-} catch (\RuntimeException $e) {
-    echo $e->getMessage();
-}
+eval("namespace ReportControllerRuntime; switch (get_request_var('action')) {" . $match['body'] . '}');
+echo 'accepted';
 PHP;
 
     foreach (array($root . '/reports_admin.php', $root . '/reports_user.php') as $controller) {
@@ -117,7 +113,10 @@ PHP;
             $exit = proc_close($process);
 
             expect($exit)->toBe(0, $stderr)
-                ->and($stdout)->toBe('POST_REQUIRED:' . $action);
+                ->and($stdout)->toContain('LOG:AUTH:WARNING: Rejected non-POST request to reports_user.php?action=' . $action)
+                ->and($stdout)->toContain('HEADER:Location: reports_user.php')
+                ->and($stdout)->not->toContain('HANDLER:')
+                ->and($stdout)->not->toContain('accepted');
         }
     }
 });
