@@ -213,9 +213,9 @@ def bootstrap_repeat_provenance():
             path.write_text('fixture ' + name)
         (root / 'cacti.sql').write_text('fixture schema')
         def git(*args):
-            subprocess.run(['git', '-C', str(root), '-c', 'user.name=Harness Fixture',
+            harness.run(['git', '-C', str(root), '-c', 'user.name=Harness Fixture',
                             '-c', 'user.email=fixture@example.invalid', '-c', 'commit.gpgsign=false',
-                            '-c', 'core.hooksPath=' + str(root / 'no-hooks'), *args], check=True, capture_output=True)
+                            '-c', 'core.hooksPath=' + str(root / 'no-hooks'), *args])
         git('init', '-q')
         git('add', '.')
         git('commit', '-q', '-s', '-m', 'Create bootstrap provenance fixture')
@@ -240,8 +240,15 @@ def bootstrap_repeat_provenance():
             assert harness.compare(types.SimpleNamespace(results_root=root / 'tests/behavior/results',
                 baseline='first', candidate='repeat', repeat=None, approvals=None, output=None)) == 0
             recorder.args.update_golden = True
+            before = {p: p.read_bytes() for p in (root / 'tests/Golden').rglob('*.json')}
+            recorder.observed = {name: {'changed': True} for name in harness.EXPECTED_SCENARIOS}
             with patch.object(harness, 'source_provenance', side_effect=[first['provenance'], OSError('final probe failed')]):
                 assert recorder.finish() == 2
+            assert {p: p.read_bytes() for p in (root / 'tests/Golden').rglob('*.json')} == before
+            recorder.args.target = 'failed-bootstrap'
+            with patch.object(harness, 'source_provenance', side_effect=[first['provenance'], OSError('final probe failed')]):
+                assert recorder.finish() == 2
+            assert not (root / 'tests/Golden/failed-bootstrap').exists()
             failed = json.loads((recorder.destination / 'observations.json').read_text())
             assert failed['complete'] is False and 'final source provenance' in failed['error']
     print('clean bootstrap and repeat preserve identical final provenance; final probe failures fail closed')
@@ -580,7 +587,7 @@ def recording_guards():
 
 
 def diagnostic_contracts():
-    tracked = subprocess.check_output(['git', 'ls-files', 'tests/Golden/*/php-*/diagnostics/application-log.json'], cwd=ROOT, text=True).splitlines()
+    tracked = harness.run(['git', '-C', str(ROOT), 'ls-files', 'tests/Golden/*/php-*/diagnostics/application-log.json'])['stdout'].splitlines()
     assert tracked, 'No committed diagnostic goldens'
     for name in tracked:
         golden = ROOT / name
@@ -917,9 +924,9 @@ def provenance_contract():
         parent = Path(directory)
         controller, application = parent / 'controller', parent / 'application'
         def git(root, *args):
-            return subprocess.check_output(['git', '-C', str(root), '-c', 'user.name=Harness Fixture',
+            return harness.run(['git', '-C', str(root), '-c', 'user.name=Harness Fixture',
                                             '-c', 'user.email=fixture@example.invalid', '-c', 'commit.gpgsign=false',
-                                            '-c', 'core.hooksPath=' + str(parent / 'no-hooks'), *args], text=True).strip()
+                                            '-c', 'core.hooksPath=' + str(parent / 'no-hooks'), *args])['stdout'].strip()
         source = controller / 'tests/Support/Behavior/harness.py'
         for repo in (controller, application):
             repo.mkdir()
