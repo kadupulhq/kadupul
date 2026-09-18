@@ -24,14 +24,14 @@ function boost_requeue_archive($table) {
 	}
 
 	/* A live sample with the same key supersedes the retained copy, as in recovery. */
-	if (!db_execute('INSERT IGNORE INTO poller_output_boost
+	if (!db_execute_prepared('INSERT IGNORE INTO poller_output_boost
 		(local_data_id, rrd_name, time, output)
 		SELECT local_data_id, rrd_name, time, output
-		FROM `' . $table . '`')) {
+		FROM `' . $table . '`', array())) {
 		return false;
 	}
 
-	return (bool) db_execute('DROP TABLE IF EXISTS `' . $table . '`');
+	return (bool) db_execute_prepared('DROP TABLE IF EXISTS `' . $table . '`', array());
 }
 
 /**

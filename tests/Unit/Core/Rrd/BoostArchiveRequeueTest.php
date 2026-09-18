@@ -7,8 +7,9 @@ namespace BoostArchiveRequeue;
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/boost.php'), 'boost_requeue_archive'));
-function db_execute($sql)
+function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = false)
 {
+    expect($params)->toBe(array());
     $GLOBALS['requeue_statements'][] = $sql;
     return !str_starts_with($sql, $GLOBALS['requeue_fail'] ?? "\0");
 }

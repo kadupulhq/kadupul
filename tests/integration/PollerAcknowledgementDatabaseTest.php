@@ -171,3 +171,26 @@ test('Boost retains byte-distinct replacements in live and archive queues', func
         }
     }
 })->with(array(array('U', 'u'), array('42', '42 '), array('café', 'CAFÉ'), array('café', 'café ')))->with(array('utf8mb4_unicode_ci', 'latin1_swedish_ci'))->with(array('lib/boost.php', 'poller_boost.php'));
+
+test('Boost requeues retained archive samples without overwriting live samples', function () use ($root) {
+    if (!function_exists('pollerQueueDbRequeueArchive')) {
+        preg_match('/^function boost_requeue_archive\(.*?^}\n/ms', file_get_contents($root . '/lib/boost.php'), $match);
+        expect($match)->not->toBeEmpty();
+        eval(str_replace(array('boost_requeue_archive(', 'db_execute_prepared('), array('pollerQueueDbRequeueArchive(', 'pollerQueueDbDeletePrepared('), $match[0]));
+    }
+    $db = $GLOBALS['poller_contract_pdo'];
+    foreach (array('poller_output_boost', 'poller_output_boost_arch_1') as $table) {
+        $db->exec("CREATE TEMPORARY TABLE $table (local_data_id INT, rrd_name VARCHAR(19), time TIMESTAMP, output VARCHAR(512), PRIMARY KEY(local_data_id,rrd_name,time)) ENGINE=InnoDB");
+    }
+    try {
+        $db->exec("INSERT INTO poller_output_boost VALUES (1, 'value', FROM_UNIXTIME(1700000000), 'live')");
+        $db->exec("INSERT INTO poller_output_boost_arch_1 VALUES (1, 'value', FROM_UNIXTIME(1700000000), 'retained'), (2, 'value', FROM_UNIXTIME(1700000000), 'retained')");
+        expect(pollerQueueDbRequeueArchive('poller_output_boost_arch_1'))->toBeTrue()
+            ->and($db->query('SELECT local_data_id, output FROM poller_output_boost ORDER BY local_data_id')->fetchAll(PDO::FETCH_NUM))->toBe(array(array(1, 'live'), array(2, 'retained')));
+        // Temporary tables are absent from SHOW TABLES, so probe the archive directly.
+        expect(fn() => $db->query('SELECT 1 FROM poller_output_boost_arch_1'))->toThrow(PDOException::class);
+        expect(pollerQueueDbRequeueArchive('poller_output_boost_arch_1`; DROP TABLE poller_output_boost; --'))->toBeFalse();
+    } finally {
+        $db->exec('DROP TEMPORARY TABLE IF EXISTS poller_output_boost, poller_output_boost_arch_1');
+    }
+});
