@@ -59,6 +59,9 @@ test('production Boost archive consumer deletes only acknowledged samples and is
             expect(end($deletes)[0])->toContain('DELETE FROM poller_output_boost_local_data_ids')
                 ->and(end($deletes)[1])->toBe(array(43, 2));
         }
+        // Refused samples are handed to the bounded dead-letter move; a lost reply is not.
+        expect($result['dead_letters'])->toBe(in_array($mode, array('next-id-failure', 'split-failure'), true)
+            ? array(array(42, 'sample-42.rrd', "unknown DS name 'value'", array('poller_output_boost_arch_fixture'))) : array());
         $retained = array_values(array_filter($result['messages'], fn($message) => str_contains($message, 'retained samples')));
         expect($retained)->toBe(in_array($mode, array('next-id-failure', 'split-failure', 'last-failure'), true)
             ? array('WARNING: Boost retained samples for Local Data IDs 42 after RRD update failures.') : array());

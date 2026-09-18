@@ -1012,7 +1012,7 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe)
 
                     /* new process output function */
                     if (!boost_process_output($local_data_id, $outarray, $rrd_path, $rrd_tmplp, $rrdtool_pipe)) {
-                        $failed_ids[$local_data_id] = true;
+                        $failed_ids[$local_data_id] = array('path' => $rrd_path, 'reason' => rrdtool_last_rejection());
                     }
 
                     $buflen = 0;
@@ -1084,7 +1084,7 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe)
                     $outarray       = array();
 
                     if (!$written) {
-                        $failed_ids[$local_data_id] = true;
+                        $failed_ids[$local_data_id] = array('path' => $rrd_path, 'reason' => rrdtool_last_rejection());
                         continue;
                     }
                 }
@@ -1323,7 +1323,7 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe)
             $outarray[] = $tv_tmpl;
 
             if (!boost_process_output($local_data_id, $outarray, $rrd_path, $rrd_tmplp, $rrdtool_pipe)) {
-                $failed_ids[$local_data_id] = true;
+                $failed_ids[$local_data_id] = array('path' => $rrd_path, 'reason' => rrdtool_last_rejection());
             }
         }
 
@@ -1342,6 +1342,13 @@ function boost_process_local_data_ids($last_id, $child, $rrdtool_pipe)
             $results = array_values(array_filter($results, function ($row) use ($failed_ids) {
                 return !isset($failed_ids[$row['local_data_id']]);
             }));
+
+            /* Samples RRDtool refused are bounded like direct writes; a lost reply is not a refusal. */
+            foreach ($failed_ids as $failed_id => $failure) {
+                if (is_string($failure['reason']) && $failure['reason'] !== '' && !rrdtool_rejection_is_permanent($failure['reason'])) {
+                    poller_dead_letter_rejected($failed_id, $failure['path'], $failure['reason'], array_values($archive_tables));
+                }
+            }
         }
     }
 

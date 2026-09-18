@@ -587,36 +587,57 @@ function poller_output_key_predicate($count, $alias = '')
 /**
  * Move a data source's refused samples to poller_output_rejected once the
  * oldest has been retained longer than poller_rejected_hours, or the oldest
- * excess once more than poller_rejected_rows are queued.  Nothing is deleted
- * outright; cli/replay_rejected_samples.php returns them after a repair.
+ * excess once more than poller_rejected_rows are queued.  $tables lists every
+ * queue holding the source's samples: poller_output for direct writes, or the
+ * Boost archives.  Nothing is deleted outright; cli/replay_rejected_samples.php
+ * returns them after a repair.
  *
- * @return (int|false) Samples moved, or false when the queue was left unchanged
+ * @return (int|false) Samples moved, or false when the queues were left unchanged
  */
-function poller_dead_letter_rejected($local_data_id, $rrd_path, $reason)
+function poller_dead_letter_rejected($local_data_id, $rrd_path, $reason, $tables = array('poller_output'))
 {
     $hours = (int) read_config_option('poller_rejected_hours');
     $limit = (int) read_config_option('poller_rejected_rows');
     $hours = $hours > 0 ? $hours : 24;
     $limit = $limit > 0 ? $limit : 10000;
 
-    $queue = db_fetch_row_prepared(
-        'SELECT COUNT(*) AS samples, UNIX_TIMESTAMP(MIN(time)) AS oldest
-		FROM poller_output
-		WHERE local_data_id = ?',
-        array($local_data_id)
-    );
+    $samples = 0;
+    $oldest  = null;
+    $union   = array();
+    $params  = array();
 
-    if (!is_array($queue) || !isset($queue['samples']) || !is_numeric($queue['samples'])) {
-        cacti_log('ERROR: Unable to inspect rejected samples for Local Data ID ' . $local_data_id . '; samples retained.', false, 'POLLER');
-        return false;
+    foreach ($tables as $table) {
+        /* Table names are interpolated, so only queue tables are accepted. */
+        if (!preg_match('/^poller_output(_boost(_arch_[a-zA-Z0-9_]+)?)?$/D', $table)) {
+            return false;
+        }
+
+        $queue = db_fetch_row_prepared(
+            "SELECT COUNT(*) AS samples, UNIX_TIMESTAMP(MIN(time)) AS oldest
+			FROM $table
+			WHERE local_data_id = ?",
+            array($local_data_id)
+        );
+
+        if (!is_array($queue) || !isset($queue['samples']) || !is_numeric($queue['samples'])) {
+            cacti_log('ERROR: Unable to inspect rejected samples for Local Data ID ' . $local_data_id . '; samples retained.', false, 'POLLER');
+            return false;
+        }
+
+        if ((int) $queue['samples'] > 0) {
+            $samples += (int) $queue['samples'];
+            $oldest   = $oldest === null ? (int) $queue['oldest'] : min($oldest, (int) $queue['oldest']);
+        }
+
+        $union[]  = "SELECT time, rrd_name FROM $table WHERE local_data_id = ?";
+        $params[] = $local_data_id;
     }
 
-    $samples = (int) $queue['samples'];
     if ($samples === 0) {
         return 0;
     }
 
-    if ((int) $queue['oldest'] <= time() - $hours * 3600) {
+    if ($oldest <= time() - $hours * 3600) {
         $excess = $samples;
         $cause  = 'retained longer than ' . $hours . ' hours';
     } elseif ($samples > $limit) {
@@ -629,22 +650,30 @@ function poller_dead_letter_rejected($local_data_id, $rrd_path, $reason)
     /* Whole timestamp groups move together so no partial group is left behind. */
     $cutoff = db_fetch_cell_prepared(
         'SELECT time
-		FROM poller_output
-		WHERE local_data_id = ?
+		FROM (' . implode(' UNION ALL ', $union) . ') AS queued
 		ORDER BY time, rrd_name
 		LIMIT 1 OFFSET ' . ($excess - 1),
-        array($local_data_id)
+        $params
     );
 
-    $rows = empty($cutoff) ? false : db_fetch_assoc_prepared(
-        'SELECT local_data_id, rrd_name, time, output
-		FROM poller_output
-		WHERE local_data_id = ?
-		AND time <= ?',
-        array($local_data_id, $cutoff)
-    );
+    $selected = array();
+    foreach ($tables as $table) {
+        $rows = empty($cutoff) ? false : db_fetch_assoc_prepared(
+            "SELECT local_data_id, rrd_name, time, output
+			FROM $table
+			WHERE local_data_id = ?
+			AND time <= ?",
+            array($local_data_id, $cutoff)
+        );
 
-    if (!is_array($rows) || !poller_rejected_table_ensure()) {
+        if (!is_array($rows)) {
+            break;
+        }
+
+        $selected[$table] = $rows;
+    }
+
+    if (cacti_sizeof($selected) !== cacti_sizeof($tables) || !poller_rejected_table_ensure()) {
         cacti_log('ERROR: Unable to dead-letter rejected samples for Local Data ID ' . $local_data_id . '; samples retained.', false, 'POLLER');
         return false;
     }
@@ -656,45 +685,45 @@ function poller_dead_letter_rejected($local_data_id, $rrd_path, $reason)
         return false;
     }
 
-    foreach (array_chunk($rows, 500) as $chunk) {
-        $keys   = array();
-        $params = array();
+    foreach ($selected as $table => $rows) {
+        foreach (array_chunk($rows, 500) as $chunk) {
+            $keys   = array();
+            $params = array();
 
-        foreach ($chunk as $row) {
-            $keys[] = array($row['local_data_id'], $row['rrd_name'], $row['time'], $row['output']);
-            array_push($params, (int) $row['local_data_id'], (string) $row['rrd_name'], (string) $row['time']);
+            foreach ($chunk as $row) {
+                array_push($keys, (int) $row['local_data_id'], (string) $row['rrd_name'], (string) $row['time'], (string) $row['output']);
+                array_push($params, (int) $row['local_data_id'], (string) $row['rrd_name'], (string) $row['time']);
+            }
+
+            $predicate = poller_output_key_predicate(count($chunk));
+
+            /* A copy left by an earlier replay is superseded by this rejection. */
+            $cleared = db_execute_prepared(
+                'DELETE FROM poller_output_rejected
+				WHERE ' . implode(' OR ', array_fill(0, count($chunk), '(local_data_id = ? AND rrd_name = ? AND time = ?)')),
+                $params
+            );
+
+            $copied = $cleared !== false && db_execute_prepared(
+                "INSERT INTO poller_output_rejected
+				(local_data_id, rrd_name, time, output, rrd_path, reason, first_rejected, last_rejected)
+				SELECT local_data_id, rrd_name, time, output, ?, ?, FROM_UNIXTIME(?), FROM_UNIXTIME(?)
+				FROM $table
+				WHERE $predicate",
+                array_merge(array($rrd_path, $reason, time(), time()), $keys)
+            ) !== false;
+
+            /* Only the exact samples that were copied leave the queue. */
+            $deleted = $copied && db_execute_prepared("DELETE FROM $table WHERE $predicate", $keys) !== false;
+
+            if (!$deleted) {
+                db_rollback_transaction();
+                cacti_log('ERROR: Unable to dead-letter rejected samples for Local Data ID ' . $local_data_id . '; samples retained.', false, 'POLLER');
+                return false;
+            }
+
+            $moved += (int) db_affected_rows();
         }
-
-        /* A copy left by an earlier replay is superseded by this rejection. */
-        $cleared = db_execute_prepared(
-            'DELETE FROM poller_output_rejected
-			WHERE ' . implode(' OR ', array_fill(0, count($chunk), '(local_data_id = ? AND rrd_name = ? AND time = ?)')),
-            $params
-        );
-
-        $params = array($rrd_path, $reason, time(), time());
-        foreach ($keys as $key) {
-            array_push($params, (int) $key[0], (string) $key[1], (string) $key[2], (string) $key[3]);
-        }
-
-        $copied = $cleared !== false && db_execute_prepared(
-            'INSERT INTO poller_output_rejected
-			(local_data_id, rrd_name, time, output, rrd_path, reason, first_rejected, last_rejected)
-			SELECT local_data_id, rrd_name, time, output, ?, ?, FROM_UNIXTIME(?), FROM_UNIXTIME(?)
-			FROM poller_output
-			WHERE ' . poller_output_key_predicate(count($keys)),
-            $params
-        ) !== false;
-
-        $deleted = $copied ? poller_delete_output_rows($keys, $delete_failed) : 0;
-
-        if (!$copied || $delete_failed) {
-            db_rollback_transaction();
-            cacti_log('ERROR: Unable to dead-letter rejected samples for Local Data ID ' . $local_data_id . '; samples retained.', false, 'POLLER');
-            return false;
-        }
-
-        $moved += $deleted;
     }
 
     if (db_commit_transaction() === false) {

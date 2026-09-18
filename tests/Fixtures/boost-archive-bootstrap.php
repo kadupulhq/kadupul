@@ -9,6 +9,7 @@ $config = array('base_path' => $fixture, 'library_path' => $fixture . '/lib');
 $writes = array();
 $updates = array();
 $messages = array();
+$dead_letters = array();
 define('COPYRIGHT_YEARS', '2026');
 define('BOOST_TIMER_START', 0);
 define('BOOST_TIMER_END', 1);
@@ -90,6 +91,21 @@ function db_execute_prepared($sql, $params)
     }
     return $GLOBALS['mode'] !== 'assignment-failure';
 }
+function rrdtool_last_rejection()
+{
+    // RRDtool refuses the first source's schema; a lost reply has no reason.
+    return $GLOBALS['mode'] === 'last-failure' ? null : "unknown DS name 'value'";
+}
+function rrdtool_rejection_is_permanent($reason)
+{
+    return false;
+}
+// The move is covered by the database contract; this boundary records the request.
+function poller_dead_letter_rejected($id, $path, $reason, $tables)
+{
+    $GLOBALS['dead_letters'][] = array($id, $path, $reason, $tables);
+    return 0;
+}
 function boost_rrdtool_function_update($id, $path, $template, $output, $pipe)
 {
     $GLOBALS['updates'][] = array($id, $template, $output);
@@ -108,6 +124,6 @@ register_shutdown_function(function () use ($fixture) {
     restore_error_handler();
     file_put_contents($fixture . '/result.json', json_encode(array(
         'result' => $result, 'writes' => $GLOBALS['writes'], 'updates' => $GLOBALS['updates'], 'handler_restored' => $restored,
-        'messages' => $GLOBALS['messages']
+        'messages' => $GLOBALS['messages'], 'dead_letters' => $GLOBALS['dead_letters']
     )));
 });

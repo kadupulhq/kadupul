@@ -120,14 +120,14 @@ beforeEach(function () {
         getenv('BOOST_DB_PASSWORD') ?: '',
         array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
     );
-    pdo()->exec('DROP TABLE IF EXISTS poller_output, poller_output_rejected');
+    pdo()->exec('DROP TABLE IF EXISTS poller_output, poller_output_rejected, poller_output_boost_arch_1, poller_output_boost_arch_2');
     pdo()->exec("CREATE TABLE poller_output (local_data_id INT UNSIGNED NOT NULL, rrd_name VARCHAR(19) NOT NULL, time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, output VARCHAR(512) NOT NULL, PRIMARY KEY (local_data_id, rrd_name, time)) ENGINE=InnoDB");
     $GLOBALS['rejected_settings'] = array('poller_rejected_hours' => 24, 'poller_rejected_rows' => 10);
     $GLOBALS['rejected_logs'] = array();
     $GLOBALS['rejected_replace'] = null;
 });
 afterEach(function () {
-    pdo()->exec('DROP TABLE IF EXISTS poller_output, poller_output_rejected');
+    pdo()->exec('DROP TABLE IF EXISTS poller_output, poller_output_rejected, poller_output_boost_arch_1, poller_output_boost_arch_2');
 });
 
 test('a persistent schema mismatch stays bounded and dead-letters without losing samples', function () {
@@ -182,4 +182,25 @@ test('replay returns rejected samples for the next drain and a dry run moves not
         ->and(queued('poller_output_rejected', 2))->toHaveCount(1);
     expect(poller_replay_rejected(null))->toBe(1)
         ->and(queued('poller_output', 2))->toHaveCount(1);
+});
+
+test('Boost archives across tables dead-letter whole groups and reject foreign table names', function () {
+    foreach (array('poller_output_boost_arch_1', 'poller_output_boost_arch_2') as $table) {
+        pdo()->exec("CREATE TABLE $table LIKE poller_output");
+    }
+    $insert = function ($table, $time, $field) {
+        pdo()->prepare("INSERT INTO $table VALUES (1, ?, FROM_UNIXTIME(?), '1')")->execute(array($field, $time));
+    };
+    // Twelve two-field groups split across two archives; one group straddles them.
+    $start = time() - 3600;
+    for ($group = 0; $group < 12; $group++) {
+        $insert('poller_output_boost_arch_1', $start + $group * 60, 'a');
+        $insert($group === 5 ? 'poller_output_boost_arch_2' : 'poller_output_boost_arch_1', $start + $group * 60, 'b');
+    }
+    $tables = array('poller_output_boost_arch_1', 'poller_output_boost_arch_2');
+    expect(poller_dead_letter_rejected(1, '/rra/one.rrd', 'mismatch', $tables))->toBe(14)
+        ->and(queued('poller_output_rejected'))->toHaveCount(14)
+        ->and(count(queued('poller_output_boost_arch_1')) + count(queued('poller_output_boost_arch_2')))->toBe(10)
+        ->and(min(array_column(queued('poller_output_boost_arch_1'), 'time')))->toBe($start + 7 * 60);
+    expect(poller_dead_letter_rejected(1, '/rra/one.rrd', 'mismatch', array('host')))->toBeFalse();
 });
