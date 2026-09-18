@@ -63,11 +63,15 @@ function run_tree($method, $action, array $server = array()) {
 	$script = '<?php
 		function get_request_var($v) { return $v === "action" ? $_REQUEST["action"] : "3"; }
 		function get_nfilter_request_var($v) { return get_request_var($v); }
+		function get_filter_request_var($v) { return get_request_var($v); }
 		function isset_request_var($v) { return true; }
 		function top_header() {}
 		function bottom_footer() {}
 		function tree() {}
 		function tree_edit($partial = false) {}
+		function tree_require_access($tree_ids, $action) {}
+		function tree_branch_tree_id($nodeid) { return 3; }
+		function db_fetch_assoc($sql) { return array(); }
 		' . $source . '
 		$_SERVER  = ' . var_export($server + array('REQUEST_METHOD' => $method, 'SERVER_NAME' => 'cacti.example'), true) . ';
 		$_REQUEST = array("action" => ' . var_export($action, true) . ');

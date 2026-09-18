@@ -99,12 +99,14 @@ switch (get_request_var('action')) {
         break;
 	case 'sortasc':
 		csrf_require_post(true);
+		tree_require_access(array_column(db_fetch_assoc('SELECT id FROM graph_tree'), 'id'), 'sortasc');
 
 		tree_sort_name_asc();
 		header('Location: tree.php?header=false');
 		break;
 	case 'sortdesc':
 		csrf_require_post(true);
+		tree_require_access(array_column(db_fetch_assoc('SELECT id FROM graph_tree'), 'id'), 'sortdesc');
 
 		tree_sort_name_desc();
 		header('Location: tree.php?header=false');
@@ -125,53 +127,63 @@ switch (get_request_var('action')) {
 		break;
 	case 'tree_up':
 		csrf_require_post(true);
+		tree_require_access(get_filter_request_var('id'), 'tree_up');
 
 		tree_up();
 		break;
 	case 'tree_down':
 		csrf_require_post(true);
+		tree_require_access(get_filter_request_var('id'), 'tree_down');
 
 		tree_down();
 		break;
 	case 'ajax_dnd':
 		csrf_require_post(true);
+		tree_require_access(str_replace('line', '', (array) get_nfilter_request_var('tree_ids')), 'ajax_dnd');
 
 		tree_dnd();
 		break;
 	case 'lock':
 		csrf_require_post(true);
+		tree_require_access(get_filter_request_var('id'), 'lock');
 
 		api_tree_lock(get_request_var('id'), $_SESSION['sess_user_id']);
 		tree_edit(true);
 		break;
 	case 'unlock':
 		csrf_require_post(true);
+		tree_require_access(get_filter_request_var('id'), 'unlock');
 
 		api_tree_unlock(get_request_var('id'), $_SESSION['sess_user_id']);
 		tree_edit(true);
 		break;
 	case 'copy_node':
 		csrf_require_post(true);
+		tree_require_access(get_request_var('tree_id'), 'copy_node');
 
 		api_tree_copy_node(get_request_var('tree_id'), get_request_var('id'), get_request_var('parent'), get_request_var('position'));
 		break;
 	case 'create_node':
 		csrf_require_post(true);
+		tree_require_access(get_request_var('tree_id'), 'create_node');
 
 		api_tree_create_node(get_request_var('tree_id'), get_request_var('id'), get_request_var('position'), get_nfilter_request_var('text'));
 		break;
 	case 'delete_node':
 		csrf_require_post(true);
+		tree_require_access(get_request_var('tree_id'), 'delete_node');
 
 		api_tree_delete_node(get_request_var('tree_id'), get_request_var('id'));
 		break;
 	case 'move_node':
 		csrf_require_post(true);
+		tree_require_access(get_request_var('tree_id'), 'move_node');
 
 		api_tree_move_node(get_request_var('tree_id'), get_request_var('id'), get_request_var('parent'), get_request_var('position'));
 		break;
 	case 'rename_node':
 		csrf_require_post(true);
+		tree_require_access(get_request_var('tree_id'), 'rename_node');
 
 		api_tree_rename_node(get_request_var('tree_id'), get_request_var('id'), get_nfilter_request_var('text'));
 		break;
@@ -183,6 +195,7 @@ switch (get_request_var('action')) {
 		break;
 	case 'set_host_sort':
 		csrf_require_post(true);
+		tree_require_access(tree_branch_tree_id(get_request_var('nodeid')), 'set_host_sort');
 
 		set_host_sort_type();
 		break;
@@ -191,6 +204,7 @@ switch (get_request_var('action')) {
 		break;
 	case 'set_branch_sort':
 		csrf_require_post(true);
+		tree_require_access(tree_branch_tree_id(get_request_var('nodeid')), 'set_branch_sort');
 
 		set_branch_sort_type();
 		break;
@@ -199,6 +213,36 @@ switch (get_request_var('action')) {
 		tree();
 		bottom_footer();
 		break;
+}
+
+/* The same ownership check form_save() and form_actions() apply, for the
+   routes that change a tree's content, lock or position. */
+function tree_require_access($tree_ids, $action) {
+	foreach ((array) $tree_ids as $tree_id) {
+		if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) $tree_id, 'graph_tree')) {
+			cacti_log('WARNING: Rejected tree.php?action=' . $action . ' on Tree ' . (int) $tree_id . ' for User ' . $_SESSION['sess_user_id'], false, 'AUTH');
+
+			raise_message('tree_idor', __('You do not have permission to modify this tree.'), MESSAGE_LEVEL_ERROR);
+			header('Location: tree.php?header=false');
+			exit;
+		}
+	}
+}
+
+/* The sort type routes name only a branch, so the tree comes from the branch. */
+function tree_branch_tree_id($nodeid) {
+	foreach (explode('_', $nodeid) as $part) {
+		$parts = explode(':', $part);
+
+		if ($parts[0] == 'tbranch' && isset($parts[1])) {
+			return (int) db_fetch_cell_prepared('SELECT graph_tree_id
+				FROM graph_tree_items
+				WHERE id = ?',
+				array((int) $parts[1]));
+		}
+	}
+
+	return 0;
 }
 
 function tree_get_max_sequence() {
