@@ -32,6 +32,8 @@ function top_header() {}
 function bottom_footer() {}
 function api_plugin_hook_function($name, $value) { return true; }
 function repopulate_poller_cache() { record('repopulate_poller_cache'); }
+function db_fetch_cell($sql) { return 1; }
+function db_execute($sql) {}
 function rebuild_resource_cache() { record('rebuild_resource_cache'); }
 function utilities_clear_logfile() { record('utilities_clear_logfile'); }
 function utilities_view_logfile() {}
