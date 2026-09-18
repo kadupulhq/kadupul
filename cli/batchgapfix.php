@@ -197,7 +197,11 @@ if ($child == 0) {
 					if (!cacti_process_kill($r['pid'], SIGTERM, 'POLLER') && cacti_process_kill_denied($r['pid'])) {
 						printf("NOTE: Process with PID: %s is owned by another user and was left registered." . PHP_EOL, $logged_pid);
 
-						continue;
+						exit(1);
+					}
+					if (cacti_process_still_running($r['pid'])) {
+						fwrite(STDERR, "FATAL: Previous repair worker is still running; queue and registration retained. Retry after it exits.\n");
+						exit(1);
 					}
 				} else {
 					printf("NOTE: Process with PID: %s, not found likely crashed." . PHP_EOL, $logged_pid);

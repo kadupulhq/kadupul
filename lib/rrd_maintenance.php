@@ -202,10 +202,20 @@ function rrd_maintenance_configuration_error() {
             $probe = $path . DIRECTORY_SEPARATOR . '.kadupul-write-' . bin2hex(random_bytes(16));
             $handle = @fopen($probe, 'x+b');
             if ($handle !== false) {
-                $writable = fwrite($handle, '1') === 1 && fflush($handle)
-                    && rewind($handle) && fread($handle, 1) === '1';
-                $closed = fclose($handle);
-                $removed = @unlink($probe);
+                try {
+                    $writable = fwrite($handle, '1') === 1 && fflush($handle)
+                        && rewind($handle) && fread($handle, 1) === '1';
+                    $closed = fclose($handle);
+                    $removed = @unlink($probe);
+                } finally {
+                    // Retain a failed result even if this cleanup retry succeeds.
+                    if (is_resource($handle)) {
+                        @fclose($handle);
+                    }
+                    if (file_exists($probe)) {
+                        @unlink($probe);
+                    }
+                }
                 if ($writable && $closed && $removed) {
                     return '';
                 }

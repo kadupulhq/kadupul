@@ -107,7 +107,7 @@ FIXTURE;
             $args = array_merge($args, array('--oldrrd=' . $rrd, '--newrrd=' . $rrd, '--finrrd=' . $dir . '/finished.rrd'));
             $lock = $busy ? rrd_maintenance_acquire() : null;
         }
-        $process = proc_open($args, array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, array_merge(getenv(), array('RRDCACHED_ADDRESS' => $cached ? 'unix:/unavailable-test-cache' : '')));
+        $process = proc_open($args, array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, null, array_merge(getenv(), array('TMPDIR' => $dir, 'TMP' => $dir, 'TEMP' => $dir, 'RRDCACHED_ADDRESS' => $cached ? 'unix:/unavailable-test-cache' : '')));
         $deadline = microtime(true) + 10;
         while (!file_exists($dir . '/started') && microtime(true) < $deadline) { usleep(10000); }
         expect(file_exists($dir . '/started'))->toBeTrue();
