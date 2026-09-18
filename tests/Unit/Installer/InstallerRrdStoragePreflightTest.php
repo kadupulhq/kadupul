@@ -37,6 +37,7 @@ if (strpos($mode, 'collector-') === 0) {
     $config['poller_id'] = $mode === 'collector-install' ? 1 : 2;
     $config['connection'] = $mode === 'collector-offline' ? 'recovery' : 'online';
     $remote_db_cnn_id = 'primary-connection';
+    if ($mode === 'collector-forced') { $config['force_storage_location_local'] = true; }
 }
 require $root . '/lib/installer.php';
 $reflection = new ReflectionClass('Installer');
@@ -80,4 +81,4 @@ FIXTURE;
         foreach (glob($dir . '/*') as $file) { if (is_file($file)) { unlink($file); } }
         chmod($dir . '/rra', 0700); rmdir($dir . '/rra'); rmdir($dir);
     }
-})->with(array(array('memory', false), array('collector-install', true), array('collector-online', true), array('collector-offline', true), array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-attribute', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true)));
+})->with(array(array('memory', false), array('collector-install', true), array('collector-online', true), array('collector-offline', true), array('collector-forced', false), array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-attribute', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true)));

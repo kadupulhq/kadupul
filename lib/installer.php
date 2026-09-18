@@ -578,7 +578,9 @@ class Installer implements JsonSerializable {
 		}
 
 		require_once __DIR__ . '/rrd_maintenance.php';
-		$storage_error = ((int) $this->getMode() === Installer::MODE_POLLER || (int) ($config['poller_id'] ?? 1) > 1)
+		// Collectors hand samples to the main poller unless forced to write local RRD files.
+		$storage_error = (($config['force_storage_location_local'] ?? false) !== true
+			&& ((int) $this->getMode() === Installer::MODE_POLLER || (int) ($config['poller_id'] ?? 1) > 1))
 			? '' : rrd_maintenance_configuration_error();
 		if ($storage_error === '' && in_array((int) $this->getMode(), array(Installer::MODE_UPGRADE, Installer::MODE_DOWNGRADE), true)) {
 			$storage_error = $this->pollerQueueConfigurationError();
@@ -3116,7 +3118,9 @@ class Installer implements JsonSerializable {
 	private function install() {
 		global $config;
 		require_once __DIR__ . '/rrd_maintenance.php';
-		$storage_error = ((int) $this->getMode() === Installer::MODE_POLLER || (int) ($config['poller_id'] ?? 1) > 1)
+		// Collectors hand samples to the main poller unless forced to write local RRD files.
+		$storage_error = (($config['force_storage_location_local'] ?? false) !== true
+			&& ((int) $this->getMode() === Installer::MODE_POLLER || (int) ($config['poller_id'] ?? 1) > 1))
 			? '' : rrd_maintenance_configuration_error();
 		if ($storage_error === '' && in_array((int) $this->getMode(), array(Installer::MODE_UPGRADE, Installer::MODE_DOWNGRADE), true)) {
 			$storage_error = $this->pollerQueueConfigurationError();
