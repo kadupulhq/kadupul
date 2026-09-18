@@ -164,7 +164,10 @@ class Net_Ping
 			 * The other fields are numerical fields only and thus
 			 * not vulnerable for command injection */
 			if (substr_count(strtolower(PHP_OS), 'sun')) {
-				$result = shell_exec('ping ' . cacti_escapeshellarg($this->host['hostname']));
+				/* 'ping host' waits 20s by default and prints no round-trip line.
+				 * '-s host 56 count' stops after count probes and prints min/avg/max;
+				 * Solaris has no timeout operand in this form. */
+				$result = shell_exec('ping -s ' . cacti_escapeshellarg($this->host['hostname']) . ' 56 ' . (int) $this->retries);
 			} elseif (substr_count(strtolower(PHP_OS), 'hpux')) {
 				$result = shell_exec('ping -m ' . ceil($this->timeout/1000) . ' -n ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
 			} elseif (substr_count(strtolower(PHP_OS), 'mac')) {
