@@ -4,7 +4,10 @@
 #
 # Checks PER-CS formatting on the PHP files changed since a base commit.
 # main moves to PER-CS one edited file at a time, so a whole-tree run would
-# fail on every file nobody has touched yet.
+# fail on every file nobody has touched yet. Every file a change touches must
+# end up formatted; a file that was not formatted at the merge base is
+# converted first, in its own formatting-only commit
+# (tests/tools/convert_php_style.sh does that).
 #
 # Usage: tests/tools/check_php_style.sh [base]    (default: origin/main)
 # Set PHP_CS_FIXER to use a fixer binary that is not on PATH.
@@ -60,10 +63,10 @@ for f in "${files[@]}"; do
 	esac
 done
 
-# main moves to PER-CS one file at a time. A file that was not yet PER-CS clean
-# at the merge base is skipped, so a small fix in an unconverted file does not
-# force a whole-file reformat; converting it is its own formatting-only change.
-# New files, and files already clean at the merge base, must stay clean.
+# main moves to PER-CS one file at a time, and a change converts each file it
+# touches. New files, files already clean at the merge base and files a change
+# edits must all be clean. Only a file whose content is unchanged since the
+# merge base, a pure rename, keeps its old formatting.
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 root=$(pwd)
@@ -102,6 +105,7 @@ case "$fixer_path" in
 esac
 
 checked=()
+unconverted=()
 # A renamed file is compared with its merge-base name. -z keeps names with
 # unusual characters unquoted, so they match the file list above; parallel
 # arrays keep the script working on the bash 3.2 that macOS ships.
@@ -123,37 +127,6 @@ done < <(git diff -z --name-status -M --diff-filter=R "$merge_base" -- '*.php')
 # tests/Fixtures). The merge-base copy is checked with --path-mode=override,
 # which would otherwise bypass those exclusions.
 included=$("$fixer_path" list-files --config="$config" | sed -e "s/^'//" -e "s/'$//" -e 's#^\./##' -e "s/'[\\\\]''/'/g")
-
-# True when two PHP files hold the same tokens apart from whitespace, so a
-# change between them only reformats. String and heredoc contents are tokens,
-# so a changed literal does not count as whitespace.
-same_tokens() {
-	php -r '
-		$strip = function ($file) {
-			$out = array();
-			foreach (token_get_all(file_get_contents($file)) as $t) {
-				if (is_array($t)) {
-					if ($t[0] === T_WHITESPACE) {
-						continue;
-					}
-					// The opening tag token carries the whitespace that follows it.
-					if ($t[0] === T_OPEN_TAG || $t[0] === T_OPEN_TAG_WITH_ECHO) {
-						$t[1] = rtrim($t[1]);
-					}
-					// Formatting can re-indent a docblock or respace a comment.
-					if ($t[0] === T_COMMENT || $t[0] === T_DOC_COMMENT) {
-						$t[1] = preg_replace("/\\s+/", "", $t[1]);
-					}
-					$out[] = array($t[0], $t[1]);
-				} else {
-					$out[] = $t;
-				}
-			}
-			return $out;
-		};
-		exit($strip($argv[1]) === $strip($argv[2]) ? 0 : 1);
-	' -- "$1" "$2"
-}
 
 # Paths the Finder covered at the merge base. A file the merge-base Finder
 # excluded was never held to the rules, so it is checked as new even when this
@@ -220,19 +193,13 @@ for f in "${files[@]}"; do
 		# php-cs-fixer check exits 8 when files only need formatting; any other
 		# non-zero status is a real failure and must not be read as "unconverted".
 		if [ "$status" -eq 8 ]; then
-			# A change that only moves whitespace is a PER-CS conversion; it must
-			# finish the job, so it is checked in full rather than skipped. A pure
-			# rename changes nothing and keeps the exemption.
-			if ! cmp -s -- "$tmp/$base_path" "$f" && same_tokens "$tmp/$base_path" "$f"; then
-				checked+=("$f")
+			# A rename, or a mode change, that leaves the content alone does not
+			# edit the file, so it keeps its old formatting.
+			if cmp -s -- "$tmp/$base_path" "$f"; then
+				echo "Skipping $f: content unchanged since $merge_base."
 				continue
 			fi
-			if [ "$base_path" != "$f" ] && cmp -s -- "$tmp/$base_path" "$f"; then
-				echo "Skipping $f: renamed from $base_path without changes."
-			else
-				echo "Skipping $f: not PER-CS formatted at $merge_base; convert it in a formatting-only change."
-			fi
-			continue
+			unconverted+=("$f")
 		elif [ "$status" -ne 0 ]; then
 			echo "php-cs-fixer failed with status $status while checking $base_path at $merge_base" >&2
 			exit "$status"
@@ -242,7 +209,7 @@ for f in "${files[@]}"; do
 done
 
 if [ "${#checked[@]}" -eq 0 ]; then
-	echo "No changed PHP files already on PER-CS; nothing to check."
+	echo "No changed PHP files the Finder includes; nothing to check."
 	exit 0
 fi
 
@@ -253,4 +220,11 @@ set +e
 	--using-cache=no --diff -- "${checked[@]}"
 status=$?
 set -e
+if [ "$status" -ne 0 ] && [ "${#unconverted[@]}" -gt 0 ]; then
+	echo "" >&2
+	echo "These files were not PER-CS formatted at $merge_base. Convert each one in its" >&2
+	echo "own formatting-only commit before the change, for example with" >&2
+	echo "tests/tools/convert_php_style.sh:" >&2
+	printf '  %s\n' "${unconverted[@]}" >&2
+fi
 exit "$status"

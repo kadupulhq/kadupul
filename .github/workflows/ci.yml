@@ -148,6 +148,10 @@ jobs:
           BASE: ${{ github.event_name == 'pull_request' && 'HEAD^1' || github.event.before }}
         run: bash tests/tools/check_php_style.sh "$BASE"
 
+      - name: Test the style scripts
+        if: hashFiles('.php-cs-fixer.php', '.php-cs-fixer.dist.php') != ''
+        run: bash tests/tools/test_php_style.sh
+
   javascript:
     name: JavaScript
     runs-on: ubuntu-latest
