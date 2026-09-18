@@ -7,7 +7,7 @@ namespace RrdAcknowledgedResponseContract;
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 $source = file_get_contents(dirname(__DIR__, 4) . '/lib/rrd.php');
-foreach (array('rrd_acknowledged_pipes', 'rrd_acknowledged_command') as $name) {
+foreach (array('rrd_acknowledged_pipes', 'rrd_command_deadline', 'rrd_acknowledged_command') as $name) {
     eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, $name));
 }
 function escape_command($command)

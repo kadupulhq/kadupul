@@ -838,7 +838,7 @@ while ($poller_runs_completed < $poller_runs) {
                     }
 
                     if ($poller_id == 1) {
-                        $rrds_processed += process_poller_output_batch($poller_output_deferred, $rrdtool_pipe, true);
+                        $rrds_processed += process_poller_output_batch($poller_output_deferred, $rrdtool_pipe, true, $poller_start + MAX_POLLER_RUNTIME);
                         $rrd_write_failed = $poller_output_deferred;
                     } elseif ($config['connection'] != 'online') {
                         /* truncate until formal remote management is supported */
@@ -865,7 +865,7 @@ while ($poller_runs_completed < $poller_runs) {
                     $mtb = microtime(true);
 
                     if ($poller_id == 1) {
-                        $rrds_processed += process_poller_output_batch($poller_output_deferred, $rrdtool_pipe);
+                        $rrds_processed += process_poller_output_batch($poller_output_deferred, $rrdtool_pipe, false, $poller_start + MAX_POLLER_RUNTIME);
                         if ($poller_output_deferred) {
                             $rrd_write_failed = true;
                         }

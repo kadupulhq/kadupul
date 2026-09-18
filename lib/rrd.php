@@ -139,6 +139,15 @@ function &rrd_acknowledged_pipes() {
 	return $pipes;
 }
 
+/**
+ * An optional hrtime() deadline that caps every acknowledged command.  The
+ * poller sets it so a hung writer cannot outlive the collection cycle.
+ */
+function &rrd_command_deadline() {
+	static $deadline = null;
+	return $deadline;
+}
+
 /** Exchange one command without treating a successful write as persistence. */
 function rrd_acknowledged_command($pipe, $command) {
 	global $config;
@@ -149,6 +158,10 @@ function rrd_acknowledged_command($pipe, $command) {
 	}
 	$timeout = max(1, min(3600, (int) ($config['rrd_command_timeout'] ?? 60)));
 	$deadline = hrtime(true) + $timeout * 1000000000;
+	$cap = rrd_command_deadline();
+	if ($cap !== null && $cap < $deadline) {
+		$deadline = $cap;
+	}
 	$input = escape_command($command) . "\r\n";
 	$offset = 0;
 	$output = '';

@@ -2633,7 +2633,7 @@ function timeout_kill_registered_processes($tasktype = '', $taskname = '', $task
 
 
 /** Hold the writer lease only while draining a batch, never while waiting for collectors. */
-function process_poller_output_batch(&$deferred, &$proxy_pipe, $final = false) {
+function process_poller_output_batch(&$deferred, &$proxy_pipe, $final = false, $deadline = null) {
 	global $config;
 	static $reported = array();
 	static $retry_after = 0;
@@ -2687,12 +2687,21 @@ function process_poller_output_batch(&$deferred, &$proxy_pipe, $final = false) {
 	}
 	$reported['writer'] = false;
 	$failed = true;
+	/* A hung writer must not hold the lease past the collector's runtime limit. */
+	if ($deadline !== null) {
+		$command_deadline =& rrd_command_deadline();
+		$previous_deadline = $command_deadline;
+		$command_deadline = hrtime(true) + (int) (max(0, $deadline - microtime(true)) * 1000000000);
+	}
 	try {
 		$updated = process_poller_output($pipe, 0, null, $acknowledged);
 		$deferred = $updated === false;
 		$failed = $deferred;
 		return $acknowledged;
 	} finally {
+		if ($deadline !== null) {
+			$command_deadline = $previous_deadline;
+		}
 		$retry_after = $failed ? hrtime(true) + 5000000000 : 0;
 		if (!$proxy || $failed) {
 			rrd_close($pipe);
