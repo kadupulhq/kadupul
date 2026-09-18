@@ -1022,7 +1022,7 @@ function reports_item_edit() {
 		$branches = array_rekey(
 			get_allowed_branches($sql_where),
 			'id', 'name'
-		);
+);
 	} else {
 		$branches = array();
 	}
