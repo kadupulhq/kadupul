@@ -175,7 +175,7 @@ test('writes script and resource files at the Cacti base and in a plugin', funct
 
     foreach ($names as $name) {
         expect(file_get_contents($this->base . '/' . $name))->toBe('payload for ' . $name)
-            ->and($result[1][$this->base . '/' . $name])->toBe('written');
+            ->and($result[1][$name])->toBe('written');
     }
 });
 
@@ -185,16 +185,16 @@ test('normalizes backslash package destinations before dispatching writes', func
     $result = importPkgDestRun($names);
 
     expect(file_get_contents($this->base . '/scripts/ss_backslash.php'))->toBe('payload for scripts\\ss_backslash.php')
-        ->and($result[1][$this->base . '/scripts/ss_backslash.php'])->toBe('written')
+        ->and($result[1]['scripts/ss_backslash.php'])->toBe('written')
         ->and(file_get_contents($this->base . '/plugins/thold/resource/backslash.xml'))->toBe('payload for plugins\\thold\\resource\\backslash.xml')
-        ->and($result[1][$this->base . '/plugins/thold/resource/backslash.xml'])->toBe('written');
+        ->and($result[1]['plugins/thold/resource/backslash.xml'])->toBe('written');
 });
 
 test('matches selective import files after normalizing package destinations', function () {
     $result = importPkgDestRun(array('scripts\\selective.php', 'scripts\\skipped.php'), false, array('scripts/selective.php'));
 
     expect(file_get_contents($this->base . '/scripts/selective.php'))->toBe('payload for scripts\\selective.php')
-        ->and($result[1][$this->base . '/scripts/selective.php'])->toBe('written')
+        ->and($result[1]['scripts/selective.php'])->toBe('written')
         ->and(file_exists($this->base . '/scripts/skipped.php'))->toBeFalse();
 });
 
@@ -224,12 +224,53 @@ test('matches normalized package filenames for diff preview reads', function () 
         ->and(importPkgDestPackageFileNameMatches($root, 'resource\\script_server\\test.xml', 'scripts/test.xml'))->toBeFalse();
 });
 
+test('round-trips selected files when the base path is a symlink', function () use ($root) {
+    /* packaged installs often reach the tree through a symlink, e.g.
+     * /var/www/html/cacti -> /usr/share/cacti */
+    $link = $this->tmp . '/cacti-link';
+    expect(symlink($this->base, $link))->toBeTrue();
+    $GLOBALS['config']['base_path'] = $link;
+
+    file_put_contents($this->base . '/scripts/changed.php', 'old');
+    $names = array('scripts/changed.php', 'plugins/thold/resource/t.xml', 'resource/script_server/skipped.xml');
+
+    $preview = importPkgDestRun($names, true);
+
+    /* the preview keys come back as checkbox values and diff URLs */
+    $selected = array();
+
+    foreach (array_keys($preview[1]) as $pfile) {
+        expect(validate_relative_path_within($pfile, $link))->not->toBeFalse();
+
+        if (strpos($pfile, 'skipped') === false) {
+            $selected[] = importPkgDestNormalizeSelectedFile($root, $pfile);
+        }
+    }
+
+    $result = importPkgDestRun($names, false, $selected);
+
+    expect(file_get_contents($this->base . '/scripts/changed.php'))->toBe('payload for scripts/changed.php')
+        ->and(file_get_contents($this->base . '/plugins/thold/resource/t.xml'))->toBe('payload for plugins/thold/resource/t.xml')
+        ->and(file_exists($this->base . '/resource/script_server/skipped.xml'))->toBeFalse()
+        ->and($result[1])->toBe(array('scripts/changed.php' => 'written', 'plugins/thold/resource/t.xml' => 'written'));
+});
+
+test('refuses a plugin directory that is a symlink', function () {
+    expect(symlink($this->outside, $this->base . '/plugins/linked'))->toBeTrue();
+    mkdir($this->outside . '/scripts', 0700);
+
+    $result = importPkgDestRun(array('plugins/linked/scripts/payload.php'));
+
+    expect(file_exists($this->outside . '/scripts/payload.php'))->toBeFalse()
+        ->and($result[1])->toBe(array());
+});
+
 test('previews an existing script file', function () {
     file_put_contents($this->base . '/scripts/ss_test.php', 'payload for scripts/ss_test.php');
 
     $result = importPkgDestRun(array('scripts/ss_test.php'), true);
 
-    expect($result[1])->toBe(array($this->base . '/scripts/ss_test.php' => 'writable, identical'));
+    expect($result[1])->toBe(array('scripts/ss_test.php' => 'writable, identical'));
 });
 
 test('refuses a scripts directory that is not at the Cacti base or in a plugin', function () {

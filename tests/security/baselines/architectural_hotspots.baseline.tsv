@@ -385,7 +385,7 @@ dynamic_include	./lib/html_tree.php:806		include($config['include_path'] . '/glo
 dynamic_include	./lib/html_tree.php:807		include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/html_tree.php:808		include_once($config['library_path'] . '/html_utility.php');
 dynamic_include	./lib/import.php:12		include_once($config['library_path'] . '/xml.php');
-dynamic_include	./lib/import.php:2014		include_once($config['library_path'] . '/vdef.php');
+dynamic_include	./lib/import.php:2017		include_once($config['library_path'] . '/vdef.php');
 dynamic_include	./lib/installer.php:3587	                include_once($upgrade_file);
 dynamic_include	./lib/mib_cache.php:39			include_once($config['include_path'] . '/vendor/phpsnmp/mib_parser.php');
 dynamic_include	./lib/plugins.php:137							include_once($plugin_include);

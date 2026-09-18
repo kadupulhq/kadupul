@@ -280,17 +280,7 @@ function package_import_normalize_selected_file($pfile) {
 		}
 	}
 
-	$parts = explode('/', ltrim($normalized, '/'));
-
-	foreach($parts as $index => $p) {
-		if ($index == 0 && $p == 'plugins' && isset($parts[$index + 2]) && ($parts[$index + 2] == 'scripts' || $parts[$index + 2] == 'resource')) {
-			return implode('/', $parts);
-		} elseif ($index == 0 && ($p == 'scripts' || $p == 'resource')) {
-			return implode('/', $parts);
-		}
-	}
-
-	return implode('/', $parts);
+	return ltrim($normalized, '/');
 }
 
 function package_import_file_name_matches($package_name, $filename) {
@@ -594,7 +584,7 @@ function import_display_package_data($templates, $files, $package_name, $xmlfile
 								'&package_location=0' .
 								'&package_file=' . $file_package_file .
 								'&package_name=' . $file_package_name .
-								'&filename=' . str_replace($config['base_path'] . '/', '', $pfile);
+								'&filename=' . $pfile;
 
 							$nstatus .= ($nstatus != '' ? ', ':'') .
 								"<a class='diffme linkEditMain' href='" . html_escape($url) . "'>" . __('Differences') . '</a>';
