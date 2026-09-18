@@ -59,3 +59,23 @@ test('the production wait loop retries after a transient drain failure', functio
     expect(proc_close($process))->toBe(0)->and($error)->toBe('');
     expect(json_decode($output, true))->toBe(array(2, 3, false, true));
 });
+
+
+test('the final drain reports current failure state after a recovered waiting attempt', function ($failed) {
+    $source = file_get_contents(dirname(__DIR__, 4) . '/poller.php');
+    $start = strpos($source, '$rrds_processed += process_poller_output_batch(');
+    $end = strpos($source, ' elseif ($config', $start);
+    expect($start)->not->toBeFalse()->and($end)->not->toBeFalse();
+    $body = substr($source, $start, $end - $start);
+    $signature = strpos($body, 'process_poller_output_batch(true,') !== false ? '$final,&$deferred,&$pipe' : '&$deferred,&$pipe';
+    $program = '$rrds_processed=0;$poller_output_deferred=true;$rrd_write_failed=true;$rrdtool_pipe=false;'
+        . 'function process_poller_output_batch(' . $signature . '){$deferred=' . ($failed ? 'true' : 'false') . ';return 3;}'
+        . 'if(true){' . $body . 'echo json_encode(array($rrds_processed,$rrd_write_failed));';
+    $process = proc_open(array(PHP_BINARY, '-r', $program), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $output = stream_get_contents($pipes[1]);
+    $error = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    expect(proc_close($process))->toBe(0)->and($error)->toBe('');
+    expect(json_decode($output, true))->toBe(array(3, $failed));
+})->with(array(false, true));
