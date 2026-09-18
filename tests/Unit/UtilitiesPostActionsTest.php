@@ -32,8 +32,8 @@ function top_header() {}
 function bottom_footer() {}
 function api_plugin_hook_function($name, $value) { return true; }
 function repopulate_poller_cache() { record('repopulate_poller_cache'); }
-function db_fetch_cell($sql) { return 1; }
-function db_execute($sql) {}
+function db_fetch_cell_prepared($sql, $params = array(), $col_name = '', $log = true, $db_conn = false) { return 1; }
+function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = false, $execute_name = 'Exec', $default_value = true, $return_func = 'no_return_function', $return_params = array()) { return true; }
 function rebuild_resource_cache() { record('rebuild_resource_cache'); }
 function utilities_clear_logfile() { record('utilities_clear_logfile'); }
 function utilities_view_logfile() {}

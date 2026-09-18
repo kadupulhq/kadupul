@@ -26,8 +26,8 @@ function get_request_var($name) { return $_REQUEST[$name] ?? ''; }
 function cacti_log($message) {}
 function __($text) { return $text; }
 function raise_message($id) { $GLOBALS['calls'][] = 'message:' . $id; }
-function db_fetch_cell($sql) { $GLOBALS['calls'][] = $sql; return $GLOBALS['input']['lock']; }
-function db_execute($sql) { $GLOBALS['calls'][] = $sql; }
+function db_fetch_cell_prepared($sql, $params = array(), $col_name = '', $log = true, $db_conn = false) { $GLOBALS['calls'][] = array($sql, $params); return $GLOBALS['input']['lock']; }
+function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = false, $execute_name = 'Exec', $default_value = true, $return_func = 'no_return_function', $return_params = array()) { $GLOBALS['calls'][] = array($sql, $params); return true; }
 function repopulate_poller_cache() { $GLOBALS['calls'][] = 'rebuild'; }
 CODE;
 
@@ -38,7 +38,7 @@ test('a poller cache rebuild is refused while another holds the lock', function 
     $calls = clogRunProduction(pollerCacheRebuildProgram(), array('lock' => '0'));
 
     expect($calls)->toBe(array(
-        "SELECT GET_LOCK('kadupul.poller_cache_rebuild', 0)",
+        array('SELECT GET_LOCK(?, 0)', array('kadupul.poller_cache_rebuild')),
         'message:poller_cache_busy',
     ));
 });
@@ -47,9 +47,9 @@ test('a poller cache rebuild takes the lock and releases it when done', function
     $calls = clogRunProduction(pollerCacheRebuildProgram(), array('lock' => '1'));
 
     expect($calls)->toBe(array(
-        "SELECT GET_LOCK('kadupul.poller_cache_rebuild', 0)",
+        array('SELECT GET_LOCK(?, 0)', array('kadupul.poller_cache_rebuild')),
         'rebuild',
-        "SELECT RELEASE_LOCK('kadupul.poller_cache_rebuild')",
+        array('DO RELEASE_LOCK(?)', array('kadupul.poller_cache_rebuild')),
     ));
 });
 
@@ -75,8 +75,8 @@ function pushout_debug($message) {}
 function register_process_start() { $GLOBALS['calls'][] = 'register'; return true; }
 function unregister_process() { $GLOBALS['calls'][] = 'unregister'; }
 function pushout_master_handler() { $GLOBALS['calls'][] = 'rebuild'; }
-function db_fetch_cell($sql) { $GLOBALS['calls'][] = $sql; return $GLOBALS['input']['lock']; }
-function db_execute($sql) { $GLOBALS['calls'][] = $sql; }
+function db_fetch_cell_prepared($sql, $params = array(), $col_name = '', $log = true, $db_conn = false) { $GLOBALS['calls'][] = array($sql, $params); return $GLOBALS['input']['lock']; }
+function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = false, $execute_name = 'Exec', $default_value = true, $return_func = 'no_return_function', $return_params = array()) { $GLOBALS['calls'][] = array($sql, $params); return true; }
 CODE;
 
     return $program . substr($source, $start, $end - $start);
@@ -87,7 +87,7 @@ test('the CLI rebuild exits non-zero while the web rebuild holds the lock', func
 
     expect($calls)->toBe(array(
         'register',
-        "SELECT GET_LOCK('kadupul.poller_cache_rebuild', 0)",
+        array('SELECT GET_LOCK(?, 0)', array('kadupul.poller_cache_rebuild')),
         'unregister',
     ));
 });
@@ -97,9 +97,9 @@ test('the CLI rebuild takes the shared lock and releases it when done', function
 
     expect($calls)->toBe(array(
         'register',
-        "SELECT GET_LOCK('kadupul.poller_cache_rebuild', 0)",
+        array('SELECT GET_LOCK(?, 0)', array('kadupul.poller_cache_rebuild')),
         'rebuild',
         'unregister',
-        "SELECT RELEASE_LOCK('kadupul.poller_cache_rebuild')",
+        array('DO RELEASE_LOCK(?)', array('kadupul.poller_cache_rebuild')),
     ));
 });

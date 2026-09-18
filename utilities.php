@@ -57,7 +57,7 @@ switch (get_request_var('action')) {
 	case 'clear_poller_cache':
 		/* a rebuild can run for hours without a time limit, so refuse a second
 		 * one instead of stacking full rebuilds on the same tables */
-		if (!db_fetch_cell("SELECT GET_LOCK('kadupul.poller_cache_rebuild', 0)")) {
+		if (!db_fetch_cell_prepared('SELECT GET_LOCK(?, 0)', array('kadupul.poller_cache_rebuild'))) {
 			raise_message('poller_cache_busy', __('A Poller Cache rebuild is already running.'), MESSAGE_LEVEL_WARN);
 			header('Location: utilities.php?action=view_poller_cache');exit;
 		}
@@ -67,7 +67,7 @@ switch (get_request_var('action')) {
 		ini_set('max_execution_time', '0');
 		repopulate_poller_cache();
 		ini_set('max_execution_time', $max_execution);
-		db_execute("SELECT RELEASE_LOCK('kadupul.poller_cache_rebuild')");
+		db_execute_prepared('DO RELEASE_LOCK(?)', array('kadupul.poller_cache_rebuild'));
 		header('Location: utilities.php?action=view_poller_cache');exit;
 		break;
 	case 'rebuild_resource_cache':
