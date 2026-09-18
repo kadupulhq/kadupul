@@ -62,9 +62,9 @@ test('shutdown pages large queues and terminates safely on database failure', fu
     $pdo->commit();
     $GLOBALS['shutdown_query_fail'] = $failure === 'query';
     $GLOBALS['shutdown_delete_fail'] = $failure === 'delete';
-    $poller_id = 1; $rrd_write_failed = false;
+    $poller_id = 1; $rrd_cleanup_failed = false;
     eval('namespace ' . __NAMESPACE__ . '; ' . $cleanup);
     expect((int) $pdo->query('SELECT COUNT(*) FROM poller_output')->fetchColumn())->toBe($failure ? 40001 : 0)
         ->and($GLOBALS['shutdown_selects'])->toBe($failure ? 1 : 2)
-        ->and($rrd_write_failed)->toBe((bool) $failure);
+        ->and($rrd_cleanup_failed)->toBe((bool) $failure);
 })->with(array('', 'query', 'delete'));
