@@ -137,12 +137,15 @@ test('poller reports failed source deletion even after earlier chunks made progr
     }
 })->with(array(1, 2));
 
-// Exercise the exact production statement on real engine collations; native
-// consumer tests separately verify which observed rows reach this boundary.
+// Exercise the production batch on real engine collations; native consumer
+// tests separately verify which observed rows reach this boundary.
 test('Boost retains byte-distinct replacements in live and archive queues', function ($observed, $replacement, $collation, $consumer) use ($root) {
-    $source = file_get_contents($root . '/' . $consumer);
-    preg_match('/db_execute_prepared\("(DELETE FROM \$table WHERE local_data_id = \? AND rrd_name = \? AND time = FROM_UNIXTIME\(\?\)[^"]+)"/', $source, $match);
-    expect($match)->not->toBeEmpty();
+    expect(file_get_contents($root . '/' . $consumer))->toContain('boost_delete_samples($table, $results)');
+    if (!function_exists('pollerQueueDbDeleteSamples')) {
+        preg_match('/^function boost_delete_samples\(.*?^}\n/ms', file_get_contents($root . '/lib/boost.php'), $match);
+        expect($match)->not->toBeEmpty();
+        eval(str_replace(array('boost_delete_samples(', 'db_execute_prepared('), array('pollerQueueDbDeleteSamples(', 'pollerQueueDbDeletePrepared('), $match[0]));
+    }
     $db = $GLOBALS['poller_contract_pdo'];
     foreach (array('poller_output_boost', 'poller_output_boost_arch_fixture') as $table) {
         $db->exec("CREATE TEMPORARY TABLE $table (local_data_id INT, rrd_name VARCHAR(19), time TIMESTAMP, output VARCHAR(512), PRIMARY KEY(local_data_id,rrd_name,time)) ENGINE=InnoDB COLLATE=" . $collation);
@@ -150,13 +153,19 @@ test('Boost retains byte-distinct replacements in live and archive queues', func
             $insert = $db->prepare("INSERT INTO $table VALUES (?, 'value', FROM_UNIXTIME(?), ?)");
             $insert->execute(array(1, 1700000000, $replacement));
             $insert->execute(array(2, 1700000000, $observed));
-            $delete = $db->prepare(str_replace('$table', $table, $match[1]));
-            $delete->execute(array(1, 'value', 1700000000, $observed));
-            expect($delete->rowCount())->toBe(0);
-            expect($db->query("SELECT output FROM $table WHERE local_data_id=1")->fetchColumn())->toBe($replacement);
-            $delete->execute(array(2, 'value', 1700000000, $observed));
-            expect($delete->rowCount())->toBe(1);
-            expect((int) $db->query("SELECT COUNT(*) FROM $table")->fetchColumn())->toBe(1);
+            // Both observed tuples share one statement; only the byte-identical row may go.
+            $observedRows = array();
+            foreach (array(1, 2) as $id) {
+                $observedRows[] = array('local_data_id' => $id, 'rrd_name' => 'value', 'timestamp' => 1700000000, 'output' => $observed);
+            }
+            expect(pollerQueueDbDeleteSamples($table, $observedRows))->toBeTrue()
+                ->and($GLOBALS['boost_delete_affected'])->toBe(1)
+                ->and($db->query("SELECT local_data_id, output FROM $table")->fetchAll(PDO::FETCH_NUM))->toBe(array(array(1, $replacement)));
+            list($sql, $params) = $GLOBALS['boost_delete_statement'];
+            $explain = $db->prepare('EXPLAIN FORMAT=TRADITIONAL ' . $sql);
+            $explain->execute($params);
+            $plan = $explain->fetch(PDO::FETCH_ASSOC);
+            expect($plan['key'])->toBe('PRIMARY')->and($plan['type'])->toBe('range');
         } finally {
             $db->exec("DROP TEMPORARY TABLE $table");
         }
