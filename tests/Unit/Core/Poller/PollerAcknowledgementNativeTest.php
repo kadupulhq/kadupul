@@ -46,6 +46,24 @@ test('production poller files retain failed writes and preserve concurrent arriv
         if ($failed === 'replace') { $expected = array('99','43'); }
         if ($failed === 'delete') { $expected = array('42','43'); }
         expect(json_decode(file_get_contents($dir . '/outcome.json'), true))->toBe($expected);
+        if (!$realtime) {
+            foreach (array('dsstats_poller_output', 'dsdebug_poller_output', 'api_plugin_hook_function') as $hook) {
+                $file = $dir . '/' . $hook . '.jsonl';
+                $events = is_file($file) ? array_map(static fn($line) => json_decode($line, true), file($file, FILE_IGNORE_NEW_LINES)) : array();
+                if ($failed === true) {
+                    expect($events)->toBe(array());
+                } elseif (in_array($failed, array('mixed', 'page'), true)) {
+                    expect($events)->toHaveCount(1);
+                    expect(array_keys($events[0]))->toBe(array('good.rrd'));
+                } elseif ($failed === 'rejected') {
+                    expect($events)->toHaveCount(1);
+                    expect(array_values($events[0]['fixture.rrd']['times']))->toBe(array(array('value' => '45')));
+                } else {
+                    expect($events)->toHaveCount(1);
+                    expect(array_values($events[0]['fixture.rrd']['times']))->toBe(array(array('value' => '42')));
+                }
+            }
+        }
         if ($parent !== null) {
             $reports = glob($dir . '/*.coverage');
             expect($reports)->toHaveCount(1);
