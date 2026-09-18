@@ -53,6 +53,8 @@ if (isset_request_var('update_policy')) {
 
 		break;
 	case 'perm_remove':
+		csrf_require_post(true);
+
 		perm_remove();
 
 		break;

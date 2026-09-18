@@ -285,6 +285,24 @@ test('user, group and domain bulk actions refuse any GET that carries selected_i
 	}
 });
 
+test('user and group permission removal refuses a GET from anywhere', function () {
+	/* perm_remove is on the global list, which lets a same-site GET through.
+	   No page links to it, so a GET has nothing legitimate to serve. */
+	foreach (array('user_admin.php', 'user_group_admin.php') as $page) {
+		$source = file_get_contents(dirname(__DIR__, 4) . '/' . $page);
+
+		expect(preg_match("/case 'perm_remove':\n(.*?)\t*perm_remove\(\);/s", $source, $matches))->toBe(1, $page);
+
+		$check  = $matches[1] . "\nset_request_var('action', 'removed');";
+		$remove = array('type' => 'graph', 'id' => '3', 'user_id' => '4', 'group_id' => '4');
+
+		expect(run_checked($check, 'GET', $remove))->toBe('405', $page)
+			->and(run_checked($check, 'GET', $remove, array(), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('405', $page)
+			->and(run_checked($check, 'HEAD', $remove))->toBe('405', $page)
+			->and(run_checked($check, 'POST', $remove, array('__csrf_magic' => 'sid:x'), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('pass:removed', $page);
+	}
+});
+
 test('only a GET gets the same-site relaxation; HEAD, PUT, DELETE and PATCH get 405', function () {
 	$wrong = array();
 
