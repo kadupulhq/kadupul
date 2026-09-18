@@ -123,6 +123,10 @@ def assert_failed_writer_retains_queue(h):
 def prepare_baseline(baseline_revision, baseline):
     """Keep real revision metadata for the same validation used by normal captures."""
     harness.run(['git', 'clone', '--shared', '--no-checkout', '--', str(ROOT), str(baseline)])
+    # A shallow source can hold the pinned revision only in FETCH_HEAD; clone
+    # does not necessarily transfer that object. Fetch the exact revision too.
+    harness.run(['git', '-C', str(baseline), 'fetch', '--no-tags', '--depth=1',
+                 '--', str(ROOT), baseline_revision])
     harness.run(['git', '-C', str(baseline), 'checkout', '--detach', '--force', baseline_revision])
     gitdir = Path(harness.run(['git', '-C', str(baseline), 'rev-parse', '--absolute-git-dir'])['stdout'].strip())
     require(gitdir.resolve() == (baseline / '.git').resolve(), 'Baseline must own its Git metadata')

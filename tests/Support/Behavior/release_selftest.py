@@ -125,9 +125,43 @@ def baseline_overlay_replacement():
     print('Baseline overlays remove obsolete helpers without changing application data')
 
 
+def shallow_fetched_baseline():
+    with tempfile.TemporaryDirectory(prefix='release shallow baseline ') as directory:
+        remote = Path(directory) / 'remote'
+        source = Path(directory) / 'source'
+        baseline = Path(directory) / 'baseline'
+        remote.mkdir()
+        def git(tree, *args):
+            return release.harness.run(['git', '-C', str(tree), '-c', 'user.name=Harness Fixture',
+                '-c', 'user.email=fixture@example.invalid', '-c', 'commit.gpgsign=false',
+                '-c', 'core.hooksPath=/dev/null', *args])['stdout'].strip()
+        git(remote, 'init', '-q')
+        for relative in ('tests/Support/Behavior', 'tests/Fixtures', 'tests/behavior'):
+            (remote / relative).mkdir(parents=True)
+            (remote / relative / 'input').write_text('fixture')
+        (remote / 'cacti.sql').write_text('baseline schema')
+        (remote / '.dockerignore').write_text('.git')
+        git(remote, 'add', '.')
+        git(remote, 'commit', '-q', '-s', '-m', 'Baseline fixture')
+        revision = git(remote, 'rev-parse', 'HEAD')
+        (remote / 'cacti.sql').write_text('candidate schema')
+        git(remote, 'commit', '-qam', 'Candidate fixture')
+        release.harness.run(['git', 'clone', '--depth=1', '--', remote.as_uri(), str(source)])
+        git(source, 'fetch', '--no-tags', remote.as_uri(), revision)
+        assert git(source, 'rev-parse', '--is-shallow-repository') == 'true'
+        candidate = git(source, 'rev-parse', 'HEAD')
+        with patch.object(release, 'ROOT', source):
+            release.prepare_baseline(revision, baseline)
+        assert git(baseline, 'rev-parse', 'HEAD') == revision
+        assert (baseline / 'cacti.sql').read_text() == 'baseline schema'
+        assert git(source, 'rev-parse', 'HEAD') == candidate
+    print('Shallow checkouts preserve a separately fetched baseline revision')
+
+
 def main():
     baseline_checkout_metadata()
     baseline_overlay_replacement()
+    shallow_fetched_baseline()
     recursive_rrd_manifest()
     projects = []
     for missing_docker in (False, True):
