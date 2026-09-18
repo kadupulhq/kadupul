@@ -256,6 +256,27 @@ def bootstrap_repeat_provenance():
             with patch.object(harness, 'source_provenance', side_effect=[first['provenance'], OSError('final probe failed')]):
                 assert recorder.finish() == 2
             assert {p: p.read_bytes() for p in (root / 'tests/Golden').rglob('*.json')} == before
+            write_json = harness.write_json
+            written = []
+            def failing_write(path, value):
+                if 'tests/Golden' in str(path):
+                    written.append(path)
+                    if len(written) == 3:
+                        path.parent.mkdir(parents=True, exist_ok=True)
+                        path.write_text('{"trunc')
+                        raise OSError('disk full')
+                write_json(path, value)
+            with patch.object(harness, 'source_provenance', return_value=first['provenance']), patch.object(harness, 'write_json', failing_write):
+                assert recorder.finish() == 2
+            assert len(written) == 3
+            assert {p: p.read_bytes() for p in (root / 'tests/Golden').rglob('*.json')} == before
+            failed = json.loads((recorder.destination / 'observations.json').read_text())
+            assert failed['complete'] is False and 'disk full' in failed['error']
+            recorder.args.target = 'partial-bootstrap'
+            written.clear()
+            with patch.object(harness, 'source_provenance', return_value=first['provenance']), patch.object(harness, 'write_json', failing_write):
+                assert recorder.finish() == 2
+            assert not (root / 'tests/Golden/partial-bootstrap').exists()
             recorder.args.target = 'failed-bootstrap'
             with patch.object(harness, 'source_provenance', side_effect=[first['provenance'], OSError('final probe failed')]):
                 assert recorder.finish() == 2

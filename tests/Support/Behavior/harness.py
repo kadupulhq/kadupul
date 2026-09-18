@@ -808,21 +808,39 @@ class Harness:
         skipped = [n for n in self.observed if n not in selected]
         golden_originals = {}
         created_directories = set()
-        for name, value in {k: v for k, v in self.observed.items() if k in selected}.items():
-            path = golden_root / (name + '.json')
+        def restore_goldens():
+            for path, original in golden_originals.items():
+                if original is None:
+                    path.unlink(missing_ok=True)
+                else:
+                    path.write_bytes(original)
+            for path in sorted(created_directories, key=lambda p: len(p.parts), reverse=True):
+                if path.exists():
+                    path.rmdir()
+        try:
+            for name, value in {k: v for k, v in self.observed.items() if k in selected}.items():
+                path = golden_root / (name + '.json')
+                if self.args.update_golden:
+                    golden_originals[path] = path.read_bytes() if path.exists() else None
+                    parent = path.parent
+                    while not parent.exists():
+                        created_directories.add(parent)
+                        parent = parent.parent
+                    write_json(path, value)
+                elif not path.exists():
+                    failures.append(name + ': MISSING GOLDEN (explicit capture required)')
+                elif json.loads(path.read_text()) != value:
+                    failures.append(name + ': REGRESSION')
+                    (self.destination / (name.replace('/', '--') + '.diff')).write_text(''.join(difflib.unified_diff(
+                        path.read_text().splitlines(True), (json.dumps(value, indent=2, ensure_ascii=False) + '\n').splitlines(True), fromfile='golden', tofile='observed')))
+        except Exception as write_error:
+            # A partly rewritten golden set would be verified against later.
             if self.args.update_golden:
-                golden_originals[path] = path.read_bytes() if path.exists() else None
-                parent = path.parent
-                while not parent.exists():
-                    created_directories.add(parent)
-                    parent = parent.parent
-                write_json(path, value)
-            elif not path.exists():
-                failures.append(name + ': MISSING GOLDEN (explicit capture required)')
-            elif json.loads(path.read_text()) != value:
-                failures.append(name + ': REGRESSION')
-                (self.destination / (name.replace('/', '--') + '.diff')).write_text(''.join(difflib.unified_diff(
-                    path.read_text().splitlines(True), (json.dumps(value, indent=2, ensure_ascii=False) + '\n').splitlines(True), fromfile='golden', tofile='observed')))
+                restore_goldens()
+            manifest['complete'] = False
+            manifest['error'] = 'Cannot record goldens: ' + str(write_error)
+            write_json(self.destination / 'observations.json', manifest)
+            return 2
         # Capture permission does not certify the other runtime inventories.
         missing_after = set()
         for runtime_root in runtime_roots:
@@ -838,13 +856,7 @@ class Harness:
             try:
                 manifest['provenance'] = source_provenance()
             except (OSError, RuntimeError, subprocess.TimeoutExpired) as probe_error:
-                for path, original in golden_originals.items():
-                    if original is None:
-                        path.unlink(missing_ok=True)
-                    else:
-                        path.write_bytes(original)
-                for path in sorted(created_directories, key=lambda p: len(p.parts), reverse=True):
-                    path.rmdir()
+                restore_goldens()
                 manifest['complete'] = False
                 manifest['error'] = 'Cannot record final source provenance: ' + str(probe_error)
                 write_json(self.destination / 'observations.json', manifest)
