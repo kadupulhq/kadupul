@@ -61,6 +61,12 @@ function graph_realtime_ds_step($ds_step) {
 	return max($floor, (int)$ds_step);
 }
 
+/* csrf-magic checks the token only on POST. Polling stays available by GET, but
+ * only a POST may change the saved real-time preferences. */
+function graph_realtime_is_post() {
+	return isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST';
+}
+
 if (!isset($_SESSION['sess_realtime_hash'])) {
 	$_SESSION['sess_realtime_hash'] = generate_hash();
 }
@@ -344,10 +350,12 @@ case 'countdown':
 	}
 
 	/* save user preferences */
-	set_user_setting('realtime_interval', get_request_var('ds_step'));
-	set_user_setting('realtime_gwindow', abs(get_request_var('graph_start')));
-	set_user_setting('realtime_size', get_request_var('size'));
-	set_user_setting('realtime_nolegend', get_request_var('graph_nolegend'));
+	if (graph_realtime_is_post()) {
+		set_user_setting('realtime_interval', get_request_var('ds_step'));
+		set_user_setting('realtime_gwindow', abs(get_request_var('graph_start')));
+		set_user_setting('realtime_size', get_request_var('size'));
+		set_user_setting('realtime_nolegend', get_request_var('graph_nolegend'));
+	}
 
 	$_SESSION['sess_realtime_ds_step']     = get_request_var('ds_step');
 	$_SESSION['sess_realtime_graph_start'] = get_request_var('graph_start');
@@ -434,10 +442,12 @@ if (!isset($_SESSION['sess_realtime_graph_start'])) {
 }
 
 /* save user preferences */
-set_user_setting('realtime_interval', get_request_var('ds_step'));
-set_user_setting('realtime_gwindow', abs(get_request_var('graph_start')));
-set_user_setting('realtime_size', get_request_var('size'));
-set_user_setting('realtime_nolegend', get_request_var('graph_nolegend'));
+if (graph_realtime_is_post()) {
+	set_user_setting('realtime_interval', get_request_var('ds_step'));
+	set_user_setting('realtime_gwindow', abs(get_request_var('graph_start')));
+	set_user_setting('realtime_size', get_request_var('size'));
+	set_user_setting('realtime_nolegend', get_request_var('graph_nolegend'));
+}
 
 if (read_config_option('realtime_enabled') == '') {
 	print "<html>\n";

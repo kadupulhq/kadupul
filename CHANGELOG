@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-security: Save real-time graph preferences only from a POST carrying the CSRF token; the periodic refresh stays a GET
 -security: Hold the real-time refresh interval to the administrator's minimum before polling and saving it, and list only allowed intervals inline
 -security: Ping, poll, query and discover through the remote agent only for devices and networks of its own Data Collector
 -security: Log a daily warning when $proxy_headers is set without $trusted_proxies, since any client can then choose its address
