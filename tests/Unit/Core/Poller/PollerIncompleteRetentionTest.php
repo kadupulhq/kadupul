@@ -119,4 +119,4 @@ test('a short delete stops cleanup and leaves the replacement queued', function 
     $deleted = $orphan ? poller_cleanup_orphan_rows($failed) : poller_expire_incomplete_rows(172800, $failed);
     expect($deleted)->toBe(1)->and($failed)->toBeTrue()
         ->and($db->query('SELECT output FROM poller_output')->fetchAll(\PDO::FETCH_COLUMN))->toBe(array('replacement'));
-})->with(array('orphan' => true));
+})->with(array('orphan' => true, 'expiry' => false));

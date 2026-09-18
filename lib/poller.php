@@ -730,7 +730,8 @@ function poller_expire_incomplete_rows($retention, &$failed = null) {
 		}
 		$deleted = poller_delete_output_rows($keys, $failed);
 		$expired += $deleted;
-		if ($failed || ($keys && $deleted === 0)) {
+		// Only the payload observed by this pass may expire; a replaced key ends the pass.
+		if ($failed || $deleted < count($keys)) {
 			$failed = true;
 			return $expired;
 		}
