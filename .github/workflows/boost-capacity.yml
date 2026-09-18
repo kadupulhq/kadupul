@@ -127,4 +127,4 @@ jobs:
         env:
           RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
           RRDTOOL_LEGACY_TEST_BINARY: ${{ runner.temp }}/rrd149/bin/rrdtool
-        run: mise exec php@system -- php vendor/bin/pest --configuration=phpunit-spikekill.xml --filter 'rejected fields' --colors=never
+        run: mise exec php@system -- php vendor/bin/pest --configuration=phpunit-spikekill.xml --filter 'schema mismatches retain full samples' --colors=never
