@@ -63,6 +63,13 @@ function clean_up_lines($string) {
 }
 
 function read_config_option($key) { return $key === 'storage_location' ? 1 : ''; }
+function db_fetch_cell_prepared($query, $params, $default = '', $log = true, $connection = false) {
+	if (strpos($query, 'information_schema.TABLES') === false || $params !== array('poller_output')) {
+		throw new RuntimeException('Unexpected installer permission database query');
+	}
+
+	return 'InnoDB';
+}
 $config     = array('base_path' => '/cacti', 'rra_path' => '/cacti/rra');
 $unwritable = json_decode($argv[2], true);
 
