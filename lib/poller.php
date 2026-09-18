@@ -552,6 +552,227 @@ function poller_update_poller_reindex_from_buffer($host_id, $data_query_id, &$re
  *
  * @return (int|false) - Acknowledged sample updates, or false when retry is required
  */
+/**
+ * The dead-letter table may be missing on an installation that was already at
+ * this version before it was introduced.
+ */
+function poller_rejected_table_ensure()
+{
+    if (db_table_exists('poller_output_rejected', false)) {
+        return true;
+    }
+
+    return (bool) db_execute('CREATE TABLE IF NOT EXISTS poller_output_rejected (
+		local_data_id int(10) unsigned NOT NULL default "0",
+		rrd_name varchar(19) NOT NULL default "",
+		time timestamp NOT NULL default CURRENT_TIMESTAMP,
+		output varchar(512) NOT NULL default "",
+		rrd_path varchar(255) NOT NULL default "",
+		reason varchar(255) NOT NULL default "",
+		first_rejected timestamp NOT NULL default CURRENT_TIMESTAMP,
+		last_rejected timestamp NOT NULL default CURRENT_TIMESTAMP,
+		PRIMARY KEY (local_data_id, rrd_name, time),
+		KEY rrd_path (rrd_path))
+		ENGINE=InnoDB ROW_FORMAT=Dynamic');
+}
+
+/** One exact-key predicate per sample, matching poller_delete_output_rows. */
+function poller_output_key_predicate($count, $alias = '')
+{
+    $prefix = $alias === '' ? '' : $alias . '.';
+
+    return implode(' OR ', array_fill(0, $count, '(' . $prefix . 'local_data_id = ? AND ' . $prefix . 'rrd_name = ? AND ' . $prefix . 'time = ? AND CAST(CONVERT(' . $prefix . 'output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY))'));
+}
+
+/**
+ * Move a data source's refused samples to poller_output_rejected once the
+ * oldest has been retained longer than poller_rejected_hours, or the oldest
+ * excess once more than poller_rejected_rows are queued.  Nothing is deleted
+ * outright; cli/replay_rejected_samples.php returns them after a repair.
+ *
+ * @return (int|false) Samples moved, or false when the queue was left unchanged
+ */
+function poller_dead_letter_rejected($local_data_id, $rrd_path, $reason)
+{
+    $hours = (int) read_config_option('poller_rejected_hours');
+    $limit = (int) read_config_option('poller_rejected_rows');
+    $hours = $hours > 0 ? $hours : 24;
+    $limit = $limit > 0 ? $limit : 10000;
+
+    $queue = db_fetch_row_prepared(
+        'SELECT COUNT(*) AS samples, UNIX_TIMESTAMP(MIN(time)) AS oldest
+		FROM poller_output
+		WHERE local_data_id = ?',
+        array($local_data_id)
+    );
+
+    if (!is_array($queue) || !isset($queue['samples']) || !is_numeric($queue['samples'])) {
+        cacti_log('ERROR: Unable to inspect rejected samples for Local Data ID ' . $local_data_id . '; samples retained.', false, 'POLLER');
+        return false;
+    }
+
+    $samples = (int) $queue['samples'];
+    if ($samples === 0) {
+        return 0;
+    }
+
+    if ((int) $queue['oldest'] <= time() - $hours * 3600) {
+        $excess = $samples;
+        $cause  = 'retained longer than ' . $hours . ' hours';
+    } elseif ($samples > $limit) {
+        $excess = $samples - $limit;
+        $cause  = 'more than ' . $limit . ' retained samples';
+    } else {
+        return 0;
+    }
+
+    /* Whole timestamp groups move together so no partial group is left behind. */
+    $cutoff = db_fetch_cell_prepared(
+        'SELECT time
+		FROM poller_output
+		WHERE local_data_id = ?
+		ORDER BY time, rrd_name
+		LIMIT 1 OFFSET ' . ($excess - 1),
+        array($local_data_id)
+    );
+
+    $rows = empty($cutoff) ? false : db_fetch_assoc_prepared(
+        'SELECT local_data_id, rrd_name, time, output
+		FROM poller_output
+		WHERE local_data_id = ?
+		AND time <= ?',
+        array($local_data_id, $cutoff)
+    );
+
+    if (!is_array($rows) || !poller_rejected_table_ensure()) {
+        cacti_log('ERROR: Unable to dead-letter rejected samples for Local Data ID ' . $local_data_id . '; samples retained.', false, 'POLLER');
+        return false;
+    }
+
+    $reason = substr((string) $reason, 0, 255);
+    $moved  = 0;
+
+    if (!db_begin_transaction()) {
+        return false;
+    }
+
+    foreach (array_chunk($rows, 500) as $chunk) {
+        $keys   = array();
+        $params = array();
+
+        foreach ($chunk as $row) {
+            $keys[] = array($row['local_data_id'], $row['rrd_name'], $row['time'], $row['output']);
+            array_push($params, (int) $row['local_data_id'], (string) $row['rrd_name'], (string) $row['time']);
+        }
+
+        /* A copy left by an earlier replay is superseded by this rejection. */
+        $cleared = db_execute_prepared(
+            'DELETE FROM poller_output_rejected
+			WHERE ' . implode(' OR ', array_fill(0, count($chunk), '(local_data_id = ? AND rrd_name = ? AND time = ?)')),
+            $params
+        );
+
+        $params = array($rrd_path, $reason, time(), time());
+        foreach ($keys as $key) {
+            array_push($params, (int) $key[0], (string) $key[1], (string) $key[2], (string) $key[3]);
+        }
+
+        $copied = $cleared !== false && db_execute_prepared(
+            'INSERT INTO poller_output_rejected
+			(local_data_id, rrd_name, time, output, rrd_path, reason, first_rejected, last_rejected)
+			SELECT local_data_id, rrd_name, time, output, ?, ?, FROM_UNIXTIME(?), FROM_UNIXTIME(?)
+			FROM poller_output
+			WHERE ' . poller_output_key_predicate(count($keys)),
+            $params
+        ) !== false;
+
+        $deleted = $copied ? poller_delete_output_rows($keys, $delete_failed) : 0;
+
+        if (!$copied || $delete_failed) {
+            db_rollback_transaction();
+            cacti_log('ERROR: Unable to dead-letter rejected samples for Local Data ID ' . $local_data_id . '; samples retained.', false, 'POLLER');
+            return false;
+        }
+
+        $moved += $deleted;
+    }
+
+    if (db_commit_transaction() === false) {
+        db_rollback_transaction();
+        return false;
+    }
+
+    cacti_log('ERROR: Moved ' . $moved . ' rejected samples to poller_output_rejected: ' . json_encode(array('path' => $rrd_path, 'local_data_id' => (int) $local_data_id, 'cause' => $cause, 'reason' => $reason, 'action' => 'Repair the RRD, then run cli/replay_rejected_samples.php.')), false, 'POLLER');
+
+    return $moved;
+}
+
+/**
+ * Return dead-lettered samples to poller_output for the next drain.
+ *
+ * @param  (int|null) $local_data_id - one data source, or null for all
+ * @param  (bool)     $dry_run       - count without moving
+ *
+ * @return (int|false) Samples returned (or that would be), false on failure
+ */
+function poller_replay_rejected($local_data_id = null, $dry_run = false)
+{
+    if (!db_table_exists('poller_output_rejected', false)) {
+        return 0;
+    }
+
+    $where  = $local_data_id === null ? '' : ' WHERE local_data_id = ?';
+    $params = $local_data_id === null ? array() : array((int) $local_data_id);
+
+    $rows = db_fetch_assoc_prepared('SELECT local_data_id, rrd_name, time, output
+		FROM poller_output_rejected' . $where, $params);
+
+    if (!is_array($rows)) {
+        return false;
+    }
+
+    if ($dry_run || !cacti_sizeof($rows)) {
+        return cacti_sizeof($rows);
+    }
+
+    if (!db_begin_transaction()) {
+        return false;
+    }
+
+    $replayed = 0;
+    foreach (array_chunk($rows, 500) as $chunk) {
+        $params = array();
+        foreach ($chunk as $row) {
+            array_push($params, (int) $row['local_data_id'], (string) $row['rrd_name'], (string) $row['time'], (string) $row['output']);
+        }
+
+        $predicate = poller_output_key_predicate(count($chunk));
+
+        /* A live sample with the same key is the same collection and is kept. */
+        $copied  = db_execute_prepared('INSERT IGNORE INTO poller_output
+			(local_data_id, rrd_name, time, output)
+			SELECT local_data_id, rrd_name, time, output
+			FROM poller_output_rejected
+			WHERE ' . $predicate, $params);
+        $deleted = $copied === false ? false : db_execute_prepared('DELETE FROM poller_output_rejected
+			WHERE ' . $predicate, $params);
+
+        if ($deleted === false) {
+            db_rollback_transaction();
+            return false;
+        }
+
+        $replayed += cacti_sizeof($chunk);
+    }
+
+    if (db_commit_transaction() === false) {
+        db_rollback_transaction();
+        return false;
+    }
+
+    return $replayed;
+}
+
 /** Delete only the selected source samples, preserving concurrent arrivals. */
 function poller_delete_output_rows($keys, &$failed = null)
 {
@@ -948,7 +1169,12 @@ function process_poller_output_page(&$rrdtool_pipe, $remainder, $after, &$acknow
             foreach ($blocked_paths as $path => $blocked) {
                 unset($rrd_update_array[$path]);
             }
-            $rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe, $completed);
+            $rejected = array();
+            $rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe, $completed, $rejected);
+            // Samples RRDtool keeps refusing are bounded by age and count.
+            foreach ($rejected as $path => $reason) {
+                poller_dead_letter_rejected($rrd_update_array[$path]['local_data_id'], $path, $reason);
+            }
             // A terminal rejection is recorded as false in $completed and consumed.
             // Only absent acknowledgements require deferring subsequent batches.
             foreach ($rrd_update_array as $path => $fields) {

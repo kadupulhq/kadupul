@@ -52,6 +52,14 @@ test('production poller files retain failed writes and preserve concurrent arriv
         if ($failed === 'delete') {
             $expected = array('42', '43');
         }
+        if ($failed === 'mismatch') {
+            // The refused sample is older than the retention limit and moves intact.
+            $expected = array();
+            expect(json_decode(file_get_contents($dir . '/batch-result.json'), true))->toBe(array(0, true))
+                ->and(json_decode(file_get_contents($dir . '/rejected.json'), true))->toBe(array(array('local_data_id' => 1, 'output' => '42', 'rrd_path' => 'fixture.rrd', 'reason' => "unknown DS name 'value'")));
+        } elseif (is_file($dir . '/rejected.json')) {
+            expect(json_decode(file_get_contents($dir . '/rejected.json'), true))->toBe(array());
+        }
         if ($failed === 'rejected') {
             $expected = array();
             if (!$realtime) {
@@ -115,7 +123,7 @@ test('production poller files retain failed writes and preserve concurrent arriv
                         ? array_sum(array_map(static fn($fields) => count($fields['times']), $event))
                         : $event;
                 }, file($file, FILE_IGNORE_NEW_LINES)) : array();
-                if ($failed === true || in_array($failed, array('select', 'handoff', 'init', 'busy', 'count', 'incomplete', 'incomplete-recent', 'tail-failure'), true)) {
+                if ($failed === true || in_array($failed, array('select', 'handoff', 'init', 'busy', 'count', 'incomplete', 'incomplete-recent', 'tail-failure', 'mismatch'), true)) {
                     expect($events)->toBe(array());
                 } elseif (in_array($failed, array('mixed', 'page'), true)) {
                     expect($events)->toHaveCount(1);
@@ -150,4 +158,4 @@ test('production poller files retain failed writes and preserve concurrent arriv
             } rmdir($dir . $suffix);
         }
     }
-})->with(array(array(false,false),array(false,true),array(true,false),array(true,true),array(false,'replace-space'),array(true,'replace-space'),array(false,'replace'),array(true,'replace'),array(true,'delete'),array(false,'rejected'),array(true,'rejected'),array(false,'mixed'),array(false,'page'),array(false,'select'),array(false,'handoff'),array(false,'delete'),array(true,'init'),array(false,'init'),array(false,'busy'),array(false,'count'),array(false,false,true),array(false,true,true),array(false,'init',true),array(false,'rejected',true),array(true,'select'),array(true,'init-function'),array(true,'field-failure'),array(true,'field-success'),array(false,'incomplete'),array(false,'incomplete-recent'),array(false,'tail-failure'),array(false,'page-success')));
+})->with(array(array(false,false),array(false,true),array(true,false),array(true,true),array(false,'replace-space'),array(true,'replace-space'),array(false,'replace'),array(true,'replace'),array(true,'delete'),array(false,'rejected'),array(true,'rejected'),array(false,'mixed'),array(false,'page'),array(false,'select'),array(false,'handoff'),array(false,'delete'),array(true,'init'),array(false,'init'),array(false,'busy'),array(false,'count'),array(false,false,true),array(false,true,true),array(false,'init',true),array(false,'rejected',true),array(true,'select'),array(true,'init-function'),array(true,'field-failure'),array(true,'field-success'),array(false,'incomplete'),array(false,'incomplete-recent'),array(false,'mismatch'),array(false,'tail-failure'),array(false,'page-success')));

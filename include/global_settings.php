@@ -1284,6 +1284,22 @@ $settings = array(
             'max_length' => '10',
             'size' => '5'
         ),
+        'poller_rejected_hours' => array(
+            'friendly_name' => __('Rejected Sample Retention'),
+            'description' => __('Hours that samples refused by RRDtool, for example after a data source schema change, stay queued for retry before they are moved to the poller_output_rejected table.  Repair the RRDfile, then run cli/replay_rejected_samples.php to process them.'),
+            'method' => 'textbox',
+            'default' => '24',
+            'max_length' => '5',
+            'size' => '5'
+        ),
+        'poller_rejected_rows' => array(
+            'friendly_name' => __('Rejected Sample Limit'),
+            'description' => __('The most refused samples one data source may keep queued.  The oldest samples beyond this limit are moved to the poller_output_rejected table immediately.'),
+            'method' => 'textbox',
+            'default' => '10000',
+            'max_length' => '8',
+            'size' => '8'
+        ),
         'poller_refresh_output_table' => array(
             'friendly_name' => __('Refresh Poller Table Per Cycle'),
             'description' => __('This setting is for a single poller systems only to rebuild the poller output table on each polling cycle to prevent the memory table from swapping on very large systems with large databases that could use swap.'),
