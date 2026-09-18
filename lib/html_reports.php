@@ -202,7 +202,16 @@ $fields_reports_edit = array(
 		'value' => '|arg1:attachment_type|',
 		'array' => $attach_types
 		),
-);
+	);
+
+function reports_require_post($action) {
+	if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+		cacti_log('WARNING: Rejected non-POST request to ' . get_reports_page() . '?action=' . $action, false, 'AUTH');
+
+		header('Location: ' . get_reports_page());
+		exit;
+	}
+}
 
 function reports_item_dnd() {
 	/* ================= Input validation ================= */
@@ -1470,7 +1479,9 @@ function reports_tabs($report_id) {
 
 
 		if (!isempty_request_var('id')) {
-			print "<li style='float:right;position:relative;'><a class='tab' href='" . html_escape(get_reports_page() . '?action=send&id=' . get_request_var('id') . '&tab=' . get_request_var('tab')) . "'>" . __('Send Report') . "</a></li>\n";
+			$report_tab = json_encode((string) get_request_var('tab'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
+
+			print "<li style='float:right;position:relative;'><a class='tab' href='#' onclick='loadPageUsingPost(\"" . html_escape(get_reports_page()) . "\", {action:\"send\", id:" . (int) get_request_var('id') . ", tab:" . $report_tab . ", __csrf_magic:csrfMagicToken}); return false;'>" . __('Send Report') . "</a></li>\n";
 		}
 
 		print "</ul></nav></div>\n";
@@ -1619,7 +1630,7 @@ function reports_edit() {
 			$(function() {
 				$('#report_item').tableDnD({
 					onDrop: function(table, row) {
-						loadPage(reportsPage+'?action=ajax_dnd&id='+reportId+'&'+$.tableDnD.serialize());
+						loadPageUsingPost(reportsPage, 'action=ajax_dnd&id='+encodeURIComponent(reportId)+'&__csrf_magic='+encodeURIComponent(csrfMagicToken)+'&'+$.tableDnD.serialize());
 					}
 				});
 			});
@@ -1811,14 +1822,14 @@ function display_reports_items($report_id) {
 			$form_data .= '<td>' . $size . '</td>';
 
 			if ($i == 1) {
-				$form_data .= '<td class="right nowrap"><a class="pic remover fa fa-caret-down moveArrow" style="padding:3px" title="' . __esc('Move Down') . '" href="' . html_escape(get_reports_page() . '?action=item_movedown&item_id=' . $item['id'] . '&id=' . $report_id) . '"></a>' . '<span style="padding:5ps" class="moveArrowNone"></span>';
+				$form_data .= '<td class="right nowrap"><a class="pic remover fa fa-caret-down moveArrow" style="padding:3px" title="' . __esc('Move Down') . '" href="#" onclick="loadPageUsingPost(\'' . html_escape(get_reports_page()) . '\', {action:\'item_movedown\', item_id:' . (int) $item['id'] . ', id:' . (int) $report_id . ', __csrf_magic:csrfMagicToken}); return false;"></a>' . '<span style="padding:5ps" class="moveArrowNone"></span>';
 			} elseif ($i > 1 && $i < cacti_sizeof($items)) {
-				$form_data .= '<td class="right nowrap"><a class="pic remover fa fa-caret-down moveArrow" style="padding:3px" title="' . __esc('Move Down') . '" href="' . html_escape(get_reports_page() . '?action=item_movedown&item_id=' . $item['id'] . '&id=' . $report_id) . '"></a>' . '<a class="remover fa fa-caret-up moveArrow" style="padding:3px" title="' . __esc('Move Up') . '" href="' . html_escape(get_reports_page() . '?action=item_moveup&item_id=' . $item['id'] .	'&id=' . $report_id) . '"></a>';
+				$form_data .= '<td class="right nowrap"><a class="pic remover fa fa-caret-down moveArrow" style="padding:3px" title="' . __esc('Move Down') . '" href="#" onclick="loadPageUsingPost(\'' . html_escape(get_reports_page()) . '\', {action:\'item_movedown\', item_id:' . (int) $item['id'] . ', id:' . (int) $report_id . ', __csrf_magic:csrfMagicToken}); return false;"></a>' . '<a class="remover fa fa-caret-up moveArrow" style="padding:3px" title="' . __esc('Move Up') . '" href="#" onclick="loadPageUsingPost(\'' . html_escape(get_reports_page()) . '\', {action:\'item_moveup\', item_id:' . (int) $item['id'] . ', id:' . (int) $report_id . ', __csrf_magic:csrfMagicToken}); return false;"></a>';
 			} else {
-				$form_data .= '<td class="right nowrap"><span style="padding:3px" class="moveArrowNone"></span>' . '<a class="remover fa fa-caret-up moveArrow" style="padding:3px" title="' . __esc('Move Up') . '" href="' . html_escape(get_reports_page() . '?action=item_moveup&item_id=' . $item['id'] .	'&id=' . $report_id) . '"></a>';
+				$form_data .= '<td class="right nowrap"><span style="padding:3px" class="moveArrowNone"></span>' . '<a class="remover fa fa-caret-up moveArrow" style="padding:3px" title="' . __esc('Move Up') . '" href="#" onclick="loadPageUsingPost(\'' . html_escape(get_reports_page()) . '\', {action:\'item_moveup\', item_id:' . (int) $item['id'] . ', id:' . (int) $report_id . ', __csrf_magic:csrfMagicToken}); return false;"></a>';
 			}
 
-			$form_data .= '<a class="pic deleteMarker fa fa-times" style="padding:3px" href="' . html_escape(get_reports_page() . '?action=item_remove&item_id=' . $item['id'] . '&id=' . $report_id) . '" title="' . __esc('Delete') . '"></a>' . '</td></tr>';
+			$form_data .= '<a class="pic deleteMarker fa fa-times" style="padding:3px" href="#" onclick="loadPageUsingPost(\'' . html_escape(get_reports_page()) . '\', {action:\'item_remove\', item_id:' . (int) $item['id'] . ', id:' . (int) $report_id . ', __csrf_magic:csrfMagicToken}); return false;" title="' . __esc('Delete') . '"></a>' . '</td></tr>';
 
 			print $form_data;
 

@@ -1496,11 +1496,11 @@ function reports_expand_tree(&$report, $item, $parent, $output, $format_ok, $the
 
 									$outstr .= "\t\t<tr class='text_row'>" . PHP_EOL;
 									if ($format_ok) {
-										$outstr .= "\t\t\t<td class='text'>" . __('Data Query:') . ' ' . $data_query['name'] . PHP_EOL;
+										$outstr .= "\t\t\t<td class='text'>" . __('Data Query:') . ' ' . html_escape($data_query['name']) . PHP_EOL;
 										$outstr .= "\t\t\t</td>" . PHP_EOL;
 										$outstr .= "\t\t</tr>" . PHP_EOL;
 									} else {
-										$outstr .= "\t\t\t<td class='text' style='text-align:" . $alignment[$item['align']] . ";font-size: " . $item['font_size'] . "pt;'>" . __('Data Query:') . ' ' . $data_query['name'] . PHP_EOL;
+										$outstr .= "\t\t\t<td class='text' style='text-align:" . $alignment[$item['align']] . ";font-size: " . $item['font_size'] . "pt;'>" . __('Data Query:') . ' ' . html_escape($data_query['name']) . PHP_EOL;
 										$outstr .= "\t\t\t</td>" . PHP_EOL;
 										$outstr .= "\t\t</tr>" . PHP_EOL;
 									}
@@ -1680,32 +1680,49 @@ function reports_graph_area($graphs, &$report, $item, $timespan, $output, $forma
 function png2jpeg ($png_data) {
 	global $config;
 
+	$ImageData = '';
+	$fn        = false;
+
 	if ($png_data != '') {
-		$fn = '/tmp/' . time() . '.png';
+		$fn = tempnam(sys_get_temp_dir(), 'cacti-report-');
+
+		if ($fn === false) {
+			return $ImageData;
+		}
 
 		/* write rrdtool's png file to scratch dir */
 		$f = fopen($fn, 'wb');
+		if ($f === false) {
+			unlink($fn);
+
+			return $ImageData;
+		}
+
 		fwrite($f, $png_data);
 		fclose($f);
 
-		/* create php-gd image object from file */
-		$im = imagecreatefrompng($fn);
-		if (!$im) {								/* check for errors */
-			$im = ImageCreate (150, 30);		/* create an empty image */
-			$bgc = ImageColorAllocate ($im, 255, 255, 255);
-			$tc  = ImageColorAllocate ($im, 0, 0, 0);
-			ImageFilledRectangle ($im, 0, 0, 150, 30, $bgc);
-			/* print error message */
-			ImageString($im, 1, 5, 5, "Error while opening: $fn", $tc);
+		try {
+			/* create php-gd image object from file */
+			$im = imagecreatefrompng($fn);
+			if (!$im) {								/* check for errors */
+				$im = ImageCreate (150, 30);		/* create an empty image */
+				$bgc = ImageColorAllocate ($im, 255, 255, 255);
+				$tc  = ImageColorAllocate ($im, 0, 0, 0);
+				ImageFilledRectangle ($im, 0, 0, 150, 30, $bgc);
+				/* print error message */
+				ImageString($im, 1, 5, 5, "Error while opening: $fn", $tc);
+			}
+
+			ob_start(); // start a new output buffer to capture jpeg image stream
+			imagejpeg($im);	// output to buffer
+			$ImageData = ob_get_contents(); // fetch image from buffer
+			$ImageDataLength = ob_get_length();
+			ob_end_clean(); // stop this output buffer
+		} finally {
+			if ($fn !== false && file_exists($fn)) {
+				unlink($fn); // delete scratch file
+			}
 		}
-
-        ob_start(); // start a new output buffer to capture jpeg image stream
-		imagejpeg($im);	// output to buffer
-		$ImageData = ob_get_contents(); // fetch image from buffer
-		$ImageDataLength = ob_get_length();
-		ob_end_clean(); // stop this output buffer
-
-		unlink($fn); // delete scratch file
 	}
 
 	return $ImageData;
@@ -1720,32 +1737,49 @@ function png2jpeg ($png_data) {
 function png2gif ($png_data) {
 	global $config;
 
+	$ImageData = '';
+	$fn        = false;
+
 	if ($png_data != '') {
-		$fn = '/tmp/' . time() . '.png';
+		$fn = tempnam(sys_get_temp_dir(), 'cacti-report-');
+
+		if ($fn === false) {
+			return $ImageData;
+		}
 
 		/* write rrdtool's png file to scratch dir */
 		$f = fopen($fn, 'wb');
+		if ($f === false) {
+			unlink($fn);
+
+			return $ImageData;
+		}
+
 		fwrite($f, $png_data);
 		fclose($f);
 
-		/* create php-gd image object from file */
-		$im = imagecreatefrompng($fn);
-		if (!$im) {								/* check for errors */
-			$im = ImageCreate (150, 30);		/* create an empty image */
-			$bgc = ImageColorAllocate ($im, 255, 255, 255);
-			$tc  = ImageColorAllocate ($im, 0, 0, 0);
-			ImageFilledRectangle ($im, 0, 0, 150, 30, $bgc);
-			/* print error message */
-			ImageString($im, 1, 5, 5, "Error while opening: $fn", $tc);
+		try {
+			/* create php-gd image object from file */
+			$im = imagecreatefrompng($fn);
+			if (!$im) {								/* check for errors */
+				$im = ImageCreate (150, 30);		/* create an empty image */
+				$bgc = ImageColorAllocate ($im, 255, 255, 255);
+				$tc  = ImageColorAllocate ($im, 0, 0, 0);
+				ImageFilledRectangle ($im, 0, 0, 150, 30, $bgc);
+				/* print error message */
+				ImageString($im, 1, 5, 5, "Error while opening: $fn", $tc);
+			}
+
+			ob_start(); // start a new output buffer to capture gif image stream
+			imagegif($im);	// output to buffer
+			$ImageData = ob_get_contents(); // fetch image from buffer
+			$ImageDataLength = ob_get_length();
+			ob_end_clean(); // stop this output buffer
+		} finally {
+			if ($fn !== false && file_exists($fn)) {
+				unlink($fn); // delete scratch file
+			}
 		}
-
-        ob_start(); // start a new output buffer to capture gif image stream
-		imagegif($im);	// output to buffer
-		$ImageData = ob_get_contents(); // fetch image from buffer
-		$ImageDataLength = ob_get_length();
-		ob_end_clean(); // stop this output buffer
-
-		unlink($fn); // delete scratch file
 	}
 
 	return $ImageData;
