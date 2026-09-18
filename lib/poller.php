@@ -2582,10 +2582,16 @@ function timeout_kill_registered_processes($tasktype = '', $taskname = '', $task
 
 
 /** Hold the writer lease only while draining a batch, never while waiting for collectors. */
-function process_poller_output_batch(&$deferred, &$proxy_pipe) {
+function process_poller_output_batch(&$deferred, &$proxy_pipe, $final = false) {
 	global $config;
 	static $reported = array();
+	static $retry_after = 0;
 	$deferred = false;
+	// Bound background retries; final drains bypass the delay after collection.
+	if (!$final && hrtime(true) < $retry_after) {
+		$deferred = true;
+		return 0;
+	}
 	$pending = db_fetch_cell_prepared('SELECT ' . SQL_NO_CACHE . ' EXISTS(SELECT 1 FROM poller_output LIMIT 1)');
 	if (!is_numeric($pending)) {
 		if (empty($reported['count'])) {
@@ -2598,6 +2604,7 @@ function process_poller_output_batch(&$deferred, &$proxy_pipe) {
 	$reported['count'] = false;
 	if ((int) $pending === 0) {
 		$reported = array();
+		$retry_after = 0;
 		return 0;
 	}
 	$proxy = ($config['force_storage_location_local'] ?? false) !== true && read_config_option('storage_location');
@@ -2634,6 +2641,7 @@ function process_poller_output_batch(&$deferred, &$proxy_pipe) {
 		$failed = $deferred;
 		return $acknowledged;
 	} finally {
+		$retry_after = $failed ? hrtime(true) + 5000000000 : 0;
 		if (!$proxy || $failed) {
 			rrd_close($pipe);
 			$proxy_pipe = false;

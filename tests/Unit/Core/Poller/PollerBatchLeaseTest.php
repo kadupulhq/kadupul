@@ -9,6 +9,10 @@ require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 require_once dirname(__DIR__, 4) . '/lib/rrd_maintenance.php';
 eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/poller.php'), 'process_poller_output_batch'));
 const SQL_NO_CACHE = '';
+function hrtime($asNumber)
+{
+    return $GLOBALS['batch']['clock'] ?? \hrtime($asNumber);
+}
 function remote_backend()
 {
     return ($GLOBALS['config']['force_storage_location_local'] ?? false) !== true && $GLOBALS['batch']['proxy'];
@@ -47,6 +51,7 @@ function rrd_close($pipe)
 }
 function process_poller_output(&$pipe, $remainder = 0, $after = null, &$acknowledged = null)
 {
+    $GLOBALS['batch']['drains'] = ($GLOBALS['batch']['drains'] ?? 0) + 1;
     if (!remote_backend()) {
         expect(\rrd_maintenance_acquire(true, false, 0))->toBeFalse();
     }
@@ -63,7 +68,7 @@ beforeEach(function () {
     $GLOBALS['config'] = array('cacti_server_os' => 'unix', 'rra_path' => $this->directory);
     $GLOBALS['batch'] = array('mode' => 'empty', 'proxy' => false, 'opens' => 0, 'closes' => 0, 'logs' => array());
     $proxy = false;
-    process_poller_output_batch($deferred, $proxy); // Reset dedupe after recovery.
+    process_poller_output_batch($deferred, $proxy, true); // Reset dedupe after recovery.
 });
 afterEach(function () {
     $GLOBALS['config'] = $this->savedConfig;
@@ -78,10 +83,10 @@ test('local batches release leases and defer busy maintenance without errors or 
         $start = microtime(true);
         if ($mode === 'exception') {
             expect(function () use (&$deferred, &$proxy) {
-                return process_poller_output_batch($deferred, $proxy);
+                return process_poller_output_batch($deferred, $proxy, true);
             })->toThrow(\RuntimeException::class, 'drain failed');
         } else {
-            expect(process_poller_output_batch($deferred, $proxy))->toBe($mode === 'success' ? 3 : 0);
+            expect(process_poller_output_batch($deferred, $proxy, true))->toBe($mode === 'success' ? 3 : 0);
             expect($deferred)->toBe(in_array($mode, array('retry', 'init-failed', 'query-failed'), true));
         }
         if ($mode === 'busy') {
@@ -102,13 +107,13 @@ test('local batches release leases and defer busy maintenance without errors or 
 test('batch failure logs deduplicate while failing and resume after recovery', function ($mode) {
     $proxy = false;
     $GLOBALS['batch']['mode'] = $mode;
-    process_poller_output_batch($deferred, $proxy);
-    process_poller_output_batch($deferred, $proxy);
+    process_poller_output_batch($deferred, $proxy, true);
+    process_poller_output_batch($deferred, $proxy, true);
     expect($GLOBALS['batch']['logs'])->toHaveCount(1);
     $GLOBALS['batch']['mode'] = 'success';
-    process_poller_output_batch($deferred, $proxy);
+    process_poller_output_batch($deferred, $proxy, true);
     $GLOBALS['batch']['mode'] = $mode;
-    process_poller_output_batch($deferred, $proxy);
+    process_poller_output_batch($deferred, $proxy, true);
     expect($GLOBALS['batch']['logs'])->toHaveCount(2);
 })->with(array('init-failed', 'query-failed'));
 
@@ -116,20 +121,20 @@ test('proxy batches reuse a connection until failure or the collector cycle ends
     $GLOBALS['batch']['proxy'] = true;
     $GLOBALS['batch']['mode'] = 'success';
     $proxy = false;
-    process_poller_output_batch($deferred, $proxy);
-    process_poller_output_batch($deferred, $proxy);
+    process_poller_output_batch($deferred, $proxy, true);
+    process_poller_output_batch($deferred, $proxy, true);
     expect($GLOBALS['batch']['opens'])->toBe(1)->and($GLOBALS['batch']['closes'])->toBe(0);
     $GLOBALS['batch']['mode'] = $failure;
     if ($failure === 'exception') {
         expect(function () use (&$deferred, &$proxy) {
-            return process_poller_output_batch($deferred, $proxy);
+            return process_poller_output_batch($deferred, $proxy, true);
         })->toThrow(\RuntimeException::class);
     } else {
-        expect(process_poller_output_batch($deferred, $proxy))->toBe(0)->and($deferred)->toBeTrue();
+        expect(process_poller_output_batch($deferred, $proxy, true))->toBe(0)->and($deferred)->toBeTrue();
     }
     expect($GLOBALS['batch']['closes'])->toBe(1)->and($proxy)->toBeFalse();
     $GLOBALS['batch']['mode'] = 'success';
-    process_poller_output_batch($deferred, $proxy);
+    process_poller_output_batch($deferred, $proxy, true);
     expect($GLOBALS['batch']['opens'])->toBe(2);
     rrd_close($proxy);
 })->with(array('retry', 'exception'));
@@ -140,7 +145,7 @@ test('forced local storage ignores the configured proxy and Windows boolean writ
     $GLOBALS['config']['force_storage_location_local'] = true;
     $GLOBALS['config']['cacti_server_os'] = $windows ? 'win32' : 'unix';
     $proxy = false;
-    expect(process_poller_output_batch($deferred, $proxy))->toBe(3)->and($deferred)->toBeFalse();
+    expect(process_poller_output_batch($deferred, $proxy, true))->toBe(3)->and($deferred)->toBeFalse();
     expect($GLOBALS['batch']['opens'])->toBe(1)->and($GLOBALS['batch']['closes'])->toBe(1)->and($proxy)->toBeFalse();
 })->with(array(false, true));
 
@@ -148,7 +153,34 @@ test('forced local storage ignores the configured proxy and Windows boolean writ
 test('partial batch failures preserve successful update counts and recover on retry', function () {
     $GLOBALS['batch']['mode'] = 'partial';
     $proxy = false;
-    expect(process_poller_output_batch($deferred, $proxy))->toBe(3)->and($deferred)->toBeTrue();
+    expect(process_poller_output_batch($deferred, $proxy, true))->toBe(3)->and($deferred)->toBeTrue();
     $GLOBALS['batch']['mode'] = 'success';
-    expect(process_poller_output_batch($deferred, $proxy))->toBe(3)->and($deferred)->toBeFalse();
+    expect(process_poller_output_batch($deferred, $proxy, true))->toBe(3)->and($deferred)->toBeFalse();
 });
+
+
+test('failed background batches back off while final drains bypass the delay', function ($remote) {
+    $GLOBALS['batch']['clock'] = 100000000000;
+    $GLOBALS['batch']['mode'] = 'partial';
+    $GLOBALS['batch']['proxy'] = $remote;
+    $proxy = false;
+    $final = false;
+    expect(process_poller_output_batch($deferred, $proxy, $final))->toBe(3)->and($deferred)->toBeTrue();
+    for ($second = 1; $second < 5; $second++) {
+        $GLOBALS['batch']['clock'] = (100 + $second) * 1000000000;
+        expect(process_poller_output_batch($deferred, $proxy, $final))->toBe(0)->and($deferred)->toBeTrue();
+    }
+    expect($GLOBALS['batch']['opens'])->toBe(1)->and($GLOBALS['batch']['drains'])->toBe(1);
+    $GLOBALS['batch']['clock'] = 105000000000;
+    expect(process_poller_output_batch($deferred, $proxy, $final))->toBe(3)->and($deferred)->toBeTrue();
+    expect($GLOBALS['batch']['opens'])->toBe(2);
+    $GLOBALS['batch']['mode'] = 'success';
+    $final = true;
+    expect(process_poller_output_batch($deferred, $proxy, $final))->toBe(3)->and($deferred)->toBeFalse();
+    $final = false;
+    expect(process_poller_output_batch($deferred, $proxy, $final))->toBe(3)->and($deferred)->toBeFalse();
+    expect($GLOBALS['batch']['drains'])->toBe(4);
+    if ($proxy !== false) {
+        rrd_close($proxy);
+    }
+})->with(array(false, true));
