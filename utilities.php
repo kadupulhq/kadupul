@@ -34,6 +34,25 @@ include_once('./lib/utility.php');
 /* set default action */
 set_default_action();
 
+/* csrf-magic only checks the token on POST, so an action that changes state
+ * must not run from a GET that a forged link or image can send. */
+$post_actions = array(
+	'clear_poller_cache',
+	'rebuild_resource_cache',
+	'clear_logfile',
+	'purge_logfile',
+	'clear_user_log',
+	'purge_data_source_statistics',
+	'rebuild_snmpagent_cache'
+);
+
+if (in_array(get_request_var('action'), $post_actions, true) && (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST')) {
+	cacti_log('WARNING: Rejected non-POST request to utilities.php?action=' . get_request_var('action'), false, 'AUTH');
+
+	header('Location: utilities.php');
+	exit;
+}
+
 switch (get_request_var('action')) {
 	case 'clear_poller_cache':
 		/* obtain timeout settings */
@@ -985,8 +1004,11 @@ function utilities_view_user_log() {
 	}
 
 	function purgeLog() {
-		strURL = urlPath+'utilities.php?action=clear_user_log&header=false';
-		loadPageNoHeader(strURL);
+		loadPageUsingPost(urlPath+'utilities.php', {
+			action: 'clear_user_log',
+			header: 'false',
+			__csrf_magic: csrfMagicToken
+		});
 	}
 
 	$(function() {
@@ -2316,6 +2338,7 @@ function utilities() {
 		),
 		__('Rebuild Poller Cache') => array(
 			'link'  => 'utilities.php?action=clear_poller_cache',
+			'post'  => true,
 			'mode'  => 'online',
 			'description' => __('The Poller Cache will be re-generated if you select this option. Use this option only in the event of a database crash if you are experiencing issues after the crash and have already run the database repair tools.  Alternatively, if you are having problems with a specific Device, simply re-save that Device to rebuild its Poller Cache.  There is also a command line interface equivalent to this command that is recommended for large systems.'),
 			'note'        => array (
@@ -2325,6 +2348,7 @@ function utilities() {
 		),
 		__('Rebuild Resource Cache') => array(
 			'link'  => 'utilities.php?action=rebuild_resource_cache',
+			'post'  => true,
 			'mode'  => 'online',
 			'description' => __('When operating multiple Data Collectors in Cacti, Cacti will attempt to maintain state for key files on all Data Collectors.  This includes all core, non-install related website and plugin files.  When you force a Resource Cache rebuild, Cacti will clear the local Resource Cache, and then rebuild it at the next scheduled poller start.  This will trigger all Remote Data Collectors to recheck their website and plugin files for consistency.')
 		),
@@ -2340,6 +2364,7 @@ function utilities() {
 	$utilities[__('Data Source Statistics Utilities')] = array(
 		__('Purge Data Source Statistics') => array(
 			'link'  => 'utilities.php?action=purge_data_source_statistics',
+			'post'  => true,
 			'mode'  => 'online',
 			'description' => __('This menu pick will purge all existing Data Source Statistics from the Database.  If Data Source Statistics is enabled, the Data Sources Statistics will start collection again on the next Data Collector pass.')
 		),
@@ -2369,6 +2394,7 @@ function utilities() {
 			),
 			__('Rebuild SNMP Agent Cache') => array(
 				'link'  => 'utilities.php?action=rebuild_snmpagent_cache',
+				'post'  => true,
 				'mode'  => 'online',
 				'description' => __('The SNMP cache will be cleared and re-generated if you select this option. Note that it takes another poller run to restore the SNMP cache completely.')
 			),
@@ -2400,7 +2426,11 @@ function utilities() {
 
 				form_alternate_row();
 				print "<td class='nowrap' style='vertical-align:top;'>";
-				print "<a class='hyperLink' href='" . html_escape($details['link']) . "'>" . $title . '</a>';
+				if (isset($details['post'])) {
+					print "<a class='utilityPost' href='#' data-link='" . html_escape($details['link']) . "'>" . $title . '</a>';
+				} else {
+					print "<a class='hyperLink' href='" . html_escape($details['link']) . "'>" . $title . '</a>';
+				}
 				print '</td>';
 				print '<td>';
 				print html_escape($details['description']);
@@ -2420,6 +2450,22 @@ function utilities() {
 	api_plugin_hook('utilities_list');
 
 	html_end_box();
+
+	?>
+	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
+	$(function() {
+		$('a.utilityPost').on('click', function(event) {
+			event.preventDefault();
+
+			$('<form method="post"></form>')
+				.attr('action', $(this).data('link'))
+				.append($('<input type="hidden" name="__csrf_magic">').val(csrfMagicToken))
+				.appendTo('body')
+				.trigger('submit');
+		});
+	});
+	</script>
+	<?php
 }
 
 function purge_data_source_statistics() {
