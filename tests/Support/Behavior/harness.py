@@ -606,9 +606,9 @@ class Harness:
         # The same poll with rrdtool failing, to record how Cacti reports a tool
         # that exits non-zero rather than how it behaves when everything works.
         self.truncate_artifacts('rrd-argv.log', 'rrd-stdin.log')
-        self.command('sh', '-c', 'touch /artifacts/rrd-fail && test -f /artifacts/rrd-fail', check=True)
+        self.command('sh', '-c', 'rm -f /artifacts/rrd-fail-crashed && touch /artifacts/rrd-fail && test -f /artifacts/rrd-fail', check=True)
         failed = self.php('poller.php', '--force')
-        self.command('sh', '-c', 'rm -f /artifacts/rrd-fail', check=True)
+        self.command('sh', '-c', 'rm -f /artifacts/rrd-fail /artifacts/rrd-fail-crashed', check=True)
 
         # Negative control. Without it a no-op injection records an ordinary
         # poll as the failure contract, and the two scenarios after it inherit
