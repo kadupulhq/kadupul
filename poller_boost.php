@@ -1013,6 +1013,9 @@ function boost_process_local_data_ids($child, $rrdtool_pipe, $max_rows) {
 		/* A failed RRD is set aside so the rest of the shard still advances. */
 		$blocked = array();
 		$flushed = array();
+		/* The last row each source's successful flush covered, so a later
+		 * failure hands back only the rows that were never written. */
+		$acked   = array();
 
 		/* we are going to blow away all record if ok */
 		$vals_in_buffer = 0;
@@ -1020,7 +1023,7 @@ function boost_process_local_data_ids($child, $rrdtool_pipe, $max_rows) {
 		boost_timer('results_cycle', BOOST_TIMER_START);
 
 		/* go through each poller_output_boost entries and process */
-		foreach ($results as $item) {
+		foreach ($results as $index => $item) {
 			$skip_item = false;
 
 			if (isset($blocked[$item['local_data_id']])) {
@@ -1050,6 +1053,8 @@ function boost_process_local_data_ids($child, $rrdtool_pipe, $max_rows) {
 
 					if (!$flush_ok) {
 						$blocked[$local_data_id] = true;
+					} else {
+						$acked[$local_data_id] = array($results[$index - 1]['sample_time'], $results[$index - 1]['rrd_name']);
 					}
 				}
 
@@ -1163,6 +1168,8 @@ function boost_process_local_data_ids($child, $rrdtool_pipe, $max_rows) {
 
 						continue;
 					}
+
+					$acked[$local_data_id] = array($results[$index - 1]['sample_time'], $results[$index - 1]['rrd_name']);
 				}
 
 				$time = $item['timestamp'];
@@ -1343,6 +1350,16 @@ function boost_process_local_data_ids($child, $rrdtool_pipe, $max_rows) {
 		 * source from this run, so the archive can still be removed. If the
 		 * handback fails, the whole page is retained as before. */
 		foreach ($blocked as $blocked_id => $unused) {
+			if (isset($acked[$blocked_id])) {
+				$after        = 'at.time > ? OR (at.time = ? AND at.rrd_name > ?)';
+				$after_params = array($acked[$blocked_id][0], $acked[$blocked_id][0], $acked[$blocked_id][1]);
+			} else {
+				$after        = 'bpt.cursor_time IS NULL
+						OR at.time > bpt.cursor_time
+						OR (at.time = bpt.cursor_time AND at.rrd_name > bpt.cursor_rrd_name)';
+				$after_params = array();
+			}
+
 			foreach ($archive_tables as $table) {
 				if (db_execute_prepared("INSERT IGNORE INTO poller_output_boost
 					(local_data_id, rrd_name, time, output)
@@ -1353,10 +1370,8 @@ function boost_process_local_data_ids($child, $rrdtool_pipe, $max_rows) {
 					WHERE bpt.run_id = ?
 					AND bpt.local_data_id = ?
 					AND bpt.process_handler = ?
-					AND (bpt.cursor_time IS NULL
-						OR at.time > bpt.cursor_time
-						OR (at.time = bpt.cursor_time AND at.rrd_name > bpt.cursor_rrd_name))",
-					array($run_id, $blocked_id, $child), false) === false) {
+					AND ($after)",
+					array_merge(array($run_id, $blocked_id, $child), $after_params), false) === false) {
 					$updates_ok = false;
 					break 2;
 				}

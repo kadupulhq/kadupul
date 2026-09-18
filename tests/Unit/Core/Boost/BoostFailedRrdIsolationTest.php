@@ -24,7 +24,7 @@ function restore_error_handler() {}
 function get_installed_rrdtool_version() { return '1.7.2'; }
 function get_rrdtool_version() { return '1.7.2'; }
 function cacti_version_compare($a, $b, $op) { return version_compare($a, $b, $op); }
-function read_config_option($name) { return $name === 'boost_rrd_update_string_length' ? 2000 : ''; }
+function read_config_option($name) { return $name === 'boost_rrd_update_string_length' ? $GLOBALS['isolation_buffer'] : ''; }
 function boost_get_arch_table_names($table) { return array('poller_output_boost_arch_1'); }
 function array_rekey($rows, ...$args) { return array(); }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
@@ -35,7 +35,8 @@ function boost_get_unused_data_source_names($id) { return array(); }
 function boost_get_rrd_filename_and_template($id) { return array('rrd_template' => 'value', 'rrd_path' => "/rra/$id.rrd"); }
 function boost_rrdtool_function_update($id, $path, $template, $values, $pipe) {
     $GLOBALS['isolation_updates'][] = array($id, $values);
-    return $id == 2 || $GLOBALS['isolation_all_fail'] ? 'ERROR: permission denied; retain samples for retry' : 'OK';
+    $failing = $id == 2 && ($GLOBALS['isolation_fail_values'] === '' || strpos($values, $GLOBALS['isolation_fail_values']) !== false);
+    return $failing || $GLOBALS['isolation_all_fail'] ? 'ERROR: permission denied; retain samples for retry' : 'OK';
 }
 function db_fetch_assoc_prepared($sql, $params = array()) {
     if (strpos($sql, 'poller_data_template_field_mappings') !== false) { return array(); }
@@ -70,6 +71,8 @@ beforeEach(function () {
     $GLOBALS['current_lock'] = false;
     $GLOBALS['isolation_fail'] = '';
     $GLOBALS['isolation_all_fail'] = false;
+    $GLOBALS['isolation_buffer'] = 2000;
+    $GLOBALS['isolation_fail_values'] = '';
     $GLOBALS['isolation_logs'] = $GLOBALS['isolation_updates'] = array();
     $GLOBALS['config'] = array('library_path' => sys_get_temp_dir() . '/boost-isolation-' . bin2hex(random_bytes(8)));
     mkdir($GLOBALS['config']['library_path']);
@@ -111,4 +114,15 @@ test('a page where every RRD fails is retained instead of requeued', function ()
         ->and($db->query('SELECT COUNT(*) FROM poller_output_boost_local_data_ids WHERE cursor_time IS NULL')->fetchColumn())->toEqual(2)
         ->and($db->query('SELECT COUNT(*) FROM poller_output_boost_local_data_ids')->fetchColumn())->toEqual(3)
         ->and(implode("\n", $GLOBALS['isolation_logs']))->toContain('failed for every data source');
+});
+
+test('a source that fails after an acknowledged flush hands back only the unwritten rows', function () {
+    $db = $GLOBALS['isolation_db'];
+    $db->exec("INSERT INTO poller_output_boost_arch_1 VALUES (2,'value','2020-01-01 00:10:00','22'),(2,'value','2020-01-01 00:15:00','23')");
+    // A one-byte buffer flushes every timestamp; only the 00:10 write fails.
+    $GLOBALS['isolation_buffer'] = 1;
+    $GLOBALS['isolation_fail_values'] = (string) strtotime('2020-01-01 00:10:00 UTC');
+    expect(boost_process_local_data_ids(1, false, 100))->toBe(7)
+        ->and($db->query('SELECT time FROM poller_output_boost ORDER BY time')->fetchAll(\PDO::FETCH_COLUMN))
+            ->toBe(array('2020-01-01 00:10:00', '2020-01-01 00:15:00'));
 });
