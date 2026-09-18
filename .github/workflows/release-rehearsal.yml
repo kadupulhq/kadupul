@@ -24,6 +24,8 @@ jobs:
         run: mise exec python@3.12.12 -- python tests/Support/Behavior/release_selftest.py
       - name: Fetch pinned baseline source
         run: git fetch --no-tags https://github.com/Cacti/cacti.git 6482af547c204199e829b7a0df0b7a13db3e0a58
+      - name: Load PHP base image for runtime provenance
+        run: docker pull php:8.2-apache
       - name: Rehearse upgrade and restore the matching snapshot
         env:
           PHP_VERSION: '8.2'
