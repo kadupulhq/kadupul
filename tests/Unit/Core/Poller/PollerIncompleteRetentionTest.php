@@ -110,3 +110,13 @@ test('empty-result cleanup waits for a verified idle poller', function ($running
         ->and($deferred)->toBe($running === false)->and($consumed)->toBe(0)
         ->and($GLOBALS['retention_db']->query('SELECT output FROM poller_output')->fetchColumn())->toBe('saved');
 })->with(array(false, 1));
+
+test('a short delete stops cleanup and leaves the replacement queued', function ($orphan) {
+    $db = $GLOBALS['retention_db'];
+    $db->exec("INSERT INTO poller_output VALUES(1,'a','2001-01-01','first'),(2,'a','2001-01-01','second')");
+    if (!$orphan) { $db->exec("INSERT INTO poller_item VALUES(1,'a',2,''),(2,'a',2,'')"); }
+    $GLOBALS['retention_arrival'] = "UPDATE poller_output SET output='replacement' WHERE local_data_id = 2";
+    $deleted = $orphan ? poller_cleanup_orphan_rows($failed) : poller_expire_incomplete_rows(172800, $failed);
+    expect($deleted)->toBe(1)->and($failed)->toBeTrue()
+        ->and($db->query('SELECT output FROM poller_output')->fetchAll(\PDO::FETCH_COLUMN))->toBe(array('replacement'));
+})->with(array('orphan' => true));

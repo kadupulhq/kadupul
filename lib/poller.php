@@ -694,7 +694,8 @@ function poller_cleanup_orphan_rows(&$failed = null) {
 		}
 		$orphan_consumed = poller_delete_output_rows($orphan_keys, $orphan_failed);
 		$consumed += $orphan_consumed;
-		if ($orphan_failed || ($orphan_keys && $orphan_consumed === 0)) {
+		// A short count means a key was replaced after selection; stop so the next page cannot take it.
+		if ($orphan_failed || $orphan_consumed < cacti_sizeof($orphan_keys)) {
 			$failed = true;
 			cacti_log('ERROR: Orphan sample cleanup failed; rows retained for retry.', false, 'POLLER');
 			return $consumed;
