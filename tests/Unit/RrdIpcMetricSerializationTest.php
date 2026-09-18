@@ -21,7 +21,7 @@ test('rrdtool_function_update rejects empty strings as U', function () use ($rrd
 
 test('rrdtool_function_update uses locale-safe decimal replacement', function () use ($rrdSource) {
     $body = test_php_function_source($rrdSource, 'rrdtool_function_update');
-    expect($body)->toContain("str_replace(',', '.', (string)\$value)");
+    expect($body)->toContain("str_replace(',', '.', (string) \$value)");
 });
 
 test('rrdtool_function_update does not directly append raw value', function () use ($rrdSource) {
