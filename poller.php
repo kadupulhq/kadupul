@@ -641,7 +641,7 @@ while ($poller_runs_completed < $poller_runs) {
 				AND (dl.id IS NULL OR (dl.host_id > 0 AND h.id IS NULL)) LIMIT 40000',
 				array($poller_id));
 			if ($orphan_rows === false) {
-				$rrd_write_failed = true;
+				$rrd_cleanup_failed = true;
 				break;
 			}
 			$orphan_keys = array();
@@ -650,7 +650,7 @@ while ($poller_runs_completed < $poller_runs) {
 			}
 			$removed = poller_delete_output_rows($orphan_keys, $delete_failed);
 			if ($delete_failed || ($orphan_keys && $removed === 0)) {
-				$rrd_write_failed = true;
+				$rrd_cleanup_failed = true;
 				break;
 			}
 		} while (count($orphan_rows) === 40000);
@@ -989,7 +989,7 @@ if ($poller_id == 1) {
 	api_plugin_hook('poller_bottom');
 }
 
-if (!empty($rrd_write_failed)) {
+if (!empty($rrd_write_failed) || !empty($rrd_cleanup_failed)) {
 	exit(1);
 }
 

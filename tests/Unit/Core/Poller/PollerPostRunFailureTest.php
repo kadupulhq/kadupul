@@ -5,7 +5,7 @@
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
-test('RRD write failure preserves poller post-run services and only changes exit status', function ($pollerId, $recovery, $failed) {
+test('RRD write failure preserves poller post-run services and only changes exit status', function ($pollerId, $recovery, $failed, $cleanupFailed = false) {
     $source = file_get_contents(dirname(__DIR__, 4) . '/poller.php');
     $start = strpos($source, '// Finish poller bookkeeping');
     $end = strpos($source, 'function host_status_cache_check()');
@@ -19,6 +19,7 @@ test('RRD write failure preserves poller post-run services and only changes exit
         $program .= 'function ' . $name . '(...$args){$GLOBALS["events"][]="' . $name . '";}';
     }
     $program .= '$poller_id=' . $pollerId . ';$mibs=false;$config=array("connection"=>' . var_export($recovery ? 'recovery' : 'online', true) . ');';
+    $program .= '$rrd_cleanup_failed=' . ($cleanupFailed ? 'true' : 'false') . ';';
     $program .= '$rrd_write_failed=' . ($failed ? 'true' : 'false') . ';register_shutdown_function(function(){echo json_encode($GLOBALS["events"]);});' . $postRun;
     $file = tempnam(sys_get_temp_dir(), 'poller-post-run-');
     file_put_contents($file, $program);
@@ -29,7 +30,7 @@ test('RRD write failure preserves poller post-run services and only changes exit
         $error = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
-        expect(proc_close($process))->toBe($failed ? 1 : 0, $error)->and($error)->toBe('');
+        expect(proc_close($process))->toBe($failed || $cleanupFailed ? 1 : 0, $error)->and($error)->toBe('');
         $remote = array('automation_poller_bottom', 'poller_maintenance', 'api_plugin_hook');
         if ($recovery) {
             $remote = array_merge(array('cacti_log', 'poller_recovery_flush_boost'), $remote);
@@ -38,7 +39,7 @@ test('RRD write failure preserves poller post-run services and only changes exit
     } finally {
         unlink($file);
     }
-})->with(array(array(1, false, false), array(1, false, true), array(2, false, true), array(2, true, true)));
+})->with(array(array(1, false, false), array(1, false, true), array(2, false, true), array(2, true, true), array(1, false, false, true)));
 
 
 test('the production wait loop retries after a transient drain failure', function () {
@@ -78,4 +79,25 @@ test('the final drain reports current failure state after a recovered waiting at
     fclose($pipes[2]);
     expect(proc_close($process))->toBe(0)->and($error)->toBe('');
     expect(json_decode($output, true))->toBe(array(3, $failed));
+})->with(array(false, true));
+
+test('orphan cleanup records a failure independently of later RRD recovery', function ($queryFailure) {
+    $source = file_get_contents(dirname(__DIR__, 4) . '/poller.php');
+    $start = strpos($source, '// Valid pending samples belong to a retry');
+    $end = strpos($source, '// InnoDB queues', $start);
+    expect($start)->not->toBeFalse()->and($end)->not->toBeFalse();
+    // End before the enclosing retained-output conditional closes.
+    $body = substr($source, $start, $end - $start);
+    $body = substr($body, 0, strrpos($body, '}'));
+    $program = '$poller_id=1;$rrd_write_failed=false;$rrd_cleanup_failed=false;'
+        . 'function db_fetch_assoc_prepared(...$args){return ' . ($queryFailure ? 'false' : "array(array('local_data_id'=>1,'rrd_name'=>'value','time'=>'2020-01-01','output'=>'42'))") . ';}'
+        . 'function poller_delete_output_rows($keys,&$failed){$failed=true;return 0;}'
+        . $body . '$rrd_write_failed=false;echo json_encode(array($rrd_write_failed,$rrd_cleanup_failed));';
+    $process = proc_open(array(PHP_BINARY, '-r', $program), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $output = stream_get_contents($pipes[1]);
+    $error = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    expect(proc_close($process))->toBe(0)->and($error)->toBe('');
+    expect(json_decode($output, true))->toBe(array(false, true));
 })->with(array(false, true));
