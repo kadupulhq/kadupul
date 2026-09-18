@@ -768,6 +768,7 @@ while ($poller_runs_completed < $poller_runs) {
 			}
 
 			$rrds_processed = 0;
+			$rrd_write_failed = false;
 			$rrdtool_pipe = false;
 			$poller_finishing_dispatched = false;
 			$poller_output_deferred = false;
@@ -787,9 +788,7 @@ while ($poller_runs_completed < $poller_runs) {
 
 					if ($poller_id == 1) {
 						$rrds_processed += process_poller_output_batch(true, $poller_output_deferred, $rrdtool_pipe);
-						if ($poller_output_deferred) {
-							$rrd_write_failed = true;
-						}
+						$rrd_write_failed = $poller_output_deferred;
 					} elseif ($config['connection'] != 'online') {
 						/* truncate until formal remote management is supported */
 						db_execute('TRUNCATE poller_output');
