@@ -7451,6 +7451,14 @@ function get_client_addr() {
 		$proxy_headers = [];
 	}
 
+	/* the lookup runs several times per request, so warn once per process */
+	static $warned = false;
+
+	if (!$warned && cacti_sizeof(array_diff($proxy_headers, array('REMOTE_ADDR')))) {
+		$warned = true;
+		cacti_log('WARNING: $proxy_headers is set without $trusted_proxies, so client address headers are trusted from any client.  Set $trusted_proxies in include/config.php to your reverse proxy addresses.', false, 'AUTH');
+	}
+
 	if (!in_array('REMOTE_ADDR', $proxy_headers)) {
 		$proxy_headers[] = 'REMOTE_ADDR';
 	}
