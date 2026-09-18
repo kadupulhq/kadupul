@@ -899,7 +899,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 	exist, the last thing we want to do is overright data! */
 	if ($show_source != true) {
 		if (read_config_option('storage_location')) {
-			if (rrdtool_execute("file_exists $data_source_path", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER')) {
+			if (rrdtool_execute("file_exists $data_source_path", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== false) {
 				return -1;
 			}
 		} elseif (file_exists($data_source_path)) {
