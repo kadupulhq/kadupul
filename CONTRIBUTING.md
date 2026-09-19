@@ -18,6 +18,28 @@ branch keeps upstream Cacti formatting.
 Reproduce a bug before fixing it, verify the changed behavior, and include the
 validation commands and results in the pull request.
 
+### Local Git hooks
+
+Enable the repository-owned hooks once per clone:
+
+```sh
+.githooks/install
+```
+
+The pre-commit hook validates staged content only: whitespace errors, PHP
+syntax under PHP 8.1.34 selected through `mise`, and the same PER-CS migration
+policy used by CI. It does not rewrite the index or working tree. During a
+merge it ignores files copied unchanged from the incoming parent and checks
+only locally authored or conflict-resolved content.
+
+The commit-message hook enforces Conventional Commit subjects and a DCO
+`Signed-off-by` trailer. Use `git commit -s`; merge commits are exempt because
+Git generates their messages and the merged commits retain their attestations.
+
+Install php-cs-fixer 3.95.25 on `PATH`, or set `PHP_CS_FIXER` to that pinned
+executable. GitHub CI remains authoritative and must pass before merge. Local
+AI-review tools are intentionally not required by these hooks.
+
 ## Commits
 
 Use Conventional Commits and sign off every commit with `git commit -s` under the

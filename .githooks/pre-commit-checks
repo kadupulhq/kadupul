@@ -1,0 +1,191 @@
+#!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# Validate staged content only. The working tree is never rewritten.
+
+set -euo pipefail
+
+root=$(git rev-parse --show-toplevel)
+cd "$root"
+
+git diff --cached --check
+
+merge_head=$(git rev-parse -q --verify MERGE_HEAD 2>/dev/null || true)
+files=()
+php_files=()
+php_base_files=()
+
+while IFS= read -r -d '' status; do
+	IFS= read -r -d '' first
+	case "$status" in
+		R*)
+			base_file=$first
+			IFS= read -r -d '' file
+			;;
+		*)
+			file=$first
+			base_file=$file
+			;;
+	esac
+
+	# During a merge, an incoming file whose staged blob exactly matches the
+	# second parent was already validated on that branch. Check only content
+	# authored here or produced while resolving a conflict.
+	if [ -n "$merge_head" ] && git cat-file -e "$merge_head:$file" 2>/dev/null; then
+		staged_oid=$(git rev-parse ":$file")
+		incoming_oid=$(git rev-parse "$merge_head:$file")
+		if [ "$staged_oid" = "$incoming_oid" ]; then
+			continue
+		fi
+	fi
+
+	case "$file" in
+		include/vendor/*|tests/Fixtures/*|node_modules/*) continue ;;
+	esac
+
+	files+=("$file")
+	case "$file" in
+		*.php)
+			php_files+=("$file")
+			php_base_files+=("$base_file")
+			;;
+	esac
+done < <(git diff --cached --name-status --diff-filter=ACMR -M -z)
+
+if [ "${#files[@]}" -eq 0 ]; then
+	exit 0
+fi
+
+if [ "${#php_files[@]}" -eq 0 ]; then
+	exit 0
+fi
+
+if ! command -v mise >/dev/null 2>&1 || ! mise where php@8.1.34 >/dev/null 2>&1; then
+	echo 'PHP 8.1.34 is required. Install it with: mise install php@8.1.34' >&2
+	exit 1
+fi
+php_cmd=(mise exec php@8.1.34 -- php)
+
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT HUP INT TERM
+
+for file in "${php_files[@]}"; do
+	target="$tmp/staged/$file"
+	mkdir -p "$(dirname "$target")"
+	git show ":$file" > "$target"
+done
+
+for file in "${php_files[@]}"; do
+	if ! "${php_cmd[@]}" -l "$tmp/staged/$file" >/dev/null; then
+		echo "PHP syntax failed: $file" >&2
+		exit 1
+	fi
+done
+
+fixer=${PHP_CS_FIXER:-}
+if [ -z "$fixer" ]; then
+	fixer=$(command -v php-cs-fixer 2>/dev/null || true)
+fi
+if [ -z "$fixer" ]; then
+	cat >&2 <<'EOF'
+php-cs-fixer 3.95.25 is required for staged PHP formatting checks.
+Install that version or set PHP_CS_FIXER to its executable path.
+EOF
+	exit 1
+fi
+
+fixer_version=$("${php_cmd[@]}" "$fixer" --version 2>/dev/null || true)
+case "$fixer_version" in
+	'PHP CS Fixer 3.95.25 '*) ;;
+	*)
+		echo 'php-cs-fixer 3.95.25 is required; found:' >&2
+		printf '  %s\n' "${fixer_version:-unavailable}" >&2
+		exit 1
+		;;
+esac
+
+config="$tmp/config/.php-cs-fixer.php"
+mkdir -p "$(dirname "$config")"
+if ! git cat-file -e ':.php-cs-fixer.php' 2>/dev/null; then
+	echo 'The staged tree has no .php-cs-fixer.php configuration.' >&2
+	exit 1
+fi
+git show ':.php-cs-fixer.php' > "$config"
+
+same_tokens() {
+	# shellcheck disable=SC2016 # This is a literal PHP program.
+	"${php_cmd[@]}" -r '
+		$tokens = static function (string $file): array {
+			$out = [];
+			foreach (token_get_all(file_get_contents($file)) as $token) {
+				if (is_array($token) && $token[0] === T_WHITESPACE) continue;
+				if (is_array($token) && ($token[0] === T_COMMENT || $token[0] === T_DOC_COMMENT)) {
+					$token[1] = preg_replace("/\\s+/", "", $token[1]);
+				}
+				if (is_array($token) && ($token[0] === T_OPEN_TAG || $token[0] === T_OPEN_TAG_WITH_ECHO)) {
+					$token[1] = rtrim($token[1]);
+				}
+				$out[] = is_array($token) ? [$token[0], $token[1]] : $token;
+			}
+			return $out;
+		};
+		exit($tokens($argv[1]) === $tokens($argv[2]) ? 0 : 1);
+	' -- "$1" "$2"
+}
+
+failed=0
+index=0
+for file in "${php_files[@]}"; do
+	base_file=${php_base_files[$index]}
+	index=$((index + 1))
+	staged="$tmp/staged/$file"
+	fixed="$tmp/fixed/$file"
+	mkdir -p "$(dirname "$fixed")"
+	cp "$staged" "$fixed"
+
+	# A legacy-formatted file may retain its existing format until its own
+	# whitespace-only conversion commit. New and already-converted files must
+	# match the checked-in PER-CS rules.
+	require_style=1
+	if git cat-file -e "HEAD:$base_file" 2>/dev/null; then
+		head="$tmp/head/$file"
+		head_fixed="$tmp/head-fixed/$file"
+		mkdir -p "$(dirname "$head")" "$(dirname "$head_fixed")"
+		git show "HEAD:$base_file" > "$head"
+		cp "$head" "$head_fixed"
+		"${php_cmd[@]}" "$fixer" fix --allow-unsupported-php-version=yes \
+			--config="$config" --path-mode=override \
+			--using-cache=no --quiet -- "$head_fixed"
+		if ! cmp -s "$head" "$head_fixed"; then
+			if [ "$base_file" != "$file" ] && cmp -s "$head" "$staged"; then
+				# A content-identical rename keeps the legacy-format exemption.
+				require_style=0
+			elif ! same_tokens "$head" "$staged"; then
+				# A substantive edit may retain legacy formatting until a dedicated
+				# formatting-only conversion commit.
+				require_style=0
+			fi
+		fi
+	fi
+
+	if [ "$require_style" -eq 0 ]; then
+		continue
+	fi
+
+	"${php_cmd[@]}" "$fixer" fix --allow-unsupported-php-version=yes \
+		--config="$config" --path-mode=override \
+		--using-cache=no --quiet -- "$fixed"
+	if ! cmp -s "$staged" "$fixed"; then
+		echo "STYLE ERROR: $file" >&2
+		diff -u "$staged" "$fixed" || true
+		failed=1
+	fi
+done
+
+if [ "$failed" -ne 0 ]; then
+	echo 'Format the reported staged PHP files with php-cs-fixer 3.95.25.' >&2
+	exit 1
+fi
+
+echo 'Kadupul staged-content checks passed.'
