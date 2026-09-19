@@ -72,6 +72,9 @@ if (file_exists(dirname(__FILE__) . '/config.php')) {
 	include(dirname(__FILE__) . '/config.php');
 }
 
+// Existing installations retain secure defaults until their service accounts are configured.
+$config += array('rrd_maintenance_trusted_uids' => array(), 'rrd_maintenance_trusted_gids' => array());
+
 if (isset($config['cacti_version'])) {
 	die('Invalid include/config.php file detected.' . PHP_EOL);
 	exit;

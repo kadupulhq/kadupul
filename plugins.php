@@ -549,7 +549,7 @@ function update_show_current () {
 
 	$sql_order = str_replace('`version` ', 'INET_ATON(`version`) ', $sql_order);
 	$sql_order = str_replace('version ', 'version+0 ', $sql_order);
-	$sql_order = str_replace('id DESC', 'id ASC', $sql_order);
+	$sql_order = str_replace('`id` DESC', '`id` ASC', $sql_order);
 
 	$sql = "SELECT *
 		FROM $table

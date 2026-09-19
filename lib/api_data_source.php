@@ -1,8 +1,11 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
+
+require_once __DIR__ . '/rrd_maintenance.php';
 
 /* api_data_source_crc_update - update hash stored in settings table to inform
    remote pollers to update their caches
@@ -45,6 +48,10 @@ function api_data_source_remove($local_data_id) {
 
 	$autoclean = read_config_option('rrd_autoclean');
 	$acmethod  = read_config_option('rrd_autoclean_method');
+	if ($autoclean == 'on' && !rrd_maintenance_cleanup_supported()) {
+		cacti_log('WARNING: Windows automatic local RRD cleanup is unsupported; files and cleanup requests retained for manual cleanup.', false, 'MAINT');
+	}
+
 
 	if ($autoclean == 'on') {
 		$dsinfo = db_fetch_row_prepared('SELECT local_data_id, data_source_path
@@ -166,6 +173,10 @@ function api_data_source_remove_multi($local_data_ids) {
 
 	$autoclean = read_config_option('rrd_autoclean');
 	$acmethod  = read_config_option('rrd_autoclean_method');
+	if ($autoclean == 'on' && !rrd_maintenance_cleanup_supported()) {
+		cacti_log('WARNING: Windows automatic local RRD cleanup is unsupported; files and cleanup requests retained for manual cleanup.', false, 'MAINT');
+	}
+
 
 	$local_data_ids_chunks = array_chunk($local_data_ids, 1000);
 	foreach ($local_data_ids_chunks as $ids_to_delete) {

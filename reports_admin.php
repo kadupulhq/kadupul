@@ -1,6 +1,7 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -15,13 +16,15 @@ get_filter_request_var('site_id');
 get_filter_request_var('host_id');
 get_filter_request_var('host_template_id');
 get_filter_request_var('graph_template_id');
-get_filter_request_var('tab', FILTER_CALLBACK, array('options' => 'sanitize_search_string'));
+reports_tab_request_var();
 
 /* set a longer execution time for large reports */
 ini_set('max_execution_time', '300');
 
 /* set default action */
 set_default_action();
+reports_require_post_action(get_request_var('action'));
+$reports_page = get_reports_page();
 
 switch (get_request_var('action')) {
 	case 'save':
@@ -33,12 +36,12 @@ switch (get_request_var('action')) {
 
 		reports_send(get_request_var('id'));
 
-		header('Location: reports_admin.php?action=edit&tab=' . get_request_var('tab') . '&id=' . get_request_var('id'));
+		header('Location: ' . $reports_page . '?action=edit&tab=' . rawurlencode(reports_tab_request_var()) . '&id=' . get_request_var('id') . '&header=false');
 		break;
 	case 'ajax_dnd':
 		reports_item_dnd();
 
-		header('Location: reports_admin.php?action=edit&tab=items&id=' . get_request_var('id'));
+		header('Location: ' . $reports_page . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
 		break;
 	case 'setvar':
 		$changed = reports_item_validate();
@@ -116,21 +119,21 @@ switch (get_request_var('action')) {
 
 		reports_item_movedown();
 
-		header('Location: reports_admin.php?action=edit&tab=items&id=' . get_request_var('id'));
+		header('Location: ' . $reports_page . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
 		break;
 	case 'item_moveup':
 		get_filter_request_var('id');
 
 		reports_item_moveup();
 
-		header('Location: reports_admin.php?action=edit&tab=items&id=' . get_request_var('id'));
+		header('Location: ' . $reports_page . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
 		break;
 	case 'item_remove':
 		get_filter_request_var('id');
 
 		reports_item_remove();
 
-		header('Location: reports_admin.php?action=edit&tab=items&id=' . get_request_var('id'));
+		header('Location: ' . $reports_page . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
 		break;
 	case 'item_edit':
 		general_header();

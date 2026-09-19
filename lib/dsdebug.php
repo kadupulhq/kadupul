@@ -332,7 +332,7 @@ function dsdebug_run_repair($id) {
 
 					$output = rrdtool_execute('tune ' . $options, false, RRDTOOL_OUTPUT_RETURN_STDERR);
 
-					if ($output == '') {
+					if ($output === '') {
 						cacti_log("RRDfile repair command succeeded for DS[$id] Command[$command]", false, 'DSDEBUG');
 					} else {
 						cacti_log("ERROR: RRDfile repair command failed for DS[$id] Command[$command] Output[$output]", false, 'DSDEBUG');

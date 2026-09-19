@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-15 20:13-0700\n"
+"POT-Creation-Date: 2026-09-16 15:22-0700\n"
 "PO-Revision-Date: 2024-04-20 19:06-0400\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -43,7 +43,7 @@ msgstr "라이센스"
 msgid "Kadupul is licensed under the GNU GPL:"
 msgstr "Kadupul는 GNU GPL에 따라 라이센스가 부여됩니다."
 
-#: about.php:33 lib/installer.php:1821
+#: about.php:33 lib/installer.php:1833
 msgid "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
 msgstr "이 프로그램은 무료 소프트웨어입니다. 자유 소프트웨어 재단이 발표 한 GNU 일반 공중 사용 허가서 (GPL)의 조건에 따라 배포하거나 수정할 수 있습니다. 라이센스 버전 2 또는 귀하의 선택에 따라 최신 버전을 선택하십시오."
 
@@ -583,7 +583,7 @@ msgid "Included in Aggregate"
 msgstr "집계에 포함됨"
 
 #: aggregate_graphs.php:1278 aggregate_graphs.php:1612 graph_templates.php:846
-#: graph_view.php:796 graph_view.php:809 graphs.php:2265 lib/spikekill.php:1752
+#: graph_view.php:796 graph_view.php:809 graphs.php:2265 lib/spikekill.php:1757
 msgid "Size"
 msgstr "크기"
 
@@ -609,7 +609,7 @@ msgstr "아니오"
 #: data_templates.php:1238 gprint_presets.php:428 graph_templates.php:886
 #: host_templates.php:963 include/global_settings.php:874
 #: include/global_settings.php:1897 lib/api_automation.php:1463
-#: lib/installer.php:2016 lib/installer.php:2044 lib/installer.php:3718
+#: lib/installer.php:2028 lib/installer.php:2056 lib/installer.php:3737
 #: links.php:400 tree.php:2327 tree.php:2328 user_admin.php:2326
 #: user_domains.php:752 user_domains.php:756 user_group_admin.php:2008
 #: vdef.php:916
@@ -744,7 +744,7 @@ msgstr "집계 템플릿"
 #: aggregate_templates.php:595 automation_templates.php:381
 #: automation_templates.php:468 color_templates.php:645
 #: include/global_arrays.php:998 include/global_arrays.php:1061
-#: lib/installer.php:2630 user_admin.php:2929 user_group_admin.php:2493
+#: lib/installer.php:2642 user_admin.php:2929 user_group_admin.php:2493
 msgid "Templates"
 msgstr "템플릿"
 
@@ -1172,7 +1172,7 @@ msgstr "연락처"
 #: automation_devices.php:270 include/global_form.php:1137
 #: include/global_form.php:1173 include/global_form.php:1367
 #: include/global_form.php:1743 lib/api_automation.php:273
-#: lib/api_automation.php:1229 lib/installer.php:1936 lib/installer.php:2631
+#: lib/api_automation.php:1229 lib/installer.php:1948 lib/installer.php:2643
 #: managers.php:202 user_admin.php:978 user_admin.php:1123
 #: user_group_admin.php:1010 user_group_admin.php:1996
 msgid "Description"
@@ -1198,7 +1198,7 @@ msgstr "SNMP"
 #: host.php:1671 host.php:1788 lib/api_automation.php:151
 #: lib/api_automation.php:275 lib/api_automation.php:568
 #: lib/api_automation.php:1089 lib/api_automation.php:1232
-#: lib/html_reports.php:1876 lib/installer.php:1936 managers.php:204
+#: lib/html_reports.php:1876 lib/installer.php:1948 managers.php:204
 #: package_import.php:537 package_import.php:622 plugins.php:467
 #: plugins.php:590 pollers.php:1005 templates_import.php:206
 #: templates_import.php:245 user_admin.php:1123 user_group_admin.php:1010
@@ -1255,11 +1255,11 @@ msgstr "검색된 장치 제거"
 #: lib/functions.php:5938 lib/functions.php:5942 lib/html.php:1261
 #: lib/html.php:1333 lib/html_reports.php:1666 lib/html_reports.php:1692
 #: lib/html_reports.php:1763 lib/html_reports.php:1764
-#: lib/html_reports.php:1765 lib/spikekill.php:1743 lib/spikekill.php:1744
-#: lib/spikekill.php:1788 lib/spikekill.php:1789 lib/spikekill.php:1790
-#: lib/spikekill.php:1791 lib/spikekill.php:1792 lib/spikekill.php:1793
-#: lib/spikekill.php:1794 lib/spikekill.php:1795 lib/spikekill.php:1796
-#: lib/spikekill.php:1797 lib/spikekill.php:1798 plugins.php:739
+#: lib/html_reports.php:1765 lib/spikekill.php:1748 lib/spikekill.php:1749
+#: lib/spikekill.php:1796 lib/spikekill.php:1797 lib/spikekill.php:1798
+#: lib/spikekill.php:1799 lib/spikekill.php:1800 lib/spikekill.php:1801
+#: lib/spikekill.php:1802 lib/spikekill.php:1803 lib/spikekill.php:1804
+#: lib/spikekill.php:1805 lib/spikekill.php:1806 plugins.php:739
 #: pollers.php:1113 user_admin.php:2320 utilities.php:721 utilities.php:1170
 #: utilities.php:2638 utilities.php:2766 utilities.php:2774 utilities.php:2785
 #: utilities.php:2796 utilities.php:2819 utilities.php:2865 utilities.php:3099
@@ -1564,8 +1564,8 @@ msgstr "일반 설정"
 #: include/global_form.php:1331 include/global_form.php:1359
 #: include/global_form.php:1432 include/global_form.php:1460
 #: include/global_form.php:2105 include/global_form.php:2203
-#: include/global_form.php:2248 lib/installer.php:1936 lib/installer.php:2009
-#: lib/installer.php:2039 lib/installer.php:2631 lib/installer.php:2719
+#: include/global_form.php:2248 lib/installer.php:1948 lib/installer.php:2021
+#: lib/installer.php:2051 lib/installer.php:2643 lib/installer.php:2731
 #: lib/vdef.php:56 managers.php:554 pollers.php:44 sites.php:23
 #: user_admin.php:978 user_domains.php:309 utilities.php:847 utilities.php:3079
 msgid "Name"
@@ -2495,7 +2495,7 @@ msgstr "트리 생성 기준"
 msgid "Change Leaf Type"
 msgstr "리프 유형 변경"
 
-#: automation_tree_rules.php:715 lib/installer.php:3942 utilities.php:2633
+#: automation_tree_rules.php:715 lib/installer.php:3961 utilities.php:2633
 #: utilities.php:2634 utilities.php:2637 utilities.php:2638
 msgid "WARNING:"
 msgstr "경고:"
@@ -2543,9 +2543,9 @@ msgid "No Tree Rules Found"
 msgstr "트리 규칙 없음"
 
 #: cactid.php:27 help.php:28 lib/functions.php:6219 lib/functions.php:6288
-#: lib/functions.php:6378 lib/functions.php:6985 poller.php:377 poller.php:527
-#: poller.php:592 poller.php:632 poller.php:774 poller.php:880
-#: poller_automation.php:36 poller_boost.php:359
+#: lib/functions.php:6378 lib/functions.php:6985 poller.php:384 poller.php:534
+#: poller.php:599 poller.php:641 poller.php:799 poller.php:905
+#: poller_automation.php:36 poller_boost.php:371
 #, fuzzy
 msgid "Kadupul System Warning"
 msgstr "Kadupul 시스템 경고"
@@ -3024,7 +3024,7 @@ msgstr "데이터 소스 내부 ID."
 msgid "The Status of the Data Source Debug Check."
 msgstr "데이터 소스 디버그 검사의 상태."
 
-#: data_debug.php:454 lib/installer.php:2390 lib/installer.php:2422
+#: data_debug.php:454 lib/installer.php:2402 lib/installer.php:2434
 #: package_import.php:591
 msgid "Writable"
 msgstr "쓰기 가능 "
@@ -3198,7 +3198,7 @@ msgstr "재방송 분석"
 msgid "Check"
 msgstr "체크"
 
-#: data_debug.php:809 include/global_form.php:1015 lib/rrd.php:3265
+#: data_debug.php:809 include/global_form.php:1015 lib/rrd.php:3588
 #: utilities.php:781 utilities.php:798 utilities.php:3079
 msgid "Value"
 msgstr "값"
@@ -3487,7 +3487,7 @@ msgstr "이 데이터 입력 메서드의 정보를 수집 할 때 사용하는 
 #: data_input.php:954 host.php:1682 lib/api_automation.php:162
 #: lib/api_automation.php:1100 lib/auth.php:2445 lib/clog_webapi.php:829
 #: lib/html_utility.php:1214 lib/import.php:332 lib/plugins.php:1333
-#: lib/plugins.php:1334 lib/rrd.php:3290 lib/rrd.php:3302 lib/spikekill.php:284
+#: lib/plugins.php:1334 lib/rrd.php:3613 lib/rrd.php:3625 lib/spikekill.php:284
 #: package_import.php:517 package_import.php:595 utilities.php:194
 #: utilities.php:195 utilities.php:2634
 msgid "Unknown"
@@ -3770,8 +3770,8 @@ msgid "Steps"
 msgstr "단계"
 
 #: data_source_profiles.php:622 graphs_new.php:449 include/global_form.php:281
-#: lib/html.php:566 lib/html_filter.php:55 lib/installer.php:2719
-#: lib/rrd.php:3319 utilities.php:849 utilities.php:1771
+#: lib/html.php:566 lib/html_filter.php:55 lib/installer.php:2731
+#: lib/rrd.php:3642 utilities.php:849 utilities.php:1771
 msgid "Rows"
 msgstr "행"
 
@@ -4479,7 +4479,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool 그래프 구문"
 
 #: graph_image.php:164 graph_json.php:208 graph_realtime.php:228
-#: lib/rrd.php:1669
+#: lib/rrd.php:1992
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul Poller는 아직 운영되지 않았습니다."
 
@@ -5819,11 +5819,11 @@ msgstr "현재 설치 / 업그레이드 권한이있는 Kadupul 관리자 만 �
 msgid "There is an Installation or Upgrade in progress."
 msgstr "진행중인 설치 또는 업그레이드가 있습니다."
 
-#: include/global.php:551
+#: include/global.php:554
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "이 데이터 수집기가 Kadupul 주요 사이트와 완전히 동기화 된 마지막 시간입니다."
 
-#: include/global.php:555
+#: include/global.php:558
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "메인 데이터 수집기가 오프라인 또는 복구 중 상태로 전환되었습니다"
 
@@ -6569,7 +6569,7 @@ msgstr "자연 주문"
 msgid "Numeric Ordering"
 msgstr "숫자 순서 지정"
 
-#: include/global_arrays.php:948 lib/rrd.php:3231
+#: include/global_arrays.php:948 lib/rrd.php:3554
 msgid "Header"
 msgstr "헤더"
 
@@ -7135,7 +7135,7 @@ msgid "1 GByte"
 msgstr "1 기가 바이트"
 
 #: include/global_arrays.php:1534 include/global_arrays.php:1597
-#: lib/boost.php:44
+#: lib/boost.php:53
 #, php-format
 msgid "%s GBytes"
 msgstr "%s GBytes"
@@ -8144,7 +8144,7 @@ msgstr "데이터가 데이터 소스에서 수집되는 빈도"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "RRDtool에서 알 수없는 데이터를 기록하기 전에 얼마나 오래 데이터가 누락 될 수 있습니다. 데이터 소스가 불안정하고 그래프에 간격을 표시하지 않고 이전 데이터를 전달하려는 경우이 값을 늘리십시오. 이 값에 X-Files Factor를 곱하여 실제 시간을 판별하십시오."
 
-#: include/global_form.php:223 lib/rrd.php:3322
+#: include/global_form.php:223 lib/rrd.php:3645
 msgid "X-Files Factor"
 msgstr "X 파일 요소"
 
@@ -8698,7 +8698,7 @@ msgstr "불투명 / 알파 채널"
 msgid "The opacity/alpha channel of the color."
 msgstr "색상의 불투명도 / 알파 채널입니다."
 
-#: include/global_form.php:986 lib/rrd.php:3318
+#: include/global_form.php:986 lib/rrd.php:3641
 msgid "Consolidation Function"
 msgstr "통합 기능"
 
@@ -12393,7 +12393,7 @@ msgstr "매칭 장치"
 
 #: lib/api_automation.php:133 lib/api_automation.php:1071
 #: lib/clog_webapi.php:526 lib/html_reports.php:982 lib/html_reports.php:1645
-#: lib/html_reports.php:1985 lib/html_reports.php:1996 lib/rrd.php:3260
+#: lib/html_reports.php:1985 lib/html_reports.php:1996 lib/rrd.php:3583
 #: utilities.php:339 utilities.php:1432 utilities.php:3079
 msgid "Type"
 msgstr "유형"
@@ -12741,17 +12741,17 @@ msgstr "Kadupul 로그 지워짐"
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "인증이 이전에 설정되지 않았습니다. 로컬 인증으로 설정하려고 했지만 관리 계정을 찾을 수 없습니다."
 
-#: lib/boost.php:46 utilities.php:2783
+#: lib/boost.php:55 utilities.php:2783
 #, php-format
 msgid "%s MBytes"
 msgstr "%s MBytes"
 
-#: lib/boost.php:49
+#: lib/boost.php:58
 #, php-format
 msgid "%s KBytes"
 msgstr "%s GBytes"
 
-#: lib/boost.php:52
+#: lib/boost.php:61
 #, php-format
 msgid "%s Bytes"
 msgstr "%s GBytes"
@@ -13599,7 +13599,7 @@ msgstr "장치 편집"
 msgid "Kill Spikes in Graphs"
 msgstr "그래프로 스파이크를 제거합니다."
 
-#: lib/html.php:582 lib/html.php:614 lib/installer.php:1682
+#: lib/html.php:582 lib/html.php:614 lib/installer.php:1694
 msgid "Previous"
 msgstr "이전"
 
@@ -13608,7 +13608,7 @@ msgstr "이전"
 msgid "%d to %d of %s [ %s ]"
 msgstr "%d ~ %d/%s [%s]"
 
-#: lib/html.php:588 lib/html.php:620 lib/installer.php:1681
+#: lib/html.php:588 lib/html.php:620 lib/installer.php:1693
 msgid "Next"
 msgstr "다음"
 
@@ -14735,7 +14735,7 @@ msgstr "잘못된 UTF-8 오프셋 오류!"
 msgid "Down (Thold)"
 msgstr "다운로드"
 
-#: lib/html_utility.php:1211 lib/installer.php:1977 lib/installer.php:3858
+#: lib/html_utility.php:1211 lib/installer.php:1989 lib/installer.php:3877
 msgid "Error"
 msgstr "오류"
 
@@ -14839,1054 +14839,1054 @@ msgstr "발견 종속성 :"
 msgid "Unmet Dependency:"
 msgstr "Unmet Dependency :"
 
-#: lib/installer.php:570
+#: lib/installer.php:574
 msgid "Path was not writable"
 msgstr "경로에 쓸 수 없습니다."
 
-#: lib/installer.php:580
+#: lib/installer.php:584
 msgid "Path is not writable"
 msgstr "경로에 쓸 수 없습니다."
 
-#: lib/installer.php:714
+#: lib/installer.php:726
 #, php-format
 msgid "Failed to set specified %sRRDTool version: %s"
 msgstr "지정된  %sRRDTool 버전을 설정하지 못했습니다 :  %s"
 
-#: lib/installer.php:762
+#: lib/installer.php:774
 msgid "Invalid Theme Specified"
 msgstr "잘못된 테마가 지정되었습니다."
 
-#: lib/installer.php:818
+#: lib/installer.php:830
 msgid "Resource is not writable"
 msgstr "리소스에 쓸 수 없습니다."
 
-#: lib/installer.php:823
+#: lib/installer.php:835
 msgid "File not found"
 msgstr "파일을 찾을 수 없습니다."
 
-#: lib/installer.php:836
+#: lib/installer.php:848
 msgid "PHP did not return expected result"
 msgstr "PHP가 예상 한 결과를 반환하지 않았습니다."
 
-#: lib/installer.php:850
+#: lib/installer.php:862
 msgid "Unexpected path parameter"
 msgstr "예기치 않은 경로 매개 변수"
 
-#: lib/installer.php:886
+#: lib/installer.php:898
 #, php-format
 msgid "Failed to apply specified profile %s != %s"
 msgstr "지정한 프로필  %s! =  %s을 적용하지 못했습니다."
 
-#: lib/installer.php:928
+#: lib/installer.php:940
 #, php-format
 msgid "Failed to apply specified mode: %s"
 msgstr "지정한 모드를 적용하지 못했습니다 :  %s"
 
-#: lib/installer.php:952
+#: lib/installer.php:964
 #, php-format
 msgid "Failed to apply specified automation override: %s"
 msgstr "지정한 자동화 재정의를 적용하지 못했습니다 :  %s"
 
-#: lib/installer.php:973
+#: lib/installer.php:985
 msgid "Failed to apply specified cron interval"
 msgstr "지정된 cron 간격을 적용하지 못했습니다."
 
-#: lib/installer.php:1019
+#: lib/installer.php:1031
 #, php-format
 msgid "Failed to apply '%s' as Automation Range"
 msgstr "'%s' 을 (를) 자동화 범위로 적용하지 못했습니다"
 
-#: lib/installer.php:1096
+#: lib/installer.php:1108
 msgid "No matching snmp option exists"
 msgstr "일치하는 snmp 옵션이 없습니다."
 
-#: lib/installer.php:1282
+#: lib/installer.php:1294
 msgid "No matching template exists"
 msgstr "일치하는 템플릿이 없습니다."
 
-#: lib/installer.php:1625
+#: lib/installer.php:1637
 msgid "The Installer could not proceed due to an unexpected error."
 msgstr "예기치 않은 오류로 인해 설치 프로그램을 진행할 수 없습니다."
 
-#: lib/installer.php:1626
+#: lib/installer.php:1638
 msgid "Please report this to the Kadupul Group."
 msgstr "Kadupul Group에보고 해주십시오."
 
-#: lib/installer.php:1627
+#: lib/installer.php:1639
 #, php-format
 msgid "Unknown Reason: %s"
 msgstr "알 수없는 이유 :  %s"
 
-#: lib/installer.php:1635
+#: lib/installer.php:1647
 #, php-format
 msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this can not be performed."
 msgstr "0.6.x 데이터베이스에 Kadupul  %s을 (를) 설치하려고합니다. 불행하게도, 이것은 수행 될 수 없습니다."
 
-#: lib/installer.php:1636
+#: lib/installer.php:1648
 msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
 msgstr "수 당신이 그것으로 새 데이터베이스 가져 오기 &quot;cacti.sql&quot;를 <b>작성해야합니다</b> 계속 될하려면 :"
 
-#: lib/installer.php:1638
+#: lib/installer.php:1650
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
 msgstr "그런 다음 새 데이터베이스를 가리 키도록 &quot;/ config.php에 포함&quot;을 <b>업데이트해야합니다.</b>"
 
-#: lib/installer.php:1639
+#: lib/installer.php:1651
 msgid "NOTE: Your existing data will not be modified, nor will it or any history be available to the new install"
 msgstr "참고 : 기존 데이터는 수정되지 않으며 새로 설치 한 날짜 또는 기록도 사용할 수 없습니다."
 
-#: lib/installer.php:1647
+#: lib/installer.php:1659
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
 msgstr "새 데이터베이스를 만들었지 만 &#39;cacti.sql&#39;파일을 아직 가져 오지 않았습니다. 명령 줄에서 다음을 실행하여 계속하십시오."
 
-#: lib/installer.php:1649
+#: lib/installer.php:1661
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Kadupul database. Please ensure that the Kadupul database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Kadupul database."
 msgstr "이 오류는 Kadupul 데이터베이스 사용자에게 Kadupul 데이터베이스에 대한 올바른 사용 권한이없는 경우에도 발생할 수 있습니다. Kadupul 데이터베이스 사용자가 Kadupul 데이터베이스에서 SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX를 수행 할 수 있는지 확인하십시오."
 
-#: lib/installer.php:1650
+#: lib/installer.php:1662
 #, fuzzy
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"
 msgstr "당신은 또한 MySQL의에 MySQL의 시간대 정보를 가져오고 Kadupul 사용자에게 mysql.time_zone_name 테이블에 대한 SELECT 액세스 권한을 <b>부여해야합니다</b>"
 
-#: lib/installer.php:1653
+#: lib/installer.php:1665
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
 msgstr "Linux / UNIX에서는 쉘에서 &#39;root&#39;로 다음을 실행하십시오."
 
-#: lib/installer.php:1656
+#: lib/installer.php:1668
 msgid "On Windows, you must follow the instructions here <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>Time zone description table</a>.  Once that is complete, you can issue the following command to grant the Kadupul user access to the tables:"
 msgstr "Windows에서는 <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>표준 시간대 설명 테이블</a> 의 지침을 따라야 <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>합니다</a> . 완료되면 다음 명령을 실행하여 Kadupul 사용자에게 테이블에 대한 액세스 권한을 부여 할 수 있습니다."
 
-#: lib/installer.php:1659
+#: lib/installer.php:1671
 msgid "Then run the following within MySQL as an administrator:"
 msgstr "그런 다음 MySQL에서 관리자로 다음을 실행하십시오."
 
-#: lib/installer.php:1678 pollers.php:671
+#: lib/installer.php:1690 pollers.php:671
 msgid "Test Connection"
 msgstr "연결 테스트"
 
-#: lib/installer.php:1689
+#: lib/installer.php:1701
 msgid "Begin"
 msgstr "시작"
 
-#: lib/installer.php:1695 lib/installer.php:2123 lib/installer.php:2133
-#: lib/installer.php:2773
+#: lib/installer.php:1707 lib/installer.php:2135 lib/installer.php:2145
+#: lib/installer.php:2785
 msgid "Upgrade"
 msgstr "업그레이드"
 
-#: lib/installer.php:1697 lib/installer.php:2777
+#: lib/installer.php:1709 lib/installer.php:2789
 msgid "Downgrade"
 msgstr "다운그레이드"
 
-#: lib/installer.php:1800 utilities.php:255
+#: lib/installer.php:1812 utilities.php:255
 #, fuzzy
 msgid "Kadupul Version"
 msgstr "Kadupul 버전"
 
-#: lib/installer.php:1800
+#: lib/installer.php:1812
 msgid "License Agreement"
 msgstr "라이선스 계약"
 
-#: lib/installer.php:1803
+#: lib/installer.php:1815
 #, php-format
 msgid "This version of Kadupul (%s) does not appear to have a valid version code, please contact the Kadupul Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 msgstr "이 버전의 Kadupul ( %s)는 유효한 버전 코드가없는 것으로 보입니다. Kadupul Development Team에 연락하여이 코드가 적용되었는지 확인하십시오. 릴리스에서이 오류가 표시되는 경우 GitHub에서 즉시 보고서를 제출하십시오."
 
-#: lib/installer.php:1806
+#: lib/installer.php:1818
 msgid "Thanks for taking the time to download and install Kadupul, the complete graphing solution for your network. Before you can start making cool graphs, there are a few pieces of data that Kadupul needs to know."
 msgstr "네트워크에 완벽한 그래프 솔루션 인 Kadupul를 다운로드하여 설치해 주셔서 감사합니다. 멋진 그래프를 만들기 전에 Kadupul가 알아야 할 몇 가지 데이터가 있습니다."
 
-#: lib/installer.php:1807
+#: lib/installer.php:1819
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Kadupul before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
 msgstr "계속하기 전에 Kadupul 설치에 필요한 단계를 읽고 따라야합니다. <a href=\"%1$s\">Unix</a> 및 <a href=\"%2$s\">Win32</a> 기반 운영 체제에 대한 설치 정보를 찾을 수 있습니다."
 
-#: lib/installer.php:1810
+#: lib/installer.php:1822
 #, php-format
 msgid "This process will guide you through the steps for upgrading from version '%s'. "
 msgstr "이 프로세스는 버전 &#39; %s&#39;에서 업그레이드하는 단계를 안내합니다."
 
-#: lib/installer.php:1811
+#: lib/installer.php:1823
 #, php-format
 msgid "Also, if this is an upgrade, be sure to read the <a href=\"%s\">Upgrade</a> information file."
 msgstr "또한 업그레이드 인 경우 <a href=\"%s\">업그레이드</a> 정보 파일을 읽으십시오."
 
-#: lib/installer.php:1815
+#: lib/installer.php:1827
 msgid "It is NOT recommended to downgrade as the database structure may be inconsistent"
 msgstr "데이터베이스 구조가 일치하지 않을 수 있으므로 다운 그레이드하지 않는 것이 좋습니다."
 
-#: lib/installer.php:1818
+#: lib/installer.php:1830
 msgid "Kadupul is licensed under the GNU General Public License, you must agree to its provisions before continuing:"
 msgstr "Kadupul는 GNU 일반 공중 사용 허가서 (General Public License)에 의거하여 사용이 허가되었으므로 계속하기 전에 해당 조항에 동의해야합니다."
 
-#: lib/installer.php:1822
+#: lib/installer.php:1834
 msgid "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
 msgstr "이 프로그램은 유용 할 것이라는 희망으로 배포되었지만 어떠한 보증도하지 않습니다. 상품성 또는 특정 목적에의 적합성에 대한 묵시적 보증조차하지 않습니다. 자세한 내용은 GNU General Public License를 참조하십시오."
 
-#: lib/installer.php:1859
+#: lib/installer.php:1871
 msgid "Accept GPL License Agreement"
 msgstr "GPL 라이센스 계약서 수락"
 
-#: lib/installer.php:1859
+#: lib/installer.php:1871
 msgid "Select default theme: "
 msgstr "기본 테마 선택 :"
 
-#: lib/installer.php:1883
+#: lib/installer.php:1895
 msgid "Pre-installation Checks"
 msgstr "사전 설치 검사"
 
-#: lib/installer.php:1884
+#: lib/installer.php:1896
 msgid "Location checks"
 msgstr "위치 확인"
 
-#: lib/installer.php:1920 lib/installer.php:2071 lib/installer.php:2075
-#: lib/installer.php:2231 lib/installer.php:2236 lib/installer.php:3962
+#: lib/installer.php:1932 lib/installer.php:2083 lib/installer.php:2087
+#: lib/installer.php:2243 lib/installer.php:2248 lib/installer.php:3981
 msgid "ERROR:"
 msgstr "오류:"
 
-#: lib/installer.php:1920
+#: lib/installer.php:1932
 msgid "Please update config.php with the correct relative URI location of Kadupul (url_path)."
 msgstr "Kadupul (url_path)의 올바른 상대 URI 위치로 config.php를 업데이트하십시오."
 
-#: lib/installer.php:1923
+#: lib/installer.php:1935
 msgid "Your Kadupul configuration has the relative correct path (url_path) in config.php."
 msgstr "Kadupul 구성은 config.php에 상대 경로 (url_path)가 있습니다."
 
-#: lib/installer.php:1931
+#: lib/installer.php:1943
 #, php-format
 msgid "PHP - Recommendations (%s)"
 msgstr "PHP - 권장 사항 (%s)"
 
-#: lib/installer.php:1935
+#: lib/installer.php:1947
 msgid "PHP Recommendations ("
 msgstr "PHP 권장 사항"
 
-#: lib/installer.php:1936
+#: lib/installer.php:1948
 msgid "Current"
 msgstr "현재 비번"
 
-#: lib/installer.php:1936
+#: lib/installer.php:1948
 msgid "Recommended"
 msgstr "추천"
 
-#: lib/installer.php:1943
+#: lib/installer.php:1955
 msgid "PHP Binary"
 msgstr "PHP 바이너리 경로"
 
-#: lib/installer.php:1946
+#: lib/installer.php:1958
 msgid "The PHP binary location is not valid and must be updated."
 msgstr "PHP 바이너리 위치가 유효하지 않으므로 업데이트해야합니다."
 
-#: lib/installer.php:1953
+#: lib/installer.php:1965
 msgid "Update the path_php_binary value in the settings table."
 msgstr "설정 테이블에서 path_php_binary 값을 업데이트하십시오."
 
-#: lib/installer.php:1962
+#: lib/installer.php:1974
 msgid "Passed"
 msgstr "통과됨"
 
-#: lib/installer.php:1965
+#: lib/installer.php:1977
 msgid "Warning"
 msgstr "경고"
 
-#: lib/installer.php:1971
+#: lib/installer.php:1983
 msgid "Restart Required"
 msgstr "필수"
 
-#: lib/installer.php:1971
+#: lib/installer.php:1983
 #, fuzzy
 msgid "The specified value appears to be different in the running config versus the INI file."
 msgstr "지정된 값은 INI 파일과 달리 실행 중인 구성에서 다른 것으로 나타납니다."
 
-#: lib/installer.php:2001
+#: lib/installer.php:2013
 msgid "PHP - Module Support (Required)"
 msgstr "PHP - 모듈 지원 (필수)"
 
-#: lib/installer.php:2002
+#: lib/installer.php:2014
 msgid "Kadupul requires several PHP Modules to be installed to work properly. If any of these are not installed, you will be unable to continue the installation until corrected. In addition, for optimal system performance Kadupul should be run with certain MySQL system variables set.  Please follow the MySQL recommendations at your discretion.  Always seek the MySQL documentation if you have any questions."
 msgstr "Kadupul는 제대로 작동하려면 여러 PHP 모듈을 설치해야합니다. 이 중 하나라도 설치되어 있지 않으면 정정 할 때까지 설치를 계속할 수 없습니다. 또한 최적의 시스템 성능을 위해 Kadupul는 특정 MySQL 시스템 변수를 설정하여 실행해야합니다. 귀하의 재량에 따라 MySQL 권장 사항을 따르십시오. 질문이 있으시면 항상 MySQL 설명서를 찾으십시오."
 
-#: lib/installer.php:2004
+#: lib/installer.php:2016
 msgid "The following PHP extensions are mandatory, and MUST be installed before continuing your Kadupul install."
 msgstr "다음 PHP 확장은 필수 항목이며 Kadupul 설치를 계속하기 전에 반드시 설치해야합니다."
 
-#: lib/installer.php:2008
+#: lib/installer.php:2020
 msgid "Required PHP Modules"
 msgstr "필수 PHP 모듈"
 
-#: lib/installer.php:2009 lib/installer.php:2039 plugins.php:25 plugins.php:474
+#: lib/installer.php:2021 lib/installer.php:2051 plugins.php:25 plugins.php:474
 msgid "Installed"
 msgstr "설치됨"
 
-#: lib/installer.php:2009
+#: lib/installer.php:2021
 msgid "Required"
 msgstr "필수"
 
-#: lib/installer.php:2032
+#: lib/installer.php:2044
 msgid "PHP - Module Support (Optional)"
 msgstr "PHP - 모듈 지원 (선택 사항)"
 
-#: lib/installer.php:2034
+#: lib/installer.php:2046
 msgid "The following PHP extensions are recommended, and should be installed before continuing your Kadupul install.  NOTE: If you are planning on supporting SNMPv3 with IPv6, you should not install the php-snmp module at this time."
 msgstr "Kadupul 설치를 계속하기 전에 다음 PHP 확장이 권장되며 설치해야합니다. 참고 : IPv6을 사용하여 SNMPv3을 지원할 계획이라면 현재 php-snmp 모듈을 설치하지 않아야합니다."
 
-#: lib/installer.php:2038
+#: lib/installer.php:2050
 msgid "Optional Modules"
 msgstr "선택적 모듈"
 
-#: lib/installer.php:2039
+#: lib/installer.php:2051
 msgid "Optional"
 msgstr "선택 사항"
 
-#: lib/installer.php:2060
+#: lib/installer.php:2072
 msgid "MySQL - TimeZone Support"
 msgstr "MySQL - TimeZone 지원"
 
-#: lib/installer.php:2071
+#: lib/installer.php:2083
 msgid "Your MySQL TimeZone database is not populated.  Please populate this database before proceeding."
 msgstr "MySQL TimeZone 데이터베이스가 채워지지 않습니다. 계속 진행하기 전에이 데이터베이스를 채우십시오."
 
-#: lib/installer.php:2075
+#: lib/installer.php:2087
 msgid "Your Kadupul database login account does not have access to the MySQL TimeZone database.  Please provide the Kadupul database account \"select\" access to the \"time_zone_name\" table in the \"mysql\" database, and populate MySQL's TimeZone information before proceeding."
 msgstr "Kadupul 데이터베이스 로그인 계정은 MySQL TimeZone 데이터베이스에 액세스 할 수 없습니다. Kadupul 데이터베이스 계정에 &quot;mysql&quot;데이터베이스의 &quot;time_zone_name&quot;테이블에 대한 &quot;select&quot;액세스를 제공하고 계속하기 전에 MySQL의 TimeZone 정보를 입력하십시오."
 
-#: lib/installer.php:2080
+#: lib/installer.php:2092
 msgid "Your Kadupul database account has access to the MySQL TimeZone database and that database is populated with global TimeZone information."
 msgstr "Kadupul 데이터베이스 계정은 MySQL TimeZone 데이터베이스에 액세스 할 수 있으며 해당 데이터베이스는 전역 TimeZone 정보로 채워집니다."
 
-#: lib/installer.php:2085
+#: lib/installer.php:2097
 msgid "MySQL - Settings"
 msgstr "MySQL - 설정"
 
-#: lib/installer.php:2086
+#: lib/installer.php:2098
 msgid "These MySQL performance tuning settings will help your Kadupul system perform better without issues for a longer time."
 msgstr "이러한 MySQL 성능 튜닝 설정은 Kadupul 시스템이 문제없이 오랫동안 더 잘 작동하도록 도와줍니다."
 
-#: lib/installer.php:2088
+#: lib/installer.php:2100
 msgid "Recommended MySQL System Variable Settings"
 msgstr "권장 MySQL 시스템 변수 설정"
 
-#: lib/installer.php:2118
+#: lib/installer.php:2130
 msgid "Installation Type"
 msgstr "설치 유형"
 
-#: lib/installer.php:2124
+#: lib/installer.php:2136
 #, php-format
 msgid "Upgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "<strong>%s</strong> 에서 <strong>%s</strong> (으) 로 업그레이드"
 
-#: lib/installer.php:2126
+#: lib/installer.php:2138
 msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "문제가 발생할 경우 Kadupul Group과 관련된 문제를 제기하기 전에 브라우저 캐시를 지우고 브라우저를 닫은 다음 (Kadupul 탭 만이 아니라) 브라우저를 다시 열고 다시 시도하는 것이 좋습니다"
 
-#: lib/installer.php:2127
+#: lib/installer.php:2139
 msgid "On rare occasions, we have had reports from users who experience some minor issues due to changes in the code.  These issues are caused by the browser retaining pre-upgrade code and whilst we have taken steps to minimise the chances of this, it may still occur.  If you need instructions on how to clear your browser cache, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> is a good starting point."
 msgstr "드물 긴하지만 코드의 변경으로 인해 사소한 문제가 발생한 사용자의 신고가있었습니다. 이러한 문제는 브라우저가 사전 업그레이드 코드를 유지함에 따라 발생하며 이러한 오류의 가능성을 최소화하기위한 조치를 취한 상태에서도 여전히 발생할 수 있습니다. 브라우저 캐시를 지우는 방법에 대한 지침이 필요하면 <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> 가 좋은 출발점입니다."
 
-#: lib/installer.php:2128
+#: lib/installer.php:2140
 msgid "If after clearing your cache and restarting your browser, you still experience issues, please raise the issue with us and we will try to identify the cause of it."
 msgstr "캐시를 지우고 브라우저를 다시 시작한 후에도 문제가 계속 발생하면 Google에 문제를 제기하십시오. 문제의 원인을 파악하려고 노력할 것입니다."
 
-#: lib/installer.php:2134
+#: lib/installer.php:2146
 #, php-format
 msgid "Downgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "<strong> %s의</strong> <strong> %s의</strong> 다운 그레이드"
 
-#: lib/installer.php:2135
+#: lib/installer.php:2147
 msgid "You appear to be downgrading to a previous version.  Database changes made for the newer version will not be reversed and <i>could</i> cause issues."
 msgstr "이전 버전으로 다운 그레이드되는 것으로 보입니다. 최신 버전에 대한 데이터베이스 변경 사항은 취소되지 않고 문제 <i>가</i> 발생할 <i>수</i> 있습니다."
 
-#: lib/installer.php:2140
+#: lib/installer.php:2152
 msgid "Please select the type of installation"
 msgstr "설치 유형을 선택하십시오."
 
-#: lib/installer.php:2141
+#: lib/installer.php:2153
 msgid "Installation options:"
 msgstr "설치 옵션 :"
 
-#: lib/installer.php:2145
+#: lib/installer.php:2157
 msgid "Choose this for the Primary site."
 msgstr "기본 사이트에 대해 이것을 선택하십시오."
 
-#: lib/installer.php:2145 lib/installer.php:2196
+#: lib/installer.php:2157 lib/installer.php:2208
 msgid "New Primary Server"
 msgstr "새 기본 서버"
 
-#: lib/installer.php:2146 lib/installer.php:2197
+#: lib/installer.php:2158 lib/installer.php:2209
 msgid "New Remote Poller"
 msgstr "새로운 원격 폴러"
 
-#: lib/installer.php:2146
+#: lib/installer.php:2158
 msgid "Remote Pollers are used to access networks that are not readily accessible to the Primary site."
 msgstr "원격 폴러는 주 사이트에 쉽게 액세스 할 수없는 네트워크에 액세스하는 데 사용됩니다."
 
-#: lib/installer.php:2201
+#: lib/installer.php:2213
 msgid "The following information has been determined from Kadupul's configuration file. If it is not correct, please edit \"include/config.php\" before continuing."
 msgstr "다음 정보는 Kadupul의 구성 파일에서 결정되었습니다. 올바르지 않은 경우 계속하기 전에 &quot;include / config.php&quot;를 편집하십시오."
 
-#: lib/installer.php:2205
+#: lib/installer.php:2217
 msgid "Local Database Connection Information"
 msgstr "로컬 데이터베이스 연결 정보"
 
-#: lib/installer.php:2208 lib/installer.php:2220
+#: lib/installer.php:2220 lib/installer.php:2232
 #, php-format
 msgid "Database: <b>%s</b>"
 msgstr "데이터베이스 : <b> %s</b>"
 
-#: lib/installer.php:2209 lib/installer.php:2221
+#: lib/installer.php:2221 lib/installer.php:2233
 #, php-format
 msgid "Database User: <b>%s</b>"
 msgstr "데이터베이스 사용자 : <b> %s</b>"
 
-#: lib/installer.php:2210 lib/installer.php:2222
+#: lib/installer.php:2222 lib/installer.php:2234
 #, php-format
 msgid "Database Hostname: <b>%s</b>"
 msgstr "데이터베이스 호스트 이름 : <b> %s</b>"
 
-#: lib/installer.php:2211 lib/installer.php:2223
+#: lib/installer.php:2223 lib/installer.php:2235
 #, php-format
 msgid "Port: <b>%s</b>"
 msgstr "포트 : <b> %s</b>"
 
-#: lib/installer.php:2212 lib/installer.php:2224
+#: lib/installer.php:2224 lib/installer.php:2236
 #, php-format
 msgid "Server Operating System Type: <b>%s</b>"
 msgstr "서버 운영 체제 유형 : <b> %s</b>"
 
-#: lib/installer.php:2217
+#: lib/installer.php:2229
 msgid "Central Database Connection Information"
 msgstr "중앙 데이터베이스 연결 정보"
 
-#: lib/installer.php:2229
+#: lib/installer.php:2241
 msgid "Configuration Readonly!"
 msgstr "구성 읽기 전용!"
 
-#: lib/installer.php:2231
+#: lib/installer.php:2243
 msgid "Your config.php file must be writable by the web server during install in order to configure the Remote poller.  Once installation is complete, you must set this file to Read Only to prevent possible security issues."
 msgstr "원격 폴러를 구성하려면 설치 중에 웹 서버가 config.php 파일에 쓰기 가능해야합니다. 설치가 완료되면 가능한 보안 문제를 방지하기 위해이 파일을 읽기 전용으로 설정해야합니다."
 
-#: lib/installer.php:2235
+#: lib/installer.php:2247
 msgid "Configuration of Poller"
 msgstr "폴러 구성"
 
-#: lib/installer.php:2236
+#: lib/installer.php:2248
 msgid "Your Remote Kadupul Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Kadupul database server.  Correct this and try again."
 msgstr "원격 Kadupul Poller 정보가 config.php 파일에 포함되어 있지 않습니다. config.php.dist를 검토하고 <i>$ rdatabase_default, $ rdatabase_username</i> 등의 변수를 설정하십시오. 이러한 변수를 설정하고 기본 Kadupul 데이터베이스 서버를 다시 가리켜 야합니다. 이를 수정하고 다시 시도하십시오."
 
-#: lib/installer.php:2240
+#: lib/installer.php:2252
 msgid "Remote Poller Variables"
 msgstr "원격 폴러 변수"
 
-#: lib/installer.php:2242
+#: lib/installer.php:2254
 msgid "The variables that must be set in the config.php file include the following:"
 msgstr "config.php 파일에서 설정해야하는 변수는 다음과 같습니다."
 
-#: lib/installer.php:2253
+#: lib/installer.php:2265
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
 msgstr "Installer는 자동으로 $ poller_id를 할당하고 config.php 파일에 추가합니다."
 
-#: lib/installer.php:2255
+#: lib/installer.php:2267
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Kadupul database server.  Follow the same procedure you would with any other Kadupul install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
 msgstr "변수가 config.php 파일에 모두 설정되면 주 Kadupul 데이터베이스 서버에 $ rdatabase_username 액세스 권한을 부여해야합니다. 다른 Kadupul 설치와 동일한 절차를 따르십시오. 그런 다음 &#39;연결 테스트&#39;버튼을 누를 수 있습니다. 테스트가 성공적이면 설치를 완료하고 완료 할 수 있습니다."
 
-#: lib/installer.php:2259
+#: lib/installer.php:2271
 msgid "Additional Steps After Installation"
 msgstr "설치 후 추가 단계"
 
-#: lib/installer.php:2261
+#: lib/installer.php:2273
 msgid "It is essential that the Central Kadupul server can communicate via MySQL to each remote Kadupul database server.  Once the install is complete, you must edit the Remote Data Collector and ensure the settings are correct.  You can verify using the 'Test Connection' when editing the Remote Data Collector."
 msgstr "Central Kadupul 서버가 MySQL을 통해 각 원격 Kadupul 데이터베이스 서버와 통신 할 수 있어야합니다. 설치가 완료되면 원격 데이터 수집기를 편집하여 설정이 올바른지 확인해야합니다. 원격 데이터 수집기를 편집 할 때 &#39;연결 테스트&#39;를 사용하여 확인할 수 있습니다."
 
-#: lib/installer.php:2275
+#: lib/installer.php:2287
 msgid "Critical Binary Locations and Versions"
 msgstr "중요한 바이너리 위치 및 버전"
 
-#: lib/installer.php:2276
+#: lib/installer.php:2288
 msgid "Make sure all of these values are correct before continuing."
 msgstr "계속하기 전에이 값들이 모두 올바른지 확인하십시오."
 
-#: lib/installer.php:2279
+#: lib/installer.php:2291
 msgid "One or more paths appear to be incorrect, unable to proceed"
 msgstr "하나 이상의 경로가 잘못되어 진행할 수 없습니다."
 
-#: lib/installer.php:2357
+#: lib/installer.php:2369
 msgid "Directory Permission Checks"
 msgstr "디렉터리 사용 권한 검사"
 
-#: lib/installer.php:2358
+#: lib/installer.php:2370
 msgid "Please ensure the directory permissions below are correct before proceeding.  During the install, these directories need to be owned by the Web Server user.  These permission changes are required to allow the Installer to install Device Template packages which include XML and script files that will be placed in these directories.  If you choose not to install the packages, there is an 'install_package.php' cli script that can be used from the command line after the install is complete."
 msgstr "계속하기 전에 아래의 디렉토리 권한이 올바른지 확인하십시오. 설치 중이 디렉토리는 Web Server 사용자가 소유해야합니다. 이러한 권한 변경은 Installer가 XML 및이 디렉토리에 배치 될 스크립트 파일을 포함하는 Device Template 패키지를 설치하는 데 필요합니다. 패키지를 설치하지 않기로 선택하면 설치가 완료된 후 명령 줄에서 사용할 수있는 &#39;install_package.php&#39;cli 스크립트가 있습니다."
 
-#: lib/installer.php:2361
+#: lib/installer.php:2373
 msgid "After the install is complete, you can make some of these directories read only to increase security."
 msgstr "설치가 완료되면 이러한 디렉토리 중 일부를 읽기 전용으로 설정하여 보안을 강화할 수 있습니다."
 
-#: lib/installer.php:2363
+#: lib/installer.php:2375
 msgid "These directories will be required to stay read writable after the install so that the Kadupul remote synchronization process can update them as the Main Kadupul Web Site changes"
 msgstr "이 디렉토리들은 Kadupul 원격 동기화 프로세스가 Main Kadupul 웹 사이트 변경에 따라 업데이트 할 수 있도록 설치 후에 읽기 가능한 상태로 있어야합니다."
 
-#: lib/installer.php:2367
+#: lib/installer.php:2379
 msgid "If you are installing packages, once the packages are installed, you should change the scripts directory back to read only as this presents some exposure to the web site."
 msgstr "패키지를 설치하는 경우 패키지가 설치되면 스크립트 디렉토리를 다시 읽기 전용으로 변경해야 웹 사이트에 대한 노출이 생길 수 있습니다."
 
-#: lib/installer.php:2369
+#: lib/installer.php:2381
 msgid "For remote pollers, it is critical that the paths that you will be updating frequently, including the plugins, scripts, and resources paths have read/write access as the data collector will have to update these paths from the main web server content."
 msgstr "원격 폴러의 경우 플러그인, 스크립트 및 리소스 경로를 비롯하여 자주 업데이트 할 경로에 데이터 수집기가 주 웹 서버 콘텐츠에서 이러한 경로를 업데이트해야하므로 읽기 / 쓰기 권한이 있어야합니다."
 
-#: lib/installer.php:2375
+#: lib/installer.php:2387
 msgid "Required Writable at Install Time Only"
 msgstr "설치시에만 쓰기 가능"
 
-#: lib/installer.php:2394 lib/installer.php:2426 package_import.php:589
+#: lib/installer.php:2406 lib/installer.php:2438 package_import.php:589
 msgid "Not Writable"
 msgstr "쓰기 가능 "
 
-#: lib/installer.php:2406
+#: lib/installer.php:2418
 msgid "Required Writable after Install Complete"
 msgstr "설치 완료 후 쓰기 가능"
 
-#: lib/installer.php:2437
+#: lib/installer.php:2449
 msgid "Potential permission issues"
 msgstr "잠재적 인 권한 문제"
 
-#: lib/installer.php:2446
+#: lib/installer.php:2458
 #, fuzzy
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
 msgstr "웹 서버에 아래 오류가 표시된 Kadupul 폴더에 대한 읽기 / 쓰기 권한이 있는지 확인하십시오."
 
-#: lib/installer.php:2449
+#: lib/installer.php:2461
 msgid "If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools."
 msgstr "서버에서 SELinux를 활성화 한 경우 영구적으로 비활성화하거나 일시적으로 비활성화 한 다음 SELinux 명령 줄 도구를 사용하여 적절한 사용 권한을 추가 할 수 있습니다."
 
-#: lib/installer.php:2458
+#: lib/installer.php:2470
 #, php-format
 msgid "The user '%s' should have MODIFY permission to enable read/write."
 msgstr "사용자 &#39; %s&#39;은 읽기 / 쓰기를 가능하게하는 수정 권한이 있어야합니다."
 
-#: lib/installer.php:2467
+#: lib/installer.php:2479
 msgid "An example of how to set folder permissions is shown here, though you may need to adjust this depending on your operating system, user accounts and desired permissions."
 msgstr "폴더 사용 권한을 설정하는 방법의 예가 여기에 표시되어 있지만 운영 체제, 사용자 계정 및 원하는 사용 권한에 따라이를 조정해야 할 수도 있습니다"
 
-#: lib/installer.php:2468
+#: lib/installer.php:2480
 msgid "EXAMPLE:"
 msgstr "예:"
 
-#: lib/installer.php:2469
+#: lib/installer.php:2481
 msgid "Once installation has completed the CSRF path, should be set to read-only."
 msgstr "설치가 CSRF 경로를 완료하면 읽기 전용으로 설정해야합니다."
 
-#: lib/installer.php:2471
+#: lib/installer.php:2483
 msgid "All folders are writable"
 msgstr "모든 폴더에 쓸 수 있습니다."
 
-#: lib/installer.php:2484
+#: lib/installer.php:2496
 msgid "Input Validation Whitelist Protection"
 msgstr "입력 검증 화이트리스트 보호"
 
-#: lib/installer.php:2485
+#: lib/installer.php:2497
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
 msgstr "스크립트를 호출하는 Kadupul 데이터 입력 방법은 관리자가 아닌 사람이 폴러 계정이 소유 한 파일을 손상시킬 수있는 방식으로 악용 될 수 있으며 누군가 Kadupul 폴러를 루트로 실행하는 경우 운영 체제를 손상시켜 공격자가 인프라를 활용하십시오."
 
-#: lib/installer.php:2486
+#: lib/installer.php:2498
 msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 msgstr "따라서 여러 버전 전에 Kadupul는 이러한 유형의 데이터 입력 방법에 대한 화이트리스트 기능을 제공하도록 향상되었습니다. 이렇게하면 Kadupul를 한 시간 더 안전하게 보호 할 수 있지만 Kadupul 관리자가 템플릿 및 패키지를 가져오고 관리하는 데 필요한 작업량을 증가시킵니다."
 
-#: lib/installer.php:2487
+#: lib/installer.php:2499
 #, fuzzy
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "허용 목록이 작동하는 방식은 데이터 입력 방법을 처음 가져 오거나 데이터 입력 방법을 다시 가져 오면 스크립트 및 / 또는 인수가 어떤 식 으로든 데이터 입력 방법과 해당하는 모든 데이터 소스가 변경되는 방식입니다 관리자가 데이터 입력 방법이 유효한지 확인할 때까지 즉시 비활성화하십시오."
 
-#: lib/installer.php:2488
+#: lib/installer.php:2500
 msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
 msgstr "이 상태에서 데이터 입력 방법을 식별하기 위해 다음 옵션으로 실행할 수있는 유효성 검사 스크립트를 Kadupul의 CLI 디렉토리에 제공했습니다."
 
-#: lib/installer.php:2492
+#: lib/installer.php:2504
 msgid "This script option will search for any Data Input Methods that are currently banned and provide details as to why."
 msgstr "이 스크립트 옵션은 현재 금지 된 모든 데이터 입력 방법을 검색하고 이유에 대한 세부 사항을 제공합니다."
 
-#: lib/installer.php:2493
+#: lib/installer.php:2505
 msgid "This script option un-ban the Data Input Methods that are currently banned."
 msgstr "이 스크립트 옵션은 현재 금지 된 데이터 입력 방법을 금지 해제합니다."
 
-#: lib/installer.php:2494
+#: lib/installer.php:2506
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "이 스크립트 옵션은 비활성화 된 모든 데이터 소스를 다시 활성화합니다."
 
-#: lib/installer.php:2498
+#: lib/installer.php:2510
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
 msgstr "<b>$ input_whitelist</b> 변수를 주석 해제 한 다음 웹 기반 설치가 완료된 후 위의 세 가지 CLI 스크립트 옵션을 실행하여이 기능을 사용하도록 config.php를 업데이트하는 것이 좋습니다."
 
-#: lib/installer.php:2500
+#: lib/installer.php:2512
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
 msgstr "이 보안 문제를 읽고 이해했음을 확인하려면 아래 확인란을 선택하십시오."
 
-#: lib/installer.php:2502
+#: lib/installer.php:2514
 msgid "I have read this statement"
 msgstr "나는이 진술을 읽었다"
 
-#: lib/installer.php:2519 lib/installer.php:2525
+#: lib/installer.php:2531 lib/installer.php:2537
 msgid "Default Profile"
 msgstr "기본 프로필"
 
-#: lib/installer.php:2520
+#: lib/installer.php:2532
 msgid "Please select the default Data Source Profile to be used for polling sources.  This is the maximum amount of time between scanning devices for information so the lower the polling interval, the more work is placed on the Kadupul Server host.  Also, select the intended, or configured Cron interval that you wish to use for Data Collection."
 msgstr "폴링 소스에 사용될 기본 데이터 소스 프로파일을 선택하십시오. 폴링 간격을 줄이면 더 많은 작업이 Kadupul Server 호스트에 배치되므로 정보를 검색하는 장치 사이의 최대 시간입니다. 또한 데이터 수집에 사용할 의도 된 또는 구성된 Cron 간격을 선택하십시오."
 
-#: lib/installer.php:2531
+#: lib/installer.php:2543
 msgid "Cron Interval"
 msgstr "크론 간격"
 
-#: lib/installer.php:2552
+#: lib/installer.php:2564
 msgid "Default Automation Network"
 msgstr "기본 자동화 네트워크"
 
-#: lib/installer.php:2553
+#: lib/installer.php:2565
 msgid "Kadupul can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
 msgstr "Kadupul는 설치가 완료되면 자동으로 네트워크를 검사 할 수 있습니다. 이렇게하면 아래의 네트워크 범위를 사용하여 검색 할 수있는 IP 범위를 조정할 수 있습니다. &#39;공개&#39;및 &#39;비공개&#39;커뮤니티를 모두 사용하는 검색을 위해 미리 정의 된 옵션 집합이 정의됩니다."
 
-#: lib/installer.php:2554
+#: lib/installer.php:2566
 msgid "If your devices require a different set of options to be used first, you may define them below and they will be utilized before the defaults"
 msgstr "장치에서 먼저 다른 옵션 집합을 사용해야하는 경우 아래에서 정의 할 수 있으며 기본값보다 먼저 사용됩니다"
 
-#: lib/installer.php:2555
+#: lib/installer.php:2567
 msgid "All options may be adjusted post installation"
 msgstr "모든 옵션은 설치 후 조정할 수 있습니다."
 
-#: lib/installer.php:2559
+#: lib/installer.php:2571
 msgid "Default Options"
 msgstr "기본 옵션"
 
-#: lib/installer.php:2563
+#: lib/installer.php:2575
 msgid "Scan Mode"
 msgstr "스캔 모드"
 
-#: lib/installer.php:2568
+#: lib/installer.php:2580
 msgid "Network Range"
 msgstr "네트워크 범위"
 
-#: lib/installer.php:2574
+#: lib/installer.php:2586
 msgid "Additional Defaults"
 msgstr "추가 기본값"
 
-#: lib/installer.php:2595
+#: lib/installer.php:2607
 msgid "Additional SNMP Options"
 msgstr "추가 SNMP 옵션"
 
-#: lib/installer.php:2608
+#: lib/installer.php:2620
 msgid "Error Locating Profiles"
 msgstr "프로필 찾기 오류"
 
-#: lib/installer.php:2609
+#: lib/installer.php:2621
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "프로파일을 찾을 수 없기 때문에 설치를 계속할 수 없습니다."
 
-#: lib/installer.php:2610
+#: lib/installer.php:2622
 msgid "This may occur if you have a blank database and have not yet imported the cacti.sql file"
 msgstr "빈 데이터베이스가 있고 아직 cacti.sql 파일을 가져 오지 않은 경우에 발생할 수 있습니다"
 
-#: lib/installer.php:2619
+#: lib/installer.php:2631
 msgid "Template Setup"
 msgstr "템플릿 설정"
 
-#: lib/installer.php:2622
+#: lib/installer.php:2634
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
 msgstr "Kadupul에서 내보낼 템플릿 유형을 선택하십시오."
 
-#: lib/installer.php:2623
+#: lib/installer.php:2635
 msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
 msgstr "이미 수정한 템플릿을 업데이트하는 것은 바람직하지 않습니다. 템플릿을 업그레이드해도 그래프 및 데이터 템플릿에 대한 수정 사항은 제거되지 않으며 예기치 않은 동작이 발생할 수 있습니다. 그러나 그래프, 데이터 쿼리 또는 데이터 템플릿을 변경하지 않은 경우 패키지를 다시 가져와도 아무런 영향이 없습니다. 이 경우 업데이트 후 템플릿에서 '그래프 동기화'를 수행해야 합니다."
 
-#: lib/installer.php:2625
+#: lib/installer.php:2637
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "설치 후에 사용할 장치 템플릿을 선택하십시오. 운영 체제가 Windows 인 경우 &#39;Windows 장치&#39;템플리트를 선택해야합니다. 운영 체제가 Linux / UNIX 인 경우 &#39;로컬 Linux 시스템&#39;장치 템플릿을 선택하십시오."
 
-#: lib/installer.php:2631 package_import.php:487 plugins.php:596
+#: lib/installer.php:2643 package_import.php:487 plugins.php:596
 msgid "Author"
 msgstr "작성자"
 
-#: lib/installer.php:2631 package_import.php:490
+#: lib/installer.php:2643 package_import.php:490
 msgid "Homepage"
 msgstr "홈페이지"
 
-#: lib/installer.php:2657
+#: lib/installer.php:2669
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
 msgstr "장치 템플릿을 사용하면 Kadupul 내에서 방대한 데이터를 모니터링하고 그래프로 나타낼 수 있습니다. 원하는 장치 템플릿을 선택한 후 &#39;마침&#39;을 누르면 설치가 완료됩니다. 기기 템플릿을 가져 오는 데 몇 분이 걸릴 수 있으므로이 단계에서 조금만 기다려주세요."
 
-#: lib/installer.php:2666
+#: lib/installer.php:2678
 msgid "Server Collation"
 msgstr "서버 데이터 정렬"
 
-#: lib/installer.php:2673
+#: lib/installer.php:2685
 msgid "Your server collation appears to be UTF8 compliant"
 msgstr "서버 데이터 정렬은 UTF8과 호환되는 것으로 보입니다."
 
-#: lib/installer.php:2676
+#: lib/installer.php:2688
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "서버 데이터 정렬은 완전히 UTF8과 호환되지 않습니다."
 
-#: lib/installer.php:2677
+#: lib/installer.php:2689
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
 msgstr "[mysqld] 섹션에서 &#39;character-set-server&#39;및 &#39;collation-server&#39;라는 항목을 찾아 다음과 같이 설정하십시오."
 
-#: lib/installer.php:2684
+#: lib/installer.php:2696
 msgid "Database Collation"
 msgstr "데이터베이스 데이터 정렬"
 
-#: lib/installer.php:2689
+#: lib/installer.php:2701
 msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "데이터베이스 기본 데이터 정렬은 UTF8과 호환되는 것으로 보입니다."
 
-#: lib/installer.php:2692
+#: lib/installer.php:2704
 msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
 msgstr "데이터베이스 기본 데이터 정렬은 전체 UTF8과 호환되지 않습니다."
 
-#: lib/installer.php:2693
+#: lib/installer.php:2705
 msgid "Any tables created by plugins may have issues linked against Kadupul Core tables if the collation is not matched.   Please ensure your database is changed to 'utf8mb4_unicode_ci' by running the following: "
 msgstr "데이터 정렬이 일치하지 않으면 플러그인이 만든 테이블에 Kadupul Core 테이블과 연결된 문제가있을 수 있습니다. 다음을 실행하여 데이터베이스가 &#39;utf8mb4_unicode_ci&#39;로 변경되었는지 확인하십시오."
 
-#: lib/installer.php:2700
+#: lib/installer.php:2712
 msgid "Table Setup"
 msgstr "표 설정"
 
-#: lib/installer.php:2711
+#: lib/installer.php:2723
 #, php-format
 msgid "You have more tables than your PHP configuration will allow us to display/convert.  Please modify the max_input_vars setting in php.ini to a value above %s"
 msgstr "PHP 구성에서 표시 / 변환 할 수있는 것보다 많은 테이블이 있습니다. php.ini의 max_input_vars 설정을 %s 이상의 값으로 수정하십시오"
 
-#: lib/installer.php:2714
+#: lib/installer.php:2726
 msgid "Conversion of tables may take some time especially on larger tables.  The conversion of these tables will occur in the background but will not prevent the installer from completing.  This may slow down some servers if there are not enough resources for MySQL to handle the conversion."
 msgstr "특히 큰 테이블에서는 테이블 변환에 다소 시간이 걸릴 수 있습니다. 이 테이블의 변환은 백그라운드에서 수행되지만 설치 프로그램이 완료되는 것을 막지는 못합니다. MySQL이 변환을 처리하기에 충분한 리소스가 없으면 일부 서버가 느려질 수 있습니다."
 
-#: lib/installer.php:2718
+#: lib/installer.php:2730
 msgid "Tables"
 msgstr "표"
 
-#: lib/installer.php:2719 utilities.php:853
+#: lib/installer.php:2731 utilities.php:853
 msgid "Collation"
 msgstr "대조"
 
-#: lib/installer.php:2719 utilities.php:848
+#: lib/installer.php:2731 utilities.php:848
 msgid "Engine"
 msgstr "기관"
 
-#: lib/installer.php:2719 utilities.php:854
+#: lib/installer.php:2731 utilities.php:854
 msgid "Row Format"
 msgstr "원시 형식"
 
-#: lib/installer.php:2751
+#: lib/installer.php:2763
 msgid "One or more tables are too large to convert during the installation.  You should use the cli/convert_tables.php script to perform the conversion, then refresh this page. For example: "
 msgstr "하나 이상의 테이블이 너무 커서 설치 중에 변환 할 수 없습니다. 변환을 수행하려면 cli / convert_tables.php 스크립트를 사용하고이 페이지를 새로 고쳐야합니다. 예 :"
 
-#: lib/installer.php:2755
+#: lib/installer.php:2767
 msgid "The following tables should be converted to UTF8 and InnoDB with a Dynamic row format.  Please select the tables that you wish to convert during the installation process."
 msgstr "다음 표는 UTF8 및 InnoDB로 변환해야합니다. 설치 프로세스 중에 변환하려는 테이블을 선택하십시오."
 
-#: lib/installer.php:2761
+#: lib/installer.php:2773
 msgid "All your tables appear to be UTF8 and Dynamic row format compliant"
 msgstr "모든 테이블이 UTF8 호환으로 표시됩니다."
 
-#: lib/installer.php:2772
+#: lib/installer.php:2784
 msgid "Confirm Upgrade"
 msgstr "업그레이드 확인"
 
-#: lib/installer.php:2776
+#: lib/installer.php:2788
 msgid "Confirm Downgrade"
 msgstr "다운 그레이드 확인"
 
-#: lib/installer.php:2780
+#: lib/installer.php:2792
 msgid "Confirm Installation"
 msgstr "설치 확인"
 
-#: lib/installer.php:2781 plugins.php:13
+#: lib/installer.php:2793 plugins.php:13
 msgid "Install"
 msgstr "설치"
 
-#: lib/installer.php:2786
+#: lib/installer.php:2798
 msgid "DOWNGRADE DETECTED"
 msgstr "저 무적 감지"
 
-#: lib/installer.php:2787
+#: lib/installer.php:2799
 msgid "YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
 msgstr "업그레이드 된 변경 사항을 취소하려면 Kadupul 데이터베이스를 수동으로 변경해야합니다. <br/> 설치자는 자동으로이 작업을 수행 할 방법이 없습니다."
 
-#: lib/installer.php:2788
+#: lib/installer.php:2800
 msgid "Downgrading should only be performed when absolutely necessary and doing so may break your installation"
 msgstr "다운 그레이드는 절대적으로 필요한 경우에만 수행해야하며 그렇게하면 설치 작업이 중단 될 수 있습니다."
 
-#: lib/installer.php:2791
+#: lib/installer.php:2803
 msgid "Your Kadupul Server is almost ready.  Please check that you are happy to proceed."
 msgstr "Kadupul Server가 거의 준비되었습니다. 계속해서 기꺼이 진행되는지 확인하십시오."
 
-#: lib/installer.php:2794
+#: lib/installer.php:2806
 #, php-format
 msgid "Press '%s' then click '%s' to complete the installation process after selecting your Device Templates."
 msgstr "&#39; %s&#39;을 (를) 누른 다음 &#39; %s&#39;을 (를) 클릭하여 장치 템플릿을 선택한 후 설치 프로세스를 완료하십시오."
 
-#: lib/installer.php:2811
+#: lib/installer.php:2823
 #, php-format
 msgid "Installing Kadupul Server v%s"
 msgstr "Kadupul Server v  %s 설치하기"
 
-#: lib/installer.php:2812
+#: lib/installer.php:2824
 msgid "Your Kadupul Server is now installing"
 msgstr "Kadupul Server가 설치 중입니다."
 
-#: lib/installer.php:2899
+#: lib/installer.php:2911
 #, php-format
 msgid "Spawning background process: %s %s"
 msgstr "스폰 백그라운드 프로세스 : %s %s"
 
-#: lib/installer.php:2926
+#: lib/installer.php:2938
 msgid "Complete"
 msgstr "완료"
 
-#: lib/installer.php:2927
+#: lib/installer.php:2939
 #, php-format
 msgid "Your Kadupul Server v%s has been installed/updated.  You may now start using the software."
 msgstr "Kadupul Server v  %s이 (가) 설치 / 업데이트되었습니다. 이제 소프트웨어를 사용할 수 있습니다."
 
-#: lib/installer.php:2931
+#: lib/installer.php:2943
 #, php-format
 msgid "Your Kadupul Server v%s has been installed/updated with errors"
 msgstr "Kadupul Server v  %s에 오류가 설치 / 업데이트되었습니다."
 
-#: lib/installer.php:3043
+#: lib/installer.php:3057
 msgid "Get Help"
 msgstr "도와주세요."
 
-#: lib/installer.php:3048
+#: lib/installer.php:3062
 msgid "Report Issue"
 msgstr "문제 보고"
 
-#: lib/installer.php:3051
+#: lib/installer.php:3065
 msgid "Get Started"
 msgstr "도움말 문서 연결"
 
-#: lib/installer.php:3107
+#: lib/installer.php:3126
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "v %s에 대한 %s 프로세스 시작"
 
-#: lib/installer.php:3133
+#: lib/installer.php:3152
 msgid "Unable to update application defaults."
 msgstr ""
 
-#: lib/installer.php:3136
+#: lib/installer.php:3155
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "v %s에 대한 %s 프로세스 완료"
 
-#: lib/installer.php:3176
+#: lib/installer.php:3195
 #, php-format
 msgid "Found %s templates to install"
 msgstr "설치할 %s 템플릿을 찾았습니다."
 
-#: lib/installer.php:3186
+#: lib/installer.php:3205
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "패키지 # %s '%s'을 (를) 가져 오려고합니다."
 
-#: lib/installer.php:3195
+#: lib/installer.php:3214
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "프로필 '%s'에서 패키지 # %s '%s'을 (를) 가져 왔습니다."
 
-#: lib/installer.php:3201
+#: lib/installer.php:3220
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "프로필 '%s'에서 패키지 # %s '%s'을 (를) 가져 오지 못했습니다."
 
-#: lib/installer.php:3218
+#: lib/installer.php:3237
 #, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "장치 템플릿 '%s' 에 대한 매핑 자동화 템플릿"
 
-#: lib/installer.php:3239
+#: lib/installer.php:3258
 msgid "No templates were selected for import"
 msgstr "가져올 템플릿을 선택하지 않았습니다"
 
-#: lib/installer.php:3249
+#: lib/installer.php:3268
 msgid "Updating remote configuration file"
 msgstr "구성 대기 중"
 
-#: lib/installer.php:3284
+#: lib/installer.php:3303
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "기본 데이터 원본 프로필을 %s (%s) (으) 로 설정"
 
-#: lib/installer.php:3312
+#: lib/installer.php:3331
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "선택한 프로필 (%s) 을 찾지 못했습니다. 변경 사항이 없습니다"
 
-#: lib/installer.php:3321
+#: lib/installer.php:3340
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "자동화 네트워크 (%s) 업데이트, 모드 \"%s\"=> \"%s\", 서브넷 \"%s\"=> %s \""
 
-#: lib/installer.php:3331
+#: lib/installer.php:3350
 msgid "Failed to find automation network, no changes were made"
 msgstr "자동화 네트워크를 찾지 못했습니다. 변경 사항이 없습니다."
 
-#: lib/installer.php:3335
+#: lib/installer.php:3354
 msgid "Adding extra snmp settings for automation"
 msgstr "자동화를위한 추가 snmp 설정 추가"
 
-#: lib/installer.php:3341
+#: lib/installer.php:3360
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "자동화 옵션 세트 %s 선택"
 
-#: lib/installer.php:3354
+#: lib/installer.php:3373
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "자동화 옵션 세트 업데이트 %s"
 
-#: lib/installer.php:3357
+#: lib/installer.php:3376
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "자동화 옵션 세트 %s을 (를) 성공적으로 업데이트했습니다"
 
-#: lib/installer.php:3359
+#: lib/installer.php:3378
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "재확인 자동화 옵션 세트 %s"
 
-#: lib/installer.php:3367
+#: lib/installer.php:3386
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "자동화 옵션 세트 %s 업데이트 실패"
 
-#: lib/installer.php:3370
+#: lib/installer.php:3389
 msgid "Failed to find any automation option set"
 msgstr "복사 할 데이터를 찾지 못했습니다!"
 
-#: lib/installer.php:3400
+#: lib/installer.php:3419
 #, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "장치 템플릿 [편집 :  %s]"
 
-#: lib/installer.php:3430
+#: lib/installer.php:3449
 msgid "Creating Graphs for Default Device"
 msgstr "이 장치에 대한 그래프 만들기"
 
-#: lib/installer.php:3437
+#: lib/installer.php:3456
 msgid "Adding Device to Default Tree"
 msgstr "장치 기본값"
 
-#: lib/installer.php:3445
+#: lib/installer.php:3464
 msgid "No templated graphs for Default Device were found"
 msgstr "기본 장치에 대한 템플릿 그래프가 없습니다."
 
-#: lib/installer.php:3449
+#: lib/installer.php:3468
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "경고 : 운영 체제의 장치 템플릿을 찾을 수 없습니다. Kadupul 서버를 모니터하려면 디바이스 템플리트 또는 Kadupul 패키지를 가져와야합니다."
 
-#: lib/installer.php:3456
+#: lib/installer.php:3475
 msgid "Running first-time data query for local host"
 msgstr "로컬 호스트에 대한 최초 데이터 쿼리 실행"
 
-#: lib/installer.php:3464
+#: lib/installer.php:3483
 msgid "Repopulating poller cache"
 msgstr "폴러 캐시 다시 작성"
 
-#: lib/installer.php:3469
+#: lib/installer.php:3488
 msgid "Repopulating SNMP Agent cache"
 msgstr "SNMPAgent 캐시 다시 작성"
 
-#: lib/installer.php:3474
+#: lib/installer.php:3493
 msgid "Generating RSA Key Pair"
 msgstr "RSA 키 페어 생성"
 
-#: lib/installer.php:3487
+#: lib/installer.php:3506
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "변환 할 %s 테이블을 찾았습니다."
 
-#: lib/installer.php:3494
+#: lib/installer.php:3513
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "테이블 # %s '%s'변환 중"
 
-#: lib/installer.php:3509
+#: lib/installer.php:3528
 msgid "No tables where found or selected for conversion"
 msgstr "변환을 위해 찾거나 선택한 테이블이 없습니다."
 
-#: lib/installer.php:3521
+#: lib/installer.php:3540
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "%s에서 %s (으)로 전환"
 
-#: lib/installer.php:3525
+#: lib/installer.php:3544
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "참고 : db 캐시에 임시 파일 사용 : %s"
 
-#: lib/installer.php:3547
+#: lib/installer.php:3566
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "v %s (DB %s)에서 v %s로 업그레이드"
 
-#: lib/installer.php:3555
+#: lib/installer.php:3574
 #, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "경고 : v %s의 업그레이드 기능을 찾지 못했습니다"
 
-#: lib/installer.php:3616
+#: lib/installer.php:3635
 msgid "Install aborted due to no EULA acceptance"
 msgstr "EULA 승인이 없어 설치가 중단되었습니다."
 
-#: lib/installer.php:3640
+#: lib/installer.php:3659
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "백그라운드가 이미 %s에서 시작되었습니다. %s에서의이 시도는 생략되었습니다."
 
-#: lib/installer.php:3664
+#: lib/installer.php:3683
 #, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "설치 중 예외 발생: # %s - %s"
 
-#: lib/installer.php:3683
+#: lib/installer.php:3702
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "설치가  %s에서 시작되어  %s에서 완료되었습니다."
 
-#: lib/installer.php:3720
+#: lib/installer.php:3739
 msgid "Both"
 msgstr "모두"
 
-#: lib/installer.php:3720
+#: lib/installer.php:3739
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "분"
 
-#: lib/installer.php:3725
+#: lib/installer.php:3744
 #, fuzzy, php-format
 msgid "%s - N/A"
 msgstr "해당 없음"
 
-#: lib/installer.php:3725 lib/installer.php:3727
+#: lib/installer.php:3744 lib/installer.php:3746
 msgid "Web"
 msgstr "웹"
 
-#: lib/installer.php:3727 lib/installer.php:3730
+#: lib/installer.php:3746 lib/installer.php:3749
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "분"
 
-#: lib/installer.php:3730
+#: lib/installer.php:3749
 msgid "Cli"
 msgstr "CLI"
 
-#: lib/installer.php:3736
+#: lib/installer.php:3755
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "PHP 옵션 설정 %s = %s"
 
-#: lib/installer.php:3742
+#: lib/installer.php:3761
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "PHP 옵션 %s을 (를) 설정하지 못했습니다. %s (%s 여야 함)"
 
-#: lib/installer.php:3779
+#: lib/installer.php:3798
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "동기화를 시도 할 때 데이터 수집기를 찾을 수 없습니다."
 
@@ -16157,184 +16157,196 @@ msgstr "이미 추가 된 보고서 그래프 항목 &#39; <i> %s</i> &#39;을 (
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "건너 뛴 보고서 그래프 항목 &#39; <i> %s</i> &#39;이 (가) 이미 있음"
 
-#: lib/rrd.php:1666
+#: lib/rrd.php:1989
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "오류 : RRD 파일  %s을 (를) 쓸 수 없습니다."
 
-#: lib/rrd.php:3025
+#: lib/rrd.php:3348
 #, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "필요한 RRD 파일 단계 크기는 '%s' 이지만 관찰된 단계는 '%s' 입니다"
 
-#: lib/rrd.php:3085
+#: lib/rrd.php:3408
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "데이터 원본 &#39; %s&#39;의 형식이 &#39; %s&#39;이어야합니다."
 
-#: lib/rrd.php:3091
+#: lib/rrd.php:3414
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "데이터 원본 &#39; %s&#39;의 하트 비트가 &#39; %s&#39;이어야합니다."
 
-#: lib/rrd.php:3103
+#: lib/rrd.php:3426
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "데이터 원본 &#39; %s&#39;의 RRD 최소값은 &#39; %s&#39;이어야합니다."
 
-#: lib/rrd.php:3112
+#: lib/rrd.php:3435
 #, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "Kadupul 정의에서 DS &#39; %s&#39;이 누락되었습니다."
 
-#: lib/rrd.php:3126 lib/rrd.php:3127
+#: lib/rrd.php:3449 lib/rrd.php:3450
 #, fuzzy, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA &#39; %s&#39;의 CF / 스텝 수 ( %s,  %s)가 &#39; %s&#39;"
 
-#: lib/rrd.php:3140 lib/rrd.php:3141
+#: lib/rrd.php:3463 lib/rrd.php:3464
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "파일 RRA &#39; %s&#39;은 (는) &#39; %s&#39;(으)로 동일한 CF / 단계 ( %s,  %s)"
 
-#: lib/rrd.php:3173
+#: lib/rrd.php:3496
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "'%s' 의 pdp_per_row가 유효하지 않습니다. RRA '%s' 은 (는) '%s' 이어야 합니다. Kadupul가 RRD 파일을 다시 만들 수 있도록 삭제하고 허용하는 것이 좋습니다."
 
-#: lib/rrd.php:3177
+#: lib/rrd.php:3500
 #, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "Kadupul에 대한 XFF RRA id &#39; %s&#39;은 (는) &#39; %s&#39;이어야합니다."
 
-#: lib/rrd.php:3181
+#: lib/rrd.php:3504
 #, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Kadupul RRA ID '%s' 의 행 수가 잘못되었습니다. 행 수는 '%s' 이지만 '%s' 이어야 합니다"
 
-#: lib/rrd.php:3198
+#: lib/rrd.php:3521
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "RRA &#39; %s&#39;은 (는) RRDfile에 없습니다."
 
-#: lib/rrd.php:3206
+#: lib/rrd.php:3529
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "Kadupul 정의에서 RRA &#39; %s&#39;이 누락되었습니다."
 
-#: lib/rrd.php:3227
+#: lib/rrd.php:3550
 msgid "RRD File Information"
 msgstr "RRD 파일 정보"
 
-#: lib/rrd.php:3259
+#: lib/rrd.php:3582
 msgid "Data Source Items"
 msgstr "데이터 소스 항목"
 
-#: lib/rrd.php:3261
+#: lib/rrd.php:3584
 msgid "Minimal Heartbeat"
 msgstr "최소 하트 비트"
 
-#: lib/rrd.php:3262
+#: lib/rrd.php:3585
 msgid "Min"
 msgstr "최소"
 
-#: lib/rrd.php:3263
+#: lib/rrd.php:3586
 msgid "Max"
 msgstr "최대"
 
-#: lib/rrd.php:3264
+#: lib/rrd.php:3587
 msgid "Last DS"
 msgstr "마지막 DS"
 
-#: lib/rrd.php:3266
+#: lib/rrd.php:3589
 msgid "Unknown Sec"
 msgstr "알 수없는 초"
 
-#: lib/rrd.php:3317
+#: lib/rrd.php:3640
 msgid "Round Robin Archive"
 msgstr "라운드 로빈 아카이브"
 
-#: lib/rrd.php:3320
+#: lib/rrd.php:3643
 msgid "Cur Row"
 msgstr "커 로우"
 
-#: lib/rrd.php:3321
+#: lib/rrd.php:3644
 msgid "PDP per Row"
 msgstr "행당 PDP"
 
-#: lib/rrd.php:3323
+#: lib/rrd.php:3646
 msgid "CDP Prep Value (0)"
 msgstr "CDP 준비 값 (0)"
 
-#: lib/rrd.php:3324
+#: lib/rrd.php:3647
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP 알 수없는 데이터 요소 (0)"
 
-#: lib/rrd.php:3382
+#: lib/rrd.php:3705
 msgid "Errors Found"
 msgstr " %s을 찾을 수 없습니다."
 
-#: lib/rrd.php:3394
+#: lib/rrd.php:3717
 msgid "Optional Tuning Recommendations"
 msgstr "데이터 소스 필드"
 
-#: lib/rrd.php:3419 lib/rrd.php:3422
+#: lib/rrd.php:3742 lib/rrd.php:3745
 #, php-format
 msgid "rename %s to %s"
 msgstr "%s에서  %s (으)로 이름 바꾸기"
 
-#: lib/rrd.php:3496
+#: lib/rrd.php:3818
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "rrdtool 덤프의 XML을 구문 분석하는 동안 오류가 발생했습니다."
 
-#: lib/rrd.php:3528 lib/rrd.php:3585 lib/rrd.php:3643
+#: lib/rrd.php:3850 lib/rrd.php:3908 lib/rrd.php:3967
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "XML 파일을 쓰는 동안 오류가 발생했습니다 :  %s"
 
-#: lib/rrd.php:3539 lib/rrd.php:3596 lib/rrd.php:3654
+#: lib/rrd.php:3857 lib/rrd.php:3915 lib/rrd.php:3974
+msgid "RRD restore failed; original and recovery XML preserved. See application log."
+msgstr ""
+
+#: lib/rrd.php:3863 lib/rrd.php:3921 lib/rrd.php:3980
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "오류 : RRD 파일  %s을 (를) 쓸 수 없습니다."
 
-#: lib/rrd.php:3568 lib/rrd.php:3626
+#: lib/rrd.php:3891 lib/rrd.php:3950
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "RRDtool 덤프의 XML을 구문 분석하는 동안 오류가 발생했습니다."
 
-#: lib/rrd.php:3874
+#: lib/rrd.php:4199
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF =  %s, ROWS = % d, PDP_PER_ROW = % d, XFF = % 1.2f)가 RRD 파일에서 제거되었습니다."
 
-#: lib/rrd.php:3911
+#: lib/rrd.php:4236
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF =  %s, ROWS = % d, PDP_PER_ROW = % d, XFF = % 1.2f) RRD 파일에 추가"
 
-#: lib/rrd.php:3941 lib/rrd.php:3955
+#: lib/rrd.php:4266 lib/rrd.php:4280
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "웹 사이트에  %s에 대한 쓰기 권한이 없으며 RRD를 만들거나 업데이트 할 수 없음"
 
-#: lib/rrd.php:3951
+#: lib/rrd.php:4276
 msgid "(Custom)"
 msgstr "사용자 정의"
 
-#: lib/rrd.php:3957
+#: lib/rrd.php:4282
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "데이터 파일을 열지 못했습니다. 폴러가 아직 실행되지 않았을 수 있습니다."
 
-#: lib/rrd.php:3960
+#: lib/rrd.php:4285
 msgid "RRA Folder"
 msgstr "RRA 폴더"
 
-#: lib/rrd.php:3960
+#: lib/rrd.php:4285
 msgid "Root"
 msgstr "워드프레스 루트 디렉토리를 확인할 수 없습니다"
 
-#: lib/rrd.php:4072
+#: lib/rrd.php:4397
 msgid "Unknown RRDtool Error"
 msgstr "알 수없는 RRDtool 오류"
+
+#: lib/rrd_maintenance.php:208
+msgid "RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading."
+msgstr ""
+
+#: lib/rrd_maintenance.php:317
+msgid "RRD storage configuration requires attention"
+msgstr ""
 
 #: lib/snmp.php:194 lib/snmp.php:294 lib/snmp.php:389 lib/snmp.php:734
 #: lib/snmp.php:749
@@ -16365,12 +16377,12 @@ msgstr ""
 msgid "FATAL: Standard Deviation must be a positive integer."
 msgstr ""
 
-#: lib/spikekill.php:262 lib/spikekill.php:1752
+#: lib/spikekill.php:262 lib/spikekill.php:1757
 #, fuzzy
 msgid "StdDev"
 msgstr "StdDev 제거"
 
-#: lib/spikekill.php:268 lib/spikekill.php:1752
+#: lib/spikekill.php:268 lib/spikekill.php:1757
 #, fuzzy
 msgid "Variance"
 msgstr "변수"
@@ -16477,143 +16489,151 @@ msgstr ""
 msgid "Window Range:  All"
 msgstr "Windows 관련"
 
-#: lib/spikekill.php:429
+#: lib/spikekill.php:393
+msgid "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal."
+msgstr ""
+
+#: lib/spikekill.php:400
+msgid "FATAL: RRD storage is busy or its maintenance lock is unavailable. Retry after polling completes."
+msgstr ""
+
+#: lib/spikekill.php:452
 #, php-format
 msgid "FATAL: Unable to safely create a temporary XML file in '%s'!"
 msgstr ""
 
-#: lib/spikekill.php:478 lib/spikekill.php:500
+#: lib/spikekill.php:501 lib/spikekill.php:523
 msgid "FATAL: RRD source identity changed or could not be verified safely."
 msgstr ""
 
-#: lib/spikekill.php:508
+#: lib/spikekill.php:531
 msgid "FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"
 msgstr ""
 
-#: lib/spikekill.php:524
+#: lib/spikekill.php:547
 msgid "FATAL: RRDtool returned an empty dump. The RRD file was not modified."
 msgstr ""
 
-#: lib/spikekill.php:552
+#: lib/spikekill.php:575
 #, php-format
 msgid "FATAL: RRDfile Backup of '%s' to '%s' FAILED!"
 msgstr ""
 
-#: lib/spikekill.php:766
+#: lib/spikekill.php:789
 #, php-format
 msgid "NOTE: Searching for Spikes in XML file '%s'"
 msgstr ""
 
-#: lib/spikekill.php:769
+#: lib/spikekill.php:792
 #, php-format
 msgid "NOTE: Limited to Time Window: %s through %s"
 msgstr ""
 
-#: lib/spikekill.php:776
+#: lib/spikekill.php:799
 msgid "NOTE: Dryrun requested.  No updates performed"
 msgstr ""
 
-#: lib/spikekill.php:812
+#: lib/spikekill.php:835
 #, php-format
 msgid "NOTE: No Window Spikes found in '%s'"
 msgstr ""
 
-#: lib/spikekill.php:815
+#: lib/spikekill.php:838
 #, php-format
 msgid "NOTE: No Spikes found in '%s'"
 msgstr ""
 
-#: lib/spikekill.php:828
+#: lib/spikekill.php:851
 #, php-format
 msgid "NOTE: Spikes Found and Remediated.  Total Spikes %s"
 msgstr ""
 
-#: lib/spikekill.php:832
+#: lib/spikekill.php:855
 #, php-format
 msgid "FATAL: Unable to restore '%s' from '%s'"
 msgstr ""
 
-#: lib/spikekill.php:842
+#: lib/spikekill.php:865
 #, php-format
 msgid "FATAL: Unable to backup '%s'"
 msgstr ""
 
-#: lib/spikekill.php:852
+#: lib/spikekill.php:875
 #, php-format
 msgid "FATAL: Unable to write XML file '%s'"
 msgstr ""
 
-#: lib/spikekill.php:861
+#: lib/spikekill.php:884
 #, fuzzy
 msgid "NOTE: No Spikes Found."
 msgstr "찾을 수있는 사이트가 없습니다."
 
-#: lib/spikekill.php:922
+#: lib/spikekill.php:945
 #, php-format
 msgid "NOTE: Re-Importing '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1013
+#: lib/spikekill.php:1036
 #, php-format
 msgid "NOTE: Backing Up '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1752
+#: lib/spikekill.php:1757
 #, fuzzy
 msgid "Avg"
 msgstr "평균 :"
 
-#: lib/spikekill.php:1752
+#: lib/spikekill.php:1757
 #, fuzzy
 msgid "CF"
 msgstr "CDEF"
 
-#: lib/spikekill.php:1752
+#: lib/spikekill.php:1757
 #, fuzzy
 msgid "DS"
 msgstr "DES"
 
-#: lib/spikekill.php:1752
+#: lib/spikekill.php:1757
 msgid "NonNan"
 msgstr ""
 
-#: lib/spikekill.php:1752
+#: lib/spikekill.php:1757
 #, fuzzy
 msgid "Samples"
 msgstr "단순"
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1758
 msgid "MaxStdDev"
 msgstr ""
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1758
 #, fuzzy
 msgid "MaxValue"
 msgstr "값"
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1758
 #, fuzzy
 msgid "MinStdDev"
 msgstr "드라이 런 StdDev"
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1758
 #, fuzzy
 msgid "MinValue"
 msgstr "값"
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1758
 msgid "StdKilled"
 msgstr ""
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1758
 msgid "VarKilled"
 msgstr ""
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1758
 msgid "WindKilled"
 msgstr ""
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1758
 msgid "WindSamples"
 msgstr ""
 
@@ -17476,51 +17496,51 @@ msgstr "플러그인이 호환되지 않습니다."
 msgid "Enable Plugin Locally"
 msgstr "플러그인 사용"
 
-#: poller.php:377
+#: poller.php:384
 #, php-format
 msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
 msgstr "경고: %s 이 (가) 폴러 ID %d 의 폴러 간격과 동기화되지 않았습니다! 폴러 간격은 %d 초이며 최대 %d 초이지만 마지막 설문 조사 이후 %d 초가 지났습니다!"
 
-#: poller.php:527
+#: poller.php:534
 #, php-format
 msgid "WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate."
 msgstr "경고: 폴러 ID %d 에 대한 폴링 사이클을 초과하는 것으로 탐지된 프로세스가 %d 개 있습니다. 조사하십시오."
 
-#: poller.php:592
+#: poller.php:599
 #, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
 msgstr "경고: 폴러 ID %d 에 대해 폴러 출력 테이블이 비어 있지 않습니다. 문제: %d, %s."
 
-#: poller.php:632
+#: poller.php:641
 #, php-format
 msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
 msgstr "오류: 척추 경로: %s 이 (가) 폴러 ID %d 에 유효하지 않습니다. 투표자는 계속할 수 없습니다!"
 
-#: poller.php:774
+#: poller.php:799
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "폴러 ID %d 의 최대 런타임 %d 초를 초과했습니다. 종료 중."
 
-#: poller.php:880
+#: poller.php:905
 #, fuzzy
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "경고: Kadupul 폴링 주기가 폴러 간격을 초과했습니다."
 
-#: poller.php:905
+#: poller.php:935
 #, php-format
 msgid "WARNING: PollerID:%s with Name:%s is in Heartbeat Status"
 msgstr "경고: 이름: %s 의 PollerID: %s 이 (가) 하트비트 상태입니다"
 
-#: poller.php:907
+#: poller.php:937
 msgid "Poller in Heartbeat Mode"
 msgstr "하트비트 모드의 폴러"
 
-#: poller.php:1164
+#: poller.php:1194
 #, fuzzy
 msgid "Kadupul System Notification"
 msgstr "Kadupul 시스템 유틸리티"
 
-#: poller.php:1164
+#: poller.php:1194
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
 msgstr "참고 : 두 번째 Kadupul 데이터 수집기가 추가되었습니다. 따라서 자동으로 부스트를 활성화하십시오!"
 
@@ -17538,7 +17558,7 @@ msgstr "Kadupul 기본 관리자"
 msgid "Kadupul Automation Report requires an html based Email client"
 msgstr "Kadupul Automation Report는 HTML 기반 이메일 클라이언트가 필요합니다"
 
-#: poller_boost.php:359
+#: poller_boost.php:371
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
 msgstr "경고: 감지된 폴러 부스트 오버런, 가능한 부스트 폴러 충돌"
 
@@ -20309,3 +20329,7 @@ msgstr "이 VDEF를 사용하는 그래프 템플릿 수입니다."
 #: vdef.php:923
 msgid "No VDEFs"
 msgstr "VDEF 없음"
+
+#: rrdcleaner.php:28 rrdcleaner.php:427 rrdcleaner.php:462
+msgid "Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup."
+msgstr ""
