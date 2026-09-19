@@ -149,3 +149,26 @@ test('profile bulk actions refuse any GET that carries selected_items', function
 	expect(run_profiles('POST', 'actions', array('selected_items' => 'a:1:{i:0;i:3;}', 'drp_action' => '1')))->toBe("HANDLER:actions\nCODE:200\n")
 		->and(run_profiles('GET', 'actions', array('drp_action' => '1'), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe("HANDLER:actions\nCODE:200\n");
 });
+
+test('deleting profiles skips every profile a Data Template or a Data Source uses', function () {
+	$usage  = array('3' => array(1, 0), '4' => array(0, 2), '6' => array(0, 0));
+	$output = run_profiles('POST', 'actions', array('selected_items' => 'a:3:{i:0;i:3;i:1;i:4;i:2;i:6;}', 'drp_action' => '1'), array(), array('form_actions', 'profiles_not_in_use'), $usage);
+
+	expect($output)->toContain('LOG:WEBUI:WARNING: Refused to delete Data Source Profile 3 in use by Data Templates or Data Sources for user 5')
+		->and($output)->toContain('LOG:WEBUI:WARNING: Refused to delete Data Source Profile 4 in use by Data Templates or Data Sources for user 5')
+		->and($output)->toContain('MESSAGE:profile_in_use')
+		->and($output)->toContain("EXEC:DELETE FROM data_source_profiles WHERE (id IN(6))\n")
+		->and($output)->toContain("EXEC:DELETE FROM data_source_profiles_rra WHERE (data_source_profile_id IN(6))\n")
+		->and($output)->toContain("EXEC:DELETE FROM data_source_profiles_cf WHERE (data_source_profile_id IN(6))\n")
+		->and(substr_count($output, 'EXEC:'))->toBe(3);
+
+	$output = run_profiles('POST', 'actions', array('selected_items' => 'a:2:{i:0;i:3;i:1;i:4;}', 'drp_action' => '1'), array(), array('form_actions', 'profiles_not_in_use'), $usage);
+
+	expect($output)->toContain('MESSAGE:profile_in_use')
+		->and($output)->not->toContain('EXEC:');
+
+	$output = run_profiles('POST', 'actions', array('selected_items' => 'a:1:{i:0;i:3;}', 'drp_action' => '2', 'title_format' => '<profile_title> (1)'), array(), array('form_actions', 'profiles_not_in_use'), $usage);
+
+	expect($output)->toContain('HANDLER:duplicate')
+		->and($output)->not->toContain('Refused');
+});

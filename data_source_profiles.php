@@ -262,6 +262,10 @@ function form_actions() {
 	if (isset_request_var('selected_items')) {
 		$selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
 
+		if ($selected_items != false && get_request_var('drp_action') == '1') {
+			$selected_items = profiles_not_in_use($selected_items);
+		}
+
 		if ($selected_items != false) {
 			if (get_request_var('drp_action') == '1') { // delete
 				db_execute('DELETE FROM data_source_profiles WHERE ' . array_to_sql_or($selected_items, 'id'));
@@ -340,6 +344,28 @@ function form_actions() {
 	form_end();
 
 	bottom_footer();
+}
+
+/* The list disables the checkbox of a profile that a Data Template or a Data
+   Source uses, but deleting one leaves them pointing at a missing profile. */
+function profiles_not_in_use($selected_items) {
+	$unused = array();
+
+	foreach ($selected_items as $profile_id) {
+		$in_use = db_fetch_cell_prepared('SELECT COUNT(*)
+			FROM data_template_data
+			WHERE data_source_profile_id = ?',
+			array($profile_id));
+
+		if ($in_use > 0) {
+			cacti_log('WARNING: Refused to delete Data Source Profile ' . (int) $profile_id . ' in use by Data Templates or Data Sources for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+			raise_message('profile_in_use', __('Data Source Profiles in use by Data Templates or Data Sources can not be deleted.'), MESSAGE_LEVEL_ERROR);
+		} else {
+			$unused[] = $profile_id;
+		}
+	}
+
+	return $unused;
 }
 
 /* --------------------------
