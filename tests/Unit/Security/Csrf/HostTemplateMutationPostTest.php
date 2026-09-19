@@ -106,3 +106,37 @@ test('device template bulk actions refuse any GET that carries selected_items', 
 	expect(run_host_templates('POST', 'actions', array('selected_items' => 'a:1:{i:0;i:3;}', 'drp_action' => '1')))->toBe('actions')
 		->and(run_host_templates('GET', 'actions', array('drp_action' => '1'), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('actions');
 });
+
+/**
+ * @return array<int, string>
+ */
+function host_template_item_mutations() {
+	return array('item_add_gt', 'item_remove_gt', 'item_add_dq', 'item_remove_dq');
+}
+
+test('device template item changes refuse any GET, including a same-site one', function () {
+	foreach (host_template_item_mutations() as $action) {
+		expect_refused($action, array('host_template_id' => '3', 'id' => '4', 'graph_template_id' => '4', 'snmp_query_id' => '4'));
+	}
+});
+
+test('device template item changes still run on POST and the removal dialogs still render by GET', function () {
+	foreach (host_template_item_mutations() as $action) {
+		expect(run_host_templates('POST', $action, array('host_template_id' => '3', 'id' => '4')))->toBe($action, $action);
+	}
+
+	foreach (array('item_remove_gt_confirm', 'item_remove_dq_confirm') as $action) {
+		expect(run_host_templates('GET', $action, array('host_template_id' => '3', 'id' => '4'), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe($action, $action);
+	}
+});
+
+test('device template edit page sends item changes by POST with the csrf token', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/host_templates.php');
+
+	foreach (host_template_item_mutations() as $action) {
+		expect($source)->not->toContain('host_templates.php?action=' . $action . '&')
+			->and($source)->toContain("\$.post('host_templates.php?action=" . $action . "', {");
+	}
+
+	expect(substr_count($source, '__csrf_magic: csrfMagicToken'))->toBe(4);
+});
