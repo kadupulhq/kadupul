@@ -8,7 +8,7 @@
 
 require(__DIR__ . '/../include/cli_check.php');
 require_once($config['base_path'] . '/lib/poller.php');
-require_once($config['base_path'] . '/lib/rrd_maintenance.php');
+require_once __DIR__ . '/../lib/rrd_maintenance.php';
 
 /* process calling arguments */
 $parms = $_SERVER['argv'];
