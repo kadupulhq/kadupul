@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
-// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 test('failed queue inspection stops before producer launch while empty queues proceed', function ($issues, $status) {
     $source = file_get_contents(dirname(__DIR__, 4) . '/poller.php');
