@@ -614,10 +614,10 @@ header_redirect	./aggregate_templates.php:272			header('Location: aggregate_temp
 header_redirect	./aggregate_templates.php:309			header('Location: aggregate_templates.php?header=false');
 header_redirect	./aggregate_templates.php:52			header('Location: aggregate_templates.php?header=false&action=edit&id=' . get_nfilter_request_var('id'));
 header_redirect	./aggregate_templates.php:87			header('Location: aggregate_templates.php?header=false&action=edit&id=' . get_nfilter_request_var('id'));
-header_redirect	./auth_changepassword.php:215			header('Location: logout.php');
-header_redirect	./auth_changepassword.php:308			header('Location:index.php');
-header_redirect	./auth_changepassword.php:91		header('Location: graph_view.php');
-header_redirect	./auth_login.php:213						header('Location: auth_login.php');
+header_redirect	./auth_changepassword.php:217			header('Location: logout.php');
+header_redirect	./auth_changepassword.php:310			header('Location:index.php');
+header_redirect	./auth_changepassword.php:93		header('Location: graph_view.php');
+header_redirect	./auth_login.php:218						header('Location: auth_login.php');
 header_redirect	./automation_devices.php:127			header('Location: automation_devices.php?header=false');
 header_redirect	./automation_devices.php:219			header('Location: automation_devices.php?header=false');
 header_redirect	./automation_devices.php:665		header('Location: automation_devices.php?header=false');

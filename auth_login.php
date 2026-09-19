@@ -11,6 +11,12 @@ include_once(__DIR__ . '/lib/ldap.php');
 /* set default action */
 set_default_action();
 
+// Form credentials require a validated POST; server-authenticated Basic login does not.
+$auth_method = read_config_option('auth_method');
+if ($auth_method != 2) {
+	cacti_require_post_actions(array('login'));
+}
+
 /**
  * get the username from the post variable
  * For all but basic, this means that two post variables must be
@@ -26,7 +32,6 @@ $user_enabled  = true;                                // A variable to let plugi
 $guest_user    = false;                               // Indicates the Guest account is being used
 $realm         = 0;                                   // The compensated realm used for template and user validation
 $frv_realm     = get_nfilter_request_var('realm', 0); // The dropdown value for realm
-$auth_method   = read_config_option('auth_method');   // The authentication method for Kadupul
 $error         = false;                               // Global variable, will be true if any errors occur
 $error_msg     = '';                                  // The errors message in case there was a login error
 

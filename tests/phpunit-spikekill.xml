@@ -23,6 +23,8 @@
       <file>./Unit/Core/PathHelpersTest.php</file>
       <file>./Unit/Security/Auth/ReportAdminGroupRealmTest.php</file>
       <file>./Unit/Security/Auth/ReportMutationCsrfTest.php</file>
+      <file>./Unit/Security/Auth/ProfileMutationCsrfTest.php</file>
+      <file>./Unit/Security/Auth/LoginMutationCsrfTest.php</file>
       <file>./Unit/ImportPackageFileDestinationTest.php</file>
       <file>./Unit/Core/Poller/PollerBatchLeaseTest.php</file>
       <file>./Unit/Core/Poller/PollerPostRunFailureTest.php</file>

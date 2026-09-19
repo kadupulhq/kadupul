@@ -7,6 +7,8 @@
 
 include('./include/global.php');
 
+cacti_require_post_actions(array('changepassword'));
+
 set_default_action();
 
 $action = get_request_var('action');
