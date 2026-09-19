@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+set -euo pipefail
+
+message_file=${1:?commit message file is required}
+
+# Git-generated merge and revert subjects intentionally do not follow the
+# Conventional Commits subject form. DCO is checked in CI for the commits for
+# which the repository requires it.
+if git rev-parse -q --verify MERGE_HEAD >/dev/null 2>&1; then
+	exit 0
+fi
+
+subject=$(sed -n '1p' "$message_file")
+pattern='^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-z0-9._/-]+\))?!?: .+'
+
+if [[ ! "$subject" =~ $pattern && "$subject" != fixup\!* && "$subject" != squash\!* && "$subject" != Revert\ \"* ]]; then
+	cat >&2 <<EOF
+Commit subject is not a Conventional Commit:
+  $subject
+
+Expected: type(optional-scope): short description
+Allowed types: build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test
+EOF
+	exit 1
+fi
+
+if ! grep -Eq '^Signed-off-by: .+ <[^>]+>$' "$message_file"; then
+	cat >&2 <<'EOF'
+Commit is missing a Developer Certificate of Origin sign-off.
+Create commits with `git commit -s`, or amend this commit with a valid
+Signed-off-by trailer after reviewing the DCO.
+EOF
+	exit 1
+fi

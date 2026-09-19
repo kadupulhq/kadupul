@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+set -euo pipefail
+
+root=$(git rev-parse --show-toplevel)
+cd "$root"
+
+git config --local core.hooksPath .githooks
+
+printf 'Kadupul Git hooks enabled for %s\n' "$root"
+printf 'Disable them with: git config --local --unset core.hooksPath\n'
