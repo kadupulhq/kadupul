@@ -623,7 +623,7 @@ function form_save() {
 		}
 
 		if (get_filter_request_var('id') > 0) {
-			tree_require_lock(get_request_var('id'), 'save', false);
+			tree_require_lock(get_request_var('id'), 'save');
 		}
 
 		if (get_filter_request_var('id') > 0) {

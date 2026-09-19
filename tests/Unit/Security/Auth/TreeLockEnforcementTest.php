@@ -176,20 +176,30 @@ test('a tree locked by another user can not be locked over or saved', function (
 		->and($stdout)->not->toContain('HANDLER:sql_save');
 });
 
-test('an unlocked or self-held tree can be locked and saved', function () use ($runController, $heldBySelf, $unlocked) {
+test('an unlocked or self-held tree can be locked', function () use ($runController, $heldBySelf, $unlocked) {
 	foreach (array($heldBySelf, $unlocked) as $lock) {
 		list($exit, $stdout, $stderr) = $runController('lock', array('id' => '3'), $lock);
 
 		expect($exit)->toBe(0, $stderr)
 			->and($stdout)->toContain('HANDLER:api_tree_lock')
 			->and($stdout)->not->toContain('MESSAGE:tree_locked');
-
-		list($exit, $stdout, $stderr) = $runController('save', array('id' => '3', 'save_component_tree' => '1', 'name' => 'x', 'sort_type' => '1'), $lock);
-
-		expect($exit)->toBe(0, $stderr)
-			->and($stdout)->toContain('HANDLER:sql_save')
-			->and($stdout)->not->toContain('MESSAGE:tree_locked');
 	}
+});
+
+test('an existing tree is saved only by the user holding its lock', function () use ($runController, $heldBySelf, $unlocked, $lockMessage) {
+	$save = array('id' => '3', 'save_component_tree' => '1', 'name' => 'x', 'sort_type' => '1');
+
+	list($exit, $stdout, $stderr) = $runController('save', $save, $heldBySelf);
+
+	expect($exit)->toBe(0, $stderr)
+		->and($stdout)->toContain('HANDLER:sql_save')
+		->and($stdout)->not->toContain('MESSAGE:tree_locked');
+
+	list($exit, $stdout, $stderr) = $runController('save', $save, $unlocked);
+
+	expect($exit)->toBe(0, $stderr)
+		->and($stdout)->toContain($lockMessage)
+		->and($stdout)->not->toContain('HANDLER:sql_save');
 });
 
 test('the tree owner can release a lock another user holds, as the editor allows', function () use ($runController, $heldByOther) {
