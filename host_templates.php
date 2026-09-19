@@ -150,6 +150,19 @@ function template_item_add_dq() {
 	get_filter_request_var('snmp_query_id');
 	/* ==================================================== */
 
+	$valid = db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM host_template AS ht
+		CROSS JOIN snmp_query AS sq
+		WHERE ht.id = ?
+		AND sq.id = ?',
+		array(get_request_var('host_template_id'), get_request_var('snmp_query_id')));
+
+	if (!$valid) {
+		template_item_refuse('add Data Query ' . get_request_var('snmp_query_id') . ' to');
+
+		return;
+	}
+
 	db_execute_prepared('REPLACE INTO host_template_snmp_query
 		(host_template_id, snmp_query_id)
 		VALUES (?, ?)',
@@ -164,12 +177,34 @@ function template_item_add_gt() {
 	get_filter_request_var('graph_template_id');
 	/* ==================================================== */
 
+	/* The edit page offers no Graph Template that belongs to a Data Query. */
+	$valid = db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM host_template AS ht
+		CROSS JOIN graph_templates AS gt
+		WHERE ht.id = ?
+		AND gt.id = ?
+		AND gt.id NOT IN (SELECT graph_template_id FROM snmp_query_graph)',
+		array(get_request_var('host_template_id'), get_request_var('graph_template_id')));
+
+	if (!$valid) {
+		template_item_refuse('add Graph Template ' . get_request_var('graph_template_id') . ' to');
+
+		return;
+	}
+
 	db_execute_prepared('REPLACE INTO host_template_graph
 		(host_template_id, graph_template_id)
 		VALUES (?, ?)',
 		array(get_request_var('host_template_id'), get_request_var('graph_template_id')));
 
 	raise_message(41);
+}
+
+/* The edit page sends only pairs it listed, so anything else is a stale page
+   or a forged request, and doing nothing silently would hide either. */
+function template_item_refuse($change) {
+	cacti_log('WARNING: Refused to ' . $change . ' Device Template ' . get_request_var('host_template_id') . ' for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+	raise_message('host_template_item_refused', __('That item can not be added to or removed from this Device Template.'), MESSAGE_LEVEL_ERROR);
 }
 
 function form_actions() {
@@ -355,6 +390,18 @@ function template_item_remove_gt() {
 	get_filter_request_var('host_template_id');
 	/* ==================================================== */
 
+	$held = db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM host_template_graph
+		WHERE host_template_id = ?
+		AND graph_template_id = ?',
+		array(get_request_var('host_template_id'), get_request_var('id')));
+
+	if (!$held) {
+		template_item_refuse('remove Graph Template ' . get_request_var('id') . ' from');
+
+		return;
+	}
+
 	db_execute_prepared('DELETE FROM host_template_graph
 		WHERE graph_template_id = ?
 		AND host_template_id = ?',
@@ -423,6 +470,18 @@ function template_item_remove_dq() {
 	get_filter_request_var('id');
 	get_filter_request_var('host_template_id');
 	/* ==================================================== */
+
+	$held = db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM host_template_snmp_query
+		WHERE host_template_id = ?
+		AND snmp_query_id = ?',
+		array(get_request_var('host_template_id'), get_request_var('id')));
+
+	if (!$held) {
+		template_item_refuse('remove Data Query ' . get_request_var('id') . ' from');
+
+		return;
+	}
 
 	db_execute_prepared('DELETE FROM host_template_snmp_query
 		WHERE snmp_query_id = ?
