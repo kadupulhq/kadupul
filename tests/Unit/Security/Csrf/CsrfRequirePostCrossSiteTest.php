@@ -44,9 +44,9 @@ function page_guards() {
 		),
 		'color.php'                  => array('save' => true, 'actions' => false, 'remove' => false),
 		'data_queries.php'           => array(
-			'save' => true, 'actions' => false, 'item_moveup_dssv' => false, 'item_movedown_dssv' => false,
-			'item_remove_dssv' => false, 'item_moveup_gsv' => false, 'item_movedown_gsv' => false,
-			'item_remove_gsv' => false, 'item_remove_confirm' => false, 'item_remove' => false, 'remove' => false,
+			'save' => true, 'actions' => false, 'item_moveup_dssv' => true, 'item_movedown_dssv' => true,
+			'item_remove_dssv' => true, 'item_moveup_gsv' => true, 'item_movedown_gsv' => true,
+			'item_remove_gsv' => true, 'item_remove_confirm' => false, 'item_remove' => true, 'remove' => true,
 		),
 		'rrdcheck.php'               => array('purge' => false),
 	);

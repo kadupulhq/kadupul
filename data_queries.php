@@ -54,37 +54,37 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'item_moveup_dssv':
-		csrf_require_post();
+		csrf_require_post(true);
 		data_query_item_moveup_dssv();
 
 		header('Location: data_queries.php?header=false&action=item_edit&id=' . get_filter_request_var('snmp_query_graph_id') . '&snmp_query_id=' . get_filter_request_var('snmp_query_id'));
 		break;
 	case 'item_movedown_dssv':
-		csrf_require_post();
+		csrf_require_post(true);
 		data_query_item_movedown_dssv();
 
 		header('Location: data_queries.php?header=false&action=item_edit&id=' . get_filter_request_var('snmp_query_graph_id') . '&snmp_query_id=' . get_filter_request_var('snmp_query_id'));
 		break;
 	case 'item_remove_dssv':
-		csrf_require_post();
+		csrf_require_post(true);
 		data_query_item_remove_dssv();
 
 		header('Location: data_queries.php?header=false&action=item_edit&id=' . get_filter_request_var('snmp_query_graph_id') . '&snmp_query_id=' . get_filter_request_var('snmp_query_id'));
 		break;
 	case 'item_moveup_gsv':
-		csrf_require_post();
+		csrf_require_post(true);
 		data_query_item_moveup_gsv();
 
 		header('Location: data_queries.php?header=false&action=item_edit&id=' . get_filter_request_var('snmp_query_graph_id') . '&snmp_query_id=' . get_filter_request_var('snmp_query_id'));
 		break;
 	case 'item_movedown_gsv':
-		csrf_require_post();
+		csrf_require_post(true);
 		data_query_item_movedown_gsv();
 
 		header('Location: data_queries.php?header=false&action=item_edit&id=' . get_filter_request_var('snmp_query_graph_id') . '&snmp_query_id=' . get_filter_request_var('snmp_query_id'));
 		break;
 	case 'item_remove_gsv':
-		csrf_require_post();
+		csrf_require_post(true);
 		data_query_item_remove_gsv();
 
 		header('Location: data_queries.php?header=false&action=item_edit&id=' . get_filter_request_var('snmp_query_graph_id') . '&snmp_query_id=' . get_filter_request_var('snmp_query_id'));
@@ -95,7 +95,7 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'item_remove':
-		csrf_require_post();
+		csrf_require_post(true);
 		data_query_item_remove();
 
 		header('Location: data_queries.php?header=false&action=edit&id=' . get_filter_request_var('snmp_query_id'));
@@ -108,7 +108,7 @@ switch (get_request_var('action')) {
 		bottom_footer();
 		break;
 	case 'remove':
-		csrf_require_post();
+		csrf_require_post(true);
 		data_query_remove();
 
 		header ('Location: data_queries.php');

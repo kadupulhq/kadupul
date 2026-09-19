@@ -109,3 +109,45 @@ test('data query bulk actions refuse any GET that carries selected_items', funct
 	expect(run_data_queries('POST', 'actions', array('selected_items' => 'a:1:{i:0;i:3;}', 'drp_action' => '1')))->toBe('actions')
 		->and(run_data_queries('GET', 'actions', array('drp_action' => '1'), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('actions');
 });
+
+/**
+ * @return array<int, string>
+ */
+function data_query_mutations() {
+	return array(
+		'item_moveup_dssv', 'item_movedown_dssv', 'item_remove_dssv',
+		'item_moveup_gsv', 'item_movedown_gsv', 'item_remove_gsv',
+		'item_remove', 'remove',
+	);
+}
+
+test('suggested value and association changes refuse any GET, including a same-site one', function () {
+	foreach (data_query_mutations() as $action) {
+		expect_refused($action, array('id' => '3', 'snmp_query_graph_id' => '4', 'snmp_query_id' => '5', 'data_template_id' => '6'));
+	}
+});
+
+test('suggested value and association changes still run on POST', function () {
+	foreach (data_query_mutations() as $action) {
+		expect(run_data_queries('POST', $action, array('id' => '3', 'snmp_query_graph_id' => '4', 'snmp_query_id' => '5', 'data_template_id' => '6')))->toBe($action, $action);
+	}
+});
+
+test('the data query edit pages send their changes by POST with the csrf token', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/data_queries.php');
+
+	expect(preg_match("/\\\$\\('\\.remover'\\)\\.on\\('click', function\\(event\\) \\{(.*?)\\.done\\(/s", $source, $matches))->toBe(1);
+
+	expect($matches[1])->not->toContain('$.get(')
+		->and($matches[1])->toContain('cactiPreparePostRequestFromUrl(href)')
+		->and($matches[1])->toContain('$.post(request.url, request.data)')
+		->and($source)->toContain("\$.post('data_queries.php?action=item_remove', {");
+
+	foreach (data_query_mutations() as $action) {
+		expect($source)->not->toContain("href='<?php print html_escape('data_queries.php?action=" . $action . '&');
+
+		if (strpos($action, 'sv') !== false) {
+			expect($source)->toContain("href='#' data-url='<?php print html_escape('data_queries.php?action=" . $action . '&');
+		}
+	}
+});
