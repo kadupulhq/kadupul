@@ -64,6 +64,8 @@ function cacti_log($message, $output = false, $facility = '') { echo 'LOG:' . $m
 function set_config_option($name, $value) {}
 function __($text) { return $text; }
 function is_tree_allowed($tree_id) { return true; }
+function is_device_allowed($device_id) { return (int) $device_id === 5; }
+function is_graph_allowed($graph_id) { return (int) $graph_id === 7; }
 
 $source = file_get_contents(getcwd() . '/lib/api_tree.php');
 preg_match_all('/^function (api_tree_[a-z_]+)\(.*?^}\n/ms', $source, $functions);
@@ -97,7 +99,10 @@ PHP;
 	fclose($pipes[1]);
 	fclose($pipes[2]);
 
-	expect(proc_close($process))->toBe(0, $stderr . $stdout);
+	$exit = proc_close($process);
+	if ($exit !== 0) {
+		throw new RuntimeException($stderr . $stdout);
+	}
 	expect($stdout)->toContain('ITEMS:');
 
 	return array(json_decode(substr($stdout, strpos($stdout, 'ITEMS:') + 6), true), $stdout);
@@ -165,5 +170,18 @@ test('creating or copying a node under a parent in another tree is refused', fun
 		expect(count($items))->toBe(6)
 			->and(end($items)['graph_tree_id'])->toBe(1)
 			->and(end($items)['parent'])->toBe(10);
+	}
+});
+
+test('copying a source from another tree or an unauthorized object is refused', function () use ($runTree) {
+	foreach (array(
+		array('api_tree_copy_node', array(1, 'tbranch:22_thost:5', 'tbranch:10', 0), "Source '22' is not in TreeID: '1'"),
+		array('api_tree_copy_node', array(1, 'thost:6', 'tbranch:10', 0), "not permitted to copy DeviceID:'6'"),
+		array('api_tree_copy_node', array(1, 'tgraph:8', 'tbranch:10', 0), "not permitted to copy GraphID:'8'"),
+	) as $case) {
+		list($items, $stdout) = $runTree(array($case[0], $case[1]));
+
+		expect($stdout)->toContain($case[2])
+			->and(count($items))->toBe(5);
 	}
 });

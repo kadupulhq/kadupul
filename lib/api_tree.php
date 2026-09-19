@@ -100,6 +100,21 @@ function api_tree_copy_node($tree_id, $node_id, $new_parent, $new_position) {
 		return;
 	}
 
+	if ($data['leaf_id'] > 0 && !api_tree_leaf_in_tree($tree_id, $data['leaf_id'])) {
+		cacti_log("SECURITY: Source '" . (int) $data['leaf_id'] . "' is not in TreeID: '$tree_id', Function copy_node", false, 'AUTH');
+		return;
+	}
+
+	if ($data['host'] > 0 && !is_device_allowed($data['host'])) {
+		cacti_log("SECURITY: User is not permitted to copy DeviceID:'" . (int) $data['host'] . "', Function copy_node", false, 'AUTH');
+		return;
+	}
+
+	if ($data['graph'] > 0 && !is_graph_allowed($data['graph'])) {
+		cacti_log("SECURITY: User is not permitted to copy GraphID:'" . (int) $data['graph'] . "', Function copy_node", false, 'AUTH');
+		return;
+	}
+
 	if (!isset($pdata['leaf_id']) || $pdata['leaf_id'] < 0 || !is_numeric($pdata['leaf_id'])) {
 		cacti_log('ERROR: Copy node parent data invalid, Function copy_node', false);
 		return;
