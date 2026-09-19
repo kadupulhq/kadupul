@@ -14,8 +14,21 @@ git diff --cached --check
 merge_head=$(git rev-parse -q --verify MERGE_HEAD 2>/dev/null || true)
 files=()
 php_files=()
+php_base_files=()
 
-while IFS= read -r -d '' file; do
+while IFS= read -r -d '' status; do
+	IFS= read -r -d '' first
+	case "$status" in
+		R*)
+			base_file=$first
+			IFS= read -r -d '' file
+			;;
+		*)
+			file=$first
+			base_file=$file
+			;;
+	esac
+
 	# During a merge, an incoming file whose staged blob exactly matches the
 	# second parent was already validated on that branch. Check only content
 	# authored here or produced while resolving a conflict.
@@ -33,9 +46,12 @@ while IFS= read -r -d '' file; do
 
 	files+=("$file")
 	case "$file" in
-		*.php) php_files+=("$file") ;;
+		*.php)
+			php_files+=("$file")
+			php_base_files+=("$base_file")
+			;;
 	esac
-done < <(git diff --cached --name-only --diff-filter=ACMR -z)
+done < <(git diff --cached --name-status --diff-filter=ACMR -M -z)
 
 if [ "${#files[@]}" -eq 0 ]; then
 	exit 0
@@ -89,6 +105,14 @@ case "$fixer_version" in
 		;;
 esac
 
+config="$tmp/config/.php-cs-fixer.php"
+mkdir -p "$(dirname "$config")"
+if ! git cat-file -e ':.php-cs-fixer.php' 2>/dev/null; then
+	echo 'The staged tree has no .php-cs-fixer.php configuration.' >&2
+	exit 1
+fi
+git show ':.php-cs-fixer.php' > "$config"
+
 same_tokens() {
 	# shellcheck disable=SC2016 # This is a literal PHP program.
 	"${php_cmd[@]}" -r '
@@ -102,7 +126,7 @@ same_tokens() {
 				if (is_array($token) && ($token[0] === T_OPEN_TAG || $token[0] === T_OPEN_TAG_WITH_ECHO)) {
 					$token[1] = rtrim($token[1]);
 				}
-				$out[] = $token;
+				$out[] = is_array($token) ? [$token[0], $token[1]] : $token;
 			}
 			return $out;
 		};
@@ -111,7 +135,10 @@ same_tokens() {
 }
 
 failed=0
+index=0
 for file in "${php_files[@]}"; do
+	base_file=${php_base_files[$index]}
+	index=$((index + 1))
 	staged="$tmp/staged/$file"
 	fixed="$tmp/fixed/$file"
 	mkdir -p "$(dirname "$fixed")"
@@ -121,17 +148,24 @@ for file in "${php_files[@]}"; do
 	# whitespace-only conversion commit. New and already-converted files must
 	# match the checked-in PER-CS rules.
 	require_style=1
-	if git cat-file -e "HEAD:$file" 2>/dev/null; then
+	if git cat-file -e "HEAD:$base_file" 2>/dev/null; then
 		head="$tmp/head/$file"
 		head_fixed="$tmp/head-fixed/$file"
 		mkdir -p "$(dirname "$head")" "$(dirname "$head_fixed")"
-		git show "HEAD:$file" > "$head"
+		git show "HEAD:$base_file" > "$head"
 		cp "$head" "$head_fixed"
 		"${php_cmd[@]}" "$fixer" fix --allow-unsupported-php-version=yes \
-			--config="$root/.php-cs-fixer.php" --path-mode=override \
+			--config="$config" --path-mode=override \
 			--using-cache=no --quiet -- "$head_fixed"
-		if ! cmp -s "$head" "$head_fixed" && ! same_tokens "$head" "$staged"; then
-			require_style=0
+		if ! cmp -s "$head" "$head_fixed"; then
+			if [ "$base_file" != "$file" ] && cmp -s "$head" "$staged"; then
+				# A content-identical rename keeps the legacy-format exemption.
+				require_style=0
+			elif ! same_tokens "$head" "$staged"; then
+				# A substantive edit may retain legacy formatting until a dedicated
+				# formatting-only conversion commit.
+				require_style=0
+			fi
 		fi
 	fi
 
@@ -140,7 +174,7 @@ for file in "${php_files[@]}"; do
 	fi
 
 	"${php_cmd[@]}" "$fixer" fix --allow-unsupported-php-version=yes \
-		--config="$root/.php-cs-fixer.php" --path-mode=override \
+		--config="$config" --path-mode=override \
 		--using-cache=no --quiet -- "$fixed"
 	if ! cmp -s "$staged" "$fixed"; then
 		echo "STYLE ERROR: $file" >&2

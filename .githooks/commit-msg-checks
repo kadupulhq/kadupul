@@ -14,7 +14,7 @@ if git rev-parse -q --verify MERGE_HEAD >/dev/null 2>&1; then
 fi
 
 subject=$(sed -n '1p' "$message_file")
-pattern='^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-z0-9._/-]+\))?!?: .+'
+pattern='^(build|chore|ci|docs|feat|fix|perf|refactor|revert|security|style|test)(\([a-z0-9._/-]+\))?!?: .+'
 
 if [[ ! "$subject" =~ $pattern && "$subject" != fixup\!* && "$subject" != squash\!* && "$subject" != Revert\ \"* ]]; then
 	cat >&2 <<EOF
@@ -22,12 +22,12 @@ Commit subject is not a Conventional Commit:
   $subject
 
 Expected: type(optional-scope): short description
-Allowed types: build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test
+Allowed types: build, chore, ci, docs, feat, fix, perf, refactor, revert, security, style, test
 EOF
 	exit 1
 fi
 
-if ! grep -Eq '^Signed-off-by: .+ <[^>]+>$' "$message_file"; then
+if ! git interpret-trailers --parse "$message_file" | grep -Eq '^Signed-off-by: .+ <[^>]+>$'; then
 	cat >&2 <<'EOF'
 Commit is missing a Developer Certificate of Origin sign-off.
 Create commits with `git commit -s`, or amend this commit with a valid
