@@ -340,6 +340,13 @@ function tree_down() {
 
 	$new_seq = $seq + 1;
 
+	/* the swap also moves the neighbouring tree, so the caller must be
+	   allowed to modify that tree as well */
+	tree_require_access(array_column(db_fetch_assoc_prepared('SELECT id
+		FROM graph_tree
+		WHERE sequence = ?',
+		array($new_seq)), 'id'), 'tree_down');
+
 	/* update the old tree first */
 	db_execute_prepared('UPDATE graph_tree
 		SET sequence = ?
@@ -367,6 +374,13 @@ function tree_up() {
 		array($tree_id));
 
 	$new_seq = $seq - 1;
+
+	/* the swap also moves the neighbouring tree, so the caller must be
+	   allowed to modify that tree as well */
+	tree_require_access(array_column(db_fetch_assoc_prepared('SELECT id
+		FROM graph_tree
+		WHERE sequence = ?',
+		array($new_seq)), 'id'), 'tree_up');
 
 	/* update the old tree first */
 	db_execute_prepared('UPDATE graph_tree
