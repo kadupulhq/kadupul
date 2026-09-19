@@ -149,6 +149,7 @@ if (!function_exists(__NAMESPACE__ . '\\snmpagent_notification')) {
     /* eval() runs only function source read from lib/snmpagent.php in this
      * repository, never external input. */
     eval('namespace ' . __NAMESPACE__ . '; ' . snmpagent_function_source(file_get_contents(__DIR__ . '/../../../../lib/snmpagent.php'), 'snmpagent_notification')); // nosemgrep: php.lang.security.eval-use.eval-use
+    eval('namespace ' . __NAMESPACE__ . '; ' . snmpagent_function_source(file_get_contents(__DIR__ . '/../../../../lib/snmpagent.php'), 'snmpagent_loggable_args')); // nosemgrep: php.lang.security.eval-use.eval-use
 }
 
 beforeEach(function () {
