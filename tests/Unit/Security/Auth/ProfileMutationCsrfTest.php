@@ -138,3 +138,38 @@ test('global bootstrap checks action shape and generic mutations before controll
     $source = file_get_contents(dirname(__DIR__, 4) . '/include/global.php');
     expect($source)->toContain("cacti_require_post_actions(array('save', 'update_data', 'changepassword'));");
 });
+
+test('normal form posts retain the middleware timeout callback before the action guard', function ($token) {
+    $root = dirname(__DIR__, 4);
+    $program = <<<'PHP'
+$config = array('include_path' => $argv[1] . '/include', 'is_web' => true, 'url_path' => '/');
+$_SERVER['REQUEST_METHOD'] = 'POST';
+$_SERVER['REQUEST_URI'] = '/auth_profile.php';
+$_REQUEST = array('action' => 'save');
+$_POST = $argv[2] === 'missing' ? array() : array('__csrf_magic' => 'invalid');
+$events = array();
+function raise_message($name) { $GLOBALS['events'][] = $name; }
+function is_urlencoded($value) { return urldecode($value) !== $value; }
+function sanitize_uri($value) { return $value; }
+session_start();
+require $argv[1] . '/lib/html_utility.php';
+register_shutdown_function(function () { echo json_encode($GLOBALS['events']); session_destroy(); });
+require $argv[1] . '/include/csrf.php';
+$events[] = 'guard-reached';
+cacti_require_post_actions(array('save'));
+$events[] = 'mutation-reached';
+PHP;
+    $process = proc_open(array(PHP_BINARY, '-r', $program, $root, $token), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    expect(is_resource($process))->toBeTrue();
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    $exit = proc_close($process);
+    if ($exit !== 0) {
+        throw new RuntimeException($stderr . $stdout);
+    }
+    expect($exit)->toBe(0)
+        ->and($stderr)->toBe('')
+        ->and(json_decode($stdout, true))->toBe(array('csrf_timeout'));
+})->with(array('missing', 'invalid'));
