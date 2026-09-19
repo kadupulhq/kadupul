@@ -70,10 +70,12 @@ for arg in "$@"; do
 			;;
 	esac
 	dup=0
-	for p in ${paths[@]+"${paths[@]}"}; do
-		if [ "$p" = "$path" ]; then
+	j=0
+	while [ "$j" -lt "${#paths[@]}" ]; do
+		if [ "${paths[$j]}" = "$path" ]; then
 			dup=1
 		fi
+		j=$((j + 1))
 	done
 	if [ "$dup" -eq 1 ]; then
 		continue

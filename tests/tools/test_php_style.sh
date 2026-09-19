@@ -178,4 +178,18 @@ test "$(git diff-tree --no-commit-id --name-only -r HEAD)" = 'lib/legacy.php'
 test "$(git diff --cached --name-only)" = "$(printf 'lib/clean.php\nlib/other.php')"
 test -z "$(git diff --no-ext-diff)"
 
+# A path with a space stays one path, and naming it twice converts it once.
+new_repo spaced
+git mv lib/legacy.php 'lib/my legacy.php'
+git commit -q -m 'refactor: rename greeting'
+legacy "'hi '" > 'lib/my legacy.php'
+if ! convert 'lib/my legacy.php' 'lib/my legacy.php'; then
+	cat "$scratch/log" >&2
+	echo 'FAIL: conversion of a path with a space failed' >&2
+	exit 1
+fi
+test "$(git log -1 --format=%s)" = 'style: convert lib/my legacy.php to PER-CS 2.0'
+test "$(git diff-tree --no-commit-id --name-only -r HEAD)" = 'lib/my legacy.php'
+formatted "'hi '" | cmp -s - 'lib/my legacy.php'
+
 echo 'PHP style checks behave as expected.'
