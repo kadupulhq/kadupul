@@ -72,6 +72,15 @@ function db_fetch_assoc_prepared(...$args)
 }
 function db_fetch_assoc($sql)
 {
+    if ($GLOBALS['mode'] === 'multi') {
+        // Templated and untemplated sources, each with unmapped MULTI and invalid output.
+        return array(
+            array('local_data_id' => 42, 'data_template_id' => 1, 'timestamp' => '1699999800', 'rrd_name' => '', 'output' => 'in:21 out:5'),
+            array('local_data_id' => 43, 'data_template_id' => 0, 'timestamp' => '1699999800', 'rrd_name' => '', 'output' => 'in:22'),
+            array('local_data_id' => 44, 'data_template_id' => 1, 'timestamp' => '1699999800', 'rrd_name' => '', 'output' => 'garbage'),
+            array('local_data_id' => 45, 'data_template_id' => 0, 'timestamp' => '1699999800', 'rrd_name' => '', 'output' => 'garbage'),
+        );
+    }
     return array(
         array('local_data_id' => 42, 'data_template_id' => 1, 'timestamp' => '1699999800', 'rrd_name' => 'value', 'output' => '21'),
         array('local_data_id' => $GLOBALS['mode'] === 'next-id-failure' ? 43 : 42,

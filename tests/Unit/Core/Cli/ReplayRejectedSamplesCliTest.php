@@ -10,7 +10,15 @@ test('replay CLI requires an explicit scope and reports what it moved', function
         mkdir($dir . $suffix, 0700);
     }
     copy($root . '/cli/replay_rejected_samples.php', $dir . '/cli/replay_rejected_samples.php');
-    file_put_contents($dir . '/include/cli_check.php', '<?php $config = array("base_path" => dirname(__DIR__)); define("COPYRIGHT_YEARS", "2026");'
+    $coverage = $this->getTestResultObject()->getCodeCoverage();
+    $prelude = '';
+    if ($coverage !== null) {
+        $prelude = 'define("RRD_TEST_COVERAGE_DIRECTORY",' . var_export($dir, true) . ');'
+            . 'define("RRD_TEST_CLI_COVERAGE_COPY",' . var_export($dir . '/cli/replay_rejected_samples.php', true) . ');'
+            . 'define("RRD_TEST_CLI_COVERAGE_SOURCE",' . var_export($root . '/cli/replay_rejected_samples.php', true) . ');'
+            . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    file_put_contents($dir . '/include/cli_check.php', '<?php ' . $prelude . '$config = array("base_path" => dirname(__DIR__)); define("COPYRIGHT_YEARS", "2026");'
         . 'function get_cacti_cli_version() { return "fixture"; }'
         . 'function cacti_log($message, ...$args) { file_put_contents(dirname(__DIR__) . "/log", $message); }');
     // The move itself is covered by the database contract; this boundary records the request.
@@ -21,13 +29,18 @@ test('replay CLI requires an explicit scope and reports what it moved', function
         . 'if ($connection !== false) { throw new LogicException("replay checked another queue"); }'
         . 'return ' . var_export($engine, true) . ' === "InnoDB" ? "" : "The poller_output queue must use InnoDB before collection."; }');
     try {
-        $process = proc_open(array_merge(array(PHP_BINARY, $dir . '/cli/replay_rejected_samples.php'), $arguments), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $process = proc_open(array_merge(array(PHP_BINARY, '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $dir . '/cli/replay_rejected_samples.php'), $arguments), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
         $output = stream_get_contents($pipes[1]) . stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
         expect(proc_close($process))->toBe($exit, $output)->and($output)->toContain($message);
         expect(is_file($dir . '/call') ? json_decode(file_get_contents($dir . '/call'), true) : null)->toBe($call);
-        expect(is_file($dir . '/log'))->toBe($exit === 0 && !in_array('--dry-run', $arguments, true));
+        expect(is_file($dir . '/log'))->toBe($exit === 0 && $call !== null && !$call[1]);
+        if ($coverage !== null) {
+            $reports = glob($dir . '/*.coverage');
+            expect($reports)->toHaveCount(1);
+            $coverage->merge(unserialize(file_get_contents($reports[0])));
+        }
     } finally {
         foreach (array('/cli', '/include', '/lib', '') as $suffix) {
             foreach (glob($dir . $suffix . '/*') as $file) {
@@ -46,5 +59,8 @@ test('replay CLI requires an explicit scope and reports what it moved', function
     'all' => array(array('--all'), 0, array(null, false), 'Replayed 3 rejected samples for all data sources'),
     'failure' => array(array('--local-data-id=9'), 1, array(9, false), 'Unable to replay rejected samples'),
     'volatile queue' => array(array('--all'), 1, null, 'Rejected samples were not replayed. The poller_output queue must use InnoDB', 'MEMORY'),
+    'help' => array(array('--help'), 0, null, 'usage: replay_rejected_samples.php'),
+    'version' => array(array('--version'), 0, null, 'Kadupul Rejected Sample Replay Utility, Version fixture'),
+    'unknown parameter' => array(array('--bogus'), 1, null, 'ERROR: Invalid Parameter --bogus'),
     'volatile queue dry run' => array(array('--all', '--dry-run'), 0, array(null, true), 'Would replay 3', 'MEMORY'),
 ));

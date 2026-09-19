@@ -16,7 +16,9 @@ test('tuning gives up behind a busy writer instead of blocking the request', fun
     chmod($dir . '/rrdtool', 0700);
     $config = array('cacti_server_os' => 'unix', 'rra_path' => $dir, 'include_path' => $dir, 'is_web' => true);
     $tune = array('data_source_id' => 1, 'data-source-type' => 1, 'heartbeat' => 777, 'minimum' => '', 'maximum' => '', 'data-source-rename' => '');
-    file_put_contents($dir . '/tune.php', '<?php $config = ' . var_export($config, true) . ';' .
+    $coverage = $this->getTestResultObject()->getCodeCoverage();
+    $prelude = $coverage === null ? '' : 'define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__); require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+    file_put_contents($dir . '/tune.php', '<?php ' . $prelude . '$config = ' . var_export($config, true) . ';' .
         'define("CACTI_LOCALE", "en-US"); define("POLLER_VERBOSITY_DEBUG", 5);' .
         'function read_config_option($name) { return $name === "path_rrdtool" ? __DIR__ . "/rrdtool" : ""; }' .
         'function cacti_log($message, ...$args) { file_put_contents(__DIR__ . "/log", $message . PHP_EOL, FILE_APPEND); }' .
@@ -29,7 +31,7 @@ test('tuning gives up behind a busy writer instead of blocking the request', fun
     $GLOBALS['config'] = $config;
     $writer = $busy ? rrd_maintenance_acquire() : false;
     try {
-        $process = proc_open(array(PHP_BINARY, $dir . '/tune.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $dir . '/tune.php'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
         $output = stream_get_contents($pipes[1]);
         $error = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
@@ -43,6 +45,11 @@ test('tuning gives up behind a busy writer instead of blocking the request', fun
                 ->and(file_get_contents($dir . '/log'))->toContain('RRD storage is busy');
         } else {
             expect($result)->not->toBeFalse()->and(file_exists($dir . '/tuned'))->toBeTrue();
+        }
+        if ($coverage !== null) {
+            $reports = glob($dir . '/*.coverage');
+            expect($reports)->toHaveCount(1);
+            $coverage->merge(unserialize(file_get_contents($reports[0])));
         }
     } finally {
         rrd_maintenance_release($writer);
