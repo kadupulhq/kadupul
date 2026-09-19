@@ -96,7 +96,7 @@ function run_profiles($method, $action, array $request = array(), array $server 
 
 			return strpos($s, "local_data_id > 0") !== false ? $u[1] : $u[0] + $u[1];
 		}
-		function header($h) { print "HEADER:" . $h . "\n"; }
+		function header($h) { $GLOBALS["headers"][] = $h; }
 		function set_request_var($n, $v) { $_REQUEST[$n] = $v; }
 		function form_input_validate($v, $n, $r, $a, $e) { return $v; }
 		function input_validate_input_number($v) {}
@@ -111,7 +111,11 @@ function run_profiles($method, $action, array $request = array(), array $server 
 		$_SESSION = array("sess_user_id" => 5);
 		$usage    = ' . var_export($usage, true) . ';
 		$rras     = ' . var_export($rras, true) . ';
+		$headers  = array();
 		register_shutdown_function(function () {
+			foreach ($GLOBALS["headers"] as $header) {
+				print "HEADER:" . $header . "\n";
+			}
 			/* The CLI reports no code until one is set. */
 			print "CODE:" . (http_response_code() ?: 200) . "\n";
 		});
