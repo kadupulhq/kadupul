@@ -181,3 +181,41 @@ test('deleting data input methods that nothing uses still deletes them', functio
 	expect($writes[0])->toBe(array('write:api_data_input_remove(4)', 'write:api_data_input_remove(6)'))
 		->and($output)->not->toContain('Refused');
 });
+
+test('removing a data input field refuses any GET, including a same-site one', function () {
+	expect_refused('data_input.php', array('action' => 'field_remove', 'id' => '7', 'data_input_id' => '3'), array('fields' => array(7 => array('data_input_id' => 3, 'input_output' => 'in')), 'user_methods' => array(0 => array(3))));
+});
+
+test('removing a data input field needs a field of the method named that the edit page lets go', function () {
+	$refused = array(
+		'is not a field of Data Input Method 3' => array('fields' => array(7 => array('data_input_id' => 9, 'input_output' => 'in')), 'user_methods' => array(0 => array(3, 9))),
+		'belongs to a built-in Data Input Method' => array('fields' => array(7 => array('data_input_id' => 3, 'input_output' => 'in'))),
+		'is an output field of a method that 2 Data Source(s) use' => array('fields' => array(7 => array('data_input_id' => 3, 'input_output' => 'out')), 'user_methods' => array(0 => array(3)), 'data_sources' => array(3 => 2)),
+	);
+
+	foreach ($refused as $reason => $db) {
+		$output = run_page('data_input.php', 'POST', array('action' => 'field_remove', 'id' => '7', 'data_input_id' => '3'), $db);
+
+		expect($output)->toContain('log:AUTH:WARNING: Rejected data_input.php?action=field_remove because field 7 ' . $reason)
+			->and($output)->toContain('header:Location: data_input.php?header=false')
+			->and($output)->not->toContain('handler:');
+	}
+});
+
+test('removing a data input field still runs on POST for a field the edit page lets go', function () {
+	$allowed = array(
+		array('fields' => array(7 => array('data_input_id' => 3, 'input_output' => 'in')), 'user_methods' => array(0 => array(3)), 'data_sources' => array(3 => 2)),
+		array('fields' => array(7 => array('data_input_id' => 3, 'input_output' => 'out')), 'user_methods' => array(0 => array(3))),
+	);
+
+	foreach ($allowed as $db) {
+		$output = run_page('data_input.php', 'POST', array('action' => 'field_remove', 'id' => '7', 'data_input_id' => '3'), $db);
+
+		expect($output)->toContain('query:7,3')
+			->and($output)->toContain('handler:field_remove')
+			->and($output)->toContain('header:Location: data_input.php?header=false&action=edit&id=3')
+			->and($output)->not->toContain('Rejected');
+	}
+
+	expect(run_page('data_input.php', 'GET', array('action' => 'field_remove_confirm', 'id' => '7', 'data_input_id' => '3'), array(), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('handler:field_remove_confirm');
+});

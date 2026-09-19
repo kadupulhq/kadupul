@@ -55,6 +55,9 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'field_remove':
+		csrf_require_post(true);
+		data_input_require_removable_field('field_remove');
+
 		field_remove();
 
 		header('Location: data_input.php?header=false&action=edit&id=' . get_filter_request_var('data_input_id'));
@@ -369,6 +372,44 @@ function form_actions() {
 /* --------------------------
     CDEF Item Functions
    -------------------------- */
+
+/* field_remove() deletes by field id alone. The edit page lists only the
+   fields of the method it shows, never shows a built-in method, and disables
+   the delete marker of an output field once a data source collects with the
+   method, so check the same here. */
+function data_input_require_removable_field($action) {
+	$id            = get_filter_request_var('id');
+	$data_input_id = get_filter_request_var('data_input_id');
+
+	$field = db_fetch_row_prepared('SELECT input_output
+		FROM data_input_fields
+		WHERE id = ?
+		AND data_input_id = ?',
+		array($id, $data_input_id));
+
+	if (!cacti_sizeof($field)) {
+		$reason = 'is not a field of Data Input Method ' . (int) $data_input_id;
+	} elseif (empty(get_nonsystem_data_input($data_input_id))) {
+		$reason = 'belongs to a built-in Data Input Method';
+	} else {
+		$data_sources = db_fetch_cell_prepared('SELECT COUNT(*)
+			FROM data_template_data
+			WHERE data_input_id = ?
+			AND local_data_id > 0',
+			array($data_input_id));
+
+		if ($field['input_output'] != 'out' || $data_sources == 0) {
+			return;
+		}
+
+		$reason = 'is an output field of a method that ' . (int) $data_sources . ' Data Source(s) use';
+	}
+
+	cacti_log('WARNING: Rejected data_input.php?action=' . $action . ' because field ' . (int) $id . ' ' . $reason, false, 'AUTH');
+
+	header('Location: data_input.php?header=false');
+	exit;
+}
 
 function field_remove_confirm() {
 	/* ================= input validation ================= */
