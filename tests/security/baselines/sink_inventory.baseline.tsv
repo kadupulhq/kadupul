@@ -778,8 +778,8 @@ header_redirect	./gprint_presets.php:85				header('Location: gprint_presets.php?
 header_redirect	./gprint_presets.php:88				header('Location: gprint_presets.php?header=false');
 header_redirect	./graph.php:75		header('Location: permission_denied.php');
 header_redirect	./graph_templates.php:215		header('Location: graph_templates.php?header=false&action=template_edit&id=' . (empty($graph_template_id) ? get_nfilter_request_var('graph_template_id') : $graph_template_id));
-header_redirect	./graph_templates.php:345			header('Location: graph_templates.php?header=false');
-header_redirect	./graph_templates.php:435			header('Location: graph_templates.php?header=false');
+header_redirect	./graph_templates.php:375			header('Location: graph_templates.php?header=false');
+header_redirect	./graph_templates.php:465			header('Location: graph_templates.php?header=false');
 header_redirect	./graph_templates.php:66			header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
 header_redirect	./graph_templates_inputs.php:134				header('Location: graph_templates_inputs.php?header=false&action=input_edit&graph_template_input_id=' . (empty($graph_template_input_id) ? get_nfilter_request_var('graph_template_input_id') : $graph_template_input_id) . '&graph_template_id=' . get_nfilter_request_var('graph_template_id'));
 header_redirect	./graph_templates_inputs.php:137				header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_nfilter_request_var('graph_template_id'));
