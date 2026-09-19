@@ -21,6 +21,7 @@ test('tuning gives up behind a busy writer instead of blocking the request', fun
     file_put_contents($dir . '/tune.php', '<?php ' . $prelude . '$config = ' . var_export($config, true) . ';' .
         'define("CACTI_LOCALE", "en-US"); define("POLLER_VERBOSITY_DEBUG", 5);' .
         'function read_config_option($name) { return $name === "path_rrdtool" ? __DIR__ . "/rrdtool" : ""; }' .
+        'function debounce_run_notification(...$args) { return true; }' .
         'function cacti_log($message, ...$args) { file_put_contents(__DIR__ . "/log", $message . PHP_EOL, FILE_APPEND); }' .
         'function cacti_escapeshellcmd($value) { return escapeshellcmd($value); } function cacti_escapeshellarg($value) { return escapeshellarg($value); }' .
         'function get_data_source_item_name($id) { return "value"; } function get_data_source_path($id, $expand) { return __DIR__ . "/source.rrd"; }' .
