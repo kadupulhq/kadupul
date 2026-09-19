@@ -7,6 +7,8 @@ $config = array('base_path' => $fixture, 'library_path' => $fixture . '/lib');
 $ack_table = getenv('ACK_REALTIME') === '1' ? 'poller_output_realtime' : 'poller_output';
 $ack_db = new PDO('sqlite::memory:', null, null, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 $ack_db->sqliteCreateFunction('UNIX_TIMESTAMP', 'strtotime', 1);
+$ack_db->sqliteCreateFunction('FROM_UNIXTIME', static fn($time) => date('Y-m-d H:i:s', $time), 1);
+$ack_db->exec('CREATE TABLE poller_output_rejected(local_data_id INTEGER,rrd_name TEXT,time TEXT,output TEXT,rrd_path TEXT,reason TEXT,first_rejected TEXT,last_rejected TEXT)');
 // Model the queue's case-insensitive, PAD SPACE collation.
 $ack_db->sqliteCreateCollation('queue_output', static fn($a, $b) => strcasecmp(rtrim($a, ' '), rtrim($b, ' ')));
 $ack_db->exec('CREATE TABLE data_local(id INTEGER,data_template_id INTEGER)');
@@ -33,8 +35,11 @@ if (in_array(getenv('ACK_FAIL'), array('mixed', 'page', 'tail-failure', 'page-su
     $ack_db->exec("INSERT INTO poller_output VALUES(2,'value','2020-01-01','44')");
     $ack_db->commit();
 }
-if (getenv('ACK_FAIL') === 'incomplete') {
+if (in_array(getenv('ACK_FAIL'), array('incomplete', 'incomplete-recent'), true)) {
     $ack_db->exec('UPDATE poller_item SET rrd_num=2');
+}
+if (getenv('ACK_FAIL') === 'incomplete-recent') {
+    $ack_db->exec("UPDATE poller_output SET time='" . date('Y-m-d H:i:s') . "'");
 }
 function is_hexadecimal($value)
 {
@@ -142,7 +147,31 @@ function db_fetch_cell_prepared($sql, $params = array())
     if (getenv('ACK_FAIL') === 'count') {
         return false;
     }
-    return db_fetch_cell($sql);
+    $query = $GLOBALS['ack_db']->prepare($sql);
+    $query->execute($params);
+    return $query->fetchColumn();
+}
+function db_fetch_row_prepared($sql, $params = array())
+{
+    $query = $GLOBALS['ack_db']->prepare($sql);
+    $query->execute($params);
+    return $query->fetch(PDO::FETCH_ASSOC);
+}
+function db_table_exists($table, ...$args)
+{
+    return true;
+}
+function db_begin_transaction()
+{
+    return $GLOBALS['ack_db']->beginTransaction();
+}
+function db_commit_transaction()
+{
+    return $GLOBALS['ack_db']->commit();
+}
+function db_rollback_transaction()
+{
+    return $GLOBALS['ack_db']->rollBack();
 }
 function db_fetch_cell($sql)
 {
@@ -161,8 +190,15 @@ function db_execute_prepared($sql, $params)
     $query = $GLOBALS['ack_db']->prepare($sql);
     return $query->execute($params);
 }
-function rrdtool_function_update($updates, $pipe = false, &$completed = null)
+function rrdtool_function_update($updates, $pipe = false, &$completed = null, &$rejected = null)
 {
+    $rejected = array();
+    if (getenv('ACK_FAIL') === 'mismatch') {
+        // RRDtool refuses the sample because the file lacks a data source.
+        $completed = array();
+        $rejected = array_fill_keys(array_keys($updates), "unknown DS name 'value'");
+        return false;
+    }
     static $calls = 0;
     $calls++;
     file_put_contents(getenv('ACK_FIXTURE') . '/updates.json', json_encode($updates));
@@ -173,7 +209,7 @@ function rrdtool_function_update($updates, $pipe = false, &$completed = null)
         $GLOBALS['ack_db']->exec("UPDATE " . $GLOBALS['ack_table'] . " SET output='99' WHERE time='2020-01-01'");
     }
 
-    if (!in_array(getenv('ACK_FAIL'), array('mixed', 'page', 'rejected', 'incomplete', 'tail-failure', 'page-success'), true)) {
+    if (!in_array(getenv('ACK_FAIL'), array('mixed', 'page', 'rejected', 'incomplete', 'incomplete-recent', 'tail-failure', 'page-success'), true)) {
         $GLOBALS['ack_db']->exec('INSERT INTO ' . $GLOBALS['ack_table'] . " VALUES(1,'value','2020-01-02','43'" . (getenv('ACK_REALTIME') === '1' ? ',1' : '') . ')');
     }
     $completed = array();
@@ -191,6 +227,7 @@ function rrdtool_function_update($updates, $pipe = false, &$completed = null)
 }
 function db_close()
 {
+    file_put_contents(getenv('ACK_FIXTURE') . '/rejected.json', json_encode($GLOBALS['ack_db']->query('SELECT local_data_id, output, rrd_path, reason FROM poller_output_rejected')->fetchAll(PDO::FETCH_ASSOC)));
     if (in_array(getenv('ACK_FAIL'), array('mixed', 'page', 'tail-failure', 'page-success'), true)) {
         file_put_contents(getenv('ACK_FIXTURE') . '/outcome.json', json_encode($GLOBALS['ack_db']->query('SELECT output, COUNT(*) AS remaining FROM poller_output GROUP BY output')->fetchAll(PDO::FETCH_ASSOC)));
         return;

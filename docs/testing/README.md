@@ -13,9 +13,15 @@ The working order is observe, capture, assert, preserve.
 - `mise`, providing Python 3.12
 - GNU Make
 
-Nothing else. The application, database, SNMP agent and RRDtool all run in
-containers built from this checkout, so no local PHP, MariaDB or net-snmp
-install is involved and no developer database is ever touched.
+The application, database, SNMP agent and RRDtool run in containers built from
+this checkout, so application tests need no local PHP, MariaDB or net-snmp
+installation and never touch a developer database.
+
+The separate `make test-harness-selftest` command also checks native process
+supervision on Linux. That check requires a host PHP CLI with POSIX support;
+run it with `mise exec php@8.1.34 -- make test-harness-selftest`. CI installs
+PHP explicitly for this check. Non-Linux hosts run the other self-tests and
+report that native Linux process supervision was not exercised.
 
 ## Running it
 
@@ -43,7 +49,7 @@ Pick a PHP version with `PHP_VERSION`. Goldens are stored per version, so a
 capture on one version never overwrites another.
 
 ```sh
-PHP_VERSION=8.3 make test-update-golden
+PHP_VERSION=8.3 make test-bootstrap-golden
 ```
 
 ## What a run does
@@ -63,14 +69,20 @@ Containers are torn down afterwards unless `--keep` is passed.
 ## Golden files
 
 Goldens are the compatibility contract. They never update as a side effect of
-a normal run: a scenario with no golden is reported as `MISSING GOLDEN` and
-fails. Only `make test-update-golden` writes them, and that target refuses to
+a normal run: missing scenarios fail the inventory check with
+`Runtime goldens are missing observations`. Only explicit `make test-update-golden`
+or `make test-bootstrap-golden` writes them; both refuse to
 run scoped, so a partial capture cannot leave the rest stale.
 
 Normalization is deliberately narrow. Filesystem roots become `<APP>` and
-`<HARNESS>`, and the base URL becomes `<BASE>`. Known diagnostic log clocks and installer/poller timestamps are
-normalized. Dates in database values, UI output and plugin messages are preserved. Identifiers, row counts, scalar types, ordering and message
-text are all preserved, because a change in any of them is a behavioral change.
+`<HARNESS>`, and the base URL becomes `<BASE>`. Known diagnostic clocks,
+installer/poller timestamps, PHP diagnostic source-line locations and the byte
+count in a recognized failed-write diagnostic are normalized. Dates and arbitrary
+numbers in database values, UI output and plugin messages remain unchanged.
+Diagnostic records are sorted because processes can interleave log writes;
+duplicate records remain present so lost or added diagnostics still change the
+comparison. Other observation ordering, identifiers, row counts, scalar types,
+and diagnostic message content remain part of the contract.
 
 When a golden changes, read the diff. A legitimate change is approved
 explicitly through the differential runner, never by re-recording silently.
@@ -80,13 +92,21 @@ explicitly through the differential runner, never by re-recording silently.
 The point of the harness is comparing a baseline against a candidate.
 
 ```sh
-make test-update-golden TARGET=cacti-1.2.31
-make test-update-golden TARGET=kadupul
+make test-bootstrap-golden TARGET=cacti-1.2.31
+make test-bootstrap-golden TARGET=kadupul
 make compare BASELINE=cacti-1.2.31 CANDIDATE=kadupul
 ```
 
-`make compare` writes `comparison.json` and `comparison.md` under
-`tests/behavior/results/`, classifying each scenario as `IDENTICAL`,
+For captures produced with a separate application checkout, use the controller's results directory:
+
+```sh
+make compare BASELINE=cacti-1.2.31 CANDIDATE=kadupul RESULTS_ROOT=/path/to/controller/tests/behavior/results
+```
+
+The underlying `tests/bin/compare` accepts `--results-root` too. The default report is written into that directory; `--output` can select a different report prefix. A repeat manifest remains an explicit path passed with `--repeat`.
+
+`make compare` writes `comparison.json` and `comparison.md` under the selected
+results directory (by default `tests/behavior/results/`), classifying each scenario as `IDENTICAL`,
 `INTENTIONAL_CHANGE`, `REGRESSION`, `NONDETERMINISTIC` or `NEEDS_REVIEW`.
 
 A difference counts as intentional only when an approvals file names the
@@ -139,8 +159,21 @@ suite meaningful.
 ## Recording new behavior
 
 1. Add a scenario in `Harness.scenarios()`, capturing both the application's
-   response and the resulting database state.
-2. Run `make test-update-golden` and read the new file. If it contains a value
+   response and the resulting database state. Add its exact name to
+   `EXPECTED_SCENARIOS` in `harness.py` as part of the same change.
+2. To add scenarios to an existing inventory, run
+   `make test-bootstrap-golden TARGET=cacti PHP_VERSION=8.2`
+   and read the new files. Use your intended target label in place of `cacti`.
+   Repeat capture for every existing PHP runtime using its corresponding
+   container configuration. Bootstrap permits missing entries during capture
+   and writes only the current runtime; it still rejects orphaned scenarios.
+   A bootstrap manifest remains incomplete and cannot be compared until every
+   runtime inventory is complete. Partial bootstrap writes the current runtime's
+   goldens, lists the missing observations, and exits 2; capture the remaining
+   runtimes before expecting success. Normal verification also rejects an absent
+   current-runtime directory.
+   Use `make test-update-golden` for updates to an already complete inventory.
+   If a new file contains a value
    that varies between runs, normalize it in `normalize()` or stop recording
    it. Do not normalize a value that carries meaning.
 3. Run `make test-characterization` twice and confirm both pass, which is what
@@ -163,10 +196,9 @@ harness records the deprecation rather than suppressing it.
 Main has renamed Cacti to Kadupul in visible output, so six scenarios no longer
 match these 1.2.31 goldens: `upgrade/install`, `cli/device-help`,
 `auth/login-invalid`, `auth/missing-csrf`, `faults/database-unreachable` and
-`graphs/definition`, whose default watermark still reads Cacti. A seventh,
-`poller/rrd-failure`, differs because the warning it records moved from
-`lib/rrd.php` line 334 to 327. The goldens stay the 1.2.31 contract, so a run
-against main reports these seven until they are approved as intended changes.
+`graphs/definition`, whose default watermark still reads Cacti. PHP diagnostic source-line moves are normalized and no longer count as
+a separate behavioral difference. The goldens stay the 1.2.31 contract, so a run
+against main reports these six until they are approved as intended changes.
 
 `get_request_var()` memoizes each name into the `$_CACTI_REQUEST` global. Once
 a name is read, later changes to `$_REQUEST` are ignored for the rest of the

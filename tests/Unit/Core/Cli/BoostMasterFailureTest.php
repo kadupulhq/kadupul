@@ -6,7 +6,7 @@
 test('Boost master retains archives and retries when any child result fails', function ($failed, $updates, $expectedExit) {
     $source = file_get_contents(dirname(__DIR__, 4) . '/poller_boost.php');
     $start = strpos($source, 'if ($child == false) {');
-    $end = strpos($source, "} else {\n\tcacti_log('INFO: Boost register child process", $start);
+    $end = strpos($source, "} else {\n    cacti_log('INFO: Boost register child process", $start);
     expect($start)->not->toBeFalse()->and($end)->not->toBeFalse();
     // Run the actual master control flow; only external effects are replaced.
     $master = substr($source, $start, $end - $start) . '}';

@@ -44,13 +44,21 @@ test('production poller files retain failed writes and preserve concurrent arriv
         if ($error !== '') {
             throw new RuntimeException($error . $output);
         }
-        expect(proc_close($process))->toBe(($failed && !(!$realtime && $failed === 'rejected')) && !in_array($failed, array('replace', 'replace-space', 'field-success', 'incomplete', 'page-success'), true) ? 1 : 0, $error . $output)->and($error)->toBe('');
+        expect(proc_close($process))->toBe(($failed && !(!$realtime && $failed === 'rejected')) && !in_array($failed, array('replace', 'replace-space', 'field-success', 'incomplete', 'incomplete-recent', 'page-success'), true) ? 1 : 0, $error . $output)->and($error)->toBe('');
         $expected = is_string($failed) ? array(array('output' => '42', 'remaining' => $failed === 'page' ? 120001 : 1)) : ($failed ? array('42','43') : array('43'));
         if (in_array($failed, array('select', 'handoff', 'init', 'init-function', 'busy', 'count'), true)) {
             $expected = array('42');
         }
         if ($failed === 'delete') {
             $expected = array('42', '43');
+        }
+        if ($failed === 'mismatch') {
+            // The refused sample is older than the retention limit and moves intact.
+            $expected = array();
+            expect(json_decode(file_get_contents($dir . '/batch-result.json'), true))->toBe(array(0, true))
+                ->and(json_decode(file_get_contents($dir . '/rejected.json'), true))->toBe(array(array('local_data_id' => 1, 'output' => '42', 'rrd_path' => 'fixture.rrd', 'reason' => "unknown DS name 'value'")));
+        } elseif (is_file($dir . '/rejected.json')) {
+            expect(json_decode(file_get_contents($dir . '/rejected.json'), true))->toBe(array());
         }
         if ($failed === 'rejected') {
             $expected = array();
@@ -82,8 +90,9 @@ test('production poller files retain failed writes and preserve concurrent arriv
             $updates = json_decode(file_get_contents($dir . '/updates.json'), true);
             expect(array_values($updates)[0]['times'][strtotime('2020-01-01')])->toBe(array('value' => '42'));
         }
-        if ($failed === 'incomplete') {
-            $expected = array('42');
+        if (in_array($failed, array('incomplete', 'incomplete-recent'), true)) {
+            // A group that never completes is discarded once it is several cycles old.
+            $expected = $failed === 'incomplete' ? array() : array('42');
             $updates = json_decode(file_get_contents($dir . '/updates.json'), true);
             expect(array_values($updates)[0]['times'])->toBe(array());
             expect(json_decode(file_get_contents($dir . '/batch-result.json'), true))->toBe(array(0, false));
@@ -114,7 +123,7 @@ test('production poller files retain failed writes and preserve concurrent arriv
                         ? array_sum(array_map(static fn($fields) => count($fields['times']), $event))
                         : $event;
                 }, file($file, FILE_IGNORE_NEW_LINES)) : array();
-                if ($failed === true || in_array($failed, array('select', 'handoff', 'init', 'busy', 'count', 'incomplete', 'tail-failure'), true)) {
+                if ($failed === true || in_array($failed, array('select', 'handoff', 'init', 'busy', 'count', 'incomplete', 'incomplete-recent', 'tail-failure', 'mismatch'), true)) {
                     expect($events)->toBe(array());
                 } elseif (in_array($failed, array('mixed', 'page'), true)) {
                     expect($events)->toHaveCount(1);
@@ -149,4 +158,4 @@ test('production poller files retain failed writes and preserve concurrent arriv
             } rmdir($dir . $suffix);
         }
     }
-})->with(array(array(false,false),array(false,true),array(true,false),array(true,true),array(false,'replace-space'),array(true,'replace-space'),array(false,'replace'),array(true,'replace'),array(true,'delete'),array(false,'rejected'),array(true,'rejected'),array(false,'mixed'),array(false,'page'),array(false,'select'),array(false,'handoff'),array(false,'delete'),array(true,'init'),array(false,'init'),array(false,'busy'),array(false,'count'),array(false,false,true),array(false,true,true),array(false,'init',true),array(false,'rejected',true),array(true,'select'),array(true,'init-function'),array(true,'field-failure'),array(true,'field-success'),array(false,'incomplete'),array(false,'tail-failure'),array(false,'page-success')));
+})->with(array(array(false,false),array(false,true),array(true,false),array(true,true),array(false,'replace-space'),array(true,'replace-space'),array(false,'replace'),array(true,'replace'),array(true,'delete'),array(false,'rejected'),array(true,'rejected'),array(false,'mixed'),array(false,'page'),array(false,'select'),array(false,'handoff'),array(false,'delete'),array(true,'init'),array(false,'init'),array(false,'busy'),array(false,'count'),array(false,false,true),array(false,true,true),array(false,'init',true),array(false,'rejected',true),array(true,'select'),array(true,'init-function'),array(true,'field-failure'),array(true,'field-success'),array(false,'incomplete'),array(false,'incomplete-recent'),array(false,'mismatch'),array(false,'tail-failure'),array(false,'page-success')));

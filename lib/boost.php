@@ -15,6 +15,51 @@ function boost_archive_is_empty($table) {
 }
 
 /**
+ * Retained samples go back to the live queue so a persistently failing RRD
+ * does not leave one more archive table behind on every cycle.
+ */
+function boost_requeue_archive($table) {
+	if (!preg_match('/^poller_output_boost_arch_[a-zA-Z0-9_]+$/D', $table)) {
+		return false;
+	}
+
+	/* A live sample with the same key supersedes the retained copy, as in recovery. */
+	if (!db_execute_prepared('INSERT IGNORE INTO poller_output_boost
+		(local_data_id, rrd_name, time, output)
+		SELECT local_data_id, rrd_name, time, output
+		FROM `' . $table . '`', array())) {
+		return false;
+	}
+
+	return (bool) db_execute_prepared('DROP TABLE IF EXISTS `' . $table . '`', array());
+}
+
+/**
+ * Delete exactly the sample tuples that were read.  A concurrent sample with
+ * the same key but different output survives for the next pass.
+ */
+function boost_delete_samples($table, $rows) {
+	foreach (array_chunk($rows, 500) as $chunk) {
+		$params = array();
+
+		foreach ($chunk as $row) {
+			$params[] = $row['local_data_id'];
+			$params[] = $row['rrd_name'];
+			$params[] = $row['timestamp'];
+			$params[] = $row['output'];
+		}
+
+		$where = implode(' OR ', array_fill(0, count($chunk), '(local_data_id = ? AND rrd_name = ? AND time = FROM_UNIXTIME(?) AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY))'));
+
+		if (db_execute_prepared("DELETE FROM $table WHERE $where", $params) === false) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+/**
  * boost_array_orderby - performs a multicolumn sort of an
  *   array
  */
@@ -1124,11 +1169,8 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 
 	/* Delete only the exact samples whose updates were acknowledged. */
 	foreach (array_merge(array('poller_output_boost'), (array) $archive_tables) as $table) {
-		foreach ($results as $row) {
-			if (db_execute_prepared("DELETE FROM $table WHERE local_data_id = ? AND rrd_name = ? AND time = FROM_UNIXTIME(?) AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY)",
-				array($row['local_data_id'], $row['rrd_name'], $row['timestamp'], $row['output'])) === false) {
-				return -1;
-			}
+		if (!boost_delete_samples($table, $results)) {
+			return -1;
 		}
 	}
 

@@ -11,6 +11,8 @@
       <file>./Unit/Core/Rrd/RrdMaintenanceLockTest.php</file>
       <file>./Unit/Core/Rrd/MaintenancePurgeLeaseTest.php</file>
       <file>./Unit/Core/Rrd/RrdResizeLeaseTest.php</file>
+      <file>./Unit/Core/Rrd/RrdTuneLeaseTest.php</file>
+      <file>./Unit/Core/Poller/PollerWriterDeadlineNativeTest.php</file>
       <file>./Unit/Security/Shell/SpikekillBackupSymlinkSafetyTest.php</file>
       <file>./Unit/Security/Shell/SpikekillRemoveSpikesEndToEndTest.php</file>
       <file>./Unit/Security/Shell/SpikekillXmlDirectoryRaceTest.php</file>
@@ -20,6 +22,7 @@
       <file>./Unit/Core/PathHelpersTest.php</file>
       <file>./Unit/Security/Auth/ReportAdminGroupRealmTest.php</file>
       <file>./Unit/Security/Auth/ReportMutationCsrfTest.php</file>
+      <file>./Unit/ImportPackageFileDestinationTest.php</file>
       <file>./Unit/Core/Poller/PollerBatchLeaseTest.php</file>
       <file>./Unit/Core/Poller/PollerPostRunFailureTest.php</file>
       <file>./Unit/Core/Poller/ShutdownOrphanCleanupTest.php</file>

@@ -65,6 +65,10 @@ function db_fetch_assoc(...$args)
 {
     return empty($GLOBALS['cleanup_read_failure']) ? array() : false;
 }
+function db_fetch_assoc_prepared(...$args)
+{
+    return db_fetch_assoc();
+}
 function maint_debug(...$args) {}
 function db_fetch_row_prepared(...$args)
 {

@@ -48,7 +48,8 @@ test('production Boost owns, supervises and reaps actual worker processes', func
                 ->and($result['dsstats_called'])->toBeTrue()
                 ->and($result['rrdcheck_called'])->toBeTrue()
                 ->and($result['plugin_hook'])->toBe('boost_poller_bottom')
-                ->and(isset($result['dropped_archive']))->toBe($mode === 'master-success-empty');
+                ->and(isset($result['dropped_archive']))->toBe($mode === 'master-success-empty')
+                ->and($result['requeued_archive'] ?? null)->toBe($mode === 'master-success-requeued' ? 'poller_output_boost_arch_fixture' : null);
             expect(file($dir . '/reaped'))->toHaveCount(3);
         } elseif ($master) {
             expect($result['boost_poller_status'])->toStartWith('failed - end time:')
@@ -85,4 +86,4 @@ test('production Boost owns, supervises and reaps actual worker processes', func
             rmdir($dir . $suffix);
         }
     }
-})->with(array('success','early-crash','timeout','launch-failure','shutdown','output-init','output-archives','output-count','output-empty','output-ids','output-last','output-select','output-next-count','prepare-failure','archive-retry','master-failed-count','master-child-failed','master-invalid-total','master-missing-child','master-success-empty','master-success-retained'));
+})->with(array('success','early-crash','timeout','launch-failure','shutdown','output-init','output-archives','output-count','output-empty','output-ids','output-last','output-select','output-next-count','prepare-failure','archive-retry','master-failed-count','master-child-failed','master-invalid-total','master-missing-child','master-success-empty','master-success-retained','master-success-requeued'));

@@ -7,7 +7,7 @@ namespace RrdAcknowledgedResponseContract;
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 $source = file_get_contents(dirname(__DIR__, 4) . '/lib/rrd.php');
-foreach (array('rrd_acknowledged_pipes', 'rrd_acknowledged_command') as $name) {
+foreach (array('rrd_acknowledged_pipes', 'rrd_command_deadline', 'rrd_acknowledged_command') as $name) {
     eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, $name));
 }
 function escape_command($command)
@@ -21,9 +21,13 @@ function hrtime($numeric)
 }
 function stream_select(&$read, &$write, &$except, $seconds, $microseconds)
 {
-    if (++$GLOBALS['response_selects'] === 1) {
+    // The first select writes the command, the second is idle, and the reply
+    // is readable only from the third, after the injected clock has advanced.
+    $select = ++$GLOBALS['response_selects'];
+    if ($select < 3) {
         $read = array();
-    } else {
+    }
+    if ($select > 1) {
         $write = array();
     }
     return 1;
@@ -37,7 +41,7 @@ function proc_terminate($process)
 test('acknowledgement deadline honors longer configuration and bounds extreme values', function ($timeout, $elapsed, $expected) {
     $saved = $GLOBALS['config'] ?? null;
     $GLOBALS['config'] = array('rrd_command_timeout' => $timeout);
-    $GLOBALS['response_clock'] = array(0, 100000000, $elapsed * 1000000000);
+    $GLOBALS['response_clock'] = array(0, 100000000, 200000000, $elapsed * 1000000000);
     $GLOBALS['response_selects'] = 0;
     $GLOBALS['response_terminated'] = false;
     $pipe = fopen('php://temp', 'r+');
@@ -49,6 +53,7 @@ test('acknowledgement deadline honors longer configuration and bounds extreme va
     try {
         list($result, $output) = rrd_acknowledged_command($pipe, 'dump fixture.rrd');
         expect($result)->toBe($expected)
+            ->and($GLOBALS['response_selects'])->toBe($expected ? 3 : 2)
             ->and($GLOBALS['response_terminated'])->toBe(!$expected)
             ->and($pipes[(int) $pipe]['failed'])->toBe(!$expected);
         expect($output)->toBe($expected ? "OK u:0 s:0 r:0\n" : '');

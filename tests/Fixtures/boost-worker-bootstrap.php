@@ -133,6 +133,14 @@ function boost_archive_is_empty($table)
 {
     return getenv('BOOST_MODE') === 'master-success-empty';
 }
+function boost_requeue_archive($table)
+{
+    if (getenv('BOOST_MODE') !== 'master-success-requeued') {
+        return false;
+    }
+    $GLOBALS['settings_written']['requeued_archive'] = $table;
+    return true;
+}
 function dsstats_boost_bottom()
 {
     $GLOBALS['settings_written']['dsstats_called'] = true;
@@ -146,6 +154,8 @@ function api_plugin_hook($name)
     $GLOBALS['settings_written']['plugin_hook'] = $name;
 }
 define('SQL_NO_CACHE', '');
+require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
+eval(test_php_function_source(file_get_contents(dirname(__DIR__, 2) . '/lib/boost.php'), 'boost_delete_samples'));
 function boost_memory_limit() {}
 function boost_get_total_rows()
 {

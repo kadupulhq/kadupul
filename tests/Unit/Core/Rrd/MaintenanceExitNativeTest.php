@@ -30,6 +30,8 @@ function register_process_start(...$args) { return true; }
 function unregister_process(...$args) { $GLOBALS['events'][] = 'unregister'; }
 function db_fetch_cell($sql) { return $GLOBALS['mode'] === 'count' ? false : ($GLOBALS['mode'] === 'empty' ? 0 : 1); }
 function db_fetch_assoc($sql) { return strpos($sql, 'data_source_purge_action') !== false ? false : array(); }
+// The purge reads the queue in keyset pages; a failed page read is the 'read' failure.
+function db_fetch_assoc_prepared($sql, $params = array(), $log = true, $db_conn = false) { return strpos($sql, 'FROM data_source_purge_action') !== false && count($params) === 3 ? false : array(); }
 function db_execute($sql) { $GLOBALS['events'][] = strpos($sql, 'poller_output_realtime') !== false ? 'realtime' : 'authcache'; return true; }
 function api_device_purge_deleted_devices() { $GLOBALS['events'][] = 'devices'; }
 function cacti_escapeshellcmd($command) { return $command; }

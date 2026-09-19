@@ -3,6 +3,7 @@
   <testsuites>
     <testsuite name="Poller database contracts">
       <file>./integration/PollerAcknowledgementDatabaseTest.php</file>
+      <file>./integration/PollerRejectedSamplesDatabaseTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

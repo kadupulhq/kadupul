@@ -42,6 +42,7 @@ if (strpos($mode, 'collector-') === 0) {
     $config['poller_id'] = $mode === 'collector-install' ? 1 : 2;
     $config['connection'] = $mode === 'collector-offline' ? 'recovery' : 'online';
     $remote_db_cnn_id = 'primary-connection';
+    if ($mode === 'collector-forced') { $config['force_storage_location_local'] = true; }
 }
 require $root . '/lib/installer.php';
 $reflection = new ReflectionClass('Installer');
@@ -107,4 +108,4 @@ FIXTURE;
         rmdir($dir . '/rra');
         rmdir($dir);
     }
-})->with(array(array('collector-install', true), array('collector-online', true), array('collector-offline', true), array('memory-string', false), array('fresh', true), array('memory', false), array('queue-unavailable', false), array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-attribute', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true), array('proxy-local-private', true), array('proxy-local-group', false), array('proxy-local-missing', false)))->with(array('upgrade', 'downgrade', 'downgrade-string', 'auto-upgrade', 'auto-downgrade'));
+})->with(array(array('collector-install', true), array('collector-online', true), array('collector-offline', true), array('collector-forced', false), array('memory-string', false), array('fresh', true), array('memory', false), array('queue-unavailable', false), array('missing', false), array('group', false), array('no-posix', false), array('trusted-group', true), array('private', true), array('windows', true), array('windows-attribute', true), array('windows-missing', false), array('windows-file', false), array('windows-readonly', false), array('proxy', true), array('proxy-local-private', true), array('proxy-local-group', false), array('proxy-local-missing', false)))->with(array('upgrade', 'downgrade', 'downgrade-string', 'auto-upgrade', 'auto-downgrade'));

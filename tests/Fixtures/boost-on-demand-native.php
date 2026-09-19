@@ -74,7 +74,7 @@ function db_execute_prepared($sql, $params, ...$args)
 {
     if (str_starts_with($sql, 'DELETE')) {
         $GLOBALS['deletes'][] = array($sql, $params);
-        $failAt = array('delete-first' => 1, 'delete-later' => 3)[$GLOBALS['mode']] ?? 0;
+        $failAt = array('delete-first' => 1, 'delete-later' => 2)[$GLOBALS['mode']] ?? 0;
         return count($GLOBALS['deletes']) !== $failAt;
     }
     return true;

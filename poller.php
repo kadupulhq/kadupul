@@ -492,6 +492,8 @@ db_execute('REPLACE INTO poller_data_template_field_mappings
 	AND gti.local_graph_id = 0
 	GROUP BY dtr.data_template_id, dif.data_name');
 
+// Each run resets its own write state; a failure in any run fails the process.
+$rrd_runs_failed = false;
 while ($poller_runs_completed < $poller_runs) {
     // record the start time for this loop
     $loop_start = microtime(true);
@@ -665,6 +667,9 @@ while ($poller_runs_completed < $poller_runs) {
         }
 
         // Valid pending samples belong to a retry, even after writer failure.
+        // A device's samples without a poller item (a disabled data source)
+        // are never written; expire them only after a few cycles so a poller
+        // cache rebuild in progress cannot lose them.  Hostless sources stay.
         do {
             $orphan_rows = db_fetch_assoc_prepared(
                 'SELECT po.local_data_id, po.rrd_name, po.time, po.output
@@ -674,8 +679,12 @@ while ($poller_runs_completed < $poller_runs) {
                 LEFT JOIN host AS h
                 ON dl.host_id = h.id
                 WHERE (h.poller_id = ? OR h.id IS NULL)
-                AND (dl.id IS NULL OR (dl.host_id > 0 AND h.id IS NULL)) LIMIT 40000',
-                array($poller_id)
+                AND (dl.id IS NULL OR (dl.host_id > 0 AND h.id IS NULL)
+                OR (dl.host_id > 0 AND po.time < FROM_UNIXTIME(?) AND NOT EXISTS (
+                    SELECT 1 FROM poller_item AS pi
+                    WHERE pi.local_data_id = po.local_data_id
+                    AND pi.rrd_name = po.rrd_name))) LIMIT 40000',
+                array($poller_id, time() - 5 * max(60, (int) $poller_interval))
             );
             if ($orphan_rows === false) {
                 $rrd_cleanup_failed = true;
@@ -829,7 +838,7 @@ while ($poller_runs_completed < $poller_runs) {
                     }
 
                     if ($poller_id == 1) {
-                        $rrds_processed += process_poller_output_batch($poller_output_deferred, $rrdtool_pipe, true);
+                        $rrds_processed += process_poller_output_batch($poller_output_deferred, $rrdtool_pipe, true, $poller_start + MAX_POLLER_RUNTIME);
                         $rrd_write_failed = $poller_output_deferred;
                     } elseif ($config['connection'] != 'online') {
                         /* truncate until formal remote management is supported */
@@ -856,7 +865,7 @@ while ($poller_runs_completed < $poller_runs) {
                     $mtb = microtime(true);
 
                     if ($poller_id == 1) {
-                        $rrds_processed += process_poller_output_batch($poller_output_deferred, $rrdtool_pipe);
+                        $rrds_processed += process_poller_output_batch($poller_output_deferred, $rrdtool_pipe, false, $poller_start + MAX_POLLER_RUNTIME);
                         if ($poller_output_deferred) {
                             $rrd_write_failed = true;
                         }
@@ -933,6 +942,7 @@ while ($poller_runs_completed < $poller_runs) {
         cacti_log('WARNING: The Kadupul Data Collector is currently disabled!', true, 'POLLER');
     }
 
+    $rrd_runs_failed = $rrd_runs_failed || !empty($rrd_write_failed);
     $poller_runs_completed++;
 
     // push records updates to the main poller
@@ -1063,7 +1073,7 @@ if ($poller_id == 1) {
     api_plugin_hook('poller_bottom');
 }
 
-if (!empty($rrd_write_failed) || !empty($rrd_cleanup_failed)) {
+if (!empty($rrd_runs_failed) || !empty($rrd_cleanup_failed)) {
     exit(1);
 }
 
