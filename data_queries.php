@@ -697,6 +697,24 @@ function data_query_item_remove() {
 		return;
 	}
 
+	/* The edit page shows no delete control for an association that graphs
+	   were made from; a request can still name one. */
+	$graphs = db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM graph_local AS gl
+		INNER JOIN snmp_query_graph AS sqg
+		ON gl.snmp_query_graph_id = sqg.id
+		AND gl.graph_template_id = sqg.graph_template_id
+		WHERE sqg.id = ?',
+		array(get_request_var('id')));
+
+	if ($graphs > 0) {
+		cacti_log('WARNING: Refused to delete Data Query ' . get_request_var('snmp_query_id') . ' Graph Template association ' . get_request_var('id') . ' because ' . $graphs . ' Graphs use it', false, 'WEBUI');
+
+		raise_message('data_query_in_use', __('Graphs use this Graph Template association, so it can not be deleted.'), MESSAGE_LEVEL_ERROR);
+
+		return;
+	}
+
 	db_execute_prepared('DELETE
 		FROM snmp_query_graph
 		WHERE id = ?',
@@ -1141,6 +1159,21 @@ function data_query_item_edit() {
    --------------------- */
 
 function data_query_remove($id) {
+	/* The list page disables the checkbox of a Data Query that graphs use;
+	   a request can still name one. */
+	$graphs = db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM graph_local
+		WHERE snmp_query_id = ?',
+		array($id));
+
+	if ($graphs > 0) {
+		cacti_log('WARNING: Refused to delete Data Query ' . $id . ' because ' . $graphs . ' Graphs use it', false, 'WEBUI');
+
+		raise_message('data_query_in_use', __('Graphs use this Data Query, so it can not be deleted.'), MESSAGE_LEVEL_ERROR);
+
+		return;
+	}
+
 	$snmp_query_graph = db_fetch_assoc_prepared('SELECT id
 		FROM snmp_query_graph
 		WHERE snmp_query_id = ?',
