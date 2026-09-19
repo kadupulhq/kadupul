@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('replay CLI requires an explicit scope and reports what it moved', function ($arguments, $exit, $call, $message) {
+test('replay CLI requires an explicit scope and reports what it moved', function ($arguments, $exit, $call, $message, $engine = 'InnoDB') {
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/replay-rejected-' . bin2hex(random_bytes(8));
     foreach (array('', '/cli', '/include', '/lib') as $suffix) {
@@ -16,6 +16,10 @@ test('replay CLI requires an explicit scope and reports what it moved', function
     // The move itself is covered by the database contract; this boundary records the request.
     file_put_contents($dir . '/lib/poller.php', '<?php function poller_replay_rejected($id = null, $dry = false) {'
         . 'file_put_contents(dirname(__DIR__) . "/call", json_encode(array($id, $dry))); return $id === 9 ? false : 3; }');
+    // The queue check reads the engine of the connection replay writes to.
+    file_put_contents($dir . '/lib/rrd_maintenance.php', '<?php function rrd_maintenance_queue_configuration_error($connection = false) {'
+        . 'if ($connection !== false) { throw new LogicException("replay checked another queue"); }'
+        . 'return ' . var_export($engine, true) . ' === "InnoDB" ? "" : "The poller_output queue must use InnoDB before collection."; }');
     try {
         $process = proc_open(array_merge(array(PHP_BINARY, $dir . '/cli/replay_rejected_samples.php'), $arguments), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
         $output = stream_get_contents($pipes[1]) . stream_get_contents($pipes[2]);
@@ -41,4 +45,6 @@ test('replay CLI requires an explicit scope and reports what it moved', function
     'dry run' => array(array('--local-data-id=5', '--dry-run'), 0, array(5, true), 'Would replay 3 rejected samples for Local Data ID 5'),
     'all' => array(array('--all'), 0, array(null, false), 'Replayed 3 rejected samples for all data sources'),
     'failure' => array(array('--local-data-id=9'), 1, array(9, false), 'Unable to replay rejected samples'),
+    'volatile queue' => array(array('--all'), 1, null, 'Rejected samples were not replayed. The poller_output queue must use InnoDB', 'MEMORY'),
+    'volatile queue dry run' => array(array('--all', '--dry-run'), 0, array(null, true), 'Would replay 3', 'MEMORY'),
 ));

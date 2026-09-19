@@ -8,6 +8,7 @@
 
 require(__DIR__ . '/../include/cli_check.php');
 require_once($config['base_path'] . '/lib/poller.php');
+require_once($config['base_path'] . '/lib/rrd_maintenance.php');
 
 /* process calling arguments */
 $parms = $_SERVER['argv'];
@@ -62,6 +63,15 @@ if ($all === ($local_data_id !== null)) {
     print 'ERROR: Specify exactly one of --local-data-id=N or --all' . PHP_EOL . PHP_EOL;
     display_help();
     exit(1);
+}
+
+/* Replay writes to poller_output on this connection; a MEMORY queue would lose them on restart. */
+if (!$dry_run) {
+    $queue_error = rrd_maintenance_queue_configuration_error(false);
+    if ($queue_error !== '') {
+        fwrite(STDERR, 'ERROR: Rejected samples were not replayed. ' . $queue_error . PHP_EOL);
+        exit(1);
+    }
 }
 
 $replayed = poller_replay_rejected($local_data_id, $dry_run);
