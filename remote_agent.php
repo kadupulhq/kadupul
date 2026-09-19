@@ -249,6 +249,18 @@ function remote_client_authorized() {
 	return true;
 }
 
+/* Callers address the collector that owns the device, so an id owned by
+ * another collector is never a legitimate request here. */
+function remote_agent_host_is_local($host_id) {
+	global $config;
+
+	return db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM host
+		WHERE id = ?
+		AND poller_id = ?',
+		array($host_id, $config['poller_id'])) > 0;
+}
+
 function get_graph_data() {
 	get_filter_request_var('graph_start');
 	get_filter_request_var('graph_end');
@@ -305,11 +317,12 @@ function get_graph_data() {
 		$graph_data_array['graph_theme'] = cacti_validate_theme(get_request_var('graph_theme'));
 	}
 
-	/* set the theme */
-	if (isset_request_var('effective_user')) {
-		$user = get_request_var('effective_user');
-	} else {
-		$user = 0;
+	/* rrdtool_function_graph() skips the permission check for user 0 */
+	$user = get_request_var('effective_user');
+
+	if (empty($user) || $user < 1) {
+		print 'GRAPH ACCESS DENIED';
+		return false;
 	}
 
 	$graph_data_array['graphv'] = true;
@@ -322,6 +335,8 @@ function get_graph_data() {
 }
 
 function get_snmp_data() {
+	global $config;
+
 	$host_id = get_filter_request_var('host_id');
 	$oid     = get_nfilter_request_var('oid');
 
@@ -333,7 +348,7 @@ function get_snmp_data() {
 	$output = '';
 
 	if (!empty($host_id)) {
-		$host = db_fetch_row_prepared('SELECT * FROM host WHERE id = ?', array($host_id));
+		$host = db_fetch_row_prepared('SELECT * FROM host WHERE id = ? AND poller_id = ?', array($host_id, $config['poller_id']));
 
 		if (!cacti_sizeof($host)) {
 			print 'U';
@@ -357,6 +372,8 @@ function get_snmp_data() {
 }
 
 function get_snmp_data_walk() {
+	global $config;
+
 	$host_id = get_filter_request_var('host_id');
 	$oid     = get_nfilter_request_var('oid');
 
@@ -368,7 +385,7 @@ function get_snmp_data_walk() {
 	$output = array();
 
 	if (!empty($host_id)) {
-		$host = db_fetch_row_prepared('SELECT * FROM host WHERE id = ?', array($host_id));
+		$host = db_fetch_row_prepared('SELECT * FROM host WHERE id = ? AND poller_id = ?', array($host_id, $config['poller_id']));
 
 		if (!cacti_sizeof($host)) {
 			print 'U';
@@ -397,6 +414,12 @@ function get_snmp_data_walk() {
 
 function ping_device() {
 	$host_id = get_filter_request_var('host_id');
+
+	if (!remote_agent_host_is_local($host_id)) {
+		print 'ERROR: Device[' . (int) $host_id . '] is not assigned to this Data Collector';
+		return;
+	}
+
 	api_device_ping_device($host_id, true);
 }
 
@@ -411,6 +434,11 @@ function poll_for_data() {
 	/* ensure we have a valid poller_id */
 	if (!preg_match('/^[a-z0-9]+$/i', $poller_id)) {
 		return array();
+	}
+
+	if (!remote_agent_host_is_local($host_id)) {
+		print json_encode($return);
+		return;
 	}
 
 	$i = 0;
@@ -549,7 +577,7 @@ function run_remote_data_query() {
 	$host_id = get_filter_request_var('host_id');
 	$data_query_id = get_filter_request_var('data_query_id');
 
-	if ($host_id > 0 && $data_query_id > 0) {
+	if ($host_id > 0 && $data_query_id > 0 && remote_agent_host_is_local($host_id)) {
 		run_data_query($host_id, $data_query_id);
 	}
 }
@@ -557,8 +585,20 @@ function run_remote_data_query() {
 function run_remote_discovery() {
 	global $config;
 
+	$network_id = get_filter_request_var('network');
+
+	$local = db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM automation_networks
+		WHERE id = ?
+		AND poller_id = ?',
+		array($network_id, $config['poller_id']));
+
+	if (!$local) {
+		return;
+	}
+
 	$poller_id = cacti_escapeshellarg($config['poller_id']);
-	$network   = cacti_escapeshellarg(get_filter_request_var('network'));
+	$network   = cacti_escapeshellarg($network_id);
 	$php       = cacti_escapeshellcmd(read_config_option('path_php_binary'));
 	$path      = cacti_escapeshellarg(read_config_option('path_webroot') . '/poller_automation.php');
 

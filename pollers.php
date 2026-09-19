@@ -26,9 +26,12 @@
 require('./include/auth.php');
 require_once($config['base_path'] . '/lib/poller.php');
 
-/* performing a full sync can take a lot of memory and time */
-ini_set('memory_limit', '-1');
-ini_set('max_execution_time', '900');
+/* performing a full sync can take a lot of memory and time, but a
+   connection test must not hold a web worker that long */
+if (get_nfilter_request_var('action') != 'ping') {
+	ini_set('memory_limit', '-1');
+	ini_set('max_execution_time', '900');
+}
 
 $poller_actions = array(
 	1 => __('Delete'),
@@ -233,6 +236,11 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'actions':
+		/* Without selected_items this only renders the confirmation page. */
+		if (isset_request_var('selected_items')) {
+			csrf_require_post(true);
+		}
+
 		form_actions();
 
 		break;
@@ -247,6 +255,8 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'ping':
+		csrf_require_post(true);
+
 		test_database_connection();
 
 		break;
@@ -447,6 +457,12 @@ function form_actions() {
 	if (isset_request_var('selected_items')) {
 		$selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
 
+		if ($selected_items != false && get_nfilter_request_var('drp_action') == '1') {
+			$selected_items = pollers_without_main($selected_items, 'delete');
+		} elseif ($selected_items != false && get_nfilter_request_var('drp_action') == '2') {
+			$selected_items = pollers_without_main($selected_items, 'disable');
+		}
+
 		if ($selected_items != false) {
 			if (get_nfilter_request_var('drp_action') == '1') { // delete
 				db_execute('DELETE FROM poller WHERE ' . array_to_sql_or($selected_items, 'id'));
@@ -626,6 +642,30 @@ function form_actions() {
     Site Functions
    --------------------- */
 
+/* Devices from a deleted collector move to the main one (id 1), and the list
+   offers no control to re-enable it, so deleting or disabling it stops data
+   collection.  The disabled checkbox in the list is only a hint. */
+function pollers_without_main($selected_items, $verb) {
+	$remote  = array();
+	$refused = false;
+
+	foreach ($selected_items as $item) {
+		/* Loose on purpose: MySQL also reads '1e0' or ' 1' as id 1. */
+		if ($item == 1) {
+			$refused = true;
+		} else {
+			$remote[] = $item;
+		}
+	}
+
+	if ($refused) {
+		cacti_log('WARNING: Refused to ' . $verb . ' the main Data Collector for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+		raise_message('poller_keep_main', __('The Main Data Collector can not be deleted or disabled.'), MESSAGE_LEVEL_ERROR);
+	}
+
+	return $remote;
+}
+
 function poller_edit() {
 	global $fields_poller_edit;
 
@@ -799,6 +839,16 @@ function test_database_connection($poller = array()) {
 				return false;
 			}
 		}
+
+		/* The values come from the edit form, so the host must not carry a
+		   scheme, path or socket, and each retry holds the worker for up to
+		   the 2 second connect timeout in db_connect_real(). */
+		if (!pollers_valid_db_endpoint($poller['dbhost'], $poller['dbport'])) {
+			print __('Invalid Database Hostname or Port');
+			return false;
+		}
+
+		$poller['dbretries'] = min(max((int) $poller['dbretries'], 0), 3);
 	}
 
 	$connection = db_connect_real(
@@ -821,6 +871,24 @@ function test_database_connection($poller = array()) {
     } else {
         print __('Connection Failed');
     }
+}
+
+function pollers_valid_db_endpoint($host, $port) {
+	if (!is_string($host) || $host === '' || strlen($host) > 100) {
+		return false;
+	}
+
+	/* FILTER_FLAG_HOSTNAME rejects underscores, which container and cloud
+	   database names such as db_primary use. Labels stay alphanumeric with
+	   inner hyphens, so a scheme, path, socket, credential or DSN option
+	   still fails, and an optional trailing dot keeps absolute names. */
+	$label = '[A-Za-z0-9_](?:[A-Za-z0-9_-]{0,61}[A-Za-z0-9_])?';
+
+	if (filter_var($host, FILTER_VALIDATE_IP) === false && !preg_match('/^' . $label . '(?:\\.' . $label . ')*\\.?$/D', $host)) {
+		return false;
+	}
+
+	return is_string($port) && ctype_digit($port) && $port >= 1 && $port <= 65535;
 }
 
 function pollers() {

@@ -50,6 +50,11 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'actions':
+		/* Without selected_items this only renders the confirmation page. */
+		if (isset_request_var('selected_items')) {
+			csrf_require_post(true);
+		}
+
 		form_actions();
 
 		break;
@@ -214,6 +219,32 @@ function form_save() {
     The 'actions' function
    ------------------------ */
 
+/* The list disables the checkbox of a template that a graph uses, but the
+   request names the ids, so the delete checks again. Deleting one would turn
+   its graphs into graphs without a template. */
+function graph_templates_unused($selected_items) {
+	$unused = array();
+
+	foreach ($selected_items as $id) {
+		$graphs = db_fetch_cell_prepared('SELECT COUNT(*)
+			FROM graph_local
+			WHERE graph_template_id = ?',
+			array($id));
+
+		if ($graphs > 0) {
+			cacti_log('WARNING: Refused to delete Graph Template ' . (int) $id . ', which ' . (int) $graphs . ' Graph(s) use', false, 'AUTH');
+		} else {
+			$unused[] = $id;
+		}
+	}
+
+	if (cacti_sizeof($unused) < cacti_sizeof($selected_items)) {
+		raise_message('graph_template_in_use', __('Graph Templates in use by a Graph were not deleted.'), MESSAGE_LEVEL_ERROR);
+	}
+
+	return $unused;
+}
+
 function form_actions() {
 	global $graph_actions, $config, $image_types;
 
@@ -224,6 +255,10 @@ function form_actions() {
 	/* if we are to save this form, instead of display it */
 	if (isset_request_var('selected_items')) {
 		$selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
+
+		if ($selected_items != false && get_request_var('drp_action') == '1') {
+			$selected_items = graph_templates_unused($selected_items);
+		}
 
 		if ($selected_items != false) {
 			if (get_request_var('drp_action') == '1') { // delete

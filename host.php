@@ -66,16 +66,25 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'reindex':
+		csrf_require_post(true);
+
 		host_reindex();
 
 		header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
 
 		break;
 	case 'actions':
+		/* Without selected_items this only renders the confirmation page. */
+		if (isset_request_var('selected_items')) {
+			csrf_require_post(true);
+		}
+
 		form_actions();
 
 		break;
 	case 'gt_add':
+		csrf_require_post(true);
+
 		get_filter_request_var('host_id');
 
 		host_add_gt();
@@ -84,6 +93,8 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'gt_remove':
+		csrf_require_post(true);
+
 		get_filter_request_var('host_id');
 
 		host_remove_gt();
@@ -92,6 +103,8 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'query_add':
+		csrf_require_post(true);
+
 		get_filter_request_var('host_id');
 
 		host_add_query();
@@ -100,6 +113,8 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'query_remove':
+		csrf_require_post(true);
+
 		get_filter_request_var('host_id');
 
 		host_remove_query();
@@ -108,6 +123,8 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'query_change':
+		csrf_require_post(true);
+
 		get_filter_request_var('host_id');
 
 		host_change_query();
@@ -116,6 +133,8 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'query_reload':
+		csrf_require_post(true);
+
 		get_filter_request_var('host_id');
 
 		host_reload_query();
@@ -124,6 +143,8 @@ switch (get_request_var('action')) {
 		header('Location: host.php?header=false&action=edit&id=' . get_request_var('host_id'));
 		break;
 	case 'query_verbose':
+		csrf_require_post(true);
+
 		get_filter_request_var('host_id');
 
 		host_reload_query();
@@ -145,6 +166,8 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'enable_debug':
+		csrf_require_post(true);
+
 		enable_device_debug(get_filter_request_var('host_id'));
 		raise_message('enable_debug', __('Device Debugging Enabled for Device.'), MESSAGE_LEVEL_INFO);
 
@@ -152,6 +175,8 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'disable_debug':
+		csrf_require_post(true);
+
 		disable_device_debug(get_filter_request_var('host_id'));
 		raise_message('disable_debug', __('Device Debugging Disabled for Device.'), MESSAGE_LEVEL_INFO);
 
@@ -159,6 +184,8 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'repopulate':
+		csrf_require_post(true);
+
 		if (get_filter_request_var('host_id') > 0) {
 			push_out_host(get_request_var('host_id'));
 			raise_message('repopulate_message', __('Poller Cache for Device Refreshed.'), MESSAGE_LEVEL_INFO);
@@ -190,9 +217,21 @@ switch (get_request_var('action')) {
 function host_reindex() {
 	global $config;
 
+	$host_id = get_filter_request_var('host_id');
+
+	/* The CLI registers its run with a read then a write, so two requests for
+	   one device could both start a full re-index. GET_LOCK is atomic, and
+	   releasing it at shutdown also covers a run that hits the time limit. */
+	if (db_fetch_cell_prepared('SELECT GET_LOCK(?, 0)', array('host.reindex.' . $host_id)) != 1) {
+		raise_message('host_reindex_running', __('A Re-Index of this Device is already running.  Try again after it finishes.'), MESSAGE_LEVEL_WARN);
+
+		return false;
+	}
+
+	register_shutdown_function('host_reindex_release', $host_id);
+
 	$start = microtime(true);
 
-	$host_id = get_filter_request_var('host_id');
 	shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/cli/poller_reindex_hosts.php') . ' --qid=all --id=' . cacti_escapeshellarg((string) $host_id));
 
 	$end = microtime(true);
@@ -205,6 +244,12 @@ function host_reindex() {
 		array($host_id));
 
 	raise_message('host_reindex', __('Device Reindex Completed in %0.2f seconds.  There were %d items updated.', $total_time, $items), MESSAGE_LEVEL_INFO);
+
+	return true;
+}
+
+function host_reindex_release($host_id) {
+	db_execute_prepared('DO RELEASE_LOCK(?)', array('host.reindex.' . $host_id));
 }
 
 function add_tree_names_to_actions_array() {
@@ -713,12 +758,12 @@ function host_edit() {
 		if (cacti_sizeof($host)) {
 			$header_label = __esc('Device [edit: %s]', $host['description']);
 			if (is_device_debug_enabled($host['id'])) {
-				$debug_link = "<span class='linkMarker'>*</span><a class='hyperLink' href='" . html_escape('host.php?action=disable_debug&host_id=' . $host['id']) . "'>" . __('Disable Device Debug') . "</a><br>";
+				$debug_link = "<span class='linkMarker'>*</span><a class='hyperLink cactiPostAction' href='#' data-url='" . html_escape('host.php?action=disable_debug&host_id=' . $host['id']) . "'>" . __('Disable Device Debug') . "</a><br>";
 			} else {
-				$debug_link = "<span class='linkMarker'>*</span><a class='hyperLink' href='" . html_escape('host.php?action=enable_debug&host_id=' . $host['id']) . "'>" . __('Enable Device Debug') . "</a><br>";
+				$debug_link = "<span class='linkMarker'>*</span><a class='hyperLink cactiPostAction' href='#' data-url='" . html_escape('host.php?action=enable_debug&host_id=' . $host['id']) . "'>" . __('Enable Device Debug') . "</a><br>";
 			}
 
-			$repop_link = "<span class='linkMarker'>*</span><a class='hyperLink' href='" . html_escape('host.php?action=repopulate&host_id=' . $host['id']) . "'>" . __('Repopulate Poller Cache') . "</a><br>";
+			$repop_link = "<span class='linkMarker'>*</span><a class='hyperLink cactiPostAction' href='#' data-url='" . html_escape('host.php?action=repopulate&host_id=' . $host['id']) . "'>" . __('Repopulate Poller Cache') . "</a><br>";
 			$repop_link .= "<span class='linkMarker'>*</span><a class='hyperLink' href='" . html_escape('utilities.php?poller_action=-1&action=view_poller_cache&host_id=' . $host['id'] . '&template_id=-1&filter=&rows=-1') . "'>" . __('View Poller Cache') . "</a><br>";
 		}
 	} else {
@@ -735,7 +780,7 @@ function host_edit() {
 				<td rowspan='2' class='textInfo right' style='vertical-align:top'>
 					<span class='linkMarker'>*</span><a class='hyperLink' href='<?php print html_escape('host.php?action=edit');?>'><?php print __('Create New Device');?></a><br>
 					<span class='linkMarker'>*</span><a class='hyperLink' href='<?php print html_escape('graphs_new.php?reset=true&host_id=' . $host['id']);?>'><?php print __('Create Graphs for this Device');?></a><br>
-					<span class='linkMarker'>*</span><a class='hyperLink' href='<?php print html_escape('host.php?action=reindex&host_id=' . $host['id']);?>'><?php print __('Re-Index Device');?></a><br>
+					<span class='linkMarker'>*</span><a class='hyperLink cactiPostAction' href='#' data-url='<?php print html_escape('host.php?action=reindex&host_id=' . $host['id']);?>'><?php print __('Re-Index Device');?></a><br>
 					<?php print $debug_link;?>
 					<?php print $repop_link;?>
 					<span class='linkMarker'>*</span><a class='hyperLink' href='<?php print html_escape('data_sources.php?reset=true&host_id=' . $host['id'] . '&ds_rows=30&filter=&template_id=-1&method_id=-1&page=1');?>'><?php print __('Data Source List');?></a><br>
@@ -1234,17 +1279,8 @@ function device_javascript() {
 		setPing();
 	}
 
-	function hostPageLoad(strURL) {
-		var scrollTop = $(window).scrollTop();
-		$.get(strURL, function(data) {
-			$('#main').html(data);
-			applySkin();
-			$(window).scrollTop(scrollTop);
-		});
-	}
-
-	/* query_remove and gt_remove change data, and include/global.php rejects them
-	 * unless they arrive by POST with a CSRF token. */
+	/* Every per-device change here is refused unless it arrives by POST with a
+	 * CSRF token. */
 	function hostPagePost(strURL, postData) {
 		var scrollTop = $(window).scrollTop();
 		postData.__csrf_magic = csrfMagicToken;
@@ -1312,14 +1348,20 @@ function device_javascript() {
 
 		$('[id^="reload"]').on('click', function(data) {
 			$(this).addClass('fa-spin');
-			strURL = 'host.php?action=query_reload&id='+$(this).attr('data-id')+'&host_id='+$('#id').val()+'&nostate=true';
-			hostPageLoad(strURL);
+			hostPagePost('host.php?action=query_reload', {
+				id: $(this).attr('data-id'),
+				host_id: $('#id').val(),
+				nostate: 'true'
+			});
 		});
 
 		$('[id^="verbose"]').on('click', function(data) {
 			$(this).addClass('fa-spin');
-			var strURL = 'host.php?action=query_verbose&id='+$(this).attr('data-id')+'&host_id='+$('#id').val()+'&nostate=true';
-			loadPageNoHeader(strURL, true);
+			hostPagePost('host.php?action=query_verbose', {
+				id: $(this).attr('data-id'),
+				host_id: $('#id').val(),
+				nostate: 'true'
+			});
 		});
 
 		$('[id^="remove"]').on('click', function(data) {
@@ -1400,14 +1442,13 @@ function device_javascript() {
 			});
 
 		$('input[id^="reindex_"]').on('change', function() {
-			strURL  = urlPath+'host.php?action=query_change&header=false';
-			strURL += '&host_id='+$(this).attr('data-device-id');
-			strURL += '&data_query_id='+$(this).attr('data-query-id');
-			strURL += '&reindex_method='+$(this).attr('data-reindex-method');
-
 			height = $('.hostInfoHeader').height();
 
-			loadPageNoHeader(strURL, true);
+			hostPagePost('host.php?action=query_change', {
+				host_id: $(this).attr('data-device-id'),
+				data_query_id: $(this).attr('data-query-id'),
+				reindex_method: $(this).attr('data-reindex-method')
+			});
 
 			$('.hostInfoHeader').css('height', height);
 		});

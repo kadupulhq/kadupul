@@ -192,12 +192,26 @@ if (!$forcerun) {
 	}
 }
 
+/* utilities.php takes the same lock, so a web and a CLI rebuild never
+ * rewrite the poller cache at the same time */
+if ($type == 'rmaster' && !db_fetch_cell_prepared('SELECT GET_LOCK(?, 0)', array('kadupul.poller_cache_rebuild'))) {
+	print 'ERROR: A Poller Cache rebuild is already running' . PHP_EOL;
+
+	if (!$forcerun) {
+		unregister_process('pushout', 'rmaster', 0);
+	}
+
+	exit(1);
+}
+
 /* Collect data as determined by the type */
 switch ($type) {
 	case 'rmaster':
 		pushout_master_handler($forcerun, $host_id, $host_template_id, $data_template_id, $threads);
 
 		unregister_process('pushout', 'rmaster', 0);
+
+		db_execute_prepared('DO RELEASE_LOCK(?)', array('kadupul.poller_cache_rebuild'));
 
 		break;
 	case 'child':  /* Launched by the rmaster process */
@@ -419,6 +433,8 @@ function sig_handler($signo) {
 
 			if (strpos($type, 'rmaster') !== false) {
 				pushout_kill_running_processes();
+
+				db_execute_prepared('DO RELEASE_LOCK(?)', array('kadupul.poller_cache_rebuild'));
 			}
 
 			unregister_process('pushout', 'rmaster', $thread_id, getmypid());

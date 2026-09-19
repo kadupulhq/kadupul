@@ -127,10 +127,11 @@ function exec_poll_php($command, $using_proc_function, $pipes, $proc_fd) {
  * @param  (string) $filename      - the full pathname to the script to execute
  * @param  (string) $args          - any additional arguments that must be passed onto the executable
  * @param  (string) $redirect_args - any additional arguments for file re-direction.  Otherwise output goes to /dev/null
+ * @param  (string) $log_args      - the arguments to log in place of $args, for a caller passing secrets
  *
  * @return (void)
  */
-function exec_background($filename, $args = '', $redirect_args = '') {
+function exec_background($filename, $args = '', $redirect_args = '', $log_args = null) {
 	global $config, $debug;
 
 	if (is_array($args)) {
@@ -145,7 +146,13 @@ function exec_background($filename, $args = '', $redirect_args = '') {
 		$redirect_args = '';
 	}
 
-	cacti_log("DEBUG: About to Spawn a Remote Process [CMD: $filename, ARGS: $args]", true, 'POLLER', ($debug ? POLLER_VERBOSITY_NONE:POLLER_VERBOSITY_DEBUG));
+	/* snmptrap receives communities and v3 passphrases as -c, -A and -X.
+	 * path_snmptrap may name a wrapper, so the caller can supply the log form. */
+	if ($log_args === null) {
+		$log_args = (stripos(basename(trim($filename, '\'"')), 'snmp') === 0) ? cacti_redact_snmp_command($args) : $args;
+	}
+
+	cacti_log("DEBUG: About to Spawn a Remote Process [CMD: $filename, ARGS: $log_args]", true, 'POLLER', ($debug ? POLLER_VERBOSITY_NONE:POLLER_VERBOSITY_DEBUG));
 
 	if (file_exists($filename)) {
 		if ($config['cacti_server_os'] == 'win32') {

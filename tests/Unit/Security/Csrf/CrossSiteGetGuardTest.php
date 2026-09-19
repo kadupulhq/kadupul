@@ -376,7 +376,6 @@ function read_only_actions() {
 		'host.php'                  => array('export', 'edit', 'ajax_locations'),
 		'host_templates.php'        => array('item_remove_gt_confirm', 'item_remove_dq_confirm', 'edit'),
 		'links.php'                 => array('edit'),
-		'managers.php'              => array('edit'),
 		'package_import.php'        => array('details', 'diff'),
 		'pollers.php'               => array('ajax_tz', 'edit'),
 		/* Remote Data Collector calls, authorized by the poller address rather than a browser session */

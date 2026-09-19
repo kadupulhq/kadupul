@@ -7432,7 +7432,7 @@ function get_debug_prefix() {
 }
 
 function get_client_addr() {
-	global $config, $allowed_proxy_headers, $trusted_proxies;
+	global $config, $allowed_proxy_headers, $trusted_proxies, $database_sessions, $database_hostname, $database_port, $database_default;
 
 	/* $trusted_proxies is opt-in; without it keep the original header handling */
 	if (!empty($trusted_proxies)) {
@@ -7449,6 +7449,19 @@ function get_client_addr() {
 
 	if (!is_array($proxy_headers)) {
 		$proxy_headers = [];
+	}
+
+	/* the lookup runs several times per request and on every request, so
+	 * check once per process and log at most once a day. Early callers can
+	 * run before the database is connected; they skip the warning. */
+	static $checked = false;
+
+	if (!$checked && cacti_sizeof(array_diff($proxy_headers, array('REMOTE_ADDR')))) {
+		$checked = true;
+
+		if (!empty($database_sessions["$database_hostname:$database_port:$database_default"]) && debounce_run_notification('proxy_headers_untrusted', 86400)) {
+			cacti_log('WARNING: $proxy_headers is set without $trusted_proxies, so client address headers are trusted from any client.  Set $trusted_proxies in include/config.php to your reverse proxy addresses.', false, 'AUTH');
+		}
 	}
 
 	if (!in_array('REMOTE_ADDR', $proxy_headers)) {
@@ -8742,6 +8755,22 @@ function cacti_is_sensitive_key($key) {
  */
 function cacti_redact_value($key, $value) {
 	return cacti_is_sensitive_key($key) ? '[REDACTED]' : $value;
+}
+
+/**
+ * cacti_redact_snmp_command - Replaces the community (-c), auth passphrase
+ * (-A) and privacy passphrase (-X) values in a net-snmp command line.
+ *
+ * The value may be joined to the flag or separated by whitespace, and may
+ * be single quoted (POSIX escapeshellarg, including the '\'' form) or
+ * double quoted with backslash escapes (win32 snmp_escape_string).
+ */
+function cacti_redact_snmp_command($command) {
+	return preg_replace(
+		'/(^|\s)(-[cAX])(\s*)(?:\'[^\']*\'|"(?:\\\\.|[^"\\\\])*"|\\\\.|[^\s\'"\\\\])+/',
+		'$1$2$3[REDACTED]',
+		(string) $command
+	);
 }
 
 /**

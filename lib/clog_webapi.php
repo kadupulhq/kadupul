@@ -100,6 +100,14 @@ function clog_validate_filename(&$file, &$filepath, &$filename, $filecheck = fal
 function clog_purge_logfile() {
 	global $config;
 
+	/* csrf-magic only checks the token on POST, so a GET here would let a
+	 * forged link purge or delete logs as the signed-in administrator. */
+	if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+		cacti_log('WARNING: Rejected non-POST request to purge a log file', false, 'AUTH');
+
+		return;
+	}
+
 	$filename = get_nfilter_request_var('filename');
 
 	if (!clog_validate_filename($filename, $logpath, $logname)) {
@@ -136,6 +144,18 @@ function clog_purge_logfile() {
 		}
 	} else {
 		raise_message('clog_missing');
+	}
+}
+
+/* tail_file() keeps every requested line in memory and each one is parsed
+ * again on render, so cap requests at the largest choice the filter offers. */
+function clog_limit_tail_lines() {
+	global $log_tail_lines;
+
+	$max_tail_lines = max(array_keys($log_tail_lines));
+
+	if (get_request_var('tail_lines') > $max_tail_lines) {
+		set_request_var('tail_lines', $max_tail_lines);
 	}
 }
 
@@ -190,6 +210,8 @@ function clog_view_logfile() {
 	validate_store_request_vars($filters, 'sess_clog');
 	/* ================= input validation ================= */
 
+	clog_limit_tail_lines();
+
 	/* enable page refreshes */
 	kill_session_var('custom');
 
@@ -241,8 +263,12 @@ function clog_view_logfile() {
 				<input type='button' class='ui-button ui-corner-all ui-widget' id='pc' name='purge_continue' value='" . __esc('Continue') . "' title='" . __esc('Purge Log') . "'>
 				<script type='text/javascript' " . CactiSecureHeaders::getNonceAttribute() . ">
 				$('#pc').on('click', function() {
-					strURL = location.pathname+'?purge_continue=1&header=false&filename=" . basename($logfile) . "';
-					loadPageNoHeader(strURL);
+					loadPageUsingPost(location.pathname, {
+						purge_continue: 1,
+						header: 'false',
+						filename: '" . basename($logfile) . "',
+						__csrf_magic: csrfMagicToken
+					});
 				});
 
 				$('#cancel').on('click', function() {
@@ -739,6 +765,33 @@ function clog_regex_parser($matches) {
 	return $result;
 }
 
+/* Log View grants the log text, not the objects it names, so a viewer who is
+ * not a log administrator only sees a name where they could open the object. */
+function clog_regex_allowed($page, $id) {
+	global $user_auth_realm_filenames;
+
+	static $allowed = array();
+
+	if (clog_admin()) {
+		return true;
+	}
+
+	if (!isset($allowed[$page][$id])) {
+		$realm  = isset($user_auth_realm_filenames[$page]) ? $user_auth_realm_filenames[$page] : 0;
+		$result = $realm > 0 && is_realm_allowed($realm);
+
+		if ($page == 'host.php' && !$result) {
+			$result = is_device_allowed($id);
+		} elseif ($page == 'graph_view.php' && $result) {
+			$result = is_graph_allowed($id);
+		}
+
+		$allowed[$page][$id] = $result;
+	}
+
+	return $allowed[$page][$id];
+}
+
 function clog_regex_device($matches) {
 	global $config;
 
@@ -755,6 +808,11 @@ function clog_regex_device($matches) {
 		$result = '';
 
 		foreach($dev_ids as $id) {
+			if ($id != 0 && !clog_regex_allowed('host.php', $id)) {
+				$result .= $matches[1] . $id . $matches[3];
+				continue;
+			}
+
 			if (!isset($host_cache[$id])) {
 				$host_cache[$id] = db_fetch_cell_prepared('SELECT description
         		    FROM host
@@ -822,6 +880,12 @@ function clog_regex_datasource($matches) {
 		}
 
 		foreach($ds_ids as $ds_id) {
+			if (!clog_regex_allowed('data_sources.php', $ds_id)) {
+				$result .= ($i == 0 ? '':', ') . $ds_id;
+				$i++;
+				continue;
+			}
+
 			$ds_title = $ds_id;
 			if (array_key_exists($ds_id, $ds_titles)) {
 				$ds_title = $ds_titles[$ds_id];
@@ -848,6 +912,11 @@ function clog_regex_datainput($matches) {
 		$result = '';
 
 		foreach ($data_ids as $id) {
+			if (!clog_regex_allowed('data_input.php', $id)) {
+				$result .= $matches[1] . $id . $matches[3];
+				continue;
+			}
+
 			$name = db_fetch_cell_prepared('SELECT name FROM data_input WHERE id = ?', array($id));
 
 			if ($name === false || $name === '') {
@@ -882,6 +951,11 @@ function clog_regex_poller($matches) {
 		$result = '';
 
 		foreach ($poller_ids as $poller_id) {
+			if (!clog_regex_allowed('pollers.php', $poller_id)) {
+				$result .= $matches[1] . $poller_id . $matches[3];
+				continue;
+			}
+
 			$result .= $matches[1].'<a href=\'' . html_escape($config['url_path'] . 'pollers.php?action=edit&id=' . $poller_id) . '\'>' . (isset($poller_cache[$poller_id]) ? html_escape($poller_cache[$poller_id]):$poller_id) . '</a>' . $matches[3];
 		}
 	}
@@ -910,6 +984,11 @@ function clog_regex_dataquery($matches) {
 		$result = '';
 
 		foreach ($query_ids as $query_id) {
+			if (!clog_regex_allowed('data_queries.php', $query_id)) {
+				$result .= $matches[1] . $query_id . $matches[3];
+				continue;
+			}
+
 			$result .= $matches[1] . '<a href=\'' . html_escape($config['url_path'] . 'data_queries.php?action=edit&id=' . $query_id) . '\'>' . (isset($query_cache[$query_id]) ? html_escape($query_cache[$query_id]):$query_id) . '</a>' . $matches[3];
 		}
 	}
@@ -965,7 +1044,7 @@ function clog_regex_graphs($matches) {
 		$i = 0;
 		foreach ($graph_ids as $id) {
 			$graph_add .= ($i > 0 ? '%2C' : '') . $id;
-			$title     .= ($title != '' ? ', ':'') . html_escape((isset($graph_cache[$id]) ? html_escape($graph_cache[$id]):$id));
+			$title     .= ($title != '' ? ', ':'') . html_escape((isset($graph_cache[$id]) && clog_regex_allowed('graph_view.php', $id) ? html_escape($graph_cache[$id]):$id));
 			$i++;
 		}
 
@@ -996,6 +1075,11 @@ function clog_regex_graphtemplates($matches) {
 		$result = '';
 
 		foreach ($ids as $id) {
+			if (!clog_regex_allowed('graph_templates.php', $id)) {
+				$result .= $matches[1] . $id . $matches[3];
+				continue;
+			}
+
 			$result .= $matches[1] . '<a href=\'' . html_escape($config['url_path'] . 'graph_templates.php?action=template_edit&id=' . $id) . '\'>' . (isset($templates_cache[$id]) ? html_escape($templates_cache[$id]):$id) . '</a>' . $matches[3];
 		}
 	}
@@ -1027,7 +1111,7 @@ function clog_regex_users($matches) {
 		foreach ($user_ids as $id) {
 			$result .= $matches[1];
 
-			if (isset($users_cache[$id])) {
+			if (isset($users_cache[$id]) && clog_regex_allowed('user_admin.php', $id)) {
 				$result .= '<a href=\'' . html_escape($config['url_path'] . 'user_admin.php?action=user_edit&tab=general&id=' . $id) . '\'>' . html_escape($users_cache[$id]) . '</a>';
 			} else {
 				$result .= $id;
@@ -1061,6 +1145,11 @@ function clog_regex_rule($matches) {
 		$result = '';
 
 		foreach ($dev_ids as $rule_id) {
+			if (!clog_regex_allowed('automation_graph_rules.php', $rule_id)) {
+				$result .= $matches[1] . $rule_id . $matches[3];
+				continue;
+			}
+
 			$result .= $matches[1] . '<a href=\'' . html_escape($config['url_path'] . 'automation_graph_rules.php?action=edit&id=' . $rule_id) . '\'>' . (isset($rules_cache[$rule_id]) ? html_escape($rules_cache[$rule_id]):$rule_id) . '</a>' . $matches[3];
 		}
 	}

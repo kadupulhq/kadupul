@@ -48,10 +48,17 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'actions':
+		/* Without selected_items this only renders the confirmation page. */
+		if (isset_request_var('selected_items')) {
+			csrf_require_post(true);
+		}
+
 		form_actions();
 
 		break;
 	case 'item_add_gt':
+		csrf_require_post(true);
+
 		template_item_add_gt();
 
 		header('Location: host_templates.php?header=false&action=edit&id=' . get_filter_request_var('host_template_id'));
@@ -61,11 +68,15 @@ switch (get_request_var('action')) {
 
         break;
 	case 'item_remove_gt':
+		csrf_require_post(true);
+
 		template_item_remove_gt();
 
 		header('Location: host_templates.php?header=false&action=edit&id=' . get_filter_request_var('host_template_id'));
 		break;
 	case 'item_add_dq':
+		csrf_require_post(true);
+
 		template_item_add_dq();
 
 		header('Location: host_templates.php?header=false&action=edit&id=' . get_filter_request_var('host_template_id'));
@@ -75,6 +86,8 @@ switch (get_request_var('action')) {
 
         break;
 	case 'item_remove_dq':
+		csrf_require_post(true);
+
 		template_item_remove_dq();
 
 		header('Location: host_templates.php?header=false&action=edit&id=' . get_filter_request_var('host_template_id'));
@@ -137,6 +150,19 @@ function template_item_add_dq() {
 	get_filter_request_var('snmp_query_id');
 	/* ==================================================== */
 
+	$valid = db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM host_template AS ht
+		CROSS JOIN snmp_query AS sq
+		WHERE ht.id = ?
+		AND sq.id = ?',
+		array(get_request_var('host_template_id'), get_request_var('snmp_query_id')));
+
+	if (!$valid) {
+		template_item_refuse('add Data Query ' . get_request_var('snmp_query_id') . ' to');
+
+		return;
+	}
+
 	db_execute_prepared('REPLACE INTO host_template_snmp_query
 		(host_template_id, snmp_query_id)
 		VALUES (?, ?)',
@@ -151,12 +177,34 @@ function template_item_add_gt() {
 	get_filter_request_var('graph_template_id');
 	/* ==================================================== */
 
+	/* The edit page offers no Graph Template that belongs to a Data Query. */
+	$valid = db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM host_template AS ht
+		CROSS JOIN graph_templates AS gt
+		WHERE ht.id = ?
+		AND gt.id = ?
+		AND gt.id NOT IN (SELECT graph_template_id FROM snmp_query_graph)',
+		array(get_request_var('host_template_id'), get_request_var('graph_template_id')));
+
+	if (!$valid) {
+		template_item_refuse('add Graph Template ' . get_request_var('graph_template_id') . ' to');
+
+		return;
+	}
+
 	db_execute_prepared('REPLACE INTO host_template_graph
 		(host_template_id, graph_template_id)
 		VALUES (?, ?)',
 		array(get_request_var('host_template_id'), get_request_var('graph_template_id')));
 
 	raise_message(41);
+}
+
+/* The edit page sends only pairs it listed, so anything else is a stale page
+   or a forged request, and doing nothing silently would hide either. */
+function template_item_refuse($change) {
+	cacti_log('WARNING: Refused to ' . $change . ' Device Template ' . get_request_var('host_template_id') . ' for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+	raise_message('host_template_item_refused', __('That item can not be added to or removed from this Device Template.'), MESSAGE_LEVEL_ERROR);
 }
 
 function form_actions() {
@@ -169,6 +217,10 @@ function form_actions() {
 	/* if we are to save this form, instead of display it */
 	if (isset_request_var('selected_items')) {
 		$selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
+
+		if ($selected_items != false && get_nfilter_request_var('drp_action') == '1') {
+			$selected_items = host_templates_without_devices($selected_items);
+		}
 
 		if ($selected_items != false) {
 			if (get_nfilter_request_var('drp_action') == '1') { // delete
@@ -278,6 +330,35 @@ function form_actions() {
     Template Functions
    --------------------- */
 
+/* Deleting a Device Template detaches every Device that uses it. The list
+   only disables the checkbox of such a template, so enforce the same rule
+   here. Deleted Devices count, as they do in the list's Devices Using column. */
+function host_templates_without_devices($selected_items) {
+	$unused  = array();
+	$refused = false;
+
+	foreach ($selected_items as $item) {
+		$devices = db_fetch_cell_prepared('SELECT COUNT(*)
+			FROM host
+			WHERE host_template_id = ?',
+			array($item));
+
+		if ($devices > 0) {
+			$refused = true;
+
+			cacti_log('WARNING: Refused to delete Device Template ' . (int) $item . ' used by ' . (int) $devices . ' Device(s) for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+		} else {
+			$unused[] = $item;
+		}
+	}
+
+	if ($refused) {
+		raise_message('host_template_in_use', __('A Device Template in use by a Device can not be deleted.'), MESSAGE_LEVEL_ERROR);
+	}
+
+	return $unused;
+}
+
 function template_item_remove_gt_confirm() {
 	/* ================= input validation ================= */
 	get_filter_request_var('id');
@@ -341,6 +422,18 @@ function template_item_remove_gt() {
 	get_filter_request_var('id');
 	get_filter_request_var('host_template_id');
 	/* ==================================================== */
+
+	$held = db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM host_template_graph
+		WHERE host_template_id = ?
+		AND graph_template_id = ?',
+		array(get_request_var('host_template_id'), get_request_var('id')));
+
+	if (!$held) {
+		template_item_refuse('remove Graph Template ' . get_request_var('id') . ' from');
+
+		return;
+	}
 
 	db_execute_prepared('DELETE FROM host_template_graph
 		WHERE graph_template_id = ?
@@ -410,6 +503,18 @@ function template_item_remove_dq() {
 	get_filter_request_var('id');
 	get_filter_request_var('host_template_id');
 	/* ==================================================== */
+
+	$held = db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM host_template_snmp_query
+		WHERE host_template_id = ?
+		AND snmp_query_id = ?',
+		array(get_request_var('host_template_id'), get_request_var('id')));
+
+	if (!$held) {
+		template_item_refuse('remove Data Query ' . get_request_var('id') . ' from');
+
+		return;
+	}
 
 	db_execute_prepared('DELETE FROM host_template_snmp_query
 		WHERE snmp_query_id = ?

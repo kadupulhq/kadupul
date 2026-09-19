@@ -150,6 +150,11 @@ if (isset_request_var('update_policy')) {
 } else {
 	switch (get_request_var('action')) {
 	case 'actions':
+		/* Without selected_items this only renders the confirmation page. */
+		if (isset_request_var('selected_items')) {
+			csrf_require_post(true);
+		}
+
 		form_actions();
 
 		break;
@@ -158,6 +163,8 @@ if (isset_request_var('update_policy')) {
 
 		break;
 	case 'perm_remove':
+		csrf_require_post(true);
+
 		perm_remove();
 
 		break;

@@ -90,13 +90,24 @@ switch (get_request_var('action')) {
 		form_save();
 		break;
 	case 'actions':
+		/* Without selected_items this only renders the confirmation page. */
+		if (isset_request_var('selected_items')) {
+			csrf_require_post(true);
+		}
+
         form_actions();
         break;
 	case 'sortasc':
+		csrf_require_post(true);
+		tree_require_access(array_column(db_fetch_assoc('SELECT id FROM graph_tree'), 'id'), 'sortasc');
+
 		tree_sort_name_asc();
 		header('Location: tree.php?header=false');
 		break;
 	case 'sortdesc':
+		csrf_require_post(true);
+		tree_require_access(array_column(db_fetch_assoc('SELECT id FROM graph_tree'), 'id'), 'sortdesc');
+
 		tree_sort_name_desc();
 		header('Location: tree.php?header=false');
 		break;
@@ -115,35 +126,71 @@ switch (get_request_var('action')) {
 		display_graphs();
 		break;
 	case 'tree_up':
+		csrf_require_post(true);
+		tree_require_access(get_filter_request_var('id'), 'tree_up');
+
 		tree_up();
 		break;
 	case 'tree_down':
+		csrf_require_post(true);
+		tree_require_access(get_filter_request_var('id'), 'tree_down');
+
 		tree_down();
 		break;
 	case 'ajax_dnd':
+		csrf_require_post(true);
+		tree_require_access(str_replace('line', '', (array) get_nfilter_request_var('tree_ids')), 'ajax_dnd');
+
 		tree_dnd();
 		break;
 	case 'lock':
+		csrf_require_post(true);
+		tree_require_access(get_filter_request_var('id'), 'lock');
+		tree_require_lock(get_filter_request_var('id'), 'lock', false);
+
 		api_tree_lock(get_request_var('id'), $_SESSION['sess_user_id']);
 		tree_edit(true);
 		break;
 	case 'unlock':
+		csrf_require_post(true);
+		tree_require_access(get_filter_request_var('id'), 'unlock');
+
 		api_tree_unlock(get_request_var('id'), $_SESSION['sess_user_id']);
 		tree_edit(true);
 		break;
 	case 'copy_node':
+		csrf_require_post(true);
+		tree_require_access(get_request_var('tree_id'), 'copy_node');
+		tree_require_lock(get_request_var('tree_id'), 'copy_node');
+
 		api_tree_copy_node(get_request_var('tree_id'), get_request_var('id'), get_request_var('parent'), get_request_var('position'));
 		break;
 	case 'create_node':
+		csrf_require_post(true);
+		tree_require_access(get_request_var('tree_id'), 'create_node');
+		tree_require_lock(get_request_var('tree_id'), 'create_node');
+
 		api_tree_create_node(get_request_var('tree_id'), get_request_var('id'), get_request_var('position'), get_nfilter_request_var('text'));
 		break;
 	case 'delete_node':
+		csrf_require_post(true);
+		tree_require_access(get_request_var('tree_id'), 'delete_node');
+		tree_require_lock(get_request_var('tree_id'), 'delete_node');
+
 		api_tree_delete_node(get_request_var('tree_id'), get_request_var('id'));
 		break;
 	case 'move_node':
+		csrf_require_post(true);
+		tree_require_access(get_request_var('tree_id'), 'move_node');
+		tree_require_lock(get_request_var('tree_id'), 'move_node');
+
 		api_tree_move_node(get_request_var('tree_id'), get_request_var('id'), get_request_var('parent'), get_request_var('position'));
 		break;
 	case 'rename_node':
+		csrf_require_post(true);
+		tree_require_access(get_request_var('tree_id'), 'rename_node');
+		tree_require_lock(get_request_var('tree_id'), 'rename_node');
+
 		api_tree_rename_node(get_request_var('tree_id'), get_request_var('id'), get_nfilter_request_var('text'));
 		break;
 	case 'get_node':
@@ -153,12 +200,20 @@ switch (get_request_var('action')) {
 		get_host_sort_type();
 		break;
 	case 'set_host_sort':
+		csrf_require_post(true);
+		tree_require_access(tree_branch_tree_id(get_request_var('nodeid')), 'set_host_sort');
+		tree_require_lock(tree_branch_tree_id(get_request_var('nodeid')), 'set_host_sort');
+
 		set_host_sort_type();
 		break;
 	case 'get_branch_sort':
 		get_branch_sort_type();
 		break;
 	case 'set_branch_sort':
+		csrf_require_post(true);
+		tree_require_access(tree_branch_tree_id(get_request_var('nodeid')), 'set_branch_sort');
+		tree_require_lock(tree_branch_tree_id(get_request_var('nodeid')), 'set_branch_sort');
+
 		set_branch_sort_type();
 		break;
 	default:
@@ -166,6 +221,62 @@ switch (get_request_var('action')) {
 		tree();
 		bottom_footer();
 		break;
+}
+
+/* The same ownership check form_save() and form_actions() apply, for the
+   routes that change a tree's content, lock or position. */
+function tree_require_access($tree_ids, $action) {
+	foreach ((array) $tree_ids as $tree_id) {
+		if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) $tree_id, 'graph_tree')) {
+			cacti_log('WARNING: Rejected tree.php?action=' . $action . ' on Tree ' . (int) $tree_id . ' for User ' . $_SESSION['sess_user_id'], false, 'AUTH');
+
+			raise_message('tree_idor', __('You do not have permission to modify this tree.'), MESSAGE_LEVEL_ERROR);
+			header('Location: tree.php?header=false');
+			exit;
+		}
+	}
+}
+
+/* tree_edit() offers these changes only to the user holding the tree's lock,
+   and offers the lock only while no one else holds it. $held is false for
+   the requests that need only that no one else holds it. */
+function tree_require_lock($tree_id, $action, $held = true) {
+	$tree = db_fetch_row_prepared('SELECT locked, locked_date, modified_by
+		FROM graph_tree
+		WHERE id = ?',
+		array((int) $tree_id));
+
+	if (!cacti_sizeof($tree)) {
+		$message = __('To Edit this tree, you must first lock it by pressing the Edit Tree button.');
+	} elseif ($tree['locked'] == 1 && $tree['modified_by'] != $_SESSION['sess_user_id']) {
+		$message = __('This tree has been locked for Editing on %s by %s.', $tree['locked_date'], html_escape(get_username($tree['modified_by']))) . ' ' . __('To edit the tree, you must first unlock it and then lock it as yourself');
+	} elseif ($held && $tree['locked'] != 1) {
+		$message = __('To Edit this tree, you must first lock it by pressing the Edit Tree button.');
+	} else {
+		return;
+	}
+
+	cacti_log('WARNING: Rejected tree.php?action=' . $action . ' on Tree ' . (int) $tree_id . ' without its lock for User ' . $_SESSION['sess_user_id'], false, 'AUTH');
+
+	raise_message('tree_locked', $message, MESSAGE_LEVEL_ERROR);
+	header('Location: tree.php?header=false');
+	exit;
+}
+
+/* The sort type routes name only a branch, so the tree comes from the branch. */
+function tree_branch_tree_id($nodeid) {
+	foreach (explode('_', $nodeid) as $part) {
+		$parts = explode(':', $part);
+
+		if ($parts[0] == 'tbranch' && isset($parts[1])) {
+			return (int) db_fetch_cell_prepared('SELECT graph_tree_id
+				FROM graph_tree_items
+				WHERE id = ?',
+				array((int) $parts[1]));
+		}
+	}
+
+	return 0;
 }
 
 function tree_get_max_sequence() {
@@ -229,6 +340,13 @@ function tree_down() {
 
 	$new_seq = $seq + 1;
 
+	/* the swap also moves the neighbouring tree, so the caller must be
+	   allowed to modify that tree as well */
+	tree_require_access(array_column(db_fetch_assoc_prepared('SELECT id
+		FROM graph_tree
+		WHERE sequence = ?',
+		array($new_seq)), 'id'), 'tree_down');
+
 	/* update the old tree first */
 	db_execute_prepared('UPDATE graph_tree
 		SET sequence = ?
@@ -256,6 +374,13 @@ function tree_up() {
 		array($tree_id));
 
 	$new_seq = $seq - 1;
+
+	/* the swap also moves the neighbouring tree, so the caller must be
+	   allowed to modify that tree as well */
+	tree_require_access(array_column(db_fetch_assoc_prepared('SELECT id
+		FROM graph_tree
+		WHERE sequence = ?',
+		array($new_seq)), 'id'), 'tree_up');
 
 	/* update the old tree first */
 	db_execute_prepared('UPDATE graph_tree
@@ -509,6 +634,10 @@ function form_save() {
 			raise_message('tree_idor', __('You do not have permission to modify this tree.'), MESSAGE_LEVEL_ERROR);
 			header('Location: tree.php');
 			exit;
+		}
+
+		if (get_filter_request_var('id') > 0) {
+			tree_require_lock(get_request_var('id'), 'save');
 		}
 
 		if (get_filter_request_var('id') > 0) {
@@ -1117,7 +1246,7 @@ function tree_edit($partial = false) {
 		}
 
 		function setBranchSortOrder(type, nodeid) {
-			$.get('tree.php?action=set_branch_sort&type='+type+'&nodeid='+nodeid)
+			$.post('tree.php', { 'action' : 'set_branch_sort', 'type' : type, 'nodeid' : nodeid, '__csrf_magic' : csrfMagicToken })
 			.done(function(data) {
 				branchSortInfo[nodeid] = type;
 			})
@@ -1127,7 +1256,7 @@ function tree_edit($partial = false) {
 		}
 
 		function setHostSortOrder(type, nodeid) {
-			$.get('tree.php?action=set_host_sort&type='+type+'&nodeid='+nodeid)
+			$.post('tree.php', { 'action' : 'set_host_sort', 'type' : type, 'nodeid' : nodeid, '__csrf_magic' : csrfMagicToken })
 			.done(function(data) {
 				hostSortInfo[nodeid] = type;
 			})
@@ -2116,12 +2245,13 @@ function tree() {
 			clearFilter();
 		});
 
-		$('#sorta').on('click', function() {
-			loadPageNoHeader('tree.php?action=sortasc');
-		});
+		$('#sorta, #sortd').on('click', function(event) {
+			event.preventDefault();
 
-		$('#sortd').on('click', function() {
-			loadPageNoHeader('tree.php?action=sortdesc');
+			loadPageUsingPost('tree.php', {
+				action: $(this).attr('id') == 'sorta' ? 'sortasc' : 'sortdesc',
+				__csrf_magic: csrfMagicToken
+			});
 		});
 
 		$('#form_tree').on('submit', function(event) {
@@ -2141,13 +2271,15 @@ function tree() {
 			'class'    => 'fa fa-plus'
 		),
 		array(
-			'href'     => 'tree.php?action=sortasc',
+			'href'     => '#',
+			'id'       => 'sorta',
 			'callback' => true,
 			'title'    => __esc('Sort Trees Ascending'),
 			'class'    => 'fa fa-sort-alpha-down'
 		),
 		array(
-			'href'     => 'tree.php?action=sortdesc',
+			'href'     => '#',
+			'id'       => 'sortd',
 			'callback' => true,
 			'title'    => __esc('Sort Trees Descending'),
 			'class'    => 'fa fa-sort-alpha-up'
@@ -2382,7 +2514,7 @@ function tree() {
 
 			$('#tree_ids').tableDnD({
 				onDrop: function(table, row) {
-					loadPageNoHeader('tree.php?action=ajax_dnd&'+$.tableDnD.serialize());
+					loadPageUsingPost('tree.php?action=ajax_dnd', $.tableDnD.serialize() + '&__csrf_magic=' + encodeURIComponent(csrfMagicToken));
 				}
 			});
 			<?php } ?>

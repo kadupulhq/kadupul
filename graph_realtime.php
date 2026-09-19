@@ -44,6 +44,29 @@ get_filter_request_var('top');
 get_filter_request_var('left');
 /* ==================================================== */
 
+/* The interval list offers only steps at or above the administrator's minimum
+ * refresh interval. The step also sets the real-time RRD step and is saved as a
+ * preference, so hold request and stored values to the same floor. */
+function graph_realtime_ds_step($ds_step) {
+	$floor = (int)read_config_option('realtime_interval');
+
+	if ($floor < 1) {
+		$floor = 1;
+	}
+
+	if (empty($ds_step) || !is_numeric($ds_step)) {
+		$ds_step = read_user_setting('realtime_interval', 10);
+	}
+
+	return max($floor, (int)$ds_step);
+}
+
+/* csrf-magic checks the token only on POST. Polling stays available by GET, but
+ * only a POST may change the saved real-time preferences. */
+function graph_realtime_is_post() {
+	return isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST';
+}
+
 if (!isset($_SESSION['sess_realtime_hash'])) {
 	$_SESSION['sess_realtime_hash'] = generate_hash();
 }
@@ -84,11 +107,7 @@ case 'countdown':
 			$graph_contents = file_get_contents(__DIR__ . '/images/cacti_error_image.png');
 		}
 
-		$ds_step = get_request_var('ds_step');
-
-		if (empty($ds_step) || $ds_step < 1) {
-			$ds_step = read_user_setting('realtime_interval', 10);
-		}
+		$ds_step = graph_realtime_ds_step(get_request_var('ds_step'));
 
 		$graph_start = get_request_var('graph_start');
 
@@ -153,6 +172,8 @@ case 'countdown':
 
 		break;
 	}
+
+	set_request_var('ds_step', graph_realtime_ds_step(get_request_var('ds_step')));
 
 	$graph_data_array = array();
 
@@ -329,10 +350,12 @@ case 'countdown':
 	}
 
 	/* save user preferences */
-	set_user_setting('realtime_interval', get_request_var('ds_step'));
-	set_user_setting('realtime_gwindow', abs(get_request_var('graph_start')));
-	set_user_setting('realtime_size', get_request_var('size'));
-	set_user_setting('realtime_nolegend', get_request_var('graph_nolegend'));
+	if (graph_realtime_is_post()) {
+		set_user_setting('realtime_interval', get_request_var('ds_step'));
+		set_user_setting('realtime_gwindow', abs(get_request_var('graph_start')));
+		set_user_setting('realtime_size', get_request_var('size'));
+		set_user_setting('realtime_nolegend', get_request_var('graph_nolegend'));
+	}
 
 	$_SESSION['sess_realtime_ds_step']     = get_request_var('ds_step');
 	$_SESSION['sess_realtime_graph_start'] = get_request_var('graph_start');
@@ -410,6 +433,8 @@ if (!isset($_SESSION['sess_realtime_ds_step'])) {
 	set_request_var('ds_step', $_SESSION['sess_realtime_ds_step']);
 }
 
+set_request_var('ds_step', graph_realtime_ds_step(get_request_var('ds_step')));
+
 if (!isset($_SESSION['sess_realtime_graph_start'])) {
 	load_current_session_value('graph_start', 'sess_realtime_graph_start', read_user_setting('realtime_gwindow', 60));
 } else {
@@ -417,10 +442,12 @@ if (!isset($_SESSION['sess_realtime_graph_start'])) {
 }
 
 /* save user preferences */
-set_user_setting('realtime_interval', get_request_var('ds_step'));
-set_user_setting('realtime_gwindow', abs(get_request_var('graph_start')));
-set_user_setting('realtime_size', get_request_var('size'));
-set_user_setting('realtime_nolegend', get_request_var('graph_nolegend'));
+if (graph_realtime_is_post()) {
+	set_user_setting('realtime_interval', get_request_var('ds_step'));
+	set_user_setting('realtime_gwindow', abs(get_request_var('graph_start')));
+	set_user_setting('realtime_size', get_request_var('size'));
+	set_user_setting('realtime_nolegend', get_request_var('graph_nolegend'));
+}
 
 if (read_config_option('realtime_enabled') == '') {
 	print "<html>\n";

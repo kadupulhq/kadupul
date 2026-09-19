@@ -159,6 +159,9 @@ if ($config['poller_id'] == 1 || read_config_option('storage_location')) {
 	$output = rrdtool_function_graph(get_request_var('local_graph_id'), $rra_id, $graph_data_array, '', $xport_meta, $_SESSION['sess_user_id']);
 
 	ob_end_clean();
+} elseif (!is_graph_allowed(get_request_var('local_graph_id'), $_SESSION['sess_user_id'])) {
+	/* check here so the decision never depends on the main poller */
+	$output = 'GRAPH ACCESS DENIED';
 } else {
 	if (isset_request_var('rra_id')) {
 		if (get_nfilter_request_var('rra_id') == 'all') {
@@ -173,9 +176,7 @@ if ($config['poller_id'] == 1 || read_config_option('storage_location')) {
 		$graph_data_array['graph_theme'] = cacti_validate_theme(get_selected_theme());
 	}
 
-	if (isset($_SESSION['sess_user_id'])) {
-		$graph_data_array['effective_user'] = $_SESSION['sess_user_id'];
-	}
+	$graph_data_array['effective_user'] = $_SESSION['sess_user_id'];
 
 	$url  = $config['url_path'] . 'remote_agent.php?action=graph_json';
 	$url .= '&local_graph_id=' . get_request_var('local_graph_id');

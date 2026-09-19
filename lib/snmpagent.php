@@ -829,12 +829,14 @@ function snmpagent_notification($notification, $mib, $varbinds, $severity = SNMP
 		$specific_trap_number = array_pop($branches);
 	}
 
-	/* generate a list of SNMP notification receivers listening for this notification */
+	/* generate a list of SNMP notification receivers listening for this notification.
+	 * disabled holds '' or 'on' (NULL on rows not saved by the form); MySQL coerces
+	 * both strings to 0, so 'disabled = 0' matched disabled receivers too. */
 	$notification_managers = db_fetch_assoc_prepared('SELECT snmpagent_managers.*
 		FROM snmpagent_managers_notifications
 		INNER JOIN snmpagent_managers
 		ON (snmpagent_managers.id = snmpagent_managers_notifications.manager_id)
-		WHERE snmpagent_managers.disabled = 0
+		WHERE COALESCE(snmpagent_managers.disabled, \'\') = \'\'
 		AND snmpagent_managers_notifications.notification = ?
 		AND snmpagent_managers_notifications.mib = ?',
 		array($notification, $mib));
@@ -883,7 +885,8 @@ function snmpagent_notification($notification, $mib, $varbinds, $severity = SNMP
 			FROM snmpagent_managers_notifications AS smn
 			INNER JOIN snmpagent_managers AS sm
 			ON sm.id = smn.manager_id
-			WHERE smn.notification = ?
+			WHERE COALESCE(sm.disabled, \'\') = \'\'
+			AND smn.notification = ?
 			AND smn.mib = ?
 			ORDER BY sm.snmp_message_type', array($notification, $mib));
 
@@ -963,7 +966,7 @@ function snmpagent_notification($notification, $mib, $varbinds, $severity = SNMP
 				}
 
 				/* execute net-snmp to generate this notification in the background */
-				exec_background(cacti_escapeshellcmd($path_snmptrap), $args);
+				exec_background(cacti_escapeshellcmd($path_snmptrap), $args, '', cacti_redact_snmp_command($args));
 
 				/* insert a new entry into the notification log for that SNMP receiver */
 				$save = array();
@@ -977,21 +980,7 @@ function snmpagent_notification($notification, $mib, $varbinds, $severity = SNMP
 
 				sql_save($save, 'snmpagent_notifications_log');
 
-				/* log the net-snmp command with every sensitive value from the
-				 * manager row masked. Sweeps the full row so future credential
-				 * fields are covered without editing this call site. */
-				$redactable = array();
-				if (is_array($notification_manager)) {
-					foreach ($notification_manager as $k => $v) {
-						if ($v !== '' && $v !== null && cacti_is_sensitive_key($k)) {
-							$redactable[] = (string) $v;
-						}
-					}
-				}
-
-				$safe_args = cacti_sizeof($redactable) ? str_replace($redactable, '[REDACTED]', $args) : $args;
-
-				cacti_log("NOTE: $path_snmptrap " . $safe_args, false, 'SNMPAGENT', POLLER_VERBOSITY_MEDIUM);
+				cacti_log("NOTE: $path_snmptrap " . snmpagent_loggable_args($args, $notification_manager), false, 'SNMPAGENT', POLLER_VERBOSITY_MEDIUM);
 			}
 		}
 	} else {
@@ -999,4 +988,30 @@ function snmpagent_notification($notification, $mib, $varbinds, $severity = SNMP
 		cacti_log('ERROR: Incomplete number of varbinds given for event: ' . $notification . ' (' . $mib . ')', false, 'SNMPAGENT', POLLER_VERBOSITY_NONE);
 		return false;
 	}
+}
+
+/**
+ * The snmptrap arguments safe to log. The -c, -A and -X values are masked by
+ * option, because $args holds them shell-escaped: a secret with a quote in it
+ * no longer matches its raw value. Every other sensitive value of the manager
+ * row is then masked by value, so future credential fields are covered too.
+ *
+ * @param string $args    the snmptrap arguments as passed to the shell
+ * @param array  $manager the snmpagent_managers row
+ *
+ * @return string the arguments with secrets replaced by [REDACTED]
+ */
+function snmpagent_loggable_args($args, $manager) {
+	$safe = cacti_redact_snmp_command($args);
+
+	$redactable = array();
+	if (is_array($manager)) {
+		foreach ($manager as $key => $value) {
+			if ($value !== '' && $value !== null && cacti_is_sensitive_key($key)) {
+				$redactable[] = (string) $value;
+			}
+		}
+	}
+
+	return cacti_sizeof($redactable) ? str_replace($redactable, '[REDACTED]', $safe) : $safe;
 }

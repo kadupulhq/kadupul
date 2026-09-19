@@ -41,6 +41,11 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'actions':
+		/* Without selected_items this only renders the confirmation page. */
+		if (isset_request_var('selected_items')) {
+			csrf_require_post(true);
+		}
+
 		form_actions();
 
 		break;
@@ -49,6 +54,8 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'item_remove':
+		csrf_require_post(true);
+
 		profile_item_remove();
 
 		break;
@@ -125,6 +132,14 @@ function form_save() {
 	}
 
 	if (isset_request_var('save_component_profile')) {
+		/* The edit page disables these fields, so a browser does not send them. */
+		if (get_request_var('id') > 0 && profile_is_read_only(get_request_var('id'))
+			&& (isset_request_var('step') || isset_request_var('x_files_factor') || isset_request_var('consolidation_function_id'))) {
+			profile_refuse_read_only(get_request_var('id'), 'the step, X-Files Factor or Consolidation Functions');
+
+			return;
+		}
+
 		$save['id']             = form_input_validate(get_request_var('id'), 'id', '^[0-9]+$', false, 3);
 		$save['hash']           = get_hash_data_source_profile(get_request_var('id'));
 
@@ -202,6 +217,31 @@ function form_save() {
 		get_filter_request_var('profile_id');
 		/* ==================================================== */
 
+		/* sql_save() would otherwise move an RRA of any profile into this one. */
+		if (get_request_var('id') > 0) {
+			$owned = db_fetch_cell_prepared('SELECT COUNT(*)
+				FROM data_source_profiles_rra
+				WHERE id = ?
+				AND data_source_profile_id = ?',
+				array(get_request_var('id'), get_request_var('profile_id')));
+
+			if (empty($owned)) {
+				cacti_log('WARNING: Refused to save RRA ' . (int) get_request_var('id') . ' outside Data Source Profile ' . (int) get_request_var('profile_id') . ' for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+
+				header('Location: data_source_profiles.php?header=false');
+
+				return;
+			}
+		}
+
+		/* A read only profile offers no new RRA and disables Steps and Rows. */
+		if (profile_is_read_only(get_request_var('profile_id'))
+			&& (get_request_var('id') == 0 || isset_request_var('steps') || isset_request_var('rows'))) {
+			profile_refuse_read_only(get_request_var('profile_id'), 'the RRAs');
+
+			return;
+		}
+
 		$sampling_interval = db_fetch_cell_prepared('SELECT step
 			FROM data_source_profiles
 			WHERE id = ?',
@@ -242,6 +282,23 @@ function form_save() {
 	}
 }
 
+/* A profile is read only once a Data Source uses it, because its RRDfiles
+   already hold the step, the consolidation functions and the RRAs. */
+function profile_is_read_only($profile_id) {
+	return db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM data_template_data
+		WHERE data_source_profile_id = ?
+		AND local_data_id > 0',
+		array($profile_id)) > 0;
+}
+
+function profile_refuse_read_only($profile_id, $what) {
+	cacti_log('WARNING: Refused to change ' . $what . ' of read only Data Source Profile ' . (int) $profile_id . ' for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+	raise_message('profile_read_only', __('Profiles that are in use by Data Sources become read only for now.'), MESSAGE_LEVEL_ERROR);
+
+	header('Location: data_source_profiles.php?header=false&action=edit&id=' . (int) $profile_id);
+}
+
 /* ------------------------
     The 'actions' function
    ------------------------ */
@@ -256,6 +313,10 @@ function form_actions() {
 	/* if we are to save this form, instead of display it */
 	if (isset_request_var('selected_items')) {
 		$selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
+
+		if ($selected_items != false && get_request_var('drp_action') == '1') {
+			$selected_items = profiles_not_in_use($selected_items);
+		}
 
 		if ($selected_items != false) {
 			if (get_request_var('drp_action') == '1') { // delete
@@ -335,6 +396,28 @@ function form_actions() {
 	form_end();
 
 	bottom_footer();
+}
+
+/* The list disables the checkbox of a profile that a Data Template or a Data
+   Source uses, but deleting one leaves them pointing at a missing profile. */
+function profiles_not_in_use($selected_items) {
+	$unused = array();
+
+	foreach ($selected_items as $profile_id) {
+		$in_use = db_fetch_cell_prepared('SELECT COUNT(*)
+			FROM data_template_data
+			WHERE data_source_profile_id = ?',
+			array($profile_id));
+
+		if ($in_use > 0) {
+			cacti_log('WARNING: Refused to delete Data Source Profile ' . (int) $profile_id . ' in use by Data Templates or Data Sources for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+			raise_message('profile_in_use', __('Data Source Profiles in use by Data Templates or Data Sources can not be deleted.'), MESSAGE_LEVEL_ERROR);
+		} else {
+			$unused[] = $profile_id;
+		}
+	}
+
+	return $unused;
 }
 
 /* --------------------------
@@ -437,9 +520,43 @@ function profile_item_remove_confirm() {
 function profile_item_remove() {
 	/* ================= input validation ================= */
 	get_filter_request_var('id');
+	get_filter_request_var('profile_id');
 	/* ==================================================== */
 
-	db_execute_prepared('DELETE FROM data_source_profiles_rra WHERE id = ?', array(get_request_var('id')));
+	$rra_id     = get_request_var('id');
+	$profile_id = get_request_var('profile_id');
+
+	$owned = db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM data_source_profiles_rra
+		WHERE id = ?
+		AND data_source_profile_id = ?',
+		array($rra_id, $profile_id));
+
+	if (empty($owned)) {
+		cacti_log('WARNING: Refused to remove RRA ' . (int) $rra_id . ' outside Data Source Profile ' . (int) $profile_id . ' for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+
+		return;
+	}
+
+	/* The edit page shows no delete control once a Data Source uses the
+	   profile, because its RRDfiles already hold these RRAs. */
+	$readonly = db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM data_template_data
+		WHERE data_source_profile_id = ?
+		AND local_data_id > 0',
+		array($profile_id));
+
+	if ($readonly > 0) {
+		cacti_log('WARNING: Refused to remove RRA ' . (int) $rra_id . ' from read only Data Source Profile ' . (int) $profile_id . ' for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+		raise_message('profile_read_only', __('Data Source Profiles in use by Data Sources are read only.'), MESSAGE_LEVEL_ERROR);
+
+		return;
+	}
+
+	db_execute_prepared('DELETE FROM data_source_profiles_rra
+		WHERE id = ?
+		AND data_source_profile_id = ?',
+		array($rra_id, $profile_id));
 }
 
 
@@ -723,7 +840,8 @@ function profile_edit() {
 					$('#continue').off('click').on('click', function(data) {
 						$.post('data_source_profiles.php?action=item_remove', {
 							__csrf_magic: csrfMagicToken,
-							id: $('#rra_id').val()
+							id: $('#rra_id').val(),
+							profile_id: profile_id
 						}).done(function(data) {
 							$('#cdialog').dialog('close');
 							loadPageNoHeader('data_source_profiles.php?action=edit&header=false&id=' + $('#rra_profile_id').val());

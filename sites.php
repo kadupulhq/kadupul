@@ -190,6 +190,11 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'actions':
+		/* Without selected_items this only renders the confirmation page. */
+		if (isset_request_var('selected_items')) {
+			csrf_require_post(true);
+		}
+
 		form_actions();
 
 		break;
@@ -317,8 +322,46 @@ function duplicate_site($template_id, $name) {
     The 'actions' function
    ------------------------ */
 
+/* Sites carry no per-user permission; the Sites realm that auth.php checks is
+   the whole scope. The ids still come from the client, so act only when each
+   one is a plain integer that names an existing Site, and refuse the whole
+   request otherwise. */
+function sites_selected_ids($selected_items) {
+	$ids     = array();
+	$invalid = 0;
+
+	foreach ($selected_items as $item) {
+		if (is_scalar($item) && preg_match('/^[1-9][0-9]{0,9}$/', (string) $item)) {
+			$ids[] = (string) $item;
+		} else {
+			$invalid++;
+		}
+	}
+
+	$unique   = array_values(array_unique($ids));
+	$existing = array();
+
+	if (cacti_sizeof($unique)) {
+		$existing = array_rekey(db_fetch_assoc_prepared('SELECT id
+			FROM sites
+			WHERE id IN (' . implode(', ', array_fill(0, cacti_sizeof($unique), '?')) . ')',
+			$unique), 'id', 'id');
+	}
+
+	$unknown = $invalid + cacti_sizeof($unique) - cacti_sizeof($existing);
+
+	if ($unknown > 0) {
+		cacti_log('WARNING: Refused a Site action naming ' . $unknown . ' unknown Site id(s) for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+		raise_message('site_unknown', __('One or more of the selected Sites does not exist. Nothing was changed.'), MESSAGE_LEVEL_ERROR);
+
+		return false;
+	}
+
+	return $ids;
+}
+
 function form_actions() {
-	global $site_actions;
+	global $site_actions, $item_rows;
 
 	/* ================= input validation ================= */
 	get_filter_request_var('drp_action', FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^([a-zA-Z0-9_]+)$/')));
@@ -327,6 +370,21 @@ function form_actions() {
 	/* if we are to save this form, instead of display it */
 	if (isset_request_var('selected_items')) {
 		$selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
+
+		if ($selected_items != false) {
+			$selected_items = sites_selected_ids($selected_items);
+		}
+
+		/* Each duplicate is a full copy of the Site, so take no more than the
+		   largest list page can select. */
+		$limit = cacti_sizeof($item_rows) ? max(array_keys($item_rows)) : 0;
+
+		if ($selected_items != false && get_nfilter_request_var('drp_action') == '2' && cacti_sizeof($selected_items) > $limit) {
+			cacti_log('WARNING: Refused to duplicate ' . cacti_sizeof($selected_items) . ' Sites, more than ' . $limit . ', for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+			raise_message('site_duplicate_limit', __('No more than %d Sites can be duplicated at once.', $limit), MESSAGE_LEVEL_ERROR);
+
+			$selected_items = false;
+		}
 
 		if ($selected_items != false) {
 			if (get_nfilter_request_var('drp_action') == '1') { /* delete */

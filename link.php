@@ -37,7 +37,9 @@ if (!cacti_sizeof($page)) {
 } else {
 	global $link_nav;
 
-	if (is_realm_allowed($page['id']+10000)) {
+	/* The admin form describes an unchecked Enabled box as unavailable, and every
+	   menu already hides the page, so a direct link must not reach it either. */
+	if ($page['enabled'] == 'on' && is_realm_allowed($page['id']+10000)) {
 		unset ($refresh);
 
 		if (!empty($page['refresh'])) {

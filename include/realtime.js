@@ -37,6 +37,7 @@ var graphsRendered  = null;
 var prevTotalGraphs = null;
 var url;
 var local_graph_id  = null;
+var realtimeSaved   = '';
 
 function getRealtimeSize() {
 	var size = $('#size').val();
@@ -58,6 +59,20 @@ function realtimeDetectBrowser() {
 	}
 
 	return browser;
+}
+
+/* graph_realtime.php saves the interval, window, size and thumbnail choice
+ * only from a POST, which csrf-magic checks. Post when the choice changes and
+ * keep the periodic refresh a GET, so a token that expires while the page
+ * stays open does not stop the graph. */
+function realtimeRequest(url, options, dataType) {
+	if (options != realtimeSaved) {
+		realtimeSaved = options;
+
+		return $.ajax({ url: url, type: 'POST', data: { __csrf_magic: csrfMagicToken }, dataType: dataType });
+	}
+
+	return $.ajax({ url: url, type: 'GET', dataType: dataType });
 }
 
 function imageOptionsChanged(action) {
@@ -92,7 +107,7 @@ function imageOptionsChanged(action) {
 
 	Pace.stop;
 
-	$.getJSON(url)
+	realtimeRequest(url, [graph_start, ds_step, size, isThumb].join(':'), 'json')
 		.done(function(data) {
 			var image_format = (data.image_format == 'svg+xml') ? 'svg+xml' : 'png';
 			if ($('#rimage').length) {
@@ -276,7 +291,7 @@ function realtimeGrapher() {
 						position = $('body').position();
 					}
 
-					$.get(urlPath+'graph_realtime.php?action=countdown&top='+parseInt(position.top)+'&left='+parseInt(position.left)+(isThumb ? '&graph_nolegend=true':'&graph_nolegend=false')+'&graph_end=0&graph_start=-'+(parseInt(graph_start) > 0 ? graph_start:'60')+'&local_graph_id='+local_graph_id+'&ds_step='+ds_step+'&count='+count+sizeOption)
+					realtimeRequest(urlPath+'graph_realtime.php?action=countdown&top='+parseInt(position.top)+'&left='+parseInt(position.left)+(isThumb ? '&graph_nolegend=true':'&graph_nolegend=false')+'&graph_end=0&graph_start=-'+(parseInt(graph_start) > 0 ? graph_start:'60')+'&local_graph_id='+local_graph_id+'&ds_step='+ds_step+'&count='+count+sizeOption, [graph_start, ds_step, size, isThumb].join(':'), 'text')
 						.done(function(data) {
 							var results;
 

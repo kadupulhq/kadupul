@@ -51,9 +51,14 @@ switch (get_request_var('action')) {
 		form_save();
 		break;
 	case 'actions':
+		csrf_require_post(true);
 		form_actions();
 		break;
 	case 'edit':
+		if (isset_request_var('purge')) {
+			csrf_require_post(true);
+		}
+
 		top_header();
 		manager_edit();
 		bottom_footer();
@@ -733,6 +738,17 @@ function manager_logs($id, $header_label) {
 		$('#form_snmpagent_manager_logs').on('submit', function() {
 			applyFilter();
 		});
+
+		$('#purge').on('click', function() {
+			loadPageUsingPost('managers.php', {
+				action: 'edit',
+				tab: 'logs',
+				id: $('#id').val(),
+				purge: 1,
+				header: 'false',
+				__csrf_magic: csrfMagicToken
+			});
+		});
 	});
 
 	</script>
@@ -934,6 +950,65 @@ function form_save() {
 	header('Location: managers.php?action=edit&header=false&id=' . (empty($manager_id) ? get_nfilter_request_var('id') : $manager_id) );
 }
 
+/**
+ * managers_cached_notification_pairs - returns the (mib, notification) pairs
+ * from a submitted selection that name a Notification in snmpagent_cache.
+ *
+ * selected_items round-trips through the confirmation form, so it is client
+ * input. snmpagent_managers_notifications has no foreign key to the cache, and
+ * a legitimate selection can never hold more pairs than the cache has
+ * notifications, so a larger one is refused outright.
+ *
+ * @param mixed $selected_items unserialized array(mib => array(name => state))
+ *
+ * @return array list of array(mib, notification)
+ */
+function managers_cached_notification_pairs($selected_items) {
+	if (!is_array($selected_items)) {
+		return array();
+	}
+
+	$known = array();
+
+	foreach (db_fetch_assoc("SELECT mib, name FROM snmpagent_cache WHERE kind = 'Notification'") as $row) {
+		$known[$row['mib']][$row['name']] = true;
+	}
+
+	$limit = 0;
+
+	foreach ($known as $names) {
+		$limit += cacti_sizeof($names);
+	}
+
+	$pairs = array();
+	$seen  = 0;
+
+	foreach ($selected_items as $mib => $notifications) {
+		if (!is_array($notifications)) {
+			$notifications = array();
+			$seen++;
+		}
+
+		foreach ($notifications as $notification => $state) {
+			$seen++;
+
+			if ($seen > $limit) {
+				cacti_log('WARNING: Rejected notification receiver selection with more than ' . $limit . ' entries', false, 'WEBUI');
+
+				return array();
+			}
+
+			if (isset($known[$mib][$notification])) {
+				$pairs[] = array((string) $mib, (string) $notification);
+			} else {
+				cacti_log('WARNING: Rejected unknown SNMP notification selection for receiver ' . get_request_var('id'), false, 'WEBUI');
+			}
+		}
+	}
+
+	return $pairs;
+}
+
 function form_actions() {
 	global $manager_actions, $manager_notification_actions;
 
@@ -966,29 +1041,23 @@ function form_actions() {
 			get_filter_request_var('id');
 			/* ==================================================== */
 
-			$selected_items = cacti_unserialize(stripslashes(get_nfilter_request_var('selected_items')));
+			$pairs = managers_cached_notification_pairs(cacti_unserialize(stripslashes(get_nfilter_request_var('selected_items'))));
 
-			if (is_array($selected_items)) {
-				if (get_nfilter_request_var('drp_action') == '1') { // disable
-					foreach($selected_items as $mib => $notifications) {
-						foreach($notifications as $notification => $state) {
-							db_execute_prepared('DELETE FROM snmpagent_managers_notifications
-								WHERE `manager_id` = ?
-								AND `mib` = ?
-								AND `notification` = ?
-								LIMIT 1',
-								array(get_nfilter_request_var('id'), $mib, $notification));
-						}
-					}
-				} elseif (get_nfilter_request_var('drp_action') == '2') { // enable
-					foreach($selected_items as $mib => $notifications) {
-						foreach($notifications as $notification => $state) {
-							db_execute_prepared('INSERT IGNORE INTO snmpagent_managers_notifications
-								(`manager_id`, `notification`, `mib`)
-								VALUES (?, ?, ?)',
-								array(get_nfilter_request_var('id'), $notification, $mib));
-						}
-					}
+			if (get_nfilter_request_var('drp_action') == '1') { // disable
+				foreach($pairs as $pair) {
+					db_execute_prepared('DELETE FROM snmpagent_managers_notifications
+						WHERE `manager_id` = ?
+						AND `mib` = ?
+						AND `notification` = ?
+						LIMIT 1',
+						array(get_request_var('id'), $pair[0], $pair[1]));
+				}
+			} elseif (get_nfilter_request_var('drp_action') == '2') { // enable
+				foreach($pairs as $pair) {
+					db_execute_prepared('INSERT IGNORE INTO snmpagent_managers_notifications
+						(`manager_id`, `notification`, `mib`)
+						VALUES (?, ?, ?)',
+						array(get_request_var('id'), $pair[1], $pair[0]));
 				}
 			}
 
