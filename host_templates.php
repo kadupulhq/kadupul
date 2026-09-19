@@ -218,6 +218,10 @@ function form_actions() {
 	if (isset_request_var('selected_items')) {
 		$selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
 
+		if ($selected_items != false && get_nfilter_request_var('drp_action') == '1') {
+			$selected_items = host_templates_without_devices($selected_items);
+		}
+
 		if ($selected_items != false) {
 			if (get_nfilter_request_var('drp_action') == '1') { // delete
 				db_execute('DELETE FROM host_template WHERE ' . array_to_sql_or($selected_items, 'id'));
@@ -325,6 +329,35 @@ function form_actions() {
 /* ---------------------
     Template Functions
    --------------------- */
+
+/* Deleting a Device Template detaches every Device that uses it. The list
+   only disables the checkbox of such a template, so enforce the same rule
+   here. Deleted Devices count, as they do in the list's Devices Using column. */
+function host_templates_without_devices($selected_items) {
+	$unused  = array();
+	$refused = false;
+
+	foreach ($selected_items as $item) {
+		$devices = db_fetch_cell_prepared('SELECT COUNT(*)
+			FROM host
+			WHERE host_template_id = ?',
+			array($item));
+
+		if ($devices > 0) {
+			$refused = true;
+
+			cacti_log('WARNING: Refused to delete Device Template ' . (int) $item . ' used by ' . (int) $devices . ' Device(s) for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+		} else {
+			$unused[] = $item;
+		}
+	}
+
+	if ($refused) {
+		raise_message('host_template_in_use', __('A Device Template in use by a Device can not be deleted.'), MESSAGE_LEVEL_ERROR);
+	}
+
+	return $unused;
+}
 
 function template_item_remove_gt_confirm() {
 	/* ================= input validation ================= */
