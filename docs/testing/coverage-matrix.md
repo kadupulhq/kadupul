@@ -40,6 +40,8 @@ Priorities: **P0** blocks Kadupul compatibility, **P1** is important behavior,
 | PHP types | `get_request_var` memoization | yes | n/a | n/a | stale read after superglobal change | `api/type-coercion` | P0 |
 | PHP types | Empty result-set shapes | yes | n/a | yes | `db_fetch_row`, `_cell`, `_assoc` | `api/type-coercion` | P0 |
 | Diagnostics | Warnings, notices, deprecations raised outside Cacti's own handler | yes | n/a | yes | grouped and counted, suppression flagged | `api/php-errors` | P0 |
+| Diagnostics | Visible prepend PHP events | yes | yes | yes | fatal and suppression masks | `diagnostics/visible-php-errors` | P0 |
+| Diagnostics | Application-handler PHP log | yes | yes | yes | calibrated warning, ordered duplicate events | `diagnostics/application-log` | P0 |
 | Diagnostics | Handler calibration | yes | n/a | yes | `E_USER_WARNING`, `TypeError` | `api/warning-calibration` | P1 |
 | Poller | Full run against a device with data sources | yes | yes | no | exit status, stats line, poller cache, rrdtool argv | `poller/run-reachable` | P0 |
 | Poller | rrdtool exits non-zero mid-run | yes | n/a | yes | poller still exits 0; fwrite notice on the broken pipe | `poller/rrd-failure` | P0 |
@@ -104,14 +106,155 @@ non-empty rrdtool source, and the database fault raises if the command failed to
 start. A hollow contract is worse than a missing one, because every green run
 makes it look more trustworthy.
 
-## What the diagnostics scenario does not see
+## Diagnostic scopes and recording completeness
 
-`include/global.php` installs `CactiErrorHandler`, which displaces the recorder
-in every process that bootstraps the application. The probe re-arms it by hand;
-`poller.php` and the workers it forks cannot, without editing production code.
+`api/php-errors` retains every event observed by the prepend recorder, including
+suppressed events and its calibration warning. `diagnostics/visible-php-errors`
+selects fatal events and events enabled by both recorded reporting masks.
+Neither changes the application's error-reporting policy.
 
-So `api/php-errors` covers diagnostics raised before or outside that swap, not
-every diagnostic in the run. The poller's own notices reach Cacti's log and show
-up in each scenario's captured stderr, which is where `poller/rrd-failure`
-records the broken-pipe notice. Reading the Cacti log as a normalized stream is
-the way to close this, and is not done yet.
+`include/global.php` replaces the prepend handler. The separate
+`diagnostics/application-log` contract captures PHP diagnostics emitted by the
+application's own handler, preserving subsystem, severity, message and duplicate multiplicity. Records
+are sorted by subsystem and message to tolerate cross-process log interleaving while normalizing the log timestamp, known environment paths, PHP
+diagnostic source-line locations (including backtrace frames), and failed-write
+byte counts. Error numbers, diagnostic text and unrelated numeric values remain
+part of the comparison.
+A warning emitted after application bootstrap calibrates this path; recording
+fails if it is missing. This is scoped PHP diagnostic coverage, not an assertion
+that every possible application log message is covered.
+
+A recording requires all 34 named scenarios. Empty, missing or unexpected
+observations, missing selected scenarios and orphan golden files fail before
+any golden is written. Failed runtime probes also leave an incomplete manifest.
+The committed PHP 8.2 baseline was recaptured and reproduced against application
+revision `6ce3572dab3264be563b765f25dcadd8cc046252` using the updated harness.
+The durable `test/behavior-baseline-1.2.31` branch retains this application
+revision; use this commit with the harness from the current test branch.
+Two complete manifests and their comparison are retained under
+`tests/behavior/evidence/historical-baseline/`. The first run recorded all 34 contracts; the second verified that recording
+and produced identical scenario observations. A self-test compares both retained
+manifests with every committed golden, including diagnostic ordering.
+The historical refresh changes the calibration warning’s harness
+line number (86 to 79), and removal of ten `config_settings` callbacks produced
+by seeded network-discovery workers. It also separates RRDtool acknowledgement
+counts in the four poller command contracts, as described below. Fixture setup
+now disables that unrelated
+discovery network before polling. The two diagnostic scopes are new. This is the documented
+modified Kadupul baseline, not a claim of upstream parity. Other runtime baselines
+need their own explicit capture and repeat run. Orphan checks inspect every
+existing runtime directory for the selected target.
+
+Poller command contracts retain exit status, stderr, and the exact order of
+non-acknowledgement stdout lines. Complete RRDtool `OK u:... s:... r:...`
+acknowledgements are counted separately: child writes can interleave with the
+parent statistics line in either order. Missing acknowledgements still change
+the contract. The four poller goldens explicitly adopt this representation;
+other output and diagnostic records are not sorted or discarded.
+
+The manifest `complete` flag means the evidence passed all completeness and
+inventory validation, including the target's golden inventory across runtimes.
+An orphaned golden is a validation failure even when every runtime probe ran.
+Temporary candidate goldens are local comparison artifacts, not baseline inputs.
+
+Failed `fwrite()` diagnostics normalize only the requested byte count to
+`<BYTES>`: buffer length depends on which poller commands reach the broken pipe.
+The errno, failure description, severity, source location, order and duplicate
+records remain part of the contract. Other diagnostic numbers are preserved.
+
+
+### Historical harness provenance
+
+The retained manifests record the application revision separately from the
+executing `harness_revision` and `harness_sha256`. `harness_inputs_sha256` hashes
+the actual mounted behavior helpers, plugin/SNMP fixtures, compose file and
+Dockerfile. Current captures also hash `.dockerignore` in each checkout. Dirty flags include untracked files; they are evidence, not a claim
+that all captured working trees are clean.
+
+The historical application revision predates the harness. For these two runs,
+its tracked application files were unchanged and the test directories were
+overlaid from the recorded harness commit. Thus `application_dirty` is true,
+while the controller checkout has `harness_dirty: false`. All 34 observations
+from the two fresh runs are identical. The retained `comparison.json` is the
+unaltered output of the comparison command, with hashes of the exact retained
+`first.json` and `repeat.json` manifests.
+
+Comparison output records `contracts`, `controller` provenance,
+`manifest_sha256` for baseline/candidate/repeat, and each capture's application
+revision, schema hash, and provenance in `captures`. Missing provenance or build
+input hashes are rejected. Older captures without these fields must be recaptured
+with the current harness. Repeat runs must also match the candidate runtime and
+provenance.
+
+Comparison requires format 2, a target, a valid PHP version, pinned PHP/database
+image references, package/runtime details, and no capture error. Both input hash
+maps must contain every required helper, plugin/SNMP fixture, Dockerfile, compose
+file and `.dockerignore`; the controller hash must agree with its file entry.
+Bootstrap records final provenance after writing golden files, so a clean
+checkout's first capture and its verification repeat report the same dirty state.
+Failure to record that final state leaves the capture incomplete.
+
+`application_images` records the content-addressed image IDs inspected from the
+actual web, SNMP, and database containers. This covers all files Docker copied into each
+application build, including dirty and untracked application files that are not
+in the mounted-helper inventory. Candidate and repeat image IDs must agree even
+when their Git revisions, dirty flags, and scenario observations are identical.
+Different application images between baseline and candidate are expected; the
+repeat check is what establishes that the candidate ran the same build twice.
+A rebuild with changed layers or image configuration requires another repeat.
+Missing, ambiguous, or invalid image identities leave a capture incomplete.
+Format-1 captures cannot satisfy this contract and must be captured again; do not
+add image IDs retrospectively to retained manifests.
+
+To reproduce the historical runs, create separate clean checkouts of
+`captures.baseline.revision` and
+`captures.baseline.provenance.harness_revision` recorded in `comparison.json`.
+Overlay the harness checkout's tracked `tests/Support/Behavior`,
+`tests/Fixtures/plugins/compatibility_test`, `tests/Fixtures/snmp`,
+`tests/behavior/compose.yml`, and `tests/behavior/Dockerfile` paths onto the
+application checkout. Golden files and capture results stay in the controller
+checkout, including when `--application-root` selects another application. Keep its tracked
+application files unchanged. Verify that `.dockerignore` is byte-identical in
+both checkouts before building; it is a hashed build input. Stop if it differs
+rather than changing the historical application. Run these commands from the clean controller:
+
+```sh
+cmp .dockerignore /path/to/application/.dockerignore || exit 1
+mkdir -p /path/to/results/first /path/to/results/repeat
+mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py run \
+  --application-root /path/to/application --target cacti-1.2.31 --update-golden
+cp /path/to/controller/tests/behavior/results/cacti-1.2.31/observations.json \
+  /path/to/results/first/observations.json
+mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py run \
+  --application-root /path/to/application --target cacti-1.2.31
+cp /path/to/controller/tests/behavior/results/cacti-1.2.31/observations.json \
+  /path/to/results/repeat/observations.json
+mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py compare \
+  --results-root /path/to/results --baseline first --candidate repeat \
+  --repeat /path/to/results/first/observations.json \
+  --output /path/to/results/comparison
+```
+
+The second run verifies the first run's captured golden observations. The first
+capture serves as both baseline and repeat control in this historical self-comparison;
+there are two independent captures, not three. Keep the
+manifests and generated comparison together; no hand-edited provenance or
+import-time root override is required. This establishes historical repeatability,
+not a claim that a candidate application is equivalent or superior.
+
+Before touching Docker, the runner requires a Git application checkout with
+`cacti.sql` and a complete harness overlay matching the controller input hashes.
+Both inventories remain recorded; mismatched mounted helpers or build inputs
+fail setup. Baseline/candidate controller input changes require review. Application
+diagnostics retain duplicates but sort records to tolerate process interleaving.
+
+The harness selftest verifies that retained historical evidence matches current
+controller input hashes. Changes to controller helpers or fixtures require fresh
+first and repeat captures before the evidence can pass again.
+
+The release upgrade/rollback rehearsal uses an older baseline that predates
+`.dockerignore`. It records that absence and the SHA-256 of the candidate-owned
+file added for the test build in `baseline_dockerignore`. An existing baseline
+file must match byte-for-byte; a mismatch stops the rehearsal before Docker
+builds. This exception is specific to that rehearsal, not the historical
+self-comparison procedure above.

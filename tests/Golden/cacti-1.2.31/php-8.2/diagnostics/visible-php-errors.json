@@ -1,0 +1,10 @@
+[
+  {
+    "severity": 512,
+    "message": "behavior capture calibration",
+    "file": "<HARNESS>/probe.php",
+    "count": 1,
+    "suppressed": false,
+    "suppressed_here": false
+  }
+]

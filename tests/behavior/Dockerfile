@@ -150,11 +150,21 @@ RUN mv /usr/bin/rrdtool /usr/bin/rrdtool.real \
 #!/bin/sh
 # Cacti drives rrdtool in pipe mode ("rrdtool -"), so the real update and graph
 # commands arrive on stdin, not in argv. Record both or the log says only "-".
-printf 'ARGV %s\n' "$*" >> /artifacts/rrd-argv.log 2>/dev/null || true
 if [ -n "${RRD_FAIL:-}" ] || [ -f /artifacts/rrd-fail ]; then
+    # Only the first failing process crashes, closing stdin before Cacti's
+    # first write so the broken pipe is always seen on that write. Later
+    # processes read their input before failing; exiting early would race
+    # each write against process exit and vary the crash-retry count.
+    if (set -C; : > /artifacts/rrd-fail-crashed) 2>/dev/null; then
+        exec 0<&-
+        crashed=1
+    fi
+    printf 'ARGV %s\n' "$*" >> /artifacts/rrd-argv.log 2>/dev/null || true
     echo "ERROR: injected rrdtool failure" >&2
+    [ -n "${crashed:-}" ] || cat > /dev/null
     exit 1
 fi
+printf 'ARGV %s\n' "$*" >> /artifacts/rrd-argv.log 2>/dev/null || true
 if [ "$1" = "-" ]; then
     tee -a /artifacts/rrd-stdin.log | /usr/bin/rrdtool.real "$@"
     exit $?

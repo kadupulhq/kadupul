@@ -4,6 +4,6 @@
     "message": "strlen(): Argument #1 ($string) must be of type string, array given"
   },
   "stdout": "\n",
-  "stderr": "PHP Warning:  behavior capture calibration in <HARNESS>/probe.php on line 86\n",
+  "stderr": "PHP Warning:  behavior capture calibration in <HARNESS>/probe.php on line <LINE>\n",
   "exit": 0
 }

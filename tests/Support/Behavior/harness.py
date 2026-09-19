@@ -18,11 +18,39 @@ import urllib.parse
 import urllib.request
 import urllib.error
 
-ROOT = Path(__file__).resolve().parents[3]
+CONTROLLER_ROOT = Path(__file__).resolve().parents[3]
+ROOT = CONTROLLER_ROOT
+
+# Explicit inventory: removing a capture must never shrink a recording silently.
+EXPECTED_SCENARIOS = frozenset(['api/ajax-hosts', 'api/datasource-invalid', 'api/php-errors', 'api/type-coercion', 'api/warning-calibration', 'auth/login-admin', 'auth/login-invalid', 'auth/missing-csrf', 'cli/device-help', 'cli/device-missing', 'database/fresh-schema', 'devices/create', 'devices/delete', 'diagnostics/application-log', 'diagnostics/visible-php-errors', 'faults/database-unreachable', 'faults/missing-rrd-file', 'graphs/create', 'graphs/datasource-create', 'graphs/definition', 'plugins/callbacks', 'plugins/disable', 'plugins/enable', 'plugins/hook', 'plugins/hook-disabled', 'plugins/install', 'plugins/poller-hooks', 'plugins/uninstall', 'poller/device-unreachable', 'poller/rrd-failure', 'poller/run-reachable', 'snmp/get', 'ui/devices', 'upgrade/install'])
+
+# Minimum supported input inventory. Extra inputs remain hashed and compared.
+# Keep old captures readable when adding optional helpers; a required runtime
+# dependency must be added here and old captures lacking it must be recaptured.
+REQUIRED_INPUTS = frozenset(
+    ['tests/Support/Behavior/' + name for name in (
+        'coverage.php', 'coverage_selftest.py', 'errors.php', 'harness.py', 'inventory.py',
+        'merge_poller_coverage.php', 'poller_coverage.py', 'probe.php', 'release_readiness.py',
+        'release_selftest.py', 'selftest.py', 'wait-php.php')]
+    + ['tests/Fixtures/plugins/compatibility_test/INFO', 'tests/Fixtures/plugins/compatibility_test/setup.php',
+       'tests/Fixtures/snmp/snmpd.conf', 'tests/Fixtures/snmp/value.sh',
+       'tests/behavior/compose.yml', 'tests/behavior/Dockerfile', '.dockerignore'])
+
 
 
 def run(args, *, data=None, check=True, timeout=180):
-    p = subprocess.run(args, input=data, text=True, capture_output=True, timeout=timeout)
+    env = None
+    if args[0] == 'git':
+        # Hooks export repository-local settings that override even git -C.
+        # A baseline command must never reuse the candidate's index or gitdir.
+        local_names = {'GIT_ALTERNATE_OBJECT_DIRECTORIES', 'GIT_CONFIG',
+                       'GIT_CONFIG_PARAMETERS', 'GIT_CONFIG_COUNT', 'GIT_OBJECT_DIRECTORY',
+                       'GIT_DIR', 'GIT_WORK_TREE', 'GIT_IMPLICIT_WORK_TREE',
+                       'GIT_GRAFT_FILE', 'GIT_INDEX_FILE', 'GIT_NO_REPLACE_OBJECTS',
+                       'GIT_REPLACE_REF_BASE', 'GIT_PREFIX', 'GIT_SHALLOW_FILE', 'GIT_COMMON_DIR'}
+        env = {key: value for key, value in os.environ.items()
+               if key not in local_names and not key.startswith(('GIT_CONFIG_KEY_', 'GIT_CONFIG_VALUE_'))}
+    p = subprocess.run(args, input=data, text=True, capture_output=True, timeout=timeout, env=env)
     result = dict(exit=p.returncode, stdout=p.stdout, stderr=p.stderr)
     if check and p.returncode:
         raise RuntimeError(f'{args!r}: {result}')
@@ -32,6 +60,45 @@ def run(args, *, data=None, check=True, timeout=180):
 def write_json(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + '\n')
+
+
+def source_provenance():
+    """Identify the executing harness independently from the application tree."""
+    source = Path(__file__).resolve()
+    harness_root = source.parents[3]
+    def git(root, *arguments):
+        return run(['git', '-C', str(root), *arguments])['stdout'].strip()
+    def input_hashes(root):
+        inputs = {}
+        for relative in ('tests/Support/Behavior', 'tests/Fixtures/plugins/compatibility_test',
+                         'tests/Fixtures/snmp', 'tests/behavior/compose.yml', 'tests/behavior/Dockerfile', '.dockerignore'):
+            path = root / relative
+            paths = path.rglob('*') if path.is_dir() else [path]
+            for item in sorted(paths):
+                if item.is_file() and '__pycache__' not in item.parts:
+                    inputs[str(item.relative_to(root))] = hashlib.sha256(item.read_bytes()).hexdigest()
+        return inputs
+    return {'harness_revision': git(harness_root, 'rev-parse', 'HEAD'),
+            'harness_dirty': bool(git(harness_root, 'status', '--porcelain', '--untracked-files=all', '--', '.', ':(exclude)tests/behavior/results/**')),
+            'application_dirty': bool(git(ROOT, 'status', '--porcelain', '--untracked-files=all', '--', '.', ':(exclude)tests/behavior/results/**')),
+            'harness_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
+            'harness_inputs_sha256': input_hashes(harness_root),
+            'application_inputs_sha256': input_hashes(ROOT)}
+
+
+def validate_application_inputs():
+    """Require the mounted application helpers to match the recorded controller."""
+    if not ROOT.is_dir() or not (ROOT / 'cacti.sql').is_file():
+        raise RuntimeError('Application root must be a checkout containing cacti.sql')
+    run(['git', '-C', str(ROOT), 'rev-parse', '--verify', 'HEAD'])
+    provenance = source_provenance()
+    controller = provenance['harness_inputs_sha256']
+    application = provenance['application_inputs_sha256']
+    if not REQUIRED_INPUTS.issubset(controller) or not REQUIRED_INPUTS.issubset(application):
+        raise RuntimeError('Application or controller is missing required harness inputs')
+    mismatched = sorted(name for name in set(controller) | set(application) if application.get(name) != controller.get(name))
+    if mismatched:
+        raise RuntimeError('Application harness overlay differs from controller: ' + ', '.join(mismatched))
 
 
 # Normalize only timestamps in known diagnostic line shapes. Arbitrary dates
@@ -54,6 +121,48 @@ INSTALL_TIMESTAMPS = re.compile(
     + _DATE + r'(, completed at )' + _DATE + r'$', re.MULTILINE)
 
 
+def normalize_failed_write_size(value):
+    """Normalize write sizes only in complete Cacti or native PHP records."""
+    prefix = r'(?:(?:' + '|'.join(_POLLER_DATES) + r') \d{2}:\d{2}:\d{2} - [A-Z][A-Z0-9_]* |Total\[\d+\.\d+\] )'
+    root = r'(?:/var/www/html|/harness|<APP>|<HARNESS>)/[^\r\n]*\.php'
+    shapes = (
+        (prefix + r'PHP (?:NOTICE|WARNING):', r' in file: ' + root + r'\s+on line: \d+'),
+        (r'(?:' + prefix + r')?PHP (?:Notice|Warning):', r' in ' + root + r' on line \d+'),
+    )
+    for start, location in shapes:
+        value = re.sub(r'^(' + start + r'[ \t]+fwrite\(\): Write of )\d+'
+                       + r'( bytes failed with errno=\d+[^\r\n]*' + location + r')(?=\r?$)',
+                       r'\1<BYTES>\2', value, flags=re.MULTILINE)
+    return value
+
+
+def normalize_php_locations(value):
+    """Ignore source movement only in recognized PHP diagnostic locations."""
+    lines = []
+    root = r'(?:<APP>|<HARNESS>|/var/www/html|/harness)'
+    for line in value.splitlines(keepends=True):
+        log_prefix = r'(?:(?:' + '|'.join(_POLLER_DATES) + r') \d{2}:\d{2}:\d{2} - [A-Z][A-Z0-9_]* |Total\[\d+\.\d+\] )'
+        severity = r'PHP (?:(?:USER_)?(?:NOTICE|WARNING|ERROR|DEPRECATED)|(?:CORE|COMPILE)_(?:ERROR|WARNING)|RECOVERABLE_ERROR|PARSE|ALL|STRICT|Unknown Error)'
+        cacti_record = (r'^(' + log_prefix + severity + r"(?: in  Plugin '[^\r\n']+')?:[^\r\n]* in file:\s+"
+                        + root + r'/[^\r\n]*?\.php\s+on line:\s*)\d+(\s*)$')
+        # Raw uppercase severity text can be a warning payload. Cacti records
+        # require their logger prefix; native PHP diagnostics have a separate shape.
+        line = re.sub(cacti_record, r'\1<LINE>\2', line)
+        native_record = (r'^((?:' + log_prefix + r')?PHP (?:Notice|Warning|Deprecated|Fatal error|Parse error):[^\r\n]* in '
+                         + root + r'/[^\r\n]*?\.php on line )\d+(\s*)$')
+        line = re.sub(native_record, r'\1<LINE>\2', line)
+        # cacti_debug_backtrace emits a distinct record, with comma-separated
+        # file[line]:function() frames. A path-shaped warning payload is data.
+        log_prefix = r'(?:(?:' + '|'.join(_POLLER_DATES) + r') \d{2}:\d{2}:\d{2} - [A-Z][A-Z0-9_]* )?'
+        trace = re.fullmatch(log_prefix + r'(PHP ERROR(?: [A-Z_]+)? Backtrace:\s*\()(.*)(\)\s*)', line)
+        if trace:
+            frames = re.sub(r'(^|, )((?:' + root + r')?/[^\s\[\]]+\.php)\[\d+\](?=:[^(),\r\n]+\(\)(?:, |$))',
+                            r'\1\2[<LINE>]', trace[2])
+            line = line[:trace.start(2)] + frames + line[trace.end(2):]
+        lines.append(line)
+    return ''.join(lines)
+
+
 def normalize(value):
     """Explicit environment and wall-clock substitutions only.
 
@@ -66,18 +175,73 @@ def normalize(value):
     if isinstance(value, list):
         return [normalize(v) for v in value]
     if isinstance(value, str):
-        value = value.replace('/var/www/html', '<APP>').replace('/harness', '<HARNESS>')
+        value = normalize_php_locations(normalize_failed_write_size(value))
+        value = normalize_known_roots(value)
         # Poller timing lines report per-process CPU and wall clock, which differ
         # on every run. The line's presence and count still matter, its
         # measurements do not. Both patterns are anchored to the poller's own
         # line shapes so an application message carrying the same tokens is
         # still compared.
-        value = re.sub(r'(?<=OK )u:\d+\.\d+ s:\d+\.\d+ r:\d+\.\d+', 'u:<T> s:<T> r:<T>', value)
-        value = re.sub(r'(?<=SYSTEM STATS: )Time:\d+\.\d+', 'Time:<T>', value)
+        value = re.sub(r'^OK u:\d+(?:\.\d+)? s:\d+(?:\.\d+)? r:\d+(?:\.\d+)?(?=\r?$)', 'OK u:<T> s:<T> r:<T>', value, flags=re.MULTILINE)
         value = POLLER_TIMESTAMP.sub('<TIMESTAMP>', value)
+        value = re.sub(r'^(?P<prefix>(?:<TIMESTAMP> - )?SYSTEM STATS: )Time:\d+(?:\.\d+)?(?=\s|$)', r'\g<prefix>Time:<T>', value, flags=re.MULTILINE)
         value = INSTALL_TIMESTAMPS.sub(r'\g<1><TIMESTAMP>\g<2><TIMESTAMP>', value)
         return CLOCK.sub('[<TIME>]', value)
     return value
+
+def poller_command_contract(result):
+    """Count RRD child acknowledgements independently of parent stdout timing."""
+    command = {key: result[key] for key in ('exit', 'stdout', 'stderr')}
+    acknowledgements = 0
+    output = []
+    for line in command['stdout'].splitlines(keepends=True):
+        if re.fullmatch(r'OK u:\d+(?:\.\d+)? s:\d+(?:\.\d+)? r:\d+(?:\.\d+)?\r?\n?', line):
+            acknowledgements += 1
+        else:
+            output.append(line)
+    command['stdout'] = ''.join(output)
+    command['rrd_acknowledgements'] = acknowledgements
+    return command
+
+
+def normalize_known_roots(value):
+    roots = {'/var/www/html': '<APP>', '/harness': '<HARNESS>'}
+    return re.sub(r'(?<![\w./-])(?:/var/www/html|/harness)(?=/|\r?$)',
+                  lambda match: roots[match[0]], value, flags=re.MULTILINE)
+
+
+def visible_diagnostics(events):
+    """Observed diagnostics enabled by both shipped and current reporting policy."""
+    return [event for event in events if event['severity'] == 'FATAL'
+            or (event.get('suppressed') is False and event.get('suppressed_here') is False)]
+
+
+def application_diagnostics(contents):
+    """Retain diagnostic multiplicity without unstable cross-process log order."""
+    timestamp = re.compile(r'^(?:' + '|'.join(_POLLER_DATES) + r') \d{2}:\d{2}:\d{2}$')
+    entries = []
+    for line in contents.splitlines():
+        prefix, separator, message = line.partition(' - ')
+        if separator and timestamp.fullmatch(prefix):
+            entries.append([prefix, message])
+        elif entries:
+            # A multi-line diagnostic continues until the next timestamped record.
+            entries[-1][1] += '\n' + line
+    records = []
+    for prefix, message in entries:
+        # POLLER records carry a per-process PID; dropping that prefix keeps
+        # the subsystem and message comparable across runs.
+        message = re.sub(r'^(POLLER): Poller\[\d+\] PID\[\d+\] ', r'\1 ', message)
+        match = re.fullmatch(r'([A-Z][A-Z0-9_]*) (PHP [^\n]*:.*)', message, re.DOTALL)
+        if match:
+            normalized = normalize_php_locations(normalize_failed_write_size(prefix + ' - ' + message))
+            detail = normalized.partition(' - ')[2].partition(' ')[2]
+            records.append({'subsystem': match[1], 'message': normalize_known_roots(detail)})
+        elif re.search(r'\bPHP [A-Z][A-Za-z_ ]*:', message.partition('\n')[0]):
+            # An unrecognized logger prefix must surface as a contract change,
+            # not disappear from the capture.
+            records.append({'subsystem': '<UNPARSED>', 'message': normalize_known_roots(message)})
+    return sorted(records, key=lambda row: (row['subsystem'], row['message']))
 
 
 class Forms(HTMLParser):
@@ -147,8 +311,9 @@ class Harness:
             fcntl.flock(self.lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
             raise RuntimeError('Another behavioral harness run holds the ' + project + ' project') from None
+        self.setup_started = False
         self.observed = {}
-        self.destination = ROOT / 'tests/behavior/results' / args.target
+        self.destination = CONTROLLER_ROOT / 'tests/behavior/results' / args.target
 
     def compose(self, *args, **kwargs):
         return run(self.dc + list(args), **kwargs)
@@ -193,7 +358,9 @@ class Harness:
     def capture(self, name, value):
         if name in self.observed:
             raise RuntimeError('Duplicate scenario ' + name)
-        self.observed[name] = normalize(value)
+        # Application log messages have already had only known roots replaced.
+        # The general timing normalizer would erase meaningful warning text.
+        self.observed[name] = value if name == 'diagnostics/application-log' else normalize(value)
         print('CAPTURE ' + name, flush=True)
 
     def probe(self, name):
@@ -249,7 +416,7 @@ class Harness:
                 continue
             # The first token is the subcommand; keep it and the file it acts on,
             # drop absolute paths and epoch arguments that move every run.
-            call = re.sub(r'/var/www/html', '<APP>', line)
+            call = normalize_known_roots(line)
             # Only the update timestamp, which is followed by the value colon.
             # A bare ten-digit run is a DS maximum or an RRA row count.
             call = re.sub(r'(?<=\s)1[0-9]{9}(?=:)', '<EPOCH>', call)
@@ -268,8 +435,12 @@ class Harness:
             self.command('sh', '-c', 'rm -f /artifacts/' + name, check=True)
 
     def poller_state(self):
+        items = self.rows("SELECT JSON_OBJECT('host_id',host_id,'action',action,'rrd_name',rrd_name,'rrd_path',rrd_path) FROM poller_item ORDER BY local_data_id, rrd_name")
+        for item in items:
+            if isinstance(item.get('rrd_path'), str):
+                item['rrd_path'] = normalize_known_roots(item['rrd_path'])
         return {
-            'poller_item': self.rows("SELECT JSON_OBJECT('host_id',host_id,'action',action,'rrd_name',rrd_name,'rrd_path',REPLACE(rrd_path,'/var/www/html','<APP>')) FROM poller_item ORDER BY local_data_id, rrd_name"),
+            'poller_item': items,
             'poller_output_rows': self.sql('SELECT COUNT(*) FROM poller_output').strip(),
             'host_status': self.rows("SELECT JSON_OBJECT('description',description,'status',status,'status_event_count',status_event_count,'availability_method',availability_method) FROM host ORDER BY id"),
         }
@@ -282,12 +453,15 @@ class Harness:
                 'hooks': self.rows("SELECT JSON_OBJECT('hook',hook,'function',`function`,'status',status,'file',file) FROM plugin_hooks WHERE name='compatibility_test' ORDER BY hook")}
 
     def setup(self):
+        validate_application_inputs()
+        self.setup_started = True
         # The project name is stable so images are reused, which means a previous
         # run's database and append-only artifacts survive. Drop them first, or a
         # baseline can be recorded against state this run never created.
         self.compose('down', '--volumes', '--remove-orphans', check=False, timeout=120)
         self.compose('up', '-d', '--build', '--wait', 'db', 'web', 'snmp', timeout=1200)
         self.truncate_artifacts('php-errors.jsonl', 'plugin.jsonl', 'rrd-argv.log', 'rrd-stdin.log')
+        self.command('sh', '-c', ': > /var/www/html/log/cacti.log', check=True)
         self.sql((ROOT / 'cacti.sql').read_text())
         self.capture('database/fresh-schema', {'version': self.sql('SELECT * FROM version'),
                      'tables': self.sql('SHOW TABLES'), 'devices': self.devices(),
@@ -400,7 +574,7 @@ class Harness:
         if not any(call.startswith('update ') for call in rrd_calls):
             raise RuntimeError('Poller made no RRD updates; refusing to record a hollow run')
         self.capture('poller/run-reachable', {
-            'command': {k: run[k] for k in ('exit', 'stdout', 'stderr')},
+            'command': poller_command_contract(run),
             'database': state,
             'rrd_calls': rrd_calls,
         })
@@ -417,9 +591,9 @@ class Harness:
         # The same poll with rrdtool failing, to record how Cacti reports a tool
         # that exits non-zero rather than how it behaves when everything works.
         self.truncate_artifacts('rrd-argv.log', 'rrd-stdin.log')
-        self.command('sh', '-c', 'touch /artifacts/rrd-fail && test -f /artifacts/rrd-fail', check=True)
+        self.command('sh', '-c', 'rm -f /artifacts/rrd-fail-crashed && touch /artifacts/rrd-fail && test -f /artifacts/rrd-fail', check=True)
         failed = self.php('poller.php', '--force')
-        self.command('sh', '-c', 'rm -f /artifacts/rrd-fail', check=True)
+        self.command('sh', '-c', 'rm -f /artifacts/rrd-fail /artifacts/rrd-fail-crashed', check=True)
 
         # Negative control. Without it a no-op injection records an ordinary
         # poll as the failure contract, and the two scenarios after it inherit
@@ -428,7 +602,7 @@ class Harness:
             raise RuntimeError('rrdtool failure was never injected; the scenario would record a normal poll')
 
         self.capture('poller/rrd-failure', {
-            'command': {k: failed[k] for k in ('exit', 'stdout', 'stderr')},
+            'command': poller_command_contract(failed),
             'database': self.poller_state(),
             'rrd_calls': self.rrd_calls(),
         })
@@ -439,7 +613,7 @@ class Harness:
         self.truncate_artifacts('rrd-argv.log', 'rrd-stdin.log')
         unreachable = self.php('poller.php', '--force')
         self.capture('poller/device-unreachable', {
-            'command': {k: unreachable[k] for k in ('exit', 'stdout', 'stderr')},
+            'command': poller_command_contract(unreachable),
             'database': self.poller_state(),
         })
         self.sql("UPDATE host SET hostname='127.0.0.1', availability_method=0 WHERE id=" + device + ";")
@@ -457,7 +631,7 @@ class Harness:
         self.truncate_artifacts('rrd-argv.log', 'rrd-stdin.log')
         missing = self.php('poller.php', '--force')
         self.capture('faults/missing-rrd-file', {
-            'command': {k: missing[k] for k in ('exit', 'stdout', 'stderr')},
+            'command': poller_command_contract(missing),
             'rrd_calls': self.rrd_calls(),
         })
 
@@ -491,29 +665,18 @@ class Harness:
         self.capture('faults/database-unreachable', {k: broken[k] for k in ('exit', 'stdout', 'stderr')})
 
     def diagnostics_scenario(self):
-        """PHP diagnostics the recorder sees during the run.
+        """Capture two diagnostic contracts after all application scenarios.
 
-        This has to be captured last. When it ran at the end of scenarios() it
-        saw only the probe's own process, so the poller's fwrite notice on the
-        broken rrdtool pipe went unrecorded while the scenario claimed to
-        characterize PHP diagnostics.
+        The prepend recorder observes diagnostics before or outside the
+        application's handler swap. The independent application-log capture
+        observes post-bootstrap diagnostics from pollers and workers, including
+        the broken RRDtool pipe. Both paths have their own calibration control.
         """
         events = self.diagnostics()
 
-        # Negative control: a diagnostic raised outside the probe must arrive.
-        # Without it, a recorder that silently stops working still looks green.
-        # Scope, stated rather than implied. include/global.php calls
-        # set_error_handler('CactiErrorHandler'), which displaces this recorder in
-        # every process that bootstraps the application. probe.php re-arms it
-        # explicitly; poller.php and its workers cannot without editing
-        # production code, so their diagnostics go to Cacti's own log instead and
-        # are visible in each scenario's stderr, not here.
-        #
-        # What this scenario therefore covers is diagnostics raised before or
-        # outside that handler swap. The control below keeps it honest: at least
-        # one event must come from application code rather than the probe, so a
-        # recorder that silently stops working still fails.
-        # Events are still raw here; normalize() only rewrites /harness later.
+        # The prepend recorder must see an event from application code, not
+        # merely its probe. The application-log control below separately proves
+        # that the installed CactiErrorHandler records post-bootstrap warnings.
         outside_probe = [e for e in events
                          if not any(m in str(e.get('file', '')) for m in ('/harness/', '<HARNESS>'))]
 
@@ -522,6 +685,24 @@ class Harness:
                                'the recorder is no longer reaching lib/')
 
         self.capture('api/php-errors', events)
+        self.capture('diagnostics/visible-php-errors', visible_diagnostics(events))
+
+        self.capture_application_diagnostics()
+
+    def capture_application_diagnostics(self):
+        before_log = self.command('cat', '/var/www/html/log/cacti.log', check=True)['stdout']
+        # This process leaves the application's handler installed. Its warning
+        # must arrive through the real log, independently of the prepend recorder.
+        calibration = self.php('-r', "chdir('/var/www/html'); $no_http_headers=true; include 'include/global.php'; trigger_error('behavior application-handler calibration', E_USER_WARNING);")
+        if calibration['exit']:
+            raise RuntimeError('Application handler calibration failed: ' + json.dumps(calibration))
+        log = self.command('cat', '/var/www/html/log/cacti.log', check=True)['stdout']
+        if not log.startswith(before_log):
+            raise RuntimeError('Application log rotated or truncated during calibration')
+        appended = application_diagnostics(log[len(before_log):])
+        if not any('behavior application-handler calibration' in row['message'] for row in appended):
+            raise RuntimeError('The application log missed the post-bootstrap calibration warning')
+        self.capture('diagnostics/application-log', application_diagnostics(log))
 
     def base_image_digest(self):
         """The base image this run was built on.
@@ -531,20 +712,48 @@ class Harness:
         the rest, so record what was actually used instead: a base refresh then
         shows up as a diff in the manifest rather than silently moving a golden.
         """
-        result = self.command('sh', '-c', 'cat /etc/os-release | head -2; php -v | head -1', check=False)
+        operating_system = self.command('cat', '/etc/os-release', check=True)['stdout'].strip()
+        php_version = self.command('php', '-v', check=True)['stdout'].strip()
+        if not operating_system or not php_version.startswith('PHP '):
+            raise RuntimeError('Missing or invalid runtime provenance')
+        runtime = '\n'.join(operating_system.splitlines()[:2] + php_version.splitlines()[:1])
         image = run(['docker', 'image', 'inspect', '--format', '{{index .RepoDigests 0}}',
-                     f'php:{os.environ.get("PHP_VERSION", "8.2")}-apache'], check=False)
-        db = run(['docker', 'image', 'inspect', '--format', '{{index .RepoDigests 0}}', 'mariadb:10.11'], check=False)
-        packages = self.command('sh', '-c', "dpkg-query -W -f='${Package}=${Version}\\n' rrdtool snmp snmpd", check=False)
-        return {'ref': (image['stdout'] or '').strip() or 'unresolved',
-                'db_ref': (db['stdout'] or '').strip() or 'unresolved',
+                     f'php:{os.environ.get("PHP_VERSION", "8.2")}-apache'], check=True)
+        db = run(['docker', 'image', 'inspect', '--format', '{{index .RepoDigests 0}}', 'mariadb:10.11'], check=True)
+        packages = self.command('sh', '-c', "dpkg-query -W -f='${Package}=${Version}\\n' rrdtool snmp snmpd", check=True)
+        return {'ref': (image['stdout'] or '').strip(),
+                'db_ref': (db['stdout'] or '').strip(),
                 # The base digest does not pin apt, so a rebuild can change these.
                 'packages': (packages['stdout'] or '').strip(),
-                'runtime': (result['stdout'] or '').strip()}
+                'runtime': runtime}
+
+    def application_image_digests(self):
+        """Identify the immutable images actually used, including COPY build inputs.
+
+        Git revision and dirty flags cannot identify different uncommitted builds.
+        Container image IDs include all layers and their configuration; inspecting
+        the running containers also avoids resolving a tag that moved after setup.
+        Mounted helpers remain covered by the separate input hash inventories.
+        """
+        images = {}
+        for service in ('web', 'snmp', 'db'):
+            container = self.compose('ps', '-q', service)['stdout'].strip()
+            if not re.fullmatch(r'[0-9a-f]{12,64}', container):
+                raise RuntimeError('Cannot identify application container: ' + service)
+            image = run(['docker', 'container', 'inspect', '--format', '{{.Image}}', container])['stdout'].strip()
+            if not re.fullmatch(r'sha256:[0-9a-f]{64}', image):
+                raise RuntimeError('Cannot identify application image: ' + service)
+            images[service] = image
+        return images
 
     def finish(self, error=None):
         runtime = None
         base_image = None
+        application_images = None
+        if error is None and set(self.observed) != EXPECTED_SCENARIOS:
+            missing = sorted(EXPECTED_SCENARIOS - set(self.observed))
+            unexpected = sorted(set(self.observed) - EXPECTED_SCENARIOS)
+            error = f'Scenario inventory mismatch: missing={missing}, unexpected={unexpected}'
         if error is None:
             try:
                 result = self.command('php', '-r', 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;', check=True)
@@ -552,35 +761,112 @@ class Harness:
                 if not re.fullmatch(r'\d+\.\d+', runtime):
                     raise RuntimeError('Web container did not report a valid PHP runtime')
                 base_image = self.base_image_digest()
+                validate_base_image(base_image, 'capture')
+                application_images = self.application_image_digests()
             except (OSError, RuntimeError, subprocess.TimeoutExpired) as probe_error:
                 error = 'Cannot record runtime provenance: ' + str(probe_error)
-        manifest = {'format': 1, 'target': self.args.target, 'revision': run(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'])['stdout'].strip(),
-                    'php': runtime, 'schema_sha256': hashlib.sha256((ROOT / 'cacti.sql').read_bytes()).hexdigest(),
+        missing = set()
+        if error is None:
+            try:
+                self.selected()
+                target_root = CONTROLLER_ROOT / 'tests/Golden' / self.args.target
+                orphans = set()
+                missing = set()
+                current_root = target_root / ('php-' + runtime)
+                runtime_roots = set(target_root.glob('php-*')) | {current_root}
+                for golden_root in runtime_roots:
+                    recorded = {str(path.relative_to(golden_root))[:-5] for path in golden_root.rglob('*.json')}
+                    orphans.update(golden_root.name + '/' + name for name in recorded - set(self.observed))
+                    missing.update(golden_root.name + '/' + name for name in set(self.observed) - recorded)
+                if orphans:
+                    raise RuntimeError('Goldens have no observations: ' + ', '.join(sorted(orphans)))
+                initial_capture = self.args.update_golden and not any(target_root.glob('php-*'))
+                if missing and not (initial_capture or (self.args.update_golden and getattr(self.args, 'bootstrap_goldens', False))):
+                    raise RuntimeError('Runtime goldens are missing observations: ' + ', '.join(sorted(missing)))
+            except RuntimeError as selection_error:
+                error = str(selection_error)
+        revision = schema_hash = provenance = None
+        try:
+            revision = run(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'])['stdout'].strip()
+            schema_hash = hashlib.sha256((ROOT / 'cacti.sql').read_bytes()).hexdigest()
+            provenance = source_provenance()
+        except (OSError, RuntimeError, subprocess.TimeoutExpired) as probe_error:
+            detail = 'Cannot record source provenance: ' + str(probe_error)
+            error = error + '; ' + detail if error else detail
+        manifest = {'format': 2, 'target': self.args.target, 'revision': revision,
+                    'php': runtime, 'schema_sha256': schema_hash,
                     'base_image': base_image,
-                    'complete': error is None, 'error': error, 'scenarios': self.observed}
+                    'application_images': application_images,
+                    'complete': error is None and not missing, 'error': error, 'scenarios': self.observed,
+                    'provenance': provenance}
         write_json(self.destination / 'observations.json', manifest)
         if error:
             return 2
-        golden_root = ROOT / 'tests/Golden' / self.args.target / ('php-' + runtime)
+        golden_root = CONTROLLER_ROOT / 'tests/Golden' / self.args.target / ('php-' + runtime)
         failures = []
         selected = self.selected()
         skipped = [n for n in self.observed if n not in selected]
-        for name, value in {k: v for k, v in self.observed.items() if k in selected}.items():
-            path = golden_root / (name + '.json')
+        golden_originals = {}
+        created_directories = set()
+        def restore_goldens():
+            for path, original in golden_originals.items():
+                if original is None:
+                    path.unlink(missing_ok=True)
+                else:
+                    path.write_bytes(original)
+            for path in sorted(created_directories, key=lambda p: len(p.parts), reverse=True):
+                if path.exists():
+                    path.rmdir()
+        try:
+            for name, value in {k: v for k, v in self.observed.items() if k in selected}.items():
+                path = golden_root / (name + '.json')
+                if self.args.update_golden:
+                    golden_originals[path] = path.read_bytes() if path.exists() else None
+                    parent = path.parent
+                    while not parent.exists():
+                        created_directories.add(parent)
+                        parent = parent.parent
+                    write_json(path, value)
+                elif not path.exists():
+                    failures.append(name + ': MISSING GOLDEN (explicit capture required)')
+                elif json.loads(path.read_text()) != value:
+                    failures.append(name + ': REGRESSION')
+                    (self.destination / (name.replace('/', '--') + '.diff')).write_text(''.join(difflib.unified_diff(
+                        path.read_text().splitlines(True), (json.dumps(value, indent=2, ensure_ascii=False) + '\n').splitlines(True), fromfile='golden', tofile='observed')))
+        except Exception as write_error:
+            # A partly rewritten golden set would be verified against later.
             if self.args.update_golden:
-                write_json(path, value)
-            elif not path.exists():
-                failures.append(name + ': MISSING GOLDEN (explicit capture required)')
-            elif json.loads(path.read_text()) != value:
-                failures.append(name + ': REGRESSION')
-                (self.destination / (name.replace('/', '--') + '.diff')).write_text(''.join(difflib.unified_diff(
-                    path.read_text().splitlines(True), (json.dumps(value, indent=2, ensure_ascii=False) + '\n').splitlines(True), fromfile='golden', tofile='observed')))
-        # A golden with no observation means a scenario was renamed or removed.
-        # Walking only what ran would let that disappear silently.
-        if not self.args.update_golden and golden_root.exists():
-            recorded = {str(p.relative_to(golden_root))[:-5] for p in golden_root.rglob('*.json')}
-            for orphan in sorted(recorded - set(self.observed)):
-                failures.append(orphan + ': GOLDEN HAS NO OBSERVATION (scenario removed or renamed)')
+                restore_goldens()
+            manifest['complete'] = False
+            manifest['error'] = 'Cannot record goldens: ' + str(write_error)
+            write_json(self.destination / 'observations.json', manifest)
+            return 2
+        # Capture permission does not certify the other runtime inventories.
+        missing_after = set()
+        for runtime_root in runtime_roots:
+            recorded = {str(path.relative_to(runtime_root))[:-5] for path in runtime_root.rglob('*.json')}
+            missing_after.update(runtime_root.name + '/' + name for name in set(self.observed) - recorded)
+        manifest['complete'] = not missing_after
+        # Successful manifests need no partial-inventory failure detail.
+        if missing_after:
+            manifest['inventory_missing'] = sorted(missing_after)
+        if self.args.update_golden:
+            # Golden writes can change both working-tree dirty flags. Record the
+            # resulting state so a bootstrap followed by verification agrees.
+            try:
+                manifest['provenance'] = source_provenance()
+            except (OSError, RuntimeError, subprocess.TimeoutExpired) as probe_error:
+                restore_goldens()
+                manifest['complete'] = False
+                manifest['error'] = 'Cannot record final source provenance: ' + str(probe_error)
+                write_json(self.destination / 'observations.json', manifest)
+                return 2
+        write_json(self.destination / 'observations.json', manifest)
+        # The pre-recording inventory validation above owns orphan detection.
+        if not manifest['complete']:
+            print('Incomplete capture; runtime goldens are missing observations: '
+                  + ', '.join(manifest['inventory_missing']), file=sys.stderr)
+            return 2
 
         if skipped:
             print(f'{len(skipped)} scenarios ran but were not verified (--only {" ".join(self.args.only)})')
@@ -613,27 +899,97 @@ class Harness:
         return chosen
 
 
+def validate_base_image(base_image, role):
+    if not isinstance(base_image, dict) or any(not isinstance(base_image.get(key), str) or not base_image[key].strip()
+                                              for key in ('ref', 'db_ref', 'packages', 'runtime')):
+        raise RuntimeError(f'Missing or invalid {role} base image provenance')
+    if any(not re.fullmatch(r'[^\s@]+@sha256:[0-9a-f]{64}', base_image[key]) for key in ('ref', 'db_ref')):
+        raise RuntimeError(f'Unpinned {role} base image provenance')
+
+
 def compare(args):
-    root = ROOT / 'tests/behavior/results'
-    baseline = json.loads((root / args.baseline / 'observations.json').read_text())
-    candidate = json.loads((root / args.candidate / 'observations.json').read_text())
-    if not baseline['complete'] or not candidate['complete']:
-        raise RuntimeError('Cannot compare incomplete runs')
+    root = Path(getattr(args, 'results_root', None) or CONTROLLER_ROOT / 'tests/behavior/results')
+    paths = {'baseline': root / args.baseline / 'observations.json',
+             'candidate': root / args.candidate / 'observations.json'}
+    if args.repeat:
+        paths['repeat'] = Path(args.repeat)
+    payloads = {role: path.read_bytes() for role, path in paths.items()}
+    captures = {role: json.loads(payload) for role, payload in payloads.items()}
+    baseline, candidate = captures['baseline'], captures['candidate']
+    repeat = captures.get('repeat')
+    manifests = list(captures.items())
+    for role, manifest in manifests:
+        if not isinstance(manifest, dict) or manifest.get('complete') is not True:
+            raise RuntimeError(f'Cannot compare incomplete {role} run')
+        if type(manifest.get('format')) is not int or manifest['format'] != 2:
+            raise RuntimeError(f'Missing or unsupported {role} manifest format')
+        if not isinstance(manifest.get('target'), str) or not manifest['target'].strip():
+            raise RuntimeError(f'Missing or invalid {role} target')
+        if 'error' not in manifest or manifest['error'] is not None or manifest.get('inventory_missing'):
+            raise RuntimeError(f'Cannot compare failed {role} run')
+        if not isinstance(manifest.get('php'), str) or not re.fullmatch(r'\d+\.\d+', manifest['php']):
+            raise RuntimeError(f'Missing or invalid {role} PHP runtime')
+        validate_base_image(manifest.get('base_image'), role)
+        images = manifest.get('application_images')
+        if not isinstance(images, dict) or set(images) != {'web', 'snmp', 'db'} or any(
+                not isinstance(value, str) or not re.fullmatch(r'sha256:[0-9a-f]{64}', value)
+                for value in images.values()):
+            raise RuntimeError(f'Missing or invalid {role} application image provenance')
+        scenarios = manifest.get('scenarios')
+        if not isinstance(scenarios, dict) or set(scenarios) != EXPECTED_SCENARIOS:
+            names = set(scenarios) if isinstance(scenarios, dict) else set()
+            raise RuntimeError(f'Invalid {role} scenario inventory: missing={sorted(EXPECTED_SCENARIOS - names)}; unexpected={sorted(names - EXPECTED_SCENARIOS)}')
+        def digest(value, lengths=(64,)):
+            return isinstance(value, str) and len(value) in lengths and re.fullmatch(r'[0-9a-f]+', value)
+        provenance = manifest.get('provenance')
+        if not digest(manifest.get('revision'), (40, 64)) or not digest(manifest.get('schema_sha256')) or not isinstance(provenance, dict):
+            raise RuntimeError(f'Missing or invalid {role} application provenance')
+        if not digest(provenance.get('harness_revision'), (40, 64)) or not digest(provenance.get('harness_sha256')):
+            raise RuntimeError(f'Missing or invalid {role} harness provenance')
+        for key in ('harness_dirty', 'application_dirty'):
+            if not isinstance(provenance.get(key), bool):
+                raise RuntimeError(f'Missing or invalid {role} provenance {key}')
+        for key in ('harness_inputs_sha256', 'application_inputs_sha256'):
+            inputs = provenance.get(key)
+            if not isinstance(inputs, dict) or not REQUIRED_INPUTS.issubset(inputs) or not all(isinstance(name, str) and name and digest(value) for name, value in inputs.items()):
+                raise RuntimeError(f'Missing or invalid {role} provenance {key}')
+        if provenance['harness_inputs_sha256']['tests/Support/Behavior/harness.py'] != provenance['harness_sha256']:
+            raise RuntimeError(f'Inconsistent {role} harness source hash')
+        if provenance['harness_inputs_sha256'] != provenance['application_inputs_sha256']:
+            raise RuntimeError(f'Inconsistent {role} application/controller input hashes')
     approvals = json.loads(Path(args.approvals).read_text()) if args.approvals else {}
-    repeat = json.loads(Path(args.repeat).read_text()) if args.repeat else None
-    # A partial control run would label every later difference NONDETERMINISTIC.
-    if repeat is not None and not repeat['complete']:
-        raise RuntimeError('Cannot use an incomplete run as the repeat control')
     report = []
+    controller = source_provenance()
+    controller_matches = True
+    for role, manifest in manifests:
+        for key in ('harness_sha256', 'harness_inputs_sha256'):
+            if manifest['provenance'][key] != controller[key]:
+                controller_matches = False
+                report.append({'scenario': '<controller>/' + role + '/' + key,
+                               'status': 'NEEDS_REVIEW', 'digest': '',
+                               'baseline': manifest['provenance'][key], 'candidate': controller[key]})
     # Matching scenarios prove little if the runs used different runtimes or packages.
     for key in ('php', 'base_image'):
         if baseline.get(key) != candidate.get(key):
             report.append({'scenario': '<environment>/' + key, 'status': 'NEEDS_REVIEW', 'digest': '',
                            'baseline': baseline.get(key), 'candidate': candidate.get(key)})
+    for key in ('harness_sha256', 'harness_inputs_sha256', 'application_inputs_sha256'):
+        if baseline['provenance'][key] != candidate['provenance'][key]:
+            report.append({'scenario': '<environment>/' + key, 'status': 'NEEDS_REVIEW', 'digest': '',
+                           'baseline': baseline['provenance'][key], 'candidate': candidate['provenance'][key]})
+    repeat_environment_matches = True
+    if repeat:
+        for key in ('php', 'base_image', 'application_images', 'revision', 'schema_sha256', 'provenance'):
+            if candidate.get(key) != repeat.get(key):
+                repeat_environment_matches = False
+                report.append({'scenario': '<repeat-environment>/' + key, 'status': 'NEEDS_REVIEW', 'digest': '',
+                               'baseline': candidate.get(key), 'candidate': repeat.get(key)})
     for name in sorted(baseline['scenarios'].keys() | candidate['scenarios'].keys()):
         b, c = baseline['scenarios'].get(name), candidate['scenarios'].get(name)
         digest = hashlib.sha256(json.dumps({'baseline': b, 'candidate': c}, sort_keys=True).encode()).hexdigest()
         if name not in baseline['scenarios'] or name not in candidate['scenarios']:
+            status = 'NEEDS_REVIEW'
+        elif not controller_matches or not repeat_environment_matches:
             status = 'NEEDS_REVIEW'
         elif repeat and (name not in repeat['scenarios'] or c != repeat['scenarios'][name]):
             status = 'NONDETERMINISTIC'
@@ -644,35 +1000,50 @@ def compare(args):
         else:
             status = 'REGRESSION'
         report.append({'scenario': name, 'status': status, 'digest': digest, 'baseline': b, 'candidate': c})
-    output = Path(args.output)
-    write_json(output.with_suffix('.json'), {'baseline': args.baseline, 'candidate': args.candidate, 'differences': report})
+    output = Path(args.output) if args.output else root / 'comparison'
+    write_json(output.with_suffix('.json'), {
+        'baseline': args.baseline, 'candidate': args.candidate, 'differences': report,
+        'contracts': len(EXPECTED_SCENARIOS), 'controller': controller,
+        'manifest_sha256': {role: hashlib.sha256(payload).hexdigest() for role, payload in payloads.items()},
+        'captures': {role: {key: manifest[key] for key in ('revision', 'schema_sha256', 'provenance', 'application_images')}
+                     for role, manifest in manifests},
+    })
     output.with_suffix('.md').write_text('# Behavioral comparison\n\n' + '\n'.join(f"- {r['status']}: `{r['scenario']}`" for r in report) + '\n')
     print(output.with_suffix('.md').read_text())
     return int(any(r['status'] not in ('IDENTICAL', 'INTENTIONAL_CHANGE') for r in report))
 
 
 def main():
+    global ROOT
     parser = argparse.ArgumentParser()
     sub = parser.add_subparsers(dest='action', required=True)
     test = sub.add_parser('run')
     test.add_argument('--target', default=os.environ.get('TARGET', 'kadupul'))
+    test.add_argument('--application-root', type=Path, default=CONTROLLER_ROOT,
+                      help='Application checkout to exercise; harness provenance still identifies this controller checkout.')
     test.add_argument('--update-golden', action='store_true')
+    test.add_argument('--bootstrap-goldens', action='store_true',
+                      help='Allow missing runtime entries during an explicit full capture; verification still requires complete inventories.')
     test.add_argument('--keep', action='store_true')
     test.add_argument('--only', nargs='*', default=None, metavar='GROUP',
-                      help='Verify only these scenario groups (api, auth, devices, graphs, plugins, cli, poller, ui, database, upgrade, snmp). All scenarios still run, because later ones consume earlier fixtures.')
+                      help='Verify only these scenario groups (api, auth, devices, graphs, plugins, cli, poller, ui, database, upgrade, snmp, faults, diagnostics). All scenarios still run, because later ones consume earlier fixtures.')
     diff = sub.add_parser('compare')
+    diff.add_argument('--results-root', type=Path, help='Directory containing capture labels; defaults to this checkout tests/behavior/results.')
     diff.add_argument('--baseline', required=True)
     diff.add_argument('--candidate', required=True)
     diff.add_argument('--repeat')
     diff.add_argument('--approvals')
-    diff.add_argument('--output', default=str(ROOT / 'tests/behavior/results/comparison'))
+    diff.add_argument('--output', help='Report path prefix; defaults to comparison under the selected results root.')
     args = parser.parse_args()
     if args.action == 'compare':
         return compare(args)
+    ROOT = args.application_root.resolve()
     if not re.fullmatch(r'[a-zA-Z0-9_.-]+', args.target) or args.target in ('.', '..'):
         parser.error('Target must be a safe artifact label')
     if args.only and args.update_golden:
         parser.error('--update-golden records every scenario; it cannot be scoped with --only')
+    if args.bootstrap_goldens and (not args.update_golden or args.only is not None):
+        parser.error('--bootstrap-goldens requires --update-golden without --only')
     harness = Harness(args)
     error = None
     status = 2
@@ -689,13 +1060,13 @@ def main():
         try:
             status = harness.finish(error)
         finally:
-            if not args.keep:
+            if not args.keep and getattr(harness, 'setup_started', True):
                 try:
                     harness.compose('down', '--volumes', '--remove-orphans', timeout=120)
                 except (OSError, RuntimeError, subprocess.TimeoutExpired) as cleanup_error:
                     print('Container cleanup failed: ' + str(cleanup_error), file=sys.stderr)
                     status = status or 2
-            else:
+            elif args.keep:
                 print('Kept project: ' + ' '.join(harness.dc))
     return status
 

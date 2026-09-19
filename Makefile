@@ -29,6 +29,10 @@ test-characterization: ## Verify observed behavior against the committed goldens
 test-update-golden: ## Re-record goldens. Review the diff before committing.
 	$(BEHAVIOR) --target $(TARGET) --update-golden
 
+.PHONY: test-bootstrap-golden
+test-bootstrap-golden: ## Capture added scenarios/runtimes; incomplete inventories cannot be compared.
+	$(BEHAVIOR) --target $(TARGET) --update-golden --bootstrap-goldens
+
 .PHONY: test-keep
 test-keep: ## Run the behavioral suite and leave containers up for inspection
 	$(BEHAVIOR) --target $(TARGET) --keep
@@ -49,7 +53,7 @@ test-api test-poller test-plugins test-auth test-devices: ## Run the suite, repo
 compare: ## Differential report. Usage: make compare BASELINE=cacti-1.2.31 CANDIDATE=kadupul
 	@test -n "$(BASELINE)" -a -n "$(CANDIDATE)" \
 		|| { echo 'Usage: make compare BASELINE=<target> CANDIDATE=<target>'; exit 2; }
-	./tests/bin/compare --baseline $(BASELINE) --candidate $(CANDIDATE) $(if $(APPROVALS),--approvals $(APPROVALS))
+	./tests/bin/compare --baseline $(BASELINE) --candidate $(CANDIDATE) $(if $(APPROVALS),--approvals $(APPROVALS)) $(if $(RESULTS_ROOT),--results-root "$(RESULTS_ROOT)")
 
 .PHONY: test-harness-selftest
 test-harness-selftest: ## Check the harness normalization does not erase real contracts
