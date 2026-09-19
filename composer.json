@@ -36,6 +36,9 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "config": {
+        "platform": {
+            "php": "8.0.0"
+        },
         "sort-packages": true,
         "vendor-dir": "./include/vendor"
     }

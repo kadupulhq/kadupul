@@ -11,6 +11,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Refresh bundled DOMPurify, D3, jQuery UI, tablesorter and HTML Purifier, pin Composer resolution to the existing PHP runtime floors, and verify browser-library provenance and compatibility in CI.
+
 - Require complete behavioral scenario inventories and capture application-handler PHP diagnostics separately from prepend-recorder events.
 
 - Preserve reproducible behavioral baseline references and count RRDtool acknowledgements in reachable polling, failed writes, unreachable-device polling, and missing-file fault contracts.

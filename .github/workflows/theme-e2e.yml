@@ -47,6 +47,13 @@ jobs:
         run: npm run test:themes -- --config=playwright.config.js
         working-directory: tests/e2e
 
+      - name: Verify pinned browser library sources
+        run: node tools/dependencies/sync.mjs --check
+
+      - name: Run browser library compatibility suite
+        run: node node_modules/@playwright/test/cli.js test --config=playwright.config.js vendor-assets.spec.js
+        working-directory: tests/e2e
+
       - name: Upload Playwright artifacts on failure
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7

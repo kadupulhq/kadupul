@@ -1,0 +1,52 @@
+[
+  {
+    "file": "purify.js",
+    "package": "dompurify",
+    "version": "3.4.15",
+    "url": "https://cdn.jsdelivr.net/npm/dompurify@3.4.15/dist/purify.js",
+    "sha256": "979b6c28df92881a36009de0bda1e866bee043ad69d36e54509e7210723d9af4"
+  },
+  {
+    "file": "purify.js.map",
+    "package": "dompurify",
+    "version": "3.4.15",
+    "url": "https://cdn.jsdelivr.net/npm/dompurify@3.4.15/dist/purify.js.map",
+    "sha256": "17fb521d869b004df2a25946311f1ade6272f4f9a81644fc861273bbd058a0c8"
+  },
+  {
+    "file": "d3.js",
+    "package": "d3",
+    "version": "7.9.0",
+    "url": "https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.js",
+    "sha256": "0c0d58be2106c14e242fc75bc09a17467800630751580665f6e9552a0c064ea2"
+  },
+  {
+    "file": "jquery-ui.js",
+    "package": "jquery-ui",
+    "version": "1.14.2",
+    "url": "https://code.jquery.com/ui/1.14.2/jquery-ui.js",
+    "sha256": "cca6e2f08d89e40f7f02d5c45ea7ea64ddb732dd70a5573210360217f3d260ac",
+    "patch": "ui-back-compat"
+  },
+  {
+    "file": "jquery.tablesorter.js",
+    "package": "tablesorter",
+    "version": "2.32.0",
+    "url": "https://cdn.jsdelivr.net/npm/tablesorter@2.32.0/dist/js/jquery.tablesorter.js",
+    "sha256": "78d7efca4f4d4c0b93b8552fec5c52a36866d5059f64f430ba5bbaf7af74d3c4"
+  },
+  {
+    "file": "jquery.tablesorter.widgets.js",
+    "package": "tablesorter",
+    "version": "2.32.0",
+    "url": "https://cdn.jsdelivr.net/npm/tablesorter@2.32.0/dist/js/jquery.tablesorter.widgets.js",
+    "sha256": "08efcb88c8cae759cf07a51f4f53ab879b17550e1db34cac18e1d54311c48650"
+  },
+  {
+    "file": "jquery.tablesorter.pager.js",
+    "package": "tablesorter",
+    "version": "2.32.0",
+    "url": "https://raw.githubusercontent.com/Mottie/tablesorter/v2.32.0/addons/pager/jquery.tablesorter.pager.js",
+    "sha256": "f11f6e3d22509862004729ec1ab44e2245c87e4c902b22c4a2f765aad198a285"
+  }
+]
