@@ -117,6 +117,16 @@ test('a site delete or duplicate naming an id that is not an existing site chang
     }
 });
 
+test('a site duplicate larger than the largest list page changes nothing', function () use ($runAction, $expectRefused) {
+    $expectRefused($runAction, '2', array_fill(0, 5001, '3'), 'Refused to duplicate 5001 Sites', 'site_duplicate_limit');
+
+    list($exit, $stdout, $stderr) = $runAction('2', array_fill(0, 5000, '3'));
+
+    expect($exit)->toBe(0, $stderr)
+        ->and(substr_count($stdout, 'COPY:Site 3 (1)'))->toBe(5000)
+        ->and($stdout)->not->toContain('Refused');
+});
+
 test('existing sites are still deleted and duplicated, and a large delete is not capped', function () use ($runAction) {
     list($exit, $stdout, $stderr) = $runAction('1', array('3', '5'));
 

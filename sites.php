@@ -361,7 +361,7 @@ function sites_selected_ids($selected_items) {
 }
 
 function form_actions() {
-	global $site_actions;
+	global $site_actions, $item_rows;
 
 	/* ================= input validation ================= */
 	get_filter_request_var('drp_action', FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^([a-zA-Z0-9_]+)$/')));
@@ -373,6 +373,17 @@ function form_actions() {
 
 		if ($selected_items != false) {
 			$selected_items = sites_selected_ids($selected_items);
+		}
+
+		/* Each duplicate is a full copy of the Site, so take no more than the
+		   largest list page can select. */
+		$limit = cacti_sizeof($item_rows) ? max(array_keys($item_rows)) : 0;
+
+		if ($selected_items != false && get_nfilter_request_var('drp_action') == '2' && cacti_sizeof($selected_items) > $limit) {
+			cacti_log('WARNING: Refused to duplicate ' . cacti_sizeof($selected_items) . ' Sites, more than ' . $limit . ', for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+			raise_message('site_duplicate_limit', __('No more than %d Sites can be duplicated at once.', $limit), MESSAGE_LEVEL_ERROR);
+
+			$selected_items = false;
 		}
 
 		if ($selected_items != false) {
