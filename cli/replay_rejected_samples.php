@@ -65,6 +65,13 @@ if ($all === ($local_data_id !== null)) {
     exit(1);
 }
 
+/* An online remote collector queues into the main database, where the drain also dead-letters,
+ * so this collector's local tables hold neither the rejected samples nor the live queue. */
+if (($config['poller_id'] ?? 1) > 1 && ($config['connection'] ?? '') === 'online') {
+    fwrite(STDERR, 'ERROR: This collector queues samples in the main database. Run replay_rejected_samples.php on the main data collector.' . PHP_EOL);
+    exit(1);
+}
+
 /* Replay writes to poller_output on this connection; a MEMORY queue would lose them on restart. */
 if (!$dry_run) {
     $queue_error = rrd_maintenance_queue_configuration_error(false);

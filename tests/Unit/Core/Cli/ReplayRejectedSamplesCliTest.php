@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('replay CLI requires an explicit scope and reports what it moved', function ($arguments, $exit, $call, $message, $engine = 'InnoDB') {
+test('replay CLI requires an explicit scope and reports what it moved', function ($arguments, $exit, $call, $message, $engine = 'InnoDB', $collector = array(1, 'online')) {
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/replay-rejected-' . bin2hex(random_bytes(8));
     foreach (array('', '/cli', '/include', '/lib') as $suffix) {
@@ -18,7 +18,7 @@ test('replay CLI requires an explicit scope and reports what it moved', function
             . 'define("RRD_TEST_CLI_COVERAGE_SOURCE",' . var_export($root . '/cli/replay_rejected_samples.php', true) . ');'
             . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
     }
-    file_put_contents($dir . '/include/cli_check.php', '<?php ' . $prelude . '$config = array("base_path" => dirname(__DIR__)); define("COPYRIGHT_YEARS", "2026");'
+    file_put_contents($dir . '/include/cli_check.php', '<?php ' . $prelude . '$config = array("base_path" => dirname(__DIR__), "poller_id" => ' . (int) $collector[0] . ', "connection" => ' . var_export($collector[1], true) . '); define("COPYRIGHT_YEARS", "2026");'
         . 'function get_cacti_cli_version() { return "fixture"; }'
         . 'function cacti_log($message, ...$args) { file_put_contents(dirname(__DIR__) . "/log", $message); }');
     // The move itself is covered by the database contract; this boundary records the request.
@@ -63,4 +63,7 @@ test('replay CLI requires an explicit scope and reports what it moved', function
     'version' => array(array('--version'), 0, null, 'Kadupul Rejected Sample Replay Utility, Version fixture'),
     'unknown parameter' => array(array('--bogus'), 1, null, 'ERROR: Invalid Parameter --bogus'),
     'volatile queue dry run' => array(array('--all', '--dry-run'), 0, array(null, true), 'Would replay 3', 'MEMORY'),
+    'online remote collector' => array(array('--all'), 1, null, 'Run replay_rejected_samples.php on the main data collector', 'InnoDB', array(2, 'online')),
+    'online remote dry run' => array(array('--all', '--dry-run'), 1, null, 'queues samples in the main database', 'InnoDB', array(2, 'online')),
+    'offline remote collector' => array(array('--all'), 0, array(null, false), 'Replayed 3 rejected samples', 'InnoDB', array(2, 'offline')),
 ));
