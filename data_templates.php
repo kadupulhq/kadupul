@@ -54,10 +54,16 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'rrd_add':
+		csrf_require_post(true);
+		data_templates_require_editable('rrd_add');
+
 		template_rrd_add();
 
 		break;
 	case 'rrd_remove':
+		csrf_require_post(true);
+		data_templates_require_editable('rrd_remove');
+
 		template_rrd_remove();
 
 		break;
@@ -559,6 +565,60 @@ function form_actions() {
 /* ----------------------------
     template - Data Templates
    ---------------------------- */
+
+/* Data sources copy a template's items, so the edit page offers New and the
+   item delete markers only while no data source uses the template. It offers
+   New only when the template does not collect by SNMP Get, and a delete marker
+   only while the template has another item. The request names the ids, and
+   template_rrd_remove() deletes by item id alone, so check all of it again. */
+function data_templates_require_editable($action) {
+	if ($action == 'rrd_add') {
+		$data_template_id     = get_filter_request_var('id');
+		$data_template_rrd_id = 0;
+	} else {
+		$data_template_id     = get_filter_request_var('data_template_id');
+		$data_template_rrd_id = get_filter_request_var('id');
+	}
+
+	$template = db_fetch_row_prepared('SELECT di.hash
+		FROM data_template_data AS dtd
+		INNER JOIN data_template AS dt
+		ON dt.id = dtd.data_template_id
+		LEFT JOIN data_input AS di
+		ON di.id = dtd.data_input_id
+		WHERE dtd.data_template_id = ?
+		AND dtd.local_data_id = 0',
+		array($data_template_id));
+
+	$rrds = array();
+
+	if ($action == 'rrd_remove') {
+		$rrds = array_column(db_fetch_assoc_prepared('SELECT id
+			FROM data_template_rrd
+			WHERE data_template_id = ?
+			AND local_data_id = 0',
+			array($data_template_id)), 'id');
+	}
+
+	if (!cacti_sizeof($template)) {
+		$reason = 'is not a Data Template';
+	} elseif (data_templates_data_sources($data_template_id) > 0) {
+		$reason = 'is in use by a Data Source';
+	} elseif ($action == 'rrd_add' && $template['hash'] == '3eb92bb845b9660a7445cf9740726522') {
+		$reason = 'collects by SNMP Get';
+	} elseif ($action == 'rrd_remove' && !in_array($data_template_rrd_id, $rrds)) {
+		$reason = 'does not hold item ' . (int) $data_template_rrd_id;
+	} elseif ($action == 'rrd_remove' && cacti_sizeof($rrds) < 2) {
+		$reason = 'would lose its last item';
+	} else {
+		return;
+	}
+
+	cacti_log('WARNING: Rejected data_templates.php?action=' . $action . ' because Data Template ' . (int) $data_template_id . ' ' . $reason, false, 'AUTH');
+
+	header('Location: data_templates.php?header=false');
+	exit;
+}
 
 function template_rrd_remove() {
 	/* ================= input validation ================= */

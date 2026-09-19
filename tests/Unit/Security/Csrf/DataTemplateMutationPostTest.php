@@ -187,3 +187,55 @@ test('deleting data templates that no data source uses still deletes them', func
 		->and($output)->toContain('write:UPDATE data_local SET data_template_id = 0 WHERE data_template_id IN (4,5)')
 		->and($output)->not->toContain('Refused');
 });
+
+test('data template item changes refuse any GET, including a same-site one', function () {
+	$db = array('template' => array(3 => array('hash' => 'x')), 'rrds' => array(3 => array(7, 8)));
+
+	expect_refused('data_templates.php', array('action' => 'rrd_add', 'id' => '3'), $db);
+	expect_refused('data_templates.php', array('action' => 'rrd_remove', 'id' => '7', 'data_template_id' => '3'), $db);
+});
+
+test('a data template item is added only to an unused template that does not collect by SNMP Get', function () {
+	$refused = array(
+		'is not a Data Template'     => array(),
+		'is in use by a Data Source' => array('template' => array(3 => array('hash' => 'x')), 'data_sources' => array(3 => 2)),
+		'collects by SNMP Get'       => array('template' => array(3 => array('hash' => '3eb92bb845b9660a7445cf9740726522'))),
+	);
+
+	foreach ($refused as $reason => $db) {
+		$output = run_page('data_templates.php', 'POST', array('action' => 'rrd_add', 'id' => '3'), $db);
+
+		expect($output)->toContain('log:AUTH:WARNING: Rejected data_templates.php?action=rrd_add because Data Template 3 ' . $reason)
+			->and($output)->toContain('header:Location: data_templates.php?header=false')
+			->and($output)->not->toContain('handler:');
+	}
+
+	$output = run_page('data_templates.php', 'POST', array('action' => 'rrd_add', 'id' => '3'), array('template' => array(3 => array('hash' => 'x'))));
+
+	expect($output)->toContain('query:3')
+		->and($output)->toContain('handler:template_rrd_add')
+		->and($output)->not->toContain('Rejected');
+});
+
+test('a data template item is removed only from the unused template that holds it, and never the last one', function () {
+	$template = array(3 => array('hash' => 'x'));
+	$refused  = array(
+		'is not a Data Template'     => array('rrds' => array(3 => array(7, 8))),
+		'is in use by a Data Source' => array('template' => $template, 'rrds' => array(3 => array(7, 8)), 'data_sources' => array(3 => 1)),
+		'does not hold item 7'       => array('template' => $template, 'rrds' => array(3 => array(8, 9), 4 => array(7, 10))),
+		'would lose its last item'   => array('template' => $template, 'rrds' => array(3 => array(7))),
+	);
+
+	foreach ($refused as $reason => $db) {
+		$output = run_page('data_templates.php', 'POST', array('action' => 'rrd_remove', 'id' => '7', 'data_template_id' => '3'), $db);
+
+		expect($output)->toContain('log:AUTH:WARNING: Rejected data_templates.php?action=rrd_remove because Data Template 3 ' . $reason)
+			->and($output)->toContain('header:Location: data_templates.php?header=false')
+			->and($output)->not->toContain('handler:');
+	}
+
+	$output = run_page('data_templates.php', 'POST', array('action' => 'rrd_remove', 'id' => '7', 'data_template_id' => '3'), array('template' => $template, 'rrds' => array(3 => array(7, 8))));
+
+	expect($output)->toContain('handler:template_rrd_remove')
+		->and($output)->not->toContain('Rejected');
+});
