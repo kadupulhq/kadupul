@@ -147,7 +147,9 @@ blob_copy() {
 	git cat-file blob "$1" > "$2/$3"
 }
 
-# Everything is computed first; nothing is written until every file passes.
+# Everything is computed first; HEAD, the index and the working tree are not
+# updated until every file passes. git hash-object may leave unreachable blobs
+# for garbage collection when a later file is refused.
 # --index-info input, NUL-terminated so any path survives.
 : > "$tmp/conversion-info"
 : > "$tmp/index-info"
