@@ -416,7 +416,7 @@ function ping_device() {
 	$host_id = get_filter_request_var('host_id');
 
 	if (!remote_agent_host_is_local($host_id)) {
-		print 'ERROR: Device[' . $host_id . '] is not assigned to this Data Collector';
+		print 'ERROR: Device[' . (int) $host_id . '] is not assigned to this Data Collector';
 		return;
 	}
 

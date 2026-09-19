@@ -154,6 +154,12 @@ test('ping acts only on a device of this collector', function () {
 		->and($output)->toContain('is not assigned to this Data Collector');
 });
 
+test('the ping refusal prints the device id only as an integer', function () {
+	$output = run_action(__NAMESPACE__ . '\ping_device', array('host_id' => '20<script>'));
+
+	expect($output)->toBe('ERROR: Device[20] is not assigned to this Data Collector');
+});
+
 test('data queries run only for a device of this collector', function () {
 	run_action(__NAMESPACE__ . '\run_remote_data_query', array('host_id' => 10, 'data_query_id' => 5));
 	expect(calls('data_query'))->toBe(array(array(10, 5)));
