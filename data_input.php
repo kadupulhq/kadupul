@@ -240,6 +240,35 @@ function data_input_save_message($data_input_id, $type = 'input') {
 	}
 }
 
+/* The list hides the built-in methods and disables the checkbox of a method
+   that a data template or data source collects with, but the request names the
+   ids, so the delete checks again. api_data_input_remove() deletes the method
+   and every value collected for its fields. */
+function data_input_unused($selected_items) {
+	$unused = array();
+
+	foreach ($selected_items as $id) {
+		$used = db_fetch_cell_prepared('SELECT COUNT(*)
+			FROM data_template_data
+			WHERE data_input_id = ?',
+			array($id));
+
+		if (empty(get_nonsystem_data_input($id))) {
+			cacti_log('WARNING: Refused to delete built-in Data Input Method ' . (int) $id, false, 'AUTH');
+		} elseif ($used > 0) {
+			cacti_log('WARNING: Refused to delete Data Input Method ' . (int) $id . ', which ' . (int) $used . ' Data Template(s) or Data Source(s) use', false, 'AUTH');
+		} else {
+			$unused[] = $id;
+		}
+	}
+
+	if (cacti_sizeof($unused) < cacti_sizeof($selected_items)) {
+		raise_message('data_input_in_use', __('Data Input Methods that are built in or in use were not deleted.'), MESSAGE_LEVEL_ERROR);
+	}
+
+	return $unused;
+}
+
 function form_actions() {
 	global $di_actions;
 
@@ -250,6 +279,10 @@ function form_actions() {
 	/* if we are to save this form, instead of display it */
 	if (isset_request_var('selected_items')) {
 		$selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
+
+		if ($selected_items != false && get_request_var('drp_action') == '1') {
+			$selected_items = data_input_unused($selected_items);
+		}
 
 		if ($selected_items != false) {
 			if (get_request_var('drp_action') == '1') { // delete

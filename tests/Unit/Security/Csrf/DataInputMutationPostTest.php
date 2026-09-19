@@ -160,3 +160,24 @@ test('data input bulk actions refuse any GET that carries selected_items', funct
 	expect(run_page('data_input.php', 'POST', array('action' => 'actions', 'selected_items' => 'a:1:{i:0;i:3;}', 'drp_action' => '1')))->toBe('handler:form_actions')
 		->and(run_page('data_input.php', 'GET', array('action' => 'actions', 'drp_action' => '1'), array(), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('handler:form_actions');
 });
+
+test('deleting data input methods leaves built-in methods and methods in use', function () {
+	$request = array('action' => 'actions', 'drp_action' => '1', 'selected_items' => serialize(array(3, 4, 5)));
+	$output  = run_page('data_input.php', 'POST', $request, array('usage' => array(3 => 2), 'user_methods' => array(0 => array(3, 4))), array(), true);
+
+	preg_match_all('/^write:.*$/m', $output, $writes);
+
+	expect($writes[0])->toBe(array('write:api_data_input_remove(4)'))
+		->and($output)->toContain('log:AUTH:WARNING: Refused to delete Data Input Method 3, which 2 Data Template(s) or Data Source(s) use')
+		->and($output)->toContain('log:AUTH:WARNING: Refused to delete built-in Data Input Method 5')
+		->and($output)->toContain('header:Location: data_input.php?header=false');
+});
+
+test('deleting data input methods that nothing uses still deletes them', function () {
+	$output = run_page('data_input.php', 'POST', array('action' => 'actions', 'drp_action' => '1', 'selected_items' => serialize(array(4, 6))), array('user_methods' => array(0 => array(4, 6))), array(), true);
+
+	preg_match_all('/^write:.*$/m', $output, $writes);
+
+	expect($writes[0])->toBe(array('write:api_data_input_remove(4)', 'write:api_data_input_remove(6)'))
+		->and($output)->not->toContain('Refused');
+});

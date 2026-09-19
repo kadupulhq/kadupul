@@ -721,10 +721,10 @@ header_redirect	./data_input.php:129					header('Location: data_input.php?action
 header_redirect	./data_input.php:161			header('Location: data_input.php?header=false&action=edit&id=' . (empty($data_input_id) ? get_nfilter_request_var('id') : $data_input_id));
 header_redirect	./data_input.php:204				header('Location: data_input.php?header=false&action=field_edit&data_input_id=' . get_request_var('data_input_id') . '&id=' . (empty($data_input_field_id) ? get_request_var('id') : $data_input_field_id) . (!isempty_request_var('input_output') ? '&type=' . get_request_var('input_output') : ''));
 header_redirect	./data_input.php:206				header('Location: data_input.php?header=false&action=edit&id=' . get_request_var('data_input_id'));
-header_redirect	./data_input.php:266			header('Location: data_input.php?header=false');
-header_redirect	./data_input.php:316			header('Location: data_input.php?header=none');
-header_redirect	./data_input.php:502			header('Location: data_input.php?header=false&action=edit&id=' . get_filter_request_var('data_input_id'));
-header_redirect	./data_input.php:565				header('Location: data_input.php');
+header_redirect	./data_input.php:299			header('Location: data_input.php?header=false');
+header_redirect	./data_input.php:349			header('Location: data_input.php?header=none');
+header_redirect	./data_input.php:535			header('Location: data_input.php?header=false&action=edit&id=' . get_filter_request_var('data_input_id'));
+header_redirect	./data_input.php:598				header('Location: data_input.php');
 header_redirect	./data_input.php:60			header('Location: data_input.php?header=false&action=edit&id=' . get_filter_request_var('data_input_id'));
 header_redirect	./data_input.php:79				header('Location: data_input.php?header=false&action=edit&id=' . get_filter_request_var('id'));
 header_redirect	./data_queries.php:108			header ('Location: data_queries.php');
