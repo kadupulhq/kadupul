@@ -9,6 +9,7 @@ test('profile mutations require unambiguous actions and a valid POST token', fun
     mkdir($dir . '/include', 0700, true);
     // Isolate authentication/database setup, not the controller or CSRF validator.
     file_put_contents($dir . '/include/auth.php', '<?php');
+    file_put_contents($dir . '/include/global.php', '<?php');
     $coverage = $this->getTestResultObject()->getCodeCoverage();
     $prelude = '';
     if ($coverage !== null) {
@@ -28,11 +29,20 @@ require $root . '/include/vendor/csrf/csrf-magic.php';
 require $root . '/lib/html_utility.php';
 function read_config_option($key) { return '0'; }
 function db_execute_prepared(...$args) { echo 'MUTATION'; exit; }
+function db_fetch_row_prepared(...$args) { return array('id' => 42, 'realm' => 0, 'password_change' => 'on', 'password' => '', 'username' => 'test'); }
+function get_cacti_version() { return 'test'; }
+function cacti_sizeof($value) { return count($value); }
+function get_guest_account() { return 0; }
+function secpass_check_pass($value) { return 'ok'; }
+function secpass_check_history(...$args) { return true; }
+function compat_password_verify(...$args) { return false; }
+function get_client_addr() { return '127.0.0.1'; }
+$config = array('url_path' => '/');
 session_id('profile-csrf-test-session');
 $_SESSION = array('sess_user_id' => 42);
 $_SERVER['REQUEST_METHOD'] = $argv[3];
 $field = $argv[4] === 'scalar' ? 'action' : ($argv[4] === 'array' ? 'action[]' : 'action[x][]');
-parse_str($field . '=' . $argv[2] . '&tab=general&name=full_name&value=test&full_name=test&email_address=test', $_REQUEST);
+parse_str($field . '=' . $argv[2] . '&tab=general&name=full_name&value=test&full_name=test&email_address=test&password=test&password_confirm=test', $_REQUEST);
 $_GET = $_SERVER['REQUEST_METHOD'] === 'GET' ? $_REQUEST : array();
 $_POST = $_SERVER['REQUEST_METHOD'] === 'POST' ? $_REQUEST : array();
 if ($argv[5] === 'valid') {
@@ -45,7 +55,7 @@ if ($argv[5] === 'valid') {
     $_POST['__csrf_magic'] = array('invalid');
 }
 register_shutdown_function(function () { echo 'STATUS:' . (http_response_code() ?: 200); });
-require $root . '/auth_profile.php';
+require $root . ($argv[2] === 'changepassword' ? '/auth_changepassword.php' : '/auth_profile.php');
 PHP;
     try {
         $process = proc_open(
@@ -59,7 +69,7 @@ PHP;
         $stderr = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
-        expect(proc_close($process))->toBe(0)
+        expect(proc_close($process))->toBe(0, $stderr . $stdout)
             ->and($stderr)->toBe('')
             ->and($stdout)->toBe(($status === 200 ? 'MUTATION' : '') . 'STATUS:' . $status);
         if ($coverage !== null) {
@@ -69,13 +79,14 @@ PHP;
         }
     } finally {
         unlink($dir . '/include/auth.php');
+        unlink($dir . '/include/global.php');
         rmdir($dir . '/include');
         foreach (glob($dir . '/*') as $file) {
             unlink($file);
         }
         rmdir($dir);
     }
-})->with(array('save', 'update_data', 'clear_user_settings', 'reset_default', 'logout_everywhere'))
+})->with(array('save', 'update_data', 'clear_user_settings', 'reset_default', 'logout_everywhere', 'changepassword'))
     ->with(array(
         'GET' => array('GET', 'scalar', 'missing', 405),
         'GET with body token' => array('GET', 'scalar', 'valid', 405),
