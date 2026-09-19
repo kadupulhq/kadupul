@@ -17,6 +17,9 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Reject traversal, absolute paths and symlink escapes in package file writes and previews while preserving supported script, resource and plugin destinations (#108).
+- Package import now rejects files for a plugin whose directory is a symlink; install such plugins as real directories under `plugins/` (#108).
+
 - Validate comparison provenance, hash Docker build exclusions, and emit exact capture hashes in behavioral reports.
 
 - Compare behavioral captures from an explicit results directory when the controller and application use separate checkouts; document the Linux native self-test PHP prerequisite.

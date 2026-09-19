@@ -384,7 +384,7 @@ dynamic_include	./lib/html_tree.php:806		include($config['include_path'] . '/glo
 dynamic_include	./lib/html_tree.php:807		include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/html_tree.php:808		include_once($config['library_path'] . '/html_utility.php');
 dynamic_include	./lib/import.php:12		include_once($config['library_path'] . '/xml.php');
-dynamic_include	./lib/import.php:1983		include_once($config['library_path'] . '/vdef.php');
+dynamic_include	./lib/import.php:2017		include_once($config['library_path'] . '/vdef.php');
 dynamic_include	./lib/installer.php:3591	                include_once($upgrade_file);
 dynamic_include	./lib/mib_cache.php:39			include_once($config['include_path'] . '/vendor/phpsnmp/mib_parser.php');
 dynamic_include	./lib/plugins.php:137							include_once($plugin_include);
@@ -573,7 +573,7 @@ fs_write	./lib/functions.php:7036		if (($f = @fopen($path, 'w'))) {
 fs_write	./lib/functions.php:704					file_put_contents(sys_get_temp_dir() . '/cacti-option.log', get_debug_prefix() .
 fs_write	./lib/functions.php:7110				file_put_contents($tmp_file, 'cacti');
 fs_write	./lib/import.php:408		$f   = fopen($filename, 'r');
-fs_write	./lib/import.php:589							$file = fopen($filename, 'wb');
+fs_write	./lib/import.php:623							$file = fopen($filename, 'wb');
 fs_write	./lib/installer.php:2971	            $file = fopen($cacheFile, "r");
 fs_write	./lib/poller.php:1700	                                if (file_put_contents($tmpfile, $contents) !== false) {
 fs_write	./lib/poller.php:1707	                                            file_put_contents($mypath, $contents);
@@ -589,7 +589,7 @@ fs_write	./lib/spikekill.php:1166			$source_handle = fopen($source, 'rb');
 fs_write	./lib/spikekill.php:1256				$handle    = @fopen($candidate, 'xb+');
 fs_write	./lib/spikekill.php:514			$source_handle = @fopen($this->rrdfile, 'rb');
 fs_write	./lib/spikekill.php:932			$original = @fopen($rrdfile, 'rb');
-fs_write	./package_import.php:368					file_put_contents($xmlfile, $data);
+fs_write	./package_import.php:373					file_put_contents($xmlfile, $data);
 fs_write	./package_import.php:79		if (file_put_contents($xmlfile, $_SESSION['sess_import_package']) === false) {
 fs_write	./script_server.php:32		define('STDIN', fopen('php://stdin', 'r'));
 fs_write	./script_server.php:33		define('STDOUT', fopen('php://stdout', 'w'));
@@ -912,7 +912,7 @@ header_redirect	./mibs/index.php:7	header("Location:../index.php");
 header_redirect	./package_import.php:111					header('Location: package_import.php');
 header_redirect	./package_import.php:117				header('Location: package_import.php');
 header_redirect	./package_import.php:129				header('Location: package_import?package_location=0');
-header_redirect	./package_import.php:234				header('Location: package_import.php');
+header_redirect	./package_import.php:216				header('Location: package_import.php');
 header_redirect	./plugins.php:107				header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
 header_redirect	./plugins.php:128				header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
 header_redirect	./plugins.php:143				header('Location: plugins.php' . ($option != '' ? '&' . $option:''));
