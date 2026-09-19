@@ -473,7 +473,12 @@ function data_query_item_movedown_gsv() {
 	/* ================= input validation ================= */
 	get_filter_request_var('id');
 	get_filter_request_var('snmp_query_graph_id');
+	get_filter_request_var('snmp_query_id');
 	/* ==================================================== */
+
+	if (!data_query_request_owns('snmp_query_graph_sv', array('snmp_query_graph_id', 'field_name'))) {
+		return;
+	}
 
 	move_item_down('snmp_query_graph_sv', get_request_var('id'), array('snmp_query_graph_id' => get_request_var('snmp_query_graph_id'), 'field_name' => get_nfilter_request_var('field_name')));
 }
@@ -482,7 +487,12 @@ function data_query_item_moveup_gsv() {
 	/* ================= input validation ================= */
 	get_filter_request_var('id');
 	get_filter_request_var('snmp_query_graph_id');
+	get_filter_request_var('snmp_query_id');
 	/* ==================================================== */
+
+	if (!data_query_request_owns('snmp_query_graph_sv', array('snmp_query_graph_id', 'field_name'))) {
+		return;
+	}
 
 	move_item_up('snmp_query_graph_sv', get_request_var('id'), array('snmp_query_graph_id' => get_request_var('snmp_query_graph_id'), 'field_name' => get_nfilter_request_var('field_name')));
 }
@@ -490,7 +500,13 @@ function data_query_item_moveup_gsv() {
 function data_query_item_remove_gsv() {
 	/* ================= input validation ================= */
 	get_filter_request_var('id');
+	get_filter_request_var('snmp_query_graph_id');
+	get_filter_request_var('snmp_query_id');
 	/* ==================================================== */
+
+	if (!data_query_request_owns('snmp_query_graph_sv', array('snmp_query_graph_id'))) {
+		return;
+	}
 
 	db_execute_prepared('DELETE FROM snmp_query_graph_sv
 		WHERE id = ?',
@@ -502,7 +518,12 @@ function data_query_item_movedown_dssv() {
 	get_filter_request_var('id');
 	get_filter_request_var('data_template_id');
 	get_filter_request_var('snmp_query_graph_id');
+	get_filter_request_var('snmp_query_id');
 	/* ==================================================== */
+
+	if (!data_query_request_owns('snmp_query_graph_rrd_sv', array('snmp_query_graph_id', 'data_template_id', 'field_name'))) {
+		return;
+	}
 
 	move_item_down('snmp_query_graph_rrd_sv', get_request_var('id'), array('data_template_id' => get_request_var('data_template_id'), 'snmp_query_graph_id' => get_request_var('snmp_query_graph_id'), 'field_name' => get_nfilter_request_var('field_name')));
 }
@@ -512,9 +533,51 @@ function data_query_item_moveup_dssv() {
 	get_filter_request_var('id');
 	get_filter_request_var('data_template_id');
 	get_filter_request_var('snmp_query_graph_id');
+	get_filter_request_var('snmp_query_id');
 	/* ==================================================== */
 
+	if (!data_query_request_owns('snmp_query_graph_rrd_sv', array('snmp_query_graph_id', 'data_template_id', 'field_name'))) {
+		return;
+	}
+
 	move_item_up('snmp_query_graph_rrd_sv', get_request_var('id'), array('data_template_id' => get_request_var('data_template_id'), 'snmp_query_graph_id' => get_request_var('snmp_query_graph_id'), 'field_name' => get_nfilter_request_var('field_name')));
+}
+
+/* The ids arrive in the request, so the row must sit under the Data Query,
+   and the graph association and field the page named. A mismatch is refused
+   rather than corrected because the page never sends one. */
+function data_query_request_owns($table, $columns) {
+	$sql_params = array(get_request_var('id'), get_request_var('snmp_query_id'));
+
+	if ($table == 'snmp_query_graph') {
+		$sql = 'SELECT COUNT(*)
+			FROM snmp_query_graph AS item
+			WHERE item.id = ?
+			AND item.snmp_query_id = ?';
+	} else {
+		$sql = "SELECT COUNT(*)
+			FROM $table AS item
+			INNER JOIN snmp_query_graph AS sqg
+			ON sqg.id = item.snmp_query_graph_id
+			WHERE item.id = ?
+			AND sqg.snmp_query_id = ?";
+	}
+
+	foreach ($columns as $column) {
+		$sql .= " AND item.$column = ?";
+
+		$sql_params[] = get_nfilter_request_var($column);
+	}
+
+	if (db_fetch_cell_prepared($sql, $sql_params) > 0) {
+		return true;
+	}
+
+	cacti_log('WARNING: Refused a change to ' . $table . ' id ' . get_request_var('id') . ' that is not under Data Query ' . get_request_var('snmp_query_id'), false, 'WEBUI');
+
+	raise_message('data_query_item_mismatch', __('The item does not belong to this Data Query.'), MESSAGE_LEVEL_ERROR);
+
+	return false;
 }
 
 function data_query_sv_check_sequences($type, $snmp_query_graph_id, $field_name) {
@@ -571,7 +634,14 @@ function data_query_sv_check_sequences($type, $snmp_query_graph_id, $field_name)
 function data_query_item_remove_dssv() {
 	/* ================= input validation ================= */
 	get_filter_request_var('id');
+	get_filter_request_var('snmp_query_graph_id');
+	get_filter_request_var('data_template_id');
+	get_filter_request_var('snmp_query_id');
 	/* ==================================================== */
+
+	if (!data_query_request_owns('snmp_query_graph_rrd_sv', array('snmp_query_graph_id', 'data_template_id'))) {
+		return;
+	}
 
 	db_execute_prepared('DELETE
 		FROM snmp_query_graph_rrd_sv
@@ -620,7 +690,12 @@ function data_query_item_remove_confirm() {
 function data_query_item_remove() {
 	/* ================= input validation ================= */
 	get_filter_request_var('id');
+	get_filter_request_var('snmp_query_id');
 	/* ==================================================== */
+
+	if (!data_query_request_owns('snmp_query_graph', array())) {
+		return;
+	}
 
 	db_execute_prepared('DELETE
 		FROM snmp_query_graph
