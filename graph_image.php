@@ -1,4 +1,5 @@
 <?php
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
@@ -23,7 +24,7 @@ get_filter_request_var('graph_width');
 get_filter_request_var('local_graph_id');
 
 if (isset_request_var('graph_nolegend')) {
-	set_request_var('graph_nolegend', 'true');
+    set_request_var('graph_nolegend', 'true');
 }
 
 get_filter_request_var('graph_theme', FILTER_CALLBACK, array('options' => 'sanitize_search_string'));
@@ -35,31 +36,33 @@ $graph_data_array = array();
 
 // Determine the graph type of the output
 if (!isset_request_var('image_format')) {
-	$type   = db_fetch_cell_prepared('SELECT image_format_id
+    $type   = db_fetch_cell_prepared(
+        'SELECT image_format_id
 		FROM graph_templates_graph
 		WHERE local_graph_id = ?',
-		array(get_request_var('local_graph_id')));
+        array(get_request_var('local_graph_id'))
+    );
 
-	switch($type) {
-	case '1':
-		$gtype = 'png';
-		break;
-	case '3':
-		$gtype = 'svg+xml';
-		break;
-	}
+    switch ($type) {
+        case '1':
+            $gtype = 'png';
+            break;
+        case '3':
+            $gtype = 'svg+xml';
+            break;
+    }
 } else {
-	switch(strtolower(get_nfilter_request_var('image_format'))) {
-	case 'png':
-		$gtype = 'png';
-		break;
-	case 'svg':
-		$gtype = 'svg+xml';
-		break;
-	default:
-		$gtype = 'png';
-		break;
-	}
+    switch (strtolower(get_nfilter_request_var('image_format'))) {
+        case 'png':
+            $gtype = 'png';
+            break;
+        case 'svg':
+            $gtype = 'svg+xml';
+            break;
+        default:
+            $gtype = 'png';
+            break;
+    }
 }
 
 $graph_data_array['image_format'] = $gtype;
@@ -68,116 +71,116 @@ cacti_session_close();
 
 /* override: graph start time (unix time) */
 if (!isempty_request_var('graph_start') && get_request_var('graph_start') < FILTER_VALIDATE_MAX_DATE_AS_INT) {
-	$graph_data_array['graph_start'] = get_request_var('graph_start');
+    $graph_data_array['graph_start'] = get_request_var('graph_start');
 }
 
 /* override: graph end time (unix time) */
 if (!isempty_request_var('graph_end') && get_request_var('graph_end') < FILTER_VALIDATE_MAX_DATE_AS_INT) {
-	$graph_data_array['graph_end'] = get_request_var('graph_end');
+    $graph_data_array['graph_end'] = get_request_var('graph_end');
 }
 
 /* override: graph height (in pixels) */
 if (!isempty_request_var('graph_height') && get_request_var('graph_height') < 3000) {
-	$graph_data_array['graph_height'] = get_request_var('graph_height');
+    $graph_data_array['graph_height'] = get_request_var('graph_height');
 }
 
 /* override: graph width (in pixels) */
 if (!isempty_request_var('graph_width') && get_request_var('graph_width') < 3000) {
-	$graph_data_array['graph_width'] = get_request_var('graph_width');
+    $graph_data_array['graph_width'] = get_request_var('graph_width');
 }
 
 /* override: skip drawing the legend? */
 if (!isempty_request_var('graph_nolegend')) {
-	$graph_data_array['graph_nolegend'] = get_request_var('graph_nolegend');
+    $graph_data_array['graph_nolegend'] = get_request_var('graph_nolegend');
 }
 
 /* print RRDtool graph source? */
 if (!isempty_request_var('show_source')) {
-	$graph_data_array['print_source'] = get_request_var('show_source');
+    $graph_data_array['print_source'] = get_request_var('show_source');
 }
 
 /* disable cache check */
 if (isset_request_var('disable_cache')) {
-	$graph_data_array['disable_cache'] = true;
+    $graph_data_array['disable_cache'] = true;
 }
 
 /* set the theme — validate against installed themes to prevent LFI */
 if (isset_request_var('graph_theme')) {
-	$graph_data_array['graph_theme'] = cacti_validate_theme(get_request_var('graph_theme'));
+    $graph_data_array['graph_theme'] = cacti_validate_theme(get_request_var('graph_theme'));
 }
 
 if (isset_request_var('rra_id')) {
-	if (get_nfilter_request_var('rra_id') == 'all') {
-		$rra_id = 'all';
-	} else {
-		$rra_id = get_filter_request_var('rra_id');
-	}
+    if (get_nfilter_request_var('rra_id') == 'all') {
+        $rra_id = 'all';
+    } else {
+        $rra_id = get_filter_request_var('rra_id');
+    }
 } else {
-	$rra_id = null;
+    $rra_id = null;
 }
 
 if ($config['poller_id'] == 1 || read_config_option('storage_location')) {
-	$null_param = array();
-	$output = rrdtool_function_graph(get_request_var('local_graph_id'), $rra_id, $graph_data_array, '', $null_param, $_SESSION['sess_user_id']);
+    $null_param = array();
+    $output = rrdtool_function_graph(get_request_var('local_graph_id'), $rra_id, $graph_data_array, '', $null_param, $_SESSION['sess_user_id']);
 } else {
-	$url  = $config['url_path'] . 'remote_agent.php?action=graph_json';
-	$url .= '&local_graph_id=' . get_request_var('local_graph_id');
-	$url .= '&rra_id=' . $rra_id;
+    $url  = $config['url_path'] . 'remote_agent.php?action=graph_json';
+    $url .= '&local_graph_id=' . get_request_var('local_graph_id');
+    $url .= '&rra_id=' . $rra_id;
 
-	foreach($graph_data_array as $variable => $value) {
-		$url .= '&' . rawurlencode((string)$variable) . '=' . rawurlencode((string)$value);
-	}
+    foreach ($graph_data_array as $variable => $value) {
+        $url .= '&' . rawurlencode((string) $variable) . '=' . rawurlencode((string) $value);
+    }
 
-	$output = call_remote_data_collector(1, $url);
+    $output = call_remote_data_collector(1, $url);
 
-	if (is_array($output) && isset($output['image'])) {
-		$output = $output['image'];
-	}
+    if (is_array($output) && isset($output['image'])) {
+        $output = $output['image'];
+    }
 
-	// Find the beginning of the image definition row
-	$image_begin_pos  = strpos($output, 'image = ');
-	// Find the end of the line of the image definition row, after this the raw image data will come
-	$image_data_pos   = strpos($output, "\n" , $image_begin_pos) + 1;
-	// Insert the raw image data to the array
-	$output  = substr($output, $image_data_pos);
+    // Find the beginning of the image definition row
+    $image_begin_pos  = strpos($output, 'image = ');
+    // Find the end of the line of the image definition row, after this the raw image data will come
+    $image_data_pos   = strpos($output, "\n", $image_begin_pos) + 1;
+    // Insert the raw image data to the array
+    $output  = substr($output, $image_data_pos);
 }
 
 if ($output !== false && $output != '') {
-	/* flush the headers now */
-	ob_end_clean();
+    /* flush the headers now */
+    ob_end_clean();
 
-	header('Content-type: image/'. $gtype);
-	header('Cache-Control: max-age=15');
+    header('Content-type: image/' . $gtype);
+    header('Cache-Control: max-age=15');
 
-	print $output;
+    print $output;
 } else {
-	ob_start();
+    ob_start();
 
-	/* get the error string */
-	$graph_data_array['get_error'] = true;
-	$null_param = array();
-	rrdtool_function_graph(get_request_var('local_graph_id'), $rra_id, $graph_data_array, '', $null_param, $_SESSION['sess_user_id']);
+    /* get the error string */
+    $graph_data_array['get_error'] = true;
+    $null_param = array();
+    rrdtool_function_graph(get_request_var('local_graph_id'), $rra_id, $graph_data_array, '', $null_param, $_SESSION['sess_user_id']);
 
-	$error = ob_get_contents();
+    $error = ob_get_contents();
 
-	if (read_config_option('stats_poller') == '') {
-		$error = __('The Kadupul Poller has not run yet.');
-	}
+    if (read_config_option('stats_poller') == '') {
+        $error = __('The Kadupul Poller has not run yet.');
+    }
 
-	if (isset($graph_data_array['graph_width']) && isset($graph_data_array['graph_height'])) {
-		$image = rrdtool_create_error_image($error, $graph_data_array['graph_width'], $graph_data_array['graph_height']);
-	} else {
-		$image = rrdtool_create_error_image($error);
-	}
+    if (isset($graph_data_array['graph_width']) && isset($graph_data_array['graph_height'])) {
+        $image = rrdtool_create_error_image($error, $graph_data_array['graph_width'], $graph_data_array['graph_height']);
+    } else {
+        $image = rrdtool_create_error_image($error);
+    }
 
-	ob_end_clean();
+    ob_end_clean();
 
-	header('Content-type: image/png');
-	header('Cache-Control: max-age=15');
+    header('Content-type: image/png');
+    header('Cache-Control: max-age=15');
 
-	if ($image !== false) {
-		print $image;
-	} else {
-		print file_get_contents(__DIR__ . '/images/kadupul-error.png');
-	}
+    if ($image !== false) {
+        print $image;
+    } else {
+        print file_get_contents(__DIR__ . '/images/kadupul-error.png');
+    }
 }

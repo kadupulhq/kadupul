@@ -29,7 +29,7 @@ function _ra_function_body(string $source, string $needle): string
 }
 
 test('get_snmp_data initialises $output before the host lookup', function () use ($source) {
-    $body = _ra_function_body($source, 'function get_snmp_data() {');
+    $body = _ra_function_body($source, 'function get_snmp_data()');
 
     $initPos   = strpos($body, "\$output = ''");
     $hostCheck = strpos($body, 'if (!empty($host_id))');
@@ -40,14 +40,14 @@ test('get_snmp_data initialises $output before the host lookup', function () use
 });
 
 test('get_snmp_data bails with U when the host row is missing', function () use ($source) {
-    $body = _ra_function_body($source, 'function get_snmp_data() {');
+    $body = _ra_function_body($source, 'function get_snmp_data()');
 
     expect($body)->toContain('!cacti_sizeof($host)');
     expect($body)->toContain("print 'U'");
 });
 
 test('get_snmp_data_walk initialises $output as an array before the host lookup', function () use ($source) {
-    $body = _ra_function_body($source, 'function get_snmp_data_walk() {');
+    $body = _ra_function_body($source, 'function get_snmp_data_walk()');
 
     $initPos   = strpos($body, '$output = array()');
     $hostCheck = strpos($body, 'if (!empty($host_id))');
@@ -58,7 +58,7 @@ test('get_snmp_data_walk initialises $output as an array before the host lookup'
 });
 
 test('get_snmp_data_walk preserves the cacti_sizeof($output) / U fallback', function () use ($source) {
-    $body = _ra_function_body($source, 'function get_snmp_data_walk() {');
+    $body = _ra_function_body($source, 'function get_snmp_data_walk()');
 
     expect($body)->toContain('!cacti_sizeof($host)');
     expect($body)->toContain('cacti_sizeof($output)');

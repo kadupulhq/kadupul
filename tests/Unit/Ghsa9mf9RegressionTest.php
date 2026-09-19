@@ -18,14 +18,14 @@ test('graph_image.php contains the 9mf9 fix', function () {
     $src = file_get_contents(__DIR__ . '/../../graph_image.php');
     expect($src)->not->toBeFalse();
     // Fix-specific assertion anchors below:
-    expect($src)->toContain('rawurlencode((string)$variable)');
-    expect($src)->toContain('rawurlencode((string)$value)');
+    expect($src)->toContain('rawurlencode((string) $variable)');
+    expect($src)->toContain('rawurlencode((string) $value)');
 });
 
 test('graph_json.php contains the 9mf9 fix', function () {
     $src = file_get_contents(__DIR__ . '/../../graph_json.php');
     expect($src)->not->toBeFalse();
     // Fix-specific assertion anchors below:
-    expect($src)->toContain('rawurlencode((string)$variable)');
-    expect($src)->toContain('rawurlencode((string)$value)');
+    expect($src)->toContain('rawurlencode((string) $variable)');
+    expect($src)->toContain('rawurlencode((string) $value)');
 });

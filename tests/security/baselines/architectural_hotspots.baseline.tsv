@@ -17,8 +17,8 @@ cmd_exec	./cli/update_heartbeat.php:247				$result = exec($command, $output, $re
 cmd_exec	./cmd.php:295			$cactiphp = proc_open($command, $cactides, $pipes);
 cmd_exec	./cmd_realtime.php:98				$cactiphp = proc_open(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/script_server.php') . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
 cmd_exec	./data_input.php:66			$output = shell_exec($php . ' -q ' . $script . ' --update --push ' . $id_arg);
-cmd_exec	./graph_realtime.php:202		shell_exec($php_binary . ' -q ' . $script_path . ' ' . $args);
-cmd_exec	./host.php:178		shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/cli/poller_reindex_hosts.php') . ' --qid=all --id=' . cacti_escapeshellarg((string) $host_id));
+cmd_exec	./graph_realtime.php:206	        shell_exec($php_binary . ' -q ' . $script_path . ' ' . $args);
+cmd_exec	./host.php:179	    shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/cli/poller_reindex_hosts.php') . ' --qid=all --id=' . cacti_escapeshellarg((string) $host_id));
 cmd_exec	./install/functions.php:521				$myinfo = @json_decode(shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/cli/import_package.php') . ' --filename=' . cacti_escapeshellarg("/$path/$xmlfile") . ' --info'), true);
 cmd_exec	./install/install.php:108			print '<li>' . __('The shell_exec() and/or exec() functions are currently blocked.') . '<br>' . __('See the PHP Manual: <a href="http://php.net/manual/en/ini.core.php#ini.disable-functions">Disable Functions</a>.') .'</li>';
 cmd_exec	./lib/database.php:2274		$process = proc_open(trim($cmd_string), $descriptors, $pipes, null, $env);
@@ -91,16 +91,16 @@ cmd_exec	./lib/utility.php:2098		$json     = shell_exec($php . ' -q ' . $php_fil
 cmd_exec	./poller_realtime.php:128	shell_exec("$command_string $extra_args");
 cmd_exec	./poller_realtime.php:212					shell_exec($command);
 cmd_exec	./poller_spikekill.php:230				$response = exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
-cmd_exec	./remote_agent.php:481								$cactiphp = proc_open($php_bin . ' -q ' . $srv_path . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
+cmd_exec	./remote_agent.php:532	                                $cactiphp = proc_open($php_bin . ' -q ' . $srv_path . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
 cmd_exec	./script_server.php:168					exec("TASKLIST /FO LIST /FI \"PID eq $parent_pid\"", $out);
 cmd_exec	./snmpagent_mibcache.php:32			popen('start "CactiSNMPCacheChild" /I ' . $php . ' ' . $extra_args, 'r');
 cmd_exec	./snmpagent_mibcache.php:34			exec($php . ' ' . $extra_args . ' > /dev/null &');
 cmd_exec	./snmpagent_persist.php:64		pclose(popen('start "CactiSNMPCache" /I /B ' . $php . ' ' . $extra_args, 'r'));
 cmd_exec	./snmpagent_persist.php:66		exec('ps -ef | grep -v grep | grep -v "sh -c" | grep snmpagent_mibcache.php', $output);
 cmd_exec	./snmpagent_persist.php:68			exec($php . ' ' . $extra_args . ' > /dev/null &');
-cmd_exec	./utilities.php:202					exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')), $out_array);
-cmd_exec	./utilities.php:220				$snmp_version = shell_exec(cacti_escapeshellcmd(read_config_option('path_snmpget')) . ' -V 2>&1');
-cmd_exec	./utilities.php:240				exec(cacti_escapeshellcmd(read_config_option('path_spine')) . ' --version', $out_array);
+cmd_exec	./utilities.php:207	                exec(cacti_escapeshellcmd(read_config_option('path_rrdtool')), $out_array);
+cmd_exec	./utilities.php:225	            $snmp_version = shell_exec(cacti_escapeshellcmd(read_config_option('path_snmpget')) . ' -V 2>&1');
+cmd_exec	./utilities.php:245	            exec(cacti_escapeshellcmd(read_config_option('path_spine')) . ' --version', $out_array);
 dynamic_include	./automation_snmp.php:396		#include_once($config['base_path'].'/plugins/mactrack/lib/automation_functions.php');
 dynamic_include	./automation_tree_rules.php:520		include_once($config['base_path'].'/lib/html_tree.php');
 dynamic_include	./cli/add_data_query.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
@@ -274,7 +274,7 @@ dynamic_include	./color_templates.php:161		include_once($config['base_path'] . '
 dynamic_include	./color_templates.php:361		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./color_templates.php:411		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./color_templates.php:467		include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./graph_realtime.php:365	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
+dynamic_include	./graph_realtime.php:369	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
 dynamic_include	./include/auth.php:104					require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/auth.php:159				require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/csrf.php:38	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
@@ -441,7 +441,7 @@ dynamic_include	./lib/utility.php:164		include_once($config['library_path'] . '/
 dynamic_include	./lib/utility.php:165		include_once($config['library_path'] . '/api_poller.php');
 dynamic_include	./lib/utility.php:29		include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./lib/utility.php:820		include_once($config['library_path'] . '/api_data_source.php');
-dynamic_include	./link.php:55					include_once($file);
+dynamic_include	./link.php:58	                include_once($file);
 dynamic_include	./poller.php:1025	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:1176	    include_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller.php:18	require_once($config['base_path'] . '/lib/poller.php');
@@ -506,20 +506,20 @@ dynamic_include	./poller_rrdcheck.php:19	require_once($config['base_path'] . '/l
 dynamic_include	./poller_rrdcheck.php:20	require_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./poller_rrdcheck.php:21	require_once($config['base_path'] . '/lib/rrdcheck.php');
 dynamic_include	./pollers.php:9	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./remote_agent.php:10	include_once($config['base_path'] . '/lib/data_query.php');
-dynamic_include	./remote_agent.php:11	require_once($config['base_path'] . '/lib/api_graph.php');
-dynamic_include	./remote_agent.php:12	require_once($config['base_path'] . '/lib/api_tree.php');
-dynamic_include	./remote_agent.php:13	require_once($config['base_path'] . '/lib/data_query.php');
-dynamic_include	./remote_agent.php:14	require_once($config['base_path'] . '/lib/html_form_template.php');
-dynamic_include	./remote_agent.php:15	require_once($config['base_path'] . '/lib/ping.php');
-dynamic_include	./remote_agent.php:16	require_once($config['base_path'] . '/lib/poller.php');
-dynamic_include	./remote_agent.php:17	require_once($config['base_path'] . '/lib/rrd.php');
-dynamic_include	./remote_agent.php:18	require_once($config['base_path'] . '/lib/snmp.php');
-dynamic_include	./remote_agent.php:19	require_once($config['base_path'] . '/lib/sort.php');
-dynamic_include	./remote_agent.php:20	require_once($config['base_path'] . '/lib/template.php');
-dynamic_include	./remote_agent.php:21	require_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./remote_agent.php:8	require_once($config['base_path'] . '/lib/api_device.php');
-dynamic_include	./remote_agent.php:9	require_once($config['base_path'] . '/lib/api_data_source.php');
+dynamic_include	./remote_agent.php:10	require_once($config['base_path'] . '/lib/api_data_source.php');
+dynamic_include	./remote_agent.php:11	include_once($config['base_path'] . '/lib/data_query.php');
+dynamic_include	./remote_agent.php:12	require_once($config['base_path'] . '/lib/api_graph.php');
+dynamic_include	./remote_agent.php:13	require_once($config['base_path'] . '/lib/api_tree.php');
+dynamic_include	./remote_agent.php:14	require_once($config['base_path'] . '/lib/data_query.php');
+dynamic_include	./remote_agent.php:15	require_once($config['base_path'] . '/lib/html_form_template.php');
+dynamic_include	./remote_agent.php:16	require_once($config['base_path'] . '/lib/ping.php');
+dynamic_include	./remote_agent.php:17	require_once($config['base_path'] . '/lib/poller.php');
+dynamic_include	./remote_agent.php:18	require_once($config['base_path'] . '/lib/rrd.php');
+dynamic_include	./remote_agent.php:19	require_once($config['base_path'] . '/lib/snmp.php');
+dynamic_include	./remote_agent.php:20	require_once($config['base_path'] . '/lib/sort.php');
+dynamic_include	./remote_agent.php:21	require_once($config['base_path'] . '/lib/template.php');
+dynamic_include	./remote_agent.php:22	require_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./remote_agent.php:9	require_once($config['base_path'] . '/lib/api_device.php');
 dynamic_include	./reports_admin.php:10	include_once($config['library_path'] . '/timespan_settings.php');
 dynamic_include	./reports_admin.php:8	include_once($config['library_path'] . '/reports.php');
 dynamic_include	./reports_admin.php:9	include_once($config['library_path'] . '/html_reports.php');
@@ -541,7 +541,7 @@ sort_order_input	./automation_snmp.php:515				ORDER BY sequence', array(get_requ
 sort_order_input	./data_queries.php:854						ORDER BY field_name, sequence', array(get_request_var('id'), $data_template['id']));
 sort_order_input	./graph_templates.php:486			ORDER BY name', array(get_request_var('id')));
 sort_order_input	./graph_templates_inputs.php:179			ORDER BY gti.sequence", array(get_request_var('id'), get_request_var('graph_template_id')));
-sort_order_input	./graphs.php:1346				ORDER BY gti.sequence", array(get_request_var('id')));
+sort_order_input	./graphs.php:1403				ORDER BY gti.sequence", array(get_request_var('id')));
 sort_order_input	./host_templates.php:449				ORDER BY graph_templates.name', array(get_request_var('id')));
 sort_order_input	./host_templates.php:487									ORDER BY gt.name', array(get_request_var('id'))),'name','id','','','');?>
 sort_order_input	./host_templates.php:506				ORDER BY snmp_query.name', array(get_request_var('id')));
