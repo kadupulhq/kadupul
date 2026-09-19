@@ -26,6 +26,7 @@ if (defined('REPORT_SECURITY_TEST_COVERAGE')) {
 if (defined('PROFILE_SECURITY_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/auth_profile.php');
     $coverageFilter->includeFile($coverageRoot . '/auth_changepassword.php');
+    $coverageFilter->includeFile($coverageRoot . '/auth_login.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
 }
 if (defined('RRD_TEST_CLI_COVERAGE_COPY')) {

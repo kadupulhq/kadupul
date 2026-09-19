@@ -17,7 +17,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
-- Reject array-valued actions and require CSRF-validated POST requests for password changes, profile saves, setting resets and session revocation.
+- Reject array-valued actions and require CSRF-validated POST requests for form login, password changes, profile saves, setting resets and session revocation while preserving server-authenticated Basic login.
 - Quote the installer's PHP executable as one shell argument when validating binary locations.
 - Enforce enabled-group report realms and authorize report item saves, edits and moves against their existing parent (#111).
 - Reject traversal, absolute paths and symlink escapes in package file writes and previews while preserving supported script, resource and plugin destinations (#108).
