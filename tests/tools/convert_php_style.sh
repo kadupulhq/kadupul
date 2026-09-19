@@ -2,9 +2,10 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# Converts PHP files to PER-CS in a formatting-only commit of their own, then
-# reformats any pending edits to those files so the remaining diff holds only
-# the real change.
+# Converts PHP files that need PER-CS formatting in a formatting-only commit of
+# their own, then reformats pending edits to those converted files so the
+# remaining diff holds only the real change. Files already clean at HEAD are
+# left untouched.
 #
 # Each file must exist at HEAD and be covered by the fixer config's Finder.
 # Its HEAD version is fixed until it stops changing (some files need a second
