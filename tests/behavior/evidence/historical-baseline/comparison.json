@@ -2437,7 +2437,7 @@
   ],
   "contracts": 34,
   "controller": {
-    "harness_revision": "8b6ca034fed8ce9d400f1fc0e6fd06fa0add93e5",
+    "harness_revision": "bfd33d4962a9947587e4c449ae73b911e26a124a",
     "harness_dirty": false,
     "application_dirty": false,
     "harness_sha256": "9586a2e277cfc3c9e7aa8026973e2bf68696c18abde70844ff12540b299084b9",
@@ -2459,7 +2459,7 @@
       "tests/Fixtures/snmp/snmpd.conf": "ebf84be55637f147cee6be598389319ca05504b0e72de663325d37f4740d087e",
       "tests/Fixtures/snmp/value.sh": "ca019476b495d907b5fa03b70352cdb243c976a78718752f1c1a7ed2fde0ac9f",
       "tests/behavior/compose.yml": "ecdbd3c9f4c469113f2b2f72cc0fd232b0c50200fdd7500d91f49599c713309e",
-      "tests/behavior/Dockerfile": "b4b7089dc9e7a9d82c40bfa831ed70f4beb92ec30a1837711e46e0d80e27b479",
+      "tests/behavior/Dockerfile": "e3238f7955cb2399faa83ccfa1027abb9bdb999be863c2200e8bb11223ac7422",
       ".dockerignore": "cc2dfe087ace25d3f4fb7a63ccc83aed5622efa1e2742500aa0b0d97f287a04f"
     },
     "application_inputs_sha256": {
@@ -2480,21 +2480,21 @@
       "tests/Fixtures/snmp/snmpd.conf": "ebf84be55637f147cee6be598389319ca05504b0e72de663325d37f4740d087e",
       "tests/Fixtures/snmp/value.sh": "ca019476b495d907b5fa03b70352cdb243c976a78718752f1c1a7ed2fde0ac9f",
       "tests/behavior/compose.yml": "ecdbd3c9f4c469113f2b2f72cc0fd232b0c50200fdd7500d91f49599c713309e",
-      "tests/behavior/Dockerfile": "b4b7089dc9e7a9d82c40bfa831ed70f4beb92ec30a1837711e46e0d80e27b479",
+      "tests/behavior/Dockerfile": "e3238f7955cb2399faa83ccfa1027abb9bdb999be863c2200e8bb11223ac7422",
       ".dockerignore": "cc2dfe087ace25d3f4fb7a63ccc83aed5622efa1e2742500aa0b0d97f287a04f"
     }
   },
   "manifest_sha256": {
-    "baseline": "b76fb7039511457e28861fa0efa03fa3844a2f13c4fd8abf5735faf30a868fea",
-    "candidate": "b76fb7039511457e28861fa0efa03fa3844a2f13c4fd8abf5735faf30a868fea",
-    "repeat": "b76fb7039511457e28861fa0efa03fa3844a2f13c4fd8abf5735faf30a868fea"
+    "baseline": "4130697cbe3cf8592aca95d276461d4fa49997b96367c2b9ef853f8c3d63047c",
+    "candidate": "4130697cbe3cf8592aca95d276461d4fa49997b96367c2b9ef853f8c3d63047c",
+    "repeat": "4130697cbe3cf8592aca95d276461d4fa49997b96367c2b9ef853f8c3d63047c"
   },
   "captures": {
     "baseline": {
       "revision": "6ce3572dab3264be563b765f25dcadd8cc046252",
       "schema_sha256": "162581247df6fe0f33508e44848244e6e65798cd108afcfb306a558dd58a320e",
       "provenance": {
-        "harness_revision": "8b6ca034fed8ce9d400f1fc0e6fd06fa0add93e5",
+        "harness_revision": "bfd33d4962a9947587e4c449ae73b911e26a124a",
         "harness_dirty": false,
         "application_dirty": true,
         "harness_sha256": "9586a2e277cfc3c9e7aa8026973e2bf68696c18abde70844ff12540b299084b9",
@@ -2516,7 +2516,7 @@
           "tests/Fixtures/snmp/snmpd.conf": "ebf84be55637f147cee6be598389319ca05504b0e72de663325d37f4740d087e",
           "tests/Fixtures/snmp/value.sh": "ca019476b495d907b5fa03b70352cdb243c976a78718752f1c1a7ed2fde0ac9f",
           "tests/behavior/compose.yml": "ecdbd3c9f4c469113f2b2f72cc0fd232b0c50200fdd7500d91f49599c713309e",
-          "tests/behavior/Dockerfile": "b4b7089dc9e7a9d82c40bfa831ed70f4beb92ec30a1837711e46e0d80e27b479",
+          "tests/behavior/Dockerfile": "e3238f7955cb2399faa83ccfa1027abb9bdb999be863c2200e8bb11223ac7422",
           ".dockerignore": "cc2dfe087ace25d3f4fb7a63ccc83aed5622efa1e2742500aa0b0d97f287a04f"
         },
         "application_inputs_sha256": {
@@ -2537,13 +2537,13 @@
           "tests/Fixtures/snmp/snmpd.conf": "ebf84be55637f147cee6be598389319ca05504b0e72de663325d37f4740d087e",
           "tests/Fixtures/snmp/value.sh": "ca019476b495d907b5fa03b70352cdb243c976a78718752f1c1a7ed2fde0ac9f",
           "tests/behavior/compose.yml": "ecdbd3c9f4c469113f2b2f72cc0fd232b0c50200fdd7500d91f49599c713309e",
-          "tests/behavior/Dockerfile": "b4b7089dc9e7a9d82c40bfa831ed70f4beb92ec30a1837711e46e0d80e27b479",
+          "tests/behavior/Dockerfile": "e3238f7955cb2399faa83ccfa1027abb9bdb999be863c2200e8bb11223ac7422",
           ".dockerignore": "cc2dfe087ace25d3f4fb7a63ccc83aed5622efa1e2742500aa0b0d97f287a04f"
         }
       },
       "application_images": {
-        "web": "sha256:9e52fa196049bcce36ac657eff65632a4eab576f83a154d3af53d993743b4cb8",
-        "snmp": "sha256:b654ed0ec294e4f0bdef2d0a269e39580d15b9a8c0e494c9210533efa1f3ecd1",
+        "web": "sha256:cf5e800629dec0d32e55c78d95530c1f38bfc6777a1f279fc598bca3a82fb0f0",
+        "snmp": "sha256:381066d05ac153d25dc092f7137816e3542959b2cdb4c7cb1b0ca83b3a3b7977",
         "db": "sha256:d7e3dae8dc3312252133a5574ac4660d10c14018cafae7c5f0b70e8ae1120018"
       }
     },
@@ -2551,7 +2551,7 @@
       "revision": "6ce3572dab3264be563b765f25dcadd8cc046252",
       "schema_sha256": "162581247df6fe0f33508e44848244e6e65798cd108afcfb306a558dd58a320e",
       "provenance": {
-        "harness_revision": "8b6ca034fed8ce9d400f1fc0e6fd06fa0add93e5",
+        "harness_revision": "bfd33d4962a9947587e4c449ae73b911e26a124a",
         "harness_dirty": false,
         "application_dirty": true,
         "harness_sha256": "9586a2e277cfc3c9e7aa8026973e2bf68696c18abde70844ff12540b299084b9",
@@ -2573,7 +2573,7 @@
           "tests/Fixtures/snmp/snmpd.conf": "ebf84be55637f147cee6be598389319ca05504b0e72de663325d37f4740d087e",
           "tests/Fixtures/snmp/value.sh": "ca019476b495d907b5fa03b70352cdb243c976a78718752f1c1a7ed2fde0ac9f",
           "tests/behavior/compose.yml": "ecdbd3c9f4c469113f2b2f72cc0fd232b0c50200fdd7500d91f49599c713309e",
-          "tests/behavior/Dockerfile": "b4b7089dc9e7a9d82c40bfa831ed70f4beb92ec30a1837711e46e0d80e27b479",
+          "tests/behavior/Dockerfile": "e3238f7955cb2399faa83ccfa1027abb9bdb999be863c2200e8bb11223ac7422",
           ".dockerignore": "cc2dfe087ace25d3f4fb7a63ccc83aed5622efa1e2742500aa0b0d97f287a04f"
         },
         "application_inputs_sha256": {
@@ -2594,13 +2594,13 @@
           "tests/Fixtures/snmp/snmpd.conf": "ebf84be55637f147cee6be598389319ca05504b0e72de663325d37f4740d087e",
           "tests/Fixtures/snmp/value.sh": "ca019476b495d907b5fa03b70352cdb243c976a78718752f1c1a7ed2fde0ac9f",
           "tests/behavior/compose.yml": "ecdbd3c9f4c469113f2b2f72cc0fd232b0c50200fdd7500d91f49599c713309e",
-          "tests/behavior/Dockerfile": "b4b7089dc9e7a9d82c40bfa831ed70f4beb92ec30a1837711e46e0d80e27b479",
+          "tests/behavior/Dockerfile": "e3238f7955cb2399faa83ccfa1027abb9bdb999be863c2200e8bb11223ac7422",
           ".dockerignore": "cc2dfe087ace25d3f4fb7a63ccc83aed5622efa1e2742500aa0b0d97f287a04f"
         }
       },
       "application_images": {
-        "web": "sha256:9e52fa196049bcce36ac657eff65632a4eab576f83a154d3af53d993743b4cb8",
-        "snmp": "sha256:b654ed0ec294e4f0bdef2d0a269e39580d15b9a8c0e494c9210533efa1f3ecd1",
+        "web": "sha256:cf5e800629dec0d32e55c78d95530c1f38bfc6777a1f279fc598bca3a82fb0f0",
+        "snmp": "sha256:381066d05ac153d25dc092f7137816e3542959b2cdb4c7cb1b0ca83b3a3b7977",
         "db": "sha256:d7e3dae8dc3312252133a5574ac4660d10c14018cafae7c5f0b70e8ae1120018"
       }
     },
@@ -2608,7 +2608,7 @@
       "revision": "6ce3572dab3264be563b765f25dcadd8cc046252",
       "schema_sha256": "162581247df6fe0f33508e44848244e6e65798cd108afcfb306a558dd58a320e",
       "provenance": {
-        "harness_revision": "8b6ca034fed8ce9d400f1fc0e6fd06fa0add93e5",
+        "harness_revision": "bfd33d4962a9947587e4c449ae73b911e26a124a",
         "harness_dirty": false,
         "application_dirty": true,
         "harness_sha256": "9586a2e277cfc3c9e7aa8026973e2bf68696c18abde70844ff12540b299084b9",
@@ -2630,7 +2630,7 @@
           "tests/Fixtures/snmp/snmpd.conf": "ebf84be55637f147cee6be598389319ca05504b0e72de663325d37f4740d087e",
           "tests/Fixtures/snmp/value.sh": "ca019476b495d907b5fa03b70352cdb243c976a78718752f1c1a7ed2fde0ac9f",
           "tests/behavior/compose.yml": "ecdbd3c9f4c469113f2b2f72cc0fd232b0c50200fdd7500d91f49599c713309e",
-          "tests/behavior/Dockerfile": "b4b7089dc9e7a9d82c40bfa831ed70f4beb92ec30a1837711e46e0d80e27b479",
+          "tests/behavior/Dockerfile": "e3238f7955cb2399faa83ccfa1027abb9bdb999be863c2200e8bb11223ac7422",
           ".dockerignore": "cc2dfe087ace25d3f4fb7a63ccc83aed5622efa1e2742500aa0b0d97f287a04f"
         },
         "application_inputs_sha256": {
@@ -2651,13 +2651,13 @@
           "tests/Fixtures/snmp/snmpd.conf": "ebf84be55637f147cee6be598389319ca05504b0e72de663325d37f4740d087e",
           "tests/Fixtures/snmp/value.sh": "ca019476b495d907b5fa03b70352cdb243c976a78718752f1c1a7ed2fde0ac9f",
           "tests/behavior/compose.yml": "ecdbd3c9f4c469113f2b2f72cc0fd232b0c50200fdd7500d91f49599c713309e",
-          "tests/behavior/Dockerfile": "b4b7089dc9e7a9d82c40bfa831ed70f4beb92ec30a1837711e46e0d80e27b479",
+          "tests/behavior/Dockerfile": "e3238f7955cb2399faa83ccfa1027abb9bdb999be863c2200e8bb11223ac7422",
           ".dockerignore": "cc2dfe087ace25d3f4fb7a63ccc83aed5622efa1e2742500aa0b0d97f287a04f"
         }
       },
       "application_images": {
-        "web": "sha256:9e52fa196049bcce36ac657eff65632a4eab576f83a154d3af53d993743b4cb8",
-        "snmp": "sha256:b654ed0ec294e4f0bdef2d0a269e39580d15b9a8c0e494c9210533efa1f3ecd1",
+        "web": "sha256:cf5e800629dec0d32e55c78d95530c1f38bfc6777a1f279fc598bca3a82fb0f0",
+        "snmp": "sha256:381066d05ac153d25dc092f7137816e3542959b2cdb4c7cb1b0ca83b3a3b7977",
         "db": "sha256:d7e3dae8dc3312252133a5574ac4660d10c14018cafae7c5f0b70e8ae1120018"
       }
     }
