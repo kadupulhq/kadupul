@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
-// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 function spikeBackupCommand($args, $env = null)
 {
@@ -41,7 +41,7 @@ beforeEach(function () {
     }
     expect(spikeBackupCommand(array_merge(array($this->binary, 'update', $this->rrd), $samples))[0])->toBe(0);
     $this->before = file_get_contents($this->rrd);
-    $this->env = array_merge(getenv(), array('SPIKE_TEST_ROOT' => $this->root, 'SPIKE_TEST_RRDTOOL' => $this->binary, 'SPIKE_TEST_BACKUP' => $this->dir . '/backup'));
+    $this->env = array_merge(getenv(), array('SPIKE_TEST_ROOT' => $this->root, 'SPIKE_TEST_RRA' => $this->dir, 'SPIKE_TEST_RRDTOOL' => $this->binary, 'SPIKE_TEST_BACKUP' => $this->dir . '/backup'));
     $this->args = array(PHP_BINARY, $this->dir . '/cli/removespikes.php', '--rrdfile=' . $this->rrd, '--method=stddev', '--avgnan=avg', '--stddev=1', '--outliers=2', '--number=100');
 });
 

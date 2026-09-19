@@ -18,3 +18,259 @@ leaves the live RRD unchanged. On success the original owner, group and mode are
 preserved, and the validated sibling replaces the live directory entry with
 rename. Rename replaces a swapped symlink itself rather than following its target.
 Requested recovery snapshots remain available after success or failure.
+
+Local RRDtool writers hold a shared advisory lock on the configured RRA directory
+inode. Synchronous commands release it only after the child exits; piped commands
+retain it until `rrd_close()` drains and waits for RRDtool (also at PHP shutdown).
+Spike removal waits for an exclusive lock before its dump and holds it
+through backup and atomic replacement. It retries brief contention for up to
+60 seconds, bounded further by spikekill_timeout, then safely refuses if polling
+still owns the store; retry after polling finishes. A new writer waits until maintenance completes.
+Before opening a lease, all local writers validate the configured directory,
+its symlink entries, its canonical target, and their ancestors against the same
+ownership and permission policy, with explicitly configured service-account
+trust for split web/poller deployments (see below). PHP's POSIX extension is
+required on Unix; unsafe or unverifiable storage fails closed. Root and the
+service account are trusted: this does not protect against either changing
+permissions or replacing directories during an operation. They must stop all
+writers and maintenance before changing the storage namespace.
+The piped hot path reuses its existing lock without reopening or statting storage.
+
+All Kadupul processes sharing RRD files must configure the same RRA directory,
+including when individual RRDs live elsewhere. Stop pollers before replacing that
+directory or changing storage configuration. External writers and cache daemons do
+not participate in this protocol: quiesce them before maintenance. Spike removal
+refuses a configured `RRDCACHED_ADDRESS`. Use local POSIX storage with working
+cross-process directory `flock`; unsupported locking fails closed. No lock file is
+created or removed, so a user cannot split the lock by unlinking a sidecar file.
+
+Heartbeat tuning holds an exclusive lease and waits for active writers. XML rewrite utilities hold an exclusive lease from before their dump through child completion and refuse contention or a configured cache daemon. Splicing takes an exclusive lease before reading and rewriting its RRDs. Floating
+first flushes through the regular backend and fetches its inspection data, then
+waits for an exclusive lease before dumping and rewriting. Float workers
+therefore serialize the rewrite phase rather than racing each other or polling.
+A busy splice exits before dumping. Cache-daemon rewrites are refused. Windows
+refuses destructive local rewrites because exclusive maintenance coordination is unavailable.
+Private replacement pipes opened during crash recovery are drained and closed
+before returning; later calls with the closed original pipe use synchronous I/O.
+
+Batch gap repair uses one worker even when multiple threads are requested, so its own children cannot reject one another under the global exclusive maintenance lease. A repair refuses an already-active polling writer and requires a retry; normal polling writers wait up to five seconds behind active exclusive maintenance. An unavailable or replaced storage directory fails closed. Heartbeat tuning also requires the external cache daemon to be disabled.
+
+Float children handle SIGTERM and SIGINT while waiting for a lease, unregister their own task identity, and leave queued samples intact. Failed writer initialization prevents normal and on-demand Boost queue consumption; main Boost cleanup retains nonempty or unverifiable archive tables.
+
+An exclusive rewrite aborts after a broken pipe; it cannot release its lease and retry a now-stale dump snapshot. Ordinary writer recovery remains available.
+
+### Separate web and poller accounts
+
+When the web server and poller run as different Unix users, configure
+`$config['rrd_maintenance_trusted_uids']` in `include/config.php` with the numeric
+UIDs of both service accounts (including any account owning a storage ancestor).
+Use identical configuration for every process sharing the store. If the storage
+is group-writable, also explicitly list its numeric GID in
+`$config['rrd_maintenance_trusted_gids']`; every member of that group must be trusted
+to administer the storage. Normal filesystem access permissions still apply.
+Do not infer trust from the directory's current owner or from group membership.
+World-writable storage remains rejected, as do unlisted owners and writable
+ancestor groups. Stop all participating processes before changing storage paths.
+The stricter spike backup filesystem checks remain in effect independently.
+
+### Upgrade prerequisite
+
+Before upgrading an existing split-account installation, identify the numeric
+UIDs of the web and poller accounts and the groups allowed to modify RRD storage.
+Set the explicit trust lists in the existing `include/config.php` on every
+participating collector; changing `config.php.dist` does not update an installed
+configuration. PHP's POSIX extension is required for local Unix RRD storage.
+For example, a `0775 cacti:apache` store requires the actual numeric UID of
+`cacti` (and the web account) and the numeric GID of `apache` in those lists.
+Use the IDs from the installation, not example numbers from another server.
+Do not make the storage world-writable to work around a permissions error.
+
+The web/CLI installer permission step reports this prerequisite, and the actual
+installation/upgrade operation checks again before schema or version changes.
+`cli/upgrade_database.php` refuses unsafe local storage before local upgrades.
+A remote collector upgrading either database does not need a local RRD store;
+`--check-rrd-storage` always checks the invoking account and local storage.
+The force option cannot bypass a required storage check.
+Run the check as both service accounts before putting the upgraded code in
+service. Remote RRDtool proxy storage retains its existing path. See the Windows acknowledgement limitation below.
+
+Queue deletion uses exact selected sample keys so newer timestamps remain queued.
+The queue-query benchmark does not measure acknowledged RRD write throughput.
+
+
+### Acknowledged updates and bounded waits
+
+Local Unix pollers reuse one full-duplex RRDtool process for acknowledged updates.
+Only already-past timestamps are recognized permanent RRDtool errors. Schema
+mismatches retain the complete sample for repair and replay; they never write a
+shortened value list. The affected RRD stays blocked across pages of a drain,
+while healthy RRDs continue. The wait loop retries transient failures on its next
+iteration. Successful writes remain counted even when another sample is deferred.
+Operators must repair the reported schema mismatch and monitor queue growth;
+valid observations are not silently expired to hide the error. A bounded archival
+retention policy remains an operational design requirement. Timeouts, crashes,
+and missing responses also retain samples for retry.
+A rejected update still makes the drain report failure. It is never counted as a
+successful write. RRDtool protocol output is suppressed in web requests.
+
+Read-only graph, graphv, xport, fetch, info, first, last, and lastupdate commands
+do not acquire a writer lease or require writer trust configuration. Their normal
+filesystem read permissions still apply. Writers wait at most five seconds for
+shared access; float workers also have a five-second exclusive acquisition bound.
+Contention fails the operation and retains queued samples for a later retry.
+Utility XML restores write to a temporary file beside the original and replace it
+only after RRDtool acknowledges success and ownership/mode are preserved. Failed
+or timed-out restores leave the original file and recovery XML intact.
+
+Windows uses synchronous per-command acknowledgements; persistent nonblocking
+RRDtool pipes are POSIX-only. Windows poller throughput has not been validated by
+this change. Do not treat the Unix capacity evidence as Windows capacity evidence.
+
+The primary poller and Boost master also check this prerequisite before launching
+collection or worker processes, including after a code-only deployment. They exit
+nonzero, log the required configuration, and use the existing administrator
+notification settings. This prevents new collection from silently filling a
+queue that cannot be drained; existing queued samples remain intact.
+
+Local destructive rewrites fail closed on Windows because no exclusive storage
+lease is implemented there. Read-only graph and export calls remain available.
+Remote storage retains the proxy's existing restore protocol; the local atomic
+rename guarantee does not apply to remote proxy restores.
+
+Float and splice keep XML intermediates in random owner-only workspaces; failed restores retain recovery XML there. Custom RRD paths are coordinated against their trusted ancestor directories as well as the configured store, so a writer using an ancestor as its RRA root is excluded. These conservative custom-path locks can serialize otherwise unrelated maintenance operations. Resize holds its exclusive lease through replacement. Local purge/archive releases the file lease before metadata cleanup and retains queued work when coordination or the filesystem operation fails.
+
+## Bounded CLI maintenance
+
+Floating uses one worker even when `--threads` requests more, because every
+rewrite takes the same exclusive storage lease. The master owns and reaps its
+worker and terminates the isolated worker process group at its deadline. Queue
+rows remain available for `--resume`. `$config['rrd_float_worker_timeout']`
+defaults to eight hours and may be lowered by the administrator.
+
+Float dump and atomic restore/info commands use the same bounded, concurrently
+drained process supervisor as spike removal. CLI commands default to 300 seconds;
+`$config['rrd_maintenance_command_timeout']` may override that up to eight hours.
+Failed or timed-out restores preserve the original RRD and recovery XML.
+Heartbeat tuning and spike removal coordinate the selected custom RRD paths as
+well as the configured store. Remote resize is refused before commands are sent
+because the proxy protocol has no verified atomic replacement operation.
+
+Legacy Boost streams are drained before checking the last committed timestamp.
+Acknowledged streams already provide that ordering and remain reusable across
+updates. No successful queue deletion relies solely on a pipe write.
+
+
+## Windows automatic cleanup
+
+Automatic **local** RRD purge and archive are unsupported on Windows until a
+validated exclusive storage lease is available. Data-source deletion still
+removes database metadata, but retains its RRD files and logs that manual
+cleanup is required. When `rrd_autoclean` is enabled, deletion still records a
+pending purge request; automatic maintenance leaves it for manual handling.
+RRDCleaner rejects
+delete/archive requests; rescanning can inventory orphaned files and preserves
+existing purge requests. Scheduled maintenance skips this unsupported task with
+a warning, so it does not continually fail the whole maintenance cycle.
+Remote proxy storage keeps its existing cleanup behavior.
+
+For manual cleanup, disable automatic cleanup (`rrd_autoclean`) and stop every
+poller, Boost worker, web-triggered writer and external RRDtool/rrdcached writer
+that can access the store. Back up the RRD directory and export
+`data_source_purge_action` before making changes. Review each orphaned file or
+queued request against current data-source metadata. Archive or remove only
+confirmed unused files while writers remain stopped. Remove only the specific
+completed request IDs from `data_source_purge_action`; do not truncate the queue
+or discard requests for files whose cleanup failed. Keep the export until the
+files and corresponding completed requests have been verified, then restart
+writers. Ordinary acknowledged Windows updates remain available.
+
+
+## Poller completion and maintenance opportunities
+
+An RRD failure retains retryable samples and sets a nonzero poller exit status,
+but does not skip post-poll services, maintenance, reports, recovery flushes or
+plugin hooks. For local storage the poller releases its writer pipe and shared lease after
+each output batch, before sleeping while collectors finish. Exclusive maintenance
+can use the gaps between batches. Active writers still take priority over unsafe
+file replacement; stop writers when an operation requires a guaranteed window.
+
+LTS floating, like the main branch, uses one worker even if `--threads` requests
+more. Multiple float workers cannot concurrently own the same exclusive lease.
+The documented storage trust migration remains mandatory before upgrading:
+implicit trust or a warn-only bypass would permit uncoordinated destructive access.
+
+An empty output queue does not start an RRDtool child or acquire a writer lease.
+An unreadable queue count defers work instead of treating an unknown count as zero.
+The final exit status intentionally records any write failure during the run, even
+if a later batch succeeds; successful retries do not hide an earlier rejected sample
+or intermittent storage failure. Logs identify the failure and operators can verify
+that the queue drained.
+
+A busy local maintenance lease is probed without waiting and records one NOTE
+until access recovers. It preserves pending samples without marking the collector
+run failed. Untrusted storage, unavailable writers and unreadable queues remain
+errors. Failure logging resumes after recovery. Proxy storage reuses one connection
+across output batches and closes it at the end of the collector cycle or on failure.
+
+
+### Durable retry queue and service-account probe
+
+The normal `poller_output` queue now requires InnoDB, matching the existing Boost
+queue. Run `php cli/upgrade_database.php --migrate-poller-queue` to convert it without deleting retained rows. Before a
+code-only deployment, stop collectors, back up the database, and run that migration
+(or `ALTER TABLE poller_output ENGINE=InnoDB ROW_FORMAT=Dynamic`). Do not restart
+collection until the queue is InnoDB; the startup preflight rejects MEMORY or an
+unreadable engine. InnoDB retains samples across restarts under the configured database durability settings. Disk capacity must
+be monitored; durability does not provide unlimited retention capacity.
+
+Run `php cli/upgrade_database.php --check-rrd-storage` under each actual service
+account, including the web user, before cutover. For example, use
+`sudo -u www-data php cli/upgrade_database.php --check-rrd-storage` on systems with
+that account. The check reports the invoking UID/GID, makes no upgrade, and exits
+nonzero for unsafe storage or an unsuitable queue. Configure the exact
+`$config['rrd_maintenance_trusted_uids']` and
+`$config['rrd_maintenance_trusted_gids']` keys in `include/config.php` for all
+participating accounts and writable groups. Root-only validation cannot establish
+that the web account has access.
+
+After a real batch write failure, interim attempts stop until the final drain;
+maintenance contention remains retryable between batches. Retained-queue warning
+mail is limited to once per 30 minutes per poller. Samples are preserved for repair,
+not expired merely because a writer remains unavailable.
+
+On remote collectors, add `--local` when checking or migrating that collector’s queue.
+Without it, `upgrade_database.php` keeps its established main-database target.
+The storage permission probe always runs as the invoking service account.
+
+### Review evidence and recovery policy
+
+Complete samples remain retryable when a file is corrupt, unavailable, or returns
+an unrecognized error. Expiring those rows would lose collected data that can be
+replayed after repair. The poller returns failure and its retained-output warning
+reports the total row count and affected data-source IDs, throttled to once per
+30 minutes. Monitor that count and database capacity; if necessary pause the
+affected collector while repairing storage, then drain its retained samples.
+Schema mismatches retain the complete timestamp, including valid sibling fields.
+Before a template change adds data sources, stop affected collectors and writers,
+back up the RRDs and database, and extend existing RRD schemas through the
+application's `rrd_datasource_add` repair path. Verify the on-disk data-source names
+and counts before resuming collection. After repair, confirm the retained queue
+drains and timestamps advance. Do not delete queue rows merely to clear alerts.
+There is currently no automatic backlog capacity limit: pause collection before
+database capacity is exhausted if repair cannot be completed promptly.
+
+The Windows per-command process cost is an intentional tradeoff for acknowledged
+writes, not a claim of unchanged throughput relative to the pre-PR poller. The
+native Windows measurement above is the available capacity evidence; deployments
+must validate their own complete collection cycle.
+
+A MariaDB 10.11.19 diagnostic used one million InnoDB rows and a 10,000-tuple
+four-column delete predicate `(local_data_id, rrd_name, time, output) IN (...)`.
+`EXPLAIN DELETE` selected `type=range`, `key=PRIMARY`, and `rows=10000`.
+This checks that plan and fixture, not every database version or distribution.
+
+RRDproxy's `setcnn timeout off` response is `% Timeout disabled.` followed by
+`OK u:0.00`. The LTS encrypted-channel regression test uses that exact response.
+The upstream definitions were checked in
+[client.php](https://github.com/Cacti/rrdproxy/blob/2af67f634f4b93b3f501837340a8c417374175c5/lib/client.php#L266)
+and [global.php](https://github.com/Cacti/rrdproxy/blob/2af67f634f4b93b3f501837340a8c417374175c5/include/global.php#L32).

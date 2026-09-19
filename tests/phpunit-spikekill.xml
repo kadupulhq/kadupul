@@ -2,6 +2,17 @@
 <phpunit bootstrap="./bootstrap-unit.php" colors="true">
   <testsuites>
     <testsuite name="Spikekill">
+      <file>./Unit/Installer/InstallerRrdStoragePreflightTest.php</file>
+      <file>./Unit/Installer/LegacyQueueUpgradeTest.php</file>
+      <file>./Unit/Core/Cli/BoostMasterFailureTest.php</file>
+      <file>./Unit/Core/Cli/BoostWorkerNativeTest.php</file>
+      <file>./Unit/Core/Cli/PollerDrainNativeTest.php</file>
+      <file>./Unit/Core/Cli/RrdMaintenanceCoordinationTest.php</file>
+      <file>./Unit/Core/Rrd/RrdMaintenanceLockTest.php</file>
+      <file>./Unit/Core/Rrd/MaintenancePurgeLeaseTest.php</file>
+      <file>./Unit/Core/Rrd/RrdResizeLeaseTest.php</file>
+      <file>./Unit/Core/Rrd/RrdTuneLeaseTest.php</file>
+      <file>./Unit/Core/Poller/PollerWriterDeadlineNativeTest.php</file>
       <file>./Unit/Security/Shell/SpikekillBackupSymlinkSafetyTest.php</file>
       <file>./Unit/Security/Shell/SpikekillRemoveSpikesEndToEndTest.php</file>
       <file>./Unit/Security/Shell/SpikekillXmlDirectoryRaceTest.php</file>
@@ -9,6 +20,22 @@
       <file>./Unit/Core/Cli/RemoveSpikesBackupTest.php</file>
       <file>./Unit/Security/Shell/SpikekillStatisticsTest.php</file>
       <file>./Unit/Core/PathHelpersTest.php</file>
+      <file>./Unit/Security/Auth/ReportAdminGroupRealmTest.php</file>
+      <file>./Unit/Security/Auth/ReportMutationCsrfTest.php</file>
+      <file>./Unit/ImportPackageFileDestinationTest.php</file>
+      <file>./Unit/Core/Poller/PollerBatchLeaseTest.php</file>
+      <file>./Unit/Core/Poller/PollerPostRunFailureTest.php</file>
+      <file>./Unit/Core/Poller/ShutdownOrphanCleanupTest.php</file>
+      <file>./Unit/Core/Poller/QueueInspectionFailureTest.php</file>
+      <file>./Unit/Core/Rrd/WindowsCleanupPolicyTest.php</file>
+      <file>./Unit/Core/Rrd/RealtimeFieldLookupFailureTest.php</file>
+      <file>./Unit/Core/Rrd/DsdebugRepairResultTest.php</file>
+      <file>./Unit/Core/Rrd/BoostReadFailureNativeTest.php</file>
+      <file>./Unit/Core/Rrd/WindowsCleanupNativeTest.php</file>
+      <file>./Unit/Core/Poller/PollerAcknowledgementTest.php</file>
+      <file>./Unit/Core/Poller/PollerAcknowledgementNativeTest.php</file>
+      <file>./Unit/Core/Poller/RemoteQueuePreflightNativeTest.php</file>
+      <file>./Unit/Core/Rrd/RrdProxyAcknowledgementTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

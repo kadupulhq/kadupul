@@ -204,6 +204,38 @@ $fields_reports_edit = array(
 		),
 );
 
+
+function reports_sanitize_tab($tab) {
+	if (!is_scalar($tab)) {
+		return '';
+	}
+
+	return sanitize_search_string((string) $tab);
+}
+
+function reports_tab_request_var() {
+	if (isset_request_var('tab')) {
+		set_request_var('tab', reports_sanitize_tab(get_nfilter_request_var('tab')));
+	}
+
+	return reports_sanitize_tab(get_request_var('tab'));
+}
+
+function reports_require_post($action) {
+	if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+		cacti_log('WARNING: Rejected non-POST request to ' . get_reports_page() . '?action=' . $action, false, 'AUTH');
+
+		header('Location: ' . get_reports_page());
+		exit;
+	}
+}
+
+function reports_require_post_action($action) {
+	if (in_array($action, array('save', 'send', 'ajax_dnd', 'actions', 'item_movedown', 'item_moveup', 'item_remove'), true)) {
+		reports_require_post($action);
+	}
+}
+
 function reports_item_dnd() {
 	/* ================= Input validation ================= */
 	get_filter_request_var('id');
@@ -346,10 +378,25 @@ function reports_form_save() {
 
 		unset($_SESSION['sess_error_fields']);
 
+		$report_id = (int) get_request_var('report_id');
+		$item_id   = (int) get_request_var('id');
+
+		/* sql_save() overwrites whatever row carries this id, so an existing
+		   item must already sit in a report the caller may change.  Failing
+		   here skips the save, and item_edit then refuses the same ids.  A report
+		   admin passes the ownership check for any id, so the report must exist. */
+		if (!cacti_authorize_resource($_SESSION['sess_user_id'], $report_id, 'reports') ||
+			!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ?', array($report_id)) ||
+			($item_id != 0 && db_fetch_cell_prepared('SELECT report_id FROM reports_items WHERE id = ?', array($item_id)) != $report_id)) {
+			raise_message('permission_denied');
+
+			$_SESSION['sess_error_fields']['report_id'] = 'report_id';
+		}
+
 		$save = array();
 
-		$save['id']                = get_nfilter_request_var('id');
-		$save['report_id']         = form_input_validate(get_nfilter_request_var('report_id'), 'report_id', '^[0-9]+$', false, 3);
+		$save['id']                = $item_id;
+		$save['report_id']         = $report_id;
 
 		if (isempty_request_var('id')) {
 			$save['sequence'] = db_fetch_cell_prepared('SELECT MAX(sequence)+1
@@ -621,7 +668,10 @@ function reports_item_movedown() {
 	get_filter_request_var('id');
 	/* ==================================================== */
 
-	if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) get_request_var('id'), 'reports')) {
+	/* move_item_down() rewrites the item row by id alone */
+	if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) get_request_var('id'), 'reports') ||
+		!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ?', array(get_request_var('id'))) ||
+		db_fetch_cell_prepared('SELECT report_id FROM reports_items WHERE id = ?', array(get_request_var('item_id'))) != get_request_var('id')) {
 		return;
 	}
 
@@ -634,7 +684,10 @@ function reports_item_moveup() {
 	get_filter_request_var('id');
 	/* ==================================================== */
 
-	if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) get_request_var('id'), 'reports')) {
+	/* move_item_up() rewrites the item row by id alone */
+	if (!cacti_authorize_resource($_SESSION['sess_user_id'], (int) get_request_var('id'), 'reports') ||
+		!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ?', array(get_request_var('id'))) ||
+		db_fetch_cell_prepared('SELECT report_id FROM reports_items WHERE id = ?', array(get_request_var('item_id'))) != get_request_var('id')) {
 		return;
 	}
 
@@ -647,8 +700,14 @@ function reports_item_remove() {
 	/* ==================================================== */
 
 	$item_id = (int) get_request_var('item_id');
+	$report_id = db_fetch_cell_prepared('SELECT report_id
+		FROM reports_items
+		WHERE id = ?',
+		array($item_id));
 
-	if (!cacti_authorize_resource($_SESSION['sess_user_id'], $item_id, 'report_item')) {
+	if ($report_id === false ||
+		!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ?', array($report_id)) ||
+		!cacti_authorize_resource($_SESSION['sess_user_id'], (int) $report_id, 'reports')) {
 		return;
 	}
 
@@ -878,10 +937,25 @@ function reports_item_edit() {
 	$report_item['host_id']           = -1;
 	$report_item['tree_id']           = -1;
 
-	if (isset_request_var('item_id') && get_filter_request_var('item_id') > 0) {
+	$report_id = (int) get_filter_request_var('id');
+	$item_id   = (isset_request_var('item_id') ? (int) get_filter_request_var('item_id') : 0);
+
+	/* the item is drawn under $report_id, so it must be filed there, as save and
+	   move already require, and the report itself must exist */
+	if (!cacti_authorize_resource($_SESSION['sess_user_id'], $report_id, 'reports') ||
+		!db_fetch_cell_prepared('SELECT id FROM reports WHERE id = ?', array($report_id)) ||
+		($item_id != 0 && (!cacti_authorize_resource($_SESSION['sess_user_id'], $item_id, 'report_item') ||
+		db_fetch_cell_prepared('SELECT report_id FROM reports_items WHERE id = ?', array($item_id)) != $report_id))) {
+		/* the caller has already printed the page header */
+		raise_message('permission_denied');
+
+		return;
+	}
+
+	if ($item_id > 0) {
 		$report_item = db_fetch_row_prepared('SELECT *
 			FROM reports_items WHERE id = ?',
-			array(get_request_var('item_id')));
+			array($item_id));
 	} else {
 		$report_item['report_id']      = get_request_var('id');
 		$report_item['local_graph_id'] = 0;
@@ -1414,7 +1488,7 @@ function reports_tabs($report_id) {
 		set_request_var('tab', 'details');
 	}
 
-	$current_tab = get_request_var('tab');
+	$current_tab = reports_tab_request_var();
 
 	if (cacti_sizeof($tabs) && isset_request_var('id')) {
 		$i = 0;
@@ -1434,7 +1508,9 @@ function reports_tabs($report_id) {
 
 
 		if (!isempty_request_var('id')) {
-			print "<li style='float:right;position:relative;'><a class='tab' href='" . html_escape(get_reports_page() . '?action=send&id=' . get_request_var('id') . '&tab=' . get_request_var('tab')) . "'>" . __('Send Report') . "</a></li>\n";
+			$report_tab = json_encode($current_tab, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_INVALID_UTF8_SUBSTITUTE);
+
+			print "<li style='float:right;position:relative;'><a class='tab' href='#' onclick='loadPageUsingPost(\"" . html_escape(get_reports_page()) . "\", {action:\"send\", id:" . (int) get_request_var('id') . ", tab:" . $report_tab . ", __csrf_magic:csrfMagicToken}); return false;'>" . __('Send Report') . "</a></li>\n";
 		}
 
 		print "</ul></nav></div>\n";
@@ -1583,7 +1659,7 @@ function reports_edit() {
 			$(function() {
 				$('#report_item').tableDnD({
 					onDrop: function(table, row) {
-						loadPage(reportsPage+'?action=ajax_dnd&id='+reportId+'&'+$.tableDnD.serialize());
+						loadPageUsingPost(reportsPage, 'action=ajax_dnd&id='+encodeURIComponent(reportId)+'&__csrf_magic='+encodeURIComponent(csrfMagicToken)+'&'+$.tableDnD.serialize());
 					}
 				});
 			});
@@ -1775,14 +1851,14 @@ function display_reports_items($report_id) {
 			$form_data .= '<td>' . $size . '</td>';
 
 			if ($i == 1) {
-				$form_data .= '<td class="right nowrap"><a class="pic remover fa fa-caret-down moveArrow" style="padding:3px" title="' . __esc('Move Down') . '" href="' . html_escape(get_reports_page() . '?action=item_movedown&item_id=' . $item['id'] . '&id=' . $report_id) . '"></a>' . '<span style="padding:5ps" class="moveArrowNone"></span>';
+				$form_data .= '<td class="right nowrap"><a class="pic remover fa fa-caret-down moveArrow" style="padding:3px" title="' . __esc('Move Down') . '" href="#" onclick="loadPageUsingPost(\'' . html_escape(get_reports_page()) . '\', {action:\'item_movedown\', item_id:' . (int) $item['id'] . ', id:' . (int) $report_id . ', __csrf_magic:csrfMagicToken}); return false;"></a>' . '<span style="padding:5ps" class="moveArrowNone"></span>';
 			} elseif ($i > 1 && $i < cacti_sizeof($items)) {
-				$form_data .= '<td class="right nowrap"><a class="pic remover fa fa-caret-down moveArrow" style="padding:3px" title="' . __esc('Move Down') . '" href="' . html_escape(get_reports_page() . '?action=item_movedown&item_id=' . $item['id'] . '&id=' . $report_id) . '"></a>' . '<a class="remover fa fa-caret-up moveArrow" style="padding:3px" title="' . __esc('Move Up') . '" href="' . html_escape(get_reports_page() . '?action=item_moveup&item_id=' . $item['id'] .	'&id=' . $report_id) . '"></a>';
+				$form_data .= '<td class="right nowrap"><a class="pic remover fa fa-caret-down moveArrow" style="padding:3px" title="' . __esc('Move Down') . '" href="#" onclick="loadPageUsingPost(\'' . html_escape(get_reports_page()) . '\', {action:\'item_movedown\', item_id:' . (int) $item['id'] . ', id:' . (int) $report_id . ', __csrf_magic:csrfMagicToken}); return false;"></a>' . '<a class="remover fa fa-caret-up moveArrow" style="padding:3px" title="' . __esc('Move Up') . '" href="#" onclick="loadPageUsingPost(\'' . html_escape(get_reports_page()) . '\', {action:\'item_moveup\', item_id:' . (int) $item['id'] . ', id:' . (int) $report_id . ', __csrf_magic:csrfMagicToken}); return false;"></a>';
 			} else {
-				$form_data .= '<td class="right nowrap"><span style="padding:3px" class="moveArrowNone"></span>' . '<a class="remover fa fa-caret-up moveArrow" style="padding:3px" title="' . __esc('Move Up') . '" href="' . html_escape(get_reports_page() . '?action=item_moveup&item_id=' . $item['id'] .	'&id=' . $report_id) . '"></a>';
+				$form_data .= '<td class="right nowrap"><span style="padding:3px" class="moveArrowNone"></span>' . '<a class="remover fa fa-caret-up moveArrow" style="padding:3px" title="' . __esc('Move Up') . '" href="#" onclick="loadPageUsingPost(\'' . html_escape(get_reports_page()) . '\', {action:\'item_moveup\', item_id:' . (int) $item['id'] . ', id:' . (int) $report_id . ', __csrf_magic:csrfMagicToken}); return false;"></a>';
 			}
 
-			$form_data .= '<a class="pic deleteMarker fa fa-times" style="padding:3px" href="' . html_escape(get_reports_page() . '?action=item_remove&item_id=' . $item['id'] . '&id=' . $report_id) . '" title="' . __esc('Delete') . '"></a>' . '</td></tr>';
+			$form_data .= '<a class="pic deleteMarker fa fa-times" style="padding:3px" href="#" onclick="loadPageUsingPost(\'' . html_escape(get_reports_page()) . '\', {action:\'item_remove\', item_id:' . (int) $item['id'] . ', id:' . (int) $report_id . ', __csrf_magic:csrfMagicToken}); return false;" title="' . __esc('Delete') . '"></a>' . '</td></tr>';
 
 			print $form_data;
 

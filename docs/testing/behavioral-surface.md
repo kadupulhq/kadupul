@@ -154,3 +154,7 @@ Inventory was collected before adding scenarios. A machine-readable companion is
 - `cli/structure_rra_paths.php`
 - `cli/update_heartbeat.php`
 - `cli/upgrade_database.php`
+
+The fixture disables seeded discovery networks after recording the untouched schema and installer result. Every poller invocation owns a process group and waits for its shells and background descendants to finish (30-second total observation limit covering the parent and its descendants); configuration callbacks from discovery workers must not leak into later plugin lifecycle captures. The historical plugin callback golden was refreshed for this fixture change: ten extra configuration callbacks were removed, with lifecycle events and payloads unchanged. A Linux self-test starts a delayed shell and PHP grandchild, verifies completion, and checks that the parent exit status is preserved.
+
+Native descendant supervision, exit-70 handling, timeout cleanup, and post-timeout write prevention are tested on Linux. The macOS self-test covers platform-independent contracts and skips these Linux process-boundary scenarios; a macOS pass is not evidence for those scenarios.

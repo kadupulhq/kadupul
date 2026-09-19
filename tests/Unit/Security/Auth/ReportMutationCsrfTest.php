@@ -1,0 +1,599 @@
+<?php
+
+// SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+$root = dirname(__DIR__, 4);
+
+test('report POST helper rejects non-POST requests with a logged redirect', function () use ($root) {
+    $program = <<<'PHP'
+namespace ReportPostHelperRuntime;
+
+$method = $argv[1];
+$_SERVER['REQUEST_METHOD'] = $method;
+
+function cacti_log($message, $output = false, $facility = '') { echo 'LOG:' . $facility . ':' . $message . "\n"; }
+function get_reports_page() { return 'realm_reports.php'; }
+function header($value) { echo 'HEADER:' . $value . "\n"; }
+
+$source = file_get_contents(getcwd() . '/lib/html_reports.php');
+preg_match('/^function reports_require_post\(.*?^}\n/ms', $source, $match);
+if (empty($match)) { exit(2); }
+
+eval('namespace ReportPostHelperRuntime; ' . $match[0]);
+reports_require_post('actions');
+echo 'OK';
+PHP;
+
+    foreach (array('GET' => "LOG:AUTH:WARNING: Rejected non-POST request to realm_reports.php?action=actions\nHEADER:Location: realm_reports.php\n", 'POST' => 'OK') as $method => $expected) {
+        $process = proc_open(
+            array(PHP_BINARY, '-r', $program, $method),
+            array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+            $pipes,
+            $root
+        );
+
+        expect(is_resource($process))->toBeTrue();
+
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+
+        $exit = proc_close($process);
+
+        expect($exit)->toBe(0, $stderr)
+            ->and($stdout)->toBe($expected);
+    }
+});
+
+test('report mutation actions reject non-POST requests in both report controllers', function () use ($root) {
+    $program = <<<'PHP'
+namespace ReportControllerRuntime;
+
+$controller = $argv[1];
+$action     = $argv[2];
+$source       = file_get_contents(getcwd() . '/' . $controller);
+$helperSource = file_get_contents(getcwd() . '/lib/html_reports.php');
+
+preg_match('/switch \(get_request_var\(\'action\'\)\) \{(?P<body>.*?)^}$/ms', $source, $match);
+preg_match('/^function reports_require_post\(.*?^}\n/ms', $helperSource, $helperMatch);
+preg_match('/^function reports_require_post_action\(.*?^}\n/ms', $helperSource, $actionHelperMatch);
+if (empty($match['body']) || empty($helperMatch[0]) || empty($actionHelperMatch[0])) {
+    exit(2);
+}
+
+function get_request_var($name) { return $name === 'action' ? $GLOBALS['action']:'1'; }
+function get_filter_request_var($name) { return get_request_var($name); }
+function get_reports_page() { return 'reports_user.php'; }
+function cacti_log($message, $output = false, $facility = '') { echo 'LOG:' . $facility . ':' . $message . "\n"; }
+function reports_form_save() { echo 'HANDLER:save'; }
+function reports_send($id) { echo 'HANDLER:send'; }
+function reports_item_dnd() { echo 'HANDLER:ajax_dnd'; }
+function reports_form_actions() { echo 'HANDLER:actions'; }
+function reports_item_movedown() { echo 'HANDLER:item_movedown'; }
+function reports_item_moveup() { echo 'HANDLER:item_moveup'; }
+function reports_item_remove() { echo 'HANDLER:item_remove'; }
+function reports_item_validate() {}
+function reports_get_branch_select($tree_id) {}
+function get_allowed_ajax_hosts() {}
+function get_allowed_ajax_graphs() {}
+function get_allowed_ajax_graph_templates() {}
+function general_header() {}
+function reports_item_edit() {}
+function reports_edit() {}
+function reports() {}
+function bottom_footer() {}
+function header($value) { echo 'HEADER:' . $value . "\n"; }
+
+eval('namespace ReportControllerRuntime; ' . $helperMatch[0]);
+eval('namespace ReportControllerRuntime; ' . $actionHelperMatch[0]);
+
+$_SERVER['REQUEST_METHOD'] = 'GET';
+$GLOBALS['action'] = $action;
+
+reports_require_post_action($action);
+eval("namespace ReportControllerRuntime; switch (get_request_var('action')) {" . $match['body'] . '}');
+echo 'accepted';
+PHP;
+
+    foreach (array($root . '/reports_admin.php', $root . '/reports_user.php') as $controller) {
+        foreach (array('save', 'send', 'ajax_dnd', 'actions', 'item_movedown', 'item_moveup', 'item_remove') as $action) {
+            $process = proc_open(
+                array(PHP_BINARY, '-r', $program, basename($controller), $action),
+                array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+                $pipes,
+                $root
+            );
+
+            expect(is_resource($process))->toBeTrue();
+
+            $stdout = stream_get_contents($pipes[1]);
+            $stderr = stream_get_contents($pipes[2]);
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+
+            $exit = proc_close($process);
+
+            expect($exit)->toBe(0, $stderr)
+                ->and($stdout)->toContain('LOG:AUTH:WARNING: Rejected non-POST request to reports_user.php?action=' . $action)
+                ->and($stdout)->toContain('HEADER:Location: reports_user.php')
+                ->and($stdout)->not->toContain('HANDLER:')
+                ->and($stdout)->not->toContain('accepted');
+        }
+    }
+});
+
+test('report item controls post mutations with the csrf token', function () use ($root) {
+    $program = <<<'PHP'
+namespace ReportItemControlRuntime;
+
+define(__NAMESPACE__ . '\REPORTS_ITEM_GRAPH', 1);
+define(__NAMESPACE__ . '\REPORTS_ITEM_HOST', 2);
+define(__NAMESPACE__ . '\REPORTS_ITEM_TEXT', 3);
+define(__NAMESPACE__ . '\REPORTS_ITEM_TREE', 4);
+$GLOBALS['graph_timespans'] = array(1 => 'Today');
+$GLOBALS['item_types'] = array(REPORTS_ITEM_TEXT => 'Text');
+$GLOBALS['alignment'] = array(1 => 'Left');
+
+function __($text, ...$args) { return $args ? vsprintf($text, $args) : $text; }
+function __esc($text) { return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
+function html_escape($text) { return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
+function get_reports_page() { return 'reports_user.php'; }
+function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+function html_header() {}
+function form_alternate_row() {}
+function db_fetch_cell_prepared($sql, $params = array()) { return 'off'; }
+function db_fetch_assoc_prepared($sql, $params = array()) {
+    return array(
+        array('id' => 11, 'sequence' => 1, 'item_type' => REPORTS_ITEM_TEXT, 'item_text' => 'first', 'align' => 1, 'font_size' => 10, 'timespan' => 0),
+        array('id' => 12, 'sequence' => 2, 'item_type' => REPORTS_ITEM_TEXT, 'item_text' => 'middle', 'align' => 1, 'font_size' => 10, 'timespan' => 0),
+        array('id' => 13, 'sequence' => 3, 'item_type' => REPORTS_ITEM_TEXT, 'item_text' => 'last', 'align' => 1, 'font_size' => 10, 'timespan' => 0),
+    );
+}
+
+$source = file_get_contents(getcwd() . '/lib/html_reports.php');
+preg_match('/^function display_reports_items\(.*?^}\n\nfunction get_reports_page\(/ms', $source, $match);
+if (empty($match)) { exit(2); }
+$display = preg_replace('/\nfunction get_reports_page\($/m', '', $match[0]);
+eval('namespace ReportItemControlRuntime; ' . $display);
+
+ob_start();
+display_reports_items(7);
+$html = ob_get_clean();
+echo $html;
+PHP;
+
+    $process = proc_open(
+        array(PHP_BINARY, '-r', $program),
+        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+        $pipes,
+        $root
+    );
+
+    expect(is_resource($process))->toBeTrue();
+
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+
+    $exit = proc_close($process);
+
+    expect($exit)->toBe(0, $stderr)
+        ->and($stdout)->toContain('loadPageUsingPost')
+        ->and($stdout)->toContain('__csrf_magic:csrfMagicToken')
+        ->and($stdout)->toContain("action:'item_movedown'")
+        ->and($stdout)->toContain("action:'item_moveup'")
+        ->and($stdout)->toContain("action:'item_remove'")
+        ->and($stdout)->not->toContain('?action=item_movedown&item_id=')
+        ->and($stdout)->not->toContain('?action=item_moveup&item_id=')
+        ->and($stdout)->not->toContain('?action=item_remove&item_id=');
+});
+
+test('report drag and drop consumes POST item order for the authorized report', function () use ($root) {
+    $program = <<<'PHP'
+namespace ReportDndRuntime;
+
+parse_str('id=7&__csrf_magic=token&report_item%5B%5D=line13&report_item%5B%5D=line11&report_item%5B%5D=line12', $_POST);
+$_SERVER['REQUEST_METHOD'] = 'POST';
+$_SESSION['sess_user_id'] = 5;
+$GLOBALS['updates'] = array();
+
+function get_filter_request_var($name) { return $_POST[$name] ?? null; }
+function get_request_var($name) { return $_POST[$name] ?? null; }
+function isset_request_var($name) { return isset($_POST[$name]); }
+function get_nfilter_request_var($name) { return $_POST[$name] ?? null; }
+function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+function cacti_authorize_resource($user, $resource, $type) { return $user === 5 && $resource === 7 && $type === 'reports'; }
+function input_validate_input_number($value) {
+    if (!preg_match('/^[0-9]+$/', (string) $value)) {
+        throw new \RuntimeException('bad number');
+    }
+}
+function db_execute_prepared($sql, $params = array()) { $GLOBALS['updates'][] = $params; }
+
+$source = file_get_contents(getcwd() . '/lib/html_reports.php');
+preg_match('/^function reports_item_dnd\(.*?^}\n\nfunction reports_form_save\(/ms', $source, $match);
+if (empty($match)) { exit(2); }
+$dnd = preg_replace('/\nfunction reports_form_save\($/m', '', $match[0]);
+eval('namespace ReportDndRuntime; ' . $dnd);
+
+reports_item_dnd();
+echo json_encode($GLOBALS['updates']);
+PHP;
+
+    $process = proc_open(
+        array(PHP_BINARY, '-r', $program),
+        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+        $pipes,
+        $root
+    );
+
+    expect(is_resource($process))->toBeTrue();
+
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+
+    $exit = proc_close($process);
+
+    expect($exit)->toBe(0, $stderr)
+        ->and(json_decode($stdout, true))->toBe(array(
+            array(1, '13', '7'),
+            array(2, '11', '7'),
+            array(3, '12', '7'),
+        ));
+});
+
+test('send report tab encodes hostile tab values inside POST onclick data', function () use ($root) {
+    $program = <<<'PHP'
+namespace ReportTabsRuntime;
+
+$case = $argv[1];
+$GLOBALS['config'] = array('url_path' => '/cacti/');
+$_REQUEST = array('id' => '7');
+if ($case === 'hostile') {
+    $_REQUEST['tab'] = 'items";alert(1);//<script>&\'';
+} elseif ($case === 'invalid-utf8') {
+    $_REQUEST['tab'] = 'items' . chr(195) . '&next';
+} elseif ($case === 'array-tab') {
+    $_REQUEST['tab'] = array('items');
+}
+
+function __($text, ...$args) { return $args ? vsprintf($text, $args) : $text; }
+function isset_request_var($name) { return isset($_REQUEST[$name]); }
+function set_request_var($name, $value) { $_REQUEST[$name] = $value; }
+function get_request_var($name) { return $_REQUEST[$name] ?? null; }
+function get_nfilter_request_var($name) { return $_REQUEST[$name] ?? null; }
+function isempty_request_var($name) { return empty($_REQUEST[$name]); }
+function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+function get_reports_page() { return 'reports_user.php'; }
+function html_escape($text) { return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
+function sanitize_search_string($string) {
+    $drop = array('(',')','^', '$', '<', '>', '`', '\'', '"', '|', ',', '?', '+', '[', ']', '{', '}', '#', ';', '!', '=', '*');
+    $replace = array('','',' ', ' ', ' ', ' ', '', '', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
+    $string = preg_replace('/[\n\r]/is', ' ', $string);
+    return str_replace($drop, $replace, $string);
+}
+
+$source = file_get_contents(getcwd() . '/lib/html_reports.php');
+preg_match('/^function reports_sanitize_tab\(.*?^}\n\nfunction reports_require_post\(/ms', $source, $helperMatch);
+preg_match('/^function reports_tabs\(.*?^}\n\nfunction reports_edit\(/ms', $source, $match);
+if (empty($helperMatch) || empty($match)) { exit(2); }
+$helpers = preg_replace('/\nfunction reports_require_post\($/m', '', $helperMatch[0]);
+$tabs = preg_replace('/\nfunction reports_edit\($/m', '', $match[0]);
+eval('namespace ReportTabsRuntime; ' . $helpers . "\n" . $tabs);
+
+ob_start();
+reports_tabs(7);
+$html = ob_get_clean();
+echo $html;
+PHP;
+
+    foreach (array('hostile', 'invalid-utf8', 'array-tab') as $case) {
+        $process = proc_open(
+            array(PHP_BINARY, '-r', $program, $case),
+            array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+            $pipes,
+            $root
+        );
+
+        expect(is_resource($process))->toBeTrue();
+
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+
+        $exit = proc_close($process);
+
+        expect($exit)->toBe(0, $stderr)
+            ->and($stdout)->toContain('loadPageUsingPost')
+            ->and($stdout)->not->toContain('items";alert(1)')
+            ->and($stdout)->not->toContain('<script>');
+
+        if ($case === 'hostile') {
+            expect($stdout)->toContain('\\u0026');
+        } elseif ($case === 'invalid-utf8') {
+            expect($stdout)->toContain('items\\ufffd\\u0026next');
+        } elseif ($case === 'array-tab') {
+            expect($stdout)->toContain('tab:""');
+        }
+    }
+});
+
+test('csrf middleware rejects empty-body POST mutations without a token', function () use ($root) {
+    $program = <<<'PHP'
+function csrf_startup() {
+    csrf_conf('defer', true);
+    csrf_conf('rewrite', false);
+    csrf_conf('auto-session', false);
+}
+$_SERVER['REQUEST_METHOD'] = 'POST';
+$_POST = array();
+require __DIR__ . '/../include/vendor/csrf/csrf-magic.php';
+echo csrf_check(false) ? 'accepted' : 'rejected';
+PHP;
+
+    $process = proc_open(
+        array(PHP_BINARY, '-r', $program),
+        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+        $pipes,
+        $root . '/tests'
+    );
+
+    expect(is_resource($process))->toBeTrue();
+
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+
+    $exit = proc_close($process);
+
+    expect($exit)->toBe(0, $stderr)
+        ->and($stdout)->toBe('rejected');
+});
+
+test('report controllers redirect mutations through the realm-aware reports page', function () use ($root) {
+    $program = <<<'PHP'
+namespace ReportRedirectRuntime;
+
+$controller = $argv[1];
+$action     = $argv[2];
+$source     = file_get_contents(getcwd() . '/' . $controller);
+
+preg_match('/switch \(get_request_var\(\'action\'\)\) \{(?P<body>.*?)^}$/ms', $source, $match);
+if (empty($match['body'])) {
+    exit(2);
+}
+
+function get_request_var($name) {
+    $values = array('action' => $GLOBALS['action'], 'id' => '7', 'item_id' => '11', 'tab' => "items\"\r\nSet-Cookie: bad=1&x=");
+    return $values[$name] ?? '1';
+}
+function get_filter_request_var($name) { return get_request_var($name); }
+function get_reports_page() { return 'realm_reports.php'; }
+function reports_tab_request_var() { return (string) get_request_var('tab'); }
+function reports_require_post($action) {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        throw new \RuntimeException('POST_REQUIRED:' . $action);
+    }
+}
+function reports_form_save() {}
+function reports_send($id) {}
+function reports_item_dnd() {}
+function reports_form_actions() {}
+function reports_item_movedown() {}
+function reports_item_moveup() {}
+function reports_item_remove() {}
+function reports_item_validate() {}
+function reports_get_branch_select($tree_id) {}
+function get_allowed_ajax_hosts() {}
+function get_allowed_ajax_graphs() {}
+function get_allowed_ajax_graph_templates() {}
+function general_header() {}
+function reports_item_edit() {}
+function reports_edit() {}
+function reports() {}
+function bottom_footer() {}
+function header($value) { echo 'HEADER:' . $value; }
+
+$_SERVER['REQUEST_METHOD'] = 'POST';
+$GLOBALS['action'] = $action;
+$reports_page = get_reports_page();
+
+eval("namespace ReportRedirectRuntime; switch (get_request_var('action')) {" . $match['body'] . '}');
+PHP;
+
+    foreach (array('reports_admin.php', 'reports_user.php') as $controller) {
+        foreach (array('send', 'ajax_dnd', 'item_movedown', 'item_moveup', 'item_remove') as $action) {
+            $process = proc_open(
+                array(PHP_BINARY, '-r', $program, $controller, $action),
+                array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+                $pipes,
+                $root
+            );
+
+            expect(is_resource($process))->toBeTrue();
+
+            $stdout = stream_get_contents($pipes[1]);
+            $stderr = stream_get_contents($pipes[2]);
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+
+            $exit = proc_close($process);
+
+            expect($exit)->toBe(0, $stderr)
+                ->and($stdout)->toContain('HEADER:Location: realm_reports.php')
+                ->and($stdout)->toContain('header=false')
+                ->and($stdout)->not->toContain('reports_admin.php?action=edit');
+
+            if ($action === 'send') {
+                expect($stdout)->toContain('tab=items%22%0D%0ASet-Cookie%3A%20bad%3D1%26x%3D')
+                    ->and($stdout)->not->toContain("items\"\r\nSet-Cookie")
+                    ->and($stdout)->not->toContain('&x=&id=');
+            }
+        }
+    }
+});
+
+test('report data query labels are escaped before generated html output', function () use ($root) {
+    $program = <<<'PHP'
+namespace ReportTreeRuntime;
+
+define(__NAMESPACE__ . '\HOST_GROUPING_DATA_QUERY_INDEX', 2);
+define(__NAMESPACE__ . '\HOST_GROUPING_GRAPH_TEMPLATE', 1);
+$tmp = \sys_get_temp_dir() . '/report-tree-' . bin2hex(random_bytes(4));
+mkdir($tmp);
+file_put_contents($tmp . '/global_arrays.php', '<?php');
+file_put_contents($tmp . '/data_query.php', '<?php');
+file_put_contents($tmp . '/html_tree.php', '<?php');
+file_put_contents($tmp . '/html_utility.php', '<?php');
+
+$GLOBALS['config'] = array('include_path' => $tmp, 'library_path' => $tmp);
+$GLOBALS['alignment'] = array('left' => 'left');
+
+function __($text, ...$args) { return $args ? vsprintf($text, $args) : $text; }
+function html_escape($text) { return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
+function read_user_setting($name) { return 1; }
+function get_timespan(&$timespan) { $timespan = array('begin_now' => 1, 'end_now' => 2); }
+function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+function db_qstr_rlike($value) { return '= ' . var_export($value, true); }
+function array_rekey($array) { return $array; }
+function is_device_allowed($id, $user) { return true; }
+function is_graph_allowed($id, $user) { return true; }
+function is_graph_template_allowed($id, $user) { return true; }
+function get_formatted_data_query_indexes($hostId, $queryId) { return array('idx1' => 'Index 1'); }
+function reports_graph_area() { return '<tr><td>graph</td></tr>'; }
+function necturally_sort_graphs($a, $b) { return 0; }
+function db_fetch_cell_prepared($sql, $params = array()) {
+    if (strpos($sql, 'SELECT host_id') !== false) { return 5; }
+    if (strpos($sql, 'FROM graph_tree ') !== false) { return 'Tree'; }
+    if (strpos($sql, 'SELECT title') !== false) { return 'Leaf'; }
+    if (strpos($sql, 'h.description') !== false) { return 'Host'; }
+    return 0;
+}
+function db_fetch_assoc_prepared($sql, $params = array()) {
+    if (strpos($sql, 'FROM graph_tree_items') !== false) {
+        return array(array('id' => 9, 'local_graph_id' => 0, 'host_id' => 5, 'host_grouping_type' => HOST_GROUPING_DATA_QUERY_INDEX));
+    }
+
+    if (strpos($sql, 'snmp_query AS sq') !== false) {
+        return array(array('id' => 7, 'name' => '<script>alert(1)</script>'));
+    }
+
+    return array();
+}
+function db_fetch_assoc($sql) {
+    if (strpos($sql, 'gl.snmp_query_id=7') !== false) {
+        return array(array('title_cache' => 'Graph', 'local_graph_id' => 77, 'snmp_index' => 'idx1'));
+    }
+
+    return array();
+}
+
+$source = file_get_contents(getcwd() . '/lib/reports.php');
+preg_match('/^function reports_expand_tree\(.*?^}\n\nfunction reports_data_query_label\(.*?^}\n/ms', $source, $match);
+if (empty($match)) { exit(3); }
+
+$runtimeSource = str_replace("'necturally_sort_graphs'", "__NAMESPACE__ . '\\\\necturally_sort_graphs'", $match[0]);
+eval('namespace ReportTreeRuntime; ' . $runtimeSource);
+
+$report = array('user_id' => 1);
+$item = array(
+    'tree_id' => 1,
+    'branch_id' => 9,
+    'timespan' => 1,
+    'align' => 'left',
+    'font_size' => 10,
+    'graph_name_regexp' => '',
+    'tree_cascade' => 'on',
+);
+
+$formatted = reports_expand_tree($report, $item, 9, 0, true);
+$plain     = reports_expand_tree($report, $item, 9, 0, false);
+
+array_map('\unlink', glob($tmp . '/*.php'));
+rmdir($tmp);
+
+echo json_encode(array($formatted, $plain));
+PHP;
+
+    $process = proc_open(
+        array(PHP_BINARY, '-r', $program),
+        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+        $pipes,
+        $root
+    );
+
+    expect(is_resource($process))->toBeTrue();
+
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+
+    $exit = proc_close($process);
+
+    $rendered = json_decode($stdout, true);
+
+    expect($exit)->toBe(0, $stderr)
+        ->and($rendered)->toBeArray()
+        ->and($rendered[0])->toContain('Data Query: &lt;script&gt;alert(1)&lt;/script&gt;')
+        ->and($rendered[1])->toContain('Data Query: &lt;script&gt;alert(1)&lt;/script&gt;')
+        ->and($rendered[0])->not->toContain('<script>')
+        ->and($rendered[1])->not->toContain('<script>');
+});
+
+test('report image conversion uses unpredictable temporary files with cleanup', function () use ($root) {
+    $program = <<<'PHP'
+namespace ReportPngRuntime;
+$GLOBALS['tmpdir'] = \sys_get_temp_dir() . '/report-png-' . bin2hex(random_bytes(4));
+mkdir($GLOBALS['tmpdir']);
+$GLOBALS['seen_files'] = array();
+function sys_get_temp_dir() { return $GLOBALS['tmpdir']; }
+function imagecreatefrompng($file) { $GLOBALS['seen_files'][] = $file; return $GLOBALS['decode_ok'] ? 'image' : false; }
+function ImageCreate($width, $height) { return 'fallback'; }
+function ImageColorAllocate($image, $red, $green, $blue) { return 'color'; }
+function ImageFilledRectangle($image, $x1, $y1, $x2, $y2, $color) {}
+function ImageString($image, $font, $x, $y, $string, $color) {}
+function imagejpeg($image) { echo 'jpeg'; }
+function imagegif($image) { echo 'gif'; }
+$source = file_get_contents(getcwd() . '/lib/reports.php');
+preg_match('/^function png2jpeg .*?^}\n/ms', $source, $jpeg);
+preg_match('/^function png2gif .*?^}\n/ms', $source, $gif);
+if (empty($jpeg) || empty($gif)) { exit(2); }
+eval('namespace ReportPngRuntime; ' . $jpeg[0] . $gif[0]);
+$GLOBALS['decode_ok'] = true;
+$jpegData1 = png2jpeg('png-data-1');
+$jpegData2 = png2jpeg('png-data-2');
+$GLOBALS['decode_ok'] = false;
+$gifData = png2gif('bad-data');
+$remaining = glob($GLOBALS['tmpdir'] . '/cacti-report-*');
+$unique = count(array_unique($GLOBALS['seen_files']));
+rmdir($GLOBALS['tmpdir']);
+echo json_encode(array($jpegData1, $jpegData2, $gifData, $remaining, $unique, count($GLOBALS['seen_files'])));
+PHP;
+
+    $process = proc_open(
+        array(PHP_BINARY, '-r', $program),
+        array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+        $pipes,
+        $root
+    );
+
+    expect(is_resource($process))->toBeTrue();
+
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+
+    $exit = proc_close($process);
+
+    expect($exit)->toBe(0, $stderr)
+        ->and(json_decode($stdout, true))->toBe(array('jpeg', 'jpeg', 'gif', array(), 3, 3));
+});

@@ -1,0 +1,290 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+"""Rehearse a real release upgrade and snapshot rollback in disposable containers."""
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import shutil
+import sys
+import tempfile
+import uuid
+from types import SimpleNamespace
+
+import harness
+
+ROOT = harness.ROOT
+
+
+def require(condition, message):
+    if not condition:
+        raise RuntimeError(message)
+
+
+def checked(result, label):
+    require(result['exit'] == 0, label + ': ' + json.dumps(result))
+    return result
+
+
+def rrd_manifest(h):
+    code = '''$r=[];
+if (is_link("rra")) { throw new RuntimeException("RRD snapshot cannot preserve an external symlink target"); }
+$files=new RecursiveIteratorIterator(new RecursiveDirectoryIterator("rra", FilesystemIterator::SKIP_DOTS));
+foreach ($files as $file) {
+    if ($file->isLink()) { throw new RuntimeException("RRD snapshot cannot preserve an external symlink target"); }
+    if (!$file->isFile() || strtolower($file->getExtension()) !== "rrd") { continue; }
+    $path=$file->getPathname(); $hash=hash_file("sha256",$path);
+    if ($hash === false) { throw new RuntimeException("Cannot hash RRD snapshot member"); }
+    $r[substr($path,4)]=$hash;
+}
+ksort($r); echo json_encode($r);'''
+    result = checked(h.php('-r', code), 'RRD manifest')
+    values = json.loads(result['stdout'])
+    require(isinstance(values, dict) and values, 'No RRD files were created')
+    return values
+
+
+def domain_state(h):
+    return {table: h.sql('SELECT * FROM ' + table + ' ORDER BY ' + key)
+            for table, key in [('host', 'id'), ('data_local', 'id'), ('graph_local', 'id'),
+                               ('plugin_config', 'id'), ('plugin_hooks', 'id')]}
+
+
+def authenticate(h):
+    h.base = 'http://' + h.compose('port', 'web', '80')['stdout'].strip()
+    session = harness.Session(h.base)
+    result = session.login('behavior-admin')
+    require(result['admin_layout'] and not result['login_form'], 'Admin login failed')
+    return session
+
+
+def assert_graph(h):
+    graph = h.probe('graph')['result']
+    require(isinstance(graph, dict) and bool(graph.get('source')), 'Graph definition is empty')
+    # Drive the production rendering function, then inspect the returned PNG.
+    code = '''chdir('/var/www/html'); $no_http_headers=true; include 'include/global.php'; include_once 'lib/rrd.php';
+$id=(int)db_fetch_cell('SELECT MIN(gti.local_graph_id) FROM graph_templates_item gti INNER JOIN data_template_rrd dtr ON dtr.id=gti.task_item_id INNER JOIN data_local dl ON dl.id=dtr.local_data_id WHERE gti.local_graph_id>0');
+ob_start(); $png=rrdtool_function_graph($id,0,array('graph_start'=>time()-3600,'graph_end'=>time(),'graph_width'=>400,'graph_height'=>120,'image_format'=>'png')); $diagnostics=ob_get_clean();
+if (!is_string($png) || substr($png,0,8)!=="\\x89PNG\\r\\n\\x1a\\n") {fwrite(STDERR,'Graph did not return PNG: '.substr((string)$png.$diagnostics,0,200));exit(1);} echo json_encode(array('signature'=>'PNG','bytes'=>strlen($png)));'''
+    return json.loads(checked(h.php('-r', code), 'Graph rendering')['stdout'])
+
+
+def assert_plugin(h):
+    observed = h.probe('plugin')
+    result = observed['result']
+    require(result.get('callbacks_observed') == 8, 'Plugin did not dispatch every callback')
+    require(len(result.get('filter', [])) == 7 and all(row['input'] == row['result'] for row in result['filter']),
+            'Plugin changed filter values')
+    return observed
+
+
+def assert_poll(h, label):
+    h.truncate_artifacts('rrd-argv.log', 'rrd-stdin.log', 'plugin.jsonl')
+    result = checked(h.php('poller.php', '--force'), label)
+    calls = h.rrd_calls()
+    require(any(call.startswith('update ') for call in calls), label + ' made no RRD updates')
+    events = [row['args'][0][0] for row in h.jsonl('/artifacts/plugin.jsonl')
+              if row.get('callback') == 'event' and row.get('args')]
+    require('poller_top' in events and 'poller_bottom' in events, label + ' skipped plugin lifecycle hooks')
+    return {'command': result, 'rrd_calls': calls, 'plugin_events': events}
+
+
+def assert_failed_writer_retains_queue(h):
+    row = h.sql("SELECT local_data_id,rrd_name FROM poller_item WHERE rrd_name != '' ORDER BY local_data_id LIMIT 1").strip().split('\t')
+    require(len(row) == 2 and row[0].isdigit() and row[1].replace('_', '').isalnum(), 'No safe queue fixture key')
+    predicate = "local_data_id=" + row[0] + " AND rrd_name='" + row[1] + "' AND time='2001-01-01 00:00:00'"
+    h.sql("INSERT INTO poller_output(local_data_id,rrd_name,time,output) VALUES (" + row[0] + ",'" + row[1] + "','2001-01-01 00:00:00','8675309')")
+    h.sql("REPLACE INTO settings(name,value) VALUES ('poller_refresh_output_table','on')")
+    # Hostless data sources are valid. Deleted-host and deleted-source rows are not.
+    fixture_ids = '16000000,16000001,16000002'
+    require(h.sql("SELECT COUNT(*) FROM data_local WHERE id IN (" + fixture_ids + ")").strip() == '0', 'Queue fixture IDs already exist')
+    require(h.sql("SELECT COUNT(*) FROM host WHERE id=16000001").strip() == '0', 'Deleted-device fixture already exists')
+    h.sql("INSERT INTO data_local(id,host_id,data_template_id) VALUES (16000000,0,0),(16000001,16000001,0)")
+    h.sql("INSERT INTO poller_output(local_data_id,rrd_name,time,output) VALUES (16000000,'fixture','2001-01-01','1'),(16000001,'fixture','2001-01-01','2'),(16000002,'fixture','2001-01-01','3')")
+    before = rrd_manifest(h)
+    checked(h.php('-r', 'if (!chmod("rra",0777)) {exit(1);}'), 'Unsafe storage fixture')
+    try:
+        result = h.php('poller.php', '--force')
+        require(result['exit'] == 1, 'Unavailable writer did not fail the poller run')
+        require(h.sql("SELECT output FROM poller_output WHERE " + predicate).strip() == '8675309', 'Unavailable writer consumed pending samples')
+        require(rrd_manifest(h) == before, 'Unavailable writer changed RRD samples')
+        require(h.sql("SELECT COUNT(*) FROM poller_output WHERE local_data_id IN (" + fixture_ids + ")").strip() == '3', 'Failed storage preflight changed the pending queue')
+        checked(h.php('-r', 'if (!chmod("rra",0755)) {exit(1);}'), 'Restore storage before orphan cleanup')
+        checked(h.php('poller.php', '--force'), 'Poll after restoring writer configuration')
+        require(h.sql("SELECT local_data_id FROM poller_output WHERE local_data_id IN (" + fixture_ids + ") ORDER BY local_data_id").strip() == '16000000', 'Orphan cleanup removed a hostless source or retained a deleted device/source')
+        return {'exit': result['exit'], 'queue_retained': True, 'rrd_unchanged': True}
+    finally:
+        checked(h.php('-r', 'if (!chmod("rra",0755)) {exit(1);}'), 'Restore storage permissions')
+        h.sql("DELETE FROM poller_output WHERE local_data_id IN (" + fixture_ids + ")")
+        h.sql("DELETE FROM data_local WHERE id IN (" + fixture_ids + ")")
+
+
+def prepare_baseline(baseline_revision, baseline):
+    """Keep real revision metadata for the same validation used by normal captures."""
+    harness.run(['git', 'clone', '--shared', '--no-checkout', '--', str(ROOT), str(baseline)])
+    # A shallow source can hold the pinned revision only in FETCH_HEAD; clone
+    # does not necessarily transfer that object. Fetch the exact revision too.
+    harness.run(['git', '-C', str(baseline), 'fetch', '--no-tags', '--depth=1',
+                 '--', str(ROOT), baseline_revision])
+    harness.run(['git', '-C', str(baseline), 'checkout', '--detach', '--force', baseline_revision])
+    gitdir = Path(harness.run(['git', '-C', str(baseline), 'rev-parse', '--absolute-git-dir'])['stdout'].strip())
+    require(gitdir.resolve() == (baseline / '.git').resolve(), 'Baseline must own its Git metadata')
+    require(not harness.run(['git', '-C', str(baseline), 'status', '--porcelain'])['stdout'].strip(),
+            'Baseline checkout must be complete and clean before applying test inputs')
+    original_ignore = baseline / '.dockerignore'
+    candidate_ignore = (ROOT / '.dockerignore').read_bytes()
+    require(not original_ignore.is_symlink(), 'Baseline .dockerignore must not be a symlink')
+    original_bytes = original_ignore.read_bytes() if original_ignore.exists() else None
+    require(original_bytes is None or original_bytes == candidate_ignore,
+            'Baseline .dockerignore differs from the controller; refusing to overwrite it')
+    # The test infrastructure is candidate-owned; the application and
+    # schema are the exact baseline revision checked out above.
+    # Replace candidate-owned inputs; merging leaves deleted baseline helpers active.
+    for relative in ('tests/Support/Behavior', 'tests/Fixtures', 'tests/behavior'):
+        destination = baseline / relative
+        if destination.is_symlink():
+            destination.unlink()
+        elif destination.exists():
+            shutil.rmtree(destination)
+    shutil.copytree(ROOT / 'tests/Support/Behavior', baseline / 'tests/Support/Behavior', dirs_exist_ok=True)
+    shutil.copytree(ROOT / 'tests/Fixtures', baseline / 'tests/Fixtures', dirs_exist_ok=True)
+    shutil.copytree(ROOT / 'tests/behavior', baseline / 'tests/behavior', dirs_exist_ok=True,
+            ignore=shutil.ignore_patterns('results', '__pycache__'))
+    shutil.copy2(ROOT / '.dockerignore', baseline / '.dockerignore')
+    return {'baseline_sha256': hashlib.sha256(original_bytes).hexdigest() if original_bytes is not None else None,
+            'applied_sha256': hashlib.sha256(candidate_ignore).hexdigest(),
+            'added': original_bytes is None}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--baseline', default='6482af547c204199e829b7a0df0b7a13db3e0a58')
+    parser.add_argument('--output', type=Path)
+    args = parser.parse_args()
+    project = 'kadupul-release-' + uuid.uuid4().hex
+    output = (args.output or ROOT / 'tests/behavior/results/release-readiness' / project).resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    evidence = {'complete': False, 'baseline_requested': args.baseline,
+                'project': project, 'php_requested': os.environ.get('PHP_VERSION', '8.2'), 'steps': {}}
+    h = None
+    try:
+        baseline_revision = checked(harness.run(['git', '-C', str(ROOT), 'rev-parse', '--verify', '--end-of-options', args.baseline + '^{commit}'], check=False), 'Baseline revision')['stdout'].strip()
+        evidence['baseline'] = baseline_revision
+        evidence['candidate'] = checked(harness.run(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'], check=False), 'Candidate revision')['stdout'].strip()
+        with tempfile.TemporaryDirectory(prefix='kadupul-release-') as temporary:
+            temp = Path(temporary)
+            baseline = temp / 'baseline'
+            evidence['baseline_dockerignore'] = prepare_baseline(baseline_revision, baseline)
+            harness.ROOT = baseline
+            h = harness.Harness(SimpleNamespace(target='release-readiness', only=None, update_golden=False, project=project))
+            # Use a dedicated project and keep the baseline image for rollback.
+            h.dc = ['docker', 'compose', '-p', project, '-f', str(baseline / 'tests/behavior/compose.yml')]
+            override = temp / 'phase.json'
+            def phase(tree, image):
+                override.write_text(json.dumps({'services': {'web': {'image': image, 'build': {'context': str(tree)}}}}))
+                h.dc = h.dc[:6] + ['-f', str(override)]
+            phase(baseline, project + '-baseline:local')
+            h.setup()
+            authenticate(h)
+            h.poller_scenarios()
+            checked(h.php('cli/plugin_manage.php', '--plugin=compatibility_test', '--install'), 'Plugin install')
+            checked(h.php('cli/plugin_manage.php', '--plugin=compatibility_test', '--enable'), 'Plugin enable')
+            h.sql("REPLACE INTO settings(name,value) VALUES ('graph_watermark','Operations custom watermark');")
+            # Include a real nested RRD so the rehearsal exercises structured paths.
+            checked(h.php('-r', '$files=glob("rra/*.rrd"); if (!$files || !mkdir("rra/structured") || !copy($files[0], "rra/structured/fixture.rrd")) {exit(1);}'), 'Structured RRD fixture')
+            before_rrd = rrd_manifest(h)
+            require(len(before_rrd) == 6 and 'structured/fixture.rrd' in before_rrd, 'Expected six RRD snapshot members including the structured fixture')
+            before_domain = domain_state(h)
+            evidence['steps']['baseline'] = {'version': h.sql('SELECT cacti FROM version').strip(),
+                                            'rrd': before_rrd, 'graph': assert_graph(h),
+                                            'runtime': h.base_image_digest()}
+            # All poller calls are synchronous; no scheduled poller service is
+            # started. Stop Apache before snapshotting the database and files.
+            h.compose('stop', 'web')
+            dump = h.compose('exec', '-T', 'db', 'mariadb-dump', '-uroot', '-pbehavior-root',
+                             '--skip-comments', '--skip-dump-date', '--hex-blob', 'cacti')['stdout']
+            snapshot = temp / 'rra'
+            h.compose('cp', 'web:/var/www/html/rra', str(snapshot))
+            evidence['snapshot_sha256'] = hashlib.sha256(dump.encode()).hexdigest()
+            phase(ROOT, project + '-candidate:local')
+            h.compose('up', '-d', '--build', '--wait', '--no-deps', 'web', timeout=1200)
+            h.compose('cp', str(snapshot) + '/.', 'web:/var/www/html/rra')
+            h.compose('exec', '-T', 'web', 'chown', '-R', 'www-data:www-data', '/var/www/html/rra')
+            # A code-only cutover must explicitly migrate the old volatile queue
+            # before either the web or collector account resumes writes.
+            h.sql("INSERT INTO poller_output(local_data_id,rrd_name,time,output) VALUES (16000003,'migration','2001-01-01','42')")
+            queue_before = h.sql('SELECT local_data_id,rrd_name,time,output FROM poller_output ORDER BY local_data_id,rrd_name,time')
+            old_engine = h.sql("SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='poller_output'").strip()
+            probe_before = h.php('cli/upgrade_database.php', '--check-rrd-storage')
+            require(old_engine.upper() == 'MEMORY' and probe_before['exit'] == 1, 'Baseline volatile queue was not refused')
+            migrations = []
+            for attempt in range(2):
+                migrations.append(checked(h.php('cli/upgrade_database.php', '--migrate-poller-queue'), 'Durable queue migration'))
+                require(h.sql('SELECT local_data_id,rrd_name,time,output FROM poller_output ORDER BY local_data_id,rrd_name,time') == queue_before, 'Queue migration changed retained samples')
+                checked(h.php('cli/upgrade_database.php', '--check-rrd-storage'), 'Storage and durable queue probe')
+            evidence['steps']['queue_migration'] = {'before_engine': old_engine, 'refused_volatile_queue': probe_before,
+                                                   'commands': migrations, 'retained_samples_preserved': True}
+            h.sql("DELETE FROM poller_output WHERE local_data_id=16000003 AND rrd_name='migration' AND time='2001-01-01' AND output='42'")
+            upgrade = checked(h.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=3', '--force'), 'Upgrade')
+            actual_version = h.sql('SELECT cacti FROM version').strip()
+            evidence['steps']['upgrade_attempt'] = {'command': upgrade, 'database_version': actual_version, 'source_version': checked(h.php('-r', 'echo file_get_contents("include/cacti_version");'), 'Source version')['stdout'].strip()}
+            require(actual_version == (ROOT / 'include/cacti_version').read_text().strip(), 'Upgrade version mismatch: ' + actual_version)
+            require(rrd_manifest(h) == before_rrd, 'Upgrade modified RRD bytes')
+            require(domain_state(h) == before_domain, 'Upgrade changed device, source, graph or plugin identities')
+            require(h.sql("SELECT value FROM settings WHERE name='graph_watermark'").strip() == 'Operations custom watermark', 'Upgrade changed custom watermark')
+            authenticate(h)
+            graph = assert_graph(h)
+            plugin = assert_plugin(h)
+            repeat = checked(h.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=3', '--force'), 'Repeated upgrade')
+            require(rrd_manifest(h) == before_rrd and domain_state(h) == before_domain, 'Repeated upgrade changed persisted data')
+            # The completed web wizard removes these transient settings.
+            h.sql("DELETE FROM settings WHERE name LIKE 'install_%'")
+            after_cleanup = checked(h.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=3', '--force'), 'Repeated upgrade after web completion cleanup')
+            require(rrd_manifest(h) == before_rrd and domain_state(h) == before_domain, 'Post-completion repeat changed persisted data')
+            poll = assert_poll(h, 'Candidate poller')
+            evidence['steps']['upgrade'] = {'command': upgrade, 'repeat': repeat, 'after_web_cleanup': after_cleanup, 'graph': graph, 'plugin': plugin,
+                                            'poller': poll, 'rrd_preserved_before_poll': True}
+            evidence['steps']['unavailable_writer'] = assert_failed_writer_retains_queue(h)
+            # Restore the old code AND its matching DB/RRD snapshot. A code-only
+            # downgrade is not an acceptable rollback of a schema upgrade.
+            h.compose('stop', 'web')
+            h.sql('DROP DATABASE cacti; CREATE DATABASE cacti CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;')
+            h.sql(dump)
+            phase(baseline, project + '-baseline:local')
+            h.compose('up', '-d', '--no-build', '--wait', '--no-deps', 'web', timeout=180)
+            h.compose('cp', str(snapshot) + '/.', 'web:/var/www/html/rra')
+            h.compose('exec', '-T', 'web', 'chown', '-R', 'www-data:www-data', '/var/www/html/rra')
+            require(rrd_manifest(h) == before_rrd and domain_state(h) == before_domain, 'Rollback did not restore snapshot')
+            require(h.sql('SELECT cacti FROM version').strip() == evidence['steps']['baseline']['version'], 'Rollback version mismatch')
+            require(h.sql("SELECT value FROM settings WHERE name='graph_watermark'").strip() == 'Operations custom watermark', 'Rollback lost custom watermark')
+            authenticate(h)
+            evidence['steps']['rollback'] = {'graph': assert_graph(h), 'plugin': assert_plugin(h),
+                                             'poller': assert_poll(h, 'Rollback poller'),
+                                             'snapshot_restored': True}
+            evidence['complete'] = True
+    except Exception as error:
+        evidence['error'] = str(error)
+        print(error, file=sys.stderr)
+    finally:
+        # The temporary compose tree can be gone after an exception. Project
+        # containers are removed directly using their dedicated project label.
+        try:
+            cleanup = harness.run(['docker', 'ps', '-aq', '--filter', 'label=com.docker.compose.project=' + project], check=False)
+            ids = cleanup['stdout'].split()
+            if ids:
+                harness.run(['docker', 'rm', '-fv', *ids], check=False)
+            harness.run(['docker', 'network', 'rm', project + '_default'], check=False)
+            harness.run(['docker', 'image', 'rm', project + '-baseline:local', project + '-candidate:local', project + '-snmp:latest'], check=False)
+        except Exception as error:
+            evidence['cleanup_error'] = str(error)
+            evidence['complete'] = False
+        if h is not None:
+            evidence['baseline_observations'] = h.observed
+        harness.write_json(output / 'observations.json', evidence)
+    print(json.dumps({'complete': evidence['complete'], 'output': str(output)}))
+    return 0 if evidence['complete'] else 1
+
+
+if __name__ == '__main__':
+    sys.exit(main())

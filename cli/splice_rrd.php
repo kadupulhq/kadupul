@@ -187,11 +187,17 @@ if ($overwrite && $finrrd == '') {
 }
 
 if ($finrrd == '') {
-	print 'FATAL: You must specify a New RRDfile or use the overwrite option!' . PHP_EOL . PHP_EOL;
-	display_help();
-
-	exit(-2);
+	$finrrd = dirname($newrrd) . '/' . basename($newrrd) . '.new';
 }
+
+require_once __DIR__ . '/../lib/rrd_maintenance.php';
+rrd_maintenance_cli_preflight();
+$rrd_rewrite_lock = rrd_maintenance_acquire_paths(array($oldrrd, $newrrd, $finrrd));
+if ($rrd_rewrite_lock === false) {
+    fwrite(STDERR, "FATAL: RRD storage is busy or its maintenance lock is unavailable.\n");
+    exit(1);
+}
+register_shutdown_function(function () use ($rrd_rewrite_lock) { rrd_maintenance_release($rrd_rewrite_lock); });
 
 debug('Entering Mainline');
 
@@ -229,31 +235,53 @@ if (strlen($response)) {
 	exit(-1);
 }
 
-/* determine the temporary file name */
-$seed = mt_rand();
-
-if (substr_count(PHP_OS, 'WIN')) {
-	$tempdir    = getenv('TEMP');
-	$oldxmlfile = $tempdir . '/' . str_replace('.rrd', '', basename($oldrrd)) . '.dump.' . $seed;
-	$seed++;
-	$newxmlfile = $tempdir . '/' . str_replace('.rrd', '', basename($newrrd)) . '.dump.' . $seed;
-} else {
-	$tempdir    = '/tmp';
-	$oldxmlfile = '/tmp/' . str_replace('.rrd', '', basename($oldrrd)) . '.dump.' . $seed;
-	$seed++;
-	$newxmlfile = '/tmp/' . str_replace('.rrd', '', basename($newrrd)) . '.dump.' . $seed;
+/* All XML and SQLite intermediates stay in an owner-only random workspace. */
+$seed = bin2hex(random_bytes(8));
+$tempdir = rrd_maintenance_workspace();
+if ($tempdir === false) {
+    fwrite(STDERR, "FATAL: Unable to create private RRD workspace.\n");
+    exit(1);
 }
+$oldxmlfile = $tempdir . '/old.xml';
+$newxmlfile = $tempdir . '/new.xml';
+$discard_dumps = static function () use ($oldxmlfile, $newxmlfile, $tempdir) {
+	$retained = false;
+	foreach (array($oldxmlfile, $newxmlfile) as $dumpfile) {
+		if (file_exists($dumpfile)) {
+			if (!@unlink($dumpfile)) {
+				$retained = true;
+			}
+		}
+	}
+	$removed = @rmdir($tempdir);
+	if ($retained || !$removed) {
+		fwrite(STDERR, 'Partial dumps retained for manual cleanup in ' . $tempdir . PHP_EOL);
+	}
+};
 
-if ($finrrd == '') {
-	$finrrd = dirname($newrrd) . '/' . basename($newrrd) . '.new';
+
+/* Require successful bounded dumps before parsing any intermediate output. */
+$dump_sources = array($oldrrd, $newrrd);
+foreach (array($oldxmlfile, $newxmlfile) as $index => $xmlfile) {
+	$source = $dump_sources[$index];
+	debug("Creating XML file '$xmlfile' from '$source'");
+	$handle = fopen($xmlfile, 'x');
+	if ($handle === false) {
+		$discard_dumps();
+		fwrite(STDERR, "FATAL: Unable to create dump file.\n");
+		exit(1);
+	}
+	try {
+		$result = rrd_maintenance_run_command(array($rrdtool, 'dump', $source), $handle, rrd_maintenance_command_timeout());
+	} finally {
+		fclose($handle);
+	}
+	if ($result['exit'] !== 0) {
+		$discard_dumps();
+		fwrite(STDERR, "FATAL: RRDtool dump failed; inputs preserved.\n");
+		exit(1);
+	}
 }
-
-/* execute the dump commands */
-debug("Creating XML file '$oldxmlfile' from '$oldrrd'");
-shell_exec(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($oldrrd) . ' > ' . cacti_escapeshellarg($oldxmlfile));
-
-debug("Creating XML file '$newxmlfile' from '$newrrd'");
-shell_exec(cacti_escapeshellcmd($rrdtool) . ' dump ' . cacti_escapeshellarg($newrrd) . ' > ' . cacti_escapeshellarg($newxmlfile));
 
 /* read the xml files into arrays */
 if (file_exists($oldxmlfile)) {
@@ -313,7 +341,9 @@ file_put_contents($newxmlfile, $new_xml);
 /* finally update the file XML file and Reprocess the RRDfile */
 if (!$dryrun) {
 	debug('Creating New RRDfile');
-	createRRDFileFromXML($newxmlfile, $finrrd);
+	if (!createRRDFileFromXML($newxmlfile, $finrrd)) {
+		exit(1);
+	}
 }
 
 /* remove the temp file */
@@ -828,24 +858,13 @@ function processXML(&$output) {
 
 /* All Functions */
 function createRRDFileFromXML($xmlfile, $rrdfile) {
-	global $rrdtool;
-
-	/* execute the dump command */
-	print 'NOTE: Re-Importing \'' . $xmlfile . '\' to \'' . $rrdfile . '\'' . PHP_EOL;
-	$return_code = 0;
-	$output      = array();
-	$command     = cacti_escapeshellcmd($rrdtool) . ' restore -f -r ' . cacti_escapeshellarg($xmlfile) . ' ' . cacti_escapeshellarg($rrdfile);
-	$result      = exec($command, $output, $return_var);
-
-	if ($return_var == 0) {
-		print "NOTE: File $rrdfile Restored Correctly" . PHP_EOL;
-	} else {
-		print "WARNING: File $rrdfile Encountered Errors.  Errors below:" . PHP_EOL;
-
-		foreach($output as $l) {
-			print "WARNING: $l" . PHP_EOL;
-		}
-	}
+    global $rrdtool;
+    if (!rrd_maintenance_restore_command($rrdtool, $xmlfile, $rrdfile, true)) {
+        print "ERROR: Restore failed; original and recovery XML preserved.\n";
+        return false;
+    }
+    print "NOTE: File $rrdfile Restored Correctly\n";
+    return true;
 }
 
 function XMLrip($tag, $line) {
@@ -1022,7 +1041,7 @@ function display_help() {
 	print 'so long as the new RRDfile already has the correct step.' . PHP_EOL . PHP_EOL;
 
 	print 'The Old and New input parameters are mandatory.  If the finrrd option is' . PHP_EOL;
-	print 'not specified, it will be the newrrd plus a timestamp.' . PHP_EOL . PHP_EOL;
+	print 'not specified, it will be the newrrd path plus .new.' . PHP_EOL . PHP_EOL;
 
 	print '--oldrrd=file    - The old RRDfile that contains old data.' . PHP_EOL;
 	print '--newrrd=file    - The new RRDfile that contains more recent data.' . PHP_EOL;

@@ -224,16 +224,30 @@ if (!$force) {
 	printf('This is a forced run, impacted Data Source Profiles will have their Heartbeats updated as well' . PHP_EOL);
 }
 
+require_once __DIR__ . '/../lib/rrd_maintenance.php';
+rrd_maintenance_cli_preflight();
+$rrd_writer_lock = rrd_maintenance_acquire_paths(array_column($rrdfiles, 'rrd'), 5);
+if ($rrd_writer_lock === false) {
+    print 'ERROR: RRD maintenance storage is busy or unsafe.' . PHP_EOL;
+    exit(1);
+}
+register_shutdown_function(function () use ($rrd_writer_lock) { rrd_maintenance_release($rrd_writer_lock); });
+
 $i = 0;
+$tune_failed = false;
+$rrdtool_bin = read_config_option('path_rrdtool');
+if ($rrdtool_bin == '') {
+    $rrdtool_bin = 'rrdtool';
+}
 if (cacti_sizeof($rrdfiles)) {
 	foreach($rrdfiles as $f) {
 		if (file_exists($f['rrd'])) {
-			$command = sprintf("rrdtool tune %s ", $f['rrd']);
+			$command = cacti_escapeshellarg($rrdtool_bin) . ' tune ' . cacti_escapeshellarg($f['rrd']);
 
 			$data_sources = explode(',', $f['data_sources']);
 
 			foreach($data_sources as $ds) {
-				$command .= " --heartbeat $ds:$new_heartbeat";
+				$command .= ' --heartbeat ' . cacti_escapeshellarg($ds . ':' . $new_heartbeat);
 			}
 
 			$output      = array();
@@ -247,6 +261,7 @@ if (cacti_sizeof($rrdfiles)) {
 			$result = exec($command, $output, $return_code);
 
 			if ($return_code != 0) {
+				$tune_failed = true;
 				printf("Warning Error Occurred: " . implode(', ', $output) . PHP_EOL);
 			} else {
 				db_execute_prepared('UPDATE data_template_rrd
@@ -255,7 +270,8 @@ if (cacti_sizeof($rrdfiles)) {
 					array($new_heartbeat, $f['local_data_id']));
 			}
 		} else {
-			printf('WARNING: RRDfile \'%s\' does not exist!' . PHP_EOL);
+			$tune_failed = true;
+			printf('WARNING: RRDfile \'%s\' does not exist!' . PHP_EOL, $f['rrd']);
 		}
 
 		$i++;
@@ -266,6 +282,11 @@ if (cacti_sizeof($rrdfiles)) {
 	}
 
 	printf("Processed a Total of %s RRDfiles" . PHP_EOL, $i);
+
+	if ($tune_failed) {
+		fwrite(STDERR, "ERROR: Heartbeat updates failed; aggregate metadata was retained for retry.\n");
+		exit(1);
+	}
 
 	if ($data_template_id > 0) {
 		db_execute_prepared('UPDATE data_template_rrd

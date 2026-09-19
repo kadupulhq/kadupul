@@ -386,6 +386,36 @@ class spikekill {
 	}
 
 	public function remove_spikes() {
+		require_once __DIR__ . '/rrd_maintenance.php';
+		/* An external cache daemon can write after its client returns and
+		 * therefore does not participate in our local child lifetime lock. */
+		if (getenv('RRDCACHED_ADDRESS')) {
+			$this->set_error(__('FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal.'));
+			return false;
+		}
+
+		clearstatcache(true, $this->rrdfile);
+		if (is_link($this->rrdfile)) {
+			$this->set_error(__esc("FATAL: File '%s' is not a regular file.", $this->rrdfile));
+			return false;
+		}
+
+		// Wait through brief polling contention, with a bounded deadline.
+		$lock = rrd_maintenance_acquire_paths(array($this->rrdfile), min(60, $this->commandTimeout()), $busy);
+		if ($lock === false) {
+			$this->set_error($busy ? __('FATAL: RRD storage is busy. Retry after polling completes.') :
+				__('FATAL: RRD storage is untrusted or unavailable. Run cli/upgrade_database.php --check-rrd-storage as the web service account and correct its storage configuration.'));
+			return false;
+		}
+
+		try {
+			return $this->remove_spikes_locked();
+		} finally {
+			rrd_maintenance_release($lock);
+		}
+	}
+
+	private function remove_spikes_locked() {
 		global $config;
 
 		$this->strout = '';
@@ -1260,95 +1290,7 @@ class spikekill {
 	 * @return (array) array('exit' => int|false, 'stdout' => string, 'stderr' => string)
 	 */
 	private function runRRDCommand(array $argv, $stdout_handle, $timeout = 30) {
-		$capture_stdout = ($stdout_handle === null);
-
-		$descriptors = array(
-			0 => array('pipe', 'r'),
-			1 => $capture_stdout ? array('pipe', 'w') : $stdout_handle,
-			2 => array('pipe', 'w'),
-		);
-
-		$process = @proc_open($argv, $descriptors, $pipes);
-
-		if (!is_resource($process)) {
-			return array('exit' => false, 'stdout' => '', 'stderr' => '');
-		}
-
-		fclose($pipes[0]);
-
-		if ($capture_stdout) {
-			stream_set_blocking($pipes[1], false);
-		}
-
-		stream_set_blocking($pipes[2], false);
-
-		$stdout    = '';
-		$stderr    = '';
-		$remaining = (int) $timeout * 1000000;
-		$exit      = null;
-
-		while ($remaining > 0) {
-			$start  = microtime(true);
-			$read   = $capture_stdout ? array($pipes[1], $pipes[2]) : array($pipes[2]);
-			$write  = array();
-			$except = array();
-			stream_select($read, $write, $except, intdiv($remaining, 1000000), $remaining % 1000000);
-
-			usleep(50000);
-
-			$status = proc_get_status($process);
-
-			if ($capture_stdout) {
-				$stdout .= stream_get_contents($pipes[1]);
-			}
-
-			$stderr .= stream_get_contents($pipes[2]);
-
-			/* proc_get_status() returns false on a dead handle. Preserve a
-			   valid exitcode while it is observable because a later status
-			   read or proc_close() can return -1 after the child has
-			   already been reaped. */
-			if (!is_array($status) || empty($status['running'])) {
-				if (is_array($status) && isset($status['exitcode']) && $status['exitcode'] >= 0) {
-					$exit = (int) $status['exitcode'];
-				}
-
-				break;
-			}
-
-			$remaining -= (int) ((microtime(true) - $start) * 1000000);
-		}
-
-		if ($capture_stdout) {
-			fclose($pipes[1]);
-		}
-
-		fclose($pipes[2]);
-
-		$status = proc_get_status($process);
-
-		if (is_array($status) && !empty($status['running'])) {
-			if (isset($status['pid']) && function_exists('posix_kill')) {
-				posix_kill($status['pid'], 9);
-			}
-
-			proc_terminate($process, 9);
-			proc_close($process);
-
-			return array('exit' => false, 'stdout' => $stdout, 'stderr' => $stderr);
-		}
-
-		if ($exit === null && is_array($status) && isset($status['exitcode']) && $status['exitcode'] >= 0) {
-			$exit = (int) $status['exitcode'];
-		}
-
-		$close_exit = proc_close($process);
-
-		if ($exit === null) {
-			$exit = $close_exit;
-		}
-
-		return array('exit' => $exit, 'stdout' => $stdout, 'stderr' => $stderr);
+		return rrd_maintenance_run_command($argv, $stdout_handle, $timeout);
 	}
 
 	/**
@@ -1392,7 +1334,7 @@ class spikekill {
 	private function commandTimeout() {
 		$configured = (int) read_config_option('spikekill_timeout');
 
-		return $configured > 0 ? $configured : 3600;
+		return $configured > 0 ? min($configured, 28800) : 3600;
 	}
 
 	/**
@@ -1421,31 +1363,8 @@ class spikekill {
 	 * belongs to the current account or root. Windows needs ACL-aware support.
 	 */
 	private function directoryPathIsTrusted($path) {
-		if (!function_exists('posix_geteuid') || DIRECTORY_SEPARATOR === '\\') {
-			return false;
-		}
-		$uid = posix_geteuid();
-		$child = @stat($path);
-		if ($child === false || !in_array($child['uid'], array(0, $uid), true) || ($child['mode'] & 0022) !== 0) {
-			return false;
-		}
-		while ($child !== false) {
-			$parent_path = dirname($path);
-			$parent = @stat($parent_path);
-			if ($parent === false || !in_array($parent['uid'], array(0, $uid), true)) {
-				return false;
-			}
-			if (($parent['mode'] & 0022) !== 0
-				&& (!(($parent['mode'] & 01000) !== 0) || !in_array($child['uid'], array(0, $uid), true))) {
-				return false;
-			}
-			if ($parent_path === $path) {
-				return true;
-			}
-			$path = $parent_path;
-			$child = $parent;
-		}
-		return false;
+		require_once __DIR__ . '/rrd_maintenance.php';
+		return rrd_maintenance_directory_is_trusted($path);
 	}
 
 	/**
@@ -1712,6 +1631,9 @@ class spikekill {
 						foreach($dses as $dskey => $ds) {
 							/* Empty or sparse RRAs use nonnumeric sentinels. Preserve
 							 * missing statistics instead of rounding or formatting them as zero. */
+							if (!isset($ds['stddev']) || !is_numeric($ds['stddev']) || !is_finite((float) $ds['stddev'])) {
+								$ds['min_cutoff'] = $ds['max_cutoff'] = 'N/A';
+							}
 							foreach (array('average', 'stddev', 'variance_avg', 'max_value', 'min_value', 'max_cutoff', 'min_cutoff') as $field) {
 								if (empty($ds['numsamples']) || !isset($ds[$field]) || !is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
 									$ds[$field] = 'N/A';
@@ -1757,6 +1679,9 @@ class spikekill {
 						foreach($dses as $dskey => $ds) {
 							/* Empty or sparse RRAs use nonnumeric sentinels. Preserve
 							 * missing statistics instead of rounding or formatting them as zero. */
+							if (!isset($ds['stddev']) || !is_numeric($ds['stddev']) || !is_finite((float) $ds['stddev'])) {
+								$ds['min_cutoff'] = $ds['max_cutoff'] = 'N/A';
+							}
 							foreach (array('average', 'stddev', 'variance_avg', 'max_value', 'min_value', 'max_cutoff', 'min_cutoff') as $field) {
 								if (empty($ds['numsamples']) || !isset($ds[$field]) || !is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
 									$ds[$field] = 'N/A';

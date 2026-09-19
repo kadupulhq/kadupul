@@ -578,11 +578,45 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 		$fdata = base64_decode($f['data']);
 		$name = $f['name'];
 
-		if (strpos($name, 'scripts/') !== false || strpos($name, 'resource/') !== false) {
-			$filename = $config['base_path'] . "/$name";
+		$normalized_name = str_replace('\\', '/', $name);
 
-			if (!$preview) {
-				if (!cacti_sizeof($import_files) || in_array($name, $import_files)) {
+		/* A crafted package could write outside base_path via '..' in the file
+		 * name; 'resource/../target.php' still contains 'resource/' and slipped
+		 * past the check below (GHSA-vp35-4h28-r883). Reject traversal, NUL, and
+		 * absolute paths before deriving the destination. */
+		if (strpos($name, chr(0)) !== false || preg_match('#(^|/)\.\.(/|$)#', $normalized_name)) {
+			cacti_log("WARNING: Skipping package file with path traversal attempt: $name", false, 'IMPORT');
+
+			continue;
+		}
+
+		if (preg_match('#^([/\\\\]|[A-Za-z]:)#', $name)) {
+			cacti_log("WARNING: Skipping package file with absolute path: $name", false, 'IMPORT');
+
+			continue;
+		}
+
+		if (strpos($normalized_name, 'scripts/') !== false || strpos($normalized_name, 'resource/') !== false) {
+			/* Packages ship scripts and resources for the base or a plugin only.
+			 * A name such as 'evil/scripts/x.php' or a symlink under the base
+			 * would otherwise place the write or preview read anywhere. */
+			$filename = false;
+
+			if (preg_match('#^(plugins/[A-Za-z0-9_-]+/)?(scripts|resource)/#', $normalized_name)) {
+				$filename = validate_relative_path_within($normalized_name, $config['base_path']);
+			}
+
+			if ($filename === false) {
+				cacti_log("WARNING: Skipping package file outside the script and resource directories: $name", false, 'IMPORT');
+
+				continue;
+			}
+
+			/* Key the status by the package name, not $filename. The UI posts the
+			 * key back as the selection and diff target, and $filename is under
+			 * realpath(base_path), which differs from base_path behind a symlink. */
+				if (!$preview) {
+					if (!cacti_sizeof($import_files) || in_array($name, $import_files, true) || in_array($normalized_name, $import_files, true)) {
 					cacti_log('Writing file: ' . $filename, false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 
 					if ((is_writeable(dirname($filename)) && !file_exists($filename)) || is_writable($filename)) {
@@ -592,21 +626,21 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 							fwrite($file , $fdata, strlen($fdata));
 							fclose($file);
 							clearstatcache();
-							$filestatus[$filename] = __('written');
+							$filestatus[$normalized_name] = __('written');
 						} else {
-							$filestatus[$filename] = __('could not open');
+							$filestatus[$normalized_name] = __('could not open');
 						}
 
 						if (!file_exists($filename)) {
 							cacti_log('FATAL: Unable to create directory: ' . $filename, true, 'IMPORT', POLLER_VERBOSITY_LOW);
 
-							$filestatus[$filename] = __('not exists');
+							$filestatus[$normalized_name] = __('not exists');
 						}
 					} else {
-						$filestatus[$filename] = __('not writable');
+						$filestatus[$normalized_name] = __('not writable');
 					}
 
-					cacti_log('Write Status file: ' . $filename . ', with Status ' . $filestatus[$filename], false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
+					cacti_log('Write Status file: ' . $filename . ', with Status ' . $filestatus[$normalized_name], false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 				}
 			} else {
 				cacti_log('Previewing file: ' . $filename, false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
@@ -620,29 +654,29 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 				if (is_writeable(dirname($filename))) {
 					if (file_exists($filename) && is_writable($filename)) {
 						if ($new === $existing) {
-							$filestatus[$filename] = 'writable, identical';
+							$filestatus[$normalized_name] = 'writable, identical';
 						} else {
-							$filestatus[$filename] = 'writable, differences';
+							$filestatus[$normalized_name] = 'writable, differences';
 						}
 					} elseif (file_exists($filename) && is_writeable($filename)) {
-						$filestatus[$filename] = 'writable, new';
+						$filestatus[$normalized_name] = 'writable, new';
 					} elseif (file_exists($filename) && !is_writeable($filename)) {
 						if ($new === $existing) {
-							$filestatus[$filename] = 'not writable, identical';
+							$filestatus[$normalized_name] = 'not writable, identical';
 						} else {
-							$filestatus[$filename] = 'not writable, differences';
+							$filestatus[$normalized_name] = 'not writable, differences';
 						}
 					} else {
-						$filestatus[$filename] = 'writable, new';
+						$filestatus[$normalized_name] = 'writable, new';
 					}
 				} elseif (file_exists($filename)) {
 					if ($new === $existing) {
-						$filestatus[$filename] = 'not writable, identical';
+						$filestatus[$normalized_name] = 'not writable, identical';
 					} else {
-						$filestatus[$filename] = 'not writable, differences';
+						$filestatus[$normalized_name] = 'not writable, differences';
 					}
 				} else {
-					$filestatus[$filename] = 'not writable, new';
+					$filestatus[$normalized_name] = 'not writable, new';
 				}
 			}
 		} else {

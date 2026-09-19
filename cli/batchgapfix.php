@@ -41,7 +41,10 @@ $method     = 'fill';
 $avgnan     = 'last';
 $start_time = false;
 $end_time   = false;
-$php_bin    = read_config_option('path_php_binary');
+$php_bin    = (string) read_config_option('path_php_binary');
+if ($php_bin === '') {
+    $php_bin = PHP_BINARY;
+}
 
 /* install signal handlers for UNIX types only */
 if (function_exists('pcntl_signal')) {
@@ -171,26 +174,27 @@ $end_date   = date('Y-m-d H:i:s', $end_time);
 
 // Parent Process, prep table insert records
 if ($child == 0) {
+	require_once __DIR__ . '/../lib/rrd_maintenance.php';
+	rrd_maintenance_cli_preflight();
 	$type = 'master';
 
 	if ($force) {
-		printf("NOTE: Looking for and killing running processes." . PHP_EOL);
+		printf("NOTE: Checking for running processes; stop live workers before retrying." . PHP_EOL);
 
 		$running = db_fetch_assoc('SELECT *
 			FROM processes
 			WHERE tasktype = "batchgapfix"');
 
 		if (cacti_sizeof($running)) {
-			printf("NOTE: Found %s running processes found." . PHP_EOL);
+			printf("NOTE: Found %s running processes." . PHP_EOL, cacti_sizeof($running));
 
 			foreach($running as $r) {
-				$running = posix_kill($r['pid'], 0);
-				if (posix_get_last_error() == 1) {
-					printf("NOTE: Process with PID: %s being killed." . PHP_EOL, $r['pid']);
-
-					posix_kill($r['pid'], SIGTERM);
-				} else {
-					printf("NOTE: Process with PID: %s, not found likely crashed." . PHP_EOL, $r['pid']);
+				$alive = @posix_kill($r['pid'], 0);
+				// A stale PID can belong to another process; stop workers manually.
+				// Only ESRCH proves absence. EPERM and other probe failures retain ownership.
+				if ($alive || posix_get_last_error() !== 3) {
+					fwrite(STDERR, "FATAL: Previous repair worker has not exited; queue and registration retained.\n");
+					exit(1);
 				}
 			}
 
@@ -208,7 +212,7 @@ if ($child == 0) {
 	if (db_table_exists('graph_local_spikekill')) {
 		$running = db_fetch_cell('SELECT COUNT(*) FROM graph_local_spikekill WHERE ended = "0000-00-00"');
 
-		if ($running > 0 && !$force) {
+		if (!is_numeric($running) || ($running > 0 && !$force)) {
 			print "FATAL: You have requested a start run, and a run appears to be already running" . PHP_EOL;
 			print "FATAL: Check that no processes are running and use the --force option to override." . PHP_EOL;
 			exit(1);
@@ -252,6 +256,13 @@ if ($child == 0) {
 
 	print "NOTE: There are $rrdfiles RRDfiles that will be checked for gaps and fixed" . PHP_EOL;
 
+	// All rewrites share one exclusive storage lease; parallel children would
+	// reject one another and mark untouched files as failed.
+	if ($threads > 1) {
+		print 'NOTE: Serializing gap repair to preserve exclusive RRD maintenance.' . PHP_EOL;
+		$threads = 1;
+	}
+
 	$rrds_per_thread = ceil($rrdfiles/$threads);
 
 	// Distributing RRDfiles into tasks
@@ -267,54 +278,29 @@ if ($child == 0) {
 
 	printf("NOTE: %s, Database primed for batch gap fill." . PHP_EOL, $now);
 
-	// Fork Child Binaries
-	for($i = 1; $i <= $threads; $i++) {
-		$command = sprintf("%s/cli/batchgapfix.php --start='%s' --end='%s' --method=%s --avgnan=%s --child=%s" . ($force ? ' --force':'') . ($debug ? ' --debug':''),
-			$config['base_path'],
-			$start_date,
-			$end_date,
-			$method,
-			$avgnan,
-			$i
-		);
-
-		$now = date('H:i:s');
-
-		printf("NOTE: %s, Exec in Background: %s %s" . PHP_EOL, $now, $php_bin, $command);
-
-		exec_background($php_bin, $command);
-	}
-
+	// Maintenance is serialized. Own and wait for the actual child rather
+	// than waiting on rows a crashed child can never mark as finished.
 	$start = microtime(true);
-
-	while (true) {
-		sleep(1);
-
-		$not_finished = db_fetch_cell_prepared('SELECT COUNT(*)
-			FROM graph_local_spikekill
-			WHERE ended = "0000-00-00"');
-
-		$end = microtime(true);
-
-		$rate = ($rrdfiles - $not_finished) / ($end - $start);
-
-		if ($rate > 0) {
-			$estimate = round($rrdfiles / $rate, 0);
-			$complete = ($end - $start) - $estimate;
-		} else {
-			$estimate = 'unknown';
-		}
-
-		$now = date('H:i:s');
-
-		if ($not_finished > 0) {
-			printf("NOTE: %s, Status %s of %s RRDfiles processed. Total Time is %.0f." . PHP_EOL, $now, number_format($rrdfiles - $not_finished), number_format($rrdfiles), $end - $start);
-			printf("NOTE: %s, Processing Rate: %s RRDfiles per/second, Estimated Complete in: %s seconds, Sleeping 1 seconds." . PHP_EOL, $now, round($rate, 2), $estimate);
-		} else {
-			printf("NOTE: All RRDfiles processed.  Total Time was %.2f seconds." . PHP_EOL, $end - $start);
-			break;
-		}
+	$args = array($php_bin, $config['base_path'] . '/cli/batchgapfix.php',
+		'--start=' . $start_date, '--end=' . $end_date, '--method=' . $method,
+		'--avgnan=' . $avgnan, '--child=1');
+	if ($force) {
+		$args[] = '--force';
 	}
+	if ($debug) {
+		$args[] = '--debug';
+	}
+	$process = proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
+	$child_status = 1;
+	if (is_resource($process)) {
+		$child_process = proc_get_status($process);
+		$closed_status = proc_close($process);
+		$child_status = $child_process['running'] ? $closed_status : $child_process['exitcode'];
+		unregister_process('batchgapfix', 'child', 1, $child_process['pid']);
+	}
+	$not_finished = db_fetch_cell_prepared('SELECT COUNT(*) FROM graph_local_spikekill WHERE ended = "0000-00-00"');
+	$end = microtime(true);
+	$rate = is_numeric($not_finished) ? ($rrdfiles - $not_finished) / max($end - $start, 0.000001) : 0;
 
 	$succeeded = db_fetch_cell('SELECT COUNT(*) FROM graph_local_spikekill WHERE exit_code = 0');
 	$failed    = db_fetch_cell('SELECT COUNT(*) FROM graph_local_spikekill WHERE exit_code != 0');
@@ -322,6 +308,12 @@ if ($child == 0) {
 	cacti_log(sprintf('BATCHFIX STATS: Time:%s, RRDfiles:%s, Threads:%s, Rate:%s, Succeeded:%s, Failed:%s', round($end - $start, 2), $rrdfiles, $threads, round($rate,2), $succeeded, $failed), false, 'SYSTEM');
 
 	unregister_process('batchgapfix', $type, $child);
+
+	if ($child_status !== 0 || !($not_finished === 0 || $not_finished === '0')
+		|| !($failed === 0 || $failed === '0')) {
+		fwrite(STDERR, "ERROR: Gap repair failed for some RRD files; queue results retained.\n");
+		exit(1);
+	}
 
 	db_execute('TRUNCATE TABLE graph_local_spikekill');
 
@@ -350,14 +342,14 @@ if ($child == 0) {
 		$return_var = 0;
 
 		// Format the command
-		$command = sprintf("%s -q %s/cli/removespikes.php --rrdfile='%s' --outlier-start='%s' --outlier-end='%s' --method=%s --avgnan=%s",
-			$php_bin,
-			$config['base_path'],
-			$rrdfile['data_source_path'],
-			$start_date,
-			$end_date,
-			$method,
-			$avgnan
+		$command = sprintf('%s -q %s --rrdfile=%s --outlier-start=%s --outlier-end=%s --method=%s --avgnan=%s',
+			cacti_escapeshellarg($php_bin),
+			cacti_escapeshellarg($config['base_path'] . '/cli/removespikes.php'),
+			cacti_escapeshellarg($rrdfile['data_source_path']),
+			cacti_escapeshellarg($start_date),
+			cacti_escapeshellarg($end_date),
+			cacti_escapeshellarg($method),
+			cacti_escapeshellarg($avgnan)
 		);
 
 		db_execute_prepared('UPDATE graph_local_spikekill
@@ -379,7 +371,7 @@ if ($child == 0) {
 			printf("SUCCESS: Gap Fills for RRDfile:%s" . PHP_EOL, $rrdfile['data_source_path']);
 			$succeeded++;
 		} else {
-			printf("FAILED:  Gap Fills failed for RRDfile:%s" . PHP_EOL, $graph['data_source_path']);
+			printf("FAILED:  Gap Fills failed for RRDfile:%s" . PHP_EOL, $rrdfile['data_source_path']);
 			$failed++;
 		}
 	}
@@ -393,7 +385,7 @@ if ($child == 0) {
 	unregister_process('batchgapfix', $type, $child);
 }
 
-exit(0);
+exit($failed > 0 ? 1 : 0);
 
 /** sig_handler - provides a generic means to catch exceptions to the Kadupul log.
  * @arg $signo  - (int) the signal that was thrown by the interface.
@@ -434,8 +426,8 @@ function display_help() {
 	display_version();
 
 	print PHP_EOL . 'This utility will fill gaps in graphs based upon a time range.' . PHP_EOL;
-	print 'It will perform this process in parallel to increase performance based upon the number of threads ' . PHP_EOL;
-	print 'selected by the user.' . PHP_EOL . PHP_EOL;
+	print 'Gap repairs run serially to preserve exclusive RRD maintenance. The threads option is retained ' . PHP_EOL;
+	print 'for command-line compatibility.' . PHP_EOL . PHP_EOL;
 	print 'usage: batchgapfix.php --start=\'YYYY-MM-DD HH:MM:SS\' --end=\'YYYY-MM-DD HH:MM:SS\' [--threads=N]' . PHP_EOL;
 	print '       [--method=fill|float] [--avgnan=last|avg] [--host-ids=N,N,N,...]' . PHP_EOL;
 	print '       [-f|--force] [-d|--debug]' . PHP_EOL . PHP_EOL;
@@ -443,7 +435,7 @@ function display_help() {
 	print '   --start=\'YYYY-MM-DD HH:MM:SS\' - The start date to check and remove gaps.' . PHP_EOL;
 	print '   --end=\'YYYY-MM-DD HH:MM:SS\'   - The end date to check and remove gaps.' . PHP_EOL . PHP_EOL;
 	print 'Optional:' . PHP_EOL;
-	print '   --threads=N                     - Default is 5.  The number of parallel threads [1..40]' . PHP_EOL;
+	print '   --threads=N                     - Accepted range [1..40]; maintenance currently uses one worker' . PHP_EOL;
 	print '   --method=fill|float             - Default is \'fill\'.  The method to fill gaps.' . PHP_EOL;
 	print '   --avgnan=last|avg               - Default is \'last\'.  The number to use to fill gaps.' . PHP_EOL;
 	print '   --host-ids=N,N,N,...            - A comma delimited list of Kadupul Device ID\'s to process.' . PHP_EOL;

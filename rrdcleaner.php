@@ -8,6 +8,7 @@
 include_once ('./include/auth.php');
 include_once ($config['library_path'] . '/functions.php');
 include_once ($config['library_path'] . '/rrd.php');
+require_once __DIR__ . '/lib/rrd_maintenance.php';
 
 $ds_actions = array (
 	1 => __x('dropdown action', 'Delete'),
@@ -21,6 +22,10 @@ set_default_action();
 
 if (isset_request_var('rescan')) {
 	set_request_var('action', 'restart');
+}
+
+if (!rrd_maintenance_cleanup_supported()) {
+	raise_message('rrd_cleanup_unsupported', __('Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup.'), MESSAGE_LEVEL_ERROR);
 }
 
 switch(get_request_var('action')) {
@@ -108,8 +113,10 @@ function rrdclean_truncate_tables() {
 	db_execute($sql);
 
 	/* clear old data_source_purge_action table */
-	$sql = 'TRUNCATE TABLE `data_source_purge_action`';
-	db_execute($sql);
+	if (rrd_maintenance_cleanup_supported()) {
+		$sql = 'TRUNCATE TABLE `data_source_purge_action`';
+		db_execute($sql);
+	}
 
 	/* restore original error handler */
 	restore_error_handler();
@@ -416,6 +423,11 @@ function rrdcleaner_legend($total_size) {
 
 function remove_all_rrds() {
 	global $config, $rra_path;
+	if (!rrd_maintenance_cleanup_supported()) {
+		raise_message('rrd_cleanup_unsupported', __('Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup.'), MESSAGE_LEVEL_ERROR);
+		return false;
+	}
+
 
 	/* suppress warnings */
 	error_reporting(0);
@@ -446,6 +458,11 @@ function remove_all_rrds() {
  */
 function do_rrd() {
 	global $config, $rra_path;
+	if (!rrd_maintenance_cleanup_supported()) {
+		raise_message('rrd_cleanup_unsupported', __('Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup.'), MESSAGE_LEVEL_ERROR);
+		return false;
+	}
+
 
 	/* suppress warnings */
 	error_reporting(0);

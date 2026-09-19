@@ -1,7 +1,7 @@
 <?php
 
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
-// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 
 require_once dirname(__DIR__, 4) . '/lib/spikekill.php';
 if (!function_exists('cacti_sizeof')) {
@@ -44,6 +44,13 @@ test('statistics preserve unavailable values and align all sixteen columns', fun
             $row[$field] = 0;
         }
     }
+    if ($value === '__single__') {
+        $row['numsamples'] = 1;
+        foreach (array('average', 'variance_avg', 'max_value', 'min_value', 'max_cutoff', 'min_cutoff') as $field) {
+            $row[$field] = 42;
+        }
+        $row['stddev'] = false;
+    }
     $method = $class->getMethod('outputStatistics');
     $method->setAccessible(true);
     $method->invoke($object, array(array($row)));
@@ -57,9 +64,10 @@ test('statistics preserve unavailable values and align all sixteen columns', fun
         $cells = array_merge(array('1 mins'), preg_split('/\s+/', trim(preg_replace('/^\s*1 mins\s+/', '', $match[0]))));
     }
     expect($cells)->toHaveCount(16)
-        ->and(array_slice($cells, 5, 7))->toBe(array_fill(0, 7, $expected))
+        ->and(array_slice($cells, 5, 7))->toBe($value === '__single__' ? array('42', 'N/A', '42', '42', '42', 'N/A', 'N/A') : array_fill(0, 7, $expected))
         ->and(array_slice($cells, 12))->toBe(array('1', '2', '3', '4'));
 })->with(array(
+    array('__single__', 'N/A', false), array('__single__', 'N/A', true),
     array('__empty__', 'N/A', false), array('__empty__', 'N/A', true), array('__missing__', 'N/A', false), array('__missing__', 'N/A', true),
     array('NAN', 'N/A', false), array('NAN', 'N/A', true),
     array(NAN, 'N/A', false), array(NAN, 'N/A', true),

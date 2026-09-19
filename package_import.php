@@ -165,25 +165,7 @@ function form_save() {
 				$id = base64_decode(str_replace('chk_file_', '', $var));
 				$id = json_decode($id, true);
 
-				if (strpos($id['pfile'], '/') !== false) {
-					$parts = explode('/', $id['pfile']);
-				} elseif (strpos($id['pfile'], '\\') !== false) {
-					$parts = explode('\\', $id['pfile']);
-				} else {
-					$parts = array($id['pfile']);
-				}
-
-				foreach($parts as $index => $p) {
-					if ($p == 'scripts') {
-						break;
-					} elseif ($p == 'resource') {
-						break;
-					} else {
-						unset($parts[$index]);
-					}
-				}
-
-				$id['pfile'] = implode('/', $parts);
+				$id['pfile'] = package_import_normalize_selected_file($id['pfile']);
 
 				$files[] = $id['pfile'];
 			}
@@ -256,7 +238,7 @@ function package_file_get_contents($filename) {
 		$fdata = false;
 
 		foreach ($data['files']['file'] as $file) {
-			if ($file['name'] == $filename) {
+			if (package_import_file_name_matches($file['name'], $filename)) {
 				$binary_signature = base64_decode($file['filesignature']);
 
 				$fdata = base64_decode($file['data']);
@@ -281,6 +263,29 @@ function package_file_get_contents($filename) {
 	}
 
 	return false;
+}
+
+function package_import_normalize_selected_file($pfile) {
+	global $config;
+
+	$normalized = str_replace('\\', '/', $pfile);
+
+	if (isset($config['base_path']) && $config['base_path'] !== '') {
+		$base_path = rtrim(str_replace('\\', '/', $config['base_path']), '/');
+
+		if ($normalized === $base_path) {
+			$normalized = '';
+		} elseif (strpos($normalized, $base_path . '/') === 0) {
+			$normalized = substr($normalized, strlen($base_path) + 1);
+		}
+	}
+
+	return ltrim($normalized, '/');
+}
+
+function package_import_file_name_matches($package_name, $filename) {
+	return $package_name == $filename ||
+		package_import_normalize_selected_file($package_name) == package_import_normalize_selected_file($filename);
 }
 
 function package_diff_file() {
@@ -579,7 +584,7 @@ function import_display_package_data($templates, $files, $package_name, $xmlfile
 								'&package_location=0' .
 								'&package_file=' . $file_package_file .
 								'&package_name=' . $file_package_name .
-								'&filename=' . str_replace($config['base_path'] . '/', '', $pfile);
+								'&filename=' . $pfile;
 
 							$nstatus .= ($nstatus != '' ? ', ':'') .
 								"<a class='diffme linkEditMain' href='" . html_escape($url) . "'>" . __('Differences') . '</a>';

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kadupul 1.2.20\n"
 "Report-Msgid-Bugs-To: https://github.com/kadupulhq/kadupul/issues\n"
-"POT-Creation-Date: 2026-09-15 20:13-0700\n"
+"POT-Creation-Date: 2026-09-16 15:22-0700\n"
 "PO-Revision-Date: 2026-05-10 08:18+0000\n"
 "Last-Translator: Kadupul translation team\n"
 "Language-Team: https://github.com/kadupulhq/kadupul\n"
@@ -43,7 +43,7 @@ msgstr "Licences līgums"
 msgid "Kadupul is licensed under the GNU GPL:"
 msgstr "Kadupul ir licencēts saskaņā ar GNU GPL:"
 
-#: about.php:33 lib/installer.php:1821
+#: about.php:33 lib/installer.php:1833
 msgid "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
 msgstr "Šī ir bezmaksas programmatūra. Jūs varat to izplatīt tālāk un/vai modificēt saskaņā ar GNU vispārējās publiskās licences (GNU General Public License) noteikumiem, ko publicējusi Brīvās programmatūras fonds (Free Software Foundation). Vai nu licences 2. versija, vai nu jebkura jaunāka versija (pēc jūsu izvēles)."
 
@@ -583,7 +583,7 @@ msgid "Included in Aggregate"
 msgstr "Iekļauts apkopojumā"
 
 #: aggregate_graphs.php:1278 aggregate_graphs.php:1612 graph_templates.php:846
-#: graph_view.php:796 graph_view.php:809 graphs.php:2265 lib/spikekill.php:1752
+#: graph_view.php:796 graph_view.php:809 graphs.php:2265 lib/spikekill.php:1757
 msgid "Size"
 msgstr "Izmērs"
 
@@ -609,7 +609,7 @@ msgstr "Nē"
 #: data_templates.php:1238 gprint_presets.php:428 graph_templates.php:886
 #: host_templates.php:963 include/global_settings.php:874
 #: include/global_settings.php:1897 lib/api_automation.php:1463
-#: lib/installer.php:2016 lib/installer.php:2044 lib/installer.php:3718
+#: lib/installer.php:2028 lib/installer.php:2056 lib/installer.php:3737
 #: links.php:400 tree.php:2327 tree.php:2328 user_admin.php:2326
 #: user_domains.php:752 user_domains.php:756 user_group_admin.php:2008
 #: vdef.php:916
@@ -744,7 +744,7 @@ msgstr "Apkopotās veidnes"
 #: aggregate_templates.php:595 automation_templates.php:381
 #: automation_templates.php:468 color_templates.php:645
 #: include/global_arrays.php:998 include/global_arrays.php:1061
-#: lib/installer.php:2630 user_admin.php:2929 user_group_admin.php:2493
+#: lib/installer.php:2642 user_admin.php:2929 user_group_admin.php:2493
 msgid "Templates"
 msgstr "Veidnes"
 
@@ -1171,7 +1171,7 @@ msgstr "Kontakti"
 #: automation_devices.php:270 include/global_form.php:1137
 #: include/global_form.php:1173 include/global_form.php:1367
 #: include/global_form.php:1743 lib/api_automation.php:273
-#: lib/api_automation.php:1229 lib/installer.php:1936 lib/installer.php:2631
+#: lib/api_automation.php:1229 lib/installer.php:1948 lib/installer.php:2643
 #: managers.php:202 user_admin.php:978 user_admin.php:1123
 #: user_group_admin.php:1010 user_group_admin.php:1996
 msgid "Description"
@@ -1197,7 +1197,7 @@ msgstr "SNMP"
 #: host.php:1671 host.php:1788 lib/api_automation.php:151
 #: lib/api_automation.php:275 lib/api_automation.php:568
 #: lib/api_automation.php:1089 lib/api_automation.php:1232
-#: lib/html_reports.php:1876 lib/installer.php:1936 managers.php:204
+#: lib/html_reports.php:1876 lib/installer.php:1948 managers.php:204
 #: package_import.php:537 package_import.php:622 plugins.php:467
 #: plugins.php:590 pollers.php:1005 templates_import.php:206
 #: templates_import.php:245 user_admin.php:1123 user_group_admin.php:1010
@@ -1254,11 +1254,11 @@ msgstr "Iztīrīt atklātās ierīces"
 #: lib/functions.php:5938 lib/functions.php:5942 lib/html.php:1261
 #: lib/html.php:1333 lib/html_reports.php:1666 lib/html_reports.php:1692
 #: lib/html_reports.php:1763 lib/html_reports.php:1764
-#: lib/html_reports.php:1765 lib/spikekill.php:1743 lib/spikekill.php:1744
-#: lib/spikekill.php:1788 lib/spikekill.php:1789 lib/spikekill.php:1790
-#: lib/spikekill.php:1791 lib/spikekill.php:1792 lib/spikekill.php:1793
-#: lib/spikekill.php:1794 lib/spikekill.php:1795 lib/spikekill.php:1796
-#: lib/spikekill.php:1797 lib/spikekill.php:1798 plugins.php:739
+#: lib/html_reports.php:1765 lib/spikekill.php:1748 lib/spikekill.php:1749
+#: lib/spikekill.php:1796 lib/spikekill.php:1797 lib/spikekill.php:1798
+#: lib/spikekill.php:1799 lib/spikekill.php:1800 lib/spikekill.php:1801
+#: lib/spikekill.php:1802 lib/spikekill.php:1803 lib/spikekill.php:1804
+#: lib/spikekill.php:1805 lib/spikekill.php:1806 plugins.php:739
 #: pollers.php:1113 user_admin.php:2320 utilities.php:721 utilities.php:1170
 #: utilities.php:2638 utilities.php:2766 utilities.php:2774 utilities.php:2785
 #: utilities.php:2796 utilities.php:2819 utilities.php:2865 utilities.php:3099
@@ -1563,8 +1563,8 @@ msgstr "Pamatiestatījumi"
 #: include/global_form.php:1331 include/global_form.php:1359
 #: include/global_form.php:1432 include/global_form.php:1460
 #: include/global_form.php:2105 include/global_form.php:2203
-#: include/global_form.php:2248 lib/installer.php:1936 lib/installer.php:2009
-#: lib/installer.php:2039 lib/installer.php:2631 lib/installer.php:2719
+#: include/global_form.php:2248 lib/installer.php:1948 lib/installer.php:2021
+#: lib/installer.php:2051 lib/installer.php:2643 lib/installer.php:2731
 #: lib/vdef.php:56 managers.php:554 pollers.php:44 sites.php:23
 #: user_admin.php:978 user_domains.php:309 utilities.php:847 utilities.php:3079
 msgid "Name"
@@ -2496,7 +2496,7 @@ msgstr "Koka izveides kritērijs"
 msgid "Change Leaf Type"
 msgstr "Mainīt koka lapu tipu"
 
-#: automation_tree_rules.php:715 lib/installer.php:3942 utilities.php:2633
+#: automation_tree_rules.php:715 lib/installer.php:3961 utilities.php:2633
 #: utilities.php:2634 utilities.php:2637 utilities.php:2638
 msgid "WARNING:"
 msgstr "BRĪDINĀJUMS:"
@@ -2544,9 +2544,9 @@ msgid "No Tree Rules Found"
 msgstr "Koku noteikumi netika atrasti"
 
 #: cactid.php:27 help.php:28 lib/functions.php:6219 lib/functions.php:6288
-#: lib/functions.php:6378 lib/functions.php:6985 poller.php:377 poller.php:527
-#: poller.php:592 poller.php:632 poller.php:774 poller.php:880
-#: poller_automation.php:36 poller_boost.php:359
+#: lib/functions.php:6378 lib/functions.php:6985 poller.php:384 poller.php:534
+#: poller.php:599 poller.php:641 poller.php:799 poller.php:905
+#: poller_automation.php:36 poller_boost.php:371
 msgid "Kadupul System Warning"
 msgstr "Kadupul sistēmas brīdinājums"
 
@@ -3048,7 +3048,7 @@ msgstr "Datu avota iekšējais ID."
 msgid "The Status of the Data Source Debug Check."
 msgstr "Datu avota atkļūdošanas pārbaudes statuss."
 
-#: data_debug.php:454 lib/installer.php:2390 lib/installer.php:2422
+#: data_debug.php:454 lib/installer.php:2402 lib/installer.php:2434
 #: package_import.php:591
 msgid "Writable"
 msgstr "Rakstāms"
@@ -3222,7 +3222,7 @@ msgstr "Atkārtoti palaist analīzi"
 msgid "Check"
 msgstr "Pārbaudīt"
 
-#: data_debug.php:809 include/global_form.php:1015 lib/rrd.php:3265
+#: data_debug.php:809 include/global_form.php:1015 lib/rrd.php:3588
 #: utilities.php:781 utilities.php:798 utilities.php:3079
 msgid "Value"
 msgstr "Vērtība"
@@ -3515,7 +3515,7 @@ msgstr "Metode, ko izmanto informācijas vākšanai šai datu ievades metodei."
 #: data_input.php:954 host.php:1682 lib/api_automation.php:162
 #: lib/api_automation.php:1100 lib/auth.php:2445 lib/clog_webapi.php:829
 #: lib/html_utility.php:1214 lib/import.php:332 lib/plugins.php:1333
-#: lib/plugins.php:1334 lib/rrd.php:3290 lib/rrd.php:3302 lib/spikekill.php:284
+#: lib/plugins.php:1334 lib/rrd.php:3613 lib/rrd.php:3625 lib/spikekill.php:284
 #: package_import.php:517 package_import.php:595 utilities.php:194
 #: utilities.php:195 utilities.php:2634
 msgid "Unknown"
@@ -3817,8 +3817,8 @@ msgid "Steps"
 msgstr "Soļi"
 
 #: data_source_profiles.php:622 graphs_new.php:449 include/global_form.php:281
-#: lib/html.php:566 lib/html_filter.php:55 lib/installer.php:2719
-#: lib/rrd.php:3319 utilities.php:849 utilities.php:1771
+#: lib/html.php:566 lib/html_filter.php:55 lib/installer.php:2731
+#: lib/rrd.php:3642 utilities.php:849 utilities.php:1771
 msgid "Rows"
 msgstr "Rindas"
 
@@ -4553,7 +4553,7 @@ msgid "RRDtool Graph Syntax"
 msgstr "RRDtool grafikas sintakse"
 
 #: graph_image.php:164 graph_json.php:208 graph_realtime.php:228
-#: lib/rrd.php:1669
+#: lib/rrd.php:1992
 msgid "The Kadupul Poller has not run yet."
 msgstr "Kadupul aptaujātajs vēl nav bijis palaists."
 
@@ -5894,11 +5894,11 @@ msgstr "Pašlaik var pieteikties tikai Kadupul administratori ar instalēšanas/
 msgid "There is an Installation or Upgrade in progress."
 msgstr "Pašlaik notiek uzstādīšana vai atjaunināšana."
 
-#: include/global.php:551
+#: include/global.php:554
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "Galvenais datu apkopotājs atkal ir tiešsaistē"
 
-#: include/global.php:555
+#: include/global.php:558
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr "Galvenais datu apkopotājs ir bezsaistē vai atgūtas"
 
@@ -6646,7 +6646,7 @@ msgstr "Dabiskā sakārtošana"
 msgid "Numeric Ordering"
 msgstr "Ciparu secība"
 
-#: include/global_arrays.php:948 lib/rrd.php:3231
+#: include/global_arrays.php:948 lib/rrd.php:3554
 msgid "Header"
 msgstr "Galvene"
 
@@ -7211,7 +7211,7 @@ msgid "1 GByte"
 msgstr "1 GB baits"
 
 #: include/global_arrays.php:1534 include/global_arrays.php:1597
-#: lib/boost.php:44
+#: lib/boost.php:53
 #, php-format
 msgid "%s GBytes"
 msgstr "%s GBaiti"
@@ -8220,7 +8220,7 @@ msgstr "Cik bieži dati tiks vākti no datu avota?"
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "Cik ilgi datu var trūkt, pirms RRDtool reģistrē nezināmus datus. Palieliniet šo vērtību, ja jūsu datu avots ir nestabils un vēlaties pārnest vecos datus, nevis rādīt diagrammās nepilnības. Šī vērtība tiek reizināta ar X-Files koeficientu, lai noteiktu faktisko laika ilgumu."
 
-#: include/global_form.php:223 lib/rrd.php:3322
+#: include/global_form.php:223 lib/rrd.php:3645
 msgid "X-Files Factor"
 msgstr "X-failu faktors"
 
@@ -8778,7 +8778,7 @@ msgstr "Necaurredzamība/Alfa kanāls"
 msgid "The opacity/alpha channel of the color."
 msgstr "Krāsas necaurredzamības/alfa kanāls."
 
-#: include/global_form.php:986 lib/rrd.php:3318
+#: include/global_form.php:986 lib/rrd.php:3641
 msgid "Consolidation Function"
 msgstr "Konsolidācijas funkcija"
 
@@ -12489,7 +12489,7 @@ msgstr "Atbilstošās ierīces"
 
 #: lib/api_automation.php:133 lib/api_automation.php:1071
 #: lib/clog_webapi.php:526 lib/html_reports.php:982 lib/html_reports.php:1645
-#: lib/html_reports.php:1985 lib/html_reports.php:1996 lib/rrd.php:3260
+#: lib/html_reports.php:1985 lib/html_reports.php:1996 lib/rrd.php:3583
 #: utilities.php:339 utilities.php:1432 utilities.php:3079
 msgid "Type"
 msgstr "Tips"
@@ -12837,17 +12837,17 @@ msgstr "Kadupul pieteikšanās kļūme"
 msgid "Authentication was previously not set.  Attempted to set to Local Authentication, but no Administrative account was found."
 msgstr "Autentifikācija iepriekš nebija iestatīta. Mēģināja iestatīt vietējo autentifikāciju, taču netika atrasts neviens administratīvs konts."
 
-#: lib/boost.php:46 utilities.php:2783
+#: lib/boost.php:55 utilities.php:2783
 #, php-format
 msgid "%s MBytes"
 msgstr "%s MBaiti"
 
-#: lib/boost.php:49
+#: lib/boost.php:58
 #, php-format
 msgid "%s KBytes"
 msgstr "%s KBaiti"
 
-#: lib/boost.php:52
+#: lib/boost.php:61
 #, php-format
 msgid "%s Bytes"
 msgstr "%s Baiti"
@@ -13697,7 +13697,7 @@ msgstr "Rediģēt ierīci"
 msgid "Kill Spikes in Graphs"
 msgstr "Nogalināt tapas grafikos"
 
-#: lib/html.php:582 lib/html.php:614 lib/installer.php:1682
+#: lib/html.php:582 lib/html.php:614 lib/installer.php:1694
 msgid "Previous"
 msgstr "Iepriekšējais"
 
@@ -13706,7 +13706,7 @@ msgstr "Iepriekšējais"
 msgid "%d to %d of %s [ %s ]"
 msgstr "%d līdz %d no %s [ %s ]"
 
-#: lib/html.php:588 lib/html.php:620 lib/installer.php:1681
+#: lib/html.php:588 lib/html.php:620 lib/installer.php:1693
 msgid "Next"
 msgstr "Nākamie"
 
@@ -14837,7 +14837,7 @@ msgstr "Nepareiza UTF-8 nobīdes kļūda!"
 msgid "Down (Thold)"
 msgstr "Lejupielādēt"
 
-#: lib/html_utility.php:1211 lib/installer.php:1977 lib/installer.php:3858
+#: lib/html_utility.php:1211 lib/installer.php:1989 lib/installer.php:3877
 msgid "Error"
 msgstr "Kļūda"
 
@@ -14940,1062 +14940,1062 @@ msgstr "Atrastā atkarība:"
 msgid "Unmet Dependency:"
 msgstr "Neapmierinātā atkarība:"
 
-#: lib/installer.php:570
+#: lib/installer.php:574
 msgid "Path was not writable"
 msgstr "Ceļš nebija rakstāms"
 
-#: lib/installer.php:580
+#: lib/installer.php:584
 msgid "Path is not writable"
 msgstr "Ceļš nav rakstāms"
 
-#: lib/installer.php:714
+#: lib/installer.php:726
 #, php-format
 msgid "Failed to set specified %sRRDTool version: %s"
 msgstr "Neizdevās iestatīt norādīto %sRRDTool versiju: %s"
 
-#: lib/installer.php:762
+#: lib/installer.php:774
 msgid "Invalid Theme Specified"
 msgstr "Norādīts nederīgs motīvs"
 
-#: lib/installer.php:818
+#: lib/installer.php:830
 msgid "Resource is not writable"
 msgstr "Resurss nav rakstāms"
 
-#: lib/installer.php:823
+#: lib/installer.php:835
 msgid "File not found"
 msgstr "Fails nav atrasts"
 
-#: lib/installer.php:836
+#: lib/installer.php:848
 msgid "PHP did not return expected result"
 msgstr "PHP neatdeva gaidīto rezultātu"
 
-#: lib/installer.php:850
+#: lib/installer.php:862
 msgid "Unexpected path parameter"
 msgstr "Negaidīts ceļa parametrs"
 
-#: lib/installer.php:886
+#: lib/installer.php:898
 #, php-format
 msgid "Failed to apply specified profile %s != %s"
 msgstr "Neizdevās lietot norādīto profilu %s != %s"
 
-#: lib/installer.php:928
+#: lib/installer.php:940
 #, php-format
 msgid "Failed to apply specified mode: %s"
 msgstr "Neizdevās lietot norādīto režīmu: %s"
 
-#: lib/installer.php:952
+#: lib/installer.php:964
 #, php-format
 msgid "Failed to apply specified automation override: %s"
 msgstr "Neizdevās lietot norādīto automatizācijas ignorēšanu: %s"
 
-#: lib/installer.php:973
+#: lib/installer.php:985
 msgid "Failed to apply specified cron interval"
 msgstr "Neizdevās lietot norādīto cron intervālu"
 
-#: lib/installer.php:1019
+#: lib/installer.php:1031
 #, php-format
 msgid "Failed to apply '%s' as Automation Range"
 msgstr "Neizdevās lietot '%s' kā automatizācijas diapazonu"
 
-#: lib/installer.php:1096
+#: lib/installer.php:1108
 msgid "No matching snmp option exists"
 msgstr "Nav atbilstošas snmp opcijas"
 
-#: lib/installer.php:1282
+#: lib/installer.php:1294
 msgid "No matching template exists"
 msgstr "Nav atbilstošas veidnes"
 
-#: lib/installer.php:1625
+#: lib/installer.php:1637
 msgid "The Installer could not proceed due to an unexpected error."
 msgstr "Instalēšanas programma nevarēja turpināt neparedzētas kļūdas dēļ."
 
-#: lib/installer.php:1626
+#: lib/installer.php:1638
 msgid "Please report this to the Kadupul Group."
 msgstr "Lūdzu, ziņojiet par to Kadupul Group."
 
-#: lib/installer.php:1627
+#: lib/installer.php:1639
 #, php-format
 msgid "Unknown Reason: %s"
 msgstr "Nezināms iemesls: %s"
 
-#: lib/installer.php:1635
+#: lib/installer.php:1647
 #, php-format
 msgid "You are attempting to install Kadupul %s onto a 0.6.x database. Unfortunately, this can not be performed."
 msgstr "Jūs mēģināt instalēt Kadupul %s 0.6.x datu bāzē. Diemžēl to nevar izpildīt."
 
-#: lib/installer.php:1636
+#: lib/installer.php:1648
 msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
 msgstr "Lai varētu turpināt, <b>OBLIGĀTI</b> jāizveido jauna datu bāze, jāimportē tajā \"cacti.sql\":"
 
-#: lib/installer.php:1638
+#: lib/installer.php:1650
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
 msgstr "Pēc tam <b>OBLIGĀTI</b> jāatjaunina \"include/config.php\", lai norādītu uz jauno datu bāzi."
 
-#: lib/installer.php:1639
+#: lib/installer.php:1651
 msgid "NOTE: Your existing data will not be modified, nor will it or any history be available to the new install"
 msgstr "PIEZĪME. Jūsu esošie dati netiks mainīti, kā arī tie vai vēsture nebūs pieejama jaunajai instalēšanai"
 
-#: lib/installer.php:1647
+#: lib/installer.php:1659
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
 msgstr "Jūs esat izveidojis jaunu datu bāzi, bet vēl neesat importējis failu 'cacti.sql'. Lai turpinātu, komandrindā izpildiet tālāk norādītās darbības:"
 
-#: lib/installer.php:1649
+#: lib/installer.php:1661
 #, fuzzy
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Kadupul database. Please ensure that the Kadupul database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Kadupul database."
 msgstr "Šī kļūda var tikt ģenerēta arī tad, ja Kadupul datu bāzes lietotājam nav pareizu atļauju Kadupul datu bāzē. Lūdzu, pārliecinieties, ka Kadupul datu bāzes lietotājam ir iespēja ATLASĪT, IEVIETOT, dzēst, ATJAUNINĀT, IZVEIDOT, MAINĪT, DROP, INDEX Kadupul datu bāzē."
 
-#: lib/installer.php:1650
+#: lib/installer.php:1662
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Kadupul user SELECT access to the mysql.time_zone_name table"
 msgstr "Jums <b>OBLIGĀTI</b> JĀIEMPORTĒ arī MySQL TimeZone informācija MySQL un piešķiriet Kadupul lietotājam SELECT piekļuvi tabulai mysql.time_zone_name."
 
-#: lib/installer.php:1653
+#: lib/installer.php:1665
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
 msgstr "Operētājsistēmā Linux/UNIX čaulā kā “root” palaidiet šo:"
 
-#: lib/installer.php:1656
+#: lib/installer.php:1668
 msgid "On Windows, you must follow the instructions here <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>Time zone description table</a>.  Once that is complete, you can issue the following command to grant the Kadupul user access to the tables:"
 msgstr "Operētājsistēmā Windows jums jāievēro šeit sniegtie norādījumi <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>Laika joslas apraksta tabula</a> . Kad tas ir pabeigts, varat izdot šādu komandu, lai piešķirtu Kadupul lietotājam piekļuvi tabulām:"
 
-#: lib/installer.php:1659
+#: lib/installer.php:1671
 msgid "Then run the following within MySQL as an administrator:"
 msgstr "Pēc tam MySQL palaidiet šo darbību kā administrators:"
 
-#: lib/installer.php:1678 pollers.php:671
+#: lib/installer.php:1690 pollers.php:671
 msgid "Test Connection"
 msgstr "Pārbaudīt savienojumu"
 
-#: lib/installer.php:1689
+#: lib/installer.php:1701
 msgid "Begin"
 msgstr "Sāciet"
 
-#: lib/installer.php:1695 lib/installer.php:2123 lib/installer.php:2133
-#: lib/installer.php:2773
+#: lib/installer.php:1707 lib/installer.php:2135 lib/installer.php:2145
+#: lib/installer.php:2785
 msgid "Upgrade"
 msgstr "Apgreidot"
 
-#: lib/installer.php:1697 lib/installer.php:2777
+#: lib/installer.php:1709 lib/installer.php:2789
 msgid "Downgrade"
 msgstr "Pazemināt"
 
-#: lib/installer.php:1800 utilities.php:255
+#: lib/installer.php:1812 utilities.php:255
 #, fuzzy
 msgid "Kadupul Version"
 msgstr "Kadupul versija"
 
-#: lib/installer.php:1800
+#: lib/installer.php:1812
 msgid "License Agreement"
 msgstr "Licences līgums"
 
-#: lib/installer.php:1803
+#: lib/installer.php:1815
 #, php-format
 msgid "This version of Kadupul (%s) does not appear to have a valid version code, please contact the Kadupul Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 msgstr "Šķiet, ka šai Kadupul versijai (%s) nav derīga versijas koda. Lūdzu, sazinieties ar Kadupul izstrādes komandu, lai pārliecinātos, ka tas ir labots. Ja laidienā redzat šo kļūdu, lūdzu, nekavējoties ziņojiet par to vietnē GitHub"
 
-#: lib/installer.php:1806
+#: lib/installer.php:1818
 #, fuzzy
 msgid "Thanks for taking the time to download and install Kadupul, the complete graphing solution for your network. Before you can start making cool graphs, there are a few pieces of data that Kadupul needs to know."
 msgstr "Paldies, ka veltījāt laiku, lai lejupielādētu un instalētu Kadupul — jūsu tīklam paredzēto pilnīgo grafiku risinājumu. Pirms varat sākt veidot foršus grafikus, Kadupul ir jāzina daži dati."
 
-#: lib/installer.php:1807
+#: lib/installer.php:1819
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Kadupul before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
 msgstr "Pārliecinieties, ka esat izlasījuši un izpildījuši vajadzīgās darbības, kas nepieciešamas, lai uzstādītu Kadupul. Uzstādīšanas informāciju <a href=\"%s\">Unix</a> un <a href=\"%s\">Win32</a> operētājsistēmām var atrast sekojot to atbilstošajām saitēm."
 
-#: lib/installer.php:1810
+#: lib/installer.php:1822
 #, php-format
 msgid "This process will guide you through the steps for upgrading from version '%s'. "
 msgstr "Šis process palīdzēs jums veikt versijas '%s' atjaunināšanu. "
 
-#: lib/installer.php:1811
+#: lib/installer.php:1823
 #, php-format
 msgid "Also, if this is an upgrade, be sure to read the <a href=\"%s\">Upgrade</a> information file."
 msgstr "Turklāt, ja tas ir jauninājums, noteikti izlasiet <a href=\"%s\">jaunināšanas</a> informācijas failu."
 
-#: lib/installer.php:1815
+#: lib/installer.php:1827
 msgid "It is NOT recommended to downgrade as the database structure may be inconsistent"
 msgstr "NAV ieteicams pazemināt versiju, jo datu bāzes struktūra var būt nekonsekventa"
 
-#: lib/installer.php:1818
+#: lib/installer.php:1830
 msgid "Kadupul is licensed under the GNU General Public License, you must agree to its provisions before continuing:"
 msgstr "Kadupul ir licencēts saskaņā ar GNU vispārējo publisko licenci, jums ir jāpiekrīt tās noteikumiem, pirms turpināt:"
 
-#: lib/installer.php:1822
+#: lib/installer.php:1834
 msgid "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
 msgstr "Šī programma tiek izplatīta cerībā, ka tā būs noderīga, bet BEZ GARANTIJAS; pat bez netiešas garantijas par TIRDZNIECĪBU vai PIEMĒROTĪBU KONKRĒTAM MĒRĶIEM. Plašāku informāciju skatiet GNU vispārējā publiskajā licencē."
 
-#: lib/installer.php:1859
+#: lib/installer.php:1871
 msgid "Accept GPL License Agreement"
 msgstr "Piekrītiet GPL licences līgumam"
 
-#: lib/installer.php:1859
+#: lib/installer.php:1871
 msgid "Select default theme: "
 msgstr "Izvēlieties noklusējuma motīvu: "
 
-#: lib/installer.php:1883
+#: lib/installer.php:1895
 msgid "Pre-installation Checks"
 msgstr "Pirmsinstalēšanas pārbaudes"
 
-#: lib/installer.php:1884
+#: lib/installer.php:1896
 msgid "Location checks"
 msgstr "Atrašanās vietas pārbaudes"
 
-#: lib/installer.php:1920 lib/installer.php:2071 lib/installer.php:2075
-#: lib/installer.php:2231 lib/installer.php:2236 lib/installer.php:3962
+#: lib/installer.php:1932 lib/installer.php:2083 lib/installer.php:2087
+#: lib/installer.php:2243 lib/installer.php:2248 lib/installer.php:3981
 msgid "ERROR:"
 msgstr "KĻŪDA:"
 
-#: lib/installer.php:1920
+#: lib/installer.php:1932
 #, fuzzy
 msgid "Please update config.php with the correct relative URI location of Kadupul (url_path)."
 msgstr "Lūdzu, atjauniniet config.php, norādot pareizo Kadupul relatīvo URI atrašanās vietu (url_path)."
 
-#: lib/installer.php:1923
+#: lib/installer.php:1935
 msgid "Your Kadupul configuration has the relative correct path (url_path) in config.php."
 msgstr "Jūsu Kadupul konfigurācijai ir relatīvi pareizais ceļš (url_path) failā config.php."
 
-#: lib/installer.php:1931
+#: lib/installer.php:1943
 #, php-format
 msgid "PHP - Recommendations (%s)"
 msgstr "PHP — ieteikumi (%s)"
 
-#: lib/installer.php:1935
+#: lib/installer.php:1947
 msgid "PHP Recommendations ("
 msgstr "PHP ieteikumi"
 
-#: lib/installer.php:1936
+#: lib/installer.php:1948
 msgid "Current"
 msgstr "Pašreizējais"
 
-#: lib/installer.php:1936
+#: lib/installer.php:1948
 msgid "Recommended"
 msgstr "Ieteicams"
 
-#: lib/installer.php:1943
+#: lib/installer.php:1955
 msgid "PHP Binary"
 msgstr "PHP binārs"
 
-#: lib/installer.php:1946
+#: lib/installer.php:1958
 msgid "The PHP binary location is not valid and must be updated."
 msgstr "PHP binārā atrašanās vieta nav derīga, un tā ir jāatjaunina."
 
-#: lib/installer.php:1953
+#: lib/installer.php:1965
 msgid "Update the path_php_binary value in the settings table."
 msgstr "Iestatījumu tabulā atjauniniet vērtību path_php_binary."
 
-#: lib/installer.php:1962
+#: lib/installer.php:1974
 msgid "Passed"
 msgstr "Nokārtots"
 
-#: lib/installer.php:1965
+#: lib/installer.php:1977
 msgid "Warning"
 msgstr "Brīdinājums"
 
-#: lib/installer.php:1971
+#: lib/installer.php:1983
 msgid "Restart Required"
 msgstr "Nepieciešams"
 
-#: lib/installer.php:1971
+#: lib/installer.php:1983
 #, fuzzy
 msgid "The specified value appears to be different in the running config versus the INI file."
 msgstr "Konkrētā vērtība, šķiet, atšķiras palaistajā konfigurācijā no INI faila."
 
-#: lib/installer.php:2001
+#: lib/installer.php:2013
 msgid "PHP - Module Support (Required)"
 msgstr "PHP — moduļa atbalsts (nepieciešams)"
 
-#: lib/installer.php:2002
+#: lib/installer.php:2014
 #, fuzzy
 msgid "Kadupul requires several PHP Modules to be installed to work properly. If any of these are not installed, you will be unable to continue the installation until corrected. In addition, for optimal system performance Kadupul should be run with certain MySQL system variables set.  Please follow the MySQL recommendations at your discretion.  Always seek the MySQL documentation if you have any questions."
 msgstr "Lai Kadupul darbotos pareizi, ir jāinstalē vairāki PHP moduļi. Ja kāds no tiem nav instalēts, jūs nevarēsit turpināt instalēšanu, kamēr tas netiks izlabots. Turklāt optimālai sistēmas veiktspējai Kadupul ir jādarbina ar noteiktiem MySQL sistēmas mainīgajiem. Lūdzu, ievērojiet MySQL ieteikumus pēc saviem ieskatiem. Ja jums ir kādi jautājumi, vienmēr meklējiet MySQL dokumentāciju."
 
-#: lib/installer.php:2004
+#: lib/installer.php:2016
 msgid "The following PHP extensions are mandatory, and MUST be installed before continuing your Kadupul install."
 msgstr "Šie PHP paplašinājumi ir obligāti, un pirms turpināt Kadupul instalēšanu, tie OBLIGĀTI jāinstalē."
 
-#: lib/installer.php:2008
+#: lib/installer.php:2020
 msgid "Required PHP Modules"
 msgstr "Nepieciešamie PHP moduļi"
 
-#: lib/installer.php:2009 lib/installer.php:2039 plugins.php:25 plugins.php:474
+#: lib/installer.php:2021 lib/installer.php:2051 plugins.php:25 plugins.php:474
 msgid "Installed"
 msgstr "Uzstādīts"
 
-#: lib/installer.php:2009
+#: lib/installer.php:2021
 msgid "Required"
 msgstr "Nepieciešams"
 
-#: lib/installer.php:2032
+#: lib/installer.php:2044
 msgid "PHP - Module Support (Optional)"
 msgstr "PHP — moduļa atbalsts (pēc izvēles)"
 
-#: lib/installer.php:2034
+#: lib/installer.php:2046
 msgid "The following PHP extensions are recommended, and should be installed before continuing your Kadupul install.  NOTE: If you are planning on supporting SNMPv3 with IPv6, you should not install the php-snmp module at this time."
 msgstr "Ieteicami ir šādi PHP paplašinājumi, un tie ir jāinstalē pirms Kadupul instalēšanas turpināšanas. PIEZĪME. Ja plānojat atbalstīt SNMPv3 ar IPv6, pašlaik nevajadzētu instalēt php-snmp moduli."
 
-#: lib/installer.php:2038
+#: lib/installer.php:2050
 msgid "Optional Modules"
 msgstr "Izvēles moduļi"
 
-#: lib/installer.php:2039
+#: lib/installer.php:2051
 msgid "Optional"
 msgstr "Pēc izvēles"
 
-#: lib/installer.php:2060
+#: lib/installer.php:2072
 msgid "MySQL - TimeZone Support"
 msgstr "MySQL — laika joslas atbalsts"
 
-#: lib/installer.php:2071
+#: lib/installer.php:2083
 msgid "Your MySQL TimeZone database is not populated.  Please populate this database before proceeding."
 msgstr "Jūsu MySQL TimeZone datu bāze nav aizpildīta. Pirms turpināt, lūdzu, aizpildiet šo datu bāzi."
 
-#: lib/installer.php:2075
+#: lib/installer.php:2087
 msgid "Your Kadupul database login account does not have access to the MySQL TimeZone database.  Please provide the Kadupul database account \"select\" access to the \"time_zone_name\" table in the \"mysql\" database, and populate MySQL's TimeZone information before proceeding."
 msgstr "Jūsu Kadupul datu bāzes pieteikšanās kontam nav piekļuves MySQL TimeZone datubāzei. Lūdzu, nodrošiniet Kadupul datu bāzes kontam \"select\" piekļuvi tabulai \"time_zone_name\" datu bāzē \"mysql\" un aizpildiet MySQL laika joslas informāciju pirms turpināt."
 
-#: lib/installer.php:2080
+#: lib/installer.php:2092
 msgid "Your Kadupul database account has access to the MySQL TimeZone database and that database is populated with global TimeZone information."
 msgstr "Jūsu Kadupul datu bāzes kontam ir piekļuve MySQL TimeZone datubāzei, un šī datu bāze ir aizpildīta ar globālo laika joslas informāciju."
 
-#: lib/installer.php:2085
+#: lib/installer.php:2097
 msgid "MySQL - Settings"
 msgstr "MySQL — iestatījumi"
 
-#: lib/installer.php:2086
+#: lib/installer.php:2098
 msgid "These MySQL performance tuning settings will help your Kadupul system perform better without issues for a longer time."
 msgstr "Šie MySQL veiktspējas regulēšanas iestatījumi palīdzēs jūsu Kadupul sistēmai darboties labāk bez problēmām ilgāku laiku."
 
-#: lib/installer.php:2088
+#: lib/installer.php:2100
 msgid "Recommended MySQL System Variable Settings"
 msgstr "Ieteicamie MySQL sistēmas mainīgo iestatījumi"
 
-#: lib/installer.php:2118
+#: lib/installer.php:2130
 msgid "Installation Type"
 msgstr "Instalācijas veids"
 
-#: lib/installer.php:2124
+#: lib/installer.php:2136
 #, php-format
 msgid "Upgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "Jaunināt no <strong>%s</strong> uz <strong>%s</strong>"
 
-#: lib/installer.php:2126
+#: lib/installer.php:2138
 msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Kadupul is on) and retrying, before raising an issue with Kadupul"
 msgstr "Problēmu gadījumā ir ļoti ieteicams notīrīt pārlūka kešatmiņu, pārstartēt pārlūku (nevis tikai aizvērt cilni, kurā Kadupul atvērts) un mēģināt vēlreiz. Ja tas nepalīdz, variet ziņot problēmu Kadupul komandai"
 
-#: lib/installer.php:2127
+#: lib/installer.php:2139
 msgid "On rare occasions, we have had reports from users who experience some minor issues due to changes in the code.  These issues are caused by the browser retaining pre-upgrade code and whilst we have taken steps to minimise the chances of this, it may still occur.  If you need instructions on how to clear your browser cache, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> is a good starting point."
 msgstr "Retos gadījumos esam saņēmuši ziņojumus no lietotājiem, kuriem ir radušās nelielas problēmas koda izmaiņu dēļ. Šīs problēmas rada tas, ka pārlūkprogramma saglabā pirmsjaunināšanas kodu, un, lai gan esam veikuši pasākumus, lai samazinātu tā iespējamību, tā joprojām var rasties. Ja jums ir nepieciešami norādījumi par pārlūkprogrammas kešatmiņas notīrīšanu, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> ir labs sākumpunkts."
 
-#: lib/installer.php:2128
+#: lib/installer.php:2140
 msgid "If after clearing your cache and restarting your browser, you still experience issues, please raise the issue with us and we will try to identify the cause of it."
 msgstr "Ja pēc kešatmiņas notīrīšanas un pārlūkprogrammas restartēšanas joprojām rodas problēmas, lūdzu, sazinieties ar mums, un mēs mēģināsim noteikt tās cēloni."
 
-#: lib/installer.php:2134
+#: lib/installer.php:2146
 #, php-format
 msgid "Downgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "Pazemināt no <strong>%s</strong> uz <strong>%s</strong>"
 
-#: lib/installer.php:2135
+#: lib/installer.php:2147
 msgid "You appear to be downgrading to a previous version.  Database changes made for the newer version will not be reversed and <i>could</i> cause issues."
 msgstr "Šķiet, ka jūs pārejat uz iepriekšējo versiju. Jaunākajai versijai veiktās datu bāzes izmaiņas netiks atsauktas un <i>var</i> radīt problēmas."
 
-#: lib/installer.php:2140
+#: lib/installer.php:2152
 msgid "Please select the type of installation"
 msgstr "Lūdzu, izvēlieties instalācijas veidu"
 
-#: lib/installer.php:2141
+#: lib/installer.php:2153
 msgid "Installation options:"
 msgstr "Uzstādīšanas iespējas:"
 
-#: lib/installer.php:2145
+#: lib/installer.php:2157
 msgid "Choose this for the Primary site."
 msgstr "Izvēlieties šo primārajai vietnei."
 
-#: lib/installer.php:2145 lib/installer.php:2196
+#: lib/installer.php:2157 lib/installer.php:2208
 msgid "New Primary Server"
 msgstr "Jauns primārais serveris"
 
-#: lib/installer.php:2146 lib/installer.php:2197
+#: lib/installer.php:2158 lib/installer.php:2209
 msgid "New Remote Poller"
 msgstr "Jauns attālais aptaujātajs"
 
-#: lib/installer.php:2146
+#: lib/installer.php:2158
 msgid "Remote Pollers are used to access networks that are not readily accessible to the Primary site."
 msgstr "Attālinātie aptauju meklētāji tiek izmantoti, lai piekļūtu tīkliem, kas nav viegli pieejami primārajai vietnei."
 
-#: lib/installer.php:2201
+#: lib/installer.php:2213
 msgid "The following information has been determined from Kadupul's configuration file. If it is not correct, please edit \"include/config.php\" before continuing."
 msgstr "Tālāk norādītā informācija ir noteikta no Kadupul konfigurācijas faila. Ja tā nav pareiza, lūdzu, pirms turpināt, rediģējiet \"include/config.php\"."
 
-#: lib/installer.php:2205
+#: lib/installer.php:2217
 msgid "Local Database Connection Information"
 msgstr "Vietējās datu bāzes savienojuma informācija"
 
-#: lib/installer.php:2208 lib/installer.php:2220
+#: lib/installer.php:2220 lib/installer.php:2232
 #, php-format
 msgid "Database: <b>%s</b>"
 msgstr "Datu bāze: <b>%s</b>"
 
-#: lib/installer.php:2209 lib/installer.php:2221
+#: lib/installer.php:2221 lib/installer.php:2233
 #, php-format
 msgid "Database User: <b>%s</b>"
 msgstr "Datu bāzes lietotājs: <b>%s</b>"
 
-#: lib/installer.php:2210 lib/installer.php:2222
+#: lib/installer.php:2222 lib/installer.php:2234
 #, php-format
 msgid "Database Hostname: <b>%s</b>"
 msgstr "Datu bāzes saimniekdatora nosaukums: <b>%s</b>"
 
-#: lib/installer.php:2211 lib/installer.php:2223
+#: lib/installer.php:2223 lib/installer.php:2235
 #, php-format
 msgid "Port: <b>%s</b>"
 msgstr "Ports: <b>%s</b>"
 
-#: lib/installer.php:2212 lib/installer.php:2224
+#: lib/installer.php:2224 lib/installer.php:2236
 #, php-format
 msgid "Server Operating System Type: <b>%s</b>"
 msgstr "Servera operētājsistēmas veids: <b>%s</b>"
 
-#: lib/installer.php:2217
+#: lib/installer.php:2229
 msgid "Central Database Connection Information"
 msgstr "Centrālās datu bāzes savienojuma informācija"
 
-#: lib/installer.php:2229
+#: lib/installer.php:2241
 msgid "Configuration Readonly!"
 msgstr "Konfigurācija Tikai lasāma!"
 
-#: lib/installer.php:2231
+#: lib/installer.php:2243
 msgid "Your config.php file must be writable by the web server during install in order to configure the Remote poller.  Once installation is complete, you must set this file to Read Only to prevent possible security issues."
 msgstr "Lai konfigurētu attālo aptauju, jūsu config.php failam instalēšanas laikā ir jābūt rakstītam tīmekļa serverim. Kad instalēšana ir pabeigta, šim failam ir jāiestata tikai lasāms, lai novērstu iespējamās drošības problēmas."
 
-#: lib/installer.php:2235
+#: lib/installer.php:2247
 msgid "Configuration of Poller"
 msgstr "Aptaujātaja konfigurēšana"
 
-#: lib/installer.php:2236
+#: lib/installer.php:2248
 #, fuzzy
 msgid "Your Remote Kadupul Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Kadupul database server.  Correct this and try again."
 msgstr "Jūsu Remote Kadupul Poller informācija nav iekļauta jūsu config.php failā. Lūdzu, pārskatiet config.php.dist un iestatiet mainīgos: <i>$rdatabase_default, $rdatabase_username</i> utt. Šie mainīgie ir jāiestata un jānorāda atpakaļ uz jūsu primāro Kadupul datu bāzes serveri. Izlabojiet to un mēģiniet vēlreiz."
 
-#: lib/installer.php:2240
+#: lib/installer.php:2252
 msgid "Remote Poller Variables"
 msgstr "Attālā aptaujātaja mainīgie lielumi"
 
-#: lib/installer.php:2242
+#: lib/installer.php:2254
 msgid "The variables that must be set in the config.php file include the following:"
 msgstr "Mainīgie, kas jāiestata failā config.php, ir šādi:"
 
-#: lib/installer.php:2253
+#: lib/installer.php:2265
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
 msgstr "Instalēšanas programma automātiski piešķir $poller_id un pievieno to failam config.php."
 
-#: lib/installer.php:2255
+#: lib/installer.php:2267
 #, fuzzy
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Kadupul database server.  Follow the same procedure you would with any other Kadupul install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
 msgstr "Kad visi mainīgie ir iestatīti failā config.php, jums ir arī jāpiešķir $rdatabase_username piekļuve galvenajam Kadupul datu bāzes serverim. Izpildiet to pašu procedūru, ko darītu ar jebkuru citu Kadupul instalēšanu. Pēc tam varat nospiest pogu Pārbaudīt savienojumu. Ja pārbaude būs veiksmīga, varēsiet turpināt un pabeigt instalēšanu."
 
-#: lib/installer.php:2259
+#: lib/installer.php:2271
 msgid "Additional Steps After Installation"
 msgstr "Papildu darbības pēc instalēšanas"
 
-#: lib/installer.php:2261
+#: lib/installer.php:2273
 msgid "It is essential that the Central Kadupul server can communicate via MySQL to each remote Kadupul database server.  Once the install is complete, you must edit the Remote Data Collector and ensure the settings are correct.  You can verify using the 'Test Connection' when editing the Remote Data Collector."
 msgstr "Ir svarīgi, lai Centrālais Kadupul serveris varētu sazināties, izmantojot MySQL, ar katru attālo Kadupul datu bāzes serveri. Kad instalēšana ir pabeigta, jums ir jārediģē Remote Data Collector un jāpārliecinās, ka iestatījumi ir pareizi. Rediģējot Remote Data Collector, varat to pārbaudīt, izmantojot “Pārbaudīt savienojumu”."
 
-#: lib/installer.php:2275
+#: lib/installer.php:2287
 msgid "Critical Binary Locations and Versions"
 msgstr "Kritiskās binārās vietas un versijas"
 
-#: lib/installer.php:2276
+#: lib/installer.php:2288
 msgid "Make sure all of these values are correct before continuing."
 msgstr "Pirms turpināt, pārliecinieties, vai visas šīs vērtības ir pareizas."
 
-#: lib/installer.php:2279
+#: lib/installer.php:2291
 msgid "One or more paths appear to be incorrect, unable to proceed"
 msgstr "Šķiet, ka viens vai vairāki ceļi nav pareizi, nevar turpināt"
 
-#: lib/installer.php:2357
+#: lib/installer.php:2369
 msgid "Directory Permission Checks"
 msgstr "Direktoriju atļauju pārbaudes"
 
-#: lib/installer.php:2358
+#: lib/installer.php:2370
 msgid "Please ensure the directory permissions below are correct before proceeding.  During the install, these directories need to be owned by the Web Server user.  These permission changes are required to allow the Installer to install Device Template packages which include XML and script files that will be placed in these directories.  If you choose not to install the packages, there is an 'install_package.php' cli script that can be used from the command line after the install is complete."
 msgstr "Pirms turpināt, lūdzu, pārbaudiet, vai tālāk norādītās direktoriju atļaujas ir pareizas. Instalēšanas laikā šiem direktorijiem ir jābūt tīmekļa servera lietotāja īpašumā. Šīs atļauju izmaiņas ir nepieciešamas, lai ļautu instalētājam instalēt ierīces veidņu pakotnes, kas ietver XML un skriptu failus, kas tiks ievietoti šajos direktorijos. Ja izvēlaties neinstalēt pakotnes, pēc instalēšanas pabeigšanas ir pieejams klikšķa skripts \"install_package.php\", ko var izmantot no komandrindas."
 
-#: lib/installer.php:2361
+#: lib/installer.php:2373
 msgid "After the install is complete, you can make some of these directories read only to increase security."
 msgstr "Kad instalēšana ir pabeigta, dažus no šiem direktorijiem varat iestatīt tikai lasāmiem, lai palielinātu drošību."
 
-#: lib/installer.php:2363
+#: lib/installer.php:2375
 msgid "These directories will be required to stay read writable after the install so that the Kadupul remote synchronization process can update them as the Main Kadupul Web Site changes"
 msgstr "Šīm mapēm pēc uzstādīšanas jābūt lasāmām un rakstāmām, lai Kadupul attālās sinhronizācijas process varētu tos atjaunināt, mainoties galvenajai Kadupul vietnei"
 
-#: lib/installer.php:2367
+#: lib/installer.php:2379
 msgid "If you are installing packages, once the packages are installed, you should change the scripts directory back to read only as this presents some exposure to the web site."
 msgstr "Ja instalējat pakotnes, kad pakotnes ir instalētas, skriptu direktorijs ir jāmaina atpakaļ, lai tas būtu tikai lasāms, jo tādējādi vietne tiek nedaudz pakļauta."
 
-#: lib/installer.php:2369
+#: lib/installer.php:2381
 msgid "For remote pollers, it is critical that the paths that you will be updating frequently, including the plugins, scripts, and resources paths have read/write access as the data collector will have to update these paths from the main web server content."
 msgstr "Attālajiem aptaujātājiem ir ļoti svarīgi, lai ceļiem, kurus jūs bieži atjaunināsit, tostarp spraudņiem, skriptiem un resursu ceļiem, būtu lasīšanas/rakstīšanas piekļuve, jo datu savācējam šie ceļi būs jāatjaunina no galvenā tīmekļa servera satura."
 
-#: lib/installer.php:2375
+#: lib/installer.php:2387
 msgid "Required Writable at Install Time Only"
 msgstr "Nepieciešams rakstīt tikai instalēšanas laikā"
 
-#: lib/installer.php:2394 lib/installer.php:2426 package_import.php:589
+#: lib/installer.php:2406 lib/installer.php:2438 package_import.php:589
 msgid "Not Writable"
 msgstr "Nav Rakstāms"
 
-#: lib/installer.php:2406
+#: lib/installer.php:2418
 msgid "Required Writable after Install Complete"
 msgstr "Nepieciešams rakstīt pēc instalēšanas pabeigšanas"
 
-#: lib/installer.php:2437
+#: lib/installer.php:2449
 msgid "Potential permission issues"
 msgstr "Iespējamās atļaujas problēmas"
 
-#: lib/installer.php:2446
+#: lib/installer.php:2458
 #, fuzzy
 msgid "Please make sure that your webserver has read/write access to the Kadupul folders that show errors below."
 msgstr "Lūdzu, pārliecinieties, vai jūsu tīmekļa serverim ir lasīšanas/rakstīšanas piekļuve Kadupul mapēm, kurās tiek rādītas tālāk norādītās kļūdas."
 
-#: lib/installer.php:2449
+#: lib/installer.php:2461
 msgid "If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools."
 msgstr "Ja jūsu serverī ir iespējots SELinux, varat to pastāvīgi atspējot vai īslaicīgi atspējot un pēc tam pievienot atbilstošās atļaujas, izmantojot SELinux komandrindas rīkus."
 
-#: lib/installer.php:2458
+#: lib/installer.php:2470
 #, php-format
 msgid "The user '%s' should have MODIFY permission to enable read/write."
 msgstr "Lai iespējotu lasīšanu/rakstīšanu, lietotājam “%s” ir jābūt MODIFICĒŠANAS atļaujai."
 
-#: lib/installer.php:2467
+#: lib/installer.php:2479
 msgid "An example of how to set folder permissions is shown here, though you may need to adjust this depending on your operating system, user accounts and desired permissions."
 msgstr "Šeit ir parādīts mapju atļauju iestatīšanas piemērs, taču, iespējams, tas būs jāpielāgo atkarībā no operētājsistēmas, lietotāju kontiem un vēlamajām atļaujām."
 
-#: lib/installer.php:2468
+#: lib/installer.php:2480
 msgid "EXAMPLE:"
 msgstr "PIEMĒRS:"
 
-#: lib/installer.php:2469
+#: lib/installer.php:2481
 msgid "Once installation has completed the CSRF path, should be set to read-only."
 msgstr "Kad instalēšana ir pabeigta, CSRF ceļš ir jāiestata kā tikai lasāms."
 
-#: lib/installer.php:2471
+#: lib/installer.php:2483
 msgid "All folders are writable"
 msgstr "Visas mapes ir rakstāmas"
 
-#: lib/installer.php:2484
+#: lib/installer.php:2496
 msgid "Input Validation Whitelist Protection"
 msgstr "Ievades validācijas baltā saraksta aizsardzība"
 
-#: lib/installer.php:2485
+#: lib/installer.php:2497
 msgid "Kadupul Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Kadupul poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
 msgstr "Kadupul datu ievades metodes, kas izsauc skriptu, var tikt izmantotas tādā veidā, ka administrators, kas nav administrators, var sabojāt jebkuru failu, kas pieder poller kontam, un gadījumos, kad kāds palaiž Kadupul polleri kā root, var kompromitēt operētājsistēmu, ļaujot uzbrucējiem izmantot savu infrastruktūru."
 
-#: lib/installer.php:2486
+#: lib/installer.php:2498
 msgid "Therefore, several versions ago, Kadupul was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Kadupul more thoroughly, it does increase the amount of work required by the Kadupul administrator to import and manage Templates and Packages."
 msgstr "Tāpēc pirms vairākām versijām Kadupul tika uzlabots, lai nodrošinātu baltā saraksta iespējas šiem datu ievades metožu veidiem. Lai gan tas nodrošina Kadupul rūpīgāku drošību, tas palielina darba apjomu, kas nepieciešams Kadupul administratoram, lai importētu un pārvaldītu veidnes un pakotnes."
 
-#: lib/installer.php:2487
+#: lib/installer.php:2499
 #, fuzzy
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "Baltais saraksts darbojas šādi: kad pirmo reizi importējat datu ievades metodi vai atkārtoti importējat datu ievades metodi un skripts un/vai argumenti jebkādā veidā mainās, datu ievades metode un visi atbilstošie datu avoti nekavējoties atspējot, līdz administrators apstiprinās, ka datu ievades metode ir derīga."
 
-#: lib/installer.php:2488
+#: lib/installer.php:2500
 msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Kadupul's CLI directory that can be run with the following options:"
 msgstr "Lai šādā stāvoklī identificētu datu ievades metodes, esam nodrošinājuši validācijas skriptu Kadupul CLI direktorijā, ko var palaist ar šādām opcijām:"
 
-#: lib/installer.php:2492
+#: lib/installer.php:2504
 msgid "This script option will search for any Data Input Methods that are currently banned and provide details as to why."
 msgstr "Šī skripta opcija meklēs visas pašlaik aizliegtās datu ievades metodes un sniegs detalizētu informāciju par iemeslu."
 
-#: lib/installer.php:2493
+#: lib/installer.php:2505
 msgid "This script option un-ban the Data Input Methods that are currently banned."
 msgstr "Šī skripta opcija atceļ pašlaik aizliegto datu ievades metožu aizliegumu."
 
-#: lib/installer.php:2494
+#: lib/installer.php:2506
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "Šī skripta opcija atkārtoti iespējos visus atspējotos datu avotus."
 
-#: lib/installer.php:2498
+#: lib/installer.php:2510
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
 msgstr "Ir ļoti ieteicams atjaunināt savu config.php, lai iespējotu šo līdzekli, atņemot komentārus no mainīgā <b>$input_whitelist</b> un pēc tam palaižot trīs iepriekš minētās CLI skripta opcijas pēc tīmekļa instalēšanas pabeigšanas."
 
-#: lib/installer.php:2500
+#: lib/installer.php:2512
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
 msgstr "Atzīmējiet izvēles rūtiņu tālāk, lai apstiprinātu, ka esat izlasījis un sapratis šīs drošības problēmas"
 
-#: lib/installer.php:2502
+#: lib/installer.php:2514
 msgid "I have read this statement"
 msgstr "Esmu izlasījis šo paziņojumu"
 
-#: lib/installer.php:2519 lib/installer.php:2525
+#: lib/installer.php:2531 lib/installer.php:2537
 msgid "Default Profile"
 msgstr "Noklusējuma profils"
 
-#: lib/installer.php:2520
+#: lib/installer.php:2532
 msgid "Please select the default Data Source Profile to be used for polling sources.  This is the maximum amount of time between scanning devices for information so the lower the polling interval, the more work is placed on the Kadupul Server host.  Also, select the intended, or configured Cron interval that you wish to use for Data Collection."
 msgstr "Lūdzu, atlasiet noklusējuma datu avota profilu, kas tiks izmantots aptaujas avotiem. Šis ir maksimālais laiks starp informācijas skenēšanas ierīcēm, tāpēc, jo mazāks ir aptaujas intervāls, jo vairāk darba tiek ieguldīts Kadupul Server resursdatorā. Tāpat atlasiet paredzēto vai konfigurēto Cron intervālu, ko vēlaties izmantot datu apkopošanai."
 
-#: lib/installer.php:2531
+#: lib/installer.php:2543
 msgid "Cron Interval"
 msgstr "Krona intervāls"
 
-#: lib/installer.php:2552
+#: lib/installer.php:2564
 msgid "Default Automation Network"
 msgstr "Noklusējuma automatizācijas tīkls"
 
-#: lib/installer.php:2553
+#: lib/installer.php:2565
 #, fuzzy
 msgid "Kadupul can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
 msgstr "Kad instalēšana ir pabeigta, Kadupul var automātiski skenēt tīklu. Tas izmantos tālāk norādīto tīkla diapazonu, lai noteiktu IP diapazonu, ko var skenēt. Skenēšanai ir definēts iepriekš definēts opciju kopums, kas ietver gan “publisku”, gan “privātu” kopienu izmantošanu."
 
-#: lib/installer.php:2554
+#: lib/installer.php:2566
 msgid "If your devices require a different set of options to be used first, you may define them below and they will be utilized before the defaults"
 msgstr "Ja jūsu ierīcēm vispirms ir jāizmanto cita opciju kopa, varat tās definēt tālāk, un tās tiks izmantotas pirms noklusējuma"
 
-#: lib/installer.php:2555
+#: lib/installer.php:2567
 msgid "All options may be adjusted post installation"
 msgstr "Visas opcijas var pielāgot pēc uzstādīšanas"
 
-#: lib/installer.php:2559
+#: lib/installer.php:2571
 msgid "Default Options"
 msgstr "Noklusējuma opcijas"
 
-#: lib/installer.php:2563
+#: lib/installer.php:2575
 msgid "Scan Mode"
 msgstr "Skenēšanas režīms"
 
-#: lib/installer.php:2568
+#: lib/installer.php:2580
 msgid "Network Range"
 msgstr "Tīkla diapazons"
 
-#: lib/installer.php:2574
+#: lib/installer.php:2586
 msgid "Additional Defaults"
 msgstr "Papildu noklusējuma iestatījumi"
 
-#: lib/installer.php:2595
+#: lib/installer.php:2607
 msgid "Additional SNMP Options"
 msgstr "Papildu SNMP opcijas"
 
-#: lib/installer.php:2608
+#: lib/installer.php:2620
 msgid "Error Locating Profiles"
 msgstr "Kļūda, atrodot profilus"
 
-#: lib/installer.php:2609
+#: lib/installer.php:2621
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "Instalēšanu nevar turpināt, jo nevarēja atrast nevienu profilu."
 
-#: lib/installer.php:2610
+#: lib/installer.php:2622
 msgid "This may occur if you have a blank database and have not yet imported the cacti.sql file"
 msgstr "Tas var notikt, ja jums ir tukša datu bāze un vēl neesat importējis failu cacti.sql"
 
-#: lib/installer.php:2619
+#: lib/installer.php:2631
 msgid "Template Setup"
 msgstr "Veidnes iestatīšana"
 
-#: lib/installer.php:2622
+#: lib/installer.php:2634
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
 msgstr "Lūdzu, atlasiet ierīces veidnes, kuras vēlaties atjaunināt jaunināšanas laikā."
 
-#: lib/installer.php:2623
+#: lib/installer.php:2635
 msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
 msgstr "Nav ieteicams atjaunināt veidnes, kurās jau esat veicis izmaiņas. Veidņu jaunināšana NEIZŅEMS grafu un datu veidņu modifikācijas un var izraisīt neparedzētu darbību. Tomēr, ja neesat veicis izmaiņas nevienā grafikā, datu vaicājumā vai datu veidnē, pakotnes atkārtotai importēšanai nevajadzētu ietekmēt. Tādā gadījumā pēc atjaunināšanas jums būs jāsinhronizē diagrammas no veidnēm."
 
-#: lib/installer.php:2625
+#: lib/installer.php:2637
 msgid "Please select the Device Templates that you wish to use after the Install.  If you Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "Lūdzu, atlasiet ierīces veidnes, kuras vēlaties izmantot pēc instalēšanas. Ja jūsu operētājsistēma ir Windows, jums ir jāatlasa veidne \"Windows ierīce\". Ja jūsu operētājsistēma ir Linux/UNIX, noteikti atlasiet ierīces veidni Vietējā Linux mašīna."
 
-#: lib/installer.php:2631 package_import.php:487 plugins.php:596
+#: lib/installer.php:2643 package_import.php:487 plugins.php:596
 msgid "Author"
 msgstr "Autors"
 
-#: lib/installer.php:2631 package_import.php:490
+#: lib/installer.php:2643 package_import.php:490
 msgid "Homepage"
 msgstr "Mājas lapa"
 
-#: lib/installer.php:2657
+#: lib/installer.php:2669
 #, fuzzy
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Kadupul.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
 msgstr "Ierīču veidnes ļauj pārraudzīt un grafiski attēlot plašu Kadupul datu klāstu. Kad esat atlasījis vajadzīgās ierīces veidnes, nospiediet \"Next\" un instalēšana tiks pabeigta. Lūdzu, esiet pacietīgs šajā darbībā, jo ierīču veidņu importēšana var ilgt dažas minūtes."
 
-#: lib/installer.php:2666
+#: lib/installer.php:2678
 msgid "Server Collation"
 msgstr "Serveru salīdzināšana"
 
-#: lib/installer.php:2673
+#: lib/installer.php:2685
 msgid "Your server collation appears to be UTF8 compliant"
 msgstr "Šķiet, ka jūsu servera salīdzinājums ir saderīgs ar UTF8"
 
-#: lib/installer.php:2676
+#: lib/installer.php:2688
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "Šķiet, ka jūsu servera datubāzes collation parametrs NAV pilnībā saderīgs ar UTF-8. "
 
-#: lib/installer.php:2677
+#: lib/installer.php:2689
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
 msgstr "Sadaļā [mysqld] atrodiet ierakstus ar nosaukumu 'rakstzīmju kopas serveris' un 'collation-server' un iestatiet tos šādi:"
 
-#: lib/installer.php:2684
+#: lib/installer.php:2696
 msgid "Database Collation"
 msgstr "Datu bāzu salīdzināšana"
 
-#: lib/installer.php:2689
+#: lib/installer.php:2701
 msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "Šķiet, ka jūsu datu bāzes noklusējuma salīdzināšana ir saderīga ar UTF8"
 
-#: lib/installer.php:2692
+#: lib/installer.php:2704
 msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
 msgstr "Šķiet, ka jūsu datubāzes noklusējuma collation parametrs NAV pilnībā saderīga ar UTF-8. "
 
-#: lib/installer.php:2693
+#: lib/installer.php:2705
 msgid "Any tables created by plugins may have issues linked against Kadupul Core tables if the collation is not matched.   Please ensure your database is changed to 'utf8mb4_unicode_ci' by running the following: "
 msgstr "Ja salīdzinājums nav saskaņots, jebkurām spraudņu izveidotajām tabulām var būt problēmas, kas saistītas ar Kadupul Core tabulām. Lūdzu, pārliecinieties, ka jūsu datu bāze ir mainīta uz “utf8mb4_unicode_ci”, izpildot tālāk norādīto. "
 
-#: lib/installer.php:2700
+#: lib/installer.php:2712
 msgid "Table Setup"
 msgstr "Tabulas iestatīšana"
 
-#: lib/installer.php:2711
+#: lib/installer.php:2723
 #, php-format
 msgid "You have more tables than your PHP configuration will allow us to display/convert.  Please modify the max_input_vars setting in php.ini to a value above %s"
 msgstr "Jums ir vairāk tabulu, nekā jūsu PHP konfigurācija ļaus mums parādīt/konvertēt. Lūdzu, mainiet max_input_vars iestatījumu failā php.ini uz vērtību virs %s"
 
-#: lib/installer.php:2714
+#: lib/installer.php:2726
 msgid "Conversion of tables may take some time especially on larger tables.  The conversion of these tables will occur in the background but will not prevent the installer from completing.  This may slow down some servers if there are not enough resources for MySQL to handle the conversion."
 msgstr "Tabulu konvertēšana var aizņemt kādu laiku, īpaši uz lielākiem galdiem. Šo tabulu konvertēšana notiks fonā, taču tas netraucēs instalētājam to pabeigt. Tas var palēnināt dažu serveru darbību, ja nav pietiekami daudz resursu, lai MySQL varētu apstrādāt konvertēšanu."
 
-#: lib/installer.php:2718
+#: lib/installer.php:2730
 msgid "Tables"
 msgstr "Tabulas"
 
-#: lib/installer.php:2719 utilities.php:853
+#: lib/installer.php:2731 utilities.php:853
 msgid "Collation"
 msgstr "Salīdzināšana"
 
-#: lib/installer.php:2719 utilities.php:848
+#: lib/installer.php:2731 utilities.php:848
 msgid "Engine"
 msgstr "Motors"
 
-#: lib/installer.php:2719 utilities.php:854
+#: lib/installer.php:2731 utilities.php:854
 msgid "Row Format"
 msgstr "Rindas formāts"
 
-#: lib/installer.php:2751
+#: lib/installer.php:2763
 msgid "One or more tables are too large to convert during the installation.  You should use the cli/convert_tables.php script to perform the conversion, then refresh this page. For example: "
 msgstr "Viena vai vairākas tabulas ir pārāk lielas, lai tās pārveidotu instalēšanas laikā.   Lai veiktu pārveidošanu, izmantojiet skriptu cli/convert_tables.php, pēc tam atsvaidziniet šo lapu. Piemēram: "
 
-#: lib/installer.php:2755
+#: lib/installer.php:2767
 msgid "The following tables should be converted to UTF8 and InnoDB with a Dynamic row format.  Please select the tables that you wish to convert during the installation process."
 msgstr "Tālāk norādītās tabulas ir jāpārvērš uz UTF8 un InnoDB, izmantojot dinamisko rindu formātu. Lūdzu, atlasiet tabulas, kuras vēlaties konvertēt instalēšanas procesa laikā."
 
-#: lib/installer.php:2761
+#: lib/installer.php:2773
 msgid "All your tables appear to be UTF8 and Dynamic row format compliant"
 msgstr "Šķiet, ka visas jūsu tabulas ir saderīgas ar UTF8 un dinamisko rindu formātu"
 
-#: lib/installer.php:2772
+#: lib/installer.php:2784
 msgid "Confirm Upgrade"
 msgstr "Apstipriniet jaunināšanu"
 
-#: lib/installer.php:2776
+#: lib/installer.php:2788
 msgid "Confirm Downgrade"
 msgstr "Apstipriniet pazemināšanu"
 
-#: lib/installer.php:2780
+#: lib/installer.php:2792
 msgid "Confirm Installation"
 msgstr "Apstipriniet instalēšanu"
 
-#: lib/installer.php:2781 plugins.php:13
+#: lib/installer.php:2793 plugins.php:13
 msgid "Install"
 msgstr "Instalēt"
 
-#: lib/installer.php:2786
+#: lib/installer.php:2798
 msgid "DOWNGRADE DETECTED"
 msgstr "KONSTATĒTA SAMAZINĀŠANA"
 
-#: lib/installer.php:2787
+#: lib/installer.php:2799
 msgid "YOU MUST MANUALLY CHANGE THE KADUPUL DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
 msgstr "JUMS MANUĀLI JĀMAINA Kadupul DATUBĀZE, LAI ATJAUNOTU JEBKĀDAS JAUNINĀJUMA VEIKTĀS IZMAIŅAS.<br/>UZSTĀDĪTĀJS NEVAR TO AUTOMĀTISKI IZDARĪT JŪSU VIETĀ"
 
-#: lib/installer.php:2788
+#: lib/installer.php:2800
 msgid "Downgrading should only be performed when absolutely necessary and doing so may break your installation"
 msgstr "Pazemināšana jāveic tikai tad, ja tas ir absolūti nepieciešams, un tas var sabojāt instalāciju"
 
-#: lib/installer.php:2791
+#: lib/installer.php:2803
 msgid "Your Kadupul Server is almost ready.  Please check that you are happy to proceed."
 msgstr "Jūsu Kadupul serveris ir gandrīz gatavs. Lūdzu, pārbaudiet, vai esat priecīgs turpināt."
 
-#: lib/installer.php:2794
+#: lib/installer.php:2806
 #, php-format
 msgid "Press '%s' then click '%s' to complete the installation process after selecting your Device Templates."
 msgstr "Nospiediet “%s”, pēc tam noklikšķiniet uz “%s”, lai pabeigtu instalēšanas procesu pēc ierīču veidņu atlases."
 
-#: lib/installer.php:2811
+#: lib/installer.php:2823
 #, php-format
 msgid "Installing Kadupul Server v%s"
 msgstr "Kadupul Server v%s instalēšana"
 
-#: lib/installer.php:2812
+#: lib/installer.php:2824
 msgid "Your Kadupul Server is now installing"
 msgstr "Jūsu Kadupul Server tagad tiek instalēts"
 
-#: lib/installer.php:2899
+#: lib/installer.php:2911
 #, php-format
 msgid "Spawning background process: %s %s"
 msgstr "Nārsta fona process: %s %s"
 
-#: lib/installer.php:2926
+#: lib/installer.php:2938
 msgid "Complete"
 msgstr "Pabeigt"
 
-#: lib/installer.php:2927
+#: lib/installer.php:2939
 #, php-format
 msgid "Your Kadupul Server v%s has been installed/updated.  You may now start using the software."
 msgstr "Jūsu Kadupul Server v%s ir instalēts/atjaunināts. Tagad varat sākt lietot programmatūru."
 
-#: lib/installer.php:2931
+#: lib/installer.php:2943
 #, php-format
 msgid "Your Kadupul Server v%s has been installed/updated with errors"
 msgstr "Jūsu Kadupul Server v%s ir instalēts/atjaunināts ar kļūdām"
 
-#: lib/installer.php:3043
+#: lib/installer.php:3057
 msgid "Get Help"
 msgstr "Iegūt palīdzību"
 
-#: lib/installer.php:3048
+#: lib/installer.php:3062
 msgid "Report Issue"
 msgstr "Ziņot par problēmu"
 
-#: lib/installer.php:3051
+#: lib/installer.php:3065
 msgid "Get Started"
 msgstr "Uzsākt"
 
-#: lib/installer.php:3107
+#: lib/installer.php:3126
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "Tiek sākts %s process v%s"
 
-#: lib/installer.php:3133
+#: lib/installer.php:3152
 msgid "Unable to update application defaults."
 msgstr ""
 
-#: lib/installer.php:3136
+#: lib/installer.php:3155
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "Pabeigts %s process v%s"
 
-#: lib/installer.php:3176
+#: lib/installer.php:3195
 #, php-format
 msgid "Found %s templates to install"
 msgstr "Atrastas %s instalējamās veidnes"
 
-#: lib/installer.php:3186
+#: lib/installer.php:3205
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "Tūlīt tiks importēta #%s '%s' pakotne."
 
-#: lib/installer.php:3195
+#: lib/installer.php:3214
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "#%s '%s' pakotnes ievietošana '%s' profilā izdevās"
 
-#: lib/installer.php:3201
+#: lib/installer.php:3220
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "#%s '%s' pakotnes ievietošana '%s' profilā neizdevās"
 
-#: lib/installer.php:3218
+#: lib/installer.php:3237
 #, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "Kartēšanas automatizācijas veidne ierīces veidnei “%s”"
 
-#: lib/installer.php:3239
+#: lib/installer.php:3258
 msgid "No templates were selected for import"
 msgstr "Ievietošanai netika atlasīta neviena veidne"
 
-#: lib/installer.php:3249
+#: lib/installer.php:3268
 msgid "Updating remote configuration file"
 msgstr "Attālinātās konfigurācijas faila atjaunināšana"
 
-#: lib/installer.php:3284
+#: lib/installer.php:3303
 #, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "Noklusējuma datu avota profila iestatīšana uz %s (%s)"
 
-#: lib/installer.php:3312
+#: lib/installer.php:3331
 #, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "Neizdevās atrast atlasīto profilu (%s), izmaiņas netika veiktas"
 
-#: lib/installer.php:3321
+#: lib/installer.php:3340
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "Notiek automatizācijas tīkla (%s) atjaunināšana, režīms \"%s\" => \"%s\", apakštīkls \"%s\" => %s\""
 
-#: lib/installer.php:3331
+#: lib/installer.php:3350
 msgid "Failed to find automation network, no changes were made"
 msgstr "Neizdevās atrast automatizācijas tīklu, izmaiņas netika veiktas"
 
-#: lib/installer.php:3335
+#: lib/installer.php:3354
 msgid "Adding extra snmp settings for automation"
 msgstr "Papildu SNMP iestatījumu pievienošana automatizācijai"
 
-#: lib/installer.php:3341
+#: lib/installer.php:3360
 #, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "Automatizācijas opciju kopas atlase %s"
 
-#: lib/installer.php:3354
+#: lib/installer.php:3373
 #, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "Notiek automatizācijas opciju kopas atjaunināšana %s"
 
-#: lib/installer.php:3357
+#: lib/installer.php:3376
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "Automatizācijas opciju kopa %s ir veiksmīgi atjaunināta"
 
-#: lib/installer.php:3359
+#: lib/installer.php:3378
 #, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "Atkārtotas automatizācijas opciju kopa %s"
 
-#: lib/installer.php:3367
+#: lib/installer.php:3386
 #, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "Neizdevās atjaunināt automatizācijas opciju kopu %s"
 
-#: lib/installer.php:3370
+#: lib/installer.php:3389
 msgid "Failed to find any automation option set"
 msgstr "Neizdevās atrast nevienu automatizācijas opciju kopu"
 
-#: lib/installer.php:3400
+#: lib/installer.php:3419
 #, fuzzy, php-format
 msgid "Device Template for First Kadupul Device is %s"
 msgstr "Ierīces veidne pirmajai Kadupul ierīcei ir %s"
 
-#: lib/installer.php:3430
+#: lib/installer.php:3449
 msgid "Creating Graphs for Default Device"
 msgstr "Grafiku izveide noklusējuma ierīcei"
 
-#: lib/installer.php:3437
+#: lib/installer.php:3456
 msgid "Adding Device to Default Tree"
 msgstr "Ierīces pievienošana noklusējuma kokam"
 
-#: lib/installer.php:3445
+#: lib/installer.php:3464
 msgid "No templated graphs for Default Device were found"
 msgstr "Netika atrasts neviens no veidnes veidots grafiks noklusējuma ierīcei"
 
-#: lib/installer.php:3449
+#: lib/installer.php:3468
 #, fuzzy
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Kadupul Packages to monitor your Kadupul server."
 msgstr "BRĪDINĀJUMS. Jūsu operētājsistēmas ierīces veidne nav atrasta. Lai pārraudzītu savu Kadupul serveri, jums būs jāimportē ierīču veidnes vai Kadupul pakotnes."
 
-#: lib/installer.php:3456
+#: lib/installer.php:3475
 msgid "Running first-time data query for local host"
 msgstr "Pirmo reizi tiek izpildīts datu vaicājums vietējam saimniekdatoram"
 
-#: lib/installer.php:3464
+#: lib/installer.php:3483
 msgid "Repopulating poller cache"
 msgstr "Poller kešatmiņas pārpopulācija"
 
-#: lib/installer.php:3469
+#: lib/installer.php:3488
 msgid "Repopulating SNMP Agent cache"
 msgstr "SNMP aģenta kešatmiņas pārpopulācija"
 
-#: lib/installer.php:3474
+#: lib/installer.php:3493
 msgid "Generating RSA Key Pair"
 msgstr "RSA atslēgu pāra ģenerēšana"
 
-#: lib/installer.php:3487
+#: lib/installer.php:3506
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "Atrastas %s tabulas konvertēšanai"
 
-#: lib/installer.php:3494
+#: lib/installer.php:3513
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "Konvertē tabulu Nr. %s '%s'"
 
-#: lib/installer.php:3509
+#: lib/installer.php:3528
 msgid "No tables where found or selected for conversion"
 msgstr "Nav atrasta neviena tabula vai atlasīta konvertēšanai"
 
-#: lib/installer.php:3521
+#: lib/installer.php:3540
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "Pārslēgts no %s uz %s"
 
-#: lib/installer.php:3525
+#: lib/installer.php:3544
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "PIEZĪME. Pagaidu faila izmantošana db kešatmiņai: %s"
 
-#: lib/installer.php:3547
+#: lib/installer.php:3566
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "Jaunināšana no v%s (DB %s) uz v%s"
 
-#: lib/installer.php:3555
+#: lib/installer.php:3574
 #, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "BRĪDINĀJUMS: neizdevās atrast v%s jaunināšanas funkciju"
 
-#: lib/installer.php:3616
+#: lib/installer.php:3635
 msgid "Install aborted due to no EULA acceptance"
 msgstr "Instalēšana tika pārtraukta, jo nav pieņemts EULA"
 
-#: lib/installer.php:3640
+#: lib/installer.php:3659
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "Fons jau tika sākts plkst. %s, šis mēģinājums plkst. %s tika izlaists"
 
-#: lib/installer.php:3664
+#: lib/installer.php:3683
 #, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "Instalēšanas laikā radās izņēmums: #%s - %s"
 
-#: lib/installer.php:3683
+#: lib/installer.php:3702
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "Instalēšana tika sākta plkst. %s, pabeigta plkst. %s"
 
-#: lib/installer.php:3720
+#: lib/installer.php:3739
 msgid "Both"
 msgstr "Abas"
 
-#: lib/installer.php:3720
+#: lib/installer.php:3739
 #, php-format
 msgid "No - %s"
 msgstr "Nē — %s"
 
-#: lib/installer.php:3725
+#: lib/installer.php:3744
 #, php-format
 msgid "%s - N/A"
 msgstr "%s — Nē"
 
-#: lib/installer.php:3725 lib/installer.php:3727
+#: lib/installer.php:3744 lib/installer.php:3746
 msgid "Web"
 msgstr "Заголовок сайта"
 
-#: lib/installer.php:3727 lib/installer.php:3730
+#: lib/installer.php:3746 lib/installer.php:3749
 #, php-format
 msgid "%s - No"
 msgstr "%s — Nē"
 
-#: lib/installer.php:3730
+#: lib/installer.php:3749
 msgid "Cli"
 msgstr "Komandrindas interfeiss"
 
-#: lib/installer.php:3736
+#: lib/installer.php:3755
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "PHP opcijas iestatīšana %s = %s"
 
-#: lib/installer.php:3742
+#: lib/installer.php:3761
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "Neizdevās iestatīt PHP opciju %s, ir %s (jābūt %s)"
 
-#: lib/installer.php:3779
+#: lib/installer.php:3798
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "Pilnīgai sinhronizācijai nav atrasts neviens attālais datu savācējs"
 
@@ -16266,184 +16266,196 @@ msgstr "Neizdevās pievienot atskaites grafikas elementu <i>%s</i> . Jau pastāv
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Izlaistā pārskata grafikas elements “ <i>%s</i> ” jau pastāv"
 
-#: lib/rrd.php:1666
+#: lib/rrd.php:1989
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "KĻŪDA: RRDfails %s nav ierakstāms"
 
-#: lib/rrd.php:3025
+#: lib/rrd.php:3348
 #, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "Nepieciešamais RRDfile soļa lielums ir '%s', bet novērotais solis ir '%s'"
 
-#: lib/rrd.php:3085
+#: lib/rrd.php:3408
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "Datu avota “%s” veidam ir jābūt “%s”"
 
-#: lib/rrd.php:3091
+#: lib/rrd.php:3414
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "Datu avota '%s' RRD datu pulsam jābūt '%s'"
 
-#: lib/rrd.php:3103
+#: lib/rrd.php:3426
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "RRD minimumam datu avotam “%s” ir jābūt “%s”"
 
-#: lib/rrd.php:3112
+#: lib/rrd.php:3435
 #, fuzzy, php-format
 msgid "DS '%s' missing in Kadupul definition"
 msgstr "Kadupul definīcijā trūkst DS '%s'"
 
-#: lib/rrd.php:3126 lib/rrd.php:3127
+#: lib/rrd.php:3449 lib/rrd.php:3450
 #, php-format
 msgid "Kadupul RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Kadupul RRA '%s' ir tāds pats CF/soļi (%s, %s) kā '%s'"
 
-#: lib/rrd.php:3140 lib/rrd.php:3141
+#: lib/rrd.php:3463 lib/rrd.php:3464
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "RRA failam '%s' ir tik pat CF/soļi (%s, %s) kā '%s'"
 
-#: lib/rrd.php:3173
+#: lib/rrd.php:3496
 #, fuzzy, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Kadupul to re-create RRDfile."
 msgstr "'%s' pdp_per_row nav derīgs RRA '%s', kam jābūt '%s'.  Apsveriet iespēju dzēst un ļaut Kadupul atkārtoti izveidot RRD failu."
 
-#: lib/rrd.php:3177
+#: lib/rrd.php:3500
 #, fuzzy, php-format
 msgid "The XFF for Kadupul RRA id is '%s' but should be '%s'"
 msgstr "XFF Kadupul RRA ID '%s' ir jābūt '%s'"
 
-#: lib/rrd.php:3181
+#: lib/rrd.php:3504
 #, php-format
 msgid "The number of rows for Kadupul RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Kadupul RRA ID '%s' rindu skaits ir nepareizs.  Rindu skaits ir \"%s\", bet tam jābūt \"%s\""
 
-#: lib/rrd.php:3198
+#: lib/rrd.php:3521
 #, php-format
 msgid "The RRA '%s' missing in the existing Kadupul RRDfile"
 msgstr "Esošajā Kadupul RRD failā trūkst '%s' RRA"
 
-#: lib/rrd.php:3206
+#: lib/rrd.php:3529
 #, php-format
 msgid "RRA '%s' missing in Kadupul definition"
 msgstr "Kadupul definīcijā trūkst RRA '%s'"
 
-#: lib/rrd.php:3227
+#: lib/rrd.php:3550
 msgid "RRD File Information"
 msgstr "RRD faila informācija"
 
-#: lib/rrd.php:3259
+#: lib/rrd.php:3582
 msgid "Data Source Items"
 msgstr "Datu avota vienumi"
 
-#: lib/rrd.php:3261
+#: lib/rrd.php:3584
 msgid "Minimal Heartbeat"
 msgstr "Minimālais RRD datu pulss"
 
-#: lib/rrd.php:3262
+#: lib/rrd.php:3585
 msgid "Min"
 msgstr "Min"
 
-#: lib/rrd.php:3263
+#: lib/rrd.php:3586
 msgid "Max"
 msgstr "Maks."
 
-#: lib/rrd.php:3264
+#: lib/rrd.php:3587
 msgid "Last DS"
 msgstr "Pēdējā DS"
 
-#: lib/rrd.php:3266
+#: lib/rrd.php:3589
 msgid "Unknown Sec"
 msgstr "Nezināma sek"
 
-#: lib/rrd.php:3317
+#: lib/rrd.php:3640
 msgid "Round Robin Archive"
 msgstr "Round Robin arhīvs"
 
-#: lib/rrd.php:3320
+#: lib/rrd.php:3643
 msgid "Cur Row"
 msgstr "Pašreizējā rinda"
 
-#: lib/rrd.php:3321
+#: lib/rrd.php:3644
 msgid "PDP per Row"
 msgstr "PDP katrā rindā"
 
-#: lib/rrd.php:3323
+#: lib/rrd.php:3646
 msgid "CDP Prep Value (0)"
 msgstr "CDP sagatavošanas vērtība (0)"
 
-#: lib/rrd.php:3324
+#: lib/rrd.php:3647
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP nezināmie datu punkti (0)"
 
-#: lib/rrd.php:3382
+#: lib/rrd.php:3705
 msgid "Errors Found"
 msgstr "%s nav atrasts"
 
-#: lib/rrd.php:3394
+#: lib/rrd.php:3717
 msgid "Optional Tuning Recommendations"
 msgstr "Datu avotu labošanas ieteikumi"
 
-#: lib/rrd.php:3419 lib/rrd.php:3422
+#: lib/rrd.php:3742 lib/rrd.php:3745
 #, php-format
 msgid "rename %s to %s"
 msgstr "pārdēvēt %s par %s"
 
-#: lib/rrd.php:3496
+#: lib/rrd.php:3818
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "Kļūda, parsējot rrdtool dump XML"
 
-#: lib/rrd.php:3528 lib/rrd.php:3585 lib/rrd.php:3643
+#: lib/rrd.php:3850 lib/rrd.php:3908 lib/rrd.php:3967
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "KĻŪDA, rakstot XML failu: %s"
 
-#: lib/rrd.php:3539 lib/rrd.php:3596 lib/rrd.php:3654
+#: lib/rrd.php:3857 lib/rrd.php:3915 lib/rrd.php:3974
+msgid "RRD restore failed; original and recovery XML preserved. See application log."
+msgstr ""
+
+#: lib/rrd.php:3863 lib/rrd.php:3921 lib/rrd.php:3980
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "KĻŪDA: RRDfails %s nav ierakstāms"
 
-#: lib/rrd.php:3568 lib/rrd.php:3626
+#: lib/rrd.php:3891 lib/rrd.php:3950
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "Kļūda, parsējot RRDtool izgāztuves XML"
 
-#: lib/rrd.php:3874
+#: lib/rrd.php:4199
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) noņemts no RRD faila"
 
-#: lib/rrd.php:3911
+#: lib/rrd.php:4236
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) pievieno RRD failam"
 
-#: lib/rrd.php:3941 lib/rrd.php:3955
+#: lib/rrd.php:4266 lib/rrd.php:4280
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "Vietnei nav rakstīšanas piekļuves %s, iespējams, nevar izveidot/atjaunināt RRD"
 
-#: lib/rrd.php:3951
+#: lib/rrd.php:4276
 msgid "(Custom)"
 msgstr "(Pielāgots)"
 
-#: lib/rrd.php:3957
+#: lib/rrd.php:4282
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "Neizdevās atvērt datu failu, iespējams, aptaujātajs vēl nav palaists"
 
-#: lib/rrd.php:3960
+#: lib/rrd.php:4285
 msgid "RRA Folder"
 msgstr "RRA mape"
 
-#: lib/rrd.php:3960
+#: lib/rrd.php:4285
 msgid "Root"
 msgstr "ROOT - uz objektu orientēta bibliotēku kopa mērogojamu datu analīzei"
 
-#: lib/rrd.php:4072
+#: lib/rrd.php:4397
 msgid "Unknown RRDtool Error"
 msgstr "Nezināma RRDtool kļūda"
+
+#: lib/rrd_maintenance.php:208
+msgid "RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading."
+msgstr ""
+
+#: lib/rrd_maintenance.php:317
+msgid "RRD storage configuration requires attention"
+msgstr ""
 
 #: lib/snmp.php:194 lib/snmp.php:294 lib/snmp.php:389 lib/snmp.php:734
 #: lib/snmp.php:749
@@ -16474,12 +16486,12 @@ msgstr ""
 msgid "FATAL: Standard Deviation must be a positive integer."
 msgstr ""
 
-#: lib/spikekill.php:262 lib/spikekill.php:1752
+#: lib/spikekill.php:262 lib/spikekill.php:1757
 #, fuzzy
 msgid "StdDev"
 msgstr "Noņemiet StdDev"
 
-#: lib/spikekill.php:268 lib/spikekill.php:1752
+#: lib/spikekill.php:268 lib/spikekill.php:1757
 #, fuzzy
 msgid "Variance"
 msgstr "Variable"
@@ -16586,141 +16598,149 @@ msgstr ""
 msgid "Window Range:  All"
 msgstr "Windows saistīta"
 
-#: lib/spikekill.php:429
+#: lib/spikekill.php:393
+msgid "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal."
+msgstr ""
+
+#: lib/spikekill.php:400
+msgid "FATAL: RRD storage is busy or its maintenance lock is unavailable. Retry after polling completes."
+msgstr ""
+
+#: lib/spikekill.php:452
 #, php-format
 msgid "FATAL: Unable to safely create a temporary XML file in '%s'!"
 msgstr ""
 
-#: lib/spikekill.php:478 lib/spikekill.php:500
+#: lib/spikekill.php:501 lib/spikekill.php:523
 msgid "FATAL: RRD source identity changed or could not be verified safely."
 msgstr ""
 
-#: lib/spikekill.php:508
+#: lib/spikekill.php:531
 msgid "FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"
 msgstr ""
 
-#: lib/spikekill.php:524
+#: lib/spikekill.php:547
 msgid "FATAL: RRDtool returned an empty dump. The RRD file was not modified."
 msgstr ""
 
-#: lib/spikekill.php:552
+#: lib/spikekill.php:575
 #, php-format
 msgid "FATAL: RRDfile Backup of '%s' to '%s' FAILED!"
 msgstr ""
 
-#: lib/spikekill.php:766
+#: lib/spikekill.php:789
 #, php-format
 msgid "NOTE: Searching for Spikes in XML file '%s'"
 msgstr ""
 
-#: lib/spikekill.php:769
+#: lib/spikekill.php:792
 #, php-format
 msgid "NOTE: Limited to Time Window: %s through %s"
 msgstr ""
 
-#: lib/spikekill.php:776
+#: lib/spikekill.php:799
 msgid "NOTE: Dryrun requested.  No updates performed"
 msgstr ""
 
-#: lib/spikekill.php:812
+#: lib/spikekill.php:835
 #, php-format
 msgid "NOTE: No Window Spikes found in '%s'"
 msgstr ""
 
-#: lib/spikekill.php:815
+#: lib/spikekill.php:838
 #, php-format
 msgid "NOTE: No Spikes found in '%s'"
 msgstr ""
 
-#: lib/spikekill.php:828
+#: lib/spikekill.php:851
 #, php-format
 msgid "NOTE: Spikes Found and Remediated.  Total Spikes %s"
 msgstr ""
 
-#: lib/spikekill.php:832
+#: lib/spikekill.php:855
 #, php-format
 msgid "FATAL: Unable to restore '%s' from '%s'"
 msgstr ""
 
-#: lib/spikekill.php:842
+#: lib/spikekill.php:865
 #, php-format
 msgid "FATAL: Unable to backup '%s'"
 msgstr ""
 
-#: lib/spikekill.php:852
+#: lib/spikekill.php:875
 #, php-format
 msgid "FATAL: Unable to write XML file '%s'"
 msgstr ""
 
-#: lib/spikekill.php:861
+#: lib/spikekill.php:884
 #, fuzzy
 msgid "NOTE: No Spikes Found."
 msgstr "Nav atrasta neviena vietne"
 
-#: lib/spikekill.php:922
+#: lib/spikekill.php:945
 #, php-format
 msgid "NOTE: Re-Importing '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1013
+#: lib/spikekill.php:1036
 #, php-format
 msgid "NOTE: Backing Up '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1752
+#: lib/spikekill.php:1757
 msgid "Avg"
 msgstr "Vid."
 
-#: lib/spikekill.php:1752
+#: lib/spikekill.php:1757
 msgid "CF"
 msgstr "CF"
 
-#: lib/spikekill.php:1752
+#: lib/spikekill.php:1757
 #, fuzzy
 msgid "DS"
 msgstr "DES"
 
-#: lib/spikekill.php:1752
+#: lib/spikekill.php:1757
 msgid "NonNan"
 msgstr ""
 
-#: lib/spikekill.php:1752
+#: lib/spikekill.php:1757
 #, fuzzy
 msgid "Samples"
 msgstr "Vienkāršs"
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1758
 msgid "MaxStdDev"
 msgstr ""
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1758
 #, fuzzy
 msgid "MaxValue"
 msgstr "Vērtība"
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1758
 #, fuzzy
 msgid "MinStdDev"
 msgstr "MinStdDev"
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1758
 #, fuzzy
 msgid "MinValue"
 msgstr "Vērtība"
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1758
 msgid "StdKilled"
 msgstr ""
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1758
 msgid "VarKilled"
 msgstr ""
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1758
 msgid "WindKilled"
 msgstr ""
 
-#: lib/spikekill.php:1753
+#: lib/spikekill.php:1758
 msgid "WindSamples"
 msgstr ""
 
@@ -17591,50 +17611,50 @@ msgstr "Spraudnis nav saderīgs"
 msgid "Enable Plugin Locally"
 msgstr "Iespējot spraudni lokāli"
 
-#: poller.php:377
+#: poller.php:384
 #, php-format
 msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
 msgstr "BRĪDINĀJUMS: %s nav sinhronizēts ar aptauju intervālu polera ID %d! Aptaujāšanas intervāls ir %d sekundes, maksimums %d sekundes, bet kopš pēdējās aptaujas ir pagājušas %d sekundes!"
 
-#: poller.php:527
+#: poller.php:534
 #, php-format
 msgid "WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate."
 msgstr "BRĪDINĀJUMS: ir konstatēti %d procesi, kas pārsniedz aptaujas cikla aptauju id %d, lūdzu, izpētiet."
 
-#: poller.php:592
+#: poller.php:599
 #, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
 msgstr "BRĪDINĀJUMS: Pollera izvades tabula nav tukša pollera ID %d. Problēmas: %d, %s."
 
-#: poller.php:632
+#: poller.php:641
 #, php-format
 msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
 msgstr "KĻŪDA: mugurkaula ceļš: %s nav derīgs polera ID %d. Poller nevar turpināt!"
 
-#: poller.php:774
+#: poller.php:799
 #, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Pārsniegts maksimālais izpildes laiks %d sekundes polera ID %d. Iziet."
 
-#: poller.php:880
+#: poller.php:905
 msgid "WARNING: Kadupul Polling Cycle Exceeded Poller Interval by "
 msgstr "BRĪDINĀJUMS: Kadupul apjautāšanas cikls pārsniedza apjautāšanas intervālu par "
 
-#: poller.php:905
+#: poller.php:935
 #, fuzzy, php-format
 msgid "WARNING: PollerID:%s with Name:%s is in Heartbeat Status"
 msgstr "BRĪDINĀJUMS: PollerID:%s ar nosaukumu:%s ir periodisko kontrolziņojumu statusā"
 
-#: poller.php:907
+#: poller.php:937
 msgid "Poller in Heartbeat Mode"
 msgstr "Aptaujas veicējs sirdspukstu režīmā"
 
-#: poller.php:1164
+#: poller.php:1194
 #, fuzzy
 msgid "Kadupul System Notification"
 msgstr "Kadupul sistēmas paziņojums"
 
-#: poller.php:1164
+#: poller.php:1194
 msgid "NOTE: A second Kadupul data collector has been added.  Therefore, enabling boost automatically!"
 msgstr "PIEZĪME. Ir pievienots otrs Kadupul datu savācējs. Tāpēc automātiska pastiprināšana!"
 
@@ -17653,7 +17673,7 @@ msgstr "Kadupul primārais administrators"
 msgid "Kadupul Automation Report requires an html based Email client"
 msgstr "Kadupul automatizācijas ziņojumam ir nepieciešams e-pasta klients, kura pamatā ir HTML"
 
-#: poller_boost.php:359
+#: poller_boost.php:371
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
 msgstr "BRĪDINĀJUMS: konstatēts Poller Boost pārtēriņš, iespējama Boost Poller avārija"
 
@@ -20501,3 +20521,7 @@ msgstr "Grafiku veidņu skaits, kas izmanto šo VDEF."
 #: vdef.php:923
 msgid "No VDEFs"
 msgstr "Nav VDEF"
+
+#: rrdcleaner.php:28 rrdcleaner.php:427 rrdcleaner.php:462
+msgid "Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup."
+msgstr ""
