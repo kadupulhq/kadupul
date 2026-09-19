@@ -5,13 +5,13 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-require_once dirname(__DIR__) . '/Helpers/ClogProductionFunctions.php';
+require_once dirname(__DIR__, 3) . '/Helpers/ClogProductionFunctions.php';
 
 // Run the production utilities.php dispatch for clear_poller_cache with the
 // database lock and the rebuild recorded in call order.
 function pollerCacheRebuildProgram(): string
 {
-    $source = file_get_contents(dirname(__DIR__, 2) . '/utilities.php');
+    $source = file_get_contents(dirname(__DIR__, 4) . '/utilities.php');
     $start  = strpos($source, '/* set default action */');
     $end    = strpos($source, '/* -----------------------');
 
@@ -68,7 +68,7 @@ test('a poller cache rebuild that dies part way still releases the lock at shutd
 // Run the production CLI rebuild flow from its timing setup to the final exit.
 function pollerCacheCliProgram(): string
 {
-    $source = file_get_contents(dirname(__DIR__, 2) . '/cli/rebuild_poller_cache.php');
+    $source = file_get_contents(dirname(__DIR__, 4) . '/cli/rebuild_poller_cache.php');
     $start  = strpos($source, '/* take time and log performance data */');
     $end    = strpos($source, "\nfunction pushout_master_handler");
 

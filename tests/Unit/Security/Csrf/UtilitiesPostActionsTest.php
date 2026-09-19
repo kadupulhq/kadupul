@@ -5,13 +5,13 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-require_once dirname(__DIR__) . '/Helpers/ClogProductionFunctions.php';
+require_once dirname(__DIR__, 3) . '/Helpers/ClogProductionFunctions.php';
 
 // Run the production utilities.php action dispatch with every callee recorded,
 // so the test shows which state-changing function a request reaches.
 function utilitiesDispatchProgram(): string
 {
-    $source = file_get_contents(dirname(__DIR__, 2) . '/utilities.php');
+    $source = file_get_contents(dirname(__DIR__, 4) . '/utilities.php');
     $start  = strpos($source, '/* set default action */');
     $end    = strpos($source, '/* -----------------------');
 
@@ -78,7 +78,7 @@ test('a POST to a state-changing utilities action still runs it', function (stri
 })->with('utilities state actions');
 
 test('utilities menu and purge buttons send state-changing actions by POST with the token', function () {
-    $source = file_get_contents(dirname(__DIR__, 2) . '/utilities.php');
+    $source = file_get_contents(dirname(__DIR__, 4) . '/utilities.php');
 
     expect($source)->not->toContain("?action=clear_user_log&header=false")
         ->and($source)->toContain("action: 'clear_user_log'")

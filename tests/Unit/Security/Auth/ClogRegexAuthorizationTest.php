@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-require_once dirname(__DIR__) . '/Helpers/ClogProductionFunctions.php';
+require_once dirname(__DIR__, 3) . '/Helpers/ClogProductionFunctions.php';
 
 function clogRegexProgram(): string
 {

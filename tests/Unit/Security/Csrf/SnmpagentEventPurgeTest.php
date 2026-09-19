@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-require_once dirname(__DIR__) . '/Helpers/ClogProductionFunctions.php';
+require_once dirname(__DIR__, 3) . '/Helpers/ClogProductionFunctions.php';
 
 // The production function stops at the filter setup, after the purge decision.
 function snmpagentPurgeProgram(): string
@@ -52,7 +52,7 @@ test('a POST with purge truncates the SNMP Agent notification log', function () 
 });
 
 test('the SNMP Agent notification log purge button posts the token', function () {
-    $source = file_get_contents(dirname(__DIR__, 2) . '/utilities.php');
+    $source = file_get_contents(dirname(__DIR__, 4) . '/utilities.php');
 
     expect($source)->not->toContain('view_snmpagent_events&purge=1')
         ->and($source)->toContain("action: 'view_snmpagent_events',\n\t\t\tpurge: 1,");
