@@ -845,7 +845,7 @@ class Installer implements JsonSerializable
                     if ($should_set && $name == 'path_php_binary') {
                         $input = mt_rand(2, 64);
                         $output = shell_exec(
-                            cacti_escapeshellcmd($path) . ' -q ' .
+                            cacti_escapeshellarg($path) . ' -q ' .
                             cacti_escapeshellarg($config['base_path'] . '/install/cli_test.php') .
                             ' ' . $input
                         );
