@@ -748,6 +748,14 @@ INSERT INTO `table_columns` VALUES ('poller_output_boost_local_data_ids',1,'loca
 INSERT INTO `table_columns` VALUES ('poller_output_boost_local_data_ids',2,'process_handler','int(10) unsigned','YES','MUL','0','');
 INSERT INTO `table_columns` VALUES ('poller_output_boost_processes',1,'sock_int_value','bigint(20) unsigned','NO','PRI',NULL,'auto_increment');
 INSERT INTO `table_columns` VALUES ('poller_output_boost_processes',2,'status','varchar(255)','YES','',NULL,'');
+INSERT INTO `table_columns` VALUES ('poller_output_rejected',1,'local_data_id','int(10) unsigned','NO','PRI','0','');
+INSERT INTO `table_columns` VALUES ('poller_output_rejected',2,'rrd_name','varchar(19)','NO','PRI','','');
+INSERT INTO `table_columns` VALUES ('poller_output_rejected',3,'time','timestamp','NO','PRI','current_timestamp()','');
+INSERT INTO `table_columns` VALUES ('poller_output_rejected',4,'output','varchar(512)','NO','','','');
+INSERT INTO `table_columns` VALUES ('poller_output_rejected',5,'rrd_path','varchar(255)','NO','MUL','','');
+INSERT INTO `table_columns` VALUES ('poller_output_rejected',6,'reason','varchar(255)','NO','','','');
+INSERT INTO `table_columns` VALUES ('poller_output_rejected',7,'first_rejected','timestamp','NO','','current_timestamp()','');
+INSERT INTO `table_columns` VALUES ('poller_output_rejected',8,'last_rejected','timestamp','NO','','current_timestamp()','');
 INSERT INTO `table_columns` VALUES ('poller_output_realtime',1,'local_data_id','int(10) unsigned','NO','PRI','0','');
 INSERT INTO `table_columns` VALUES ('poller_output_realtime',2,'rrd_name','varchar(19)','NO','PRI','','');
 INSERT INTO `table_columns` VALUES ('poller_output_realtime',3,'time','timestamp','NO','PRI','0000-00-00 00:00:00','');
@@ -1315,6 +1323,10 @@ INSERT INTO `table_indexes` VALUES ('poller_output_boost',0,'PRIMARY',3,'rrd_nam
 INSERT INTO `table_indexes` VALUES ('poller_output_boost_local_data_ids',0,'PRIMARY',1,'local_data_id',NULL,0,NULL,NULL,'','HASH','');
 INSERT INTO `table_indexes` VALUES ('poller_output_boost_local_data_ids',1,'process_handler',1,'process_handler',NULL,0,NULL,NULL,'YES','HASH','');
 INSERT INTO `table_indexes` VALUES ('poller_output_boost_processes',0,'PRIMARY',1,'sock_int_value',NULL,0,NULL,NULL,'','HASH','');
+INSERT INTO `table_indexes` VALUES ('poller_output_rejected',0,'PRIMARY',1,'local_data_id','A',NULL,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('poller_output_rejected',0,'PRIMARY',2,'rrd_name','A',NULL,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('poller_output_rejected',0,'PRIMARY',3,'time','A',NULL,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('poller_output_rejected',1,'rrd_path',1,'rrd_path','A',NULL,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('poller_output_realtime',1,'poller_id',1,'poller_id','A',0,'191',NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('poller_output_realtime',0,'PRIMARY',1,'local_data_id','A',0,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('poller_output_realtime',0,'PRIMARY',2,'rrd_name','A',0,NULL,NULL,'','BTREE','');

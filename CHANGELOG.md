@@ -9,11 +9,20 @@ follows [Semantic Versioning](VERSIONING.md).
 Targeting `v1.3.0`, the first planned application release. See
 [VERSIONING.md](VERSIONING.md).
 
+### Changed
+
+- Require complete behavioral scenario inventories and capture application-handler PHP diagnostics separately from prepend-recorder events.
+
+- Preserve reproducible behavioral baseline references and count RRDtool acknowledgements in reachable polling, failed writes, unreachable-device polling, and missing-file fault contracts.
+
 ### Fixed
 
 - Reject traversal, absolute paths and symlink escapes in package file writes and previews while preserving supported script, resource and plugin destinations (#108).
 - Package import now rejects files for a plugin whose directory is a symlink; install such plugins as real directories under `plugins/` (#108).
 
+- Validate comparison provenance, hash Docker build exclusions, and emit exact capture hashes in behavioral reports.
+
+- Compare behavioral captures from an explicit results directory when the controller and application use separate checkouts; document the Linux native self-test PHP prerequisite.
 - Stop Boost fetch preparation after writer initialization fails; restore caller error settings and release only owned writers on exceptions.
 - Make unsafe poller queue diagnostics available for translation.
 - Include measured poller and dependency-failure integration execution in Sonar coverage, rejecting stale or incomplete evidence.
@@ -21,7 +30,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Preserve hyphenated RRD data sources, verify durable queues after legacy upgrades, and allow remote database upgrades without unrelated local storage.
 
 - Refuse web upgrades when the poller queue is volatile or unreadable, before changing the database.
-- Recover valid fields from rejected RRD groups without stalling later timestamps; report refused RRD repairs as failures.
+- Retain complete rejected RRD groups for replay after schema repair, preserve timestamp ordering, and report refused RRD repairs as failures.
 
 - Retain realtime samples when their field mapping cannot be read.
 
@@ -97,7 +106,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Unit test coverage reported to SonarQube Cloud from a PHP 8.1 run of the
   tests that pass without a database.
 - Update vendored phpseclib to 3.0.57 and constant_time_encoding to 3.1.3, and lock runtime dependencies.
-- Behavioral characterization harness recording 32 contracts from a running
+- Behavioral characterization harness recording 34 contracts from a running
   1.2.31 install, with a differential runner so a rewrite of the internals can
   be compared against what an administrator, plugin or script actually sees.
 - Repository scaffolding: continuous integration for PHP 8.1 through 8.4 and

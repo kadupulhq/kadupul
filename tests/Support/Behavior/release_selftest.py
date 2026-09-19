@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-3.0-or-later
 import json
+import os
 import hashlib
 import subprocess
 from pathlib import Path
@@ -66,7 +67,139 @@ def recursive_rrd_manifest():
     print('RRD manifests distinguish nested paths, detect nested changes, and reject empty stores')
 
 
+def baseline_checkout_metadata():
+    revision = release.harness.run(['git', '-C', str(release.ROOT), 'rev-parse', 'HEAD'])['stdout'].strip()
+    with tempfile.TemporaryDirectory(prefix='release baseline checkout ') as directory:
+        baseline = Path(directory) / 'baseline'
+        # Reproduce the Git environment inherited by a pre-push hook, but
+        # point it at a disposable repository so a regression cannot damage ROOT.
+        decoy = Path(directory) / 'caller'
+        release.harness.run(['git', 'init', str(decoy)])
+        before = (decoy / '.git/HEAD').read_bytes()
+        hook_env = {'GIT_DIR': str(decoy / '.git'), 'GIT_WORK_TREE': str(decoy),
+                    'GIT_COMMON_DIR': str(decoy / '.git'), 'GIT_INDEX_FILE': str(decoy / '.git/index')}
+        with patch.dict(os.environ, hook_env):
+            release.prepare_baseline(revision, baseline)
+            assert release.harness.run(['git', '-C', str(baseline), 'rev-parse', 'HEAD'])['stdout'].strip() == revision
+        assert (decoy / '.git/HEAD').read_bytes() == before
+        assert not (decoy / '.git/index').exists()
+        assert release.harness.run(['git', '-C', str(release.ROOT), 'rev-parse', 'HEAD'])['stdout'].strip() == revision
+        actual = release.harness.run(['git', '-C', str(baseline), 'rev-parse', 'HEAD'])['stdout'].strip()
+        assert actual == revision
+        assert (baseline / '.git').is_dir()
+        expected_schema = release.harness.run(['git', '-C', str(release.ROOT), 'show', revision + ':cacti.sql'])['stdout'].encode()
+        assert (baseline / 'cacti.sql').read_bytes() == expected_schema
+        with patch.object(release.harness, 'ROOT', baseline):
+            release.harness.validate_application_inputs()
+    print('Release baseline preserves revision metadata, schema and validated controller overlay')
+
+
+def baseline_overlay_replacement():
+    with tempfile.TemporaryDirectory(prefix='release obsolete inputs ') as directory:
+        source = Path(directory) / 'source'
+        source.mkdir()
+        def git(*arguments):
+            return release.harness.run(['git', '-C', str(source), '-c', 'user.name=Harness Fixture',
+                '-c', 'user.email=fixture@example.invalid', '-c', 'commit.gpgsign=false',
+                '-c', 'core.hooksPath=/dev/null', *arguments])['stdout'].strip()
+        git('init', '-q')
+        for relative in ('tests/Support/Behavior', 'tests/Fixtures', 'tests/behavior'):
+            (source / relative).mkdir(parents=True)
+            (source / relative / 'current').write_text('candidate input')
+            (source / relative / 'obsolete').write_text('baseline-only input')
+        (source / 'cacti.sql').write_text('unchanged schema')
+        (source / '.dockerignore').write_text('.git')
+        git('add', '.')
+        git('commit', '-q', '-s', '-m', 'Create baseline fixture')
+        revision = git('rev-parse', 'HEAD')
+        for path in source.rglob('obsolete'):
+            path.unlink()
+        git('add', '-u')
+        git('commit', '-q', '-s', '-m', 'Remove obsolete controller inputs')
+        baseline = Path(directory) / 'baseline'
+        with patch.object(release, 'ROOT', source):
+            release.prepare_baseline(revision, baseline)
+        assert not list(baseline.rglob('obsolete'))
+        assert len(list((baseline / 'tests').rglob('current'))) == 3
+        assert (baseline / 'cacti.sql').read_text() == 'unchanged schema'
+    print('Baseline overlays remove obsolete helpers without changing application data')
+
+
+def baseline_ignore_contract():
+    for original in (None, '.git', 'different/'):
+        with tempfile.TemporaryDirectory(prefix='release ignore ') as directory:
+            source = Path(directory) / 'source'
+            source.mkdir()
+            def git(*args):
+                return release.harness.run(['git', '-C', str(source), '-c', 'user.name=Harness Fixture',
+                    '-c', 'user.email=fixture@example.invalid', '-c', 'commit.gpgsign=false',
+                    '-c', 'core.hooksPath=/dev/null', *args])['stdout'].strip()
+            git('init', '-q')
+            (source / 'cacti.sql').write_text('schema')
+            if original is not None:
+                (source / '.dockerignore').write_text(original)
+            git('add', '.')
+            git('commit', '-qm', 'Baseline')
+            revision = git('rev-parse', 'HEAD')
+            for relative in ('tests/Support/Behavior', 'tests/Fixtures', 'tests/behavior'):
+                (source / relative).mkdir(parents=True)
+            (source / '.dockerignore').write_text('.git')
+            baseline = Path(directory) / 'baseline'
+            with patch.object(release, 'ROOT', source):
+                if original == 'different/':
+                    try:
+                        release.prepare_baseline(revision, baseline)
+                    except RuntimeError as error:
+                        assert 'refusing to overwrite' in str(error)
+                    else:
+                        raise AssertionError('Changed baseline build inputs accepted')
+                    assert (baseline / '.dockerignore').read_text() == original
+                else:
+                    evidence = release.prepare_baseline(revision, baseline)
+                    assert evidence['added'] == (original is None)
+                    assert (evidence['baseline_sha256'] is None) == (original is None)
+                    assert (baseline / '.dockerignore').read_text() == '.git'
+    print('Baseline build exclusions are preserved; absent historical inputs are explicitly recorded')
+
+
+def shallow_fetched_baseline():
+    with tempfile.TemporaryDirectory(prefix='release shallow baseline ') as directory:
+        remote = Path(directory) / 'remote'
+        source = Path(directory) / 'source'
+        baseline = Path(directory) / 'baseline'
+        remote.mkdir()
+        def git(tree, *args):
+            return release.harness.run(['git', '-C', str(tree), '-c', 'user.name=Harness Fixture',
+                '-c', 'user.email=fixture@example.invalid', '-c', 'commit.gpgsign=false',
+                '-c', 'core.hooksPath=/dev/null', *args])['stdout'].strip()
+        git(remote, 'init', '-q')
+        for relative in ('tests/Support/Behavior', 'tests/Fixtures', 'tests/behavior'):
+            (remote / relative).mkdir(parents=True)
+            (remote / relative / 'input').write_text('fixture')
+        (remote / 'cacti.sql').write_text('baseline schema')
+        (remote / '.dockerignore').write_text('.git')
+        git(remote, 'add', '.')
+        git(remote, 'commit', '-q', '-s', '-m', 'Baseline fixture')
+        revision = git(remote, 'rev-parse', 'HEAD')
+        (remote / 'cacti.sql').write_text('candidate schema')
+        git(remote, 'commit', '-qam', 'Candidate fixture')
+        release.harness.run(['git', 'clone', '--depth=1', '--', remote.as_uri(), str(source)])
+        git(source, 'fetch', '--no-tags', remote.as_uri(), revision)
+        assert git(source, 'rev-parse', '--is-shallow-repository') == 'true'
+        candidate = git(source, 'rev-parse', 'HEAD')
+        with patch.object(release, 'ROOT', source):
+            release.prepare_baseline(revision, baseline)
+        assert git(baseline, 'rev-parse', 'HEAD') == revision
+        assert (baseline / 'cacti.sql').read_text() == 'baseline schema'
+        assert git(source, 'rev-parse', 'HEAD') == candidate
+    print('Shallow checkouts preserve a separately fetched baseline revision')
+
+
 def main():
+    baseline_ignore_contract()
+    baseline_checkout_metadata()
+    baseline_overlay_replacement()
+    shallow_fetched_baseline()
     recursive_rrd_manifest()
     projects = []
     for missing_docker in (False, True):
