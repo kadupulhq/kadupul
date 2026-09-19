@@ -44,20 +44,20 @@ test('migrated files do not build RLIKE from double-quoted concat', function () 
 });
 
 test('data_debug.php uses db_qstr_rlike for all rfilter RLIKE clauses', function () use ($dataDebug) {
-	expect($dataDebug)->toContain("dtd.name_cache \" . db_qstr_rlike(get_request_var('rfilter'))")
-		->and($dataDebug)->toContain("dtd.local_data_id \" . db_qstr_rlike(get_request_var('rfilter'))")
-		->and($dataDebug)->toContain("dt.name \" . db_qstr_rlike(get_request_var('rfilter'))");
+	expect($dataDebug)->toContain("dtd.name_cache ' . db_qstr_rlike(get_request_var('rfilter'))")
+		->and($dataDebug)->toContain("dtd.local_data_id ' . db_qstr_rlike(get_request_var('rfilter'))")
+		->and($dataDebug)->toContain("dt.name ' . db_qstr_rlike(get_request_var('rfilter'))");
 });
 
 test('data_sources.php uses db_qstr_rlike and casts dl.id to int', function () use ($dataSources) {
-	expect($dataSources)->toContain("dtd.name_cache \" . db_qstr_rlike(get_request_var('rfilter'))")
-		->and($dataSources)->toContain("dtd.local_data_id \" . db_qstr_rlike(get_request_var('rfilter'))")
-		->and($dataSources)->toContain("dt.name \" . db_qstr_rlike(get_request_var('rfilter'))")
-		->and($dataSources)->toContain("dl.id = \" . (int) get_request_var('rfilter')");
+	expect($dataSources)->toContain("dtd.name_cache ' . db_qstr_rlike(get_request_var('rfilter'))")
+		->and($dataSources)->toContain("dtd.local_data_id ' . db_qstr_rlike(get_request_var('rfilter'))")
+		->and($dataSources)->toContain("dt.name ' . db_qstr_rlike(get_request_var('rfilter'))")
+		->and($dataSources)->toContain("dl.id = ' . (int) get_request_var('rfilter')");
 });
 
 test('graph_view.php uses db_qstr_rlike for rfilter RLIKE clauses', function () use ($graphView) {
-	$count = substr_count($graphView, "gtg.title_cache \" . db_qstr_rlike(get_request_var('rfilter'))");
+	$count = substr_count($graphView, "gtg.title_cache ' . db_qstr_rlike(get_request_var('rfilter'))");
 	expect($count)->toBeGreaterThanOrEqual(2);
 });
 

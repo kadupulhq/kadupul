@@ -112,6 +112,12 @@ if (cacti_sizeof($parms)) {
 	}
 }
 
+require_once __DIR__ . '/lib/rrd_maintenance.php';
+$queue_remote = (int) ($config['poller_id'] ?? 1) > 1;
+$queue_online = ($config['connection'] ?? 'online') === 'online';
+if ((!$queue_remote || $queue_online)
+	&& !rrd_maintenance_poller_preflight(!$queue_remote, $queue_remote ? $remote_db_cnn_id : false)) { exit(1); }
+
 /* install signal handlers for UNIX only */
 if (function_exists('pcntl_signal')) {
 	pcntl_signal(SIGTERM, 'sig_handler');
@@ -761,7 +767,12 @@ function boost_output_rrd_data($child) {
 
 	$rrd_updates       = 0;
 	$processed_rows    = 0;
-	$rrdtool_pipe      = rrd_init();
+	$rrdtool_pipe      = rrd_init(true, false, true);
+	if ($rrdtool_pipe === false) {
+		cacti_log('ERROR: RRD initialization failed; pending Boost samples were retained.', true, 'BOOST');
+		return -1;
+	}
+
 	$runtime_exceeded  = false;
 
 	/* let's set and track memory usage will we */
@@ -999,14 +1010,25 @@ function boost_process_local_data_ids($child, $rrdtool_pipe, $max_rows) {
 
 		$unused_data_source_names = array();
 
+		/* A failed RRD is set aside so the rest of the shard still advances. */
+		$blocked = array();
+		$flushed = array();
+		/* The last row each source's successful flush covered, so a later
+		 * failure hands back only the rows that were never written. */
+		$acked   = array();
+
 		/* we are going to blow away all record if ok */
 		$vals_in_buffer = 0;
 
 		boost_timer('results_cycle', BOOST_TIMER_START);
 
 		/* go through each poller_output_boost entries and process */
-		foreach ($results as $item) {
+		foreach ($results as $index => $item) {
 			$skip_item = false;
+
+			if (isset($blocked[$item['local_data_id']])) {
+				continue;
+			}
 
 			if ($local_data_id == $item['local_data_id'] && cacti_sizeof($unused_data_source_names) && isset($unused_data_source_names[$item['rrd_name']])) {
 				continue;
@@ -1023,14 +1045,16 @@ function boost_process_local_data_ids($child, $rrdtool_pipe, $max_rows) {
 				if ($vals_in_buffer) {
 					$outarray[] = $tv_tmpl;
 					$flush_ok   = boost_process_output($local_data_id, $outarray, $rrd_path, $rrd_tmplp, $rrdtool_pipe);
+					$flushed[$local_data_id] = true;
 
 					$buflen         = 0;
 					$vals_in_buffer = 0;
 					$outarray       = array();
 
 					if (!$flush_ok) {
-						$updates_ok = false;
-						break;
+						$blocked[$local_data_id] = true;
+					} else {
+						$acked[$local_data_id] = array($results[$index - 1]['sample_time'], $results[$index - 1]['rrd_name']);
 					}
 				}
 
@@ -1133,15 +1157,19 @@ function boost_process_local_data_ids($child, $rrdtool_pipe, $max_rows) {
 				if ($buflen > $upd_string_len) {
 					/* new process output function */
 					$flush_ok = boost_process_output($local_data_id, $outarray, $rrd_path, $rrd_tmplp, $rrdtool_pipe);
+					$flushed[$local_data_id] = true;
 
 					$buflen         = 0;
 					$vals_in_buffer = 0;
 					$outarray       = array();
 
 					if (!$flush_ok) {
-						$updates_ok = false;
-						break;
+						$blocked[$local_data_id] = true;
+
+						continue;
 					}
+
+					$acked[$local_data_id] = array($results[$index - 1]['sample_time'], $results[$index - 1]['rrd_name']);
 				}
 
 				$time = $item['timestamp'];
@@ -1304,8 +1332,61 @@ function boost_process_local_data_ids($child, $rrdtool_pipe, $max_rows) {
 			$outarray[] = $tv_tmpl;
 
 			if (!boost_process_output($local_data_id, $outarray, $rrd_path, $rrd_tmplp, $rrdtool_pipe)) {
-				$updates_ok = false;
+				$blocked[$local_data_id] = true;
 			}
+
+			$flushed[$local_data_id] = true;
+		}
+
+		/* Every RRD failing points at RRDtool or storage, not one file. Requeuing
+		 * would report success, so retain the page and fail the child instead. */
+		if (cacti_sizeof($blocked) > 1 && cacti_sizeof($blocked) == cacti_sizeof($flushed)) {
+			cacti_log('ERROR: Boost RRD updates failed for every data source in the page; the page was retained.', true, 'BOOST');
+			$updates_ok = false;
+			$blocked    = array();
+		}
+
+		/* Hand unacknowledged samples back to the live table and drop the data
+		 * source from this run, so the archive can still be removed. If the
+		 * handback fails, the whole page is retained as before. */
+		foreach ($blocked as $blocked_id => $unused) {
+			if (isset($acked[$blocked_id])) {
+				$after        = 'at.time > ? OR (at.time = ? AND at.rrd_name > ?)';
+				$after_params = array($acked[$blocked_id][0], $acked[$blocked_id][0], $acked[$blocked_id][1]);
+			} else {
+				$after        = 'bpt.cursor_time IS NULL
+						OR at.time > bpt.cursor_time
+						OR (at.time = bpt.cursor_time AND at.rrd_name > bpt.cursor_rrd_name)';
+				$after_params = array();
+			}
+
+			foreach ($archive_tables as $table) {
+				if (db_execute_prepared("INSERT IGNORE INTO poller_output_boost
+					(local_data_id, rrd_name, time, output)
+					SELECT at.local_data_id, at.rrd_name, at.time, at.output
+					FROM `$table` AS at
+					INNER JOIN poller_output_boost_local_data_ids AS bpt
+					ON at.local_data_id = bpt.local_data_id
+					WHERE bpt.run_id = ?
+					AND bpt.local_data_id = ?
+					AND bpt.process_handler = ?
+					AND ($after)",
+					array_merge(array($run_id, $blocked_id, $child), $after_params), false) === false) {
+					$updates_ok = false;
+					break 2;
+				}
+			}
+
+			if (db_execute_prepared('DELETE FROM poller_output_boost_local_data_ids
+				WHERE run_id = ?
+				AND local_data_id = ?
+				AND process_handler = ?',
+				array($run_id, $blocked_id, $child), false) === false) {
+				$updates_ok = false;
+				break;
+			}
+
+			cacti_log("WARNING: Boost requeued Local Data ID '$blocked_id' after an RRD update failure; other data sources continue.", true, 'BOOST');
 		}
 
 		/* release the last lock */
@@ -1329,7 +1410,9 @@ function boost_process_local_data_ids($child, $rrdtool_pipe, $max_rows) {
 		$cursors = array();
 
 		foreach($results as $item) {
-			$cursors[$item['local_data_id']] = array($item['sample_time'], $item['rrd_name']);
+			if (!isset($blocked[$item['local_data_id']])) {
+				$cursors[$item['local_data_id']] = array($item['sample_time'], $item['rrd_name']);
+			}
 		}
 
 		foreach($cursors as $local_data_id => $cursor) {

@@ -2022,7 +2022,7 @@ function user_group() {
 		ON uag.id = uagm.group_id
 		$sql_where
 		GROUP BY uag.id
-		" . get_order_string() . "
+		" . get_order_string(array('name', 'members', 'description', 'policy_graphs', 'policy_hosts', 'policy_graph_templates', 'enabled')) . "
 		LIMIT " . ($rows * (get_request_var('page') - 1)) . ',' . $rows, $params);
 
 	$nav = html_nav_bar('user_group_admin.php?filter=' . get_request_var('filter'), MAX_DISPLAY_PAGES, get_request_var('page'), $rows, $total_rows, 8, __('Groups'), 'page', 'main');

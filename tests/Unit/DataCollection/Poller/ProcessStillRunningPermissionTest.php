@@ -89,17 +89,26 @@ test('a live but unrelated process still fails the identity check', function () 
 
 	$pid = proc_get_status($proc)['pid'];
 
-	/* EPERM proves the pid exists, but the child runs php -r and the target
-	   runs sleep, so the /proc comparison must still reject it. */
-	$running = process_still_running_with_errno($pid, PROCESS_STILL_RUNNING_EPERM);
-
-	proc_terminate($proc, SIGKILL);
-
-	foreach ($pipes as $pipe) {
-		fclose($pipe);
+	try {
+		// proc_open may return before the child has exec'd sleep. Wait for
+		// the actual unrelated executable instead of probing its fork state.
+		$deadline = microtime(true) + 2;
+		do {
+			$command = @file_get_contents('/proc/' . $pid . '/cmdline');
+			if ($command !== false && strpos($command, "sleep\0") === 0) {
+				break;
+			}
+			usleep(1000);
+		} while (microtime(true) < $deadline);
+		expect($command)->toStartWith("sleep\0");
+		$running = process_still_running_with_errno($pid, PROCESS_STILL_RUNNING_EPERM);
+	} finally {
+		proc_terminate($proc, 9);
+		foreach ($pipes as $pipe) {
+			fclose($pipe);
+		}
+		proc_close($proc);
 	}
-
-	proc_close($proc);
 
 	expect($running)->toBeFalse();
 });

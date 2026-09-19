@@ -577,6 +577,20 @@ class Installer implements JsonSerializable {
 			}
 		}
 
+		require_once __DIR__ . '/rrd_maintenance.php';
+		// Collectors hand samples to the main poller unless forced to write local RRD files.
+		$storage_error = (($config['force_storage_location_local'] ?? false) !== true
+			&& ((int) $this->getMode() === Installer::MODE_POLLER || (int) ($config['poller_id'] ?? 1) > 1))
+			? '' : rrd_maintenance_configuration_error();
+		if ($storage_error === '' && in_array((int) $this->getMode(), array(Installer::MODE_UPGRADE, Installer::MODE_DOWNGRADE), true)) {
+			$storage_error = $this->pollerQueueConfigurationError();
+		}
+		$storage_path = $config['rra_path'] ?? ($config['base_path'] . '/rra');
+		$permissions['always'][$storage_path] = $storage_error === '';
+		if ($storage_error !== '') {
+			$this->addError(Installer::STEP_PERMISSION_CHECK, 'RRD storage', $storage_path, $storage_error);
+		}
+
 		return $permissions;
 	}
 
@@ -3090,8 +3104,30 @@ class Installer implements JsonSerializable {
 	 *                                                               *
 	 *****************************************************************/
 
+	/** Match the database used by online and recovery collector producers. */
+	private function pollerQueueConfigurationError()
+	{
+		global $config, $remote_db_cnn_id;
+		$remote = (int) ($config['poller_id'] ?? 1) > 1;
+		if ($remote && ($config['connection'] ?? 'online') !== 'online') {
+			return ''; // Offline/recovery collectors retain their authoritative backlog in Boost.
+		}
+		return rrd_maintenance_queue_configuration_error($remote ? $remote_db_cnn_id : false);
+	}
+
 	private function install() {
 		global $config;
+		require_once __DIR__ . '/rrd_maintenance.php';
+		// Collectors hand samples to the main poller unless forced to write local RRD files.
+		$storage_error = (($config['force_storage_location_local'] ?? false) !== true
+			&& ((int) $this->getMode() === Installer::MODE_POLLER || (int) ($config['poller_id'] ?? 1) > 1))
+			? '' : rrd_maintenance_configuration_error();
+		if ($storage_error === '' && in_array((int) $this->getMode(), array(Installer::MODE_UPGRADE, Installer::MODE_DOWNGRADE), true)) {
+			$storage_error = $this->pollerQueueConfigurationError();
+		}
+		if ($storage_error !== '') {
+			throw new RuntimeException($storage_error);
+		}
 		$failure = '';
 
 		switch ($this->mode) {
@@ -3603,7 +3639,9 @@ class Installer implements JsonSerializable {
 		if (cacti_version_compare($orig_cacti_version, $cacti_upgrade_version, '<')) {
 			db_execute("UPDATE version SET cacti = '" . $cacti_upgrade_version . "'");
 		}
-		return false;
+		require_once __DIR__ . '/rrd_maintenance.php';
+		$queue_error = $this->pollerQueueConfigurationError();
+		return $queue_error !== '' ? $queue_error : false;
 	}
 
 	private function checkDatabaseUpgrade($cacti_upgrade_version) {

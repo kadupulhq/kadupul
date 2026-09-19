@@ -1544,7 +1544,7 @@ function ds() {
 		$sql_where1 .= ($sql_where1 != '' ? ' AND':'WHERE') . ' (dl.snmp_index = "" AND dl.snmp_query_id > 0)';
 	}
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('name_cache', 'local_data_id', 'active', 'data_template_name'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	if (get_request_var('orphans') == 'true') {

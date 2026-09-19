@@ -258,7 +258,7 @@ function form_selectable_cell($contents, $id, $width = '', $style_or_class = '',
 	}
 
 	if ($title != '') {
-		$wrapper = "<span class='cactiTooltipHint' style='padding:0px;margin:0px;' title='" . str_replace(array('"', "'"), '', $title) . "'>" . $contents . "</span>";
+		$wrapper = "<span class='cactiTooltipHint' style='padding:0px;margin:0px;' title='" . html_escape($title) . "'>" . $contents . "</span>";
 	} else {
 		$wrapper = $contents;
 	}
@@ -761,12 +761,20 @@ function validate_store_request_vars($filters, $sess_prefix = '') {
 }
 
 function cacti_normalize_sort_direction($direction) {
+	if (!is_scalar($direction)) {
+		return 'ASC';
+	}
+
 	$direction = strtoupper((string) $direction);
 
 	return ($direction === 'DESC') ? 'DESC' : 'ASC';
 }
 
 function cacti_normalize_sort_column($column) {
+	if (!is_scalar($column)) {
+		return '';
+	}
+
 	$column = trim((string) $column);
 
 	if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(?:\.[a-zA-Z][a-zA-Z0-9_]*)*$/', $column)) {
@@ -911,38 +919,71 @@ function update_order_string($inplace = false) {
 
 /* get_order_string - returns a valid order string for a table
    @returns - the order string */
-function get_order_string() {
-	$page        = get_order_string_page(true);
-	$sort_column = cacti_normalize_sort_column(get_nfilter_request_var('sort_column'));
-	$sort_dir    = cacti_normalize_sort_direction(get_nfilter_request_var('sort_direction'));
-
-	$request_column = get_request_var('sort_column');
-	if (!is_scalar($request_column)) {
-		$request_column = '';
+function get_order_string($allowed_columns = null) {
+	$page = get_order_string_page(true);
+	if (is_array($allowed_columns)) {
+		$_SESSION['valid_sort_columns'][$page] = $allowed_columns;
 	}
-
-	if (strpos((string)$request_column, '(') === false && strpos((string)$request_column, '`') === false) {
-		$del = '`';
-	} else {
-		$del = '';
-	}
-
-	if ($sort_column != '') {
-		return cacti_build_sort_fragment($sort_column, $sort_dir) !== ''
-			? 'ORDER BY ' . cacti_build_sort_fragment($sort_column, $sort_dir)
-			: '';
-	} else {
-		$column    = validate_sort_column($request_column, $page);
-		$direction_raw = get_nfilter_request_var('sort_direction');
-		if (!is_scalar($direction_raw)) $direction_raw = '';
-		$direction = (strtoupper((string)$direction_raw) == 'DESC' ? 'DESC' : 'ASC');
-
-		if ($column == '') {
-			return '';
+	$columns = $_SESSION['sort_data'][$page] ?? array();
+	if (is_array($columns) && get_nfilter_request_var('add') === 'true') {
+		$requested = get_request_var('sort_column');
+		$requested = is_scalar($requested) ? validate_sort_column((string) $requested, $page) : '';
+		if ($requested !== '') {
+			$columns[$requested] = get_nfilter_request_var('sort_direction');
 		}
-
-		return 'ORDER BY ' . $del . implode($del . '.' . $del, explode('.', $column)) . $del . ' ' . $direction;
 	}
+
+	// Discard obsolete saved columns before deciding whether a request fallback is needed.
+	if (is_array($columns)) {
+		foreach (array_keys($columns) as $column) {
+			if (validate_sort_column($column, $page) === '') {
+				unset($columns[$column]);
+			}
+		}
+	}
+	if (!is_array($columns) || !$columns) {
+		$requested = get_request_var('sort_column');
+		$columns = is_scalar($requested)
+			? array((string) $requested => get_nfilter_request_var('sort_direction'))
+			: array();
+	}
+
+	$parts = array();
+	$validated_columns = array();
+	foreach ($columns as $column => $direction) {
+		$column = validate_sort_column($column, $page);
+		if ($column === '') {
+			continue;
+		}
+		$direction = cacti_normalize_sort_direction($direction);
+		if (cacti_normalize_sort_column($column) !== '') {
+			$parts[] = cacti_build_sort_fragment($column, $direction);
+			$validated_columns[$column] = $direction;
+		} elseif (isset($_SESSION['valid_sort_columns'][$page]) && in_array($column, $_SESSION['valid_sort_columns'][$page], true)) {
+			// Only a server-defined allowlist may authorize an SQL expression.
+			$parts[] = $column . ' ' . $direction;
+			$validated_columns[$column] = $direction;
+		}
+	}
+
+	// Invalid or obsolete saved sorts must not leave paginated queries unordered.
+	if (!$parts && isset($_SESSION['valid_sort_columns'][$page])) {
+		foreach ($_SESSION['valid_sort_columns'][$page] as $default) {
+			if (!is_string($default) || trim($default) === '') {
+				continue;
+			}
+			$parts[] = cacti_normalize_sort_column($default) !== ''
+				? cacti_build_sort_fragment($default, 'ASC') : $default . ' ASC';
+			$validated_columns[$default] = 'ASC';
+			break;
+		}
+	}
+
+	// Request-state processing can precede the first registration of this map.
+	// Persist only the columns validated here so pagination retains that sort.
+	$_SESSION['sort_data'][$page] = $validated_columns;
+	$_SESSION['sort_string'][$page] = $parts ? 'ORDER BY ' . implode(', ', $parts) : '';
+	return $_SESSION['sort_string'][$page];
 }
 
 /**
@@ -962,7 +1003,8 @@ function validate_sort_column($column, $page) {
 		}
 	}
 
-	return sanitize_sql_column($column);
+	// The table must register its columns before request-driven sorting.
+	return '';
 }
 
 function remove_column_from_order_string($column) {

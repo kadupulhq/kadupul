@@ -32,7 +32,7 @@ $rrdProxyRoot = dirname(__DIR__, 4);
  * @param array<int, string>            $touch - empty files to create in the work directory first
  * @param array<int, string>            $rrds  - RRD files to create in the work directory first
  */
-function rrd_proxy_channel_run(string $root, array $calls = array(), array $touch = array(), array $rrds = array()) : array {
+function rrd_proxy_channel_run(string $root, array $calls = array(), array $touch = array(), array $rrds = array(), $existsReply = null) : array {
 	require_once $root . '/include/vendor/autoload.php';
 
 	$work = sys_get_temp_dir() . '/cacti-rrdp-' . bin2hex(random_bytes(6));
@@ -63,6 +63,7 @@ function rrd_proxy_channel_run(string $root, array $calls = array(), array $touc
 		'work'           => $work,
 		'calls'          => $calls,
 		'rrdtool'        => cacti_test_rrdtool_binary(),
+		'exists_reply'   => $existsReply,
 	);
 
 	file_put_contents($work . '/keys.json', json_encode($keys));
@@ -169,10 +170,12 @@ while (($raw = proxy_read_message($client)) !== false) {
 	 * and call_user_func_array($cmd, $options); include/global.php: RRD_OK 'OK u:0.00', RRD_ERROR 'ERROR:' */
 	$parts = explode(' ', trim($command), 2);
 
-	if ($parts[0] === 'file_exists') {
+	if ($command === 'setcnn timeout off') {
+		$reply = "% Timeout disabled.\nOK u:0.00";
+	} elseif ($parts[0] === 'file_exists') {
 		$status = call_user_func_array('file_exists', explode(' ', $parts[1] ?? ''));
-		$reply  = ($status === true) ? 'OK u:0.00' : 'ERROR:';
-	} elseif ($parts[0] === 'fetch' && $keys['rrdtool'] !== '') {
+		$reply  = $keys['exists_reply'] ?? (($status === true) ? 'OK u:0.00' : 'ERROR:');
+	} elseif (in_array($parts[0], array('fetch', 'update'), true) && $keys['rrdtool'] !== '') {
 		/* Cacti/rrdproxy lib/client.php: an $rrdtool_cmds verb is written to the proxy's
 		 * own 'rrdtool -' pipe as $cmd . ' ' . $cmd_options . "\r\n" */
 		$process = proc_open(array($keys['rrdtool'], '-'), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $keys['work']);
@@ -236,7 +239,13 @@ $calls  = array();
 
 foreach ($keys['calls'] as $call) {
 	try {
-		if ($call[0] == 'array') {
+		if ($call[0] == 'update') {
+            $argv = str_replace('{work}', $keys['work'], $call[1]);
+            $ok = rrdtool_execute($argv, false, RRDTOOL_OUTPUT_BOOLEAN, $rrdp);
+            $calls[] = array('ok' => $ok, 'reason' => rrdtool_last_rejection(), 'permanent' => rrdtool_rejection_is_permanent(rrdtool_last_rejection()));
+            continue;
+        }
+        if ($call[0] == 'array') {
 			$argv = str_replace('{work}', $keys['work'], $call[1]);
 			$calls[] = rrdtool_execute($argv, false, RRDTOOL_OUTPUT_STDOUT, $rrdp, 'RRDCHECK');
 
@@ -379,3 +388,29 @@ test('RRDproxy array fetch commands arrive as one quoted rrdtool command, includ
 		expect($packet['encrypted'])->toBeTrue();
 	}
 })->skip(!extension_loaded('sockets') || cacti_test_rrdtool_binary() === '', 'the sockets extension or rrdtool is not available');
+
+
+test('native proxy errors preserve retryable rejection reasons and clear them after recovery', function () use ($rrdProxyRoot) {
+    $run = rrd_proxy_channel_run($rrdProxyRoot, array(
+        array('update', array('update', '{work}/sample.rrd', '--template', 'missing', '1700000300:42')),
+        array('update', array('update', '{work}/sample.rrd', '1700000300:42:43')),
+        array('update', array('update', '{work}/sample.rrd', '1700000300:42')),
+    ), array(), array('sample.rrd'));
+    expect($run['client']['calls'][0]['ok'])->toBeFalse()->and($run['client']['calls'][0]['permanent'])->toBeFalse();
+    expect($run['client']['calls'][1]['ok'])->toBeFalse()->and($run['client']['calls'][1]['permanent'])->toBeFalse();
+    expect($run['client']['calls'][2])->toBe(array('ok' => true, 'reason' => null, 'permanent' => false));
+})->skip(!extension_loaded('sockets') || cacti_test_rrdtool_binary() === '', 'Native RRDtool and sockets are required');
+
+
+test('the upstream setcnn timeout response is acknowledged over the encrypted proxy channel', function () use ($rrdProxyRoot) {
+    $run = rrd_proxy_channel_run($rrdProxyRoot, array(array('update', 'setcnn timeout off')));
+    expect($run['client']['calls'])->toBe(array(array('ok' => true, 'reason' => null, 'permanent' => false)));
+    expect(array_column($run['packets'], 'command'))->toContain('setcnn timeout off');
+    foreach ($run['packets'] as $packet) { expect($packet['encrypted'])->toBeTrue(); }
+})->skip(!extension_loaded('sockets'), 'the sockets extension is not loaded');
+
+
+test('a malformed proxy existence reply is unknown rather than evidence to recreate an RRD', function () use ($rrdProxyRoot) {
+    $run = rrd_proxy_channel_run($rrdProxyRoot, array(array('path', 'file_exists', '{work}/plain.rrd')), array('plain.rrd'), array(), 'invalid OK u:0.00');
+    expect($run['client']['calls'])->toBe(array(null));
+})->skip(!extension_loaded('sockets'), 'the sockets extension is not loaded');

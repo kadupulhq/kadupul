@@ -173,7 +173,7 @@ test('plugins_load_temp_table restores original sql_mode after the bulk INSERT',
 
 	$fn_pos       = strpos($source, 'function plugins_load_temp_table()');
 	$insert_pos   = strpos($source, 'INSERT INTO $table SELECT * FROM plugin_config', $fn_pos);
-	$restore_pos  = strpos($source, 'SET SESSION sql_mode = ?', $fn_pos);
+	$restore_pos  = strpos($source, 'SET SESSION sql_mode = ?', $insert_pos);
 
 	expect($insert_pos)->not->toBeFalse();
 	expect($restore_pos)->not->toBeFalse('sql_mode restore not found in plugins_load_temp_table');
@@ -188,7 +188,8 @@ test('plugins_load_temp_table restore uses db_execute_prepared with $orig_sql_mo
 
 	// The restore call must bind $orig_sql_mode, not a hardcoded string, so
 	// the session mode is returned to exactly what it was before the copy.
-	$restore_slice_start = strpos($source, 'SET SESSION sql_mode = ?', $fn_pos);
+	$insert_pos = strpos($source, 'INSERT INTO $table SELECT * FROM plugin_config', $fn_pos);
+	$restore_slice_start = strpos($source, 'SET SESSION sql_mode = ?', $insert_pos);
 	$restore_slice       = substr($source, $restore_slice_start, 120);
 
 	expect($restore_slice)->toContain('$orig_sql_mode');

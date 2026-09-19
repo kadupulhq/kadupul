@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__DIR__, 3) . "/Helpers/PhpSource.php";
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -23,47 +24,32 @@ test('auth_process_lockout uses atomic SQL increment for failed_attempts', funct
 
 test('auth_process_lockout atomic increment is inside auth_process_lockout function', function () use ($authSource) {
 	// Extract the function body and verify the pattern is there
-	$start = strpos($authSource, 'function auth_process_lockout(');
-	expect($start)->not->toBeFalse();
-
-	$body = substr($authSource, $start, 2000);
+	$body = test_php_function_source($authSource, 'auth_process_lockout');
 	expect(str_contains($body, 'failed_attempts = failed_attempts + 1'))
 		->toBeTrue();
 });
 
 test('set_auth_cookie does not use mt_rand', function () use ($authSource) {
 	// Extract set_auth_cookie function body
-	$start = strpos($authSource, 'function set_auth_cookie(');
-	expect($start)->not->toBeFalse();
-
-	$body = substr($authSource, $start, 1000);
+	$body = test_php_function_source($authSource, 'set_auth_cookie');
 	expect(str_contains($body, 'mt_rand'))
 		->toBeFalse();
 });
 
 test('set_auth_cookie does not use md5 with REQUEST_TIME', function () use ($authSource) {
-	$start = strpos($authSource, 'function set_auth_cookie(');
-	expect($start)->not->toBeFalse();
-
-	$body = substr($authSource, $start, 1000);
+	$body = test_php_function_source($authSource, 'set_auth_cookie');
 	expect(str_contains($body, "md5(\$_SERVER['REQUEST_TIME']"))
 		->toBeFalse();
 });
 
 test('set_auth_cookie uses random_bytes for CSPRNG', function () use ($authSource) {
-	$start = strpos($authSource, 'function set_auth_cookie(');
-	expect($start)->not->toBeFalse();
-
-	$body = substr($authSource, $start, 1000);
+	$body = test_php_function_source($authSource, 'set_auth_cookie');
 	expect(str_contains($body, 'random_bytes('))
 		->toBeTrue();
 });
 
 test('set_auth_cookie fails closed on CSPRNG failure', function () use ($authSource) {
-	$start = strpos($authSource, 'function set_auth_cookie(');
-	expect($start)->not->toBeFalse();
-
-	$body = substr($authSource, $start, 1000);
+	$body = test_php_function_source($authSource, 'set_auth_cookie');
 	// Must catch Exception from random_bytes and return false
 	expect(str_contains($body, 'catch (Exception'))
 		->toBeTrue();
@@ -71,42 +57,22 @@ test('set_auth_cookie fails closed on CSPRNG failure', function () use ($authSou
 		->toBeTrue();
 });
 
-test('auth_display_custom_error_message escapes message with htmlspecialchars', function () use ($authSource) {
-	$start = strpos($authSource, 'function auth_display_custom_error_message(');
-	expect($start)->not->toBeFalse();
-
-	$body = substr($authSource, $start, 1500);
-	expect(str_contains($body, 'htmlspecialchars($message'))
+test('auth_display_custom_error_message escapes message with html_escape', function () use ($authSource) {
+	$body = test_php_function_source($authSource, 'auth_display_custom_error_message');
+	expect(str_contains($body, 'html_escape($message'))
 		->toBeTrue();
 });
 
-test('auth_display_custom_error_message escapes custom_message with htmlspecialchars', function () use ($authSource) {
-	$start = strpos($authSource, 'function auth_display_custom_error_message(');
-	expect($start)->not->toBeFalse();
-
-	$body = substr($authSource, $start, 1500);
-	expect(str_contains($body, 'htmlspecialchars($custom_message'))
+test('auth_display_custom_error_message escapes custom_message with html_escape', function () use ($authSource) {
+	$body = test_php_function_source($authSource, 'auth_display_custom_error_message');
+	expect(str_contains($body, 'html_escape($custom_message'))
 		->toBeTrue();
 });
 
-test('auth_login_redirect blocks protocol-relative open redirect', function () use ($authSource) {
-	$start = strpos($authSource, 'function auth_login_redirect(');
-	expect($start)->not->toBeFalse();
-
-	$body = substr($authSource, $start, 3000);
-	// The fix checks that $referer[1] === '/' to block //evil.com
-	expect(str_contains($body, "\$referer[1] === '/'"))
-		->toBeTrue();
-});
-
-test('auth_login_redirect validates referer starts with slash', function () use ($authSource) {
-	$start = strpos($authSource, 'function auth_login_redirect(');
-	expect($start)->not->toBeFalse();
-
-	$body = substr($authSource, $start, 3000);
-	// Must check $referer[0] to ensure path is relative
-	expect(str_contains($body, "\$referer[0] !== '/'"))
-		->toBeTrue();
+test('auth_login_redirect validates both explicit redirect and referer inputs', function () use ($authSource) {
+    $body = test_php_function_source($authSource, 'auth_login_redirect');
+    expect($body)->toContain('validate_redirect_url($redirect_url)')
+        ->and($body)->toContain("validate_redirect_url(\$_SERVER['HTTP_REFERER'])");
 });
 
 test('auth_login performs auth transition hardening on successful login', function () use ($authLoginSource) {

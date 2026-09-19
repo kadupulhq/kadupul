@@ -567,7 +567,7 @@ function display_matching_graphs($rule, $rule_type, $url) {
 		LEFT JOIN host_template AS ht
 		ON h.host_template_id=ht.id
 		$sql_where
-		" . get_order_string() . "
+		" . get_order_string(array('description', 'hostname', 'host_template_name', 'status', 'title_cache', 'local_graph_id', 'name')) . "
 		LIMIT " . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$graph_list = db_fetch_assoc($sql, false);

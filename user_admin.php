@@ -247,6 +247,12 @@ function form_actions() {
 				WHERE id = ?',
 				array(get_nfilter_request_var('selected_items')));
 
+			if (!cacti_sizeof($template_user)) {
+				raise_message(2);
+				header('Location: user_admin.php?header=false');
+				exit;
+			}
+
 			$overwrite     = array( 'full_name' => get_nfilter_request_var('new_fullname') );
 
 			if ($new_username != '') {
@@ -295,16 +301,27 @@ function form_actions() {
 						WHERE id = ?',
 						array(get_nfilter_request_var('template_user')));
 
-					for ($i=0;($i<cacti_count($selected_items));$i++) {
+					if (!cacti_sizeof($template)) {
+						raise_message(2);
+						header('Location: user_admin.php?header=false');
+						exit;
+					}
+					$copy_users = array();
+					foreach ($selected_items as $selected_id) {
 						$user = db_fetch_row_prepared('SELECT username, realm
 							FROM user_auth
-							WHERE id = ?',
-							array($selected_items[$i]));
-
-						if ((isset($user)) && (isset($template))) {
-							if (user_copy($template['username'], $user['username'], $template['realm'], $user['realm'], true) === false) {
-								$copy_error = true;
-							}
+							WHERE id = ?', array($selected_id));
+						if (!cacti_sizeof($user)) {
+							raise_message(2);
+							header('Location: user_admin.php?header=false');
+							exit;
+						}
+						$copy_users[] = $user;
+					}
+					// Validate the entire selection before changing any account.
+					foreach ($copy_users as $user) {
+						if (user_copy($template['username'], $user['username'], $template['realm'], $user['realm'], true) === false) {
+							$copy_error = true;
 						}
 					}
 
@@ -2323,7 +2340,7 @@ function user() {
 		ON ua.id = ug.user_id
 		$sql_where");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('username', 'id', 'full_name', 'enabled', 'realm', 'policy_graphs', 'policy_hosts', 'policy_graph_templates', 'dtime'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$user_list = db_fetch_assoc("SELECT ua.id, ua.username, ua.full_name,

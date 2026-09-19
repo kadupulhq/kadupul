@@ -5,6 +5,7 @@
 
 namespace BoostHandoffRetryTest;
 
+function read_config_option($key) {return 300;}
 function cacti_log(...$args)
 {
 }
@@ -22,7 +23,7 @@ function db_fetch_assoc($sql)
             $GLOBALS['diagnostic_orphan_remaining'] -= $count;
             $orphans = array();
             for ($id = 1; $id <= $count; $id++) {
-                $orphans[] = array('local_data_id' => $id + 100000 + $GLOBALS['diagnostic_orphan_remaining'], 'rrd_name' => 'value', 'time' => '2026-09-15 00:00:00');
+                $orphans[] = array('local_data_id' => $id + 100000 + $GLOBALS['diagnostic_orphan_remaining'], 'rrd_name' => 'value', 'time' => '2026-09-15 00:00:00', 'output' => '10');
             }
             return $orphans;
         }
@@ -38,6 +39,7 @@ function db_fetch_assoc($sql)
 }
 function db_fetch_assoc_prepared($sql, $params = array())
 {
+    if (str_contains($sql, 'AS incomplete')) {return array();}
     if (str_contains($sql, "FROM poller_output AS po")) {
         if (isset($GLOBALS["pagination_probe"])) {
             $GLOBALS["pagination_params"][] = $params;
@@ -59,14 +61,18 @@ function db_execute(...$args)
 {
     throw new \RuntimeException('Source samples must survive a failed handoff');
 }
-function rrdtool_function_update(...$args)
+function rrdtool_function_update($updates, $pipe = false, &$completed = null)
 {
+    $completed = array();
     if (isset($GLOBALS['cleanup_retry_rows'])) {
-        $GLOBALS['cleanup_retry_updates'] = $args[0];
-        if (!empty($GLOBALS['diagnostic_probe'])) {
-            return count(array_filter($args[0], function ($row) { return !empty($row['times']); }));
+        $GLOBALS['cleanup_retry_updates'] = $updates;
+        if (!empty($GLOBALS['writer_failed'])) {return false;}
+        foreach ($updates as $path => $fields) {
+            foreach ($fields['times'] as $time => $values) {
+                $completed[$path][$time] = true;
+            }
         }
-        return 1;
+        return array_sum(array_map('count', $completed));
     }
     throw new \RuntimeException('A failed handoff must not write an RRD');
 }
@@ -78,7 +84,7 @@ if (!defined('SQL_NO_CACHE')) {
     define('SQL_NO_CACHE', '');
 }
 $source = file_get_contents(dirname(__DIR__, 4) . '/lib/poller.php');
-foreach (array('poller_cleanup_orphan_rows', 'process_poller_output') as $name) {
+foreach (array('poller_cleanup_orphan_rows', 'poller_expire_incomplete_rows', 'process_poller_output') as $name) {
     if (!preg_match('/^function ' . $name . '\(.*?^}\n/ms', $source, $match)) {
         throw new \RuntimeException('Missing production poller function');
     }
@@ -104,33 +110,37 @@ test('failed Boost handoff retains source samples and skips direct RRD writes', 
     }
 });
 
-function pollerDeferredProbe(&$pipe, $remainder, &$deferred)
+function pollerDeferredProbe($remainder, &$deferred)
 {
     $GLOBALS['deferred_probe_calls']++;
     $deferred = true;
     return 0;
 }
 
-test('main poller skips subsequent drains and final drain after a deferred handoff', function () {
+test('main poller retries failed waiting drains and the final drain', function () {
     $source = file_get_contents(dirname(__DIR__, 4) . '/poller.php');
-    preg_match_all('/if \(\$poller_id == 1\) \{\s*if \(!\$poller_output_deferred\) \{.*?\n\t{5}\}/s', $source, $matches);
+    preg_match_all('/if \(\$poller_id == 1\) \{\s*(?:if \(empty\(\$poller_output_deferred\)\) \{\s*)?\$rrds_processed \+= process_poller_output_batch\(.*?\n\t{5}\}/s', $source, $matches);
     expect($matches[0])->toHaveCount(2);
     $poller_id = 1;
     $poller_output_deferred = false;
     $rrds_processed = 0;
     $rrdtool_pipe = null;
+    // The guards pass the collector deadline to the writer.
+    if (!defined('MAX_POLLER_RUNTIME')) { define('MAX_POLLER_RUNTIME', 298); }
+    $poller_start = microtime(true);
     $GLOBALS['deferred_probe_calls'] = 0;
     // Execute the actual waiting-loop guard twice, then the completion guard.
     foreach (array($matches[0][1], $matches[0][1], $matches[0][0]) as $guard) {
-        eval(str_replace('process_poller_output(', '\\' . __NAMESPACE__ . '\\pollerDeferredProbe(', $guard)); // nosemgrep: php.lang.security.eval-use.eval-use
+        eval(str_replace('process_poller_output_batch(', '\\' . __NAMESPACE__ . '\\pollerDeferredProbe(', $guard)); // nosemgrep: php.lang.security.eval-use.eval-use
     }
-    expect($GLOBALS['deferred_probe_calls'])->toBe(1)
-        ->and($poller_output_deferred)->toBeTrue();
+    expect($GLOBALS['deferred_probe_calls'])->toBe(3)
+        ->and($poller_output_deferred)->toBeTrue()->and($rrd_write_failed)->toBeTrue();
 });
 
 
 function poller_delete_output_rows($keys, &$failed) {
     $GLOBALS['cleanup_retry_keys'] = $keys;
+    if (!$keys) { $failed = false; return 0; }
     if (isset($GLOBALS['pagination_deleted'])) { $GLOBALS['pagination_deleted'] = array_merge($GLOBALS['pagination_deleted'], $keys); }
     if (!empty($GLOBALS['diagnostic_probe'])) {
         $failed = false;
@@ -143,11 +153,14 @@ function dsstats_poller_output($rows) {}
 function dsdebug_poller_output($rows) {}
 function api_plugin_hook_function($name, $rows) {}
 function db_fetch_cell($sql) {
+    if (!empty($GLOBALS['diagnostic_count_fail']) && str_contains($sql, 'FROM poller_time')) {return false;}
+    if (!empty($GLOBALS['writer_failed'])) { return 0; }
     if (!empty($GLOBALS['diagnostic_probe'])) { return str_contains($sql, 'FROM poller_time') ? 0 : 1; }
     throw new \RuntimeException('Cleanup failure must stop further drain queries');
 }
 
-test('partial cleanup failure still updates consumed samples and propagates deferral', function () {
+test('write or cleanup failure defers remaining samples without premature deletion', function ($writer_failed) {
+    $GLOBALS['writer_failed'] = $writer_failed;
     $saved = $GLOBALS['config'] ?? null;
     $root = sys_get_temp_dir() . '/cleanup-retry-' . bin2hex(random_bytes(6));
     mkdir($root, 0700);
@@ -162,21 +175,22 @@ test('partial cleanup failure still updates consumed samples and propagates defe
     $GLOBALS['cleanup_retry_rows'] = array($row, $next);
     try {
         $pipe = null;
-        expect(process_poller_output($pipe, false, $deferred, $consumed))->toBe(1)
+        expect(process_poller_output($pipe, false, $deferred, $consumed))->toBe($writer_failed ? 0 : 2)
             ->and($deferred)->toBeTrue()
-            ->and($consumed)->toBe(1)
-            ->and($GLOBALS['cleanup_retry_keys'])->toBe(array(array(7, 'value', $row['time']), array(7, 'value', $next['time'])))
+            ->and($consumed)->toBe($writer_failed ? 0 : 1)
+            ->and($GLOBALS['cleanup_retry_keys'] ?? array())->toBe($writer_failed ? array() : array(array(7, 'value', $row['time'], $row['output']), array(7, 'value', $next['time'], $next['output'])))
             ->and($GLOBALS['cleanup_retry_updates']['/example.rrd']['times'])->toBe(array($row['unix_time'] => array('value' => '10'), $next['unix_time'] => array('value' => '11')));
     } finally {
-        unset($GLOBALS['cleanup_retry_rows'], $GLOBALS['cleanup_retry_keys'], $GLOBALS['cleanup_retry_updates']);
+        unset($GLOBALS['writer_failed'], $GLOBALS['cleanup_retry_rows'], $GLOBALS['cleanup_retry_keys'], $GLOBALS['cleanup_retry_updates']);
         $GLOBALS['config'] = $saved;
         unlink($root . '/rrd.php');
         rmdir($root);
     }
-});
+})->with(array(false, true));
 
 
-test('post-drain diagnostics preserve partial arrivals and fail closed on unreadable orphans', function ($lookup_fails, $orphan_count) {
+test('post-drain diagnostics preserve partial arrivals and fail closed on unreadable orphans', function ($lookup_fails, $orphan_count, $count_fails = false) {
+    $GLOBALS['diagnostic_count_fail'] = $count_fails;
     $saved = $GLOBALS['config'] ?? null;
     $root = sys_get_temp_dir() . '/diagnostic-retry-' . bin2hex(random_bytes(6));
     mkdir($root, 0700);
@@ -198,20 +212,20 @@ test('post-drain diagnostics preserve partial arrivals and fail closed on unread
     try {
         $pipe = null;
         expect(process_poller_output($pipe, false, $deferred, $consumed))->toBe(1)
-            ->and($deferred)->toBe($lookup_fails)
-            ->and($consumed)->toBe(1 + ($lookup_fails ? 0 : $orphan_count))
-            ->and($GLOBALS['diagnostic_probe_ran'])->toBe(!$lookup_fails)
-            ->and($GLOBALS['diagnostic_orphan_queries'])->toBe($lookup_fails ? 1 : 2)
+            ->and($deferred)->toBe($lookup_fails || $count_fails)
+            ->and($consumed)->toBe(1 + (($lookup_fails || $count_fails) ? 0 : $orphan_count))
+            ->and($GLOBALS['diagnostic_probe_ran'])->toBe(!$lookup_fails && !$count_fails)
+            ->and($GLOBALS['diagnostic_orphan_queries'])->toBe($count_fails ? 0 : ($lookup_fails ? 1 : 2))
             ->and($GLOBALS['diagnostic_orphan_remaining'])->toBe(0);
         // db_execute() throws if either old broad diagnostic DELETE is reached.
     } finally {
         unset($GLOBALS['cleanup_retry_rows'], $GLOBALS['cleanup_retry_keys'], $GLOBALS['cleanup_retry_updates'],
-            $GLOBALS['diagnostic_probe'], $GLOBALS['diagnostic_probe_reads'], $GLOBALS['diagnostic_probe_ran'], $GLOBALS['diagnostic_orphan_fail'], $GLOBALS['diagnostic_orphan_remaining'], $GLOBALS['diagnostic_orphan_queries']);
+            $GLOBALS['diagnostic_count_fail'], $GLOBALS['diagnostic_probe'], $GLOBALS['diagnostic_probe_reads'], $GLOBALS['diagnostic_probe_ran'], $GLOBALS['diagnostic_orphan_fail'], $GLOBALS['diagnostic_orphan_remaining'], $GLOBALS['diagnostic_orphan_queries']);
         $GLOBALS['config'] = $saved;
         unlink($root . '/rrd.php');
         rmdir($root);
     }
-})->with(array(array(true, 0), array(false, 40003)));
+})->with(array(array(true, 0), array(false, 40003), array(false, 0, true)));
 
 
 test('an orphan-only queue is drained or explicitly deferred on lookup failure', function ($lookup_fails) {
@@ -276,7 +290,7 @@ test('an incomplete-only batch still diagnoses and cleans orphans without recurs
             ->and($GLOBALS['diagnostic_probe_reads'])->toBe(2);
     } finally {
         unset($GLOBALS['cleanup_retry_rows'], $GLOBALS['cleanup_retry_keys'], $GLOBALS['cleanup_retry_updates'],
-            $GLOBALS['diagnostic_probe'], $GLOBALS['diagnostic_probe_reads'], $GLOBALS['diagnostic_probe_ran'],
+            $GLOBALS['diagnostic_count_fail'], $GLOBALS['diagnostic_probe'], $GLOBALS['diagnostic_probe_reads'], $GLOBALS['diagnostic_probe_ran'],
             $GLOBALS['diagnostic_orphan_fail'], $GLOBALS['diagnostic_orphan_remaining'], $GLOBALS['diagnostic_orphan_queries']);
         $GLOBALS['config'] = $saved;
         unlink($root . '/rrd.php');
@@ -322,7 +336,7 @@ test('keyset draining reaches complete samples behind an incomplete page and com
             ->and($GLOBALS['pagination_probe'])->toBe(array())
             ->and($GLOBALS['pagination_params'])->toBe(array(array(), array(40000, $row['time'], 'a'), array(40000, $row['time'])))
             ->and($GLOBALS['pagination_deleted'])->toHaveCount($complete_boundary ? 3 : 1)
-            ->and($GLOBALS['pagination_deleted'])->toContain(array(40001, 'a', $row['time']));
+            ->and($GLOBALS['pagination_deleted'])->toContain(array(40001, 'a', $row['time'], $row['output']));
     } finally {
         unset($GLOBALS['pagination_deleted'], $GLOBALS['pagination_probe'], $GLOBALS['pagination_params'], $GLOBALS['cleanup_retry_rows'],
             $GLOBALS['cleanup_retry_keys'], $GLOBALS['cleanup_retry_updates'], $GLOBALS['diagnostic_probe'],

@@ -150,10 +150,19 @@ cacti_exec(read_config_option('path_php_binary'), array(
 ), $output, false);
 
 // open a pipe to rrdtool for writing
-$rrdtool_pipe = rrd_init();
+$rrdtool_pipe = rrd_init(true, false, true);
+if ($rrdtool_pipe === false) {
+	cacti_log('ERROR: RRD initialization failed; realtime samples were retained.');
+	db_close();
+	exit(1);
+}
 
 /* process poller output */
-process_poller_output_rt($rrdtool_pipe, $poller_id, $interval);
+if (process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) === false) {
+	rrd_close($rrdtool_pipe);
+	db_close();
+	exit(1);
+}
 
 /* close rrd */
 rrd_close($rrdtool_pipe);
@@ -186,10 +195,17 @@ function display_help() {
 function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 	global $config;
 
+	if ($rrdtool_pipe === false) {
+		cacti_log('ERROR: RRD initialization failed; pending realtime samples were retained.');
+		return false;
+	}
+
 	include_once($config['library_path'] . '/rrd.php');
 
 	/* let's count the number of rrd files we processed */
 	$rrds_processed = 0;
+	$skipped = false;
+	$rrd_update_array = array();
 
 	/* create/update the rrd files */
 	$results = db_fetch_assoc_prepared('SELECT port.output, port.time, port.local_data_id,
@@ -203,6 +219,8 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 		WHERE port.poller_id = ?',
 		array($poller_id));
 
+	if ($results === false) { return false; }
+
 	if (cacti_sizeof($results)) {
 		/* create an array keyed off of each .rrd file */
 		foreach ($results as $item) {
@@ -212,6 +230,7 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 			if (!cacti_rrdtool_valid_path($rt_graph_path) || !cacti_rrdtool_valid_path($data_source_path)) {
 				cacti_log('ERROR: Realtime rejected invalid RRD path for local_data_id ' . (int) $item['local_data_id'] . ', realtime path: ' . cacti_log_safe_value($rt_graph_path) . ', source path: ' . cacti_log_safe_value($data_source_path) . '.', false, 'POLLER');
 
+				$skipped = true;
 				continue;
 			}
 
@@ -221,6 +240,7 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 				$command = @rrdtool_function_create($item['local_data_id'], true);
 
 				if ($command === false) {
+					$skipped = true;
 					continue;
 				}
 
@@ -276,17 +296,19 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 				/* multiple value output */
 				$values = preg_split('/\s+/', $value);
 
-				$rrd_field_names = array_rekey(
-					db_fetch_assoc_prepared('SELECT DISTINCT dtr.data_source_name, dif.data_name
+				$field_rows = db_fetch_assoc_prepared('SELECT DISTINCT dtr.data_source_name, dif.data_name
 						FROM graph_templates_item AS gti
 						INNER JOIN data_template_rrd AS dtr
 						ON gti.task_item_id = dtr.id
 						INNER JOIN data_input_fields AS dif
 						ON dtr.data_input_field_id = dif.id
 						AND dtr.local_data_id = ?',
-						array($item['local_data_id'])),
-					'data_name', 'data_source_name'
-				);
+						array($item['local_data_id']));
+				if ($field_rows === false) {
+					cacti_log('ERROR: Unable to read realtime field mapping; pending samples retained.', false, 'POLLER');
+					return false;
+				}
+				$rrd_field_names = array_rekey($field_rows, 'data_name', 'data_source_name');
 
 				if (cacti_sizeof($values)) {
 					foreach($values as $value) {
@@ -307,18 +329,24 @@ function process_poller_output_rt($rrdtool_pipe, $poller_id, $interval) {
 			}
 		}
 
+		$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe, $completed);
+
 		/* make sure each .rrd file has complete data */
 		foreach ($results as $item) {
-			db_execute_prepared('DELETE FROM poller_output_realtime
+			$path = read_config_option('realtime_cache_path') . '/user_' . $poller_id . '_' . $item['local_data_id'] . '.rrd';
+			// Present false means permanently rejected and logged; absent means retry.
+			if (!isset($completed[$path][strtotime($item['time'])])) { continue; }
+			if (db_execute_prepared('DELETE FROM poller_output_realtime
 				WHERE local_data_id = ?
 				AND rrd_name = ?
 				AND time = ?
-				AND poller_id = ?',
-				array($item['local_data_id'], $item['rrd_name'], $item['time'], $poller_id));
+				AND poller_id = ?
+				AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY)',
+				array($item['local_data_id'], $item['rrd_name'], $item['time'], $poller_id, $item['output'])) === false) { return false; }
 		}
 
-		$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe);
+
 	}
 
-	return $rrds_processed;
+	return $skipped ? false : $rrds_processed;
 }

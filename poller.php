@@ -188,6 +188,15 @@ if ($total_pollers > 1) {
 // check to see if the poller is disabled
 poller_enabled_check($poller_id);
 
+// Validate the actual queue before launching producers, including remote collectors.
+// Only the primary writer requires local RRD storage; online remotes use its database.
+require_once __DIR__ . '/lib/rrd_maintenance.php';
+if (((int) $poller_id === 1 || $config['connection'] === 'online')
+	&& !rrd_maintenance_poller_preflight((int) $poller_id === 1, $poller_db_cnn_id)) {
+    exit(1);
+}
+
+
 // install signal handlers for UNIX only
 if (function_exists('pcntl_signal')) {
 	pcntl_signal(SIGTERM, 'sig_handler');
@@ -589,6 +598,12 @@ while ($poller_runs_completed < $poller_runs) {
 		$issues = array();
 	}
 
+	// A failed inspection is not an empty queue; do not launch producers.
+	if ($issues === false) {
+		cacti_log('ERROR: Unable to inspect retained poller output; collection stopped.', true, 'POLLER');
+		exit(1);
+	}
+
 	if (cacti_sizeof($issues)) {
 		$count  = db_fetch_cell_prepared('SELECT ' . SQL_NO_CACHE . ' COUNT(*)
 			FROM poller_output AS po
@@ -615,42 +630,41 @@ while ($poller_runs_completed < $poller_runs) {
 			$issue_list .= ", Additional Issues Remain.  Only showing first $issues_limit";
 		}
 
-		cacti_log("WARNING: Poller Output Table not Empty.  Issues: $count, $issue_list", true, 'POLLER');
-		admin_email(__('Cacti System Warning'), __('WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s.', $poller_id, $count, $issue_list));
-
-		db_execute_prepared('DELETE po
-			FROM poller_output AS po
-			LEFT JOIN data_local AS dl
-			ON po.local_data_id = dl.id
-			LEFT JOIN host AS h
-			ON dl.host_id = h.id
-			WHERE h.poller_id = ?
-			OR h.id IS NULL',
-			array($poller_id));
-	}
-
-	/**
-	 * adjust for recent memory table problems in MariaDB and memory tables
-	 * being pushed into swap
-	 */
-	if ($poller_id == 1 && read_config_option('poller_refresh_output_table') == 'on' && $total_pollers == 1) {
-		db_execute('CREATE TABLE IF NOT EXISTS po LIKE poller_output');
-		db_execute('RENAME TABLE poller_output TO poold, po TO poller_output');
-		db_execute('DROP TABLE IF EXISTS poold');
-
-		// The swapped-in copy inherits the engine, so only convert when it is
-		// not already MEMORY. This drops a metadata-locking ALTER from every
-		// poll cycle in the steady state.
-		if (db_fetch_cell("SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'poller_output'") != 'MEMORY') {
-			db_execute('ALTER TABLE poller_output ENGINE=MEMORY');
+		if (debounce_run_notification('poller_output_retained_' . $poller_id, 1800)) {
+			cacti_log("WARNING: Poller Output Table not Empty.  Issues: $count, $issue_list", true, 'POLLER');
+			admin_email(__('Cacti System Warning'), __('WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s.', $poller_id, $count, $issue_list));
 		}
 
-		// catch the unlikely event that the poller_output_boost is missing
-		if (!db_table_exists('poller_output_boost')) {
-			db_execute('CREATE TABLE poller_output_boost LIKE poller_output');
-			db_execute('ALTER TABLE poller_output_boost ENGINE=InnoDB');
-		}
+		// Valid pending samples belong to a retry, even after writer failure.
+		do {
+			$orphan_rows = db_fetch_assoc_prepared('SELECT po.local_data_id, po.rrd_name, po.time, po.output
+				FROM poller_output AS po
+				LEFT JOIN data_local AS dl
+				ON po.local_data_id = dl.id
+				LEFT JOIN host AS h
+				ON dl.host_id = h.id
+				WHERE (h.poller_id = ? OR h.id IS NULL)
+				AND (dl.id IS NULL OR (dl.host_id > 0 AND h.id IS NULL)) LIMIT 40000',
+				array($poller_id));
+			if ($orphan_rows === false) {
+				$rrd_cleanup_failed = true;
+				break;
+			}
+			$orphan_keys = array();
+			foreach ((array) $orphan_rows as $orphan) {
+				$orphan_keys[] = array($orphan['local_data_id'], $orphan['rrd_name'], $orphan['time'], $orphan['output']);
+			}
+			$removed = poller_delete_output_rows($orphan_keys, $delete_failed);
+			if ($delete_failed || $removed !== cacti_sizeof($orphan_keys)) {
+				$rrd_cleanup_failed = true;
+				break;
+			}
+		} while (count($orphan_rows) === 40000);
 	}
+
+	// InnoDB queues do not need the legacy MEMORY-table swap.
+	// Never replace a live queue after an empty-count snapshot.
+
 
 	// mainline
 	if (read_config_option('poller_enabled') == 'on') {
@@ -756,11 +770,12 @@ while ($poller_runs_completed < $poller_runs) {
 				// insert the current date/time for graphs
 				set_config_option('date', date('Y-m-d H:i:s'));
 
-				// open a pipe to rrdtool for writing
-				$rrdtool_pipe = rrd_init();
+
 			}
 
 			$rrds_processed = 0;
+			$rrd_write_failed = false;
+			$rrdtool_pipe = false;
 			$poller_finishing_dispatched = false;
 			$poller_output_deferred = false;
 			while (1) {
@@ -778,9 +793,8 @@ while ($poller_runs_completed < $poller_runs) {
 					}
 
 					if ($poller_id == 1) {
-						if (!$poller_output_deferred) {
-							$rrds_processed += process_poller_output($rrdtool_pipe, true, $poller_output_deferred);
-						}
+						$rrds_processed += process_poller_output_batch(true, $poller_output_deferred, $rrdtool_pipe, $poller_start + MAX_POLLER_RUNTIME);
+						$rrd_write_failed = $poller_output_deferred;
 					} elseif ($config['connection'] != 'online') {
 						/* truncate until formal remote management is supported */
 						db_execute('TRUNCATE poller_output');
@@ -798,8 +812,9 @@ while ($poller_runs_completed < $poller_runs) {
 					$mtb = microtime(true);
 
 					if ($poller_id == 1) {
-						if (!$poller_output_deferred) {
-							$rrds_processed += process_poller_output($rrdtool_pipe, false, $poller_output_deferred);
+						$rrds_processed += process_poller_output_batch(false, $poller_output_deferred, $rrdtool_pipe, $poller_start + MAX_POLLER_RUNTIME);
+						if ($poller_output_deferred) {
+							$rrd_write_failed = true;
 						}
 					} elseif ($config['connection'] != 'online') {
 						/* truncate until formal remote management is supported */
@@ -826,9 +841,10 @@ while ($poller_runs_completed < $poller_runs) {
 				}
 			}
 
-			if ($poller_id == 1) {
+			if ($rrdtool_pipe !== false) {
 				rrd_close($rrdtool_pipe);
 			}
+
 		}
 
 
@@ -924,6 +940,8 @@ while ($poller_runs_completed < $poller_runs) {
 	}
 }
 
+// Finish poller bookkeeping, but report an unavailable writer as a failed run.
+
 function poller_heartbeat_check() {
 	$poller_interval = read_config_option('poller_interval');
 
@@ -975,6 +993,10 @@ if ($poller_id == 1) {
 	automation_poller_bottom();
 	poller_maintenance();
 	api_plugin_hook('poller_bottom');
+}
+
+if (!empty($rrd_write_failed) || !empty($rrd_cleanup_failed)) {
+	exit(1);
 }
 
 function host_status_cache_check() {

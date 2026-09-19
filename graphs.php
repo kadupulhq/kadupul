@@ -2268,7 +2268,7 @@ function graph_management() {
 
 	$total_rows = get_total_row_data($_SESSION['sess_user_id'], $sql, array(), 'graph');
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('title_cache', 'local_graph_id', 'graph_source', 'source_name', 'height'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$graph_list = db_fetch_assoc("SELECT gtg.id, gl.id AS local_graph_id,

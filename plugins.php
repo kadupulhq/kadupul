@@ -565,12 +565,12 @@ function update_show_current () {
 		FROM $table
 		$sql_where");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('directory', 'name', 'status', 'author', 'requires', 'version', 'id'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$sql_order = str_replace('`version` ', 'INET_ATON(`version`) ', $sql_order);
 	$sql_order = str_replace('version ', 'version+0 ', $sql_order);
-	$sql_order = str_replace('id DESC', 'id ASC', $sql_order);
+	$sql_order = str_replace('`id` DESC', '`id` ASC', $sql_order);
 
 	$sql = "SELECT *
 		FROM $table

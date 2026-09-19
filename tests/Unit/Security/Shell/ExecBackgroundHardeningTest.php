@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__DIR__, 3) . "/Helpers/PhpSource.php";
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -28,7 +29,6 @@ test('poller.php escapes stderrlog path', function () use ($pollerSource) {
 });
 
 test('exec_background strips shell operators from string args', function () use ($pollerLib) {
-	$start = strpos($pollerLib, 'function exec_background(');
-	$body = substr($pollerLib, $start, 800);
+	$body = test_php_function_source($pollerLib, 'exec_background');
 	expect($body)->toContain("preg_replace('/[&;|]+/', '', \$args)");
 });

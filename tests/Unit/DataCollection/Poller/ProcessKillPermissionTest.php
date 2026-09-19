@@ -132,7 +132,8 @@ function process_kill_permission_scenario($action, $errno, $pid = 'self', $expir
 	fclose($pipes[1]);
 	fclose($pipes[2]);
 
-	expect(proc_close($process))->toBe(0, $error);
+	// The signal stub never makes the target exit; forced repair must abort.
+	expect(proc_close($process))->toBe($action === 'batchgapfix' ? 1 : 0, $error);
 
 	$out = json_decode($stdout, true);
 
@@ -254,10 +255,10 @@ test('a cleanup routine keeps the row of a child it may not signal', function ($
 		->and(implode("\n", $out['log']) . $out['output'])->toContain('another user');
 })->with('cleanup routines');
 
-test('a cleanup routine still kills and retires a child this user started', function ($action) {
+test('cleanup signals owned children but retains a repair worker that stays alive', function ($action) {
 	$out = process_kill_permission_scenario($action, 0);
 
-	expect($out['writes'])->toBe(array('DELETE'))
+	expect($out['writes'])->toBe($action === 'batchgapfix' ? array() : array('DELETE'))
 		->and(implode("\n", $out['log']) . $out['output'])->not->toContain('another user');
 })->with('cleanup routines');
 

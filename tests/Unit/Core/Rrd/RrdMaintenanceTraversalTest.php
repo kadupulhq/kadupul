@@ -26,11 +26,17 @@
  */
 
 namespace RrdMaintenanceTraversalTest;
+require_once dirname(__DIR__, 4) . '/lib/rrd_maintenance.php';
 
 if (!function_exists(__NAMESPACE__ . '\remove_files')) {
 	$root = dirname(__DIR__, 4);
 
+	$maintenance = file_get_contents($root . '/lib/rrd_maintenance.php');
+	preg_match('/^function rrd_maintenance_cleanup_supported\(.*?^}\n/ms', $maintenance, $support);
+	eval('namespace ' . __NAMESPACE__ . '; ' . $support[0]);
+
 	$source = file_get_contents($root . '/poller_maintenance.php');
+	preg_match('/^function rrdfile_purge\(.*?^}\n/ms', $source, $purgeFunction);
 	preg_match('/^function remove_files\(.*?^}\n/ms', $source, $remove);
 	preg_match('/^function rrdclean_create_path\(.*?^}\n/ms', $source, $create);
 
@@ -38,7 +44,7 @@ if (!function_exists(__NAMESPACE__ . '\remove_files')) {
 	preg_match('/^function rrd_check_path\(.*?^}\n/ms', $source, $check);
 
 	// test-only eval of source read from this repository, not external input
-	eval('namespace ' . __NAMESPACE__ . '; ' . $remove[0] . $create[0] . $check[0]);
+	eval('namespace ' . __NAMESPACE__ . '; ' . $remove[0] . $create[0] . $check[0] . $purgeFunction[0]);
 }
 
 function read_config_option($name, $force = false) {
@@ -83,13 +89,15 @@ if (!defined('RRDTOOL_OUTPUT_BOOLEAN')) {
 }
 
 function rrd_init() {
-	return 'proxy-pipe';
+	return $GLOBALS['rmt_init_result'] ?? 'proxy-pipe';
 }
 
 function rrd_close($rrdtool_pipe) {
+    $GLOBALS['rmt_closed'][] = $rrdtool_pipe;
 }
 
 function rrdtool_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pipe = false, $logopt = 'WEBLOG') {
+    return array_key_exists('rmt_setup_result', $GLOBALS) ? $GLOBALS['rmt_setup_result'] : true;
 }
 
 function cacti_rrdtool_valid_path($path) {
@@ -108,6 +116,8 @@ $purge = function (string $name, string $action): void {
 };
 
 beforeEach(function () {
+    unset($GLOBALS['rmt_init_result'], $GLOBALS['rmt_setup_result']);
+    $GLOBALS['rmt_closed'] = array();
 	$this->root = realpath(sys_get_temp_dir()) . '/rrd-maint-' . bin2hex(random_bytes(4));
 	$this->base = $this->root . '/cacti';
 	$this->rra  = $this->base . '/rra';
@@ -237,13 +247,14 @@ test('sends an archive of a custom location to the RRDproxy as 1.2.31 did', func
 		->and($GLOBALS['rmt_log'])->toBe(array());
 });
 
-test('counts and reports a failed RRDproxy delete as 1.2.31 did', function () use ($purge) {
+test('retains and reports a failed RRDproxy delete', function () use ($purge) {
 	$GLOBALS['rmt_settings']['storage_location'] = 1;
 	$GLOBALS['rmt_proxy_result'] = false;
 
 	$purge('5/local_5.rrd', '1');
 
-	expect($GLOBALS['purged'])->toBe(1)
+	expect($GLOBALS['purged'])->toBe(0)
+        ->and($GLOBALS['rmt_dropped'])->toBe(array())
 		->and(implode("\n", $GLOBALS['rmt_log']))->toContain('unable to remove 5/local_5.rrd from the RRDproxy');
 });
 
@@ -268,3 +279,82 @@ test('does not send a .. path to the RRDproxy for archiving', function () use ($
 		->and(implode("\n", $GLOBALS['rmt_log']))->toContain('.. segment')
 		->and($GLOBALS['rmt_dropped'])->toBe(array('5/../../include/config.php'));
 });
+
+ test('local purge and archive defer while a writer holds the lease', function ($action) use ($purge) {
+    $lease = \rrd_maintenance_acquire(false, false);
+    expect(is_resource($lease))->toBeTrue();
+    try {
+        $purge('keep.rrd', $action);
+        expect(file_get_contents($this->rra . '/keep.rrd'))->toBe('rrd')
+            ->and($GLOBALS['rmt_dropped'])->toBe(array())
+            ->and($GLOBALS['rmt_log'][0])->toContain('purge queue retained');
+    } finally { \rrd_maintenance_release($lease); }
+    $purge('keep.rrd', $action);
+    expect(file_exists($this->rra . '/keep.rrd'))->toBeFalse();
+    $exclusive = \rrd_maintenance_acquire(true, false);
+    expect(is_resource($exclusive))->toBeTrue();
+    \rrd_maintenance_release($exclusive);
+})->with(array('1', '3'));
+
+
+function db_fetch_cell($sql) { return 1; }
+function db_fetch_assoc($sql) {
+    $GLOBALS['rmt_reads']++;
+    if ($GLOBALS['rmt_reads'] > 1) { throw new \RuntimeException('deferred purge was retried in a tight loop'); }
+    return array(array('id' => 1, 'name' => 'keep.rrd', 'local_data_id' => 0, 'action' => '1'));
+}
+
+test('purge loop returns failure after one deferred batch and retains queued files', function () {
+    $GLOBALS['rmt_reads'] = 0;
+    $lease = \rrd_maintenance_acquire(false, false);
+    expect(is_resource($lease))->toBeTrue();
+    try {
+        expect(rrdfile_purge(false))->toBeFalse()
+            ->and($GLOBALS['rmt_reads'])->toBe(1)
+            ->and($GLOBALS['rmt_dropped'])->toBe(array())
+            ->and(file_get_contents($this->rra . '/keep.rrd'))->toBe('rrd');
+    } finally { \rrd_maintenance_release($lease); }
+});
+
+test('Windows local purge and archive retain files and queue when exclusive coordination is unavailable', function ($action) use ($purge) {
+    $GLOBALS['config']['cacti_server_os'] = 'win32';
+    $purge('keep.rrd', $action);
+    expect(file_get_contents($this->rra . '/keep.rrd'))->toBe('rrd')
+        ->and($GLOBALS['rmt_dropped'])->toBe(array())
+        ->and($GLOBALS['rmt_log'][0])->toContain('purge queue retained');
+})->with(array('1', '3'));
+
+
+test('proxy failures retain cleanup requests and close initialized pipes', function ($failure, $action) {
+    $GLOBALS['rmt_settings']['storage_location'] = 1;
+    $GLOBALS['rmt_init_result'] = $failure === 'init' ? false : 'proxy-pipe';
+    $GLOBALS['rmt_setup_result'] = $failure === 'unknown' ? null : ($failure !== 'setup');
+    $GLOBALS['rmt_proxy_result'] = $failure !== 'command';
+    expect(remove_files(array(array('name' => 'keep.rrd', 'action' => $action, 'local_data_id' => 0))))->toBeFalse()
+        ->and($GLOBALS['rmt_dropped'])->toBe(array())
+        ->and($GLOBALS['purged'])->toBe(0)->and($GLOBALS['archived'])->toBe(0)
+        ->and($GLOBALS['rmt_closed'])->toBe($failure === 'init' ? array() : array('proxy-pipe'));
+})->with(array(array('init', '1'), array('setup', '1'), array('unknown', '1'), array('unknown', '3'), array('command', '1'), array('command', '3')));
+
+
+function unlink($path) { return empty($GLOBALS['rmt_filesystem_failure']) || basename($path) === 'keep.rrd' ? \unlink($path) : false; }
+function rename($source, $target) { return empty($GLOBALS['rmt_filesystem_failure']) || basename($source) === 'keep.rrd' ? \rename($source, $target) : false; }
+
+test('local filesystem failures retain cleanup requests and source files', function ($action) {
+    $GLOBALS['rmt_filesystem_failure'] = true;
+    $GLOBALS['rmt_settings']['rrd_archive'] = $this->base . '/archive';
+    $file = $this->rra . '/5/local_5.rrd';
+    try {
+        expect(remove_files(array(array('id' => 1, 'name' => '5/local_5.rrd', 'local_data_id' => 0, 'action' => $action), array('id' => 2, 'name' => 'keep.rrd', 'local_data_id' => 0, 'action' => $action))))->toBeFalse()
+            ->and(file_exists($file))->toBeTrue()
+            ->and($GLOBALS['rmt_dropped'])->toBe(array('keep.rrd'))
+            ->and(file_exists($this->rra . '/keep.rrd'))->toBeFalse()
+            ->and($GLOBALS['archived'])->toBe($action === '3' ? 1 : 0)
+            ->and($GLOBALS['purged'])->toBe($action === '1' ? 1 : 0);
+        unset($GLOBALS['rmt_filesystem_failure']);
+        expect(remove_files(array(array('id' => 1, 'name' => '5/local_5.rrd', 'local_data_id' => 0, 'action' => $action))))->toBeTrue()
+            ->and(file_exists($file))->toBeFalse();
+    } finally {
+        unset($GLOBALS['rmt_filesystem_failure']);
+    }
+})->with(array('1', '3'));

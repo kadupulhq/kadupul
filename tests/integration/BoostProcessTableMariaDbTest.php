@@ -31,6 +31,7 @@ function boostMariaDbReset() {
 	);
 	$GLOBALS['boost_mariadb_cache'] = array('tables' => array(), 'columns' => array());
 	$GLOBALS['boost_mariadb_logs']  = array();
+	$GLOBALS['boost_retention_tables'] = array();
 	$GLOBALS['boost_delete_calls'] = 0;
 	$GLOBALS['boost_delete_fail_at'] = 0;
 }
@@ -276,6 +277,8 @@ test('runtime repair clears duplicate legacy rows before adding the run-child ke
 });
 
 function boostMariaDbDeletePrepared($sql, $params) {
+	$sql = strtr($sql, $GLOBALS['boost_retention_tables'] ?? array());
+	$GLOBALS['boost_delete_statement'] = array($sql, $params);
 	if (++$GLOBALS['boost_delete_calls'] === $GLOBALS['boost_delete_fail_at']) {
 		return false;
 	}
@@ -301,7 +304,7 @@ test('poller deletes only its selected sample keys when newer rows arrive before
 	try {
 		$insert = $db->prepare('INSERT INTO poller_output VALUES (?,?,?,?)');
 		$insert->execute(array(7, 'traffic_in', '2026-09-15 00:00:00', '10'));
-		$selected = $db->query('SELECT local_data_id,rrd_name,time FROM poller_output')->fetchAll(PDO::FETCH_NUM);
+		$selected = $db->query('SELECT local_data_id,rrd_name,time,output FROM poller_output')->fetchAll(PDO::FETCH_NUM);
 		// Deterministic interleaving: these rows arrive after the drain's SELECT.
 		$insert->execute(array(7, 'traffic_in', '2026-09-15 00:01:00', '11'));
 		$insert->execute(array(7, 'traffic_out', '2026-09-15 00:00:00', '12'));
@@ -310,6 +313,12 @@ test('poller deletes only its selected sample keys when newer rows arrive before
 			->and(boostMariaDbDeleteOutputRows($selected))->toBe(0)
 			->and(boostMariaDbDeleteOutputRows(array()))->toBe(0);
 		expect($db->query('SELECT output FROM poller_output ORDER BY output')->fetchAll(PDO::FETCH_COLUMN))->toBe(array('11', '12'));
+        $insert->execute(array(7, 'traffic_in', '2026-09-15 00:00:00', '99'));
+        expect(boostMariaDbDeleteOutputRows($selected))->toBe(0)
+            ->and($db->query("SELECT output FROM poller_output WHERE output='99'")->fetchColumn())->toBe('99');
+        expect(boostMariaDbDeleteOutputRows(array(array(7, 'traffic_in', '2026-09-15 00:00:00')), $failed))->toBe(0)
+            ->and($failed)->toBeTrue();
+
 	} finally {
 		$db->exec('DROP TEMPORARY TABLE poller_output');
 	}
@@ -323,25 +332,87 @@ function boostMariaDbLoadDeleteRows($root) {
 	}
 }
 
+test('poller acknowledgement preserves byte-distinct replacement values and uses the primary key', function ($observed, $replacement, $batch_size, $collation) use ($root) {
+	boostMariaDbLoadDeleteRows($root);
+	$db = $GLOBALS['boost_mariadb_pdo'];
+	$db->exec('CREATE TEMPORARY TABLE poller_output (local_data_id INT, rrd_name VARCHAR(19), time TIMESTAMP, output VARCHAR(512), PRIMARY KEY(local_data_id,rrd_name,time)) ENGINE=InnoDB COLLATE=' . $collation);
+	try {
+		$rows = $keys = array();
+		for ($id = 1; $id <= 10000; $id++) {
+			$rows[] = "($id,'value','2026-09-15 00:00:00'," . $db->quote($observed) . ')';
+			if ($id <= $batch_size) { $keys[] = array($id, 'value', '2026-09-15 00:00:00', $observed); }
+		}
+		$db->exec('INSERT INTO poller_output VALUES ' . implode(',', $rows));
+		$db->prepare('UPDATE poller_output SET output=? WHERE local_data_id=1')->execute(array($replacement));
+		expect(boostMariaDbDeleteOutputRows($keys, $failed))->toBe($batch_size - 1)->and($failed)->toBeFalse();
+		expect($db->query('SELECT output FROM poller_output WHERE local_data_id=1')->fetchColumn())->toBe($replacement);
+		list($sql, $params) = $GLOBALS['boost_delete_statement'];
+		$explain = $db->prepare('EXPLAIN FORMAT=TRADITIONAL ' . $sql);
+		$explain->execute($params);
+		$plan = $explain->fetch(PDO::FETCH_ASSOC);
+		expect($plan['key'])->toBe('PRIMARY')->and($plan['type'])->toBe('range');
+	} finally {
+		$db->exec('DROP TEMPORARY TABLE poller_output');
+	}
+})->with(array(array('U', 'u'), array('42', '42 '), array('café', 'CAFÉ'), array('café', 'café ')))->with(array(2, 500))->with(array('utf8mb4_unicode_ci', 'latin1_swedish_ci'));
+
 
 test('poller reports failed source deletion even after earlier chunks made progress', function ($fail_at) use ($root) {
 	boostMariaDbLoadDeleteRows($root);
 	$db = $GLOBALS['boost_mariadb_pdo'];
-	$db->exec('CREATE TEMPORARY TABLE poller_output (local_data_id INT, rrd_name VARCHAR(19), time TIMESTAMP, PRIMARY KEY(local_data_id,rrd_name,time)) ENGINE=MEMORY');
+	$db->exec('CREATE TEMPORARY TABLE poller_output (local_data_id INT, rrd_name VARCHAR(19), time TIMESTAMP, output VARCHAR(32), PRIMARY KEY(local_data_id,rrd_name,time)) ENGINE=MEMORY');
 	try {
 		$values = array();
 		$keys = array();
-		for ($id = 1; $id <= 10001; $id++) {
-			$values[] = "($id,'value','2026-09-15 00:00:00')";
-			$keys[] = array($id, 'value', '2026-09-15 00:00:00');
+		for ($id = 1; $id <= 501; $id++) {
+			$values[] = "($id,'value','2026-09-15 00:00:00','10')";
+			$keys[] = array($id, 'value', '2026-09-15 00:00:00', '10');
 		}
 		$db->exec('INSERT INTO poller_output VALUES ' . implode(',', $values));
 		$GLOBALS['boost_delete_fail_at'] = $fail_at;
 		$consumed = boostMariaDbDeleteOutputRows($keys, $failed);
 		expect($failed)->toBeTrue()
-			->and($consumed)->toBe($fail_at === 1 ? 0 : 10000)
-			->and((int) $db->query('SELECT count(*) FROM poller_output')->fetchColumn())->toBe(10001 - $consumed);
+			->and($consumed)->toBe($fail_at === 1 ? 0 : 500)
+			->and((int) $db->query('SELECT count(*) FROM poller_output')->fetchColumn())->toBe(501 - $consumed);
 	} finally {
 		$db->exec('DROP TEMPORARY TABLE poller_output');
 	}
 })->with(array(1, 2));
+
+function boostMariaDbRetentionRows($sql, $params) {
+    $sql = strtr($sql, $GLOBALS['boost_retention_tables']);
+    $statement = $GLOBALS['boost_mariadb_pdo']->prepare($sql);
+    $statement->execute($params);
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+
+test('incomplete retention uses database time across PHP and database timezone differences', function ($zone) use ($root) {
+    boostMariaDbLoadDeleteRows($root);
+    if (!function_exists('boostMariaDbExpireIncomplete')) {
+        preg_match('/^function poller_expire_incomplete_rows\(.*?^}\n/ms', file_get_contents($root . '/lib/poller.php'), $match);
+        expect($match)->not->toBeEmpty();
+        eval(str_replace(array('poller_expire_incomplete_rows(', 'db_fetch_assoc_prepared(', 'poller_delete_output_rows(', 'cacti_log('), array('boostMariaDbExpireIncomplete(', 'boostMariaDbRetentionRows(', 'boostMariaDbDeleteOutputRows(', 'boostMariaDbLog('), $match[0]));
+    }
+    $db = $GLOBALS['boost_mariadb_pdo'];
+    $suffix = bin2hex(random_bytes(6));
+    $tables = array('poller_output' => 'retention_output_' . $suffix, 'poller_item' => 'retention_item_' . $suffix);
+    $GLOBALS['boost_retention_tables'] = $tables;
+    $execute = function ($sql) use ($db, $tables) { return $db->exec(strtr($sql, $tables)); };
+    $previousZone = date_default_timezone_get();
+    date_default_timezone_set('Asia/Tokyo');
+    try {
+        $db->exec('SET time_zone=' . $db->quote($zone));
+        $db->exec('SET timestamp=1700000000');
+        $execute('CREATE TABLE poller_output (local_data_id INT, rrd_name VARCHAR(19), time TIMESTAMP, output VARCHAR(32), PRIMARY KEY(local_data_id,rrd_name,time)) ENGINE=InnoDB');
+        $execute('CREATE TABLE poller_item (local_data_id INT, rrd_name VARCHAR(19), rrd_num INT)');
+        $execute("INSERT INTO poller_item VALUES (1,'a',2),(1,'b',2),(2,'a',2),(3,'a',2),(4,'a',2)");
+        $execute("INSERT INTO poller_output VALUES (1,'a',FROM_UNIXTIME(1699999100),'complete-a'),(1,'b',FROM_UNIXTIME(1699999100),'complete-b'),(2,'a',FROM_UNIXTIME(1699999100),'expired'),(3,'a',FROM_UNIXTIME(1699999700),'recent'),(4,'a',FROM_UNIXTIME(1699999400),'boundary')");
+        expect(boostMariaDbExpireIncomplete(600, $failed))->toBe(1)->and($failed)->toBeFalse();
+        expect($db->query('SELECT output FROM ' . $tables['poller_output'] . ' ORDER BY output')->fetchAll(PDO::FETCH_COLUMN))->toBe(array('boundary','complete-a','complete-b','recent'));
+    } finally {
+        date_default_timezone_set($previousZone);
+        $execute('DROP TABLE IF EXISTS poller_output, poller_item');
+        $GLOBALS['boost_retention_tables'] = array();
+        $db->exec('SET timestamp=0');
+    }
+})->with(array('+00:00', '-08:00', '+05:30'));

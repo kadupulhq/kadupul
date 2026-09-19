@@ -180,27 +180,7 @@ function form_save() {
 				$id = base64_decode(str_replace('chk_file_', '', $var));
 				$id = json_decode($id, true);
 
-				if (strpos($id['pfile'], '/') !== false) {
-					$parts = explode('/', $id['pfile']);
-				} elseif (strpos($id['pfile'], '\\') !== false) {
-					$parts = explode('\\', $id['pfile']);
-				} else {
-					$parts = array($id['pfile']);
-				}
-
-				foreach($parts as $index => $p) {
-					if ($p == 'scripts') {
-						break;
-					} elseif ($p == 'resource') {
-						break;
-					} else {
-						unset($parts[$index]);
-					}
-				}
-
-				$id['pfile'] = implode('/', $parts);
-
-				$files[] = $id['pfile'];
+				$files[] = package_import_normalize_selected_file($id['pfile'] ?? '');
 			}
 
 			if (strpos($var, 'chk_import_') !== false) {
@@ -250,6 +230,11 @@ function form_save() {
 			exit;
 		}
 	}
+}
+
+/** A selection posts back the package-relative name used as the preview status key. */
+function package_import_normalize_selected_file($pfile) {
+	return is_string($pfile) ? ltrim(str_replace('\\', '/', $pfile), '/') : '';
 }
 
 function package_file_get_contents($filename) {
@@ -638,7 +623,7 @@ function import_display_package_data($templates, $files, $package_name, $xmlfile
 								'&package_location=0' .
 								'&package_file=' . $file_package_file .
 								'&package_name=' . $file_package_name .
-								'&filename=' . str_replace($config['base_path'] . '/', '', $pfile);
+								'&filename=' . $pfile;
 
 							$nstatus .= ($nstatus != '' ? ', ':'') .
 								"<a class='diffme linkEditMain' href='" . html_escape($url) . "'>" . __('Differences') . '</a>';

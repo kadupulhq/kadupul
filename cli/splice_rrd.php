@@ -211,6 +211,10 @@ if ($finrrd == '') {
 	exit(-2);
 }
 
+require_once __DIR__ . '/../lib/rrd_maintenance.php';
+$rrd_rewrite_lock = rrd_maintenance_cli_lock(true);
+register_shutdown_function(function () use ($rrd_rewrite_lock) { rrd_maintenance_release($rrd_rewrite_lock); });
+
 debug('Entering Mainline');
 
 /* let's see if we can find rrdtool */

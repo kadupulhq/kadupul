@@ -15,59 +15,14 @@
  * and path traversal across all callers of sanitize_uri().
  */
 
-$src = file_get_contents(__DIR__ . '/../../../../lib/functions.php');
+require_once dirname(__DIR__, 4) . '/lib/functions.php';
 
-test('sanitize_uri drop-char list contains backslash', function () use ($src) {
-    $start = strpos($src, 'function sanitize_uri(');
-    expect($start)->not->toBeFalse();
+test('sanitize_uri removes dangerous characters from literal and encoded requests', function ($character) {
+    expect(sanitize_uri('/index.php?x=a' . $character . 'b'))->toBe('/index.php?x=ab')
+        ->and(sanitize_uri('/index.php?x=a' . rawurlencode($character) . 'b'))->toBe('/index.php?x=ab');
+})->with(array(chr(92), chr(0), chr(13), chr(10), ';', '{', '}', '^', '$'));
 
-    $body = substr($src, $start, 2000);
-    // Stored in source as "\\" (double-quoted two-char escape)
-    expect($body)->toContain('"\\' . '\\"');
-});
-
-test('sanitize_uri drop-char list contains NUL character', function () use ($src) {
-    $start = strpos($src, 'function sanitize_uri(');
-    expect($start)->not->toBeFalse();
-
-    $body = substr($src, $start, 2000);
-    expect($body)->toContain('"\0"');
-});
-
-test('sanitize_uri drop-char list contains carriage return', function () use ($src) {
-    $start = strpos($src, 'function sanitize_uri(');
-    expect($start)->not->toBeFalse();
-
-    $body = substr($src, $start, 2000);
-    expect($body)->toContain('"\r"');
-});
-
-test('sanitize_uri drop-char list contains newline', function () use ($src) {
-    $start = strpos($src, 'function sanitize_uri(');
-    expect($start)->not->toBeFalse();
-
-    $body = substr($src, $start, 2000);
-    expect($body)->toContain('"\n"');
-});
-
-test('sanitize_uri drop-char and drop-replace arrays have equal length', function () use ($src) {
-    $start = strpos($src, 'function sanitize_uri(');
-    expect($start)->not->toBeFalse();
-
-    $body = substr($src, $start, 2000);
-
-    // Extract match array: find everything between the first ( and the matching );
-    $matchStart = strpos($body, '$drop_char_match');
-    $matchOpen  = strpos($body, '(', $matchStart);
-    $matchClose = strpos($body, ');', $matchOpen);
-    $matchInner = substr($body, $matchOpen + 1, $matchClose - $matchOpen - 1);
-    $matchCount = substr_count($matchInner, ',') + 1;
-
-    $replaceStart = strpos($body, '$drop_char_replace');
-    $replaceOpen  = strpos($body, '(', $replaceStart);
-    $replaceClose = strpos($body, ');', $replaceOpen);
-    $replaceInner = substr($body, $replaceOpen + 1, $replaceClose - $replaceOpen - 1);
-    $replaceCount = substr_count($replaceInner, ',') + 1;
-
-    expect($matchCount)->toBe($replaceCount);
+test('sanitize_uri preserves IPv6 brackets only when explicitly requested', function () {
+    expect(sanitize_uri('http://[::1]/index.php', true))->toBe('http://[::1]/index.php')
+        ->and(sanitize_uri('/index.php?x=[a]'))->toBe('/index.php?x=a');
 });

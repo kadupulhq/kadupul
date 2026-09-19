@@ -988,7 +988,7 @@ function get_networks(&$sql_where, $rows, $apply_limits = true) {
 		$sql_where = ' WHERE (automation_networks.name LIKE ' . db_qstr('%' . get_request_var('filter') . '%') . ')';
 	}
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('name', 'data_collector', 'sched_type', 'total_ips', 'threads', 'last_runtime', 'last_started'));
 
 	if ($apply_limits) {
 		$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;

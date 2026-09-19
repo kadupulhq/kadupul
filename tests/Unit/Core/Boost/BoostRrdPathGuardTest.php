@@ -61,10 +61,13 @@ function boostRrdGuard_cacti_log($message) {
 	$GLOBALS['boost_rrd_guard']['logs'][] = $message;
 }
 
+function boostRrdGuard_rrdtool_last_rejection() { return null; }
+function boostRrdGuard_rrdtool_rejection_is_permanent($reason) { return false; }
+
 function boostRrdGuard_rrdtool_execute($command) {
 	$GLOBALS['boost_rrd_guard']['executed'][] = $command;
 
-	return 'OK';
+	return true;
 }
 
 function boostRrdGuardLoad($root) {
@@ -87,7 +90,7 @@ function boostRrdGuardLoad($root) {
 		expect($start)->not->toBeFalse()
 			->and($end)->not->toBeFalse();
 
-		$function = preg_replace('/\b(boost_rrdtool_function_update|boost_rrdtool_get_last_update_time|boost_rrdtool_function_create|rrdtool_execute_path_command|rrdtool_execute|cacti_rrdtool_valid_ds_template|cacti_rrdtool_valid_path|cacti_has_control_chars|cacti_version_compare|get_rrdtool_version|read_config_option|db_fetch_cell_prepared|cacti_log)\(/', 'boostRrdGuard_$1(', substr($source, $start, $end - $start));
+		$function = preg_replace('/\b(rrdtool_last_rejection|rrdtool_rejection_is_permanent|boost_rrdtool_function_update|boost_rrdtool_get_last_update_time|boost_rrdtool_function_create|rrdtool_execute_path_command|rrdtool_execute|cacti_rrdtool_valid_ds_template|cacti_rrdtool_valid_path|cacti_has_control_chars|cacti_version_compare|get_rrdtool_version|read_config_option|db_fetch_cell_prepared|cacti_log)\(/', 'boostRrdGuard_$1(', substr($source, $start, $end - $start));
 
 		eval($function);
 	}

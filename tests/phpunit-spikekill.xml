@@ -2,12 +2,21 @@
 <phpunit bootstrap="./bootstrap-unit.php" colors="true">
   <testsuites>
     <testsuite name="Spikekill">
+      <file>./Unit/Core/Poller/RemoteQueuePreflightNativeTest.php</file>
+      <file>./Unit/Installer/InstallerRrdStoragePreflightTest.php</file>
+      <file>./Unit/Installer/LegacyQueueUpgradeTest.php</file>
+      <file>./Unit/Core/Cli/RrdMaintenanceCoordinationTest.php</file>
+      <file>./Unit/Core/Rrd/RrdMaintenanceLockTest.php</file>
       <file>./Unit/Security/Shell/SpikekillBackupSymlinkSafetyTest.php</file>
       <file>./Unit/Security/Shell/SpikekillRemoveSpikesEndToEndTest.php</file>
       <file>./Unit/Security/Shell/SpikekillXmlDirectoryRaceTest.php</file>
       <file>./Unit/Security/Shell/SpikekillXmlDumpFileSafetyTest.php</file>
       <file>./Unit/Core/Cli/RemoveSpikesBackupTest.php</file>
       <file>./Unit/Security/Shell/SpikekillStatisticsTest.php</file>
+      <file>./Unit/Core/Poller/PollerIncompleteRetentionTest.php</file>
+      <file>./Unit/Core/Rrd/RealtimeCompletionTest.php</file>
+      <file>./Unit/Core/Rrd/RealtimeFieldLookupFailureTest.php</file>
+      <file>./Unit/Core/Rrd/DsdebugRepairResultTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

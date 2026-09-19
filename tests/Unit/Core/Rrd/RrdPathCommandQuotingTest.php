@@ -138,3 +138,15 @@ test('a graph renders from an RRD path holding an apostrophe', function () use (
 	expect($render['error'])->toBe('')
 		->and($render['width'])->toBeInt();
 })->skip(cacti_test_rrdtool_binary() === '', 'rrdtool is not installed');
+
+
+test('captured command failures release the fixture lease before shutdown', function () {
+	$result = cacti_test_rrd_harness_run(array(
+		'action' => 'execute_capture',
+		'throw_config' => true,
+		'calls' => array(array('raw', 'info example.rrd')),
+	));
+	expect($result['error'])->toBe('RuntimeException: fixture configuration failure')
+		->and($result['fixture_cleaned'])->toBeTrue()
+		->and($result['warnings'])->toBe(array());
+});

@@ -1,4 +1,8 @@
 <?php
+if (!function_exists('read_config_option')) {
+    function read_config_option($name) { return ''; }
+}
+
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |

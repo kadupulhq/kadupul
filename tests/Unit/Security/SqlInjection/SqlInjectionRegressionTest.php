@@ -21,6 +21,8 @@
  * so the advisory it guards against remains traceable.
  */
 
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+
 $utilitiesSource      = file_get_contents(__DIR__ . '/../../../../utilities.php');
 $databaseSource       = file_get_contents(__DIR__ . '/../../../../lib/database.php');
 $graphViewSource      = file_get_contents(__DIR__ . '/../../../../graph_view.php');
@@ -37,21 +39,17 @@ $htmlUtilitySource    = file_get_contents(__DIR__ . '/../../../../lib/html_utili
 test('GHSA-3p6w: utilities.php builds ORDER BY through get_order_string', function () use ($utilitiesSource) {
 	expect($utilitiesSource)->not->toBeFalse();
 	// view_user_log and view_poller_cache
-	expect($utilitiesSource)->toContain("\t\t\" . get_order_string() . \"\n");
-	expect($utilitiesSource)->toContain('$order_string = get_order_string();');
+	expect($utilitiesSource)->toContain("\t\t\" . get_order_string(array('username', 'full_name', 'realm', 'time', 'result', 'ip')) . \"\n");
+	expect($utilitiesSource)->toContain("\$order_string = get_order_string(array('action', 'dtd.name_cache', 'h.description'));");
 	expect($utilitiesSource)->not->toMatch('/ORDER BY[^;]*get_(nfilter_|filter_)?request_var\(\'sort_(column|direction)\'\)/');
 });
 
 test('GHSA-3p6w: get_order_string validates the requested sort column and clamps direction', function () use ($htmlUtilitySource) {
-	$start = strpos($htmlUtilitySource, 'function get_order_string() {');
-	expect($start)->not->toBeFalse();
+	$body = test_php_function_source($htmlUtilitySource, 'get_order_string');
 
-	$end  = strpos($htmlUtilitySource, "\n}\n", $start);
-	$body = substr($htmlUtilitySource, $start, $end - $start);
-
-	expect($body)->toContain("\$sort_column = cacti_normalize_sort_column(get_nfilter_request_var('sort_column'));");
-	expect($body)->toContain('$column    = validate_sort_column($request_column, $page);');
-	expect($body)->toContain("(strtoupper((string)\$direction_raw) == 'DESC' ? 'DESC' : 'ASC')");
+	expect($body)->toContain("cacti_normalize_sort_column(\$column)");
+	expect($body)->toContain('$column = validate_sort_column($column, $page);');
+	expect($body)->toContain("cacti_normalize_sort_direction(\$direction)");
 	expect($htmlUtilitySource)->toContain("preg_match('/^[a-zA-Z][a-zA-Z0-9_]*(?:\\.[a-zA-Z][a-zA-Z0-9_]*)*\$/', \$column)");
 });
 

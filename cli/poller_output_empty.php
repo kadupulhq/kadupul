@@ -67,7 +67,11 @@ if (cacti_sizeof($parms)) {
 $start = microtime(true);
 
 /* open a pipe to rrdtool for writing */
-$rrdtool_pipe = rrd_init();
+$rrdtool_pipe = rrd_init(true, false, true);
+if ($rrdtool_pipe === false) {
+	fwrite(STDERR, "ERROR: RRD initialization failed; queued samples retained for retry.\n");
+	exit(1);
+}
 
 $rrds_processed = 0;
 

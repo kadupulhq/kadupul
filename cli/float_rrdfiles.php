@@ -44,6 +44,7 @@ array_shift($parms);
 /* system controlled parameters */
 $type              = 'rmaster';
 $thread_id         = 0;
+$rrd_rewrite_lock  = false; /* held by sig_handler() if a child is interrupted mid-fetch */
 
 /* mandatory parameters */
 $start_time        = false;
@@ -57,7 +58,7 @@ $local_graph_ids   = array();
 $step              = false;
 
 /* optional for threading and verbose display */
-$threads           = 20;
+$threads           = 1;
 $seebug            = false;
 
 /* optional for force handing and resume */
@@ -144,6 +145,9 @@ if (cacti_sizeof($parms)) {
 	}
 }
 
+require_once __DIR__ . '/../lib/rrd_maintenance.php';
+rrd_maintenance_cli_preflight();
+
 /**
  * Types include
  *
@@ -154,8 +158,8 @@ if (cacti_sizeof($parms)) {
 
 /* install signal handlers for UNIX only */
 if (function_exists('pcntl_signal')) {
-	pcntl_signal(SIGTERM, 'sig_handler');
-	pcntl_signal(SIGINT, 'sig_handler');
+	pcntl_signal(SIGTERM, 'sig_handler', false);
+	pcntl_signal(SIGINT, 'sig_handler', false);
 }
 
 if ($start_time == false || $end_time == false) {
@@ -251,54 +255,84 @@ if (!$forcerun) {
 }
 
 /* Collect data as determined by the type */
+$exit_status = 0;
 switch ($type) {
 	case 'rmaster':
-		float_master_handler($forcerun, $resume, $host_id, $host_template_id, $graph_template_id, $local_graph_ids, $threads, $step, $start_time, $end_time);
+		$exit_status = float_master_handler($forcerun, $resume, $host_id, $host_template_id, $graph_template_id, $local_graph_ids, $threads, $step, $start_time, $end_time) ? 0 : 1;
 
 		unregister_process('rfloat', 'rmaster', 0);
 
 		break;
 	case 'child':  /* Launched by the rmaster process */
-		$rrdfiles = db_fetch_assoc_prepared('SELECT *
-			FROM poller_float_rrdfiles_not_done
-			WHERE process = ?',
-			array($thread_id));
+		try {
+			$rrdfiles = db_fetch_assoc_prepared('SELECT *
+				FROM poller_float_rrdfiles_not_done
+				WHERE process = ?',
+				array($thread_id));
 
-		$child_start = microtime(true);
+			$child_start = microtime(true);
 
-		if (cacti_sizeof($rrdfiles)) {
-			cacti_log(sprintf('Child Started Process %s with %d RRDfiles', $thread_id, cacti_sizeof($rrdfiles)), true, 'RFLOAT');
-		} else {
-			cacti_log(sprintf('Child Started Process %s with No RRDfiles', $thread_id), true, 'RFLOAT');
-		}
-
-		foreach($rrdfiles as $data) {
-			print '.';
-
-			/* Update the rrdfile to current */
-			rrdtool_function_fetch($data['local_data_id'], time()-120, time());
-
-			/* A float that fails keeps its queue row so --resume retries it. The
-			 * temporary XML file is created exclusively, so one left by a killed
-			 * child is refused rather than overwritten, and deleting the row
-			 * anyway would drop that RRD from the queue unfloated. */
-			if (float_rrdfile($data['rrd_path'], $data['local_data_id'], $step, $start_time, $end_time)) {
-				db_execute_prepared('DELETE FROM poller_float_rrdfiles_not_done
-					WHERE local_data_id = ?',
-					array($data['local_data_id']));
+			if (cacti_sizeof($rrdfiles)) {
+				cacti_log(sprintf('Child Started Process %s with %d RRDfiles', $thread_id, cacti_sizeof($rrdfiles)), true, 'RFLOAT');
+			} else {
+				cacti_log(sprintf('Child Started Process %s with No RRDfiles', $thread_id), true, 'RFLOAT');
 			}
+
+			foreach($rrdfiles as $data) {
+				print '.';
+
+				/* Flush before the exclusive lease: Boost itself needs a shared lease. */
+				try {
+					$fetched = rrdtool_function_fetch($data['local_data_id'], time()-120, time());
+					if (empty($fetched)) {
+						throw new RuntimeException('Unable to fetch RRD data before floating.');
+					}
+				} catch (Throwable $error) {
+					cacti_log(sprintf('ERROR: Float DS[%d] retained for retry: %s', $data['local_data_id'], $error->getMessage()), true, 'RFLOAT');
+					$exit_status = 1;
+					continue;
+				}
+
+				/* A float that fails keeps its queue row so --resume retries it. The
+				 * temporary XML file is created exclusively, so one left by a killed
+				 * child is refused rather than overwritten, and deleting the row
+				 * anyway would drop that RRD from the queue unfloated. */
+				$rrd_rewrite_lock = rrd_maintenance_acquire(true, true, 5);
+				if ($rrd_rewrite_lock === false) {
+					fwrite(STDERR, "FATAL: RRD storage is busy or its maintenance lock is unavailable.\n");
+					$exit_status = 1;
+					break; // Leave the row queued, then unregister this child below.
+				}
+				try {
+					if (float_rrdfile($data['rrd_path'], $data['local_data_id'], $step, $start_time, $end_time)) {
+						db_execute_prepared('DELETE FROM poller_float_rrdfiles_not_done
+							WHERE local_data_id = ?',
+							array($data['local_data_id']));
+					} else {
+						$exit_status = 1;
+					}
+				} catch (Throwable $error) {
+					cacti_log(sprintf('ERROR: Float DS[%d] retained for retry: %s', $data['local_data_id'], $error->getMessage()), true, 'RFLOAT');
+					$exit_status = 1;
+				} finally {
+					rrd_maintenance_release($rrd_rewrite_lock);
+				}
+			}
+
+			$total_time = microtime(true) - $child_start;
+		} catch (Throwable $error) {
+			cacti_log('ERROR: Float worker failed: ' . $error->getMessage(), true, 'RFLOAT');
+			$exit_status = 1;
+		} finally {
+			unregister_process('rfloat', 'child', $thread_id);
 		}
-
-		$total_time = microtime(true) - $child_start;
-
-		unregister_process('rfloat', 'child', $thread_id);
 
 		break;
 }
 
 float_debug('Polling Ending');
 
-exit(0);
+exit($exit_status);
 
 /**
  * float_rrdfile - Takes the last known data for a data range
@@ -541,6 +575,10 @@ function float_rrdfile($rrd_path, $local_data_id, $step, $start_time, $end_time)
 function float_master_handler($forcerun, $resume, $host_id, $host_template_id, $graph_template_id, $local_graph_ids, $threads, $step, $start_time, $end_time) {
 	global $type;
 
+	if (float_reap_dead_children() === false) {
+		return false;
+	}
+
 	/* Create table if first time use */
 	if (!db_table_exists('poller_float_rrdfiles_not_done')) {
 		db_execute("CREATE TABLE `poller_float_rrdfiles_not_done` (
@@ -619,10 +657,14 @@ function float_master_handler($forcerun, $resume, $host_id, $host_template_id, $
 		return false;
 	}
 
+	// Every rewrite takes one directory-wide exclusive lease; siblings cannot run concurrently.
+	$threads = 1;
 	$rrdfiles_per_process = ceil(db_fetch_cell_prepared('SELECT COUNT(*)/? FROM poller_float_rrdfiles_not_done', array($threads)));
 
 	print "There are $threads and $rrdfiles_per_process RRDfiles to process per thread" . PHP_EOL;
 
+	$children = array();
+	$child_failed = false;
 	for($thread_id = 1; $thread_id <= $threads; $thread_id++) {
 		db_execute_prepared("UPDATE poller_float_rrdfiles_not_done
 			SET process = ?
@@ -632,27 +674,35 @@ function float_master_handler($forcerun, $resume, $host_id, $host_template_id, $
 
 		float_debug("Launching Process ID $thread_id");
 
-		float_launch_child($thread_id, $step, $start_time, $end_time);
+		$process = float_launch_child($thread_id, $step, $start_time, $end_time);
+		if (is_resource($process)) {
+			$children[$thread_id] = $process;
+		} else {
+			$child_failed = true;
+		}
 	}
 
-	$starting = true;
-
-	while (true) {
-		if ($starting) {
-			sleep(5);
-			$starting = false;
+	// Own the child handles: a crash before registration cannot leave us
+	// waiting forever on stale (or missing) database process rows.
+	while ($children) {
+		foreach ($children as $thread_id => $process) {
+			$status = proc_get_status($process);
+			if (!$status['running']) {
+				$child_failed = $child_failed || $status['exitcode'] !== 0;
+				proc_close($process);
+				unregister_process('rfloat', 'child', $thread_id, $status['pid']);
+				unset($children[$thread_id]);
+			}
 		}
-
-		$running = float_processes_running();
-
-		$rrds = db_fetch_cell('SELECT COUNT(*) FROM poller_float_rrdfiles_not_done');
-
-		if ($running > 0) {
-			float_debug(sprintf('%s Processes Running, %s RRDfiles Remaining, Sleeping for 2 seconds.', $running, $rrds));
-			sleep(2);
-		} else {
-			break;
+		if ($children) {
+			usleep(100000);
 		}
+	}
+	$rrds = db_fetch_cell('SELECT COUNT(*) FROM poller_float_rrdfiles_not_done');
+
+	if ($child_failed || !is_numeric($rrds) || (int) $rrds !== 0) {
+		cacti_log('ERROR: RRD floating left unprocessed files; use --resume after correcting the failure.', true, 'RFLOAT');
+		return false;
 	}
 
 	return true;
@@ -666,7 +716,7 @@ function float_master_handler($forcerun, $resume, $host_id, $host_template_id, $
  * @param $start_time (int)    The float window start time as a timestamp
  * @param $end_time   (int)    The float window end time as a timestamp
  *
- * @return - NULL
+ * @return resource|false Child handle owned by the master.
  */
 function float_launch_child($thread_id, $step, $start_time, $end_time) {
 	global $config, $seebug;
@@ -677,27 +727,14 @@ function float_launch_child($thread_id, $step, $start_time, $end_time) {
 		$php_binary = PHP_BINARY;
 	}
 
-	$args       = array(
-		$config['base_path'] . '/cli/float_rrdfiles.php',
-		'--type=child',
-		'--child=' . $thread_id,
-		'--start=' . $start_time,
-		'--end=' . $end_time
-	);
-
-	if ($step !== false) {
-		$args[] = '--step=' . $step;
-	}
-
-	if ($seebug) {
-		$args[] = '--debug';
-	}
-
 	float_debug(sprintf('Launching Float Data Process Number %s for Type %s', $thread_id, 'child'));
 
 	cacti_log(sprintf('NOTE: Launching Float Data Number %s for Type %s', $thread_id, 'child'), false, 'RFLOAT', POLLER_VERBOSITY_MEDIUM);
 
-	exec_background($php_binary, $args);
+	$args = array($php_binary, $config['base_path'] . '/cli/float_rrdfiles.php', '--type=child', '--child=' . $thread_id, '--start=' . $start_time, '--end=' . $end_time);
+	if ($step !== false) { $args[] = '--step=' . $step; }
+	if ($seebug) { $args[] = '--debug'; }
+	return proc_open($args, array(0 => STDIN, 1 => STDOUT, 2 => STDERR), $pipes);
 }
 
 /**
@@ -712,11 +749,48 @@ function float_processes_running() {
 		WHERE tasktype = "rfloat"
 		AND taskname = "child"');
 
-	if ($running == 0) {
+	if (!is_numeric($running)) { return false; }
+	if ((int) $running === 0) {
 		return 0;
 	}
 
 	return $running;
+}
+
+/**
+ * float_reap_dead_children - removes the process table rows of any child that
+ *   exited without unregistering itself, so the rmaster's wait loop stops
+ *   counting a worker that is already gone
+ *
+ * @return - (int) The number of children that were reaped
+ */
+function float_reap_dead_children() {
+	$reaped = 0;
+
+	$children = db_fetch_assoc_prepared('SELECT *
+		FROM processes
+		WHERE tasktype = ?
+		AND taskname = ?',
+		array('rfloat', 'child'));
+
+	if ($children === false) {
+		cacti_log('ERROR: Unable to inspect float workers; queue retained without modification.', false, 'RFLOAT');
+		return false;
+	}
+
+	foreach($children as $c) {
+		if (cacti_process_still_running($c['pid'])) {
+			continue;
+		}
+
+		cacti_log(sprintf('WARNING: Float Data Process Number %s with PID %s exited without unregistering itself.  Its unprocessed RRDfiles remain queued for --resume.', $c['taskid'], cacti_process_pid_for_log($c['pid'])), false, 'RFLOAT');
+
+		unregister_process($c['tasktype'], $c['taskname'], $c['taskid'], $c['pid']);
+
+		$reaped++;
+	}
+
+	return $reaped;
 }
 
 /**
@@ -753,7 +827,7 @@ function display_help () {
 
 	print 'Cacti\'s RRDfile Data Float Tool.  This CLI script will float a' . PHP_EOL;
 	print 'range in select Cacti Graphs using the RRDtool dump/import utility.' . PHP_EOL . PHP_EOL;
-	print 'This utility will run in parallel with the given number of threads,' . PHP_EOL;
+	print 'This utility serializes rewrites under the exclusive storage lease,' . PHP_EOL;
 	print 'except in the case when you have specified specific --graph-ids as' . PHP_EOL;
 	print 'show with the optional settings below.' . PHP_EOL . PHP_EOL;
 
@@ -762,7 +836,7 @@ function display_help () {
 	print '    --end=TS    - The float range end time timestamp or date.' . PHP_EOL . PHP_EOL;
 
 	print 'Optional:' . PHP_EOL;
-	print '    --threads             - 20, The number of threads to use to update RRDfiles' . PHP_EOL;
+	print '    --threads             - Accepted for compatibility; rewrites use one worker' . PHP_EOL;
 	print '    --resume              - False, Resume a canceled float process' . PHP_EOL;
 	print '    --host-id=N           - N/A, Update a specific devices RRDfiles' . PHP_EOL;
 	print '    --host-template-id=N  - N/A, Update a specific Device Templates RRDfiles' . PHP_EOL;
@@ -784,7 +858,7 @@ function display_help () {
  * @return - null
  */
 function sig_handler($signo) {
-	global $type, $thread_id;
+	global $type, $thread_id, $rrd_rewrite_lock;
 
 	switch ($signo) {
 		case SIGTERM:
@@ -795,7 +869,13 @@ function sig_handler($signo) {
 				float_kill_running_processes();
 			}
 
-			unregister_process('rfloat', 'rmaster', $thread_id, getmypid());
+			/* a child interrupted mid-fetch still owns the row it registered under
+			 * its own type/thread id; unregistering as 'rmaster' would miss it and
+			 * leave float_processes_running() counting a process that is gone */
+			unregister_process('rfloat', $type, $thread_id, getmypid());
+
+			rrd_maintenance_release($rrd_rewrite_lock);
+
 
 			exit(1);
 			break;

@@ -934,7 +934,7 @@ function automation_graph_rules() {
 		ON agr.graph_type_id = sqg.id
 		$sql_where");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('name', 'id', 'snmp_query_name', 'graph_type_name', 'enabled'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$automation_graph_rules_list = db_fetch_assoc("SELECT agr.id, agr.name, agr.snmp_query_id, agr.graph_type_id,

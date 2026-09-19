@@ -452,10 +452,10 @@ function settings_javascript() {
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 
 	var themeFonts   = <?php print read_config_option('font_method');?>;
-	var currentTab   = <?php print json_encode((string) get_nfilter_request_var('tab'));?>;
-	var currentTheme = '<?php print get_selected_theme();?>';
-	var currentLang  = '<?php print read_config_option('user_language');?>';
-	var authMethod   = '<?php print read_config_option('auth_method');?>';
+	var currentTab   = <?php print json_encode((string) get_nfilter_request_var('tab'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
+	var currentTheme = <?php print json_encode((string) get_selected_theme(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
+	var currentLang  = <?php print json_encode((string) read_config_option('user_language'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
+	var authMethod   = <?php print json_encode((string) read_config_option('auth_method'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
 
 	function clearUserSettings() {
 		$.get('auth_profile.php?action=clear_user_settings', function() {
@@ -650,7 +650,7 @@ function settings_javascript() {
 		});
 
 		$('#return').on('click', function() {
-			document.location = <?php print json_encode($_SESSION['profile_referer'] ?? '');?>;
+			document.location = <?php print json_encode($_SESSION['profile_referer'] ?? '', JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);?>;
 		});
 
 		// set the buttons active

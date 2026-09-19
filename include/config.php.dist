@@ -282,3 +282,21 @@ $i18n_log = null;
  * locations under /tmp/systemd<uniqueid>/tmp
  */
 $i18n_text_log = null;
+
+/**
+ * RRD storage shared by separate web and poller Unix accounts requires an
+ * explicit trust list, identical in every process that accesses the store.
+ * Use numeric Unix IDs, for example array(33, 1001), after checking local IDs.
+ * Trusted accounts may replace storage paths; quiesce all writers before doing
+ * so. Only list a group when ALL its members are trusted storage administrators.
+ * World-writable storage is always rejected. Empty lists trust root/current UID.
+ */
+$config['rrd_maintenance_trusted_uids'] = array();
+$config['rrd_maintenance_trusted_gids'] = array();
+
+// Maximum time for one acknowledged RRDtool command, including large dumps.
+// Default: 60 seconds. Accepted range: 1 through 3600 seconds. Timeouts retain
+// queued samples and invalidate the failed pipe; a new operation opens a new one.
+// A command can hold the writer lease for this entire period. Keep this below
+// the poller interval/runtime budget; larger values can delay other writers.
+// $config['rrd_command_timeout'] = 60;

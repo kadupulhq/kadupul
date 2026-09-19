@@ -734,10 +734,11 @@ function domains() {
 
 	$total_rows = get_total_row_data($_SESSION['sess_user_id'], "SELECT count(*) FROM user_domains $sql_where", $params);
 
-	$domains = db_fetch_assoc_prepared("SELECT *
-		FROM user_domains
+	$domains = db_fetch_assoc_prepared("SELECT ud.*, ldap.cn_full_name, ldap.cn_email
+		FROM user_domains AS ud
+		LEFT JOIN user_domains_ldap AS ldap ON ldap.domain_id = ud.domain_id
 		$sql_where
-		" . get_order_string() . "
+		" . get_order_string(array('domain_name', 'type', 'defdomain', 'user_id', 'cn_full_name', 'cn_email', 'enabled')) . "
 		LIMIT " . ($rows*(get_request_var('page')-1)) . ',' . $rows, $params);
 
 	$nav = html_nav_bar('user_user_domains.php?filter=' . get_request_var('filter'), MAX_DISPLAY_PAGES, get_request_var('page'), $rows, $total_rows, 8, __('User Domains'), 'page', 'main');
@@ -768,8 +769,8 @@ function domains() {
 			form_selectable_cell($domain_types[$domain['type']], $domain['domain_id']);
 			form_selectable_cell(($domain['defdomain'] == '0' ? '--': __('Yes') ), $domain['domain_id']);
 			form_selectable_ecell(($domain['user_id'] == '0' ? __('None Selected') : db_fetch_cell_prepared('SELECT username FROM user_auth WHERE id = ?', array($domain['user_id']))), $domain['domain_id']);
-			form_selectable_ecell(db_fetch_cell_prepared('SELECT cn_full_name FROM user_domains_ldap WHERE domain_id = ?', array($domain['domain_id'])), $domain['domain_id']);
-			form_selectable_ecell(db_fetch_cell_prepared('SELECT cn_email FROM user_domains_ldap WHERE domain_id = ?', array($domain['domain_id'])), $domain['domain_id']);
+			form_selectable_ecell($domain['cn_full_name'], $domain['domain_id']);
+			form_selectable_ecell($domain['cn_email'], $domain['domain_id']);
 			form_selectable_cell($domain['enabled'] == 'on' ? __('Yes'):__('No'), $domain['domain_id']);
 			form_checkbox_cell($domain['domain_name'], $domain['domain_id']);
 			form_end_row();

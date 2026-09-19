@@ -644,16 +644,27 @@ function poller_delete_output_rows($keys, &$failed = null) {
 		return 0;
 	}
 
+	// Validate the entire selection before any chunk can delete rows.
+	foreach ($keys as $key) {
+		if (!is_array($key) || array_keys($key) !== array(0, 1, 2, 3)) {
+			$failed = true;
+			return 0;
+		}
+	}
+
 	$consumed = 0;
-	foreach (array_chunk($keys, 10000) as $chunk) {
+	foreach (array_chunk($keys, 500) as $chunk) {
 		$params = array();
 		foreach ($chunk as $key) {
 			$params[] = (int) $key[0];
 			$params[] = (string) $key[1];
 			$params[] = (string) $key[2];
+			$params[] = (string) $key[3];
 		}
-		$placeholders = implode(',', array_fill(0, cacti_sizeof($chunk), '(?,?,?)'));
-		if (db_execute_prepared("DELETE FROM poller_output WHERE (local_data_id, rrd_name, time) IN ($placeholders)", $params) === false) {
+		// Compare the observed payload byte-for-byte, regardless of table collation.
+		$placeholders = implode(' OR ', array_fill(0, cacti_sizeof($chunk), '(local_data_id = ? AND rrd_name = ? AND time = ? AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY))'));
+		// Explicit key equalities retain range access on both MySQL and MariaDB.
+		if (db_execute_prepared("DELETE FROM poller_output WHERE $placeholders", $params) === false) {
 			$failed = true;
 			break;
 		}
@@ -668,7 +679,7 @@ function poller_cleanup_orphan_rows(&$failed = null) {
 	$failed = false;
 	$consumed = 0;
 	do {
-		$orphans = db_fetch_assoc('SELECT po.local_data_id, po.rrd_name, po.time
+		$orphans = db_fetch_assoc('SELECT po.local_data_id, po.rrd_name, po.time, po.output
 			FROM poller_output AS po
 			LEFT JOIN data_local AS dl ON dl.id = po.local_data_id
 			WHERE dl.id IS NULL LIMIT 40000');
@@ -679,17 +690,56 @@ function poller_cleanup_orphan_rows(&$failed = null) {
 		}
 		$orphan_keys = array();
 		foreach ($orphans as $orphan) {
-			$orphan_keys[] = array($orphan['local_data_id'], $orphan['rrd_name'], $orphan['time']);
+			$orphan_keys[] = array($orphan['local_data_id'], $orphan['rrd_name'], $orphan['time'], $orphan['output']);
 		}
 		$orphan_consumed = poller_delete_output_rows($orphan_keys, $orphan_failed);
 		$consumed += $orphan_consumed;
-		if ($orphan_failed || ($orphan_keys && $orphan_consumed === 0)) {
+		// A short count means a key was replaced after selection; stop so the next page cannot take it.
+		if ($orphan_failed || $orphan_consumed < cacti_sizeof($orphan_keys)) {
 			$failed = true;
 			cacti_log('ERROR: Orphan sample cleanup failed; rows retained for retry.', false, 'POLLER');
 			return $consumed;
 		}
 	} while (cacti_sizeof($orphans) === 40000);
 	return $consumed;
+}
+
+/** Bound incomplete sample retention without discarding complete retry groups. */
+function poller_expire_incomplete_rows($retention, &$failed = null) {
+	$failed = false;
+	$expired = 0;
+	do {
+		$rows = db_fetch_assoc_prepared('SELECT po.local_data_id, po.rrd_name, po.time, po.output
+			FROM poller_output AS po
+			INNER JOIN (
+				SELECT old.local_data_id, old.time
+				FROM poller_output AS old
+				LEFT JOIN poller_item AS pi ON pi.local_data_id = old.local_data_id AND pi.rrd_name = old.rrd_name
+				WHERE old.time < FROM_UNIXTIME(UNIX_TIMESTAMP() - ?)
+				GROUP BY old.local_data_id, old.time
+				HAVING MAX(pi.rrd_num) IS NULL OR COUNT(DISTINCT pi.rrd_name) < MAX(pi.rrd_num)
+			) AS incomplete ON incomplete.local_data_id = po.local_data_id AND incomplete.time = po.time
+			LIMIT 40000', array(max(0, (int) $retention)));
+		if ($rows === false) {
+			$failed = true;
+			return $expired;
+		}
+		$keys = array();
+		foreach ($rows as $row) {
+			$keys[] = array($row['local_data_id'], $row['rrd_name'], $row['time'], $row['output']);
+		}
+		$deleted = poller_delete_output_rows($keys, $failed);
+		$expired += $deleted;
+		// Only the payload observed by this pass may expire; a replaced key ends the pass.
+		if ($failed || $deleted < count($keys)) {
+			$failed = true;
+			return $expired;
+		}
+	} while (count($rows) === 40000);
+	if ($expired > 0) {
+		cacti_log(sprintf('WARNING: Expired %d incomplete poller samples older than the retention window; complete retry groups were retained.', $expired), false, 'POLLER');
+	}
+	return $expired;
 }
 
 /**
@@ -701,11 +751,17 @@ function poller_cleanup_orphan_rows(&$failed = null) {
  *
  * @return (int) - The number of rrdfiles processed
  */
-function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null, &$consumed = null, $after = null) {
+function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null, &$consumed = null, $after = null, $blocked_paths = array()) {
 	global $config, $debug;
 
 	$deferred = false;
 	$consumed = 0;
+
+	if ($rrdtool_pipe === false) {
+		cacti_log('ERROR: RRD initialization failed; pending poller samples were retained.', false, 'POLLER');
+		$deferred = true;
+		return 0;
+	}
 
 	static $rrd_field_names = array();
 	static $checked_bad     = false;
@@ -714,6 +770,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 
 	/* let's count the number of rrd files we processed */
 	$rrds_processed = 0;
+	$write_failed = false;
 	$max_rows = 40000;
 
 	if ($remainder == 0) {
@@ -773,6 +830,9 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 			$deferred = true;
 			return 0;
 		}
+
+		$unmapped_keys      = array();
+		$unmapped_retention = max(600, 2 * (int) read_config_option('poller_interval'));
 
 		/* create an array keyed off of each .rrd file */
 		foreach ($results as $item) {
@@ -968,7 +1028,17 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 			if ((!isset($rrd_update_array[$rrd_path]['times'][$unix_time])) && ($rrd_name != '')) {
 				$rrd_update_array[$rrd_path]['times'][$unix_time][$rrd_name] = 'U';
 			} elseif ((!isset($rrd_update_array[$rrd_path]['times'][$unix_time])) && ($rrd_name == '')) {
-				unset($rrd_update_array[$rrd_path]);
+				// Other samples for this file are still valid; drop only the unusable one.
+				if (empty($rrd_update_array[$rrd_path]['times'])) {
+					unset($rrd_update_array[$rrd_path]);
+				}
+
+				/* A MULTI row carries the whole sample, so nothing can arrive to
+				 * complete it. Retention leaves room for a transient mapping failure. */
+				if ($unix_time < time() - $unmapped_retention) {
+					cacti_log(sprintf('WARNING: Discarded unmapped MULTI output for DS[%d] at %s', $local_data_id, $item['time']), false, 'POLLER');
+					$unmapped_keys[] = array($local_data_id, $rrd_name, $item['time'], $item['output']);
+				}
 			}
 		}
 
@@ -987,7 +1057,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 				 * those data sources from the $rrd_update_array yet.
 				 */
 				if ($item['rrd_num'] <= cacti_sizeof($rrd_update_array[$rrd_path]['times'][$unix_time])) {
-					$output_keys[] = array($item['local_data_id'], $item['rrd_name'], $item['time']);
+					$output_keys[] = array($item['local_data_id'], $item['rrd_name'], $item['time'], $item['output']);
 
 				} else {
 					unset($rrd_update_array[$rrd_path]['times'][$unix_time]);
@@ -995,17 +1065,52 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 			}
 		}
 
-		$consumed += poller_delete_output_rows($output_keys, $deferred);
 
-		/* process dsstats information */
-		dsstats_poller_output($rrd_update_array);
-		dsdebug_poller_output($rrd_update_array);
-
-		api_plugin_hook_function('poller_output', $rrd_update_array);
 
 		if ($direct_rrd_update) {
-			$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe);
+			// Never advance an RRD past a retained sample from an earlier page.
+			foreach ($blocked_paths as $path => $blocked) {
+				unset($rrd_update_array[$path]);
+			}
+			$rrds_processed = rrdtool_function_update($rrd_update_array, $rrdtool_pipe, $completed);
+			// A terminal rejection is recorded as false in $completed and consumed.
+			// Only absent acknowledgements require deferring subsequent batches.
+			foreach ($rrd_update_array as $path => $fields) {
+				foreach ($fields['times'] as $time => $values) {
+					if (!isset($completed[$path][$time])) {
+						$write_failed = true;
+						$blocked_paths[$path] = true;
+					}
+				}
+			}
+			$rrds_processed = array_sum(array_map(function ($samples) { return count(array_filter($samples)); }, $completed));
+			$output_keys = array();
+			// Present false means permanently rejected and logged; absent means retry.
+			foreach ($results as $item) {
+				if (isset($completed[$item['rrd_path']][$item['unix_time']])) {
+					$output_keys[] = array($item['local_data_id'], $item['rrd_name'], $item['time'], $item['output']);
+				}
+			}
 		}
+
+		// Publish only accepted samples; retained writes must not replay side effects.
+		if ($direct_rrd_update) {
+			foreach ($rrd_update_array as $path => $fields) {
+				foreach ($fields['times'] as $time => $values) {
+					if (($completed[$path][$time] ?? null) !== true) {
+						unset($rrd_update_array[$path]['times'][$time]);
+					}
+				}
+				if (empty($rrd_update_array[$path]['times'])) { unset($rrd_update_array[$path]); }
+			}
+		}
+		if ($rrd_update_array) {
+			dsstats_poller_output($rrd_update_array);
+			dsdebug_poller_output($rrd_update_array);
+			api_plugin_hook_function('poller_output', $rrd_update_array);
+		}
+
+		$consumed += poller_delete_output_rows(array_merge($output_keys, $unmapped_keys), $deferred);
 
 		$results = NULL;
 		$rrd_update_array = NULL;
@@ -1029,7 +1134,7 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 				WHERE end_time = "0000-00-00"');
 
 			if ($full_page) {
-				$rrds_processed += process_poller_output($rrdtool_pipe, $max_rows, $deferred, $child_consumed, $next);
+				$rrds_processed += process_poller_output($rrdtool_pipe, $max_rows, $deferred, $child_consumed, $next, $blocked_paths);
 				$consumed += $child_consumed;
 
 				if ($deferred) {
@@ -1037,7 +1142,8 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 				}
 			}
 
-			if ($running == 0) {
+			if (!is_numeric($running)) { $deferred = true; return $rrds_processed; }
+			if ((int) $running === 0) {
 				/* Purge only the exact orphan keys observed here, so arrivals for
 				 * a concurrently recreated data source cannot be swept away. */
 				$consumed += poller_cleanup_orphan_rows($deferred);
@@ -1046,6 +1152,11 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 				}
 
 				if (!$checked_bad) {
+					$retention = max(600, 2 * (int) read_config_option('poller_interval'));
+					$consumed += poller_expire_incomplete_rows($retention, $deferred);
+					if ($deferred) {
+						return $rrds_processed;
+					}
 					/* A new poller may have started since the running-count snapshot.
 					 * Diagnose incomplete samples, but retain them for later arrivals. */
 					// Identify data sources that are somehow not aligned
@@ -1080,9 +1191,17 @@ function process_poller_output(&$rrdtool_pipe, $remainder = 0, &$deferred = null
 			}
 		}
 	} elseif ($results === array()) {
+		$running = db_fetch_cell('SELECT COUNT(*) FROM poller_time WHERE end_time = "0000-00-00"');
+		if (!is_numeric($running)) { $deferred = true; return $rrds_processed; }
+		if ((int) $running > 0) { return $rrds_processed; }
 		$consumed += poller_cleanup_orphan_rows($deferred);
+		if (!$deferred) {
+			$retention = max(600, 2 * (int) read_config_option('poller_interval'));
+			$consumed += poller_expire_incomplete_rows($retention, $deferred);
+		}
 	}
 
+	$deferred = $deferred || $write_failed;
 	return $rrds_processed;
 }
 
@@ -3139,6 +3258,84 @@ function timeout_kill_registered_processes($tasktype = '', $taskname = '', $task
 			}
 
 			unregister_process($r['tasktype'], $r['taskname'], $r['taskid'], $r['pid']);
+		}
+	}
+}
+
+
+/** Hold the writer lease only while draining a batch, never while waiting for collectors. */
+function process_poller_output_batch($final, &$deferred, &$proxy_pipe, $deadline = null) {
+	global $config;
+	static $reported = array();
+	static $retry_after = 0;
+	$deferred = false;
+	// Bound background retries; final drains bypass the delay after collection.
+	if (!$final && hrtime(true) < $retry_after) {
+		$deferred = true;
+		return 0;
+	}
+	$pending = db_fetch_cell_prepared('SELECT ' . SQL_NO_CACHE . ' COUNT(*) FROM poller_output');
+	if (!is_numeric($pending)) {
+		if (empty($reported['count'])) {
+			cacti_log('ERROR: Unable to read pending poller output count; samples retained for retry.', false, 'POLLER');
+			$reported['count'] = true;
+		}
+		$deferred = true;
+		return 0;
+	}
+	$reported['count'] = false;
+	if ((int) $pending === 0) {
+		$reported = array();
+		$retry_after = 0;
+		return 0;
+	}
+	$proxy = ($config['force_storage_location_local'] ?? false) !== true && read_config_option('storage_location');
+	$busy = false;
+	if ($proxy) {
+		if ($proxy_pipe === false) {
+			$proxy_pipe = rrd_init('POLLER', false, true);
+		}
+		$pipe = $proxy_pipe;
+	} else {
+		$pipe = rrd_init(true, false, true, 0, $busy);
+	}
+	if ($busy) {
+		if (empty($reported['busy'])) {
+			cacti_log('NOTE: RRD maintenance is active; pending poller samples retained for a later batch.', false, 'POLLER');
+			$reported['busy'] = true;
+		}
+		$deferred = true;
+		return 0;
+	}
+	$reported['busy'] = false;
+	if ($pipe === false) {
+		if (empty($reported['writer'])) {
+			cacti_log('ERROR: Unable to start the RRD batch writer; pending samples retained for retry.', false, 'POLLER');
+			$reported['writer'] = true;
+		}
+		$deferred = true;
+		return 0;
+	}
+	$reported['writer'] = false;
+	$failed = true;
+	/* A hung writer must not hold the lease past the collector's runtime limit. */
+	if ($deadline !== null) {
+		$command_deadline =& rrd_command_deadline();
+		$previous_deadline = $command_deadline;
+		$command_deadline = hrtime(true) + (int) (max(0, $deadline - microtime(true)) * 1000000000);
+	}
+	try {
+		$updated = process_poller_output($pipe, $final, $deferred);
+		$failed = $deferred;
+		return $updated;
+	} finally {
+		if ($deadline !== null) {
+			$command_deadline = $previous_deadline;
+		}
+		$retry_after = $failed ? hrtime(true) + 5000000000 : 0;
+		if (!$proxy || $failed) {
+			rrd_close($pipe);
+			$proxy_pipe = false;
 		}
 	}
 }

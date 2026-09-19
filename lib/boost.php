@@ -621,27 +621,27 @@ function boost_fetch_cache_check($local_data_id, $rrdtool_pipe = false) {
 		/* install the boost error handler */
 		set_error_handler('boost_error_handler');
 
-		/* process input parameters */
-		if (!is_resource($rrdtool_pipe)) {
-			$rrdtool_pipe = rrd_init();
-			$close_pipe = true;
-		} else {
-			$close_pipe = false;
-		}
+		$close_pipe = false;
+		try {
+			if (!is_resource($rrdtool_pipe)) {
+				$rrdtool_pipe = rrd_init(true, false, true);
+				if ($rrdtool_pipe === false) {
+					cacti_log('ERROR: Boost fetch writer initialization failed; pending samples retained.', false, 'BOOST');
+					return false;
+				}
+				$close_pipe = true;
+			}
 
-		/* get the information to populate into the rrd files */
-		if (boost_check_correct_enabled()) {
-			boost_process_poller_output($local_data_id, $rrdtool_pipe);
-		}
-
-		/* restore original error handler */
-		restore_error_handler();
-		error_reporting($previous_error_reporting);
-
-		/* close rrdtool */
-		if ($close_pipe) {
-			boost_rrdtool_pipe_creates('forget', $rrdtool_pipe);
-			rrd_close($rrdtool_pipe);
+			if (boost_check_correct_enabled()) {
+				boost_process_poller_output($local_data_id, $rrdtool_pipe);
+			}
+		} finally {
+			restore_error_handler();
+			error_reporting($previous_error_reporting);
+			if ($close_pipe) {
+				boost_rrdtool_pipe_creates('forget', $rrdtool_pipe);
+				rrd_close($rrdtool_pipe);
+			}
 		}
 	}
 }
@@ -1209,7 +1209,19 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 	cacti_system_zone_set();
 
 	include_once($config['library_path'] . '/rrd.php');
+	$owned_rrd_pipe = !$rrdtool_pipe;
+	if ($owned_rrd_pipe) {
+		$rrdtool_pipe = rrd_init(true, false, true);
+	}
+	if ($rrdtool_pipe === false) {
+		if (empty($config['is_web']) || debounce_run_notification('rrd_initialization_failure', 1800)) {
+			cacti_log('ERROR: RRD initialization failed; pending on-demand Boost samples were retained.', false, 'BOOST');
+		}
+		return -1;
+	}
 	$previous_error_reporting = error_reporting();
+	$boost_handler_installed = false;
+	try {
 
 	/* suppress warnings */
 	if (defined('E_DEPRECATED')) {
@@ -1220,6 +1232,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 
 	/* install the boost error handler */
 	set_error_handler('boost_error_handler');
+	$boost_handler_installed = true;
 
 
 	$max_rows = (int) read_config_option('boost_rrd_update_max_records_per_select');
@@ -1290,7 +1303,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 
 	$boost_results   = 0;
 	$updates_ok      = true;
-	$rrdp_auto_close = false;
+	$rrdp_auto_close = $owned_rrd_pipe;
 	$cursor          = false;
 
 	/* Page through the rows so a long backlog is written in full without
@@ -1343,7 +1356,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 		}
 
 		if (!$rrdtool_pipe) {
-			$rrdtool_pipe    = rrd_init();
+			$rrdtool_pipe    = rrd_init(true, false, true);
 			$rrdp_auto_close = true;
 		}
 
@@ -1587,6 +1600,7 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 	if ($rrdp_auto_close) {
 		boost_rrdtool_pipe_creates('forget', $rrdtool_pipe);
 		rrd_close($rrdtool_pipe);
+		$owned_rrd_pipe = false;
 	}
 
 	/* Remove retry records only after RRD and archive forwarding acknowledgement. */
@@ -1644,11 +1658,17 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 		db_execute("SELECT RELEASE_LOCK('boost.single_ds.$local_data_id')");
 	}
 
-	/* restore original error handler */
-	restore_error_handler();
-	error_reporting($previous_error_reporting);
-
 	return $updates_ok ? $boost_results : -1;
+	} finally {
+		if ($boost_handler_installed) {
+			restore_error_handler();
+		}
+		error_reporting($previous_error_reporting);
+		if ($owned_rrd_pipe) {
+			boost_rrdtool_pipe_creates('forget', $rrdtool_pipe);
+			rrd_close($rrdtool_pipe);
+		}
+	}
 }
 
 function boost_rrdtool_get_last_update_time($rrd_path, &$rrdtool_pipe) {
@@ -1816,7 +1836,7 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
 			$file_exists = file_exists($data_source_path);
 		}
 
-		if ($file_exists == true) {
+		if ($file_exists !== false) {
 			return -1;
 		}
 	}
@@ -2060,8 +2080,15 @@ function boost_rrdtool_pipe_creates($action, $rrdtool_pipe, $rrd_path = '') {
    @arg $rrd_path      - the path to the RRD file
    @arg $rrd_update_template  - the order in which values need to be added
    @arg $rrd_update_values    - values to include in the database */
-function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_template, &$rrd_update_values, &$rrdtool_pipe) {
+function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_template, &$rrd_update_values, &$rrdtool_pipe, &$retry_budget = null) {
 	global $debug;
+
+	// Bound synchronous recovery work while retaining any unacknowledged rows.
+	if ($retry_budget === null) {
+		$retry_budget = 64;
+	} elseif ($retry_budget-- <= 0) {
+		return 'ERROR: Boost recovery command limit reached; retain samples for retry';
+	}
 
 	/* lets count the number of rrd files processed */
 	$rrds_processed = 0;
@@ -2103,7 +2130,11 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 		$file_exists = file_exists($rrd_path);
 	}
 
-	if ($file_exists == false) {
+	if ($file_exists === null) {
+		return 'ERROR: Unable to confirm RRD existence';
+	}
+
+	if ($file_exists === false) {
 		$ds_exists = db_fetch_cell_prepared('SELECT id FROM data_local WHERE id = ?', array($local_data_id));
 
 		// Check for a Data Source that has been removed
@@ -2114,7 +2145,8 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 				/* rrdtool create overwrites, so queue one create per file on a pipe */
 				$created = true;
 			} else {
-				$created = boost_rrdtool_function_create($local_data_id, false, $rrdtool_pipe);
+				$create_pipe = $rrdtool_pipe;
+				$created = boost_rrdtool_function_create($local_data_id, false, $create_pipe);
 			}
 
 			if ($piped) {
@@ -2173,7 +2205,7 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 
 			cacti_log("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, 'BOOST', ($debug ? POLLER_VERBOSITY_NONE : POLLER_VERBOSITY_HIGH));
 
-			$result = rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'BOOST');
+			$result = rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
 		} else {
 			if (cacti_has_control_chars($rrd_update_values)) {
 				cacti_log("ERROR: Invalid RRD update value set for local_data_id: $local_data_id.", false, 'BOOST');
@@ -2183,11 +2215,31 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 
 			cacti_log("update $rrd_path $update_options $rrd_update_values", true, 'BOOST', ($debug ? POLLER_VERBOSITY_NONE : POLLER_VERBOSITY_HIGH));
 
-			$result = rrdtool_execute("update $rrd_path $update_options $rrd_update_values", false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'BOOST');
+			$result = rrdtool_execute("update $rrd_path $update_options $rrd_update_values", false, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'BOOST');
 		}
 
-		if ($result === false || preg_match('/(?:^|\b)(?:ERROR|Error)(?::|\b)/', trim((string) $result))) {
-			return is_string($result) && $result !== '' ? $result : 'ERROR: RRDtool did not acknowledge the update';
+		if ($result !== true) {
+			$reason = rrdtool_last_rejection();
+			if (is_string($reason) && strpos($reason, $rrd_path . ': ') === 0) {
+				$reason = substr($reason, strlen($rrd_path) + 2);
+			}
+			if (rrdtool_rejection_is_permanent($reason)) {
+				$samples = preg_split('/\s+/', trim($rrd_update_values), -1, PREG_SPLIT_NO_EMPTY);
+				if (count($samples) > 1) {
+					// Bisect to isolate malformed samples without retrying every good row.
+					foreach (array_chunk($samples, (int) ceil(count($samples) / 2)) as $half) {
+						$sample = implode(' ', $half);
+						$status = boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_template, $sample, $rrdtool_pipe, $retry_budget);
+						if ($status !== 'OK') {
+							return $status;
+						}
+					}
+				} else {
+					cacti_log("ERROR: Permanently rejected Boost sample for local_data_id $local_data_id, path $rrd_path, template $rrd_update_template, values $rrd_update_values: $reason", false, 'BOOST');
+				}
+				return 'OK';
+			}
+			return is_string($reason) && $reason !== '' ? 'ERROR: ' . $reason . '; retain samples for retry' : 'ERROR: RRDtool did not acknowledge the update';
 		}
 
 		return 'OK';

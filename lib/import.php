@@ -734,13 +734,16 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 				continue;
 			}
 
+			/* Key the status by the package name, not $filename. The UI posts the
+			 * key back as the selection and diff target, and $filename is under
+			 * realpath(base_path), which differs from base_path behind a symlink. */
 			if (!$preview) {
-				if (!cacti_sizeof($import_files) || in_array($name, $import_files)) {
+				if (!cacti_sizeof($import_files) || in_array($name, $import_files, true) || in_array($normalized_name, $import_files, true)) {
 					/* a shipped package can carry an older copy of a file the release already hardened */
 					if (!$replace_files && file_exists($filename)) {
 						cacti_log('NOTE: Keeping existing file: ' . $filename, false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 
-						$filestatus[$filename] = __('kept existing');
+						$filestatus[$normalized_name] = __('kept existing');
 
 						continue;
 					}
@@ -758,21 +761,21 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 							fwrite($file , $fdata, strlen($fdata));
 							fclose($file);
 							clearstatcache();
-							$filestatus[$filename] = __('written');
+							$filestatus[$normalized_name] = __('written');
 						} else {
-							$filestatus[$filename] = __('could not open');
+							$filestatus[$normalized_name] = __('could not open');
 						}
 
 						if (!file_exists($filename)) {
 							cacti_log('FATAL: Unable to create directory: ' . $filename, true, 'IMPORT', POLLER_VERBOSITY_LOW);
 
-							$filestatus[$filename] = __('not exists');
+							$filestatus[$normalized_name] = __('not exists');
 						}
 					} else {
-						$filestatus[$filename] = __('not writable');
+						$filestatus[$normalized_name] = __('not writable');
 					}
 
-					cacti_log('Write Status file: ' . $filename . ', with Status ' . $filestatus[$filename], false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
+					cacti_log('Write Status file: ' . $filename . ', with Status ' . $filestatus[$normalized_name], false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 				}
 			} else {
 				cacti_log('Previewing file: ' . $filename, false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
@@ -786,29 +789,29 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 				if (is_writeable(dirname($filename))) {
 					if (file_exists($filename) && is_writable($filename)) {
 						if ($new === $existing) {
-							$filestatus[$filename] = 'writable, identical';
+							$filestatus[$normalized_name] = 'writable, identical';
 						} else {
-							$filestatus[$filename] = 'writable, differences';
+							$filestatus[$normalized_name] = 'writable, differences';
 						}
 					} elseif (file_exists($filename) && is_writeable($filename)) {
-						$filestatus[$filename] = 'writable, new';
+						$filestatus[$normalized_name] = 'writable, new';
 					} elseif (file_exists($filename) && !is_writeable($filename)) {
 						if ($new === $existing) {
-							$filestatus[$filename] = 'not writable, identical';
+							$filestatus[$normalized_name] = 'not writable, identical';
 						} else {
-							$filestatus[$filename] = 'not writable, differences';
+							$filestatus[$normalized_name] = 'not writable, differences';
 						}
 					} else {
-						$filestatus[$filename] = 'writable, new';
+						$filestatus[$normalized_name] = 'writable, new';
 					}
 				} elseif (file_exists($filename)) {
 					if ($new === $existing) {
-						$filestatus[$filename] = 'not writable, identical';
+						$filestatus[$normalized_name] = 'not writable, identical';
 					} else {
-						$filestatus[$filename] = 'not writable, differences';
+						$filestatus[$normalized_name] = 'not writable, differences';
 					}
 				} else {
-					$filestatus[$filename] = 'not writable, new';
+					$filestatus[$normalized_name] = 'not writable, new';
 				}
 			}
 		} else {

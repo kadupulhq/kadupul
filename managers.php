@@ -194,7 +194,7 @@ function manager() {
 		FROM snmpagent_managers AS sm
 		$sql_where");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('description', 'id', 'disabled', 'hostname', 'count_notify', 'count_log'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$managers = db_fetch_assoc("SELECT sm.id, sm.description,

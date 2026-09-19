@@ -830,7 +830,7 @@ function get_vdef_records(&$total_rows, &$rows) {
         ) AS rs
         $sql_where");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('name', 'graphs', 'templates'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	return db_fetch_assoc("SELECT rs.*,

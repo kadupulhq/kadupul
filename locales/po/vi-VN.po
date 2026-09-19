@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: developers@cacti.net\n"
-"POT-Creation-Date: 2026-09-15 20:13-0700\n"
+"POT-Creation-Date: 2026-09-17 18:08-0700\n"
 "PO-Revision-Date: 2023-03-07 13:33+0000\n"
 "Last-Translator: Anonymous <anonymous@cacti.net>\n"
 "Language-Team: Vietnamese <http://translate.cacti.net/projects/cacti/core-v1-2-x/vi/>\n"
@@ -80,7 +80,7 @@ msgstr "Giấy phép"
 msgid "Cacti is licensed under the GNU GPL:"
 msgstr "Cacti được cấp phép theo GPL GNU:"
 
-#: about.php:100 lib/installer.php:1852
+#: about.php:100 lib/installer.php:1864
 msgid "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
 msgstr "Chương trình này là phần mềm miễn phí; bạn có thể phân phối lại và / hoặc sửa đổi nó theo các điều khoản của Giấy phép Công cộng GNU do Tổ chức Phần mềm Tự do xuất bản; phiên bản 2 của Giấy phép hoặc (tùy chọn của bạn) bất kỳ phiên bản mới hơn."
 
@@ -93,7 +93,7 @@ msgstr "Chương trình này được phân phối với hy vọng nó sẽ hữ
 #: automation_snmp.php:29 automation_snmp.php:590 automation_templates.php:31
 #: automation_tree_rules.php:33 cdef.php:29 cdef.php:624 color.php:29
 #: color_templates.php:28 color_templates.php:123 data_input.php:32
-#: data_input.php:662 data_input.php:704 data_queries.php:32
+#: data_input.php:696 data_input.php:738 data_queries.php:32
 #: data_queries.php:835 data_queries.php:942 data_queries.php:1203
 #: data_source_profiles.php:31 data_source_profiles.php:671 data_sources.php:37
 #: data_sources.php:1090 data_templates.php:34 data_templates.php:752
@@ -151,7 +151,7 @@ msgstr "Nhấp vào &#39;Tiếp tục&#39; để xóa (các) Biểu đồ Tổng
 #: automation_templates.php:174 automation_tree_rules.php:327 cdef.php:276
 #: cdef.php:287 cdef.php:343 color.php:196 color_templates.php:243
 #: color_templates.php:255 color_templates.php:264
-#: color_templates_items.php:299 data_input.php:303 data_input.php:355
+#: color_templates_items.php:299 data_input.php:308 data_input.php:365
 #: data_queries.php:424 data_queries.php:438 data_queries.php:602
 #: data_source_profiles.php:306 data_source_profiles.php:316
 #: data_source_profiles.php:424 data_sources.php:535 data_sources.php:547
@@ -172,8 +172,8 @@ msgstr "Nhấp vào &#39;Tiếp tục&#39; để xóa (các) Biểu đồ Tổng
 #: managers.php:1036 managers.php:1097 plugins.php:693 pollers.php:565
 #: pollers.php:574 pollers.php:583 pollers.php:592 pollers.php:601
 #: sites.php:383 sites.php:393 tree.php:721 tree.php:730 tree.php:739
-#: tree.php:748 user_admin.php:358 user_admin.php:398 user_admin.php:409
-#: user_admin.php:420 user_admin.php:443 user_domains.php:235
+#: tree.php:748 user_admin.php:375 user_admin.php:415 user_admin.php:426
+#: user_admin.php:437 user_admin.php:460 user_domains.php:235
 #: user_domains.php:244 user_domains.php:253 user_domains.php:262
 #: user_group_admin.php:472 user_group_admin.php:491 user_group_admin.php:502
 #: user_group_admin.php:513 vdef.php:279 vdef.php:289 vdef.php:353
@@ -189,7 +189,7 @@ msgstr "Hủy"
 #: automation_templates.php:174 automation_tree_rules.php:327 cdef.php:276
 #: cdef.php:287 cdef.php:344 color.php:196 color_templates.php:243
 #: color_templates.php:255 color_templates.php:264
-#: color_templates_items.php:300 data_input.php:303 data_input.php:356
+#: color_templates_items.php:300 data_input.php:308 data_input.php:366
 #: data_queries.php:424 data_queries.php:438 data_queries.php:603
 #: data_source_profiles.php:306 data_source_profiles.php:316
 #: data_source_profiles.php:425 data_sources.php:535 data_sources.php:547
@@ -208,8 +208,8 @@ msgstr "Hủy"
 #: links.php:202 links.php:211 links.php:220 managers.php:1036
 #: managers.php:1097 pollers.php:565 pollers.php:574 pollers.php:583
 #: pollers.php:592 pollers.php:601 sites.php:383 sites.php:393 tree.php:721
-#: tree.php:730 tree.php:739 tree.php:748 user_admin.php:358 user_admin.php:398
-#: user_admin.php:409 user_admin.php:420 user_admin.php:443
+#: tree.php:730 tree.php:739 tree.php:748 user_admin.php:375 user_admin.php:415
+#: user_admin.php:426 user_admin.php:437 user_admin.php:460
 #: user_domains.php:235 user_domains.php:244 user_domains.php:253
 #: user_domains.php:262 user_group_admin.php:472 user_group_admin.php:491
 #: user_group_admin.php:502 user_group_admin.php:513 vdef.php:279 vdef.php:289
@@ -344,7 +344,7 @@ msgid "Place Graph(s) on Tree"
 msgstr "Đặt đồ thị trên cây"
 
 #: aggregate_graphs.php:595 data_sources.php:1076 lib/html_reports.php:1585
-#: user_admin.php:1886
+#: user_admin.php:1903
 #, php-format
 msgid "[edit: %s]"
 msgstr "[chỉnh sửa: %s]"
@@ -394,15 +394,15 @@ msgstr "Xem trước tổng hợp [ %s]"
 msgid "Aggregate Preview %s"
 msgstr "Xem trước tổng hợp [ %s]"
 
-#: aggregate_graphs.php:729 graph.php:565 graphs.php:1733
+#: aggregate_graphs.php:729 graph.php:589 graphs.php:1733
 msgid "RRDtool Command:"
 msgstr "Lệnh RRDtool:"
 
-#: aggregate_graphs.php:731 graph.php:574 graphs.php:1737
+#: aggregate_graphs.php:731 graph.php:598 graphs.php:1737
 msgid "Not Checked"
 msgstr "Không kiểm tra"
 
-#: aggregate_graphs.php:731 graph.php:570 graphs.php:1735
+#: aggregate_graphs.php:731 graph.php:594 graphs.php:1735
 msgid "RRDtool Says:"
 msgstr "RRDtool nói:"
 
@@ -451,21 +451,21 @@ msgstr "Kết hợp đồ thị"
 #: automation_graph_rules.php:806 automation_networks.php:1198
 #: automation_networks.php:1242 automation_snmp.php:700
 #: automation_templates.php:400 automation_tree_rules.php:858 cdef.php:747
-#: color.php:520 color_templates.php:538 data_debug.php:1123 data_input.php:820
+#: color.php:520 color_templates.php:538 data_debug.php:1123 data_input.php:854
 #: data_queries.php:1321 data_source_profiles.php:914 data_sources.php:1463
 #: data_templates.php:1051 gprint_presets.php:271 graph_templates.php:720
-#: graph_view.php:654 graphs.php:2116 graphs_new.php:463 host.php:1739
+#: graph_view.php:654 graphs.php:2116 graphs_new.php:463 host.php:1825
 #: host_templates.php:782 lib/api_automation.php:144 lib/api_automation.php:485
 #: lib/api_automation.php:719 lib/api_automation.php:1082
 #: lib/clog_webapi.php:616 lib/html.php:266 lib/html_filter.php:64
 #: lib/html_graph.php:214 lib/html_reports.php:2023 lib/html_tree.php:136
 #: lib/html_tree.php:984 links.php:323 managers.php:153 managers.php:503
 #: managers.php:745 plugins.php:482 pollers.php:885 rrdcheck.php:229
-#: rrdcleaner.php:514 settings.php:557 settings.php:574 settings.php:633
+#: rrdcleaner.php:531 settings.php:557 settings.php:574 settings.php:633
 #: sites.php:509 tree.php:894 tree.php:929 tree.php:964 tree.php:2166
-#: user_admin.php:2191 user_admin.php:2642 user_admin.php:2761
-#: user_admin.php:2859 user_admin.php:2974 user_admin.php:3071
-#: user_admin.php:3168 user_domains.php:658 user_group_admin.php:1963
+#: user_admin.php:2208 user_admin.php:2659 user_admin.php:2778
+#: user_admin.php:2876 user_admin.php:2991 user_admin.php:3088
+#: user_admin.php:3185 user_domains.php:658 user_group_admin.php:1963
 #: user_group_admin.php:2295 user_group_admin.php:2415
 #: user_group_admin.php:2530 user_group_admin.php:2627
 #: user_group_admin.php:2724 utilities.php:1092 utilities.php:1488
@@ -477,12 +477,12 @@ msgstr "Tìm kiếm"
 #: aggregate_graphs.php:1245 aggregate_graphs.php:1288
 #: aggregate_graphs.php:1545 color_templates.php:658 data_sources.php:1644
 #: data_sources.php:1778 graph_view.php:492 graph_view.php:724
-#: graph_view.php:785 graphs.php:2133 graphs.php:2298 host.php:1850
+#: graph_view.php:785 graphs.php:2133 graphs.php:2298 host.php:1539
 #: include/global_arrays.php:1011 include/global_arrays.php:1246
 #: include/global_arrays.php:2040 lib/api_automation.php:295 lib/html.php:1843
 #: lib/html.php:1845 lib/html.php:1923 lib/html_graph.php:220
 #: lib/html_tree.php:1039 lib/html_tree.php:1414 tree.php:873 tree.php:2312
-#: user_admin.php:900 user_admin.php:1167 user_admin.php:2670
+#: user_admin.php:917 user_admin.php:1184 user_admin.php:2687
 #: user_group_admin.php:899 user_group_admin.php:1053 user_group_admin.php:2323
 #: utilities.php:321
 msgid "Graphs"
@@ -493,20 +493,20 @@ msgstr "Đồ thị"
 #: automation_graph_rules.php:848 automation_networks.php:1208
 #: automation_snmp.php:710 automation_templates.php:410
 #: automation_tree_rules.php:878 cdef.php:757 color.php:530
-#: color_templates.php:554 data_debug.php:1133 data_input.php:830
+#: color_templates.php:554 data_debug.php:1133 data_input.php:864
 #: data_queries.php:1331 data_source_profiles.php:924
 #: data_source_profiles.php:1043 data_sources.php:1473 data_templates.php:1077
 #: gprint_presets.php:281 graph_templates.php:730 graph_view.php:728
-#: graphs.php:2137 graphs_new.php:473 host.php:1764 host_templates.php:792
+#: graphs.php:2137 graphs_new.php:473 host.php:1850 host_templates.php:792
 #: include/global_form.php:256 lib/api_automation.php:187
 #: lib/api_automation.php:495 lib/api_automation.php:729
 #: lib/api_automation.php:1125 lib/html_reports.php:2043 links.php:333
 #: managers.php:163 managers.php:513 plugins.php:506 pollers.php:895
-#: rrdcheck.php:252 rrdcleaner.php:540 sites.php:519 tree.php:2176
-#: user_admin.php:2249 user_admin.php:2674 user_admin.php:2771
-#: user_admin.php:2887 user_admin.php:2984 user_admin.php:3081
-#: user_admin.php:3178 user_domains.php:33 user_domains.php:668
-#: user_domains.php:754 user_group_admin.php:1973 user_group_admin.php:2327
+#: rrdcheck.php:252 rrdcleaner.php:557 sites.php:519 tree.php:2176
+#: user_admin.php:2266 user_admin.php:2691 user_admin.php:2788
+#: user_admin.php:2904 user_admin.php:3001 user_admin.php:3098
+#: user_admin.php:3195 user_domains.php:33 user_domains.php:668
+#: user_domains.php:755 user_group_admin.php:1973 user_group_admin.php:2327
 #: user_group_admin.php:2443 user_group_admin.php:2540
 #: user_group_admin.php:2637 user_group_admin.php:2734 utilities.php:1070
 #: utilities.php:1793 utilities.php:2101 utilities.php:3040 utilities.php:3309
@@ -523,34 +523,34 @@ msgstr "Một phần của cốt liệu"
 #: automation_graph_rules.php:860 automation_networks.php:1242
 #: automation_snmp.php:722 automation_templates.php:422
 #: automation_tree_rules.php:890 cdef.php:775 color.php:554
-#: color_templates.php:576 data_debug.php:1051 data_input.php:842
+#: color_templates.php:576 data_debug.php:1051 data_input.php:876
 #: data_queries.php:1343 data_source_profiles.php:942 data_sources.php:1416
 #: data_templates.php:1095 gprint_presets.php:299 graph_templates.php:748
-#: graph_view.php:662 graphs.php:2107 graphs_new.php:452 host.php:1729
+#: graph_view.php:662 graphs.php:2107 graphs_new.php:452 host.php:1815
 #: host_templates.php:773 lib/api_automation.php:199 lib/api_automation.php:476
 #: lib/api_automation.php:741 lib/api_automation.php:1137
 #: lib/clog_webapi.php:541 lib/html.php:1691 lib/html_filter.php:81
 #: lib/html_graph.php:201 lib/html_reports.php:2054 lib/html_tree.php:1026
 #: links.php:343 managers.php:175 managers.php:525 managers.php:765
 #: plugins.php:518 pollers.php:930 sites.php:531 tree.php:2188
-#: user_admin.php:2261 user_admin.php:2692 user_admin.php:2789
-#: user_admin.php:2905 user_admin.php:3002 user_admin.php:3099
-#: user_admin.php:3196
+#: user_admin.php:2278 user_admin.php:2709 user_admin.php:2806
+#: user_admin.php:2922 user_admin.php:3019 user_admin.php:3116
+#: user_admin.php:3213
 msgid "Go"
 msgstr "Đi"
 
 #: aggregate_graphs.php:1267 aggregate_graphs.php:1561
 #: automation_devices.php:512 automation_snmp.php:722
 #: automation_templates.php:422 cdef.php:775 color.php:554 data_debug.php:1051
-#: data_input.php:842 data_queries.php:1343 data_source_profiles.php:942
+#: data_input.php:876 data_queries.php:1343 data_source_profiles.php:942
 #: data_sources.php:1416 data_templates.php:1095 gprint_presets.php:299
 #: graph_templates.php:748 graph_view.php:662 graphs.php:2107
-#: graphs_new.php:452 host.php:1729 host_templates.php:773
+#: graphs_new.php:452 host.php:1815 host_templates.php:773
 #: lib/html_graph.php:201 managers.php:175 managers.php:525 managers.php:765
 #: plugins.php:518 pollers.php:930 sites.php:531 tree.php:2188
-#: user_admin.php:2261 user_admin.php:2692 user_admin.php:2789
-#: user_admin.php:2905 user_admin.php:3002 user_admin.php:3099
-#: user_admin.php:3196 user_domains.php:680 user_group_admin.php:1985
+#: user_admin.php:2278 user_admin.php:2709 user_admin.php:2806
+#: user_admin.php:2922 user_admin.php:3019 user_admin.php:3116
+#: user_admin.php:3213 user_domains.php:680 user_group_admin.php:1985
 #: user_group_admin.php:2345 user_group_admin.php:2461
 #: user_group_admin.php:2558 user_group_admin.php:2655
 #: user_group_admin.php:2752 utilities.php:1082 utilities.php:1440
@@ -563,33 +563,33 @@ msgstr "Đặt / Làm mới Bộ lọc"
 #: automation_graph_rules.php:861 automation_networks.php:1243
 #: automation_snmp.php:723 automation_templates.php:423
 #: automation_tree_rules.php:891 cdef.php:776 color.php:555
-#: color_templates.php:577 data_debug.php:1052 data_input.php:843
+#: color_templates.php:577 data_debug.php:1052 data_input.php:877
 #: data_queries.php:1344 data_source_profiles.php:943 data_sources.php:1417
 #: data_templates.php:1096 gprint_presets.php:300 graph_templates.php:749
-#: graph_view.php:663 graphs.php:2108 graphs_new.php:453 host.php:1730
+#: graph_view.php:663 graphs.php:2108 graphs_new.php:453 host.php:1816
 #: host_templates.php:774 lib/api_automation.php:200 lib/api_automation.php:477
 #: lib/api_automation.php:742 lib/api_automation.php:1138
 #: lib/clog_webapi.php:542 lib/html_filter.php:86 lib/html_graph.php:202
 #: lib/html_graph.php:319 lib/html_reports.php:2055 lib/html_tree.php:1027
 #: lib/html_tree.php:1138 links.php:344 managers.php:176 managers.php:526
 #: managers.php:766 plugins.php:519 pollers.php:931 sites.php:532 tree.php:2189
-#: user_admin.php:2262 user_admin.php:2693 user_admin.php:2790
-#: user_admin.php:2906 user_admin.php:3003 user_admin.php:3100
-#: user_admin.php:3197 user_domains.php:681
+#: user_admin.php:2279 user_admin.php:2710 user_admin.php:2807
+#: user_admin.php:2923 user_admin.php:3020 user_admin.php:3117
+#: user_admin.php:3214 user_domains.php:681
 msgid "Clear"
 msgstr "Xóa"
 
 #: aggregate_graphs.php:1268 aggregate_graphs.php:1562 automation_snmp.php:723
 #: automation_templates.php:423 cdef.php:776 color.php:555 data_debug.php:1052
-#: data_input.php:843 data_queries.php:1344 data_source_profiles.php:943
+#: data_input.php:877 data_queries.php:1344 data_source_profiles.php:943
 #: data_sources.php:1417 data_templates.php:1096 gprint_presets.php:300
 #: graph_templates.php:749 graph_view.php:663 graphs.php:2108
-#: graphs_new.php:453 host.php:1730 host_templates.php:774
+#: graphs_new.php:453 host.php:1816 host_templates.php:774
 #: lib/html_graph.php:202 lib/html_tree.php:1027 managers.php:176
 #: managers.php:526 managers.php:766 plugins.php:519 pollers.php:931
-#: sites.php:532 tree.php:2189 user_admin.php:2262 user_admin.php:2693
-#: user_admin.php:2790 user_admin.php:2906 user_admin.php:3003
-#: user_admin.php:3100 user_admin.php:3197 user_domains.php:681
+#: sites.php:532 tree.php:2189 user_admin.php:2279 user_admin.php:2710
+#: user_admin.php:2807 user_admin.php:2923 user_admin.php:3020
+#: user_admin.php:3117 user_admin.php:3214 user_domains.php:681
 #: user_group_admin.php:1986 user_group_admin.php:2346
 #: user_group_admin.php:2462 user_group_admin.php:2559
 #: user_group_admin.php:2656 user_group_admin.php:2753 utilities.php:1083
@@ -599,18 +599,18 @@ msgid "Clear Filters"
 msgstr "Xóa bộ lọc"
 
 #: aggregate_graphs.php:1293 aggregate_graphs.php:1627 graphs.php:1271
-#: lib/api_automation.php:586 user_admin.php:908 user_group_admin.php:907
+#: lib/api_automation.php:586 user_admin.php:925 user_group_admin.php:907
 msgid "Graph Title"
 msgstr "Tiêu đề đồ thị"
 
 #: aggregate_graphs.php:1294 aggregate_graphs.php:1628
 #: automation_graph_rules.php:961 automation_tree_rules.php:984
-#: data_debug.php:459 data_input.php:929 data_queries.php:1429
+#: data_debug.php:459 data_input.php:963 data_queries.php:1429
 #: data_sources.php:1638 data_templates.php:1204 graph_templates.php:854
-#: graphs.php:2314 host.php:1844 host_templates.php:933
+#: graphs.php:2314 host.php:1533 host_templates.php:933
 #: lib/api_automation.php:294 pollers.php:1011 sites.php:611 tree.php:2252
-#: user_admin.php:908 user_admin.php:1022 user_admin.php:1167
-#: user_admin.php:1314 user_admin.php:1453 user_group_admin.php:705
+#: user_admin.php:925 user_admin.php:1039 user_admin.php:1184
+#: user_admin.php:1331 user_admin.php:1470 user_group_admin.php:705
 #: user_group_admin.php:907 user_group_admin.php:1053 user_group_admin.php:1198
 #: user_group_admin.php:1330
 msgid "ID"
@@ -622,19 +622,19 @@ msgstr "Bao gồm trong cốt liệu"
 
 #: aggregate_graphs.php:1296 aggregate_graphs.php:1630 graph_templates.php:871
 #: graph_view.php:814 graph_view.php:827 graphs.php:2332 lib/html_graph.php:351
-#: lib/html_tree.php:1170 lib/spikekill.php:1771
+#: lib/html_tree.php:1170 lib/spikekill.php:1777
 msgid "Size"
 msgstr "Kích thước"
 
 #: aggregate_graphs.php:1312 aggregate_templates.php:725
 #: automation_tree_rules.php:737 cdef.php:902 color.php:713 color.php:715
-#: color_templates.php:682 data_input.php:974 data_queries.php:1481
+#: color_templates.php:682 data_input.php:1008 data_queries.php:1481
 #: data_source_profiles.php:1123 data_source_profiles.php:1124
 #: data_sources.php:1725 data_sources.php:1726 data_templates.php:1265
 #: gprint_presets.php:446 graph_templates.php:911 host_templates.php:981
 #: include/global_settings.php:893 include/global_settings.php:1918
 #: lib/api_automation.php:1480 links.php:417 tree.php:2345 tree.php:2346
-#: user_admin.php:2379 user_domains.php:773 user_group_admin.php:2053
+#: user_admin.php:2396 user_domains.php:774 user_group_admin.php:2053
 #: vdef.php:934
 msgid "No"
 msgstr "Không"
@@ -642,15 +642,15 @@ msgstr "Không"
 #: aggregate_graphs.php:1312 aggregate_templates.php:725
 #: automation_tree_rules.php:730 cdef.php:902 color.php:713 color.php:715
 #: color_templates.php:682 data_debug.php:699 data_debug.php:704
-#: data_debug.php:709 data_input.php:974 data_queries.php:1481
+#: data_debug.php:709 data_input.php:1008 data_queries.php:1481
 #: data_source_profiles.php:1122 data_source_profiles.php:1123
 #: data_source_profiles.php:1124 data_sources.php:1725 data_sources.php:1726
 #: data_templates.php:1265 gprint_presets.php:446 graph_templates.php:911
 #: host_templates.php:981 include/global_settings.php:892
 #: include/global_settings.php:1917 lib/api_automation.php:1480
-#: lib/installer.php:2046 lib/installer.php:2074 lib/installer.php:3733
-#: links.php:417 tree.php:2345 tree.php:2346 user_admin.php:2377
-#: user_domains.php:769 user_domains.php:773 user_group_admin.php:2051
+#: lib/installer.php:2058 lib/installer.php:2086 lib/installer.php:3767
+#: links.php:417 tree.php:2345 tree.php:2346 user_admin.php:2394
+#: user_domains.php:770 user_domains.php:774 user_group_admin.php:2051
 #: vdef.php:934
 msgid "Yes"
 msgstr "Có"
@@ -669,10 +669,10 @@ msgid "Aggregate Graphs"
 msgstr "Đồ thị tổng hợp"
 
 #: aggregate_graphs.php:1523 data_debug.php:1025 data_sources.php:1390
-#: graph_view.php:686 graphs.php:2072 host.php:1680
+#: graph_view.php:686 graphs.php:2072 host.php:1766
 #: include/global_arrays.php:2920 include/global_settings.php:627
 #: lib/api_automation.php:454 lib/html_graph.php:164 lib/html_tree.php:990
-#: rrdcleaner.php:386 user_admin.php:2648 user_admin.php:2865
+#: rrdcleaner.php:393 user_admin.php:2665 user_admin.php:2882
 #: user_group_admin.php:2301 user_group_admin.php:2421 utilities.php:2031
 msgid "Template"
 msgstr "Mẫu"
@@ -682,15 +682,15 @@ msgstr "Mẫu"
 #: automation_devices.php:561 automation_graph_rules.php:816
 #: automation_graph_rules.php:838 automation_tree_rules.php:868
 #: data_debug.php:1029 data_sources.php:1394 graph_templates_items.php:543
-#: graphs.php:2076 graphs_items.php:357 host.php:1649 host.php:1667
-#: host.php:1684 host.php:1749 lib/api_automation.php:154
+#: graphs.php:2076 graphs_items.php:357 host.php:1735 host.php:1753
+#: host.php:1770 host.php:1835 lib/api_automation.php:154
 #: lib/api_automation.php:172 lib/api_automation.php:441
 #: lib/api_automation.php:458 lib/api_automation.php:1092
 #: lib/api_automation.php:1110 lib/auth.php:3299 lib/auth.php:3347
 #: lib/html.php:2207 lib/html.php:2230 lib/html.php:2268 lib/html.php:2298
 #: lib/html_reports.php:988 lib/html_reports.php:992 lib/html_reports.php:1107
 #: lib/html_reports.php:1117 lib/html_reports.php:2033 managers.php:492
-#: managers.php:755 user_admin.php:2652 user_admin.php:2869
+#: managers.php:755 user_admin.php:2669 user_admin.php:2886
 #: user_group_admin.php:2305 user_group_admin.php:2425 utilities.php:1058
 #: utilities.php:1742 utilities.php:2035 utilities.php:2080 utilities.php:2090
 #: utilities.php:3025 utilities.php:3283 utilities.php:3296
@@ -703,8 +703,8 @@ msgstr "Bất kỳ"
 #: data_debug.php:1030 data_sources.php:954 data_sources.php:1395
 #: data_sources.php:1699 data_templates.php:1267 graph_templates_items.php:66
 #: graphs.php:1637 graphs.php:1646 graphs.php:2077 graphs_items.php:358
-#: graphs_items.php:470 host.php:257 host.php:1174 host.php:1185 host.php:1650
-#: host.php:1685 include/global_arrays.php:541 include/global_arrays.php:599
+#: graphs_items.php:470 host.php:257 host.php:1174 host.php:1185 host.php:1736
+#: host.php:1771 include/global_arrays.php:541 include/global_arrays.php:599
 #: include/global_arrays.php:691 include/global_arrays.php:903
 #: include/global_arrays.php:1769 include/global_form.php:588
 #: include/global_form.php:897 include/global_form.php:905
@@ -728,7 +728,7 @@ msgstr "Bất kỳ"
 #: lib/html_reports.php:1410 lib/html_reports.php:1415
 #: lib/html_reports.php:1420 package_import.php:753 settings.php:550
 #: settings.php:572 settings.php:603 templates_import.php:344
-#: templates_import.php:376 user_admin.php:2653 user_admin.php:2870
+#: templates_import.php:376 user_admin.php:2670 user_admin.php:2887
 #: user_group_admin.php:2306 user_group_admin.php:2426 utilities.php:2036
 msgid "None"
 msgstr "Không"
@@ -783,7 +783,7 @@ msgstr "Mẫu tổng hợp"
 #: aggregate_templates.php:613 automation_templates.php:406
 #: automation_templates.php:493 color_templates.php:663
 #: include/global_arrays.php:1020 include/global_arrays.php:1083
-#: lib/installer.php:2663 user_admin.php:2980 user_group_admin.php:2536
+#: lib/installer.php:2675 user_admin.php:2997 user_group_admin.php:2536
 msgid "Templates"
 msgstr "Giao diện"
 
@@ -802,7 +802,7 @@ msgid "Aggregate Templates that are in use can not be Deleted.  In use is define
 msgstr "Các mẫu tổng hợp đang sử dụng không thể bị xóa. Trong sử dụng được định nghĩa là được tham chiếu bởi một Uẩn."
 
 #: aggregate_templates.php:708 cdef.php:885 color.php:690
-#: color_templates.php:653 data_input.php:935 data_queries.php:1435
+#: color_templates.php:653 data_input.php:969 data_queries.php:1435
 #: data_source_profiles.php:1048 data_sources.php:1656 data_templates.php:1210
 #: gprint_presets.php:406 graph_templates.php:860 host_templates.php:939
 #: vdef.php:916
@@ -917,19 +917,19 @@ msgstr "Lưu"
 msgid "Version %s | %s"
 msgstr "Phiên bản %s %s"
 
-#: auth_changepassword.php:402 user_admin.php:1952
+#: auth_changepassword.php:402 user_admin.php:1969
 msgid "Password Too Short"
 msgstr "Mật khẩu quá ngắn"
 
-#: auth_changepassword.php:408 user_admin.php:1957
+#: auth_changepassword.php:408 user_admin.php:1974
 msgid "Password Validation Passes"
 msgstr "Xác thực mật khẩu"
 
-#: auth_changepassword.php:424 user_admin.php:1971
+#: auth_changepassword.php:424 user_admin.php:1988
 msgid "Passwords do Not Match"
 msgstr "Mất khẩu không hợp lệ"
 
-#: auth_changepassword.php:428 user_admin.php:1974
+#: auth_changepassword.php:428 user_admin.php:1991
 msgid "Passwords Match"
 msgstr "Kết hợp mật khẩu"
 
@@ -980,7 +980,7 @@ msgid "Password"
 msgstr "Mật khẩu"
 
 #: auth_login.php:361 include/global_settings.php:2315 lib/auth.php:592
-#: lib/auth.php:614 lib/auth.php:624 lib/auth.php:629 user_admin.php:2238
+#: lib/auth.php:614 lib/auth.php:624 lib/auth.php:629 user_admin.php:2255
 msgid "Local"
 msgstr "Địa phương"
 
@@ -989,7 +989,7 @@ msgstr "Địa phương"
 msgid "LDAP"
 msgstr "LDAP"
 
-#: auth_login.php:383 user_admin.php:2233 user_admin.php:2359
+#: auth_login.php:383 user_admin.php:2250 user_admin.php:2376
 #: user_group_admin.php:705
 msgid "Realm"
 msgstr "Địa hạt:"
@@ -1004,7 +1004,7 @@ msgstr "Đăng nhập"
 
 #: auth_profile.php:76 include/global_settings.php:39
 #: include/global_settings.php:1201 include/global_settings.php:1510
-#: lib/html.php:2613 managers.php:39 user_admin.php:1853
+#: lib/html.php:2613 managers.php:39 user_admin.php:1870
 #: user_group_admin.php:1737
 msgid "General"
 msgstr "Chung"
@@ -1029,7 +1029,7 @@ msgstr "Xem danh sách"
 msgid "Preview View"
 msgstr "Xem trước"
 
-#: auth_profile.php:317 include/global_form.php:1516 user_admin.php:2355
+#: auth_profile.php:317 include/global_form.php:1516 user_admin.php:2372
 msgid "User Name"
 msgstr "Tên người dùng"
 
@@ -1038,7 +1038,7 @@ msgid "The login name for this user."
 msgstr "Tên đăng nhập cho người dùng này."
 
 #: auth_profile.php:325 include/global_form.php:1524
-#: include/global_settings.php:1862 user_admin.php:2357 user_domains.php:497
+#: include/global_settings.php:1862 user_admin.php:2374 user_domains.php:497
 #: user_group_admin.php:705 utilities.php:1159
 msgid "Full Name"
 msgstr "Họ và tên"
@@ -1079,7 +1079,7 @@ msgstr "Thoát khỏi mọi nơi"
 msgid "Clear all your Login Session Tokens."
 msgstr "Xóa tất cả các Mã thông báo phiên đăng nhập của bạn."
 
-#: auth_profile.php:381 user_admin.php:1860 user_group_admin.php:1744
+#: auth_profile.php:381 user_admin.php:1877 user_group_admin.php:1744
 msgid "User Settings"
 msgstr "Thiết lập người dùng"
 
@@ -1113,17 +1113,17 @@ msgstr "Xóa thiết bị"
 
 #: automation_devices.php:54 automation_devices.php:307
 #: automation_devices.php:417 automation_devices.php:428
-#: automation_devices.php:673 automation_devices.php:674 host.php:1754
+#: automation_devices.php:673 automation_devices.php:674 host.php:1840
 #: lib/api_automation.php:177 lib/api_automation.php:1115
-#: lib/html_utility.php:1373 pollers.php:48
+#: lib/html_utility.php:1415 pollers.php:48
 msgid "Down"
 msgstr "Xuống"
 
 #: automation_devices.php:55 automation_devices.php:307
 #: automation_devices.php:419 automation_devices.php:430
-#: automation_devices.php:673 automation_devices.php:674 host.php:1753
+#: automation_devices.php:673 automation_devices.php:674 host.php:1839
 #: lib/api_automation.php:176 lib/api_automation.php:1114
-#: lib/html_utility.php:1379
+#: lib/html_utility.php:1421
 msgid "Up"
 msgstr "Lên trên"
 
@@ -1174,13 +1174,13 @@ msgstr "Nhấp vào &#39;Tiếp tục&#39; để thêm (các) thiết bị đư�
 msgid "Delete Device(s)"
 msgstr "Xóa thiết bị"
 
-#: automation_devices.php:275 automation_devices.php:572 host.php:1635
-#: host.php:1760 host.php:1910 include/global_arrays.php:1008
+#: automation_devices.php:275 automation_devices.php:572 host.php:1721
+#: host.php:1846 host.php:1923 include/global_arrays.php:1008
 #: include/global_arrays.php:1064 include/global_arrays.php:2354
 #: lib/api_automation.php:183 lib/api_automation.php:283
 #: lib/api_automation.php:491 lib/api_automation.php:575
 #: lib/api_automation.php:1239 pollers.php:1047 sites.php:612 tree.php:872
-#: tree.php:2306 user_admin.php:1159 user_admin.php:2883
+#: tree.php:2306 user_admin.php:1176 user_admin.php:2900
 #: user_group_admin.php:1045 user_group_admin.php:2439 utilities.php:316
 msgid "Devices"
 msgstr "Thiết bị"
@@ -1197,7 +1197,7 @@ msgstr "IP"
 msgid "SNMP Name"
 msgstr "Tên SNMP"
 
-#: automation_devices.php:287 host.php:1701 include/global_form.php:1205
+#: automation_devices.php:287 host.php:1787 include/global_form.php:1205
 #: include/global_settings.php:2310 lib/html.php:2294
 msgid "Location"
 msgstr "Vị trí"
@@ -1209,8 +1209,8 @@ msgstr "Liên hệ"
 #: automation_devices.php:289 include/global_form.php:1154
 #: include/global_form.php:1190 include/global_form.php:1384
 #: include/global_form.php:1760 lib/api_automation.php:290
-#: lib/api_automation.php:1246 lib/installer.php:1966 lib/installer.php:2664
-#: managers.php:220 user_admin.php:1022 user_admin.php:1167
+#: lib/api_automation.php:1246 lib/installer.php:1978 lib/installer.php:2676
+#: managers.php:220 user_admin.php:1039 user_admin.php:1184
 #: user_group_admin.php:1053 user_group_admin.php:2039
 msgid "Description"
 msgstr "Mô tả"
@@ -1219,7 +1219,7 @@ msgstr "Mô tả"
 msgid "OS"
 msgstr "OS"
 
-#: automation_devices.php:291 host.php:1874 include/global_arrays.php:542
+#: automation_devices.php:291 host.php:1563 include/global_arrays.php:542
 msgid "Uptime"
 msgstr "Thời gian hoạt động"
 
@@ -1232,13 +1232,13 @@ msgstr "SNMP"
 #: automation_graph_rules.php:834 automation_networks.php:1093
 #: automation_tree_rules.php:864 data_debug.php:465 data_debug.php:1078
 #: data_sources.php:1442 data_templates.php:1233 host.php:781 host.php:906
-#: host.php:1745 host.php:1862 lib/api_automation.php:168
+#: host.php:1551 host.php:1831 lib/api_automation.php:168
 #: lib/api_automation.php:292 lib/api_automation.php:585
 #: lib/api_automation.php:1106 lib/api_automation.php:1249
-#: lib/html_reports.php:2029 lib/installer.php:1966 managers.php:222
+#: lib/html_reports.php:2029 lib/installer.php:1978 managers.php:222
 #: package_import.php:596 package_import.php:681 plugins.php:488
 #: plugins.php:611 pollers.php:1023 templates_import.php:238
-#: templates_import.php:277 user_admin.php:1167 user_group_admin.php:1053
+#: templates_import.php:277 user_admin.php:1184 user_group_admin.php:1053
 #: utilities.php:2076
 msgid "Status"
 msgstr "Trạng thái"
@@ -1251,7 +1251,7 @@ msgstr "Lần cuối kiểm tra vào"
 msgid "Not Detected"
 msgstr "Không được phát hiện"
 
-#: automation_devices.php:331 host.php:1968
+#: automation_devices.php:331 host.php:1981
 msgid "No Devices Found"
 msgstr "Không tìm thấy thiết bị nào"
 
@@ -1267,7 +1267,7 @@ msgstr "Mạng"
 msgid "Reset fields to defaults"
 msgstr "Đặt lại các trường về mặc định"
 
-#: automation_devices.php:518 color.php:561 host.php:1731
+#: automation_devices.php:518 color.php:561 host.php:1817
 #: lib/html_form.php:1437
 msgid "Export"
 msgstr "Xuất ra"
@@ -1288,16 +1288,16 @@ msgstr "Thiết bị phát hiện"
 #: automation_devices.php:695 automation_networks.php:1167
 #: automation_snmp.php:568 automation_snmp.php:569 automation_snmp.php:570
 #: automation_snmp.php:571 automation_snmp.php:572 automation_snmp.php:573
-#: data_debug.php:624 data_source_profiles.php:74 host.php:1937
+#: data_debug.php:624 data_source_profiles.php:74 host.php:1950
 #: lib/functions.php:6102 lib/functions.php:6106 lib/html.php:1303
 #: lib/html.php:1375 lib/html_reports.php:1760 lib/html_reports.php:1786
 #: lib/html_reports.php:1857 lib/html_reports.php:1858
-#: lib/html_reports.php:1859 lib/spikekill.php:1762 lib/spikekill.php:1763
-#: lib/spikekill.php:1807 lib/spikekill.php:1808 lib/spikekill.php:1809
-#: lib/spikekill.php:1810 lib/spikekill.php:1811 lib/spikekill.php:1812
-#: lib/spikekill.php:1813 lib/spikekill.php:1814 lib/spikekill.php:1815
-#: lib/spikekill.php:1816 lib/spikekill.php:1817 plugins.php:765
-#: pollers.php:1131 user_admin.php:2371 utilities.php:739 utilities.php:1188
+#: lib/html_reports.php:1859 lib/spikekill.php:1768 lib/spikekill.php:1769
+#: lib/spikekill.php:1816 lib/spikekill.php:1817 lib/spikekill.php:1818
+#: lib/spikekill.php:1819 lib/spikekill.php:1820 lib/spikekill.php:1821
+#: lib/spikekill.php:1822 lib/spikekill.php:1823 lib/spikekill.php:1824
+#: lib/spikekill.php:1825 lib/spikekill.php:1826 plugins.php:765
+#: pollers.php:1131 user_admin.php:2388 utilities.php:739 utilities.php:1188
 #: utilities.php:2656 utilities.php:2784 utilities.php:2792 utilities.php:2803
 #: utilities.php:2814 utilities.php:2837 utilities.php:2883 utilities.php:3117
 msgid "N/A"
@@ -1427,14 +1427,14 @@ msgstr "Truy vấn dữ liệu"
 #: automation_graph_rules.php:980 automation_networks.php:550
 #: automation_tree_rules.php:869 automation_tree_rules.php:989
 #: automation_tree_rules.php:1007 data_debug.php:1084 data_sources.php:1447
-#: host.php:1750 include/global_arrays.php:935 include/global_form.php:1548
+#: host.php:1836 include/global_arrays.php:935 include/global_form.php:1548
 #: include/global_settings.php:362 include/global_settings.php:378
 #: lib/api_automation.php:173 lib/api_automation.php:1111
 #: lib/html_reports.php:2034 lib/html_reports.php:2139
 #: lib/html_reports.php:2150 lib/html_reports.php:2186 links.php:396
-#: links.php:574 managers.php:247 managers.php:608 user_admin.php:1022
-#: user_admin.php:1034 user_admin.php:2358 user_domains.php:350
-#: user_domains.php:758 user_group_admin.php:88 user_group_admin.php:705
+#: links.php:574 managers.php:247 managers.php:608 user_admin.php:1039
+#: user_admin.php:1051 user_admin.php:2375 user_domains.php:350
+#: user_domains.php:759 user_group_admin.php:88 user_group_admin.php:705
 #: user_group_admin.php:720 user_group_admin.php:2043 utilities.php:2081
 #: utilities.php:2901
 msgid "Enabled"
@@ -1443,7 +1443,7 @@ msgstr "Bật"
 #: automation_graph_rules.php:840 automation_graph_rules.php:980
 #: automation_networks.php:1108 automation_tree_rules.php:870
 #: automation_tree_rules.php:1007 data_debug.php:1085 data_sources.php:1448
-#: data_templates.php:1269 host.php:1751 include/global_arrays.php:934
+#: data_templates.php:1269 host.php:1837 include/global_arrays.php:934
 #: include/global_arrays.php:1590 include/global_arrays.php:1893
 #: include/global_settings.php:361 include/global_settings.php:377
 #: include/global_settings.php:1361 include/global_settings.php:1621
@@ -1452,8 +1452,8 @@ msgstr "Bật"
 #: include/global_settings.php:1777 include/global_settings.php:2541
 #: lib/api_automation.php:174 lib/api_automation.php:1112 lib/html.php:2690
 #: lib/html_reports.php:2035 lib/html_reports.php:2186
-#: lib/html_utility.php:1363 links.php:513 managers.php:247 managers.php:608
-#: pollers.php:49 user_admin.php:1034 user_domains.php:412
+#: lib/html_utility.php:1405 links.php:513 managers.php:247 managers.php:608
+#: pollers.php:49 user_admin.php:1051 user_domains.php:412
 #: user_group_admin.php:720 utilities.php:2082 utilities.php:2598
 #: utilities.php:2901
 msgid "Disabled"
@@ -1543,7 +1543,7 @@ msgstr "Chạy khám phá trong chế độ gỡ lỗi"
 msgid "Click 'Continue' to cancel on going Network Discovery(s)."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để hủy khi đi khám phá mạng."
 
-#: automation_networks.php:416 data_input.php:560 include/global_arrays.php:527
+#: automation_networks.php:416 data_input.php:594 include/global_arrays.php:527
 msgid "SNMP Get"
 msgstr "Nhận SNMP"
 
@@ -1590,8 +1590,8 @@ msgstr "Phạm vi khám phá mạng [mới]"
 msgid "General Settings"
 msgstr "Cài đặt chung"
 
-#: automation_networks.php:454 automation_snmp.php:509 data_input.php:613
-#: data_input.php:674 data_queries.php:789 data_queries.php:894
+#: automation_networks.php:454 automation_snmp.php:509 data_input.php:647
+#: data_input.php:708 data_queries.php:789 data_queries.php:894
 #: data_queries.php:1162 data_source_profiles.php:636 graph_templates.php:498
 #: include/global_form.php:215 include/global_form.php:281
 #: include/global_form.php:338 include/global_form.php:358
@@ -1601,10 +1601,10 @@ msgstr "Cài đặt chung"
 #: include/global_form.php:1348 include/global_form.php:1376
 #: include/global_form.php:1449 include/global_form.php:1477
 #: include/global_form.php:2122 include/global_form.php:2220
-#: include/global_form.php:2265 lib/installer.php:1966 lib/installer.php:2039
-#: lib/installer.php:2069 lib/installer.php:2664 lib/installer.php:2751
+#: include/global_form.php:2265 lib/installer.php:1978 lib/installer.php:2051
+#: lib/installer.php:2081 lib/installer.php:2676 lib/installer.php:2763
 #: lib/vdef.php:74 managers.php:572 pollers.php:62 sites.php:41
-#: user_admin.php:1022 user_domains.php:326 utilities.php:865
+#: user_admin.php:1039 user_domains.php:326 utilities.php:865
 #: utilities.php:3097
 msgid "Name"
 msgstr "Tên"
@@ -1617,7 +1617,7 @@ msgstr "Đặt cho Mạng này một cái tên có ý nghĩa."
 msgid "New Network Discovery Range"
 msgstr "Phạm vi khám phá mạng mới"
 
-#: automation_networks.php:462 automation_networks.php:1090 host.php:1663
+#: automation_networks.php:462 automation_networks.php:1090 host.php:1749
 msgid "Data Collector"
 msgstr "Thu thập dữ liệu"
 
@@ -2142,7 +2142,7 @@ msgstr "Rảnh rỗi"
 
 #: automation_networks.php:1168 include/global_arrays.php:909
 #: include/global_arrays.php:1227 include/global_settings.php:2567
-#: lib/html_reports.php:2181 user_admin.php:2229
+#: lib/html_reports.php:2181 user_admin.php:2246
 msgid "Never"
 msgstr "Không bao giờ"
 
@@ -2462,7 +2462,7 @@ msgid "Device Automation Templates"
 msgstr "Mẫu tự động hóa thiết bị"
 
 #: automation_templates.php:502 data_sources.php:1668 package_import.php:678
-#: templates_import.php:274 user_admin.php:1314 user_group_admin.php:1198
+#: templates_import.php:274 user_admin.php:1331 user_group_admin.php:1198
 msgid "Template Name"
 msgstr "Tên mẫu"
 
@@ -2534,7 +2534,7 @@ msgstr "Tiêu chí tạo cây"
 msgid "Change Leaf Type"
 msgstr "Thay đổi loại lá"
 
-#: automation_tree_rules.php:754 lib/installer.php:3942 utilities.php:2651
+#: automation_tree_rules.php:754 lib/installer.php:3976 utilities.php:2651
 #: utilities.php:2652 utilities.php:2655 utilities.php:2656
 msgid "WARNING:"
 msgstr "LƯU Ý:"
@@ -2582,9 +2582,9 @@ msgid "No Tree Rules Found"
 msgstr "Không tìm thấy quy tắc cây"
 
 #: cactid.php:44 help.php:71 lib/functions.php:6389 lib/functions.php:6458
-#: lib/functions.php:6564 lib/functions.php:7235 poller.php:401 poller.php:551
-#: poller.php:619 poller.php:665 poller.php:812 poller.php:918
-#: poller_automation.php:54 poller_boost.php:499
+#: lib/functions.php:6564 lib/functions.php:7235 poller.php:410 poller.php:560
+#: poller.php:629 poller.php:673 poller.php:821 poller.php:928
+#: poller_automation.php:54 poller_boost.php:505
 msgid "Cacti System Warning"
 msgstr "Cảnh báo hệ thống Cacti"
 
@@ -2711,7 +2711,7 @@ msgstr "CDEF đang sử dụng không thể bị xóa. Đang sử dụng đượ
 msgid "The number of Graphs using this CDEF."
 msgstr "Số lượng đồ thị sử dụng CDEF này."
 
-#: cdef.php:887 color.php:692 data_input.php:946 data_queries.php:1446
+#: cdef.php:887 color.php:692 data_input.php:980 data_queries.php:1446
 #: data_source_profiles.php:1076 gprint_presets.php:417 vdef.php:918
 msgid "Templates Using"
 msgstr "Mẫu sử dụng"
@@ -2982,12 +2982,12 @@ msgstr "Hex màu:"
 msgid "Remove Color Item"
 msgstr "Xóa mục màu"
 
-#: color_templates_items.php:367
+#: color_templates_items.php:377
 #, php-format
 msgid "Color Template Items [edit Report Item: %s]"
 msgstr "Mục mẫu màu [chỉnh sửa mục báo cáo: %s]"
 
-#: color_templates_items.php:370
+#: color_templates_items.php:380
 #, php-format
 msgid "Color Template Items [new Report Item: %s]"
 msgstr "Mục mẫu màu [Mục báo cáo mới: %s]"
@@ -3059,7 +3059,7 @@ msgstr "ID nội bộ của Nguồn dữ liệu."
 msgid "The Status of the Data Source Debug Check."
 msgstr "Trạng thái của Kiểm tra gỡ lỗi nguồn dữ liệu."
 
-#: data_debug.php:471 lib/installer.php:2417 lib/installer.php:2449
+#: data_debug.php:471 lib/installer.php:2429 lib/installer.php:2461
 #: package_import.php:650
 msgid "Writable"
 msgstr "Có thể ghi"
@@ -3118,9 +3118,9 @@ msgid "Summary of issues found for the Data Source."
 msgstr "Bất kỳ vấn đề tóm tắt nào được tìm thấy cho Nguồn dữ liệu."
 
 #: data_debug.php:572 data_debug.php:1129 data_sources.php:1469
-#: data_sources.php:1622 host.php:1856 include/global_arrays.php:1012
+#: data_sources.php:1622 host.php:1545 include/global_arrays.php:1012
 #: include/global_arrays.php:1058 include/global_arrays.php:2336
-#: lib/api_automation.php:296 user_admin.php:1167 user_group_admin.php:1053
+#: lib/api_automation.php:296 user_admin.php:1184 user_group_admin.php:1053
 #: utilities.php:326
 msgid "Data Sources"
 msgstr "Nguồn dữ liệu"
@@ -3233,7 +3233,7 @@ msgstr "Phân tích chạy lại"
 msgid "Check"
 msgstr "Kiểm tra"
 
-#: data_debug.php:826 include/global_form.php:1032 lib/rrd.php:3668
+#: data_debug.php:826 include/global_form.php:1032 lib/rrd.php:4049
 #: utilities.php:799 utilities.php:816 utilities.php:3097
 msgid "Value"
 msgstr "Giá trị"
@@ -3312,11 +3312,11 @@ msgstr "Hồ sơ"
 
 #: data_debug.php:1066 data_debug.php:1082 data_debug.php:1093
 #: data_sources.php:1429 data_sources.php:1446 data_templates.php:1061
-#: graphs.php:2126 graphs_new.php:430 host.php:1705 host_templates.php:708
+#: graphs.php:2126 graphs_new.php:430 host.php:1791 host_templates.php:708
 #: host_templates.php:723 lib/clog_webapi.php:557 lib/html.php:225
 #: lib/html_reports.php:1088 lib/html_reports.php:2277 plugins.php:492
 #: settings.php:549 settings.php:571 settings.php:602 tree.php:870
-#: user_admin.php:2201 user_admin.php:2223 user_admin.php:2237
+#: user_admin.php:2218 user_admin.php:2240 user_admin.php:2254
 #: utilities.php:1040 utilities.php:1454
 msgid "All"
 msgstr "Tất cả"
@@ -3342,198 +3342,198 @@ msgstr ""
 msgid "Input field <%s> requires Special Type Code \"%s\"."
 msgstr ""
 
-#: data_input.php:289
+#: data_input.php:294
 msgid "Click 'Continue' to delete the following Data Input Method"
 msgid_plural "Click 'Continue' to delete the following Data Input Method"
 msgstr[0] "Nhấp vào &#39;Tiếp tục&#39; để xóa Phương thức nhập dữ liệu sau"
 
-#: data_input.php:296
+#: data_input.php:301
 msgid "Click 'Continue' to duplicate the following Data Input Method(s). You can optionally change the title format for the new Data Input Method(s)."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để nhân đôi (các) Phương thức nhập dữ liệu sau. Bạn có thể tùy ý thay đổi định dạng tiêu đề cho (các) Phương thức nhập dữ liệu mới."
 
-#: data_input.php:298
+#: data_input.php:303
 msgid "Input Name:"
 msgstr "Tên đầu vào:"
 
-#: data_input.php:303
+#: data_input.php:308
 msgid "Delete Data Input Method"
 msgid_plural "Delete Data Input Methods"
 msgstr[0] "Xóa phương thức nhập dữ liệu"
 
-#: data_input.php:348
+#: data_input.php:358
 msgid "Click 'Continue' to delete the following Data Input Field."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để xóa Trường nhập dữ liệu sau."
 
-#: data_input.php:349
+#: data_input.php:359
 #, php-format
 msgid "Field Name: %s"
 msgstr "Tên trường: %s"
 
-#: data_input.php:350
+#: data_input.php:360
 #, php-format
 msgid "Friendly Name: %s"
 msgstr "Tên thân thiện: %s"
 
-#: data_input.php:356 host_templates.php:306 host_templates.php:375
+#: data_input.php:366 host_templates.php:306 host_templates.php:375
 msgid "Remove Data Input Field"
 msgstr "Xóa trường nhập dữ liệu"
 
-#: data_input.php:467
+#: data_input.php:496
 msgid "This script appears to have no input values, therefore there is nothing to add."
 msgstr "Kịch bản này dường như không có giá trị đầu vào, do đó không có gì để thêm."
 
-#: data_input.php:473
+#: data_input.php:502
 #, php-format
 msgid "Output Fields [edit: %s]"
 msgstr "Trường đầu ra [chỉnh sửa: %s]"
 
-#: data_input.php:474 include/global_form.php:661
+#: data_input.php:503 include/global_form.php:661
 msgid "Output Field"
 msgstr "Trường đầu ra"
 
-#: data_input.php:476
+#: data_input.php:505
 #, php-format
 msgid "Input Fields [edit: %s]"
 msgstr "Trường nhập liệu [chỉnh sửa: %s]"
 
-#: data_input.php:477
+#: data_input.php:506
 msgid "Input Field"
 msgstr "Trường nhập"
 
-#: data_input.php:540
+#: data_input.php:574
 #, php-format
 msgid "Data Input Method [edit: %s]"
 msgstr "Phương thức nhập dữ liệu [chỉnh sửa: %s]"
 
-#: data_input.php:544
+#: data_input.php:578
 msgid "Data Input Method [new]"
 msgstr "Phương thức nhập dữ liệu [mới]"
 
-#: data_input.php:563 include/global_arrays.php:528
+#: data_input.php:597 include/global_arrays.php:528
 msgid "SNMP Query"
 msgstr "Truy vấn SNMP"
 
-#: data_input.php:566 include/global_arrays.php:530
+#: data_input.php:600 include/global_arrays.php:530
 msgid "Script Query"
 msgstr "Truy vấn tập lệnh"
 
-#: data_input.php:569 include/global_arrays.php:532
+#: data_input.php:603 include/global_arrays.php:532
 msgid "Script Server Query"
 msgstr "Máy chủ tập lệnh"
 
-#: data_input.php:577
+#: data_input.php:611
 msgid "White List Verification Succeeded."
 msgstr "Xác minh danh sách trắng thành công."
 
-#: data_input.php:579
+#: data_input.php:613
 msgid "White List Verification Failed.  Run CLI script input_whitelist.php to correct."
 msgstr "Xác minh danh sách trắng không thành công. Chạy tập lệnh CLI input_whitelist.php để sửa."
 
-#: data_input.php:585
+#: data_input.php:619
 msgid "Input String does not exist in White List.  Run CLI script input_whitelist.php to correct."
 msgstr "Chuỗi đầu vào không tồn tại trong Danh sách trắng. Chạy tập lệnh CLI input_whitelist.php để sửa."
 
-#: data_input.php:610
+#: data_input.php:644
 msgid "Input Fields"
 msgstr "Trường đầu vào"
 
-#: data_input.php:614 data_input.php:675 include/global_form.php:465
+#: data_input.php:648 data_input.php:709 include/global_form.php:465
 msgid "Friendly Name"
 msgstr "Tên thân thiện"
 
-#: data_input.php:615
+#: data_input.php:649
 msgid "Field Order"
 msgstr "Field Order"
 
-#: data_input.php:659
+#: data_input.php:693
 msgid "(Not In Use)"
 msgstr "(Không sử dụng)"
 
-#: data_input.php:668
+#: data_input.php:702
 msgid "No Input Fields"
 msgstr "Không có trường đầu vào"
 
-#: data_input.php:672
+#: data_input.php:706
 msgid "Output Fields"
 msgstr "Trường đầu ra"
 
-#: data_input.php:676
+#: data_input.php:710
 msgid "Update RRA"
 msgstr "Cập nhật RRA"
 
-#: data_input.php:702
+#: data_input.php:736
 msgid "Output Fields can not be removed when Data Sources are present"
 msgstr "Không thể xóa Trường đầu ra khi có Nguồn dữ liệu"
 
-#: data_input.php:711
+#: data_input.php:745
 msgid "No Output Fields"
 msgstr "Không có trường đầu ra"
 
-#: data_input.php:739
+#: data_input.php:773
 msgid "Delete Data Input Field"
 msgstr "Xóa trường nhập dữ liệu"
 
-#: data_input.php:752
+#: data_input.php:786
 #, fuzzy
 msgid "Update Whitelist"
 msgstr "Cập nhật trường này"
 
-#: data_input.php:811 include/global_arrays.php:1018
+#: data_input.php:845 include/global_arrays.php:1018
 #: include/global_arrays.php:1242 include/global_arrays.php:2390
 msgid "Data Input Methods"
 msgstr "Phương thức nhập dữ liệu"
 
-#: data_input.php:826 data_input.php:918
+#: data_input.php:860 data_input.php:952
 msgid "Input Methods"
 msgstr "Phương thức nhập liệu"
 
-#: data_input.php:927
+#: data_input.php:961
 msgid "Data Input Name"
 msgstr "Tên đầu vào dữ liệu"
 
-#: data_input.php:927
+#: data_input.php:961
 msgid "The name of this Data Input Method."
 msgstr "Tên của Phương thức nhập dữ liệu này."
 
-#: data_input.php:932
+#: data_input.php:966
 msgid "The internal database ID for this Data Input Method.  Useful when performing automation or debugging."
 msgstr "ID cơ sở dữ liệu nội bộ cho Mẫu dữ liệu này. Hữu ích khi thực hiện tự động hóa hoặc gỡ lỗi."
 
-#: data_input.php:937
+#: data_input.php:971
 msgid "Data Inputs that are in use cannot be Deleted. In use is defined as being referenced either by a Data Source or a Data Template."
 msgstr "Dữ liệu đầu vào đang sử dụng không thể bị xóa. Đang sử dụng được định nghĩa là được tham chiếu bởi Nguồn dữ liệu hoặc Mẫu dữ liệu."
 
-#: data_input.php:940 data_source_profiles.php:1070 data_templates.php:1215
+#: data_input.php:974 data_source_profiles.php:1070 data_templates.php:1215
 msgid "Data Sources Using"
 msgstr "Nguồn dữ liệu sử dụng"
 
-#: data_input.php:943
+#: data_input.php:977
 msgid "The number of Data Sources that use this Data Input Method."
 msgstr "Số lượng Nguồn dữ liệu sử dụng Phương thức nhập dữ liệu này."
 
-#: data_input.php:949
+#: data_input.php:983
 msgid "The number of Data Templates that use this Data Input Method."
 msgstr "Số lượng Mẫu dữ liệu sử dụng Phương thức nhập dữ liệu này."
 
-#: data_input.php:952 data_queries.php:1452 include/global_arrays.php:1374
+#: data_input.php:986 data_queries.php:1452 include/global_arrays.php:1374
 #: include/global_form.php:584 include/global_form.php:1401
 msgid "Data Input Method"
 msgstr "Phương thức nhập dữ liệu"
 
-#: data_input.php:955
+#: data_input.php:989
 msgid "The method used to gather information for this Data Input Method."
 msgstr "Phương pháp được sử dụng để thu thập thông tin cho Phương thức nhập dữ liệu này."
 
-#: data_input.php:977 host.php:1756 lib/api_automation.php:179
+#: data_input.php:1011 host.php:1842 lib/api_automation.php:179
 #: lib/api_automation.php:1117 lib/auth.php:2498 lib/clog_webapi.php:854
-#: lib/html_utility.php:1385 lib/import.php:423 lib/plugins.php:1243
-#: lib/plugins.php:1244 lib/rrd.php:3693 lib/rrd.php:3705 lib/spikekill.php:302
+#: lib/html_utility.php:1427 lib/import.php:423 lib/plugins.php:1243
+#: lib/plugins.php:1244 lib/rrd.php:4074 lib/rrd.php:4086 lib/spikekill.php:302
 #: package_import.php:576 package_import.php:654 utilities.php:212
 #: utilities.php:213 utilities.php:2652
 msgid "Unknown"
 msgstr "Không xác định"
 
-#: data_input.php:982
+#: data_input.php:1016
 msgid "No Data Input Methods Found"
 msgstr "Không tìm thấy phương thức nhập dữ liệu"
 
@@ -3810,8 +3810,8 @@ msgid "Steps"
 msgstr "Bước"
 
 #: data_source_profiles.php:640 graphs_new.php:469 include/global_form.php:298
-#: lib/html.php:583 lib/html_filter.php:73 lib/installer.php:2751
-#: lib/rrd.php:3722 utilities.php:867 utilities.php:1789
+#: lib/html.php:583 lib/html_filter.php:73 lib/installer.php:2763
+#: lib/rrd.php:4103 utilities.php:867 utilities.php:1789
 msgid "Rows"
 msgstr "Hàng"
 
@@ -3852,7 +3852,7 @@ msgid "1 Year"
 msgstr "1 Năm"
 
 #: data_source_profiles.php:826 include/global_arrays.php:799
-#: include/global_arrays.php:1482 rrdcleaner.php:528
+#: include/global_arrays.php:1482 rrdcleaner.php:545
 #, php-format
 msgid "%d Month"
 msgstr "% d Tháng"
@@ -3861,15 +3861,15 @@ msgstr "% d Tháng"
 #: include/global_arrays.php:801 include/global_arrays.php:802
 #: include/global_arrays.php:803 include/global_arrays.php:1483
 #: include/global_arrays.php:1484 include/global_arrays.php:1485
-#: include/global_arrays.php:1486 rrdcleaner.php:529 rrdcleaner.php:530
-#: rrdcleaner.php:531
+#: include/global_arrays.php:1486 rrdcleaner.php:546 rrdcleaner.php:547
+#: rrdcleaner.php:548
 #, php-format
 msgid "%d Months"
 msgstr "% d Tháng"
 
 #: data_source_profiles.php:835 include/global_arrays.php:740
 #: include/global_arrays.php:796 include/global_arrays.php:1480
-#: rrdcleaner.php:524 rrdcleaner.php:525
+#: rrdcleaner.php:541 rrdcleaner.php:542
 #, php-format
 msgid "%d Week"
 msgstr "% d Tuần"
@@ -3877,7 +3877,7 @@ msgstr "% d Tuần"
 #: data_source_profiles.php:835 include/global_arrays.php:797
 #: include/global_arrays.php:798 include/global_arrays.php:1481
 #: include/global_settings.php:2921 include/global_settings.php:2922
-#: include/global_settings.php:2923 rrdcleaner.php:526 rrdcleaner.php:527
+#: include/global_settings.php:2923 rrdcleaner.php:543 rrdcleaner.php:544
 #, php-format
 msgid "%d Weeks"
 msgstr "% d Tuần"
@@ -4477,7 +4477,7 @@ msgstr "HÌNH ẢNH KHÔNG TỒN TẠI"
 msgid "Viewing Graph"
 msgstr "Xem biểu đồ"
 
-#: graph.php:116
+#: graph.php:116 graph.php:292 graph.php:316 graph.php:330 graph.php:385
 #, fuzzy
 msgid "The Graph you requested does not exist."
 msgstr "Nguồn dữ liệu không tồn tại."
@@ -4490,7 +4490,7 @@ msgstr "Chi tiết đồ thị, thu phóng và gỡ lỗi tiện ích"
 msgid "CSV Export"
 msgstr "Xuất CSV"
 
-#: graph.php:152 graph.php:403 lib/html.php:538
+#: graph.php:152 graph.php:427 lib/html.php:538
 msgid "Edit Graph Template"
 msgstr "Chỉnh sửa mẫu biểu đồ."
 
@@ -4502,24 +4502,24 @@ msgstr "Nhấp để xem Biểu đồ này trong thời gian thực"
 msgid "Utility View"
 msgstr "Chế độ xem tiện ích"
 
-#: graph.php:381
+#: graph.php:405
 msgid "Graph Utility View"
 msgstr "Chế độ xem tiện ích"
 
-#: graph.php:394
+#: graph.php:418
 msgid "Graph Source/Properties"
 msgstr "Nguồn / Thuộc tính đồ thị"
 
-#: graph.php:398
+#: graph.php:422
 msgid "Graph Data"
 msgstr "Dữ liệu đồ thị"
 
-#: graph.php:563
+#: graph.php:587
 msgid "RRDtool Graph Syntax"
 msgstr "Cú pháp đồ thị RRDtool"
 
 #: graph_image.php:186 graph_json.php:225 graph_realtime.php:306
-#: lib/rrd.php:1955
+#: lib/rrd.php:2336
 msgid "The Cacti Poller has not run yet."
 msgstr "Cacti Poller chưa chạy."
 
@@ -4665,7 +4665,7 @@ msgstr "Chọn hộp kiểm này nếu bạn muốn cho phép người dùng ghi
 
 #: graph_templates.php:711 graph_templates.php:726 graph_templates.php:890
 #: graphs_new.php:568 include/global_arrays.php:1253
-#: include/global_arrays.php:2264 lib/html_tree.php:558 user_admin.php:1306
+#: include/global_arrays.php:2264 lib/html_tree.php:558 user_admin.php:1323
 #: user_group_admin.php:1190
 msgid "Graph Templates"
 msgstr "Mẫu đồ thị"
@@ -5231,7 +5231,7 @@ msgstr "(Chọn một loại biểu đồ để tạo)"
 msgid "Create"
 msgstr "Tạo"
 
-#: graphs_new.php:572 graphs_new.php:870 lib/html.php:1107 user_admin.php:1525
+#: graphs_new.php:572 graphs_new.php:870 lib/html.php:1107 user_admin.php:1542
 #: user_group_admin.php:1407
 msgid "Select All"
 msgstr "Chọn tất cả"
@@ -5628,107 +5628,107 @@ msgstr "SNMP GetNext"
 msgid "Delete Item from Device"
 msgstr "Xóa (các) mẫu thiết bị"
 
-#: host.php:1490 host.php:1531 host.php:1713
+#: host.php:1490 host.php:1613 host.php:1799
 msgid "Undefined"
 msgstr "Mùi không xác định"
 
-#: host.php:1645 include/global_settings.php:635 lib/html.php:2264
-#: lib/html_reports.php:1101
-msgid "Site"
-msgstr "Trang"
-
-#: host.php:1731
-msgid "Export Devices"
-msgstr "Xuất thiết bị"
-
-#: host.php:1752 lib/api_automation.php:175 lib/api_automation.php:1113
-msgid "Not Up"
-msgstr "Không lên"
-
-#: host.php:1755 lib/api_automation.php:178 lib/api_automation.php:1116
-#: lib/html.php:81 lib/html_utility.php:1376 pollers.php:50
-msgid "Recovering"
-msgstr "Phục hồi"
-
-#: host.php:1832 lib/api_automation.php:582 tree.php:943 utilities.php:2221
+#: host.php:1521 lib/api_automation.php:582 tree.php:943 utilities.php:2221
 msgid "Device Description"
 msgstr "Mô tả thiết bị"
 
-#: host.php:1835
+#: host.php:1524
 msgid "The name by which this Device will be referred to."
 msgstr "Tên mà Thiết bị này sẽ được gọi."
 
-#: host.php:1838 include/global_form.php:1197 include/global_form.php:1768
+#: host.php:1527 include/global_form.php:1197 include/global_form.php:1768
 #: lib/api_automation.php:291 lib/api_automation.php:583
 #: lib/api_automation.php:896 lib/api_automation.php:1247 managers.php:223
-#: pollers.php:131 pollers.php:1017 user_admin.php:1167
+#: pollers.php:131 pollers.php:1017 user_admin.php:1184
 #: user_group_admin.php:1053
 msgid "Hostname"
 msgstr "Tên máy chủ"
 
-#: host.php:1841
+#: host.php:1530
 msgid "Either an IP address, or hostname.  If a hostname, it must be resolvable by either DNS, or from your hosts file."
 msgstr "Địa chỉ IP hoặc tên máy chủ. Nếu là tên máy chủ, nó phải được phân giải bằng DNS hoặc từ tệp máy chủ của bạn."
 
-#: host.php:1847
+#: host.php:1536
 msgid "The internal database ID for this Device.  Useful when performing automation or debugging."
 msgstr "ID cơ sở dữ liệu nội bộ cho thiết bị này. Hữu ích khi thực hiện tự động hóa hoặc gỡ lỗi."
 
-#: host.php:1853
+#: host.php:1542
 msgid "The total number of Graphs generated from this Device."
 msgstr "Tổng số đồ thị được tạo từ thiết bị này."
 
-#: host.php:1859
+#: host.php:1548
 msgid "The total number of Data Sources generated from this Device."
 msgstr "Tổng số Nguồn dữ liệu được tạo từ Thiết bị này."
 
-#: host.php:1865
+#: host.php:1554
 msgid "The monitoring status of the Device based upon ping results.  If this Device is a special type Device, by using the hostname \"localhost\", or due to the setting to not perform an Availability Check, it will always remain Up.  When using cmd.php data collector, a Device with no Graphs, is not pinged by the data collector and will remain in an \"Unknown\" state."
 msgstr "Trạng thái giám sát của Thiết bị dựa trên kết quả ping. Nếu Thiết bị này là Thiết bị loại đặc biệt, bằng cách sử dụng tên máy chủ &quot;localhost&quot; hoặc do cài đặt không thực hiện Kiểm tra tính khả dụng, thiết bị sẽ luôn duy trì. Khi sử dụng trình thu thập dữ liệu cmd.php, Thiết bị không có Đồ thị, sẽ không được trình thu thập dữ liệu ping và sẽ vẫn ở trạng thái &quot;Không xác định&quot;."
 
-#: host.php:1868
+#: host.php:1557
 msgid "In State"
 msgstr "Tỉnh"
 
-#: host.php:1871
+#: host.php:1560
 msgid "The amount of time that this Device has been in its current state."
 msgstr "Lượng thời gian mà Thiết bị này đã ở trạng thái hiện tại."
 
-#: host.php:1877
+#: host.php:1566
 msgid "The current amount of time that the host has been up."
 msgstr "Lượng thời gian hiện tại mà máy chủ đã lên."
 
-#: host.php:1880
+#: host.php:1569
 msgid "Poll Time"
 msgstr "Thời gian bình chọn"
 
-#: host.php:1883
+#: host.php:1572
 msgid "The amount of time it takes to collect data from this Device."
 msgstr "Lượng thời gian cần thiết để thu thập dữ liệu từ Thiết bị này."
 
-#: host.php:1886
+#: host.php:1575
 msgid "Current (ms)"
 msgstr "Hiện tại (ms)"
 
-#: host.php:1889
+#: host.php:1578
 msgid "The current ping time in milliseconds to reach the Device."
 msgstr "Thời gian ping hiện tại tính bằng mili giây để đến Thiết bị."
 
-#: host.php:1892
+#: host.php:1581
 msgid "Average (ms)"
 msgstr "Trung bình (ms)"
 
-#: host.php:1895
+#: host.php:1584
 msgid "The average ping time in milliseconds to reach the Device since the counters were cleared for this Device."
 msgstr "Thời gian ping trung bình tính bằng mili giây để đến Thiết bị do các bộ đếm đã bị xóa cho Thiết bị này."
 
-#: host.php:1898
+#: host.php:1587
 msgid "Availability"
 msgstr "Tình trạng"
 
-#: host.php:1901
+#: host.php:1590
 msgid "The availability percentage based upon ping results since the counters were cleared for this Device."
 msgstr "Tỷ lệ phần trăm khả dụng dựa trên kết quả ping kể từ khi bộ đếm đã bị xóa cho Thiết bị này."
+
+#: host.php:1731 include/global_settings.php:635 lib/html.php:2264
+#: lib/html_reports.php:1101
+msgid "Site"
+msgstr "Trang"
+
+#: host.php:1817
+msgid "Export Devices"
+msgstr "Xuất thiết bị"
+
+#: host.php:1838 lib/api_automation.php:175 lib/api_automation.php:1113
+msgid "Not Up"
+msgstr "Không lên"
+
+#: host.php:1841 lib/api_automation.php:178 lib/api_automation.php:1116
+#: lib/html.php:81 lib/html_utility.php:1418 pollers.php:50
+msgid "Recovering"
+msgstr "Phục hồi"
 
 #: host_templates.php:37
 msgid "Sync Devices"
@@ -5912,11 +5912,11 @@ msgstr ""
 msgid "Return to Cacti: %s"
 msgstr "Yêu cầu: Cacti&gt; = %s"
 
-#: include/global.php:561
+#: include/global.php:564
 msgid "The Main Data Collector has returned to an Online Status"
 msgstr "Lần cuối cùng Bộ thu thập dữ liệu này được đồng bộ hóa hoàn toàn với trang web chính của Cacti."
 
-#: include/global.php:565
+#: include/global.php:568
 msgid "The Main Data Collector has gone to an Offline or Recovering Status"
 msgstr ""
 
@@ -6559,7 +6559,7 @@ msgid "%0.1f Minutes"
 msgstr "%d phút"
 
 #: include/global_arrays.php:804 include/global_arrays.php:1487
-#: include/global_settings.php:1626 rrdcleaner.php:532
+#: include/global_settings.php:1626 rrdcleaner.php:549
 #, php-format
 msgid "%d Year"
 msgstr "% d Năm"
@@ -6612,7 +6612,7 @@ msgstr "Khó"
 msgid "Demand"
 msgstr "Yêu cầu"
 
-#: include/global_arrays.php:912 user_admin.php:752 user_group_admin.php:758
+#: include/global_arrays.php:912 user_admin.php:769 user_group_admin.php:758
 msgid "Allow"
 msgstr "Cho phép"
 
@@ -6666,7 +6666,7 @@ msgstr "Trật tự tự nhiên"
 msgid "Numeric Ordering"
 msgstr "Đặt hàng số"
 
-#: include/global_arrays.php:970 lib/rrd.php:3634
+#: include/global_arrays.php:970 lib/rrd.php:4015
 msgid "Header"
 msgstr "Đầu trang"
 
@@ -6760,8 +6760,8 @@ msgid "Sites"
 msgstr "Websites"
 
 #: include/global_arrays.php:1010 include/global_arrays.php:1247 tree.php:2157
-#: tree.php:2172 tree.php:2236 user_admin.php:1445 user_admin.php:3077
-#: user_admin.php:3174 user_group_admin.php:1322 user_group_admin.php:2633
+#: tree.php:2172 tree.php:2236 user_admin.php:1462 user_admin.php:3094
+#: user_admin.php:3191 user_group_admin.php:1322 user_group_admin.php:2633
 msgid "Trees"
 msgstr "Cây"
 
@@ -6836,7 +6836,7 @@ msgid "Settings"
 msgstr "Cài đặt"
 
 #: include/global_arrays.php:1049 include/global_arrays.php:2606
-#: user_admin.php:2245 user_admin.php:2346 user_group_admin.php:697
+#: user_admin.php:2262 user_admin.php:2363 user_group_admin.php:697
 #: user_group_admin.php:2730
 msgid "Users"
 msgstr "Người dùng"
@@ -6846,7 +6846,7 @@ msgid "User Groups"
 msgstr "Nhóm người dùng"
 
 #: include/global_arrays.php:1051 include/global_arrays.php:2624
-#: user_domains.php:649 user_domains.php:743
+#: user_domains.php:649 user_domains.php:744
 msgid "User Domains"
 msgstr "Tên miền người dùng"
 
@@ -6862,7 +6862,7 @@ msgstr "Tiện ích hệ thống"
 #: include/global_arrays.php:1055 include/global_arrays.php:1089
 #: include/global_arrays.php:1132 include/global_arrays.php:1235
 #: include/global_arrays.php:2240 links.php:96 links.php:315 links.php:385
-#: links.php:416 links.php:498 user_admin.php:1603 user_group_admin.php:1487
+#: links.php:416 links.php:498 user_admin.php:1620 user_group_admin.php:1487
 msgid "External Links"
 msgstr "Liên kết Bên ngoài"
 
@@ -7853,7 +7853,7 @@ msgstr "Chế độ danh sách"
 
 #: include/global_arrays.php:2090 include/global_arrays.php:2096
 #: lib/functions.php:4062 lib/html.php:1834 lib/html.php:1911 lib/html.php:2610
-#: links.php:357 user_admin.php:1574 user_group_admin.php:1458
+#: links.php:357 user_admin.php:1591 user_group_admin.php:1458
 msgid "Console"
 msgstr "ÄÃ³ng"
 
@@ -7922,7 +7922,7 @@ msgid "(Remove Item)"
 msgstr "(Loại bỏ mục)"
 
 #: include/global_arrays.php:2456 include/global_settings.php:234
-#: rrdcleaner.php:328
+#: rrdcleaner.php:335
 msgid "RRD Cleaner"
 msgstr "Chất tẩy rửa RRD"
 
@@ -8238,7 +8238,7 @@ msgstr "Tần suất mà dữ liệu sẽ được thu thập từ Nguồn dữ 
 msgid "How long can data be missing before RRDtool records unknown data.  Increase this value if your Data Source is unstable and you wish to carry forward old data rather than show gaps in your graphs.  This value is multiplied by the X-Files Factor to determine the actual amount of time."
 msgstr "Dữ liệu có thể bị mất bao lâu trước khi RRDtool ghi lại dữ liệu không xác định. Tăng giá trị này nếu Nguồn dữ liệu của bạn không ổn định và bạn muốn chuyển tiếp dữ liệu cũ thay vì hiển thị các khoảng trống trong biểu đồ của bạn. Giá trị này được nhân với Hệ số tệp X để xác định lượng thời gian thực tế."
 
-#: include/global_form.php:240 lib/rrd.php:3725
+#: include/global_form.php:240 lib/rrd.php:4106
 msgid "X-Files Factor"
 msgstr "Yếu tố X-Files"
 
@@ -8792,7 +8792,7 @@ msgstr "Opacity / Kênh Alpha"
 msgid "The opacity/alpha channel of the color."
 msgstr "Các kênh opacity / alpha của màu sắc."
 
-#: include/global_form.php:1003 lib/rrd.php:3721
+#: include/global_form.php:1003 lib/rrd.php:4102
 msgid "Consolidation Function"
 msgstr "Chức năng hợp nhất"
 
@@ -12480,7 +12480,7 @@ msgstr "Thiết bị phù hợp"
 
 #: lib/api_automation.php:150 lib/api_automation.php:1088
 #: lib/clog_webapi.php:551 lib/html_reports.php:1067 lib/html_reports.php:1739
-#: lib/html_reports.php:2138 lib/html_reports.php:2149 lib/rrd.php:3663
+#: lib/html_reports.php:2138 lib/html_reports.php:2149 lib/rrd.php:4044
 #: utilities.php:357 utilities.php:1450 utilities.php:3097
 msgid "Type"
 msgstr "Loại"
@@ -13664,7 +13664,7 @@ msgstr "Chỉnh sửa thiết bị"
 msgid "Kill Spikes in Graphs"
 msgstr "Tiêu diệt gai trong đồ thị"
 
-#: lib/html.php:599 lib/html.php:631 lib/installer.php:1715
+#: lib/html.php:599 lib/html.php:631 lib/installer.php:1727
 msgid "Previous"
 msgstr "Trước"
 
@@ -13673,7 +13673,7 @@ msgstr "Trước"
 msgid "%d to %d of %s [ %s ]"
 msgstr "% d đến% d của %s [ %s]"
 
-#: lib/html.php:605 lib/html.php:637 lib/installer.php:1714
+#: lib/html.php:605 lib/html.php:637 lib/installer.php:1726
 msgid "Next"
 msgstr "Tiếp"
 
@@ -14568,7 +14568,7 @@ msgstr "Sự kiện"
 msgid "Send Report"
 msgstr "Gửi báo cáo"
 
-#: lib/html_reports.php:1597 lib/import.php:3138 user_admin.php:1888
+#: lib/html_reports.php:1597 lib/import.php:3138 user_admin.php:1905
 msgid "[new]"
 msgstr "[Mới]"
 
@@ -14763,48 +14763,48 @@ msgstr "Đã chọn"
 msgid "The regular expression \"%s\" is not valid. Error is %s"
 msgstr "Thuật ngữ tìm kiếm &quot; %s&quot; không hợp lệ. Lỗi là %s"
 
-#: lib/html_utility.php:1269
+#: lib/html_utility.php:1311
 msgid "Cacti regular expressions are limited to 50 characters only for security reasons."
 msgstr ""
 
-#: lib/html_utility.php:1273
+#: lib/html_utility.php:1315
 msgid "Cacti regular expressions can not includes the semi-color character."
 msgstr ""
 
-#: lib/html_utility.php:1290
+#: lib/html_utility.php:1332
 #, fuzzy
 msgid "Invalid regular expression."
 msgstr "Nhập một biểu thức chính quy"
 
-#: lib/html_utility.php:1293
+#: lib/html_utility.php:1335
 msgid "There was an internal error!"
 msgstr "Có lỗi nội bộ!"
 
-#: lib/html_utility.php:1294
+#: lib/html_utility.php:1336
 msgid "Backtrack limit was exhausted!"
 msgstr "Giới hạn quay lui đã cạn kiệt!"
 
-#: lib/html_utility.php:1295
+#: lib/html_utility.php:1337
 msgid "Recursion limit was exhausted!"
 msgstr "Giới hạn đệ quy đã hết!"
 
-#: lib/html_utility.php:1296
+#: lib/html_utility.php:1338
 msgid "Bad UTF-8 error!"
 msgstr "Lỗi UTF-8!"
 
-#: lib/html_utility.php:1297
+#: lib/html_utility.php:1339
 msgid "Bad UTF-8 offset error!"
 msgstr "Lỗi bù UTF-8 xấu!"
 
-#: lib/html_utility.php:1328
+#: lib/html_utility.php:1370
 msgid "Cacti RLIKE filters do not support alternation or bounded-repeat characters."
 msgstr ""
 
-#: lib/html_utility.php:1367
+#: lib/html_utility.php:1409
 msgid "Down (Thold)"
 msgstr "Tải xuống"
 
-#: lib/html_utility.php:1382 lib/installer.php:2007 lib/installer.php:3864
+#: lib/html_utility.php:1424 lib/installer.php:2019 lib/installer.php:3898
 msgid "Error"
 msgstr "Lỗi"
 
@@ -14939,1087 +14939,1087 @@ msgstr ""
 msgid "Path is not writable"
 msgstr "Đường dẫn không thể ghi"
 
-#: lib/installer.php:675
+#: lib/installer.php:687
 msgid "The external CSRF secret must be outside the Cacti document root"
 msgstr ""
 
-#: lib/installer.php:686
+#: lib/installer.php:698
 #, fuzzy
 msgid "Unable to create the external CSRF secret"
 msgstr "Không thể truy xuất trạng thái bảng"
 
-#: lib/installer.php:703
+#: lib/installer.php:715
 msgid "Unable to persist the CSRF secret"
 msgstr ""
 
-#: lib/installer.php:730
+#: lib/installer.php:742
 #, php-format
 msgid "Failed to set specified %sRRDTool version: %s"
 msgstr "Không thể đặt phiên bản %sRRDTool được chỉ định: %s"
 
-#: lib/installer.php:776
+#: lib/installer.php:788
 msgid "Invalid Theme Specified"
 msgstr "Chủ đề không hợp lệ được chỉ định"
 
-#: lib/installer.php:830
+#: lib/installer.php:842
 msgid "Resource is not writable"
 msgstr "Tài nguyên không thể ghi"
 
-#: lib/installer.php:835
+#: lib/installer.php:847
 msgid "File not found"
 msgstr "Không tìm thấy tập tin"
 
-#: lib/installer.php:847
+#: lib/installer.php:859
 msgid "PHP did not return expected result"
 msgstr "PHP đã không trả lại kết quả mong đợi"
 
-#: lib/installer.php:861
+#: lib/installer.php:873
 msgid "Unexpected path parameter"
 msgstr "Tham số đường dẫn không mong đợi"
 
-#: lib/installer.php:895
+#: lib/installer.php:907
 #, php-format
 msgid "Failed to apply specified profile %s != %s"
 msgstr "Không thể áp dụng hồ sơ được chỉ định %s! = %s"
 
-#: lib/installer.php:935
+#: lib/installer.php:947
 #, php-format
 msgid "Failed to apply specified mode: %s"
 msgstr "Không thể áp dụng chế độ được chỉ định: %s"
 
-#: lib/installer.php:957
+#: lib/installer.php:969
 #, php-format
 msgid "Failed to apply specified automation override: %s"
 msgstr "Không thể áp dụng ghi đè tự động hóa được chỉ định: %s"
 
-#: lib/installer.php:977
+#: lib/installer.php:989
 msgid "Failed to apply specified cron interval"
 msgstr "Không thể áp dụng khoảng thời gian xác định"
 
-#: lib/installer.php:1021
+#: lib/installer.php:1033
 #, fuzzy, php-format
 msgid "Failed to apply '%s' as Automation Range"
 msgstr "Không thể áp dụng Phạm vi tự động hóa được chỉ định"
 
-#: lib/installer.php:1096
+#: lib/installer.php:1108
 msgid "No matching snmp option exists"
 msgstr "Không có tùy chọn snmp phù hợp tồn tại"
 
-#: lib/installer.php:1277
+#: lib/installer.php:1289
 #, fuzzy
 msgid "Unable to load the available templates"
 msgstr "Không thể truy xuất trạng thái bảng"
 
-#: lib/installer.php:1287
+#: lib/installer.php:1299
 msgid "The template selection was incomplete. Reload this installer step and select the templates again."
 msgstr ""
 
-#: lib/installer.php:1320
+#: lib/installer.php:1332
 msgid "No matching template exists"
 msgstr "Không có mẫu phù hợp tồn tại"
 
-#: lib/installer.php:1402
+#: lib/installer.php:1414
 msgid "Unable to load the tables requiring conversion"
 msgstr ""
 
-#: lib/installer.php:1414
+#: lib/installer.php:1426
 msgid "The table selection was incomplete. Reload this installer step and select the tables again."
 msgstr ""
 
-#: lib/installer.php:1661
+#: lib/installer.php:1673
 msgid "The Installer could not proceed due to an unexpected error."
 msgstr "Trình cài đặt không thể tiến hành do một lỗi không mong muốn."
 
-#: lib/installer.php:1662
+#: lib/installer.php:1674
 msgid "Please report this to the Cacti Group."
 msgstr "Vui lòng báo cáo điều này với Tập đoàn Cacti."
 
-#: lib/installer.php:1663
+#: lib/installer.php:1675
 #, php-format
 msgid "Unknown Reason: %s"
 msgstr "Lý do không xác định: %s"
 
-#: lib/installer.php:1670
+#: lib/installer.php:1682
 #, php-format
 msgid "You are attempting to install Cacti %s onto a 0.6.x database. Unfortunately, this can not be performed."
 msgstr "Bạn đang cố gắng cài đặt Cacti %s vào cơ sở dữ liệu 0.6.x. Thật không may, điều này không thể được thực hiện."
 
-#: lib/installer.php:1671
+#: lib/installer.php:1683
 msgid "To be able continue, you <b>MUST</b> create a new database, import \"cacti.sql\" into it:"
 msgstr "Để có thể tiếp tục, bạn <b>PHẢI</b> tạo một cơ sở dữ liệu mới, nhập &quot;cacti.sql&quot; vào đó:"
 
-#: lib/installer.php:1673
+#: lib/installer.php:1685
 msgid "You <b>MUST</b> then update \"include/config.php\" to point to the new database."
 msgstr "Sau đó, bạn <b>PHẢI</b> cập nhật &quot;include / config.php&quot; để trỏ đến cơ sở dữ liệu mới."
 
-#: lib/installer.php:1674
+#: lib/installer.php:1686
 msgid "NOTE: Your existing data will not be modified, nor will it or any history be available to the new install"
 msgstr "LƯU Ý: Dữ liệu hiện tại của bạn sẽ không được sửa đổi, cũng như sẽ không có bất kỳ lịch sử nào có sẵn cho cài đặt mới"
 
-#: lib/installer.php:1681
+#: lib/installer.php:1693
 msgid "You have created a new database, but have not yet imported the 'cacti.sql' file. At the command line, execute the following to continue:"
 msgstr "Bạn đã tạo một cơ sở dữ liệu mới, nhưng chưa nhập tệp &#39;cacti.sql&#39;. Tại dòng lệnh, thực hiện như sau để tiếp tục:"
 
-#: lib/installer.php:1683
+#: lib/installer.php:1695
 msgid "This error may also be generated if the cacti database user does not have correct permissions on the Cacti database. Please ensure that the Cacti database user has the ability to SELECT, INSERT, DELETE, UPDATE, CREATE, ALTER, DROP, INDEX on the Cacti database."
 msgstr "Lỗi này cũng có thể được tạo ra nếu người dùng cơ sở dữ liệu cacti không có quyền chính xác trên cơ sở dữ liệu Cacti. Vui lòng đảm bảo rằng người dùng cơ sở dữ liệu Cacti có khả năng CHỌN, CHERTN, XÓA, CẬP NHẬT, TẠO, THAY ĐỔI, DROP, INDEX trên cơ sở dữ liệu Cacti."
 
-#: lib/installer.php:1684
+#: lib/installer.php:1696
 msgid "You <b>MUST</b> also import MySQL TimeZone information into MySQL and grant the Cacti user SELECT access to the mysql.time_zone_name table"
 msgstr "Bạn cũng <b>phải</b> nhập thông tin TimeZone của MySQL vào MySQL và cấp cho người dùng Cacti quyền truy cập vào bảng mysql.time_zone_name"
 
-#: lib/installer.php:1687
+#: lib/installer.php:1699
 msgid "On Linux/UNIX, run the following as 'root' in a shell:"
 msgstr "Trên Linux / UNIX, hãy chạy phần sau dưới dạng &#39;root&#39; trong shell:"
 
-#: lib/installer.php:1690
+#: lib/installer.php:1702
 msgid "On Windows, you must follow the instructions here <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>Time zone description table</a>.  Once that is complete, you can issue the following command to grant the Cacti user access to the tables:"
 msgstr "Trên Windows, bạn phải làm theo các hướng dẫn ở đây <a target='_blank' href='https://dev.mysql.com/downloads/timezones.html'>Bảng mô tả múi giờ</a> . Khi đã hoàn tất, bạn có thể ban hành lệnh sau để cấp quyền truy cập cho người dùng Cacti vào các bảng:"
 
-#: lib/installer.php:1693
+#: lib/installer.php:1705
 msgid "Then run the following within MySQL as an administrator:"
 msgstr "Sau đó chạy phần sau trong MySQL với tư cách quản trị viên:"
 
-#: lib/installer.php:1711 pollers.php:689
+#: lib/installer.php:1723 pollers.php:689
 msgid "Test Connection"
 msgstr "Kiểm tra kết nối"
 
-#: lib/installer.php:1722
+#: lib/installer.php:1734
 msgid "Begin"
 msgstr "Bắt đầu"
 
-#: lib/installer.php:1728 lib/installer.php:2152 lib/installer.php:2162
-#: lib/installer.php:2804
+#: lib/installer.php:1740 lib/installer.php:2164 lib/installer.php:2174
+#: lib/installer.php:2816
 msgid "Upgrade"
 msgstr "Nâng cấp"
 
-#: lib/installer.php:1730 lib/installer.php:2808
+#: lib/installer.php:1742 lib/installer.php:2820
 msgid "Downgrade"
 msgstr "Downgrade"
 
-#: lib/installer.php:1831 utilities.php:273
+#: lib/installer.php:1843 utilities.php:273
 msgid "Cacti Version"
 msgstr "Phiên bản xương rồng"
 
-#: lib/installer.php:1831
+#: lib/installer.php:1843
 msgid "License Agreement"
 msgstr "Äiá»u kiá»n giáº¥y phÃ©p"
 
-#: lib/installer.php:1834
+#: lib/installer.php:1846
 #, php-format
 msgid "This version of Cacti (%s) does not appear to have a valid version code, please contact the Cacti Development Team to ensure this is corrected.  If you are seeing this error in a release, please raise a report immediately on GitHub"
 msgstr "Phiên bản Cacti ( %s) này dường như không có mã phiên bản hợp lệ, vui lòng liên hệ với Nhóm phát triển Cacti để đảm bảo điều này được thực hiện. Nếu bạn thấy lỗi này trong một bản phát hành, vui lòng đưa ra báo cáo ngay lập tức trên GitHub"
 
-#: lib/installer.php:1837
+#: lib/installer.php:1849
 msgid "Thanks for taking the time to download and install Cacti, the complete graphing solution for your network. Before you can start making cool graphs, there are a few pieces of data that Cacti needs to know."
 msgstr "Cảm ơn bạn đã dành thời gian để tải xuống và cài đặt Cacti, giải pháp đồ họa hoàn chỉnh cho mạng của bạn. Trước khi bạn có thể bắt đầu tạo các biểu đồ thú vị, có một vài phần dữ liệu mà Cacti cần biết."
 
-#: lib/installer.php:1838
+#: lib/installer.php:1850
 #, php-format
 msgid "Make sure you have read and followed the required steps needed to install Cacti before continuing. Install information can be found for <a href=\"%s\">Unix</a> and <a href=\"%s\">Win32</a>-based operating systems."
 msgstr "Hãy chắc chắn rằng bạn đã đọc và làm theo các bước cần thiết để cài đặt Cacti trước khi tiếp tục. Thông tin cài đặt có thể được tìm thấy cho <a href=\"%1$s\">các</a> hệ điều hành dựa trên <a href=\"%1$s\">Unix</a> và <a href=\"%2$s\">Win32</a> ."
 
-#: lib/installer.php:1841
+#: lib/installer.php:1853
 #, php-format
 msgid "This process will guide you through the steps for upgrading from version '%s'. "
 msgstr "Quá trình này sẽ hướng dẫn bạn các bước để nâng cấp từ phiên bản &#39; %s&#39;."
 
-#: lib/installer.php:1842
+#: lib/installer.php:1854
 #, php-format
 msgid "Also, if this is an upgrade, be sure to read the <a href=\"%s\">Upgrade</a> information file."
 msgstr "Ngoài ra, nếu đây là bản nâng cấp, hãy nhớ đọc tệp thông tin <a href=\"%s\">Nâng cấp</a> ."
 
-#: lib/installer.php:1846
+#: lib/installer.php:1858
 msgid "It is NOT recommended to downgrade as the database structure may be inconsistent"
 msgstr "KHÔNG nên hạ cấp vì cấu trúc cơ sở dữ liệu có thể không nhất quán"
 
-#: lib/installer.php:1849
+#: lib/installer.php:1861
 msgid "Cacti is licensed under the GNU General Public License, you must agree to its provisions before continuing:"
 msgstr "Cacti được cấp phép theo Giấy phép Công cộng GNU, bạn phải đồng ý với các quy định của nó trước khi tiếp tục:"
 
-#: lib/installer.php:1853
+#: lib/installer.php:1865
 msgid "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
 msgstr "Chương trình này được phân phối với hy vọng nó sẽ hữu ích, nhưng KHÔNG CÓ BẤT K WAR ĐẢM BẢO NÀO; thậm chí không có bảo hành ngụ ý của MERCHANTABILITY hoặc FITNESS CHO MỘT MỤC ĐÍCH THAM GIA. Xem Giấy phép Công cộng GNU để biết thêm chi tiết."
 
-#: lib/installer.php:1890
+#: lib/installer.php:1902
 msgid "Accept GPL License Agreement"
 msgstr "Chấp nhận Thỏa thuận cấp phép GPL"
 
-#: lib/installer.php:1890
+#: lib/installer.php:1902
 msgid "Select default theme: "
 msgstr "Chọn chủ đề mặc định:"
 
-#: lib/installer.php:1913
+#: lib/installer.php:1925
 msgid "Pre-installation Checks"
 msgstr "Kiểm tra trước khi cài đặt"
 
-#: lib/installer.php:1914
+#: lib/installer.php:1926
 msgid "Location checks"
 msgstr "Kiểm tra vị trí"
 
-#: lib/installer.php:1950 lib/installer.php:2101 lib/installer.php:2105
-#: lib/installer.php:2260 lib/installer.php:2265 lib/installer.php:3961
+#: lib/installer.php:1962 lib/installer.php:2113 lib/installer.php:2117
+#: lib/installer.php:2272 lib/installer.php:2277 lib/installer.php:3995
 msgid "ERROR:"
 msgstr "Lỗi:"
 
-#: lib/installer.php:1950
+#: lib/installer.php:1962
 msgid "Please update config.php with the correct relative URI location of Cacti (url_path)."
 msgstr "Vui lòng cập nhật config.php với vị trí URI tương đối chính xác của Cacti (url_path)."
 
-#: lib/installer.php:1953
+#: lib/installer.php:1965
 msgid "Your Cacti configuration has the relative correct path (url_path) in config.php."
 msgstr "Cấu hình Cacti của bạn có đường dẫn chính xác tương đối (url_path) trong config.php."
 
-#: lib/installer.php:1961
+#: lib/installer.php:1973
 #, fuzzy, php-format
 msgid "PHP - Recommendations (%s)"
 msgstr "PHP - Khuyến nghị"
 
-#: lib/installer.php:1965
+#: lib/installer.php:1977
 msgid "PHP Recommendations ("
 msgstr "Khuyến nghị về PHP"
 
-#: lib/installer.php:1966
+#: lib/installer.php:1978
 msgid "Current"
 msgstr "Hiện hành"
 
-#: lib/installer.php:1966
+#: lib/installer.php:1978
 msgid "Recommended"
 msgstr "Đề nghị"
 
-#: lib/installer.php:1973
+#: lib/installer.php:1985
 msgid "PHP Binary"
 msgstr "Đường dẫn nhị phân PHP"
 
-#: lib/installer.php:1976
+#: lib/installer.php:1988
 msgid "The PHP binary location is not valid and must be updated."
 msgstr "Vị trí nhị phân PHP không hợp lệ và phải được cập nhật."
 
-#: lib/installer.php:1983
+#: lib/installer.php:1995
 msgid "Update the path_php_binary value in the settings table."
 msgstr "Cập nhật giá trị path_php_binary trong bảng cài đặt."
 
-#: lib/installer.php:1992
+#: lib/installer.php:2004
 msgid "Passed"
 msgstr "Đã vượt qua"
 
-#: lib/installer.php:1995
+#: lib/installer.php:2007
 msgid "Warning"
 msgstr "Cảnh báo"
 
-#: lib/installer.php:2001
+#: lib/installer.php:2013
 msgid "Restart Required"
 msgstr "Cần thiết"
 
-#: lib/installer.php:2001
+#: lib/installer.php:2013
 msgid "The specified value appears to be different in the running config versus the INI file."
 msgstr ""
 
-#: lib/installer.php:2031
+#: lib/installer.php:2043
 msgid "PHP - Module Support (Required)"
 msgstr "PHP - Hỗ trợ mô-đun (Bắt buộc)"
 
-#: lib/installer.php:2032
+#: lib/installer.php:2044
 msgid "Cacti requires several PHP Modules to be installed to work properly. If any of these are not installed, you will be unable to continue the installation until corrected. In addition, for optimal system performance Cacti should be run with certain MySQL system variables set.  Please follow the MySQL recommendations at your discretion.  Always seek the MySQL documentation if you have any questions."
 msgstr "Cacti yêu cầu một số Mô-đun PHP được cài đặt để hoạt động đúng. Nếu bất kỳ thứ nào trong số này không được cài đặt, bạn sẽ không thể tiếp tục cài đặt cho đến khi được sửa. Ngoài ra, để có hiệu năng hệ thống tối ưu, Cacti nên được chạy với một số biến hệ thống MySQL nhất định. Vui lòng làm theo các khuyến nghị của MySQL theo quyết định của bạn. Luôn luôn tìm tài liệu MySQL nếu bạn có bất kỳ câu hỏi nào."
 
-#: lib/installer.php:2034
+#: lib/installer.php:2046
 msgid "The following PHP extensions are mandatory, and MUST be installed before continuing your Cacti install."
 msgstr "Các phần mở rộng PHP sau là bắt buộc và PHẢI được cài đặt trước khi tiếp tục cài đặt Cacti của bạn."
 
-#: lib/installer.php:2038
+#: lib/installer.php:2050
 msgid "Required PHP Modules"
 msgstr "Các mô-đun PHP cần thiết"
 
-#: lib/installer.php:2039 lib/installer.php:2069 plugins.php:43 plugins.php:495
+#: lib/installer.php:2051 lib/installer.php:2081 plugins.php:43 plugins.php:495
 msgid "Installed"
 msgstr "Đã lắp đặt"
 
-#: lib/installer.php:2039
+#: lib/installer.php:2051
 msgid "Required"
 msgstr "Cần thiết"
 
-#: lib/installer.php:2062
+#: lib/installer.php:2074
 msgid "PHP - Module Support (Optional)"
 msgstr "PHP - Hỗ trợ mô-đun (Tùy chọn)"
 
-#: lib/installer.php:2064
+#: lib/installer.php:2076
 msgid "The following PHP extensions are recommended, and should be installed before continuing your Cacti install.  NOTE: If you are planning on supporting SNMPv3 with IPv6, you should not install the php-snmp module at this time."
 msgstr "Các phần mở rộng PHP sau được khuyến nghị và nên được cài đặt trước khi tiếp tục cài đặt Cacti của bạn. LƯU Ý: Nếu bạn dự định hỗ trợ SNMPv3 với IPv6, bạn không nên cài đặt mô-đun php-snmp tại thời điểm này."
 
-#: lib/installer.php:2068
+#: lib/installer.php:2080
 msgid "Optional Modules"
 msgstr "Các module tùy chọn"
 
-#: lib/installer.php:2069
+#: lib/installer.php:2081
 msgid "Optional"
 msgstr "Tuỳ chọn"
 
-#: lib/installer.php:2090
+#: lib/installer.php:2102
 msgid "MySQL - TimeZone Support"
 msgstr "MySQL - Hỗ trợ TimeZone"
 
-#: lib/installer.php:2101
+#: lib/installer.php:2113
 msgid "Your MySQL TimeZone database is not populated.  Please populate this database before proceeding."
 msgstr "Cơ sở dữ liệu TimeZone MySQL của bạn không được điền. Vui lòng điền cơ sở dữ liệu này trước khi tiếp tục."
 
-#: lib/installer.php:2105
+#: lib/installer.php:2117
 msgid "Your Cacti database login account does not have access to the MySQL TimeZone database.  Please provide the Cacti database account \"select\" access to the \"time_zone_name\" table in the \"mysql\" database, and populate MySQL's TimeZone information before proceeding."
 msgstr "Tài khoản đăng nhập cơ sở dữ liệu Cacti của bạn không có quyền truy cập vào cơ sở dữ liệu MySQL TimeZone. Vui lòng cung cấp quyền truy cập &quot;chọn&quot; tài khoản cơ sở dữ liệu Cacti vào bảng &quot;time_zone_name&quot; trong cơ sở dữ liệu &quot;mysql&quot; và điền thông tin TimeZone của MySQL trước khi tiếp tục."
 
-#: lib/installer.php:2110
+#: lib/installer.php:2122
 msgid "Your Cacti database account has access to the MySQL TimeZone database and that database is populated with global TimeZone information."
 msgstr "Tài khoản cơ sở dữ liệu Cacti của bạn có quyền truy cập vào cơ sở dữ liệu TimeZone của MySQL và cơ sở dữ liệu đó được cung cấp thông tin TimeZone toàn cầu."
 
-#: lib/installer.php:2115
+#: lib/installer.php:2127
 msgid "MySQL - Settings"
 msgstr "MySQL - Cài đặt"
 
-#: lib/installer.php:2116
+#: lib/installer.php:2128
 msgid "These MySQL performance tuning settings will help your Cacti system perform better without issues for a longer time."
 msgstr "Các cài đặt điều chỉnh hiệu suất MySQL này sẽ giúp hệ thống Cacti của bạn hoạt động tốt hơn mà không gặp sự cố trong thời gian dài hơn."
 
-#: lib/installer.php:2118
+#: lib/installer.php:2130
 msgid "Recommended MySQL System Variable Settings"
 msgstr "Đề xuất cài đặt biến hệ thống MySQL"
 
-#: lib/installer.php:2147
+#: lib/installer.php:2159
 msgid "Installation Type"
 msgstr "Loại cài đặt"
 
-#: lib/installer.php:2153
+#: lib/installer.php:2165
 #, php-format
 msgid "Upgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "Nâng cấp từ <strong> %s</strong> lên <strong> %s</strong>"
 
-#: lib/installer.php:2155
+#: lib/installer.php:2167
 msgid "In the event of issues, It is highly recommended that you clear your browser cache, closing then reopening your browser (not just the tab Cacti is on) and retrying, before raising an issue with The Cacti Group"
 msgstr "Trong trường hợp xảy ra sự cố, chúng tôi khuyên bạn nên xóa bộ nhớ cache của trình duyệt, đóng lại sau đó mở lại trình duyệt của bạn (không chỉ tab Cacti đang bật) và thử lại, trước khi đưa ra vấn đề với Nhóm Cacti"
 
-#: lib/installer.php:2156
+#: lib/installer.php:2168
 msgid "On rare occasions, we have had reports from users who experience some minor issues due to changes in the code.  These issues are caused by the browser retaining pre-upgrade code and whilst we have taken steps to minimise the chances of this, it may still occur.  If you need instructions on how to clear your browser cache, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> is a good starting point."
 msgstr "Trong các trường hợp hiếm hoi, chúng tôi đã có báo cáo từ những người dùng gặp phải một số vấn đề nhỏ do thay đổi trong mã. Những vấn đề này là do trình duyệt giữ lại mã nâng cấp trước và trong khi chúng tôi đã thực hiện các bước để giảm thiểu khả năng này, thì nó vẫn có thể xảy ra. Nếu bạn cần hướng dẫn về cách xóa bộ nhớ cache của trình duyệt, <a href='https://www.refreshyourcache.com' target='_blank'>https://www.refreshyourcache.com/</a> là điểm khởi đầu tốt."
 
-#: lib/installer.php:2157
+#: lib/installer.php:2169
 msgid "If after clearing your cache and restarting your browser, you still experience issues, please raise the issue with us and we will try to identify the cause of it."
 msgstr "Nếu sau khi xóa bộ nhớ cache và khởi động lại trình duyệt của bạn, bạn vẫn gặp sự cố, vui lòng nêu vấn đề với chúng tôi và chúng tôi sẽ cố gắng xác định nguyên nhân của nó."
 
-#: lib/installer.php:2163
+#: lib/installer.php:2175
 #, php-format
 msgid "Downgrade from <strong>%s</strong> to <strong>%s</strong>"
 msgstr "Hạ cấp từ <strong> %s</strong> xuống <strong> %s</strong>"
 
-#: lib/installer.php:2164
+#: lib/installer.php:2176
 msgid "You appear to be downgrading to a previous version.  Database changes made for the newer version will not be reversed and <i>could</i> cause issues."
 msgstr "Bạn dường như đang hạ cấp xuống phiên bản trước. Thay đổi cơ sở dữ liệu được thực hiện cho phiên bản mới hơn sẽ không bị đảo ngược và <i>có thể</i> gây ra sự cố."
 
-#: lib/installer.php:2169
+#: lib/installer.php:2181
 msgid "Please select the type of installation"
 msgstr "Vui lòng chọn loại cài đặt"
 
-#: lib/installer.php:2170
+#: lib/installer.php:2182
 msgid "Installation options:"
 msgstr "Tùy chọn cài đặt:"
 
-#: lib/installer.php:2174
+#: lib/installer.php:2186
 msgid "Choose this for the Primary site."
 msgstr "Chọn mục này cho trang web Chính."
 
-#: lib/installer.php:2174 lib/installer.php:2225
+#: lib/installer.php:2186 lib/installer.php:2237
 msgid "New Primary Server"
 msgstr "Máy chủ chính mới"
 
-#: lib/installer.php:2175 lib/installer.php:2226
+#: lib/installer.php:2187 lib/installer.php:2238
 msgid "New Remote Poller"
 msgstr "Xe đẩy từ xa mới"
 
-#: lib/installer.php:2175
+#: lib/installer.php:2187
 msgid "Remote Pollers are used to access networks that are not readily accessible to the Primary site."
 msgstr "Pollers từ xa được sử dụng để truy cập các mạng không thể truy cập vào trang web Chính."
 
-#: lib/installer.php:2230
+#: lib/installer.php:2242
 msgid "The following information has been determined from Cacti's configuration file. If it is not correct, please edit \"include/config.php\" before continuing."
 msgstr "Thông tin sau đây đã được xác định từ tệp cấu hình của Cacti. Nếu nó không đúng, vui lòng chỉnh sửa &quot;include / config.php&quot; trước khi tiếp tục."
 
-#: lib/installer.php:2234
+#: lib/installer.php:2246
 msgid "Local Database Connection Information"
 msgstr "Thông tin kết nối cơ sở dữ liệu cục bộ"
 
-#: lib/installer.php:2237 lib/installer.php:2249
+#: lib/installer.php:2249 lib/installer.php:2261
 #, php-format
 msgid "Database: <b>%s</b>"
 msgstr "Cơ sở dữ liệu: <b> %s</b>"
 
-#: lib/installer.php:2238 lib/installer.php:2250
+#: lib/installer.php:2250 lib/installer.php:2262
 #, php-format
 msgid "Database User: <b>%s</b>"
 msgstr "Người dùng cơ sở dữ liệu: <b> %s</b>"
 
-#: lib/installer.php:2239 lib/installer.php:2251
+#: lib/installer.php:2251 lib/installer.php:2263
 #, php-format
 msgid "Database Hostname: <b>%s</b>"
 msgstr "Tên máy chủ cơ sở dữ liệu: <b> %s</b>"
 
-#: lib/installer.php:2240 lib/installer.php:2252
+#: lib/installer.php:2252 lib/installer.php:2264
 #, php-format
 msgid "Port: <b>%s</b>"
 msgstr "Cổng: <b> %s</b>"
 
-#: lib/installer.php:2241 lib/installer.php:2253
+#: lib/installer.php:2253 lib/installer.php:2265
 #, php-format
 msgid "Server Operating System Type: <b>%s</b>"
 msgstr "Loại hệ điều hành máy chủ: <b> %s</b>"
 
-#: lib/installer.php:2246
+#: lib/installer.php:2258
 msgid "Central Database Connection Information"
 msgstr "Thông tin kết nối cơ sở dữ liệu trung tâm"
 
-#: lib/installer.php:2258
+#: lib/installer.php:2270
 msgid "Configuration Readonly!"
 msgstr "Cấu hình chỉ đọc!"
 
-#: lib/installer.php:2260
+#: lib/installer.php:2272
 msgid "Your config.php file must be writable by the web server during install in order to configure the Remote poller.  Once installation is complete, you must set this file to Read Only to prevent possible security issues."
 msgstr "Tập tin config.php của bạn phải được ghi bởi máy chủ web trong khi cài đặt để định cấu hình Trình đẩy từ xa. Sau khi cài đặt hoàn tất, bạn phải đặt tệp này thành Chỉ đọc để ngăn các sự cố bảo mật có thể xảy ra."
 
-#: lib/installer.php:2264
+#: lib/installer.php:2276
 msgid "Configuration of Poller"
 msgstr "Cấu hình của Poller"
 
-#: lib/installer.php:2265
+#: lib/installer.php:2277
 msgid "Your Remote Cacti Poller information has not been included in your config.php file.  Please review the config.php.dist, and set the variables: <i>$rdatabase_default, $rdatabase_username</i>, etc.  These variables must be set and point back to your Primary Cacti database server.  Correct this and try again."
 msgstr "Thông tin về Cacti từ xa của bạn chưa được đưa vào tệp config.php. Vui lòng xem lại config.php.dist và đặt các biến: <i>$ rdatabase_default, $ rdatabase_username</i> , v.v. Các biến này phải được đặt và trỏ về máy chủ cơ sở dữ liệu Cacti chính của bạn. Sửa lỗi này và thử lại."
 
-#: lib/installer.php:2269
+#: lib/installer.php:2281
 msgid "Remote Poller Variables"
 msgstr "Biến Pug từ xa"
 
-#: lib/installer.php:2271
+#: lib/installer.php:2283
 msgid "The variables that must be set in the config.php file include the following:"
 msgstr "Các biến phải được đặt trong tệp config.php bao gồm:"
 
-#: lib/installer.php:2282
+#: lib/installer.php:2294
 msgid "The Installer automatically assigns a $poller_id and adds it to the config.php file."
 msgstr "Trình cài đặt tự động gán một $ poller_id và thêm nó vào tệp config.php."
 
-#: lib/installer.php:2284
+#: lib/installer.php:2296
 msgid "Once the variables are all set in the config.php file, you must also grant the $rdatabase_username access to the main Cacti database server.  Follow the same procedure you would with any other Cacti install.  You may then press the 'Test Connection' button.  If the test is successful you will be able to proceed and complete the install."
 msgstr "Khi tất cả các biến được đặt trong tệp config.php, bạn cũng phải cấp quyền truy cập $ rdatabase_username cho máy chủ cơ sở dữ liệu Cacti chính. Thực hiện theo cùng một quy trình bạn sẽ làm với bất kỳ cài đặt Cacti nào khác. Sau đó, bạn có thể nhấn nút &#39;Kiểm tra kết nối&#39;. Nếu thử nghiệm thành công, bạn sẽ có thể tiến hành và hoàn tất cài đặt."
 
-#: lib/installer.php:2288
+#: lib/installer.php:2300
 msgid "Additional Steps After Installation"
 msgstr "Các bước bổ sung sau khi cài đặt"
 
-#: lib/installer.php:2290
+#: lib/installer.php:2302
 msgid "It is essential that the Central Cacti server can communicate via MySQL to each remote Cacti database server.  Once the install is complete, you must edit the Remote Data Collector and ensure the settings are correct.  You can verify using the 'Test Connection' when editing the Remote Data Collector."
 msgstr "Điều cần thiết là máy chủ Cacti trung tâm có thể giao tiếp qua MySQL đến từng máy chủ cơ sở dữ liệu Cacti từ xa. Sau khi cài đặt hoàn tất, bạn phải chỉnh sửa Trình thu thập dữ liệu từ xa và đảm bảo các cài đặt là chính xác. Bạn có thể xác minh bằng cách sử dụng &#39;Kiểm tra kết nối&#39; khi chỉnh sửa Trình thu thập dữ liệu từ xa."
 
-#: lib/installer.php:2303
+#: lib/installer.php:2315
 msgid "Critical Binary Locations and Versions"
 msgstr "Các vị trí và phiên bản nhị phân quan trọng"
 
-#: lib/installer.php:2304
+#: lib/installer.php:2316
 msgid "Make sure all of these values are correct before continuing."
 msgstr "Hãy chắc chắn rằng tất cả các giá trị này là chính xác trước khi tiếp tục."
 
-#: lib/installer.php:2307
+#: lib/installer.php:2319
 msgid "One or more paths appear to be incorrect, unable to proceed"
 msgstr "Một hoặc nhiều đường dẫn có vẻ không chính xác, không thể tiếp tục"
 
-#: lib/installer.php:2384
+#: lib/installer.php:2396
 msgid "Directory Permission Checks"
 msgstr "Kiểm tra quyền hạn thư mục"
 
-#: lib/installer.php:2385
+#: lib/installer.php:2397
 msgid "Please ensure the directory permissions below are correct before proceeding.  During the install, these directories need to be owned by the Web Server user.  These permission changes are required to allow the Installer to install Device Template packages which include XML and script files that will be placed in these directories.  If you choose not to install the packages, there is an 'install_package.php' cli script that can be used from the command line after the install is complete."
 msgstr "Vui lòng đảm bảo các quyền của thư mục bên dưới là chính xác trước khi tiếp tục. Trong quá trình cài đặt, các thư mục này cần được sở hữu bởi người dùng Máy chủ Web. Những thay đổi quyền này được yêu cầu để cho phép Trình cài đặt cài đặt các gói Mẫu thiết bị bao gồm các tệp XML và tập lệnh sẽ được đặt trong các thư mục này. Nếu bạn chọn không cài đặt các gói, có một tập lệnh cli &#39;install_package.php&#39; có thể được sử dụng từ dòng lệnh sau khi cài đặt hoàn tất."
 
-#: lib/installer.php:2388
+#: lib/installer.php:2400
 msgid "After the install is complete, you can make some of these directories read only to increase security."
 msgstr "Sau khi cài đặt hoàn tất, bạn có thể làm cho một số thư mục này chỉ đọc để tăng tính bảo mật."
 
-#: lib/installer.php:2390
+#: lib/installer.php:2402
 msgid "These directories will be required to stay read writable after the install so that the Cacti remote synchronization process can update them as the Main Cacti Web Site changes"
 msgstr "Các thư mục này sẽ được yêu cầu ở lại có thể ghi được sau khi cài đặt để quá trình đồng bộ hóa từ xa Cacti có thể cập nhật chúng khi Trang web chính của Cacti thay đổi"
 
-#: lib/installer.php:2394
+#: lib/installer.php:2406
 msgid "If you are installing packages, once the packages are installed, you should change the scripts directory back to read only as this presents some exposure to the web site."
 msgstr "Nếu bạn đang cài đặt các gói, một khi các gói được cài đặt, bạn nên thay đổi thư mục script trở lại để chỉ đọc vì điều này thể hiện một số tiếp xúc với trang web."
 
-#: lib/installer.php:2396
+#: lib/installer.php:2408
 msgid "For remote pollers, it is critical that the paths that you will be updating frequently, including the plugins, scripts, and resources paths have read/write access as the data collector will have to update these paths from the main web server content."
 msgstr "Đối với người thăm dò từ xa, điều quan trọng là các đường dẫn mà bạn sẽ cập nhật thường xuyên, bao gồm các plugin, tập lệnh và đường dẫn tài nguyên có quyền truy cập đọc / ghi vì trình thu thập dữ liệu sẽ phải cập nhật các đường dẫn này từ nội dung máy chủ web chính."
 
-#: lib/installer.php:2402
+#: lib/installer.php:2414
 msgid "Required Writable at Install Time Only"
 msgstr "Yêu cầu có thể ghi tại thời gian cài đặt"
 
-#: lib/installer.php:2421 lib/installer.php:2454 lib/installer.php:2462
+#: lib/installer.php:2433 lib/installer.php:2466 lib/installer.php:2474
 #: package_import.php:648
 msgid "Not Writable"
 msgstr "Có thể ghi"
 
-#: lib/installer.php:2433
+#: lib/installer.php:2445
 msgid "Required Writable after Install Complete"
 msgstr "Yêu cầu ghi được sau khi cài đặt hoàn tất"
 
-#: lib/installer.php:2473
+#: lib/installer.php:2485
 msgid "Potential permission issues"
 msgstr "Vấn đề cho phép tiềm năng"
 
-#: lib/installer.php:2482
+#: lib/installer.php:2494
 msgid "Please make sure that your webserver has read/write access to the cacti folders that show errors below."
 msgstr "Vui lòng đảm bảo rằng máy chủ web của bạn có quyền truy cập đọc / ghi vào các thư mục cacti hiển thị lỗi bên dưới."
 
-#: lib/installer.php:2485
+#: lib/installer.php:2497
 msgid "If SELinux is enabled on your server, you can either permanently disable this, or temporarily disable it and then add the appropriate permissions using the SELinux command-line tools."
 msgstr "Nếu SELinux được bật trên máy chủ của bạn, bạn có thể vô hiệu hóa vĩnh viễn điều này hoặc tạm thời vô hiệu hóa nó và sau đó thêm các quyền thích hợp bằng cách sử dụng các công cụ dòng lệnh của SELinux."
 
-#: lib/installer.php:2494
+#: lib/installer.php:2506
 #, php-format
 msgid "The user '%s' should have MODIFY permission to enable read/write."
 msgstr "Người dùng &#39; %s&#39; nên có quyền MODIFY để cho phép đọc / ghi."
 
-#: lib/installer.php:2503
+#: lib/installer.php:2515
 msgid "An example of how to set folder permissions is shown here, though you may need to adjust this depending on your operating system, user accounts and desired permissions."
 msgstr "Một ví dụ về cách đặt quyền thư mục được hiển thị ở đây, mặc dù bạn có thể cần điều chỉnh tùy thuộc vào hệ điều hành, tài khoản người dùng và quyền mong muốn của bạn"
 
-#: lib/installer.php:2504
+#: lib/installer.php:2516
 msgid "EXAMPLE:"
 msgstr "THÍ DỤ:"
 
-#: lib/installer.php:2505
+#: lib/installer.php:2517
 msgid "Once installation has completed the CSRF path, should be set to read-only."
 msgstr "Khi quá trình cài đặt đã hoàn tất đường dẫn CSRF, nên được đặt thành chỉ đọc."
 
-#: lib/installer.php:2507
+#: lib/installer.php:2519
 msgid "All folders are writable"
 msgstr "Tất cả các thư mục đều có thể ghi"
 
-#: lib/installer.php:2519
+#: lib/installer.php:2531
 msgid "Input Validation Whitelist Protection"
 msgstr "Bảo vệ danh sách xác thực đầu vào"
 
-#: lib/installer.php:2520
+#: lib/installer.php:2532
 msgid "Cacti Data Input methods that call a script can be exploited in ways that a non-administrator can perform damage to either files owned by the poller account, and in cases where someone runs the Cacti poller as root, can compromise the operating system allowing attackers to exploit your infrastructure."
 msgstr "Các phương thức Nhập dữ liệu của Cacti có thể được khai thác theo cách mà một người không phải là quản trị viên có thể gây thiệt hại cho các tệp do tài khoản pug sở hữu và trong trường hợp ai đó chạy trình đẩy Cacti với quyền root, có thể làm tổn hại hệ điều hành cho phép kẻ tấn công khai thác cơ sở hạ tầng của bạn."
 
-#: lib/installer.php:2521
+#: lib/installer.php:2533
 msgid "Therefore, several versions ago, Cacti was enhanced to provide Whitelist capabilities on the these types of Data Input Methods.  Though this does secure Cacti more thoroughly, it does increase the amount of work required by the Cacti administrator to import and manage Templates and Packages."
 msgstr "Do đó, một số phiên bản trước đây, Cacti đã được cải tiến để cung cấp các khả năng của Danh sách trắng về các loại Phương thức nhập dữ liệu này. Mặc dù điều này không bảo mật Cacti nhiều hơn, nhưng nó sẽ tăng số lượng công việc mà quản trị viên Cacti yêu cầu để nhập và quản lý Mẫu và Gói."
 
-#: lib/installer.php:2522
+#: lib/installer.php:2534
 #, fuzzy
 msgid "The way that the Whitelisting works is that when you first import a Data Input Method, or you re-import a Data Input Method, and the script and or arguments change in any way, the Data Input Method, and all the corresponding Data Sources will be immediately disabled until the administrator validates that the Data Input Method is valid."
 msgstr "Cách thức hoạt động của Danh sách trắng là khi bạn lần đầu tiên nhập Phương thức nhập dữ liệu hoặc bạn nhập lại Phương thức nhập dữ liệu và tập lệnh và hoặc thay đổi theo bất kỳ cách nào, Phương thức nhập dữ liệu và tất cả các nguồn dữ liệu tương ứng sẽ bị vô hiệu hóa ngay lập tức cho đến khi quản trị viên xác nhận rằng Phương thức nhập dữ liệu hợp lệ."
 
-#: lib/installer.php:2523
+#: lib/installer.php:2535
 msgid "To make identifying Data Input Methods in this state, we have provided a validation script in Cacti's CLI directory that can be run with the following options:"
 msgstr "Để xác định Phương thức nhập dữ liệu ở trạng thái này, chúng tôi đã cung cấp tập lệnh xác thực trong thư mục CLI của Cacti có thể chạy với các tùy chọn sau:"
 
-#: lib/installer.php:2527
+#: lib/installer.php:2539
 msgid "This script option will search for any Data Input Methods that are currently banned and provide details as to why."
 msgstr "Tùy chọn tập lệnh này sẽ tìm kiếm bất kỳ Phương thức nhập dữ liệu nào hiện đang bị cấm và cung cấp chi tiết về lý do tại sao."
 
-#: lib/installer.php:2528
+#: lib/installer.php:2540
 msgid "This script option un-ban the Data Input Methods that are currently banned."
 msgstr "Tùy chọn tập lệnh này hủy bỏ các Phương thức nhập dữ liệu hiện đang bị cấm."
 
-#: lib/installer.php:2529
+#: lib/installer.php:2541
 msgid "This script option will re-enable any disabled Data Sources."
 msgstr "Tùy chọn tập lệnh này sẽ kích hoạt lại mọi Nguồn dữ liệu bị vô hiệu hóa."
 
-#: lib/installer.php:2533
+#: lib/installer.php:2545
 msgid "It is strongly suggested that you update your config.php to enable this feature by uncommenting the <b>$input_whitelist</b> variable and then running the three CLI script options above after the web based install has completed."
 msgstr "Chúng tôi khuyên bạn nên cập nhật config.php để kích hoạt tính năng này bằng cách bỏ qua biến <b>$ input_whlistist</b> và sau đó chạy ba tùy chọn tập lệnh CLI ở trên sau khi quá trình cài đặt dựa trên web hoàn tất."
 
-#: lib/installer.php:2535
+#: lib/installer.php:2547
 msgid "Check the Checkbox below to acknowledge that you have read and understand this security concern"
 msgstr "Kiểm tra Hộp kiểm bên dưới để xác nhận rằng bạn đã đọc và hiểu mối quan tâm bảo mật này"
 
-#: lib/installer.php:2537
+#: lib/installer.php:2549
 msgid "I have read this statement"
 msgstr "Tôi đã đọc tuyên bố này"
 
-#: lib/installer.php:2553 lib/installer.php:2559
+#: lib/installer.php:2565 lib/installer.php:2571
 msgid "Default Profile"
 msgstr "Cấu hình mặc định"
 
-#: lib/installer.php:2554
+#: lib/installer.php:2566
 msgid "Please select the default Data Source Profile to be used for polling sources.  This is the maximum amount of time between scanning devices for information so the lower the polling interval, the more work is placed on the Cacti Server host.  Also, select the intended, or configured Cron interval that you wish to use for Data Collection."
 msgstr "Vui lòng chọn Hồ sơ nguồn dữ liệu mặc định sẽ được sử dụng cho các nguồn bỏ phiếu. Đây là lượng thời gian tối đa giữa các thiết bị quét để tìm thông tin vì vậy khoảng thời gian bỏ phiếu càng thấp, càng nhiều công việc được đặt trên máy chủ Cacti Server. Ngoài ra, chọn khoảng Cron dự định hoặc được định cấu hình mà bạn muốn sử dụng cho Thu thập dữ liệu."
 
-#: lib/installer.php:2565
+#: lib/installer.php:2577
 msgid "Cron Interval"
 msgstr "Khoảng thời gian"
 
-#: lib/installer.php:2586
+#: lib/installer.php:2598
 msgid "Default Automation Network"
 msgstr "Mạng tự động mặc định"
 
-#: lib/installer.php:2587
+#: lib/installer.php:2599
 msgid "Cacti can automatically scan the network once installation has completed. This will utilise the network range below to work out the range of IPs that can be scanned.  A predefined set of options are defined for scanning which include using both 'public' and 'private' communities."
 msgstr "Cacti có thể tự động quét mạng sau khi cài đặt hoàn tất. Điều này sẽ sử dụng phạm vi mạng bên dưới để tìm ra dải IP có thể được quét. Một bộ tùy chọn được xác định trước được xác định để quét bao gồm sử dụng cả cộng đồng &#39;công khai&#39; và &#39;riêng tư&#39;."
 
-#: lib/installer.php:2588
+#: lib/installer.php:2600
 msgid "If your devices require a different set of options to be used first, you may define them below and they will be utilized before the defaults"
 msgstr "Nếu thiết bị của bạn yêu cầu một bộ tùy chọn khác được sử dụng trước tiên, bạn có thể xác định chúng bên dưới và chúng sẽ được sử dụng trước khi mặc định"
 
-#: lib/installer.php:2589
+#: lib/installer.php:2601
 msgid "All options may be adjusted post installation"
 msgstr "Tất cả các tùy chọn có thể được điều chỉnh cài đặt bài"
 
-#: lib/installer.php:2593
+#: lib/installer.php:2605
 msgid "Default Options"
 msgstr "Tùy chọn mặc định"
 
-#: lib/installer.php:2597
+#: lib/installer.php:2609
 msgid "Scan Mode"
 msgstr "Chế độ quét"
 
-#: lib/installer.php:2602
+#: lib/installer.php:2614
 msgid "Network Range"
 msgstr "Phạm vi mạng"
 
-#: lib/installer.php:2608
+#: lib/installer.php:2620
 msgid "Additional Defaults"
 msgstr "Mặc định bổ sung"
 
-#: lib/installer.php:2629
+#: lib/installer.php:2641
 msgid "Additional SNMP Options"
 msgstr "Tùy chọn SNMP bổ sung"
 
-#: lib/installer.php:2642
+#: lib/installer.php:2654
 msgid "Error Locating Profiles"
 msgstr "Lỗi định vị hồ sơ"
 
-#: lib/installer.php:2643
+#: lib/installer.php:2655
 msgid "The installation cannot continue because no profiles could be found."
 msgstr "Việc cài đặt không thể tiếp tục vì không thể tìm thấy hồ sơ."
 
-#: lib/installer.php:2644
+#: lib/installer.php:2656
 msgid "This may occur if you have a blank database and have not yet imported the cacti.sql file"
 msgstr "Điều này có thể xảy ra nếu bạn có cơ sở dữ liệu trống và chưa nhập tệp cacti.sql"
 
-#: lib/installer.php:2652
+#: lib/installer.php:2664
 msgid "Template Setup"
 msgstr "Thiết lập mẫu"
 
-#: lib/installer.php:2655
+#: lib/installer.php:2667
 msgid "Please select the Device Templates that you wish to update during the Upgrade."
 msgstr "Chọn loại Mẫu mà bạn muốn xuất từ Cacti."
 
-#: lib/installer.php:2656
+#: lib/installer.php:2668
 msgid "Updating Templates that you have already made modifications to is not advisable.  The Upgrade of the Templates will NOT remove modifications to Graph and Data Templates, and can lead to unexpected behavior.  However, if you have not made changes to any Graph, Data Query, or Data Template, reimporting the Package should not have any affect.  In that case, you would have to 'Sync Graphs' to from the Templates after update."
 msgstr "Không nên cập nhật các Mẫu mà bạn đã thực hiện sửa đổi. Việc Nâng cấp Mẫu sẽ KHÔNG xóa các sửa đổi đối với Mẫu Đồ thị và Dữ liệu, đồng thời có thể dẫn đến hành vi không mong muốn. Tuy nhiên, nếu bạn chưa thực hiện thay đổi đối với bất kỳ Biểu đồ, Truy vấn Dữ liệu hoặc Mẫu Dữ liệu nào, việc nhập lại Gói sẽ không có bất kỳ ảnh hưởng nào. Trong trường hợp đó, bạn sẽ phải 'Đồng bộ hóa Đồ thị' từ Mẫu sau khi cập nhật."
 
-#: lib/installer.php:2658
+#: lib/installer.php:2670
 #, fuzzy
 msgid "Please select the Device Templates that you wish to use after the Install.  If your Operating System is Windows, you need to ensure that you select the 'Windows Device' Template.  If your Operating System is Linux/UNIX, make sure you select the 'Local Linux Machine' Device Template."
 msgstr "Vui lòng chọn Mẫu thiết bị bạn muốn sử dụng sau khi cài đặt. Nếu Hệ điều hành của bạn là Windows, bạn cần đảm bảo rằng bạn chọn Mẫu &#39;Thiết bị Windows&#39;. Nếu Hệ điều hành của bạn là Linux / UNIX, hãy đảm bảo bạn chọn Mẫu thiết bị &#39;Máy Linux cục bộ&#39;."
 
-#: lib/installer.php:2664 package_import.php:546 plugins.php:617
+#: lib/installer.php:2676 package_import.php:546 plugins.php:617
 msgid "Author"
 msgstr "Tác giả"
 
-#: lib/installer.php:2664 package_import.php:549
+#: lib/installer.php:2676 package_import.php:549
 msgid "Homepage"
 msgstr "Trang chủ"
 
-#: lib/installer.php:2690
+#: lib/installer.php:2702
 msgid "Device Templates allow you to monitor and graph a vast assortment of data within Cacti.  After you select the desired Device Templates, press 'Next' and the installation will complete.  Please be patient on this step, as the importation of the Device Templates can take a few minutes."
 msgstr "Mẫu thiết bị cho phép bạn giám sát và vẽ biểu đồ một loại dữ liệu khổng lồ trong Cacti. Sau khi bạn chọn Mẫu thiết bị mong muốn, bấm &#39;Hoàn tất&#39; và quá trình cài đặt sẽ hoàn tất. Hãy kiên nhẫn trong bước này, vì việc nhập Mẫu thiết bị có thể mất vài phút."
 
-#: lib/installer.php:2698
+#: lib/installer.php:2710
 msgid "Server Collation"
 msgstr "Đối chiếu máy chủ"
 
-#: lib/installer.php:2705
+#: lib/installer.php:2717
 msgid "Your server collation appears to be UTF8 compliant"
 msgstr "Đối chiếu máy chủ của bạn dường như tuân thủ UTF8"
 
-#: lib/installer.php:2708
+#: lib/installer.php:2720
 msgid "Your server collation does NOT appear to be fully UTF8 compliant. "
 msgstr "Đối chiếu máy chủ của bạn dường như KHÔNG tuân thủ đầy đủ UTF8."
 
-#: lib/installer.php:2709
+#: lib/installer.php:2721
 msgid "Under the [mysqld] section, locate the entries named 'character-set-server' and 'collation-server' and set them as follows:"
 msgstr "Trong phần [mysqld], định vị các mục có tên &#39;ký tự ‑ đặt ‑ máy chủ&#39; và &#39;đối chiếu ‑ máy chủ&#39; và đặt chúng như sau:"
 
-#: lib/installer.php:2716
+#: lib/installer.php:2728
 msgid "Database Collation"
 msgstr "Đối chiếu cơ sở dữ liệu"
 
-#: lib/installer.php:2721
+#: lib/installer.php:2733
 msgid "Your database default collation appears to be UTF8 compliant"
 msgstr "Đối chiếu cơ sở dữ liệu của bạn dường như tuân thủ UTF8"
 
-#: lib/installer.php:2724
+#: lib/installer.php:2736
 msgid "Your database default collation does NOT appear to be full UTF8 compliant. "
 msgstr "Đối chiếu cơ sở dữ liệu của bạn dường như KHÔNG tuân thủ đầy đủ UTF8."
 
-#: lib/installer.php:2725
+#: lib/installer.php:2737
 msgid "Any tables created by plugins may have issues linked against Cacti Core tables if the collation is not matched.   Please ensure your database is changed to 'utf8mb4_unicode_ci' by running the following: "
 msgstr "Bất kỳ bảng nào được tạo bởi các plugin đều có thể có các vấn đề được liên kết với các bảng Cacti Core nếu đối chiếu không khớp. Vui lòng đảm bảo cơ sở dữ liệu của bạn được thay đổi thành &#39;utf8mb4_unicode_ci&#39; bằng cách chạy như sau:"
 
-#: lib/installer.php:2732
+#: lib/installer.php:2744
 msgid "Table Setup"
 msgstr "Thiết lập bảng"
 
-#: lib/installer.php:2743
+#: lib/installer.php:2755
 #, php-format
 msgid "You have more tables than your PHP configuration will allow us to display/convert.  Please modify the max_input_vars setting in php.ini to a value above %s"
 msgstr "Bạn có nhiều bảng hơn cấu hình PHP của bạn sẽ cho phép chúng tôi hiển thị / chuyển đổi. Vui lòng sửa đổi cài đặt max_input_vars trong php.ini thành giá trị trên%s"
 
-#: lib/installer.php:2746
+#: lib/installer.php:2758
 msgid "Conversion of tables may take some time especially on larger tables.  The conversion of these tables will occur in the background but will not prevent the installer from completing.  This may slow down some servers if there are not enough resources for MySQL to handle the conversion."
 msgstr "Chuyển đổi các bảng có thể mất một thời gian đặc biệt là trên các bảng lớn hơn. Việc chuyển đổi các bảng này sẽ diễn ra trong nền nhưng sẽ không ngăn trình cài đặt hoàn tất. Điều này có thể làm chậm một số máy chủ nếu không có đủ tài nguyên để MySQL xử lý chuyển đổi."
 
-#: lib/installer.php:2750
+#: lib/installer.php:2762
 msgid "Tables"
 msgstr "Những cái bàn"
 
-#: lib/installer.php:2751 utilities.php:871
+#: lib/installer.php:2763 utilities.php:871
 msgid "Collation"
 msgstr "Đối chiếu"
 
-#: lib/installer.php:2751 utilities.php:866
+#: lib/installer.php:2763 utilities.php:866
 msgid "Engine"
 msgstr "Đông cơ"
 
-#: lib/installer.php:2751 utilities.php:872
+#: lib/installer.php:2763 utilities.php:872
 msgid "Row Format"
 msgstr "Định dạng"
 
-#: lib/installer.php:2783
+#: lib/installer.php:2795
 msgid "One or more tables are too large to convert during the installation.  You should use the cli/convert_tables.php script to perform the conversion, then refresh this page. For example: "
 msgstr "Một hoặc nhiều bảng quá lớn để chuyển đổi trong khi cài đặt. Bạn nên sử dụng tập lệnh cli / convert_tables.php để thực hiện chuyển đổi, sau đó làm mới trang này. Ví dụ:"
 
-#: lib/installer.php:2787
+#: lib/installer.php:2799
 msgid "The following tables should be converted to UTF8 and InnoDB with a Dynamic row format.  Please select the tables that you wish to convert during the installation process."
 msgstr "Các bảng sau nên được chuyển đổi thành UTF8 và InnoDB. Vui lòng chọn các bảng mà bạn muốn chuyển đổi trong quá trình cài đặt."
 
-#: lib/installer.php:2793
+#: lib/installer.php:2805
 msgid "All your tables appear to be UTF8 and Dynamic row format compliant"
 msgstr "Tất cả các bảng của bạn dường như tuân thủ UTF8"
 
-#: lib/installer.php:2803
+#: lib/installer.php:2815
 msgid "Confirm Upgrade"
 msgstr "Xác nhận nâng cấp"
 
-#: lib/installer.php:2807
+#: lib/installer.php:2819
 msgid "Confirm Downgrade"
 msgstr "Xác nhận hạ cấp"
 
-#: lib/installer.php:2811
+#: lib/installer.php:2823
 msgid "Confirm Installation"
 msgstr "Xác nhận cài đặt"
 
-#: lib/installer.php:2812 plugins.php:31
+#: lib/installer.php:2824 plugins.php:31
 msgid "Install"
 msgstr "Cài đặt"
 
-#: lib/installer.php:2817
+#: lib/installer.php:2829
 msgid "DOWNGRADE DETECTED"
 msgstr "DOWNGRADE PHÁT HIỆN"
 
-#: lib/installer.php:2818
+#: lib/installer.php:2830
 msgid "YOU MUST MANUALLY CHANGE THE CACTI DATABASE TO REVERT ANY UPGRADE CHANGES THAT HAVE BEEN MADE.<br/>THE INSTALLER HAS NO METHOD TO DO THIS AUTOMATICALLY FOR YOU"
 msgstr "BẠN PHẢI THAY ĐỔI SỰ THAY ĐỔI CACTI ĐỂ TÌM HIỂU BẤT K CH SỰ THAY ĐỔI NÀO NÀO ĐÃ ĐƯỢC THỰC HIỆN. <br/> CÀI ĐẶT KHÔNG CÓ PHƯƠNG PHÁP NÀO ĐỂ TỰ ĐỘNG NÀY CHO BẠN"
 
-#: lib/installer.php:2819
+#: lib/installer.php:2831
 msgid "Downgrading should only be performed when absolutely necessary and doing so may break your installation"
 msgstr "Việc hạ cấp chỉ nên được thực hiện khi thực sự cần thiết và làm như vậy có thể phá vỡ sự cài đặt của bạn"
 
-#: lib/installer.php:2822
+#: lib/installer.php:2834
 msgid "Your Cacti Server is almost ready.  Please check that you are happy to proceed."
 msgstr "Máy chủ Cacti của bạn gần như đã sẵn sàng. Vui lòng kiểm tra xem bạn có vui lòng tiếp tục không."
 
-#: lib/installer.php:2825
+#: lib/installer.php:2837
 #, php-format
 msgid "Press '%s' then click '%s' to complete the installation process after selecting your Device Templates."
 msgstr "Nhấn &#39; %s&#39;, sau đó nhấp vào &#39; %s&#39; để hoàn tất quá trình cài đặt sau khi chọn Mẫu thiết bị của bạn."
 
-#: lib/installer.php:2841
+#: lib/installer.php:2853
 #, php-format
 msgid "Installing Cacti Server v%s"
 msgstr "Cài đặt máy chủ Cacti v %s"
 
-#: lib/installer.php:2842
+#: lib/installer.php:2854
 msgid "Your Cacti Server is now installing"
 msgstr "Máy chủ Cacti của bạn hiện đang cài đặt"
 
-#: lib/installer.php:2929
+#: lib/installer.php:2941
 #, php-format
 msgid "Spawning background process: %s %s"
 msgstr "Quá trình sinh sản nền tảng:%s%s"
 
-#: lib/installer.php:2955
+#: lib/installer.php:2967
 msgid "Complete"
 msgstr "Hoàn thành"
 
-#: lib/installer.php:2956
+#: lib/installer.php:2968
 #, php-format
 msgid "Your Cacti Server v%s has been installed/updated.  You may now start using the software."
 msgstr "Máy chủ Cacti của bạn v %s đã được cài đặt / cập nhật. Bây giờ bạn có thể bắt đầu sử dụng phần mềm."
 
-#: lib/installer.php:2960
+#: lib/installer.php:2972
 #, php-format
 msgid "Your Cacti Server v%s has been installed/updated with errors"
 msgstr "Máy chủ Cacti của bạn v %s đã được cài đặt / cập nhật có lỗi"
 
-#: lib/installer.php:3072
+#: lib/installer.php:3084
 msgid "Get Help"
 msgstr "Hỗ trợ"
 
-#: lib/installer.php:3077
+#: lib/installer.php:3089
 msgid "Report Issue"
 msgstr "Báo cáo vấn đề"
 
-#: lib/installer.php:3080
+#: lib/installer.php:3092
 msgid "Get Started"
 msgstr "Bắt đầu"
 
-#: lib/installer.php:3109
+#: lib/installer.php:3141
 #, php-format
 msgid "Starting %s Process for v%s"
 msgstr "Bắt đầu quá trình%s cho v%s"
 
-#: lib/installer.php:3133
+#: lib/installer.php:3165
 #, php-format
 msgid "Finished %s Process for v%s"
 msgstr "Đã hoàn thành%s Quá trình cho v%s"
 
-#: lib/installer.php:3177
+#: lib/installer.php:3209
 msgid "WARNING: Unable to validate the installed database because cacti.sql could not be read"
 msgstr ""
 
-#: lib/installer.php:3183
+#: lib/installer.php:3215
 msgid "WARNING: Unable to validate the installed database because cacti.sql contains no table definitions"
 msgstr ""
 
-#: lib/installer.php:3192
+#: lib/installer.php:3224
 msgid "WARNING: Unable to query the installed database schema"
 msgstr ""
 
-#: lib/installer.php:3199
+#: lib/installer.php:3231
 #, php-format
 msgid "WARNING: Core database tables are missing: %s"
 msgstr ""
 
-#: lib/installer.php:3216
+#: lib/installer.php:3248
 #, php-format
 msgid "Found %s templates to install"
 msgstr "Đã tìm thấy mẫu%s để cài đặt"
 
-#: lib/installer.php:3226
+#: lib/installer.php:3258
 #, php-format
 msgid "About to import Package #%s '%s'."
 msgstr "Sắp nhập Gói #%s '%s'."
 
-#: lib/installer.php:3239
+#: lib/installer.php:3271
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' succeeded"
 msgstr "Nhập gói #%s '%s' trong Hồ sơ '%s' đã thành công"
 
-#: lib/installer.php:3245
+#: lib/installer.php:3277
 #, php-format
 msgid "Import of Package #%s '%s' under Profile '%s' failed"
 msgstr "Nhập gói #%s '%s' trong Hồ sơ '%s' không thành công"
 
-#: lib/installer.php:3260
+#: lib/installer.php:3292
 #, fuzzy, php-format
 msgid "Mapping Automation Template for Device Template '%s'"
 msgstr "Mẫu tự động hóa cho [Mẫu đã xóa]"
 
-#: lib/installer.php:3277
+#: lib/installer.php:3309
 msgid "No templates were selected for import"
 msgstr "Không có mẫu nào được chọn để nhập"
 
-#: lib/installer.php:3286
+#: lib/installer.php:3318
 msgid "Updating remote configuration file"
 msgstr "Đang chờ cấu hình"
 
-#: lib/installer.php:3318
+#: lib/installer.php:3350
 #, fuzzy, php-format
 msgid "Setting default data source profile to %s (%s)"
 msgstr "Hồ sơ nguồn dữ liệu mặc định cho mẫu dữ liệu này."
 
-#: lib/installer.php:3340
+#: lib/installer.php:3372
 #, fuzzy, php-format
 msgid "Failed to find selected profile (%s), no changes were made"
 msgstr "Không thể áp dụng hồ sơ được chỉ định %s! = %s"
 
-#: lib/installer.php:3349
+#: lib/installer.php:3381
 #, php-format
 msgid "Updating automation network (%s), mode \"%s\" => \"%s\", subnet \"%s\" => %s\""
 msgstr "Cập nhật mạng tự động (%s), chế độ \"%s\" => \"%s\", mạng con \"%s\" =>%s \""
 
-#: lib/installer.php:3359
+#: lib/installer.php:3391
 msgid "Failed to find automation network, no changes were made"
 msgstr "Không thể tìm thấy mạng tự động, không có thay đổi nào được thực hiện"
 
-#: lib/installer.php:3363
+#: lib/installer.php:3395
 msgid "Adding extra snmp settings for automation"
 msgstr "Thêm cài đặt snmp bổ sung cho tự động hóa"
 
-#: lib/installer.php:3369
+#: lib/installer.php:3401
 #, fuzzy, php-format
 msgid "Selecting Automation Option Set %s"
 msgstr "Xóa (các) Mẫu tự động hóa"
 
-#: lib/installer.php:3382
+#: lib/installer.php:3414
 #, fuzzy, php-format
 msgid "Updating Automation Option Set %s"
 msgstr "Tùy chọn SNMP tự động hóa"
 
-#: lib/installer.php:3385
+#: lib/installer.php:3417
 #, php-format
 msgid "Successfully updated Automation Option Set %s"
 msgstr "Tùy chọn tự động cập nhật thành công Đặt%s"
 
-#: lib/installer.php:3387
+#: lib/installer.php:3419
 #, fuzzy, php-format
 msgid "Resequencing Automation Option Set %s"
 msgstr "Chạy tự động hóa trên thiết bị"
 
-#: lib/installer.php:3393
+#: lib/installer.php:3425
 #, fuzzy, php-format
 msgid "Failed to updated Automation Option Set %s"
 msgstr "Không thể áp dụng Phạm vi tự động hóa được chỉ định"
 
-#: lib/installer.php:3396
+#: lib/installer.php:3428
 msgid "Failed to find any automation option set"
 msgstr "Không thể tìm thấy dữ liệu để sao chép!"
 
-#: lib/installer.php:3426
+#: lib/installer.php:3458
 #, php-format
 msgid "Device Template for First Cacti Device is %s"
 msgstr "Mẫu thiết bị [chỉnh sửa: %s]"
 
-#: lib/installer.php:3452
+#: lib/installer.php:3484
 msgid "Creating Graphs for Default Device"
 msgstr "Tạo đồ thị cho thiết bị này"
 
-#: lib/installer.php:3459
+#: lib/installer.php:3491
 msgid "Adding Device to Default Tree"
 msgstr "Mặc định thiết bị"
 
-#: lib/installer.php:3467
+#: lib/installer.php:3499
 msgid "No templated graphs for Default Device were found"
 msgstr "Không tìm thấy biểu đồ khuôn mẫu cho Thiết bị mặc định"
 
-#: lib/installer.php:3471
+#: lib/installer.php:3503
 msgid "WARNING: Device Template for your Operating System Not Found.  You will need to import Device Templates or Cacti Packages to monitor your Cacti server."
 msgstr "CẢNH BÁO: Không tìm thấy Mẫu thiết bị cho Hệ điều hành của bạn. Bạn sẽ cần nhập Mẫu thiết bị hoặc Gói Cacti để theo dõi máy chủ Cacti của bạn."
 
-#: lib/installer.php:3478
+#: lib/installer.php:3510
 msgid "Running first-time data query for local host"
 msgstr "Chạy truy vấn dữ liệu lần đầu cho máy chủ cục bộ"
 
-#: lib/installer.php:3486
+#: lib/installer.php:3518
 msgid "Repopulating poller cache"
 msgstr "Rebuild Pug Cache"
 
-#: lib/installer.php:3491
+#: lib/installer.php:3523
 msgid "Repopulating SNMP Agent cache"
 msgstr "Xây dựng lại bộ nhớ cache SNMPAgent"
 
-#: lib/installer.php:3496
+#: lib/installer.php:3528
 msgid "Generating RSA Key Pair"
 msgstr "Tạo cặp khóa RSA"
 
-#: lib/installer.php:3508
+#: lib/installer.php:3540
 #, php-format
 msgid "Found %s tables to convert"
 msgstr "Đã tìm thấy bảng%s để chuyển đổi"
 
-#: lib/installer.php:3515
+#: lib/installer.php:3547
 #, php-format
 msgid "Converting Table #%s '%s'"
 msgstr "Bảng chuyển đổi #%s '%s'"
 
-#: lib/installer.php:3530
+#: lib/installer.php:3562
 msgid "No tables where found or selected for conversion"
 msgstr "Không có bảng nơi tìm thấy hoặc được chọn để chuyển đổi"
 
-#: lib/installer.php:3541
+#: lib/installer.php:3573
 #, php-format
 msgid "Switched from %s to %s"
 msgstr "Chuyển từ%s sang%s"
 
-#: lib/installer.php:3545
+#: lib/installer.php:3577
 #, php-format
 msgid "NOTE: Using temporary file for db cache: %s"
 msgstr "LƯU Ý: Sử dụng tệp tạm thời cho bộ đệm db:%s"
 
-#: lib/installer.php:3567
+#: lib/installer.php:3599
 #, php-format
 msgid "Upgrading from v%s (DB %s) to v%s"
 msgstr "Nâng cấp từ v%s (DB%s) lên v%s"
 
-#: lib/installer.php:3575
+#: lib/installer.php:3607
 #, php-format
 msgid "WARNING: Failed to find upgrade function for v%s"
 msgstr "CẢNH BÁO: Không thể tìm thấy chức năng nâng cấp cho v%s"
 
-#: lib/installer.php:3634
+#: lib/installer.php:3668
 msgid "Install aborted due to no EULA acceptance"
 msgstr "Cài đặt bị hủy bỏ do không chấp nhận EULA"
 
-#: lib/installer.php:3657
+#: lib/installer.php:3691
 #, php-format
 msgid "Background was already started at %s, this attempt at %s was skipped"
 msgstr "Bối cảnh đã được bắt đầu ở%s, lần thử này ở%s đã bị bỏ qua"
 
-#: lib/installer.php:3683
+#: lib/installer.php:3717
 #, fuzzy, php-format
 msgid "Exception occurred during installation: #%s - %s"
 msgstr "Ngoại lệ xảy ra trong khi cài đặt: #"
 
-#: lib/installer.php:3699
+#: lib/installer.php:3733
 #, php-format
 msgid "Installation was started at %s, completed at %s"
 msgstr "Cài đặt đã được bắt đầu ở %s, hoàn thành ở %s"
 
-#: lib/installer.php:3735
+#: lib/installer.php:3769
 msgid "Both"
 msgstr "Cả hai"
 
-#: lib/installer.php:3735
+#: lib/installer.php:3769
 #, fuzzy, php-format
 msgid "No - %s"
 msgstr "Phút"
 
-#: lib/installer.php:3740
+#: lib/installer.php:3774
 #, fuzzy, php-format
 msgid "%s - N/A"
 msgstr "Phút"
 
-#: lib/installer.php:3740 lib/installer.php:3742
+#: lib/installer.php:3774 lib/installer.php:3776
 msgid "Web"
 msgstr "Web"
 
-#: lib/installer.php:3742 lib/installer.php:3745
+#: lib/installer.php:3776 lib/installer.php:3779
 #, fuzzy, php-format
 msgid "%s - No"
 msgstr "Phút"
 
-#: lib/installer.php:3745
+#: lib/installer.php:3779
 msgid "Cli"
 msgstr "Cổ điển"
 
-#: lib/installer.php:3750
+#: lib/installer.php:3784
 #, php-format
 msgid "Setting PHP Option %s = %s"
 msgstr "Đặt tùy chọn PHP%s =%s"
 
-#: lib/installer.php:3756
+#: lib/installer.php:3790
 #, php-format
 msgid "Failed to set PHP option %s, is %s (should be %s)"
 msgstr "Không thể đặt tùy chọn PHP%s, là%s (nên là%s)"
 
-#: lib/installer.php:3790
+#: lib/installer.php:3824
 msgid "No Remote Data Collectors found for full synchronization"
 msgstr "Không tìm thấy (các) Trình thu thập dữ liệu khi thử đồng bộ hóa"
 
@@ -16290,189 +16290,215 @@ msgstr "Không thể thêm mục biểu đồ báo cáo &#39; <i> %s</i> &#39; �
 msgid "Skipped Report Graph Item '<i>%s</i>' Already Exists"
 msgstr "Mục biểu đồ bị bỏ qua &#39; <i> %s</i> &#39; đã tồn tại"
 
-#: lib/rrd.php:1952
+#: lib/rrd.php:2333
 #, fuzzy, php-format
 msgid "ERROR: RRD file does not exist: %s"
 msgstr "LRI: RRDfile %s không thể ghi"
 
-#: lib/rrd.php:3428
+#: lib/rrd.php:3809
 #, fuzzy, php-format
 msgid "The required RRDfile step size is '%s' but observed step is '%s'"
 msgstr "Kích thước bước RRD bắt buộc là &#39; %s&#39;"
 
-#: lib/rrd.php:3488
+#: lib/rrd.php:3869
 #, php-format
 msgid "Type for Data Source '%s' should be '%s'"
 msgstr "Loại cho Nguồn dữ liệu &#39; %s&#39; phải là &#39; %s&#39;"
 
-#: lib/rrd.php:3494
+#: lib/rrd.php:3875
 #, php-format
 msgid "Heartbeat for Data Source '%s' should be '%s'"
 msgstr "Nhịp tim cho Nguồn dữ liệu &#39; %s&#39; phải là &#39; %s&#39;"
 
-#: lib/rrd.php:3506
+#: lib/rrd.php:3887
 #, php-format
 msgid "RRD minimum for Data Source '%s' should be '%s'"
 msgstr "RRD tối thiểu cho Nguồn dữ liệu &#39; %s&#39; phải là &#39; %s&#39;"
 
-#: lib/rrd.php:3515
+#: lib/rrd.php:3896
 #, php-format
 msgid "DS '%s' missing in Cacti definition"
 msgstr "DS &#39; %s&#39; bị thiếu trong định nghĩa Cacti"
 
-#: lib/rrd.php:3529 lib/rrd.php:3530
+#: lib/rrd.php:3910 lib/rrd.php:3911
 #, php-format
 msgid "Cacti RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Cacti RRA &#39; %s&#39; có cùng CF / bước ( %s, %s) là &#39; %s&#39;"
 
-#: lib/rrd.php:3543 lib/rrd.php:3544
+#: lib/rrd.php:3924 lib/rrd.php:3925
 #, php-format
 msgid "File RRA '%s' has same CF/steps (%s, %s) as '%s'"
 msgstr "Tệp RRA &#39; %s&#39; có cùng CF / bước ( %s, %s) là &#39; %s&#39;"
 
-#: lib/rrd.php:3576
+#: lib/rrd.php:3957
 #, php-format
 msgid "The pdp_per_row of '%s' is invalid for RRA '%s' should be '%s'.  Consider deleting and allowing Cacti to re-create RRDfile."
 msgstr ""
 
-#: lib/rrd.php:3580
+#: lib/rrd.php:3961
 #, php-format
 msgid "The XFF for Cacti RRA id is '%s' but should be '%s'"
 msgstr "XFF cho id RRA của cacti &#39; %s&#39; phải là &#39; %s&#39;"
 
-#: lib/rrd.php:3584
+#: lib/rrd.php:3965
 #, fuzzy, php-format
 msgid "The number of rows for Cacti RRA id '%s' is incorrect.  The number of rows are '%s' but should be '%s'"
 msgstr "Số lượng hàng cho id Cacti RRA &#39; %s&#39; phải là &#39; %s&#39;"
 
-#: lib/rrd.php:3601
+#: lib/rrd.php:3982
 #, php-format
 msgid "The RRA '%s' missing in the existing Cacti RRDfile"
 msgstr "RRA &#39; %s&#39; bị thiếu trong RRDfile"
 
-#: lib/rrd.php:3609
+#: lib/rrd.php:3990
 #, php-format
 msgid "RRA '%s' missing in Cacti definition"
 msgstr "RRA &#39; %s&#39; bị thiếu trong định nghĩa Cacti"
 
-#: lib/rrd.php:3630
+#: lib/rrd.php:4011
 msgid "RRD File Information"
 msgstr "Thông tin tập tin RRD"
 
-#: lib/rrd.php:3662
+#: lib/rrd.php:4043
 msgid "Data Source Items"
 msgstr "Mục nguồn dữ liệu"
 
-#: lib/rrd.php:3664
+#: lib/rrd.php:4045
 msgid "Minimal Heartbeat"
 msgstr "Nhịp tim tối thiểu"
 
-#: lib/rrd.php:3665
+#: lib/rrd.php:4046
 msgid "Min"
 msgstr "Tối thiểu"
 
-#: lib/rrd.php:3666
+#: lib/rrd.php:4047
 msgid "Max"
 msgstr "Tối đa"
 
-#: lib/rrd.php:3667
+#: lib/rrd.php:4048
 msgid "Last DS"
 msgstr "DS cuối"
 
-#: lib/rrd.php:3669
+#: lib/rrd.php:4050
 msgid "Unknown Sec"
 msgstr "Không rõ giây"
 
-#: lib/rrd.php:3720
+#: lib/rrd.php:4101
 msgid "Round Robin Archive"
 msgstr "Lưu trữ vòng Robin"
 
-#: lib/rrd.php:3723
+#: lib/rrd.php:4104
 msgid "Cur Row"
 msgstr "Hàng cong"
 
-#: lib/rrd.php:3724
+#: lib/rrd.php:4105
 msgid "PDP per Row"
 msgstr "PDP mỗi hàng"
 
-#: lib/rrd.php:3726
+#: lib/rrd.php:4107
 msgid "CDP Prep Value (0)"
 msgstr "Giá trị chuẩn bị CDP (0)"
 
-#: lib/rrd.php:3727
+#: lib/rrd.php:4108
 msgid "CDP Unknown Data points (0)"
 msgstr "CDP Điểm dữ liệu không xác định (0)"
 
-#: lib/rrd.php:3790
+#: lib/rrd.php:4171
 msgid "Errors Found"
 msgstr "Không %s Tìm thấy"
 
-#: lib/rrd.php:3802
+#: lib/rrd.php:4183
 msgid "Optional Tuning Recommendations"
 msgstr "Trường nguồn dữ liệu"
 
-#: lib/rrd.php:3829 lib/rrd.php:3832
+#: lib/rrd.php:4210 lib/rrd.php:4213
 #, php-format
 msgid "rename %s to %s"
 msgstr "đổi tên %s thành %s"
 
-#: lib/rrd.php:3906 lib/rrd.php:3985 lib/rrd.php:4051
+#: lib/rrd.php:4286 lib/rrd.php:4367 lib/rrd.php:4435
 #, fuzzy
 msgid "ERROR: Invalid RRDfile path"
 msgstr "Nhập đường dẫn tệp hợp lệ"
 
-#: lib/rrd.php:3915
+#: lib/rrd.php:4296
 msgid "Error while parsing the XML of rrdtool dump"
 msgstr "Lỗi trong khi phân tích cú pháp XML của rrdtool dump"
 
-#: lib/rrd.php:3947 lib/rrd.php:4012 lib/rrd.php:4078
+#: lib/rrd.php:4328 lib/rrd.php:4395 lib/rrd.php:4463
 #, php-format
 msgid "ERROR while writing XML file: %s"
 msgstr "LRI trong khi viết tệp XML: %s"
 
-#: lib/rrd.php:3958 lib/rrd.php:4023 lib/rrd.php:4089
+#: lib/rrd.php:4335 lib/rrd.php:4402 lib/rrd.php:4470
+msgid "RRD restore failed; original and recovery XML preserved. See application log."
+msgstr ""
+
+#: lib/rrd.php:4341 lib/rrd.php:4408 lib/rrd.php:4476
 #, php-format
 msgid "ERROR: RRDfile %s not writeable"
 msgstr "LRI: RRDfile %s không thể ghi"
 
-#: lib/rrd.php:3994 lib/rrd.php:4060
+#: lib/rrd.php:4377 lib/rrd.php:4445
 msgid "Error while parsing the XML of RRDtool dump"
 msgstr "Lỗi trong khi phân tích cú pháp XML của RRDtool dump"
 
-#: lib/rrd.php:4309
+#: lib/rrd.php:4695
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) removed from RRD file"
 msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_law =% d, XFF =% 1.2f) đã bị xóa khỏi tệp RRD"
 
-#: lib/rrd.php:4347
+#: lib/rrd.php:4733
 #, php-format
 msgid "RRA (CF=%s, ROWS=%d, PDP_PER_ROW=%d, XFF=%1.2f) adding to RRD file"
 msgstr "RRA (CF = %s, ROWS =% d, PDP_PER_law =% d, XFF =% 1.2f) thêm vào tệp RRD"
 
-#: lib/rrd.php:4379 lib/rrd.php:4393
+#: lib/rrd.php:4765 lib/rrd.php:4779
 #, php-format
 msgid "Website does not have write access to %s, may be unable to create/update RRDs"
 msgstr "Trang web không có quyền ghi vào %s, có thể không thể tạo / cập nhật RRD"
 
-#: lib/rrd.php:4389
+#: lib/rrd.php:4775
 msgid "(Custom)"
 msgstr "(Tùy chỉnh)"
 
-#: lib/rrd.php:4395
+#: lib/rrd.php:4781
 msgid "Failed to open data file, poller may not have run yet"
 msgstr "Không thể mở tệp dữ liệu, pug có thể chưa chạy"
 
-#: lib/rrd.php:4398
+#: lib/rrd.php:4784
 msgid "RRA Folder"
 msgstr "Thư mục RRA"
 
-#: lib/rrd.php:4398
+#: lib/rrd.php:4784
 msgid "Root"
 msgstr "Root"
 
-#: lib/rrd.php:4507
+#: lib/rrd.php:4893
 msgid "Unknown RRDtool Error"
 msgstr "Lỗi RRDtool không xác định"
+
+#: lib/rrd_maintenance.php:214
+msgid "RRD storage is not ready: the configured directory must exist and allow this service account to create, read, write and remove files."
+msgstr ""
+
+#: lib/rrd_maintenance.php:220
+msgid "RRD storage is not ready for coordinated access. Enable PHP POSIX and configure the numeric rrd_maintenance_trusted_uids and rrd_maintenance_trusted_gids in include/config.php for every web and poller service account. Remove world-write permissions and check storage ancestors. See docs/testing/spikekill-safety.md before upgrading."
+msgstr ""
+
+#: lib/rrd_maintenance.php:276
+#, php-format
+msgid "The poller_output queue must use InnoDB before collection. Stop all collectors, including remote collectors, and run cli/upgrade_database.php --migrate-poller-queue (or convert poller_output to InnoDB after a backup). Observed engine: %s. Retained samples must not be discarded to clear this condition."
+msgstr ""
+
+#: lib/rrd_maintenance.php:276
+#, fuzzy
+msgid "unavailable"
+msgstr "Không có sẵn"
+
+#: lib/rrd_maintenance.php:288
+msgid "RRD storage configuration requires attention"
+msgstr ""
 
 #: lib/snmp.php:247 lib/snmp.php:347 lib/snmp.php:442 lib/snmp.php:877
 #: lib/snmp.php:892
@@ -16503,12 +16529,12 @@ msgstr ""
 msgid "FATAL: Standard Deviation must be a positive integer."
 msgstr ""
 
-#: lib/spikekill.php:280 lib/spikekill.php:1771
+#: lib/spikekill.php:280 lib/spikekill.php:1777
 #, fuzzy
 msgid "StdDev"
 msgstr "Xóa StdDev"
 
-#: lib/spikekill.php:286 lib/spikekill.php:1771
+#: lib/spikekill.php:286 lib/spikekill.php:1777
 #, fuzzy
 msgid "Variance"
 msgstr "Biến thể"
@@ -16614,143 +16640,155 @@ msgstr ""
 msgid "Window Range:  All"
 msgstr ""
 
-#: lib/spikekill.php:447
+#: lib/spikekill.php:411
+msgid "FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal."
+msgstr ""
+
+#: lib/spikekill.php:418
+msgid "FATAL: RRD storage is busy. Retry after polling completes."
+msgstr ""
+
+#: lib/spikekill.php:419
+msgid "FATAL: RRD storage is untrusted or unavailable. Run cli/upgrade_database.php --check-rrd-storage as the web service account and correct its storage configuration."
+msgstr ""
+
+#: lib/spikekill.php:471
 #, php-format
 msgid "FATAL: Unable to safely create a temporary XML file in '%s'!"
 msgstr ""
 
-#: lib/spikekill.php:496 lib/spikekill.php:518
+#: lib/spikekill.php:520 lib/spikekill.php:542
 msgid "FATAL: RRD source identity changed or could not be verified safely."
 msgstr ""
 
-#: lib/spikekill.php:526
+#: lib/spikekill.php:550
 msgid "FATAL: RRDtool Command Failed.  Please verify that the RRDtool path is valid in Settings->Paths!"
 msgstr ""
 
-#: lib/spikekill.php:542
+#: lib/spikekill.php:566
 msgid "FATAL: RRDtool returned an empty dump. The RRD file was not modified."
 msgstr ""
 
-#: lib/spikekill.php:570
+#: lib/spikekill.php:594
 #, php-format
 msgid "FATAL: RRDfile Backup of '%s' to '%s' FAILED!"
 msgstr ""
 
-#: lib/spikekill.php:784
+#: lib/spikekill.php:808
 #, php-format
 msgid "NOTE: Searching for Spikes in XML file '%s'"
 msgstr ""
 
-#: lib/spikekill.php:787
+#: lib/spikekill.php:811
 #, php-format
 msgid "NOTE: Limited to Time Window: %s through %s"
 msgstr ""
 
-#: lib/spikekill.php:794
+#: lib/spikekill.php:818
 msgid "NOTE: Dryrun requested.  No updates performed"
 msgstr ""
 
-#: lib/spikekill.php:830
+#: lib/spikekill.php:854
 #, php-format
 msgid "NOTE: No Window Spikes found in '%s'"
 msgstr ""
 
-#: lib/spikekill.php:833
+#: lib/spikekill.php:857
 #, php-format
 msgid "NOTE: No Spikes found in '%s'"
 msgstr ""
 
-#: lib/spikekill.php:846
+#: lib/spikekill.php:870
 #, php-format
 msgid "NOTE: Spikes Found and Remediated.  Total Spikes %s"
 msgstr ""
 
-#: lib/spikekill.php:850
+#: lib/spikekill.php:874
 #, php-format
 msgid "FATAL: Unable to restore '%s' from '%s'"
 msgstr ""
 
-#: lib/spikekill.php:860
+#: lib/spikekill.php:884
 #, php-format
 msgid "FATAL: Unable to backup '%s'"
 msgstr ""
 
-#: lib/spikekill.php:870
+#: lib/spikekill.php:894
 #, php-format
 msgid "FATAL: Unable to write XML file '%s'"
 msgstr ""
 
-#: lib/spikekill.php:879
+#: lib/spikekill.php:903
 #, fuzzy
 msgid "NOTE: No Spikes Found."
 msgstr "Không tìm thấy trang nào"
 
-#: lib/spikekill.php:940
+#: lib/spikekill.php:964
 #, php-format
 msgid "NOTE: Re-Importing '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1031
+#: lib/spikekill.php:1055
 #, php-format
 msgid "NOTE: Backing Up '%s' to '%s'"
 msgstr ""
 
-#: lib/spikekill.php:1771
+#: lib/spikekill.php:1777
 #, fuzzy
 msgid "Avg"
 msgstr "Trung bình:"
 
-#: lib/spikekill.php:1771
+#: lib/spikekill.php:1777
 #, fuzzy
 msgid "CF"
 msgstr "CDEF"
 
-#: lib/spikekill.php:1771
+#: lib/spikekill.php:1777
 #, fuzzy
 msgid "DS"
 msgstr "MÔ TẢ"
 
-#: lib/spikekill.php:1771
+#: lib/spikekill.php:1777
 msgid "NonNan"
 msgstr ""
 
-#: lib/spikekill.php:1771
+#: lib/spikekill.php:1777
 #, fuzzy
 msgid "Samples"
 msgstr "Đơn giản"
 
-#: lib/spikekill.php:1772
+#: lib/spikekill.php:1778
 msgid "MaxStdDev"
 msgstr ""
 
-#: lib/spikekill.php:1772
+#: lib/spikekill.php:1778
 #, fuzzy
 msgid "MaxValue"
 msgstr "Giá trị"
 
-#: lib/spikekill.php:1772
+#: lib/spikekill.php:1778
 #, fuzzy
 msgid "MinStdDev"
 msgstr "Chạy khô StdDev"
 
-#: lib/spikekill.php:1772
+#: lib/spikekill.php:1778
 #, fuzzy
 msgid "MinValue"
 msgstr "Giá trị"
 
-#: lib/spikekill.php:1772
+#: lib/spikekill.php:1778
 msgid "StdKilled"
 msgstr ""
 
-#: lib/spikekill.php:1772
+#: lib/spikekill.php:1778
 msgid "VarKilled"
 msgstr ""
 
-#: lib/spikekill.php:1772
+#: lib/spikekill.php:1778
 msgid "WindKilled"
 msgstr ""
 
-#: lib/spikekill.php:1772
+#: lib/spikekill.php:1778
 msgid "WindSamples"
 msgstr ""
 
@@ -17018,15 +17056,15 @@ msgstr "Áp dụng bộ lọc"
 msgid "Reset filters"
 msgstr "Đặt lại bộ lọc"
 
-#: links.php:358 links.php:526 user_admin.php:1575 user_group_admin.php:1459
+#: links.php:358 links.php:526 user_admin.php:1592 user_group_admin.php:1459
 msgid "Top Tab"
 msgstr "Tab hàng đầu"
 
-#: links.php:359 user_admin.php:1576 user_group_admin.php:1460
+#: links.php:359 user_admin.php:1593 user_group_admin.php:1460
 msgid "Bottom Console"
 msgstr "Bảng điều khiển dưới cùng"
 
-#: links.php:360 user_admin.php:1577 user_group_admin.php:1461
+#: links.php:360 user_admin.php:1594 user_group_admin.php:1461
 msgid "Top Console"
 msgstr "Bảng điều khiển hàng đầu"
 
@@ -17604,49 +17642,49 @@ msgstr "Plugin không tương thích"
 msgid "Enable Plugin Locally"
 msgstr "Sử dụng Plugin"
 
-#: poller.php:401
+#: poller.php:410
 #, fuzzy, php-format
 msgid "WARNING: %s is out of sync with the Poller Interval for poller id %d!  The Poller Interval is %d seconds, with a maximum of a %d seconds, but %d seconds have passed since the last poll!"
 msgstr "CẢNH BÁO: %s không đồng bộ với Khoảng thời gian của Poller! Khoảng thời gian của Poller là &#39;% d&#39; giây, với tối đa &#39;% d&#39; giây, nhưng% d giây đã trôi qua kể từ cuộc thăm dò cuối cùng!"
 
-#: poller.php:551
+#: poller.php:560
 #, fuzzy, php-format
 msgid "WARNING: There are %d processes detected as overrunning a polling cycle for poller id %d, please investigate."
 msgstr "CẢNH BÁO: Có &#39;% d&#39; được phát hiện là vượt quá chu kỳ bỏ phiếu, vui lòng điều tra."
 
-#: poller.php:619
+#: poller.php:629
 #, fuzzy, php-format
 msgid "WARNING: Poller Output Table not empty for poller id %d.  Issues: %d, %s."
 msgstr "CẢNH BÁO: Bảng đầu ra của xe đẩy không trống. Các vấn đề:% d, %s."
 
-#: poller.php:665
+#: poller.php:673
 #, fuzzy, php-format
 msgid "ERROR: The spine path: %s is invalid for poller id %d.  Poller can not continue!"
 msgstr "LRI: Đường dẫn cột sống: %s không hợp lệ. Xe đẩy không thể tiếp tục!"
 
-#: poller.php:812
+#: poller.php:821
 #, fuzzy, php-format
 msgid "Maximum runtime of %d seconds exceeded for poller id %d. Exiting."
 msgstr "Thời gian chạy tối đa% d giây vượt quá. Thoát hiểm."
 
-#: poller.php:918
+#: poller.php:928
 msgid "WARNING: Cacti Polling Cycle Exceeded Poller Interval by "
 msgstr "CẢNH BÁO: Chu kỳ thăm dò của xương rồng đã vượt quá khoảng thời gian thăm dò của xương rồng bởi"
 
-#: poller.php:943
+#: poller.php:955
 #, php-format
 msgid "WARNING: PollerID:%s with Name:%s is in Heartbeat Status"
 msgstr ""
 
-#: poller.php:945
+#: poller.php:957
 msgid "Poller in Heartbeat Mode"
 msgstr ""
 
-#: poller.php:1241
+#: poller.php:1257
 msgid "Cacti System Notification"
 msgstr "Tiện ích hệ thống Cacti"
 
-#: poller.php:1241
+#: poller.php:1257
 msgid "NOTE: A second Cacti data collector has been added.  Therefore, enabling boost automatically!"
 msgstr "LƯU Ý: Một bộ thu thập dữ liệu Cacti thứ hai đã được thêm vào. Do đó, cho phép tăng tự động!"
 
@@ -17663,7 +17701,7 @@ msgstr "Quản trị viên chính của Cacti"
 msgid "Cacti Automation Report requires an html based Email client"
 msgstr "Báo cáo tự động hóa Cacti yêu cầu ứng dụng Email dựa trên html"
 
-#: poller_boost.php:499
+#: poller_boost.php:505
 msgid "WARNING: Detected Poller Boost Overrun, Possible Boost Poller Crash"
 msgstr "CẢNH BÁO: Đã phát hiện thấy Poller Boost Overrun, Có thể xảy ra sự cố Poller Boost"
 
@@ -18024,7 +18062,7 @@ msgstr "Dữ liệu hợp lệ"
 msgid "Message"
 msgstr ""
 
-#: rrdcheck.php:187 rrdcheck.php:191 rrdcleaner.php:399 rrdcleaner.php:400
+#: rrdcheck.php:187 rrdcheck.php:191 rrdcleaner.php:406 rrdcleaner.php:407
 msgid "Deleted"
 msgstr "Đã xóa"
 
@@ -18055,7 +18093,7 @@ msgstr "ngày"
 msgid "Messages"
 msgstr ""
 
-#: rrdcheck.php:264 rrdcleaner.php:552 user_domains.php:680
+#: rrdcheck.php:264 rrdcleaner.php:569 user_domains.php:680
 #: user_group_admin.php:1985 user_group_admin.php:2345
 #: user_group_admin.php:2461 user_group_admin.php:2558
 #: user_group_admin.php:2655 user_group_admin.php:2752
@@ -18063,7 +18101,7 @@ msgctxt "filter: use"
 msgid "Go"
 msgstr "Đi"
 
-#: rrdcheck.php:265 rrdcleaner.php:553 user_group_admin.php:1986
+#: rrdcheck.php:265 rrdcleaner.php:570 user_group_admin.php:1986
 #: user_group_admin.php:2346 user_group_admin.php:2462
 #: user_group_admin.php:2559 user_group_admin.php:2656
 msgctxt "filter: reset"
@@ -18075,81 +18113,85 @@ msgctxt "filter: purge"
 msgid "Purge"
 msgstr "Gỡ"
 
-#: rrdcleaner.php:31 tree.php:32
+#: rrdcleaner.php:32 tree.php:32
 msgctxt "dropdown action"
 msgid "Delete"
 msgstr "Xóa"
 
-#: rrdcleaner.php:32
+#: rrdcleaner.php:33
 msgctxt "dropdown action"
 msgid "Archive"
 msgstr "Lưu trữ"
 
-#: rrdcleaner.php:373
+#: rrdcleaner.php:48 rrdcleaner.php:447 rrdcleaner.php:482
+msgid "Automatic local RRD cleanup is unavailable on Windows. Stop all RRD writers before manual cleanup."
+msgstr ""
+
+#: rrdcleaner.php:380
 msgid "RRD Files"
 msgstr "Tập tin RRD"
 
-#: rrdcleaner.php:382
+#: rrdcleaner.php:389
 msgid "RRD File Name"
 msgstr "Tên tệp RRD"
 
-#: rrdcleaner.php:383
+#: rrdcleaner.php:390
 msgid "DS Name"
 msgstr "Tên DS"
 
-#: rrdcleaner.php:384
+#: rrdcleaner.php:391
 msgid "DS ID"
 msgstr "ID DS"
 
-#: rrdcleaner.php:385
+#: rrdcleaner.php:392
 msgid "Template ID"
 msgstr "ID mẫu"
 
-#: rrdcleaner.php:387
+#: rrdcleaner.php:394
 msgid "Last Modified"
 msgstr "Sửa đổi lần cuối"
 
-#: rrdcleaner.php:388
+#: rrdcleaner.php:395
 msgid "Size [KB]"
 msgstr "Kích thước [KB]"
 
-#: rrdcleaner.php:408
+#: rrdcleaner.php:415
 msgid "No unused RRD Files"
 msgstr "Không có tệp RRD không sử dụng"
 
-#: rrdcleaner.php:430
+#: rrdcleaner.php:437
 msgid "Total Size [MB]:"
 msgstr "Tổng kích thước [MB]:"
 
-#: rrdcleaner.php:432
+#: rrdcleaner.php:439
 msgid "Last Scan:"
 msgstr "Lần quét cuối:"
 
-#: rrdcleaner.php:520
+#: rrdcleaner.php:537
 msgid "Time Since Update"
 msgstr "Thời gian kể từ khi cập nhật"
 
-#: rrdcleaner.php:536
+#: rrdcleaner.php:553
 msgid "RRDfiles"
 msgstr "RRDfiles"
 
-#: rrdcleaner.php:554
+#: rrdcleaner.php:571
 msgid "Rescan"
 msgstr "Quét lại"
 
-#: rrdcleaner.php:559
+#: rrdcleaner.php:576
 msgid "Delete All"
 msgstr "Xóa Tất Cả"
 
-#: rrdcleaner.php:559
+#: rrdcleaner.php:576
 msgid "Delete All Unknown RRDfiles"
 msgstr "Xóa tất cả RRDfiles không xác định"
 
-#: rrdcleaner.php:560
+#: rrdcleaner.php:577
 msgid "Archive All"
 msgstr "Lưu trữ tất cả"
 
-#: rrdcleaner.php:560
+#: rrdcleaner.php:577
 msgid "Archive All Unknown RRDfiles"
 msgstr "Lưu trữ tất cả RRDfiles không xác định"
 
@@ -18740,7 +18782,7 @@ msgstr "Sắp xếp cây tăng dần"
 msgid "Sort Trees Descending"
 msgstr "Sắp xếp cây giảm dần"
 
-#: tree.php:2246 user_admin.php:1453 user_group_admin.php:1330
+#: tree.php:2246 user_admin.php:1470 user_group_admin.php:1330
 msgid "Tree Name"
 msgstr "Tên cây"
 
@@ -18816,134 +18858,134 @@ msgstr "Không tìm thấy cây"
 msgid "Batch Copy"
 msgstr "Sao chép hàng loạt"
 
-#: user_admin.php:272
+#: user_admin.php:278
 msgid "You are not allowed to delete the current login account"
 msgstr "Bạn không được phép thay đổi mật khẩu của bạn."
 
-#: user_admin.php:284
+#: user_admin.php:290
 msgid "You are not allowed to disable the current login account"
 msgstr "Bạn không được phép thay đổi mật khẩu của bạn."
 
-#: user_admin.php:353
+#: user_admin.php:370
 msgid "Click 'Continue' to delete the selected User(s)."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để xóa (các) Người dùng đã chọn."
 
-#: user_admin.php:358
+#: user_admin.php:375
 msgid "Delete User(s)"
 msgstr "Xóa người dùng"
 
-#: user_admin.php:368
+#: user_admin.php:385
 msgid "Click 'Continue' to copy the selected User to a new User below."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để sao chép Người dùng đã chọn sang Người dùng mới bên dưới."
 
-#: user_admin.php:373
+#: user_admin.php:390
 msgid "Template Username:"
 msgstr "Tên người dùng mẫu:"
 
-#: user_admin.php:378
+#: user_admin.php:395
 msgid "Username:"
 msgstr "Tên đăng nhập:"
 
-#: user_admin.php:385
+#: user_admin.php:402
 msgid "Full Name:"
 msgstr "Tên đầy đủ:"
 
-#: user_admin.php:392
+#: user_admin.php:409
 msgid "Realm:"
 msgstr "Địa hạt:"
 
-#: user_admin.php:398
+#: user_admin.php:415
 msgid "Copy User"
 msgstr "Sao chép người dùng"
 
-#: user_admin.php:404
+#: user_admin.php:421
 msgid "Click 'Continue' to enable the selected User(s)."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để bật (các) Người dùng đã chọn."
 
-#: user_admin.php:409
+#: user_admin.php:426
 msgid "Enable User(s)"
 msgstr "Cho phép người dùng"
 
-#: user_admin.php:415
+#: user_admin.php:432
 msgid "Click 'Continue' to disable the selected User(s)."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để tắt (các) Người dùng đã chọn."
 
-#: user_admin.php:420
+#: user_admin.php:437
 msgid "Disable User(s)"
 msgstr "Vô hiệu hóa người dùng"
 
-#: user_admin.php:428
+#: user_admin.php:445
 msgid "Click 'Continue' to overwrite the User(s) settings with the selected template User settings and permissions.  The original users Full Name, Password, Realm and Enable status will be retained, all other fields will be overwritten from Template User."
 msgstr "Nhấp vào &#39;Tiếp tục&#39; để ghi đè cài đặt Người dùng bằng mẫu đã chọn Cài đặt và quyền của Người dùng. Người dùng ban đầu Tên đầy đủ, Mật khẩu, Địa hạt và trạng thái Bật sẽ được giữ lại, tất cả các trường khác sẽ được ghi đè từ Người dùng Mẫu."
 
-#: user_admin.php:432
+#: user_admin.php:449
 msgid "Template User:"
 msgstr "Người dùng mẫu:"
 
-#: user_admin.php:438
+#: user_admin.php:455
 msgid "User(s) to update:"
 msgstr "Người dùng để cập nhật:"
 
-#: user_admin.php:443
+#: user_admin.php:460
 msgid "Reset User(s) Settings"
 msgstr "Đặt lại cài đặt người dùng"
 
-#: user_admin.php:753 user_group_admin.php:759
+#: user_admin.php:770 user_group_admin.php:759
 msgid "Deny"
 msgstr "Từ chối"
 
-#: user_admin.php:784 user_group_admin.php:776
+#: user_admin.php:801 user_group_admin.php:776
 msgid "<b>Note:</b> System Graph Policy is 'Permissive' meaning the User must have access to at least one of Graph, Device, or Graph Template to gain access to the Graph"
 msgstr "<b>Lưu ý:</b> Chính sách biểu đồ hệ thống là &#39;Cho phép&#39; nghĩa là Người dùng phải có quyền truy cập vào ít nhất một Biểu đồ, Thiết bị hoặc Mẫu biểu đồ để có quyền truy cập vào Biểu đồ"
 
-#: user_admin.php:786 user_group_admin.php:778
+#: user_admin.php:803 user_group_admin.php:778
 msgid "<b>Note:</b> System Graph Policy is 'Restrictive' meaning the User must have access to either the Graph or the Device and Graph Template to gain access to the Graph"
 msgstr "<b>Lưu ý:</b> Chính sách biểu đồ hệ thống là &#39;Hạn chế&#39; nghĩa là Người dùng phải có quyền truy cập vào Biểu đồ hoặc Mẫu thiết bị và Biểu đồ để có quyền truy cập vào Biểu đồ"
 
-#: user_admin.php:788 user_group_admin.php:780
+#: user_admin.php:805 user_group_admin.php:780
 msgid "<b>Note:</b> System Graph Policy is 'Device' meaning the User must have access to the Graph or Device to gain access to the Graph"
 msgstr "<b>Lưu ý:</b> Chính sách biểu đồ hệ thống là &#39;Hạn chế&#39; nghĩa là Người dùng phải có quyền truy cập vào Biểu đồ hoặc Mẫu thiết bị và Biểu đồ để có quyền truy cập vào Biểu đồ"
 
-#: user_admin.php:790 user_group_admin.php:782
+#: user_admin.php:807 user_group_admin.php:782
 msgid "<b>Note:</b> System Graph Policy is 'Graph Template' meaning the User must have access to the Graph or Graph Template to gain access to the Graph"
 msgstr "<b>Lưu ý:</b> Chính sách biểu đồ hệ thống là &#39;Cho phép&#39; nghĩa là Người dùng phải có quyền truy cập vào ít nhất một Biểu đồ, Thiết bị hoặc Mẫu biểu đồ để có quyền truy cập vào Biểu đồ"
 
-#: user_admin.php:794 user_group_admin.php:790
+#: user_admin.php:811 user_group_admin.php:790
 msgid "Default Graph Policy"
 msgstr "Chính sách đồ thị mặc định"
 
-#: user_admin.php:799
+#: user_admin.php:816
 msgid "Default Graph Policy for this User"
 msgstr "Chính sách đồ thị mặc định cho người dùng này"
 
-#: user_admin.php:804 user_admin.php:1084 user_admin.php:1249
-#: user_admin.php:1393 user_group_admin.php:800 user_group_admin.php:983
+#: user_admin.php:821 user_admin.php:1101 user_admin.php:1266
+#: user_admin.php:1410 user_group_admin.php:800 user_group_admin.php:983
 #: user_group_admin.php:1131 user_group_admin.php:1274
 msgid "Update"
 msgstr "Cập nhật"
 
-#: user_admin.php:908 user_admin.php:1167 user_admin.php:1314
-#: user_admin.php:1453 user_group_admin.php:907 user_group_admin.php:1053
+#: user_admin.php:925 user_admin.php:1184 user_admin.php:1331
+#: user_admin.php:1470 user_group_admin.php:907 user_group_admin.php:1053
 #: user_group_admin.php:1198 user_group_admin.php:1330
 msgid "Effective Policy"
 msgstr "Chính sách hiệu quả"
 
-#: user_admin.php:922 user_group_admin.php:921
+#: user_admin.php:939 user_group_admin.php:921
 msgid "No Matching Graphs Found"
 msgstr "Không tìm thấy đồ thị phù hợp"
 
-#: user_admin.php:937 user_admin.php:943 user_admin.php:1212
-#: user_admin.php:1218 user_admin.php:1356 user_admin.php:1362
-#: user_admin.php:1494 user_admin.php:1500 user_group_admin.php:936
+#: user_admin.php:954 user_admin.php:960 user_admin.php:1229
+#: user_admin.php:1235 user_admin.php:1373 user_admin.php:1379
+#: user_admin.php:1511 user_admin.php:1517 user_group_admin.php:936
 #: user_group_admin.php:942 user_group_admin.php:1097 user_group_admin.php:1103
 #: user_group_admin.php:1240 user_group_admin.php:1246
 #: user_group_admin.php:1370 user_group_admin.php:1376
 msgid "Revoke Access"
 msgstr "Thu hồi truy cập"
 
-#: user_admin.php:938 user_admin.php:942 user_admin.php:1213
-#: user_admin.php:1217 user_admin.php:1357 user_admin.php:1361
-#: user_admin.php:1495 user_admin.php:1499 user_group_admin.php:63
+#: user_admin.php:955 user_admin.php:959 user_admin.php:1230
+#: user_admin.php:1234 user_admin.php:1374 user_admin.php:1378
+#: user_admin.php:1512 user_admin.php:1516 user_group_admin.php:63
 #: user_group_admin.php:937 user_group_admin.php:941 user_group_admin.php:1098
 #: user_group_admin.php:1102 user_group_admin.php:1241
 #: user_group_admin.php:1245 user_group_admin.php:1371
@@ -18951,261 +18993,261 @@ msgstr "Thu hồi truy cập"
 msgid "Grant Access"
 msgstr "Cấp phép truy cập"
 
-#: user_admin.php:1014 user_admin.php:2767 user_group_admin.php:1969
+#: user_admin.php:1031 user_admin.php:2784 user_group_admin.php:1969
 #: user_group_admin.php:2028
 msgid "Groups"
 msgstr "Nhóm"
 
-#: user_admin.php:1022 user_admin.php:1031
+#: user_admin.php:1039 user_admin.php:1048
 msgid "Member"
 msgstr "Thành viên"
 
-#: user_admin.php:1022
+#: user_admin.php:1039
 msgid "Policies (Graph/Device/Template)"
 msgstr "Chính sách (Biểu đồ / Thiết bị / Mẫu)"
 
-#: user_admin.php:1031 user_group_admin.php:718
+#: user_admin.php:1048 user_group_admin.php:718
 msgid "Non Member"
 msgstr "Không phải thành viên"
 
-#: user_admin.php:1033 user_admin.php:2401 user_admin.php:2402
-#: user_admin.php:2403 user_group_admin.php:2060 user_group_admin.php:2061
+#: user_admin.php:1050 user_admin.php:2418 user_admin.php:2419
+#: user_admin.php:2420 user_group_admin.php:2060 user_group_admin.php:2061
 #: user_group_admin.php:2062
 msgid "ALLOW"
 msgstr "Cho phép"
 
-#: user_admin.php:1033 user_admin.php:2401 user_admin.php:2402
-#: user_admin.php:2403 user_group_admin.php:2060 user_group_admin.php:2061
+#: user_admin.php:1050 user_admin.php:2418 user_admin.php:2419
+#: user_admin.php:2420 user_group_admin.php:2060 user_group_admin.php:2061
 #: user_group_admin.php:2062
 msgid "DENY"
 msgstr "Từ chối"
 
-#: user_admin.php:1039
+#: user_admin.php:1056
 msgid "No Matching User Groups Found"
 msgstr "Không tìm thấy nhóm người dùng phù hợp"
 
-#: user_admin.php:1053
+#: user_admin.php:1070
 msgid "Assign Membership"
 msgstr "Chỉ định thành viên"
 
-#: user_admin.php:1054
+#: user_admin.php:1071
 msgid "Remove Membership"
 msgstr "Xóa tư cách thành viên"
 
-#: user_admin.php:1074 user_group_admin.php:973
+#: user_admin.php:1091 user_group_admin.php:973
 msgid "Default Device Policy"
 msgstr "Chính sách thiết bị mặc định"
 
-#: user_admin.php:1079
+#: user_admin.php:1096
 msgid "Default Device Policy for this User"
 msgstr "Chính sách thiết bị mặc định cho người dùng này"
 
-#: user_admin.php:1178 user_admin.php:1186 user_admin.php:1325
-#: user_admin.php:1333 user_admin.php:1464 user_admin.php:1472
+#: user_admin.php:1195 user_admin.php:1203 user_admin.php:1342
+#: user_admin.php:1350 user_admin.php:1481 user_admin.php:1489
 #: user_group_admin.php:1064 user_group_admin.php:1072
 #: user_group_admin.php:1209 user_group_admin.php:1217
 #: user_group_admin.php:1341 user_group_admin.php:1349
 msgid "Access Granted"
 msgstr "Chấp thuận quyền truy cập"
 
-#: user_admin.php:1180 user_admin.php:1184 user_admin.php:1327
-#: user_admin.php:1331 user_admin.php:1466 user_admin.php:1470
+#: user_admin.php:1197 user_admin.php:1201 user_admin.php:1344
+#: user_admin.php:1348 user_admin.php:1483 user_admin.php:1487
 #: user_group_admin.php:1066 user_group_admin.php:1070
 #: user_group_admin.php:1211 user_group_admin.php:1215
 #: user_group_admin.php:1343 user_group_admin.php:1347
 msgid "Access Restricted"
 msgstr "Khu phận sự"
 
-#: user_admin.php:1197 user_group_admin.php:1083
+#: user_admin.php:1214 user_group_admin.php:1083
 msgid "No Matching Devices Found"
 msgstr "Không tìm thấy thiết bị phù hợp"
 
-#: user_admin.php:1239 user_group_admin.php:1121
+#: user_admin.php:1256 user_group_admin.php:1121
 msgid "Default Graph Template Policy"
 msgstr "Chính sách mẫu biểu đồ mặc định"
 
-#: user_admin.php:1244
+#: user_admin.php:1261
 msgid "Default Graph Template Policy for this User"
 msgstr "Chính sách mẫu biểu đồ mặc định cho người dùng này"
 
-#: user_admin.php:1314 user_group_admin.php:1198
+#: user_admin.php:1331 user_group_admin.php:1198
 msgid "Total Graphs"
 msgstr "Tổng đồ thị"
 
-#: user_admin.php:1341 user_group_admin.php:1225
+#: user_admin.php:1358 user_group_admin.php:1225
 msgid "No Matching Graph Templates Found"
 msgstr "Không tìm thấy mẫu đồ thị phù hợp"
 
-#: user_admin.php:1383 user_group_admin.php:1264
+#: user_admin.php:1400 user_group_admin.php:1264
 msgid "Default Tree Policy"
 msgstr "Chính sách cây mặc định"
 
-#: user_admin.php:1388
+#: user_admin.php:1405
 msgid "Default Tree Policy for this User"
 msgstr "Chính sách cây mặc định cho người dùng này"
 
-#: user_admin.php:1479 user_group_admin.php:1356
+#: user_admin.php:1496 user_group_admin.php:1356
 msgid "No Matching Trees Found"
 msgstr "Không tìm thấy cây phù hợp"
 
-#: user_admin.php:1524 user_group_admin.php:1406
+#: user_admin.php:1541 user_group_admin.php:1406
 msgid "User Permissions"
 msgstr "Quyền Người dùng"
 
-#: user_admin.php:1581 user_group_admin.php:1465
+#: user_admin.php:1598 user_group_admin.php:1465
 msgid "External Link Permissions"
 msgstr "Quyền liên kết ngoài"
 
-#: user_admin.php:1660 user_group_admin.php:1542
+#: user_admin.php:1677 user_group_admin.php:1542
 msgid "Plugin Permissions"
 msgstr "Quyền Plugin"
 
-#: user_admin.php:1677 user_group_admin.php:1559
+#: user_admin.php:1694 user_group_admin.php:1559
 msgid "Legacy Permissions"
 msgstr "Quyền Người dùng"
 
-#: user_admin.php:1739 user_group_admin.php:1623
+#: user_admin.php:1756 user_group_admin.php:1623
 #, php-format
 msgid "User Settings %s"
 msgstr "Cài đặt người dùng %s"
 
-#: user_admin.php:1854 user_group_admin.php:1739
+#: user_admin.php:1871 user_group_admin.php:1739
 msgid "Permissions"
 msgstr "Quyền hạn"
 
-#: user_admin.php:1855
+#: user_admin.php:1872
 msgid "Group Membership"
 msgstr "Thành viên nhóm"
 
-#: user_admin.php:1856 user_group_admin.php:1740
+#: user_admin.php:1873 user_group_admin.php:1740
 msgid "Graph Perms"
 msgstr "Perm đồ thị"
 
-#: user_admin.php:1857 user_group_admin.php:1741
+#: user_admin.php:1874 user_group_admin.php:1741
 msgid "Device Perms"
 msgstr "Giấy phép thiết bị"
 
-#: user_admin.php:1858 user_group_admin.php:1742
+#: user_admin.php:1875 user_group_admin.php:1742
 msgid "Template Perms"
 msgstr "Giấy phép mẫu"
 
-#: user_admin.php:1859 user_group_admin.php:1743
+#: user_admin.php:1876 user_group_admin.php:1743
 msgid "Tree Perms"
 msgstr "Cây uốn"
 
-#: user_admin.php:1879
+#: user_admin.php:1896
 #, fuzzy
 msgid "User not found."
 msgstr "Không tìm thấy tập tin"
 
-#: user_admin.php:1918
+#: user_admin.php:1935
 #, php-format
 msgid "User Management %s"
 msgstr "Quản lý người dùng %s"
 
-#: user_admin.php:2176
+#: user_admin.php:2193
 msgid "User Management"
 msgstr "Quản lý Người dùng"
 
-#: user_admin.php:2197
+#: user_admin.php:2214
 #, fuzzy
 msgid "Group"
 msgstr "Nhóm"
 
-#: user_admin.php:2219 user_admin.php:2363
+#: user_admin.php:2236 user_admin.php:2380
 msgid "Last Login"
 msgstr "Lân đăng nhập cuối"
 
-#: user_admin.php:2224
+#: user_admin.php:2241
 #, fuzzy
 msgid "< 1 Week Ago"
 msgstr "1 Tuần"
 
-#: user_admin.php:2225
+#: user_admin.php:2242
 msgid "< 1 Month Ago"
 msgstr ""
 
-#: user_admin.php:2226
+#: user_admin.php:2243
 msgid "> 1 Month Ago"
 msgstr ""
 
-#: user_admin.php:2227
+#: user_admin.php:2244
 #, fuzzy
 msgid "> 2 Months Ago"
 msgstr "% d Tháng"
 
-#: user_admin.php:2228
+#: user_admin.php:2245
 #, fuzzy
 msgid "> 4 Months Ago"
 msgstr "% d Tháng"
 
-#: user_admin.php:2239
+#: user_admin.php:2256
 msgid "Basic"
 msgstr "Cơ bản"
 
-#: user_admin.php:2240
+#: user_admin.php:2257
 msgid "LDAP/AD"
 msgstr "LDAP"
 
-#: user_admin.php:2241
+#: user_admin.php:2258
 msgid "Domain"
 msgstr "Tên miền"
 
-#: user_admin.php:2356
+#: user_admin.php:2373
 msgid "User ID"
 msgstr "ID người dùng"
 
-#: user_admin.php:2360 user_group_admin.php:2040
+#: user_admin.php:2377 user_group_admin.php:2040
 msgid "Graph Policy"
 msgstr "Chính sách đồ thị"
 
-#: user_admin.php:2361 user_group_admin.php:2041
+#: user_admin.php:2378 user_group_admin.php:2041
 msgid "Device Policy"
 msgstr "Chính sách thiết bị"
 
-#: user_admin.php:2362 user_group_admin.php:2042
+#: user_admin.php:2379 user_group_admin.php:2042
 msgid "Template Policy"
 msgstr "Chính sách mẫu"
 
-#: user_admin.php:2385
+#: user_admin.php:2402
 msgid "Unavailable"
 msgstr "Không có sẵn"
 
-#: user_admin.php:2410
+#: user_admin.php:2427
 msgid "No Users Found"
 msgstr "Không tìm thấy người dùng"
 
-#: user_admin.php:2633 user_group_admin.php:2286
+#: user_admin.php:2650 user_group_admin.php:2286
 #, php-format
 msgid "Graph Permissions %s"
 msgstr "Quyền đồ thị %s"
 
-#: user_admin.php:2687 user_admin.php:2784
+#: user_admin.php:2704 user_admin.php:2801
 msgid "Show All"
 msgstr "Hiển thị tất cả"
 
-#: user_admin.php:2752
+#: user_admin.php:2769
 #, fuzzy, php-format
 msgid "Group Membership %s"
 msgstr "Thành viên nhóm"
 
-#: user_admin.php:2850 user_group_admin.php:2406
+#: user_admin.php:2867 user_group_admin.php:2406
 #, php-format
 msgid "Devices Permission %s"
 msgstr "Quyền thiết bị %s"
 
-#: user_admin.php:2900 user_admin.php:2997 user_admin.php:3094
-#: user_admin.php:3191 user_group_admin.php:2340 user_group_admin.php:2456
+#: user_admin.php:2917 user_admin.php:3014 user_admin.php:3111
+#: user_admin.php:3208 user_group_admin.php:2340 user_group_admin.php:2456
 #: user_group_admin.php:2553 user_group_admin.php:2650
 msgid "Only Show Exceptions"
 msgstr "Hiển thị ngoại lệ"
 
-#: user_admin.php:2965 user_group_admin.php:2521
+#: user_admin.php:2982 user_group_admin.php:2521
 #, php-format
 msgid "Template Permission %s"
 msgstr "Cho phép mẫu %s"
 
-#: user_admin.php:3062 user_admin.php:3159 user_group_admin.php:2618
+#: user_admin.php:3079 user_admin.php:3176 user_group_admin.php:2618
 #, php-format
 msgid "Tree Permission %s"
 msgstr "Giấy phép cây %s"
@@ -19320,31 +19362,31 @@ msgstr "Thuộc tính miền"
 msgid "Domains"
 msgstr "Miền"
 
-#: user_domains.php:752
+#: user_domains.php:753
 msgid "Domain Name"
 msgstr "Tên miền Domain"
 
-#: user_domains.php:753
+#: user_domains.php:754
 msgid "Domain Type"
 msgstr "Loại tên miền"
 
-#: user_domains.php:755
+#: user_domains.php:756
 msgid "Effective User"
 msgstr "Người dùng hiệu quả"
 
-#: user_domains.php:756
+#: user_domains.php:757
 msgid "CN FullName"
 msgstr "Tên đầy đủ CN"
 
-#: user_domains.php:757
+#: user_domains.php:758
 msgid "CN eMail"
 msgstr "Email điện tử"
 
-#: user_domains.php:770
+#: user_domains.php:771
 msgid "None Selected"
 msgstr "Chưa chọn mục nào"
 
-#: user_domains.php:778
+#: user_domains.php:779
 msgid "No User Domains Found"
 msgstr "Không tìm thấy tên miền người dùng"
 

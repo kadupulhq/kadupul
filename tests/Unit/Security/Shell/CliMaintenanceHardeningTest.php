@@ -16,19 +16,13 @@ $updateHeartbeatSource = file_get_contents($base . '/cli/update_heartbeat.php');
 
 test('database sourced RRD paths are escaped before shell execution', function () use ($batchgapfixSource, $floatRrdfilesSource, $updateHeartbeatSource) {
 	expect($batchgapfixSource)->toContain('cacti_escapeshellarg($rrdfile[\'data_source_path\'])')
-		->and($batchgapfixSource)->toContain('exec_background($php_bin, $args)')
 		->and($floatRrdfilesSource)->toContain("cacti_escapeshellarg(\$rrdtool_bin) . ' dump ' . cacti_escapeshellarg(\$rrd_path)")
 		->and($floatRrdfilesSource)->toContain("cacti_escapeshellarg(\$tmp_file) . ' ' . cacti_escapeshellarg(\$rrd_path)")
 		->and($updateHeartbeatSource)->toContain("cacti_escapeshellarg(\$f['rrd'])")
 		->and($updateHeartbeatSource)->toContain("cacti_escapeshellarg(\$ds . ':' . \$new_heartbeat)");
 });
 
-test('CLI subprocesses pass background arguments as arrays', function () use ($batchgapfixSource, $floatRrdfilesSource) {
-	expect($batchgapfixSource)->toContain('exec_background($php_bin, $args)')
-		->and($floatRrdfilesSource)->toContain('exec_background($php_binary, $args)')
-		->and($batchgapfixSource)->toContain('$php_bin = PHP_BINARY;')
-		->and($floatRrdfilesSource)->toContain('$php_binary = PHP_BINARY;');
-});
+// Native argument-boundary and child-exit coverage lives in RrdMaintenanceCoordinationTest.
 
 test('float rrdfiles creates its 1.2.31 temporary names exclusively and cleans up', function () use ($floatRrdfilesSource) {
 	expect($floatRrdfilesSource)->toContain("\$tmp_file = \$tmp_dir . '/' . \$local_data_id . '.xml';")

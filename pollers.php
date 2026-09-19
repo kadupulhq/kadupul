@@ -980,7 +980,7 @@ function pollers() {
 
 	$total_rows = db_fetch_cell("SELECT COUNT(*) FROM poller $sql_where");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('name', 'id', 'poller.hostname', 'status', 'total_time', 'hosts', 'snmp', 'script', 'server', 'last_update', 'last_status', 'last_sync'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$pollers = db_fetch_assoc("SELECT poller.*, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(poller.last_status) as heartbeat, count(h.id) AS hosts

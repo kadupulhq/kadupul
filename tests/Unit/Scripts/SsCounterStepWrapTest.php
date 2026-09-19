@@ -22,9 +22,8 @@
  * or current + modulus - previous when the counter has wrapped.
  */
 
-global $called_by_script_server;
-$called_by_script_server = true;
-require_once __DIR__ . '/../../../scripts/ss_net_snmp_disk_io.php';
+require_once dirname(__DIR__, 2) . '/Helpers/PhpSource.php';
+eval(test_php_function_source(file_get_contents(dirname(__DIR__, 3) . '/scripts/ss_net_snmp_disk_io.php'), 'ss_counter_step'));
 
 test('no wrap: delta is current minus previous', function () {
 	expect(ss_counter_step('U', '105', '100', '4294967296'))->toBe('5');

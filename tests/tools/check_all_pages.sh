@@ -629,6 +629,9 @@ FILTERED_LOG="$(grep -v \
   -e "REINDEX Poller" \
   -e "DSDEBUG Bad Data" \
   -e "PUSHOUT Child Started" \
+  -e "SYSLOG: Removing old partition" \
+  -e " - SYSTEM SYSLOG: Creating new partition 'd[0-9]\{8\}'$" \
+  -e "SYSLOG Setting Up Database Tables" \
   "$CACTI_LOG")" || true
 
 save_log_files

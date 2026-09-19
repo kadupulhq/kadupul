@@ -62,16 +62,48 @@ function rrdtool_reset_language() {
 	putenv('LANG=' . $prev_lang);
 }
 
-function rrd_init($output_to_term = true) {
+function rrd_init($output_to_term = true, $exclusive = false, $acknowledged = false, $lease_timeout = null, &$lease_busy = null) {
 	global $config;
+	$lease_busy = false;
 
-	$args = func_get_args();
+	$args = array_slice(func_get_args(), 0, 1);
 	$force_storage_location_local = (isset($config['force_storage_location_local']) && $config['force_storage_location_local'] === true ) ? true : false;
 	$function = ($force_storage_location_local === false && read_config_option('storage_location')) ? '__rrd_proxy_init' : '__rrd_init';
-	return call_user_func_array($function, $args);
+	if ($function !== '__rrd_init') {
+		return call_user_func_array($function, $args);
+	}
+
+	$args = array($output_to_term, $acknowledged);
+	require_once __DIR__ . '/rrd_maintenance.php';
+	if ($exclusive && getenv('RRDCACHED_ADDRESS')) {
+		cacti_log('ERROR: Disable RRDCACHED_ADDRESS before destructive RRD maintenance.');
+		return false;
+	}
+	$lock = rrd_maintenance_acquire($exclusive, false, $lease_timeout, $lease_busy);
+	if ($lock === false) {
+		if ((!$lease_busy || $lease_timeout !== 0) && (empty($config['is_web']) || debounce_run_notification('rrd_initialization_failure', 1800))) {
+			cacti_log($exclusive && ($config['cacti_server_os'] ?? '') === 'win32'
+			? 'ERROR: Destructive local RRD maintenance is unsupported on Windows; no changes were made.'
+			: 'ERROR: Unable to coordinate local RRD writes with maintenance.');
+		}
+		return false;
+	}
+
+	$pipe = false;
+	try {
+		$pipe = call_user_func_array($function, $args);
+		if (is_resource($pipe)) {
+			rrd_maintenance_pipe($pipe, $lock, false, $exclusive);
+		}
+		return $pipe;
+	} finally {
+		if (!is_resource($pipe)) {
+			rrd_maintenance_release($lock);
+		}
+	}
 }
 
-function __rrd_init($output_to_term = true) {
+function __rrd_init($output_to_term = true, $acknowledged = false) {
 	global $config;
 
 	/* set the rrdtool default font */
@@ -80,6 +112,33 @@ function __rrd_init($output_to_term = true) {
 	}
 
 	rrdtool_set_language();
+	if ($acknowledged && $config['cacti_server_os'] === 'win32') {
+		rrdtool_reset_language();
+		return true; // Boolean writes use the synchronous response-reading fallback.
+	}
+	if ($acknowledged) {
+		$process = proc_open(array(read_config_option('path_rrdtool'), '-'),
+			array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('redirect', 1)), $streams);
+		if (!is_resource($process)) {
+			rrdtool_reset_language();
+			return false;
+		}
+		stream_set_blocking($streams[0], false);
+		stream_set_blocking($streams[1], false);
+		$owned =& rrd_acknowledged_pipes();
+		$owned[(int) $streams[0]] = array('write' => $streams[0], 'read' => $streams[1],
+			'process' => $process, 'echo' => $output_to_term && empty($config['is_web']), 'failed' => false);
+		static $shutdown_registered = false;
+		if (!$shutdown_registered) {
+			register_shutdown_function(function () {
+				foreach (rrd_acknowledged_pipes() as $state) {
+					rrd_close($state['write']);
+				}
+			});
+			$shutdown_registered = true;
+		}
+		return $streams[0];
+	}
 
 	$rrdtool = cacti_escapeshellarg(read_config_option('path_rrdtool'));
 
@@ -92,6 +151,85 @@ function __rrd_init($output_to_term = true) {
 	}
 
 	return popen($command, 'w');
+}
+
+/** Native response pipes are owned by the same lifetime as their writer lease. */
+function &rrd_acknowledged_pipes() {
+	static $pipes = array();
+	return $pipes;
+}
+
+/**
+ * An optional hrtime() deadline that caps every acknowledged command.  The
+ * poller sets it so a hung writer cannot outlive the collection cycle.
+ */
+function &rrd_command_deadline() {
+	static $deadline = null;
+	return $deadline;
+}
+
+/** Exchange one command without treating a successful write as persistence. */
+function rrd_acknowledged_command($pipe, $command) {
+	global $config;
+	$pipes =& rrd_acknowledged_pipes();
+	$state =& $pipes[(int) $pipe];
+	if ($state['failed']) {
+		return array(false, '');
+	}
+	$timeout = max(1, min(3600, (int) ($config['rrd_command_timeout'] ?? 60)));
+	$deadline = hrtime(true) + $timeout * 1000000000;
+	$cap = rrd_command_deadline();
+	if ($cap !== null && $cap < $deadline) {
+		$deadline = $cap;
+	}
+	$input = escape_command($command) . "\r\n";
+	$offset = 0;
+	$output = '';
+	$response_scan = 0;
+	$write_failed = false;
+	while (hrtime(true) < $deadline) {
+		$read = array($state['read']);
+		$write = !$write_failed && $offset < strlen($input) ? array($pipe) : array();
+		$except = null;
+		$selected = @stream_select($read, $write, $except, 0, 100000);
+		if ($selected === false) {
+			break;
+		}
+		if ($read) {
+			$chunk = fread($state['read'], 8192);
+			if ($chunk === false || ($chunk === '' && feof($state['read']))) {
+				break;
+			}
+			$output .= $chunk;
+			// Scan each completed response line once, including split terminators.
+			$last_newline = strrpos($chunk, "\n");
+			if ($last_newline !== false) {
+				$end = strlen($output) - strlen($chunk) + $last_newline + 1;
+				$lines = substr($output, $response_scan, $end - $response_scan);
+				$response_scan = $end;
+				if (preg_match('/^ERROR:[^\r\n]*\r?\n/m', $lines)) {
+					$state['failed'] = $write_failed || $offset !== strlen($input);
+					return array(false, $output);
+				}
+				if ($offset === strlen($input) && preg_match('/^OK(?: u:[^\r\n]+)?\r?\n/m', $lines)) {
+					return array(true, $output);
+				}
+			}
+		}
+		if ($write) {
+			$written = @fwrite($pipe, substr($input, $offset, 8192));
+			if ($written === false) {
+				// Read the child's final diagnostic before treating EOF as failure.
+				$write_failed = true;
+			} else {
+				$offset += $written;
+			}
+		}
+	}
+	$state['failed'] = true;
+	proc_terminate($state['process']);
+	cacti_log('ERROR: RRDtool response was unavailable or timed out; samples retained for retry.');
+	return array(false, $output);
 }
 
 function __rrd_proxy_init($logopt = 'WEBLOG') {
@@ -187,10 +325,49 @@ function rrd_close() {
 	$args = func_get_args();
 	$force_storage_location_local = (isset($config['force_storage_location_local']) && $config['force_storage_location_local'] === true) ? true : false;
 	$function = ($force_storage_location_local === false && read_config_option('storage_location')) ? '__rrd_proxy_close' : '__rrd_close';
-	return call_user_func_array($function, $args);
+	try {
+		return call_user_func_array($function, $args);
+	} finally {
+		if ($function === '__rrd_close') {
+			require_once __DIR__ . '/rrd_maintenance.php';
+			rrd_maintenance_pipe($args[0], null, true);
+		}
+	}
+}
+
+/** Keep an owned writer pipe scoped to one operation, including early returns. */
+function rrd_with_pipe($operation) {
+	$pipe = rrd_init(true, true, true);
+	if ($pipe === false) {
+		return false;
+	}
+	try {
+		return $operation($pipe);
+	} finally {
+		rrd_close($pipe);
+	}
 }
 
 function __rrd_close($rrdtool_pipe) {
+	$owned =& rrd_acknowledged_pipes();
+	if (isset($owned[(int) $rrdtool_pipe])) {
+		$state = $owned[(int) $rrdtool_pipe];
+		unset($owned[(int) $rrdtool_pipe]);
+		if (is_resource($state['write'])) { fclose($state['write']); }
+		// Commands have already been acknowledged. EOF asks the idle child to exit.
+		$deadline = hrtime(true) + 1000000000;
+		do {
+			$status = proc_get_status($state['process']);
+			if (!$status['running']) { break; }
+			usleep(10000);
+		} while (hrtime(true) < $deadline);
+		if ($status['running']) { proc_terminate($state['process'], 9); }
+		fclose($state['read']);
+		proc_close($state['process']);
+		rrdtool_reset_language();
+		return;
+	}
+
 	/* close the rrdtool file descriptor */
 	if (is_resource($rrdtool_pipe)) {
 		pclose($rrdtool_pipe);
@@ -291,14 +468,58 @@ function decrypt($input) {
 	}
 }
 
+/** Last local command rejection, distinct from an unavailable response. */
+function &rrdtool_last_rejection() {
+	static $rejection = null;
+	return $rejection;
+}
+
 function rrdtool_execute() {
 	global $config;
+	$rejection =& rrdtool_last_rejection();
+	$rejection = null;
 
 	$args = func_get_args();
 	$force_storage_location_local = (isset($config['force_storage_location_local']) && $config['force_storage_location_local'] === true) ? true : false;
 	$function = ($force_storage_location_local === false && read_config_option('storage_location')) ? '__rrd_proxy_execute' : '__rrd_execute';
 
-	return call_user_func_array($function, $args);
+	if ($function !== '__rrd_execute') {
+		return call_user_func_array($function, $args);
+	}
+
+	// Readers do not mutate RRD files and must remain available to separate
+	// web users and while an administrator owns the maintenance lease.
+	$command = $args[0] ?? '';
+	$verb = is_array($command) ? ($command[0] ?? '') : strtok(ltrim($command), " \t\r\n");
+	if (in_array($verb, array('graph', 'graphv', 'xport', 'fetch', 'info', 'last', 'lastupdate', 'first'), true)
+		&& strpbrk(is_array($command) ? implode(' ', $command) : str_replace("\\\n", ' ', $command), "\r\n") === false
+		&& (!isset($args[3]) || $args[3] === false || $args[3] === '')) {
+		return call_user_func_array($function, $args);
+	}
+
+	$destructive = in_array($verb, array('tune', 'resize', 'restore', 'unlink', 'archive'), true);
+	require_once __DIR__ . '/rrd_maintenance.php';
+	if (isset($args[3]) && is_resource($args[3])) {
+		if (!rrd_maintenance_pipe($args[3]) || ($destructive && !rrd_maintenance_pipe_is_exclusive($args[3]))) {
+			cacti_log('ERROR: Local RRD pipes must be opened with rrd_init for maintenance coordination.');
+			return false;
+		}
+		return call_user_func_array($function, $args);
+	}
+
+	$lock = rrd_maintenance_acquire($destructive);
+	if ($lock === false) {
+		cacti_log($destructive && ($config['cacti_server_os'] ?? '') === 'win32'
+			? 'ERROR: Destructive local RRD maintenance is unsupported on Windows; no changes were made.'
+			: 'ERROR: Unable to coordinate local RRD writes with maintenance.');
+		return false;
+	}
+
+	try {
+		return call_user_func_array($function, $args);
+	} finally {
+		rrd_maintenance_release($lock);
+	}
 }
 
 /**
@@ -372,9 +593,50 @@ function rrdtool_quote_argument($string) {
 function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pipe = false, $logopt = 'WEBLOG') {
 	global $config;
 
+
+
+
 	if (is_array($command_line)) {
 		$cmd = array_shift($command_line);
 		$command_line = $cmd . ' ' . implode(' ', array_map('rrdtool_quote_argument', $command_line));
+	}
+
+	// Fold continuation lines before sending a single IPC command.
+	$command_line = str_replace("\\\n", ' ', $command_line);
+
+	$owned =& rrd_acknowledged_pipes();
+	if (is_resource($rrdtool_pipe) && isset($owned[(int) $rrdtool_pipe])) {
+		list($acknowledged, $response) = rrd_acknowledged_command($rrdtool_pipe, $command_line);
+		if (!$acknowledged && !$owned[(int) $rrdtool_pipe]['failed'] && preg_match('/^ERROR:([^\r\n]*)\r?\n/m', $response, $error)) {
+			$rejection =& rrdtool_last_rejection();
+			$rejection = trim($error[1]);
+		}
+		if ($owned[(int) $rrdtool_pipe]['echo']) { print $response; }
+		if ($output_flag === RRDTOOL_OUTPUT_BOOLEAN) { return $acknowledged; }
+		if (!$acknowledged) { return false; }
+		rrdtool_trim_output($response);
+		return $output_flag === RRDTOOL_OUTPUT_NULL ? null : $response;
+	}
+	// A legacy write-only pipe cannot acknowledge a boolean request. Running it
+	// through another process could overtake commands already queued on this pipe.
+	if (defined('RRDTOOL_OUTPUT_BOOLEAN') && $output_flag === RRDTOOL_OUTPUT_BOOLEAN && is_resource($rrdtool_pipe)) {
+		cacti_log('ERROR: Boolean RRD commands require an acknowledged pipe; command not submitted.', false, $logopt);
+		return false;
+	}
+	// Callers without a response pipe use the synchronous fallback.
+	if (defined('RRDTOOL_OUTPUT_BOOLEAN') && $output_flag === RRDTOOL_OUTPUT_BOOLEAN) {
+		if ($config['cacti_server_os'] !== 'win32') {
+			$temporary = __rrd_init(false, true);
+			if (!is_resource($temporary)) {
+				return false;
+			}
+			try {
+				return __rrd_execute($command_line, $log_to_stdout, $output_flag, $temporary, $logopt);
+			} finally {
+				__rrd_close($temporary);
+			}
+		}
+		$rrdtool_pipe = false;
 	}
 
 	static $last_command;
@@ -446,37 +708,48 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 
 		rrdtool_reset_language();
 	} else {
-		$i = 0;
-		while (1) {
-			if (fwrite($rrdtool_pipe, escape_command(" $command_line") . "\r\n") === false) {
-				cacti_log("ERROR: Detected RRDtool Crash on '$command_line'.  Last command was '$last_command'");
+		$original_rrdtool_pipe = $rrdtool_pipe;
+		try {
+			$i = 0;
+			while (1) {
+				if (fwrite($rrdtool_pipe, escape_command(" $command_line") . "\r\n") === false) {
+					cacti_log("ERROR: Detected RRDtool Crash on '$command_line'.  Last command was '$last_command'");
 
-				/* close the invalid pipe */
-				rrd_close($rrdtool_pipe);
+					// Reopening would release the exclusive lease and invalidate the
+					// dump snapshot. Abort this rewrite instead of retrying it.
+					if (rrd_maintenance_pipe_is_exclusive($rrdtool_pipe)) {
+						rrd_close($rrdtool_pipe);
+						throw new RuntimeException('RRD rewrite pipe failed; the operation was aborted without retry.');
+					}
 
-				/* open a new rrdtool process */
-				$rrdtool_pipe = rrd_init();
+					/* close the invalid pipe */
+					rrd_close($rrdtool_pipe);
 
-				if (!is_resource($rrdtool_pipe)) {
-					cacti_log("FATAL: RRDtool could not be restarted. Giving up on '$command_line'.");
-
-					return false;
-				}
-
-				if ($i > 4) {
-					cacti_log("FATAL: RRDtool Restart Attempts Exceeded. Giving up on '$command_line'.");
-
-					/* a written command also returns nothing, so tell callers this one never reached rrdtool */
-					return false;
-				} else {
+					if ($i > 4) {
+						cacti_log("FATAL: RRDtool Restart Attempts Exceeded. Giving up on '$command_line'.");
+						return false;
+					}
 					$i++;
+
+					/* open a new rrdtool process */
+					$rrdtool_pipe = rrd_init();
+					if (!is_resource($rrdtool_pipe)) {
+						cacti_log("FATAL: RRDtool could not be restarted. Giving up on '$command_line'.");
+						return false;
+					}
+
+					continue;
+				} else {
+					fflush($rrdtool_pipe);
+
+					break;
 				}
-
-				continue;
-			} else {
-				fflush($rrdtool_pipe);
-
-				break;
+			}
+		} finally {
+			/* A private recovery child must finish before returning. Later
+			 * calls with the closed original pipe use synchronous execution. */
+			if ($rrdtool_pipe !== $original_rrdtool_pipe && is_resource($rrdtool_pipe)) {
+				rrd_close($rrdtool_pipe);
 			}
 		}
 	}
@@ -485,7 +758,25 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 	$last_command = $command_line;
 
 	if (!isset($fp)) {
-		return;
+		return (defined('RRDTOOL_OUTPUT_BOOLEAN') && $output_flag === RRDTOOL_OUTPUT_BOOLEAN) ? false : null;
+	}
+
+	if ((defined('RRDTOOL_OUTPUT_BOOLEAN') && $output_flag === RRDTOOL_OUTPUT_BOOLEAN)) {
+		stream_set_timeout($fp, 60);
+		$output = stream_get_contents($fp);
+		$metadata = stream_get_meta_data($fp);
+		if ($metadata['timed_out']) {
+			proc_terminate($process);
+		}
+		fclose($fp);
+		$status = proc_close($process);
+		if (!$metadata['timed_out'] && is_string($output) && preg_match('/^ERROR:([^\r\n]*)\r?$/m', $output, $error)) {
+			$rejection =& rrdtool_last_rejection();
+			$rejection = trim($error[1]);
+		}
+		return !$metadata['timed_out'] && $status === 0 && is_string($output)
+			&& preg_match('/^OK(?: u:[^\r\n]+)?\r?$/m', $output) === 1
+			&& preg_match('/^ERROR:/m', $output) !== 1;
 	}
 
 	switch ($output_flag) {
@@ -536,6 +827,16 @@ function __rrd_execute($command_line, $log_to_stdout, $output_flag, $rrdtool_pip
 			break;
 		case RRDTOOL_OUTPUT_NULL:
 		default:
+			/* Even callers discarding output must wait for queued writes
+			 * before the maintenance lock can be released. Drain first so
+			 * the child cannot block on a full stdout pipe. */
+			while (!feof($fp)) {
+				fread($fp, 8192);
+			}
+			if (isset($process)) {
+				fclose($fp);
+				proc_close($process);
+			}
 			return;
 			break;
 	}
@@ -694,7 +995,13 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp=
 			}
 			break;
 		case RRDTOOL_OUTPUT_BOOLEAN :
-			return (substr_count($output, 'OK u')) ? true : false;
+			if (preg_match('/^ERROR:\s*(.+)$/m', $output, $error)) {
+				$rejection =& rrdtool_last_rejection();
+				$rejection = trim($error[1]);
+			}
+			if (strpos($output, 'ERROR:') !== false) { return false; }
+			// Incomplete or malformed replies do not prove a file is absent.
+			return preg_match('/^OK u:[^\r\n]+\r?$/m', $output) === 1 ? true : null;
 			break;
 	}
 }
@@ -752,7 +1059,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 	exist, the last thing we want to do is overright data! */
 	if ($show_source != true) {
 		if (read_config_option('storage_location')) {
-			if (rrdtool_execute_path_command('file_exists', $data_source_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER')) {
+			if (rrdtool_execute_path_command('file_exists', $data_source_path, '', true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER') !== false) {
 				return -1;
 			}
 		} elseif (file_exists($data_source_path)) {
@@ -969,9 +1276,22 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 	}
 }
 
-function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false) {
+/** Only timestamps that RRDtool can no longer accept are terminal.
+ * Schema mismatches remain retryable until the RRD definition is repaired.
+ */
+function rrdtool_rejection_is_permanent($reason) {
+	return is_string($reason) && (bool) preg_match(
+		'/^(?:[^\r\n]+: )?illegal attempt to update using time \d+ when last update time is \d+/',
+		$reason
+	);
+}
+
+function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$completed = null) {
+	static $retained_logs = array();
 	/* lets count the number of rrd files processed */
 	$rrds_processed = 0;
+	$completed = array();
+	$failed = false;
 
 	foreach ($update_cache_array as $rrd_path => $rrd_fields) {
 		$create_rrd_file = false;
@@ -979,6 +1299,11 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false) {
 		if (!cacti_rrdtool_valid_path($rrd_path) || !rrd_check_path($rrd_path)) {
 			cacti_log("ERROR: Invalid RRD file path in poller cache for local_data_id: {$rrd_fields['local_data_id']}.", false, 'POLLER');
 
+			foreach ($rrd_fields['times'] as $update_time => $field_array) {
+				cacti_log('ERROR: Invalid RRD sample path (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array)), false, 'POLLER');
+				$completed[$rrd_path][$update_time] = false;
+			}
+			$failed = true;
 			continue;
 		}
 
@@ -994,7 +1319,10 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false) {
 
 			if ($file_exists === false) {
 				$times = array_keys($rrd_fields['times']);
-				rrdtool_function_create($rrd_fields['local_data_id'], false, $rrdtool_pipe);
+				if (rrdtool_function_create($rrd_fields['local_data_id'], false, $rrdtool_pipe) === false) {
+					$failed = true;
+					continue;
+				}
 				$create_rrd_file = true;
 			}
 
@@ -1031,10 +1359,26 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false) {
 				} else {
 					cacti_log("ERROR: Invalid RRD update time for local_data_id: {$rrd_fields['local_data_id']}.", false, 'POLLER');
 
+					cacti_log('ERROR: Invalid RRD sample (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array)), false, 'POLLER');
+					$completed[$rrd_path][$update_time] = false;
+					$failed = true;
 					continue;
 				}
 
 				$rrd_update_template = '';
+				foreach ($field_array as $field_name => $value) {
+					if (!preg_match('/^[a-zA-Z0-9_-]{1,19}$/D', (string)$field_name)) {
+						cacti_log('ERROR: Invalid RRD field discarded (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'field' => $field_name, 'value' => $value)), false, 'POLLER');
+						unset($field_array[$field_name]);
+					}
+				}
+				if (!$field_array) {
+					cacti_log('ERROR: RRD sample has no valid fields (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time)), false, 'POLLER');
+					$completed[$rrd_path][$update_time] = false;
+					$failed = true;
+					continue;
+				}
+
 
 				foreach ($field_array as $field_name => $value) {
 					if (cacti_sizeof($unused_data_source_names) && isset($unused_data_source_names[$field_name])) {
@@ -1049,6 +1393,9 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false) {
 					if (!cacti_rrdtool_valid_ds_name($field_name)) {
 						cacti_log("ERROR: Invalid RRD update data source name for local_data_id: {$rrd_fields['local_data_id']}.", false, 'POLLER');
 
+						cacti_log('ERROR: Invalid RRD sample data source (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array)), false, 'POLLER');
+						$failed = true;
+						$completed[$rrd_path][$update_time] = false;
 						continue 2;
 					}
 
@@ -1082,20 +1429,52 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false) {
 				if (!cacti_rrdtool_valid_ds_template($rrd_update_template) || cacti_has_control_chars($rrd_update_values)) {
 					cacti_log("ERROR: Invalid RRD update template or value set for local_data_id: {$rrd_fields['local_data_id']}.", false, 'POLLER');
 
+					cacti_log('ERROR: Invalid RRD sample (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array)), false, 'POLLER');
+					$completed[$rrd_path][$update_time] = false;
+					$failed = true;
 					continue;
 				}
 
-				rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'POLLER');
+				// Never advance this RRD's timestamp after dropping a valid field.
+				// A schema mismatch must retain the full sample for replay after repair.
+				$updated = rrdtool_execute("update $rrd_path $update_options --template $rrd_update_template $rrd_update_values", true, RRDTOOL_OUTPUT_BOOLEAN, $rrdtool_pipe, 'POLLER');
+
+				if ($updated !== true) {
+					$rejection = rrdtool_last_rejection();
+					if (rrdtool_rejection_is_permanent($rejection)) {
+						// Record the rejected update before deciding whether its
+						// timestamp can be consumed safely.
+						cacti_log('ERROR: RRDtool rejected sample (not written): ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'values' => $field_array, 'reason' => $rejection)), false, 'POLLER');
+						$failed = true;
+						$completed[$rrd_path][$update_time] = false;
+						continue;
+					}
+					$now = hrtime(true);
+					$previous = $retained_logs[$rrd_path] ?? null;
+					if ($previous === null || $previous['reason'] !== $rejection || $now - $previous['time'] >= 60000000000) {
+						$retained_logs[$rrd_path] = array('time' => $now, 'reason' => $rejection);
+						cacti_log('ERROR: RRD pending sample retained for retry: ' . json_encode(array('path' => $rrd_path, 'time' => $update_time, 'reason' => $rejection ?: 'No acknowledgement received', 'action' => 'Repair the reported schema or storage error before replay; monitor queue growth.')), false, 'POLLER');
+					}
+					$failed = true;
+					break;
+				}
+				unset($retained_logs[$rrd_path]);
+				$completed[$rrd_path][$update_time] = true;
 				$rrds_processed++;
 			}
 		}
 	}
 
-	return $rrds_processed;
+	return $failed ? false : $rrds_processed;
 }
 
 function rrdtool_function_tune($rrd_tune_array) {
 	global $config, $data_source_types;
+
+	if (getenv('RRDCACHED_ADDRESS')) {
+		cacti_log('ERROR: Stop external RRD writers and disable RRDCACHED_ADDRESS before tuning.');
+		return;
+	}
 
 	include($config['include_path'] . '/global_arrays.php');
 
@@ -1128,8 +1507,25 @@ function rrdtool_function_tune($rrd_tune_array) {
 		if (file_exists($data_source_path) == true) {
 			if (is_file(read_config_option('path_rrdtool')) && is_executable(read_config_option('path_rrdtool'))) {
 				$rrdtool_cmd = cacti_escapeshellcmd(read_config_option('path_rrdtool')) . ' tune ' . cacti_escapeshellarg($data_source_path) . $rrd_tune;
-				$fp = popen($rrdtool_cmd, 'r');
-				pclose($fp);
+				require_once __DIR__ . '/rrd_maintenance.php';
+				/* A web request must not wait indefinitely behind a polling cycle. */
+				$lock = rrd_maintenance_acquire(($config['cacti_server_os'] ?? '') !== 'win32', true, 5, $busy);
+				if ($lock === false) {
+					cacti_log($busy ? 'ERROR: RRD storage is busy; retry RRD tuning after polling completes.' :
+						'ERROR: Unable to coordinate RRD tuning with maintenance.');
+					return false;
+				}
+				try {
+					$fp = popen($rrdtool_cmd, 'r');
+					if (is_resource($fp)) {
+						while (!feof($fp)) {
+							fread($fp, 8192);
+						}
+						pclose($fp);
+					}
+				} finally {
+					rrd_maintenance_release($lock);
+				}
 
 				cacti_log('CACTI2RRD: ' . $rrdtool_cmd, false, 'WEBLOG', POLLER_VERBOSITY_DEBUG);
 			} else {
@@ -1301,7 +1697,7 @@ function rrdtool_function_fetch($local_data_id, $start_time, $end_time, $resolut
 
 	$output = rrdtool_execute($cmd_line, false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe);
 
-	if (!is_string($output)) {
+	if (!is_string($output) || trim($output) === '') {
 		return $fetch_array;
 	}
 
@@ -3896,75 +4292,76 @@ function rrd_repair($data_source_id) {
  * @return (mixed) - success (bool) or error message (array)
  */
 function rrd_datasource_add($file_array, $ds_array, $debug) {
-	global $data_source_types, $consolidation_functions;
+	return rrd_with_pipe(function ($rrdtool_pipe) use ($file_array, $ds_array, $debug) {
+		global $data_source_types, $consolidation_functions;
 
-	$rrdtool_pipe = rrd_init();
+		/* iterate all given rrd files */
+		foreach ($file_array as $file) {
+			if (!cacti_rrdtool_valid_path($file)) {
+				$check['err_msg'] = __('ERROR: Invalid RRDfile path');
 
-	/* iterate all given rrd files */
-	foreach ($file_array as $file) {
-		if (!cacti_rrdtool_valid_path($file)) {
-			$check['err_msg'] = __('ERROR: Invalid RRDfile path');
-
-			return $check;
-		}
-
-		// create a DOM object from an rrdtool dump
-		$dom = new domDocument;
-
-		if ($dom->loadXML(rrdtool_execute_path_command('dump', $file, '', false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL')) === false) {
-			$check['err_msg'] = __('Error while parsing the XML of rrdtool dump');
-			return $check;
-		}
-
-		/* rrdtool dump depends on rrd file version:
-		 * version 0001 => RRDtool 1.0.x
-		 * version 0003 => RRDtool 1.2.x, 1.3.x, 1.4.x, 1.5.x, 1.6.x
-		 */
-		$version = trim($dom->getElementsByTagName('version')->item(0)->nodeValue);
-
-		/* now start XML processing */
-		foreach ($ds_array as $ds) {
-			/* first, append the <DS> structure in the rrd header */
-			if ($ds['type'] === $data_source_types[5]) {
-				rrd_append_compute_ds($dom, $version, $ds['name'], $ds['type'], $ds['cdef']);
-			} else {
-				rrd_append_ds($dom, $version, $ds['name'], $ds['type'], $ds['heartbeat'], $ds['min'], $ds['max']);
-			}
-			/* now work on the <DS> structure as part of the <cdp_prep> tree */
-			rrd_append_cdp_prep_ds($dom, $version);
-			/* add <V>alues to the <database> tree */
-			rrd_append_value($dom);
-		}
-
-		if ($debug) {
-			print $dom->saveXML();
-		} else {
-			/* for rrdtool restore, we need a file, so write the XML to disk */
-			$xml_file = $file . '.xml';
-			$rc = $dom->save($xml_file);
-			/* verify, if write was successful */
-			if ($rc === false) {
-				$check['err_msg'] = __('ERROR while writing XML file: %s', $xml_file);
 				return $check;
-			} else {
-				/* are we allowed to write the rrd file? */
-				if (is_writable($file)) {
-					// restore the modified XML to rrd
-					rrdtool_execute_restore_command($xml_file, $file, false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
-					// scratch that XML file to avoid filling up the disk
-					unlink($xml_file);
-					cacti_log('Added Data Source(s) to RRDfile: ' . $file, false, 'UTIL');
+			}
+
+			// create a DOM object from an rrdtool dump
+			$dom = new domDocument;
+
+			$xml = rrdtool_execute_path_command('dump', $file, '', false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+			if (!is_string($xml) || $xml === '' || $dom->loadXML($xml) === false) {
+				$check['err_msg'] = __('Error while parsing the XML of rrdtool dump');
+				return $check;
+			}
+
+			/* rrdtool dump depends on rrd file version:
+			 * version 0001 => RRDtool 1.0.x
+			 * version 0003 => RRDtool 1.2.x, 1.3.x, 1.4.x, 1.5.x, 1.6.x
+			 */
+			$version = trim($dom->getElementsByTagName('version')->item(0)->nodeValue);
+
+			/* now start XML processing */
+			foreach ($ds_array as $ds) {
+				/* first, append the <DS> structure in the rrd header */
+				if ($ds['type'] === $data_source_types[5]) {
+					rrd_append_compute_ds($dom, $version, $ds['name'], $ds['type'], $ds['cdef']);
 				} else {
-					$check['err_msg'] = __('ERROR: RRDfile %s not writeable', $file);
+					rrd_append_ds($dom, $version, $ds['name'], $ds['type'], $ds['heartbeat'], $ds['min'], $ds['max']);
+				}
+				/* now work on the <DS> structure as part of the <cdp_prep> tree */
+				rrd_append_cdp_prep_ds($dom, $version);
+				/* add <V>alues to the <database> tree */
+				rrd_append_value($dom);
+			}
+
+			if ($debug) {
+				print $dom->saveXML();
+			} else {
+				/* for rrdtool restore, we need a file, so write the XML to disk */
+				$xml_file = $file . '.xml';
+				$rc = $dom->save($xml_file);
+				/* verify, if write was successful */
+				if ($rc === false) {
+					$check['err_msg'] = __('ERROR while writing XML file: %s', $xml_file);
 					return $check;
+				} else {
+					/* are we allowed to write the rrd file? */
+					if (is_writable($file)) {
+						// restore the modified XML to rrd
+						if (!rrd_maintenance_restore($xml_file, $file, $rrdtool_pipe)) {
+							return array('err_msg' => __('RRD restore failed; original and recovery XML preserved. See application log.'));
+						}
+						// scratch that XML file to avoid filling up the disk
+						unlink($xml_file);
+						cacti_log('Added Data Source(s) to RRDfile: ' . $file, false, 'UTIL');
+					} else {
+						$check['err_msg'] = __('ERROR: RRDfile %s not writeable', $file);
+						return $check;
+					}
 				}
 			}
 		}
-	}
 
-	rrd_close($rrdtool_pipe);
-
-	return true;
+		return true;
+	});
 }
 
 /**
@@ -3977,59 +4374,61 @@ function rrd_datasource_add($file_array, $ds_array, $debug) {
  * @return (mixed) true for success (bool) or error message (array)
  */
 function rrd_rra_delete($file_array, $rra_array, $debug) {
-	$rrdtool_pipe = rrd_init();
+	return rrd_with_pipe(function ($rrdtool_pipe) use ($file_array, $rra_array, $debug) {
 
-	/* iterate all given rrd files */
-	foreach ($file_array as $file) {
-		if (!cacti_rrdtool_valid_path($file)) {
-			$check['err_msg'] = __('ERROR: Invalid RRDfile path');
+		/* iterate all given rrd files */
+		foreach ($file_array as $file) {
+			if (!cacti_rrdtool_valid_path($file)) {
+				$check['err_msg'] = __('ERROR: Invalid RRDfile path');
 
-			return $check;
-		}
-
-		// create a DOM document from an rrdtool dump
-		$dom = new domDocument;
-
-		if ($dom->loadXML(rrdtool_execute_path_command('dump', $file, '', false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL')) === false) {
-			$check['err_msg'] = __('Error while parsing the XML of RRDtool dump');
-
-			return $check;
-		}
-
-		// now start XML processing
-		foreach ($rra_array as $rra) {
-			rrd_delete_rra($dom, $rra, $debug);
-		}
-
-		if ($debug) {
-			print $dom->saveXML();
-		} else {
-			/* for rrdtool restore, we need a file, so write the XML to disk */
-			$xml_file = $file . '.xml';
-			$rc = $dom->save($xml_file);
-			/* verify, if write was successful */
-			if ($rc === false) {
-				$check['err_msg'] = __('ERROR while writing XML file: %s', $xml_file);
 				return $check;
+			}
+
+			// create a DOM document from an rrdtool dump
+			$dom = new domDocument;
+
+			$xml = rrdtool_execute_path_command('dump', $file, '', false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+			if (!is_string($xml) || $xml === '' || $dom->loadXML($xml) === false) {
+				$check['err_msg'] = __('Error while parsing the XML of RRDtool dump');
+
+				return $check;
+			}
+
+			// now start XML processing
+			foreach ($rra_array as $rra) {
+				rrd_delete_rra($dom, $rra, $debug);
+			}
+
+			if ($debug) {
+				print $dom->saveXML();
 			} else {
-				/* are we allowed to write the rrd file? */
-				if (is_writable($file)) {
-					// restore the modified XML to rrd
-					rrdtool_execute_restore_command($xml_file, $file, false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
-					// scratch that XML file to avoid filling up the disk
-					unlink($xml_file);
-					cacti_log('Deleted RRA(s) from RRDfile: ' . $file, false, 'UTIL');
-				} else {
-					$check['err_msg'] = __('ERROR: RRDfile %s not writeable', $file);
+				/* for rrdtool restore, we need a file, so write the XML to disk */
+				$xml_file = $file . '.xml';
+				$rc = $dom->save($xml_file);
+				/* verify, if write was successful */
+				if ($rc === false) {
+					$check['err_msg'] = __('ERROR while writing XML file: %s', $xml_file);
 					return $check;
+				} else {
+					/* are we allowed to write the rrd file? */
+					if (is_writable($file)) {
+						// restore the modified XML to rrd
+						if (!rrd_maintenance_restore($xml_file, $file, $rrdtool_pipe)) {
+							return array('err_msg' => __('RRD restore failed; original and recovery XML preserved. See application log.'));
+						}
+						// scratch that XML file to avoid filling up the disk
+						unlink($xml_file);
+						cacti_log('Deleted RRA(s) from RRDfile: ' . $file, false, 'UTIL');
+					} else {
+						$check['err_msg'] = __('ERROR: RRDfile %s not writeable', $file);
+						return $check;
+					}
 				}
 			}
 		}
-	}
 
-	rrd_close($rrdtool_pipe);
-
-	return true;
+		return true;
+	});
 }
 
 /**
@@ -4043,59 +4442,61 @@ function rrd_rra_delete($file_array, $rra_array, $debug) {
  * @return (mixed)  success (bool) or error message (array)
  */
 function rrd_rra_clone($file_array, $cf, $rra_array, $debug) {
-	$rrdtool_pipe = rrd_init();
+	return rrd_with_pipe(function ($rrdtool_pipe) use ($file_array, $cf, $rra_array, $debug) {
 
-	/* iterate all given rrd files */
-	foreach ($file_array as $file) {
-		if (!cacti_rrdtool_valid_path($file)) {
-			$check['err_msg'] = __('ERROR: Invalid RRDfile path');
+		/* iterate all given rrd files */
+		foreach ($file_array as $file) {
+			if (!cacti_rrdtool_valid_path($file)) {
+				$check['err_msg'] = __('ERROR: Invalid RRDfile path');
 
-			return $check;
-		}
-
-		// create a DOM document from an rrdtool dump
-		$dom = new domDocument;
-
-		if ($dom->loadXML(rrdtool_execute_path_command('dump', $file, '', false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL')) === false) {
-			$check['err_msg'] = __('Error while parsing the XML of RRDtool dump');
-
-			return $check;
-		}
-
-		// now start XML processing
-		foreach ($rra_array as $rra) {
-			rrd_copy_rra($dom, $cf, $rra, $debug);
-		}
-
-		if ($debug) {
-			print $dom->saveXML();
-		} else {
-			/* for rrdtool restore, we need a file, so write the XML to disk */
-			$xml_file = $file . '.xml';
-			$rc = $dom->save($xml_file);
-			/* verify, if write was successful */
-			if ($rc === false) {
-				$check['err_msg'] = __('ERROR while writing XML file: %s', $xml_file);
 				return $check;
+			}
+
+			// create a DOM document from an rrdtool dump
+			$dom = new domDocument;
+
+			$xml = rrdtool_execute_path_command('dump', $file, '', false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
+			if (!is_string($xml) || $xml === '' || $dom->loadXML($xml) === false) {
+				$check['err_msg'] = __('Error while parsing the XML of RRDtool dump');
+
+				return $check;
+			}
+
+			// now start XML processing
+			foreach ($rra_array as $rra) {
+				rrd_copy_rra($dom, $cf, $rra, $debug);
+			}
+
+			if ($debug) {
+				print $dom->saveXML();
 			} else {
-				/* are we allowed to write the rrd file? */
-				if (is_writable($file)) {
-					// restore the modified XML to rrd
-					rrdtool_execute_restore_command($xml_file, $file, false, RRDTOOL_OUTPUT_STDOUT, $rrdtool_pipe, 'UTIL');
-					// scratch that XML file to avoid filling up the disk
-					unlink($xml_file);
-					cacti_log('Cloned RRA(s) in RRDfile: ' . $file, false, 'UTIL');
-				} else {
-					$check['err_msg'] = __('ERROR: RRDfile %s not writeable', $file);
+				/* for rrdtool restore, we need a file, so write the XML to disk */
+				$xml_file = $file . '.xml';
+				$rc = $dom->save($xml_file);
+				/* verify, if write was successful */
+				if ($rc === false) {
+					$check['err_msg'] = __('ERROR while writing XML file: %s', $xml_file);
 					return $check;
+				} else {
+					/* are we allowed to write the rrd file? */
+					if (is_writable($file)) {
+						// restore the modified XML to rrd
+						if (!rrd_maintenance_restore($xml_file, $file, $rrdtool_pipe)) {
+							return array('err_msg' => __('RRD restore failed; original and recovery XML preserved. See application log.'));
+						}
+						// scratch that XML file to avoid filling up the disk
+						unlink($xml_file);
+						cacti_log('Cloned RRA(s) in RRDfile: ' . $file, false, 'UTIL');
+					} else {
+						$check['err_msg'] = __('ERROR: RRDfile %s not writeable', $file);
+						return $check;
+					}
 				}
 			}
 		}
-	}
 
-	rrd_close($rrdtool_pipe);
-
-	return true;
+		return true;
+	});
 }
 
 /**
@@ -4220,7 +4621,7 @@ function rrd_append_compute_ds($dom, $version, $name, $type, $cdef) {
 function rrd_append_cdp_prep_ds($dom, $version) {
 	/* get all <cdp_prep><ds> entries */
 	#$cdp_prep_list = $xpath->query('/rrd/rra/cdp_prep');
-	$cdp_prep_list = $dom->getElementsByTagName('rra')->item(0)->getElementsByTagName('cdp_prep');
+	$cdp_prep_list = $dom->getElementsByTagName('cdp_prep');
 
 	/* get XPATH notation required for positioning */
 	#$xpath = new DOMXPath($dom);
@@ -4247,7 +4648,7 @@ function rrd_append_cdp_prep_ds($dom, $version) {
 		foreach ($cdp_prep_list as $cdp_prep) {
 			/* $cdp_prep now points to the next <cdp_prep> XML Element
 			 * and append new ds entry at end of <cdp_prep> child list */
-			$cdp_prep->appendChild($new_ds);
+			$cdp_prep->appendChild($new_ds->cloneNode(true));
 		}
 	}
 }
@@ -4275,7 +4676,7 @@ function rrd_append_value($dom) {
 		foreach ($itemList as $item) {
 			/* $item now points to the next <cdp_prep> XML Element
 			 * and append new ds entry at end of <cdp_prep> child list */
-			$item->appendChild($new_v);
+			$item->appendChild($new_v->cloneNode(true));
 		}
 	}
 }

@@ -6,6 +6,7 @@
 	<testsuites>
 		<testsuite name="Boost MariaDB">
 			<file>./integration/BoostProcessTableMariaDbTest.php</file>
+			<file>./integration/DurablePollerQueueMariaDbTest.php</file>
 		</testsuite>
 	</testsuites>
 </phpunit>

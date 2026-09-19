@@ -404,6 +404,30 @@ class spikekill {
 	}
 
 	public function remove_spikes() {
+		require_once __DIR__ . '/rrd_maintenance.php';
+		/* An external cache daemon can write after its client returns and
+		 * therefore does not participate in our local child lifetime lock. */
+		if (getenv('RRDCACHED_ADDRESS')) {
+			$this->set_error(__('FATAL: Stop external RRD writers and disable RRDCACHED_ADDRESS before spike removal.'));
+			return false;
+		}
+
+		// Wait through brief polling contention, with a bounded deadline.
+		$lock = rrd_maintenance_acquire(true, false, min(60, $this->commandTimeout()), $busy);
+		if ($lock === false) {
+			$this->set_error($busy ? __('FATAL: RRD storage is busy. Retry after polling completes.') :
+				__('FATAL: RRD storage is untrusted or unavailable. Run cli/upgrade_database.php --check-rrd-storage as the web service account and correct its storage configuration.'));
+			return false;
+		}
+
+		try {
+			return $this->remove_spikes_locked();
+		} finally {
+			rrd_maintenance_release($lock);
+		}
+	}
+
+	private function remove_spikes_locked() {
 		global $config;
 
 		$this->strout = '';
@@ -1310,9 +1334,11 @@ class spikekill {
 			$read   = $capture_stdout ? array($pipes[1], $pipes[2]) : array($pipes[2]);
 			$write  = array();
 			$except = array();
-			stream_select($read, $write, $except, intdiv($remaining, 1000000), $remaining % 1000000);
+			$ready = stream_select($read, $write, $except, intdiv($remaining, 1000000), $remaining % 1000000);
 
-			usleep(50000);
+			if ($ready === false || $ready === 0 || (feof($pipes[2]) && (!$capture_stdout || feof($pipes[1])))) {
+				usleep(1000);
+			}
 
 			$status = proc_get_status($process);
 
@@ -1410,7 +1436,7 @@ class spikekill {
 	private function commandTimeout() {
 		$configured = (int) read_config_option('spikekill_timeout');
 
-		return $configured > 0 ? $configured : 3600;
+		return $configured > 0 ? min($configured, 28800) : 3600;
 	}
 
 	/**
@@ -1440,31 +1466,8 @@ class spikekill {
 	 * belongs to the current account or root. Windows needs ACL-aware support.
 	 */
 	private function directoryPathIsTrusted($path) {
-		if (!function_exists('posix_geteuid') || DIRECTORY_SEPARATOR === '\\') {
-			return false;
-		}
-		$uid = posix_geteuid();
-		$child = @stat($path);
-		if ($child === false || !in_array($child['uid'], array(0, $uid), true) || ($child['mode'] & 0022) !== 0) {
-			return false;
-		}
-		while ($child !== false) {
-			$parent_path = dirname($path);
-			$parent = @stat($parent_path);
-			if ($parent === false || !in_array($parent['uid'], array(0, $uid), true)) {
-				return false;
-			}
-			if (($parent['mode'] & 0022) !== 0
-				&& (!(($parent['mode'] & 01000) !== 0) || !in_array($child['uid'], array(0, $uid), true))) {
-				return false;
-			}
-			if ($parent_path === $path) {
-				return true;
-			}
-			$path = $parent_path;
-			$child = $parent;
-		}
-		return false;
+		require_once __DIR__ . '/rrd_maintenance.php';
+		return rrd_maintenance_directory_is_trusted($path);
 	}
 
 	/**
@@ -1731,6 +1734,9 @@ class spikekill {
 						foreach($dses as $dskey => $ds) {
 							/* Empty or sparse RRAs use nonnumeric sentinels. Preserve
 							 * missing statistics instead of rounding or formatting them as zero. */
+							if (!isset($ds['stddev']) || !is_numeric($ds['stddev']) || !is_finite((float) $ds['stddev'])) {
+								$ds['min_cutoff'] = $ds['max_cutoff'] = 'N/A';
+							}
 							foreach (array('average', 'stddev', 'variance_avg', 'max_value', 'min_value', 'max_cutoff', 'min_cutoff') as $field) {
 								if (empty($ds['numsamples']) || !isset($ds[$field]) || !is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
 									$ds[$field] = 'N/A';
@@ -1776,6 +1782,9 @@ class spikekill {
 						foreach($dses as $dskey => $ds) {
 							/* Empty or sparse RRAs use nonnumeric sentinels. Preserve
 							 * missing statistics instead of rounding or formatting them as zero. */
+							if (!isset($ds['stddev']) || !is_numeric($ds['stddev']) || !is_finite((float) $ds['stddev'])) {
+								$ds['min_cutoff'] = $ds['max_cutoff'] = 'N/A';
+							}
 							foreach (array('average', 'stddev', 'variance_avg', 'max_value', 'min_value', 'max_cutoff', 'min_cutoff') as $field) {
 								if (empty($ds['numsamples']) || !isset($ds[$field]) || !is_numeric($ds[$field]) || !is_finite((float) $ds[$field])) {
 									$ds[$field] = 'N/A';

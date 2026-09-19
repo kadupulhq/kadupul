@@ -60,7 +60,7 @@ test('without the configured administrator an enabled settings user is chosen', 
 	$updates = no_auth_executed($result, 'UPDATE user_auth');
 
 	expect($updates)->toHaveCount(1)
-		->and($updates[0]['params'])->toBe(array(7))
+		->and(array_map('strval', $updates[0]['params']))->toBe(array('7'))
 		->and($result['session'])->not->toHaveKey('sess_user_id')
 		->and($result['config_writes'])->toContain(array('auth_method', 1));
 });
@@ -78,7 +78,7 @@ test('a disabled configured administrator is passed over for an enabled settings
 	$updates = no_auth_executed($result, 'UPDATE user_auth');
 
 	expect($updates)->toHaveCount(1)
-		->and($updates[0]['params'])->toBe(array(7))
+		->and(array_map('strval', $updates[0]['params']))->toBe(array('7'))
 		->and($result['session'])->not->toHaveKey('sess_user_id')
 		->and($result['session'])->not->toHaveKey('sess_change_password')
 		->and($result['events'])->not->toContain('cookie_set')
@@ -99,7 +99,7 @@ test('without the configured administrator a settings user from an enabled group
 	$updates = no_auth_executed($result, 'UPDATE user_auth');
 
 	expect($updates)->toHaveCount(1)
-		->and($updates[0]['params'])->toBe(array(9));
+		->and(array_map('strval', $updates[0]['params']))->toBe(array('9'));
 });
 
 test('without an administrator account the install still leaves no authentication', function () {

@@ -1399,7 +1399,7 @@ function data_query() {
 		ON (sq.data_input_id=di.id)
 		$sql_where");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('name', 'id', 'graphs', 'templates', 'data_input_method'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$snmp_queries = db_fetch_assoc("SELECT sq.id, sq.name,

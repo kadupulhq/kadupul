@@ -53,11 +53,11 @@ function rrdPathGuard_cacti_sizeof($value) {
 }
 
 function rrdPathGuard_cacti_rrdtool_valid_ds_name($name) {
-	return true;
+	return (bool) preg_match('/^[a-zA-Z0-9_]{1,19}$/D', $name);
 }
 
 function rrdPathGuard_cacti_rrdtool_valid_ds_template($template) {
-	return true;
+	return $template !== '' && strpos($template, ' ') === false;
 }
 
 function rrdPathGuard_cacti_has_control_chars($value) {
@@ -75,7 +75,7 @@ function rrdPathGuard_cacti_version_compare($a, $b, $operator) {
 function rrdPathGuard_rrdtool_execute($command) {
 	$GLOBALS['rrd_path_guard']['executed'][] = $command;
 
-	return 'OK';
+	return true;
 }
 
 function rrdPathGuardLoad($root) {
@@ -138,9 +138,10 @@ afterEach(function () {
 });
 
 test('the poller refuses to update an existing RRD reached through traversal', function () {
-	expect(rrdPathGuard_rrdtool_function_update(rrdPathGuardCache($this->tmp . '/rra/../outside/evil.rrd')))->toBe(0)
+	expect(rrdPathGuard_rrdtool_function_update(rrdPathGuardCache($this->tmp . '/rra/../outside/evil.rrd')))->toBeFalse()
 		->and($GLOBALS['rrd_path_guard']['executed'])->toBe(array())
-		->and($GLOBALS['rrd_path_guard']['logs'])->toBe(array('ERROR: Invalid RRD file path in poller cache for local_data_id: 12.'));
+		->and($GLOBALS['rrd_path_guard']['logs'][0])->toBe('ERROR: Invalid RRD file path in poller cache for local_data_id: 12.')
+		->and($GLOBALS['rrd_path_guard']['logs'][1])->toContain('Invalid RRD sample path (not written)');
 });
 
 test('the poller still updates an RRD under the RRA directory and at a custom location', function () {
@@ -167,3 +168,16 @@ test('create still finds an existing RRD at a custom location', function () {
 	expect(rrdPathGuard_rrdtool_function_create(12, false))->toBe(-1)
 		->and($GLOBALS['rrd_path_guard']['logs'])->toBe(array());
 });
+
+
+test('local invalid samples are consumed without blocking valid sibling samples', function ($kind) {
+    $path = $this->tmp . '/rra/5/12.rrd';
+    $invalid_time = $kind === 'time' ? 'invalid-time' : 1000;
+    $bad = $kind === 'ds' ? array('bad ds' => '1') : ($kind === 'template' ? array() : array('ds' => '1'));
+    $updates = array($path => array('local_data_id' => 12, 'data_template_id' => 0, 'times' => array($invalid_time => $bad, 1001 => array('ds' => '2'))));
+    expect(rrdPathGuard_rrdtool_function_update($updates, false, $completed))->toBeFalse();
+    expect($completed[$path])->toHaveCount(2);
+    expect($GLOBALS['rrd_path_guard']['executed'])->toHaveCount(1);
+    expect($GLOBALS['rrd_path_guard']['executed'][0])->toContain('1001:2');
+    expect(implode("\n", $GLOBALS['rrd_path_guard']['logs']))->toContain('not written');
+})->with(array('time','ds','template'));

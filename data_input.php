@@ -213,6 +213,11 @@ function data_input_save_message($data_input_id, $type = 'input') {
 		WHERE di.id = ?",
 		array($data_input_id));
 
+	if (!cacti_sizeof($counts) || !isset($counts['templates'], $counts['data_sources'])) {
+		raise_message(2);
+		return;
+	}
+
 	if ($counts['templates'] == 0 && $counts['data_sources'] == 0) {
 		raise_message(1);
 	} elseif ($counts['templates'] > 0 && $counts['data_sources'] == 0) {
@@ -333,14 +338,19 @@ function field_remove_confirm() {
 	get_filter_request_var('data_input_id');
 	/* ==================================================== */
 
-	form_start('data_input.php?action=edit&id' . get_request_var('data_input_id'));
-
-	html_start_box('', '100%', '', '3', 'center', '');
-
 	$field = db_fetch_row_prepared('SELECT *
 		FROM data_input_fields
 		WHERE id = ?',
 		array(get_request_var('id')));
+
+	if (!cacti_sizeof($field)) {
+		raise_message(2);
+		return;
+	}
+
+	form_start('data_input.php?action=edit&id' . get_request_var('data_input_id'));
+
+	html_start_box('', '100%', '', '3', 'center', '');
 
 	?>
 	<tr>
@@ -393,6 +403,11 @@ function field_remove() {
 		WHERE id = ?',
 		array(get_request_var('id')));
 
+	if (!cacti_sizeof($field)) {
+		raise_message(2);
+		return;
+	}
+
 	db_execute_prepared('DELETE FROM data_input_fields WHERE id = ?', array(get_request_var('id')));
 	db_execute_prepared('DELETE FROM data_input_data WHERE data_input_field_id = ?', array(get_request_var('id')));
 
@@ -426,11 +441,20 @@ function field_edit() {
 			FROM data_input_fields
 			WHERE id = ?',
 			array(get_request_var('id')));
+
+		if (!cacti_sizeof($field)) {
+			raise_message(2);
+			return;
+		}
 	}
 
 	if (!isempty_request_var('type')) {
 		$current_field_type = get_request_var('type');
 	} else {
+		if (!isset($field['input_output'])) {
+			raise_message(2);
+			return;
+		}
 		$current_field_type = $field['input_output'];
 	}
 
@@ -438,6 +462,11 @@ function field_edit() {
 		FROM data_input
 		WHERE id = ?',
 		array(get_request_var('data_input_id')));
+
+	if (!cacti_sizeof($data_input)) {
+		raise_message(2);
+		return;
+	}
 
 	/* obtain a list of available fields for this given field type (input/output) */
 	if (($current_field_type == 'in') && (preg_match_all('/<([_a-zA-Z0-9]+)>/', db_fetch_cell_prepared('SELECT input_string FROM data_input WHERE id = ?', array(!isempty_request_var('data_input_id') ? get_request_var('data_input_id') : $field['data_input_id'])), $matches))) {
@@ -536,6 +565,11 @@ function data_edit() {
 			FROM data_input
 			WHERE id = ?',
 			array(get_request_var('id')));
+
+		if (!cacti_sizeof($data_input)) {
+			raise_message(2);
+			return;
+		}
 
 		$header_label = __esc('Data Input Method [edit: %s]', $data_input['name']);
 	} else {
@@ -901,7 +935,7 @@ function data() {
 		FROM data_input AS di
 		$sql_where");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('name', 'id', 'data_sources', 'templates', 'type_id'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$data_inputs = db_fetch_assoc("SELECT di.*,

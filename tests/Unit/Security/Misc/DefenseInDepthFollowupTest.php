@@ -48,17 +48,15 @@ test('cacti_path_is_within helper exists in functions.php', function () use ($fu
 });
 
 test('cacti_path_is_within uses realpath for both candidate and base', function () use ($funcSource) {
-	$start = strpos($funcSource, 'function cacti_path_is_within(');
-	$body = substr($funcSource, $start, 800);
+	$body = test_php_function_source($funcSource, 'cacti_path_is_within');
 	expect($body)->toContain('realpath($candidate)');
 	expect($body)->toContain('realpath($base)');
 });
 
 test('cacti_path_is_within handles Windows case-insensitive comparison', function () use ($funcSource) {
-	$start = strpos($funcSource, 'function cacti_path_is_within(');
-	$body = substr($funcSource, $start, 800);
+	$body = test_php_function_source($funcSource, 'cacti_path_is_within');
 	expect($body)->toContain("DIRECTORY_SEPARATOR === '\\\\'");
-	expect($body)->toContain('strtolower(');
+	expect($body)->toContain('cacti_normalize_windows_path($resolved)');
 });
 
 // --- index.php uses cacti_path_is_within ---
@@ -69,8 +67,8 @@ test('index.php uses cacti_path_is_within for include path validation', function
 
 // --- script_server.php uses cacti_path_is_within ---
 
-test('script_server.php uses cacti_path_is_within for include path validation', function () use ($ssSource) {
-	expect($ssSource)->toContain('cacti_path_is_within(');
+test('script_server.php validates includes against its allowed roots', function () use ($ssSource) {
+	expect($ssSource)->toContain('script_server_path_is_allowed($real_include, $allowed_roots)');
 });
 
 // --- link.php uses cacti_path_is_within ---
@@ -83,25 +81,15 @@ test('link.php confines local content includes to regular files inside include/c
 
 // --- db_replace redaction ---
 
-test('db_replace redacts snmp_auth_passphrase', function () use ($dbSource) {
-	expect($dbSource)->toContain("'snmp_auth_passphrase'");
-});
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+eval(test_php_function_source($funcSource, 'cacti_is_sensitive_key'));
 
-test('db_replace redacts rsa_private_key', function () use ($dbSource) {
-	expect($dbSource)->toContain("'rsa_private_key'");
-});
-
-test('db_replace redacts secret', function () use ($dbSource) {
-	expect($dbSource)->toContain("'secret'");
-});
-
-test('db_replace redacts auth_key', function () use ($dbSource) {
-	expect($dbSource)->toContain("'auth_key'");
-});
-
-test('db_replace redacts priv_key', function () use ($dbSource) {
-	expect($dbSource)->toContain("'priv_key'");
-});
+test('db_replace delegates credential detection to the shared sensitive-key policy', function ($key) use ($dbSource) {
+    $body = test_php_function_source($dbSource, 'db_replace');
+    expect($body)->toContain('cacti_is_sensitive_key($field)')
+        ->and($body)->toContain("\$log_items[\$field] = '********'")
+        ->and(cacti_is_sensitive_key($key))->toBeTrue();
+})->with(array('snmp_auth_passphrase', 'rsa_private_key', 'secret', 'auth_key', 'priv_key'));
 
 // --- boost path confinement ---
 

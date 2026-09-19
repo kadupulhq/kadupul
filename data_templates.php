@@ -1173,7 +1173,7 @@ function template() {
 			$sql_having
 		) AS rs");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('name', 'id', 'data_sources', 'data_input_method', 'profile_name', 'active'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$template_list_sql = "SELECT dt.id, dt.name,

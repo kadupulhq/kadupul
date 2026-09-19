@@ -781,7 +781,7 @@ function automation_snmp() {
 		$sql_where
 		GROUP BY asnmp.id");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('name', 'networks', 'totals', 'v1entries', 'v2entries', 'v3entries'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$snmp_groups = db_fetch_assoc("SELECT asnmp.*, COUNT(anw.id) AS networks,

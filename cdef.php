@@ -849,7 +849,7 @@ function cdef() {
 			$sql_having
 		) AS rs");
 
-	$sql_order = get_order_string();
+	$sql_order = get_order_string(array('name', 'graphs', 'templates'));
 	$sql_limit = ' LIMIT ' . ($rows*(get_request_var('page')-1)) . ',' . $rows;
 
 	$cdef_list = db_fetch_assoc("SELECT rs.*,
