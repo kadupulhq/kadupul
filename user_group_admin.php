@@ -189,6 +189,29 @@ if (isset_request_var('update_policy')) {
     Actions Function
    -------------------------- */
 
+/* A group mutation must name a group that exists; a forged id would otherwise
+   write realm, permission, member or setting rows for no group at all. */
+function user_group_exists($id) {
+	return $id > 0 && db_fetch_cell_prepared('SELECT COUNT(*) FROM user_auth_group WHERE id = ?', array($id)) > 0;
+}
+
+function user_group_refuse($id) {
+	cacti_log('WARNING: Refused a change to missing User Group ID ' . $id . ' from IP ' . get_client_addr(), false, 'AUTH');
+	raise_message('permission_denied');
+	header('Location: user_group_admin.php?header=false');
+	exit;
+}
+
+/* The edit page switches a console landing page to the graphs page when the
+   group lacks console access; the stored value must follow the same rule. */
+function user_group_login_opts($login_opts, $group_id) {
+	if ((string) $login_opts === '2' && !is_user_group_realm_allowed(8, $group_id)) {
+		return '3';
+	}
+
+	return $login_opts;
+}
+
 function user_group_disable($id) {
 	db_execute_prepared("UPDATE user_auth_group SET enabled = '' WHERE id = ?", array($id));
 
@@ -266,6 +289,10 @@ function user_group_copy($id, $prefix = 'New Group') {
 function update_policies() {
 	csrf_require_post(true);
 
+	if (!user_group_exists(get_filter_request_var('id'))) {
+		user_group_refuse(get_filter_request_var('id'));
+	}
+
 	$policies = array('policy_graphs', 'policy_trees', 'policy_hosts', 'policy_graph_templates');
 
 	foreach ($policies as $p) {
@@ -282,6 +309,14 @@ function update_policies() {
 
 function form_actions() {
 	global $group_actions, $user_auth_realms;
+
+	$associating = isset_request_var('associate_host') || isset_request_var('associate_graph')
+		|| isset_request_var('associate_template') || isset_request_var('associate_tree')
+		|| isset_request_var('associate_member');
+
+	if ($associating && !user_group_exists(get_filter_request_var('id'))) {
+		user_group_refuse(get_filter_request_var('id'));
+	}
 
 	/* if we are to save this form, instead of display it */
 	if (isset_request_var('associate_host')) {
@@ -417,6 +452,12 @@ function form_actions() {
 		$selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
 
 		if ($selected_items != false) {
+			foreach ($selected_items as $selected) {
+				if (!user_group_exists($selected)) {
+					user_group_refuse($selected);
+				}
+			}
+
 			if (get_nfilter_request_var('drp_action') == '1') { /* delete */
 				for ($i=0;($i<cacti_count($selected_items));$i++) {
 					user_group_remove($selected_items[$i]);
@@ -561,6 +602,11 @@ function form_save() {
 		get_filter_request_var('realm');
 		/* ==================================================== */
 
+		/* id 0 creates a group; any other id must be one that exists. */
+		if (get_request_var('id') != 0 && !user_group_exists(get_request_var('id'))) {
+			user_group_refuse(get_request_var('id'));
+		}
+
 		/* check duplicate group */
 		if (cacti_sizeof(db_fetch_row_prepared('SELECT * FROM user_auth_group WHERE name = ? AND id != ?', array(get_nfilter_request_var('name'), get_nfilter_request_var('id'))))) {
 			raise_message(12);
@@ -573,7 +619,7 @@ function form_save() {
 		$save['show_list']      = form_input_validate(get_nfilter_request_var('show_list', ''), 'show_list', '', true, 3);
 		$save['show_preview']   = form_input_validate(get_nfilter_request_var('show_preview', ''), 'show_preview', '', true, 3);
 		$save['graph_settings'] = form_input_validate(get_nfilter_request_var('graph_settings', ''), 'graph_settings', '', true, 3);
-		$save['login_opts']     = form_input_validate(get_nfilter_request_var('login_opts'), 'login_opts', '', true, 3);
+		$save['login_opts']     = form_input_validate(user_group_login_opts(get_nfilter_request_var('login_opts'), get_filter_request_var('id')), 'login_opts', '', true, 3);
 		$save['enabled']        = form_input_validate(get_nfilter_request_var('enabled', ''), 'enabled', '', true, 3);
 
 		$save = api_plugin_hook_function('user_group_admin_setup_sql_save', $save);
@@ -593,6 +639,10 @@ function form_save() {
 		header('Location: user_group_admin.php?action=edit&header=false&tab=general&id=' . (isset($group_id) && $group_id > 0 ? $group_id : get_nfilter_request_var('id')));
 		exit;
 	} elseif (isset_request_var('save_component_realm_perms')) {
+		if (!user_group_exists(get_filter_request_var('id'))) {
+			user_group_refuse(get_filter_request_var('id'));
+		}
+
 		db_execute_prepared('DELETE FROM user_auth_group_realm WHERE group_id = ?', array(get_filter_request_var('id')));
 
 		foreach ($_POST as $var => $val) {
@@ -610,6 +660,10 @@ function form_save() {
 		header('Location: user_group_admin.php?action=edit&header=false&tab=realms&id=' . get_request_var('id'));
 		exit;
 	} elseif (isset_request_var('save_component_graph_settings')) {
+		if (!user_group_exists(get_filter_request_var('id'))) {
+			user_group_refuse(get_filter_request_var('id'));
+		}
+
 		foreach ($settings_user as $tab_short_name => $tab_fields) {
 			foreach ($tab_fields as $field_name => $field_array) {
 				if ((isset($field_array['items'])) && (is_array($field_array['items']))) {
@@ -647,6 +701,10 @@ function perm_remove() {
 	get_filter_request_var('id');
 	get_filter_request_var('group_id');
 	/* ==================================================== */
+
+	if (!user_group_exists(get_request_var('group_id'))) {
+		user_group_refuse(get_request_var('group_id'));
+	}
 
 	if (get_request_var('type') == 'graph') {
 		db_execute_prepared('DELETE FROM user_auth_group_perms WHERE type=1 AND group_id = ? AND item_id = ?', array(get_request_var('group_id'), get_request_var('id')));

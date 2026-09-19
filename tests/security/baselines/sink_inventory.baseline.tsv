@@ -995,6 +995,7 @@ header_redirect	./user_group_admin.php:1827				header('Location: user_group_admi
 header_redirect	./user_group_admin.php:1835				header('Location: user_group_admin.php&header=false');
 header_redirect	./user_group_admin.php:1846				header('Location: user_group_admin.php&header=false');
 header_redirect	./user_group_admin.php:1854				header('Location: user_group_admin.php&header=false');
+header_redirect	./user_group_admin.php:201		header('Location: user_group_admin.php?header=false');
 header_redirect	./user_group_admin.php:279		header('Location: user_group_admin.php?action=edit&header=false&tab=' .  get_nfilter_request_var('tab') . '&id=' . get_filter_request_var('id'));
 header_redirect	./user_group_admin.php:311			header('Location: user_group_admin.php?action=edit&header=false&tab=permsd&id=' . get_nfilter_request_var('id'));
 header_redirect	./user_group_admin.php:337			header('Location: user_group_admin.php?action=edit&header=false&tab=permsg&id=' . get_nfilter_request_var('id'));
