@@ -358,6 +358,39 @@ function form_save() {
     The "actions" function
    ------------------------ */
 
+/* A template is in use once a data source is built from it, which is what the
+   list counts as Data Sources Using. */
+function data_templates_data_sources($data_template_id) {
+	return db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM data_template_data
+		WHERE data_template_id = ?
+		AND local_data_id > 0',
+		array($data_template_id));
+}
+
+/* The list disables the checkbox of a template in use, but the request names
+   the ids, so the delete checks again. Deleting one would detach its data
+   sources from their template. */
+function data_templates_unused($selected_items) {
+	$unused = array();
+
+	foreach ($selected_items as $id) {
+		$data_sources = data_templates_data_sources($id);
+
+		if ($data_sources > 0) {
+			cacti_log('WARNING: Refused to delete Data Template ' . (int) $id . ', which ' . (int) $data_sources . ' Data Source(s) use', false, 'AUTH');
+		} else {
+			$unused[] = $id;
+		}
+	}
+
+	if (cacti_sizeof($unused) < cacti_sizeof($selected_items)) {
+		raise_message('data_template_in_use', __('Data Templates in use by a Data Source were not deleted.'), MESSAGE_LEVEL_ERROR);
+	}
+
+	return $unused;
+}
+
 function form_actions() {
 	global $ds_actions;
 
@@ -368,6 +401,10 @@ function form_actions() {
 	/* if we are to save this form, instead of display it */
 	if (isset_request_var('selected_items')) {
 		$selected_items = sanitize_unserialize_selected_items(get_nfilter_request_var('selected_items'));
+
+		if ($selected_items != false && get_nfilter_request_var('drp_action') == '1') {
+			$selected_items = data_templates_unused($selected_items);
+		}
 
 		if ($selected_items != false) {
 			if (get_nfilter_request_var('drp_action') == '1') { // delete

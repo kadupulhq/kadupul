@@ -159,3 +159,31 @@ test('data template bulk actions refuse any GET that carries selected_items', fu
 	expect(run_page('data_templates.php', 'POST', array('action' => 'actions', 'selected_items' => 'a:1:{i:0;i:3;}', 'drp_action' => '1')))->toBe('handler:form_actions')
 		->and(run_page('data_templates.php', 'GET', array('action' => 'actions', 'drp_action' => '1'), array(), array('HTTP_SEC_FETCH_SITE' => 'same-origin')))->toBe('handler:form_actions');
 });
+
+test('deleting data templates leaves every template that a data source uses', function () {
+	$request = array('action' => 'actions', 'drp_action' => '1', 'selected_items' => serialize(array(3, 4)));
+	$output  = run_page('data_templates.php', 'POST', $request, array('data_sources' => array(3 => 2)), array(), true);
+
+	preg_match_all('/^write:.*$/m', $output, $writes);
+
+	expect($writes[0])->not->toBeEmpty()
+		->and($output)->toContain('log:AUTH:WARNING: Refused to delete Data Template 3, which 2 Data Source(s) use')
+		->and($output)->toContain('header:Location: data_templates.php?header=false');
+
+	foreach ($writes[0] as $write) {
+		expect($write)->toContain('IN (4)')
+			->and($write)->not->toMatch('/IN \([^)]*\b3\b/');
+	}
+
+	$request['selected_items'] = serialize(array(3));
+
+	expect(run_page('data_templates.php', 'POST', $request, array('data_sources' => array(3 => 1)), array(), true))->not->toContain('write:');
+});
+
+test('deleting data templates that no data source uses still deletes them', function () {
+	$output = run_page('data_templates.php', 'POST', array('action' => 'actions', 'drp_action' => '1', 'selected_items' => serialize(array(4, 5))), array(), array(), true);
+
+	expect($output)->toContain('write:DELETE FROM data_template WHERE id IN (4,5)')
+		->and($output)->toContain('write:UPDATE data_local SET data_template_id = 0 WHERE data_template_id IN (4,5)')
+		->and($output)->not->toContain('Refused');
+});
