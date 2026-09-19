@@ -20,6 +20,8 @@
       <file>./Unit/Core/Cli/RemoveSpikesBackupTest.php</file>
       <file>./Unit/Security/Shell/SpikekillStatisticsTest.php</file>
       <file>./Unit/Core/PathHelpersTest.php</file>
+      <file>./Unit/Security/Auth/ReportAdminGroupRealmTest.php</file>
+      <file>./Unit/Security/Auth/ReportMutationCsrfTest.php</file>
       <file>./Unit/ImportPackageFileDestinationTest.php</file>
       <file>./Unit/Core/Poller/PollerBatchLeaseTest.php</file>
       <file>./Unit/Core/Poller/PollerPostRunFailureTest.php</file>

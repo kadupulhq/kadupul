@@ -17,6 +17,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Enforce enabled-group report realms and authorize report item saves, edits and moves against their existing parent (#111).
 - Reject traversal, absolute paths and symlink escapes in package file writes and previews while preserving supported script, resource and plugin destinations (#108).
 - Package import now rejects files for a plugin whose directory is a symlink; install such plugins as real directories under `plugins/` (#108).
 
