@@ -762,8 +762,10 @@ header_redirect	./data_sources.php:481			header('Location: data_sources.php?head
 header_redirect	./data_sources.php:599			header('Location: data_sources.php?header=false');
 header_redirect	./data_sources.php:751		header('Location: data_sources.php?header=false&action=ds_edit&id=' . get_request_var('local_data_id'));
 header_redirect	./data_sources.php:766		header('Location: data_sources.php?header=false&action=ds_edit&id=' . get_request_var('id') . "&view_rrd=$data_template_rrd_id");
+header_redirect	./data_sources.php:769			header('Location: data_sources.php?header=false&action=ds_edit&id=' . get_request_var('local_data_id'));
 header_redirect	./data_sources.php:775		header('Location: data_sources.php?header=false&action=ds_edit&id=' . get_request_var('id'));
 header_redirect	./data_sources.php:784		header('Location: data_sources.php?header=false&action=ds_edit&id=' . get_request_var('id'));
+header_redirect	./data_sources.php:793			header('Location: data_sources.php?header=false&action=ds_edit&id=' . get_request_var('id'));
 header_redirect	./data_sources.php:824				header ('Location: data_sources.php');
 header_redirect	./data_sources.php:99			header ('Location: data_sources.php');
 header_redirect	./data_templates.php:172					header('Location: data_templates.php?header=false&action=template_edit&id=' . (empty($data_template_id) ? get_request_var('data_template_id') : $data_template_id) . (isempty_request_var('current_rrd') ? '' : '&view_rrd=' . (get_nfilter_request_var('current_rrd') ? get_nfilter_request_var('current_rrd') : get_request_var('data_template_rrd_id'))));

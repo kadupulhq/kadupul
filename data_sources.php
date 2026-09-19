@@ -734,10 +734,41 @@ function data_edit($incform = true) {
     Data Source Functions
    ------------------------ */
 
+/* The edit page offers RRD items only on a data source without a data template. */
+function ds_rrd_editable($local_data_id) {
+	$data_template_id = db_fetch_cell_prepared('SELECT data_template_id
+		FROM data_local
+		WHERE id = ?',
+		array($local_data_id));
+
+	return $data_template_id !== false && $data_template_id !== null && (int) $data_template_id === 0;
+}
+
 function ds_rrd_remove() {
 	/* ================= input validation ================= */
 	get_filter_request_var('id');
+	get_filter_request_var('local_data_id');
 	/* ==================================================== */
+
+	/* The item must belong to the data source being edited, which must be untemplated
+	 * and keep at least one item, as the edit page only offers removal then. */
+	$owner = db_fetch_cell_prepared('SELECT local_data_id
+		FROM data_template_rrd
+		WHERE id = ?',
+		array(get_request_var('id')));
+
+	$items = db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM data_template_rrd
+		WHERE local_data_id = ?',
+		array(get_request_var('local_data_id')));
+
+	if ((int) $owner !== (int) get_request_var('local_data_id') || (int) $owner <= 0
+		|| !ds_rrd_editable($owner) || (int) $items <= 1) {
+		cacti_log('WARNING: Refused removing RRD item ' . get_request_var('id') . ' from Local Data ID ' . get_request_var('local_data_id'), false, 'WEBUI');
+		raise_message('permission_denied');
+		header('Location: data_sources.php?header=false&action=ds_edit&id=' . get_request_var('local_data_id'));
+		exit;
+	}
 
 	db_execute_prepared('DELETE FROM data_template_rrd
 		WHERE id = ?',
@@ -755,6 +786,13 @@ function ds_rrd_add() {
 	/* ================= input validation ================= */
 	get_filter_request_var('id');
 	/* ==================================================== */
+
+	if (get_request_var('id') <= 0 || !ds_rrd_editable(get_request_var('id'))) {
+		cacti_log('WARNING: Refused adding an RRD item to Local Data ID ' . get_request_var('id'), false, 'WEBUI');
+		raise_message('permission_denied');
+		header('Location: data_sources.php?header=false&action=ds_edit&id=' . get_request_var('id'));
+		exit;
+	}
 
 	db_execute_prepared("INSERT INTO data_template_rrd
 		(local_data_id, rrd_maximum, rrd_minimum, rrd_heartbeat, data_source_type_id, data_source_name)
