@@ -84,6 +84,10 @@ function run_profiles($method, $action, array $request = array(), array $server 
 		function db_execute($s) { print "EXEC:" . $s . "\n"; }
 		function db_execute_prepared($s, $p = array()) { print "EXEC:" . preg_replace("/\s+/", " ", $s) . " " . json_encode($p) . "\n"; }
 		function db_fetch_cell_prepared($s, $p = array()) {
+			if (strpos($s, "SELECT step") !== false || strpos($s, "SELECT heartbeat") !== false) {
+				return 300;
+			}
+
 			if (strpos($s, "FROM data_source_profiles_rra") !== false) {
 				return (isset($GLOBALS["rras"][$p[0]]) && (string) $GLOBALS["rras"][$p[0]] === (string) $p[1]) ? 1 : 0;
 			}
@@ -93,6 +97,12 @@ function run_profiles($method, $action, array $request = array(), array $server 
 			return strpos($s, "local_data_id > 0") !== false ? $u[1] : $u[0] + $u[1];
 		}
 		function header($h) { print "HEADER:" . $h . "\n"; }
+		function set_request_var($n, $v) { $_REQUEST[$n] = $v; }
+		function form_input_validate($v, $n, $r, $a, $e) { return $v; }
+		function input_validate_input_number($v) {}
+		function is_error_message() { return false; }
+		function get_hash_data_source_profile($i) { return "hash"; }
+		function sql_save($s, $t) { print "SAVE:" . $t . ":" . json_encode($s) . "\n"; return 11; }
 		function top_header() {}
 		function bottom_footer() {}
 		' . $stubs . $functions . '
@@ -201,4 +211,57 @@ test('the profile edit page posts RRA removal with the token and the profile id'
 	expect(preg_match('/^function profile_edit\(\).*?^}\R/ms', $source, $edit))->toBe(1)
 		->and($edit[0])->toContain("\$.post('data_source_profiles.php?action=item_remove', {")
 		->and($edit[0])->toMatch('/__csrf_magic: csrfMagicToken,\s+id: \$\(\'#rra_id\'\)\.val\(\),\s+profile_id: profile_id\s+}\)/');
+});
+
+test('saving a read only profile refuses the fields its edit page disables', function () {
+	$save = array('form_save', 'profile_is_read_only', 'profile_refuse_read_only');
+
+	foreach (array(array('step' => '300', 'heartbeat' => '600'), array('x_files_factor' => '0.5'), array('consolidation_function_id' => array('1'))) as $locked) {
+		$output = run_profiles('POST', 'save', array('save_component_profile' => '1', 'id' => '3', 'name' => 'p') + $locked, array(), $save, array('3' => array(0, 1)));
+
+		expect($output)->toContain('LOG:WEBUI:WARNING: Refused to change the step, X-Files Factor or Consolidation Functions of read only Data Source Profile 3 for user 5')
+			->and($output)->toContain('MESSAGE:profile_read_only')
+			->and($output)->toContain('HEADER:Location: data_source_profiles.php?header=false&action=edit&id=3')
+			->and($output)->not->toContain('SAVE:')
+			->and($output)->not->toContain('EXEC:');
+	}
+
+	$output = run_profiles('POST', 'save', array('save_component_profile' => '1', 'id' => '3', 'name' => 'renamed', 'heartbeat' => '300'), array(), $save, array('3' => array(0, 1)));
+
+	expect($output)->toContain('SAVE:data_source_profiles:{"id":"3","hash":"hash","name":"renamed"}')
+		->and($output)->not->toContain('Refused');
+
+	/* Data Templates alone leave the profile editable, as the edit page does. */
+	$output = run_profiles('POST', 'save', array('save_component_profile' => '1', 'id' => '3', 'name' => 'p', 'step' => '60', 'heartbeat' => '120', 'x_files_factor' => '0.5'), array(), $save, array('3' => array(2, 0)));
+
+	expect($output)->toContain('SAVE:data_source_profiles:{"id":"3","hash":"hash","name":"p","step":"60","heartbeat":"120","x_files_factor":"0.5"}')
+		->and($output)->not->toContain('Refused');
+});
+
+test('saving an RRA refuses one of another profile, and a new or resized RRA of a read only profile', function () {
+	$save = array('form_save', 'profile_is_read_only', 'profile_refuse_read_only');
+
+	$output = run_profiles('POST', 'save', array('save_component_rra' => '1', 'id' => '7', 'profile_id' => '4', 'name' => 'r', 'timespan' => '86400'), array(), $save, array(), array('7' => 3));
+
+	expect($output)->toContain('LOG:WEBUI:WARNING: Refused to save RRA 7 outside Data Source Profile 4 for user 5')
+		->and($output)->not->toContain('SAVE:');
+
+	foreach (array(array('id' => '0', 'steps' => '300', 'rows' => '600'), array('id' => '7', 'steps' => '600'), array('id' => '7', 'rows' => '900')) as $locked) {
+		$output = run_profiles('POST', 'save', array('save_component_rra' => '1', 'profile_id' => '3', 'name' => 'r', 'timespan' => '86400') + $locked, array(), $save, array('3' => array(0, 1)), array('7' => 3));
+
+		expect($output)->toContain('LOG:WEBUI:WARNING: Refused to change the RRAs of read only Data Source Profile 3 for user 5')
+			->and($output)->toContain('MESSAGE:profile_read_only')
+			->and($output)->toContain('HEADER:Location: data_source_profiles.php?header=false&action=edit&id=3')
+			->and($output)->not->toContain('SAVE:');
+	}
+
+	$output = run_profiles('POST', 'save', array('save_component_rra' => '1', 'id' => '7', 'profile_id' => '3', 'name' => 'r', 'timespan' => '86400'), array(), $save, array('3' => array(0, 1)), array('7' => 3));
+
+	expect($output)->toContain('SAVE:data_source_profiles_rra:{"id":"7","name":"r","data_source_profile_id":"3","timespan":"86400"}')
+		->and($output)->not->toContain('Refused');
+
+	$output = run_profiles('POST', 'save', array('save_component_rra' => '1', 'id' => '0', 'profile_id' => '3', 'name' => 'r', 'timespan' => '86400', 'steps' => '600', 'rows' => '700'), array(), $save, array('3' => array(2, 0)));
+
+	expect($output)->toContain('SAVE:data_source_profiles_rra:{"id":"0","name":"r","data_source_profile_id":"3","timespan":"86400","steps":2,"rows":"700"}')
+		->and($output)->not->toContain('Refused');
 });

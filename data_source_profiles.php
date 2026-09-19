@@ -132,6 +132,14 @@ function form_save() {
 	}
 
 	if (isset_request_var('save_component_profile')) {
+		/* The edit page disables these fields, so a browser does not send them. */
+		if (get_request_var('id') > 0 && profile_is_read_only(get_request_var('id'))
+			&& (isset_request_var('step') || isset_request_var('x_files_factor') || isset_request_var('consolidation_function_id'))) {
+			profile_refuse_read_only(get_request_var('id'), 'the step, X-Files Factor or Consolidation Functions');
+
+			return;
+		}
+
 		$save['id']             = form_input_validate(get_request_var('id'), 'id', '^[0-9]+$', false, 3);
 		$save['hash']           = get_hash_data_source_profile(get_request_var('id'));
 
@@ -209,6 +217,31 @@ function form_save() {
 		get_filter_request_var('profile_id');
 		/* ==================================================== */
 
+		/* sql_save() would otherwise move an RRA of any profile into this one. */
+		if (get_request_var('id') > 0) {
+			$owned = db_fetch_cell_prepared('SELECT COUNT(*)
+				FROM data_source_profiles_rra
+				WHERE id = ?
+				AND data_source_profile_id = ?',
+				array(get_request_var('id'), get_request_var('profile_id')));
+
+			if (empty($owned)) {
+				cacti_log('WARNING: Refused to save RRA ' . (int) get_request_var('id') . ' outside Data Source Profile ' . (int) get_request_var('profile_id') . ' for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+
+				header('Location: data_source_profiles.php?header=false');
+
+				return;
+			}
+		}
+
+		/* A read only profile offers no new RRA and disables Steps and Rows. */
+		if (profile_is_read_only(get_request_var('profile_id'))
+			&& (get_request_var('id') == 0 || isset_request_var('steps') || isset_request_var('rows'))) {
+			profile_refuse_read_only(get_request_var('profile_id'), 'the RRAs');
+
+			return;
+		}
+
 		$sampling_interval = db_fetch_cell_prepared('SELECT step
 			FROM data_source_profiles
 			WHERE id = ?',
@@ -247,6 +280,23 @@ function form_save() {
 			header('Location: data_source_profiles.php?header=false&action=edit&id=' . get_request_var('profile_id'));
 		}
 	}
+}
+
+/* A profile is read only once a Data Source uses it, because its RRDfiles
+   already hold the step, the consolidation functions and the RRAs. */
+function profile_is_read_only($profile_id) {
+	return db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM data_template_data
+		WHERE data_source_profile_id = ?
+		AND local_data_id > 0',
+		array($profile_id)) > 0;
+}
+
+function profile_refuse_read_only($profile_id, $what) {
+	cacti_log('WARNING: Refused to change ' . $what . ' of read only Data Source Profile ' . (int) $profile_id . ' for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+	raise_message('profile_read_only', __('Profiles that are in use by Data Sources become read only for now.'), MESSAGE_LEVEL_ERROR);
+
+	header('Location: data_source_profiles.php?header=false&action=edit&id=' . (int) $profile_id);
 }
 
 /* ------------------------
