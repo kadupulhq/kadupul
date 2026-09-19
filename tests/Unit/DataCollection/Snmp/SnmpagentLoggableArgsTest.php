@@ -14,14 +14,14 @@
 
 namespace SnmpagentLoggableArgsTest;
 
-require_once dirname(__DIR__, 2) . '/Helpers/PhpSource.php';
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
 
 // The production helpers run here; the manager row is the only input.
-$functions = file_get_contents(dirname(__DIR__, 3) . '/lib/functions.php');
+$functions = file_get_contents(dirname(__DIR__, 4) . '/lib/functions.php');
 foreach (array('cacti_sizeof', 'cacti_is_sensitive_key', 'cacti_redact_snmp_command') as $name) {
 	eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($functions, $name));
 }
-eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 3) . '/lib/snmpagent.php'), 'snmpagent_loggable_args'));
+eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/snmpagent.php'), 'snmpagent_loggable_args'));
 
 test('a passphrase with a quote is masked even though the shell escaped it', function () {
 	$manager = array('snmp_password' => "it's secret", 'snmp_priv_passphrase' => "pr'iv", 'snmp_community' => '', 'hostname' => 'receiver');
