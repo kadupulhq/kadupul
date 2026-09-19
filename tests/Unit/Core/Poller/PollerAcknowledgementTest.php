@@ -6,7 +6,13 @@
 namespace PollerAcknowledgement;
 
 require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/poller.php'), 'poller_delete_output_rows'));
+function db_affected_rows()
+{
+    return $GLOBALS['ack_db']->query('SELECT changes()')->fetchColumn();
+}
 eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/poller.php'), 'process_poller_output'));
+eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/poller.php'), 'process_poller_output_page'));
 eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/poller_realtime.php'), 'process_poller_output_rt'));
 function cacti_sizeof($v)
 {
@@ -60,6 +66,8 @@ function db_fetch_cell($sql)
 }
 function db_execute_prepared($sql, $params)
 {
+    // SQLite expresses MySQL's binary cast as a BLOB cast.
+    $sql = preg_replace('/\bCAST\(CONVERT\((output|\?) USING utf8mb4\) AS BINARY\)/', 'CAST($1 AS BLOB)', $sql);
     if ($GLOBALS['ack_result'] === false) {
         throw new \RuntimeException('Deleted samples without acknowledgement');
     }
@@ -116,7 +124,7 @@ test('normal and realtime processors delete only acknowledged samples and retain
     expect($values)->toBe($result === false ? array('42','43') : array('43'));
 })->with(array(array(false,false),array(false,1),array(true,false),array(true,1)));
 
-test('MULTI completeness counts active fields while retaining genuinely partial timestamps', function ($unused) {
+test('MULTI completeness counts active fields while retaining genuinely partial timestamps', function ($unused, $recent) {
     $db = $GLOBALS['ack_db'];
     $GLOBALS['debug'] = false;
     $GLOBALS['ack_table'] = 'poller_output';
@@ -128,11 +136,30 @@ test('MULTI completeness counts active fields while retaining genuinely partial 
     if (!$unused) {
         $db->exec('INSERT INTO graph_templates_item VALUES(2)');
     }
-    $db->exec("INSERT INTO poller_output VALUES(1,'','2020-01-01','value:42')");
+    // A partial group is retained while it may still complete, then discarded.
+    $time = $recent ? date('Y-m-d H:i:s', time() - 60) : '2020-01-01';
+    $db->exec("INSERT INTO poller_output VALUES(1,'','$time','value:42')");
     $pipe = true;
     process_poller_output($pipe, 1);
-    $remaining = (int) $db->query("SELECT COUNT(*) FROM poller_output WHERE time='2020-01-01'")->fetchColumn();
-    expect($remaining)->toBe($unused ? 0 : 1);
-    $sample = $GLOBALS['ack_updates']['fixture.rrd']['times'][strtotime('2020-01-01')] ?? null;
+    $remaining = (int) $db->query("SELECT COUNT(*) FROM poller_output WHERE time='$time'")->fetchColumn();
+    expect($remaining)->toBe($unused || !$recent ? 0 : 1);
+    $sample = $GLOBALS['ack_updates']['fixture.rrd']['times'][strtotime($time)] ?? null;
     expect($sample)->toBe($unused ? array('value' => '42') : null);
-})->with(array(true, false));
+})->with(array(true, false))->with(array('recent' => true, 'expired' => false));
+
+test('an unparseable MULTI sample does not discard earlier complete samples for the same RRD', function () {
+    $db = $GLOBALS['ack_db'];
+    $GLOBALS['debug'] = false;
+    $GLOBALS['ack_table'] = 'poller_output';
+    $GLOBALS['ack_result'] = 1;
+    $db->exec("UPDATE data_local SET data_template_id=1; UPDATE poller_item SET rrd_name='',rrd_num=1");
+    $db->exec("CREATE TABLE data_template_rrd(id INTEGER,local_data_id INTEGER,data_source_name TEXT,data_input_field_id INTEGER); INSERT INTO data_template_rrd VALUES(1,1,'value',1)");
+    $db->exec("CREATE TABLE data_input_fields(id INTEGER,data_name TEXT); INSERT INTO data_input_fields VALUES(1,'value')");
+    $db->exec('CREATE TABLE graph_templates_item(task_item_id INTEGER); INSERT INTO graph_templates_item VALUES(1)');
+    // Both samples are older than the expiry window; only the second has no mapped field.
+    $db->exec("INSERT INTO poller_output VALUES(1,'','2020-01-01 00:00:00','value:42'),(1,'','2020-01-01 00:05:00','bogus:7')");
+    $pipe = true;
+    expect(process_poller_output($pipe, 1))->toBe(1);
+    expect($GLOBALS['ack_updates']['fixture.rrd']['times'])->toBe(array(strtotime('2020-01-01 00:00:00') => array('value' => '42')));
+    expect($db->query("SELECT COUNT(*) FROM poller_output WHERE rrd_name=''")->fetchColumn())->toBe(0);
+});

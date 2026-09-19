@@ -67,9 +67,10 @@ function rrd_maintenance_directory_is_trusted($path)
  * for the child. Exclusive maintenance refuses active writers by default;
  * callers may explicitly wait when their operation permits it.
  */
-function rrd_maintenance_acquire($exclusive = false, $wait = false, $timeout = null)
+function rrd_maintenance_acquire($exclusive = false, $wait = false, $timeout = null, &$busy = null)
 {
     global $config;
+    $busy = false;
 
     if (($config['cacti_server_os'] ?? '') === 'win32') {
         return $exclusive ? false : true;
@@ -92,8 +93,10 @@ function rrd_maintenance_acquire($exclusive = false, $wait = false, $timeout = n
     }
     $flags = ($exclusive ? LOCK_EX : LOCK_SH) | (($wait && $timeout === null) ? 0 : LOCK_NB);
     $deadline = hrtime(true) + max(0, (float) $timeout) * 1000000000;
-    while (!@flock($handle, $flags)) {
+    $would_block = 0;
+    while (!@flock($handle, $flags, $would_block)) {
         if ($timeout === null || hrtime(true) >= $deadline) {
+            $busy = $would_block === 1;
             fclose($handle);
             return false;
         }
@@ -113,9 +116,10 @@ function rrd_maintenance_acquire($exclusive = false, $wait = false, $timeout = n
 }
 
 /** Lock configured storage and every possible trusted root for custom RRD paths. */
-function rrd_maintenance_acquire_paths($files, $timeout = 0)
+function rrd_maintenance_acquire_paths($files, $timeout = 0, &$busy = null)
 {
     global $config;
+    $busy = false;
     $had_path = array_key_exists('rra_path', $config);
     $saved_path = $config['rra_path'] ?? null;
     $original = $config['rra_path'] ?? (($config['base_path'] ?? '') . '/rra');
@@ -156,7 +160,7 @@ function rrd_maintenance_acquire_paths($files, $timeout = 0)
     try {
         foreach ($directories as $directory => $_) {
             $config['rra_path'] = $directory;
-            $lock = rrd_maintenance_acquire(true, $timeout > 0, max(0, $deadline - microtime(true)));
+            $lock = rrd_maintenance_acquire(true, $timeout > 0, max(0, $deadline - microtime(true)), $busy);
             if ($lock === false) {
                 rrd_maintenance_release($locks);
                 return false;
@@ -281,10 +285,39 @@ function rrd_maintenance_cli_preflight()
 function rrd_maintenance_configuration_error()
 {
     global $config;
-    if (($config['cacti_server_os'] ?? '') === 'win32' || read_config_option('storage_location')) {
+    if (read_config_option('storage_location') && ($config['force_storage_location_local'] ?? false) !== true) {
         return '';
     }
     $path = $config['rra_path'] ?? (($config['base_path'] ?? '') . '/rra');
+    if (($config['cacti_server_os'] ?? '') === 'win32') {
+        // Windows directory read-only attributes do not establish ACL access.
+        // Probe the actual service account's create/read/write/delete capability.
+        if (is_dir($path) && is_readable($path)) {
+            $probe = $path . DIRECTORY_SEPARATOR . '.kadupul-write-' . bin2hex(random_bytes(16));
+            $handle = @fopen($probe, 'x+b');
+            if ($handle !== false) {
+                try {
+                    $writable = fwrite($handle, '1') === 1 && fflush($handle)
+                        && rewind($handle) && fread($handle, 1) === '1';
+                    $closed = fclose($handle);
+                    $removed = @unlink($probe);
+                } finally {
+                    // Retain a failed result even if this cleanup retry succeeds.
+                    if (is_resource($handle)) {
+                        @fclose($handle);
+                    }
+                    if (file_exists($probe)) {
+                        @unlink($probe);
+                    }
+                }
+                if ($writable && $closed && $removed) {
+                    return '';
+                }
+            }
+        }
+        return __('RRD storage is not ready: the configured directory must exist and allow this service account to create, read, write and remove files.')
+            . ' [path=' . $path . ']';
+    }
     if (rrd_maintenance_directory_is_trusted($path) && is_readable($path) && is_writable($path)) {
         return '';
     }
@@ -296,7 +329,7 @@ function rrd_maintenance_configuration_error()
 function rrd_maintenance_restore($xml_file, $rrd_file, $pipe)
 {
     global $config;
-    if (is_array($pipe) && read_config_option('storage_location') && empty($config['force_storage_location_local'])) {
+    if (is_array($pipe) && read_config_option('storage_location') && ($config['force_storage_location_local'] ?? false) !== true) {
         if (strpbrk($xml_file . $rrd_file, "\r\n\0") !== false) {
             return false;
         }
@@ -485,15 +518,28 @@ function rrd_maintenance_restore_command($binary, $xml_file, $rrd_file, $range_c
     });
 }
 
-/** Stop collection before a bad storage configuration can fill the MEMORY queue. */
-function rrd_maintenance_poller_preflight()
+/** Require durable storage before accepting retryable collector samples. */
+function rrd_maintenance_queue_configuration_error($queue_connection = false)
 {
-    $error = rrd_maintenance_configuration_error();
+    $engine = db_fetch_cell_prepared('SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?', array('poller_output'), '', true, $queue_connection);
+    if (is_string($engine) && strtolower($engine) === 'innodb') {
+        return '';
+    }
+    return sprintf(__('The poller_output queue must use InnoDB before collection. Stop all collectors, including remote collectors, and run cli/upgrade_database.php --migrate-poller-queue (or convert poller_output to InnoDB after a backup). Observed engine: %s. Retained samples must not be discarded to clear this condition.'), is_string($engine) && $engine !== '' ? $engine : __('unavailable'));
+}
+
+/** Stop collection before unsafe storage or a volatile retry queue can lose samples. */
+function rrd_maintenance_poller_preflight($check_storage = true, $queue_connection = false)
+{
+    $error = $check_storage ? rrd_maintenance_configuration_error() : '';
+    if ($error === '') {
+        $error = rrd_maintenance_queue_configuration_error($queue_connection);
+    }
     if ($error === '') {
         return true;
     }
-    cacti_log('ERROR: Poller refused unsafe RRD storage: ' . $error, true, 'POLLER');
-    if (function_exists('admin_email')) {
+    cacti_log('ERROR: Poller refused unsafe RRD storage or queue: ' . $error, true, 'POLLER');
+    if (function_exists('admin_email') && debounce_run_notification('rrd_preflight_refused', 1800)) {
         admin_email(__('RRD storage configuration requires attention'), $error);
     }
     return false;
@@ -505,4 +551,12 @@ function rrd_maintenance_command_timeout()
     global $config;
     $seconds = $config['rrd_maintenance_command_timeout'] ?? 300;
     return is_numeric($seconds) && $seconds > 0 ? min(28800, (float) $seconds) : 300;
+}
+
+/** Windows has no validated exclusive local storage lease for automatic cleanup. */
+function rrd_maintenance_cleanup_supported()
+{
+    global $config;
+    return ($config['cacti_server_os'] ?? '') !== 'win32' ||
+        (read_config_option('storage_location') && ($config['force_storage_location_local'] ?? false) !== true);
 }

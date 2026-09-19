@@ -24,10 +24,15 @@ Most of the 126 tables are configuration and must come across intact. A
 meaningful minority are local state that the poller rebuilds on its next cycle,
 and copying them wastes time and imports staleness.
 
-State, not configuration: `poller_output` and its boost and realtime variants,
-`poller_item`, `poller_time`, `host_snmp_cache`, and the whole
-`data_source_stats_*` family. Truncate these and let the first cycle repopulate
-them.
+Poller output queues contain measurements that may not yet exist in the RRD
+files. Preserve `poller_output` and its boost and realtime variants until their
+samples have been acknowledged; do not truncate them during migration. See the
+[durable-queue upgrade procedure](upgrading-rrd-storage.md) for the maintenance
+window and storage checks required by the current code.
+
+Other runtime tables, including `poller_item`, `poller_time`, `host_snmp_cache`,
+and the `data_source_stats_*` family, need an explicit migration policy and
+validation of their rebuild behavior before any reset is automated.
 
 Everything else moves. `settings` is a two-column name and value table, which
 makes it easy to move and easy to get wrong: a setting the fork renames has to

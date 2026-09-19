@@ -15,6 +15,51 @@ function boost_archive_is_empty($table) {
 }
 
 /**
+ * Retained samples go back to the live queue so a persistently failing RRD
+ * does not leave one more archive table behind on every cycle.
+ */
+function boost_requeue_archive($table) {
+	if (!preg_match('/^poller_output_boost_arch_[a-zA-Z0-9_]+$/D', $table)) {
+		return false;
+	}
+
+	/* A live sample with the same key supersedes the retained copy, as in recovery. */
+	if (!db_execute_prepared('INSERT IGNORE INTO poller_output_boost
+		(local_data_id, rrd_name, time, output)
+		SELECT local_data_id, rrd_name, time, output
+		FROM `' . $table . '`', array())) {
+		return false;
+	}
+
+	return (bool) db_execute_prepared('DROP TABLE IF EXISTS `' . $table . '`', array());
+}
+
+/**
+ * Delete exactly the sample tuples that were read.  A concurrent sample with
+ * the same key but different output survives for the next pass.
+ */
+function boost_delete_samples($table, $rows) {
+	foreach (array_chunk($rows, 500) as $chunk) {
+		$params = array();
+
+		foreach ($chunk as $row) {
+			$params[] = $row['local_data_id'];
+			$params[] = $row['rrd_name'];
+			$params[] = $row['timestamp'];
+			$params[] = $row['output'];
+		}
+
+		$where = implode(' OR ', array_fill(0, count($chunk), '(local_data_id = ? AND rrd_name = ? AND time = FROM_UNIXTIME(?) AND CAST(CONVERT(output USING utf8mb4) AS BINARY) = CAST(CONVERT(? USING utf8mb4) AS BINARY))'));
+
+		if (db_execute_prepared("DELETE FROM $table WHERE $where", $params) === false) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+/**
  * boost_array_orderby - performs a multicolumn sort of an
  *   array
  */
@@ -274,6 +319,8 @@ function boost_fetch_cache_check($local_data_id, $rrdtool_pipe = false) {
 			return false;
 		}
 
+		$previous_error_reporting = error_reporting();
+
 		/* suppress warnings */
 		if (defined('E_DEPRECATED')) {
 			error_reporting(E_ALL ^ E_DEPRECATED);
@@ -284,25 +331,26 @@ function boost_fetch_cache_check($local_data_id, $rrdtool_pipe = false) {
 		/* install the boost error handler */
 		set_error_handler('boost_error_handler');
 
-		/* process input parameters */
-		if (!is_resource($rrdtool_pipe)) {
-			$rrdtool_pipe = rrd_init(true, false, true);
-			$close_pipe = true;
-		} else {
-			$close_pipe = false;
-		}
+		$close_pipe = false;
+		try {
+			if (!is_resource($rrdtool_pipe)) {
+				$rrdtool_pipe = rrd_init(true, false, true);
+				if ($rrdtool_pipe === false) {
+					cacti_log('ERROR: Boost fetch writer initialization failed; pending samples retained.', false, 'BOOST');
+					return false;
+				}
+				$close_pipe = true;
+			}
 
-		/* get the information to populate into the rrd files */
-		if (boost_check_correct_enabled()) {
-			boost_process_poller_output($local_data_id, $rrdtool_pipe);
-		}
-
-		/* restore original error handler */
-		restore_error_handler();
-
-		/* close rrdtool */
-		if ($close_pipe) {
-			rrd_close($rrdtool_pipe);
+			if (boost_check_correct_enabled()) {
+				boost_process_poller_output($local_data_id, $rrdtool_pipe);
+			}
+		} finally {
+			restore_error_handler();
+			error_reporting($previous_error_reporting);
+			if ($close_pipe) {
+				rrd_close($rrdtool_pipe);
+			}
 		}
 	}
 }
@@ -702,7 +750,9 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 		$rrdtool_pipe = rrd_init(true, false, true);
 	}
 	if ($rrdtool_pipe === false) {
-		cacti_log('ERROR: RRD initialization failed; pending on-demand Boost samples were retained.', false, 'BOOST');
+		if (empty($config['is_web']) || debounce_run_notification('rrd_initialization_failure', 1800)) {
+			cacti_log('ERROR: RRD initialization failed; pending on-demand Boost samples were retained.', false, 'BOOST');
+		}
 		return -1;
 	}
 	$previous_error_reporting = error_reporting();
@@ -1119,11 +1169,8 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 
 	/* Delete only the exact samples whose updates were acknowledged. */
 	foreach (array_merge(array('poller_output_boost'), (array) $archive_tables) as $table) {
-		foreach ($results as $row) {
-			if (db_execute_prepared("DELETE FROM $table WHERE local_data_id = ? AND rrd_name = ? AND time = FROM_UNIXTIME(?) AND output = ?",
-				array($row['local_data_id'], $row['rrd_name'], $row['timestamp'], $row['output'])) === false) {
-				return -1;
-			}
+		if (!boost_delete_samples($table, $results)) {
+			return -1;
 		}
 	}
 
@@ -1280,7 +1327,7 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
 			$file_exists = file_exists($data_source_path);
 		}
 
-		if ($file_exists == true) {
+		if ($file_exists !== false) {
 			return -1;
 		}
 	}
@@ -1504,7 +1551,11 @@ function boost_rrdtool_function_update($local_data_id, $rrd_path, $rrd_update_te
 		$file_exists = file_exists($rrd_path);
 	}
 
-	if ($file_exists == false) {
+	if ($file_exists === null) {
+		return 'ERROR: Unable to confirm RRD existence';
+	}
+
+	if ($file_exists === false) {
 		$ds_exists = db_fetch_cell_prepared('SELECT id FROM data_local WHERE id = ?', array($local_data_id));
 
 		// Check for a Data Source that has been removed

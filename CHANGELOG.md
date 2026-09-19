@@ -9,7 +9,42 @@ follows [Semantic Versioning](VERSIONING.md).
 Targeting `v1.3.0`, the first planned application release. See
 [VERSIONING.md](VERSIONING.md).
 
+### Changed
+
+- Require complete behavioral scenario inventories and capture application-handler PHP diagnostics separately from prepend-recorder events.
+
+- Preserve reproducible behavioral baseline references and count RRDtool acknowledgements in reachable polling, failed writes, unreachable-device polling, and missing-file fault contracts.
+
 ### Fixed
+
+- Reject traversal, absolute paths and symlink escapes in package file writes and previews while preserving supported script, resource and plugin destinations (#108).
+- Package import now rejects files for a plugin whose directory is a symlink; install such plugins as real directories under `plugins/` (#108).
+
+- Validate comparison provenance, hash Docker build exclusions, and emit exact capture hashes in behavioral reports.
+
+- Compare behavioral captures from an explicit results directory when the controller and application use separate checkouts; document the Linux native self-test PHP prerequisite.
+- Stop Boost fetch preparation after writer initialization fails; restore caller error settings and release only owned writers on exceptions.
+- Make unsafe poller queue diagnostics available for translation.
+- Include measured poller and dependency-failure integration execution in Sonar coverage, rejecting stale or incomplete evidence.
+
+- Preserve hyphenated RRD data sources, verify durable queues after legacy upgrades, and allow remote database upgrades without unrelated local storage.
+
+- Refuse web upgrades when the poller queue is volatile or unreadable, before changing the database.
+- Retain complete rejected RRD groups for replay after schema repair, preserve timestamp ordering, and report refused RRD repairs as failures.
+
+- Retain realtime samples when their field mapping cannot be read.
+
+- Guard installer test POSIX checks on Windows runtimes.
+
+- Honor forced-local Windows cleanup policy and disable the obsolete volatile queue swap.
+- Validate Windows storage access, fail on unreadable maintenance queues, and clarify exclusive queue migration/probe modes.
+
+- Preserve retryable poller samples in InnoDB. Follow the [durable-queue upgrade procedure](docs/upgrading-rrd-storage.md). Before code-only deployment, stop collectors, back up the database, run `php cli/upgrade_database.php --migrate-poller-queue`, and run `--check-rrd-storage` under every web and poller service account.
+- Back off failed drains, throttle repeated notifications, distinguish untrusted storage from lock contention, and classify native proxy sample errors.
+
+- Finish poller post-run services before reporting failed writes, and release writer leases between collection batches so maintenance can proceed.
+
+- Keep Windows local RRD cleanup explicitly manual, preserve queued requests during rescans, and discard partial splice dumps after command failure.
 
 - Require explicit RRD service UID/GID trust before collection after code-only upgrades; refuse unsafe storage and notify the configured administrator before spawning poller workers. Configure shared stores as documented in `docs/testing/spikekill-safety.md`.
 
@@ -71,7 +106,7 @@ Targeting `v1.3.0`, the first planned application release. See
 - Unit test coverage reported to SonarQube Cloud from a PHP 8.1 run of the
   tests that pass without a database.
 - Update vendored phpseclib to 3.0.57 and constant_time_encoding to 3.1.3, and lock runtime dependencies.
-- Behavioral characterization harness recording 32 contracts from a running
+- Behavioral characterization harness recording 34 contracts from a running
   1.2.31 install, with a differential runner so a rewrite of the internals can
   be compared against what an administrator, plugin or script actually sees.
 - Repository scaffolding: continuous integration for PHP 8.1 through 8.4 and

@@ -17,7 +17,7 @@ test('boost.php escapes log path with cacti_escapeshellarg', function () use ($b
 });
 
 test('poller.php casts poller_id to int', function () use ($pollerSource) {
-	expect($pollerSource)->toContain('$poller_id = (int)$value');
+	expect(preg_match('/\$poller_id\s*=\s*\(int\)\s*\$value/', $pollerSource))->toBe(1);
 });
 
 test('poller.php escapes stderrlog path', function () use ($pollerSource) {

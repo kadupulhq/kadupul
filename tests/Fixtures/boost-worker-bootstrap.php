@@ -34,6 +34,9 @@ function cacti_log(...$args) {}
 function boost_debug(...$args) {}
 function read_config_option($key)
 {
+    if ($key === 'boost_last_run_time' && strpos(getenv('BOOST_MODE'), 'master-') === 0) {
+        return 1700000000;
+    }
     if ($key === 'path_php_binary') {
         return PHP_BINARY;
     }
@@ -64,9 +67,29 @@ function boost_get_arch_table_names(...$args)
 {
     return in_array(getenv('BOOST_MODE'), array('output-archives','prepare-failure'), true) ? array() : array('poller_output_boost_arch_pending');
 }
-function db_fetch_cell_prepared($sql, $params = array())
+function db_fetch_cell($sql)
 {
     $mode = getenv('BOOST_MODE');
+    if (strpos($sql, 'WHERE status < 0') !== false) {
+        return $mode === 'master-failed-count' ? false : ($mode === 'master-child-failed' ? 1 : 0);
+    }
+    if (strpos($sql, 'SUM(status)') !== false) {
+        return $mode === 'master-invalid-total' ? false : 5;
+    }
+    if (strpos($sql, 'FROM poller_output_boost_processes') !== false) {
+        return $mode === 'master-missing-child' ? 1 : 2;
+    }
+    return 2;
+}
+function db_fetch_cell_prepared($sql, $params = array())
+{
+    if (str_contains($sql, 'SELECT ENGINE FROM information_schema.TABLES')) {
+        return 'InnoDB';
+    }
+    $mode = getenv('BOOST_MODE');
+    if ($mode === 'output-next-count' && strpos($sql, 'SELECT COUNT(*)') !== false) {
+        return false;
+    }
     if ($mode === 'archive-retry' && strpos($sql, 'TABLE_ROWS') !== false) {
         return 0;
     }
@@ -98,11 +121,41 @@ function db_fetch_assoc_prepared(...$args)
 {
     return array();
 }
-function db_fetch_assoc(...$args)
+function db_fetch_assoc($sql)
 {
-    return false;
+    if (getenv('BOOST_MODE') === 'output-next-count') {
+        return array();
+    }
+    return strpos($sql, 'information_schema.tables') !== false && strpos(getenv('BOOST_MODE'), 'master-success') === 0
+        ? array(array('name' => 'poller_output_boost_arch_fixture')) : false;
+}
+function boost_archive_is_empty($table)
+{
+    return getenv('BOOST_MODE') === 'master-success-empty';
+}
+function boost_requeue_archive($table)
+{
+    if (getenv('BOOST_MODE') !== 'master-success-requeued') {
+        return false;
+    }
+    $GLOBALS['settings_written']['requeued_archive'] = $table;
+    return true;
+}
+function dsstats_boost_bottom()
+{
+    $GLOBALS['settings_written']['dsstats_called'] = true;
+}
+function rrdcheck_boost_bottom()
+{
+    $GLOBALS['settings_written']['rrdcheck_called'] = true;
+}
+function api_plugin_hook($name)
+{
+    $GLOBALS['settings_written']['plugin_hook'] = $name;
 }
 define('SQL_NO_CACHE', '');
+require_once dirname(__DIR__) . '/Helpers/PhpSource.php';
+eval(test_php_function_source(file_get_contents(dirname(__DIR__, 2) . '/lib/boost.php'), 'boost_delete_samples'));
 function boost_memory_limit() {}
 function boost_get_total_rows()
 {
@@ -123,6 +176,10 @@ function register_process_start(...$args)
 function db_execute($sql)
 {
     if (strpos($sql, 'DROP TABLE') !== false) {
+        if (getenv('BOOST_MODE') === 'master-success-empty') {
+            $GLOBALS['settings_written']['dropped_archive'] = $sql;
+            return true;
+        }
         throw new RuntimeException('Archive cleanup after failed preparation');
     }
     return true;
@@ -131,8 +188,16 @@ function db_execute_prepared(...$args)
 {
     return true;
 }
+if ($mode === 'shutdown') {
+    // Launch during normal execution, as the master does, so its registered
+    // cleanup precedes the final coverage collector and owns live children.
+    $debug = true;
+    $children = boost_launch_children();
+    file_put_contents($fixture . '/result.json', json_encode(array(null, array_column($children, 'pid'))));
+    return;
+}
 register_shutdown_function(function () use ($fixture, $mode) {
-    if (in_array($mode, array('prepare-failure','archive-retry'), true)) {
+    if (in_array($mode, array('prepare-failure','archive-retry'), true) || strpos($mode, 'master-') === 0) {
         file_put_contents($fixture . '/result.json', json_encode($GLOBALS['settings_written']));
         return;
     }
@@ -149,10 +214,6 @@ register_shutdown_function(function () use ($fixture, $mode) {
     $GLOBALS['debug'] = true;
     $children = boost_launch_children();
     $pids = array_column($children, 'pid');
-    if ($mode === 'shutdown') {
-        file_put_contents($fixture . '/result.json', json_encode(array(null, $pids)));
-        return;
-    }
     if ($mode === 'launch-failure') {
         $children[] = array('process' => false, 'child' => 3, 'pid' => 0);
     }

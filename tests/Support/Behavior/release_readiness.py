@@ -7,9 +7,7 @@ import json
 import os
 from pathlib import Path
 import shutil
-import subprocess
 import sys
-import tarfile
 import tempfile
 import uuid
 from types import SimpleNamespace
@@ -122,6 +120,43 @@ def assert_failed_writer_retains_queue(h):
         h.sql("DELETE FROM data_local WHERE id IN (" + fixture_ids + ")")
 
 
+def prepare_baseline(baseline_revision, baseline):
+    """Keep real revision metadata for the same validation used by normal captures."""
+    harness.run(['git', 'clone', '--shared', '--no-checkout', '--', str(ROOT), str(baseline)])
+    # A shallow source can hold the pinned revision only in FETCH_HEAD; clone
+    # does not necessarily transfer that object. Fetch the exact revision too.
+    harness.run(['git', '-C', str(baseline), 'fetch', '--no-tags', '--depth=1',
+                 '--', str(ROOT), baseline_revision])
+    harness.run(['git', '-C', str(baseline), 'checkout', '--detach', '--force', baseline_revision])
+    gitdir = Path(harness.run(['git', '-C', str(baseline), 'rev-parse', '--absolute-git-dir'])['stdout'].strip())
+    require(gitdir.resolve() == (baseline / '.git').resolve(), 'Baseline must own its Git metadata')
+    require(not harness.run(['git', '-C', str(baseline), 'status', '--porcelain'])['stdout'].strip(),
+            'Baseline checkout must be complete and clean before applying test inputs')
+    original_ignore = baseline / '.dockerignore'
+    candidate_ignore = (ROOT / '.dockerignore').read_bytes()
+    require(not original_ignore.is_symlink(), 'Baseline .dockerignore must not be a symlink')
+    original_bytes = original_ignore.read_bytes() if original_ignore.exists() else None
+    require(original_bytes is None or original_bytes == candidate_ignore,
+            'Baseline .dockerignore differs from the controller; refusing to overwrite it')
+    # The test infrastructure is candidate-owned; the application and
+    # schema are the exact baseline revision checked out above.
+    # Replace candidate-owned inputs; merging leaves deleted baseline helpers active.
+    for relative in ('tests/Support/Behavior', 'tests/Fixtures', 'tests/behavior'):
+        destination = baseline / relative
+        if destination.is_symlink():
+            destination.unlink()
+        elif destination.exists():
+            shutil.rmtree(destination)
+    shutil.copytree(ROOT / 'tests/Support/Behavior', baseline / 'tests/Support/Behavior', dirs_exist_ok=True)
+    shutil.copytree(ROOT / 'tests/Fixtures', baseline / 'tests/Fixtures', dirs_exist_ok=True)
+    shutil.copytree(ROOT / 'tests/behavior', baseline / 'tests/behavior', dirs_exist_ok=True,
+            ignore=shutil.ignore_patterns('results', '__pycache__'))
+    shutil.copy2(ROOT / '.dockerignore', baseline / '.dockerignore')
+    return {'baseline_sha256': hashlib.sha256(original_bytes).hexdigest() if original_bytes is not None else None,
+            'applied_sha256': hashlib.sha256(candidate_ignore).hexdigest(),
+            'added': original_bytes is None}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--baseline', default='6482af547c204199e829b7a0df0b7a13db3e0a58')
@@ -140,19 +175,7 @@ def main():
         with tempfile.TemporaryDirectory(prefix='kadupul-release-') as temporary:
             temp = Path(temporary)
             baseline = temp / 'baseline'
-            baseline.mkdir()
-            archive = temp / 'baseline.tar'
-            with archive.open('wb') as stream:
-                subprocess.run(['git', '-C', str(ROOT), 'archive', baseline_revision], stdout=stream, check=True)
-            with tarfile.open(archive) as source:
-                source.extractall(baseline, filter='data')
-            # The test infrastructure is candidate-owned; the application and
-            # schema are the exact baseline revision exported above.
-            shutil.copytree(ROOT / 'tests/Support/Behavior', baseline / 'tests/Support/Behavior', dirs_exist_ok=True)
-            shutil.copytree(ROOT / 'tests/Fixtures', baseline / 'tests/Fixtures', dirs_exist_ok=True)
-            shutil.copytree(ROOT / 'tests/behavior', baseline / 'tests/behavior', dirs_exist_ok=True,
-                            ignore=shutil.ignore_patterns('results', '__pycache__'))
-            shutil.copy2(ROOT / '.dockerignore', baseline / '.dockerignore')
+            evidence['baseline_dockerignore'] = prepare_baseline(baseline_revision, baseline)
             harness.ROOT = baseline
             h = harness.Harness(SimpleNamespace(target='release-readiness', only=None, update_golden=False, project=project))
             # Use a dedicated project and keep the baseline image for rollback.
@@ -188,6 +211,21 @@ def main():
             h.compose('up', '-d', '--build', '--wait', '--no-deps', 'web', timeout=1200)
             h.compose('cp', str(snapshot) + '/.', 'web:/var/www/html/rra')
             h.compose('exec', '-T', 'web', 'chown', '-R', 'www-data:www-data', '/var/www/html/rra')
+            # A code-only cutover must explicitly migrate the old volatile queue
+            # before either the web or collector account resumes writes.
+            h.sql("INSERT INTO poller_output(local_data_id,rrd_name,time,output) VALUES (16000003,'migration','2001-01-01','42')")
+            queue_before = h.sql('SELECT local_data_id,rrd_name,time,output FROM poller_output ORDER BY local_data_id,rrd_name,time')
+            old_engine = h.sql("SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='poller_output'").strip()
+            probe_before = h.php('cli/upgrade_database.php', '--check-rrd-storage')
+            require(old_engine.upper() == 'MEMORY' and probe_before['exit'] == 1, 'Baseline volatile queue was not refused')
+            migrations = []
+            for attempt in range(2):
+                migrations.append(checked(h.php('cli/upgrade_database.php', '--migrate-poller-queue'), 'Durable queue migration'))
+                require(h.sql('SELECT local_data_id,rrd_name,time,output FROM poller_output ORDER BY local_data_id,rrd_name,time') == queue_before, 'Queue migration changed retained samples')
+                checked(h.php('cli/upgrade_database.php', '--check-rrd-storage'), 'Storage and durable queue probe')
+            evidence['steps']['queue_migration'] = {'before_engine': old_engine, 'refused_volatile_queue': probe_before,
+                                                   'commands': migrations, 'retained_samples_preserved': True}
+            h.sql("DELETE FROM poller_output WHERE local_data_id=16000003 AND rrd_name='migration' AND time='2001-01-01' AND output='42'")
             upgrade = checked(h.php('cli/install_cacti.php', '--accept-eula', '--install', '--mode=3', '--force'), 'Upgrade')
             actual_version = h.sql('SELECT cacti FROM version').strip()
             evidence['steps']['upgrade_attempt'] = {'command': upgrade, 'database_version': actual_version, 'source_version': checked(h.php('-r', 'echo file_get_contents("include/cacti_version");'), 'Source version')['stdout'].strip()}

@@ -268,9 +268,15 @@ switch ($type) {
 
 				/* Flush Boost before locking: it needs a shared lease. The fetch values are
                  * not a rewrite snapshot; float_rrdfile dumps afresh under the exclusive lease. */
-				$fetched = rrdtool_function_fetch($data['local_data_id'], time()-120, time());
-				if (empty($fetched)) {
-					throw new RuntimeException('Unable to fetch RRD data before floating.');
+				try {
+					$fetched = rrdtool_function_fetch($data['local_data_id'], time()-120, time());
+					if (empty($fetched)) {
+						throw new RuntimeException('Unable to fetch RRD data before floating.');
+					}
+				} catch (Throwable $error) {
+					cacti_log(sprintf('ERROR: Float DS[%d] retained for retry: %s', $data['local_data_id'], $error->getMessage()), true, 'RFLOAT');
+					$exit_status = 1;
+					continue;
 				}
 
 				$rrd_rewrite_lock = rrd_maintenance_acquire_paths(array($data['rrd_path']), 5);
@@ -287,6 +293,9 @@ switch ($type) {
 					} else {
 						$exit_status = 1;
 					}
+				} catch (Throwable $error) {
+					cacti_log(sprintf('ERROR: Float DS[%d] retained for retry: %s', $data['local_data_id'], $error->getMessage()), true, 'RFLOAT');
+					$exit_status = 1;
 				} finally {
 					rrd_maintenance_release($rrd_rewrite_lock);
 				}

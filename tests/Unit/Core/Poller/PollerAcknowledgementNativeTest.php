@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('production poller files retain failed writes and preserve concurrent arrivals', function ($realtime, $failed) {
+test('production poller files retain failed writes and preserve concurrent arrivals', function ($realtime, $failed, $remote = false) {
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/poller-native-' . bin2hex(random_bytes(8));
     foreach (array('', '/lib', '/include') as $suffix) {
@@ -24,16 +24,19 @@ test('production poller files retain failed writes and preserve concurrent arriv
         $coverage .= 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
     }
     $bootstrap = '<?php ' . $coverage . 'require ' . var_export($root . '/tests/Fixtures/poller-ack-bootstrap.php', true) . ';';
+    if ($failed === 'init-function') {
+        $bootstrap .= '$result=process_poller_output_rt(false,1,5);db_close();exit($result===false?1:0);';
+    }
     try {
         if ($realtime) {
             copy($root . '/poller_realtime.php', $dir . '/poller_realtime.php');
             file_put_contents($dir . '/include/cli_check.php', $bootstrap);
             $arguments = array($dir . '/poller_realtime.php', '--graph=1', '--interval=5', '--poller_id=1');
         } else {
-            file_put_contents($dir . '/run.php', $bootstrap . 'require ' . var_export($root . '/lib/poller.php', true) . ';$pipe=true;$result=process_poller_output($pipe,1);if(getenv("ACK_FAIL")==="rejected"){process_poller_output($pipe,1);}db_close();exit($result===false?1:0);');
+            file_put_contents($dir . '/run.php', $bootstrap . 'require ' . var_export($root . '/lib/poller.php', true) . ';$deferred=false;$proxy=false;$result=process_poller_output_batch($deferred,$proxy);file_put_contents(getenv("ACK_FIXTURE")."/batch-result.json",json_encode(array($result,$deferred)));$failed=$deferred;if(getenv("ACK_FAIL")==="rejected"&&!$deferred){$GLOBALS["ack_db"]->exec("INSERT INTO poller_output VALUES(1, \'value\', \'2020-01-03\', \'45\')");putenv("ACK_FAIL=page-success");$next=process_poller_output_batch($deferred,$proxy);file_put_contents(getenv("ACK_FIXTURE")."/after-rejection.json",json_encode(array($next,$deferred)));putenv("ACK_FAIL=rejected");}if(getenv("ACK_PROXY")==="1"&&!$deferred&&getenv("ACK_FAIL")==="0"){process_poller_output_batch($deferred,$proxy);}if($proxy!==false){rrd_close($proxy);}file_put_contents(getenv("ACK_FIXTURE")."/transport.json",json_encode(array($GLOBALS["ack_opens"]??0,$GLOBALS["ack_closes"]??0)));db_close();exit($failed||$deferred?1:0);');
             $arguments = array($dir . '/run.php');
         }
-        $process = proc_open(array_merge(array(PHP_BINARY, '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~'), $arguments), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes, null, array_merge(getenv(), array('ACK_FIXTURE' => $dir,'ACK_REALTIME' => $realtime ? '1' : '0','ACK_FAIL' => is_string($failed) ? $failed : ($failed ? '1' : '0'))));
+        $process = proc_open(array_merge(array(PHP_BINARY, '-d', 'pcov.directory=/', '-d', 'pcov.exclude=~/(include/vendor|tests)/~'), $arguments), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes, null, array_merge(getenv(), array('ACK_PROXY' => $remote ? '1' : '0','ACK_FIXTURE' => $dir,'ACK_REALTIME' => $realtime ? '1' : '0','ACK_FAIL' => is_string($failed) ? $failed : ($failed ? '1' : '0'))));
         $output = stream_get_contents($pipes[1]);
         $error = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
@@ -41,16 +44,31 @@ test('production poller files retain failed writes and preserve concurrent arriv
         if ($error !== '') {
             throw new RuntimeException($error . $output);
         }
-        expect(proc_close($process))->toBe($failed && $failed !== 'replace' ? 1 : 0, $error . $output)->and($error)->toBe('');
-        $expected = is_string($failed) ? array(array('output' => '42', 'remaining' => $failed === 'page' ? 40001 : 1)) : ($failed ? array('42','43') : array('43'));
-        if (in_array($failed, array('select', 'handoff', 'init'), true)) {
+        expect(proc_close($process))->toBe(($failed && !(!$realtime && $failed === 'rejected')) && !in_array($failed, array('replace', 'replace-space', 'field-success', 'incomplete', 'incomplete-recent', 'page-success'), true) ? 1 : 0, $error . $output)->and($error)->toBe('');
+        $expected = is_string($failed) ? array(array('output' => '42', 'remaining' => $failed === 'page' ? 120001 : 1)) : ($failed ? array('42','43') : array('43'));
+        if (in_array($failed, array('select', 'handoff', 'init', 'init-function', 'busy', 'count'), true)) {
             $expected = array('42');
         }
         if ($failed === 'delete') {
             $expected = array('42', '43');
         }
+        if ($failed === 'mismatch') {
+            // The refused sample is older than the retention limit and moves intact.
+            $expected = array();
+            expect(json_decode(file_get_contents($dir . '/batch-result.json'), true))->toBe(array(0, true))
+                ->and(json_decode(file_get_contents($dir . '/rejected.json'), true))->toBe(array(array('local_data_id' => 1, 'output' => '42', 'rrd_path' => 'fixture.rrd', 'reason' => "unknown DS name 'value'")));
+        } elseif (is_file($dir . '/rejected.json')) {
+            expect(json_decode(file_get_contents($dir . '/rejected.json'), true))->toBe(array());
+        }
         if ($failed === 'rejected') {
             $expected = array();
+            if (!$realtime) {
+                expect(json_decode(file_get_contents($dir . '/batch-result.json'), true))->toBe(array(0, false));
+                expect(json_decode(file_get_contents($dir . '/after-rejection.json'), true))->toBe(array(1, false));
+            }
+        }
+        if ($failed === 'replace-space') {
+            $expected = array('42 ', '43');
         }
         if ($failed === 'replace') {
             $expected = array('99','43');
@@ -58,7 +76,74 @@ test('production poller files retain failed writes and preserve concurrent arriv
         if ($failed === 'delete') {
             $expected = array('42','43');
         }
+        if ($remote) {
+            if ($failed === false) {
+                $expected = array();
+            }
+            expect(json_decode(file_get_contents($dir . '/transport.json'), true))->toBe(array(1, $failed === 'init' ? 0 : 1));
+        }
+        if ($failed === 'field-failure') {
+            $expected = array('value:42');
+            expect(file_exists($dir . '/updates.json'))->toBeFalse();
+        } elseif ($failed === 'field-success') {
+            $expected = array('43');
+            $updates = json_decode(file_get_contents($dir . '/updates.json'), true);
+            expect(array_values($updates)[0]['times'][strtotime('2020-01-01')])->toBe(array('value' => '42'));
+        }
+        if (in_array($failed, array('incomplete', 'incomplete-recent'), true)) {
+            // A group that never completes is discarded once it is several cycles old.
+            $expected = $failed === 'incomplete' ? array() : array('42');
+            $updates = json_decode(file_get_contents($dir . '/updates.json'), true);
+            expect(array_values($updates)[0]['times'])->toBe(array());
+            expect(json_decode(file_get_contents($dir . '/batch-result.json'), true))->toBe(array(0, false));
+        } elseif ($failed === 'tail-failure') {
+            $expected = array(array('output' => '42', 'remaining' => 40001), array('output' => '44', 'remaining' => 1));
+            expect(file_exists($dir . '/updates.json'))->toBeFalse();
+            expect(json_decode(file_get_contents($dir . '/batch-result.json'), true))->toBe(array(0, true));
+        } elseif ($failed === 'page-success') {
+            $expected = array();
+            expect(json_decode(file_get_contents($dir . '/batch-result.json'), true))->toBe(array(120002, false));
+        }
+        if (in_array($failed, array('mixed', 'page'), true)) {
+            expect(json_decode(file_get_contents($dir . '/batch-result.json'), true))->toBe(array(1, true));
+        }
+        if (in_array($failed, array('page', 'page-success'), true)) {
+            $pages = array_map(static fn($line) => json_decode($line, true), file($dir . '/pages.jsonl', FILE_IGNORE_NEW_LINES));
+            expect(max(array_column($pages, 'depth')))->toBeLessThanOrEqual(2);
+            expect(array_sum(array_column($pages, 'rows')))->toBe($failed === 'page' ? 40001 : 120002);
+        }
         expect(json_decode(file_get_contents($dir . '/outcome.json'), true))->toBe($expected);
+        if (!$realtime) {
+            foreach (array('dsstats_poller_output', 'dsdebug_poller_output', 'api_plugin_hook_function') as $hook) {
+                $file = $dir . '/' . $hook . '.jsonl';
+                unset($events);
+                $events = is_file($file) ? array_map(static function ($line) use ($failed) {
+                    $event = json_decode($line, true);
+                    return $failed === 'page-success'
+                        ? array_sum(array_map(static fn($fields) => count($fields['times']), $event))
+                        : $event;
+                }, file($file, FILE_IGNORE_NEW_LINES)) : array();
+                if ($failed === true || in_array($failed, array('select', 'handoff', 'init', 'busy', 'count', 'incomplete', 'incomplete-recent', 'tail-failure', 'mismatch'), true)) {
+                    expect($events)->toBe(array());
+                } elseif (in_array($failed, array('mixed', 'page'), true)) {
+                    expect($events)->toHaveCount(1);
+                    expect(array_keys($events[0]))->toBe(array('good.rrd'));
+                } elseif ($failed === 'page-success') {
+                    expect($events)->toHaveCount(4);
+                    expect(array_sum($events))->toBe(120002);
+                } elseif ($remote && $failed === false) {
+                    expect($events)->toHaveCount(2);
+                    expect(array_values($events[0]['fixture.rrd']['times']))->toBe(array(array('value' => '42')));
+                    expect(array_values($events[1]['fixture.rrd']['times']))->toBe(array(array('value' => '43')));
+                } elseif ($failed === 'rejected') {
+                    expect($events)->toHaveCount(1);
+                    expect(array_values($events[0]['fixture.rrd']['times']))->toBe(array(array('value' => '45')));
+                } else {
+                    expect($events)->toHaveCount(1);
+                    expect(array_values($events[0]['fixture.rrd']['times']))->toBe(array(array('value' => '42')));
+                }
+            }
+        }
         if ($parent !== null) {
             $reports = glob($dir . '/*.coverage');
             expect($reports)->toHaveCount(1);
@@ -73,4 +158,4 @@ test('production poller files retain failed writes and preserve concurrent arriv
             } rmdir($dir . $suffix);
         }
     }
-})->with(array(array(false,false),array(false,true),array(true,false),array(true,true),array(false,'replace'),array(true,'replace'),array(true,'delete'),array(false,'rejected'),array(true,'rejected'),array(false,'mixed'),array(false,'page'),array(false,'select'),array(false,'handoff'),array(false,'delete'),array(true,'init')));
+})->with(array(array(false,false),array(false,true),array(true,false),array(true,true),array(false,'replace-space'),array(true,'replace-space'),array(false,'replace'),array(true,'replace'),array(true,'delete'),array(false,'rejected'),array(true,'rejected'),array(false,'mixed'),array(false,'page'),array(false,'select'),array(false,'handoff'),array(false,'delete'),array(true,'init'),array(false,'init'),array(false,'busy'),array(false,'count'),array(false,false,true),array(false,true,true),array(false,'init',true),array(false,'rejected',true),array(true,'select'),array(true,'init-function'),array(true,'field-failure'),array(true,'field-success'),array(false,'incomplete'),array(false,'incomplete-recent'),array(false,'mismatch'),array(false,'tail-failure'),array(false,'page-success')));

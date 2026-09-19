@@ -2,7 +2,8 @@
   "command": {
     "exit": 0,
     "stdout": "<TIMESTAMP> - SYSTEM STATS: Time:<T> Method:cmd.php Processes:1 Threads:1 Hosts:1 HostsPerProcess:1 DataSources:5 RRDsProcessed:0\n",
-    "stderr": ""
+    "stderr": "",
+    "rrd_acknowledgements": 0
   },
   "database": {
     "poller_item": [

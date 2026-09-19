@@ -4,6 +4,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 test('production Boost owns, supervises and reaps actual worker processes', function ($mode) {
+    $master = strpos($mode, 'master-') === 0;
+    $masterSuccess = strpos($mode, 'master-success') === 0;
+    $fullRun = $master || in_array($mode, array('prepare-failure','archive-retry'), true);
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/boost-worker-' . bin2hex(random_bytes(8));
     mkdir($dir, 0700);
@@ -27,7 +30,7 @@ test('production Boost owns, supervises and reaps actual worker processes', func
     $bootstrap .= 'require ' . var_export($root . '/tests/Fixtures/boost-worker-bootstrap.php', true) . ';';
     file_put_contents($dir . '/include/cli_check.php', $bootstrap);
     try {
-        $process = proc_open(array(PHP_BINARY,'-d','pcov.directory=/','-d','pcov.exclude=~/(include/vendor|tests)/~',$dir . '/poller_boost.php',in_array($mode, array('prepare-failure','archive-retry'), true) ? '--force' : '--help'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes, null, array_merge(getenv(), array('BOOST_FIXTURE' => $dir,'BOOST_MODE' => $mode)));
+        $process = proc_open(array(PHP_BINARY,'-d','pcov.directory=/','-d','pcov.exclude=~/(include/vendor|tests)/~',$dir . '/poller_boost.php',$fullRun ? '--force' : '--help'), array(1 => array('pipe','w'),2 => array('pipe','w')), $pipes, null, array_merge(getenv(), array('BOOST_FIXTURE' => $dir,'BOOST_MODE' => $mode)));
         $output = stream_get_contents($pipes[1]);
         $error = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
@@ -36,9 +39,24 @@ test('production Boost owns, supervises and reaps actual worker processes', func
         if ($error !== '') {
             throw new RuntimeException($error . $output);
         }
-        expect($status)->toBe(in_array($mode, array('prepare-failure','archive-retry'), true) ? 1 : 0);
+        expect($status)->toBe($fullRun && !$masterSuccess ? 1 : 0);
         $result = json_decode(file_get_contents($dir . '/result.json'), true);
-        if (in_array($mode, array('prepare-failure','archive-retry'), true)) {
+        if ($masterSuccess) {
+            expect($result['boost_poller_status'])->toStartWith('complete - end time:')
+                ->and($result['boost_last_run_time'])->toBeGreaterThan(1700000000)
+                ->and($result['stats_boost'])->toContain('RRDUpdates:5')
+                ->and($result['dsstats_called'])->toBeTrue()
+                ->and($result['rrdcheck_called'])->toBeTrue()
+                ->and($result['plugin_hook'])->toBe('boost_poller_bottom')
+                ->and(isset($result['dropped_archive']))->toBe($mode === 'master-success-empty')
+                ->and($result['requeued_archive'] ?? null)->toBe($mode === 'master-success-requeued' ? 'poller_output_boost_arch_fixture' : null);
+            expect(file($dir . '/reaped'))->toHaveCount(3);
+        } elseif ($master) {
+            expect($result['boost_poller_status'])->toStartWith('failed - end time:')
+                ->and($result['boost_last_run_time'])->toBe(1700000000)
+                ->and($result)->not->toHaveKey('stats_boost');
+            expect(file($dir . '/reaped'))->toHaveCount(3);
+        } elseif (in_array($mode, array('prepare-failure','archive-retry'), true)) {
             expect($result['boost_poller_status'])->toBe('failed - preparation');
             expect(file($dir . '/reaped'))->toHaveCount(1);
         } elseif (strpos($mode, 'output-') === 0) {
@@ -68,4 +86,4 @@ test('production Boost owns, supervises and reaps actual worker processes', func
             rmdir($dir . $suffix);
         }
     }
-})->with(array('success','early-crash','timeout','launch-failure','shutdown','output-init','output-archives','output-count','output-empty','output-ids','output-last','output-select','prepare-failure','archive-retry'));
+})->with(array('success','early-crash','timeout','launch-failure','shutdown','output-init','output-archives','output-count','output-empty','output-ids','output-last','output-select','output-next-count','prepare-failure','archive-retry','master-failed-count','master-child-failed','master-invalid-total','master-missing-child','master-success-empty','master-success-retained','master-success-requeued'));
