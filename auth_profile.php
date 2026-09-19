@@ -7,6 +7,8 @@
 $guest_account = true;
 include('./include/auth.php');
 
+cacti_require_post_actions(array('save', 'update_data', 'clear_user_settings', 'reset_default', 'logout_everywhere'));
+
 /* set default action */
 set_default_action();
 
@@ -440,7 +442,7 @@ function settings_javascript() {
 	var authMethod   = '<?php print read_config_option('auth_method');?>';
 
 	function clearUserSettings() {
-		$.get('auth_profile.php?action=clear_user_settings', function() {
+		$.post('auth_profile.php', {action: 'clear_user_settings', tab: currentTab, __csrf_magic: csrfMagicToken}, function() {
 			document.location = 'auth_profile.php?newtheme=1';
 			$('#clear_settings').blur();
 		});
@@ -471,7 +473,7 @@ function settings_javascript() {
 
 	function logoutEverywhere() {
 		$('#logout_everywhere').blur();
-		$.get('auth_profile.php?action=logout_everywhere', function(data) {
+		$.post('auth_profile.php', {action: 'logout_everywhere', __csrf_magic: csrfMagicToken}, function(data) {
 			$('body').append('<div style="display:none;" id="cleared" title="<?php print __esc('User Sessions Cleared');?>"><p><?php print __('All your login sessions have been cleared.');?></p></div>');
 
 			$('#cleared').dialog({
@@ -563,7 +565,7 @@ function settings_javascript() {
 							var id = $(this).attr('data-id');
 
 							if (id != undefined) {
-								$.get('auth_profile.php?tab='+currentTab+'&action=reset_default&name='+id, function(data) {
+								$.post('auth_profile.php', {action: 'reset_default', tab: currentTab, name: id, __csrf_magic: csrfMagicToken}, function(data) {
 									if (id != 'selected_theme' && id != 'user_language' && id != 'enable_hscroll') {
 										if ($('#'+id).is(':checkbox')) {
 											if (data == 'on') {

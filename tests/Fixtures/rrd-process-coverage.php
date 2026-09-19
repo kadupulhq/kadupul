@@ -23,6 +23,10 @@ if (defined('REPORT_SECURITY_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/html_reports.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/reports.php');
 }
+if (defined('PROFILE_SECURITY_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/auth_profile.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+}
 if (defined('RRD_TEST_CLI_COVERAGE_COPY')) {
     $coverageFilter->includeFile(RRD_TEST_CLI_COVERAGE_COPY);
 }

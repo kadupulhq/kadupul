@@ -587,19 +587,8 @@ if ($config['is_web']) {
 		raise_message('csrf_ptimeout');
 	}
 
-	/* check for save actions using GET */
-	if (isset_request_var('action')) {
-		$action = get_nfilter_request_var('action');
-
-		$bad_actions = array('save', 'update_data', 'changepassword');
-
-		foreach($bad_actions as $bad) {
-			if ($action == $bad && !isset($_POST['__csrf_magic'])) {
-				cacti_log('WARNING: Attempt to use GET method for POST operations from IP ' . get_client_addr(), false, 'WEBUI');
-				exit;
-			}
-		}
-	}
+	/* Validate the action before any controller can normalize or dispatch it. */
+	cacti_require_post_actions(array('save', 'update_data', 'changepassword'));
 
 	if (isset($_COOKIE['CactiTimeZone'])) {
 		$gmt_offset = $_COOKIE['CactiTimeZone'];

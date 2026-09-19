@@ -293,16 +293,35 @@ function get_checkbox_style() {
    @arg $default - The default action is not set
    @returns - null */
 function set_default_action($default = '') {
+	cacti_require_post_actions(array());
 	if (!isset_request_var('action')) {
 		set_request_var('action', $default);
-	} elseif (is_array(get_nfilter_request_var('action'))) {
-		if (read_config_option('log_validation') == 'on') {
-			cacti_log('WARNING: Request variable \'action\' was passed as array in ' . $_SERVER['SCRIPT_NAME'] . '.', false, 'WEBUI');
-		}
-
-		set_request_var('action', $_REQUEST['action'][0]);
 	} else {
 		set_request_var('action', $_REQUEST['action']);
+	}
+}
+
+/** Reject ambiguous actions and require a validated POST for listed mutations. */
+function cacti_require_post_actions(array $actions) {
+	$action = $_REQUEST['action'] ?? '';
+	if (!is_string($action)) {
+		http_response_code(400);
+		exit;
+	}
+
+	if (!in_array($action, $actions, true)) {
+		return;
+	}
+
+	if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+		header('Allow: POST');
+		http_response_code(405);
+		exit;
+	}
+
+	if (!is_string($_POST['__csrf_magic'] ?? null) || !csrf_check(false)) {
+		http_response_code(403);
+		exit;
 	}
 }
 
