@@ -7,15 +7,11 @@
 ARG PHP_VERSION=8.2
 FROM php:${PHP_VERSION}-apache
 
-ARG POLLER_COVERAGE=0
-RUN if [ "$POLLER_COVERAGE" = 1 ]; then \
-        pecl install pcov-1.0.12 && docker-php-ext-enable pcov; \
-    fi
-
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends \
+        $PHPIZE_DEPS \
         rrdtool \
         snmp \
         snmpd \
@@ -50,6 +46,11 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         ldap \
         intl \
         mbstring
+
+ARG POLLER_COVERAGE=0
+RUN if [ "$POLLER_COVERAGE" = 1 ]; then \
+        pecl install pcov-1.0.12 && docker-php-ext-enable pcov; \
+    fi
 
 RUN a2enmod rewrite ssl headers
 
