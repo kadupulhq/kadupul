@@ -172,3 +172,33 @@ test('deleting profiles skips every profile a Data Template or a Data Source use
 	expect($output)->toContain('HANDLER:duplicate')
 		->and($output)->not->toContain('Refused');
 });
+
+test('RRA removal refuses any GET, an RRA of another profile and a read only profile', function () {
+	expect_refused('item_remove', array('id' => '7', 'profile_id' => '3'));
+
+	foreach (array(array('3', array('7' => 9)), array('0', array('7' => 3)), array('3', array())) as $case) {
+		$output = run_profiles('POST', 'item_remove', array('id' => '7', 'profile_id' => $case[0]), array(), array('profile_item_remove'), array(), $case[1]);
+
+		expect($output)->toContain('LOG:WEBUI:WARNING: Refused to remove RRA 7 outside Data Source Profile ' . $case[0] . ' for user 5')
+			->and($output)->not->toContain('EXEC:');
+	}
+
+	$output = run_profiles('POST', 'item_remove', array('id' => '7', 'profile_id' => '3'), array(), array('profile_item_remove'), array('3' => array(0, 1)), array('7' => 3));
+
+	expect($output)->toContain('LOG:WEBUI:WARNING: Refused to remove RRA 7 from read only Data Source Profile 3 for user 5')
+		->and($output)->toContain('MESSAGE:profile_read_only')
+		->and($output)->not->toContain('EXEC:');
+
+	/* Data Templates alone leave the RRAs editable, as the edit page does. */
+	$output = run_profiles('POST', 'item_remove', array('id' => '7', 'profile_id' => '3'), array(), array('profile_item_remove'), array('3' => array(2, 0)), array('7' => 3));
+
+	expect($output)->toBe("EXEC:DELETE FROM data_source_profiles_rra WHERE id = ? AND data_source_profile_id = ? [\"7\",\"3\"]\nCODE:200\n");
+});
+
+test('the profile edit page posts RRA removal with the token and the profile id', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/data_source_profiles.php');
+
+	expect(preg_match('/^function profile_edit\(\).*?^}\R/ms', $source, $edit))->toBe(1)
+		->and($edit[0])->toContain("\$.post('data_source_profiles.php?action=item_remove', {")
+		->and($edit[0])->toMatch('/__csrf_magic: csrfMagicToken,\s+id: \$\(\'#rra_id\'\)\.val\(\),\s+profile_id: profile_id\s+}\)/');
+});

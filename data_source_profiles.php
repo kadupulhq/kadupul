@@ -54,6 +54,8 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'item_remove':
+		csrf_require_post(true);
+
 		profile_item_remove();
 
 		break;
@@ -468,9 +470,43 @@ function profile_item_remove_confirm() {
 function profile_item_remove() {
 	/* ================= input validation ================= */
 	get_filter_request_var('id');
+	get_filter_request_var('profile_id');
 	/* ==================================================== */
 
-	db_execute_prepared('DELETE FROM data_source_profiles_rra WHERE id = ?', array(get_request_var('id')));
+	$rra_id     = get_request_var('id');
+	$profile_id = get_request_var('profile_id');
+
+	$owned = db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM data_source_profiles_rra
+		WHERE id = ?
+		AND data_source_profile_id = ?',
+		array($rra_id, $profile_id));
+
+	if (empty($owned)) {
+		cacti_log('WARNING: Refused to remove RRA ' . (int) $rra_id . ' outside Data Source Profile ' . (int) $profile_id . ' for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+
+		return;
+	}
+
+	/* The edit page shows no delete control once a Data Source uses the
+	   profile, because its RRDfiles already hold these RRAs. */
+	$readonly = db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM data_template_data
+		WHERE data_source_profile_id = ?
+		AND local_data_id > 0',
+		array($profile_id));
+
+	if ($readonly > 0) {
+		cacti_log('WARNING: Refused to remove RRA ' . (int) $rra_id . ' from read only Data Source Profile ' . (int) $profile_id . ' for user ' . $_SESSION['sess_user_id'], false, 'WEBUI');
+		raise_message('profile_read_only', __('Data Source Profiles in use by Data Sources are read only.'), MESSAGE_LEVEL_ERROR);
+
+		return;
+	}
+
+	db_execute_prepared('DELETE FROM data_source_profiles_rra
+		WHERE id = ?
+		AND data_source_profile_id = ?',
+		array($rra_id, $profile_id));
 }
 
 
@@ -754,7 +790,8 @@ function profile_edit() {
 					$('#continue').off('click').on('click', function(data) {
 						$.post('data_source_profiles.php?action=item_remove', {
 							__csrf_magic: csrfMagicToken,
-							id: $('#rra_id').val()
+							id: $('#rra_id').val(),
+							profile_id: profile_id
 						}).done(function(data) {
 							$('#cdialog').dialog('close');
 							loadPageNoHeader('data_source_profiles.php?action=edit&header=false&id=' + $('#rra_profile_id').val());
