@@ -51,12 +51,12 @@ switch (get_request_var('action')) {
 		form_save();
 		break;
 	case 'actions':
-		managers_require_post('actions');
+		csrf_require_post(true);
 		form_actions();
 		break;
 	case 'edit':
 		if (isset_request_var('purge')) {
-			managers_require_post('purge');
+			csrf_require_post(true);
 		}
 
 		top_header();
@@ -68,17 +68,6 @@ switch (get_request_var('action')) {
 		manager();
 		bottom_footer();
 	break;
-}
-
-/* csrf-magic checks the token only on POST, so a mutation reachable by GET
-   could be forged from another site with the admin's session cookie. */
-function managers_require_post($action) {
-	if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
-		cacti_log('WARNING: Rejected non-POST request to managers.php?action=' . $action, false, 'AUTH');
-
-		header('Location: managers.php?header=false');
-		exit;
-	}
 }
 
 function manager() {
