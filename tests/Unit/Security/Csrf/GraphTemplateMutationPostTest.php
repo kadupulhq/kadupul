@@ -182,3 +182,41 @@ test('deleting graph templates that no graph uses still deletes them', function 
 		->and($output)->toContain('write:UPDATE graph_local SET graph_template_id=0 WHERE graph_template_id IN (4,5)')
 		->and($output)->not->toContain('Refused');
 });
+
+/**
+ * @return array<int, string>
+ */
+function item_mutations() {
+	return array('item_remove', 'item_moveup', 'item_movedown');
+}
+
+test('graph template item changes refuse any GET, including a same-site one', function () {
+	foreach (item_mutations() as $action) {
+		expect_refused('graph_templates_items.php', array('action' => $action, 'id' => '7', 'graph_template_id' => '3'), array('owner' => 3));
+	}
+});
+
+test('graph template item changes refuse an item of another template or of a graph', function () {
+	foreach (item_mutations() as $action) {
+		foreach (array(array('3', 9), array('3', 0), array('0', 0), array('3', null)) as $case) {
+			list($graph_template_id, $owner) = $case;
+
+			$output = run_page('graph_templates_items.php', 'POST', array('action' => $action, 'id' => '7', 'graph_template_id' => $graph_template_id), array('owner' => $owner));
+
+			expect($output)->toContain('log:AUTH:WARNING: Rejected graph_templates_items.php?action=' . $action . ' for id 7 outside Graph Template ' . (int) $graph_template_id)
+				->and($output)->toContain('header:Location: graph_templates.php?header=false')
+				->and($output)->not->toContain('handler:');
+		}
+	}
+});
+
+test('graph template item changes still run on POST for an item of the template named', function () {
+	foreach (item_mutations() as $action) {
+		$output = run_page('graph_templates_items.php', 'POST', array('action' => $action, 'id' => '7', 'graph_template_id' => '3'), array('owner' => 3));
+
+		expect($output)->toContain('query:7,3')
+			->and($output)->toContain('handler:' . $action)
+			->and($output)->toContain('header:Location: graph_templates.php?header=false&action=template_edit&id=3')
+			->and($output)->not->toContain('Rejected');
+	}
+});

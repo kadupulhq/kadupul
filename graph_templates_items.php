@@ -70,21 +70,24 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'item_remove':
-		get_filter_request_var('graph_template_id');
+		csrf_require_post(true);
+		graph_templates_items_require_template_item('item_remove');
 
 		item_remove();
 
 		header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
 		break;
 	case 'item_movedown':
-		get_filter_request_var('graph_template_id');
+		csrf_require_post(true);
+		graph_templates_items_require_template_item('item_movedown');
 
 		item_movedown();
 
 		header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
 		break;
 	case 'item_moveup':
-		get_filter_request_var('graph_template_id');
+		csrf_require_post(true);
+		graph_templates_items_require_template_item('item_moveup');
 
 		item_moveup();
 
@@ -104,6 +107,30 @@ switch (get_request_var('action')) {
 
 		bottom_footer();
 		break;
+}
+
+/* The item functions act on the item id alone, and graph items live in the
+   same table as template items, so the item must belong to the template the
+   request names. */
+function graph_templates_items_require_template_item($action) {
+	$id                = get_filter_request_var('id');
+	$graph_template_id = get_filter_request_var('graph_template_id');
+
+	$owned = db_fetch_cell_prepared('SELECT COUNT(*)
+		FROM graph_templates_item AS gti
+		INNER JOIN graph_templates AS gt
+		ON gt.id = gti.graph_template_id
+		WHERE gti.id = ?
+		AND gti.graph_template_id = ?
+		AND gti.local_graph_id = 0',
+		array($id, $graph_template_id));
+
+	if (empty($owned)) {
+		cacti_log('WARNING: Rejected graph_templates_items.php?action=' . $action . ' for id ' . (int) $id . ' outside Graph Template ' . (int) $graph_template_id, false, 'AUTH');
+
+		header('Location: graph_templates.php?header=false');
+		exit;
+	}
 }
 
 /* --------------------------
