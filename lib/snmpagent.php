@@ -966,7 +966,7 @@ function snmpagent_notification($notification, $mib, $varbinds, $severity = SNMP
 				}
 
 				/* execute net-snmp to generate this notification in the background */
-				exec_background(cacti_escapeshellcmd($path_snmptrap), $args);
+				exec_background(cacti_escapeshellcmd($path_snmptrap), $args, '', cacti_redact_snmp_command($args));
 
 				/* insert a new entry into the notification log for that SNMP receiver */
 				$save = array();

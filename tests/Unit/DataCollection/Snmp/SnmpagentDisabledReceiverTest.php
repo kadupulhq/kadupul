@@ -106,7 +106,12 @@ function db_fetch_assoc_prepared($sql, $params = [])
     return [];
 }
 
-function exec_background($filename, $args = '', $redirect_args = '')
+function cacti_redact_snmp_command($command)
+{
+    return $command;
+}
+
+function exec_background($filename, $args = '', $redirect_args = '', $log_args = null)
 {
     $GLOBALS['snmpagent_disabled_traps'][] = $args;
 }

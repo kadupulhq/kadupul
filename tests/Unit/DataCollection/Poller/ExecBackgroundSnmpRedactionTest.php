@@ -95,6 +95,22 @@ test('the spawn log masks snmptrap communities and v3 passphrases', function () 
     expect($GLOBALS['exec_background_logs'][1])->toContain("-u 'monitor'");
 });
 
+test('the spawn log masks secrets for a snmptrap wrapper the caller names', function () {
+    $args = " -v 2c -c 'Comm-S3cret' 'nms.example:162' \"\" '1.3.6.1.4.1.23925'";
+
+    exec_background('/opt/monitor/send-trap', $args, '', cacti_redact_snmp_command($args));
+
+    expect($GLOBALS['exec_background_logs'][0])->toContain('CMD: /opt/monitor/send-trap')
+        ->and($GLOBALS['exec_background_logs'][0])->toContain('-c [REDACTED]')
+        ->and($GLOBALS['exec_background_logs'][0])->not->toContain('S3cret');
+});
+
+test('snmpagent passes the redacted arguments to the spawn log', function () {
+    $source = file_get_contents(__DIR__ . '/../../../../lib/snmpagent.php');
+
+    expect($source)->toContain("exec_background(cacti_escapeshellcmd(\$path_snmptrap), \$args, '', cacti_redact_snmp_command(\$args));");
+});
+
 test('the spawn log leaves other commands untouched', function () {
     exec_background('/usr/bin/php', "-q '/var/www/kadupul/poller_automation.php' -c 5");
 
