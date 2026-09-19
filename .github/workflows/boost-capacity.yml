@@ -1,0 +1,130 @@
+name: Boost capacity diagnostics
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/boost-capacity.yml'
+      - 'cli/poller_output_empty.php'
+      - 'install/upgrades/1_2_32.php'
+      - 'lib/boost.php'
+      - 'lib/poller.php'
+      - 'lib/rrd.php'
+      - 'lib/rrd_maintenance.php'
+      - 'poller.php'
+      - 'poller_boost.php'
+      - 'poller_recovery.php'
+      - 'tests/composer.json'
+      - 'tests/composer.lock'
+      - 'tests/phpunit-boost.xml'
+      - 'tests/phpunit-boost-mariadb.xml'
+      - 'tests/phpunit-spikekill.xml'
+      - 'tests/benchmarks/**'
+      - 'tests/Helpers/PhpSource.php'
+      - 'tests/HandOff/BoostDataHandOffTest.php'
+      - 'tests/integration/BoostProcessTableMariaDbTest.php'
+      - 'tests/integration/DurablePollerQueueMariaDbTest.php'
+      - 'tests/Unit/Core/Boost/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  queue:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    env:
+      BOOST_DB_USER: benchmark
+      BOOST_DB_PASSWORD: benchmark
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - database: '10.6'
+            health: 'healthcheck.sh --connect --innodb_initialized'
+            image: mariadb:10.6@sha256:553351e202c5f01c9e703d7d1d2b037a0aedb43c4fed79b3615d9183655f02c5
+          - database: '10.11'
+            health: 'healthcheck.sh --connect --innodb_initialized'
+            image: mariadb:10.11@sha256:07c0aaff7396b74cb7975cba78257178d188e30f531a5db2b617c48beef13c41
+          - database: '11.8'
+            health: 'healthcheck.sh --connect --innodb_initialized'
+            image: mariadb:11.8@sha256:8b5f33ebd85d1775657e974ed10434128bb493c80e826ceaa54074fd1a92a112
+          - database: 'mysql-8.4'
+            image: mysql:8.4@sha256:85b9bf2e29cf836ecb8c2a15a935d4ba0c606631dff1dd79531a11983c638f2a
+            health: 'mysqladmin ping --host=127.0.0.1 --silent'
+          - database: 'mysql-9.7'
+            image: mysql:9.7@sha256:29abb0a179982e4a8928138bfc7f918af9eda64e7eeb1b1d084c1720a20159e6
+            health: 'mysqladmin ping --host=127.0.0.1 --silent'
+    services:
+      db:
+        image: ${{ matrix.image }}
+        env:
+          MYSQL_ROOT_PASSWORD: cacti-contract-root
+          MYSQL_USER: benchmark
+          MYSQL_PASSWORD: benchmark
+          MYSQL_DATABASE: cacti_boost_contract
+          MARIADB_ROOT_PASSWORD: cacti-contract-root
+          MARIADB_USER: benchmark
+          MARIADB_PASSWORD: benchmark
+          MARIADB_DATABASE: cacti_boost_contract
+        ports: ['3306:3306']
+        options: --health-cmd="${{ matrix.health }}" --health-interval=5s --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.1'
+          extensions: pdo_mysql
+          coverage: none
+      - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3
+        with:
+          install: false
+      - name: Install test dependencies
+        run: mise exec php@system -- composer install --working-dir=tests --no-interaction --no-progress --prefer-dist
+      - name: Retain database handoff and exact deletion contracts
+        working-directory: tests
+        run: mise exec php@system -- php vendor/bin/pest --configuration=phpunit-boost-mariadb.xml --colors=never
+      - name: Measure million-row queries with identical selected samples
+        run: |
+          QUEUE_ENGINE=InnoDB mise exec php@system -- php tests/benchmarks/poller_queue.php > queue-innodb.json
+          QUEUE_ENGINE=MEMORY mise exec php@system -- php tests/benchmarks/poller_queue.php > queue-memory.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: queue-${{ matrix.database }}
+          path: queue-*.json
+  legacy:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.1'
+          extensions: pdo_mysql
+          coverage: none
+      - uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3
+        with:
+          install: false
+      - name: Install build dependencies
+        run: sudo apt-get update && sudo apt-get install -y autoconf automake autopoint gettext libtool pkg-config libxml2-dev libpango1.0-dev libcairo2-dev libglib2.0-dev groff-base rrdtool
+      - name: Build pinned RRDtool 1.4.9
+        run: tests/benchmarks/build_rrd149.sh "$RUNNER_TEMP/rrd149"
+      - name: Install test dependencies
+        run: mise exec php@system -- composer install --working-dir=tests --no-interaction --no-progress --prefer-dist
+      - name: Verify modern retries and real legacy pending writes
+        working-directory: tests
+        env:
+          RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
+          RRDTOOL_LEGACY_TEST_BINARY: ${{ runner.temp }}/rrd149/bin/rrdtool
+        run: mise exec php@system -- php vendor/bin/pest --configuration=phpunit-boost.xml --colors=never
+      - name: Verify grouped sample recovery and legacy timestamp retries
+        working-directory: tests
+        env:
+          RRDTOOL_TEST_BINARY: /usr/bin/rrdtool
+          RRDTOOL_LEGACY_TEST_BINARY: ${{ runner.temp }}/rrd149/bin/rrdtool
+        run: mise exec php@system -- php vendor/bin/pest --configuration=phpunit-spikekill.xml --filter 'schema mismatches retain full samples' --colors=never
