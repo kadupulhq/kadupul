@@ -1,4 +1,5 @@
 <?php
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -17,42 +18,43 @@
 
 $source = file_get_contents(__DIR__ . '/../../tree.php');
 
-function _tree_function_body(string $source, string $needle): string {
-	$start = strpos($source, $needle);
-	expect($start)->not->toBeFalse();
+function _tree_function_body(string $source, string $needle): string
+{
+    $start = strpos($source, $needle);
+    expect($start)->not->toBeFalse();
 
-	$end = strpos($source, "\nfunction ", $start + strlen($needle));
-	return substr($source, $start, $end !== false ? $end - $start : 4000);
+    $end = strpos($source, "\nfunction ", $start + strlen($needle));
+    return substr($source, $start, $end !== false ? $end - $start : 4000);
 }
 
 test('get_host_sort_type guards against a missing row before the constant comparison', function () use ($source) {
-	$body = _tree_function_body($source, 'function get_host_sort_type() {');
+    $body = _tree_function_body($source, 'function get_host_sort_type() {');
 
-	$guardPos = strpos($body, '$sort_type === false');
-	expect($guardPos)->not->toBeFalse('=== false guard must be present');
+    $guardPos = strpos($body, '$sort_type === false');
+    expect($guardPos)->not->toBeFalse('=== false guard must be present');
 
-	$cmpPos = strpos($body, 'HOST_GROUPING_GRAPH_TEMPLATE');
-	expect($cmpPos)->not->toBeFalse();
-	expect($guardPos < $cmpPos)->toBeTrue('guard must run before the loose-equal comparison');
+    $cmpPos = strpos($body, 'HOST_GROUPING_GRAPH_TEMPLATE');
+    expect($cmpPos)->not->toBeFalse();
+    expect($guardPos < $cmpPos)->toBeTrue('guard must run before the loose-equal comparison');
 
-	/* The guard returns rather than printing garbage. */
-	$guardRegion = substr($body, $guardPos, 80);
-	expect($guardRegion)->toContain('return');
+    /* The guard returns rather than printing garbage. */
+    $guardRegion = substr($body, $guardPos, 80);
+    expect($guardRegion)->toContain('return');
 });
 
 test('get_branch_sort_type guards against a missing row before the switch', function () use ($source) {
-	$body = _tree_function_body($source, 'function get_branch_sort_type() {');
+    $body = _tree_function_body($source, 'function get_branch_sort_type() {');
 
-	$guardPos  = strpos($body, '$sort_type === false');
-	$switchPos = strpos($body, 'switch($sort_type)');
+    $guardPos  = strpos($body, '$sort_type === false');
+    $switchPos = strpos($body, 'switch($sort_type)');
 
-	expect($guardPos)->not->toBeFalse('=== false guard must be present');
-	expect($switchPos)->not->toBeFalse();
-	expect($guardPos < $switchPos)->toBeTrue('guard must run before the switch');
+    expect($guardPos)->not->toBeFalse('=== false guard must be present');
+    expect($switchPos)->not->toBeFalse();
+    expect($guardPos < $switchPos)->toBeTrue('guard must run before the switch');
 
-	/* The guard prints empty and breaks out of the parent foreach so the
-	 * caller does not accidentally fall through into TREE_ORDERING_INHERIT. */
-	$guardRegion = substr($body, $guardPos, 120);
-	expect($guardRegion)->toContain("print ''");
-	expect($guardRegion)->toContain('break;');
+    /* The guard prints empty and breaks out of the parent foreach so the
+     * caller does not accidentally fall through into TREE_ORDERING_INHERIT. */
+    $guardRegion = substr($body, $guardPos, 120);
+    expect($guardRegion)->toContain("print ''");
+    expect($guardRegion)->toContain('break;');
 });
