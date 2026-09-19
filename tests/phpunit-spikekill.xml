@@ -11,6 +11,8 @@
       <file>./Unit/Core/Rrd/RrdMaintenanceLockTest.php</file>
       <file>./Unit/Core/Rrd/MaintenancePurgeLeaseTest.php</file>
       <file>./Unit/Core/Rrd/RrdResizeLeaseTest.php</file>
+      <file>./Unit/Core/Rrd/RrdTuneLeaseTest.php</file>
+      <file>./Unit/Core/Poller/PollerWriterDeadlineNativeTest.php</file>
       <file>./Unit/Security/Shell/SpikekillBackupSymlinkSafetyTest.php</file>
       <file>./Unit/Security/Shell/SpikekillRemoveSpikesEndToEndTest.php</file>
       <file>./Unit/Security/Shell/SpikekillXmlDirectoryRaceTest.php</file>
