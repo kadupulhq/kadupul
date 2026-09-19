@@ -58,7 +58,8 @@ $helperSource = file_get_contents(getcwd() . '/lib/html_reports.php');
 
 preg_match('/switch \(get_request_var\(\'action\'\)\) \{(?P<body>.*?)^}$/ms', $source, $match);
 preg_match('/^function reports_require_post\(.*?^}\n/ms', $helperSource, $helperMatch);
-if (empty($match['body']) || empty($helperMatch[0])) {
+preg_match('/^function reports_require_post_action\(.*?^}\n/ms', $helperSource, $actionHelperMatch);
+if (empty($match['body']) || empty($helperMatch[0]) || empty($actionHelperMatch[0])) {
     exit(2);
 }
 
@@ -86,10 +87,12 @@ function bottom_footer() {}
 function header($value) { echo 'HEADER:' . $value . "\n"; }
 
 eval('namespace ReportControllerRuntime; ' . $helperMatch[0]);
+eval('namespace ReportControllerRuntime; ' . $actionHelperMatch[0]);
 
 $_SERVER['REQUEST_METHOD'] = 'GET';
 $GLOBALS['action'] = $action;
 
+reports_require_post_action($action);
 eval("namespace ReportControllerRuntime; switch (get_request_var('action')) {" . $match['body'] . '}');
 echo 'accepted';
 PHP;
@@ -400,6 +403,7 @@ function header($value) { echo 'HEADER:' . $value; }
 
 $_SERVER['REQUEST_METHOD'] = 'POST';
 $GLOBALS['action'] = $action;
+$reports_page = get_reports_page();
 
 eval("namespace ReportRedirectRuntime; switch (get_request_var('action')) {" . $match['body'] . '}');
 PHP;

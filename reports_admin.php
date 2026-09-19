@@ -23,26 +23,25 @@ ini_set('max_execution_time', '300');
 
 /* set default action */
 set_default_action();
+reports_require_post_action(get_request_var('action'));
+$reports_page = get_reports_page();
 
 switch (get_request_var('action')) {
 	case 'save':
-		reports_require_post('save');
 		reports_form_save();
 
 		break;
 	case 'send':
-		reports_require_post('send');
 		get_filter_request_var('id');
 
 		reports_send(get_request_var('id'));
 
-		header('Location: ' . get_reports_page() . '?action=edit&tab=' . rawurlencode(reports_tab_request_var()) . '&id=' . get_request_var('id') . '&header=false');
+		header('Location: ' . $reports_page . '?action=edit&tab=' . rawurlencode(reports_tab_request_var()) . '&id=' . get_request_var('id') . '&header=false');
 		break;
 	case 'ajax_dnd':
-		reports_require_post('ajax_dnd');
 		reports_item_dnd();
 
-		header('Location: ' . get_reports_page() . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
+		header('Location: ' . $reports_page . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
 		break;
 	case 'setvar':
 		$changed = reports_item_validate();
@@ -112,33 +111,29 @@ switch (get_request_var('action')) {
 
         break;
 	case 'actions':
-		reports_require_post('actions');
 		reports_form_actions();
 
 		break;
 	case 'item_movedown':
-		reports_require_post('item_movedown');
 		get_filter_request_var('id');
 
 		reports_item_movedown();
 
-		header('Location: ' . get_reports_page() . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
+		header('Location: ' . $reports_page . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
 		break;
 	case 'item_moveup':
-		reports_require_post('item_moveup');
 		get_filter_request_var('id');
 
 		reports_item_moveup();
 
-		header('Location: ' . get_reports_page() . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
+		header('Location: ' . $reports_page . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
 		break;
 	case 'item_remove':
-		reports_require_post('item_remove');
 		get_filter_request_var('id');
 
 		reports_item_remove();
 
-		header('Location: ' . get_reports_page() . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
+		header('Location: ' . $reports_page . '?action=edit&tab=items&id=' . get_request_var('id') . '&header=false');
 		break;
 	case 'item_edit':
 		general_header();

@@ -230,6 +230,12 @@ function reports_require_post($action) {
 	}
 }
 
+function reports_require_post_action($action) {
+	if (in_array($action, array('save', 'send', 'ajax_dnd', 'actions', 'item_movedown', 'item_moveup', 'item_remove'), true)) {
+		reports_require_post($action);
+	}
+}
+
 function reports_item_dnd() {
 	/* ================= Input validation ================= */
 	get_filter_request_var('id');

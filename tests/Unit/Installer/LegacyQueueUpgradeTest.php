@@ -64,7 +64,11 @@ $reflection=new ReflectionClass('Installer');$installer=$reflection->newInstance
 $property=$reflection->getProperty('old_cacti_version');$property->setAccessible(true);$property->setValue($installer,'1.1.5');
 $method=$reflection->getMethod('upgradeDatabase');$method->setAccessible(true);
 ob_start();
-try { $result=$method->invoke($installer); }
+try {
+    $result=$method->invoke($installer);
+    require_once $root.'/install/upgrades/1_2_31.php';
+    upgrade_to_1_2_31();
+}
 finally {
     ob_end_clean();
     $cacheCreated=isset($GLOBALS['cache_file']) && is_file($GLOBALS['cache_file']);
@@ -87,7 +91,10 @@ INSTALLER;
         } else {
             expect($result[0])->toContain('poller_output queue must use InnoDB');
         }
-        expect(implode(';', $result[1]))->toContain('ALTER TABLE poller_output')->toContain('ENGINE=InnoDB');
+        expect(implode(';', $result[1]))
+            ->toContain('ALTER TABLE poller_output')
+            ->toContain('ENGINE=InnoDB')
+            ->toContain('CREATE TABLE IF NOT EXISTS poller_output_rejected');
         if ($coverage !== null) {
             $reports = glob($dir . '/*.coverage');
             expect($reports)->toHaveCount(1);
