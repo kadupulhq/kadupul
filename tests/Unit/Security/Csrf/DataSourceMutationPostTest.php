@@ -110,7 +110,7 @@ test('data source bulk actions refuse any GET that carries selected_items', func
  * @return array<int, string>
  */
 function data_source_mutations() {
-	return array('ds_enable', 'ds_disable', 'rrd_add', 'rrd_remove');
+	return array('ds_enable', 'ds_disable', 'ds_remove', 'rrd_add', 'rrd_remove');
 }
 
 test('per-data-source mutations refuse any GET, including a same-site one', function () {
