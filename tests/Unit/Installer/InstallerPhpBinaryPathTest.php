@@ -21,17 +21,14 @@ test('installer probes a PHP executable whose filename contains shell syntax', f
             . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
     }
     $program = <<<'PHP'
-$config = array('base_path' => $argv[1]);
+$config = array('base_path' => $argv[1], 'cacti_server_os' => 'unix');
 $saved = array();
-function cacti_count($value) { return count($value); }
 function log_install_debug(...$args) {}
 function log_install_high(...$args) {}
 function log_install_medium(...$args) {}
-function clean_up_lines($value) { return $value; }
 function __($value) { return $value; }
-function cacti_escapeshellarg($value) { return escapeshellarg($value); }
-function cacti_escapeshellcmd($value) { return escapeshellcmd($value); }
 function set_install_config_option($name, $value) { $GLOBALS['saved'][$name] = $value; }
+require $argv[1] . '/lib/functions.php';
 require $argv[1] . '/lib/installer.php';
 $class = new ReflectionClass('Installer');
 $installer = $class->newInstanceWithoutConstructor();
