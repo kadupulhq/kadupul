@@ -5,6 +5,14 @@
  */
 
 include('./include/auth.php');
+
+cacti_require_post_request();
+
+if (isset_request_var('method') && !is_string(get_nfilter_request_var('method'))) {
+	http_response_code(400);
+	exit;
+}
+
 include_once($config['base_path'] . '/lib/spikekill.php');
 
 $debug = false;
@@ -97,4 +105,3 @@ if (is_realm_allowed(1043)) {
 } else {
 	print __("FATAL: Spike Kill Not Allowed") . PHP_EOL;
 }
-
