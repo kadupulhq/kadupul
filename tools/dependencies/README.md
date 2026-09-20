@@ -1,7 +1,7 @@
 # Third-party dependency maintenance
 
-The application still declares PHP >=8.0; its CI matrix remains PHP 8.1–8.4.
-Root Composer resolution is pinned to PHP 8.0.0 and test dependency resolution
+Main declares PHP >=8.1 after the phpseclib 4 migration; its CI matrix remains PHP 8.1–8.4.
+Root Composer resolution is pinned to PHP 8.1.0 and test dependency resolution
 to PHP 8.1.0, so updating on a newer developer machine cannot silently raise
 either floor. Node is maintenance/test tooling, not an application requirement.
 
@@ -83,8 +83,8 @@ D3 7.8.2 → 7.9.0, jQuery UI 1.14.0 → 1.14.2, and tablesorter core/widgets/pa
 to 2.32.0. It synchronizes the bundled HTML Purifier 4.19.0 with the already
 locked 4.19.1 and updates compatible test dependency patches.
 
-- phpseclib remains on 3.0.57. Version 4 requires PHP 8.1 and a namespace/API
-  migration, so it cannot replace version 3 while retaining the PHP 8.0 floor.
+- Main uses phpseclib 4 with PHP >=8.1; LTS retains phpseclib 3 and PHP >=8.0.
+  See [phpseclib.md](phpseclib.md) for migration scope and remaining legacy proxy code.
 - Pest remains on 1.23.1 for this batch. Pest 2 can run on PHP 8.1, but migrating
   to PHPUnit 10 requires updating the native subprocess coverage integration.
   This is migration work, not a runtime incompatibility excuse; newer Pest

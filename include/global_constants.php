@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-define('CACTI_PHP_VERSION_MINIMUM', '5.4.0');
+define('CACTI_PHP_VERSION_MINIMUM', '8.1.0');
 
 define('CACTI_ESCAPE_CHARACTER', '"');
 define('COPYRIGHT_YEARS', 'Copyright (C) 2004-' . date('Y') . ' The Cacti Group');

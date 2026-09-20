@@ -3,6 +3,7 @@
   <testsuites>
     <testsuite name="Spikekill">
       <file>./Unit/BundledDependencyCompatibilityTest.php</file>
+      <file>./Unit/PhpseclibBranchCompatibilityTest.php</file>
       <file>./Unit/Security/Auth/BasicAuthAuthorizationTest.php</file>
       <file>./Unit/FlagIconsCompatibilityTest.php</file>
       <file>./Unit/PhpMailerCompatibilityTest.php</file>

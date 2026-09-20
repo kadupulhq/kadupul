@@ -10,8 +10,8 @@ it('keeps dependency resolution at the existing application and test runtime flo
     $application = json_decode(file_get_contents($root . '/composer.json'), true, 512, JSON_THROW_ON_ERROR);
     $tests = json_decode(file_get_contents($root . '/tests/composer.json'), true, 512, JSON_THROW_ON_ERROR);
 
-    expect($application['require']['php'])->toBe('>=8.0')
-        ->and($application['config']['platform']['php'])->toBe('8.0.0')
+    expect($application['require']['php'])->toBe('>=8.1')
+        ->and($application['config']['platform']['php'])->toBe('8.1.0')
         ->and($tests['config']['platform']['php'])->toBe('8.1.0');
 });
 
