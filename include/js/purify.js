@@ -501,6 +501,7 @@
     // Kadupul: cache selectors before a form named-property can shadow them.
     const queryElementTemplates = lookupGetter(ElementPrototype, 'querySelectorAll');
     const queryFragmentTemplates = lookupGetter(window.DocumentFragment.prototype, 'querySelectorAll');
+    const normalizeNode = lookupGetter(Node.prototype, 'normalize');
     const cloneNode = lookupGetter(ElementPrototype, 'cloneNode');
     const remove = lookupGetter(ElementPrototype, 'remove');
     // Clobber-safe Attr-node removal. On an HTMLFormElement a descendant named
@@ -1553,7 +1554,7 @@
      * @param node The root element whose character data should be scrubbed.
      */
     const _scrubTemplateExpressions2 = function _scrubTemplateExpressions(node) {
-      node.normalize();
+      normalizeNode(node);
       /* Clobber-safe ownerDocument read, same reasoning as _createNodeIterator:
          under SAFE_FOR_TEMPLATES this runs on the live IN_PLACE root, which may
          carry a form-named-getter override of ownerDocument. */

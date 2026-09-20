@@ -29,29 +29,31 @@ test("jQuery UI legacy escapeSelector fallback does not recurse", async ({
   );
 });
 
-test("DOMPurify template scrubbing tolerates a form-associated selector clobber", async ({
-  page,
-}) => {
-  await page.setContent(
-    '<form id="clobber-target"><template><span>{{</span><span>unsafe}}</span></template><img onerror="window.__unsafe = true"></form><input form="clobber-target" name="querySelectorAll">',
-  );
-  await load(page, "purify.js");
-  const result = await page.evaluate(() => {
-    const form = document.getElementById("clobber-target");
-    const clobbered = typeof form.querySelectorAll !== "function";
-    DOMPurify.sanitize(form, { IN_PLACE: true, SAFE_FOR_TEMPLATES: true });
-    const template = Element.prototype.querySelector.call(form, "template");
-    return {
-      clobbered,
-      handlers: Element.prototype.querySelectorAll.call(form, "[onerror]")
-        .length,
-      text: template.content.textContent,
-    };
+for (const method of ["querySelectorAll", "normalize"]) {
+  test(`DOMPurify template scrubbing tolerates a form-associated ${method} clobber`, async ({
+    page,
+  }) => {
+    await page.setContent(
+      `<form id="clobber-target"><template><span>{{</span><span>unsafe}}</span></template><img onerror="window.__unsafe = true"></form><input form="clobber-target" name="${method}">`,
+    );
+    await load(page, "purify.js");
+    const result = await page.evaluate((method) => {
+      const form = document.getElementById("clobber-target");
+      const clobbered = typeof form[method] !== "function";
+      DOMPurify.sanitize(form, { IN_PLACE: true, SAFE_FOR_TEMPLATES: true });
+      const template = Element.prototype.querySelector.call(form, "template");
+      return {
+        clobbered,
+        handlers: Element.prototype.querySelectorAll.call(form, "[onerror]")
+          .length,
+        text: template.content.textContent,
+      };
+    }, method);
+    expect(result.clobbered).toBe(true);
+    expect(result.handlers).toBe(0);
+    expect(result.text).not.toContain("{{");
   });
-  expect(result.clobbered).toBe(true);
-  expect(result.handlers).toBe(0);
-  expect(result.text).not.toContain("{{");
-});
+}
 
 for (const fragment of ["%", "%E0%A4%A", "panel%20two"]) {
   test(`tabs tolerate encoded or malformed fragments: ${fragment}`, async ({

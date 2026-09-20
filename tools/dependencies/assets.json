@@ -7,6 +7,14 @@
     "sha256": "979b6c28df92881a36009de0bda1e866bee043ad69d36e54509e7210723d9af4",
     "replacements": [
       {
+        "before": "const cloneNode = lookupGetter(ElementPrototype, 'cloneNode');",
+        "after": "const normalizeNode = lookupGetter(Node.prototype, 'normalize');\n    const cloneNode = lookupGetter(ElementPrototype, 'cloneNode');"
+      },
+      {
+        "before": "node.normalize();",
+        "after": "normalizeNode(node);"
+      },
+      {
         "before": "const ElementPrototype = Element.prototype;",
         "after": "const ElementPrototype = Element.prototype;\n    // Kadupul: cache selectors before a form named-property can shadow them.\n    const queryElementTemplates = lookupGetter(ElementPrototype, 'querySelectorAll');\n    const queryFragmentTemplates = lookupGetter(window.DocumentFragment.prototype, 'querySelectorAll');"
       },

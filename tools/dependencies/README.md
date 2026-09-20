@@ -31,9 +31,9 @@ percent escapes in tab fragments, use native anchor parsing with protocol/host
 comparison when identifying local tabs, and use jQuery's selector escaping
 instead of requiring native `URL`/`CSS.escape` support at the seven widget call sites.
 The older-jQuery escape fallback itself keeps its original native implementation.
-DOMPurify also caches prototype selector methods for template recursion so a
-form-associated named input cannot clobber its `querySelectorAll` call during
-in-place template scrubbing. Both fixes have regression tests that failed before
+DOMPurify also caches prototype selector and normalization methods for template recursion so a
+form-associated named input cannot clobber its `querySelectorAll` or `normalize` call during
+in-place template scrubbing. These fixes have regression tests that failed before
 the corresponding patches. License headers and the original upstream DOMPurify
 source map remain bundled; the locally patched bundle does not reference that
 map, whose line mappings describe unmodified upstream code.
