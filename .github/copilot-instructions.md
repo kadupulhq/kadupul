@@ -2,6 +2,12 @@ Copilot instructions for this repo (Kadupul)
 
 Use these notes to navigate and contribute productively to this PHP codebase.
 
+## Pull-request feedback
+
+Follow the GitHub review feedback rules in [AGENTS.md](../AGENTS.md): respond in
+the original GitHub thread with commit/test evidence, resolve only addressed
+findings, request re-review, and verify latest-head CI before an authorized merge.
+
 ## Big picture
 - Kadupul is a PHP web app + CLI poller/daemon that stores state in MySQL/MariaDB and graphs via RRDtool.
 - Bootstrap: `include/global.php` loads config, DB connection (`lib/database.php`), core libs, and sets `$config` globals. Web pages typically include `include/auth.php` first; CLI scripts include `include/cli_check.php`.
