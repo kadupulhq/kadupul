@@ -17,6 +17,53 @@ async function load(page, ...files) {
   }
 }
 
+test("DOMPurify discarded template cleanup tolerates a missing constructor", async ({ page }) => {
+  await page.evaluate(() => { window.HTMLTemplateElement = undefined; });
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const root = document.createElement("div");
+    root.innerHTML = '<section><template><img onerror="window.__discardedTemplate = true"></template></section>';
+    const section = root.firstChild;
+    const img = section.firstChild.content.firstChild;
+    DOMPurify.sanitize(root, { IN_PLACE: true, KEEP_CONTENT: false, FORBID_TAGS: ["section"] });
+    return { detached: section.parentNode === null, handler: img.hasAttribute("onerror") };
+  });
+  expect(result).toEqual({ detached: true, handler: false });
+});
+
+for (const phase of ["afterSanitizeElements", "customAfterElements", "beforeSanitizeAttributes", "uponSanitizeAttribute", "afterSanitizeAttributes"]) {
+  for (const tree of ["light", "template", "shadow"]) {
+    test(`DOMPurify defuses ${phase} detached subtrees in ${tree} trees`, async ({ page }) => {
+      await load(page, "purify.js");
+      const result = await page.evaluate(({ phase, tree }) => {
+        const root = document.createElement("div");
+        let container = root;
+        if (tree === "template") {
+          const template = document.createElement("template");
+          root.append(template);
+          container = template.content;
+        } else if (tree === "shadow") {
+          container = root.attachShadow({ mode: "open" });
+        }
+        const target = document.createElement(phase === "customAfterElements" ? "test-card" : "section");
+        target.setAttribute("title", "safe");
+        target.innerHTML = '<img onerror="window.__detachedHookEvent = true">';
+        const img = target.firstChild;
+        container.append(target);
+        let calls = 0;
+        const hook = phase === "customAfterElements" ? "afterSanitizeElements" : phase;
+        DOMPurify.addHook(hook, (node) => {
+          if (node === target) { calls++; node.remove(); }
+        });
+        DOMPurify.sanitize(root, { IN_PLACE: true, CUSTOM_ELEMENT_HANDLING: { tagNameCheck: /^test-card$/ } });
+        DOMPurify.removeAllHooks();
+        return { calls, detached: target.parentNode === null, handler: img.hasAttribute("onerror") };
+      }, { phase, tree });
+      expect(result).toEqual({ calls: 1, detached: true, handler: false });
+    });
+  }
+}
+
 test("DOMPurify template scrubbing tolerates a missing template constructor", async ({ page }) => {
   await page.evaluate(() => { window.HTMLTemplateElement = undefined; });
   await load(page, "purify.js");

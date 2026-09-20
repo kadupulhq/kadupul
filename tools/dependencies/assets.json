@@ -130,6 +130,42 @@
       {
         "before": "        arrayForEach(templates, tmpl => {",
         "after": "        arrayForEach(templates || [], tmpl => {"
+      },
+      {
+        "before": "if (getTemplateContent && transformCaseFunc(_readNodeName(node)) === 'template') {\n            const content = getTemplateContent(node);",
+        "after": "if (transformCaseFunc(_readNodeName(node)) === 'template') {\n            const content = getTemplateContent ? getTemplateContent(node) : node.content;"
+      },
+      {
+        "before": "          _executeHooks(hooks.afterSanitizeElements, currentNode, null);\n        }\n        return removed;",
+        "after": "          _executeHooks(hooks.afterSanitizeElements, currentNode, null);\n          if (_handleHookDetachedNode(currentNode, root, inPlace)) {\n            return true;\n          }\n        }\n        return removed;"
+      },
+      {
+        "before": "      _executeHooks(hooks.afterSanitizeElements, currentNode, null);\n      return false;",
+        "after": "      _executeHooks(hooks.afterSanitizeElements, currentNode, null);\n      return _handleHookDetachedNode(currentNode, root, inPlace);"
+      },
+      {
+        "before": "function _sanitizeAttributes(currentNode) {",
+        "after": "function _sanitizeAttributes(currentNode, root, inPlace) {\n      if (_handleHookDetachedNode(currentNode, root, inPlace)) {\n        return;\n      }"
+      },
+      {
+        "before": "_sanitizeAttributes(currentNode);",
+        "after": "_sanitizeAttributes(currentNode, walkRoot, inPlace);"
+      },
+      {
+        "before": "_sanitizeAttributes(shadowNode);",
+        "after": "_sanitizeAttributes(shadowNode, fragment, inPlace);"
+      },
+      {
+        "before": "      _executeHooks(hooks.beforeSanitizeAttributes, currentNode, null);",
+        "after": "      _executeHooks(hooks.beforeSanitizeAttributes, currentNode, null);\n      if (_handleHookDetachedNode(currentNode, root, inPlace)) {\n        return;\n      }"
+      },
+      {
+        "before": "        _executeHooks(hooks.uponSanitizeAttribute, currentNode, hookEvent);",
+        "after": "        _executeHooks(hooks.uponSanitizeAttribute, currentNode, hookEvent);\n        if (_handleHookDetachedNode(currentNode, root, inPlace)) {\n          return;\n        }"
+      },
+      {
+        "before": "      _executeHooks(hooks.afterSanitizeAttributes, currentNode, null);",
+        "after": "      _executeHooks(hooks.afterSanitizeAttributes, currentNode, null);\n      _handleHookDetachedNode(currentNode, root, inPlace);"
       }
     ]
   },

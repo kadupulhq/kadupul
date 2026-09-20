@@ -1338,8 +1338,8 @@
           if (shadow) {
             stack.push(shadow);
           }
-          if (getTemplateContent && transformCaseFunc(_readNodeName(node)) === 'template') {
-            const content = getTemplateContent(node);
+          if (transformCaseFunc(_readNodeName(node)) === 'template') {
+            const content = getTemplateContent ? getTemplateContent(node) : node.content;
             if (_isDocumentFragment(content)) {
               stack.push(content);
             }
@@ -1932,6 +1932,9 @@
            skipped; they are removal decisions, not the hook contract. */
         if (removed === false) {
           _executeHooks(hooks.afterSanitizeElements, currentNode, null);
+          if (_handleHookDetachedNode(currentNode, root, inPlace)) {
+            return true;
+          }
         }
         return removed;
       }
@@ -1964,7 +1967,7 @@
       }
       /* Execute a hook if present */
       _executeHooks(hooks.afterSanitizeElements, currentNode, null);
-      return false;
+      return _handleHookDetachedNode(currentNode, root, inPlace);
     };
     /**
      * _isValidAttribute
@@ -2156,9 +2159,15 @@
      * @param currentNode to sanitize
      */
     // eslint-disable-next-line complexity
-    const _sanitizeAttributes = function _sanitizeAttributes(currentNode) {
+    const _sanitizeAttributes = function _sanitizeAttributes(currentNode, root, inPlace) {
+      if (_handleHookDetachedNode(currentNode, root, inPlace)) {
+        return;
+      }
       /* Execute a hook if present */
       _executeHooks(hooks.beforeSanitizeAttributes, currentNode, null);
+      if (_handleHookDetachedNode(currentNode, root, inPlace)) {
+        return;
+      }
       const attributes = currentNode.attributes;
       /* Check if we have attributes; if not we might have a text node */
       if (!attributes || _isClobbered(currentNode)) {
@@ -2200,6 +2209,9 @@
         hookEvent.keepAttr = true;
         hookEvent.forceKeepAttr = undefined; // Allows developers to see this is a property they can set
         _executeHooks(hooks.uponSanitizeAttribute, currentNode, hookEvent);
+        if (_handleHookDetachedNode(currentNode, root, inPlace)) {
+          return;
+        }
         value = hookEvent.attrValue;
         /* Full DOM Clobbering protection via namespace isolation,
          * Prefix id and name attributes with `user-content-`
@@ -2264,6 +2276,7 @@
       }
       /* Execute a hook if present */
       _executeHooks(hooks.afterSanitizeAttributes, currentNode, null);
+      _handleHookDetachedNode(currentNode, root, inPlace);
     };
     /**
      * _sanitizeShadowDOM
@@ -2281,7 +2294,7 @@
         /* Sanitize tags and elements */
         _sanitizeElements(shadowNode, fragment, inPlace);
         /* Check attributes next */
-        _sanitizeAttributes(shadowNode);
+        _sanitizeAttributes(shadowNode, fragment, inPlace);
         /* Deep shadow DOM detected.
            Realm-safe check (GHSA-hpcv-96wg-7vj8): use nodeType against the
            DOCUMENT_FRAGMENT_NODE constant rather than instanceof, so we
@@ -2588,7 +2601,7 @@
           /* Sanitize tags and elements */
           _sanitizeElements(currentNode, walkRoot, inPlace);
           /* Check attributes next */
-          _sanitizeAttributes(currentNode);
+          _sanitizeAttributes(currentNode, walkRoot, inPlace);
           /* Shadow DOM detected, sanitize it.
              Realm-safe check (GHSA-hpcv-96wg-7vj8): nodeType-based detection
              instead of instanceof, so foreign-realm <template>.content is
