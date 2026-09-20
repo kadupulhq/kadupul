@@ -23,6 +23,16 @@ function read_config_option($name) { return ''; }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function db_execute_prepared(...$args) { echo 'WRITE'; exit; }
 function sanitize_unserialize_selected_items($value) { echo 'WRITE'; exit; }
+function db_fetch_assoc($sql) { return array(array('directory' => '2')); }
+function sanitize_search_string($value) { return $value; }
+function api_plugin_install($id) { echo 'WRITE'; exit; }
+function api_plugin_uninstall($id) { echo 'WRITE'; exit; }
+function api_plugin_enable($id) { echo 'WRITE'; exit; }
+function api_plugin_disable($id) { echo 'WRITE'; exit; }
+function api_plugin_moveup($id) { echo 'WRITE'; exit; }
+function api_plugin_movedown($id) { echo 'WRITE'; exit; }
+$config = array('poller_id' => 2);
+$plugins_integrated = array();
 session_id('admin-csrf-test');
 $_SESSION = array('sess_user_id' => 42);
 $_SERVER['REQUEST_METHOD'] = $argv[4];
@@ -33,6 +43,9 @@ if ($argv[3] === 'update_policy') {
     $_REQUEST['action'] = $argv[3];
 }
 if ($argv[5] === 'action_array') $_REQUEST['action'] = array('save');
+if ($argv[2] === 'plugins.php') {
+    $_REQUEST['mode'] = $argv[5] === 'action_array' ? array($argv[3]) : $argv[3];
+}
 $_POST = $argv[4] === 'POST' ? $_REQUEST : array();
 $_GET = $argv[4] === 'GET' ? $_REQUEST : array();
 if ($argv[5] === 'valid') $_POST['__csrf_magic'] = csrf_get_tokens();
@@ -72,8 +85,22 @@ PHP;
         }
         rmdir($dir);
     }
-})->with(array('user_admin.php', 'user_group_admin.php'))
-    ->with(array('update_policy', 'perm_remove', 'actions'))
+})->with(array(
+    array('user_admin.php', 'update_policy'),
+    array('user_admin.php', 'perm_remove'),
+    array('user_admin.php', 'actions'),
+    array('user_group_admin.php', 'update_policy'),
+    array('user_group_admin.php', 'perm_remove'),
+    array('user_group_admin.php', 'actions'),
+    array('plugins.php', 'install'),
+    array('plugins.php', 'uninstall'),
+    array('plugins.php', 'enable'),
+    array('plugins.php', 'disable'),
+    array('plugins.php', 'moveup'),
+    array('plugins.php', 'movedown'),
+    array('plugins.php', 'remote_enable'),
+    array('plugins.php', 'remote_disable'),
+))
     ->with(array(
         array('GET', 'missing', 405),
         array('GET', 'valid', 405),

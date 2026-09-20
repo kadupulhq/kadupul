@@ -7,6 +7,15 @@
 
 include('./include/auth.php');
 
+$requested_mode = get_nfilter_request_var('mode');
+if (!is_string($requested_mode)) {
+	http_response_code(400);
+	exit;
+}
+if (in_array($requested_mode, array('installold', 'uninstallold', 'install', 'uninstall', 'enable', 'disable', 'remote_enable', 'remote_disable', 'moveup', 'movedown'), true)) {
+	cacti_require_post_request();
+}
+
 global $local_db_cnn_id;
 
 $actions = array(
@@ -43,10 +52,10 @@ $modes = array(
 	'movedown'
 );
 
-if (isset_request_var('mode') && in_array(get_nfilter_request_var('mode'), $modes) && isset_request_var('id')) {
+if (isset_request_var('mode') && in_array($requested_mode, $modes, true) && isset_request_var('id')) {
 	get_filter_request_var('id', FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^([a-zA-Z0-9 _]+)$/')));
 
-	$mode = get_nfilter_request_var('mode');
+	$mode = $requested_mode;
 	$id   = sanitize_search_string(get_request_var('id'));
 
 	if (isset_request_var('header')) {
@@ -663,8 +672,15 @@ function update_show_current () {
 	var url = '';
 
 	$(function() {
+		$('.piinstall, .pienable, .pidisable, .moveArrow').on('click', function(event) {
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			loadPageUsingPost($(this).attr('href'), { __csrf_magic: csrfMagicToken, header: 'false' });
+		});
+
 		$('.piuninstall').on('click', function(event) {
 			event.preventDefault();
+			event.stopImmediatePropagation();
 			url = $(this).attr('href');
 
 			var btnUninstall = {
@@ -680,7 +696,7 @@ function update_show_current () {
 					id: 'btnUninstall',
 					click: function() {
 						$('#uninstalldialog').dialog('close');
-						document.location = url;
+						loadPageUsingPost(url, { __csrf_magic: csrfMagicToken, header: 'false' });
 					}
 				}
 			};
@@ -890,4 +906,3 @@ function plugin_actions($plugin, $table) {
 
 	return $link;
 }
-

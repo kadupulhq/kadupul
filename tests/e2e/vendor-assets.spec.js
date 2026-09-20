@@ -35,6 +35,43 @@ test("graph input delete handler sends the CSRF token by POST", async ({ page })
   });
 });
 
+test("plugin lifecycle links send token-bearing POST requests", async ({ page }) => {
+  const source = fs.readFileSync(path.resolve(__dirname, "../../plugins.php"), "utf8");
+  const handler = source.match(/\$\('\.piinstall, \.pienable, \.pidisable, \.moveArrow'\)\.on\('click', function\(event\) \{[\s\S]*?\n\t\t\}\);/);
+  expect(handler).not.toBeNull();
+  const classes = ["piinstall", "pienable", "pidisable", "moveArrow"];
+  await page.setContent(classes.map(name => `<a class="${name}" href="plugins.php?mode=fixture&id=2">${name}</a>`).join(""));
+  await load(page, "jquery.js");
+  await page.evaluate(() => {
+    window.csrfMagicToken = "body-token";
+    window.pluginRequests = [];
+    window.loadPageUsingPost = (url, data) => window.pluginRequests.push({ url, data });
+  });
+  await page.addScriptTag({ content: handler[0] });
+  for (const name of classes) await page.getByText(name, { exact: true }).click();
+  expect(await page.evaluate(() => window.pluginRequests)).toEqual(classes.map(() => ({
+    url: "plugins.php?mode=fixture&id=2", data: { __csrf_magic: "body-token", header: "false" },
+  })));
+});
+
+test("plugin uninstall confirmation posts instead of navigating", async ({ page }) => {
+  const source = fs.readFileSync(path.resolve(__dirname, "../../plugins.php"), "utf8");
+  const callback = source.match(/click: function\(\) \{\s*\$\('#uninstalldialog'\)\.dialog\('close'\);[\s\S]*?\n\t{5}\}/);
+  expect(callback).not.toBeNull();
+  await load(page, "jquery.js");
+  await page.evaluate(() => {
+    window.url = "plugins.php?mode=uninstall&id=2";
+    window.csrfMagicToken = "body-token";
+    $.fn.dialog = () => {};
+    window.loadPageUsingPost = (url, data) => { window.uninstallRequest = { url, data }; };
+  });
+  await page.addScriptTag({ content: `window.confirmPluginUninstall = ${callback[0].replace("click: ", "")};` });
+  await page.evaluate(() => window.confirmPluginUninstall());
+  expect(await page.evaluate(() => window.uninstallRequest)).toEqual({
+    url: "plugins.php?mode=uninstall&id=2", data: { __csrf_magic: "body-token", header: "false" },
+  });
+});
+
 test("DOMPurify abort clears shadow and template trees and unsafe URI attributes", async ({ page }) => {
   await load(page, "purify.js");
   const result = await page.evaluate(() => {

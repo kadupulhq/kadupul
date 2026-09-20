@@ -8,6 +8,7 @@ $coverageRoot = dirname(__DIR__, 2);
 require_once $coverageRoot . '/tests/vendor/autoload.php';
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
 if (defined('ADMIN_MUTATION_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/plugins.php');
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
     $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
