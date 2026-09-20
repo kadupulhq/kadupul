@@ -1,0 +1,297 @@
+[
+  {
+    "file": "purify.js",
+    "package": "dompurify",
+    "version": "3.4.15",
+    "url": "https://cdn.jsdelivr.net/npm/dompurify@3.4.15/dist/purify.js",
+    "sha256": "979b6c28df92881a36009de0bda1e866bee043ad69d36e54509e7210723d9af4",
+    "replacements": [
+      {
+        "before": "const getShadowRoot = lookupGetter(ElementPrototype, 'shadowRoot');",
+        "after": "const getShadowRoot = lookupGetter(ElementPrototype, 'shadowRoot');\n    const getTemplateContent = HTMLTemplateElement ? lookupGetter(HTMLTemplateElement.prototype, 'content') : null;"
+      },
+      {
+        "before": "          _stripDisallowedAttributes(node);\n        }\n        const childNodes = getChildNodes(node);",
+        "after": "          _stripDisallowedAttributes(node);\n          // Kadupul: fail-closed cleanup must also reach non-light DOM.\n          const shadow = getShadowRoot(node);\n          if (shadow) {\n            stack.push(shadow);\n          }\n          if (getTemplateContent && transformCaseFunc(_readNodeName(node)) === 'template') {\n            const content = getTemplateContent(node);\n            if (_isDocumentFragment(content)) {\n              stack.push(content);\n            }\n          }\n        }\n        const childNodes = getChildNodes(node);"
+      },
+      {
+        "before": "          _sanitizeAttachedShadowRoots(dirty);\n        } catch (error) {\n          _neutralizeRoot(dirty);\n          throw error;",
+        "after": "          _sanitizeAttachedShadowRoots(dirty);\n        } catch (error) {\n          _neutralizeRoot(dirty);\n          // Kadupul: removed shadow subtrees are no longer reachable from dirty.\n          arrayForEach(DOMPurify.removed, entry => {\n            if (entry.element) {\n              _neutralizeSubtree(entry.element);\n            }\n          });\n          throw error;"
+      },
+      {
+        "before": "        // No policy supplied: keep the currently active policy if one is set — a\n        // previously supplied policy is intentionally sticky across config-less\n        // calls — otherwise fall back to the instance's own internal policy,\n        // created at most once. (A policy supplied for a *single* call still\n        // lingers by design; what must not linger is a policy whose configuration\n        // has been torn down via `clearConfig()`, which restores the default.)\n        if (trustedTypesPolicy === undefined) {\n          trustedTypesPolicy = _getDefaultTrustedTypesPolicy();\n        }\n        // Sign internal variables only when a policy is active. A falsy policy\n        // (Trusted Types unsupported, creation failed, or an explicit opt-out)\n        // leaves `emptyHTML` as a plain string, so we never call `.createHTML` on\n        // a non-policy and throw. See #1422.\n        if (trustedTypesPolicy && typeof emptyHTML === 'string') {\n          emptyHTML = _createTrustedHTML('');\n        }",
+        "after": "        // Kadupul: a per-call policy must not leak into a fresh configuration.\n        // setConfig() remains persistent because sanitize skips parsing it.\n        trustedTypesPolicy = _getDefaultTrustedTypesPolicy();\n        emptyHTML = trustedTypesPolicy ? _createTrustedHTML('') : '';"
+      },
+      {
+        "before": "DOMPurify.sanitize = function (dirty) {",
+        "after": "const _sanitize = function (dirty) {"
+      },
+      {
+        "before": "    DOMPurify.setConfig = function () {",
+        "after": "    // Kadupul: nested calls must not replace the outer removal ledger.\n    let sanitizeDepth = 0;\n    DOMPurify.sanitize = function (dirty, cfg) {\n      _assertNotInTrustedTypesPolicy();\n      const previousRemoved = DOMPurify.removed;\n      const nested = sanitizeDepth > 0;\n      sanitizeDepth++;\n      try {\n        return _sanitize(dirty, cfg);\n      } finally {\n        sanitizeDepth--;\n        if (nested) {\n          DOMPurify.removed = previousRemoved;\n        }\n      }\n    };\n    DOMPurify.setConfig = function () {"
+      },
+      {
+        "before": "typeof name !== 'string' || ALLOWED_ATTR[transformCaseFunc(name)]",
+        "after": "typeof name !== 'string' || (ALLOWED_ATTR[transformCaseFunc(name)] && !FORBID_ATTR[transformCaseFunc(name)])"
+      },
+      {
+        "before": "function _handleHookDetachedNode(currentNode, root)",
+        "after": "function _handleHookDetachedNode(currentNode, root, inPlace)"
+      },
+      {
+        "before": "if (IN_PLACE) {\n        _neutralizeSubtree(currentNode);",
+        "after": "if (inPlace) {\n        _neutralizeSubtree(currentNode);"
+      },
+      {
+        "before": "function _sanitizeElements(currentNode, root)",
+        "after": "function _sanitizeElements(currentNode, root, inPlace)"
+      },
+      {
+        "before": "_handleHookDetachedNode(currentNode, root)",
+        "after": "_handleHookDetachedNode(currentNode, root, inPlace)",
+        "count": 2
+      },
+      {
+        "before": "function _sanitizeShadowDOM(fragment)",
+        "after": "function _sanitizeShadowDOM(fragment, inPlace)"
+      },
+      {
+        "before": "function _sanitizeAttachedShadowRoots(root)",
+        "after": "function _sanitizeAttachedShadowRoots(root, inPlace)"
+      },
+      {
+        "before": "_sanitizeElements(shadowNode, fragment);",
+        "after": "_sanitizeElements(shadowNode, fragment, inPlace);"
+      },
+      {
+        "before": "_sanitizeElements(currentNode, walkRoot);",
+        "after": "_sanitizeElements(currentNode, walkRoot, inPlace);"
+      },
+      {
+        "before": "_sanitizeShadowDOM2(shadowNode.content);",
+        "after": "_sanitizeShadowDOM2(shadowNode.content, inPlace);"
+      },
+      {
+        "before": "_sanitizeAttachedShadowRoots(innerSr);",
+        "after": "_sanitizeAttachedShadowRoots(innerSr, inPlace);"
+      },
+      {
+        "before": "_sanitizeShadowDOM2(innerSr);",
+        "after": "_sanitizeShadowDOM2(innerSr, inPlace);"
+      },
+      {
+        "before": "_sanitizeShadowDOM2(item.shadow);",
+        "after": "_sanitizeShadowDOM2(item.shadow, inPlace);"
+      },
+      {
+        "before": "_sanitizeAttachedShadowRoots(dirty);",
+        "after": "_sanitizeAttachedShadowRoots(dirty, inPlace);"
+      },
+      {
+        "before": "_sanitizeAttachedShadowRoots(body);",
+        "after": "_sanitizeAttachedShadowRoots(body, false);"
+      },
+      {
+        "before": "_sanitizeShadowDOM2(currentNode.content);",
+        "after": "_sanitizeShadowDOM2(currentNode.content, inPlace);"
+      },
+      {
+        "before": "const cloneNode = lookupGetter(ElementPrototype, 'cloneNode');",
+        "after": "const normalizeNode = lookupGetter(Node.prototype, 'normalize');\n    const cloneNode = lookupGetter(ElementPrototype, 'cloneNode');"
+      },
+      {
+        "before": "node.normalize();",
+        "after": "normalizeNode(node);"
+      },
+      {
+        "before": "const ElementPrototype = Element.prototype;",
+        "after": "const ElementPrototype = Element.prototype;\n    // Kadupul: cache selectors before a form named-property can shadow them.\n    const queryElementTemplates = lookupGetter(ElementPrototype, 'querySelectorAll');\n    const queryFragmentTemplates = lookupGetter(window.DocumentFragment.prototype, 'querySelectorAll');"
+      },
+      {
+        "before": "      var _node$querySelectorAl;\n",
+        "after": ""
+      },
+      {
+        "before": "const templates = (_node$querySelectorAl = node.querySelectorAll) === null || _node$querySelectorAl === void 0 ? void 0 : _node$querySelectorAl.call(node, 'template');",
+        "after": "const templates = (_isDocumentFragment(node) ? queryFragmentTemplates : queryElementTemplates)(node, 'template');"
+      },
+      {
+        "before": "//# sourceMappingURL=purify.js.map",
+        "after": "// Kadupul: upstream source map is not used for this locally patched bundle."
+      },
+      {
+        "before": "    const _scrubTemplateExpressions2 = function _scrubTemplateExpressions(node) {\n      normalizeNode(node);\n      /* Clobber-safe ownerDocument read, same reasoning as _createNodeIterator:\n         under SAFE_FOR_TEMPLATES this runs on the live IN_PLACE root, which may\n         carry a form-named-getter override of ownerDocument. */\n      const doc = getOwnerDocument ? getOwnerDocument(node) : node.ownerDocument;\n      const walker = createNodeIterator.call(doc || node, node,\n      // eslint-disable-next-line no-bitwise\n      NodeFilter.SHOW_TEXT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_CDATA_SECTION | NodeFilter.SHOW_PROCESSING_INSTRUCTION, null);\n      let currentNode = walker.nextNode();\n      while (currentNode) {\n        currentNode.data = _stripTemplateExpressions(currentNode.data);\n        currentNode = walker.nextNode();\n      }\n      // NodeIterator does not descend into <template>.content per the DOM spec,\n      // so we must explicitly recurse into each template's content fragment,\n      // mirroring the approach used by _sanitizeShadowDOM.\n      const templates = (_isDocumentFragment(node) ? queryFragmentTemplates : queryElementTemplates)(node, 'template');\n      if (templates) {\n        arrayForEach(templates, tmpl => {\n          if (_isDocumentFragment(tmpl.content)) {\n            _scrubTemplateExpressions2(tmpl.content);\n          }\n        });\n      }\n    };",
+        "after": "    const _scrubTemplateExpressions2 = function _scrubTemplateExpressions(node) {\n      // Kadupul: template content is a separate tree; use a work stack so\n      // attacker-controlled nesting cannot exhaust the JavaScript call stack.\n      const pending = [node];\n      while (pending.length > 0) {\n        const root = pending.pop();\n        normalizeNode(root);\n        const doc = getOwnerDocument ? getOwnerDocument(root) : root.ownerDocument;\n        const walker = createNodeIterator.call(doc || root, root,\n        // eslint-disable-next-line no-bitwise\n        NodeFilter.SHOW_TEXT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_CDATA_SECTION | NodeFilter.SHOW_PROCESSING_INSTRUCTION, null);\n        let currentNode;\n        while ((currentNode = walker.nextNode())) {\n          currentNode.data = _stripTemplateExpressions(currentNode.data);\n        }\n        const templates = (_isDocumentFragment(root) ? queryFragmentTemplates : queryElementTemplates)(root, 'template');\n        arrayForEach(templates, tmpl => {\n          const content = getTemplateContent(tmpl);\n          if (_isDocumentFragment(content)) {\n            pending.push(content);\n          }\n        });\n      }\n    };"
+      },
+      {
+        "before": "          const content = getTemplateContent(tmpl);",
+        "after": "          const content = getTemplateContent ? getTemplateContent(tmpl) : tmpl.content;"
+      },
+      {
+        "before": "        arrayForEach(templates, tmpl => {",
+        "after": "        arrayForEach(templates || [], tmpl => {"
+      },
+      {
+        "before": "if (getTemplateContent && transformCaseFunc(_readNodeName(node)) === 'template') {\n            const content = getTemplateContent(node);",
+        "after": "if (transformCaseFunc(_readNodeName(node)) === 'template') {\n            const content = getTemplateContent ? getTemplateContent(node) : node.content;"
+      },
+      {
+        "before": "          _executeHooks(hooks.afterSanitizeElements, currentNode, null);\n        }\n        return removed;",
+        "after": "          _executeHooks(hooks.afterSanitizeElements, currentNode, null);\n          if (_handleHookDetachedNode(currentNode, root, inPlace)) {\n            return true;\n          }\n        }\n        return removed;"
+      },
+      {
+        "before": "      _executeHooks(hooks.afterSanitizeElements, currentNode, null);\n      return false;",
+        "after": "      _executeHooks(hooks.afterSanitizeElements, currentNode, null);\n      return _handleHookDetachedNode(currentNode, root, inPlace);"
+      },
+      {
+        "before": "function _sanitizeAttributes(currentNode) {",
+        "after": "function _sanitizeAttributes(currentNode, root, inPlace) {\n      if (_handleHookDetachedNode(currentNode, root, inPlace)) {\n        return;\n      }"
+      },
+      {
+        "before": "_sanitizeAttributes(currentNode);",
+        "after": "_sanitizeAttributes(currentNode, walkRoot, inPlace);"
+      },
+      {
+        "before": "_sanitizeAttributes(shadowNode);",
+        "after": "_sanitizeAttributes(shadowNode, fragment, inPlace);"
+      },
+      {
+        "before": "      _executeHooks(hooks.beforeSanitizeAttributes, currentNode, null);",
+        "after": "      _executeHooks(hooks.beforeSanitizeAttributes, currentNode, null);\n      if (_handleHookDetachedNode(currentNode, root, inPlace)) {\n        return;\n      }"
+      },
+      {
+        "before": "        _executeHooks(hooks.uponSanitizeAttribute, currentNode, hookEvent);",
+        "after": "        _executeHooks(hooks.uponSanitizeAttribute, currentNode, hookEvent);\n        if (_handleHookDetachedNode(currentNode, root, inPlace)) {\n          return;\n        }"
+      },
+      {
+        "before": "      _executeHooks(hooks.afterSanitizeAttributes, currentNode, null);",
+        "after": "      _executeHooks(hooks.afterSanitizeAttributes, currentNode, null);\n      _handleHookDetachedNode(currentNode, root, inPlace);"
+      },
+      {
+        "before": "    const _neutralizeSubtree = function _neutralizeSubtree(root) {\n      const stack = [root];\n      while (stack.length > 0) {\n        const node = stack.pop();\n        const nodeType = _readNodeType(node);\n        if (nodeType === NODE_TYPE.element) {\n          _stripDisallowedAttributes(node);\n          // Kadupul: fail-closed cleanup must also reach non-light DOM.\n          const shadow = getShadowRoot(node);\n          if (shadow) {\n            stack.push(shadow);\n          }\n          if (transformCaseFunc(_readNodeName(node)) === 'template') {\n            const content = getTemplateContent ? getTemplateContent(node) : node.content;\n            if (_isDocumentFragment(content)) {\n              stack.push(content);\n            }\n          }\n        }\n        const childNodes = getChildNodes(node);\n        if (childNodes) {\n          for (let i = childNodes.length - 1; i >= 0; --i) {\n            stack.push(childNodes[i]);\n          }\n        }\n      }\n    };",
+        "after": "    const _neutralizeSubtree = function _neutralizeSubtree(root, abort = false) {\n      const stack = [root];\n      while (stack.length > 0) {\n        const node = stack.pop();\n        const nodeType = _readNodeType(node);\n        if (nodeType === NODE_TYPE.element) {\n          if (!abort) {\n            _stripDisallowedAttributes(node);\n          }\n          // Discarded/aborted trees must not retain URI or other active attributes.\n          const attributes = getAttributes(node);\n          if (abort && attributes) {\n            for (let i = attributes.length - 1; i >= 0; --i) {\n              const attribute = attributes[i];\n              if (attribute && typeof attribute.name === 'string') {\n                _stripAttributeNode(node, attribute, attribute.name);\n              }\n            }\n          }\n          // Kadupul: fail-closed cleanup must also reach non-light DOM.\n          const shadow = getShadowRoot(node);\n          if (shadow) {\n            stack.push(shadow);\n          }\n          if (transformCaseFunc(_readNodeName(node)) === 'template') {\n            const content = getTemplateContent ? getTemplateContent(node) : node.content;\n            if (_isDocumentFragment(content)) {\n              stack.push(content);\n            }\n          }\n        }\n        const childNodes = getChildNodes(node);\n        if (childNodes) {\n          for (let i = childNodes.length - 1; i >= 0; --i) {\n            const child = childNodes[i];\n            stack.push(child);\n            if (abort && _isDocumentFragment(node)) {\n              remove(child);\n            }\n          }\n        }\n      }\n    };"
+      },
+      {
+        "before": "    const _neutralizePatchLinkage = function _neutralizePatchLinkage(root) {\n      if (!SAFE_FOR_XML) {\n        return;\n      }\n      const stack = [root];\n      while (stack.length > 0) {\n        const node = stack.pop();\n        const nodeType = _readNodeType(node);\n        /* Remove range markers (the target side of a patch linkage): every\n           processing instruction, and any markup-bearing comment. */\n        if (nodeType === NODE_TYPE.processingInstruction || nodeType === NODE_TYPE.comment && regExpTest(COMMENT_MARKUP_PROBE, node.data)) {\n          try {\n            remove(node);\n          } catch (_) {\n            /* Best-effort */\n          }\n          continue;\n        }\n        /* Strip patch-source attributes (the source side) off elements. */\n        if (nodeType === NODE_TYPE.element) {\n          const element = node;\n          const lcTag = transformCaseFunc(_readNodeName(node));\n          try {\n            if (element.hasAttribute && element.hasAttribute('patchsrc')) {\n              element.removeAttribute('patchsrc');\n            }\n            if (element.hasAttribute && element.hasAttribute('for') && _isPatchLinkageAttribute('for', lcTag)) {\n              element.removeAttribute('for');\n            }\n          } catch (_) {\n            /* Clobbered removeAttribute/hasAttribute on a doomed node — ignore */\n          }\n        }\n        const childNodes = getChildNodes(node);\n        if (childNodes) {\n          for (let i = childNodes.length - 1; i >= 0; --i) {\n            stack.push(childNodes[i]);\n          }\n        }\n      }\n    };",
+        "after": "    const _neutralizePatchLinkage = function _neutralizePatchLinkage(root) {\n      if (!SAFE_FOR_XML) {\n        return;\n      }\n      const stack = [root];\n      while (stack.length > 0) {\n        const node = stack.pop();\n        const nodeType = _readNodeType(node);\n        /* Remove range markers (the target side of a patch linkage): every\n           processing instruction, and any markup-bearing comment. */\n        if (nodeType === NODE_TYPE.processingInstruction || nodeType === NODE_TYPE.comment && regExpTest(COMMENT_MARKUP_PROBE, node.data)) {\n          try {\n            remove(node);\n          } catch (_) {\n            /* Best-effort */\n          }\n          continue;\n        }\n        /* Strip patch-source attributes (the source side) off elements. */\n        if (nodeType === NODE_TYPE.element) {\n          const shadow = getShadowRoot(node);\n          if (shadow) {\n            stack.push(shadow);\n          }\n          if (transformCaseFunc(_readNodeName(node)) === 'template') {\n            const content = getTemplateContent ? getTemplateContent(node) : node.content;\n            if (_isDocumentFragment(content)) {\n              stack.push(content);\n            }\n          }\n          const element = node;\n          const lcTag = transformCaseFunc(_readNodeName(node));\n          try {\n            if (element.hasAttribute && element.hasAttribute('patchsrc')) {\n              element.removeAttribute('patchsrc');\n            }\n            if (element.hasAttribute && element.hasAttribute('for') && _isPatchLinkageAttribute('for', lcTag)) {\n              element.removeAttribute('for');\n            }\n          } catch (_) {\n            /* Clobbered removeAttribute/hasAttribute on a doomed node — ignore */\n          }\n        }\n        const childNodes = getChildNodes(node);\n        if (childNodes) {\n          for (let i = childNodes.length - 1; i >= 0; --i) {\n            stack.push(childNodes[i]);\n          }\n        }\n      }\n    };"
+      },
+      {
+        "before": "        const root = pending.pop();\n        normalizeNode(root);",
+        "after": "        const root = pending.pop();\n        if (_readNodeType(root) === NODE_TYPE.element && transformCaseFunc(_readNodeName(root)) === 'template') {\n          const content = getTemplateContent ? getTemplateContent(root) : root.content;\n          if (_isDocumentFragment(content)) {\n            pending.push(content);\n          }\n        }\n        normalizeNode(root);"
+      },
+      {
+        "before": "      _neutralizeSubtree(root);\n      const childNodes",
+        "after": "      _neutralizeSubtree(root, true);\n      const childNodes"
+      },
+      {
+        "before": "              _neutralizeSubtree(entry.element);",
+        "after": "              _neutralizeSubtree(entry.element, true);",
+        "count": 2
+      },
+      {
+        "before": "          const element = node;\n          const lcTag = transformCaseFunc(_readNodeName(node));\n          try {\n            if (element.hasAttribute && element.hasAttribute('patchsrc')) {\n              element.removeAttribute('patchsrc');\n            }\n            if (element.hasAttribute && element.hasAttribute('for') && _isPatchLinkageAttribute('for', lcTag)) {\n              element.removeAttribute('for');\n            }\n          } catch (_) {\n            /* Clobbered removeAttribute/hasAttribute on a doomed node — ignore */\n          }",
+        "after": "          const lcTag = transformCaseFunc(_readNodeName(node));\n          const attributes = getAttributes(node);\n          if (attributes) {\n            for (let i = attributes.length - 1; i >= 0; --i) {\n              const attribute = attributes[i];\n              const name = attribute && attribute.name;\n              if (typeof name === 'string' && _isPatchLinkageAttribute(transformCaseFunc(name), lcTag)) {\n                // Cached prototype removal cannot be shadowed by form controls.\n                removeAttributeNode(node, attribute);\n              }\n            }\n          }"
+      },
+      {
+        "before": "    const _sanitizeShadowDOM2 = function _sanitizeShadowDOM(fragment, inPlace) {\n      let shadowNode = null;\n      const shadowIterator = _createNodeIterator(fragment);\n      /* Execute a hook if present */\n      _executeHooks(hooks.beforeSanitizeShadowDOM, fragment, null);\n      while (shadowNode = shadowIterator.nextNode()) {\n        /* Execute a hook if present */\n        _executeHooks(hooks.uponSanitizeShadowNode, shadowNode, null);\n        /* Sanitize tags and elements */\n        _sanitizeElements(shadowNode, fragment, inPlace);\n        /* Check attributes next */\n        _sanitizeAttributes(shadowNode, fragment, inPlace);\n        /* Deep shadow DOM detected.\n           Realm-safe check (GHSA-hpcv-96wg-7vj8): use nodeType against the\n           DOCUMENT_FRAGMENT_NODE constant rather than instanceof, so we\n           recurse into <template>.content from foreign realms too. */\n        if (_isDocumentFragment(shadowNode.content)) {\n          _sanitizeShadowDOM2(shadowNode.content, inPlace);\n        }\n        /* An element iterated here may itself host an attached\n           shadow root. The default NodeIterator does not enter shadow\n           trees, so a shadow root nested inside template.content was\n           previously reached by no walk at all (the pre-pass at\n           _sanitizeAttachedShadowRoots descends via childNodes, which\n           doesn't enter template.content; the template-content recursion\n           above iterates the content but never inspected shadowRoot).\n           Walk it explicitly. The nodeType guard avoids reading\n           shadowRoot off text / comment / CDATA / PI nodes that the\n           iterator also surfaces. */\n        if (_readNodeType(shadowNode) === NODE_TYPE.element) {\n          const innerSr = getShadowRoot(shadowNode);\n          if (_isDocumentFragment(innerSr)) {\n            _sanitizeAttachedShadowRoots(innerSr, inPlace);\n            _sanitizeShadowDOM2(innerSr, inPlace);\n          }\n        }\n      }\n      /* Execute a hook if present */\n      _executeHooks(hooks.afterSanitizeShadowDOM, fragment, null);\n    };",
+        "after": "    const _sanitizeShadowDOM2 = function _sanitizeShadowDOM(fragment, inPlace) {\n      // Explicit frames preserve nested before/upon/after hook order without\n      // spending the JavaScript call stack on attacker-controlled tree depth.\n      const frames = [{ enter: fragment }];\n      while (frames.length > 0) {\n        const frame = frames.pop();\n        if (frame.enter) {\n          const iterator = _createNodeIterator(frame.enter);\n          _executeHooks(hooks.beforeSanitizeShadowDOM, frame.enter, null);\n          frames.push({ fragment: frame.enter, iterator });\n          continue;\n        }\n        if (frame.host) {\n          const shadow = getShadowRoot(frame.host);\n          if (_isDocumentFragment(shadow)) {\n            frames.push({ enter: shadow });\n          }\n          continue;\n        }\n        const shadowNode = frame.iterator.nextNode();\n        if (!shadowNode) {\n          _executeHooks(hooks.afterSanitizeShadowDOM, frame.fragment, null);\n          continue;\n        }\n        frames.push(frame);\n        _executeHooks(hooks.uponSanitizeShadowNode, shadowNode, null);\n        _sanitizeElements(shadowNode, frame.fragment, inPlace);\n        _sanitizeAttributes(shadowNode, frame.fragment, inPlace);\n        if (_readNodeType(shadowNode) === NODE_TYPE.element) {\n          // Read the shadow root after the template-content frame completes.\n          frames.push({ host: shadowNode });\n          if (transformCaseFunc(_readNodeName(shadowNode)) === 'template') {\n            const content = getTemplateContent ? getTemplateContent(shadowNode) : shadowNode.content;\n            if (_isDocumentFragment(content)) {\n              frames.push({ enter: content });\n            }\n          }\n        }\n      }\n    };"
+      },
+      {
+        "before": "            /* Push the deferred sanitise first so it pops after the shadow\n               walk we push next, i.e. nested shadow roots are discovered\n               before this one is sanitised. */\n            stack.push({\n              node: null,\n              shadow: sr\n            }, {\n              node: sr,\n              shadow: null\n            });",
+        "after": "            // The iterative sanitizer owns this entire shadow tree, including\n            // nested roots. Discovering them again would duplicate hook calls.\n            stack.push({\n              node: null,\n              shadow: sr\n            });"
+      },
+      {
+        "before": "      /* Iterative (explicit stack) rather than per-child recursion. DOM APIs\n         impose no depth cap, so an attacker-shaped tree (JSON/CRDT/editor data\n         built straight into the DOM — the IN_PLACE surface) deeper than the JS\n         call-stack budget would otherwise overflow native recursion here and\n         throw at the IN_PLACE entry pre-pass, before a single node is\n         sanitized, leaving the caller's live tree untouched (fail-open). See\n         campaign-3 F4. A heap stack keeps depth off the call stack.\n              Each work item is either a node to descend into, or a deferred\n         `_sanitizeShadowDOM` for an already-walked shadow root. The deferred\n         form preserves the original post-order discipline: a shadow root's\n         nested shadow roots are discovered before the outer shadow is\n         sanitized (which may remove hosts). Pushes are in reverse of the\n         desired processing order (LIFO): template content, then children, then\n         the shadow-sanitize, then the shadow walk — so the order matches the\n         previous recursion exactly. */\n",
+        "after": "      // Discover roots in light/template trees iteratively. Each discovered\n      // shadow root is owned by the iterative sanitizer, which also handles\n      // its nested roots; do not separately prewalk those roots a second time.\n"
+      },
+      {
+        "before": "        /* (pushed before children → processed after them, matching the old\n           \"template content last\" order) When the node is a <template>,\n           descend into its content. */\n        if (isElement) {\n          const rootName = getNodeName ? getNodeName(node) : null;\n          if (typeof rootName === 'string' && transformCaseFunc(rootName) === 'template') {\n            const content = node.content;\n            if (_isDocumentFragment(content)) {\n              stack.push({\n                node: content,\n                shadow: null\n              });\n            }\n          }\n        }\n",
+        "after": "        // Template content is a separate, inert tree. The main sanitizer\n        // enters it and owns its attached shadows; prewalking it duplicates hooks.\n"
+      },
+      {
+        "before": "      // Discover roots in light/template trees iteratively.",
+        "after": "      // Discover roots in light DOM iteratively; the main walk owns templates."
+      }
+    ]
+  },
+  {
+    "file": "purify.js.map",
+    "package": "dompurify",
+    "version": "3.4.15",
+    "url": "https://cdn.jsdelivr.net/npm/dompurify@3.4.15/dist/purify.js.map",
+    "sha256": "17fb521d869b004df2a25946311f1ade6272f4f9a81644fc861273bbd058a0c8"
+  },
+  {
+    "file": "d3.js",
+    "package": "d3",
+    "version": "7.9.0",
+    "url": "https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.js",
+    "sha256": "0c0d58be2106c14e242fc75bc09a17467800630751580665f6e9552a0c064ea2",
+    "replacements": [
+      {
+        "before": "function quantileIndex(values, p, valueof = number$3) {\n  if (isNaN(p = +p)) return;",
+        "after": "function quantileIndex(values, p, valueof = number$3) {\n  if (isNaN(p = +p)) return;\n  // Kadupul: consume single-use iterables once before indexed access.\n  values = array(values);"
+      },
+      {
+        "before": "      index = Uint32Array.from(values, (_, i) => i),\n      j = numbers.length - 1,",
+        "after": "      index = Uint32Array.from(values, (_, i) => i).filter(i => !isNaN(numbers[i])),\n      j = index.length - 1,"
+      }
+    ]
+  },
+  {
+    "file": "jquery-ui.js",
+    "package": "jquery-ui",
+    "version": "1.14.2",
+    "url": "https://code.jquery.com/ui/1.14.2/jquery-ui.js",
+    "sha256": "cca6e2f08d89e40f7f02d5c45ea7ea64ddb732dd70a5573210360217f3d260ac",
+    "patch": "ui-back-compat",
+    "replacements": [
+      {
+        "before": "var anchorUrl = new URL( anchor.href ),\n\t\t\tlocationUrl = new URL( location.href );",
+        "after": "var anchorUrl = anchor,\n\t\t\tlocationUrl = document.createElement( \"a\" );\n\t\tlocationUrl.href = location.href;"
+      },
+      {
+        "before": "anchorUrl.origin === locationUrl.origin &&",
+        "after": "anchorUrl.protocol === locationUrl.protocol &&\n\t\t\tanchorUrl.host === locationUrl.host &&"
+      },
+      {
+        "before": "locationHashDecoded = decodeURIComponent( locationHash );",
+        "after": "locationHashDecoded = locationHash;\n\n\t\ttry {\n\t\t\tlocationHashDecoded = decodeURIComponent( locationHash );\n\t\t} catch ( error ) {\n\t\t\t// Kadupul: malformed fragments retain their literal identifiers.\n\t\t}"
+      },
+      {
+        "before": "panelId = decodeURIComponent( panelId );",
+        "after": "try {\n\t\t\t\t\t\tpanelId = decodeURIComponent( panelId );\n\t\t\t\t\t} catch ( error ) {\n\t\t\t\t\t\t// Kadupul: malformed fragments retain their literal identifiers.\n\t\t\t\t\t}"
+      },
+      {
+        "before": "CSS.escape(",
+        "after": "$.escapeSelector(",
+        "count": 8
+      },
+      {
+        "before": "return $.escapeSelector( id + \"\" );",
+        "after": "return CSS.escape( id + \"\" );"
+      }
+    ]
+  },
+  {
+    "file": "jquery.tablesorter.js",
+    "package": "tablesorter",
+    "version": "2.32.0",
+    "url": "https://cdn.jsdelivr.net/npm/tablesorter@2.32.0/dist/js/jquery.tablesorter.js",
+    "sha256": "78d7efca4f4d4c0b93b8552fec5c52a36866d5059f64f430ba5bbaf7af74d3c4"
+  },
+  {
+    "file": "jquery.tablesorter.widgets.js",
+    "package": "tablesorter",
+    "version": "2.32.0",
+    "url": "https://cdn.jsdelivr.net/npm/tablesorter@2.32.0/dist/js/jquery.tablesorter.widgets.js",
+    "sha256": "08efcb88c8cae759cf07a51f4f53ab879b17550e1db34cac18e1d54311c48650"
+  },
+  {
+    "file": "jquery.tablesorter.pager.js",
+    "package": "tablesorter",
+    "version": "2.32.0",
+    "url": "https://raw.githubusercontent.com/Mottie/tablesorter/v2.32.0/addons/pager/jquery.tablesorter.pager.js",
+    "sha256": "f11f6e3d22509862004729ec1ab44e2245c87e4c902b22c4a2f765aad198a285"
+  }
+]

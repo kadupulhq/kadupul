@@ -88,6 +88,16 @@ jobs:
           mise exec python@3.12.12 -- python tests/Support/Behavior/coverage_selftest.py --unit tests/coverage.php --integration "$RUNNER_TEMP/poller-coverage"
           php tests/Support/Behavior/merge_poller_coverage.php tests/coverage.php "$RUNNER_TEMP/poller-coverage" tests/coverage.xml
 
+      - name: Set up Node for dependency maintenance tests
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '22'
+
+      - name: Dependency maintenance tests with coverage
+        run: |
+          node --experimental-test-coverage --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=tests/vendor-sync.lcov tests/Unit/vendor-sync.test.mjs
+          test -s tests/vendor-sync.lcov
+
       - name: Scan
         uses: SonarSource/sonarqube-scan-action@22918119ff8e1ca75a623e15c8296b6ea4fbe28f # v8.2.1
         env:

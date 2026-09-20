@@ -103,6 +103,7 @@ resource/**/*.cache
 *.tar.gz.sha256
 coverage/
 tests/coverage.xml
+tests/vendor-sync.lcov
 .phpunit.result.cache
 .phpunit.cache/
 .php-cs-fixer.cache
