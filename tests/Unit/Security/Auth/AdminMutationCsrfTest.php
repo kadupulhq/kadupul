@@ -104,7 +104,10 @@ PHP;
                 }
             }
         }
-        expect(file_get_contents($dir . '/server.log'))->not->toMatch('/PHP (Fatal error|Warning|Notice)/');
+        $serverLog = file_get_contents($dir . '/server.log');
+        if (preg_match('/PHP (Fatal error|Warning|Notice)/', $serverLog)) {
+            throw new RuntimeException($serverLog);
+        }
     } finally {
         if (is_resource($server)) {
             proc_terminate($server);
