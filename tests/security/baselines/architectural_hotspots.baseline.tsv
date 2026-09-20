@@ -540,7 +540,7 @@ host_header	./lib/html_utility.php:1079		} elseif (isset($_SERVER['HTTP_HOST']) 
 host_header	./lib/html_utility.php:1080			$srv_host = preg_replace('/:\d+$/', '', $_SERVER['HTTP_HOST']);
 sort_order_input	./automation_snmp.php:515				ORDER BY sequence', array(get_request_var('id')));
 sort_order_input	./data_queries.php:854						ORDER BY field_name, sequence', array(get_request_var('id'), $data_template['id']));
-sort_order_input	./graph_templates.php:486			ORDER BY name', array(get_request_var('id')));
+sort_order_input	./graph_templates.php:489			ORDER BY name', array(get_request_var('id')));
 sort_order_input	./graph_templates_inputs.php:179			ORDER BY gti.sequence", array(get_request_var('id'), get_request_var('graph_template_id')));
 sort_order_input	./graphs.php:1346				ORDER BY gti.sequence", array(get_request_var('id')));
 sort_order_input	./host_templates.php:449				ORDER BY graph_templates.name', array(get_request_var('id')));

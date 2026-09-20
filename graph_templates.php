@@ -1,10 +1,13 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
 include('./include/auth.php');
+cacti_require_post_actions(array('save', 'actions'));
+
 include_once('./lib/api_graph.php');
 include_once('./lib/api_data_source.php');
 include_once('./lib/api_tree.php');
@@ -905,4 +908,3 @@ function template() {
 
 	form_end();
 }
-

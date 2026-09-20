@@ -772,10 +772,10 @@ header_redirect	./gprint_presets.php:67				header('Location: gprint_presets.php?
 header_redirect	./gprint_presets.php:70				header('Location: gprint_presets.php?header=false');
 header_redirect	./gprint_presets.php:98			header('Location: gprint_presets.php?header=false');
 header_redirect	./graph.php:57		header('Location: permission_denied.php');
-header_redirect	./graph_templates.php:192		header('Location: graph_templates.php?header=false&action=template_edit&id=' . (empty($graph_template_id) ? get_nfilter_request_var('graph_template_id') : $graph_template_id));
-header_redirect	./graph_templates.php:322			header('Location: graph_templates.php?header=false');
-header_redirect	./graph_templates.php:412			header('Location: graph_templates.php?header=false');
-header_redirect	./graph_templates.php:43			header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
+header_redirect	./graph_templates.php:195		header('Location: graph_templates.php?header=false&action=template_edit&id=' . (empty($graph_template_id) ? get_nfilter_request_var('graph_template_id') : $graph_template_id));
+header_redirect	./graph_templates.php:325			header('Location: graph_templates.php?header=false');
+header_redirect	./graph_templates.php:415			header('Location: graph_templates.php?header=false');
+header_redirect	./graph_templates.php:46			header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
 header_redirect	./graph_templates_inputs.php:21			header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
 header_redirect	./graph_templates_inputs.php:96				header('Location: graph_templates_inputs.php?header=false&action=input_edit&graph_template_input_id=' . (empty($graph_template_input_id) ? get_nfilter_request_var('graph_template_input_id') : $graph_template_input_id) . '&graph_template_id=' . get_nfilter_request_var('graph_template_id'));
 header_redirect	./graph_templates_inputs.php:99				header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_nfilter_request_var('graph_template_id'));

@@ -104,12 +104,12 @@ $class = new ReflectionClass('Installer');
 $installer = $class->newInstanceWithoutConstructor();
 $probe = $class->getMethod('probePhpBinary');
 $probe->setAccessible(true);
-echo json_encode($probe->invoke($installer, $argv[2], 7, 0.1));
+echo json_encode($probe->invoke($installer, $argv[2], 7, $argv[3] === 'timeout' ? 0.1 : 5));
 PHP;
     try {
         $disabled = $scenario === 'no_proc' ? 'proc_open,shell_exec,exec,popen' : 'shell_exec,exec,popen';
         $start = microtime(true);
-        $process = proc_open(array(PHP_BINARY, '-d', 'disable_functions=' . $disabled, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $prelude . $program, $root, $binary), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $process = proc_open(array(PHP_BINARY, '-d', 'disable_functions=' . $disabled, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $prelude . $program, $root, $binary, $scenario), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
         $stdout = stream_get_contents($pipes[1]);
         $stderr = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
