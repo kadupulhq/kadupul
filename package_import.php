@@ -685,7 +685,7 @@ function import_display_package_data($templates, $files, $package_name, $xmlfile
 				}
 
 				if (cacti_sizeof($diff_array)) {
-					// Mixed imported values and color spans are purified at the output boundary.
+					// Purify mixed values and color spans below; do not double-escape the rich markup.
 					$diff_details .= __('Differences') . '<br>' . implode('<br>', $diff_array);
 				}
 

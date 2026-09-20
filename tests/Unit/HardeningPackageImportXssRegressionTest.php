@@ -25,9 +25,8 @@ test('GHSA-wqqv-4rrg-mrrc: package name column uses form_selectable_ecell', func
 });
 
 test('GHSA-wqqv-4rrg-mrrc: diff_array is not double-escaped', function () use ($pkgSource) {
-	// Entries in $diff_array are pre-escaped at source in lib/import.php.
-	// Wrapping them again with array_map('html_escape') would double-encode
-	// the color spans used to highlight differences, breaking the UI.
+	// Mixed values and rich markup are purified at the output boundary.
+	// Blanket escaping would encode the color spans and break the UI.
 	$doubleEscape = strpos($pkgSource, "array_map('html_escape', \$diff_array)");
 	expect($doubleEscape)->toBeFalse();
 });
