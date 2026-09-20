@@ -23,6 +23,17 @@ $database_ssl_ca   = '';
 $database_persist  = false;
 
 /**
+ * Main only: trusted CLI PHP executables for installer probes. By default the
+ * current CLI binary is allowed for CLI installs; web installs use PHP_BINDIR/php
+ * (php.exe beside the running PHP binary on Windows). Add absolute paths when deployments
+ * use another PHP installation. This list is server-controlled, not a UI setting.
+ * Symlink aliases are accepted only when they resolve to a listed executable.
+ * Use an empty array to disable probes. Keep listed binaries and their parent
+ * directories outside the web user's write permissions. LTS is unchanged.
+ */
+//$installer_allowed_php_binaries = array('/usr/bin/php', '/opt/php/bin/php');
+
+/**
  * When the cacti server is a remote poller, then these entries point to
  * the main cacti server. Otherwise, these variables have no use and
  * must remain commented out.

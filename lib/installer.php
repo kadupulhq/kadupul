@@ -803,6 +803,82 @@ class Installer implements JsonSerializable
         return $paths;
     }
 
+    /** Probe a configured PHP executable without invoking a command shell. */
+    private function probePhpBinary($path, $input, $timeout = 5)
+    {
+        global $installer_allowed_php_binaries;
+
+        foreach (array('proc_open', 'proc_get_status', 'proc_terminate', 'proc_close') as $function) {
+            if (!function_exists($function)) {
+                return false;
+            }
+        }
+        if (!is_string($path) || str_contains($path, "\0")) {
+            return false;
+        }
+        // Main: only server-configured executables may run, never an arbitrary
+        // request-selected program. Resolve aliases before comparing paths.
+        $defaultBinary = PHP_SAPI === 'cli' ? PHP_BINARY : (PHP_OS_FAMILY === 'Windows' ? dirname(PHP_BINARY) . DIRECTORY_SEPARATOR . 'php.exe' : PHP_BINDIR . DIRECTORY_SEPARATOR . 'php');
+        $allowed = $installer_allowed_php_binaries ?? array($defaultBinary);
+        if (!is_array($allowed)) {
+            return false;
+        }
+        $requested = realpath($path);
+        $executable = false;
+        foreach ($allowed as $candidate) {
+            if (!is_string($candidate) || str_contains($candidate, "\0")) {
+                continue;
+            }
+            $trusted = realpath($candidate);
+            if ($trusted !== false && $trusted === $requested && is_file($trusted) && is_executable($trusted)) {
+                $executable = $trusted;
+                break;
+            }
+        }
+        if ($executable === false) {
+            return false;
+        }
+
+        $process = null;
+        try {
+            $null = PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null';
+            $process = @proc_open(
+                array($executable, '-q', dirname(__DIR__) . '/install/cli_test.php', (string) $input, '--exit-status'),
+                array(0 => array('file', $null, 'r'), 1 => array('file', $null, 'w'), 2 => array('file', $null, 'w')),
+                $pipes,
+                null,
+                null,
+                array('bypass_shell' => true)
+            );
+            if (!is_resource($process)) {
+                return false;
+            }
+            $deadline = microtime(true) + $timeout;
+            do {
+                $status = proc_get_status($process);
+                if (!$status || !$status['running']) {
+                    if (!$status || $status['exitcode'] !== ($input * $input) % 251 + 1) {
+                        return false;
+                    }
+                    return (string) ($input * $input);
+                }
+                usleep(10000);
+            } while (microtime(true) < $deadline);
+
+            return false;
+        } catch (Throwable $error) {
+            return false;
+        } finally {
+            if (is_resource($process)) {
+                $status = proc_get_status($process);
+                if ($status && $status['running']) {
+                    proc_terminate($process, 9);
+                }
+                proc_close($process);
+            }
+        }
+    }
+
     /* setPaths() - sets paths set in the array, checking for a number of
      *              issues.  The array should be key->path which is compared
      *              against $this->paths
@@ -822,6 +898,13 @@ class Installer implements JsonSerializable
                 $check = isset($this->paths[$name]['install_check']) ? $this->paths[$name]['install_check'] : 'file_exists';
                 $optional = isset($this->paths[$name]['install_optional']) ? $this->paths[$name]['install_optional'] : false;
                 $blank = isset($this->paths[$name]['install_blank']) ? $this->paths[$name]['install_blank'] : false;
+                if (($optional || $blank) && ($path === false || $path === null)) {
+                    $path = '';
+                }
+                if (!is_string($path) || str_contains($path, "\0")) {
+                    $this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('Unexpected path parameter'));
+                    continue;
+                }
                 log_install_high('paths', sprintf('setPaths(): name: %-25s, key_exists: %-5s, optional: %-5s, check: %s, path: %s', $name, $key_exists, $optional, $check, $path));
                 if ($key_exists) {
                     $should_set = true;
@@ -844,15 +927,16 @@ class Installer implements JsonSerializable
 
                     if ($should_set && $name == 'path_php_binary') {
                         $input = mt_rand(2, 64);
-                        $output = shell_exec(
-                            cacti_escapeshellarg($path) . ' -q ' .
-                            cacti_escapeshellarg($config['base_path'] . '/install/cli_test.php') .
-                            ' ' . $input
-                        );
+                        // Persist the checked target, not a request-supplied
+                        // symlink that could later point to another executable.
+                        $canonicalPath = realpath($path);
+                        $output = $this->probePhpBinary($canonicalPath, $input);
 
-                        if ($output != $input * $input) {
-                            $this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('PHP did not return expected result'));
+                        if ($output === false || trim($output) !== (string) ($input * $input)) {
+                            $this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('PHP is not in the server-configured installer allowlist or did not return the expected result'));
                             $should_set = false;
+                        } else {
+                            $path = $canonicalPath;
                         }
                     }
 
