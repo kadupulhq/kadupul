@@ -981,6 +981,8 @@ function quantileSorted(values, p, valueof = number$3) {
 
 function quantileIndex(values, p, valueof = number$3) {
   if (isNaN(p = +p)) return;
+  // Kadupul: consume single-use iterables once before indexed access.
+  values = array(values);
   numbers = Float64Array.from(values, (_, i) => number$3(valueof(values[i], i, values)));
   if (p <= 0) return minIndex(numbers);
   if (p >= 1) return maxIndex(numbers);

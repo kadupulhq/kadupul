@@ -16,6 +16,83 @@ async function load(page, ...files) {
   }
 }
 
+test("DOMPurify scopes caller Trusted Types policy to its configuration", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    let calls = 0;
+    const policy = trustedTypes.createPolicy("kadupul-regression", {
+      createHTML(value) { calls++; return value; },
+      createScriptURL(value) { return value; },
+    });
+    DOMPurify.sanitize("<b>first</b>", { TRUSTED_TYPES_POLICY: policy });
+    const beforeDefault = calls;
+    const normal = DOMPurify.sanitize("<b>second</b>", { RETURN_TRUSTED_TYPE: true });
+    const defaultCalls = calls - beforeDefault;
+    DOMPurify.setConfig({ TRUSTED_TYPES_POLICY: policy, RETURN_TRUSTED_TYPE: true });
+    const beforePersistent = calls;
+    DOMPurify.sanitize("<b>persistent</b>");
+    const persistentCalls = calls - beforePersistent;
+    DOMPurify.clearConfig();
+    const beforeClear = calls;
+    DOMPurify.sanitize("<b>cleared</b>", { RETURN_TRUSTED_TYPE: true });
+    const clearedCalls = calls - beforeClear;
+    const optedOut = DOMPurify.sanitize("<b>plain</b>", { TRUSTED_TYPES_POLICY: null, RETURN_TRUSTED_TYPE: true });
+    return { defaultCalls, persistentCalls, clearedCalls, trusted: trustedTypes.isHTML(normal), optedOut: typeof optedOut };
+  });
+  expect(result.defaultCalls).toBe(0);
+  expect(result.persistentCalls).toBeGreaterThan(0);
+  expect(result.clearedCalls).toBe(0);
+  expect(result.trusted).toBe(true);
+  expect(result.optedOut).toBe("string");
+});
+
+for (const abort of [false, true]) {
+  test(`DOMPurify retains prior outer removals across a nested call (abort=${abort})`, async ({ page }) => {
+    await load(page, "purify.js");
+    const result = await page.evaluate((abort) => {
+      const root = document.createElement("div");
+      root.innerHTML = '<section><img onerror="window.__removedEvent=true"></section><b>trigger</b>';
+      const removed = root.firstChild;
+      const img = removed.firstChild;
+      let nested = false;
+      DOMPurify.addHook("beforeSanitizeElements", (node) => {
+        if (node.nodeName === "B" && !nested) {
+          nested = true;
+          try {
+            DOMPurify.sanitize("<i>nested</i>");
+          } catch (error) {
+            if (!abort || error.message !== "fixture abort") throw error;
+          }
+        } else if (node.nodeName === "I" && abort) {
+          throw new Error("fixture abort");
+        }
+      });
+      DOMPurify.sanitize(root, { IN_PLACE: true, FORBID_TAGS: ["section"], KEEP_CONTENT: false });
+      DOMPurify.removeAllHooks();
+      return { nested, detached: removed.parentNode === null, handler: img.hasAttribute("onerror"), tracked: DOMPurify.removed.some((entry) => entry.element === removed) };
+    }, abort);
+    expect(result).toEqual({ nested: true, detached: true, handler: false, tracked: true });
+  });
+}
+
+test("D3 quantileIndex handles arrays, sets and single-use iterators", async ({ page }) => {
+  await load(page, "d3.js");
+  const result = await page.evaluate(() => {
+    const values = [30, 10, 20];
+    const collect = (factory) => [0, 0.5, 1].map((p) => d3.quantileIndex(factory(), p));
+    const array = collect(() => values);
+    const set = collect(() => new Set(values));
+    const generator = collect(() => (function* () { yield* values; })());
+    const objects = (function* () { yield { n: 30 }; yield { n: 10 }; yield { n: 20 }; })();
+    const accessor = d3.quantileIndex(objects, 0.5, (value, index, materialized) => {
+      if (materialized[index] !== value) throw new Error("Invalid accessor collection");
+      return value.n;
+    });
+    return { array, set, generator, accessor };
+  });
+  expect(result).toEqual({ array: [1, 2, 0], set: [1, 2, 0], generator: [1, 2, 0], accessor: 2 });
+});
+
 test("DOMPurify discarded subtrees respect explicit forbidden attributes", async ({ page }) => {
   await load(page, "purify.js");
   const result = await page.evaluate(() => {

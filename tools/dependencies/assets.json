@@ -7,6 +7,18 @@
     "sha256": "979b6c28df92881a36009de0bda1e866bee043ad69d36e54509e7210723d9af4",
     "replacements": [
       {
+        "before": "        // No policy supplied: keep the currently active policy if one is set — a\n        // previously supplied policy is intentionally sticky across config-less\n        // calls — otherwise fall back to the instance's own internal policy,\n        // created at most once. (A policy supplied for a *single* call still\n        // lingers by design; what must not linger is a policy whose configuration\n        // has been torn down via `clearConfig()`, which restores the default.)\n        if (trustedTypesPolicy === undefined) {\n          trustedTypesPolicy = _getDefaultTrustedTypesPolicy();\n        }\n        // Sign internal variables only when a policy is active. A falsy policy\n        // (Trusted Types unsupported, creation failed, or an explicit opt-out)\n        // leaves `emptyHTML` as a plain string, so we never call `.createHTML` on\n        // a non-policy and throw. See #1422.\n        if (trustedTypesPolicy && typeof emptyHTML === 'string') {\n          emptyHTML = _createTrustedHTML('');\n        }",
+        "after": "        // Kadupul: a per-call policy must not leak into a fresh configuration.\n        // setConfig() remains persistent because sanitize skips parsing it.\n        trustedTypesPolicy = _getDefaultTrustedTypesPolicy();\n        emptyHTML = trustedTypesPolicy ? _createTrustedHTML('') : '';"
+      },
+      {
+        "before": "DOMPurify.sanitize = function (dirty) {",
+        "after": "const _sanitize = function (dirty) {"
+      },
+      {
+        "before": "    DOMPurify.setConfig = function () {",
+        "after": "    // Kadupul: nested calls must not replace the outer removal ledger.\n    let sanitizeDepth = 0;\n    DOMPurify.sanitize = function (dirty, cfg) {\n      const previousRemoved = DOMPurify.removed;\n      const nested = sanitizeDepth > 0;\n      sanitizeDepth++;\n      try {\n        return _sanitize(dirty, cfg);\n      } finally {\n        sanitizeDepth--;\n        if (nested) {\n          DOMPurify.removed = previousRemoved;\n        }\n      }\n    };\n    DOMPurify.setConfig = function () {"
+      },
+      {
         "before": "typeof name !== 'string' || ALLOWED_ATTR[transformCaseFunc(name)]",
         "after": "typeof name !== 'string' || (ALLOWED_ATTR[transformCaseFunc(name)] && !FORBID_ATTR[transformCaseFunc(name)])"
       },
@@ -109,7 +121,13 @@
     "package": "d3",
     "version": "7.9.0",
     "url": "https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.js",
-    "sha256": "0c0d58be2106c14e242fc75bc09a17467800630751580665f6e9552a0c064ea2"
+    "sha256": "0c0d58be2106c14e242fc75bc09a17467800630751580665f6e9552a0c064ea2",
+    "replacements": [
+      {
+        "before": "function quantileIndex(values, p, valueof = number$3) {\n  if (isNaN(p = +p)) return;",
+        "after": "function quantileIndex(values, p, valueof = number$3) {\n  if (isNaN(p = +p)) return;\n  // Kadupul: consume single-use iterables once before indexed access.\n  values = array(values);"
+      }
+    ]
   },
   {
     "file": "jquery-ui.js",

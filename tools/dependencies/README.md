@@ -45,6 +45,12 @@ Seven browser regressions failed before these patches and pass afterward; they
 cover forbidden-handler removal and both before/upon element hooks in all three
 tree types. These are targeted fixes, not a guarantee of arbitrary reentrant
 configuration isolation. Preserve every manifest patch on future refreshes.
+The sanitizer also restores the outer removal ledger after nested calls (including
+throws) and resets an omitted per-call Trusted Types policy to the internal
+default; persistent `setConfig()` policies and explicit opt-out remain supported.
+D3's `quantileIndex` materializes non-indexed iterables before accessing indexes,
+so sets and single-use generators behave like arrays. Browser tests cover each
+correction. All transformations are recorded in the source manifest.
 The theme CI job checks provenance and runs real-browser tests
 for sanitization, legacy widgets, sorting/paging and D3 rendering.
 

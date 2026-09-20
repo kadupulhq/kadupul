@@ -978,22 +978,10 @@
         trustedTypesPolicy = undefined;
         emptyHTML = '';
       } else {
-        // No policy supplied: keep the currently active policy if one is set — a
-        // previously supplied policy is intentionally sticky across config-less
-        // calls — otherwise fall back to the instance's own internal policy,
-        // created at most once. (A policy supplied for a *single* call still
-        // lingers by design; what must not linger is a policy whose configuration
-        // has been torn down via `clearConfig()`, which restores the default.)
-        if (trustedTypesPolicy === undefined) {
-          trustedTypesPolicy = _getDefaultTrustedTypesPolicy();
-        }
-        // Sign internal variables only when a policy is active. A falsy policy
-        // (Trusted Types unsupported, creation failed, or an explicit opt-out)
-        // leaves `emptyHTML` as a plain string, so we never call `.createHTML` on
-        // a non-policy and throw. See #1422.
-        if (trustedTypesPolicy && typeof emptyHTML === 'string') {
-          emptyHTML = _createTrustedHTML('');
-        }
+        // Kadupul: a per-call policy must not leak into a fresh configuration.
+        // setConfig() remains persistent because sanitize skips parsing it.
+        trustedTypesPolicy = _getDefaultTrustedTypesPolicy();
+        emptyHTML = trustedTypesPolicy ? _createTrustedHTML('') : '';
       }
       // Prevent further manipulation of configuration.
       // Not available in IE8, Safari 5, etc.
@@ -2411,7 +2399,7 @@
       }
     };
     // eslint-disable-next-line complexity
-    DOMPurify.sanitize = function (dirty) {
+    const _sanitize = function (dirty) {
       let cfg = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       let body = null;
       let importedNode = null;
@@ -2662,6 +2650,21 @@
         serializedHTML = _stripTemplateExpressions(serializedHTML);
       }
       return trustedTypesPolicy && RETURN_TRUSTED_TYPE ? _createTrustedHTML(serializedHTML) : serializedHTML;
+    };
+    // Kadupul: nested calls must not replace the outer removal ledger.
+    let sanitizeDepth = 0;
+    DOMPurify.sanitize = function (dirty, cfg) {
+      const previousRemoved = DOMPurify.removed;
+      const nested = sanitizeDepth > 0;
+      sanitizeDepth++;
+      try {
+        return _sanitize(dirty, cfg);
+      } finally {
+        sanitizeDepth--;
+        if (nested) {
+          DOMPurify.removed = previousRemoved;
+        }
+      }
     };
     DOMPurify.setConfig = function () {
       let cfg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
