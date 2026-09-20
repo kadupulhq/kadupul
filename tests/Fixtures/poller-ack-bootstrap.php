@@ -53,9 +53,22 @@ function cacti_sizeof($value)
     return is_array($value) ? count($value) : 0;
 }
 function cacti_log(...$args) {}
-function cacti_exec($command)
+function cacti_exec($binary, array $arguments = array(), array &$output = array(), $timeout = 30)
 {
-    return shell_exec($command);
+    $process = proc_open(array_merge(array($binary), $arguments), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    if (!is_resource($process)) {
+        throw new RuntimeException('Unable to start fixture poller worker');
+    }
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    $status = proc_close($process);
+    if ($stderr !== '') {
+        throw new RuntimeException($stderr);
+    }
+    $output = $stdout === '' ? array() : explode("\n", rtrim($stdout, "\n"));
+    return $status;
 }
 function db_affected_rows()
 {
