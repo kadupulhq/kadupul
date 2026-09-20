@@ -21,7 +21,8 @@ Symfony owns the application lifecycle and composition root. Platform owns
 health, response security headers and installation configuration adapters.
 IdentityAccess owns the current-actor query and public Actor/ConsoleAccess
 contracts. Inventory owns device-list criteria, its ListDevices use case,
-read models and DeviceCatalog port. Other
+read models and DeviceCatalog port, plus the Device aggregate, EditDevice command
+and DeviceEditor port. Other
 features remain legacy code until migrated. New modules are introduced with a
 working use case, rather than empty entity/repository scaffolding.
 
@@ -30,7 +31,7 @@ working use case, rather than empty entity/repository scaffolding.
 ```text
 src/
   Kernel.php                         Symfony composition root
-  Inventory/                         Example next module
+  Inventory/                         Device administration module
     Domain/                          Entities, value objects, invariants, events
     Application/
       UseCase/                       Commands/queries and orchestration
@@ -98,10 +99,13 @@ are confined to adapters; new routes do not bootstrap the procedural application
 Platform's PDO/configuration contracts are technical integration APIs used only
 by infrastructure, never domain/application services.
 
-The next slice is device editing: define the Device aggregate and editing rules,
-then implement a command use case, persistence port, transaction boundary and
-Symfony form/CSRF adapters. Do not introduce an anemic entity merely to wrap a
-read projection. The existing schema can remain while its ownership migrates.
+Device editing now covers name, address and notes through a Device aggregate,
+EditDevice command, DeviceEditor port and Symfony Form/CSRF adapters. The write
+adapter isolates the legacy save API in a CLI process, rechecks authorization and
+revision under a row lock, and preserves graph/poller/plugin effects. The local
+transaction cannot roll back arbitrary external effects. This is a transitional
+adapter to retire as owning modules acquire explicit integration contracts.
+Remaining device settings and bulk actions still use the legacy editor.
 
 ## Cutover and retirement criteria
 

@@ -17,7 +17,7 @@ and the compatibility URL `app.php` enter the Symfony kernel directly. Neither
 loads `include/global.php`, `include/auth.php`, nor a legacy page script.
 
 Existing pages and scheduled commands still use the legacy bootstrap. Keep the
-legacy deployment available during migration: login, logout, editing and plugins
+legacy deployment available during migration: login, logout, advanced device configuration and plugins
 have not yet moved. Do not switch the whole installation's document root to
 `public/` until routing for those remaining features is explicitly configured.
 
@@ -77,7 +77,7 @@ The adapter projects the four legacy graph/device visibility modes without the
 legacy fast path that overlooks device exceptions. Default-allow exceptions are
 explicitly checked. The explicit state filter replaces legacy saved display
 preferences for this new screen. `host.php` remains operational; advanced filters,
-exports, edits, bulk actions, plugin-provided list hooks/columns and navigation
+exports, advanced edits, bulk actions, plugin-provided list hooks/columns and navigation
 cutover are remaining migration work, not claimed parity.
 
 Run the module/kernel checks with `composer test`. Run real HTTP/database checks:
@@ -90,6 +90,40 @@ mise exec -- python tests/Symfony/session_bridge.py --database-sessions
 These create and remove a disposable Docker stack. They check session sharing,
 account restrictions, group realms, visibility modes, device exceptions, search,
 paging, escaping and input rejection. CI runs both session configurations.
+
+## Inventory editing slice
+
+Click a device name to open `/app.php/inventory/devices/{id}/edit`. Symfony Forms
+and Twig edit its name, address and notes. The Device aggregate validates these
+fields; the EditDevice command authorizes through IdentityAccess and saves through
+the DeviceEditor port. The list and editor share the same visibility policy.
+Other settings, including SNMP credentials, templates and poller assignment, remain
+in the legacy editor and cannot be submitted through this form.
+
+Symfony's built-in stateless CSRF protection requires the form token and same-origin
+browser evidence. Missing or cross-origin evidence fails closed; no second session
+payload is introduced. A revision derived from editable fields rejects stale saves
+with HTTP 409. Hidden devices return 404; revoked device access prevents saving.
+
+The transitional outbound adapter invokes a fixed PHP CLI worker using Symfony
+Process with JSON on stdin, never a shell command assembled from user input. The
+worker rechecks account, realms and visibility, locks the current device row,
+validates its revision and calls the existing device-save API with fresh settings.
+It retains legacy poller/remote synchronization, graph-title updates and host-save
+hooks without bootstrapping legacy globals inside Symfony's HTTP process. Successful
+saves log actor and device IDs without field values or credentials. A PHP CLI binary
+at PHP_BINDIR/php and process execution must be available to the web runtime.
+
+Local writes use a database transaction. External plugin and remote-collector
+effects cannot universally be rolled back. Timeouts or failures report an uncertain
+outcome and ask the operator to reload before retrying; writes are never retried
+automatically. Existing legacy editors do not enforce the new revision protocol.
+Remote collectors and arbitrary third-party plugins require separate parity testing.
+
+The HTTP suite checks invalid/extra fields, CSRF rejection, hidden devices, revoked
+realms, stale saves, escaped notes, persistence, graph-title refresh, host-save hooks
+and audit attribution with both session handlers. Domain/application tests check
+atomic validation and authorization before persistence.
 
 ## Source installation
 
@@ -246,3 +280,10 @@ Inventory validation: module/kernel/architecture tests pass (16 tests). The HTTP
 suite verifies shared sessions, all four legacy visibility modes, deny exceptions,
 enabled/disabled group grants, paging, escaped Twig output and malformed inputs.
 The dependency-complete archive boots the Inventory route without network access.
+
+Device-edit validation: module/kernel/architecture tests pass on PHP 8.3.33
+(25 tests, 1,750 assertions). Both real HTTP session configurations pass, including
+the graph-title, plugin-hook and audit checks. Container/Twig lint, staged-content
+checks and both security inventories pass. The production image builds and the
+extracted offline archive verifies with Docker networking disabled. These focused
+checks do not resolve the pre-existing full-suite failures described above.

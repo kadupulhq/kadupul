@@ -28,7 +28,7 @@
         <thead><tr><th scope="col">ID</th><th scope="col">Name</th><th scope="col">Hostname</th><th scope="col">Status</th></tr></thead>
         <tbody>
         {% for device in result.devices %}
-            <tr><td>{{ device.id }}</td><td>{{ device.description }}</td><td>{{ device.hostname }}</td><td>{{ device.disabled ? 'Disabled' : device.status }}</td></tr>
+            <tr><td>{{ device.id }}</td><td><a href="{{ path('inventory_device_edit', {id: device.id}) }}">{{ device.description }}</a></td><td>{{ device.hostname }}</td><td>{{ device.disabled ? 'Disabled' : device.status }}</td></tr>
         {% else %}
             <tr><td colspan="4">No devices found on this page.</td></tr>
         {% endfor %}

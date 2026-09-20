@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block title %}Edit device · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <p><a href="{{ path('inventory_devices') }}">Back to devices</a></p>
+    <h1>Edit {{ device.description }}</h1>
+    {% if saved %}<p role="status">Device saved.</p>{% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.hostname) }}
+        {{ form_row(form.notes) }}
+        <button type="submit">Save device</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

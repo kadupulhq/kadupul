@@ -29,6 +29,8 @@ def verify_inventory(harness, session, user_id, check):
         check([d['id'] for d in listing(q='inventory-fixture', size=100)['devices']] == expected_ids,
               'visibility matches legacy policy mode ' + str(mode))
     harness.sql("REPLACE INTO settings (name,value) VALUES ('graph_auth_method','3')")
+    from device_edit_scenarios import verify_device_edit
+    verify_device_edit(harness, session, user_id, allowed[0], ids[0], check)
     first = listing(q='inventory-fixture')
     second = listing(q='inventory-fixture', page=2)
     check(len(first['devices']) == 25 and first['hasNext'] and len(second['devices']) == 2 and not second['hasNext'],

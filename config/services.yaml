@@ -32,5 +32,15 @@ services:
 
     Kadupul\Inventory\Application\Query\ListDevices: ~
 
+    Kadupul\Inventory\Application\Query\FindEditableDevice: ~
+    Kadupul\Inventory\Application\Command\EditDevice: ~
+
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceEditor:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    Kadupul\Inventory\Application\Port\DeviceEditor:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceEditor
+
     Kadupul\Inventory\Application\Port\DeviceCatalog:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCatalog

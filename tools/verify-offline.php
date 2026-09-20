@@ -22,6 +22,10 @@ $response = $kernel->handle(Request::create('/inventory/devices'));
 if ($response->getStatusCode() !== 401 || !is_file($root . '/templates/inventory/devices.html.twig')) {
     throw new RuntimeException('Offline Inventory route or template missing');
 }
+$response = $kernel->handle(Request::create('/inventory/devices/1/edit'));
+if ($response->getStatusCode() !== 401 || !is_file($root . '/templates/inventory/edit.html.twig') || !is_file($root . '/bin/legacy-device-edit.php')) {
+    throw new RuntimeException('Offline Inventory edit route, template or worker missing');
+}
 $kernel->shutdown();
 foreach (['Kadupul\\Inventory\\Application\\Query\\ListDevices', 'Kadupul\\Inventory\\Infrastructure\\Symfony\\Controller\\DeviceListController'] as $class) {
     if (!class_exists($class)) {

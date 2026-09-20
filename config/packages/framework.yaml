@@ -9,6 +9,9 @@ framework:
     # The read-only compatibility adapter opens the existing native session.
     # Do not start a second Symfony session with a different cookie or payload.
     session: false
+    form: true
+    csrf_protection:
+        stateless_token_ids: ['inventory_device_edit']
 
 when@test:
     framework:
