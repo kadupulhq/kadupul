@@ -6,6 +6,11 @@
 
 include('./include/auth.php');
 
+cacti_require_post_actions(array('save', 'actions', 'perm_remove'));
+if (isset_request_var('update_policy')) {
+	cacti_require_post_request();
+}
+
 set_default_action();
 
 $group_actions = array(

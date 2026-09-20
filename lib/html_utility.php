@@ -313,6 +313,11 @@ function cacti_require_post_actions(array $actions) {
 		return;
 	}
 
+	cacti_require_post_request();
+}
+
+/* Also protect mutations dispatched by flags, mode, or method rather than action. */
+function cacti_require_post_request() {
 	if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
 		header('Allow: POST');
 		http_response_code(405);
