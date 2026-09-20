@@ -82,7 +82,7 @@ test('installer PHP probes fail closed without a shell', function ($scenario) {
             . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
     }
     $binary = PHP_BINARY;
-    if (in_array($scenario, array('nonzero', 'timeout', 'excess_output'), true)) {
+    if (in_array($scenario, array('nonzero', 'timeout', 'excess_output', 'flood'), true)) {
         if (PHP_OS_FAMILY === 'Windows') {
             rmdir($dir);
             $this->markTestSkipped('Executable shebang fixtures require Unix.');
@@ -92,6 +92,7 @@ test('installer PHP probes fail closed without a shell', function ($scenario) {
             'nonzero' => 'echo 49; exit(7);',
             'timeout' => 'usleep(1000000); echo 49;',
             'excess_output' => 'echo str_repeat("x", 1024);',
+            'flood' => 'while (true) { echo str_repeat("x", 8192); }',
         )[$scenario];
         file_put_contents($binary, '#!' . PHP_BINARY . "\n<?php " . $code);
         chmod($binary, 0700);
@@ -138,4 +139,4 @@ PHP;
         }
         rmdir($dir);
     }
-})->with(array('success', 'missing', 'nonzero', 'timeout', 'excess_output', 'no_proc'));
+})->with(array('success', 'missing', 'nonzero', 'timeout', 'excess_output', 'flood', 'no_proc'));
