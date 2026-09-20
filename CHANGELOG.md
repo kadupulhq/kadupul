@@ -30,6 +30,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Bind aggregate-item replacement values in prepared queries, including the parent-ID delete predicate.
 - Enforce first-request realm authorization after Basic authentication and reject disabled, missing or locked accounts before creating authenticated sessions.
 - Reject client-supplied Basic identity headers, recheck enabled accounts on persisted sessions and remember-me restoration, and revoke credentials after successful account-disable saves.
 - Reset shared mail translations between messages and honor the configured sendmail executable after transport initialization.

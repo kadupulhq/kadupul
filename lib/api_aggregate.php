@@ -477,6 +477,7 @@ function aggregate_graph_items_save($items, $table) {
 	$defaults['item_total']      = '';
 
 	$items_sql = array();
+	$parameters = array();
 	foreach ($items as $item) {
 		// substitute any missing fields with defaults
 		$item = array_merge($defaults, $item);
@@ -489,19 +490,19 @@ function aggregate_graph_items_save($items, $table) {
 			return false;
 		}
 
-		// convert to partial SQL statement
-		$items_sql[] = sprintf(
-			' (%d, %d, %d, %d, %s, %d, %s, %d, %s, %s)',
-			$item[$id_field],
-			$item['graph_templates_item_id'],
-			$item['sequence'],
-			$item['color_template'],
-			db_qstr($item['t_graph_type_id']),
-			$item['graph_type_id'],
-			db_qstr($item['t_cdef_id']),
-			$item['cdef_id'],
-			db_qstr($item['item_skip']),
-			db_qstr($item['item_total'])
+		// Keep values out of SQL while preserving the existing integer fields.
+		$items_sql[] = ' (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+		array_push($parameters,
+			(int) $item[$id_field],
+			(int) $item['graph_templates_item_id'],
+			(int) $item['sequence'],
+			(int) $item['color_template'],
+			$item['t_graph_type_id'],
+			(int) $item['graph_type_id'],
+			$item['t_cdef_id'],
+			(int) $item['cdef_id'],
+			$item['item_skip'],
+			$item['item_total']
 		);
 	}
 
@@ -513,10 +514,10 @@ function aggregate_graph_items_save($items, $table) {
 
 	/* remove all old items */
 	if (isset( $items[0][$id_field])) {
-		db_execute("DELETE FROM $table WHERE " . $id_field . '=' . $items[0][$id_field]);
+		db_execute_prepared("DELETE FROM $table WHERE " . $id_field . ' = ?', array((int) $items[0][$id_field]));
 	}
 
-	if (db_execute($sql) == 1) {
+	if (db_execute_prepared($sql, $parameters) == 1) {
 		return true;
 	} else {
 		return false;
@@ -1996,4 +1997,3 @@ function draw_aggregate_template_graph_config($aggregate_template_id, $graph_tem
 	</script>
 	<?php
 }
-
