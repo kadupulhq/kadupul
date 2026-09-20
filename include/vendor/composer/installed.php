@@ -3,11 +3,11 @@
         'name' => 'kadupulhq/kadupul',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '7fc06b257dc7a8c71605efa6cbbf9382cf16199c',
+        'reference' => '74a78d6b180b5379a58ae27da5c1b5bcd40f8ef7',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../../',
         'aliases' => array(),
-        'dev' => true,
+        'dev' => false,
     ),
     'versions' => array(
         'ezyang/htmlpurifier' => array(
@@ -22,7 +22,7 @@
         'kadupulhq/kadupul' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '7fc06b257dc7a8c71605efa6cbbf9382cf16199c',
+            'reference' => '74a78d6b180b5379a58ae27da5c1b5bcd40f8ef7',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../../',
             'aliases' => array(),

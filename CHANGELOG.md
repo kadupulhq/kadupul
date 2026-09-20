@@ -11,6 +11,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Refresh bundled DOMPurify, D3, jQuery UI, tablesorter and HTML Purifier, pin Composer resolution to the branch PHP runtime floor, and verify browser-library provenance and compatibility in CI.
 - Move main to phpseclib 4.x and PHP >=8.1; retain phpseclib 3.x and existing PHP support on `lts/1.2`.
 - Refresh flag-icons to 7.5.0 while retaining every configured language flag, both aspect ratios and the existing CSS class/path API.
 - Update PHPMailer to 7.1.1 while retaining the current PHP floor, include paths and local translations; regenerate its bundled autoloader without development dependencies.
