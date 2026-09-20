@@ -11,7 +11,7 @@ REGEX;
     expect(preg_match_all($redirect, $source))->toBe(8);
 });
 
-test('account administration rejects unprotected mutation requests', function ($controller, $route, $method, $token, $expected) {
+test('account and plugin administration reject unprotected mutation requests', function ($controller, $route, $method, $token, $expected) {
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/admin-csrf-' . bin2hex(random_bytes(8));
     mkdir($dir . '/include', 0700, true);

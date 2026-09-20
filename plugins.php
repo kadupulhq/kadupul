@@ -661,13 +661,13 @@ function update_show_current () {
 	var url = '';
 
 	$(function() {
-		$('.piinstall, .pienable, .pidisable, .moveArrow').on('click', function(event) {
+		$('.piinstall, .pienable, .pidisable, .moveArrow').attr('data-post-action', 'true').off('click').on('click', function(event) {
 			event.preventDefault();
 			event.stopImmediatePropagation();
 			loadPageUsingPost($(this).attr('href'), { __csrf_magic: csrfMagicToken, header: 'false' });
 		});
 
-		$('.piuninstall').on('click', function(event) {
+		$('.piuninstall').attr('data-post-action', 'true').off('click').on('click', function(event) {
 			event.preventDefault();
 			event.stopImmediatePropagation();
 			url = $(this).attr('href');
