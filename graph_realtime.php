@@ -194,12 +194,23 @@ case 'countdown':
 
 	/* call poller */
 	$local_graph_id = get_filter_request_var('local_graph_id');
+	$interval = filter_var($graph_data_array['ds_step'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)));
+	if (!is_int($local_graph_id) || $local_graph_id < 1 || $interval === false ||
+		!is_string($hash) || !preg_match('/\A[a-zA-Z0-9_-]{1,64}\z/', $hash)) {
+		http_response_code(400);
+		exit;
+	}
 	$graph_rrd      = read_config_option('realtime_cache_path') . '/user_' . $hash . '_lgi_' . $local_graph_id . '.png';
-	$php_binary     = cacti_escapeshellcmd(read_config_option('path_php_binary'));
-	$script_path    = cacti_escapeshellarg($config['base_path'] . '/poller_realtime.php');
-	$args           = '--graph=' . $local_graph_id . ' --interval=' . $graph_data_array['ds_step'] . ' --poller_id=' . $hash;
-
-	shell_exec($php_binary . ' -q ' . $script_path . ' ' . $args);
+	$poller_output = array();
+	$status = cacti_exec(read_config_option('path_php_binary'), array(
+		'-q', $config['base_path'] . '/poller_realtime.php', '--graph=' . $local_graph_id,
+		'--interval=' . $interval, '--poller_id=' . $hash
+	), $poller_output, 300);
+	if ($status !== 0) {
+		cacti_log('ERROR: Realtime poller failed with exit status ' . (int) $status, false, 'WEBLOG');
+		http_response_code(503);
+		exit;
+	}
 
 	/* construct the image name  */
 	$graph_data_array['export_realtime'] = $graph_rrd;

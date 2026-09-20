@@ -12,7 +12,6 @@ cmd_exec	./cli/splice_rrd.php:227	$response = shell_exec($rrdtool);
 cmd_exec	./cli/update_heartbeat.php:261				$result = exec($command, $output, $return_code);
 cmd_exec	./cmd.php:295			$cactiphp = proc_open($command, $cactides, $pipes);
 cmd_exec	./cmd_realtime.php:98				$cactiphp = proc_open(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/script_server.php') . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
-cmd_exec	./graph_realtime.php:202		shell_exec($php_binary . ' -q ' . $script_path . ' ' . $args);
 cmd_exec	./host.php:180		shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/cli/poller_reindex_hosts.php') . ' --qid=all --id=' . cacti_escapeshellarg((string) $host_id));
 cmd_exec	./install/functions.php:521				$myinfo = @json_decode(shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/cli/import_package.php') . ' --filename=' . cacti_escapeshellarg("/$path/$xmlfile") . ' --info'), true);
 cmd_exec	./install/install.php:108			print '<li>' . __('The shell_exec() and/or exec() functions are currently blocked.') . '<br>' . __('See the PHP Manual: <a href="http://php.net/manual/en/ini.core.php#ini.disable-functions">Disable Functions</a>.') .'</li>';
@@ -273,7 +272,7 @@ dynamic_include	./color_templates.php:163		include_once($config['base_path'] . '
 dynamic_include	./color_templates.php:363		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./color_templates.php:413		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./color_templates.php:469		include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./graph_realtime.php:365	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
+dynamic_include	./graph_realtime.php:376	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
 dynamic_include	./include/auth.php:120					require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/auth.php:180				require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/csrf.php:15	require_once($config['include_path'] .'/vendor/csrf/csrf-conf.php');
