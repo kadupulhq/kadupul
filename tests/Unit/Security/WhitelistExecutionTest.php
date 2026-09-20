@@ -124,16 +124,34 @@ PHP;
     array('POST', 'valid', '7', 'whitelist_update', 200, true),
 ));
 
-test('native argv execution preserves metacharacters and reports exit status', function ($exit) {
+test('native argv execution preserves metacharacters and reports exit status', function ($exit, $timeout) {
     $program = <<<'PHP'
 require $argv[1] . '/lib/functions.php';
 $payload = 'spaces ; & | $(echo injected) `echo injected` "quotes"';
 $output = array();
-$result = cacti_exec(PHP_BINARY, array('-r', 'echo $argv[1]; exit((int) $argv[2]);', $payload, $argv[2]), $output, 5);
-$string = cacti_exec_string(PHP_BINARY, array('-r', 'echo $argv[1]; exit((int) $argv[2]);', $payload, $argv[2]), 5);
+$timeout = json_decode($argv[3], true);
+$result = cacti_exec(PHP_BINARY, array('-r', 'echo $argv[1]; exit((int) $argv[2]);', $payload, $argv[2]), $output, $timeout);
+$string = cacti_exec_string(PHP_BINARY, array('-r', 'echo $argv[1]; exit((int) $argv[2]);', $payload, $argv[2]), $timeout);
 echo json_encode(array($result, $output, $string));
 PHP;
-    $result = json_decode(runWhitelistProbe($this, $program, array((string) $exit)), true, 512, JSON_THROW_ON_ERROR);
+    $result = json_decode(runWhitelistProbe($this, $program, array((string) $exit, json_encode($timeout))), true, 512, JSON_THROW_ON_ERROR);
     $payload = 'spaces ; & | $(echo injected) `echo injected` "quotes"';
     expect($result)->toBe(array($exit, array($payload), $exit === 0 ? $payload : false));
-})->with(array(0, 7));
+})->with(array(0, 7))->with(array(5, false));
+
+test('native argv execution terminates a child at its deadline', function () {
+    $program = <<<'PHP'
+require $argv[1] . '/lib/functions.php';
+$config = array('is_web' => false, 'base_path' => getcwd(), 'config_options_array' => array(
+    'selective_debug' => '', 'client_timezone_support' => '', 'log_destination' => '0', 'path_cactilog' => ''));
+$output = array();
+$start = microtime(true);
+$status = cacti_exec(PHP_BINARY, array('-r', 'sleep(5); echo "not terminated";'), $output, 1);
+echo json_encode(array($status, $output, microtime(true) - $start));
+PHP;
+    $result = json_decode(runWhitelistProbe($this, $program), true, 512, JSON_THROW_ON_ERROR);
+    expect($result[0])->toBe(1);
+    expect($result[1])->toBe(array());
+    expect($result[2])->toBeGreaterThanOrEqual(1);
+    expect($result[2])->toBeLessThan(4);
+});

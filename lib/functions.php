@@ -7485,15 +7485,14 @@ function cacti_exec($binary, array $args = array(), array &$output = array(), $t
 
 	$stdout    = '';
 	$stderr    = '';
-	$remaining = (int) $timeout * 1000000;
+	$deadline  = hrtime(true) / 1000000000 + (int) $timeout;
 	$exit      = false;
 
-	while ($remaining > 0) {
-		$start  = microtime(true);
+	while (($remaining = $deadline - hrtime(true) / 1000000000) > 0) {
 		$read   = array($pipes[1], $pipes[2]);
 		$write  = array();
 		$except = array();
-		stream_select($read, $write, $except, 0, $remaining);
+		stream_select($read, $write, $except, (int) $remaining, (int) (($remaining - floor($remaining)) * 1000000));
 
 		usleep(50000);
 
@@ -7506,8 +7505,6 @@ function cacti_exec($binary, array $args = array(), array &$output = array(), $t
 
 			break;
 		}
-
-		$remaining -= (int) ((microtime(true) - $start) * 1000000);
 	}
 
 	fclose($pipes[1]);
