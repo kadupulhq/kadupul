@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('import preview renders untrusted fields without active HTML', function ($payload, $renderer) {
+test('import preview renders untrusted fields without active HTML', function ($payload, $renderer, $rowStatus) {
     $root = dirname(__DIR__, 3);
     $directory = sys_get_temp_dir() . '/import-preview-' . bin2hex(random_bytes(8));
     mkdir($directory . '/include', 0700, true);
@@ -30,7 +30,7 @@ try { require $argv[1] . ($argv[3] === 'package' ? '/package_import.php' : '/tem
 }
 $payload = (string) simplexml_load_string('<template><name><![CDATA[' . $argv[2] . ']]></name></template>')->name;
 $templates = array('files' => array($payload => 'missing'), 'hash' => array(
-    'type_name' => $payload, 'name' => $payload, 'status' => 'updated',
+    'type_name' => $payload, 'name' => $payload, 'status' => $argv[4],
     'deps' => array('hash' => $payload),
     'vals' => array('differences' => array($payload, '<span style="background-color:#ff0000">ff0000</span>'), 'orphans' => array($payload))
 ));
@@ -56,7 +56,7 @@ PHP;
             . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';' . $program;
     }
     try {
-        $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $program, $root, $payload, $renderer), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $directory);
+        $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $program, $root, $payload, $renderer, $rowStatus), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $directory);
         $html = stream_get_contents($pipes[1]);
         $errors = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
@@ -66,10 +66,20 @@ PHP;
             throw new RuntimeException($errors . $html);
         }
         expect($errors)->toBe('');
-        expect($html)->toContain('&lt;', 'ff0000', 'background-color:');
+        expect($html)->toContain('&lt;');
+        if ($renderer === 'template' && $rowStatus === 'damaged') {
+            expect($html)->toContain('Some CDEF Items will not import')->not->toContain('ff0000');
+        } else {
+            expect($html)->toContain('ff0000', 'background-color:');
+        }
         $document = new DOMDocument();
         @$document->loadHTML($html);
         $xpath = new DOMXPath($document);
+        if ($renderer !== 'results') {
+            $expectedStatus = array('updated' => 'Updated', 'new' => 'New')[$rowStatus]
+                ?? ($renderer === 'template' && $rowStatus === 'damaged' ? 'Damaged' : 'Unchanged');
+            expect($xpath->query('//span[text()="' . $expectedStatus . '"]')->length)->toBeGreaterThan(0);
+        }
         expect($xpath->query('//img|//svg|//iframe|//a|//style|//@*[starts-with(name(), "on")]')->length)->toBe(0);
         expect($xpath->query('//script')->length)->toBe($renderer === 'package' ? 1 : 0);
         foreach ($xpath->query('//script') as $script) {
@@ -101,4 +111,4 @@ PHP;
     '<script>alert(1)</script><iframe srcdoc="unsafe"></iframe>',
     '<a href="javascript:alert(1)" onclick="alert(2)">link</a>',
     '<span style="background-image:url(javascript:alert(1))" onmouseover="alert(2)">value</span>',
-))->with(array('template', 'package', 'results'));
+))->with(array('template', 'package', 'results'))->with(array('updated', 'new', 'damaged', 'unchanged', '\" onmouseover=\"alert(9)'));

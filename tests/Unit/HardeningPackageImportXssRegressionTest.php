@@ -5,17 +5,19 @@
  */
 
 $pkgSource = file_get_contents(__DIR__ . '/../../package_import.php');
+$identitySource = file_get_contents(__DIR__ . '/../../lib/import.php');
 
-test('GHSA-wqqv-4rrg-mrrc: template name column uses form_selectable_ecell', function () use ($pkgSource) {
+test('GHSA-wqqv-4rrg-mrrc: template name column uses form_selectable_ecell', function () use ($pkgSource, $identitySource) {
 	// form_selectable_ecell HTML-encodes before output; the plain variant does not.
 	// Locate the detail-row rendering block and confirm $detail['name'] goes
 	// through the escaping variant.
-	$pos = strpos($pkgSource, "form_selectable_ecell(\$detail['name']");
+	expect($pkgSource)->toContain('import_preview_identity_row($detail, $id)');
+	$pos = strpos($identitySource, "form_selectable_ecell(\$detail['name']");
 	expect($pos)->not->toBeFalse();
 });
 
-test('GHSA-wqqv-4rrg-mrrc: type_name column uses form_selectable_ecell', function () use ($pkgSource) {
-	$pos = strpos($pkgSource, "form_selectable_ecell(\$detail['type_name']");
+test('GHSA-wqqv-4rrg-mrrc: type_name column uses form_selectable_ecell', function () use ($identitySource) {
+	$pos = strpos($identitySource, "form_selectable_ecell(\$detail['type_name']");
 	expect($pos)->not->toBeFalse();
 });
 

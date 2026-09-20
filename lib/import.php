@@ -2660,6 +2660,24 @@ function xml_character_decode($text) {
 	}
 }
 
+/* Render the shared identity cells with one output-encoding policy. */
+function import_preview_identity_row($detail, $id, $show_damaged = false) {
+	if ($detail['status'] == 'updated') {
+		$status = "<span class='updateObject'>" . __('Updated') . '</span>';
+	} elseif ($detail['status'] == 'new') {
+		$status = "<span class='newObject'>" . __('New') . '</span>';
+	} elseif ($show_damaged && $detail['status'] == 'damaged') {
+		$status = "<span class='deviceDown'>" . __('Damaged') . '</span>';
+	} else {
+		$status = "<span class='deviceUp'>" . __('Unchanged') . '</span>';
+	}
+
+	form_alternate_row('line_import_' . html_escape($detail['status']) . '_' . $id);
+	form_selectable_ecell($detail['type_name'], $id);
+	form_selectable_ecell($detail['name'], $id);
+	form_selectable_cell($status, $id);
+}
+
 /* Preserve only application-owned preview formatting, never active imported HTML. */
 function import_preview_html($html) {
 	static $purifier;

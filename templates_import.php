@@ -268,21 +268,7 @@ function display_template_data(&$templates) {
 				)
 			);
 
-			if ($detail['status'] == 'updated') {
-				$status = "<span class='updateObject'>" . __('Updated') . '</span>';
-			} elseif ($detail['status'] == 'new') {
-				$status = "<span class='newObject'>" . __('New') . '</span>';
-			} elseif ($detail['status'] == 'damaged') {
-				$status = "<span class='deviceDown'>" . __('Damaged') . '</span>';
-			} else {
-				$status = "<span class='deviceUp'>" . __('Unchanged') . '</span>';
-			}
-
-			form_alternate_row('line_import_' . html_escape($detail['status']) . '_' . $id);
-
-			form_selectable_ecell($detail['type_name'], $id);
-			form_selectable_ecell($detail['name'], $id);
-			form_selectable_cell($status, $id);
+			import_preview_identity_row($detail, $id, true);
 
 			if (isset($detail['deps'])) {
 				$dep_details = array();
