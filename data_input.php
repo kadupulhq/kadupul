@@ -6,7 +6,7 @@
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions'));
+cacti_require_post_actions(array('actions', 'whitelist_update'));
 include_once('./lib/api_data_source.php');
 include_once('./lib/poller.php');
 include_once('./lib/template.php');
@@ -48,26 +48,17 @@ switch (get_request_var('action')) {
 
 		break;
 	case 'whitelist_update':
-		/* csrf-magic only validates the token on POST. A GET to this
-		 * action would bypass the token check and let a CSRF gadget
-		 * trigger the shell_exec below. The UI uses loadPageUsingPost
-		 * so a POST is the only legitimate caller. */
-		if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
-			cacti_log('WARNING: Rejected non-POST request to data_input.php?action=whitelist_update', false, 'AUTH');
-
-			header('Location: data_input.php?header=false&action=edit&id=' . get_filter_request_var('id'));
-			exit;
-		}
-
 		$id = get_filter_request_var('id');
 
-		$php        = cacti_escapeshellcmd(read_config_option('path_php_binary'));
-		$script     = cacti_escapeshellarg($config['base_path'] . '/cli/input_whitelist.php');
-		$id_arg     = cacti_escapeshellarg('--id=' . $id);
+		$output = cacti_exec_string(read_config_option('path_php_binary'), array(
+			'-q', $config['base_path'] . '/cli/input_whitelist.php', '--update', '--push', '--id=' . $id
+		), false);
 
-		$output = shell_exec($php . ' -q ' . $script . ' --update --push ' . $id_arg);
-
-		raise_message('whitelist_updated', html_escape($output), MESSAGE_LEVEL_INFO);
+		if ($output === false) {
+			raise_message('whitelist_updated', __('Unable to update the input whitelist. Check the Kadupul log for details.'), MESSAGE_LEVEL_ERROR);
+		} else {
+			raise_message('whitelist_updated', html_escape($output), MESSAGE_LEVEL_INFO);
+		}
 
 		/* fall through */
 	case 'edit':

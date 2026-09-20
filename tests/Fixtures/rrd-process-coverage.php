@@ -7,6 +7,11 @@
 $coverageRoot = dirname(__DIR__, 2);
 require_once $coverageRoot . '/tests/vendor/autoload.php';
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('WHITELIST_EXEC_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/data_input.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/functions.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+}
 if (defined('AGGREGATE_QUERY_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/api_aggregate.php');
 }

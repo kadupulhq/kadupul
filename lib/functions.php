@@ -7502,7 +7502,7 @@ function cacti_exec($binary, array $args = array(), array &$output = array(), $t
 		$stderr .= stream_get_contents($pipes[2]);
 
 		if (!$status['running']) {
-			$exit = $status['exit_code'];
+			$exit = $status['exitcode'];
 
 			break;
 		}
