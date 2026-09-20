@@ -25,9 +25,15 @@ content/internal references for all bundled SVGs. Upstream's demo/build tooling
 is not installed or used by the application and is not part of root Composer or
 the E2E npm dependency audit.
 
-Upstream documentation still illustrates a 7.3.2 CDN URL; Kadupul does not use
-that URL and serves the bundled 7.5.0 CSS locally. The upstream Python maintenance
-scripts use substring-based SVG filename filters and should not be run on
-directories containing backup files such as `xx.svg.bak`. They are retained
-unmodified for provenance, are not invoked by Kadupul or CI, and are not the
-validation mechanism for shipped assets. Use the compatibility tests above.
+Local non-runtime patches align the README CDN example with version 7.5.0 and
+change both Python maintenance scripts to require the exact `.svg` suffix and
+remove only that final extension. This prevents backup/temporary files such as
+`xx.svg.bak` from being modified or reported as country codes. Preserve these
+patches when refreshing the upstream archive. Kadupul serves local CSS and does
+not invoke these maintenance scripts in the application.
+
+`mise exec python@3.12.12 -- python tests/Support/flag_icons_helpers_test.py`
+executes the real scripts against disposable fixtures, never the bundled asset
+directories. CI runs these tests using its existing Python toolchain. Two tests
+failed before the patches and pass afterward; a third verifies that unknown real
+SVG files still fail the country-code check. Application runtime support is unchanged.
