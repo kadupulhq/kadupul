@@ -12,7 +12,8 @@ if (!is_string($requested_mode)) {
 	http_response_code(400);
 	exit;
 }
-if (in_array($requested_mode, array('installold', 'uninstallold', 'install', 'uninstall', 'enable', 'disable', 'remote_enable', 'remote_disable', 'moveup', 'movedown'), true)) {
+$mutation_modes = array('installold', 'uninstallold', 'install', 'uninstall', 'enable', 'disable', 'remote_enable', 'remote_disable', 'moveup', 'movedown');
+if (in_array($requested_mode, $mutation_modes, true)) {
 	cacti_require_post_request();
 }
 
@@ -38,19 +39,7 @@ $status_names = array(
 $pluginslist = retrieve_plugin_list();
 
 /* Check to see if we are installing, etc... */
-$modes = array(
-	'installold',
-	'uninstallold',
-	'install',
-	'uninstall',
-	'disable',
-	'enable',
-	'check',
-	'remote_enable',
-	'remote_disable',
-	'moveup',
-	'movedown'
-);
+$modes = array_merge($mutation_modes, array('check'));
 
 if (isset_request_var('mode') && in_array($requested_mode, $modes, true) && isset_request_var('id')) {
 	get_filter_request_var('id', FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^([a-zA-Z0-9 _]+)$/')));

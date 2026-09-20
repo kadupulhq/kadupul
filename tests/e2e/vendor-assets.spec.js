@@ -37,7 +37,7 @@ test("graph input delete handler sends the CSRF token by POST", async ({ page })
 
 test("plugin lifecycle links send token-bearing POST requests", async ({ page }) => {
   const source = fs.readFileSync(path.resolve(__dirname, "../../plugins.php"), "utf8");
-  const handler = source.match(/\$\('\.piinstall, \.pienable, \.pidisable, \.moveArrow'\)\.on\('click', function\(event\) \{[\s\S]*?\n\t\t\}\);/);
+  const handler = source.match(/\$\('\.piinstall, \.pienable, \.pidisable, \.moveArrow'\)\.on\('click', function\(event\) \{[\s\S]*?\n[ \t]*\}\);/);
   expect(handler).not.toBeNull();
   const classes = ["piinstall", "pienable", "pidisable", "moveArrow"];
   await page.setContent(classes.map(name => `<a class="${name}" href="plugins.php?mode=fixture&id=2">${name}</a>`).join(""));
@@ -56,7 +56,7 @@ test("plugin lifecycle links send token-bearing POST requests", async ({ page })
 
 test("plugin uninstall confirmation posts instead of navigating", async ({ page }) => {
   const source = fs.readFileSync(path.resolve(__dirname, "../../plugins.php"), "utf8");
-  const callback = source.match(/click: function\(\) \{\s*\$\('#uninstalldialog'\)\.dialog\('close'\);[\s\S]*?\n\t{5}\}/);
+  const callback = source.match(/click: function\(\) \{\s*\$\('#uninstalldialog'\)\.dialog\('close'\);[\s\S]*?\n[ \t]*\}/);
   expect(callback).not.toBeNull();
   await load(page, "jquery.js");
   await page.evaluate(() => {
