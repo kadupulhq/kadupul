@@ -2660,6 +2660,19 @@ function xml_character_decode($text) {
 	}
 }
 
+/* Preserve only application-owned preview formatting, never active imported HTML. */
+function import_preview_html($html) {
+	static $purifier;
+	if ($purifier === null) {
+		$config = HTMLPurifier_Config::createDefault();
+		$config->set('HTML.Allowed', 'br,em,span[style]');
+		$config->set('CSS.AllowedProperties', array('background-color'));
+		$purifier = new HTMLPurifier($config);
+	}
+
+	return $purifier->purify($html);
+}
+
 function import_display_results($import_debug_info, $filestatus, $web = false, $preview = false) {
 	global $hash_type_names, $ignorable_hashes;
 
@@ -2742,7 +2755,7 @@ function import_display_results($import_debug_info, $filestatus, $web = false, $
 				if (isset($vals['differences'])) {
 					print '<ul class="monoSpace">' . PHP_EOL;
 					foreach($vals['differences'] as $diff) {
-						print '<li>' . $diff . '</li>' . PHP_EOL;
+						print '<li>' . import_preview_html($diff) . '</li>' . PHP_EOL;
 					}
 					print '</ul>' . PHP_EOL;
 				}
