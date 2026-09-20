@@ -2,6 +2,7 @@
 <phpunit bootstrap="./bootstrap-unit.php" colors="true">
   <testsuites>
     <testsuite name="Spikekill">
+      <file>./Unit/Security/WhitelistExecutionTest.php</file>
       <file>./Unit/Security/AggregateItemQueryTest.php</file>
       <file>./Unit/Security/ImportPreviewOutputTest.php</file>
       <file>./Unit/Security/Auth/AdminMutationCsrfTest.php</file>

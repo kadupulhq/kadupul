@@ -32,6 +32,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Execute input-whitelist updates without a shell, enforce token-protected POST, and report subprocess failures correctly.
 - Bind aggregate-item replacement values in prepared queries, including the parent-ID delete predicate.
 - Enforce first-request realm authorization after Basic authentication and reject disabled, missing or locked accounts before creating authenticated sessions.
 - Reject client-supplied Basic identity headers, recheck enabled accounts on persisted sessions and remember-me restoration, and revoke credentials after successful account-disable saves.
