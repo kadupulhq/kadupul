@@ -11,6 +11,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Require token-protected POST requests for installer JSON operations.
 - Require POST and valid CSRF tokens before graph-template bulk mutations.
 - Probe the configured PHP binary without a shell, reject failed probes, and bound installer probe execution time.
 - Move main to phpseclib 4.x and PHP >=8.1; retain phpseclib 3.x and existing PHP support on `lts/1.2`.
