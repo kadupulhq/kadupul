@@ -1,0 +1,35 @@
+name: LTS vendor compatibility
+
+on:
+  pull_request:
+    branches: [lts/1.2]
+  push:
+    branches: [lts/1.2]
+
+permissions:
+  contents: read
+
+jobs:
+  vendor-browser-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.0'
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: tests/e2e/package-lock.json
+      - run: npm ci --ignore-scripts
+        working-directory: tests/e2e
+      - name: Install pinned vendor sources without lifecycle scripts
+        run: npm install --prefix "$RUNNER_TEMP/kadupul-vendors" --ignore-scripts --no-audit --no-fund --package-lock=false ua-parser-js@1.0.41 d3@7.9.0 tablesorter@2.32.0 jquery-sparkline@2.4.0 hotkeys-js@3.13.15 jquery-hotkeys@0.2.2 @fortawesome/fontawesome-free@5.15.4 vanderlee-colorpicker@1.2.21 dygraphs@1.1.1 jquery.cookie@1.4.1 jquery-ui-multiselect-widget@3.0.1
+      - name: Verify checked-in assets and compatibility patches
+        run: node tools/dependencies/sync.mjs --check --source="$RUNNER_TEMP/kadupul-vendors/node_modules"
+      - run: node --test tests/Unit/vendor-lts-sync.test.mjs
+      - run: node node_modules/@playwright/test/cli.js install --with-deps chromium
+        working-directory: tests/e2e
+      - run: node node_modules/@playwright/test/cli.js test --config playwright.config.js vendor-lts.spec.js
+        working-directory: tests/e2e

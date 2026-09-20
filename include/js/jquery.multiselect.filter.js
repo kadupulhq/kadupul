@@ -193,15 +193,14 @@
       var cache = this.cache; // Cached text() object
 
       this.$rows.toggleClass(hiddenClass, !!term);
-
       var filteredInputs = $checkboxes.children().map(function(x) {
         var elem = this;
         var $groupItems = $(elem);
         var groupShown = false;
 
-        // Account for optgroups
-        // If we are searching in option group labels and we match an optgroup label,
-        // then show all its children and return all its inputs also.
+         // Account for optgroups
+         // If we are searching in option group labels and we match an optgroup label,
+         // then show all its children and return all its inputs also.
         if (elem.classList.contains(optgroupClass)) {
           var $groupItems = $groupItems.find('li');
           if (searchGroups && regex.test( cache[x] ) ) {
