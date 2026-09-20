@@ -4,11 +4,123 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 test('plugin lifecycle redirects preserve AJAX query parameters', function () {
-    $source = file_get_contents(dirname(__DIR__, 4) . '/plugins.php');
-    $redirect = <<<'REGEX'
-~header\s*\(\s*'Location: plugins\.php'\s*\.\s*\(\s*\$option\s*!=\s*''\s*\?\s*'\?'\s*\.\s*\$option\s*:\s*''\s*\)\s*\)\s*;~
-REGEX;
-    expect(preg_match_all($redirect, $source))->toBe(8);
+    $root = dirname(__DIR__, 4);
+    $dir = sys_get_temp_dir() . '/plugin-redirect-' . bin2hex(random_bytes(8));
+    mkdir($dir . '/include', 0700, true);
+    file_put_contents($dir . '/include/auth.php', '<?php');
+    $coverage = $this->getTestResultObject()->getCodeCoverage();
+    $program = '<?php $root = ' . var_export($root, true) . ';';
+    if ($coverage !== null) {
+        $program .= 'define("ADMIN_MUTATION_TEST_COVERAGE", true);'
+            . 'define("RRD_TEST_COVERAGE_DIRECTORY", __DIR__);'
+            . 'require $root . "/tests/Fixtures/rrd-process-coverage.php";';
+    }
+    $program .= <<<'PHP'
+function csrf_startup() {
+    csrf_conf('rewrite', false);
+    csrf_conf('defer', true);
+    csrf_conf('auto-session', false);
+    csrf_conf('secret', 'isolated-plugin-redirect-secret');
+}
+require $root . '/include/vendor/csrf/csrf-magic.php';
+require $root . '/lib/html_utility.php';
+require $root . '/include/global_constants.php';
+function __($value) { return $value; }
+function read_config_option($name) { return ''; }
+function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+function db_execute_prepared(...$args) { header('X-Test-Mutation: remote'); }
+function db_fetch_assoc($sql) { return array(array('directory' => 'fixture')); }
+function sanitize_search_string($value) { return $value; }
+function api_plugin_install($id) { header('X-Test-Mutation: install'); }
+function api_plugin_uninstall($id) { header('X-Test-Mutation: uninstall'); }
+function api_plugin_enable($id) { header('X-Test-Mutation: enable'); }
+function api_plugin_disable($id) { header('X-Test-Mutation: disable'); }
+function api_plugin_moveup($id) { header('X-Test-Mutation: moveup'); }
+function api_plugin_movedown($id) { header('X-Test-Mutation: movedown'); }
+$config = array('poller_id' => 2);
+$plugins_integrated = array();
+session_id('plugin-redirect-test');
+$_SESSION = array('sess_user_id' => 42, 'sess_plugins_state' => (int) $_POST['test_state']);
+// This fixture tests redirects; the separate request matrix tests token rejection.
+$_POST['__csrf_magic'] = csrf_get_tokens();
+require $root . '/plugins.php';
+PHP;
+    file_put_contents($dir . '/router.php', $program);
+    $socket = stream_socket_server('tcp://127.0.0.1:0', $error, $message);
+    if ($socket === false) {
+        throw new RuntimeException($message);
+    }
+    $address = stream_socket_get_name($socket, false);
+    fclose($socket);
+    $server = null;
+    try {
+        // Coverage hooks and JIT are incompatible in the HTTP-server SAPI.
+        $server = proc_open(
+            array(PHP_BINARY, '-d', 'opcache.jit=off', '-d', 'opcache.jit_buffer_size=0', '-d', 'pcov.directory=' . $root,
+                '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-S', $address, 'router.php'),
+            array(0 => array('pipe', 'r'), 1 => array('file', $dir . '/server.log', 'a'),
+                2 => array('file', $dir . '/server.log', 'a')),
+            $pipes,
+            $dir
+        );
+        if (!is_resource($server)) {
+            throw new RuntimeException('Unable to start plugin redirect server');
+        }
+        fclose($pipes[0]);
+        $ready = false;
+        for ($attempt = 0; $attempt < 100; $attempt++) {
+            $probe = @stream_socket_client('tcp://' . $address, $error, $message, 0.1);
+            if ($probe !== false) {
+                fclose($probe);
+                $ready = true;
+                break;
+            }
+            usleep(20000);
+        }
+        expect($ready)->toBeTrue();
+        foreach (array('install', 'uninstall', 'enable', 'disable', 'moveup', 'movedown', 'remote_enable', 'remote_disable') as $mode) {
+            foreach (array(false, true) as $ajax) {
+                foreach ($mode === 'install' ? array(-1, 0) : array(-1) as $state) {
+                    $data = array('mode' => $mode, 'id' => 'fixture', 'test_state' => $state);
+                    if ($ajax) {
+                        $data['header'] = 'false';
+                    }
+                    $context = stream_context_create(array('http' => array('method' => 'POST',
+                        'header' => "Content-Type: application/x-www-form-urlencoded\r\n",
+                        'content' => http_build_query($data), 'follow_location' => 0, 'timeout' => 5)));
+                    file_get_contents('http://' . $address . '/plugins.php', false, $context);
+                    expect($http_response_header[0])->toContain('302');
+                    $location = 'plugins.php' . ($state >= 0 ? '?state=5' : '');
+                    if ($ajax) {
+                        $location .= ($state >= 0 ? '&' : '?') . 'header=false';
+                    }
+                    expect($http_response_header)->toContain('Location: ' . $location);
+                    expect($http_response_header)->toContain('X-Test-Mutation: ' . (str_starts_with($mode, 'remote_') ? 'remote' : $mode));
+                    if ($coverage !== null) {
+                        foreach (glob($dir . '/*.coverage') as $file) {
+                            $coverage->merge(unserialize(file_get_contents($file)));
+                            unlink($file);
+                        }
+                    }
+                }
+            }
+        }
+        $serverLog = file_get_contents($dir . '/server.log');
+        if (preg_match('/PHP (Fatal error|Warning|Notice)/', $serverLog)) {
+            throw new RuntimeException($serverLog);
+        }
+    } finally {
+        if (is_resource($server)) {
+            proc_terminate($server);
+            proc_close($server);
+        }
+        unlink($dir . '/include/auth.php');
+        rmdir($dir . '/include');
+        foreach (glob($dir . '/*') as $file) {
+            unlink($file);
+        }
+        rmdir($dir);
+    }
 });
 
 test('account and plugin administration reject unprotected mutation requests', function ($controller, $route, $method, $token, $expected) {
