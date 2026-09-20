@@ -7,6 +7,11 @@
 
 include('./include/auth.php');
 
+cacti_require_post_actions(array('save', 'actions', 'perm_remove'));
+if (array_key_exists('update_policy', $_REQUEST)) {
+	cacti_require_post_request();
+}
+
 $user_actions = array(
 	1 => __('Delete'),
 	2 => __('Copy'),
