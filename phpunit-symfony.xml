@@ -6,7 +6,7 @@
          failOnWarning="true"
          failOnRisky="true">
     <testsuites>
-        <testsuite name="Symfony foundation">
+        <testsuite name="Symfony modules">
             <directory>tests/Symfony</directory>
         </testsuite>
     </testsuites>

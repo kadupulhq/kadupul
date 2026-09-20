@@ -11,49 +11,85 @@ Main requires PHP 8.2 or later. `mise.toml` selects PHP 8.3.33 for development,
 Node 22.22.2 for asset builds and Python 3.12.12 for the behavioral harness and
 release builder. CI checks the application on PHP 8.2, 8.3 and 8.4.
 
-Symfony 7.4 owns a new kernel, service container, attribute routes, console and
-Twig configuration. Its public liveness endpoint is `GET /healthz` (also supporting
-HEAD). This is a liveness check, not a database, collection or storage readiness
-check. `GET /session` is an authenticated identity query; other paths return 404.
-Symfony's own session handling remains disabled.
+Symfony 7.4 owns the migrated application's request lifecycle, service container,
+routes, controllers, responses, console and Twig rendering. Both `public/index.php`
+and the compatibility URL `app.php` enter the Symfony kernel directly. Neither
+loads `include/global.php`, `include/auth.php`, nor a legacy page script.
 
-Existing pages and scheduled commands still use the legacy bootstrap. Do not
-switch an existing installation's document root to `public/` yet: legacy route
-coexistence still requires the legacy document root.
+Existing pages and scheduled commands still use the legacy bootstrap. Keep the
+legacy deployment available during migration: login, logout, editing and plugins
+have not yet moved. Do not switch the whole installation's document root to
+`public/` until routing for those remaining features is explicitly configured.
 
-## Shared authentication bridge
+## Shared identity compatibility
 
-On an existing legacy deployment, `GET /app.php/session` (also HEAD) returns only
-the authenticated user's ID and username. The server must support PHP PATH_INFO.
-The entry point executes the legacy bootstrap in global scope before passing the
-request to Symfony. Existing login, remember-me, trusted Basic authentication,
-session rotation, password-change redirects and logout remain owned by legacy
-code. Both native file sessions and the configured database handler are reused.
+`GET /session` (also HEAD) returns the authenticated user's ID and username.
+In an existing deployment use `/app.php/session`; the server must support PHP
+PATH_INFO. The equivalent route through `public/index.php` now accepts the same
+valid session, because Symfony owns the complete request lifecycle.
 
-The bridge requires console realm 8, including grants from enabled groups. The
-IdentityAccess adapter rechecks the account and realm before producing an Actor
-DTO; missing, disabled, locked, guest and pending-password-change identities are
-rejected. Responses carry `Cache-Control: private, no-store`. The standalone
-`public/index.php` entry cannot authenticate this query, even with a session
-cookie: it returns 401. Anonymous requests through `app.php` use the existing
-HTML login flow, not a new JSON login API.
+An injected IdentityAccess adapter reads the existing session and rechecks the
+account and console realm 8, including enabled-group grants, using prepared SQL.
+Disabled, locked and deleted accounts revoke the presented session. Guest and
+pending-password-change identities are rejected. Anonymous and ineligible
+requests return JSON 401; they do not render a legacy login page. Visit the
+existing login/password-change flow first. Legacy login, remember-me restoration,
+Basic/LDAP authentication, session rotation and logout still issue or revoke
+credentials; the new routes do not authenticate headers or remember-me cookies.
+Provider-specific flows remain to be migrated and validated separately.
 
-This is a read-only bridge, not a replacement login system or a general route
-authorization mechanism. New protected controllers must use explicit application
-authorization; Inventory will additionally require its device realm and resource
-policies. Mutation routes and Symfony CSRF ownership are not introduced here.
-Use the existing request-per-process PHP deployment; persistent application
-workers require a separate audit of legacy globals and static permission caches.
+Native file sessions and the legacy database session schema are supported. The
+adapter preserves the session name, cookie scope, root ownership and payload.
+Its database handler reads existing credentials and touches access time, but
+cannot create a login or overwrite the legacy session payload. Expired database
+sessions fail closed. Symfony's separate session bag remains disabled to avoid a
+second payload format during this transition. Application/domain code sees only
+Actor and access contracts, not PHP session globals.
 
-Run real HTTP/database verification with:
+Installation configuration is read from the fixed trusted `include/config.php`
+path by a Platform adapter; no request data controls that include. Connection
+credentials are never part of a response. This slice supports the primary MySQL
+installation; remote-poller database routing is not yet migrated. Database TLS
+requires a CA and verifies the server certificate. HTTPS-only installations reject
+insecure authenticated requests, and Symfony emits response security headers.
+Use request-per-process PHP deployment; long-running application workers require
+an explicit session-lifecycle migration before enabling them.
+
+## Inventory read slice
+
+Open `/app.php/inventory/devices` after logging in. Symfony routes the request to
+`DeviceListController`, which invokes `Inventory\Application\Query\ListDevices`.
+The use case obtains identity through IdentityAccess's public `ConsoleAccess`
+contract, requires device realm 3 in addition to console realm 8, then queries
+its `DeviceCatalog` port. The legacy-schema adapter applies user/group visibility
+before pagination and projects only ID, name, hostname, enabled state and status.
+SNMP secrets and notes are never selected or returned.
+
+Twig renders `templates/inventory/devices.html.twig`, including escaped data,
+search/filter controls, an empty state and previous/next links. A JSON read
+representation is available at `/app.php/inventory/devices.json`. Both accept
+`q`, `state=all|enabled|disabled`, `page`, and `size=25|50|100`. Search matches
+literal text rather than treating percent or underscore as SQL wildcards.
+Results have a stable name/ID ordering; lookahead avoids stale permission counts.
+All responses are private/no-store, and mutation methods are rejected.
+
+The adapter projects the four legacy graph/device visibility modes without the
+legacy fast path that overlooks device exceptions. Default-allow exceptions are
+explicitly checked. The explicit state filter replaces legacy saved display
+preferences for this new screen. `host.php` remains operational; advanced filters,
+exports, edits, bulk actions, plugin-provided list hooks/columns and navigation
+cutover are remaining migration work, not claimed parity.
+
+Run the module/kernel checks with `composer test`. Run real HTTP/database checks:
 
 ```sh
 mise exec -- python tests/Symfony/session_bridge.py
 mise exec -- python tests/Symfony/session_bridge.py --database-sessions
 ```
 
-The suite creates and removes a disposable Docker stack. It tests session sharing,
-logout, account eligibility, direct/group permissions and password-change flow.
+These create and remove a disposable Docker stack. They check session sharing,
+account restrictions, group realms, visibility modes, device exceptions, search,
+paging, escaping and input rejection. CI runs both session configurations.
 
 ## Source installation
 
@@ -183,7 +219,7 @@ operations: a fixed bootstrap under the current release directory, a pinned HTTP
 archive download, its temporary file, and checksum-verified writes to allowlisted
 legacy dependency paths. No HTTP request data controls these operations.
 
-Additional validation: Symfony kernel/console/Twig/identity tests pass (5 tests, 29
+Foundation validation before the Inventory slice: Symfony kernel/console/Twig/identity tests passed (5 tests, 29
 assertions), asset patch tests pass (19 tests), RSA compatibility passes, mailer
 compatibility passes (16 tests), HTML Purifier/runtime-floor checks pass (2 tests),
 and CSV paths pass (4 tests). Offline verification succeeded on PHP 8.2 with
@@ -199,3 +235,14 @@ The shared-authentication HTTP suite passes with both file and database sessions
 including direct and enabled-group grants, revocation, disabled/locked/deleted
 accounts, mandatory password changes and legacy logout. These checks do not
 claim coverage of every external authentication provider or plugin.
+
+The Inventory slice adds architecture boundary tests and application/domain tests.
+The configuration include added by this slice is allowlisted in the security
+inventories: its path comes exclusively from Symfony's project directory, and
+the loaded file is trusted installation configuration, not a request-selected
+script or legacy application bootstrap.
+
+Inventory validation: module/kernel/architecture tests pass (16 tests). The HTTP
+suite verifies shared sessions, all four legacy visibility modes, deny exceptions,
+enabled/disabled group grants, paging, escaped Twig output and malformed inputs.
+The dependency-complete archive boots the Inventory route without network access.

@@ -9,3 +9,9 @@ identity_access:
         path: '../src/IdentityAccess/Infrastructure/Symfony/Controller/'
         namespace: Kadupul\IdentityAccess\Infrastructure\Symfony\Controller
     type: attribute
+
+inventory:
+    resource:
+        path: '../src/Inventory/Infrastructure/Symfony/Controller/'
+        namespace: Kadupul\Inventory\Infrastructure\Symfony\Controller
+    type: attribute

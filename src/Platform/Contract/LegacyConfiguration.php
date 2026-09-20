@@ -5,5 +5,9 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-// Compatibility URL; Symfony owns routing and the complete request lifecycle.
-require __DIR__ . '/public/index.php';
+namespace Kadupul\Platform\Contract;
+
+interface LegacyConfiguration
+{
+    public function values(): array;
+}

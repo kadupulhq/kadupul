@@ -71,7 +71,7 @@ final class KernelTest extends TestCase
         }
     }
 
-    public function testIdentityRequiresAuthenticatedLegacyEntry(): void
+    public function testIdentityRejectsUntrustedCookiesWithoutLegacyBootstrap(): void
     {
         $kernel = new Kernel('test', false);
         try {
@@ -84,6 +84,21 @@ final class KernelTest extends TestCase
             self::assertSame([], $response->headers->getCookies());
             self::assertSame(405, $kernel->handle(Request::create('/session', 'POST'))->getStatusCode());
             self::assertSame('', $kernel->handle(Request::create('/session', 'HEAD'))->getContent());
+            self::assertFalse(defined('CACTI_VERSION'));
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public function testInventoryFailsClosedWithoutLegacyBootstrap(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            foreach (['/inventory/devices', '/inventory/devices.json'] as $path) {
+                self::assertSame(401, $kernel->handle(Request::create($path))->getStatusCode());
+                self::assertSame(405, $kernel->handle(Request::create($path, 'POST'))->getStatusCode());
+            }
+            self::assertSame(400, $kernel->handle(Request::create('/inventory/devices?page[]=1'))->getStatusCode());
             self::assertFalse(defined('CACTI_VERSION'));
         } finally {
             $kernel->shutdown();

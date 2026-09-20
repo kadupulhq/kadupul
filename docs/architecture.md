@@ -17,8 +17,11 @@ not a claim that the procedural application has already been decomposed.
 | Alerting | Alert rules, evaluation, incidents and notification intent | Mail transport or device configuration |
 | Platform | Operational health and application integration infrastructure | Business rules shared merely for convenience |
 
-Platform owns the health controller. IdentityAccess owns the current-actor query,
-its public Actor DTO and the legacy authenticated-session adapter. Other
+Symfony owns the application lifecycle and composition root. Platform owns
+health, response security headers and installation configuration adapters.
+IdentityAccess owns the current-actor query and public Actor/ConsoleAccess
+contracts. Inventory owns device-list criteria, its ListDevices use case,
+read models and DeviceCatalog port. Other
 features remain legacy code until migrated. New modules are introduced with a
 working use case, rather than empty entity/repository scaffolding.
 
@@ -88,7 +91,32 @@ external compatibility check for authentication, plugins, devices, collection
 and graphing. A feature is migrated when its legacy entry point can be removed
 without losing those contracts.
 
-The next vertical slice is Inventory device listing, followed by editing. The
-read-only shared-session bridge establishes identity while legacy code continues
-to own authentication. Inventory must add explicit device authorization before
-exposing its routes; console access alone does not grant device access.
+The Inventory list is the first migrated read slice. Symfony owns its routes,
+controller and Twig rendering. Its application use case depends on a catalog port
+and IdentityAccess's public access contract. Native session and legacy-schema SQL
+are confined to adapters; new routes do not bootstrap the procedural application.
+Platform's PDO/configuration contracts are technical integration APIs used only
+by infrastructure, never domain/application services.
+
+The next slice is device editing: define the Device aggregate and editing rules,
+then implement a command use case, persistence port, transaction boundary and
+Symfony form/CSRF adapters. Do not introduce an anemic entity merely to wrap a
+read projection. The existing schema can remain while its ownership migrates.
+
+## Cutover and retirement criteria
+
+- Inventory list: migrate required filters, saved preferences, exports, plugin
+  contributions and navigation; compare behavior before replacing `host.php`.
+- Inventory writes: move edit/bulk commands, validation, resource authorization,
+  transactions and audit effects into the module; retire corresponding legacy
+  dispatch actions only after regression coverage passes.
+- IdentityAccess: migrate credential issuance, external providers, remember-me,
+  logout and CSRF to Symfony security integration before removing native-session
+  compatibility. Symfony already owns new HTTP requests and access decisions.
+- Persistence: replace legacy-schema adapters as owning modules evolve their
+  schema and contracts. Temporary read projections may join the old shared
+  schema; they must not write another module's data.
+
+`tests/Symfony/ArchitectureTest.php` checks inward dependencies, cross-module
+contract usage, framework isolation and entry points. Behavioral HTTP tests cover
+the adapters against a disposable database. Both are required CI checks.

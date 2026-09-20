@@ -9,28 +9,51 @@ namespace Kadupul\IdentityAccess\Infrastructure\Legacy;
 
 use Kadupul\IdentityAccess\Application\Port\AuthenticatedSession;
 use Kadupul\IdentityAccess\Contract\Actor;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
+use Kadupul\Platform\Contract\DatabaseConnection;
 
-final class LegacyAuthenticatedSession implements AuthenticatedSession
+final readonly class LegacyAuthenticatedSession implements AuthenticatedSession, ConsoleAccess
 {
+    public function __construct(private SharedSession $session, private DatabaseConnection $database) {}
+
     public function consoleActor(): ?Actor
     {
-        // Only the legacy entry point may attest that authentication completed.
-        if (!defined('KADUPUL_AUTHENTICATED_ENTRY') || KADUPUL_AUTHENTICATED_ENTRY !== true
-            || session_status() !== PHP_SESSION_ACTIVE) {
+        $snapshot = $this->session->read();
+        $id = (int) ($snapshot['sess_user_id'] ?? 0);
+        if ($id <= 0 || isset($snapshot['sess_change_password'])) {
             return null;
         }
-
-        $id = (int) ($_SESSION['sess_user_id'] ?? 0);
-        if ($id <= 0 || $id === (int) get_guest_account() || isset($_SESSION['sess_change_password'])) {
+        $authMethod = $this->database->get()->query("SELECT value FROM settings WHERE name = 'auth_method'")->fetchColumn();
+        if ($authMethod !== false && !in_array((int) $authMethod, [1, 2, 3, 4], true)) {
             return null;
         }
-
-        $user = db_fetch_row_prepared('SELECT id, username, enabled, locked FROM user_auth WHERE id = ?', [$id]);
-        if (!$user || $user['enabled'] !== 'on' || $user['locked'] === 'on'
-            || !cacti_authorize_has_realm($id, 8)) {
+        $query = $this->database->get()->prepare('SELECT id, username, enabled, locked FROM user_auth WHERE id = ?');
+        $query->execute([$id]);
+        $user = $query->fetch();
+        if (!$user || $user['enabled'] !== 'on' || $user['locked'] === 'on') {
+            $this->session->revoke();
             return null;
         }
-
+        $guest = $this->database->get()->query("SELECT value FROM settings WHERE name = 'guest_user'")->fetchColumn();
+        if ($id === (int) $guest || $user['username'] === $guest || !$this->hasRealm($id, 8)) {
+            return null;
+        }
         return new Actor($id, $user['username']);
+    }
+
+    public function canManageDevices(Actor $actor): bool
+    {
+        return $actor->id > 0 && $this->hasRealm($actor->id, 3);
+    }
+
+    private function hasRealm(int $id, int $realm): bool
+    {
+        $query = $this->database->get()->prepare("SELECT 1 FROM user_auth_realm WHERE user_id = ? AND realm_id = ?
+            UNION SELECT 1 FROM user_auth_group_realm r
+            INNER JOIN user_auth_group_members m ON m.group_id = r.group_id
+            INNER JOIN user_auth_group g ON g.id = r.group_id
+            WHERE g.enabled = 'on' AND m.user_id = ? AND r.realm_id = ? LIMIT 1");
+        $query->execute([$id, $realm, $id, $realm]);
+        return $query->fetchColumn() !== false;
     }
 }

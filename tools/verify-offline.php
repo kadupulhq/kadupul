@@ -18,7 +18,16 @@ $response = $kernel->handle(Request::create('/session'));
 if ($response->getStatusCode() !== 401 || !is_file($root . '/app.php')) {
     throw new RuntimeException('Offline identity bridge missing or not closed to unauthenticated requests');
 }
+$response = $kernel->handle(Request::create('/inventory/devices'));
+if ($response->getStatusCode() !== 401 || !is_file($root . '/templates/inventory/devices.html.twig')) {
+    throw new RuntimeException('Offline Inventory route or template missing');
+}
 $kernel->shutdown();
+foreach (['Kadupul\\Inventory\\Application\\Query\\ListDevices', 'Kadupul\\Inventory\\Infrastructure\\Symfony\\Controller\\DeviceListController'] as $class) {
+    if (!class_exists($class)) {
+        throw new RuntimeException('Missing Inventory module: ' . $class);
+    }
+}
 foreach (['HTMLPurifier', 'phpseclib4\\Crypt\\RSA'] as $class) {
     if (!class_exists($class)) {
         throw new RuntimeException('Missing production dependency: ' . $class);

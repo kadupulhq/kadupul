@@ -6,7 +6,8 @@ framework:
         utf8: true
     php_errors:
         log: true
-    # Authentication and legacy session bridging are a later migration step.
+    # The read-only compatibility adapter opens the existing native session.
+    # Do not start a second Symfony session with a different cookie or payload.
     session: false
 
 when@test:

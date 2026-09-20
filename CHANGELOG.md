@@ -11,6 +11,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Make Symfony own migrated HTTP requests and add an Inventory device list with Twig rendering, module ports, permission-filtered queries, and shared-session adapters.
 - Require token-protected POST for plugin lifecycle, remote status, and ordering changes; retain uninstall confirmation.
 - Require validated POST intent for interactive spike removal, including dry runs, and migrate its browser request to send a CSRF token.
 - Bridge legacy authenticated sessions into a read-only Symfony identity query, with account and console-realm checks.
