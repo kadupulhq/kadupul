@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('native mailer composes multipart mail and resets shared translations without delivering mail', function (): void {
+test('native mailer composes multipart mail and resets shared translations without delivering mail', function (bool $configured): void {
     if (PHP_OS_FAMILY === 'Windows') {
         $this->markTestSkipped('The inert sendmail capture uses a POSIX shell.');
     }
@@ -26,7 +26,7 @@ test('native mailer composes multipart mail and resets shared translations witho
     }
     try {
         $process = proc_open(
-            array(PHP_BINARY, '-d', 'sendmail_path=' . $fallback, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $prelude . 'require ' . var_export($capture, true) . ';', $root, $dir, $sendmail),
+            array(PHP_BINARY, '-d', 'sendmail_path=' . ($configured ? $fallback : $sendmail), '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $prelude . 'require ' . var_export($capture, true) . ';', $root, $dir, $configured ? $sendmail : ''),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes
         );
@@ -56,7 +56,7 @@ test('native mailer composes multipart mail and resets shared translations witho
         }
         rmdir($dir);
     }
-});
+})->with(array(true, false));
 
 test('PHPMailer validates encoding and prevents extra headers while generating MIME only', function (): void {
     require_once dirname(__DIR__, 2) . '/include/vendor/phpmailer/vendor/autoload.php';
@@ -117,4 +117,36 @@ test('XOAUTH2 accepts only successful final SMTP replies without opening a conne
     array(20, array(235), true),
     array(20, array(535), false),
     array(0, array(235), true)
+));
+
+test('SMTP DATA generator retains the first line and normalizes message data without a connection', function ($message, $expected): void {
+    require_once dirname(__DIR__, 2) . '/include/vendor/phpmailer/vendor/autoload.php';
+    $smtp = new class () extends PHPMailer\PHPMailer\SMTP {
+        public string $wire = '';
+        public array $commands = array();
+
+        protected function sendCommand($command, $commandstring, $expect)
+        {
+            $this->commands[] = $command;
+            $this->last_reply = $expect . ' fixture reply';
+
+            return true;
+        }
+
+        public function client_send($data, $command = '')
+        {
+            $this->wire .= $data;
+
+            return strlen($data);
+        }
+    };
+    $smtp->Timelimit = 3;
+    expect($smtp->data($message))->toBeTrue()
+        ->and($smtp->wire)->toBe($expected)
+        ->and($smtp->commands)->toBe(array('DATA', 'DATA END'))
+        ->and($smtp->Timelimit)->toBe(3);
+})->with(array(
+    array("Subject: fixture\r\n\r\n.first\rsecond\nthird\r\n", "Subject: fixture\r\n\r\n..first\r\nsecond\r\nthird\r\n\r\n"),
+    array('', "\r\n"),
+    array('Body without headers', "Body without headers\r\n")
 ));

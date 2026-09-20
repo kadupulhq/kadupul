@@ -5051,7 +5051,7 @@ function mailer($from, $to, $cc, $bcc, $replyto, $subject, $body, $body_text = '
 		$mail->isMail();
 	} elseif ($how == 1) {
 		$mail->isSendmail();
-		$mail->Sendmail = read_config_option('settings_sendmail_path');
+		$mail->Sendmail = read_config_option('settings_sendmail_path') ?: $mail->Sendmail;
 	} elseif ($how == 2) {
 		$mail->isSMTP();
 		$mail->Host = read_config_option('settings_smtp_host');
