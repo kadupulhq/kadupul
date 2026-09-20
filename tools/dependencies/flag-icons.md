@@ -1,8 +1,8 @@
 # Flag-icons provenance
 
-Updated 6.11.1 → 7.5.0 on 2026-09-19. This is a CSS/SVG asset update: no
-application PHP or browser runtime minimum changes, new application dependencies,
-or CSS class/path migrations are required.
+Updated 6.11.1 → 7.5.0 on 2026-09-19. This CSS/SVG asset update does not change
+application PHP or browser runtime minimums. It adds no application dependencies
+and requires no CSS class/path migrations.
 
 - Upstream release: https://github.com/lipis/flag-icons/releases/tag/v7.5.0
 - Archive: https://codeload.github.com/lipis/flag-icons/zip/refs/tags/v7.5.0
@@ -24,3 +24,10 @@ ratios, every asset URL in minified/unminified CSS, and XML validity/passive
 content/internal references for all bundled SVGs. Upstream's demo/build tooling
 is not installed or used by the application and is not part of root Composer or
 the E2E npm dependency audit.
+
+Upstream documentation still illustrates a 7.3.2 CDN URL; Kadupul does not use
+that URL and serves the bundled 7.5.0 CSS locally. The upstream Python maintenance
+scripts use substring-based SVG filename filters and should not be run on
+directories containing backup files such as `xx.svg.bak`. They are retained
+unmodified for provenance, are not invoked by Kadupul or CI, and are not the
+validation mechanism for shipped assets. Use the compatibility tests above.
