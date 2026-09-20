@@ -49,6 +49,9 @@ Fail-closed cleanup traverses attached shadow roots and template content using
 cached prototype getters. An aborted shadow prepass also neutralizes its already
 removed subtrees. Two browser regressions reproduce retained event handlers before
 these patches and verify their removal afterward.
+The final template-expression scrub uses an explicit work stack rather than
+recursing through nested template fragments. An isolated test of that production
+helper covers 12,000 nested fragments and preserves text normalization/scrubbing.
 The sanitizer also restores the outer removal ledger after nested calls (including
 throws) and resets an omitted per-call Trusted Types policy to the internal
 default; persistent `setConfig()` policies and explicit opt-out remain supported.

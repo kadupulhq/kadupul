@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 const path = require("node:path");
+const fs = require("node:fs");
 const { test, expect } = require("@playwright/test");
 
 test.beforeEach(async ({ page }) => {
@@ -15,6 +16,28 @@ async function load(page, ...files) {
     });
   }
 }
+
+test("DOMPurify final template scrub handles deeply nested fragments without recursion", async ({ page }) => {
+  // Expose the production closure only in this isolated test, exercising the final
+  // scrub independently of the separate element-sanitization traversal.
+  const source = fs.readFileSync(path.resolve(__dirname, "../../include/js/purify.js"), "utf8");
+  const anchor = "    DOMPurify.setConfig = function () {";
+  expect(source.split(anchor)).toHaveLength(2);
+  await page.addScriptTag({ content: source.replace(anchor, "    DOMPurify.testTemplateScrub = _scrubTemplateExpressions2;\n" + anchor) });
+  const result = await page.evaluate(() => {
+    const root = document.createElement("div");
+    let container = root;
+    for (let depth = 0; depth < 12000; depth++) {
+      const template = document.createElement("template");
+      container.append(template);
+      container = template.content;
+    }
+    container.append(document.createTextNode("{{"), document.createTextNode("unsafe}}"));
+    DOMPurify.testTemplateScrub(root);
+    return container.textContent;
+  });
+  expect(result).toBe(" ");
+});
 
 for (const detached of [false, true]) {
   test(`DOMPurify failed shadow prepass neutralizes ${detached ? "removed" : "attached"} trees`, async ({ page }) => {

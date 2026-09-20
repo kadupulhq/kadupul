@@ -1554,27 +1554,25 @@
      * @param node The root element whose character data should be scrubbed.
      */
     const _scrubTemplateExpressions2 = function _scrubTemplateExpressions(node) {
-      normalizeNode(node);
-      /* Clobber-safe ownerDocument read, same reasoning as _createNodeIterator:
-         under SAFE_FOR_TEMPLATES this runs on the live IN_PLACE root, which may
-         carry a form-named-getter override of ownerDocument. */
-      const doc = getOwnerDocument ? getOwnerDocument(node) : node.ownerDocument;
-      const walker = createNodeIterator.call(doc || node, node,
-      // eslint-disable-next-line no-bitwise
-      NodeFilter.SHOW_TEXT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_CDATA_SECTION | NodeFilter.SHOW_PROCESSING_INSTRUCTION, null);
-      let currentNode = walker.nextNode();
-      while (currentNode) {
-        currentNode.data = _stripTemplateExpressions(currentNode.data);
-        currentNode = walker.nextNode();
-      }
-      // NodeIterator does not descend into <template>.content per the DOM spec,
-      // so we must explicitly recurse into each template's content fragment,
-      // mirroring the approach used by _sanitizeShadowDOM.
-      const templates = (_isDocumentFragment(node) ? queryFragmentTemplates : queryElementTemplates)(node, 'template');
-      if (templates) {
+      // Kadupul: template content is a separate tree; use a work stack so
+      // attacker-controlled nesting cannot exhaust the JavaScript call stack.
+      const pending = [node];
+      while (pending.length > 0) {
+        const root = pending.pop();
+        normalizeNode(root);
+        const doc = getOwnerDocument ? getOwnerDocument(root) : root.ownerDocument;
+        const walker = createNodeIterator.call(doc || root, root,
+        // eslint-disable-next-line no-bitwise
+        NodeFilter.SHOW_TEXT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_CDATA_SECTION | NodeFilter.SHOW_PROCESSING_INSTRUCTION, null);
+        let currentNode;
+        while ((currentNode = walker.nextNode())) {
+          currentNode.data = _stripTemplateExpressions(currentNode.data);
+        }
+        const templates = (_isDocumentFragment(root) ? queryFragmentTemplates : queryElementTemplates)(root, 'template');
         arrayForEach(templates, tmpl => {
-          if (_isDocumentFragment(tmpl.content)) {
-            _scrubTemplateExpressions2(tmpl.content);
+          const content = getTemplateContent(tmpl);
+          if (_isDocumentFragment(content)) {
+            pending.push(content);
           }
         });
       }
