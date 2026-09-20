@@ -32,6 +32,15 @@ async function safeDestination(path) {
   }
   return destination;
 }
+async function walkPackageDirectory(packageRoot, directory, paths) {
+  const path = contained(packageRoot, await realpath(resolve(packageRoot, directory)));
+  for (const item of await readdir(path, { withFileTypes: true })) {
+    if (item.isSymbolicLink()) throw new Error(`Symlink in package: ${item.name}`);
+    const child = `${directory}/${item.name}`;
+    if (item.isDirectory()) await walkPackageDirectory(packageRoot, child, paths);
+    else if (item.isFile()) paths.push(child);
+  }
+}
 const entries = [];
 for (const entry of manifest) {
   if (!entry.treeSha256) {
@@ -43,17 +52,9 @@ for (const entry of manifest) {
   const metadata = JSON.parse(await readFile(resolve(packageRoot, 'package.json'), 'utf8'));
   if (metadata.version !== entry.version) throw new Error(`Wrong package version: ${entry.package}`);
   const paths = [...entry.files];
-  async function walk(directory) {
-    const path = contained(packageRoot, await realpath(resolve(packageRoot, directory)));
-    for (const item of await readdir(path, { withFileTypes: true })) {
-      if (item.isSymbolicLink()) throw new Error(`Symlink in package: ${item.name}`);
-      const child = `${directory}/${item.name}`;
-      if (item.isDirectory()) await walk(child);
-      else if (item.isFile()) paths.push(child);
-    }
-  }
-  for (const directory of entry.directories) await walk(directory);
-  paths.sort();
+  for (const directory of entry.directories) await walkPackageDirectory(packageRoot, directory, paths);
+  // Hash ordering is deliberately code-unit lexical, never locale-dependent.
+  paths.sort((left, right) => left < right ? -1 : Number(left > right));
   const hash = createHash('sha256');
   const expanded = [];
   for (const path of paths) {
@@ -99,7 +100,7 @@ for (const entry of entries) {
   }
   // Match Git text normalization so fresh checkouts reproduce the same bytes.
   if (/\.(js|map|css|scss|less|json|yml|yaml|txt|svg)$/i.test(entry.file)) {
-    data = Buffer.from(data.toString('utf8').replace(/\r\n/g, '\n'));
+    data = Buffer.from(data.toString('utf8').replaceAll('\r\n', '\n'));
   }
   let current;
   try { current = await readFile(destination); } catch (error) { if (error.code !== 'ENOENT') throw error; }
