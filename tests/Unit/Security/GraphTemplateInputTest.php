@@ -190,7 +190,7 @@ PHP;
     expect(runGraphInputProbe($program, array($column), $this->getTestResultObject()->getCodeCoverage()))->toBe($valid ? 'BOUNDSTATUS:200' : 'STATUS:400');
 })->with(array(array('text_format', true), array('text_format, unapproved()', false), array('local_graph_id', false)));
 
-test('graph save rejects stored identifiers and binds approved input values', function ($column, $valid) {
+test('graph save rejects stored identifiers before persistence and binds approved input values', function ($column, $valid, $mode) {
     $program = <<<'PHP'
 require $argv[1] . '/include/global_constants.php';
 require $argv[1] . '/lib/html_utility.php';
@@ -198,6 +198,9 @@ function read_config_option($key) { return '0'; }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function __($text, ...$args) { return $text; }
 function api_plugin_hook_function($name, $value) { return $value; }
+function form_input_validate($value, ...$args) { return $value; }
+function is_error_message() { return false; }
+function sql_save(...$args) { throw new Exception('Persistence before input validation'); }
 function db_fetch_cell_prepared(...$args) { return 2; }
 function db_fetch_assoc_prepared($sql, $params) {
     return strpos($sql, 'SELECT id, column_name') !== false ? array(array('id' => 7, 'column_name' => $GLOBALS['argv'][2])) : array(array('id' => 88));
@@ -207,8 +210,19 @@ function db_execute_prepared($sql, $params) {
     echo 'BOUND'; exit;
 }
 $_REQUEST = array('action' => 'save', 'save_component_input' => '1', 'local_graph_id' => '1', 'host_id_prev' => '1', 'host_id' => '1', 'graph_template_graph_id' => '0', 'local_graph_template_graph_id' => '0', 'graph_template_id' => '0', 'graph_template_id_prev' => '0', 'text_format_7' => "safe' quoted");
+if ($argv[3] !== 'input') {
+    $_REQUEST[$argv[3]] = '1';
+    $_REQUEST['graph_template_id'] = '2';
+}
 register_shutdown_function(function () { echo 'STATUS:' . (http_response_code() ?: 200); });
 require $argv[1] . '/graphs.php';
 PHP;
-    expect(runGraphInputProbe($program, array($column), $this->getTestResultObject()->getCodeCoverage()))->toBe($valid ? 'BOUNDSTATUS:200' : 'STATUS:400');
-})->with(array(array('text_format', true), array('text_format, unapproved()', false), array('local_graph_id', false)));
+    expect(runGraphInputProbe($program, array($column, $mode), $this->getTestResultObject()->getCodeCoverage()))->toBe($valid ? 'BOUNDSTATUS:200' : 'STATUS:400');
+})->with(array(
+    array('text_format', true, 'input'),
+    array('text_format, unapproved()', false, 'input'),
+    array('local_graph_id', false, 'input'),
+    array('text_format, unapproved()', false, 'save_component_graph'),
+    array('local_graph_id', false, 'save_component_graph'),
+    array('text_format, unapproved()', false, 'save_component_graph_new'),
+));
