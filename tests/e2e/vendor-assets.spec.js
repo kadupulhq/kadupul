@@ -17,6 +17,18 @@ async function load(page, ...files) {
   }
 }
 
+test("DOMPurify template scrubbing tolerates a missing template constructor", async ({ page }) => {
+  await page.evaluate(() => { window.HTMLTemplateElement = undefined; });
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const root = document.createElement("div");
+    root.innerHTML = '<template><span>{{unsafe}}</span></template><b>safe</b>';
+    DOMPurify.sanitize(root, { IN_PLACE: true, SAFE_FOR_TEMPLATES: true });
+    return { templateText: root.querySelector("template").content.textContent, text: root.querySelector("b").textContent };
+  });
+  expect(result).toEqual({ templateText: " ", text: "safe" });
+});
+
 test("DOMPurify final template scrub handles deeply nested fragments without recursion", async ({ page }) => {
   // Expose the production closure only in this isolated test, exercising the final
   // scrub independently of the separate element-sanitization traversal.

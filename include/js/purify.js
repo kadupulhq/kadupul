@@ -1569,8 +1569,8 @@
           currentNode.data = _stripTemplateExpressions(currentNode.data);
         }
         const templates = (_isDocumentFragment(root) ? queryFragmentTemplates : queryElementTemplates)(root, 'template');
-        arrayForEach(templates, tmpl => {
-          const content = getTemplateContent(tmpl);
+        arrayForEach(templates || [], tmpl => {
+          const content = getTemplateContent ? getTemplateContent(tmpl) : tmpl.content;
           if (_isDocumentFragment(content)) {
             pending.push(content);
           }
