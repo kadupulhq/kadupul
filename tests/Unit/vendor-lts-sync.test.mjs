@@ -56,3 +56,11 @@ test('source symlinks cannot escape the selected package root', () => fixture(as
   await symlink(resolve(root, 'outside.js'), resolve(root, 'packages/example/link.js'));
   assert.match((await execute({ ...entry, source: 'link.js' })).stderr, /Unsafe asset path/);
 }));
+
+test('source traversal and symlinks cannot read a sibling package', () => fixture(async ({ root, entry, execute }) => {
+  await mkdir(resolve(root, 'packages/sibling'));
+  await writeFile(resolve(root, 'packages/sibling/asset.js'), 'sibling');
+  assert.match((await execute({ ...entry, source: '../sibling/asset.js' })).stderr, /Unsafe asset path/);
+  await symlink(resolve(root, 'packages/sibling/asset.js'), resolve(root, 'packages/example/sibling.js'));
+  assert.match((await execute({ ...entry, source: 'sibling.js' })).stderr, /Unsafe asset path/);
+}));

@@ -44,6 +44,9 @@ application runtime dependency.
   Do not equate the 1.4.1 upgrade with closing this advisory. Tests cover the
   actual bundled jQuery 3.7.1 options merge; the all-cookie map uses a null
   prototype. Migration to a different library is outside a same-major refresh.
+- The LTS cookie adapter deliberately retains the old function-valued write
+  behavior. The newer upstream read-converter overload is not enabled: adopting
+  it would turn an existing write into a read/callback execution.
 
 ## Reproduction
 

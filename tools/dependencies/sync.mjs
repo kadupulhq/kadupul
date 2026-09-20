@@ -73,8 +73,9 @@ for (const entry of entries) {
   const destination = await safeDestination(entry.file);
   let data;
   if (sourceRoot && entry.source) {
-    const source = await realpath(contained(sourceRoot, resolve(sourceRoot, entry.package, entry.source)));
-    contained(sourceRoot, source);
+    const packageRoot = contained(sourceRoot, await realpath(resolve(sourceRoot, entry.package)));
+    const source = await realpath(contained(packageRoot, resolve(packageRoot, entry.source)));
+    contained(packageRoot, source);
     data = await readFile(source);
   } else {
     const url = new URL(entry.url);

@@ -45,6 +45,16 @@ test('cookie options and names cannot pollute prototypes', async ({ page }) => {
   })).toEqual([true, true, 'untrusted']);
 });
 
+test('LTS cookie function values remain writes, not new converter callbacks', async ({ page }) => {
+  await load(page, 'include/js/jquery.cookie.js');
+  expect(await page.evaluate(() => {
+    let calls = 0;
+    const value = function () { calls++; return 'converted'; };
+    $.cookie('function-value', value, { path: '/' });
+    return { called: calls, preserved: $.cookie('function-value') === String(value) };
+  })).toEqual({ called: 0, preserved: true });
+});
+
 test('UAParser retains browser and operating system detection', async ({ page }) => {
   await load(page, 'include/themes/midwinter/vendor/ua-parser/ua-parser.js');
   const result = await page.evaluate(() => new UAParser('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36').getResult());
