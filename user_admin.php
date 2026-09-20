@@ -585,6 +585,9 @@ function form_save() {
 			$user_id = sql_save($save, 'user_auth');
 
 			if ($user_id) {
+				if (($save['enabled'] ?? '') !== 'on') {
+					cacti_auth_revoke_user_credentials($user_id);
+				}
 				raise_message(1);
 			} else {
 				raise_message(2);
@@ -3158,4 +3161,3 @@ function member_filter($header_label) {
 
 	html_end_box();
 }
-

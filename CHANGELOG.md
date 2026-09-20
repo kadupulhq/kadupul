@@ -17,6 +17,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Enforce first-request realm authorization after Basic authentication and reject disabled, missing or locked accounts before creating authenticated sessions.
+- Reject client-supplied Basic identity headers, recheck enabled accounts on persisted sessions and remember-me restoration, and revoke credentials after successful account-disable saves.
 - Reject array-valued actions and require CSRF-validated POST requests for form login, password changes, profile saves, setting resets and session revocation while preserving server-authenticated Basic login.
 - Quote the installer's PHP executable as one shell argument when validating binary locations.
 - Enforce enabled-group report realms and authorize report item saves, edits and moves against their existing parent (#111).
