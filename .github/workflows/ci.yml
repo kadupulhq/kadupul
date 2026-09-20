@@ -192,6 +192,8 @@ jobs:
           coverage: none
       - name: Verify observation normalization and failure reporting
         run: mise exec python@3.12.12 -- python tests/Support/Behavior/selftest.py
+      - name: Verify flag maintenance filename filters
+        run: mise exec python@3.12.12 -- python tests/Support/flag_icons_helpers_test.py
       # This exercises runtime invariants without claiming parity with upstream.
       # Observations are ephemeral CI artifacts; committed goldens stay untouched.
       - name: Load PHP base image for runtime provenance

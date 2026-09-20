@@ -44,6 +44,12 @@ if (in_array($scenario, array('disabled', 'existing_disabled'), true)) {
 } elseif (in_array($scenario, array('missing', 'existing_missing'), true)) {
     $db->exec('DELETE FROM user_auth');
 }
+if (strpos($scenario, 'guest') !== false) {
+    $db->exec("UPDATE user_auth SET enabled = ''");
+    if ($scenario === 'guest_locked') $db->exec("UPDATE user_auth SET locked = 'on'");
+    if ($scenario === 'existing_guest_missing') $db->exec('DELETE FROM user_auth');
+    $guest_account = true;
+}
 if ($scenario === 'allowed') {
     $db->exec('INSERT INTO user_auth_realm VALUES (42, 7)');
 } elseif (in_array($scenario, array('group', 'disabled_group'), true)) {
@@ -58,7 +64,7 @@ function read_config_option($key) {
     return array('auth_method' => '2', 'auth_cache_enabled' => 'on', 'admin_user' => 1)[$key] ?? '';
 }
 function get_current_page() { return 'user_admin.php'; }
-function get_guest_account() { return 0; }
+function get_guest_account() { return strpos($GLOBALS['scenario'], 'guest') !== false ? 42 : 0; }
 function get_template_account($id) { return 0; }
 function get_client_addr() { return '127.0.0.1'; }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }

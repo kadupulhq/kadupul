@@ -4995,7 +4995,7 @@ function cacti_auth_transition($user_id, $reason = 'login') {
 		WHERE id = ?',
 		array($user_id));
 
-	if (!$account || $account['enabled'] !== 'on' || $account['locked'] === 'on') {
+	if (!$account || ($account['enabled'] !== 'on' && (int)$user_id !== (int)get_guest_account()) || $account['locked'] === 'on') {
 		cacti_log('SECURITY: auth transition blocked for unavailable, disabled or locked user: ' . $user_id . ' reason: ' . $reason, false, 'AUTH');
 
 		return false;

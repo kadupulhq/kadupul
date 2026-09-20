@@ -12,9 +12,11 @@ for (dirpath, dirnames, filenames) in os.walk(dir_1x1):
 
 def add_ids(directory):
     for f in files:
+        if not f.endswith(".svg"):
+            continue
         filename = os.path.join(directory, f)
         update = False
-        flag_id = "flag-icons-%s" % (f.replace(".svg", ""))
+        flag_id = "flag-icons-%s" % f[:-4]
         with open(filename, "r") as flag:
             lines = flag.readlines()
             if lines[0].find("id") == -1 and lines[0].find("viewBox") > 0:
