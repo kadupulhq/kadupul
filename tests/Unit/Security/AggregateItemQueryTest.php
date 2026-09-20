@@ -30,7 +30,9 @@ $item = array($id => $argv[3], 'graph_templates_item_id' => 11,
     't_graph_type_id' => "on'); DELETE FROM $table; --",
     't_cdef_id' => "quote'\\value", 'item_skip' => 'on', 'item_total' => '');
 $second = array($id => 1, 'graph_templates_item_id' => 12);
-$saved = aggregate_graph_items_save(array($item, $second), $table);
+$nullable = array($id => 1, 'graph_templates_item_id' => 13,
+    't_graph_type_id' => null, 't_cdef_id' => null, 'item_skip' => null, 'item_total' => null);
+$saved = aggregate_graph_items_save(array($item, $second, $nullable), $table);
 echo json_encode(array('saved' => $saved, 'queries' => $queries,
     'rows' => $db->query("SELECT * FROM $table ORDER BY graph_templates_item_id")->fetchAll(PDO::FETCH_ASSOC)));
 PHP;
@@ -59,15 +61,19 @@ PHP;
         expect($result['saved'])->toBeTrue();
         $id = $table === 'aggregate_graphs_graph_item' ? 'aggregate_graph_id' : 'aggregate_template_id';
         expect($result['queries'][0])->toBe(array("DELETE FROM $table WHERE $id = ?", array(1)));
-        expect(substr_count($result['queries'][1][0], '?'))->toBe(20);
+        expect(substr_count($result['queries'][1][0], '?'))->toBe(30);
         expect($result['queries'][1][0])->not->toContain('DELETE');
-        expect($result['rows'])->toHaveCount(3);
-        expect(array_column($result['rows'], 'graph_templates_item_id'))->toBe(array(11, 12, 20));
+        expect($result['rows'])->toHaveCount(4);
+        expect(array_column($result['rows'], 'graph_templates_item_id'))->toBe(array(11, 12, 13, 20));
         expect($result['rows'][0]['t_graph_type_id'])->toBe("on'); DELETE FROM $table; --");
         expect($result['rows'][0]['t_cdef_id'])->toBe("quote'\\value");
         expect($result['rows'][0]['sequence'])->toBe(3);
         expect($result['rows'][1]['sequence'])->toBe(0);
-        expect($result['rows'][2][$id])->toBe(2);
+        foreach (array('t_graph_type_id', 't_cdef_id', 'item_skip', 'item_total') as $field) {
+            expect($result['rows'][1][$field])->toBe('');
+            expect($result['rows'][2][$field])->toBeNull();
+        }
+        expect($result['rows'][3][$id])->toBe(2);
         if ($coverage !== null) {
             foreach (glob($directory . '/*.coverage') as $report) {
                 $coverage->merge(unserialize(file_get_contents($report)));

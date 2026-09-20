@@ -54,8 +54,9 @@ PHP;
     fclose($socket);
     $server = null;
     try {
+        // Coverage hooks and JIT are incompatible in the HTTP-server SAPI.
         $server = proc_open(
-            array(PHP_BINARY, '-d', 'pcov.directory=' . $root,
+            array(PHP_BINARY, '-d', 'opcache.jit=off', '-d', 'opcache.jit_buffer_size=0', '-d', 'pcov.directory=' . $root,
                 '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-S', $address, 'router.php'),
             array(0 => array('pipe', 'r'), 1 => array('file', $dir . '/server.log', 'a'),
                 2 => array('file', $dir . '/server.log', 'a')),
