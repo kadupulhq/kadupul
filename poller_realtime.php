@@ -111,21 +111,26 @@ $change_files = false;
 /* obtain some defaults from the database */
 $max_threads = read_config_option('max_threads');
 
-/* Determine Command Name */
-$command_string = cacti_escapeshellcmd(read_config_option('path_php_binary'));
-$extra_args     = '-q ' . cacti_escapeshellarg($config['base_path'] . '/cmd_realtime.php') . ' ' . cacti_escapeshellarg($poller_id) . ' ' . (int)$graph_id . ' ' . (int)$interval;
-
 /* Determine if Realtime will work or not */
 $cache_dir = read_config_option('realtime_cache_path');
 if (!is_dir($cache_dir)) {
 	cacti_log("FATAL: Realtime Cache Directory '$cache_dir' Does Not Exist!");
-	return -1;
+	exit(1);
 } elseif (!is_writable($cache_dir)) {
 	cacti_log("FATAL: Realtime Cache Directory '$cache_dir' is Not Writable!");
-	return -2;
+	exit(2);
 }
 
-shell_exec("$command_string $extra_args");
+/* Wait for the worker before consuming its samples; do not leave it behind on a parent-only timeout. */
+$worker_output = array();
+$worker_status = cacti_exec(read_config_option('path_php_binary'), array(
+	'-q', $config['base_path'] . '/cmd_realtime.php', $poller_id, (string) $graph_id, (string) $interval
+), $worker_output, null);
+if ($worker_status !== 0) {
+	cacti_log('ERROR: Realtime worker failed with exit status ' . (int) $worker_status);
+	db_close();
+	exit(1);
+}
 
 /* open a pipe to rrdtool for writing */
 $rrdtool_pipe = rrd_init(true, false, true);

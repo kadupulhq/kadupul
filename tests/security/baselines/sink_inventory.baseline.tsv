@@ -12,7 +12,6 @@ cmd_exec	./cli/splice_rrd.php:227	$response = shell_exec($rrdtool);
 cmd_exec	./cli/update_heartbeat.php:261				$result = exec($command, $output, $return_code);
 cmd_exec	./cmd.php:295			$cactiphp = proc_open($command, $cactides, $pipes);
 cmd_exec	./cmd_realtime.php:98				$cactiphp = proc_open(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/script_server.php') . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
-cmd_exec	./graph_realtime.php:202		shell_exec($php_binary . ' -q ' . $script_path . ' ' . $args);
 cmd_exec	./host.php:180		shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/cli/poller_reindex_hosts.php') . ' --qid=all --id=' . cacti_escapeshellarg((string) $host_id));
 cmd_exec	./install/functions.php:521				$myinfo = @json_decode(shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/cli/import_package.php') . ' --filename=' . cacti_escapeshellarg("/$path/$xmlfile") . ' --info'), true);
 cmd_exec	./install/install.php:108			print '<li>' . __('The shell_exec() and/or exec() functions are currently blocked.') . '<br>' . __('See the PHP Manual: <a href="http://php.net/manual/en/ini.core.php#ini.disable-functions">Disable Functions</a>.') .'</li>';
@@ -28,8 +27,8 @@ cmd_exec	./lib/functions.php:6934				$shell = shell_exec(cacti_escapeshellcmd(re
 cmd_exec	./lib/functions.php:7133				exec('id -nu', $o, $r);
 cmd_exec	./lib/functions.php:7143				exec(sprintf('grep :%s: /etc/passwd | cut -d: -f1', (int) $uid), $o, $r);
 cmd_exec	./lib/functions.php:7435	 * shell_exec() callers that already assemble the command string.
-cmd_exec	./lib/functions.php:7475		$process = proc_open($argv, $descriptors, $pipes);
-cmd_exec	./lib/functions.php:7544	 * shell_exec() and expect a string return value.
+cmd_exec	./lib/functions.php:7476		$process = proc_open($argv, $descriptors, $pipes);
+cmd_exec	./lib/functions.php:7545	 * shell_exec() and expect a string return value.
 cmd_exec	./lib/installer.php:3528	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:3564	                    shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:3621	                    $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
@@ -85,8 +84,7 @@ cmd_exec	./lib/utility.php:1898		$json     = shell_exec($php . ' -q ' . $php_fil
 cmd_exec	./lib/utility.php:1966		$json     = shell_exec($php . ' -q ' . $php_file);
 cmd_exec	./lib/utility.php:2098		$json     = shell_exec($php . ' -q ' . $php_file);
 cmd_exec	./poller_boost.php:556	        $process = proc_open($arguments, $descriptors, $pipes);
-cmd_exec	./poller_realtime.php:128	shell_exec("$command_string $extra_args");
-cmd_exec	./poller_realtime.php:230					shell_exec($command);
+cmd_exec	./poller_realtime.php:235					shell_exec($command);
 cmd_exec	./poller_spikekill.php:230				$response = exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./remote_agent.php:481								$cactiphp = proc_open($php_bin . ' -q ' . $srv_path . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
 cmd_exec	./script_server.php:168					exec("TASKLIST /FO LIST /FI \"PID eq $parent_pid\"", $out);
@@ -99,7 +97,7 @@ cmd_exec	./utilities.php:202					exec(cacti_escapeshellcmd(read_config_option('p
 cmd_exec	./utilities.php:220				$snmp_version = shell_exec(cacti_escapeshellcmd(read_config_option('path_snmpget')) . ' -V 2>&1');
 cmd_exec	./utilities.php:240				exec(cacti_escapeshellcmd(read_config_option('path_spine')) . ' --version', $out_array);
 deserialize	./lib/functions.php:4686				$items = unserialize($unstripped, array('allowed_classes' => false));
-deserialize	./lib/functions.php:7998		return @unserialize($strobj, array('allowed_classes' => false));
+deserialize	./lib/functions.php:7999		return @unserialize($strobj, array('allowed_classes' => false));
 dynamic_include	./automation_tree_rules.php:522		include_once($config['base_path'].'/lib/html_tree.php');
 dynamic_include	./cli/add_data_query.php:10	require_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./cli/add_data_query.php:11	require_once($config['base_path'] . '/lib/api_automation.php');
@@ -273,7 +271,7 @@ dynamic_include	./color_templates.php:163		include_once($config['base_path'] . '
 dynamic_include	./color_templates.php:363		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./color_templates.php:413		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./color_templates.php:469		include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./graph_realtime.php:365	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
+dynamic_include	./graph_realtime.php:384	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
 dynamic_include	./include/auth.php:120					require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/auth.php:180				require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/csrf.php:15	require_once($config['include_path'] .'/vendor/csrf/csrf-conf.php');
@@ -492,7 +490,7 @@ dynamic_include	./poller_maintenance.php:16	require_once($config['library_path']
 dynamic_include	./poller_realtime.php:10	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller_realtime.php:11	require_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./poller_realtime.php:12	require_once($config['base_path'] . '/lib/rrd.php');
-dynamic_include	./poller_realtime.php:182		include_once($config['library_path'] . '/rrd.php');
+dynamic_include	./poller_realtime.php:187		include_once($config['library_path'] . '/rrd.php');
 dynamic_include	./poller_recovery.php:18	require_once($config['base_path'] . '/lib/poller.php');
 dynamic_include	./poller_recovery.php:19	require_once($config['base_path'] . '/lib/boost.php');
 dynamic_include	./poller_recovery.php:20	require_once($config['base_path'] . '/lib/dsstats.php');
@@ -877,8 +875,8 @@ header_redirect	./lib/auth.php:4773					header('Location: ' . $config['url_path'
 header_redirect	./lib/auth.php:4778				header('Location: ' . $config['url_path'] . 'graph_view.php' . ($newtheme ? '?newtheme=1':''));
 header_redirect	./lib/auth.php:4973			header ('Location: ' . $config['url_path'] . 'auth_changepassword.php?action=force&ref=' . urlencode(validate_redirect_url(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'index.php')));
 header_redirect	./lib/clog_webapi.php:82			header('Location: ' . get_current_page());
-header_redirect	./lib/functions.php:8103		header('Location: ' . $save_url);
-header_redirect	./lib/functions.php:8126		header('Location: ' . $safe_url, true, $status);
+header_redirect	./lib/functions.php:8104		header('Location: ' . $save_url);
+header_redirect	./lib/functions.php:8127		header('Location: ' . $safe_url, true, $status);
 header_redirect	./lib/html_graph.php:480			header('Location: ' . $page . '?host_id=' . $host_id . '&header=false');
 header_redirect	./lib/html_reports.php:1566				header('Location: reports.php');
 header_redirect	./lib/html_reports.php:228			header('Location: ' . get_reports_page());

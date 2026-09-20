@@ -7440,7 +7440,8 @@ function cacti_input_string_is_safe($input_string) {
  * @param string $binary   Path to the executable. Must not start with '-'.
  * @param array  $args     Ordered argument strings (not shell-escaped).
  * @param array  &$output  Receives stdout lines on success; empty array on empty output.
- * @param mixed  $timeout  False for 4 hour timeout or seconds before the process is killed (default 30).
+ * @param mixed  $timeout  Null waits for completion; false sets a 4 hour timeout; otherwise seconds (default 30).
+ *                        Timed termination affects only the direct child, not its descendants.
  *
  * @return int Exit code, or 255 on spawn failure, error with binary or timeout.
  */
@@ -7485,10 +7486,10 @@ function cacti_exec($binary, array $args = array(), array &$output = array(), $t
 
 	$stdout    = '';
 	$stderr    = '';
-	$deadline  = hrtime(true) / 1000000000 + (int) $timeout;
+	$deadline  = $timeout === null ? null : hrtime(true) / 1000000000 + (int) $timeout;
 	$exit      = false;
 
-	while (($remaining = $deadline - hrtime(true) / 1000000000) > 0) {
+	while (($remaining = $deadline === null ? 1 : $deadline - hrtime(true) / 1000000000) > 0) {
 		$read   = array($pipes[1], $pipes[2]);
 		$write  = array();
 		$except = array();
