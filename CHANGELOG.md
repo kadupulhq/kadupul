@@ -13,6 +13,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Require POST and valid CSRF tokens before graph-template bulk mutations.
 - Probe the configured PHP binary without a shell, reject failed probes, and bound installer probe execution time.
+- Move main to phpseclib 4.x and PHP >=8.1; retain phpseclib 3.x and existing PHP support on `lts/1.2`.
 - Refresh flag-icons to 7.5.0 while retaining every configured language flag, both aspect ratios and the existing CSS class/path API.
 - Update PHPMailer to 7.1.1 while retaining the current PHP floor, include paths and local translations; regenerate its bundled autoloader without development dependencies.
 
