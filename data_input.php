@@ -49,15 +49,21 @@ switch (get_request_var('action')) {
 		break;
 	case 'whitelist_update':
 		$id = get_filter_request_var('id');
+		if (!is_int($id) || $id < 1) {
+			http_response_code(400);
+			exit;
+		}
 
-		$output = cacti_exec_string(read_config_option('path_php_binary'), array(
+		$output = array();
+		$status = cacti_exec(read_config_option('path_php_binary'), array(
 			'-q', $config['base_path'] . '/cli/input_whitelist.php', '--update', '--push', '--id=' . $id
-		), false);
+		), $output, false);
+		$message = implode("\n", $output);
 
-		if ($output === false) {
-			raise_message('whitelist_updated', __('Unable to update the input whitelist. Check the Kadupul log for details.'), MESSAGE_LEVEL_ERROR);
+		if ($status !== 0) {
+			raise_message('whitelist_updated', html_escape($message !== '' ? $message : __('Unexpected error occurred')), MESSAGE_LEVEL_ERROR);
 		} else {
-			raise_message('whitelist_updated', html_escape($output), MESSAGE_LEVEL_INFO);
+			raise_message('whitelist_updated', html_escape($message), MESSAGE_LEVEL_INFO);
 		}
 
 		/* fall through */

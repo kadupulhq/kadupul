@@ -72,10 +72,11 @@ function __($text) { return $text; }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function read_config_option($name) { return '/configured php/bin/php'; }
 function die_html_input_error(...$args) { http_response_code(400); exit; }
-function cacti_exec_string($binary, $arguments, $timeout) {
+function cacti_exec($binary, $arguments, &$output, $timeout) {
     $expected = array('-q', '/configured path/cli/input_whitelist.php', '--update', '--push', '--id=7');
     if ($binary !== '/configured php/bin/php' || $arguments !== $expected || $timeout !== false) throw new RuntimeException('Incorrect argv or timeout');
-    return $GLOBALS['failure'] ? false : '<script>output</script>';
+    $output = $GLOBALS['failure'] === 'empty' ? array() : array('<script>output</script>');
+    return $GLOBALS['failure'] ? 7 : 0;
 }
 function raise_message($id, $message, $level) { echo json_encode(array($message, $level === MESSAGE_LEVEL_ERROR ? 'error' : ($level === MESSAGE_LEVEL_INFO ? 'info' : 'unknown'))); }
 function top_header() { exit; }
@@ -89,7 +90,7 @@ if ($argv[3] === 'valid') $_POST['__csrf_magic'] = csrf_get_tokens();
 if ($argv[3] === 'query') $_GET['__csrf_magic'] = $_REQUEST['__csrf_magic'] = csrf_get_tokens();
 if ($argv[3] === 'array') $_POST['__csrf_magic'] = array('bad');
 if ($argv[3] === 'forged') $_POST['__csrf_magic'] = 'sid:forged,1';
-$failure = $argv[6] === 'true';
+$failure = json_decode($argv[6], true);
 register_shutdown_function(function () { echo 'STATUS:' . (http_response_code() ?: 200); });
 require $argv[1] . '/data_input.php';
 PHP;
@@ -97,7 +98,7 @@ PHP;
     if ($expected === 200) {
         expect($output)->toEndWith('STATUS:200');
         $message = json_decode(substr($output, 0, -10), true, 512, JSON_THROW_ON_ERROR);
-        expect($message[0])->toBe($failure ? 'Unable to update the input whitelist. Check the Kadupul log for details.' : '&lt;script&gt;output&lt;/script&gt;');
+        expect($message[0])->toBe($failure === 'empty' ? 'Unexpected error occurred' : '&lt;script&gt;output&lt;/script&gt;');
         expect($message[1])->toBe($failure ? 'error' : 'info');
     } else {
         expect($output)->toBe('STATUS:' . $expected);
@@ -114,6 +115,11 @@ PHP;
     array('POST', 'valid', '7', array('whitelist_update'), 400),
     array('POST', 'valid', '7; echo injected', 'whitelist_update', 400),
     array('POST', 'valid', array('7'), 'whitelist_update', 400),
+    array('POST', 'valid', '', 'whitelist_update', 400),
+    array('POST', 'valid', null, 'whitelist_update', 400),
+    array('POST', 'valid', '0', 'whitelist_update', 400),
+    array('POST', 'valid', '-1', 'whitelist_update', 400),
+    array('POST', 'valid', '7', 'whitelist_update', 200, 'empty'),
     array('POST', 'valid', '7', 'whitelist_update', 200),
     array('POST', 'valid', '7', 'whitelist_update', 200, true),
 ));

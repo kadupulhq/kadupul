@@ -19,5 +19,5 @@ test('whitelist update is guarded before controller dispatch', function () use (
 
 test('whitelist controller has no shell execution sink', function () use ($source) {
     expect($source)->not->toContain('shell_exec(');
-    expect($source)->toContain('cacti_exec_string(');
+    expect($source)->toContain('cacti_exec(');
 });
