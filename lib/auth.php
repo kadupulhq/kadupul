@@ -138,6 +138,7 @@ function check_auth_cookie() {
 					FROM user_auth
 					WHERE id = ?
 					AND enabled = \'on\'
+					AND locked != \'on\'
 					AND realm = 0',
 					array($user_id));
 			} else {
@@ -145,6 +146,7 @@ function check_auth_cookie() {
 					FROM user_auth
 					WHERE id = ?
 					AND enabled = \'on\'
+					AND locked != \'on\'
 					AND realm = ?',
 					array($user_id, $realm_id));
 			}

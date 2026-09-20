@@ -36,8 +36,8 @@ if ($version != CACTI_VERSION && !defined('IN_CACTI_INSTALL')) {
 
 /* Recheck persisted session eligibility before any protected-page shortcut. */
 if ($auth_method != 0 && isset($_SESSION['sess_user_id'])) {
-	$session_user = db_fetch_row_prepared('SELECT enabled FROM user_auth WHERE id = ?', array($_SESSION['sess_user_id']));
-	if (!$session_user || ($session_user['enabled'] !== 'on' && (int)$_SESSION['sess_user_id'] !== (int)get_guest_account())) {
+	$session_user = db_fetch_row_prepared('SELECT enabled, locked FROM user_auth WHERE id = ?', array($_SESSION['sess_user_id']));
+	if (!$session_user || $session_user['locked'] === 'on' || ($session_user['enabled'] !== 'on' && (int)$_SESSION['sess_user_id'] !== (int)get_guest_account())) {
 		cacti_cookie_logout();
 		cacti_session_destroy();
 		http_response_code(403);
@@ -131,6 +131,11 @@ if ($auth_method != 0) {
 		/* find guest user */
 		if (!empty($guest_user_id)) {
 			if (empty($_SESSION['sess_user_id'])) {
+				if (!cacti_auth_transition((int)$guest_user_id, 'guest')) {
+					http_response_code(403);
+					exit;
+				}
+
 				$_SESSION['sess_user_id'] = $guest_user_id;
 			}
 

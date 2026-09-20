@@ -39,15 +39,15 @@ $db->exec('CREATE TABLE user_auth_group_members (group_id INTEGER, user_id INTEG
 $db->exec('CREATE TABLE user_auth_group_realm (group_id INTEGER, realm_id INTEGER)');
 if (in_array($scenario, array('disabled', 'existing_disabled'), true)) {
     $db->exec("UPDATE user_auth SET enabled = ''");
-} elseif ($scenario === 'locked') {
+} elseif (in_array($scenario, array('locked', 'existing_locked'), true)) {
     $db->exec("UPDATE user_auth SET locked = 'on'");
 } elseif (in_array($scenario, array('missing', 'existing_missing'), true)) {
     $db->exec('DELETE FROM user_auth');
 }
 if (strpos($scenario, 'guest') !== false) {
     $db->exec("UPDATE user_auth SET enabled = ''");
-    if ($scenario === 'guest_locked') $db->exec("UPDATE user_auth SET locked = 'on'");
-    if ($scenario === 'existing_guest_missing') $db->exec('DELETE FROM user_auth');
+    if (str_ends_with($scenario, 'guest_locked')) $db->exec("UPDATE user_auth SET locked = 'on'");
+    if (str_ends_with($scenario, 'guest_missing')) $db->exec('DELETE FROM user_auth');
     $guest_account = true;
 }
 if ($scenario === 'allowed') {
@@ -82,10 +82,10 @@ function get_request_var($name) { return get_nfilter_request_var($name); }
 function isset_request_var($name) { return isset($_REQUEST[$name]); }
 function set_default_action() {}
 function form_input_validate($value, ...$args) { return $value; }
-function is_error_message() { return $GLOBALS['scenario'] === 'validation_error'; }
+function is_error_message() { return str_ends_with($GLOBALS['scenario'], 'validation_error'); }
 function raise_message($id) { $GLOBALS['events'][] = 'MESSAGE:' . $id; }
 function sql_save($save, $table) {
-    if ($GLOBALS['scenario'] === 'save_failed') return false;
+    if (str_ends_with($GLOBALS['scenario'], 'save_failed')) return false;
     $query = $GLOBALS['db']->prepare('UPDATE user_auth SET enabled = ? WHERE id = ?');
     $query->execute(array($save['enabled'], $save['id']));
     return $save['id'];
@@ -94,6 +94,7 @@ function api_plugin_hook_function($hook, ...$args) {
     if ($hook === 'user_admin_setup_sql_save') {
         $save = $args[0];
         if ($GLOBALS['scenario'] === 'plugin_disabled') $save['enabled'] = '';
+        if ($GLOBALS['scenario'] === 'plugin_reset') $save['must_change_password'] = 'on';
         return $save;
     }
     if ($hook === 'custom_denied') {
@@ -124,6 +125,7 @@ function db_execute_prepared($sql, $params = array()) {
     return $query->execute($params);
 }
 $_SERVER['PHP_AUTH_USER'] = 'fixture';
+if (strpos($scenario, 'guest') !== false) unset($_SERVER['PHP_AUTH_USER']);
 $_SESSION = array();
 if (str_starts_with($scenario, 'existing_')) {
     $_SESSION['sess_user_id'] = 42;
@@ -151,6 +153,15 @@ if ($mode === 'transition') {
         user_disable(42);
     } else {
         $_REQUEST = array('action' => 'save', 'save_component_user' => '1', 'id' => 42, 'realm' => 2, 'username' => 'fixture', 'enabled' => in_array($scenario, array('enabled', 'plugin_disabled'), true) ? 'on' : '');
+        if (str_starts_with($scenario, 'password_')) {
+            $_REQUEST['enabled'] = 'on';
+            $_REQUEST['password'] = $_REQUEST['password_confirm'] = 'fixture-new-password';
+        }
+        if (str_starts_with($scenario, 'reset_') || $scenario === 'plugin_reset') {
+            $_REQUEST['enabled'] = 'on';
+            $_REQUEST['password_change'] = 'on';
+            $_REQUEST['must_change_password'] = $scenario === 'plugin_reset' ? '' : 'on';
+        }
         require $root . '/user_admin.php';
     }
     foreach (array(42, 43) as $id) {
