@@ -34,6 +34,11 @@ if ($version != CACTI_VERSION && !defined('IN_CACTI_INSTALL')) {
 	exit;
 }
 
+/* Logout owns credential teardown and must remain accessible to suspended users. */
+if (get_current_page() == 'logout.php') {
+	return true;
+}
+
 /* Recheck persisted session eligibility before any protected-page shortcut. */
 if ($auth_method != 0 && isset($_SESSION['sess_user_id'])) {
 	$session_user = db_fetch_row_prepared('SELECT enabled, locked FROM user_auth WHERE id = ?', array($_SESSION['sess_user_id']));
@@ -46,10 +51,9 @@ if ($auth_method != 0 && isset($_SESSION['sess_user_id'])) {
 }
 
 /**
- * The logout page does not require authentication
- * so, short cut the process.
+ * Eligible users may reach the password-change flow without a realm check.
  */
-if (get_current_page() == 'logout.php' || get_current_page() == 'auth_changepassword.php') {
+if (get_current_page() == 'auth_changepassword.php') {
 	return true;
 }
 

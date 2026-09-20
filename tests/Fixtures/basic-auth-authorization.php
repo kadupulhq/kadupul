@@ -63,7 +63,7 @@ if ($scenario === 'allowed') {
 function read_config_option($key) {
     return array('auth_method' => '2', 'auth_cache_enabled' => 'on', 'admin_user' => 1)[$key] ?? '';
 }
-function get_current_page() { return 'user_admin.php'; }
+function get_current_page() { return $GLOBALS['mode'] === 'logout' ? 'logout.php' : 'user_admin.php'; }
 function get_guest_account() { return strpos($GLOBALS['scenario'], 'guest') !== false ? 42 : 0; }
 function get_template_account($id) { return 0; }
 function get_client_addr() { return '127.0.0.1'; }

@@ -275,8 +275,8 @@ dynamic_include	./color_templates.php:361		include_once($config['base_path'] . '
 dynamic_include	./color_templates.php:411		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./color_templates.php:467		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./graph_realtime.php:365	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
-dynamic_include	./include/auth.php:116					require_once($config['base_path'] . '/auth_login.php');
-dynamic_include	./include/auth.php:176				require_once($config['base_path'] . '/auth_login.php');
+dynamic_include	./include/auth.php:120					require_once($config['base_path'] . '/auth_login.php');
+dynamic_include	./include/auth.php:180				require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/csrf.php:38	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
 dynamic_include	./include/csrf.php:7	require_once($config['include_path'] .'/vendor/csrf/csrf-conf.php');
 dynamic_include	./include/global.php:263	include_once($config['library_path'] . '/database.php');
@@ -828,7 +828,7 @@ header_redirect	./host_templates.php:53			header('Location: host_templates.php?h
 header_redirect	./host_templates.php:62			header('Location: host_templates.php?header=false&action=edit&id=' . get_filter_request_var('host_template_id'));
 header_redirect	./images/index.php:7	header("Location:../index.php");
 header_redirect	./include/auth.php:33		header ('Location: ' . $config['url_path'] . 'install/');
-header_redirect	./include/auth.php:65				header ('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
+header_redirect	./include/auth.php:69				header ('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
 header_redirect	./include/content/index.php:7	header("Location:../index.php");
 header_redirect	./include/csrf.php:33		header('Location: ' . validate_redirect_url($_SERVER['REQUEST_URI']));
 header_redirect	./include/fa/css/index.php:7	header("Location:../index.php");
