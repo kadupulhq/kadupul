@@ -7,7 +7,7 @@
 include('./include/auth.php');
 
 cacti_require_post_actions(array('save', 'actions', 'perm_remove'));
-if (array_key_exists('update_policy', $_REQUEST)) {
+if (isset_request_var('update_policy')) {
 	cacti_require_post_request();
 }
 
