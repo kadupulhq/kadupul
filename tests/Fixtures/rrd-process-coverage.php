@@ -19,7 +19,12 @@ if (defined('IMPORT_PREVIEW_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/templates_import.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/import.php');
 }
+if (defined('BULK_CSRF_CONTROLLER')) {
+    $coverageFilter->includeFile(BULK_CSRF_CONTROLLER);
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+}
 if (defined('ADMIN_MUTATION_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/plugins.php');
     $coverageFilter->includeFile($coverageRoot . '/user_admin.php');
     $coverageFilter->includeFile($coverageRoot . '/user_group_admin.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');

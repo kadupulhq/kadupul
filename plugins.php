@@ -7,6 +7,16 @@
 
 include('./include/auth.php');
 
+$requested_mode = get_nfilter_request_var('mode');
+if (!is_string($requested_mode)) {
+	http_response_code(400);
+	exit;
+}
+$mutation_modes = array('installold', 'uninstallold', 'install', 'uninstall', 'enable', 'disable', 'remote_enable', 'remote_disable', 'moveup', 'movedown');
+if (in_array($requested_mode, $mutation_modes, true)) {
+	cacti_require_post_request();
+}
+
 global $local_db_cnn_id;
 
 $actions = array(
@@ -29,24 +39,12 @@ $status_names = array(
 $pluginslist = retrieve_plugin_list();
 
 /* Check to see if we are installing, etc... */
-$modes = array(
-	'installold',
-	'uninstallold',
-	'install',
-	'uninstall',
-	'disable',
-	'enable',
-	'check',
-	'remote_enable',
-	'remote_disable',
-	'moveup',
-	'movedown'
-);
+$modes = array_merge($mutation_modes, array('check'));
 
-if (isset_request_var('mode') && in_array(get_nfilter_request_var('mode'), $modes) && isset_request_var('id')) {
+if (isset_request_var('mode') && in_array($requested_mode, $modes, true) && isset_request_var('id')) {
 	get_filter_request_var('id', FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^([a-zA-Z0-9 _]+)$/')));
 
-	$mode = get_nfilter_request_var('mode');
+	$mode = $requested_mode;
 	$id   = sanitize_search_string(get_request_var('id'));
 
 	if (isset_request_var('header')) {
@@ -140,7 +138,7 @@ if (isset_request_var('mode') && in_array(get_nfilter_request_var('mode'), $mode
 
 			api_plugin_movedown($id);
 
-			header('Location: plugins.php' . ($option != '' ? '&' . $option:''));
+			header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
 			exit;
 
 			break;
@@ -160,7 +158,7 @@ if (isset_request_var('mode') && in_array(get_nfilter_request_var('mode'), $mode
 					array($id), false, $local_db_cnn_id);
 			}
 
-			header('Location: plugins.php' . ($option != '' ? '&' . $option:''));
+			header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
 			exit;
 
 			break;
@@ -180,7 +178,7 @@ if (isset_request_var('mode') && in_array(get_nfilter_request_var('mode'), $mode
 					array($id), false, $local_db_cnn_id);
 			}
 
-			header('Location: plugins.php' . ($option != '' ? '&' . $option:''));
+			header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
 			exit;
 
 			break;
@@ -663,8 +661,15 @@ function update_show_current () {
 	var url = '';
 
 	$(function() {
-		$('.piuninstall').on('click', function(event) {
+		$('.piinstall, .pienable, .pidisable, .moveArrow').attr('data-post-action', 'true').off('click').on('click', function(event) {
 			event.preventDefault();
+			event.stopImmediatePropagation();
+			loadPageUsingPost($(this).attr('href'), { __csrf_magic: csrfMagicToken, header: 'false' });
+		});
+
+		$('.piuninstall').attr('data-post-action', 'true').off('click').on('click', function(event) {
+			event.preventDefault();
+			event.stopImmediatePropagation();
 			url = $(this).attr('href');
 
 			var btnUninstall = {
@@ -680,7 +685,7 @@ function update_show_current () {
 					id: 'btnUninstall',
 					click: function() {
 						$('#uninstalldialog').dialog('close');
-						document.location = url;
+						loadPageUsingPost(url, { __csrf_magic: csrfMagicToken, header: 'false' });
 					}
 				}
 			};
@@ -890,4 +895,3 @@ function plugin_actions($plugin, $table) {
 
 	return $link;
 }
-

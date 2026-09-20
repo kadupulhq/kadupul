@@ -35,6 +35,7 @@
       <file>./Unit/Security/Auth/ReportAdminGroupRealmTest.php</file>
       <file>./Unit/Security/Auth/ReportMutationCsrfTest.php</file>
       <file>./Unit/Security/Auth/ProfileMutationCsrfTest.php</file>
+      <file>./Unit/Security/Auth/BulkMutationCsrfTest.php</file>
       <file>./Unit/Security/Auth/SpikeMutationCsrfTest.php</file>
       <file>./Unit/Security/Auth/LoginMutationCsrfTest.php</file>
       <file>./Unit/ImportPackageFileDestinationTest.php</file>

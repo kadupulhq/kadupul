@@ -5,6 +5,8 @@
  */
 
 include('./include/auth.php');
+
+cacti_require_post_actions(array('actions'));
 include_once('./lib/data_query.php');
 include_once('./lib/poller.php');
 include_once('./lib/utility.php');
@@ -1469,4 +1471,3 @@ function data_query() {
 
 	form_end();
 }
-

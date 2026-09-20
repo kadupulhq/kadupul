@@ -6,6 +6,8 @@
 
 include('./include/auth.php');
 
+cacti_require_post_actions(array('actions'));
+
 $site_actions = array(
 	1 => __('Delete'),
 	2 => __('Duplicate')
@@ -627,4 +629,3 @@ function sites() {
 
 	form_end();
 }
-

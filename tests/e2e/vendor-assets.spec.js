@@ -35,6 +35,57 @@ test("graph input delete handler sends the CSRF token by POST", async ({ page })
   });
 });
 
+test("plugin lifecycle links send token-bearing POST requests", async ({ page }) => {
+  const source = fs.readFileSync(path.resolve(__dirname, "../../plugins.php"), "utf8");
+  const handler = source.match(/\$\('\.piinstall, \.pienable, \.pidisable, \.moveArrow'\)[^\n]*?\.on\('click', function\(event\) \{[\s\S]*?\n[ \t]*\}\);/);
+  expect(handler).not.toBeNull();
+  const classes = ["piinstall", "pienable", "pidisable", "moveArrow"];
+  await page.setContent(classes.map(name => `<a class="pic ${name}" href="plugins.php?mode=fixture&id=2">${name}</a>`).join(""));
+  await load(page, "jquery.js");
+  await page.evaluate(() => {
+    window.csrfMagicToken = "body-token";
+    window.pluginRequests = [];
+    window.pluginGetRequests = [];
+    window.theme = "classic";
+    window.basename = value => value;
+    window.loadPage = url => window.pluginGetRequests.push(url);
+    window.loadPageUsingPost = (url, data) => window.pluginRequests.push({ url, data });
+  });
+  const layout = fs.readFileSync(path.resolve(__dirname, "../../include/layout.js"), "utf8");
+  const anchorsStart = layout.indexOf("function ajaxAnchors()");
+  const anchorsEnd = layout.indexOf("function checkFormStatus(", anchorsStart);
+  expect(anchorsStart).toBeGreaterThan(-1);
+  expect(anchorsEnd).toBeGreaterThan(anchorsStart);
+  await page.addScriptTag({ content: layout.slice(anchorsStart, anchorsEnd) });
+  await page.evaluate(() => ajaxAnchors());
+  await page.addScriptTag({ content: handler[0] });
+  // A later applySkin call must not replace POST handlers with navigation GETs.
+  await page.evaluate(() => ajaxAnchors());
+  for (const name of classes) await page.getByText(name, { exact: true }).click();
+  expect(await page.evaluate(() => window.pluginRequests)).toEqual(classes.map(() => ({
+    url: "plugins.php?mode=fixture&id=2", data: { __csrf_magic: "body-token", header: "false" },
+  })));
+  expect(await page.evaluate(() => window.pluginGetRequests)).toEqual([]);
+});
+
+test("plugin uninstall confirmation posts instead of navigating", async ({ page }) => {
+  const source = fs.readFileSync(path.resolve(__dirname, "../../plugins.php"), "utf8");
+  const callback = source.match(/click: function\(\) \{\s*\$\('#uninstalldialog'\)\.dialog\('close'\);[\s\S]*?\n[ \t]*\}/);
+  expect(callback).not.toBeNull();
+  await load(page, "jquery.js");
+  await page.evaluate(() => {
+    window.url = "plugins.php?mode=uninstall&id=2";
+    window.csrfMagicToken = "body-token";
+    $.fn.dialog = () => {};
+    window.loadPageUsingPost = (url, data) => { window.uninstallRequest = { url, data }; };
+  });
+  await page.addScriptTag({ content: `window.confirmPluginUninstall = ${callback[0].replace("click: ", "")};` });
+  await page.evaluate(() => window.confirmPluginUninstall());
+  expect(await page.evaluate(() => window.uninstallRequest)).toEqual({
+    url: "plugins.php?mode=uninstall&id=2", data: { __csrf_magic: "body-token", header: "false" },
+  });
+});
+
 test("spike removal and dry-run requests carry POST tokens", async ({ page }) => {
   const source = fs.readFileSync(path.resolve(__dirname, "../../include/layout.js"), "utf8");
   const start = source.indexOf("function removeSpikes(");
