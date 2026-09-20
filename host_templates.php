@@ -5,6 +5,8 @@
  */
 
 include('./include/auth.php');
+
+cacti_require_post_actions(array('actions'));
 include_once('./lib/api_data_source.php');
 include_once('./lib/api_device.php');
 include_once('./lib/api_graph.php');
@@ -979,5 +981,4 @@ function template() {
 
 	form_end();
 }
-
 

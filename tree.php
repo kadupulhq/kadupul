@@ -6,6 +6,8 @@
  */
 
 include('./include/auth.php');
+
+cacti_require_post_actions(array('actions'));
 include_once('./lib/api_tree.php');
 include_once('./lib/html_tree.php');
 include_once('./lib/data_query.php');
@@ -2373,4 +2375,3 @@ function tree() {
 		<?php
 	}
 }
-

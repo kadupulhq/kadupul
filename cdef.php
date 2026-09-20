@@ -5,6 +5,8 @@
  */
 
 include('./include/auth.php');
+
+cacti_require_post_actions(array('actions'));
 include_once('./lib/cdef.php');
 
 $cdef_actions = array(
@@ -902,4 +904,3 @@ function cdef() {
 
 	form_end();
 }
-

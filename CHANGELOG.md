@@ -13,6 +13,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Require validated POST intent for interactive spike removal, including dry runs, and migrate its browser request to send a CSRF token.
 - Escape imported preview fields and restrict rich change-summary markup to safe formatting.
+- Require validated POST requests for bulk-action confirmation and execution across core administration controllers; retain read-only navigation.
 - Require token-protected POST requests for user/group policy, permission, and bulk mutations.
 - Require validated POST requests for graph-template input mutations and allowlist graph-item columns across editing, XML import, duplication, rendering, and propagation before persistence or SQL construction.
 - Restrict main installer PHP probes to a server-configured executable allowlist; leave LTS behavior unchanged.
