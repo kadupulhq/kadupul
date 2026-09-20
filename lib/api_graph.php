@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+require_once __DIR__ . '/graph_template_input.php';
+
 function api_delete_graphs(&$local_graph_ids, $delete_type) {
 	/* check for a bad local_graph_id = 0, and remove graphs */
 	api_graph_remove_bad_graphs($local_graph_ids);
@@ -384,6 +386,12 @@ function api_duplicate_graph($_local_graph_id, $_graph_template_id, $graph_title
 			WHERE graph_template_id = ?',
 			array($_graph_template_id));
 
+		foreach ($graph_template_inputs as $input) {
+			if (graph_template_input_column($input['column_name'] ?? null) === null) {
+				return false;
+			}
+		}
+
 		/* create new entry: graph_templates */
 		$save['id']       = 0;
 		$save['hash']     = get_hash_graph_template(0);
@@ -440,7 +448,7 @@ function api_duplicate_graph($_local_graph_id, $_graph_template_id, $graph_title
 				$save['graph_template_id'] = $graph_template_id;
 				$save['name']              = $graph_template_input['name'];
 				$save['description']       = $graph_template_input['description'];
-				$save['column_name']       = $graph_template_input['column_name'];
+				$save['column_name']       = graph_template_input_column($graph_template_input['column_name']);
 				$save['hash']              = get_hash_graph_template(0, 'graph_template_input');
 
 				$graph_template_input_id   = sql_save($save, 'graph_template_input');
@@ -621,4 +629,3 @@ function api_graph_change_device($local_graph_id, $host_id) {
 
 	return false;
 }
-

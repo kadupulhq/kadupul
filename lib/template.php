@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+require_once __DIR__ . '/graph_template_input.php';
+
 /* push_out_data_source_custom_data - pushes out the "custom data" associated with a data
 	template to all of its children. this includes all fields inherited from the host
 	and the data template
@@ -443,31 +445,6 @@ function push_out_graph($graph_template_graph_id, $push_title = true) {
    @arg $session_members - when looking for the 'active' value of the graph input, ignore these graph
 	template items. typically you want to ignore all items that were just selected and have yet to be
 	saved to the database. this is because these items most likely contain incorrect data */
-function graph_template_input_column($column) {
-	// SQL identifiers cannot be parameter-bound. Return only a canonical literal.
-	static $columns = array(
-		'graph_type_id' => 'graph_type_id',
-		'task_item_id' => 'task_item_id',
-		'color_id' => 'color_id',
-		'alpha' => 'alpha',
-		'consolidation_function_id' => 'consolidation_function_id',
-		'cdef_id' => 'cdef_id',
-		'vdef_id' => 'vdef_id',
-		'shift' => 'shift',
-		'value' => 'value',
-		'gprint_id' => 'gprint_id',
-		'textalign' => 'textalign',
-		'text_format' => 'text_format',
-		'hard_return' => 'hard_return',
-		'line_width' => 'line_width',
-		'dashes' => 'dashes',
-		'dash_offset' => 'dash_offset',
-		'sequence' => 'sequence'
-	);
-
-	return is_string($column) && isset($columns[$column]) ? $columns[$column] : null;
-}
-
 function push_out_graph_input($graph_template_input_id, $graph_template_item_id, $session_members) {
 	$graph_input = db_fetch_row_prepared('SELECT graph_template_id, column_name
 		FROM graph_template_input

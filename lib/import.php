@@ -5,6 +5,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+require_once __DIR__ . '/graph_template_input.php';
+
 function import_xml_data(&$xml_data, $import_as_new, $profile_id, $remove_orphans = false, $replace_svalues = false, $import_hashes = array(), $class = '') {
 	global $config, $hash_type_codes, $cacti_version_codes, $ignorable_hashes, $preview_only;
 	global $import_debug_info, $import_messages, $legacy_template;
@@ -704,6 +706,18 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 function xml_to_graph_template($hash, &$xml_array, &$hash_cache, $hash_version, $remove_orphans = false) {
 	global $struct_graph, $struct_graph_item, $fields_graph_template_input_edit, $cacti_version_codes;
 	global $preview_only, $graph_item_types, $import_debug_info;
+
+	// Validate the entire input list before any template persistence, including preview.
+	$inputs = $xml_array['inputs'] ?? array();
+	if (!is_array($inputs) && $inputs !== '') {
+		return false;
+	}
+	foreach (is_array($inputs) ? $inputs : array() as $input) {
+		if (!is_array($input) || !is_string($input['column_name'] ?? null)
+			|| graph_template_input_column(xml_character_decode($input['column_name'])) === null) {
+			return false;
+		}
+	}
 
 	/* track changes */
 	$status = 0;

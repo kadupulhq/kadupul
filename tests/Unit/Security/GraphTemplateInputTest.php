@@ -1,5 +1,8 @@
 <?php
 
+// SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 function runGraphInputProbe($program, array $arguments = array(), $coverage = null)
 {
     $root = dirname(__DIR__, 3);
@@ -133,3 +136,79 @@ push_out_graph_input(1, 5, json_decode($argv[2], true));
 PHP;
     expect(runGraphInputProbe($program, array(json_encode($members)), $this->getTestResultObject()->getCodeCoverage()))->toBe('BOUND');
 })->with(array('no new members' => array(array()), 'new members' => array(array(6))));
+
+test('XML graph input identifiers are checked before any database access', function ($column, $valid) {
+    $program = <<<'PHP'
+require $argv[1] . '/lib/import.php';
+function db_fetch_cell_prepared(...$args) { echo 'ACCEPTED'; exit; }
+$xml = array('inputs' => array(array('column_name' => json_decode($argv[2], true))));
+$cache = array();
+if (xml_to_graph_template('hash', $xml, $cache, '1.0') !== false) throw new Exception('Invalid import accepted');
+echo 'REJECTED';
+PHP;
+    expect(runGraphInputProbe($program, array(json_encode($column)), $this->getTestResultObject()->getCodeCoverage()))->toBe($valid ? 'ACCEPTED' : 'REJECTED');
+})->with(array(
+    array('text_format', true),
+    array('text&#95;format', true),
+    array('text_format, unexpected()', false),
+    array('local_graph_id', false),
+    array(array('text_format'), false),
+    array(null, false),
+));
+
+test('template duplication rejects poisoned graph input rows before persistence', function () {
+    $program = <<<'PHP'
+require $argv[1] . '/lib/api_graph.php';
+function cacti_sizeof($value) { return count($value); }
+function db_fetch_row_prepared(...$args) { return array('id' => 2, 'name' => 'template'); }
+function db_fetch_assoc_prepared($sql, $params) {
+    return strpos($sql, 'FROM graph_template_input') !== false ? array(array('column_name' => 'unapproved()')) : array();
+}
+function sql_save(...$args) { throw new Exception('Invalid input reached persistence'); }
+if (api_duplicate_graph(0, 2, 'copy') !== false) throw new Exception('Invalid clone accepted');
+echo 'REJECTED';
+PHP;
+    expect(runGraphInputProbe($program, array(), $this->getTestResultObject()->getCodeCoverage()))->toBe('REJECTED');
+});
+
+test('graph input rendering checks stored identifiers before SELECT construction', function ($column, $valid) {
+    $program = <<<'PHP'
+require $argv[1] . '/lib/html_form_template.php';
+function cacti_sizeof($value) { return count($value); }
+function db_fetch_assoc_prepared(...$args) { return array(array('column_name' => $GLOBALS['argv'][2], 'id' => 7)); }
+function db_fetch_row_prepared($sql, $params) {
+    if (strpos($sql, 'SELECT gti.`text_format`, gti.id') === false) throw new Exception('Unsafe rendering SELECT');
+    echo 'BOUND'; exit;
+}
+function __($text, ...$args) { return $text; }
+function raise_message_javascript(...$args) {}
+function cacti_log(...$args) {}
+function get_client_addr() { return '127.0.0.1'; }
+register_shutdown_function(function () { echo 'STATUS:' . (http_response_code() ?: 200); });
+draw_nontemplated_fields_graph_item(2, 0);
+PHP;
+    expect(runGraphInputProbe($program, array($column), $this->getTestResultObject()->getCodeCoverage()))->toBe($valid ? 'BOUNDSTATUS:200' : 'STATUS:400');
+})->with(array(array('text_format', true), array('text_format, unapproved()', false), array('local_graph_id', false)));
+
+test('graph save rejects stored identifiers and binds approved input values', function ($column, $valid) {
+    $program = <<<'PHP'
+require $argv[1] . '/include/global_constants.php';
+require $argv[1] . '/lib/html_utility.php';
+function read_config_option($key) { return '0'; }
+function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+function __($text, ...$args) { return $text; }
+function api_plugin_hook_function($name, $value) { return $value; }
+function db_fetch_cell_prepared(...$args) { return 2; }
+function db_fetch_assoc_prepared($sql, $params) {
+    return strpos($sql, 'SELECT id, column_name') !== false ? array(array('id' => 7, 'column_name' => $GLOBALS['argv'][2])) : array(array('id' => 88));
+}
+function db_execute_prepared($sql, $params) {
+    if (strpos($sql, 'SET `text_format` = ?') === false || $params !== array("safe' quoted", 88)) throw new Exception('Unsafe graph input UPDATE');
+    echo 'BOUND'; exit;
+}
+$_REQUEST = array('action' => 'save', 'save_component_input' => '1', 'local_graph_id' => '1', 'host_id_prev' => '1', 'host_id' => '1', 'graph_template_graph_id' => '0', 'local_graph_template_graph_id' => '0', 'graph_template_id' => '0', 'graph_template_id_prev' => '0', 'text_format_7' => "safe' quoted");
+register_shutdown_function(function () { echo 'STATUS:' . (http_response_code() ?: 200); });
+require $argv[1] . '/graphs.php';
+PHP;
+    expect(runGraphInputProbe($program, array($column), $this->getTestResultObject()->getCodeCoverage()))->toBe($valid ? 'BOUNDSTATUS:200' : 'STATUS:400');
+})->with(array(array('text_format', true), array('text_format, unapproved()', false), array('local_graph_id', false)));

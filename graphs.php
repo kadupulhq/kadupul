@@ -372,6 +372,13 @@ function form_save() {
 
 			if (cacti_sizeof($input_list)) {
 				foreach ($input_list as $input) {
+					if (graph_template_input_column($input['column_name'] ?? null) === null) {
+						http_response_code(400);
+						exit;
+					}
+				}
+				foreach ($input_list as $input) {
+					$column = graph_template_input_column($input['column_name']);
 					/* we need to find out which graph items will be affected by saving this particular item */
 					$item_list = db_fetch_assoc_prepared('SELECT gti.id
 						FROM graph_template_input_defs AS gtid
@@ -387,11 +394,11 @@ function form_save() {
 							/* if we are changing templates, the POST vars we are searching for here will not exist.
 							 this is because the db and form are out of sync here, but it is ok to just skip over saving
 							 the inputs in this case. */
-							if (isset_request_var($input['column_name'] . '_' . $input['id'])) {
+							if (isset_request_var($column . '_' . $input['id'])) {
 								db_execute_prepared('UPDATE graph_templates_item
-									SET ' . $input['column_name'] . ' = ?
+									SET `' . $column . '` = ?
 									WHERE id = ?',
-									array(get_nfilter_request_var($input['column_name'] . '_' . $input['id']), $item['id']));
+									array(get_nfilter_request_var($column . '_' . $input['id']), $item['id']));
 							}
 						}
 					}
