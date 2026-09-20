@@ -14,6 +14,12 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
 
 ob_start();
 
+// Reject malformed tokens before the authentication bootstrap invokes CSRF.
+if (!is_string($_POST['__csrf_magic'] ?? null)) {
+	http_response_code(403);
+	exit;
+}
+
 // Prevent redirect to /install/
 define('IN_CACTI_INSTALL', 1);
 chdir(__DIR__ . '/../');

@@ -894,6 +894,10 @@ class Installer implements JsonSerializable
 
             /* get all items on the form and write values for them  */
             foreach ($param_paths as $name => $path) {
+                if (!is_string($path) || str_contains($path, "\0")) {
+                    $this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('Unexpected path parameter'));
+                    continue;
+                }
                 $key_exists = array_key_exists($name, $this->paths);
                 $check = isset($this->paths[$name]['install_check']) ? $this->paths[$name]['install_check'] : 'file_exists';
                 $optional = isset($this->paths[$name]['install_optional']) ? $this->paths[$name]['install_optional'] : false;

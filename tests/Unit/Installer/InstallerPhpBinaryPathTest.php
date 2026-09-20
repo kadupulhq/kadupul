@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('installer probes a PHP executable whose filename contains shell syntax', function () {
+test('installer validates and canonicalizes submitted PHP paths', function ($shape) {
     if (PHP_OS_FAMILY === 'Windows') {
         $this->markTestSkipped('The fixture uses Unix symlinks and filename characters.');
     }
@@ -37,13 +37,14 @@ $paths->setAccessible(true);
 $paths->setValue($installer, array('path_php_binary' => array('install_check' => 'file_exists')));
 $method = $class->getMethod('setPaths');
 $method->setAccessible(true);
-$method->invoke($installer, array('path_php_binary' => $argv[2]));
+$submitted = $argv[3] === 'array' ? array($argv[2]) : ($argv[3] === 'nul' ? $argv[2] . "\0" : $argv[2]);
+$method->invoke($installer, array('path_php_binary' => $submitted));
 echo json_encode($saved);
 PHP;
 
     try {
         $process = proc_open(
-            array(PHP_BINARY, '-d', 'disable_functions=shell_exec,exec,popen', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $prelude . $program, $root, $binary),
+            array(PHP_BINARY, '-d', 'disable_functions=shell_exec,exec,popen', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $prelude . $program, $root, $binary, $shape),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $dir
@@ -55,11 +56,13 @@ PHP;
         fclose($pipes[2]);
         expect(proc_close($process))->toBe(0)
             ->and($error)->toBe('')
-            ->and(json_decode($output, true))->toBe(array('path_php_binary' => realpath(PHP_BINARY)))
+            ->and(json_decode($output, true))->toBe($shape === 'scalar' ? array('path_php_binary' => realpath(PHP_BINARY)) : array())
             ->and(file_exists($dir . '/INJECTED'))->toBeFalse();
         unlink($binary);
         symlink($dir . '/untrusted-replacement', $binary);
-        expect(is_file(json_decode($output, true)['path_php_binary']))->toBeTrue();
+        if ($shape === 'scalar') {
+            expect(is_file(json_decode($output, true)['path_php_binary']))->toBeTrue();
+        }
         if ($coverage !== null) {
             $reports = glob($dir . '/*.coverage');
             expect($reports)->toHaveCount(1);
@@ -71,7 +74,7 @@ PHP;
         }
         rmdir($dir);
     }
-});
+})->with(array('scalar', 'array', 'nul'));
 
 test('installer PHP probes fail closed without a shell', function ($scenario) {
     $root = dirname(__DIR__, 3);

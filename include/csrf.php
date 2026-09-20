@@ -1,8 +1,16 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
+
+// Kadupul submits one serialized token string, never PHP parameter arrays.
+// Reject malformed input before csrf-magic iterates nested attacker input.
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && array_key_exists('__csrf_magic', $_POST) && !is_string($_POST['__csrf_magic'])) {
+	http_response_code(403);
+	exit;
+}
 
 require_once($config['include_path'] .'/vendor/csrf/csrf-conf.php');
 
