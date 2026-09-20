@@ -12,12 +12,15 @@ Targeting `v1.3.0`, the first planned application release. See
 ### Changed
 
 - Refresh flag-icons to 7.5.0 while retaining every configured language flag, both aspect ratios and the existing CSS class/path API.
+- Update PHPMailer to 7.1.1 while retaining the current PHP floor, include paths and local translations; regenerate its bundled autoloader without development dependencies.
 
 - Require complete behavioral scenario inventories and capture application-handler PHP diagnostics separately from prepend-recorder events.
 
 - Preserve reproducible behavioral baseline references and count RRDtool acknowledgements in reachable polling, failed writes, unreachable-device polling, and missing-file fault contracts.
 
 ### Fixed
+
+- Reset shared mail translations between messages and honor the configured sendmail executable after transport initialization.
 
 - Reject array-valued actions and require CSRF-validated POST requests for form login, password changes, profile saves, setting resets and session revocation while preserving server-authenticated Basic login.
 - Quote the installer's PHP executable as one shell argument when validating binary locations.

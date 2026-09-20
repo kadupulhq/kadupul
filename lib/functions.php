@@ -5037,9 +5037,9 @@ function mailer($from, $to, $cc, $bcc, $replyto, $subject, $body, $body_text = '
 
 	// Setup i18n
 	$langparts = explode('-', $cacti_locale);
-	if (file_exists($config['include_path'] . '/vendor/phpmailer/language/phpmailer.lang-' . $langparts[0] . '.php')) {
-		$mail->setLanguage($langparts[0], $config['include_path'] . '/vendor/phpmailer/language/');
-	}
+	// PHPMailer 7 shares translations; reset to English when a locale is unavailable.
+	$language_path = $config['include_path'] . '/vendor/phpmailer/language/';
+	PHPMailer\PHPMailer\PHPMailer::setLanguage($langparts[0], $language_path);
 
 	// Determine the Email send method
 	$how = read_config_option('settings_how');
@@ -5050,8 +5050,8 @@ function mailer($from, $to, $cc, $bcc, $replyto, $subject, $body, $body_text = '
 	if ($how == 0) {
 		$mail->isMail();
 	} elseif ($how == 1) {
-		$mail->Sendmail = read_config_option('settings_sendmail_path');
 		$mail->isSendmail();
+		$mail->Sendmail = read_config_option('settings_sendmail_path') ?: $mail->Sendmail;
 	} elseif ($how == 2) {
 		$mail->isSMTP();
 		$mail->Host = read_config_option('settings_smtp_host');
