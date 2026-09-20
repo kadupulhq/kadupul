@@ -6,6 +6,8 @@
  */
 
 require('./include/auth.php');
+
+cacti_require_post_actions(array('actions'));
 require_once($config['base_path'] . '/lib/poller.php');
 
 /* performing a full sync can take a lot of memory and time */
@@ -1133,4 +1135,3 @@ function pollers() {
 
 	form_end();
 }
-

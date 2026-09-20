@@ -6,6 +6,8 @@
 
 include_once('./include/auth.php');
 
+cacti_require_post_actions(array('actions'));
+
 $aggregate_actions = array(
 	1 => __('Delete'),
 	2 => __('Duplicate'),
@@ -721,4 +723,3 @@ function aggregate_color_template() {
 	</script>
 	<?php
 }
-

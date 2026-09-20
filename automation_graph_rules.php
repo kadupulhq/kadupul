@@ -5,6 +5,8 @@
  */
 
 include('./include/auth.php');
+
+cacti_require_post_actions(array('actions'));
 include_once('./lib/data_query.php');
 
 $automation_graph_rules_actions = array(
@@ -962,4 +964,3 @@ function automation_graph_rules() {
 
 	form_end();
 }
-

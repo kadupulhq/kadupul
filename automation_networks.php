@@ -7,6 +7,8 @@
 
 /* include cacti base functions */
 include('./include/auth.php');
+
+cacti_require_post_actions(array('actions'));
 include_once('./lib/snmp.php');
 include_once('./lib/poller.php');
 
@@ -1265,4 +1267,3 @@ function networks_filter() {
 	</tr>
 	<?php
 }
-
