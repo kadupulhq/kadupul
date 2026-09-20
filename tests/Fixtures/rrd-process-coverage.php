@@ -8,6 +8,7 @@ $coverageRoot = dirname(__DIR__, 2);
 require_once $coverageRoot . '/tests/vendor/autoload.php';
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
 if (defined('IMPORT_PREVIEW_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/package_import.php');
     $coverageFilter->includeFile($coverageRoot . '/templates_import.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/import.php');
 }

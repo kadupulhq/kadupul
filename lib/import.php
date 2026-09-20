@@ -2665,6 +2665,7 @@ function import_preview_html($html) {
 	static $purifier;
 	if ($purifier === null) {
 		$config = HTMLPurifier_Config::createDefault();
+		$config->set('Cache.DefinitionImpl', null);
 		$config->set('HTML.Allowed', 'br,em,span[style]');
 		$config->set('CSS.AllowedProperties', array('background-color'));
 		$purifier = new HTMLPurifier($config);

@@ -659,7 +659,7 @@ function import_display_package_data($templates, $files, $package_name, $xmlfile
 				$status = "<span class='deviceUp'>" . __('Unchanged') . '</span>';
 			}
 
-			form_alternate_row('line_import_' . $detail['status'] . '_' . $id);
+			form_alternate_row('line_import_' . html_escape($detail['status']) . '_' . $id);
 
 			form_selectable_ecell($detail['type_name'], $id);
 			form_selectable_ecell($detail['name'], $id);
@@ -685,8 +685,7 @@ function import_display_package_data($templates, $files, $package_name, $xmlfile
 				}
 
 				if (cacti_sizeof($diff_array)) {
-					// $diff_array entries are pre-escaped at source in lib/import.php via html_escape();
-					// do NOT wrap with array_map('html_escape') here — that would double-encode color spans.
+					// Mixed imported values and color spans are purified at the output boundary.
 					$diff_details .= __('Differences') . '<br>' . implode('<br>', $diff_array);
 				}
 
@@ -694,7 +693,7 @@ function import_display_package_data($templates, $files, $package_name, $xmlfile
 					$diff_details .= ($diff_details != '' ? '<br>':'') . __('Orphans') . '<br>' . implode('<br>', array_map('html_escape', $orphan_array));
 				}
 
-				form_selectable_cell($diff_details, $id, '', 'white-space:pre-wrap');
+				form_selectable_cell(import_preview_html($diff_details), $id, '', 'white-space:pre-wrap');
 			} else {
 				form_selectable_cell(__('None'), $id);
 			}
