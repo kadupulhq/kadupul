@@ -24,7 +24,8 @@ $database_persist  = false;
 
 /**
  * Main only: trusted CLI PHP executables for installer probes. By default the
- * CLI PHP in PHP_BINDIR is allowed. Add absolute paths here when deployments
+ * current CLI binary is allowed for CLI installs; web installs use PHP_BINDIR/php
+ * (php.exe beside the running PHP binary on Windows). Add absolute paths when deployments
  * use another PHP installation. This list is server-controlled, not a UI setting.
  * Symlink aliases are accepted only when they resolve to a listed executable.
  * Use an empty array to disable probes. Keep listed binaries and their parent

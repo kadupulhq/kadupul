@@ -12,7 +12,7 @@ $probe->setAccessible(true);
 
 foreach (array(2, 7, 64) as $input) {
     if ($probe->invoke($installer, PHP_BINARY, $input) !== (string) ($input * $input)) {
-        throw new RuntimeException('Default CLI probe failed');
+        throw new RuntimeException('Default CLI probe failed for ' . PHP_BINARY . ' (PHP_BINDIR=' . PHP_BINDIR . ')');
     }
 }
 $installer_allowed_php_binaries = array();

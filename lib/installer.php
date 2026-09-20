@@ -816,7 +816,8 @@ class Installer implements JsonSerializable
         }
         // Main: only server-configured executables may run, never an arbitrary
         // request-selected program. Resolve aliases before comparing paths.
-        $allowed = $installer_allowed_php_binaries ?? array(PHP_BINDIR . DIRECTORY_SEPARATOR . (PHP_OS_FAMILY === 'Windows' ? 'php.exe' : 'php'));
+        $defaultBinary = PHP_SAPI === 'cli' ? PHP_BINARY : (PHP_OS_FAMILY === 'Windows' ? dirname(PHP_BINARY) . DIRECTORY_SEPARATOR . 'php.exe' : PHP_BINDIR . DIRECTORY_SEPARATOR . 'php');
+        $allowed = $installer_allowed_php_binaries ?? array($defaultBinary);
         if (!is_array($allowed)) {
             return false;
         }
