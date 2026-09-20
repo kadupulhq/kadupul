@@ -205,7 +205,7 @@ case 'countdown':
 	$status = cacti_exec(read_config_option('path_php_binary'), array(
 		'-q', $config['base_path'] . '/poller_realtime.php', '--graph=' . $local_graph_id,
 		'--interval=' . $interval, '--poller_id=' . $hash
-	), $poller_output, 300);
+	), $poller_output, null); // Preserve synchronous completion; direct-child timeouts cannot reap nested pollers.
 	if ($status !== 0) {
 		cacti_log('ERROR: Realtime poller failed with exit status ' . (int) $status, false, 'WEBLOG');
 		http_response_code(503);

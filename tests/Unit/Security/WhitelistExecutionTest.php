@@ -137,7 +137,7 @@ PHP;
     $result = json_decode(runWhitelistProbe($this, $program, array((string) $exit, json_encode($timeout))), true, 512, JSON_THROW_ON_ERROR);
     $payload = 'spaces ; & | $(echo injected) `echo injected` "quotes"';
     expect($result)->toBe(array($exit, array($payload), $exit === 0 ? $payload : false));
-})->with(array(0, 7))->with(array(5, false));
+})->with(array(0, 7))->with(array(5, false, null));
 
 test('native argv execution terminates a child at its deadline', function () {
     $program = <<<'PHP'
