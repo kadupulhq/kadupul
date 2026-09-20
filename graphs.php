@@ -224,6 +224,27 @@ function form_save() {
 	$gt_id_prev_unparsed = get_nfilter_request_var('graph_template_id_prev');
 	parse_validate_graph_template_id('graph_template_id');
 
+	// Preflight the effective template before graph metadata or template changes.
+	$input_list = array();
+	if (isset_request_var('save_component_graph') || isset_request_var('save_component_graph_new')) {
+		$input_template_id = get_request_var('graph_template_id');
+	} elseif (isset_request_var('save_component_input')) {
+		$input_template_id = db_fetch_cell_prepared('SELECT graph_template_id
+			FROM graph_local WHERE id = ?', array(get_request_var('local_graph_id')));
+	} else {
+		$input_template_id = 0;
+	}
+	if ($input_template_id > 0) {
+		$input_list = db_fetch_assoc_prepared('SELECT id, column_name
+			FROM graph_template_input WHERE graph_template_id = ?', array($input_template_id));
+		foreach ($input_list as $input) {
+			if (graph_template_input_column($input['column_name'] ?? null) === null) {
+				http_response_code(400);
+				exit;
+			}
+		}
+	}
+
 	if (isset_request_var('save_component_graph_new') && !isempty_request_var('graph_template_id')) {
 		$snmp_query_array  = array();
 		$suggested_values  = array();
@@ -357,21 +378,11 @@ function form_save() {
 		get_filter_request_var('local_graph_id');
 		/* ==================================================== */
 
-		/* first; get the current graph template id */
-		$graph_template_id = db_fetch_cell_prepared('SELECT graph_template_id
-			FROM graph_local
-			WHERE id = ?',
-			array(get_nfilter_request_var('local_graph_id')));
-
-		/* get all inputs that go along with this graph template, if templated */
-		if ($graph_template_id > 0) {
-			$input_list = db_fetch_assoc_prepared('SELECT id, column_name
-				FROM graph_template_input
-				WHERE graph_template_id = ?',
-				array($graph_template_id));
-
+		/* Reuse the validated snapshot; do not discover invalid inputs after writes. */
+		if ($input_template_id > 0) {
 			if (cacti_sizeof($input_list)) {
 				foreach ($input_list as $input) {
+					$column = graph_template_input_column($input['column_name']);
 					/* we need to find out which graph items will be affected by saving this particular item */
 					$item_list = db_fetch_assoc_prepared('SELECT gti.id
 						FROM graph_template_input_defs AS gtid
@@ -387,11 +398,11 @@ function form_save() {
 							/* if we are changing templates, the POST vars we are searching for here will not exist.
 							 this is because the db and form are out of sync here, but it is ok to just skip over saving
 							 the inputs in this case. */
-							if (isset_request_var($input['column_name'] . '_' . $input['id'])) {
+							if (isset_request_var($column . '_' . $input['id'])) {
 								db_execute_prepared('UPDATE graph_templates_item
-									SET ' . $input['column_name'] . ' = ?
+									SET `' . $column . '` = ?
 									WHERE id = ?',
-									array(get_nfilter_request_var($input['column_name'] . '_' . $input['id']), $item['id']));
+									array(get_nfilter_request_var($column . '_' . $input['id']), $item['id']));
 							}
 						}
 					}

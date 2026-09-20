@@ -383,8 +383,8 @@ dynamic_include	./lib/html_tree.php:76		include_once($config['library_path'] . '
 dynamic_include	./lib/html_tree.php:806		include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/html_tree.php:807		include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/html_tree.php:808		include_once($config['library_path'] . '/html_utility.php');
-dynamic_include	./lib/import.php:12		include_once($config['library_path'] . '/xml.php');
-dynamic_include	./lib/import.php:2017		include_once($config['library_path'] . '/vdef.php');
+dynamic_include	./lib/import.php:14		include_once($config['library_path'] . '/xml.php');
+dynamic_include	./lib/import.php:2031		include_once($config['library_path'] . '/vdef.php');
 dynamic_include	./lib/installer.php:3675	                include_once($upgrade_file);
 dynamic_include	./lib/mib_cache.php:39			include_once($config['include_path'] . '/vendor/phpsnmp/mib_parser.php');
 dynamic_include	./lib/plugins.php:137							include_once($plugin_include);
@@ -431,7 +431,7 @@ dynamic_include	./lib/rrdcheck.php:729			include_once($config['library_path'] . 
 dynamic_include	./lib/snmp.php:32		include_once($config['include_path'] . '/vendor/phpsnmp/extension.php');
 dynamic_include	./lib/snmp.php:34		include_once($config['include_path'] . '/vendor/phpsnmp/classSNMP.php');
 dynamic_include	./lib/snmpagent.php:873				include_once($config['library_path'] . '/poller.php');
-dynamic_include	./lib/template.php:1465		include_once($config['library_path'] . '/data_query.php');
+dynamic_include	./lib/template.php:1473		include_once($config['library_path'] . '/data_query.php');
 dynamic_include	./lib/timespan_settings.php:14	include_once($config['base_path'] . '/lib/time.php');
 dynamic_include	./lib/utility.php:111		include_once($config['library_path'] . '/api_data_source.php');
 dynamic_include	./lib/utility.php:164		include_once($config['library_path'] . '/data_query.php');
@@ -572,8 +572,8 @@ fs_write	./lib/functions.php:7027			if (($f = @fopen($path, 'a'))) {
 fs_write	./lib/functions.php:7036		if (($f = @fopen($path, 'w'))) {
 fs_write	./lib/functions.php:704					file_put_contents(sys_get_temp_dir() . '/cacti-option.log', get_debug_prefix() .
 fs_write	./lib/functions.php:7110				file_put_contents($tmp_file, 'cacti');
-fs_write	./lib/import.php:408		$f   = fopen($filename, 'r');
-fs_write	./lib/import.php:623							$file = fopen($filename, 'wb');
+fs_write	./lib/import.php:410		$f   = fopen($filename, 'r');
+fs_write	./lib/import.php:625							$file = fopen($filename, 'wb');
 fs_write	./lib/installer.php:3055	            $file = fopen($cacheFile, "r");
 fs_write	./lib/poller.php:1700	                                if (file_put_contents($tmpfile, $contents) !== false) {
 fs_write	./lib/poller.php:1707	                                            file_put_contents($mypath, $contents);
@@ -776,9 +776,9 @@ header_redirect	./graph_templates.php:195		header('Location: graph_templates.php
 header_redirect	./graph_templates.php:325			header('Location: graph_templates.php?header=false');
 header_redirect	./graph_templates.php:415			header('Location: graph_templates.php?header=false');
 header_redirect	./graph_templates.php:46			header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
-header_redirect	./graph_templates_inputs.php:21			header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
-header_redirect	./graph_templates_inputs.php:96				header('Location: graph_templates_inputs.php?header=false&action=input_edit&graph_template_input_id=' . (empty($graph_template_input_id) ? get_nfilter_request_var('graph_template_input_id') : $graph_template_input_id) . '&graph_template_id=' . get_nfilter_request_var('graph_template_id'));
-header_redirect	./graph_templates_inputs.php:99				header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_nfilter_request_var('graph_template_id'));
+header_redirect	./graph_templates_inputs.php:104				header('Location: graph_templates_inputs.php?header=false&action=input_edit&graph_template_input_id=' . (empty($graph_template_input_id) ? get_nfilter_request_var('graph_template_input_id') : $graph_template_input_id) . '&graph_template_id=' . get_nfilter_request_var('graph_template_id'));
+header_redirect	./graph_templates_inputs.php:107				header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_nfilter_request_var('graph_template_id'));
+header_redirect	./graph_templates_inputs.php:23			header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
 header_redirect	./graph_templates_items.php:320				header('Location: graph_templates_items.php?header=false&action=item_edit&graph_template_item_id=' . (empty($graph_template_item_id) ? get_nfilter_request_var('graph_template_item_id') : $graph_template_item_id) . '&id=' . get_nfilter_request_var('graph_template_id'));
 header_redirect	./graph_templates_items.php:323				header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_nfilter_request_var('graph_template_id'));
 header_redirect	./graph_templates_items.php:59			header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
@@ -786,17 +786,17 @@ header_redirect	./graph_templates_items.php:66			header('Location: graph_templat
 header_redirect	./graph_templates_items.php:73			header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
 header_redirect	./graph_view.php:169		header('Location: graph_view.php?action=list&header=false');
 header_redirect	./graph_view.php:370				header('Location: permission_denied.php');
-header_redirect	./graphs.php:1286			header('Location: graphs.php?header=false');
-header_redirect	./graphs.php:1461				header('Location: graphs.php');
-header_redirect	./graphs.php:250				header('Location: graphs.php?action=graph_edit&header=false&id=' . $local_graph_id);
-header_redirect	./graphs.php:252				header('Location: graphs.php?header=false');
-header_redirect	./graphs.php:404			header('Location: graphs.php?action=graph_edit&header=false&host_id=' . get_nfilter_request_var('host_id') . '&new=1');
-header_redirect	./graphs.php:406			header('Location: graphs.php?action=graph_edit&header=false&id=' . (empty($local_graph_id) ? get_nfilter_request_var('local_graph_id') : $local_graph_id) . (isset_request_var('host_id') ? '&host_id=' . get_nfilter_request_var('host_id') : ''));
-header_redirect	./graphs.php:408			header('Location: graphs.php?action=graph_edit&header=false&id=' . $local_graph_id);
-header_redirect	./graphs.php:410			header('Location: graphs.php?header=false');
-header_redirect	./graphs.php:737					header("Location: aggregate_graphs.php?header=false&action=edit&tab=details&id=$local_graph_id");
-header_redirect	./graphs.php:770				header('Location: graphs.php?header=false&template_id=-1');
-header_redirect	./graphs.php:772				header('Location: graphs.php?header=false');
+header_redirect	./graphs.php:1297			header('Location: graphs.php?header=false');
+header_redirect	./graphs.php:1472				header('Location: graphs.php');
+header_redirect	./graphs.php:271				header('Location: graphs.php?action=graph_edit&header=false&id=' . $local_graph_id);
+header_redirect	./graphs.php:273				header('Location: graphs.php?header=false');
+header_redirect	./graphs.php:415			header('Location: graphs.php?action=graph_edit&header=false&host_id=' . get_nfilter_request_var('host_id') . '&new=1');
+header_redirect	./graphs.php:417			header('Location: graphs.php?action=graph_edit&header=false&id=' . (empty($local_graph_id) ? get_nfilter_request_var('local_graph_id') : $local_graph_id) . (isset_request_var('host_id') ? '&host_id=' . get_nfilter_request_var('host_id') : ''));
+header_redirect	./graphs.php:419			header('Location: graphs.php?action=graph_edit&header=false&id=' . $local_graph_id);
+header_redirect	./graphs.php:421			header('Location: graphs.php?header=false');
+header_redirect	./graphs.php:748					header("Location: aggregate_graphs.php?header=false&action=edit&tab=details&id=$local_graph_id");
+header_redirect	./graphs.php:781				header('Location: graphs.php?header=false&template_id=-1');
+header_redirect	./graphs.php:783				header('Location: graphs.php?header=false');
 header_redirect	./graphs_items.php:217				header('Location: graphs.php?header=false&action=item_edit&graph_template_item_id=' . (empty($graph_template_item_id) ? get_nfilter_request_var('graph_template_item_id') : $graph_template_item_id) . '&id=' . get_nfilter_request_var('local_graph_id'));
 header_redirect	./graphs_items.php:220				header('Location: graphs.php?header=false&action=graph_edit&id=' . get_nfilter_request_var('local_graph_id'));
 header_redirect	./graphs_items.php:24			header('Location: graphs.php?header=false&action=graph_edit&id=' . get_request_var('local_graph_id'));
@@ -1009,5 +1009,5 @@ header_redirect	./vdef.php:39			header('Location: vdef.php?header=false&action=e
 header_redirect	./vdef.php:46			header('Location: vdef.php?header=false&action=edit&id=' . get_request_var('vdef_id'));
 header_redirect	./vdef.php:535		header('Location: vdef.php?action=edit&header=false&id=' . get_request_var('id'));
 xml_parse	./install/functions.php:497				$xmlget = simplexml_load_string($xml);
-xml_parse	./lib/import.php:349		$xmlget = simplexml_load_string($data);
-xml_parse	./lib/import.php:475		$xmlget = simplexml_load_string($xml);
+xml_parse	./lib/import.php:351		$xmlget = simplexml_load_string($data);
+xml_parse	./lib/import.php:477		$xmlget = simplexml_load_string($xml);

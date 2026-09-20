@@ -7,6 +7,16 @@
 $coverageRoot = dirname(__DIR__, 2);
 require_once $coverageRoot . '/tests/vendor/autoload.php';
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('GRAPH_INPUT_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/lib/graph_template_input.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/import.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/api_graph.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_form_template.php');
+    $coverageFilter->includeFile($coverageRoot . '/graphs.php');
+    $coverageFilter->includeFile($coverageRoot . '/graph_templates_inputs.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/template.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+}
 if (defined('INSTALLER_CSRF_BOOTSTRAP_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/include/csrf.php');
 }

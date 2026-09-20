@@ -5,6 +5,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+require_once __DIR__ . '/graph_template_input.php';
+
 /* draw_nontemplated_fields_graph - draws a form that consists of all non-templated graph fields associated
      with a particular graph template
    @arg $graph_template_id - the id of the graph template to base the form after
@@ -139,7 +141,8 @@ function draw_nontemplated_fields_graph_item($graph_template_id, $local_graph_id
 
 	if (cacti_sizeof($input_item_list)) {
 		foreach ($input_item_list as $item) {
-			if (!db_column_exists('graph_templates_item', $item['column_name'])) {
+			$column = graph_template_input_column($item['column_name'] ?? null);
+			if ($column === null) {
 				raise_message_javascript(
 					__('Attempted SQL Injection'),
 					__('There was a SQL Injection attempted on the page'),
@@ -148,13 +151,15 @@ function draw_nontemplated_fields_graph_item($graph_template_id, $local_graph_id
 
 				cacti_log(sprintf('ERROR: A client attempted to create a SQL Injection into Kadupul likely from an external host with the address %s', get_client_addr()), false, 'SECURITY');
 
+				http_response_code(400);
 				exit;
 			}
+			$item['column_name'] = $column;
 
 			$form_array = array();
 
 			if (!empty($local_graph_id)) {
-				$current_def_value = db_fetch_row_prepared('SELECT gti.' . $item['column_name'] . ', gti.id
+				$current_def_value = db_fetch_row_prepared('SELECT gti.`' . $column . '`, gti.id
 					FROM graph_templates_item AS gti
 					INNER JOIN graph_template_input_defs AS gtid
 					ON gtid.graph_template_item_id=gti.local_graph_template_item_id
@@ -163,7 +168,7 @@ function draw_nontemplated_fields_graph_item($graph_template_id, $local_graph_id
 					LIMIT 1',
 					array($item['id'], $local_graph_id));
 			} else {
-				$current_def_value = db_fetch_row_prepared('SELECT gti.' . $item['column_name'] . ', gti.id
+				$current_def_value = db_fetch_row_prepared('SELECT gti.`' . $column . '`, gti.id
 					FROM graph_templates_item AS gti
 					INNER JOIN graph_template_input_defs AS gtid
 					ON gtid.graph_template_item_id=gti.id
@@ -639,4 +644,3 @@ function draw_custom_data_row($field_name, $data_input_field_id, $data_template_
 		form_text_box($field_name, $current_value, '', '');
 	}
 }
-

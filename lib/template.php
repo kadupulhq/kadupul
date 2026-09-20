@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+require_once __DIR__ . '/graph_template_input.php';
+
 /* push_out_data_source_custom_data - pushes out the "custom data" associated with a data
 	template to all of its children. this includes all fields inherited from the host
 	and the data template
@@ -448,6 +450,12 @@ function push_out_graph_input($graph_template_input_id, $graph_template_item_id,
 		FROM graph_template_input
 		WHERE id = ?', array($graph_template_input_id));
 
+	$column = graph_template_input_column($graph_input['column_name'] ?? null);
+	if ($column === null) {
+		// Also reject poisoned rows created by older versions or template imports.
+		return false;
+	}
+
 	$graph_input_items = db_fetch_assoc_prepared('SELECT graph_template_item_id
 		FROM graph_template_input_defs
 		WHERE graph_template_input_id = ?', array($graph_template_input_id));
@@ -469,11 +477,11 @@ function push_out_graph_input($graph_template_input_id, $graph_template_item_id,
 	}
 
 	if (cacti_sizeof($session_members) == 0) {
-		$values_to_apply = db_fetch_assoc('SELECT local_graph_id,' . $graph_input['column_name'] . '
+		$values_to_apply = db_fetch_assoc_prepared('SELECT local_graph_id,`' . $column . '`
 			FROM graph_templates_item
-			WHERE graph_template_id=' . $graph_input['graph_template_id'] . " $sql_include_items
+			WHERE graph_template_id = ? ' . "$sql_include_items
 			AND local_graph_id>0
-			GROUP BY local_graph_id");
+			GROUP BY local_graph_id", array($graph_input['graph_template_id']));
 	} else {
 		$i = 0;
 		foreach ($session_members as $item_id => $item_id) {
@@ -481,21 +489,21 @@ function push_out_graph_input($graph_template_input_id, $graph_template_item_id,
 			$i++;
 		}
 
-		$values_to_apply = db_fetch_assoc('SELECT local_graph_id,' . $graph_input['column_name'] . '
+		$values_to_apply = db_fetch_assoc_prepared('SELECT local_graph_id,`' . $column . '`
 			FROM graph_templates_item
-			WHERE graph_template_id=' . $graph_input['graph_template_id'] . '
+			WHERE graph_template_id = ?
 			AND local_graph_id>0
-			AND !(' . array_to_sql_or($new_session_members, 'local_graph_template_item_id') . ") $sql_include_items GROUP BY local_graph_id");
+			AND !(' . array_to_sql_or($new_session_members, 'local_graph_template_item_id') . ") $sql_include_items GROUP BY local_graph_id", array($graph_input['graph_template_id']));
 	}
 
 	if (cacti_sizeof($values_to_apply)) {
 		foreach ($values_to_apply as $value) {
 			/* this is just an extra check that i threw in to prevent users' graphs from getting really messed up */
-			if (!(($graph_input['column_name'] == 'task_item_id') && (empty($value[$graph_input['column_name']])))) {
-				db_execute('UPDATE graph_templates_item
-					SET ' . $graph_input['column_name'] . "=" . db_qstr($value[$graph_input['column_name']]) . "
-					WHERE local_graph_id=" . $value['local_graph_id'] . "
-					AND local_graph_template_item_id=$graph_template_item_id");
+			if (!(($column == 'task_item_id') && (empty($value[$column])))) {
+				db_execute_prepared('UPDATE graph_templates_item
+					SET `' . $column . '` = ?
+					WHERE local_graph_id = ?
+					AND local_graph_template_item_id = ?', array($value[$column], $value['local_graph_id'], $graph_template_item_id));
 			}
 		}
 	}

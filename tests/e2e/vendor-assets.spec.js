@@ -17,6 +17,24 @@ async function load(page, ...files) {
   }
 }
 
+test("graph input delete handler sends the CSRF token by POST", async ({ page }) => {
+  const controller = fs.readFileSync(path.resolve(__dirname, "../../graph_templates.php"), "utf8");
+  const handler = controller.match(/\$\('\.inputDeleteMarker'\)\.on\('click', function\(event\) \{[\s\S]*?\n\t\t\}\);/);
+  expect(handler).not.toBeNull();
+  await page.setContent('<a class="inputDeleteMarker" href="graph_templates_inputs.php?action=input_remove&id=7&graph_template_id=2">Delete input</a>');
+  await load(page, "jquery.js");
+  await page.evaluate(() => {
+    window.csrfMagicToken = "test-body-token";
+    window.loadPageUsingPost = (url, data) => { window.deleteRequest = { url, data }; };
+  });
+  await page.addScriptTag({ content: handler[0] });
+  await page.getByText("Delete input", { exact: true }).click();
+  expect(await page.evaluate(() => window.deleteRequest)).toEqual({
+    url: "graph_templates_inputs.php?action=input_remove&id=7&graph_template_id=2",
+    data: { __csrf_magic: "test-body-token" },
+  });
+});
+
 test("DOMPurify abort clears shadow and template trees and unsafe URI attributes", async ({ page }) => {
   await load(page, "purify.js");
   const result = await page.evaluate(() => {
