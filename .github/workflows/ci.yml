@@ -312,7 +312,8 @@ jobs:
             exit 0
           fi
 
-          if ! printf '%s\n' "$changed" | grep -qx 'CHANGELOG.md'; then
+          # A here-string avoids SIGPIPE from grep -q exiting early on large PRs.
+          if ! grep -qx 'CHANGELOG.md' <<< "$changed"; then
             echo "::error file=CHANGELOG.md::This branch changes behaviour but does not touch CHANGELOG.md. Add an entry under Unreleased, or apply the no-changelog label." >&2
             exit 1
           fi

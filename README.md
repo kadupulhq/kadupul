@@ -13,6 +13,9 @@ or migration path. It is not ready for production.
 
 ## First-release goals
 
+Main requires PHP 8.1 or later and uses phpseclib 4.x. The `lts/1.2` branch
+retains PHP 8.0 support and phpseclib 3.x.
+
 - Verify device polling, data collection, and graphing with automated tests.
 - Preserve plugin APIs, hooks, templates, and existing RRD data.
 - Improve security boundaries and maintainability.
