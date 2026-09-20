@@ -2316,44 +2316,44 @@
      * @param fragment to iterate over recursively
      */
     const _sanitizeShadowDOM2 = function _sanitizeShadowDOM(fragment, inPlace) {
-      let shadowNode = null;
-      const shadowIterator = _createNodeIterator(fragment);
-      /* Execute a hook if present */
-      _executeHooks(hooks.beforeSanitizeShadowDOM, fragment, null);
-      while (shadowNode = shadowIterator.nextNode()) {
-        /* Execute a hook if present */
-        _executeHooks(hooks.uponSanitizeShadowNode, shadowNode, null);
-        /* Sanitize tags and elements */
-        _sanitizeElements(shadowNode, fragment, inPlace);
-        /* Check attributes next */
-        _sanitizeAttributes(shadowNode, fragment, inPlace);
-        /* Deep shadow DOM detected.
-           Realm-safe check (GHSA-hpcv-96wg-7vj8): use nodeType against the
-           DOCUMENT_FRAGMENT_NODE constant rather than instanceof, so we
-           recurse into <template>.content from foreign realms too. */
-        if (_isDocumentFragment(shadowNode.content)) {
-          _sanitizeShadowDOM2(shadowNode.content, inPlace);
+      // Explicit frames preserve nested before/upon/after hook order without
+      // spending the JavaScript call stack on attacker-controlled tree depth.
+      const frames = [{ enter: fragment }];
+      while (frames.length > 0) {
+        const frame = frames.pop();
+        if (frame.enter) {
+          const iterator = _createNodeIterator(frame.enter);
+          _executeHooks(hooks.beforeSanitizeShadowDOM, frame.enter, null);
+          frames.push({ fragment: frame.enter, iterator });
+          continue;
         }
-        /* An element iterated here may itself host an attached
-           shadow root. The default NodeIterator does not enter shadow
-           trees, so a shadow root nested inside template.content was
-           previously reached by no walk at all (the pre-pass at
-           _sanitizeAttachedShadowRoots descends via childNodes, which
-           doesn't enter template.content; the template-content recursion
-           above iterates the content but never inspected shadowRoot).
-           Walk it explicitly. The nodeType guard avoids reading
-           shadowRoot off text / comment / CDATA / PI nodes that the
-           iterator also surfaces. */
+        if (frame.host) {
+          const shadow = getShadowRoot(frame.host);
+          if (_isDocumentFragment(shadow)) {
+            frames.push({ enter: shadow });
+          }
+          continue;
+        }
+        const shadowNode = frame.iterator.nextNode();
+        if (!shadowNode) {
+          _executeHooks(hooks.afterSanitizeShadowDOM, frame.fragment, null);
+          continue;
+        }
+        frames.push(frame);
+        _executeHooks(hooks.uponSanitizeShadowNode, shadowNode, null);
+        _sanitizeElements(shadowNode, frame.fragment, inPlace);
+        _sanitizeAttributes(shadowNode, frame.fragment, inPlace);
         if (_readNodeType(shadowNode) === NODE_TYPE.element) {
-          const innerSr = getShadowRoot(shadowNode);
-          if (_isDocumentFragment(innerSr)) {
-            _sanitizeAttachedShadowRoots(innerSr, inPlace);
-            _sanitizeShadowDOM2(innerSr, inPlace);
+          // Read the shadow root after the template-content frame completes.
+          frames.push({ host: shadowNode });
+          if (transformCaseFunc(_readNodeName(shadowNode)) === 'template') {
+            const content = getTemplateContent ? getTemplateContent(shadowNode) : shadowNode.content;
+            if (_isDocumentFragment(content)) {
+              frames.push({ enter: content });
+            }
           }
         }
       }
-      /* Execute a hook if present */
-      _executeHooks(hooks.afterSanitizeShadowDOM, fragment, null);
     };
     /**
      * _sanitizeAttachedShadowRoots
@@ -2375,21 +2375,9 @@
      * @param root the subtree root to walk for attached shadow roots
      */
     const _sanitizeAttachedShadowRoots = function _sanitizeAttachedShadowRoots(root, inPlace) {
-      /* Iterative (explicit stack) rather than per-child recursion. DOM APIs
-         impose no depth cap, so an attacker-shaped tree (JSON/CRDT/editor data
-         built straight into the DOM — the IN_PLACE surface) deeper than the JS
-         call-stack budget would otherwise overflow native recursion here and
-         throw at the IN_PLACE entry pre-pass, before a single node is
-         sanitized, leaving the caller's live tree untouched (fail-open). See
-         campaign-3 F4. A heap stack keeps depth off the call stack.
-              Each work item is either a node to descend into, or a deferred
-         `_sanitizeShadowDOM` for an already-walked shadow root. The deferred
-         form preserves the original post-order discipline: a shadow root's
-         nested shadow roots are discovered before the outer shadow is
-         sanitized (which may remove hosts). Pushes are in reverse of the
-         desired processing order (LIFO): template content, then children, then
-         the shadow-sanitize, then the shadow walk — so the order matches the
-         previous recursion exactly. */
+      // Discover roots in light/template trees iteratively. Each discovered
+      // shadow root is owned by the iterative sanitizer, which also handles
+      // its nested roots; do not separately prewalk those roots a second time.
       const stack = [{
         node: root,
         shadow: null
@@ -2439,15 +2427,11 @@
         if (isElement) {
           const sr = getShadowRoot(node);
           if (_isDocumentFragment(sr)) {
-            /* Push the deferred sanitise first so it pops after the shadow
-               walk we push next, i.e. nested shadow roots are discovered
-               before this one is sanitised. */
+            // The iterative sanitizer owns this entire shadow tree, including
+            // nested roots. Discovering them again would duplicate hook calls.
             stack.push({
               node: null,
               shadow: sr
-            }, {
-              node: sr,
-              shadow: null
             });
           }
         }

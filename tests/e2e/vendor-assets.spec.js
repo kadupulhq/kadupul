@@ -183,6 +183,59 @@ test("DOMPurify final template scrub handles deeply nested fragments without rec
   expect(result).toBe(" ");
 });
 
+test("DOMPurify iterative shadow traversal runs nested hooks once in depth-first order", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const root = document.createElement("div");
+    const outer = root.attachShadow({ mode: "open" });
+    const template = document.createElement("template");
+    outer.append(template);
+    const host = document.createElement("div");
+    template.content.append(host);
+    const inner = host.attachShadow({ mode: "open" });
+    inner.innerHTML = '<img onerror="unsafe()">';
+    const names = new Map([[outer, "outer"], [template.content, "template"], [inner, "inner"]]);
+    const events = [];
+    DOMPurify.addHook("beforeSanitizeShadowDOM", node => events.push("before:" + names.get(node)));
+    DOMPurify.addHook("afterSanitizeShadowDOM", node => events.push("after:" + names.get(node)));
+    DOMPurify.sanitize(root, { IN_PLACE: true });
+    DOMPurify.removeAllHooks();
+    return events;
+  });
+  expect(result).toEqual(["before:outer", "before:template", "before:inner", "after:inner", "after:template", "after:outer"]);
+});
+
+for (const mode of ["in-place", "string", "shadow-template"]) {
+  test(`DOMPurify public sanitizer handles deep ${mode} input without recursion`, async ({ page }) => {
+    await load(page, "purify.js");
+    const result = await page.evaluate((mode) => {
+      const depth = 12000;
+      if (mode === "string") {
+        const clean = DOMPurify.sanitize('<div>' + '<template>'.repeat(depth) + '<img onerror="unsafe()">' + '</template>'.repeat(depth) + '</div>');
+        return { unsafe: clean.includes("onerror"), retained: clean.includes("<img") };
+      }
+      const root = document.createElement("div");
+      let container = root;
+      for (let i = 0; i < depth; i++) {
+        const template = document.createElement("template");
+        container.append(template);
+        container = template.content;
+        if (mode === "shadow-template" && i % 100 === 0) {
+          const host = document.createElement("div");
+          container.append(host);
+          container = host.attachShadow({ mode: "open" });
+        }
+      }
+      const img = document.createElement("img");
+      img.setAttribute("onerror", "unsafe()");
+      container.append(img);
+      DOMPurify.sanitize(root, { IN_PLACE: true });
+      return { unsafe: img.hasAttribute("onerror"), retained: img.parentNode === container };
+    }, mode);
+    expect(result).toEqual({ unsafe: false, retained: true });
+  });
+}
+
 for (const detached of [false, true]) {
   test(`DOMPurify failed shadow prepass neutralizes ${detached ? "removed" : "attached"} trees`, async ({ page }) => {
     await load(page, "purify.js");
