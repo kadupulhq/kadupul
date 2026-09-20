@@ -137,12 +137,16 @@ function check_auth_cookie() {
 				$user_info = db_fetch_row_prepared('SELECT id, realm, username
 					FROM user_auth
 					WHERE id = ?
+					AND enabled = \'on\'
+					AND locked != \'on\'
 					AND realm = 0',
 					array($user_id));
 			} else {
 				$user_info = db_fetch_row_prepared('SELECT id, realm, username
 					FROM user_auth
 					WHERE id = ?
+					AND enabled = \'on\'
+					AND locked != \'on\'
 					AND realm = ?',
 					array($user_id, $realm_id));
 			}
@@ -251,13 +255,8 @@ function get_basic_auth_username() {
 		$username = str_replace("\\", "\\\\", $_SERVER['REMOTE_USER']);
 	} elseif (isset($_SERVER['REDIRECT_REMOTE_USER'])) {
 		$username = str_replace("\\", "\\\\", $_SERVER['REDIRECT_REMOTE_USER']);
-	} elseif (isset($_SERVER['HTTP_PHP_AUTH_USER'])) {
-		$username = str_replace("\\", "\\\\", $_SERVER['HTTP_PHP_AUTH_USER']);
-	} elseif (isset($_SERVER['HTTP_REMOTE_USER'])) {
-		$username = str_replace("\\", "\\\\", $_SERVER['HTTP_REMOTE_USER']);
-	} elseif (isset($_SERVER['HTTP_REDIRECT_REMOTE_USER'])) {
-		$username = str_replace("\\", "\\\\", $_SERVER['HTTP_REDIRECT_REMOTE_USER']);
 	} else {
+		/* HTTP_* values are client headers, not server-authenticated identities. */
 		$username = false;
 	}
 
@@ -516,11 +515,16 @@ function user_disable($user_id) {
 	/* ==================================================== */
 
 	db_execute_prepared("UPDATE user_auth SET enabled = '' WHERE id = ?", array($user_id));
+	cacti_auth_revoke_user_credentials($user_id);
+
+	reset_user_perms($user_id);
+}
+
+/** Revoke persisted credentials after an account has been disabled. */
+function cacti_auth_revoke_user_credentials($user_id) {
 	db_execute_prepared('DELETE FROM user_auth_cache WHERE user_id = ?', array($user_id));
 	db_execute_prepared('DELETE FROM user_auth_row_cache WHERE user_id = ?', array($user_id));
 	db_execute_prepared('DELETE FROM sessions WHERE user_id = ?', array($user_id));
-
-	reset_user_perms($user_id);
 }
 
 /**
@@ -4984,17 +4988,17 @@ function check_reset_no_authentication($auth_method) {
  * @param  int    $user_id The user ID undergoing the transition
  * @param  string $reason  Short label for audit log (e.g. 'login', 'role_switch')
  *
- * @return bool True if the transition succeeded, false if the user is locked out
+ * @return bool True if the transition succeeded, false if the account cannot authenticate
  */
 function cacti_auth_transition($user_id, $reason = 'login') {
-	/* check lockout status before allowing transition */
-	$locked = db_fetch_cell_prepared('SELECT locked
+	/* Recheck account eligibility at every authentication boundary. */
+	$account = db_fetch_row_prepared('SELECT enabled, locked
 		FROM user_auth
 		WHERE id = ?',
 		array($user_id));
 
-	if ($locked == 'on') {
-		cacti_log('SECURITY: auth transition blocked for locked user: ' . $user_id . ' reason: ' . $reason, false, 'AUTH');
+	if (!$account || ($account['enabled'] !== 'on' && (int)$user_id !== (int)get_guest_account()) || $account['locked'] === 'on') {
+		cacti_log('SECURITY: auth transition blocked for unavailable, disabled or locked user: ' . $user_id . ' reason: ' . $reason, false, 'AUTH');
 
 		return false;
 	}

@@ -34,11 +34,26 @@ if ($version != CACTI_VERSION && !defined('IN_CACTI_INSTALL')) {
 	exit;
 }
 
+/* Logout owns credential teardown and must remain accessible to suspended users. */
+if (get_current_page() == 'logout.php') {
+	return true;
+}
+
+/* Recheck persisted session eligibility before any protected-page shortcut. */
+if ($auth_method != 0 && isset($_SESSION['sess_user_id'])) {
+	$session_user = db_fetch_row_prepared('SELECT enabled, locked FROM user_auth WHERE id = ?', array($_SESSION['sess_user_id']));
+	if (!$session_user || $session_user['locked'] === 'on' || ($session_user['enabled'] !== 'on' && (int)$_SESSION['sess_user_id'] !== (int)get_guest_account())) {
+		cacti_cookie_logout();
+		cacti_session_destroy();
+		http_response_code(403);
+		exit;
+	}
+}
+
 /**
- * The logout page does not require authentication
- * so, short cut the process.
+ * Eligible users may reach the password-change flow without a realm check.
  */
-if (get_current_page() == 'logout.php' || get_current_page() == 'auth_changepassword.php') {
+if (get_current_page() == 'auth_changepassword.php') {
 	return true;
 }
 
@@ -85,10 +100,11 @@ if ($auth_method != 0) {
 			if (cacti_sizeof($current_user)) {
 				/* GHSA-273r-qr93-wgcp: regenerate session id on auth transition */
 				if (!cacti_auth_transition((int)$current_user['id'], 'basic_auth')) {
-					return false;
+					http_response_code(403);
+					exit;
 				}
 
-				$_SESSION['sess_user_id'] = $current_user['id'];;
+				$_SESSION['sess_user_id'] = $current_user['id'];
 
 				$client_addr = get_client_addr();
 
@@ -99,7 +115,7 @@ if ($auth_method != 0) {
 					VALUES (?, ?, 1, ?, NOW())',
 					array($username, $current_user['id'], $client_addr));
 
-				return true;
+				/* Continue through the requested page's realm authorization below. */
 			} else {
 				require_once($config['base_path'] . '/auth_login.php');
 			}
@@ -119,6 +135,11 @@ if ($auth_method != 0) {
 		/* find guest user */
 		if (!empty($guest_user_id)) {
 			if (empty($_SESSION['sess_user_id'])) {
+				if (!cacti_auth_transition((int)$guest_user_id, 'guest')) {
+					http_response_code(403);
+					exit;
+				}
+
 				$_SESSION['sess_user_id'] = $guest_user_id;
 			}
 
