@@ -18,7 +18,15 @@
  * Might be useful, when you want to pass some other data to your handler
  */
 
-(function(jQuery) {
+(function(factory) {
+        if (typeof define === 'function' && define.amd) {
+                // AMD
+                define('jquery-hotkeys', ['jquery'], factory);
+        } else {
+                // Browser globals
+                factory(jQuery);
+        }
+}(function(jQuery) {
 
   jQuery.hotkeys = {
     version: "0.2.0",
@@ -201,4 +209,4 @@
     };
   });
 
-})(jQuery || this.jQuery || window.jQuery);
+}));

@@ -1,0 +1,377 @@
+[
+  {
+    "file": "include/themes/midwinter/vendor/ua-parser/ua-parser.js",
+    "package": "ua-parser-js",
+    "version": "1.0.41",
+    "source": "src/ua-parser.js",
+    "url": "https://cdn.jsdelivr.net/npm/ua-parser-js@1.0.41/src/ua-parser.js",
+    "sha256": "9563363c1ea20cd7f5d751441b114278f9937e212dc84d29d5dd7a77c82cdbdb"
+  },
+  {
+    "file": "include/themes/midwinter/vendor/hotkeys/hotkeys.js",
+    "package": "hotkeys-js",
+    "version": "3.13.15",
+    "source": "dist/hotkeys.js",
+    "url": "https://cdn.jsdelivr.net/npm/hotkeys-js@3.13.15/dist/hotkeys.js",
+    "sha256": "e4a31ef468653c2c2873bf6a4292065ce06d12847389a0dea07e28ccd98e9d8a"
+  },
+  {
+    "file": "include/js/jquery.sparkline.js",
+    "package": "jquery-sparkline",
+    "version": "2.4.0",
+    "source": "jquery.sparkline.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-sparkline@2.4.0/jquery.sparkline.js",
+    "sha256": "5176a866ef13152b041823b2de3049febaa6314733992adc0a86974fff2a22d5"
+  },
+  {
+    "file": "include/js/jquery.colorpicker.js",
+    "package": "vanderlee-colorpicker",
+    "version": "1.2.21",
+    "source": "jquery.colorpicker.js",
+    "url": "https://cdn.jsdelivr.net/npm/vanderlee-colorpicker@1.2.21/jquery.colorpicker.js",
+    "sha256": "679a3b7e98c189073229800d4f5d93648a7bb861eccac21fe98d5a6f9dba8099"
+  },
+  {
+    "file": "include/js/dygraph-combined.js",
+    "package": "dygraphs",
+    "version": "1.1.1",
+    "source": "dygraph-combined.js",
+    "url": "https://cdn.jsdelivr.net/npm/dygraphs@1.1.1/dygraph-combined.js",
+    "sha256": "d60ed177d7efbc4ba471b04b6b4546d609edfe321303d396c6f5168645fe9a97"
+  },
+  {
+    "file": "include/js/dygraph-combined.js.map",
+    "package": "dygraphs",
+    "version": "1.1.1",
+    "source": "dygraph-combined.js.map",
+    "url": "https://cdn.jsdelivr.net/npm/dygraphs@1.1.1/dygraph-combined.js.map",
+    "sha256": "2ae26ada246c52d344b1e78c0f78d143fca8071bdbf381a7e891e6ca8d015070"
+  },
+  {
+    "file": "include/js/jquery.multiselect.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "src/jquery.multiselect.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/src/jquery.multiselect.js",
+    "sha256": "b444b5442077ece68523e3cf8bbf624c047c83f3b7aa339a2621961fcb8b01c8"
+  },
+  {
+    "file": "include/js/jquery.multiselect.filter.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "src/jquery.multiselect.filter.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/src/jquery.multiselect.filter.js",
+    "sha256": "11d3441fe7822c251a434f2666312354d0f2885bbdd7e850c6508821d32d47f2"
+  },
+  {
+    "file": "include/js/d3.js",
+    "package": "d3",
+    "version": "7.9.0",
+    "source": "dist/d3.js",
+    "url": "https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.js",
+    "sha256": "0c0d58be2106c14e242fc75bc09a17467800630751580665f6e9552a0c064ea2",
+    "replacements": [
+      {
+        "before": "function quantileIndex(values, p, valueof = number$3) {\n  if (isNaN(p = +p)) return;",
+        "after": "function quantileIndex(values, p, valueof = number$3) {\n  if (isNaN(p = +p)) return;\n  // Kadupul: consume single-use iterables once before indexed access.\n  values = array(values);"
+      },
+      {
+        "before": "      index = Uint32Array.from(values, (_, i) => i),\n      j = numbers.length - 1,",
+        "after": "      index = Uint32Array.from(values, (_, i) => i).filter(i => !isNaN(numbers[i])),\n      j = index.length - 1,"
+      }
+    ]
+  },
+  {
+    "file": "include/js/jquery.tablesorter.js",
+    "package": "tablesorter",
+    "version": "2.32.0",
+    "source": "dist/js/jquery.tablesorter.js",
+    "url": "https://cdn.jsdelivr.net/npm/tablesorter@2.32.0/dist/js/jquery.tablesorter.js",
+    "sha256": "78d7efca4f4d4c0b93b8552fec5c52a36866d5059f64f430ba5bbaf7af74d3c4"
+  },
+  {
+    "file": "include/js/jquery.tablesorter.widgets.js",
+    "package": "tablesorter",
+    "version": "2.32.0",
+    "source": "dist/js/jquery.tablesorter.widgets.js",
+    "url": "https://cdn.jsdelivr.net/npm/tablesorter@2.32.0/dist/js/jquery.tablesorter.widgets.js",
+    "sha256": "08efcb88c8cae759cf07a51f4f53ab879b17550e1db34cac18e1d54311c48650"
+  },
+  {
+    "file": "include/js/jquery.tablesorter.pager.js",
+    "package": "tablesorter",
+    "version": "2.32.0",
+    "url": "https://raw.githubusercontent.com/Mottie/tablesorter/v2.32.0/addons/pager/jquery.tablesorter.pager.js",
+    "sha256": "f11f6e3d22509862004729ec1ab44e2245c87e4c902b22c4a2f765aad198a285"
+  },
+  {
+    "file": "include/fa",
+    "package": "@fortawesome/fontawesome-free",
+    "version": "5.15.4",
+    "directories": [
+      "css",
+      "js",
+      "less",
+      "scss",
+      "metadata",
+      "sprites",
+      "svgs",
+      "webfonts"
+    ],
+    "files": [
+      "LICENSE.txt"
+    ],
+    "treeSha256": "4cb4729dbf169059c30afa8927b4e87db8b0639363980d44cfdbf592e323286c",
+    "count": 1698
+  },
+  {
+    "file": "include/js/jquery.cookie.js",
+    "package": "jquery.cookie",
+    "version": "1.4.1",
+    "source": "jquery.cookie.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.js",
+    "sha256": "b84161c9fbf7520cd14e7019f92120bd87a928a074156e91a992eba9fc9436e8",
+    "replacements": [
+      {
+        "before": "var result = key ? undefined : {};",
+        "after": "var result = key ? undefined : Object.create(null);"
+      },
+      {
+        "before": "$.cookie(key)",
+        "after": "config(key)",
+        "count": 2
+      },
+      {
+        "before": "$.cookie(key, '', $.extend",
+        "after": "config(key, '', $.extend"
+      },
+      {
+        "before": "\n}));",
+        "after": "\n\t// Kadupul LTS: preserve the pre-1.4 named-cookie API used by themes/plugins.\n\t// The upstream implementation remains responsible for cookie parsing/writing.\n\t$.cookie = function (key, value, options) {\n\t\tif (!arguments.length) {\n\t\t\treturn config();\n\t\t}\n\t\tvar writing = arguments.length > 1 && String(value) !== '[object Object]';\n\t\tvar opts = writing ? $.extend({}, options) : (value || {});\n\t\tvar previousRaw = config.raw;\n\t\ttry {\n\t\t\tconfig.raw = opts.raw === undefined ? previousRaw : !!opts.raw;\n\t\t\tif (writing) {\n\t\t\t\tif (value === null || value === undefined) {\n\t\t\t\t\topts.expires = -1;\n\t\t\t\t\tvalue = '';\n\t\t\t\t}\n\t\t\t\t// The old API counts calendar days, including DST transitions.\n\t\t\t\tif (typeof opts.expires === 'number') {\n\t\t\t\t\tvar date = new Date();\n\t\t\t\t\tdate.setDate(date.getDate() + opts.expires);\n\t\t\t\t\topts.expires = date;\n\t\t\t\t}\n\t\t\t\treturn config(key, String(value), opts);\n\t\t\t}\n\t\t\tvar result = config(key);\n\t\t\treturn result === undefined ? null : result;\n\t\t} finally {\n\t\t\tconfig.raw = previousRaw;\n\t\t}\n\t};\n\t['raw', 'json', 'defaults'].forEach(function (name) {\n\t\tObject.defineProperty($.cookie, name, {\n\t\t\tget: function () { return config[name]; },\n\t\t\tset: function (value) { config[name] = value; }\n\t\t});\n\t});\n\n}));"
+      }
+    ]
+  },
+  {
+    "file": "include/js/jquery.tablednd.js",
+    "package": "tablednd",
+    "version": "0.9.2",
+    "url": "https://raw.githubusercontent.com/isocra/TableDnD/620b4f62b470fda63486a09c18fc9b222790098c/js/jquery.tablednd.js",
+    "sha256": "5fc9fbebef6d82e7e738bba9468a360907d1f623e7fbd7ee0711e7d83976ee82"
+  },
+  {
+    "file": "include/js/jquery.hotkeys.js",
+    "package": "jquery-hotkeys",
+    "version": "0.2.2",
+    "source": "jquery-hotkeys.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-hotkeys@0.2.2/jquery-hotkeys.js",
+    "sha256": "5b387b1ef06d9ec2bde6711107b9a042c8ced72ac0958fa312922a5bb49f31fd"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.br.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.br.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.br.js",
+    "sha256": "0c2f7b89c4fb556f74ed3d8fbb06bf2eeea3b0d3b036c1ce17c2028f1cb0aa01"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.cs.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.cs.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.cs.js",
+    "sha256": "b5da2f8f1d39e86009061742e791b9b3efda502d90d0d48f1299ba913d431a34"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.de.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.de.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.de.js",
+    "sha256": "87df188b47f63ffaa1215c2cfc69c4dcc8f4a96c18ccd0379447753e333bf7f4"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.es.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.es.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.es.js",
+    "sha256": "64a2bf69dc55bcae4196d394bf8bb927f1401580670354b0f30a78b0211c98d0"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.filter.br.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.filter.br.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.filter.br.js",
+    "sha256": "6977481d84fc61e9bb98d47efd3b56c0547f9496cf094f066f80acb2c9a59474"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.filter.cs.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.filter.cs.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.filter.cs.js",
+    "sha256": "8495ffcda8f207261bb4be3f15592db0c94470482fec10a9d51d24fd033b4ce9"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.filter.de.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.filter.de.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.filter.de.js",
+    "sha256": "988fdf6f3f3286663043e318bea67f7cbfd5b5b4e09d3cf772395c2013b78485"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.filter.es.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.filter.es.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.filter.es.js",
+    "sha256": "bb0dfa048d487941fae75aee77558d1611daed872f12a2b52c08559b115a7002"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.filter.fr.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.filter.fr.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.filter.fr.js",
+    "sha256": "093c58adc3b1a6191faf952eb39a95962ffea69fa40d3729cda4a89e9d5932c0"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.filter.hu.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.filter.hu.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.filter.hu.js",
+    "sha256": "2a6c1f85f89b5db1712dcff7e840b3e40e087ccbec4b2aa26c64c88bc65740b5"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.filter.it.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.filter.it.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.filter.it.js",
+    "sha256": "e25ec5af623f8c20d2b5c3bfcf02e9399ae6fec9e3ebed4eae4a7c40deaa2c23"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.filter.ja.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.filter.ja.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.filter.ja.js",
+    "sha256": "ad36355d77b2e058a544032dedb06128795509b589acca2b6586756e7d88d6bc"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.filter.pl.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.filter.pl.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.filter.pl.js",
+    "sha256": "12c89119e886ce1503df242a8c2e493a2440374aa56b82243c9f03071cdfa08a"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.filter.ru.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.filter.ru.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.filter.ru.js",
+    "sha256": "b3b163680f7c56fc7290a7c1a6d220263e95040458a0812f572da065286541b6"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.filter.tr.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.filter.tr.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.filter.tr.js",
+    "sha256": "4d9c9ebe97381750d30439027b1d66f661e7257497d8b3cad2eed87d42bec838"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.filter.zh-cn.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.filter.zh-cn.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.filter.zh-cn.js",
+    "sha256": "417050fa8fa5376ad3e082f15e9b92e470a8efab8ee823a238426c7c1fe56f18"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.filter.zh-tw.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.filter.zh-tw.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.filter.zh-tw.js",
+    "sha256": "0c7e92f689db5d126a96d1e0f57d0db8387583dc7413e135da8e36cc0c3edd00"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.fr.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.fr.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.fr.js",
+    "sha256": "0767a68a1d95aa7990593296717e11109de15128c73445f59bb34ebe386636f4"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.hu.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.hu.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.hu.js",
+    "sha256": "9da1e867933041e3237f60d63ee3a53a57dd3ed2b86da00469ea1bad191133ec"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.it.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.it.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.it.js",
+    "sha256": "72f6bb3b5e6402c06eed0ef31b190202b8856e1aea24cf005bd7577362ac46a3"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.ja.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.ja.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.ja.js",
+    "sha256": "bd7edb5411e5087181dede3864598f12a8b1be1e3a10f3be549adbb826e9322a"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.pl.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.pl.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.pl.js",
+    "sha256": "b2238ce0938ac5131a72a28ea11198a225ca35c6422650ac41d65b202601763c"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.ru.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.ru.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.ru.js",
+    "sha256": "bf62e829dd599ca64344b5a3c57110c8b0cb28e9bf1bca65aab2ec3162f3df24"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.tr.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.tr.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.tr.js",
+    "sha256": "6e49d65709cc6e69605b11474edfaf874f2eed600a5fe092eb781641d3ca35db"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.zh-cn.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.zh-cn.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.zh-cn.js",
+    "sha256": "57e8d5aefedc4bb0bb51fd65d55c1a6ca9090f644eef47ca434359abef72f886"
+  },
+  {
+    "file": "include/js/LC_MESSAGES/jquery.multiselect.zh-tw.js",
+    "package": "jquery-ui-multiselect-widget",
+    "version": "3.0.1",
+    "source": "i18n/jquery.multiselect.zh-tw.js",
+    "url": "https://cdn.jsdelivr.net/npm/jquery-ui-multiselect-widget@3.0.1/i18n/jquery.multiselect.zh-tw.js",
+    "sha256": "e47db8644b325daa7c1ae545eba8bf09574df4ada2f5d9f78a861fc9e6e9e7cf"
+  }
+]
