@@ -11,7 +11,7 @@ change the PHP 8.1–8.4 test matrix.
 
 The old `src` files exactly matched upstream 6.10.0. The new `src`, language
 files and top-level release documents were copied from the verified archive;
-there are no local edits to upstream mailer code. Kadupul's `index.php` directory
+the only local runtime patch is the XOAUTH2 continuation fix described below. Kadupul's `index.php` directory
 guards and pre-existing Amharic/Chamorro translations are retained. Existing
 `include/vendor/phpmailer/src` and `language` paths remain unchanged.
 
@@ -41,3 +41,13 @@ transport is used. It checks multipart body/attachment generation and German →
 English → unavailable-locale fallback in one process. Separate MIME-only tests
 cover uppercase Base64, invalid encoding, and injected header-line removal.
 The native child contributes actual executed-line coverage to Sonar.
+
+## Local upstream compatibility patch
+
+In `src/SMTP.php`, the long-token XOAUTH2 continuation branch in upstream 7.1.1
+returns false when its final `AUTH End` command succeeds, and true when that
+command fails. The local patch negates that result in the failure check. Eight
+no-network protocol cases cover direct success, continuation success/rejection,
+initial/token rejection, short tokens and empty tokens. Both continuation cases
+failed before the patch and pass afterward. Preserve this patch until an upstream
+release incorporates the correction; do not overwrite it during a vendor refresh.

@@ -73,3 +73,48 @@ test('PHPMailer validates encoding and prevents extra headers while generating M
     $mail->Encoding = 'unsupported';
     expect($mail->preSend())->toBeFalse();
 });
+
+test('XOAUTH2 accepts only successful final SMTP replies without opening a connection', function ($length, $replies, $expected): void {
+    require_once dirname(__DIR__, 2) . '/include/vendor/phpmailer/vendor/autoload.php';
+    $provider = new class ($length) implements PHPMailer\PHPMailer\OAuthTokenProvider {
+        private int $length;
+
+        public function __construct(int $length)
+        {
+            $this->length = $length;
+        }
+
+        public function getOauth64()
+        {
+            return str_repeat('a', $this->length);
+        }
+    };
+    $smtp = new class ($replies) extends PHPMailer\PHPMailer\SMTP {
+        public array $replies;
+
+        public function __construct(array $replies)
+        {
+            $this->replies = $replies;
+            $this->server_caps = array('EHLO' => 'fixture', 'AUTH' => array('XOAUTH2'));
+        }
+
+        protected function sendCommand($command, $commandstring, $expect)
+        {
+            $code = array_shift($this->replies);
+            $this->last_reply = $code . ' fixture reply';
+
+            return in_array($code, (array) $expect, true);
+        }
+    };
+    expect($smtp->authenticate('fixture', '', 'XOAUTH2', $provider))->toBe($expected)
+        ->and($smtp->replies)->toBe(array());
+})->with(array(
+    array(500, array(334, 235), true),
+    array(500, array(334, 334, 235), true),
+    array(500, array(334, 334, 535), false),
+    array(500, array(535), false),
+    array(500, array(334, 535), false),
+    array(20, array(235), true),
+    array(20, array(535), false),
+    array(0, array(235), true)
+));
