@@ -24,6 +24,11 @@ jobs:
         with:
           php-version: '8.1'
           coverage: none
+      - name: Verify portable installer probe and executable allowlist
+        shell: pwsh
+        run: |
+          php tests/integration/installer_probe_preflight.php
+          if ($LASTEXITCODE -ne 0) { throw 'Installer probe preflight failed' }
       - name: Verify a writable directory with the read-only attribute
         shell: pwsh
         run: |

@@ -12,6 +12,10 @@ Targeting `v1.3.0`, the first planned application release. See
 ### Changed
 
 - Require validated POST requests for graph-template input mutations and allowlist graph-item columns across editing, XML import, duplication, rendering, and propagation before persistence or SQL construction.
+- Restrict main installer PHP probes to a server-configured executable allowlist; leave LTS behavior unchanged.
+- Require token-protected POST requests for installer JSON operations.
+- Require POST and valid CSRF tokens before graph-template bulk mutations.
+- Probe the configured PHP binary without a shell, reject failed probes, and bound installer probe execution time.
 - Refresh bundled DOMPurify, D3, jQuery UI, tablesorter and HTML Purifier, pin Composer resolution to the branch PHP runtime floor, and verify browser-library provenance and compatibility in CI.
 - Move main to phpseclib 4.x and PHP >=8.1; retain phpseclib 3.x and existing PHP support on `lts/1.2`.
 - Refresh flag-icons to 7.5.0 while retaining every configured language flag, both aspect ratios and the existing CSS class/path API.

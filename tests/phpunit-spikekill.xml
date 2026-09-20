@@ -3,6 +3,8 @@
   <testsuites>
     <testsuite name="Spikekill">
       <file>./Unit/Security/GraphTemplateInputTest.php</file>
+      <file>./Unit/Installer/InstallerEndpointCsrfTest.php</file>
+      <file>./Unit/Security/Auth/GraphTemplateBulkCsrfTest.php</file>
       <file>./Unit/BundledDependencyCompatibilityTest.php</file>
       <file>./Unit/PhpseclibBranchCompatibilityTest.php</file>
       <file>./Unit/Security/Auth/BasicAuthAuthorizationTest.php</file>

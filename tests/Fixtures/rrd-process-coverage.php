@@ -17,6 +17,13 @@ if (defined('GRAPH_INPUT_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/lib/template.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
 }
+if (defined('INSTALLER_CSRF_BOOTSTRAP_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/include/csrf.php');
+}
+if (defined('GRAPH_TEMPLATE_SECURITY_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/graph_templates.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+}
 if (defined('BASIC_AUTH_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/include/auth.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/auth.php');

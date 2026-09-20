@@ -31,10 +31,10 @@ cmd_exec	./lib/functions.php:7143				exec(sprintf('grep :%s: /etc/passwd | cut -
 cmd_exec	./lib/functions.php:7435	 * shell_exec() callers that already assemble the command string.
 cmd_exec	./lib/functions.php:7475		$process = proc_open($argv, $descriptors, $pipes);
 cmd_exec	./lib/functions.php:7547	 * shell_exec() and expect a string return value.
-cmd_exec	./lib/installer.php:3444	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
-cmd_exec	./lib/installer.php:3480	                    shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
-cmd_exec	./lib/installer.php:3537	                    $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
-cmd_exec	./lib/installer.php:847	                        $output = shell_exec(
+cmd_exec	./lib/installer.php:3528	            $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
+cmd_exec	./lib/installer.php:3564	                    shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
+cmd_exec	./lib/installer.php:3621	                    $results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
+cmd_exec	./lib/installer.php:845	            $process = @proc_open(
 cmd_exec	./lib/ping.php:149					$result = shell_exec('ping ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:151					$result = shell_exec('ping -m ' . ceil($this->timeout/1000) . ' -n ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
 cmd_exec	./lib/ping.php:153					$result = shell_exec('ping -t ' . ceil($this->timeout/1000) . ' -c ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
@@ -277,8 +277,8 @@ dynamic_include	./color_templates.php:467		include_once($config['base_path'] . '
 dynamic_include	./graph_realtime.php:365	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
 dynamic_include	./include/auth.php:120					require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/auth.php:180				require_once($config['base_path'] . '/auth_login.php');
-dynamic_include	./include/csrf.php:38	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
-dynamic_include	./include/csrf.php:7	require_once($config['include_path'] .'/vendor/csrf/csrf-conf.php');
+dynamic_include	./include/csrf.php:15	require_once($config['include_path'] .'/vendor/csrf/csrf-conf.php');
+dynamic_include	./include/csrf.php:46	include_once($config['include_path'] . '/vendor/csrf/csrf-magic.php');
 dynamic_include	./include/global.php:263	include_once($config['library_path'] . '/database.php');
 dynamic_include	./include/global.php:264	include_once($config['library_path'] . '/functions.php');
 dynamic_include	./include/global.php:265	include_once($config['library_path'] . '/headers_secure.php');
@@ -385,7 +385,7 @@ dynamic_include	./lib/html_tree.php:807		include_once($config['library_path'] . 
 dynamic_include	./lib/html_tree.php:808		include_once($config['library_path'] . '/html_utility.php');
 dynamic_include	./lib/import.php:14		include_once($config['library_path'] . '/xml.php');
 dynamic_include	./lib/import.php:2031		include_once($config['library_path'] . '/vdef.php');
-dynamic_include	./lib/installer.php:3591	                include_once($upgrade_file);
+dynamic_include	./lib/installer.php:3675	                include_once($upgrade_file);
 dynamic_include	./lib/mib_cache.php:39			include_once($config['include_path'] . '/vendor/phpsnmp/mib_parser.php');
 dynamic_include	./lib/plugins.php:137							include_once($plugin_include);
 dynamic_include	./lib/plugins.php:447		include_once($config['library_path'] . '/database.php');
@@ -574,7 +574,7 @@ fs_write	./lib/functions.php:704					file_put_contents(sys_get_temp_dir() . '/ca
 fs_write	./lib/functions.php:7110				file_put_contents($tmp_file, 'cacti');
 fs_write	./lib/import.php:410		$f   = fopen($filename, 'r');
 fs_write	./lib/import.php:625							$file = fopen($filename, 'wb');
-fs_write	./lib/installer.php:2971	            $file = fopen($cacheFile, "r");
+fs_write	./lib/installer.php:3055	            $file = fopen($cacheFile, "r");
 fs_write	./lib/poller.php:1700	                                if (file_put_contents($tmpfile, $contents) !== false) {
 fs_write	./lib/poller.php:1707	                                            file_put_contents($mypath, $contents);
 fs_write	./lib/poller.php:1736	                            file_put_contents($mypath, $contents);
@@ -772,10 +772,10 @@ header_redirect	./gprint_presets.php:67				header('Location: gprint_presets.php?
 header_redirect	./gprint_presets.php:70				header('Location: gprint_presets.php?header=false');
 header_redirect	./gprint_presets.php:98			header('Location: gprint_presets.php?header=false');
 header_redirect	./graph.php:57		header('Location: permission_denied.php');
-header_redirect	./graph_templates.php:192		header('Location: graph_templates.php?header=false&action=template_edit&id=' . (empty($graph_template_id) ? get_nfilter_request_var('graph_template_id') : $graph_template_id));
-header_redirect	./graph_templates.php:322			header('Location: graph_templates.php?header=false');
-header_redirect	./graph_templates.php:412			header('Location: graph_templates.php?header=false');
-header_redirect	./graph_templates.php:43			header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
+header_redirect	./graph_templates.php:195		header('Location: graph_templates.php?header=false&action=template_edit&id=' . (empty($graph_template_id) ? get_nfilter_request_var('graph_template_id') : $graph_template_id));
+header_redirect	./graph_templates.php:325			header('Location: graph_templates.php?header=false');
+header_redirect	./graph_templates.php:415			header('Location: graph_templates.php?header=false');
+header_redirect	./graph_templates.php:46			header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
 header_redirect	./graph_templates_inputs.php:104				header('Location: graph_templates_inputs.php?header=false&action=input_edit&graph_template_input_id=' . (empty($graph_template_input_id) ? get_nfilter_request_var('graph_template_input_id') : $graph_template_input_id) . '&graph_template_id=' . get_nfilter_request_var('graph_template_id'));
 header_redirect	./graph_templates_inputs.php:107				header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_nfilter_request_var('graph_template_id'));
 header_redirect	./graph_templates_inputs.php:23			header('Location: graph_templates.php?header=false&action=template_edit&id=' . get_request_var('graph_template_id'));
@@ -830,7 +830,7 @@ header_redirect	./images/index.php:7	header("Location:../index.php");
 header_redirect	./include/auth.php:33		header ('Location: ' . $config['url_path'] . 'install/');
 header_redirect	./include/auth.php:69				header ('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
 header_redirect	./include/content/index.php:7	header("Location:../index.php");
-header_redirect	./include/csrf.php:33		header('Location: ' . validate_redirect_url($_SERVER['REQUEST_URI']));
+header_redirect	./include/csrf.php:41		header('Location: ' . validate_redirect_url($_SERVER['REQUEST_URI']));
 header_redirect	./include/fa/css/index.php:7	header("Location:../index.php");
 header_redirect	./include/fa/index.php:7	header("Location:../index.php");
 header_redirect	./include/fa/js/index.php:7	header("Location:../index.php");
