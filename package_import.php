@@ -651,19 +651,7 @@ function import_display_package_data($templates, $files, $package_name, $xmlfile
 				)
 			);
 
-			if ($detail['status'] == 'updated') {
-				$status = "<span class='updateObject'>" . __('Updated') . '</span>';
-			} elseif ($detail['status'] == 'new') {
-				$status = "<span class='newObject'>" . __('New') . '</span>';
-			} else {
-				$status = "<span class='deviceUp'>" . __('Unchanged') . '</span>';
-			}
-
-			form_alternate_row('line_import_' . $detail['status'] . '_' . $id);
-
-			form_selectable_ecell($detail['type_name'], $id);
-			form_selectable_ecell($detail['name'], $id);
-			form_selectable_cell($status, $id);
+			import_preview_identity_row($detail, $id);
 
 			if (isset($detail['vals'])) {
 				$diff_details = '';
@@ -685,8 +673,7 @@ function import_display_package_data($templates, $files, $package_name, $xmlfile
 				}
 
 				if (cacti_sizeof($diff_array)) {
-					// $diff_array entries are pre-escaped at source in lib/import.php via html_escape();
-					// do NOT wrap with array_map('html_escape') here — that would double-encode color spans.
+					// Purify mixed values and color spans below; do not double-escape the rich markup.
 					$diff_details .= __('Differences') . '<br>' . implode('<br>', $diff_array);
 				}
 
@@ -694,7 +681,7 @@ function import_display_package_data($templates, $files, $package_name, $xmlfile
 					$diff_details .= ($diff_details != '' ? '<br>':'') . __('Orphans') . '<br>' . implode('<br>', array_map('html_escape', $orphan_array));
 				}
 
-				form_selectable_cell($diff_details, $id, '', 'white-space:pre-wrap');
+				form_selectable_cell(import_preview_html($diff_details), $id, '', 'white-space:pre-wrap');
 			} else {
 				form_selectable_cell(__('None'), $id);
 			}
