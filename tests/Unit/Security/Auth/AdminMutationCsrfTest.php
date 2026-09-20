@@ -5,8 +5,10 @@
 
 test('plugin lifecycle redirects preserve AJAX query parameters', function () {
     $source = file_get_contents(dirname(__DIR__, 4) . '/plugins.php');
-    expect(substr_count($source, "header('Location: plugins.php' . (\$option != '' ? '?' . \$option:''));"))->toBe(8);
-    expect($source)->not->toContain("header('Location: plugins.php' . (\$option != '' ? '&'");
+    $redirect = <<<'REGEX'
+~header\s*\(\s*'Location: plugins\.php'\s*\.\s*\(\s*\$option\s*!=\s*''\s*\?\s*'\?'\s*\.\s*\$option\s*:\s*''\s*\)\s*\)\s*;~
+REGEX;
+    expect(preg_match_all($redirect, $source))->toBe(8);
 });
 
 test('account administration rejects unprotected mutation requests', function ($controller, $route, $method, $token, $expected) {

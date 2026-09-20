@@ -917,9 +917,9 @@ header_redirect	./package_import.php:216				header('Location: package_import.php
 header_redirect	./plugins.php:103				header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
 header_redirect	./plugins.php:116				header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
 header_redirect	./plugins.php:137				header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
-header_redirect	./plugins.php:152				header('Location: plugins.php' . ($option != '' ? '&' . $option:''));
-header_redirect	./plugins.php:172				header('Location: plugins.php' . ($option != '' ? '&' . $option:''));
-header_redirect	./plugins.php:192				header('Location: plugins.php' . ($option != '' ? '&' . $option:''));
+header_redirect	./plugins.php:152				header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
+header_redirect	./plugins.php:172				header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
+header_redirect	./plugins.php:192				header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
 header_redirect	./plugins.php:76					header('Location: plugins.php?state=5' . ($option != '' ? '&' . $option:''));
 header_redirect	./plugins.php:78					header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
 header_redirect	./plugins.php:92				header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
