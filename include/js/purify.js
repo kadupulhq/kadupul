@@ -1454,17 +1454,17 @@
               stack.push(content);
             }
           }
-          const element = node;
           const lcTag = transformCaseFunc(_readNodeName(node));
-          try {
-            if (element.hasAttribute && element.hasAttribute('patchsrc')) {
-              element.removeAttribute('patchsrc');
+          const attributes = getAttributes(node);
+          if (attributes) {
+            for (let i = attributes.length - 1; i >= 0; --i) {
+              const attribute = attributes[i];
+              const name = attribute && attribute.name;
+              if (typeof name === 'string' && _isPatchLinkageAttribute(transformCaseFunc(name), lcTag)) {
+                // Cached prototype removal cannot be shadowed by form controls.
+                removeAttributeNode(node, attribute);
+              }
             }
-            if (element.hasAttribute && element.hasAttribute('for') && _isPatchLinkageAttribute('for', lcTag)) {
-              element.removeAttribute('for');
-            }
-          } catch (_) {
-            /* Clobbered removeAttribute/hasAttribute on a doomed node — ignore */
           }
         }
         const childNodes = getChildNodes(node);

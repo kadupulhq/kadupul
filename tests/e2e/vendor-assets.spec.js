@@ -53,6 +53,39 @@ test("DOMPurify severs non-light patch linkage before the first sanitization hoo
   expect(result).toEqual([[false, false], [false, false]]);
 });
 
+for (const tree of ["shadow", "template"]) {
+  for (const method of ["hasAttribute", "removeAttribute"]) {
+    test(`DOMPurify linkage prepass tolerates ${method} clobbering in ${tree}`, async ({ page }) => {
+      await load(page, "purify.js");
+      const result = await page.evaluate(({ tree, method }) => {
+        const root = document.createElement("div");
+        let container;
+        if (tree === "shadow") {
+          container = root.attachShadow({ mode: "open" });
+        } else {
+          const template = document.createElement("template");
+          root.append(template);
+          container = template.content;
+        }
+        const form = document.createElement("form");
+        form.setAttribute("patchsrc", "/patch");
+        form.setAttribute("for", "target");
+        form.innerHTML = `<input name="${method}">`;
+        container.append(form);
+        const clobbered = typeof form[method] !== "function";
+        let observed;
+        DOMPurify.addHook("beforeSanitizeElements", () => {
+          if (!observed) observed = ["patchsrc", "for"].map(name => Element.prototype.hasAttribute.call(form, name));
+        });
+        DOMPurify.sanitize(root, { IN_PLACE: true });
+        DOMPurify.removeAllHooks();
+        return { clobbered, observed };
+      }, { tree, method });
+      expect(result).toEqual({ clobbered: true, observed: [false, false] });
+    });
+  }
+}
+
 test("DOMPurify final template scrub includes a template root", async ({ page }) => {
   const source = fs.readFileSync(path.resolve(__dirname, "../../include/js/purify.js"), "utf8");
   const anchor = "    DOMPurify.setConfig = function () {";

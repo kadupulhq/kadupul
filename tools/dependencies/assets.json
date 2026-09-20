@@ -187,6 +187,10 @@
         "before": "              _neutralizeSubtree(entry.element);",
         "after": "              _neutralizeSubtree(entry.element, true);",
         "count": 2
+      },
+      {
+        "before": "          const element = node;\n          const lcTag = transformCaseFunc(_readNodeName(node));\n          try {\n            if (element.hasAttribute && element.hasAttribute('patchsrc')) {\n              element.removeAttribute('patchsrc');\n            }\n            if (element.hasAttribute && element.hasAttribute('for') && _isPatchLinkageAttribute('for', lcTag)) {\n              element.removeAttribute('for');\n            }\n          } catch (_) {\n            /* Clobbered removeAttribute/hasAttribute on a doomed node — ignore */\n          }",
+        "after": "          const lcTag = transformCaseFunc(_readNodeName(node));\n          const attributes = getAttributes(node);\n          if (attributes) {\n            for (let i = attributes.length - 1; i >= 0; --i) {\n              const attribute = attributes[i];\n              const name = attribute && attribute.name;\n              if (typeof name === 'string' && _isPatchLinkageAttribute(transformCaseFunc(name), lcTag)) {\n                // Cached prototype removal cannot be shadowed by form controls.\n                removeAttributeNode(node, attribute);\n              }\n            }\n          }"
       }
     ]
   },
