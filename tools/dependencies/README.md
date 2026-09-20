@@ -45,6 +45,10 @@ Seven browser regressions failed before these patches and pass afterward; they
 cover forbidden-handler removal and both before/upon element hooks in all three
 tree types. These are targeted fixes, not a guarantee of arbitrary reentrant
 configuration isolation. Preserve every manifest patch on future refreshes.
+Fail-closed cleanup traverses attached shadow roots and template content using
+cached prototype getters. An aborted shadow prepass also neutralizes its already
+removed subtrees. Two browser regressions reproduce retained event handlers before
+these patches and verify their removal afterward.
 The sanitizer also restores the outer removal ledger after nested calls (including
 throws) and resets an omitted per-call Trusted Types policy to the internal
 default; persistent `setConfig()` policies and explicit opt-out remain supported.

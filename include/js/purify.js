@@ -514,6 +514,7 @@
     const getChildNodes = lookupGetter(ElementPrototype, 'childNodes');
     const getParentNode = lookupGetter(ElementPrototype, 'parentNode');
     const getShadowRoot = lookupGetter(ElementPrototype, 'shadowRoot');
+    const getTemplateContent = HTMLTemplateElement ? lookupGetter(HTMLTemplateElement.prototype, 'content') : null;
     const getAttributes = lookupGetter(ElementPrototype, 'attributes');
     const getNodeType = Node && Node.prototype ? lookupGetter(Node.prototype, 'nodeType') : null;
     const getNodeName = Node && Node.prototype ? lookupGetter(Node.prototype, 'nodeName') : null;
@@ -1332,6 +1333,17 @@
         const nodeType = _readNodeType(node);
         if (nodeType === NODE_TYPE.element) {
           _stripDisallowedAttributes(node);
+          // Kadupul: fail-closed cleanup must also reach non-light DOM.
+          const shadow = getShadowRoot(node);
+          if (shadow) {
+            stack.push(shadow);
+          }
+          if (getTemplateContent && transformCaseFunc(_readNodeName(node)) === 'template') {
+            const content = getTemplateContent(node);
+            if (_isDocumentFragment(content)) {
+              stack.push(content);
+            }
+          }
         }
         const childNodes = getChildNodes(node);
         if (childNodes) {
@@ -2505,6 +2517,12 @@
           _sanitizeAttachedShadowRoots(dirty, inPlace);
         } catch (error) {
           _neutralizeRoot(dirty);
+          // Kadupul: removed shadow subtrees are no longer reachable from dirty.
+          arrayForEach(DOMPurify.removed, entry => {
+            if (entry.element) {
+              _neutralizeSubtree(entry.element);
+            }
+          });
           throw error;
         }
       } else if (_isNode(dirty)) {

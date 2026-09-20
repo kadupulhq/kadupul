@@ -7,6 +7,18 @@
     "sha256": "979b6c28df92881a36009de0bda1e866bee043ad69d36e54509e7210723d9af4",
     "replacements": [
       {
+        "before": "const getShadowRoot = lookupGetter(ElementPrototype, 'shadowRoot');",
+        "after": "const getShadowRoot = lookupGetter(ElementPrototype, 'shadowRoot');\n    const getTemplateContent = HTMLTemplateElement ? lookupGetter(HTMLTemplateElement.prototype, 'content') : null;"
+      },
+      {
+        "before": "          _stripDisallowedAttributes(node);\n        }\n        const childNodes = getChildNodes(node);",
+        "after": "          _stripDisallowedAttributes(node);\n          // Kadupul: fail-closed cleanup must also reach non-light DOM.\n          const shadow = getShadowRoot(node);\n          if (shadow) {\n            stack.push(shadow);\n          }\n          if (getTemplateContent && transformCaseFunc(_readNodeName(node)) === 'template') {\n            const content = getTemplateContent(node);\n            if (_isDocumentFragment(content)) {\n              stack.push(content);\n            }\n          }\n        }\n        const childNodes = getChildNodes(node);"
+      },
+      {
+        "before": "          _sanitizeAttachedShadowRoots(dirty);\n        } catch (error) {\n          _neutralizeRoot(dirty);\n          throw error;",
+        "after": "          _sanitizeAttachedShadowRoots(dirty);\n        } catch (error) {\n          _neutralizeRoot(dirty);\n          // Kadupul: removed shadow subtrees are no longer reachable from dirty.\n          arrayForEach(DOMPurify.removed, entry => {\n            if (entry.element) {\n              _neutralizeSubtree(entry.element);\n            }\n          });\n          throw error;"
+      },
+      {
         "before": "        // No policy supplied: keep the currently active policy if one is set — a\n        // previously supplied policy is intentionally sticky across config-less\n        // calls — otherwise fall back to the instance's own internal policy,\n        // created at most once. (A policy supplied for a *single* call still\n        // lingers by design; what must not linger is a policy whose configuration\n        // has been torn down via `clearConfig()`, which restores the default.)\n        if (trustedTypesPolicy === undefined) {\n          trustedTypesPolicy = _getDefaultTrustedTypesPolicy();\n        }\n        // Sign internal variables only when a policy is active. A falsy policy\n        // (Trusted Types unsupported, creation failed, or an explicit opt-out)\n        // leaves `emptyHTML` as a plain string, so we never call `.createHTML` on\n        // a non-policy and throw. See #1422.\n        if (trustedTypesPolicy && typeof emptyHTML === 'string') {\n          emptyHTML = _createTrustedHTML('');\n        }",
         "after": "        // Kadupul: a per-call policy must not leak into a fresh configuration.\n        // setConfig() remains persistent because sanitize skips parsing it.\n        trustedTypesPolicy = _getDefaultTrustedTypesPolicy();\n        emptyHTML = trustedTypesPolicy ? _createTrustedHTML('') : '';"
       },

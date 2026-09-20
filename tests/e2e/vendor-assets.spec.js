@@ -16,6 +16,42 @@ async function load(page, ...files) {
   }
 }
 
+for (const detached of [false, true]) {
+  test(`DOMPurify failed shadow prepass neutralizes ${detached ? "removed" : "attached"} trees`, async ({ page }) => {
+    await load(page, "purify.js");
+    const result = await page.evaluate((detached) => {
+      const root = document.createElement("div");
+      const shadow = root.attachShadow({ mode: "open" });
+      const section = document.createElement("section");
+      section.innerHTML = '<img onerror="window.__shadowEvent = true"><template><img onerror="window.__templateEvent = true"></template>';
+      const img = section.firstChild;
+      const templateImg = section.lastChild.content.firstChild;
+      const nestedHost = document.createElement("div");
+      const nestedShadow = nestedHost.attachShadow({ mode: "open" });
+      nestedShadow.innerHTML = '<img onerror="window.__nestedEvent = true">';
+      const nestedImg = nestedShadow.firstChild;
+      section.append(nestedHost);
+      const stop = document.createElement("span");
+      shadow.append(section, stop);
+      DOMPurify.addHook("beforeSanitizeElements", (node) => {
+        if (node === (detached ? stop : section)) throw new Error("test shadow abort");
+      });
+      let message = "";
+      try {
+        DOMPurify.sanitize(root, { IN_PLACE: true, KEEP_CONTENT: false, FORBID_TAGS: detached ? ["section"] : [] });
+      } catch (error) {
+        message = error.message;
+      } finally {
+        DOMPurify.removeAllHooks();
+      }
+      return { message, detached: section.parentNode === null, handlers: [img, templateImg, nestedImg].map((node) => node.hasAttribute("onerror")) };
+    }, detached);
+    expect(result.message).toBe("test shadow abort");
+    if (detached) expect(result.detached).toBe(true);
+    expect(result.handlers).toEqual([false, false, false]);
+  });
+}
+
 test("DOMPurify rejects nested policy sanitization before configuration mutation", async ({ page }) => {
   await load(page, "purify.js");
   const result = await page.evaluate(() => {
