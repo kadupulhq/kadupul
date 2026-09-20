@@ -27,9 +27,7 @@ session_id('admin-csrf-test');
 $_SESSION = array('sess_user_id' => 42);
 $_SERVER['REQUEST_METHOD'] = $argv[4];
 $_REQUEST = array('id' => '2', 'user_id' => '2', 'group_id' => '2', 'type' => 'graph', 'policy_graphs' => '1', 'selected_items' => 'fixture', 'drp_action' => '1');
-if ($argv[3] === 'cached_policy') {
-    $_CACTI_REQUEST['update_policy'] = '1';
-} elseif ($argv[3] === 'update_policy') {
+if ($argv[3] === 'update_policy') {
     $_REQUEST['update_policy'] = '1';
 } else {
     $_REQUEST['action'] = $argv[3];
@@ -75,7 +73,7 @@ PHP;
         rmdir($dir);
     }
 })->with(array('user_admin.php', 'user_group_admin.php'))
-    ->with(array('update_policy', 'cached_policy', 'perm_remove', 'actions'))
+    ->with(array('update_policy', 'perm_remove', 'actions'))
     ->with(array(
         array('GET', 'missing', 405),
         array('GET', 'valid', 405),
