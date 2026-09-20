@@ -2,6 +2,7 @@
 <phpunit bootstrap="./bootstrap-unit.php" colors="true">
   <testsuites>
     <testsuite name="Spikekill">
+      <file>./Unit/FlagIconsCompatibilityTest.php</file>
       <file>./Unit/Installer/InstallerRrdStoragePreflightTest.php</file>
       <file>./Unit/Installer/InstallerPhpBinaryPathTest.php</file>
       <file>./Unit/Installer/LegacyQueueUpgradeTest.php</file>
