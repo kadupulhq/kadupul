@@ -81,6 +81,14 @@ function get_filter_request_var($name) { return get_nfilter_request_var($name); 
 function get_request_var($name) { return get_nfilter_request_var($name); }
 function isset_request_var($name) { return isset($_REQUEST[$name]); }
 function set_default_action() {}
+// This persistence fixture mocks request helpers. The real method/token guard
+// is exercised separately by AdminMutationCsrfTest against the real controller.
+function cacti_require_post_actions(array $actions) {
+    if (in_array($_REQUEST['action'] ?? '', $actions, true)
+        && (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' || ($_POST['__csrf_magic'] ?? '') !== 'auth-fixture-token')) {
+        throw new RuntimeException('Authentication fixture requires an intentional POST');
+    }
+}
 function form_input_validate($value, ...$args) { return $value; }
 function is_error_message() { return str_ends_with($GLOBALS['scenario'], 'validation_error'); }
 function raise_message($id) { $GLOBALS['events'][] = 'MESSAGE:' . $id; }
@@ -152,6 +160,8 @@ if ($mode === 'transition') {
     if ($mode === 'bulk_disable') {
         user_disable(42);
     } else {
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_POST['__csrf_magic'] = 'auth-fixture-token';
         $_REQUEST = array('action' => 'save', 'save_component_user' => '1', 'id' => 42, 'realm' => 2, 'username' => 'fixture', 'enabled' => in_array($scenario, array('enabled', 'plugin_disabled'), true) ? 'on' : '');
         if (str_starts_with($scenario, 'password_')) {
             $_REQUEST['enabled'] = 'on';
