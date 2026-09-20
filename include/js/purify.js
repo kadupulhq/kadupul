@@ -1193,7 +1193,7 @@
          whose queued resource event still fires in page scope after we throw.
          Clobber-safe reads; a doomed clobbered node's own attributes are
          irrelevant while its non-clobbered descendants are reached and scrubbed. */
-      _neutralizeSubtree(root);
+      _neutralizeSubtree(root, true);
       const childNodes = getChildNodes(root);
       if (childNodes) {
         const snapshot = [];
@@ -1326,13 +1326,25 @@
      *
      * @param root the root of a removed subtree to neutralise
      */
-    const _neutralizeSubtree = function _neutralizeSubtree(root) {
+    const _neutralizeSubtree = function _neutralizeSubtree(root, abort = false) {
       const stack = [root];
       while (stack.length > 0) {
         const node = stack.pop();
         const nodeType = _readNodeType(node);
         if (nodeType === NODE_TYPE.element) {
-          _stripDisallowedAttributes(node);
+          if (!abort) {
+            _stripDisallowedAttributes(node);
+          }
+          // Discarded/aborted trees must not retain URI or other active attributes.
+          const attributes = getAttributes(node);
+          if (abort && attributes) {
+            for (let i = attributes.length - 1; i >= 0; --i) {
+              const attribute = attributes[i];
+              if (attribute && typeof attribute.name === 'string') {
+                _stripAttributeNode(node, attribute, attribute.name);
+              }
+            }
+          }
           // Kadupul: fail-closed cleanup must also reach non-light DOM.
           const shadow = getShadowRoot(node);
           if (shadow) {
@@ -1348,7 +1360,11 @@
         const childNodes = getChildNodes(node);
         if (childNodes) {
           for (let i = childNodes.length - 1; i >= 0; --i) {
-            stack.push(childNodes[i]);
+            const child = childNodes[i];
+            stack.push(child);
+            if (abort && _isDocumentFragment(node)) {
+              remove(child);
+            }
           }
         }
       }
@@ -1428,6 +1444,16 @@
         }
         /* Strip patch-source attributes (the source side) off elements. */
         if (nodeType === NODE_TYPE.element) {
+          const shadow = getShadowRoot(node);
+          if (shadow) {
+            stack.push(shadow);
+          }
+          if (transformCaseFunc(_readNodeName(node)) === 'template') {
+            const content = getTemplateContent ? getTemplateContent(node) : node.content;
+            if (_isDocumentFragment(content)) {
+              stack.push(content);
+            }
+          }
           const element = node;
           const lcTag = transformCaseFunc(_readNodeName(node));
           try {
@@ -1559,6 +1585,12 @@
       const pending = [node];
       while (pending.length > 0) {
         const root = pending.pop();
+        if (_readNodeType(root) === NODE_TYPE.element && transformCaseFunc(_readNodeName(root)) === 'template') {
+          const content = getTemplateContent ? getTemplateContent(root) : root.content;
+          if (_isDocumentFragment(content)) {
+            pending.push(content);
+          }
+        }
         normalizeNode(root);
         const doc = getOwnerDocument ? getOwnerDocument(root) : root.ownerDocument;
         const walker = createNodeIterator.call(doc || root, root,
@@ -2531,7 +2563,7 @@
           // Kadupul: removed shadow subtrees are no longer reachable from dirty.
           arrayForEach(DOMPurify.removed, entry => {
             if (entry.element) {
-              _neutralizeSubtree(entry.element);
+              _neutralizeSubtree(entry.element, true);
             }
           });
           throw error;
@@ -2618,7 +2650,7 @@
              reach them. Defuse them too, mirroring the success-path loop below. */
           arrayForEach(DOMPurify.removed, entry => {
             if (entry.element) {
-              _neutralizeSubtree(entry.element);
+              _neutralizeSubtree(entry.element, true);
             }
           });
         }

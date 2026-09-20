@@ -17,6 +17,57 @@ async function load(page, ...files) {
   }
 }
 
+test("DOMPurify abort clears shadow and template trees and unsafe URI attributes", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const root = document.createElement("div");
+    const shadow = root.attachShadow({ mode: "open" });
+    shadow.innerHTML = '<a href="javascript:alert(1)">link</a><template><iframe srcdoc="unsafe"></iframe></template><script>unsafe</script>';
+    const link = shadow.firstChild;
+    const content = shadow.querySelector("template").content;
+    const frame = content.firstChild;
+    DOMPurify.addHook("beforeSanitizeElements", () => { throw new Error("abort"); });
+    let message;
+    try { DOMPurify.sanitize(root, { IN_PLACE: true }); } catch (error) { message = error.message; }
+    DOMPurify.removeAllHooks();
+    return { message, shadow: shadow.childNodes.length, template: content.childNodes.length, href: link.hasAttribute("href"), srcdoc: frame.hasAttribute("srcdoc") };
+  });
+  expect(result).toEqual({ message: "abort", shadow: 0, template: 0, href: false, srcdoc: false });
+});
+
+test("DOMPurify severs non-light patch linkage before the first sanitization hook", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const root = document.createElement("div");
+    const shadow = root.attachShadow({ mode: "open" });
+    shadow.innerHTML = '<span for="target" patchsrc="/patch"></span><template><span for="target" patchsrc="/patch"></span></template>';
+    const nodes = [shadow.firstChild, shadow.lastChild.content.firstChild];
+    let observed;
+    DOMPurify.addHook("beforeSanitizeElements", () => {
+      if (!observed) observed = nodes.map(node => [node.hasAttribute("for"), node.hasAttribute("patchsrc")]);
+    });
+    DOMPurify.sanitize(root, { IN_PLACE: true });
+    DOMPurify.removeAllHooks();
+    return observed;
+  });
+  expect(result).toEqual([[false, false], [false, false]]);
+});
+
+test("DOMPurify final template scrub includes a template root", async ({ page }) => {
+  const source = fs.readFileSync(path.resolve(__dirname, "../../include/js/purify.js"), "utf8");
+  const anchor = "    DOMPurify.setConfig = function () {";
+  expect(source.split(anchor)).toHaveLength(2);
+  await page.addScriptTag({ content: source.replace(anchor, "    DOMPurify.testTemplateScrub = _scrubTemplateExpressions2;\n" + anchor) });
+  const result = await page.evaluate(() => {
+    const root = document.createElement("template");
+    root.content.append(document.createTextNode("{{"), document.createTextNode("unsafe}}"));
+    DOMPurify.setConfig({ SAFE_FOR_TEMPLATES: true });
+    DOMPurify.testTemplateScrub(root);
+    return root.content.textContent;
+  });
+  expect(result).toBe(" ");
+});
+
 test("DOMPurify discarded template cleanup tolerates a missing constructor", async ({ page }) => {
   await page.evaluate(() => { window.HTMLTemplateElement = undefined; });
   await load(page, "purify.js");
@@ -92,6 +143,7 @@ test("DOMPurify final template scrub handles deeply nested fragments without rec
       container = template.content;
     }
     container.append(document.createTextNode("{{"), document.createTextNode("unsafe}}"));
+    DOMPurify.setConfig({ SAFE_FOR_TEMPLATES: true });
     DOMPurify.testTemplateScrub(root);
     return container.textContent;
   });
