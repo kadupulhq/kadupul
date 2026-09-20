@@ -31,6 +31,10 @@ if (!isset($_SESSION['sess_realtime_hash'])) {
 }
 
 $hash = $_SESSION['sess_realtime_hash'];
+if (!is_string($hash) || !preg_match('/\A[a-zA-Z0-9_-]{1,64}\z/', $hash)) {
+	http_response_code(400);
+	exit;
+}
 
 set_default_action();
 
@@ -195,8 +199,7 @@ case 'countdown':
 	/* call poller */
 	$local_graph_id = get_filter_request_var('local_graph_id');
 	$interval = filter_var($graph_data_array['ds_step'], FILTER_VALIDATE_INT, array('options' => array('min_range' => 1)));
-	if (!is_int($local_graph_id) || $local_graph_id < 1 || $interval === false ||
-		!is_string($hash) || !preg_match('/\A[a-zA-Z0-9_-]{1,64}\z/', $hash)) {
+	if (!is_int($local_graph_id) || $local_graph_id < 1 || $interval === false) {
 		http_response_code(400);
 		exit;
 	}
@@ -290,7 +293,12 @@ case 'countdown':
 	exit;
 	break;
 case 'view':
-	$graph_rrd = read_config_option('realtime_cache_path') . '/user_' . $hash . '_lgi_' . get_filter_request_var('local_graph_id') . '.png';
+	$local_graph_id = get_filter_request_var('local_graph_id');
+	if (!is_int($local_graph_id) || $local_graph_id < 1) {
+		http_response_code(400);
+		exit;
+	}
+	$graph_rrd = read_config_option('realtime_cache_path') . '/user_' . $hash . '_lgi_' . $local_graph_id . '.png';
 
 	if (file_exists($graph_rrd)) {
 		print base64_encode(file_get_contents($graph_rrd));

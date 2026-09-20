@@ -19,7 +19,7 @@ function read_user_setting($name, $default = null) {
     return $name === 'realtime_interval' ? $GLOBALS['step'] : $default;
 }
 function read_config_option($name) {
-    return $name === 'path_php_binary' ? '/php path/php' : '/isolated cache';
+    return $name === 'path_php_binary' ? '/php path/php' : getcwd() . '/cache';
 }
 function db_fetch_row_prepared(...$args) { return array(); }
 function db_fetch_cell_prepared(...$args) { return '1'; }
@@ -76,7 +76,7 @@ PHP;
             throw new RuntimeException($stderr . $stdout);
         }
         expect(json_decode($stdout, true, 512, JSON_THROW_ON_ERROR))->toBe(array(
-            'status' => $expected, 'called' => $expected !== 400, 'rendered' => $expected === 200));
+            'status' => $expected, 'called' => $expected !== 400 && $action !== 'view', 'rendered' => $expected === 200 && $action !== 'view'));
         if ($coverage !== null) {
             foreach (glob($dir . '/*.coverage') as $file) {
                 $coverage->merge(unserialize(file_get_contents($file)));
@@ -118,6 +118,11 @@ PHP;
     array('7', '0', 'abc123', 0, 400),
     array('7', '-1', 'abc123', 0, 400),
     array('7', '10', '../outside', 0, 400),
+    array('7', '10', '../outside', 0, 400, 'view'),
+    array('7', '10', array('abc'), 0, 400, 'view'),
+    array(null, '10', 'abc123', 0, 400, 'view'),
+    array(array(), '10', 'abc123', 0, 400, 'view'),
+    array('7', '10', 'abc123', 0, 200, 'view'),
     array('7', '10', 'abc; echo injected', 0, 400),
     array('7', '10', "abc\n", 0, 400),
     array('7', '10', array('abc'), 0, 400),
