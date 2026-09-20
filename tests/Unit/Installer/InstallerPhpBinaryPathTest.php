@@ -112,7 +112,11 @@ $probe->setAccessible(true);
 echo json_encode($probe->invoke($installer, $argv[2], 7, in_array($argv[3], array('timeout', 'flood'), true) ? 0.1 : 5));
 PHP;
     try {
-        $disabled = $scenario === 'no_proc' ? 'proc_open,shell_exec,exec,popen' : 'shell_exec,exec,popen';
+        $disabled = 'shell_exec,exec,popen';
+        $missingFunctions = array('no_proc' => 'proc_open', 'no_status' => 'proc_get_status', 'no_terminate' => 'proc_terminate', 'no_close' => 'proc_close');
+        if (isset($missingFunctions[$scenario])) {
+            $disabled .= ',' . $missingFunctions[$scenario];
+        }
         $start = microtime(true);
         $process = proc_open(array(PHP_BINARY, '-d', 'disable_functions=' . $disabled, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $prelude . $program, $root, $binary, $scenario), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
         $stdout = stream_get_contents($pipes[1]);
@@ -144,7 +148,7 @@ PHP;
         }
         rmdir($dir);
     }
-})->with(array('success', 'missing', 'nonzero', 'timeout', 'excess_output', 'flood', 'no_proc', 'untrusted', 'empty_allowlist', 'invalid_allowlist'));
+})->with(array('success', 'missing', 'nonzero', 'timeout', 'excess_output', 'flood', 'no_proc', 'no_status', 'no_terminate', 'no_close', 'untrusted', 'empty_allowlist', 'invalid_allowlist'));
 
 test('legacy CLI probe callers retain stdout behavior', function () {
     $process = proc_open(array(PHP_BINARY, dirname(__DIR__, 3) . '/install/cli_test.php', '7'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);

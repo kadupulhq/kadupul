@@ -808,8 +808,10 @@ class Installer implements JsonSerializable
     {
         global $installer_allowed_php_binaries;
 
-        if (!function_exists('proc_open')) {
-            return false;
+        foreach (array('proc_open', 'proc_get_status', 'proc_terminate', 'proc_close') as $function) {
+            if (!function_exists($function)) {
+                return false;
+            }
         }
         if (!is_string($path) || str_contains($path, "\0")) {
             return false;

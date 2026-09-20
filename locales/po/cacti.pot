@@ -14853,8 +14853,8 @@ msgstr ""
 msgid "File not found"
 msgstr ""
 
-#: lib/installer.php:848
-msgid "PHP did not return expected result"
+#: lib/installer.php:926
+msgid "PHP is not in the server-configured installer allowlist or did not return the expected result"
 msgstr ""
 
 #: lib/installer.php:862
