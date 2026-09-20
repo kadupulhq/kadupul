@@ -203,6 +203,14 @@
       {
         "before": "      /* Iterative (explicit stack) rather than per-child recursion. DOM APIs\n         impose no depth cap, so an attacker-shaped tree (JSON/CRDT/editor data\n         built straight into the DOM — the IN_PLACE surface) deeper than the JS\n         call-stack budget would otherwise overflow native recursion here and\n         throw at the IN_PLACE entry pre-pass, before a single node is\n         sanitized, leaving the caller's live tree untouched (fail-open). See\n         campaign-3 F4. A heap stack keeps depth off the call stack.\n              Each work item is either a node to descend into, or a deferred\n         `_sanitizeShadowDOM` for an already-walked shadow root. The deferred\n         form preserves the original post-order discipline: a shadow root's\n         nested shadow roots are discovered before the outer shadow is\n         sanitized (which may remove hosts). Pushes are in reverse of the\n         desired processing order (LIFO): template content, then children, then\n         the shadow-sanitize, then the shadow walk — so the order matches the\n         previous recursion exactly. */\n",
         "after": "      // Discover roots in light/template trees iteratively. Each discovered\n      // shadow root is owned by the iterative sanitizer, which also handles\n      // its nested roots; do not separately prewalk those roots a second time.\n"
+      },
+      {
+        "before": "        /* (pushed before children → processed after them, matching the old\n           \"template content last\" order) When the node is a <template>,\n           descend into its content. */\n        if (isElement) {\n          const rootName = getNodeName ? getNodeName(node) : null;\n          if (typeof rootName === 'string' && transformCaseFunc(rootName) === 'template') {\n            const content = node.content;\n            if (_isDocumentFragment(content)) {\n              stack.push({\n                node: content,\n                shadow: null\n              });\n            }\n          }\n        }\n",
+        "after": "        // Template content is a separate, inert tree. The main sanitizer\n        // enters it and owns its attached shadows; prewalking it duplicates hooks.\n"
+      },
+      {
+        "before": "      // Discover roots in light/template trees iteratively.",
+        "after": "      // Discover roots in light DOM iteratively; the main walk owns templates."
       }
     ]
   },
@@ -223,6 +231,10 @@
       {
         "before": "function quantileIndex(values, p, valueof = number$3) {\n  if (isNaN(p = +p)) return;",
         "after": "function quantileIndex(values, p, valueof = number$3) {\n  if (isNaN(p = +p)) return;\n  // Kadupul: consume single-use iterables once before indexed access.\n  values = array(values);"
+      },
+      {
+        "before": "      index = Uint32Array.from(values, (_, i) => i),\n      j = numbers.length - 1,",
+        "after": "      index = Uint32Array.from(values, (_, i) => i).filter(i => !isNaN(numbers[i])),\n      j = index.length - 1,"
       }
     ]
   },

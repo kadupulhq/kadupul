@@ -2375,7 +2375,7 @@
      * @param root the subtree root to walk for attached shadow roots
      */
     const _sanitizeAttachedShadowRoots = function _sanitizeAttachedShadowRoots(root, inPlace) {
-      // Discover roots in light/template trees iteratively. Each discovered
+      // Discover roots in light DOM iteratively; the main walk owns templates. Each discovered
       // shadow root is owned by the iterative sanitizer, which also handles
       // its nested roots; do not separately prewalk those roots a second time.
       const stack = [{
@@ -2404,21 +2404,8 @@
             });
           }
         }
-        /* (pushed before children → processed after them, matching the old
-           "template content last" order) When the node is a <template>,
-           descend into its content. */
-        if (isElement) {
-          const rootName = getNodeName ? getNodeName(node) : null;
-          if (typeof rootName === 'string' && transformCaseFunc(rootName) === 'template') {
-            const content = node.content;
-            if (_isDocumentFragment(content)) {
-              stack.push({
-                node: content,
-                shadow: null
-              });
-            }
-          }
-        }
+        // Template content is a separate, inert tree. The main sanitizer
+        // enters it and owns its attached shadows; prewalking it duplicates hooks.
         /* Shadow root (processed first): walk its subtree, then sanitise it.
            Realm-safe check (GHSA-hpcv-96wg-7vj8): nodeType-based detection
            rather than `instanceof DocumentFragment`, which is realm-bound and

@@ -86,6 +86,42 @@ for (const tree of ["shadow", "template"]) {
   }
 }
 
+test("DOMPurify sanitizes a shadow root inside a light-DOM template once", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const root = document.createElement("div");
+    const template = document.createElement("template");
+    root.append(template);
+    const host = document.createElement("div");
+    template.content.append(host);
+    const shadow = host.attachShadow({ mode: "open" });
+    shadow.innerHTML = '<img onerror="unsafe()">';
+    let calls = 0;
+    DOMPurify.addHook("beforeSanitizeShadowDOM", node => { if (node === shadow) calls++; });
+    DOMPurify.sanitize(root, { IN_PLACE: true });
+    DOMPurify.removeAllHooks();
+    return { calls, handler: shadow.firstChild.hasAttribute("onerror") };
+  });
+  expect(result).toEqual({ calls: 1, handler: false });
+});
+
+test("D3 quantileIndex ignores invalid members while retaining original indexes", async ({ page }) => {
+  await load(page, "d3.js");
+  const result = await page.evaluate(() => {
+    const values = [null, 1, NaN, 3, undefined];
+    function* iterable() { yield* values; }
+    return {
+      array: d3.quantileIndex(values, 0.5),
+      set: d3.quantileIndex(new Set(values), 0.5),
+      generator: d3.quantileIndex(iterable(), 0.5),
+      accessor: d3.quantileIndex(values.map(value => ({ value })), 0.5, row => row.value),
+      invalid: d3.quantileIndex([null, NaN, undefined], 0.5),
+      bounds: [d3.quantileIndex(values, 0), d3.quantileIndex(values, 1)],
+    };
+  });
+  expect(result).toEqual({ array: 1, set: 1, generator: 1, accessor: 1, invalid: -1, bounds: [1, 3] });
+});
+
 test("DOMPurify final template scrub includes a template root", async ({ page }) => {
   const source = fs.readFileSync(path.resolve(__dirname, "../../include/js/purify.js"), "utf8");
   const anchor = "    DOMPurify.setConfig = function () {";
