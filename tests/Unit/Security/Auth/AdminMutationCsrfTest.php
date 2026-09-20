@@ -3,6 +3,12 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+test('plugin lifecycle redirects preserve AJAX query parameters', function () {
+    $source = file_get_contents(dirname(__DIR__, 4) . '/plugins.php');
+    expect(substr_count($source, "header('Location: plugins.php' . (\$option != '' ? '?' . \$option:''));"))->toBe(8);
+    expect($source)->not->toContain("header('Location: plugins.php' . (\$option != '' ? '&'");
+});
+
 test('account administration rejects unprotected mutation requests', function ($controller, $route, $method, $token, $expected) {
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/admin-csrf-' . bin2hex(random_bytes(8));

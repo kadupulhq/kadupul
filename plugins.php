@@ -149,7 +149,7 @@ if (isset_request_var('mode') && in_array($requested_mode, $modes, true) && isse
 
 			api_plugin_movedown($id);
 
-			header('Location: plugins.php' . ($option != '' ? '&' . $option:''));
+			header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
 			exit;
 
 			break;
@@ -169,7 +169,7 @@ if (isset_request_var('mode') && in_array($requested_mode, $modes, true) && isse
 					array($id), false, $local_db_cnn_id);
 			}
 
-			header('Location: plugins.php' . ($option != '' ? '&' . $option:''));
+			header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
 			exit;
 
 			break;
@@ -189,7 +189,7 @@ if (isset_request_var('mode') && in_array($requested_mode, $modes, true) && isse
 					array($id), false, $local_db_cnn_id);
 			}
 
-			header('Location: plugins.php' . ($option != '' ? '&' . $option:''));
+			header('Location: plugins.php' . ($option != '' ? '?' . $option:''));
 			exit;
 
 			break;
