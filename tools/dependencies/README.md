@@ -37,6 +37,14 @@ in-place template scrubbing. These fixes have regression tests that failed befor
 the corresponding patches. License headers and the original upstream DOMPurify
 source map remain bundled; the locally patched bundle does not reference that
 map, whose line mappings describe unmodified upstream code.
+Removed-subtree cleanup also gives `FORBID_ATTR` precedence over `ALLOWED_ATTR`,
+including attributes added with `ADD_ATTR`. The active call's `inPlace` mode is
+passed explicitly through element, template and attached-shadow traversal so a
+reentrant hook's nested string sanitization cannot disable detached-node cleanup.
+Seven browser regressions failed before these patches and pass afterward; they
+cover forbidden-handler removal and both before/upon element hooks in all three
+tree types. These are targeted fixes, not a guarantee of arbitrary reentrant
+configuration isolation. Preserve every manifest patch on future refreshes.
 The theme CI job checks provenance and runs real-browser tests
 for sanitization, legacy widgets, sorting/paging and D3 rendering.
 

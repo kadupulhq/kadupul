@@ -1309,7 +1309,7 @@
       for (let i = attributes.length - 1; i >= 0; --i) {
         const attribute = attributes[i];
         const name = attribute && attribute.name;
-        if (typeof name !== 'string' || ALLOWED_ATTR[transformCaseFunc(name)]) {
+        if (typeof name !== 'string' || (ALLOWED_ATTR[transformCaseFunc(name)] && !FORBID_ATTR[transformCaseFunc(name)])) {
           continue;
         }
         _stripAttributeNode(element, attribute, name);
@@ -1864,11 +1864,11 @@
      * @param root the current walk root
      * @return true if the node is detached and now handled, false otherwise
      */
-    const _handleHookDetachedNode = function _handleHookDetachedNode(currentNode, root) {
+    const _handleHookDetachedNode = function _handleHookDetachedNode(currentNode, root, inPlace) {
       if (currentNode === root || getParentNode(currentNode) !== null) {
         return false;
       }
-      if (IN_PLACE) {
+      if (inPlace) {
         _neutralizeSubtree(currentNode);
       }
       return true;
@@ -1882,12 +1882,12 @@
      * @param currentNode to check for permission to exist
      * @return true if node was killed, false if left alive
      */
-    const _sanitizeElements = function _sanitizeElements(currentNode, root) {
+    const _sanitizeElements = function _sanitizeElements(currentNode, root, inPlace) {
       /* Execute a hook if present */
       _executeHooks(hooks.beforeSanitizeElements, currentNode, null);
       /* A hook may have detached the node - treat it as removed (see
          _handleHookDetachedNode for the full rationale). */
-      if (_handleHookDetachedNode(currentNode, root)) {
+      if (_handleHookDetachedNode(currentNode, root, inPlace)) {
         return true;
       }
       /* Check if element is clobbered or can clobber */
@@ -1910,7 +1910,7 @@
       });
       /* The uponSanitizeElement hook may have detached the node, exactly as
          above (see _handleHookDetachedNode for the full rationale). */
-      if (_handleHookDetachedNode(currentNode, root)) {
+      if (_handleHookDetachedNode(currentNode, root, inPlace)) {
         return true;
       }
       /* Remove mXSS vectors, processing instructions and risky comments */
@@ -2272,7 +2272,7 @@
      *
      * @param fragment to iterate over recursively
      */
-    const _sanitizeShadowDOM2 = function _sanitizeShadowDOM(fragment) {
+    const _sanitizeShadowDOM2 = function _sanitizeShadowDOM(fragment, inPlace) {
       let shadowNode = null;
       const shadowIterator = _createNodeIterator(fragment);
       /* Execute a hook if present */
@@ -2281,7 +2281,7 @@
         /* Execute a hook if present */
         _executeHooks(hooks.uponSanitizeShadowNode, shadowNode, null);
         /* Sanitize tags and elements */
-        _sanitizeElements(shadowNode, fragment);
+        _sanitizeElements(shadowNode, fragment, inPlace);
         /* Check attributes next */
         _sanitizeAttributes(shadowNode);
         /* Deep shadow DOM detected.
@@ -2289,7 +2289,7 @@
            DOCUMENT_FRAGMENT_NODE constant rather than instanceof, so we
            recurse into <template>.content from foreign realms too. */
         if (_isDocumentFragment(shadowNode.content)) {
-          _sanitizeShadowDOM2(shadowNode.content);
+          _sanitizeShadowDOM2(shadowNode.content, inPlace);
         }
         /* An element iterated here may itself host an attached
            shadow root. The default NodeIterator does not enter shadow
@@ -2304,8 +2304,8 @@
         if (_readNodeType(shadowNode) === NODE_TYPE.element) {
           const innerSr = getShadowRoot(shadowNode);
           if (_isDocumentFragment(innerSr)) {
-            _sanitizeAttachedShadowRoots(innerSr);
-            _sanitizeShadowDOM2(innerSr);
+            _sanitizeAttachedShadowRoots(innerSr, inPlace);
+            _sanitizeShadowDOM2(innerSr, inPlace);
           }
         }
       }
@@ -2331,7 +2331,7 @@
      *
      * @param root the subtree root to walk for attached shadow roots
      */
-    const _sanitizeAttachedShadowRoots = function _sanitizeAttachedShadowRoots(root) {
+    const _sanitizeAttachedShadowRoots = function _sanitizeAttachedShadowRoots(root, inPlace) {
       /* Iterative (explicit stack) rather than per-child recursion. DOM APIs
          impose no depth cap, so an attacker-shaped tree (JSON/CRDT/editor data
          built straight into the DOM — the IN_PLACE surface) deeper than the JS
@@ -2355,7 +2355,7 @@
         const item = stack.pop();
         /* Deferred shadow-DOM sanitisation: runs after its subtree was walked. */
         if (item.shadow) {
-          _sanitizeShadowDOM2(item.shadow);
+          _sanitizeShadowDOM2(item.shadow, inPlace);
           continue;
         }
         const node = item.node;
@@ -2514,7 +2514,7 @@
            inside a shadow root could abort this pre-pass before the walk runs,
            which would otherwise leave the entire live tree unsanitized. */
         try {
-          _sanitizeAttachedShadowRoots(dirty);
+          _sanitizeAttachedShadowRoots(dirty, inPlace);
         } catch (error) {
           _neutralizeRoot(dirty);
           throw error;
@@ -2545,7 +2545,7 @@
            (SO-003). In the BODY/HTML branches `body === importedNode`, so this
            is equivalent there; in the element branch `body` contains the
            appended element and its descendants. `body` covers all three. */
-        _sanitizeAttachedShadowRoots(body);
+        _sanitizeAttachedShadowRoots(body, false);
       } else {
         /* Exit directly if we have nothing to do */
         if (!RETURN_DOM && !SAFE_FOR_TEMPLATES && !WHOLE_DOCUMENT &&
@@ -2582,7 +2582,7 @@
         const nodeIterator = _createNodeIterator(walkRoot);
         while (currentNode = nodeIterator.nextNode()) {
           /* Sanitize tags and elements */
-          _sanitizeElements(currentNode, walkRoot);
+          _sanitizeElements(currentNode, walkRoot, inPlace);
           /* Check attributes next */
           _sanitizeAttributes(currentNode);
           /* Shadow DOM detected, sanitize it.
@@ -2590,7 +2590,7 @@
              instead of instanceof, so foreign-realm <template>.content is
              walked correctly. */
           if (_isDocumentFragment(currentNode.content)) {
-            _sanitizeShadowDOM2(currentNode.content);
+            _sanitizeShadowDOM2(currentNode.content, inPlace);
           }
         }
       } catch (error) {

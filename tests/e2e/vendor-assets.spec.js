@@ -16,6 +16,60 @@ async function load(page, ...files) {
   }
 }
 
+test("DOMPurify discarded subtrees respect explicit forbidden attributes", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const root = document.createElement("div");
+    root.innerHTML = '<section><img onerror="window.__discardedEvent = true" title="safe"></section>';
+    const removed = root.firstChild;
+    const img = removed.firstChild;
+    DOMPurify.sanitize(root, {
+      IN_PLACE: true,
+      KEEP_CONTENT: false,
+      FORBID_TAGS: ["section"],
+      ADD_ATTR: ["onerror"],
+      FORBID_ATTR: ["onerror"],
+    });
+    return { detached: removed.parentNode === null, handler: img.hasAttribute("onerror"), title: img.getAttribute("title") };
+  });
+  expect(result).toEqual({ detached: true, handler: false, title: "safe" });
+});
+
+for (const hook of ["beforeSanitizeElements", "uponSanitizeElement"]) {
+  for (const tree of ["light", "template", "shadow"]) {
+    test(`DOMPurify reentrant ${hook} preserves in-place cleanup in ${tree} trees`, async ({ page }) => {
+      await load(page, "purify.js");
+      const result = await page.evaluate(({ hook, tree }) => {
+        const root = document.createElement("div");
+        let container = root;
+        if (tree === "template") {
+          const template = document.createElement("template");
+          root.append(template);
+          container = template.content;
+        } else if (tree === "shadow") {
+          container = root.attachShadow({ mode: "open" });
+        }
+        const removed = document.createElement("section");
+        removed.innerHTML = '<img onerror="window.__detachedEvent = true">';
+        container.append(removed);
+        const img = removed.firstChild;
+        let calls = 0;
+        DOMPurify.addHook(hook, (node) => {
+          if (node === removed) {
+            calls++;
+            DOMPurify.sanitize("<b>nested safe input</b>");
+            node.remove();
+          }
+        });
+        DOMPurify.sanitize(root, { IN_PLACE: true });
+        DOMPurify.removeAllHooks();
+        return { calls, detached: removed.parentNode === null, handler: img.hasAttribute("onerror") };
+      }, { hook, tree });
+      expect(result).toEqual({ calls: 1, detached: true, handler: false });
+    });
+  }
+}
+
 test("jQuery UI legacy escapeSelector fallback does not recurse", async ({
   page,
 }) => {

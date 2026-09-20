@@ -7,6 +7,71 @@
     "sha256": "979b6c28df92881a36009de0bda1e866bee043ad69d36e54509e7210723d9af4",
     "replacements": [
       {
+        "before": "typeof name !== 'string' || ALLOWED_ATTR[transformCaseFunc(name)]",
+        "after": "typeof name !== 'string' || (ALLOWED_ATTR[transformCaseFunc(name)] && !FORBID_ATTR[transformCaseFunc(name)])"
+      },
+      {
+        "before": "function _handleHookDetachedNode(currentNode, root)",
+        "after": "function _handleHookDetachedNode(currentNode, root, inPlace)"
+      },
+      {
+        "before": "if (IN_PLACE) {\n        _neutralizeSubtree(currentNode);",
+        "after": "if (inPlace) {\n        _neutralizeSubtree(currentNode);"
+      },
+      {
+        "before": "function _sanitizeElements(currentNode, root)",
+        "after": "function _sanitizeElements(currentNode, root, inPlace)"
+      },
+      {
+        "before": "_handleHookDetachedNode(currentNode, root)",
+        "after": "_handleHookDetachedNode(currentNode, root, inPlace)",
+        "count": 2
+      },
+      {
+        "before": "function _sanitizeShadowDOM(fragment)",
+        "after": "function _sanitizeShadowDOM(fragment, inPlace)"
+      },
+      {
+        "before": "function _sanitizeAttachedShadowRoots(root)",
+        "after": "function _sanitizeAttachedShadowRoots(root, inPlace)"
+      },
+      {
+        "before": "_sanitizeElements(shadowNode, fragment);",
+        "after": "_sanitizeElements(shadowNode, fragment, inPlace);"
+      },
+      {
+        "before": "_sanitizeElements(currentNode, walkRoot);",
+        "after": "_sanitizeElements(currentNode, walkRoot, inPlace);"
+      },
+      {
+        "before": "_sanitizeShadowDOM2(shadowNode.content);",
+        "after": "_sanitizeShadowDOM2(shadowNode.content, inPlace);"
+      },
+      {
+        "before": "_sanitizeAttachedShadowRoots(innerSr);",
+        "after": "_sanitizeAttachedShadowRoots(innerSr, inPlace);"
+      },
+      {
+        "before": "_sanitizeShadowDOM2(innerSr);",
+        "after": "_sanitizeShadowDOM2(innerSr, inPlace);"
+      },
+      {
+        "before": "_sanitizeShadowDOM2(item.shadow);",
+        "after": "_sanitizeShadowDOM2(item.shadow, inPlace);"
+      },
+      {
+        "before": "_sanitizeAttachedShadowRoots(dirty);",
+        "after": "_sanitizeAttachedShadowRoots(dirty, inPlace);"
+      },
+      {
+        "before": "_sanitizeAttachedShadowRoots(body);",
+        "after": "_sanitizeAttachedShadowRoots(body, false);"
+      },
+      {
+        "before": "_sanitizeShadowDOM2(currentNode.content);",
+        "after": "_sanitizeShadowDOM2(currentNode.content, inPlace);"
+      },
+      {
         "before": "const cloneNode = lookupGetter(ElementPrototype, 'cloneNode');",
         "after": "const normalizeNode = lookupGetter(Node.prototype, 'normalize');\n    const cloneNode = lookupGetter(ElementPrototype, 'cloneNode');"
       },
