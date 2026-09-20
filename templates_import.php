@@ -222,7 +222,7 @@ function display_template_data(&$templates) {
 
 			form_alternate_row('line_' . $id);
 
-			form_selectable_cell($path, $id);
+			form_selectable_ecell($path, $id);
 			form_selectable_cell($status, $id);
 
 			form_end_row();
@@ -268,21 +268,7 @@ function display_template_data(&$templates) {
 				)
 			);
 
-			if ($detail['status'] == 'updated') {
-				$status = "<span class='updateObject'>" . __('Updated') . '</span>';
-			} elseif ($detail['status'] == 'new') {
-				$status = "<span class='newObject'>" . __('New') . '</span>';
-			} elseif ($detail['status'] == 'damaged') {
-				$status = "<span class='deviceDown'>" . __('Damaged') . '</span>';
-			} else {
-				$status = "<span class='deviceUp'>" . __('Unchanged') . '</span>';
-			}
-
-			form_alternate_row('line_import_' . $detail['status'] . '_' . $id);
-
-			form_selectable_cell($detail['type_name'], $id);
-			form_selectable_cell($detail['name'], $id);
-			form_selectable_cell($status, $id);
+			import_preview_identity_row($detail, $id, true);
 
 			if (isset($detail['deps'])) {
 				$dep_details = array();
@@ -307,7 +293,7 @@ function display_template_data(&$templates) {
 					$dep_details['unmet'] = __('Unmet: %d', $unmet_count);
 				}
 
-				form_selectable_cell(implode(', ', $dep_details), $id, '', 'white-space:pre-wrap');
+				form_selectable_ecell(implode(', ', $dep_details), $id, '', 'white-space:pre-wrap');
 			} else {
 				form_selectable_cell(__('None'), $id);
 			}
@@ -326,7 +312,7 @@ function display_template_data(&$templates) {
 						}
 					} elseif ($type == 'orphans') {
 						foreach($diffs as $item) {
-							$orphan_array[$item] = $item;
+							$orphan_array[$item] = html_escape($item);
 						}
 					}
 				}
@@ -339,7 +325,7 @@ function display_template_data(&$templates) {
 					$diff_details .= ($diff_details != '' ? '<br>':'') . __('Orphans', 'package') . '<br>' . implode('<br>', $orphan_array);
 				}
 
-				form_selectable_cell($diff_details, $id, '', 'white-space:pre-wrap');
+				form_selectable_cell(import_preview_html($diff_details), $id, '', 'white-space:pre-wrap');
 			} else {
 				form_selectable_cell(__('None'), $id);
 			}
