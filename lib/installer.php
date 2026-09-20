@@ -806,7 +806,33 @@ class Installer implements JsonSerializable
     /** Probe a configured PHP executable without invoking a command shell. */
     private function probePhpBinary($path, $input, $timeout = 5)
     {
+        global $installer_allowed_php_binaries;
+
         if (!function_exists('proc_open')) {
+            return false;
+        }
+        if (!is_string($path) || str_contains($path, "\0")) {
+            return false;
+        }
+        // Main: only server-configured executables may run, never an arbitrary
+        // request-selected program. Resolve aliases before comparing paths.
+        $allowed = $installer_allowed_php_binaries ?? array(PHP_BINDIR . DIRECTORY_SEPARATOR . (PHP_OS_FAMILY === 'Windows' ? 'php.exe' : 'php'));
+        if (!is_array($allowed)) {
+            return false;
+        }
+        $requested = realpath($path);
+        $executable = false;
+        foreach ($allowed as $candidate) {
+            if (!is_string($candidate) || str_contains($candidate, "\0")) {
+                continue;
+            }
+            $trusted = realpath($candidate);
+            if ($trusted !== false && $trusted === $requested && is_file($trusted) && is_executable($trusted)) {
+                $executable = $trusted;
+                break;
+            }
+        }
+        if ($executable === false) {
             return false;
         }
 
@@ -816,7 +842,7 @@ class Installer implements JsonSerializable
         try {
             $null = PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null';
             $process = @proc_open(
-                array($path, '-q', dirname(__DIR__) . '/install/cli_test.php', (string) $input),
+                array($executable, '-q', dirname(__DIR__) . '/install/cli_test.php', (string) $input),
                 array(0 => array('file', $null, 'r'), 1 => array('pipe', 'w'), 2 => array('file', $null, 'w')),
                 $pipes,
                 null,
@@ -918,7 +944,7 @@ class Installer implements JsonSerializable
                         $output = $this->probePhpBinary($path, $input);
 
                         if ($output === false || trim($output) !== (string) ($input * $input)) {
-                            $this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('PHP did not return expected result'));
+                            $this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('PHP is not in the server-configured installer allowlist or did not return the expected result'));
                             $should_set = false;
                         }
                     }

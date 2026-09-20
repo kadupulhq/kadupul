@@ -82,7 +82,7 @@ test('installer PHP probes fail closed without a shell', function ($scenario) {
             . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
     }
     $binary = PHP_BINARY;
-    if (in_array($scenario, array('nonzero', 'timeout', 'excess_output', 'flood'), true)) {
+    if (in_array($scenario, array('nonzero', 'timeout', 'excess_output', 'flood', 'untrusted'), true)) {
         if (PHP_OS_FAMILY === 'Windows') {
             rmdir($dir);
             $this->markTestSkipped('Executable shebang fixtures require Unix.');
@@ -93,6 +93,7 @@ test('installer PHP probes fail closed without a shell', function ($scenario) {
             'timeout' => 'usleep(1000000); echo 49;',
             'excess_output' => 'echo str_repeat("x", 1024);',
             'flood' => 'while (true) { echo str_repeat("x", 8192); }',
+            'untrusted' => 'file_put_contents(__DIR__ . "/EXECUTED", "bad"); echo 49;',
         )[$scenario];
         file_put_contents($binary, '#!' . PHP_BINARY . "\n<?php " . $code);
         chmod($binary, 0700);
@@ -101,6 +102,9 @@ test('installer PHP probes fail closed without a shell', function ($scenario) {
     }
     $program = <<<'PHP'
 require $argv[1] . '/lib/installer.php';
+$installer_allowed_php_binaries = $argv[3] === 'untrusted' ? array(PHP_BINARY) : array($argv[2]);
+if ($argv[3] === 'empty_allowlist') $installer_allowed_php_binaries = array();
+if ($argv[3] === 'invalid_allowlist') $installer_allowed_php_binaries = 'not-an-array';
 $class = new ReflectionClass('Installer');
 $installer = $class->newInstanceWithoutConstructor();
 $probe = $class->getMethod('probePhpBinary');
@@ -116,6 +120,7 @@ PHP;
         fclose($pipes[1]);
         fclose($pipes[2]);
         expect(proc_close($process))->toBe(0)->and($stderr)->toBe('');
+        expect(file_exists($dir . '/EXECUTED'))->toBeFalse();
         $result = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
         if ($scenario === 'success') {
             expect(trim($result))->toBe('49');
@@ -139,4 +144,4 @@ PHP;
         }
         rmdir($dir);
     }
-})->with(array('success', 'missing', 'nonzero', 'timeout', 'excess_output', 'flood', 'no_proc'));
+})->with(array('success', 'missing', 'nonzero', 'timeout', 'excess_output', 'flood', 'no_proc', 'untrusted', 'empty_allowlist', 'invalid_allowlist'));
