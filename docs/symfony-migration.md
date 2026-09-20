@@ -12,13 +12,48 @@ Node 22.22.2 for asset builds and Python 3.12.12 for the behavioral harness and
 release builder. CI checks the application on PHP 8.2, 8.3 and 8.4.
 
 Symfony 7.4 owns a new kernel, service container, attribute routes, console and
-Twig configuration. Its only HTTP endpoint is `GET /healthz` (also supporting
+Twig configuration. Its public liveness endpoint is `GET /healthz` (also supporting
 HEAD). This is a liveness check, not a database, collection or storage readiness
-check. Other paths return 404. Sessions are disabled in this foundation.
+check. `GET /session` is an authenticated identity query; other paths return 404.
+Symfony's own session handling remains disabled.
 
 Existing pages and scheduled commands still use the legacy bootstrap. Do not
 switch an existing installation's document root to `public/` yet: legacy route
-coexistence and authentication bridging are subsequent milestones.
+coexistence still requires the legacy document root.
+
+## Shared authentication bridge
+
+On an existing legacy deployment, `GET /app.php/session` (also HEAD) returns only
+the authenticated user's ID and username. The server must support PHP PATH_INFO.
+The entry point executes the legacy bootstrap in global scope before passing the
+request to Symfony. Existing login, remember-me, trusted Basic authentication,
+session rotation, password-change redirects and logout remain owned by legacy
+code. Both native file sessions and the configured database handler are reused.
+
+The bridge requires console realm 8, including grants from enabled groups. The
+IdentityAccess adapter rechecks the account and realm before producing an Actor
+DTO; missing, disabled, locked, guest and pending-password-change identities are
+rejected. Responses carry `Cache-Control: private, no-store`. The standalone
+`public/index.php` entry cannot authenticate this query, even with a session
+cookie: it returns 401. Anonymous requests through `app.php` use the existing
+HTML login flow, not a new JSON login API.
+
+This is a read-only bridge, not a replacement login system or a general route
+authorization mechanism. New protected controllers must use explicit application
+authorization; Inventory will additionally require its device realm and resource
+policies. Mutation routes and Symfony CSRF ownership are not introduced here.
+Use the existing request-per-process PHP deployment; persistent application
+workers require a separate audit of legacy globals and static permission caches.
+
+Run real HTTP/database verification with:
+
+```sh
+mise exec -- python tests/Symfony/session_bridge.py
+mise exec -- python tests/Symfony/session_bridge.py --database-sessions
+```
+
+The suite creates and removes a disposable Docker stack. It tests session sharing,
+logout, account eligibility, direct/group permissions and password-change flow.
 
 ## Source installation
 
@@ -142,13 +177,13 @@ the only difference was the same elapsed-time field (`0.0494` seconds). This
 comparison is not a claim of identical build provenance: the Docker dependency
 build inputs intentionally changed.
 
-The security inventories exclude generated Symfony cache (`var/`) and npm
-packages. The four new reviewed inventory entries are CLI-only build/verification
+The security inventories exclude generated Symfony cache (`var/`), Font Awesome
+(`include/fa/`) and npm packages. The four new reviewed inventory entries are CLI-only build/verification
 operations: a fixed bootstrap under the current release directory, a pinned HTTPS
 archive download, its temporary file, and checksum-verified writes to allowlisted
 legacy dependency paths. No HTTP request data controls these operations.
 
-Additional validation: Symfony kernel/console/Twig tests pass (4 tests, 22
+Additional validation: Symfony kernel/console/Twig/identity tests pass (5 tests, 29
 assertions), asset patch tests pass (19 tests), RSA compatibility passes, mailer
 compatibility passes (16 tests), HTML Purifier/runtime-floor checks pass (2 tests),
 and CSV paths pass (4 tests). Offline verification succeeded on PHP 8.2 with
@@ -159,3 +194,8 @@ unchanged `include/global.php`; its other three checks pass.
 The production Docker image builds successfully. An initial attempt exhausted
 the local Docker build filesystem; a subsequent complete build passed. The
 application harness image and disconnected archive verification also completed.
+
+The shared-authentication HTTP suite passes with both file and database sessions,
+including direct and enabled-group grants, revocation, disabled/locked/deleted
+accounts, mandatory password changes and legacy logout. These checks do not
+claim coverage of every external authentication provider or plugin.

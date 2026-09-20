@@ -17,7 +17,8 @@ not a claim that the procedural application has already been decomposed.
 | Alerting | Alert rules, evaluation, incidents and notification intent | Mail transport or device configuration |
 | Platform | Operational health and application integration infrastructure | Business rules shared merely for convenience |
 
-Only Platform's health controller exists in the new structure today. Other
+Platform owns the health controller. IdentityAccess owns the current-actor query,
+its public Actor DTO and the legacy authenticated-session adapter. Other
 features remain legacy code until migrated. New modules are introduced with a
 working use case, rather than empty entity/repository scaffolding.
 
@@ -55,7 +56,7 @@ dependencies or module boundaries.
 
 Symfony wires adapters to ports explicitly in configuration. Domain entities and
 contract DTOs are not automatically registered as services. The initial service
-configuration registers only Platform infrastructure.
+configuration registers infrastructure and explicitly selected application services.
 
 ## Between modules
 
@@ -87,6 +88,7 @@ external compatibility check for authentication, plugins, devices, collection
 and graphing. A feature is migrated when its legacy entry point can be removed
 without losing those contracts.
 
-The next vertical slice is Inventory device listing, followed by editing. Shared
-identity/session ownership and authorization must be established before exposing
-protected Symfony routes.
+The next vertical slice is Inventory device listing, followed by editing. The
+read-only shared-session bridge establishes identity while legacy code continues
+to own authentication. Inventory must add explicit device authorization before
+exposing its routes; console access alone does not grant device access.

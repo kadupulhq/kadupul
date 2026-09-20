@@ -186,9 +186,9 @@ fi
 exec /usr/bin/rrdtool.real "$@"
 SHIM
 
-RUN mkdir -p /var/www/html/log /var/www/html/rra /artifacts \
+RUN mkdir -p /var/www/html/log /var/www/html/rra /var/www/html/var /artifacts \
         /var/www/html/cache/boost \
         /var/www/html/cache/mibcache \
         /var/www/html/cache/realtime \
         /var/www/html/cache/spikekill \
- && chown -R www-data:www-data /var/www/html/log /var/www/html/rra /var/www/html/cache /artifacts
+ && chown -R www-data:www-data /var/www/html/log /var/www/html/rra /var/www/html/cache /var/www/html/var /artifacts

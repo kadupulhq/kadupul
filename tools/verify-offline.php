@@ -14,6 +14,10 @@ $response = $kernel->handle(Request::create('/healthz'));
 if ($response->getStatusCode() !== 200 || $response->getContent() !== '{"status":"ok"}') {
     throw new RuntimeException('Offline Symfony boot failed');
 }
+$response = $kernel->handle(Request::create('/session'));
+if ($response->getStatusCode() !== 401 || !is_file($root . '/app.php')) {
+    throw new RuntimeException('Offline identity bridge missing or not closed to unauthenticated requests');
+}
 $kernel->shutdown();
 foreach (['HTMLPurifier', 'phpseclib4\\Crypt\\RSA'] as $class) {
     if (!class_exists($class)) {

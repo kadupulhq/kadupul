@@ -13,6 +13,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Require token-protected POST for plugin lifecycle, remote status, and ordering changes; retain uninstall confirmation.
 - Require validated POST intent for interactive spike removal, including dry runs, and migrate its browser request to send a CSRF token.
+- Bridge legacy authenticated sessions into a read-only Symfony identity query, with account and console-realm checks.
 - Escape imported preview fields and restrict rich change-summary markup to safe formatting.
 - Require validated POST requests for bulk-action confirmation and execution across core administration controllers; retain read-only navigation.
 - Require token-protected POST requests for user/group policy, permission, and bulk mutations.

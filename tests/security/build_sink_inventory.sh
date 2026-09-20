@@ -11,6 +11,7 @@ fi
 
 EXCLUDE=(
 	--glob '!include/vendor/**'
+	--glob '!include/fa/**'
 	--glob '!node_modules/**'
 	--glob '!var/**'
 	--glob '!locales/**'

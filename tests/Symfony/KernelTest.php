@@ -70,4 +70,23 @@ final class KernelTest extends TestCase
             $kernel->shutdown();
         }
     }
+
+    public function testIdentityRequiresAuthenticatedLegacyEntry(): void
+    {
+        $kernel = new Kernel('test', false);
+        try {
+            $request = Request::create('/session', 'GET', [], ['Cacti' => 'untrusted-cookie']);
+            $request->headers->set('X-Remote-User', 'admin');
+            $response = $kernel->handle($request);
+            self::assertSame(401, $response->getStatusCode());
+            self::assertSame(['error' => 'authentication_required'], json_decode($response->getContent(), true));
+            self::assertTrue($response->headers->hasCacheControlDirective('no-store'));
+            self::assertSame([], $response->headers->getCookies());
+            self::assertSame(405, $kernel->handle(Request::create('/session', 'POST'))->getStatusCode());
+            self::assertSame('', $kernel->handle(Request::create('/session', 'HEAD'))->getContent());
+            self::assertFalse(defined('CACTI_VERSION'));
+        } finally {
+            $kernel->shutdown();
+        }
+    }
 }

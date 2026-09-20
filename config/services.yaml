@@ -5,3 +5,11 @@ services:
 
     Kadupul\Platform\Infrastructure\:
         resource: '../src/Platform/Infrastructure/'
+
+    Kadupul\IdentityAccess\Infrastructure\:
+        resource: '../src/IdentityAccess/Infrastructure/'
+
+    Kadupul\IdentityAccess\Application\Query\CurrentActor: ~
+
+    Kadupul\IdentityAccess\Application\Port\AuthenticatedSession:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession

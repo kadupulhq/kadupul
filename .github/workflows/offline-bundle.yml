@@ -33,6 +33,10 @@ jobs:
         run: mise exec python@3.12.12 -- python tools/build-offline.py
       - name: Build isolated verification runtime
         run: docker build -f tests/behavior/Dockerfile -t kadupul-offline-verifier .
+      - name: Verify shared authentication over HTTP
+        run: |
+          mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py
+          mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py --database-sessions
       - name: Verify archive without network access
         run: |
           mkdir -p /tmp/kadupul-offline-check

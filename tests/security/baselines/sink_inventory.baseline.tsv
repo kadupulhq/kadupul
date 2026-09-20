@@ -831,17 +831,6 @@ header_redirect	./include/auth.php:33		header ('Location: ' . $config['url_path'
 header_redirect	./include/auth.php:69				header ('Location: ' . $config['url_path'] . 'auth_changepassword.php?ref=' . rawurlencode(validate_redirect_url($_SERVER['HTTP_REFERER'] ?? '', 'index.php')));
 header_redirect	./include/content/index.php:7	header("Location:../index.php");
 header_redirect	./include/csrf.php:41		header('Location: ' . validate_redirect_url($_SERVER['REQUEST_URI']));
-header_redirect	./include/fa/css/index.php:7	header("Location:../index.php");
-header_redirect	./include/fa/index.php:7	header("Location:../index.php");
-header_redirect	./include/fa/js/index.php:7	header("Location:../index.php");
-header_redirect	./include/fa/less/index.php:7	header("Location:../index.php");
-header_redirect	./include/fa/metadata/index.php:7	header("Location:../index.php");
-header_redirect	./include/fa/scss/index.php:7	header("Location:../index.php");
-header_redirect	./include/fa/sprites/index.php:7	header("Location:../index.php");
-header_redirect	./include/fa/svgs/brands/index.php:7	header("Location:../index.php");
-header_redirect	./include/fa/svgs/regular/index.php:7	header("Location:../index.php");
-header_redirect	./include/fa/svgs/solid/index.php:7	header("Location:../index.php");
-header_redirect	./include/fa/webfonts/index.php:7	header("Location:../index.php");
 header_redirect	./include/global.php:408				header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 header_redirect	./include/index.php:7	header("Location:../index.php");
 header_redirect	./include/js/LC_MESSAGES/index.php:7	header("Location:../index.php");
