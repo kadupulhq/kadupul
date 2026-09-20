@@ -920,11 +920,16 @@ class Installer implements JsonSerializable
 
                     if ($should_set && $name == 'path_php_binary') {
                         $input = mt_rand(2, 64);
-                        $output = $this->probePhpBinary($path, $input);
+                        // Persist the checked target, not a request-supplied
+                        // symlink that could later point to another executable.
+                        $canonicalPath = realpath($path);
+                        $output = $this->probePhpBinary($canonicalPath, $input);
 
                         if ($output === false || trim($output) !== (string) ($input * $input)) {
                             $this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('PHP is not in the server-configured installer allowlist or did not return the expected result'));
                             $should_set = false;
+                        } else {
+                            $path = $canonicalPath;
                         }
                     }
 

@@ -55,8 +55,11 @@ PHP;
         fclose($pipes[2]);
         expect(proc_close($process))->toBe(0)
             ->and($error)->toBe('')
-            ->and(json_decode($output, true))->toBe(array('path_php_binary' => $binary))
+            ->and(json_decode($output, true))->toBe(array('path_php_binary' => realpath(PHP_BINARY)))
             ->and(file_exists($dir . '/INJECTED'))->toBeFalse();
+        unlink($binary);
+        symlink($dir . '/untrusted-replacement', $binary);
+        expect(is_file(json_decode($output, true)['path_php_binary']))->toBeTrue();
         if ($coverage !== null) {
             $reports = glob($dir . '/*.coverage');
             expect($reports)->toHaveCount(1);
