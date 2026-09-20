@@ -1,0 +1,8 @@
+{
+  "command": {
+    "exit": 0,
+    "stdout": "DS Added - DS[6]\n",
+    "stderr": ""
+  },
+  "database": "1\t309\t1\t0\t\t0\n2\t310\t1\t0\t\t0\n3\t311\t1\t0\t\t0\n4\t312\t1\t0\t\t0\n5\t313\t1\t0\t\t0\n6\t1\t2\t0\t\t0\n"
+}

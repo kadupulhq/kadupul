@@ -9,7 +9,6 @@
     "type": "project",
     "license": "GPL-3.0-or-later",
     "require": {
-        "php": ">=8.1",
         "ext-PDO": "*",
         "ext-Phar": "*",
         "ext-dom": "*",
@@ -30,16 +29,42 @@
         "ezyang/htmlpurifier": "^4.19",
         "paragonie/constant_time_encoding": "^3.1",
         "paragonie/random_compat": "^9.99",
-        "phpseclib/phpseclib": "^4.0"
+        "php": ">=8.2",
+        "phpseclib/phpseclib": "^4.0",
+        "symfony/console": "7.4.*",
+        "symfony/framework-bundle": "7.4.*",
+        "symfony/twig-bundle": "7.4.*",
+        "symfony/yaml": "7.4.*"
     },
-    "require-dev": {},
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    },
     "minimum-stability": "stable",
     "prefer-stable": true,
     "config": {
         "platform": {
-            "php": "8.1.0"
+            "php": "8.2.0"
         },
         "sort-packages": true,
         "vendor-dir": "./include/vendor"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kadupul\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kadupul\\Tests\\": "tests/Symfony/"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "@php tools/dependencies/install-legacy.php"
+        ],
+        "post-update-cmd": [
+            "@php tools/dependencies/install-legacy.php"
+        ],
+        "test": "@php include/vendor/bin/phpunit --configuration phpunit-symfony.xml"
     }
 }

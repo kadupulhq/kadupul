@@ -1,16 +1,18 @@
 # Third-party dependency maintenance
 
-Main declares PHP >=8.1 after the phpseclib 4 migration; its CI matrix remains PHP 8.1–8.4.
-Root Composer resolution is pinned to PHP 8.1.0 and test dependency resolution
-to PHP 8.1.0, so updating on a newer developer machine cannot silently raise
-either floor. Node is maintenance/test tooling, not an application requirement.
+Main requires PHP >=8.2. Composer resolves against PHP 8.2.0, and `mise.toml`
+pins the local development tools. LTS retains its existing distribution model.
 
-## Composer
+## Composer and npm installs
 
-Run updates through `mise` using the supported runtime. Commit both the lockfile
-and the tracked `include/vendor` changes: a current lockfile alone does not mean
-the bundled code is current. Do not overwrite the unmanaged libraries sharing
-that directory. Run `composer audit` for both the root and `tests` projects.
+Commit manifests, lockfiles and reviewed compatibility patch recipes, not generated
+`include/vendor`, `include/fa` or npm-built browser bundles. Run `composer install`,
+`npm ci --ignore-scripts` and `npm run build` through `mise`. The legacy source
+snapshot is installed by Composer's post-install/update script and preserves local
+security fixes until those features migrate. It is not covered by Composer audit.
+
+See [Symfony migration and offline bundles](../../docs/symfony-migration.md) for
+source installation, compatibility exceptions and disconnected deployment.
 
 ## Browser assets
 

@@ -1,0 +1,5 @@
+platform:
+    resource:
+        path: '../src/Platform/Infrastructure/Symfony/Controller/'
+        namespace: Kadupul\Platform\Infrastructure\Symfony\Controller
+    type: attribute

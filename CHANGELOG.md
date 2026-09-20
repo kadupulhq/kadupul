@@ -16,6 +16,8 @@ Targeting `v1.3.0`, the first planned application release. See
 - Escape imported preview fields and restrict rich change-summary markup to safe formatting.
 - Require validated POST requests for bulk-action confirmation and execution across core administration controllers; retain read-only navigation.
 - Require token-protected POST requests for user/group policy, permission, and bulk mutations.
+- Begin the Symfony 7.4 migration with a standalone kernel, console, routing and Twig foundation; require PHP 8.2 or later on main.
+- Install generated dependencies with Composer and npm instead of tracking vendor trees, and provide a dependency-complete offline bundle build.
 - Require validated POST requests for graph-template input mutations and allowlist graph-item columns across editing, XML import, duplication, rendering, and propagation before persistence or SQL construction.
 - Restrict main installer PHP probes to a server-configured executable allowlist; leave LTS behavior unchanged.
 - Require token-protected POST requests for installer JSON operations.

@@ -5,6 +5,13 @@
 # database image, so a refresh shows up there. A digest pin here would fix one
 # PHP version and break the version matrix.
 ARG PHP_VERSION=8.2
+FROM node:22.22.2-bookworm-slim@sha256:9f6d5975c7dca860947d3915877f85607946403fc55349f39b4bc3688448bb6e AS assets
+WORKDIR /app
+COPY package.json package-lock.json ./
+COPY tools/dependencies ./tools/dependencies
+COPY include/js/jquery.tablesorter.pager.js ./include/js/jquery.tablesorter.pager.js
+RUN npm ci --ignore-scripts --no-audit --no-fund && node tools/dependencies/build.mjs
+
 FROM php:${PHP_VERSION}-apache
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -80,7 +87,14 @@ RUN mkdir -p /var/cacti-state \
 # include/config.php (whatever the developer had) clobbered our
 # container-friendly config, killing every protected request.
 COPY --chown=www-data:www-data . /var/www/html
-RUN rm -f /var/www/html/include/config.php
+COPY --from=composer@sha256:d8f6343d3fae98107426bc49163ccad46ef85aabd4a27d80a74401fab4aba332 /usr/bin/composer /usr/local/bin/composer
+RUN php -d auto_prepend_file= /usr/local/bin/composer install --working-dir=/var/www/html --no-dev --no-interaction --no-progress --prefer-dist --no-scripts \
+ && php -d auto_prepend_file= /var/www/html/tools/dependencies/install-legacy.php
+COPY --from=assets /app/include/js /var/www/html/include/js
+COPY --from=assets /app/include/fa /var/www/html/include/fa
+COPY --from=assets /app/include/vendor/flag-icons /var/www/html/include/vendor/flag-icons
+RUN rm -f /var/www/html/include/config.php \
+ && chown -R www-data:www-data /var/www/html/include/vendor/csrf
 
 # Inline entrypoint. When ROLE=poller, generate a self-signed cert and switch Apache
 # to HTTPS on 443. Otherwise serve plain HTTP on 80.

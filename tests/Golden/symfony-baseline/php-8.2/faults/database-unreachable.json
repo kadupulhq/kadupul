@@ -1,0 +1,5 @@
+{
+  "exit": 0,
+  "stdout": "FATAL: Connection to Kadupul database failed. Please ensure: \n\n  - the PHP MySQL module is installed and enabled.\n  - the database is running.\n  - the credentials in config.php are valid.\n",
+  "stderr": ""
+}

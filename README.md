@@ -13,7 +13,7 @@ or migration path. It is not ready for production.
 
 ## First-release goals
 
-Main requires PHP 8.1 or later and uses phpseclib 4.x. The `lts/1.2` branch
+Main requires PHP 8.2 or later and uses phpseclib 4.x. The `lts/1.2` branch
 retains PHP 8.0 support and phpseclib 3.x.
 
 - Verify device polling, data collection, and graphing with automated tests.
@@ -22,6 +22,14 @@ retains PHP 8.0 support and phpseclib 3.x.
 - Provide documented installation and reversible migration procedures.
 
 These are goals, not completed features. See [project status](https://kadupul.org/project/status/).
+
+## Development and offline installation
+
+Main is beginning an incremental Symfony 7.4 migration. Source checkouts install
+PHP dependencies with Composer and browser dependencies with npm. Generated
+vendor directories are not tracked. Dependency-complete release archives support
+offline installation without Composer or Node on the target host.
+See [migration and installation instructions](docs/symfony-migration.md).
 
 ## Documentation
 

@@ -6,9 +6,9 @@
 test('main uses phpseclib 4 and preserves stored RSA keys', function (): void {
     $root = dirname(__DIR__, 2);
     $manifest = json_decode(file_get_contents($root . '/composer.json'), true, 512, JSON_THROW_ON_ERROR);
-    expect($manifest['require']['php'])->toBe('>=8.1')
+    expect($manifest['require']['php'])->toBe('>=8.2')
         ->and($manifest['require']['phpseclib/phpseclib'])->toBe('^4.0')
-        ->and($manifest['config']['platform']['php'])->toBe('8.1.0');
+        ->and($manifest['config']['platform']['php'])->toBe('8.2.0');
     $program = <<<'PHP'
 require $argv[1] . '/include/vendor/autoload.php';
 require $argv[1] . '/lib/auth.php';

@@ -1,0 +1,26 @@
+[
+  {
+    "subsystem": "CMDPHP",
+    "message": "PHP ERROR Backtrace:  (<HARNESS>/probe.php[<LINE>]:sanitize_search_string(), /lib/functions.php[<LINE>]:preg_replace(), {closure}(), <HARNESS>/errors.php[<LINE>]:CactiErrorHandler())"
+  },
+  {
+    "subsystem": "CMDPHP",
+    "message": "PHP ERROR WARNING Backtrace:  (<HARNESS>/probe.php[<LINE>]:trigger_error(), {closure}(), <HARNESS>/errors.php[<LINE>]:CactiErrorHandler())"
+  },
+  {
+    "subsystem": "CMDPHP",
+    "message": "PHP ERROR WARNING Backtrace:  (Command line code[1]:trigger_error(), CactiErrorHandler())"
+  },
+  {
+    "subsystem": "ERROR",
+    "message": "PHP DEPRECATED: preg_replace(): Passing null to parameter #3 ($subject) of type array|string is deprecated in file: <APP>/lib/functions.php  on line: <LINE>"
+  },
+  {
+    "subsystem": "ERROR",
+    "message": "PHP USER_WARNING: behavior application-handler calibration in file: Command line code  on line: 1"
+  },
+  {
+    "subsystem": "ERROR",
+    "message": "PHP USER_WARNING: behavior capture calibration in file: <HARNESS>/probe.php  on line: <LINE>"
+  }
+]

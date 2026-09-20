@@ -1,0 +1,65 @@
+{
+  "revision": "c035db65f8b6ccbcb32a92c962e640df9e32f28f",
+  "php": "8.2",
+  "base_image": {
+    "ref": "php@sha256:0970c7c14b21003bce8178af2985b491a65b71e800ff5366053de544306ed2a1",
+    "db_ref": "mariadb@sha256:07c0aaff7396b74cb7975cba78257178d188e30f531a5db2b617c48beef13c41",
+    "packages": "rrdtool=1.7.2-4.2+b5\nsnmp=5.9.4+dfsg-2+deb13u1\nsnmpd=5.9.4+dfsg-2+deb13u1",
+    "runtime": "PRETTY_NAME=\"Debian GNU/Linux 13 (trixie)\"\nNAME=\"Debian GNU/Linux\"\nPHP 8.2.33 (cli) (built: Aug 25 2026 00:40:46) (NTS)"
+  },
+  "application_images": {
+    "web": "sha256:b5e036d0a6f07a524a3baf587cb9ab188b0ec6635515c4aafc223174f5db7c7b",
+    "snmp": "sha256:e5e1d9094cde826358c204ba05811644e4aa147346db3ffead514eab9aa0d6be",
+    "db": "sha256:d7e3dae8dc3312252133a5574ac4660d10c14018cafae7c5f0b70e8ae1120018"
+  },
+  "schema_sha256": "1e97ae8c560bcba0e0d9606ae7957e0b23878d27291f532f01e6a160fb8790ec",
+  "provenance": {
+    "harness_revision": "c035db65f8b6ccbcb32a92c962e640df9e32f28f",
+    "harness_dirty": true,
+    "application_dirty": true,
+    "harness_sha256": "9586a2e277cfc3c9e7aa8026973e2bf68696c18abde70844ff12540b299084b9",
+    "harness_inputs_sha256": {
+      "tests/Support/Behavior/coverage.php": "e23fd8e8b958497c587db9ca28dbea6efdba14aa6c116cc8e90537f406d2c190",
+      "tests/Support/Behavior/coverage_selftest.py": "7c8537998e8013b0ebed8a9133f666eea60be4339ec37f95a62cdad1a20d8262",
+      "tests/Support/Behavior/errors.php": "884c7e1c794498717f97b5d3e5e92062526db29062c5a5fdab114ffda94a3f7e",
+      "tests/Support/Behavior/harness.py": "9586a2e277cfc3c9e7aa8026973e2bf68696c18abde70844ff12540b299084b9",
+      "tests/Support/Behavior/inventory.py": "1afc3c37ce3512502cf0748904b64b83ed812c1bdb0ca701246816132613a8c8",
+      "tests/Support/Behavior/merge_poller_coverage.php": "0083909100e11f37e7e14065ecc20ff9ce96a86a80819abd9bbceb8c1ecc1cab",
+      "tests/Support/Behavior/poller_coverage.py": "189d4de22147f40a2977ad5e3456c583a4dea90d9fa9615894dc1c1506155fab",
+      "tests/Support/Behavior/probe.php": "b58002db5b6e3d4f3efc02adac5935996d1d14cd5006046818fdb4471ed7223b",
+      "tests/Support/Behavior/release_readiness.py": "6f2b353e1380ef603f50c8d8ddb6a6f135cd3140d72609da26c9c09f68208eff",
+      "tests/Support/Behavior/release_selftest.py": "17d5fa3a6eb814fdd313ccdc83c88fe1ca3e33bec285cf4b1999dfb6e5028d5e",
+      "tests/Support/Behavior/selftest.py": "fff506223456272601a28f82902d88e614dc2977aa613aa258b1463e670f0579",
+      "tests/Support/Behavior/wait-php.php": "1d300ec4f8baab11ec3cc708e20106644e07e6c54b5d3ae4521a09801533bd3b",
+      "tests/Fixtures/plugins/compatibility_test/INFO": "ecba2c2fbf1fcb5d839789c23fa61c1c8f57a0377dac46ab754eaf72ac88c2c3",
+      "tests/Fixtures/plugins/compatibility_test/setup.php": "a48cadbb4a7fc3d61e30aecd2163b72d15ded864bb9abe653c9b063dbaa578e7",
+      "tests/Fixtures/snmp/snmpd.conf": "ebf84be55637f147cee6be598389319ca05504b0e72de663325d37f4740d087e",
+      "tests/Fixtures/snmp/value.sh": "ca019476b495d907b5fa03b70352cdb243c976a78718752f1c1a7ed2fde0ac9f",
+      "tests/behavior/compose.yml": "ecdbd3c9f4c469113f2b2f72cc0fd232b0c50200fdd7500d91f49599c713309e",
+      "tests/behavior/Dockerfile": "e3238f7955cb2399faa83ccfa1027abb9bdb999be863c2200e8bb11223ac7422",
+      ".dockerignore": "cc2dfe087ace25d3f4fb7a63ccc83aed5622efa1e2742500aa0b0d97f287a04f"
+    },
+    "application_inputs_sha256": {
+      "tests/Support/Behavior/coverage.php": "e23fd8e8b958497c587db9ca28dbea6efdba14aa6c116cc8e90537f406d2c190",
+      "tests/Support/Behavior/coverage_selftest.py": "7c8537998e8013b0ebed8a9133f666eea60be4339ec37f95a62cdad1a20d8262",
+      "tests/Support/Behavior/errors.php": "884c7e1c794498717f97b5d3e5e92062526db29062c5a5fdab114ffda94a3f7e",
+      "tests/Support/Behavior/harness.py": "9586a2e277cfc3c9e7aa8026973e2bf68696c18abde70844ff12540b299084b9",
+      "tests/Support/Behavior/inventory.py": "1afc3c37ce3512502cf0748904b64b83ed812c1bdb0ca701246816132613a8c8",
+      "tests/Support/Behavior/merge_poller_coverage.php": "0083909100e11f37e7e14065ecc20ff9ce96a86a80819abd9bbceb8c1ecc1cab",
+      "tests/Support/Behavior/poller_coverage.py": "189d4de22147f40a2977ad5e3456c583a4dea90d9fa9615894dc1c1506155fab",
+      "tests/Support/Behavior/probe.php": "b58002db5b6e3d4f3efc02adac5935996d1d14cd5006046818fdb4471ed7223b",
+      "tests/Support/Behavior/release_readiness.py": "6f2b353e1380ef603f50c8d8ddb6a6f135cd3140d72609da26c9c09f68208eff",
+      "tests/Support/Behavior/release_selftest.py": "17d5fa3a6eb814fdd313ccdc83c88fe1ca3e33bec285cf4b1999dfb6e5028d5e",
+      "tests/Support/Behavior/selftest.py": "fff506223456272601a28f82902d88e614dc2977aa613aa258b1463e670f0579",
+      "tests/Support/Behavior/wait-php.php": "1d300ec4f8baab11ec3cc708e20106644e07e6c54b5d3ae4521a09801533bd3b",
+      "tests/Fixtures/plugins/compatibility_test/INFO": "ecba2c2fbf1fcb5d839789c23fa61c1c8f57a0377dac46ab754eaf72ac88c2c3",
+      "tests/Fixtures/plugins/compatibility_test/setup.php": "a48cadbb4a7fc3d61e30aecd2163b72d15ded864bb9abe653c9b063dbaa578e7",
+      "tests/Fixtures/snmp/snmpd.conf": "ebf84be55637f147cee6be598389319ca05504b0e72de663325d37f4740d087e",
+      "tests/Fixtures/snmp/value.sh": "ca019476b495d907b5fa03b70352cdb243c976a78718752f1c1a7ed2fde0ac9f",
+      "tests/behavior/compose.yml": "ecdbd3c9f4c469113f2b2f72cc0fd232b0c50200fdd7500d91f49599c713309e",
+      "tests/behavior/Dockerfile": "e3238f7955cb2399faa83ccfa1027abb9bdb999be863c2200e8bb11223ac7422",
+      ".dockerignore": "cc2dfe087ace25d3f4fb7a63ccc83aed5622efa1e2742500aa0b0d97f287a04f"
+    }
+  },
+  "note": "Pre-change repeated capture. Golden scenario payloads are from the first capture; the only repeat difference is the documented poller/device-unreachable Total elapsed time."
+}

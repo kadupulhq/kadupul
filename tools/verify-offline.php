@@ -1,0 +1,39 @@
+<?php
+
+/*
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+// Run from an extracted release, ideally in a container with --network none.
+use Symfony\Component\HttpFoundation\Request;
+
+$root = getcwd();
+$kernel = require $root . '/config/bootstrap.php';
+$response = $kernel->handle(Request::create('/healthz'));
+if ($response->getStatusCode() !== 200 || $response->getContent() !== '{"status":"ok"}') {
+    throw new RuntimeException('Offline Symfony boot failed');
+}
+$kernel->shutdown();
+foreach (['HTMLPurifier', 'phpseclib4\\Crypt\\RSA'] as $class) {
+    if (!class_exists($class)) {
+        throw new RuntimeException('Missing production dependency: ' . $class);
+    }
+}
+$manifest = json_decode(file_get_contents($root . '/tools/dependencies/legacy-files.json'), true, 512, JSON_THROW_ON_ERROR);
+foreach ($manifest['files'] as $file => $digest) {
+    if (!is_file($root . '/' . $file) || hash_file('sha256', $root . '/' . $file) !== $digest) {
+        throw new RuntimeException('Offline compatibility dependency mismatch: ' . $file);
+    }
+}
+foreach (['include/js/purify.js', 'include/js/jquery-ui.js', 'include/js/d3.js', 'include/fa/css/all.css', 'include/vendor/flag-icons/flags/4x3/us.svg'] as $file) {
+    if (!is_file($root . '/' . $file) || filesize($root . '/' . $file) === 0) {
+        throw new RuntimeException('Missing offline asset: ' . $file);
+    }
+}
+foreach (['node_modules', 'include/vendor/phpunit', 'include/config.php', 'include/vendor/csrf/csrf-secret.php'] as $path) {
+    if (file_exists($root . '/' . $path)) {
+        throw new RuntimeException('Development dependency or installation state in bundle: ' . $path);
+    }
+}
+echo "Offline framework, PHP dependencies, compatibility files and browser assets verified.\n";

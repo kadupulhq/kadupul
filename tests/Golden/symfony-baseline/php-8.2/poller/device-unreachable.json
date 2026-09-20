@@ -1,0 +1,51 @@
+{
+  "command": {
+    "exit": 0,
+    "stdout": "Total[0.0211] WARNING: Poller Output Table not Empty.  Issues: 5, DS[1, 2, 3, 4, 5]\n<TIMESTAMP> - SYSTEM STATS: Time:<T> Method:cmd.php Processes:1 Threads:1 Hosts:1 HostsPerProcess:1 DataSources:5 RRDsProcessed:5\n",
+    "stderr": "",
+    "rrd_acknowledgements": 5
+  },
+  "database": {
+    "poller_item": [
+      {
+        "host_id": 1,
+        "action": 1,
+        "rrd_name": "proc",
+        "rrd_path": "<APP>/rra/local_linux_machine_proc_1.rrd"
+      },
+      {
+        "host_id": 1,
+        "action": 1,
+        "rrd_name": "",
+        "rrd_path": "<APP>/rra/local_linux_machine_load_1min_2.rrd"
+      },
+      {
+        "host_id": 1,
+        "action": 1,
+        "rrd_name": "users",
+        "rrd_path": "<APP>/rra/local_linux_machine_users_3.rrd"
+      },
+      {
+        "host_id": 1,
+        "action": 1,
+        "rrd_name": "mem_buffers",
+        "rrd_path": "<APP>/rra/local_linux_machine_mem_buffers_4.rrd"
+      },
+      {
+        "host_id": 1,
+        "action": 1,
+        "rrd_name": "mem_swap",
+        "rrd_path": "<APP>/rra/local_linux_machine_mem_swap_5.rrd"
+      }
+    ],
+    "poller_output_rows": "0",
+    "host_status": [
+      {
+        "description": "Local Linux Machine",
+        "status": 3,
+        "status_event_count": 1,
+        "availability_method": 1
+      }
+    ]
+  }
+}
