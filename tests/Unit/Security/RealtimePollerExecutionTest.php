@@ -124,3 +124,87 @@ PHP;
     array('7', '10', '', 0, 400),
     array('7', '10', str_repeat('a', 65), 0, 400),
 ));
+
+test('standalone realtime poller exits nonzero for unavailable cache directories', function ($mode, $expected) {
+    $root = dirname(__DIR__, 3);
+    $dir = sys_get_temp_dir() . '/realtime-cache-' . bin2hex(random_bytes(8));
+    mkdir($dir . '/include', 0700, true);
+    mkdir($dir . '/lib', 0700);
+    mkdir($dir . '/cache', 0700);
+    $dir = realpath($dir);
+    copy($root . '/poller_realtime.php', $dir . '/poller_realtime.php');
+    foreach (array('poller', 'data_query', 'rrd') as $library) {
+        file_put_contents($dir . '/lib/' . $library . '.php', '<?php');
+    }
+    $bootstrap = <<<'PHP'
+<?php
+$config = array('base_path' => dirname(__DIR__));
+function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
+function read_config_option($key) {
+    if ($key === 'realtime_cache_path') return dirname(__DIR__) . '/' . getenv('REALTIME_CACHE_FIXTURE');
+    if ($key === 'path_php_binary') return PHP_BINARY;
+    return 1;
+}
+function cacti_escapeshellcmd($value) { return escapeshellcmd($value); }
+function cacti_escapeshellarg($value) { return escapeshellarg($value); }
+function cacti_log($message) { echo $message; }
+function rrd_init(...$args) { throw new RuntimeException('Invalid cache reached RRD initialization'); }
+PHP;
+    $coverage = $this->getTestResultObject()->getCodeCoverage();
+    if ($coverage !== null) {
+        $bootstrap .= "\n" . 'define("RRD_TEST_CLI_COVERAGE_COPY", ' . var_export($dir . '/poller_realtime.php', true) . ');'
+            . 'define("RRD_TEST_CLI_COVERAGE_SOURCE", ' . var_export($root . '/poller_realtime.php', true) . ');'
+            . 'define("RRD_TEST_COVERAGE_DIRECTORY", ' . var_export($dir, true) . ');'
+            . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    file_put_contents($dir . '/include/cli_check.php', $bootstrap);
+    try {
+        if ($mode === 'cache') {
+            chmod($dir . '/cache', 0500);
+            clearstatcache(true, $dir . '/cache');
+            if (is_writable($dir . '/cache')) {
+                $this->markTestSkipped('This execution user can write a read-only directory');
+            }
+        }
+        $environment = getenv();
+        $environment['REALTIME_CACHE_FIXTURE'] = $mode;
+        $process = proc_open(
+            array(PHP_BINARY, '-d', 'pcov.directory=' . dirname($dir),
+                '-d', 'pcov.exclude=~/(include/vendor|tests)/~', $dir . '/poller_realtime.php',
+                '--graph=7', '--interval=10', '--poller_id=abc123'),
+            array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
+            $pipes,
+            $dir,
+            $environment
+        );
+        if (!is_resource($process)) {
+            throw new RuntimeException('Unable to start standalone realtime poller');
+        }
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        expect(proc_close($process))->toBe($expected);
+        expect($stderr)->toBe('');
+        expect($stdout)->toContain($mode === 'cache' ? 'is Not Writable!' : 'Does Not Exist!');
+        if ($coverage !== null) {
+            foreach (glob($dir . '/*.coverage') as $file) {
+                $coverage->merge(unserialize(file_get_contents($file)));
+            }
+        }
+    } finally {
+        chmod($dir . '/cache', 0700);
+        rmdir($dir . '/cache');
+        unlink($dir . '/poller_realtime.php');
+        unlink($dir . '/include/cli_check.php');
+        foreach (array('poller', 'data_query', 'rrd') as $library) {
+            unlink($dir . '/lib/' . $library . '.php');
+        }
+        foreach (glob($dir . '/*.coverage') as $file) {
+            unlink($file);
+        }
+        rmdir($dir . '/include');
+        rmdir($dir . '/lib');
+        rmdir($dir);
+    }
+})->with(array(array('missing', 1), array('cache', 2)));

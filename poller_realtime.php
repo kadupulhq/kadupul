@@ -119,10 +119,10 @@ $extra_args     = '-q ' . cacti_escapeshellarg($config['base_path'] . '/cmd_real
 $cache_dir = read_config_option('realtime_cache_path');
 if (!is_dir($cache_dir)) {
 	cacti_log("FATAL: Realtime Cache Directory '$cache_dir' Does Not Exist!");
-	return -1;
+	exit(1);
 } elseif (!is_writable($cache_dir)) {
 	cacti_log("FATAL: Realtime Cache Directory '$cache_dir' is Not Writable!");
-	return -2;
+	exit(2);
 }
 
 shell_exec("$command_string $extra_args");

@@ -1,42 +1,43 @@
 <?php
+
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
 /*
  * Tests for command injection hardening in graph_realtime.php.
  *
- * grv('local_graph_id') was interpolated into shell_exec via sprintf without
- * escaping. The fix casts to (int), uses cacti_escapeshellcmd for the PHP
- * binary, and cacti_escapeshellarg for the script path.
+ * Source contracts complement the executable RealtimePollerExecutionTest.
+ * The poller invocation now uses argv instead of shell escaping.
  */
 
 $graphRealtimePath = __DIR__ . '/../../graph_realtime.php';
 
-// --- graph_realtime.php: shell escaping for poller invocation ---
+// --- graph_realtime.php: shell-free poller invocation ---
 
-test('graph_realtime.php uses cacti_escapeshellcmd for PHP binary', function () use ($graphRealtimePath) {
-	$contents = file_get_contents($graphRealtimePath);
+test('graph_realtime.php passes the PHP binary directly to argv execution', function () use ($graphRealtimePath) {
+    $contents = file_get_contents($graphRealtimePath);
 
-	expect($contents)->toContain("cacti_escapeshellcmd(read_config_option('path_php_binary')");
+    expect($contents)->toContain("cacti_exec(read_config_option('path_php_binary'), array(");
 });
 
-test('graph_realtime.php uses cacti_escapeshellarg for poller_realtime script path', function () use ($graphRealtimePath) {
-	$contents = file_get_contents($graphRealtimePath);
+test('graph_realtime.php passes the poller script as an argument', function () use ($graphRealtimePath) {
+    $contents = file_get_contents($graphRealtimePath);
 
-	expect($contents)->toContain("\$config['base_path'] . '/poller_realtime.php'");
-	expect($contents)->toContain('poller_realtime.php');
+    expect($contents)->toContain("\$config['base_path'] . '/poller_realtime.php'");
+    expect($contents)->toContain('poller_realtime.php');
 });
 
-test('graph_realtime.php casts local_graph_id to int before shell_exec', function () use ($graphRealtimePath) {
-	$contents = file_get_contents($graphRealtimePath);
+test('graph_realtime.php requires a positive integer graph identifier', function () use ($graphRealtimePath) {
+    $contents = file_get_contents($graphRealtimePath);
 
-	expect($contents)->toMatch('/\(int\)\s+gfrv\s*\(\s*[\'"]local_graph_id[\'"]\s*\)/');
+    expect($contents)->toContain('!is_int($local_graph_id) || $local_graph_id < 1');
 });
 
-test('graph_realtime.php does not pass raw grv local_graph_id to sprintf for shell', function () use ($graphRealtimePath) {
-	$contents = file_get_contents($graphRealtimePath);
+test('graph_realtime.php has no shell execution sink', function () use ($graphRealtimePath) {
+    $contents = file_get_contents($graphRealtimePath);
 
-	expect($contents)->not->toMatch('/sprintf\s*\([^)]*grv\s*\(\s*[\'"]local_graph_id[\'"]\s*\)/');
+    expect($contents)->not->toContain('shell_exec(');
 });
