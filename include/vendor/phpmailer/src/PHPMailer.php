@@ -1352,8 +1352,7 @@ class PHPMailer
      */
     protected static function parseSimplerAddresses($addrstr, $charset)
     {
-        // Emit a runtime notice to recommend using the IMAP extension for full RFC822 parsing
-        trigger_error(self::lang('imap_recommended'), E_USER_NOTICE);
+        // Kadupul: the supported non-IMAP parser must not emit advisory notices during normal use.
 
         $addresses = [];
         $list = explode(',', $addrstr);
@@ -3833,7 +3832,11 @@ class PHPMailer
             } else {
                 // PHP 8.3+ already interprets underscores as spaces. Remove additional
                 // linear whitespace between adjacent encoded words to avoid double spacing.
-                $value = preg_replace('/(\?=)\s+(=\?)/', '$1$2', $value);
+                // Kadupul: preserve string input if optional whitespace normalization fails.
+                $normalized = preg_replace('/(\?=)\s+(=\?)/', '$1$2', $value);
+                if ($normalized !== null) {
+                    $value = $normalized;
+                }
             }
             // Decode the header value
             $value = mb_decode_mimeheader($value);

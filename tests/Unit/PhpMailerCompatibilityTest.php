@@ -150,3 +150,37 @@ test('SMTP DATA generator retains the first line and normalizes message data wit
     array('', "\r\n"),
     array('Body without headers', "Body without headers\r\n")
 ));
+
+test('supported non-IMAP address parsing does not emit advisory notices', function (): void {
+    require_once dirname(__DIR__, 2) . '/include/vendor/phpmailer/vendor/autoload.php';
+    $addresses = PHPMailer\PHPMailer\PHPMailer::parseAddresses('Alice <alice@example.invalid>, Bob <bob@example.invalid>', false, 'UTF-8');
+    expect(array_column($addresses, 'address'))->toBe(array('alice@example.invalid', 'bob@example.invalid'))
+        ->and(array_column($addresses, 'name'))->toBe(array('Alice', 'Bob'));
+});
+
+test('header decoding preserves string input when whitespace normalization reports a PCRE error', function (): void {
+    $root = dirname(__DIR__, 2);
+    $program = <<<'PHP'
+namespace PHPMailer\PHPMailer;
+// Inject a PCRE failure only in the optional PHP 8.3+ whitespace-normalization pass.
+function preg_replace($pattern, $replacement, $subject) {
+    if ($pattern === '/(\?=)\s+(=\?)/') { $GLOBALS['faultInjected'] = true; return null; }
+    return \preg_replace($pattern, $replacement, $subject);
+}
+error_reporting(E_ALL);
+set_error_handler(function ($severity, $message) { throw new \RuntimeException($message); });
+require $argv[1] . '/include/vendor/phpmailer/vendor/autoload.php';
+$value = PHPMailer::decodeHeader('=?UTF-8?B?VGVzdA==?= =?UTF-8?B?VGVzdA==?=', 'UTF-8');
+echo json_encode(array('value' => $value, 'faultInjected' => $GLOBALS['faultInjected'] ?? false), JSON_THROW_ON_ERROR);
+PHP;
+    $process = proc_open(array(PHP_BINARY, '-r', $program, $root), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    expect(is_resource($process))->toBeTrue();
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    expect(proc_close($process))->toBe(0)->and($stderr)->toBe('');
+    $result = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
+    expect($result['value'])->toContain('Test')
+        ->and($result['faultInjected'])->toBe(PHP_VERSION_ID >= 80300);
+});

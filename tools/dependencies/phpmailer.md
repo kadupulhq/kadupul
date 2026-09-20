@@ -11,7 +11,7 @@ change the PHP 8.1–8.4 test matrix.
 
 The old `src` files exactly matched upstream 6.10.0. The new `src`, language
 files and top-level release documents were copied from the verified archive;
-the only local runtime patch is the XOAUTH2 continuation fix described below. Kadupul's `index.php` directory
+the local runtime patches are described below. Kadupul's `index.php` directory
 guards and pre-existing Amharic/Chamorro translations are retained. Existing
 `include/vendor/phpmailer/src` and `language` paths remain unchanged.
 
@@ -44,7 +44,7 @@ English → unavailable-locale fallback in one process. Separate MIME-only tests
 cover uppercase Base64, invalid encoding, and injected header-line removal.
 The native child contributes actual executed-line coverage to Sonar.
 
-## Local upstream compatibility patch
+## Local upstream compatibility patches
 
 In `src/SMTP.php`, the long-token XOAUTH2 continuation branch in upstream 7.1.1
 returns false when its final `AUTH End` command succeeds, and true when that
@@ -53,6 +53,15 @@ no-network protocol cases cover direct success, continuation success/rejection,
 initial/token rejection, short tokens and empty tokens. Both continuation cases
 failed before the patch and pass afterward. Preserve this patch until an upstream
 release incorporates the correction; do not overwrite it during a vendor refresh.
+
+The supported non-IMAP address parser no longer emits an unconditional advisory
+notice during normal use. Genuine validation errors and deprecation diagnostics
+remain unchanged. A real address-parsing regression test checks this behavior.
+
+Header decoding retains its original string if optional adjacent-word whitespace
+normalization returns a PCRE error. A native-child fault-injection test exercises
+this defensive guard on PHP 8.3+; this is not a naturally reproduced PCRE failure.
+The PHP 8.1 decoding path remains unchanged. Preserve these patches during refreshes.
 
 Three additional no-network tests run the real SMTP DATA generator, covering
 the first header, mixed line endings, dot-stuffing, empty bodies and headerless
