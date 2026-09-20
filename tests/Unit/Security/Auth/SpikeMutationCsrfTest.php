@@ -56,6 +56,9 @@ PHP;
     }
     try {
         $process = proc_open(array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $program, $root, $method, $token, json_encode($spikeMethod), json_encode($dryrun)), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $dir);
+        if (!is_resource($process)) {
+            throw new RuntimeException('Unable to start the isolated spike-removal request process.');
+        }
         $stdout = stream_get_contents($pipes[1]);
         $stderr = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
