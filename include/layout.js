@@ -3723,7 +3723,12 @@ function removeSpikes(method, dryrun, local_graph_id) {
 		'&outlier-start='  + graph_start +
 		'&outlier-end='    + graph_end;
 
-	$.getJSON(href)
+	$.ajax({
+		url: href,
+		type: 'POST',
+		dataType: 'json',
+		data: { __csrf_magic: csrfMagicToken }
+	})
 		.done(function(data) {
 			checkForRedirects(data, href);
 
@@ -4815,4 +4820,3 @@ function checkSNMPPassphraseConfirm(type) {
 		}
 	}
 }
-
