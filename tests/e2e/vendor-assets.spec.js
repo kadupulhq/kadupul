@@ -35,6 +35,41 @@ test("graph input delete handler sends the CSRF token by POST", async ({ page })
   });
 });
 
+test("spike removal and dry-run requests carry POST tokens", async ({ page }) => {
+  const source = fs.readFileSync(path.resolve(__dirname, "../../include/layout.js"), "utf8");
+  const start = source.indexOf("function removeSpikes(");
+  const end = source.indexOf("/** buildGraphImage", start);
+  expect(start).toBeGreaterThan(-1);
+  expect(end).toBeGreaterThan(start);
+  await page.setContent('<img id="graph_2" graph_start="100" graph_end="200">');
+  await load(page, "jquery.js");
+  await page.evaluate(() => {
+    window.urlPath = "/";
+    window.csrfMagicToken = "body-token";
+    window.closeDateFilters = () => {};
+    window.spikeRequests = [];
+    $.ajax = options => {
+      window.spikeRequests.push(options);
+      return { done() { return this; }, fail() { return this; } };
+    };
+  });
+  await page.addScriptTag({ content: source.slice(start, end) });
+  await page.evaluate(() => {
+    removeSpikes("stddev", false, 2);
+    removeSpikes("fill", true, 2);
+  });
+  const requests = await page.evaluate(() => window.spikeRequests);
+  expect(requests).toHaveLength(2);
+  for (const request of requests) {
+    expect(request.type).toBe("POST");
+    expect(request.dataType).toBe("json");
+    expect(request.data).toEqual({ __csrf_magic: "body-token" });
+    expect(request.url).toContain("local_graph_id=2&outlier-start=100&outlier-end=200");
+  }
+  expect(requests[0].url).not.toContain("dryrun");
+  expect(requests[1].url).toContain("dryrun=true");
+});
+
 test("DOMPurify abort clears shadow and template trees and unsafe URI attributes", async ({ page }) => {
   await load(page, "purify.js");
   const result = await page.evaluate(() => {

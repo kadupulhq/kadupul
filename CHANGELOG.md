@@ -11,6 +11,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Require validated POST intent for interactive spike removal, including dry runs, and migrate its browser request to send a CSRF token.
 - Escape imported preview fields and restrict rich change-summary markup to safe formatting.
 - Require token-protected POST requests for user/group policy, permission, and bulk mutations.
 - Require validated POST requests for graph-template input mutations and allowlist graph-item columns across editing, XML import, duplication, rendering, and propagation before persistence or SQL construction.
