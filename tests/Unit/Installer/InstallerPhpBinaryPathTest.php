@@ -43,7 +43,7 @@ PHP;
 
     try {
         $process = proc_open(
-            array(PHP_BINARY, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $prelude . $program, $root, $binary),
+            array(PHP_BINARY, '-d', 'disable_functions=shell_exec,exec,popen', '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $prelude . $program, $root, $binary),
             array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')),
             $pipes,
             $dir
@@ -69,3 +69,73 @@ PHP;
         rmdir($dir);
     }
 });
+
+test('installer PHP probes fail closed without a shell', function ($scenario) {
+    $root = dirname(__DIR__, 3);
+    $dir = sys_get_temp_dir() . '/installer-probe-' . bin2hex(random_bytes(8));
+    mkdir($dir, 0700);
+    $coverage = $this->getTestResultObject()->getCodeCoverage();
+    $prelude = '';
+    if ($coverage !== null) {
+        $prelude = 'define("RRD_TEST_INSTALLER_COVERAGE",true);'
+            . 'define("RRD_TEST_COVERAGE_DIRECTORY",' . var_export($dir, true) . ');'
+            . 'require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
+    }
+    $binary = PHP_BINARY;
+    if (in_array($scenario, array('nonzero', 'timeout', 'excess_output'), true)) {
+        if (PHP_OS_FAMILY === 'Windows') {
+            rmdir($dir);
+            $this->markTestSkipped('Executable shebang fixtures require Unix.');
+        }
+        $binary = $dir . '/probe';
+        $code = array(
+            'nonzero' => 'echo 49; exit(7);',
+            'timeout' => 'usleep(1000000); echo 49;',
+            'excess_output' => 'echo str_repeat("x", 1024);',
+        )[$scenario];
+        file_put_contents($binary, '#!' . PHP_BINARY . "\n<?php " . $code);
+        chmod($binary, 0700);
+    } elseif ($scenario === 'missing') {
+        $binary = $dir . '/not-present';
+    }
+    $program = <<<'PHP'
+require $argv[1] . '/lib/installer.php';
+$class = new ReflectionClass('Installer');
+$installer = $class->newInstanceWithoutConstructor();
+$probe = $class->getMethod('probePhpBinary');
+$probe->setAccessible(true);
+echo json_encode($probe->invoke($installer, $argv[2], 7, 0.1));
+PHP;
+    try {
+        $disabled = $scenario === 'no_proc' ? 'proc_open,shell_exec,exec,popen' : 'shell_exec,exec,popen';
+        $start = microtime(true);
+        $process = proc_open(array(PHP_BINARY, '-d', 'disable_functions=' . $disabled, '-d', 'pcov.directory=' . $root, '-d', 'pcov.exclude=~/(include/vendor|tests)/~', '-r', $prelude . $program, $root, $binary), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        expect(proc_close($process))->toBe(0)->and($stderr)->toBe('');
+        $result = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
+        if ($scenario === 'success') {
+            expect(trim($result))->toBe('49');
+        } else {
+            expect($result)->toBeFalse();
+        }
+        if ($scenario === 'timeout' && $coverage === null) {
+            expect(microtime(true) - $start)->toBeLessThan(0.9);
+        }
+        if ($coverage !== null) {
+            foreach (glob($dir . '/*.coverage') as $file) {
+                $coverage->merge(unserialize(file_get_contents($file)));
+            }
+        }
+    } finally {
+        if (is_file($dir . '/probe')) {
+            unlink($dir . '/probe');
+        }
+        foreach (glob($dir . '/*.coverage') as $file) {
+            unlink($file);
+        }
+        rmdir($dir);
+    }
+})->with(array('success', 'missing', 'nonzero', 'timeout', 'excess_output', 'no_proc'));
