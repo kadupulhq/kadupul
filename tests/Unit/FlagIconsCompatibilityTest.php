@@ -9,9 +9,23 @@ test('flag icons retain every configured locale and all CSS asset references', f
     $package = json_decode(file_get_contents($base . '/package.json'), true, 512, JSON_THROW_ON_ERROR);
     expect($package['version'])->toBe('7.5.0');
     $css = file_get_contents($base . '/css/flag-icons.css');
-    preg_match_all("/'country'\s*=>\s*'([a-z-]+)'/", file_get_contents($root . '/include/global_languages.php'), $matches);
-    expect(count($matches[1]))->toBeGreaterThan(20);
-    foreach (array_unique($matches[1]) as $country) {
+    $program = <<<'PHP'
+function read_config_option($key) { return '0'; }
+require $argv[1] . '/include/global_constants.php';
+// Disable translation setup only; read the real runtime locale registry.
+require $argv[1] . '/include/global_languages.php';
+echo json_encode(array_column(get_list_of_locales(), 'country'), JSON_THROW_ON_ERROR);
+PHP;
+    $process = proc_open(array(PHP_BINARY, '-r', $program, $root), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    expect(is_resource($process))->toBeTrue();
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    expect(proc_close($process))->toBe(0)->and($stderr)->toBe('');
+    $countries = json_decode($stdout, true, 512, JSON_THROW_ON_ERROR);
+    expect(count($countries))->toBeGreaterThan(20);
+    foreach (array_unique($countries) as $country) {
         expect($css)->toContain('.fi-' . $country . ' {');
         foreach (array('1x1', '4x3') as $ratio) {
             expect(is_file($base . '/flags/' . $ratio . '/' . $country . '.svg'))->toBeTrue();
