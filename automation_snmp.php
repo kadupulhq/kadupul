@@ -5,6 +5,8 @@
  */
 
 include('./include/auth.php');
+
+cacti_require_post_actions(array('actions'));
 include_once('./lib/snmp.php');
 
 $automation_snmp_actions = array(
@@ -839,4 +841,3 @@ function automation_snmp() {
 	</script>
 	<?php
 }
-

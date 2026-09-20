@@ -6,6 +6,8 @@
 
 include('./include/auth.php');
 
+cacti_require_post_actions(array('actions'));
+
 $gprint_actions = array(
 	1 => __('Delete')
 );

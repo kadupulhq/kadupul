@@ -7,6 +7,8 @@
 
 include_once('./include/auth.php');
 
+cacti_require_post_actions(array('actions'));
+
 $link_actions = array(
 	1 => __('Delete'),
 	3 => __('Enable'),

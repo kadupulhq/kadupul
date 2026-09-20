@@ -6,6 +6,8 @@
  */
 
 include_once('include/auth.php');
+
+cacti_require_post_actions(array('actions'));
 include_once('lib/rrd.php');
 include_once('lib/dsdebug.php');
 

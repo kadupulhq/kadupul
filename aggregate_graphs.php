@@ -5,6 +5,8 @@
  */
 
 include('./include/auth.php');
+
+cacti_require_post_actions(array('actions'));
 include_once('./lib/api_graph.php');
 include_once('./lib/api_tree.php');
 include_once('./lib/api_data_source.php');
@@ -1688,4 +1690,3 @@ function purge_old_graphs() {
 			WHERE aggregate_graph_id IN (' . implode(',', $old_agg_ids) . ')');
 	}
 }
-

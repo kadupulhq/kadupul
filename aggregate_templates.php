@@ -5,6 +5,8 @@
  */
 
 include_once('./include/auth.php');
+
+cacti_require_post_actions(array('actions'));
 include_once('./lib/api_aggregate.php');
 include_once('./lib/data_query.php');
 
@@ -764,4 +766,3 @@ function aggregate_template() {
 	</script>
 	<?php
 }
-
