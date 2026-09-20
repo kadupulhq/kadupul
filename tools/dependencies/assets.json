@@ -16,7 +16,7 @@
       },
       {
         "before": "    DOMPurify.setConfig = function () {",
-        "after": "    // Kadupul: nested calls must not replace the outer removal ledger.\n    let sanitizeDepth = 0;\n    DOMPurify.sanitize = function (dirty, cfg) {\n      const previousRemoved = DOMPurify.removed;\n      const nested = sanitizeDepth > 0;\n      sanitizeDepth++;\n      try {\n        return _sanitize(dirty, cfg);\n      } finally {\n        sanitizeDepth--;\n        if (nested) {\n          DOMPurify.removed = previousRemoved;\n        }\n      }\n    };\n    DOMPurify.setConfig = function () {"
+        "after": "    // Kadupul: nested calls must not replace the outer removal ledger.\n    let sanitizeDepth = 0;\n    DOMPurify.sanitize = function (dirty, cfg) {\n      _assertNotInTrustedTypesPolicy();\n      const previousRemoved = DOMPurify.removed;\n      const nested = sanitizeDepth > 0;\n      sanitizeDepth++;\n      try {\n        return _sanitize(dirty, cfg);\n      } finally {\n        sanitizeDepth--;\n        if (nested) {\n          DOMPurify.removed = previousRemoved;\n        }\n      }\n    };\n    DOMPurify.setConfig = function () {"
       },
       {
         "before": "typeof name !== 'string' || ALLOWED_ATTR[transformCaseFunc(name)]",

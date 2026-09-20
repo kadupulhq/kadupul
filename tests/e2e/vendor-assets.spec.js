@@ -16,6 +16,40 @@ async function load(page, ...files) {
   }
 }
 
+test("DOMPurify rejects nested policy sanitization before configuration mutation", async ({ page }) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    let message = "";
+    const policy = trustedTypes.createPolicy("nested-policy-regression", {
+      createHTML(value) {
+        return DOMPurify.sanitize(value, { TRUSTED_TYPES_POLICY: null });
+      },
+      createScriptURL(value) { return value; },
+    });
+    try {
+      DOMPurify.sanitize("<b>outer</b>", { TRUSTED_TYPES_POLICY: policy, RETURN_TRUSTED_TYPE: true });
+    } catch (error) {
+      message = error.message;
+    }
+    const recovered = DOMPurify.sanitize("<b>recovered</b>", { RETURN_TRUSTED_TYPE: true });
+    return { message, recovered: String(recovered), trusted: trustedTypes.isHTML(recovered) };
+  });
+  expect(result.message).toContain("must not call DOMPurify.sanitize");
+  expect(result.recovered).toBe("<b>recovered</b>");
+  expect(result.trusted).toBe(true);
+});
+
+test("D3 quantileIndex preserves empty-input and invalid-input behavior", async ({ page }) => {
+  await load(page, "d3.js");
+  const result = await page.evaluate(() => {
+    const empty = [0, 0.5, 1].map((p) => d3.quantileIndex([], p));
+    let nullRejected = false;
+    try { d3.quantileIndex(null, 0.5); } catch (error) { nullRejected = error instanceof TypeError; }
+    return { empty, nullRejected, nan: d3.quantileIndex(null, NaN) === undefined };
+  });
+  expect(result).toEqual({ empty: [-1, -1, -1], nullRejected: true, nan: true });
+});
+
 test("DOMPurify scopes caller Trusted Types policy to its configuration", async ({ page }) => {
   await load(page, "purify.js");
   const result = await page.evaluate(() => {

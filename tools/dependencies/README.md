@@ -48,6 +48,8 @@ configuration isolation. Preserve every manifest patch on future refreshes.
 The sanitizer also restores the outer removal ledger after nested calls (including
 throws) and resets an omitted per-call Trusted Types policy to the internal
 default; persistent `setConfig()` policies and explicit opt-out remain supported.
+Sanitize entry rejects reentry from a supplied Trusted Types policy before any
+configuration changes, including nested calls that opt out of Trusted Types.
 D3's `quantileIndex` materializes non-indexed iterables before accessing indexes,
 so sets and single-use generators behave like arrays. Browser tests cover each
 correction. All transformations are recorded in the source manifest.

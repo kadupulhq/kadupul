@@ -2654,6 +2654,7 @@
     // Kadupul: nested calls must not replace the outer removal ledger.
     let sanitizeDepth = 0;
     DOMPurify.sanitize = function (dirty, cfg) {
+      _assertNotInTrustedTypesPolicy();
       const previousRemoved = DOMPurify.removed;
       const nested = sanitizeDepth > 0;
       sanitizeDepth++;
