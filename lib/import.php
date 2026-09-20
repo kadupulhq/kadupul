@@ -2660,6 +2660,38 @@ function xml_character_decode($text) {
 	}
 }
 
+/* Render the shared identity cells with one output-encoding policy. */
+function import_preview_identity_row($detail, $id, $show_damaged = false) {
+	if ($detail['status'] == 'updated') {
+		$status = "<span class='updateObject'>" . __('Updated') . '</span>';
+	} elseif ($detail['status'] == 'new') {
+		$status = "<span class='newObject'>" . __('New') . '</span>';
+	} elseif ($show_damaged && $detail['status'] == 'damaged') {
+		$status = "<span class='deviceDown'>" . __('Damaged') . '</span>';
+	} else {
+		$status = "<span class='deviceUp'>" . __('Unchanged') . '</span>';
+	}
+
+	form_alternate_row('line_import_' . html_escape($detail['status']) . '_' . $id);
+	form_selectable_ecell($detail['type_name'], $id);
+	form_selectable_ecell($detail['name'], $id);
+	form_selectable_cell($status, $id);
+}
+
+/* Preserve only application-owned preview formatting, never active imported HTML. */
+function import_preview_html($html) {
+	static $purifier;
+	if ($purifier === null) {
+		$config = HTMLPurifier_Config::createDefault();
+		$config->set('Cache.DefinitionImpl', null);
+		$config->set('HTML.Allowed', 'br,em,span[style]');
+		$config->set('CSS.AllowedProperties', array('background-color'));
+		$purifier = new HTMLPurifier($config);
+	}
+
+	return $purifier->purify($html);
+}
+
 function import_display_results($import_debug_info, $filestatus, $web = false, $preview = false) {
 	global $hash_type_names, $ignorable_hashes;
 
@@ -2742,7 +2774,7 @@ function import_display_results($import_debug_info, $filestatus, $web = false, $
 				if (isset($vals['differences'])) {
 					print '<ul class="monoSpace">' . PHP_EOL;
 					foreach($vals['differences'] as $diff) {
-						print '<li>' . $diff . '</li>' . PHP_EOL;
+						print '<li>' . import_preview_html($diff) . '</li>' . PHP_EOL;
 					}
 					print '</ul>' . PHP_EOL;
 				}
