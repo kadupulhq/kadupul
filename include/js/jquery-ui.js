@@ -4017,7 +4017,7 @@ var formResetMixin = $.ui.formResetMixin = {
 // Code from https://github.com/jquery/jquery/blob/e539bac79e666bba95bba86d690b4e609dca2286/src/selector/escapeSelector.js
 if ( !$.escapeSelector ) {
 	$.escapeSelector = function( id ) {
-		return CSS.escape( id + "" );
+		return $.escapeSelector( id + "" );
 	};
 }
 
@@ -4117,7 +4117,7 @@ var labels = $.fn.labels = function() {
 		ancestors = ancestor.add( ancestor.length ? ancestor.siblings() : this.siblings() );
 
 		// Create a selector for the label based on the id
-		selector = "label[for='" + CSS.escape( id ) + "']";
+		selector = "label[for='" + $.escapeSelector( id ) + "']";
 
 		labels = labels.add( ancestors.find( selector ).addBack( selector ) );
 
@@ -6558,7 +6558,7 @@ $.widget( "ui.checkboxradio", [ $.ui.formResetMixin, {
 	_getRadioGroup: function() {
 		var group;
 		var name = this.element[ 0 ].name;
-		var nameSelector = "input[name='" + CSS.escape( name ) + "']";
+		var nameSelector = "input[name='" + $.escapeSelector( name ) + "']";
 
 		if ( !name ) {
 			return $( [] );
@@ -14312,7 +14312,7 @@ var widgetsSelectmenu = $.widget( "ui.selectmenu", [ $.ui.formResetMixin, {
 			}
 
 			if ( !$( event.target ).closest( ".ui-selectmenu-menu, #" +
-				CSS.escape( this.ids.button ) ).length ) {
+				$.escapeSelector( this.ids.button ) ).length ) {
 				this.close( event );
 			}
 		}
@@ -17488,15 +17488,17 @@ $.widget( "ui.tabs", {
 	},
 
 	_isLocal: function( anchor ) {
-		var anchorUrl = new URL( anchor.href ),
-			locationUrl = new URL( location.href );
+		var anchorUrl = anchor,
+			locationUrl = document.createElement( "a" );
+		locationUrl.href = location.href;
 
 		return anchor.hash.length > 1 &&
 
 			// `href` may contain a hash but also username & password;
 			// we want to ignore them, so we check the three fields
 			// below instead.
-			anchorUrl.origin === locationUrl.origin &&
+			anchorUrl.protocol === locationUrl.protocol &&
+			anchorUrl.host === locationUrl.host &&
 			anchorUrl.pathname === locationUrl.pathname &&
 			anchorUrl.search === locationUrl.search;
 	},
@@ -17541,7 +17543,13 @@ $.widget( "ui.tabs", {
 		var active = this.options.active,
 			collapsible = this.options.collapsible,
 			locationHash = location.hash.substring( 1 ),
+			locationHashDecoded = locationHash;
+
+		try {
 			locationHashDecoded = decodeURIComponent( locationHash );
+		} catch ( error ) {
+			// Kadupul: malformed fragments retain their literal identifiers.
+		}
 
 		if ( active === null ) {
 
@@ -17875,10 +17883,14 @@ $.widget( "ui.tabs", {
 				// hash. Replicate this logic.
 				selector = anchor.hash;
 				panelId = selector.substring( 1 );
-				panel = that.element.find( "#" + CSS.escape( panelId ) );
+				panel = that.element.find( "#" + $.escapeSelector( panelId ) );
 				if ( !panel.length ) {
-					panelId = decodeURIComponent( panelId );
-					panel = that.element.find( "#" + CSS.escape( panelId ) );
+					try {
+						panelId = decodeURIComponent( panelId );
+					} catch ( error ) {
+						// Kadupul: malformed fragments retain their literal identifiers.
+					}
+					panel = that.element.find( "#" + $.escapeSelector( panelId ) );
 				}
 
 			// remote tab
@@ -18165,7 +18177,7 @@ $.widget( "ui.tabs", {
 		// meta-function to give users option to provide a href string instead of a numerical index.
 		if ( typeof index === "string" ) {
 			index = this.anchors.index( this.anchors.filter( "[href$='" +
-				CSS.escape( index ) + "']" ) );
+				$.escapeSelector( index ) + "']" ) );
 		}
 
 		return index;
@@ -18317,7 +18329,7 @@ $.widget( "ui.tabs", {
 
 	_getPanelForTab: function( tab ) {
 		var id = $( tab ).attr( "aria-controls" );
-		return this.element.find( "#" + CSS.escape( id ) );
+		return this.element.find( "#" + $.escapeSelector( id ) );
 	}
 } );
 

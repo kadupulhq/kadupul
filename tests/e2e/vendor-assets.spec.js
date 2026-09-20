@@ -16,6 +16,70 @@ async function load(page, ...files) {
   }
 }
 
+for (const fragment of ["%", "%E0%A4%A", "panel%20two"]) {
+  test(`tabs tolerate encoded or malformed fragments: ${fragment}`, async ({
+    page,
+  }) => {
+    await page.setContent(
+      '<div id="tabs"><ul><li><a href="#first">First</a></li><li><a href="#panel%20two">Second</a></li><li><a href="#%">Missing malformed panel</a></li></ul><div id="first">One</div><div id="panel two">Two</div></div>',
+    );
+    await page.evaluate((hash) => {
+      location.hash = hash;
+    }, fragment);
+    await load(page, "jquery.js", "jquery-ui.js");
+    const active = await page.evaluate(() => {
+      $("#tabs").tabs();
+      return $("#tabs").tabs("option", "active");
+    });
+    expect(active).toBe({ "%": 2, "%E0%A4%A": 0, "panel%20two": 1 }[fragment]);
+  });
+}
+
+test("tabs retain locality checks without URL or CSS.escape constructors", async ({
+  page,
+}) => {
+  await page.setContent(
+    '<div id="tabs"><ul><li><a href="#first">First</a></li></ul><div id="first">One</div></div>',
+  );
+  await load(page, "jquery.js", "jquery-ui.js");
+  const result = await page.evaluate(() => {
+    window.URL = undefined;
+    window.CSS.escape = undefined;
+    $("#tabs").tabs();
+    const tabs = $("#tabs").tabs("instance");
+    const anchor = document.createElement("a");
+    anchor.href = location.href.split("#")[0] + "#first";
+    const local = tabs._isLocal(anchor);
+    anchor.hostname = "example.invalid";
+    return { local, remote: tabs._isLocal(anchor) };
+  });
+  expect(result).toEqual({ local: true, remote: false });
+});
+
+test("DOMPurify removes executable content in nested attached shadow trees", async ({
+  page,
+}) => {
+  await load(page, "purify.js");
+  const result = await page.evaluate(() => {
+    const root = document.createElement("div");
+    const host = document.createElement("div");
+    root.append(host);
+    const shadow = host.attachShadow({ mode: "open" });
+    const inner = document.createElement("div");
+    shadow.append(inner);
+    const nested = inner.attachShadow({ mode: "open" });
+    nested.innerHTML =
+      '<b>safe</b><img src=x onerror="alert(1)"><script>alert(1)</script>';
+    DOMPurify.sanitize(root, { IN_PLACE: true });
+    return {
+      text: nested.querySelector("b").textContent,
+      scripts: nested.querySelectorAll("script").length,
+      handlers: nested.querySelectorAll("[onerror]").length,
+    };
+  });
+  expect(result).toEqual({ text: "safe", scripts: 0, handlers: 0 });
+});
+
 test("DOMPurify keeps harmless markup and strips executable HTML and SVG", async ({
   page,
 }) => {

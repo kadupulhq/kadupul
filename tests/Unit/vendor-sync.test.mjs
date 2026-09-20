@@ -97,3 +97,24 @@ test("validates the entire batch before writing its first asset", async () => {
 test("rejects invalid modes", async () => {
   await assert.rejects(syncAssets([], "--invalid"), /Usage:/);
 });
+
+test("applies exact compatibility replacements without interpreting dollar signs", async () => {
+  const { asset, io, writes } = fixture("old", {
+    replacements: [{ before: "old", after: "$& $.escapeSelector" }],
+  });
+  await syncAssets([asset], "--write", io);
+  assert.equal(writes[0][1].toString(), "$& $.escapeSelector");
+});
+
+for (const before of ["missing", "", "upstream"]) {
+  test(`rejects missing, empty or ambiguous replacements: ${before}`, async () => {
+    const { asset, io, writes } = fixture("upstream upstream", {
+      replacements: [{ before, after: "patched" }],
+    });
+    await assert.rejects(
+      syncAssets([asset], "--write", io),
+      /no longer applies/,
+    );
+    assert.equal(writes.length, 0);
+  });
+}

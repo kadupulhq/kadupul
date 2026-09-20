@@ -26,7 +26,30 @@
     "version": "1.14.2",
     "url": "https://code.jquery.com/ui/1.14.2/jquery-ui.js",
     "sha256": "cca6e2f08d89e40f7f02d5c45ea7ea64ddb732dd70a5573210360217f3d260ac",
-    "patch": "ui-back-compat"
+    "patch": "ui-back-compat",
+    "replacements": [
+      {
+        "before": "var anchorUrl = new URL( anchor.href ),\n\t\t\tlocationUrl = new URL( location.href );",
+        "after": "var anchorUrl = anchor,\n\t\t\tlocationUrl = document.createElement( \"a\" );\n\t\tlocationUrl.href = location.href;"
+      },
+      {
+        "before": "anchorUrl.origin === locationUrl.origin &&",
+        "after": "anchorUrl.protocol === locationUrl.protocol &&\n\t\t\tanchorUrl.host === locationUrl.host &&"
+      },
+      {
+        "before": "locationHashDecoded = decodeURIComponent( locationHash );",
+        "after": "locationHashDecoded = locationHash;\n\n\t\ttry {\n\t\t\tlocationHashDecoded = decodeURIComponent( locationHash );\n\t\t} catch ( error ) {\n\t\t\t// Kadupul: malformed fragments retain their literal identifiers.\n\t\t}"
+      },
+      {
+        "before": "panelId = decodeURIComponent( panelId );",
+        "after": "try {\n\t\t\t\t\t\tpanelId = decodeURIComponent( panelId );\n\t\t\t\t\t} catch ( error ) {\n\t\t\t\t\t\t// Kadupul: malformed fragments retain their literal identifiers.\n\t\t\t\t\t}"
+      },
+      {
+        "before": "CSS.escape(",
+        "after": "$.escapeSelector(",
+        "count": 8
+      }
+    ]
   },
   {
     "file": "jquery.tablesorter.js",
