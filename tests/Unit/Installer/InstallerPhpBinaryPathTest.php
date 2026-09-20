@@ -109,7 +109,7 @@ $class = new ReflectionClass('Installer');
 $installer = $class->newInstanceWithoutConstructor();
 $probe = $class->getMethod('probePhpBinary');
 $probe->setAccessible(true);
-echo json_encode($probe->invoke($installer, $argv[2], 7, $argv[3] === 'timeout' ? 0.1 : 5));
+echo json_encode($probe->invoke($installer, $argv[2], 7, in_array($argv[3], array('timeout', 'flood'), true) ? 0.1 : 5));
 PHP;
     try {
         $disabled = $scenario === 'no_proc' ? 'proc_open,shell_exec,exec,popen' : 'shell_exec,exec,popen';
@@ -127,7 +127,7 @@ PHP;
         } else {
             expect($result)->toBeFalse();
         }
-        if ($scenario === 'timeout' && $coverage === null) {
+        if (in_array($scenario, array('timeout', 'flood'), true) && $coverage === null) {
             expect(microtime(true) - $start)->toBeLessThan(0.9);
         }
         if ($coverage !== null) {
@@ -145,3 +145,12 @@ PHP;
         rmdir($dir);
     }
 })->with(array('success', 'missing', 'nonzero', 'timeout', 'excess_output', 'flood', 'no_proc', 'untrusted', 'empty_allowlist', 'invalid_allowlist'));
+
+test('legacy CLI probe callers retain stdout behavior', function () {
+    $process = proc_open(array(PHP_BINARY, dirname(__DIR__, 3) . '/install/cli_test.php', '7'), array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+    $stdout = stream_get_contents($pipes[1]);
+    $stderr = stream_get_contents($pipes[2]);
+    fclose($pipes[1]);
+    fclose($pipes[2]);
+    expect(proc_close($process))->toBe(0)->and($stdout)->toBe('49')->and($stderr)->toBe('');
+});

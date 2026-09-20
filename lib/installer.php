@@ -836,14 +836,12 @@ class Installer implements JsonSerializable
             return false;
         }
 
-        $pipes = array();
-        $output = '';
         $process = null;
         try {
             $null = PHP_OS_FAMILY === 'Windows' ? 'NUL' : '/dev/null';
             $process = @proc_open(
-                array($executable, '-q', dirname(__DIR__) . '/install/cli_test.php', (string) $input),
-                array(0 => array('file', $null, 'r'), 1 => array('pipe', 'w'), 2 => array('file', $null, 'w')),
+                array($executable, '-q', dirname(__DIR__) . '/install/cli_test.php', (string) $input, '--exit-status'),
+                array(0 => array('file', $null, 'r'), 1 => array('file', $null, 'w'), 2 => array('file', $null, 'w')),
                 $pipes,
                 null,
                 null,
@@ -852,31 +850,14 @@ class Installer implements JsonSerializable
             if (!is_resource($process)) {
                 return false;
             }
-            if (!stream_set_blocking($pipes[1], false)) {
-                return false;
-            }
-
             $deadline = microtime(true) + $timeout;
             do {
-                $chunk = fread($pipes[1], 65 - strlen($output));
-                if ($chunk === false) {
-                    return false;
-                }
-                $output .= $chunk;
-                if (strlen($output) > 64) {
-                    return false;
-                }
                 $status = proc_get_status($process);
                 if (!$status || !$status['running']) {
-                    if (!$status || $status['exitcode'] !== 0) {
+                    if (!$status || $status['exitcode'] !== ($input * $input) % 251 + 1) {
                         return false;
                     }
-                    // Drain bytes written between the read and the exit check.
-                    $chunk = stream_get_contents($pipes[1], 65 - strlen($output));
-                    if ($chunk === false || strlen($output . $chunk) > 64) {
-                        return false;
-                    }
-                    return $output . $chunk;
+                    return (string) ($input * $input);
                 }
                 usleep(10000);
             } while (microtime(true) < $deadline);
@@ -891,11 +872,6 @@ class Installer implements JsonSerializable
                     proc_terminate($process, 9);
                 }
                 proc_close($process);
-            }
-            foreach ($pipes as $pipe) {
-                if (is_resource($pipe)) {
-                    fclose($pipe);
-                }
             }
         }
     }
