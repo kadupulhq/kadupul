@@ -494,7 +494,7 @@ function item() {
 				<a class='linkEditMain' href='<?php print html_escape('graph_templates_inputs.php?action=input_edit&id=' . $item['id'] . '&graph_template_id=' . get_request_var('id'));?>'><?php print html_escape($item['name']);?></a>
 			</td>
 			<td class='right'>
-				<a class='deleteMarker fa fa-times' title='<?php print __esc('Delete');?>' href='<?php print html_escape('graph_templates_inputs.php?action=input_remove&id=' . $item['id'] . '&graph_template_id=' . get_request_var('id') . '&nostate=true');?>'></a>
+				<a class='deleteMarker inputDeleteMarker fa fa-times' title='<?php print __esc('Delete');?>' href='<?php print html_escape('graph_templates_inputs.php?action=input_remove&id=' . $item['id'] . '&graph_template_id=' . get_request_var('id') . '&nostate=true');?>'></a>
 			</td>
 		</tr>
 		<?php
@@ -506,7 +506,13 @@ function item() {
 	?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 	$(function() {
-		$('.deleteMarker, .moveArrow').on('click', function(event) {
+		$('.inputDeleteMarker').on('click', function(event) {
+			event.preventDefault();
+			loadPageUsingPost($(this).attr('href'), {
+				__csrf_magic: csrfMagicToken
+			});
+		});
+		$('.deleteMarker:not(.inputDeleteMarker), .moveArrow').on('click', function(event) {
 			event.preventDefault();
 			loadPageNoHeader($(this).attr('href'));
 		});
@@ -905,4 +911,3 @@ function template() {
 
 	form_end();
 }
-

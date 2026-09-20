@@ -7,6 +7,8 @@
 include('./include/auth.php');
 include_once('./lib/template.php');
 
+cacti_require_post_actions(array('save', 'input_remove'));
+
 /* set default action */
 set_default_action();
 
@@ -31,6 +33,12 @@ switch (get_request_var('action')) {
 
 function form_save() {
 	if ((isset_request_var('save_component_input')) && (!is_error_message())) {
+		$column = graph_template_input_column(get_nfilter_request_var('column_name'));
+		if ($column === null) {
+			http_response_code(400);
+			exit;
+		}
+
 		$graph_input_values = array();
 		$selected_graph_items = array();
 
@@ -44,7 +52,7 @@ function form_save() {
 		$save['graph_template_id'] = get_nfilter_request_var('graph_template_id');
 		$save['name'] = form_input_validate(get_nfilter_request_var('name'), 'name', '', false, 3);
 		$save['description'] = form_input_validate(get_nfilter_request_var('description'), 'description', '', true, 3);
-		$save['column_name'] = form_input_validate(get_nfilter_request_var('column_name'), 'column_name', '', true, 3);
+		$save['column_name'] = $column;
 
 		if (!is_error_message()) {
 			$graph_template_input_id = sql_save($save, 'graph_template_input');

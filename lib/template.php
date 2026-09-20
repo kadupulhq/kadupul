@@ -443,10 +443,41 @@ function push_out_graph($graph_template_graph_id, $push_title = true) {
    @arg $session_members - when looking for the 'active' value of the graph input, ignore these graph
 	template items. typically you want to ignore all items that were just selected and have yet to be
 	saved to the database. this is because these items most likely contain incorrect data */
+function graph_template_input_column($column) {
+	// SQL identifiers cannot be parameter-bound. Return only a canonical literal.
+	static $columns = array(
+		'graph_type_id' => 'graph_type_id',
+		'task_item_id' => 'task_item_id',
+		'color_id' => 'color_id',
+		'alpha' => 'alpha',
+		'consolidation_function_id' => 'consolidation_function_id',
+		'cdef_id' => 'cdef_id',
+		'vdef_id' => 'vdef_id',
+		'shift' => 'shift',
+		'value' => 'value',
+		'gprint_id' => 'gprint_id',
+		'textalign' => 'textalign',
+		'text_format' => 'text_format',
+		'hard_return' => 'hard_return',
+		'line_width' => 'line_width',
+		'dashes' => 'dashes',
+		'dash_offset' => 'dash_offset',
+		'sequence' => 'sequence'
+	);
+
+	return is_string($column) && isset($columns[$column]) ? $columns[$column] : null;
+}
+
 function push_out_graph_input($graph_template_input_id, $graph_template_item_id, $session_members) {
 	$graph_input = db_fetch_row_prepared('SELECT graph_template_id, column_name
 		FROM graph_template_input
 		WHERE id = ?', array($graph_template_input_id));
+
+	$column = graph_template_input_column($graph_input['column_name'] ?? null);
+	if ($column === null) {
+		// Also reject poisoned rows created by older versions or template imports.
+		return false;
+	}
 
 	$graph_input_items = db_fetch_assoc_prepared('SELECT graph_template_item_id
 		FROM graph_template_input_defs
@@ -469,11 +500,11 @@ function push_out_graph_input($graph_template_input_id, $graph_template_item_id,
 	}
 
 	if (cacti_sizeof($session_members) == 0) {
-		$values_to_apply = db_fetch_assoc('SELECT local_graph_id,' . $graph_input['column_name'] . '
+		$values_to_apply = db_fetch_assoc_prepared('SELECT local_graph_id,`' . $column . '`
 			FROM graph_templates_item
-			WHERE graph_template_id=' . $graph_input['graph_template_id'] . " $sql_include_items
+			WHERE graph_template_id = ? ' . "$sql_include_items
 			AND local_graph_id>0
-			GROUP BY local_graph_id");
+			GROUP BY local_graph_id", array($graph_input['graph_template_id']));
 	} else {
 		$i = 0;
 		foreach ($session_members as $item_id => $item_id) {
@@ -481,21 +512,21 @@ function push_out_graph_input($graph_template_input_id, $graph_template_item_id,
 			$i++;
 		}
 
-		$values_to_apply = db_fetch_assoc('SELECT local_graph_id,' . $graph_input['column_name'] . '
+		$values_to_apply = db_fetch_assoc_prepared('SELECT local_graph_id,`' . $column . '`
 			FROM graph_templates_item
-			WHERE graph_template_id=' . $graph_input['graph_template_id'] . '
+			WHERE graph_template_id = ?
 			AND local_graph_id>0
-			AND !(' . array_to_sql_or($new_session_members, 'local_graph_template_item_id') . ") $sql_include_items GROUP BY local_graph_id");
+			AND !(' . array_to_sql_or($new_session_members, 'local_graph_template_item_id') . ") $sql_include_items GROUP BY local_graph_id", array($graph_input['graph_template_id']));
 	}
 
 	if (cacti_sizeof($values_to_apply)) {
 		foreach ($values_to_apply as $value) {
 			/* this is just an extra check that i threw in to prevent users' graphs from getting really messed up */
-			if (!(($graph_input['column_name'] == 'task_item_id') && (empty($value[$graph_input['column_name']])))) {
-				db_execute('UPDATE graph_templates_item
-					SET ' . $graph_input['column_name'] . "=" . db_qstr($value[$graph_input['column_name']]) . "
-					WHERE local_graph_id=" . $value['local_graph_id'] . "
-					AND local_graph_template_item_id=$graph_template_item_id");
+			if (!(($column == 'task_item_id') && (empty($value[$column])))) {
+				db_execute_prepared('UPDATE graph_templates_item
+					SET `' . $column . '` = ?
+					WHERE local_graph_id = ?
+					AND local_graph_template_item_id = ?', array($value[$column], $value['local_graph_id'], $graph_template_item_id));
 			}
 		}
 	}
