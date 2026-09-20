@@ -11,6 +11,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Update PHPMailer to 7.1.1 while retaining the current PHP floor, include paths and local translations; regenerate its bundled autoloader without development dependencies.
+
 - Require complete behavioral scenario inventories and capture application-handler PHP diagnostics separately from prepend-recorder events.
 
 - Preserve reproducible behavioral baseline references and count RRDtool acknowledgements in reachable polling, failed writes, unreachable-device polling, and missing-file fault contracts.
@@ -19,6 +21,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Enforce first-request realm authorization after Basic authentication and reject disabled, missing or locked accounts before creating authenticated sessions.
 - Reject client-supplied Basic identity headers, recheck enabled accounts on persisted sessions and remember-me restoration, and revoke credentials after successful account-disable saves.
+- Reset shared mail translations between messages and honor the configured sendmail executable after transport initialization.
+
 - Reject array-valued actions and require CSRF-validated POST requests for form login, password changes, profile saves, setting resets and session revocation while preserving server-authenticated Basic login.
 - Quote the installer's PHP executable as one shell argument when validating binary locations.
 - Enforce enabled-group report realms and authorize report item saves, edits and moves against their existing parent (#111).
