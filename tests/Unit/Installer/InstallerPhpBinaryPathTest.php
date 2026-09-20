@@ -34,11 +34,15 @@ $class = new ReflectionClass('Installer');
 $installer = $class->newInstanceWithoutConstructor();
 $paths = $class->getProperty('paths');
 $paths->setAccessible(true);
-$paths->setValue($installer, array('path_php_binary' => array('install_check' => 'file_exists')));
+$optional = str_starts_with($argv[3], 'optional_');
+$name = $optional ? 'path_spine_config' : 'path_php_binary';
+$paths->setValue($installer, array($name => array('install_check' => 'file_exists', 'install_optional' => $optional)));
 $method = $class->getMethod('setPaths');
 $method->setAccessible(true);
 $submitted = $argv[3] === 'array' ? array($argv[2]) : ($argv[3] === 'nul' ? $argv[2] . "\0" : $argv[2]);
-$method->invoke($installer, array('path_php_binary' => $submitted));
+if ($argv[3] === 'optional_false') $submitted = false;
+if ($argv[3] === 'optional_null') $submitted = null;
+$method->invoke($installer, array($name => $submitted));
 echo json_encode($saved);
 PHP;
 
@@ -54,9 +58,10 @@ PHP;
         $error = stream_get_contents($pipes[2]);
         fclose($pipes[1]);
         fclose($pipes[2]);
+        $expected = str_starts_with($shape, 'optional_') ? array('path_spine_config' => '') : ($shape === 'scalar' ? array('path_php_binary' => realpath(PHP_BINARY)) : array());
         expect(proc_close($process))->toBe(0)
             ->and($error)->toBe('')
-            ->and(json_decode($output, true))->toBe($shape === 'scalar' ? array('path_php_binary' => realpath(PHP_BINARY)) : array())
+            ->and(json_decode($output, true))->toBe($expected)
             ->and(file_exists($dir . '/INJECTED'))->toBeFalse();
         unlink($binary);
         symlink($dir . '/untrusted-replacement', $binary);
@@ -74,7 +79,7 @@ PHP;
         }
         rmdir($dir);
     }
-})->with(array('scalar', 'array', 'nul'));
+})->with(array('scalar', 'array', 'nul', 'optional_false', 'optional_null'));
 
 test('installer PHP probes fail closed without a shell', function ($scenario) {
     $root = dirname(__DIR__, 3);
