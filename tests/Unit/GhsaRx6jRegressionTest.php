@@ -5,6 +5,12 @@
  */
 
 $includeAuthSource = file_get_contents(__DIR__ . '/../../include/auth.php');
+// Inspect the guest-to-auth block, not unrelated fail-closed session teardown.
+$guestBlockStart = strpos($includeAuthSource, "if (!isset(\$guest_account) && isset(\$_SESSION['sess_user_id']))");
+if ($guestBlockStart === false) {
+	throw new RuntimeException('Missing guest-to-auth transition block');
+}
+$includeAuthSource = substr($includeAuthSource, $guestBlockStart);
 
 test('GHSA-rx6j-2pxr-p6gj: guest-to-auth transition destroys then restarts the session', function () use ($includeAuthSource) {
 	// The guest-to-auth cleanup block must destroy the existing session
