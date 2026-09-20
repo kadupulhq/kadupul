@@ -498,6 +498,9 @@
       const DOMParser = window.DOMParser,
       trustedTypes = window.trustedTypes;
     const ElementPrototype = Element.prototype;
+    // Kadupul: cache selectors before a form named-property can shadow them.
+    const queryElementTemplates = lookupGetter(ElementPrototype, 'querySelectorAll');
+    const queryFragmentTemplates = lookupGetter(window.DocumentFragment.prototype, 'querySelectorAll');
     const cloneNode = lookupGetter(ElementPrototype, 'cloneNode');
     const remove = lookupGetter(ElementPrototype, 'remove');
     // Clobber-safe Attr-node removal. On an HTMLFormElement a descendant named
@@ -1550,7 +1553,6 @@
      * @param node The root element whose character data should be scrubbed.
      */
     const _scrubTemplateExpressions2 = function _scrubTemplateExpressions(node) {
-      var _node$querySelectorAl;
       node.normalize();
       /* Clobber-safe ownerDocument read, same reasoning as _createNodeIterator:
          under SAFE_FOR_TEMPLATES this runs on the live IN_PLACE root, which may
@@ -1567,7 +1569,7 @@
       // NodeIterator does not descend into <template>.content per the DOM spec,
       // so we must explicitly recurse into each template's content fragment,
       // mirroring the approach used by _sanitizeShadowDOM.
-      const templates = (_node$querySelectorAl = node.querySelectorAll) === null || _node$querySelectorAl === void 0 ? void 0 : _node$querySelectorAl.call(node, 'template');
+      const templates = (_isDocumentFragment(node) ? queryFragmentTemplates : queryElementTemplates)(node, 'template');
       if (templates) {
         arrayForEach(templates, tmpl => {
           if (_isDocumentFragment(tmpl.content)) {
@@ -2727,4 +2729,4 @@
   return purify;
 
 }));
-//# sourceMappingURL=purify.js.map
+// Kadupul: upstream source map is not used for this locally patched bundle.

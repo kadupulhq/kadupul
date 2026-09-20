@@ -85,6 +85,19 @@ test("rejects unsuccessful upstream responses", async () => {
   await assert.rejects(syncAssets([asset], "--write", io), /404/);
 });
 
+test("disallows upstream redirects before any asset write", async () => {
+  const { asset, io, writes } = fixture();
+  io.fetch = async (_url, options) => {
+    assert.equal(options.redirect, "error");
+    throw new TypeError("fetch failed: unexpected redirect");
+  };
+  await assert.rejects(
+    syncAssets([asset], "--write", io),
+    /unexpected redirect/,
+  );
+  assert.equal(writes.length, 0);
+});
+
 test("validates the entire batch before writing its first asset", async () => {
   const { asset, io, writes } = fixture();
   await assert.rejects(

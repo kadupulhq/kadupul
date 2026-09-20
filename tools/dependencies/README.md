@@ -23,14 +23,21 @@ mise exec node@22 -- node tools/dependencies/sync.mjs --check
 mise exec node@22 -- node tools/dependencies/sync.mjs --write
 ```
 
-Both commands fetch upstream bytes and reject checksum mismatches. All downloads
+Both commands reject redirects, fetch upstream bytes and reject checksum mismatches. All downloads
 are checked before `--write` changes any files. Transformations are LF
 line-ending normalization and the jQuery UI compatibility patches explicitly
 recorded in the manifest: retain `$.uiBackCompat = true`, tolerate malformed
 percent escapes in tab fragments, use native anchor parsing with protocol/host
 comparison when identifying local tabs, and use jQuery's selector escaping
-instead of requiring native `URL`/`CSS.escape` support. License headers and the DOMPurify source map
-remain bundled. The theme CI job checks provenance and runs real-browser tests
+instead of requiring native `URL`/`CSS.escape` support at the seven widget call sites.
+The older-jQuery escape fallback itself keeps its original native implementation.
+DOMPurify also caches prototype selector methods for template recursion so a
+form-associated named input cannot clobber its `querySelectorAll` call during
+in-place template scrubbing. Both fixes have regression tests that failed before
+the corresponding patches. License headers and the original upstream DOMPurify
+source map remain bundled; the locally patched bundle does not reference that
+map, whose line mappings describe unmodified upstream code.
+The theme CI job checks provenance and runs real-browser tests
 for sanitization, legacy widgets, sorting/paging and D3 rendering.
 
 Before changing a pin, compare the current file with its old upstream release

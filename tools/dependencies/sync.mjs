@@ -49,7 +49,10 @@ async function prepareAsset(asset, io) {
   ) {
     throw new Error(`Unexpected upstream: ${url.origin}`);
   }
-  const response = await io.fetch(url, { signal: AbortSignal.timeout(30_000) });
+  const response = await io.fetch(url, {
+    signal: AbortSignal.timeout(30_000),
+    redirect: "error",
+  });
   if (!response.ok) throw new Error(`${response.status}: ${url}`);
   const bytes = Buffer.from(await response.arrayBuffer());
   if (hash(bytes) !== asset.sha256)

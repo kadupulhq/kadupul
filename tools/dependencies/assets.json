@@ -4,7 +4,25 @@
     "package": "dompurify",
     "version": "3.4.15",
     "url": "https://cdn.jsdelivr.net/npm/dompurify@3.4.15/dist/purify.js",
-    "sha256": "979b6c28df92881a36009de0bda1e866bee043ad69d36e54509e7210723d9af4"
+    "sha256": "979b6c28df92881a36009de0bda1e866bee043ad69d36e54509e7210723d9af4",
+    "replacements": [
+      {
+        "before": "const ElementPrototype = Element.prototype;",
+        "after": "const ElementPrototype = Element.prototype;\n    // Kadupul: cache selectors before a form named-property can shadow them.\n    const queryElementTemplates = lookupGetter(ElementPrototype, 'querySelectorAll');\n    const queryFragmentTemplates = lookupGetter(window.DocumentFragment.prototype, 'querySelectorAll');"
+      },
+      {
+        "before": "      var _node$querySelectorAl;\n",
+        "after": ""
+      },
+      {
+        "before": "const templates = (_node$querySelectorAl = node.querySelectorAll) === null || _node$querySelectorAl === void 0 ? void 0 : _node$querySelectorAl.call(node, 'template');",
+        "after": "const templates = (_isDocumentFragment(node) ? queryFragmentTemplates : queryElementTemplates)(node, 'template');"
+      },
+      {
+        "before": "//# sourceMappingURL=purify.js.map",
+        "after": "// Kadupul: upstream source map is not used for this locally patched bundle."
+      }
+    ]
   },
   {
     "file": "purify.js.map",
@@ -48,6 +66,10 @@
         "before": "CSS.escape(",
         "after": "$.escapeSelector(",
         "count": 8
+      },
+      {
+        "before": "return $.escapeSelector( id + \"\" );",
+        "after": "return CSS.escape( id + \"\" );"
       }
     ]
   },

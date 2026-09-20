@@ -4017,7 +4017,7 @@ var formResetMixin = $.ui.formResetMixin = {
 // Code from https://github.com/jquery/jquery/blob/e539bac79e666bba95bba86d690b4e609dca2286/src/selector/escapeSelector.js
 if ( !$.escapeSelector ) {
 	$.escapeSelector = function( id ) {
-		return $.escapeSelector( id + "" );
+		return CSS.escape( id + "" );
 	};
 }
 
