@@ -112,6 +112,7 @@
             <directory>../cache</directory>
             <directory>../log</directory>
             <directory>../rra</directory>
+            <directory>../var</directory>
         </exclude>
         <report>
             <clover outputFile="coverage.xml"/>

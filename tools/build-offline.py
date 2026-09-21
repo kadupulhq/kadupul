@@ -21,17 +21,7 @@ def run(*args, cwd):
     subprocess.run(args, cwd=cwd, check=True)
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output', type=Path, default=ROOT / 'dist')
-    args = parser.parse_args()
-    output = args.output.resolve()
-    output.mkdir(parents=True, exist_ok=True)
-    # The index is the source inventory: stage new source files before building.
-    # Ignored local secrets, generated vendors and development state never enter.
-    paths = subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT).decode().split('\0')
-    if any(path.startswith(('include/vendor/', 'include/fa/')) for path in paths):
-        raise RuntimeError('Generated dependency directories must not be tracked')
+def build_runtimes():
     php, node, composer, npm = (shutil.which(name) for name in ('php', 'node', 'composer', 'npm'))
     # mise resolves direct executables even when a shell has reordered PATH.
     if shutil.which('mise'):
@@ -43,6 +33,21 @@ def main():
         php, node = selected.get('php', php), selected.get('node', node)
     if not all((php, node, composer, npm)):
         raise RuntimeError('Build requires PHP, Composer, Node and npm; run through mise')
+    return php, node, composer, npm
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output', type=Path, default=ROOT / 'dist')
+    args = parser.parse_args()
+    output = args.output.resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    # The index is the source inventory: stage new source files before building.
+    # Ignored local secrets, generated vendors and development state never enter.
+    paths = subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT).decode().split('\0')
+    if any(path.startswith(('include/vendor/', 'include/fa/')) for path in paths):
+        raise RuntimeError('Generated dependency directories must not be tracked')
+    php, node, composer, npm = build_runtimes()
     revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
     with tempfile.TemporaryDirectory(prefix='kadupul-offline-') as temporary:
         stage = Path(temporary) / 'kadupul'

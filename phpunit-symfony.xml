@@ -10,4 +10,10 @@
             <directory>tests/Symfony</directory>
         </testsuite>
     </testsuites>
+    <source>
+        <include>
+            <directory suffix=".php">src</directory>
+            <file>bin/legacy-device-edit.php</file>
+        </include>
+    </source>
 </phpunit>

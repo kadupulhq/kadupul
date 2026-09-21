@@ -44,7 +44,7 @@ jobs:
           sudo apt-get install -y --no-install-recommends rrdtool
 
       - name: Install application dependencies
-        run: composer install --no-dev --no-interaction --no-progress
+        run: composer install --no-interaction --no-progress
 
       # composer install only warns when the lock is stale; validate exits
       # non-zero, so the run uses exactly the committed versions.
@@ -69,6 +69,13 @@ jobs:
 
       - name: Build browser assets for compatibility tests
         run: npm ci --ignore-scripts && npm run build
+
+      - name: Symfony module coverage
+        run: |
+          php -d pcov.directory="$GITHUB_WORKSPACE" \
+            -d pcov.exclude='~/(include/vendor|tests|var)/~' \
+            include/vendor/bin/phpunit --configuration phpunit-symfony.xml --coverage-php var/symfony-coverage.php
+          test -s var/symfony-coverage.php
 
       - name: Unit tests with coverage
         working-directory: tests
@@ -99,9 +106,29 @@ jobs:
           mise exec python@3.12.12 -- python tests/Support/Behavior/coverage_selftest.py --unit tests/coverage.php --integration "$RUNNER_TEMP/poller-coverage"
           php tests/Support/Behavior/merge_poller_coverage.php tests/coverage.php "$RUNNER_TEMP/poller-coverage" tests/coverage.xml
 
+      - name: Symfony HTTP and worker coverage
+        env:
+          PHP_VERSION: '8.2'
+        run: |
+          set -euo pipefail
+          mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py --coverage-output "$RUNNER_TEMP/symfony-files"
+          mise exec python@3.12.12 -- python tests/Symfony/session_bridge.py --database-sessions --coverage-output "$RUNNER_TEMP/symfony-database"
+
+      - name: Offline builder and compatibility-tool coverage
+        run: |
+          set -euo pipefail
+          mise exec python@3.12.12 -- python -m venv "$RUNNER_TEMP/coverage-python"
+          "$RUNNER_TEMP/coverage-python/bin/python" -m pip install -r tests/Symfony/requirements.txt
+          "$RUNNER_TEMP/coverage-python/bin/python" -m coverage run --data-file=var/offline.coverage --include='tools/build-offline.py' tools/build-offline.py
+          "$RUNNER_TEMP/coverage-python/bin/python" -m coverage xml --data-file=var/offline.coverage -o var/offline-coverage.xml
+          mise exec python@3.12.12 -- python tests/Symfony/offline_coverage.py --archive dist/kadupul-offline.tar.gz --output "$RUNNER_TEMP/offline-tools"
+          mise exec python@3.12.12 -- python tests/Symfony/coverage_selftest.py --unit var/symfony-coverage.php --files "$RUNNER_TEMP/symfony-files" --database "$RUNNER_TEMP/symfony-database" --offline "$RUNNER_TEMP/offline-tools"
+          php tests/Symfony/merge_coverage.php var/symfony-coverage.php "$RUNNER_TEMP/symfony-files" "$RUNNER_TEMP/symfony-database" "$RUNNER_TEMP/offline-tools" var/symfony-coverage.xml
+          test -s var/symfony-coverage.xml
+
       - name: Dependency maintenance tests with coverage
         run: |
-          node --experimental-test-coverage --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=tests/vendor-sync.lcov tests/Unit/vendor-sync.test.mjs tests/Unit/security-inventory.test.mjs
+          node --experimental-test-coverage --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=tests/vendor-sync.lcov tests/Unit/vendor-sync.test.mjs tests/Unit/security-inventory.test.mjs tests/Unit/browser-build.test.mjs
           test -s tests/vendor-sync.lcov
 
       - name: Scan

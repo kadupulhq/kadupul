@@ -123,3 +123,28 @@ baseline removal contains only the redirect sentinels in `include/vendor/index.p
 and `locales/index.php`; no application execution sink was removed. A fixture
 checks that adding direct/nested vendor PHP and cached PHP leaves the inventory
 unchanged while an authored application sink remains visible.
+
+## Symfony migration Sonar findings
+
+The [PR 145 quality gate](https://sonarcloud.io/dashboard?id=kadupulhq_kadupul&pullRequest=145)
+reported an explicit supplied session-ID assignment (`php:S5328`). The bridge now
+lets PHP resume the native HTTP cookie, with strict mode and cookie-only sessions
+explicitly enabled and URL session propagation disabled. A synthetic request
+cookie cannot replace the native cookie, and an already selected different ID
+fails closed. HTTP regression tests verify unknown IDs are neither adopted nor
+created, query parameters cannot select an existing authenticated session, and
+both supported handlers retain login, revocation and logout behavior. This is a
+code correction, not a scanner suppression.
+
+The other three annotations are corrected directly: the asset builder requires
+a URL object and uses its `href`; runtime selection is extracted from the offline
+builder; the saved-device message uses the native `output` element.
+
+The initial coverage report omitted the Symfony test runner and HTTP processes.
+The workflow now imports measured module, file/database HTTP, save-worker,
+offline-verification, dependency-installer, Python-builder and browser-build
+coverage. Integration measurements must match source hashes and successful test
+inventories before PHPUnit publishes a combined Clover report. Negative checks
+reject stale sources, missing evidence, invalid line observations and unexecuted
+workers without replacing the previous report. Generated `var/` cache is excluded
+consistently; authored source remains in scope and the quality gate is unchanged.

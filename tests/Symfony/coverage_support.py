@@ -1,0 +1,44 @@
+"""Optional measured HTTP/worker coverage for the existing integration suite."""
+import hashlib
+import json
+from pathlib import Path
+
+
+def configure_coverage(harness, output):
+    output = output.resolve()
+    output.mkdir(parents=True, exist_ok=False)
+    raw = output / 'raw'
+    raw.mkdir(mode=0o777)
+    raw.chmod(0o777)
+    ini = output / 'coverage.ini'
+    ini.write_text('pcov.directory=/var/www/html\n'
+                   'pcov.exclude="~/(include/vendor|tests)/|^/var/www/html/var/~"\n'
+                   'auto_prepend_file=/harness/coverage.php\n')
+    override = output / 'compose.json'
+    override.write_text(json.dumps({'services': {'web': {
+        'build': {'args': {'POLLER_COVERAGE': '1'}},
+        'volumes': [f'{raw}:/coverage',
+                    f'{ini}:/usr/local/etc/php/conf.d/zz-coverage.ini:ro'],
+    }}}))
+    harness.dc += ['-f', str(override)]
+    command = harness.command
+
+    def instrumented(*args, **kwargs):
+        return command(*(arg.replace('auto_prepend_file=/harness/errors.php',
+                                     'auto_prepend_file=/harness/coverage.php')
+                         if isinstance(arg, str) else arg for arg in args), **kwargs)
+
+    harness.command = instrumented
+
+
+def publish_coverage(output, database_sessions, checks):
+    if not list((output / 'raw').glob('coverage-*.json')):
+        raise RuntimeError('No Symfony HTTP coverage recorded')
+    root = Path(__file__).resolve().parents[2]
+    sources = ['session_bridge.py', 'inventory_scenarios.py', 'device_edit_scenarios.py', 'coverage_support.py']
+    evidence = {'suite': 'symfony-http',
+                'session_handler': 'database' if database_sessions else 'files',
+                'checks': checks,
+                'source_sha256': {f'tests/Symfony/{name}': hashlib.sha256(
+                    (root / 'tests/Symfony' / name).read_bytes()).hexdigest() for name in sources}}
+    (output / 'observations.json').write_text(json.dumps(evidence, indent=2) + '\n')

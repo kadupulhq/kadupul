@@ -22,7 +22,8 @@ await syncAssets(manifest, '--write', {
   readFile,
   writeFile,
   async fetch(url) {
-    const asset = manifest.find((entry) => entry.url === String(url));
+    if (!(url instanceof URL)) throw new TypeError('Expected an asset URL');
+    const asset = manifest.find((entry) => entry.url === url.href);
     if (!asset || !paths[asset.file]) throw new Error('Unmapped npm asset');
     // npm's tablesorter distribution omits the unminified pager; retain its small pinned source.
     const source = asset.file === 'jquery.tablesorter.pager.js'

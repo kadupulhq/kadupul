@@ -330,3 +330,11 @@ list/export visibility and page boundaries, state filters, revoked access,
 malformed filters, empty pages, HEAD responses and multiline Unicode/formula-like
 cells. Container/Twig lint, security inventories, focused Semgrep and staged-content
 checks pass. The rebuilt offline archive verifies with networking disabled.
+
+Shared-session hardening and coverage validation: unknown cookie IDs are rejected
+without adopting or creating the supplied ID, and query parameters cannot resume
+an authenticated session. Both session-handler HTTP suites pass. The local merged
+PHP report measures 459/521 statements (88.1%); the offline builder measures 94.1%
+line coverage, and all 40 JavaScript build/maintenance tests pass. Nine malformed
+coverage-evidence cases fail closed. These local totals are not a substitute for
+Sonar's independently calculated new-code quality gate.

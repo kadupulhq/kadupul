@@ -1,5 +1,13 @@
 version: 2
 updates:
+  - package-ecosystem: pip
+    directory: /tests/Symfony
+    target-branch: main
+    labels: [dependencies, no-changelog]
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
   - package-ecosystem: composer
     directories:
       - /

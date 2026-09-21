@@ -44,6 +44,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Resume Symfony's shared identity through native strict cookie handling and measure Symfony, HTTP worker, browser-build and offline-release coverage in Sonar.
+
 - Require token-protected POST for device reindexing, execute its PHP worker without a shell, and report worker failures instead of success.
 - Execute realtime graph polling without a shell, validate poller identifiers, and stop graph rendering when polling fails.
 - Execute input-whitelist updates without a shell, enforce token-protected POST, and report subprocess failures correctly.
