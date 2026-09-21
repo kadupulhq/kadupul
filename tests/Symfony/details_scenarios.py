@@ -18,7 +18,9 @@ class Links(HTMLParser):
 
 def verify_details(harness, session, user_id, allowed_id, hidden_id, listing, check):
     path = f'/app.php/inventory/devices/{allowed_id}'
-    original = harness.rows(f"SELECT JSON_OBJECT('description',description,'notes',notes,'status',status,'disabled',disabled,'location',location,'external_id',external_id,'site_id',site_id) FROM host WHERE id={allowed_id}")[0]
+    def snapshot():
+        return harness.rows(f"SELECT JSON_OBJECT('description',description,'notes',notes,'status',status,'disabled',disabled,'location',location,'external_id',external_id,'site_id',site_id,'deleted',deleted,'snmp_community',snmp_community) FROM host WHERE id={allowed_id}")[0]
+    original = snapshot()
     def literal(value):
         if value is None:
             return 'NULL'
@@ -79,5 +81,6 @@ def verify_details(harness, session, user_id, allowed_id, hidden_id, listing, ch
     check(session.request(path)['status'] == 403, 'revoked device realm denies details')
     harness.sql(f'INSERT INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},3)')
     harness.sql('UPDATE host SET ' + ','.join(key + '=' + literal(value) for key, value in original.items()) + f' WHERE id={allowed_id}')
+    check(snapshot() == original, 'details restores every modified device field, including disabled and fixture credentials')
     harness.sql(f'DELETE FROM sites WHERE id={site}')
     print('Device details HTTP checks passed.', flush=True)
