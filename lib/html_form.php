@@ -1466,7 +1466,8 @@ function form_color_dropdown($form_name, $form_previous_value, $form_none_entry,
 
 	$colors_list = db_fetch_assoc($colors_sql);
 
-	print "<select style='background-color: #$current_color_html;' id='$form_name_html' name='$form_name_html'" . $class . ">";
+	print "<select style='background-color: #$current_color_html;'" .
+		" id='$form_name_html' name='$form_name_html'" . $class . ">";
 
 	if ($form_none_entry != '') {
 		print "<option value='0'>$form_none_entry</option>";
