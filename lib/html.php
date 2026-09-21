@@ -664,6 +664,7 @@ function html_nav_bar($base_url, $max_pages, $current_page, $rows_per_page, $tot
    @arg $return_to - the id of the object to inject output into as a result of the sort action */
 function html_header_sort($header_items, $sort_column, $sort_direction, $last_item_colspan = 1, $url = '', $return_to = '') {
 	static $page_count = 0;
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
 
 	$reg_page = $page_count . '_' . str_replace('.php', '', basename($_SERVER['SCRIPT_NAME']));
 
@@ -710,6 +711,13 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		$primarySort = $key;
 		break;
 	}
+
+	$return_html = htmlspecialchars((string) ($return_to == '' ? 'main' : $return_to), $escape_flags, 'UTF-8', false);
+	$return_html = str_replace('`', '&#96;', $return_html);
+	$page_html = htmlspecialchars((string) ($url == '' ? get_current_page(false) : $url), $escape_flags, 'UTF-8', false);
+	$page_html = str_replace('`', '&#96;', $page_html);
+	$colspan_html = htmlspecialchars((string) $last_item_colspan, $escape_flags, 'UTF-8', false);
+	$colspan_html = str_replace('`', '&#96;', $colspan_html);
 
 	print "<tr class='tableHeader'>";
 
@@ -814,11 +822,27 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 			$icon = 'fa fa-sort';
 		}
 
+		$tip_html = htmlspecialchars((string) $tip, $escape_flags, 'UTF-8', false);
+		$tip_html = str_replace('`', '&#96;', $tip_html);
+		$align_html = htmlspecialchars((string) $align, $escape_flags, 'UTF-8', false);
+		$align_html = str_replace('`', '&#96;', $align_html);
+		$db_column_html = htmlspecialchars((string) $db_column, $escape_flags, 'UTF-8', false);
+		$db_column_html = str_replace('`', '&#96;', $db_column_html);
+		$direction_html = htmlspecialchars((string) $direction, $escape_flags, 'UTF-8', false);
+		$direction_html = str_replace('`', '&#96;', $direction_html);
+
 		if (($db_column == '') || (substr_count($db_column, 'nosort'))) {
-			print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'":'') . " class='$nohide $align' " . ((($i+1) == cacti_count($header_items)) ? "colspan='$last_item_colspan' " : '') . '>' . $display_text . '</th>';
+			print '<th ' . ($tip != '' ? "title='$tip_html'" : '')
+				. " class='$nohide $align_html' "
+				. ((($i+1) == cacti_count($header_items)) ? "colspan='$colspan_html' " : '')
+				. '>' . $display_text . '</th>';
 		} else {
-			print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'":'') . " class='sortable $align $nohide $isSort'>";
-			print "<div class='sortinfo' sort-return='" . ($return_to == '' ? 'main':$return_to) . "' sort-page='" . ($url == '' ? html_escape(get_current_page(false)):$url) . "' sort-column='$db_column' sort-direction='$direction'><div class='textSubHeaderDark'>" . $display_text . "<i class='$icon'></i></div></div></th>";
+			print '<th ' . ($tip != '' ? "title='$tip_html'" : '')
+				. " class='sortable $align_html $nohide $isSort'>";
+			print "<div class='sortinfo' sort-return='$return_html' sort-page='$page_html'"
+				. " sort-column='$db_column_html' sort-direction='$direction_html'>"
+				. "<div class='textSubHeaderDark'>" . $display_text
+				. "<i class='$icon'></i></div></div></th>";
 		}
 
 		$i++;
@@ -844,6 +868,7 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
    @arg $return_to - the id of the object to inject output into as a result of the sort action */
 function html_header_sort_checkbox($header_items, $sort_column, $sort_direction, $include_form = true, $form_action = '', $return_to = '', $prefix = 'chk') {
 	static $page_count = 0;
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
 
 	$reg_page = $page_count . '_' . str_replace('.php', '', basename($_SERVER['SCRIPT_NAME']));
 
@@ -893,6 +918,13 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 
 	/* default to the 'current' file */
 	if ($form_action == '') { $form_action = get_current_page(); }
+
+	$return_html = htmlspecialchars((string) ($return_to == '' ? 'main' : $return_to), $escape_flags, 'UTF-8', false);
+	$return_html = str_replace('`', '&#96;', $return_html);
+	$page_html = htmlspecialchars((string) $form_action, $escape_flags, 'UTF-8', false);
+	$page_html = str_replace('`', '&#96;', $page_html);
+	$prefix_html = htmlspecialchars((string) $prefix, $escape_flags, 'UTF-8', false);
+	$prefix_html = str_replace('`', '&#96;', $prefix_html);
 
 	print "<tr class='tableHeader'>";
 
@@ -997,15 +1029,36 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 			$icon = 'fa fa-sort';
 		}
 
+		$tip_html = htmlspecialchars((string) $tip, $escape_flags, 'UTF-8', false);
+		$tip_html = str_replace('`', '&#96;', $tip_html);
+		$align_html = htmlspecialchars((string) $align, $escape_flags, 'UTF-8', false);
+		$align_html = str_replace('`', '&#96;', $align_html);
+		$db_column_html = htmlspecialchars((string) $db_column, $escape_flags, 'UTF-8', false);
+		$db_column_html = str_replace('`', '&#96;', $db_column_html);
+		$direction_html = htmlspecialchars((string) $direction, $escape_flags, 'UTF-8', false);
+		$direction_html = str_replace('`', '&#96;', $direction_html);
+
 		if (($db_column == '') || (substr_count($db_column, 'nosort'))) {
-			print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'":'') . " class='$align $nohide'>" . $display_text . '</th>';
+			print '<th ' . ($tip != '' ? "title='$tip_html'" : '')
+				. " class='$align_html $nohide' "
+				. '>' . $display_text . '</th>';
 		} else {
-			print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "'":'') . " class='sortable $align $nohide $isSort'>";
-			print "<div class='sortinfo' sort-return='" . ($return_to == '' ? 'main':$return_to) . "' sort-page='" . html_escape($form_action) . "' sort-column='$db_column' sort-direction='$direction'><div class='textSubHeaderDark'>" . $display_text . "<i class='$icon'></i></div></div></th>";
+			print '<th ' . ($tip != '' ? "title='$tip_html'" : '')
+				. " class='sortable $align_html $nohide $isSort'>";
+			print "<div class='sortinfo' sort-return='$return_html' sort-page='$page_html'"
+				. " sort-column='$db_column_html' sort-direction='$direction_html'>"
+				. "<div class='textSubHeaderDark'>" . $display_text
+				. "<i class='$icon'></i></div></div></th>";
 		}
 	}
 
-	print "<th class='tableSubHeaderCheckbox'><input id='selectall' class='checkbox' type='checkbox' title='" . __esc('Select All Rows'). "' data-prefix='$prefix'><label class='formCheckboxLabel' title='" . __esc('Select All Rows') . "' for='selectall'></label></th>" . ($include_form ? "<th style='display:none;'><form id='$prefix' name='$prefix' method='post' action='$form_action'></th>":'');
+	print "<th class='tableSubHeaderCheckbox'><input id='selectall' class='checkbox' type='checkbox' title='"
+		. __esc('Select All Rows') . "' data-prefix='$prefix_html'>"
+		. "<label class='formCheckboxLabel' title='" . __esc('Select All Rows') . "' for='selectall'></label></th>";
+	if ($include_form) {
+		print "<th style='display:none;'><form id='$prefix_html' name='$prefix_html'"
+			. " method='post' action='$page_html'></th>";
+	}
 	print '</tr>';
 
 	$page_count++;
@@ -1071,12 +1124,18 @@ function html_header($header_items, $last_item_colspan = 1) {
         optional alignment.
    @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row */
 function html_section_header($header_item, $last_item_colspan = 1) {
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$colspan_html = htmlspecialchars((string) $last_item_colspan, $escape_flags, 'UTF-8', false);
+	$colspan_html = str_replace('`', '&#96;', $colspan_html);
 	print "<tr class='tableHeader " . (!$last_item_colspan > 1 ? 'tableFixed':'') . "'>";
 
 	if (is_array($header_item) && isset($header_item['display'])) {
-		print "<th " . (isset($header_item['align']) ? "style='text-align:" . $header_item['align'] . ";'":"") . " colspan='$last_item_colspan'>" . $header_item['display'] . '</th>';
+		$align_html = htmlspecialchars((string) ($header_item['align'] ?? ''), $escape_flags, 'UTF-8', false);
+		$align_html = str_replace('`', '&#96;', $align_html);
+		print '<th ' . (isset($header_item['align']) ? "style='text-align:$align_html;'" : '')
+			. " colspan='$colspan_html'>" . $header_item['display'] . '</th>';
 	} else {
-		print "<th colspan='$last_item_colspan'>" . $header_item . '</th>';
+		print "<th colspan='$colspan_html'>" . $header_item . '</th>';
 	}
 
 	print '</tr>';
