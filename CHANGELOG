@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-security: Encode table-row, selectable-cell and checkbox metadata while preserving selection and trusted cell markup
 -security: Encode color-selector and edit-control metadata while preserving color selection, callbacks and trusted custom markup
 -security: Batch button and dropdown attribute encoding while preserving callbacks, selection and language flags
 -security: Batch stateful form-control attribute encoding and script-safe callback ID binding while preserving saved values and selection
