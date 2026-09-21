@@ -2,6 +2,7 @@
 <phpunit bootstrap="vendor/autoload.php" beStrictAboutOutputDuringTests="false">
 	<testsuites>
 		<testsuite name="cacti_exec regression">
+			<file>Unit/Security/Shell/LtsWorkerExecutionTest.php</file>
 			<file>Unit/CactiExecContractTest.php</file>
 			<file>integration/CactiExecExitCodeTest.php</file>
 		</testsuite>

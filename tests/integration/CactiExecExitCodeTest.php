@@ -46,6 +46,15 @@ test('cacti_exec returns the real process exit code', function () {
 	expect(cacti_exec(PHP_BINARY, array('-r', 'exit(255);'), $out))->toBe(255);
 });
 
+test('explicit synchronous waits preserve argv and worker status', function ($timeout, $status) {
+	$out = array();
+	$payload = "argument with spaces; $(echo unsafe) & 'quotes'";
+	$program = 'usleep(100000); echo $argv[1]; exit((int) $argv[2]);';
+	$result = cacti_exec(PHP_BINARY, array('-r', $program, $payload, (string) $status), $out, $timeout);
+	expect($result)->toBe($status);
+	expect($out)->toBe(array($payload));
+})->with(array(null, false, 5))->with(array(0, 7));
+
 test('a non-zero exit still returns the exit code and captures output', function () {
 	$out = array();
 	$rc  = cacti_exec(PHP_BINARY, array('-r', 'fwrite(STDOUT, "partial\n"); exit(2);'), $out);
@@ -118,6 +127,16 @@ test('timeout zero fails closed without entering the process wait loop', functio
 	$out = array();
 
 	expect(_exec_quietly(fn () => cacti_exec(PHP_BINARY, array('-r', 'usleep(200000);'), $out, 0)))->toBe(1);
+});
+
+test('finite waits still enforce a monotonic deadline', function () {
+	$out = array();
+	$started = microtime(true);
+	$result = _exec_quietly(function () use (&$out) {
+		return cacti_exec(PHP_BINARY, array('-r', 'sleep(5);'), $out, 1);
+	});
+	expect($result)->toBe(1);
+	expect(microtime(true) - $started)->toBeLessThan(4.0);
 });
 
 test('a signal-terminated child does not fabricate a successful exit code', function () {

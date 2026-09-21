@@ -10,8 +10,8 @@
 /*
  * Coverage backfill for PR #7149. csrf-magic only validates the
  * magic token on POST. The whitelist_update case in data_input.php
- * accepts shell_exec arguments and therefore must reject non-POST
- * before reaching the shell call, otherwise a GET-triggered CSRF
+ * executes a worker and therefore must reject non-POST
+ * before reaching the executor call, otherwise a GET-triggered CSRF
  * gadget on an authenticated admin can fire the rebuild push.
  */
 
@@ -21,11 +21,11 @@ test('whitelist_update body contains a REQUEST_METHOD POST guard', function () u
 	expect($source)->toContain("\$_SERVER['REQUEST_METHOD'] !== 'POST'");
 });
 
-test('REQUEST_METHOD guard precedes the shell_exec call in the whitelist_update case', function () use ($source) {
+test('REQUEST_METHOD guard precedes the cacti_exec call in the whitelist_update case', function () use ($source) {
 	/* Slice the case body from its marker to the next case label
-	 * or the documented fall-through comment. The shell_exec call
+	 * or the documented fall-through comment. The cacti_exec call
 	 * must appear AFTER the REQUEST_METHOD rejection so a non-POST
-	 * request can never reach the shell. */
+	 * request can never execute the worker. */
 	$start = strpos($source, "case 'whitelist_update':");
 	expect($start)->not->toBeFalse();
 
@@ -36,9 +36,10 @@ test('REQUEST_METHOD guard precedes the shell_exec call in the whitelist_update 
 
 	$body = substr($source, $start, $end - $start);
 	$methodPos = strpos($body, "REQUEST_METHOD");
-	$shellPos  = strpos($body, 'shell_exec(');
+	$execPos  = strpos($body, 'cacti_exec(');
 
 	expect($methodPos)->not->toBeFalse();
-	expect($shellPos)->not->toBeFalse();
-	expect($methodPos < $shellPos)->toBeTrue();
+	expect($execPos)->not->toBeFalse();
+	expect($methodPos < $execPos)->toBeTrue();
+	expect($body)->not->toContain('shell_exec(');
 });

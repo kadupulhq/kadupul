@@ -7857,15 +7857,15 @@ function cacti_input_string_is_safe($input_string) {
  * arguments are known separately; use exec_with_timeout() when migrating legacy
  * shell_exec() callers that already assemble the command string.
  *
- * Requires PHP 7.4+ (array form of proc_open). The 1.2.x branch targets PHP 7.4
- * as its minimum, so no version gate is needed.
+ * Array-form proc_open is available since PHP 7.4. This branch requires PHP 8.0+,
+ * so no version gate is needed.
  *
  * @param string $binary   Path to the executable. Must not start with '-'.
  * @param array  $args     Ordered argument strings (not shell-escaped).
  * @param array  &$output  Receives stdout lines on success; empty array on empty output.
- * @param mixed  $timeout  False for 4 hour timeout or seconds before the process is killed (default 30).
+ * @param mixed  $timeout  Null waits for completion; false allows 4 hours; otherwise seconds (default 30).
  *
- * @return int Exit code, or 255 on spawn failure, error with binary or timeout.
+ * @return int Exit code, 1 on timeout, or 255 on invalid binary or spawn failure.
  */
 function cacti_exec($binary, array $args = array(), array &$output = array(), $timeout = 30) {
 	// Ensure buffers flush automatically
@@ -7908,15 +7908,17 @@ function cacti_exec($binary, array $args = array(), array &$output = array(), $t
 
 	$stdout    = '';
 	$stderr    = '';
-	$remaining = (int) $timeout * 1000000;
+	$deadline  = $timeout === null ? null : hrtime(true) / 1000000000 + (int) $timeout;
+	$remaining = $deadline === null ? 1 : $deadline - hrtime(true) / 1000000000;
 	$exit      = null;
 
 	while ($remaining > 0) {
-		$start  = microtime(true);
 		$read   = array($pipes[1], $pipes[2]);
 		$write  = array();
 		$except = array();
-		stream_select($read, $write, $except, 0, $remaining);
+		$seconds = (int) $remaining;
+		$microseconds = max(0, min(999999, (int) (($remaining - $seconds) * 1000000)));
+		stream_select($read, $write, $except, $seconds, $microseconds);
 
 		usleep(50000);
 
@@ -7935,7 +7937,7 @@ function cacti_exec($binary, array $args = array(), array &$output = array(), $t
 			break;
 		}
 
-		$remaining -= (int) ((microtime(true) - $start) * 1000000);
+		$remaining = $deadline === null ? 1 : $deadline - hrtime(true) / 1000000000;
 	}
 
 	fclose($pipes[1]);

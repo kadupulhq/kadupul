@@ -167,7 +167,7 @@ test('device edit page posts the re-index link with the csrf token', function ()
 /**
  * Runs the production host_reindex() in a child process, with the database
  * answering GET_LOCK as given, and returns every call in order, including
- * those made at shutdown. shell_exec is renamed to a stub.
+ * those made at shutdown. The argv executor is stubbed.
  *
  * @param string $lock The GET_LOCK answer.
  * @param bool   $dies Whether the re-index exits part way.
@@ -180,7 +180,7 @@ function run_reindex($lock, $dies = false) {
 	expect(preg_match('/^function host_reindex\(\).*?^}\n/ms', $source, $reindex))->toBe(1);
 	preg_match('/^function host_reindex_release\(.*?^}\n/ms', $source, $release);
 
-	$functions = str_replace('shell_exec(', 'test_shell_exec(', $reindex[0]) . (empty($release[0]) ? '' : $release[0]);
+	$functions = $reindex[0] . (empty($release[0]) ? '' : $release[0]);
 
 	$script = '<?php
 		$calls  = array();
@@ -193,20 +193,23 @@ function run_reindex($lock, $dies = false) {
 		function __($text) { return $text; }
 		function get_filter_request_var($name) { return "7"; }
 		function read_config_option($name) { return "/usr/bin/php"; }
-		function cacti_escapeshellcmd($value) { return $value; }
-		function cacti_escapeshellarg($value) { return "\'" . $value . "\'"; }
 		function db_fetch_cell_prepared($sql, $params) {
 			record("cell:" . $sql . ":" . implode(",", $params));
 			return strpos($sql, "GET_LOCK") !== false ? $GLOBALS["lock"] : 0;
 		}
 		function db_execute_prepared($sql, $params) { record("execute:" . $sql . ":" . implode(",", $params)); return true; }
 		function raise_message($id, $message, $level) { record("message:" . $id . ":" . $level); }
-		function test_shell_exec($command) {
+		function cacti_exec($binary, $args, &$output, $timeout) {
+			if ($binary !== "/usr/bin/php" || $args !== array("-q", "/base/cli/poller_reindex_hosts.php", "--qid=all", "--id=7") || $timeout !== null) {
+				throw new RuntimeException("Unexpected reindex executor arguments");
+			}
 			record("exec");
 			if ($GLOBALS["dies"]) {
 				register_shutdown_function(function () { print json_encode($GLOBALS["calls"]); });
 				exit(0);
 			}
+			$output = array();
+			return 0;
 		}
 		' . $functions . '
 		$result = host_reindex();
