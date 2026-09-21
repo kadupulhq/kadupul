@@ -28,7 +28,7 @@ def main():
     raw.chmod(0o777)  # Container www-data writes to this dedicated directory.
     ini = output / 'coverage.ini'
     ini.write_text('pcov.directory=/var/www/html\n'
-                   'pcov.exclude="~/(include/vendor|tests)/~"\n'
+                   'pcov.exclude="~^/var/www/html/(include/vendor|tests|var/cache)/~"\n'
                    'auto_prepend_file=/harness/coverage.php\n')
     override = output / 'compose.json'
     override.write_text(json.dumps({'services': {'web': {
@@ -55,6 +55,12 @@ def main():
             raise RuntimeError('Incomplete poller scenario inventory')
         if not list(raw.glob('coverage-*.json')):
             raise RuntimeError('No integration coverage recorded')
+        # Booting Symfony during a poller run must never include its generated
+        # container in source coverage: those files vary between environments.
+        for report in raw.glob('coverage-*.json'):
+            files = json.loads(report.read_text())['files']
+            if any(path.startswith('/var/www/html/var/cache/') for path in files):
+                raise RuntimeError('Generated Symfony cache leaked into source coverage')
         evidence = {'scope': 'poller and dependency-failure integration coverage',
                     'revision': run(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'])['stdout'].strip(),
                     'scenarios': h.observed}
