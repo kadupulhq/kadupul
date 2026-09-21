@@ -2627,7 +2627,8 @@ function graph_filter($header_label) {
 	}
 
 	function clearFilter(objForm) {
-		strURL = 'user_admin.php?action=user_edit&tab=permsg&id=<?php print rawurlencode((string) get_request_var('id'));?>&clear=true'
+		strURL = 'user_admin.php?action=user_edit&tab=permsg&id=<?php
+			print rawurlencode((string) get_request_var('id'));?>&clear=true'
 		strURL = strURL + '&header=false';
 		loadPageNoHeader(strURL);
 	}
@@ -2746,7 +2747,8 @@ function group_filter($header_label) {
 	}
 
 	function clearFilter() {
-		strURL = 'user_admin.php?action=user_edit&tab=permsgr&id=<?php print rawurlencode((string) get_request_var('id'));?>&clear=true'
+		strURL = 'user_admin.php?action=user_edit&tab=permsgr&id=<?php
+			print rawurlencode((string) get_request_var('id'));?>&clear=true'
 		strURL = strURL + '&header=false';
 		loadPageNoHeader(strURL);
 	}
@@ -2844,7 +2846,8 @@ function device_filter($header_label) {
 	}
 
 	function clearFilter(objForm) {
-		strURL = 'user_admin.php?action=user_edit&tab=permsd&id=<?php print rawurlencode((string) get_request_var('id'));?>&clear=true'
+		strURL = 'user_admin.php?action=user_edit&tab=permsd&id=<?php
+			print rawurlencode((string) get_request_var('id'));?>&clear=true'
 		strURL = strURL + '&header=false';
 		loadPageNoHeader(strURL);
 	}
@@ -2959,7 +2962,8 @@ function template_filter($header_label) {
 	}
 
 	function clearFilter() {
-		strURL = 'user_admin.php?action=user_edit&tab=permste&id=<?php print rawurlencode((string) get_request_var('id'));?>&clear=true'
+		strURL = 'user_admin.php?action=user_edit&tab=permste&id=<?php
+			print rawurlencode((string) get_request_var('id'));?>&clear=true'
 		strURL = strURL + '&header=false';
 		loadPageNoHeader(strURL);
 	}
@@ -3056,7 +3060,8 @@ function tree_filter($header_label) {
 	}
 
 	function clearFilter() {
-		strURL = 'user_admin.php?action=user_edit&tab=permstr&id=<?php print rawurlencode((string) get_request_var('id'));?>&clear=true'
+		strURL = 'user_admin.php?action=user_edit&tab=permstr&id=<?php
+			print rawurlencode((string) get_request_var('id'));?>&clear=true'
 		strURL = strURL + '&header=false';
 		loadPageNoHeader(strURL);
 	}
@@ -3153,7 +3158,8 @@ function member_filter($header_label) {
 	}
 
 	function clearFilter(objForm) {
-		strURL = 'user_admin.php?action=user_edit&tab=members&id=<?php print rawurlencode((string) get_request_var('id'));?>&clear=true'
+		strURL = 'user_admin.php?action=user_edit&tab=members&id=<?php
+			print rawurlencode((string) get_request_var('id'));?>&clear=true'
 		strURL = strURL + '&header=false';
 		loadPageNoHeader(strURL);
 	}

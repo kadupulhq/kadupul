@@ -26,7 +26,9 @@ function render_output_line($line, $payload) {
 }
 
 test('admin IDs and tabs retain their values without breaking output contexts', function ($file, $expected, $payload) use ($root) {
-	$lines = file($root . '/' . $file, FILE_IGNORE_NEW_LINES);
+	$source = file_get_contents($root . '/' . $file);
+	/* Whitespace inside PHP tags does not affect the rendered output. */
+	$lines = explode("\n", preg_replace('/<\?php\s+print\s+/', '<?php print ', $source));
 	$count = 0;
 	foreach ($lines as $line) {
 		$isId = strpos($line, "get_request_var('id')") !== false;
