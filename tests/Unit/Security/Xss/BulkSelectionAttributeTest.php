@@ -7,6 +7,10 @@
 
 namespace BulkSelectionAttributeTest;
 
+function __esc($text) {
+	return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+}
+
 function get_request_var($name) {
 	return $GLOBALS['bulk_action_payload'];
 }
@@ -15,12 +19,11 @@ function get_nfilter_request_var($name) {
 	return get_request_var($name);
 }
 
-function render_confirmation($source, $items, $action) {
+function render_confirmation($source, $items, $action, $save_html = '') {
 	expect(preg_match('/\$selected_items_html = \(isset\(\$(\w+)\).*?<\/tr>[^;]*;/s', $source, $match))->toBe(1);
 	if ($items !== null) {
 		${$match[1]} = $items;
 	}
-	$save_html = '';
 	$GLOBALS['bulk_action_payload'] = $action;
 	ob_start();
 	try {
@@ -41,9 +44,15 @@ test('bulk confirmation fields preserve serialized selections and action values'
 	$document->loadHTML('<!doctype html><html><head><meta charset="UTF-8"></head><body><table>'
 		. $output . '</table></body></html>');
 	$inputs = $document->getElementsByTagName('input');
-	expect($inputs->length)->toBe(3);
+	$hasReturnButton = in_array($file, array('automation_networks.php', 'automation_snmp.php'), true);
+	expect($inputs->length)->toBe($hasReturnButton ? 4 : 3);
 	$fields = array();
 	foreach ($inputs as $input) {
+		if ($hasReturnButton && $input->getAttribute('type') === 'button') {
+			expect($input->getAttribute('name'))->toBe('cancel');
+			expect($input->getAttribute('value'))->toBe('Return');
+			continue;
+		}
 		expect($input->attributes->length)->toBe(3);
 		expect($input->getAttribute('type'))->toBe('hidden');
 		$fields[$input->getAttribute('name')] = $input->getAttribute('value');
@@ -73,6 +82,12 @@ test('bulk confirmation fields preserve serialized selections and action values'
 	'automation templates' => 'automation_templates.php',
 	'automation graph rules' => 'automation_graph_rules.php',
 	'automation tree rules' => 'automation_tree_rules.php',
+	'discovered devices' => 'automation_devices.php',
+	'discovery networks' => 'automation_networks.php',
+	'automation SNMP' => 'automation_snmp.php',
+	'colors' => 'color.php',
+	'links' => 'links.php',
+	'sites' => 'sites.php',
 ))->with(array(
 	'ordinary ID' => '42',
 	'leading zeros' => '0042',
@@ -84,3 +99,18 @@ test('bulk confirmation fields preserve serialized selections and action values'
 	'entity-like text' => '&#39;&quot;&amp;',
 	'backtick' => '` value',
 ));
+
+test('discovery confirmation keeps cancel and submit controls when an action is available', function ($file) {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
+	$output = render_confirmation($source, array('0042'), '1', '<button type="submit">Continue</button>');
+	$document = new \DOMDocument();
+	$document->loadHTML('<!doctype html><html><body><table>' . $output . '</table></body></html>');
+	$xpath = new \DOMXPath($document);
+	expect($xpath->query('//input[@type="hidden"]')->length)->toBe(3);
+	$cancel = $xpath->query('//input[@type="button" and @name="cancel"]');
+	expect($cancel->length)->toBe(1);
+	expect($cancel->item(0)->getAttribute('value'))->toBe('Cancel');
+	expect($xpath->query('//button[@type="submit"]')->length)->toBe(1);
+	expect($xpath->query('//input[@name="selected_items"]')->item(0)->getAttribute('value'))
+		->toBe(serialize(array('0042')));
+})->with(array('automation_networks.php', 'automation_snmp.php'));
