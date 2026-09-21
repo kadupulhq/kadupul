@@ -1448,6 +1448,8 @@ INSERT INTO `table_indexes` VALUES ('user_auth_realm',1,'user_id',1,'user_id','A
 INSERT INTO `table_indexes` VALUES ('user_auth_row_cache',0,'PRIMARY',1,'user_id','A',0,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('user_auth_row_cache',0,'PRIMARY',2,'class','A',0,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('user_auth_row_cache',0,'PRIMARY',3,'hash','A',0,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('user_auth_row_cache',1,'class_time',1,'class','A',0,NULL,NULL,'','BTREE','');
+INSERT INTO `table_indexes` VALUES ('user_auth_row_cache',1,'class_time',2,'time','A',0,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('user_domains',0,'PRIMARY',1,'domain_id','A',0,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('user_domains_ldap',0,'PRIMARY',1,'domain_id','A',0,NULL,NULL,'','BTREE','');
 INSERT INTO `table_indexes` VALUES ('user_log',0,'PRIMARY',1,'username','A',0,NULL,NULL,'','BTREE','');
