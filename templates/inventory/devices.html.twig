@@ -5,6 +5,7 @@
 {% block body %}
 <main>
     <h1>Devices</h1>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
     <p><a href="{{ path('inventory_sites') }}">Sites</a></p>
     <form method="get" action="{{ path('inventory_devices') }}" role="search">
         <label for="device-search">Search by name, hostname, location or external ID</label>
