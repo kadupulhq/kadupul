@@ -1090,6 +1090,11 @@ function html_section_header($header_item, $last_item_colspan = 1) {
 function html_header_checkbox($header_items, $include_form = true, $form_action = '', $resizable = true, $prefix = 'chk') {
 	/* default to the 'current' file */
 	if ($form_action == '') { $form_action = get_current_page(); }
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$action_html = htmlspecialchars((string) $form_action, $escape_flags, 'UTF-8', false);
+	$action_html = str_replace('`', '&#96;', $action_html);
+	$prefix_html = htmlspecialchars((string) $prefix, $escape_flags, 'UTF-8', false);
+	$prefix_html = str_replace('`', '&#96;', $prefix_html);
 
 	print "<tr class='tableHeader " . (!$resizable ? 'tableFixed':'') . "'>";
 
@@ -1113,13 +1118,28 @@ function html_header_checkbox($header_items, $include_form = true, $form_action 
 				$tip = '';
 			}
 
-			print '<th ' . ($tip != '' ? " title='" . html_escape($tip) . "' ":'') . "class='$align $nohide'>" . html_escape($item['display']) . '</th>';
+			$tip_html = htmlspecialchars((string) $tip, $escape_flags, 'UTF-8', false);
+			$tip_html = str_replace('`', '&#96;', $tip_html);
+			$align_html = htmlspecialchars((string) $align, $escape_flags, 'UTF-8', false);
+			$align_html = str_replace('`', '&#96;', $align_html);
+			$display_html = htmlspecialchars((string) $item['display'], $escape_flags, 'UTF-8', false);
+			$display_html = str_replace('`', '&#96;', $display_html);
+			print '<th ' . ($tip != '' ? " title='$tip_html' " : '')
+				. "class='$align_html $nohide'>" . $display_html . '</th>';
 		} else {
-			print "<th class='left'>" . html_escape($item) . '</th>';
+			$display_html = htmlspecialchars((string) $item, $escape_flags, 'UTF-8', false);
+			$display_html = str_replace('`', '&#96;', $display_html);
+			print "<th class='left'>" . $display_html . '</th>';
 		}
 	}
 
-	print "<th class='tableSubHeaderCheckbox'><input id='selectall' class='checkbox' type='checkbox' title='" . __esc('Select All Rows'). "' data-prefix='$prefix'><label class='formCheckboxLabel' title='" . __esc('Select All') . "' for='selectall'></label></th>" . ($include_form ? "<th style='display:none;'><form id='$prefix' name='$prefix' method='post' action='$form_action'></th>":'');
+	print "<th class='tableSubHeaderCheckbox'><input id='selectall' class='checkbox' type='checkbox' title='"
+		. __esc('Select All Rows') . "' data-prefix='$prefix_html'>"
+		. "<label class='formCheckboxLabel' title='" . __esc('Select All') . "' for='selectall'></label></th>";
+	if ($include_form) {
+		print "<th style='display:none;'><form id='$prefix_html' name='$prefix_html'"
+			. " method='post' action='$action_html'></th>";
+	}
 	print '</tr>';
 }
 
