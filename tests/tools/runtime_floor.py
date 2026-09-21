@@ -1,12 +1,11 @@
 """Exercise the real runtime preflight and both bootstraps through mise PHP."""
 import argparse
+from http.client import HTTPConnection
 from pathlib import Path
 import socket
 import subprocess
 import tempfile
 import time
-from urllib.error import HTTPError, URLError
-from urllib.request import urlopen
 
 ROOT = Path(__file__).resolve().parents[2]
 MESSAGE = b'Kadupul main requires PHP 8.4 or later.'
@@ -39,22 +38,25 @@ def main():
             for entry in entries:
                 deadline = time.monotonic() + 10
                 while True:
+                    connection = HTTPConnection('127.0.0.1', port, timeout=2)
                     try:
-                        response = urlopen(f'http://127.0.0.1:{port}/{entry}', timeout=2)
-                    except HTTPError as error:
-                        response = error
-                    except URLError:
+                        connection.request('GET', '/' + entry)
+                        response = connection.getresponse()
+                    except OSError:
+                        connection.close()
                         if server.poll() is not None or time.monotonic() >= deadline:
                             raise
                         time.sleep(0.1)
                         continue
                     break
-                with response:
+                try:
                     body = response.read()
                     if response.status != (200 if supported else 500) or body != (b'' if supported else MESSAGE):
                         raise AssertionError(f'{entry}: unexpected HTTP result {response.status}: {body!r}')
                     if not supported and response.headers.get_content_type() != 'text/plain':
                         raise AssertionError('Unsupported runtime must return plain text')
+                finally:
+                    connection.close()
                 print(f'PASS PHP {version}: HTTP {entry}', flush=True)
         finally:
             server.terminate()
