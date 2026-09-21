@@ -1,6 +1,6 @@
 """Real Symfony form, CSRF, authorization, concurrency and legacy-save checks."""
 from html.parser import HTMLParser
-from urllib.parse import urlencode
+from urllib.parse import parse_qs, urlencode, urlsplit
 from urllib.request import Request
 from urllib.error import HTTPError
 
@@ -9,10 +9,16 @@ class Inputs(HTMLParser):
     def __init__(self):
         super().__init__()
         self.fields = {}
+        self.links = []
+        self.action = None
         self.select = None
         self.textarea = None
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        if tag == 'a' and 'href' in attrs:
+            self.links.append(attrs['href'])
+        if tag == 'form':
+            self.action = attrs.get('action')
         if tag == 'input' and 'name' in attrs:
             self.fields[attrs['name']] = attrs.get('value', '')
         elif tag == 'select':
@@ -52,6 +58,43 @@ def verify_device_edit(harness, session, user_id, allowed_id, hidden_id, check):
             response = error
         body = response.read().decode()
         return response.status, body
+    context = {'q': 'inventory-fixture & rack', 'state': 'enabled', 'status': 'up',
+               'sort': 'hostname', 'direction': 'desc', 'page': '2', 'size': '50'}
+    edit_query = {'list[' + key + ']': value for key, value in context.items()}
+    edit_query['list[return_url]'] = 'https://attacker.invalid/'
+    context_path = path + '?' + urlencode(edit_query)
+    with session.opener.open(harness.base + context_path) as response:
+        navigation = Inputs()
+        navigation.feed(response.read().decode())
+    expected_query = {key: [value] for key, value in context.items()}
+
+    def check_navigation(body):
+        navigation = Inputs()
+        navigation.feed(body)
+        back = next(link for link in navigation.links if urlsplit(link).path == '/app.php/inventory/devices')
+        check(parse_qs(urlsplit(back).query) == expected_query,
+              'editor returns to the exact inventory view with only supported parameters')
+        action = urlsplit(navigation.action)
+        check(not action.netloc and action.path == path,
+              'form action stays on the fixed Symfony device route')
+        check(parse_qs(action.query) == {'list[' + key + ']': [value] for key, value in context.items()},
+              'form action retains validated list context')
+
+    invalid_navigation = dict(navigation.fields, **{'device_edit[description]': ''})
+    status, body = post(invalid_navigation, harness.base, target=context_path)
+    check(status == 422, 'invalid edit with list context is rejected')
+    check_navigation(body)
+    request = Request(harness.base + navigation.action, data=urlencode(navigation.fields).encode(),
+                      headers={'Origin': harness.base})
+    with session.opener.open(request) as response:
+        check(response.status == 200 and parse_qs(urlsplit(response.url).query).get('saved') == ['1'],
+              'successful save redirects with confirmation')
+        check_navigation(response.read().decode())
+    for query in ('list=invalid', 'list[page][]=2', 'list[sort]=unsafe', 'list[page]=0'):
+        target = path + '?' + query
+        check(session.request(target)['status'] == 400, 'invalid editor context rejected on GET')
+        check(post(navigation.fields, harness.base, target=target)[0] == 400,
+              'invalid editor context rejected before saving')
     original = harness.sql(f'SELECT description FROM host WHERE id={allowed_id}').strip()
     fields = get_fields()
     check(fields.get('device_edit[enabled]') == 'enabled', 'editor displays current polling state')

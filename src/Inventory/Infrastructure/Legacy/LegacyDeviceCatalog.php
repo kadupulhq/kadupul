@@ -32,10 +32,27 @@ final readonly class LegacyDeviceCatalog implements DeviceCatalog
         } elseif ($criteria->state === 'enabled') {
             $where .= " AND (h.disabled = '' OR h.disabled IS NULL)";
         }
+        if ($criteria->status === 'disabled') {
+            $where .= " AND h.disabled = 'on'";
+        } elseif ($criteria->status !== 'all') {
+            $where .= " AND (h.disabled = '' OR h.disabled IS NULL)";
+            if ($criteria->status === 'unknown') {
+                $where .= ' AND (h.status NOT IN (1, 2, 3, 4) OR h.status IS NULL)';
+            } else {
+                $where .= ' AND h.status = ?';
+                $parameters[] = match ($criteria->status) {
+                    'down' => 1, 'recovering' => 2, 'up' => 3, 'error' => 4,
+                };
+            }
+        }
         $where .= ' AND (' . $this->visibility->predicate($userId) . ')';
+        $column = match ($criteria->sort) {
+            'name' => 'h.description', 'hostname' => 'h.hostname',
+        };
+        $direction = $criteria->direction === 'desc' ? 'DESC' : 'ASC';
         $query = $db->prepare("SELECT DISTINCT h.id, h.description, h.hostname, h.disabled, h.status
             FROM host h LEFT JOIN graph_local gl ON gl.host_id = h.id
-            WHERE $where ORDER BY h.description ASC, h.id ASC LIMIT " . $criteria->offset() . ',' . ($criteria->pageSize + 1));
+            WHERE $where ORDER BY $column $direction, h.id $direction LIMIT " . $criteria->offset() . ',' . ($criteria->pageSize + 1));
         $query->execute($parameters);
         $rows = $query->fetchAll();
         $hasNext = count($rows) > $criteria->pageSize;
@@ -47,7 +64,7 @@ final readonly class LegacyDeviceCatalog implements DeviceCatalog
                 (string) $row['hostname'],
                 $row['disabled'] === 'on',
                 match ((int) $row['status']) {
-                    1 => 'Down', 2 => 'Recovering', 3 => 'Up', default => 'Unknown'
+                    1 => 'Down', 2 => 'Recovering', 3 => 'Up', 4 => 'Error', default => 'Unknown'
                 }
             );
         }

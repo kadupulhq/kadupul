@@ -76,9 +76,18 @@ SNMP secrets and notes are never selected or returned.
 Twig renders `templates/inventory/devices.html.twig`, including escaped data,
 search/filter controls, an empty state and previous/next links. A JSON read
 representation is available at `/app.php/inventory/devices.json`. Both accept
-`q`, `state=all|enabled|disabled`, `page`, and `size=25|50|100`. Search matches
+`q`, `state=all|enabled|disabled`, `status=all|up|down|recovering|unknown|error|disabled`,
+`page`, and `size=25|50|100`. Status matches the displayed column: disabled
+devices appear only under Disabled, regardless of their last observed status.
+Status and polling-state filters intersect, so contradictory choices return an
+empty result. Status filtering happens before pagination and is retained in page
+and CSV links. Search matches
 literal text rather than treating percent or underscore as SQL wildcards.
-Results have a stable name/ID ordering; lookahead avoids stale permission counts.
+Use `sort=name|hostname` and `direction=asc|desc` to choose ordering. The default
+is ascending name. Device ID breaks equal-value ties in the same direction,
+keeping pages deterministic for an unchanged inventory. Text ordering follows the
+installation database collation. Sorting is retained in page and CSV links;
+lookahead avoids stale permission counts.
 All responses are private/no-store, and mutation methods are rejected.
 
 “Export this page (CSV)” uses `/app.php/inventory/devices.csv` with the same
@@ -127,6 +136,10 @@ match the existing schema. Empty values clear the fields; neither field implies
 uniqueness or changes site membership. Both participate in stale-edit detection
 and pass through the existing graph-title and plugin save effects. The new form
 does not yet provide the legacy location autocomplete.
+Opening a device from the list preserves its search, filters, sorting, page and
+page size through validation errors and successful saves. “Back to devices”
+returns to that view. Only validated list parameters are carried in `list[...]`;
+form actions and links use fixed Symfony routes, never a supplied return URL.
 Other settings, including SNMP credentials, templates and poller assignment, remain
 in the legacy editor and cannot be submitted through this form.
 

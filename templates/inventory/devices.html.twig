@@ -14,6 +14,24 @@
             <option value="{{ value }}"{% if criteria.state == value %} selected{% endif %}>{{ label }}</option>
             {% endfor %}
         </select>
+        <label for="device-status">Status</label>
+        <select id="device-status" name="status">
+            {% for value, label in {'all': 'All', 'up': 'Up', 'down': 'Down', 'error': 'Error', 'recovering': 'Recovering', 'unknown': 'Unknown', 'disabled': 'Disabled'} %}
+            <option value="{{ value }}"{% if criteria.status == value %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <label for="device-sort">Sort by</label>
+        <select id="device-sort" name="sort">
+            {% for value, label in {'name': 'Name', 'hostname': 'Hostname'} %}
+            <option value="{{ value }}"{% if criteria.sort == value %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <label for="device-direction">Order</label>
+        <select id="device-direction" name="direction">
+            {% for value, label in {'asc': 'Ascending', 'desc': 'Descending'} %}
+            <option value="{{ value }}"{% if criteria.direction == value %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
         <label for="device-size">Devices per page</label>
         <select id="device-size" name="size">
             {% for size in [25, 50, 100] %}
@@ -30,13 +48,12 @@
         <tbody>
         {% for device in result.devices %}
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
-            <tr><td>{{ device.id }}</td><td><a href="{{ path('inventory_device_edit', {id: device.id}) }}">{{ device.description }}</a></td><td>{{ device.hostname }}</td><td>{{ device.disabled ? 'Disabled' : device.status }}</td></tr>
+            <tr><td>{{ device.id }}</td><td><a href="{{ path('inventory_device_edit', {id: device.id, list: filters}) }}">{{ device.description }}</a></td><td>{{ device.hostname }}</td><td>{{ device.disabled ? 'Disabled' : device.status }}</td></tr>
         {% else %}
             <tr><td colspan="4">No devices found on this page.</td></tr>
         {% endfor %}
         </tbody>
     </table>
-    {% set filters = {q: criteria.search, state: criteria.state, size: criteria.pageSize} %}
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
     <p><a href="{{ path('inventory_devices_csv', filters|merge({page: criteria.page})) }}">Export this page (CSV)</a></p>
     <nav aria-label="Device pages">

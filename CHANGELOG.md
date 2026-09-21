@@ -44,6 +44,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Preserve the legacy Error device status in Symfony Inventory filtering, display and CSV exports.
+
 - Deny internal application paths in the Nginx deployment and reject HTTP execution of command-line tools before bootstrap.
 
 - Resume Symfony's shared identity through native strict cookie handling and measure Symfony, HTTP worker, browser-build and offline-release coverage in Sonar.
@@ -143,6 +145,12 @@ Targeting `v1.3.0`, the first planned application release. See
   of stopping the installer with a fatal error.
 
 ### Added
+
+- Preserve the Symfony inventory view through device editing, validation errors and saves.
+
+- Sort Symfony Inventory by name or hostname in either direction, with stable page boundaries and matching CSV order.
+
+- Filter Symfony Inventory by displayed device status across Twig, JSON, pagination and current-page CSV.
 
 - SonarQube Cloud analysis for main and same-repository pull requests.
 - Unit test coverage reported to SonarQube Cloud from a PHP 8.1 run of the

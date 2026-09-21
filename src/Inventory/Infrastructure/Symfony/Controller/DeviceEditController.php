@@ -11,6 +11,7 @@ use Kadupul\Inventory\Application\Command\EditDevice;
 use Kadupul\Inventory\Application\Query\FindEditableDevice;
 use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Inventory\Domain\DeviceEditConflict;
+use Kadupul\Inventory\Infrastructure\Symfony\DeviceListParameters;
 use Kadupul\Inventory\Infrastructure\Symfony\Form\DeviceEditType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormError;
@@ -35,7 +36,18 @@ final class DeviceEditController
         if ($device === null) {
             return new Response('Device not found.', 404, $headers);
         }
-        $form = $forms->create(DeviceEditType::class, ['description' => $device->description(), 'hostname' => $device->hostname(), 'notes' => $device->notes(), 'enabled' => $device->enabled(), 'location' => $device->location(), 'external_id' => $device->externalId(), 'revision' => $device->revision()]);
+        $query = $request->query->all();
+        $list = $query['list'] ?? [];
+        try {
+            if (!is_array($list)) {
+                throw new \InvalidArgumentException('Invalid device list filters.');
+            }
+            $filters = DeviceListParameters::encode(DeviceListParameters::parse($list));
+        } catch (\InvalidArgumentException) {
+            return new Response('Invalid device list filters.', 400, $headers);
+        }
+        $editParameters = ['id' => $id, 'list' => $filters];
+        $form = $forms->create(DeviceEditType::class, ['description' => $device->description(), 'hostname' => $device->hostname(), 'notes' => $device->notes(), 'enabled' => $device->enabled(), 'location' => $device->location(), 'external_id' => $device->externalId(), 'revision' => $device->revision()], ['action' => $urls->generate('inventory_device_edit', $editParameters)]);
         $form->handleRequest($request);
         $status = $request->isMethod('POST') ? 422 : 200;
         if ($form->isSubmitted()) {
@@ -49,7 +61,7 @@ final class DeviceEditController
                 $data = $form->getData();
                 try {
                     $edit($id, (string) $data['description'], (string) $data['hostname'], (string) $data['notes'], $data['enabled'], (string) $data['location'], (string) $data['external_id'], (string) $data['revision']);
-                    return new RedirectResponse($urls->generate('inventory_device_edit', ['id' => $id, 'saved' => 1]), 303, $headers);
+                    return new RedirectResponse($urls->generate('inventory_device_edit', $editParameters + ['saved' => 1]), 303, $headers);
                 } catch (InventoryAccessDenied) {
                     return new Response('Access denied.', 403, $headers);
                 } catch (DeviceEditConflict $error) {
@@ -63,6 +75,6 @@ final class DeviceEditController
                 }
             }
         }
-        return new Response($twig->render('inventory/edit.html.twig', ['device' => $device, 'form' => $form->createView(), 'saved' => $request->query->get('saved') === '1']), $status, $headers);
+        return new Response($twig->render('inventory/edit.html.twig', ['device' => $device, 'form' => $form->createView(), 'saved' => ($query['saved'] ?? null) === '1', 'filters' => $filters]), $status, $headers);
     }
 }
