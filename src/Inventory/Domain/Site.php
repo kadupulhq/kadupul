@@ -31,7 +31,7 @@ final class Site
         if (!hash_equals($this->revision(), $expectedRevision)) {
             throw new SiteEditConflict('This site changed. Reload it before saving.');
         }
-        $name = trim($name);
+        $name = trim($name, " \t\n\r\x0B");
         if ($name === '' || !mb_check_encoding($name, 'UTF-8') || mb_strlen($name, 'UTF-8') > 100 || str_contains($name, "\0")) {
             throw new \InvalidArgumentException('The name must contain 1–100 characters.');
         }

@@ -51,7 +51,7 @@ final class SiteEditTest extends TestCase
 
     public static function invalidText(): iterable
     {
-        foreach ([' ', str_repeat('東', 101), "a\0b", "\xff"] as $name) {
+        foreach ([' ', str_repeat('東', 101), "a\0b", "\0Name", "Name\0", "\xff"] as $name) {
             yield [$name, 'Valid'];
         }
         foreach ([str_repeat('東', 1025), "a\0b", "\xff"] as $notes) {
