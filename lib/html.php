@@ -97,9 +97,20 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
 		$table_prefix .= '_' . clean_up_name(get_nfilter_request_var('tab'));
 	}
 	$table_id = $table_prefix . $table_suffix;
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$table_id_html = htmlspecialchars((string)$table_id, $escape_flags, 'UTF-8', false);
+	$table_id_html = str_replace('`', '&#96;', $table_id_html);
+	$width_html = htmlspecialchars((string)$width, $escape_flags, 'UTF-8', false);
+	$width_html = str_replace('`', '&#96;', $width_html);
+	$align_html = htmlspecialchars((string)$align, $escape_flags, 'UTF-8', false);
+	$align_html = str_replace('`', '&#96;', $align_html);
+	$padding_html = htmlspecialchars((string)$cell_padding, $escape_flags, 'UTF-8', false);
+	$padding_html = str_replace('`', '&#96;', $padding_html);
+	$add_label_html = htmlspecialchars((string)$add_label, $escape_flags, 'UTF-8', false);
+	$add_label_html = str_replace('`', '&#96;', $add_label_html);
 
 	if ($title != '') {
-		print "<div id='$table_id' class='cactiTable' style='width:$width;text-align:$align;'>";
+		print "<div id='$table_id_html' class='cactiTable' style='width:$width_html;text-align:$align_html;'>";
 		print '<div>';
 		print "<div class='cactiTableTitle'><span>" . ($title != '' ? $title:'') . '</span></div>';
 		print "<div class='cactiTableButton'>";
@@ -122,12 +133,19 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
 		}
 
 		if ($help_file !== false && $help_count == 0 && is_realm_allowed(28)) {
-			print "<span class='cactiHelp' title='" . __esc('Get Page Help') . "'><a class='linkOverDark helpPage' data-page='" . html_escape(basename($help_file)) . "' href='#'><i class='far fa-question-circle'></i></a></span>";
+			$help_html = htmlspecialchars(basename($help_file), $escape_flags, 'UTF-8', false);
+			$help_html = str_replace('`', '&#96;', $help_html);
+			print "<span class='cactiHelp' title='" . __esc('Get Page Help') . "'>" .
+				"<a class='linkOverDark helpPage' data-page='$help_html' href='#'>" .
+				"<i class='far fa-question-circle'></i></a></span>";
 			$help_count++;
 		}
 
 		if ($add_text != '' && !is_array($add_text)) {
-			print "<span class='cactiFilterAdd' title='$add_label'><a class='linkOverDark' href='" . html_escape($add_text) . "'><i class='fa fa-plus'></i></a></span>";
+			$add_text_html = htmlspecialchars((string)$add_text, $escape_flags, 'UTF-8', false);
+			$add_text_html = str_replace('`', '&#96;', $add_text_html);
+			print "<span class='cactiFilterAdd' title='$add_label_html'>" .
+				"<a class='linkOverDark' href='$add_text_html'><i class='fa fa-plus'></i></a></span>";
 		} else {
 			if (is_array($add_text)) {
 				if (cacti_sizeof($add_text)) {
@@ -145,7 +163,7 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
 						}
 
 						if (isset($icon['href'])) {
-							$href = html_escape($icon['href']);
+							$href = $icon['href'];
 						} else {
 							$href = '#';
 						}
@@ -156,7 +174,20 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
 							$title = $add_label;
 						}
 
-						print "<span class='cactiFilterAdd' title='$title'><a" . (isset($icon['id']) ? " id='" . $icon['id'] . "'":'') . " class='$classo' href='$href'><i class='$classi'></i></a></span>";
+						$href_html = htmlspecialchars((string)$href, $escape_flags, 'UTF-8', false);
+						$href_html = str_replace('`', '&#96;', $href_html);
+						$title_html = htmlspecialchars((string)$title, $escape_flags, 'UTF-8', false);
+						$title_html = str_replace('`', '&#96;', $title_html);
+						$classi_html = htmlspecialchars((string)$classi, $escape_flags, 'UTF-8', false);
+						$classi_html = str_replace('`', '&#96;', $classi_html);
+						$id_attribute = '';
+						if (isset($icon['id'])) {
+							$id_html = htmlspecialchars((string)$icon['id'], $escape_flags, 'UTF-8', false);
+							$id_html = str_replace('`', '&#96;', $id_html);
+							$id_attribute = " id='$id_html'";
+						}
+						print "<span class='cactiFilterAdd' title='$title_html'><a$id_attribute" .
+							" class='$classo' href='$href_html'><i class='$classi_html'></i></a></span>";
 					}
 				}
 			} else {
@@ -166,17 +197,17 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
 		print '</div></div>';
 
 		if ($div === true) {
-			print "<div id='$table_id" . "_child' class='cactiTable'>";
+			print "<div id='$table_id_html" . "_child' class='cactiTable'>";
 		} else {
-			print "<table id='$table_id" . "_child' class='cactiTable' style='padding:" . $cell_padding . "px;'>";
+			print "<table id='$table_id_html" . "_child' class='cactiTable' style='padding:{$padding_html}px;'>";
 		}
 	} else {
-		print "<div id='$table_id' class='cactiTable' style='width:$width;text-align:$align;'>";
+		print "<div id='$table_id_html' class='cactiTable' style='width:$width_html;text-align:$align_html;'>";
 
 		if ($div === true) {
-			print "<div id='$table_id" . "_child' class='cactiTable'>";
+			print "<div id='$table_id_html" . "_child' class='cactiTable'>";
 		} else {
-			print "<table id='$table_id" . "_child' class='cactiTable' style='padding:" . $cell_padding . "px;'>";
+			print "<table id='$table_id_html" . "_child' class='cactiTable' style='padding:{$padding_html}px;'>";
 		}
 	}
 
