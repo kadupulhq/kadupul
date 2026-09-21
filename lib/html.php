@@ -1016,6 +1016,9 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
         alternatively and array of header names and alignment array('display' = 'blah', 'align' = 'blah')
    @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row */
 function html_header($header_items, $last_item_colspan = 1) {
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$colspan_html = htmlspecialchars((string) $last_item_colspan, $escape_flags, 'UTF-8', false);
+	$colspan_html = str_replace('`', '&#96;', $colspan_html);
 	print "<tr class='tableHeader " . (!$last_item_colspan > 1 ? 'tableFixed':'') . "'>";
 
 	$i = 0;
@@ -1039,9 +1042,21 @@ function html_header($header_items, $last_item_colspan = 1) {
 				$tip = '';
 			}
 
-			print '<th ' . ($tip != '' ? "title='" . html_escape($tip) . "' ":'') . "class='$nohide $align' " . ((($i+1) == cacti_count($header_items)) ? "colspan='$last_item_colspan' " : '') . '>' . html_escape($item['display']) . '</th>';
+			$tip_html = htmlspecialchars((string) $tip, $escape_flags, 'UTF-8', false);
+			$tip_html = str_replace('`', '&#96;', $tip_html);
+			$align_html = htmlspecialchars((string) $align, $escape_flags, 'UTF-8', false);
+			$align_html = str_replace('`', '&#96;', $align_html);
+			$display_html = htmlspecialchars((string) $item['display'], $escape_flags, 'UTF-8', false);
+			$display_html = str_replace('`', '&#96;', $display_html);
+			print '<th ' . ($tip != '' ? "title='$tip_html' " : '')
+				. "class='$nohide $align_html' "
+				. ((($i+1) == cacti_count($header_items)) ? "colspan='$colspan_html' " : '')
+				. '>' . $display_html . '</th>';
 		} else {
-			print '<th ' . ((($i+1) == cacti_count($header_items)) ? "colspan='$last_item_colspan' " : '') . '>' . html_escape($item) . '</th>';
+			$display_html = htmlspecialchars((string) $item, $escape_flags, 'UTF-8', false);
+			$display_html = str_replace('`', '&#96;', $display_html);
+			print '<th ' . ((($i+1) == cacti_count($header_items)) ? "colspan='$colspan_html' " : '')
+				. '>' . $display_html . '</th>';
 		}
 
 		$i++;
