@@ -5,7 +5,7 @@
 # database image, so a refresh shows up there. A digest pin here would fix one
 # PHP version and break the version matrix.
 ARG PHP_VERSION=8.2
-FROM node:22.22.2-bookworm-slim@sha256:9f6d5975c7dca860947d3915877f85607946403fc55349f39b4bc3688448bb6e AS assets
+FROM node:26.8.2-bookworm-slim@sha256:cd9f682fa2885cd1056e830424764158570061c59736a1da836bc3d73df095ae AS assets
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY tools/dependencies ./tools/dependencies
