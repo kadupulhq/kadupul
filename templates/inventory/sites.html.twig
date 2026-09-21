@@ -25,6 +25,7 @@
     </form>
     <p>Device counts include only devices you can access. Site editing is available in the existing Sites screen.</p>
     <table>
+        <caption>Sites and devices you can access at each site</caption>
         <thead><tr><th scope="col">Name</th><th scope="col">ID</th><th scope="col">Accessible devices</th><th scope="col">City</th><th scope="col">State</th><th scope="col">Country</th></tr></thead>
         <tbody>
         {% for site in result.sites %}
@@ -41,10 +42,10 @@
     </table>
     <nav aria-label="Site pages">
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
-        {% if criteria.page > 1 %}<a href="{{ path('inventory_sites', filters|merge({page: criteria.page - 1})) }}">Previous</a>{% endif %}
+        {% if criteria.page > 1 %}<a rel="prev" href="{{ path('inventory_sites', filters|merge({page: criteria.page - 1})) }}">Previous</a>{% endif %}
         <span>Page {{ criteria.page }}</span>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
-        {% if result.hasNext %}<a href="{{ path('inventory_sites', filters|merge({page: criteria.page + 1})) }}">Next</a>{% endif %}
+        {% if result.hasNext %}<a rel="next" href="{{ path('inventory_sites', filters|merge({page: criteria.page + 1})) }}">Next</a>{% endif %}
     </nav>
 </main>
 {% endblock %}
