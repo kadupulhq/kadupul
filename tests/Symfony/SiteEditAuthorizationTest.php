@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 final class SiteEditAuthorizationTest extends TestCase
 {
     #[DataProvider('revocations')]
-    public function testAuthorizationLossDuringPostPreservesStatus(bool $anonymous, bool $atPersistence): void
+    public function testSaveFailurePreservesStatus(bool $anonymous, bool $atPersistence, bool $persistenceFailure = false): void
     {
         $kernel = new Kernel('test', true);
         try {
@@ -36,7 +36,8 @@ final class SiteEditAuthorizationTest extends TestCase
             $sites = $this->createMock(SiteEditor::class);
             $sites->expects(self::exactly($atPersistence ? 3 : 2))->method('find')->with(12)->willReturn($site);
             if ($atPersistence) {
-                $sites->expects(self::once())->method('save')->willThrowException(new InventoryAccessDenied($anonymous));
+                $failure = $persistenceFailure ? new \RuntimeException('private adapter diagnostic') : new InventoryAccessDenied($anonymous);
+                $sites->expects(self::once())->method('save')->willThrowException($failure);
             } else {
                 $sites->expects(self::never())->method('save');
             }
@@ -51,7 +52,11 @@ final class SiteEditAuthorizationTest extends TestCase
             $request = Request::create($path, 'POST', ['site_edit' => ['name' => 'Changed', 'notes' => '', 'revision' => $revision, '_token' => $token]]);
             $request->headers->set('Origin', 'http://localhost');
             $response = $kernel->handle($request);
-            self::assertSame($anonymous ? 401 : 403, $response->getStatusCode());
+            self::assertSame($persistenceFailure ? 502 : ($anonymous ? 401 : 403), $response->getStatusCode());
+            if ($persistenceFailure) {
+                self::assertStringContainsString('Save outcome is uncertain. Reload the site before retrying.', $response->getContent());
+                self::assertStringNotContainsString('private adapter diagnostic', $response->getContent());
+            }
             self::assertTrue($response->headers->hasCacheControlDirective('no-store'));
         } finally {
             $kernel->shutdown();
@@ -64,5 +69,6 @@ final class SiteEditAuthorizationTest extends TestCase
         yield 'realm lost before command' => [false, false];
         yield 'session lost before persistence' => [true, true];
         yield 'realm lost before persistence' => [false, true];
+        yield 'generic persistence failure without retry' => [false, true, true];
     }
 }
