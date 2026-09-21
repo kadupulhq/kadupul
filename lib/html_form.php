@@ -807,7 +807,13 @@ function form_hidden_box($form_name, $form_previous_value, $form_default_value, 
 		$form_previous_value = $form_default_value;
 	}
 
-	print "<div style='display:none;'><input style='height:0px;' type='hidden' id='$form_name' name='$form_name' value='" . html_escape($form_previous_value) . "'></div>";
+	$name_html = htmlspecialchars((string) $form_name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	$name_html = str_replace('`', '&#96;', $name_html);
+	$value_html = htmlspecialchars((string) $form_previous_value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	$value_html = str_replace('`', '&#96;', $value_html);
+
+	print "<div style='display:none;'><input style='height:0px;' type='hidden'"
+		. " id='$name_html' name='$name_html' value='$value_html'></div>";
 }
 
 /* form_dropdown - draws a standard html dropdown box
