@@ -67,6 +67,12 @@ test('bulk confirmation fields preserve serialized selections and action values'
 	'host templates' => 'host_templates.php',
 	'data inputs' => 'data_input.php',
 	'GPRINT presets' => 'gprint_presets.php',
+	'aggregate templates' => 'aggregate_templates.php',
+	'color templates' => 'color_templates.php',
+	'data source profiles' => 'data_source_profiles.php',
+	'automation templates' => 'automation_templates.php',
+	'automation graph rules' => 'automation_graph_rules.php',
+	'automation tree rules' => 'automation_tree_rules.php',
 ))->with(array(
 	'ordinary ID' => '42',
 	'leading zeros' => '0042',
