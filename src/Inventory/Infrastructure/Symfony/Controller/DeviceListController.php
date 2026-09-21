@@ -10,6 +10,7 @@ namespace Kadupul\Inventory\Infrastructure\Symfony\Controller;
 use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Inventory\Application\Query\ListDevices;
 use Kadupul\Inventory\Domain\DeviceListCriteria;
+use Kadupul\Inventory\Infrastructure\Symfony\Export\DevicePageCsv;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +21,8 @@ final class DeviceListController
 {
     #[Route('/inventory/devices', name: 'inventory_devices', methods: ['GET', 'HEAD'])]
     #[Route('/inventory/devices.json', name: 'inventory_devices_json', defaults: ['_format' => 'json'], methods: ['GET', 'HEAD'])]
-    public function __invoke(Request $request, ListDevices $listDevices, Environment $twig): Response
+    #[Route('/inventory/devices.csv', name: 'inventory_devices_csv', defaults: ['_format' => 'csv'], methods: ['GET', 'HEAD'])]
+    public function __invoke(Request $request, ListDevices $listDevices, Environment $twig, DevicePageCsv $csv): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         try {
@@ -41,6 +43,13 @@ final class DeviceListController
             return new JsonResponse(['error' => $error->getMessage()], $error->unauthenticated ? 401 : 403, $headers);
         } catch (\InvalidArgumentException $error) {
             return new JsonResponse(['error' => 'Invalid device list filters.'], 400, $headers);
+        }
+
+        if ($request->getRequestFormat() === 'csv') {
+            return new Response($csv->encode($result), 200, $headers + [
+                'Content-Type' => 'text/csv; charset=UTF-8',
+                'Content-Disposition' => 'attachment; filename="devices-page-' . $criteria->page . '.csv"',
+            ]);
         }
 
         if ($request->getRequestFormat() === 'json') {

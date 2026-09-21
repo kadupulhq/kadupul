@@ -73,11 +73,23 @@ literal text rather than treating percent or underscore as SQL wildcards.
 Results have a stable name/ID ordering; lookahead avoids stale permission counts.
 All responses are private/no-store, and mutation methods are rejected.
 
+“Export this page (CSV)” uses `/app.php/inventory/devices.csv` with the same
+filters, ordering, page size and authorization as the list. This is a current-page
+download (at most 100 devices), not a complete inventory export. The Symfony
+controller invokes the same `ListDevices` application query and passes its read
+model to an infrastructure CSV encoder; no export-specific SQL or domain format
+dependency is introduced. The file includes only ID, name, hostname and displayed
+status, with UTF-8 identification and CSV quoting. Name and hostname cells always
+receive a leading apostrophe to mark them as literal spreadsheet text, including
+formula-like values preceded by whitespace. Raw CSV readers retain that prefix.
+Empty pages return column headers. Downloads are private/no-store; HEAD returns
+headers only and mutation methods are rejected.
+
 The adapter projects the four legacy graph/device visibility modes without the
 legacy fast path that overlooks device exceptions. Default-allow exceptions are
 explicitly checked. The explicit state filter replaces legacy saved display
 preferences for this new screen. `host.php` remains operational; advanced filters,
-exports, advanced edits, bulk actions, plugin-provided list hooks/columns and navigation
+full exports, advanced edits, bulk actions, plugin-provided list hooks/columns and navigation
 cutover are remaining migration work, not claimed parity.
 
 Run the module/kernel checks with `composer test`. Run real HTTP/database checks:
@@ -311,3 +323,10 @@ persistence, Unicode limits, explicit clearing, escaping, stale revisions and
 graph-title substitution checks. Container/Twig lint, security inventories and
 staged-content checks pass. The rebuilt offline archive verifies with Docker
 networking disabled.
+
+Current-page CSV validation: 49 module/kernel/architecture tests pass on PHP
+8.3.33 (2,077 assertions). File- and database-session HTTP suites verify matching
+list/export visibility and page boundaries, state filters, revoked access,
+malformed filters, empty pages, HEAD responses and multiline Unicode/formula-like
+cells. Container/Twig lint, security inventories, focused Semgrep and staged-content
+checks pass. The rebuilt offline archive verifies with networking disabled.

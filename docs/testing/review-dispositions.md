@@ -101,12 +101,13 @@ an unlimited storage guarantee.
 
 ## Symfony route links and reusable workflow syntax
 
-Semgrep's `generic.html-templates.security.var-in-href.var-in-href` flags five
+Semgrep's `generic.html-templates.security.var-in-href.var-in-href` flags six
 Inventory Twig anchors. Each calls Symfony `path()` with a literal route name;
 IDs and filter values are encoded route/query parameters, never an input URI.
 Twig retains attribute escaping. The existing HTTP tests verify escaped values
 and generated compatibility-entry links. Suppressions name only this rule on
-those five anchors; arbitrary href variables remain subject to scanning.
+those six anchors (including the current-page CSV download); arbitrary href
+variables remain subject to scanning.
 
 Zizmor's `self-repository` recommendation conflicts with the CI-pinned actionlint
 image, which rejects `$/` reusable workflow calls. Keep the supported `./` form

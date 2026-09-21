@@ -11,6 +11,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Export the current Symfony Inventory page as a permission-filtered CSV download with spreadsheet-safe text cells.
+
 - Migrate device location and external ID editing to Symfony with Unicode-aware domain validation and stale-edit detection.
 
 - Enable and disable device polling through the Symfony editor, including polling state in stale-edit protection and preserving legacy save effects.

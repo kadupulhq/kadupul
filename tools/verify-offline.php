@@ -26,6 +26,10 @@ $response = $kernel->handle(Request::create('/inventory/devices/1/edit'));
 if ($response->getStatusCode() !== 401 || !is_file($root . '/templates/inventory/edit.html.twig') || !is_file($root . '/bin/legacy-device-edit.php')) {
     throw new RuntimeException('Offline Inventory edit route, template or worker missing');
 }
+$response = $kernel->handle(Request::create('/inventory/devices.csv'));
+if ($response->getStatusCode() !== 401) {
+    throw new RuntimeException('Offline Inventory CSV route missing or not protected');
+}
 $kernel->shutdown();
 foreach (['Kadupul\\Inventory\\Application\\Query\\ListDevices', 'Kadupul\\Inventory\\Infrastructure\\Symfony\\Controller\\DeviceListController'] as $class) {
     if (!class_exists($class)) {

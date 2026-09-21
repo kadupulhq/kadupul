@@ -1,6 +1,9 @@
 """Inventory migration checks against real Symfony HTTP routes and legacy tables."""
+import csv
+import io
 import json
 from urllib.parse import urlencode
+from urllib.request import Request
 
 
 def verify_inventory(harness, session, user_id, check):
@@ -10,6 +13,17 @@ def verify_inventory(harness, session, user_id, check):
         result = session.request(base + '.json?' + urlencode(filters))
         check(result['status'] == 200, 'Inventory query succeeds')
         return result['json']
+
+    def export(**filters):
+        with session.opener.open(harness.base + base + '.csv?' + urlencode(filters)) as response:
+            check(response.status == 200, 'CSV export succeeds')
+            check(response.headers.get_content_type() == 'text/csv', 'CSV has the correct media type')
+            check('no-store' in response.headers.get('Cache-Control', ''), 'CSV is not cached')
+            check(response.headers.get('Content-Disposition') ==
+                  f'attachment; filename="devices-page-{filters.get("page", 1)}.csv"', 'CSV is downloaded with a fixed page filename')
+            rows = list(csv.reader(io.StringIO(response.read().decode('utf-8-sig'), newline='')))
+            check(rows[0] == ['ID', 'Name', 'Hostname', 'Status'], 'CSV only exports list columns')
+            return rows[1:]
 
     # No production database is used: Harness.setup owns this disposable schema.
     saved = harness.rows(f"SELECT JSON_OBJECT('policy_hosts',policy_hosts,'policy_graphs',policy_graphs,'policy_graph_templates',policy_graph_templates) FROM user_auth WHERE id={user_id}")[0]
@@ -39,11 +53,24 @@ def verify_inventory(harness, session, user_id, check):
           'hidden devices never enter either page')
     check(all(set(d) == {'id', 'description', 'hostname', 'disabled', 'status'} for d in first['devices']),
           'device projection exposes no SNMP credentials or notes')
+    for page_number, devices in ((1, first['devices']), (2, second['devices'])):
+        check(export(q='inventory-fixture', page=page_number) == [
+            [str(d['id']), "'" + d['description'], "'" + d['hostname'],
+             'Disabled' if d['disabled'] else d['status']] for d in devices],
+              'CSV uses the same visibility, ordering and page boundary as the list')
+    check(not export(q='inventory-fixture', page=3), 'empty CSV page contains only the header')
+    with session.opener.open(Request(harness.base + base + '.csv', method='HEAD')) as response:
+        check(response.status == 200 and response.read() == b'', 'CSV HEAD returns no body')
     check(not listing(q="%' OR 1=1 --")['devices'], 'search metacharacters cannot expand the query')
     check(not listing(q='inventory-fixture%')['devices'], 'search percent is literal')
     harness.sql(f"UPDATE host SET disabled='on' WHERE id={allowed[0]}")
     check([d['id'] for d in listing(q='inventory-fixture', state='disabled')['devices']] == [allowed[0]],
           'disabled filter preserves visibility')
+    check([int(row[0]) for row in export(q='inventory-fixture', state='disabled')] == [allowed[0]],
+          'CSV preserves the disabled filter')
+    formula = ' \t=1+1,"東京"\nnext'
+    harness.sql(f"UPDATE host SET description=CONVERT(UNHEX('{formula.encode().hex()}') USING utf8mb4) WHERE id={allowed[0]}")
+    check(export(q='=1+1')[0][1] == "'" + formula, 'CSV quotes multiline Unicode text and neutralizes formulas')
     check(allowed[0] not in [d['id'] for d in listing(q='inventory-fixture', state='enabled')['devices']],
           'enabled filter excludes disabled devices')
     harness.sql(f"UPDATE host SET deleted='on' WHERE id={allowed[1]}")
@@ -57,10 +84,14 @@ def verify_inventory(harness, session, user_id, check):
     check('no-store' in response.headers.get('Cache-Control', ''), 'Inventory responses are not cached')
     response.close()
     check('/app.php/inventory/devices' in body, 'Symfony generates links for the compatibility entry URL')
+    check('/app.php/inventory/devices.csv?' in body and 'Export this page (CSV)' in body,
+          'Twig links to the compatibility CSV route')
     for query in ('page=0', 'page=1e3', 'page[]=1', 'q[]=x', 'size=100000', 'state=other'):
         check(session.request(base + '.json?' + query)['status'] == 400, 'invalid filters are rejected: ' + query)
+        check(session.request(base + '.csv?' + query)['status'] == 400, 'invalid CSV filters are rejected: ' + query)
     harness.sql(f'DELETE FROM user_auth_realm WHERE user_id={user_id} AND realm_id=3')
     check(session.request(base + '.json')['status'] == 403, 'console access alone does not authorize Inventory')
+    check(session.request(base + '.csv')['status'] == 403, 'revoked device realm prevents CSV export')
     harness.sql("INSERT INTO user_auth_group (name,enabled,policy_hosts,policy_graphs,policy_graph_templates) VALUES ('inventory-test','on',2,2,2)")
     group = int(harness.sql("SELECT id FROM user_auth_group WHERE name='inventory-test'").strip())
     harness.sql(f'INSERT INTO user_auth_group_members (group_id,user_id) VALUES ({group},{user_id}); INSERT INTO user_auth_group_realm (group_id,realm_id) VALUES ({group},3); INSERT INTO user_auth_group_perms (group_id,item_id,type) VALUES ({group},{ids[0]},3)')

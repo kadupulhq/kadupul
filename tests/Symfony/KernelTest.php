@@ -94,7 +94,7 @@ final class KernelTest extends TestCase
     {
         $kernel = new Kernel('test', true);
         try {
-            foreach (['/inventory/devices', '/inventory/devices.json'] as $path) {
+            foreach (['/inventory/devices', '/inventory/devices.json', '/inventory/devices.csv'] as $path) {
                 self::assertSame(401, $kernel->handle(Request::create($path))->getStatusCode());
                 self::assertSame(405, $kernel->handle(Request::create($path, 'POST'))->getStatusCode());
             }
