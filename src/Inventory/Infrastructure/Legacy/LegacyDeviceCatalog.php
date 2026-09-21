@@ -46,9 +46,13 @@ final readonly class LegacyDeviceCatalog implements DeviceCatalog
             }
         }
         $where .= ' AND (' . $this->visibility->predicate($userId) . ')';
+        $column = match ($criteria->sort) {
+            'name' => 'h.description', 'hostname' => 'h.hostname',
+        };
+        $direction = $criteria->direction === 'desc' ? 'DESC' : 'ASC';
         $query = $db->prepare("SELECT DISTINCT h.id, h.description, h.hostname, h.disabled, h.status
             FROM host h LEFT JOIN graph_local gl ON gl.host_id = h.id
-            WHERE $where ORDER BY h.description ASC, h.id ASC LIMIT " . $criteria->offset() . ',' . ($criteria->pageSize + 1));
+            WHERE $where ORDER BY $column $direction, h.id $direction LIMIT " . $criteria->offset() . ',' . ($criteria->pageSize + 1));
         $query->execute($parameters);
         $rows = $query->fetchAll();
         $hasNext = count($rows) > $criteria->pageSize;

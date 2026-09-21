@@ -27,7 +27,7 @@ final class DeviceListController
         $headers = ['Cache-Control' => 'private, no-store'];
         try {
             $query = $request->query->all();
-            foreach (['q', 'state', 'status', 'page', 'size'] as $key) {
+            foreach (['q', 'state', 'status', 'sort', 'direction', 'page', 'size'] as $key) {
                 if (isset($query[$key]) && !is_string($query[$key])) {
                     throw new \InvalidArgumentException('Invalid device list filters.');
                 }
@@ -37,7 +37,7 @@ final class DeviceListController
             if (!ctype_digit($page) || !ctype_digit($size) || strlen($page) > 6 || strlen($size) > 3) {
                 throw new \InvalidArgumentException('Invalid device list filters.');
             }
-            $criteria = new DeviceListCriteria($query['q'] ?? '', $query['state'] ?? 'all', (int) $page, (int) $size, $query['status'] ?? 'all');
+            $criteria = new DeviceListCriteria($query['q'] ?? '', $query['state'] ?? 'all', (int) $page, (int) $size, $query['status'] ?? 'all', $query['sort'] ?? 'name', $query['direction'] ?? 'asc');
             $result = $listDevices($criteria);
         } catch (InventoryAccessDenied $error) {
             return new JsonResponse(['error' => $error->getMessage()], $error->unauthenticated ? 401 : 403, $headers);

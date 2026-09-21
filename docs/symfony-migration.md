@@ -83,7 +83,11 @@ Status and polling-state filters intersect, so contradictory choices return an
 empty result. Status filtering happens before pagination and is retained in page
 and CSV links. Search matches
 literal text rather than treating percent or underscore as SQL wildcards.
-Results have a stable name/ID ordering; lookahead avoids stale permission counts.
+Use `sort=name|hostname` and `direction=asc|desc` to choose ordering. The default
+is ascending name. Device ID breaks equal-value ties in the same direction,
+keeping pages deterministic for an unchanged inventory. Text ordering follows the
+installation database collation. Sorting is retained in page and CSV links;
+lookahead avoids stale permission counts.
 All responses are private/no-store, and mutation methods are rejected.
 
 “Export this page (CSV)” uses `/app.php/inventory/devices.csv` with the same

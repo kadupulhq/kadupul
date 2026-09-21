@@ -144,6 +144,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Added
 
+- Sort Symfony Inventory by name or hostname in either direction, with stable page boundaries and matching CSV order.
+
 - Filter Symfony Inventory by displayed device status across Twig, JSON, pagination and current-page CSV.
 
 - SonarQube Cloud analysis for main and same-repository pull requests.
