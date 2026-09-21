@@ -852,12 +852,12 @@ class Installer implements JsonSerializable {
 
 					if ($should_set && $name == 'path_php_binary') {
 						$input = mt_rand(2,64);
-						$output = shell_exec(
-							cacti_escapeshellcmd($path) . ' -q ' .
-							cacti_escapeshellarg($config['base_path'] .  '/install/cli_test.php') .
-							' ' . $input);
+						$output = array();
+						$status = cacti_exec($path, array(
+							'-q', $config['base_path'] . '/install/cli_test.php', (string) $input
+						), $output, null);
 
-						if ($output != $input * $input) {
+						if ($status !== 0 || implode("\n", $output) != $input * $input) {
 							$this->addError(Installer::STEP_BINARY_LOCATIONS, 'Paths', $name, __('PHP did not return expected result'));
 							$should_set = false;
 						}

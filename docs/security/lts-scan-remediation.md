@@ -44,6 +44,29 @@ findings closed only when a fresh merged-LTS analysis confirms closure.
 
 ## Remaining batches
 
+### Verified first-batch closure
+
+The 2026-09-21T02:13:05Z analysis of merged revision
+`b3cf69a9a14b1d9a84df7aa0652a3dba98eeaed1` reports 493 unresolved
+vulnerabilities, down from 495. Both first-batch keys above are `CLOSED` with
+resolution `FIXED` in Sonar. The original category table remains a historical
+baseline, not the current count.
+
+### Installer PHP probe
+
+- Target `AaCs2NkYIug_wyaLilnG`: replace the installer PHP probe's shell string
+  with a direct executable and separate argv elements.
+- Preserve the operator-selected executable, existing path checks, random
+  numeric challenge, synchronous wait and PHP 8.0 runtime floor. Do not import
+  main's executable allowlist policy into LTS.
+- Require both a successful worker exit and the expected square result before
+  saving the executable configuration.
+- Execute the production method in regression tests with stubbed external
+  boundaries; cover success, wrong output, nonzero exit with correct output,
+  spawn failure and missing executable. The shared executor suite separately
+  exercises real subprocesses and literal metacharacters.
+- Treat this finding as pending until a merged-LTS scan confirms closure.
+
 Inspect realtime polling, installer PHP probes, background remote-discovery
 arguments and SQL save callers next. Preserve asynchronous worker behavior and
 database connection semantics. Then address XSS by output context and controller;
