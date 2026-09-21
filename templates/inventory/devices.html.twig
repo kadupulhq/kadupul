@@ -6,7 +6,7 @@
 <main>
     <h1>Devices</h1>
     <form method="get" action="{{ path('inventory_devices') }}" role="search">
-        <label for="device-search">Search by name or hostname</label>
+        <label for="device-search">Search by name, hostname, location or external ID</label>
         <input id="device-search" type="search" name="q" value="{{ criteria.search }}" maxlength="200">
         <label for="device-state">State</label>
         <select id="device-state" name="state">
@@ -44,13 +44,13 @@
     </form>
     <table>
         <caption>Devices you can access</caption>
-        <thead><tr><th scope="col">ID</th><th scope="col">Name</th><th scope="col">Hostname</th><th scope="col">Status</th></tr></thead>
+        <thead><tr><th scope="col">ID</th><th scope="col">Name</th><th scope="col">Hostname</th><th scope="col">Status</th><th scope="col">Location</th><th scope="col">External ID</th></tr></thead>
         <tbody>
         {% for device in result.devices %}
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
-            <tr><td>{{ device.id }}</td><td><a href="{{ path('inventory_device_edit', {id: device.id, list: filters}) }}">{{ device.description }}</a></td><td>{{ device.hostname }}</td><td>{{ device.disabled ? 'Disabled' : device.status }}</td></tr>
+            <tr><td>{{ device.id }}</td><td><a href="{{ path('inventory_device_edit', {id: device.id, list: filters}) }}">{{ device.description }}</a></td><td>{{ device.hostname }}</td><td>{{ device.disabled ? 'Disabled' : device.status }}</td><td>{{ device.location }}</td><td>{{ device.externalId }}</td></tr>
         {% else %}
-            <tr><td colspan="4">No devices found on this page.</td></tr>
+            <tr><td colspan="6">No devices found on this page.</td></tr>
         {% endfor %}
         </tbody>
     </table>

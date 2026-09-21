@@ -16,7 +16,7 @@ final class DevicePageCsv
         // The query bounds the page to 100 rows. No export files are persisted.
         $stream = new \SplTempFileObject();
         $stream->fwrite("\xEF\xBB\xBF");
-        $stream->fputcsv(['ID', 'Name', 'Hostname', 'Status'], ',', '"', '', "\r\n");
+        $stream->fputcsv(['ID', 'Name', 'Hostname', 'Status', 'Location', 'External ID'], ',', '"', '', "\r\n");
         foreach ($page->devices as $device) {
             // Mark all operator-controlled text as literal spreadsheet text,
             // including formulas preceded by whitespace or control characters.
@@ -25,6 +25,8 @@ final class DevicePageCsv
                 "'" . $device->description,
                 "'" . $device->hostname,
                 $device->disabled ? 'Disabled' : $device->status,
+                "'" . $device->location,
+                "'" . $device->externalId,
             ], ',', '"', '', "\r\n");
         }
         $stream->rewind();

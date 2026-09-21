@@ -9,5 +9,5 @@ namespace Kadupul\Inventory\Application\ReadModel;
 
 final readonly class DeviceSummary
 {
-    public function __construct(public int $id, public string $description, public string $hostname, public bool $disabled, public string $status) {}
+    public function __construct(public int $id, public string $description, public string $hostname, public bool $disabled, public string $status, public string $location, public string $externalId) {}
 }

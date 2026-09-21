@@ -24,8 +24,8 @@ final readonly class LegacyDeviceCatalog implements DeviceCatalog
         $parameters = [];
         if ($criteria->search !== '') {
             $pattern = '%' . strtr($criteria->search, ['!' => '!!', '%' => '!%', '_' => '!_']) . '%';
-            $where .= " AND (h.description LIKE ? ESCAPE '!' OR h.hostname LIKE ? ESCAPE '!')";
-            $parameters = [$pattern, $pattern];
+            $where .= " AND (h.description LIKE ? ESCAPE '!' OR h.hostname LIKE ? ESCAPE '!' OR h.location LIKE ? ESCAPE '!' OR h.external_id LIKE ? ESCAPE '!')";
+            $parameters = [$pattern, $pattern, $pattern, $pattern];
         }
         if ($criteria->state === 'disabled') {
             $where .= " AND h.disabled = 'on'";
@@ -50,7 +50,7 @@ final readonly class LegacyDeviceCatalog implements DeviceCatalog
             'name' => 'h.description', 'hostname' => 'h.hostname',
         };
         $direction = $criteria->direction === 'desc' ? 'DESC' : 'ASC';
-        $query = $db->prepare("SELECT DISTINCT h.id, h.description, h.hostname, h.disabled, h.status
+        $query = $db->prepare("SELECT DISTINCT h.id, h.description, h.hostname, h.disabled, h.status, h.location, h.external_id
             FROM host h LEFT JOIN graph_local gl ON gl.host_id = h.id
             WHERE $where ORDER BY $column $direction, h.id $direction LIMIT " . $criteria->offset() . ',' . ($criteria->pageSize + 1));
         $query->execute($parameters);
@@ -65,7 +65,9 @@ final readonly class LegacyDeviceCatalog implements DeviceCatalog
                 $row['disabled'] === 'on',
                 match ((int) $row['status']) {
                     1 => 'Down', 2 => 'Recovering', 3 => 'Up', 4 => 'Error', default => 'Unknown'
-                }
+                },
+                (string) $row['location'],
+                (string) $row['external_id']
             );
         }
 

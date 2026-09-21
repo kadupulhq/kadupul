@@ -19,16 +19,16 @@ final class DevicePageCsvTest extends TestCase
     public function testTextRoundTripsAsLiteralCells(string $text): void
     {
         $csv = (new DevicePageCsv())->encode(new DevicePage([
-            new DeviceSummary(42, $text, $text, false, 'Up'),
-            new DeviceSummary(43, 'disabled', 'router.invalid', true, 'Up'),
+            new DeviceSummary(42, $text, $text, false, 'Up', $text, $text),
+            new DeviceSummary(43, 'disabled', 'router.invalid', true, 'Up', '', ''),
         ], true));
-        self::assertStringStartsWith("\xEF\xBB\xBFID,Name,Hostname,Status\r\n", $csv);
+        self::assertStringStartsWith("\xEF\xBB\xBFID,Name,Hostname,Status,Location,\"External ID\"\r\n", $csv);
         $stream = new \SplTempFileObject();
         $stream->fwrite(substr($csv, 3));
         $stream->rewind();
-        self::assertSame(['ID', 'Name', 'Hostname', 'Status'], $stream->fgetcsv(',', '"', ''));
-        self::assertSame(['42', "'" . $text, "'" . $text, 'Up'], $stream->fgetcsv(',', '"', ''));
-        self::assertSame(['43', "'disabled", "'router.invalid", 'Disabled'], $stream->fgetcsv(',', '"', ''));
+        self::assertSame(['ID', 'Name', 'Hostname', 'Status', 'Location', 'External ID'], $stream->fgetcsv(',', '"', ''));
+        self::assertSame(['42', "'" . $text, "'" . $text, 'Up', "'" . $text, "'" . $text], $stream->fgetcsv(',', '"', ''));
+        self::assertSame(['43', "'disabled", "'router.invalid", 'Disabled', "'", "'"], $stream->fgetcsv(',', '"', ''));
         self::assertFalse($stream->fgetcsv(',', '"', ''));
     }
 
@@ -41,6 +41,6 @@ final class DevicePageCsvTest extends TestCase
 
     public function testEmptyPageStillHasColumnHeaders(): void
     {
-        self::assertSame("\xEF\xBB\xBFID,Name,Hostname,Status\r\n", (new DevicePageCsv())->encode(new DevicePage([], false)));
+        self::assertSame("\xEF\xBB\xBFID,Name,Hostname,Status,Location,\"External ID\"\r\n", (new DevicePageCsv())->encode(new DevicePage([], false)));
     }
 }
