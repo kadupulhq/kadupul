@@ -8,6 +8,19 @@
     <form method="get" action="{{ path('inventory_devices') }}" role="search">
         <label for="device-search">Search by name, hostname, location or external ID</label>
         <input id="device-search" type="search" name="q" value="{{ criteria.search }}" maxlength="200">
+        <label for="device-site">Site</label>
+        <select id="device-site" name="site">
+            <option value=""{% if criteria.siteId is null %} selected{% endif %}>All sites</option>
+            <option value="0"{% if criteria.siteId is same as(0) %} selected{% endif %}>Unassigned</option>
+            {% set selectedSiteVisible = false %}
+            {% for site in sites %}
+                {% if criteria.siteId is same as(site.id) %}{% set selectedSiteVisible = true %}{% endif %}
+                <option value="{{ site.id }}"{% if criteria.siteId is same as(site.id) %} selected{% endif %}>{{ site.name }}</option>
+            {% endfor %}
+            {% if criteria.siteId > 0 and not selectedSiteVisible %}
+                <option value="{{ criteria.siteId }}" selected>Selected site (no accessible devices)</option>
+            {% endif %}
+        </select>
         <label for="device-state">State</label>
         <select id="device-state" name="state">
             {% for value, label in {'all': 'All', 'enabled': 'Enabled', 'disabled': 'Disabled'} %}
@@ -23,13 +36,13 @@
         <label for="device-sort">Sort by</label>
         <select id="device-sort" name="sort">
             {% for value, label in {'name': 'Name', 'hostname': 'Hostname'} %}
-            <option value="{{ value }}"{% if criteria.sort == value %} selected{% endif %}>{{ label }}</option>
+            <option value="{{ value }}"{% if criteria.order.field == value %} selected{% endif %}>{{ label }}</option>
             {% endfor %}
         </select>
         <label for="device-direction">Order</label>
         <select id="device-direction" name="direction">
             {% for value, label in {'asc': 'Ascending', 'desc': 'Descending'} %}
-            <option value="{{ value }}"{% if criteria.direction == value %} selected{% endif %}>{{ label }}</option>
+            <option value="{{ value }}"{% if criteria.order.direction == value %} selected{% endif %}>{{ label }}</option>
             {% endfor %}
         </select>
         <label for="device-size">Devices per page</label>
