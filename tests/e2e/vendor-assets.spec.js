@@ -17,6 +17,27 @@ async function load(page, ...files) {
   }
 }
 
+test("Font Awesome legacy circle alias renders with the bundled font", async ({ page }) => {
+  await page.setContent('<i id="legacy" class="fa fa-circle-thin"></i><i id="circle" class="fa fa-circle"></i><i id="notch" class="fa fa-circle-notch"></i>');
+  await page.addStyleTag({ url: '/include/fa/css/all.css' });
+  const icons = await page.evaluate(async () => {
+    await document.fonts.ready;
+    return ['legacy', 'circle', 'notch'].map(id => {
+      const style = getComputedStyle(document.getElementById(id), '::before');
+      return {
+        content: style.content,
+        family: style.fontFamily,
+        fontLoaded: document.fonts.check(`${style.fontWeight} 16px ${style.fontFamily}`),
+      };
+    });
+  });
+  expect(icons[0]).toEqual(icons[1]);
+  expect(icons[0].content).toContain('\uf111');
+  expect(icons[2].content).toContain('\uf1ce');
+  expect(icons[0].family).toContain('Font Awesome 7 Free');
+  expect(icons.every(icon => icon.fontLoaded)).toBe(true);
+});
+
 test("graph input delete handler sends the CSRF token by POST", async ({ page }) => {
   const controller = fs.readFileSync(path.resolve(__dirname, "../../graph_templates.php"), "utf8");
   const handler = controller.match(/\$\('\.inputDeleteMarker'\)\.on\('click', function\(event\) \{[\s\S]*?\n\t\t\}\);/);
