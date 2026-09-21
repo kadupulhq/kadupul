@@ -184,6 +184,9 @@ def normalize(value):
         # still compared.
         value = re.sub(r'^OK u:\d+(?:\.\d+)? s:\d+(?:\.\d+)? r:\d+(?:\.\d+)?(?=\r?$)', 'OK u:<T> s:<T> r:<T>', value, flags=re.MULTILINE)
         value = POLLER_TIMESTAMP.sub('<TIMESTAMP>', value)
+        # cacti_log's CLI elapsed-time prefix is volatile; keep the warning
+        # and its issue count / data-source IDs intact.
+        value = re.sub(r'^Total\[\d+(?:\.\d+)?\](?= WARNING: Poller Output Table not Empty\.  Issues: \d+, DS\[)', 'Total[<T>]', value, flags=re.MULTILINE)
         value = re.sub(r'^(?P<prefix>(?:<TIMESTAMP> - )?SYSTEM STATS: )Time:\d+(?:\.\d+)?(?=\s|$)', r'\g<prefix>Time:<T>', value, flags=re.MULTILINE)
         value = INSTALL_TIMESTAMPS.sub(r'\g<1><TIMESTAMP>\g<2><TIMESTAMP>', value)
         return CLOCK.sub('[<TIME>]', value)

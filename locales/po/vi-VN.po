@@ -12328,8 +12328,8 @@ msgid "Please wait while the installation system for Kadupul Version %s initiali
 msgstr "Vui lòng đợi trong khi hệ thống cài đặt cho Phiên bản Kadupul %s khởi chạy. Bạn phải kích hoạt JavaScript để làm việc này."
 
 #: install/install.php:101
-msgid "FATAL: We are unable to continue with this installation. In order to install Kadupul, PHP must be at version 5.4 or later."
-msgstr "FATAL: Chúng tôi không thể tiếp tục cài đặt này. Để cài đặt Kadupul, PHP phải có phiên bản 5.4 trở lên."
+msgid "FATAL: We are unable to continue with this installation. In order to install Kadupul, PHP must be at version 8.4 or later."
+msgstr "FATAL: Chúng tôi không thể tiếp tục cài đặt này. Để cài đặt Kadupul, PHP phải có phiên bản 8.4 trở lên."
 
 #: install/install.php:104
 msgid "See the PHP Manual: <a href=\"http://php.net/manual/en/book.json.php\">JavaScript Object Notation</a>."

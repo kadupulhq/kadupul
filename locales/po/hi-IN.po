@@ -12421,8 +12421,8 @@ msgstr "कृपया प्रतीक्षा करें, जबकि K
 
 #: install/install.php:101
 #, fuzzy
-msgid "FATAL: We are unable to continue with this installation. In order to install Kadupul, PHP must be at version 5.4 or later."
-msgstr "FATAL: हम इस इंस्टॉलेशन को जारी रखने में असमर्थ हैं। Kadupul को स्थापित करने के लिए, PHP का संस्करण 5.4 या उसके बाद का संस्करण होना चाहिए।"
+msgid "FATAL: We are unable to continue with this installation. In order to install Kadupul, PHP must be at version 8.4 or later."
+msgstr "FATAL: हम इस इंस्टॉलेशन को जारी रखने में असमर्थ हैं। Kadupul को स्थापित करने के लिए, PHP का संस्करण 8.4 या उसके बाद का संस्करण होना चाहिए।"
 
 #: install/install.php:104
 msgid "See the PHP Manual: <a href=\"http://php.net/manual/en/book.json.php\">JavaScript Object Notation</a>."

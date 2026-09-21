@@ -1,9 +1,9 @@
 # phpseclib branch policy
 
-- Main: Composer-managed phpseclib `^4.0` (currently 4.0.1), PHP >=8.1.
+- Main: Composer-managed phpseclib `^4.0` (currently 4.0.1), PHP >=8.4.
 - `lts/1.2`: Composer-managed phpseclib `^3.0`, existing PHP >=8.0 support.
 
-The installer floor and Composer platform resolution on main are both 8.1.0.
+The installer floor and Composer platform resolution on main are both 8.4.0.
 Main now requires PHP 8.4; CI validates that floor. Do not backport this major upgrade
 or its PHP floor to LTS.
 

@@ -12334,7 +12334,7 @@ msgid "Please wait while the installation system for Kadupul Version %s initiali
 msgstr ""
 
 #: install/install.php:101
-msgid "FATAL: We are unable to continue with this installation. In order to install Kadupul, PHP must be at version 5.4 or later."
+msgid "FATAL: We are unable to continue with this installation. In order to install Kadupul, PHP must be at version 8.4 or later."
 msgstr ""
 
 #: install/install.php:104
