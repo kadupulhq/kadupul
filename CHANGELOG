@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-security: Batch stateful form-control attribute encoding and script-safe callback ID binding while preserving saved values and selection
 -security: Encode sortable and section-header metadata across shared renderers while preserving sorting state and trusted display markup
 -security: Encode checkbox table-header metadata and form attributes while preserving selection controls and POST behavior
 -security: Encode shared table-header attributes and text while preserving last-column spans and layout

@@ -126,7 +126,7 @@ test('a form whose only handler is on_change still binds it', function () {
 	$html = _draw_edit_form_render(array('type_id' => _draw_edit_form_dropdown('applyTholdFilter()')));
 
 	expect($html)->toContain("on('change'")
-		->and($html)->toContain('#type_id')
+		->and($html)->toContain('document.getElementById("type_id")')
 		->and($html)->toContain('applyTholdFilter()');
 });
 
