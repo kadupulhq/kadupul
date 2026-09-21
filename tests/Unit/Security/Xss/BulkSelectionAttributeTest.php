@@ -32,7 +32,7 @@ function render_confirmation($source, $items, $action) {
 	}
 }
 
-test('bulk confirmation fields preserve serialized selections and action values', function ($file, $payload) {
+test('bulk confirmation fields preserve serialized selections and action values', function ($file, ?string $payload) {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
 	$items = $payload === null ? null : array($payload, '0042', 3);
 	$action = $payload === null ? '1' : $payload;
