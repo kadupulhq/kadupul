@@ -33,6 +33,7 @@ def main():
     failures = {
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
+        'details-test-hash': 'Integration test source differs',
         'missing-check': 'Incomplete Symfony integration',
         'wrong-handler': 'Wrong integration suite',
         'missing-reports': 'Missing integration coverage',
@@ -54,6 +55,8 @@ def main():
                 worker['sha256'] = '0' * 64
             elif case == 'test-hash':
                 evidence['source_sha256']['tests/Symfony/session_bridge.py'] = '0' * 64
+            elif case == 'details-test-hash':
+                evidence['source_sha256']['tests/Symfony/details_scenarios.py'] = '0' * 64
             elif case == 'missing-check':
                 evidence['checks'] = []
             elif case == 'wrong-handler':
