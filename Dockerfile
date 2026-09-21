@@ -10,7 +10,7 @@
 # the same build.
 
 # --- dependencies -----------------------------------------------------------
-FROM composer@sha256:d8f6343d3fae98107426bc49163ccad46ef85aabd4a27d80a74401fab4aba332 AS vendor
+FROM composer@sha256:a5f59b9fd2faf31218632be4809dc6491761085e8064c31dc3b84378c48c248b AS vendor
 
 WORKDIR /app
 COPY composer.json composer.lock ./
