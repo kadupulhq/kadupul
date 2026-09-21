@@ -1,84 +1,84 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Devices · Kadupul{% endblock %}
+{% block title %}{{ 'Devices'|trans({}, 'inventory') }} · Kadupul{% endblock %}
 
 {% block body %}
 <main>
-    <h1>Devices</h1>
+    <h1>{{ 'Devices'|trans({}, 'inventory') }}</h1>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
-    <p><a href="{{ path('inventory_sites') }}">Sites</a></p>
+    <p><a href="{{ path('inventory_sites') }}">{{ 'Sites'|trans({}, 'inventory') }}</a></p>
     <form method="get" action="{{ path('inventory_devices') }}" role="search">
-        <label for="device-search">Search by name, hostname, location or external ID</label>
+        <label for="device-search">{{ 'Search by name, hostname, location or external ID'|trans({}, 'inventory') }}</label>
         <input id="device-search" type="search" name="q" value="{{ criteria.search }}" maxlength="200">
-        <label for="device-site">Site</label>
+        <label for="device-site">{{ 'Site'|trans({}, 'inventory') }}</label>
         <select id="device-site" name="site">
-            <option value=""{% if criteria.siteId is null %} selected{% endif %}>All sites</option>
-            <option value="0"{% if criteria.siteId is same as(0) %} selected{% endif %}>Unassigned</option>
+            <option value=""{% if criteria.siteId is null %} selected{% endif %}>{{ 'All sites'|trans({}, 'inventory') }}</option>
+            <option value="0"{% if criteria.siteId is same as(0) %} selected{% endif %}>{{ 'Unassigned'|trans({}, 'inventory') }}</option>
             {% set selectedSiteVisible = false %}
             {% for site in sites %}
                 {% if criteria.siteId is same as(site.id) %}{% set selectedSiteVisible = true %}{% endif %}
                 <option value="{{ site.id }}"{% if criteria.siteId is same as(site.id) %} selected{% endif %}>{{ site.name }}</option>
             {% endfor %}
             {% if criteria.siteId > 0 and not selectedSiteVisible %}
-                <option value="{{ criteria.siteId }}" selected>Selected site (no accessible devices)</option>
+                <option value="{{ criteria.siteId }}" selected>{{ 'Selected site (no accessible devices)'|trans({}, 'inventory') }}</option>
             {% endif %}
         </select>
-        <label for="device-state">State</label>
+        <label for="device-state">{{ 'device.state'|trans({}, 'inventory') }}</label>
         <select id="device-state" name="state">
             {% for value, label in {'all': 'All', 'enabled': 'Enabled', 'disabled': 'Disabled'} %}
-            <option value="{{ value }}"{% if criteria.state == value %} selected{% endif %}>{{ label }}</option>
+            <option value="{{ value }}"{% if criteria.state == value %} selected{% endif %}>{{ label|trans({}, 'inventory') }}</option>
             {% endfor %}
         </select>
-        <label for="device-status">Status</label>
+        <label for="device-status">{{ 'Status'|trans({}, 'inventory') }}</label>
         <select id="device-status" name="status">
             {% for value, label in {'all': 'All', 'up': 'Up', 'down': 'Down', 'error': 'Error', 'recovering': 'Recovering', 'unknown': 'Unknown', 'disabled': 'Disabled'} %}
-            <option value="{{ value }}"{% if criteria.status == value %} selected{% endif %}>{{ label }}</option>
+            <option value="{{ value }}"{% if criteria.status == value %} selected{% endif %}>{{ label|trans({}, 'inventory') }}</option>
             {% endfor %}
         </select>
-        <label for="device-sort">Sort by</label>
+        <label for="device-sort">{{ 'Sort by'|trans({}, 'inventory') }}</label>
         <select id="device-sort" name="sort">
             {% for value, label in {'name': 'Name', 'hostname': 'Hostname'} %}
-            <option value="{{ value }}"{% if criteria.order.field == value %} selected{% endif %}>{{ label }}</option>
+            <option value="{{ value }}"{% if criteria.order.field == value %} selected{% endif %}>{{ label|trans({}, 'inventory') }}</option>
             {% endfor %}
         </select>
-        <label for="device-direction">Order</label>
+        <label for="device-direction">{{ 'Order'|trans({}, 'inventory') }}</label>
         <select id="device-direction" name="direction">
             {% for value, label in {'asc': 'Ascending', 'desc': 'Descending'} %}
-            <option value="{{ value }}"{% if criteria.order.direction == value %} selected{% endif %}>{{ label }}</option>
+            <option value="{{ value }}"{% if criteria.order.direction == value %} selected{% endif %}>{{ label|trans({}, 'inventory') }}</option>
             {% endfor %}
         </select>
-        <label for="device-size">Devices per page</label>
+        <label for="device-size">{{ 'Devices per page'|trans({}, 'inventory') }}</label>
         <select id="device-size" name="size">
             {% for size in [25, 50, 100] %}
             <option{% if criteria.pageSize == size %} selected{% endif %}>{{ size }}</option>
             {% endfor %}
         </select>
-        <button type="submit">Apply</button>
+        <button type="submit">{{ 'Apply'|trans({}, 'inventory') }}</button>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
-        <a href="{{ path('inventory_devices') }}">Reset</a>
+        <a href="{{ path('inventory_devices') }}">{{ 'Reset'|trans({}, 'inventory') }}</a>
     </form>
     <table>
-        <caption>Devices you can access</caption>
-        <thead><tr><th scope="col">ID</th><th scope="col">Name</th><th scope="col">Hostname</th><th scope="col">Status</th><th scope="col">Location</th><th scope="col">External ID</th><th scope="col">Actions</th></tr></thead>
+        <caption>{{ 'Devices you can access'|trans({}, 'inventory') }}</caption>
+        <thead><tr><th scope="col">{{ 'ID'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Name'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Hostname'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Status'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Location'|trans({}, 'inventory') }}</th><th scope="col">{{ 'External ID'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Actions'|trans({}, 'inventory') }}</th></tr></thead>
         <tbody>
         {% for device in result.devices %}
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
-            <tr><td>{{ device.id }}</td><td><a href="{{ path('inventory_device_details', {id: device.id, list: filters}) }}">{{ device.description }}</a></td><td>{{ device.hostname }}</td><td>{{ device.disabled ? 'Disabled' : device.status }}</td><td>{{ device.location }}</td><td>{{ device.externalId }}</td>
+            <tr><td>{{ device.id }}</td><td><a href="{{ path('inventory_device_details', {id: device.id, list: filters}) }}">{{ device.description }}</a></td><td>{{ device.hostname }}</td><td>{{ (device.disabled ? 'Disabled' : device.status)|trans({}, 'inventory') }}</td><td>{{ device.location }}</td><td>{{ device.externalId }}</td>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
-            <td><a href="{{ path('inventory_device_edit', {id: device.id, list: filters}) }}">Edit</a></td></tr>
+            <td><a href="{{ path('inventory_device_edit', {id: device.id, list: filters}) }}">{{ 'Edit'|trans({}, 'inventory') }}</a></td></tr>
         {% else %}
-            <tr><td colspan="7">No devices found on this page.</td></tr>
+            <tr><td colspan="7">{{ 'No devices found on this page.'|trans({}, 'inventory') }}</td></tr>
         {% endfor %}
         </tbody>
     </table>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
-    <p><a href="{{ path('inventory_devices_csv', filters|merge({page: criteria.page})) }}">Export this page (CSV)</a></p>
-    <nav aria-label="Device pages">
+    <p><a href="{{ path('inventory_devices_csv', filters|merge({page: criteria.page})) }}">{{ 'Export this page (CSV)'|trans({}, 'inventory') }}</a></p>
+    <nav aria-label="{{ 'Device pages'|trans({}, 'inventory') }}">
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
-        {% if criteria.page > 1 %}<a rel="prev" href="{{ path('inventory_devices', filters|merge({page: criteria.page - 1})) }}">Previous</a>{% endif %}
-        <span>Page {{ criteria.page }}</span>
+        {% if criteria.page > 1 %}<a rel="prev" href="{{ path('inventory_devices', filters|merge({page: criteria.page - 1})) }}">{{ 'Previous'|trans({}, 'inventory') }}</a>{% endif %}
+        <span>{{ 'Page %page%'|trans({'%page%': criteria.page}, 'inventory') }}</span>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
-        {% if result.hasNext %}<a rel="next" href="{{ path('inventory_devices', filters|merge({page: criteria.page + 1})) }}">Next</a>{% endif %}
+        {% if result.hasNext %}<a rel="next" href="{{ path('inventory_devices', filters|merge({page: criteria.page + 1})) }}">{{ 'Next'|trans({}, 'inventory') }}</a>{% endif %}
     </nav>
 </main>
 {% endblock %}

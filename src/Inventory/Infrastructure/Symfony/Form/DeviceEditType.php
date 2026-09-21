@@ -14,23 +14,27 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class DeviceEditType extends AbstractType
 {
+    public function __construct(private readonly TranslatorInterface $translator) {}
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('description', TextType::class, ['label' => 'Name', 'attr' => ['maxlength' => 150]])
             ->add('hostname', TextType::class, ['label' => 'Hostname or IP address', 'attr' => ['maxlength' => 100]])
-            ->add('location', TextType::class, ['required' => false, 'trim' => false, 'empty_data' => '', 'attr' => ['maxlength' => 40]])
+            ->add('location', TextType::class, ['label' => 'Location', 'required' => false, 'trim' => false, 'empty_data' => '', 'attr' => ['maxlength' => 40]])
             ->add('external_id', TextType::class, ['label' => 'External ID', 'required' => false, 'trim' => false, 'empty_data' => '', 'attr' => ['maxlength' => 40]])
-            ->add('notes', TextareaType::class, ['required' => false, 'trim' => false, 'empty_data' => '', 'attr' => ['rows' => 8]])
+            ->add('notes', TextareaType::class, ['label' => 'Notes', 'required' => false, 'trim' => false, 'empty_data' => '', 'attr' => ['rows' => 8]])
             ->add('enabled', ChoiceType::class, ['label' => 'Polling', 'choices' => ['Enabled' => true, 'Disabled' => false],
                 'choice_value' => static fn(?bool $enabled): string => $enabled === null ? '' : ($enabled ? 'enabled' : 'disabled'),
+                'invalid_message' => $this->translator->trans('Choose whether polling is enabled or disabled.', [], 'inventory'),
                 'placeholder' => false, 'help' => 'Disabled devices are excluded from polling. Existing graphs and data are retained.'])
             ->add('revision', HiddenType::class);
     }
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['csrf_protection' => true, 'csrf_token_id' => 'inventory_device_edit', 'method' => 'POST']);
+        $resolver->setDefaults(['translation_domain' => 'inventory', 'csrf_protection' => true, 'csrf_token_id' => 'inventory_device_edit', 'method' => 'POST']);
     }
 }

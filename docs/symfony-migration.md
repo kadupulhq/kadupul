@@ -447,23 +447,26 @@ line coverage, and all 40 JavaScript build/maintenance tests pass. Nine malforme
 coverage-evidence cases fail closed. These local totals are not a substitute for
 Sonar's independently calculated new-code quality gate.
 
-## Site translation slice
+## Inventory translation slices
 
-Symfony Translation now owns UI messages for the site list and name/notes editor.
+Symfony Translation now owns UI messages for the site list and name/notes editor, plus the device list,
+details and editor.
 The initial catalogs are English and French in `config/translations/inventory.*.yaml`.
 They cover Twig text, accessible labels, form labels/help, and editor validation and
-failure messages. Dynamic site names remain escaped after parameter substitution.
-The HTML language attribute follows the request locale. JSON representations and
-other migrated screens retain their existing language/data contracts.
+failure messages. Device status labels and polling choices are translated only in
+HTML; stored names, notes, locations and site names remain user data. Polling choice
+values stay `enabled`/`disabled`. Dynamic site names remain escaped after parameter substitution.
+The HTML language attribute follows the request locale. JSON and CSV representations retain their existing language/data contracts,
+including status values and CSV headers.
 
-Platform's site-locale subscriber runs after routing and before Symfony's locale
+Platform's `InventoryLocaleSubscriber` runs after routing and before Symfony's locale
 listener. IdentityAccess exposes a read-only `LocalePreference` contract backed by
 the existing native session and `settings_user.user_language`. No locale global,
 gettext bootstrap, session write, or PHP process-wide `setlocale()` is introduced.
 Domain/application code still emits its existing errors; the HTTP adapter translates
 them for presentation. Those error strings currently serve as catalog IDs.
 
-For site HTML requests carrying cookies, precedence is:
+For migrated Inventory HTML requests carrying cookies, precedence is:
 
 1. `i18n_language_support=0` forces English.
 2. Trusted installation `$i18n_force_language`, if supported.
@@ -480,7 +483,7 @@ Use the existing preference screen to change the saved language; an existing log
 may retain its session language until the next legacy locale refresh/login.
 
 The existing gettext catalogs and legacy pages are unchanged. Additional languages,
-device screens, locale-aware dates/numbers and migration of the preference editor
+locale-aware dates/numbers and migration of the preference editor
 are follow-up slices. New catalogs reside under the already non-public `config/`
 directory and are included in offline bundles together with the locked translation
 component. LTS is unchanged.

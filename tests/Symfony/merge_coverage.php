@@ -40,7 +40,9 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'site write serializes account, policy, direct and group grant revocations',
         'site rollback cannot restore a revoked session after account re-enabling',
         'Symfony site translations honor the legacy session and ignore locale query overrides',
-        'disabled translation overrides a French shared session'];
+        'disabled translation overrides a French shared session',
+        'French device editor translates labels without changing polling values',
+        'device CSV bytes are independent of locale'];
     foreach ($checks as $check) {
         if (!in_array($check, $manifest['checks'] ?? [], true)) {
             throw new RuntimeException('Incomplete Symfony integration checks');
@@ -92,7 +94,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php', 'src/Inventory/Infrastructure/Legacy/LegacySiteEditor.php',
         'src/IdentityAccess/Infrastructure/Legacy/LegacyLocalePreference.php',
-        'src/Platform/Infrastructure/Symfony/SiteLocaleSubscriber.php'];
+        'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php'];
     foreach ($requiredPaths as $required) {
         if (!($observed[$required] ?? false)) {
             throw new RuntimeException('Missing measured execution: ' . $required);

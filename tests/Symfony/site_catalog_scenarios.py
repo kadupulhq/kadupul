@@ -100,6 +100,26 @@ def verify_site_catalog(harness, session, user_id, ids, allowed, device_listing,
                   'site JSON data is independent of locale')
             check(harness.sql(f"SELECT value FROM settings_user WHERE user_id={user_id} AND name='user_language'").strip() == 'fr-FR',
                   'Symfony locale selection does not rewrite the saved preference')
+            devices = '/app.php/inventory/devices'
+            device_query = '?' + urlencode({'site': site_ids[0]})
+            with french.opener.open(harness.base + devices + device_query) as response:
+                body = response.read().decode()
+            check('<html lang="fr">' in body and 'Appareils auxquels vous avez accès' in body and '>État</label>' in body and '&lt;site&gt;' in body,
+                  'French device list translates controls and escapes site names')
+            with french.opener.open(harness.base + devices + f'/{allowed[0]}') as response:
+                body = response.read().decode()
+            check('<html lang="fr">' in body and 'Retour aux appareils' in body and '&lt;site&gt;' in body,
+                  'French device details preserve escaped site data')
+            with french.opener.open(harness.base + devices + f'/{allowed[0]}/edit') as response:
+                body = response.read().decode()
+            check('<html lang="fr">' in body and 'Enregistrer l’appareil' in body and '>Collecte</label>' in body and 'value="enabled"' in body and 'value="disabled"' in body,
+                  'French device editor translates labels without changing polling values')
+            check(french.request(devices + '.json' + device_query)['json'] == session.request(devices + '.json' + device_query)['json'],
+                  'device JSON is independent of locale')
+            with french.opener.open(harness.base + devices + '.csv' + device_query) as response:
+                french_csv = response.read()
+            with session.opener.open(harness.base + devices + '.csv' + device_query) as response:
+                check(french_csv == response.read(), 'device CSV bytes are independent of locale')
             harness.sql("UPDATE settings SET value='0' WHERE name='i18n_language_support'")
             with french.opener.open(harness.base + base + '?q=no-matching-site-fixture') as response:
                 body = response.read().decode()
