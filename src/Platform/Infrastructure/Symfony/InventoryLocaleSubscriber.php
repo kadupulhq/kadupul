@@ -14,7 +14,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-final readonly class SiteLocaleSubscriber implements EventSubscriberInterface
+final readonly class InventoryLocaleSubscriber implements EventSubscriberInterface
 {
     public function __construct(private LocalePreference $preference, private DatabaseConnection $database, private LegacyConfiguration $configuration) {}
 
@@ -27,7 +27,7 @@ final readonly class SiteLocaleSubscriber implements EventSubscriberInterface
     public function onRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
-        if (!$event->isMainRequest() || !in_array($request->attributes->get('_route'), ['inventory_sites', 'inventory_site_edit'], true)) {
+        if (!$event->isMainRequest() || !in_array($request->attributes->get('_route'), ['inventory_sites', 'inventory_site_edit', 'inventory_devices', 'inventory_device_details', 'inventory_device_edit'], true)) {
             return;
         }
         // Anonymous requests do not need installation/session access for locale.

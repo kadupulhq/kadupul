@@ -27,7 +27,7 @@ def main():
         'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php',
         'src/Inventory/Infrastructure/Legacy/LegacySiteEditor.php',
         'src/IdentityAccess/Infrastructure/Legacy/LegacyLocalePreference.php',
-        'src/Platform/Infrastructure/Symfony/SiteLocaleSubscriber.php')]
+        'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php')]
     for path in (args.files / 'raw').glob('coverage-*.json'):
         report = json.loads(path.read_text())
         for source in required:
@@ -48,7 +48,7 @@ def main():
         'invalid-line': 'Invalid PCOV',
         'unmeasured-worker': 'Missing measured execution',
         'unmeasured-site-editor': 'Missing measured execution: src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php',
-        'unmeasured-locale': 'Missing measured execution: src/Platform/Infrastructure/Symfony/SiteLocaleSubscriber.php',
+        'unmeasured-locale': 'Missing measured execution: src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php',
         'path-traversal': 'Invalid integration source path',
     }
     with tempfile.TemporaryDirectory(prefix='symfony-coverage-negative-') as directory:
@@ -84,7 +84,7 @@ def main():
                 editor = data['files'][prefix + 'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php']
                 editor['lines'] = {line: -1 for line in editor['lines']}
             elif case == 'unmeasured-locale':
-                locale = data['files'][prefix + 'src/Platform/Infrastructure/Symfony/SiteLocaleSubscriber.php']
+                locale = data['files'][prefix + 'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php']
                 locale['lines'] = {line: -1 for line in locale['lines']}
             elif case == 'path-traversal':
                 data['files'][prefix + 'src/../bin/legacy-device-edit.php'] = data['files'].pop(required[0])
