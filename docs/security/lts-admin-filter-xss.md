@@ -25,9 +25,9 @@ text, backticks and delimiters: 91 new site/payload combinations. Together with
 the previous 392 combinations, the suite exercises 483 combinations in 30 cases.
 This is output-boundary coverage, not full browser/controller integration.
 
-The scan baseline and closure of PR #149 must be verified against a fresh LTS
-analysis before asserting any count reduction. This batch likewise requires a
-post-merge scan; do not dismiss findings or infer closure from green PR checks.
+PR #149 has the verified post-merge checkpoint below. This follow-up batch still
+requires its own post-merge scan; do not dismiss findings or infer closure from
+green PR checks.
 
 Verified PR #149 checkpoint: analysis of merged revision
 `d03263c43eea0e32c7c11cdf530d8ac2c305c259` at 2026-09-21T03:54:03Z reports
