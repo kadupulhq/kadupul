@@ -12,7 +12,7 @@ Run from the repository root after producing `tests/coverage.php` with PHPUnit's
 ```sh
 mise exec python@3.12.12 -- python tests/Support/Behavior/poller_coverage.py --output /tmp/poller-coverage
 mise exec python@3.12.12 -- python tests/Support/Behavior/coverage_selftest.py --unit tests/coverage.php --integration /tmp/poller-coverage
-mise exec php@8.1 -- php tests/Support/Behavior/merge_poller_coverage.php tests/coverage.php /tmp/poller-coverage tests/coverage.xml
+mise exec php@8.4 -- php tests/Support/Behavior/merge_poller_coverage.php tests/coverage.php /tmp/poller-coverage tests/coverage.xml
 ```
 
 The output directory must not already exist. The runner owns the
@@ -28,5 +28,4 @@ after validation and report generation succeed. The failure self-test verifies
 that seven kinds of invalid evidence leave an existing report untouched.
 
 This measures the executed scenarios, not every branch or deployment environment.
-It does not establish 100% coverage. Unit and integration runtimes are PHP 8.1 and
-PHP 8.2 respectively; source hashes must match the checkout used for analysis.
+It does not establish 100% coverage. Unit and integration runtimes on main are PHP 8.4; source hashes must match the checkout used for analysis.

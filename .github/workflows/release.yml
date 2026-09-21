@@ -24,7 +24,7 @@ jobs:
     with:
       tarball: true
       image: true
-      php-version: '8.3'
+      php-version: '8.4'
 
   attach-offline-bundle:
     needs: [release, offline-bundle]

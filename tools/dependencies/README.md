@@ -1,6 +1,6 @@
 # Third-party dependency maintenance
 
-Main requires PHP >=8.2. Composer resolves against PHP 8.2.0, and `mise.toml`
+Main requires PHP >=8.4. Composer resolves against PHP 8.4.0, and `mise.toml`
 pins the local development tools. LTS retains its existing distribution model.
 
 ## Composer and npm installs
@@ -85,7 +85,7 @@ D3 7.8.2 → 7.9.0, jQuery UI 1.14.0 → 1.14.2, and tablesorter core/widgets/pa
 to 2.32.0. It synchronizes the bundled HTML Purifier 4.19.0 with the already
 locked 4.19.1 and updates compatible test dependency patches.
 
-- Main uses phpseclib 4 with PHP >=8.1; LTS retains phpseclib 3 and PHP >=8.0.
+- Main uses phpseclib 4 with PHP >=8.4; LTS retains phpseclib 3 and PHP >=8.0.
   See [phpseclib.md](phpseclib.md) for migration scope and remaining legacy proxy code.
 - Pest remains on 1.23.1 for this batch. Pest 2 can run on PHP 8.1, but migrating
   to PHPUnit 10 requires updating the native subprocess coverage integration.

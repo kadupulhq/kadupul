@@ -7,9 +7,9 @@ The target is [DDD modules with hexagonal internals](architecture.md), composed 
 
 ## Foundation
 
-Main requires PHP 8.2 or later. `mise.toml` selects PHP 8.3.33 for development,
+Main requires PHP 8.4 or later. `mise.toml` selects PHP 8.4.25 for development,
 Node 22.22.2 for asset builds and Python 3.12.12 for the behavioral harness and
-release builder. CI checks the application on PHP 8.2, 8.3 and 8.4.
+release builder. CI checks the application on PHP 8.4.
 
 Symfony 7.4 owns the migrated application's request lifecycle, service container,
 routes, controllers, responses, console and Twig rendering. Both `public/index.php`
@@ -150,9 +150,45 @@ Search (`q`) matches name, city, state or country as literal text. `direction=as
 sorts by name with an ID tie-breaker; `page` and `size=25|50|100` provide bounded
 pagination with lookahead. Twig escapes site text and carries filters between
 pages. Controller responses are private/no-store. GET/HEAD are supported; Symfony
-rejects mutations at routing with a generic 405. Site create/edit/delete/duplicate,
+rejects mutations at routing with a generic 405. Site create/delete/duplicate, remaining edit fields,
 other sort columns, saved preferences and legacy navigation cutover remain to be
 migrated. `sites.php` remains operational.
+
+## Site editing slice
+
+Site names now open `/app.php/inventory/sites/{id}/edit`. Symfony Forms and Twig
+edit the name and notes through Inventory's Site aggregate, EditSite command and
+SiteEditor port. Console access and realm 3 authorize all site edits, including
+empty sites, consistent with legacy site administration. Anonymous requests return
+401, revoked access 403, and absent/deleted sites 404. No request can create a site.
+
+Names are trimmed and require 1–100 Unicode characters; notes preserve whitespace
+and allow up to 1,024 Unicode characters, matching the database column. Symfony
+normalizes textarea line endings to LF. The domain enforces character limits;
+browser UTF-16 maxlength attributes are omitted so astral characters count correctly. Empty notes
+clear the field; legacy NULL notes read as empty text. Both fields reject invalid
+UTF-8 and NUL characters. Symfony's stateless CSRF protection requires its token and
+same-origin evidence. Unknown fields are rejected. Validated list search, order,
+page and size survive errors and saves; no supplied return URL is followed.
+
+The legacy-schema adapter uses prepared statements and a local transaction. It
+rechecks the actor and realm before acquiring a site-row lock, compares the name/notes
+revision under that lock, and updates only those two fields. IdentityAccess uses
+current locking reads during this transaction: account, authentication policy,
+and the direct or group grants that authorize the write stay locked through
+commit. Concurrent revocations wait for the write; revocations committed first
+are observed and rejected. Session storage uses its own database connection so
+rolling back a rejected site write cannot restore a revoked credential. Stale saves return
+409; concurrent address, timezone, map or alternate-ID changes are preserved.
+The legacy update-site path has no plugin/poller save hooks or cache invalidation
+for existing sites, so this adapter does not bootstrap procedural code or launch
+a CLI worker. Site creation's cache effects are outside this slice. Existing legacy
+editors do not enforce the new revision protocol, so they can still overwrite later.
+
+Failed persistence attempts roll back when the transaction remains active. An
+uncertain failure returns 502 and asks the operator to reload before retrying;
+there is no automatic retry. Controller responses are private/no-store. Site
+creation, other settings and destructive/bulk operations remain in `sites.php`.
 
 ## Inventory details slice
 

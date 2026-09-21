@@ -12350,10 +12350,6 @@ msgstr "Initialisation"
 msgid "Please wait while the installation system for Kadupul Version %s initializes. You must have JavaScript enabled for this to work."
 msgstr "Veuillez patienter pendant que le système d'installation de Kadupul Version %s s'initialise.  JavaScript doit être activé pour que cela fonctionne."
 
-#: install/install.php:101
-msgid "FATAL: We are unable to continue with this installation. In order to install Kadupul, PHP must be at version 5.4 or later."
-msgstr "FATAL : Nous ne pouvons pas continuer cette installation. Pour installer Kadupul, PHP doit être en version 5.4 ou ultérieure."
-
 #: install/install.php:104
 msgid "See the PHP Manual: <a href=\"http://php.net/manual/en/book.json.php\">JavaScript Object Notation</a>."
 msgstr "Voir le manuel PHP : <a href=\"http://php.net/manual/en/book.json.php\">JavaScript Object Notation</a>."

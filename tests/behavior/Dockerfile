@@ -4,7 +4,7 @@
 # source diff. The manifest records the resolved digest of this image and of the
 # database image, so a refresh shows up there. A digest pin here would fix one
 # PHP version and break the version matrix.
-ARG PHP_VERSION=8.2
+ARG PHP_VERSION=8.4
 FROM node:26.8.2-bookworm-slim@sha256:cd9f682fa2885cd1056e830424764158570061c59736a1da836bc3d73df095ae AS assets
 WORKDIR /app
 COPY package.json package-lock.json ./

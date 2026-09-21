@@ -108,6 +108,12 @@ transaction cannot roll back arbitrary external effects. This is a transitional
 adapter to retire as owning modules acquire explicit integration contracts.
 Remaining device settings and bulk actions still use the legacy editor.
 
+Site name/notes editing uses a Site aggregate, EditSite command and SiteEditor
+port. Its legacy-schema adapter owns a transaction and row lock, rechecks access
+through IdentityAccess's public contract, validates the editable-field revision,
+and updates only migrated fields. Existing-site updates have no legacy save hooks,
+so this path needs no procedural bootstrap or process bridge.
+
 ## Cutover and retirement criteria
 
 - Inventory list: migrate required filters, saved preferences, exports, plugin

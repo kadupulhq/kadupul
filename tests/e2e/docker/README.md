@@ -8,7 +8,7 @@ checked out.
 
 ```
 docker-compose.yml         master + remote poller + MariaDB
-Dockerfile.cacti           PHP 8.2 + Apache + RRDtool + extensions
+Dockerfile.cacti           PHP 8.4 + Apache + RRDtool + extensions
 setup.sh                   idempotent DB seed + admin/lowpriv user
 run.sh                     bring up, seed, run tests, tear down
 probes/

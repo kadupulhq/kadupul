@@ -1,11 +1,11 @@
-# Behavioral characterization harness for the Cacti 1.2.31 baseline.
+# Behavioral characterization harness for Kadupul main on PHP 8.4.
 #
 # The harness runs the application in containers and records normalized
 # observations. Golden files are the compatibility specification a Kadupul
 # rewrite must satisfy; they never update as a side effect of running tests.
 
-PHP_VERSION ?= 8.2
-TARGET      ?= cacti-1.2.31
+PHP_VERSION ?= 8.4
+TARGET      ?= kadupul
 BEHAVIOR    := PHP_VERSION=$(PHP_VERSION) ./tests/bin/behavior
 
 .DEFAULT_GOAL := help

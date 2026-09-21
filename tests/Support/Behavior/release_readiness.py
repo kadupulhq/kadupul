@@ -185,7 +185,7 @@ def main():
     output = (args.output or ROOT / 'tests/behavior/results/release-readiness' / project).resolve()
     output.mkdir(parents=True, exist_ok=True)
     evidence = {'complete': False, 'baseline_requested': args.baseline,
-                'project': project, 'php_requested': os.environ.get('PHP_VERSION', '8.2'), 'steps': {}}
+                'project': project, 'php_requested': os.environ.get('PHP_VERSION', '8.4'), 'steps': {}}
     h = None
     try:
         baseline_revision = checked(harness.run(['git', '-C', str(ROOT), 'rev-parse', '--verify', '--end-of-options', args.baseline + '^{commit}'], check=False), 'Baseline revision')['stdout'].strip()

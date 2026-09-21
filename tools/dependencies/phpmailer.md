@@ -1,8 +1,8 @@
 # PHPMailer provenance and compatibility
 
 Updated from 6.10.0 to **7.1.1** on 2026-09-19. Upstream still declares
-PHP >=5.5.0, so this does not raise Kadupul's PHP >=8.0 application floor or
-change the PHP 8.1–8.4 test matrix.
+PHP >=5.5.0. Kadupul main requires PHP >=8.4 independently of this
+dependency's lower minimum.
 
 - Release: https://github.com/PHPMailer/PHPMailer/releases/tag/v7.1.1
 - Archive: https://codeload.github.com/PHPMailer/PHPMailer/zip/refs/tags/v7.1.1

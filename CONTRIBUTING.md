@@ -27,7 +27,7 @@ Enable the repository-owned hooks once per clone:
 ```
 
 The pre-commit hook validates staged content only: whitespace errors, PHP
-syntax under PHP 8.3.33 selected through `mise`, and the same PER-CS migration
+syntax under PHP 8.4.25 selected through `mise`, and the same PER-CS migration
 policy used by CI. It does not rewrite the index or working tree. During a
 merge it ignores files copied unchanged from the incoming parent and checks
 only locally authored or conflict-resolved content.

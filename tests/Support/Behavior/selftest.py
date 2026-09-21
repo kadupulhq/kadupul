@@ -36,6 +36,11 @@ CASES = [
     ('bracketed clock', '[20:47:59] [ global ] Finished', '[<TIME>] [ global ] Finished'),
     ('clock after newline', 'start\n[20:47:59] [ global ] Finished', 'start\n[<TIME>] [ global ] Finished'),
     ('poller timing', 'OK u:0.12 s:0.03 r:0.20', 'OK u:<T> s:<T> r:<T>'),
+    ('poller warning clock', 'Total[0.0218] WARNING: Poller Output Table not Empty.  Issues: 5, DS[1, 2]',
+     'Total[<T>] WARNING: Poller Output Table not Empty.  Issues: 5, DS[1, 2]'),
+    ('unrelated total', 'Total[0.0218] user value', 'Total[0.0218] user value'),
+    ('embedded warning clock', 'PHP WARNING: Total[0.0218] WARNING: Poller Output Table not Empty.  Issues: 5, DS[1]',
+     'PHP WARNING: Total[0.0218] WARNING: Poller Output Table not Empty.  Issues: 5, DS[1]'),
 
     # Schema and behaviour must survive.
     ('zero DDL default', "status_fail_date\ttimestamp\tNO\t\t0000-00-00 00:00:00\t",

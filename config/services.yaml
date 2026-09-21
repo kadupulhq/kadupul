@@ -19,6 +19,15 @@ services:
     Kadupul\IdentityAccess\Infrastructure\:
         resource: '../src/IdentityAccess/Infrastructure/'
 
+    # Session expiry/revocation must commit independently of application writes.
+    # Rolling back a site edit must never restore a rejected credential.
+    kadupul.session_database:
+        class: Kadupul\Platform\Infrastructure\Legacy\InstallationDatabase
+
+    Kadupul\IdentityAccess\Infrastructure\Legacy\ReadOnlyDatabaseSessionHandler:
+        arguments:
+            $database: '@kadupul.session_database'
+
     Kadupul\IdentityAccess\Application\Query\CurrentActor: ~
 
     Kadupul\IdentityAccess\Application\Port\AuthenticatedSession:
@@ -59,3 +68,9 @@ services:
 
     Kadupul\Inventory\Application\Port\SiteCatalog:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacySiteCatalog
+
+    Kadupul\Inventory\Application\Query\FindEditableSite: ~
+    Kadupul\Inventory\Application\Command\EditSite: ~
+
+    Kadupul\Inventory\Application\Port\SiteEditor:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacySiteEditor

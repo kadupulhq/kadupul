@@ -1,6 +1,6 @@
 # Kadupul runtime image for the e2e harness. The repo is baked into the image.
 
-FROM php:8.2-apache
+FROM php:8.4-apache
 
 ENV DEBIAN_FRONTEND=noninteractive
 

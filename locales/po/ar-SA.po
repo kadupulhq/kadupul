@@ -12540,10 +12540,6 @@ msgstr "جار التهيئة"
 msgid "Please wait while the installation system for Kadupul Version %s initializes. You must have JavaScript enabled for this to work."
 msgstr "يرجى الانتظار حتى تتم تهيئة نظام التثبيت لإصدار Kadupul %s. يجب تمكين جافا سكريبت حتى يعمل هذا."
 
-#: install/install.php:101
-msgid "FATAL: We are unable to continue with this installation. In order to install Kadupul, PHP must be at version 5.4 or later."
-msgstr "فادح: نحن غير قادرين على متابعة هذا التثبيت. لتثبيت Kadupul ، يجب أن يكون PHP في الإصدار 5.4 أو أحدث."
-
 #: install/install.php:104
 msgid "See the PHP Manual: <a href=\"http://php.net/manual/en/book.json.php\">JavaScript Object Notation</a>."
 msgstr "انظر دليل PHP: <a href=\"http://php.net/manual/en/book.json.php\">ترميز كائن JavaScript</a> ."

@@ -15,7 +15,7 @@ again. It never points at an existing installation.
 
 ```sh
 git fetch https://github.com/Cacti/cacti.git 6482af547c204199e829b7a0df0b7a13db3e0a58
-PHP_VERSION=8.2 mise exec python@3.12.12 -- python tests/Support/Behavior/release_readiness.py \
+PHP_VERSION=8.4 mise exec python@3.12.12 -- python tests/Support/Behavior/release_readiness.py \
   --baseline 6482af547c204199e829b7a0df0b7a13db3e0a58
 ```
 

@@ -19,7 +19,7 @@ installation and never touch a developer database.
 
 The separate `make test-harness-selftest` command also checks native process
 supervision on Linux. That check requires a host PHP CLI with POSIX support;
-run it with `mise exec php@8.1.34 -- make test-harness-selftest`. CI installs
+run it with `mise exec php@8.4.25 -- make test-harness-selftest`. CI installs
 PHP explicitly for this check. Non-Linux hosts run the other self-tests and
 report that native Linux process supervision was not exercised.
 
@@ -45,11 +45,16 @@ make test-poller
 Every scenario always executes, because later ones consume fixtures the earlier
 ones create. The scoping flag decides what is verified, not what runs.
 
+Main defaults to `TARGET=kadupul` and PHP 8.4. The historical Cacti 1.2.31
+PHP 8.2 observations stay unchanged; their label does not select an application
+checkout. Use `--application-root` with the historical checkout when recording
+that baseline. Main cannot run on PHP 8.2.
+
 Pick a PHP version with `PHP_VERSION`. Goldens are stored per version, so a
 capture on one version never overwrites another.
 
 ```sh
-PHP_VERSION=8.3 make test-bootstrap-golden
+PHP_VERSION=8.4 make test-bootstrap-golden TARGET=kadupul
 ```
 
 ## What a run does
@@ -76,7 +81,8 @@ run scoped, so a partial capture cannot leave the rest stale.
 
 Normalization is deliberately narrow. Filesystem roots become `<APP>` and
 `<HARNESS>`, and the base URL becomes `<BASE>`. Known diagnostic clocks,
-installer/poller timestamps, PHP diagnostic source-line locations and the byte
+installer/poller timestamps, the elapsed-time prefix of the poller output-table
+warning (retaining its issue count and IDs), PHP diagnostic source-line locations and the byte
 count in a recognized failed-write diagnostic are normalized. Dates and arbitrary
 numbers in database values, UI output and plugin messages remain unchanged.
 Diagnostic records are sorted because processes can interleave log writes;

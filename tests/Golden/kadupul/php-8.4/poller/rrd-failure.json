@@ -1,0 +1,54 @@
+{
+  "command": {
+    "exit": 1,
+    "stdout": "ERROR: injected rrdtool failure\n<TIMESTAMP> - SYSTEM STATS: Time:<T> Method:cmd.php Processes:1 Threads:1 Hosts:1 HostsPerProcess:1 DataSources:5 RRDsProcessed:0\n",
+    "stderr": "",
+    "rrd_acknowledgements": 0
+  },
+  "database": {
+    "poller_item": [
+      {
+        "host_id": 1,
+        "action": 1,
+        "rrd_name": "proc",
+        "rrd_path": "<APP>/rra/local_linux_machine_proc_1.rrd"
+      },
+      {
+        "host_id": 1,
+        "action": 1,
+        "rrd_name": "",
+        "rrd_path": "<APP>/rra/local_linux_machine_load_1min_2.rrd"
+      },
+      {
+        "host_id": 1,
+        "action": 1,
+        "rrd_name": "users",
+        "rrd_path": "<APP>/rra/local_linux_machine_users_3.rrd"
+      },
+      {
+        "host_id": 1,
+        "action": 1,
+        "rrd_name": "mem_buffers",
+        "rrd_path": "<APP>/rra/local_linux_machine_mem_buffers_4.rrd"
+      },
+      {
+        "host_id": 1,
+        "action": 1,
+        "rrd_name": "mem_swap",
+        "rrd_path": "<APP>/rra/local_linux_machine_mem_swap_5.rrd"
+      }
+    ],
+    "poller_output_rows": "5",
+    "host_status": [
+      {
+        "description": "Local Linux Machine",
+        "status": 3,
+        "status_event_count": 0,
+        "availability_method": 0
+      }
+    ]
+  },
+  "rrd_calls": [
+    "ARGV -"
+  ]
+}

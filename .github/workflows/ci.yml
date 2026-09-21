@@ -13,6 +13,36 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  runtime-floor:
+    name: PHP runtime boundary (${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # 8.3 is a rejection test, not a supported application runtime.
+        php: ['8.3', '8.4']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '${{ matrix.php }}'
+          coverage: none
+      - name: Isolate installed PHP before mise activation
+        run: |
+          mkdir -p "$RUNNER_TEMP/runtime-php/bin"
+          ln -s "$(readlink -f "$(command -v php)")" "$RUNNER_TEMP/runtime-php/bin/php"
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+        with:
+          install_args: python@3.12.12
+          add_shims_to_path: false
+      - name: Register selected PHP and verify CLI/HTTP runtime boundaries
+        env:
+          TEST_PHP_VERSION: '${{ matrix.php }}'
+        run: |
+          mise link "php@$TEST_PHP_VERSION" "$RUNNER_TEMP/runtime-php"
+          mise exec python@3.12.12 -- python tests/tools/runtime_floor.py --php-version "$TEST_PHP_VERSION"
+
   windows-storage-preflight:
     name: Windows storage access
     runs-on: windows-2022
@@ -22,7 +52,7 @@ jobs:
           persist-credentials: false
       - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
         with:
-          php-version: '8.2'
+          php-version: '8.4'
           coverage: none
       - name: Verify portable installer probe and executable allowlist
         shell: pwsh
@@ -73,10 +103,10 @@ jobs:
       with:
         persist-credentials: false
 
-    - name: Install PHP 8.2
+    - name: Install PHP 8.4
       uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
       with:
-        php-version: '8.2'
+        php-version: '8.4'
         extensions: pdo_mysql
         coverage: none
 
@@ -94,7 +124,8 @@ jobs:
       run: |
         # shellcheck disable=SC2016
         php -r '$db = new PDO("mysql:host=" . getenv("BOOST_DB_HOST") . ";dbname=" . getenv("BOOST_DB_NAME"), getenv("BOOST_DB_USER"), getenv("BOOST_DB_PASSWORD")); echo json_encode($db->query("SELECT VERSION() AS version, @@version_comment AS vendor, @@sql_mode AS sql_mode, @@collation_server AS collation, @@default_storage_engine AS storage_engine")->fetch(PDO::FETCH_ASSOC), JSON_PRETTY_PRINT), PHP_EOL;'
-        php vendor/bin/pest --configuration=phpunit-database.xml --colors=never
+        # Pest 1 dependency deprecations: see docs/testing/php84-modernization-audit.md.
+        php -d error_reporting=24575 vendor/bin/pest --configuration=phpunit-database.xml --colors=never
 
   php:
     name: PHP ${{ matrix.php }}
@@ -102,7 +133,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['8.2', '8.3', '8.4']
+        php: ['8.4']
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -199,7 +230,7 @@ jobs:
       - name: Install PHP for native process-boundary self-tests
         uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
-          php-version: '8.2'
+          php-version: '8.4'
           extensions: posix
           coverage: none
       - name: Verify observation normalization and failure reporting
@@ -211,10 +242,10 @@ jobs:
       # This exercises runtime invariants without claiming parity with upstream.
       # Observations are ephemeral CI artifacts; committed goldens stay untouched.
       - name: Load PHP base image for runtime provenance
-        run: docker pull php:8.2-apache
+        run: docker pull php:8.4-apache
       - name: Exercise fresh install, authentication and collection
         env:
-          PHP_VERSION: '8.2'
+          PHP_VERSION: '8.4'
         run: mise exec python@3.12.12 -- python tests/Support/Behavior/harness.py run --target ci-smoke --update-golden
       - name: Upload observations
         if: always()
