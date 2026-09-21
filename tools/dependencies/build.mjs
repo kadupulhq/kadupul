@@ -46,6 +46,6 @@ await cp(new URL("node_modules/@fortawesome/fontawesome-free/", root), new URL("
 // Preserve the legacy circle-thin alias used by existing screens/plugins.
 const allCss = new URL('include/fa/css/all.css', root);
 const css = await readFile(allCss, 'utf8');
-const anchor = '.fa-circle-notch:before {\n  content: "\\f1ce"; }';
+const anchor = '.fa-circle-notch {\n  --fa: "\\f1ce";\n}';
 if (css.split(anchor).length !== 2) throw new Error('Font Awesome compatibility patch no longer applies');
-await writeFile(allCss, css.replace(anchor, anchor + '\n\n.fa.fa-circle-thin:before {\n  content: "\\f111"; }'));
+await writeFile(allCss, css.replace(anchor, anchor + '\n\n.fa.fa-circle-thin {\n  --fa: "\\f111";\n}'));
