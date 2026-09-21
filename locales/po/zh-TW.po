@@ -14521,10 +14521,6 @@ msgstr "初始化"
 msgid "Please wait while the installation system for Kadupul Version %s initializes. You must have JavaScript enabled for this to work."
 msgstr "請等待Kadupul Version%s的安裝系統初始化。您必須啟用JavaScript才能使用此功能。"
 
-#: install/install.php:101
-msgid "FATAL: We are unable to continue with this installation. In order to install Kadupul, PHP must be at version 8.4 or later."
-msgstr "致命：我們無法繼續此安裝。為了安裝Kadupul，PHP必須是8.4或更高版本。"
-
 #: install/install.php:104
 #, fuzzy
 msgid "See the PHP Manual: <a href=\"http://php.net/manual/en/book.json.php\">JavaScript Object Notation</a>."

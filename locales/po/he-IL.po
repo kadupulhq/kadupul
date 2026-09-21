@@ -12448,10 +12448,6 @@ msgstr "איתחול"
 msgid "Please wait while the installation system for Kadupul Version %s initializes. You must have JavaScript enabled for this to work."
 msgstr "המתן בעת הפעלת מערכת ההתקנה עבור Kadupul Version %s. עליך להפעיל את JavaScript כדי שזה יעבוד."
 
-#: install/install.php:101
-msgid "FATAL: We are unable to continue with this installation. In order to install Kadupul, PHP must be at version 8.4 or later."
-msgstr "פתאל: אין באפשרותנו להמשיך בהתקנה זו. כדי להתקין את Kadupul, PHP חייב להיות בגירסה 8.4 ואילך."
-
 #: install/install.php:104
 msgid "See the PHP Manual: <a href=\"http://php.net/manual/en/book.json.php\">JavaScript Object Notation</a>."
 msgstr "עיין במדריך PHP: <a href=\"http://php.net/manual/en/book.json.php\">סימון אובייקט JavaScript</a> ."

@@ -12371,10 +12371,6 @@ msgstr "Initialiseren"
 msgid "Please wait while the installation system for Kadupul Version %s initializes. You must have JavaScript enabled for this to work."
 msgstr "Even geduld a.u.b. terwijl het installatiesysteem voor Kadupul versie %s initialiseert.  U moet JavaScript ingeschakeld hebben om dit te laten werken."
 
-#: install/install.php:101
-msgid "FATAL: We are unable to continue with this installation. In order to install Kadupul, PHP must be at version 8.4 or later."
-msgstr "FATAL: We kunnen niet doorgaan met deze installatie. Om Kadupul te installeren moet PHP op versie 8.4 of later staan."
-
 #: install/install.php:104
 msgid "See the PHP Manual: <a href=\"http://php.net/manual/en/book.json.php\">JavaScript Object Notation</a>."
 msgstr "Zie de PHP-handleiding: <a href=\"http://php.net/manual/en/book.json.php\">JavaScript Objectnotatie</a>."
