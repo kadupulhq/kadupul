@@ -29,7 +29,7 @@ function get_filter_request_var($name) {
 }
 
 function render_confirmation($source, $items, $action, $save_html = '') {
-	expect(preg_match('/\$selected_items_html = \(isset\(\$(\w+)\).*?<\/tr>[^;]*;/s', $source, $match))->toBe(1);
+	expect(preg_match('/\$selected_items_html = (?:\(isset\(|serialize\()\$(\w+)\).*?<\/tr>[^;]*;/s', $source, $match))->toBe(1);
 	if ($items !== null) {
 		${$match[1]} = $items;
 	}
@@ -47,6 +47,10 @@ function render_confirmation($source, $items, $action, $save_html = '') {
 test('bulk confirmation fields preserve serialized selections and action values', function ($file, ?string $payload) {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
 	$items = $payload === null ? null : array($payload, '0042', 3);
+	if ($file === 'host.php' && $items === null) {
+		// Device confirmation initializes its selection before collecting checkbox IDs.
+		$items = array();
+	}
 	$action = $payload === null ? '1' : $payload;
 	$output = render_confirmation($source, $items, $action);
 	$document = new \DOMDocument();
@@ -110,6 +114,8 @@ test('bulk confirmation fields preserve serialized selections and action values'
 	'user domains' => 'user_domains.php',
 	'trees' => 'tree.php',
 	'reports' => 'lib/html_reports.php',
+	'devices' => 'host.php',
+	'user groups' => 'user_group_admin.php',
 ))->with(array(
 	'ordinary ID' => '42',
 	'leading zeros' => '0042',
