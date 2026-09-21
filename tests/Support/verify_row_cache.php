@@ -30,6 +30,11 @@ $database = new class ($pdo) implements \Kadupul\Platform\Contract\DatabaseConne
         return $this->pdo;
     }
 };
+// Inspect a populated range; an empty range may be optimized away by MySQL 9.7.
+$plan = $pdo->query("EXPLAIN SELECT user_id, hash FROM user_auth_row_cache WHERE class = 'graph' AND time < FROM_UNIXTIME(1700000000) ORDER BY time, user_id, hash LIMIT 1000")->fetch(PDO::FETCH_ASSOC);
+if (!str_contains((string) $plan['possible_keys'], 'class_time')) {
+    throw new RuntimeException('Cleanup cannot use its class/time access path.');
+}
 $storage = new \Kadupul\IdentityAccess\Infrastructure\Legacy\InstallationRowCache($database);
 $cutoff = new \Kadupul\IdentityAccess\Domain\RowCacheInvalidation('graph', 1700000000);
 if ($storage->count($cutoff) !== 1001) {
@@ -43,10 +48,6 @@ foreach ([1000, 1, 0] as $expected) {
 }
 if ($pdo->query('SELECT hash FROM user_auth_row_cache ORDER BY hash')->fetchAll(PDO::FETCH_COLUMN) !== ['boundary', 'fresh', 'other']) {
     throw new RuntimeException('Fresh or unrelated cache rows changed.');
-}
-$plan = $pdo->query("EXPLAIN SELECT user_id, hash FROM user_auth_row_cache WHERE class = 'graph' AND time < FROM_UNIXTIME(1700000000) ORDER BY time, user_id, hash LIMIT 1000")->fetch(PDO::FETCH_ASSOC);
-if (!str_contains((string) $plan['possible_keys'], 'class_time')) {
-    throw new RuntimeException('Cleanup cannot use its class/time access path.');
 }
 $pdo->exec('ALTER TABLE user_auth_row_cache DROP INDEX class_time');
 try {
@@ -80,6 +81,10 @@ upgrade_to_1_2_31();
 upgrade_to_1_2_31();
 if ($indexCreates !== 1 || !db_index_exists('user_auth_row_cache', 'class_time')) {
     throw new RuntimeException('Index upgrade is not idempotent.');
+}
+preg_match_all("/INSERT INTO `table_indexes` VALUES \('user_auth_row_cache',1,'class_time',([12]),'([^']+)'/", file_get_contents($root . '/docs/audit_schema.sql'), $audit);
+if ($audit[1] !== ['1', '2'] || $audit[2] !== ['class', 'time']) {
+    throw new RuntimeException('Database audit schema does not preserve the cleanup index.');
 }
 if ($storage->count($cutoff) !== 0) {
     throw new RuntimeException('Backlog count did not reflect cleanup.');
