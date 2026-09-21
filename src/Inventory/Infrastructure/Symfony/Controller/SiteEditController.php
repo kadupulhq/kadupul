@@ -56,8 +56,8 @@ final class SiteEditController
                 try {
                     $edit($id, (string) $data['name'], (string) $data['notes'], (string) $data['revision']);
                     return new RedirectResponse($urls->generate('inventory_site_edit', $parameters + ['saved' => 1]), 303, $headers);
-                } catch (InventoryAccessDenied) {
-                    return new Response('Access denied.', 403, $headers);
+                } catch (InventoryAccessDenied $error) {
+                    return new Response('Access denied.', $error->unauthenticated ? 401 : 403, $headers);
                 } catch (SiteNotFound) {
                     return new Response('Site not found.', 404, $headers);
                 } catch (SiteEditConflict $error) {
