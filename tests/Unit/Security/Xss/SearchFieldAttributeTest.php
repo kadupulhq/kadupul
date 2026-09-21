@@ -75,6 +75,12 @@ test('search fields preserve literal values and existing attributes', function (
 	'new graphs' => array('graphs_new.php', array('filter')),
 	'links' => array('links.php', array('filter')),
 	'sites' => array('sites.php', array('filter')),
+	'devices' => array('host.php', array('filter')),
+	'plugins' => array('plugins.php', array('filter')),
+	'RRD checks' => array('rrdcheck.php', array('filter')),
+	'RRD cleaner' => array('rrdcleaner.php', array('filter')),
+	'user domains' => array('user_domains.php', array('filter')),
+	'pollers' => array('pollers.php', array('filter')),
 ))->with(array(
 	'ordinary search' => 'router 42',
 	'empty search' => '',
