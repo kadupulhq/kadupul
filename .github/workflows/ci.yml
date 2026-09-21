@@ -28,16 +28,19 @@ jobs:
         with:
           php-version: '${{ matrix.php }}'
           coverage: none
-      - name: Record installed PHP location before mise activation
-        run: echo "RUNTIME_TEST_PHP_PREFIX=$(dirname "$(dirname "$(command -v php)")")" >> "$GITHUB_ENV"
+      - name: Isolate installed PHP before mise activation
+        run: |
+          mkdir -p "$RUNNER_TEMP/runtime-php/bin"
+          ln -s "$(readlink -f "$(command -v php)")" "$RUNNER_TEMP/runtime-php/bin/php"
       - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
         with:
           install_args: python@3.12.12
+          add_shims_to_path: false
       - name: Register selected PHP and verify CLI/HTTP runtime boundaries
         env:
           TEST_PHP_VERSION: '${{ matrix.php }}'
         run: |
-          mise link "php@$TEST_PHP_VERSION" "$RUNTIME_TEST_PHP_PREFIX"
+          mise link "php@$TEST_PHP_VERSION" "$RUNNER_TEMP/runtime-php"
           mise exec python@3.12.12 -- python tests/tools/runtime_floor.py --php-version "$TEST_PHP_VERSION"
 
   windows-storage-preflight:
