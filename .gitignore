@@ -130,3 +130,20 @@ __pycache__/
 .omc/
 .worktrees/
 notepad.md
+
+# Symfony runtime state.
+/var/*
+!/var/.htaccess
+
+# Generated browser distributions.
+/include/fa/
+/include/js/purify.js
+/include/js/purify.js.map
+/include/js/d3.js
+/include/js/jquery-ui.js
+/include/js/jquery.tablesorter.js
+/include/js/jquery.tablesorter.widgets.js
+/include/js/jquery.js
+
+# Generated Symfony IDE reference.
+/config/reference.php

@@ -1,0 +1,5 @@
+{
+  "exit": 1,
+  "stdout": "ERROR: You must supply a valid host-id to run this script!\n",
+  "stderr": ""
+}

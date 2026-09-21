@@ -14,6 +14,13 @@
  *   assess.php --dsn=mysql:host=db;dbname=cacti --user=cactiuser --password=... [--json]
  */
 
+if (PHP_SAPI !== 'cli') {
+	if (!headers_sent()) {
+		http_response_code(404);
+	}
+	exit;
+}
+
 const SUPPORTED_FROM = '1.2.0';
 
 /** Poller scratch space. Rebuilt on the next cycle, so it is never migrated. */

@@ -1,0 +1,106 @@
+[
+  {
+    "callback": "install",
+    "args": []
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "event",
+    "args": [
+      [
+        "compatibility_event",
+        "payload",
+        {
+          "value": 42
+        }
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      null
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      false
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      ""
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      "0"
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      0
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      []
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      {
+        "value": 42
+      }
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "filter",
+    "args": [
+      [
+        "config_settings"
+      ]
+    ]
+  },
+  {
+    "callback": "uninstall",
+    "args": []
+  }
+]

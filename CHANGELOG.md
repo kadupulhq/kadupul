@@ -11,11 +11,23 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Export the current Symfony Inventory page as a permission-filtered CSV download with spreadsheet-safe text cells.
+
+- Migrate device location and external ID editing to Symfony with Unicode-aware domain validation and stale-edit detection.
+
+- Enable and disable device polling through the Symfony editor, including polling state in stale-edit protection and preserving legacy save effects.
+
+- Add Symfony device editing for name, address and notes with domain validation, CSRF protection, stale-edit detection and an isolated legacy save adapter.
+
+- Make Symfony own migrated HTTP requests and add an Inventory device list with Twig rendering, module ports, permission-filtered queries, and shared-session adapters.
 - Require token-protected POST for plugin lifecycle, remote status, and ordering changes; retain uninstall confirmation.
 - Require validated POST intent for interactive spike removal, including dry runs, and migrate its browser request to send a CSRF token.
+- Bridge legacy authenticated sessions into a read-only Symfony identity query, with account and console-realm checks.
 - Escape imported preview fields and restrict rich change-summary markup to safe formatting.
 - Require validated POST requests for bulk-action confirmation and execution across core administration controllers; retain read-only navigation.
 - Require token-protected POST requests for user/group policy, permission, and bulk mutations.
+- Begin the Symfony 7.4 migration with a standalone kernel, console, routing and Twig foundation; require PHP 8.2 or later on main.
+- Install generated dependencies with Composer and npm instead of tracking vendor trees, and provide a dependency-complete offline bundle build.
 - Require validated POST requests for graph-template input mutations and allowlist graph-item columns across editing, XML import, duplication, rendering, and propagation before persistence or SQL construction.
 - Restrict main installer PHP probes to a server-configured executable allowlist; leave LTS behavior unchanged.
 - Require token-protected POST requests for installer JSON operations.
@@ -31,6 +43,10 @@ Targeting `v1.3.0`, the first planned application release. See
 - Preserve reproducible behavioral baseline references and count RRDtool acknowledgements in reachable polling, failed writes, unreachable-device polling, and missing-file fault contracts.
 
 ### Fixed
+
+- Deny internal application paths in the Nginx deployment and reject HTTP execution of command-line tools before bootstrap.
+
+- Resume Symfony's shared identity through native strict cookie handling and measure Symfony, HTTP worker, browser-build and offline-release coverage in Sonar.
 
 - Require token-protected POST for device reindexing, execute its PHP worker without a shell, and report worker failures instead of success.
 - Execute realtime graph polling without a shell, validate poller identifiers, and stop graph rendering when polling fails.

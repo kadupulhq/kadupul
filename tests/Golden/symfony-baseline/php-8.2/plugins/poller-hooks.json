@@ -1,0 +1,12 @@
+{
+  "command": {
+    "exit": 0
+  },
+  "events_in_order": [
+    "poller_top",
+    "poller_bottom"
+  ],
+  "other_callbacks_seen": [
+    "filter"
+  ]
+}

@@ -1,0 +1,18 @@
+framework:
+    secret: '%env(APP_SECRET)%'
+    http_method_override: false
+    handle_all_throwables: true
+    router:
+        utf8: true
+    php_errors:
+        log: true
+    # The read-only compatibility adapter opens the existing native session.
+    # Do not start a second Symfony session with a different cookie or payload.
+    session: false
+    form: true
+    csrf_protection:
+        stateless_token_ids: ['inventory_device_edit']
+
+when@test:
+    framework:
+        test: true

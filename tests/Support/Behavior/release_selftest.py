@@ -195,7 +195,37 @@ def shallow_fetched_baseline():
     print('Shallow checkouts preserve a separately fetched baseline revision')
 
 
+def legacy_build_input_integrity():
+    import hashlib
+    import shutil
+    evidence = release.ROOT / 'tests/behavior/evidence/historical-baseline'
+    with tempfile.TemporaryDirectory() as directory:
+        baseline = Path(directory) / 'baseline'
+        baseline.mkdir()
+        hashes = release.legacy_build_inputs(baseline)
+        assert hashlib.sha256((baseline / '.behavior-legacy.Dockerfile').read_bytes()).hexdigest() == hashes['tests/behavior/Dockerfile']
+        assert hashlib.sha256((baseline / '.behavior-legacy.Dockerfile.dockerignore').read_bytes()).hexdigest() == hashes['.dockerignore']
+        forged_root = Path(directory) / 'forged'
+        forged_evidence = forged_root / 'tests/behavior/evidence/historical-baseline'
+        shutil.copytree(evidence, forged_evidence)
+        manifest = json.loads((forged_evidence / 'first.json').read_text())
+        manifest['provenance']['harness_inputs_sha256']['tests/behavior/Dockerfile'] = '0' * 64
+        (forged_evidence / 'first.json').write_text(json.dumps(manifest))
+        destination = Path(directory) / 'rejected'
+        destination.mkdir()
+        with patch.object(release, 'ROOT', forged_root):
+            try:
+                release.legacy_build_inputs(destination)
+            except RuntimeError as error:
+                assert 'hash mismatch' in str(error)
+            else:
+                raise AssertionError('Unverified historical build input accepted')
+        assert not list(destination.iterdir())
+    print('Historical release build inputs retain verified hashes and reject tampering')
+
+
 def main():
+    legacy_build_input_integrity()
     baseline_ignore_contract()
     baseline_checkout_metadata()
     baseline_overlay_replacement()

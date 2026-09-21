@@ -130,7 +130,7 @@ any golden is written. Failed runtime probes also leave an incomplete manifest.
 The committed PHP 8.2 baseline was recaptured and reproduced against application
 revision `6ce3572dab3264be563b765f25dcadd8cc046252` using the updated harness.
 The durable `test/behavior-baseline-1.2.31` branch retains this application
-revision; use this commit with the harness from the current test branch.
+revision; use this commit with its recorded controller, retained in `controller-inputs.zip`.
 Two complete manifests and their comparison are retained under
 `tests/behavior/evidence/historical-baseline/`. The first run recorded all 34 contracts; the second verified that recording
 and produced identical scenario observations. A self-test compares both retained
@@ -248,9 +248,15 @@ Both inventories remain recorded; mismatched mounted helpers or build inputs
 fail setup. Baseline/candidate controller input changes require review. Application
 diagnostics retain duplicates but sort records to tolerate process interleaving.
 
-The harness selftest verifies that retained historical evidence matches current
-controller input hashes. Changes to controller helpers or fixtures require fresh
-first and repeat captures before the evidence can pass again.
+The harness selftest verifies the retained historical manifests against the exact
+19 controller inputs archived in `tests/behavior/evidence/historical-baseline/controller-inputs.zip`.
+These bytes were recovered from the recorded clean controller revision and verified
+against every recorded SHA-256; the observations and manifests are unchanged.
+Symfony's Composer/npm Docker build differs from that historical controller.
+Current runs record their actual controller inputs. The comparison command still
+rejects different controller hashes: claiming parity with a changed controller
+requires fresh first/repeat captures using that controller. Passing the historical
+archive selftest is an integrity check, not evidence of current-build parity.
 
 The release upgrade/rollback rehearsal uses an older baseline that predates
 `.dockerignore`. It records that absence and the SHA-256 of the candidate-owned
@@ -258,3 +264,10 @@ file added for the test build in `baseline_dockerignore`. An existing baseline
 file must match byte-for-byte; a mismatch stops the rehearsal before Docker
 builds. This exception is specific to that rehearsal, not the historical
 self-comparison procedure above.
+
+The Composer migration also makes the release rehearsal's build recipes explicit:
+the old release uses the hash-verified historical Dockerfile and matching
+Dockerfile-specific ignore file from `controller-inputs.zip`; the candidate uses
+the current dependency-installing Dockerfile. The rehearsal records the selected
+historical build hashes in `baseline_build_inputs`. This preserves the baseline's
+vendored libraries without importing candidate dependencies into that application.

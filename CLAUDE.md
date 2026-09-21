@@ -34,7 +34,8 @@ out with `git rm --cached`.
   - no `match` expressions — use `switch`
   - no named arguments, no enums, no readonly props, no constructor promotion
   - no `Stringable` / `ReturnTypeWillChange` reliance
-- `develop` targets PHP 8.1+.  PHP 8 syntax is fine there.
+- `main` targets PHP 8.2+; use the development runtimes pinned in `mise.toml`.
+- Symfony code uses framework services; the wrappers below apply to legacy code.
 
 ## Application idioms
 

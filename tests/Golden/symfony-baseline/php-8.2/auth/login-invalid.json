@@ -1,0 +1,36 @@
+{
+  "status": 200,
+  "url": "<BASE>/index.php",
+  "content_type": "text/html; charset=UTF-8",
+  "inputs": [
+    {
+      "name": "__csrf_magic",
+      "type": "hidden"
+    },
+    {
+      "name": "action",
+      "type": "hidden"
+    },
+    {
+      "name": "login_username",
+      "type": "text"
+    },
+    {
+      "name": "login_password",
+      "type": "password"
+    },
+    {
+      "name": "remember_me",
+      "type": "checkbox"
+    },
+    {
+      "type": "submit"
+    }
+  ],
+  "title": "Login to Kadupul",
+  "login_form": true,
+  "admin_layout": false,
+  "messages": [
+    "Access Denied!  Login Failed."
+  ]
+}

@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Devices · Kadupul{% endblock %}
+
+{% block body %}
+<main>
+    <h1>Devices</h1>
+    <form method="get" action="{{ path('inventory_devices') }}" role="search">
+        <label for="device-search">Search by name or hostname</label>
+        <input id="device-search" type="search" name="q" value="{{ criteria.search }}" maxlength="200">
+        <label for="device-state">State</label>
+        <select id="device-state" name="state">
+            {% for value, label in {'all': 'All', 'enabled': 'Enabled', 'disabled': 'Disabled'} %}
+            <option value="{{ value }}"{% if criteria.state == value %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        <label for="device-size">Devices per page</label>
+        <select id="device-size" name="size">
+            {% for size in [25, 50, 100] %}
+            <option{% if criteria.pageSize == size %} selected{% endif %}>{{ size }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Apply</button>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
+        <a href="{{ path('inventory_devices') }}">Reset</a>
+    </form>
+    <table>
+        <caption>Devices you can access</caption>
+        <thead><tr><th scope="col">ID</th><th scope="col">Name</th><th scope="col">Hostname</th><th scope="col">Status</th></tr></thead>
+        <tbody>
+        {% for device in result.devices %}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
+            <tr><td>{{ device.id }}</td><td><a href="{{ path('inventory_device_edit', {id: device.id}) }}">{{ device.description }}</a></td><td>{{ device.hostname }}</td><td>{{ device.disabled ? 'Disabled' : device.status }}</td></tr>
+        {% else %}
+            <tr><td colspan="4">No devices found on this page.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% set filters = {q: criteria.search, state: criteria.state, size: criteria.pageSize} %}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
+    <p><a href="{{ path('inventory_devices_csv', filters|merge({page: criteria.page})) }}">Export this page (CSV)</a></p>
+    <nav aria-label="Device pages">
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
+        {% if criteria.page > 1 %}<a rel="prev" href="{{ path('inventory_devices', filters|merge({page: criteria.page - 1})) }}">Previous</a>{% endif %}
+        <span>Page {{ criteria.page }}</span>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
+        {% if result.hasNext %}<a rel="next" href="{{ path('inventory_devices', filters|merge({page: criteria.page + 1})) }}">Next</a>{% endif %}
+    </nav>
+</main>
+{% endblock %}

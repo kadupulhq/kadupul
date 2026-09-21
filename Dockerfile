@@ -14,9 +14,19 @@ FROM composer@sha256:d8f6343d3fae98107426bc49163ccad46ef85aabd4a27d80a74401fab4a
 
 WORKDIR /app
 COPY composer.json composer.lock ./
+COPY src ./src
+COPY tools/dependencies ./tools/dependencies
 RUN composer install \
-      --no-dev --no-interaction --no-progress --no-scripts \
+      --no-dev --no-interaction --no-progress --ignore-platform-req=ext-* \
       --prefer-dist --optimize-autoloader --classmap-authoritative
+
+# Browser dependencies are built once; Node is not shipped in the runtime.
+FROM node:22.22.2-bookworm-slim@sha256:9f6d5975c7dca860947d3915877f85607946403fc55349f39b4bc3688448bb6e AS assets
+WORKDIR /app
+COPY package.json package-lock.json ./
+COPY tools/dependencies ./tools/dependencies
+COPY include/js/jquery.tablesorter.pager.js ./include/js/jquery.tablesorter.pager.js
+RUN npm ci --ignore-scripts --no-audit --no-fund && node tools/dependencies/build.mjs
 
 # --- runtime ----------------------------------------------------------------
 FROM php@sha256:075b11566518bfa979bb9f2fe2e5359148326d659b15a2f414c2c305a0479a4e AS runtime
@@ -80,14 +90,17 @@ WORKDIR /var/www/html
 # The application is baked in. An image whose code comes from a bind mount is
 # not a release artefact.
 COPY --chown=www-data:www-data . .
-COPY --from=vendor --chown=www-data:www-data /app/vendor ./vendor
+COPY --from=vendor --chown=www-data:www-data /app/include/vendor ./include/vendor
+COPY --from=assets --chown=www-data:www-data /app/include/js ./include/js
+COPY --from=assets --chown=www-data:www-data /app/include/fa ./include/fa
+COPY --from=assets --chown=www-data:www-data /app/include/vendor/flag-icons ./include/vendor/flag-icons
 
 # Writable state is exactly these three directories and nothing else. They are
 # declared as volumes so an operator who forgets to mount them still keeps data
 # across a restart.
 RUN set -eux; \
-    mkdir -p cache log rra; \
-    chown -R www-data:www-data cache log rra; \
+    mkdir -p cache log rra var; \
+    chown -R www-data:www-data cache log rra var; \
     chmod 0755 /usr/local/bin/entrypoint; \
     rm -rf docker
 VOLUME ["/var/www/html/rra", "/var/www/html/log", "/var/www/html/cache"]

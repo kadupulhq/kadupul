@@ -64,7 +64,7 @@ findings, request re-review, and verify latest-head CI before an authorized merg
   - `lts/1.2` keeps upstream Cacti formatting (tabs, same-line function braces) so upstream fixes cherry-pick cleanly. Do not reformat files there.
   - Start each file with SPDX tags, not the old GPL box. Files inherited from Cacti keep `SPDX-FileCopyrightText: <years> The Cacti Group` with its existing years and `SPDX-License-Identifier: GPL-2.0-or-later`; add `SPDX-FileCopyrightText: 2026 The Kadupul project and contributors` when you make a substantive change. Files Kadupul creates carry only the Kadupul line and `GPL-3.0-or-later`.
   - Use snake_case functions and procedural structure consistent with the codebase; avoid introducing namespaces unless integrating vendor code.
-  - Maintain the PHP >=8.0 requirement in `composer.json`; the CI matrix covers PHP 8.1–8.4.
+  - Maintain the PHP >=8.2 requirement in `composer.json`; the CI matrix covers PHP 8.2–8.4 on main.
   - Don’t change public function signatures in `lib/api_*.php` or widely used helpers without auditing usages.
   - For dependencies, prefer Composer-managed libs under `include/vendor` and keep versions pinned by `composer.lock`.
 

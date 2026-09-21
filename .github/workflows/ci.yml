@@ -22,7 +22,7 @@ jobs:
           persist-credentials: false
       - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
         with:
-          php-version: '8.1'
+          php-version: '8.2'
           coverage: none
       - name: Verify portable installer probe and executable allowlist
         shell: pwsh
@@ -73,10 +73,10 @@ jobs:
       with:
         persist-credentials: false
 
-    - name: Install PHP 8.1
+    - name: Install PHP 8.2
       uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
       with:
-        php-version: '8.1'
+        php-version: '8.2'
         extensions: pdo_mysql
         coverage: none
 
@@ -102,7 +102,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['8.1', '8.2', '8.3', '8.4']
+        php: ['8.2', '8.3', '8.4']
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -154,6 +154,13 @@ jobs:
         if: steps.composer-test.outputs.available == 'true'
         run: composer test
 
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22.22.2'
+
+      - name: Build installed browser assets for compatibility tests
+        run: npm ci --ignore-scripts && npm run build
+
       - name: Install isolated CSV test runner
         run: composer install --working-dir=tests --prefer-dist --no-progress --no-interaction
 
@@ -197,6 +204,8 @@ jobs:
           coverage: none
       - name: Verify observation normalization and failure reporting
         run: mise exec python@3.12.12 -- python tests/Support/Behavior/selftest.py
+      - name: Restore pinned compatibility libraries
+        run: php tools/dependencies/install-legacy.php
       - name: Verify flag maintenance filename filters
         run: mise exec python@3.12.12 -- python tests/Support/flag_icons_helpers_test.py
       # This exercises runtime invariants without claiming parity with upstream.

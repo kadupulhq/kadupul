@@ -1,0 +1,17 @@
+platform:
+    resource:
+        path: '../src/Platform/Infrastructure/Symfony/Controller/'
+        namespace: Kadupul\Platform\Infrastructure\Symfony\Controller
+    type: attribute
+
+identity_access:
+    resource:
+        path: '../src/IdentityAccess/Infrastructure/Symfony/Controller/'
+        namespace: Kadupul\IdentityAccess\Infrastructure\Symfony\Controller
+    type: attribute
+
+inventory:
+    resource:
+        path: '../src/Inventory/Infrastructure/Symfony/Controller/'
+        namespace: Kadupul\Inventory\Infrastructure\Symfony\Controller
+    type: attribute

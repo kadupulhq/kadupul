@@ -183,7 +183,7 @@ done
 #    bind mount preserves host UIDs, so without this Kadupul dies on its
 #    very first log line with "System log file is not available for
 #    writing", killing emitHeaders() before it runs.
-for d in log cache rra resource; do
+for d in log cache rra resource include/vendor/csrf; do
     if [ -d "${CACTI_ROOT}/${d}" ]; then
         chmod -R a+w "${CACTI_ROOT}/${d}" 2>/dev/null || true
     fi

@@ -13,6 +13,9 @@ MODE="${1:---summary}"
 
 EXCLUDE=(
 	--glob '!include/vendor/**'
+	--glob '!include/fa/**'
+	--glob '!node_modules/**'
+	--glob '!var/**'
 	--glob '!locales/**'
 	--glob '!tests/**'
 	--glob '!**/*.min.js'

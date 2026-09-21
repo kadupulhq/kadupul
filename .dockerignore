@@ -36,3 +36,12 @@ dist/
 build/
 coverage/
 *.tar.gz
+
+var/
+
+# Always reconstruct dependencies from lockfiles inside the image.
+include/vendor/
+include/fa/
+
+# Generated Symfony IDE reference.
+/config/reference.php

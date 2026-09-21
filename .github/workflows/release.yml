@@ -8,9 +8,13 @@ permissions:
   contents: read
 
 jobs:
+  offline-bundle:
+    uses: ./.github/workflows/offline-bundle.yml # zizmor: ignore[self-repository] -- Pinned actionlint does not yet support $/ workflow calls.
+
   # A called workflow can only narrow the caller's token, never widen it, so
   # every scope the reusable jobs need has to be granted here.
   release:
+    needs: offline-bundle
     uses: kadupulhq/.github/.github/workflows/release.yml@917f4d4369474e947d29252a7597868927f3a38a # v1.0.0
     permissions:
       contents: write     # create the release and upload its assets
@@ -21,3 +25,20 @@ jobs:
       tarball: true
       image: true
       php-version: '8.3'
+
+  attach-offline-bundle:
+    needs: [release, offline-bundle]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5
+        with:
+          name: kadupul-offline-bundle
+          path: dist
+      - name: Attach installable archive to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: gh release upload "$RELEASE_TAG" dist/kadupul-offline.tar.gz dist/kadupul-offline.tar.gz.sha256

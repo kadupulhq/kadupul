@@ -1,0 +1,46 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Kadupul\Platform\Infrastructure\:
+        resource: '../src/Platform/Infrastructure/'
+
+    Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    Kadupul\Platform\Contract\LegacyConfiguration:
+        alias: Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration
+
+    Kadupul\Platform\Contract\DatabaseConnection:
+        alias: Kadupul\Platform\Infrastructure\Legacy\InstallationDatabase
+
+    Kadupul\IdentityAccess\Infrastructure\:
+        resource: '../src/IdentityAccess/Infrastructure/'
+
+    Kadupul\IdentityAccess\Application\Query\CurrentActor: ~
+
+    Kadupul\IdentityAccess\Application\Port\AuthenticatedSession:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession
+
+    Kadupul\IdentityAccess\Contract\ConsoleAccess:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuthenticatedSession
+
+    Kadupul\Inventory\Infrastructure\:
+        resource: '../src/Inventory/Infrastructure/'
+
+    Kadupul\Inventory\Application\Query\ListDevices: ~
+
+    Kadupul\Inventory\Application\Query\FindEditableDevice: ~
+    Kadupul\Inventory\Application\Command\EditDevice: ~
+
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceEditor:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    Kadupul\Inventory\Application\Port\DeviceEditor:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceEditor
+
+    Kadupul\Inventory\Application\Port\DeviceCatalog:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCatalog

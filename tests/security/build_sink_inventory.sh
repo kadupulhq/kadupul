@@ -11,6 +11,9 @@ fi
 
 EXCLUDE=(
 	--glob '!include/vendor/**'
+	--glob '!include/fa/**'
+	--glob '!node_modules/**'
+	--glob '!var/**'
 	--glob '!locales/**'
 	--glob '!tests/**'
 	--glob '!**/*.min.js'
@@ -21,7 +24,7 @@ printf 'category\tlocation\tmatch\n'
 scan() {
 	local category="$1"
 	local pattern="$2"
-	rg -n --pcre2 --no-config --no-ignore --no-ignore-vcs --no-ignore-parent "$pattern" "${EXCLUDE[@]}" --glob '*.php' . 2>/dev/null | grep -v '\/plugins\/' | while IFS= read -r line; do
+	rg -n --pcre2 --no-config --no-ignore --no-ignore-vcs --no-ignore-parent "$pattern" --glob '*.php' "${EXCLUDE[@]}" . 2>/dev/null | grep -v '\/plugins\/' | while IFS= read -r line; do
 		file="${line%%:*}"
 		rest="${line#*:}"
 		lineno="${rest%%:*}"

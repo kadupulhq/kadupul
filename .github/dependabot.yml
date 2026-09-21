@@ -1,13 +1,19 @@
 version: 2
 updates:
+  - package-ecosystem: pip
+    directory: /tests/Symfony
+    target-branch: main
+    labels: [dependencies, no-changelog]
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
   - package-ecosystem: composer
     directories:
       - /
-      # The test runner is declared here rather than in the tracked
-      # include/vendor tree. Only the manifest is committed on this branch; the
-      # lock file arrives with the characterization suite, after which Dependabot
-      # updates both.
       - /tests
+    target-branch: main
+    labels: [dependencies, no-changelog]
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
@@ -20,7 +26,8 @@ updates:
     directories:
       - /
       - /tests/e2e
-      - /include/tabler
+    target-branch: main
+    labels: [dependencies, no-changelog]
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
@@ -31,8 +38,20 @@ updates:
 
   - package-ecosystem: github-actions
     directory: /
+    target-branch: main
+    labels: [dependencies, no-changelog]
     schedule:
       interval: weekly
     groups:
       actions:
         patterns: ["*"]
+
+  - package-ecosystem: docker
+    directories:
+      - /
+      - /tests/behavior
+    target-branch: main
+    labels: [dependencies, no-changelog]
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5

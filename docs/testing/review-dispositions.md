@@ -98,3 +98,53 @@ within a process unless the reason changes or a successful write clears the
 suppression. The existing retained-output warning also sends a debounced
 administrator email. These bounds do not expire valid measurements or provide
 an unlimited storage guarantee.
+
+## Symfony route links and reusable workflow syntax
+
+Semgrep's `generic.html-templates.security.var-in-href.var-in-href` flags six
+Inventory Twig anchors. Each calls Symfony `path()` with a literal route name;
+IDs and filter values are encoded route/query parameters, never an input URI.
+Twig retains attribute escaping. The existing HTTP tests verify escaped values
+and generated compatibility-entry links. Suppressions name only this rule on
+those six anchors (including the current-page CSV download); arbitrary href
+variables remain subject to scanning.
+
+Zizmor's `self-repository` recommendation conflicts with the CI-pinned actionlint
+image, which rejects `$/` reusable workflow calls. Keep the supported `./` form
+with one annotated compatibility exception until that parser supports `$/`.
+Both spellings resolve the same repository workflow; token permissions are unchanged.
+
+## Dependency-independent sink inventory
+
+The positive `*.php` glob followed the exclusion globs, overriding exclusions for
+direct child files. Moving it before the exclusions consistently omits the
+already-excluded generated dependency/cache and locale trees. The reviewed
+baseline removal contains only the redirect sentinels in `include/vendor/index.php`
+and `locales/index.php`; no application execution sink was removed. A fixture
+checks that adding direct/nested vendor PHP and cached PHP leaves the inventory
+unchanged while an authored application sink remains visible.
+
+## Symfony migration Sonar findings
+
+The [PR 145 quality gate](https://sonarcloud.io/dashboard?id=kadupulhq_kadupul&pullRequest=145)
+reported an explicit supplied session-ID assignment (`php:S5328`). The bridge now
+lets PHP resume the native HTTP cookie, with strict mode and cookie-only sessions
+explicitly enabled and URL session propagation disabled. A synthetic request
+cookie cannot replace the native cookie, and an already selected different ID
+fails closed. HTTP regression tests verify unknown IDs are neither adopted nor
+created, query parameters cannot select an existing authenticated session, and
+both supported handlers retain login, revocation and logout behavior. This is a
+code correction, not a scanner suppression.
+
+The other three annotations are corrected directly: the asset builder requires
+a URL object and uses its `href`; runtime selection is extracted from the offline
+builder; the saved-device message uses the native `output` element.
+
+The initial coverage report omitted the Symfony test runner and HTTP processes.
+The workflow now imports measured module, file/database HTTP, save-worker,
+offline-verification, dependency-installer, Python-builder and browser-build
+coverage. Integration measurements must match source hashes and successful test
+inventories before PHPUnit publishes a combined Clover report. Negative checks
+reject stale sources, missing evidence, invalid line observations and unexecuted
+workers without replacing the previous report. Generated `var/` cache is excluded
+consistently; authored source remains in scope and the quality gate is unchanged.

@@ -43,6 +43,9 @@ jobs:
       - name: Verify advisory matrix failure handling
         run: bash tests/security/test_private_advisory_matrix.sh
 
+      - name: Verify generated dependency exclusions
+        run: bash tests/security/test_sink_inventory_exclusions.sh
+
       - name: Verify tracked sink baseline
         run: tests/security/verify_sink_inventory.sh
 
