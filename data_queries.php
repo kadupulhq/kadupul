@@ -678,7 +678,9 @@ function data_query_item_remove_confirm() {
 			<input type='button' class='ui-button ui-corner-all ui-widget' id='cancel' value='<?php print __esc('Cancel');?>' onClick='$("#cdialog").dialog("close");' name='cancel'>
 			<input type='button' class='ui-button ui-corner-all ui-widget' id='continue' value='<?php print __esc('Continue');?>' name='continue' title='<?php print __esc('Remove Data Query Graph Template');?>'>
 			<input type='hidden' id='snmp_query_graph_id' value='<?php
-				print str_replace('`', '&#96;',
+				print str_replace(
+					'`',
+					'&#96;',
 					htmlspecialchars((string) get_request_var('id'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
 				);?>'>
 		</td>
@@ -931,7 +933,8 @@ function data_query_item_edit() {
 							. rawurlencode((string) get_request_var('snmp_query_id'))
 							. '&field_name='
 							. rawurlencode((string) $suggested_value['field_name']),
-							ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'
+							ENT_QUOTES | ENT_SUBSTITUTE,
+							'UTF-8'
 						);?>'></a>
 					<?php } else {?>
 					<span class='moveArrowNone'></span>
@@ -948,7 +951,8 @@ function data_query_item_edit() {
 							. rawurlencode((string) get_request_var('snmp_query_id'))
 							. '&field_name='
 							. rawurlencode((string) $suggested_value['field_name']),
-							ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'
+							ENT_QUOTES | ENT_SUBSTITUTE,
+							'UTF-8'
 						);?>'></a>
 					<?php } else {?>
 					<span class='moveArrowNone'></span>
@@ -967,7 +971,8 @@ function data_query_item_edit() {
 							. rawurlencode((string) $suggested_value['id'])
 							. '&snmp_query_id='
 							. rawurlencode((string) get_request_var('snmp_query_id')),
-							ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'
+							ENT_QUOTES | ENT_SUBSTITUTE,
+							'UTF-8'
 						);?>'></a>
 				</td>
 				<?php
@@ -1073,7 +1078,8 @@ function data_query_item_edit() {
 									. rawurlencode((string) $data_template['id'])
 									. '&field_name='
 									. rawurlencode((string) $suggested_value['field_name']),
-									ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'
+									ENT_QUOTES | ENT_SUBSTITUTE,
+									'UTF-8'
 								);?>'></a>
 							<?php } else {?>
 							<span class='moveArrowNone'></span>
@@ -1092,7 +1098,8 @@ function data_query_item_edit() {
 									. rawurlencode((string) $data_template['id'])
 									. '&field_name='
 									. rawurlencode((string) $suggested_value['field_name']),
-									ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'
+									ENT_QUOTES | ENT_SUBSTITUTE,
+									'UTF-8'
 								);?>'></a>
 							<?php } else {?>
 							<span class='moveArrowNone'></span>
@@ -1113,7 +1120,8 @@ function data_query_item_edit() {
 									. rawurlencode((string) get_request_var('snmp_query_id'))
 									. '&data_template_id='
 									. rawurlencode((string) $data_template['id']),
-									ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'
+									ENT_QUOTES | ENT_SUBSTITUTE,
+									'UTF-8'
 								);?>'></a>
 						</td>
 						<?php
