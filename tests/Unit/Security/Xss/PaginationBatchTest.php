@@ -113,3 +113,23 @@ test('empty and single-page lists and caller-owned object markup remain compatib
 	$all = document(html_nav_bar('items.php', 3, 1, 10, 5, 30, '<strong>Graphs</strong>'));
 	expect($all->query('//strong')->item(0)->textContent)->toBe('Graphs');
 });
+
+test('malformed UTF-8 is replaced without dropping URL or return-target text', function ($counted, $bytes, $replacement) {
+	$base = 'items.php?id=' . $bytes;
+	$return = 'panel-' . $bytes;
+	$xpath = document(html_nav_bar($base, 3, 2, 10, 100, 30, 'Rows', 'page', $return, $counted));
+	$previous = $xpath->query('//div[@class="navBarNavigationPrevious"]/a')->item(0);
+	$next = $xpath->query('//div[@class="navBarNavigationNext"]/a')->item(0);
+	expect($previous->getAttribute('data-url'))->toBe('items.php?id=' . $replacement . '&page=1');
+	expect($next->getAttribute('data-url'))->toBe('items.php?id=' . $replacement . '&page=3');
+	foreach ($xpath->query('//a') as $link) {
+		expect($link->getAttribute('data-return'))->toBe('panel-' . $replacement);
+		if ($link->parentNode->tagName === 'li') {
+			expect($link->getAttribute('data-url'))->toBe('items.php?id=' . $replacement . '&&page=' . $link->textContent);
+		}
+	}
+})->with(array(false, true))->with(array(
+	array("before\xFFafter", "before\u{FFFD}after"),
+	array("before\xC3(after", "before\u{FFFD}(after"),
+	array("before\xE2\x82", "before\u{FFFD}"),
+));
