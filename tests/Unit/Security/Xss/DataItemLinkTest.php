@@ -14,14 +14,16 @@ function get_request_var($name) {
 
 test('item link parameters round-trip without changing action or attribute boundaries', function ($file, $payload) {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
-	$pattern = "/htmlspecialchars\\(\\s*'(data_sources|data_templates)\\.php\\?action="
-		. "(ds_edit|template_edit|rrd_remove|rrd_add)&id='\\s+.*?,\\s*ENT_QUOTES \\| ENT_SUBSTITUTE,\\s*'UTF-8'\\s*\\)/s";
+	$pattern = "/(\\\$item_\\w+_url) = '(?:data_sources|data_templates)\\.php\\?action="
+		. "(ds_edit|template_edit|rrd_remove|rrd_add)&id='.*?;/s";
 	expect(preg_match_all($pattern, $source, $matches, PREG_SET_ORDER))->toBe($file === 'data_sources.php' ? 3 : 2);
 	$template_data_rrd = array('id' => 'item-' . $payload);
 	$GLOBALS['data_item_link_id'] = $payload;
 	try {
 		foreach ($matches as $match) {
-			$encoded = eval('namespace DataItemLinkTest; return ' . $match[0] . ';');
+			$escapePattern = '/htmlspecialchars\\(' . preg_quote($match[1], '/') . '[^;]*?\\)/';
+			expect(preg_match($escapePattern, $source, $escape))->toBe(1);
+			$encoded = eval('namespace DataItemLinkTest; ' . $match[0] . ' return ' . $escape[0] . ';');
 			$attribute = $match[2] === 'ds_edit' || $match[2] === 'template_edit' ? 'href' : 'data-url';
 			$document = new \DOMDocument();
 			$document->loadHTML('<!doctype html><html><head><meta charset="UTF-8"></head><body><a '
