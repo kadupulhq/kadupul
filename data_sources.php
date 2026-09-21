@@ -1146,7 +1146,7 @@ function ds_edit() {
 				foreach ($template_data_rrds as $template_data_rrd) {
 					$i++;
 					print '	<td ' . (($template_data_rrd['id'] == get_request_var('view_rrd')) ? "class='even'" : "class='odd'") . " style='width:" . ((strlen($template_data_rrd['data_source_name']) * 9) + 50) . ";text-align:center;' class='tab'>
-						<span class='textHeader'><a href='" . html_escape('data_sources.php?action=ds_edit&id=' . get_request_var('id') . '&view_rrd=' . $template_data_rrd['id']) . "'>$i: " . html_escape($template_data_rrd['data_source_name']) . '</a>' . (($use_data_template == false) ? " <a class='pic deleteMarker fa fa-times cactiPostAction' href='#' data-url='" . html_escape('data_sources.php?action=rrd_remove&id=' . $template_data_rrd['id'] . '&local_data_id=' . get_request_var('id')) . "' title='" . __esc('Delete') . "'></a>" : '') . '</span>
+						<span class='textHeader'><a href='" . htmlspecialchars('data_sources.php?action=ds_edit&id=' . rawurlencode((string) get_request_var('id')) . '&view_rrd=' . rawurlencode((string) $template_data_rrd['id']), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "'>$i: " . html_escape($template_data_rrd['data_source_name']) . '</a>' . (($use_data_template == false) ? " <a class='pic deleteMarker fa fa-times cactiPostAction' href='#' data-url='" . htmlspecialchars('data_sources.php?action=rrd_remove&id=' . rawurlencode((string) $template_data_rrd['id']) . '&local_data_id=' . rawurlencode((string) get_request_var('id')), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "' title='" . __esc('Delete') . "'></a>" : '') . '</span>
 						</td>';
 					print "<td style='width:1px;'></td>";
 				}
@@ -1164,7 +1164,7 @@ function ds_edit() {
 				" . __esc('Data Source Item %s', $header_label) . "
 			</div>
 			<div class='tableSubHeaderColumn right'>
-				" . ((!isempty_request_var('id') && (empty($data_template['id']))) ? "<a class='linkOverDark cactiPostAction' href='#' data-url='" . html_escape('data_sources.php?action=rrd_add&id=' . get_request_var('id')) . "'>" . __('New') . '</a>&nbsp;' : '') . '
+				" . ((!isempty_request_var('id') && (empty($data_template['id']))) ? "<a class='linkOverDark cactiPostAction' href='#' data-url='" . htmlspecialchars('data_sources.php?action=rrd_add&id=' . rawurlencode((string) get_request_var('id')), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "'>" . __('New') . '</a>&nbsp;' : '') . '
 			</div>
 		</div>';
 

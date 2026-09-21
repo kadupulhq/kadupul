@@ -129,8 +129,9 @@ test('data source edit page sends its mutations by POST with the csrf token', fu
 	$source = file_get_contents(dirname(__DIR__, 4) . '/data_sources.php');
 
 	expect($source)->toContain("<a class='hyperLink cactiPostAction' href='#' data-url='<?php print html_escape('data_sources.php?action=ds_' . (\$data['active'] == 'on' ? 'dis' : 'en') . 'able&id=' . (int) get_request_var('id'))")
-		->and($source)->toContain("<a class='pic deleteMarker fa fa-times cactiPostAction' href='#' data-url='\" . html_escape('data_sources.php?action=rrd_remove&id='")
-		->and($source)->toContain("<a class='linkOverDark cactiPostAction' href='#' data-url='\" . html_escape('data_sources.php?action=rrd_add&id='")
+		->and($source)->toContain("<a class='pic deleteMarker fa fa-times cactiPostAction' href='#' data-url='\" . htmlspecialchars('data_sources.php?action=rrd_remove&id='")
+		->and($source)->toContain("<a class='linkOverDark cactiPostAction' href='#' data-url='\" . htmlspecialchars('data_sources.php?action=rrd_add&id='")
 		->and($source)->not->toContain("href='<?php print html_escape('data_sources.php?action=ds_'")
-		->and($source)->not->toContain("href='\" . html_escape('data_sources.php?action=rrd_");
+		->and($source)->not->toContain("href='\" . html_escape('data_sources.php?action=rrd_")
+		->and($source)->not->toContain("href='\" . htmlspecialchars('data_sources.php?action=rrd_");
 });
