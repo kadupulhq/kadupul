@@ -147,7 +147,8 @@ test('the data query edit pages send their changes by POST with the csrf token',
 		expect($source)->not->toContain("href='<?php print html_escape('data_queries.php?action=" . $action . '&');
 
 		if (strpos($action, 'sv') !== false) {
-			expect($source)->toContain("href='#' data-url='<?php print html_escape('data_queries.php?action=" . $action . '&');
+			$pattern = "/href='#'\\s+data-url='<\\?php\\s+print htmlspecialchars\\(\\s*'data_queries\\.php\\?action=";
+			expect(preg_match($pattern . preg_quote($action, '/') . '&/', $source))->toBe(1);
 		}
 	}
 });
