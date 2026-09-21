@@ -1392,11 +1392,20 @@ function form_confirm($title_text, $body_text, $cancel_url, $action_url) { ?>
  */
 function form_confirm_buttons($action_url, $cancel_url) {
 	global $config;
+
+	$cancel_url_html = $config['url_path'] . $cancel_url;
+	$cancel_url_html = htmlspecialchars($cancel_url_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	$cancel_url_html = str_replace('`', '&#96;', $cancel_url_html);
+	$action_url_html = $config['url_path'] . $action_url . '&confirm=true';
+	$action_url_html = htmlspecialchars($action_url_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	$action_url_html = str_replace('`', '&#96;', $action_url_html);
 	?>
 	<tr>
 		<td class='right'>
-			<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' data-url='<?php print html_escape($config['url_path'] . $cancel_url);?>' value='<?php print __esc('Cancel');?>'>
-			<input type='button' class='ui-button ui-corner-all ui-widget cactiPostAction' data-url='<?php print html_escape($config['url_path'] . $action_url . '&confirm=true');?>' value='<?php print __esc('Delete');?>'>
+			<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo'
+				data-url='<?php print $cancel_url_html;?>' value='<?php print __esc('Cancel');?>'>
+			<input type='button' class='ui-button ui-corner-all ui-widget cactiPostAction'
+				data-url='<?php print $action_url_html;?>' value='<?php print __esc('Delete');?>'>
 		</td>
 	</tr>
 <?php }
