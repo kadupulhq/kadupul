@@ -19,11 +19,14 @@ function render_expression($expression, $payload) {
 
 test('data query action parameters round trip without escaping the HTML attribute', function ($payload) {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/data_queries.php');
-	preg_match_all('/data-url=\'<\?php print (.*?);\?>\'/', $source, $matches);
+	preg_match_all('/data-url=\'<\?php\s+print (.*?);\?>\'/s', $source, $matches);
 	expect(count($matches[1]))->toBe(6);
 	$actions = array();
 	foreach ($matches[1] as $expression) {
 		$value = render_expression($expression, $payload);
+		expect($value)->toContain('&amp;snmp_query_graph_id=');
+		expect($value)->not->toContain('&snmp_query_graph_id=');
+		expect(strpbrk($value, "<>\"'`"))->toBeFalse();
 		$document = new \DOMDocument();
 		$document->loadHTML('<!doctype html><html><head><meta charset="UTF-8"></head><body><a data-url=\'' . $value . '\'>action</a></body></html>');
 		$links = $document->getElementsByTagName('a');
@@ -58,8 +61,9 @@ test('data query action parameters round trip without escaping the HTML attribut
 
 test('data query removal hidden ID preserves its literal attribute value', function ($payload) {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/data_queries.php');
-	expect(preg_match('/<input type=\'hidden\' id=\'snmp_query_graph_id\' value=\'<\?php print (.*?);\?>\'>/', $source, $match))->toBe(1);
+	expect(preg_match('/<input type=\'hidden\' id=\'snmp_query_graph_id\' value=\'<\?php\s+print (.*?);\?>\'>/s', $source, $match))->toBe(1);
 	$value = render_expression($match[1], $payload);
+	expect(strpbrk($value, "<>\"'`"))->toBeFalse();
 	$document = new \DOMDocument();
 	$document->loadHTML('<!doctype html><html><head><meta charset="UTF-8"></head><body><input value=\'' . $value . '\'></body></html>');
 	$inputs = $document->getElementsByTagName('input');
@@ -69,4 +73,4 @@ test('data query removal hidden ID preserves its literal attribute value', funct
 	expect($document->getElementsByTagName('script')->length)->toBe(0);
 	expect($document->getElementsByTagName('img')->length)->toBe(0);
 })->with(array('42', '0042', '', 'réseau 日本語', '\' autofocus onfocus="alert(1)',
-	'\'><img src=x onerror=alert(1)><script>alert(1)</script>', '&#39;&quot;&amp;'));
+	'\'><img src=x onerror=alert(1)><script>alert(1)</script>', '&#39;&quot;&amp;', '` value'));
