@@ -23,7 +23,7 @@ def verify_inventory(harness, session, user_id, check):
             check(response.headers.get('Content-Disposition') ==
                   f'attachment; filename="devices-page-{filters.get("page", 1)}.csv"', 'CSV is downloaded with a fixed page filename')
             rows = list(csv.reader(io.StringIO(response.read().decode('utf-8-sig'), newline='')))
-            check(rows[0] == ['ID', 'Name', 'Hostname', 'Status'], 'CSV only exports list columns')
+            check(rows[0] == ['ID', 'Name', 'Hostname', 'Status', 'Location', 'External ID'], 'CSV only exports list columns')
             return rows[1:]
 
     # No production database is used: Harness.setup owns this disposable schema.
@@ -52,13 +52,41 @@ def verify_inventory(harness, session, user_id, check):
           'permissions apply before page boundaries and lookahead')
     check([d['id'] for d in first['devices'] + second['devices']] == allowed,
           'hidden devices never enter either page')
-    check(all(set(d) == {'id', 'description', 'hostname', 'disabled', 'status'} for d in first['devices']),
+    check(all(set(d) == {'id', 'description', 'hostname', 'disabled', 'status', 'location', 'externalId'} for d in first['devices']),
           'device projection exposes no SNMP credentials or notes')
     for page_number, devices in ((1, first['devices']), (2, second['devices'])):
         check(export(q='inventory-fixture', page=page_number) == [
             [str(d['id']), "'" + d['description'], "'" + d['hostname'],
-             'Disabled' if d['disabled'] else d['status']] for d in devices],
+             'Disabled' if d['disabled'] else d['status'], "'" + d['location'], "'" + d['externalId']] for d in devices],
               'CSV uses the same visibility, ordering and page boundary as the list')
+    check(all(d['location'] == '' and d['externalId'] == '' for d in first['devices']),
+          'null and empty legacy metadata are consistently empty strings')
+    location = '<rack>東京 %_!'
+    external_id = ' \t=asset-42,"東京"'
+    def sql_text(value):
+        return f"CONVERT(UNHEX('{value.encode().hex()}') USING utf8mb4)"
+    harness.sql(f"UPDATE host SET location={sql_text(location)}, external_id={sql_text(external_id)} WHERE id IN ({ids[0]},{allowed[0]})")
+    for query in (location, external_id, '%_!'):
+        result = listing(q=query)['devices']
+        check([d['id'] for d in result] == [allowed[0]], 'metadata search obeys visibility and literal matching')
+        check(result[0]['location'] == location and result[0]['externalId'] == external_id,
+              'metadata projection preserves Unicode and whitespace')
+        check(export(q=query)[0][4:] == ["'" + location, "'" + external_id],
+              'metadata CSV quotes text and neutralizes spreadsheet formulas')
+    with session.opener.open(harness.base + base + '?' + urlencode({'q': location})) as response:
+        html = response.read().decode()
+        check(location not in html and '&lt;rack&gt;東京' in html, 'Twig escapes metadata and reflected metadata searches')
+        check('external ID' in html and 'External ID</th>' in html, 'Twig exposes searchable metadata columns')
+    harness.sql("UPDATE host SET location='metadata-page' WHERE id IN (" + ','.join(map(str, ids)) + ')')
+    for page, expected in ((1, allowed[:25]), (2, allowed[25:])):
+        result = listing(q='metadata-page', page=page)
+        check([d['id'] for d in result['devices']] == expected and result['hasNext'] == (page == 1),
+              'metadata search applies permissions before pagination')
+        check([int(row[0]) for row in export(q='metadata-page', page=page)] == expected,
+              'metadata search pages match CSV exports')
+    harness.sql(f"UPDATE host SET notes='private-search-only', snmp_community='private-search-only' WHERE id={allowed[0]}")
+    check(not listing(q='private-search-only')['devices'], 'notes and SNMP credentials are not searchable')
+    harness.sql('UPDATE host SET location=NULL, external_id=NULL WHERE id IN (' + ','.join(map(str, ids)) + ')')
     # Equal values exercise the ID tie-breaker across both sort directions.
     originals = {d['id']: d for d in first['devices'] + second['devices']}
     harness.sql(f"UPDATE host SET description='inventory-fixture-tie', hostname='fixture-tie.invalid' WHERE id IN ({allowed[0]},{allowed[1]})")

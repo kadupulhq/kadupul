@@ -70,7 +70,8 @@ Open `/app.php/inventory/devices` after logging in. Symfony routes the request t
 The use case obtains identity through IdentityAccess's public `ConsoleAccess`
 contract, requires device realm 3 in addition to console realm 8, then queries
 its `DeviceCatalog` port. The legacy-schema adapter applies user/group visibility
-before pagination and projects only ID, name, hostname, enabled state and status.
+before pagination and projects only ID, name, hostname, enabled state, status, location and external ID.
+Legacy null location/external ID values are represented as empty strings.
 SNMP secrets and notes are never selected or returned.
 
 Twig renders `templates/inventory/devices.html.twig`, including escaped data,
@@ -81,7 +82,7 @@ representation is available at `/app.php/inventory/devices.json`. Both accept
 devices appear only under Disabled, regardless of their last observed status.
 Status and polling-state filters intersect, so contradictory choices return an
 empty result. Status filtering happens before pagination and is retained in page
-and CSV links. Search matches
+and CSV links. Search matches name, hostname, location and external ID as
 literal text rather than treating percent or underscore as SQL wildcards.
 Use `sort=name|hostname` and `direction=asc|desc` to choose ordering. The default
 is ascending name. Device ID breaks equal-value ties in the same direction,
@@ -95,8 +96,9 @@ filters, ordering, page size and authorization as the list. This is a current-pa
 download (at most 100 devices), not a complete inventory export. The Symfony
 controller invokes the same `ListDevices` application query and passes its read
 model to an infrastructure CSV encoder; no export-specific SQL or domain format
-dependency is introduced. The file includes only ID, name, hostname and displayed
-status, with UTF-8 identification and CSV quoting. Name and hostname cells always
+dependency is introduced. The file includes ID, name, hostname and displayed status, followed by the
+Location and External ID columns, with UTF-8 identification and CSV quoting.
+Name, hostname, location and external ID cells always
 receive a leading apostrophe to mark them as literal spreadsheet text, including
 formula-like values preceded by whitespace. Raw CSV readers retain that prefix.
 Empty pages return column headers. Downloads are private/no-store; HEAD returns

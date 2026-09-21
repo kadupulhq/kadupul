@@ -146,6 +146,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Added
 
+- Show and search device location and external ID in Symfony Inventory, and append both fields to the current-page CSV export.
+
 - Preserve the Symfony inventory view through device editing, validation errors and saves.
 
 - Sort Symfony Inventory by name or hostname in either direction, with stable page boundaries and matching CSV order.
