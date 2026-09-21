@@ -55,6 +55,8 @@ def verify_site_edit(harness, session, user_id, check):
         harness.sql(f"UPDATE sites SET name='' WHERE id={site_id}")
         with session.opener.open(harness.base + '/app.php/inventory/sites?size=100') as response:
             check(f'Unnamed site #{site_id}' in response.read().decode(), 'blank legacy site names have accessible edit links')
+        _, blank_body = form()
+        check(f'<h1>Edit Unnamed site #{site_id}</h1>' in blank_body, 'blank legacy site names have identifying editor headings')
         harness.sql(f"UPDATE sites SET name='site-edit-fixture' WHERE id={site_id}")
         original = snapshot()
         parser, body = form()

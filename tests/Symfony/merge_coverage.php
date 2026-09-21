@@ -85,7 +85,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     $requiredPaths = $handler === 'none' ? ['tools/verify-offline.php', 'tools/dependencies/install-legacy.php'] : [
         'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
-        'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php', 'src/Inventory/Infrastructure/Legacy/LegacySiteEditor.php'];
+        'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php', 'src/Inventory/Infrastructure/Legacy/LegacySiteEditor.php'];
     foreach ($requiredPaths as $required) {
         if (!($observed[$required] ?? false)) {
             throw new RuntimeException('Missing measured execution: ' . $required);

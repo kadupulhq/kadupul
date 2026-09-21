@@ -24,6 +24,7 @@ def main():
         'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php',
         'src/Inventory/Infrastructure/Legacy/LegacySiteEditor.php')]
     for path in (args.files / 'raw').glob('coverage-*.json'):
         report = json.loads(path.read_text())
@@ -44,6 +45,7 @@ def main():
         'invalid-hit': 'Invalid PCOV',
         'invalid-line': 'Invalid PCOV',
         'unmeasured-worker': 'Missing measured execution',
+        'unmeasured-site-editor': 'Missing measured execution: src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php',
         'path-traversal': 'Invalid integration source path',
     }
     with tempfile.TemporaryDirectory(prefix='symfony-coverage-negative-') as directory:
@@ -75,6 +77,9 @@ def main():
                 worker['lines']['0'] = 1
             elif case == 'unmeasured-worker':
                 worker['lines'] = {line: -1 for line in worker['lines']}
+            elif case == 'unmeasured-site-editor':
+                editor = data['files'][prefix + 'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php']
+                editor['lines'] = {line: -1 for line in editor['lines']}
             elif case == 'path-traversal':
                 data['files'][prefix + 'src/../bin/legacy-device-edit.php'] = data['files'].pop(required[0])
             raw.write_text(json.dumps(data))
