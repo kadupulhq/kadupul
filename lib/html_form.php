@@ -600,14 +600,12 @@ function form_submit($form_name, $value, $title = '', $action = '') {
  */
 function form_file($form_name, $form_size = 30, $form_accept = '') {
 	// Retain pre-escaped callers while encoding every quoted attribute boundary.
-	$form_name_html = htmlspecialchars((string) $form_name, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false);
+	$attribute_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$form_name_html = htmlspecialchars((string) $form_name, $attribute_flags, 'UTF-8', false);
 	$form_name_html = str_replace('`', '&#96;', $form_name_html);
-	$form_size_html = htmlspecialchars((string) $form_size, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false);
+	$form_size_html = htmlspecialchars((string) $form_size, $attribute_flags, 'UTF-8', false);
 	$form_size_html = str_replace('`', '&#96;', $form_size_html);
-	$form_accept_html = htmlspecialchars(
-	    (string) $form_accept,
-	    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false
-	);
+	$form_accept_html = htmlspecialchars((string) $form_accept, $attribute_flags, 'UTF-8', false);
 	$form_accept_html = str_replace('`', '&#96;', $form_accept_html);
 
 	print "<div>";
@@ -652,16 +650,14 @@ function form_filepath_box($form_name, $form_previous_value, $form_default_value
 	}
 
 	// Retain pre-escaped callers while encoding every quoted attribute boundary.
-	$form_name_html = htmlspecialchars((string) $form_name, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false);
+	$attribute_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$form_name_html = htmlspecialchars((string) $form_name, $attribute_flags, 'UTF-8', false);
 	$form_name_html = str_replace('`', '&#96;', $form_name_html);
-	$form_size_html = htmlspecialchars((string) $form_size, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false);
+	$form_size_html = htmlspecialchars((string) $form_size, $attribute_flags, 'UTF-8', false);
 	$form_size_html = str_replace('`', '&#96;', $form_size_html);
-	$form_max_length_html = htmlspecialchars(
-	    (string) $form_max_length,
-	    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false
-	);
+	$form_max_length_html = htmlspecialchars((string) $form_max_length, $attribute_flags, 'UTF-8', false);
 	$form_max_length_html = str_replace('`', '&#96;', $form_max_length_html);
-	$type_html = htmlspecialchars((string) $type, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false);
+	$type_html = htmlspecialchars((string) $type, $attribute_flags, 'UTF-8', false);
 	$type_html = str_replace('`', '&#96;', $type_html);
 
 	print "<input type='$type_html'";
@@ -708,17 +704,14 @@ function form_filepath_box($form_name, $form_previous_value, $form_default_value
 
 	$extra_data = '';
 	if ($extra_text != '') {
-		$extra_text = htmlspecialchars((string) $extra_text, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false);
+		$extra_text = htmlspecialchars((string) $extra_text, $attribute_flags, 'UTF-8', false);
 		$extra_text = str_replace('`', '&#96;', $extra_text);
 		$extra_data = "<span class='cactiTooltipHint fa $extra_class' style='padding:5px;font-size:16px;color:$extra_color' title='$extra_text'></span>";
 	}
 
 	print " class='ui-state-default ui-corner-all$error_class'";
 
-	$form_previous_value_html = htmlspecialchars(
-	    (string) $form_previous_value,
-	    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false
-	);
+	$form_previous_value_html = htmlspecialchars((string) $form_previous_value, $attribute_flags, 'UTF-8', false);
 	$form_previous_value_html = str_replace('`', '&#96;', $form_previous_value_html);
 
 	print " id='$form_name_html' placeholder='" .
@@ -751,16 +744,14 @@ function form_dirpath_box($form_name, $form_previous_value, $form_default_value,
 	}
 
 	// Retain pre-escaped callers while encoding every quoted attribute boundary.
-	$form_name_html = htmlspecialchars((string) $form_name, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false);
+	$attribute_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$form_name_html = htmlspecialchars((string) $form_name, $attribute_flags, 'UTF-8', false);
 	$form_name_html = str_replace('`', '&#96;', $form_name_html);
-	$form_size_html = htmlspecialchars((string) $form_size, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false);
+	$form_size_html = htmlspecialchars((string) $form_size, $attribute_flags, 'UTF-8', false);
 	$form_size_html = str_replace('`', '&#96;', $form_size_html);
-	$form_max_length_html = htmlspecialchars(
-	    (string) $form_max_length,
-	    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false
-	);
+	$form_max_length_html = htmlspecialchars((string) $form_max_length, $attribute_flags, 'UTF-8', false);
 	$form_max_length_html = str_replace('`', '&#96;', $form_max_length_html);
-	$type_html = htmlspecialchars((string) $type, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false);
+	$type_html = htmlspecialchars((string) $type, $attribute_flags, 'UTF-8', false);
 	$type_html = str_replace('`', '&#96;', $type_html);
 
 	print "<input type='$type_html'";
@@ -790,10 +781,7 @@ function form_dirpath_box($form_name, $form_previous_value, $form_default_value,
 		$extra_data = "<span class='cactiTooltipHint fa fa-times-circle' style='padding:5px;font-size:16px;color:red' title='" . __esc('Directory is Not found'). "'></span>";
 	}
 
-	$form_previous_value_html = htmlspecialchars(
-	    (string) $form_previous_value,
-	    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false
-	);
+	$form_previous_value_html = htmlspecialchars((string) $form_previous_value, $attribute_flags, 'UTF-8', false);
 	$form_previous_value_html = str_replace('`', '&#96;', $form_previous_value_html);
 
 	print " id='$form_name_html' name='$form_name_html' placeholder='" .
@@ -827,18 +815,16 @@ function form_text_box($form_name, $form_previous_value, $form_default_value, $f
 	}
 
 	// Retain pre-escaped callers while encoding every quoted attribute boundary.
-	$form_name_html = htmlspecialchars((string) $form_name, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false);
+	$attribute_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$form_name_html = htmlspecialchars((string) $form_name, $attribute_flags, 'UTF-8', false);
 	$form_name_html = str_replace('`', '&#96;', $form_name_html);
-	$form_size_html = htmlspecialchars((string) $form_size, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false);
+	$form_size_html = htmlspecialchars((string) $form_size, $attribute_flags, 'UTF-8', false);
 	$form_size_html = str_replace('`', '&#96;', $form_size_html);
-	$form_max_length_html = htmlspecialchars(
-	    (string) $form_max_length,
-	    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false
-	);
+	$form_max_length_html = htmlspecialchars((string) $form_max_length, $attribute_flags, 'UTF-8', false);
 	$form_max_length_html = str_replace('`', '&#96;', $form_max_length_html);
-	$type_html = htmlspecialchars((string) $type, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false);
+	$type_html = htmlspecialchars((string) $type, $attribute_flags, 'UTF-8', false);
 	$type_html = str_replace('`', '&#96;', $type_html);
-	$title_html = htmlspecialchars((string) $title, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false);
+	$title_html = htmlspecialchars((string) $title, $attribute_flags, 'UTF-8', false);
 	$title_html = str_replace('`', '&#96;', $title_html);
 
 	if ($type == 'password') {
@@ -866,16 +852,10 @@ function form_text_box($form_name, $form_previous_value, $form_default_value, $f
 		}
 	}
 
-	$form_previous_value_html = htmlspecialchars(
-	    (string) $form_previous_value,
-	    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false
-	);
+	$form_previous_value_html = htmlspecialchars((string) $form_previous_value, $attribute_flags, 'UTF-8', false);
 	$form_previous_value_html = str_replace('`', '&#96;', $form_previous_value_html);
 
-	$placeholder_html = htmlspecialchars(
-	    (string) $placeholder,
-	    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false
-	);
+	$placeholder_html = htmlspecialchars((string) $placeholder, $attribute_flags, 'UTF-8', false);
 	$placeholder_html = str_replace('`', '&#96;', $placeholder_html);
 
 	print " id='$form_name_html' " .
@@ -1422,16 +1402,14 @@ function form_font_box($form_name, $form_previous_value, $form_default_value, $f
 	}
 
 	// Retain pre-escaped callers while encoding every quoted attribute boundary.
-	$form_name_html = htmlspecialchars((string) $form_name, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false);
+	$attribute_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$form_name_html = htmlspecialchars((string) $form_name, $attribute_flags, 'UTF-8', false);
 	$form_name_html = str_replace('`', '&#96;', $form_name_html);
-	$form_size_html = htmlspecialchars((string) $form_size, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false);
+	$form_size_html = htmlspecialchars((string) $form_size, $attribute_flags, 'UTF-8', false);
 	$form_size_html = str_replace('`', '&#96;', $form_size_html);
-	$form_max_length_html = htmlspecialchars(
-	    (string) $form_max_length,
-	    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false
-	);
+	$form_max_length_html = htmlspecialchars((string) $form_max_length, $attribute_flags, 'UTF-8', false);
 	$form_max_length_html = str_replace('`', '&#96;', $form_max_length_html);
-	$type_html = htmlspecialchars((string) $type, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false);
+	$type_html = htmlspecialchars((string) $type, $attribute_flags, 'UTF-8', false);
 	$type_html = str_replace('`', '&#96;', $type_html);
 
 	print "<input type='$type_html'";
@@ -1460,16 +1438,10 @@ function form_font_box($form_name, $form_previous_value, $form_default_value, $f
 		$extra_data = "<span style='color:green'><br>[" . __('NO FONT VERIFICATION POSSIBLE') . ']</span>';
 	}
 
-	$form_previous_value_html = htmlspecialchars(
-	    (string) $form_previous_value,
-	    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false
-	);
+	$form_previous_value_html = htmlspecialchars((string) $form_previous_value, $attribute_flags, 'UTF-8', false);
 	$form_previous_value_html = str_replace('`', '&#96;', $form_previous_value_html);
 
-	$placeholder_html = htmlspecialchars(
-	    (string) $placeholder,
-	    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false
-	);
+	$placeholder_html = htmlspecialchars((string) $placeholder, $attribute_flags, 'UTF-8', false);
 	$placeholder_html = str_replace('`', '&#96;', $placeholder_html);
 
 	print " id='$form_name_html' " .
