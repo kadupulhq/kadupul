@@ -102,13 +102,13 @@ function draw_edit_form($array) {
 				print '<div class="hidden formRow">';
 				form_hidden_box($field_name, $field_array['value'], '0', true);
 				print '</div>';
-				} elseif ($field_array['method'] == 'spacer') {
-					$collapsible = (isset($field_array['collapsible']) && $field_array['collapsible'] == 'true');
-					$friendly_html = htmlspecialchars((string) $field_array['friendly_name'], $escape_flags, 'UTF-8', false);
-					$friendly_html = str_replace('`', '&#96;', $friendly_html);
+			} elseif ($field_array['method'] == 'spacer') {
+				$collapsible = (isset($field_array['collapsible']) && $field_array['collapsible'] == 'true');
+				$friendly_html = htmlspecialchars((string) $field_array['friendly_name'], $escape_flags, 'UTF-8', false);
+				$friendly_html = str_replace('`', '&#96;', $friendly_html);
 
-					print "<div class='spacer formHeader" . ($collapsible ? ' collapsible':'')
-						. "' id='$row_id_html'><div class='formHeaderText'>" . $friendly_html;
+				print "<div class='spacer formHeader" . ($collapsible ? ' collapsible':'')
+					. "' id='$row_id_html'><div class='formHeaderText'>" . $friendly_html;
 				print '<div class="formTooltip">' . (isset($field_array['description']) ? display_tooltip(html_purify($field_array['description'])):'') . '</div>';
 				print ($collapsible ? "<div class='formHeaderAnchor'><i class='fa fa-angle-double-up'></i></div>":'') . '</div></div>';
 			} else {
