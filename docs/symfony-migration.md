@@ -139,8 +139,10 @@ Inventory's `DeviceDetailsReader` port. The legacy adapter applies the same
 visibility policy as the list and selects only the displayed fields. Twig shows
 metadata, site, status and escaped plain-text notes; SNMP credentials are never
 selected. Missing/hidden/deleted devices return 404, anonymous requests 401, and
-revoked device-realm access 403. Responses are private/no-store; mutation methods
-are rejected. Status projection is shared with the list, including Error and
+revoked device-realm access 403. Responses produced by the details controller are
+private/no-store. Unsupported methods receive Symfony’s generic routing-level 405
+before the controller runs, without its cache headers or any device data.
+Status projection is shared with the list, including Error and
 Disabled. A missing site reference shows Unavailable; site ID zero is Unassigned.
 
 The details page, explicit list Edit action, and editor retain the validated list
