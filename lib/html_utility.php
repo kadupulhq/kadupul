@@ -1546,7 +1546,8 @@ function get_page_list($current_page, $pages_per_screen, $rows_per_page, $total_
 			}
 
 			if ($current_page == $page) {
-				$url_page_select .= "<li><a data-url='$page_html' data-return='$return_html' href='#' class='active'>$page</a></li>";
+				$url_page_select .= "<li><a data-url='$page_html' data-return='$return_html' href='#'";
+				$url_page_select .= " class='active'>$page</a></li>";
 			} else {
 				$url_page_select .= "<li><a data-url='$page_html' data-return='$return_html' href='#'>$page</a></li>";
 			}
@@ -1562,7 +1563,8 @@ function get_page_list($current_page, $pages_per_screen, $rows_per_page, $total_
 		$last_html = htmlspecialchars($last_url, $escape_flags, 'UTF-8', false);
 		$last_html = str_replace('`', '&#96;', $last_html);
 		if ($current_page == $total_pages) {
-			$url_page_select .= "<li><a data-url='$last_html' data-return='$return_html' href='#' class='active'>$total_pages</a></li>";
+			$url_page_select .= "<li><a data-url='$last_html' data-return='$return_html' href='#'";
+			$url_page_select .= " class='active'>$total_pages</a></li>";
 		} else {
 			$url_page_select .= "<li><a data-url='$last_html' data-return='$return_html' href='#'>$total_pages</a></li>";
 		}
