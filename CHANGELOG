@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-security: Encode checkbox table-header metadata and form attributes while preserving selection controls and POST behavior
 -security: Encode shared table-header attributes and text while preserving last-column spans and layout
 -security: Encode spike-removal menu attributes while preserving nested markup and action metadata
 -security: Encode shared save-button attributes while preserving cancel URL sanitization and button behavior
