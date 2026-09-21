@@ -3,7 +3,7 @@
  * boundaries stubbed. Existing CSRF suites verify token validation separately. */
 
 test('LTS worker controllers preserve lock and invocation contracts', function ($controller, $failure, $busy, $expected) {
-	$root = dirname(__DIR__, 2);
+	$root = dirname(__DIR__, 4);
 	$dir = sys_get_temp_dir() . '/lts-worker-' . bin2hex(random_bytes(8));
 	mkdir($dir . '/include', 0700, true);
 	mkdir($dir . '/lib', 0700);

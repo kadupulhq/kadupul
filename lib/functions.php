@@ -7917,7 +7917,7 @@ function cacti_exec($binary, array $args = array(), array &$output = array(), $t
 		$write  = array();
 		$except = array();
 		$seconds = (int) $remaining;
-		$microseconds = (int) (($remaining - $seconds) * 1000000);
+		$microseconds = max(0, min(999999, (int) (($remaining - $seconds) * 1000000)));
 		stream_select($read, $write, $except, $seconds, $microseconds);
 
 		usleep(50000);
