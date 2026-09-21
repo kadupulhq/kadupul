@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-security: Preserve literal search text and labels in colors, data source profiles, graph templates, new graphs, links and sites
 -security: Preserve literal search text and associated labels in data templates, data inputs, data queries, GPRINT presets, CDEFs and VDEFs
 -security: Preserve literal search text with explicit attribute escaping and associated labels across automation and discovery filters
 -security: Preserve literal search text with explicit attribute escaping in aggregate graphs, device templates, notification managers and trees
