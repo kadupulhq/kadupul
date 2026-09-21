@@ -9,16 +9,18 @@ controllers contain 90 XSS findings; this batch targets the 49 sinks below.
 - Encode request IDs as URL-component data before embedding them in single-quoted
   JavaScript URL strings. Percent encoding protects quote, script-tag and query
   delimiters while preserving the value when the request is parsed.
-- HTML-escape IDs and tab values in quoted hidden-input attributes.
+- HTML-escape IDs and tab values in quoted hidden-input attributes with explicit
+  `htmlspecialchars` and `ENT_QUOTES | ENT_SUBSTITUTE`. Encode ampersands too so
+  entity-like input round-trips as literal text rather than being decoded.
 - Do not change request validation, authorization, routing, database values,
   CSRF guards, supported PHP versions, or helpers that intentionally emit HTML.
 - Existing integer validation may already prevent exploitation of some paths.
   These changes enforce safety at the output boundary; they are not a claim that
   every scanner trace was independently exploitable.
-- The regression test evaluates the production output snippets and real HTML
-  escaping function, checks JavaScript string boundaries and URL round trips,
+- The regression test evaluates the production output snippets and native HTML
+  encoding, checks JavaScript string boundaries and URL round trips,
   and parses HTML to verify one input, unchanged values and no injected elements
-  or attributes. It covers all 49 sites across six payloads (294 site/payload
+  or attributes. It covers all 49 sites across eight payloads (392 site/payload
   combinations). It is output-boundary coverage, not a full browser/admin-flow
   exploit reproduction.
 - Do not mark findings closed until a fresh merged-LTS scan confirms resolution.
@@ -76,4 +78,3 @@ controllers contain 90 XSS findings; this batch targets the 49 sinks below.
 | user_group_admin.php | 2670 | AaCs2PU4Iug_wyaLils4 |
 | user_group_admin.php | 2686 | AaCs2PU4Iug_wyaLilsf |
 | user_group_admin.php | 2767 | AaCs2PU4Iug_wyaLilsZ |
-

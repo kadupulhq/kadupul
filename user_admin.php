@@ -826,8 +826,10 @@ function graph_perms_edit($tab, $header_label) {
 			</td>
 			<td>
 				<input type='submit' class='ui-button ui-corner-all ui-widget' name='update_policy' value='<?php print __esc('Update');?>'>
-				<input type='hidden' name='tab' value='<?php print html_escape($tab);?>'>
-				<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
+				<input type='hidden' name='tab' value='<?php
+					print htmlspecialchars((string) $tab, ENT_QUOTES | ENT_SUBSTITUTE);?>'>
+				<input type='hidden' name='id' value='<?php
+					print htmlspecialchars((string) get_request_var('id'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 				<input type='hidden' name='update_policy' value='1'>
 			</td>
 			</tr></table></td>
@@ -1106,8 +1108,10 @@ function graph_perms_edit($tab, $header_label) {
 			</td>
 			<td>
 				<input type='submit' class='ui-button ui-corner-all ui-widget' name='update_policy' value='<?php print __esc('Update');?>'>
-				<input type='hidden' name='tab' value='<?php print html_escape($tab);?>'>
-				<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
+				<input type='hidden' name='tab' value='<?php
+					print htmlspecialchars((string) $tab, ENT_QUOTES | ENT_SUBSTITUTE);?>'>
+				<input type='hidden' name='id' value='<?php
+					print htmlspecialchars((string) get_request_var('id'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 				<input type='hidden' name='update_policy' value='1'>
 			</td>
 			</tr></table></td>
@@ -1271,8 +1275,10 @@ function graph_perms_edit($tab, $header_label) {
 			</td>
 			<td>
 				<input type='submit' class='ui-button ui-corner-all ui-widget' name='update_policy' value='<?php print __esc('Update');?>'>
-				<input type='hidden' name='tab' value='<?php print html_escape($tab);?>'>
-				<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
+				<input type='hidden' name='tab' value='<?php
+					print htmlspecialchars((string) $tab, ENT_QUOTES | ENT_SUBSTITUTE);?>'>
+				<input type='hidden' name='id' value='<?php
+					print htmlspecialchars((string) get_request_var('id'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 				<input type='hidden' name='update_policy' value='1'>
 			</td>
 			</tr></table></td>
@@ -1415,8 +1421,10 @@ function graph_perms_edit($tab, $header_label) {
 			</td>
 			<td>
 				<input type='submit' class='ui-button ui-corner-all ui-widget' name='update_policy' value='<?php print __esc('Update');?>'>
-				<input type='hidden' name='tab' value='<?php print html_escape($tab);?>'>
-				<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
+				<input type='hidden' name='tab' value='<?php
+					print htmlspecialchars((string) $tab, ENT_QUOTES | ENT_SUBSTITUTE);?>'>
+				<input type='hidden' name='id' value='<?php
+					print htmlspecialchars((string) get_request_var('id'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 				<input type='hidden' name='update_policy' value='1'>
 			</td>
 			</tr></table></td>
@@ -2722,7 +2730,8 @@ function graph_filter($header_label) {
 			</table>
 			<input type='hidden' name='action' value='user_edit'>
 			<input type='hidden' name='tab' value='permsg'>
-			<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
+			<input type='hidden' name='id' value='<?php
+					print htmlspecialchars((string) get_request_var('id'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 		</form>
 		</td>
 	</tr>
@@ -2820,7 +2829,8 @@ function group_filter($header_label) {
 			</table>
 			<input type='hidden' name='action' value='user_edit'>
 			<input type='hidden' name='tab' value='permsgr'>
-			<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
+			<input type='hidden' name='id' value='<?php
+					print htmlspecialchars((string) get_request_var('id'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 		</form>
 		</td>
 	</tr>
@@ -2937,7 +2947,8 @@ function device_filter($header_label) {
 			</table>
 			<input type='hidden' name='action' value='user_edit'>
 			<input type='hidden' name='tab' value='permsd'>
-			<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
+			<input type='hidden' name='id' value='<?php
+					print htmlspecialchars((string) get_request_var('id'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 		</form>
 		</td>
 	</tr>
@@ -3035,7 +3046,8 @@ function template_filter($header_label) {
 			</table>
 			<input type='hidden' name='action' value='user_edit'>
 			<input type='hidden' name='tab' value='permste'>
-			<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
+			<input type='hidden' name='id' value='<?php
+					print htmlspecialchars((string) get_request_var('id'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 		</form>
 		</td>
 	</tr>
@@ -3133,7 +3145,8 @@ function tree_filter($header_label) {
 			</table>
 			<input type='hidden' name='action' value='user_edit'>
 			<input type='hidden' name='tab' value='permstr'>
-			<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
+			<input type='hidden' name='id' value='<?php
+					print htmlspecialchars((string) get_request_var('id'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 		</form>
 		</td>
 	</tr>
@@ -3231,7 +3244,8 @@ function member_filter($header_label) {
 			</table>
 			<input type='hidden' name='action' value='user_edit'>
 			<input type='hidden' name='tab' value='members'>
-			<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
+			<input type='hidden' name='id' value='<?php
+					print htmlspecialchars((string) get_request_var('id'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 		</form>
 		</td>
 	</tr>

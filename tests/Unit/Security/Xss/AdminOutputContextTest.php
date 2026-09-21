@@ -2,11 +2,7 @@
 
 namespace AdminOutputContextTest;
 
-require_once dirname(__DIR__, 3) . '/Helpers/RrdGraphHarness.php';
-
 $root = dirname(__DIR__, 4);
-$html = file_get_contents($root . '/lib/html.php');
-eval('namespace AdminOutputContextTest;' . \cacti_test_rrd_function_source($html, 'html_escape'));
 
 function get_request_var($name) {
 	return $GLOBALS['admin_output_payload'];
@@ -32,7 +28,8 @@ test('admin IDs and tabs retain their values without breaking output contexts', 
 	$count = 0;
 	foreach ($lines as $line) {
 		$isId = strpos($line, "get_request_var('id')") !== false;
-		$isTab = strpos($line, 'print html_escape($tab)') !== false || strpos($line, 'print $tab;') !== false;
+		$isTab = preg_match('/print (?:html_escape|htmlspecialchars)\(.*\$tab/', $line) === 1
+			|| strpos($line, 'print $tab;') !== false;
 		$isUrl = strpos($line, 'strURL') !== false;
 		$isInput = strpos($line, '<input') !== false;
 		if ((!$isId && !$isTab) || (!$isUrl && !$isInput) || strpos($line, '<?php print ') === false) {
@@ -68,4 +65,6 @@ test('admin IDs and tabs retain their values without breaking output contexts', 
 	'attribute boundary' => '\' autofocus onfocus="alert(1)',
 	'script boundary' => '</script><script>alert(1)</script>',
 	'URL delimiters' => '7&tab=other#fragment%20+ space',
+	'entity-like text' => '&#39;&quot;&amp;',
+	'backtick' => '` value',
 ));
