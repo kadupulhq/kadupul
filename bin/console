@@ -8,5 +8,12 @@
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 
+if (PHP_SAPI !== 'cli') {
+    if (!headers_sent()) {
+        http_response_code(404);
+    }
+    exit;
+}
+
 $kernel = require dirname(__DIR__) . '/config/bootstrap.php';
 exit((new Application($kernel))->run());

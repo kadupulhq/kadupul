@@ -21,6 +21,14 @@ legacy deployment available during migration: login, logout, advanced device con
 have not yet moved. Do not switch the whole installation's document root to
 `public/` until routing for those remaining features is explicitly configured.
 
+For Nginx repository-root deployments, apply the non-public-directory, dotfile,
+metadata and internal-PHP deny locations in `tests/e2e/nginx.conf` **before** the
+generic PHP location. Nginx does not read `.htaccess`. Preserve the PATH_INFO
+handling shown there for `/app.php/...` routes. Never expose `src/`, `config/`,
+`templates/`, `bin/`, `tools/`, `tests/` or runtime state as static content or PHP
+entry points. The PHP build, verification and assessment tools also reject HTTP
+execution before loading dependencies or configuration.
+
 ## Shared identity compatibility
 
 `GET /session` (also HEAD) returns the authenticated user's ID and username.

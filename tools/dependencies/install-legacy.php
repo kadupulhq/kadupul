@@ -5,6 +5,11 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 // Transitional compatibility libraries, including reviewed local security fixes.
 // These are pinned source files, not substitutes for Composer-managed packages.
 $root = dirname(__DIR__, 2);

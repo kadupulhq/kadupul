@@ -8,6 +8,11 @@
 // Run from an extracted release, ideally in a container with --network none.
 use Symfony\Component\HttpFoundation\Request;
 
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 $root = getcwd();
 $kernel = require $root . '/config/bootstrap.php';
 $response = $kernel->handle(Request::create('/healthz'));

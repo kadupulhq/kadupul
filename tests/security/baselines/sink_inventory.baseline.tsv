@@ -528,7 +528,7 @@ dynamic_include	./scripts/ss_netsnmp_lmsensors.php:26		include($config['base_pat
 dynamic_include	./snmpagent_persist.php:147				include( $path_mibcache );
 dynamic_include	./spikekill.php:16	include_once($config['base_path'] . '/lib/spikekill.php');
 dynamic_include	./src/Platform/Infrastructure/Legacy/InstallationConfiguration.php:29	        require $path;
-dynamic_include	./tools/verify-offline.php:12	$kernel = require $root . '/config/bootstrap.php';
+dynamic_include	./tools/verify-offline.php:17	$kernel = require $root . '/config/bootstrap.php';
 fs_write	./cactid.php:82		$STDERR = fopen('/dev/null', 'wb');
 fs_write	./cactid.php:93		$STDERR = fopen('null', 'wb');
 fs_write	./cli/float_rrdfiles.php:366				$fp = fopen($tmp_file, 'x');
@@ -596,9 +596,9 @@ fs_write	./scripts/ss_net_snmp_disk_io.php:208			file_put_contents("$tmpdir/$tmp
 fs_write	./snmpagent_mibcachechild.php:72		$lock = fopen($path_mibcache_lock, 'w');
 fs_write	./snmpagent_mibcachechild.php:76			file_put_contents($path_mibcache, '<?php $cache = ' . var_export($cache, true) . ';', LOCK_EX);
 fs_write	./templates_import.php:49				$fp = fopen($_FILES['import_file']['tmp_name'],'r');
-fs_write	./tools/dependencies/install-legacy.php:44	    $source = fopen($url, 'rb', false, $context);
-fs_write	./tools/dependencies/install-legacy.php:48	    $destination = fopen($archivePath, 'wb');
-fs_write	./tools/dependencies/install-legacy.php:81	        if (file_put_contents($target, $bytes) !== strlen($bytes)) {
+fs_write	./tools/dependencies/install-legacy.php:49	    $source = fopen($url, 'rb', false, $context);
+fs_write	./tools/dependencies/install-legacy.php:53	    $destination = fopen($archivePath, 'wb');
+fs_write	./tools/dependencies/install-legacy.php:86	        if (file_put_contents($target, $bytes) !== strlen($bytes)) {
 fs_write	./utilities.php:1602				$log_fh = fopen($logfile, 'w');
 header_redirect	./aggregate_graphs.php:105			header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
 header_redirect	./aggregate_graphs.php:232		header('Location: aggregate_graphs.php?header=false&action=edit&id=' . $local_graph_id);
