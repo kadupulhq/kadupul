@@ -454,7 +454,7 @@ function manager_notifications($id, $header_label) {
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 
 	function applyFilter() {
-		strURL  = 'managers.php?action=edit&tab=notifications&id=<?php print $id; ?>';
+		strURL  = 'managers.php?action=edit&tab=notifications&id=<?php print rawurlencode((string) $id); ?>';
 		strURL += '&mib=' + $('#mib').val();
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&filter=' + $('#filter').val();
@@ -464,7 +464,9 @@ function manager_notifications($id, $header_label) {
 	}
 
 	function clearFilter() {
-		strURL = 'managers.php?action=edit&tab=notifications&id=<?php print $id; ?>&clear=1&header=false';
+		strURL = 'managers.php?action=edit&tab=notifications&id=<?php
+			print rawurlencode((string) $id);
+		?>&clear=1&header=false';
 		loadPageNoHeader(strURL);
 	}
 
@@ -627,7 +629,11 @@ function manager_notifications($id, $header_label) {
 	}
 
 	?>
-	<input type='hidden' name='id' value='<?php print get_request_var('id'); ?>'>
+	<input type='hidden' name='id' value='<?php
+		$id_html = (string) get_request_var('id');
+		$id_html = htmlspecialchars($id_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+		print str_replace('`', '&#96;', $id_html);
+	?>'>
 	<?php
 
 	html_end_box(false);
@@ -711,7 +717,7 @@ function manager_logs($id, $header_label) {
 	function applyFilter(objForm) {
 		strURL  = '?header=false&severity=' + $('#severity').val();
 		strURL += '&filter=' + $('#filter').val();
-		strURL += '&action=edit&tab=logs&id=<?php print get_request_var('id'); ?>';
+		strURL += '&action=edit&tab=logs&id=<?php print rawurlencode((string) get_request_var('id')); ?>';
 		loadPageNoHeader(strURL);
 	}
 
@@ -799,7 +805,11 @@ function manager_logs($id, $header_label) {
 				</table>
 				<input type='hidden' name='action' value='edit'>
 				<input type='hidden' name='tab' value='logs'>
-				<input type='hidden' id='id' value='<?php print get_request_var('id'); ?>'>
+				<input type='hidden' id='id' value='<?php
+					$id_html = (string) get_request_var('id');
+					$id_html = htmlspecialchars($id_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+					print str_replace('`', '&#96;', $id_html);
+				?>'>
 			</form>
 		</td>
 	</tr>
@@ -889,7 +899,11 @@ function manager_logs($id, $header_label) {
 	}
 
 	?>
-	<input type='hidden' name='id' value='<?php print get_filter_request_var('id'); ?>'>
+	<input type='hidden' name='id' value='<?php
+		$id_html = (string) get_filter_request_var('id');
+		$id_html = htmlspecialchars($id_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+		print str_replace('`', '&#96;', $id_html);
+	?>'>
 	<div style='display:none' id='snmpagentTooltip'></div>
 	<?php
 }
