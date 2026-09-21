@@ -41,7 +41,10 @@ foreach (['Kadupul\\Inventory\\Application\\Query\\ListDevices', 'Kadupul\\Inven
         throw new RuntimeException('Missing Inventory module: ' . $class);
     }
 }
-foreach (['HTMLPurifier', 'phpseclib4\\Crypt\\RSA', 'Symfony\\Component\\Mailer\\Mailer', 'Kadupul\\Alerting\\Infrastructure\\Symfony\\TestMailCommand'] as $class) {
+if (!is_file($root . '/include/admin_notifications.php')) {
+    throw new RuntimeException('Offline administrator notification bridge missing');
+}
+foreach (['HTMLPurifier', 'phpseclib4\\Crypt\\RSA', 'Symfony\\Component\\Mailer\\Mailer', 'Kadupul\\Alerting\\Infrastructure\\Symfony\\TestMailCommand', 'Kadupul\\Alerting\\Infrastructure\\Legacy\\AdministratorNotificationBridge'] as $class) {
     if (!class_exists($class)) {
         throw new RuntimeException('Missing production dependency: ' . $class);
     }
