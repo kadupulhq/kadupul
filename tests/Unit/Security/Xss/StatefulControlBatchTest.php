@@ -57,7 +57,8 @@ function capture($callback, $session = array()) {
 
 dataset('stateful helpers', array('checkbox', 'radio', 'textarea', 'multi'));
 dataset('stateful payloads', array('field', 'réseau 日本語', '\'" autofocus onfocus="alert(1)',
-	'</textarea><img src=x onerror=alert(1)><script>alert(1)</script>', '&#39;&quot;&amp;', chr(96), 'a.b:c[d]'));
+	'</textarea><img src=x onerror=alert(1)><script>alert(1)</script>', '&#39;&quot;&amp;', chr(96), 'a.b:c[d]',
+	'&#39;', '&amp;#39;'));
 
 test('spacer headers preserve text and collapsible markup without injection', function ($payload, $collapsible) {
 	list($doc) = capture(function () use ($payload, $collapsible) {
@@ -138,7 +139,11 @@ test('edit forms bind callbacks by script-safe literal IDs and clear registratio
 	expect($scripts->item(0)->getAttribute('nonce'))->toBe('test');
 	$script = $scripts->item(0)->textContent;
 	expect(preg_match_all('/document\\.getElementById\\(("(?:[^"\\\\]|\\\\.)*")\\)/', $script, $matches))->toBe(2);
-	foreach ($matches[1] as $json) { expect(json_decode($json, true, 512, JSON_THROW_ON_ERROR))->toBe($decoded); }
+	foreach ($matches[1] as $json) {
+		$lookupId = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+		expect($lookupId)->toBe($decoded);
+		expect($lookupId)->toBe($doc->getElementsByTagName('textarea')->item(0)->getAttribute('id'));
+	}
 	expect($script)->toContain(".on('change', function() { changed(); });");
 	expect($script)->toContain(".on('click', function() { clicked(); });");
 	expect($after)->not->toHaveKey('form_change_actions');
