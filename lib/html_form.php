@@ -1596,16 +1596,22 @@ function form_end($ajax = true) {
 		}
 
 		$(function() {
-			formArray['<?php print $form_id;?>'] = $('#<?php print $form_id;?>').serializeForm();
+			var formId = <?php
+				print json_encode((string) $form_id, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+			?>;
+			var form = $(document.getElementById(formId));
+			formArray[formId] = form.serializeForm();
 			changed = false;
 
-			$('#<?php print $form_id;?>').on('submit', function(event) {
+			form.on('submit', function(event) {
 				event.preventDefault();
 
 				// Enable the form if it's disabled
 				$(this).find('input, textarea, select').prop('disabled', false);
 
-				strURL  = '<?php print $form_action;?>';
+				strURL = <?php
+					print json_encode((string) $form_action, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+				?>;
 				strURL += (strURL.indexOf('?') >= 0 ? '&':'?') + 'header=false';
 
 				json =  $(this).serializeObject();
