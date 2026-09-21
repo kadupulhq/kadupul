@@ -232,7 +232,17 @@ function host_reindex() {
 
 	$start = microtime(true);
 
-	shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/cli/poller_reindex_hosts.php') . ' --qid=all --id=' . cacti_escapeshellarg((string) $host_id));
+	$output = array();
+	$status = cacti_exec(read_config_option('path_php_binary'), array(
+		'-q', $config['base_path'] . '/cli/poller_reindex_hosts.php',
+		'--qid=all', '--id=' . (int) $host_id
+	), $output, null);
+
+	if ($status !== 0) {
+		raise_message('host_reindex', __('Device Reindex Failed.'), MESSAGE_LEVEL_ERROR);
+
+		return false;
+	}
 
 	$end = microtime(true);
 

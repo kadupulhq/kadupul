@@ -74,7 +74,7 @@ switch (get_request_var('action')) {
 	case 'whitelist_update':
 		/* csrf-magic only validates the token on POST. A GET to this
 		 * action would bypass the token check and let a CSRF gadget
-		 * trigger the shell_exec below. The UI uses loadPageUsingPost
+		 * trigger the worker below. The UI uses loadPageUsingPost
 		 * so a POST is the only legitimate caller. */
 		if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
 			cacti_log('WARNING: Rejected non-POST request to data_input.php?action=whitelist_update', false, 'AUTH');
@@ -85,13 +85,13 @@ switch (get_request_var('action')) {
 
 		$id = get_filter_request_var('id');
 
-		$php        = cacti_escapeshellcmd(read_config_option('path_php_binary'));
-		$script     = cacti_escapeshellarg($config['base_path'] . '/cli/input_whitelist.php');
-		$id_arg     = cacti_escapeshellarg('--id=' . $id);
+		$output = array();
+		$status = cacti_exec(read_config_option('path_php_binary'), array(
+			'-q', $config['base_path'] . '/cli/input_whitelist.php',
+			'--update', '--push', '--id=' . (int) $id
+		), $output, null);
 
-		$output = shell_exec($php . ' -q ' . $script . ' --update --push ' . $id_arg);
-
-		raise_message('whitelist_updated', html_escape($output), MESSAGE_LEVEL_INFO);
+		raise_message('whitelist_updated', html_escape(implode("\n", $output)), $status === 0 ? MESSAGE_LEVEL_INFO : MESSAGE_LEVEL_ERROR);
 
 		/* fall through */
 	case 'edit':
