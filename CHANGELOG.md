@@ -144,6 +144,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Added
 
+- Filter Symfony Inventory by displayed device status across Twig, JSON, pagination and current-page CSV.
+
 - SonarQube Cloud analysis for main and same-repository pull requests.
 - Unit test coverage reported to SonarQube Cloud from a PHP 8.1 run of the
   tests that pass without a database.

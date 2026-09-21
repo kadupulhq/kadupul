@@ -32,6 +32,19 @@ final readonly class LegacyDeviceCatalog implements DeviceCatalog
         } elseif ($criteria->state === 'enabled') {
             $where .= " AND (h.disabled = '' OR h.disabled IS NULL)";
         }
+        if ($criteria->status === 'disabled') {
+            $where .= " AND h.disabled = 'on'";
+        } elseif ($criteria->status !== 'all') {
+            $where .= " AND (h.disabled = '' OR h.disabled IS NULL)";
+            if ($criteria->status === 'unknown') {
+                $where .= ' AND (h.status NOT IN (1, 2, 3) OR h.status IS NULL)';
+            } else {
+                $where .= ' AND h.status = ?';
+                $parameters[] = match ($criteria->status) {
+                    'down' => 1, 'recovering' => 2, 'up' => 3,
+                };
+            }
+        }
         $where .= ' AND (' . $this->visibility->predicate($userId) . ')';
         $query = $db->prepare("SELECT DISTINCT h.id, h.description, h.hostname, h.disabled, h.status
             FROM host h LEFT JOIN graph_local gl ON gl.host_id = h.id

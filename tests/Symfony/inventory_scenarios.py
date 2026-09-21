@@ -2,7 +2,8 @@
 import csv
 import io
 import json
-from urllib.parse import urlencode
+from html.parser import HTMLParser
+from urllib.parse import parse_qs, urlencode, urlsplit
 from urllib.request import Request
 
 
@@ -68,6 +69,54 @@ def verify_inventory(harness, session, user_id, check):
           'disabled filter preserves visibility')
     check([int(row[0]) for row in export(q='inventory-fixture', state='disabled')] == [allowed[0]],
           'CSV preserves the disabled filter')
+    # Match displayed status, so disabled devices cannot also appear as Up/Down.
+    harness.sql(f"UPDATE host SET status=3 WHERE id={allowed[0]}")
+    for index, value in enumerate((1, 2, 0, 9), start=1):
+        harness.sql(f"UPDATE host SET status={value} WHERE id={allowed[index]}")
+    expected_statuses = {'disabled': [allowed[0]], 'down': [allowed[1]],
+                         'recovering': [allowed[2]], 'unknown': allowed[3:5], 'up': allowed[5:]}
+    for status, expected in expected_statuses.items():
+        check([d['id'] for d in listing(q='inventory-fixture', status=status, size=100)['devices']] == expected,
+              'status filter matches displayed status and preserves visibility: ' + status)
+        check([int(row[0]) for row in export(q='inventory-fixture', status=status, size=100)] == expected,
+              'CSV preserves status: ' + status)
+    check(not listing(q='inventory-fixture', state='disabled', status='up')['devices'],
+          'conflicting polling and status filters return no devices')
+    check(not listing(q='inventory-fixture', state='enabled', status='disabled')['devices'],
+          'disabled status cannot bypass enabled state')
+    harness.sql('UPDATE host SET status=1 WHERE id IN (' + ','.join(map(str, ids)) + ')')
+    for page, expected in ((1, allowed[1:26]), (2, allowed[26:])):
+        result = listing(q='inventory-fixture', status='down', page=page)
+        check([d['id'] for d in result['devices']] == expected and result['hasNext'] == (page == 1),
+              'status and visibility apply before pagination')
+        check([int(row[0]) for row in export(q='inventory-fixture', status='down', page=page)] == expected,
+              'CSV preserves status-filtered page boundaries')
+
+    class Links(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.links = []
+            self.selected = []
+
+        def handle_starttag(self, tag, attributes):
+            attrs = dict(attributes)
+            if tag == 'a' and ('rel' in attrs or '.csv?' in attrs.get('href', '')):
+                self.links.append(attrs['href'])
+            if tag == 'option' and 'selected' in attrs:
+                self.selected.append(attrs.get('value'))
+
+    for page in (1, 2):
+        with session.opener.open(harness.base + base + '?' + urlencode(
+                {'q': 'inventory-fixture', 'status': 'down', 'page': page})) as response:
+            html = Links()
+            html.feed(response.read().decode())
+        check('down' in html.selected and len(html.links) == 2,
+              'Twig selects status and renders CSV plus pagination')
+        for link in html.links:
+            filters = parse_qs(urlsplit(link).query)
+            check(filters.get('status') == ['down'] and filters.get('q') == ['inventory-fixture'],
+                  'Twig retains search and status in page and export links')
+    harness.sql('UPDATE host SET status=3 WHERE id IN (' + ','.join(map(str, ids)) + ')')
     formula = ' \t=1+1,"東京"\nnext'
     harness.sql(f"UPDATE host SET description=CONVERT(UNHEX('{formula.encode().hex()}') USING utf8mb4) WHERE id={allowed[0]}")
     check(export(q='=1+1')[0][1] == "'" + formula, 'CSV quotes multiline Unicode text and neutralizes formulas')
@@ -86,7 +135,7 @@ def verify_inventory(harness, session, user_id, check):
     check('/app.php/inventory/devices' in body, 'Symfony generates links for the compatibility entry URL')
     check('/app.php/inventory/devices.csv?' in body and 'Export this page (CSV)' in body,
           'Twig links to the compatibility CSV route')
-    for query in ('page=0', 'page=1e3', 'page[]=1', 'q[]=x', 'size=100000', 'state=other'):
+    for query in ('page=0', 'page=1e3', 'page[]=1', 'q[]=x', 'size=100000', 'state=other', 'status=other', 'status[]=up', 'status=3%20OR%201=1'):
         check(session.request(base + '.json?' + query)['status'] == 400, 'invalid filters are rejected: ' + query)
         check(session.request(base + '.csv?' + query)['status'] == 400, 'invalid CSV filters are rejected: ' + query)
     harness.sql(f'DELETE FROM user_auth_realm WHERE user_id={user_id} AND realm_id=3')

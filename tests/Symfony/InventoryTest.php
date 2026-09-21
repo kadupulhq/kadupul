@@ -44,7 +44,7 @@ final class InventoryTest extends TestCase
         $access->method('consoleActor')->willReturn($actor);
         $access->expects(self::once())->method('canManageDevices')->with($actor)->willReturn(true);
         $catalog = $this->createMock(DeviceCatalog::class);
-        $criteria = new DeviceListCriteria(' router ', 'enabled', 2, 50);
+        $criteria = new DeviceListCriteria(' router ', 'enabled', 2, 50, 'down');
         $page = new DevicePage([], false);
         $catalog->expects(self::once())->method('visibleTo')->with(42, $criteria)->willReturn($page);
         self::assertSame($page, (new ListDevices($access, $catalog))($criteria));
@@ -65,6 +65,8 @@ final class InventoryTest extends TestCase
         yield [ ['page' => 100001] ];
         yield [ ['pageSize' => 1000] ];
         yield [ ['state' => 'any SQL'] ];
+        yield [ ['status' => 'other'] ];
+        yield [ ['status' => '3 OR 1=1'] ];
         yield [ ['search' => str_repeat('x', 201)] ];
     }
 }

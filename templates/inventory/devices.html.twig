@@ -14,6 +14,12 @@
             <option value="{{ value }}"{% if criteria.state == value %} selected{% endif %}>{{ label }}</option>
             {% endfor %}
         </select>
+        <label for="device-status">Status</label>
+        <select id="device-status" name="status">
+            {% for value, label in {'all': 'All', 'up': 'Up', 'down': 'Down', 'recovering': 'Recovering', 'unknown': 'Unknown', 'disabled': 'Disabled'} %}
+            <option value="{{ value }}"{% if criteria.status == value %} selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
         <label for="device-size">Devices per page</label>
         <select id="device-size" name="size">
             {% for size in [25, 50, 100] %}
@@ -36,7 +42,7 @@
         {% endfor %}
         </tbody>
     </table>
-    {% set filters = {q: criteria.search, state: criteria.state, size: criteria.pageSize} %}
+    {% set filters = {q: criteria.search, state: criteria.state, status: criteria.status, size: criteria.pageSize} %}
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
     <p><a href="{{ path('inventory_devices_csv', filters|merge({page: criteria.page})) }}">Export this page (CSV)</a></p>
     <nav aria-label="Device pages">
