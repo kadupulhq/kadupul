@@ -227,6 +227,10 @@ function draw_edit_form($array) {
  * @return void
  */
 function draw_edit_control($field_name, &$field_array) {
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$field_name_html = htmlspecialchars((string)$field_name, $escape_flags, 'UTF-8', false);
+	$field_name_html = str_replace('`', '&#96;', $field_name_html);
+
 	switch ($field_array['method']) {
 	case 'textbox':
 		form_text_box(
@@ -447,9 +451,9 @@ function draw_edit_control($field_name, &$field_array) {
 		break;
 	case 'checkbox_group':
 		if (isset($field_array['type']) && $field_array['type'] == 'flex') {
-			print "</td></tr><tr><td><div id='{$field_name}_group' class='checkboxgroup1 flexContainer'>" . PHP_EOL;
+			print "</td></tr><tr><td><div id='{$field_name_html}_group' class='checkboxgroup1 flexContainer'>" . PHP_EOL;
 		} else {
-			print "<div id='{$field_name}_group' class='checkboxgroup1'>" . PHP_EOL;
+			print "<div id='{$field_name_html}_group' class='checkboxgroup1'>" . PHP_EOL;
 		}
 
 		foreach ($field_array['items'] as $check_name => $check_array) {
@@ -557,7 +561,9 @@ function draw_edit_control($field_name, &$field_array) {
 		break;
 	default:
 		if (isset($field_array['value'])) {
-			print '<em>' . html_escape($field_array['value']) . '</em>';
+			$value_html = htmlspecialchars((string)$field_array['value'], $escape_flags, 'UTF-8', false);
+			$value_html = str_replace('`', '&#96;', $value_html);
+			print '<em>' . $value_html . '</em>';
 
 			form_hidden_box($field_name, $field_array['value'], '', true);
 		} else {
@@ -1422,12 +1428,18 @@ function form_multi_dropdown($form_name, $array_display, $sql_previous_values, $
    @arg $form_default_value - the value of this form element to use if there is
      no current value available */
 function form_color_dropdown($form_name, $form_previous_value, $form_none_entry, $form_default_value, $class = '', $on_change = '') {
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$form_name_html = htmlspecialchars((string)$form_name, $escape_flags, 'UTF-8', false);
+	$form_name_html = str_replace('`', '&#96;', $form_name_html);
+	$class_html = htmlspecialchars((string)$class, $escape_flags, 'UTF-8', false);
+	$class_html = str_replace('`', '&#96;', $class_html);
+
 	if ($form_previous_value == '') {
 		$form_previous_value = $form_default_value;
 	}
 
 	if ($class != '') {
-		$class = " class='colordropdown $class' ";
+		$class = " class='colordropdown $class_html' ";
 	} else {
 		$class = " class='colordropdown'";
 	}
@@ -1436,6 +1448,8 @@ function form_color_dropdown($form_name, $form_previous_value, $form_none_entry,
 		FROM colors
 		WHERE id = ?',
 		array($form_previous_value));
+	$current_color_html = htmlspecialchars((string)$current_color, $escape_flags, 'UTF-8', false);
+	$current_color_html = str_replace('`', '&#96;', $current_color_html);
 
 	$on_change = "this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor;$on_change";
 
@@ -1452,7 +1466,7 @@ function form_color_dropdown($form_name, $form_previous_value, $form_none_entry,
 
 	$colors_list = db_fetch_assoc($colors_sql);
 
-	print "<select style='background-color: #$current_color;' id='$form_name' name='$form_name'" . $class . ">";
+	print "<select style='background-color: #$current_color_html;' id='$form_name_html' name='$form_name_html'" . $class . ">";
 
 	if ($form_none_entry != '') {
 		print "<option value='0'>$form_none_entry</option>";
@@ -1466,13 +1480,20 @@ function form_color_dropdown($form_name, $form_previous_value, $form_none_entry,
 				$display = $color['name'] . ' (' . $color['hex'] . ')';
 			}
 
-			print "<option data-color='" . html_escape($color['hex']) . "' style='background-color: #" . html_escape($color['hex']) . ";' value='" . $color['id'] . "'";
+			$hex_html = htmlspecialchars((string)$color['hex'], $escape_flags, 'UTF-8', false);
+			$hex_html = str_replace('`', '&#96;', $hex_html);
+			$id_html = htmlspecialchars((string)$color['id'], $escape_flags, 'UTF-8', false);
+			$id_html = str_replace('`', '&#96;', $id_html);
+			$display_html = htmlspecialchars((string)$display, $escape_flags, 'UTF-8', false);
+			$display_html = str_replace('`', '&#96;', $display_html);
+
+			print "<option data-color='$hex_html' style='background-color: #$hex_html;' value='$id_html'";
 
 			if ($form_previous_value == $color['id']) {
 				print ' selected';
 			}
 
-			print '>' . html_escape($display) . '</option>';
+			print '>' . $display_html . '</option>';
 		}
 	}
 
