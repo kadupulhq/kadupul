@@ -1546,8 +1546,16 @@ function form_save_button($cancel_url, $force_type = '', $key_field = 'id', $aja
 		$alt = __esc('Export');
 	}
 
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$force_type_html = htmlspecialchars((string) $force_type, $escape_flags, 'UTF-8', false);
+	$force_type_html = str_replace('`', '&#96;', $force_type_html);
 	if ($force_type != 'import' && $force_type != 'export' && $force_type != 'save' && $force_type != 'close' && $cancel_url != '') {
-		$cancel_action = "<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' data-url='" . html_escape(sanitize_uri($cancel_url)) . "' value='" . $calt . "'>";
+		$cancel_url_html = htmlspecialchars(sanitize_uri($cancel_url), $escape_flags, 'UTF-8', false);
+		$cancel_url_html = str_replace('`', '&#96;', $cancel_url_html);
+		$calt_html = htmlspecialchars((string) $calt, $escape_flags, 'UTF-8', false);
+		$calt_html = str_replace('`', '&#96;', $calt_html);
+		$cancel_action = "<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo'"
+			. " data-url='$cancel_url_html' value='$calt_html'>";
 	} else {
 		$cancel_action = '';
 	}
@@ -1558,7 +1566,8 @@ function form_save_button($cancel_url, $force_type = '', $key_field = 'id', $aja
 			<td class='saveRow'>
 				<input type='hidden' name='action' value='save'>
 				<?php print $cancel_action;?>
-				<input type='submit' class='<?php print $force_type;?> ui-button ui-corner-all ui-widget' id='submit' value='<?php print $alt;?>'>
+				<input type='submit' class='<?php print $force_type_html;?> ui-button ui-corner-all ui-widget'
+					id='submit' value='<?php print $alt;?>'>
 			</td>
 		</tr>
 	</table>
@@ -1576,13 +1585,19 @@ function form_save_button($cancel_url, $force_type = '', $key_field = 'id', $aja
  * @return void
  */
 function form_save_buttons($buttons) {
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
 	?>
 	<table style='width:100%;text-align:center;'>
 		<tr>
 			<td class='saveRow'>
 				<input type='hidden' name='action' value='save'>
 				<?php foreach($buttons as $b) {
-					print "<input type='button' class='ui-button ui-corner-all ui-widget' id='" . $b['id'] . "' value='" . html_escape($b['value']) . "'>";
+					$id_html = htmlspecialchars((string) $b['id'], $escape_flags, 'UTF-8', false);
+					$id_html = str_replace('`', '&#96;', $id_html);
+					$value_html = htmlspecialchars((string) $b['value'], $escape_flags, 'UTF-8', false);
+					$value_html = str_replace('`', '&#96;', $value_html);
+					print "<input type='button' class='ui-button ui-corner-all ui-widget'"
+						. " id='$id_html' value='$value_html'>";
 				} ?>
 			</td>
 		</tr>
