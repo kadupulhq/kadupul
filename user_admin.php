@@ -826,8 +826,8 @@ function graph_perms_edit($tab, $header_label) {
 			</td>
 			<td>
 				<input type='submit' class='ui-button ui-corner-all ui-widget' name='update_policy' value='<?php print __esc('Update');?>'>
-				<input type='hidden' name='tab' value='<?php print $tab;?>'>
-				<input type='hidden' name='id' value='<?php print get_request_var('id');?>'>
+				<input type='hidden' name='tab' value='<?php print html_escape($tab);?>'>
+				<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
 				<input type='hidden' name='update_policy' value='1'>
 			</td>
 			</tr></table></td>
@@ -1106,8 +1106,8 @@ function graph_perms_edit($tab, $header_label) {
 			</td>
 			<td>
 				<input type='submit' class='ui-button ui-corner-all ui-widget' name='update_policy' value='<?php print __esc('Update');?>'>
-				<input type='hidden' name='tab' value='<?php print $tab;?>'>
-				<input type='hidden' name='id' value='<?php print get_request_var('id');?>'>
+				<input type='hidden' name='tab' value='<?php print html_escape($tab);?>'>
+				<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
 				<input type='hidden' name='update_policy' value='1'>
 			</td>
 			</tr></table></td>
@@ -1271,8 +1271,8 @@ function graph_perms_edit($tab, $header_label) {
 			</td>
 			<td>
 				<input type='submit' class='ui-button ui-corner-all ui-widget' name='update_policy' value='<?php print __esc('Update');?>'>
-				<input type='hidden' name='tab' value='<?php print $tab;?>'>
-				<input type='hidden' name='id' value='<?php print get_request_var('id');?>'>
+				<input type='hidden' name='tab' value='<?php print html_escape($tab);?>'>
+				<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
 				<input type='hidden' name='update_policy' value='1'>
 			</td>
 			</tr></table></td>
@@ -1415,8 +1415,8 @@ function graph_perms_edit($tab, $header_label) {
 			</td>
 			<td>
 				<input type='submit' class='ui-button ui-corner-all ui-widget' name='update_policy' value='<?php print __esc('Update');?>'>
-				<input type='hidden' name='tab' value='<?php print $tab;?>'>
-				<input type='hidden' name='id' value='<?php print get_request_var('id');?>'>
+				<input type='hidden' name='tab' value='<?php print html_escape($tab);?>'>
+				<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
 				<input type='hidden' name='update_policy' value='1'>
 			</td>
 			</tr></table></td>
@@ -2617,7 +2617,7 @@ function graph_filter($header_label) {
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 
 	function applyFilter() {
-		strURL  = 'user_admin.php?action=user_edit&tab=permsg&id=<?php print get_request_var('id');?>'
+		strURL  = 'user_admin.php?action=user_edit&tab=permsg&id=<?php print rawurlencode((string) get_request_var('id'));?>'
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&graph_template_id=' + $('#graph_template_id').val();
 		strURL += '&associated=' + $('#associated').is(':checked');
@@ -2627,7 +2627,7 @@ function graph_filter($header_label) {
 	}
 
 	function clearFilter(objForm) {
-		strURL = 'user_admin.php?action=user_edit&tab=permsg&id=<?php print get_request_var('id');?>&clear=true'
+		strURL = 'user_admin.php?action=user_edit&tab=permsg&id=<?php print rawurlencode((string) get_request_var('id'));?>&clear=true'
 		strURL = strURL + '&header=false';
 		loadPageNoHeader(strURL);
 	}
@@ -2721,7 +2721,7 @@ function graph_filter($header_label) {
 			</table>
 			<input type='hidden' name='action' value='user_edit'>
 			<input type='hidden' name='tab' value='permsg'>
-			<input type='hidden' name='id' value='<?php print get_request_var('id');?>'>
+			<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
 		</form>
 		</td>
 	</tr>
@@ -2737,7 +2737,7 @@ function group_filter($header_label) {
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 
 	function applyFilter() {
-		strURL  = 'user_admin.php?action=user_edit&tab=permsgr&id=<?php print get_request_var('id');?>'
+		strURL  = 'user_admin.php?action=user_edit&tab=permsgr&id=<?php print rawurlencode((string) get_request_var('id'));?>'
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&associated=' + $('#associated').is(':checked');
 		strURL += '&filter=' + $('#filter').val();
@@ -2746,7 +2746,7 @@ function group_filter($header_label) {
 	}
 
 	function clearFilter() {
-		strURL = 'user_admin.php?action=user_edit&tab=permsgr&id=<?php print get_request_var('id');?>&clear=true'
+		strURL = 'user_admin.php?action=user_edit&tab=permsgr&id=<?php print rawurlencode((string) get_request_var('id'));?>&clear=true'
 		strURL = strURL + '&header=false';
 		loadPageNoHeader(strURL);
 	}
@@ -2818,7 +2818,7 @@ function group_filter($header_label) {
 			</table>
 			<input type='hidden' name='action' value='user_edit'>
 			<input type='hidden' name='tab' value='permsgr'>
-			<input type='hidden' name='id' value='<?php print get_request_var('id');?>'>
+			<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
 		</form>
 		</td>
 	</tr>
@@ -2834,7 +2834,7 @@ function device_filter($header_label) {
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 
 	function applyFilter() {
-		strURL  = 'user_admin.php?action=user_edit&tab=permsd&id=<?php print get_request_var('id');?>'
+		strURL  = 'user_admin.php?action=user_edit&tab=permsd&id=<?php print rawurlencode((string) get_request_var('id'));?>'
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&host_template_id=' + $('#host_template_id').val();
 		strURL += '&associated=' + $('#associated').is(':checked');
@@ -2844,7 +2844,7 @@ function device_filter($header_label) {
 	}
 
 	function clearFilter(objForm) {
-		strURL = 'user_admin.php?action=user_edit&tab=permsd&id=<?php print get_request_var('id');?>&clear=true'
+		strURL = 'user_admin.php?action=user_edit&tab=permsd&id=<?php print rawurlencode((string) get_request_var('id'));?>&clear=true'
 		strURL = strURL + '&header=false';
 		loadPageNoHeader(strURL);
 	}
@@ -2934,7 +2934,7 @@ function device_filter($header_label) {
 			</table>
 			<input type='hidden' name='action' value='user_edit'>
 			<input type='hidden' name='tab' value='permsd'>
-			<input type='hidden' name='id' value='<?php print get_request_var('id');?>'>
+			<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
 		</form>
 		</td>
 	</tr>
@@ -2950,7 +2950,7 @@ function template_filter($header_label) {
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 
 	function applyFilter() {
-		strURL  = 'user_admin.php?action=user_edit&tab=permste&id=<?php print get_request_var('id');?>'
+		strURL  = 'user_admin.php?action=user_edit&tab=permste&id=<?php print rawurlencode((string) get_request_var('id'));?>'
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&associated=' + $('#associated').is(':checked');
 		strURL += '&filter=' + $('#filter').val();
@@ -2959,7 +2959,7 @@ function template_filter($header_label) {
 	}
 
 	function clearFilter() {
-		strURL = 'user_admin.php?action=user_edit&tab=permste&id=<?php print get_request_var('id');?>&clear=true'
+		strURL = 'user_admin.php?action=user_edit&tab=permste&id=<?php print rawurlencode((string) get_request_var('id'));?>&clear=true'
 		strURL = strURL + '&header=false';
 		loadPageNoHeader(strURL);
 	}
@@ -3031,7 +3031,7 @@ function template_filter($header_label) {
 			</table>
 			<input type='hidden' name='action' value='user_edit'>
 			<input type='hidden' name='tab' value='permste'>
-			<input type='hidden' name='id' value='<?php print get_request_var('id');?>'>
+			<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
 		</form>
 		</td>
 	</tr>
@@ -3047,7 +3047,7 @@ function tree_filter($header_label) {
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 
 	function applyFilter() {
-		strURL  = 'user_admin.php?action=user_edit&tab=permstr&id=<?php print get_request_var('id');?>'
+		strURL  = 'user_admin.php?action=user_edit&tab=permstr&id=<?php print rawurlencode((string) get_request_var('id'));?>'
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&associated=' + $('#associated').is(':checked');
 		strURL += '&filter=' + $('#filter').val();
@@ -3056,7 +3056,7 @@ function tree_filter($header_label) {
 	}
 
 	function clearFilter() {
-		strURL = 'user_admin.php?action=user_edit&tab=permstr&id=<?php print get_request_var('id');?>&clear=true'
+		strURL = 'user_admin.php?action=user_edit&tab=permstr&id=<?php print rawurlencode((string) get_request_var('id'));?>&clear=true'
 		strURL = strURL + '&header=false';
 		loadPageNoHeader(strURL);
 	}
@@ -3128,7 +3128,7 @@ function tree_filter($header_label) {
 			</table>
 			<input type='hidden' name='action' value='user_edit'>
 			<input type='hidden' name='tab' value='permstr'>
-			<input type='hidden' name='id' value='<?php print get_request_var('id');?>'>
+			<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
 		</form>
 		</td>
 	</tr>
@@ -3144,7 +3144,7 @@ function member_filter($header_label) {
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 
 	function applyFilter(objForm) {
-		strURL  = 'user_admin.php?action=user_edit&tab=members&id=<?php print get_request_var('id');?>'
+		strURL  = 'user_admin.php?action=user_edit&tab=members&id=<?php print rawurlencode((string) get_request_var('id'));?>'
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&associated=' + $('#associated').is(':checked');
 		strURL += '&filter=' + $('#filter').val();
@@ -3153,7 +3153,7 @@ function member_filter($header_label) {
 	}
 
 	function clearFilter(objForm) {
-		strURL = 'user_admin.php?action=user_edit&tab=members&id=<?php print get_request_var('id');?>&clear=true'
+		strURL = 'user_admin.php?action=user_edit&tab=members&id=<?php print rawurlencode((string) get_request_var('id'));?>&clear=true'
 		strURL = strURL + '&header=false';
 		loadPageNoHeader(strURL);
 	}
@@ -3225,7 +3225,7 @@ function member_filter($header_label) {
 			</table>
 			<input type='hidden' name='action' value='user_edit'>
 			<input type='hidden' name='tab' value='members'>
-			<input type='hidden' name='id' value='<?php print get_request_var('id');?>'>
+			<input type='hidden' name='id' value='<?php print html_escape(get_request_var('id'));?>'>
 		</form>
 		</td>
 	</tr>
