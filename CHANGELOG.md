@@ -146,6 +146,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Added
 
+- Filter Symfony Inventory by site, with permission-aware site choices and preserved list/export/editor context.
+
 - Show and search device location and external ID in Symfony Inventory, and append both fields to the current-page CSV export.
 
 - Preserve the Symfony inventory view through device editing, validation errors and saves.

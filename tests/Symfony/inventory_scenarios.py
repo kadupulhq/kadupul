@@ -46,6 +46,8 @@ def verify_inventory(harness, session, user_id, check):
     harness.sql("REPLACE INTO settings (name,value) VALUES ('graph_auth_method','3')")
     from device_edit_scenarios import verify_device_edit
     verify_device_edit(harness, session, user_id, allowed[0], ids[0], check)
+    from site_scenarios import verify_sites
+    verify_sites(harness, session, user_id, ids, allowed, listing, export, check)
     first = listing(q='inventory-fixture')
     second = listing(q='inventory-fixture', page=2)
     check(len(first['devices']) == 25 and first['hasNext'] and len(second['devices']) == 2 and not second['hasNext'],
@@ -206,6 +208,7 @@ def verify_inventory(harness, session, user_id, check):
     check('/app.php/inventory/devices.csv?' in body and 'Export this page (CSV)' in body,
           'Twig links to the compatibility CSV route')
     for query in ('page=0', 'page=1e3', 'page[]=1', 'q[]=x', 'size=100000', 'state=other', 'status=other', 'status[]=up', 'status=3%20OR%201=1',
+                  'site=-1', 'site[]=1', 'site=4294967296', 'site=00000000001', 'site=1e3',
                   'sort=description', 'sort[]=name', 'direction[]=asc', 'direction=invalid',
                   'sort=name%3BSELECT%201', 'direction=desc%3BSELECT%201'):
         check(session.request(base + '.json?' + query)['status'] == 400, 'invalid filters are rejected: ' + query)

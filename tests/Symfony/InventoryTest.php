@@ -14,6 +14,10 @@ use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Inventory\Application\Query\ListDevices;
 use Kadupul\Inventory\Application\ReadModel\DevicePage;
 use Kadupul\Inventory\Domain\DeviceListCriteria;
+use Kadupul\Inventory\Domain\DeviceOrder;
+use Kadupul\Inventory\Application\Port\DeviceSites;
+use Kadupul\Inventory\Application\Query\ListDeviceSites;
+use Kadupul\Inventory\Application\ReadModel\DeviceSite;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -44,7 +48,7 @@ final class InventoryTest extends TestCase
         $access->method('consoleActor')->willReturn($actor);
         $access->expects(self::once())->method('canManageDevices')->with($actor)->willReturn(true);
         $catalog = $this->createMock(DeviceCatalog::class);
-        $criteria = new DeviceListCriteria(' router ', 'enabled', 2, 50, 'down', 'hostname', 'desc');
+        $criteria = new DeviceListCriteria(' router ', 'enabled', 2, 50, 'down', new DeviceOrder('hostname', 'desc'), 12);
         $page = new DevicePage([], false);
         $catalog->expects(self::once())->method('visibleTo')->with(42, $criteria)->willReturn($page);
         self::assertSame($page, (new ListDevices($access, $catalog))($criteria));
@@ -59,6 +63,42 @@ final class InventoryTest extends TestCase
         new DeviceListCriteria(...$arguments);
     }
 
+    #[DataProvider('deniedIdentities')]
+    public function testDeniedIdentityCannotDiscoverSites(?Actor $actor, bool $permitted): void
+    {
+        $access = $this->createMock(ConsoleAccess::class);
+        $access->method('consoleActor')->willReturn($actor);
+        $access->method('canManageDevices')->willReturn($permitted);
+        $sites = $this->createMock(DeviceSites::class);
+        $sites->expects(self::never())->method('visibleTo');
+        $this->expectException(InventoryAccessDenied::class);
+        (new ListDeviceSites($access, $sites))();
+    }
+
+    public function testSiteDiscoveryUsesTheCurrentActor(): void
+    {
+        $access = $this->createMock(ConsoleAccess::class);
+        $actor = new Actor(42, 'operator');
+        $access->method('consoleActor')->willReturn($actor);
+        $access->expects(self::once())->method('canManageDevices')->with($actor)->willReturn(true);
+        $sites = $this->createMock(DeviceSites::class);
+        $result = [new DeviceSite(12, 'West')];
+        $sites->expects(self::once())->method('visibleTo')->with(42)->willReturn($result);
+        self::assertSame($result, (new ListDeviceSites($access, $sites))());
+    }
+
+    public function testOrderingRejectsSqlFragments(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        new DeviceOrder('hostname; DROP TABLE host', 'desc');
+    }
+
+    public function testOrderingRejectsUnsupportedDirections(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        new DeviceOrder('name', 'DESC NULLS FIRST');
+    }
+
     public static function invalidCriteria(): iterable
     {
         yield [ ['page' => 0] ];
@@ -67,9 +107,8 @@ final class InventoryTest extends TestCase
         yield [ ['state' => 'any SQL'] ];
         yield [ ['status' => 'other'] ];
         yield [ ['status' => '3 OR 1=1'] ];
-        yield [ ['sort' => 'description'] ];
-        yield [ ['sort' => 'hostname; DROP TABLE host'] ];
-        yield [ ['direction' => 'DESC NULLS FIRST'] ];
+        yield [ ['siteId' => -1] ];
+        yield [ ['siteId' => 4294967296] ];
         yield [ ['search' => str_repeat('x', 201)] ];
     }
 }

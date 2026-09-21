@@ -44,3 +44,8 @@ services:
 
     Kadupul\Inventory\Application\Port\DeviceCatalog:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCatalog
+
+    Kadupul\Inventory\Application\Query\ListDeviceSites: ~
+
+    Kadupul\Inventory\Application\Port\DeviceSites:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceSites

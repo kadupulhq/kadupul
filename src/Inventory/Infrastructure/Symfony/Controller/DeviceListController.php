@@ -9,6 +9,7 @@ namespace Kadupul\Inventory\Infrastructure\Symfony\Controller;
 
 use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Inventory\Application\Query\ListDevices;
+use Kadupul\Inventory\Application\Query\ListDeviceSites;
 use Kadupul\Inventory\Infrastructure\Symfony\DeviceListParameters;
 use Kadupul\Inventory\Infrastructure\Symfony\Export\DevicePageCsv;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,12 +23,13 @@ final class DeviceListController
     #[Route('/inventory/devices', name: 'inventory_devices', methods: ['GET', 'HEAD'])]
     #[Route('/inventory/devices.json', name: 'inventory_devices_json', defaults: ['_format' => 'json'], methods: ['GET', 'HEAD'])]
     #[Route('/inventory/devices.csv', name: 'inventory_devices_csv', defaults: ['_format' => 'csv'], methods: ['GET', 'HEAD'])]
-    public function __invoke(Request $request, ListDevices $listDevices, Environment $twig, DevicePageCsv $csv): Response
+    public function __invoke(Request $request, ListDevices $listDevices, Environment $twig, DevicePageCsv $csv, ListDeviceSites $listSites): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         try {
             $criteria = DeviceListParameters::parse($request->query->all());
             $result = $listDevices($criteria);
+            $sites = $request->getRequestFormat() === 'html' ? $listSites() : [];
         } catch (InventoryAccessDenied $error) {
             return new JsonResponse(['error' => $error->getMessage()], $error->unauthenticated ? 401 : 403, $headers);
         } catch (\InvalidArgumentException $error) {
@@ -46,6 +48,6 @@ final class DeviceListController
                 'pageSize' => $criteria->pageSize, 'hasNext' => $result->hasNext], 200, $headers);
         }
 
-        return new Response($twig->render('inventory/devices.html.twig', ['result' => $result, 'criteria' => $criteria, 'filters' => DeviceListParameters::encode($criteria)]), 200, $headers);
+        return new Response($twig->render('inventory/devices.html.twig', ['result' => $result, 'criteria' => $criteria, 'sites' => $sites, 'filters' => DeviceListParameters::encode($criteria)]), 200, $headers);
     }
 }
