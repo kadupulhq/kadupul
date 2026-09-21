@@ -2769,7 +2769,8 @@ CREATE TABLE user_auth_row_cache (
   `hash` varchar(32) NOT NULL default '0',
   `total_rows` int(10) unsigned NOT NULL default '0',
   `time` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  PRIMARY KEY (`user_id`,`class`,`hash`)
+  PRIMARY KEY (`user_id`,`class`,`hash`),
+  KEY `class_time` (`class`,`time`)
 ) ENGINE=InnoDB ROW_FORMAT=Dynamic;
 
 --

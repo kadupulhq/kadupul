@@ -112,3 +112,10 @@ services:
     Kadupul\IdentityAccess\Infrastructure\Symfony\RowCacheCleanupHandler:
         arguments:
             $enabled: '%env(default::KADUPUL_ROW_CACHE_SCHEDULER)%'
+
+    # Cleanup fixes its session timezone; do not share that PDO with other modules.
+    kadupul.row_cache_database:
+        class: Kadupul\Platform\Infrastructure\Legacy\InstallationDatabase
+    Kadupul\IdentityAccess\Infrastructure\Legacy\InstallationRowCache:
+        arguments:
+            $database: '@kadupul.row_cache_database'

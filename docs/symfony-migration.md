@@ -577,7 +577,12 @@ log rotation or authentication-token expiry.
 
 The default remains legacy `poller_maintenance.php`. To transfer only this cleanup:
 
-1. Deploy Composer dependencies and clear the production Symfony container.
+1. Deploy Composer dependencies, run the database upgrade and clear the production
+   Symfony container. Fresh schemas and the 1.2.31 upgrade create
+   `user_auth_row_cache.class_time (class, time)`. Installations already stamped
+   1.2.31 must add this index once before enabling the worker; check `SHOW INDEX
+   FROM user_auth_row_cache` first. The worker refuses cleanup if it is absent.
+   The additive index is safe to retain when rolling back.
 2. Create a writable `var/scheduler` directory for the worker account. Preserve
    that directory across deployments (for example with a local shared-directory
    symlink). It contains schedule checkpoints and locks, not disposable cache.
@@ -585,7 +590,7 @@ The default remains legacy `poller_maintenance.php`. To transfer only this clean
    environment and the supervised worker environment. Only literal `1` enables
    it. Remote collectors always retain legacy cleanup and cannot run this worker.
 4. Check the schedule with `php bin/console debug:scheduler row_cache`, then run
-   `php bin/console messenger:consume scheduler_row_cache --time-limit=3600 --memory-limit=128M` under systemd or another process supervisor configured
+   `php bin/console messenger:consume scheduler_row_cache --time-limit=3600 --memory-limit=128M --failure-limit=1` under systemd or another process supervisor configured
    to restart the worker even after a successful time-limit exit. Keep the existing
    poller cron entry; it still owns all other work.
 
@@ -600,8 +605,9 @@ The period is five minutes. Persisted checkpoints and
 immediate catch-up run. Each run deletes at most 1,000 rows per invalidated class;
 remaining rows are processed on subsequent runs. It preserves rows at/after the
 cutoff, rechecks timestamps before deletion to protect concurrent refreshes, and
-is safe to repeat. Failures remain visible to Messenger; a later tick retries
-cleanup against current database state. It does not promise exactly-once work.
+is safe to repeat. Failures remain visible to Messenger. `--failure-limit=1` makes the worker exit
+on a failed message; its supervisor must restart it so a dropped database
+connection is replaced. A later tick retries against current database state. It does not promise exactly-once work.
 
 Monitor supervisor restarts, Messenger failures, and backlog size. If the worker
 stops, stale cache rows may accumulate, but the existing read path rejects

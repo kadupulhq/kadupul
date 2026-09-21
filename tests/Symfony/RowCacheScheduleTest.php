@@ -90,7 +90,7 @@ final class RowCacheScheduleTest extends TestCase
     {
         $pdo = new \PDO('sqlite::memory:');
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $pdo->sqliteCreateFunction('UNIX_TIMESTAMP', static fn(string $time): int => (int) $time);
+        $pdo->sqliteCreateFunction('FROM_UNIXTIME', static fn(string $time): int => (int) $time);
         $pdo->exec('CREATE TABLE settings (name TEXT PRIMARY KEY, value TEXT)');
         $pdo->exec('CREATE TABLE user_auth_row_cache (user_id INTEGER, class TEXT, hash TEXT, time INTEGER, PRIMARY KEY (user_id, class, hash))');
 
@@ -154,6 +154,17 @@ final class RowCacheScheduleTest extends TestCase
         $cache->expects(self::never())->method('invalidations');
         $this->expectException(\RuntimeException::class);
         (new RowCacheCleanupHandler(new CleanInvalidatedRowCache($cache), null))(new RowCacheCleanup());
+    }
+
+    public function testFrameworkRegistersSchedulerTransport(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            self::assertInstanceOf(\Symfony\Component\Scheduler\Messenger\SchedulerTransport::class, $kernel->getContainer()->get('test.service_container')->get('messenger.transport.scheduler_row_cache'));
+        } finally {
+            $kernel->shutdown();
+        }
     }
 
     public function testSymfonyMessengerDispatchesToApplicationHandler(): void
