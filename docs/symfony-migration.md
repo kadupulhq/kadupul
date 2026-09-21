@@ -446,3 +446,41 @@ PHP report measures 459/521 statements (88.1%); the offline builder measures 94.
 line coverage, and all 40 JavaScript build/maintenance tests pass. Nine malformed
 coverage-evidence cases fail closed. These local totals are not a substitute for
 Sonar's independently calculated new-code quality gate.
+
+## Site translation slice
+
+Symfony Translation now owns UI messages for the site list and name/notes editor.
+The initial catalogs are English and French in `config/translations/inventory.*.yaml`.
+They cover Twig text, accessible labels, form labels/help, and editor validation and
+failure messages. Dynamic site names remain escaped after parameter substitution.
+The HTML language attribute follows the request locale. JSON representations and
+other migrated screens retain their existing language/data contracts.
+
+Platform's site-locale subscriber runs after routing and before Symfony's locale
+listener. IdentityAccess exposes a read-only `LocalePreference` contract backed by
+the existing native session and `settings_user.user_language`. No locale global,
+gettext bootstrap, session write, or PHP process-wide `setlocale()` is introduced.
+Domain/application code still emits its existing errors; the HTTP adapter translates
+them for presentation. Those error strings currently serve as catalog IDs.
+
+For site HTML requests carrying cookies, precedence is:
+
+1. `i18n_language_support=0` forces English.
+2. Trusted installation `$i18n_force_language`, if supported.
+3. Shared-session `sess_user_language`, or saved `user_language` when absent.
+4. Weighted browser languages, unless `i18n_auto_detection` disables detection.
+5. Installation `i18n_default_language`, then English.
+
+Legacy `en-US`/`en_US` and `fr-FR`/`fr_FR` spellings (including supported-language
+regional variants) map to the English/French catalogs. Unsupported values fall
+through this precedence; arbitrary paths cannot select catalogs. Anonymous requests
+without cookies default to English without opening installation/session storage.
+Query parameters such as `language` and `_locale` do not switch or persist a locale.
+Use the existing preference screen to change the saved language; an existing login
+may retain its session language until the next legacy locale refresh/login.
+
+The existing gettext catalogs and legacy pages are unchanged. Additional languages,
+device screens, locale-aware dates/numbers and migration of the preference editor
+are follow-up slices. New catalogs reside under the already non-public `config/`
+directory and are included in offline bundles together with the locked translation
+component. LTS is unchanged.

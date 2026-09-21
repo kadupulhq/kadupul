@@ -79,6 +79,39 @@ def verify_site_catalog(harness, session, user_id, ids, allowed, device_listing,
             check(empty['sites'] == [] and not empty['hasNext'], 'empty site pages have no next page')
         with session.opener.open(harness.base + base + '?q=no-matching-site-fixture') as response:
             check('No sites match these filters.' in response.read().decode(), 'site page renders empty state')
+        # A new legacy login captures the saved language in its native session.
+        language_names = "'i18n_language_support','i18n_auto_detection','i18n_default_language'"
+        language_settings = harness.rows(f"SELECT JSON_OBJECT('name',name,'value',value) FROM settings WHERE name IN ({language_names})")
+        user_language = harness.rows(f"SELECT JSON_OBJECT('value',value) FROM settings_user WHERE user_id={user_id} AND name='user_language'")
+        try:
+            harness.sql("REPLACE INTO settings (name,value) VALUES ('i18n_language_support','1'),('i18n_auto_detection','0'),('i18n_default_language','en-US')")
+            harness.sql(f"REPLACE INTO settings_user (user_id,name,value) VALUES ({user_id},'user_language','fr-FR')")
+            french = Session(harness.base)
+            check(french.login('behavior-admin')['status'] == 200, 'legacy login accepts French language preference')
+            with french.opener.open(harness.base + base + '?q=no-matching-site-fixture&language=en&_locale=en') as response:
+                body = response.read().decode()
+            check('<html lang="fr">' in body and 'Aucun site ne correspond' in body,
+                  'Symfony site translations honor the legacy session and ignore locale query overrides')
+            with french.opener.open(harness.base + base + f'/{site_ids[0]}/edit') as response:
+                body = response.read().decode()
+            check('Enregistrer le site' in body and '>Nom</label>' in body and '&lt;site&gt;' in body,
+                  'French site forms translate labels and preserve escaping')
+            check(french.request(base + '.json?' + urlencode({'q': prefix}))['json'] == listing(q=prefix),
+                  'site JSON data is independent of locale')
+            check(harness.sql(f"SELECT value FROM settings_user WHERE user_id={user_id} AND name='user_language'").strip() == 'fr-FR',
+                  'Symfony locale selection does not rewrite the saved preference')
+            harness.sql("UPDATE settings SET value='0' WHERE name='i18n_language_support'")
+            with french.opener.open(harness.base + base + '?q=no-matching-site-fixture') as response:
+                body = response.read().decode()
+            check('<html lang="en">' in body and 'No sites match these filters.' in body,
+                  'disabled translation overrides a French shared session')
+        finally:
+            harness.sql(f"DELETE FROM settings WHERE name IN ({language_names})")
+            for setting in language_settings:
+                harness.sql(f"INSERT INTO settings (name,value) VALUES ({text(setting['name'])},{text(setting['value'])})")
+            harness.sql(f"DELETE FROM settings_user WHERE user_id={user_id} AND name='user_language'")
+            for setting in user_language:
+                harness.sql(f"INSERT INTO settings_user (user_id,name,value) VALUES ({user_id},'user_language',{text(setting['value'])})")
         harness.sql(f'DELETE FROM user_auth_realm WHERE user_id={user_id} AND realm_id=3')
         try:
             check(session.request(base + '.json')['status'] == 403, 'revoked site administration realm denies catalog access')

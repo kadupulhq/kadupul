@@ -11,6 +11,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Translate the Symfony site list and editor with Symfony Translation, English/French catalogs and read-only compatibility with existing language preferences.
+
 - Raise the minimum PHP version on main to 8.4, including Composer, development tooling, CI and offline/install verification. LTS keeps its existing runtime floor.
 
 - Migrate site name and notes editing to Symfony Forms with domain validation, stateless CSRF, transactional writes and stale-edit protection.

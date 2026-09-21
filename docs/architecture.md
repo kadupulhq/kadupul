@@ -131,3 +131,8 @@ so this path needs no procedural bootstrap or process bridge.
 `tests/Symfony/ArchitectureTest.php` checks inward dependencies, cross-module
 contract usage, framework isolation and entry points. Behavioral HTTP tests cover
 the adapters against a disposable database. Both are required CI checks.
+
+Symfony Translation is a presentation dependency. Platform resolves the site HTML
+request locale using IdentityAccess's public LocalePreference contract and existing
+installation settings. Inventory's Twig/forms/controllers translate UI messages;
+domain/application errors and rules remain framework- and locale-independent.
