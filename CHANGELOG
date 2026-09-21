@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-security: Escape shared upload, text, path and font control attributes while retaining pre-escaped values and form state
 -security: Escape shared hidden-input names and values while preserving literal text and existing default-value selection
 -security: Escape shared form attributes and form-end JavaScript values while retaining raw globals, generated IDs and multipart behavior
 -security: Preserve literal confirmation-button URLs with explicit attribute escaping while retaining POST action controls
