@@ -1121,32 +1121,44 @@ function html_header_checkbox($header_items, $include_form = true, $form_action 
         is only applicable if the array is formatted using the second method above
    @arg $form_previous_value - the current value of this form element */
 function html_create_list($form_data, $column_display, $column_id, $form_previous_value) {
+	// Preserve pre-escaped callers and compare selection against the original IDs.
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
 	if (empty($column_display)) {
 		if (cacti_sizeof($form_data)) {
 			foreach (array_keys($form_data) as $id) {
-				print '<option value="' . html_escape($id) . '"';
+				$id_html = htmlspecialchars((string) $id, $escape_flags, 'UTF-8', false);
+				$id_html = str_replace('`', '&#96;', $id_html);
+				$label = null_out_substitutions($form_data[$id]);
+				$label_html = htmlspecialchars((string) $label, $escape_flags, 'UTF-8', false);
+				$label_html = str_replace('`', '&#96;', $label_html);
+				print '<option value="' . $id_html . '"';
 
 				if ($form_previous_value == $id) {
 					print ' selected';
 				}
 
-				print '>' . html_escape(null_out_substitutions($form_data[$id])) . '</option>';
+				print '>' . $label_html . '</option>';
 			}
 		}
 	} else {
 		if (cacti_sizeof($form_data)) {
 			foreach ($form_data as $row) {
-				print "<option value='" . html_escape($row[$column_id]) . "'";
+				$id_html = htmlspecialchars((string) $row[$column_id], $escape_flags, 'UTF-8', false);
+				$id_html = str_replace('`', '&#96;', $id_html);
+				print "<option value='" . $id_html . "'";
 
 				if ($form_previous_value == $row[$column_id]) {
 					print ' selected';
 				}
 
 				if (isset($row['host_id'])) {
-					print '>' . html_escape($row[$column_display]) . '</option>';
+					$label = $row[$column_display];
 				} else {
-					print '>' . html_escape(null_out_substitutions($row[$column_display])) . '</option>';
+					$label = null_out_substitutions($row[$column_display]);
 				}
+				$label_html = htmlspecialchars((string) $label, $escape_flags, 'UTF-8', false);
+				$label_html = str_replace('`', '&#96;', $label_html);
+				print '>' . $label_html . '</option>';
 			}
 		}
 	}
