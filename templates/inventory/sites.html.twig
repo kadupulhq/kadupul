@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sites · Kadupul{% endblock %}
+
+{% block body %}
+<main>
+    <h1>Sites</h1>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
+    <p><a href="{{ path('inventory_devices') }}">Devices</a></p>
+    <form method="get" action="{{ path('inventory_sites') }}" role="search">
+        <label for="site-search">Search by name, city, state or country</label>
+        <input id="site-search" type="search" name="q" value="{{ criteria.search }}" maxlength="200">
+        <label for="site-direction">Name order</label>
+        <select id="site-direction" name="direction">
+            <option value="asc"{% if criteria.direction == 'asc' %} selected{% endif %}>Ascending</option>
+            <option value="desc"{% if criteria.direction == 'desc' %} selected{% endif %}>Descending</option>
+        </select>
+        <label for="site-size">Per page</label>
+        <select id="site-size" name="size">
+            {% for size in [25, 50, 100] %}
+            <option value="{{ size }}"{% if criteria.pageSize == size %} selected{% endif %}>{{ size }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Apply</button>
+    </form>
+    <p>Device counts include only devices you can access. Site editing is available in the existing Sites screen.</p>
+    <table>
+        <caption>Sites and devices you can access at each site</caption>
+        <thead><tr><th scope="col">Name</th><th scope="col">ID</th><th scope="col">Accessible devices</th><th scope="col">City</th><th scope="col">State</th><th scope="col">Country</th></tr></thead>
+        <tbody>
+        {% for site in result.sites %}
+            <tr>
+                <td>{{ site.name }}</td><td>{{ site.id }}</td>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
+                <td><a href="{{ path('inventory_devices', {site: site.id}) }}" aria-label="Devices at {{ site.name }}">{{ site.visibleDevices }}</a></td>
+                <td>{{ site.city }}</td><td>{{ site.state }}</td><td>{{ site.country }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="6">No sites match these filters.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <nav aria-label="Site pages">
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
+        {% if criteria.page > 1 %}<a rel="prev" href="{{ path('inventory_sites', filters|merge({page: criteria.page - 1})) }}">Previous</a>{% endif %}
+        <span>Page {{ criteria.page }}</span>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
+        {% if result.hasNext %}<a rel="next" href="{{ path('inventory_sites', filters|merge({page: criteria.page + 1})) }}">Next</a>{% endif %}
+    </nav>
+</main>
+{% endblock %}

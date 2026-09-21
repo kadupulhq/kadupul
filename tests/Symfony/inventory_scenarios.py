@@ -48,6 +48,8 @@ def verify_inventory(harness, session, user_id, check):
     verify_device_edit(harness, session, user_id, allowed[0], ids[0], check)
     from site_scenarios import verify_sites
     verify_sites(harness, session, user_id, ids, allowed, listing, export, check)
+    from site_catalog_scenarios import verify_site_catalog
+    verify_site_catalog(harness, session, user_id, ids, allowed, listing, check)
     from details_scenarios import verify_details
     verify_details(harness, session, user_id, allowed[0], ids[0], listing, check)
     first = listing(q='inventory-fixture')
