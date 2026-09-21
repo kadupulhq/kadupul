@@ -6,6 +6,8 @@ on:
     paths:
       - '.github/workflows/cacti-exec-coverage.yml'
       - 'lib/functions.php'
+      - 'lib/installer.php'
+      - 'tests/Unit/Installer/InstallerPhpProbeTest.php'
       - 'host.php'
       - 'data_input.php'
       - 'tests/Unit/Security/Shell/LtsWorkerExecutionTest.php'
@@ -17,6 +19,8 @@ on:
     paths:
       - '.github/workflows/cacti-exec-coverage.yml'
       - 'lib/functions.php'
+      - 'lib/installer.php'
+      - 'tests/Unit/Installer/InstallerPhpProbeTest.php'
       - 'host.php'
       - 'data_input.php'
       - 'tests/Unit/Security/Shell/LtsWorkerExecutionTest.php'
