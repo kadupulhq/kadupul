@@ -36,9 +36,13 @@ test('search fields preserve literal values and existing attributes', function (
 		expect($input->getAttribute('id'))->toBe($ids[$index]);
 		expect($source)->toContain("<label for='" . $ids[$index] . "'>");
 		expect($input->getAttribute('type'))->toBe('text');
-		expect($input->getAttribute('class'))->toBe('ui-state-default ui-corner-all');
+		$classes = $file === 'graph_templates.php' ? 'ui-state-default' : 'ui-state-default ui-corner-all';
+		expect($input->getAttribute('class'))->toBe($classes);
 		expect($input->getAttribute('size'))->toBe($ids[$index] === 'rfilter' ? '45' : '25');
-		$namedFilters = array('data_templates.php', 'data_input.php', 'data_queries.php', 'gprint_presets.php', 'cdef.php');
+		$namedFilters = array(
+			'data_templates.php', 'data_input.php', 'data_queries.php', 'gprint_presets.php', 'cdef.php',
+			'color.php', 'data_source_profiles.php', 'graph_templates.php', 'graphs_new.php'
+		);
 		$hasName = ($file === 'tree.php' && $ids[$index] !== 'filter') || in_array($file, $namedFilters, true);
 		expect($input->attributes->length)->toBe($hasName ? 6 : 5);
 		if ($hasName) {
@@ -65,6 +69,12 @@ test('search fields preserve literal values and existing attributes', function (
 	'GPRINT presets' => array('gprint_presets.php', array('filter')),
 	'CDEFs' => array('cdef.php', array('filter')),
 	'VDEFs' => array('vdef.php', array('filter')),
+	'colors' => array('color.php', array('filter')),
+	'data source profiles' => array('data_source_profiles.php', array('filter')),
+	'graph templates' => array('graph_templates.php', array('filter')),
+	'new graphs' => array('graphs_new.php', array('filter')),
+	'links' => array('links.php', array('filter')),
+	'sites' => array('sites.php', array('filter')),
 ))->with(array(
 	'ordinary search' => 'router 42',
 	'empty search' => '',
