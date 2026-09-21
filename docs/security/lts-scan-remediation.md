@@ -65,7 +65,23 @@ baseline, not the current count.
   boundaries; cover success, wrong output, nonzero exit with correct output,
   spawn failure and missing executable. The shared executor suite separately
   exercises real subprocesses and literal metacharacters.
-- Treat this finding as pending until a merged-LTS scan confirms closure.
+- Closure verified: the 2026-09-21T02:41:35Z analysis of
+  `bb59f6e4160bc1548d8b057741d6c783be9100c2` marks this finding `CLOSED/FIXED`
+  and reports 492 unresolved vulnerabilities.
+
+### Realtime controller shell boundary
+
+- Target `AaCs2PDaIug_wyaLilpY`: invoke `poller_realtime.php` with the configured
+  PHP executable and separate argv elements instead of a shell string.
+- Preserve the synchronous wait, existing permission checks, interval policy,
+  preference CSRF behavior, cache naming, response shape and rendering logic.
+- This scoped LTS change intentionally retains the existing render-after-poll
+  behavior regardless of worker status. It does not change nested worker failure
+  propagation or claim to fix the remaining realtime path-injection findings.
+- Controller harnesses execute the real shared argv executor against a marker
+  process. The focused PHP 8.0–8.4 CI suite now includes realtime authorization,
+  interval, preference and shell-boundary regressions.
+- Closure remains pending until a merged-LTS analysis confirms it.
 
 Inspect realtime polling, installer PHP probes, background remote-discovery
 arguments and SQL save callers next. Preserve asynchronous worker behavior and

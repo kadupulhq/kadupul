@@ -17,7 +17,7 @@ function graph_realtime_run(array $scenario): array
     $fsrc    = file_get_contents($root . '/lib/functions.php');
     $shipped = "<?php\n";
 
-    foreach (array('cacti_escapeshellcmd', 'cacti_escapeshellarg', 'cacti_sizeof') as $name) {
+    foreach (array('cacti_exec', 'cacti_sizeof') as $name) {
         $start = strpos($fsrc, 'function ' . $name . '(');
         $end   = strpos($fsrc, "\n}\n", (int) $start);
 

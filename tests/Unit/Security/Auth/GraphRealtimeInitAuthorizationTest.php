@@ -34,7 +34,7 @@ function graph_realtime_init_run(array $scenario) : array {
 	$fsrc    = file_get_contents($root . '/lib/functions.php');
 	$shipped = "<?php\n";
 
-	foreach (array('cacti_escapeshellcmd', 'cacti_escapeshellarg', 'cacti_sizeof') as $name) {
+	foreach (array('cacti_exec', 'cacti_sizeof') as $name) {
 		$shipped .= cacti_test_rrd_function_source($fsrc, $name) . "\n\n";
 	}
 
