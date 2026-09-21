@@ -63,6 +63,8 @@ final class AdministratorNotificationTest extends TestCase
         yield 'port above range' => [['settings_smtp_port' => '65536'], [], true, null];
         yield 'port integer overflow' => [['settings_smtp_port' => '999999999999999999999999'], [], true, null];
         yield 'malformed port' => [['settings_smtp_port' => '25x'], [], true, null];
+        yield 'sender name with newline' => [['settings_from_name' => "Primary\nSender"], [], true, null];
+        yield 'recipient name with newline' => [[], ['recipient' => ['email_address' => 'admin@example.test', 'full_name' => "Primary\nAdmin"]], true, null];
         yield 'native mail' => [['settings_how' => '0'], [], true, null];
         yield 'implicit sender name lookup' => [['settings_from_name' => ''], [], true, null];
         yield 'sendmail' => [['settings_how' => '1'], [], true, null];
@@ -105,12 +107,23 @@ final class AdministratorNotificationTest extends TestCase
             self::assertSame([[7]], $result['recipients']);
         }
         if ($legacy) {
-            self::assertSame('"Primary Admin" <admin@example.test>', $result['legacy'][0][0]);
-            self::assertSame(($settings['settings_from_name'] ?? null) === '' ? 'sender@example.test' : 'Kadupul diagnostic <sender@example.test>', $result['legacy'][0][1]);
+            self::assertSame('"' . ($fixture['recipient']['full_name'] ?? 'Primary Admin') . '" <admin@example.test>', $result['legacy'][0][0]);
+            $sender = $settings['settings_from_name'] ?? 'Kadupul diagnostic';
+            self::assertSame($sender === '' ? 'sender@example.test' : $sender . ' <sender@example.test>', $result['legacy'][0][1]);
             self::assertSame($fixture['subject'] ?? 'Administrative warning', $result['legacy'][0][2]);
             self::assertSame($fixture['body'] ?? '<strong>Storage needs attention.</strong>', $result['legacy'][0][3]);
             self::assertSame(['', '', true], array_slice($result['legacy'][0], 4));
         }
+    }
+
+    public function testProductionLegacyNotificationDoesNotRequireApplicationSecret(): void
+    {
+        $client = new Process([PHP_BINARY, __DIR__ . '/admin_notification_client.php'], dirname(__DIR__, 2), ['APP_ENV' => 'prod', 'APP_DEBUG' => '0', 'APP_SECRET' => false]);
+        $client->setInput(json_encode(self::fixture(['settings_how' => '0'], []), JSON_THROW_ON_ERROR));
+        self::assertSame(0, $client->run(), $client->getErrorOutput());
+        $result = json_decode($client->getOutput(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertCount(1, $result['legacy']);
+        self::assertSame([], $result['logs']);
     }
 
     public static function bridge(array $settings, array $fixture = []): array

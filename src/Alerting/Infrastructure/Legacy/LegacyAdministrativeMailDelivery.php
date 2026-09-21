@@ -55,6 +55,7 @@ final class LegacyAdministrativeMailDelivery implements AdministrativeMailDelive
         // Complex legacy address lists, host lists and template substitutions remain legacy-owned.
         return $settings['settings_how'] === '2' && $singleHost
             && $settings['settings_from_name'] !== ''
+            && !preg_match('/[\x00-\x1f\x7f]/', $settings['settings_from_name'] . $recipient->name)
             && $settings['settings_smtp_username'] !== '0'
             && filter_var($settings['settings_from_email'], FILTER_VALIDATE_EMAIL)
             && filter_var($recipient->email, FILTER_VALIDATE_EMAIL)
