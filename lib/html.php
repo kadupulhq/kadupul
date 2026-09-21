@@ -588,14 +588,14 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
 		array($local_graph_id));
 
 	print "<div class='iconWrapper'>";
-	print "<a class='iconLink utils' href='#' role='link' id='graph_" . $graph_id_html .
+	print "<a class='iconLink utils' href='#' id='graph_" . $graph_id_html .
 		"_util'><img class='drillDown' src='" . $path_html .
 		"images/cog.png' alt='' title='" . __esc('Graph Details, Zooming and Debugging Utilities') .
 		"'></a><br>";
-	print "<a class='iconLink csvexport' href='#' role='link' id='graph_" . $graph_id_html .
+	print "<a class='iconLink csvexport' href='#' id='graph_" . $graph_id_html .
 		"_csv'><img class='drillDown' src='" . $path_html .
 		"images/table_go.png' alt='' title='" . __esc('CSV Export of Graph Data'). "'></a><br>";
-	print "<a class='iconLink mrtg' href='#' role='link' id='graph_" . $graph_id_html .
+	print "<a class='iconLink mrtg' href='#' id='graph_" . $graph_id_html .
 		"_mrtg'><img class='drillDown' src='" . $path_html .
 		"images/timeview.png' alt='' title='" . __esc('Time Graph View'). "'></a><br>";
 
@@ -622,7 +622,7 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
 	}
 
 	if (is_realm_allowed(10) && $graph_template_id > 0) {
-		print "<a class='iconLink' role='link' title='" . __esc('Edit Graph Template') .
+		print "<a class='iconLink' title='" . __esc('Edit Graph Template') .
 			"' href='" . html_escape($config['url_path'] . 'graph_templates.php?action=template_edit&id=' . $graph_template_id) .
 			"'><img src='" . html_escape($config['url_path'] . 'images/template_edit.png') .
 			"'></img></a>";
@@ -631,7 +631,7 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
 
 	if (read_config_option('realtime_enabled') == 'on' && is_realm_allowed(25)) {
 		if (read_user_setting('realtime_mode') == '' || read_user_setting('realtime_mode') == '1') {
-			print "<a class='iconLink realtime' href='#' role='link' id='graph_" . $graph_id_html .
+			print "<a class='iconLink realtime' href='#' id='graph_" . $graph_id_html .
 				"_realtime'><img class='drillDown' src='" . $path_html .
 				"images/chart_curve_go.png' alt='' title='" . __esc('Click to view just this Graph in Real-time'). "'></a><br/>";
 		} else {
