@@ -59,6 +59,28 @@ dataset('stateful helpers', array('checkbox', 'radio', 'textarea', 'multi'));
 dataset('stateful payloads', array('field', 'réseau 日本語', '\'" autofocus onfocus="alert(1)',
 	'</textarea><img src=x onerror=alert(1)><script>alert(1)</script>', '&#39;&quot;&amp;', chr(96), 'a.b:c[d]'));
 
+test('spacer headers preserve text and collapsible markup without injection', function ($payload, $collapsible) {
+	list($doc) = capture(function () use ($payload, $collapsible) {
+		draw_edit_form(array('config' => array('no_form_tag' => true), 'fields' => array($payload => array(
+			'method' => 'spacer', 'friendly_name' => $payload, 'collapsible' => $collapsible,
+		))));
+	});
+	$decoded = html_entity_decode($payload, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+	$xpath = new \DOMXPath($doc);
+	$header = $xpath->query("//div[contains(@class,'spacer')]")->item(0);
+	expect($header->getAttribute('id'))->toBe('row_' . $decoded);
+	expect($header->getAttribute('class'))->toBe('spacer formHeader' . ($collapsible ? ' collapsible' : ''));
+	expect($xpath->query("//div[@class='formHeaderText']")->item(0)->textContent)->toBe($decoded);
+	expect($doc->getElementsByTagName('script')->length)->toBe(0);
+})->with('stateful payloads')->with(array(false, true));
+
+test('textarea placeholder omission remains explicit for empty inputs', function ($placeholder) {
+	list($doc) = capture(function () use ($placeholder) {
+		form_text_area('field', 'value', 3, 20, '', '', '', $placeholder);
+	});
+	expect($doc->getElementsByTagName('textarea')->item(0)->hasAttribute('placeholder'))->toBeFalse();
+})->with(array(array(''), array(null), array(false)));
+
 test('stateful controls encode paired identifiers, values and metadata', function ($helper, $payload) {
 	list($doc, $session) = capture(function () use ($helper, $payload) {
 		switch ($helper) {

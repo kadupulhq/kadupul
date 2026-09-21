@@ -102,11 +102,13 @@ function draw_edit_form($array) {
 				print '<div class="hidden formRow">';
 				form_hidden_box($field_name, $field_array['value'], '0', true);
 				print '</div>';
-			} elseif ($field_array['method'] == 'spacer') {
-				$collapsible = (isset($field_array['collapsible']) && $field_array['collapsible'] == 'true');
+				} elseif ($field_array['method'] == 'spacer') {
+					$collapsible = (isset($field_array['collapsible']) && $field_array['collapsible'] == 'true');
+					$friendly_html = htmlspecialchars((string) $field_array['friendly_name'], $escape_flags, 'UTF-8', false);
+					$friendly_html = str_replace('`', '&#96;', $friendly_html);
 
-				print "<div class='spacer formHeader" . ($collapsible ? ' collapsible':'')
-					. "' id='$row_id_html'><div class='formHeaderText'>" . html_escape($field_array['friendly_name']);
+					print "<div class='spacer formHeader" . ($collapsible ? ' collapsible':'')
+						. "' id='$row_id_html'><div class='formHeaderText'>" . $friendly_html;
 				print '<div class="formTooltip">' . (isset($field_array['description']) ? display_tooltip(html_purify($field_array['description'])):'') . '</div>';
 				print ($collapsible ? "<div class='formHeaderAnchor'><i class='fa fa-angle-double-up'></i></div>":'') . '</div></div>';
 			} else {
@@ -1297,13 +1299,11 @@ function form_text_area($form_name, $form_previous_value, $form_rows, $form_colu
 	$form_previous_value_html = htmlspecialchars((string) $form_previous_value, $escape_flags, 'UTF-8', false);
 	$form_previous_value_html = str_replace('`', '&#96;', $form_previous_value_html);
 
-	if ($placeholder != '') {
-		$placeholder = " placeholder='" . $placeholder_html . "'";
-	}
+	$placeholder_attribute = $placeholder != '' ? " placeholder='$placeholder_html'" : '';
 
 	print "<textarea class='$class_html ui-state-default ui-corner-all' aria-multiline='true'"
 		. " cols='$form_columns_html' rows='$form_rows_html' id='$form_name_html' name='$form_name_html'"
-		. $placeholder . '>' . $form_previous_value_html . '</textarea>';
+		. $placeholder_attribute . '>' . $form_previous_value_html . '</textarea>';
 }
 
 /* form_multi_dropdown - draws a standard html multiple select dropdown
