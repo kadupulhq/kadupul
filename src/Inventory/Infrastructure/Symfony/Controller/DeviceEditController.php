@@ -51,7 +51,7 @@ final class DeviceEditController
             if ($form->getExtraData() !== []) {
                 $form->addError(new FormError($translator->trans('Unexpected fields were submitted.', [], 'inventory')));
             }
-            if (!is_bool($form->get('enabled')->getData())) {
+            if ($form->get('enabled')->isSynchronized() && !is_bool($form->get('enabled')->getData())) {
                 $form->get('enabled')->addError(new FormError($translator->trans('Choose whether polling is enabled or disabled.', [], 'inventory')));
             }
             if ($form->isValid()) {

@@ -14,9 +14,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class DeviceEditType extends AbstractType
 {
+    public function __construct(private readonly TranslatorInterface $translator) {}
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('description', TextType::class, ['label' => 'Name', 'attr' => ['maxlength' => 150]])
@@ -26,6 +29,7 @@ final class DeviceEditType extends AbstractType
             ->add('notes', TextareaType::class, ['label' => 'Notes', 'required' => false, 'trim' => false, 'empty_data' => '', 'attr' => ['rows' => 8]])
             ->add('enabled', ChoiceType::class, ['label' => 'Polling', 'choices' => ['Enabled' => true, 'Disabled' => false],
                 'choice_value' => static fn(?bool $enabled): string => $enabled === null ? '' : ($enabled ? 'enabled' : 'disabled'),
+                'invalid_message' => $this->translator->trans('Choose whether polling is enabled or disabled.', [], 'inventory'),
                 'placeholder' => false, 'help' => 'Disabled devices are excluded from polling. Existing graphs and data are retained.'])
             ->add('revision', HiddenType::class);
     }
