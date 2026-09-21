@@ -112,3 +112,13 @@ Zizmor's `self-repository` recommendation conflicts with the CI-pinned actionlin
 image, which rejects `$/` reusable workflow calls. Keep the supported `./` form
 with one annotated compatibility exception until that parser supports `$/`.
 Both spellings resolve the same repository workflow; token permissions are unchanged.
+
+## Dependency-independent sink inventory
+
+The positive `*.php` glob followed the exclusion globs, overriding exclusions for
+direct child files. Moving it before the exclusions consistently omits the
+already-excluded generated dependency/cache and locale trees. The reviewed
+baseline removal contains only the redirect sentinels in `include/vendor/index.php`
+and `locales/index.php`; no application execution sink was removed. A fixture
+checks that adding direct/nested vendor PHP and cached PHP leaves the inventory
+unchanged while an authored application sink remains visible.
