@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-security: Escape bulk confirmation selections and actions in data, graph and host template forms without altering submitted IDs
 -security: Encode data-query action parameters and escape their HTML attributes while preserving literal IDs and field names
 -feature: Refresh bundled JavaScript libraries within their existing major release lines, preserving LTS cookie and browser integration behavior
 -security: Save real-time graph preferences only from a POST carrying the CSRF token; the periodic refresh stays a GET
