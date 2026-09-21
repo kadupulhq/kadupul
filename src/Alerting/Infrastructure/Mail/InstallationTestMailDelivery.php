@@ -58,7 +58,7 @@ final class InstallationTestMailDelivery implements TestMailDelivery
                 $transport->stop();
                 $transport->getStream()->terminate();
             }
-        } catch (\Exception) {
+        } catch (\Throwable) {
             // Transport/DB errors and their traces may contain credentials or server responses.
             // Do not retain them as a previous exception or log them through the console.
             throw new MailDeliveryFailed();

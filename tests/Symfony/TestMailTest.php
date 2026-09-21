@@ -67,12 +67,21 @@ final class TestMailTest extends TestCase
         (new SendTestMail(new InstallationTestMailDelivery($this->database($settings))))();
     }
 
-    public function testDatabaseErrorsDoNotLeakThroughVerboseConsole(): void
+    public static function databaseFailures(): iterable
     {
-        $database = new class implements DatabaseConnection {
+        yield 'exception' => [new \RuntimeException('sensitive-database-credential')];
+        yield 'PHP error' => [new \Error('sensitive-installation-credential')];
+    }
+
+    #[DataProvider('databaseFailures')]
+    public function testDatabaseErrorsDoNotLeakThroughVerboseConsole(\Throwable $failure): void
+    {
+        $database = new class ($failure) implements DatabaseConnection {
+            public function __construct(private readonly \Throwable $failure) {}
+
             public function get(): \PDO
             {
-                throw new \RuntimeException('sensitive-database-credential');
+                throw $this->failure;
             }
         };
         [$status, $display] = $this->console($database);

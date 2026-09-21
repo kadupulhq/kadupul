@@ -517,9 +517,11 @@ hosts, PHP mail and sendmail are not supported by this command.
 implicit TLS; normal certificate/hostname verification remains enabled. ESMTP is
 required: HELO fallback is blocked because it can bypass the component's required-TLS
 check. A configured SMTP username requires advertised authentication; credentials
-are supplied through transport setters, never a DSN. The local tests use a loopback
-SMTP server, including rejection, lost acknowledgements and TLS downgrade refusal;
-they do not establish successful delivery through a production TLS server.
+are supplied through transport setters, never a DSN. The local tests use loopback
+SMTP servers, including authenticated STARTTLS and implicit-TLS delivery with a
+temporary test CA, untrusted/wrong-host certificate rejection before authentication,
+lost acknowledgements and TLS downgrade refusal. Machine trust is unchanged; these
+tests do not establish delivery through a production SMTP server.
 
 Existing web test-mail, report attachments and daemon notifications still use the
 legacy mailer. Migrating those callers and removing PHPMailer are follow-up slices.
