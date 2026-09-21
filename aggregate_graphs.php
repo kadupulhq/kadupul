@@ -1242,13 +1242,13 @@ function aggregate_items() {
 			<table class='filterTable'>
 				<tr>
 					<td>
-						<?php print __('Search');?>
+						<label for='rfilter'><?php print __('Search');?></label>
 					</td>
 					<td>
 						<input type='text' class='ui-state-default ui-corner-all' id='rfilter' size='45' value='<?php
-							print str_replace('`', '&#96;', htmlspecialchars(
-							    (string) get_request_var('rfilter'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'
-							));
+							$search_html = (string) get_request_var('rfilter');
+							$search_html = htmlspecialchars($search_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+							print str_replace('`', '&#96;', $search_html);
 						?>'>
 					</td>
 					<td>
@@ -1524,13 +1524,13 @@ function aggregate_graph() {
 			<table class='filterTable'>
 				<tr>
 					<td>
-						<?php print __('Search');?>
+						<label for='filter'><?php print __('Search');?></label>
 					</td>
 					<td>
 						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
-							print str_replace('`', '&#96;', htmlspecialchars(
-							    (string) get_request_var('filter'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'
-							));
+							$search_html = (string) get_request_var('filter');
+							$search_html = htmlspecialchars($search_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+							print str_replace('`', '&#96;', $search_html);
 						?>'>
 					</td>
 					<td>

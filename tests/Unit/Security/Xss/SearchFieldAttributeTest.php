@@ -14,7 +14,7 @@ function get_request_var($name) {
 
 test('search fields preserve literal values and existing attributes', function ($file, $ids, ?string $payload) {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
-	$count = preg_match_all("/<input\b[^\n]*value='<\\?php\\s+print str_replace\\(.*?\\?>'>/s", $source, $matches);
+	$count = preg_match_all("/<input\b[^\n]*value='<\\?php\\s+\\\$search_html = .*?\\?>'>/s", $source, $matches);
 	expect($count)->toBe(count($ids));
 	foreach ($matches[0] as $index => $markup) {
 		$GLOBALS['search_field_payload'] = $payload;
@@ -34,6 +34,7 @@ test('search fields preserve literal values and existing attributes', function (
 		$input = $inputs->item(0);
 		expect($input->getAttribute('value'))->toBe($payload ?? '');
 		expect($input->getAttribute('id'))->toBe($ids[$index]);
+		expect($source)->toContain("<label for='" . $ids[$index] . "'>");
 		expect($input->getAttribute('type'))->toBe('text');
 		expect($input->getAttribute('class'))->toBe('ui-state-default ui-corner-all');
 		expect($input->getAttribute('size'))->toBe($ids[$index] === 'rfilter' ? '45' : '25');

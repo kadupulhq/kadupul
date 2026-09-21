@@ -63,25 +63,20 @@ test('report heading expressions render hostile components as text', function ($
 // GHSA-fwh3: Reflected XSS via rfilter in aggregate_graphs.php
 // ---------------------------------------------------------------------------
 
-test('GHSA-fwh3: aggregate_graphs.php escapes rfilter with html_escape_request_var in value attribute', function () use ($aggregateGraphsPath) {
+test('GHSA-fwh3: aggregate_graphs.php explicitly escapes rfilter in its value attribute', function () use ($aggregateGraphsPath) {
 	$contents = file_get_contents($aggregateGraphsPath);
 
-	// html_escape_request_var() must be used instead of raw get_request_var() in the value attribute.
-	expect($contents)->toContain("html_escape_request_var('rfilter')");
+	expect($contents)->toContain("htmlspecialchars(\$search_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')");
 	expect($contents)->not->toContain("value='<?php print get_request_var('rfilter');?>'");
 });
 
-test('GHSA-fwh3: contract — rfilter output in HTML attributes must use html_escape_request_var()', function () use ($aggregateGraphsPath) {
+test('GHSA-fwh3: contract — rfilter is encoded at its HTML attribute boundary', function () use ($aggregateGraphsPath) {
 	$contents = file_get_contents($aggregateGraphsPath);
 
-	// html_escape_request_var() is the Cacti convention for encoding HTML attribute values
-	// retrieved from request variables. The raw get_request_var() call must be replaced.
-	$hasRaw    = str_contains($contents, "value='<?php print get_request_var('rfilter');?>'");
-	$hasSafe   = str_contains($contents, "value='<?php print html_escape_request_var('rfilter');?>'");
-
-	// Fails until the advisory is remediated.
-	expect($hasRaw)->toBeFalse('raw get_request_var() must be replaced with html_escape_request_var()');
-	expect($hasSafe)->toBeTrue('html_escape_request_var() must be used for the rfilter value attribute');
+	expect(preg_match("/id='rfilter'[^>]*?<\\?php(.*?)\\?>/s", $contents, $match))->toBe(1);
+	expect($match[1])->toContain("(string) get_request_var('rfilter')");
+	expect($match[1])->toContain("htmlspecialchars(\$search_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')");
+	expect($match[1])->toContain("print str_replace('`', '&#96;', \$search_html)");
 });
 
 // ---------------------------------------------------------------------------
