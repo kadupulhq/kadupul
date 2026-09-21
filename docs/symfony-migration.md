@@ -565,3 +565,49 @@ Reports and attachments still use their existing mailer. Legacy functions remain
 inside the compatibility adapters until their callers/configurations are migrated;
 this is not removal of PHPMailer or all global state. New source is included in
 offline bundles. LTS is unchanged.
+
+## Opt-in row-count cache scheduler
+
+IdentityAccess now owns invalidated permission-count cache cleanup through
+`CleanInvalidatedRowCache` and its `InvalidatedRowCache` port. Domain and
+application code have no Symfony, PDO or global dependencies. Symfony Scheduler
+and Messenger are infrastructure adapters; the installation adapter reads the
+primary collector database. This does not schedule polling, reports, RRD work,
+log rotation or authentication-token expiry.
+
+The default remains legacy `poller_maintenance.php`. To transfer only this cleanup:
+
+1. Deploy Composer dependencies and clear the production Symfony container.
+2. Create a writable `var/scheduler` directory for the worker account. Preserve
+   that directory across deployments (for example with a local shared-directory
+   symlink). It contains schedule checkpoints and locks, not disposable cache.
+3. Set `KADUPUL_ROW_CACHE_SCHEDULER=1` in both the primary poller/maintenance
+   environment and the supervised worker environment. Only literal `1` enables
+   it. Remote collectors always retain legacy cleanup and cannot run this worker.
+4. Check the schedule with `php bin/console debug:scheduler row_cache`, then run
+   `php bin/console messenger:consume scheduler_row_cache --time-limit=3600 --memory-limit=128M` under systemd or another process supervisor configured
+   to restart the worker even after a successful time-limit exit. Keep the existing
+   poller cron entry; it still owns all other work.
+
+Use one designated host and the same installation/state directory and OS account
+for all instances. The filesystem lock excludes concurrent workers sharing that
+local directory; it is not a distributed lock across separate hosts or volumes.
+The disabled schedule is empty and does not open installation configuration.
+
+The period is five minutes. Persisted checkpoints and
+`processOnlyLastMissedRun(true)` avoid replaying every missed interval. Symfony
+7.4 may defer a restarted schedule to the next tick, so do not rely on an
+immediate catch-up run. Each run deletes at most 1,000 rows per invalidated class;
+remaining rows are processed on subsequent runs. It preserves rows at/after the
+cutoff, rechecks timestamps before deletion to protect concurrent refreshes, and
+is safe to repeat. Failures remain visible to Messenger; a later tick retries
+cleanup against current database state. It does not promise exactly-once work.
+
+Monitor supervisor restarts, Messenger failures, and backlog size. If the worker
+stops, stale cache rows may accumulate, but the existing read path rejects
+invalidated rows and recomputes counts. To roll back, stop the worker first,
+remove the switch from the primary maintenance environment and restore/restart
+that process. Legacy cleanup resumes on its next maintenance run. LTS is unchanged.
+
+See the [Symfony 7.4 Scheduler documentation](https://symfony.com/doc/7.4/scheduler.html)
+for worker supervision, stateful schedules and locking.

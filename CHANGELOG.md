@@ -11,6 +11,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Add opt-in Symfony Scheduler ownership of primary-collector row-count cache cleanup through an IdentityAccess application handler, with bounded deletion, persisted checkpoints and worker locking.
+
 - Route administrator notifications through a Symfony-owned Alerting use case, use Symfony Mailer for supported SMTP configurations, and retain legacy delivery compatibility without resending failed SMTP messages.
 
 - Add `kadupul:mail:test`, a Symfony Mailer console command behind an Alerting application port, using existing SMTP settings with explicit TLS requirements and sanitized failures.
