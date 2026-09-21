@@ -25,6 +25,15 @@ These are application findings, not vendor warnings:
 condition is unreachable under the new floor. Remove that obsolete branch as
 cleanup rather than treating it as an active warning.
 
+A second pass matched the deprecated internal functions reported by reflection
+on the selected PHP 8.4 runtime against application source. It found four
+`libxml_disable_entity_loader()` calls in `lib/import.php:347,355,473,481`, all
+behind `LIBXML_VERSION < 20900`. These are dormant on the tested libxml runtime,
+and belong in the compatibility-branch cleanup. Keep XXE regression coverage
+when removing them; do not replace parser safety with untested assumptions.
+The [PHP function reference](https://www.php.net/manual/en/function.libxml-disable-entity-loader.php)
+explains the deprecation and libxml-dependent parser behavior.
+
 ## Test dependency debt
 
 The isolated `tests/composer.json` still uses Pest 1 / PHPUnit 9. Under PHP 8.4,
