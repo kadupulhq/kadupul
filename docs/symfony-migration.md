@@ -76,7 +76,7 @@ SNMP secrets and notes are never selected or returned.
 Twig renders `templates/inventory/devices.html.twig`, including escaped data,
 search/filter controls, an empty state and previous/next links. A JSON read
 representation is available at `/app.php/inventory/devices.json`. Both accept
-`q`, `state=all|enabled|disabled`, `status=all|up|down|recovering|unknown|disabled`,
+`q`, `state=all|enabled|disabled`, `status=all|up|down|recovering|unknown|error|disabled`,
 `page`, and `size=25|50|100`. Status matches the displayed column: disabled
 devices appear only under Disabled, regardless of their last observed status.
 Status and polling-state filters intersect, so contradictory choices return an

@@ -16,7 +16,7 @@
         </select>
         <label for="device-status">Status</label>
         <select id="device-status" name="status">
-            {% for value, label in {'all': 'All', 'up': 'Up', 'down': 'Down', 'recovering': 'Recovering', 'unknown': 'Unknown', 'disabled': 'Disabled'} %}
+            {% for value, label in {'all': 'All', 'up': 'Up', 'down': 'Down', 'error': 'Error', 'recovering': 'Recovering', 'unknown': 'Unknown', 'disabled': 'Disabled'} %}
             <option value="{{ value }}"{% if criteria.status == value %} selected{% endif %}>{{ label }}</option>
             {% endfor %}
         </select>

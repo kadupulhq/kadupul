@@ -44,6 +44,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Preserve the legacy Error device status in Symfony Inventory filtering, display and CSV exports.
+
 - Deny internal application paths in the Nginx deployment and reject HTTP execution of command-line tools before bootstrap.
 
 - Resume Symfony's shared identity through native strict cookie handling and measure Symfony, HTTP worker, browser-build and offline-release coverage in Sonar.

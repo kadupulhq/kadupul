@@ -93,15 +93,20 @@ def verify_inventory(harness, session, user_id, check):
           'CSV preserves the disabled filter')
     # Match displayed status, so disabled devices cannot also appear as Up/Down.
     harness.sql(f"UPDATE host SET status=3 WHERE id={allowed[0]}")
-    for index, value in enumerate((1, 2, 0, 9), start=1):
+    for index, value in enumerate((1, 2, 0, 9, 4), start=1):
         harness.sql(f"UPDATE host SET status={value} WHERE id={allowed[index]}")
     expected_statuses = {'disabled': [allowed[0]], 'down': [allowed[1]],
-                         'recovering': [allowed[2]], 'unknown': allowed[3:5], 'up': allowed[5:]}
+                         'recovering': [allowed[2]], 'unknown': allowed[3:5], 'error': [allowed[5]], 'up': allowed[6:]}
+    harness.sql(f'UPDATE host SET status=4 WHERE id={ids[0]}')
     for status, expected in expected_statuses.items():
         check([d['id'] for d in listing(q='inventory-fixture', status=status, size=100)['devices']] == expected,
               'status filter matches displayed status and preserves visibility: ' + status)
-        check([int(row[0]) for row in export(q='inventory-fixture', status=status, size=100)] == expected,
-              'CSV preserves status: ' + status)
+        rows = export(q='inventory-fixture', status=status, size=100)
+        check([int(row[0]) for row in rows] == expected and all(row[3] == status.capitalize() for row in rows),
+              'CSV preserves status and its displayed label: ' + status)
+        if status != 'disabled':
+            check(all(d['status'] == status.capitalize() for d in listing(q='inventory-fixture', status=status, size=100)['devices']),
+                  'JSON projects the displayed status: ' + status)
     check(not listing(q='inventory-fixture', state='disabled', status='up')['devices'],
           'conflicting polling and status filters return no devices')
     check(not listing(q='inventory-fixture', state='enabled', status='disabled')['devices'],
@@ -165,6 +170,7 @@ def verify_inventory(harness, session, user_id, check):
     harness.sql(f"UPDATE host SET description='{unsafe}' WHERE id={allowed[0]}")
     response = session.opener.open(harness.base + base + '?' + urlencode({'q': unsafe}))
     body = response.read().decode()
+    check('<option value="error"' in body, 'Twig offers the Error status filter')
     check(unsafe not in body and '&lt;script&gt;alert(1)&lt;/script&gt;' in body, 'Twig escapes stored and reflected text')
     check('no-store' in response.headers.get('Cache-Control', ''), 'Inventory responses are not cached')
     response.close()
