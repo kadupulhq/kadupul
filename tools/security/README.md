@@ -7,7 +7,8 @@ mise exec node@22.22.2 -- node tools/security/inventory.mjs /absolute/path/to/pr
 mise exec node@22.22.2 -- node --test tests/Unit/security-inventory.test.mjs
 ```
 
-The collector paginates both scanners, requires matching main revisions, and
+The collector paginates both scanners, requires matching main revisions for
+Sonar-linked alerts (other scanners retain their own recorded revisions), and
 matches GitHub alerts using their embedded stable Sonar issue keys. It retains
 unmatched alerts rather than silently treating similar locations as duplicates.
 It writes a normalized `inventory.json` with every finding and a grouped,

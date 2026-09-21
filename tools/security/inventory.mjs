@@ -11,6 +11,15 @@ export function priority(rule) {
   return 3;
 }
 
+function sonarKey(alert) {
+  return (alert.most_recent_instance.message.text ?? '').match(/<!--SONAR_ISSUE_KEY:([\w-]+?)-->/)?.[1];
+}
+
+// Reports are data, never executable markup supplied by the remote scanner.
+function markdownText(value) {
+  return String(value).replace(/[&<>|`\[\]\\*_!\r\n]/g, char => `&#${char.charCodeAt(0)};`);
+}
+
 export function reconcile(issues, alerts) {
   const rows = issues.map(issue => ({
     sonarKey: issue.key, rule: issue.rule, severity: issue.severity,
@@ -24,9 +33,9 @@ export function reconcile(issues, alerts) {
   const unmatched = [];
   for (const alert of alerts) {
     const instance = alert.most_recent_instance;
-    const key = (instance.message.text ?? '').match(/<!--SONAR_ISSUE_KEY:([\w-]+?)-->/)?.[1];
+    const key = sonarKey(alert);
     const reference = { number: alert.number, url: alert.html_url,
-      revision: instance.commit_sha, sonarKey: key ?? null };
+      revision: instance.commit_sha, tool: alert.tool?.name ?? null, sonarKey: key ?? null };
     if (key && keys.has(key)) keys.get(key).github.push(reference);
     else unmatched.push({ ...reference, rule: alert.rule.id,
       path: instance.location.path, line: instance.location.start_line,
@@ -68,7 +77,7 @@ export async function collect(output, { sonar = fetchSonar, runGh = execFileSync
     '--paginate', '--slurp'], { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 })).flat();
   const after = await analysis();
   if (before.key !== after.key) throw new Error('Sonar analysis changed during collection; retry');
-  if (alerts.some(a => a.most_recent_instance.commit_sha !== before.revision)) {
+  if (alerts.some(a => sonarKey(a) && a.most_recent_instance.commit_sha !== before.revision)) {
     throw new Error('GitHub and Sonar revisions differ; wait for scans to converge');
   }
   const inventory = { collectedAt: new Date().toISOString(), branch: 'main',
@@ -80,10 +89,10 @@ export async function collect(output, { sonar = fetchSonar, runGh = execFileSync
     conservativeTotal: inventory.rows.length + inventory.unmatched.length };
   const groups = new Map();
   for (const row of inventory.rows) {
-    const key = `P${row.priority} | ${row.rule} | ${row.path}`;
+    const key = `P${row.priority} | ${markdownText(row.rule)} | ${markdownText(row.path)}`;
     groups.set(key, (groups.get(key) ?? 0) + 1);
   }
-  const report = `# Security remediation inventory\n\nGenerated: ${inventory.collectedAt}\n\nMain revision: ${before.revision}\n\n`
+  const report = `# Security remediation inventory\n\nGenerated: ${inventory.collectedAt}\n\nMain revision: ${markdownText(before.revision)}\n\n`
     + `Sonar: ${issues.length}; GitHub: ${alerts.length}; exact overlaps: ${inventory.counts.matchedGithub}; unmatched: ${inventory.unmatched.length}.\n\n`
     + 'Priorities are provisional rule-based triage, not proof of exploitability. P1: command/SQL injection and embedded secrets. P2: XSS, path, LDAP and template injection. P3: remaining controls. Authentication/authorization findings from manual review must be tracked separately.\n\n'
     + 'Fix batches: first host reindex argv/POST enforcement; next validate remote-agent command flows and SQL helper callers; then context-specific XSS batches by controller/shared rendering helper. Do not globally escape HTML helpers or dismiss validated-input flows without evidence. Preserve LTS and confirm closure only after a main scan.\n\n'

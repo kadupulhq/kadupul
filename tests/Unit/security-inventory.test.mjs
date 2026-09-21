@@ -15,13 +15,13 @@ test('device reindex link cancels navigation and supplies a token to the POST lo
   assert.match(line, /data-post-action='true'/);
   const handler = line.match(/onclick='([^']+)'/)[1];
   const calls = [];
-  runInNewContext(`(function(event) { ${handler} }).call(link, event)`, {
+  const result = runInNewContext(`(function() { ${handler} }).call(link)`, {
     link: { href: 'host.php?action=reindex&host_id=7' },
-    event: { preventDefault: () => calls.push('prevented') },
     csrfMagicToken: 'test-token',
     loadPageUsingPost: (url, body) => calls.push([url, body.__csrf_magic, body.header]),
   });
-  assert.deepEqual(calls, ['prevented', ['host.php?action=reindex&host_id=7', 'test-token', 'false']]);
+  assert.equal(result, false);
+  assert.deepEqual(calls, [['host.php?action=reindex&host_id=7', 'test-token', 'false']]);
 });
 function alert(key, number = 1) {
   return { number, rule: { id: issue.rule }, most_recent_instance: {
@@ -70,6 +70,35 @@ test('collects every page and writes counts, revision and ranked report', async 
     assert.deepEqual(result.counts, { sonar: 2, github: 2, matchedGithub: 2, unmatchedGithub: 0, conservativeTotal: 2 });
     assert.equal(result.analysis.revision, 'abc');
     assert.match(readFileSync(join(dir, 'TRIAGE.md'), 'utf8'), /unverified|provisional/);
+  } finally {
+    rmSync(dir, { recursive: true });
+  }
+});
+
+test('retains older non-Sonar alerts and renders remote markup as report data', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'security-inventory-test-'));
+  const unrelated = alert(null, 2);
+  unrelated.tool = { name: 'CodeQL' };
+  unrelated.most_recent_instance.commit_sha = 'older-codeql-scan';
+  const payload = '<script>alert(1)</script>|[link](file:///tmp/a)\n**heading**';
+  try {
+    await collect(dir, {
+      sonar: async endpoint => endpoint === 'project_analyses/search'
+        ? { analyses: [{ key: 'analysis', revision: 'abc' }] }
+        : { paging: { total: 1 }, issues: [{ ...issue, component: `project:${payload}` }] },
+      runGh: () => JSON.stringify([[alert('sonar-1'), unrelated]]),
+    });
+    const result = JSON.parse(readFileSync(join(dir, 'inventory.json'), 'utf8'));
+    assert.equal(result.counts.conservativeTotal, 2);
+    assert.equal(result.counts.matchedGithub, 1);
+    assert.equal(result.unmatched[0].tool, 'CodeQL');
+    assert.equal(result.unmatched[0].revision, 'older-codeql-scan');
+    assert.equal(result.rows[0].path, payload);
+    const markdown = readFileSync(join(dir, 'TRIAGE.md'), 'utf8');
+    assert.ok(!markdown.includes(payload));
+    assert.ok(!markdown.includes('<script>'));
+    assert.ok(!markdown.includes('[link]'));
+    assert.match(markdown, /&#60;script&#62;/);
   } finally {
     rmSync(dir, { recursive: true });
   }
