@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-security: Explicitly encode shared dropdown option values and labels while preserving selection and pre-escaped text
 -security: Encode data-source and template item link parameters and attributes while retaining POST mutation controls
 -security: Escape shared upload, text, path and font control attributes while retaining pre-escaped values and form state
 -security: Escape shared hidden-input names and values while preserving literal text and existing default-value selection
