@@ -93,9 +93,14 @@ test('retains older non-Sonar alerts and renders remote markup as report data', 
     assert.equal(result.counts.matchedGithub, 1);
     assert.equal(result.unmatched[0].tool, 'CodeQL');
     assert.equal(result.unmatched[0].revision, 'older-codeql-scan');
+    // Assertion only: verifies JSON data round-trip; no HTML sink or rendering.
+    // nosemgrep: javascript.lang.security.audit.unknown-value-with-script-tag.unknown-value-with-script-tag
     assert.equal(result.rows[0].path, payload);
     const markdown = readFileSync(join(dir, 'TRIAGE.md'), 'utf8');
+    // Negative string assertions verify hostile markup is absent, not rendered.
+    // nosemgrep: javascript.lang.security.audit.unknown-value-with-script-tag.unknown-value-with-script-tag
     assert.ok(!markdown.includes(payload));
+    // nosemgrep: javascript.lang.security.audit.unknown-value-with-script-tag.unknown-value-with-script-tag
     assert.ok(!markdown.includes('<script>'));
     assert.ok(!markdown.includes('[link]'));
     assert.match(markdown, /&#60;script&#62;/);
