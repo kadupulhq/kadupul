@@ -11,6 +11,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Add a Symfony/Twig site catalog with bounded search and pagination, realm-based administration access, and permission-filtered device counts.
+
 - Export the current Symfony Inventory page as a permission-filtered CSV download with spreadsheet-safe text cells.
 
 - Migrate device location and external ID editing to Symfony with Unicode-aware domain validation and stale-edit detection.

@@ -22,7 +22,8 @@ health, response security headers and installation configuration adapters.
 IdentityAccess owns the current-actor query and public Actor/ConsoleAccess
 contracts. Inventory owns device-list criteria, its ListDevices use case,
 read models and DeviceCatalog port, plus the Device aggregate, EditDevice command
-and DeviceEditor port. Other
+and DeviceEditor port. Site administration reads use the ListSites query and
+SiteCatalog port; site device counts share Inventory’s device visibility adapter. Other
 features remain legacy code until migrated. New modules are introduced with a
 working use case, rather than empty entity/repository scaffolding.
 

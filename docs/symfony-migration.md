@@ -131,6 +131,29 @@ These create and remove a disposable Docker stack. They check session sharing,
 account restrictions, group realms, visibility modes, device exceptions, search,
 paging, escaping and input rejection. CI runs both session configurations.
 
+## Site catalog slice
+
+`/app.php/inventory/sites` now lists sites through Symfony and Twig, with the same
+read representation at `/app.php/inventory/sites.json`. Inventory's `ListSites`
+query requires console access and realm 3 (Sites/Devices/Data), matching the legacy
+site administration boundary. Its `SiteCatalog` port returns site names, IDs, city,
+state, country and accessible-device counts. All positive-ID sites are listed,
+including empty sites and sites with no accessible devices. This is a site
+administration view; the device filter still names only sites with visible devices.
+
+Counts apply the existing device visibility policy, exclude deleted devices, and
+count each device once even when it has multiple graphs. Count links open the
+permission-filtered device list for that site. Neither notes nor other site fields
+are selected. Legacy null address fields display as empty text.
+
+Search (`q`) matches name, city, state or country as literal text. `direction=asc|desc`
+sorts by name with an ID tie-breaker; `page` and `size=25|50|100` provide bounded
+pagination with lookahead. Twig escapes site text and carries filters between
+pages. Controller responses are private/no-store. GET/HEAD are supported; Symfony
+rejects mutations at routing with a generic 405. Site create/edit/delete/duplicate,
+other sort columns, saved preferences and legacy navigation cutover remain to be
+migrated. `sites.php` remains operational.
+
 ## Inventory details slice
 
 Device names open `/app.php/inventory/devices/{id}` (GET/HEAD). Symfony invokes
