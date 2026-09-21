@@ -38,7 +38,11 @@ test('search fields preserve literal values and existing attributes', function (
 		expect($input->getAttribute('type'))->toBe('text');
 		$classes = $file === 'graph_templates.php' ? 'ui-state-default' : 'ui-state-default ui-corner-all';
 		expect($input->getAttribute('class'))->toBe($classes);
-		expect($input->getAttribute('size'))->toBe($ids[$index] === 'rfilter' ? '45' : '25');
+		$regexSizes = array(
+			'aggregate_graphs.php' => '45', 'data_debug.php' => '30', 'data_sources.php' => '55',
+			'graph_view.php' => '55', 'graphs.php' => '55', 'utilities.php' => '75'
+		);
+		expect($input->getAttribute('size'))->toBe($ids[$index] === 'rfilter' ? $regexSizes[$file] : '25');
 		$namedFilters = array(
 			'data_templates.php', 'data_input.php', 'data_queries.php', 'gprint_presets.php', 'cdef.php',
 			'color.php', 'data_source_profiles.php', 'graph_templates.php', 'graphs_new.php'
@@ -81,6 +85,11 @@ test('search fields preserve literal values and existing attributes', function (
 	'RRD cleaner' => array('rrdcleaner.php', array('filter')),
 	'user domains' => array('user_domains.php', array('filter')),
 	'pollers' => array('pollers.php', array('filter')),
+	'data debug' => array('data_debug.php', array('rfilter')),
+	'data sources' => array('data_sources.php', array('rfilter')),
+	'graph viewer' => array('graph_view.php', array('rfilter')),
+	'graphs' => array('graphs.php', array('rfilter')),
+	'utilities' => array('utilities.php', array('filter', 'rfilter', 'filter', 'filter', 'filter', 'filter')),
 ))->with(array(
 	'ordinary search' => 'router 42',
 	'empty search' => '',

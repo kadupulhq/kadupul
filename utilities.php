@@ -1126,10 +1126,14 @@ function utilities_view_user_log() {
 			<table class='filterTable'>
 				<tr>
 					<td>
-						<?php print __('Search');?>
+						<label for='filter'><?php print __('Search');?></label>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
+						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+							$search_html = (string) get_request_var('filter');
+							$search_html = htmlspecialchars($search_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+							print str_replace('`', '&#96;', $search_html);
+						?>'>
 					</td>
 				</tr>
 			</table>
@@ -1528,10 +1532,14 @@ function utilities_view_logfile() {
 			<table class='filterTable'>
 				<tr>
 					<td>
-						<?php print __('Search');?>
+						<label for='rfilter'><?php print __('Search');?></label>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='rfilter' size='75' value='<?php print html_escape_request_var('rfilter');?>'>
+						<input type='text' class='ui-state-default ui-corner-all' id='rfilter' size='75' value='<?php
+							$search_html = (string) get_request_var('rfilter');
+							$search_html = htmlspecialchars($search_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+							print str_replace('`', '&#96;', $search_html);
+						?>'>
 					</td>
 				</tr>
 			</table>
@@ -1823,10 +1831,14 @@ function utilities_view_snmp_cache() {
 			<table class='filterTable'>
 				<tr>
 					<td>
-						<?php print __('Search');?>
+						<label for='filter'><?php print __('Search');?></label>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
+						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+							$search_html = (string) get_request_var('filter');
+							$search_html = htmlspecialchars($search_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+							print str_replace('`', '&#96;', $search_html);
+						?>'>
 					</td>
 					<td>
 						<?php print __('Rows');?>
@@ -2110,10 +2122,14 @@ function utilities_view_poller_cache() {
 			<table class='filterTable'>
 				<tr>
 					<td>
-						<?php print __('Search');?>
+						<label for='filter'><?php print __('Search');?></label>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
+						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+							$search_html = (string) get_request_var('filter');
+							$search_html = htmlspecialchars($search_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+							print str_replace('`', '&#96;', $search_html);
+						?>'>
 					</td>
 					<td>
 						<?php print __('Status');?>
@@ -3077,10 +3093,14 @@ function snmpagent_utilities_run_cache() {
 				<table class='filterTable'>
 					<tr>
 						<td>
-							<?php print __('Search');?>
+							<label for='filter'><?php print __('Search');?></label>
 						</td>
 						<td>
-							<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
+							<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+								$search_html = (string) get_request_var('filter');
+								$search_html = htmlspecialchars($search_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+								print str_replace('`', '&#96;', $search_html);
+							?>'>
 						</td>
 						<td>
 							<?php print __('MIB');?>
@@ -3342,10 +3362,14 @@ function snmpagent_utilities_run_eventlog(){
 				<table class='filterTable'>
 					<tr>
 						<td>
-							<?php print __('Search');?>
+							<label for='filter'><?php print __('Search');?></label>
 						</td>
 						<td>
-							<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
+							<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+								$search_html = (string) get_request_var('filter');
+								$search_html = htmlspecialchars($search_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+								print str_replace('`', '&#96;', $search_html);
+							?>'>
 						</td>
 						<td>
 							<?php print __('Severity');?>
