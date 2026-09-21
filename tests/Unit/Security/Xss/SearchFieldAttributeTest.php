@@ -52,6 +52,12 @@ test('search fields preserve literal values and existing attributes', function (
 	'device templates' => array('host_templates.php', array('filter')),
 	'notification managers' => array('managers.php', array('filter', 'filter', 'filter')),
 	'trees' => array('tree.php', array('sfilter', 'hfilter', 'gfilter', 'filter')),
+	'automation templates' => array('automation_templates.php', array('filter')),
+	'automation SNMP' => array('automation_snmp.php', array('filter')),
+	'automation tree rules' => array('automation_tree_rules.php', array('filter')),
+	'discovered devices' => array('automation_devices.php', array('filter')),
+	'discovery networks' => array('automation_networks.php', array('filter')),
+	'automation graph rules' => array('automation_graph_rules.php', array('filter')),
 ))->with(array(
 	'ordinary search' => 'router 42',
 	'empty search' => '',
