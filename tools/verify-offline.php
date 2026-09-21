@@ -41,7 +41,7 @@ foreach (['Kadupul\\Inventory\\Application\\Query\\ListDevices', 'Kadupul\\Inven
         throw new RuntimeException('Missing Inventory module: ' . $class);
     }
 }
-foreach (['HTMLPurifier', 'phpseclib4\\Crypt\\RSA'] as $class) {
+foreach (['HTMLPurifier', 'phpseclib4\\Crypt\\RSA', 'Symfony\\Component\\Mailer\\Mailer', 'Kadupul\\Alerting\\Infrastructure\\Symfony\\TestMailCommand'] as $class) {
     if (!class_exists($class)) {
         throw new RuntimeException('Missing production dependency: ' . $class);
     }

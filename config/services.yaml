@@ -77,3 +77,10 @@ services:
 
     Kadupul\IdentityAccess\Contract\LocalePreference:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyLocalePreference
+
+    Kadupul\Alerting\Application\Command\SendTestMail: ~
+    Kadupul\Alerting\Infrastructure\Symfony\TestMailCommand: ~
+    Kadupul\Alerting\Infrastructure\Mail\InstallationTestMailDelivery: ~
+
+    Kadupul\Alerting\Application\Port\TestMailDelivery:
+        alias: Kadupul\Alerting\Infrastructure\Mail\InstallationTestMailDelivery

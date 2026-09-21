@@ -487,3 +487,43 @@ locale-aware dates/numbers and migration of the preference editor
 are follow-up slices. New catalogs reside under the already non-public `config/`
 directory and are included in offline bundles together with the locked translation
 component. LTS is unchanged.
+
+
+## First Symfony Mailer path
+
+On main, `php bin/console kadupul:mail:test` sends one plain-text test message to
+`settings_test_email`, using the installation database and existing mail settings.
+Run it as an installation operator with access to `include/config.php`; it sends
+real mail when invoked. Success means the SMTP server accepted the message, not
+that the recipient received it. Failures return exit code 1 and deliberately omit
+raw database/SMTP errors, credentials and recipients, including in verbose mode.
+Check server logs before retrying: a lost acknowledgement can leave the send outcome
+unknown. The command never automatically resends a message.
+
+Symfony Console and the container compose Alerting's `SendTestMail` application
+use case with its `TestMailDelivery` outbound port and a Symfony Mailer adapter.
+The application layer has no globals, database calls or Symfony dependencies.
+Settings and network access are lazy, so console discovery and health checks do
+not require an installed database or SMTP server. No legacy bootstrap is loaded.
+
+This first path requires `settings_how=2` (SMTP), one hostname or IP in
+`settings_smtp_host`, port 1–65535, timeout 1–300 seconds, and single bare email
+addresses in `settings_from_email` and `settings_test_email`. Sender display name
+comes from `settings_from_name`. Missing host/port/timeout settings default to
+localhost/25/10; explicitly invalid values fail. Semicolon-separated failover
+hosts, PHP mail and sendmail are not supported by this command.
+
+`settings_smtp_secure=none` disables TLS, `tls` requires STARTTLS, and `ssl` uses
+implicit TLS; normal certificate/hostname verification remains enabled. ESMTP is
+required: HELO fallback is blocked because it can bypass the component's required-TLS
+check. A configured SMTP username requires advertised authentication; credentials
+are supplied through transport setters, never a DSN. The local tests use loopback
+SMTP servers, including authenticated STARTTLS and implicit-TLS delivery with a
+temporary test CA, untrusted/wrong-host certificate rejection before authentication,
+lost acknowledgements and TLS downgrade refusal. Machine trust is unchanged; these
+tests do not establish delivery through a production SMTP server.
+
+Existing web test-mail, report attachments and daemon notifications still use the
+legacy mailer. Migrating those callers and removing PHPMailer are follow-up slices.
+Composer locks the new component, and offline archives include its production
+dependencies. No vendor directories are tracked. LTS is unchanged.
