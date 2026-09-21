@@ -3,7 +3,7 @@
 {% block body %}
 <main>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
-    <p><a href="{{ path('inventory_devices') }}">Back to devices</a></p>
+    <p><a href="{{ path('inventory_devices', filters) }}">Back to devices</a></p>
     <h1>Edit {{ device.description }}</h1>
     {% if saved %}<output>Device saved.</output>{% endif %}
     {{ form_start(form) }}

@@ -136,6 +136,10 @@ match the existing schema. Empty values clear the fields; neither field implies
 uniqueness or changes site membership. Both participate in stale-edit detection
 and pass through the existing graph-title and plugin save effects. The new form
 does not yet provide the legacy location autocomplete.
+Opening a device from the list preserves its search, filters, sorting, page and
+page size through validation errors and successful saves. “Back to devices”
+returns to that view. Only validated list parameters are carried in `list[...]`;
+form actions and links use fixed Symfony routes, never a supplied return URL.
 Other settings, including SNMP credentials, templates and poller assignment, remain
 in the legacy editor and cannot be submitted through this form.
 

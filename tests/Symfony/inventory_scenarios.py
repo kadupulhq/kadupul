@@ -118,12 +118,15 @@ def verify_inventory(harness, session, user_id, check):
         def __init__(self):
             super().__init__()
             self.links = []
+            self.edits = []
             self.selected = []
 
         def handle_starttag(self, tag, attributes):
             attrs = dict(attributes)
             if tag == 'a' and ('rel' in attrs or '.csv?' in attrs.get('href', '')):
                 self.links.append(attrs['href'])
+            if tag == 'a' and '/edit?' in attrs.get('href', ''):
+                self.edits.append(attrs['href'])
             if tag == 'option' and 'selected' in attrs:
                 self.selected.append(attrs.get('value'))
 
@@ -134,6 +137,16 @@ def verify_inventory(harness, session, user_id, check):
             html.feed(response.read().decode())
         check(all(value in html.selected for value in ('down', 'hostname', 'desc')) and len(html.links) == 2,
               'Twig selects status and renders CSV plus pagination')
+        check(bool(html.edits), 'filtered list links to device editors')
+        for link in html.edits:
+            context = parse_qs(urlsplit(link).query)
+            check(context.get('list[q]') == ['inventory-fixture']
+                  and context.get('list[status]') == ['down']
+                  and context.get('list[sort]') == ['hostname']
+                  and context.get('list[direction]') == ['desc']
+                  and context.get('list[page]') == [str(page)]
+                  and context.get('list[size]') == ['25'],
+                  'device links carry the selected inventory view')
         for link in html.links:
             filters = parse_qs(urlsplit(link).query)
             check(filters.get('status') == ['down'] and filters.get('q') == ['inventory-fixture']

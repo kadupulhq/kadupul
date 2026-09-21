@@ -9,7 +9,7 @@ namespace Kadupul\Inventory\Infrastructure\Symfony\Controller;
 
 use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Inventory\Application\Query\ListDevices;
-use Kadupul\Inventory\Domain\DeviceListCriteria;
+use Kadupul\Inventory\Infrastructure\Symfony\DeviceListParameters;
 use Kadupul\Inventory\Infrastructure\Symfony\Export\DevicePageCsv;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,18 +26,7 @@ final class DeviceListController
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         try {
-            $query = $request->query->all();
-            foreach (['q', 'state', 'status', 'sort', 'direction', 'page', 'size'] as $key) {
-                if (isset($query[$key]) && !is_string($query[$key])) {
-                    throw new \InvalidArgumentException('Invalid device list filters.');
-                }
-            }
-            $page = $query['page'] ?? '1';
-            $size = $query['size'] ?? '25';
-            if (!ctype_digit($page) || !ctype_digit($size) || strlen($page) > 6 || strlen($size) > 3) {
-                throw new \InvalidArgumentException('Invalid device list filters.');
-            }
-            $criteria = new DeviceListCriteria($query['q'] ?? '', $query['state'] ?? 'all', (int) $page, (int) $size, $query['status'] ?? 'all', $query['sort'] ?? 'name', $query['direction'] ?? 'asc');
+            $criteria = DeviceListParameters::parse($request->query->all());
             $result = $listDevices($criteria);
         } catch (InventoryAccessDenied $error) {
             return new JsonResponse(['error' => $error->getMessage()], $error->unauthenticated ? 401 : 403, $headers);
@@ -57,6 +46,6 @@ final class DeviceListController
                 'pageSize' => $criteria->pageSize, 'hasNext' => $result->hasNext], 200, $headers);
         }
 
-        return new Response($twig->render('inventory/devices.html.twig', ['result' => $result, 'criteria' => $criteria]), 200, $headers);
+        return new Response($twig->render('inventory/devices.html.twig', ['result' => $result, 'criteria' => $criteria, 'filters' => DeviceListParameters::encode($criteria)]), 200, $headers);
     }
 }
