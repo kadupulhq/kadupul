@@ -472,17 +472,22 @@ function form_actions() {
 		exit;
 	}
 
+	$selected_items_html = (isset($user_array) ? serialize($user_array) : '');
+	if (get_nfilter_request_var('drp_action') == '2') { // copy uses a scalar ID, not a serialized selection
+		$selected_items_html = (string) $user_id;
+	}
+	$selected_items_html = htmlspecialchars($selected_items_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	$selected_items_html = str_replace('`', '&#96;', $selected_items_html);
+	$action_html = htmlspecialchars((string) get_nfilter_request_var('drp_action'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	$action_html = str_replace('`', '&#96;', $action_html);
+
 	print "<tr>
 		<td class='saveRow'>
 			<input type='hidden' name='action' value='actions'>";
 
-	if (get_nfilter_request_var('drp_action') == '2') { // copy
-		print "<input type='hidden' name='selected_items' value='" . $user_id . "'>";
-	} else {
-		print "<input type='hidden' name='selected_items' value='" . (isset($user_array) ? serialize($user_array) : '') . "'>";
-	}
+	print "<input type='hidden' name='selected_items' value='$selected_items_html'>";
 
-	print "<input type='hidden' name='drp_action' value='" . html_escape(get_nfilter_request_var('drp_action')) . "'>
+	print "<input type='hidden' name='drp_action' value='$action_html'>
 		$save_html
 		</td>
 	</tr>";
