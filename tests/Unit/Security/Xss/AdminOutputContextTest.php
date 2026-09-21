@@ -8,8 +8,9 @@ test('admin search fields preserve literal text in a single attribute', function
 	$source = file_get_contents($root . '/' . $file);
 	$lines = explode("\n", preg_replace('/<\?php\s+print\s+/', '<?php print ', $source));
 	$count = 0;
+	$ids = array();
 	foreach ($lines as $line) {
-		if (strpos($line, "id='filter'") === false || strpos($line, '<input') === false) {
+		if (strpos($line, "get_request_var('filter')") === false || strpos($line, '<input') === false) {
 			continue;
 		}
 		$count++;
@@ -21,10 +22,21 @@ test('admin search fields preserve literal text in a single attribute', function
 		expect($inputs->length)->toBe(1);
 		expect($inputs->item(0)->getAttribute('value'))->toBe($payload);
 		expect($inputs->item(0)->attributes->length)->toBe(5);
+		expect($inputs->item(0)->getAttribute('class'))->toContain('adminFilter');
+		$id = $inputs->item(0)->getAttribute('id');
+		expect($id)->not->toBe('');
+		expect($ids)->not->toContain($id);
+		$ids[] = $id;
+		expect($source)->toContain("<label for='" . $id . "'>");
+		expect($source)->toContain("$('#" . $id . "').val()");
 		expect($document->getElementsByTagName('script')->length)->toBe(0);
 		expect($document->getElementsByTagName('img')->length)->toBe(0);
 	}
 	expect($count)->toBe($expected);
+	$layout = file_get_contents($root . '/include/layout.js');
+	expect($layout)->toContain("$('#filter, #rfilter, .adminFilter').focus()");
+	expect($layout)->toContain("$('#filter, #rfilter, .adminFilter').prop('size', '15')");
+	expect($layout)->toContain("$('#filter, #rfilter, .adminFilter').on('keydown'");
 })->with(array(
 	'user filters' => array('user_admin.php', 7),
 	'group filters' => array('user_group_admin.php', 6),

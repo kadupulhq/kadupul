@@ -1927,7 +1927,7 @@ function user_group() {
 	function applyFilter() {
 		strURL  = 'user_group_admin.php'
 		strURL += '?rows=' + $('#rows').val();
-		strURL += '&filter=' + $('#filter').val();
+		strURL += '&filter=' + $('#g-search').val();
 		strURL += '&header=false';
 		loadPageNoHeader(strURL);
 	}
@@ -1975,10 +1975,10 @@ function user_group() {
 			<table class='filterTable'>
 				<tr>
 					<td>
-						<?php print __('Search');?>
+						<label for='g-search'><?php print __('Search');?></label>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+						<input type='text' class='ui-state-default ui-corner-all adminFilter' id='g-search' size='25' value='<?php
 							print htmlspecialchars((string) get_request_var('filter'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 					</td>
 					<td>
@@ -2266,7 +2266,7 @@ function graph_filter($header_label) {
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&graph_template_id=' + $('#graph_template_id').val();
 		strURL += '&associated=' + $('#associated').is(':checked');
-		strURL += '&filter=' + $('#filter').val();
+		strURL += '&filter=' + $('#graphs').val();
 		strURL += '&header=false';
 		loadPageNoHeader(strURL);
 	}
@@ -2309,10 +2309,10 @@ function graph_filter($header_label) {
 			<table class='filterTable'>
 				<tr>
 					<td>
-						<?php print __('Search');?>
+						<label for='graphs'><?php print __('Search');?></label>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+						<input type='text' class='ui-state-default ui-corner-all adminFilter' id='graphs' size='25' value='<?php
 							print htmlspecialchars((string) get_request_var('filter'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 					</td>
 					<td>
@@ -2389,7 +2389,7 @@ function device_filter($header_label) {
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&host_template_id=' + $('#host_template_id').val();
 		strURL += '&associated=' + $('#associated').is(':checked');
-		strURL += '&filter=' + $('#filter').val();
+		strURL += '&filter=' + $('#devices').val();
 		strURL += '&header=false';
 		loadPageNoHeader(strURL);
 	}
@@ -2432,10 +2432,10 @@ function device_filter($header_label) {
 			<table class='filterTable'>
 				<tr>
 					<td>
-						<?php print __('Search');?>
+						<label for='devices'><?php print __('Search');?></label>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+						<input type='text' class='ui-state-default ui-corner-all adminFilter' id='devices' size='25' value='<?php
 							print htmlspecialchars((string) get_request_var('filter'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 					</td>
 					<td>
@@ -2508,7 +2508,7 @@ function template_filter($header_label) {
 			print rawurlencode((string) get_request_var('id'));?>'
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&associated=' + $('#associated').is(':checked');
-		strURL += '&filter=' + $('#filter').val();
+		strURL += '&filter=' + $('#templates').val();
 		strURL += '&header=false';
 		loadPageNoHeader(strURL);
 	}
@@ -2551,10 +2551,10 @@ function template_filter($header_label) {
 			<table class='filterTable'>
 				<tr>
 					<td>
-						<?php print __('Search');?>
+						<label for='templates'><?php print __('Search');?></label>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+						<input type='text' class='ui-state-default ui-corner-all adminFilter' id='templates' size='25' value='<?php
 							print htmlspecialchars((string) get_request_var('filter'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 					</td>
 					<td>
@@ -2609,7 +2609,7 @@ function tree_filter($header_label) {
 			print rawurlencode((string) get_request_var('id'));?>'
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&associated=' + $('#associated').is(':checked');
-		strURL += '&filter=' + $('#filter').val();
+		strURL += '&filter=' + $('#trees').val();
 		strURL += '&header=false';
 		loadPageNoHeader(strURL);
 	}
@@ -2652,10 +2652,10 @@ function tree_filter($header_label) {
 			<table class='filterTable'>
 				<tr>
 					<td>
-						<?php print __('Search');?>
+						<label for='trees'><?php print __('Search');?></label>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+						<input type='text' class='ui-state-default ui-corner-all adminFilter' id='trees' size='25' value='<?php
 							print htmlspecialchars((string) get_request_var('filter'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 					</td>
 					<td>
@@ -2710,7 +2710,7 @@ function member_filter($header_label) {
 			print rawurlencode((string) get_request_var('id'));?>'
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&associated=' + $('#associated').is(':checked');
-		strURL += '&filter=' + $('#filter').val();
+		strURL += '&filter=' + $('#members').val();
 		strURL += '&header=false';
 		loadPageNoHeader(strURL);
 	}
@@ -2753,10 +2753,10 @@ function member_filter($header_label) {
 			<table class='filterTable'>
 				<tr>
 					<td>
-						<?php print __('Search');?>
+						<label for='members'><?php print __('Search');?></label>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+						<input type='text' class='ui-state-default ui-corner-all adminFilter' id='members' size='25' value='<?php
 							print htmlspecialchars((string) get_request_var('filter'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 					</td>
 					<td>

@@ -2874,9 +2874,9 @@ function setupUserMenu() {
 
 function setupSpecialKeys() {
 	if (!isMobile.any()) {
-		$('#filter, #rfilter').focus();
+		$('#filter, #rfilter, .adminFilter').focus();
 	} else {
-		$('#filter, #rfilter').prop('size', '15');
+		$('#filter, #rfilter, .adminFilter').prop('size', '15');
 	}
 }
 
@@ -3208,7 +3208,7 @@ $(function() {
 		handlePopState();
 	}
 
-	$('#filter, #rfilter').on('keydown', function(event) {
+	$('#filter, #rfilter, .adminFilter').on('keydown', function(event) {
 		if (event.keyCode == 8 && $(this).val() == '') {
 			handlePopState();
 		}
