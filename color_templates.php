@@ -535,16 +535,20 @@ function aggregate_color_template() {
 
 	html_start_box(__('Color Templates'), '100%', '', '3', 'center', 'color_templates.php?action=template_edit');
 
+	$search_html = (string) get_request_var('filter');
+	$search_html = htmlspecialchars($search_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	$search_html = str_replace('`', '&#96;', $search_html);
+
 	$filter_html = '<tr class="even">
 		<td>
 			<form id="form_template">
 				<table class="filterTable">
 					<tr>
 						<td>
-							' . __('Search') . '
+							<label for="filter">' . __('Search') . '</label>
 						</td>
 						<td>
-							<input type="text" class="ui-state-default ui-corner-all" id="filter" size="25" value="' . html_escape_request_var('filter') . '">
+							<input type="text" class="ui-state-default ui-corner-all" id="filter" size="25" value="' . $search_html . '">
 						</td>
 						<td>
 							' . __('Color Templates') . '
