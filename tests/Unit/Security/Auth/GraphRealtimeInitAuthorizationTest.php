@@ -42,12 +42,17 @@ function graph_realtime_init_run(array $scenario) : array {
 	file_put_contents($work . '/lib/rrd.php', "<?php\n");
 	file_put_contents($work . '/php-marker.sh', "#!/bin/sh\nfor a in \"\$@\"; do printf '[%s]' \"\$a\"; done >> '" . $work . "/marker.txt'\necho >> '" . $work . "/marker.txt'\n");
 	chmod($work . '/php-marker.sh', 0700);
+	$pollerExit = (int) ($scenario['poller_exit'] ?? 0);
+	file_put_contents($work . '/php-marker.sh', 'exit ' . $pollerExit . "\n", FILE_APPEND);
 	copy($root . '/graph_realtime.php', $work . '/graph_realtime.php');
 
 	$scenario['config'] = ($scenario['config'] ?? array()) + array(
 		'path_php_binary'     => $work . '/php-marker.sh',
 		'realtime_cache_path' => $work,
 	);
+	if (!empty($scenario['missing_poller'])) {
+		$scenario['config']['path_php_binary'] = $work . '/missing-php';
+	}
 
 	foreach ($scenario['cache'] ?? array() as $id => $contents) {
 		file_put_contents($work . '/user_abc123_lgi_' . $id . '.png', $contents);
@@ -73,6 +78,10 @@ register_shutdown_function(function () {
 });
 
 require getenv('RT_WORK') . '/shipped.php';
+
+function cacti_log($message, $output = false, $environ = 'CMDPHP') {
+	$GLOBALS['calls']['logs'][] = $message;
+}
 
 function get_request_var($name, $default = '') {
 	return $GLOBALS['scenario']['request'][$name] ?? $default;
@@ -171,7 +180,10 @@ function __($text, ...$args) {
 PHP);
 
 	$env = array('RT_SCENARIO' => $work . '/scenario.json', 'RT_CALLS' => $work . '/calls.json', 'RT_WORK' => $work, 'PATH' => getenv('PATH'));
-	$process = proc_open(array(PHP_BINARY, '-d', 'error_reporting=E_ALL & ~E_DEPRECATED', 'graph_realtime.php'), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $work, $env);
+	/* Keep runtime diagnostics captured separately from the JSON response. */
+	$command = array(PHP_BINARY, '-d', 'error_reporting=E_ALL & ~E_DEPRECATED',
+		'-d', 'display_errors=stderr', 'graph_realtime.php');
+	$process = proc_open($command, array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $work, $env);
 
 	fclose($pipes[0]);
 	$stdout = stream_get_contents($pipes[1]);
@@ -225,6 +237,34 @@ test('realtime preserves spaces and shell metacharacters in the executable and s
 	));
 	expect($run['calls']['graph'])->toBeGreaterThan(0);
 });
+
+test('LTS renders after a failed or missing poller without changing the response', function ($missing, $cached) use ($realtimeRequest) {
+	$run = graph_realtime_init_run(array(
+		'request' => $realtimeRequest,
+		'allowed' => array(5),
+		'config' => array('realtime_enabled' => 'on'),
+		'poller_exit' => 7,
+		'missing_poller' => $missing,
+		'cache' => $cached ? array(5 => 'CACHEDPNG') : array()
+	));
+
+	expect($run['polls'])->toHaveCount($missing ? 0 : 1);
+	expect($run['calls']['allowed'])->toBe(array(5));
+	expect($run['calls']['graph'])->toBeGreaterThan(0);
+	if (!is_array($run['response'])) {
+		throw new RuntimeException('Invalid realtime response: ' . $run['raw']);
+	}
+	expect($run['response']['data'])->toBe($cached ? base64_encode('CACHEDPNG') : '');
+	expect(array_keys($run['response']))->toBe(array(
+		'local_graph_id', 'top', 'left', 'ds_step', 'graph_start', 'size', 'thumbnails', 'data', 'image_format'
+	));
+	expect($run['raw'])->not->toContain('Fatal error');
+})->with(array(
+	'failed poller without cache' => array(false, false),
+	'failed poller with cache' => array(false, true),
+	'missing poller without cache' => array(true, false),
+	'missing poller with cache' => array(true, true),
+));
 
 test('an allowed graph costs one permission query per request', function () use ($realtimeRequest) {
 	foreach (array('init', 'countdown') as $action) {
