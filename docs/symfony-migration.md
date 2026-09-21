@@ -588,3 +588,31 @@ Validation failures return 422, revoked access 401/403 and uncertain write resul
 not stored. Labels and errors use the English/French Inventory catalogs. Existing
 site address/map editing, duplication and deletion remain in `sites.php`; LTS is
 unchanged.
+
+### Device creation
+
+`/inventory/devices/new` now uses a Symfony Form and Twig page backed by the
+Inventory `CreateDevice` use case. `PrepareDeviceCreation` reads non-secret
+installation defaults and current template, site and enabled-poller choices.
+Domain validation rejects unknown fields, invalid references at the form boundary,
+unsupported protocols, out-of-range values and invalid SNMPv3 combinations.
+The isolated legacy adapter rechecks the actor, realms and selected references
+before calling `api_device_save` with an enforced zero ID. This preserves template
+associations, poller/cache behavior, automation and plugin save/create hooks.
+
+Configured community strings and passphrases are resolved only in the CLI worker;
+they never populate the HTTP form. Explicit credentials use password fields and
+are cleared on validation failures. Clear **Use configured credentials** before
+entering device-specific secrets. The default enables polling; operators can
+choose Disabled before creating devices that should not be polled yet.
+
+Creation uses stateless CSRF protection, private/no-store responses and a 303
+redirect to the permission-filtered device list. Creating a device does not grant
+visibility permissions. Worker failures and timeouts have an uncertain outcome:
+check the list before retrying. The adapter never retries automatically. A local
+transaction protects database work where possible, but plugin, remote-poller,
+SNMP and filesystem effects are not a distributed transaction. Duplicate names
+and repeated valid submissions retain legacy behavior; creation is not an
+idempotent API. Custom plugin form fields and subsequent graph/query management
+remain on the legacy pages; the standard creation fields and core hooks are
+covered here. Existing legacy URLs and LTS remain unchanged.
