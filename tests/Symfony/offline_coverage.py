@@ -21,6 +21,8 @@ def main():
     output.mkdir(parents=True, exist_ok=False)
     raw = output / 'raw'
     raw.mkdir()
+    diagnostics = output / 'diagnostics'
+    diagnostics.mkdir()
     archive = args.archive.resolve()
     expected = Path(str(archive) + '.sha256').read_text().split()[0]
     if hashlib.sha256(archive.read_bytes()).hexdigest() != expected:
@@ -32,7 +34,9 @@ def main():
 
         def execute(script, network='none', error=None):
             command = ['docker', 'run', '--rm', '--network', network, '--entrypoint', 'php',
+                       '--user', f'{os.getuid()}:{os.getgid()}',
                        '--volume', f'{stage}:/var/www/html', '--volume', f'{raw}:/coverage',
+                       '--volume', f'{diagnostics}:/artifacts',
                        '--volume', f'{ROOT}/tests/Support/Behavior:/harness:ro',
                        '--workdir', '/var/www/html', args.image,
                        '-d', 'pcov.directory=/var/www/html',
