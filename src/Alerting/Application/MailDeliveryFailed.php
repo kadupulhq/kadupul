@@ -11,6 +11,6 @@ final class MailDeliveryFailed extends \RuntimeException
 {
     public function __construct()
     {
-        parent::__construct('Test mail could not be confirmed. Check the installation mail settings and SMTP server logs before retrying.');
+        parent::__construct('Mail could not be confirmed. Check the installation mail settings and SMTP server logs before retrying.');
     }
 }

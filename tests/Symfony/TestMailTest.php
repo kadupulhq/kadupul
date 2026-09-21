@@ -10,6 +10,7 @@ namespace Kadupul\Tests;
 use Kadupul\Alerting\Application\Command\SendTestMail;
 use Kadupul\Alerting\Application\MailDeliveryFailed;
 use Kadupul\Alerting\Infrastructure\Mail\InstallationTestMailDelivery;
+use Kadupul\Alerting\Infrastructure\Mail\SmtpMessageSender;
 use Kadupul\Kernel;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -64,7 +65,7 @@ final class TestMailTest extends TestCase
     public function testInvalidSettingsAreRejectedBeforeSmtp(array $settings): void
     {
         $this->expectException(MailDeliveryFailed::class);
-        (new SendTestMail(new InstallationTestMailDelivery($this->database($settings))))();
+        (new SendTestMail(new InstallationTestMailDelivery($this->database($settings), new SmtpMessageSender())))();
     }
 
     public static function databaseFailures(): iterable
@@ -89,7 +90,7 @@ final class TestMailTest extends TestCase
         self::assertStringContainsString('could not be confirmed', $display);
         self::assertStringNotContainsString('sensitive', $display);
         try {
-            (new InstallationTestMailDelivery($database))->send('Test', 'Test');
+            (new InstallationTestMailDelivery($database, new SmtpMessageSender()))->send('Test', 'Test');
             self::fail('Expected sanitized failure.');
         } catch (MailDeliveryFailed $error) {
             self::assertNull($error->getPrevious());
@@ -99,6 +100,10 @@ final class TestMailTest extends TestCase
     public static function smtpScenarios(): iterable
     {
         yield 'accepted' => ['accept', [], 0, true];
+        yield 'administrator accepted' => ['accept', [], 0, true, true];
+        yield 'administrator rejected without fallback' => ['reject', [], 1, true, true];
+        yield 'administrator lost acknowledgement without fallback' => ['lost', [], 1, true, true];
+        yield 'administrator TLS downgrade refused without fallback' => ['accept', ['settings_smtp_secure' => 'tls'], 1, false, true];
         yield 'authenticated' => ['auth', ['settings_smtp_username' => 'test-user', 'settings_smtp_password' => 'test-secret'], 0, true];
         yield 'none disables automatic STARTTLS' => ['advertise-tls', [], 0, true];
         yield 'connection lost after data' => ['lost', [], 1, true];
@@ -109,7 +114,7 @@ final class TestMailTest extends TestCase
     }
 
     #[DataProvider('smtpScenarios')]
-    public function testConsoleAgainstLoopbackSmtp(string $scenario, array $settings, int $expected, bool $sends): void
+    public function testConsoleAgainstLoopbackSmtp(string $scenario, array $settings, int $expected, bool $sends, bool $administrator = false): void
     {
         $server = stream_socket_server('tcp://127.0.0.1:0', $errno, $error);
         self::assertIsResource($server);
@@ -123,7 +128,19 @@ final class TestMailTest extends TestCase
         }
         fclose($server);
         try {
-            [$status, $display] = $this->console($this->database(array_replace($settings, ['settings_smtp_port' => $port])));
+            $configured = array_replace($settings, ['settings_smtp_port' => $port]);
+            if ($administrator) {
+                $result = AdministratorNotificationTest::bridge($configured);
+                self::assertSame([], $result['legacy'], 'Never fall back after an SMTP attempt.');
+                self::assertSame([[7]], $result['recipients']);
+                $status = count(array_filter($result['logs'], static fn(array $log): bool => str_starts_with($log[0], 'WARNING:'))) > 0 ? 1 : 0;
+                if ($expected === 0) {
+                    self::assertSame([['INFO: Administrative Email accepted by SMTP server.', false, 'MAILER']], $result['logs']);
+                }
+                $display = json_encode($result['logs']);
+            } else {
+                [$status, $display] = $this->console($this->database($configured));
+            }
             pcntl_waitpid($pid, $childStatus);
             self::assertTrue(pcntl_wifexited($childStatus));
             self::assertSame(0, pcntl_wexitstatus($childStatus));
@@ -140,13 +157,19 @@ final class TestMailTest extends TestCase
                 self::assertStringNotContainsString("STARTTLS\r\n", $transcript);
             }
             if ($sends) {
-                self::assertStringContainsString('RCPT TO:<recipient@example.test>', $transcript);
+                self::assertStringContainsString($administrator ? 'RCPT TO:<admin@example.test>' : 'RCPT TO:<recipient@example.test>', $transcript);
                 self::assertStringContainsString('From: Kadupul diagnostic <sender@example.test>', $transcript);
-                self::assertStringContainsString('Subject: Kadupul test email', $transcript);
-                self::assertStringContainsString('This test email was sent by Kadupul using Symfony Mailer.', $transcript);
+                self::assertStringContainsString($administrator ? 'Subject: Administrative warning' : 'Subject: Kadupul test email', $transcript);
+                self::assertStringContainsString($administrator ? '<strong>Storage needs attention.</strong>' : 'This test email was sent by Kadupul using Symfony Mailer.', $transcript);
+                if ($administrator) {
+                    self::assertStringContainsString('Content-Type: text/html', $transcript);
+                    self::assertStringContainsString('Content-Type: text/plain', $transcript);
+                }
             }
             if ($expected === 0) {
-                self::assertStringContainsString('SMTP server accepted', $display);
+                if (!$administrator) {
+                    self::assertStringContainsString('SMTP server accepted', $display);
+                }
             } else {
                 self::assertStringContainsString('before retrying', $display);
                 self::assertStringNotContainsString('SMTP server accepted', $display);

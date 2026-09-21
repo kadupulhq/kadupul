@@ -527,3 +527,41 @@ Existing web test-mail, report attachments and daemon notifications still use th
 legacy mailer. Migrating those callers and removing PHPMailer are follow-up slices.
 Composer locks the new component, and offline archives include its production
 dependencies. No vendor directories are tracked. LTS is unchanged.
+
+
+## Administrator notification migration
+
+On main, existing `admin_email()` callers now enter a Symfony-composed Alerting
+`NotifyAdministrator` use case through `include/admin_notifications.php`.
+Alerting owns the enabled/configured policy and the delivery decision. IdentityAccess
+owns account contact lookup and exposes it through `UserContacts`; an Alerting
+adapter maps that contract to its recipient model. Domain and application code
+contain no globals, legacy functions, database calls or Symfony dependencies.
+
+Legacy infrastructure adapters deliberately reuse `read_config_option()` and the
+active collector database connection. This preserves installation defaults,
+preferences and remote-collector context without loading a second installation
+configuration/database connection. Disabled or unset administrators are checked
+before account lookup; unknown accounts and empty addresses retain their warnings.
+The bridge catches notification failures so collection continues and logs a generic
+uncertain-outcome warning without raw exception messages. SMTP acceptance is logged
+without recipient addresses, subjects or credentials.
+
+A single ordinary SMTP host, explicit sender name and bare sender/recipient
+addresses now use the same Symfony SMTP sender as `kadupul:mail:test`. Administrative
+HTML messages retain a plain-text alternative. Required STARTTLS, implicit TLS,
+certificate verification and sanitized errors are shared with the tested mail path.
+The existing callers still supply their translated subject/body and control their
+own notification frequency; this change introduces no schedule, queue or retries.
+
+Compatibility is chosen before any send attempt. PHP mail, sendmail, host lists or
+embedded host protocols/ports, complex address formats, implicit sender-name lookup,
+legacy template substitutions and other unsupported SMTP settings retain the
+legacy delivery path. The literal SMTP username `0` also retains that path because
+Symfony treats it as empty during authentication. Once Symfony SMTP is attempted,
+errors or lost acknowledgements never trigger a second send through PHPMailer.
+
+Reports and attachments still use their existing mailer. Legacy functions remain
+inside the compatibility adapters until their callers/configurations are migrated;
+this is not removal of PHPMailer or all global state. New source is included in
+offline bundles. LTS is unchanged.

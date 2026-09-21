@@ -1,5 +1,15 @@
 # Agent instructions
 
+## GitHub metadata
+
+- Always add appropriate metadata when creating or updating pull requests and bug
+  issues. Use existing labels for the target branch, affected technology, and
+  change type; bug issues must include `bug`.
+- Add applicable existing milestones and projects, and link related issues or
+  pull requests. Do not invent milestones, project membership, or ownership.
+- Main migration work uses `branch:main`; leave LTS unchanged unless explicitly
+  requested.
+
 ## GitHub review feedback
 
 Always address pull-request feedback using GitHub's native review workflow,

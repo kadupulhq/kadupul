@@ -4866,43 +4866,8 @@ function appendHeaderSuppression($url) {
 }
 
 function admin_email($subject, $message) {
-	if (read_config_option('admin_user') > 0) {
-		if (read_config_option('notify_admin') == 'on') {
-			$admin_details = db_fetch_row_prepared('SELECT full_name, email_address
-				FROM user_auth
-				WHERE id = ?',
-				array(read_config_option('admin_user')));
-
-			if (cacti_sizeof($admin_details)) {
-				$email = read_config_option('settings_from_email');
-				$name  = read_config_option('settings_from_name');
-
-				if ($name != '') {
-					$from = "$name <$email>";
-				} else {
-					$from = $email;
-				}
-
-				if ($admin_details['email_address'] != '') {
-					if ($admin_details['full_name'] != '') {
-						$to = '"' . $admin_details['full_name'] . '" <' . $admin_details['email_address'] . '>';
-					} else {
-						$to = $admin_details['email_address'];
-					}
-
-					send_mail($to, $from, $subject, $message, '', '', true);
-				} else {
-					cacti_log('WARNING: Primary Admin account does not have an email address!  Unable to send administrative Email.', false, 'SYSTEM');
-				}
-			} else {
-				cacti_log('WARNING: Primary Admin account set to an invalid user!  Unable to send administrative Email.', false, 'SYSTEM');
-			}
-		} else {
-			cacti_log('WARNING: Primary Admin account notifications disabled!  Unable to send administrative Email.', false, 'SYSTEM');
-		}
-	} else {
-		cacti_log('WARNING: Primary Admin account not set!  Unable to send administrative Email.', false, 'SYSTEM');
-	}
+	require_once dirname(__DIR__) . '/include/admin_notifications.php';
+	kadupul_notify_administrator((string) $subject, (string) $message);
 }
 
 function send_mail($to, $from, $subject, $body, $attachments = '', $headers = '', $html = false) {

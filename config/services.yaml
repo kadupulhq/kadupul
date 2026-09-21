@@ -84,3 +84,20 @@ services:
 
     Kadupul\Alerting\Application\Port\TestMailDelivery:
         alias: Kadupul\Alerting\Infrastructure\Mail\InstallationTestMailDelivery
+
+    Kadupul\Alerting\Infrastructure\Mail\SmtpMessageSender: ~
+    Kadupul\Alerting\Application\Command\NotifyAdministrator: ~
+    Kadupul\Alerting\Infrastructure\Legacy\LegacyAdministratorPreferences: ~
+    Kadupul\Alerting\Infrastructure\Legacy\LegacyAdministratorRecipients: ~
+    Kadupul\Alerting\Infrastructure\Legacy\LegacyAdministrativeMailDelivery: ~
+    Kadupul\Alerting\Infrastructure\Legacy\AdministratorNotificationBridge:
+        public: true
+
+    Kadupul\Alerting\Application\Port\AdministratorNotificationPreferences:
+        alias: Kadupul\Alerting\Infrastructure\Legacy\LegacyAdministratorPreferences
+    Kadupul\Alerting\Application\Port\AdministratorRecipients:
+        alias: Kadupul\Alerting\Infrastructure\Legacy\LegacyAdministratorRecipients
+    Kadupul\Alerting\Application\Port\AdministrativeMailDelivery:
+        alias: Kadupul\Alerting\Infrastructure\Legacy\LegacyAdministrativeMailDelivery
+    Kadupul\IdentityAccess\Contract\UserContacts:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyUserContacts
