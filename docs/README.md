@@ -6,4 +6,4 @@ SPDX-License-Identifier: GPL-2.0-or-later
 
 # Kadupul documentation
 
-Documentation is available at https://kadupul.org/.
+Documentation is available at https://kadupulhq.github.io/website/.
