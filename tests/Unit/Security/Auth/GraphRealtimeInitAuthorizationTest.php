@@ -26,7 +26,7 @@ require_once dirname(__DIR__, 3) . '/Helpers/RrdGraphHarness.php';
 
 function graph_realtime_init_run(array $scenario) : array {
 	$root = dirname(__DIR__, 4);
-	$work = sys_get_temp_dir() . '/cacti-rt-' . bin2hex(random_bytes(6));
+	$work = sys_get_temp_dir() . '/cacti rt;literal-' . bin2hex(random_bytes(6));
 
 	mkdir($work . '/include', 0700, true);
 	mkdir($work . '/lib', 0700);
@@ -34,7 +34,7 @@ function graph_realtime_init_run(array $scenario) : array {
 	$fsrc    = file_get_contents($root . '/lib/functions.php');
 	$shipped = "<?php\n";
 
-	foreach (array('cacti_escapeshellcmd', 'cacti_escapeshellarg', 'cacti_sizeof') as $name) {
+	foreach (array('cacti_exec', 'cacti_sizeof') as $name) {
 		$shipped .= cacti_test_rrd_function_source($fsrc, $name) . "\n\n";
 	}
 
@@ -59,6 +59,7 @@ function graph_realtime_init_run(array $scenario) : array {
 <?php
 $scenario = json_decode(file_get_contents(getenv('RT_SCENARIO')), true);
 $config   = array('base_path' => '/opt/kadupul', 'url_path' => '/', 'cacti_server_os' => 'unix');
+$config['base_path'] = $scenario['base_path'] ?? $config['base_path'];
 $calls    = array('graph' => 0, 'graph_users' => array(), 'allowed' => array());
 $_SESSION = array('sess_user_id' => 7);
 
@@ -209,6 +210,20 @@ test('an allowed graph is polled once with the 1.2.31 poller arguments and respo
 		->and($run['calls']['graph'])->toBeGreaterThan(0)
 		->and($run['response']['data'])->toBe('')
 		->and(array_keys($run['response']))->toBe(array('local_graph_id', 'top', 'left', 'ds_step', 'graph_start', 'size', 'thumbnails', 'data', 'image_format'));
+});
+
+test('realtime preserves spaces and shell metacharacters in the executable and script paths', function () use ($realtimeRequest) {
+	$run = graph_realtime_init_run(array(
+		'request' => $realtimeRequest,
+		'allowed' => array(5),
+		'config' => array('realtime_enabled' => 'on'),
+		'base_path' => '/opt/kadupul path;literal$(not-a-command)'
+	));
+
+	expect($run['polls'])->toBe(array(
+		'[-q][/opt/kadupul path;literal$(not-a-command)/poller_realtime.php][--graph=5][--interval=10][--poller_id=abc123]'
+	));
+	expect($run['calls']['graph'])->toBeGreaterThan(0);
 });
 
 test('an allowed graph costs one permission query per request', function () use ($realtimeRequest) {

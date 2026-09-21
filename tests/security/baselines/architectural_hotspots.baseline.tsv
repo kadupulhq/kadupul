@@ -18,7 +18,6 @@ cmd_exec	./cli/splice_rrd.php:909		$result      = exec($command, $output, $retur
 cmd_exec	./cli/update_heartbeat.php:277				$result = exec($command, $output, $return_code);
 cmd_exec	./cmd.php:313			$cactiphp = proc_open($command, $cactides, $pipes);
 cmd_exec	./cmd_realtime.php:115				$cactiphp = proc_open(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/script_server.php') . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
-cmd_exec	./graph_realtime.php:299		shell_exec($php_binary . ' -q ' . $script_path . ' ' . $args);
 cmd_exec	./install/functions.php:542				$myinfo = @json_decode(shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/cli/import_package.php') . ' --filename=' . cacti_escapeshellarg("/$path/$xmlfile") . ' --info'), true);
 cmd_exec	./install/install.php:125			print '<li>' . __('The shell_exec() and/or exec() functions are currently blocked.') . '<br>' . __('See the PHP Manual: <a href="http://php.net/manual/en/ini.core.php#ini.disable-functions">Disable Functions</a>.') .'</li>';
 cmd_exec	./lib/database.php:2705		$process = proc_open(trim($cmd_string), $descriptors, $pipes, null, $env);
@@ -38,7 +37,6 @@ cmd_exec	./lib/functions.php:7985	 * shell_exec() and expect a string return val
 cmd_exec	./lib/installer.php:3464				$results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:3496						shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
 cmd_exec	./lib/installer.php:3552						$results = shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
-cmd_exec	./lib/installer.php:855							$output = shell_exec(
 cmd_exec	./lib/maintenance_cli.php:250		$process = proc_open($argv, array(1 => array('pipe', 'w')), $pipes);
 cmd_exec	./lib/ping.php:170					$result = shell_exec('ping -s ' . cacti_escapeshellarg($this->host['hostname']) . ' 56 ' . (int) $this->retries);
 cmd_exec	./lib/ping.php:172					$result = shell_exec('ping -m ' . ceil($this->timeout/1000) . ' -n ' . $this->retries . ' ' . cacti_escapeshellarg($this->host['hostname']));
@@ -276,7 +274,7 @@ dynamic_include	./color_templates.php:179		include_once($config['base_path'] . '
 dynamic_include	./color_templates.php:379		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./color_templates.php:429		include_once($config['base_path'] . '/lib/api_aggregate.php');
 dynamic_include	./color_templates.php:485		include_once($config['base_path'] . '/lib/api_aggregate.php');
-dynamic_include	./graph_realtime.php:481	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
+dynamic_include	./graph_realtime.php:485	    <?php include($config['base_path'] . '/include/global_session.php'); ?>
 dynamic_include	./include/auth.php:140					require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/auth.php:200				require_once($config['base_path'] . '/auth_login.php');
 dynamic_include	./include/csrf.php:26	require_once($config['include_path'] .'/vendor/csrf/csrf-conf.php');
