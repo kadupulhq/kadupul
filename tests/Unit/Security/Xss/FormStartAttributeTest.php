@@ -125,9 +125,18 @@ test('paired form helpers encode JavaScript values and preserve non-AJAX output'
 	expect($scripts->item(0)->getAttribute('nonce'))->toBe('test-nonce');
 	$script = $scripts->item(0)->textContent;
 	expect(preg_match('/var formId = ([^\r\n]+);/', $script, $idMatch))->toBe(1);
-	expect(json_decode(trim($idMatch[1]), true))->toBe(trim($id));
+	$renderedId = $document->getElementsByTagName('form')->item(0)->getAttribute('id');
+	expect(json_decode(trim($idMatch[1]), true))->toBe($renderedId);
 	expect(preg_match('/strURL = ([^\r\n]+);/', $script, $actionMatch))->toBe(1);
-	expect(json_decode(trim($actionMatch[1]), true))->toBe($action);
+	$renderedAction = $document->getElementsByTagName('form')->item(0)->getAttribute('action');
+	expect(json_decode(trim($actionMatch[1]), true))->toBe($renderedAction);
+	if (strpos($payload, chr(255)) !== false) {
+		expect($renderedId)->toBe('form_invalid' . "\u{FFFD}");
+		expect($renderedAction)->toBe('host.php?filter=invalid' . "\u{FFFD}");
+	} else {
+		expect($renderedId)->toBe(trim($id));
+		expect($renderedAction)->toBe($action);
+	}
 	expect($script)->toContain('$(document.getElementById(formId))');
 	expect($script)->toContain("form.on('submit'");
 	expect($script)->toContain("$.post(strURL, json)");
@@ -144,5 +153,6 @@ test('paired form helpers encode JavaScript values and preserve non-AJAX output'
 	'entities' => '&#39;&quot;&amp;',
 	'URL syntax' => '7&tab=other#fragment%20+ space',
 	'CSS punctuation' => 'a:b.c[d]',
+	'invalid UTF-8' => 'invalid' . chr(255),
 	'backtick' => chr(96) . ' value',
 ));

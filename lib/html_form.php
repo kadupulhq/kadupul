@@ -1533,7 +1533,9 @@ function form_end($ajax = true) {
 
 	print '</form>' . PHP_EOL;
 
-	if ($ajax) { ?>
+	if ($ajax) {
+		$json_flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE;
+		?>
 		<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 		var formArray = [];
 		var changed = false;
@@ -1597,7 +1599,7 @@ function form_end($ajax = true) {
 
 		$(function() {
 			var formId = <?php
-				print json_encode((string) $form_id, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+				print json_encode((string) $form_id, $json_flags);
 			?>;
 			var form = $(document.getElementById(formId));
 			formArray[formId] = form.serializeForm();
@@ -1610,7 +1612,7 @@ function form_end($ajax = true) {
 				$(this).find('input, textarea, select').prop('disabled', false);
 
 				strURL = <?php
-					print json_encode((string) $form_action, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+					print json_encode((string) $form_action, $json_flags);
 				?>;
 				strURL += (strURL.indexOf('?') >= 0 ? '&':'?') + 'header=false';
 
