@@ -34,6 +34,34 @@ function document($html) {
 dataset('pagination payloads', array('items.php', 'réseau 日本語', '\'" autofocus onfocus="alert(1)',
 	'\'><img src=x onerror=alert(1)><script>alert(1)</script>', '&#39;&quot;&amp;', '&amp;#39;', chr(96), 'a.b:c[d]'));
 
+$baseline = json_decode(file_get_contents(__DIR__ . '/pagination-alert-baseline.json'), true, 512, JSON_THROW_ON_ERROR);
+$affectedFiles = array_values(array_unique(array_column($baseline['issues'], 'file')));
+dataset('pagination affected subsystems', $affectedFiles);
+
+test('recorded scanner paths are unique and point to pagination callers', function () use ($baseline, $affectedFiles) {
+	expect(count($baseline['issues']))->toBe(96);
+	expect(count(array_unique(array_column($baseline['issues'], 'key'))))->toBe(96);
+	expect(count($affectedFiles))->toBe(29);
+	foreach ($affectedFiles as $file) {
+		$source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
+		expect($source)->toContain('html_nav_bar(');
+	}
+});
+
+test('affected subsystems retain safe pagination with hostile query values in both modes', function ($file, $counted, $payload) {
+	// Representative URLs exercise the shared renderer, not a full controller/DB integration.
+	$base = $file . '?action=edit&id=' . $payload;
+	$xpath = document(html_nav_bar($base, 3, 2, 10, 100, 30, 'Rows', 'page', 'main', $counted));
+	$previous = $xpath->query('//div[@class="navBarNavigationPrevious"]/a')->item(0);
+	$next = $xpath->query('//div[@class="navBarNavigationNext"]/a')->item(0);
+	expect($previous->getAttribute('data-url'))->toBe(decoded($base . '&page=1'));
+	expect($next->getAttribute('data-url'))->toBe(decoded($base . '&page=3'));
+	foreach ($xpath->query('//a') as $link) {
+		expect($link->getAttribute('data-return'))->toBe('main');
+		expect($link->attributes->length)->toBe($link->hasAttribute('class') ? 4 : 3);
+	}
+})->with('pagination affected subsystems')->with(array(false, true))->with('pagination payloads');
+
 test('navigation attributes are encoded in counted and count-free modes', function ($counted, $payload) {
 	$xpath = document(html_nav_bar($payload, 3, 5, 10, 200, 30, 'Rows', $payload, $payload, $counted));
 	$links = $xpath->query('//a');
