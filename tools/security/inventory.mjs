@@ -18,7 +18,7 @@ function sonarKey(alert) {
 
 // Reports are data, never executable markup supplied by the remote scanner.
 function markdownText(value) {
-  return String(value).replace(/[&<>|`\[\]\\*_!\r\n]/g, char => `&#${char.charCodeAt(0)};`);
+  return String(value).replace(/[&<>|`[\]\\*_!\r\n]/g, char => `&#${char.codePointAt(0)};`);
 }
 
 export function reconcile(issues, alerts) {

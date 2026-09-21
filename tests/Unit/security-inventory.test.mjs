@@ -10,14 +10,16 @@ import { collect, reconcile, priority } from '../../tools/security/inventory.mjs
 
 const issue = { key: 'sonar-1', rule: 'phpsecurity:S2076', component: 'project:host.php', line: 180 };
 
-test('device reindex link cancels navigation and supplies a token to the POST loader', () => {
+test('device reindex button supplies a token to the POST loader without submitting a form', () => {
   const source = readFileSync(new URL('../../host.php', import.meta.url), 'utf8');
   const line = source.split('\n').find(value => value.includes('host.php?action=reindex&host_id='));
   assert.match(line, /data-post-action='true'/);
+  assert.match(line, /<button type='button'/);
+  assert.ok(!line.includes(' href='));
   const handler = line.match(/onclick='([^']+)'/)[1];
   const calls = [];
   const result = runInNewContext(`(function() { ${handler} }).call(link)`, {
-    link: { href: 'host.php?action=reindex&host_id=7' },
+    link: { dataset: { url: 'host.php?action=reindex&host_id=7' } },
     csrfMagicToken: 'test-token',
     loadPageUsingPost: (url, body) => calls.push([url, body.__csrf_magic, body.header]),
   });
