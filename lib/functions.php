@@ -7857,8 +7857,8 @@ function cacti_input_string_is_safe($input_string) {
  * arguments are known separately; use exec_with_timeout() when migrating legacy
  * shell_exec() callers that already assemble the command string.
  *
- * Requires PHP 7.4+ (array form of proc_open). The 1.2.x branch targets PHP 7.4
- * as its minimum, so no version gate is needed.
+ * Array-form proc_open is available since PHP 7.4. This branch requires PHP 8.0+,
+ * so no version gate is needed.
  *
  * @param string $binary   Path to the executable. Must not start with '-'.
  * @param array  $args     Ordered argument strings (not shell-escaped).
