@@ -89,6 +89,15 @@ is ascending name. Device ID breaks equal-value ties in the same direction,
 keeping pages deterministic for an unchanged inventory. Text ordering follows the
 installation database collation. Sorting is retained in page and CSV links;
 lookahead avoids stale permission counts.
+The `site` filter accepts an empty value for all sites, `0` for unassigned
+(site ID zero), or a positive site ID. Inventory's `ListDeviceSites` query obtains
+choices through the `DeviceSites` port; its legacy adapter uses the same device
+visibility policy as the list. Only sites with accessible, non-deleted devices
+are named. Hidden, empty and deleted-only sites are omitted. An unavailable
+selected site retains a generic label without revealing its name. Search, state,
+status and site intersect before pagination. Site selection survives CSV and
+editor navigation; this does not change device site assignments.
+
 All responses are private/no-store, and mutation methods are rejected.
 
 “Export this page (CSV)” uses `/app.php/inventory/devices.csv` with the same

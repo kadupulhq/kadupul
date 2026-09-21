@@ -59,7 +59,7 @@ def verify_device_edit(harness, session, user_id, allowed_id, hidden_id, check):
         body = response.read().decode()
         return response.status, body
     context = {'q': 'inventory-fixture & rack', 'state': 'enabled', 'status': 'up',
-               'sort': 'hostname', 'direction': 'desc', 'page': '2', 'size': '50'}
+               'sort': 'hostname', 'direction': 'desc', 'page': '2', 'size': '50', 'site': '0'}
     edit_query = {'list[' + key + ']': value for key, value in context.items()}
     edit_query['list[return_url]'] = 'https://attacker.invalid/'
     context_path = path + '?' + urlencode(edit_query)
