@@ -1512,7 +1512,13 @@ function form_start($action, $id = '', $multipart = false) {
 
 	$form_action = $action;
 
-	print "<form class='cactiFormStart' id='$form_id' name='$form_id' action='$form_action' autocomplete='off' method='post'" . ($multipart ? " enctype='multipart/form-data'":'') . ">";
+	$form_id_html = htmlspecialchars((string) $form_id, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	$form_id_html = str_replace('`', '&#96;', $form_id_html);
+	$form_action_html = htmlspecialchars((string) $form_action, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	$form_action_html = str_replace('`', '&#96;', $form_action_html);
+
+	print "<form class='cactiFormStart' id='$form_id_html' name='$form_id_html' action='$form_action_html'"
+		. " autocomplete='off' method='post'" . ($multipart ? " enctype='multipart/form-data'":'') . ">";
 }
 
 /**
