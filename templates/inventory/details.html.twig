@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ details.device.description }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
+    <p><a href="{{ path('inventory_devices', filters) }}">Back to devices</a></p>
+    <h1>{{ details.device.description }}</h1>
+    <dl>
+        <dt>ID</dt><dd>{{ details.device.id }}</dd>
+        <dt>Hostname</dt><dd>{{ details.device.hostname }}</dd>
+        <dt>Status</dt><dd>{{ details.device.disabled ? 'Disabled' : details.device.status }}</dd>
+        <dt>Site</dt><dd>{{ details.siteId == 0 ? 'Unassigned' : (details.siteName ?? 'Unavailable') }}</dd>
+        <dt>Location</dt><dd>{{ details.device.location }}</dd>
+        <dt>External ID</dt><dd>{{ details.device.externalId }}</dd>
+    </dl>
+    <h2>Notes</h2>
+    {% if details.notes == '' %}<p>No notes.</p>{% else %}<pre>{{ details.notes }}</pre>{% endif %}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
+    <p><a href="{{ path('inventory_device_edit', {id: details.device.id, list: filters}) }}">Edit device</a></p>
+</main>
+{% endblock %}

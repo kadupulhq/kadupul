@@ -48,6 +48,8 @@ def verify_inventory(harness, session, user_id, check):
     verify_device_edit(harness, session, user_id, allowed[0], ids[0], check)
     from site_scenarios import verify_sites
     verify_sites(harness, session, user_id, ids, allowed, listing, export, check)
+    from details_scenarios import verify_details
+    verify_details(harness, session, user_id, allowed[0], ids[0], listing, check)
     first = listing(q='inventory-fixture')
     second = listing(q='inventory-fixture', page=2)
     check(len(first['devices']) == 25 and first['hasNext'] and len(second['devices']) == 2 and not second['hasNext'],
@@ -154,6 +156,7 @@ def verify_inventory(harness, session, user_id, check):
             super().__init__()
             self.links = []
             self.edits = []
+            self.details = []
             self.selected = []
 
         def handle_starttag(self, tag, attributes):
@@ -162,6 +165,8 @@ def verify_inventory(harness, session, user_id, check):
                 self.links.append(attrs['href'])
             if tag == 'a' and '/edit?' in attrs.get('href', ''):
                 self.edits.append(attrs['href'])
+            if tag == 'a' and '/inventory/devices/' in attrs.get('href', '') and '/edit' not in attrs.get('href', ''):
+                self.details.append(attrs['href'])
             if tag == 'option' and 'selected' in attrs:
                 self.selected.append(attrs.get('value'))
 
@@ -172,8 +177,8 @@ def verify_inventory(harness, session, user_id, check):
             html.feed(response.read().decode())
         check(all(value in html.selected for value in ('down', 'hostname', 'desc')) and len(html.links) == 2,
               'Twig selects status and renders CSV plus pagination')
-        check(bool(html.edits), 'filtered list links to device editors')
-        for link in html.edits:
+        check(bool(html.edits) and bool(html.details), 'filtered list links to device details and editors')
+        for link in html.edits + html.details:
             context = parse_qs(urlsplit(link).query)
             check(context.get('list[q]') == ['inventory-fixture']
                   and context.get('list[status]') == ['down']

@@ -146,6 +146,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Added
 
+- Add a Symfony device details page with permission-filtered metadata, site, status and escaped notes, preserving inventory navigation.
+
 - Filter Symfony Inventory by site, with permission-aware site choices and preserved list/export/editor context.
 
 - Show and search device location and external ID in Symfony Inventory, and append both fields to the current-page CSV export.
