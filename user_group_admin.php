@@ -525,12 +525,18 @@ function form_actions() {
 		exit;
 	}
 
+	$selected_items_html = (isset($group_array) ? serialize($group_array) : '');
+	$selected_items_html = htmlspecialchars($selected_items_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	$selected_items_html = str_replace('`', '&#96;', $selected_items_html);
+	$action_html = htmlspecialchars((string) get_nfilter_request_var('drp_action'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	$action_html = str_replace('`', '&#96;', $action_html);
+
 	print "<tr>
 		<td class='saveRow'>
 			<input type='hidden' name='action' value='actions'>";
 
-	print "<input type='hidden' name='selected_items' value='" . (isset($group_array) ? serialize($group_array) : '') . "'>";
-	print "<input type='hidden' name='drp_action' value='" . html_escape(get_nfilter_request_var('drp_action')) . "'>
+	print "<input type='hidden' name='selected_items' value='$selected_items_html'>";
+	print "<input type='hidden' name='drp_action' value='$action_html'>
 		$save_html
 		</td>
 	</tr>";
