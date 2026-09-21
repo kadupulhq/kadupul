@@ -38,7 +38,8 @@ test('search fields preserve literal values and existing attributes', function (
 		expect($input->getAttribute('type'))->toBe('text');
 		expect($input->getAttribute('class'))->toBe('ui-state-default ui-corner-all');
 		expect($input->getAttribute('size'))->toBe($ids[$index] === 'rfilter' ? '45' : '25');
-		$hasName = $file === 'tree.php' && $ids[$index] !== 'filter';
+		$namedFilters = array('data_templates.php', 'data_input.php', 'data_queries.php', 'gprint_presets.php', 'cdef.php');
+		$hasName = ($file === 'tree.php' && $ids[$index] !== 'filter') || in_array($file, $namedFilters, true);
 		expect($input->attributes->length)->toBe($hasName ? 6 : 5);
 		if ($hasName) {
 			expect($input->getAttribute('name'))->toBe($ids[$index]);
@@ -58,6 +59,12 @@ test('search fields preserve literal values and existing attributes', function (
 	'discovered devices' => array('automation_devices.php', array('filter')),
 	'discovery networks' => array('automation_networks.php', array('filter')),
 	'automation graph rules' => array('automation_graph_rules.php', array('filter')),
+	'data templates' => array('data_templates.php', array('filter')),
+	'data inputs' => array('data_input.php', array('filter')),
+	'data queries' => array('data_queries.php', array('filter')),
+	'GPRINT presets' => array('gprint_presets.php', array('filter')),
+	'CDEFs' => array('cdef.php', array('filter')),
+	'VDEFs' => array('vdef.php', array('filter')),
 ))->with(array(
 	'ordinary search' => 'router 42',
 	'empty search' => '',
