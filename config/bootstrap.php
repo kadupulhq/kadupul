@@ -7,6 +7,7 @@
 
 use Kadupul\Kernel;
 
+require_once dirname(__DIR__) . '/include/runtime.php';
 require_once dirname(__DIR__) . '/include/vendor/autoload.php';
 
 $environment = $_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? (getenv('APP_ENV') ?: 'prod');

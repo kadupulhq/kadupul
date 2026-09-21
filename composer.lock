@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ecf5293c45c3d31b93a24dc5fc2806d0",
+    "content-hash": "868ec99cf96fa75fc098e49de6d36a56",
     "packages": [
         {
             "name": "ezyang/htmlpurifier",
@@ -5620,7 +5620,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.2",
+        "php": ">=8.4",
         "ext-pdo": "*",
         "ext-phar": "*",
         "ext-dom": "*",
@@ -5641,7 +5641,7 @@
     },
     "platform-dev": {},
     "platform-overrides": {
-        "php": "8.2.0"
+        "php": "8.4.0"
     },
     "plugin-api-version": "2.9.0"
 }

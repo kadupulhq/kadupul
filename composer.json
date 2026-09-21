@@ -9,7 +9,7 @@
     "type": "project",
     "license": "GPL-3.0-or-later",
     "require": {
-        "php": ">=8.2",
+        "php": ">=8.4",
         "ext-PDO": "*",
         "ext-Phar": "*",
         "ext-dom": "*",
@@ -46,7 +46,7 @@
     "prefer-stable": true,
     "config": {
         "platform": {
-            "php": "8.2.0"
+            "php": "8.4.0"
         },
         "sort-packages": true,
         "vendor-dir": "./include/vendor"

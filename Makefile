@@ -4,7 +4,7 @@
 # observations. Golden files are the compatibility specification a Kadupul
 # rewrite must satisfy; they never update as a side effect of running tests.
 
-PHP_VERSION ?= 8.2
+PHP_VERSION ?= 8.4
 TARGET      ?= cacti-1.2.31
 BEHAVIOR    := PHP_VERSION=$(PHP_VERSION) ./tests/bin/behavior
 

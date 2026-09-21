@@ -12,6 +12,8 @@
    include/config.php for user configurable settings.
 
 */
+require_once __DIR__ . '/runtime.php';
+
 /* load cacti version from file */
 $cacti_version_file = dirname(__FILE__) . '/cacti_version';
 

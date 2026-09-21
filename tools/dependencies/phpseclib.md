@@ -4,7 +4,7 @@
 - `lts/1.2`: Composer-managed phpseclib `^3.0`, existing PHP >=8.0 support.
 
 The installer floor and Composer platform resolution on main are both 8.1.0.
-The PHP 8.1–8.4 CI matrix remains unchanged. Do not backport this major upgrade
+Main now requires PHP 8.4; CI validates that floor. Do not backport this major upgrade
 or its PHP floor to LTS.
 
 The application RSA key-generation helper uses the `phpseclib4` namespace.

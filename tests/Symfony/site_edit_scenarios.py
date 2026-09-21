@@ -52,6 +52,10 @@ def verify_site_edit(harness, session, user_id, check):
               'site edit form uses a fixed route and discards supplied return URLs')
 
     try:
+        harness.sql(f"UPDATE sites SET name='' WHERE id={site_id}")
+        with session.opener.open(harness.base + '/app.php/inventory/sites?size=100') as response:
+            check(f'Unnamed site #{site_id}' in response.read().decode(), 'blank legacy site names have accessible edit links')
+        harness.sql(f"UPDATE sites SET name='site-edit-fixture' WHERE id={site_id}")
         original = snapshot()
         parser, body = form()
         navigation(body)
@@ -65,11 +69,11 @@ def verify_site_edit(harness, session, user_id, check):
             status, body, _ = post(fields | invalid)
             check(status == 422 and snapshot() == original, 'site validation and extra-field rejection leave all columns unchanged')
             navigation(body)
-        valid = fields | {'site_edit[name]': ' <site>東京 ', 'site_edit[notes]': '<script>alert(1)</script>\n  東京 notes  '}
+        valid = fields | {'site_edit[name]': ' <site>東京 ', 'site_edit[notes]': '<script>alert(1)</script>\r\n  東京 notes  '}
         status, body, location = post(valid)
         saved = snapshot()
         check(status == 200 and 'Site saved.' in body and parse_qs(urlsplit(location).query).get('saved') == ['1'], 'site save redirects to a confirmation')
-        check(saved['name'] == '<site>東京' and saved['notes'] == valid['site_edit[notes]'], 'site save preserves Unicode notes and trims name')
+        check(saved['name'] == '<site>東京' and saved['notes'] == valid['site_edit[notes]'].replace('\r\n', '\n'), 'site save preserves Unicode notes and trims name')
         check({k: v for k, v in saved.items() if k not in ('name', 'notes')} == {k: v for k, v in original.items() if k not in ('name', 'notes')},
               'site save preserves address, timezone, map and alternate ID fields')
         check('<script>' not in body and '&lt;script&gt;' in body and '<site>' not in body and '&lt;site&gt;' in body, 'site editor escapes saved names and notes')

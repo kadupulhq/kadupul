@@ -1,6 +1,6 @@
 # Third-party dependency maintenance
 
-Main requires PHP >=8.2. Composer resolves against PHP 8.2.0, and `mise.toml`
+Main requires PHP >=8.4. Composer resolves against PHP 8.4.0, and `mise.toml`
 pins the local development tools. LTS retains its existing distribution model.
 
 ## Composer and npm installs

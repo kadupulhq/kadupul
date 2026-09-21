@@ -718,7 +718,7 @@ class Harness:
             raise RuntimeError('Missing or invalid runtime provenance')
         runtime = '\n'.join(operating_system.splitlines()[:2] + php_version.splitlines()[:1])
         image = run(['docker', 'image', 'inspect', '--format', '{{index .RepoDigests 0}}',
-                     f'php:{os.environ.get("PHP_VERSION", "8.2")}-apache'], check=True)
+                     f'php:{os.environ.get("PHP_VERSION", "8.4")}-apache'], check=True)
         db = run(['docker', 'image', 'inspect', '--format', '{{index .RepoDigests 0}}', 'mariadb:10.11'], check=True)
         packages = self.command('sh', '-c', "dpkg-query -W -f='${Package}=${Version}\\n' rrdtool snmp snmpd", check=True)
         return {'ref': (image['stdout'] or '').strip(),

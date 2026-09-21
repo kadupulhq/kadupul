@@ -19,7 +19,7 @@ installation and never touch a developer database.
 
 The separate `make test-harness-selftest` command also checks native process
 supervision on Linux. That check requires a host PHP CLI with POSIX support;
-run it with `mise exec php@8.1.34 -- make test-harness-selftest`. CI installs
+run it with `mise exec php@8.4.25 -- make test-harness-selftest`. CI installs
 PHP explicitly for this check. Non-Linux hosts run the other self-tests and
 report that native Linux process supervision was not exercised.
 

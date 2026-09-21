@@ -7,9 +7,9 @@ The target is [DDD modules with hexagonal internals](architecture.md), composed 
 
 ## Foundation
 
-Main requires PHP 8.2 or later. `mise.toml` selects PHP 8.3.33 for development,
+Main requires PHP 8.4 or later. `mise.toml` selects PHP 8.4.25 for development,
 Node 22.22.2 for asset builds and Python 3.12.12 for the behavioral harness and
-release builder. CI checks the application on PHP 8.2, 8.3 and 8.4.
+release builder. CI checks the application on PHP 8.4.
 
 Symfony 7.4 owns the migrated application's request lifecycle, service container,
 routes, controllers, responses, console and Twig rendering. Both `public/index.php`

@@ -98,7 +98,7 @@ if ($hasEverything) {
 } else {
 	print '<div class="installErrorImage"><img src=\'../images/kadupul-logo.png\'></div>';
 	print '<div class="installErrorText">';
-	print '<p>' . __('FATAL: We are unable to continue with this installation. In order to install Kadupul, PHP must be at version 5.4 or later.') . '</p>';
+	print '<p>' . __('FATAL: We are unable to continue with this installation. In order to install Kadupul, PHP must be at version 8.4 or later.') . '</p>';
 	print '<ul>';
 	if (!$hasJson) {
 		print '<li>' . __('The php-json module must also be installed.') . '<br>' . __('See the PHP Manual: <a href="http://php.net/manual/en/book.json.php">JavaScript Object Notation</a>.') . '</li>';
