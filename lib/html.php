@@ -2376,20 +2376,30 @@ function html_spikekill_setting($name) {
 }
 
 function html_spikekill_menu_item($text, $icon = '', $class = '', $id = '', $data_graph = '', $subitem = '') {
+	// Keep menu markup separate from values inserted into quoted attributes.
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
 	$output = '<li ';
 
 	if (!empty($id)) {
-		$output .= "id='$id' ";
+		$id_html = htmlspecialchars((string) $id, $escape_flags, 'UTF-8', false);
+		$id_html = str_replace('`', '&#96;', $id_html);
+		$output .= "id='$id_html' ";
 	}
 
 	if (!empty($data_graph)) {
-		$output .= "data-graph='$data_graph' ";
+		$graph_html = htmlspecialchars((string) $data_graph, $escape_flags, 'UTF-8', false);
+		$graph_html = str_replace('`', '&#96;', $graph_html);
+		$output .= "data-graph='$graph_html' ";
 	}
 
-	$output .= 'class=\'' . (empty($class)?'': " $class") . '\'>';
+	$class_html = htmlspecialchars((string) $class, $escape_flags, 'UTF-8', false);
+	$class_html = str_replace('`', '&#96;', $class_html);
+	$output .= 'class=\'' . (empty($class)?'': " $class_html") . '\'>';
 	$output .= '<span class=\'spikeKillMenuItem\'>';
 	if (!empty($icon)) {
-		$output .= "<i class='$icon'></i>";
+		$icon_html = htmlspecialchars((string) $icon, $escape_flags, 'UTF-8', false);
+		$icon_html = str_replace('`', '&#96;', $icon_html);
+		$output .= "<i class='$icon_html'></i>";
 	}
 
 	$output .= "$text</span>";
