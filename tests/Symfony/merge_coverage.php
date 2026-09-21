@@ -38,7 +38,9 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'Symfony command disables device polling', 'CSV quotes multiline Unicode text and neutralizes formulas',
         'site counts exclude hidden and deleted devices', 'site persistence rechecks actor and revision and rolls back rejected saves',
         'site write serializes account, policy, direct and group grant revocations',
-        'site rollback cannot restore a revoked session after account re-enabling'];
+        'site rollback cannot restore a revoked session after account re-enabling',
+        'Symfony site translations honor the legacy session and ignore locale query overrides',
+        'disabled translation overrides a French shared session'];
     foreach ($checks as $check) {
         if (!in_array($check, $manifest['checks'] ?? [], true)) {
             throw new RuntimeException('Incomplete Symfony integration checks');
@@ -88,7 +90,9 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
-        'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php', 'src/Inventory/Infrastructure/Legacy/LegacySiteEditor.php'];
+        'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php', 'src/Inventory/Infrastructure/Legacy/LegacySiteEditor.php',
+        'src/IdentityAccess/Infrastructure/Legacy/LegacyLocalePreference.php',
+        'src/Platform/Infrastructure/Symfony/SiteLocaleSubscriber.php'];
     foreach ($requiredPaths as $required) {
         if (!($observed[$required] ?? false)) {
             throw new RuntimeException('Missing measured execution: ' . $required);
