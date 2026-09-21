@@ -1026,10 +1026,14 @@ function tree_edit($partial = false) {
 				<table class='filterTable'>
 					<tr>
 						<td>
-							<?php print __('Search'); ?>
+							<label for='sfilter'><?php print __('Search');?></label>
 						</td>
 						<td>
-							<input type='text' class='ui-state-default ui-corner-all' id='sfilter' name='sfilter' size='25' value='<?php print html_escape_request_var('sfilter');?>'>
+							<input type='text' class='ui-state-default ui-corner-all' id='sfilter' name='sfilter' size='25' value='<?php
+								$search_html = (string) get_request_var('sfilter');
+								$search_html = htmlspecialchars($search_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+								print str_replace('`', '&#96;', $search_html);
+							?>'>
 						</td>
 					</tr>
 				</table>
@@ -1061,10 +1065,14 @@ function tree_edit($partial = false) {
 				<table class='filterTable'>
 					<tr>
 						<td>
-							<?php print __('Search'); ?>
+							<label for='hfilter'><?php print __('Search');?></label>
 						</td>
 						<td>
-							<input type='text' class='ui-state-default ui-corner-all' id='hfilter' name='hfilter' size='25' value='<?php print html_escape_request_var('hfilter');?>'>
+							<input type='text' class='ui-state-default ui-corner-all' id='hfilter' name='hfilter' size='25' value='<?php
+								$search_html = (string) get_request_var('hfilter');
+								$search_html = htmlspecialchars($search_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+								print str_replace('`', '&#96;', $search_html);
+							?>'>
 						</td>
 					</tr>
 				</table>
@@ -1096,10 +1104,14 @@ function tree_edit($partial = false) {
 				<table class='filterTable'>
 					<tr>
 						<td>
-							<?php print __('Search'); ?>
+							<label for='gfilter'><?php print __('Search');?></label>
 						</td>
 						<td>
-							<input type='text'  class='ui-state-default ui-corner-all' id='gfilter' name='gfilter' size='25' value='<?php print html_escape_request_var('gfilter');?>'>
+							<input type='text'  class='ui-state-default ui-corner-all' id='gfilter' name='gfilter' size='25' value='<?php
+								$search_html = (string) get_request_var('gfilter');
+								$search_html = htmlspecialchars($search_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+								print str_replace('`', '&#96;', $search_html);
+							?>'>
 						</td>
 					</tr>
 				</table>
@@ -2301,10 +2313,14 @@ function tree() {
 			<table class='filterTable'>
 				<tr>
 					<td>
-						<?php print __('Search'); ?>
+						<label for='filter'><?php print __('Search');?></label>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
+						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+							$search_html = (string) get_request_var('filter');
+							$search_html = htmlspecialchars($search_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+							print str_replace('`', '&#96;', $search_html);
+						?>'>
 					</td>
 					<td>
 						<?php print __('Trees'); ?>

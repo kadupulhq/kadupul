@@ -88,14 +88,16 @@ test('GHSA-m544: auth_profile.php contains the m544 fix', function () use ($auth
 
 // GHSA-cfhh: XSS half of the aggregate rfilter advisory (SQL-injection half lives
 // in the SqlInjection regression group).
-test('GHSA-cfhh: aggregate rfilter text input is html_escape_request_var encoded', function () use ($aggregateGraphsSource) {
+test('GHSA-cfhh: aggregate rfilter text input is explicitly HTML encoded', function () use ($aggregateGraphsSource) {
 	// The aggregate graph filter form round-trips the submitted value
 	// back into the input element. Raw output here yields reflected XSS.
-	expect($aggregateGraphsSource)->toContain("html_escape_request_var('rfilter')");
+	expect($aggregateGraphsSource)->toContain("htmlspecialchars(\$search_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')");
 });
 
 test('GHSA-cfhh: the encoded rfilter is emitted as the input value attribute', function () use ($aggregateGraphsSource) {
-	// Pin the exact render site so a reviewer who refactors the filter
-	// box cannot silently drop the escape helper.
-	expect($aggregateGraphsSource)->toContain("value='<?php print html_escape_request_var('rfilter');?>'");
+	// Pin the render site; SearchFieldAttributeTest also exercises its actual DOM output.
+	expect(preg_match("/id='rfilter'[^>]*?<\\?php(.*?)\\?>/s", $aggregateGraphsSource, $match))->toBe(1);
+	expect($match[1])->toContain("(string) get_request_var('rfilter')");
+	expect($match[1])->toContain("htmlspecialchars(\$search_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')");
+	expect($match[1])->toContain("print str_replace('`', '&#96;', \$search_html)");
 });
