@@ -26,6 +26,15 @@ final class SiteListParameters
         return new SiteListCriteria($query['q'] ?? '', (int) $page, (int) $size, $query['direction'] ?? 'asc');
     }
 
+    public static function context(array $query): array
+    {
+        $list = $query['list'] ?? [];
+        if (!is_array($list)) {
+            throw new \InvalidArgumentException('Invalid site list filters.');
+        }
+        return self::encode(self::parse($list));
+    }
+
     public static function encode(SiteListCriteria $criteria): array
     {
         return ['q' => $criteria->search, 'page' => $criteria->page, 'size' => $criteria->pageSize, 'direction' => $criteria->direction];

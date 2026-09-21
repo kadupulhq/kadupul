@@ -26,7 +26,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'device_edit_scenarios.py', 'coverage_support.py'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'device_edit_scenarios.py', 'coverage_support.py'];
     foreach ($scripts as $script) {
         $path = 'tests/Symfony/' . $script;
         if (($manifest['source_sha256'][$path] ?? '') !== hash_file('sha256', $root . '/' . $path)) {
@@ -36,7 +36,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     $checks = $handler === 'none' ? ['disconnected archive verified', 'dependency repair verified', 'invalid manifest and symlink rejected'] : [
         'query parameters cannot select an authenticated session', 'deleted account cannot use persisted session',
         'Symfony command disables device polling', 'CSV quotes multiline Unicode text and neutralizes formulas',
-        'site counts exclude hidden and deleted devices'];
+        'site counts exclude hidden and deleted devices', 'site persistence rechecks actor and revision and rolls back rejected saves'];
     foreach ($checks as $check) {
         if (!in_array($check, $manifest['checks'] ?? [], true)) {
             throw new RuntimeException('Incomplete Symfony integration checks');
@@ -85,7 +85,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     $requiredPaths = $handler === 'none' ? ['tools/verify-offline.php', 'tools/dependencies/install-legacy.php'] : [
         'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
-        'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php'];
+        'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php', 'src/Inventory/Infrastructure/Legacy/LegacySiteEditor.php'];
     foreach ($requiredPaths as $required) {
         if (!($observed[$required] ?? false)) {
             throw new RuntimeException('Missing measured execution: ' . $required);

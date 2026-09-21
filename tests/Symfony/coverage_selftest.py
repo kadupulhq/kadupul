@@ -23,7 +23,8 @@ def main():
     required = [prefix + path for path in (
         'bin/legacy-device-edit.php', 'src/IdentityAccess/Infrastructure/Legacy/SharedSession.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceEditController.php',
-        'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php')]
+        'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
+        'src/Inventory/Infrastructure/Legacy/LegacySiteEditor.php')]
     for path in (args.files / 'raw').glob('coverage-*.json'):
         report = json.loads(path.read_text())
         for source in required:
@@ -36,6 +37,7 @@ def main():
         'test-hash': 'Integration test source differs',
         'details-test-hash': 'Integration test source differs',
         'sites-test-hash': 'Integration test source differs',
+        'site-edit-test-hash': 'Integration test source differs',
         'missing-check': 'Incomplete Symfony integration',
         'wrong-handler': 'Wrong integration suite',
         'missing-reports': 'Missing integration coverage',
@@ -61,6 +63,8 @@ def main():
                 evidence['source_sha256']['tests/Symfony/details_scenarios.py'] = '0' * 64
             elif case == 'sites-test-hash':
                 evidence['source_sha256']['tests/Symfony/site_catalog_scenarios.py'] = '0' * 64
+            elif case == 'site-edit-test-hash':
+                evidence['source_sha256']['tests/Symfony/site_edit_scenarios.py'] = '0' * 64
             elif case == 'missing-check':
                 evidence['checks'] = []
             elif case == 'wrong-handler':

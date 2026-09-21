@@ -11,6 +11,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Migrate site name and notes editing to Symfony Forms with domain validation, stateless CSRF, transactional writes and stale-edit protection.
+
 - Add a Symfony/Twig site catalog with bounded search and pagination, realm-based administration access, and permission-filtered device counts.
 
 - Export the current Symfony Inventory page as a permission-filtered CSV download with spreadsheet-safe text cells.

@@ -11,7 +11,7 @@ framework:
     session: false
     form: true
     csrf_protection:
-        stateless_token_ids: ['inventory_device_edit']
+        stateless_token_ids: ['inventory_device_edit', 'inventory_site_edit']
 
 when@test:
     framework:

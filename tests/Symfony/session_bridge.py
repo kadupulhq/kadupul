@@ -97,6 +97,8 @@ def main():
               'Symfony public entry owns authentication for the same session')
         from inventory_scenarios import verify_inventory
         verify_inventory(harness, session, user_id, check)
+        from site_edit_scenarios import verify_site_edit
+        verify_site_edit(harness, session, user_id, check)
         response = session.opener.open(harness.base + '/app.php/session')
         check('no-store' in response.headers.get('Cache-Control', ''), 'identity response is never cached')
         response.close()

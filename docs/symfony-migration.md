@@ -150,9 +150,39 @@ Search (`q`) matches name, city, state or country as literal text. `direction=as
 sorts by name with an ID tie-breaker; `page` and `size=25|50|100` provide bounded
 pagination with lookahead. Twig escapes site text and carries filters between
 pages. Controller responses are private/no-store. GET/HEAD are supported; Symfony
-rejects mutations at routing with a generic 405. Site create/edit/delete/duplicate,
+rejects mutations at routing with a generic 405. Site create/delete/duplicate, remaining edit fields,
 other sort columns, saved preferences and legacy navigation cutover remain to be
 migrated. `sites.php` remains operational.
+
+## Site editing slice
+
+Site names now open `/app.php/inventory/sites/{id}/edit`. Symfony Forms and Twig
+edit the name and notes through Inventory's Site aggregate, EditSite command and
+SiteEditor port. Console access and realm 3 authorize all site edits, including
+empty sites, consistent with legacy site administration. Anonymous requests return
+401, revoked access 403, and absent/deleted sites 404. No request can create a site.
+
+Names are trimmed and require 1–100 Unicode characters; notes preserve whitespace
+and allow up to 1,024 Unicode characters, matching the database column. Symfony
+normalizes textarea line endings to LF. Empty notes
+clear the field; legacy NULL notes read as empty text. Both fields reject invalid
+UTF-8 and NUL characters. Symfony's stateless CSRF protection requires its token and
+same-origin evidence. Unknown fields are rejected. Validated list search, order,
+page and size survive errors and saves; no supplied return URL is followed.
+
+The legacy-schema adapter uses prepared statements and a local transaction. It
+rechecks the actor and realm before acquiring a row lock, compares the name/notes
+revision under that lock, and updates only those two fields. Stale saves return
+409; concurrent address, timezone, map or alternate-ID changes are preserved.
+The legacy update-site path has no plugin/poller save hooks or cache invalidation
+for existing sites, so this adapter does not bootstrap procedural code or launch
+a CLI worker. Site creation's cache effects are outside this slice. Existing legacy
+editors do not enforce the new revision protocol, so they can still overwrite later.
+
+Failed persistence attempts roll back when the transaction remains active. An
+uncertain failure returns 502 and asks the operator to reload before retrying;
+there is no automatic retry. Controller responses are private/no-store. Site
+creation, other settings and destructive/bulk operations remain in `sites.php`.
 
 ## Inventory details slice
 

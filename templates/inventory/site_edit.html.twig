@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% block title %}Edit site · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses a fixed route name and encoded validated parameters, not a supplied URL. #}
+    <p><a href="{{ path('inventory_sites', filters) }}">Back to sites</a></p>
+    <h1>Edit {{ site.name }}</h1>
+    {% if saved %}<output>Site saved.</output>{% endif %}
+    <p>Edit the site name and notes here. Address, timezone and map settings remain in the existing Sites screen.</p>
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.notes) }}
+        <button type="submit">Save site</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

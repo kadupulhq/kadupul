@@ -23,14 +23,15 @@
         </select>
         <button type="submit">Apply</button>
     </form>
-    <p>Device counts include only devices you can access. Site editing is available in the existing Sites screen.</p>
+    <p>Device counts include only devices you can access. Select a site name to edit its name and notes.</p>
     <table>
         <caption>Sites and devices you can access at each site</caption>
         <thead><tr><th scope="col">Name</th><th scope="col">ID</th><th scope="col">Accessible devices</th><th scope="col">City</th><th scope="col">State</th><th scope="col">Country</th></tr></thead>
         <tbody>
         {% for site in result.sites %}
             <tr>
-                <td>{{ site.name }}</td><td>{{ site.id }}</td>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route with integer site ID and encoded validated list context. #}
+                <td><a href="{{ path('inventory_site_edit', {id: site.id, list: filters}) }}">{{ site.name }}</a></td><td>{{ site.id }}</td>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
                 <td><a href="{{ path('inventory_devices', {site: site.id}) }}" aria-label="Devices at {{ site.name }}">{{ site.visibleDevices }}</a></td>
                 <td>{{ site.city }}</td><td>{{ site.state }}</td><td>{{ site.country }}</td>

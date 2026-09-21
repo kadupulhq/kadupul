@@ -35,7 +35,7 @@ def publish_coverage(output, database_sessions, checks):
     if not list((output / 'raw').glob('coverage-*.json')):
         raise RuntimeError('No Symfony HTTP coverage recorded')
     root = Path(__file__).resolve().parents[2]
-    sources = ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'device_edit_scenarios.py', 'coverage_support.py']
+    sources = ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'device_edit_scenarios.py', 'coverage_support.py']
     evidence = {'suite': 'symfony-http',
                 'session_handler': 'database' if database_sessions else 'files',
                 'checks': checks,
