@@ -30,6 +30,16 @@ final class InstallationRowCache implements InvalidatedRowCache
         }
     }
 
+    public function count(RowCacheInvalidation $invalidation): int
+    {
+        $query = $this->connection()->prepare('SELECT COUNT(*) FROM user_auth_row_cache WHERE class = ? AND time < FROM_UNIXTIME(?)');
+        $query->bindValue(1, $invalidation->class);
+        $query->bindValue(2, $invalidation->before, \PDO::PARAM_INT);
+        $query->execute();
+
+        return (int) $query->fetchColumn();
+    }
+
     public function remove(RowCacheInvalidation $invalidation): int
     {
         $pdo = $this->connection();

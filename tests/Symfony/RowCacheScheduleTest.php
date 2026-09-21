@@ -14,6 +14,7 @@ use Kadupul\IdentityAccess\Infrastructure\Legacy\InstallationRowCache;
 use Kadupul\IdentityAccess\Infrastructure\Symfony\RowCacheCleanup;
 use Kadupul\IdentityAccess\Infrastructure\Symfony\RowCacheCleanupHandler;
 use Kadupul\IdentityAccess\Infrastructure\Symfony\RowCacheSchedule;
+use Kadupul\IdentityAccess\Infrastructure\Symfony\RowCacheState;
 use Kadupul\Kernel;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
@@ -42,7 +43,7 @@ final class RowCacheScheduleTest extends TestCase
         $config = $this->createMock(LegacyConfiguration::class);
         $config->expects($enabled === '1' ? self::once() : self::never())->method('values')->willReturn([]);
 
-        return new RowCacheSchedule($config, $this->directory, $enabled);
+        return new RowCacheSchedule($config, new RowCacheState($this->directory), $enabled);
     }
 
     public function testDisabledScheduleDoesNotReadInstallationOrCreateState(): void
@@ -58,7 +59,7 @@ final class RowCacheScheduleTest extends TestCase
         $config = $this->createMock(LegacyConfiguration::class);
         $config->method('values')->willThrowException(new \RuntimeException('Primary installation required.'));
         $this->expectException(\RuntimeException::class);
-        (new RowCacheSchedule($config, $this->directory, '1'))->getSchedule();
+        (new RowCacheSchedule($config, new RowCacheState($this->directory), '1'))->getSchedule();
     }
 
     public function testRestartSkipsBacklogAndLockExcludesSecondWorker(): void
@@ -116,10 +117,13 @@ final class RowCacheScheduleTest extends TestCase
         $insert->execute([1, 'graph', 'boundary', 100]);
         $insert->execute([1, 'graph', 'fresh', 101]);
         $insert->execute([1, 'device', 'other', 1]);
-        $clean = new CleanInvalidatedRowCache(new InstallationRowCache($db));
+        $storage = new InstallationRowCache($db);
+        self::assertSame(1001, $storage->count(new RowCacheInvalidation('graph', 100)));
+        $clean = new CleanInvalidatedRowCache($storage);
         self::assertSame(1000, $clean());
         self::assertSame(1, $clean());
         self::assertSame(0, $clean());
+        self::assertSame(0, $storage->count(new RowCacheInvalidation('graph', 100)));
         self::assertSame(['boundary', 'fresh', 'other'], $pdo->query('SELECT hash FROM user_auth_row_cache ORDER BY hash')->fetchAll(\PDO::FETCH_COLUMN));
     }
 

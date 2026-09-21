@@ -30,7 +30,12 @@ $database = new class ($pdo) implements \Kadupul\Platform\Contract\DatabaseConne
         return $this->pdo;
     }
 };
-$clean = new \Kadupul\IdentityAccess\Application\Command\CleanInvalidatedRowCache(new \Kadupul\IdentityAccess\Infrastructure\Legacy\InstallationRowCache($database));
+$storage = new \Kadupul\IdentityAccess\Infrastructure\Legacy\InstallationRowCache($database);
+$cutoff = new \Kadupul\IdentityAccess\Domain\RowCacheInvalidation('graph', 1700000000);
+if ($storage->count($cutoff) !== 1001) {
+    throw new RuntimeException('Backlog count includes fresh rows or misses stale rows.');
+}
+$clean = new \Kadupul\IdentityAccess\Application\Command\CleanInvalidatedRowCache($storage);
 foreach ([1000, 1, 0] as $expected) {
     if ($clean() !== $expected) {
         throw new RuntimeException('Bounded or idempotent cleanup failed.');
@@ -75,5 +80,8 @@ upgrade_to_1_2_31();
 upgrade_to_1_2_31();
 if ($indexCreates !== 1 || !db_index_exists('user_auth_row_cache', 'class_time')) {
     throw new RuntimeException('Index upgrade is not idempotent.');
+}
+if ($storage->count($cutoff) !== 0) {
+    throw new RuntimeException('Backlog count did not reflect cleanup.');
 }
 echo "Row-cache database contract passed.\n";

@@ -14,6 +14,8 @@ interface InvalidatedRowCache
     /** @return iterable<RowCacheInvalidation> */
     public function invalidations(): iterable;
 
+    public function count(RowCacheInvalidation $invalidation): int;
+
     /** Delete at most one bounded batch, retaining rows at or after the cutoff. */
     public function remove(RowCacheInvalidation $invalidation): int;
 }
