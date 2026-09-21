@@ -7865,7 +7865,7 @@ function cacti_input_string_is_safe($input_string) {
  * @param array  &$output  Receives stdout lines on success; empty array on empty output.
  * @param mixed  $timeout  Null waits for completion; false allows 4 hours; otherwise seconds (default 30).
  *
- * @return int Exit code, or 255 on spawn failure, error with binary or timeout.
+ * @return int Exit code, 1 on timeout, or 255 on invalid binary or spawn failure.
  */
 function cacti_exec($binary, array $args = array(), array &$output = array(), $timeout = 30) {
 	// Ensure buffers flush automatically
