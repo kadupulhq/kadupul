@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Read-only scanner collection. No alerts are dismissed or modified.
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { mkdtempSync, writeFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
+import { tmpdir } from 'node:os';
 import { pathToFileURL } from 'node:url';
 
 export function priority(rule) {
@@ -53,7 +54,7 @@ async function fetchSonar(endpoint, parameters) {
   return response.json();
 }
 
-export async function collect(output, { sonar = fetchSonar, runGh = execFileSync } = {}) {
+export async function collect({ sonar = fetchSonar, runGh = execFileSync } = {}) {
   const project = 'kadupulhq_kadupul';
   const analysis = async () => {
     const response = await sonar('project_analyses/search', {
@@ -106,13 +107,16 @@ export async function collect(output, { sonar = fetchSonar, runGh = execFileSync
     + 'Fix batches: first host reindex argv/POST enforcement; next validate remote-agent command flows and SQL helper callers; then context-specific XSS batches by controller/shared rendering helper. Do not globally escape HTML helpers or dismiss validated-input flows without evidence. Preserve LTS and confirm closure only after a main scan.\n\n'
     + '| Priority | Rule | File | Findings |\n|---|---|---|---:|\n'
     + [...groups].map(([key, count]) => `| ${key} | ${count} |`).join('\n') + '\n';
-  mkdirSync(output, { recursive: true });
-  writeFileSync(resolve(output, 'inventory.json'), JSON.stringify(inventory, null, 2) + '\n');
-  writeFileSync(resolve(output, 'TRIAGE.md'), report);
-  console.log(JSON.stringify(inventory.counts));
+  // Never accept a report path from CLI arguments or scanner data. Each run
+  // owns a fresh private directory; exclusive creation refuses existing files.
+  const output = mkdtempSync(join(tmpdir(), 'kadupul-security-inventory-'));
+  const options = { encoding: 'utf8', mode: 0o600, flag: 'wx' };
+  writeFileSync(join(output, 'inventory.json'), JSON.stringify(inventory, null, 2) + '\n', options);
+  writeFileSync(join(output, 'TRIAGE.md'), report, options);
+  return { output, counts: inventory.counts };
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
-  if (!process.argv[2]) throw new Error('Usage: node tools/security/inventory.mjs OUTPUT_DIRECTORY');
-  await collect(resolve(process.argv[2]));
+  if (process.argv.length !== 2) throw new Error('Usage: node tools/security/inventory.mjs (no output path accepted)');
+  console.log(JSON.stringify(await collect()));
 }

@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { runInNewContext } from 'node:vm';
@@ -49,10 +50,10 @@ test('ranks injection before XSS and remaining controls without claiming exploit
 });
 
 test('collects every page and writes counts, revision and ranked report', async () => {
-  const dir = mkdtempSync(join(tmpdir(), 'security-inventory-test-'));
+  let dir;
   const pages = [];
   try {
-    await collect(dir, {
+    const collected = await collect({
       sonar: async (endpoint, params) => {
         if (endpoint === 'project_analyses/search') return { analyses: [{ key: 'analysis', revision: 'abc', date: '2026-09-20' }] };
         pages.push(params.p);
@@ -65,29 +66,36 @@ test('collects every page and writes counts, revision and ranked report', async 
         return JSON.stringify([[alert('sonar-1')], [alert('sonar-2', 2)]]);
       },
     });
+    dir = collected.output;
+    assert.deepEqual(readdirSync(dir).sort(), ['TRIAGE.md', 'inventory.json']);
+    if (process.platform !== 'win32') {
+      assert.equal(statSync(dir).mode & 0o777, 0o700);
+      for (const file of readdirSync(dir)) assert.equal(statSync(join(dir, file)).mode & 0o777, 0o600);
+    }
     assert.deepEqual(pages, ['1', '2']);
     const result = JSON.parse(readFileSync(join(dir, 'inventory.json'), 'utf8'));
     assert.deepEqual(result.counts, { sonar: 2, github: 2, matchedGithub: 2, unmatchedGithub: 0, conservativeTotal: 2 });
     assert.equal(result.analysis.revision, 'abc');
     assert.match(readFileSync(join(dir, 'TRIAGE.md'), 'utf8'), /unverified|provisional/);
   } finally {
-    rmSync(dir, { recursive: true });
+    if (dir) rmSync(dir, { recursive: true });
   }
 });
 
 test('retains older non-Sonar alerts and renders remote markup as report data', async () => {
-  const dir = mkdtempSync(join(tmpdir(), 'security-inventory-test-'));
+  let dir;
   const unrelated = alert(null, 2);
   unrelated.tool = { name: 'CodeQL' };
   unrelated.most_recent_instance.commit_sha = 'older-codeql-scan';
   const payload = '<script>alert(1)</script>|[link](file:///tmp/a)\n**heading**';
   try {
-    await collect(dir, {
+    const collected = await collect({
       sonar: async endpoint => endpoint === 'project_analyses/search'
         ? { analyses: [{ key: 'analysis', revision: 'abc' }] }
         : { paging: { total: 1 }, issues: [{ ...issue, component: `project:${payload}` }] },
       runGh: () => JSON.stringify([[alert('sonar-1'), unrelated]]),
     });
+    dir = collected.output;
     const result = JSON.parse(readFileSync(join(dir, 'inventory.json'), 'utf8'));
     assert.equal(result.counts.conservativeTotal, 2);
     assert.equal(result.counts.matchedGithub, 1);
@@ -105,7 +113,7 @@ test('retains older non-Sonar alerts and renders remote markup as report data', 
     assert.ok(!markdown.includes('[link]'));
     assert.match(markdown, /&#60;script&#62;/);
   } finally {
-    rmSync(dir, { recursive: true });
+    if (dir) rmSync(dir, { recursive: true });
   }
 });
 
@@ -113,7 +121,7 @@ for (const response of [null, {}, { analyses: [] }, { analyses: [null] },
   { analyses: [{ key: 'analysis' }] }, { analyses: [{ key: '', revision: 'abc' }] },
   { analyses: [{ key: 'analysis', revision: ' ' }] }]) {
   test(`rejects unusable Sonar analysis ${JSON.stringify(response)} before collecting`, async () => {
-    await assert.rejects(collect('/unused-on-error', {
+    await assert.rejects(collect({
       sonar: async endpoint => {
         assert.equal(endpoint, 'project_analyses/search');
         return response;
@@ -125,7 +133,7 @@ for (const response of [null, {}, { analyses: [] }, { analyses: [null] },
 
 test('rejects an analysis disappearing during collection', async () => {
   let analyses = 0;
-  await assert.rejects(collect('/unused-on-error', {
+  await assert.rejects(collect({
     sonar: async endpoint => endpoint === 'project_analyses/search'
       ? { analyses: analyses++ === 0 ? [{ key: 'analysis', revision: 'abc' }] : [] }
       : { paging: { total: 1 }, issues: [issue] },
@@ -137,7 +145,7 @@ for (const scenario of ['count changed', 'empty page', 'analysis changed', 'revi
   test(`fails closed when ${scenario}`, async () => {
     let calls = 0;
     let issuePages = 0;
-    await assert.rejects(collect('/unused-on-error', {
+    await assert.rejects(collect({
       sonar: async endpoint => {
         if (endpoint === 'project_analyses/search') {
           calls++;
@@ -149,5 +157,24 @@ for (const scenario of ['count changed', 'empty page', 'analysis changed', 'revi
       },
       runGh: () => JSON.stringify([[alert('sonar-1')]]),
     }), /Issue count changed|Incomplete Sonar pagination|Sonar analysis changed|GitHub and Sonar revisions differ/);
-  });
+});
 }
+
+test('CLI rejects output path arguments without touching existing files', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'inventory-cli-test-'));
+  const target = join(directory, 'inventory.json');
+  writeFileSync(target, 'preserve me');
+  try {
+    for (const argument of [directory, '../outside', '/tmp', '--output=elsewhere']) {
+      const result = spawnSync(process.execPath, ['tools/security/inventory.mjs', argument], {
+        cwd: new URL('../../', import.meta.url), encoding: 'utf8',
+      });
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /no output path accepted/);
+      assert.equal(readFileSync(target, 'utf8'), 'preserve me');
+      assert.deepEqual(readdirSync(directory), ['inventory.json']);
+    }
+  } finally {
+    rmSync(directory, { recursive: true });
+  }
+});

@@ -3,7 +3,7 @@
 Run the read-only collector with authenticated GitHub CLI access:
 
 ```sh
-mise exec node@22.22.2 -- node tools/security/inventory.mjs /absolute/path/to/private-report
+mise exec node@22.22.2 -- node tools/security/inventory.mjs
 mise exec node@22.22.2 -- node --test tests/Unit/security-inventory.test.mjs
 ```
 
@@ -11,6 +11,9 @@ The collector paginates both scanners, requires matching main revisions for
 Sonar-linked alerts (other scanners retain their own recorded revisions), and
 matches GitHub alerts using their embedded stable Sonar issue keys. It retains
 unmatched alerts rather than silently treating similar locations as duplicates.
+It creates a fresh private temporary directory and prints its path and counts
+as JSON. Output-path arguments are rejected; fixed report filenames are created
+exclusively with owner-only permissions, never overwriting existing files.
 It writes a normalized `inventory.json` with every finding and a grouped,
 provisionally ranked `TRIAGE.md`. These are snapshots, not proof of exploitability
 or closure. Keep reports outside the repository and refresh after merged scans.
