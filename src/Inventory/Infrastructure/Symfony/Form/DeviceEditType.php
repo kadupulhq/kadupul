@@ -21,6 +21,8 @@ final class DeviceEditType extends AbstractType
     {
         $builder->add('description', TextType::class, ['label' => 'Name', 'attr' => ['maxlength' => 150]])
             ->add('hostname', TextType::class, ['label' => 'Hostname or IP address', 'attr' => ['maxlength' => 100]])
+            ->add('location', TextType::class, ['required' => false, 'trim' => false, 'empty_data' => '', 'attr' => ['maxlength' => 40]])
+            ->add('external_id', TextType::class, ['label' => 'External ID', 'required' => false, 'trim' => false, 'empty_data' => '', 'attr' => ['maxlength' => 40]])
             ->add('notes', TextareaType::class, ['required' => false, 'trim' => false, 'empty_data' => '', 'attr' => ['rows' => 8]])
             ->add('enabled', ChoiceType::class, ['label' => 'Polling', 'choices' => ['Enabled' => true, 'Disabled' => false],
                 'choice_value' => static fn(?bool $enabled): string => $enabled === null ? '' : ($enabled ? 'enabled' : 'disabled'),

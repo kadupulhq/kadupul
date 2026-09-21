@@ -21,9 +21,9 @@ final class DeviceEditTest extends TestCase
 {
     public function testStaleRevisionDoesNotChangeTheAggregate(): void
     {
-        $device = new Device(7, 'Before', 'before.invalid', 'Original notes', true);
+        $device = new Device(7, 'Before', 'before.invalid', 'Original notes', true, '', '');
         try {
-            $device->revise('After', 'after.invalid', '', false, str_repeat('0', 64));
+            $device->revise('After', 'after.invalid', '', false, '', '', str_repeat('0', 64));
             self::fail('Expected conflict');
         } catch (DeviceEditConflict) {
             self::assertSame('Before', $device->description());
@@ -34,10 +34,10 @@ final class DeviceEditTest extends TestCase
     #[DataProvider('invalidChanges')]
     public function testValidationIsAtomic(string $name, string $hostname, string $notes): void
     {
-        $device = new Device(7, 'Before', 'before.invalid', 'Original notes', true);
+        $device = new Device(7, 'Before', 'before.invalid', 'Original notes', true, '', '');
         $before = $device->revision();
         try {
-            $device->revise($name, $hostname, $notes, false, $before);
+            $device->revise($name, $hostname, $notes, false, '', '', $before);
             self::fail('Expected validation error');
         } catch (\InvalidArgumentException) {
             self::assertSame($before, $device->revision());
@@ -59,30 +59,79 @@ final class DeviceEditTest extends TestCase
         $access = $this->createMock(ConsoleAccess::class);
         $access->method('consoleActor')->willReturn(new Actor(42, 'operator'));
         $access->method('canManageDevices')->willReturn(true);
-        $device = new Device(7, 'Before', 'before.invalid', '', true);
+        $device = new Device(7, 'Before', 'before.invalid', '', true, '', '');
         $revision = $device->revision();
         $port = $this->createMock(DeviceEditor::class);
         $port->expects(self::once())->method('findVisible')->with(42, 7)->willReturn($device);
-        $port->expects(self::once())->method('save')->with(42, self::callback(fn(Device $saved) => $saved->description() === 'After' && $saved->hostname() === 'after.invalid' && !$saved->enabled()), $revision);
-        (new EditDevice($access, $port))(7, 'After', 'after.invalid', 'Notes', false, $revision);
+        $port->expects(self::once())->method('save')->with(42, self::callback(fn(Device $saved) => $saved->description() === 'After' && $saved->hostname() === 'after.invalid' && !$saved->enabled() && $saved->location() === 'Rack 2' && $saved->externalId() === 'asset-42'), $revision);
+        (new EditDevice($access, $port))(7, 'After', 'after.invalid', 'Notes', false, 'Rack 2', 'asset-42', $revision);
     }
 
     public function testPollingChangeInvalidatesAnOlderDetailsForm(): void
     {
-        $device = new Device(7, 'Device', 'host.invalid', '', true);
+        $device = new Device(7, 'Device', 'host.invalid', '', true, '', '');
         $original = $device->revision();
-        $device->revise('Device', 'host.invalid', '', false, $original);
+        $device->revise('Device', 'host.invalid', '', false, '', '', $original);
         self::assertFalse($device->enabled());
         self::assertNotSame($original, $device->revision());
         $this->expectException(DeviceEditConflict::class);
-        $device->revise('Stale edit', 'host.invalid', '', true, $original);
+        $device->revise('Stale edit', 'host.invalid', '', true, '', '', $original);
     }
 
     public function testDisabledDeviceCanBeEnabledWithCurrentRevision(): void
     {
-        $device = new Device(7, 'Device', 'host.invalid', '', false);
-        $device->revise('Device', 'host.invalid', '', true, $device->revision());
+        $device = new Device(7, 'Device', 'host.invalid', '', false, '', '');
+        $device->revise('Device', 'host.invalid', '', true, '', '', $device->revision());
         self::assertTrue($device->enabled());
+    }
+
+    #[DataProvider('invalidMetadata')]
+    public function testMetadataValidationDoesNotPartiallyApplyAnEdit(string $location, string $externalId): void
+    {
+        $device = new Device(7, 'Before', 'host.invalid', 'Notes', true, 'Rack 1', 'asset-7');
+        $revision = $device->revision();
+        try {
+            $device->revise('After', 'other.invalid', '', false, $location, $externalId, $revision);
+            self::fail('Expected validation error');
+        } catch (\InvalidArgumentException) {
+            self::assertSame($revision, $device->revision());
+        }
+    }
+
+    public static function invalidMetadata(): iterable
+    {
+        foreach ([str_repeat('界', 41), "\xff", "invalid\0text"] as $invalid) {
+            yield [$invalid, 'valid'];
+            yield ['valid', $invalid];
+        }
+    }
+
+    public function testMetadataSupportsFortyUnicodeCharactersAndExplicitClearing(): void
+    {
+        $device = new Device(7, 'Device', 'host.invalid', '', true, '', '');
+        $value = str_repeat('界', 40);
+        $device->revise('Device', 'host.invalid', '', true, $value, $value, $device->revision());
+        self::assertSame($value, $device->location());
+        self::assertSame($value, $device->externalId());
+        $device->revise('Device', 'host.invalid', '', true, '', '', $device->revision());
+        self::assertSame('', $device->location());
+        self::assertSame('', $device->externalId());
+    }
+
+    #[DataProvider('metadataChanges')]
+    public function testMetadataChangesInvalidateEarlierForms(string $location, string $externalId): void
+    {
+        $device = new Device(7, 'Device', 'host.invalid', '', true, '', '');
+        $revision = $device->revision();
+        $device->revise('Device', 'host.invalid', '', true, $location, $externalId, $revision);
+        $this->expectException(DeviceEditConflict::class);
+        $device->revise('Stale', 'host.invalid', '', true, '', '', $revision);
+    }
+
+    public static function metadataChanges(): iterable
+    {
+        yield ['Rack 1', ''];
+        yield ['', 'asset-7'];
     }
 
     public function testUnauthorizedCommandCannotReadOrWriteDevice(): void
@@ -94,6 +143,6 @@ final class DeviceEditTest extends TestCase
         $port->expects(self::never())->method('findVisible');
         $port->expects(self::never())->method('save');
         $this->expectException(InventoryAccessDenied::class);
-        (new EditDevice($access, $port))(7, 'After', 'after.invalid', '', false, 'untrusted');
+        (new EditDevice($access, $port))(7, 'After', 'after.invalid', '', false, '', '', 'untrusted');
     }
 }

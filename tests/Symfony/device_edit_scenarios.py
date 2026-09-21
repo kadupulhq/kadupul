@@ -55,6 +55,8 @@ def verify_device_edit(harness, session, user_id, allowed_id, hidden_id, check):
     original = harness.sql(f'SELECT description FROM host WHERE id={allowed_id}').strip()
     fields = get_fields()
     check(fields.get('device_edit[enabled]') == 'enabled', 'editor displays current polling state')
+    check(fields.get('device_edit[location]') == '' and fields.get('device_edit[external_id]') == '', 'legacy null metadata renders as empty fields')
+    fields.update({'device_edit[location]': 'Rack <west>', 'device_edit[external_id]': 'asset-42'})
     fields.update({'device_edit[description]': 'Edited inventory device', 'device_edit[hostname]': 'edited.invalid', 'device_edit[notes]': '<script>alert(1)</script> notes'})
     check(post(fields)[0] == 422, 'save requires same-origin CSRF evidence')
     check(post(fields, 'https://attacker.invalid')[0] == 422, 'cross-origin save is rejected')
@@ -64,6 +66,9 @@ def verify_device_edit(harness, session, user_id, allowed_id, hidden_id, check):
     missing_state = dict(fields)
     missing_state.pop('device_edit[enabled]')
     check(post(missing_state, harness.base)[0] == 422, 'omitted polling state cannot silently disable a device')
+    for field in ('location', 'external_id'):
+        too_long = dict(fields, **{f'device_edit[{field}]': '界' * 41})
+        check(post(too_long, harness.base)[0] == 422, field + ' rejects overlong Unicode text')
     no_token = dict(fields)
     no_token.pop('device_edit[_token]')
     check(post(no_token, harness.base)[0] == 422, 'save requires the Symfony CSRF field')
@@ -80,12 +85,17 @@ def verify_device_edit(harness, session, user_id, allowed_id, hidden_id, check):
     harness.sql(f'DELETE FROM user_auth_realm WHERE user_id={user_id} AND realm_id=3')
     check(post(fields, harness.base)[0] == 403, 'realm revocation after form load prevents save')
     harness.sql(f'INSERT INTO user_auth_realm (user_id,realm_id) VALUES ({user_id},3)')
+    for field in ('location', 'external_id'):
+        pending = get_fields()
+        harness.sql(f"UPDATE host SET {field}='Concurrent metadata' WHERE id={allowed_id}")
+        check(post(pending, harness.base)[0] == 409, field + ' change invalidates previously loaded form')
+        harness.sql(f"UPDATE host SET {field}=NULL WHERE id={allowed_id}")
     harness.sql(f"UPDATE host SET description='Concurrent edit' WHERE id={allowed_id}")
     check(post(fields, harness.base)[0] == 409, 'stale edit reports conflict without overwriting')
     fresh = get_fields()
     fresh.update({k: v for k, v in fields.items() if k != 'device_edit[revision]'})
     graph_id = int(harness.sql(f'INSERT INTO graph_local (host_id) VALUES ({allowed_id}); SELECT LAST_INSERT_ID()').strip())
-    harness.sql(f"INSERT INTO graph_templates_graph (local_graph_id,title,title_cache) VALUES ({graph_id},'|host_description| - edit graph','Old graph title')")
+    harness.sql(f"INSERT INTO graph_templates_graph (local_graph_id,title,title_cache) VALUES ({graph_id},'|host_description| - |host_location| - |host_external_id|','Old graph title')")
     for action in ('--install', '--enable'):
         check(harness.php('cli/plugin_manage.php', '--plugin=compatibility_test', action)['exit'] == 0,
               'compatibility plugin prepares for save-hook check')
@@ -98,8 +108,10 @@ def verify_device_edit(harness, session, user_id, allowed_id, hidden_id, check):
           'legacy write adapter persists validated fields')
     check('&lt;script&gt;alert(1)&lt;/script&gt; notes' in body and '<script>alert(1)</script>' not in body,
           'stored notes remain escaped in the edit form')
-    check(harness.sql(f'SELECT title_cache FROM graph_templates_graph WHERE local_graph_id={graph_id}').strip() == 'Edited inventory device - edit graph',
+    check(harness.sql(f'SELECT title_cache FROM graph_templates_graph WHERE local_graph_id={graph_id}').strip() == 'Edited inventory device - Rack <west> - asset-42',
           'legacy graph title cache is refreshed')
+    check(harness.sql(f'SELECT location,external_id FROM host WHERE id={allowed_id}').strip() == 'Rack <west>\tasset-42', 'metadata persists through the legacy save adapter')
+    check('Rack &lt;west&gt;' in body and 'Rack <west>' not in body, 'location is escaped in the edit form')
     events = harness.jsonl('/artifacts/plugin.jsonl')
     check(any(event.get('callback') == 'filter' and isinstance(event.get('args'), list) and len(event['args']) == 1
               and isinstance(event['args'][0], dict) and str(event['args'][0].get('host_id')) == str(allowed_id) for event in events),
@@ -136,5 +148,14 @@ def verify_device_edit(harness, session, user_id, allowed_id, hidden_id, check):
     check(allowed_id not in [device['id'] for device in disabled_list], 'enabled device leaves disabled Inventory filter')
     check(harness.sql(f'SELECT notes FROM host WHERE id={allowed_id}').strip() == '<script>alert(1)</script> notes',
           'polling transitions preserve device notes')
+    metadata = get_fields()
+    check(metadata['device_edit[location]'] == 'Rack <west>' and metadata['device_edit[external_id]'] == 'asset-42', 'polling changes preserve metadata')
+    metadata.update({'device_edit[location]': '界' * 40, 'device_edit[external_id]': 'é' * 40})
+    check(post(metadata, harness.base)[0] == 200, 'metadata accepts forty multibyte characters')
+    check(harness.sql(f'SELECT CHAR_LENGTH(location),CHAR_LENGTH(external_id) FROM host WHERE id={allowed_id}').strip() == '40\t40', 'multibyte metadata is not truncated')
+    metadata = get_fields()
+    metadata.update({'device_edit[location]': '', 'device_edit[external_id]': ''})
+    check(post(metadata, harness.base)[0] == 200, 'metadata can be explicitly cleared')
+    check(harness.sql(f"SELECT COUNT(*) FROM host WHERE id={allowed_id} AND location='' AND external_id=''").strip() == '1', 'empty metadata is persisted')
     # Restore fixture fields so the existing listing assertions remain independent.
     harness.sql(f"UPDATE host SET description='{original}', hostname='fixture-edit.invalid', notes='' WHERE id={allowed_id}")

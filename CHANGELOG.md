@@ -11,6 +11,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Migrate device location and external ID editing to Symfony with Unicode-aware domain validation and stale-edit detection.
+
 - Enable and disable device polling through the Symfony editor, including polling state in stale-edit protection and preserving legacy save effects.
 
 - Add Symfony device editing for name, address and notes with domain validation, CSRF protection, stale-edit detection and an isolated legacy save adapter.

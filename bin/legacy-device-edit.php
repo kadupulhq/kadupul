@@ -38,11 +38,11 @@ try {
         throw new InvalidArgumentException('Payload too large');
     }
     $command = json_decode($input, true, 16, JSON_THROW_ON_ERROR);
-    if (!is_array($command) || array_diff(array_keys($command), ['actor', 'id', 'revision', 'description', 'hostname', 'notes', 'enabled']) !== []
+    if (!is_array($command) || array_diff(array_keys($command), ['actor', 'id', 'revision', 'description', 'hostname', 'notes', 'enabled', 'location', 'external_id']) !== []
         || !is_bool($command['enabled'] ?? null) || !is_int($command['actor'] ?? null) || !is_int($command['id'] ?? null) || $command['actor'] <= 0 || $command['id'] <= 0) {
         throw new InvalidArgumentException('Invalid command');
     }
-    foreach (['revision', 'description', 'hostname', 'notes'] as $field) {
+    foreach (['revision', 'description', 'hostname', 'notes', 'location', 'external_id'] as $field) {
         if (!is_string($command[$field] ?? null)) {
             throw new InvalidArgumentException('Invalid command');
         }
@@ -72,11 +72,13 @@ try {
         $status = 'denied';
         throw new RuntimeException('Access denied');
     }
-    $device = new Device((int) $row['id'], $row['description'], (string) $row['hostname'], (string) $row['notes'], $row['disabled'] !== 'on');
-    $device->revise($command['description'], $command['hostname'], $command['notes'], $command['enabled'], $command['revision']);
+    $device = new Device((int) $row['id'], $row['description'], (string) $row['hostname'], (string) $row['notes'], $row['disabled'] !== 'on', (string) $row['location'], (string) $row['external_id']);
+    $device->revise($command['description'], $command['hostname'], $command['notes'], $command['enabled'], $command['location'], $command['external_id'], $command['revision']);
     $row['description'] = $device->description();
     $row['hostname'] = $device->hostname();
     $row['notes'] = $device->notes();
+    $row['location'] = $device->location();
+    $row['external_id'] = $device->externalId();
     $row['disabled'] = $device->enabled() ? '' : 'on';
     $row['device_template_id'] = $row['host_template_id'];
     $_SESSION['sess_user_id'] = $command['actor'];

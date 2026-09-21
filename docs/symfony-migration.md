@@ -94,7 +94,7 @@ paging, escaping and input rejection. CI runs both session configurations.
 ## Inventory editing slice
 
 Click a device name to open `/app.php/inventory/devices/{id}/edit`. Symfony Forms
-and Twig edit its name, address, notes and polling state. The Device aggregate validates these
+and Twig edit its name, address, location, external ID, notes and polling state. The Device aggregate validates these
 fields; the EditDevice command authorizes through IdentityAccess and saves through
 the DeviceEditor port. The list and editor share the same visibility policy.
 The polling choice is required and accepts only Enabled or Disabled; missing or
@@ -102,6 +102,11 @@ invalid choices are rejected. Polling state participates in the revision so an
 older details form cannot overwrite a concurrent enable/disable operation. Saving
 uses the legacy device-save path: disabling resets observed status to unknown,
 and enabling leaves status discovery to the next poll. Historical data is retained.
+Location and external ID are optional Unicode text, limited to 40 characters to
+match the existing schema. Empty values clear the fields; neither field implies
+uniqueness or changes site membership. Both participate in stale-edit detection
+and pass through the existing graph-title and plugin save effects. The new form
+does not yet provide the legacy location autocomplete.
 Other settings, including SNMP credentials, templates and poller assignment, remain
 in the legacy editor and cannot be submitted through this form.
 
@@ -299,3 +304,10 @@ choices, rejected missing/invalid states, concurrent changes, enable/disable
 persistence, status reset, list filters and retained notes. Container/Twig lint,
 security inventories and staged-content checks pass; the rebuilt offline archive
 verifies with Docker networking disabled.
+
+Location/external-ID validation: 36 module/kernel/architecture tests pass on
+PHP 8.3.33 (2,014 assertions). Both HTTP session configurations pass metadata
+persistence, Unicode limits, explicit clearing, escaping, stale revisions and
+graph-title substitution checks. Container/Twig lint, security inventories and
+staged-content checks pass. The rebuilt offline archive verifies with Docker
+networking disabled.

@@ -9,7 +9,7 @@ namespace Kadupul\Inventory\Domain;
 
 final class Device
 {
-    public function __construct(public readonly int $id, private string $description, private string $hostname, private string $notes, private bool $enabled) {}
+    public function __construct(public readonly int $id, private string $description, private string $hostname, private string $notes, private bool $enabled, private string $location, private string $externalId) {}
     public function description(): string
     {
         return $this->description;
@@ -26,11 +26,19 @@ final class Device
     {
         return $this->enabled;
     }
+    public function location(): string
+    {
+        return $this->location;
+    }
+    public function externalId(): string
+    {
+        return $this->externalId;
+    }
     public function revision(): string
     {
-        return hash('sha256', json_encode([$this->id, $this->description, $this->hostname, $this->notes, $this->enabled], JSON_THROW_ON_ERROR));
+        return hash('sha256', json_encode([$this->id, $this->description, $this->hostname, $this->notes, $this->enabled, $this->location, $this->externalId], JSON_THROW_ON_ERROR));
     }
-    public function revise(string $description, string $hostname, string $notes, bool $enabled, string $expectedRevision): void
+    public function revise(string $description, string $hostname, string $notes, bool $enabled, string $location, string $externalId, string $expectedRevision): void
     {
         if (!hash_equals($this->revision(), $expectedRevision)) {
             throw new DeviceEditConflict('This device changed. Reload it before saving.');
@@ -46,9 +54,16 @@ final class Device
         if (strlen($notes) > 65535 || !mb_check_encoding($notes, 'UTF-8') || str_contains($notes, "\0")) {
             throw new \InvalidArgumentException('Notes must be valid text of at most 65,535 bytes.');
         }
+        foreach (['Location' => $location, 'External ID' => $externalId] as $label => $value) {
+            if (!mb_check_encoding($value, 'UTF-8') || mb_strlen($value, 'UTF-8') > 40 || str_contains($value, "\0")) {
+                throw new \InvalidArgumentException($label . ' must be valid text of at most 40 characters.');
+            }
+        }
         $this->description = $description;
         $this->hostname = $hostname;
         $this->notes = $notes;
         $this->enabled = $enabled;
+        $this->location = $location;
+        $this->externalId = $externalId;
     }
 }
