@@ -91,8 +91,11 @@ switch (get_request_var('action')) {
 			'--update', '--push', '--id=' . (int) $id
 		), $output, null);
 
-		raise_message('whitelist_updated', html_escape(implode("\n", $output)),
-			$status === 0 ? MESSAGE_LEVEL_INFO : MESSAGE_LEVEL_ERROR);
+		raise_message(
+			'whitelist_updated',
+			html_escape(implode("\n", $output)),
+			$status === 0 ? MESSAGE_LEVEL_INFO : MESSAGE_LEVEL_ERROR
+		);
 
 		/* fall through */
 	case 'edit':
