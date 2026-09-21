@@ -679,9 +679,9 @@ function data_query_item_remove_confirm() {
 			<input type='button' class='ui-button ui-corner-all ui-widget' id='continue' value='<?php print __esc('Continue');?>' name='continue' title='<?php print __esc('Remove Data Query Graph Template');?>'>
 			<input type='hidden' id='snmp_query_graph_id' value='<?php
 				print str_replace(
-					'`',
-					'&#96;',
-					htmlspecialchars((string) get_request_var('id'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+				    '`',
+				    '&#96;',
+				    htmlspecialchars((string) get_request_var('id'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
 				);?>'>
 		</td>
 	</tr>
@@ -925,16 +925,16 @@ function data_query_item_edit() {
 					<a class='remover fa fa-caret-down moveArrow' title='<?php print __('Move Down');?>' href='#'
 						data-url='<?php
 						print htmlspecialchars(
-							'data_queries.php?action=item_movedown_gsv&snmp_query_graph_id='
-							. rawurlencode((string) get_request_var('id'))
-							. '&id='
-							. rawurlencode((string) $suggested_value['id'])
-							. '&snmp_query_id='
-							. rawurlencode((string) get_request_var('snmp_query_id'))
-							. '&field_name='
-							. rawurlencode((string) $suggested_value['field_name']),
-							ENT_QUOTES | ENT_SUBSTITUTE,
-							'UTF-8'
+						    'data_queries.php?action=item_movedown_gsv&snmp_query_graph_id='
+						    . rawurlencode((string) get_request_var('id'))
+						    . '&id='
+						    . rawurlencode((string) $suggested_value['id'])
+						    . '&snmp_query_id='
+						    . rawurlencode((string) get_request_var('snmp_query_id'))
+						    . '&field_name='
+						    . rawurlencode((string) $suggested_value['field_name']),
+						    ENT_QUOTES | ENT_SUBSTITUTE,
+						    'UTF-8'
 						);?>'></a>
 					<?php } else {?>
 					<span class='moveArrowNone'></span>
@@ -943,16 +943,16 @@ function data_query_item_edit() {
 					<a class='remover fa fa-caret-up moveArrow' title='<?php print __('Move Up');?>' href='#'
 						data-url='<?php
 						print htmlspecialchars(
-							'data_queries.php?action=item_moveup_gsv&snmp_query_graph_id='
-							. rawurlencode((string) get_request_var('id'))
-							. '&id='
-							. rawurlencode((string) $suggested_value['id'])
-							. '&snmp_query_id='
-							. rawurlencode((string) get_request_var('snmp_query_id'))
-							. '&field_name='
-							. rawurlencode((string) $suggested_value['field_name']),
-							ENT_QUOTES | ENT_SUBSTITUTE,
-							'UTF-8'
+						    'data_queries.php?action=item_moveup_gsv&snmp_query_graph_id='
+						    . rawurlencode((string) get_request_var('id'))
+						    . '&id='
+						    . rawurlencode((string) $suggested_value['id'])
+						    . '&snmp_query_id='
+						    . rawurlencode((string) get_request_var('snmp_query_id'))
+						    . '&field_name='
+						    . rawurlencode((string) $suggested_value['field_name']),
+						    ENT_QUOTES | ENT_SUBSTITUTE,
+						    'UTF-8'
 						);?>'></a>
 					<?php } else {?>
 					<span class='moveArrowNone'></span>
@@ -965,14 +965,14 @@ function data_query_item_edit() {
 					<a class='remover deleteMarker fa fa-times' title='<?php print html_escape(__('Delete'));?>' href='#'
 						data-url='<?php
 						print htmlspecialchars(
-							'data_queries.php?action=item_remove_gsv&snmp_query_graph_id='
-							. rawurlencode((string) get_request_var('id'))
-							. '&id='
-							. rawurlencode((string) $suggested_value['id'])
-							. '&snmp_query_id='
-							. rawurlencode((string) get_request_var('snmp_query_id')),
-							ENT_QUOTES | ENT_SUBSTITUTE,
-							'UTF-8'
+						    'data_queries.php?action=item_remove_gsv&snmp_query_graph_id='
+						    . rawurlencode((string) get_request_var('id'))
+						    . '&id='
+						    . rawurlencode((string) $suggested_value['id'])
+						    . '&snmp_query_id='
+						    . rawurlencode((string) get_request_var('snmp_query_id')),
+						    ENT_QUOTES | ENT_SUBSTITUTE,
+						    'UTF-8'
 						);?>'></a>
 				</td>
 				<?php
@@ -1069,17 +1069,17 @@ function data_query_item_edit() {
 							<a class='remover fa fa-caret-down moveArrow' title='<?php print __('Move Down');?>' href='#'
 								data-url='<?php
 								print htmlspecialchars(
-									'data_queries.php?action=item_movedown_dssv&snmp_query_graph_id='
-									. rawurlencode((string) get_request_var('id'))
-									. '&id='. rawurlencode((string) $suggested_value['id'])
-									. '&snmp_query_id='
-									. rawurlencode((string) get_request_var('snmp_query_id'))
-									. '&data_template_id='
-									. rawurlencode((string) $data_template['id'])
-									. '&field_name='
-									. rawurlencode((string) $suggested_value['field_name']),
-									ENT_QUOTES | ENT_SUBSTITUTE,
-									'UTF-8'
+								    'data_queries.php?action=item_movedown_dssv&snmp_query_graph_id='
+								    . rawurlencode((string) get_request_var('id'))
+								    . '&id='. rawurlencode((string) $suggested_value['id'])
+								    . '&snmp_query_id='
+								    . rawurlencode((string) get_request_var('snmp_query_id'))
+								    . '&data_template_id='
+								    . rawurlencode((string) $data_template['id'])
+								    . '&field_name='
+								    . rawurlencode((string) $suggested_value['field_name']),
+								    ENT_QUOTES | ENT_SUBSTITUTE,
+								    'UTF-8'
 								);?>'></a>
 							<?php } else {?>
 							<span class='moveArrowNone'></span>
@@ -1088,18 +1088,18 @@ function data_query_item_edit() {
 							<a class='remover fa fa-caret-up moveArrow' title='<?php print __('Move Up');?>' href='#'
 								data-url='<?php
 								print htmlspecialchars(
-									'data_queries.php?action=item_moveup_dssv&snmp_query_graph_id='
-									. rawurlencode((string) get_request_var('id'))
-									. '&id='
-									. rawurlencode((string) $suggested_value['id'])
-									. '&snmp_query_id='
-									. rawurlencode((string) get_request_var('snmp_query_id'))
-									. '&data_template_id='
-									. rawurlencode((string) $data_template['id'])
-									. '&field_name='
-									. rawurlencode((string) $suggested_value['field_name']),
-									ENT_QUOTES | ENT_SUBSTITUTE,
-									'UTF-8'
+								    'data_queries.php?action=item_moveup_dssv&snmp_query_graph_id='
+								    . rawurlencode((string) get_request_var('id'))
+								    . '&id='
+								    . rawurlencode((string) $suggested_value['id'])
+								    . '&snmp_query_id='
+								    . rawurlencode((string) get_request_var('snmp_query_id'))
+								    . '&data_template_id='
+								    . rawurlencode((string) $data_template['id'])
+								    . '&field_name='
+								    . rawurlencode((string) $suggested_value['field_name']),
+								    ENT_QUOTES | ENT_SUBSTITUTE,
+								    'UTF-8'
 								);?>'></a>
 							<?php } else {?>
 							<span class='moveArrowNone'></span>
@@ -1112,16 +1112,16 @@ function data_query_item_edit() {
 							<a class='remover deleteMarker fa fa-times' title='<?php print __('Delete');?>' href='#'
 								data-url='<?php
 								print htmlspecialchars(
-									'data_queries.php?action=item_remove_dssv&snmp_query_graph_id='
-									. rawurlencode((string) get_request_var('id'))
-									. '&id='
-									. rawurlencode((string) $suggested_value['id'])
-									. '&snmp_query_id='
-									. rawurlencode((string) get_request_var('snmp_query_id'))
-									. '&data_template_id='
-									. rawurlencode((string) $data_template['id']),
-									ENT_QUOTES | ENT_SUBSTITUTE,
-									'UTF-8'
+								    'data_queries.php?action=item_remove_dssv&snmp_query_graph_id='
+								    . rawurlencode((string) get_request_var('id'))
+								    . '&id='
+								    . rawurlencode((string) $suggested_value['id'])
+								    . '&snmp_query_id='
+								    . rawurlencode((string) get_request_var('snmp_query_id'))
+								    . '&data_template_id='
+								    . rawurlencode((string) $data_template['id']),
+								    ENT_QUOTES | ENT_SUBSTITUTE,
+								    'UTF-8'
 								);?>'></a>
 						</td>
 						<?php

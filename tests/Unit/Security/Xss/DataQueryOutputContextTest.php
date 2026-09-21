@@ -1,5 +1,10 @@
 <?php
 
+/*
+ * Copyright (C) 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
+
 namespace DataQueryOutputContextTest;
 
 function get_request_var($name) {
