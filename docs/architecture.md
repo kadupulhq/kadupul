@@ -99,7 +99,7 @@ are confined to adapters; new routes do not bootstrap the procedural application
 Platform's PDO/configuration contracts are technical integration APIs used only
 by infrastructure, never domain/application services.
 
-Device editing now covers name, address and notes through a Device aggregate,
+Device editing now covers name, address, notes and polling state through a Device aggregate,
 EditDevice command, DeviceEditor port and Symfony Form/CSRF adapters. The write
 adapter isolates the legacy save API in a CLI process, rechecks authorization and
 revision under a row lock, and preserves graph/poller/plugin effects. The local

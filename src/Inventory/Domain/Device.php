@@ -9,7 +9,7 @@ namespace Kadupul\Inventory\Domain;
 
 final class Device
 {
-    public function __construct(public readonly int $id, private string $description, private string $hostname, private string $notes) {}
+    public function __construct(public readonly int $id, private string $description, private string $hostname, private string $notes, private bool $enabled) {}
     public function description(): string
     {
         return $this->description;
@@ -22,11 +22,15 @@ final class Device
     {
         return $this->notes;
     }
+    public function enabled(): bool
+    {
+        return $this->enabled;
+    }
     public function revision(): string
     {
-        return hash('sha256', json_encode([$this->id, $this->description, $this->hostname, $this->notes], JSON_THROW_ON_ERROR));
+        return hash('sha256', json_encode([$this->id, $this->description, $this->hostname, $this->notes, $this->enabled], JSON_THROW_ON_ERROR));
     }
-    public function revise(string $description, string $hostname, string $notes, string $expectedRevision): void
+    public function revise(string $description, string $hostname, string $notes, bool $enabled, string $expectedRevision): void
     {
         if (!hash_equals($this->revision(), $expectedRevision)) {
             throw new DeviceEditConflict('This device changed. Reload it before saving.');
@@ -45,5 +49,6 @@ final class Device
         $this->description = $description;
         $this->hostname = $hostname;
         $this->notes = $notes;
+        $this->enabled = $enabled;
     }
 }

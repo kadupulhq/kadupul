@@ -94,9 +94,14 @@ paging, escaping and input rejection. CI runs both session configurations.
 ## Inventory editing slice
 
 Click a device name to open `/app.php/inventory/devices/{id}/edit`. Symfony Forms
-and Twig edit its name, address and notes. The Device aggregate validates these
+and Twig edit its name, address, notes and polling state. The Device aggregate validates these
 fields; the EditDevice command authorizes through IdentityAccess and saves through
 the DeviceEditor port. The list and editor share the same visibility policy.
+The polling choice is required and accepts only Enabled or Disabled; missing or
+invalid choices are rejected. Polling state participates in the revision so an
+older details form cannot overwrite a concurrent enable/disable operation. Saving
+uses the legacy device-save path: disabling resets observed status to unknown,
+and enabling leaves status discovery to the next poll. Historical data is retained.
 Other settings, including SNMP credentials, templates and poller assignment, remain
 in the legacy editor and cannot be submitted through this form.
 
@@ -121,7 +126,7 @@ automatically. Existing legacy editors do not enforce the new revision protocol.
 Remote collectors and arbitrary third-party plugins require separate parity testing.
 
 The HTTP suite checks invalid/extra fields, CSRF rejection, hidden devices, revoked
-realms, stale saves, escaped notes, persistence, graph-title refresh, host-save hooks
+realms, stale saves, polling transitions, escaped notes, persistence, graph-title refresh, host-save hooks
 and audit attribution with both session handlers. Domain/application tests check
 atomic validation and authorization before persistence.
 
@@ -287,3 +292,10 @@ the graph-title, plugin-hook and audit checks. Container/Twig lint, staged-conte
 checks and both security inventories pass. The production image builds and the
 extracted offline archive verifies with Docker networking disabled. These focused
 checks do not resolve the pre-existing full-suite failures described above.
+
+Polling-state validation: 27 module/kernel/architecture tests pass on PHP 8.3.33
+(1,813 assertions). File- and database-session HTTP suites pass for explicit
+choices, rejected missing/invalid states, concurrent changes, enable/disable
+persistence, status reset, list filters and retained notes. Container/Twig lint,
+security inventories and staged-content checks pass; the rebuilt offline archive
+verifies with Docker networking disabled.

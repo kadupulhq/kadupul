@@ -14,7 +14,7 @@ use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 final readonly class EditDevice
 {
     public function __construct(private ConsoleAccess $access, private DeviceEditor $devices) {}
-    public function __invoke(int $id, string $description, string $hostname, string $notes, string $revision): void
+    public function __invoke(int $id, string $description, string $hostname, string $notes, bool $enabled, string $revision): void
     {
         $actor = $this->access->consoleActor();
         if ($actor === null || !$this->access->canManageDevices($actor)) {
@@ -24,7 +24,7 @@ final readonly class EditDevice
         if ($device === null) {
             throw new InventoryAccessDenied(false);
         }
-        $device->revise($description, $hostname, $notes, $revision);
+        $device->revise($description, $hostname, $notes, $enabled, $revision);
         $this->devices->save($actor->id, $device, $revision);
     }
 }

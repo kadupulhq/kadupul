@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class DeviceEditType extends AbstractType
@@ -21,6 +22,9 @@ final class DeviceEditType extends AbstractType
         $builder->add('description', TextType::class, ['label' => 'Name', 'attr' => ['maxlength' => 150]])
             ->add('hostname', TextType::class, ['label' => 'Hostname or IP address', 'attr' => ['maxlength' => 100]])
             ->add('notes', TextareaType::class, ['required' => false, 'trim' => false, 'empty_data' => '', 'attr' => ['rows' => 8]])
+            ->add('enabled', ChoiceType::class, ['label' => 'Polling', 'choices' => ['Enabled' => true, 'Disabled' => false],
+                'choice_value' => static fn(?bool $enabled): string => $enabled === null ? '' : ($enabled ? 'enabled' : 'disabled'),
+                'placeholder' => false, 'help' => 'Disabled devices are excluded from polling. Existing graphs and data are retained.'])
             ->add('revision', HiddenType::class);
     }
     public function configureOptions(OptionsResolver $resolver): void

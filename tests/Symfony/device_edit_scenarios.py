@@ -9,10 +9,28 @@ class Inputs(HTMLParser):
     def __init__(self):
         super().__init__()
         self.fields = {}
+        self.select = None
+        self.textarea = None
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
         if tag == 'input' and 'name' in attrs:
             self.fields[attrs['name']] = attrs.get('value', '')
+        elif tag == 'select':
+            self.select = attrs.get('name')
+        elif tag == 'option' and self.select and 'selected' in attrs:
+            self.fields[self.select] = attrs.get('value', '')
+        elif tag == 'textarea':
+            self.textarea = attrs.get('name')
+            if self.textarea:
+                self.fields[self.textarea] = ''
+    def handle_data(self, data):
+        if self.textarea:
+            self.fields[self.textarea] += data
+    def handle_endtag(self, tag):
+        if tag == 'select':
+            self.select = None
+        elif tag == 'textarea':
+            self.textarea = None
 
 
 def verify_device_edit(harness, session, user_id, allowed_id, hidden_id, check):
@@ -36,9 +54,16 @@ def verify_device_edit(harness, session, user_id, allowed_id, hidden_id, check):
         return response.status, body
     original = harness.sql(f'SELECT description FROM host WHERE id={allowed_id}').strip()
     fields = get_fields()
+    check(fields.get('device_edit[enabled]') == 'enabled', 'editor displays current polling state')
     fields.update({'device_edit[description]': 'Edited inventory device', 'device_edit[hostname]': 'edited.invalid', 'device_edit[notes]': '<script>alert(1)</script> notes'})
     check(post(fields)[0] == 422, 'save requires same-origin CSRF evidence')
     check(post(fields, 'https://attacker.invalid')[0] == 422, 'cross-origin save is rejected')
+    for bad_state in ('', 'on', 'false', 'unexpected'):
+        invalid_state = dict(fields, **{'device_edit[enabled]': bad_state})
+        check(post(invalid_state, harness.base)[0] == 422, 'invalid polling choice is rejected: ' + repr(bad_state))
+    missing_state = dict(fields)
+    missing_state.pop('device_edit[enabled]')
+    check(post(missing_state, harness.base)[0] == 422, 'omitted polling state cannot silently disable a device')
     no_token = dict(fields)
     no_token.pop('device_edit[_token]')
     check(post(no_token, harness.base)[0] == 422, 'save requires the Symfony CSRF field')
@@ -87,5 +112,29 @@ def verify_device_edit(harness, session, user_id, allowed_id, hidden_id, check):
               'save-hook fixture is removed')
     check(post(fresh, harness.base)[0] == 409, 'replayed stale save cannot overwrite the new revision')
     check(session.request('/bin/legacy-device-edit.php')['status'] in (403, 404), 'CLI write boundary is not HTTP-accessible')
+    # A state change in another editor must invalidate a previously loaded form.
+    pending = get_fields()
+    harness.sql(f"UPDATE host SET disabled='on' WHERE id={allowed_id}")
+    check(post(pending, harness.base)[0] == 409, 'concurrent polling change rejects stale details form')
+    harness.sql(f"UPDATE host SET disabled='', status=3 WHERE id={allowed_id}")
+    disable = get_fields()
+    disable['device_edit[enabled]'] = 'disabled'
+    check(post(disable, harness.base)[0] == 200, 'Symfony command disables device polling')
+    check(harness.sql(f'SELECT disabled,status FROM host WHERE id={allowed_id}').strip() == 'on\t0',
+          'legacy disable effect resets device status')
+    check(get_fields().get('device_edit[enabled]') == 'disabled', 'editor reloads disabled state')
+    disabled_list = session.request('/app.php/inventory/devices.json?state=disabled&size=100')['json']['devices']
+    check(allowed_id in [device['id'] for device in disabled_list], 'disabled device appears in disabled Inventory filter')
+    check(post(disable, harness.base)[0] == 409, 'old enabled revision cannot repeat a state change')
+    enable = get_fields()
+    enable['device_edit[enabled]'] = 'enabled'
+    check(post(enable, harness.base)[0] == 200, 'Symfony command enables device polling')
+    check(harness.sql(f"SELECT COUNT(*) FROM host WHERE id={allowed_id} AND disabled='' AND status=0").strip() == '1',
+          'enabling retains unknown status until the poller observes the device')
+    check(get_fields().get('device_edit[enabled]') == 'enabled', 'editor reloads enabled state')
+    disabled_list = session.request('/app.php/inventory/devices.json?state=disabled&size=100')['json']['devices']
+    check(allowed_id not in [device['id'] for device in disabled_list], 'enabled device leaves disabled Inventory filter')
+    check(harness.sql(f'SELECT notes FROM host WHERE id={allowed_id}').strip() == '<script>alert(1)</script> notes',
+          'polling transitions preserve device notes')
     # Restore fixture fields so the existing listing assertions remain independent.
     harness.sql(f"UPDATE host SET description='{original}', hostname='fixture-edit.invalid', notes='' WHERE id={allowed_id}")
