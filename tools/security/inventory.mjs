@@ -55,9 +55,17 @@ async function fetchSonar(endpoint, parameters) {
 
 export async function collect(output, { sonar = fetchSonar, runGh = execFileSync } = {}) {
   const project = 'kadupulhq_kadupul';
-  const analysis = async () => (await sonar('project_analyses/search', {
-    project, branch: 'main', ps: '1',
-  })).analyses[0];
+  const analysis = async () => {
+    const response = await sonar('project_analyses/search', {
+      project, branch: 'main', ps: '1',
+    });
+    const latest = response?.analyses?.[0];
+    if (!latest || typeof latest.key !== 'string' || !latest.key.trim()
+        || typeof latest.revision !== 'string' || !latest.revision.trim()) {
+      throw new Error('No usable Sonar main analysis with a revision; verify project access and wait for a completed scan');
+    }
+    return latest;
+  };
   const before = await analysis();
   const issues = [];
   let expected;

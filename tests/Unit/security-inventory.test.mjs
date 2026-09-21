@@ -109,6 +109,30 @@ test('retains older non-Sonar alerts and renders remote markup as report data', 
   }
 });
 
+for (const response of [null, {}, { analyses: [] }, { analyses: [null] },
+  { analyses: [{ key: 'analysis' }] }, { analyses: [{ key: '', revision: 'abc' }] },
+  { analyses: [{ key: 'analysis', revision: ' ' }] }]) {
+  test(`rejects unusable Sonar analysis ${JSON.stringify(response)} before collecting`, async () => {
+    await assert.rejects(collect('/unused-on-error', {
+      sonar: async endpoint => {
+        assert.equal(endpoint, 'project_analyses/search');
+        return response;
+      },
+      runGh: () => assert.fail('Must not query GitHub without an analysis'),
+    }), /No usable Sonar main analysis with a revision/);
+  });
+}
+
+test('rejects an analysis disappearing during collection', async () => {
+  let analyses = 0;
+  await assert.rejects(collect('/unused-on-error', {
+    sonar: async endpoint => endpoint === 'project_analyses/search'
+      ? { analyses: analyses++ === 0 ? [{ key: 'analysis', revision: 'abc' }] : [] }
+      : { paging: { total: 1 }, issues: [issue] },
+    runGh: () => JSON.stringify([[alert('sonar-1')]]),
+  }), /No usable Sonar main analysis with a revision/);
+});
+
 for (const scenario of ['count changed', 'empty page', 'analysis changed', 'revision mismatch']) {
   test(`fails closed when ${scenario}`, async () => {
     let calls = 0;
