@@ -127,6 +127,8 @@ test('per-data-source mutations still run on POST', function () {
 
 test('data source edit page sends its mutations by POST with the csrf token', function () {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/data_sources.php');
+	$source = preg_replace('/\s+/', ' ', $source);
+	$source = str_replace('htmlspecialchars( ', 'htmlspecialchars(', $source);
 
 	expect($source)->toContain("<a class='hyperLink cactiPostAction' href='#' data-url='<?php print html_escape('data_sources.php?action=ds_' . (\$data['active'] == 'on' ? 'dis' : 'en') . 'able&id=' . (int) get_request_var('id'))")
 		->and($source)->toContain("<a class='pic deleteMarker fa fa-times cactiPostAction' href='#' data-url='\" . htmlspecialchars('data_sources.php?action=rrd_remove&id='")

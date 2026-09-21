@@ -14,7 +14,8 @@ function get_request_var($name) {
 
 test('item link parameters round-trip without changing action or attribute boundaries', function ($file, $payload) {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
-	$pattern = "/htmlspecialchars\\('(data_sources|data_templates)\\.php\\?action=(ds_edit|template_edit|rrd_remove|rrd_add)&id=' .*?, ENT_QUOTES \\| ENT_SUBSTITUTE, 'UTF-8'\\)/";
+	$pattern = "/htmlspecialchars\\(\\s*'(data_sources|data_templates)\\.php\\?action="
+		. "(ds_edit|template_edit|rrd_remove|rrd_add)&id='\\s+.*?,\\s*ENT_QUOTES \\| ENT_SUBSTITUTE,\\s*'UTF-8'\\s*\\)/s";
 	expect(preg_match_all($pattern, $source, $matches, PREG_SET_ORDER))->toBe($file === 'data_sources.php' ? 3 : 2);
 	$template_data_rrd = array('id' => 'item-' . $payload);
 	$GLOBALS['data_item_link_id'] = $payload;

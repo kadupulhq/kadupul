@@ -857,7 +857,37 @@ function template_edit() {
 			print "<div class='tabs' style='float:left;'><nav><ul role='tablist'>\n";
 
 			foreach ($template_data_rrds as $template_data_rrd) {
-				print "<li class='subTab'><a " . (($template_data_rrd['id'] == get_request_var('view_rrd')) ? "class='pic selected'" : "class='pic'") . " href='" . htmlspecialchars('data_templates.php?action=template_edit&id=' . rawurlencode((string) get_request_var('id')) . '&view_rrd=' . rawurlencode((string) $template_data_rrd['id']), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "'>" . ($i + 1) . ': ' . html_escape($template_data_rrd['data_source_name']) . '</a>' . ($template_data['data_sources'] == 0 ? "<a class='pic deleteMarker fa fa-times cactiPostAction' title='" . __esc('Delete') . "' href='#' data-url='" . htmlspecialchars('data_templates.php?action=rrd_remove&id=' . rawurlencode((string) $template_data_rrd['id']) . '&data_template_id=' . rawurlencode((string) get_request_var('id')), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "'></a>" : "<a class='deleteMarkerDisabled fa fa-times' href='#' title='" . __esc('Data Templates in use can not be modified') . "'></a>") . "</li>\n";
+				print "<li class='subTab'><a "
+					. (($template_data_rrd['id'] == get_request_var('view_rrd')) ? "class='pic selected'" : "class='pic'")
+					. " href='"
+					. htmlspecialchars(
+						'data_templates.php?action=template_edit&id='
+						. rawurlencode((string) get_request_var('id'))
+						. '&view_rrd='
+						. rawurlencode((string) $template_data_rrd['id']),
+						ENT_QUOTES | ENT_SUBSTITUTE,
+						'UTF-8'
+					)
+					. "'>"
+					. ($i + 1)
+					. ': '
+					. html_escape($template_data_rrd['data_source_name'])
+					. '</a>'
+					. ($template_data['data_sources'] == 0 ? "<a class='pic deleteMarker fa fa-times cactiPostAction' title='"
+					. __esc('Delete')
+					. "' href='#' data-url='"
+					. htmlspecialchars(
+						'data_templates.php?action=rrd_remove&id='
+						. rawurlencode((string) $template_data_rrd['id'])
+						. '&data_template_id='
+						. rawurlencode((string) get_request_var('id')),
+						ENT_QUOTES | ENT_SUBSTITUTE,
+						'UTF-8'
+					)
+					. "'></a>" : "<a class='deleteMarkerDisabled fa fa-times' href='#' title='"
+					. __esc('Data Templates in use can not be modified')
+					. "'></a>")
+					. "</li>\n";
 
 				$i++;
 			}
