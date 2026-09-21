@@ -36,7 +36,7 @@ See [migration and installation instructions](docs/symfony-migration.md).
 - [Getting started](https://kadupulhq.github.io/website/start/what-kadupul-is/)
 - [Installation](https://kadupulhq.github.io/website/start/install/)
 - [Documentation map](https://kadupulhq.github.io/website/map/)
-- [Compatibility](https://kadupulhq.github.io/website/project/compatibility/)
+- [Compatibility](https://kadupulhq.github.io/website/project/compatibility-with-cacti/)
 
 ## The name
 
