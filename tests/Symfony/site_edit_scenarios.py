@@ -68,7 +68,7 @@ def verify_site_edit(harness, session, user_id, check):
             check(post(fields, origin=origin)[0] == 422 and snapshot() == original, 'site saves reject missing or cross-origin CSRF evidence')
         missing_token = {key: value for key, value in fields.items() if key != 'site_edit[_token]'}
         check(post(missing_token)[0] == 422 and snapshot() == original, 'site save requires the CSRF token')
-        for invalid in ({'site_edit[name]': ' '}, {'site_edit[name]': '東' * 101}, {'site_edit[notes]': '京' * 1025}, {'site_edit[latitude]': '50'}, {'site_edit[name][]': 'bad'}):
+        for invalid in ({'site_edit[name]': '\0Name'}, {'site_edit[name]': 'Name\0'}, {'site_edit[name]': 'Na\0me'}, {'site_edit[notes]': '\0Notes'}, {'site_edit[notes]': 'Notes\0'}, {'site_edit[name]': ' '}, {'site_edit[name]': '東' * 101}, {'site_edit[notes]': '京' * 1025}, {'site_edit[latitude]': '50'}, {'site_edit[name][]': 'bad'}):
             status, body, _ = post(fields | invalid)
             check(status == 422 and snapshot() == original, 'site validation and extra-field rejection leave all columns unchanged')
             navigation(body)

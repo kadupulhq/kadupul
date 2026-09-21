@@ -13,6 +13,33 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  runtime-floor:
+    name: PHP runtime boundary (${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # 8.3 is a rejection test, not a supported application runtime.
+        php: ['8.3', '8.4']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '${{ matrix.php }}'
+          coverage: none
+      - name: Record installed PHP location before mise activation
+        run: echo "RUNTIME_TEST_PHP_PREFIX=$(dirname "$(dirname "$(command -v php)")")" >> "$GITHUB_ENV"
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+        with:
+          install_args: python@3.12.12
+      - name: Register selected PHP and verify CLI/HTTP runtime boundaries
+        env:
+          TEST_PHP_VERSION: '${{ matrix.php }}'
+        run: |
+          mise link "php@$TEST_PHP_VERSION" "$RUNTIME_TEST_PHP_PREFIX"
+          mise exec python@3.12.12 -- python tests/tools/runtime_floor.py --php-version "$TEST_PHP_VERSION"
+
   windows-storage-preflight:
     name: Windows storage access
     runs-on: windows-2022

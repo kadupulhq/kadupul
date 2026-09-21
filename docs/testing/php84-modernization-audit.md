@@ -85,17 +85,19 @@ encapsulated objects remain appropriate for the domain model.
   selected deprecated functions/constants/signatures. Dynamic calls, method
   receivers, inherited/magic properties and runtime argument values require
   further analysis; this is not a complete compatibility proof.
-- Syntax checks covered 655 application/test/tool PHP files, including the new
+- The initial syntax scan covered 655 application/test/tool PHP files, including the new
   preflight and excluding fixture/golden trees. The executable was explicitly
   resolved with `mise which php` and verified as **8.4.25**: zero syntax errors or
   compile-time deprecations. An initial child-process run resolved host PHP 8.5;
   its `$http_response_header` diagnostics were excluded from this PHP 8.4 audit.
-- Symfony unit/kernel/architecture suite: 100 tests, 4,165 assertions passed on
+- Symfony unit/kernel/architecture suite: 101 tests, 4,172 assertions passed on
   PHP 8.4.25. Complete HTTP suites passed with file and database sessions on
   the PHP 8.4 test image. Passing these suites does not mean all legacy paths
   were executed or all runtime deprecations were rejected.
 - Legacy and Symfony bootstraps reject PHP 8.3 before database/configuration
-  access; PHP 8.4 passes the preflight. Both Composer manifests/locks validate.
+  access; PHP 8.4 passes the preflight. `tests/tools/runtime_floor.py` now
+  verifies both CLI and HTTP behavior in CI on PHP 8.3 (rejection only) and
+  PHP 8.4. Both Composer manifests/locks validate.
 - The complete legacy unit suite could not run locally on the case-insensitive
   macOS worktree: a `HandOff`/`handoff` exclusion resolves differently and loads
   the already-excluded missing `lib/type_secure.php` dependency. Linux CI is the
