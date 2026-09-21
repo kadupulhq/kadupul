@@ -33,7 +33,7 @@ final class InstallationConfiguration implements LegacyConfiguration
 
         return $this->configuration = [
             'root' => $this->projectDir,
-            'forced_locale' => $config['i18n_force_language'] ?? null,
+            'forced_locale' => $i18n_force_language ?? null,
             'host' => $database_hostname ?? 'localhost', 'port' => $database_port ?? 3306,
             'database' => $database_default ?? '', 'username' => $database_username ?? '', 'password' => $database_password ?? '',
             'ssl' => $database_ssl ?? false, 'ssl_key' => $database_ssl_key ?? '',

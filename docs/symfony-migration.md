@@ -466,7 +466,7 @@ them for presentation. Those error strings currently serve as catalog IDs.
 For site HTML requests carrying cookies, precedence is:
 
 1. `i18n_language_support=0` forces English.
-2. Trusted installation `config['i18n_force_language']`, if supported.
+2. Trusted installation `$i18n_force_language`, if supported.
 3. Shared-session `sess_user_language`, or saved `user_language` when absent.
 4. Weighted browser languages, unless `i18n_auto_detection` disables detection.
 5. Installation `i18n_default_language`, then English.

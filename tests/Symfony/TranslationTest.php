@@ -16,6 +16,7 @@ use Kadupul\Kernel;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Kadupul\Platform\Contract\LegacyConfiguration;
 use Kadupul\Platform\Infrastructure\Symfony\SiteLocaleSubscriber;
+use Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,6 +62,37 @@ final class TranslationTest extends TestCase
         yield 'default without detection' => [['i18n_auto_detection' => '0', 'i18n_default_language' => 'fr-FR'], null, null, 'en', 'fr'];
         yield 'unsupported browser uses default' => [['i18n_default_language' => 'fr'], null, null, 'ja', 'fr'];
         yield 'English fallback and ignored query' => [[], null, null, 'ja', 'en'];
+    }
+
+    #[DataProvider('installationLocales')]
+    public function testActualInstallationConfigurationSelectsLocale(string $source, string $expected): void
+    {
+        $directory = sys_get_temp_dir() . '/kadupul-locale-' . bin2hex(random_bytes(8));
+        mkdir($directory . '/include', 0700, true);
+        try {
+            file_put_contents($directory . '/include/config.php', "<?php\n" . $source);
+            $configuration = new InstallationConfiguration($directory);
+            $preference = $this->createMock(LocalePreference::class);
+            $preference->method('preferredLocale')->willReturn('en-US');
+            $subscriber = new SiteLocaleSubscriber($preference, $this->database([]), $configuration);
+            $request = Request::create('/inventory/sites', 'GET', [], ['Cacti' => 'fixture']);
+            $request->attributes->set('_route', 'inventory_sites');
+            $request->headers->set('Accept-Language', 'en-US');
+            $subscriber->onRequest(new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST));
+            self::assertSame($expected, $request->attributes->get('_locale'));
+            self::assertFalse(defined('CACTI_VERSION'));
+        } finally {
+            unlink($directory . '/include/config.php');
+            rmdir($directory . '/include');
+            rmdir($directory);
+        }
+    }
+
+    public static function installationLocales(): iterable
+    {
+        yield 'scalar overrides user and browser' => ['$i18n_force_language = "fr-FR";', 'fr'];
+        yield 'null preserves preference' => ['$i18n_force_language = null;', 'en'];
+        yield 'unset preserves preference' => ['', 'en'];
     }
 
     public function testFrenchFormEscapesDataTranslatesValidationAndResetsLocale(): void
