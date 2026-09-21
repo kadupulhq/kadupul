@@ -1,5 +1,6 @@
 """Symfony site editing: authorization, CSRF, revisions and isolated writes."""
 import json
+from pathlib import Path
 from urllib.error import HTTPError
 from urllib.parse import parse_qs, urlencode, urlsplit
 from urllib.request import Request
@@ -105,6 +106,26 @@ def verify_site_edit(harness, session, user_id, check):
             check(session.request(path + suffix)['status'] == 400, 'site editor rejects malformed list context')
         with session.opener.open(Request(harness.base + path, method='HEAD')) as response:
             check(response.status == 200 and response.read() == b'', 'site editor HEAD has no body')
+        cookies = next(handler.cookiejar for handler in session.opener.handlers if hasattr(handler, 'cookiejar'))
+        credential = next(cookie.value for cookie in cookies if cookie.name == 'Cacti')
+        payload = {'user': user_id, 'site': site_id, 'cookie': credential, 'mode': 'locks'}
+        probe_source = Path(__file__).with_name('site_authorization_probe.php').read_text().removeprefix('<?php')
+        locked = harness.php('-r', probe_source, json.dumps(payload))
+        locks = json.loads(locked['stdout']) if locked['exit'] == 0 else {}
+        if locked['exit'] != 0 or len(locks) != 16 or not all(locks.values()):
+            raise AssertionError('Authorization lock probe failed: ' + repr(locked))
+        check(locked['exit'] == 0 and len(locks) == 16 and all(locks.values()),
+              'site write serializes account, policy, direct and group grant revocations')
+        # Use a separate credential so this rejection does not end the suite's session.
+        rejected = Session(harness.base)
+        check(not rejected.login('behavior-admin')['login_form'], 'revocation probe obtains a separate session')
+        cookies = next(handler.cookiejar for handler in rejected.opener.handlers if hasattr(handler, 'cookiejar'))
+        payload.update(cookie=next(cookie.value for cookie in cookies if cookie.name == 'Cacti'), mode='revoke')
+        revoked = harness.php('-r', probe_source, json.dumps(payload))
+        evidence = json.loads(revoked['stdout']) if revoked['exit'] == 0 else {}
+        check(revoked['exit'] == 0 and len(evidence) == 4 and all(evidence.values())
+              and rejected.request('/app.php/session')['status'] == 401,
+              'site rollback cannot restore a revoked session after account re-enabling')
         # Exercise the adapter independently of the application's earlier read:
         # revisions and authorization must be checked again at persistence time.
         probe = r'''

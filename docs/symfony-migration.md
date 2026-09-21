@@ -172,8 +172,13 @@ same-origin evidence. Unknown fields are rejected. Validated list search, order,
 page and size survive errors and saves; no supplied return URL is followed.
 
 The legacy-schema adapter uses prepared statements and a local transaction. It
-rechecks the actor and realm before acquiring a row lock, compares the name/notes
-revision under that lock, and updates only those two fields. Stale saves return
+rechecks the actor and realm before acquiring a site-row lock, compares the name/notes
+revision under that lock, and updates only those two fields. IdentityAccess uses
+current locking reads during this transaction: account, authentication policy,
+and the direct or group grants that authorize the write stay locked through
+commit. Concurrent revocations wait for the write; revocations committed first
+are observed and rejected. Session storage uses its own database connection so
+rolling back a rejected site write cannot restore a revoked credential. Stale saves return
 409; concurrent address, timezone, map or alternate-ID changes are preserved.
 The legacy update-site path has no plugin/poller save hooks or cache invalidation
 for existing sites, so this adapter does not bootstrap procedural code or launch

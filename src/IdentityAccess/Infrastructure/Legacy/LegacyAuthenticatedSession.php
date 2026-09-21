@@ -23,18 +23,18 @@ final readonly class LegacyAuthenticatedSession implements AuthenticatedSession,
         if ($id <= 0 || isset($snapshot['sess_change_password'])) {
             return null;
         }
-        $authMethod = $this->database->get()->query("SELECT value FROM settings WHERE name = 'auth_method'")->fetchColumn();
+        $authMethod = $this->database->get()->query("SELECT value FROM settings WHERE name = 'auth_method'" . $this->readLock())->fetchColumn();
         if ($authMethod !== false && !in_array((int) $authMethod, [1, 2, 3, 4], true)) {
             return null;
         }
-        $query = $this->database->get()->prepare('SELECT id, username, enabled, locked FROM user_auth WHERE id = ?');
+        $query = $this->database->get()->prepare('SELECT id, username, enabled, locked FROM user_auth WHERE id = ?' . $this->readLock());
         $query->execute([$id]);
         $user = $query->fetch();
         if (!$user || $user['enabled'] !== 'on' || $user['locked'] === 'on') {
             $this->session->revoke();
             return null;
         }
-        $guest = $this->database->get()->query("SELECT value FROM settings WHERE name = 'guest_user'")->fetchColumn();
+        $guest = $this->database->get()->query("SELECT value FROM settings WHERE name = 'guest_user'" . $this->readLock())->fetchColumn();
         if ($id === (int) $guest || $user['username'] === $guest || !$this->hasRealm($id, 8)) {
             return null;
         }
@@ -48,12 +48,26 @@ final readonly class LegacyAuthenticatedSession implements AuthenticatedSession,
 
     private function hasRealm(int $id, int $realm): bool
     {
-        $query = $this->database->get()->prepare("SELECT 1 FROM user_auth_realm WHERE user_id = ? AND realm_id = ?
-            UNION SELECT 1 FROM user_auth_group_realm r
+        // Each successful grant must remain locked until its caller commits.
+        // Separate queries ensure the lock applies to direct AND group grants;
+        // a suffix on a UNION would not lock every query block.
+        $query = $this->database->get()->prepare('SELECT realm_id FROM user_auth_realm WHERE user_id = ? AND realm_id = ?' . $this->readLock());
+        $query->execute([$id, $realm]);
+        if ($query->fetchColumn() !== false) {
+            return true;
+        }
+        $query = $this->database->get()->prepare("SELECT r.realm_id FROM user_auth_group_realm r
             INNER JOIN user_auth_group_members m ON m.group_id = r.group_id
             INNER JOIN user_auth_group g ON g.id = r.group_id
-            WHERE g.enabled = 'on' AND m.user_id = ? AND r.realm_id = ? LIMIT 1");
-        $query->execute([$id, $realm, $id, $realm]);
+            WHERE g.enabled = 'on' AND m.user_id = ? AND r.realm_id = ? LIMIT 1" . $this->readLock());
+        $query->execute([$id, $realm]);
         return $query->fetchColumn() !== false;
+    }
+
+    private function readLock(): string
+    {
+        // MySQL and MariaDB locking reads see the current committed row even
+        // after an earlier consistent read, and hold it through the site write.
+        return $this->database->get()->inTransaction() ? ' LOCK IN SHARE MODE' : '';
     }
 }
