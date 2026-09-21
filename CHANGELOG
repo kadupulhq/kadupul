@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-security: Escape shared form attributes and form-end JavaScript values while retaining raw globals, generated IDs and multipart behavior
 -security: Preserve literal confirmation-button URLs with explicit attribute escaping while retaining POST action controls
 -security: Encode notification-manager IDs in JavaScript URLs and hidden attributes while preserving validation and submitted IDs
 -security: Preserve literal search text and associate labels in aggregate templates, color templates and reports

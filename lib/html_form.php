@@ -1512,7 +1512,13 @@ function form_start($action, $id = '', $multipart = false) {
 
 	$form_action = $action;
 
-	print "<form class='cactiFormStart' id='$form_id' name='$form_id' action='$form_action' autocomplete='off' method='post'" . ($multipart ? " enctype='multipart/form-data'":'') . ">";
+	$form_id_html = htmlspecialchars((string) $form_id, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	$form_id_html = str_replace('`', '&#96;', $form_id_html);
+	$form_action_html = htmlspecialchars((string) $form_action, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	$form_action_html = str_replace('`', '&#96;', $form_action_html);
+
+	print "<form class='cactiFormStart' id='$form_id_html' name='$form_id_html' action='$form_action_html'"
+		. " autocomplete='off' method='post'" . ($multipart ? " enctype='multipart/form-data'":'') . ">";
 }
 
 /**
@@ -1527,7 +1533,9 @@ function form_end($ajax = true) {
 
 	print '</form>' . PHP_EOL;
 
-	if ($ajax) { ?>
+	if ($ajax) {
+		$json_flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE;
+		?>
 		<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 		var formArray = [];
 		var changed = false;
@@ -1590,16 +1598,22 @@ function form_end($ajax = true) {
 		}
 
 		$(function() {
-			formArray['<?php print $form_id;?>'] = $('#<?php print $form_id;?>').serializeForm();
+			var formId = <?php
+				print json_encode((string) $form_id, $json_flags);
+			?>;
+			var form = $(document.getElementById(formId));
+			formArray[formId] = form.serializeForm();
 			changed = false;
 
-			$('#<?php print $form_id;?>').on('submit', function(event) {
+			form.on('submit', function(event) {
 				event.preventDefault();
 
 				// Enable the form if it's disabled
 				$(this).find('input, textarea, select').prop('disabled', false);
 
-				strURL  = '<?php print $form_action;?>';
+				strURL = <?php
+					print json_encode((string) $form_action, $json_flags);
+				?>;
 				strURL += (strURL.indexOf('?') >= 0 ? '&':'?') + 'header=false';
 
 				json =  $(this).serializeObject();
