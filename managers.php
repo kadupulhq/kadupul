@@ -1112,7 +1112,8 @@ function form_actions() {
 			$selected_items_html = (isset($selected_items) ? serialize($selected_items) : '');
 			$selected_items_html = htmlspecialchars($selected_items_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 			$selected_items_html = str_replace('`', '&#96;', $selected_items_html);
-			$action_html = htmlspecialchars((string) get_nfilter_request_var('drp_action'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+			$action_html = (string) get_nfilter_request_var('drp_action');
+			$action_html = htmlspecialchars($action_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 			$action_html = str_replace('`', '&#96;', $action_html);
 
 			print "<tr>
@@ -1178,7 +1179,8 @@ function form_actions() {
 			$selected_items_html = (isset($selected_items) ? serialize($selected_items) : '');
 			$selected_items_html = htmlspecialchars($selected_items_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 			$selected_items_html = str_replace('`', '&#96;', $selected_items_html);
-			$action_html = htmlspecialchars((string) get_nfilter_request_var('drp_action'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+			$action_html = (string) get_nfilter_request_var('drp_action');
+			$action_html = htmlspecialchars($action_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 			$action_html = str_replace('`', '&#96;', $action_html);
 			$id_html = htmlspecialchars((string) get_nfilter_request_var('id'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 			$id_html = str_replace('`', '&#96;', $id_html);
