@@ -37,6 +37,7 @@
  * @return void
  */
 function draw_edit_form($array) {
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
 	if (cacti_sizeof($array)) {
 		foreach ($array as $top_branch => $top_children) {
 			if ($top_branch == 'config') {
@@ -49,13 +50,26 @@ function draw_edit_form($array) {
 
 	if (cacti_sizeof($fields_array)) {
 		if (!isset($config_array['no_form_tag'])) {
-			print "<form class='cactiForm' method='post' autocomplete='off' action='" . ((isset($config_array['post_to'])) ? $config_array['post_to'] : get_current_page()) . "'" . ((isset($config_array['form_name'])) ? " name='" . $config_array['form_name'] . "'" : '') . ((isset($config_array['enctype'])) ? " enctype='" . $config_array['enctype'] . "'" : '') . ">";
+			$post_to = $config_array['post_to'] ?? get_current_page();
+			$post_html = htmlspecialchars((string) $post_to, $escape_flags, 'UTF-8', false);
+			$post_html = str_replace('`', '&#96;', $post_html);
+			print "<form class='cactiForm' method='post' autocomplete='off' action='$post_html'";
+			foreach (array('form_name' => 'name', 'enctype' => 'enctype') as $key => $attribute) {
+				if (isset($config_array[$key])) {
+					$value_html = htmlspecialchars((string) $config_array[$key], $escape_flags, 'UTF-8', false);
+					$value_html = str_replace('`', '&#96;', $value_html);
+					print " $attribute='$value_html'";
+				}
+			}
+			print '>';
 		}
 
 		$i = 0;
 		$row_class = 'odd';
 
 		foreach ($fields_array as $field_name => $field_array) {
+			$row_id_html = htmlspecialchars('row_' . $field_name, $escape_flags, 'UTF-8', false);
+			$row_id_html = str_replace('`', '&#96;', $row_id_html);
 			if ($field_array['method'] == 'hidden') {
 				if (!isset($field_array['value'])) {
 					cacti_log("WARNING: Cacti Form field '$field_name' does not include a 'value' Column.  Using default.", false);
@@ -90,16 +104,19 @@ function draw_edit_form($array) {
 				print '</div>';
 			} elseif ($field_array['method'] == 'spacer') {
 				$collapsible = (isset($field_array['collapsible']) && $field_array['collapsible'] == 'true');
+				$friendly_html = htmlspecialchars((string) $field_array['friendly_name'], $escape_flags, 'UTF-8', false);
+				$friendly_html = str_replace('`', '&#96;', $friendly_html);
 
-				print "<div class='spacer formHeader" . ($collapsible ? ' collapsible':'') . "' id='row_$field_name'><div class='formHeaderText'>" . html_escape($field_array['friendly_name']);
+				print "<div class='spacer formHeader" . ($collapsible ? ' collapsible':'')
+					. "' id='$row_id_html'><div class='formHeaderText'>" . $friendly_html;
 				print '<div class="formTooltip">' . (isset($field_array['description']) ? display_tooltip(html_purify($field_array['description'])):'') . '</div>';
 				print ($collapsible ? "<div class='formHeaderAnchor'><i class='fa fa-angle-double-up'></i></div>":'') . '</div></div>';
 			} else {
 				// Make a row using a div
 				if (isset($config_array['force_row_color'])) {
-					print "<div id='row_$field_name' class='formRow even-alternate $row_class'>";
+					print "<div id='$row_id_html' class='formRow even-alternate $row_class'>";
 				} else {
-					print "<div id='row_$field_name' class='formRow $row_class'>";
+					print "<div id='$row_id_html' class='formRow $row_class'>";
 					if ($row_class == 'even') {
 						$row_class = 'odd';
 					} else {
@@ -167,17 +184,23 @@ function draw_edit_form($array) {
 
 		if ((isset($_SESSION['form_change_actions']) && cacti_sizeof($_SESSION['form_change_actions'])) ||
 			(isset($_SESSION['form_click_actions']) && cacti_sizeof($_SESSION['form_click_actions']))) {
+			$json_flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE;
 			print PHP_EOL . '<script type="text/javascript" ' . CactiSecureHeaders::getNonceAttribute() . '>' . PHP_EOL;
+			// Control IDs use double_encode=false: decode once to match the DOM, not the HTML source.
 
 			if (isset($_SESSION['form_change_actions']) && cacti_sizeof($_SESSION['form_change_actions'])) {
 				foreach($_SESSION['form_change_actions'] as $form_name => $action) {
-					print "$('#" . html_escape($form_name) . "').on('change', function() { " . $action . "; });" . PHP_EOL;
+					$element_id = html_entity_decode((string) $form_name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+					print '$(document.getElementById(' . json_encode($element_id, $json_flags)
+						. ")).on('change', function() { " . $action . "; });" . PHP_EOL;
 				}
 			}
 
 			if (isset($_SESSION['form_click_actions']) && cacti_sizeof($_SESSION['form_click_actions'])) {
 				foreach($_SESSION['form_click_actions'] as $form_name => $action) {
-					print "$('#" . html_escape($form_name) . "').on('click', function() { " . $action . "; });" . PHP_EOL;
+					$element_id = html_entity_decode((string) $form_name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+					print '$(document.getElementById(' . json_encode($element_id, $json_flags)
+						. ")).on('click', function() { " . $action . "; });" . PHP_EOL;
 				}
 			}
 
@@ -1161,9 +1184,22 @@ function form_checkbox($form_name, $form_previous_value, $form_caption, $form_de
 		$labelClass = ' checkboxLabelWanted';
 	}
 
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, 'UTF-8', false);
+	$form_name_html = str_replace('`', '&#96;', $form_name_html);
+	$class_html = htmlspecialchars((string) $class, $escape_flags, 'UTF-8', false);
+	$class_html = str_replace('`', '&#96;', $class_html);
+	$title_html = htmlspecialchars((string) $title, $escape_flags, 'UTF-8', false);
+	$title_html = str_replace('`', '&#96;', $title_html);
+	$form_caption_html = htmlspecialchars((string) $form_caption, $escape_flags, 'UTF-8', false);
+	$form_caption_html = str_replace('`', '&#96;', $form_caption_html);
+
 	print "<span class='nowrap'>";
-	print "<label class='checkboxSwitch' " . ($title != '' ? " title='" . html_escape($title) . "'":'') . '><input ' . ($title != '' ? " title='" . html_escape($title) . "'":'') . " class='formCheckbox$class' type='checkbox' id='$form_name' name='$form_name'" . $checked . "><span class='checkboxSlider checkboxRound'></span></label>";
-	print "<label class='checkboxLabel$labelClass' for='$form_name'>" . html_escape($form_caption) . '</label>';
+	print "<label class='checkboxSwitch' " . ($title != '' ? " title='$title_html'" : '') . '><input '
+		. ($title != '' ? " title='$title_html'" : '')
+		. " class='formCheckbox$class_html' type='checkbox' id='$form_name_html' name='$form_name_html'"
+		. $checked . "><span class='checkboxSlider checkboxRound'></span></label>";
+	print "<label class='checkboxLabel$labelClass' for='$form_name_html'>" . $form_caption_html . '</label>';
 	print '</span>';
 }
 
@@ -1201,11 +1237,23 @@ function form_radio_button($form_name, $form_previous_value, $form_current_value
 		$_SESSION['form_change_actions'][$css_id] = $on_change;
 	}
 
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, 'UTF-8', false);
+	$form_name_html = str_replace('`', '&#96;', $form_name_html);
+	$css_id_html = htmlspecialchars((string) $css_id, $escape_flags, 'UTF-8', false);
+	$css_id_html = str_replace('`', '&#96;', $css_id_html);
+	$class_html = htmlspecialchars((string) $class, $escape_flags, 'UTF-8', false);
+	$class_html = str_replace('`', '&#96;', $class_html);
+	$form_current_value_html = htmlspecialchars((string) $form_current_value, $escape_flags, 'UTF-8', false);
+	$form_current_value_html = str_replace('`', '&#96;', $form_current_value_html);
+	$form_caption_html = htmlspecialchars((string) $form_caption, $escape_flags, 'UTF-8', false);
+	$form_caption_html = str_replace('`', '&#96;', $form_caption_html);
+
 	print "<span class='nowrap'>";
-	print "<label class='radioSwitch'><input value='" . html_escape($form_current_value) .
-		"' class='formCheckbox$class' type='radio' id='$css_id' name='$form_name'" .
+	print "<label class='radioSwitch'><input value='" . $form_current_value_html .
+		"' class='formCheckbox$class_html' type='radio' id='$css_id_html' name='$form_name_html'" .
 		$checked . "><span class='radioSlider radioRound'></span></label>";
-	print "<label class='radioLabelWanted' for='$css_id'>" . html_escape($form_caption) . "</label>";
+	print "<label class='radioLabelWanted' for='$css_id_html'>" . $form_caption_html . "</label>";
 	print "</span>";
 }
 
@@ -1238,11 +1286,25 @@ function form_text_area($form_name, $form_previous_value, $form_rows, $form_colu
 		$_SESSION['form_change_actions'][$form_name] = $on_change;
 	}
 
-	if ($placeholder != '') {
-		$placeholder = " placeholder='" . html_escape($placeholder) . "'";
-	}
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, 'UTF-8', false);
+	$form_name_html = str_replace('`', '&#96;', $form_name_html);
+	$class_html = htmlspecialchars((string) $class, $escape_flags, 'UTF-8', false);
+	$class_html = str_replace('`', '&#96;', $class_html);
+	$form_columns_html = htmlspecialchars((string) $form_columns, $escape_flags, 'UTF-8', false);
+	$form_columns_html = str_replace('`', '&#96;', $form_columns_html);
+	$form_rows_html = htmlspecialchars((string) $form_rows, $escape_flags, 'UTF-8', false);
+	$form_rows_html = str_replace('`', '&#96;', $form_rows_html);
+	$placeholder_html = htmlspecialchars((string) $placeholder, $escape_flags, 'UTF-8', false);
+	$placeholder_html = str_replace('`', '&#96;', $placeholder_html);
+	$form_previous_value_html = htmlspecialchars((string) $form_previous_value, $escape_flags, 'UTF-8', false);
+	$form_previous_value_html = str_replace('`', '&#96;', $form_previous_value_html);
 
-	print "<textarea class='$class ui-state-default ui-corner-all' aria-multiline='true' cols='$form_columns' rows='$form_rows' id='$form_name' name='$form_name'" . $placeholder . '>' . html_escape($form_previous_value) . "</textarea>";
+	$placeholder_attribute = $placeholder != '' ? " placeholder='$placeholder_html'" : '';
+
+	print "<textarea class='$class_html ui-state-default ui-corner-all' aria-multiline='true'"
+		. " cols='$form_columns_html' rows='$form_rows_html' id='$form_name_html' name='$form_name_html'"
+		. $placeholder_attribute . '>' . $form_previous_value_html . '</textarea>';
 }
 
 /* form_multi_dropdown - draws a standard html multiple select dropdown
@@ -1287,10 +1349,19 @@ function form_multi_dropdown($form_name, $array_display, $sql_previous_values, $
 		$_SESSION['form_change_actions'][$form_name] = $on_change;
 	}
 
-	print "<select style='height:20px;' size='1' class='$class' id='$form_name' name='$form_name" . "[]' multiple>";
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, 'UTF-8', false);
+	$form_name_html = str_replace('`', '&#96;', $form_name_html);
+
+	print "<select style='height:20px;' size='1' class='$class' id='$form_name_html'"
+		. " name='$form_name_html" . "[]' multiple>";
 
 	foreach (array_keys($array_display) as $id) {
-		print "<option value='" . $id . "'";
+		$id_html = htmlspecialchars((string) $id, $escape_flags, 'UTF-8', false);
+		$id_html = str_replace('`', '&#96;', $id_html);
+		$label_html = htmlspecialchars((string) $array_display[$id], $escape_flags, 'UTF-8', false);
+		$label_html = str_replace('`', '&#96;', $label_html);
+		print "<option value='" . $id_html . "'";
 
 		if (is_array($sql_previous_values) && cacti_sizeof($sql_previous_values)) {
 			for ($i=0; ($i < cacti_count($sql_previous_values)); $i++) {
@@ -1300,7 +1371,7 @@ function form_multi_dropdown($form_name, $array_display, $sql_previous_values, $
 			}
 		}
 
-		print '>' . html_escape($array_display[$id]);
+		print '>' . $label_html;
 		print "</option>";
 	}
 
