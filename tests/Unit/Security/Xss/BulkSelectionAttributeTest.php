@@ -19,6 +19,15 @@ function get_nfilter_request_var($name) {
 	return get_request_var($name);
 }
 
+function isset_request_var($name) {
+	return $name === 'local_graph_id';
+}
+
+function get_filter_request_var($name) {
+	expect($name)->toBe('local_graph_id');
+	return 17;
+}
+
 function render_confirmation($source, $items, $action, $save_html = '') {
 	expect(preg_match('/\$selected_items_html = \(isset\(\$(\w+)\).*?<\/tr>[^;]*;/s', $source, $match))->toBe(1);
 	if ($items !== null) {
@@ -45,7 +54,8 @@ test('bulk confirmation fields preserve serialized selections and action values'
 		. $output . '</table></body></html>');
 	$inputs = $document->getElementsByTagName('input');
 	$hasReturnButton = in_array($file, array('automation_networks.php', 'automation_snmp.php'), true);
-	expect($inputs->length)->toBe($hasReturnButton ? 4 : 3);
+	$hasGraphId = $file === 'aggregate_graphs.php';
+	expect($inputs->length)->toBe(3 + (int) $hasReturnButton + (int) $hasGraphId);
 	$fields = array();
 	foreach ($inputs as $input) {
 		if ($hasReturnButton && $input->getAttribute('type') === 'button') {
@@ -58,6 +68,9 @@ test('bulk confirmation fields preserve serialized selections and action values'
 		$fields[$input->getAttribute('name')] = $input->getAttribute('value');
 	}
 	expect($fields['action'])->toBe('actions');
+	if ($hasGraphId) {
+		expect($fields['local_graph_id'])->toBe('17');
+	}
 	expect($fields['drp_action'])->toBe($action);
 	expect($fields['selected_items'])->toBe($items === null ? '' : serialize($items));
 	if ($items !== null) {
@@ -88,6 +101,12 @@ test('bulk confirmation fields preserve serialized selections and action values'
 	'colors' => 'color.php',
 	'links' => 'links.php',
 	'sites' => 'sites.php',
+	'CDEFs' => 'cdef.php',
+	'VDEFs' => 'vdef.php',
+	'aggregate graphs' => 'aggregate_graphs.php',
+	'graphs' => 'graphs.php',
+	'data sources' => 'data_sources.php',
+	'pollers' => 'pollers.php',
 ))->with(array(
 	'ordinary ID' => '42',
 	'leading zeros' => '0042',

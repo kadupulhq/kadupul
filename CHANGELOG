@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-security: Escape confirmation selections and actions for CDEFs, VDEFs, aggregate graphs, graphs, data sources and pollers without altering submitted values
 -security: Escape confirmation selections and actions for discovered devices, discovery networks, automation SNMP, colors, links and sites without altering submitted values
 -security: Escape bulk confirmation selections and actions for aggregate/color templates, data source profiles, automation templates and automation graph/tree rules while preserving submitted values
 -security: Escape bulk confirmation selections and actions for data queries, data inputs, data templates, graph templates, host templates and GPRINT presets without altering submitted IDs
