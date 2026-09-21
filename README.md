@@ -4,7 +4,7 @@ Network monitoring and graphing. Kadupul polls devices over SNMP and scripts,
 stores measurements in RRD files, and renders graphs with RRDtool.
 It is an independent fork of [Cacti](https://github.com/Cacti/cacti), without affiliation or endorsement from that project.
 
-[Documentation](https://kadupul.org/) · [Issue tracker](https://github.com/kadupulhq/kadupul/issues) · [Discussions](https://github.com/kadupulhq/kadupul/discussions)
+[Documentation](https://kadupulhq.github.io/website/) · [Issue tracker](https://github.com/kadupulhq/kadupul/issues) · [Discussions](https://github.com/kadupulhq/kadupul/discussions)
 
 ## Status
 
@@ -21,7 +21,7 @@ retains PHP 8.0 support and phpseclib 3.x.
 - Improve security boundaries and maintainability.
 - Provide documented installation and reversible migration procedures.
 
-These are goals, not completed features. See [project status](https://kadupul.org/project/status/).
+These are goals, not completed features. See [project status](https://kadupulhq.github.io/website/project/status/).
 
 ## Development and offline installation
 
@@ -33,10 +33,10 @@ See [migration and installation instructions](docs/symfony-migration.md).
 
 ## Documentation
 
-- [Getting started](https://kadupul.org/start/what-kadupul-is/)
-- [Installation](https://kadupul.org/start/install/)
-- [Documentation map](https://kadupul.org/map/)
-- [Compatibility](https://kadupul.org/project/compatibility/)
+- [Getting started](https://kadupulhq.github.io/website/start/what-kadupul-is/)
+- [Installation](https://kadupulhq.github.io/website/start/install/)
+- [Documentation map](https://kadupulhq.github.io/website/map/)
+- [Compatibility](https://kadupulhq.github.io/website/project/compatibility-with-cacti/)
 
 ## The name
 
@@ -51,7 +51,7 @@ Report vulnerabilities through [SECURITY.md](SECURITY.md).
 ## License
 
 [GPL-3.0-or-later](LICENSE). Dependencies retain their own license terms.
-See the [licensing documentation](https://kadupul.org/project/license/).
+See the [licensing documentation](https://kadupulhq.github.io/website/project/license/).
 
 ### RRD storage platform requirements
 
