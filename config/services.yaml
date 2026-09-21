@@ -74,3 +74,6 @@ services:
 
     Kadupul\Inventory\Application\Port\SiteEditor:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacySiteEditor
+
+    Kadupul\IdentityAccess\Contract\LocalePreference:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyLocalePreference

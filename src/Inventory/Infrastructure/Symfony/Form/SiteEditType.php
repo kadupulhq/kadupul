@@ -18,13 +18,13 @@ final class SiteEditType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('name', TextType::class, ['trim' => false, 'help' => 'Enter a name of 1–100 Unicode characters.'])
-            ->add('notes', TextareaType::class, ['required' => false, 'trim' => false, 'empty_data' => '', 'help' => 'Up to 1,024 Unicode characters.', 'attr' => ['rows' => 8]])
+        $builder->add('name', TextType::class, ['label' => 'Name', 'trim' => false, 'help' => 'Enter a name of 1–100 Unicode characters.'])
+            ->add('notes', TextareaType::class, ['label' => 'Notes', 'required' => false, 'trim' => false, 'empty_data' => '', 'help' => 'Up to 1,024 Unicode characters.', 'attr' => ['rows' => 8]])
             ->add('revision', HiddenType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['csrf_protection' => true, 'csrf_token_id' => 'inventory_site_edit', 'method' => 'POST']);
+        $resolver->setDefaults(['translation_domain' => 'inventory', 'csrf_protection' => true, 'csrf_token_id' => 'inventory_site_edit', 'method' => 'POST']);
     }
 }

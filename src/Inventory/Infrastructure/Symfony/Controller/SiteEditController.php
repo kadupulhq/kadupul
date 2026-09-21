@@ -22,26 +22,27 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class SiteEditController
 {
     #[Route('/inventory/sites/{id}/edit', name: 'inventory_site_edit', requirements: ['id' => '[1-9][0-9]{0,9}'], methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(int $id, Request $request, FindEditableSite $find, EditSite $edit, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls): Response
+    public function __invoke(int $id, Request $request, FindEditableSite $find, EditSite $edit, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         try {
             $site = $find($id);
         } catch (InventoryAccessDenied $error) {
-            return new Response('Access denied.', $error->unauthenticated ? 401 : 403, $headers);
+            return new Response($translator->trans('Access denied.', [], 'inventory'), $error->unauthenticated ? 401 : 403, $headers);
         }
         if ($site === null) {
-            return new Response('Site not found.', 404, $headers);
+            return new Response($translator->trans('Site not found.', [], 'inventory'), 404, $headers);
         }
         $query = $request->query->all();
         try {
             $filters = SiteListParameters::context($query);
         } catch (\InvalidArgumentException) {
-            return new Response('Invalid site list filters.', 400, $headers);
+            return new Response($translator->trans('Invalid site list filters.', [], 'inventory'), 400, $headers);
         }
         $parameters = ['id' => $id, 'list' => $filters];
         $form = $forms->create(SiteEditType::class, ['name' => $site->name(), 'notes' => $site->notes(), 'revision' => $site->revision()], ['action' => $urls->generate('inventory_site_edit', $parameters)]);
@@ -49,7 +50,7 @@ final class SiteEditController
         $status = $request->isMethod('POST') ? 422 : 200;
         if ($form->isSubmitted()) {
             if ($form->getExtraData() !== []) {
-                $form->addError(new FormError('Unexpected fields were submitted.'));
+                $form->addError(new FormError($translator->trans('Unexpected fields were submitted.', [], 'inventory')));
             }
             if ($form->isValid()) {
                 $data = $form->getData();
@@ -57,17 +58,17 @@ final class SiteEditController
                     $edit($id, (string) $data['name'], (string) $data['notes'], (string) $data['revision']);
                     return new RedirectResponse($urls->generate('inventory_site_edit', $parameters + ['saved' => 1]), 303, $headers);
                 } catch (InventoryAccessDenied $error) {
-                    return new Response('Access denied.', $error->unauthenticated ? 401 : 403, $headers);
+                    return new Response($translator->trans('Access denied.', [], 'inventory'), $error->unauthenticated ? 401 : 403, $headers);
                 } catch (SiteNotFound) {
-                    return new Response('Site not found.', 404, $headers);
+                    return new Response($translator->trans('Site not found.', [], 'inventory'), 404, $headers);
                 } catch (SiteEditConflict $error) {
                     $status = 409;
-                    $form->addError(new FormError($error->getMessage()));
+                    $form->addError(new FormError($translator->trans($error->getMessage(), [], 'inventory')));
                 } catch (\InvalidArgumentException $error) {
-                    $form->addError(new FormError($error->getMessage()));
+                    $form->addError(new FormError($translator->trans($error->getMessage(), [], 'inventory')));
                 } catch (\RuntimeException) {
                     $status = 502;
-                    $form->addError(new FormError('Save outcome is uncertain. Reload the site before retrying.'));
+                    $form->addError(new FormError($translator->trans('Save outcome is uncertain. Reload the site before retrying.', [], 'inventory')));
                 }
             }
         }
