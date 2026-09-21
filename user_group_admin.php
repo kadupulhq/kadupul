@@ -1978,7 +1978,8 @@ function user_group() {
 						<?php print __('Search');?>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
+						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+							print htmlspecialchars((string) get_request_var('filter'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 					</td>
 					<td>
 						<?php print __('Groups');?>
@@ -2311,7 +2312,8 @@ function graph_filter($header_label) {
 						<?php print __('Search');?>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
+						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+							print htmlspecialchars((string) get_request_var('filter'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 					</td>
 					<td>
 						<?php print __('Template');?>
@@ -2433,7 +2435,8 @@ function device_filter($header_label) {
 						<?php print __('Search');?>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
+						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+							print htmlspecialchars((string) get_request_var('filter'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 					</td>
 					<td>
 						<?php print __('Template');?>
@@ -2551,7 +2554,8 @@ function template_filter($header_label) {
 						<?php print __('Search');?>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
+						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+							print htmlspecialchars((string) get_request_var('filter'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 					</td>
 					<td>
 						<?php print __('Templates');?>
@@ -2651,7 +2655,8 @@ function tree_filter($header_label) {
 						<?php print __('Search');?>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
+						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+							print htmlspecialchars((string) get_request_var('filter'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 					</td>
 					<td>
 						<?php print __('Trees');?>
@@ -2751,7 +2756,8 @@ function member_filter($header_label) {
 						<?php print __('Search');?>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
+						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+							print htmlspecialchars((string) get_request_var('filter'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 					</td>
 					<td>
 						<?php print __('Users');?>
