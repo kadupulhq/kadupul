@@ -280,7 +280,9 @@ jobs:
 
       - name: Test
         if: steps.detect.outputs.found == 'true'
-        run: npm run --if-present test
+        run: |
+          npm run --if-present test
+          node --test tests/Unit/security-inventory.test.mjs
 
   changelog:
     name: Changelog

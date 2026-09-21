@@ -7,7 +7,7 @@
 
 include('./include/auth.php');
 
-cacti_require_post_actions(array('actions'));
+cacti_require_post_actions(array('actions', 'reindex'));
 include_once('./lib/api_automation.php');
 include_once('./lib/api_data_source.php');
 include_once('./lib/api_device.php');
@@ -177,7 +177,21 @@ function host_reindex() {
 	$start = microtime(true);
 
 	$host_id = get_filter_request_var('host_id');
-	shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/cli/poller_reindex_hosts.php') . ' --qid=all --id=' . cacti_escapeshellarg((string) $host_id));
+	if (!is_int($host_id) || $host_id <= 0) {
+		die_html_input_error('host_id', $host_id);
+	}
+
+	$output = array();
+	$status = cacti_exec(read_config_option('path_php_binary'), array(
+		'-q', $config['base_path'] . '/cli/poller_reindex_hosts.php',
+		'--qid=all', '--id=' . $host_id
+	), $output, null);
+
+	if ($status !== 0) {
+		raise_message('host_reindex', __('Device Reindex Failed.'), MESSAGE_LEVEL_ERROR);
+
+		return;
+	}
 
 	$end = microtime(true);
 
@@ -719,7 +733,7 @@ function host_edit() {
 				<td rowspan='2' class='textInfo right' style='vertical-align:top'>
 					<span class='linkMarker'>*</span><a class='hyperLink' href='<?php print html_escape('host.php?action=edit');?>'><?php print __('Create New Device');?></a><br>
 					<span class='linkMarker'>*</span><a class='hyperLink' href='<?php print html_escape('graphs_new.php?reset=true&host_id=' . $host['id']);?>'><?php print __('Create Graphs for this Device');?></a><br>
-					<span class='linkMarker'>*</span><a class='hyperLink' href='<?php print html_escape('host.php?action=reindex&host_id=' . $host['id']);?>'><?php print __('Re-Index Device');?></a><br>
+					<span class='linkMarker'>*</span><button type='button' class='hyperLink' data-post-action='true' onclick='loadPageUsingPost(this.dataset.url, {__csrf_magic: csrfMagicToken, header: "false"}); return false;' data-url='<?php print html_escape('host.php?action=reindex&host_id=' . $host['id']);?>'><?php print __('Re-Index Device');?></button><br>
 					<?php print $debug_link;?>
 					<?php print $repop_link;?>
 					<span class='linkMarker'>*</span><a class='hyperLink' href='<?php print html_escape('data_sources.php?reset=true&host_id=' . $host['id'] . '&ds_rows=30&filter=&template_id=-1&method_id=-1&page=1');?>'><?php print __('Data Source List');?></a><br>
