@@ -98,3 +98,17 @@ within a process unless the reason changes or a successful write clears the
 suppression. The existing retained-output warning also sends a debounced
 administrator email. These bounds do not expire valid measurements or provide
 an unlimited storage guarantee.
+
+## Symfony route links and reusable workflow syntax
+
+Semgrep's `generic.html-templates.security.var-in-href.var-in-href` flags five
+Inventory Twig anchors. Each calls Symfony `path()` with a literal route name;
+IDs and filter values are encoded route/query parameters, never an input URI.
+Twig retains attribute escaping. The existing HTTP tests verify escaped values
+and generated compatibility-entry links. Suppressions name only this rule on
+those five anchors; arbitrary href variables remain subject to scanning.
+
+Zizmor's `self-repository` recommendation conflicts with the CI-pinned actionlint
+image, which rejects `$/` reusable workflow calls. Keep the supported `./` form
+with one annotated compatibility exception until that parser supports `$/`.
+Both spellings resolve the same repository workflow; token permissions are unchanged.

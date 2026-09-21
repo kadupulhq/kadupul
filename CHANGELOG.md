@@ -42,6 +42,7 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Require token-protected POST for device reindexing, execute its PHP worker without a shell, and report worker failures instead of success.
 - Execute realtime graph polling without a shell, validate poller identifiers, and stop graph rendering when polling fails.
 - Execute input-whitelist updates without a shell, enforce token-protected POST, and report subprocess failures correctly.
 - Bind aggregate-item replacement values in prepared queries, including the parent-ID delete predicate.

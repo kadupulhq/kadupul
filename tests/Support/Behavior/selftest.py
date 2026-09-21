@@ -498,13 +498,21 @@ def unavailable_docker_failure():
 
 
 def retained_controller_inputs():
-    actual = harness.source_provenance()['harness_inputs_sha256']
+    # Historical evidence belongs to its captured controller, not today's build.
+    # Keep exact source bytes so shallow CI checkouts can verify provenance.
+    import hashlib
+    import zipfile
+    evidence = ROOT / 'tests/behavior/evidence/historical-baseline'
+    with zipfile.ZipFile(evidence / 'controller-inputs.zip') as archive:
+        names = archive.namelist()
+        assert len(names) == len(set(names)), 'Duplicate retained controller inputs'
+        actual = {name: hashlib.sha256(archive.read(name)).hexdigest() for name in names}
     for label in ('first', 'repeat'):
-        path = ROOT / 'tests/behavior/evidence/historical-baseline' / (label + '.json')
+        path = evidence / (label + '.json')
         recorded = json.loads(path.read_text())['provenance']['harness_inputs_sha256']
         changed = sorted(key for key in set(actual) | set(recorded) if actual.get(key) != recorded.get(key))
-        assert not changed, 'Recapture historical evidence after changing controller inputs: ' + ', '.join(changed)
-    print('retained baseline evidence matches the current controller inputs')
+        assert not changed, 'Historical controller archive differs from captured inputs: ' + ', '.join(changed)
+    print('retained baseline evidence matches its archived controller inputs; current builds require matching-provenance captures')
 
 
 def separate_application_outputs():

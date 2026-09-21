@@ -35,7 +35,7 @@ await syncAssets(manifest, '--write', {
 
 const flags = new URL('include/vendor/flag-icons/', root);
 await mkdir(flags, { recursive: true });
-for (const path of ['css', 'flags', 'LICENSE']) {
+for (const path of ['css', 'flags', 'LICENSE', 'package.json']) {
   await cp(new URL(`node_modules/flag-icons/${path}`, root), new URL(path, flags), { recursive: true });
 }
 console.log('flag-icons: npm assets installed');

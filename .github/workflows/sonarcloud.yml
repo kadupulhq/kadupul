@@ -62,6 +62,14 @@ jobs:
       #
       # PCOV guesses its root from the working directory and would instrument
       # only tests/, so point it at the checkout.
+      - name: Set up Node for application assets
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22.22.2'
+
+      - name: Build browser assets for compatibility tests
+        run: npm ci --ignore-scripts && npm run build
+
       - name: Unit tests with coverage
         working-directory: tests
         env:
@@ -91,14 +99,9 @@ jobs:
           mise exec python@3.12.12 -- python tests/Support/Behavior/coverage_selftest.py --unit tests/coverage.php --integration "$RUNNER_TEMP/poller-coverage"
           php tests/Support/Behavior/merge_poller_coverage.php tests/coverage.php "$RUNNER_TEMP/poller-coverage" tests/coverage.xml
 
-      - name: Set up Node for dependency maintenance tests
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
-        with:
-          node-version: '22'
-
       - name: Dependency maintenance tests with coverage
         run: |
-          node --experimental-test-coverage --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=tests/vendor-sync.lcov tests/Unit/vendor-sync.test.mjs
+          node --experimental-test-coverage --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=tests/vendor-sync.lcov tests/Unit/vendor-sync.test.mjs tests/Unit/security-inventory.test.mjs
           test -s tests/vendor-sync.lcov
 
       - name: Scan

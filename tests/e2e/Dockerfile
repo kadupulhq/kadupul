@@ -1,6 +1,5 @@
-# PHP-FPM image for the Kadupul E2E stack. The committed include/vendor tree
-# requires PHP 8.0 or later, so a 7.4 image fails every request in Composer's
-# platform check. Composer is intentionally not installed here.
+# PHP-FPM runtime for the E2E stack. CI installs locked Composer/npm
+# dependencies into the mounted checkout before starting this image.
 
 FROM php:8.4-fpm-alpine
 
@@ -51,7 +50,8 @@ RUN set -eux; \
         gmp \
         ldap \
         snmp \
-        sockets; \
+        sockets \
+        pcntl; \
     apk del --no-network .build-deps; \
     rm -rf /var/cache/apk/*
 

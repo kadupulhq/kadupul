@@ -157,6 +157,25 @@ def prepare_baseline(baseline_revision, baseline):
             'added': original_bytes is None}
 
 
+def legacy_build_inputs(baseline):
+    """Build the old release with its retained dependency-complete image recipe."""
+    import zipfile
+    evidence = ROOT / 'tests/behavior/evidence/historical-baseline'
+    recorded = json.loads((evidence / 'first.json').read_text())['provenance']['harness_inputs_sha256']
+    paths = {'tests/behavior/Dockerfile': baseline / '.behavior-legacy.Dockerfile',
+             '.dockerignore': baseline / '.behavior-legacy.Dockerfile.dockerignore'}
+    digests = {}
+    with zipfile.ZipFile(evidence / 'controller-inputs.zip') as archive:
+        for source, destination in paths.items():
+            content = archive.read(source)
+            digest = hashlib.sha256(content).hexdigest()
+            require(digest == recorded[source], 'Archived baseline build input hash mismatch: ' + source)
+            require(not destination.exists() and not destination.is_symlink(), 'Baseline build input destination already exists')
+            destination.write_bytes(content)
+            digests[source] = digest
+    return digests
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--baseline', default='6482af547c204199e829b7a0df0b7a13db3e0a58')
@@ -176,13 +195,21 @@ def main():
             temp = Path(temporary)
             baseline = temp / 'baseline'
             evidence['baseline_dockerignore'] = prepare_baseline(baseline_revision, baseline)
+            evidence['baseline_build_inputs'] = legacy_build_inputs(baseline)
             harness.ROOT = baseline
             h = harness.Harness(SimpleNamespace(target='release-readiness', only=None, update_golden=False, project=project))
             # Use a dedicated project and keep the baseline image for rollback.
             h.dc = ['docker', 'compose', '-p', project, '-f', str(baseline / 'tests/behavior/compose.yml')]
             override = temp / 'phase.json'
             def phase(tree, image):
-                override.write_text(json.dumps({'services': {'web': {'image': image, 'build': {'context': str(tree)}}}}))
+                web_build = {'context': str(tree)}
+                legacy_dockerfile = str(baseline / '.behavior-legacy.Dockerfile')
+                if tree == baseline:
+                    web_build['dockerfile'] = legacy_dockerfile
+                override.write_text(json.dumps({'services': {
+                    'web': {'image': image, 'build': web_build},
+                    'snmp': {'build': {'dockerfile': legacy_dockerfile}},
+                }}))
                 h.dc = h.dc[:6] + ['-f', str(override)]
             phase(baseline, project + '-baseline:local')
             h.setup()

@@ -21,6 +21,7 @@
             {% endfor %}
         </select>
         <button type="submit">Apply</button>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
         <a href="{{ path('inventory_devices') }}">Reset</a>
     </form>
     <table>
@@ -28,6 +29,7 @@
         <thead><tr><th scope="col">ID</th><th scope="col">Name</th><th scope="col">Hostname</th><th scope="col">Status</th></tr></thead>
         <tbody>
         {% for device in result.devices %}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
             <tr><td>{{ device.id }}</td><td><a href="{{ path('inventory_device_edit', {id: device.id}) }}">{{ device.description }}</a></td><td>{{ device.hostname }}</td><td>{{ device.disabled ? 'Disabled' : device.status }}</td></tr>
         {% else %}
             <tr><td colspan="4">No devices found on this page.</td></tr>
@@ -36,8 +38,10 @@
     </table>
     {% set filters = {q: criteria.search, state: criteria.state, size: criteria.pageSize} %}
     <nav aria-label="Device pages">
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
         {% if criteria.page > 1 %}<a rel="prev" href="{{ path('inventory_devices', filters|merge({page: criteria.page - 1})) }}">Previous</a>{% endif %}
         <span>Page {{ criteria.page }}</span>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
         {% if result.hasNext %}<a rel="next" href="{{ path('inventory_devices', filters|merge({page: criteria.page + 1})) }}">Next</a>{% endif %}
     </nav>
 </main>

@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   offline-bundle:
-    uses: ./.github/workflows/offline-bundle.yml
+    uses: ./.github/workflows/offline-bundle.yml # zizmor: ignore[self-repository] -- Pinned actionlint does not yet support $/ workflow calls.
 
   # A called workflow can only narrow the caller's token, never widen it, so
   # every scope the reusable jobs need has to be granted here.

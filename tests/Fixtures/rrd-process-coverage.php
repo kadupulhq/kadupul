@@ -7,6 +7,10 @@
 $coverageRoot = dirname(__DIR__, 2);
 require_once $coverageRoot . '/tests/vendor/autoload.php';
 $coverageFilter = new SebastianBergmann\CodeCoverage\Filter();
+if (defined('HOST_REINDEX_TEST_COVERAGE')) {
+    $coverageFilter->includeFile($coverageRoot . '/host.php');
+    $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
+}
 if (defined('REALTIME_EXEC_TEST_COVERAGE')) {
     $coverageFilter->includeFile($coverageRoot . '/graph_realtime.php');
     $coverageFilter->includeFile($coverageRoot . '/lib/html_utility.php');
