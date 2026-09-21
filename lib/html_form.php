@@ -583,11 +583,19 @@ function form_button($form_name, $value, $title = '', $action = '') {
 		$_SESSION['form_click_actions'][$form_name] = $action;
 	}
 
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, 'UTF-8', false);
+	$form_name_html = str_replace('`', '&#96;', $form_name_html);
+	$value_html = htmlspecialchars((string) $value, $escape_flags, 'UTF-8', false);
+	$value_html = str_replace('`', '&#96;', $value_html);
+	$title_html = htmlspecialchars((string) $title, $escape_flags, 'UTF-8', false);
+	$title_html = str_replace('`', '&#96;', $title_html);
+
 	print "<input type='button' class='ui-button ui-corner-all ui-widget' " .
-		"id='$form_name' " .
-		"name='$form_name' " .
-		"value='" . html_escape($value) . "' " .
-		($title!='' ? "title='" . html_escape($title) . "'":"") . ">";
+		"id='$form_name_html' " .
+		"name='$form_name_html' " .
+		"value='" . $value_html . "' " .
+		($title!='' ? "title='" . $title_html . "'":"") . ">";
 }
 
 /**
@@ -605,11 +613,19 @@ function form_submit($form_name, $value, $title = '', $action = '') {
 		$_SESSION['form_click_actions'][$form_name] = $action;
 	}
 
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, 'UTF-8', false);
+	$form_name_html = str_replace('`', '&#96;', $form_name_html);
+	$value_html = htmlspecialchars((string) $value, $escape_flags, 'UTF-8', false);
+	$value_html = str_replace('`', '&#96;', $value_html);
+	$title_html = htmlspecialchars((string) $title, $escape_flags, 'UTF-8', false);
+	$title_html = str_replace('`', '&#96;', $title_html);
+
 	print "<input type='submit' class='ui-button ui-corner-all ui-widget' " .
-		"id='$form_name' " .
-		"name='$form_name' " .
-		"value='" . html_escape($value) . "' " .
-		($title!='' ? "title='" . html_escape($title) . "'":"") . ">";
+		"id='$form_name_html' " .
+		"name='$form_name_html' " .
+		"value='" . $value_html . "' " .
+		($title!='' ? "title='" . $title_html . "'":"") . ">";
 }
 
 /**
@@ -948,15 +964,19 @@ function form_dropdown($form_name, $form_data, $column_display, $column_id, $for
 		}
 	}
 
-	if ($class != '') {
-		$class = " class='$class' ";
-	}
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, 'UTF-8', false);
+	$form_name_html = str_replace('`', '&#96;', $form_name_html);
+	$class_html = htmlspecialchars((string) $class, $escape_flags, 'UTF-8', false);
+	$class_html = str_replace('`', '&#96;', $class_html);
+
+	$class_attribute = $class != '' ? " class='$class_html' " : '';
 
 	if ($on_change != '') {
 		$_SESSION['form_change_actions'][$form_name] = $on_change;
 	}
 
-	print "<select id='" . html_escape($form_name) . "' name='" . html_escape($form_name) . "'" . $class . '>';
+	print "<select id='" . $form_name_html . "' name='" . $form_name_html . "'" . $class_attribute . '>';
 
 	if (!empty($form_none_entry)) {
 		print "<option value='0'" . (empty($form_previous_value) ? ' selected' : '') . ">$form_none_entry</option>";
@@ -985,9 +1005,13 @@ function form_droplanguage($form_name, $column_display, $column_id, $form_previo
 		}
 	}
 
-	if ($class != '') {
-		$class = " class='$class' ";
-	}
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, 'UTF-8', false);
+	$form_name_html = str_replace('`', '&#96;', $form_name_html);
+	$class_html = htmlspecialchars((string) $class, $escape_flags, 'UTF-8', false);
+	$class_html = str_replace('`', '&#96;', $class_html);
+
+	$class_attribute = $class != '' ? " class='$class_html' " : '';
 
 	if ($on_change != '') {
 		$_SESSION['form_change_actions'][$form_name] = $on_change;
@@ -995,7 +1019,7 @@ function form_droplanguage($form_name, $column_display, $column_id, $form_previo
 
 	$languages = get_installed_locales();
 
-	print "<select id='" . html_escape($form_name) . "' name='" . html_escape($form_name) . "'" . $class . '>';
+	print "<select id='" . $form_name_html . "' name='" . $form_name_html . "'" . $class_attribute . '>';
 
 	foreach ($languages as $key => $value) {
 		$selected = '';
@@ -1011,7 +1035,14 @@ function form_droplanguage($form_name, $column_display, $column_id, $form_previo
 			$flagName = strtolower($flags[0]);
 		}
 
-		print '<option value=\'' . $key . '\'' . $selected . ' data-class=\'fi-' . $flagName . '\'><span class="fi fis fi-' . $flagName . '"></span>' . __($value) . '</option>';
+		$key_html = htmlspecialchars((string) $key, $escape_flags, 'UTF-8', false);
+		$key_html = str_replace('`', '&#96;', $key_html);
+		$flag_html = htmlspecialchars((string) $flagName, $escape_flags, 'UTF-8', false);
+		$flag_html = str_replace('`', '&#96;', $flag_html);
+		$label_html = htmlspecialchars((string) __($value), $escape_flags, 'UTF-8', false);
+		$label_html = str_replace('`', '&#96;', $label_html);
+		print "<option value='$key_html'" . $selected . " data-class='fi-$flag_html'>"
+			. "<span class='fi fis fi-$flag_html'></span>" . $label_html . '</option>';
 	}
 
 	print '</select>';
