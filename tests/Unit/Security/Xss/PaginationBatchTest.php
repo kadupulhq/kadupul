@@ -114,7 +114,9 @@ test('empty and single-page lists and caller-owned object markup remain compatib
 	expect($all->query('//strong')->item(0)->textContent)->toBe('Graphs');
 });
 
-test('malformed UTF-8 is replaced without dropping URL or return-target text', function ($counted, $bytes, $replacement) {
+test('malformed UTF-8 is replaced without dropping URL or return-target text', function ($counted, $hex, $replacement) {
+	// Keep malformed bytes out of PHPUnit dataset names and its JUnit XML report.
+	$bytes = hex2bin($hex);
 	$base = 'items.php?id=' . $bytes;
 	$return = 'panel-' . $bytes;
 	$xpath = document(html_nav_bar($base, 3, 2, 10, 100, 30, 'Rows', 'page', $return, $counted));
@@ -129,7 +131,7 @@ test('malformed UTF-8 is replaced without dropping URL or return-target text', f
 		}
 	}
 })->with(array(false, true))->with(array(
-	array("before\xFFafter", "before\u{FFFD}after"),
-	array("before\xC3(after", "before\u{FFFD}(after"),
-	array("before\xE2\x82", "before\u{FFFD}"),
+	array('6265666f7265ff6166746572', "before\u{FFFD}after"),
+	array('6265666f7265c3286166746572', "before\u{FFFD}(after"),
+	array('6265666f7265e282', "before\u{FFFD}"),
 ));
