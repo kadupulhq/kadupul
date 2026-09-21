@@ -31,7 +31,7 @@ $database = new class ($pdo) implements \Kadupul\Platform\Contract\DatabaseConne
     }
 };
 // Inspect a populated range; an empty range may be optimized away by MySQL 9.7.
-$plan = $pdo->query("EXPLAIN SELECT user_id, hash FROM user_auth_row_cache WHERE class = 'graph' AND time < FROM_UNIXTIME(1700000000) ORDER BY time, user_id, hash LIMIT 1000")->fetch(PDO::FETCH_ASSOC);
+$plan = $pdo->query("EXPLAIN FORMAT=TRADITIONAL SELECT user_id, hash FROM user_auth_row_cache WHERE class = 'graph' AND time < FROM_UNIXTIME(1700000000) ORDER BY time, user_id, hash LIMIT 1000")->fetch(PDO::FETCH_ASSOC);
 if (!str_contains((string) $plan['possible_keys'], 'class_time')) {
     throw new RuntimeException('Cleanup cannot use its class/time access path.');
 }
