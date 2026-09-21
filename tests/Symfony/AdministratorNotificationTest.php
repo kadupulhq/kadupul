@@ -59,6 +59,10 @@ final class AdministratorNotificationTest extends TestCase
     public static function compatibility(): iterable
     {
         yield 'zero username retains legacy authentication' => [['settings_smtp_username' => '0', 'settings_how' => '2'], [], true, null];
+        yield 'port zero' => [['settings_smtp_port' => '0'], [], true, null];
+        yield 'port above range' => [['settings_smtp_port' => '65536'], [], true, null];
+        yield 'port integer overflow' => [['settings_smtp_port' => '999999999999999999999999'], [], true, null];
+        yield 'malformed port' => [['settings_smtp_port' => '25x'], [], true, null];
         yield 'native mail' => [['settings_how' => '0'], [], true, null];
         yield 'implicit sender name lookup' => [['settings_from_name' => ''], [], true, null];
         yield 'sendmail' => [['settings_how' => '1'], [], true, null];

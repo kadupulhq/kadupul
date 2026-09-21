@@ -59,6 +59,8 @@ final class LegacyAdministrativeMailDelivery implements AdministrativeMailDelive
             && filter_var($settings['settings_from_email'], FILTER_VALIDATE_EMAIL)
             && filter_var($recipient->email, FILTER_VALIDATE_EMAIL)
             && ctype_digit($settings['settings_smtp_port'])
+            && (int) $settings['settings_smtp_port'] >= 1
+            && (int) $settings['settings_smtp_port'] <= 65535
             && ctype_digit($settings['settings_smtp_timeout'])
             && in_array($settings['settings_smtp_secure'], ['none', 'tls', 'ssl'], true)
             && !str_contains($subject, '|date_time|')
