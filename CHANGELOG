@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-security: Encode notification-manager IDs in JavaScript URLs and hidden attributes while preserving validation and submitted IDs
 -security: Preserve literal search text and associate labels in aggregate templates, color templates and reports
 -security: Preserve literal search text and labels in graph, data-source, debug and utility filters without changing their sizes
 -security: Preserve literal search text and labels in devices, plugins, RRD checks, RRD cleaner, user domains and pollers
