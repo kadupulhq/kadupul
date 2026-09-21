@@ -57,13 +57,15 @@
     </form>
     <table>
         <caption>Devices you can access</caption>
-        <thead><tr><th scope="col">ID</th><th scope="col">Name</th><th scope="col">Hostname</th><th scope="col">Status</th><th scope="col">Location</th><th scope="col">External ID</th></tr></thead>
+        <thead><tr><th scope="col">ID</th><th scope="col">Name</th><th scope="col">Hostname</th><th scope="col">Status</th><th scope="col">Location</th><th scope="col">External ID</th><th scope="col">Actions</th></tr></thead>
         <tbody>
         {% for device in result.devices %}
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
-            <tr><td>{{ device.id }}</td><td><a href="{{ path('inventory_device_edit', {id: device.id, list: filters}) }}">{{ device.description }}</a></td><td>{{ device.hostname }}</td><td>{{ device.disabled ? 'Disabled' : device.status }}</td><td>{{ device.location }}</td><td>{{ device.externalId }}</td></tr>
+            <tr><td>{{ device.id }}</td><td><a href="{{ path('inventory_device_details', {id: device.id, list: filters}) }}">{{ device.description }}</a></td><td>{{ device.hostname }}</td><td>{{ device.disabled ? 'Disabled' : device.status }}</td><td>{{ device.location }}</td><td>{{ device.externalId }}</td>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
+            <td><a href="{{ path('inventory_device_edit', {id: device.id, list: filters}) }}">Edit</a></td></tr>
         {% else %}
-            <tr><td colspan="6">No devices found on this page.</td></tr>
+            <tr><td colspan="7">No devices found on this page.</td></tr>
         {% endfor %}
         </tbody>
     </table>

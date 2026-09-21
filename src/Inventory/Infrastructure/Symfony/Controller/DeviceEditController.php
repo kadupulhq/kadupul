@@ -37,12 +37,8 @@ final class DeviceEditController
             return new Response('Device not found.', 404, $headers);
         }
         $query = $request->query->all();
-        $list = $query['list'] ?? [];
         try {
-            if (!is_array($list)) {
-                throw new \InvalidArgumentException('Invalid device list filters.');
-            }
-            $filters = DeviceListParameters::encode(DeviceListParameters::parse($list));
+            $filters = DeviceListParameters::context($query);
         } catch (\InvalidArgumentException) {
             return new Response('Invalid device list filters.', 400, $headers);
         }

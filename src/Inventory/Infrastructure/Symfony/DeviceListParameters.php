@@ -31,6 +31,15 @@ final class DeviceListParameters
         return new DeviceListCriteria($query['q'] ?? '', $query['state'] ?? 'all', (int) $page, (int) $size, $query['status'] ?? 'all', new DeviceOrder($query['sort'] ?? 'name', $query['direction'] ?? 'asc'), $site === '' ? null : (int) $site);
     }
 
+    public static function context(array $query): array
+    {
+        $list = $query['list'] ?? [];
+        if (!is_array($list)) {
+            throw new \InvalidArgumentException('Invalid device list filters.');
+        }
+        return self::encode(self::parse($list));
+    }
+
     public static function encode(DeviceListCriteria $criteria): array
     {
         return ['q' => $criteria->search, 'state' => $criteria->state, 'status' => $criteria->status,

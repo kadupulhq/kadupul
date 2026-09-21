@@ -9,7 +9,6 @@ namespace Kadupul\Inventory\Infrastructure\Legacy;
 
 use Kadupul\Inventory\Application\Port\DeviceCatalog;
 use Kadupul\Inventory\Application\ReadModel\DevicePage;
-use Kadupul\Inventory\Application\ReadModel\DeviceSummary;
 use Kadupul\Inventory\Domain\DeviceListCriteria;
 use Kadupul\Platform\Contract\DatabaseConnection;
 
@@ -62,17 +61,7 @@ final readonly class LegacyDeviceCatalog implements DeviceCatalog
         $hasNext = count($rows) > $criteria->pageSize;
         $devices = [];
         foreach (array_slice($rows, 0, $criteria->pageSize) as $row) {
-            $devices[] = new DeviceSummary(
-                (int) $row['id'],
-                $row['description'],
-                (string) $row['hostname'],
-                $row['disabled'] === 'on',
-                match ((int) $row['status']) {
-                    1 => 'Down', 2 => 'Recovering', 3 => 'Up', 4 => 'Error', default => 'Unknown'
-                },
-                (string) $row['location'],
-                (string) $row['external_id']
-            );
+            $devices[] = LegacyDeviceProjection::summary($row);
         }
 
         return new DevicePage($devices, $hasNext);
