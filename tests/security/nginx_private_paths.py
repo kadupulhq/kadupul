@@ -1,12 +1,11 @@
 """Exercise the repository-root Nginx boundary and CLI guards over real HTTP."""
 import argparse
+from http.client import HTTPConnection, HTTPException
 from pathlib import Path
 import shutil
 import subprocess
 import tempfile
 import time
-from urllib.error import HTTPError, URLError
-from urllib.request import urlopen
 import uuid
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -66,21 +65,21 @@ def main():
                 '--volume', f'{stage}:/var/www/html/cacti:ro',
                 '--volume', f'{ROOT}/tests/e2e/nginx.conf:/etc/nginx/conf.d/default.conf:ro', 'nginx:alpine')
             port = run('docker', 'port', nginx, '80/tcp').rsplit(':', 1)[1]
-            base = 'http://127.0.0.1:' + port
 
             def request(path):
+                connection = HTTPConnection('127.0.0.1', int(port), timeout=5)
                 try:
-                    response = urlopen(base + '/' + path, timeout=5)
-                except HTTPError as error:
-                    response = error
-                with response:
-                    return response.status, response.read().decode()
+                    connection.request('GET', '/' + path)
+                    with connection.getresponse() as response:
+                        return response.status, response.read().decode()
+                finally:
+                    connection.close()
 
             for attempt in range(30):
                 try:
                     if request('index.php') == (200, 'PUBLIC:'):
                         break
-                except (URLError, OSError):
+                except (HTTPException, OSError):
                     pass
                 time.sleep(0.2)
             else:
