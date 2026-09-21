@@ -26,9 +26,9 @@ final class SiteEditTest extends TestCase
     {
         $site = new Site(12, 'Old', '');
         $revision = $site->revision();
-        $site->revise(' ' . str_repeat('東', 100) . ' ', str_repeat('京', 1024), $revision);
-        self::assertSame(str_repeat('東', 100), $site->name());
-        self::assertSame(str_repeat('京', 1024), $site->notes());
+        $site->revise(' ' . str_repeat('🌏', 100) . ' ', str_repeat('🌟', 1024), $revision);
+        self::assertSame(str_repeat('🌏', 100), $site->name());
+        self::assertSame(str_repeat('🌟', 1024), $site->notes());
         self::assertNotSame($revision, $site->revision());
         $revision = $site->revision();
         $site->revise($site->name(), '', $revision);

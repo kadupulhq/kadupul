@@ -164,7 +164,8 @@ empty sites, consistent with legacy site administration. Anonymous requests retu
 
 Names are trimmed and require 1–100 Unicode characters; notes preserve whitespace
 and allow up to 1,024 Unicode characters, matching the database column. Symfony
-normalizes textarea line endings to LF. Empty notes
+normalizes textarea line endings to LF. The domain enforces character limits;
+browser UTF-16 maxlength attributes are omitted so astral characters count correctly. Empty notes
 clear the field; legacy NULL notes read as empty text. Both fields reject invalid
 UTF-8 and NUL characters. Symfony's stateless CSRF protection requires its token and
 same-origin evidence. Unknown fields are rejected. Validated list search, order,

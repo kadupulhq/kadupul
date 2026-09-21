@@ -18,8 +18,8 @@ final class SiteEditType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('name', TextType::class, ['attr' => ['maxlength' => 100]])
-            ->add('notes', TextareaType::class, ['required' => false, 'trim' => false, 'empty_data' => '', 'attr' => ['maxlength' => 1024, 'rows' => 8]])
+        $builder->add('name', TextType::class, ['help' => 'Enter a name of 1–100 Unicode characters.'])
+            ->add('notes', TextareaType::class, ['required' => false, 'trim' => false, 'empty_data' => '', 'help' => 'Up to 1,024 Unicode characters.', 'attr' => ['rows' => 8]])
             ->add('revision', HiddenType::class);
     }
 

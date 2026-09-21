@@ -27,6 +27,7 @@ def verify_site_edit(harness, session, user_id, check):
             body = response.read().decode()
             check('private' in ','.join(response.headers.get_all('Cache-Control', [])) and 'no-store' in ','.join(response.headers.get_all('Cache-Control', [])),
                   'site editor responses are private and not stored')
+        check('maxlength=' not in body, 'site editor avoids UTF-16 browser limits on Unicode characters')
         parser = Inputs()
         parser.feed(body)
         check('site_edit[_token]' in parser.fields and 'site_edit[revision]' in parser.fields, 'site editor includes CSRF and revision fields')
@@ -82,7 +83,7 @@ def verify_site_edit(harness, session, user_id, check):
         check(post(parser.fields | {'site_edit[notes]': ''})[0] == 200 and snapshot()['city'] == 'Changed elsewhere' and snapshot()['notes'] == '',
               'site save clears notes without overwriting concurrent unmigrated fields')
         parser, _ = form()
-        check(post(parser.fields | {'site_edit[name]': '東' * 100, 'site_edit[notes]': '京' * 1024})[0] == 200, 'site storage accepts Unicode character limits')
+        check(post(parser.fields | {'site_edit[name]': '🌏' * 100, 'site_edit[notes]': '🌟' * 1024})[0] == 200, 'site storage accepts Unicode character limits')
         parser, _ = form()
         check(post(parser.fields)[0] == 200, 'unchanged site save succeeds')
         check(Session(harness.base).request(path)['status'] == 401, 'anonymous site editing is denied')
