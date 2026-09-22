@@ -74,3 +74,11 @@ restore a deleted site's association. A two-connection test drives the actual
 legacy device creation command while deletion holds the site lock. Direct SQL
 writes and third-party plugins that bypass the device API remain outside this
 application locking protocol; no foreign key is added to the legacy schema.
+
+The legacy SQL helper also stops retrying statements from a transaction after a
+failure: a server deadlock may already have rolled back its locks. The transaction
+owner must reject or roll back the operation. Standalone statement retries remain
+supported. Failed `sql_save` operations now return `false`, including updates that
+previously could return an existing/stale identifier. Regression evidence covers a
+real constraint failure, unchanged successful saves, lost-transaction deadlocks,
+and standalone retry compatibility; coverage publication requires this evidence.

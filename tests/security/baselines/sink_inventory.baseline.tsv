@@ -14,7 +14,7 @@ cmd_exec	./cmd.php:295			$cactiphp = proc_open($command, $cactides, $pipes);
 cmd_exec	./cmd_realtime.php:98				$cactiphp = proc_open(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/script_server.php') . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
 cmd_exec	./install/functions.php:521				$myinfo = @json_decode(shell_exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' . cacti_escapeshellarg($config['base_path'] . '/cli/import_package.php') . ' --filename=' . cacti_escapeshellarg("/$path/$xmlfile") . ' --info'), true);
 cmd_exec	./install/install.php:108			print '<li>' . __('The shell_exec() and/or exec() functions are currently blocked.') . '<br>' . __('See the PHP Manual: <a href="http://php.net/manual/en/ini.core.php#ini.disable-functions">Disable Functions</a>.') .'</li>';
-cmd_exec	./lib/database.php:2274		$process = proc_open(trim($cmd_string), $descriptors, $pipes, null, $env);
+cmd_exec	./lib/database.php:2287		$process = proc_open(trim($cmd_string), $descriptors, $pipes, null, $env);
 cmd_exec	./lib/dsstats.php:1043		$process = proc_open($command, $fds, $pipes);
 cmd_exec	./lib/functions.php:2219					$output = shell_exec($script_path);
 cmd_exec	./lib/functions.php:2234						$output = shell_exec($php . ' -q ' . $script);
@@ -559,7 +559,7 @@ fs_write	./lib/clog_webapi.php:102					$log_fh = fopen($logfile, 'w');
 fs_write	./lib/csp_report_endpoint.php:145		/* Bucket names are predictable, and fopen() follows symlinks, so a bucket in
 fs_write	./lib/csp_report_endpoint.php:162		$fh = @fopen($bucket, 'c+'); // nosemgrep: php.lang.security.injection.tainted-filename.tainted-filename
 fs_write	./lib/database.php:189					file_put_contents(sys_get_temp_dir() . '/cacti-option.log',
-fs_write	./lib/database.php:2119		file_put_contents(sys_get_temp_dir() . '/cacti-sql.log', get_debug_prefix() . $line, FILE_APPEND);
+fs_write	./lib/database.php:2132		file_put_contents(sys_get_temp_dir() . '/cacti-sql.log', get_debug_prefix() . $line, FILE_APPEND);
 fs_write	./lib/database.php:57					file_put_contents(sys_get_temp_dir() . '/cacti-option.log',
 fs_write	./lib/functions.php:1338			$fp = @fopen($logfile, 'a');
 fs_write	./lib/functions.php:1413		$fp = fopen($file_name, 'r');

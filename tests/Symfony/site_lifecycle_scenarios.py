@@ -95,6 +95,8 @@ def verify_site_lifecycle(harness, session, user_id, check):
         check(probe['exit'] == 0 and all(json.loads(probe['stdout']).values()), 'site lifecycle adapter rejects revoked stale and partial writes')
         race = harness.php('-r', Path(__file__).with_name('site_assignment_probe.php').read_text().removeprefix('<?php'))
         check(race['exit'] == 0 and race['stdout'] == 'concurrent assignment rejected', 'legacy device assignment waits for site deletion and rejects a deleted site')
+        failure = harness.php('-r', Path(__file__).with_name('database_failure_probe.php').read_text().removeprefix('<?php'))
+        check(failure['exit'] == 0 and failure['stdout'] == 'database failures rejected', 'transactional SQL failures cannot retry without locks or report a saved ID')
         from site_collector_scenarios import verify_collector_sites
         verify_collector_sites(harness, request, form, action, copies[0], created, check)
         for suffix in ['ids[]=0', 'ids[]=1&ids[]=1', 'ids=bad', 'ids[]=4294967296']:

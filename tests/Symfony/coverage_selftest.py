@@ -33,6 +33,7 @@ def main():
         'src/Inventory/Infrastructure/Legacy/LegacySiteCreator.php',
         'src/Platform/Infrastructure/Legacy/CollectorSiteDatabase.php',
         'sites.php',
+        'lib/database.php',
         'src/Inventory/Infrastructure/Symfony/Controller/LegacySitesController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteActionController.php',
         'src/Inventory/Infrastructure/Legacy/LegacySiteLifecycle.php',
