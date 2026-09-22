@@ -3,7 +3,7 @@
 // SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-test('maintenance CLI propagates queue failures after completing other maintenance', function ($mode) {
+test('maintenance CLI propagates queue failures after completing other maintenance', function ($mode, $collector, $switch, $legacyCleanup) {
     $root = dirname(__DIR__, 4);
     $dir = sys_get_temp_dir() . '/maintenance-exit-' . bin2hex(random_bytes(8));
     mkdir($dir, 0700);
@@ -19,24 +19,26 @@ test('maintenance CLI propagates queue failures after completing other maintenan
     if ($parent !== null) {
         $bootstrap .= 'define("RRD_TEST_COVERAGE_DIRECTORY",dirname(__DIR__));define("RRD_TEST_CLI_COVERAGE_COPY",dirname(__DIR__)."/poller_maintenance.php");define("RRD_TEST_CLI_COVERAGE_SOURCE",' . var_export($root . '/poller_maintenance.php', true) . ');require ' . var_export($root . '/tests/Fixtures/rrd-process-coverage.php', true) . ';';
     }
-    $bootstrap .= '$mode=' . var_export($mode, true) . ';';
+    $bootstrap .= '$mode=' . var_export($mode, true) . ';$collector=' . $collector . ';putenv(' . var_export($switch === null ? 'KADUPUL_ROW_CACHE_SCHEDULER' : 'KADUPUL_ROW_CACHE_SCHEDULER=' . $switch, true) . ');';
     $bootstrap .= <<<'SOURCE'
-$config = array('poller_id'=>1, 'cacti_server_os'=>'unix', 'base_path'=>dirname(__DIR__), 'rra_path'=>dirname(__DIR__), 'library_path'=>dirname(__DIR__).'/lib');
-$events = $messages = array();
+$config = array('poller_id'=>$collector, 'cacti_server_os'=>'unix', 'base_path'=>dirname(__DIR__), 'rra_path'=>dirname(__DIR__), 'library_path'=>dirname(__DIR__).'/lib');
+$events = $messages = $rowCacheDeletes = array();
 function read_config_option($key, ...$args) { if ($key === 'secpass_expireaccount') { $GLOBALS['events'][] = 'passwords'; } return 0; }
 function cacti_sizeof($value) { return is_array($value) ? count($value) : 0; }
 function cacti_log($message, ...$args) { $GLOBALS['messages'][] = $message; }
 function register_process_start(...$args) { return true; }
 function unregister_process(...$args) { $GLOBALS['events'][] = 'unregister'; }
 function db_fetch_cell($sql) { return $GLOBALS['mode'] === 'count' ? false : ($GLOBALS['mode'] === 'empty' ? 0 : 1); }
-function db_fetch_assoc($sql) { return strpos($sql, 'data_source_purge_action') !== false ? false : array(); }
+function db_fetch_assoc($sql) { if (strpos($sql, 'time_last_change') !== false) { return array('fixture'=>123); } return strpos($sql, 'data_source_purge_action') !== false ? false : array(); }
+function db_execute_prepared($sql, $params) { $GLOBALS['rowCacheDeletes'][] = array($sql, $params); return true; }
+function api_plugin_hook($hook) { $GLOBALS['events'][] = $hook; }
 // The purge reads the queue in keyset pages; a failed page read is the 'read' failure.
 function db_fetch_assoc_prepared($sql, $params = array(), $log = true, $db_conn = false) { return strpos($sql, 'FROM data_source_purge_action') !== false && count($params) === 3 ? false : array(); }
 function db_execute($sql) { $GLOBALS['events'][] = strpos($sql, 'poller_output_realtime') !== false ? 'realtime' : 'authcache'; return true; }
 function api_device_purge_deleted_devices() { $GLOBALS['events'][] = 'devices'; }
 function cacti_escapeshellcmd($command) { return $command; }
 function array_rekey($rows, ...$args) { return $rows; }
-register_shutdown_function(function () { file_put_contents(dirname(__DIR__).'/result.json', json_encode(array($GLOBALS['events'], $GLOBALS['messages']))); });
+register_shutdown_function(function () { file_put_contents(dirname(__DIR__).'/result.json', json_encode(array($GLOBALS['events'], $GLOBALS['messages'], $GLOBALS['rowCacheDeletes']))); });
 SOURCE;
     file_put_contents($dir . '/include/cli_check.php', $bootstrap);
     try {
@@ -47,8 +49,13 @@ SOURCE;
         fclose($pipes[2]);
         $this->assertSame($mode === 'empty' ? 0 : 1, proc_close($process), $output . $error);
         expect($error)->toBe('');
-        list($events, $messages) = json_decode(file_get_contents($dir . '/result.json'), true);
-        expect($events)->toBe(array('authcache', 'passwords', 'realtime', 'devices', 'unregister'));
+        list($events, $messages, $deletes) = json_decode(file_get_contents($dir . '/result.json'), true);
+        expect($events)->toBe($collector === 1 ? array('authcache', 'passwords', 'realtime', 'devices', 'unregister') : array('realtime', 'devices', 'poller_remote_maint', 'unregister'));
+        expect($deletes)->toHaveCount($legacyCleanup ? 1 : 0);
+        if ($legacyCleanup) {
+            expect($deletes[0][0])->toContain('DELETE FROM user_auth_row_cache');
+            expect($deletes[0][1])->toBe(array('fixture', 123));
+        }
         expect(end($messages))->toStartWith('MAINT STATS:');
         if ($mode !== 'empty') {
             expect(implode("\n", $messages))->toContain('requests retained');
@@ -68,4 +75,13 @@ SOURCE;
             rmdir($dir . $suffix);
         }
     }
-})->with(array('count', 'read', 'empty'));
+})->with(array(
+    'count failure' => array('count', 1, null, true),
+    'read failure' => array('read', 1, null, true),
+    'default primary' => array('empty', 1, null, true),
+    'enabled primary' => array('empty', 1, '1', false),
+    'zero is disabled' => array('empty', 1, '0', true),
+    'truthy word is disabled' => array('empty', 1, 'true', true),
+    'remote always legacy' => array('empty', 2, '1', true),
+    'remote default' => array('empty', 2, null, true),
+));

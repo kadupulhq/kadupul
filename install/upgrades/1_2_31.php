@@ -1,6 +1,7 @@
 <?php
 /*
  * SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
@@ -22,6 +23,10 @@ function upgrade_to_1_2_31() {
 	}
 
 	db_install_execute('ALTER TABLE settings_user MODIFY COLUMN name varchar(255) NOT NULL default ""');
+
+	if (!db_index_exists('user_auth_row_cache', 'class_time')) {
+		db_install_execute('ALTER TABLE user_auth_row_cache ADD INDEX class_time (class, time)');
+	}
 
 	/* Samples RRDtool keeps refusing are moved here instead of growing the queue. */
 	db_install_execute('CREATE TABLE IF NOT EXISTS poller_output_rejected (

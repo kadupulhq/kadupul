@@ -101,8 +101,10 @@ api_device_purge_deleted_devices();
 // Rotate Kadupul Logs
 logrotate_check($force);
 
-// Remove deleted devices
-remove_aged_row_cache();
+// Only the primary collector can explicitly hand this cleanup to Symfony.
+if ((int) $config['poller_id'] !== 1 || getenv('KADUPUL_ROW_CACHE_SCHEDULER') !== '1') {
+	remove_aged_row_cache();
+}
 
 if ($config['poller_id'] > 1) {
 	api_plugin_hook('poller_remote_maint');

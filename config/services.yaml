@@ -102,6 +102,24 @@ services:
     Kadupul\IdentityAccess\Contract\UserContacts:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyUserContacts
 
+    Kadupul\IdentityAccess\Application\Command\CleanInvalidatedRowCache: ~
+    Kadupul\IdentityAccess\Application\Port\InvalidatedRowCache:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\InstallationRowCache
+    Kadupul\IdentityAccess\Infrastructure\Symfony\RowCacheSchedule:
+        arguments:
+            $stateDirectory: '%kernel.project_dir%/var/scheduler'
+            $enabled: '%env(default::KADUPUL_ROW_CACHE_SCHEDULER)%'
+    Kadupul\IdentityAccess\Infrastructure\Symfony\RowCacheCleanupHandler:
+        arguments:
+            $enabled: '%env(default::KADUPUL_ROW_CACHE_SCHEDULER)%'
+
+    # Cleanup fixes its session timezone; do not share that PDO with other modules.
+    kadupul.row_cache_database:
+        class: Kadupul\Platform\Infrastructure\Legacy\InstallationDatabase
+    Kadupul\IdentityAccess\Infrastructure\Legacy\InstallationRowCache:
+        arguments:
+            $database: '@kadupul.row_cache_database'
+
     Kadupul\Inventory\Application\Command\CreateSite: ~
     Kadupul\Inventory\Application\Port\SiteCreator:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacySiteCreator
