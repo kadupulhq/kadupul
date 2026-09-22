@@ -453,33 +453,36 @@ if (graph_realtime_is_post()) {
 	set_user_setting('realtime_nolegend', get_request_var('graph_nolegend'));
 }
 
+$realtime_error = '';
 if (read_config_option('realtime_enabled') == '') {
-	print "<html>\n";
-	print "<body>\n";
-	print "	<p><strong>" . __('Real-time has been disabled by your administrator.') . "</strong></p>\n";
-	print "</body>\n";
-	print "</html>\n";
-	exit;
+	$realtime_error = __('Real-time has been disabled by your administrator.');
 } elseif (!is_dir(read_config_option('realtime_cache_path'))) {
-	print "<html>\n";
-	print "<body>\n";
-	print "	<p><strong>" . __('The Image Cache Directory does not exist.  Please first create it and set permissions and then attempt to open another Real-time graph.') . "</strong></p>\n";
-	print "</body>\n";
-	print "</html>\n";
-	exit;
+	$realtime_error = __(
+		'The Image Cache Directory does not exist.  Please first create it and set permissions ' .
+		'and then attempt to open another Real-time graph.'
+	);
 } elseif (!is_writable(read_config_option('realtime_cache_path'))) {
-	print "<html>\n";
+	$realtime_error = __(
+		'The Image Cache Directory is not writable.  Please set permissions ' .
+		'and then attempt to open another Real-time graph.'
+	);
+}
+
+if ($realtime_error !== '') {
+	print "<!DOCTYPE html>\n";
+	print "<html lang='" . html_escape(CACTI_LOCALE) . "'>\n";
+	print "<head><meta charset='utf-8'><title>" . __esc('Cacti Real-time Graphing') . "</title></head>\n";
 	print "<body>\n";
-	print "	<p><strong>" . __('The Image Cache Directory is not writable.  Please set permissions and then attempt to open another Real-time graph.') . "</strong></p>\n";
-	print "</body>\n";
-	print "</html>\n";
+	print "\t<p><strong>" . $realtime_error . "</strong></p>\n";
+	print "</body>\n</html>\n";
 	exit;
 }
 
 $selectedTheme = get_selected_theme();
 
 ?>
-<html>
+<!DOCTYPE html>
+<html lang='<?php print html_escape(CACTI_LOCALE);?>'>
 <head>
 	<?php html_common_header(__('Cacti Real-time Graphing'));?>
     <?php include($config['base_path'] . '/include/global_session.php'); ?>
@@ -488,7 +491,8 @@ $selectedTheme = get_selected_theme();
 	<form method='post' action='graph_realtime.php' id='gform'>
 		<div id='rtfilter' class='cactiTable center'>
 			<div class='filterTable even'>
-				<select id='graph_start' onChange='imageOptionsChanged("timespan")'>
+				<select id='graph_start'
+					aria-label='<?php print __esc('Timespan');?>' onChange='imageOptionsChanged("timespan")'>
 					<?php
 					foreach ($realtime_window as $interval => $text) {
 						printf('<option value="%d"%s>%s</option>',
@@ -497,7 +501,8 @@ $selectedTheme = get_selected_theme();
 					}
 					?>
 				</select>
-				<select id='ds_step' onChange='imageOptionsChanged("interval")'>
+				<select id='ds_step'
+					aria-label='<?php print __esc('Refresh Interval');?>' onChange='imageOptionsChanged("interval")'>
 					<?php
 					$min_refresh = read_config_option('realtime_interval');
 					foreach ($realtime_refresh as $interval => $text) {
@@ -509,7 +514,8 @@ $selectedTheme = get_selected_theme();
 					}
 				?>
 				</select>
-				<select id='size' onChange='imageOptionsChanged("interval")'>
+				<select id='size'
+					aria-label='<?php print __esc('Size');?>' onChange='imageOptionsChanged("interval")'>
 					<?php
 					foreach ($realtime_sizes as $key => $value) {
 						printf('<option value="%d"%s>%s</option>',

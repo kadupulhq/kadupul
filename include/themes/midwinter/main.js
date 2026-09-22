@@ -136,8 +136,8 @@ function setupTheme() {
 	let midWinter_Font_Size = storage.get('midWinter_Font_Size');
 
 	// -- login, logout -- rewrite
-	if ($('.loginArea legend').length !== 0) {
-		$('.loginArea legend').text('Cacti Monitoring');
+	if ($('.loginArea legend, .loginArea .loginHeading').length !== 0) {
+		$('.loginArea legend, .loginArea .loginHeading').text('Cacti Monitoring');
 		$('.loginTitle p').html('v'+cactiVersion);
 		$('#login_username, #login_password').attr('placeholder', '');
 	}

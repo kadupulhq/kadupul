@@ -1018,7 +1018,13 @@ ul#breadcrumbs {
     text-align: center;
 }
 
-legend {
+.loginHeading {
+	margin: 0;
+	padding: 0 2px;
+	font-weight: inherit;
+}
+
+legend, .loginHeading {
     color: var(--text-color-highlight-a);
     font-size: var(--fs-huge);
     font-weight: bold;

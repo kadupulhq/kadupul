@@ -330,7 +330,7 @@ if (isset_request_var('ref')) {
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html lang='<?php print html_escape(CACTI_LOCALE);?>'>
 <head>
 	<?php html_common_header(api_plugin_hook_function('change_password_title', __('Change Password')));?>
 </head>
@@ -339,7 +339,7 @@ if (isset_request_var('ref')) {
 	<div class='loginCenter'>
 		<div class='loginArea'>
 			<div class='cactiLogoutLogo'></div>
-			<legend><?php print __('Change Password');?></legend>
+			<h1 class='loginHeading'><?php print __('Change Password');?></h1>
 			<form name='login' method='post' action='<?php print get_current_page();?>'>
 				<input type='hidden' name='action' value='changepassword'>
 				<input type='hidden' name='ref' value='<?php print html_escape(get_request_var('ref')); ?>'>
