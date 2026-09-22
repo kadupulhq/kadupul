@@ -762,7 +762,7 @@ function cdef() {
 						?>'>
 					</td>
 					<td>
-						<?php print __('CDEFs');?>
+<label for='rows'><?php print __('CDEFs');?></label>
 					</td>
 					<td>
 						<select id='rows' name='rows'>

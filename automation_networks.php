@@ -1211,7 +1211,7 @@ function networks_filter() {
 						?>'>
 					</td>
 					<td>
-						<?php print __('Networks');?>
+<label for='rows'><?php print __('Networks');?></label>
 					</td>
 					<td>
 						<select id='rows'>

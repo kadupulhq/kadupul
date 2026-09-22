@@ -1,0 +1,44 @@
+<?php
+
+/* Copyright (C) 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-2.0-or-later */
+
+namespace PaginationAccessibleLabelTest;
+
+function __($text) { return $text; }
+
+$baseline = json_decode(file_get_contents(__DIR__ . '/pagination-label-baseline.json'), true, 512, JSON_THROW_ON_ERROR);
+$cases = array();
+foreach ($baseline['issues'] as $issue) { $cases[$issue['key']] = array($issue); }
+dataset('pagination accessible labels', $cases);
+
+function render($fragment) {
+	ob_start();
+	try {
+		eval('namespace PaginationAccessibleLabelTest; ?><table><tr><td>' . $fragment . '<option value="7" selected>7</option></select></td></tr></table>');
+		return ob_get_contents();
+	} finally { ob_end_clean(); }
+}
+
+test('each pagination fix maps to a unique baseline finding', function () use ($baseline) {
+	expect(count($baseline['issues']))->toBe(15);
+	expect(count(array_unique(array_column($baseline['issues'], 'key'))))->toBe(15);
+});
+
+test('pagination controls have associated visible names without changing other markup', function ($issue) {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/' . $issue['file']);
+	expect(substr_count($source, $issue['after']))->toBe(1);
+	$position = strpos($source, $issue['after']);
+	$output = render(substr($source, $position, strlen($issue['after'])));
+	$doc = new \DOMDocument();
+	$doc->loadHTML('<!doctype html><html><body>' . $output . '</body></html>');
+	$label = $doc->getElementsByTagName('label')->item(0);
+	$select = $doc->getElementsByTagName('select')->item(0);
+	expect($doc->getElementsByTagName('label')->length)->toBe(1);
+	expect($label->getAttribute('for'))->toBe($select->getAttribute('id'));
+	expect($label->textContent)->toBe($issue['label']);
+	expect($select->getAttribute('id'))->toBe('rows');
+	expect($doc->getElementsByTagName('option')->item(0)->getAttribute('value'))->toBe('7');
+	expect($doc->getElementsByTagName('option')->item(0)->hasAttribute('selected'))->toBeTrue();
+	expect(str_replace(array("<label for='rows'>", '</label>'), '', $output))->toBe(render($issue['before']));
+})->with('pagination accessible labels');

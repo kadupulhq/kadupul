@@ -1207,7 +1207,7 @@ function template() {
 						</select>
 					</td>
 					<td>
-						<?php print __('Data Templates');?>
+<label for='rows'><?php print __('Data Templates');?></label>
 					</td>
 					<td>
 						<select id='rows' name='rows'>

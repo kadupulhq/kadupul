@@ -768,7 +768,7 @@ function template() {
 						?>'>
 					</td>
 					<td>
-						<?php print __('Graph Templates');?>
+<label for='rows'><?php print __('Graph Templates');?></label>
 					</td>
 					<td>
 						<select id='rows' name='rows'>
