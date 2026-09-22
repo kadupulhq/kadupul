@@ -1,0 +1,14 @@
+{
+  "project": "kadupulhq_kadupul-lts",
+  "baseRevision": "d42f3e651a4906a132b75de87a30f2981d4be5a6",
+  "file": "lib/functions.php",
+  "function": "generate_hash",
+  "originalLine": 4459,
+  "issues": [
+    {"key": "AaCs2NZkIug_wyaLilmn", "rule": "php:S2245"},
+    {"key": "AaCs2NZkIug_wyaLilmq", "rule": "php:S4790"}
+  ],
+  "change": "Remove MD5/session/time/pseudorandom fallback; retain 16 secure bytes encoded as 32 lowercase hex characters. Propagate entropy failure without returning an identifier.",
+  "compatibility": "PHP >=8.0 unchanged. Successful outputs keep the same format. Entropy exhaustion deliberately fails closed. No stored hashes, authentication formats or existing session identifiers are migrated.",
+  "closure": "Pending merged Sonar analysis; no manual false-positive transition."
+}
