@@ -71,6 +71,30 @@ final class DeviceSnmpChangeTest extends TestCase
         self::assertNotSame($revision, $device->revision());
     }
 
+    public function testV3ProtocolAndPassphraseRequirements(): void
+    {
+        $valid = $this->fields(['keep_credentials' => false, 'snmp_version' => '3', 'snmp_username' => 'operator', 'snmp_auth_protocol' => 'SHA384', 'snmp_password' => 'password-eight', 'snmp_priv_protocol' => 'AES', 'snmp_priv_passphrase' => 'privacy-eight']);
+        foreach ([['snmp_auth_protocol' => '[None]'], ['snmp_password' => 'short'], ['snmp_priv_passphrase' => 'short'], ['snmp_priv_protocol' => 'unsupported']] as $override) {
+            try {
+                new DeviceSnmpChange(array_replace($valid, $override));
+                self::fail('Invalid SNMPv3 combination accepted');
+            } catch (\InvalidArgumentException $error) {
+                self::assertStringNotContainsString('password-eight', $error->getMessage());
+                self::assertStringNotContainsString('privacy-eight', $error->getMessage());
+            }
+        }
+        foreach (array_keys(Snmp::PUBLIC_DEFAULTS + Snmp::CREDENTIAL_DEFAULTS) as $key) {
+            $missing = $valid;
+            unset($missing[$key]);
+            try {
+                new DeviceSnmpChange($missing);
+                self::fail('Missing SNMP field accepted: ' . $key);
+            } catch (\InvalidArgumentException $error) {
+                self::assertSame('Submit all SNMP settings.', $error->getMessage());
+            }
+        }
+    }
+
     public function testStoredCredentialsAreValidatedAfterResolution(): void
     {
         $change = new DeviceSnmpChange($this->fields(['snmp_version' => '3', 'snmp_auth_protocol' => 'SHA', 'snmp_priv_protocol' => 'AES']));
