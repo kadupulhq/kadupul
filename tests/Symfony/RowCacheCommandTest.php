@@ -118,6 +118,19 @@ final class RowCacheCommandTest extends TestCase
         self::assertStringContainsString('<error>graph</error>: 2 stale rows', $tester->getDisplay());
     }
 
+    public function testJsonPreservesConsoleMarkupWithAndWithoutDecoration(): void
+    {
+        foreach ([false, true] as $decorated) {
+            $cache = $this->createMock(InvalidatedRowCache::class);
+            $name = '<error>graph</error>';
+            $cache->method('invalidations')->willReturn([new RowCacheInvalidation($name, 100)]);
+            $cache->method('count')->willReturn(2);
+            $tester = $this->command($cache);
+            self::assertSame(0, $tester->execute(['--json' => true], ['decorated' => $decorated]));
+            self::assertSame($name, json_decode($tester->getDisplay(), true, 512, JSON_THROW_ON_ERROR)['classes'][0]['class']);
+        }
+    }
+
     public function testInspectionFailureHasNoRawDatabaseDetails(): void
     {
         $cache = $this->createMock(InvalidatedRowCache::class);

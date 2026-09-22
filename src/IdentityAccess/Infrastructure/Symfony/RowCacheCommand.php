@@ -53,7 +53,7 @@ final class RowCacheCommand extends Command
             }
             $result = ['status' => 'ok', 'mode' => $execute ? 'cleanup' : 'inspect', 'scheduler_configured' => $this->enabled === '1', 'deleted' => $deleted, 'remaining' => $remaining, 'classes' => $classes];
             if ($json) {
-                $output->writeln(json_encode($result, JSON_THROW_ON_ERROR));
+                $output->writeln(json_encode($result, JSON_THROW_ON_ERROR), OutputInterface::OUTPUT_RAW);
             } else {
                 $output->writeln(sprintf('%s: %d deleted; %d stale rows remain.', $execute ? 'Cleanup' : 'Inspection', $deleted, $remaining));
                 foreach ($classes as $class) {
@@ -75,6 +75,6 @@ final class RowCacheCommand extends Command
 
     private function failure(OutputInterface $output, bool $json, string $status, string $message): void
     {
-        $output->writeln($json ? json_encode(['status' => $status, 'error' => $message], JSON_THROW_ON_ERROR) : '<error>' . $message . '</error>');
+        $output->writeln($json ? json_encode(['status' => $status, 'error' => $message], JSON_THROW_ON_ERROR) : '<error>' . $message . '</error>', $json ? OutputInterface::OUTPUT_RAW : OutputInterface::OUTPUT_NORMAL);
     }
 }
