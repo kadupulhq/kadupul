@@ -150,50 +150,63 @@ def verify_remote_device_state(harness, session, device_id, poller, check):
 
 
 def verify_device_statistics(harness, session, ids, check, remote=None, hidden=None):
-    ids = ids[:2]
-    selected = ','.join(map(str, ids))
-    form = StateForm(harness, session, ids)
-    form.path = form.path.replace('/disable?', '/clear-statistics?')
-    columns = 'min_time,max_time,cur_time,avg_time,total_polls,failed_polls,availability'
-    identity = 'id,description,hostname,disabled,status,site_id,poller_id,host_template_id'
-    before = harness.sql(f'SELECT {identity} FROM host WHERE id IN ({selected}) ORDER BY id')
-    seed = 'min_time=2,max_time=8,cur_time=4,avg_time=5,total_polls=10,failed_polls=2,availability=80'
-    def seeded(prefix=''):
-        harness.sql(f'UPDATE {prefix}host SET {seed} WHERE id IN ({selected})')
-    def counters(prefix=''):
-        return harness.sql(f'SELECT {columns} FROM {prefix}host WHERE id IN ({selected}) ORDER BY id')
-    seeded()
-    if remote:
-        seeded('create_remote.')
-    initial = counters()
-    fields = form.fields()
-    check(counters() == initial, 'statistics confirmation GET does not reset counters')
-    check(form.request(fields=fields, origin=False)[0] == 422, 'statistics reset requires same-origin CSRF')
-    missing = dict(fields)
-    missing.pop('device_state[_token]')
-    check(form.apply(missing) == 422, 'statistics reset requires a CSRF token')
-    check(form.apply(fields | {'device_state[extra]': '1'}) == 422, 'statistics reset rejects extra fields')
-    check(form.apply(fields | {'device_state[selection]': json.dumps({str(ids[0]): 'a' * 64})}) in (409,422), 'statistics reset rejects stale or mismatched selection')
-    if hidden:
-        check(form.request(path=form.path + '&ids[]=' + str(hidden))[0] == 404, 'statistics reset conceals inaccessible devices')
-    if remote:
-        harness.sql(f"UPDATE poller SET last_status='2000-01-01 00:00:00' WHERE id={remote}")
-        try:
-            check(form.apply() == 502 and counters() == initial, 'offline collector rejects statistics reset before primary writes')
-        finally:
-            harness.sql(f'UPDATE poller SET last_status=NOW() WHERE id={remote}')
-    prefix = 'create_remote.' if remote else ''
-    last = ids[0] if remote else ids[-1]
-    harness.sql(f"DELIMITER $$\nCREATE TRIGGER {prefix}reject_statistics BEFORE UPDATE ON {prefix}host FOR EACH ROW BEGIN IF NEW.id={last} AND NEW.total_polls=0 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='statistics fixture rejection'; END IF; END$$\nDELIMITER ;")
+    check(harness.php('-r', 'require "include/global.php"; function setup_statistics_hook() { api_plugin_register_hook("compatibility_test","device_action_bottom","compatibility_statistics_action","setup.php",true); } setup_statistics_hook();')['exit'] == 0, 'statistics action hook registered')
     try:
-        check(form.apply() == 502, 'statistics SQL rejection reports uncertain outcome')
-        check(counters() == initial, 'statistics SQL rejection rolls back entire primary selection')
+        ids = ids[:2]
+        selected = ','.join(map(str, ids))
+        form = StateForm(harness, session, ids)
+        form.path = form.path.replace('/disable?', '/clear-statistics?')
+        columns = 'min_time,max_time,cur_time,avg_time,total_polls,failed_polls,availability'
+        identity = 'id,description,hostname,disabled,status,site_id,poller_id,host_template_id'
+        before = harness.sql(f'SELECT {identity} FROM host WHERE id IN ({selected}) ORDER BY id')
+        seed = 'min_time=2,max_time=8,cur_time=4,avg_time=5,total_polls=10,failed_polls=2,availability=80'
+        def seeded(prefix=''):
+            harness.sql(f'UPDATE {prefix}host SET {seed} WHERE id IN ({selected})')
+        def counters(prefix=''):
+            return harness.sql(f'SELECT {columns} FROM {prefix}host WHERE id IN ({selected}) ORDER BY id')
+        seeded()
+        if remote:
+            seeded('create_remote.')
+        initial = counters()
+        def actions():
+            events = harness.command('cat', '/artifacts/plugin.jsonl')['stdout']
+            return [json.loads(line)['args'] for line in events.splitlines()
+                    if json.loads(line).get('callback') == 'statistics_action']
+        before_actions = actions()
+        fields = form.fields()
+        check(counters() == initial, 'statistics confirmation GET does not reset counters')
+        check(form.request(fields=fields, origin=False)[0] == 422, 'statistics reset requires same-origin CSRF')
+        missing = dict(fields)
+        missing.pop('device_state[_token]')
+        check(form.apply(missing) == 422, 'statistics reset requires a CSRF token')
+        check(form.apply(fields | {'device_state[extra]': '1'}) == 422, 'statistics reset rejects extra fields')
+        check(form.apply(fields | {'device_state[selection]': json.dumps({str(ids[0]): 'a' * 64})}) in (409,422), 'statistics reset rejects stale or mismatched selection')
+        if hidden:
+            check(form.request(path=form.path + '&ids[]=' + str(hidden))[0] == 404, 'statistics reset conceals inaccessible devices')
+        if remote:
+            harness.sql(f"UPDATE poller SET last_status='2000-01-01 00:00:00' WHERE id={remote}")
+            try:
+                check(form.apply() == 502 and counters() == initial, 'offline collector rejects statistics reset before primary writes')
+            finally:
+                harness.sql(f'UPDATE poller SET last_status=NOW() WHERE id={remote}')
+        prefix = 'create_remote.' if remote else ''
+        last = ids[0] if remote else ids[-1]
+        harness.sql(f"DELIMITER $$\nCREATE TRIGGER {prefix}reject_statistics BEFORE UPDATE ON {prefix}host FOR EACH ROW BEGIN IF NEW.id={last} AND NEW.total_polls=0 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='statistics fixture rejection'; END IF; END$$\nDELIMITER ;")
+        try:
+            check(form.apply() == 502, 'statistics SQL rejection reports uncertain outcome')
+            check(counters() == initial, 'statistics SQL rejection rolls back entire primary selection')
+        finally:
+            harness.sql(f'DROP TRIGGER {prefix}reject_statistics')
+        check(actions() == before_actions, 'rejected statistics resets do not invoke action 5 callbacks')
+        check(form.apply() == 200, 'statistics confirmation resets selected devices')
+        check(actions()[len(before_actions):] == [[['5', sorted(ids)]]], 'statistics reset invokes action 5 once with the complete selection')
+        predicate = 'min_time=9.99999 AND max_time=0 AND cur_time=0 AND avg_time=0 AND total_polls=0 AND failed_polls=0 AND availability=100'
+        check(harness.sql(f'SELECT COUNT(*) FROM host WHERE id IN ({selected}) AND {predicate}').strip() == str(len(ids)), 'all seven primary statistics match the legacy reset')
+        if remote:
+            check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id={ids[0]} AND {predicate}').strip() == '1', 'remote statistics match the legacy reset')
+        check(harness.sql(f'SELECT {identity} FROM host WHERE id IN ({selected}) ORDER BY id') == before, 'statistics reset retains device identity configuration and state')
+        before_repeat = actions()
+        check(form.apply() == 200, 'statistics reset also succeeds for already-reset counters')
+        check(actions()[len(before_repeat):] == [[['5', sorted(ids)]]], 'repeated statistics reset invokes action 5 once')
     finally:
-        harness.sql(f'DROP TRIGGER {prefix}reject_statistics')
-    check(form.apply() == 200, 'statistics confirmation resets selected devices')
-    predicate = 'min_time=9.99999 AND max_time=0 AND cur_time=0 AND avg_time=0 AND total_polls=0 AND failed_polls=0 AND availability=100'
-    check(harness.sql(f'SELECT COUNT(*) FROM host WHERE id IN ({selected}) AND {predicate}').strip() == str(len(ids)), 'all seven primary statistics match the legacy reset')
-    if remote:
-        check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id={ids[0]} AND {predicate}').strip() == '1', 'remote statistics match the legacy reset')
-    check(harness.sql(f'SELECT {identity} FROM host WHERE id IN ({selected}) ORDER BY id') == before, 'statistics reset retains device identity configuration and state')
-    check(form.apply() == 200, 'statistics reset also succeeds for already-reset counters')
+        harness.sql("DELETE FROM plugin_hooks WHERE name='compatibility_test' AND hook='device_action_bottom' AND `function`='compatibility_statistics_action'")

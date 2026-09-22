@@ -103,6 +103,7 @@ def main():
                 measured['files'][source] = report['files'][source]
     if set(measured['files']) != set(required):
         raise RuntimeError('Self-test requires real HTTP and worker measurements')
+    statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
     failures = {
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
@@ -138,6 +139,8 @@ def main():
         'unmeasured-LegacyDeviceCreator.php': 'Missing measured execution: src/Inventory/Infrastructure/Legacy/LegacyDeviceCreator.php',
         'path-traversal': 'Invalid integration source path',
     }
+    for index in range(len(statistics_checks)):
+        failures['missing-statistics-check-' + str(index)] = 'Incomplete Symfony integration'
     for source in required:
         failures.setdefault('unmeasured-' + source.rsplit('/', 1)[-1], 'Missing measured execution')
     with tempfile.TemporaryDirectory(prefix='symfony-coverage-negative-') as directory:
@@ -178,6 +181,8 @@ def main():
                 evidence['source_sha256']['tests/Fixtures/plugins/compatibility_test/setup.php'] = '0' * 64
             elif case == 'missing-device-creation-check':
                 evidence['checks'].remove('legacy template graph associations are preserved')
+            elif case.startswith('missing-statistics-check-'):
+                evidence['checks'].remove(statistics_checks[int(case.rsplit('-', 1)[1])])
             elif case == 'missing-check':
                 evidence['checks'] = []
             elif case == 'wrong-handler':
