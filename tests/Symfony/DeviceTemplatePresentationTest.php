@@ -1,0 +1,80 @@
+<?php
+
+/*
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+namespace Kadupul\Tests;
+
+use Kadupul\Kernel;
+use Kadupul\IdentityAccess\Contract\Actor;
+use Kadupul\IdentityAccess\Contract\ConsoleAccess;
+use Kadupul\Inventory\Application\Port\DeviceTemplateAssignments;
+use Kadupul\Inventory\Domain\DeviceTemplateAssignment;
+use Kadupul\Platform\Contract\DatabaseConnection;
+use Kadupul\Platform\Contract\LegacyConfiguration;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Request;
+
+final class DeviceTemplatePresentationTest extends TestCase
+{
+    public function testFrenchPresentationEscapesNamesAndPreservesAssignmentValues(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            $container = $kernel->getContainer()->get('test.service_container');
+            $configuration = $this->createMock(LegacyConfiguration::class);
+            $configuration->method('values')->willReturn(['forced_locale' => 'fr-FR']);
+            $container->set(LegacyConfiguration::class, $configuration);
+            $pdo = new \PDO('sqlite::memory:');
+            $pdo->exec('CREATE TABLE settings (name TEXT, value TEXT)');
+            $database = $this->createMock(DatabaseConnection::class);
+            $database->method('get')->willReturn($pdo);
+            $container->set(DatabaseConnection::class, $database);
+            $access = $this->createMock(ConsoleAccess::class);
+            $access->method('consoleActor')->willReturn(new Actor(42, 'operator'));
+            $access->method('canManageDevices')->willReturn(true);
+            $container->set(ConsoleAccess::class, $access);
+            $device = new DeviceTemplateAssignment(7, '<router>', 0, 1);
+            $port = $this->createMock(DeviceTemplateAssignments::class);
+            $port->method('findVisible')->willReturn($device);
+            $port->method('templates')->willReturn([2 => '<Template>', 3 => '<Template>']);
+            $port->expects(self::once())->method('save')->with(42, self::callback(fn($saved) => $saved->templateId() === 2), $device->revision());
+            $container->set(DeviceTemplateAssignments::class, $port);
+            $path = '/inventory/devices/7/template';
+            $response = $kernel->handle(Request::create($path, 'GET', [], ['Cacti' => 'fixture']));
+            self::assertSame(200, $response->getStatusCode());
+            self::assertStringContainsString('Attribuer un modèle d’appareil', $response->getContent());
+            self::assertStringContainsString('&lt;router&gt;', $response->getContent());
+            self::assertStringContainsString('value="2">&lt;Template&gt;', $response->getContent());
+            self::assertStringContainsString('value="3">&lt;Template&gt;', $response->getContent());
+            $saved = $kernel->handle(Request::create($path . '?saved=1', 'GET', [], ['Cacti' => 'fixture']));
+            self::assertSame(200, $saved->getStatusCode());
+            self::assertStringContainsString('Modèle d’appareil mis à jour.', $saved->getContent());
+            self::assertStringNotContainsString('Modèle d’appareil attribué.', $saved->getContent());
+            $document = new \DOMDocument();
+            @$document->loadHTML($response->getContent());
+            $token = (new \DOMXPath($document))->evaluate('string(//input[@name="device_template[_token]"]/@value)');
+            $fields = ['template_id' => '2', 'revision' => $device->revision(), '_token' => $token];
+            foreach (['', '9999', null] as $invalid) {
+                $data = array_replace($fields, ['template_id' => $invalid]);
+                $request = Request::create($path, 'POST', ['device_template' => $data], ['Cacti' => 'fixture']);
+                $request->headers->set('Origin', 'http://localhost');
+                $response = $kernel->handle($request);
+                self::assertSame(422, $response->getStatusCode());
+                self::assertStringContainsString('Sélectionnez un modèle d’appareil valide.', $response->getContent());
+            }
+            $request = Request::create($path, 'POST', ['device_template' => $fields], ['Cacti' => 'fixture']);
+            $request->headers->set('Origin', 'http://localhost');
+            self::assertSame(303, $kernel->handle($request)->getStatusCode());
+            $device->assign(2, $device->revision());
+            $saved = $kernel->handle(Request::create($path . '?saved=1', 'GET', [], ['Cacti' => 'fixture']));
+            self::assertSame(200, $saved->getStatusCode());
+            self::assertStringContainsString('Modèle d’appareil mis à jour.', $saved->getContent());
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+}

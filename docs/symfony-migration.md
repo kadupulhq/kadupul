@@ -793,3 +793,29 @@ secret-derived fingerprint is exposed through the revision token.
 Leaving SNMPv3 clears v3 credentials, protocols, context and engine ID through
 the existing legacy API. Stored credentials incompatible with selected v3
 protocols produce a validation error and roll back the entire edit.
+
+
+### Device template assignment
+
+The device editor links to a dedicated Symfony Form/Twig workflow backed by
+AssignDeviceTemplate, a template-assignment aggregate, and a persistence port.
+Template and collector identities participate in stale-form detection. Choices
+are loaded through an authorized query; the worker locks policy/grants and
+rechecks visibility, references and the revision before writing. Creation shares
+the same authorization-lock helper. Template writes use a repeatable-read
+transaction and current locking reads for visibility mode, user/group policies,
+memberships, and permission exceptions, including gaps where new exceptions could
+revoke access. The final device/graph visibility query is also a locking read.
+The isolated worker uses the configured PHP executable, with a platform-correct
+fallback on Windows.
+
+Changing a template delegates graph/query attachment and unused graph-association
+cleanup to the legacy API. Existing graphs and data remain intact. Unassignment
+keeps existing associations. Unchanged selections do not resynchronize templates.
+Required associations and final template identities are verified before success.
+
+Assigned remote collectors must be available for a change. Remote writes are not
+a distributed transaction: a collector can receive changes before a later failure
+rolls back the primary. Such failures return an uncertain-outcome error; operators
+must reload and verify before retrying. Collector reassignment is a separate
+workflow and is not accepted by this form.

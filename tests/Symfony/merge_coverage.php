@@ -26,7 +26,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'coverage_support.py'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_template_authorization_probe.php', 'coverage_support.py'];
     $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
     if ($handler !== 'none') {
         $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
@@ -47,6 +47,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'French device editor translates labels without changing polling values',
         'device CSV bytes are independent of locale',
         'device polling settings save through Symfony',
+        'device template assignment saves through Symfony',
+        'collector association failure cannot report successful template assignment',
         'SNMP credentials replace through Symfony without disclosure',
         'stored credential rotation survives unrelated edits',
         'all polling fields persist through the legacy adapter',
@@ -94,7 +96,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             $relative = substr($path, strlen('/var/www/html/'));
             // Legacy application coverage has its own report. Never import
             // generated configuration/cache, dependencies or installed plugins.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -125,6 +127,16 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/IdentityAccess/Infrastructure/Legacy/LegacyLocalePreference.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteCreateController.php',
         'src/Inventory/Domain/DevicePolling.php',
+        'src/Inventory/Domain/DeviceTemplateAssignment.php',
+        'src/Inventory/Infrastructure/Symfony/DeviceFormFailure.php',
+        'src/Inventory/Infrastructure/Symfony/DeviceFormPage.php',
+        'src/Inventory/Application/Command/AssignDeviceTemplate.php',
+        'src/Inventory/Application/Query/PrepareDeviceTemplateAssignment.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceTemplateAssignments.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceWriteAuthorization.php',
+        'src/Inventory/Infrastructure/Symfony/Form/DeviceTemplateType.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DeviceTemplateController.php',
+        'bin/legacy-device-template.php',
         'src/Inventory/Domain/DeviceSnmpConfiguration.php',
         'src/Inventory/Domain/DeviceSnmpChange.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceSnmpType.php',

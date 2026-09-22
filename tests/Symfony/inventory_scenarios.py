@@ -46,6 +46,8 @@ def verify_inventory(harness, session, user_id, check):
     harness.sql("REPLACE INTO settings (name,value) VALUES ('graph_auth_method','3')")
     from device_edit_scenarios import verify_device_edit
     verify_device_edit(harness, session, user_id, allowed[0], ids[0], check)
+    from device_template_scenarios import verify_device_template
+    verify_device_template(harness, session, user_id, allowed[0], ids[0], check)
     from site_scenarios import verify_sites
     verify_sites(harness, session, user_id, ids, allowed, listing, export, check)
     from site_catalog_scenarios import verify_site_catalog
