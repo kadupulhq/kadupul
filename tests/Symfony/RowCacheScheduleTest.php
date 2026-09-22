@@ -146,6 +146,20 @@ final class RowCacheScheduleTest extends TestCase
         (new CleanInvalidatedRowCache(new InstallationRowCache($db)))();
     }
 
+    public function testMalformedLaterCutoffCannotPartiallyCleanEarlierClasses(): void
+    {
+        $db = $this->database();
+        $pdo = $db->get();
+        $pdo->exec("INSERT INTO settings VALUES ('time_last_change_graph', '100'), ('time_last_change_zebra', 'invalid')");
+        $pdo->exec("INSERT INTO user_auth_row_cache VALUES (1, 'graph', 'stale', 99)");
+        try {
+            (new CleanInvalidatedRowCache(new InstallationRowCache($db)))();
+            self::fail('Expected invalid cutoff rejection');
+        } catch (\RuntimeException) {
+            self::assertSame(1, (int) $pdo->query('SELECT COUNT(*) FROM user_auth_row_cache')->fetchColumn());
+        }
+    }
+
     public function testInvalidDomainCutoffIsRejected(): void
     {
         $this->expectException(\InvalidArgumentException::class);

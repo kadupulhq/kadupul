@@ -610,9 +610,11 @@ connection is replaced. A later tick retries against current database state. It 
 
 Monitor supervisor restarts, Messenger failures, and backlog size. If the worker
 stops, stale cache rows may accumulate, but the existing read path rejects
-invalidated rows and recomputes counts. To roll back, stop the worker first,
-remove the switch from the primary maintenance environment and restore/restart
-that process. Legacy cleanup resumes on its next maintenance run. LTS is unchanged.
+invalidated rows and recomputes counts. To roll back, disable automatic worker restarts in the supervisor, stop every
+worker sharing this installation and wait for any in-flight cleanup to finish.
+Remove the switch from both the worker and primary maintenance environments,
+then restore/restart primary maintenance. Do not resume legacy cleanup while a
+worker can still run with its original environment. Legacy cleanup resumes on its next maintenance run. LTS is unchanged.
 
 See the [Symfony 7.4 Scheduler documentation](https://symfony.com/doc/7.4/scheduler.html)
 for worker supervision, stateful schedules and locking.

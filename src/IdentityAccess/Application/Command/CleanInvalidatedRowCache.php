@@ -15,8 +15,10 @@ final class CleanInvalidatedRowCache
 
     public function __invoke(): int
     {
+        // Validate the complete lazy snapshot before deleting any class.
+        $invalidations = [...$this->cache->invalidations()];
         $removed = 0;
-        foreach ($this->cache->invalidations() as $invalidation) {
+        foreach ($invalidations as $invalidation) {
             $removed += $this->cache->remove($invalidation);
         }
 
