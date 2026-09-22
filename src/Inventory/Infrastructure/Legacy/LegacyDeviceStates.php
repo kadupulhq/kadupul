@@ -46,7 +46,11 @@ final readonly class LegacyDeviceStates implements DeviceStates
         if (!preg_match('/KADUPUL_STATE_RESULT=(\{[^\r\n]+\})/', $process->getOutput(), $match)) {
             throw new \RuntimeException('Device state change outcome is unknown.');
         }
-        $status = json_decode($match[1], true, 16, JSON_THROW_ON_ERROR)['status'] ?? '';
+        try {
+            $status = json_decode($match[1], true, 16, JSON_THROW_ON_ERROR)['status'] ?? '';
+        } catch (\JsonException $error) {
+            throw new \RuntimeException('Device state change outcome is unknown.', 0, $error);
+        }
         if ($status === 'conflict') {
             throw new DeviceEditConflict('Selected devices changed. Reload the confirmation before saving.');
         }
