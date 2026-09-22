@@ -1,4 +1,5 @@
 """Device-template assignment through real Symfony forms and legacy writes."""
+import json
 from urllib.request import Request
 from urllib.error import HTTPError
 from urllib.parse import urlencode
@@ -93,7 +94,12 @@ def verify_remote_template_assignment(harness, session, device_id, check):
             template = int(harness.sql(f"INSERT INTO host_template (hash,name) VALUES ('remote-template-{index}','Remote template {index}'); SELECT LAST_INSERT_ID()").strip())
             templates.append(template)
             harness.sql(f'INSERT INTO host_template_graph (host_template_id,graph_template_id) VALUES ({template},{graph})')
+        def saves():
+            events = harness.command('cat', '/artifacts/plugin.jsonl')['stdout']
+            return sum(json.loads(line).get('args') == [{'host_id': device_id}] for line in events.splitlines())
+        before = saves()
         check(assign(templates[0]) == 200, 'online collector template assignment succeeds')
+        check(saves() == before + 1, 'template assignment preserves the legacy host-save hook')
         check(harness.sql(f'SELECT host_template_id FROM create_remote.host WHERE id={device_id}').strip() == str(templates[0]), 'collector template identity matches the primary')
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host_graph WHERE host_id={device_id} AND graph_template_id={graphs[0]}').strip() == '1', 'collector receives required template associations')
         harness.sql("CREATE TRIGGER create_remote.reject_template_graph BEFORE INSERT ON create_remote.host_graph FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='template fixture rejection'")

@@ -119,6 +119,7 @@ try {
         } else {
             api_device_update_host_template($assignment->id, $assignment->templateId());
         }
+        api_plugin_hook_function('host_save', ['host_id' => $assignment->id]);
         if (is_error_message() || !$connection->inTransaction()) {
             throw new RuntimeException('Template save failed');
         }
