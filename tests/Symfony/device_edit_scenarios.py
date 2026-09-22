@@ -208,6 +208,9 @@ def verify_device_edit(harness, session, user_id, allowed_id, hidden_id, check):
     columns = ','.join(polling)
     original_polling = harness.sql(f'SELECT {columns} FROM host WHERE id={allowed_id}').strip().split('\t')
     try:
+        harness.sql(f'UPDATE host SET ping_method=0 WHERE id={allowed_id}')
+        legacy = get_fields()
+        check(post(legacy, harness.base)[0] == 422, 'unsupported historical polling value requires an explicit valid choice')
         fields = get_fields()
         changed = fields | {'device_edit[polling][' + key + ']': value for key, value in polling.items()}
         check(post(changed, harness.base)[0] == 200, 'device polling settings save through Symfony')

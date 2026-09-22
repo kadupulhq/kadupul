@@ -765,6 +765,7 @@ OID count, bulk-walk size, availability method, and ping method/port/timeout/ret
 `DevicePolling` validates a complete set of settings and is shared by device
 creation and editing. All fields participate in the device revision; an external
 change rejects stale forms before persistence. Missing or invalid settings do not
-silently reset existing values. The worker repeats validation and retains the
+silently reset existing values. Unsupported historical values require an explicit
+valid choice before saving; they are not silently normalized. The worker repeats validation and retains the
 legacy cache/poller/plugin path. SNMP credential and protocol editing, template
 and collector assignment remain separate slices. LTS is unchanged.

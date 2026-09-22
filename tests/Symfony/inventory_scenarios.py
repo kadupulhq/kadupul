@@ -31,8 +31,8 @@ def verify_inventory(harness, session, user_id, check):
     saved_mode = harness.sql("SELECT value FROM settings WHERE name='graph_auth_method'").strip()
     harness.sql("REPLACE INTO settings (name,value) VALUES ('graph_auth_method','3')")
     harness.sql(f"UPDATE user_auth SET policy_hosts=2, policy_graphs=2, policy_graph_templates=2 WHERE id={user_id}")
-    values = ','.join(f"('inventory-fixture-{i:02d}','fixture-{i}.invalid','',3)" for i in range(28))
-    harness.sql('INSERT INTO host (description,hostname,disabled,status) VALUES ' + values)
+    values = ','.join(f"('inventory-fixture-{i:02d}','fixture-{i}.invalid','',3,1)" for i in range(28))
+    harness.sql('INSERT INTO host (description,hostname,disabled,status,ping_method) VALUES ' + values)
     ids = [int(x) for x in harness.sql("SELECT id FROM host WHERE description LIKE 'inventory-fixture-%' ORDER BY id").splitlines()]
     allowed = ids[1:]
     harness.sql('INSERT INTO user_auth_perms (user_id,item_id,type) VALUES ' + ','.join(f'({user_id},{id},3)' for id in allowed))
