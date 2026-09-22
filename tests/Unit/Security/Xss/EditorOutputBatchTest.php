@@ -119,6 +119,9 @@ test('thumbnail strings retain charset and pre-escaped values inside a single hi
             expect($input->attributes->length)->toBe(3);
             expect($input->getAttribute('type'))->toBe('hidden');
             expect($input->getAttribute('id'))->toBe('thumbnails');
+            // Independent value assertion, not just equality with the legacy fixture.
+            $expected = html_entity_decode($bytes, ENT_QUOTES | ENT_HTML5, $effective);
+            expect($input->getAttribute('value'))->toBe(mb_convert_encoding($expected, 'UTF-8', $effective));
         } finally {
             ini_set('default_charset', $previous);
         }
@@ -131,3 +134,13 @@ test('editor navigation string round-trips with no HTML script delimiters', func
         ->toBe('graphs_items.php?header=false&action=item_edit' . $payload);
     expect($match[1])->not->toContain('<', '>', '&', "'");
 })->with('editor json')->with('editor text payloads');
+
+test('invalid UTF-8 navigation bytes remain a JSON string with replacement characters', function ($issue) {
+    // Malformed bytes stay out of PHPUnit dataset labels and JUnit XML.
+    $payload = '&id=before' . hex2bin('ff') . 'after</script>';
+    $output = render(fragment($issue), $payload);
+    expect(preg_match('/^strURL = ("(?:\\\\.|[^"\\\\])*") \+$/', $output, $match))->toBe(1);
+    expect(json_decode($match[1], true, 512, JSON_THROW_ON_ERROR))
+        ->toBe('graphs_items.php?header=false&action=item_edit&id=before' . "\u{FFFD}" . 'after</script>');
+    expect($match[1])->not->toContain('<', '>', '&', "'");
+})->with('editor json');
