@@ -5,6 +5,22 @@
 
 namespace AutomationOutputBatchTest;
 
+function mb_convert_encoding($value, $to, $from) {
+	if (($GLOBALS['automation_conversion_failure'] ?? '') === 'false') {
+		return false;
+	}
+	if (($GLOBALS['automation_conversion_failure'] ?? '') === 'exception') {
+		throw new \ValueError('Unsupported configured encoding');
+	}
+	return \mb_convert_encoding($value, $to, $from);
+}
+
+$source = file_get_contents(dirname(__DIR__, 4) . '/lib/api_automation.php');
+if (!preg_match('/function automation_url_utf8\(.*?^\}/ms', $source, $match)) {
+	throw new \RuntimeException('Missing URL charset helper');
+}
+eval('namespace AutomationOutputBatchTest; ' . $match[0]);
+
 function get_request_var($name) { return $GLOBALS['automation_batch_payload']; }
 function isset_request_var($name) { return true; }
 function __($value) { return $value; }
@@ -51,7 +67,7 @@ function render_fragment($fragment, $payload) {
 	$field = array('id' => $payload, 'data_name' => $payload);
 	$item = array('id' => $payload);
 	// One form is emitted inside PHP; the remaining sinks are mixed HTML/PHP templates.
-	if (strncmp($fragment, 'print ', 6) === 0) {
+	if (strncmp($fragment, 'print ', 6) === 0 || strncmp($fragment, '$automation_output_', 19) === 0) {
 		$fragment = '<?php ' . $fragment . ' ?>';
 	}
 	ob_start();
@@ -78,6 +94,12 @@ test('batch records 25 distinct scanner findings and every production occurrence
 		$source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
 		expect(substr_count($source, $fragment))->toBe($count);
 	}
+});
+
+test('automation search controls have associated visible labels', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/lib/api_automation.php');
+	expect(substr_count($source, "<label for='filterd'>"))->toBe(1);
+	expect(substr_count($source, "<label for='filter'>"))->toBe(3);
 });
 
 test('HTML output preserves legacy values charset and toggle behavior without attribute injection',
@@ -138,3 +160,16 @@ test('script URL is a complete JSON string and preserves the filter suffix', fun
 	expect($match[3] . ';')->toBe($before[1]);
 })->with('automation script sinks')->with('automation output payloads')
 	->with(array('UTF-8', 'ISO-8859-1', 'Windows-1252', ''));
+
+test('conversion failures still produce safe string URLs', function ($issue, $failure) {
+	$payload = 'automation.php?id=</script>\'"&filter=café';
+	$GLOBALS['automation_conversion_failure'] = $failure;
+	try {
+		$script = render_fragment(production_fragment($issue), $payload);
+	} finally {
+		unset($GLOBALS['automation_conversion_failure']);
+	}
+	expect(preg_match('/^strURL\s*=\s*("(?:\\\\.|[^"\\\\])*")/s', $script, $match))->toBe(1);
+	expect(json_decode($match[1], true, 512, JSON_THROW_ON_ERROR))->toBe($payload);
+	expect($match[1])->not->toContain('<', '>', '&', "'");
+})->with('automation script sinks')->with(array('false', 'exception'));
