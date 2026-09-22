@@ -119,6 +119,7 @@ final class DeviceCreateTest extends TestCase
     public static function requests(): iterable
     {
         yield 'success' => ['success', 303];
+        yield 'legacy zero ping' => ['legacy', 303];
         yield 'extra field' => ['extra', 422];
         yield 'invalid name' => ['invalid', 422];
         yield 'secret is not reflected' => ['secret', 422];
@@ -148,7 +149,7 @@ final class DeviceCreateTest extends TestCase
             $database->method('get')->willReturn($db);
             $container->set(\Kadupul\Platform\Contract\DatabaseConnection::class, $database);
             $catalog = $this->createMock(\Kadupul\Inventory\Application\Port\DeviceCreationCatalog::class);
-            $defaults = array_replace(NewDevice::DEFAULTS, ['host_template_id' => 0, 'site_id' => 0, 'poller_id' => 1]);
+            $defaults = array_replace(NewDevice::DEFAULTS, ['host_template_id' => 0, 'site_id' => 0, 'poller_id' => 1, 'ping_method' => $mode === 'legacy' ? '0' : '1']);
             $catalog->method('choices')->willReturn(new \Kadupul\Inventory\Application\Query\DeviceCreationChoices($defaults, [2 => 'Template'], [3 => 'Site'], [1 => 'Main']));
             $container->set(\Kadupul\Inventory\Application\Port\DeviceCreationCatalog::class, $catalog);
             $creator = $this->createMock(DeviceCreator::class);
@@ -156,14 +157,20 @@ final class DeviceCreateTest extends TestCase
                 $creator->expects(self::once())->method('create')->willThrowException(new InventoryAccessDenied(false));
             } elseif ($mode === 'failure') {
                 $creator->expects(self::once())->method('create')->willThrowException(new \RuntimeException('private-sql-host'));
-            } elseif ($mode === 'success') {
-                $creator->expects(self::once())->method('create')->with(42, self::callback(static fn(NewDevice $device): bool => !$device->fields['enabled'] && $device->fields['use_default_credentials']))->willReturn(7);
+            } elseif (in_array($mode, ['success', 'legacy'], true)) {
+                $creator->expects(self::once())->method('create')->with(42, self::callback(static fn(NewDevice $device): bool => !$device->fields['enabled'] && $device->fields['use_default_credentials'] && ($mode !== 'legacy' || $device->fields['ping_method'] === '0')))->willReturn(7);
             } else {
                 $creator->expects(self::never())->method('create');
             }
             $container->set(DeviceCreator::class, $creator);
             $token = $container->get(CsrfTokenManagerInterface::class)->getToken('inventory_device_create')->getValue();
             $data = array_replace(NewDevice::DEFAULTS, ['description' => $mode === 'invalid' ? '' : 'Tokyo', 'hostname' => '127.0.0.1', 'enabled' => '0', 'use_default_credentials' => '1', '_token' => $token]);
+            if ($mode === 'legacy') {
+                $data['ping_method'] = '0';
+                $page = $kernel->handle(Request::create('/inventory/devices/new', 'GET', [], ['Cacti' => 'fixture']));
+                self::assertSame(200, $page->getStatusCode());
+                self::assertStringContainsString('value="0" selected="selected">Non configuré (historique)', $page->getContent());
+            }
             if ($mode === 'extra') {
                 $data['id'] = '99';
             }
