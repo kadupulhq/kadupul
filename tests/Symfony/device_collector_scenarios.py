@@ -79,6 +79,7 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
     cleanup_trigger = False
     second = None
     schema = False
+    primary_extra = False
     try:
         harness.sql('CREATE DATABASE collector_second CHARACTER SET utf8mb4')
         schema = True
@@ -87,6 +88,9 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
         if not all(re.fullmatch(r'[A-Za-z0-9_]+', table) for table in tables):
             raise RuntimeError('Unexpected fixture table name')
         harness.sql(';'.join(f'CREATE TABLE collector_second.`{table}` LIKE cacti.`{table}`' for table in tables))
+        harness.sql("ALTER TABLE poller_item ADD collector_optional VARCHAR(20) DEFAULT 'primary-only'")
+        primary_extra = True
+        harness.sql("ALTER TABLE create_remote.poller_item ADD collector_remote VARCHAR(20) DEFAULT 'remote-only'")
         second = int(harness.sql("INSERT INTO poller (name,hostname,dbhost,dbdefault,dbuser,dbpass,last_status) VALUES ('Second collector','db','db','collector_second','root','behavior-root',NOW()); SELECT LAST_INSERT_ID()").strip())
         harness.sql(f"INSERT INTO data_template_rrd (local_data_id,data_source_name) VALUES ({data},'collector')")
         harness.sql(f"INSERT INTO data_input_data (data_template_data_id,data_input_field_id,value) VALUES ({dtd},1,'collector input')")
@@ -129,6 +133,8 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
         check(form.assign(poller) == 502, 'collector replication failure cannot report success')
         check(harness.sql(f'SELECT poller_id FROM host WHERE id={device_id}').strip() == '1', 'collector replication failure rolls back primary ownership')
     finally:
+        if primary_extra:
+            harness.sql('ALTER TABLE poller_item DROP COLUMN collector_optional')
         if cleanup_trigger:
             harness.sql('DROP TRIGGER collector_second.reject_collector_cleanup')
         if trigger:

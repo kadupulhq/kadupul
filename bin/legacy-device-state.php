@@ -109,9 +109,7 @@ try {
         }
         $device = LegacyDeviceStates::state($row);
         $device->assertRevision($selection->revisions[$device->id]);
-        if ($device->enabled === $enabled) {
-            continue;
-        }
+        $remoteMatches = true;
         if ($device->pollerId > 1) {
             if (!isset($remotes[$device->pollerId])) {
                 if (!remote_poller_up($device->pollerId) || !(($remote = poller_connect_to_remote($device->pollerId)) instanceof PDO)) {
@@ -119,10 +117,14 @@ try {
                 }
                 $remotes[$device->pollerId] = $remote;
             }
-            $remoteRows = $read($remotes[$device->pollerId], "SELECT id, poller_id FROM host WHERE id = ? AND deleted = ''", [$device->id]);
+            $remoteRows = $read($remotes[$device->pollerId], "SELECT id, poller_id, disabled FROM host WHERE id = ? AND deleted = ''", [$device->id]);
             if (count($remoteRows) !== 1 || (int) $remoteRows[0]['poller_id'] !== $device->pollerId) {
                 throw new RuntimeException('Collector device unavailable');
             }
+            $remoteMatches = ($remoteRows[0]['disabled'] !== 'on') === $enabled;
+        }
+        if ($device->enabled === $enabled && $remoteMatches) {
+            continue;
         }
         $changed[$device->id] = $device;
     }
@@ -139,6 +141,7 @@ try {
         }
         $action = $enabled ? '2' : '3';
         set_request_var('drp_action', $action);
+        snmpagent_device_action_bottom([$action, $ids]);
         api_plugin_hook_function('device_action_bottom', [$action, $ids]);
         if (db_error() !== '' || is_error_message() || !$connection->inTransaction()) {
             throw new RuntimeException('Device operation could not be confirmed');
@@ -152,7 +155,7 @@ try {
                 || (!$enabled && isset($changed[$device->id]) && (int) $verify[0]['status'] !== 0)) {
                 throw new RuntimeException('Device state could not be confirmed');
             }
-            if (isset($changed[$device->id], $remotes[$device->pollerId])) {
+            if (isset($remotes[$device->pollerId])) {
                 $verify = $read($remotes[$device->pollerId], "SELECT disabled, poller_id FROM host WHERE id = ? AND deleted = ''", [$device->id]);
                 if (count($verify) !== 1 || ($verify[0]['disabled'] !== 'on') !== $enabled || (int) $verify[0]['poller_id'] !== $device->pollerId) {
                     throw new RuntimeException('Collector state could not be confirmed');
@@ -181,8 +184,8 @@ try {
 } catch (Throwable) {
     // Remote effects may survive a primary rollback; never report false success.
 } finally {
-    if ($transactionStarted) {
-        db_rollback_transaction();
+    if ($transactionStarted && $connection->inTransaction()) {
+        db_rollback_transaction($connection);
     }
 }
 while (ob_get_level() > 0) {
