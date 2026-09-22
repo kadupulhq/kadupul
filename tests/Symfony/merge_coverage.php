@@ -136,6 +136,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Domain/DeviceTemplateAssignment.php',
         'src/Inventory/Domain/DeviceCollectorAssignment.php',
         'src/Inventory/Infrastructure/Symfony/DeviceFormFailure.php',
+        'src/Inventory/Infrastructure/Symfony/DeviceFormPage.php',
         'src/Inventory/Application/Command/AssignDeviceTemplate.php',
         'src/Inventory/Application/Command/AssignDeviceCollector.php',
         'src/Inventory/Application/Query/PrepareDeviceTemplateAssignment.php',
