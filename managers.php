@@ -496,7 +496,7 @@ function manager_notifications($id, $header_label) {
 				<table class='filterTable'>
 					<tr>
 						<td>
-							<?php print __('MIB');?>
+							<label for='mib'><?php print __('MIB');?></label>
 						</td>
 						<td>
 							<select id='mib' name='mib'>

@@ -538,7 +538,7 @@ function filter() {
 						?>'>
 					</td>
 					<td>
-						<?php print __('Time Since Update');?>
+						<label for='age'><?php print __('Time Since Update');?></label>
 					</td>
 					<td>
 						<select id='age'>
@@ -554,7 +554,7 @@ function filter() {
 						</select>
 					</td>
 					<td>
-						<?php print __('RRDfiles');?>
+						<label for='rows'><?php print __('RRDfiles');?></label>
 					</td>
 					<td>
 						<select id='rows'>

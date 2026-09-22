@@ -744,7 +744,7 @@ function vdef_filter() {
 						?>'>
 					</td>
 					<td>
-						<?php print __('VDEFs');?>
+						<label for='rows'><?php print __('VDEFs');?></label>
 					</td>
 					<td>
 						<select id='rows'>

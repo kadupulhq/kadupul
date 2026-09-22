@@ -1252,7 +1252,7 @@ function aggregate_items() {
 						?>'>
 					</td>
 					<td>
-						<?php print __('Graphs');?>
+						<label for='rows'><?php print __('Graphs');?></label>
 					</td>
 					<td>
 						<select id='rows'>
@@ -1534,7 +1534,7 @@ function aggregate_graph() {
 						?>'>
 					</td>
 					<td>
-						<?php print __('Template');?>
+						<label for='template_id'><?php print __('Template');?></label>
 					</td>
 					<td>
 						<select id='template_id' name='template_id'>
