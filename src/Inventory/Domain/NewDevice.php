@@ -25,7 +25,7 @@ final readonly class NewDevice
             throw new \InvalidArgumentException('Unexpected fields were submitted.');
         }
         $fields = array_replace(self::DEFAULTS, $values);
-        $integers = ['host_template_id' => [0, 16777215], 'site_id' => [0, 4294967295], 'poller_id' => [1, 65535], 'device_threads' => [1, 255], 'snmp_port' => [1, 65535], 'snmp_timeout' => [1, 16777215], 'max_oids' => [1, 60], 'ping_port' => [0, 65535], 'ping_timeout' => [1, 4294967295], 'ping_retries' => [0, 100]];
+        $integers = ['host_template_id' => [0, 16777215], 'site_id' => [0, 4294967295], 'poller_id' => [1, 65535], 'device_threads' => [1, 255], 'snmp_port' => [0, 65535], 'snmp_timeout' => [1, 16777215], 'max_oids' => [0, 60], 'ping_port' => [0, 65535], 'ping_timeout' => [0, 4294967295], 'ping_retries' => [0, 100]];
         foreach ($fields as $key => $value) {
             if (in_array($key, ['enabled', 'use_default_credentials'], true)) {
                 if (!is_bool($value)) {
@@ -49,7 +49,7 @@ final readonly class NewDevice
                 throw new \InvalidArgumentException('A device numeric setting is outside its supported range.');
             }
         }
-        foreach (['snmp_version' => ['0', '1', '2', '3'], 'availability_method' => ['0', '1', '2', '3', '4', '5', '6'], 'ping_method' => ['1', '2', '3', '5'], 'snmp_auth_protocol' => self::AUTH_PROTOCOLS, 'snmp_priv_protocol' => self::PRIVACY_PROTOCOLS] as $key => $allowed) {
+        foreach (['snmp_version' => ['0', '1', '2', '3'], 'availability_method' => ['0', '1', '2', '3', '4', '5', '6'], 'ping_method' => ['0', '1', '2', '3', '5'], 'snmp_auth_protocol' => self::AUTH_PROTOCOLS, 'snmp_priv_protocol' => self::PRIVACY_PROTOCOLS] as $key => $allowed) {
             if (!in_array($fields[$key], $allowed, true)) {
                 throw new \InvalidArgumentException('Select supported SNMP and availability settings.');
             }
@@ -73,6 +73,6 @@ final readonly class NewDevice
                 throw new \InvalidArgumentException('SNMPv3 authentication and privacy passphrases require at least 8 bytes.');
             }
         }
-        $this->fields = $fields;
+        $this->fields = array_replace($fields, (new DevicePolling(array_intersect_key($fields, DevicePolling::DEFAULTS)))->fields);
     }
 }

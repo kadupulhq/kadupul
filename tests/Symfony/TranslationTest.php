@@ -197,7 +197,7 @@ final class TranslationTest extends TestCase
             $document = new \DOMDocument();
             @$document->loadHTML($response->getContent());
             $token = (new \DOMXPath($document))->evaluate('string(//input[@name="device_edit[_token]"]/@value)');
-            $fields = ['site_id' => '0', 'description' => '', 'hostname' => 'router.invalid', 'notes' => '', 'location' => 'Enabled', 'external_id' => 'asset-1', 'enabled' => 'disabled', 'revision' => $device->revision(), '_token' => $token];
+            $fields = ['polling' => \Kadupul\Inventory\Domain\DevicePolling::DEFAULTS, 'site_id' => '0', 'description' => '', 'hostname' => 'router.invalid', 'notes' => '', 'location' => 'Enabled', 'external_id' => 'asset-1', 'enabled' => 'disabled', 'revision' => $device->revision(), '_token' => $token];
             foreach (['on', 'unexpected', '', null, ['enabled']] as $invalidChoice) {
                 $invalidFields = $fields;
                 $invalidFields['description'] = 'Router';
@@ -212,6 +212,11 @@ final class TranslationTest extends TestCase
                 self::assertSame(1, substr_count($response->getContent(), 'Choisissez si la collecte est activée ou désactivée.'));
                 self::assertStringNotContainsString('The selected choice is invalid.', $response->getContent());
             }
+            $injected = array_replace($fields, ['description' => 'Router']);
+            $injected['polling']['snmp_password'] = 'not-authorized';
+            $request = Request::create($path, 'POST', ['device_edit' => $injected], ['Cacti' => 'fixture']);
+            $request->headers->set('Origin', 'http://localhost');
+            self::assertSame(422, $kernel->handle($request)->getStatusCode());
             foreach ([['', 422], ['Router', 303]] as [$name, $expectedStatus]) {
                 $fields['description'] = $name;
                 $request = Request::create($path, 'POST', ['device_edit' => $fields], ['Cacti' => 'fixture']);

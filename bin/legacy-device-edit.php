@@ -39,7 +39,8 @@ try {
         throw new InvalidArgumentException('Payload too large');
     }
     $command = json_decode($input, true, 16, JSON_THROW_ON_ERROR);
-    if (!is_array($command) || array_diff(array_keys($command), ['actor', 'id', 'revision', 'description', 'hostname', 'notes', 'enabled', 'location', 'external_id', 'site_id']) !== []
+    if (!is_array($command) || array_diff(array_keys($command), ['actor', 'id', 'revision', 'description', 'hostname', 'notes', 'enabled', 'location', 'external_id', 'site_id', 'polling']) !== []
+        || !is_array($command['polling'] ?? null)
         || !is_int($command['site_id'] ?? null) || $command['site_id'] < 0 || $command['site_id'] > 4294967295
         || !is_bool($command['enabled'] ?? null) || !is_int($command['actor'] ?? null) || !is_int($command['id'] ?? null) || $command['actor'] <= 0 || $command['id'] <= 0) {
         throw new InvalidArgumentException('Invalid command');
@@ -99,8 +100,9 @@ try {
         $status = 'denied';
         throw new RuntimeException('Access denied');
     }
-    $device = new Device((int) $row['id'], $row['description'], (string) $row['hostname'], (string) $row['notes'], $row['disabled'] !== 'on', (string) $row['location'], (string) $row['external_id'], (int) $row['site_id']);
-    $device->revise($command['description'], $command['hostname'], $command['notes'], $command['enabled'], $command['location'], $command['external_id'], $command['revision'], $command['site_id']);
+    $device = new Device((int) $row['id'], $row['description'], (string) $row['hostname'], (string) $row['notes'], $row['disabled'] !== 'on', (string) $row['location'], (string) $row['external_id'], (int) $row['site_id'], array_intersect_key($row, \Kadupul\Inventory\Domain\DevicePolling::DEFAULTS));
+    $device->revise($command['description'], $command['hostname'], $command['notes'], $command['enabled'], $command['location'], $command['external_id'], $command['revision'], $command['site_id'], $command['polling']);
+    $row = array_replace($row, $device->polling());
     $row['site_id'] = $device->siteId();
     $row['expected_site_id'] = $device->siteId();
     $row['description'] = $device->description();

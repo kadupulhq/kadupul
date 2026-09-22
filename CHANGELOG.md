@@ -12,6 +12,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Add Symfony device polling-settings editing with shared domain validation, legacy sentinel preservation and stale-form protection.
+
 - Add Symfony device site reassignment with stale-form detection, ordered site locks, explicit unassignment, and transactional cache invalidation.
 
 - Add a Symfony row-cache maintenance command with read-only backlog inspection, JSON output and explicit bounded cleanup sharing the Scheduler worker lock.
