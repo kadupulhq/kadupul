@@ -771,31 +771,31 @@ function data_edit() {
 				?>
 				<td>
 <?php
-		$automation_output_0 = 'data_input.php?action=field_edit&id='
-			. $field['id']
-			. '&data_input_id='
-			. get_request_var('id');
-		$automation_output_0 = htmlspecialchars(
-			(string)$automation_output_0,
-			ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
-			ini_get('default_charset') ?: 'UTF-8',
-			false
-		);
-		$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
-		$automation_output_1 = $field['data_name'];
-		$automation_output_1 = htmlspecialchars(
-			(string)$automation_output_1,
-			ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
-			ini_get('default_charset') ?: 'UTF-8',
-			false
-		);
-		$automation_output_1 = str_replace('`', '&#96;', $automation_output_1);
-		print '<a class="linkEditMain" href="';
-		print $automation_output_0;
-		print '">';
-		print $automation_output_1;
-		print '</a>';
-		?>
+        $automation_output_0 = 'data_input.php?action=field_edit&id='
+            . $field['id']
+            . '&data_input_id='
+            . get_request_var('id');
+        $automation_output_0 = htmlspecialchars(
+            (string)$automation_output_0,
+            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+            ini_get('default_charset') ?: 'UTF-8',
+            false
+        );
+        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
+        $automation_output_1 = $field['data_name'];
+        $automation_output_1 = htmlspecialchars(
+            (string)$automation_output_1,
+            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+            ini_get('default_charset') ?: 'UTF-8',
+            false
+        );
+        $automation_output_1 = str_replace('`', '&#96;', $automation_output_1);
+        print '<a class="linkEditMain" href="';
+        print $automation_output_0;
+        print '">';
+        print $automation_output_1;
+        print '</a>';
+        ?>
 				</td>
 				<td>
 					<?php print html_escape($field['name']);?>
@@ -805,23 +805,23 @@ function data_edit() {
 				</td>
 				<td class="right">
 <?php
-		$automation_output_0 = 'data_input.php?action=field_remove_confirm&id='
-			. $field['id']
-			. '&data_input_id='
-			. get_request_var('id');
-		$automation_output_0 = htmlspecialchars(
-			(string)$automation_output_0,
-			ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
-			ini_get('default_charset') ?: 'UTF-8',
-			false
-		);
-		$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
-		print '<a class=\'delete deleteMarker fa fa-times\' href=\'';
-		print $automation_output_0;
-		print '\' title=\'';
-		print __esc('Delete');
-		print '\'></a>';
-		?>
+        $automation_output_0 = 'data_input.php?action=field_remove_confirm&id='
+            . $field['id']
+            . '&data_input_id='
+            . get_request_var('id');
+        $automation_output_0 = htmlspecialchars(
+            (string)$automation_output_0,
+            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+            ini_get('default_charset') ?: 'UTF-8',
+            false
+        );
+        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
+        print '<a class=\'delete deleteMarker fa fa-times\' href=\'';
+        print $automation_output_0;
+        print '\' title=\'';
+        print __esc('Delete');
+        print '\'></a>';
+        ?>
 				</td>
 				<?php
 				form_end_row();
@@ -852,31 +852,31 @@ function data_edit() {
 				?>
 				<td>
 <?php
-		$automation_output_0 = 'data_input.php?action=field_edit&id='
-			. $field['id']
-			. '&data_input_id='
-			. get_request_var('id');
-		$automation_output_0 = htmlspecialchars(
-			(string)$automation_output_0,
-			ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
-			ini_get('default_charset') ?: 'UTF-8',
-			false
-		);
-		$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
-		$automation_output_1 = $field['data_name'];
-		$automation_output_1 = htmlspecialchars(
-			(string)$automation_output_1,
-			ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
-			ini_get('default_charset') ?: 'UTF-8',
-			false
-		);
-		$automation_output_1 = str_replace('`', '&#96;', $automation_output_1);
-		print '<a class=\'linkEditMain\' href=\'';
-		print $automation_output_0;
-		print '\'>';
-		print $automation_output_1;
-		print '</a>';
-		?>
+        $automation_output_0 = 'data_input.php?action=field_edit&id='
+            . $field['id']
+            . '&data_input_id='
+            . get_request_var('id');
+        $automation_output_0 = htmlspecialchars(
+            (string)$automation_output_0,
+            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+            ini_get('default_charset') ?: 'UTF-8',
+            false
+        );
+        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
+        $automation_output_1 = $field['data_name'];
+        $automation_output_1 = htmlspecialchars(
+            (string)$automation_output_1,
+            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+            ini_get('default_charset') ?: 'UTF-8',
+            false
+        );
+        $automation_output_1 = str_replace('`', '&#96;', $automation_output_1);
+        print '<a class=\'linkEditMain\' href=\'';
+        print $automation_output_0;
+        print '\'>';
+        print $automation_output_1;
+        print '</a>';
+        ?>
 				</td>
 				<td>
 					<?php print html_escape($field['name']);?>
@@ -889,23 +889,23 @@ function data_edit() {
 					<a class='deleteMarkerDisabled fa fa-times' href='#' title='<?php print __esc('Output Fields can not be removed when Data Sources are present');?>'></a>
 					<?php } else { ?>
 <?php
-		$automation_output_0 = 'data_input.php?action=field_remove_confirm&id='
-			. $field['id']
-			. '&data_input_id='
-			. get_request_var('id');
-		$automation_output_0 = htmlspecialchars(
-			(string)$automation_output_0,
-			ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
-			ini_get('default_charset') ?: 'UTF-8',
-			false
-		);
-		$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
-		print '<a class=\'delete deleteMarker fa fa-times\' href=\'';
-		print $automation_output_0;
-		print '\' title=\'';
-		print __esc('Delete');
-		print '\'></a>';
-		?>
+        $automation_output_0 = 'data_input.php?action=field_remove_confirm&id='
+            . $field['id']
+            . '&data_input_id='
+            . get_request_var('id');
+        $automation_output_0 = htmlspecialchars(
+            (string)$automation_output_0,
+            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+            ini_get('default_charset') ?: 'UTF-8',
+            false
+        );
+        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
+        print '<a class=\'delete deleteMarker fa fa-times\' href=\'';
+        print $automation_output_0;
+        print '\' title=\'';
+        print __esc('Delete');
+        print '\'></a>';
+        ?>
 					<?php } ?>
 				</td>
 				<?php

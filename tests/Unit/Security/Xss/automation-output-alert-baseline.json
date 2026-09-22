@@ -9,7 +9,7 @@
       "line": 488,
       "context": "html",
       "before": "<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>",
-      "after": "<?php\n\t\t$automation_output_0 = get_request_var('filter');\n\t\t$automation_output_0 = htmlspecialchars(\n\t\t\t(string)$automation_output_0,\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n\t\t\tini_get('default_charset') ?: 'UTF-8',\n\t\t\tfalse\n\t\t);\n\t\t$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n\t\tprint '<input type=\\'text\\' class=\\'ui-state-default ui-corner-all\\' id=\\'fil'\n\t\t\t. 'ter\\' size=\\'25\\' value=\\'';\n\t\tprint $automation_output_0;\n\t\tprint '\\'>';\n\t\t?>"
+      "after": "<?php\n        $automation_output_0 = get_request_var('filter');\n        $automation_output_0 = htmlspecialchars(\n            (string)$automation_output_0,\n            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n            ini_get('default_charset') ?: 'UTF-8',\n            false\n        );\n        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n        print '<input type=\\'text\\' class=\\'ui-state-default ui-corner-all\\' id=\\'fil'\n            . 'ter\\' size=\\'25\\' value=\\'';\n        print $automation_output_0;\n        print '\\'>';\n        ?>"
     },
     {
       "key": "AaCs2NLVIug_wyaLillq",
@@ -17,7 +17,7 @@
       "line": 147,
       "context": "html",
       "before": "<input type='text' class='ui-state-default ui-corner-all' id='filterd' size='25' value='<?php print html_escape_request_var('filterd');?>'>",
-      "after": "<?php\n\t\t$automation_output_0 = get_request_var('filterd');\n\t\t$automation_output_0 = htmlspecialchars(\n\t\t\t(string)$automation_output_0,\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n\t\t\tini_get('default_charset') ?: 'UTF-8',\n\t\t\tfalse\n\t\t);\n\t\t$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n\t\tprint '<input type=\\'text\\' class=\\'ui-state-default ui-corner-all\\' id=\\'fil'\n\t\t\t. 'terd\\' size=\\'25\\' value=\\'';\n\t\tprint $automation_output_0;\n\t\tprint '\\'>';\n\t\t?>"
+      "after": "<?php\n        $automation_output_0 = get_request_var('filterd');\n        $automation_output_0 = htmlspecialchars(\n            (string)$automation_output_0,\n            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n            ini_get('default_charset') ?: 'UTF-8',\n            false\n        );\n        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n        print '<input type=\\'text\\' class=\\'ui-state-default ui-corner-all\\' id=\\'fil'\n            . 'terd\\' size=\\'25\\' value=\\'';\n        print $automation_output_0;\n        print '\\'>';\n        ?>"
     },
     {
       "key": "AaCs2NLVIug_wyaLillo",
@@ -25,7 +25,7 @@
       "line": 722,
       "context": "html",
       "before": "<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>",
-      "after": "<?php\n\t\t$automation_output_0 = get_request_var('filter');\n\t\t$automation_output_0 = htmlspecialchars(\n\t\t\t(string)$automation_output_0,\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n\t\t\tini_get('default_charset') ?: 'UTF-8',\n\t\t\tfalse\n\t\t);\n\t\t$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n\t\tprint '<input type=\\'text\\' class=\\'ui-state-default ui-corner-all\\' id=\\'fil'\n\t\t\t. 'ter\\' size=\\'25\\' value=\\'';\n\t\tprint $automation_output_0;\n\t\tprint '\\'>';\n\t\t?>"
+      "after": "<?php\n        $automation_output_0 = get_request_var('filter');\n        $automation_output_0 = htmlspecialchars(\n            (string)$automation_output_0,\n            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n            ini_get('default_charset') ?: 'UTF-8',\n            false\n        );\n        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n        print '<input type=\\'text\\' class=\\'ui-state-default ui-corner-all\\' id=\\'fil'\n            . 'ter\\' size=\\'25\\' value=\\'';\n        print $automation_output_0;\n        print '\\'>';\n        ?>"
     },
     {
       "key": "AaCs2NLVIug_wyaLillV",
@@ -33,7 +33,7 @@
       "line": 1085,
       "context": "html",
       "before": "<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>",
-      "after": "<?php\n\t\t$automation_output_0 = get_request_var('filter');\n\t\t$automation_output_0 = htmlspecialchars(\n\t\t\t(string)$automation_output_0,\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n\t\t\tini_get('default_charset') ?: 'UTF-8',\n\t\t\tfalse\n\t\t);\n\t\t$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n\t\tprint '<input type=\\'text\\' class=\\'ui-state-default ui-corner-all\\' id=\\'fil'\n\t\t\t. 'ter\\' size=\\'25\\' value=\\'';\n\t\tprint $automation_output_0;\n\t\tprint '\\'>';\n\t\t?>"
+      "after": "<?php\n        $automation_output_0 = get_request_var('filter');\n        $automation_output_0 = htmlspecialchars(\n            (string)$automation_output_0,\n            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n            ini_get('default_charset') ?: 'UTF-8',\n            false\n        );\n        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n        print '<input type=\\'text\\' class=\\'ui-state-default ui-corner-all\\' id=\\'fil'\n            . 'ter\\' size=\\'25\\' value=\\'';\n        print $automation_output_0;\n        print '\\'>';\n        ?>"
     },
     {
       "key": "AaCs2POKIug_wyaLilrV",
@@ -41,7 +41,7 @@
       "line": 782,
       "context": "html",
       "before": "<a class='delete deleteMarker fa fa-times' href='<?php print html_escape('data_input.php?action=field_remove_confirm&id=' . $field['id'] . '&data_input_id=' . get_request_var('id'));?>' title='<?php print __esc('Delete');?>'></a>",
-      "after": "<?php\n\t\t$automation_output_0 = 'data_input.php?action=field_remove_confirm&id='\n\t\t\t. $field['id']\n\t\t\t. '&data_input_id='\n\t\t\t. get_request_var('id');\n\t\t$automation_output_0 = htmlspecialchars(\n\t\t\t(string)$automation_output_0,\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n\t\t\tini_get('default_charset') ?: 'UTF-8',\n\t\t\tfalse\n\t\t);\n\t\t$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n\t\tprint '<a class=\\'delete deleteMarker fa fa-times\\' href=\\'';\n\t\tprint $automation_output_0;\n\t\tprint '\\' title=\\'';\n\t\tprint __esc('Delete');\n\t\tprint '\\'></a>';\n\t\t?>"
+      "after": "<?php\n        $automation_output_0 = 'data_input.php?action=field_remove_confirm&id='\n            . $field['id']\n            . '&data_input_id='\n            . get_request_var('id');\n        $automation_output_0 = htmlspecialchars(\n            (string)$automation_output_0,\n            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n            ini_get('default_charset') ?: 'UTF-8',\n            false\n        );\n        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n        print '<a class=\\'delete deleteMarker fa fa-times\\' href=\\'';\n        print $automation_output_0;\n        print '\\' title=\\'';\n        print __esc('Delete');\n        print '\\'></a>';\n        ?>"
     },
     {
       "key": "AaCs2POKIug_wyaLilrS",
@@ -49,7 +49,7 @@
       "line": 824,
       "context": "html",
       "before": "<a class='delete deleteMarker fa fa-times' href='<?php print html_escape('data_input.php?action=field_remove_confirm&id=' . $field['id'] . '&data_input_id=' . get_request_var('id'));?>' title='<?php print __esc('Delete');?>'></a>",
-      "after": "<?php\n\t\t$automation_output_0 = 'data_input.php?action=field_remove_confirm&id='\n\t\t\t. $field['id']\n\t\t\t. '&data_input_id='\n\t\t\t. get_request_var('id');\n\t\t$automation_output_0 = htmlspecialchars(\n\t\t\t(string)$automation_output_0,\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n\t\t\tini_get('default_charset') ?: 'UTF-8',\n\t\t\tfalse\n\t\t);\n\t\t$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n\t\tprint '<a class=\\'delete deleteMarker fa fa-times\\' href=\\'';\n\t\tprint $automation_output_0;\n\t\tprint '\\' title=\\'';\n\t\tprint __esc('Delete');\n\t\tprint '\\'></a>';\n\t\t?>"
+      "after": "<?php\n        $automation_output_0 = 'data_input.php?action=field_remove_confirm&id='\n            . $field['id']\n            . '&data_input_id='\n            . get_request_var('id');\n        $automation_output_0 = htmlspecialchars(\n            (string)$automation_output_0,\n            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n            ini_get('default_charset') ?: 'UTF-8',\n            false\n        );\n        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n        print '<a class=\\'delete deleteMarker fa fa-times\\' href=\\'';\n        print $automation_output_0;\n        print '\\' title=\\'';\n        print __esc('Delete');\n        print '\\'></a>';\n        ?>"
     },
     {
       "key": "AaCs2PCLIug_wyaLilpQ",
@@ -57,7 +57,7 @@
       "line": 589,
       "context": "html",
       "before": "<a class='delete deleteMarker fa fa-times' title='<?php print __esc('Delete');?>' href='<?php print html_escape('host_templates.php?action=item_remove_gt_confirm&id=' . $item['id'] . '&host_template_id=' . get_request_var('id'));?>'></a>",
-      "after": "<?php\n\t\t$automation_output_0 = 'host_templates.php?action=item_remove_gt_confirm&id='\n\t\t\t. $item['id']\n\t\t\t. '&host_template_id='\n\t\t\t. get_request_var('id');\n\t\t$automation_output_0 = htmlspecialchars(\n\t\t\t(string)$automation_output_0,\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n\t\t\tini_get('default_charset') ?: 'UTF-8',\n\t\t\tfalse\n\t\t);\n\t\t$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n\t\tprint '<a class=\\'delete deleteMarker fa fa-times\\' title=\\'';\n\t\tprint __esc('Delete');\n\t\tprint '\\' href=\\'';\n\t\tprint $automation_output_0;\n\t\tprint '\\'></a>';\n\t\t?>"
+      "after": "<?php\n        $automation_output_0 = 'host_templates.php?action=item_remove_gt_confirm&id='\n            . $item['id']\n            . '&host_template_id='\n            . get_request_var('id');\n        $automation_output_0 = htmlspecialchars(\n            (string)$automation_output_0,\n            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n            ini_get('default_charset') ?: 'UTF-8',\n            false\n        );\n        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n        print '<a class=\\'delete deleteMarker fa fa-times\\' title=\\'';\n        print __esc('Delete');\n        print '\\' href=\\'';\n        print $automation_output_0;\n        print '\\'></a>';\n        ?>"
     },
     {
       "key": "AaCs2PCLIug_wyaLilpO",
@@ -65,7 +65,7 @@
       "line": 646,
       "context": "html",
       "before": "<a class='delete deleteMarker fa fa-times' title='<?php print __esc('Delete');?>' href='<?php print html_escape('host_templates.php?action=item_remove_dq_confirm&id=' . $item['id'] . '&host_template_id=' . get_request_var('id'));?>'></a>",
-      "after": "<?php\n\t\t$automation_output_0 = 'host_templates.php?action=item_remove_dq_confirm&id='\n\t\t\t. $item['id']\n\t\t\t. '&host_template_id='\n\t\t\t. get_request_var('id');\n\t\t$automation_output_0 = htmlspecialchars(\n\t\t\t(string)$automation_output_0,\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n\t\t\tini_get('default_charset') ?: 'UTF-8',\n\t\t\tfalse\n\t\t);\n\t\t$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n\t\tprint '<a class=\\'delete deleteMarker fa fa-times\\' title=\\'';\n\t\tprint __esc('Delete');\n\t\tprint '\\' href=\\'';\n\t\tprint $automation_output_0;\n\t\tprint '\\'></a>';\n\t\t?>"
+      "after": "<?php\n        $automation_output_0 = 'host_templates.php?action=item_remove_dq_confirm&id='\n            . $item['id']\n            . '&host_template_id='\n            . get_request_var('id');\n        $automation_output_0 = htmlspecialchars(\n            (string)$automation_output_0,\n            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n            ini_get('default_charset') ?: 'UTF-8',\n            false\n        );\n        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n        print '<a class=\\'delete deleteMarker fa fa-times\\' title=\\'';\n        print __esc('Delete');\n        print '\\' href=\\'';\n        print $automation_output_0;\n        print '\\'></a>';\n        ?>"
     },
     {
       "key": "AaCs2POKIug_wyaLilrc",
@@ -73,7 +73,7 @@
       "line": 773,
       "context": "html",
       "before": "<a class=\"linkEditMain\" href=\"<?php print html_escape('data_input.php?action=field_edit&id=' . $field['id'] . '&data_input_id=' . get_request_var('id'));?>\"><?php print html_escape($field['data_name']);?></a>",
-      "after": "<?php\n\t\t$automation_output_0 = 'data_input.php?action=field_edit&id='\n\t\t\t. $field['id']\n\t\t\t. '&data_input_id='\n\t\t\t. get_request_var('id');\n\t\t$automation_output_0 = htmlspecialchars(\n\t\t\t(string)$automation_output_0,\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n\t\t\tini_get('default_charset') ?: 'UTF-8',\n\t\t\tfalse\n\t\t);\n\t\t$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n\t\t$automation_output_1 = $field['data_name'];\n\t\t$automation_output_1 = htmlspecialchars(\n\t\t\t(string)$automation_output_1,\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n\t\t\tini_get('default_charset') ?: 'UTF-8',\n\t\t\tfalse\n\t\t);\n\t\t$automation_output_1 = str_replace('`', '&#96;', $automation_output_1);\n\t\tprint '<a class=\"linkEditMain\" href=\"';\n\t\tprint $automation_output_0;\n\t\tprint '\">';\n\t\tprint $automation_output_1;\n\t\tprint '</a>';\n\t\t?>"
+      "after": "<?php\n        $automation_output_0 = 'data_input.php?action=field_edit&id='\n            . $field['id']\n            . '&data_input_id='\n            . get_request_var('id');\n        $automation_output_0 = htmlspecialchars(\n            (string)$automation_output_0,\n            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n            ini_get('default_charset') ?: 'UTF-8',\n            false\n        );\n        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n        $automation_output_1 = $field['data_name'];\n        $automation_output_1 = htmlspecialchars(\n            (string)$automation_output_1,\n            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n            ini_get('default_charset') ?: 'UTF-8',\n            false\n        );\n        $automation_output_1 = str_replace('`', '&#96;', $automation_output_1);\n        print '<a class=\"linkEditMain\" href=\"';\n        print $automation_output_0;\n        print '\">';\n        print $automation_output_1;\n        print '</a>';\n        ?>"
     },
     {
       "key": "AaCs2POKIug_wyaLilrd",
@@ -81,7 +81,7 @@
       "line": 812,
       "context": "html",
       "before": "<a class='linkEditMain' href='<?php print html_escape('data_input.php?action=field_edit&id=' . $field['id'] . '&data_input_id=' . get_request_var('id'));?>'><?php print html_escape($field['data_name']);?></a>",
-      "after": "<?php\n\t\t$automation_output_0 = 'data_input.php?action=field_edit&id='\n\t\t\t. $field['id']\n\t\t\t. '&data_input_id='\n\t\t\t. get_request_var('id');\n\t\t$automation_output_0 = htmlspecialchars(\n\t\t\t(string)$automation_output_0,\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n\t\t\tini_get('default_charset') ?: 'UTF-8',\n\t\t\tfalse\n\t\t);\n\t\t$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n\t\t$automation_output_1 = $field['data_name'];\n\t\t$automation_output_1 = htmlspecialchars(\n\t\t\t(string)$automation_output_1,\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n\t\t\tini_get('default_charset') ?: 'UTF-8',\n\t\t\tfalse\n\t\t);\n\t\t$automation_output_1 = str_replace('`', '&#96;', $automation_output_1);\n\t\tprint '<a class=\\'linkEditMain\\' href=\\'';\n\t\tprint $automation_output_0;\n\t\tprint '\\'>';\n\t\tprint $automation_output_1;\n\t\tprint '</a>';\n\t\t?>"
+      "after": "<?php\n        $automation_output_0 = 'data_input.php?action=field_edit&id='\n            . $field['id']\n            . '&data_input_id='\n            . get_request_var('id');\n        $automation_output_0 = htmlspecialchars(\n            (string)$automation_output_0,\n            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n            ini_get('default_charset') ?: 'UTF-8',\n            false\n        );\n        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n        $automation_output_1 = $field['data_name'];\n        $automation_output_1 = htmlspecialchars(\n            (string)$automation_output_1,\n            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n            ini_get('default_charset') ?: 'UTF-8',\n            false\n        );\n        $automation_output_1 = str_replace('`', '&#96;', $automation_output_1);\n        print '<a class=\\'linkEditMain\\' href=\\'';\n        print $automation_output_0;\n        print '\\'>';\n        print $automation_output_1;\n        print '</a>';\n        ?>"
     },
     {
       "key": "AaCs2O2dIug_wyaLilod",
@@ -89,7 +89,7 @@
       "line": 435,
       "context": "html",
       "before": "<td class='textInfo' style='text-align:right;vertical-align:top;'><span class='linkMarker'>*</span><a class='linkEditMain' href='<?php print html_escape('automation_tree_rules.php?action=item_edit&id=' . (isset_request_var('id') ? get_request_var('id') : 0) . '&item_id=' . (isset_request_var('item_id') ? get_request_var('item_id') : 0) . '&rule_type=' . (isset_request_var('rule_type') ? get_request_var('rule_type') : 0) .'&show_trees=') . (isset($_SESSION['automation_tree_rules_show_trees']) ? '0' : '1');?>'><?php print (isset($_SESSION['automation_tree_rules_show_trees']) ? __('Don\\'t Show'):__('Show'));?> <?php print __('Created Trees');?></a><br>",
-      "after": "<?php\n\t\t$automation_output_0 = 'automation_tree_rules.php?action=item_edit&id='\n\t\t\t. (isset_request_var('id') ? get_request_var('id') : 0)\n\t\t\t. '&item_id='\n\t\t\t. (isset_request_var('item_id') ? get_request_var('item_id') : 0)\n\t\t\t. '&rule_type='\n\t\t\t. (isset_request_var('rule_type') ? get_request_var('rule_type') : 0) .'&show_trees=';\n\t\t$automation_output_0 = htmlspecialchars(\n\t\t\t(string)$automation_output_0,\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n\t\t\tini_get('default_charset') ?: 'UTF-8',\n\t\t\tfalse\n\t\t);\n\t\t$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n\t\tprint '<td class=\\'textInfo\\' style=\\'text-align:right;vertical-align:top;\\''\n\t\t\t. '><span class=\\'linkMarker\\'>*</span><a class=\\'linkEditMain\\' href=\\'';\n\t\tprint $automation_output_0 . (isset($_SESSION['automation_tree_rules_show_trees']) ? '0' : '1');\n\t\tprint '\\'>';\n\t\tprint (isset($_SESSION['automation_tree_rules_show_trees']) ? __('Don\\'t Show'):__('Show'));\n\t\tprint ' ';\n\t\tprint __('Created Trees');\n\t\tprint '</a><br>';\n\t\t?>"
+      "after": "<?php\n        $automation_output_0 = 'automation_tree_rules.php?action=item_edit&id='\n            . (isset_request_var('id') ? get_request_var('id') : 0)\n            . '&item_id='\n            . (isset_request_var('item_id') ? get_request_var('item_id') : 0)\n            . '&rule_type='\n            . (isset_request_var('rule_type') ? get_request_var('rule_type') : 0) .'&show_trees=';\n        $automation_output_0 = htmlspecialchars(\n            (string)$automation_output_0,\n            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n            ini_get('default_charset') ?: 'UTF-8',\n            false\n        );\n        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n        print '<td class=\\'textInfo\\' style=\\'text-align:right;vertical-align:top;\\''\n            . '><span class=\\'linkMarker\\'>*</span><a class=\\'linkEditMain\\' href=\\'';\n        print $automation_output_0 . (isset($_SESSION['automation_tree_rules_show_trees']) ? '0' : '1');\n        print '\\'>';\n        print (isset($_SESSION['automation_tree_rules_show_trees']) ? __('Don\\'t Show'):__('Show'));\n        print ' ';\n        print __('Created Trees');\n        print '</a><br>';\n        ?>"
     },
     {
       "key": "AaCs2O2dIug_wyaLiloY",
@@ -97,7 +97,7 @@
       "line": 585,
       "context": "html",
       "before": "<td class='textInfo right' style='vertical-align:top;'><span class='linkMarker'>*</span><a class='linkEditMain' href='<?php print html_escape('automation_tree_rules.php?action=edit&id=' . (isset_request_var('id') ? get_request_var('id') : 0) . '&show_hosts=') . (isset($_SESSION['automation_tree_rules_show_objects']) ? '0' : '1');?>'><?php print (isset($_SESSION['automation_tree_rules_show_objects']) ? __('Don\\'t Show'):__('Show'));?> <?php print __('Eligible Objects');?></a><br>",
-      "after": "<?php\n\t\t$automation_output_0 = 'automation_tree_rules.php?action=edit&id='\n\t\t\t. (isset_request_var('id') ? get_request_var('id') : 0)\n\t\t\t. '&show_hosts=';\n\t\t$automation_output_0 = htmlspecialchars(\n\t\t\t(string)$automation_output_0,\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n\t\t\tini_get('default_charset') ?: 'UTF-8',\n\t\t\tfalse\n\t\t);\n\t\t$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n\t\tprint '<td class=\\'textInfo right\\' style=\\'vertical-align:top;\\'><span clas'\n\t\t\t. 's=\\'linkMarker\\'>*</span><a class=\\'linkEditMain\\' href=\\'';\n\t\tprint $automation_output_0 . (isset($_SESSION['automation_tree_rules_show_objects']) ? '0' : '1');\n\t\tprint '\\'>';\n\t\tprint (isset($_SESSION['automation_tree_rules_show_objects']) ? __('Don\\'t Show'):__('Show'));\n\t\tprint ' ';\n\t\tprint __('Eligible Objects');\n\t\tprint '</a><br>';\n\t\t?>"
+      "after": "<?php\n        $automation_output_0 = 'automation_tree_rules.php?action=edit&id='\n            . (isset_request_var('id') ? get_request_var('id') : 0)\n            . '&show_hosts=';\n        $automation_output_0 = htmlspecialchars(\n            (string)$automation_output_0,\n            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n            ini_get('default_charset') ?: 'UTF-8',\n            false\n        );\n        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n        print '<td class=\\'textInfo right\\' style=\\'vertical-align:top;\\'><span clas'\n            . 's=\\'linkMarker\\'>*</span><a class=\\'linkEditMain\\' href=\\'';\n        print $automation_output_0 . (isset($_SESSION['automation_tree_rules_show_objects']) ? '0' : '1');\n        print '\\'>';\n        print (isset($_SESSION['automation_tree_rules_show_objects']) ? __('Don\\'t Show'):__('Show'));\n        print ' ';\n        print __('Eligible Objects');\n        print '</a><br>';\n        ?>"
     },
     {
       "key": "AaCs2NLVIug_wyaLillg",
@@ -105,7 +105,7 @@
       "line": 140,
       "context": "html",
       "before": "<form method='post' id='form_automation_host' action='<?php print html_escape($url);?>'>",
-      "after": "<?php\n\t\t$automation_output_0 = $url;\n\t\t$automation_output_0 = htmlspecialchars(\n\t\t\t(string)$automation_output_0,\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n\t\t\tini_get('default_charset') ?: 'UTF-8',\n\t\t\tfalse\n\t\t);\n\t\t$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n\t\tprint '<form method=\\'post\\' id=\\'form_automation_host\\' action=\\'';\n\t\tprint $automation_output_0;\n\t\tprint '\\'>';\n\t\t?>"
+      "after": "<?php\n        $automation_output_0 = $url;\n        $automation_output_0 = htmlspecialchars(\n            (string)$automation_output_0,\n            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n            ini_get('default_charset') ?: 'UTF-8',\n            false\n        );\n        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n        print '<form method=\\'post\\' id=\\'form_automation_host\\' action=\\'';\n        print $automation_output_0;\n        print '\\'>';\n        ?>"
     },
     {
       "key": "AaCs2NLVIug_wyaLillZ",
@@ -113,7 +113,7 @@
       "line": 433,
       "context": "html",
       "before": "<form id='form_graphs' action='<?php print html_escape($url);?>'>",
-      "after": "<?php\n\t\t$automation_output_0 = $url;\n\t\t$automation_output_0 = htmlspecialchars(\n\t\t\t(string)$automation_output_0,\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n\t\t\tini_get('default_charset') ?: 'UTF-8',\n\t\t\tfalse\n\t\t);\n\t\t$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n\t\tprint '<form id=\\'form_graphs\\' action=\\'';\n\t\tprint $automation_output_0;\n\t\tprint '\\'>';\n\t\t?>"
+      "after": "<?php\n        $automation_output_0 = $url;\n        $automation_output_0 = htmlspecialchars(\n            (string)$automation_output_0,\n            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n            ini_get('default_charset') ?: 'UTF-8',\n            false\n        );\n        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n        print '<form id=\\'form_graphs\\' action=\\'';\n        print $automation_output_0;\n        print '\\'>';\n        ?>"
     },
     {
       "key": "AaCs2NLVIug_wyaLillc",
@@ -121,7 +121,7 @@
       "line": 715,
       "context": "html",
       "before": "<form id='form_automation_objects' action='<?php print html_escape($url);?>'>",
-      "after": "<?php\n\t\t$automation_output_0 = $url;\n\t\t$automation_output_0 = htmlspecialchars(\n\t\t\t(string)$automation_output_0,\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n\t\t\tini_get('default_charset') ?: 'UTF-8',\n\t\t\tfalse\n\t\t);\n\t\t$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n\t\tprint '<form id=\\'form_automation_objects\\' action=\\'';\n\t\tprint $automation_output_0;\n\t\tprint '\\'>';\n\t\t?>"
+      "after": "<?php\n        $automation_output_0 = $url;\n        $automation_output_0 = htmlspecialchars(\n            (string)$automation_output_0,\n            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n            ini_get('default_charset') ?: 'UTF-8',\n            false\n        );\n        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n        print '<form id=\\'form_automation_objects\\' action=\\'';\n        print $automation_output_0;\n        print '\\'>';\n        ?>"
     },
     {
       "key": "AaCs2NLVIug_wyaLilln",
@@ -129,7 +129,7 @@
       "line": 1072,
       "context": "html",
       "before": "print \"<form method='post' id='form_automation_tree' action='\" . html_escape($url) . \"'>\";",
-      "after": "$automation_output_0 = $url;\n\t\t$automation_output_0 = htmlspecialchars(\n\t\t\t(string)$automation_output_0,\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n\t\t\tini_get('default_charset') ?: 'UTF-8',\n\t\t\tfalse\n\t\t);\n\t\t$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n\t\tprint \"<form method='post' id='form_automation_tree' action='\" . $automation_output_0 . \"'>\";"
+      "after": "$automation_output_0 = $url;\n        $automation_output_0 = htmlspecialchars(\n            (string)$automation_output_0,\n            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n            ini_get('default_charset') ?: 'UTF-8',\n            false\n        );\n        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n        print \"<form method='post' id='form_automation_tree' action='\" . $automation_output_0 . \"'>\";"
     },
     {
       "key": "AaCs2NLVIug_wyaLilld",
@@ -137,7 +137,7 @@
       "line": 108,
       "context": "javascript",
       "before": "strURL = '<?php print $url;?>' + '&cleard=true&header=false';",
-      "after": "strURL = <?php\n\t\tprint json_encode(\n\t\t\tautomation_url_utf8($url),\n\t\t\tJSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n\t\t);\n\t\t?> + '&cleard=true&header=false';"
+      "after": "strURL = <?php\n        print json_encode(\n            automation_url_utf8($url),\n            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n        );\n        ?> + '&cleard=true&header=false';"
     },
     {
       "key": "AaCs2NLVIug_wyaLilla",
@@ -145,7 +145,7 @@
       "line": 402,
       "context": "javascript",
       "before": "strURL = '<?php print $url;?>' + '&clear=true&header=false';",
-      "after": "strURL = <?php\n\t\tprint json_encode(\n\t\t\tautomation_url_utf8($url),\n\t\t\tJSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n\t\t);\n\t\t?> + '&clear=true&header=false';"
+      "after": "strURL = <?php\n        print json_encode(\n            automation_url_utf8($url),\n            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n        );\n        ?> + '&clear=true&header=false';"
     },
     {
       "key": "AaCs2NLVIug_wyaLillj",
@@ -153,7 +153,7 @@
       "line": 685,
       "context": "javascript",
       "before": "strURL = '<?php print $url;?>' + '&oclear=true&header=false';",
-      "after": "strURL = <?php\n\t\tprint json_encode(\n\t\t\tautomation_url_utf8($url),\n\t\t\tJSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n\t\t);\n\t\t?> + '&oclear=true&header=false';"
+      "after": "strURL = <?php\n        print json_encode(\n            automation_url_utf8($url),\n            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n        );\n        ?> + '&oclear=true&header=false';"
     },
     {
       "key": "AaCs2NLVIug_wyaLillY",
@@ -161,7 +161,7 @@
       "line": 1046,
       "context": "javascript",
       "before": "strURL = '<?php print $url;?>' + '&clear=true&header=false';",
-      "after": "strURL = <?php\n\t\tprint json_encode(\n\t\t\tautomation_url_utf8($url),\n\t\t\tJSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n\t\t);\n\t\t?> + '&clear=true&header=false';"
+      "after": "strURL = <?php\n        print json_encode(\n            automation_url_utf8($url),\n            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n        );\n        ?> + '&clear=true&header=false';"
     },
     {
       "key": "AaCs2NLVIug_wyaLillm",
@@ -169,7 +169,7 @@
       "line": 677,
       "context": "javascript",
       "before": "strURL  = '<?php print $url;?>';",
-      "after": "strURL  = <?php\n\t\tprint json_encode(\n\t\t\tautomation_url_utf8($url),\n\t\t\tJSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n\t\t);\n\t\t?>;"
+      "after": "strURL  = <?php\n        print json_encode(\n            automation_url_utf8($url),\n            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n        );\n        ?>;"
     },
     {
       "key": "AaCs2NLVIug_wyaLillX",
@@ -177,7 +177,7 @@
       "line": 99,
       "context": "javascript",
       "before": "strURL  = '<?php print $url;?>' + '&host_status=' + $('#host_status').val();",
-      "after": "strURL  = <?php\n\t\tprint json_encode(\n\t\t\tautomation_url_utf8($url),\n\t\t\tJSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n\t\t);\n\t\t?> + '&host_status=' + $('#host_status').val();"
+      "after": "strURL  = <?php\n        print json_encode(\n            automation_url_utf8($url),\n            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n        );\n        ?> + '&host_status=' + $('#host_status').val();"
     },
     {
       "key": "AaCs2NLVIug_wyaLillW",
@@ -185,7 +185,7 @@
       "line": 393,
       "context": "javascript",
       "before": "strURL  = '<?php print $url;?>' + '&host_id=' + $('#host_id').val();",
-      "after": "strURL  = <?php\n\t\tprint json_encode(\n\t\t\tautomation_url_utf8($url),\n\t\t\tJSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n\t\t);\n\t\t?> + '&host_id=' + $('#host_id').val();"
+      "after": "strURL  = <?php\n        print json_encode(\n            automation_url_utf8($url),\n            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n        );\n        ?> + '&host_id=' + $('#host_id').val();"
     },
     {
       "key": "AaCs2NLVIug_wyaLillf",
@@ -193,7 +193,7 @@
       "line": 1037,
       "context": "javascript",
       "before": "strURL  = '<?php print $url;?>' + '&host_status=' + $('#host_status').val();",
-      "after": "strURL  = <?php\n\t\tprint json_encode(\n\t\t\tautomation_url_utf8($url),\n\t\t\tJSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n\t\t);\n\t\t?> + '&host_status=' + $('#host_status').val();"
+      "after": "strURL  = <?php\n        print json_encode(\n            automation_url_utf8($url),\n            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n        );\n        ?> + '&host_status=' + $('#host_status').val();"
     },
     {
       "key": "AaCs2PaqIug_wyaLilte",
@@ -201,7 +201,7 @@
       "line": 618,
       "context": "html",
       "before": "<td class='textInfo right' style='vertical-align:top;'><span class='linkMarker'>*</span><a class='linkEditMain' href='<?php print html_escape('automation_graph_rules.php?action=edit&id=' . (isset_request_var('id') ? get_request_var('id') : 0) . '&show_rule=') . ($_SESSION['automation_graph_rules_show_rule'] == true ? '0' : '1');?>'><?php print ($_SESSION['automation_graph_rules_show_rule'] == true ? __('Don\\'t Show'):__('Show'));?> <?php print __('Rule Details.');?></a><br>",
-      "after": "<?php\n\t\t$automation_output_0 = 'automation_graph_rules.php?action=edit&id='\n\t\t\t. (isset_request_var('id') ? get_request_var('id') : 0)\n\t\t\t. '&show_rule=';\n\t\t$automation_output_0 = htmlspecialchars(\n\t\t\t(string)$automation_output_0,\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n\t\t\tini_get('default_charset') ?: 'UTF-8',\n\t\t\tfalse\n\t\t);\n\t\t$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n\t\tprint '<td class=\\'textInfo right\\' style=\\'vertical-align:top;\\'><span clas'\n\t\t\t. 's=\\'linkMarker\\'>*</span><a class=\\'linkEditMain\\' href=\\'';\n\t\tprint $automation_output_0 . ($_SESSION['automation_graph_rules_show_rule'] == true ? '0' : '1');\n\t\tprint '\\'>';\n\t\tprint ($_SESSION['automation_graph_rules_show_rule'] == true ? __('Don\\'t Show'):__('Show'));\n\t\tprint ' ';\n\t\tprint __('Rule Details.');\n\t\tprint '</a><br>';\n\t\t?>"
+      "after": "<?php\n        $automation_output_0 = 'automation_graph_rules.php?action=edit&id='\n            . (isset_request_var('id') ? get_request_var('id') : 0)\n            . '&show_rule=';\n        $automation_output_0 = htmlspecialchars(\n            (string)$automation_output_0,\n            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n            ini_get('default_charset') ?: 'UTF-8',\n            false\n        );\n        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);\n        print '<td class=\\'textInfo right\\' style=\\'vertical-align:top;\\'><span clas'\n            . 's=\\'linkMarker\\'>*</span><a class=\\'linkEditMain\\' href=\\'';\n        print $automation_output_0 . ($_SESSION['automation_graph_rules_show_rule'] == true ? '0' : '1');\n        print '\\'>';\n        print ($_SESSION['automation_graph_rules_show_rule'] == true ? __('Don\\'t Show'):__('Show'));\n        print ' ';\n        print __('Rule Details.');\n        print '</a><br>';\n        ?>"
     }
   ]
 }
