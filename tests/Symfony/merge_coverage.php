@@ -102,7 +102,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             $relative = substr($path, strlen('/var/www/html/'));
             // Legacy application coverage has its own report. Never import
             // generated configuration/cache, dependencies or installed plugins.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-device-state.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -137,6 +137,9 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Domain/DeviceCollectorAssignment.php',
         'src/Inventory/Infrastructure/Symfony/DeviceFormFailure.php',
         'src/Inventory/Infrastructure/Symfony/DeviceFormPage.php',
+        'src/Inventory/Infrastructure/Symfony/DeviceAssignmentForm.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceAssignmentLock.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceAssignmentProcess.php',
         'src/Inventory/Application/Command/AssignDeviceTemplate.php',
         'src/Inventory/Application/Command/AssignDeviceCollector.php',
         'src/Inventory/Application/Query/PrepareDeviceTemplateAssignment.php',
@@ -150,7 +153,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceTemplateController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceCollectorController.php',
         'bin/legacy-device-template.php',
-        'bin/legacy-device-collector.php',
+        'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php',
         'bin/legacy-device-state.php',
         'src/Inventory/Domain/DeviceState.php',
         'src/Inventory/Domain/DeviceSelection.php',
