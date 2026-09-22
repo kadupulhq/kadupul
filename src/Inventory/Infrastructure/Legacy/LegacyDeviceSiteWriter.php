@@ -21,7 +21,12 @@ final class LegacyDeviceSiteWriter
             // The site's existence must be established before status/cache or
             // remote disable effects. Primary writes share this transaction.
             if (($fields['disabled'] ?? '') === 'on' && (int) ($fields['id'] ?? 0) > 0) {
-                \api_device_disable_devices([(int) $fields['id']]);
+                if (!\api_device_disable_devices([(int) $fields['id']])) {
+                    throw new \RuntimeException('Device disable failed.');
+                }
+            }
+            if (!$db->inTransaction()) {
+                throw new \RuntimeException('Device transaction was lost.');
             }
             $id = \sql_save($fields, 'host', 'id', true, $db);
             if (!$id || \is_error_message()) {

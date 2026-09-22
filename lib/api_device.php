@@ -248,30 +248,34 @@ function api_device_remove_multi($device_ids, $delete_type = 2) {
  *
  * @param  (array) An array of device ids
  *
- * @return (void)
+ * @return (bool) Whether all attempted database updates succeeded
  */
-function api_device_disable_devices($device_ids) {
+function api_device_disable_devices($device_ids): bool {
 	global $config;
 
 	$raised = array();
 
 	foreach ($device_ids as $device_id) {
-		db_execute_prepared("UPDATE host
+		if (!db_execute_prepared("UPDATE host
 			SET disabled = 'on', status = 0
 			WHERE id = ?
 			AND (deleted = '' OR (deleted = 'on' AND disabled = ''))",
-			array($device_id));
+			array($device_id))) {
+			return false;
+		}
 
 		$poller_id = db_fetch_cell_prepared('SELECT poller_id FROM host WHERE id = ?', array($device_id));
 
 		if ($poller_id > 1) {
 			if (remote_poller_up($poller_id)) {
 				if (($rcnn_id = poller_push_to_remote_db_connect($device_id)) !== false) {
-					db_execute_prepared("UPDATE host
+					if (!db_execute_prepared("UPDATE host
 						SET disabled='on'
 						WHERE id = ?
 						AND (deleted = '' OR (deleted = 'on' AND disabled = ''))",
-						array($device_id), true, $rcnn_id);
+						array($device_id), true, $rcnn_id)) {
+						return false;
+					}
 				} elseif (!isset($raised[$poller_id])) {
 					raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
 					$raised[$poller_id] = true;
@@ -282,6 +286,8 @@ function api_device_disable_devices($device_ids) {
 			}
 		}
 	}
+
+	return true;
 }
 
 /**
