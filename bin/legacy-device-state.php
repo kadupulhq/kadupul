@@ -146,22 +146,6 @@ try {
         if (db_error() !== '' || is_error_message() || !$connection->inTransaction()) {
             throw new RuntimeException('Device operation could not be confirmed');
         }
-        foreach ($rows as $row) {
-            $device = LegacyDeviceStates::state($row);
-            $verify = $read($connection, "SELECT disabled, status, site_id, poller_id, host_template_id FROM host WHERE id = ? AND deleted = ''", [$device->id]);
-            if (count($verify) !== 1 || ($verify[0]['disabled'] !== 'on') !== $enabled
-                || (int) $verify[0]['site_id'] !== $device->siteId || (int) $verify[0]['poller_id'] !== $device->pollerId
-                || (int) $verify[0]['host_template_id'] !== $device->templateId
-                || (!$enabled && isset($changed[$device->id]) && (int) $verify[0]['status'] !== 0)) {
-                throw new RuntimeException('Device state could not be confirmed');
-            }
-            if (isset($remotes[$device->pollerId])) {
-                $verify = $read($remotes[$device->pollerId], "SELECT disabled, poller_id FROM host WHERE id = ? AND deleted = ''", [$device->id]);
-                if (count($verify) !== 1 || ($verify[0]['disabled'] !== 'on') !== $enabled || (int) $verify[0]['poller_id'] !== $device->pollerId) {
-                    throw new RuntimeException('Collector state could not be confirmed');
-                }
-            }
-        }
         $markers = ['time_last_change_device' => (string) time()];
         foreach ($changed as $device) {
             $markers['poller_replicate_device_cache_crc_' . $device->pollerId] = bin2hex(random_bytes(20));
@@ -170,6 +154,23 @@ try {
         foreach ($markers as $name => $value) {
             if (!$query->execute([$name, $value, $value])) {
                 throw new RuntimeException('Device cache invalidation failed');
+            }
+        }
+    }
+    // Confirm every selected copy even when preflight found no changes.
+    foreach ($rows as $row) {
+        $device = LegacyDeviceStates::state($row);
+        $verify = $read($connection, "SELECT disabled, status, site_id, poller_id, host_template_id FROM host WHERE id = ? AND deleted = ''", [$device->id]);
+        if (count($verify) !== 1 || ($verify[0]['disabled'] !== 'on') !== $enabled
+            || (int) $verify[0]['site_id'] !== $device->siteId || (int) $verify[0]['poller_id'] !== $device->pollerId
+            || (int) $verify[0]['host_template_id'] !== $device->templateId
+            || (!$enabled && isset($changed[$device->id]) && (int) $verify[0]['status'] !== 0)) {
+            throw new RuntimeException('Device state could not be confirmed');
+        }
+        if (isset($remotes[$device->pollerId])) {
+            $verify = $read($remotes[$device->pollerId], "SELECT disabled, poller_id FROM host WHERE id = ? AND deleted = ''", [$device->id]);
+            if (count($verify) !== 1 || ($verify[0]['disabled'] !== 'on') !== $enabled || (int) $verify[0]['poller_id'] !== $device->pollerId) {
+                throw new RuntimeException('Collector state could not be confirmed');
             }
         }
     }
