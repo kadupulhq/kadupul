@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'Add site'|trans({}, 'inventory') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route and encoded validated list context. #}
+    <p><a href="{{ path('inventory_sites', filters) }}">{{ 'Back to sites'|trans({}, 'inventory') }}</a></p>
+    <h1>{{ 'Add site'|trans({}, 'inventory') }}</h1>
+    <p>{{ 'Enter the site details. Map zoom ranges from 0 to 23.'|trans({}, 'inventory') }}</p>
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">{{ 'Create site'|trans({}, 'inventory') }}</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

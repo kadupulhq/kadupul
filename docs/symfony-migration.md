@@ -150,7 +150,7 @@ Search (`q`) matches name, city, state or country as literal text. `direction=as
 sorts by name with an ID tie-breaker; `page` and `size=25|50|100` provide bounded
 pagination with lookahead. Twig escapes site text and carries filters between
 pages. Controller responses are private/no-store. GET/HEAD are supported; Symfony
-rejects mutations at routing with a generic 405. Site create/delete/duplicate, remaining edit fields,
+rejects mutations at routing with a generic 405. Site deletion/duplication, remaining edit fields,
 other sort columns, saved preferences and legacy navigation cutover remain to be
 migrated. `sites.php` remains operational.
 
@@ -160,7 +160,7 @@ Site names now open `/app.php/inventory/sites/{id}/edit`. Symfony Forms and Twig
 edit the name and notes through Inventory's Site aggregate, EditSite command and
 SiteEditor port. Console access and realm 3 authorize all site edits, including
 empty sites, consistent with legacy site administration. Anonymous requests return
-401, revoked access 403, and absent/deleted sites 404. No request can create a site.
+401, revoked access 403, and absent/deleted sites 404. Editing never creates a missing site; creation has its own route below.
 
 Names are trimmed and require 1–100 Unicode characters; notes preserve whitespace
 and allow up to 1,024 Unicode characters, matching the database column. Symfony
@@ -187,8 +187,7 @@ editors do not enforce the new revision protocol, so they can still overwrite la
 
 Failed persistence attempts roll back when the transaction remains active. An
 uncertain failure returns 502 and asks the operator to reload before retrying;
-there is no automatic retry. Controller responses are private/no-store. Site
-creation, other settings and destructive/bulk operations remain in `sites.php`.
+there is no automatic retry. Controller responses are private/no-store. Other settings and destructive/bulk operations remain in `sites.php`.
 
 ## Inventory details slice
 
@@ -638,3 +637,27 @@ On failure some classes may already have committed deletions. The command report
 this without exposing database exception details; inspect again before retrying.
 A successful command reports remaining rows rather than claiming all cleanup is
 finished. Restart the scheduled worker afterward if that is the chosen owner.
+
+## Site creation through Symfony
+
+`/app.php/inventory/sites/new` now renders a Symfony Form in Twig and dispatches
+Inventory's `CreateSite` use case. The Sites list links to it. Creation accepts
+name, address lines, city/state/postal code/country, timezone, latitude/longitude,
+map zoom, alternate name and notes. Domain validation enforces Unicode/database
+bounds, known timezones, coordinate ranges and precision, and zoom 0–23. It uses
+the same name/notes rules as the migrated editor. Duplicate names remain allowed,
+as in the legacy schema; this is not an idempotency guarantee for repeated POSTs.
+
+Console and realm 3 authorization apply to both form access and submission, and
+are rechecked by the persistence adapter inside its transaction. Stateless CSRF,
+extra-field rejection and fixed-route navigation protect the form boundary.
+The site and both legacy invalidation markers (`time_last_change_site` and
+`time_last_change_site_device`) commit together. A marker failure rolls back the
+site. The adapter does not bootstrap a legacy page or invoke plugin/poller work.
+
+Successful creation redirects with HTTP 303 to the existing Twig site editor.
+Validation failures return 422, revoked access 401/403 and uncertain write results
+502 with a message to inspect the list before retrying. Responses are private and
+not stored. Labels and errors use the English/French Inventory catalogs. Existing
+site address/map editing, duplication and deletion remain in `sites.php`; LTS is
+unchanged.

@@ -7,6 +7,8 @@
     <h1>{{ 'Sites'|trans({}, 'inventory') }}</h1>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
     <p><a href="{{ path('inventory_devices') }}">{{ 'Devices'|trans({}, 'inventory') }}</a></p>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route and encoded validated list context. #}
+    <p><a href="{{ path('inventory_site_create', {list: filters}) }}">{{ 'Add site'|trans({}, 'inventory') }}</a></p>
     <form method="get" action="{{ path('inventory_sites') }}" role="search">
         <label for="site-search">{{ 'Search by name, city, state or country'|trans({}, 'inventory') }}</label>
         <input id="site-search" type="search" name="q" value="{{ criteria.search }}" maxlength="200">

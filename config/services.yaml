@@ -126,3 +126,7 @@ services:
     Kadupul\IdentityAccess\Infrastructure\Symfony\RowCacheCommand:
         arguments:
             $enabled: '%env(default::KADUPUL_ROW_CACHE_SCHEDULER)%'
+
+    Kadupul\Inventory\Application\Command\CreateSite: ~
+    Kadupul\Inventory\Application\Port\SiteCreator:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacySiteCreator
