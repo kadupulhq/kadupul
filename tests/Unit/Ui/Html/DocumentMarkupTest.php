@@ -20,8 +20,8 @@ function read_config_option($name) { return $name === 'realtime_enabled' ? Realt
 function is_dir($path) { return RealtimeState::$directory; }
 function is_writable($path) { return RealtimeState::$writable; }
 
-function render($markup, $file) {
-	$snmp_query = array('id' => 42);
+function render($markup, $file, $queryId = 42) {
+	$snmp_query = array('id' => $queryId);
 	ob_start();
 	try {
 		if ($file === 'graphs_new.php') {
@@ -116,5 +116,31 @@ test('realtime accessible names reuse existing gettext catalog messages', functi
 	$catalog = file_get_contents($root . '/locales/po/cacti.pot');
 	foreach (array('Timespan', 'Refresh Interval', 'Size') as $message) {
 		expect($catalog)->toContain('msgid "' . $message . '"');
+	}
+});
+
+test('graph query captions target their matching production select on multi-query pages', function () use ($baseline) {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/graphs_new.php');
+	expect(preg_match('/<select class=\x27dqselect\x27[^\n]+>/', $source, $match))->toBe(1);
+	$caption = array_values(array_filter($baseline, function ($entry) {
+		return $entry['file'] === 'graphs_new.php';
+	}))[0]['after'];
+	$markup = '';
+	foreach (array(42, 99) as $queryId) {
+		$markup .= render($caption . $match[0] . "<option value='7' selected>Fixture</option></select>",
+			'graphs_new.php', $queryId);
+	}
+	$doc = new \DOMDocument();
+	$doc->loadHTML('<!doctype html><html><body>' . $markup . '</body></html>');
+	$xpath = new \DOMXPath($doc);
+	foreach (array(42, 99) as $queryId) {
+		$id = 'sgg_' . $queryId;
+		$labels = $xpath->query('//label[@for="' . $id . '"]');
+		$controls = $xpath->query('//select[@id="' . $id . '"]');
+		expect($labels->length)->toBe(1);
+		expect($controls->length)->toBe(1);
+		expect($labels->item(0)->textContent)->toBe('Select a Graph Type to Create');
+		expect($controls->item(0)->getAttribute('name'))->toBe($id);
+		expect($controls->item(0)->getAttribute('data-prefix'))->toBe($queryId . ',');
 	}
 });

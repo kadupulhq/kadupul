@@ -457,9 +457,15 @@ $realtime_error = '';
 if (read_config_option('realtime_enabled') == '') {
 	$realtime_error = __('Real-time has been disabled by your administrator.');
 } elseif (!is_dir(read_config_option('realtime_cache_path'))) {
-	$realtime_error = __('The Image Cache Directory does not exist.  Please first create it and set permissions and then attempt to open another Real-time graph.');
+	$realtime_error = __(
+		'The Image Cache Directory does not exist.  Please first create it and set permissions ' .
+		'and then attempt to open another Real-time graph.'
+	);
 } elseif (!is_writable(read_config_option('realtime_cache_path'))) {
-	$realtime_error = __('The Image Cache Directory is not writable.  Please set permissions and then attempt to open another Real-time graph.');
+	$realtime_error = __(
+		'The Image Cache Directory is not writable.  Please set permissions ' .
+		'and then attempt to open another Real-time graph.'
+	);
 }
 
 if ($realtime_error !== '') {

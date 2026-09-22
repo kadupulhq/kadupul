@@ -29,7 +29,7 @@
     "component": "kadupulhq_kadupul-lts:auth_changepassword.php",
     "line": 334,
     "message": "Add a <title> tag to this page.",
-    "disposition": "False-positive candidate: production shared helper emits the title; see SharedPageTitleTest. No closure claimed."
+    "disposition": "RESOLVED/FALSE-POSITIVE in Sonar: production shared helper emits the title; verified by SharedPageTitleTest. Evidence and exact-key triage recorded in GitHub issue #275."
   },
   {
     "key": "AaCeytTIrnQdoRHC47YN",
@@ -53,7 +53,7 @@
     "component": "kadupulhq_kadupul-lts:auth_login.php",
     "line": 313,
     "message": "Add a <title> tag to this page.",
-    "disposition": "False-positive candidate: production shared helper emits the title; see SharedPageTitleTest. No closure claimed."
+    "disposition": "RESOLVED/FALSE-POSITIVE in Sonar: production shared helper emits the title; verified by SharedPageTitleTest. Evidence and exact-key triage recorded in GitHub issue #275."
   },
   {
     "key": "AaCeytXvrnQdoRHC47nN",
@@ -77,7 +77,7 @@
     "component": "kadupulhq_kadupul-lts:install/install.php",
     "line": 95,
     "message": "Add a <title> tag to this page.",
-    "disposition": "False-positive candidate: production shared helper emits the title; see SharedPageTitleTest. No closure claimed."
+    "disposition": "RESOLVED/FALSE-POSITIVE in Sonar: production shared helper emits the title; verified by SharedPageTitleTest. Evidence and exact-key triage recorded in GitHub issue #275."
   },
   {
     "key": "AaCeytZarnQdoRHC47nv",
@@ -165,7 +165,7 @@
     "component": "kadupulhq_kadupul-lts:graph_realtime.php",
     "line": 483,
     "message": "Add a <title> tag to this page.",
-    "disposition": "False-positive candidate: production shared helper emits the title; see SharedPageTitleTest. No closure claimed."
+    "disposition": "RESOLVED/FALSE-POSITIVE in Sonar: production shared helper emits the title; verified by SharedPageTitleTest. Evidence and exact-key triage recorded in GitHub issue #275."
   },
   {
     "key": "AaCeys9yrnQdoRHC466Z",
@@ -173,7 +173,7 @@
     "component": "kadupulhq_kadupul-lts:include/top_general_header.php",
     "line": 33,
     "message": "Add a <title> tag to this page.",
-    "disposition": "False-positive candidate: production shared helper emits the title; see SharedPageTitleTest. No closure claimed."
+    "disposition": "RESOLVED/FALSE-POSITIVE in Sonar: production shared helper emits the title; verified by SharedPageTitleTest. Evidence and exact-key triage recorded in GitHub issue #275."
   },
   {
     "key": "AaCeys9rrnQdoRHC466U",
@@ -181,7 +181,7 @@
     "component": "kadupulhq_kadupul-lts:include/top_graph_header.php",
     "line": 33,
     "message": "Add a <title> tag to this page.",
-    "disposition": "False-positive candidate: production shared helper emits the title; see SharedPageTitleTest. No closure claimed."
+    "disposition": "RESOLVED/FALSE-POSITIVE in Sonar: production shared helper emits the title; verified by SharedPageTitleTest. Evidence and exact-key triage recorded in GitHub issue #275."
   },
   {
     "key": "AaCeys7qrnQdoRHC46vF",
@@ -189,6 +189,6 @@
     "component": "kadupulhq_kadupul-lts:include/top_header.php",
     "line": 33,
     "message": "Add a <title> tag to this page.",
-    "disposition": "False-positive candidate: production shared helper emits the title; see SharedPageTitleTest. No closure claimed."
+    "disposition": "RESOLVED/FALSE-POSITIVE in Sonar: production shared helper emits the title; verified by SharedPageTitleTest. Evidence and exact-key triage recorded in GitHub issue #275."
   }
 ]
