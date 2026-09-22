@@ -966,7 +966,7 @@ function pollers() {
 						?>'>
 					</td>
 					<td>
-						<?php print __('Collectors');?>
+						<label for='rows'><?php print __('Collectors');?></label>
 					</td>
 					<td>
 						<select id='rows'>
@@ -981,7 +981,7 @@ function pollers() {
 						</select>
 					</td>
 					<td>
-						<?php print __('Refresh');?>
+						<label for='refresh'><?php print __('Refresh');?></label>
 					</td>
 					<td>
 						<select id='refresh'>

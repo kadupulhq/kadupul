@@ -1022,7 +1022,7 @@ function data_debug_filter() {
 					<?php print html_site_filter(get_request_var('site_id'));?>
 					<?php print html_host_filter(get_request_var('host_id'), 'applyFilter', $host_where);?>
 					<td>
-						<?php print __('Template');?>
+						<label for='template_id'><?php print __('Template');?></label>
 					</td>
 					<td>
 						<select id='template_id' name='template_id'>

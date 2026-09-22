@@ -676,7 +676,7 @@ function domains() {
 						?>'>
 					</td>
 					<td>
-						<?php print __('Domains');?>
+						<label for='rows'><?php print __('Domains');?></label>
 					</td>
 					<td>
 						<select id='rows'>

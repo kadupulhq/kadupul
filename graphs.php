@@ -2080,7 +2080,7 @@ function graph_management() {
 					<?php print html_site_filter(get_request_var('site_id'));?>
 					<?php print html_host_filter(get_request_var('host_id'), 'applyFilter', $host_where);?>
 					<td>
-						<?php print __('Template');?>
+						<label for='template_id'><?php print __('Template');?></label>
 					</td>
 					<td>
 						<select id='template_id'>
@@ -2134,7 +2134,7 @@ function graph_management() {
 						?>'>
 					</td>
 					<td>
-						<?php print __('Graph Source');?>
+						<label for='source'><?php print __('Graph Source');?></label>
 					</td>
 					<td>
 						<select id='source'>
@@ -2145,7 +2145,7 @@ function graph_management() {
 						</select>
 					</td>
 					<td>
-						<?php print __('Graphs');?>
+						<label for='rows'><?php print __('Graphs');?></label>
 					</td>
 					<td>
 						<select id='rows'>

@@ -1,0 +1,230 @@
+{
+  "rule": "Web:InputWithoutLabelCheck",
+  "issues": [
+    {
+      "key": "AaCeytjGrnQdoRHC48Vj",
+      "file": "graphs_new.php",
+      "line": 429,
+      "label": "Graph Types",
+      "id": "graph_type",
+      "before": "\t\t\t\t\t\t\t<?php print __('Graph Types');?>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='graph_type' name='graph_type'>",
+      "after": "\t\t\t\t\t\t\t<label for='graph_type'><?php print __('Graph Types');?></label>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='graph_type' name='graph_type'>"
+    },
+    {
+      "key": "AaCeytdYrnQdoRHC472z",
+      "file": "graphs_items.php",
+      "line": 382,
+      "label": "Data Template",
+      "id": "data_template_id",
+      "before": "\t\t\t\t\t\t<?php print __('Data Template');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='data_template_id'>",
+      "after": "\t\t\t\t\t\t<label for='data_template_id'><?php print __('Data Template');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='data_template_id'>"
+    },
+    {
+      "key": "AaCeytdKrnQdoRHC470w",
+      "file": "aggregate_graphs.php",
+      "line": 1258,
+      "label": "Graphs",
+      "id": "rows",
+      "before": "\t\t\t\t\t\t<?php print __('Graphs');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('Graphs');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>"
+    },
+    {
+      "key": "AaCeytdKrnQdoRHC470y",
+      "file": "aggregate_graphs.php",
+      "line": 1540,
+      "label": "Template",
+      "id": "template_id",
+      "before": "\t\t\t\t\t\t<?php print __('Template');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='template_id' name='template_id'>",
+      "after": "\t\t\t\t\t\t<label for='template_id'><?php print __('Template');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='template_id' name='template_id'>"
+    },
+    {
+      "key": "AaCeytXWrnQdoRHC47kv",
+      "file": "automation_devices.php",
+      "line": 510,
+      "label": "Network",
+      "id": "network",
+      "before": "\t\t\t\t\t\t<?php print __('Network');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='network'>",
+      "after": "\t\t\t\t\t\t<label for='network'><?php print __('Network');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='network'>"
+    },
+    {
+      "key": "AaCeytXWrnQdoRHC47kw",
+      "file": "automation_devices.php",
+      "line": 540,
+      "label": "Status",
+      "id": "status",
+      "before": "\t\t\t\t\t\t<?php print __('Status');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='status'>",
+      "after": "\t\t\t\t\t\t<label for='status'><?php print __('Status');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='status'>"
+    },
+    {
+      "key": "AaCeytTurnQdoRHC47av",
+      "file": "data_debug.php",
+      "line": 1028,
+      "label": "Template",
+      "id": "template_id",
+      "before": "\t\t\t\t\t\t<?php print __('Template');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='template_id' name='template_id'>",
+      "after": "\t\t\t\t\t\t<label for='template_id'><?php print __('Template');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='template_id' name='template_id'>"
+    },
+    {
+      "key": "AaCeytSErnQdoRHC47TK",
+      "file": "data_sources.php",
+      "line": 1482,
+      "label": "Template",
+      "id": "template_id",
+      "before": "\t\t\t\t\t\t<?php print __('Template');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='template_id' name='template_id'>",
+      "after": "\t\t\t\t\t\t<label for='template_id'><?php print __('Template');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='template_id' name='template_id'>"
+    },
+    {
+      "key": "AaCeytVwrnQdoRHC47f5",
+      "file": "data_templates.php",
+      "line": 1197,
+      "label": "Profile",
+      "id": "profile",
+      "before": "\t\t\t\t\t\t<?php print __('Profile');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='profile'>",
+      "after": "\t\t\t\t\t\t<label for='profile'><?php print __('Profile');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='profile'>"
+    },
+    {
+      "key": "AaCeytATrnQdoRHC469Y",
+      "file": "graphs.php",
+      "line": 2086,
+      "label": "Template",
+      "id": "template_id",
+      "before": "\t\t\t\t\t\t<?php print __('Template');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='template_id'>",
+      "after": "\t\t\t\t\t\t<label for='template_id'><?php print __('Template');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='template_id'>"
+    },
+    {
+      "key": "AaCeytATrnQdoRHC469a",
+      "file": "graphs.php",
+      "line": 2140,
+      "label": "Graph Source",
+      "id": "source",
+      "before": "\t\t\t\t\t\t<?php print __('Graph Source');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='source'>",
+      "after": "\t\t\t\t\t\t<label for='source'><?php print __('Graph Source');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='source'>"
+    },
+    {
+      "key": "AaCeytATrnQdoRHC469b",
+      "file": "graphs.php",
+      "line": 2151,
+      "label": "Graphs",
+      "id": "rows",
+      "before": "\t\t\t\t\t\t<?php print __('Graphs');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('Graphs');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>"
+    },
+    {
+      "key": "AaCeytlSrnQdoRHC48dp",
+      "file": "managers.php",
+      "line": 502,
+      "label": "MIB",
+      "id": "mib",
+      "before": "\t\t\t\t\t\t\t<?php print __('MIB');?>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='mib' name='mib'>",
+      "after": "\t\t\t\t\t\t\t<label for='mib'><?php print __('MIB');?></label>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='mib' name='mib'>"
+    },
+    {
+      "key": "AaCeyteBrnQdoRHC477d",
+      "file": "plugins.php",
+      "line": 495,
+      "label": "Status",
+      "id": "state",
+      "before": "\t\t\t\t\t\t<?php print __('Status');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='state' name='state'>",
+      "after": "\t\t\t\t\t\t<label for='state'><?php print __('Status');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='state' name='state'>"
+    },
+    {
+      "key": "AaCeytcdrnQdoRHC47yd",
+      "file": "pollers.php",
+      "line": 972,
+      "label": "Collectors",
+      "id": "rows",
+      "before": "\t\t\t\t\t\t<?php print __('Collectors');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('Collectors');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>"
+    },
+    {
+      "key": "AaCeytcdrnQdoRHC47ye",
+      "file": "pollers.php",
+      "line": 987,
+      "label": "Refresh",
+      "id": "refresh",
+      "before": "\t\t\t\t\t\t<?php print __('Refresh');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='refresh'>",
+      "after": "\t\t\t\t\t\t<label for='refresh'><?php print __('Refresh');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='refresh'>"
+    },
+    {
+      "key": "AaCeytitrnQdoRHC48UM",
+      "file": "rrdcheck.php",
+      "line": 242,
+      "label": "Age",
+      "id": "age",
+      "before": "\t\t\t\t\t\t<?php print __('Age');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='age'>",
+      "after": "\t\t\t\t\t\t<label for='age'><?php print __('Age');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='age'>"
+    },
+    {
+      "key": "AaCeytcArnQdoRHC47wX",
+      "file": "rrdcleaner.php",
+      "line": 544,
+      "label": "Time Since Update",
+      "id": "age",
+      "before": "\t\t\t\t\t\t<?php print __('Time Since Update');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='age'>",
+      "after": "\t\t\t\t\t\t<label for='age'><?php print __('Time Since Update');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='age'>"
+    },
+    {
+      "key": "AaCeytcArnQdoRHC47wY",
+      "file": "rrdcleaner.php",
+      "line": 560,
+      "label": "RRDfiles",
+      "id": "rows",
+      "before": "\t\t\t\t\t\t<?php print __('RRDfiles');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('RRDfiles');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>"
+    },
+    {
+      "key": "AaCeytk7rnQdoRHC48cj",
+      "file": "sites.php",
+      "line": 586,
+      "label": "Sites",
+      "id": "rows",
+      "before": "\t\t\t\t\t\t<?php print __('Sites');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('Sites');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>"
+    },
+    {
+      "key": "AaCeytaSrnQdoRHC47tA",
+      "file": "user_domains.php",
+      "line": 682,
+      "label": "Domains",
+      "id": "rows",
+      "before": "\t\t\t\t\t\t<?php print __('Domains');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('Domains');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>"
+    },
+    {
+      "key": "AaCeytZzrnQdoRHC47on",
+      "file": "utilities.php",
+      "line": 1076,
+      "label": "User",
+      "id": "username",
+      "before": "\t\t\t\t\t\t<?php print __('User');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='username'>",
+      "after": "\t\t\t\t\t\t<label for='username'><?php print __('User');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='username'>"
+    },
+    {
+      "key": "AaCeytkIrnQdoRHC48aU",
+      "file": "vdef.php",
+      "line": 750,
+      "label": "VDEFs",
+      "id": "rows",
+      "before": "\t\t\t\t\t\t<?php print __('VDEFs');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('VDEFs');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>"
+    },
+    {
+      "key": "AaCeytdxrnQdoRHC473m",
+      "file": "user_admin.php",
+      "line": 2238,
+      "label": "Group",
+      "id": "group",
+      "before": "\t\t\t\t\t\t<?php print __('Group');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='group'>",
+      "after": "\t\t\t\t\t\t<label for='group'><?php print __('Group');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='group'>"
+    },
+    {
+      "key": "AaCeytdxrnQdoRHC473n",
+      "file": "user_admin.php",
+      "line": 2260,
+      "label": "Last Login",
+      "id": "login",
+      "before": "\t\t\t\t\t\t<?php print __('Last Login');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='login'>",
+      "after": "\t\t\t\t\t\t<label for='login'><?php print __('Last Login');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='login'>"
+    }
+  ]
+}

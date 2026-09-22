@@ -1070,7 +1070,7 @@ function utilities_view_user_log() {
 			<table class='filterTable'>
 				<tr>
 					<td>
-						<?php print __('User');?>
+						<label for='username'><?php print __('User');?></label>
 					</td>
 					<td>
 						<select id='username'>

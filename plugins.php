@@ -489,7 +489,7 @@ function update_show_current () {
 						?>'>
 					</td>
 					<td>
-						<?php print __('Status');?>
+						<label for='state'><?php print __('Status');?></label>
 					</td>
 					<td>
 						<select id='state' name='state'>

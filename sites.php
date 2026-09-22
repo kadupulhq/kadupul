@@ -580,7 +580,7 @@ function sites() {
 						?>'>
 					</td>
 					<td>
-						<?php print __('Sites');?>
+						<label for='rows'><?php print __('Sites');?></label>
 					</td>
 					<td>
 						<select id='rows'>

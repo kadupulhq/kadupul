@@ -504,7 +504,7 @@ function draw_filter() {
 						?>'>
 					</td>
 					<td>
-						<?php print __('Network');?>
+						<label for='network'><?php print __('Network');?></label>
 					</td>
 					<td>
 						<select id='network'>
@@ -534,7 +534,7 @@ function draw_filter() {
 			<table class='filterTable'>
 				<tr>
 					<td>
-						<?php print __('Status');?>
+						<label for='status'><?php print __('Status');?></label>
 					</td>
 					<td>
 						<select id='status'>

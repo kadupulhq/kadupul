@@ -2232,7 +2232,7 @@ function user() {
 							print htmlspecialchars((string) get_request_var('filter'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 					</td>
 					<td>
-						<?php print __('Group');?>
+						<label for='group'><?php print __('Group');?></label>
 					</td>
 					<td>
 						<select id='group'>
@@ -2254,7 +2254,7 @@ function user() {
 						</select>
 					</td>
 					<td>
-						<?php print __('Last Login');?>
+						<label for='login'><?php print __('Last Login');?></label>
 					</td>
 					<td>
 						<select id='login'>

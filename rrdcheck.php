@@ -236,7 +236,7 @@ function filter() {
 						?>'>
 					</td>
 					<td>
-						<?php print __('Age');?>
+						<label for='age'><?php print __('Age');?></label>
 					</td>
 					<td>
 						<select id='age'>

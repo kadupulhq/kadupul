@@ -376,7 +376,7 @@ function item_edit() {
 				</tr>
 				<tr>
 					<td>
-						<?php print __('Data Template');?>
+						<label for='data_template_id'><?php print __('Data Template');?></label>
 					</td>
 					<td>
 						<select id='data_template_id'>

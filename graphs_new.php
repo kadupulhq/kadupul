@@ -423,7 +423,7 @@ function graphs() {
 					<tr>
 						<?php print html_host_filter(get_request_var('host_id'), 'applyFilter', '', true, true);?>
 						<td>
-							<?php print __('Graph Types');?>
+							<label for='graph_type'><?php print __('Graph Types');?></label>
 						</td>
 						<td>
 							<select id='graph_type' name='graph_type'>

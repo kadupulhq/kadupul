@@ -1191,7 +1191,7 @@ function template() {
 						?>'>
 					</td>
 					<td>
-						<?php print __('Profile');?>
+						<label for='profile'><?php print __('Profile');?></label>
 					</td>
 					<td>
 						<select id='profile'>
