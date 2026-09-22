@@ -221,3 +221,4 @@
 "Select a valid device collector.": "Sélectionnez un collecteur valide."
 "Device collector assigned.": "Collecteur de l’appareil affecté."
 "Moving a device copies its polling configuration and removes it from the previous collector. Existing graphs and collected data are retained.": "Le déplacement d’un appareil copie sa configuration de collecte et le retire du collecteur précédent. Les graphiques et données existants sont conservés."
+"Device template updated.": "Modèle d’appareil mis à jour."

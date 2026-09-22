@@ -221,3 +221,4 @@
 "Select a valid device collector.": "Select a valid device collector."
 "Device collector assigned.": "Device collector assigned."
 "Moving a device copies its polling configuration and removes it from the previous collector. Existing graphs and collected data are retained.": "Moving a device copies its polling configuration and removes it from the previous collector. Existing graphs and collected data are retained."
+"Device template updated.": "Device template updated."
