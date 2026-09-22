@@ -197,7 +197,7 @@ final class TranslationTest extends TestCase
             $document = new \DOMDocument();
             @$document->loadHTML($response->getContent());
             $token = (new \DOMXPath($document))->evaluate('string(//input[@name="device_edit[_token]"]/@value)');
-            $fields = ['polling' => \Kadupul\Inventory\Domain\DevicePolling::DEFAULTS, 'site_id' => '0', 'description' => '', 'hostname' => 'router.invalid', 'notes' => '', 'location' => 'Enabled', 'external_id' => 'asset-1', 'enabled' => 'disabled', 'revision' => $device->revision(), '_token' => $token];
+            $fields = ['snmp' => ['keep_credentials' => 'keep'] + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::PUBLIC_DEFAULTS + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::CREDENTIAL_DEFAULTS, 'polling' => \Kadupul\Inventory\Domain\DevicePolling::DEFAULTS, 'site_id' => '0', 'description' => '', 'hostname' => 'router.invalid', 'notes' => '', 'location' => 'Enabled', 'external_id' => 'asset-1', 'enabled' => 'disabled', 'revision' => $device->revision(), '_token' => $token];
             foreach (['on', 'unexpected', '', null, ['enabled']] as $invalidChoice) {
                 $invalidFields = $fields;
                 $invalidFields['description'] = 'Router';
