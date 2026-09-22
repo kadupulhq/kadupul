@@ -94,7 +94,12 @@ try {
     if ((int) $row['host_template_id'] !== $assignment->templateId()) {
         $remote = null;
         if ($assignment->pollerId > 1) {
-            if (!remote_poller_up($assignment->pollerId)) {
+            // Keep collector configuration stable until primary commit/rollback.
+            $query = $connection->prepare('SELECT id, disabled, UNIX_TIMESTAMP() - UNIX_TIMESTAMP(last_status) AS age FROM poller WHERE id = ? FOR UPDATE');
+            $query->execute([$assignment->pollerId]);
+            $collector = $query->fetch(PDO::FETCH_ASSOC);
+            if (!$collector || $collector['disabled'] !== '' || $collector['age'] === null
+                || (int) $collector['age'] >= (int) read_config_option('poller_interval') * 2) {
                 throw new RuntimeException('Collector unavailable');
             }
             $remote = poller_connect_to_remote($assignment->pollerId);
