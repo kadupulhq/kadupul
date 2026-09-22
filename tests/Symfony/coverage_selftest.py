@@ -182,7 +182,8 @@ def main():
             elif case == 'missing-device-creation-check':
                 evidence['checks'].remove('legacy template graph associations are preserved')
             elif case.startswith('missing-statistics-check-'):
-                evidence['checks'].remove(statistics_checks[int(case.rsplit('-', 1)[1])])
+                missing = statistics_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case == 'missing-check':
                 evidence['checks'] = []
             elif case == 'wrong-handler':
