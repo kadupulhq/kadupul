@@ -119,3 +119,7 @@ services:
     Kadupul\IdentityAccess\Infrastructure\Legacy\InstallationRowCache:
         arguments:
             $database: '@kadupul.row_cache_database'
+
+    Kadupul\Inventory\Application\Command\CreateSite: ~
+    Kadupul\Inventory\Application\Port\SiteCreator:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacySiteCreator

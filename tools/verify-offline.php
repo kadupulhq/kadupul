@@ -35,6 +35,10 @@ $response = $kernel->handle(Request::create('/inventory/devices.csv'));
 if ($response->getStatusCode() !== 401) {
     throw new RuntimeException('Offline Inventory CSV route missing or not protected');
 }
+$response = $kernel->handle(Request::create('/inventory/sites/new'));
+if ($response->getStatusCode() !== 401 || !is_file($root . '/templates/inventory/site_create.html.twig')) {
+    throw new RuntimeException('Offline site creation route or template missing');
+}
 $kernel->shutdown();
 foreach (['Kadupul\\Inventory\\Application\\Query\\ListDevices', 'Kadupul\\Inventory\\Infrastructure\\Symfony\\Controller\\DeviceListController'] as $class) {
     if (!class_exists($class)) {

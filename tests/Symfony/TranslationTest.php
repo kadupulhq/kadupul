@@ -55,6 +55,11 @@ final class TranslationTest extends TestCase
         $request->headers->set('Accept-Language', $browser);
         $subscriber->onRequest(new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST));
         self::assertSame($expected, $request->attributes->get('_locale'));
+        $request = Request::create('/inventory/sites/new', 'GET', ['language' => 'fr', '_locale' => 'fr'], ['Cacti' => 'fixture']);
+        $request->attributes->set('_route', 'inventory_site_create');
+        $request->headers->set('Accept-Language', $browser);
+        $subscriber->onRequest(new RequestEvent($this->createMock(HttpKernelInterface::class), $request, HttpKernelInterface::MAIN_REQUEST));
+        self::assertSame($expected, $request->attributes->get('_locale'));
     }
 
     public static function preferences(): iterable

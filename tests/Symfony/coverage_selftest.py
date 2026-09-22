@@ -27,6 +27,10 @@ def main():
         'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php',
         'src/Inventory/Infrastructure/Legacy/LegacySiteEditor.php',
         'src/IdentityAccess/Infrastructure/Legacy/LegacyLocalePreference.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/SiteCreateController.php',
+        'src/Inventory/Application/Command/CreateSite.php',
+        'src/Inventory/Domain/NewSite.php',
+        'src/Inventory/Infrastructure/Legacy/LegacySiteCreator.php',
         'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php')]
     for path in (args.files / 'raw').glob('coverage-*.json'):
         report = json.loads(path.read_text())
@@ -49,6 +53,12 @@ def main():
         'unmeasured-worker': 'Missing measured execution',
         'unmeasured-site-editor': 'Missing measured execution: src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php',
         'unmeasured-locale': 'Missing measured execution: src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php',
+        'missing-site-creation-check': 'Incomplete Symfony integration',
+        'site-create-test-hash': 'Integration test source differs',
+        'unmeasured-SiteCreateController.php': 'Missing measured execution: src/Inventory/Infrastructure/Symfony/Controller/SiteCreateController.php',
+        'unmeasured-CreateSite.php': 'Missing measured execution: src/Inventory/Application/Command/CreateSite.php',
+        'unmeasured-NewSite.php': 'Missing measured execution: src/Inventory/Domain/NewSite.php',
+        'unmeasured-LegacySiteCreator.php': 'Missing measured execution: src/Inventory/Infrastructure/Legacy/LegacySiteCreator.php',
         'path-traversal': 'Invalid integration source path',
     }
     with tempfile.TemporaryDirectory(prefix='symfony-coverage-negative-') as directory:
@@ -70,6 +80,13 @@ def main():
                 evidence['source_sha256']['tests/Symfony/site_catalog_scenarios.py'] = '0' * 64
             elif case == 'site-edit-test-hash':
                 evidence['source_sha256']['tests/Symfony/site_edit_scenarios.py'] = '0' * 64
+            elif case == 'site-create-test-hash':
+                evidence['source_sha256']['tests/Symfony/site_create_scenarios.py'] = '0' * 64
+            elif case == 'missing-site-creation-check':
+                evidence['checks'].remove('site creation persists name')
+            elif case.startswith('unmeasured-') and case.removeprefix('unmeasured-').endswith('.php'):
+                source = next(path for path in required if path.endswith('/' + case.removeprefix('unmeasured-')))
+                data['files'][source]['lines'] = {line: -1 for line in data['files'][source]['lines']}
             elif case == 'missing-check':
                 evidence['checks'] = []
             elif case == 'wrong-handler':
