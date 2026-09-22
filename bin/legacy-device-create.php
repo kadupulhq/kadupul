@@ -6,6 +6,7 @@
  */
 
 use Kadupul\Inventory\Domain\NewDevice;
+use Kadupul\Inventory\Infrastructure\Legacy\DeviceCreationVerifier;
 
 if (PHP_SAPI !== 'cli') {
     http_response_code(404);
@@ -137,6 +138,7 @@ try {
             throw new RuntimeException('Collector replication could not be confirmed');
         }
     }
+    (new DeviceCreationVerifier())->verify($connection, $remote, (int) $saved, (int) $fields['host_template_id']);
     if (!db_commit_transaction()) {
         throw new RuntimeException('Commit failed');
     }

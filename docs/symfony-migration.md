@@ -623,6 +623,9 @@ The worker locks the account, authentication/guest policy and whichever direct
 or group grants authorize the transaction. Remote collectors must be online:
 the worker prepares both connections for full UTF-8 and strict writes and checks
 that the collector received the same device fields before confirming creation.
+Before commit, required template graph/query associations must exist on the
+primary, and collector graph/query associations (including reindex methods) must
+match the primary. Verification failures do not report successful creation.
 Replication failure remains an uncertain outcome because remote writes cannot
 be rolled back with the primary transaction.
 
