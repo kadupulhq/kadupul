@@ -2323,7 +2323,7 @@ function tree() {
 						?>'>
 					</td>
 					<td>
-						<?php print __('Trees'); ?>
+						<label for='rows'><?php print __('Trees');?></label>
 					</td>
 					<td>
 						<select id='rows'>

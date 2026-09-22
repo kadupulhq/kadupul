@@ -298,6 +298,12 @@ function html_graph_template_multiselect() {
 		placeholder: '<?php print __('Enter keyword');?>',
 		width: msWidth
 	});
+	var templateLabel = $('label[for="graph_template_id"]');
+	var templateButton = $('#graph_template_id_ms');
+	if (templateLabel.length && templateButton.length) {
+		templateLabel.attr('for', templateButton.attr('id'));
+		templateButton.attr('aria-label', templateLabel.text());
+	}
 	<?php
 }
 
@@ -2453,7 +2459,7 @@ function html_host_filter($host_id = '-1', $call_back = 'applyFilter', $sql_wher
 	if ($theme == 'classic' || !read_config_option('autocomplete_enabled')) {
 		?>
 		<td>
-			<?php print __('Device');?>
+			<label for='host_id'><?php print __('Device');?></label>
 		</td>
 		<td>
 			<select id='host_id' name='host_id'>
@@ -2485,7 +2491,7 @@ function html_host_filter($host_id = '-1', $call_back = 'applyFilter', $sql_wher
 
 		?>
 		<td>
-			<?php print __('Device');?>
+			<label for='host'><?php print __('Device');?></label>
 		</td>
 		<td>
 			<span id='host_wrapper' style='width:200px;' class='ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-corner-all ui-button ui-widget'>

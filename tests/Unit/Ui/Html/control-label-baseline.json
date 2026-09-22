@@ -1,0 +1,162 @@
+[
+  {
+    "key": "AaCeyr49rnQdoRHC44yL",
+    "file": "lib/api_automation.php",
+    "line": 202,
+    "id": "host_template_id",
+    "before": "\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<?php print __('Type');?>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='host_template_id'>",
+    "after": "\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<label for='host_template_id'><?php print __('Type');?></label>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='host_template_id'>"
+  },
+  {
+    "key": "AaCeyr49rnQdoRHC44yM",
+    "file": "lib/api_automation.php",
+    "line": 511,
+    "id": "host_id",
+    "before": "\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<?php print __('Device');?>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='host_id'>",
+    "after": "\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<label for='host_id'><?php print __('Device');?></label>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='host_id'>"
+  },
+  {
+    "key": "AaCeyr49rnQdoRHC44yO",
+    "file": "lib/api_automation.php",
+    "line": 1241,
+    "id": "host_template_id",
+    "before": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<?php print __('Type');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='host_template_id'>",
+    "after": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<label for='host_template_id'><?php print __('Type');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='host_template_id'>"
+  },
+  {
+    "key": "AaCeysHcrnQdoRHC45FI",
+    "file": "lib/html.php",
+    "line": 2459,
+    "id": "host_id",
+    "before": "\t\t<td>\n\t\t\t<?php print __('Device');?>\n\t\t</td>\n\t\t<td>\n\t\t\t<select id='host_id' name='host_id'>",
+    "after": "\t\t<td>\n\t\t\t<label for='host_id'><?php print __('Device');?></label>\n\t\t</td>\n\t\t<td>\n\t\t\t<select id='host_id' name='host_id'>"
+  },
+  {
+    "key": "AaCeytlSrnQdoRHC48do",
+    "file": "managers.php",
+    "line": 171,
+    "id": "rows",
+    "before": "\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<?php print __('Receivers'); ?>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='rows'>",
+    "after": "\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<label for='rows'><?php print __('Receivers');?></label>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='rows'>"
+  },
+  {
+    "key": "AaCeytgbrnQdoRHC48Hc",
+    "file": "tree.php",
+    "line": 2329,
+    "id": "rows",
+    "before": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<?php print __('Trees'); ?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>",
+    "after": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<label for='rows'><?php print __('Trees');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>"
+  },
+  {
+    "key": "AaCeytTIrnQdoRHC47YQ",
+    "file": "auth_changepassword.php",
+    "line": 366,
+    "id": "current",
+    "before": "\t\t\t\t\t\t\t<td><?php print __('Current password');?></td>\n\t\t\t\t\t\t\t<td class='nowrap'><input type='password' class='ui-state-default ui-corner-all' id='current' name='current_password' autocomplete='current-password' size='20' placeholder='********'></td>",
+    "after": "\t\t\t\t\t\t\t<td><label for='current'><?php print __('Current password');?></label></td>\n\t\t\t\t\t\t\t<td class='nowrap'><input type='password' class='ui-state-default ui-corner-all' id='current' name='current_password' autocomplete='current-password' size='20' placeholder='********'></td>"
+  },
+  {
+    "key": "AaCeytTIrnQdoRHC47YR",
+    "file": "auth_changepassword.php",
+    "line": 371,
+    "id": "password",
+    "before": "\t\t\t\t\t\t\t<td><?php print __('New password');?></td>\n\t\t\t\t\t\t\t<td class='nowrap'><input type='password' class='ui-state-default ui-corner-all' id='password' name='password' autocomplete='off' size='20' placeholder='********'><?php print display_tooltip($secpass_tooltip);?></td>",
+    "after": "\t\t\t\t\t\t\t<td><label for='password'><?php print __('New password');?></label></td>\n\t\t\t\t\t\t\t<td class='nowrap'><input type='password' class='ui-state-default ui-corner-all' id='password' name='password' autocomplete='off' size='20' placeholder='********'><?php print display_tooltip($secpass_tooltip);?></td>"
+  },
+  {
+    "key": "AaCeytTIrnQdoRHC47YS",
+    "file": "auth_changepassword.php",
+    "line": 375,
+    "id": "password_confirm",
+    "before": "\t\t\t\t\t\t\t<td><?php print __('Confirm new password');?></td>\n\t\t\t\t\t\t\t<td class='nowrap'><input type='password' class='ui-state-default ui-corner-all' id='password_confirm' name='password_confirm' autocomplete='off' size='20' placeholder='********'></td>",
+    "after": "\t\t\t\t\t\t\t<td><label for='password_confirm'><?php print __('Confirm new password');?></label></td>\n\t\t\t\t\t\t\t<td class='nowrap'><input type='password' class='ui-state-default ui-corner-all' id='password_confirm' name='password_confirm' autocomplete='off' size='20' placeholder='********'></td>"
+  },
+  {
+    "key": "AaCeysd8rnQdoRHC451S",
+    "file": "lib/clog_webapi.php",
+    "line": 526,
+    "id": "filename",
+    "before": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<?php print __('File');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='filename'>",
+    "after": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<label for='filename'><?php print __('File');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='filename'>"
+  },
+  {
+    "key": "AaCeysd8rnQdoRHC451T",
+    "file": "lib/clog_webapi.php",
+    "line": 553,
+    "id": "tail_lines",
+    "before": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<?php print (get_request_var('reverse') == 1 ? __('Tail Lines'):__('Head Lines'));?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='tail_lines'>",
+    "after": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<label for='tail_lines'><?php\n\t\t\t\t\t\t\tprint (get_request_var('reverse') == 1 ? __('Tail Lines'):__('Head Lines'));\n\t\t\t\t\t\t?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='tail_lines'>"
+  },
+  {
+    "key": "AaCeysd8rnQdoRHC451U",
+    "file": "lib/clog_webapi.php",
+    "line": 580,
+    "id": "message_type",
+    "before": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<?php print __('Type');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='message_type'>",
+    "after": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<label for='message_type'><?php print __('Type');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='message_type'>"
+  },
+  {
+    "key": "AaCeysd8rnQdoRHC451V",
+    "file": "lib/clog_webapi.php",
+    "line": 616,
+    "id": "reverse",
+    "before": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<?php print __('Display');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='reverse'>",
+    "after": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<label for='reverse'><?php print __('Display');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='reverse'>"
+  },
+  {
+    "key": "AaCeysd8rnQdoRHC451W",
+    "file": "lib/clog_webapi.php",
+    "line": 645,
+    "id": "matches",
+    "before": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<?php print __('Search');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='matches'>",
+    "after": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<label for='matches' id='log-search-label'><?php print __('Search');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='matches'>"
+  },
+  {
+    "key": "AaCeysSUrnQdoRHC45oT",
+    "file": "lib/html_tree.php",
+    "line": 987,
+    "id": "rfilter",
+    "before": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<?php print __('Search');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<input type='text' class='ui-state-default ui-corner-all' id='rfilter' size='55' value='<?php print html_escape_request_var('rfilter');?>'>",
+    "after": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<label for='rfilter'><?php print __('Search');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<input type='text' class='ui-state-default ui-corner-all' id='rfilter' size='55' value='<?php print html_escape_request_var('rfilter');?>'>"
+  },
+  {
+    "key": "AaCeysSUrnQdoRHC45oU",
+    "file": "lib/html_tree.php",
+    "line": 993,
+    "id": "graph_template_id",
+    "before": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<?php print __('Template');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='graph_template_id' multiple style='opacity:0.1;overflow-y:auto;overflow-x:hide;height:0px;'>",
+    "after": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<label for='graph_template_id'><?php print __('Template');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='graph_template_id' multiple style='opacity:0.1;overflow-y:auto;overflow-x:hide;height:0px;'>"
+  },
+  {
+    "key": "AaCeytfErnQdoRHC48Aa",
+    "file": "data_queries.php",
+    "line": 1003,
+    "id": "svg_field",
+    "before": "\t\t\t\t\t<td class='nowrap'>\n\t\t\t\t\t\t<?php print __('Field Name');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<input type='text' class='ui-state-default ui-corner-all' id='svg_field' size='15'>",
+    "after": "\t\t\t\t\t<td class='nowrap'>\n\t\t\t\t\t\t<label for='svg_field'><?php print __('Field Name');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<input type='text' class='ui-state-default ui-corner-all' id='svg_field' size='15'>"
+  },
+  {
+    "key": "AaCeytfErnQdoRHC48Ab",
+    "file": "data_queries.php",
+    "line": 1009,
+    "id": "svg_text",
+    "before": "\t\t\t\t\t<td class='nowrap'>\n\t\t\t\t\t\t<?php print __('Suggested Value');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<input type='text' class='ui-state-default ui-corner-all' id='svg_text' size='60'>",
+    "after": "\t\t\t\t\t<td class='nowrap'>\n\t\t\t\t\t\t<label for='svg_text'><?php print __('Suggested Value');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<input type='text' class='ui-state-default ui-corner-all' id='svg_text' size='60'>"
+  },
+  {
+    "key": "AaCeyrsIrnQdoRHC44mS",
+    "file": "lib/html_graph.php",
+    "line": 167,
+    "id": "graph_template_id",
+    "before": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<?php print __('Template');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='graph_template_id' multiple style='opacity:0.1;overflow-y:auto;overflow-x:hide;height:0px;'>",
+    "after": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<label for='graph_template_id'><?php print __('Template');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='graph_template_id' multiple style='opacity:0.1;overflow-y:auto;overflow-x:hide;height:0px;'>"
+  },
+  {
+    "key": "AaCeytiPrnQdoRHC48Sc",
+    "file": "color.php",
+    "line": 382,
+    "id": "allow_update",
+    "before": "\t\t\t<input type='checkbox' name='allow_update' id='allow_update'><?php print __('Allow Existing Rows to be Updated?');?>",
+    "after": "\t\t\t<input type='checkbox' name='allow_update' id='allow_update'><label for='allow_update'><?php\n\t\t\t\tprint __('Allow Existing Rows to be Updated?');\n\t\t\t?></label>"
+  }
+]

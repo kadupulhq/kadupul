@@ -981,13 +981,13 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
-						<?php print __('Search');?>
+						<label for='rfilter'><?php print __('Search');?></label>
 					</td>
 					<td>
 						<input type='text' class='ui-state-default ui-corner-all' id='rfilter' size='55' value='<?php print html_escape_request_var('rfilter');?>'>
 					</td>
 					<td>
-						<?php print __('Template');?>
+						<label for='graph_template_id'><?php print __('Template');?></label>
 					</td>
 					<td>
 						<select id='graph_template_id' multiple style='opacity:0.1;overflow-y:auto;overflow-x:hide;height:0px;'>

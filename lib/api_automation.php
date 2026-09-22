@@ -196,7 +196,7 @@ function display_matching_hosts($rule, $rule_type, $url) {
 							?>
 						</td>
 						<td>
-							<?php print __('Type');?>
+							<label for='host_template_id'><?php print __('Type');?></label>
 						</td>
 						<td>
 							<select id='host_template_id'>
@@ -505,7 +505,7 @@ function display_matching_graphs($rule, $rule_type, $url) {
 				<table class='filterTable' role='presentation'>
 					<tr>
 						<td>
-							<?php print __('Device');?>
+							<label for='host_id'><?php print __('Device');?></label>
 						</td>
 						<td>
 							<select id='host_id'>
@@ -1235,7 +1235,7 @@ function display_matching_trees ($rule_id, $rule_type, $item, $url) {
 						?>
 					</td>
 					<td>
-						<?php print __('Type');?>
+						<label for='host_template_id'><?php print __('Type');?></label>
 					</td>
 					<td>
 						<select id='host_template_id'>
