@@ -55,6 +55,8 @@ function compatibility_create_guard($value) {
         $config['DEBUG_SQL_FLOW'] = true;
         cacti_log('Fixture credential: ' . $value['snmp_community'], false, 'DBCALL');
         db_echo_sql('Fixture credential: ' . $value['snmp_community']);
+        // Exercise the actual database-error path, including its returned message.
+        db_execute_prepared("SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ?", [$value['snmp_community']]);
     }
     return $value;
 }
