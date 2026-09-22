@@ -44,10 +44,10 @@ test('each reported head emits exactly one title through the production shared h
 	State::$theme = $theme;
 	$page_title = 'Fixture navigation';
 	$source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
-	expect(preg_match('/html_common_header\([^\n]*\);/', $source, $match))->toBe(1);
+	expect(preg_match_all('/html_common_header\([^\n]*\);/', $source, $matches))->toBe(1);
 	ob_start();
 	try {
-		eval('namespace SharedPageTitleTest; ' . $match[0]);
+		eval('namespace SharedPageTitleTest; ' . $matches[0][0]);
 		$markup = ob_get_contents();
 	} finally {
 		ob_end_clean();

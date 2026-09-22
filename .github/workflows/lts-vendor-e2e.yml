@@ -31,5 +31,5 @@ jobs:
       - run: node --test tests/Unit/vendor-lts-sync.test.mjs
       - run: node node_modules/@playwright/test/cli.js install --with-deps chromium
         working-directory: tests/e2e
-      - run: node node_modules/@playwright/test/cli.js test --config playwright.config.js vendor-lts.spec.js
+      - run: node node_modules/@playwright/test/cli.js test --config playwright.config.js vendor-lts.spec.js document-accessibility.spec.js
         working-directory: tests/e2e

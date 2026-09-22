@@ -22,7 +22,7 @@
   {
     "file": "graph_realtime.php",
     "before": "\t\t\t\t<select id='graph_start' onChange='imageOptionsChanged(\"timespan\")'>",
-    "after": "\t\t\t\t<select id='graph_start'\n\t\t\t\t\taria-label='<?php print __esc('Time Span');?>' onChange='imageOptionsChanged(\"timespan\")'>"
+    "after": "\t\t\t\t<select id='graph_start'\n\t\t\t\t\taria-label='<?php print __esc('Timespan');?>' onChange='imageOptionsChanged(\"timespan\")'>"
   },
   {
     "file": "graph_realtime.php",
@@ -32,7 +32,7 @@
   {
     "file": "graph_realtime.php",
     "before": "\t\t\t\t<select id='size' onChange='imageOptionsChanged(\"interval\")'>",
-    "after": "\t\t\t\t<select id='size'\n\t\t\t\t\taria-label='<?php print __esc('Graph Size');?>' onChange='imageOptionsChanged(\"interval\")'>"
+    "after": "\t\t\t\t<select id='size'\n\t\t\t\t\taria-label='<?php print __esc('Size');?>' onChange='imageOptionsChanged(\"interval\")'>"
   },
   {
     "file": "graphs_new.php",

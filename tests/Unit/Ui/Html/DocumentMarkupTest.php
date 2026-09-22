@@ -11,6 +11,15 @@ function html_escape($text) { return htmlspecialchars($text, ENT_QUOTES, 'UTF-8'
 function get_cacti_version_text() { return 'LTS fixture'; }
 const CACTI_LOCALE = 'fr-FR';
 
+class RealtimeState {
+	public static $enabled = 'on';
+	public static $directory = true;
+	public static $writable = true;
+}
+function read_config_option($name) { return $name === 'realtime_enabled' ? RealtimeState::$enabled : '/fixture'; }
+function is_dir($path) { return RealtimeState::$directory; }
+function is_writable($path) { return RealtimeState::$writable; }
+
 function render($markup, $file) {
 	$snmp_query = array('id' => 42);
 	ob_start();
@@ -64,4 +73,48 @@ test('Midwinter invalidates its imported core stylesheet cache after heading cha
 	$theme = dirname(__DIR__, 4) . '/include/themes/midwinter/';
 	$css = file_get_contents($theme . 'main.css');
 	expect($css)->toContain('core.css?' . md5_file($theme . 'css/media/core.css'));
+});
+
+test('realtime error branches emit localized complete documents without changing messages', function ($enabled, $dir, $write, $message) {
+	RealtimeState::$enabled = $enabled;
+	RealtimeState::$directory = $dir;
+	RealtimeState::$writable = $write;
+	$source = file_get_contents(dirname(__DIR__, 4) . '/graph_realtime.php');
+	$start = strpos($source, '$realtime_error =');
+	$end = strpos($source, '$selectedTheme = get_selected_theme();', $start);
+	$block = substr($source, $start, $end - $start);
+	expect(substr_count($block, 'exit;'))->toBe(1);
+	// Only replace process termination so the emitted error document can be inspected in this test.
+	$block = str_replace('exit;', 'return;', $block);
+	ob_start();
+	try {
+		eval('namespace DocumentMarkupTest; ' . $block);
+		$markup = ob_get_contents();
+	} finally {
+		ob_end_clean();
+	}
+	if ($message === '') {
+		expect($markup)->toBe('');
+		return;
+	}
+	expect($markup)->toStartWith('<!DOCTYPE html>');
+	$doc = new \DOMDocument();
+	$doc->loadHTML($markup);
+	expect($doc->documentElement->getAttribute('lang'))->toBe('fr-FR');
+	expect($doc->getElementsByTagName('title')->length)->toBe(1);
+	expect($doc->getElementsByTagName('title')->item(0)->textContent)->toBe('Cacti Real-time Graphing');
+	expect($doc->getElementsByTagName('strong')->item(0)->textContent)->toBe($message);
+})->with(array(
+	array('', true, true, 'Real-time has been disabled by your administrator.'),
+	array('on', false, true, 'The Image Cache Directory does not exist.  Please first create it and set permissions and then attempt to open another Real-time graph.'),
+	array('on', true, false, 'The Image Cache Directory is not writable.  Please set permissions and then attempt to open another Real-time graph.'),
+	array('on', true, true, '')
+));
+
+test('realtime accessible names reuse existing gettext catalog messages', function () {
+	$root = dirname(__DIR__, 4);
+	$catalog = file_get_contents($root . '/locales/po/cacti.pot');
+	foreach (array('Timespan', 'Refresh Interval', 'Size') as $message) {
+		expect($catalog)->toContain('msgid "' . $message . '"');
+	}
 });
