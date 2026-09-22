@@ -88,9 +88,13 @@ define('KADUPUL_THROW_DATABASE_ERRORS', true);
 foreach ([true, false] as $transactional) {
     $strict = new DeadlockConnection($transactional);
     try {
-        db_execute_prepared('UPDATE fixture SET value=1', [], true, $strict);
+        try {
+            db_execute_prepared('UPDATE fixture SET value=1', [], true, $strict);
+        } catch (Exception) {
+            throw new LogicException('Legacy recovery swallowed the strict SQL abort');
+        }
         throw new LogicException('Strict worker continued after failed SQL');
-    } catch (RuntimeException $error) {
+    } catch (Error $error) {
         if ($error->getMessage() !== 'Database operation failed.' || $strict->attempts !== 1) {
             throw new LogicException('Strict worker retried SQL or exposed diagnostics');
         }
