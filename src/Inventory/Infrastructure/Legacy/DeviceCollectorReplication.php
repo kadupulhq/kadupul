@@ -36,6 +36,16 @@ final class DeviceCollectorReplication
                 }
                 $rows = [];
                 foreach ($query->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                    // Pollers own these observations; they can change immediately
+                    // after replication without changing device configuration.
+                    $volatile = match ($table) {
+                        'host' => ['status', 'status_event_count', 'status_fail_date', 'status_rec_date', 'status_last_error', 'min_time', 'max_time', 'cur_time', 'avg_time', 'polling_time', 'total_polls', 'failed_polls', 'availability', 'last_updated', 'snmp_sysDescr', 'snmp_sysObjectID', 'snmp_sysUpTimeInstance', 'snmp_sysContact', 'snmp_sysName', 'snmp_sysLocation'],
+                        'poller_item' => ['rrd_next_step', 'last_updated', 'present'],
+                        'host_snmp_cache' => ['last_updated', 'present'],
+                        'poller_reindex' => ['assert_value', 'present'],
+                        default => [],
+                    };
+                    $row = array_diff_key($row, array_flip($volatile));
                     ksort($row);
                     $rows[] = json_encode(array_map(static fn($value) => $value === null ? null : (string) $value, $row), JSON_THROW_ON_ERROR);
                 }
@@ -44,6 +54,27 @@ final class DeviceCollectorReplication
             };
             if ($read($primary) !== $read($target)) {
                 throw new \RuntimeException('Collector replication could not be confirmed');
+            }
+        }
+    }
+
+    public function purgeDependents(PDO $source, int $deviceId): void
+    {
+        // Delete children while their ownership can still be discovered. The
+        // legacy purge removes the parent rows without foreign-key cascades.
+        foreach ([
+            'data_input_data' => 'data_template_data_id IN (SELECT id FROM data_template_data WHERE local_data_id IN (SELECT id FROM data_local WHERE host_id = ?))',
+            'data_template_rrd' => 'local_data_id IN (SELECT id FROM data_local WHERE host_id = ?)',
+            'data_template_data' => 'local_data_id IN (SELECT id FROM data_local WHERE host_id = ?)',
+            'graph_templates_item' => 'local_graph_id IN (SELECT id FROM graph_local WHERE host_id = ?)',
+        ] as $table => $where) {
+            $delete = $source->prepare("DELETE FROM $table WHERE $where");
+            if (!$delete->execute([$deviceId])) {
+                throw new \RuntimeException('Previous collector dependent cleanup failed');
+            }
+            $verify = $source->prepare("SELECT COUNT(*) FROM $table WHERE $where");
+            if (!$verify->execute([$deviceId]) || (int) $verify->fetchColumn() !== 0) {
+                throw new \RuntimeException('Previous collector dependents remain');
             }
         }
     }
