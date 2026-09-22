@@ -59,3 +59,9 @@ test('document corrections use production fragments and retain visible text', fu
 		expect($after)->toContain('<span');
 	}
 })->with('document markup');
+
+test('Midwinter invalidates its imported core stylesheet cache after heading changes', function () {
+	$theme = dirname(__DIR__, 4) . '/include/themes/midwinter/';
+	$css = file_get_contents($theme . 'main.css');
+	expect($css)->toContain('core.css?' . md5_file($theme . 'css/media/core.css'));
+});
