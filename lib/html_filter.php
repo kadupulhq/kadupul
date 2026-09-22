@@ -164,7 +164,9 @@ class CactiTableFilter {
 					switch($field_array['method']) {
 					case 'button':
 						print "<div class='formColumnButton'>\n";
-						print "<input type='button' class='ui-button ui-corner-all ui-widget' id='" . $field_name . "' value='" . html_escape_request_var($field_name) . "'" . (isset($field_array->title) ? " title='" . html_escape($field_array->title, ENT_QUOTES, 'UTF-8'):'') . "'>";
+						print "<input type='button' class='ui-button ui-corner-all ui-widget' id='" . $field_name .
+							"' value='" . html_escape_request_var($field_name) . "'" .
+							(isset($field_array->title) ? " title='" . html_escape($field_array->title) : '') . "'>";
 						print "</div>\n";
 
 						break;

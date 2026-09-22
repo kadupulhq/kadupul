@@ -146,6 +146,6 @@ if (read_config_option('auth_method') == 2) {
 	var refreshMSeconds=<?php print $myrefresh['seconds']*1000;?>;
 	var urlPath='<?php print $config['url_path'];?>';
 	var previousPage='';
-	var sessionMessage=<?php print display_output_messages(false);?>;
+	var sessionMessage=<?php print display_output_messages();?>;
 	var csrfMagicToken='<?php print csrf_get_tokens();?>';
 </script>

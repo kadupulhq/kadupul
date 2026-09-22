@@ -109,7 +109,7 @@ switch (get_request_var('action')) {
 		break;
 	case 'remove':
 		csrf_require_post(true);
-		data_query_remove();
+		data_query_remove(get_filter_request_var('id'));
 
 		header ('Location: data_queries.php');
 		break;

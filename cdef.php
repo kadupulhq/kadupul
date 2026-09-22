@@ -100,7 +100,7 @@ function draw_cdef_preview($cdef_id) {
 	?>
 	<tr class='even'>
 		<td style='padding:4px'>
-			<pre>cdef=<?php print html_escape(get_cdef($cdef_id, true));?></pre>
+			<pre>cdef=<?php print html_escape(get_cdef($cdef_id));?></pre>
 		</td>
 	</tr>
 	<?php

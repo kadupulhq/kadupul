@@ -157,7 +157,7 @@ if (cacti_sizeof($reports)) {
 		reports_log('Reports processing report: ' . $report['name'], true, 'REPORTS', POLLER_VERBOSITY_MEDIUM);
 		$current_user = db_fetch_row_prepared('SELECT * FROM user_auth WHERE id = ?', array($report['user_id']));
 		if (isset($report['email'])) {
-			generate_report($report, false, 'poller');
+			generate_report($report, false);
 			$number_sent++;
 		}
 	}
@@ -176,4 +176,3 @@ if (!$force) {
 }
 
 exit(0);
-

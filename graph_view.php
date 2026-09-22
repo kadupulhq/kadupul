@@ -1090,7 +1090,7 @@ case 'list':
 			viewGraphs();
 		});
 
-		<?php html_graph_template_multiselect('list');?>
+		<?php html_graph_template_multiselect();?>
 	});
 	</script>
 	<?php

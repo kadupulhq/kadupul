@@ -295,7 +295,7 @@ if (cacti_sizeof($parms)) {
 
 	if ($listInputFields) {
 		if ($template_id > 0) {
-			$input_fields = getInputFields($template_id, $quietMode);
+			$input_fields = getInputFields($template_id);
 			displayInputFields($input_fields, $quietMode);
 		} else {
 			print "ERROR: You must supply an graph-template-id before you can list its input fields\n";
@@ -516,7 +516,7 @@ if (cacti_sizeof($parms)) {
 	if ($cgInputFields != '') {
 		$fields = explode(' ', $cgInputFields);
 		if ($template_id > 0) {
-			$input_fields = getInputFields($template_id, $quietMode);
+			$input_fields = getInputFields($template_id);
 		}
 
 		if (cacti_sizeof($fields)) {

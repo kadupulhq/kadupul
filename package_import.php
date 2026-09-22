@@ -975,7 +975,7 @@ function package_import() {
 
 	set_request_var('package_class', '0');
 
-	if (get_request_var('package_location') == 0) {
+	if (get_filter_request_var('package_location') == 0) {
 		form_start('package_import.php', 'import', true);
 	} else {
 		form_start('package_import.php', 'import');
@@ -985,7 +985,7 @@ function package_import() {
 
 	$default_profile = get_default_profile();
 
-	$form = get_import_form(get_filter_request_var('package_location'), $default_profile);
+	$form = get_import_form($default_profile);
 
 	html_start_box(__('Package Import'), '100%', true, '3', 'center', '');
 

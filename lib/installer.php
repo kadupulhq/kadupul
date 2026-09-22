@@ -1163,7 +1163,7 @@ class Installer implements JsonSerializable {
 		}
 
 		if (empty($default_template) && !$force) {
-			set_default_action('default_template', '');
+			set_default_action('default_template');
 			$default_template = $this->getDefaultTemplate(true);
 		}
 

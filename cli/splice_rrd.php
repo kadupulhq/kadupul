@@ -349,7 +349,7 @@ $new_rrd    = processXML($new_output);
 // Splice new RRDfiles array with the flattened data
 debug('Splicing RRDfiles');
 
-spliceRRDs($new_rrd, $old_flat, $old_rrd['dsnames'], $db);
+spliceRRDs($new_rrd, $old_flat, $old_rrd['dsnames']);
 
 debug('Re-Creating XML File');
 $new_xml = recreateXML($new_rrd);
