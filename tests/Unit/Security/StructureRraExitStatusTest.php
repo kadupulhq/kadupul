@@ -10,8 +10,9 @@ $cases = array();
 // Extract each real fatal diagnostic through its exit, without loading the
 // operational CLI bootstrap or touching any RRD files or database.
 preg_match_all('/print [^;]*FATAL:[^;]*;\s*(?:display_help\(\);\s*)?exit[^;]*;/', $source, $matches);
+$expectedCodes = array(1, 1, 1, 1, 1, 1, 1, 5, 6, 3);
 foreach ($matches[0] as $index => $fragment) {
-	$cases['fatal branch ' . $index] = array($fragment, array(1, 1, 1, 1, 1, 1, 1, 5, 6, 3)[$index]);
+	$cases['fatal branch ' . $index] = array($fragment, $expectedCodes[$index] ?? null);
 }
 dataset('structure RRA fatal branches', $cases);
 
