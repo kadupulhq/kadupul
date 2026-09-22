@@ -106,6 +106,10 @@ def verify_remote_template_assignment(harness, session, device_id, check):
         check(saves() == before + 1, 'template assignment preserves the legacy host-save hook')
         check(harness.sql(f'SELECT host_template_id FROM create_remote.host WHERE id={device_id}').strip() == str(templates[0]), 'collector template identity matches the primary')
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host_graph WHERE host_id={device_id} AND graph_template_id={graphs[0]}').strip() == '1', 'collector receives required template associations')
+        harness.sql(f"UPDATE create_remote.host SET deleted='on' WHERE id={device_id}")
+        check(assign(0) == 502, 'template unassignment refuses deleted remote devices')
+        check(harness.sql(f'SELECT host_template_id FROM create_remote.host WHERE id={device_id}').strip() == str(templates[0]), 'deleted remote device retains its template')
+        harness.sql(f"UPDATE create_remote.host SET deleted='' WHERE id={device_id}")
         harness.sql("CREATE TRIGGER create_remote.reject_template_graph BEFORE INSERT ON create_remote.host_graph FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='template fixture rejection'")
         trigger = True
         check(assign(templates[1]) == 502, 'collector association failure cannot report successful template assignment')
