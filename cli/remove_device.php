@@ -185,7 +185,7 @@ if (cacti_sizeof($parms)) {
 			print "Removing devices with ids: $ids_confirm" . PHP_EOL;
 		}
 
-		$host_id = api_device_remove_multi($ids);
+		api_device_remove_multi($ids);
 
 		if (is_error_message()) {
 			print "ERROR: Failed to remove devices" . PHP_EOL;
@@ -265,4 +265,3 @@ function preg_array_key_match($needle, $haystack) {
 
 	return $matches;
 }
-

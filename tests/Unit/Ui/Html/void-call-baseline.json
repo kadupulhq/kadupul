@@ -1,0 +1,202 @@
+[
+  {
+    "key": "AaCs2NRBIug_wyaLilmA",
+    "file": "lib/html.php",
+    "line": 539,
+    "fn": "graph_drilldown_icons",
+    "before": "\t\t\t\t\t\t\t<?php print graph_drilldown_icons($graph['local_graph_id'], 'graph_buttons_thumbnails', $tree_id, $branch_id);?>",
+    "after": "\t\t\t\t\t\t\t<?php graph_drilldown_icons($graph['local_graph_id'], 'graph_buttons_thumbnails', $tree_id, $branch_id);?>"
+  },
+  {
+    "key": "AaCs2O9TIug_wyaLilo3",
+    "file": "data_debug.php",
+    "line": 1022,
+    "fn": "html_site_filter",
+    "before": "\t\t\t\t\t<?php print html_site_filter(get_request_var('site_id'));?>",
+    "after": "\t\t\t\t\t<?php html_site_filter(get_request_var('site_id'));?>"
+  },
+  {
+    "key": "AaCs2O9TIug_wyaLilo4",
+    "file": "data_debug.php",
+    "line": 1023,
+    "fn": "html_host_filter",
+    "before": "\t\t\t\t\t<?php print html_host_filter(get_request_var('host_id'), 'applyFilter', $host_where);?>",
+    "after": "\t\t\t\t\t<?php html_host_filter(get_request_var('host_id'), 'applyFilter', $host_where);?>"
+  },
+  {
+    "key": "AaCs2O0fIug_wyaLiloT",
+    "file": "install/install.php",
+    "line": 97,
+    "fn": "html_common_header",
+    "before": "print html_common_header(__('Cacti Server v%s - Maintenance', CACTI_VERSION));",
+    "after": "html_common_header(__('Cacti Server v%s - Maintenance', CACTI_VERSION));"
+  },
+  {
+    "key": "AaCs2O5XIug_wyaLilof",
+    "file": "data_sources.php",
+    "line": 1476,
+    "fn": "html_site_filter",
+    "before": "\t\t\t\t\t<?php print html_site_filter(get_request_var('site_id'));?>",
+    "after": "\t\t\t\t\t<?php html_site_filter(get_request_var('site_id'));?>"
+  },
+  {
+    "key": "AaCs2O5XIug_wyaLilog",
+    "file": "data_sources.php",
+    "line": 1477,
+    "fn": "html_host_filter",
+    "before": "\t\t\t\t\t<?php print html_host_filter(get_request_var('host_id'), 'applyFilter', $host_where);?>",
+    "after": "\t\t\t\t\t<?php html_host_filter(get_request_var('host_id'), 'applyFilter', $host_where);?>"
+  },
+  {
+    "key": "AaCs2Oe2Iug_wyaLiloG",
+    "file": "graphs.php",
+    "line": 2080,
+    "fn": "html_site_filter",
+    "before": "\t\t\t\t\t<?php print html_site_filter(get_request_var('site_id'));?>",
+    "after": "\t\t\t\t\t<?php html_site_filter(get_request_var('site_id'));?>"
+  },
+  {
+    "key": "AaCs2Oe2Iug_wyaLiloH",
+    "file": "graphs.php",
+    "line": 2081,
+    "fn": "html_host_filter",
+    "before": "\t\t\t\t\t<?php print html_host_filter(get_request_var('host_id'), 'applyFilter', $host_where);?>",
+    "after": "\t\t\t\t\t<?php html_host_filter(get_request_var('host_id'), 'applyFilter', $host_where);?>"
+  },
+  {
+    "key": "AaCs2ObMIug_wyaLiloA",
+    "file": "include/top_general_header.php",
+    "line": 40,
+    "fn": "html_graph_tabs_right",
+    "before": "\t\t<div class='cactiGraphHeaderBackground' style='display:none'><div id='gtabs'><?php print html_graph_tabs_right();?></div></div>",
+    "after": "\t\t<div class='cactiGraphHeaderBackground' style='display:none'><div id='gtabs'><?php\n\t\t\thtml_graph_tabs_right();\n\t\t?></div></div>"
+  },
+  {
+    "key": "AaCs2ObMIug_wyaLiloB",
+    "file": "include/top_general_header.php",
+    "line": 46,
+    "fn": "draw_login_status",
+    "before": "\t\t<?php if (read_config_option('auth_method') != 0) { ?><div class='infoBar'><?php echo draw_login_status($using_guest_account);?></div><?php } ?>",
+    "after": "\t\t<?php if (read_config_option('auth_method') != 0) { ?><div class='infoBar'><?php\n\t\t\tdraw_login_status($using_guest_account);\n\t\t?></div><?php } ?>"
+  },
+  {
+    "key": "AaCs2OayIug_wyaLiln-",
+    "file": "include/top_graph_header.php",
+    "line": 40,
+    "fn": "html_graph_tabs_right",
+    "before": "\t\t<div class='cactiGraphHeaderBackground'><div id='gtabs'><?php print html_graph_tabs_right();?></div></div>",
+    "after": "\t\t<div class='cactiGraphHeaderBackground'><div id='gtabs'><?php html_graph_tabs_right();?></div></div>"
+  },
+  {
+    "key": "AaCs2OayIug_wyaLiln_",
+    "file": "include/top_graph_header.php",
+    "line": 46,
+    "fn": "draw_login_status",
+    "before": "\t\t<?php if (read_config_option('auth_method') != 0) {?><div class='infoBar'><?php echo draw_login_status($using_guest_account);?></div><?php }?>",
+    "after": "\t\t<?php if (read_config_option('auth_method') != 0) {?><div class='infoBar'><?php\n\t\t\tdraw_login_status($using_guest_account);\n\t\t?></div><?php }?>"
+  },
+  {
+    "key": "AaCs2OWKIug_wyaLiln5",
+    "file": "include/top_header.php",
+    "line": 40,
+    "fn": "html_graph_tabs_right",
+    "before": "\t\t<div class='cactiGraphHeaderBackground' style='display:none'><div id='gtabs'><?php print html_graph_tabs_right();?></div></div>",
+    "after": "\t\t<div class='cactiGraphHeaderBackground' style='display:none'><div id='gtabs'><?php\n\t\t\thtml_graph_tabs_right();\n\t\t?></div></div>"
+  },
+  {
+    "key": "AaCs2OWKIug_wyaLiln6",
+    "file": "include/top_header.php",
+    "line": 46,
+    "fn": "draw_login_status",
+    "before": "\t\t<?php if (read_config_option('auth_method') != 0) {?><div class='infoBar'><?php echo draw_login_status($using_guest_account);?></div><?php }?>",
+    "after": "\t\t<?php if (read_config_option('auth_method') != 0) {?><div class='infoBar'><?php\n\t\t\tdraw_login_status($using_guest_account);\n\t\t?></div><?php }?>"
+  },
+  {
+    "key": "AaCs2NzbIug_wyaLilnf",
+    "file": "cli/remove_device.php",
+    "line": 188,
+    "fn": "api_device_remove_multi",
+    "before": "\t\t$host_id = api_device_remove_multi($ids);",
+    "after": "\t\tapi_device_remove_multi($ids);"
+  },
+  {
+    "key": "AaCs2PLDIug_wyaLilqR",
+    "file": "graphs_items.php",
+    "line": 375,
+    "fn": "html_host_filter",
+    "before": "\t\t\t\t\t<?php print html_host_filter(get_request_var('host_id'));?>",
+    "after": "\t\t\t\t\t<?php html_host_filter(get_request_var('host_id'));?>"
+  },
+  {
+    "key": "AaCs2NBHIug_wyaLilkm",
+    "file": "lib/html_graph.php",
+    "line": 162,
+    "fn": "html_host_filter",
+    "before": "\t\t\t\t\t<?php print html_host_filter(get_request_var('host_id'), 'applyGraphFilter', $devices_where);?>",
+    "after": "\t\t\t\t\t<?php html_host_filter(get_request_var('host_id'), 'applyGraphFilter', $devices_where);?>"
+  },
+  {
+    "key": "AaCs2PU4Iug_wyaLilsS",
+    "file": "user_group_admin.php",
+    "line": 494,
+    "fn": "form_text_box",
+    "before": "\t\t\tprint form_text_box('group_prefix', __('New Group'), '', 25);",
+    "after": "\t\t\tform_text_box('group_prefix', __('New Group'), '', 25);"
+  },
+  {
+    "key": "AaCs2PaHIug_wyaLiltV",
+    "file": "graphs_new.php",
+    "line": 424,
+    "fn": "html_host_filter",
+    "before": "\t\t\t\t\t\t<?php print html_host_filter(get_request_var('host_id'), 'applyFilter', '', true, true);?>",
+    "after": "\t\t\t\t\t\t<?php html_host_filter(get_request_var('host_id'), 'applyFilter', '', true, true);?>"
+  },
+  {
+    "key": "AaCs2PEIIug_wyaLilpc",
+    "file": "utilities.php",
+    "line": 1787,
+    "fn": "html_host_filter",
+    "before": "\t\t\t\t\t<?php print html_host_filter(get_request_var('host_id'));?>",
+    "after": "\t\t\t\t\t<?php html_host_filter(get_request_var('host_id'));?>"
+  },
+  {
+    "key": "AaCs2PEIIug_wyaLilpd",
+    "file": "utilities.php",
+    "line": 2084,
+    "fn": "html_host_filter",
+    "before": "\t\t\t\t\t<?php print html_host_filter(get_request_var('host_id'));?>",
+    "after": "\t\t\t\t\t<?php html_host_filter(get_request_var('host_id'));?>"
+  },
+  {
+    "key": "AaCs2PLrIug_wyaLilqU",
+    "file": "user_admin.php",
+    "line": 403,
+    "fn": "form_text_box",
+    "before": "\t\t\tprint form_text_box('new_username', '', '', 25);",
+    "after": "\t\t\tform_text_box('new_username', '', '', 25);"
+  },
+  {
+    "key": "AaCs2PLrIug_wyaLilqV",
+    "file": "user_admin.php",
+    "line": 410,
+    "fn": "form_text_box",
+    "before": "\t\t\tprint form_text_box('new_fullname', '', '', 35);",
+    "after": "\t\t\tform_text_box('new_fullname', '', '', 35);"
+  },
+  {
+    "key": "AaCs2PLrIug_wyaLilqW",
+    "file": "user_admin.php",
+    "line": 417,
+    "fn": "form_dropdown",
+    "before": "\t\t\tprint form_dropdown('new_realm', $auth_realms, '', '', $user_realm, '', 0);",
+    "after": "\t\t\tform_dropdown('new_realm', $auth_realms, '', '', $user_realm, '', 0);"
+  },
+  {
+    "key": "AaCs2PLrIug_wyaLilqX",
+    "file": "user_admin.php",
+    "line": 457,
+    "fn": "form_dropdown",
+    "before": "\t\t\tprint form_dropdown('template_user', $usernames, 'username', 'id', '', '', 0);",
+    "after": "\t\t\tform_dropdown('template_user', $usernames, 'username', 'id', '', '', 0);"
+  }
+]

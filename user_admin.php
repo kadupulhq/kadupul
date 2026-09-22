@@ -400,21 +400,21 @@ function form_actions() {
 			<tr>
 				<td class='textArea'>
 					<p>" . __('Username:') . " ";
-			print form_text_box('new_username', '', '', 25);
+			form_text_box('new_username', '', '', 25);
 
 			print "</p></td>
 				</tr>
 				<tr>
 					<td class='textArea'>
 						<p>" . __('Full Name:') . " ";
-			print form_text_box('new_fullname', '', '', 35);
+			form_text_box('new_fullname', '', '', 35);
 
 			print "</p></td>
 				</tr>
 				<tr>
 					<td class='textArea'>
 						<p>" . __('Realm:') ." ";
-			print form_dropdown('new_realm', $auth_realms, '', '', $user_realm, '', 0);
+			form_dropdown('new_realm', $auth_realms, '', '', $user_realm, '', 0);
 
 			print "</p></td>
 				</tr>";
@@ -454,7 +454,7 @@ function form_actions() {
 				<tr>
 					<td class='textArea'>
 						<p>" . __('Template User:') . " ";
-			print form_dropdown('template_user', $usernames, 'username', 'id', '', '', 0);
+			form_dropdown('template_user', $usernames, 'username', 'id', '', '', 0);
 
 			print "</p></td>
 				</tr><tr>

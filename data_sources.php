@@ -1473,8 +1473,8 @@ function ds() {
 		<form id='form_data_sources' name='form_data_sources' action='data_sources.php'>
 			<table class='filterTable'>
 				<tr>
-					<?php print html_site_filter(get_request_var('site_id'));?>
-					<?php print html_host_filter(get_request_var('host_id'), 'applyFilter', $host_where);?>
+					<?php html_site_filter(get_request_var('site_id'));?>
+					<?php html_host_filter(get_request_var('host_id'), 'applyFilter', $host_where);?>
 					<td>
 						<label for='template_id'><?php print __('Template');?></label>
 					</td>

@@ -372,7 +372,7 @@ function item_edit() {
 		<form name='form_graph_items' action='graphs_items.php'>
 			<table class='filterTable'>
 				<tr>
-					<?php print html_host_filter(get_request_var('host_id'));?>
+					<?php html_host_filter(get_request_var('host_id'));?>
 				</tr>
 				<tr>
 					<td>

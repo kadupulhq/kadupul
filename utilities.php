@@ -1784,7 +1784,7 @@ function utilities_view_snmp_cache() {
 		<form id='form_snmpcache' action='utilities.php'>
 			<table class='filterTable'>
 				<tr>
-					<?php print html_host_filter(get_request_var('host_id'));?>
+					<?php html_host_filter(get_request_var('host_id'));?>
 					<td>
 						<?php print __('Query Name');?>
 					</td>
@@ -2081,7 +2081,7 @@ function utilities_view_poller_cache() {
 		<form id='form_pollercache' action='utilities.php'>
 			<table class='filterTable'>
 				<tr>
-					<?php print html_host_filter(get_request_var('host_id'));?>
+					<?php html_host_filter(get_request_var('host_id'));?>
 					<td>
 						<?php print __('Template');?>
 					</td>

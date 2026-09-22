@@ -491,7 +491,7 @@ function form_actions() {
 			<tr>
 				<td class='textArea'>
 					<p>" . __('Group Prefix:') . " ";
-			print form_text_box('group_prefix', __('New Group'), '', 25);
+			form_text_box('group_prefix', __('New Group'), '', 25);
 			print "</p></td>
 				</tr>";
 

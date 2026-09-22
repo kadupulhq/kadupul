@@ -421,7 +421,7 @@ function graphs() {
 			<tr><td style='width:70%;'>
 				<table class='filterTable'>
 					<tr>
-						<?php print html_host_filter(get_request_var('host_id'), 'applyFilter', '', true, true);?>
+						<?php html_host_filter(get_request_var('host_id'), 'applyFilter', '', true, true);?>
 						<td>
 							<label for='graph_type'><?php print __('Graph Types');?></label>
 						</td>
