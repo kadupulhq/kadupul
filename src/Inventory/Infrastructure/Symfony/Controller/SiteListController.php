@@ -36,6 +36,6 @@ final class SiteListController
             return new JsonResponse(['sites' => $result->sites, 'page' => $criteria->page,
                 'pageSize' => $criteria->pageSize, 'hasNext' => $result->hasNext], 200, $headers);
         }
-        return new Response($twig->render('inventory/sites.html.twig', ['result' => $result, 'criteria' => $criteria, 'filters' => SiteListParameters::encode($criteria), 'completed' => $request->query->all()['completed'] ?? '', 'legacyDeviceUrl' => ($configuration->values()['collector_id'] ?? 1) === 1 ? null : $request->getBasePath() . '/host.php']), 200, $headers);
+        return new Response($twig->render('inventory/sites.html.twig', ['result' => $result, 'criteria' => $criteria, 'filters' => SiteListParameters::encode($criteria), 'completed' => $request->query->all()['completed'] ?? '', 'legacyDeviceUrl' => ($configuration->values()['collector_id'] ?? 1) === 1 ? null : rtrim($configuration->values()['url_path'], '/') . '/host.php']), 200, $headers);
     }
 }

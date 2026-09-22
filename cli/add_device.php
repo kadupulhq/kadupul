@@ -446,7 +446,7 @@ if (cacti_sizeof($parms)) {
 		$snmp_priv_protocol, $snmp_context, $snmp_engine_id, $max_oids, $device_threads,
 		$poller_id, $site_id, $external_id, $location, $bulk_walk_size);
 
-	if (is_error_message()) {
+	if (!$host_id || is_error_message()) {
 		print "ERROR: Failed to add this device\n";
 		exit(1);
 	} else {

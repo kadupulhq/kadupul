@@ -93,6 +93,8 @@ def verify_site_lifecycle(harness, session, user_id, check):
         check(harness.sql("SELECT COUNT(*) FROM settings WHERE name IN ('time_last_change_site','time_last_change_site_device') AND value > 1").strip() == '2', 'site lifecycle commits both cache invalidations')
         probe = harness.php('-r', Path(__file__).with_name('site_lifecycle_probe.php').read_text().removeprefix('<?php'))
         check(probe['exit'] == 0 and all(json.loads(probe['stdout']).values()), 'site lifecycle adapter rejects revoked stale and partial writes')
+        race = harness.php('-r', Path(__file__).with_name('site_assignment_probe.php').read_text().removeprefix('<?php'))
+        check(race['exit'] == 0 and race['stdout'] == 'concurrent assignment rejected', 'legacy device assignment waits for site deletion and rejects a deleted site')
         from site_collector_scenarios import verify_collector_sites
         verify_collector_sites(harness, request, form, action, copies[0], created, check)
         for suffix in ['ids[]=0', 'ids[]=1&ids[]=1', 'ids=bad', 'ids[]=4294967296']:

@@ -30,6 +30,8 @@ $poller_id = 2;
         time.sleep(3)
         status, body, _ = request('/app.php/inventory/sites')
         check(status == 200 and '/host.php' in body, 'online collector site listing uses primary data and legacy device links')
+        status, body, _ = request('/public/index.php/inventory/sites')
+        check(status == 200 and 'href="/host.php"' in body and '/public/host.php' not in body, 'public collector entry links to the installation device page')
         path = f'/app.php/inventory/sites/{site_id}/edit'
         fields = form(path)
         check(request(path, fields | {'site_edit[notes]': 'collector-update'})[0] == 200 and harness.sql(f'SELECT notes FROM sites WHERE id={site_id}').strip() == 'collector-update', 'online collector site edit writes only to the primary')

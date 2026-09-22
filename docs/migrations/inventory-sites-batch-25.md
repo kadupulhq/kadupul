@@ -66,3 +66,11 @@ recovery queue empty. The primary must be reachable and initialized. There is no
 fallback to editing the collector-local database. This exception is restricted to
 Sites HTTP routes; a cached configuration cannot enable other routes or CLI workers.
 Collector Sites pages continue linking to the existing local device management UI.
+
+Review follow-up: legacy device saves now lock and recheck the selected site on
+their existing database connection before writing the device. The lock lasts until
+the owning transaction commits, so a device save waiting behind deletion cannot
+restore a deleted site's association. A two-connection test drives the actual
+legacy device creation command while deletion holds the site lock. Direct SQL
+writes and third-party plugins that bypass the device API remain outside this
+application locking protocol; no foreign key is added to the legacy schema.

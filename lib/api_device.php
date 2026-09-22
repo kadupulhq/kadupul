@@ -924,7 +924,7 @@ function api_device_save($id, $device_template_id, $description, $hostname, $snm
 	$availability_method, $ping_method, $ping_port, $ping_timeout, $ping_retries,
 	$notes, $snmp_auth_protocol, $snmp_priv_passphrase, $snmp_priv_protocol, $snmp_context, $snmp_engine_id,
 	$max_oids = 5, $device_threads = 1, $poller_id = 1, $site_id = 1, $external_id = '', $location = '', $bulk_walk_size = -1) {
-	global $config;
+	global $config, $database_sessions, $database_default, $database_hostname, $database_port;
 
 	include_once($config['base_path'] . '/lib/utility.php');
 	include_once($config['base_path'] . '/lib/variables.php');
@@ -1018,7 +1018,8 @@ function api_device_save($id, $device_template_id, $description, $hostname, $snm
 	if (!is_error_message()) {
 		$save = api_plugin_hook_function('api_device_save', $save);
 
-		$device_id = sql_save($save, 'host');
+		$connection = $database_sessions["$database_hostname:$database_port:$database_default"];
+		$device_id = \Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceSiteWriter::save($connection, $save);
 
 		if ($device_id) {
 			if ($previous_poller > 1 && $poller_id != $previous_poller) {
