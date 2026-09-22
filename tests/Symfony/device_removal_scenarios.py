@@ -150,7 +150,12 @@ def verify_device_removal(harness, session, user_id, poller, check):
         check(remote_form.remove() == 200, 'device removal recovers after remote purge failure')
         check(harness.sql(f"SELECT deleted FROM host WHERE id={remote['device']}").strip() == 'on', 'remote device retains primary cleanup tombstone')
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id={remote["device"]}').strip() == '0', 'remote device is purged before success')
+        check(harness.sql(f'SELECT host_id FROM graph_local WHERE id={remote["graph"]}').strip() == '0', 'remote retention preserves and unassigns the primary graph')
         for data, dtd, rrd in remote['sources']:
+            check(harness.sql(f'SELECT host_id FROM data_local WHERE id={data}').strip() == '0', 'remote retention preserves and unassigns the primary data source')
+            check(harness.sql(f"SELECT active='' FROM data_template_data WHERE id={dtd}").strip() == '1', 'remote retention keeps the primary data configuration disabled')
+            check(harness.sql(f'SELECT COUNT(*) FROM data_template_rrd WHERE id={rrd}').strip() == '1', 'remote retention preserves the primary RRD definition')
+            check(harness.sql(f'SELECT COUNT(*) FROM data_source_purge_action WHERE local_data_id={data}').strip() == '0', 'remote retention never schedules RRD deletion')
             check(harness.sql(f'SELECT COUNT(*) FROM create_remote.data_input_data WHERE data_template_data_id={dtd}').strip() == '0', 'remote removal purges dependent configuration')
     finally:
         for trigger in triggers:
