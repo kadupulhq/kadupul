@@ -1,0 +1,12 @@
+{
+  "project": "kadupulhq_kadupul-lts",
+  "baseRevision": "ea46737c1c25d908b25f8b61c26b411eff2f849a",
+  "issues": [
+    {"key": "AaCs2NZkIug_wyaLilmo", "rule": "php:S2245", "file": "lib/functions.php", "function": "get_dns_from_ip"},
+    {"key": "AaCs2NLVIug_wyaLillU", "rule": "php:S2245", "file": "lib/api_automation.php", "function": "automation_get_dns_from_ip"}
+  ],
+  "scope": "Shared IPv4 PTR client with secure 16-bit transaction IDs and bounded response validation. No external dependency or PHP requirement change.",
+  "compatibility": "Preserve signatures, configured DNS endpoint, positive millisecond timeout, uppercase hostname/IP/ERROR/timed_out return conventions. Fix automation treating timed_out=false as a timeout. Reject malformed IPs, mismatched or malformed responses and non-hostname labels. No TCP fallback or DNSSEC added.",
+  "verification": "66 isolated production-helper/wrapper cases on PHP 8.1 and 8.4; socket and entropy functions stubbed. Not a live resolver integration test.",
+  "closure": "Pending merged analysis; no manual false-positive transitions."
+}
