@@ -30,7 +30,10 @@ def verify_device_state(harness, session, user_id, ids, hidden, check):
     enable = StateForm(harness, session, ids, True)
     before = harness.sql(f'SELECT disabled,status,description,hostname,site_id,poller_id,host_template_id FROM host WHERE id IN ({selected}) ORDER BY id')
     trigger = False
+    saved_agent = harness.sql("SELECT value FROM settings WHERE name='enable_snmp_agent'").strip()
     try:
+        harness.sql("REPLACE INTO settings (name,value) VALUES ('enable_snmp_agent','on')")
+        check(harness.php('-r', 'require "include/global.php"; snmpagent_cache_install();')['exit'] == 0, 'bulk state SNMP-agent fixture initialized')
         fields = disable.fields()
         check('device_state[_token]' in fields, 'bulk state confirmation includes CSRF')
         check(harness.sql(f'SELECT disabled,status,description,hostname,site_id,poller_id,host_template_id FROM host WHERE id IN ({selected}) ORDER BY id') == before, 'bulk state GET does not mutate devices')
@@ -56,6 +59,7 @@ def verify_device_state(harness, session, user_id, ids, hidden, check):
         trigger = False
         check(disable.apply() == 200, 'bulk state confirmation disables selected devices')
         check(harness.sql(f"SELECT COUNT(*) FROM host WHERE id IN ({selected}) AND disabled='on' AND status=0").strip() == '2', 'bulk disable resets status on every selected device')
+        check(harness.sql(f"SELECT value FROM snmpagent_cache WHERE name='cactiApplDeviceStatus' AND otype='DATA' AND oid LIKE '%.{ids[0]}'").strip() == '4', 'bulk disable refreshes SNMP-agent status')
         marker = harness.sql("SELECT value FROM settings WHERE name='poller_replicate_device_cache_crc_1'")
         check(disable.apply() == 200, 'bulk state unchanged confirmation succeeds')
         check(harness.sql("SELECT value FROM settings WHERE name='poller_replicate_device_cache_crc_1'") == marker, 'bulk state no-op leaves cache markers unchanged')
@@ -66,7 +70,9 @@ def verify_device_state(harness, session, user_id, ids, hidden, check):
         harness.sql(f'INSERT INTO user_auth_perms (user_id,item_id,type) VALUES ({user_id},{ids[1]},3)')
         check(enable.apply() == 200, 'bulk state confirmation enables selected devices')
         check(harness.sql(f"SELECT COUNT(*) FROM host WHERE id IN ({selected}) AND disabled=''").strip() == '2', 'bulk enable updates every selected device')
+        check(harness.sql(f"SELECT value FROM snmpagent_cache WHERE name='cactiApplDeviceStatus' AND otype='DATA' AND oid LIKE '%.{ids[0]}'").strip() == '0', 'bulk enable refreshes SNMP-agent status')
     finally:
+        harness.sql(f"REPLACE INTO settings (name,value) VALUES ('enable_snmp_agent',CONVERT(UNHEX('{saved_agent.encode().hex()}') USING utf8mb4))")
         if trigger:
             harness.sql('DROP TRIGGER reject_bulk_state')
         for device, line in zip(ids, before.strip('\n').splitlines()):
@@ -97,6 +103,11 @@ def verify_remote_device_state(harness, session, device_id, poller, check):
         trigger = False
         check(enable.apply() == 200, 'bulk state recovers after remote write rejection')
         check(harness.sql(f"SELECT disabled='' FROM create_remote.host WHERE id={device_id}").strip() == '1', 'bulk state verifies remote enabled state')
+        harness.sql(f"UPDATE create_remote.host SET disabled='on' WHERE id={device_id}")
+        check(enable.apply() == 200, 'bulk state repairs remote drift when primary already matches')
+        check(harness.sql(f"SELECT disabled='' FROM create_remote.host WHERE id={device_id}").strip() == '1', 'bulk state verifies repaired remote copy')
+        harness.sql(f"UPDATE poller SET last_status='2000-01-01 00:00:00' WHERE id={poller}")
+        check(enable.apply() == 502, 'bulk no-op cannot confirm an offline remote copy')
     finally:
         if trigger:
             harness.sql('DROP TRIGGER create_remote.reject_bulk_state')
