@@ -688,6 +688,13 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
    @arg $return_to - paint the resulting page into this dom object
    @arg $page_count - provide a page count */
 function html_nav_bar($base_url, $max_pages, $current_page, $rows_per_page, $total_rows, $colspan=30, $object = '', $page_var = 'page', $return_to = '', $page_count = true) {
+	$charset = ini_get('default_charset');
+	if ($charset === '') {
+		$charset = 'UTF-8';
+	}
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$return_html = htmlspecialchars((string)$return_to, $escape_flags, $charset, false);
+	$return_html = str_replace('`', '&#96;', $return_html);
 	if ($object == '') $object = __('Rows');
 
 	if ($total_rows > $rows_per_page && $page_count) {
@@ -701,16 +708,32 @@ function html_nav_bar($base_url, $max_pages, $current_page, $rows_per_page, $tot
 
 		$next_page = $current_page + 1;
 		$prev_page = $current_page - 1;
+		$previous_url = $base_url . $page_var . '=' . $prev_page;
+		$previous_html = htmlspecialchars($previous_url, $escape_flags, $charset, false);
+		$previous_html = str_replace('`', '&#96;', $previous_html);
+		$next_url = $base_url . $page_var . '=' . $next_page;
+		$next_html = htmlspecialchars($next_url, $escape_flags, $charset, false);
+		$next_html = str_replace('`', '&#96;', $next_html);
+		$previous_link = '';
+		if ($current_page > 1) {
+			$previous_link = "<a data-url='$previous_html' data-return='$return_html' href='#'>";
+			$previous_link .= "<i class='fa fa-angle-double-left previous'></i>" . __('Previous') . '</a>';
+		}
+		$next_link = '';
+		if (($current_page*$rows_per_page) < $total_rows) {
+			$next_link = "<a data-url='$next_html' data-return='$return_html' href='#'>" . __('Next');
+			$next_link .= "<i class='fa fa-angle-double-right next'></i></a>";
+		}
 
 		$nav = "<div class='navBarNavigation'>
 			<div class='navBarNavigationPrevious'>
-				" . (($current_page > 1) ? "<a data-url='" . html_escape($base_url . $page_var . "=" . $prev_page) . "' data-return='" . html_escape($return_to) . "' href='#'><i class='fa fa-angle-double-left previous'></i>" . __('Previous'). '</a>':'') . "
+				$previous_link
 			</div>
 			<div class='navBarNavigationCenter'>
 				" . __('%d to %d of %s [ %s ]', (($rows_per_page*($current_page-1))+1), (($total_rows < $rows_per_page) || ($total_rows < ($rows_per_page*$current_page)) ? $total_rows : $rows_per_page*$current_page), $total_rows, $url_page_select) . "
 			</div>
 			<div class='navBarNavigationNext'>
-				" . (($current_page*$rows_per_page) < $total_rows ? "<a data-url='" . html_escape($base_url . $page_var . "=" . $next_page) . "' data-return='" . html_escape($return_to) . "' href='#'>" . __('Next'). "<i class='fa fa-angle-double-right next'></i></a>":'') . "
+				$next_link
 			</div>
 		</div>";
 	} elseif ($total_rows > 0) {
@@ -733,16 +756,32 @@ function html_nav_bar($base_url, $max_pages, $current_page, $rows_per_page, $tot
 
 			$next_page = $current_page + 1;
 			$prev_page = $current_page - 1;
+			$previous_url = $base_url . $page_var . '=' . $prev_page;
+			$previous_html = htmlspecialchars($previous_url, $escape_flags, $charset, false);
+			$previous_html = str_replace('`', '&#96;', $previous_html);
+			$next_url = $base_url . $page_var . '=' . $next_page;
+			$next_html = htmlspecialchars($next_url, $escape_flags, $charset, false);
+			$next_html = str_replace('`', '&#96;', $next_html);
+			$previous_link = '';
+			if ($current_page > 1) {
+				$previous_link = "<a data-url='$previous_html' data-return='$return_html' href='#'>";
+				$previous_link .= "<i class='fa fa-angle-double-left previous'></i>" . __('Previous') . '</a>';
+			}
+			$next_link = '';
+			if ($total_rows >= $rows_per_page) {
+				$next_link = "<a data-url='$next_html' data-return='$return_html' href='#'>" . __('Next');
+				$next_link .= "<i class='fa fa-angle-double-right next'></i></a>";
+			}
 
 			$nav = "<div class='navBarNavigation'>
 				<div class='navBarNavigationPrevious'>
-					" . (($current_page > 1) ? "<a data-url='" . html_escape($base_url . $page_var . "=" . $prev_page) . "' data-return='" . html_escape($return_to) . "' href='#'><i class='fa fa-angle-double-left previous'></i>" . __('Previous'). "</a>":"") . "
+					$previous_link
 				</div>
 				<div class='navBarNavigationCenter'>
 					" . __('Current Page: %s', $url_page_select) . "
 				</div>
 				<div class='navBarNavigationNext'>
-					" . ($total_rows >= $rows_per_page ? "<a data-url='" . html_escape($base_url . $page_var . "=" . $next_page) . "' data-return='" . html_escape($return_to) . "' href='#'>" . __('Next'). "<i class='fa fa-angle-double-right next'></i></a>":"") . "
+					$next_link
 				</div>
 			</div>";
 		}
