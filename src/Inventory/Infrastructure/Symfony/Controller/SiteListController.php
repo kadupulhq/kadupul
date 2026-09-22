@@ -15,12 +15,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Twig\Environment;
+use Kadupul\Platform\Contract\LegacyConfiguration;
 
 final class SiteListController
 {
     #[Route('/inventory/sites', name: 'inventory_sites', methods: ['GET', 'HEAD'])]
     #[Route('/inventory/sites.json', name: 'inventory_sites_json', defaults: ['_format' => 'json'], methods: ['GET', 'HEAD'])]
-    public function __invoke(Request $request, ListSites $list, Environment $twig): Response
+    public function __invoke(Request $request, ListSites $list, Environment $twig, LegacyConfiguration $configuration): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         try {
@@ -35,6 +36,6 @@ final class SiteListController
             return new JsonResponse(['sites' => $result->sites, 'page' => $criteria->page,
                 'pageSize' => $criteria->pageSize, 'hasNext' => $result->hasNext], 200, $headers);
         }
-        return new Response($twig->render('inventory/sites.html.twig', ['result' => $result, 'criteria' => $criteria, 'filters' => SiteListParameters::encode($criteria)]), 200, $headers);
+        return new Response($twig->render('inventory/sites.html.twig', ['result' => $result, 'criteria' => $criteria, 'filters' => SiteListParameters::encode($criteria), 'completed' => $request->query->all()['completed'] ?? '', 'legacyDeviceUrl' => ($configuration->values()['collector_id'] ?? 1) === 1 ? null : $request->getBasePath() . '/host.php']), 200, $headers);
     }
 }

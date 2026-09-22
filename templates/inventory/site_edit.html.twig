@@ -7,11 +7,13 @@
     {% set siteLabel = site.name|trim == '' ? 'Unnamed site #%id%'|trans({'%id%': site.id}, 'inventory') : site.name %}
     <h1>{{ 'Edit %site%'|trans({'%site%': siteLabel}, 'inventory') }}</h1>
     {% if saved %}<output>{{ 'Site saved.'|trans({}, 'inventory') }}</output>{% endif %}
-    <p>{{ 'Edit the site name and notes here. Address, timezone and map settings remain in the existing Sites screen.'|trans({}, 'inventory') }}</p>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony routes and integer site identifier. #}
+    <p><a href="{{ path('inventory_site_action', {operation: 'duplicate', ids: [site.id], list: filters}) }}">{{ 'Duplicate site'|trans({}, 'inventory') }}</a></p>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony routes and integer site identifier. #}
+    <p><a href="{{ path('inventory_site_action', {operation: 'delete', ids: [site.id], list: filters}) }}">{{ 'Delete site'|trans({}, 'inventory') }}</a></p>
     {{ form_start(form) }}
         {{ form_errors(form) }}
-        {{ form_row(form.name) }}
-        {{ form_row(form.notes) }}
+        {{ form_widget(form) }}
         <button type="submit">{{ 'Save site'|trans({}, 'inventory') }}</button>
     {{ form_end(form) }}
 </main>

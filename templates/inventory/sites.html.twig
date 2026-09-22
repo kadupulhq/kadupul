@@ -6,13 +6,19 @@
 <main>
     <h1>{{ 'Sites'|trans({}, 'inventory') }}</h1>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
-    <p><a href="{{ path('inventory_devices') }}">{{ 'Devices'|trans({}, 'inventory') }}</a></p>
+    <p><a href="{{ legacyDeviceUrl ?? path('inventory_devices') }}">{{ 'Devices'|trans({}, 'inventory') }}</a></p>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route and encoded validated list context. #}
     <p><a href="{{ path('inventory_site_create', {list: filters}) }}">{{ 'Add site'|trans({}, 'inventory') }}</a></p>
     <form method="get" action="{{ path('inventory_sites') }}" role="search">
         <label for="site-search">{{ 'Search by name, city, state or country'|trans({}, 'inventory') }}</label>
         <input id="site-search" type="search" name="q" value="{{ criteria.search }}" maxlength="200">
-        <label for="site-direction">{{ 'Name order'|trans({}, 'inventory') }}</label>
+        <label for="site-sort">{{ 'Sort by'|trans({}, 'inventory') }}</label>
+        <select id="site-sort" name="sort">
+            {% for value, label in {name: 'Name', id: 'ID', devices: 'Accessible devices', city: 'City', state: 'State', country: 'Country'} %}
+            <option value="{{ value }}"{% if criteria.sort == value %} selected{% endif %}>{{ label|trans({}, 'inventory') }}</option>
+            {% endfor %}
+        </select>
+        <label for="site-direction">{{ 'Order'|trans({}, 'inventory') }}</label>
         <select id="site-direction" name="direction">
             <option value="asc"{% if criteria.direction == 'asc' %} selected{% endif %}>{{ 'Ascending'|trans({}, 'inventory') }}</option>
             <option value="desc"{% if criteria.direction == 'desc' %} selected{% endif %}>{{ 'Descending'|trans({}, 'inventory') }}</option>
@@ -25,25 +31,33 @@
         </select>
         <button type="submit">{{ 'Apply'|trans({}, 'inventory') }}</button>
     </form>
-    <p>{{ 'Device counts include only devices you can access. Select a site name to edit its name and notes.'|trans({}, 'inventory') }}</p>
+    <p>{{ 'Device counts include only devices you can access. Select a site name to edit its settings.'|trans({}, 'inventory') }}</p>
+    {% if completed == 'delete' %}<p><output>{{ 'Sites deleted.'|trans({}, 'inventory') }}</output></p>{% elseif completed == 'duplicate' %}<p><output>{{ 'Sites duplicated.'|trans({}, 'inventory') }}</output></p>{% endif %}
+    <form method="get" action="{{ path('inventory_site_action', {operation: 'delete'}) }}">
+    {% for key, value in filters %}<input type="hidden" name="list[{{ key }}]" value="{{ value }}">{% endfor %}
     <table>
         <caption>{{ 'Sites and devices you can access at each site'|trans({}, 'inventory') }}</caption>
-        <thead><tr><th scope="col">{{ 'Name'|trans({}, 'inventory') }}</th><th scope="col">{{ 'ID'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Accessible devices'|trans({}, 'inventory') }}</th><th scope="col">{{ 'City'|trans({}, 'inventory') }}</th><th scope="col">{{ 'State'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Country'|trans({}, 'inventory') }}</th></tr></thead>
+        <thead><tr><th scope="col">{{ 'Select'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Name'|trans({}, 'inventory') }}</th><th scope="col">{{ 'ID'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Accessible devices'|trans({}, 'inventory') }}</th><th scope="col">{{ 'City'|trans({}, 'inventory') }}</th><th scope="col">{{ 'State'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Country'|trans({}, 'inventory') }}</th></tr></thead>
         <tbody>
         {% for site in result.sites %}
             {% set siteLabel = site.name|trim == '' ? 'Unnamed site #%id%'|trans({'%id%': site.id}, 'inventory') : site.name %}
             <tr>
+                <td><input type="checkbox" name="ids[]" value="{{ site.id }}" aria-label="{{ 'Select %site%'|trans({'%site%': siteLabel}, 'inventory') }}"></td>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route with integer site ID and encoded validated list context. #}
                 <td><a href="{{ path('inventory_site_edit', {id: site.id, list: filters}) }}">{{ siteLabel }}</a></td><td>{{ site.id }}</td>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
-                <td><a href="{{ path('inventory_devices', {site: site.id}) }}" aria-label="{{ 'Devices at %site%'|trans({'%site%': siteLabel}, 'inventory') }}">{{ site.visibleDevices }}</a></td>
+                <td><a href="{{ legacyDeviceUrl ? legacyDeviceUrl ~ '?reset=1&site_id=' ~ site.id : path('inventory_devices', {site: site.id}) }}" aria-label="{{ 'Devices at %site%'|trans({'%site%': siteLabel}, 'inventory') }}">{{ site.visibleDevices }}</a></td>
                 <td>{{ site.city }}</td><td>{{ site.state }}</td><td>{{ site.country }}</td>
             </tr>
         {% else %}
-            <tr><td colspan="6">{{ 'No sites match these filters.'|trans({}, 'inventory') }}</td></tr>
+            <tr><td colspan="7">{{ 'No sites match these filters.'|trans({}, 'inventory') }}</td></tr>
         {% endfor %}
         </tbody>
     </table>
+    <p>{{ 'Select up to 100 sites. Review the confirmation before applying an action.'|trans({}, 'inventory') }}</p>
+    <button type="submit">{{ 'Delete selected sites'|trans({}, 'inventory') }}</button>
+    <button type="submit" formaction="{{ path('inventory_site_action', {operation: 'duplicate'}) }}">{{ 'Duplicate selected sites'|trans({}, 'inventory') }}</button>
+    </form>
     <nav aria-label="{{ 'Site pages'|trans({}, 'inventory') }}">
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
         {% if criteria.page > 1 %}<a rel="prev" href="{{ path('inventory_sites', filters|merge({page: criteria.page - 1})) }}">{{ 'Previous'|trans({}, 'inventory') }}</a>{% endif %}

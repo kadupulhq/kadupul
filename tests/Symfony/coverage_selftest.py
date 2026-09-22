@@ -31,6 +31,15 @@ def main():
         'src/Inventory/Application/Command/CreateSite.php',
         'src/Inventory/Domain/NewSite.php',
         'src/Inventory/Infrastructure/Legacy/LegacySiteCreator.php',
+        'src/Platform/Infrastructure/Legacy/CollectorSiteDatabase.php',
+        'sites.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/LegacySitesController.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/SiteActionController.php',
+        'src/Inventory/Infrastructure/Legacy/LegacySiteLifecycle.php',
+        'src/Inventory/Application/Command/DeleteSites.php',
+        'src/Inventory/Application/Command/DuplicateSites.php',
+        'src/Inventory/Application/Query/PrepareSiteAction.php',
+        'src/Inventory/Domain/SiteSelection.php',
         'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php')]
     for path in (args.files / 'raw').glob('coverage-*.json'):
         report = json.loads(path.read_text())
@@ -55,12 +64,16 @@ def main():
         'unmeasured-locale': 'Missing measured execution: src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php',
         'missing-site-creation-check': 'Incomplete Symfony integration',
         'site-create-test-hash': 'Integration test source differs',
+        'site-lifecycle-test-hash': 'Integration test source differs',
+        'missing-site-lifecycle-check': 'Incomplete Symfony integration checks',
         'unmeasured-SiteCreateController.php': 'Missing measured execution: src/Inventory/Infrastructure/Symfony/Controller/SiteCreateController.php',
         'unmeasured-CreateSite.php': 'Missing measured execution: src/Inventory/Application/Command/CreateSite.php',
         'unmeasured-NewSite.php': 'Missing measured execution: src/Inventory/Domain/NewSite.php',
         'unmeasured-LegacySiteCreator.php': 'Missing measured execution: src/Inventory/Infrastructure/Legacy/LegacySiteCreator.php',
         'path-traversal': 'Invalid integration source path',
     }
+    for source in required:
+        failures.setdefault('unmeasured-' + source.rsplit('/', 1)[-1], 'Missing measured execution')
     with tempfile.TemporaryDirectory(prefix='symfony-coverage-negative-') as directory:
         scratch = Path(directory)
         (scratch / 'raw').mkdir()
@@ -82,6 +95,10 @@ def main():
                 evidence['source_sha256']['tests/Symfony/site_edit_scenarios.py'] = '0' * 64
             elif case == 'site-create-test-hash':
                 evidence['source_sha256']['tests/Symfony/site_create_scenarios.py'] = '0' * 64
+            elif case == 'site-lifecycle-test-hash':
+                evidence['source_sha256']['tests/Symfony/site_lifecycle_scenarios.py'] = '0' * 64
+            elif case == 'missing-site-lifecycle-check':
+                evidence['checks'].remove('bulk site deletion succeeds atomically')
             elif case == 'missing-site-creation-check':
                 evidence['checks'].remove('site creation persists name')
             elif case.startswith('unmeasured-') and case.removeprefix('unmeasured-').endswith('.php'):

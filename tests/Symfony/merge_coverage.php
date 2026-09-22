@@ -26,7 +26,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'site_creation_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'coverage_support.py'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'coverage_support.py'];
     foreach ($scripts as $script) {
         $path = 'tests/Symfony/' . $script;
         if (($manifest['source_sha256'][$path] ?? '') !== hash_file('sha256', $root . '/' . $path)) {
@@ -45,7 +45,14 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'device CSV bytes are independent of locale',
         'site creation persists name',
         'site creation updates both legacy cache markers',
-        'rejected creations leave all sites unchanged'];
+        'rejected creations leave all sites unchanged',
+        'full site address timezone map and alternate name persist',
+        'bulk site deletion succeeds atomically',
+        'bulk duplication succeeds through Symfony',
+        'site lifecycle adapter rejects revoked stale and partial writes',
+        'legacy site POST is never replayed',
+        'online collector site edit writes only to the primary',
+        'unreachable primary cannot fall back to local site writes'];
     foreach ($checks as $check) {
         if (!in_array($check, $manifest['checks'] ?? [], true)) {
             throw new RuntimeException('Incomplete Symfony integration checks');
@@ -68,7 +75,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             $relative = substr($path, strlen('/var/www/html/'));
             // Legacy application coverage has its own report. Never import
             // generated configuration/cache, dependencies or installed plugins.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['bin/legacy-device-edit.php', 'app.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['bin/legacy-device-edit.php', 'app.php', 'sites.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -101,6 +108,15 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Application/Command/CreateSite.php',
         'src/Inventory/Domain/NewSite.php',
         'src/Inventory/Infrastructure/Legacy/LegacySiteCreator.php',
+        'src/Platform/Infrastructure/Legacy/CollectorSiteDatabase.php',
+        'sites.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/LegacySitesController.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/SiteActionController.php',
+        'src/Inventory/Infrastructure/Legacy/LegacySiteLifecycle.php',
+        'src/Inventory/Application/Command/DeleteSites.php',
+        'src/Inventory/Application/Command/DuplicateSites.php',
+        'src/Inventory/Application/Query/PrepareSiteAction.php',
+        'src/Inventory/Domain/SiteSelection.php',
         'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php'];
     foreach ($requiredPaths as $required) {
         if (!($observed[$required] ?? false)) {

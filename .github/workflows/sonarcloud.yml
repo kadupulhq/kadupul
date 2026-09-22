@@ -130,7 +130,7 @@ jobs:
 
       - name: Dependency maintenance tests with coverage
         run: |
-          node --experimental-test-coverage --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=tests/vendor-sync.lcov tests/Unit/vendor-sync.test.mjs tests/Unit/security-inventory.test.mjs tests/Unit/browser-build.test.mjs
+          node --experimental-test-coverage --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=tests/vendor-sync.lcov tests/Unit/vendor-sync.test.mjs tests/Unit/security-inventory.test.mjs tests/Unit/sites-navigation.test.mjs tests/Unit/browser-build.test.mjs
           test -s tests/vendor-sync.lcov
 
       - name: Scan

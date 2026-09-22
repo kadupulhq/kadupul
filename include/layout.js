@@ -2229,6 +2229,21 @@ function loadPageUsingPost(href, postData, returnLocation) {
 	});
 }
 
+/** Symfony Sites pages own their full document rather than legacy AJAX fragments. */
+function navigateToSymfonySites(href) {
+	var target;
+	try {
+		target = new URL(href, window.location.href);
+	} catch (error) {
+		return false;
+	}
+	if (target.origin !== window.location.origin || !(/\/sites\.php$|\/(?:app\.php|public\/index\.php)\/inventory\/sites(?:\/|$)/).test(target.pathname)) {
+		return false;
+	}
+	window.location.assign(target.href);
+	return true;
+}
+
 function loadPage(href, force) {
 	statePushed = false;
 	cont = false;
@@ -2244,6 +2259,9 @@ function loadPage(href, force) {
 	}
 
 	if (cont) {
+		if (navigateToSymfonySites(href)) {
+			return;
+		}
 		closeDateFilters();
 
 		clearAllTimeouts();
@@ -2413,6 +2431,9 @@ function loadPageNoHeader(href, scroll, force) {
 	}
 
 	if (cont) {
+		if (navigateToSymfonySites(href)) {
+			return;
+		}
 		closeDateFilters();
 
 		clearAllTimeouts();

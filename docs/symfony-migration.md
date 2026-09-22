@@ -588,3 +588,28 @@ Validation failures return 422, revoked access 401/403 and uncertain write resul
 not stored. Labels and errors use the English/French Inventory catalogs. Existing
 site address/map editing, duplication and deletion remain in `sites.php`; LTS is
 unchanged.
+
+
+## Completed Sites workflow on main
+
+The [25-item Sites completion batch](migrations/inventory-sites-batch-25.md) extends
+the earlier name/notes editor to every standard site field, restores the remaining
+list sorts, and adds single/bulk duplication and deletion. Symfony confirmation
+forms own POST/CSRF validation. Inventory use cases authorize the operation, and
+the persistence port locks and checks every selected revision before any write.
+Deletion unassigns active devices; duplication copies site settings without devices.
+Both cache markers commit with the operation. A failure rolls back the entire batch.
+The full-field revision also rejects concurrent address/timezone/map edits.
+
+`sites.php` now only enters Symfony. Old list/edit links redirect, timezone lookup
+uses the framework route, and old POST forms are rejected with 409. The procedural
+page functions, raw redirects and page-level global declarations are removed.
+The earlier sections describe the initial migration slices; their remaining legacy
+Sites operations are superseded by this batch. LTS is unchanged.
+
+Online remote collectors retain Sites administration through their existing
+`rdatabase_*` configuration. The Sites-only configuration path verifies initialized
+local/primary schemas, an empty local recovery queue and primary connectivity.
+No collector-local write fallback is allowed, and non-Sites routes and CLI workers
+retain the primary-only restriction. Legacy menu loaders navigate to a full Symfony
+document instead of inserting it as an AJAX fragment, retaining unsaved-form prompts.

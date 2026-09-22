@@ -13,7 +13,7 @@ final class SiteListParameters
 {
     public static function parse(array $query): SiteListCriteria
     {
-        foreach (['q', 'page', 'size', 'direction'] as $key) {
+        foreach (['q', 'page', 'size', 'direction', 'sort'] as $key) {
             if (isset($query[$key]) && !is_string($query[$key])) {
                 throw new \InvalidArgumentException('Invalid site list filters.');
             }
@@ -23,7 +23,7 @@ final class SiteListParameters
         if (!ctype_digit($page) || !ctype_digit($size) || strlen($page) > 6 || strlen($size) > 3) {
             throw new \InvalidArgumentException('Invalid site list filters.');
         }
-        return new SiteListCriteria($query['q'] ?? '', (int) $page, (int) $size, $query['direction'] ?? 'asc');
+        return new SiteListCriteria($query['q'] ?? '', (int) $page, (int) $size, $query['direction'] ?? 'asc', $query['sort'] ?? 'name');
     }
 
     public static function context(array $query): array
@@ -37,6 +37,6 @@ final class SiteListParameters
 
     public static function encode(SiteListCriteria $criteria): array
     {
-        return ['q' => $criteria->search, 'page' => $criteria->page, 'size' => $criteria->pageSize, 'direction' => $criteria->direction];
+        return ['q' => $criteria->search, 'page' => $criteria->page, 'size' => $criteria->pageSize, 'direction' => $criteria->direction] + ($criteria->sort === 'name' ? [] : ['sort' => $criteria->sort]);
     }
 }

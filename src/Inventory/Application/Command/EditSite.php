@@ -15,7 +15,7 @@ final readonly class EditSite
 {
     public function __construct(private ConsoleAccess $access, private SiteEditor $sites) {}
 
-    public function __invoke(int $id, string $name, string $notes, string $revision): void
+    public function __invoke(int $id, string $name, string $notes, string $revision, ?array $fields = null): void
     {
         $actor = $this->access->consoleActor();
         if ($actor === null || !$this->access->canManageDevices($actor)) {
@@ -25,7 +25,7 @@ final readonly class EditSite
         if ($site === null) {
             throw new SiteNotFound();
         }
-        $site->revise($name, $notes, $revision);
+        $site->revise($name, $notes, $revision, $fields);
         $this->sites->save($actor->id, $site, $revision);
     }
 }

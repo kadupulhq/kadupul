@@ -20,10 +20,10 @@ final readonly class LegacySiteEditor implements SiteEditor
 
     public function find(int $id): ?Site
     {
-        $query = $this->database->get()->prepare('SELECT id, name, notes FROM sites WHERE id = ? AND id > 0');
+        $query = $this->database->get()->prepare('SELECT ' . SiteRecord::COLUMNS . ' FROM sites WHERE id = ? AND id > 0');
         $query->execute([$id]);
         $row = $query->fetch();
-        return $row ? new Site((int) $row['id'], $row['name'], $row['notes'] ?? '') : null;
+        return $row ? SiteRecord::hydrate($row) : null;
     }
 
     public function save(int $userId, Site $site, string $expectedRevision): void
@@ -35,19 +35,20 @@ final readonly class LegacySiteEditor implements SiteEditor
             if ($actor === null || $actor->id !== $userId || !$this->access->canManageDevices($actor)) {
                 throw new InventoryAccessDenied($actor === null);
             }
-            $query = $db->prepare('SELECT id, name, notes FROM sites WHERE id = ? AND id > 0 FOR UPDATE');
+            $query = $db->prepare('SELECT ' . SiteRecord::COLUMNS . ' FROM sites WHERE id = ? AND id > 0 FOR UPDATE');
             $query->execute([$site->id]);
             $row = $query->fetch();
             if (!$row) {
                 throw new SiteNotFound();
             }
-            $current = new Site((int) $row['id'], $row['name'], $row['notes'] ?? '');
-            $current->revise($site->name(), $site->notes(), $expectedRevision);
-            // Only migrated fields are updated. No procedural page or external
-            // plugin effects exist in the legacy update-site workflow.
-            $update = $db->prepare('UPDATE sites SET name = ?, notes = ? WHERE id = ?');
-            $update->execute([$current->name(), $current->notes(), $current->id]);
-            $db->commit();
+            $current = SiteRecord::hydrate($row);
+            $current->revise($site->name(), $site->notes(), $expectedRevision, $site->fields());
+            $assignments = implode(', ', array_map(static fn(string $key): string => $key . ' = ?', array_keys($current->fields())));
+            $update = $db->prepare('UPDATE sites SET ' . $assignments . ' WHERE id = ?');
+            $update->execute([...array_values($current->fields()), $current->id]);
+            if (!$db->commit()) {
+                throw new \RuntimeException('Site commit could not be confirmed.');
+            }
         } catch (\Throwable $error) {
             if ($db->inTransaction()) {
                 $db->rollBack();

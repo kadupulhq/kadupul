@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ (operation == 'delete' ? 'Delete sites' : 'Duplicate sites')|trans({}, 'inventory') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ (operation == 'delete' ? 'Delete sites' : 'Duplicate sites')|trans({}, 'inventory') }}</h1>
+    <p>{{ (operation == 'delete' ? 'These sites will be deleted. Their active devices will become unassigned; devices are not deleted.' : 'Copies include site settings only. Devices remain assigned to their original sites.')|trans({}, 'inventory') }}</p>
+    <ul>{% for site in sites %}<li>{{ site.name|trim == '' ? 'Unnamed site #%id%'|trans({'%id%': site.id}, 'inventory') : site.name }} (#{{ site.id }})</li>{% endfor %}</ul>
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">{{ (operation == 'delete' ? 'Confirm deletion' : 'Confirm duplication')|trans({}, 'inventory') }}</button>
+    {{ form_end(form) }}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route and validated list context. #}
+    <p><a href="{{ path('inventory_sites', filters) }}">{{ 'Cancel'|trans({}, 'inventory') }}</a></p>
+</main>
+{% endblock %}
