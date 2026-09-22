@@ -30,6 +30,7 @@ def main():
         'src/Inventory/Infrastructure/Symfony/Controller/SiteCreateController.php',
         'src/Inventory/Domain/DevicePolling.php',
         'src/Inventory/Domain/DeviceTemplateAssignment.php',
+        'src/Inventory/Infrastructure/Symfony/DeviceFormFailure.php',
         'src/Inventory/Application/Command/AssignDeviceTemplate.php',
         'src/Inventory/Application/Query/PrepareDeviceTemplateAssignment.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceTemplateAssignments.php',
