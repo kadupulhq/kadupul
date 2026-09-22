@@ -140,12 +140,199 @@ case 'view':
 					<table class='graphWrapperOuter' data-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>'>
 						<tr>
 							<td>
-								<div class='graphWrapper' id='wrapper_<?php print $graph['local_graph_id'] ?>' graph_id='<?php print $graph['local_graph_id'];?>' rra_id='<?php print $rra['id'];?>' graph_width='<?php print $graph['width'];?>' graph_height='<?php print $graph['height'];?>' graph_start='<?php print $graph_start;?>' graph_end='<?php print $graph_end;?>' title_font_size='<?php print ((read_user_setting('custom_fonts') == 'on') ? read_user_setting('title_size') : read_config_option('title_size'));?>'></div>
+								<div class='graphWrapper' id='wrapper_<?php
+									print str_replace(
+									    '`',
+									    '&#96;',
+									    htmlspecialchars(
+									        (string) $graph['local_graph_id'],
+									        ENT_QUOTES | ENT_SUBSTITUTE,
+									        ini_get('default_charset') ?: 'UTF-8'
+									    )
+									);
+								?>'
+									graph_id='<?php
+									print str_replace(
+									    '`',
+									    '&#96;',
+									    htmlspecialchars(
+									        (string) $graph['local_graph_id'],
+									        ENT_QUOTES | ENT_SUBSTITUTE,
+									        ini_get('default_charset') ?: 'UTF-8'
+									    )
+									);
+								?>'
+									rra_id='<?php
+									print str_replace(
+									    '`',
+									    '&#96;',
+									    htmlspecialchars(
+									        (string) $rra['id'],
+									        ENT_QUOTES | ENT_SUBSTITUTE,
+									        ini_get('default_charset') ?: 'UTF-8'
+									    )
+									);
+								?>'
+									graph_width='<?php
+									print str_replace(
+									    '`',
+									    '&#96;',
+									    htmlspecialchars(
+									        (string) $graph['width'],
+									        ENT_QUOTES | ENT_SUBSTITUTE,
+									        ini_get('default_charset') ?: 'UTF-8'
+									    )
+									);
+								?>'
+									graph_height='<?php
+									print str_replace(
+									    '`',
+									    '&#96;',
+									    htmlspecialchars(
+									        (string) $graph['height'],
+									        ENT_QUOTES | ENT_SUBSTITUTE,
+									        ini_get('default_charset') ?: 'UTF-8'
+									    )
+									);
+								?>'
+									graph_start='<?php
+									print str_replace(
+									    '`',
+									    '&#96;',
+									    htmlspecialchars(
+									        (string) $graph_start,
+									        ENT_QUOTES | ENT_SUBSTITUTE,
+									        ini_get('default_charset') ?: 'UTF-8'
+									    )
+									);
+								?>'
+									graph_end='<?php
+									print str_replace(
+									    '`',
+									    '&#96;',
+									    htmlspecialchars(
+									        (string) $graph_end,
+									        ENT_QUOTES | ENT_SUBSTITUTE,
+									        ini_get('default_charset') ?: 'UTF-8'
+									    )
+									);
+								?>'
+									title_font_size='<?php
+									print str_replace(
+									    '`',
+									    '&#96;',
+									    htmlspecialchars(
+									        (string) ((read_user_setting('custom_fonts') == 'on')
+									            ? read_user_setting('title_size')
+									            : read_config_option('title_size')),
+									        ENT_QUOTES | ENT_SUBSTITUTE,
+									        ini_get('default_charset') ?: 'UTF-8'
+									    )
+									);
+								?>'></div>
 							</td>
 
-							<?php if (is_realm_allowed(27)) { ?><td id='dd<?php print get_request_var('local_graph_id');?>' style='vertical-align:top;' class='graphDrillDown noprint'>
-								<a class='iconLink utils' href='#' id='graph_<?php print get_request_var('local_graph_id');?>_util' graph_start='<?php print $graph_start;?>' graph_end='<?php print $graph_end;?>' rra_id='<?php print $rra['id'];?>'><img class='drillDown' src='<?php print $config['url_path'] . 'images/cog.png';?>' alt='' title='<?php print __esc('Graph Details, Zooming and Debugging Utilities');?>'></a><br>
-								<a id='graph_<?php print $rra['id'];?>_csv' class='iconLink csv' href='<?php print html_escape($config['url_path'] . 'graph_xport.php?local_graph_id=' . get_request_var('local_graph_id') . '&rra_id=' . $rra['id'] . '&view_type=' . get_request_var('view_type') .  '&graph_start=' . $graph_start . '&graph_end=' . $graph_end);?>'><img src='<?php print $config['url_path'] . 'images/table_go.png';?>' alt='' title='<?php print __esc('CSV Export');?>'></a><br>
+							<?php if (is_realm_allowed(27)) { ?><td id='dd<?php
+								print str_replace(
+								    '`',
+								    '&#96;',
+								    htmlspecialchars(
+								        (string) get_request_var('local_graph_id'),
+								        ENT_QUOTES | ENT_SUBSTITUTE,
+								        ini_get('default_charset') ?: 'UTF-8'
+								    )
+								);
+							?>'
+								style='vertical-align:top;' class='graphDrillDown noprint'>
+								<a class='iconLink utils' href='#' id='graph_<?php
+									print str_replace(
+									    '`',
+									    '&#96;',
+									    htmlspecialchars(
+									        (string) get_request_var('local_graph_id'),
+									        ENT_QUOTES | ENT_SUBSTITUTE,
+									        ini_get('default_charset') ?: 'UTF-8'
+									    )
+									);
+								?>_util' graph_start='<?php
+									print str_replace(
+									    '`',
+									    '&#96;',
+									    htmlspecialchars(
+									        (string) $graph_start,
+									        ENT_QUOTES | ENT_SUBSTITUTE,
+									        ini_get('default_charset') ?: 'UTF-8'
+									    )
+									);
+								?>'
+									graph_end='<?php
+									print str_replace(
+									    '`',
+									    '&#96;',
+									    htmlspecialchars(
+									        (string) $graph_end,
+									        ENT_QUOTES | ENT_SUBSTITUTE,
+									        ini_get('default_charset') ?: 'UTF-8'
+									    )
+									);
+								?>'
+									rra_id='<?php
+									print str_replace(
+									    '`',
+									    '&#96;',
+									    htmlspecialchars(
+									        (string) $rra['id'],
+									        ENT_QUOTES | ENT_SUBSTITUTE,
+									        ini_get('default_charset') ?: 'UTF-8'
+									    )
+									);
+								?>'><img class='drillDown' alt='' src='<?php
+									print str_replace(
+									    '`',
+									    '&#96;',
+									    htmlspecialchars(
+									        $config['url_path'] . 'images/cog.png',
+									        ENT_QUOTES | ENT_SUBSTITUTE,
+									        ini_get('default_charset') ?: 'UTF-8'
+									    )
+									);
+								?>'
+									title='<?php print __esc('Graph Details, Zooming and Debugging Utilities');?>'></a><br>
+								<a id='graph_<?php
+									print str_replace(
+									    '`',
+									    '&#96;',
+									    htmlspecialchars(
+									        (string) $rra['id'],
+									        ENT_QUOTES | ENT_SUBSTITUTE,
+									        ini_get('default_charset') ?: 'UTF-8'
+									    )
+									);
+								?>_csv' class='iconLink csv' href='<?php
+									print str_replace(
+									    '`',
+									    '&#96;',
+									    htmlspecialchars(
+									        $config['url_path'] . 'graph_xport.php?local_graph_id=' . get_request_var('local_graph_id')
+									            . '&rra_id=' . $rra['id'] . '&view_type=' . get_request_var('view_type')
+									            . '&graph_start=' . $graph_start . '&graph_end=' . $graph_end,
+									        ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+									        ini_get('default_charset') ?: 'UTF-8',
+									        false
+									    )
+									);
+								?>'><img alt='' src='<?php
+									print str_replace(
+									    '`',
+									    '&#96;',
+									    htmlspecialchars(
+									        $config['url_path'] . 'images/table_go.png',
+									        ENT_QUOTES | ENT_SUBSTITUTE,
+									        ini_get('default_charset') ?: 'UTF-8'
+									    )
+									);
+								?>'
+									title='<?php print __esc('CSV Export');?>'></a><br>
 
 								<?php
 								if (is_realm_allowed(10) && $graph_template_id > 0) {
@@ -154,7 +341,32 @@ case 'view':
 								}
 
 								if (read_config_option('realtime_enabled') == 'on' || is_realm_allowed(25)) {
-									print "<a class='iconLink' href='#' onclick=\"window.open('".$config['url_path'] . 'graph_realtime.php?top=0&left=0&local_graph_id=' . get_request_var('local_graph_id') . "', 'popup_" . get_request_var('local_graph_id') . "', 'directories=no,toolbar=no,menubar=no,resizable=yes,location=no,scrollbars=no,status=no,titlebar=no,width=650,height=300');return false\"><img src='" . $config['url_path'] . "images/chart_curve_go.png' alt='' title='" . __esc('Click to view just this Graph in Real-time') . "'></a><br/>\n";
+									$popup_flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE;
+									$popup_url = json_encode(
+									    $config['url_path'] . 'graph_realtime.php?top=0&left=0&local_graph_id='
+									        . rawurlencode((string) get_request_var('local_graph_id')),
+									    $popup_flags
+									);
+									$popup_name = json_encode('popup_' . get_request_var('local_graph_id'), $popup_flags);
+									$popup_handler = "window.open($popup_url, $popup_name, 'directories=no,toolbar=no,menubar=no,"
+										. "resizable=yes,location=no,scrollbars=no,status=no,titlebar=no,width=650,height=300');return false";
+									print "<a class='iconLink' href='#' onclick=\"" . str_replace(
+									    '`',
+									    '&#96;',
+									    htmlspecialchars(
+									        $popup_handler,
+									        ENT_QUOTES | ENT_SUBSTITUTE,
+									        ini_get('default_charset') ?: 'UTF-8'
+									    )
+									) . "\"><img src='" . str_replace(
+									    '`',
+									    '&#96;',
+									    htmlspecialchars(
+									        $config['url_path'] . 'images/chart_curve_go.png',
+									        ENT_QUOTES | ENT_SUBSTITUTE,
+									        ini_get('default_charset') ?: 'UTF-8'
+									    )
+									) . "' alt='' title='" . __esc('Click to view just this Graph in Real-time') . "'></a><br/>\n";
 								}
 
 								print ($aggregate_url != '' ? $aggregate_url:'');
@@ -418,16 +630,136 @@ case 'zoom':
 			<table class='graphWrapperOuter' data-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>'>
 				<tr>
 					<td class='center'>
-						<div class='graphWrapper' id='wrapper_<?php print $graph['local_graph_id']?>' graph_id='<?php print $graph['local_graph_id'];?>' rra_id='<?php print $rra['id'];?>' graph_width='<?php print $graph['width'];?>' graph_height='<?php print $graph['height'];?>' title_font_size='<?php print ((read_user_setting('custom_fonts') == 'on') ? read_user_setting('title_size') : read_config_option('title_size'));?>'></div>
+						<div class='graphWrapper' id='wrapper_<?php
+							print str_replace(
+							    '`',
+							    '&#96;',
+							    htmlspecialchars(
+							        (string) $graph['local_graph_id'],
+							        ENT_QUOTES | ENT_SUBSTITUTE,
+							        ini_get('default_charset') ?: 'UTF-8'
+							    )
+							);
+						?>'
+							graph_id='<?php
+							print str_replace(
+							    '`',
+							    '&#96;',
+							    htmlspecialchars(
+							        (string) $graph['local_graph_id'],
+							        ENT_QUOTES | ENT_SUBSTITUTE,
+							        ini_get('default_charset') ?: 'UTF-8'
+							    )
+							);
+						?>'
+							rra_id='<?php
+							print str_replace(
+							    '`',
+							    '&#96;',
+							    htmlspecialchars(
+							        (string) $rra['id'],
+							        ENT_QUOTES | ENT_SUBSTITUTE,
+							        ini_get('default_charset') ?: 'UTF-8'
+							    )
+							);
+						?>'
+							graph_width='<?php
+							print str_replace(
+							    '`',
+							    '&#96;',
+							    htmlspecialchars(
+							        (string) $graph['width'],
+							        ENT_QUOTES | ENT_SUBSTITUTE,
+							        ini_get('default_charset') ?: 'UTF-8'
+							    )
+							);
+						?>'
+							graph_height='<?php
+							print str_replace(
+							    '`',
+							    '&#96;',
+							    htmlspecialchars(
+							        (string) $graph['height'],
+							        ENT_QUOTES | ENT_SUBSTITUTE,
+							        ini_get('default_charset') ?: 'UTF-8'
+							    )
+							);
+						?>'
+							title_font_size='<?php
+							print str_replace(
+							    '`',
+							    '&#96;',
+							    htmlspecialchars(
+							        (string) ((read_user_setting('custom_fonts') == 'on')
+							            ? read_user_setting('title_size')
+							            : read_config_option('title_size')),
+							        ENT_QUOTES | ENT_SUBSTITUTE,
+							        ini_get('default_charset') ?: 'UTF-8'
+							    )
+							);
+						?>'></div>
                             <?php print (read_user_setting('show_graph_title') == 'on' ? "<span class='center'>" . html_escape($graph['title_cache']) . '</span>' : '');?>
 					</td>
-					<?php if (is_realm_allowed(27)) { ?><td id='dd<?php print $graph['local_graph_id'];?>' style='vertical-align:top;' class='graphDrillDown noprint'>
-						<a href='#' id='graph_<?php print $graph['local_graph_id'];?>_properties' class='iconLink properties'>
-							<img class='drillDown' src='<?php print $config['url_path'] . 'images/graph_properties.gif';?>' alt='' title='<?php print __esc('Graph Source/Properties');?>'>
+					<?php if (is_realm_allowed(27)) { ?><td id='dd<?php
+						print str_replace(
+						    '`',
+						    '&#96;',
+						    htmlspecialchars(
+						        (string) $graph['local_graph_id'],
+						        ENT_QUOTES | ENT_SUBSTITUTE,
+						        ini_get('default_charset') ?: 'UTF-8'
+						    )
+						);
+					?>'
+						style='vertical-align:top;' class='graphDrillDown noprint'>
+						<a href='#' id='graph_<?php
+							print str_replace(
+							    '`',
+							    '&#96;',
+							    htmlspecialchars(
+							        (string) $graph['local_graph_id'],
+							        ENT_QUOTES | ENT_SUBSTITUTE,
+							        ini_get('default_charset') ?: 'UTF-8'
+							    )
+							);
+						?>_properties' class='iconLink properties'>
+							<img class='drillDown' alt='' src='<?php
+								print str_replace(
+								    '`',
+								    '&#96;',
+								    htmlspecialchars(
+								        (string) $config['url_path'] . 'images/graph_properties.gif',
+								        ENT_QUOTES | ENT_SUBSTITUTE,
+								        ini_get('default_charset') ?: 'UTF-8'
+								    )
+								);
+							?>'
+								title='<?php print __esc('Graph Source/Properties');?>'>
 						</a>
 						<br>
-						<a href='#' id='graph_<?php print $graph['local_graph_id'];?>_csv' class='iconLink properties'>
-							<img class='drillDown' src='<?php print $config['url_path'] . 'images/table_go.png';?>' alt='' title='<?php print __esc('Graph Data');?>'>
+						<a href='#' id='graph_<?php
+							print str_replace(
+							    '`',
+							    '&#96;',
+							    htmlspecialchars(
+							        (string) $graph['local_graph_id'],
+							        ENT_QUOTES | ENT_SUBSTITUTE,
+							        ini_get('default_charset') ?: 'UTF-8'
+							    )
+							);
+						?>_csv' class='iconLink properties'>
+							<img class='drillDown' alt='' src='<?php
+								print str_replace(
+								    '`',
+								    '&#96;',
+								    htmlspecialchars(
+								        (string) $config['url_path'] . 'images/table_go.png',
+								        ENT_QUOTES | ENT_SUBSTITUTE,
+								        ini_get('default_charset') ?: 'UTF-8'
+								    )
+								);
+							?>'
+								title='<?php print __esc('Graph Data');?>'>
 						</a>
 						<br>
 						<?php
