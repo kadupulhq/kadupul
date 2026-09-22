@@ -142,7 +142,7 @@ try {
     }
     $transactionStarted = false;
     $status = 'ok';
-    cacti_log('INVENTORY: User ' . $command['actor'] . ' assigned device template for device ' . $assignment->id, false, 'AUDIT');
+    cacti_log('INVENTORY: User ' . $command['actor'] . ' confirmed template ' . $assignment->templateId() . ' for device ' . $assignment->id, false, 'AUDIT');
 } catch (DeviceEditConflict) {
     $status = 'conflict';
 } catch (InvalidArgumentException) {

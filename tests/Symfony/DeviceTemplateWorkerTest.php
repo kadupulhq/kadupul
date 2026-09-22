@@ -12,10 +12,17 @@ use Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceTemplateAssignments;
 use Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceVisibility;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class DeviceTemplateWorkerTest extends TestCase
 {
-    public function testConfiguredPhpExecutableStartsTemplateWorker(): void
+    public static function executables(): array
+    {
+        return [[true], [false]];
+    }
+
+    #[DataProvider('executables')]
+    public function testConfiguredExecutableIsHonoredWithoutSilentFallback(bool $available): void
     {
         $directory = sys_get_temp_dir() . '/kadupul-template-worker-' . bin2hex(random_bytes(8));
         mkdir($directory . '/bin', 0700, true);
@@ -23,11 +30,16 @@ final class DeviceTemplateWorkerTest extends TestCase
         try {
             $pdo = new \PDO('sqlite::memory:');
             $pdo->exec('CREATE TABLE settings (name TEXT, value TEXT)');
-            $pdo->prepare('INSERT INTO settings VALUES (?, ?)')->execute(['path_php_binary', '  ' . PHP_BINARY . '  ']);
+            $pdo->prepare('INSERT INTO settings VALUES (?, ?)')->execute(['path_php_binary', '  ' . ($available ? PHP_BINARY : $directory . '/missing php executable') . '  ']);
             $database = $this->createMock(DatabaseConnection::class);
             $database->method('get')->willReturn($pdo);
             $adapter = new LegacyDeviceTemplateAssignments($database, new LegacyDeviceVisibility($database), $directory);
             $assignment = new DeviceTemplateAssignment(1, 'Device', 0, 1);
+            if (!$available) {
+                // Ignoring the configured path would incorrectly run the successful
+                // stub through PHP_BINDIR/php instead of rejecting the missing binary.
+                $this->expectException(\RuntimeException::class);
+            }
             $adapter->save(1, $assignment, $assignment->revision());
             self::assertTrue(true);
         } finally {
