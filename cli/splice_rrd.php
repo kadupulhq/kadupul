@@ -263,7 +263,12 @@ if (strlen($response)) {
 }
 
 /* determine the temporary file name */
-$seed = mt_rand();
+try {
+	$seed = random_int(0, mt_getrandmax());
+} catch (\Exception $e) {
+	print 'FATAL: Secure randomness is unavailable; temporary dump creation was not started.' . PHP_EOL;
+	exit(1);
+}
 
 if (substr_count(PHP_OS, 'WIN')) {
 	$tempdir    = cacti_cli_windows_tempdir(getenv('TEMP'));

@@ -2,14 +2,14 @@
   "project": "kadupulhq_kadupul-lts",
   "rule": "php:S2245",
   "baseRevision": "7ef2721e6",
-  "note": "26 initial findings; three targeted fixes, other assessments provisional. No scanner closures or false-positive transitions claimed.",
+  "note": "26 initial findings; three fixes merged in PR #278, two maintenance seed fixes in this follow-up. Other assessments remain provisional. Scanner closure requires merged analysis; no false-positive transitions claimed.",
   "issues": [
     {
       "key": "AaCs2N41Iug_wyaLilnz",
       "file": "cli/splice_rrd.php",
       "line": 255,
-      "disposition": "follow-up",
-      "assessment": "Temporary dump seed; current exclusive descriptor creation already mitigates planted paths. Keep legacy filenames; audit collision/denial-of-service behavior separately."
+      "disposition": "fixed in maintenance seed follow-up",
+      "assessment": "Use random_int with the original integer range. Fail before dump creation on entropy failure. Existing exclusive descriptor creation, collision refusal and legacy numeric filenames remain unchanged."
     },
     {
       "key": "AaCs2NXKIug_wyaLilmj",
@@ -22,7 +22,7 @@
       "key": "AaCs2NruIug_wyaLilnO",
       "file": "lib/headers_secure.php",
       "line": 68,
-      "disposition": "fixed in this PR",
+      "disposition": "fix merged in PR #278",
       "assessment": "Remove predictable nonce fallback; validate strong OpenSSL output and throw if both secure sources fail."
     },
     {
@@ -57,7 +57,7 @@
       "key": "AaCs2N41Iug_wyaLilny",
       "file": "cli/splice_rrd.php",
       "line": 45,
-      "disposition": "fixed in this PR",
+      "disposition": "fix merged in PR #278",
       "assessment": "Directory probe uses secure name plus atomic mkdir; never opens existing entries. Explicit file-path behavior unchanged."
     },
     {
@@ -71,8 +71,8 @@
       "key": "AaCs2NqBIug_wyaLilnM",
       "file": "lib/spikekill.php",
       "line": 442,
-      "disposition": "follow-up",
-      "assessment": "Backup filename seed; needs full ownership/collision audit before changing legacy filename contracts."
+      "disposition": "fixed in maintenance seed follow-up",
+      "assessment": "Use random_int with the original integer range. Report error and return false on entropy failure. Keep legacy backup names, safe-copy collision handling and finally-based maintenance lock release."
     },
     {
       "key": "AaCs2NkYIug_wyaLilnD",
@@ -85,7 +85,7 @@
       "key": "AaCs2NZkIug_wyaLilmp",
       "file": "lib/functions.php",
       "line": 7273,
-      "disposition": "fixed in this PR",
+      "disposition": "fix merged in PR #278",
       "assessment": "Directory probe uses secure name plus atomic mkdir; never opens existing entries. Explicit file-path behavior unchanged."
     },
     {

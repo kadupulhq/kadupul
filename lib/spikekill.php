@@ -439,7 +439,12 @@ class spikekill {
 		}
 
 		/* determine the temporary file name */
-		$this->seed = mt_rand();
+		try {
+			$this->seed = random_int(0, mt_getrandmax());
+		} catch (\Exception $e) {
+			$this->set_error(__('FATAL: Secure randomness is unavailable; spike removal was not started.'));
+			return false;
+		}
 
 		if ($config['cacti_server_os'] == 'win32') {
 			$this->tempdir = $this->normalizeDir(read_config_option('spikekill_backupdir'));
