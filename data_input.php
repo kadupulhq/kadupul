@@ -770,7 +770,11 @@ function data_edit() {
 				form_alternate_row('', true);
 				?>
 				<td>
-					<a class="linkEditMain" href="<?php print html_escape('data_input.php?action=field_edit&id=' . $field['id'] . '&data_input_id=' . get_request_var('id'));?>"><?php print html_escape($field['data_name']);?></a>
+					<a class="linkEditMain" href="<?php
+							print str_replace('`', '&#96;', htmlspecialchars((string)('data_input.php?action=field_edit&id=' . $field['id'] . '&data_input_id=' . get_request_var('id')),
+							ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>"><?php
+							print str_replace('`', '&#96;', htmlspecialchars((string)($field['data_name']),
+							ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?></a>
 				</td>
 				<td>
 					<?php print html_escape($field['name']);?>
@@ -779,7 +783,9 @@ function data_edit() {
 					<?php print $field['sequence']; if ($field['sequence'] == '0') { print ' ' . __('(Not In Use)'); }?>
 				</td>
 				<td class="right">
-					<a class='delete deleteMarker fa fa-times' href='<?php print html_escape('data_input.php?action=field_remove_confirm&id=' . $field['id'] . '&data_input_id=' . get_request_var('id'));?>' title='<?php print __esc('Delete');?>'></a>
+					<a class='delete deleteMarker fa fa-times' href='<?php
+							print str_replace('`', '&#96;', htmlspecialchars((string)('data_input.php?action=field_remove_confirm&id=' . $field['id'] . '&data_input_id=' . get_request_var('id')),
+							ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>' title='<?php print __esc('Delete');?>'></a>
 				</td>
 				<?php
 				form_end_row();
@@ -809,7 +815,11 @@ function data_edit() {
 				form_alternate_row('', true);
 				?>
 				<td>
-					<a class='linkEditMain' href='<?php print html_escape('data_input.php?action=field_edit&id=' . $field['id'] . '&data_input_id=' . get_request_var('id'));?>'><?php print html_escape($field['data_name']);?></a>
+					<a class='linkEditMain' href='<?php
+							print str_replace('`', '&#96;', htmlspecialchars((string)('data_input.php?action=field_edit&id=' . $field['id'] . '&data_input_id=' . get_request_var('id')),
+							ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>'><?php
+							print str_replace('`', '&#96;', htmlspecialchars((string)($field['data_name']),
+							ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?></a>
 				</td>
 				<td>
 					<?php print html_escape($field['name']);?>
@@ -821,7 +831,9 @@ function data_edit() {
 					<?php if ($output_disabled) {?>
 					<a class='deleteMarkerDisabled fa fa-times' href='#' title='<?php print __esc('Output Fields can not be removed when Data Sources are present');?>'></a>
 					<?php } else { ?>
-					<a class='delete deleteMarker fa fa-times' href='<?php print html_escape('data_input.php?action=field_remove_confirm&id=' . $field['id'] . '&data_input_id=' . get_request_var('id'));?>' title='<?php print __esc('Delete');?>'></a>
+					<a class='delete deleteMarker fa fa-times' href='<?php
+							print str_replace('`', '&#96;', htmlspecialchars((string)('data_input.php?action=field_remove_confirm&id=' . $field['id'] . '&data_input_id=' . get_request_var('id')),
+							ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>' title='<?php print __esc('Delete');?>'></a>
 					<?php } ?>
 				</td>
 				<?php

@@ -1,0 +1,207 @@
+{
+  "project": "kadupulhq_kadupul-lts",
+  "revision": "e0043fdcb49f23a70954e592bb498c266d66bb2b",
+  "description": "25 open findings mapped to executable output fragments. Fragment tests do not run complete controllers or database operations.",
+  "issues": [
+    {
+      "key": "AaCs2NLVIug_wyaLillb",
+      "file": "lib/api_automation.php",
+      "line": 488,
+      "context": "html",
+      "before": "<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>",
+      "after": "<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php\n\t\t\t\t\t\t\t\t\tprint str_replace('`', '&#96;', htmlspecialchars((string)(get_request_var('filter')),\n\t\t\t\t\t\t\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>'>"
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLillq",
+      "file": "lib/api_automation.php",
+      "line": 147,
+      "context": "html",
+      "before": "<input type='text' class='ui-state-default ui-corner-all' id='filterd' size='25' value='<?php print html_escape_request_var('filterd');?>'>",
+      "after": "<input type='text' class='ui-state-default ui-corner-all' id='filterd' size='25' value='<?php\n\t\t\t\t\t\t\t\t\tprint str_replace('`', '&#96;', htmlspecialchars((string)(get_request_var('filterd')),\n\t\t\t\t\t\t\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>'>"
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLillo",
+      "file": "lib/api_automation.php",
+      "line": 722,
+      "context": "html",
+      "before": "<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>",
+      "after": "<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php\n\t\t\t\t\t\t\t\t\tprint str_replace('`', '&#96;', htmlspecialchars((string)(get_request_var('filter')),\n\t\t\t\t\t\t\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>'>"
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLillV",
+      "file": "lib/api_automation.php",
+      "line": 1085,
+      "context": "html",
+      "before": "<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>",
+      "after": "<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php\n\t\t\t\t\t\t\t\tprint str_replace('`', '&#96;', htmlspecialchars((string)(get_request_var('filter')),\n\t\t\t\t\t\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>'>"
+    },
+    {
+      "key": "AaCs2POKIug_wyaLilrV",
+      "file": "data_input.php",
+      "line": 782,
+      "context": "html",
+      "before": "<a class='delete deleteMarker fa fa-times' href='<?php print html_escape('data_input.php?action=field_remove_confirm&id=' . $field['id'] . '&data_input_id=' . get_request_var('id'));?>' title='<?php print __esc('Delete');?>'></a>",
+      "after": "<a class='delete deleteMarker fa fa-times' href='<?php\n\t\t\t\t\t\t\tprint str_replace('`', '&#96;', htmlspecialchars((string)('data_input.php?action=field_remove_confirm&id=' . $field['id'] . '&data_input_id=' . get_request_var('id')),\n\t\t\t\t\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>' title='<?php print __esc('Delete');?>'></a>"
+    },
+    {
+      "key": "AaCs2POKIug_wyaLilrS",
+      "file": "data_input.php",
+      "line": 824,
+      "context": "html",
+      "before": "<a class='delete deleteMarker fa fa-times' href='<?php print html_escape('data_input.php?action=field_remove_confirm&id=' . $field['id'] . '&data_input_id=' . get_request_var('id'));?>' title='<?php print __esc('Delete');?>'></a>",
+      "after": "<a class='delete deleteMarker fa fa-times' href='<?php\n\t\t\t\t\t\t\tprint str_replace('`', '&#96;', htmlspecialchars((string)('data_input.php?action=field_remove_confirm&id=' . $field['id'] . '&data_input_id=' . get_request_var('id')),\n\t\t\t\t\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>' title='<?php print __esc('Delete');?>'></a>"
+    },
+    {
+      "key": "AaCs2PCLIug_wyaLilpQ",
+      "file": "host_templates.php",
+      "line": 589,
+      "context": "html",
+      "before": "<a class='delete deleteMarker fa fa-times' title='<?php print __esc('Delete');?>' href='<?php print html_escape('host_templates.php?action=item_remove_gt_confirm&id=' . $item['id'] . '&host_template_id=' . get_request_var('id'));?>'></a>",
+      "after": "<a class='delete deleteMarker fa fa-times' title='<?php print __esc('Delete');?>' href='<?php\n\t\t\t\t\t\t\t\tprint str_replace('`', '&#96;', htmlspecialchars((string)('host_templates.php?action=item_remove_gt_confirm&id=' . $item['id'] . '&host_template_id=' . get_request_var('id')),\n\t\t\t\t\t\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>'></a>"
+    },
+    {
+      "key": "AaCs2PCLIug_wyaLilpO",
+      "file": "host_templates.php",
+      "line": 646,
+      "context": "html",
+      "before": "<a class='delete deleteMarker fa fa-times' title='<?php print __esc('Delete');?>' href='<?php print html_escape('host_templates.php?action=item_remove_dq_confirm&id=' . $item['id'] . '&host_template_id=' . get_request_var('id'));?>'></a>",
+      "after": "<a class='delete deleteMarker fa fa-times' title='<?php print __esc('Delete');?>' href='<?php\n\t\t\t\t\t\t\t\tprint str_replace('`', '&#96;', htmlspecialchars((string)('host_templates.php?action=item_remove_dq_confirm&id=' . $item['id'] . '&host_template_id=' . get_request_var('id')),\n\t\t\t\t\t\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>'></a>"
+    },
+    {
+      "key": "AaCs2POKIug_wyaLilrc",
+      "file": "data_input.php",
+      "line": 773,
+      "context": "html",
+      "before": "<a class=\"linkEditMain\" href=\"<?php print html_escape('data_input.php?action=field_edit&id=' . $field['id'] . '&data_input_id=' . get_request_var('id'));?>\"><?php print html_escape($field['data_name']);?></a>",
+      "after": "<a class=\"linkEditMain\" href=\"<?php\n\t\t\t\t\t\t\tprint str_replace('`', '&#96;', htmlspecialchars((string)('data_input.php?action=field_edit&id=' . $field['id'] . '&data_input_id=' . get_request_var('id')),\n\t\t\t\t\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>\"><?php\n\t\t\t\t\t\t\tprint str_replace('`', '&#96;', htmlspecialchars((string)($field['data_name']),\n\t\t\t\t\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?></a>"
+    },
+    {
+      "key": "AaCs2POKIug_wyaLilrd",
+      "file": "data_input.php",
+      "line": 812,
+      "context": "html",
+      "before": "<a class='linkEditMain' href='<?php print html_escape('data_input.php?action=field_edit&id=' . $field['id'] . '&data_input_id=' . get_request_var('id'));?>'><?php print html_escape($field['data_name']);?></a>",
+      "after": "<a class='linkEditMain' href='<?php\n\t\t\t\t\t\t\tprint str_replace('`', '&#96;', htmlspecialchars((string)('data_input.php?action=field_edit&id=' . $field['id'] . '&data_input_id=' . get_request_var('id')),\n\t\t\t\t\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>'><?php\n\t\t\t\t\t\t\tprint str_replace('`', '&#96;', htmlspecialchars((string)($field['data_name']),\n\t\t\t\t\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?></a>"
+    },
+    {
+      "key": "AaCs2O2dIug_wyaLilod",
+      "file": "automation_tree_rules.php",
+      "line": 435,
+      "context": "html",
+      "before": "<td class='textInfo' style='text-align:right;vertical-align:top;'><span class='linkMarker'>*</span><a class='linkEditMain' href='<?php print html_escape('automation_tree_rules.php?action=item_edit&id=' . (isset_request_var('id') ? get_request_var('id') : 0) . '&item_id=' . (isset_request_var('item_id') ? get_request_var('item_id') : 0) . '&rule_type=' . (isset_request_var('rule_type') ? get_request_var('rule_type') : 0) .'&show_trees=') . (isset($_SESSION['automation_tree_rules_show_trees']) ? '0' : '1');?>'><?php print (isset($_SESSION['automation_tree_rules_show_trees']) ? __('Don\\'t Show'):__('Show'));?> <?php print __('Created Trees');?></a><br>",
+      "after": "<td class='textInfo' style='text-align:right;vertical-align:top;'><span class='linkMarker'>*</span><a class='linkEditMain' href='<?php\n\t\t\t\tprint str_replace('`', '&#96;', htmlspecialchars((string)('automation_tree_rules.php?action=item_edit&id=' . (isset_request_var('id') ? get_request_var('id') : 0) . '&item_id=' . (isset_request_var('item_id') ? get_request_var('item_id') : 0) . '&rule_type=' . (isset_request_var('rule_type') ? get_request_var('rule_type') : 0) .'&show_trees='),\n\t\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false)) . (isset($_SESSION['automation_tree_rules_show_trees']) ? '0' : '1');?>'><?php print (isset($_SESSION['automation_tree_rules_show_trees']) ? __('Don\\'t Show'):__('Show'));?> <?php print __('Created Trees');?></a><br>"
+    },
+    {
+      "key": "AaCs2O2dIug_wyaLiloY",
+      "file": "automation_tree_rules.php",
+      "line": 585,
+      "context": "html",
+      "before": "<td class='textInfo right' style='vertical-align:top;'><span class='linkMarker'>*</span><a class='linkEditMain' href='<?php print html_escape('automation_tree_rules.php?action=edit&id=' . (isset_request_var('id') ? get_request_var('id') : 0) . '&show_hosts=') . (isset($_SESSION['automation_tree_rules_show_objects']) ? '0' : '1');?>'><?php print (isset($_SESSION['automation_tree_rules_show_objects']) ? __('Don\\'t Show'):__('Show'));?> <?php print __('Eligible Objects');?></a><br>",
+      "after": "<td class='textInfo right' style='vertical-align:top;'><span class='linkMarker'>*</span><a class='linkEditMain' href='<?php\n\t\t\t\tprint str_replace('`', '&#96;', htmlspecialchars((string)('automation_tree_rules.php?action=edit&id=' . (isset_request_var('id') ? get_request_var('id') : 0) . '&show_hosts='),\n\t\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false)) . (isset($_SESSION['automation_tree_rules_show_objects']) ? '0' : '1');?>'><?php print (isset($_SESSION['automation_tree_rules_show_objects']) ? __('Don\\'t Show'):__('Show'));?> <?php print __('Eligible Objects');?></a><br>"
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLillg",
+      "file": "lib/api_automation.php",
+      "line": 140,
+      "context": "html",
+      "before": "<form method='post' id='form_automation_host' action='<?php print html_escape($url);?>'>",
+      "after": "<form method='post' id='form_automation_host' action='<?php\n\t\t\t\t\tprint str_replace('`', '&#96;', htmlspecialchars((string)($url),\n\t\t\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>'>"
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLillZ",
+      "file": "lib/api_automation.php",
+      "line": 433,
+      "context": "html",
+      "before": "<form id='form_graphs' action='<?php print html_escape($url);?>'>",
+      "after": "<form id='form_graphs' action='<?php\n\t\t\t\t\tprint str_replace('`', '&#96;', htmlspecialchars((string)($url),\n\t\t\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>'>"
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLillc",
+      "file": "lib/api_automation.php",
+      "line": 715,
+      "context": "html",
+      "before": "<form id='form_automation_objects' action='<?php print html_escape($url);?>'>",
+      "after": "<form id='form_automation_objects' action='<?php\n\t\t\t\t\tprint str_replace('`', '&#96;', htmlspecialchars((string)($url),\n\t\t\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>'>"
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLilln",
+      "file": "lib/api_automation.php",
+      "line": 1072,
+      "context": "html",
+      "before": "print \"<form method='post' id='form_automation_tree' action='\" . html_escape($url) . \"'>\";",
+      "after": "print \"<form method='post' id='form_automation_tree' action='\" . str_replace('`', '&#96;', htmlspecialchars((string)($url),\n\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false)) . \"'>\";"
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLilld",
+      "file": "lib/api_automation.php",
+      "line": 108,
+      "context": "javascript",
+      "before": "strURL = '<?php print $url;?>' + '&cleard=true&header=false';",
+      "after": "strURL = <?php print json_encode(\n\t\t\t\t\tmb_convert_encoding((string)$url, 'UTF-8', ini_get('default_charset') ?: 'UTF-8'),\n\t\t\t\t\tJSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n\t\t\t\t);?> + '&cleard=true&header=false';"
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLilla",
+      "file": "lib/api_automation.php",
+      "line": 402,
+      "context": "javascript",
+      "before": "strURL = '<?php print $url;?>' + '&clear=true&header=false';",
+      "after": "strURL = <?php print json_encode(\n\t\t\t\t\tmb_convert_encoding((string)$url, 'UTF-8', ini_get('default_charset') ?: 'UTF-8'),\n\t\t\t\t\tJSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n\t\t\t\t);?> + '&clear=true&header=false';"
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLillj",
+      "file": "lib/api_automation.php",
+      "line": 685,
+      "context": "javascript",
+      "before": "strURL = '<?php print $url;?>' + '&oclear=true&header=false';",
+      "after": "strURL = <?php print json_encode(\n\t\t\t\t\tmb_convert_encoding((string)$url, 'UTF-8', ini_get('default_charset') ?: 'UTF-8'),\n\t\t\t\t\tJSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n\t\t\t\t);?> + '&oclear=true&header=false';"
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLillY",
+      "file": "lib/api_automation.php",
+      "line": 1046,
+      "context": "javascript",
+      "before": "strURL = '<?php print $url;?>' + '&clear=true&header=false';",
+      "after": "strURL = <?php print json_encode(\n\t\t\t\t\tmb_convert_encoding((string)$url, 'UTF-8', ini_get('default_charset') ?: 'UTF-8'),\n\t\t\t\t\tJSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n\t\t\t\t);?> + '&clear=true&header=false';"
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLillm",
+      "file": "lib/api_automation.php",
+      "line": 677,
+      "context": "javascript",
+      "before": "strURL  = '<?php print $url;?>';",
+      "after": "strURL  = <?php print json_encode(\n\t\t\t\t\tmb_convert_encoding((string)$url, 'UTF-8', ini_get('default_charset') ?: 'UTF-8'),\n\t\t\t\t\tJSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n\t\t\t\t);?>;"
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLillX",
+      "file": "lib/api_automation.php",
+      "line": 99,
+      "context": "javascript",
+      "before": "strURL  = '<?php print $url;?>' + '&host_status=' + $('#host_status').val();",
+      "after": "strURL  = <?php print json_encode(\n\t\t\t\t\tmb_convert_encoding((string)$url, 'UTF-8', ini_get('default_charset') ?: 'UTF-8'),\n\t\t\t\t\tJSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n\t\t\t\t);?> + '&host_status=' + $('#host_status').val();"
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLillW",
+      "file": "lib/api_automation.php",
+      "line": 393,
+      "context": "javascript",
+      "before": "strURL  = '<?php print $url;?>' + '&host_id=' + $('#host_id').val();",
+      "after": "strURL  = <?php print json_encode(\n\t\t\t\t\tmb_convert_encoding((string)$url, 'UTF-8', ini_get('default_charset') ?: 'UTF-8'),\n\t\t\t\t\tJSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n\t\t\t\t);?> + '&host_id=' + $('#host_id').val();"
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLillf",
+      "file": "lib/api_automation.php",
+      "line": 1037,
+      "context": "javascript",
+      "before": "strURL  = '<?php print $url;?>' + '&host_status=' + $('#host_status').val();",
+      "after": "strURL  = <?php print json_encode(\n\t\t\t\t\tmb_convert_encoding((string)$url, 'UTF-8', ini_get('default_charset') ?: 'UTF-8'),\n\t\t\t\t\tJSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n\t\t\t\t);?> + '&host_status=' + $('#host_status').val();"
+    },
+    {
+      "key": "AaCs2PaqIug_wyaLilte",
+      "file": "automation_graph_rules.php",
+      "line": 618,
+      "context": "html",
+      "before": "<td class='textInfo right' style='vertical-align:top;'><span class='linkMarker'>*</span><a class='linkEditMain' href='<?php print html_escape('automation_graph_rules.php?action=edit&id=' . (isset_request_var('id') ? get_request_var('id') : 0) . '&show_rule=') . ($_SESSION['automation_graph_rules_show_rule'] == true ? '0' : '1');?>'><?php print ($_SESSION['automation_graph_rules_show_rule'] == true ? __('Don\\'t Show'):__('Show'));?> <?php print __('Rule Details.');?></a><br>",
+      "after": "<td class='textInfo right' style='vertical-align:top;'><span class='linkMarker'>*</span><a class='linkEditMain' href='<?php\n\t\t\t\tprint str_replace('`', '&#96;', htmlspecialchars((string)('automation_graph_rules.php?action=edit&id=' . (isset_request_var('id') ? get_request_var('id') : 0) . '&show_rule='),\n\t\t\t\tENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false)) . ($_SESSION['automation_graph_rules_show_rule'] == true ? '0' : '1');?>'><?php print ($_SESSION['automation_graph_rules_show_rule'] == true ? __('Don\\'t Show'):__('Show'));?> <?php print __('Rule Details.');?></a><br>"
+    }
+  ]
+}

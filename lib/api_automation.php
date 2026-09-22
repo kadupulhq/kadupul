@@ -96,7 +96,10 @@ function display_matching_hosts($rule, $rule_type, $url) {
 	?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 	function applyDeviceFilter() {
-		strURL  = '<?php print $url;?>' + '&host_status=' + $('#host_status').val();
+		strURL  = <?php print json_encode(
+					mb_convert_encoding((string)$url, 'UTF-8', ini_get('default_charset') ?: 'UTF-8'),
+					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE
+				);?> + '&host_status=' + $('#host_status').val();
 		strURL += '&host_template_id=' + $('#host_template_id').val();
 		strURL += '&rowsd=' + $('#rowsd').val();
 		strURL += '&filterd=' + $('#filterd').val();
@@ -105,7 +108,10 @@ function display_matching_hosts($rule, $rule_type, $url) {
 	}
 
 	function clearDeviceFilter() {
-		strURL = '<?php print $url;?>' + '&cleard=true&header=false';
+		strURL = <?php print json_encode(
+					mb_convert_encoding((string)$url, 'UTF-8', ini_get('default_charset') ?: 'UTF-8'),
+					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE
+				);?> + '&cleard=true&header=false';
 		loadPageNoHeader(strURL);
 	}
 
@@ -137,14 +143,18 @@ function display_matching_hosts($rule, $rule_type, $url) {
 	?>
 	<tr class='even'>
 		<td>
-			<form method='post' id='form_automation_host' action='<?php print html_escape($url);?>'>
+			<form method='post' id='form_automation_host' action='<?php
+					print str_replace('`', '&#96;', htmlspecialchars((string)($url),
+					ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>'>
 				<table class='filterTable'>
 					<tr>
 						<td>
 							<?php print __('Search');?>
 						</td>
 						<td>
-							<input type='text' class='ui-state-default ui-corner-all' id='filterd' size='25' value='<?php print html_escape_request_var('filterd');?>'>
+							<input type='text' class='ui-state-default ui-corner-all' id='filterd' size='25' value='<?php
+									print str_replace('`', '&#96;', htmlspecialchars((string)(get_request_var('filterd')),
+									ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>'>
 						</td>
 						<td>
 							<?php print __('Type');?>
@@ -390,7 +400,10 @@ function display_matching_graphs($rule, $rule_type, $url) {
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 
 	function applyFilter() {
-		strURL  = '<?php print $url;?>' + '&host_id=' + $('#host_id').val();
+		strURL  = <?php print json_encode(
+					mb_convert_encoding((string)$url, 'UTF-8', ini_get('default_charset') ?: 'UTF-8'),
+					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE
+				);?> + '&host_id=' + $('#host_id').val();
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&filter=' + $('#filter').val();
 		strURL += '&template_id=' + $('#template_id').val();
@@ -399,7 +412,10 @@ function display_matching_graphs($rule, $rule_type, $url) {
 	}
 
 	function clearFilter() {
-		strURL = '<?php print $url;?>' + '&clear=true&header=false';
+		strURL = <?php print json_encode(
+					mb_convert_encoding((string)$url, 'UTF-8', ini_get('default_charset') ?: 'UTF-8'),
+					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE
+				);?> + '&clear=true&header=false';
 		loadPageNoHeader(strURL);
 	}
 
@@ -430,7 +446,9 @@ function display_matching_graphs($rule, $rule_type, $url) {
 	?>
 	<tr class='even'>
 		<td>
-			<form id='form_graphs' action='<?php print html_escape($url);?>'>
+			<form id='form_graphs' action='<?php
+					print str_replace('`', '&#96;', htmlspecialchars((string)($url),
+					ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>'>
 				<table class='filterTable'>
 					<tr>
 						<td>
@@ -485,7 +503,9 @@ function display_matching_graphs($rule, $rule_type, $url) {
 							<?php print __('Search');?>
 						</td>
 						<td>
-							<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
+							<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+									print str_replace('`', '&#96;', htmlspecialchars((string)(get_request_var('filter')),
+									ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>'>
 						</td>
 						<td>
 							<?php print __('Devices');?>
@@ -674,7 +694,10 @@ function display_new_graphs($rule, $url) {
 	?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 	function applyObjectFilter() {
-		strURL  = '<?php print $url;?>';
+		strURL  = <?php print json_encode(
+					mb_convert_encoding((string)$url, 'UTF-8', ini_get('default_charset') ?: 'UTF-8'),
+					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE
+				);?>;
 		strURL += '&rows=' + $('#orows').val();
 		strURL += '&filter=' + $('#filter').val();
 		strURL += '&header=false';
@@ -682,7 +705,10 @@ function display_new_graphs($rule, $url) {
 	}
 
 	function clearObjectFilter() {
-		strURL = '<?php print $url;?>' + '&oclear=true&header=false';
+		strURL = <?php print json_encode(
+					mb_convert_encoding((string)$url, 'UTF-8', ini_get('default_charset') ?: 'UTF-8'),
+					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE
+				);?> + '&oclear=true&header=false';
 		loadPageNoHeader(strURL);
 	}
 
@@ -712,14 +738,18 @@ function display_new_graphs($rule, $url) {
 	?>
 	<tr class='even'>
 		<td>
-			<form id='form_automation_objects' action='<?php print html_escape($url);?>'>
+			<form id='form_automation_objects' action='<?php
+					print str_replace('`', '&#96;', htmlspecialchars((string)($url),
+					ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>'>
 				<table class='filterTable'>
 					<tr>
 						<td>
 							<?php print __('Search');?>
 						</td>
 						<td>
-							<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
+							<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+									print str_replace('`', '&#96;', htmlspecialchars((string)(get_request_var('filter')),
+									ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>'>
 						</td>
 						<td>
 							<?php print __('Objects');?>
@@ -1034,7 +1064,10 @@ function display_matching_trees ($rule_id, $rule_type, $item, $url) {
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 
 	function applyFilter() {
-		strURL  = '<?php print $url;?>' + '&host_status=' + $('#host_status').val();
+		strURL  = <?php print json_encode(
+					mb_convert_encoding((string)$url, 'UTF-8', ini_get('default_charset') ?: 'UTF-8'),
+					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE
+				);?> + '&host_status=' + $('#host_status').val();
 		strURL += '&host_template_id=' + $('#host_template_id').val();
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&filter=' + $('#filter').val();
@@ -1043,7 +1076,10 @@ function display_matching_trees ($rule_id, $rule_type, $item, $url) {
 	}
 
 	function clearFilter() {
-		strURL = '<?php print $url;?>' + '&clear=true&header=false';
+		strURL = <?php print json_encode(
+					mb_convert_encoding((string)$url, 'UTF-8', ini_get('default_charset') ?: 'UTF-8'),
+					JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE
+				);?> + '&clear=true&header=false';
 		loadPageNoHeader(strURL);
 	}
 
@@ -1069,7 +1105,8 @@ function display_matching_trees ($rule_id, $rule_type, $item, $url) {
 	</script>
 	<?php
 
-	print "<form method='post' id='form_automation_tree' action='" . html_escape($url) . "'>";
+	print "<form method='post' id='form_automation_tree' action='" . str_replace('`', '&#96;', htmlspecialchars((string)($url),
+			ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false)) . "'>";
 
 	html_start_box(__('Matching Items'), '100%', '', '3', 'center', '');
 
@@ -1082,7 +1119,9 @@ function display_matching_trees ($rule_id, $rule_type, $item, $url) {
 						<?php print __('Search');?>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
+						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php
+								print str_replace('`', '&#96;', htmlspecialchars((string)(get_request_var('filter')),
+								ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false));?>'>
 					</td>
 					<td>
 						<?php print __('Type');?>
