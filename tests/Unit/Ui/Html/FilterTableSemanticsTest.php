@@ -21,7 +21,7 @@ test('filter tables retain styling and expose their controls rather than data-gr
 	$expected = array_filter($baseline, function ($candidate) use ($entry) {
 		return $candidate['file'] === $entry['file'] && $candidate['after'] === $entry['after'];
 	});
-	expect(substr_count($source, $entry['after']))->toBe(count($expected));
+	expect(substr_count("\n" . $source, "\n" . $entry['after'] . "\n"))->toBe(count($expected));
 	expect(str_replace(" role='presentation'", '', $entry['after']))->toBe($entry['before']);
 	$doc = new \DOMDocument();
 	$doc->loadHTML('<!doctype html><html><body>' . $entry['after']
