@@ -379,7 +379,9 @@ function color_import() {
 			<?php print __('Should the import process be allowed to overwrite existing data?  Please note, this does not mean delete old rows, only update duplicate rows.');?>
 		</td>
 		<td class='left'>
-			<input type='checkbox' name='allow_update' id='allow_update'><?php print __('Allow Existing Rows to be Updated?');?>
+			<input type='checkbox' name='allow_update' id='allow_update'><label for='allow_update'><?php
+				print __('Allow Existing Rows to be Updated?');
+			?></label>
 		</td><?php
 
 	html_end_box(false);

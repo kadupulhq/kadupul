@@ -165,7 +165,7 @@ function manager() {
 							?>'>
 						</td>
 						<td>
-							<?php print __('Receivers'); ?>
+							<label for='rows'><?php print __('Receivers');?></label>
 						</td>
 						<td>
 							<select id='rows'>

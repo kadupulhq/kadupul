@@ -161,7 +161,7 @@ function html_graph_preview_filter($page, $action, $devices_where = '', $templat
 				<tr>
 					<?php html_host_filter(get_request_var('host_id'), 'applyGraphFilter', $devices_where);?>
 					<td>
-						<?php print __('Template');?>
+						<label for='graph_template_id'><?php print __('Template');?></label>
 					</td>
 					<td>
 						<select id='graph_template_id' multiple style='opacity:0.1;overflow-y:auto;overflow-x:hide;height:0px;'>

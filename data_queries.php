@@ -997,13 +997,13 @@ function data_query_item_edit() {
 			<table>
 				<tr>
 					<td class='nowrap'>
-						<?php print __('Field Name');?>
+						<label for='svg_field'><?php print __('Field Name');?></label>
 					</td>
 					<td>
 						<input type='text' class='ui-state-default ui-corner-all' id='svg_field' size='15'>
 					</td>
 					<td class='nowrap'>
-						<?php print __('Suggested Value');?>
+						<label for='svg_text'><?php print __('Suggested Value');?></label>
 					</td>
 					<td>
 						<input type='text' class='ui-state-default ui-corner-all' id='svg_text' size='60'>
