@@ -5,7 +5,9 @@
 
 namespace EditorOutputBatchTest;
 
-function get_request_var($name) { return $GLOBALS['editor_payload']; }
+function get_request_var($name, $default = '') {
+    return $GLOBALS['editor_present'] ? $GLOBALS['editor_payload'] : $default;
+}
 function isset_request_var($name) { return $GLOBALS['editor_present']; }
 function html_escape($value) {
     return htmlspecialchars(str_replace('`', '&#96;', $value), ENT_QUOTES | ENT_HTML5,
@@ -69,9 +71,22 @@ test('inventory contains 25 distinct open baseline findings and all production o
     }
 });
 
-test('numeric output preserves canonical IDs timestamps and missing-ID behavior', function ($issue, $number, $present) {
-    expect(render(fragment($issue), $number, $present))->toBe(render($issue['before'], $number, $present));
-})->with('editor numeric')->with(array(0, 1, 42, 2147483647, -3600, -1))->with(array(false, true));
+test('numeric output preserves canonical IDs and timestamps', function ($issue, $number) {
+    expect(render(fragment($issue), $number))->toBe(render($issue['before'], $number));
+})->with('editor numeric')->with(array(0, 1, 42, 2147483647, -3600, -1));
+
+test('absent request IDs render zero without changing independently computed timestamps', function ($issue) {
+    $isTimestamp = strpos($issue['before'], '$graph_start') !== false
+        || strpos($issue['before'], '$graph_end') !== false;
+    // Match get_request_var's actual empty-string default for absent request keys.
+    // Local graph timestamps are computed separately and must not depend on ID presence.
+    $output = render(fragment($issue), -3600, false);
+    expect($output)->toBe(render($issue['before'], $isTimestamp ? -3600 : 0, true));
+})->with('editor numeric');
+
+test('empty and null numeric values render a safe zero', function ($issue, $empty) {
+    expect(render(fragment($issue), $empty))->toBe(render($issue['before'], 0));
+})->with('editor numeric')->with(array('', null));
 
 test('numeric contexts cannot emit markup or executable tokens', function ($issue, $payload) {
     $output = render(fragment($issue), $payload);
