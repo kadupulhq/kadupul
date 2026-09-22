@@ -51,6 +51,18 @@ final class DeviceSnmpChangeTest extends TestCase
         }
     }
 
+    public function testCredentialValuesCannotEnterPublicConfigurationOrRevision(): void
+    {
+        $first = new Device(1, 'Device', 'router.invalid', '', true, '', '', 0, [], ['snmp_password' => 'first-secret']);
+        $second = new Device(1, 'Device', 'router.invalid', '', true, '', '', 0, [], ['snmp_password' => 'second-secret']);
+        self::assertSame(Snmp::PUBLIC_DEFAULTS, $first->snmp());
+        self::assertSame($first->revision(), $second->revision());
+        $revision = $first->revision();
+        $first->revise('Device', 'router.invalid', '', true, '', '', $revision, 0, null, $this->fields(['keep_credentials' => false, 'snmp_community' => 'replacement-secret']));
+        self::assertSame($revision, $first->revision());
+        self::assertSame('replacement-secret', $first->snmpChange()->resolve([])['snmp_community']);
+    }
+
     public function testPublicSettingsInvalidateOldRevision(): void
     {
         $device = new Device(1, 'Device', 'router.invalid', '', true, '', '');

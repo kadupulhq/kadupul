@@ -46,7 +46,7 @@ final class Device
     }
     public function snmp(): array
     {
-        $fields = array_replace(DeviceSnmpConfiguration::PUBLIC_DEFAULTS, $this->snmp);
+        $fields = array_replace(DeviceSnmpConfiguration::PUBLIC_DEFAULTS, array_intersect_key($this->snmp, DeviceSnmpConfiguration::PUBLIC_DEFAULTS));
         foreach (['snmp_auth_protocol', 'snmp_priv_protocol'] as $key) {
             if ($fields[$key] === '' || $fields[$key] === null) {
                 $fields[$key] = '[None]';
