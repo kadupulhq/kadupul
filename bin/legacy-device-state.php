@@ -123,7 +123,7 @@ try {
             }
             $remoteMatches = ($remoteRows[0]['disabled'] !== 'on') === $enabled;
         }
-        if ($device->enabled === $enabled && $remoteMatches) {
+        if ($device->enabled === $enabled && $remoteMatches && ($enabled || (int) $row['status'] === 0)) {
             continue;
         }
         $changed[$device->id] = $device;
