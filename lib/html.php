@@ -370,7 +370,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = '', $extra_url_args
 			?>
 			<td class='graphWrapperOuter' data-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>' style='width:<?php print round(100 / $columns, 2);?>%;'>
 				<div>
-				<table style='text-align:center;margin:auto;'>
+				<table role='presentation' style='text-align:center;margin:auto;'>
 					<tr>
 						<td>
 							<div class='graphWrapper' style='width:100%;' id='wrapper_<?php print $graph_id_html;?>'
@@ -523,7 +523,7 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = '', $extr
 			?>
 			<td class='graphWrapperOuter' data-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>' style='width:<?php print round(100 / $columns, 2);?>%;'>
 				<div>
-				<table style='text-align:center;margin:auto;'>
+				<table role='presentation' style='text-align:center;margin:auto;'>
 					<tr>
 						<td>
 							<div class='graphWrapper' id='wrapper_<?php print $graph_id_html;?>'

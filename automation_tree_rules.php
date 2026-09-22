@@ -430,7 +430,7 @@ function automation_tree_rules_item_edit() {
 		$item = db_fetch_row_prepared('SELECT * FROM automation_tree_rule_items WHERE id = ?', array(get_request_var('item_id')));
 			if ($item['field'] != AUTOMATION_TREE_ITEM_TYPE_STRING) {
 				?>
-<table style='width:100%;text-align:center;'>
+<table role='presentation' style='width:100%;text-align:center;'>
 	<tr>
 		<?php
 			$automation_output_0 = 'automation_tree_rules.php?action=item_edit&id='
@@ -602,7 +602,7 @@ function automation_tree_rules_edit() {
 
 	if (!isempty_request_var('id')) {
 		?>
-<table style='width:100%;text-align:center;'>
+<table role='presentation' style='width:100%;text-align:center;'>
 	<tr>
 		<?php
 			$automation_output_0 = 'automation_tree_rules.php?action=edit&id='

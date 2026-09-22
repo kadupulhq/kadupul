@@ -613,7 +613,7 @@ function automation_graph_rules_edit() {
 	 */
 	if (!isempty_request_var('id')) {
 		?>
-<table style='width:100%;text-align:center;'>
+<table role='presentation' style='width:100%;text-align:center;'>
 	<tr>
 		<?php
 			$automation_output_0 = 'automation_graph_rules.php?action=edit&id='
@@ -647,7 +647,7 @@ function automation_graph_rules_edit() {
 	 */
 	if (!isempty_request_var('id')) {
 		?>
-<table style='width:100%;text-align:center;'>
+<table role='presentation' style='width:100%;text-align:center;'>
 	<tr>
 		<td class='textInfo right' style='vertical-align:top;'><span class='linkMarker'>*</span><a class='linkEditMain' href='<?php print html_escape('automation_graph_rules.php?action=edit&id=' . (isset_request_var('id') ? get_request_var('id') : 0) . '&show_hosts=') . (isset($_SESSION['automation_graph_rules_show_hosts']) ? '0' : '1');?>'><?php print (isset($_SESSION['automation_graph_rules_show_hosts']) ? __('Don\'t Show'):__('Show'));?> <?php print __('Matching Devices.');?></a><br>
 		</td>
@@ -662,7 +662,7 @@ function automation_graph_rules_edit() {
 	 */
 	if (!empty($rule['graph_type_id']) && $rule['graph_type_id'] > 0) {
 		?>
-<table style='width:100%;text-align:center;'>
+<table role='presentation' style='width:100%;text-align:center;'>
 	<tr>
 		<td class='textInfo right' style='vertical-align:top;'>
 			<span class='linkMarker'>*</span><a class='linkEditMain' href='<?php print html_escape('automation_graph_rules.php?action=edit&id=' . (isset_request_var('id') ? get_request_var('id') : 0) . '&show_graphs=') . (isset($_SESSION['automation_graph_rules_show_graphs']) ? '0' : '1');?>'><?php print (isset($_SESSION['automation_graph_rules_show_graphs']) ? __('Don\'t Show'):__('Show'));?> <?php print __('Matching Objects.');?></a><br>

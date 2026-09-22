@@ -417,7 +417,7 @@ function graphs() {
 
 	</script>
 	<form id='graphs_new' action='graphs_new.php'>
-		<table class='cactiTable'>
+		<table role='presentation' class='cactiTable'>
 			<tr><td style='width:70%;'>
 				<table class='filterTable'>
 					<tr>

@@ -848,7 +848,7 @@ function data_query_item_edit() {
 						form_alternate_row();
 						?>
 						<td>
-							<table>
+							<table role='presentation'>
 								<tr>
 									<td style='width:200px;'>
 										<?php print __('Data Source');?>
@@ -994,7 +994,7 @@ function data_query_item_edit() {
 		form_alternate_row();
 		?>
 		<td colspan='4'>
-			<table>
+			<table role='presentation'>
 				<tr>
 					<td class='nowrap'>
 						<?php print __('Field Name');?>
@@ -1144,7 +1144,7 @@ function data_query_item_edit() {
 				form_alternate_row();
 				?>
 				<td colspan='4'>
-					<table>
+					<table role='presentation'>
 						<tr>
 							<td class='nowrap'>
 								<?php print __('Field Name');?>
