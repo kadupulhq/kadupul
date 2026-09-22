@@ -491,7 +491,7 @@ function draw_filter() {
 	<tr class='even'>
 		<td class='noprint'>
 		<form id='form_devices' method='get' action='automation_devices.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr class='noprint'>
 					<td>
 						<label for='filter'><?php print __('Search');?></label>
@@ -531,7 +531,7 @@ function draw_filter() {
 					</td>
 				</tr>
 			</table>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='status'><?php print __('Status');?></label>

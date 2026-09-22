@@ -851,7 +851,7 @@ function template() {
 	<tr class='even noprint'>
 		<td>
 		<form id='form_host_template' action='host_templates.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='class'><?php print __('Class');?></label>
@@ -929,7 +929,7 @@ function template() {
 					</td>
 				</tr>
 			</table>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='filter'><?php print __('Search');?></label>

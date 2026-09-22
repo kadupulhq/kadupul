@@ -157,7 +157,7 @@ function html_graph_preview_filter($page, $action, $devices_where = '', $templat
 	<tr class='even noprint'>
 		<td class='noprint'>
 		<form id='form_graph_view'>
-			<table id='device' class='filterTable'>
+			<table id='device' class='filterTable' role='presentation'>
 				<tr>
 					<?php html_host_filter(get_request_var('host_id'), 'applyGraphFilter', $devices_where);?>
 					<td>

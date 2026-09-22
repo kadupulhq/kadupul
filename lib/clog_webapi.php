@@ -517,7 +517,7 @@ function filter($clogAdmin, $selectedFile) {
 	<tr class='even'>
 		<td>
 		<form id='logfile'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<?php print __('File');?>
@@ -571,7 +571,7 @@ function filter($clogAdmin, $selectedFile) {
 					</td>
 				</tr>
 			</table>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<?php print __('Type');?>
@@ -636,7 +636,7 @@ function filter($clogAdmin, $selectedFile) {
 					</td>
 				</tr>
 			</table>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<?php print __('Search');?>

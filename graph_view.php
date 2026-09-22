@@ -648,7 +648,7 @@ case 'list':
 	?>
 	<tr class='even noprint'>
 		<td class='noprint'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr class='noprint'>
 					<td>
 						<label for='rfilter'><?php print __('Search');?></label>
@@ -673,7 +673,7 @@ case 'list':
 					</td>
 				</tr>
 			</table>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<?php html_site_filter(get_request_var('site_id'));?>
 					<?php

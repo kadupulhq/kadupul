@@ -1,0 +1,442 @@
+[
+  {
+    "key": "AaCeytXkrnQdoRHC47l8",
+    "file": "host_templates.php",
+    "line": 854,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytXkrnQdoRHC47l9",
+    "file": "host_templates.php",
+    "line": 932,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytitrnQdoRHC48UK",
+    "file": "rrdcheck.php",
+    "line": 226,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeysd8rnQdoRHC451P",
+    "file": "lib/clog_webapi.php",
+    "line": 520,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeysd8rnQdoRHC451Q",
+    "file": "lib/clog_webapi.php",
+    "line": 574,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeysd8rnQdoRHC451R",
+    "file": "lib/clog_webapi.php",
+    "line": 639,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytTurnQdoRHC47au",
+    "file": "data_debug.php",
+    "line": 1020,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytgprnQdoRHC48JP",
+    "file": "graph_view.php",
+    "line": 651,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytgprnQdoRHC48JQ",
+    "file": "graph_view.php",
+    "line": 676,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytgbrnQdoRHC48HU",
+    "file": "tree.php",
+    "line": 1026,
+    "before": "\t\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytgbrnQdoRHC48HV",
+    "file": "tree.php",
+    "line": 1065,
+    "before": "\t\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytgbrnQdoRHC48HW",
+    "file": "tree.php",
+    "line": 1104,
+    "before": "\t\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytgbrnQdoRHC48HX",
+    "file": "tree.php",
+    "line": 2313,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytcdrnQdoRHC47yb",
+    "file": "pollers.php",
+    "line": 956,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytk7rnQdoRHC48ch",
+    "file": "sites.php",
+    "line": 570,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytg0rnQdoRHC48KP",
+    "file": "links.php",
+    "line": 326,
+    "before": "\t\t\t<table class='filterTable' cellpadding='2' cellspacing='0'>",
+    "after": "\t\t\t<table class='filterTable' cellpadding='2' cellspacing='0' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytdYrnQdoRHC472y",
+    "file": "graphs_items.php",
+    "line": 373,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeythlrnQdoRHC48Pj",
+    "file": "data_source_profiles.php",
+    "line": 1037,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytkIrnQdoRHC48aS",
+    "file": "vdef.php",
+    "line": 734,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytaxrnQdoRHC47vN",
+    "file": "automation_templates.php",
+    "line": 403,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytXWrnQdoRHC47ks",
+    "file": "automation_devices.php",
+    "line": 494,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytXWrnQdoRHC47kt",
+    "file": "automation_devices.php",
+    "line": 534,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytiPrnQdoRHC48Sb",
+    "file": "color.php",
+    "line": 523,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeyrsIrnQdoRHC44mR",
+    "file": "lib/html_graph.php",
+    "line": 160,
+    "before": "\t\t\t<table id='device' class='filterTable'>",
+    "after": "\t\t\t<table id='device' class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeysSUrnQdoRHC45oS",
+    "file": "lib/html_tree.php",
+    "line": 981,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytjlrnQdoRHC48Yh",
+    "file": "automation_networks.php",
+    "line": 1201,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytdKrnQdoRHC470s",
+    "file": "aggregate_graphs.php",
+    "line": 1242,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytdKrnQdoRHC470u",
+    "file": "aggregate_graphs.php",
+    "line": 1524,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytjUrnQdoRHC48W_",
+    "file": "automation_graph_rules.php",
+    "line": 828,
+    "before": "\t\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytSSrnQdoRHC47Vw",
+    "file": "automation_snmp.php",
+    "line": 711,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytOArnQdoRHC47Qb",
+    "file": "automation_tree_rules.php",
+    "line": 902,
+    "before": "\t\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeythyrnQdoRHC48RI",
+    "file": "cdef.php",
+    "line": 752,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeyteqrnQdoRHC47-q",
+    "file": "data_input.php",
+    "line": 1027,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytfErnQdoRHC48AZ",
+    "file": "data_queries.php",
+    "line": 1522,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytSErnQdoRHC47TJ",
+    "file": "data_sources.php",
+    "line": 1474,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytVwrnQdoRHC47f3",
+    "file": "data_templates.php",
+    "line": 1181,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytWxrnQdoRHC47hr",
+    "file": "gprint_presets.php",
+    "line": 274,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytfnrnQdoRHC48DW",
+    "file": "graph_templates.php",
+    "line": 758,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytATrnQdoRHC469W",
+    "file": "graphs.php",
+    "line": 2078,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytATrnQdoRHC469X",
+    "file": "graphs.php",
+    "line": 2124,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytjGrnQdoRHC48Vi",
+    "file": "graphs_new.php",
+    "line": 422,
+    "before": "\t\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytVfrnQdoRHC47dO",
+    "file": "host.php",
+    "line": 1784,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeyr49rnQdoRHC44yG",
+    "file": "lib/api_automation.php",
+    "line": 177,
+    "before": "\t\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeyr49rnQdoRHC44yH",
+    "file": "lib/api_automation.php",
+    "line": 505,
+    "before": "\t\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeyr49rnQdoRHC44yI",
+    "file": "lib/api_automation.php",
+    "line": 1216,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytlSrnQdoRHC48dk",
+    "file": "managers.php",
+    "line": 155,
+    "before": "\t\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytlSrnQdoRHC48dm",
+    "file": "managers.php",
+    "line": 496,
+    "before": "\t\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeyteBrnQdoRHC477b",
+    "file": "plugins.php",
+    "line": 479,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytcArnQdoRHC47wV",
+    "file": "rrdcleaner.php",
+    "line": 528,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytdxrnQdoRHC473h",
+    "file": "user_admin.php",
+    "line": 2225,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytdxrnQdoRHC473j",
+    "file": "user_admin.php",
+    "line": 2678,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytaSrnQdoRHC47s-",
+    "file": "user_domains.php",
+    "line": 666,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeythTrnQdoRHC48Lm",
+    "file": "user_group_admin.php",
+    "line": 1981,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeythTrnQdoRHC48Lo",
+    "file": "user_group_admin.php",
+    "line": 2315,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  },
+  {
+    "key": "AaCeytZzrnQdoRHC47om",
+    "file": "utilities.php",
+    "line": 1070,
+    "before": "\t\t\t<table class='filterTable'>",
+    "after": "\t\t\t<table class='filterTable' role='presentation'>",
+    "reason": "Filter controls and captions arranged horizontally; not rows of tabular data."
+  }
+]

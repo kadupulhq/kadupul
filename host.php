@@ -1781,7 +1781,7 @@ function host() {
 	<tr class='even noprint'>
 		<td>
 		<form id='form_devices' action='host.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<?php api_plugin_hook('device_filter_start'); ?>
 					<td>

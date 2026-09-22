@@ -370,7 +370,7 @@ function item_edit() {
 	<tr class='even noprint'>
 		<td>
 		<form name='form_graph_items' action='graphs_items.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<?php html_host_filter(get_request_var('host_id'));?>
 				</tr>

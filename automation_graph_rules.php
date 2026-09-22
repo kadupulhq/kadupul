@@ -825,7 +825,7 @@ function automation_graph_rules() {
 	<tr class='even'>
 		<td>
 			<form id='form_automation' action='automation_graph_rules.php'>
-				<table class='filterTable'>
+				<table class='filterTable' role='presentation'>
 					<tr>
 						<td>
 							<label for='filter'><?php print __('Search');?></label>

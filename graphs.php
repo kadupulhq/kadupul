@@ -2075,7 +2075,7 @@ function graph_management() {
 	<tr class='even noprint'>
 		<td>
 			<form id='form_graphs' action='graphs.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<?php html_site_filter(get_request_var('site_id'));?>
 					<?php html_host_filter(get_request_var('host_id'), 'applyFilter', $host_where);?>
@@ -2121,7 +2121,7 @@ function graph_management() {
 					</td>
 				</tr>
 			</table>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='rfilter'><?php print __('Search');?></label>

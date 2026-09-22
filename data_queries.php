@@ -1519,7 +1519,7 @@ function data_query() {
 	<tr class='even noprint'>
 		<td class='noprint'>
 		<form id='form_data_queries' method='get' action='data_queries.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr class='noprint'>
 					<td>
 						<label for='filter'><?php print __('Search');?></label>

@@ -271,7 +271,7 @@ function gprint_presets() {
 	<tr class='even'>
 		<td>
 			<form id='form_gprint' action='gprint_presets.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='filter'><?php print __('Search');?></label>

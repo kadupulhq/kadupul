@@ -223,7 +223,7 @@ function filter() {
 	<tr class='even'>
 		<td>
 			<form id='form_rrdcheck' method='get' action='rrdcheck.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='filter'><?php print __('Search');?></label>

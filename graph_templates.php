@@ -427,7 +427,7 @@ function form_actions() {
 				</td>
 			</tr>
 			</table>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 			<tr>
 				<td>";
 
