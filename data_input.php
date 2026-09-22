@@ -464,10 +464,16 @@ function field_remove_confirm() {
 		$('#continue').on('click', function(data) {
 			$.post('data_input.php?action=field_remove', {
 				__csrf_magic: csrfMagicToken,
-				data_input_id: <?php print get_request_var('data_input_id');?>,
-				id: <?php print get_request_var('id');?>
+data_input_id: <?php
+    print (int)get_request_var('data_input_id');
+?>,
+id: <?php
+    print (int)get_request_var('id');
+?>
 			}, function(data) {
-				loadPageNoHeader('data_input.php?action=edit&header=false&id=<?php print get_request_var('data_input_id');?>');
+loadPageNoHeader('data_input.php?action=edit&header=false&id=<?php
+    print (int)get_request_var('data_input_id');
+?>');
 			});
 		});
 	});
