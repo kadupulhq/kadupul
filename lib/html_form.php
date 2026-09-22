@@ -1068,14 +1068,15 @@ function form_callback($form_name, $classic_sql, $column_display, $column_id, $c
 		}
 	}
 
+	$class_attribute = '';
 	if ($class != '') {
 		$class_html = htmlspecialchars((string) $class, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false);
-		$class = " class='" . str_replace('`', '&#96;', $class_html) . "' ";
+		$class_attribute = " class='" . str_replace('`', '&#96;', $class_html) . "' ";
 	}
 
 	$theme = get_selected_theme();
 	if ($theme == 'classic' || read_config_option('autocomplete') > 0) {
-		print "<select id='" . html_escape($form_name) . "' name='" . html_escape($form_name) . "'" . $class . '>';
+		print "<select id='" . html_escape($form_name) . "' name='" . html_escape($form_name) . "'" . $class_attribute . '>';
 
 		if (!empty($none_entry)) {
 			$none_html = htmlspecialchars((string) $none_entry, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false);
