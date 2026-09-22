@@ -26,7 +26,7 @@ final class DeviceRemovalDependencies
                 return false;
             }
         }
-        foreach (["SELECT id FROM aggregate_graphs WHERE local_graph_id IN ($graphs) FOR UPDATE", "SELECT local_graph_id FROM aggregate_graphs_items WHERE local_graph_id IN ($graphs) OR aggregate_graph_id IN ($graphs) FOR UPDATE"] as $sql) {
+        foreach (["SELECT id FROM aggregate_graphs WHERE local_graph_id IN ($graphs) FOR UPDATE", "SELECT local_graph_id FROM aggregate_graphs_items WHERE local_graph_id IN ($graphs) FOR UPDATE"] as $sql) {
             if ($db->query($sql)->fetchColumn() !== false) {
                 return false;
             }

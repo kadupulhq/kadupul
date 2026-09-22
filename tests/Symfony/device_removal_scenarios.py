@@ -107,7 +107,9 @@ def verify_device_removal(harness, session, user_id, poller, check):
         harness.sql(f'INSERT INTO aggregate_graphs_items (aggregate_graph_id,local_graph_id) VALUES (16777214,{first["graph"]})')
         check(purge.remove('purge') == 409, 'device removal rejects aggregate graph purge')
         harness.sql(f'DELETE FROM aggregate_graphs_items WHERE local_graph_id={first["graph"]}')
+        harness.sql(f'INSERT INTO aggregate_graphs_items (aggregate_graph_id,local_graph_id) VALUES ({first["graph"]},{extra_graph})')
         check(purge.remove('purge') == 200, 'device removal purges graphs and all owned data sources')
+        check(harness.sql(f'SELECT COUNT(*) FROM aggregate_graphs_items WHERE aggregate_graph_id={first["graph"]} AND local_graph_id={extra_graph}').strip() == '1', 'purge ignores unrelated aggregate IDs that collide with selected graph IDs')
         check(harness.sql(f'SELECT COUNT(*) FROM graph_local WHERE id={first["graph"]}').strip() == '0', 'purged graph is removed')
         for data, dtd, rrd in first['sources']:
             for table, where in [('data_local', f'id={data}'), ('data_template_data', f'id={dtd}'), ('data_template_rrd', f'id={rrd}'), ('data_input_data', f'data_template_data_id={dtd}')]:
