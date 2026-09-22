@@ -28,6 +28,8 @@ def main():
         'src/Inventory/Infrastructure/Legacy/LegacySiteEditor.php',
         'src/IdentityAccess/Infrastructure/Legacy/LegacyLocalePreference.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteCreateController.php',
+        'src/Inventory/Application/Query/ListAssignableSites.php',
+        'src/Inventory/Infrastructure/Legacy/LegacySiteAssignmentCatalog.php',
         'src/Inventory/Application/Command/CreateSite.php',
         'src/Inventory/Domain/NewSite.php',
         'src/Inventory/Infrastructure/Legacy/LegacySiteCreator.php',

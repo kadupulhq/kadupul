@@ -9,7 +9,7 @@ namespace Kadupul\Inventory\Domain;
 
 final class Device
 {
-    public function __construct(public readonly int $id, private string $description, private string $hostname, private string $notes, private bool $enabled, private string $location, private string $externalId) {}
+    public function __construct(public readonly int $id, private string $description, private string $hostname, private string $notes, private bool $enabled, private string $location, private string $externalId, private int $siteId = 0) {}
     public function description(): string
     {
         return $this->description;
@@ -34,14 +34,22 @@ final class Device
     {
         return $this->externalId;
     }
+    public function siteId(): int
+    {
+        return $this->siteId;
+    }
     public function revision(): string
     {
-        return hash('sha256', json_encode([$this->id, $this->description, $this->hostname, $this->notes, $this->enabled, $this->location, $this->externalId], JSON_THROW_ON_ERROR));
+        return hash('sha256', json_encode([$this->id, $this->description, $this->hostname, $this->notes, $this->enabled, $this->location, $this->externalId, $this->siteId], JSON_THROW_ON_ERROR));
     }
-    public function revise(string $description, string $hostname, string $notes, bool $enabled, string $location, string $externalId, string $expectedRevision): void
+    public function revise(string $description, string $hostname, string $notes, bool $enabled, string $location, string $externalId, string $expectedRevision, ?int $siteId = null): void
     {
         if (!hash_equals($this->revision(), $expectedRevision)) {
             throw new DeviceEditConflict('This device changed. Reload it before saving.');
+        }
+        $siteId ??= $this->siteId;
+        if ($siteId < 0 || $siteId > 4294967295) {
+            throw new \InvalidArgumentException('Select a valid site.');
         }
         $description = trim($description);
         $hostname = trim($hostname);
@@ -59,6 +67,7 @@ final class Device
                 throw new \InvalidArgumentException($label . ' must be valid text of at most 40 characters.');
             }
         }
+        $this->siteId = $siteId;
         $this->description = $description;
         $this->hostname = $hostname;
         $this->notes = $notes;

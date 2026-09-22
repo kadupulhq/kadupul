@@ -929,7 +929,7 @@ function api_device_save($id, $device_template_id, $description, $hostname, $snm
 	$snmp_username, $snmp_password, $snmp_port, $snmp_timeout, $disabled,
 	$availability_method, $ping_method, $ping_port, $ping_timeout, $ping_retries,
 	$notes, $snmp_auth_protocol, $snmp_priv_passphrase, $snmp_priv_protocol, $snmp_context, $snmp_engine_id,
-	$max_oids = 5, $device_threads = 1, $poller_id = 1, $site_id = 1, $external_id = '', $location = '', $bulk_walk_size = -1, $create_only = false) {
+	$max_oids = 5, $device_threads = 1, $poller_id = 1, $site_id = 1, $external_id = '', $location = '', $bulk_walk_size = -1, $create_only = false, $expected_site_id = null) {
 	global $config, $database_sessions, $database_default, $database_hostname, $database_port;
 
 	include_once($config['base_path'] . '/lib/utility.php');
@@ -1025,6 +1025,10 @@ function api_device_save($id, $device_template_id, $description, $hostname, $snm
 			|| (string) ($save['site_id'] ?? '') !== (string) $site_id
 			|| (string) ($save['poller_id'] ?? '') !== (string) $poller_id)) {
 			throw new RuntimeException('A plugin changed the authorized creation target');
+		}
+
+		if ($expected_site_id !== null && (!is_array($save) || (string) ($save['site_id'] ?? '') !== (string) $expected_site_id)) {
+			throw new RuntimeException('A plugin changed the authorized site assignment');
 		}
 
 		$connection = $database_sessions["$database_hostname:$database_port:$database_default"];

@@ -31,10 +31,17 @@ final class DeviceEditType extends AbstractType
                 'choice_value' => static fn(?bool $enabled): string => $enabled === null ? '' : ($enabled ? 'enabled' : 'disabled'),
                 'invalid_message' => $this->translator->trans('Choose whether polling is enabled or disabled.', [], 'inventory'),
                 'placeholder' => false, 'help' => 'Disabled devices are excluded from polling. Existing graphs and data are retained.'])
+            ->add('site_id', ChoiceType::class, ['label' => 'Site', 'choices' => [0, ...array_map('intval', array_keys($options['sites']))],
+                'choice_label' => fn(int $id): string => $id === 0 ? $this->translator->trans('Unassigned', [], 'inventory') : $options['sites'][$id],
+                'choice_value' => static fn(?int $id): string => $id === null ? '' : (string) $id,
+                'choice_translation_domain' => false, 'placeholder' => 'Select a site',
+                'invalid_message' => $this->translator->trans('Select a valid site.', [], 'inventory')])
             ->add('revision', HiddenType::class);
     }
     public function configureOptions(OptionsResolver $resolver): void
     {
+        $resolver->setRequired('sites');
+        $resolver->setAllowedTypes('sites', 'array');
         $resolver->setDefaults(['translation_domain' => 'inventory', 'csrf_protection' => true, 'csrf_token_id' => 'inventory_device_edit', 'method' => 'POST']);
     }
 }
