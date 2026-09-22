@@ -108,9 +108,12 @@ def verify_remote_template_assignment(harness, session, device_id, check):
         def saves():
             events = harness.command('cat', '/artifacts/plugin.jsonl')['stdout']
             return sum(json.loads(line).get('args') == [{'host_id': device_id}] for line in events.splitlines())
+        check(harness.php('-r', 'require "include/global.php"; function setup_template_collector_lock() { api_plugin_register_hook("compatibility_test","device_template_change","compatibility_template_collector_lock","setup.php",true); } setup_template_collector_lock();')['exit'] == 0, 'template collector lock fixture registered')
         before = saves()
         check(assign(templates[0]) == 200, 'online collector template assignment succeeds')
         check(saves() == before + 1, 'template assignment preserves the legacy host-save hook')
+        events = harness.command('cat', '/artifacts/plugin.jsonl')['stdout']
+        check(any(json.loads(line).get('callback') == 'template_collector_lock' for line in events.splitlines()), 'template assignment blocks concurrent collector disable until commit')
         check(harness.sql(f'SELECT host_template_id FROM create_remote.host WHERE id={device_id}').strip() == str(templates[0]), 'collector template identity matches the primary')
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host_graph WHERE host_id={device_id} AND graph_template_id={graphs[0]}').strip() == '1', 'collector receives required template associations')
         harness.sql(f"UPDATE create_remote.host SET deleted='on' WHERE id={device_id}")
@@ -122,6 +125,7 @@ def verify_remote_template_assignment(harness, session, device_id, check):
         check(assign(templates[1]) == 502, 'collector association failure cannot report successful template assignment')
         check(harness.sql(f'SELECT host_template_id FROM host WHERE id={device_id}').strip() == str(templates[0]), 'collector association failure rolls back the primary template')
     finally:
+        harness.sql("DELETE FROM plugin_hooks WHERE name='compatibility_test' AND hook='device_template_change' AND `function`='compatibility_template_collector_lock'")
         if trigger:
             harness.sql('DROP TRIGGER create_remote.reject_template_graph')
         for database in ['', 'create_remote.']:
