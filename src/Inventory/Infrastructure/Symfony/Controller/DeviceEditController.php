@@ -49,7 +49,7 @@ final class DeviceEditController
         $form->handleRequest($request);
         $status = $request->isMethod('POST') ? 422 : 200;
         if ($form->isSubmitted()) {
-            if ($form->getExtraData() !== []) {
+            if ($form->getExtraData() !== [] || $form->get('polling')->getExtraData() !== []) {
                 $form->addError(new FormError($translator->trans('Unexpected fields were submitted.', [], 'inventory')));
             }
             if ($form->get('enabled')->isSynchronized() && !is_bool($form->get('enabled')->getData())) {
