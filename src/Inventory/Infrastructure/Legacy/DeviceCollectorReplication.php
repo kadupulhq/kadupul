@@ -55,7 +55,7 @@ final class DeviceCollectorReplication
                     $volatile = match ($table) {
                         'host' => ['status', 'status_event_count', 'status_fail_date', 'status_rec_date', 'status_last_error', 'min_time', 'max_time', 'cur_time', 'avg_time', 'polling_time', 'total_polls', 'failed_polls', 'availability', 'last_updated', 'snmp_sysDescr', 'snmp_sysObjectID', 'snmp_sysUpTimeInstance', 'snmp_sysContact', 'snmp_sysName', 'snmp_sysLocation'],
                         'poller_item' => ['rrd_next_step', 'last_updated', 'present'],
-                        'host_snmp_cache' => ['last_updated', 'present'],
+                        'host_snmp_cache' => ['last_updated', 'present', 'field_value', 'oid'],
                         'poller_reindex' => ['assert_value', 'present'],
                         default => [],
                     };

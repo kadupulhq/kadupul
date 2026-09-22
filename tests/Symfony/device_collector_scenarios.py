@@ -56,6 +56,7 @@ def verify_device_collector(harness, session, device_id, hidden_id, check):
         missing.pop('device_collector[collector_id]')
         check(form.request(fields=missing)[0] == 422, 'collector assignment cannot omit its target')
         check(form.request(fields=fields | {'device_collector[template_id]': '0'})[0] == 422, 'collector form rejects unrelated fields')
+        harness.sql(f"INSERT INTO host_snmp_cache (host_id,snmp_query_id,field_name,field_value,snmp_index,oid) VALUES ({device_id},16777214,'collectorFixture','before','1','.1.3.6.1')")
         stale = form.fields()
         harness.sql(f'UPDATE host SET host_template_id=16777214 WHERE id={device_id}')
         check(form.assign(offline, stale) == 409, 'template changes invalidate collector confirmations')
@@ -97,6 +98,7 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
         harness.sql(f"INSERT INTO graph_templates_item (local_graph_id,text_format) VALUES ({graph},'collector graph')")
         harness.sql(f"INSERT INTO poller_item (local_data_id,host_id,poller_id,rrd_name) VALUES ({data},{device_id},{poller},'collector')")
         harness.sql(f'REPLACE INTO host_graph (host_id,graph_template_id) VALUES ({device_id},{template_graph})')
+        harness.sql(f"INSERT INTO host_snmp_cache (host_id,snmp_query_id,field_name,field_value,snmp_index,oid) VALUES ({device_id},16777214,'collectorFixture','before','1','.1.3.6.1')")
         stale = form.fields()
         check(form.assign(1) == 200, 'collector reassignment moves remote device to primary')
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id={device_id}').strip() == '0', 'collector reassignment verifies old host cleanup')
@@ -106,11 +108,14 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
         # immediately as replicated rows arrive.
         harness.sql("CREATE TRIGGER create_remote.advance_host_status BEFORE INSERT ON create_remote.host FOR EACH ROW SET NEW.total_polls=NEW.total_polls+1")
         harness.sql("CREATE TRIGGER create_remote.advance_poller_step BEFORE INSERT ON create_remote.poller_item FOR EACH ROW SET NEW.rrd_next_step=NEW.rrd_next_step+1")
+        harness.sql("DELIMITER $$\nCREATE TRIGGER create_remote.advance_snmp_cache BEFORE INSERT ON create_remote.host_snmp_cache FOR EACH ROW BEGIN SET NEW.field_value='refreshed'; SET NEW.oid='.1.3.6.2'; END$$\nDELIMITER ;")
         try:
             check(form.assign(poller) == 200, 'collector reassignment replicates primary device to remote')
         finally:
             harness.sql('DROP TRIGGER create_remote.advance_host_status')
             harness.sql('DROP TRIGGER create_remote.advance_poller_step')
+            harness.sql('DROP TRIGGER create_remote.advance_snmp_cache')
+        check(harness.sql(f"SELECT field_value FROM create_remote.host_snmp_cache WHERE host_id={device_id} AND snmp_query_id=16777214").strip() == 'refreshed', 'collector move tolerates poller-refreshed SNMP observations')
         check(harness.sql(f'SELECT poller_id FROM create_remote.host WHERE id={device_id}').strip() == str(poller), 'collector reassignment verifies target identity')
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host_graph WHERE host_id={device_id} AND graph_template_id={template_graph}').strip() == '1', 'collector reassignment preserves host graph associations')
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.data_local WHERE id={data}').strip() == '1' and harness.sql(f'SELECT COUNT(*) FROM create_remote.graph_local WHERE id={graph}').strip() == '1', 'collector reassignment preserves graph and data identities')
@@ -144,6 +149,7 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
         # Restore the creation fixture through the real successful move.
         check(form.assign(poller) == 200, 'collector assignment recovers after rejected replication')
         for prefix in ['', 'create_remote.']:
+            harness.sql(f'DELETE FROM {prefix}host_snmp_cache WHERE host_id={device_id} AND snmp_query_id=16777214')
             harness.sql(f'DELETE FROM {prefix}poller_item WHERE local_data_id={data}')
             harness.sql(f'DELETE FROM {prefix}data_input_data WHERE data_template_data_id={dtd}')
             harness.sql(f'DELETE FROM {prefix}data_template_data WHERE id={dtd}')
