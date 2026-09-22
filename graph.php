@@ -170,7 +170,15 @@ case 'view':
 							</td>
 						</tr>
 					</table>
-					<input type='hidden' id='thumbnails' value='<?php print html_escape(get_request_var('thumbnails'));?>'></input>
+<input type='hidden' id='thumbnails' value='<?php
+    $thumbnail_html = htmlspecialchars(
+        (string)get_request_var('thumbnails'),
+        ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+        ini_get('default_charset') ?: 'UTF-8',
+        false
+    );
+    print str_replace('`', '&#96;', $thumbnail_html);
+?>'></input>
 				</td>
 			</tr>
 			<?php
@@ -441,17 +449,33 @@ case 'zoom':
 		<td style='display:none;'>
 			<input type='hidden' id='date1' value=''>
 			<input type='hidden' id='date2' value=''>
-			<input type='hidden' id='graph_start' value='<?php print $graph_start;?>'>
-			<input type='hidden' id='graph_end' value='<?php print $graph_end;?>'>
-			<input type='hidden' id='thumbnails' value='<?php print html_escape(get_request_var('thumbnails'));?>'></input>
+<input type='hidden' id='graph_start' value='<?php
+    print (int)$graph_start;
+?>'>
+<input type='hidden' id='graph_end' value='<?php
+    print (int)$graph_end;
+?>'>
+<input type='hidden' id='thumbnails' value='<?php
+    $thumbnail_html = htmlspecialchars(
+        (string)get_request_var('thumbnails'),
+        ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+        ini_get('default_charset') ?: 'UTF-8',
+        false
+    );
+    print str_replace('`', '&#96;', $thumbnail_html);
+?>'></input>
 		</td>
 	</tr>
 	<tr class='odd'>
 		<td id='data'></td>
 	</tr>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
-	var graph_id      = <?php print get_request_var('local_graph_id');?>;
-	var rra_id        = <?php print get_request_var('rra_id');?>;
+var graph_id      = <?php
+    print (int)get_request_var('local_graph_id');
+?>;
+var rra_id        = <?php
+    print (int)get_request_var('rra_id');
+?>;
 	var graph_start   = 0;
 	var graph_end     = 0;
 	var graph_height  = 0;
@@ -606,4 +630,3 @@ case 'properties':
 print '</table>';
 
 bottom_footer();
-

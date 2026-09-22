@@ -409,8 +409,12 @@ function template_item_remove_gt_confirm() {
 		$('#continue').on('click', function(data) {
 			$.post('host_templates.php?action=item_remove_gt', {
 				__csrf_magic: csrfMagicToken,
-				host_template_id: <?php print get_request_var('host_template_id');?>,
-				id: <?php print get_request_var('id');?>
+host_template_id: <?php
+    print (int)get_request_var('host_template_id');
+?>,
+id: <?php
+    print (int)get_request_var('id');
+?>
 			}, function(data) {
 				$('#cdialog').dialog('close');
 				$('div[class^="ui-"]').remove();
@@ -490,8 +494,12 @@ function template_item_remove_dq_confirm() {
 		$('#continue').on('click', function(data) {
 			$.post('host_templates.php?action=item_remove_dq', {
 				__csrf_magic: csrfMagicToken,
-				host_template_id: <?php print get_request_var('host_template_id');?>,
-				id: <?php print get_request_var('id');?>
+host_template_id: <?php
+    print (int)get_request_var('host_template_id');
+?>,
+id: <?php
+    print (int)get_request_var('id');
+?>
 			}, function(data) {
 				$('#cdialog').dialog('close');
 				$('div[class^="ui-"]').remove();

@@ -651,8 +651,15 @@ function item_edit() {
 	}
 
 	function applyFilter() {
-		strURL = 'graphs_items.php?header=false&action=item_edit<?php print $id;?>' +
-			'&local_graph_id=<?php print get_request_var('local_graph_id');?>' +
+strURL = <?php
+    print json_encode(
+        'graphs_items.php?header=false&action=item_edit' . $id,
+        JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE
+    );
+?> +
+'&local_graph_id=<?php
+    print (int)get_request_var('local_graph_id');
+?>' +
 			'&data_template_id='+$('#data_template_id').val()+
 			'&host_id='+$('#host_id').val();
 
@@ -831,4 +838,3 @@ function item_edit() {
 	</script>
 	<?php
 }
-
