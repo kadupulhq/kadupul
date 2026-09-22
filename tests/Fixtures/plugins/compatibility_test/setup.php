@@ -60,3 +60,24 @@ function compatibility_create_guard($value) {
     }
     return $value;
 }
+
+function compatibility_template_collector_lock($value) {
+    $collector = (int) db_fetch_cell_prepared('SELECT poller_id FROM host WHERE id = ?', [$value['device_id']]);
+    $database = new \Kadupul\Platform\Infrastructure\Legacy\InstallationDatabase(new \Kadupul\Platform\Infrastructure\Legacy\InstallationConfiguration(getcwd()));
+    $rival = $database->get();
+    $rival->exec('SET SESSION innodb_lock_wait_timeout = 1');
+    $rival->beginTransaction();
+    try {
+        $query = $rival->prepare("UPDATE poller SET disabled='on' WHERE id = ?");
+        $query->execute([$collector]);
+        throw new RuntimeException('Collector configuration was not locked');
+    } catch (PDOException $error) {
+        if (($error->errorInfo[1] ?? null) !== 1205) {
+            throw $error;
+        }
+        compatibility_test_record('template_collector_lock', [$collector]);
+    } finally {
+        $rival->rollBack();
+    }
+    return $value;
+}

@@ -27,14 +27,23 @@ final readonly class LegacyDeviceVisibility
         if (!in_array($mode, [1, 2, 3, 4], true)) {
             throw new \RuntimeException('Unsupported visibility policy.');
         }
-        // Separate locking reads: UNION does not reliably lock its source rows.
-        $query = $db->prepare("SELECT id, 'user' AS kind, policy_graphs, policy_hosts, policy_graph_templates FROM user_auth WHERE id = ?" . $suffix);
-        $query->execute([$userId]);
-        $policies = $query->fetchAll();
-        $query = $db->prepare("SELECT g.id, 'group' AS kind, g.policy_graphs, g.policy_hosts, g.policy_graph_templates
-            FROM user_auth_group g JOIN user_auth_group_members m ON m.group_id = g.id WHERE m.user_id = ? AND g.enabled = 'on'" . $suffix);
-        $query->execute([$userId]);
-        $policies = array_merge($policies, $query->fetchAll());
+        $userPolicy = "SELECT id, 'user' AS kind, policy_graphs, policy_hosts, policy_graph_templates FROM user_auth WHERE id = ?";
+        $groupPolicy = "SELECT g.id, 'group' AS kind, g.policy_graphs, g.policy_hosts, g.policy_graph_templates
+            FROM user_auth_group g JOIN user_auth_group_members m ON m.group_id = g.id WHERE m.user_id = ? AND g.enabled = 'on'";
+        if ($lock) {
+            // UNION does not reliably lock source rows; writes need current locks.
+            $query = $db->prepare($userPolicy . $suffix);
+            $query->execute([$userId]);
+            $policies = $query->fetchAll();
+            $query = $db->prepare($groupPolicy . $suffix);
+            $query->execute([$userId]);
+            $policies = array_merge($policies, $query->fetchAll());
+        } else {
+            // Normal reads retain one statement snapshot for user/group policies.
+            $query = $db->prepare($userPolicy . ' UNION ALL ' . $groupPolicy);
+            $query->execute([$userId, $userId]);
+            $policies = $query->fetchAll();
+        }
         $predicates = [];
         foreach ($policies as $policy) {
             $table = $policy['kind'] === 'user' ? 'user_auth_perms' : 'user_auth_group_perms';

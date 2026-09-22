@@ -109,6 +109,9 @@ def verify_remote_device_state(harness, session, device_id, poller, check):
         harness.sql(f"UPDATE create_remote.host SET disabled='on' WHERE id={device_id}")
         check(enable.apply() == 200, 'bulk state repairs remote drift when primary already matches')
         check(harness.sql(f"SELECT disabled='' FROM create_remote.host WHERE id={device_id}").strip() == '1', 'bulk state verifies repaired remote copy')
+        marker = harness.sql(f"SELECT value FROM settings WHERE name='poller_replicate_device_cache_crc_{poller}'")
+        check(enable.apply() == 200, 'bulk state confirms unchanged primary and remote copies')
+        check(harness.sql(f"SELECT value FROM settings WHERE name='poller_replicate_device_cache_crc_{poller}'") == marker, 'verified remote no-op does not invalidate collector cache')
         harness.sql(f"UPDATE poller SET last_status='2000-01-01 00:00:00' WHERE id={poller}")
         check(enable.apply() == 502, 'bulk no-op cannot confirm an offline remote copy')
     finally:
