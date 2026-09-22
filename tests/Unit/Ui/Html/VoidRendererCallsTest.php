@@ -27,6 +27,8 @@ function __($text, ...$args) { return $text; }
 const CACTI_VERSION = 'fixture';
 
 function run_statement($statement) {
+	expect($statement)->not->toContain('<?php');
+	expect($statement)->not->toContain('?>');
 	$graph = array('local_graph_id' => 7);
 	$tree_id = 8;
 	$branch_id = 9;
@@ -74,12 +76,57 @@ test('void calls retain their arguments and output without consuming a nonexiste
 	expect(count($newResult[1]))->toBe(1);
 })->with('void call baseline');
 
+function function_body_tokens($source, $name) {
+	$tokens = token_get_all($source);
+	$count = count($tokens);
+	for ($index = 0; $index < $count; $index++) {
+		if (!is_array($tokens[$index]) || $tokens[$index][0] !== T_FUNCTION) {
+			continue;
+		}
+		$next = $index + 1;
+		while ($next < $count && is_array($tokens[$next])
+			&& in_array($tokens[$next][0], array(T_WHITESPACE, T_COMMENT, T_DOC_COMMENT), true)) {
+			$next++;
+		}
+		if (!isset($tokens[$next]) || !is_array($tokens[$next]) || $tokens[$next][0] !== T_STRING
+			|| $tokens[$next][1] !== $name) {
+			continue;
+		}
+		while ($next < $count && $tokens[$next] !== '{') {
+			$next++;
+		}
+		$start = ++$next;
+		$depth = 1;
+		for (; $next < $count; $next++) {
+			$token = $tokens[$next];
+			if ($token === '{' || (is_array($token)
+				&& in_array($token[0], array(T_CURLY_OPEN, T_DOLLAR_OPEN_CURLY_BRACES), true))) {
+				$depth++;
+			} elseif ($token === '}') {
+				$depth--;
+				if ($depth === 0) {
+					return array_slice($tokens, $start, $next - $start);
+				}
+			}
+		}
+	}
+	throw new \RuntimeException('Missing complete function body: ' . $name);
+}
+
+test('function extraction includes returns after nested blocks and ignores literal braces', function () {
+	$source = '<?php function fixture($value) { if ($value) { echo "}";'
+		. "\n}\nreturn 7;\n}\nfunction other() { return 8; }";
+	$tokens = function_body_tokens($source, 'fixture');
+	$returns = array_filter($tokens, function ($token) {
+		return is_array($token) && $token[0] === T_RETURN;
+	});
+	expect(count($returns))->toBe(1);
+});
+
 test('production callees do not return a value', function ($file, $name) {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
 	expect($source)->not->toBeFalse();
-	$pattern = '/^function ' . preg_quote($name, '/') . '\([^\n]*\).*?\n\}/ms';
-	expect(preg_match($pattern, $source, $match))->toBe(1);
-	$tokens = token_get_all('<?php ' . $match[0]);
+	$tokens = function_body_tokens($source, $name);
 	foreach ($tokens as $index => $token) {
 		if (!is_array($token) || $token[0] !== T_RETURN) {
 			continue;
