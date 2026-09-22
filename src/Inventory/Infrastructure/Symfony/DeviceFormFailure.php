@@ -22,7 +22,7 @@ final readonly class DeviceFormFailure
     public function apply(FormInterface $form, \RuntimeException|\InvalidArgumentException $error): int|Response
     {
         if ($error instanceof InventoryAccessDenied) {
-            return new Response($this->translator->trans('Access denied.', [], 'inventory'), 403, ['Cache-Control' => 'private, no-store']);
+            return new Response($this->translator->trans('Access denied.', [], 'inventory'), $error->unauthenticated ? 401 : 403, ['Cache-Control' => 'private, no-store']);
         }
         $status = match (true) {
             $error instanceof DeviceEditConflict => 409,
