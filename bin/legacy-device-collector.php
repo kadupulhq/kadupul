@@ -93,8 +93,10 @@ try {
     $pollers = array_unique([$previous, $target]);
     sort($pollers, SORT_NUMERIC);
     $connections = [];
+    // Take write locks up front: statistics updates must not upgrade shared
+    // collector locks after remote effects have already started.
     foreach ($pollers as $pollerId) {
-        $query = $connection->prepare('SELECT id, disabled FROM poller WHERE id = ? LOCK IN SHARE MODE');
+        $query = $connection->prepare('SELECT id, disabled FROM poller WHERE id = ? FOR UPDATE');
         if (!$query->execute([$pollerId]) || !($poller = $query->fetch(PDO::FETCH_ASSOC))
             || ($pollerId === $target && $poller['disabled'] !== '')) {
             throw new InvalidArgumentException('Invalid collector');
