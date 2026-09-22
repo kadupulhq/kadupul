@@ -21,6 +21,8 @@
 
 namespace DataQueryMutationPostTest;
 
+require_once __DIR__ . '/../../../Helpers/PhpSource.php';
+
 /**
  * Runs the data_queries.php dispatch switch in a child process with the real
  * include/csrf.php method helpers and a stub for every handler.
@@ -36,7 +38,7 @@ function run_data_queries($method, $action, array $request = array(), array $ser
 	$root    = dirname(__DIR__, 4);
 	$csrf    = file_get_contents($root . '/include/csrf.php');
 	$source  = file_get_contents($root . '/data_queries.php');
-	$helpers = '';
+	$helpers = test_php_function_source(file_get_contents($root . '/lib/html_utility.php'), 'get_filter_request_var');
 
 	foreach (array('csrf_require_post', 'csrf_request_is_cross_site', 'csrf_request_host_matches', 'csrf_strip_host_port') as $name) {
 		if (preg_match('/^function ' . $name . '\(.*?^}\R/ms', $csrf, $matches) === 1) {
@@ -56,15 +58,21 @@ function run_data_queries($method, $action, array $request = array(), array $ser
 		'data_query_item_remove_confirm' => 'item_remove_confirm', 'data_query_item_remove' => 'item_remove',
 		'data_query_remove' => 'remove',
 	) as $function => $name) {
-		$suffix = $captureId && $function === 'data_query_remove' ? ' . ":" . $x' : '';
+		$suffix = $captureId && $function === 'data_query_remove' ? ' . ":" . gettype($x) . ":" . $x' : '';
 		$stubs .= 'function ' . $function . '($x = null) { $GLOBALS["reached"][] = "' . $name . '"' . $suffix . '; }' . "\n";
 	}
 
 	$script = '<?php
+		define("FILTER_VALIDATE_IS_REGEX", 99999);
+		define("FILTER_VALIDATE_IS_NUMERIC_ARRAY", 100000);
+		define("FILTER_VALIDATE_IS_NUMERIC_LIST", 100001);
 		function get_request_var($v) { return isset($_REQUEST[$v]) ? $_REQUEST[$v] : "3"; }
-		function get_filter_request_var($v) { return get_request_var($v); }
 		function get_nfilter_request_var($v) { return get_request_var($v); }
 		function isset_request_var($v) { return isset($_REQUEST[$v]); }
+		function isempty_request_var($v) { return empty($_REQUEST[$v]); }
+		function set_request_var($v, $value) { $_REQUEST[$v] = $value; }
+		function cacti_sizeof($value) { return count($value); }
+		function die_html_input_error($name, $value) { $GLOBALS["reached"][] = "input-error"; exit; }
 		function top_header() {}
 		function bottom_footer() {}
 		' . $stubs . $helpers . '
@@ -103,9 +111,14 @@ function expect_refused($action, array $request) {
 }
 
 test('single-query removal passes the requested ID only after its POST guard', function ($id) {
-	expect(run_data_queries('POST', 'remove', array('id' => $id), array(), true))->toBe('remove:' . $id);
+	expect(run_data_queries('POST', 'remove', array('id' => $id), array(), true))->toBe('remove:integer:' . $id);
 	expect(run_data_queries('GET', 'remove', array('id' => $id), array(), true))->toBe('405');
 })->with(array('7', '42'));
+
+test('single-query removal rejects malformed IDs through the production integer filter', function ($id) {
+	expect(run_data_queries('POST', 'remove', array('id' => $id), array(), true))->toBe('input-error');
+	expect(run_data_queries('GET', 'remove', array('id' => $id), array(), true))->toBe('405');
+})->with(array(array('7x'), array('3.5'), array(array('7'))));
 
 test('data query bulk actions refuse any GET that carries selected_items', function () {
 	foreach (array('1', '2') as $drp_action) {
