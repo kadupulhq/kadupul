@@ -15,12 +15,12 @@ foreach (array('html_nav_bar' => 'html.php', 'get_page_list' => 'html_utility.ph
 	eval('namespace PaginationBatchTest; ' . $match[0]);
 }
 
-function document($html) {
+function document($html, $charset = 'UTF-8') {
 	$doc = new \DOMDocument();
 	// The existing count-free branch emits a stray closing anchor in its page label.
 	$previous = libxml_use_internal_errors(true);
 	try {
-		$doc->loadHTML('<!doctype html><html><head><meta charset="UTF-8"></head><body>' . $html . '</body></html>');
+		$doc->loadHTML('<!doctype html><html><head><meta charset="' . $charset . '"></head><body>' . $html . '</body></html>');
 	} finally { libxml_clear_errors(); libxml_use_internal_errors($previous); }
 	expect($doc->getElementsByTagName('script')->length)->toBe(0);
 	expect($doc->getElementsByTagName('img')->length)->toBe(0);
@@ -113,6 +113,28 @@ test('empty and single-page lists and caller-owned object markup remain compatib
 	$all = document(html_nav_bar('items.php', 3, 1, 10, 5, 30, '<strong>Graphs</strong>'));
 	expect($all->query('//strong')->item(0)->textContent)->toBe('Graphs');
 });
+
+test('configured charset and empty-charset fallback preserve pagination attributes', function ($charset, $counted) {
+	$previousCharset = ini_get('default_charset');
+	ini_set('default_charset', $charset);
+	try {
+		$effective = $charset === '' ? 'UTF-8' : $charset;
+		$word = $effective === 'UTF-8' ? 'café' : "caf\xe9";
+		$payload = $word . '\'"<script>alert(1)</script>' . chr(96);
+		$base = 'items.php?id=' . $payload;
+		$xpath = document(html_nav_bar($base, 3, 2, 10, 100, 30, 'Rows', 'page', $payload, $counted), $effective);
+		$decodedPayload = 'café' . '\'"<script>alert(1)</script>' . chr(96);
+		$links = $xpath->query('//a');
+		expect($links->length)->toBe($counted ? 7 : 2);
+		foreach ($links as $link) {
+			expect($link->getAttribute('data-return'))->toBe($decodedPayload);
+			expect($link->getAttribute('data-url'))->toStartWith('items.php?id=' . $decodedPayload . '&');
+			expect($link->attributes->length)->toBe($link->hasAttribute('class') ? 4 : 3);
+		}
+	} finally {
+		ini_set('default_charset', $previousCharset);
+	}
+})->with(array('ISO-8859-1', 'Windows-1252', 'UTF-8', ''))->with(array(false, true));
 
 test('malformed UTF-8 is replaced without dropping URL or return-target text', function ($counted, $hex, $replacement) {
 	// Keep malformed bytes out of PHPUnit dataset names and its JUnit XML report.

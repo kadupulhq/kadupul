@@ -611,8 +611,12 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
    @arg $return_to - paint the resulting page into this dom object
    @arg $page_count - provide a page count */
 function html_nav_bar($base_url, $max_pages, $current_page, $rows_per_page, $total_rows, $colspan=30, $object = '', $page_var = 'page', $return_to = '', $page_count = true) {
+	$charset = ini_get('default_charset');
+	if ($charset === '') {
+		$charset = 'UTF-8';
+	}
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$return_html = htmlspecialchars((string)$return_to, $escape_flags, 'UTF-8', false);
+	$return_html = htmlspecialchars((string)$return_to, $escape_flags, $charset, false);
 	$return_html = str_replace('`', '&#96;', $return_html);
 	if ($object == '') $object = __('Rows');
 
@@ -628,10 +632,10 @@ function html_nav_bar($base_url, $max_pages, $current_page, $rows_per_page, $tot
 		$next_page = $current_page + 1;
 		$prev_page = $current_page - 1;
 		$previous_url = $base_url . $page_var . '=' . $prev_page;
-		$previous_html = htmlspecialchars($previous_url, $escape_flags, 'UTF-8', false);
+		$previous_html = htmlspecialchars($previous_url, $escape_flags, $charset, false);
 		$previous_html = str_replace('`', '&#96;', $previous_html);
 		$next_url = $base_url . $page_var . '=' . $next_page;
-		$next_html = htmlspecialchars($next_url, $escape_flags, 'UTF-8', false);
+		$next_html = htmlspecialchars($next_url, $escape_flags, $charset, false);
 		$next_html = str_replace('`', '&#96;', $next_html);
 		$previous_link = '';
 		if ($current_page > 1) {
@@ -676,10 +680,10 @@ function html_nav_bar($base_url, $max_pages, $current_page, $rows_per_page, $tot
 			$next_page = $current_page + 1;
 			$prev_page = $current_page - 1;
 			$previous_url = $base_url . $page_var . '=' . $prev_page;
-			$previous_html = htmlspecialchars($previous_url, $escape_flags, 'UTF-8', false);
+			$previous_html = htmlspecialchars($previous_url, $escape_flags, $charset, false);
 			$previous_html = str_replace('`', '&#96;', $previous_html);
 			$next_url = $base_url . $page_var . '=' . $next_page;
-			$next_html = htmlspecialchars($next_url, $escape_flags, 'UTF-8', false);
+			$next_html = htmlspecialchars($next_url, $escape_flags, $charset, false);
 			$next_html = str_replace('`', '&#96;', $next_html);
 			$previous_link = '';
 			if ($current_page > 1) {
