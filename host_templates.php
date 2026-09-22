@@ -854,7 +854,7 @@ function template() {
 			<table class='filterTable'>
 				<tr>
 					<td>
-						<?php print __('Class');?>
+						<label for='class'><?php print __('Class');?></label>
 					</td>
 					<td>
 						<select id='class'>
@@ -869,7 +869,7 @@ function template() {
 						</select>
 					</td>
 					<td>
-						<?php print __('Graph Template');?>
+						<label for='graph_template'><?php print __('Graph Template');?></label>
 					</td>
 					<td>
 						<select id='graph_template'>
@@ -942,7 +942,7 @@ function template() {
 						?>'>
 					</td>
 					<td>
-						<?php print __('Device Templates');?>
+						<label for='rows'><?php print __('Device Templates');?></label>
 					</td>
 					<td>
 						<select id='rows'>

@@ -687,7 +687,7 @@ case 'list':
 					html_location_filter(get_request_var('location'), '', $loc_where);
 					?>
 					<td>
-						<?php print __('Template');?>
+						<label for='graph_template_id'><?php print __('Template');?></label>
 					</td>
 					<td>
 						<select id='graph_template_id' multiple style='opacity:0.1;overflow:hide;height:0px;'>

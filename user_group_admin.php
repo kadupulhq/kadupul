@@ -2322,7 +2322,7 @@ function graph_filter($header_label) {
 							print htmlspecialchars((string) get_request_var('filter'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 					</td>
 					<td>
-						<?php print __('Template');?>
+						<label for='graph_template_id'><?php print __('Template');?></label>
 					</td>
 					<td>
 						<select id='graph_template_id'>

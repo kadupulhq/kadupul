@@ -1,0 +1,122 @@
+{
+  "rule": "Web:InputWithoutLabelCheck",
+  "issues": [
+    {
+      "key": "AaCeytdxrnQdoRHC473o",
+      "file": "user_admin.php",
+      "line": 2274,
+      "label": "Realm",
+      "id": "realm",
+      "before": "\t\t\t\t\t\t<?php print __('Realm');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='realm'>",
+      "after": "\t\t\t\t\t\t<label for='realm'><?php print __('Realm');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='realm'>"
+    },
+    {
+      "key": "AaCeytdxrnQdoRHC473r",
+      "file": "user_admin.php",
+      "line": 2691,
+      "label": "Template",
+      "id": "graph_template_id",
+      "before": "\t\t\t\t\t\t<?php print __('Template');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='graph_template_id'>",
+      "after": "\t\t\t\t\t\t<label for='graph_template_id'><?php print __('Template');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='graph_template_id'>"
+    },
+    {
+      "key": "AaCeytXkrnQdoRHC47l-",
+      "file": "host_templates.php",
+      "line": 860,
+      "label": "Class",
+      "id": "class",
+      "before": "\t\t\t\t\t\t<?php print __('Class');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='class'>",
+      "after": "\t\t\t\t\t\t<label for='class'><?php print __('Class');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='class'>"
+    },
+    {
+      "key": "AaCeytXkrnQdoRHC47l_",
+      "file": "host_templates.php",
+      "line": 875,
+      "label": "Graph Template",
+      "id": "graph_template",
+      "before": "\t\t\t\t\t\t<?php print __('Graph Template');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='graph_template'>",
+      "after": "\t\t\t\t\t\t<label for='graph_template'><?php print __('Graph Template');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='graph_template'>"
+    },
+    {
+      "key": "AaCeytXkrnQdoRHC47mB",
+      "file": "host_templates.php",
+      "line": 948,
+      "label": "Device Templates",
+      "id": "rows",
+      "before": "\t\t\t\t\t\t<?php print __('Device Templates');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('Device Templates');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>"
+    },
+    {
+      "key": "AaCeythUrnQdoRHC48Lt",
+      "file": "user_group_admin.php",
+      "line": 2328,
+      "label": "Template",
+      "id": "graph_template_id",
+      "before": "\t\t\t\t\t\t<?php print __('Template');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='graph_template_id'>",
+      "after": "\t\t\t\t\t\t<label for='graph_template_id'><?php print __('Template');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='graph_template_id'>"
+    },
+    {
+      "key": "AaCeytVfrnQdoRHC47dP",
+      "file": "host.php",
+      "line": 1791,
+      "label": "Site",
+      "id": "site_id",
+      "before": "\t\t\t\t\t\t<?php print __('Site');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='site_id'>",
+      "after": "\t\t\t\t\t\t<label for='site_id'><?php print __('Site');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='site_id'>"
+    },
+    {
+      "key": "AaCeytgprnQdoRHC48JS",
+      "file": "graph_view.php",
+      "line": 693,
+      "label": "Template",
+      "id": "graph_template_id",
+      "before": "\t\t\t\t\t\t<?php print __('Template');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='graph_template_id' multiple style='opacity:0.1;overflow:hide;height:0px;'>",
+      "after": "\t\t\t\t\t\t<label for='graph_template_id'><?php print __('Template');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='graph_template_id' multiple style='opacity:0.1;overflow:hide;height:0px;'>"
+    },
+    {
+      "key": "AaCeytjUrnQdoRHC48XB",
+      "file": "automation_graph_rules.php",
+      "line": 844,
+      "label": "Data Query",
+      "id": "snmp_query_id",
+      "before": "\t\t\t\t\t\t\t<?php print __('Data Query');?>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='snmp_query_id'>",
+      "after": "\t\t\t\t\t\t\t<label for='snmp_query_id'><?php print __('Data Query');?></label>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='snmp_query_id'>"
+    },
+    {
+      "key": "AaCeytjUrnQdoRHC48XC",
+      "file": "automation_graph_rules.php",
+      "line": 866,
+      "label": "Status",
+      "id": "status",
+      "before": "\t\t\t\t\t\t\t<?php print __('Status');?>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='status'>",
+      "after": "\t\t\t\t\t\t\t<label for='status'><?php print __('Status');?></label>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='status'>"
+    },
+    {
+      "key": "AaCeytjUrnQdoRHC48XD",
+      "file": "automation_graph_rules.php",
+      "line": 876,
+      "label": "Graph Rules",
+      "id": "rows",
+      "before": "\t\t\t\t\t\t\t<?php print __('Graph Rules');?>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='rows'>",
+      "after": "\t\t\t\t\t\t\t<label for='rows'><?php print __('Graph Rules');?></label>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='rows'>"
+    },
+    {
+      "key": "AaCeytOArnQdoRHC47Qd",
+      "file": "automation_tree_rules.php",
+      "line": 918,
+      "label": "Status",
+      "id": "status",
+      "before": "\t\t\t\t\t\t\t<?php print __('Status');?>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='status'>",
+      "after": "\t\t\t\t\t\t\t<label for='status'><?php print __('Status');?></label>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='status'>"
+    },
+    {
+      "key": "AaCeytOArnQdoRHC47Qe",
+      "file": "automation_tree_rules.php",
+      "line": 928,
+      "label": "Tree Rules",
+      "id": "rows",
+      "before": "\t\t\t\t\t\t\t<?php print __('Tree Rules');?>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='rows'>",
+      "after": "\t\t\t\t\t\t\t<label for='rows'><?php print __('Tree Rules');?></label>\n\t\t\t\t\t\t</td>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<select id='rows'>"
+    }
+  ]
+}
