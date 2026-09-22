@@ -39,8 +39,10 @@ final readonly class DeviceSnmpChange
     public function resolve(#[\SensitiveParameter] array $stored): array
     {
         $fields = $this->fields;
-        if ($fields['keep_credentials']) {
-            foreach (DeviceSnmpConfiguration::CREDENTIAL_DEFAULTS as $key => $empty) {
+        foreach (DeviceSnmpConfiguration::CREDENTIAL_DEFAULTS as $key => $empty) {
+            if ($fields['snmp_version'] !== '3' && $key !== 'snmp_community') {
+                $fields[$key] = '';
+            } elseif ($fields['keep_credentials']) {
                 $fields[$key] = (string) ($stored[$key] ?? '');
             }
         }
