@@ -109,6 +109,16 @@ test('empty none labels remain omitted and default selections survive', function
 	expect($doc->getElementsByTagName('option')->item(0)->hasAttribute('selected'))->toBeTrue();
 });
 
+test('empty callback classes omit the attribute and retain defaults', function ($class) {
+	list($doc) = capture(function () use ($class) {
+		form_callback('field', 'SELECT fixture', 'name', 'id', 'lookup', '7', '', '', 'Existing', $class);
+	});
+	$select = $doc->getElementsByTagName('select')->item(0);
+	expect($select->hasAttribute('class'))->toBeFalse();
+	expect($select->getAttribute('name'))->toBe('field');
+	expect($doc->getElementsByTagName('option')->item(0)->hasAttribute('selected'))->toBeTrue();
+})->with(array('', null, false));
+
 test('custom controls retain their explicitly trusted HTML contract', function () {
 	$field = array('method' => 'custom', 'value' => '<strong>Trusted</strong>');
 	ob_start();
