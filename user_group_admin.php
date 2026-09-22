@@ -1988,7 +1988,7 @@ function user_group() {
 							print htmlspecialchars((string) get_request_var('filter'), ENT_QUOTES | ENT_SUBSTITUTE);?>'>
 					</td>
 					<td>
-						<?php print __('Groups');?>
+						<label for='rows'><?php print __('Groups');?></label>
 					</td>
 					<td>
 						<select id='rows'>

@@ -533,7 +533,7 @@ function color() {
 						?>'>
 					</td>
 					<td>
-						<?php print __('Colors');?>
+						<label for='rows'><?php print __('Colors');?></label>
 					</td>
 					<td>
 						<select id='rows'>

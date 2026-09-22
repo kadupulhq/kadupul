@@ -1,0 +1,125 @@
+{
+  "rule": "Web:InputWithoutLabelCheck",
+  "issues": [
+    {
+      "key": "AaCeytaxrnQdoRHC47vP",
+      "file": "automation_templates.php",
+      "line": 419,
+      "label": "Templates",
+      "before": "\t\t\t\t\t\t<?php print __('Templates');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('Templates');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>"
+    },
+    {
+      "key": "AaCeytjlrnQdoRHC48Yj",
+      "file": "automation_networks.php",
+      "line": 1217,
+      "label": "Networks",
+      "before": "\t\t\t\t\t\t<?php print __('Networks');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('Networks');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>"
+    },
+    {
+      "key": "AaCeytSSrnQdoRHC47Vy",
+      "file": "automation_snmp.php",
+      "line": 727,
+      "label": "SNMP Rules",
+      "before": "\t\t\t\t\t\t<?php print __('SNMP Rules');?>\n\t\t\t\t\t</td>\n                    <td>\n                        <select id='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('SNMP Rules');?></label>\n\t\t\t\t\t</td>\n                    <td>\n                        <select id='rows'>"
+    },
+    {
+      "key": "AaCeythyrnQdoRHC48RK",
+      "file": "cdef.php",
+      "line": 768,
+      "label": "CDEFs",
+      "before": "\t\t\t\t\t\t<?php print __('CDEFs');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows' name='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('CDEFs');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows' name='rows'>"
+    },
+    {
+      "key": "AaCeytiPrnQdoRHC48Se",
+      "file": "color.php",
+      "line": 539,
+      "label": "Colors",
+      "before": "\t\t\t\t\t\t<?php print __('Colors');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('Colors');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>"
+    },
+    {
+      "key": "AaCeyteqrnQdoRHC47-s",
+      "file": "data_input.php",
+      "line": 1043,
+      "label": "Input Methods",
+      "before": "\t\t\t\t\t\t<?php print __('Input Methods');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows' name='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('Input Methods');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows' name='rows'>"
+    },
+    {
+      "key": "AaCeytfErnQdoRHC48Ad",
+      "file": "data_queries.php",
+      "line": 1538,
+      "label": "Data Queries",
+      "before": "\t\t\t\t\t\t<?php print __('Data Queries');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows' name='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('Data Queries');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows' name='rows'>"
+    },
+    {
+      "key": "AaCeythmrnQdoRHC48Pl",
+      "file": "data_source_profiles.php",
+      "line": 1053,
+      "label": "Profiles",
+      "before": "\t\t\t\t\t\t<?php print __('Profiles');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows' name='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('Profiles');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows' name='rows'>"
+    },
+    {
+      "key": "AaCeytVwrnQdoRHC47f6",
+      "file": "data_templates.php",
+      "line": 1213,
+      "label": "Data Templates",
+      "before": "\t\t\t\t\t\t<?php print __('Data Templates');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows' name='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('Data Templates');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows' name='rows'>"
+    },
+    {
+      "key": "AaCeytWxrnQdoRHC47ht",
+      "file": "gprint_presets.php",
+      "line": 290,
+      "label": "GPRINTs",
+      "before": "\t\t\t\t\t\t<?php print __('GPRINTs');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('GPRINTs');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>"
+    },
+    {
+      "key": "AaCeytfnrnQdoRHC48DY",
+      "file": "graph_templates.php",
+      "line": 774,
+      "label": "Graph Templates",
+      "before": "\t\t\t\t\t\t<?php print __('Graph Templates');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows' name='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('Graph Templates');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows' name='rows'>"
+    },
+    {
+      "key": "AaCeytg0rnQdoRHC48KR",
+      "file": "links.php",
+      "line": 342,
+      "label": "Links",
+      "before": "\t\t\t\t\t\t<?php print __('Links');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('Links');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>"
+    },
+    {
+      "key": "AaCeytitrnQdoRHC48UN",
+      "file": "rrdcheck.php",
+      "line": 255,
+      "label": "Messages",
+      "before": "\t\t\t\t\t\t<?php print __('Messages');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('Messages');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>"
+    },
+    {
+      "key": "AaCeytdxrnQdoRHC473p",
+      "file": "user_admin.php",
+      "line": 2286,
+      "label": "Users",
+      "before": "\t\t\t\t\t\t<?php print __('Users');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('Users');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>"
+    },
+    {
+      "key": "AaCeythUrnQdoRHC48Lr",
+      "file": "user_group_admin.php",
+      "line": 1994,
+      "label": "Groups",
+      "before": "\t\t\t\t\t\t<?php print __('Groups');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>",
+      "after": "\t\t\t\t\t\t<label for='rows'><?php print __('Groups');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='rows'>"
+    }
+  ]
+}

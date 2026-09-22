@@ -2280,7 +2280,7 @@ function user() {
 						</select>
 					</td>
 					<td>
-						<?php print __('Users');?>
+						<label for='rows'><?php print __('Users');?></label>
 					</td>
 					<td>
 						<select id='rows'>
