@@ -111,25 +111,25 @@ try {
         if ($assignment->templateId() === 0) {
             // Legacy unassignment keeps existing graph/query associations.
             foreach (array_filter([$connection, $remote]) as $database) {
-                $query = $database->prepare('UPDATE host SET host_template_id = 0 WHERE id = ?');
-                if (!$query->execute([$assignment->id])) {
+                $query = $database->prepare("UPDATE host SET host_template_id = 0 WHERE id = ? AND deleted = '' AND poller_id = ?");
+                if (!$query->execute([$assignment->id, $assignment->pollerId])) {
                     throw new RuntimeException('Unassignment failed');
                 }
             }
         } else {
-            api_device_update_host_template($assignment->id, $assignment->templateId());
+            api_device_update_host_template($assignment->id, $assignment->templateId(), true);
         }
         api_plugin_hook_function('host_save', ['host_id' => $assignment->id]);
         if (is_error_message() || !$connection->inTransaction()) {
             throw new RuntimeException('Template save failed');
         }
         foreach (array_filter([$connection, $remote]) as $database) {
-            $query = $database->prepare('SELECT host_template_id FROM host WHERE id = ?');
-            if (!$query->execute([$assignment->id]) || ($saved = $query->fetchColumn()) === false || (int) $saved !== $assignment->templateId()) {
+            $query = $database->prepare("SELECT host_template_id FROM host WHERE id = ? AND deleted = '' AND poller_id = ?");
+            if (!$query->execute([$assignment->id, $assignment->pollerId]) || ($saved = $query->fetchColumn()) === false || (int) $saved !== $assignment->templateId()) {
                 throw new RuntimeException('Template assignment could not be confirmed');
             }
         }
-        (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCreationVerifier())->verify($connection, $remote, $assignment->id, $assignment->templateId());
+        (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCreationVerifier())->verify($connection, $remote, $assignment->id, $assignment->templateId(), true);
         $mark = $connection->prepare('INSERT INTO settings (name, value) VALUES (?, ?) ON DUPLICATE KEY UPDATE value = ?');
         foreach (['time_last_change_device' => (string) time(), 'poller_replicate_device_cache_crc_' . $assignment->pollerId => bin2hex(random_bytes(20))] as $name => $value) {
             if (!$mark->execute([$name, $value, $value])) {
