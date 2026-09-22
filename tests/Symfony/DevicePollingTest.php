@@ -17,9 +17,11 @@ final class DevicePollingTest extends TestCase
 {
     public function testLegacyZeroSettingsAndPartialCreationDefaults(): void
     {
-        $fields = (new DevicePolling(array_replace(DevicePolling::DEFAULTS, ['ping_method' => '0', 'max_oids' => '0'])))->fields;
+        $fields = (new DevicePolling(array_replace(DevicePolling::DEFAULTS, ['ping_method' => '0', 'max_oids' => '0', 'snmp_port' => '0', 'ping_timeout' => '0'])))->fields;
         self::assertSame('0', $fields['ping_method']);
         self::assertSame('0', $fields['max_oids']);
+        self::assertSame('0', $fields['snmp_port']);
+        self::assertSame('0', $fields['ping_timeout']);
         $created = new \Kadupul\Inventory\Domain\NewDevice(['description' => 'Partial', 'hostname' => 'partial.invalid']);
         self::assertSame(DevicePolling::DEFAULTS, array_intersect_key($created->fields, DevicePolling::DEFAULTS));
     }
