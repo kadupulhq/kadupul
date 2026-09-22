@@ -16,7 +16,7 @@ function is_realm_allowed($realm) { return State::$allowed; }
 function read_user_setting($key) { return $key === 'custom_fonts' ? State::$custom : State::$value; }
 function read_config_option($key) { return $key === 'realtime_enabled' ? 'on' : State::$value; }
 function __esc($text) { return htmlspecialchars($text, ENT_QUOTES, 'UTF-8'); }
-function html_escape($text) { return htmlspecialchars($text, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, 'UTF-8', false); }
+function html_escape($text) { return htmlspecialchars(str_replace('`', '&#96;', $text), ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false); }
 function api_plugin_hook($name, $args) { State::$plugin = array($name, $args); }
 
 function render($payload, $allowed, $custom) {
@@ -39,6 +39,7 @@ function render($payload, $allowed, $custom) {
 		eval('namespace GraphPageWrapperTest; ?>' . $match[0]);
 		$output = ob_get_contents();
 	} finally { ob_end_clean(); }
+	expect($output)->not->toContain('`');
 	$doc = new \DOMDocument();
 	$previous = libxml_use_internal_errors(true);
 	try {
