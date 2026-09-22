@@ -2890,11 +2890,13 @@ function create_all_header_nodes($item_id, $rule) {
 	global $config, $automation_tree_header_types;
 
 	# get all related rules that are enabled
-	$tree_items = db_fetch_assoc_prepared('SELECT *
+    $tree_items = db_fetch_assoc_prepared(
+        'SELECT *
         FROM automation_tree_rule_items AS atri
         WHERE atri.rule_id = ?
         ORDER BY sequence',
-		array($rule['id']));
+        array($rule['id'])
+    );
 
 	$function = automation_function_with_pid(__FUNCTION__);
 	cacti_log($function . " called: Item $item_id matches: " . cacti_sizeof($tree_items) . ' items', false, 'AUTOM8 TRACE', POLLER_VERBOSITY_HIGH);
