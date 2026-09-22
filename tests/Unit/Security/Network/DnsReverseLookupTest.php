@@ -57,6 +57,10 @@ function fread($handle, $length) {
 	case 'opcode': $packet[2] = "\x89"; break;
 	case 'truncated_flag': $packet[2] = "\x83"; break;
 	case 'rcode': $packet[3] = "\x83"; break;
+	case 'reserved_z': $packet[3] = "\xc0"; break;
+	case 'ad': $packet[3] = "\xa0"; break;
+	case 'cd': $packet[3] = "\x90"; break;
+	case 'ad_cd': $packet[3] = "\xb0"; break;
 	case 'question_count': $packet[5] = "\2"; break;
 	case 'question_name': $packet[13] = '9'; break;
 	case 'question_type': $packet[$answer - 3] = "\1"; break;
@@ -70,6 +74,9 @@ function fread($handle, $length) {
 	case 'pointer_header': $packet = ptr_packet($request, "\xc0\0"); break;
 	case 'label_type': $packet = ptr_packet($request, "\x40\0"); break;
 	case 'unsafe_label': $packet = ptr_packet($request, "\3a.b\0"); break;
+	case 'leading_hyphen': $packet = ptr_packet($request, wire_name('-bad.example')); break;
+	case 'trailing_hyphen': $packet = ptr_packet($request, wire_name('bad-.example')); break;
+	case 'only_hyphens': $packet = ptr_packet($request, wire_name('---.example')); break;
 	case 'overlong_name': $packet = ptr_packet($request, str_repeat("\x3f" . str_repeat('a', 63), 4) . "\0"); break;
 	case 'trailing': $packet .= 'extra'; break;
 	}
@@ -83,7 +90,8 @@ test('both legacy DNS wrappers preserve success and failure contracts', function
 	$GLOBALS['dns_request'] = null;
 	$call = __NAMESPACE__ . '\\' . $function;
 	$result = $call('8.8.8.8', '192.0.2.53', 1250);
-	expect($result)->toBe($scenario === 'valid' ? 'HOST.EXAMPLE' : ($scenario === 'timeout' ? 'timed_out' : '8.8.8.8'));
+	$valid = in_array($scenario, ['valid', 'ad', 'cd', 'ad_cd'], true);
+	expect($result)->toBe($valid ? 'HOST.EXAMPLE' : ($scenario === 'timeout' ? 'timed_out' : '8.8.8.8'));
 	if ($scenario === 'entropy') {
 		expect($GLOBALS['dns_open'])->toBe([]);
 	} else {
@@ -100,7 +108,27 @@ test('both legacy DNS wrappers preserve success and failure contracts', function
 	'opcode', 'truncated_flag', 'rcode', 'question_count', 'question_name', 'question_type', 'question_class',
 	'answer_class', 'answer_type', 'unrelated_owner', 'bad_length', 'loop', 'pointer_header', 'label_type',
 	'unsafe_label', 'overlong_name', 'trailing',
+	'leading_hyphen', 'trailing_hyphen', 'only_hyphens', 'reserved_z', 'ad', 'cd', 'ad_cd',
 ]);
+
+test('both DNS wrappers clamp nonpositive timeouts and preserve millisecond boundaries', function ($function, $timeout) {
+	$GLOBALS['dns_case'] = 'valid';
+	$GLOBALS['dns_open'] = [];
+	$GLOBALS['dns_closed'] = 0;
+	$call = __NAMESPACE__ . '\\' . $function;
+	expect($call('8.8.8.8', '192.0.2.53', $timeout))->toBe('HOST.EXAMPLE');
+	$expected = max(1, $timeout);
+	expect($GLOBALS['dns_open'])->toBe([['udp://192.0.2.53', 53, $expected / 1000]]);
+	expect($GLOBALS['dns_timeout'])->toBe([intdiv($expected, 1000), ($expected % 1000) * 1000]);
+	expect($GLOBALS['dns_closed'])->toBe(1);
+})->with(['get_dns_from_ip', 'automation_get_dns_from_ip'])->with([-100, 0, 1, 999, 1000, 1250]);
+
+test('DNS label grammar retains single characters underscores and interior hyphens', function ($label) {
+	$packet = str_repeat("\0", 12) . wire_name($label . '.example');
+	$offset = 12;
+	expect(cacti_dns_read_name($packet, $offset))->toBe($label . '.example');
+	expect($offset)->toBe(strlen($packet));
+})->with(['a', '_', 'db_primary', 'host-name', str_repeat('a', 63)]);
 
 test('invalid IPv4 inputs fail before network access', function ($function, $ip) {
 	$GLOBALS['dns_open'] = [];

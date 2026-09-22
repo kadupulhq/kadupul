@@ -43,7 +43,7 @@ function cacti_dns_read_name($packet, &$offset)
         }
         $label = substr($packet, $cursor, $size);
         // PTR results are hostnames, not arbitrary binary DNS owner labels.
-        if (!preg_match('/^[a-z0-9_-]+$/iD', $label)) {
+        if (!preg_match('/^[a-z0-9_](?:[a-z0-9_-]{0,61}[a-z0-9_])?$/iD', $label)) {
             return false;
         }
         $expanded += $size + 1;
@@ -64,6 +64,7 @@ function cacti_dns_parse_ptr($packet, $id, $question_name)
     }
     $header = unpack('nflags/nquestions/nanswers/nauthorities/nadditional', substr($packet, 2, 10));
     // Require a standard, successful, untruncated response with exactly one question.
+    // Reject the reserved Z bit (0x0040); AD/CD are defined bits, not proof of DNSSEC validation here.
     if (($header['flags'] & 0xFA4F) !== 0x8000 || $header['questions'] !== 1 || $header['answers'] === 0) {
         return false;
     }

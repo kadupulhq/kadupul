@@ -7,6 +7,6 @@
   ],
   "scope": "Shared IPv4 PTR client with secure 16-bit transaction IDs and bounded response validation. No external dependency or PHP requirement change.",
   "compatibility": "Preserve signatures, configured DNS endpoint, positive millisecond timeout, uppercase hostname/IP/ERROR/timed_out return conventions. Fix automation treating timed_out=false as a timeout. Reject malformed IPs, mismatched or malformed responses and non-hostname labels. No TCP fallback or DNSSEC added.",
-  "verification": "66 isolated production-helper/wrapper cases plus two real loopback UDP cases on PHP 8.1 and 8.4. Loopback tests verify configured-peer responses and rejection of a different source port; no public DNS traffic.",
+  "verification": "97 isolated production-helper/wrapper cases plus two real loopback UDP cases on PHP 8.1 and 8.4. Includes hostname grammar, reserved Z versus defined AD/CD bits, timeout clamp/boundaries, configured-peer responses and rejection of a different source port; no public DNS traffic.",
   "closure": "Pending merged analysis; no manual false-positive transitions."
 }
