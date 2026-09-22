@@ -721,7 +721,7 @@ function automation_snmp() {
 						?>'>
 					</td>
 					<td>
-<label for='rows'><?php print __('SNMP Rules');?></label>
+						<label for='rows'><?php print __('SNMP Rules');?></label>
 					</td>
                     <td>
                         <select id='rows'>

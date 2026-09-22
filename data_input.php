@@ -1037,7 +1037,7 @@ function data() {
 						?>'>
 					</td>
 					<td>
-<label for='rows'><?php print __('Input Methods');?></label>
+						<label for='rows'><?php print __('Input Methods');?></label>
 					</td>
 					<td>
 						<select id='rows' name='rows'>

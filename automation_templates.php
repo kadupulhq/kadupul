@@ -413,7 +413,7 @@ function template() {
 						?>'>
 					</td>
 					<td>
-<label for='rows'><?php print __('Templates');?></label>
+						<label for='rows'><?php print __('Templates');?></label>
 					</td>
 					<td>
 						<select id='rows'>

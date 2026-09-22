@@ -1532,7 +1532,7 @@ function data_query() {
 						?>'>
 					</td>
 					<td>
-<label for='rows'><?php print __('Data Queries');?></label>
+						<label for='rows'><?php print __('Data Queries');?></label>
 					</td>
 					<td>
 						<select id='rows' name='rows'>

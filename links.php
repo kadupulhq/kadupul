@@ -336,7 +336,7 @@ function pages() {
 						?>'>
 					</td>
 					<td>
-<label for='rows'><?php print __('Links');?></label>
+						<label for='rows'><?php print __('Links');?></label>
 					</td>
 					<td>
 						<select id='rows'>

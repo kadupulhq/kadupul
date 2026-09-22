@@ -284,7 +284,7 @@ function gprint_presets() {
 						?>'>
 					</td>
 					<td>
-<label for='rows'><?php print __('GPRINTs');?></label>
+						<label for='rows'><?php print __('GPRINTs');?></label>
 					</td>
 					<td>
 						<select id='rows'>

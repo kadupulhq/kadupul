@@ -1047,7 +1047,7 @@ function profile() {
 						?>'>
 					</td>
 					<td>
-<label for='rows'><?php print __('Profiles');?></label>
+						<label for='rows'><?php print __('Profiles');?></label>
 					</td>
 					<td>
 						<select id='rows' name='rows'>

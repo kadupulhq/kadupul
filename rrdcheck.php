@@ -249,7 +249,7 @@ function filter() {
 						</select>
 					</td>
 					<td>
-<label for='rows'><?php print __('Messages');?></label>
+						<label for='rows'><?php print __('Messages');?></label>
 					</td>
 					<td>
 						<select id='rows'>
