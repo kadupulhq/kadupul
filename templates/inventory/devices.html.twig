@@ -5,7 +5,7 @@
 {% block body %}
 <main>
     <h1>{{ 'Devices'|trans({}, 'inventory') }}</h1>
-    {% if created|default(false) %}<p role="status">{{ 'Device created.'|trans({}, 'inventory') }}</p>{% endif %}
+    {% if created|default(false) %}<p><output>{{ 'Device created.'|trans({}, 'inventory') }}</output></p>{% endif %}
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route with validated list context. #}
     <p><a href="{{ path('inventory_device_create', {list: filters}) }}">{{ 'Add device'|trans({}, 'inventory') }}</a></p>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
