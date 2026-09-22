@@ -29,7 +29,7 @@ final readonly class DeviceSnmpConfiguration
         if (!in_array($fields['snmp_version'], ['0', '1', '2', '3'], true)
             || !in_array($fields['snmp_auth_protocol'], self::AUTH_PROTOCOLS, true)
             || !in_array($fields['snmp_priv_protocol'], self::PRIVACY_PROTOCOLS, true)) {
-            throw new \InvalidArgumentException('Select supported SNMP and availability settings.');
+            throw new \InvalidArgumentException('Select supported SNMP settings.');
         }
         foreach (['snmp_community' => 100, 'snmp_username' => 50, 'snmp_password' => 50, 'snmp_priv_passphrase' => 200, 'snmp_context' => 64, 'snmp_engine_id' => 64] as $key => $limit) {
             if (mb_strlen($fields[$key], 'UTF-8') > $limit) {
