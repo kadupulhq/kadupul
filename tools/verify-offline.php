@@ -35,6 +35,14 @@ $response = $kernel->handle(Request::create('/inventory/devices.csv'));
 if ($response->getStatusCode() !== 401) {
     throw new RuntimeException('Offline Inventory CSV route missing or not protected');
 }
+foreach (['/inventory/sites/delete?ids[]=1', '/inventory/sites/duplicate?ids[]=1', '/inventory/sites/legacy'] as $route) {
+    if ($kernel->handle(Request::create($route))->getStatusCode() !== 401) {
+        throw new RuntimeException('Offline site lifecycle authorization missing');
+    }
+}
+if (!is_file($root . '/templates/inventory/site_action.html.twig') || !is_file($root . '/sites.php')) {
+    throw new RuntimeException('Offline site lifecycle assets missing');
+}
 $response = $kernel->handle(Request::create('/inventory/sites/new'));
 if ($response->getStatusCode() !== 401 || !is_file($root . '/templates/inventory/site_create.html.twig')) {
     throw new RuntimeException('Offline site creation route or template missing');

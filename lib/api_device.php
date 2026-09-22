@@ -248,30 +248,34 @@ function api_device_remove_multi($device_ids, $delete_type = 2) {
  *
  * @param  (array) An array of device ids
  *
- * @return (void)
+ * @return (bool) Whether all attempted database updates succeeded
  */
-function api_device_disable_devices($device_ids) {
+function api_device_disable_devices($device_ids): bool {
 	global $config;
 
 	$raised = array();
 
 	foreach ($device_ids as $device_id) {
-		db_execute_prepared("UPDATE host
+		if (!db_execute_prepared("UPDATE host
 			SET disabled = 'on', status = 0
 			WHERE id = ?
 			AND (deleted = '' OR (deleted = 'on' AND disabled = ''))",
-			array($device_id));
+			array($device_id))) {
+			return false;
+		}
 
 		$poller_id = db_fetch_cell_prepared('SELECT poller_id FROM host WHERE id = ?', array($device_id));
 
 		if ($poller_id > 1) {
 			if (remote_poller_up($poller_id)) {
 				if (($rcnn_id = poller_push_to_remote_db_connect($device_id)) !== false) {
-					db_execute_prepared("UPDATE host
+					if (!db_execute_prepared("UPDATE host
 						SET disabled='on'
 						WHERE id = ?
 						AND (deleted = '' OR (deleted = 'on' AND disabled = ''))",
-						array($device_id), true, $rcnn_id);
+						array($device_id), true, $rcnn_id)) {
+						return false;
+					}
 				} elseif (!isset($raised[$poller_id])) {
 					raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
 					$raised[$poller_id] = true;
@@ -282,6 +286,8 @@ function api_device_disable_devices($device_ids) {
 			}
 		}
 	}
+
+	return true;
 }
 
 /**
@@ -924,7 +930,7 @@ function api_device_save($id, $device_template_id, $description, $hostname, $snm
 	$availability_method, $ping_method, $ping_port, $ping_timeout, $ping_retries,
 	$notes, $snmp_auth_protocol, $snmp_priv_passphrase, $snmp_priv_protocol, $snmp_context, $snmp_engine_id,
 	$max_oids = 5, $device_threads = 1, $poller_id = 1, $site_id = 1, $external_id = '', $location = '', $bulk_walk_size = -1, $create_only = false) {
-	global $config;
+	global $config, $database_sessions, $database_default, $database_hostname, $database_port;
 
 	include_once($config['base_path'] . '/lib/utility.php');
 	include_once($config['base_path'] . '/lib/variables.php');
@@ -996,12 +1002,6 @@ function api_device_save($id, $device_template_id, $description, $hostname, $snm
 	 * not disabled = '' => no regexp, but allow nulls */
 	$save['disabled']             = form_input_validate($disabled, 'disabled', '^on$', true, 3);
 
-	if ($save['disabled'] == 'on') {
-		if ($save['id'] > 0) {
-			api_device_disable_devices(array($save['id']));
-		}
-	}
-
 	$quick_save = api_device_quick_save($save);
 
 	$save['availability_method']  = form_input_validate($availability_method, 'availability_method', '^[0-9]+$', false, 3);
@@ -1027,7 +1027,8 @@ function api_device_save($id, $device_template_id, $description, $hostname, $snm
 			throw new RuntimeException('A plugin changed the authorized creation target');
 		}
 
-		$device_id = sql_save($save, 'host');
+		$connection = $database_sessions["$database_hostname:$database_port:$database_default"];
+		$device_id = \Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceSiteWriter::save($connection, $save);
 
 		if ($device_id) {
 			if ($previous_poller > 1 && $poller_id != $previous_poller) {
@@ -1116,6 +1117,8 @@ function api_device_save($id, $device_template_id, $description, $hostname, $snm
 			}
 		} else {
 			raise_message(2);
+
+			return false;
 		}
 
 		/* if the user changes the host template, add each snmp query associated with it */

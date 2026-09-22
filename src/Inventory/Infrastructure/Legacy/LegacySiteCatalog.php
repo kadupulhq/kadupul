@@ -28,6 +28,7 @@ final readonly class LegacySiteCatalog implements SiteCatalog
             $parameters = [$pattern, $pattern, $pattern, $pattern];
         }
         $direction = $criteria->direction === 'desc' ? 'DESC' : 'ASC';
+        $order = ['name' => 's.name', 'id' => 's.id', 'devices' => 'devices', 'city' => 's.city', 'state' => 's.state', 'country' => 's.country'][$criteria->sort];
         $query = $this->database->get()->prepare("SELECT s.id, s.name, s.city, s.state, s.country, COALESCE(d.devices, 0) AS devices
             FROM sites s LEFT JOIN (
                 SELECT h.site_id, COUNT(DISTINCT h.id) AS devices
@@ -35,7 +36,7 @@ final readonly class LegacySiteCatalog implements SiteCatalog
                 WHERE h.id > 0 AND h.deleted = '' AND ($predicate)
                 GROUP BY h.site_id
             ) d ON d.site_id = s.id
-            WHERE $where ORDER BY s.name $direction, s.id $direction LIMIT " . $criteria->offset() . ',' . ($criteria->pageSize + 1));
+            WHERE $where ORDER BY $order $direction, s.id $direction LIMIT " . $criteria->offset() . ',' . ($criteria->pageSize + 1));
         $query->execute($parameters);
         $rows = $query->fetchAll();
         $sites = [];

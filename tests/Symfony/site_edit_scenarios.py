@@ -68,7 +68,7 @@ def verify_site_edit(harness, session, user_id, check):
             check(post(fields, origin=origin)[0] == 422 and snapshot() == original, 'site saves reject missing or cross-origin CSRF evidence')
         missing_token = {key: value for key, value in fields.items() if key != 'site_edit[_token]'}
         check(post(missing_token)[0] == 422 and snapshot() == original, 'site save requires the CSRF token')
-        for invalid in ({'site_edit[name]': '\0Name'}, {'site_edit[name]': 'Name\0'}, {'site_edit[name]': 'Na\0me'}, {'site_edit[notes]': '\0Notes'}, {'site_edit[notes]': 'Notes\0'}, {'site_edit[name]': ' '}, {'site_edit[name]': '東' * 101}, {'site_edit[notes]': '京' * 1025}, {'site_edit[latitude]': '50'}, {'site_edit[name][]': 'bad'}):
+        for invalid in ({'site_edit[name]': '\0Name'}, {'site_edit[name]': 'Name\0'}, {'site_edit[name]': 'Na\0me'}, {'site_edit[notes]': '\0Notes'}, {'site_edit[notes]': 'Notes\0'}, {'site_edit[name]': ' '}, {'site_edit[name]': '東' * 101}, {'site_edit[notes]': '京' * 1025}, {'site_edit[unexpected]': '50'}, {'site_edit[name][]': 'bad'}):
             status, body, _ = post(fields | invalid)
             check(status == 422 and snapshot() == original, 'site validation and extra-field rejection leave all columns unchanged')
             navigation(body)
@@ -77,8 +77,8 @@ def verify_site_edit(harness, session, user_id, check):
         saved = snapshot()
         check(status == 200 and 'Site saved.' in body and parse_qs(urlsplit(location).query).get('saved') == ['1'], 'site save redirects to a confirmation')
         check(saved['name'] == '<site>東京' and saved['notes'] == valid['site_edit[notes]'].replace('\r\n', '\n'), 'site save preserves Unicode notes and trims name')
-        check({k: v for k, v in saved.items() if k not in ('name', 'notes')} == {k: v for k, v in original.items() if k not in ('name', 'notes')},
-              'site save preserves address, timezone, map and alternate ID fields')
+        check({k: v if v is not None else '' for k, v in saved.items() if k not in ('name', 'notes')} == {k: v if v is not None else '' for k, v in original.items() if k not in ('name', 'notes')},
+              'site save preserves rendered settings and normalizes legacy empty fields')
         check('<script>' not in body and '&lt;script&gt;' in body and '<site>' not in body and '&lt;site&gt;' in body, 'site editor escapes saved names and notes')
         navigation(body)
         check(post(valid)[0] == 409 and snapshot() == saved, 'stale site form cannot overwrite a completed save')
@@ -87,8 +87,10 @@ def verify_site_edit(harness, session, user_id, check):
         check(post(parser.fields | {'site_edit[name]': 'Stale'})[0] == 409 and snapshot()['notes'] == 'concurrent notes', 'concurrent legacy notes edits reject stale site saves')
         parser, _ = form()
         harness.sql(f"UPDATE sites SET city='Changed elsewhere' WHERE id={site_id}")
-        check(post(parser.fields | {'site_edit[notes]': ''})[0] == 200 and snapshot()['city'] == 'Changed elsewhere' and snapshot()['notes'] == '',
-              'site save clears notes without overwriting concurrent unmigrated fields')
+        check(post(parser.fields | {'site_edit[notes]': ''})[0] == 409 and snapshot()['city'] == 'Changed elsewhere',
+              'site revision protects concurrently changed address fields')
+        parser, _ = form()
+        check(post(parser.fields | {'site_edit[notes]': ''})[0] == 200 and snapshot()['notes'] == '', 'fresh full site form clears notes')
         parser, _ = form()
         check(post(parser.fields | {'site_edit[name]': '🌏' * 100, 'site_edit[notes]': '🌟' * 1024})[0] == 200, 'site storage accepts Unicode character limits')
         parser, _ = form()

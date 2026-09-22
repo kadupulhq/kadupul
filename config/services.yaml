@@ -131,6 +131,11 @@ services:
     Kadupul\Inventory\Application\Port\SiteCreator:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacySiteCreator
 
+    Kadupul\Inventory\Application\Query\PrepareSiteAction: ~
+    Kadupul\Inventory\Application\Command\DeleteSites: ~
+    Kadupul\Inventory\Application\Command\DuplicateSites: ~
+    Kadupul\Inventory\Application\Port\SiteLifecycle:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacySiteLifecycle
     Kadupul\Inventory\Application\Command\CreateDevice: ~
     Kadupul\Inventory\Application\Query\PrepareDeviceCreation: ~
     Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreator:

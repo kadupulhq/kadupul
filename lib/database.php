@@ -463,6 +463,10 @@ function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = fa
 		}
 	}
 
+	// A deadlock can roll back the whole transaction. Never retry one statement
+	// after losing its authorization/site locks or silently reconnect mid-transaction.
+	$transaction_started = $db_conn->inTransaction();
+
 	$sql = db_strip_control_chars($sql);
 
 	if (!empty($config['DEBUG_SQL_CMD'])) {
@@ -550,6 +554,10 @@ function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = fa
 				$query->closeCursor();
 			}
 			unset($query);
+
+			if ($transaction_started) {
+				return false;
+			}
 
 			if ($log) {
 				if ($en == 1213 || $en == 1205 || $en == 1020) {
@@ -1854,6 +1862,7 @@ function _db_replace($db_conn, $table, $fieldArray, $keyCols) {
 
 	if (!$return_code) {
 		cacti_log("ERROR: SQL Save Failed for Table '$table'.  SQL:'" . clean_up_lines($sql) . "'", false, 'DBCALL');
+		return false;
 	}
 
 	return db_fetch_insert_id($db_conn);
@@ -1928,6 +1937,10 @@ function sql_save($array_items, $table_name, $key_cols = 'id', $autoinc = true, 
 	}
 
 	$replace_result = _db_replace($db_conn, $table_name, $array_items, $key_cols);
+	if ($replace_result === false) {
+		return false;
+	}
+
 
 	/* get the last AUTO_ID and return it */
 	if (!$replace_result || db_fetch_insert_id($db_conn) == '0') {

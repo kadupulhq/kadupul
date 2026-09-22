@@ -23,10 +23,7 @@ final readonly class NewSite
                 throw new \InvalidArgumentException('Site fields must contain valid text.');
             }
         }
-        // Reuse the existing name/notes invariant instead of maintaining two rules.
-        $site = new Site(0, '', '');
-        $site->revise($fields['name'], $fields['notes'], $site->revision());
-        $fields['name'] = $site->name();
+        [$fields['name'], $fields['notes']] = Site::validateText($fields['name'], $fields['notes']);
         foreach (['address1' => 100, 'address2' => 100, 'city' => 50, 'state' => 20, 'postal_code' => 20, 'country' => 30, 'timezone' => 40, 'alternate_id' => 30] as $field => $limit) {
             if (mb_strlen($fields[$field], 'UTF-8') > $limit) {
                 throw new \InvalidArgumentException('A site field exceeds its maximum length.');

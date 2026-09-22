@@ -8,6 +8,7 @@
 use Kadupul\Inventory\Domain\Device;
 use Kadupul\Inventory\Domain\DeviceEditConflict;
 use Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceVisibility;
+use Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceSiteWriter;
 use Kadupul\Platform\Contract\DatabaseConnection;
 
 if (PHP_SAPI !== 'cli') {
@@ -57,8 +58,20 @@ try {
         $status = 'denied';
         throw new RuntimeException('Access denied');
     }
-    $row = db_fetch_row_prepared("SELECT * FROM host WHERE id = ? AND deleted = '' FOR UPDATE", [$command['id']]);
     $connection = $database_sessions["$database_hostname:$database_port:$database_default"];
+    // Lock site before host, matching site deletion and legacy device saves.
+    // Recheck the association after acquiring the host lock; the first read
+    // only discovers which site to lock and cannot authorize a write.
+    $association = db_fetch_row_prepared("SELECT site_id FROM host WHERE id = ? AND deleted = ''", [$command['id']]);
+    if (!$association) {
+        $status = 'denied';
+        throw new RuntimeException('Access denied');
+    }
+    LegacyDeviceSiteWriter::lockSite($connection, $association['site_id']);
+    $row = db_fetch_row_prepared("SELECT * FROM host WHERE id = ? AND deleted = '' FOR UPDATE", [$command['id']]);
+    if ($row && (int) $row['site_id'] !== (int) $association['site_id']) {
+        throw new DeviceEditConflict('Device site changed. Reload before saving.');
+    }
     $provider = new class ($connection) implements DatabaseConnection {
         public function __construct(private PDO $connection) {}
         public function get(): PDO

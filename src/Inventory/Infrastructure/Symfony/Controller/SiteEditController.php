@@ -45,7 +45,7 @@ final class SiteEditController
             return new Response($translator->trans('Invalid site list filters.', [], 'inventory'), 400, $headers);
         }
         $parameters = ['id' => $id, 'list' => $filters];
-        $form = $forms->create(SiteEditType::class, ['name' => $site->name(), 'notes' => $site->notes(), 'revision' => $site->revision()], ['action' => $urls->generate('inventory_site_edit', $parameters)]);
+        $form = $forms->create(SiteEditType::class, $site->fields() + ['revision' => $site->revision()], ['action' => $urls->generate('inventory_site_edit', $parameters)]);
         $form->handleRequest($request);
         $status = $request->isMethod('POST') ? 422 : 200;
         if ($form->isSubmitted()) {
@@ -54,8 +54,11 @@ final class SiteEditController
             }
             if ($form->isValid()) {
                 $data = $form->getData();
+                $data['timezone'] ??= '';
                 try {
-                    $edit($id, (string) $data['name'], (string) $data['notes'], (string) $data['revision']);
+                    $revision = (string) $data['revision'];
+                    unset($data['revision']);
+                    $edit($id, (string) $data['name'], (string) $data['notes'], $revision, $data);
                     return new RedirectResponse($urls->generate('inventory_site_edit', $parameters + ['saved' => 1]), 303, $headers);
                 } catch (InventoryAccessDenied $error) {
                     return new Response($translator->trans('Access denied.', [], 'inventory'), $error->unauthenticated ? 401 : 403, $headers);
