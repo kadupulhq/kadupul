@@ -432,29 +432,29 @@ function automation_tree_rules_item_edit() {
 				?>
 <table style='width:100%;text-align:center;'>
 	<tr>
-<?php
-        $automation_output_0 = 'automation_tree_rules.php?action=item_edit&id='
-            . (isset_request_var('id') ? get_request_var('id') : 0)
-            . '&item_id='
-            . (isset_request_var('item_id') ? get_request_var('item_id') : 0)
-            . '&rule_type='
-            . (isset_request_var('rule_type') ? get_request_var('rule_type') : 0) .'&show_trees=';
-        $automation_output_0 = htmlspecialchars(
-            (string)$automation_output_0,
-            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
-            ini_get('default_charset') ?: 'UTF-8',
-            false
-        );
-        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
-        print '<td class=\'textInfo\' style=\'text-align:right;vertical-align:top;\''
-            . '><span class=\'linkMarker\'>*</span><a class=\'linkEditMain\' href=\'';
-        print $automation_output_0 . (isset($_SESSION['automation_tree_rules_show_trees']) ? '0' : '1');
-        print '\'>';
-        print (isset($_SESSION['automation_tree_rules_show_trees']) ? __('Don\'t Show'):__('Show'));
-        print ' ';
-        print __('Created Trees');
-        print '</a><br>';
-        ?>
+		<?php
+			$automation_output_0 = 'automation_tree_rules.php?action=item_edit&id='
+			    . (isset_request_var('id') ? get_request_var('id') : 0)
+			    . '&item_id='
+			    . (isset_request_var('item_id') ? get_request_var('item_id') : 0)
+			    . '&rule_type='
+			    . (isset_request_var('rule_type') ? get_request_var('rule_type') : 0) .'&show_trees=';
+			$automation_output_0 = htmlspecialchars(
+			    (string)$automation_output_0,
+			    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+			    ini_get('default_charset') ?: 'UTF-8',
+			    false
+			);
+			$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
+			print '<td class=\'textInfo\' style=\'text-align:right;vertical-align:top;\''
+			    . '><span class=\'linkMarker\'>*</span><a class=\'linkEditMain\' href=\'';
+			print $automation_output_0 . (isset($_SESSION['automation_tree_rules_show_trees']) ? '0' : '1');
+			print '\'>';
+			print (isset($_SESSION['automation_tree_rules_show_trees']) ? __('Don\'t Show'):__('Show'));
+			print ' ';
+			print __('Created Trees');
+			print '</a><br>';
+		?>
 		</td>
 	</tr>
 </table>
@@ -604,26 +604,26 @@ function automation_tree_rules_edit() {
 		?>
 <table style='width:100%;text-align:center;'>
 	<tr>
-<?php
-        $automation_output_0 = 'automation_tree_rules.php?action=edit&id='
-            . (isset_request_var('id') ? get_request_var('id') : 0)
-            . '&show_hosts=';
-        $automation_output_0 = htmlspecialchars(
-            (string)$automation_output_0,
-            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
-            ini_get('default_charset') ?: 'UTF-8',
-            false
-        );
-        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
-        print '<td class=\'textInfo right\' style=\'vertical-align:top;\'><span clas'
-            . 's=\'linkMarker\'>*</span><a class=\'linkEditMain\' href=\'';
-        print $automation_output_0 . (isset($_SESSION['automation_tree_rules_show_objects']) ? '0' : '1');
-        print '\'>';
-        print (isset($_SESSION['automation_tree_rules_show_objects']) ? __('Don\'t Show'):__('Show'));
-        print ' ';
-        print __('Eligible Objects');
-        print '</a><br>';
-        ?>
+		<?php
+			$automation_output_0 = 'automation_tree_rules.php?action=edit&id='
+			    . (isset_request_var('id') ? get_request_var('id') : 0)
+			    . '&show_hosts=';
+			$automation_output_0 = htmlspecialchars(
+			    (string)$automation_output_0,
+			    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+			    ini_get('default_charset') ?: 'UTF-8',
+			    false
+			);
+			$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
+			print '<td class=\'textInfo right\' style=\'vertical-align:top;\'><span clas'
+			    . 's=\'linkMarker\'>*</span><a class=\'linkEditMain\' href=\'';
+			print $automation_output_0 . (isset($_SESSION['automation_tree_rules_show_objects']) ? '0' : '1');
+			print '\'>';
+			print (isset($_SESSION['automation_tree_rules_show_objects']) ? __('Don\'t Show'):__('Show'));
+			print ' ';
+			print __('Eligible Objects');
+			print '</a><br>';
+		?>
 		</td>
 	</tr>
 </table>

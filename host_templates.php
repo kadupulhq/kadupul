@@ -586,24 +586,24 @@ function template_edit() {
 						<strong><?php print $i;?>)</strong> <?php print html_escape($item['name']);?>
 					</td>
 					<td class='right'>
-<?php
-        $automation_output_0 = 'host_templates.php?action=item_remove_gt_confirm&id='
-            . $item['id']
-            . '&host_template_id='
-            . get_request_var('id');
-        $automation_output_0 = htmlspecialchars(
-            (string)$automation_output_0,
-            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
-            ini_get('default_charset') ?: 'UTF-8',
-            false
-        );
-        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
-        print '<a class=\'delete deleteMarker fa fa-times\' title=\'';
-        print __esc('Delete');
-        print '\' href=\'';
-        print $automation_output_0;
-        print '\'></a>';
-        ?>
+						<?php
+							$automation_output_0 = 'host_templates.php?action=item_remove_gt_confirm&id='
+							    . $item['id']
+							    . '&host_template_id='
+							    . get_request_var('id');
+							$automation_output_0 = htmlspecialchars(
+							    (string)$automation_output_0,
+							    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+							    ini_get('default_charset') ?: 'UTF-8',
+							    false
+							);
+							$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
+							print '<a class=\'delete deleteMarker fa fa-times\' title=\'';
+							print __esc('Delete');
+							print '\' href=\'';
+							print $automation_output_0;
+							print '\'></a>';
+						?>
 					</td>
 				<?php
 				form_end_row();
@@ -660,24 +660,24 @@ function template_edit() {
 						<strong><?php print $i;?>)</strong> <?php print html_escape($item['name']);?>
 					</td>
 					<td class='right'>
-<?php
-        $automation_output_0 = 'host_templates.php?action=item_remove_dq_confirm&id='
-            . $item['id']
-            . '&host_template_id='
-            . get_request_var('id');
-        $automation_output_0 = htmlspecialchars(
-            (string)$automation_output_0,
-            ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
-            ini_get('default_charset') ?: 'UTF-8',
-            false
-        );
-        $automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
-        print '<a class=\'delete deleteMarker fa fa-times\' title=\'';
-        print __esc('Delete');
-        print '\' href=\'';
-        print $automation_output_0;
-        print '\'></a>';
-        ?>
+						<?php
+							$automation_output_0 = 'host_templates.php?action=item_remove_dq_confirm&id='
+							    . $item['id']
+							    . '&host_template_id='
+							    . get_request_var('id');
+							$automation_output_0 = htmlspecialchars(
+							    (string)$automation_output_0,
+							    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+							    ini_get('default_charset') ?: 'UTF-8',
+							    false
+							);
+							$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
+							print '<a class=\'delete deleteMarker fa fa-times\' title=\'';
+							print __esc('Delete');
+							print '\' href=\'';
+							print $automation_output_0;
+							print '\'></a>';
+						?>
 					</td>
 				<?php
 				form_end_row();
