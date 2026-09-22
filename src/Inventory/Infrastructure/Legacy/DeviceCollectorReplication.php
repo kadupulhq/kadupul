@@ -29,8 +29,22 @@ final class DeviceCollectorReplication
             'data_input_data' => 'data_template_data_id IN (SELECT id FROM data_template_data WHERE local_data_id IN (SELECT id FROM data_local WHERE host_id = ?))',
         ];
         foreach ($queries as $table => $where) {
-            $read = static function (PDO $db) use ($table, $where, $deviceId): array {
-                $query = $db->prepare("SELECT * FROM $table WHERE $where");
+            // Match the legacy transfer's schema compatibility: only columns
+            // present on both ends are copied. Identity is always mandatory.
+            $columns = static fn(PDO $db): array => $db->query("SHOW COLUMNS FROM $table")->fetchAll(PDO::FETCH_COLUMN);
+            $common = array_values(array_intersect($columns($primary), $columns($target)));
+            $required = $table === 'host' ? ['id', 'poller_id', 'host_template_id', 'hostname', 'disabled', 'deleted'] : [];
+            if ($common === [] || array_diff($required, $common) !== []) {
+                throw new \RuntimeException('Collector schema lacks required identity');
+            }
+            foreach ($common as $column) {
+                if (!preg_match('/\A[a-zA-Z0-9_]+\z/D', $column)) {
+                    throw new \RuntimeException('Unexpected collector column');
+                }
+            }
+            $projection = implode(', ', array_map(static fn($column) => "`$column`", $common));
+            $read = static function (PDO $db) use ($table, $where, $deviceId, $projection): array {
+                $query = $db->prepare("SELECT $projection FROM $table WHERE $where");
                 if (!$query->execute([$deviceId])) {
                     throw new \RuntimeException('Collector replication verification failed');
                 }
