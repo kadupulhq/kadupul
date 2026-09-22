@@ -35,7 +35,7 @@ final class DeviceCreateType extends AbstractType
         foreach ([
             'snmp_version' => ['SNMP version', ['Disabled' => '0', 'Version 1' => '1', 'Version 2' => '2', 'Version 3' => '3']],
             'availability_method' => ['Availability method', ['None' => '0', 'SNMP and ping' => '1', 'SNMP' => '2', 'Ping' => '3', 'SNMP or ping' => '4', 'SNMP system description' => '5', 'SNMP GETNEXT' => '6']],
-            'ping_method' => ['Ping method', ['ICMP' => '1', 'UDP' => '2', 'TCP' => '3', 'TCP closed' => '5']],
+            'ping_method' => ['Ping method', ['Not configured (legacy)' => '0', 'ICMP' => '1', 'UDP' => '2', 'TCP' => '3', 'TCP closed' => '5']],
             'snmp_auth_protocol' => ['SNMP authentication protocol', array_combine(NewDevice::AUTH_PROTOCOLS, NewDevice::AUTH_PROTOCOLS)],
             'snmp_priv_protocol' => ['SNMP privacy protocol', array_combine(NewDevice::PRIVACY_PROTOCOLS, NewDevice::PRIVACY_PROTOCOLS)],
             'enabled' => ['Polling', ['Enabled' => true, 'Disabled' => false]],

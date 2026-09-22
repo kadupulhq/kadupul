@@ -28,6 +28,6 @@ final class DevicePollingType extends AbstractType
     }
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['translation_domain' => 'inventory', 'csrf_protection' => false]);
+        $resolver->setDefaults(['translation_domain' => 'inventory']);
     }
 }
