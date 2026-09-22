@@ -26,7 +26,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'coverage_support.py'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'coverage_support.py'];
     foreach ($scripts as $script) {
         $path = 'tests/Symfony/' . $script;
         if (($manifest['source_sha256'][$path] ?? '') !== hash_file('sha256', $root . '/' . $path)) {
@@ -48,6 +48,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'rejected creations leave all sites unchanged',
         'full site address timezone map and alternate name persist',
         'bulk site deletion succeeds atomically',
+        'site locks precede device locks and rejected assignments preserve polling state',
         'transactional SQL failures cannot retry without locks or report a saved ID',
         'bulk duplication succeeds through Symfony',
         'site lifecycle adapter rejects revoked stale and partial writes',

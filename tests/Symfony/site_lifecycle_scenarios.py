@@ -47,9 +47,13 @@ def verify_site_lifecycle(harness, session, user_id, check):
         for invalid in [{'latitude': '91'}, {'longitude': '-181'}, {'zoom': '24'}, {'timezone': 'Invalid/Zone'}, {'address1': 'x' * 101}]:
             fresh = form(edit)
             check(request(edit, fresh | {'site_edit[' + k + ']': v for k, v in invalid.items()})[0] == 422, 'full site settings reject invalid fields')
-        for key in ['id', 'city', 'state', 'country', 'devices']:
-            data = session.request('/app.php/inventory/sites.json?' + urlencode({'q': 'lifecycle-', 'sort': key, 'direction': 'desc'}))
-            check(data['status'] == 200 and [site['id'] for site in data['json']['sites']] == ([second, first] if key == 'id' else [first, second]), 'site catalog supports migrated sort ' + key)
+        for key in ['name', 'id', 'city', 'state', 'country', 'devices']:
+            for direction in ['asc', 'desc']:
+                data = session.request('/app.php/inventory/sites.json?' + urlencode({'q': 'lifecycle-', 'sort': key, 'direction': direction}))
+                expected = [second, first] if key in ['name', 'id'] else [first, second]
+                if direction == 'asc':
+                    expected = list(reversed(expected))
+                check(data['status'] == 200 and [site['id'] for site in data['json']['sites']] == expected, 'site catalog supports migrated sort ' + key + ' ' + direction)
         for path, expected in [('/sites.php', '/app.php/inventory/sites'), (f'/sites.php?action=edit&id={first}', edit), ('/sites.php?action=edit&id=0', '/app.php/inventory/sites/new')]:
             status, _, url = request(path)
             check(status == 200 and urlsplit(url).path == expected, 'legacy Sites URL reaches Symfony ' + expected)
@@ -97,6 +101,8 @@ def verify_site_lifecycle(harness, session, user_id, check):
         check(race['exit'] == 0 and race['stdout'] == 'concurrent assignment rejected', 'legacy device assignment waits for site deletion and rejects a deleted site')
         failure = harness.php('-r', Path(__file__).with_name('database_failure_probe.php').read_text().removeprefix('<?php'))
         check(failure['exit'] == 0 and failure['stdout'] == 'database failures rejected', 'transactional SQL failures cannot retry without locks or report a saved ID')
+        disable = harness.php('-r', Path(__file__).with_name('site_disable_probe.php').read_text().removeprefix('<?php'))
+        check(disable['exit'] == 0 and disable['stdout'] == 'site locked before device effects', 'site locks precede device locks and rejected assignments preserve polling state')
         from site_collector_scenarios import verify_collector_sites
         verify_collector_sites(harness, request, form, action, copies[0], created, check)
         for suffix in ['ids[]=0', 'ids[]=1&ids[]=1', 'ids=bad', 'ids[]=4294967296']:

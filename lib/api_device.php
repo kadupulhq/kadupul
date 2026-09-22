@@ -996,12 +996,6 @@ function api_device_save($id, $device_template_id, $description, $hostname, $snm
 	 * not disabled = '' => no regexp, but allow nulls */
 	$save['disabled']             = form_input_validate($disabled, 'disabled', '^on$', true, 3);
 
-	if ($save['disabled'] == 'on') {
-		if ($save['id'] > 0) {
-			api_device_disable_devices(array($save['id']));
-		}
-	}
-
 	$quick_save = api_device_quick_save($save);
 
 	$save['availability_method']  = form_input_validate($availability_method, 'availability_method', '^[0-9]+$', false, 3);

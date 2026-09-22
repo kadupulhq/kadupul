@@ -40,8 +40,8 @@ section. Do not equate an implemented checkbox with passed verification.
 
 The retired `sites.php` implementation contained 3 `global` declarations importing
 5 variables and 2 direct superglobal references. The compatibility entry has none;
-no equivalent declarations were added under `src/Inventory`. Its diff removes
-627 old lines and adds 18 bridge lines (609 fewer lines in that entry point).
+no equivalent declarations were added under `src/Inventory`. The entry shrinks from
+631 lines to 23 lines, including the preserved copyright header (608 fewer lines).
 
 ## Compatibility decisions
 
@@ -82,3 +82,9 @@ supported. Failed `sql_save` operations now return `false`, including updates th
 previously could return an existing/stale identifier. Regression evidence covers a
 real constraint failure, unchanged successful saves, lost-transaction deadlocks,
 and standalone retry compatibility; coverage publication requires this evidence.
+
+Site validation now precedes the legacy disable/status effects. The device editor
+also locks the site before the host, then rechecks the association after taking
+the host lock. A concurrent association change rejects the edit. Regression tests
+verify this lock order with a nonwaiting host-row lock and show that a rejected
+legacy save cannot disable the device or reset its polling status.

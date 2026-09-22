@@ -46,7 +46,7 @@
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route with integer site ID and encoded validated list context. #}
                 <td><a href="{{ path('inventory_site_edit', {id: site.id, list: filters}) }}">{{ siteLabel }}</a></td><td>{{ site.id }}</td>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
-                <td><a href="{{ legacyDeviceUrl ? legacyDeviceUrl ~ '?reset=1&site_id=' ~ site.id : path('inventory_devices', {site: site.id}) }}" aria-label="{{ 'Devices at %site%'|trans({'%site%': siteLabel}, 'inventory') }}">{{ site.visibleDevices }}</a></td>
+                <td><a href="{{ legacyDeviceUrl ? legacyDeviceUrl ~ '?reset=1&site_id=' ~ site.id : path('inventory_devices', {site: site.id}) }}" aria-label="{{ site.visibleDevices }} — {{ 'Devices at %site%'|trans({'%site%': siteLabel}, 'inventory') }}">{{ site.visibleDevices }}</a></td>
                 <td>{{ site.city }}</td><td>{{ site.state }}</td><td>{{ site.country }}</td>
             </tr>
         {% else %}
