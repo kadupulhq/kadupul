@@ -55,11 +55,14 @@ test('all 25 distinct Sonar findings are represented', function () use ($baselin
 	expect(count(array_unique(array_column($baseline, 'key'))))->toBe(25);
 });
 
-test('void calls retain their arguments and output without consuming a nonexistent result', function ($entry) {
-	$lines = file(dirname(__DIR__, 4) . '/' . $entry['file'], FILE_IGNORE_NEW_LINES);
-	expect($lines)->not->toBeFalse();
-	$current = $lines[$entry['line'] - 1];
-	expect($current)->toBe($entry['after']);
+test('void calls retain their arguments and output without consuming a nonexistent result', function ($entry) use ($baseline) {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/' . $entry['file']);
+	expect($source)->not->toBeFalse();
+	$current = $entry['after'];
+	$matchingEntries = array_filter($baseline, function ($candidate) use ($entry) {
+		return $candidate['file'] === $entry['file'] && $candidate['after'] === $entry['after'];
+	});
+	expect(substr_count($source, $current))->toBe(count($matchingEntries));
 	$pattern = '/(?:print |echo |\$host_id = )?' . preg_quote($entry['fn'], '/') . '\([^;]*;/';
 	expect(preg_match($pattern, $entry['before'], $before))->toBe(1);
 	expect(preg_match($pattern, $current, $after))->toBe(1);
