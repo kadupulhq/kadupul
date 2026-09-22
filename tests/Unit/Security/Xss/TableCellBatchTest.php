@@ -15,6 +15,36 @@ foreach (array('form_alternate_row_color', 'form_alternate_row', 'form_alternate
 }
 
 function decoded($text) { return html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8'); }
+
+test('table helpers preserve configured charset bytes and escape markup', function ($charset, $hex) {
+	$original = ini_get('default_charset');
+	ini_set('default_charset', $charset);
+	$payload = hex2bin($hex) . '\'"<>&`';
+	$encoding = $charset ?: 'UTF-8';
+	$encoded = str_replace('`', '&#96;', htmlspecialchars($payload, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, $encoding, false));
+	try {
+		foreach (array(
+			function () use ($payload) { form_alternate_row_color('red', 'blue', 1, $payload); },
+			function () use ($payload) { form_alternate_row($payload); },
+			function () use ($payload) { form_alternate_row_class($payload, $payload); },
+			function () use ($payload) { form_selectable_ecell($payload, 1, $payload, $payload, $payload); },
+			function () use ($payload) { form_selectable_cell('Trusted', 1, $payload, $payload, $payload); },
+			function () use ($payload) { form_checkbox_cell($payload, $payload); }
+		) as $index => $render) {
+			ob_start();
+			try { $render(); $output = ob_get_contents(); }
+			finally { ob_end_clean(); }
+			expect($output)->toContain($encoded);
+			expect(substr_count($output, $encoded))->toBe(array(1, 1, 2, 4, 3, 4)[$index]);
+			expect($output)->not->toContain(hex2bin('efbfbd'));
+			expect($output)->not->toContain('<>&`');
+		}
+	} finally {
+		ini_set('default_charset', $original);
+	}
+})->with(array(array('ISO-8859-1', '636166e9'), array('Windows-1252', '707269636580'),
+	array('UTF-8', '636166c3a9'), array('', '636166c3a9')));
+
 function capture($callback, $row = false) {
 	ob_start();
 	try {

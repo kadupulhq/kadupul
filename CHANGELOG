@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-issue: Preserve configured character sets in shared table-cell and checkbox output encoding
 -security: Encode table-row, selectable-cell and checkbox metadata while preserving selection and trusted cell markup
 -security: Encode shared box layout and toolbar attributes while preserving title markup, navigation and layout behavior
 -security: Encode color-selector and edit-control metadata while preserving color selection, callbacks and trusted custom markup

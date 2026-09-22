@@ -151,8 +151,9 @@ function inject_form_variables(&$form_array, $arg1 = array(), $arg2 = array(), $
    @arg $row_id - used to allow js and ajax actions on this object
    @returns - the background color used for this particular row */
 function form_alternate_row_color($row_color1, $row_color2, $row_value, $row_id = '') {
+	$charset = ini_get('default_charset') ?: 'UTF-8';
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$row_id_html = htmlspecialchars((string)$row_id, $escape_flags, 'UTF-8', false);
+	$row_id_html = htmlspecialchars((string)$row_id, $escape_flags, $charset, false);
 	$row_id_html = str_replace('`', '&#96;', $row_id_html);
 
 	if ($row_value % 2 == 1) {
@@ -181,8 +182,9 @@ function form_alternate_row_color($row_color1, $row_color2, $row_value, $row_id 
    @arg $row_id - The id of the row
    @arg $reset - Reset to top of table */
 function form_alternate_row($row_id = '', $light = false, $disabled = false) {
+	$charset = ini_get('default_charset') ?: 'UTF-8';
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$row_id_html = htmlspecialchars((string)$row_id, $escape_flags, 'UTF-8', false);
+	$row_id_html = htmlspecialchars((string)$row_id, $escape_flags, $charset, false);
 	$row_id_html = str_replace('`', '&#96;', $row_id_html);
 
 	static $i = 1;
@@ -216,10 +218,11 @@ function form_alternate_row($row_id = '', $light = false, $disabled = false) {
  * @param bool   $disabled True if the row is disabled
  */
 function form_alternate_row_class($row_id = '', $class = 'tableRow', $disabled = false) {
+	$charset = ini_get('default_charset') ?: 'UTF-8';
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$row_id_html = htmlspecialchars((string)$row_id, $escape_flags, 'UTF-8', false);
+	$row_id_html = htmlspecialchars((string)$row_id, $escape_flags, $charset, false);
 	$row_id_html = str_replace('`', '&#96;', $row_id_html);
-	$class_html = htmlspecialchars((string)$class, $escape_flags, 'UTF-8', false);
+	$class_html = htmlspecialchars((string)$class, $escape_flags, $charset, false);
 	$class_html = str_replace('`', '&#96;', $class_html);
 
 	if ($row_id != '' && !$disabled && substr($row_id, 0, 4) != 'row_') {
@@ -238,8 +241,9 @@ function form_alternate_row_class($row_id = '', $class = 'tableRow', $disabled =
    @arg $style_or_class - the style or class to apply to the table element
    @arg $title - optional title for the column */
 function form_selectable_ecell($contents, $id, $width = '', $style_or_class = '', $title = '') {
+	$charset = ini_get('default_charset') ?: 'UTF-8';
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$contents_html = htmlspecialchars((string)$contents, $escape_flags, 'UTF-8', false);
+	$contents_html = htmlspecialchars((string)$contents, $escape_flags, $charset, false);
 	$contents_html = str_replace('`', '&#96;', $contents_html);
 
 	form_selectable_cell($contents_html, $id, $width, $style_or_class, $title);
@@ -252,12 +256,13 @@ function form_selectable_ecell($contents, $id, $width = '', $style_or_class = ''
    @arg $style_or_class - the style or class to apply to the table element
    @arg $title - optional title for the column */
 function form_selectable_cell($contents, $id, $width = '', $style_or_class = '', $title = '') {
+	$charset = ini_get('default_charset') ?: 'UTF-8';
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$width_html = htmlspecialchars((string)$width, $escape_flags, 'UTF-8', false);
+	$width_html = htmlspecialchars((string)$width, $escape_flags, $charset, false);
 	$width_html = str_replace('`', '&#96;', $width_html);
-	$style_or_class_html = htmlspecialchars((string)$style_or_class, $escape_flags, 'UTF-8', false);
+	$style_or_class_html = htmlspecialchars((string)$style_or_class, $escape_flags, $charset, false);
 	$style_or_class_html = str_replace('`', '&#96;', $style_or_class_html);
-	$title_html = htmlspecialchars((string)$title, $escape_flags, 'UTF-8', false);
+	$title_html = htmlspecialchars((string)$title, $escape_flags, $charset, false);
 	$title_html = str_replace('`', '&#96;', $title_html);
 
 	$output = '';
@@ -296,10 +301,11 @@ function form_selectable_cell($contents, $id, $width = '', $style_or_class = '',
 /* form_checkbox_cell - format's a tables checkbox form element so that the cacti js actions work on it
    @arg $title - the text that will be displayed if your hover over the checkbox */
 function form_checkbox_cell($title, $id, $disabled = false) {
+	$charset = ini_get('default_charset') ?: 'UTF-8';
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$title_html = htmlspecialchars((string)$title, $escape_flags, 'UTF-8', false);
+	$title_html = htmlspecialchars((string)$title, $escape_flags, $charset, false);
 	$title_html = str_replace('`', '&#96;', $title_html);
-	$id_html = htmlspecialchars((string)$id, $escape_flags, 'UTF-8', false);
+	$id_html = htmlspecialchars((string)$id, $escape_flags, $charset, false);
 	$id_html = str_replace('`', '&#96;', $id_html);
 
 	print "\t<td class='checkbox' style='width:1%;'>\n";
