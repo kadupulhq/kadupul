@@ -71,7 +71,7 @@ test('none labels remain text and retain selection in both dropdown implementati
 	expect($doc->getElementsByTagName('select')->length)->toBe(1);
 })->with(array('form_dropdown', 'form_callback'))->with('dropdown label followup payloads');
 
-test('callback classes remain attributes and consume the original error key', function ($theme, $payload) {
+test('callback select classes remain attributes for classic and positive-autocomplete settings', function ($theme, $payload) {
 	State::$theme = $theme;
 	State::$autocomplete = $theme === 'classic' ? 0 : 1;
 	try {
@@ -118,7 +118,10 @@ test('custom controls retain their explicitly trusted HTML contract', function (
 	} finally { ob_end_clean(); }
 });
 
-test('new escaping preserves configured legacy charset and replaces malformed UTF-8', function ($charset, $payload, $expected) {
+test('new escaping preserves configured legacy charset and replaces malformed UTF-8', function ($charset) {
+	// Keep non-UTF-8 bytes out of dataset labels and the JUnit XML report.
+	$payload = $charset === 'ISO-8859-1' ? "caf\xe9 &amp; tea" : "broken\xff<";
+	$expected = $charset === 'ISO-8859-1' ? "caf\xe9 &amp; tea" : "broken\xef\xbf\xbd&lt;";
 	$original = ini_get('default_charset');
 	ini_set('default_charset', $charset);
 	ob_start();
@@ -133,7 +136,4 @@ test('new escaping preserves configured legacy charset and replaces malformed UT
 		ini_set('default_charset', $original);
 	}
 	expect(substr_count($output, $expected))->toBe(4);
-})->with(array(
-	array('ISO-8859-1', "caf\xe9 &amp; tea", "caf\xe9 &amp; tea"),
-	array('UTF-8', "broken\xff<", "broken\xef\xbf\xbd&lt;")
-));
+})->with(array('ISO-8859-1', 'UTF-8'));
