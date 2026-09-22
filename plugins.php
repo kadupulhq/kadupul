@@ -476,7 +476,7 @@ function update_show_current () {
 	<tr class='even noprint'>
 		<td class='noprint'>
 		<form id='form_plugins' method='get' action='plugins.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr class='noprint'>
 					<td>
 						<label for='filter'><?php print __('Search');?></label>

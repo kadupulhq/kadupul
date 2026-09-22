@@ -1,4 +1,5 @@
 const path = require('node:path');
+const fs = require('node:fs');
 const { test, expect } = require('@playwright/test');
 
 async function load(page, ...files) {
@@ -109,6 +110,26 @@ test('colorpicker and multiselect initialize on the existing jQuery UI', async (
   expect(result.color).toBe('ff0000');
   expect(result.selected).toEqual(['a']);
   expect(result.initialized).toBe(true);
+});
+
+test('graph template caption labels and activates the initialized multiselect', async ({ page }) => {
+  const source = fs.readFileSync(path.resolve(__dirname, '../../lib/html.php'), 'utf8');
+  const match = source.match(/function html_graph_template_multiselect\(\) \{\s*\?>\s*([\s\S]*?)\s*<\?php\s*\}/);
+  expect(match).not.toBeNull();
+  const script = match[1].replace(/<\?php print __\('([^']*)'\);\?>/g, '$1');
+  expect(script).not.toContain('<?php');
+  await page.setContent('<label for="graph_template_id">Template</label><select id="graph_template_id" multiple>'
+    + '<option value="-1" selected>All</option><option value="7">Fixture</option></select>');
+  await load(page, 'include/js/jquery-ui.js', 'include/js/jquery.multiselect.js', 'include/js/jquery.multiselect.filter.js');
+  await page.evaluate(() => { window.faIcons = {}; window.applyGraphFilter = () => {}; });
+  await page.addScriptTag({ content: script });
+  const button = page.getByRole('button', { name: 'Template', exact: true });
+  await expect(button).toBeVisible();
+  await expect(page.locator('label[for="graph_template_id_ms"]')).toHaveText('Template');
+  await expect(page.locator('#graph_template_id')).toHaveValues(['-1']);
+  await page.evaluate(() => $('#graph_template_id_ms').on('click', () => { window.captionActivated = true; }));
+  await page.locator('label[for="graph_template_id_ms"]').click();
+  expect(await page.evaluate(() => window.captionActivated)).toBe(true);
 });
 
 test('Sparkline and Dygraphs render charts', async ({ page }) => {

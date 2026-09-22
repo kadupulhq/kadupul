@@ -1034,7 +1034,7 @@ function profile() {
 	<tr class='even'>
 		<td>
 			<form id='form_dsp' action='data_source_profiles.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='filter'><?php print __('Search');?></label>

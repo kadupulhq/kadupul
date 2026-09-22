@@ -1198,7 +1198,7 @@ function networks_filter() {
 	<tr class='even'>
 		<td>
 			<form id='networks' action='automation_networks.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='filter'><?php print __('Search');?></label>

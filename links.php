@@ -323,7 +323,7 @@ function pages() {
 	<tr class='even noprint'>
 		<td>
 			<form id='links' action='links.php' method='post'>
-			<table class='filterTable' cellpadding='2' cellspacing='0'>
+			<table class='filterTable' cellpadding='2' cellspacing='0' role='presentation'>
 				<tr>
 					<td>
 						<label for='filter'><?php print __('Search');?></label>

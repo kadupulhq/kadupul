@@ -1067,7 +1067,7 @@ function utilities_view_user_log() {
 	<tr class='even noprint'>
 		<td>
 		<form id='form_userlog' action='utilities.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='username'><?php print __('User');?></label>

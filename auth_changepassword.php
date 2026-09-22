@@ -362,16 +362,16 @@ if ($skip_current) {
 							<td><?php print __('Username');?></td>
 							<td class='nowrap'><input type='hidden' id='current' name='current_password' autocomplete='current-password' value=''><?php print $user['username'];?></td>
 <?php } else { ?>
-							<td><?php print __('Current password');?></td>
+							<td><label for='current'><?php print __('Current password');?></label></td>
 							<td class='nowrap'><input type='password' class='ui-state-default ui-corner-all' id='current' name='current_password' autocomplete='current-password' size='20' placeholder='********'></td>
 <?php } ?>
 						</tr>
 						<tr>
-							<td><?php print __('New password');?></td>
+							<td><label for='password'><?php print __('New password');?></label></td>
 							<td class='nowrap'><input type='password' class='ui-state-default ui-corner-all' id='password' name='password' autocomplete='off' size='20' placeholder='********'><?php print display_tooltip($secpass_tooltip);?></td>
 						</tr>
 						<tr>
-							<td><?php print __('Confirm new password');?></td>
+							<td><label for='password_confirm'><?php print __('Confirm new password');?></label></td>
 							<td class='nowrap'><input type='password' class='ui-state-default ui-corner-all' id='password_confirm' name='password_confirm' autocomplete='off' size='20' placeholder='********'></td>
 						</tr>
 						<tr>
