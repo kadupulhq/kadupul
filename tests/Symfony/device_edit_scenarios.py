@@ -208,9 +208,13 @@ def verify_device_edit(harness, session, user_id, allowed_id, hidden_id, check):
     columns = ','.join(polling)
     original_polling = harness.sql(f'SELECT {columns} FROM host WHERE id={allowed_id}').strip().split('\t')
     try:
-        harness.sql(f'UPDATE host SET ping_method=0 WHERE id={allowed_id}')
+        harness.sql(f'UPDATE host SET ping_method=0,max_oids=0 WHERE id={allowed_id}')
         legacy = get_fields()
-        check(post(legacy, harness.base)[0] == 422, 'unsupported historical polling value requires an explicit valid choice')
+        check(legacy['device_edit[polling][ping_method]'] == '0' and legacy['device_edit[polling][max_oids]'] == '0', 'legacy zero polling settings remain explicit in the form')
+        check(post(legacy, harness.base)[0] == 200, 'legacy zero polling settings round-trip unchanged')
+        check(harness.sql(f'SELECT ping_method,max_oids FROM host WHERE id={allowed_id}').strip() == '0\t0', 'legacy polling sentinels persist unchanged')
+        harness.sql(f'UPDATE host SET ping_method=NULL WHERE id={allowed_id}')
+        check(post(get_fields(), harness.base)[0] == 422, 'null historical ping method requires an explicit choice')
         fields = get_fields()
         changed = fields | {'device_edit[polling][' + key + ']': value for key, value in polling.items()}
         check(post(changed, harness.base)[0] == 200, 'device polling settings save through Symfony')
