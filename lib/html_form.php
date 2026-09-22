@@ -518,7 +518,8 @@ function draw_edit_control($field_name, &$field_array) {
 
 		break;
 	case 'template_drop_array':
-		print '<em>' . $field_array['array'][$field_array['value']] . '</em>';
+		$label_html = htmlspecialchars((string) $field_array['array'][$field_array['value']], ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false);
+		print '<em>' . str_replace('`', '&#96;', $label_html) . '</em>';
 
 		form_hidden_box($field_name, $field_array['value'], '', true);
 
@@ -985,7 +986,8 @@ function form_dropdown($form_name, $form_data, $column_display, $column_id, $for
 	print "<select id='" . $form_name_html . "' name='" . $form_name_html . "'" . $class_attribute . '>';
 
 	if (!empty($form_none_entry)) {
-		print "<option value='0'" . (empty($form_previous_value) ? ' selected' : '') . ">$form_none_entry</option>";
+		$none_html = htmlspecialchars((string) $form_none_entry, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
+		print "<option value='0'" . (empty($form_previous_value) ? ' selected' : '') . '>' . str_replace('`', '&#96;', $none_html) . '</option>';
 	}
 
 	html_create_list($form_data, $column_display, $column_id, $form_previous_value);
@@ -1067,7 +1069,8 @@ function form_callback($form_name, $classic_sql, $column_display, $column_id, $c
 	}
 
 	if ($class != '') {
-		$class = " class='$class' ";
+		$class_html = htmlspecialchars((string) $class, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false);
+		$class = " class='" . str_replace('`', '&#96;', $class_html) . "' ";
 	}
 
 	$theme = get_selected_theme();
@@ -1075,7 +1078,8 @@ function form_callback($form_name, $classic_sql, $column_display, $column_id, $c
 		print "<select id='" . html_escape($form_name) . "' name='" . html_escape($form_name) . "'" . $class . '>';
 
 		if (!empty($none_entry)) {
-			print "<option value='0'" . (empty($previous_value) ? ' selected' : '') . ">$none_entry</option>";
+			$none_html = htmlspecialchars((string) $none_entry, ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false);
+			print "<option value='0'" . (empty($previous_value) ? ' selected' : '') . '>' . str_replace('`', '&#96;', $none_html) . '</option>';
 		}
 
 		$form_data = db_fetch_assoc($classic_sql);
