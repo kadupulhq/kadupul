@@ -19,16 +19,16 @@ function __esc($text) { return htmlspecialchars($text, ENT_QUOTES, 'UTF-8'); }
 function html_escape($text) { return htmlspecialchars(str_replace('`', '&#96;', $text), ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8', false); }
 function api_plugin_hook($name, $args) { State::$plugin = array($name, $args); }
 
-function render($payload, $allowed, $custom) {
+function render($payload, $allowed, $custom, $action = 'view') {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/graph.php');
-	if (!preg_match("/<div class='graphWrapper'.*?<\/td><\\?php \\} \\?>/s", $source, $match)) {
+	if (preg_match_all("/<div class='graphWrapper'.*?<\/td><\\?php \\} \\?>/s", $source, $matches) !== 2) {
 		throw new \RuntimeException('Missing production graph block');
 	}
 	State::$value = $payload;
 	State::$allowed = $allowed;
 	State::$custom = $custom;
 	State::$plugin = array();
-	$graph = array('local_graph_id' => $payload, 'width' => $payload, 'height' => $payload);
+	$graph = array('local_graph_id' => $payload, 'width' => $payload, 'height' => $payload, 'title_cache' => 'Graph title');
 	$rra = array('id' => $payload);
 	$graph_start = $graph_end = $payload;
 	$graph_template_id = 0;
@@ -36,7 +36,7 @@ function render($payload, $allowed, $custom) {
 	$config = array('url_path' => '/kadupul/');
 	ob_start();
 	try {
-		eval('namespace GraphPageWrapperTest; ?>' . $match[0]);
+		eval('namespace GraphPageWrapperTest; ?>' . $matches[0][$action === 'zoom' ? 1 : 0]);
 		$output = ob_get_contents();
 	} finally { ob_end_clean(); }
 	expect($output)->not->toContain('`');
@@ -85,4 +85,30 @@ test('graph page attributes preserve values without introducing markup', functio
 	expect($handler)->toEndWith("width=650,height=300');return false");
 	expect(State::$plugin)->toBe(array('graph_buttons', array('hook' => 'view', 'local_graph_id' => $payload, 'rra' => $payload, 'view_type' => $payload)));
 	expect($doc->getElementsByTagName('strong')->item(0)->textContent)->toBe('Trusted aggregate');
+})->with(array(false, true))->with(array('on', ''))->with('graph page payloads');
+
+test('zoom uses the same safe attribute boundary without changing its controls or plugin arguments', function ($allowed, $custom, $payload) {
+	$doc = render($payload, $allowed, $custom, 'zoom');
+	$xpath = new \DOMXPath($doc);
+	$wrapper = $xpath->query('//div[@class="graphWrapper"]')->item(0);
+	expect($wrapper->getAttribute('id'))->toBe('wrapper_' . $payload);
+	foreach (array('graph_id', 'rra_id', 'graph_width', 'graph_height', 'title_font_size') as $name) {
+		expect($wrapper->getAttribute($name))->toBe($payload);
+	}
+	expect($wrapper->attributes->length)->toBe(7);
+	expect($doc->getElementsByTagName('script')->length)->toBe(0);
+	expect($doc->getElementsByTagName('img')->length)->toBe($allowed ? 2 : 0);
+	foreach ($doc->getElementsByTagName('*') as $element) {
+		foreach ($element->attributes as $attribute) { expect(strncmp($attribute->name, 'on', 2))->not->toBe(0); }
+	}
+	if (!$allowed) {
+		expect(State::$plugin)->toBe(array());
+		return;
+	}
+	expect($xpath->query('//td[@class="graphDrillDown noprint"]')->item(0)->getAttribute('id'))->toBe('dd' . $payload);
+	$links = $xpath->query('//a[@class="iconLink properties"]');
+	expect($links->length)->toBe(2);
+	expect($links->item(0)->getAttribute('id'))->toBe('graph_' . $payload . '_properties');
+	expect($links->item(1)->getAttribute('id'))->toBe('graph_' . $payload . '_csv');
+	expect(State::$plugin)->toBe(array('graph_buttons', array('hook' => 'zoom', 'local_graph_id' => $payload, 'rra' => $payload, 'view_type' => $payload)));
 })->with(array(false, true))->with(array('on', ''))->with('graph page payloads');
