@@ -57,12 +57,12 @@
   {
     "file": "about.php",
     "before": "\t\t<p><tt><?php print __('This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.');?></tt></p>",
-    "after": "\t\t<p><span style='font-family:monospace;'><?php print __('This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.');?></span></p>"
+    "after": "\t\t<p><span style='font-family:monospace;'><?php\n\t\t\tprint __(\n\t\t\t\t'This program is free software; you can redistribute it and/or modify it under the ' .\n\t\t\t\t'terms of the GNU General Public License as published by the Free Software Foundation; ' .\n\t\t\t\t'either version 2 of the License, or (at your option) any later version.'\n\t\t\t);\n\t\t?></span></p>"
   },
   {
     "file": "about.php",
     "before": "\t\t<p><tt><?php print __('This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.'); ?></tt></p>",
-    "after": "\t\t<p><span style='font-family:monospace;'><?php print __('This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.'); ?></span></p>"
+    "after": "\t\t<p><span style='font-family:monospace;'><?php\n\t\t\tprint __(\n\t\t\t\t'This program is distributed in the hope that it will be useful, but WITHOUT ANY ' .\n\t\t\t\t'WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A ' .\n\t\t\t\t'PARTICULAR PURPOSE. See the GNU General Public License for more details.'\n\t\t\t);\n\t\t?></span></p>"
   },
   {
     "file": "color.php",
