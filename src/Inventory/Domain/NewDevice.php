@@ -25,7 +25,7 @@ final readonly class NewDevice
             throw new \InvalidArgumentException('Unexpected fields were submitted.');
         }
         $fields = array_replace(self::DEFAULTS, $values);
-        $integers = ['host_template_id' => [0, 16777215], 'site_id' => [0, 4294967295], 'poller_id' => [1, 65535], 'device_threads' => [1, 255], 'snmp_port' => [1, 65535], 'snmp_timeout' => [1, 16777215], 'max_oids' => [0, 60], 'ping_port' => [0, 65535], 'ping_timeout' => [1, 4294967295], 'ping_retries' => [0, 100]];
+        $integers = ['host_template_id' => [0, 16777215], 'site_id' => [0, 4294967295], 'poller_id' => [1, 65535], 'device_threads' => [1, 255], 'snmp_port' => [0, 65535], 'snmp_timeout' => [1, 16777215], 'max_oids' => [0, 60], 'ping_port' => [0, 65535], 'ping_timeout' => [0, 4294967295], 'ping_retries' => [0, 100]];
         foreach ($fields as $key => $value) {
             if (in_array($key, ['enabled', 'use_default_credentials'], true)) {
                 if (!is_bool($value)) {

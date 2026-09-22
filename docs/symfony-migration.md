@@ -765,7 +765,10 @@ OID count, bulk-walk size, availability method, and ping method/port/timeout/ret
 `DevicePolling` validates a complete set of settings and is shared by device
 creation and editing. All fields participate in the device revision; an external
 change rejects stale forms before persistence. Missing or invalid settings do not
-silently reset existing values. Legacy ping method `0` and `max_oids=0` remain selectable and round-trip unchanged.
+silently reset existing values. Legacy ping method `0`, `max_oids=0`, `snmp_port=0` and `ping_timeout=0`
+remain selectable and round-trip unchanged. The SNMP sanitizer resolves port zero
+to 161; the ping engine resolves timeout zero to 500 ms. OID zero uses the
+configured maximum.
 NULL ping methods and other unsupported historical values require an explicit
 valid choice before saving; they are not silently normalized. The worker repeats validation and retains the
 legacy cache/poller/plugin path. SNMP credential and protocol editing, template
