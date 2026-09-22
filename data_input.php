@@ -1024,7 +1024,7 @@ function data() {
 	<tr class='even noprint'>
 		<td class='noprint'>
 		<form id='form_data_input' method='get' action='data_input.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr class='noprint'>
 					<td>
 						<label for='filter'><?php print __('Search');?></label>

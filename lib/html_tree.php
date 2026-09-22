@@ -978,7 +978,7 @@ function grow_right_pane_tree($tree_id, $leaf_id, $host_group_data) {
 	<tr class='even noprint' id='search'>
 		<td class='noprint'>
 		<form id='form_graph_view' method='post'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<?php print __('Search');?>

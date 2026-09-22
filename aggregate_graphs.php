@@ -1239,7 +1239,7 @@ function aggregate_items() {
 	<tr class='even'>
 		<td>
 			<form id='forms' action='aggregate_graphs.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='rfilter'><?php print __('Search');?></label>
@@ -1521,7 +1521,7 @@ function aggregate_graph() {
 	<tr class='even'>
 		<td>
 			<form id='forms' action='aggregate_graphs.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='filter'><?php print __('Search');?></label>

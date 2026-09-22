@@ -731,7 +731,7 @@ function vdef_filter() {
 	<tr class='even'>
 		<td>
 			<form id='form_vdef' action='vdef.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='filter'><?php print __('Search');?></label>

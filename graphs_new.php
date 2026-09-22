@@ -419,7 +419,7 @@ function graphs() {
 	<form id='graphs_new' action='graphs_new.php'>
 		<table class='cactiTable'>
 			<tr><td style='width:70%;'>
-				<table class='filterTable'>
+				<table class='filterTable' role='presentation'>
 					<tr>
 						<?php html_host_filter(get_request_var('host_id'), 'applyFilter', '', true, true);?>
 						<td>

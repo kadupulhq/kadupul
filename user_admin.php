@@ -2222,7 +2222,7 @@ function user() {
 	<tr class='even'>
 		<td>
 		<form id='forms' action='user_admin.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='u-search'><?php print __('Search');?></label>
@@ -2675,7 +2675,7 @@ function graph_filter($header_label) {
 	<tr class='even'>
 		<td>
 		<form id='forms' action='user_admin.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='graphs'><?php print __('Search');?></label>

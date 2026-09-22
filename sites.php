@@ -567,7 +567,7 @@ function sites() {
 	<tr class='even'>
 		<td>
 			<form id='form_site' action='sites.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='filter'><?php print __('Search');?></label>
