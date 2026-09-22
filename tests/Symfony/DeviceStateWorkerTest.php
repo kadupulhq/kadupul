@@ -16,6 +16,24 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 final class DeviceStateWorkerTest extends TestCase
 {
+    public function testStrictModeIsRestoredAfterRemoteSetupBeforeWrites(): void
+    {
+        $source = file_get_contents(__DIR__ . '/../../bin/legacy-device-state.php');
+        self::assertIsString($source);
+        $connect = strpos($source, 'poller_connect_to_remote(');
+        $remoteMode = strpos($source, '$remote->exec("SET SESSION sql_mode');
+        $primaryMode = strpos($source, '$connection->exec("SET SESSION sql_mode');
+        $write = strpos($source, 'api_device_enable_devices(');
+        foreach ([$connect, $remoteMode, $primaryMode, $write] as $offset) {
+            self::assertNotFalse($offset);
+        }
+        self::assertLessThan($remoteMode, $connect);
+        self::assertLessThan($primaryMode, $remoteMode);
+        self::assertLessThan($write, $primaryMode);
+        self::assertStringContainsString("throw new RuntimeException('Collector connection validation unavailable')", $source);
+        self::assertStringContainsString("throw new RuntimeException('Primary connection validation unavailable')", $source);
+    }
+
     public static function executables(): array
     {
         return [[true, '{"status":"ok"}', false], [false, '{"status":"ok"}', true], [true, '{malformed-json}', true], [true, '{"status":[]}', true], [true, '"ok"', true], [true, 'null', true], [true, 'true', true], [true, '42', true], [true, '[]', true]];
