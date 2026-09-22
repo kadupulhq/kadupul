@@ -90,25 +90,25 @@ $start = microtime(true);
 if (read_config_option('boost_rrd_update_enable') !== 'on') {
 	print PHP_EOL . 'FATAL: Cacti\'s Performance Booster required to run this utility.'. PHP_DEOL;
 	display_help();
-	exit -1;
+	exit(1);
 }
 
 if ($host_id !== false && ($host_id <= 0 || !is_numeric($host_id))) {
 	print PHP_EOL . 'FATAL: When specifying a Device ID, you must pick on greater or equal than zero.' . PHP_DEOL;
 	display_help();
-	exit -1;
+	exit(1);
 }
 
 if ($host_template_id !== false && ($host_template_id <= 0 || !is_numeric($host_template_id))) {
 	print PHP_EOL . 'FATAL: When specifying a Device Template ID, you must pick on greater or equal than zero.' . PHP_DEOL;
 	display_help();
-	exit -1;
+	exit(1);
 }
 
 if ($proceed == false) {
 	print PHP_EOL . 'FATAL: You Must Explicitly Instruct This Script to Proceed with the \'--proceed\' Option' . PHP_DEOL;
 	display_help();
-	exit -1;
+	exit(1);
 }
 
 /* check ownership of the current base path */
@@ -216,7 +216,7 @@ foreach ($data_sources as $info) {
 	} elseif ($dest_status == 'mkdir_failed') {
 		print "FATAL: Could NOT Make New Directory '$new_base_path'" . PHP_EOL;
 
-		exit -1;
+		exit(1);
 	}
 
 	if (!$dest_existed) {
@@ -228,7 +228,7 @@ foreach ($data_sources as $info) {
 			} else {
 				print "FATAL: Could not Set Permissions for Directory '$new_base_path'" . PHP_EOL;
 
-				exit -5;
+				exit(5);
 			}
 		}
 	}
@@ -299,7 +299,7 @@ foreach ($data_sources as $info) {
 						struct_debug("Permissions set for '$new_rrd_path'");
 					} else {
 						print "FATAL: Could not Set Permissions for File '$new_rrd_path'" . PHP_EOL;
-						exit -6;
+						exit(6);
 					}
 				}
 
@@ -307,7 +307,7 @@ foreach ($data_sources as $info) {
 				update_database($info);
 			} else {
 				print "FATAL: Could not Move RRD File '$old_rrd_path' to '$new_rrd_path'" . PHP_EOL;
-				exit -3;
+				exit(3);
 			}
 		} else {
 			$skip_count++;
@@ -645,4 +645,3 @@ function display_help() {
 	print '  2) Move the File to the Structured Path Using the New Name' . PHP_EOL;
 	print '  3) Alter the two Database Tables Required'. PHP_DEOL;
 }
-
