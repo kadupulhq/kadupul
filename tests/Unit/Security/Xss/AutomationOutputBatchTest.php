@@ -105,7 +105,8 @@ test('automation search controls have associated visible labels', function () {
 test('HTML output preserves legacy values charset and toggle behavior without attribute injection',
 	function ($issue, $payload, $charset, $shown) {
 		$previousCharset = ini_get('default_charset');
-		$previousSession = $_SESSION ?? array();
+		$hadSession = array_key_exists('_SESSION', $GLOBALS);
+		$previousSession = $_SESSION ?? null;
 		ini_set('default_charset', $charset);
 		$effective = $charset === '' ? 'UTF-8' : $charset;
 		if ($effective !== 'UTF-8') {
@@ -137,7 +138,11 @@ test('HTML output preserves legacy values charset and toggle behavior without at
 			}
 		} finally {
 			ini_set('default_charset', $previousCharset);
-			$_SESSION = $previousSession;
+			if ($hadSession) {
+				$_SESSION = $previousSession;
+			} else {
+				unset($_SESSION);
+			}
 		}
 	})->with('automation HTML sinks')->with('automation output payloads')
 	->with(array('UTF-8', 'ISO-8859-1', ''))->with(array(false, true));
