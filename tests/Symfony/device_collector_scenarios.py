@@ -110,6 +110,7 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id={device_id}').strip() == '0', 'collector reassignment verifies old host cleanup')
         check(harness.sql(f'SELECT poller_id FROM poller_item WHERE local_data_id={data}').strip() == '1', 'primary move updates polling item ownership')
         check(form.assign(poller, stale) == 409, 'collector moves invalidate stale confirmations')
+        harness.sql(f"INSERT INTO create_remote.poller_command (poller_id,time,action,command) VALUES ({poller},NOW(),3,'{device_id}'),({poller},NOW(),3,'16777214')")
         # A real target trigger simulates the poller advancing runtime fields
         # immediately as replicated rows arrive.
         harness.sql("CREATE TRIGGER create_remote.advance_host_status BEFORE INSERT ON create_remote.host FOR EACH ROW SET NEW.total_polls=NEW.total_polls+1")
@@ -122,6 +123,9 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
             harness.sql('DROP TRIGGER create_remote.advance_poller_step')
             harness.sql('DROP TRIGGER create_remote.advance_snmp_cache')
         check(harness.sql(f"SELECT field_value FROM create_remote.host_snmp_cache WHERE host_id={device_id} AND snmp_query_id=16777214").strip() == 'refreshed', 'collector move tolerates poller-refreshed SNMP observations')
+        check(harness.sql(f"SELECT COUNT(*) FROM create_remote.poller_command WHERE action=3 AND command='{device_id}'").strip() == '0', 'returning device cancels already replicated destination purge')
+        check(harness.sql("SELECT COUNT(*) FROM create_remote.poller_command WHERE action=3 AND command='16777214'").strip() == '1', 'destination purge cancellation preserves unrelated device commands')
+        harness.sql("DELETE FROM create_remote.poller_command WHERE action=3 AND command='16777214'")
         check(harness.sql(f'SELECT poller_id FROM create_remote.host WHERE id={device_id}').strip() == str(poller), 'collector reassignment verifies target identity')
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host_graph WHERE host_id={device_id} AND graph_template_id={template_graph}').strip() == '1', 'collector reassignment preserves host graph associations')
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.data_local WHERE id={data}').strip() == '1' and harness.sql(f'SELECT COUNT(*) FROM create_remote.graph_local WHERE id={graph}').strip() == '1', 'collector reassignment preserves graph and data identities')
