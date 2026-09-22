@@ -254,7 +254,9 @@ def verify_device_edit(harness, session, user_id, allowed_id, hidden_id, check):
         missing.pop('device_edit[snmp][keep_credentials]')
         check(post(missing, harness.base)[0] == 422, 'missing SNMP credential decision cannot clear credentials')
         harness.sql(f"UPDATE host SET snmp_password='short' WHERE id={allowed_id}")
-        check(post(get_fields(), harness.base)[0] == 422, 'worker rejects incompatible stored SNMP credentials')
+        before_description = harness.sql(f'SELECT description FROM host WHERE id={allowed_id}')
+        check(post(get_fields() | {'device_edit[description]': 'must-not-persist'}, harness.base)[0] == 422, 'worker rejects incompatible stored SNMP credentials')
+        check(harness.sql(f'SELECT description FROM host WHERE id={allowed_id}') == before_description, 'incompatible stored credentials roll back the entire edit')
         check(post(get_fields() | {'device_edit[snmp][snmp_version]': '2'}, harness.base)[0] == 200, 'leaving SNMPv3 clears its obsolete settings')
         check(harness.sql(f"SELECT COUNT(*) FROM host WHERE id={allowed_id} AND snmp_username='' AND snmp_password='' AND snmp_priv_passphrase='' AND snmp_context=''").strip() == '1', 'legacy SNMPv3 credential cleanup remains effective')
     finally:
