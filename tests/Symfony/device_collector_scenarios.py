@@ -110,6 +110,13 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id={device_id}').strip() == '0', 'collector reassignment verifies old host cleanup')
         check(harness.sql(f'SELECT poller_id FROM poller_item WHERE local_data_id={data}').strip() == '1', 'primary move updates polling item ownership')
         check(form.assign(poller, stale) == 409, 'collector moves invalidate stale confirmations')
+        harness.sql("CREATE TRIGGER create_remote.reject_collector_polling BEFORE INSERT ON create_remote.poller_item FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='collector polling fixture rejection'")
+        try:
+            check(form.assign(poller) == 502, 'collector rejects an early replication SQL failure')
+            check(harness.sql(f'SELECT poller_id FROM host WHERE id={device_id}').strip() == '1', 'early replication failure rolls back primary ownership')
+            check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id={device_id}').strip() == '0', 'replication stops before later host writes after a SQL failure')
+        finally:
+            harness.sql('DROP TRIGGER create_remote.reject_collector_polling')
         notes_hex = 'collector notes 🌏'.encode().hex().upper()
         harness.sql(f"UPDATE host SET notes=CONVERT(UNHEX('{notes_hex}') USING utf8mb4) WHERE id={device_id}")
         harness.sql('ALTER TABLE create_remote.host MODIFY notes TEXT CHARACTER SET utf8mb3 NULL')
