@@ -45,7 +45,7 @@ final class DeviceCollectorController
             return new Response($translator->trans('Invalid device list filters.', [], 'inventory'), 400, $headers);
         }
         $editParameters = ['id' => $id, 'list' => $filters];
-        $form = $forms->create(DeviceCollectorType::class, ['collector_id' => $device->collectorId(), 'revision' => $device->revision()], ['action' => $urls->generate('inventory_device_collector', $editParameters), 'collectors' => $view['collectors']]);
+        $form = $forms->create(DeviceCollectorType::class, ['collector_id' => array_key_exists($device->collectorId(), $view['collectors']) ? $device->collectorId() : null, 'revision' => $device->revision()], ['action' => $urls->generate('inventory_device_collector', $editParameters), 'collectors' => $view['collectors']]);
         $form->handleRequest($request);
         $status = $request->isMethod('POST') ? 422 : 200;
         if ($form->isSubmitted()) {

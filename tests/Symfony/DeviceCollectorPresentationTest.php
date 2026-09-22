@@ -37,7 +37,7 @@ final class DeviceCollectorPresentationTest extends TestCase
             $access->method('consoleActor')->willReturn(new Actor(42, 'operator'));
             $access->method('canManageDevices')->willReturn(true);
             $container->set(ConsoleAccess::class, $access);
-            $device = new DeviceCollectorAssignment(7, '<router>', 1, 0);
+            $device = new DeviceCollectorAssignment(7, '<router>', 4, 0);
             $port = $this->createMock(DeviceCollectorAssignments::class);
             $port->method('findVisible')->willReturn($device);
             $port->method('collectors')->willReturn([1 => 'Primary', 2 => '<Collector>', 3 => '<Collector>']);
@@ -50,6 +50,7 @@ final class DeviceCollectorPresentationTest extends TestCase
             self::assertStringContainsString('&lt;router&gt;', $response->getContent());
             self::assertStringContainsString('value="2">&lt;Collector&gt;', $response->getContent());
             self::assertStringContainsString('value="3">&lt;Collector&gt;', $response->getContent());
+            self::assertStringNotContainsString('value="4"', $response->getContent());
             $document = new \DOMDocument();
             @$document->loadHTML($response->getContent());
             $token = (new \DOMXPath($document))->evaluate('string(//input[@name="device_collector[_token]"]/@value)');
