@@ -17,7 +17,7 @@ compatibility. LTS remains unchanged. Plugin-owned pages are outside this queue.
 | Device template assignment | PR #262 |
 | Device collector assignment | PR #266 |
 | Device bulk enable/disable | PR #272 |
-| Device deletion and graph/data retention choices | Implemented; validation in progress |
+| Device deletion and graph/data retention choices | PR #276 |
 | Device bulk options, statistics and template synchronization | Pending |
 | Device graph-template associations | Pending |
 | Device data-query associations and reindex settings | Pending |
