@@ -7,29 +7,8 @@
 
 use Kadupul\Inventory\Domain\DeviceTemplateAssignment;
 use Kadupul\Inventory\Domain\DeviceEditConflict;
-use Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceVisibility;
-use Kadupul\Platform\Contract\DatabaseConnection;
 
-if (PHP_SAPI !== 'cli') {
-    http_response_code(404);
-    exit;
-}
-
-// Isolate procedural globals, plugin hooks and poller effects from Symfony HTTP.
-define('KADUPUL_REDACT_DATABASE_LOGS', true);
-ob_start();
-require __DIR__ . '/../include/cli_check.php';
-require_once __DIR__ . '/../lib/auth.php';
-require_once __DIR__ . '/../lib/api_automation_tools.php';
-require_once __DIR__ . '/../lib/api_device.php';
-require_once __DIR__ . '/../lib/api_data_source.php';
-require_once __DIR__ . '/../lib/api_graph.php';
-require_once __DIR__ . '/../lib/api_tree.php';
-require_once __DIR__ . '/../lib/data_query.php';
-require_once __DIR__ . '/../lib/poller.php';
-require_once __DIR__ . '/../lib/snmp.php';
-require_once __DIR__ . '/../lib/template.php';
-require_once __DIR__ . '/../lib/utility.php';
+require __DIR__ . '/legacy-assignment-bootstrap.php';
 
 $status = 'failed';
 $transactionStarted = false;
@@ -59,35 +38,10 @@ try {
     if ($command['template_id'] > 0 && !db_fetch_cell_prepared('SELECT id FROM host_template WHERE id = ? LOCK IN SHARE MODE', [$command['template_id']])) {
         throw new InvalidArgumentException('Invalid template');
     }
-    // Match the site-before-host lock order used by site deletion and device saves.
-    $site = db_fetch_row_prepared("SELECT site_id FROM host WHERE id = ? AND deleted = ''", [$command['id']]);
-    if (!$site) {
+    $row = \Kadupul\Inventory\Infrastructure\Legacy\DeviceAssignmentLock::findVisible($connection, $command['actor'], $command['id']);
+    if ($row === null) {
         $status = 'denied';
         throw new RuntimeException('Access denied');
-    }
-    if ((int) $site['site_id'] > 0) {
-        $lock = $connection->prepare('SELECT id FROM sites WHERE id = ? FOR UPDATE');
-        if (!$lock->execute([(int) $site['site_id']])) {
-            throw new RuntimeException('Site lock unavailable');
-        }
-        $lock->fetchColumn();
-    }
-    $row = db_fetch_row_prepared("SELECT id, description, host_template_id, poller_id, site_id FROM host WHERE id = ? AND deleted = '' FOR UPDATE", [$command['id']]);
-    $provider = new class ($connection) implements DatabaseConnection {
-        public function __construct(private PDO $connection) {}
-        public function get(): PDO
-        {
-            return $this->connection;
-        }
-    };
-    $visibility = new LegacyDeviceVisibility($provider);
-    $allowed = db_fetch_cell_prepared('SELECT h.id FROM host h LEFT JOIN graph_local gl ON gl.host_id = h.id WHERE h.id = ? AND (' . $visibility->predicate($command['actor'], true) . ') LIMIT 1 LOCK IN SHARE MODE', [$command['id']]);
-    if (!$row || !$allowed) {
-        $status = 'denied';
-        throw new RuntimeException('Access denied');
-    }
-    if ((int) $row['site_id'] !== (int) $site['site_id']) {
-        throw new DeviceEditConflict('Device site changed');
     }
     $assignment = new DeviceTemplateAssignment((int) $row['id'], $row['description'], (int) $row['host_template_id'], (int) $row['poller_id']);
     $assignment->assign($command['template_id'], $command['revision']);

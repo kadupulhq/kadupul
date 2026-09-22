@@ -19,6 +19,7 @@
             <file>bin/legacy-device-collector.php</file>
             <file>bin/legacy-device-state.php</file>
             <file>bin/legacy-device-remove.php</file>
+            <file>bin/legacy-assignment-bootstrap.php</file>
             <file>include/admin_notifications.php</file>
             <file>sites.php</file>
             <file>lib/database.php</file>

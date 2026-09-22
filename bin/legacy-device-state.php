@@ -53,6 +53,9 @@ try {
     }
     $transactionStarted = true;
     $connection = $database_sessions["$database_hostname:$database_port:$database_default"];
+    if ($connection->exec('SET NAMES utf8mb4') === false) {
+        throw new RuntimeException('Primary connection encoding unavailable');
+    }
     if (!(new \Kadupul\Inventory\Infrastructure\Legacy\DeviceWriteAuthorization())->allows($connection, $command['actor'])) {
         $status = 'denied';
         throw new RuntimeException('Access denied');
@@ -115,7 +118,8 @@ try {
                 if (!remote_poller_up($device->pollerId) || !(($remote = poller_connect_to_remote($device->pollerId)) instanceof PDO)) {
                     throw new RuntimeException('Collector unavailable');
                 }
-                if ($remote->exec("SET SESSION sql_mode = CONCAT_WS(',', @@SESSION.sql_mode, 'STRICT_TRANS_TABLES')") === false) {
+                if ($remote->exec('SET NAMES utf8mb4') === false
+                    || $remote->exec("SET SESSION sql_mode = CONCAT_WS(',', @@SESSION.sql_mode, 'STRICT_TRANS_TABLES')") === false) {
                     throw new RuntimeException('Collector connection validation unavailable');
                 }
                 $remotes[$device->pollerId] = $remote;

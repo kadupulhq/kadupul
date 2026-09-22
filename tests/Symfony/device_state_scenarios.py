@@ -1,5 +1,6 @@
 """Bulk state changes through Symfony confirmation and the isolated worker."""
 import json
+from pathlib import Path
 from urllib.parse import urlencode
 from device_collector_scenarios import CollectorForm
 from device_edit_scenarios import Inputs
@@ -85,12 +86,18 @@ def verify_device_state(harness, session, user_id, ids, hidden, check):
 
 
 def verify_remote_device_state(harness, session, device_id, poller, check):
-    local = int(harness.sql("INSERT INTO host (description,hostname,poller_id,disabled) VALUES ('bulk-local-fixture','bulk.invalid',1,''); SELECT LAST_INSERT_ID()").strip())
+    description_hex = 'bulk-local-fixture 🌏'.encode().hex().upper()
+    local = int(harness.sql(f"INSERT INTO host (description,hostname,poller_id,disabled) VALUES (CONVERT(UNHEX('{description_hex}') USING utf8mb4),'bulk.invalid',1,''); SELECT LAST_INSERT_ID()").strip())
     ids = [device_id, local]
     disable = StateForm(harness, session, ids)
     enable = StateForm(harness, session, ids, True)
     trigger = False
+    probe = False
+    probe_source = Path(__file__).with_name('device_state_connection_probe.php').read_text().removeprefix('<?php')
     try:
+        check(harness.php('-r', probe_source, 'install')['exit'] == 0,
+              'bulk state runtime session observer installed in disposable container')
+        probe = True
         harness.sql(f"UPDATE host SET disabled='' WHERE id={device_id}; UPDATE create_remote.host SET disabled='' WHERE id={device_id}")
         harness.sql(f"UPDATE poller SET last_status='2000-01-01 00:00:00' WHERE id={poller}")
         check(disable.apply() == 502, 'bulk state preflights offline collectors before any writes')
@@ -112,9 +119,30 @@ def verify_remote_device_state(harness, session, device_id, poller, check):
         marker = harness.sql(f"SELECT value FROM settings WHERE name='poller_replicate_device_cache_crc_{poller}'")
         check(enable.apply() == 200, 'bulk state confirms unchanged primary and remote copies')
         check(harness.sql(f"SELECT value FROM settings WHERE name='poller_replicate_device_cache_crc_{poller}'") == marker, 'verified remote no-op does not invalidate collector cache')
+        observations = harness.php('-r', 'echo file_get_contents("/artifacts/state-session-modes.jsonl");')
+        check(observations['exit'] == 0, 'bulk state runtime session observations are readable')
+        writers = set()
+        for line in observations['stdout'].splitlines():
+            observation = json.loads(line)
+            writers.add(observation['writer'])
+            connections = {row['db']: row for row in observation['sessions']}
+            check({'cacti', 'create_remote'} <= connections.keys(), 'state writer observes primary and preflighted remote sessions')
+            for database in ['cacti', 'create_remote']:
+                row = connections[database]
+                check('STRICT_TRANS_TABLES' in row['mode'].split(','),
+                      f"{observation['writer']} has strict SQL mode before writes on {database}")
+                check(all(row[key] == 'utf8mb4' for key in ['client', 'connection', 'results']),
+                      f"{observation['writer']} has utf8mb4 before writes on {database}")
+        check(writers == {'api_device_enable_devices', 'api_device_disable_devices'},
+              'runtime session checks exercised both enable and disable writers')
+        check(harness.sql(f'SELECT HEX(description) FROM host WHERE id={local}').strip() == description_hex,
+              'enable and disable preserve four-byte device descriptions and accept their revisions')
         harness.sql(f"UPDATE poller SET last_status='2000-01-01 00:00:00' WHERE id={poller}")
         check(enable.apply() == 502, 'bulk no-op cannot confirm an offline remote copy')
     finally:
+        if probe:
+            check(harness.php('-r', probe_source, 'restore')['exit'] == 0,
+                  'bulk state observer restores original container source')
         if trigger:
             harness.sql('DROP TRIGGER create_remote.reject_bulk_state')
         harness.sql(f'UPDATE poller SET last_status=NOW() WHERE id={poller}')

@@ -8,11 +8,8 @@
 namespace Kadupul\Inventory\Infrastructure\Legacy;
 
 use Kadupul\Inventory\Application\Port\DeviceCollectorAssignments;
-use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Inventory\Domain\DeviceCollectorAssignment;
-use Kadupul\Inventory\Domain\DeviceEditConflict;
 use Kadupul\Platform\Contract\DatabaseConnection;
-use Symfony\Component\Process\Process;
 
 final readonly class LegacyDeviceCollectorAssignments implements DeviceCollectorAssignments
 {
@@ -30,31 +27,11 @@ final readonly class LegacyDeviceCollectorAssignments implements DeviceCollector
     }
     public function save(int $actorId, DeviceCollectorAssignment $assignment, string $revision): void
     {
-        $configured = $this->database->get()->query("SELECT value FROM settings WHERE name = 'path_php_binary'")->fetchColumn();
-        $binary = is_string($configured) && trim($configured) !== '' ? trim($configured) : PHP_BINDIR . (PHP_OS_FAMILY === 'Windows' ? '/php.exe' : '/php');
-        $process = new Process([$binary, $this->projectDir . '/bin/legacy-device-collector.php'], $this->projectDir);
-        $process->setTimeout(120);
-        $process->setInput(json_encode(['actor' => $actorId, 'id' => $assignment->id, 'collector_id' => $assignment->collectorId(), 'revision' => $revision], JSON_THROW_ON_ERROR));
-        $process->run();
-        if (!preg_match('/KADUPUL_COLLECTOR_RESULT=(\{[^\r\n]+\})/', $process->getOutput(), $match)) {
-            throw new \RuntimeException('Collector assignment outcome is unknown.');
-        }
-        try {
-            $status = json_decode($match[1], true, 16, JSON_THROW_ON_ERROR)['status'] ?? '';
-        } catch (\JsonException) {
-            throw new \RuntimeException('Collector assignment outcome is unknown.');
-        }
-        if ($status === 'conflict') {
-            throw new DeviceEditConflict('This device changed. Reload it before saving.');
-        }
-        if ($status === 'denied') {
-            throw new InventoryAccessDenied(false);
-        }
-        if ($status === 'invalid') {
-            throw new \InvalidArgumentException('Select a valid device collector.');
-        }
-        if (!$process->isSuccessful() || $status !== 'ok') {
-            throw new \RuntimeException('Collector assignment could not be confirmed.');
-        }
+        DeviceAssignmentProcess::run($this->database->get(), $this->projectDir, 'collector', [
+            'actor' => $actorId,
+            'id' => $assignment->id,
+            'collector_id' => $assignment->collectorId(),
+            'revision' => $revision,
+        ]);
     }
 }
