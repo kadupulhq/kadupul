@@ -28,15 +28,17 @@ final class DeviceFormFailureTest extends TestCase
         }
     }
 
-    public function testDeniedWriteReturnsPrivateForbiddenResponse(): void
+    public function testDeniedWritePreservesAuthenticationStatusInPrivateResponse(): void
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator->method('trans')->willReturn('Access denied.');
-        $form = $this->createMock(FormInterface::class);
-        $form->expects(self::never())->method('addError');
-        $response = (new DeviceFormFailure($translator))->apply($form, new InventoryAccessDenied(false));
-        self::assertInstanceOf(Response::class, $response);
-        self::assertSame(403, $response->getStatusCode());
-        self::assertStringContainsString('no-store', $response->headers->get('Cache-Control'));
+        foreach ([false => 403, true => 401] as $unauthenticated => $status) {
+            $form = $this->createMock(FormInterface::class);
+            $form->expects(self::never())->method('addError');
+            $response = (new DeviceFormFailure($translator))->apply($form, new InventoryAccessDenied((bool) $unauthenticated));
+            self::assertInstanceOf(Response::class, $response);
+            self::assertSame($status, $response->getStatusCode());
+            self::assertStringContainsString('no-store', $response->headers->get('Cache-Control'));
+        }
     }
 }
