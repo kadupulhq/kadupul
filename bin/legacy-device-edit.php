@@ -103,7 +103,13 @@ try {
     }
     $device = new Device((int) $row['id'], $row['description'], (string) $row['hostname'], (string) $row['notes'], $row['disabled'] !== 'on', (string) $row['location'], (string) $row['external_id'], (int) $row['site_id'], array_intersect_key($row, \Kadupul\Inventory\Domain\DevicePolling::DEFAULTS), array_intersect_key($row, \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::PUBLIC_DEFAULTS));
     $device->revise($command['description'], $command['hostname'], $command['notes'], $command['enabled'], $command['location'], $command['external_id'], $command['revision'], $command['site_id'], $command['polling'], $command['snmp']);
-    $row = array_replace($row, $device->polling(), $device->snmpChange()->resolve($row));
+    try {
+        $snmp = $device->snmpChange()->resolve($row);
+    } catch (InvalidArgumentException) {
+        $status = 'snmp_invalid';
+        throw new RuntimeException('SNMP settings and stored credentials are incompatible.');
+    }
+    $row = array_replace($row, $device->polling(), $snmp);
     $row['site_id'] = $device->siteId();
     $row['expected_site_id'] = $device->siteId();
     $row['description'] = $device->description();
@@ -147,8 +153,6 @@ try {
     cacti_log('INVENTORY: User ' . $command['actor'] . ' edited device ' . $device->id, false, 'AUDIT');
 } catch (DeviceEditConflict) {
     $status = 'conflict';
-} catch (InvalidArgumentException) {
-    $status = 'invalid';
 } catch (Throwable) {
     // The parent receives only stable error codes, never credentials or plugin output.
 } finally {

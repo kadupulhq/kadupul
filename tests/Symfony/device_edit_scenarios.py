@@ -208,11 +208,11 @@ def verify_device_edit(harness, session, user_id, allowed_id, hidden_id, check):
     columns = ','.join(polling)
     original_polling = harness.sql(f'SELECT {columns} FROM host WHERE id={allowed_id}').strip().split('\t')
     try:
-        harness.sql(f'UPDATE host SET ping_method=0,max_oids=0 WHERE id={allowed_id}')
+        harness.sql(f'UPDATE host SET ping_method=0,max_oids=0,snmp_port=0,ping_timeout=0 WHERE id={allowed_id}')
         legacy = get_fields()
         check(legacy['device_edit[polling][ping_method]'] == '0' and legacy['device_edit[polling][max_oids]'] == '0', 'legacy zero polling settings remain explicit in the form')
         check(post(legacy, harness.base)[0] == 200, 'legacy zero polling settings round-trip unchanged')
-        check(harness.sql(f'SELECT ping_method,max_oids FROM host WHERE id={allowed_id}').strip() == '0\t0', 'legacy polling sentinels persist unchanged')
+        check(harness.sql(f'SELECT ping_method,max_oids,snmp_port,ping_timeout FROM host WHERE id={allowed_id}').strip() == '0\t0\t0\t0', 'legacy polling sentinels persist unchanged')
         harness.sql(f'UPDATE host SET ping_method=NULL WHERE id={allowed_id}')
         check(post(get_fields(), harness.base)[0] == 422, 'null historical ping method requires an explicit choice')
         fields = get_fields()
@@ -220,7 +220,7 @@ def verify_device_edit(harness, session, user_id, allowed_id, hidden_id, check):
         check(post(changed, harness.base)[0] == 200, 'device polling settings save through Symfony')
         check(harness.sql(f'SELECT {columns} FROM host WHERE id={allowed_id}').strip().split('\t') == list(polling.values()), 'all polling fields persist through the legacy adapter')
         check(post(fields, harness.base)[0] == 409, 'polling changes invalidate stale device forms')
-        for field, value in [('snmp_port', '0'), ('device_threads', '256'), ('max_oids', '61'), ('bulk_walk_size', '-2'), ('ping_retries', '101'), ('ping_timeout', '4294967296'), ('availability_method', '7'), ('ping_method', '4')]:
+        for field, value in [('snmp_port', '-1'), ('device_threads', '256'), ('max_oids', '61'), ('bulk_walk_size', '-2'), ('ping_retries', '101'), ('ping_timeout', '4294967296'), ('availability_method', '7'), ('ping_method', '4')]:
             invalid = get_fields() | {'device_edit[polling][' + field + ']': value}
             check(post(invalid, harness.base)[0] == 422, 'invalid polling setting rejected: ' + field)
         missing = get_fields()
