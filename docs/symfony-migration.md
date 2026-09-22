@@ -619,6 +619,27 @@ worker can still run with its original environment. Legacy cleanup resumes on it
 See the [Symfony 7.4 Scheduler documentation](https://symfony.com/doc/7.4/scheduler.html)
 for worker supervision, stateful schedules and locking.
 
+### Inspect and run row-cache cleanup
+
+`php bin/console kadupul:maintenance:row-cache` reports the stale row backlog
+without deleting anything or creating worker state. Add `--json` for structured
+output containing the mode, configured scheduler switch, deleted count, total
+remaining rows and per-class cutoff/count. Cutoffs are Unix timestamps. The
+switch reports configuration, not proof that a worker is healthy. Counts are
+live observations and may change while cache writers are active.
+
+To perform one bounded cleanup manually, stop the scheduled worker and use
+`php bin/console kadupul:maintenance:row-cache --execute --json`. It shares the
+worker's lock, rejects overlapping ownership before database access, and returns
+a nonzero exit status on contention or failure. It works with scheduling disabled
+on a primary installation with the required index. It does not coordinate with
+the legacy maintenance process; cleanup remains idempotent and rechecks cutoffs.
+
+On failure some classes may already have committed deletions. The command reports
+this without exposing database exception details; inspect again before retrying.
+A successful command reports remaining rows rather than claiming all cleanup is
+finished. Restart the scheduled worker afterward if that is the chosen owner.
+
 ## Site creation through Symfony
 
 `/app.php/inventory/sites/new` now renders a Symfony Form in Twig and dispatches

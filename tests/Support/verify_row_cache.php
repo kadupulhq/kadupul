@@ -35,7 +35,12 @@ $plan = $pdo->query("EXPLAIN FORMAT=TRADITIONAL SELECT user_id, hash FROM user_a
 if (!str_contains((string) $plan['possible_keys'], 'class_time')) {
     throw new RuntimeException('Cleanup cannot use its class/time access path.');
 }
-$clean = new \Kadupul\IdentityAccess\Application\Command\CleanInvalidatedRowCache(new \Kadupul\IdentityAccess\Infrastructure\Legacy\InstallationRowCache($database));
+$storage = new \Kadupul\IdentityAccess\Infrastructure\Legacy\InstallationRowCache($database);
+$cutoff = new \Kadupul\IdentityAccess\Domain\RowCacheInvalidation('graph', 1700000000);
+if ($storage->count($cutoff) !== 1001) {
+    throw new RuntimeException('Backlog count includes fresh rows or misses stale rows.');
+}
+$clean = new \Kadupul\IdentityAccess\Application\Command\CleanInvalidatedRowCache($storage);
 foreach ([1000, 1, 0] as $expected) {
     if ($clean() !== $expected) {
         throw new RuntimeException('Bounded or idempotent cleanup failed.');
@@ -80,5 +85,8 @@ if ($indexCreates !== 1 || !db_index_exists('user_auth_row_cache', 'class_time')
 preg_match_all("/INSERT INTO `table_indexes` VALUES \('user_auth_row_cache',1,'class_time',([12]),'([^']+)'/", file_get_contents($root . '/docs/audit_schema.sql'), $audit);
 if ($audit[1] !== ['1', '2'] || $audit[2] !== ['class', 'time']) {
     throw new RuntimeException('Database audit schema does not preserve the cleanup index.');
+}
+if ($storage->count($cutoff) !== 0) {
+    throw new RuntimeException('Backlog count did not reflect cleanup.');
 }
 echo "Row-cache database contract passed.\n";

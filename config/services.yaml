@@ -107,7 +107,6 @@ services:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\InstallationRowCache
     Kadupul\IdentityAccess\Infrastructure\Symfony\RowCacheSchedule:
         arguments:
-            $stateDirectory: '%kernel.project_dir%/var/scheduler'
             $enabled: '%env(default::KADUPUL_ROW_CACHE_SCHEDULER)%'
     Kadupul\IdentityAccess\Infrastructure\Symfony\RowCacheCleanupHandler:
         arguments:
@@ -119,6 +118,14 @@ services:
     Kadupul\IdentityAccess\Infrastructure\Legacy\InstallationRowCache:
         arguments:
             $database: '@kadupul.row_cache_database'
+
+    Kadupul\IdentityAccess\Application\Query\InspectInvalidatedRowCache: ~
+    Kadupul\IdentityAccess\Infrastructure\Symfony\RowCacheState:
+        arguments:
+            $directory: '%kernel.project_dir%/var/scheduler'
+    Kadupul\IdentityAccess\Infrastructure\Symfony\RowCacheCommand:
+        arguments:
+            $enabled: '%env(default::KADUPUL_ROW_CACHE_SCHEDULER)%'
 
     Kadupul\Inventory\Application\Command\CreateSite: ~
     Kadupul\Inventory\Application\Port\SiteCreator:
