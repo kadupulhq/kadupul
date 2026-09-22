@@ -177,7 +177,7 @@ function display_matching_hosts($rule, $rule_type, $url) {
 				<table class='filterTable'>
 					<tr>
 						<td>
-<label for='filterd'><?php print __('Search');?></label>
+							<label for='filterd'><?php print __('Search');?></label>
 						</td>
 						<td>
 							<?php
@@ -553,7 +553,7 @@ function display_matching_graphs($rule, $rule_type, $url) {
 				<table class='filterTable'>
 					<tr>
 						<td>
-<label for='filter'><?php print __('Search');?></label>
+							<label for='filter'><?php print __('Search');?></label>
 						</td>
 						<td>
 							<?php
@@ -822,7 +822,7 @@ function display_new_graphs($rule, $url) {
 				<table class='filterTable'>
 					<tr>
 						<td>
-<label for='filter'><?php print __('Search');?></label>
+							<label for='filter'><?php print __('Search');?></label>
 						</td>
 						<td>
 							<?php
@@ -1216,7 +1216,7 @@ function display_matching_trees ($rule_id, $rule_type, $item, $url) {
 			<table class='filterTable'>
 				<tr>
 					<td>
-<label for='filter'><?php print __('Search');?></label>
+						<label for='filter'><?php print __('Search');?></label>
 					</td>
 					<td>
 						<?php
