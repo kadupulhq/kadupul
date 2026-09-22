@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'Assign device template'|trans({}, 'inventory') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() encodes fixed-route parameters. #}
+    <p><a href="{{ path('inventory_device_edit', {id: device.id, list: filters}) }}">{{ 'Edit device'|trans({}, 'inventory') }}</a></p>
+    <h1>{{ 'Template for %device%'|trans({'%device%': device.description}, 'inventory') }}</h1>
+    <p>{{ 'Changing templates adds their graph and data-query associations and removes unused graph associations. Existing graphs and collected data are retained. Unassigning keeps current associations.'|trans({}, 'inventory') }}</p>
+    <p>{{ 'Remote collectors must be online. Reload and verify the device after a failed assignment before retrying.'|trans({}, 'inventory') }}</p>
+    {% if saved %}<output>{{ 'Device template assigned.'|trans({}, 'inventory') }}</output>{% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.template_id) }}
+        <button type="submit">{{ 'Assign device template'|trans({}, 'inventory') }}</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}

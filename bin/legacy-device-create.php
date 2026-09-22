@@ -57,30 +57,7 @@ try {
         throw new RuntimeException('Primary installation transaction unavailable');
     }
     $transactionStarted = true;
-    // Lock current policy and every grant used to authorize the write. A plain
-    // UNION read can authorize against a concurrently revoked grant.
-    $policy = $connection->query("SELECT name, value FROM settings WHERE name IN ('auth_method', 'guest_user') LOCK IN SHARE MODE")->fetchAll(PDO::FETCH_KEY_PAIR);
-    $query = $connection->prepare('SELECT id, username, enabled, locked FROM user_auth WHERE id = ? FOR UPDATE');
-    $query->execute([$command['actor']]);
-    $actor = $query->fetch(PDO::FETCH_ASSOC);
-    $hasRealm = static function (int $realm) use ($connection, $command): bool {
-        $query = $connection->prepare('SELECT realm_id FROM user_auth_realm WHERE user_id = ? AND realm_id = ? LOCK IN SHARE MODE');
-        $query->execute([$command['actor'], $realm]);
-        if ($query->fetchColumn() !== false) {
-            return true;
-        }
-        $query = $connection->prepare("SELECT r.realm_id FROM user_auth_group_realm r
-            INNER JOIN user_auth_group_members m ON m.group_id = r.group_id
-            INNER JOIN user_auth_group g ON g.id = r.group_id
-            WHERE g.enabled = 'on' AND m.user_id = ? AND r.realm_id = ? LIMIT 1 LOCK IN SHARE MODE");
-        $query->execute([$command['actor'], $realm]);
-        return $query->fetchColumn() !== false;
-    };
-    $guest = $policy['guest_user'] ?? '0';
-    if (!$actor || $actor['enabled'] !== 'on' || $actor['locked'] === 'on'
-        || !in_array((int) ($policy['auth_method'] ?? 1), [1, 2, 3, 4], true)
-        || (int) $guest === $command['actor'] || $guest === $actor['username']
-        || !$hasRealm(8) || !$hasRealm(3)) {
+    if (!(new \Kadupul\Inventory\Infrastructure\Legacy\DeviceWriteAuthorization())->allows($connection, $command['actor'])) {
         $status = 'denied';
         throw new RuntimeException('Access denied');
     }

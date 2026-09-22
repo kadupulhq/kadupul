@@ -12,6 +12,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Add a Symfony device-template assignment workflow with authorization, stale-form protection and collector association verification.
+
 - Add Symfony SNMP device editing with explicit credential replacement and worker-only resolution of stored secrets.
 
 - Add Symfony device polling-settings editing with shared domain validation, legacy sentinel preservation and stale-form protection.

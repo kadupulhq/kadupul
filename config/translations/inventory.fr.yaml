@@ -204,3 +204,11 @@
 "Submit all SNMP settings.": "Soumettez tous les paramètres SNMP."
 "SNMP settings and stored credentials are incompatible. Replace credentials or review the selected settings.": "Les paramètres SNMP et les identifiants enregistrés sont incompatibles. Remplacez les identifiants ou vérifiez les paramètres sélectionnés."
 "Not configured (legacy)": "Non configuré (historique)"
+
+"Assign device template": "Attribuer un modèle d’appareil"
+"Template for %device%": "Modèle pour %device%"
+"Select a device template": "Sélectionner un modèle d’appareil"
+"Select a valid device template.": "Sélectionnez un modèle d’appareil valide."
+"Device template assigned.": "Modèle d’appareil attribué."
+"Changing templates adds their graph and data-query associations and removes unused graph associations. Existing graphs and collected data are retained. Unassigning keeps current associations.": "Changer de modèle ajoute ses associations de graphiques et de requêtes de données et supprime les associations de graphiques inutilisées. Les graphiques existants et les données collectées sont conservés. Retirer le modèle conserve les associations actuelles."
+"Remote collectors must be online. Reload and verify the device after a failed assignment before retrying.": "Les collecteurs distants doivent être en ligne. Après un échec d’attribution, rechargez et vérifiez l’appareil avant de réessayer."
