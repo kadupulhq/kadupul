@@ -335,7 +335,7 @@ $selectedTheme = get_selected_theme();
 					<p><?php print __('Enter your Username and Password below');?></p>
 				</div>
 				<div class='cactiLogin'>
-					<table class='cactiLoginTable'>
+					<table role='presentation' class='cactiLoginTable'>
 						<tr>
 							<td>
 								<label for='login_username'><?php print __('Username');?></label>

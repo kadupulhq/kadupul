@@ -137,7 +137,8 @@ case 'view':
 			?>
 			<tr class='tableRowGraph'>
 				<td class='center'>
-					<table class='graphWrapperOuter' data-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>'>
+					<table role='presentation' class='graphWrapperOuter'
+						data-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>'>
 						<tr>
 							<td>
 								<div class='graphWrapper' id='wrapper_<?php
@@ -627,7 +628,8 @@ case 'zoom':
 	</tr>
 	<tr class='tableRowGraph'>
 		<td class='center'>
-			<table class='graphWrapperOuter' data-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>'>
+			<table role='presentation' class='graphWrapperOuter'
+				data-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>'>
 				<tr>
 					<td class='center'>
 						<div class='graphWrapper' id='wrapper_<?php

@@ -625,7 +625,7 @@ function template_edit() {
 		?>
 		<tr class='odd'>
 			<td colspan='2'>
-				<table>
+				<table role='presentation'>
 					<tr style='line-height:10px'>
 						<td class='nowrap templateAdd'>
 							<?php print __('Add Graph Template');?>
@@ -699,7 +699,7 @@ function template_edit() {
 		?>
 		<tr class='odd'>
 			<td colspan='2'>
-				<table>
+				<table role='presentation'>
 					<tr style='line-height:10px;'>
 						<td class='nowrap queryAdd'>
 							<?php print __('Add Data Query');?>

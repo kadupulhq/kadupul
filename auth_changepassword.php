@@ -356,7 +356,7 @@ if ($skip_current) {
 ?>					<p><?php print $title_message;?></p>
 				</div>
 				<div class='cactiLogin'>
-					<table class='cactiLoginTable'>
+					<table role='presentation' class='cactiLoginTable'>
 						<tr>
 <?php if ($skip_current) { ?>
 							<td><?php print __('Username');?></td>
