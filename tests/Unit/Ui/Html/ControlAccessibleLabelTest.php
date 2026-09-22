@@ -69,9 +69,15 @@ test('visible captions label their controls without changing fields or output te
 	expect($oldControl->length)->toBe(1);
 	expect($newControl->length)->toBe(1);
 	expect($newDoc->saveHTML($newControl->item(0)))->toBe($oldDoc->saveHTML($oldControl->item(0)));
-	$unwrapped = str_replace(array("<label for='" . $entry['id'] . "'>", '</label>'), '', $after);
+	$unwrapped = preg_replace('/<label\\b[^>]*>|<\/label>/', '', $after);
 	expect(preg_replace('/\s+/', ' ', trim($unwrapped)))->toBe(preg_replace('/\s+/', ' ', trim($before)));
 	if ($entry['id'] === 'tail_lines') {
 		expect($label->textContent)->toBe($reverse === 1 ? 'Tail Lines' : 'Head Lines');
 	}
 })->with('control label baseline')->with(array(1, 2));
+
+test('log search text field shares the visible search caption with its operator', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/lib/clog_webapi.php');
+	expect(substr_count($source, "id='log-search-label'"))->toBe(1);
+	expect(preg_match('/<input[^>]*id=\x27rfilter\x27[^>]*aria-labelledby=\x27log-search-label\x27/s', $source))->toBe(1);
+});

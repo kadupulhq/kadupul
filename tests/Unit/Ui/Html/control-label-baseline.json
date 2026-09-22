@@ -109,7 +109,7 @@
     "line": 645,
     "id": "matches",
     "before": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<?php print __('Search');?>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='matches'>",
-    "after": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<label for='matches'><?php print __('Search');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='matches'>"
+    "after": "\t\t\t\t\t<td>\n\t\t\t\t\t\t<label for='matches' id='log-search-label'><?php print __('Search');?></label>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td>\n\t\t\t\t\t\t<select id='matches'>"
   },
   {
     "key": "AaCeysSUrnQdoRHC45oT",

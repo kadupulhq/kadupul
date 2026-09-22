@@ -641,7 +641,7 @@ function filter($clogAdmin, $selectedFile) {
 			<table class='filterTable'>
 				<tr>
 					<td>
-						<label for='matches'><?php print __('Search');?></label>
+						<label for='matches' id='log-search-label'><?php print __('Search');?></label>
 					</td>
 					<td>
 						<select id='matches'>
@@ -650,7 +650,8 @@ function filter($clogAdmin, $selectedFile) {
 						</select>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='rfilter' size='75' value='<?php print html_escape_request_var('rfilter');?>'>
+						<input type='text' class='ui-state-default ui-corner-all' id='rfilter'
+							aria-labelledby='log-search-label' size='75' value='<?php print html_escape_request_var('rfilter');?>'>
 					</td>
 				</tr>
 			</table>
