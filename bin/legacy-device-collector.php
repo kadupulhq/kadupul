@@ -47,11 +47,16 @@ try {
         || !is_string($command['revision'] ?? null)) {
         throw new InvalidArgumentException('Invalid command');
     }
+    // Preserve four-byte text and reject truncation on legacy connections.
+    $connection = $database_sessions["$database_hostname:$database_port:$database_default"];
+    if ($connection->exec('SET NAMES utf8mb4') === false
+        || $connection->exec("SET SESSION sql_mode = CONCAT_WS(',', @@SESSION.sql_mode, 'STRICT_TRANS_TABLES')") === false) {
+        throw new RuntimeException('Primary connection validation unavailable');
+    }
     if ((int) ($config['poller_id'] ?? 0) !== 1 || !db_execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') || !db_begin_transaction()) {
         throw new RuntimeException('Primary transaction unavailable');
     }
     $transactionStarted = true;
-    $connection = $database_sessions["$database_hostname:$database_port:$database_default"];
     if (!(new \Kadupul\Inventory\Infrastructure\Legacy\DeviceWriteAuthorization())->allows($connection, $command['actor'])) {
         $status = 'denied';
         throw new RuntimeException('Access denied');
@@ -105,8 +110,16 @@ try {
             if (!remote_poller_up($pollerId) || !(($remote = poller_connect_to_remote($pollerId)) instanceof PDO)) {
                 throw new RuntimeException('Collector unavailable');
             }
+            if ($remote->exec('SET NAMES utf8mb4') === false
+                || $remote->exec("SET SESSION sql_mode = CONCAT_WS(',', @@SESSION.sql_mode, 'STRICT_TRANS_TABLES')") === false) {
+                throw new RuntimeException('Collector connection validation unavailable');
+            }
             $connections[$pollerId] = $remote;
         }
+    }
+    // Opening a legacy remote connection can reset the primary SQL modes.
+    if ($connection->exec("SET SESSION sql_mode = CONCAT_WS(',', @@SESSION.sql_mode, 'STRICT_TRANS_TABLES')") === false) {
+        throw new RuntimeException('Primary connection validation unavailable');
     }
     if ($previous !== $target) {
         $_SESSION['sess_user_id'] = $command['actor'];

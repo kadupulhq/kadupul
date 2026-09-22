@@ -96,6 +96,7 @@ def verify_remote_template_assignment(harness, session, device_id, check):
             response = error
         with response:
             return response.status
+    check(session.request('/bin/legacy-device-template.php')['status'] in (403, 404), 'template worker is inaccessible over HTTP')
     original = int(harness.sql(f'SELECT host_template_id FROM host WHERE id={device_id}').strip())
     templates = []
     trigger = False
@@ -116,6 +117,13 @@ def verify_remote_template_assignment(harness, session, device_id, check):
         check(any(json.loads(line).get('callback') == 'template_collector_lock' for line in events.splitlines()), 'template assignment blocks concurrent collector disable until commit')
         check(harness.sql(f'SELECT host_template_id FROM create_remote.host WHERE id={device_id}').strip() == str(templates[0]), 'collector template identity matches the primary')
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host_graph WHERE host_id={device_id} AND graph_template_id={graphs[0]}').strip() == '1', 'collector receives required template associations')
+        before = saves()
+        check(assign(0) == 200, 'online collector template can be unassigned')
+        check(saves() == before + 1, 'remote unassignment invokes the host-save hook once')
+        for database in ['', 'create_remote.']:
+            check(harness.sql(f'SELECT host_template_id FROM {database}host WHERE id={device_id}').strip() == '0', 'unassignment clears primary and remote template identities')
+            check(harness.sql(f'SELECT COUNT(*) FROM {database}host_graph WHERE host_id={device_id} AND graph_template_id={graphs[0]}').strip() == '1', 'remote unassignment retains existing graph associations')
+        check(assign(templates[0]) == 200, 'remote template can be reassigned after unassignment')
         harness.sql(f"UPDATE create_remote.host SET deleted='on' WHERE id={device_id}")
         check(assign(0) == 502, 'template unassignment refuses deleted remote devices')
         check(harness.sql(f'SELECT host_template_id FROM create_remote.host WHERE id={device_id}').strip() == str(templates[0]), 'deleted remote device retains its template')

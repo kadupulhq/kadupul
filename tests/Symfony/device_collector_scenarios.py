@@ -110,6 +110,15 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id={device_id}').strip() == '0', 'collector reassignment verifies old host cleanup')
         check(harness.sql(f'SELECT poller_id FROM poller_item WHERE local_data_id={data}').strip() == '1', 'primary move updates polling item ownership')
         check(form.assign(poller, stale) == 409, 'collector moves invalidate stale confirmations')
+        notes_hex = 'collector notes 🌏'.encode().hex().upper()
+        harness.sql(f"UPDATE host SET notes=CONVERT(UNHEX('{notes_hex}') USING utf8mb4) WHERE id={device_id}")
+        harness.sql('ALTER TABLE create_remote.host MODIFY notes TEXT CHARACTER SET utf8mb3 NULL')
+        try:
+            check(form.assign(poller) == 502, 'collector move rejects a destination that cannot store four-byte text')
+            check(harness.sql(f'SELECT poller_id FROM host WHERE id={device_id}').strip() == '1', 'Unicode replication failure rolls back primary ownership')
+            check(harness.sql(f'SELECT HEX(notes) FROM host WHERE id={device_id}').strip() == notes_hex, 'failed collector move preserves primary Unicode bytes')
+        finally:
+            harness.sql('ALTER TABLE create_remote.host MODIFY notes TEXT CHARACTER SET utf8mb4 NULL')
         harness.sql(f"INSERT INTO create_remote.poller_command (poller_id,time,action,command) VALUES ({poller},NOW(),3,'{device_id}'),({poller},NOW(),3,'16777214')")
         # A real target trigger simulates the poller advancing runtime fields
         # immediately as replicated rows arrive.
@@ -131,7 +140,9 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.data_local WHERE id={data}').strip() == '1' and harness.sql(f'SELECT COUNT(*) FROM create_remote.graph_local WHERE id={graph}').strip() == '1', 'collector reassignment preserves graph and data identities')
         check(harness.sql(f'SELECT value FROM create_remote.data_input_data WHERE data_template_data_id={dtd} AND data_input_field_id=1').strip() == 'collector input', 'collector reassignment copies data input configuration')
         check(harness.sql(f'SELECT COUNT(*) FROM poller_command WHERE poller_id={poller} AND action=3 AND command="{device_id}"').strip() == '0', 'returning device cancels obsolete queued purge')
+        check(harness.sql(f'SELECT HEX(notes) FROM create_remote.host WHERE id={device_id}').strip() == notes_hex, 'primary-to-remote move preserves four-byte Unicode exactly')
         check(form.assign(second) == 200, 'collector reassignment moves between remote collectors')
+        check(harness.sql(f'SELECT HEX(notes) FROM collector_second.host WHERE id={device_id}').strip() == notes_hex, 'remote-to-remote move preserves four-byte Unicode exactly')
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id={device_id}').strip() == '0', 'remote-to-remote move removes the previous collector')
         for table, column, value in [('data_template_data', 'local_data_id', data), ('data_template_rrd', 'local_data_id', data), ('data_input_data', 'data_template_data_id', dtd), ('graph_templates_item', 'local_graph_id', graph)]:
             check(harness.sql(f'SELECT COUNT(*) FROM create_remote.{table} WHERE {column}={value}').strip() == '0', 'collector cleanup removes dependent ' + table)
