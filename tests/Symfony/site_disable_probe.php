@@ -25,8 +25,8 @@ $graphsBefore = $db->query('SELECT * FROM host_graph WHERE host_id=0 ORDER BY gr
 $worker = null;
 try {
     $row = $db->query('SELECT * FROM host WHERE id=' . $hostId)->fetch();
-    $device = new \Kadupul\Inventory\Domain\Device($hostId, $row['description'], $row['hostname'], (string) $row['notes'], true, (string) $row['location'], (string) $row['external_id']);
-    $command = ['actor' => (int) $db->query("SELECT id FROM user_auth WHERE username='admin'")->fetchColumn(), 'id' => $hostId, 'description' => $device->description(), 'hostname' => $device->hostname(), 'notes' => $device->notes(), 'enabled' => false, 'location' => $device->location(), 'external_id' => $device->externalId(), 'revision' => $device->revision()];
+    $device = new \Kadupul\Inventory\Domain\Device($hostId, $row['description'], $row['hostname'], (string) $row['notes'], true, (string) $row['location'], (string) $row['external_id'], (int) $row['site_id']);
+    $command = ['actor' => (int) $db->query("SELECT id FROM user_auth WHERE username='admin'")->fetchColumn(), 'id' => $hostId, 'description' => $device->description(), 'hostname' => $device->hostname(), 'notes' => $device->notes(), 'enabled' => false, 'location' => $device->location(), 'external_id' => $device->externalId(), 'revision' => $device->revision(), 'site_id' => $siteId];
     $db->beginTransaction();
     $db->query('SELECT id FROM sites WHERE id=' . $siteId . ' FOR UPDATE')->fetchColumn();
     $worker = proc_open([PHP_BINARY, 'bin/legacy-device-edit.php'], [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);

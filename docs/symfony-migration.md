@@ -737,3 +737,23 @@ SQL debug output and replaces database log payloads with a fixed diagnostic;
 the actor/device audit entry remains available. Plugins are trusted server code
 and remain responsible for their own direct file or external logging. The default
 CLI filename is platform-specific (`php.exe` on Windows).
+
+### Device site reassignment
+
+The Symfony device editor now includes site assignment and explicit Unassigned.
+`ListAssignableSites` authorizes the choices query through a dedicated Inventory
+port; site administrators can select any current site, while device visibility
+still controls which devices they may edit. The domain revision includes site ID,
+so an assignment changed in another editor invalidates stale forms. Missing or
+invalid submitted choices cannot silently unassign a device.
+
+The isolated worker locks source and target sites in ascending ID order before
+the host, rechecks the source association and revision, and preserves the legacy
+save/plugin path. A save hook cannot replace the locked target site. Assignment
+changes invalidate device and site-device cache markers within the transaction.
+A missing historical source site can be repaired by selecting a current site or
+Unassigned. Timeouts and remote/plugin effects retain the existing uncertain-save
+behavior; the adapter never automatically retries.
+
+This completes site assignment in the editor; template, collector and detailed
+polling/credential editing remain separate migration slices. LTS is unchanged.

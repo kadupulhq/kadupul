@@ -162,6 +162,10 @@ def verify_device_edit(harness, session, user_id, allowed_id, hidden_id, check):
     audit = harness.command('cat', '/var/www/html/log/cacti.log', check=True)['stdout']
     check(f'INVENTORY: User {user_id} edited device {allowed_id}' in audit, 'save records actor and device in the audit log')
     harness.sql(f'DELETE FROM graph_templates_graph WHERE local_graph_id={graph_id}; DELETE FROM graph_local WHERE id={graph_id}')
+    check(harness.php('-r', 'require "include/global.php"; function setup_edit_site_guard() { api_plugin_register_hook("compatibility_test", "api_device_save", "compatibility_create_guard", "setup.php", true); } setup_edit_site_guard();')['exit'] == 0, 'site-changing save hook is registered')
+    guarded = get_fields() | {'device_edit[description]': 'create-hook-change-site_id'}
+    check(post(guarded, harness.base)[0] == 502, 'save hook cannot replace the locked site assignment')
+    check(harness.sql(f'SELECT description FROM host WHERE id={allowed_id}').strip() == 'Edited inventory device', 'rejected site-changing hook leaves device unchanged')
     for action in ('--disable', '--uninstall'):
         check(harness.php('cli/plugin_manage.php', '--plugin=compatibility_test', action)['exit'] == 0,
               'save-hook fixture is removed')
@@ -200,5 +204,30 @@ def verify_device_edit(harness, session, user_id, allowed_id, hidden_id, check):
     metadata.update({'device_edit[location]': '', 'device_edit[external_id]': ''})
     check(post(metadata, harness.base)[0] == 200, 'metadata can be explicitly cleared')
     check(harness.sql(f"SELECT COUNT(*) FROM host WHERE id={allowed_id} AND location='' AND external_id=''").strip() == '1', 'empty metadata is persisted')
+    original_site = int(harness.sql(f'SELECT site_id FROM host WHERE id={allowed_id}').strip())
+    site = int(harness.sql("INSERT INTO sites (name) VALUES ('Editor <west>'); SELECT LAST_INSERT_ID()").strip())
+    try:
+        fields = get_fields()
+        check(fields['device_edit[site_id]'] == str(original_site), 'device editor displays its current site')
+        for value in ('', '-1', '4294967296', '999999999', 'garbage'):
+            invalid = fields | {'device_edit[site_id]': value}
+            check(post(invalid, harness.base)[0] == 422, 'invalid site choice is rejected: ' + repr(value))
+        missing = dict(fields)
+        missing.pop('device_edit[site_id]')
+        check(post(missing, harness.base)[0] == 422, 'missing site choice cannot silently unassign a device')
+        harness.sql("REPLACE INTO settings (name,value) VALUES ('time_last_change_device','1'),('time_last_change_site_device','1')")
+        check(post(fields | {'device_edit[site_id]': str(site)}, harness.base)[0] == 200, 'device site assignment saves through Symfony')
+        check(harness.sql(f'SELECT site_id FROM host WHERE id={allowed_id}').strip() == str(site), 'selected device site persists')
+        check(harness.sql("SELECT COUNT(*) FROM settings WHERE name IN ('time_last_change_device','time_last_change_site_device') AND value > 1").strip() == '2', 'site reassignment invalidates device and site caches')
+        check(post(fields, harness.base)[0] == 409, 'site assignment changes invalidate stale edit forms')
+        check(post(get_fields() | {'device_edit[site_id]': '0'}, harness.base)[0] == 200, 'device can be explicitly unassigned')
+        fields = get_fields()
+        harness.sql(f'DELETE FROM sites WHERE id={site}')
+        check(post(fields | {'device_edit[site_id]': str(site)}, harness.base)[0] == 422, 'deleted target site cannot be submitted')
+        harness.sql(f'UPDATE host SET site_id={site} WHERE id={allowed_id}')
+        check(post(get_fields() | {'device_edit[site_id]': '0'}, harness.base)[0] == 200, 'missing historical site can be repaired by unassigning')
+    finally:
+        harness.sql(f'UPDATE host SET site_id={original_site} WHERE id={allowed_id}')
+        harness.sql(f'DELETE FROM sites WHERE id={site}')
     # Restore fixture fields so the existing listing assertions remain independent.
     harness.sql(f"UPDATE host SET description='{original}', hostname='fixture-edit.invalid', notes='' WHERE id={allowed_id}")

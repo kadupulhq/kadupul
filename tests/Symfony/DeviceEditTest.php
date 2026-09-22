@@ -134,6 +134,34 @@ final class DeviceEditTest extends TestCase
         yield ['', 'asset-7'];
     }
 
+    public function testSiteAssignmentParticipatesInRevisionAndCannotPartiallyMutate(): void
+    {
+        $device = new Device(7, 'Device', 'host.invalid', '', true, '', '', 12);
+        $revision = $device->revision();
+        try {
+            $device->revise('Changed', 'host.invalid', '', true, '', '', $revision, -1);
+            self::fail('Invalid site accepted');
+        } catch (\InvalidArgumentException) {
+            self::assertSame(12, $device->siteId());
+            self::assertSame($revision, $device->revision());
+        }
+        $device->revise('Device', 'host.invalid', '', true, '', '', $revision, 0);
+        self::assertSame(0, $device->siteId());
+        self::assertNotSame($revision, $device->revision());
+        $this->expectException(DeviceEditConflict::class);
+        $device->revise('Device', 'host.invalid', '', true, '', '', $revision, 12);
+    }
+
+    public function testSiteCatalogRequiresManagementAuthorization(): void
+    {
+        $access = $this->createMock(ConsoleAccess::class);
+        $access->method('consoleActor')->willReturn(new Actor(42, 'viewer'));
+        $catalog = $this->createMock(\Kadupul\Inventory\Application\Port\SiteAssignmentCatalog::class);
+        $catalog->expects(self::never())->method('sites');
+        $this->expectException(InventoryAccessDenied::class);
+        (new \Kadupul\Inventory\Application\Query\ListAssignableSites($access, $catalog))();
+    }
+
     public function testUnauthorizedCommandCannotReadOrWriteDevice(): void
     {
         $access = $this->createMock(ConsoleAccess::class);

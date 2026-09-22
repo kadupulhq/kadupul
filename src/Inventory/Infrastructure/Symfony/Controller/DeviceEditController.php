@@ -9,6 +9,7 @@ namespace Kadupul\Inventory\Infrastructure\Symfony\Controller;
 
 use Kadupul\Inventory\Application\Command\EditDevice;
 use Kadupul\Inventory\Application\Query\FindEditableDevice;
+use Kadupul\Inventory\Application\Query\ListAssignableSites;
 use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Inventory\Domain\DeviceEditConflict;
 use Kadupul\Inventory\Infrastructure\Symfony\DeviceListParameters;
@@ -26,7 +27,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class DeviceEditController
 {
     #[Route('/inventory/devices/{id}/edit', name: 'inventory_device_edit', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(int $id, Request $request, FindEditableDevice $find, EditDevice $edit, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function __invoke(int $id, Request $request, FindEditableDevice $find, ListAssignableSites $sites, EditDevice $edit, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         try {
@@ -44,7 +45,7 @@ final class DeviceEditController
             return new Response($translator->trans('Invalid device list filters.', [], 'inventory'), 400, $headers);
         }
         $editParameters = ['id' => $id, 'list' => $filters];
-        $form = $forms->create(DeviceEditType::class, ['description' => $device->description(), 'hostname' => $device->hostname(), 'notes' => $device->notes(), 'enabled' => $device->enabled(), 'location' => $device->location(), 'external_id' => $device->externalId(), 'revision' => $device->revision()], ['action' => $urls->generate('inventory_device_edit', $editParameters)]);
+        $form = $forms->create(DeviceEditType::class, ['description' => $device->description(), 'hostname' => $device->hostname(), 'notes' => $device->notes(), 'enabled' => $device->enabled(), 'location' => $device->location(), 'external_id' => $device->externalId(), 'site_id' => $device->siteId(), 'revision' => $device->revision()], ['action' => $urls->generate('inventory_device_edit', $editParameters), 'sites' => $sites()]);
         $form->handleRequest($request);
         $status = $request->isMethod('POST') ? 422 : 200;
         if ($form->isSubmitted()) {
@@ -54,10 +55,13 @@ final class DeviceEditController
             if ($form->get('enabled')->isSynchronized() && !is_bool($form->get('enabled')->getData())) {
                 $form->get('enabled')->addError(new FormError($translator->trans('Choose whether polling is enabled or disabled.', [], 'inventory')));
             }
+            if ($form->get('site_id')->isSynchronized() && !is_int($form->get('site_id')->getData())) {
+                $form->get('site_id')->addError(new FormError($translator->trans('Select a valid site.', [], 'inventory')));
+            }
             if ($form->isValid()) {
                 $data = $form->getData();
                 try {
-                    $edit($id, (string) $data['description'], (string) $data['hostname'], (string) $data['notes'], $data['enabled'], (string) $data['location'], (string) $data['external_id'], (string) $data['revision']);
+                    $edit($id, (string) $data['description'], (string) $data['hostname'], (string) $data['notes'], $data['enabled'], (string) $data['location'], (string) $data['external_id'], (string) $data['revision'], $data['site_id']);
                     return new RedirectResponse($urls->generate('inventory_device_edit', $editParameters + ['saved' => 1]), 303, $headers);
                 } catch (InventoryAccessDenied) {
                     return new Response($translator->trans('Access denied.', [], 'inventory'), 403, $headers);

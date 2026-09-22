@@ -184,6 +184,9 @@ final class TranslationTest extends TestCase
             $editor->method('findVisible')->willReturn($device);
             $editor->expects(self::once())->method('save')->with(42, self::callback(static fn(Device $saved): bool => !$saved->enabled() && $saved->location() === 'Enabled'), $device->revision());
             $container->set(DeviceEditor::class, $editor);
+            $sites = $this->createMock(\Kadupul\Inventory\Application\Port\SiteAssignmentCatalog::class);
+            $sites->method('sites')->willReturn([7 => 'Paris']);
+            $container->set(\Kadupul\Inventory\Application\Port\SiteAssignmentCatalog::class, $sites);
             $path = '/inventory/devices/12/edit';
             $response = $kernel->handle(Request::create($path, 'GET', [], ['Cacti' => 'fixture']));
             self::assertSame(200, $response->getStatusCode());
@@ -194,7 +197,7 @@ final class TranslationTest extends TestCase
             $document = new \DOMDocument();
             @$document->loadHTML($response->getContent());
             $token = (new \DOMXPath($document))->evaluate('string(//input[@name="device_edit[_token]"]/@value)');
-            $fields = ['description' => '', 'hostname' => 'router.invalid', 'notes' => '', 'location' => 'Enabled', 'external_id' => 'asset-1', 'enabled' => 'disabled', 'revision' => $device->revision(), '_token' => $token];
+            $fields = ['site_id' => '0', 'description' => '', 'hostname' => 'router.invalid', 'notes' => '', 'location' => 'Enabled', 'external_id' => 'asset-1', 'enabled' => 'disabled', 'revision' => $device->revision(), '_token' => $token];
             foreach (['on', 'unexpected', '', null, ['enabled']] as $invalidChoice) {
                 $invalidFields = $fields;
                 $invalidFields['description'] = 'Router';

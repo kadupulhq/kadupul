@@ -145,3 +145,7 @@ services:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreator
     Kadupul\Inventory\Application\Port\DeviceCreationCatalog:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreationCatalog
+
+    Kadupul\Inventory\Application\Query\ListAssignableSites: ~
+    Kadupul\Inventory\Application\Port\SiteAssignmentCatalog:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacySiteAssignmentCatalog
