@@ -16,7 +16,7 @@ use Kadupul\Inventory\Domain\DeviceEditConflict;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Symfony\Component\Process\Process;
 
-final readonly class LegacyDeviceStates implements DeviceStates
+final readonly class LegacyDeviceStates implements DeviceStates, \Kadupul\Inventory\Application\Port\DeviceStatistics
 {
     public function __construct(private DatabaseConnection $database, private LegacyDeviceVisibility $visibility, private string $projectDir) {}
     public static function state(array $row): DeviceState
@@ -37,11 +37,19 @@ final readonly class LegacyDeviceStates implements DeviceStates
     }
     public function setEnabled(int $actorId, DeviceSelection $selection, bool $enabled): void
     {
+        $this->run($actorId, $selection, ['enabled' => $enabled]);
+    }
+    public function clearStatistics(int $actorId, DeviceSelection $selection): void
+    {
+        $this->run($actorId, $selection, ['operation' => 'clear-statistics']);
+    }
+    private function run(int $actorId, DeviceSelection $selection, array $operation): void
+    {
         $configured = $this->database->get()->query("SELECT value FROM settings WHERE name = 'path_php_binary'")->fetchColumn();
         $binary = is_string($configured) && trim($configured) !== '' ? trim($configured) : PHP_BINDIR . (PHP_OS_FAMILY === 'Windows' ? '/php.exe' : '/php');
         $process = new Process([$binary, $this->projectDir . '/bin/legacy-device-state.php'], $this->projectDir);
         $process->setTimeout(120);
-        $process->setInput(json_encode(['actor' => $actorId, 'selection' => $selection->revisions, 'enabled' => $enabled], JSON_THROW_ON_ERROR));
+        $process->setInput(json_encode(['actor' => $actorId, 'selection' => $selection->revisions] + $operation, JSON_THROW_ON_ERROR));
         $process->run();
         if (!preg_match('/KADUPUL_STATE_RESULT=(\{[^\r\n]+\})/', $process->getOutput(), $match)) {
             throw new \RuntimeException('Device state change outcome is unknown.');

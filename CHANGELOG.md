@@ -12,6 +12,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Migrate bulk device statistics reset to a Symfony confirmation page and Inventory use case, with authorized selection checks and primary/remote failure handling.
+
 - Normalize malformed device-removal worker acknowledgements to the safe uncertain-outcome response.
 
 - Add Symfony device-removal confirmation with graph/data retention choices, shared-dependency protection and verified remote cleanup.

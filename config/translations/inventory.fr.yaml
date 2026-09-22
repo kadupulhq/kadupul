@@ -256,3 +256,8 @@
 "RRD file cleanup follows the configured maintenance policy.": "Le nettoyage des fichiers RRD suit la politique de maintenance configurée."
 "%graphs% graphs, %sources% data sources": "%graphs% graphiques, %sources% sources de données"
 "Device template updated.": "Modèle d’appareil mis à jour."
+
+"Clear device statistics": "Effacer les statistiques des appareils"
+"Confirm clearing statistics": "Confirmer l’effacement des statistiques"
+"Selected device statistics cleared.": "Statistiques des appareils sélectionnés effacées."
+"Reset response times, poll counts and availability for these devices. Graphs, historical data and device settings are retained. Statistics resume with the next poll.": "Réinitialisez les temps de réponse, les compteurs de sondage et la disponibilité de ces appareils. Les graphiques, les données historiques et les paramètres sont conservés. Les statistiques reprennent au prochain sondage."

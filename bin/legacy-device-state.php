@@ -40,14 +40,15 @@ try {
         throw new RuntimeException('Payload too large');
     }
     $command = json_decode($input, true, 8, JSON_THROW_ON_ERROR);
-    if (!is_array($command) || array_diff(array_keys($command), ['actor', 'selection', 'enabled']) !== []
+    $clearStatistics = is_array($command) && ($command['operation'] ?? null) === 'clear-statistics';
+    if (!is_array($command) || array_diff(array_keys($command), $clearStatistics ? ['actor', 'selection', 'operation'] : ['actor', 'selection', 'enabled']) !== []
         || !is_int($command['actor'] ?? null) || $command['actor'] <= 0
-        || !is_array($command['selection'] ?? null) || !is_bool($command['enabled'] ?? null)) {
+        || !is_array($command['selection'] ?? null) || (!$clearStatistics && !is_bool($command['enabled'] ?? null))) {
         throw new RuntimeException('Invalid command');
     }
     $selection = new DeviceSelection($command['selection']);
     $ids = array_keys($selection->revisions);
-    $enabled = $command['enabled'];
+    $enabled = $command['enabled'] ?? false;
     if ((int) ($config['poller_id'] ?? 0) !== 1 || !db_execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') || !db_begin_transaction()) {
         throw new RuntimeException('Primary transaction unavailable');
     }
@@ -105,6 +106,7 @@ try {
     }
     $changed = [];
     $remotes = [];
+    $remoteStates = [];
     // Validate the entire selection before any local or remote writes.
     foreach ($rows as $index => $row) {
         if ((int) $row['site_id'] !== (int) $associations[$index]['site_id']) {
@@ -128,9 +130,10 @@ try {
             if (count($remoteRows) !== 1 || (int) $remoteRows[0]['poller_id'] !== $device->pollerId) {
                 throw new RuntimeException('Collector device unavailable');
             }
-            $remoteMatches = ($remoteRows[0]['disabled'] !== 'on') === $enabled;
+            $remoteStates[$device->id] = $remoteRows[0]['disabled'] !== 'on';
+            $remoteMatches = $remoteStates[$device->id] === $enabled;
         }
-        if ($device->enabled === $enabled && $remoteMatches && ($enabled || (int) $row['status'] === 0)) {
+        if (!$clearStatistics && $device->enabled === $enabled && $remoteMatches && ($enabled || (int) $row['status'] === 0)) {
             continue;
         }
         $changed[$device->id] = $device;
@@ -146,12 +149,20 @@ try {
         // Legacy SQL helpers retain their last error even after later successes.
         // Check it without exposing diagnostics or credentials to the parent.
         $database_last_error = '';
-        if ($enabled) {
+        if ($clearStatistics) {
+            $reset = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceStatisticsReset();
+            foreach ($changed as $device) {
+                $reset->apply($connection, $device);
+                if (isset($remotes[$device->pollerId])) {
+                    $reset->apply($remotes[$device->pollerId], $device);
+                }
+            }
+        } elseif ($enabled) {
             api_device_enable_devices(array_keys($changed));
         } elseif (!api_device_disable_devices(array_keys($changed))) {
             throw new RuntimeException('Disabling devices failed');
         }
-        $action = $enabled ? '2' : '3';
+        $action = $clearStatistics ? '5' : ($enabled ? '2' : '3');
         set_request_var('drp_action', $action);
         snmpagent_device_action_bottom([$action, $ids]);
         api_plugin_hook_function('device_action_bottom', [$action, $ids]);
@@ -173,15 +184,15 @@ try {
     foreach ($rows as $row) {
         $device = LegacyDeviceStates::state($row);
         $verify = $read($connection, "SELECT disabled, status, site_id, poller_id, host_template_id FROM host WHERE id = ? AND deleted = ''", [$device->id]);
-        if (count($verify) !== 1 || ($verify[0]['disabled'] !== 'on') !== $enabled
+        if (count($verify) !== 1 || ($verify[0]['disabled'] !== 'on') !== ($clearStatistics ? $device->enabled : $enabled)
             || (int) $verify[0]['site_id'] !== $device->siteId || (int) $verify[0]['poller_id'] !== $device->pollerId
             || (int) $verify[0]['host_template_id'] !== $device->templateId
-            || (!$enabled && isset($changed[$device->id]) && (int) $verify[0]['status'] !== 0)) {
+            || (!$clearStatistics && !$enabled && isset($changed[$device->id]) && (int) $verify[0]['status'] !== 0)) {
             throw new RuntimeException('Device state could not be confirmed');
         }
         if (isset($remotes[$device->pollerId])) {
             $verify = $read($remotes[$device->pollerId], "SELECT disabled, poller_id FROM host WHERE id = ? AND deleted = ''", [$device->id]);
-            if (count($verify) !== 1 || ($verify[0]['disabled'] !== 'on') !== $enabled || (int) $verify[0]['poller_id'] !== $device->pollerId) {
+            if (count($verify) !== 1 || ($verify[0]['disabled'] !== 'on') !== ($clearStatistics ? $remoteStates[$device->id] : $enabled) || (int) $verify[0]['poller_id'] !== $device->pollerId) {
                 throw new RuntimeException('Collector state could not be confirmed');
             }
         }
@@ -191,7 +202,7 @@ try {
     }
     $transactionStarted = false;
     $status = 'ok';
-    cacti_log('INVENTORY: User ' . $command['actor'] . ' confirmed ' . ($enabled ? 'enabled' : 'disabled') . ' state for devices ' . implode(',', $ids), false, 'AUDIT');
+    cacti_log('INVENTORY: User ' . $command['actor'] . ' confirmed ' . ($clearStatistics ? 'cleared statistics' : ($enabled ? 'enabled' : 'disabled')) . ' for devices ' . implode(',', $ids), false, 'AUDIT');
 } catch (DeviceEditConflict) {
     $status = 'conflict';
 } catch (Throwable) {

@@ -38,7 +38,7 @@ final class DeviceStatePresentationTest extends TestCase
             $access->method('canManageDevices')->willReturn(true);
             $container->set(ConsoleAccess::class, $access);
             $device = new DeviceState(7, '<router>', 'router.invalid', true, 0, 1, 0);
-            $port = $this->createMock(DeviceStates::class);
+            $port = $this->createMockForIntersectionOfInterfaces([DeviceStates::class, \Kadupul\Inventory\Application\Port\DeviceStatistics::class]);
             $port->method('findVisible')->willReturn([$device]);
             $port->expects(self::once())->method('setEnabled')->with(42, self::callback(fn($selection) => $selection->revisions === [7 => $device->revision()]), false);
             $container->set(DeviceStates::class, $port);

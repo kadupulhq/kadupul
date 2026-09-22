@@ -181,3 +181,7 @@ services:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates
     Kadupul\Inventory\Application\Query\PrepareDeviceStateChange: ~
     Kadupul\Inventory\Application\Command\SetDevicesEnabled: ~
+
+    Kadupul\Inventory\Application\Port\DeviceStatistics:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates
+    Kadupul\Inventory\Application\Command\ClearDeviceStatistics: ~

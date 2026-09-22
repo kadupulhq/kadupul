@@ -27,8 +27,8 @@ use Twig\Environment;
 
 final class DeviceStateController
 {
-    #[Route('/inventory/devices/{operation}', name: 'inventory_device_state', requirements: ['operation' => 'enable|disable'], methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(string $operation, Request $request, PrepareDeviceStateChange $prepare, SetDevicesEnabled $setEnabled, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    #[Route('/inventory/devices/{operation}', name: 'inventory_device_state', requirements: ['operation' => 'enable|disable|clear-statistics'], methods: ['GET', 'HEAD', 'POST'])]
+    public function __invoke(string $operation, Request $request, PrepareDeviceStateChange $prepare, SetDevicesEnabled $setEnabled, \Kadupul\Inventory\Application\Command\ClearDeviceStatistics $clearStatistics, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         try {
@@ -71,7 +71,11 @@ final class DeviceStateController
                     if (array_keys($selection->revisions) !== $ids) {
                         throw new \InvalidArgumentException('Invalid device selection.');
                     }
-                    $setEnabled($selection, $operation === 'enable');
+                    if ($operation === 'clear-statistics') {
+                        $clearStatistics($selection);
+                    } else {
+                        $setEnabled($selection, $operation === 'enable');
+                    }
                     return new RedirectResponse($urls->generate('inventory_devices', $filters + ['completed' => $operation]), 303, $headers);
                 } catch (InventoryAccessDenied $error) {
                     return new Response($translator->trans('Access denied.', [], 'inventory'), $error->unauthenticated ? 401 : 403, $headers);

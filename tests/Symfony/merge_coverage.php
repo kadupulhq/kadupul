@@ -174,6 +174,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Application/Command/SetDevicesEnabled.php',
         'src/Inventory/Application/Query/PrepareDeviceStateChange.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceStates.php',
+        'src/Inventory/Application/Command/ClearDeviceStatistics.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceStatisticsReset.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceStateType.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceStateController.php',
         'src/Inventory/Domain/DeviceSnmpConfiguration.php',

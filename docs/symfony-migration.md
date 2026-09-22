@@ -893,3 +893,21 @@ and plugin effects may survive rollback and failures return an explicit uncertai
 outcome. Primary local devices disappear; remote devices retain the legacy
 cleanup tombstone until maintenance purges it. This is not a restore facility.
 LTS is unchanged.
+
+
+### Device statistics reset
+
+The Inventory list offers a Clear device statistics confirmation at
+`/inventory/devices/clear-statistics`. Its Symfony Form and Twig page dispatch
+`ClearDeviceStatistics` through the `DeviceStatistics` port. The legacy adapter
+reuses the isolated bulk worker's permission locks, bounded selection and stable
+configuration revisions. Live counter changes do not invalidate confirmation.
+
+The reset writes only response-time measurements, poll counts and availability,
+using the legacy defaults. It preserves graph/data ownership, historical samples,
+device identity and enabled state. Each write checks device and collector identity.
+Remote collectors must be online; the primary transaction rolls back on error,
+but remote writes can survive a later failure. The UI reports an uncertain outcome
+in that case. A poller may immediately record new statistics after a successful
+reset; zero counters are not a persistent invariant. Legacy bulk action callbacks
+run once for the selection using action 5, followed by normal cache invalidation.
