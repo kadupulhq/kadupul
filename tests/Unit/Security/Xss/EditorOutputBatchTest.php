@@ -92,7 +92,9 @@ test('numeric contexts cannot emit markup or executable tokens', function ($issu
     $output = render(fragment($issue), $payload);
     // The only changed bytes are the output values: surrounding JS/HTML is identical.
     expect($output)->toBe(render($issue['before'], (int)$payload));
-    expect($output)->not->toContain('<script', 'onerror', 'onfocus', 'alert(');
+    foreach (array('<script', 'onerror', 'onfocus', 'alert(') as $token) {
+        expect($output)->not->toContain($token);
+    }
 })->with('editor numeric')->with('editor text payloads');
 
 test('thumbnail strings retain charset and pre-escaped values inside a single hidden input',
@@ -132,7 +134,9 @@ test('editor navigation string round-trips with no HTML script delimiters', func
     expect(preg_match('/^strURL = ("(?:\\\\.|[^"\\\\])*") \+$/', $output, $match))->toBe(1);
     expect(json_decode($match[1], true, 512, JSON_THROW_ON_ERROR))
         ->toBe('graphs_items.php?header=false&action=item_edit' . $payload);
-    expect($match[1])->not->toContain('<', '>', '&', "'");
+    foreach (array('<', '>', '&', "'") as $token) {
+        expect($match[1])->not->toContain($token);
+    }
 })->with('editor json')->with('editor text payloads');
 
 test('invalid UTF-8 navigation bytes remain a JSON string with replacement characters', function ($issue) {
@@ -142,5 +146,7 @@ test('invalid UTF-8 navigation bytes remain a JSON string with replacement chara
     expect(preg_match('/^strURL = ("(?:\\\\.|[^"\\\\])*") \+$/', $output, $match))->toBe(1);
     expect(json_decode($match[1], true, 512, JSON_THROW_ON_ERROR))
         ->toBe('graphs_items.php?header=false&action=item_edit&id=before' . "\u{FFFD}" . 'after</script>');
-    expect($match[1])->not->toContain('<', '>', '&', "'");
+    foreach (array('<', '>', '&', "'") as $token) {
+        expect($match[1])->not->toContain($token);
+    }
 })->with('editor json');
