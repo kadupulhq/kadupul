@@ -151,6 +151,11 @@ function inject_form_variables(&$form_array, $arg1 = array(), $arg2 = array(), $
    @arg $row_id - used to allow js and ajax actions on this object
    @returns - the background color used for this particular row */
 function form_alternate_row_color($row_color1, $row_color2, $row_value, $row_id = '') {
+	$charset = ini_get('default_charset') ?: 'UTF-8';
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$row_id_html = htmlspecialchars((string)$row_id, $escape_flags, $charset, false);
+	$row_id_html = str_replace('`', '&#96;', $row_id_html);
+
 	if ($row_value % 2 == 1) {
 			$class='odd';
 			$current_color = $row_color1;
@@ -164,7 +169,7 @@ function form_alternate_row_color($row_color1, $row_color2, $row_value, $row_id 
 	}
 
 	if ($row_id != '') {
-		print "<tr class='$class selectable tableRow' id='$row_id'>\n";
+		print "<tr class='$class selectable tableRow' id='$row_id_html'>\n";
 	} else {
 		print "<tr class='$class tableRow'>\n";
 	}
@@ -177,6 +182,11 @@ function form_alternate_row_color($row_color1, $row_color2, $row_value, $row_id 
    @arg $row_id - The id of the row
    @arg $reset - Reset to top of table */
 function form_alternate_row($row_id = '', $light = false, $disabled = false) {
+	$charset = ini_get('default_charset') ?: 'UTF-8';
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$row_id_html = htmlspecialchars((string)$row_id, $escape_flags, $charset, false);
+	$row_id_html = str_replace('`', '&#96;', $row_id_html);
+
 	static $i = 1;
 
 	if ($i % 2 == 1) {
@@ -190,11 +200,11 @@ function form_alternate_row($row_id = '', $light = false, $disabled = false) {
 	$i++;
 
 	if ($row_id != '' && !$disabled && substr($row_id, 0, 4) != 'row_') {
-		print "<tr class='$class selectable tableRow' id='$row_id'>\n";
+		print "<tr class='$class selectable tableRow' id='$row_id_html'>\n";
 	} elseif (substr($row_id, 0, 4) == 'row_') {
-		print "<tr class='$class tableRow' id='$row_id'>\n";
+		print "<tr class='$class tableRow' id='$row_id_html'>\n";
 	} elseif ($row_id != '') {
-		print "<tr class='$class tableRow' id='$row_id'>\n";
+		print "<tr class='$class tableRow' id='$row_id_html'>\n";
 	} else {
 		print "<tr class='$class tableRow'>\n";
 	}
@@ -208,12 +218,19 @@ function form_alternate_row($row_id = '', $light = false, $disabled = false) {
  * @param bool   $disabled True if the row is disabled
  */
 function form_alternate_row_class($row_id = '', $class = 'tableRow', $disabled = false) {
+	$charset = ini_get('default_charset') ?: 'UTF-8';
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$row_id_html = htmlspecialchars((string)$row_id, $escape_flags, $charset, false);
+	$row_id_html = str_replace('`', '&#96;', $row_id_html);
+	$class_html = htmlspecialchars((string)$class, $escape_flags, $charset, false);
+	$class_html = str_replace('`', '&#96;', $class_html);
+
 	if ($row_id != '' && !$disabled && substr($row_id, 0, 4) != 'row_') {
-		print "<tr class='$class selectable' id='$row_id'>";
+		print "<tr class='$class_html selectable' id='$row_id_html'>";
 	} elseif (substr($row_id, 0, 4) == 'row_' || $row_id != '') {
-		print "<tr class='$class' id='$row_id'>";
+		print "<tr class='$class_html' id='$row_id_html'>";
 	} else {
-		print "<tr class='$class'>";
+		print "<tr class='$class_html'>";
 	}
 }
 
@@ -224,7 +241,12 @@ function form_alternate_row_class($row_id = '', $class = 'tableRow', $disabled =
    @arg $style_or_class - the style or class to apply to the table element
    @arg $title - optional title for the column */
 function form_selectable_ecell($contents, $id, $width = '', $style_or_class = '', $title = '') {
-	form_selectable_cell(html_escape($contents), $id, $width, $style_or_class, $title);
+	$charset = ini_get('default_charset') ?: 'UTF-8';
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$contents_html = htmlspecialchars((string)$contents, $escape_flags, $charset, false);
+	$contents_html = str_replace('`', '&#96;', $contents_html);
+
+	form_selectable_cell($contents_html, $id, $width, $style_or_class, $title);
 }
 
 /* form_selectable_cell - format's a table row such that it can be highlighted using cacti's js actions
@@ -234,18 +256,27 @@ function form_selectable_ecell($contents, $id, $width = '', $style_or_class = ''
    @arg $style_or_class - the style or class to apply to the table element
    @arg $title - optional title for the column */
 function form_selectable_cell($contents, $id, $width = '', $style_or_class = '', $title = '') {
+	$charset = ini_get('default_charset') ?: 'UTF-8';
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$width_html = htmlspecialchars((string)$width, $escape_flags, $charset, false);
+	$width_html = str_replace('`', '&#96;', $width_html);
+	$style_or_class_html = htmlspecialchars((string)$style_or_class, $escape_flags, $charset, false);
+	$style_or_class_html = str_replace('`', '&#96;', $style_or_class_html);
+	$title_html = htmlspecialchars((string)$title, $escape_flags, $charset, false);
+	$title_html = str_replace('`', '&#96;', $title_html);
+
 	$output = '';
 
 	if ($style_or_class != '') {
 		if (strpos($style_or_class, ':') === false) {
-			$output = "class='nowrap " . $style_or_class . "'";
+			$output = "class='nowrap " . $style_or_class_html . "'";
 			if ($width != '') {
-				$output .= " style='width:$width;'";
+				$output .= " style='width:$width_html;'";
 			}
 		} else {
-			$output = "class='nowrap' style='" . $style_or_class;
+			$output = "class='nowrap' style='" . $style_or_class_html;
 			if ($width != '') {
-				$output .= ";width:$width;";
+				$output .= ";width:$width_html;";
 			}
 			$output .= "'";
 		}
@@ -253,12 +284,13 @@ function form_selectable_cell($contents, $id, $width = '', $style_or_class = '',
 		$output = 'class="nowrap"';
 
 		if ($width != '') {
-			$output .= " style='width:$width;'";
+			$output .= " style='width:$width_html;'";
 		}
 	}
 
 	if ($title != '') {
-		$wrapper = "<span class='cactiTooltipHint' style='padding:0px;margin:0px;' title='" . html_escape($title) . "'>" . $contents . "</span>";
+		$wrapper = "<span class='cactiTooltipHint' style='padding:0px;margin:0px;' title='$title_html'>";
+		$wrapper .= $contents . "</span>";
 	} else {
 		$wrapper = $contents;
 	}
@@ -269,8 +301,19 @@ function form_selectable_cell($contents, $id, $width = '', $style_or_class = '',
 /* form_checkbox_cell - format's a tables checkbox form element so that the cacti js actions work on it
    @arg $title - the text that will be displayed if your hover over the checkbox */
 function form_checkbox_cell($title, $id, $disabled = false) {
+	$charset = ini_get('default_charset') ?: 'UTF-8';
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$title_html = htmlspecialchars((string)$title, $escape_flags, $charset, false);
+	$title_html = str_replace('`', '&#96;', $title_html);
+	$id_html = htmlspecialchars((string)$id, $escape_flags, $charset, false);
+	$id_html = str_replace('`', '&#96;', $id_html);
+
 	print "\t<td class='checkbox' style='width:1%;'>\n";
-	print "\t\t<input type='checkbox' title='" . html_escape($title) . "' class='checkbox" . ($disabled ? ' disabled':'') . "' " . ($disabled ? "disabled='disabled'":'') . " id='chk_" . $id . "' name='chk_" . $id . "'><label class='formCheckboxLabel' for='chk_" . $id . "'></label>\n";
+	$disabled_attribute = $disabled ? "disabled='disabled'" : '';
+	$checkbox_class = $disabled ? 'checkbox disabled' : 'checkbox';
+	print "\t\t<input type='checkbox' title='$title_html' class='$checkbox_class' $disabled_attribute";
+	print " id='chk_$id_html' name='chk_$id_html'>";
+	print "<label class='formCheckboxLabel' for='chk_$id_html'></label>\n";
 	print "\t</td>\n";
 }
 

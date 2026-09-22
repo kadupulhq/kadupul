@@ -2,6 +2,8 @@ Cacti CHANGELOG
 
 1.2.32
 -security: Encode automation preview URLs and input/template links in their HTML and JavaScript contexts while preserving filters and navigation
+-issue: Preserve configured character sets in shared table-cell and checkbox output encoding
+-security: Encode table-row, selectable-cell and checkbox metadata while preserving selection and trusted cell markup
 -security: Encode shared full-size and thumbnail graph metadata while preserving graph selection, grouping and drill-down behavior
 -security: Make pagination URL and return-target encoding explicit while preserving page ranges and navigation behavior
 -security: Encode shared box layout and toolbar attributes while preserving title markup, navigation and layout behavior
