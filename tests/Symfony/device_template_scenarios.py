@@ -2,7 +2,7 @@
 import json
 from urllib.request import Request
 from urllib.error import HTTPError
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
 from device_edit_scenarios import Inputs
 
 
@@ -21,7 +21,7 @@ def verify_device_template(harness, session, user_id, device_id, hidden_id, chec
         check(status == 200, 'device template assignment form loads')
         parser = Inputs()
         parser.feed(body)
-        check(parser.action == path and 'device_template[_token]' in parser.fields, 'template form has fixed action and CSRF protection')
+        check(urlsplit(parser.action).path == path and not urlsplit(parser.action).netloc and 'device_template[_token]' in parser.fields, 'template form has fixed action and CSRF protection')
         return parser.fields
     original = harness.sql(f'SELECT host_template_id,poller_id FROM host WHERE id={device_id}').strip().split('\t')
     template = int(harness.sql("INSERT INTO host_template (hash,name) VALUES ('template-assignment-fixture','Template <assignment>'); SELECT LAST_INSERT_ID()").strip())
