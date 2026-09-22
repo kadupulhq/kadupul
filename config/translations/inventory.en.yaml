@@ -213,3 +213,11 @@
 "Changing templates adds their graph and data-query associations and removes unused graph associations. Existing graphs and collected data are retained. Unassigning keeps current associations.": "Changing templates adds their graph and data-query associations and removes unused graph associations. Existing graphs and collected data are retained. Unassigning keeps current associations."
 "Remote collectors must be online. Reload and verify the device after a failed assignment before retrying.": "Remote collectors must be online. Reload and verify the device after a failed assignment before retrying."
 "Select supported SNMP settings.": "Select supported SNMP settings."
+
+"Assign device collector": "Assign device collector"
+"Collector for %device%": "Collector for %device%"
+"Device collector": "Device collector"
+"Select a device collector": "Select a device collector"
+"Select a valid device collector.": "Select a valid device collector."
+"Device collector assigned.": "Device collector assigned."
+"Moving a device copies its polling configuration and removes it from the previous collector. Existing graphs and collected data are retained.": "Moving a device copies its polling configuration and removes it from the previous collector. Existing graphs and collected data are retained."

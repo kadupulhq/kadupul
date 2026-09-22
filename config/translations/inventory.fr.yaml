@@ -213,3 +213,11 @@
 "Changing templates adds their graph and data-query associations and removes unused graph associations. Existing graphs and collected data are retained. Unassigning keeps current associations.": "Changer de modèle ajoute ses associations de graphiques et de requêtes de données et supprime les associations de graphiques inutilisées. Les graphiques existants et les données collectées sont conservés. Retirer le modèle conserve les associations actuelles."
 "Remote collectors must be online. Reload and verify the device after a failed assignment before retrying.": "Les collecteurs distants doivent être en ligne. Après un échec d’attribution, rechargez et vérifiez l’appareil avant de réessayer."
 "Select supported SNMP settings.": "Sélectionnez des paramètres SNMP pris en charge."
+
+"Assign device collector": "Affecter le collecteur de l’appareil"
+"Collector for %device%": "Collecteur pour %device%"
+"Device collector": "Collecteur de l’appareil"
+"Select a device collector": "Sélectionnez un collecteur"
+"Select a valid device collector.": "Sélectionnez un collecteur valide."
+"Device collector assigned.": "Collecteur de l’appareil affecté."
+"Moving a device copies its polling configuration and removes it from the previous collector. Existing graphs and collected data are retained.": "Le déplacement d’un appareil copie sa configuration de collecte et le retire du collecteur précédent. Les graphiques et données existants sont conservés."

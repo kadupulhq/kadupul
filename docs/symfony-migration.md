@@ -819,3 +819,27 @@ a distributed transaction: a collector can receive changes before a later failur
 rolls back the primary. Such failures return an uncertain-outcome error; operators
 must reload and verify before retrying. Collector reassignment is a separate
 workflow and is not accepted by this form.
+
+### Device collector assignment
+
+The device editor links to a dedicated Symfony Form/Twig collector page backed by
+AssignDeviceCollector, a collector-assignment aggregate and a persistence port.
+Collector and template identity participate in stale-form detection. The worker
+rechecks account/realm and visibility permissions with current locked reads,
+locks the device and referenced collectors, and only accepts an enabled target.
+Both remote collectors must be online for a move; unchanged selections are no-ops.
+
+The worker uses legacy replication and purge hooks, verifies the target's device,
+polling, graph and data-source configuration before cleaning the source, and
+checks source cleanup before reporting success. It includes host-graph
+associations omitted by the legacy bulk transfer helper. Returning a device to a
+collector cancels obsolete queued purge commands for that target. Polling item
+ownership, collector statistics and both device-cache markers are updated.
+Existing graph/data identities and collected data files are retained.
+
+This is not a distributed transaction or a durable transfer/recovery scheduler.
+A failure can leave changes on a remote collector while the primary transaction
+rolls back. The UI reports an uncertain outcome and requires reload/verification
+before retrying; a successful response is only sent after verification and
+primary commit. Offline/deferred moves and collector administration remain
+outside this workflow.

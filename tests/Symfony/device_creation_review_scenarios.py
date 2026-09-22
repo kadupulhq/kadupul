@@ -54,6 +54,8 @@ def verify_creation_compatibility(harness, post, fields, created, user_id, check
         check(harness.sql(f'SELECT HEX(notes) FROM create_remote.host WHERE id={created[-1]}').strip().lower() == fields['device_create[notes]'].encode().hex(), 'remote collector preserves four-byte Unicode notes')
         from device_template_scenarios import verify_remote_template_assignment
         verify_remote_template_assignment(harness, session, created[-1], check)
+        from device_collector_scenarios import verify_remote_collector_assignment
+        verify_remote_collector_assignment(harness, session, created[-1], poller, check)
         harness.sql("UPDATE create_remote.host SET notes=''; ALTER TABLE create_remote.host MODIFY notes TEXT CHARACTER SET utf8mb3")
         status, _ = submit('create-remote-rejected-fixture', {'device_create[poller_id]': str(poller)})
         check(status == 502 and harness.sql("SELECT COUNT(*) FROM host WHERE description='create-remote-rejected-fixture'").strip() == '0', 'remote encoding failure cannot report successful creation or commit the primary row')

@@ -12,10 +12,10 @@ compatibility. LTS remains unchanged. Plugin-owned pages are outside this queue.
 | Sites list, full edit/create, bulk duplicate/delete and legacy entry | Merged in #239 |
 | Device identity, metadata and enabled state | Migrated |
 | Device site assignment | Merged in #250 |
-| Device polling settings | PR #252 |
+| Device polling settings | Merged in #252 |
 | Device SNMP protocol and credentials | PR #257 |
 | Device template assignment | PR #262 |
-| Device collector assignment | Pending |
+| Device collector assignment | Implemented; PR validation in progress |
 | Device bulk enable/disable | Pending |
 | Device deletion, restoration and purge choices | Pending |
 | Device bulk options, statistics and template synchronization | Pending |
