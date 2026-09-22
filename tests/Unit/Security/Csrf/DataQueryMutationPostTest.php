@@ -32,7 +32,7 @@ namespace DataQueryMutationPostTest;
  *
  * @return string The handlers reached, or the response code when refused.
  */
-function run_data_queries($method, $action, array $request = array(), array $server = array()) {
+function run_data_queries($method, $action, array $request = array(), array $server = array(), $captureId = false) {
 	$root    = dirname(__DIR__, 4);
 	$csrf    = file_get_contents($root . '/include/csrf.php');
 	$source  = file_get_contents($root . '/data_queries.php');
@@ -56,7 +56,8 @@ function run_data_queries($method, $action, array $request = array(), array $ser
 		'data_query_item_remove_confirm' => 'item_remove_confirm', 'data_query_item_remove' => 'item_remove',
 		'data_query_remove' => 'remove',
 	) as $function => $name) {
-		$stubs .= 'function ' . $function . '($x = null) { $GLOBALS["reached"][] = "' . $name . '"; }' . "\n";
+		$suffix = $captureId && $function === 'data_query_remove' ? ' . ":" . $x' : '';
+		$stubs .= 'function ' . $function . '($x = null) { $GLOBALS["reached"][] = "' . $name . '"' . $suffix . '; }' . "\n";
 	}
 
 	$script = '<?php
@@ -100,6 +101,11 @@ function expect_refused($action, array $request) {
 		->and(run_data_queries('GET', $action, $request, array('HTTP_SEC_FETCH_SITE' => 'cross-site')))->toBe('405', $action)
 		->and(run_data_queries('HEAD', $action, $request))->toBe('405', $action);
 }
+
+test('single-query removal passes the requested ID only after its POST guard', function ($id) {
+	expect(run_data_queries('POST', 'remove', array('id' => $id), array(), true))->toBe('remove:' . $id);
+	expect(run_data_queries('GET', 'remove', array('id' => $id), array(), true))->toBe('405');
+})->with(array('7', '42'));
 
 test('data query bulk actions refuse any GET that carries selected_items', function () {
 	foreach (array('1', '2') as $drp_action) {

@@ -4396,7 +4396,7 @@ function rrd_rra_delete($file_array, $rra_array, $debug) {
 
 			// now start XML processing
 			foreach ($rra_array as $rra) {
-				rrd_delete_rra($dom, $rra, $debug);
+				rrd_delete_rra($dom, $rra);
 			}
 
 			if ($debug) {
@@ -4464,7 +4464,7 @@ function rrd_rra_clone($file_array, $cf, $rra_array, $debug) {
 
 			// now start XML processing
 			foreach ($rra_array as $rra) {
-				rrd_copy_rra($dom, $cf, $rra, $debug);
+				rrd_copy_rra($dom, $cf, $rra);
 			}
 
 			if ($debug) {

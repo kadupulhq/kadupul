@@ -135,7 +135,7 @@ if (cacti_sizeof($parms) == 0) {
 	}
 
 	if ($displayGroups) {
-		displayGroups($quietMode);
+		displayGroups();
 		exit(1);
 	}
 

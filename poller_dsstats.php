@@ -227,7 +227,7 @@ function dsstats_master_handler($type, $forcerun) {
 	// Insert new rows into cache
 	dsstats_insert_hourly_data_into_cache();
 
-	dsstats_log_statistics('HOURLY', $type);
+	dsstats_log_statistics('HOURLY');
 
 	/* see if boost is active or not */
 	$boost_active = read_config_option('boost_rrd_update_enable');
@@ -266,7 +266,7 @@ function dsstats_master_handler($type, $forcerun) {
 				sleep(2);
 			}
 
-			dsstats_log_statistics('DAILY', $type);
+			dsstats_log_statistics('DAILY');
 		}
 	}
 
@@ -358,4 +358,3 @@ function sig_handler($signo) {
 			/* ignore all other signals */
 	}
 }
-
