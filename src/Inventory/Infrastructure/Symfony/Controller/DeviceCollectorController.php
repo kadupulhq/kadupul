@@ -22,11 +22,12 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Kadupul\Inventory\Infrastructure\Symfony\DeviceAssignmentForm;
 
 final class DeviceCollectorController
 {
     #[Route('/inventory/devices/{id}/collector', name: 'inventory_device_collector', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(int $id, Request $request, PrepareDeviceCollectorAssignment $prepare, AssignDeviceCollector $assign, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function __invoke(int $id, Request $request, PrepareDeviceCollectorAssignment $prepare, AssignDeviceCollector $assign, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, DeviceAssignmentForm $validation): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         try {
@@ -49,12 +50,7 @@ final class DeviceCollectorController
         $form->handleRequest($request);
         $status = $request->isMethod('POST') ? 422 : 200;
         if ($form->isSubmitted()) {
-            if ($form->getExtraData() !== []) {
-                $form->addError(new FormError($translator->trans('Unexpected fields were submitted.', [], 'inventory')));
-            }
-            if ($form->get('collector_id')->isSynchronized() && !is_int($form->get('collector_id')->getData())) {
-                $form->get('collector_id')->addError(new FormError($translator->trans('Select a valid device collector.', [], 'inventory')));
-            }
+            $validation->validate($form, 'collector_id', 'Select a valid device collector.');
             if ($form->isValid()) {
                 $data = $form->getData();
                 try {

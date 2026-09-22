@@ -46,7 +46,7 @@ def main():
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceTemplateController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceCollectorController.php',
         'bin/legacy-device-template.php',
-        'bin/legacy-device-collector.php',
+        'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php',
         'src/Inventory/Domain/DeviceSnmpConfiguration.php',
         'src/Inventory/Domain/DeviceSnmpChange.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceSnmpType.php',
