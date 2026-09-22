@@ -1,0 +1,68 @@
+<?php
+
+/*
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+namespace Kadupul\Tests;
+
+use Kadupul\Inventory\Domain\Device;
+use Kadupul\Inventory\Domain\DeviceSnmpChange;
+use Kadupul\Inventory\Domain\DeviceSnmpConfiguration as Snmp;
+use PHPUnit\Framework\TestCase;
+
+final class DeviceSnmpChangeTest extends TestCase
+{
+    private function fields(array $overrides = []): array
+    {
+        return array_replace(['keep_credentials' => true] + Snmp::PUBLIC_DEFAULTS + Snmp::CREDENTIAL_DEFAULTS, $overrides);
+    }
+
+    public function testKeepResolvesCurrentCredentialsWithoutPuttingThemInPublicSettings(): void
+    {
+        $change = new DeviceSnmpChange($this->fields());
+        self::assertSame('', $change->fields['snmp_community']);
+        self::assertSame('rotated-secret', $change->resolve(['snmp_community' => 'rotated-secret'])['snmp_community']);
+        self::assertArrayNotHasKey('snmp_community', $change->publicSettings());
+    }
+
+    public function testExplicitReplacementAndVersionDowngrade(): void
+    {
+        $change = new DeviceSnmpChange($this->fields(['keep_credentials' => false, 'snmp_version' => '3', 'snmp_username' => 'operator', 'snmp_auth_protocol' => 'SHA384', 'snmp_password' => 'password-new', 'snmp_priv_protocol' => 'AES', 'snmp_priv_passphrase' => 'privacy-new']));
+        self::assertSame('password-new', $change->resolve(['snmp_password' => 'old'])['snmp_password']);
+        $downgrade = new DeviceSnmpChange(array_replace($change->fields, ['snmp_version' => '2', 'snmp_context' => 'old-context']));
+        self::assertSame('[None]', $downgrade->publicSettings()['snmp_auth_protocol']);
+        self::assertSame('', $downgrade->publicSettings()['snmp_context']);
+    }
+
+    public function testInvalidSettingsDoNotPartiallyMutateDevice(): void
+    {
+        foreach ([['keep_credentials' => null], ['keep_credentials' => 'keep'], ['snmp_version' => '4'], ['snmp_password' => 'unwanted'], ['keep_credentials' => false, 'snmp_version' => '3'], ['snmp_auth_protocol' => 'bogus'], ['snmp_context' => str_repeat('x', 65)], ['snmp_context' => "bad\0text"], ['extra' => 'ignored']] as $override) {
+            $device = new Device(1, 'Before', 'router.invalid', '', true, '', '');
+            $revision = $device->revision();
+            try {
+                $device->revise('After', 'router.invalid', '', true, '', '', $revision, 0, null, $this->fields($override));
+                self::fail('Invalid SNMP accepted');
+            } catch (\InvalidArgumentException) {
+                self::assertSame($revision, $device->revision());
+                self::assertSame('Before', $device->description());
+            }
+        }
+    }
+
+    public function testPublicSettingsInvalidateOldRevision(): void
+    {
+        $device = new Device(1, 'Device', 'router.invalid', '', true, '', '');
+        $revision = $device->revision();
+        $device->revise('Device', 'router.invalid', '', true, '', '', $revision, 0, null, $this->fields(['snmp_version' => '1']));
+        self::assertNotSame($revision, $device->revision());
+    }
+
+    public function testStoredCredentialsAreValidatedAfterResolution(): void
+    {
+        $change = new DeviceSnmpChange($this->fields(['snmp_version' => '3', 'snmp_auth_protocol' => 'SHA', 'snmp_priv_protocol' => 'AES']));
+        $this->expectException(\InvalidArgumentException::class);
+        $change->resolve(['snmp_username' => 'user', 'snmp_password' => 'short', 'snmp_priv_passphrase' => 'short']);
+    }
+}

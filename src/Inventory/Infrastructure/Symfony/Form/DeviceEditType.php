@@ -37,6 +37,7 @@ final class DeviceEditType extends AbstractType
                 'choice_translation_domain' => false, 'placeholder' => 'Select a site',
                 'invalid_message' => $this->translator->trans('Select a valid site.', [], 'inventory')])
             ->add('polling', DevicePollingType::class, ['label' => 'Polling settings'])
+            ->add('snmp', DeviceSnmpType::class, ['label' => 'SNMP settings'])
             ->add('revision', HiddenType::class);
     }
     public function configureOptions(OptionsResolver $resolver): void

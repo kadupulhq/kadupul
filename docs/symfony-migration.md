@@ -769,3 +769,23 @@ silently reset existing values. Unsupported historical values require an explici
 valid choice before saving; they are not silently normalized. The worker repeats validation and retains the
 legacy cache/poller/plugin path. SNMP credential and protocol editing, template
 and collector assignment remain separate slices. LTS is unchanged.
+
+
+### Device SNMP editing
+
+The Symfony device editor submits SNMP public settings and an explicit preserve
+or replace credential choice through the Inventory EditDevice use case. Domain
+validation runs before mutation and again inside the isolated legacy worker.
+Stored community, username and passphrases are read only inside that worker;
+the HTTP adapter never selects them. Password fields remain empty on errors.
+Database diagnostics are redacted before the worker bootstraps legacy code.
+
+Public SNMP configuration participates in stale-form detection. Credential-only
+rotation does not: preserving credentials resolves the latest stored values
+under the host lock; explicit replacement intentionally replaces them. Two
+explicit credential replacements use last-write-wins semantics. No secret or
+secret-derived fingerprint is exposed through the revision token.
+
+Leaving SNMPv3 clears v3 credentials, protocols, context and engine ID through
+the existing legacy API. Stored credentials incompatible with selected v3
+protocols produce a validation error and roll back the entire edit.

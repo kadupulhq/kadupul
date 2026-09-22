@@ -227,6 +227,36 @@ def verify_device_edit(harness, session, user_id, allowed_id, hidden_id, check):
         check(harness.sql(f'SELECT {columns} FROM host WHERE id={allowed_id}').strip().split('\t') == list(polling.values()), 'invalid polling submissions leave all settings unchanged')
     finally:
         harness.sql('UPDATE host SET ' + ','.join(key + '=' + value for key, value in zip(polling, original_polling)) + f' WHERE id={allowed_id}')
+    snmp_columns = 'snmp_version,snmp_community,snmp_username,snmp_password,snmp_auth_protocol,snmp_priv_passphrase,snmp_priv_protocol,snmp_context,snmp_engine_id'
+    original_snmp = harness.sql(f'SELECT {snmp_columns} FROM host WHERE id={allowed_id}').strip('\n').split('\t')
+    try:
+        fields = get_fields()
+        replacement = {'keep_credentials': 'replace', 'snmp_version': '3', 'snmp_community': 'edit-community-secret', 'snmp_username': 'edit-user-secret', 'snmp_password': 'edit-password-secret', 'snmp_auth_protocol': 'SHA384', 'snmp_priv_passphrase': 'edit-privacy-secret', 'snmp_priv_protocol': 'AES', 'snmp_context': 'edit-context', 'snmp_engine_id': ''}
+        changed = fields | {'device_edit[snmp][' + key + ']': value for key, value in replacement.items()}
+        status, body = post(changed, harness.base)
+        check(status == 200 and all(secret not in body for secret in ['edit-community-secret', 'edit-user-secret', 'edit-password-secret', 'edit-privacy-secret']), 'SNMP credentials replace through Symfony without disclosure')
+        check(harness.sql(f"SELECT snmp_version,snmp_auth_protocol,snmp_priv_protocol,snmp_username FROM host WHERE id={allowed_id}").strip() == '3\tSHA384\tAES\tedit-user-secret', 'SNMPv3 protocols and replacement credentials persist')
+        check(post(fields, harness.base)[0] == 409, 'public SNMP changes invalidate stale forms')
+        preserved = get_fields()
+        check(all(preserved['device_edit[snmp][' + key + ']'] == '' for key in ['snmp_community', 'snmp_username', 'snmp_password', 'snmp_priv_passphrase']), 'stored SNMP credentials never populate edit inputs')
+        harness.sql(f"UPDATE host SET snmp_password='rotated-edit-secret' WHERE id={allowed_id}")
+        check(post(preserved, harness.base)[0] == 200 and harness.sql(f'SELECT snmp_password FROM host WHERE id={allowed_id}').strip() == 'rotated-edit-secret', 'stored credential rotation survives unrelated edits')
+        invalid = get_fields() | {'device_edit[snmp][snmp_password]': 'unwanted-secret'}
+        status, body = post(invalid, harness.base)
+        check(status == 422 and 'unwanted-secret' not in body, 'preserve mode rejects entered credentials without reflecting them')
+        for key, value in [('snmp_version', '4'), ('snmp_auth_protocol', 'bogus'), ('extra', 'unexpected')]:
+            check(post(get_fields() | {'device_edit[snmp][' + key + ']': value}, harness.base)[0] == 422, 'invalid SNMP field rejected: ' + key)
+        missing = get_fields()
+        missing.pop('device_edit[snmp][keep_credentials]')
+        check(post(missing, harness.base)[0] == 422, 'missing SNMP credential decision cannot clear credentials')
+        harness.sql(f"UPDATE host SET snmp_password='short' WHERE id={allowed_id}")
+        check(post(get_fields(), harness.base)[0] == 422, 'worker rejects incompatible stored SNMP credentials')
+        check(post(get_fields() | {'device_edit[snmp][snmp_version]': '2'}, harness.base)[0] == 200, 'leaving SNMPv3 clears its obsolete settings')
+        check(harness.sql(f"SELECT COUNT(*) FROM host WHERE id={allowed_id} AND snmp_username='' AND snmp_password='' AND snmp_priv_passphrase='' AND snmp_context=''").strip() == '1', 'legacy SNMPv3 credential cleanup remains effective')
+    finally:
+        def literal(value):
+            return "CONVERT(0x" + value.encode().hex() + " USING utf8mb4)" if value else "''"
+        harness.sql('UPDATE host SET ' + ','.join(key + '=' + literal(value) for key, value in zip(snmp_columns.split(','), original_snmp)) + f' WHERE id={allowed_id}')
     original_site = int(harness.sql(f'SELECT site_id FROM host WHERE id={allowed_id}').strip())
     site = int(harness.sql("INSERT INTO sites (name) VALUES ('Editor <west>'); SELECT LAST_INSERT_ID()").strip())
     try:
