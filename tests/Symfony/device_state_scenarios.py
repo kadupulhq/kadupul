@@ -111,6 +111,22 @@ def verify_remote_device_state(harness, session, device_id, poller, check):
         check(harness.sql(f"SELECT COUNT(*) FROM host WHERE id IN ({device_id},{local}) AND disabled='on'").strip() == '2', 'remote bulk state failure rolls back primary batch')
         harness.sql('DROP TRIGGER create_remote.reject_bulk_state')
         trigger = False
+        # Reject a later replication step after the remote enabled flag changed.
+        # The worker must not mistake matching flags for a successful operation.
+        harness.sql(f"INSERT INTO host_snmp_cache (host_id,snmp_query_id,field_name,field_value,snmp_index,oid) VALUES ({device_id},16777213,'bulkStateFailure','before','1','.1.3.6.1')")
+        try:
+            harness.sql("CREATE TRIGGER create_remote.reject_bulk_reindex BEFORE INSERT ON create_remote.host_snmp_cache FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='remote reindex failure'")
+            try:
+                check(enable.apply() == 502, 'remote reindex failure cannot report successful bulk enable')
+                check(harness.sql(f"SELECT COUNT(*) FROM host WHERE id IN ({device_id},{local}) AND disabled='on'").strip() == '2', 'remote reindex failure rolls back the whole primary batch')
+                check(harness.sql(f"SELECT disabled='' FROM create_remote.host WHERE id={device_id}").strip() == '1', 'reindex failure is exercised after remote flag mutation')
+            finally:
+                harness.sql('DROP TRIGGER create_remote.reject_bulk_reindex')
+            check(enable.apply() == 200, 'bulk enable recovers after remote reindex rejection')
+            check(harness.sql(f"SELECT field_value FROM create_remote.host_snmp_cache WHERE host_id={device_id} AND snmp_query_id=16777213").strip() == 'before', 'recovered bulk enable replicates the previously rejected cache row')
+        finally:
+            for prefix in ['', 'create_remote.']:
+                harness.sql(f'DELETE FROM {prefix}host_snmp_cache WHERE host_id={device_id} AND snmp_query_id=16777213')
         check(enable.apply() == 200, 'bulk state recovers after remote write rejection')
         check(harness.sql(f"SELECT disabled='' FROM create_remote.host WHERE id={device_id}").strip() == '1', 'bulk state verifies remote enabled state')
         harness.sql(f"UPDATE create_remote.host SET disabled='on' WHERE id={device_id}")
