@@ -13,8 +13,8 @@ compatibility. LTS remains unchanged. Plugin-owned pages are outside this queue.
 | Device identity, metadata and enabled state | Migrated |
 | Device site assignment | Merged in #250 |
 | Device polling settings | PR #252 |
-| Device SNMP protocol and credentials | Draft PR #257 |
-| Device template assignment | In progress |
+| Device SNMP protocol and credentials | PR #257 |
+| Device template assignment | Draft PR #262 |
 | Device collector assignment | Pending |
 | Device bulk enable/disable | Pending |
 | Device deletion, restoration and purge choices | Pending |
