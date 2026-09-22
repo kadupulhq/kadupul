@@ -24,6 +24,12 @@ $db->prepare('INSERT INTO host_template_graph (host_template_id,graph_template_i
 $graphsBefore = $db->query('SELECT * FROM host_graph WHERE host_id=0 ORDER BY graph_template_id')->fetchAll();
 $worker = null;
 try {
+    $invalid = new \Symfony\Component\Process\Process([PHP_BINARY, 'bin/legacy-device-edit.php'], getcwd());
+    $invalid->setInput('{}');
+    $invalid->run();
+    if ($invalid->isSuccessful() || !str_contains($invalid->getOutput(), 'KADUPUL_EDIT_RESULT={"status":"failed"}')) {
+        throw new RuntimeException('Malformed worker commands must not masquerade as invalid stored credentials');
+    }
     $row = $db->query('SELECT * FROM host WHERE id=' . $hostId)->fetch();
     $device = new \Kadupul\Inventory\Domain\Device($hostId, $row['description'], $row['hostname'], (string) $row['notes'], true, (string) $row['location'], (string) $row['external_id'], (int) $row['site_id'], array_intersect_key($row, \Kadupul\Inventory\Domain\DevicePolling::DEFAULTS), array_intersect_key($row, \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::PUBLIC_DEFAULTS));
     $command = ['actor' => (int) $db->query("SELECT id FROM user_auth WHERE username='admin'")->fetchColumn(), 'id' => $hostId, 'description' => $device->description(), 'hostname' => $device->hostname(), 'notes' => $device->notes(), 'enabled' => false, 'location' => $device->location(), 'external_id' => $device->externalId(), 'revision' => $device->revision(), 'site_id' => $siteId, 'polling' => $device->polling(), 'snmp' => $device->snmpChange()->fields];

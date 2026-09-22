@@ -39,7 +39,7 @@ final readonly class LegacyDeviceEditor implements DeviceEditor
             throw new \RuntimeException('Save outcome is unknown. Reload the device before retrying.');
         }
         $status = json_decode($match[1], true, 512, JSON_THROW_ON_ERROR)['status'] ?? '';
-        if ($status === 'invalid') {
+        if ($status === 'snmp_invalid') {
             throw new \InvalidArgumentException('SNMP settings and stored credentials are incompatible. Replace credentials or review the selected settings.');
         }
         if ($status === 'conflict') {
