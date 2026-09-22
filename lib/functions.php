@@ -1256,6 +1256,9 @@ function get_selective_log_level() {
  * @param $level - (int) only log if above the specified log level
  */
 function cacti_log($string, $output = false, $environ = 'CMDPHP', $level = '') {
+	if (defined('KADUPUL_REDACT_DATABASE_LOGS') && KADUPUL_REDACT_DATABASE_LOGS && $environ === 'DBCALL') {
+		$string = 'Database diagnostic omitted during sensitive device creation';
+	}
 	global $config, $database_log;
 
 	static $start = null;

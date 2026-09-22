@@ -2114,6 +2114,9 @@ function db_check_password_length() {
  * @return (string) the last database error if any
  */
 function db_echo_sql($line, $force = false) {
+	if (defined('KADUPUL_REDACT_DATABASE_LOGS') && KADUPUL_REDACT_DATABASE_LOGS) {
+		return;
+	}
 	global $config;
 
 	file_put_contents(sys_get_temp_dir() . '/cacti-sql.log', get_debug_prefix() . $line, FILE_APPEND);

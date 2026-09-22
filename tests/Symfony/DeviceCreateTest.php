@@ -197,6 +197,25 @@ final class DeviceCreateTest extends TestCase
         (new \Kadupul\Inventory\Application\Query\PrepareDeviceCreation($access, $catalog))();
     }
 
+    public function testWorkerUsesDefaultCliWhenConfiguredPathIsEmpty(): void
+    {
+        $directory = sys_get_temp_dir() . '/kadupul-create-' . bin2hex(random_bytes(8));
+        mkdir($directory . '/bin', 0700, true);
+        file_put_contents($directory . '/bin/legacy-device-create.php', '<?php echo "KADUPUL_CREATE_RESULT=" . json_encode(["status" => "ok", "id" => 7]);');
+        try {
+            $db = new \PDO('sqlite::memory:');
+            $db->exec("CREATE TABLE settings (name TEXT,value TEXT); INSERT INTO settings VALUES ('path_php_binary', '  ')");
+            $database = $this->createMock(\Kadupul\Platform\Contract\DatabaseConnection::class);
+            $database->method('get')->willReturn($db);
+            $creator = new \Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreator($directory, $database);
+            self::assertSame(7, $creator->create(42, new NewDevice(['description' => 'Test', 'hostname' => 'localhost'])));
+        } finally {
+            unlink($directory . '/bin/legacy-device-create.php');
+            rmdir($directory . '/bin');
+            rmdir($directory);
+        }
+    }
+
     public static function workerResults(): iterable
     {
         yield 'missing configured executable' => ['', 1, \RuntimeException::class, true];

@@ -14,6 +14,8 @@ if (PHP_SAPI !== 'cli') {
 
 // Isolate procedural globals, plugin hooks and poller effects from Symfony HTTP.
 ob_start();
+// SQL statements and development diagnostics can contain SNMP credentials.
+define('KADUPUL_REDACT_DATABASE_LOGS', true);
 require __DIR__ . '/../include/cli_check.php';
 require_once __DIR__ . '/../lib/auth.php';
 require_once __DIR__ . '/../lib/api_automation_tools.php';
@@ -109,6 +111,7 @@ try {
         }
     }
     $fields['id'] = 0;
+    $fields['create_only'] = true;
     $fields['device_template_id'] = $fields['host_template_id'];
     $fields['disabled'] = $fields['enabled'] ? '' : 'on';
     $_SESSION['sess_user_id'] = $command['actor'];

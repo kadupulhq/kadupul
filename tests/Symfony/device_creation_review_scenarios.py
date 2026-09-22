@@ -15,6 +15,21 @@ def verify_creation_compatibility(harness, post, fields, created, user_id, check
             created.extend(int(value) for value in ids.splitlines())
         return status, body
 
+    check(harness.php('-r', 'require "include/global.php"; function setup_creation_guard() { api_plugin_register_hook("compatibility_test","api_device_save","compatibility_create_guard","setup.php",true); } setup_creation_guard();')['exit'] == 0, 'creation guard fixture registered')
+    before = harness.sql('SELECT id,description,hostname,host_template_id,site_id,poller_id FROM host ORDER BY id')
+    for key in ['id', 'host_template_id', 'site_id', 'poller_id']:
+        status, _ = submit('create-hook-change-' + key)
+        check(status == 502 and harness.sql('SELECT id,description,hostname,host_template_id,site_id,poller_id FROM host ORDER BY id') == before, 'creation rejects plugin changes to authorized ' + key + ' before persistence')
+    debug_fields = {k:v for k,v in fields.items() if k != 'device_create[use_default_credentials]'}
+    debug_fields.update({'device_create[description]': 'create-debug-fixture', 'device_create[host_template_id]': '0', 'device_create[snmp_community]': 'creation-log-secret-92831'})
+    status, _, _ = post(debug_fields)
+    ids = harness.sql("SELECT id FROM host WHERE description='create-debug-fixture'").strip()
+    if ids:
+        created.extend(int(value) for value in ids.splitlines())
+    check(status == 200 and ids, 'device creation succeeds with SQL debugging enabled by a plugin')
+    result = harness.php('-r', 'require "include/global.php"; $clean=true; foreach ([cacti_log_file(), sys_get_temp_dir() . "/cacti-sql.log"] as $path) { if (is_file($path) && str_contains(file_get_contents($path), "creation-log-secret-92831")) { $clean=false; } } echo $clean ? "clean" : "leaked";')
+    check(result['exit'] == 0 and result['stdout'] == 'clean', 'database diagnostics and SQL debug files omit creation credentials')
+
     v3 = {k:v for k,v in fields.items() if k != 'device_create[use_default_credentials]'}
     v3.update({'device_create[description]': 'create-sha384-fixture', 'device_create[host_template_id]': '0', 'device_create[snmp_version]': '3', 'device_create[snmp_username]': 'fixture', 'device_create[snmp_auth_protocol]': 'SHA384', 'device_create[snmp_priv_protocol]': '[None]', 'device_create[snmp_password]': 'fixture-sha384-password'})
     status, body, _ = post(v3)

@@ -20,7 +20,7 @@ final readonly class LegacyDeviceCreator implements DeviceCreator
     public function create(int $userId, NewDevice $device): int
     {
         $configured = $this->database->get()->query("SELECT value FROM settings WHERE name = 'path_php_binary'")->fetchColumn();
-        $binary = is_string($configured) && trim($configured) !== '' ? trim($configured) : PHP_BINDIR . '/php';
+        $binary = is_string($configured) && trim($configured) !== '' ? trim($configured) : PHP_BINDIR . (PHP_OS_FAMILY === 'Windows' ? '/php.exe' : '/php');
         $process = new Process([$binary, $this->projectDir . '/bin/legacy-device-create.php'], $this->projectDir);
         $process->setTimeout(120);
         $process->setInput(json_encode(['actor' => $userId, 'fields' => $device->fields], JSON_THROW_ON_ERROR));

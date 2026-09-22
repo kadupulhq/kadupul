@@ -625,3 +625,10 @@ the worker prepares both connections for full UTF-8 and strict writes and checks
 that the collector received the same device fields before confirming creation.
 Replication failure remains an uncertain outcome because remote writes cannot
 be rolled back with the primary transaction.
+
+The creation-only save guard rejects plugin changes to the device ID or the
+authorized template/site/collector before persistence. The worker suppresses raw
+SQL debug output and replaces database log payloads with a fixed diagnostic;
+the actor/device audit entry remains available. Plugins are trusted server code
+and remain responsible for their own direct file or external logging. The default
+CLI filename is platform-specific (`php.exe` on Windows).
