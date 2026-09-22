@@ -74,7 +74,18 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
     dtd = int(harness.sql(f"INSERT INTO data_template_data (local_data_id,name) VALUES ({data},'collector fixture'); SELECT LAST_INSERT_ID()").strip())
     template_graph = int(harness.sql('SELECT MIN(id) FROM graph_templates').strip())
     trigger = False
+    cleanup_trigger = False
+    second = None
+    schema = False
     try:
+        harness.sql('CREATE DATABASE collector_second CHARACTER SET utf8mb4')
+        schema = True
+        tables = harness.sql('SHOW TABLES').splitlines()
+        import re
+        if not all(re.fullmatch(r'[A-Za-z0-9_]+', table) for table in tables):
+            raise RuntimeError('Unexpected fixture table name')
+        harness.sql(';'.join(f'CREATE TABLE collector_second.`{table}` LIKE cacti.`{table}`' for table in tables))
+        second = int(harness.sql("INSERT INTO poller (name,hostname,dbhost,dbdefault,dbuser,dbpass,last_status) VALUES ('Second collector','db','db','collector_second','root','behavior-root',NOW()); SELECT LAST_INSERT_ID()").strip())
         harness.sql(f"INSERT INTO data_template_rrd (local_data_id,data_source_name) VALUES ({data},'collector')")
         harness.sql(f"INSERT INTO data_input_data (data_template_data_id,data_input_field_id,value) VALUES ({dtd},1,'collector input')")
         harness.sql(f"INSERT INTO graph_templates_item (local_graph_id,text_format) VALUES ({graph},'collector graph')")
@@ -91,12 +102,23 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.data_local WHERE id={data}').strip() == '1' and harness.sql(f'SELECT COUNT(*) FROM create_remote.graph_local WHERE id={graph}').strip() == '1', 'collector reassignment preserves graph and data identities')
         check(harness.sql(f'SELECT value FROM create_remote.data_input_data WHERE data_template_data_id={dtd} AND data_input_field_id=1').strip() == 'collector input', 'collector reassignment copies data input configuration')
         check(harness.sql(f'SELECT COUNT(*) FROM poller_command WHERE poller_id={poller} AND action=3 AND command="{device_id}"').strip() == '0', 'returning device cancels obsolete queued purge')
+        check(form.assign(second) == 200, 'collector reassignment moves between remote collectors')
+        check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id={device_id}').strip() == '0', 'remote-to-remote move removes the previous collector')
+        check(harness.sql(f'SELECT poller_id FROM collector_second.poller_item WHERE local_data_id={data}').strip() == str(second), 'remote-to-remote move transfers polling ownership')
+        harness.sql("CREATE TRIGGER collector_second.reject_collector_cleanup BEFORE DELETE ON collector_second.host FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='collector cleanup fixture rejection'")
+        cleanup_trigger = True
+        check(form.assign(1) == 502, 'collector cleanup failure cannot report success')
+        check(harness.sql(f'SELECT poller_id FROM host WHERE id={device_id}').strip() == str(second), 'collector cleanup failure rolls back primary ownership')
+        harness.sql('DROP TRIGGER collector_second.reject_collector_cleanup')
+        cleanup_trigger = False
         check(form.assign(1) == 200, 'collector reassignment can return to primary')
         harness.sql("CREATE TRIGGER create_remote.reject_collector_graph BEFORE INSERT ON create_remote.host_graph FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='collector fixture rejection'")
         trigger = True
         check(form.assign(poller) == 502, 'collector replication failure cannot report success')
         check(harness.sql(f'SELECT poller_id FROM host WHERE id={device_id}').strip() == '1', 'collector replication failure rolls back primary ownership')
     finally:
+        if cleanup_trigger:
+            harness.sql('DROP TRIGGER collector_second.reject_collector_cleanup')
         if trigger:
             harness.sql('DROP TRIGGER create_remote.reject_collector_graph')
         # The primary is authoritative after an uncertain remote write.
@@ -111,3 +133,8 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
             harness.sql(f'DELETE FROM {prefix}graph_templates_item WHERE local_graph_id={graph}')
             harness.sql(f'DELETE FROM {prefix}graph_local WHERE id={graph}')
             harness.sql(f'DELETE FROM {prefix}host_graph WHERE host_id={device_id} AND graph_template_id={template_graph}')
+        if second is not None:
+            harness.sql(f'DELETE FROM poller_command WHERE poller_id={second}')
+            harness.sql(f'DELETE FROM poller WHERE id={second}')
+        if schema:
+            harness.sql('DROP DATABASE collector_second')
