@@ -16,7 +16,7 @@ compatibility. LTS remains unchanged. Plugin-owned pages are outside this queue.
 | Device SNMP protocol and credentials | Merged in #257 |
 | Device template assignment | PR #262 |
 | Device collector assignment | PR #266 |
-| Device bulk enable/disable | Implemented; validation in progress |
+| Device bulk enable/disable | PR #272 |
 | Device deletion, restoration and purge choices | Pending |
 | Device bulk options, statistics and template synchronization | Pending |
 | Device graph-template associations | Pending |
