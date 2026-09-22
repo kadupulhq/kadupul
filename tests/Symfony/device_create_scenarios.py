@@ -87,6 +87,8 @@ def verify_device_create(harness, session, user_id, check):
             created.extend(int(v) for v in ids.splitlines())
         check(status == 200 and 'explicit-fixture-secret' not in body and len(created) == 2, 'explicit credentials create a device without being rendered')
         check(harness.sql(f'SELECT snmp_community FROM host WHERE id={created[-1]}').strip() == 'explicit-fixture-secret', 'explicit credentials are not replaced by installation defaults')
+        from device_creation_review_scenarios import verify_creation_compatibility
+        verify_creation_compatibility(harness, post, fields, created, user_id, check)
         check(session.request('/bin/legacy-device-create.php')['status'] in (403,404), 'device creation worker is inaccessible over HTTP')
     finally:
         for device_id in created:

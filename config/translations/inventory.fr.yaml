@@ -158,3 +158,4 @@
 "TCP": "TCP"
 "SNMP": "SNMP"
 "Ping": "Ping"
+"Remote collectors must be online. Creation verifies the replicated device before confirming success.": "Les collecteurs distants doivent être en ligne. La création vérifie la réplication de l’appareil avant de confirmer la réussite."

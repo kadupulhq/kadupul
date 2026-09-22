@@ -11,14 +11,17 @@ use Kadupul\Inventory\Application\Port\DeviceCreator;
 use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Inventory\Domain\NewDevice;
 use Symfony\Component\Process\Process;
+use Kadupul\Platform\Contract\DatabaseConnection;
 
 final readonly class LegacyDeviceCreator implements DeviceCreator
 {
-    public function __construct(private string $projectDir) {}
+    public function __construct(private string $projectDir, private DatabaseConnection $database) {}
 
     public function create(int $userId, NewDevice $device): int
     {
-        $process = new Process([PHP_BINDIR . '/php', $this->projectDir . '/bin/legacy-device-create.php'], $this->projectDir);
+        $configured = $this->database->get()->query("SELECT value FROM settings WHERE name = 'path_php_binary'")->fetchColumn();
+        $binary = is_string($configured) && trim($configured) !== '' ? trim($configured) : PHP_BINDIR . '/php';
+        $process = new Process([$binary, $this->projectDir . '/bin/legacy-device-create.php'], $this->projectDir);
         $process->setTimeout(120);
         $process->setInput(json_encode(['actor' => $userId, 'fields' => $device->fields], JSON_THROW_ON_ERROR));
         try {

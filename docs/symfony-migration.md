@@ -616,3 +616,12 @@ and repeated valid submissions retain legacy behavior; creation is not an
 idempotent API. Custom plugin form fields and subsequent graph/query management
 remain on the legacy pages; the standard creation fields and core hooks are
 covered here. Existing legacy URLs and LTS remain unchanged.
+
+Device creation honors the configured `path_php_binary` executable (falling back
+to the current PHP installation) and legacy defaults when settings are absent.
+The worker locks the account, authentication/guest policy and whichever direct
+or group grants authorize the transaction. Remote collectors must be online:
+the worker prepares both connections for full UTF-8 and strict writes and checks
+that the collector received the same device fields before confirming creation.
+Replication failure remains an uncertain outcome because remote writes cannot
+be rolled back with the primary transaction.

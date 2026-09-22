@@ -57,7 +57,7 @@ final class DeviceCreateTest extends TestCase
     public function testUseCasePassesActorAndValidatedDataToPort(): void
     {
         $creator = $this->createMock(DeviceCreator::class);
-        $creator->expects(self::once())->method('create')->with(42, self::callback(static fn(NewDevice $site): bool => $site->fields['description'] === 'Tokyo'))->willReturn(7);
+        $creator->expects(self::once())->method('create')->with(42, self::callback(static fn(NewDevice $device): bool => $device->fields['description'] === 'Tokyo'))->willReturn(7);
         self::assertSame(7, (new CreateDevice($this->access(), $creator))(['description' => ' Tokyo ', 'hostname' => 'localhost']));
     }
 
@@ -174,7 +174,17 @@ final class DeviceCreateTest extends TestCase
         self::assertSame(1, $choices->defaults['poller_id']);
         self::assertSame('1', $choices->defaults['snmp_version']);
         self::assertSame([1 => 'Main'], $choices->pollers);
+        self::assertSame('MD5', $choices->defaults['snmp_auth_protocol']);
+        self::assertSame('DES', $choices->defaults['snmp_priv_protocol']);
+        self::assertSame('2', $choices->defaults['ping_method']);
+        self::assertSame('400', $choices->defaults['ping_timeout']);
+        self::assertSame('1', $choices->defaults['ping_retries']);
         self::assertStringNotContainsString('private-fixture', json_encode($choices));
+        $db->exec("DELETE FROM settings WHERE name = 'default_site'; INSERT INTO sites VALUES (1,'Default');");
+        $catalog = new \Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreationCatalog($database);
+        self::assertSame(1, $catalog->choices()->defaults['site_id']);
+        $db->exec("INSERT INTO settings VALUES ('default_site','')");
+        self::assertSame(0, $catalog->choices()->defaults['site_id']);
     }
 
     public function testUnauthorizedPreparationDoesNotReadCatalog(): void
@@ -189,6 +199,7 @@ final class DeviceCreateTest extends TestCase
 
     public static function workerResults(): iterable
     {
+        yield 'missing configured executable' => ['', 1, \RuntimeException::class, true];
         yield 'lost acknowledgement' => ['', 1, \RuntimeException::class];
         yield 'malformed acknowledgement' => ['KADUPUL_CREATE_RESULT={broken}', 0, \RuntimeException::class];
         yield 'nonzero with success' => ['KADUPUL_CREATE_RESULT={"status":"ok","id":7}', 1, \RuntimeException::class];
@@ -197,13 +208,20 @@ final class DeviceCreateTest extends TestCase
     }
 
     #[DataProvider('workerResults')]
-    public function testWorkerFailuresAreSanitizedAndNeverRetried(string $output, int $exit, string $error): void
+    public function testWorkerFailuresAreSanitizedAndNeverRetried(string $output, int $exit, string $error, bool $missingBinary = false): void
     {
         $directory = sys_get_temp_dir() . '/kadupul-create-' . bin2hex(random_bytes(8));
         mkdir($directory . '/bin', 0700, true);
         file_put_contents($directory . '/bin/legacy-device-create.php', '<?php file_put_contents(__DIR__ . "/calls", "called\\n", FILE_APPEND); fwrite(STDERR, "private-worker-secret"); echo ' . var_export($output, true) . '; exit(' . $exit . ');');
         try {
-            $creator = new \Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreator($directory);
+            $db = new \PDO('sqlite::memory:');
+            $db->exec('CREATE TABLE settings (name TEXT,value TEXT)');
+            // Exercise the configured executable, including spaces in its path.
+            symlink(PHP_BINARY, $directory . '/configured php');
+            $db->prepare('INSERT INTO settings VALUES (?, ?)')->execute(['path_php_binary', $directory . ($missingBinary ? '/missing php' : '/configured php')]);
+            $database = $this->createMock(\Kadupul\Platform\Contract\DatabaseConnection::class);
+            $database->method('get')->willReturn($db);
+            $creator = new \Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreator($directory, $database);
             try {
                 $creator->create(42, new NewDevice(['description' => 'Test', 'hostname' => 'localhost']));
                 self::fail('Expected sanitized failure');
@@ -211,9 +229,16 @@ final class DeviceCreateTest extends TestCase
                 self::assertInstanceOf($error, $failure);
                 self::assertStringNotContainsString('private-worker-secret', $failure->getMessage());
             }
-            self::assertSame("called\n", file_get_contents($directory . '/bin/calls'));
+            if ($missingBinary) {
+                self::assertFileDoesNotExist($directory . '/bin/calls');
+            } else {
+                self::assertSame("called\n", file_get_contents($directory . '/bin/calls'));
+            }
         } finally {
-            unlink($directory . '/bin/calls');
+            unlink($directory . '/configured php');
+            if (is_file($directory . '/bin/calls')) {
+                unlink($directory . '/bin/calls');
+            }
             unlink($directory . '/bin/legacy-device-create.php');
             rmdir($directory . '/bin');
             rmdir($directory);

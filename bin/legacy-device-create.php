@@ -53,9 +53,30 @@ try {
         throw new RuntimeException('Primary installation transaction unavailable');
     }
     $transactionStarted = true;
-    $actor = db_fetch_row_prepared('SELECT id, enabled, locked FROM user_auth WHERE id = ? FOR UPDATE', [$command['actor']]);
-    if (!$actor || $actor['enabled'] !== 'on' || $actor['locked'] === 'on' || (int) get_guest_account() === $command['actor']
-        || !cacti_authorize_has_realm($command['actor'], 8) || !cacti_authorize_has_realm($command['actor'], 3)) {
+    // Lock current policy and every grant used to authorize the write. A plain
+    // UNION read can authorize against a concurrently revoked grant.
+    $policy = $connection->query("SELECT name, value FROM settings WHERE name IN ('auth_method', 'guest_user') LOCK IN SHARE MODE")->fetchAll(PDO::FETCH_KEY_PAIR);
+    $query = $connection->prepare('SELECT id, username, enabled, locked FROM user_auth WHERE id = ? FOR UPDATE');
+    $query->execute([$command['actor']]);
+    $actor = $query->fetch(PDO::FETCH_ASSOC);
+    $hasRealm = static function (int $realm) use ($connection, $command): bool {
+        $query = $connection->prepare('SELECT realm_id FROM user_auth_realm WHERE user_id = ? AND realm_id = ? LOCK IN SHARE MODE');
+        $query->execute([$command['actor'], $realm]);
+        if ($query->fetchColumn() !== false) {
+            return true;
+        }
+        $query = $connection->prepare("SELECT r.realm_id FROM user_auth_group_realm r
+            INNER JOIN user_auth_group_members m ON m.group_id = r.group_id
+            INNER JOIN user_auth_group g ON g.id = r.group_id
+            WHERE g.enabled = 'on' AND m.user_id = ? AND r.realm_id = ? LIMIT 1 LOCK IN SHARE MODE");
+        $query->execute([$command['actor'], $realm]);
+        return $query->fetchColumn() !== false;
+    };
+    $guest = $policy['guest_user'] ?? '0';
+    if (!$actor || $actor['enabled'] !== 'on' || $actor['locked'] === 'on'
+        || !in_array((int) ($policy['auth_method'] ?? 1), [1, 2, 3, 4], true)
+        || (int) $guest === $command['actor'] || $guest === $actor['username']
+        || !$hasRealm(8) || !$hasRealm(3)) {
         $status = 'denied';
         throw new RuntimeException('Access denied');
     }
@@ -72,6 +93,21 @@ try {
         $fields['use_default_credentials'] = false;
         $fields = (new NewDevice($fields))->fields;
     }
+    $remote = null;
+    if ((int) $fields['poller_id'] > 1) {
+        if (!remote_poller_up((int) $fields['poller_id'])) {
+            throw new RuntimeException('Selected collector is unavailable');
+        }
+        $remote = poller_connect_to_remote((int) $fields['poller_id']);
+        if (!$remote instanceof PDO || $remote->exec('SET NAMES utf8mb4') === false
+            || $remote->exec("SET SESSION sql_mode = CONCAT_WS(',', @@SESSION.sql_mode, 'STRICT_TRANS_TABLES')") === false) {
+            throw new RuntimeException('Collector connection validation unavailable');
+        }
+        // Legacy connection setup can also change the primary session's modes.
+        if ($connection->exec("SET SESSION sql_mode = CONCAT_WS(',', @@SESSION.sql_mode, 'STRICT_TRANS_TABLES')") === false) {
+            throw new RuntimeException('Primary connection validation unavailable');
+        }
+    }
     $fields['id'] = 0;
     $fields['device_template_id'] = $fields['host_template_id'];
     $fields['disabled'] = $fields['enabled'] ? '' : 'on';
@@ -86,6 +122,18 @@ try {
         throw new RuntimeException('Legacy save failed');
     }
     api_plugin_hook_function('host_save', ['host_id' => $saved]);
+    if ($remote !== null) {
+        $columns = 'description, hostname, notes, location, external_id, host_template_id, site_id, poller_id, disabled, snmp_version, snmp_community, snmp_username, snmp_password, snmp_auth_protocol, snmp_priv_passphrase, snmp_priv_protocol, snmp_context, snmp_engine_id, snmp_port, snmp_timeout, device_threads, availability_method, ping_method, ping_port, ping_timeout, ping_retries, max_oids, bulk_walk_size';
+        $query = $connection->prepare('SELECT ' . $columns . ' FROM host WHERE id = ?');
+        $query->execute([(int) $saved]);
+        $primaryRow = $query->fetch(PDO::FETCH_ASSOC);
+        $query = $remote->prepare('SELECT ' . $columns . ' FROM host WHERE id = ?');
+        $query->execute([(int) $saved]);
+        $remoteRow = $query->fetch(PDO::FETCH_ASSOC);
+        if (!$primaryRow || !$remoteRow || $primaryRow != $remoteRow) {
+            throw new RuntimeException('Collector replication could not be confirmed');
+        }
+    }
     if (!db_commit_transaction()) {
         throw new RuntimeException('Commit failed');
     }

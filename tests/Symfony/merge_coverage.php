@@ -26,9 +26,12 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'site_creation_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'coverage_support.py'];
-    foreach ($scripts as $script) {
-        $path = 'tests/Symfony/' . $script;
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'coverage_support.py'];
+    $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
+    if ($handler !== 'none') {
+        $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
+    }
+    foreach ($sourcePaths as $path) {
         if (($manifest['source_sha256'][$path] ?? '') !== hash_file('sha256', $root . '/' . $path)) {
             throw new RuntimeException('Integration test source differs from checkout');
         }
@@ -45,7 +48,15 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'device CSV bytes are independent of locale',
         'site creation persists name',
         'site creation updates both legacy cache markers',
-        'rejected creations leave all sites unchanged'];
+        'rejected creations leave all sites unchanged',
+        'worker independently rechecks revoked actor permissions',
+        'legacy template graph associations are preserved',
+        'device creation updates both cache markers',
+        'explicit credentials are not replaced by installation defaults',
+        'device creation serializes direct authorization revocations',
+        'device creation serializes group authorization revocations',
+        'remote collector preserves four-byte Unicode notes',
+        'SHA384 is preserved without mapping to an invalid protocol'];
     foreach ($checks as $check) {
         if (!in_array($check, $manifest['checks'] ?? [], true)) {
             throw new RuntimeException('Incomplete Symfony integration checks');
@@ -68,7 +79,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             $relative = substr($path, strlen('/var/www/html/'));
             // Legacy application coverage has its own report. Never import
             // generated configuration/cache, dependencies or installed plugins.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['bin/legacy-device-edit.php', 'app.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'app.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -101,6 +112,13 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Application/Command/CreateSite.php',
         'src/Inventory/Domain/NewSite.php',
         'src/Inventory/Infrastructure/Legacy/LegacySiteCreator.php',
+        'bin/legacy-device-create.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DeviceCreateController.php',
+        'src/Inventory/Application/Command/CreateDevice.php',
+        'src/Inventory/Application/Query/PrepareDeviceCreation.php',
+        'src/Inventory/Domain/NewDevice.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceCreationCatalog.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceCreator.php',
         'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php'];
     foreach ($requiredPaths as $required) {
         if (!($observed[$required] ?? false)) {

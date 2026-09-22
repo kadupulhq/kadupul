@@ -31,6 +31,13 @@ def main():
         'src/Inventory/Application/Command/CreateSite.php',
         'src/Inventory/Domain/NewSite.php',
         'src/Inventory/Infrastructure/Legacy/LegacySiteCreator.php',
+        'bin/legacy-device-create.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DeviceCreateController.php',
+        'src/Inventory/Application/Command/CreateDevice.php',
+        'src/Inventory/Application/Query/PrepareDeviceCreation.php',
+        'src/Inventory/Domain/NewDevice.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceCreationCatalog.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceCreator.php',
         'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php')]
     for path in (args.files / 'raw').glob('coverage-*.json'):
         report = json.loads(path.read_text())
@@ -59,6 +66,17 @@ def main():
         'unmeasured-CreateSite.php': 'Missing measured execution: src/Inventory/Application/Command/CreateSite.php',
         'unmeasured-NewSite.php': 'Missing measured execution: src/Inventory/Domain/NewSite.php',
         'unmeasured-LegacySiteCreator.php': 'Missing measured execution: src/Inventory/Infrastructure/Legacy/LegacySiteCreator.php',
+        'missing-device-creation-check': 'Incomplete Symfony integration',
+        'device-create-test-hash': 'Integration test source differs',
+        'creation-plugin-test-hash': 'Integration test source differs',
+        'device-compatibility-test-hash': 'Integration test source differs',
+        'unmeasured-legacy-device-create.php': 'Missing measured execution: bin/legacy-device-create.php',
+        'unmeasured-DeviceCreateController.php': 'Missing measured execution: src/Inventory/Infrastructure/Symfony/Controller/DeviceCreateController.php',
+        'unmeasured-CreateDevice.php': 'Missing measured execution: src/Inventory/Application/Command/CreateDevice.php',
+        'unmeasured-PrepareDeviceCreation.php': 'Missing measured execution: src/Inventory/Application/Query/PrepareDeviceCreation.php',
+        'unmeasured-NewDevice.php': 'Missing measured execution: src/Inventory/Domain/NewDevice.php',
+        'unmeasured-LegacyDeviceCreationCatalog.php': 'Missing measured execution: src/Inventory/Infrastructure/Legacy/LegacyDeviceCreationCatalog.php',
+        'unmeasured-LegacyDeviceCreator.php': 'Missing measured execution: src/Inventory/Infrastructure/Legacy/LegacyDeviceCreator.php',
         'path-traversal': 'Invalid integration source path',
     }
     with tempfile.TemporaryDirectory(prefix='symfony-coverage-negative-') as directory:
@@ -87,6 +105,14 @@ def main():
             elif case.startswith('unmeasured-') and case.removeprefix('unmeasured-').endswith('.php'):
                 source = next(path for path in required if path.endswith('/' + case.removeprefix('unmeasured-')))
                 data['files'][source]['lines'] = {line: -1 for line in data['files'][source]['lines']}
+            elif case == 'device-create-test-hash':
+                evidence['source_sha256']['tests/Symfony/device_create_scenarios.py'] = '0' * 64
+            elif case == 'device-compatibility-test-hash':
+                evidence['source_sha256']['tests/Symfony/device_creation_review_scenarios.py'] = '0' * 64
+            elif case == 'creation-plugin-test-hash':
+                evidence['source_sha256']['tests/Fixtures/plugins/compatibility_test/setup.php'] = '0' * 64
+            elif case == 'missing-device-creation-check':
+                evidence['checks'].remove('legacy template graph associations are preserved')
             elif case == 'missing-check':
                 evidence['checks'] = []
             elif case == 'wrong-handler':
