@@ -31,6 +31,7 @@ def main():
         'src/Inventory/Domain/DevicePolling.php',
         'src/Inventory/Domain/DeviceTemplateAssignment.php',
         'src/Inventory/Domain/DeviceCollectorAssignment.php',
+        'src/Inventory/Infrastructure/Symfony/DeviceFormFailure.php',
         'src/Inventory/Application/Command/AssignDeviceTemplate.php',
         'src/Inventory/Application/Command/AssignDeviceCollector.php',
         'src/Inventory/Application/Query/PrepareDeviceTemplateAssignment.php',
