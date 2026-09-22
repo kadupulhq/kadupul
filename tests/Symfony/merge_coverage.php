@@ -26,7 +26,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'coverage_support.py'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'site_creation_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'coverage_support.py'];
     foreach ($scripts as $script) {
         $path = 'tests/Symfony/' . $script;
         if (($manifest['source_sha256'][$path] ?? '') !== hash_file('sha256', $root . '/' . $path)) {
@@ -42,7 +42,10 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'Symfony site translations honor the legacy session and ignore locale query overrides',
         'disabled translation overrides a French shared session',
         'French device editor translates labels without changing polling values',
-        'device CSV bytes are independent of locale'];
+        'device CSV bytes are independent of locale',
+        'site creation persists name',
+        'site creation updates both legacy cache markers',
+        'rejected creations leave all sites unchanged'];
     foreach ($checks as $check) {
         if (!in_array($check, $manifest['checks'] ?? [], true)) {
             throw new RuntimeException('Incomplete Symfony integration checks');
@@ -94,6 +97,10 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Infrastructure/Symfony/Controller/SiteListController.php',
         'src/Inventory/Infrastructure/Symfony/Controller/SiteEditController.php', 'src/Inventory/Infrastructure/Legacy/LegacySiteEditor.php',
         'src/IdentityAccess/Infrastructure/Legacy/LegacyLocalePreference.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/SiteCreateController.php',
+        'src/Inventory/Application/Command/CreateSite.php',
+        'src/Inventory/Domain/NewSite.php',
+        'src/Inventory/Infrastructure/Legacy/LegacySiteCreator.php',
         'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php'];
     foreach ($requiredPaths as $required) {
         if (!($observed[$required] ?? false)) {

@@ -27,7 +27,7 @@ final readonly class InventoryLocaleSubscriber implements EventSubscriberInterfa
     public function onRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
-        if (!$event->isMainRequest() || !in_array($request->attributes->get('_route'), ['inventory_sites', 'inventory_site_edit', 'inventory_devices', 'inventory_device_details', 'inventory_device_edit'], true)) {
+        if (!$event->isMainRequest() || !in_array($request->attributes->get('_route'), ['inventory_sites', 'inventory_site_edit', 'inventory_site_create', 'inventory_devices', 'inventory_device_details', 'inventory_device_edit'], true)) {
             return;
         }
         // Anonymous requests do not need installation/session access for locale.

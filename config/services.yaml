@@ -101,3 +101,7 @@ services:
         alias: Kadupul\Alerting\Infrastructure\Legacy\LegacyAdministrativeMailDelivery
     Kadupul\IdentityAccess\Contract\UserContacts:
         alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyUserContacts
+
+    Kadupul\Inventory\Application\Command\CreateSite: ~
+    Kadupul\Inventory\Application\Port\SiteCreator:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacySiteCreator
