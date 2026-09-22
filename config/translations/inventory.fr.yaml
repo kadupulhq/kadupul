@@ -203,3 +203,4 @@
 "Choose Replace credentials before entering new credentials.": "Choisissez Remplacer les identifiants avant de saisir de nouveaux identifiants."
 "Submit all SNMP settings.": "Soumettez tous les paramètres SNMP."
 "SNMP settings and stored credentials are incompatible. Replace credentials or review the selected settings.": "Les paramètres SNMP et les identifiants enregistrés sont incompatibles. Remplacez les identifiants ou vérifiez les paramètres sélectionnés."
+"Not configured (legacy)": "Non configuré (historique)"

@@ -24,7 +24,7 @@ final class DevicePollingType extends AbstractType
             $builder->add($field, TextType::class, ['label' => $label, 'trim' => false, 'empty_data' => '']);
         }
         $builder->add('availability_method', ChoiceType::class, ['label' => 'Availability method', 'choices' => ['None' => '0', 'SNMP and ping' => '1', 'SNMP' => '2', 'Ping' => '3', 'SNMP or ping' => '4', 'SNMP system description' => '5', 'SNMP GETNEXT' => '6'], 'invalid_message' => $this->translator->trans('Select a valid device option.', [], 'inventory')]);
-        $builder->add('ping_method', ChoiceType::class, ['label' => 'Ping method', 'choices' => ['ICMP' => '1', 'UDP' => '2', 'TCP' => '3', 'TCP closed' => '5'], 'invalid_message' => $this->translator->trans('Select a valid device option.', [], 'inventory')]);
+        $builder->add('ping_method', ChoiceType::class, ['label' => 'Ping method', 'choices' => ['Not configured (legacy)' => '0', 'ICMP' => '1', 'UDP' => '2', 'TCP' => '3', 'TCP closed' => '5'], 'invalid_message' => $this->translator->trans('Select a valid device option.', [], 'inventory')]);
     }
     public function configureOptions(OptionsResolver $resolver): void
     {

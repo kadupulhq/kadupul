@@ -15,6 +15,15 @@ use PHPUnit\Framework\TestCase;
 
 final class DevicePollingTest extends TestCase
 {
+    public function testLegacyZeroSettingsAndPartialCreationDefaults(): void
+    {
+        $fields = (new DevicePolling(array_replace(DevicePolling::DEFAULTS, ['ping_method' => '0', 'max_oids' => '0'])))->fields;
+        self::assertSame('0', $fields['ping_method']);
+        self::assertSame('0', $fields['max_oids']);
+        $created = new \Kadupul\Inventory\Domain\NewDevice(['description' => 'Partial', 'hostname' => 'partial.invalid']);
+        self::assertSame(DevicePolling::DEFAULTS, array_intersect_key($created->fields, DevicePolling::DEFAULTS));
+    }
+
     public static function invalidSettings(): iterable
     {
         foreach (DevicePolling::RANGES as $key => [$minimum, $maximum]) {
@@ -22,7 +31,7 @@ final class DevicePollingTest extends TestCase
                 yield [$key, $invalid];
             }
         }
-        foreach (['bulk_walk_size' => ['-2', '61'], 'availability_method' => ['7', '-1'], 'ping_method' => ['0', '4', '6']] as $key => $values) {
+        foreach (['bulk_walk_size' => ['-2', '61'], 'availability_method' => ['7', '-1'], 'ping_method' => ['-1', '4', '6']] as $key => $values) {
             foreach ($values as $value) {
                 yield [$key, $value];
             }
