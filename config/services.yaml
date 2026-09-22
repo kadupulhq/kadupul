@@ -166,6 +166,14 @@ services:
     Kadupul\Inventory\Application\Command\AssignDeviceCollector: ~
     Kadupul\Inventory\Application\Query\PrepareDeviceCollectorAssignment: ~
 
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceRemovals:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+    Kadupul\Inventory\Application\Port\DeviceRemovals:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceRemovals
+    Kadupul\Inventory\Application\Query\PrepareDeviceRemoval: ~
+    Kadupul\Inventory\Application\Command\RemoveDevices: ~
+
     Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates:
         arguments:
             $projectDir: '%kernel.project_dir%'

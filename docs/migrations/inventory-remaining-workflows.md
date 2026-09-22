@@ -17,7 +17,7 @@ compatibility. LTS remains unchanged. Plugin-owned pages are outside this queue.
 | Device template assignment | PR #262 |
 | Device collector assignment | PR #266 |
 | Device bulk enable/disable | PR #272 |
-| Device deletion, restoration and purge choices | Pending |
+| Device deletion and graph/data retention choices | Implemented; validation in progress |
 | Device bulk options, statistics and template synchronization | Pending |
 | Device graph-template associations | Pending |
 | Device data-query associations and reindex settings | Pending |
@@ -34,3 +34,5 @@ Collector administration, template authoring, graph/data-source administration,
 automation and identity administration belong to subsequent module migrations.
 Device assignment to a collector or template is part of Inventory and stays in
 this queue; administration of those referenced objects does not.
+
+Legacy device deletion has no restore operation: local rows are deleted and remote tombstones are temporary cleanup state, not recoverable inventory.

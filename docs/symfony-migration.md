@@ -869,3 +869,27 @@ return behavior. Final primary and remote states are verified before success;
 remote effects are not a distributed transaction and may survive primary
 rollback. HTTP 502 explicitly asks operators to inspect every selected device
 before retrying. Logs contain actor, requested state and IDs, never credentials.
+
+
+### Device removal and retention
+
+`/inventory/devices/remove` uses a Symfony Form/Twig confirmation backed by
+`PrepareDeviceRemoval`, `RemoveDevices` and the `DeviceRemovals` port.
+`DeviceRemoval` revisions include graph and data-source IDs as well as device
+identity and assignments. The isolated worker rechecks the complete selection,
+visibility, authorization, revisions and online collector identities under locks
+before writing. GET does not mutate; POST requires CSRF and an explicit policy.
+
+Retain leaves graphs and disabled data sources unassigned. Purge invokes the
+legacy graph/data lifecycle and also handles data sources with no graph. It
+rejects shared data references and aggregate memberships that would affect
+objects outside the selected devices; detach those in their owning modules or
+choose retention. Legacy removal and bulk-action plugin hooks are retained.
+RRD cleanup follows the existing configured maintenance queue, not the HTTP
+request. Remote child configuration is cleaned before its ownership rows vanish.
+
+Primary writes are transactional, with immediate SQL failure handling. Remote
+and plugin effects may survive rollback and failures return an explicit uncertain
+outcome. Primary local devices disappear; remote devices retain the legacy
+cleanup tombstone until maintenance purges it. This is not a restore facility.
+LTS is unchanged.
