@@ -135,6 +135,7 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
     finally:
         if primary_extra:
             harness.sql('ALTER TABLE poller_item DROP COLUMN collector_optional')
+            harness.sql('ALTER TABLE create_remote.poller_item DROP COLUMN IF EXISTS collector_remote')
         if cleanup_trigger:
             harness.sql('DROP TRIGGER collector_second.reject_collector_cleanup')
         if trigger:
