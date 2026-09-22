@@ -213,3 +213,5 @@
 "Changing templates adds their graph and data-query associations and removes unused graph associations. Existing graphs and collected data are retained. Unassigning keeps current associations.": "Changing templates adds their graph and data-query associations and removes unused graph associations. Existing graphs and collected data are retained. Unassigning keeps current associations."
 "Remote collectors must be online. Reload and verify the device after a failed assignment before retrying.": "Remote collectors must be online. Reload and verify the device after a failed assignment before retrying."
 "Select supported SNMP settings.": "Select supported SNMP settings."
+
+"Device template updated.": "Device template updated."

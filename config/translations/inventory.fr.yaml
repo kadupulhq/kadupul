@@ -213,3 +213,5 @@
 "Changing templates adds their graph and data-query associations and removes unused graph associations. Existing graphs and collected data are retained. Unassigning keeps current associations.": "Changer de modèle ajoute ses associations de graphiques et de requêtes de données et supprime les associations de graphiques inutilisées. Les graphiques existants et les données collectées sont conservés. Retirer le modèle conserve les associations actuelles."
 "Remote collectors must be online. Reload and verify the device after a failed assignment before retrying.": "Les collecteurs distants doivent être en ligne. Après un échec d’attribution, rechargez et vérifiez l’appareil avant de réessayer."
 "Select supported SNMP settings.": "Sélectionnez des paramètres SNMP pris en charge."
+
+"Device template updated.": "Modèle d’appareil mis à jour."

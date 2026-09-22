@@ -18,7 +18,7 @@ final class DeviceTemplateWorkerTest extends TestCase
 {
     public static function executables(): array
     {
-        return [[true, '{"status":"ok"}', false], [false, '{"status":"ok"}', true], [true, '{malformed-json}', true], [true, '{"status":[]}', true]];
+        return [[true, '{"status":"ok"}', false], [false, '{"status":"ok"}', true], [true, '{malformed-json}', true], [true, '{"status":[]}', true], [true, '"ok"', true], [true, 'null', true], [true, 'true', true], [true, '42', true], [true, '[]', true]];
     }
 
     #[DataProvider('executables')]
