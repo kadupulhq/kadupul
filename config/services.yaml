@@ -123,3 +123,13 @@ services:
     Kadupul\Inventory\Application\Command\CreateSite: ~
     Kadupul\Inventory\Application\Port\SiteCreator:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacySiteCreator
+
+    Kadupul\Inventory\Application\Command\CreateDevice: ~
+    Kadupul\Inventory\Application\Query\PrepareDeviceCreation: ~
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreator:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+    Kadupul\Inventory\Application\Port\DeviceCreator:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreator
+    Kadupul\Inventory\Application\Port\DeviceCreationCatalog:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreationCatalog

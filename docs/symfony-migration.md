@@ -642,3 +642,53 @@ Validation failures return 422, revoked access 401/403 and uncertain write resul
 not stored. Labels and errors use the English/French Inventory catalogs. Existing
 site address/map editing, duplication and deletion remain in `sites.php`; LTS is
 unchanged.
+
+### Device creation
+
+`/inventory/devices/new` now uses a Symfony Form and Twig page backed by the
+Inventory `CreateDevice` use case. `PrepareDeviceCreation` reads non-secret
+installation defaults and current template, site and enabled-poller choices.
+Domain validation rejects unknown fields, invalid references at the form boundary,
+unsupported protocols, out-of-range values and invalid SNMPv3 combinations.
+The isolated legacy adapter rechecks the actor, realms and selected references
+before calling `api_device_save` with an enforced zero ID. This preserves template
+associations, poller/cache behavior, automation and plugin save/create hooks.
+
+Configured community strings and passphrases are resolved only in the CLI worker;
+they never populate the HTTP form. Explicit credentials use password fields and
+are cleared on validation failures. Clear **Use configured credentials** before
+entering device-specific secrets. The default enables polling; operators can
+choose Disabled before creating devices that should not be polled yet.
+
+Creation uses stateless CSRF protection, private/no-store responses and a 303
+redirect to the permission-filtered device list. Creating a device does not grant
+visibility permissions. Worker failures and timeouts have an uncertain outcome:
+check the list before retrying. The adapter never retries automatically. A local
+transaction protects database work where possible, but plugin, remote-poller,
+SNMP and filesystem effects are not a distributed transaction. Duplicate names
+and repeated valid submissions retain legacy behavior; creation is not an
+idempotent API. Custom plugin form fields and subsequent graph/query management
+remain on the legacy pages; the standard creation fields and core hooks are
+covered here. Existing legacy URLs and LTS remain unchanged.
+
+Device creation honors the configured `path_php_binary` executable (falling back
+to the current PHP installation) and legacy defaults when settings are absent.
+The HTTP catalog never reads the stored SNMPv3 username. With configured
+credentials selected, a blank username is resolved in the authorized CLI worker
+and validated before persistence; an explicitly entered username is retained.
+The worker locks the account, authentication/guest policy and whichever direct
+or group grants authorize the transaction. Remote collectors must be online:
+the worker prepares both connections for full UTF-8 and strict writes and checks
+that the collector received the same device fields before confirming creation.
+Before commit, required template graph/query associations must exist on the
+primary, and collector graph/query associations (including reindex methods) must
+match the primary. Verification failures do not report successful creation.
+Replication failure remains an uncertain outcome because remote writes cannot
+be rolled back with the primary transaction.
+
+The creation-only save guard rejects plugin changes to the device ID or the
+authorized template/site/collector before persistence. The worker suppresses raw
+SQL debug output and replaces database log payloads with a fixed diagnostic;
+the actor/device audit entry remains available. Plugins are trusted server code
+and remain responsible for their own direct file or external logging. The default
+CLI filename is platform-specific (`php.exe` on Windows).

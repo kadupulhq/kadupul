@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'Add device'|trans({}, 'inventory') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route and encoded validated list context. #}
+    <p><a href="{{ path('inventory_devices', filters) }}">{{ 'Back to devices'|trans({}, 'inventory') }}</a></p>
+    <h1>{{ 'Add device'|trans({}, 'inventory') }}</h1>
+    <p>{{ 'Configured credentials stay on the server. Clear Use configured credentials to supply device-specific credentials.'|trans({}, 'inventory') }}</p>
+    <p>{{ 'Remote collectors must be online. Creation verifies the replicated device before confirming success.'|trans({}, 'inventory') }}</p>
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">{{ 'Create device'|trans({}, 'inventory') }}</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}
