@@ -95,6 +95,24 @@ final class DeviceSnmpChangeTest extends TestCase
         }
     }
 
+    public function testNonV3ResolutionClearsV3SecretsBeforeCallingLegacyPersistence(): void
+    {
+        foreach (['0', '1', '2'] as $version) {
+            foreach ([true, false] as $keep) {
+                $credentials = ['snmp_community' => 'community', 'snmp_username' => 'user', 'snmp_password' => 'auth-secret', 'snmp_priv_passphrase' => 'privacy-secret'];
+                $fields = $this->fields(['snmp_version' => $version, 'keep_credentials' => $keep]);
+                if (!$keep) {
+                    $fields = array_replace($fields, $credentials);
+                }
+                $resolved = (new DeviceSnmpChange($fields))->resolve($credentials);
+                self::assertSame('community', $resolved['snmp_community']);
+                foreach (['snmp_username', 'snmp_password', 'snmp_priv_passphrase'] as $key) {
+                    self::assertSame('', $resolved[$key]);
+                }
+            }
+        }
+    }
+
     public function testStoredCredentialsAreValidatedAfterResolution(): void
     {
         $change = new DeviceSnmpChange($this->fields(['snmp_version' => '3', 'snmp_auth_protocol' => 'SHA', 'snmp_priv_protocol' => 'AES']));
