@@ -50,6 +50,10 @@ final class DeviceTemplatePresentationTest extends TestCase
             self::assertStringContainsString('&lt;router&gt;', $response->getContent());
             self::assertStringContainsString('value="2">&lt;Template&gt;', $response->getContent());
             self::assertStringContainsString('value="3">&lt;Template&gt;', $response->getContent());
+            $saved = $kernel->handle(Request::create($path . '?saved=1', 'GET', [], ['Cacti' => 'fixture']));
+            self::assertSame(200, $saved->getStatusCode());
+            self::assertStringContainsString('Modèle d’appareil mis à jour.', $saved->getContent());
+            self::assertStringNotContainsString('Modèle d’appareil attribué.', $saved->getContent());
             $document = new \DOMDocument();
             @$document->loadHTML($response->getContent());
             $token = (new \DOMXPath($document))->evaluate('string(//input[@name="device_template[_token]"]/@value)');
@@ -65,6 +69,10 @@ final class DeviceTemplatePresentationTest extends TestCase
             $request = Request::create($path, 'POST', ['device_template' => $fields], ['Cacti' => 'fixture']);
             $request->headers->set('Origin', 'http://localhost');
             self::assertSame(303, $kernel->handle($request)->getStatusCode());
+            $device->assign(2, $device->revision());
+            $saved = $kernel->handle(Request::create($path . '?saved=1', 'GET', [], ['Cacti' => 'fixture']));
+            self::assertSame(200, $saved->getStatusCode());
+            self::assertStringContainsString('Modèle d’appareil mis à jour.', $saved->getContent());
         } finally {
             $kernel->shutdown();
         }

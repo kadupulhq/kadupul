@@ -255,3 +255,4 @@
 "Affected remote collectors must be online. Failed removal may leave remote or plugin changes; inspect the outcome before retrying.": "Affected remote collectors must be online. Failed removal may leave remote or plugin changes; inspect the outcome before retrying."
 "RRD file cleanup follows the configured maintenance policy.": "RRD file cleanup follows the configured maintenance policy."
 "%graphs% graphs, %sources% data sources": "%graphs% graphs, %sources% data sources"
+"Device template updated.": "Device template updated."

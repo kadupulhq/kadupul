@@ -255,3 +255,4 @@
 "Affected remote collectors must be online. Failed removal may leave remote or plugin changes; inspect the outcome before retrying.": "Les collecteurs distants concernés doivent être en ligne. Une suppression échouée peut laisser des changements distants ou de plugins ; vérifiez le résultat avant de réessayer."
 "RRD file cleanup follows the configured maintenance policy.": "Le nettoyage des fichiers RRD suit la politique de maintenance configurée."
 "%graphs% graphs, %sources% data sources": "%graphs% graphiques, %sources% sources de données"
+"Device template updated.": "Modèle d’appareil mis à jour."
