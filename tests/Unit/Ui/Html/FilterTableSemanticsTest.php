@@ -18,6 +18,8 @@ test('all 55 filter-layout findings are accounted for', function () use ($baseli
 test('filter tables retain styling and expose their controls rather than data-grid semantics', function ($entry) use ($baseline) {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/' . $entry['file']);
 	expect($source)->not->toBeFalse();
+	// Context distinguishes identical opening tags in separate functions.
+	expect($source)->toContain($entry['context']);
 	$expected = array_filter($baseline, function ($candidate) use ($entry) {
 		return $candidate['file'] === $entry['file'] && $candidate['after'] === $entry['after'];
 	});
