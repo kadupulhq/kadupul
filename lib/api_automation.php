@@ -22,6 +22,20 @@
  +-------------------------------------------------------------------------+
 */
 
+/** Convert configured URL bytes for JSON without turning conversion failures into boolean URLs. */
+function automation_url_utf8($url)
+{
+	$url = (string)$url;
+	try {
+		$converted = mb_convert_encoding($url, 'UTF-8', ini_get('default_charset') ?: 'UTF-8');
+	} catch (\ValueError $error) {
+		// Unsupported configured encodings must still pass through the caller's JSON encoder.
+		return $url;
+	}
+
+	return is_string($converted) ? $converted : $url;
+}
+
 function display_matching_hosts($rule, $rule_type, $url) {
 	global $device_actions, $item_rows;
 
@@ -96,7 +110,12 @@ function display_matching_hosts($rule, $rule_type, $url) {
 	?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 	function applyDeviceFilter() {
-		strURL  = '<?php print $url;?>' + '&host_status=' + $('#host_status').val();
+		strURL  = <?php
+			print json_encode(
+			    automation_url_utf8($url),
+			    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE
+			);
+		?> + '&host_status=' + $('#host_status').val();
 		strURL += '&host_template_id=' + $('#host_template_id').val();
 		strURL += '&rowsd=' + $('#rowsd').val();
 		strURL += '&filterd=' + $('#filterd').val();
@@ -105,7 +124,12 @@ function display_matching_hosts($rule, $rule_type, $url) {
 	}
 
 	function clearDeviceFilter() {
-		strURL = '<?php print $url;?>' + '&cleard=true&header=false';
+		strURL = <?php
+			print json_encode(
+			    automation_url_utf8($url),
+			    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE
+			);
+		?> + '&cleard=true&header=false';
 		loadPageNoHeader(strURL);
 	}
 
@@ -137,14 +161,39 @@ function display_matching_hosts($rule, $rule_type, $url) {
 	?>
 	<tr class='even'>
 		<td>
-			<form method='post' id='form_automation_host' action='<?php print html_escape($url);?>'>
+			<?php
+				$automation_output_0 = $url;
+				$automation_output_0 = htmlspecialchars(
+				    (string)$automation_output_0,
+				    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+				    ini_get('default_charset') ?: 'UTF-8',
+				    false
+				);
+				$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
+				print '<form method=\'post\' id=\'form_automation_host\' action=\'';
+				print $automation_output_0;
+				print '\'>';
+			?>
 				<table class='filterTable'>
 					<tr>
 						<td>
-							<?php print __('Search');?>
+							<label for='filterd'><?php print __('Search');?></label>
 						</td>
 						<td>
-							<input type='text' class='ui-state-default ui-corner-all' id='filterd' size='25' value='<?php print html_escape_request_var('filterd');?>'>
+							<?php
+								$automation_output_0 = get_request_var('filterd');
+								$automation_output_0 = htmlspecialchars(
+								    (string)$automation_output_0,
+								    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+								    ini_get('default_charset') ?: 'UTF-8',
+								    false
+								);
+								$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
+								print '<input type=\'text\' class=\'ui-state-default ui-corner-all\' id=\'fil'
+								    . 'terd\' size=\'25\' value=\'';
+								print $automation_output_0;
+								print '\'>';
+							?>
 						</td>
 						<td>
 							<?php print __('Type');?>
@@ -390,7 +439,12 @@ function display_matching_graphs($rule, $rule_type, $url) {
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 
 	function applyFilter() {
-		strURL  = '<?php print $url;?>' + '&host_id=' + $('#host_id').val();
+		strURL  = <?php
+			print json_encode(
+			    automation_url_utf8($url),
+			    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE
+			);
+		?> + '&host_id=' + $('#host_id').val();
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&filter=' + $('#filter').val();
 		strURL += '&template_id=' + $('#template_id').val();
@@ -399,7 +453,12 @@ function display_matching_graphs($rule, $rule_type, $url) {
 	}
 
 	function clearFilter() {
-		strURL = '<?php print $url;?>' + '&clear=true&header=false';
+		strURL = <?php
+			print json_encode(
+			    automation_url_utf8($url),
+			    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE
+			);
+		?> + '&clear=true&header=false';
 		loadPageNoHeader(strURL);
 	}
 
@@ -430,7 +489,19 @@ function display_matching_graphs($rule, $rule_type, $url) {
 	?>
 	<tr class='even'>
 		<td>
-			<form id='form_graphs' action='<?php print html_escape($url);?>'>
+			<?php
+				$automation_output_0 = $url;
+				$automation_output_0 = htmlspecialchars(
+				    (string)$automation_output_0,
+				    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+				    ini_get('default_charset') ?: 'UTF-8',
+				    false
+				);
+				$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
+				print '<form id=\'form_graphs\' action=\'';
+				print $automation_output_0;
+				print '\'>';
+			?>
 				<table class='filterTable'>
 					<tr>
 						<td>
@@ -482,10 +553,23 @@ function display_matching_graphs($rule, $rule_type, $url) {
 				<table class='filterTable'>
 					<tr>
 						<td>
-							<?php print __('Search');?>
+							<label for='filter'><?php print __('Search');?></label>
 						</td>
 						<td>
-							<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
+							<?php
+								$automation_output_0 = get_request_var('filter');
+								$automation_output_0 = htmlspecialchars(
+								    (string)$automation_output_0,
+								    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+								    ini_get('default_charset') ?: 'UTF-8',
+								    false
+								);
+								$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
+								print '<input type=\'text\' class=\'ui-state-default ui-corner-all\' id=\'fil'
+								    . 'ter\' size=\'25\' value=\'';
+								print $automation_output_0;
+								print '\'>';
+							?>
 						</td>
 						<td>
 							<?php print __('Devices');?>
@@ -674,7 +758,12 @@ function display_new_graphs($rule, $url) {
 	?>
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 	function applyObjectFilter() {
-		strURL  = '<?php print $url;?>';
+		strURL  = <?php
+			print json_encode(
+			    automation_url_utf8($url),
+			    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE
+			);
+		?>;
 		strURL += '&rows=' + $('#orows').val();
 		strURL += '&filter=' + $('#filter').val();
 		strURL += '&header=false';
@@ -682,7 +771,12 @@ function display_new_graphs($rule, $url) {
 	}
 
 	function clearObjectFilter() {
-		strURL = '<?php print $url;?>' + '&oclear=true&header=false';
+		strURL = <?php
+			print json_encode(
+			    automation_url_utf8($url),
+			    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE
+			);
+		?> + '&oclear=true&header=false';
 		loadPageNoHeader(strURL);
 	}
 
@@ -712,14 +806,39 @@ function display_new_graphs($rule, $url) {
 	?>
 	<tr class='even'>
 		<td>
-			<form id='form_automation_objects' action='<?php print html_escape($url);?>'>
+			<?php
+				$automation_output_0 = $url;
+				$automation_output_0 = htmlspecialchars(
+				    (string)$automation_output_0,
+				    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+				    ini_get('default_charset') ?: 'UTF-8',
+				    false
+				);
+				$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
+				print '<form id=\'form_automation_objects\' action=\'';
+				print $automation_output_0;
+				print '\'>';
+			?>
 				<table class='filterTable'>
 					<tr>
 						<td>
-							<?php print __('Search');?>
+							<label for='filter'><?php print __('Search');?></label>
 						</td>
 						<td>
-							<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
+							<?php
+								$automation_output_0 = get_request_var('filter');
+								$automation_output_0 = htmlspecialchars(
+								    (string)$automation_output_0,
+								    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+								    ini_get('default_charset') ?: 'UTF-8',
+								    false
+								);
+								$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
+								print '<input type=\'text\' class=\'ui-state-default ui-corner-all\' id=\'fil'
+								    . 'ter\' size=\'25\' value=\'';
+								print $automation_output_0;
+								print '\'>';
+							?>
 						</td>
 						<td>
 							<?php print __('Objects');?>
@@ -1034,7 +1153,12 @@ function display_matching_trees ($rule_id, $rule_type, $item, $url) {
 	<script type='text/javascript' <?php print CactiSecureHeaders::getNonceAttribute();?>>
 
 	function applyFilter() {
-		strURL  = '<?php print $url;?>' + '&host_status=' + $('#host_status').val();
+		strURL  = <?php
+			print json_encode(
+			    automation_url_utf8($url),
+			    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE
+			);
+		?> + '&host_status=' + $('#host_status').val();
 		strURL += '&host_template_id=' + $('#host_template_id').val();
 		strURL += '&rows=' + $('#rows').val();
 		strURL += '&filter=' + $('#filter').val();
@@ -1043,7 +1167,12 @@ function display_matching_trees ($rule_id, $rule_type, $item, $url) {
 	}
 
 	function clearFilter() {
-		strURL = '<?php print $url;?>' + '&clear=true&header=false';
+		strURL = <?php
+			print json_encode(
+			    automation_url_utf8($url),
+			    JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE
+			);
+		?> + '&clear=true&header=false';
 		loadPageNoHeader(strURL);
 	}
 
@@ -1069,7 +1198,15 @@ function display_matching_trees ($rule_id, $rule_type, $item, $url) {
 	</script>
 	<?php
 
-	print "<form method='post' id='form_automation_tree' action='" . html_escape($url) . "'>";
+	$automation_output_0 = $url;
+	$automation_output_0 = htmlspecialchars(
+	    (string)$automation_output_0,
+	    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+	    ini_get('default_charset') ?: 'UTF-8',
+	    false
+	);
+	$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
+	print "<form method='post' id='form_automation_tree' action='" . $automation_output_0 . "'>";
 
 	html_start_box(__('Matching Items'), '100%', '', '3', 'center', '');
 
@@ -1079,10 +1216,23 @@ function display_matching_trees ($rule_id, $rule_type, $item, $url) {
 			<table class='filterTable'>
 				<tr>
 					<td>
-						<?php print __('Search');?>
+						<label for='filter'><?php print __('Search');?></label>
 					</td>
 					<td>
-						<input type='text' class='ui-state-default ui-corner-all' id='filter' size='25' value='<?php print html_escape_request_var('filter');?>'>
+						<?php
+							$automation_output_0 = get_request_var('filter');
+							$automation_output_0 = htmlspecialchars(
+							    (string)$automation_output_0,
+							    ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,
+							    ini_get('default_charset') ?: 'UTF-8',
+							    false
+							);
+							$automation_output_0 = str_replace('`', '&#96;', $automation_output_0);
+							print '<input type=\'text\' class=\'ui-state-default ui-corner-all\' id=\'fil'
+							    . 'ter\' size=\'25\' value=\'';
+							print $automation_output_0;
+							print '\'>';
+						?>
 					</td>
 					<td>
 						<?php print __('Type');?>
@@ -2740,11 +2890,13 @@ function create_all_header_nodes($item_id, $rule) {
 	global $config, $automation_tree_header_types;
 
 	# get all related rules that are enabled
-	$tree_items = db_fetch_assoc_prepared('SELECT *
+	$tree_items = db_fetch_assoc_prepared(
+	    'SELECT *
         FROM automation_tree_rule_items AS atri
         WHERE atri.rule_id = ?
         ORDER BY sequence',
-		array($rule['id']));
+	    array($rule['id'])
+	);
 
 	$function = automation_function_with_pid(__FUNCTION__);
 	cacti_log($function . " called: Item $item_id matches: " . cacti_sizeof($tree_items) . ' items', false, 'AUTOM8 TRACE', POLLER_VERBOSITY_HIGH);
