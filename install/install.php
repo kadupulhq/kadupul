@@ -94,7 +94,7 @@ if ($help != '') {
 <html>
 <head>
 <?php
-print html_common_header(__('Cacti Server v%s - Maintenance', CACTI_VERSION));
+html_common_header(__('Cacti Server v%s - Maintenance', CACTI_VERSION));
 if ($hasEverything) {
 	print get_md5_include_js('install/install.js');
 }

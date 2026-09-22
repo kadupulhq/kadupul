@@ -536,7 +536,7 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = '', $extr
 						</td>
 						<?php if (is_realm_allowed(27)) { ?>
 						<td id='dd<?php print $graph_id_html;?>' class='noprint graphDrillDown'>
-							<?php print graph_drilldown_icons($graph['local_graph_id'], 'graph_buttons_thumbnails', $tree_id, $branch_id);?>
+							<?php graph_drilldown_icons($graph['local_graph_id'], 'graph_buttons_thumbnails', $tree_id, $branch_id);?>
 						</td><?php } ?>
 					</tr>
 				</table>
