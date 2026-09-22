@@ -12,7 +12,6 @@ use Kadupul\Inventory\Application\Query\FindEditableDevice;
 use Kadupul\Inventory\Application\Query\ListAssignableSites;
 use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
 use Kadupul\Inventory\Infrastructure\Symfony\DeviceFormFailure;
-use Kadupul\Inventory\Infrastructure\Symfony\DeviceListParameters;
 use Kadupul\Inventory\Infrastructure\Symfony\Form\DeviceEditType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormError;
@@ -21,13 +20,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Twig\Environment;
+use Kadupul\Inventory\Infrastructure\Symfony\DeviceFormPage;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class DeviceEditController
 {
     #[Route('/inventory/devices/{id}/edit', name: 'inventory_device_edit', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(int $id, Request $request, FindEditableDevice $find, ListAssignableSites $sites, EditDevice $edit, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, DeviceFormFailure $failures): Response
+    public function __invoke(int $id, Request $request, FindEditableDevice $find, ListAssignableSites $sites, EditDevice $edit, FormFactoryInterface $forms, DeviceFormPage $page, UrlGeneratorInterface $urls, TranslatorInterface $translator, DeviceFormFailure $failures): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         try {
@@ -38,13 +37,10 @@ final class DeviceEditController
         if ($device === null) {
             return new Response($translator->trans('Device not found.', [], 'inventory'), 404, $headers);
         }
-        $query = $request->query->all();
-        try {
-            $filters = DeviceListParameters::context($query);
-        } catch (\InvalidArgumentException) {
-            return new Response($translator->trans('Invalid device list filters.', [], 'inventory'), 400, $headers);
+        $editParameters = $page->parameters($request, $id);
+        if ($editParameters instanceof Response) {
+            return $editParameters;
         }
-        $editParameters = ['id' => $id, 'list' => $filters];
         $form = $forms->create(DeviceEditType::class, ['description' => $device->description(), 'hostname' => $device->hostname(), 'notes' => $device->notes(), 'enabled' => $device->enabled(), 'location' => $device->location(), 'external_id' => $device->externalId(), 'site_id' => $device->siteId(), 'polling' => $device->polling(), 'snmp' => ['keep_credentials' => true] + $device->snmp() + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::CREDENTIAL_DEFAULTS, 'revision' => $device->revision()], ['action' => $urls->generate('inventory_device_edit', $editParameters), 'sites' => $sites()]);
         $form->handleRequest($request);
         $status = $request->isMethod('POST') ? 422 : 200;
@@ -64,14 +60,10 @@ final class DeviceEditController
                     $edit($id, (string) $data['description'], (string) $data['hostname'], (string) $data['notes'], $data['enabled'], (string) $data['location'], (string) $data['external_id'], (string) $data['revision'], $data['site_id'], $data['polling'], $data['snmp']);
                     return new RedirectResponse($urls->generate('inventory_device_edit', $editParameters + ['saved' => 1]), 303, $headers);
                 } catch (\RuntimeException|\InvalidArgumentException $error) {
-                    $failure = $failures->apply($form, $error);
-                    if ($failure instanceof Response) {
-                        return $failure;
-                    }
-                    $status = $failure;
+                    $status = $failures->apply($form, $error);
                 }
             }
         }
-        return new Response($twig->render('inventory/edit.html.twig', ['device' => $device, 'form' => $form->createView(), 'saved' => ($query['saved'] ?? null) === '1', 'filters' => $filters]), $status, $headers);
+        return $page->render('inventory/edit.html.twig', $device, $form, $request, $editParameters['list'], $status);
     }
 }
