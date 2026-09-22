@@ -5,6 +5,8 @@
 
 namespace PingPublicApiTest;
 
+require_once dirname(__DIR__, 4) . '/include/global_constants.php';
+
 $source = file_get_contents(dirname(__DIR__, 4) . '/lib/ping.php');
 eval('namespace PingPublicApiTest; ' . preg_replace('/^<\?php\s*/', '', $source));
 $methods = array('__construct', '__destruct', 'close_socket', 'start_time', 'get_time', 'build_udp_packet',
