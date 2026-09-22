@@ -47,6 +47,10 @@ $response = $kernel->handle(Request::create('/inventory/sites/new'));
 if ($response->getStatusCode() !== 401 || !is_file($root . '/templates/inventory/site_create.html.twig')) {
     throw new RuntimeException('Offline site creation route or template missing');
 }
+$response = $kernel->handle(Request::create('/inventory/devices/new'));
+if ($response->getStatusCode() !== 401 || !is_file($root . '/templates/inventory/device_create.html.twig') || !is_file($root . '/bin/legacy-device-create.php')) {
+    throw new RuntimeException('Offline device creation route, template or worker missing');
+}
 $kernel->shutdown();
 foreach (['Kadupul\\Inventory\\Application\\Query\\ListDevices', 'Kadupul\\Inventory\\Infrastructure\\Symfony\\Controller\\DeviceListController'] as $class) {
     if (!class_exists($class)) {

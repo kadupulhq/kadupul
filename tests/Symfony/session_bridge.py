@@ -103,6 +103,8 @@ def main():
         verify_site_create(harness, session, user_id, check)
         from site_lifecycle_scenarios import verify_site_lifecycle
         verify_site_lifecycle(harness, session, user_id, check)
+        from device_create_scenarios import verify_device_create
+        verify_device_create(harness, session, user_id, check)
         response = session.opener.open(harness.base + '/app.php/session')
         check('no-store' in response.headers.get('Cache-Control', ''), 'identity response is never cached')
         response.close()

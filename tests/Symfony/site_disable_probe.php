@@ -17,6 +17,11 @@ $db->prepare('INSERT INTO sites (name) VALUES (?)')->execute([$name]);
 $siteId = (int) $db->lastInsertId();
 $db->prepare("INSERT INTO host (description,hostname,site_id,poller_id,disabled,status,snmp_version,availability_method) VALUES (?,?,?,1,'',3,0,0)")->execute([$name, $name . '.invalid', $siteId]);
 $hostId = (int) $db->lastInsertId();
+$db->prepare('INSERT INTO host_template (hash,name) VALUES (?,?)')->execute([bin2hex(random_bytes(16)), $name]);
+$templateId = (int) $db->lastInsertId();
+$graphId = (int) $db->query('SELECT MIN(id) FROM graph_templates')->fetchColumn();
+$db->prepare('INSERT INTO host_template_graph (host_template_id,graph_template_id) VALUES (?,?)')->execute([$templateId, $graphId]);
+$graphsBefore = $db->query('SELECT * FROM host_graph WHERE host_id=0 ORDER BY graph_template_id')->fetchAll();
 $worker = null;
 try {
     $row = $db->query('SELECT * FROM host WHERE id=' . $hostId)->fetch();
@@ -67,7 +72,7 @@ require_once getcwd() . '/lib/api_device.php';
 $row = db_fetch_row_prepared('SELECT * FROM host WHERE id=?', [(int) $argv[1]]);
 $row['site_id'] = (int) $argv[2];
 $row['disabled'] = 'on';
-$row['device_template_id'] = $row['host_template_id'];
+$row['device_template_id'] = (int) $argv[3];
 $arguments = [];
 foreach ((new ReflectionFunction('api_device_save'))->getParameters() as $parameter) {
     $arguments[] = $row[$parameter->getName()] ?? ($parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : '');
@@ -76,7 +81,7 @@ $result = api_device_save(...$arguments);
 ob_end_clean();
 echo $result === false ? 'rejected' : 'accepted';
 CODE;
-    $worker = proc_open([PHP_BINARY, '-r', $script, (string) $hostId, (string) $siteId], [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+    $worker = proc_open([PHP_BINARY, '-r', $script, (string) $hostId, (string) $siteId, (string) $templateId], [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
     fclose($pipes[0]);
     $output = stream_get_contents($pipes[1]);
     stream_get_contents($pipes[2]);
@@ -88,6 +93,9 @@ CODE;
     if ($exit !== 0 || $output !== 'rejected' || $state['disabled'] !== '' || (int) $state['status'] !== 3 || (int) $state['site_id'] !== 0) {
         throw new RuntimeException('Rejected site assignment changed device polling state');
     }
+    if ($db->query('SELECT * FROM host_graph WHERE host_id=0 ORDER BY graph_template_id')->fetchAll() !== $graphsBefore) {
+        throw new RuntimeException('Rejected device save created template associations for host zero');
+    }
     echo 'site locked before device effects';
 } finally {
     if ($db->inTransaction()) {
@@ -97,6 +105,8 @@ CODE;
         proc_terminate($worker);
         proc_close($worker);
     }
+    $db->prepare('DELETE FROM host_template_graph WHERE host_template_id=?')->execute([$templateId]);
+    $db->prepare('DELETE FROM host_template WHERE id=?')->execute([$templateId]);
     $db->prepare('DELETE FROM host WHERE id=?')->execute([$hostId]);
     $db->prepare('DELETE FROM sites WHERE id=?')->execute([$siteId]);
 }

@@ -35,10 +35,10 @@ def publish_coverage(output, database_sessions, checks):
     if not list((output / 'raw').glob('coverage-*.json')):
         raise RuntimeError('No Symfony HTTP coverage recorded')
     root = Path(__file__).resolve().parents[2]
-    sources = ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'coverage_support.py']
+    sources = ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'coverage_support.py']
+    source_paths = [f'tests/Symfony/{name}' for name in sources] + ['tests/Fixtures/plugins/compatibility_test/setup.php']
     evidence = {'suite': 'symfony-http',
                 'session_handler': 'database' if database_sessions else 'files',
                 'checks': checks,
-                'source_sha256': {f'tests/Symfony/{name}': hashlib.sha256(
-                    (root / 'tests/Symfony' / name).read_bytes()).hexdigest() for name in sources}}
+                'source_sha256': {name: hashlib.sha256((root / name).read_bytes()).hexdigest() for name in source_paths}}
     (output / 'observations.json').write_text(json.dumps(evidence, indent=2) + '\n')

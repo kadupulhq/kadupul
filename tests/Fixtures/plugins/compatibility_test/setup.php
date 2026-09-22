@@ -29,3 +29,34 @@ function compatibility_test_filter($value) {
     compatibility_test_record('filter', [$value]);
     return $value;
 }
+
+function compatibility_create_lock($value) {
+    if (str_starts_with($value['description'] ?? '', 'locked-create-fixture')) {
+        file_put_contents('/artifacts/create-lock-ready', 'ready');
+        $until = microtime(true) + 30;
+        while (!is_file('/artifacts/create-lock-release')) {
+            if (microtime(true) > $until) { throw new RuntimeException('Fixture release missing'); }
+            usleep(10000);
+            clearstatcache(true, '/artifacts/create-lock-release');
+        }
+    }
+    return $value;
+}
+
+function compatibility_create_guard($value) {
+    $prefix = 'create-hook-change-';
+    if (str_starts_with($value['description'] ?? '', $prefix)) {
+        $key = substr($value['description'], strlen($prefix));
+        $value[$key] = $key === 'id' ? db_fetch_cell('SELECT MIN(id) FROM host') : 999999;
+    }
+    if (($value['description'] ?? '') === 'create-debug-fixture') {
+        global $config;
+        $config['DEBUG_SQL_CMD'] = true;
+        $config['DEBUG_SQL_FLOW'] = true;
+        cacti_log('Fixture credential: ' . $value['snmp_community'], false, 'DBCALL');
+        db_echo_sql('Fixture credential: ' . $value['snmp_community']);
+        // Exercise the actual database-error path, including its returned message.
+        db_execute_prepared("SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = ?", [$value['snmp_community']]);
+    }
+    return $value;
+}
