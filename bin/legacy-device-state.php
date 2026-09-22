@@ -115,6 +115,9 @@ try {
                 if (!remote_poller_up($device->pollerId) || !(($remote = poller_connect_to_remote($device->pollerId)) instanceof PDO)) {
                     throw new RuntimeException('Collector unavailable');
                 }
+                if ($remote->exec("SET SESSION sql_mode = CONCAT_WS(',', @@SESSION.sql_mode, 'STRICT_TRANS_TABLES')") === false) {
+                    throw new RuntimeException('Collector connection validation unavailable');
+                }
                 $remotes[$device->pollerId] = $remote;
             }
             $remoteRows = $read($remotes[$device->pollerId], "SELECT id, poller_id, disabled FROM host WHERE id = ? AND deleted = ''", [$device->id]);
@@ -129,6 +132,11 @@ try {
         $changed[$device->id] = $device;
     }
     if ($changed !== []) {
+        // Opening a legacy remote connection can reset the primary SQL modes.
+        // Restore strict writes after all connections are open, before mutations.
+        if ($connection->exec("SET SESSION sql_mode = CONCAT_WS(',', @@SESSION.sql_mode, 'STRICT_TRANS_TABLES')") === false) {
+            throw new RuntimeException('Primary connection validation unavailable');
+        }
         define('KADUPUL_THROW_DATABASE_ERRORS', true);
         $_SESSION['sess_user_id'] = $command['actor'];
         // Legacy SQL helpers retain their last error even after later successes.
