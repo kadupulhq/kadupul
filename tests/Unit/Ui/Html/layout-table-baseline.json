@@ -1,0 +1,371 @@
+[
+    {
+        "key": "AaCeytfQrnQdoRHC48Cj",
+        "file": "graph.php",
+        "line": 140,
+        "before": "\t\t\t\t\t<table class='graphWrapperOuter' data-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>'>",
+        "after": "\t\t\t\t\t<table role='presentation' class='graphWrapperOuter'\n\t\t\t\t\t\tdata-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>'>",
+        "reason": "Graph canvas and drill-down controls layout.",
+        "context": "\t\t\t<tr class='tableRowGraph'>\n\t\t\t\t<td class='center'>\n\t\t\t\t\t<table role='presentation' class='graphWrapperOuter'\n\t\t\t\t\t\tdata-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>'>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td>"
+    },
+    {
+        "key": "AaCeytfQrnQdoRHC48Ck",
+        "file": "graph.php",
+        "line": 630,
+        "before": "\t\t\t<table class='graphWrapperOuter' data-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>'>",
+        "after": "\t\t\t<table role='presentation' class='graphWrapperOuter'\n\t\t\t\tdata-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>'>",
+        "reason": "Graph canvas and drill-down controls layout.",
+        "context": "\t<tr class='tableRowGraph'>\n\t\t<td class='center'>\n\t\t\t<table role='presentation' class='graphWrapperOuter'\n\t\t\t\tdata-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>'>\n\t\t\t\t<tr>\n\t\t\t\t\t<td class='center'>"
+    },
+    {
+        "key": "AaCeyrtfrnQdoRHC44oS",
+        "file": "lib/html_form.php",
+        "line": 1596,
+        "before": "\t<table style=\"width:60%;\">",
+        "after": "\t<table role='presentation' style=\"width:60%;\">",
+        "reason": "Confirmation dialog or form action-button layout.",
+        "context": "function form_confirm($title_text, $body_text, $cancel_url, $action_url) { ?>\n\t<br>\n\t<table role='presentation' style=\"width:60%;\">\n\t\t<tr>\n\t\t\t<td class='even' colspan='10'>"
+    },
+    {
+        "key": "AaCeyrtfrnQdoRHC44oT",
+        "file": "lib/html_form.php",
+        "line": 1599,
+        "before": "\t\t\t\t<table>",
+        "after": "\t\t\t\t<table role='presentation'>",
+        "reason": "Confirmation dialog or form action-button layout.",
+        "context": "\t\t<tr>\n\t\t\t<td class='even' colspan='10'>\n\t\t\t\t<table role='presentation'>\n\t\t\t\t\t<tr class='cactiTableTitle'>\n\t\t\t\t\t\t<td class='textHeaderDark'><?php print $title_text;?></td>"
+    },
+    {
+        "key": "AaCeyrtfrnQdoRHC44oU",
+        "file": "lib/html_form.php",
+        "line": 1693,
+        "before": "\t<table style='width:100%;text-align:center;'>",
+        "after": "\t<table role='presentation' style='width:100%;text-align:center;'>",
+        "reason": "Confirmation dialog or form action-button layout.",
+        "context": "\n\t?>\n\t<table role='presentation' style='width:100%;text-align:center;'>\n\t\t<tr>\n\t\t\t<td class='saveRow'>"
+    },
+    {
+        "key": "AaCeyrtfrnQdoRHC44oV",
+        "file": "lib/html_form.php",
+        "line": 1719,
+        "before": "\t<table style='width:100%;text-align:center;'>",
+        "after": "\t<table role='presentation' style='width:100%;text-align:center;'>",
+        "reason": "Confirmation dialog or form action-button layout.",
+        "context": "\t$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;\n\t?>\n\t<table role='presentation' style='width:100%;text-align:center;'>\n\t\t<tr>\n\t\t\t<td class='saveRow'>"
+    },
+    {
+        "key": "AaCeytVfrnQdoRHC47dG",
+        "file": "host.php",
+        "line": 791,
+        "before": "\t\t<table class='hostInfoHeader' style='width:100%'>",
+        "after": "\t\t<table role='presentation' class='hostInfoHeader' style='width:100%'>",
+        "reason": "Editor title/actions, debug content or add-item form layout.",
+        "context": "\tif (!empty($host['id'])) {\n\t\t?>\n\t\t<table role='presentation' class='hostInfoHeader' style='width:100%'>\n\t\t\t<tr>\n\t\t\t\t<td class='textInfo left'>"
+    },
+    {
+        "key": "AaCeytVfrnQdoRHC47dK",
+        "file": "host.php",
+        "line": 916,
+        "before": "\t\t\t\t<table>",
+        "after": "\t\t\t\t<table role='presentation'>",
+        "reason": "Editor title/actions, debug content or add-item form layout.",
+        "context": "\t\t<tr class='odd'>\n\t\t\t<td class='saveRow' colspan='3'>\n\t\t\t\t<table role='presentation'>\n\t\t\t\t\t<tr style='line-height:10px;'>\n\t\t\t\t\t\t<td class='nowrap templateAdd' style='padding-right:15px;'>"
+    },
+    {
+        "key": "AaCeytVfrnQdoRHC47dL",
+        "file": "host.php",
+        "line": 949,
+        "before": "\t\t\t\t\t<table class='cactiTable' id='clipboardData<?php print $dbg_copy_uid;?>'>",
+        "after": "\t\t\t\t\t<table role='presentation' class='cactiTable' id='clipboardData<?php print $dbg_copy_uid;?>'>",
+        "reason": "Editor title/actions, debug content or add-item form layout.",
+        "context": "\t\t\t\t\t\t</span>\n\t\t\t\t\t</div>\n\t\t\t\t\t<table role='presentation' class='cactiTable' id='clipboardData<?php print $dbg_copy_uid;?>'>\n\t\t\t\t\t\t<tr class='tableRow'>\n\t\t\t\t\t\t\t<td class='debug'>"
+    },
+    {
+        "key": "AaCeytVfrnQdoRHC47dM",
+        "file": "host.php",
+        "line": 1053,
+        "before": "\t\t\t\t<table style='width:20%'>",
+        "after": "\t\t\t\t<table role='presentation' style='width:20%'>",
+        "reason": "Editor title/actions, debug content or add-item form layout.",
+        "context": "\t\t<tr class='odd'>\n\t\t\t<td class='saveRow' colspan='4'>\n\t\t\t\t<table role='presentation' style='width:20%'>\n\t\t\t\t\t<tr style='line-height:10px;'>\n\t\t\t\t\t\t<td class='nowrap queryAdd' style='padding-right:15px;'>"
+    },
+    {
+        "key": "AaCeytVwrnQdoRHC47f2",
+        "file": "data_templates.php",
+        "line": 750,
+        "before": "\t\t<table style='width:100%'>",
+        "after": "\t\t<table role='presentation' style='width:100%'>",
+        "reason": "Editor title/actions, debug content or add-item form layout.",
+        "context": "\n\t\t?>\n\t\t<table role='presentation' style='width:100%'>\n\t\t\t<tr>\n\t\t\t\t<td class='textInfo left' style='vertical-align:top;'>"
+    },
+    {
+        "key": "AaCeytjGrnQdoRHC48Vh",
+        "file": "graphs_new.php",
+        "line": 420,
+        "before": "\t\t<table class='cactiTable'>",
+        "after": "\t\t<table role='presentation' class='cactiTable'>",
+        "reason": "Filter toolbar outer layout.",
+        "context": "\t</script>\n\t<form id='graphs_new' action='graphs_new.php'>\n\t\t<table role='presentation' class='cactiTable'>\n\t\t\t<tr><td style='width:70%;'>\n\t\t\t\t<table class='filterTable' role='presentation'>"
+    },
+    {
+        "key": "AaCeytjUrnQdoRHC48W8",
+        "file": "automation_graph_rules.php",
+        "line": 616,
+        "before": "<table style='width:100%;text-align:center;'>",
+        "after": "<table role='presentation' style='width:100%;text-align:center;'>",
+        "reason": "Show/hide navigation action layout.",
+        "context": "\tif (!isempty_request_var('id')) {\n\t\t?>\n<table role='presentation' style='width:100%;text-align:center;'>\n\t<tr>\n\t\t<?php"
+    },
+    {
+        "key": "AaCeytjUrnQdoRHC48W9",
+        "file": "automation_graph_rules.php",
+        "line": 650,
+        "before": "<table style='width:100%;text-align:center;'>",
+        "after": "<table role='presentation' style='width:100%;text-align:center;'>",
+        "reason": "Show/hide navigation action layout.",
+        "context": "\tif (!isempty_request_var('id')) {\n\t\t?>\n<table role='presentation' style='width:100%;text-align:center;'>\n\t<tr>\n\t\t<td class='textInfo right' style='vertical-align:top;'><span class='linkMarker'>*</span><a class='linkEditMain' href='<?php print html_escape('automation_graph_rules.php?action=edit&id=' . (isset_request_var('id') ? get_request_var('id') : 0) . '&show_hosts=') . (isset($_SESSION['automation_graph_rules_show_hosts']) ? '0' : '1');?>'><?php print (isset($_SESSION['automation_graph_rules_show_hosts']) ? __('Don\\'t Show'):__('Show'));?> <?php print __('Matching Devices.');?></a><br>"
+    },
+    {
+        "key": "AaCeytjUrnQdoRHC48W-",
+        "file": "automation_graph_rules.php",
+        "line": 665,
+        "before": "<table style='width:100%;text-align:center;'>",
+        "after": "<table role='presentation' style='width:100%;text-align:center;'>",
+        "reason": "Show/hide navigation action layout.",
+        "context": "\tif (!empty($rule['graph_type_id']) && $rule['graph_type_id'] > 0) {\n\t\t?>\n<table role='presentation' style='width:100%;text-align:center;'>\n\t<tr>\n\t\t<td class='textInfo right' style='vertical-align:top;'>"
+    },
+    {
+        "key": "AaCeytf4rnQdoRHC48FU",
+        "file": "index.php",
+        "line": 65,
+        "before": "<table class='cactiTable'>",
+        "after": "<table role='presentation' class='cactiTable'>",
+        "reason": "Welcome/help content layout.",
+        "context": "if (read_config_option('hide_console') != 'on') {\n?>\n<table role='presentation' class='cactiTable'>\n\t<tr class='tableRow'>\n\t\t<td class='textAreaNotes top left'>"
+    },
+    {
+        "key": "AaCeytSErnQdoRHC47TC",
+        "file": "data_sources.php",
+        "line": 911,
+        "before": "\t\t<table style='width:100%'>",
+        "after": "\t\t<table role='presentation' style='width:100%'>",
+        "reason": "Editor title/actions, debug content or add-item form layout.",
+        "context": "\t\t\tarray(get_request_var('id')));\n\t\t?>\n\t\t<table role='presentation' style='width:100%'>\n\t\t\t<tr>\n\t\t\t\t<td class='textInfo left' style='vertical-align:top;'>"
+    },
+    {
+        "key": "AaCeytSErnQdoRHC47TH",
+        "file": "data_sources.php",
+        "line": 1253,
+        "before": "\t\t<table style='width:100%'>",
+        "after": "\t\t<table role='presentation' style='width:100%'>",
+        "reason": "Editor title/actions, debug content or add-item form layout.",
+        "context": "\tif ((isset($_SESSION['ds_debug_mode'])) && (isset_request_var('id'))) {\n\t\t?>\n\t\t<table role='presentation' style='width:100%'>\n\t\t\t<tr>\n\t\t\t\t<td>"
+    },
+    {
+        "key": "AaCeytSErnQdoRHC47TI",
+        "file": "data_sources.php",
+        "line": 1267,
+        "before": "\t\t<table style='width:100%'>",
+        "after": "\t\t<table role='presentation' style='width:100%'>",
+        "reason": "Editor title/actions, debug content or add-item form layout.",
+        "context": "\tif ((isset($_SESSION['ds_info_mode'])) && (isset_request_var('id'))) {\n\t\t?>\n\t\t<table role='presentation' style='width:100%'>\n\t\t\t<tr>\n\t\t\t\t<td><?php"
+    },
+    {
+        "key": "AaCeysHcrnQdoRHC45FC",
+        "file": "lib/html.php",
+        "line": 373,
+        "before": "\t\t\t\t<table style='text-align:center;margin:auto;'>",
+        "after": "\t\t\t\t<table role='presentation' style='text-align:center;margin:auto;'>",
+        "reason": "Graph canvas and drill-down controls layout.",
+        "context": "\t\t\t<td class='graphWrapperOuter' data-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>' style='width:<?php print round(100 / $columns, 2);?>%;'>\n\t\t\t\t<div>\n\t\t\t\t<table role='presentation' style='text-align:center;margin:auto;'>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td>"
+    },
+    {
+        "key": "AaCeysHcrnQdoRHC45FD",
+        "file": "lib/html.php",
+        "line": 526,
+        "before": "\t\t\t\t<table style='text-align:center;margin:auto;'>",
+        "after": "\t\t\t\t<table role='presentation' style='text-align:center;margin:auto;'>",
+        "reason": "Graph canvas and drill-down controls layout.",
+        "context": "\t\t\t<td class='graphWrapperOuter' data-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>' style='width:<?php print round(100 / $columns, 2);?>%;'>\n\t\t\t\t<div>\n\t\t\t\t<table role='presentation' style='text-align:center;margin:auto;'>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<td>"
+    },
+    {
+        "key": "AaCeytATrnQdoRHC469T",
+        "file": "graphs.php",
+        "line": 1586,
+        "before": "\t\t<table style='width:100%;'>",
+        "after": "\t\t<table role='presentation' style='width:100%;'>",
+        "reason": "Editor title/actions, debug content or add-item form layout.",
+        "context": "\n\t\t?>\n\t\t<table role='presentation' style='width:100%;'>\n\t\t\t<tr>\n\t\t\t\t<td class='textInfo left' style='vertical-align:top'>"
+    },
+    {
+        "key": "AaCeys7qrnQdoRHC46vH",
+        "file": "include/top_header.php",
+        "line": 59,
+        "before": "\t\t\t<table style='width:100%;'>",
+        "after": "\t\t\t<table role='presentation' style='width:100%;'>",
+        "reason": "Sidebar navigation layout, not data.",
+        "context": "\t<div id='cactiContent' class='cactiContent'>\n\t\t<div class='cactiConsoleNavigationArea' style='display:none;' id='navigation'>\n\t\t\t<table role='presentation' style='width:100%;'>\n\t\t\t\t<?php draw_menu();?>\n\t\t\t\t<tr>"
+    },
+    {
+        "key": "AaCeytTIrnQdoRHC47YO",
+        "file": "auth_changepassword.php",
+        "line": 359,
+        "before": "\t\t\t\t\t<table class='cactiLoginTable'>",
+        "after": "\t\t\t\t\t<table role='presentation' class='cactiLoginTable'>",
+        "reason": "Login/password form field layout.",
+        "context": "\t\t\t\t</div>\n\t\t\t\t<div class='cactiLogin'>\n\t\t\t\t\t<table role='presentation' class='cactiLoginTable'>\n\t\t\t\t\t\t<tr>\n<?php if ($skip_current) { ?>"
+    },
+    {
+        "key": "AaCeytXvrnQdoRHC47nO",
+        "file": "auth_login.php",
+        "line": 338,
+        "before": "\t\t\t\t\t<table class='cactiLoginTable'>",
+        "after": "\t\t\t\t\t<table role='presentation' class='cactiLoginTable'>",
+        "reason": "Login/password form field layout.",
+        "context": "\t\t\t\t</div>\n\t\t\t\t<div class='cactiLogin'>\n\t\t\t\t\t<table role='presentation' class='cactiLoginTable'>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td>"
+    },
+    {
+        "key": "AaCeytOArnQdoRHC47QZ",
+        "file": "automation_tree_rules.php",
+        "line": 433,
+        "before": "<table style='width:100%;text-align:center;'>",
+        "after": "<table role='presentation' style='width:100%;text-align:center;'>",
+        "reason": "Show/hide navigation action layout.",
+        "context": "\t\t\tif ($item['field'] != AUTOMATION_TREE_ITEM_TYPE_STRING) {\n\t\t\t\t?>\n<table role='presentation' style='width:100%;text-align:center;'>\n\t<tr>\n\t\t<?php"
+    },
+    {
+        "key": "AaCeytOArnQdoRHC47Qa",
+        "file": "automation_tree_rules.php",
+        "line": 605,
+        "before": "<table style='width:100%;text-align:center;'>",
+        "after": "<table role='presentation' style='width:100%;text-align:center;'>",
+        "reason": "Show/hide navigation action layout.",
+        "context": "\tif (!isempty_request_var('id')) {\n\t\t?>\n<table role='presentation' style='width:100%;text-align:center;'>\n\t<tr>\n\t\t<?php"
+    },
+    {
+        "key": "AaCeytfErnQdoRHC48AW",
+        "file": "data_queries.php",
+        "line": 851,
+        "before": "\t\t\t\t\t\t\t<table>",
+        "after": "\t\t\t\t\t\t\t<table role='presentation'>",
+        "reason": "Single mapping editor or suggested-value input row layout.",
+        "context": "\t\t\t\t\t\t?>\n\t\t\t\t\t\t<td>\n\t\t\t\t\t\t\t<table role='presentation'>\n\t\t\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t\t\t<td style='width:200px;'>"
+    },
+    {
+        "key": "AaCeytfErnQdoRHC48AX",
+        "file": "data_queries.php",
+        "line": 997,
+        "before": "\t\t\t<table>",
+        "after": "\t\t\t<table role='presentation'>",
+        "reason": "Single mapping editor or suggested-value input row layout.",
+        "context": "\t\t?>\n\t\t<td colspan='4'>\n\t\t\t<table role='presentation'>\n\t\t\t\t<tr>\n\t\t\t\t\t<td class='nowrap'>"
+    },
+    {
+        "key": "AaCeytfErnQdoRHC48AY",
+        "file": "data_queries.php",
+        "line": 1147,
+        "before": "\t\t\t\t\t<table>",
+        "after": "\t\t\t\t\t<table role='presentation'>",
+        "reason": "Single mapping editor or suggested-value input row layout.",
+        "context": "\t\t\t\t?>\n\t\t\t\t<td colspan='4'>\n\t\t\t\t\t<table role='presentation'>\n\t\t\t\t\t\t<tr>\n\t\t\t\t\t\t\t<td class='nowrap'>"
+    },
+    {
+        "key": "AaCeytXkrnQdoRHC47l6",
+        "file": "host_templates.php",
+        "line": 628,
+        "before": "\t\t\t\t<table>",
+        "after": "\t\t\t\t<table role='presentation'>",
+        "reason": "Editor title/actions, debug content or add-item form layout.",
+        "context": "\t\t<tr class='odd'>\n\t\t\t<td colspan='2'>\n\t\t\t\t<table role='presentation'>\n\t\t\t\t\t<tr style='line-height:10px'>\n\t\t\t\t\t\t<td class='nowrap templateAdd'>"
+    },
+    {
+        "key": "AaCeytXkrnQdoRHC47l7",
+        "file": "host_templates.php",
+        "line": 702,
+        "before": "\t\t\t\t<table>",
+        "after": "\t\t\t\t<table role='presentation'>",
+        "reason": "Editor title/actions, debug content or add-item form layout.",
+        "context": "\t\t<tr class='odd'>\n\t\t\t<td colspan='2'>\n\t\t\t\t<table role='presentation'>\n\t\t\t\t\t<tr style='line-height:10px;'>\n\t\t\t\t\t\t<td class='nowrap queryAdd'>"
+    },
+    {
+        "key": "AaCeys9yrnQdoRHC466b",
+        "file": "include/top_general_header.php",
+        "line": 60,
+        "before": "\t\t\t<table style='width:100%;'>",
+        "after": "\t\t\t<table role='presentation' style='width:100%;'>",
+        "reason": "Sidebar navigation layout, not data.",
+        "context": "\t\t<?php if (isset($user_menu) && is_array($user_menu)) {?>\n\t\t<div style='display:none;' id='navigation' class='cactiConsoleNavigationArea'>\n\t\t\t<table role='presentation' style='width:100%;'>\n\t\t\t\t<?php draw_menu($user_menu);?>\n\t\t\t\t<tr>"
+    },
+    {
+        "key": "AaCeytdxrnQdoRHC473d",
+        "file": "user_admin.php",
+        "line": 827,
+        "before": "\t\t\t<td><table><tr>",
+        "after": "\t\t\t<td><table role='presentation'><tr>",
+        "reason": "Policy selector and submit-button layout, not data.",
+        "context": "\t\t?>\n\t\t<tr class='even'>\n\t\t\t<td><table role='presentation'><tr>\n\t\t\t<td class='nowrap'><?php print __('Default Graph Policy for this User');?></td>\n\t\t\t<td>"
+    },
+    {
+        "key": "AaCeytdxrnQdoRHC473e",
+        "file": "user_admin.php",
+        "line": 1109,
+        "before": "\t\t\t<td><table><tr>",
+        "after": "\t\t\t<td><table role='presentation'><tr>",
+        "reason": "Policy selector and submit-button layout, not data.",
+        "context": "\t\t?>\n\t\t<tr class='even'>\n\t\t\t<td><table role='presentation'><tr>\n\t\t\t<td class='nowrap'><?php print __('Default Device Policy for this User');?></td>\n\t\t\t<td>"
+    },
+    {
+        "key": "AaCeytdxrnQdoRHC473f",
+        "file": "user_admin.php",
+        "line": 1276,
+        "before": "\t\t\t<td><table><tr>",
+        "after": "\t\t\t<td><table role='presentation'><tr>",
+        "reason": "Policy selector and submit-button layout, not data.",
+        "context": "\t\t?>\n\t\t<tr class='even'>\n\t\t\t<td><table role='presentation'><tr>\n\t\t\t<td class='nowrap'><?php print __('Default Graph Template Policy for this User');?></td>\n\t\t\t<td>"
+    },
+    {
+        "key": "AaCeytdxrnQdoRHC473g",
+        "file": "user_admin.php",
+        "line": 1422,
+        "before": "\t\t\t<td><table><tr>",
+        "after": "\t\t\t<td><table role='presentation'><tr>",
+        "reason": "Policy selector and submit-button layout, not data.",
+        "context": "\t\t?>\n\t\t<tr class='even'>\n\t\t\t<td><table role='presentation'><tr>\n\t\t\t<td class='nowrap'><?php print __('Default Tree Policy for this User');?></td>\n\t\t\t<td>"
+    },
+    {
+        "key": "AaCeythTrnQdoRHC48Li",
+        "file": "user_group_admin.php",
+        "line": 807,
+        "before": "\t\t\t<td><table><tr>",
+        "after": "\t\t\t<td><table role='presentation'><tr>",
+        "reason": "Policy selector and submit-button layout, not data.",
+        "context": "\t\t?>\n\t\t<tr class='even'>\n\t\t\t<td><table role='presentation'><tr>\n\t\t\t<td class='nowrap'><?php print __('Default Graph Policy for this User Group');?></td>\n\t\t\t<td>"
+    },
+    {
+        "key": "AaCeythTrnQdoRHC48Lj",
+        "file": "user_group_admin.php",
+        "line": 992,
+        "before": "\t\t\t<td><table><tr>",
+        "after": "\t\t\t<td><table role='presentation'><tr>",
+        "reason": "Policy selector and submit-button layout, not data.",
+        "context": "\t\t?>\n\t\t<tr class='even'>\n\t\t\t<td><table role='presentation'><tr>\n\t\t\t<td class='nowrap'><?php print __('Default Graph Policy for this User Group');?></td>\n\t\t\t<td>"
+    },
+    {
+        "key": "AaCeythTrnQdoRHC48Lk",
+        "file": "user_group_admin.php",
+        "line": 1142,
+        "before": "\t\t\t<td><table><tr>",
+        "after": "\t\t\t<td><table role='presentation'><tr>",
+        "reason": "Policy selector and submit-button layout, not data.",
+        "context": "\t\t?>\n\t\t<tr class='even'>\n\t\t\t<td><table role='presentation'><tr>\n\t\t\t<td class='nowrap'><?php print __('Default Graph Template Policy for this User Group');?></td>\n\t\t\t<td>"
+    },
+    {
+        "key": "AaCeythTrnQdoRHC48Ll",
+        "file": "user_group_admin.php",
+        "line": 1287,
+        "before": "\t\t\t<td><table><tr>",
+        "after": "\t\t\t<td><table role='presentation'><tr>",
+        "reason": "Policy selector and submit-button layout, not data.",
+        "context": "\t\t?>\n\t\t<tr class='even'>\n\t\t\t<td><table role='presentation'><tr>\n\t\t\t<td class='nowrap'><?php print __('Default Tree Policy for this User Group');?></td>\n\t\t\t<td>"
+    }
+]

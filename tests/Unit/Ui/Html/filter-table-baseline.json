@@ -366,7 +366,7 @@
         "before": "\t\t\t\t<table class='filterTable'>",
         "after": "\t\t\t\t<table class='filterTable' role='presentation'>",
         "reason": "Filter controls and captions arranged horizontally; not rows of tabular data.",
-        "context": "\t\t<table class='cactiTable'>\n\t\t\t<tr><td style='width:70%;'>\n\t\t\t\t<table class='filterTable' role='presentation'>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<?php html_host_filter(get_request_var('host_id'), 'applyFilter', '', true, true);?>"
+        "context": "\t\t<table role='presentation' class='cactiTable'>\n\t\t\t<tr><td style='width:70%;'>\n\t\t\t\t<table class='filterTable' role='presentation'>\n\t\t\t\t\t<tr>\n\t\t\t\t\t\t<?php html_host_filter(get_request_var('host_id'), 'applyFilter', '', true, true);?>"
     },
     {
         "key": "AaCeytVfrnQdoRHC47dO",

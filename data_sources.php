@@ -908,7 +908,7 @@ function ds_edit() {
 			WHERE local_data_id = ?',
 			array(get_request_var('id')));
 		?>
-		<table style='width:100%'>
+		<table role='presentation' style='width:100%'>
 			<tr>
 				<td class='textInfo left' style='vertical-align:top;'>
 					<?php print html_escape(get_data_source_title(get_request_var('id')));?>
@@ -1250,7 +1250,7 @@ function ds_edit() {
 	/* display the debug mode box if the user wants it */
 	if ((isset($_SESSION['ds_debug_mode'])) && (isset_request_var('id'))) {
 		?>
-		<table style='width:100%'>
+		<table role='presentation' style='width:100%'>
 			<tr>
 				<td>
 					<span class='textInfo'><?php print __('Data Source Debug');?></span><br>
@@ -1264,7 +1264,7 @@ function ds_edit() {
 	/* display the debug mode box if the user wants it */
 	if ((isset($_SESSION['ds_info_mode'])) && (isset_request_var('id'))) {
 		?>
-		<table style='width:100%'>
+		<table role='presentation' style='width:100%'>
 			<tr>
 				<td><?php
 				$rrd_info = rrdtool_function_info(get_request_var('id'));
