@@ -1785,7 +1785,7 @@ function host() {
 				<tr>
 					<?php api_plugin_hook('device_filter_start'); ?>
 					<td>
-						<?php print __('Site');?>
+						<label for='site_id'><?php print __('Site');?></label>
 					</td>
 					<td>
 						<select id='site_id'>

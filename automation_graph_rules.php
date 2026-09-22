@@ -838,7 +838,7 @@ function automation_graph_rules() {
 							?>'>
 						</td>
 						<td>
-							<?php print __('Data Query');?>
+							<label for='snmp_query_id'><?php print __('Data Query');?></label>
 						</td>
 						<td>
 							<select id='snmp_query_id'>
@@ -860,7 +860,7 @@ function automation_graph_rules() {
 							</select>
 						</td>
 						<td>
-							<?php print __('Status');?>
+							<label for='status'><?php print __('Status');?></label>
 						</td>
 						<td>
 							<select id='status'>
@@ -870,7 +870,7 @@ function automation_graph_rules() {
 							</select>
 						</td>
 						<td>
-							<?php print __('Graph Rules');?>
+							<label for='rows'><?php print __('Graph Rules');?></label>
 						</td>
 						<td>
 							<select id='rows'>

@@ -912,7 +912,7 @@ function automation_tree_rules() {
 							?>'>
 						</td>
 						<td>
-							<?php print __('Status');?>
+							<label for='status'><?php print __('Status');?></label>
 						</td>
 						<td>
 							<select id='status'>
@@ -922,7 +922,7 @@ function automation_tree_rules() {
 							</select>
 						</td>
 						<td>
-							<?php print __('Tree Rules');?>
+							<label for='rows'><?php print __('Tree Rules');?></label>
 						</td>
 						<td>
 							<select id='rows'>
