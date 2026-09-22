@@ -989,7 +989,13 @@ ul#breadcrumbs {
 	min-height: 15px;
 }
 
-legend {
+.loginHeading {
+	margin: 0;
+	padding: 0 2px;
+	font-weight: inherit;
+}
+
+legend, .loginHeading {
 	font-size: 22px;
 }
 

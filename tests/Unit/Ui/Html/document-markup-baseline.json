@@ -1,0 +1,82 @@
+[
+  {
+    "file": "auth_login.php",
+    "before": "<html>\n<head>",
+    "after": "<html lang='<?php print html_escape(CACTI_LOCALE);?>'>\n<head>"
+  },
+  {
+    "file": "auth_changepassword.php",
+    "before": "<html>\n<head>",
+    "after": "<html lang='<?php print html_escape(CACTI_LOCALE);?>'>\n<head>"
+  },
+  {
+    "file": "install/install.php",
+    "before": "<html>\n<head>",
+    "after": "<html lang='<?php print html_escape(CACTI_LOCALE);?>'>\n<head>"
+  },
+  {
+    "file": "graph_realtime.php",
+    "before": "?>\n<html>",
+    "after": "?>\n<!DOCTYPE html>\n<html lang='<?php print html_escape(CACTI_LOCALE);?>'>"
+  },
+  {
+    "file": "graph_realtime.php",
+    "before": "\t\t\t\t<select id='graph_start' onChange='imageOptionsChanged(\"timespan\")'>",
+    "after": "\t\t\t\t<select id='graph_start'\n\t\t\t\t\taria-label='<?php print __esc('Time Span');?>' onChange='imageOptionsChanged(\"timespan\")'>"
+  },
+  {
+    "file": "graph_realtime.php",
+    "before": "\t\t\t\t<select id='ds_step' onChange='imageOptionsChanged(\"interval\")'>",
+    "after": "\t\t\t\t<select id='ds_step'\n\t\t\t\t\taria-label='<?php print __esc('Refresh Interval');?>' onChange='imageOptionsChanged(\"interval\")'>"
+  },
+  {
+    "file": "graph_realtime.php",
+    "before": "\t\t\t\t<select id='size' onChange='imageOptionsChanged(\"interval\")'>",
+    "after": "\t\t\t\t<select id='size'\n\t\t\t\t\taria-label='<?php print __esc('Graph Size');?>' onChange='imageOptionsChanged(\"interval\")'>"
+  },
+  {
+    "file": "graphs_new.php",
+    "before": "\t\t\t\t\t\t\t\" . __('Select a Graph Type to Create') . \"",
+    "after": "\t\t\t\t\t\t\t<label for='sgg_\" . $snmp_query['id'] . \"'>\" . __('Select a Graph Type to Create') . \"</label>"
+  },
+  {
+    "file": "auth_login.php",
+    "before": "\t\t\t<legend><?php print __('User Login');?></legend>",
+    "after": "\t\t\t<h1 class='loginHeading'><?php print __('User Login');?></h1>"
+  },
+  {
+    "file": "auth_changepassword.php",
+    "before": "\t\t\t<legend><?php print __('Change Password');?></legend>",
+    "after": "\t\t\t<h1 class='loginHeading'><?php print __('Change Password');?></h1>"
+  },
+  {
+    "file": "about.php",
+    "before": "\t\t<font class='textSubHeaderDark'><?php print get_cacti_version_text(); ?></font>",
+    "after": "\t\t<span class='textSubHeaderDark'><?php print get_cacti_version_text(); ?></span>"
+  },
+  {
+    "file": "about.php",
+    "before": "\t\t<p><tt><?php print __('This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.');?></tt></p>",
+    "after": "\t\t<p><span style='font-family:monospace;'><?php print __('This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.');?></span></p>"
+  },
+  {
+    "file": "about.php",
+    "before": "\t\t<p><tt><?php print __('This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.'); ?></tt></p>",
+    "after": "\t\t<p><span style='font-family:monospace;'><?php print __('This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.'); ?></span></p>"
+  },
+  {
+    "file": "color.php",
+    "before": "\t\t<td width='50%'><font class='textEditTitle'><?php print __('Import Colors from Local File'); ?></font><br>",
+    "after": "\t\t<td width='50%'><span class='textEditTitle'><?php print __('Import Colors from Local File'); ?></span><br>"
+  },
+  {
+    "file": "color.php",
+    "before": "\t\t<td width='50%'><font class='textEditTitle'><?php print __('Overwrite Existing Data?');?></font><br>",
+    "after": "\t\t<td width='50%'><span class='textEditTitle'><?php print __('Overwrite Existing Data?');?></span><br>"
+  },
+  {
+    "file": "include/content/iframe-example.html",
+    "before": "<iframe width='100%' height='100%' frameborder=\"0\" src=\"http://www.cacti.net/\"></iframe>",
+    "after": "<iframe title='Cacti website' width='100%' height='100%' frameborder=\"0\" src=\"http://www.cacti.net/\"></iframe>"
+  }
+]

@@ -1,0 +1,194 @@
+[
+  {
+    "key": "AaCeytjGrnQdoRHC48Vk",
+    "rule": "Web:InputWithoutLabelCheck",
+    "component": "kadupulhq_kadupul-lts:graphs_new.php",
+    "line": 972,
+    "message": "Associate a valid label to this input field.",
+    "disposition": "Code correction in this batch; awaiting merged scan."
+  },
+  {
+    "key": "AaCeytkwrnQdoRHC48cO",
+    "rule": "Web:UnsupportedTagsInHtml5Check",
+    "component": "kadupulhq_kadupul-lts:about.php",
+    "line": 35,
+    "message": "Remove this deprecated \"font\" element.",
+    "disposition": "Code correction in this batch; awaiting merged scan."
+  },
+  {
+    "key": "AaCeytTIrnQdoRHC47YP",
+    "rule": "Web:S5254",
+    "component": "kadupulhq_kadupul-lts:auth_changepassword.php",
+    "line": 333,
+    "message": "Add \"lang\" and/or \"xml:lang\" attributes to the \"<html>\" or \"<body>\" element",
+    "disposition": "Code correction in this batch; awaiting merged scan."
+  },
+  {
+    "key": "AaCeytTIrnQdoRHC47YM",
+    "rule": "Web:PageWithoutTitleCheck",
+    "component": "kadupulhq_kadupul-lts:auth_changepassword.php",
+    "line": 334,
+    "message": "Add a <title> tag to this page.",
+    "disposition": "False-positive candidate: production shared helper emits the title; see SharedPageTitleTest. No closure claimed."
+  },
+  {
+    "key": "AaCeytTIrnQdoRHC47YN",
+    "rule": "Web:S8732",
+    "component": "kadupulhq_kadupul-lts:auth_changepassword.php",
+    "line": 342,
+    "message": "Move this <legend> element to be a direct child of a <fieldset> or <optgroup> element.",
+    "disposition": "Code correction in this batch; awaiting merged scan."
+  },
+  {
+    "key": "AaCeytXvrnQdoRHC47nP",
+    "rule": "Web:S5254",
+    "component": "kadupulhq_kadupul-lts:auth_login.php",
+    "line": 312,
+    "message": "Add \"lang\" and/or \"xml:lang\" attributes to the \"<html>\" or \"<body>\" element",
+    "disposition": "Code correction in this batch; awaiting merged scan."
+  },
+  {
+    "key": "AaCeytXvrnQdoRHC47nM",
+    "rule": "Web:PageWithoutTitleCheck",
+    "component": "kadupulhq_kadupul-lts:auth_login.php",
+    "line": 313,
+    "message": "Add a <title> tag to this page.",
+    "disposition": "False-positive candidate: production shared helper emits the title; see SharedPageTitleTest. No closure claimed."
+  },
+  {
+    "key": "AaCeytXvrnQdoRHC47nN",
+    "rule": "Web:S8732",
+    "component": "kadupulhq_kadupul-lts:auth_login.php",
+    "line": 321,
+    "message": "Move this <legend> element to be a direct child of a <fieldset> or <optgroup> element.",
+    "disposition": "Code correction in this batch; awaiting merged scan."
+  },
+  {
+    "key": "AaCeytNUrnQdoRHC47Pa",
+    "rule": "Web:S5254",
+    "component": "kadupulhq_kadupul-lts:install/install.php",
+    "line": 94,
+    "message": "Add \"lang\" and/or \"xml:lang\" attributes to the \"<html>\" or \"<body>\" element",
+    "disposition": "Code correction in this batch; awaiting merged scan."
+  },
+  {
+    "key": "AaCeytNUrnQdoRHC47PY",
+    "rule": "Web:PageWithoutTitleCheck",
+    "component": "kadupulhq_kadupul-lts:install/install.php",
+    "line": 95,
+    "message": "Add a <title> tag to this page.",
+    "disposition": "False-positive candidate: production shared helper emits the title; see SharedPageTitleTest. No closure claimed."
+  },
+  {
+    "key": "AaCeytZarnQdoRHC47nv",
+    "rule": "Web:InputWithoutLabelCheck",
+    "component": "kadupulhq_kadupul-lts:graph_realtime.php",
+    "line": 500,
+    "message": "Associate a valid label to this input field.",
+    "disposition": "Code correction in this batch; awaiting merged scan."
+  },
+  {
+    "key": "AaCeytZarnQdoRHC47nw",
+    "rule": "Web:InputWithoutLabelCheck",
+    "component": "kadupulhq_kadupul-lts:graph_realtime.php",
+    "line": 512,
+    "message": "Associate a valid label to this input field.",
+    "disposition": "Code correction in this batch; awaiting merged scan."
+  },
+  {
+    "key": "AaCeytZarnQdoRHC47nu",
+    "rule": "Web:InputWithoutLabelCheck",
+    "component": "kadupulhq_kadupul-lts:graph_realtime.php",
+    "line": 491,
+    "message": "Associate a valid label to this input field.",
+    "disposition": "Code correction in this batch; awaiting merged scan."
+  },
+  {
+    "key": "AaCeys8ErnQdoRHC46vv",
+    "rule": "Web:FrameWithoutTitleCheck",
+    "component": "kadupulhq_kadupul-lts:include/content/iframe-example.html",
+    "line": 25,
+    "message": "Add a \"title\" attribute to this <iframe> tag.",
+    "disposition": "Code correction in this batch; awaiting merged scan."
+  },
+  {
+    "key": "AaCeytiPrnQdoRHC48SY",
+    "rule": "Web:UnsupportedTagsInHtml5Check",
+    "component": "kadupulhq_kadupul-lts:color.php",
+    "line": 366,
+    "message": "Remove this deprecated \"font\" element.",
+    "disposition": "Code correction in this batch; awaiting merged scan."
+  },
+  {
+    "key": "AaCeytiPrnQdoRHC48Sa",
+    "rule": "Web:UnsupportedTagsInHtml5Check",
+    "component": "kadupulhq_kadupul-lts:color.php",
+    "line": 378,
+    "message": "Remove this deprecated \"font\" element.",
+    "disposition": "Code correction in this batch; awaiting merged scan."
+  },
+  {
+    "key": "AaCeytkxrnQdoRHC48cU",
+    "rule": "Web:UnsupportedTagsInHtml5Check",
+    "component": "kadupulhq_kadupul-lts:about.php",
+    "line": 100,
+    "message": "Remove this deprecated \"tt\" element.",
+    "disposition": "Code correction in this batch; awaiting merged scan."
+  },
+  {
+    "key": "AaCeytkxrnQdoRHC48cV",
+    "rule": "Web:UnsupportedTagsInHtml5Check",
+    "component": "kadupulhq_kadupul-lts:about.php",
+    "line": 102,
+    "message": "Remove this deprecated \"tt\" element.",
+    "disposition": "Code correction in this batch; awaiting merged scan."
+  },
+  {
+    "key": "AaCeytZarnQdoRHC47nr",
+    "rule": "Web:DoctypePresenceCheck",
+    "component": "kadupulhq_kadupul-lts:graph_realtime.php",
+    "line": 482,
+    "message": "Insert a <!DOCTYPE> declaration to before this <html> tag.",
+    "disposition": "Code correction in this batch; awaiting merged scan."
+  },
+  {
+    "key": "AaCeytZarnQdoRHC47nt",
+    "rule": "Web:S5254",
+    "component": "kadupulhq_kadupul-lts:graph_realtime.php",
+    "line": 482,
+    "message": "Add \"lang\" and/or \"xml:lang\" attributes to the \"<html>\" or \"<body>\" element",
+    "disposition": "Code correction in this batch; awaiting merged scan."
+  },
+  {
+    "key": "AaCeytZarnQdoRHC47ns",
+    "rule": "Web:PageWithoutTitleCheck",
+    "component": "kadupulhq_kadupul-lts:graph_realtime.php",
+    "line": 483,
+    "message": "Add a <title> tag to this page.",
+    "disposition": "False-positive candidate: production shared helper emits the title; see SharedPageTitleTest. No closure claimed."
+  },
+  {
+    "key": "AaCeys9yrnQdoRHC466Z",
+    "rule": "Web:PageWithoutTitleCheck",
+    "component": "kadupulhq_kadupul-lts:include/top_general_header.php",
+    "line": 33,
+    "message": "Add a <title> tag to this page.",
+    "disposition": "False-positive candidate: production shared helper emits the title; see SharedPageTitleTest. No closure claimed."
+  },
+  {
+    "key": "AaCeys9rrnQdoRHC466U",
+    "rule": "Web:PageWithoutTitleCheck",
+    "component": "kadupulhq_kadupul-lts:include/top_graph_header.php",
+    "line": 33,
+    "message": "Add a <title> tag to this page.",
+    "disposition": "False-positive candidate: production shared helper emits the title; see SharedPageTitleTest. No closure claimed."
+  },
+  {
+    "key": "AaCeys7qrnQdoRHC46vF",
+    "rule": "Web:PageWithoutTitleCheck",
+    "component": "kadupulhq_kadupul-lts:include/top_header.php",
+    "line": 33,
+    "message": "Add a <title> tag to this page.",
+    "disposition": "False-positive candidate: production shared helper emits the title; see SharedPageTitleTest. No closure claimed."
+  }
+]

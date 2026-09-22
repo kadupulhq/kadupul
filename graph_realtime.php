@@ -479,7 +479,8 @@ if (read_config_option('realtime_enabled') == '') {
 $selectedTheme = get_selected_theme();
 
 ?>
-<html>
+<!DOCTYPE html>
+<html lang='<?php print html_escape(CACTI_LOCALE);?>'>
 <head>
 	<?php html_common_header(__('Cacti Real-time Graphing'));?>
     <?php include($config['base_path'] . '/include/global_session.php'); ?>
@@ -488,7 +489,8 @@ $selectedTheme = get_selected_theme();
 	<form method='post' action='graph_realtime.php' id='gform'>
 		<div id='rtfilter' class='cactiTable center'>
 			<div class='filterTable even'>
-				<select id='graph_start' onChange='imageOptionsChanged("timespan")'>
+				<select id='graph_start'
+					aria-label='<?php print __esc('Time Span');?>' onChange='imageOptionsChanged("timespan")'>
 					<?php
 					foreach ($realtime_window as $interval => $text) {
 						printf('<option value="%d"%s>%s</option>',
@@ -497,7 +499,8 @@ $selectedTheme = get_selected_theme();
 					}
 					?>
 				</select>
-				<select id='ds_step' onChange='imageOptionsChanged("interval")'>
+				<select id='ds_step'
+					aria-label='<?php print __esc('Refresh Interval');?>' onChange='imageOptionsChanged("interval")'>
 					<?php
 					$min_refresh = read_config_option('realtime_interval');
 					foreach ($realtime_refresh as $interval => $text) {
@@ -509,7 +512,8 @@ $selectedTheme = get_selected_theme();
 					}
 				?>
 				</select>
-				<select id='size' onChange='imageOptionsChanged("interval")'>
+				<select id='size'
+					aria-label='<?php print __esc('Graph Size');?>' onChange='imageOptionsChanged("interval")'>
 					<?php
 					foreach ($realtime_sizes as $key => $value) {
 						printf('<option value="%d"%s>%s</option>',
