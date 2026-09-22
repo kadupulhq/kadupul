@@ -10,7 +10,7 @@ namespace Kadupul\Inventory\Infrastructure\Symfony\Controller;
 use Kadupul\Inventory\Application\Command\AssignDeviceTemplate;
 use Kadupul\Inventory\Application\Query\PrepareDeviceTemplateAssignment;
 use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
-use Kadupul\Inventory\Domain\DeviceEditConflict;
+use Kadupul\Inventory\Infrastructure\Symfony\DeviceFormFailure;
 use Kadupul\Inventory\Infrastructure\Symfony\DeviceListParameters;
 use Kadupul\Inventory\Infrastructure\Symfony\Form\DeviceTemplateType;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -26,7 +26,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class DeviceTemplateController
 {
     #[Route('/inventory/devices/{id}/template', name: 'inventory_device_template', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(int $id, Request $request, PrepareDeviceTemplateAssignment $prepare, AssignDeviceTemplate $assign, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    public function __invoke(int $id, Request $request, PrepareDeviceTemplateAssignment $prepare, AssignDeviceTemplate $assign, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, DeviceFormFailure $failures): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         try {
@@ -60,16 +60,12 @@ final class DeviceTemplateController
                 try {
                     $assign($id, $data['template_id'], (string) $data['revision']);
                     return new RedirectResponse($urls->generate('inventory_device_template', $editParameters + ['saved' => 1]), 303, $headers);
-                } catch (InventoryAccessDenied) {
-                    return new Response($translator->trans('Access denied.', [], 'inventory'), 403, $headers);
-                } catch (DeviceEditConflict $error) {
-                    $status = 409;
-                    $form->addError(new FormError($translator->trans($error->getMessage(), [], 'inventory')));
-                } catch (\InvalidArgumentException $error) {
-                    $form->addError(new FormError($translator->trans($error->getMessage(), [], 'inventory')));
-                } catch (\RuntimeException $error) {
-                    $status = 502;
-                    $form->addError(new FormError($translator->trans('Save outcome is uncertain. Reload the device before retrying.', [], 'inventory')));
+                } catch (\RuntimeException|\InvalidArgumentException $error) {
+                    $failure = $failures->apply($form, $error);
+                    if ($failure instanceof Response) {
+                        return $failure;
+                    }
+                    $status = $failure;
                 }
             }
         }
