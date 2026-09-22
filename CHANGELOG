@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-security: Make pagination URL and return-target encoding explicit while preserving page ranges and navigation behavior
 -security: Encode shared box layout and toolbar attributes while preserving title markup, navigation and layout behavior
 -security: Encode color-selector and edit-control metadata while preserving color selection, callbacks and trusted custom markup
 -security: Batch button and dropdown attribute encoding while preserving callbacks, selection and language flags
