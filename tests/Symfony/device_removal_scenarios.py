@@ -55,7 +55,7 @@ def verify_device_removal(harness, session, user_id, poller, check):
     try:
         harness.sql("REPLACE INTO settings (name,value) VALUES ('enable_snmp_agent','on')")
         harness.sql("REPLACE INTO settings (name,value) VALUES ('rrd_autoclean','on'),('rrd_autoclean_method','delete')")
-        check(harness.php('-r', 'require "include/global.php"; function setup_remove_hook() { api_plugin_register_hook("compatibility_test","device_remove","compatibility_test_filter","setup.php",true); api_plugin_register_hook("compatibility_test","device_action_bottom","compatibility_test_filter","setup.php",true); } setup_remove_hook();')['exit'] == 0, 'device removal hooks registered')
+        check(harness.php('-r', 'require "include/global.php"; function setup_remove_hook() { api_plugin_register_hook("compatibility_test","device_remove","compatibility_test_filter","setup.php",true); api_plugin_register_hook("compatibility_test","data_source_remove","compatibility_test_event","setup.php",true); api_plugin_register_hook("compatibility_test","device_action_bottom","compatibility_test_filter","setup.php",true); } setup_remove_hook();')['exit'] == 0, 'device removal hooks registered')
         kept = create()
         device = kept['device']
         form = RemovalForm(harness, session, [device])
@@ -111,7 +111,15 @@ def verify_device_removal(harness, session, user_id, poller, check):
         check(purge.remove('purge') == 200, 'device removal purges graphs and all owned data sources')
         check(harness.sql(f'SELECT COUNT(*) FROM aggregate_graphs_items WHERE aggregate_graph_id={first["graph"]} AND local_graph_id={extra_graph}').strip() == '1', 'purge ignores unrelated aggregate IDs that collide with selected graph IDs')
         check(harness.sql(f'SELECT COUNT(*) FROM graph_local WHERE id={first["graph"]}').strip() == '0', 'purged graph is removed')
+        events = [json.loads(line) for line in harness.command('cat', '/artifacts/plugin.jsonl')['stdout'].splitlines()]
         for data, dtd, rrd in first['sources']:
+            occurrences = 0
+            for event in events:
+                args = event.get('args', [])
+                if event.get('callback') == 'event' and args and isinstance(args[0], (list, dict)):
+                    values = args[0].values() if isinstance(args[0], dict) else args[0]
+                    occurrences += sum(str(value) == str(data) for value in values)
+            check(occurrences == 1, 'data-source purge callback runs once per linked or ungraphed source')
             for table, where in [('data_local', f'id={data}'), ('data_template_data', f'id={dtd}'), ('data_template_rrd', f'id={rrd}'), ('data_input_data', f'data_template_data_id={dtd}')]:
                 check(harness.sql(f'SELECT COUNT(*) FROM {table} WHERE {where}').strip() == '0', 'purge removes graph-linked and ungraphed data configuration: ' + table)
             check(harness.sql(f'SELECT COUNT(*) FROM data_source_purge_action WHERE local_data_id={data}').strip() == '1', 'purge schedules configured RRD maintenance')
@@ -119,8 +127,11 @@ def verify_device_removal(harness, session, user_id, poller, check):
         mixed_local, mixed_remote = create(), create(poller)
         # A stale replica does not grant permission to delete on its collector.
         harness.sql(f'INSERT INTO create_remote.host SELECT * FROM host WHERE id={mixed_local["device"]}')
+        mixed_ids = [mixed_local['device'], mixed_remote['device']]
+        before_mixed = hook_count(mixed_ids)
         mixed = RemovalForm(harness, session, [mixed_local['device'], mixed_remote['device']])
         check(mixed.remove() == 200, 'mixed collector removal succeeds for each owning collector')
+        check(hook_count(mixed_ids) == before_mixed + 1, 'mixed removal invokes one device-remove hook for the entire selection')
         check(not exists(mixed_local['device']), 'mixed removal deletes the local device')
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id={mixed_remote["device"]}').strip() == '0', 'mixed removal purges the assigned remote device')
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id={mixed_local["device"]}').strip() == '1', 'mixed removal preserves copies outside the owning collector')

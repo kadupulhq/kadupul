@@ -163,6 +163,7 @@ function api_device_remove_multi($device_ids, $delete_type = 2) {
 	global $config;
 
 	$devices_to_delete = '';
+	$devices_by_poller = array();
 	$i = 0;
 
 	if (cacti_sizeof($device_ids)) {
@@ -203,6 +204,8 @@ function api_device_remove_multi($device_ids, $delete_type = 2) {
 				WHERE id = ?',
 				array($device_id));
 
+			$devices_by_poller[$poller_id][] = $device_id;
+
 			$i++;
 		}
 
@@ -230,7 +233,7 @@ function api_device_remove_multi($device_ids, $delete_type = 2) {
 		if (cacti_sizeof($poller_ids)) {
 			foreach($poller_ids as $poller_id) {
 				api_device_cache_crc_update($poller_id);
-				api_device_purge_from_remote($device_ids, $poller_id);
+				api_device_purge_from_remote($devices_by_poller[$poller_id], $poller_id);
 			}
 		}
 
