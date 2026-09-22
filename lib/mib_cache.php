@@ -388,13 +388,13 @@ class MibCache
                 foreach ($columns as $column_params) {
                     $column_params['oid'] .= '.' . $this->active_table_entry;
                     if (isset($values[$column_params['name']])) {
-                        $sql[] = '(' . db_qstr($column_params['name']) . ', ' . db_qstr($values[$column_params['name']]) . ', ' . db_qstr($column_params['oid']) . ')';
+                        $sql[] = '(' . db_qstr($column_params['name']) . ', ' . db_qstr($values[$column_params['name']]) . ', ' . db_qstr($column_params['oid']) . ', ' . db_qstr($column_params['mib']) . ')';
                     }
                 }
 
                 if (cacti_sizeof($sql)) {
                     db_execute('INSERT INTO `snmpagent_cache`
-						(name, value, oid)
+						(name, value, oid, mib)
 						VALUES ' . implode(', ', $sql) . '
 						ON DUPLICATE KEY UPDATE value=VALUES(value)', $sql);
                 }

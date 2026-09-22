@@ -12,6 +12,10 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Preserve four-byte device text in bulk-state workers and verify primary/remote SQL modes and encodings at runtime before enable and disable writes.
+
+- Supply the required MIB identity in SNMP cache upserts so device status callbacks work with strict SQL mode.
+
 - Add Symfony bulk device enable/disable confirmation with whole-selection authorization and revision checks, transactional primary writes and verified remote state.
 
 - Require strict SQL mode on bulk-state collector connections and restore it on the primary after remote setup, rejecting writes if validation cannot be enabled.
