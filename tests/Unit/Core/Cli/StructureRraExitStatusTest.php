@@ -5,7 +5,7 @@
 
 namespace StructureRraExitStatusTest;
 
-$source = file_get_contents(dirname(__DIR__, 3) . '/cli/structure_rra_paths.php');
+$source = file_get_contents(dirname(__DIR__, 4) . '/cli/structure_rra_paths.php');
 $cases = array();
 // Extract each real fatal diagnostic through its exit, without loading the
 // operational CLI bootstrap or touching any RRD files or database.
