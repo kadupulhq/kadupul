@@ -90,8 +90,12 @@ class Net_Ping
 	}
 
 	public function build_icmp_packet() {
-		$seq_low   = rand(0,255);
-		$seq_high  = rand(0,255);
+		/* Do not leave a stale packet available if secure entropy fails. */
+		$this->request = '';
+		$this->request_len = 0;
+		$this->sqn = '';
+		$seq_low   = random_int(0, 255);
+		$seq_high  = random_int(0, 255);
 
 		$data      = 'cacti-monitoring-system'; // the actual test data
 		$type      = "\x08";                    // 8 echo message; 0 echo reply message
