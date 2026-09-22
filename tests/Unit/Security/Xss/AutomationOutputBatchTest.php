@@ -158,7 +158,9 @@ test('script URL is a complete JSON string and preserves the filter suffix', fun
 	}
 	expect(preg_match('/^(strURL\s*=\s*)("(?:\\\\.|[^"\\\\])*")(.*);$/s', $script, $match))->toBe(1);
 	expect(json_decode($match[2], true, 512, JSON_THROW_ON_ERROR))->toBe($payload);
-	expect($match[2])->not->toContain('<', '>', '&', "'");
+	foreach (array('<', '>', '&', "'") as $token) {
+		expect($match[2])->not->toContain($token);
+	}
 	// Compare the untouched JavaScript around the PHP URL expression.
 	$before = explode("'<?php print " . '$url' . ";?>'", $issue['before']);
 	expect($match[1])->toBe($before[0]);
@@ -176,5 +178,7 @@ test('conversion failures still produce safe string URLs', function ($issue, $fa
 	}
 	expect(preg_match('/^strURL\s*=\s*("(?:\\\\.|[^"\\\\])*")/s', $script, $match))->toBe(1);
 	expect(json_decode($match[1], true, 512, JSON_THROW_ON_ERROR))->toBe($payload);
-	expect($match[1])->not->toContain('<', '>', '&', "'");
+	foreach (array('<', '>', '&', "'") as $token) {
+		expect($match[1])->not->toContain($token);
+	}
 })->with('automation script sinks')->with(array('false', 'exception'));
