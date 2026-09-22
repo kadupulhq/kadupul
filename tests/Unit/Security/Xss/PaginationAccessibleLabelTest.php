@@ -40,5 +40,7 @@ test('pagination controls have associated visible names without changing other m
 	expect($select->getAttribute('id'))->toBe('rows');
 	expect($doc->getElementsByTagName('option')->item(0)->getAttribute('value'))->toBe('7');
 	expect($doc->getElementsByTagName('option')->item(0)->hasAttribute('selected'))->toBeTrue();
-	expect(str_replace(array("<label for='rows'>", '</label>'), '', $output))->toBe(render($issue['before']));
+	// PHP consumes a newline immediately after a closing tag; the new HTML
+	// label changes only that insignificant whitespace. Compare source instead.
+	expect(str_replace(array("<label for='rows'>", '</label>'), '', $issue['after']))->toBe($issue['before']);
 })->with('pagination accessible labels');
