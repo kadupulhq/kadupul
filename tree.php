@@ -1023,7 +1023,7 @@ function tree_edit($partial = false) {
 		<tr class='even noprint'>
 			<td>
 			<form id='form_tree_sites' action='tree.php'>
-				<table class='filterTable'>
+				<table class='filterTable' role='presentation'>
 					<tr>
 						<td>
 							<label for='sfilter'><?php print __('Search');?></label>
@@ -1062,7 +1062,7 @@ function tree_edit($partial = false) {
 		<tr class='even noprint'>
 			<td>
 			<form id='form_tree_devices' action='tree.php'>
-				<table class='filterTable'>
+				<table class='filterTable' role='presentation'>
 					<tr>
 						<td>
 							<label for='hfilter'><?php print __('Search');?></label>
@@ -1101,7 +1101,7 @@ function tree_edit($partial = false) {
 		<tr class='even noprint'>
 			<td>
 			<form id='form_tree_graphs' action='tree.php'>
-				<table class='filterTable'>
+				<table class='filterTable' role='presentation'>
 					<tr>
 						<td>
 							<label for='gfilter'><?php print __('Search');?></label>
@@ -2310,7 +2310,7 @@ function tree() {
 	<tr class='even noprint'>
 		<td>
 		<form id='form_tree' action='tree.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='filter'><?php print __('Search');?></label>
@@ -2323,7 +2323,7 @@ function tree() {
 						?>'>
 					</td>
 					<td>
-						<?php print __('Trees'); ?>
+						<label for='rows'><?php print __('Trees');?></label>
 					</td>
 					<td>
 						<select id='rows'>

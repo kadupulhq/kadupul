@@ -1017,7 +1017,7 @@ function data_debug_filter() {
 	<tr class='even noprint'>
 		<td>
 		<form id='form_data_debug' name='form_data_debug' action='data_debug.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<?php html_site_filter(get_request_var('site_id'));?>
 					<?php html_host_filter(get_request_var('host_id'), 'applyFilter', $host_where);?>

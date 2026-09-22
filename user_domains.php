@@ -663,7 +663,7 @@ function domains() {
 	<tr class='even' class='noprint'>
 		<td class='noprint'>
 		<form id='form_domains' method='get' action='user_domains.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr class='noprint'>
 					<td>
 						<label for='filter'><?php print __('Search');?></label>

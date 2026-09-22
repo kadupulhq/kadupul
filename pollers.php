@@ -953,7 +953,7 @@ function pollers() {
 	<tr class='even'>
 		<td>
 			<form id='form_poller' action='pollers.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='filter'><?php print __('Search');?></label>

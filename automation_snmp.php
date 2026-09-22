@@ -708,7 +708,7 @@ function automation_snmp() {
 	<tr class='even'>
 		<td>
 		<form id='snmp_form'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='filter'><?php print __('Search');?></label>

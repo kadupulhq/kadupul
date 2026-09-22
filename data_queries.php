@@ -997,13 +997,13 @@ function data_query_item_edit() {
 			<table>
 				<tr>
 					<td class='nowrap'>
-						<?php print __('Field Name');?>
+						<label for='svg_field'><?php print __('Field Name');?></label>
 					</td>
 					<td>
 						<input type='text' class='ui-state-default ui-corner-all' id='svg_field' size='15'>
 					</td>
 					<td class='nowrap'>
-						<?php print __('Suggested Value');?>
+						<label for='svg_text'><?php print __('Suggested Value');?></label>
 					</td>
 					<td>
 						<input type='text' class='ui-state-default ui-corner-all' id='svg_text' size='60'>
@@ -1519,7 +1519,7 @@ function data_query() {
 	<tr class='even noprint'>
 		<td class='noprint'>
 		<form id='form_data_queries' method='get' action='data_queries.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr class='noprint'>
 					<td>
 						<label for='filter'><?php print __('Search');?></label>

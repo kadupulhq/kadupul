@@ -755,7 +755,7 @@ function template() {
 	<tr class='even noprint'>
 		<td>
 		<form id='form_graph_template' action='graph_templates.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='filter'><?php print __('Search');?></label>

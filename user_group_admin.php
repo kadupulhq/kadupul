@@ -1978,7 +1978,7 @@ function user_group() {
 	<tr class='even'>
 		<td>
 		<form id='forms' action='user_group_admin.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='g-search'><?php print __('Search');?></label>
@@ -2312,7 +2312,7 @@ function graph_filter($header_label) {
 	<tr class='even'>
 		<td>
 		<form id='forms' action='user_group_admin.php'>
-			<table class='filterTable'>
+			<table class='filterTable' role='presentation'>
 				<tr>
 					<td>
 						<label for='graphs'><?php print __('Search');?></label>
