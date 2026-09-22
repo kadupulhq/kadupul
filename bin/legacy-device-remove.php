@@ -143,8 +143,15 @@ try {
             $verifier->purgeDependents($remotes[$snapshot->device->pollerId], $snapshot->device->id);
         }
     }
-    // Use the existing graph/data lifecycle APIs and preserve plugin callbacks.
-    api_device_remove_multi($ids, $policy === DeviceRemovalPolicy::Retain ? 1 : 2);
+    // The legacy API sends its entire selection to each involved collector.
+    // Partition by ownership so a mixed batch cannot purge unrelated remote copies.
+    $byCollector = [];
+    foreach ($snapshots as $snapshot) {
+        $byCollector[$snapshot->device->pollerId][] = $snapshot->device->id;
+    }
+    foreach ($byCollector as $deviceIds) {
+        api_device_remove_multi($deviceIds, $policy === DeviceRemovalPolicy::Retain ? 1 : 2);
+    }
     if ($policy === DeviceRemovalPolicy::Purge && $data !== []) {
         // Legacy graph deletion misses data sources with no graph references.
         api_data_source_remove_multi($data);

@@ -116,6 +116,15 @@ def verify_device_removal(harness, session, user_id, poller, check):
                 check(harness.sql(f'SELECT COUNT(*) FROM {table} WHERE {where}').strip() == '0', 'purge removes graph-linked and ungraphed data configuration: ' + table)
             check(harness.sql(f'SELECT COUNT(*) FROM data_source_purge_action WHERE local_data_id={data}').strip() == '1', 'purge schedules configured RRD maintenance')
 
+        mixed_local, mixed_remote = create(), create(poller)
+        # A stale replica does not grant permission to delete on its collector.
+        harness.sql(f'INSERT INTO create_remote.host SELECT * FROM host WHERE id={mixed_local["device"]}')
+        mixed = RemovalForm(harness, session, [mixed_local['device'], mixed_remote['device']])
+        check(mixed.remove() == 200, 'mixed collector removal succeeds for each owning collector')
+        check(not exists(mixed_local['device']), 'mixed removal deletes the local device')
+        check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id={mixed_remote["device"]}').strip() == '0', 'mixed removal purges the assigned remote device')
+        check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id={mixed_local["device"]}').strip() == '1', 'mixed removal preserves copies outside the owning collector')
+
         remote = create(poller)
         remote_form = RemovalForm(harness, session, [remote['device']])
         harness.sql(f"UPDATE poller SET last_status='2000-01-01 00:00:00' WHERE id={poller}")
