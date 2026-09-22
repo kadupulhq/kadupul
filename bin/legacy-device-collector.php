@@ -117,6 +117,11 @@ try {
             throw new RuntimeException('Stale collector cleanup could not be cancelled');
         }
         if ($target > 1) {
+            // A previous purge may already have reached the destination queue.
+            $query = $connections[$target]->prepare('DELETE FROM poller_command WHERE action = ? AND SUBSTRING_INDEX(command, ":", 1) = ?');
+            if (!$query->execute([POLLER_COMMAND_PURGE, (string) $assignment->id])) {
+                throw new \RuntimeException('Destination purge cancellation failed');
+            }
             api_device_replicate_out($assignment->id, $target);
             // Legacy bulk replication omits host_graph; preserve those associations too.
             $query = $connection->prepare('SELECT * FROM host_graph WHERE host_id = ?');
