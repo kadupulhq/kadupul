@@ -43,6 +43,8 @@ def verify_device_collector(harness, session, device_id, hidden_id, check):
         check('device_collector[_token]' in fields, 'collector form includes CSRF and fixed action')
         check(form.request(path=f'/app.php/inventory/devices/{hidden_id}/collector')[0] == 404, 'collector assignment hides inaccessible devices')
         check(form.request(path='/app.php/inventory/devices/99999999/collector')[0] == 404, 'collector assignment hides missing devices')
+        harness.sql(f'UPDATE poller SET name=NULL WHERE id={offline}')
+        check(form.request()[0] == 200, 'collector form renders nullable collector names')
         check(form.assign(original[0]) == 200, 'unchanged collector assignment is a no-op')
         check(form.request(fields=fields, origin=False)[0] == 422, 'collector assignment requires same-origin CSRF')
         missing = dict(fields)
@@ -96,7 +98,15 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id={device_id}').strip() == '0', 'collector reassignment verifies old host cleanup')
         check(harness.sql(f'SELECT poller_id FROM poller_item WHERE local_data_id={data}').strip() == '1', 'primary move updates polling item ownership')
         check(form.assign(poller, stale) == 409, 'collector moves invalidate stale confirmations')
-        check(form.assign(poller) == 200, 'collector reassignment replicates primary device to remote')
+        # A real target trigger simulates the poller advancing runtime fields
+        # immediately as replicated rows arrive.
+        harness.sql("CREATE TRIGGER create_remote.advance_host_status BEFORE INSERT ON create_remote.host FOR EACH ROW SET NEW.total_polls=NEW.total_polls+1")
+        harness.sql("CREATE TRIGGER create_remote.advance_poller_step BEFORE INSERT ON create_remote.poller_item FOR EACH ROW SET NEW.rrd_next_step=NEW.rrd_next_step+1")
+        try:
+            check(form.assign(poller) == 200, 'collector reassignment replicates primary device to remote')
+        finally:
+            harness.sql('DROP TRIGGER create_remote.advance_host_status')
+            harness.sql('DROP TRIGGER create_remote.advance_poller_step')
         check(harness.sql(f'SELECT poller_id FROM create_remote.host WHERE id={device_id}').strip() == str(poller), 'collector reassignment verifies target identity')
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host_graph WHERE host_id={device_id} AND graph_template_id={template_graph}').strip() == '1', 'collector reassignment preserves host graph associations')
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.data_local WHERE id={data}').strip() == '1' and harness.sql(f'SELECT COUNT(*) FROM create_remote.graph_local WHERE id={graph}').strip() == '1', 'collector reassignment preserves graph and data identities')
@@ -104,6 +114,8 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
         check(harness.sql(f'SELECT COUNT(*) FROM poller_command WHERE poller_id={poller} AND action=3 AND command="{device_id}"').strip() == '0', 'returning device cancels obsolete queued purge')
         check(form.assign(second) == 200, 'collector reassignment moves between remote collectors')
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id={device_id}').strip() == '0', 'remote-to-remote move removes the previous collector')
+        for table, column, value in [('data_template_data', 'local_data_id', data), ('data_template_rrd', 'local_data_id', data), ('data_input_data', 'data_template_data_id', dtd), ('graph_templates_item', 'local_graph_id', graph)]:
+            check(harness.sql(f'SELECT COUNT(*) FROM create_remote.{table} WHERE {column}={value}').strip() == '0', 'collector cleanup removes dependent ' + table)
         check(harness.sql(f'SELECT poller_id FROM collector_second.poller_item WHERE local_data_id={data}').strip() == str(second), 'remote-to-remote move transfers polling ownership')
         harness.sql("CREATE TRIGGER collector_second.reject_collector_cleanup BEFORE DELETE ON collector_second.host FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='collector cleanup fixture rejection'")
         cleanup_trigger = True

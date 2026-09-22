@@ -151,6 +151,7 @@ try {
         }
         // Verify the target before removing the old collector's polling state.
         if ($previous > 1) {
+            $verifier->purgeDependents($connections[$previous], $assignment->id);
             api_device_purge_from_remote($assignment->id, $previous);
             $verifier->verifyPurged($connections[$previous], $assignment->id);
         }

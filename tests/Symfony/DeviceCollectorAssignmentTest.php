@@ -38,7 +38,7 @@ final class DeviceCollectorAssignmentTest extends TestCase
         $device->assign(2, $revision);
     }
 
-    public function testTemplateChangesInvalidateAssignmentConfirmation(): void
+    public function testTemplateChangesInvalidateCollectorConfirmation(): void
     {
         $before = new DeviceCollectorAssignment(7, 'Router', 1, 1);
         $moved = new DeviceCollectorAssignment(7, 'Router', 1, 2);

@@ -26,7 +26,7 @@ final readonly class LegacyDeviceCollectorAssignments implements DeviceCollector
     }
     public function collectors(): array
     {
-        return $this->database->get()->query("SELECT id, name FROM poller WHERE id > 0 AND disabled = '' ORDER BY name, id")->fetchAll(\PDO::FETCH_KEY_PAIR);
+        return $this->database->get()->query("SELECT id, COALESCE(name, '') AS name FROM poller WHERE id > 0 AND disabled = '' ORDER BY name, id")->fetchAll(\PDO::FETCH_KEY_PAIR);
     }
     public function save(int $actorId, DeviceCollectorAssignment $assignment, string $revision): void
     {
