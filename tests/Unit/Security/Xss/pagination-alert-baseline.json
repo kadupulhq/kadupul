@@ -1,0 +1,487 @@
+{
+  "project": "kadupulhq_kadupul-lts",
+  "baseline_revision": "3bea5ca4a3beda7fefc5cba582c1cd159507ad93",
+  "scope": "Open vulnerability flows through html_nav_bar at baseline lines 582-650. Affected paths, not confirmed resolutions.",
+  "issues": [
+    {
+      "key": "AaCs2PEIIug_wyaLilpo",
+      "file": "utilities.php",
+      "line": 3210
+    },
+    {
+      "key": "AaCs2PEIIug_wyaLilpn",
+      "file": "utilities.php",
+      "line": 3475
+    },
+    {
+      "key": "AaCs2PY0Iug_wyaLiltS",
+      "file": "rrdcheck.php",
+      "line": 151
+    },
+    {
+      "key": "AaCs2PY0Iug_wyaLiltU",
+      "file": "rrdcheck.php",
+      "line": 209
+    },
+    {
+      "key": "AaCs2PPOIug_wyaLilrt",
+      "file": "data_queries.php",
+      "line": 1671
+    },
+    {
+      "key": "AaCs2PPOIug_wyaLilrk",
+      "file": "data_queries.php",
+      "line": 1703
+    },
+    {
+      "key": "AaCs2PVtIug_wyaLiltE",
+      "file": "data_source_profiles.php",
+      "line": 1215
+    },
+    {
+      "key": "AaCs2PVtIug_wyaLils_",
+      "file": "data_source_profiles.php",
+      "line": 1267
+    },
+    {
+      "key": "AaCs2O_ZIug_wyaLilpC",
+      "file": "data_templates.php",
+      "line": 1381
+    },
+    {
+      "key": "AaCs2O_ZIug_wyaLilpD",
+      "file": "data_templates.php",
+      "line": 1417
+    },
+    {
+      "key": "AaCs2O_6Iug_wyaLilpK",
+      "file": "gprint_presets.php",
+      "line": 438
+    },
+    {
+      "key": "AaCs2O_6Iug_wyaLilpI",
+      "file": "gprint_presets.php",
+      "line": 469
+    },
+    {
+      "key": "AaCs2PQzIug_wyaLilr-",
+      "file": "graph_templates.php",
+      "line": 939
+    },
+    {
+      "key": "AaCs2PQzIug_wyaLilsA",
+      "file": "graph_templates.php",
+      "line": 970
+    },
+    {
+      "key": "AaCs2PCLIug_wyaLilpW",
+      "file": "host_templates.php",
+      "line": 1071
+    },
+    {
+      "key": "AaCs2PCLIug_wyaLilpX",
+      "file": "host_templates.php",
+      "line": 1107
+    },
+    {
+      "key": "AaCs2NcCIug_wyaLilm3",
+      "file": "lib/html_tree.php",
+      "line": 1419
+    },
+    {
+      "key": "AaCs2NcCIug_wyaLilm2",
+      "file": "lib/html_tree.php",
+      "line": 1450
+    },
+    {
+      "key": "AaCs2O-zIug_wyaLilo9",
+      "file": "host.php",
+      "line": 1988
+    },
+    {
+      "key": "AaCs2O-zIug_wyaLilpA",
+      "file": "host.php",
+      "line": 2048
+    },
+    {
+      "key": "AaCs2PgLIug_wyaLilt8",
+      "file": "managers.php",
+      "line": 598
+    },
+    {
+      "key": "AaCs2PgLIug_wyaLilt2",
+      "file": "managers.php",
+      "line": 642
+    },
+    {
+      "key": "AaCs2PgLIug_wyaLiltv",
+      "file": "managers.php",
+      "line": 859
+    },
+    {
+      "key": "AaCs2PgLIug_wyaLilt_",
+      "file": "managers.php",
+      "line": 898
+    },
+    {
+      "key": "AaCs2PHVIug_wyaLilp2",
+      "file": "rrdcleaner.php",
+      "line": 384
+    },
+    {
+      "key": "AaCs2PHVIug_wyaLilp4",
+      "file": "rrdcleaner.php",
+      "line": 421
+    },
+    {
+      "key": "AaCs2PXhIug_wyaLiltM",
+      "file": "color.php",
+      "line": 691
+    },
+    {
+      "key": "AaCs2PXhIug_wyaLiltN",
+      "file": "color.php",
+      "line": 738
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLillh",
+      "file": "lib/api_automation.php",
+      "line": 285
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLille",
+      "file": "lib/api_automation.php",
+      "line": 326
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLilll",
+      "file": "lib/api_automation.php",
+      "line": 577
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLillk",
+      "file": "lib/api_automation.php",
+      "line": 619
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLilli",
+      "file": "lib/api_automation.php",
+      "line": 1241
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLillp",
+      "file": "lib/api_automation.php",
+      "line": 1296
+    },
+    {
+      "key": "AaCs2PFSIug_wyaLilpz",
+      "file": "user_domains.php",
+      "line": 763
+    },
+    {
+      "key": "AaCs2PFSIug_wyaLilpx",
+      "file": "user_domains.php",
+      "line": 800
+    },
+    {
+      "key": "AaCs2PLrIug_wyaLilqr",
+      "file": "user_admin.php",
+      "line": 935
+    },
+    {
+      "key": "AaCs2PLrIug_wyaLilqu",
+      "file": "user_admin.php",
+      "line": 959
+    },
+    {
+      "key": "AaCs2PLrIug_wyaLilrF",
+      "file": "user_admin.php",
+      "line": 1049
+    },
+    {
+      "key": "AaCs2PLrIug_wyaLilq1",
+      "file": "user_admin.php",
+      "line": 1076
+    },
+    {
+      "key": "AaCs2PLrIug_wyaLilqn",
+      "file": "user_admin.php",
+      "line": 1196
+    },
+    {
+      "key": "AaCs2PLrIug_wyaLilql",
+      "file": "user_admin.php",
+      "line": 1236
+    },
+    {
+      "key": "AaCs2PLrIug_wyaLilqk",
+      "file": "user_admin.php",
+      "line": 1345
+    },
+    {
+      "key": "AaCs2PLrIug_wyaLilqo",
+      "file": "user_admin.php",
+      "line": 1382
+    },
+    {
+      "key": "AaCs2PLrIug_wyaLilqt",
+      "file": "user_admin.php",
+      "line": 1486
+    },
+    {
+      "key": "AaCs2PLrIug_wyaLilrA",
+      "file": "user_admin.php",
+      "line": 1522
+    },
+    {
+      "key": "AaCs2PLrIug_wyaLilq8",
+      "file": "user_admin.php",
+      "line": 2388
+    },
+    {
+      "key": "AaCs2PLrIug_wyaLilrB",
+      "file": "user_admin.php",
+      "line": 2454
+    },
+    {
+      "key": "AaCs2PEIIug_wyaLilpu",
+      "file": "utilities.php",
+      "line": 1194
+    },
+    {
+      "key": "AaCs2PEIIug_wyaLilpk",
+      "file": "utilities.php",
+      "line": 1252
+    },
+    {
+      "key": "AaCs2PEIIug_wyaLilph",
+      "file": "utilities.php",
+      "line": 1968
+    },
+    {
+      "key": "AaCs2PEIIug_wyaLilpp",
+      "file": "utilities.php",
+      "line": 2341
+    },
+    {
+      "key": "AaCs2PKWIug_wyaLilqN",
+      "file": "aggregate_graphs.php",
+      "line": 1334
+    },
+    {
+      "key": "AaCs2PEIIug_wyaLilpe",
+      "file": "utilities.php",
+      "line": 1579
+    },
+    {
+      "key": "AaCs2PEIIug_wyaLilpl",
+      "file": "utilities.php",
+      "line": 3507
+    },
+    {
+      "key": "AaCs2PIgIug_wyaLilp9",
+      "file": "pollers.php",
+      "line": 1077
+    },
+    {
+      "key": "AaCs2PIgIug_wyaLilp7",
+      "file": "pollers.php",
+      "line": 1224
+    },
+    {
+      "key": "AaCs2PfCIug_wyaLiltr",
+      "file": "sites.php",
+      "line": 673
+    },
+    {
+      "key": "AaCs2PfCIug_wyaLilts",
+      "file": "sites.php",
+      "line": 708
+    },
+    {
+      "key": "AaCs2PapIug_wyaLiltZ",
+      "file": "automation_graph_rules.php",
+      "line": 1002
+    },
+    {
+      "key": "AaCs2O6BIug_wyaLiloq",
+      "file": "automation_snmp.php",
+      "line": 852
+    },
+    {
+      "key": "AaCs2O2dIug_wyaLiloa",
+      "file": "automation_tree_rules.php",
+      "line": 1029
+    },
+    {
+      "key": "AaCs2PWRIug_wyaLiltH",
+      "file": "cdef.php",
+      "line": 925
+    },
+    {
+      "key": "AaCs2POKIug_wyaLilrU",
+      "file": "data_input.php",
+      "line": 1112
+    },
+    {
+      "key": "AaCs2NKhIug_wyaLillO",
+      "file": "lib/html_reports.php",
+      "line": 2135
+    },
+    {
+      "key": "AaCs2NKhIug_wyaLillR",
+      "file": "lib/html_reports.php",
+      "line": 2208
+    },
+    {
+      "key": "AaCs2PgLIug_wyaLilt-",
+      "file": "managers.php",
+      "line": 270
+    },
+    {
+      "key": "AaCs2PMmIug_wyaLilrN",
+      "file": "plugins.php",
+      "line": 678
+    },
+    {
+      "key": "AaCs2PSnIug_wyaLilsC",
+      "file": "tree.php",
+      "line": 2520
+    },
+    {
+      "key": "AaCs2PU4Iug_wyaLils8",
+      "file": "user_group_admin.php",
+      "line": 745
+    },
+    {
+      "key": "AaCs2PU4Iug_wyaLilsi",
+      "file": "user_group_admin.php",
+      "line": 942
+    },
+    {
+      "key": "AaCs2PU4Iug_wyaLils9",
+      "file": "user_group_admin.php",
+      "line": 1105
+    },
+    {
+      "key": "AaCs2PU4Iug_wyaLilss",
+      "file": "user_group_admin.php",
+      "line": 1250
+    },
+    {
+      "key": "AaCs2PU4Iug_wyaLilsn",
+      "file": "user_group_admin.php",
+      "line": 1382
+    },
+    {
+      "key": "AaCs2PU4Iug_wyaLilsc",
+      "file": "user_group_admin.php",
+      "line": 2096
+    },
+    {
+      "key": "AaCs2PEIIug_wyaLilpi",
+      "file": "utilities.php",
+      "line": 1638
+    },
+    {
+      "key": "AaCs2PEIIug_wyaLilpr",
+      "file": "utilities.php",
+      "line": 3178
+    },
+    {
+      "key": "AaCs2PciIug_wyaLiltk",
+      "file": "vdef.php",
+      "line": 957
+    },
+    {
+      "key": "AaCs2PapIug_wyaLiltc",
+      "file": "automation_graph_rules.php",
+      "line": 965
+    },
+    {
+      "key": "AaCs2O2dIug_wyaLiloc",
+      "file": "automation_tree_rules.php",
+      "line": 988
+    },
+    {
+      "key": "AaCs2PEIIug_wyaLilpg",
+      "file": "utilities.php",
+      "line": 1931
+    },
+    {
+      "key": "AaCs2PEIIug_wyaLilpf",
+      "file": "utilities.php",
+      "line": 2272
+    },
+    {
+      "key": "AaCs2PKWIug_wyaLilqH",
+      "file": "aggregate_graphs.php",
+      "line": 1300
+    },
+    {
+      "key": "AaCs2PciIug_wyaLilti",
+      "file": "vdef.php",
+      "line": 920
+    },
+    {
+      "key": "AaCs2PWRIug_wyaLiltG",
+      "file": "cdef.php",
+      "line": 889
+    },
+    {
+      "key": "AaCs2POKIug_wyaLilrT",
+      "file": "data_input.php",
+      "line": 1046
+    },
+    {
+      "key": "AaCs2O6BIug_wyaLilov",
+      "file": "automation_snmp.php",
+      "line": 816
+    },
+    {
+      "key": "AaCs2PgLIug_wyaLilt3",
+      "file": "managers.php",
+      "line": 242
+    },
+    {
+      "key": "AaCs2PMmIug_wyaLilrL",
+      "file": "plugins.php",
+      "line": 591
+    },
+    {
+      "key": "AaCs2PSnIug_wyaLilsJ",
+      "file": "tree.php",
+      "line": 2394
+    },
+    {
+      "key": "AaCs2PU4Iug_wyaLilsp",
+      "file": "user_group_admin.php",
+      "line": 714
+    },
+    {
+      "key": "AaCs2PU4Iug_wyaLilsz",
+      "file": "user_group_admin.php",
+      "line": 918
+    },
+    {
+      "key": "AaCs2PU4Iug_wyaLilse",
+      "file": "user_group_admin.php",
+      "line": 1066
+    },
+    {
+      "key": "AaCs2PU4Iug_wyaLilsw",
+      "file": "user_group_admin.php",
+      "line": 1213
+    },
+    {
+      "key": "AaCs2PU4Iug_wyaLilsr",
+      "file": "user_group_admin.php",
+      "line": 1347
+    },
+    {
+      "key": "AaCs2PU4Iug_wyaLils6",
+      "file": "user_group_admin.php",
+      "line": 2054
+    }
+  ]
+}

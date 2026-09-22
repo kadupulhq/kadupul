@@ -1516,6 +1516,13 @@ function display_tooltip($text) {
    @arg $url - the url string to prepend to each page click
    @returns - a string containing html that represents the a page list */
 function get_page_list($current_page, $pages_per_screen, $rows_per_page, $total_rows, $url, $page_var = 'page', $return_to = '') {
+	$charset = ini_get('default_charset');
+	if ($charset === '') {
+		$charset = 'UTF-8';
+	}
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$return_html = htmlspecialchars((string)$return_to, $escape_flags, $charset, false);
+	$return_html = str_replace('`', '&#96;', $return_html);
 
 	// By current design, $pages_per_screen means number of page no in mid of nav bar
 	// when $total_pages is larger than $pages_per_screen + 2(first and last)
@@ -1564,15 +1571,21 @@ function get_page_list($current_page, $pages_per_screen, $rows_per_page, $total_
 	}
 
 	if ($total_pages > 0) {
+		$first_url = $url . $page_var . '=1';
+		$first_html = htmlspecialchars($first_url, $escape_flags, $charset, false);
+		$first_html = str_replace('`', '&#96;', $first_html);
 		if ($current_page == 1) {
-			$url_page_select .= "<li><a data-url='" . html_escape($url . $page_var . "=1") . "' data-return='" . html_escape($return_to) . "' href='#' class='active'>1</a></li>";
+			$url_page_select .= "<li><a data-url='$first_html' data-return='$return_html' href='#' class='active'>1</a></li>";
 		} else {
-			$url_page_select .= "<li><a data-url='" . html_escape($url . $page_var . "=1") . "' data-return='" . html_escape($return_to) . "' href='#'>1</a></li>";
+			$url_page_select .= "<li><a data-url='$first_html' data-return='$return_html' href='#'>1</a></li>";
 		}
 	}
 
 	for ($page_number=0; (($page_number+$start_page) <= $end_page); $page_number++) {
 		$page = $page_number + $start_page;
+		$page_url = $url . $page_var . '=' . $page;
+		$page_html = htmlspecialchars($page_url, $escape_flags, $charset, false);
+		$page_html = str_replace('`', '&#96;', $page_html);
 
 		if ($page_number < $pages_per_screen) {
 			if ($page_number == 0 && $start_page > 2) {
@@ -1580,9 +1593,10 @@ function get_page_list($current_page, $pages_per_screen, $rows_per_page, $total_
 			}
 
 			if ($current_page == $page) {
-				$url_page_select .= "<li><a data-url='" . html_escape($url . $page_var . "=" . $page) . "' data-return='" . html_escape($return_to) . "' href='#' class='active'>$page</a></li>";
+				$url_page_select .= "<li><a data-url='$page_html' data-return='$return_html' href='#'";
+				$url_page_select .= " class='active'>$page</a></li>";
 			} else {
-				$url_page_select .= "<li><a data-url='" . html_escape($url . $page_var . "=" . $page) . "' data-return='" . html_escape($return_to) . "' href='#'>$page</a></li>";
+				$url_page_select .= "<li><a data-url='$page_html' data-return='$return_html' href='#'>$page</a></li>";
 			}
 		}
 	}
@@ -1592,10 +1606,14 @@ function get_page_list($current_page, $pages_per_screen, $rows_per_page, $total_
 	}
 
 	if ($total_pages > 1) {
+		$last_url = $url . $page_var . '=' . $total_pages;
+		$last_html = htmlspecialchars($last_url, $escape_flags, $charset, false);
+		$last_html = str_replace('`', '&#96;', $last_html);
 		if ($current_page == $total_pages) {
-			$url_page_select .= "<li><a data-url='" . html_escape($url . $page_var . "=" . $total_pages) . "' data-return='" . html_escape($return_to) . "' href='#' class='active'>$total_pages</a></li>";
+			$url_page_select .= "<li><a data-url='$last_html' data-return='$return_html' href='#'";
+			$url_page_select .= " class='active'>$total_pages</a></li>";
 		} else {
-			$url_page_select .= "<li><a data-url='" . html_escape($url . $page_var . "=" . $total_pages) . "' data-return='" . html_escape($return_to) . "' href='#'>$total_pages</a></li>";
+			$url_page_select .= "<li><a data-url='$last_html' data-return='$return_html' href='#'>$total_pages</a></li>";
 		}
 	}
 

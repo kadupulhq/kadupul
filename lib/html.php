@@ -315,6 +315,7 @@ function html_graph_template_multiselect() {
 */
 function html_graph_area(&$graph_array, $no_graphs_message = '', $extra_url_args = '', $header = '', $columns = 0, $tree_id = 0, $branch_id = 0) {
 	global $config;
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
 
 	$i = 0; $k = 0; $j = 0;
 
@@ -356,16 +357,33 @@ function html_graph_area(&$graph_array, $no_graphs_message = '', $extra_url_args
 				print "<tr class='tableRowGraph'>";
 			}
 
+			$title_size = read_user_setting('custom_fonts') == 'on'
+				? read_user_setting('title_size') : read_config_option('title_size');
+			$graph_id_html = htmlspecialchars((string)$graph['local_graph_id'], $escape_flags, 'UTF-8', false);
+			$graph_id_html = str_replace('`', '&#96;', $graph_id_html);
+			$width_html = htmlspecialchars((string)$graph['width'], $escape_flags, 'UTF-8', false);
+			$width_html = str_replace('`', '&#96;', $width_html);
+			$height_html = htmlspecialchars((string)$graph['height'], $escape_flags, 'UTF-8', false);
+			$height_html = str_replace('`', '&#96;', $height_html);
+			$font_size_html = htmlspecialchars((string)$title_size, $escape_flags, 'UTF-8', false);
+			$font_size_html = str_replace('`', '&#96;', $font_size_html);
 			?>
 			<td class='graphWrapperOuter' data-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>' style='width:<?php print round(100 / $columns, 2);?>%;'>
 				<div>
 				<table style='text-align:center;margin:auto;'>
 					<tr>
 						<td>
-							<div class='graphWrapper' style='width:100%;' id='wrapper_<?php print $graph['local_graph_id']?>' graph_width='<?php print $graph['width'];?>' graph_height='<?php print $graph['height'];?>' title_font_size='<?php print ((read_user_setting('custom_fonts') == 'on') ? read_user_setting('title_size') : read_config_option('title_size'));?>'></div>
-							<?php print (read_user_setting('show_graph_title') == 'on' ? "<span class='center'>" . html_escape($graph['title_cache']) . '</span>' : '');?>
+							<div class='graphWrapper' style='width:100%;' id='wrapper_<?php print $graph_id_html;?>'
+								graph_width='<?php print $width_html;?>' graph_height='<?php print $height_html;?>'
+								title_font_size='<?php print $font_size_html;?>'></div>
+							<?php if (read_user_setting('show_graph_title') == 'on') {
+								$title_html = htmlspecialchars((string)$graph['title_cache'], $escape_flags, 'UTF-8', false);
+								$title_html = str_replace('`', '&#96;', $title_html);
+								print "<span class='center'>$title_html</span>";
+							} ?>
 						</td>
-						<?php if (is_realm_allowed(27)) { ?><td id='dd<?php print $graph['local_graph_id'];?>' class='noprint graphDrillDown'>
+						<?php if (is_realm_allowed(27)) { ?>
+						<td id='dd<?php print $graph_id_html;?>' class='noprint graphDrillDown'>
 							<?php graph_drilldown_icons($graph['local_graph_id'], 'graph_buttons', $tree_id, $branch_id);?>
 						</td><?php } ?>
 					</tr>
@@ -409,6 +427,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = '', $extra_url_args
 */
 function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = '', $extra_url_args = '', $header = '', $columns = 0, $tree_id = 0, $branch_id = 0) {
 	global $config;
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
 	$i = 0; $k = 0; $j = 0;
 
 	$num_graphs = cacti_sizeof($graph_array);
@@ -479,9 +498,13 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = '', $extr
 						print '</tr>';
 					}
 
-					print "<tr class='tableHeader'>
-							<td class='graphSubHeaderColumn textHeaderDark' colspan='$columns'>" . __('Data Query:') . ' ' . $graph['data_query_name'] . '</td>
-						</tr>';
+					$query_html = htmlspecialchars((string)$graph['data_query_name'], $escape_flags, 'UTF-8', false);
+					$query_html = str_replace('`', '&#96;', $query_html);
+					$columns_html = htmlspecialchars((string)$columns, $escape_flags, 'UTF-8', false);
+					$columns_html = str_replace('`', '&#96;', $columns_html);
+					print "<tr class='tableHeader'>";
+					print "<td class='graphSubHeaderColumn textHeaderDark' colspan='$columns_html'>";
+					print __('Data Query:') . ' ' . $query_html . '</td></tr>';
 					$i = 0;
 				}
 			}
@@ -491,16 +514,28 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = '', $extr
 				$start = false;
 			}
 
+			$graph_id_html = htmlspecialchars((string)$graph['local_graph_id'], $escape_flags, 'UTF-8', false);
+			$graph_id_html = str_replace('`', '&#96;', $graph_id_html);
+			$width_html = htmlspecialchars((string)read_user_setting('default_width'), $escape_flags, 'UTF-8', false);
+			$width_html = str_replace('`', '&#96;', $width_html);
+			$height_html = htmlspecialchars((string)read_user_setting('default_height'), $escape_flags, 'UTF-8', false);
+			$height_html = str_replace('`', '&#96;', $height_html);
 			?>
 			<td class='graphWrapperOuter' data-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>' style='width:<?php print round(100 / $columns, 2);?>%;'>
 				<div>
 				<table style='text-align:center;margin:auto;'>
 					<tr>
 						<td>
-							<div class='graphWrapper' id='wrapper_<?php print $graph['local_graph_id']?>' graph_width='<?php print read_user_setting('default_width');?>' graph_height='<?php print read_user_setting('default_height');?>'></div>
-							<?php print (read_user_setting('show_graph_title') == 'on' ? "<span class='center'>" . html_escape($graph['title_cache']) . '</span>' : '');?>
+							<div class='graphWrapper' id='wrapper_<?php print $graph_id_html;?>'
+								graph_width='<?php print $width_html;?>' graph_height='<?php print $height_html;?>'></div>
+							<?php if (read_user_setting('show_graph_title') == 'on') {
+								$title_html = htmlspecialchars((string)$graph['title_cache'], $escape_flags, 'UTF-8', false);
+								$title_html = str_replace('`', '&#96;', $title_html);
+								print "<span class='center'>$title_html</span>";
+							} ?>
 						</td>
-						<?php if (is_realm_allowed(27)) { ?><td id='dd<?php print $graph['local_graph_id'];?>' class='noprint graphDrillDown'>
+						<?php if (is_realm_allowed(27)) { ?>
+						<td id='dd<?php print $graph_id_html;?>' class='noprint graphDrillDown'>
 							<?php print graph_drilldown_icons($graph['local_graph_id'], 'graph_buttons_thumbnails', $tree_id, $branch_id);?>
 						</td><?php } ?>
 					</tr>
@@ -539,6 +574,11 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
 	global $config;
 
 	static $rand = 0;
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$graph_id_html = htmlspecialchars((string)$local_graph_id, $escape_flags, 'UTF-8', false);
+	$graph_id_html = str_replace('`', '&#96;', $graph_id_html);
+	$path_html = htmlspecialchars((string)$config['url_path'], $escape_flags, 'UTF-8', false);
+	$path_html = str_replace('`', '&#96;', $path_html);
 
 	$aggregate_url = aggregate_build_children_url($local_graph_id);
 
@@ -548,9 +588,16 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
 		array($local_graph_id));
 
 	print "<div class='iconWrapper'>";
-	print "<a class='iconLink utils' href='#' role='link' id='graph_" . $local_graph_id . "_util'><img class='drillDown' src='" . $config['url_path'] . "images/cog.png' alt='' title='" . __esc('Graph Details, Zooming and Debugging Utilities') . "'></a><br>";
-	print "<a class='iconLink csvexport' href='#' role='link' id='graph_" . $local_graph_id . "_csv'><img class='drillDown' src='" . $config['url_path'] . "images/table_go.png' alt='' title='" . __esc('CSV Export of Graph Data'). "'></a><br>";
-	print "<a class='iconLink mrtg' href='#' role='link' id='graph_" . $local_graph_id . "_mrtg'><img class='drillDown' src='" . $config['url_path'] . "images/timeview.png' alt='' title='" . __esc('Time Graph View'). "'></a><br>";
+	print "<a class='iconLink utils' href='#' id='graph_" . $graph_id_html .
+		"_util'><img class='drillDown' src='" . $path_html .
+		"images/cog.png' alt='' title='" . __esc('Graph Details, Zooming and Debugging Utilities') .
+		"'></a><br>";
+	print "<a class='iconLink csvexport' href='#' id='graph_" . $graph_id_html .
+		"_csv'><img class='drillDown' src='" . $path_html .
+		"images/table_go.png' alt='' title='" . __esc('CSV Export of Graph Data'). "'></a><br>";
+	print "<a class='iconLink mrtg' href='#' id='graph_" . $graph_id_html .
+		"_mrtg'><img class='drillDown' src='" . $path_html .
+		"images/timeview.png' alt='' title='" . __esc('Time Graph View'). "'></a><br>";
 
 	if (is_realm_allowed(3)) {
 		$host_id = db_fetch_cell_prepared('SELECT host_id
@@ -559,27 +606,57 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
 			array($local_graph_id));
 
 		if ($host_id > 0) {
-			print "<a class='iconLink' href='" . html_escape($config['url_path'] . "host.php?action=edit&id=$host_id") . "' data-graph='" . $local_graph_id . "' id='graph_" . $local_graph_id . "_de'><img id='de" . $host_id . '_' . $rand . "' class='drillDown' src='" . $config['url_path'] . "images/server_edit.png' title='" . __esc('Edit Device') . "'></a>";
+			$host_id_html = htmlspecialchars((string)$host_id, $escape_flags, 'UTF-8', false);
+			$host_id_html = str_replace('`', '&#96;', $host_id_html);
+			print "<a class='iconLink' href='" . html_escape($config['url_path'] .
+				"host.php?action=edit&id=$host_id") .
+				"' data-graph='" . $graph_id_html .
+				"' id='graph_" . $graph_id_html .
+				"_de'><img id='de" . $host_id_html . '_' . $rand .
+				"' class='drillDown' src='" . $path_html .
+				"images/server_edit.png' title='" . __esc('Edit Device') .
+				"'></a>";
 			print '<br/>';
 			$rand++;
 		}
 	}
 
 	if (is_realm_allowed(10) && $graph_template_id > 0) {
-		print "<a class='iconLink' role='link' title='" . __esc('Edit Graph Template') . "' href='" . html_escape($config['url_path'] . 'graph_templates.php?action=template_edit&id=' . $graph_template_id) . "'><img src='" . html_escape($config['url_path'] . 'images/template_edit.png') . "'></img></a>";
+		print "<a class='iconLink' title='" . __esc('Edit Graph Template') .
+			"' href='" . html_escape($config['url_path'] . 'graph_templates.php?action=template_edit&id=' . $graph_template_id) .
+			"'><img src='" . html_escape($config['url_path'] . 'images/template_edit.png') .
+			"'></img></a>";
 		print '<br/>';
 	}
 
 	if (read_config_option('realtime_enabled') == 'on' && is_realm_allowed(25)) {
 		if (read_user_setting('realtime_mode') == '' || read_user_setting('realtime_mode') == '1') {
-			print "<a class='iconLink realtime' href='#' role='link' id='graph_" . $local_graph_id . "_realtime'><img class='drillDown' src='" . $config['url_path'] . "images/chart_curve_go.png' alt='' title='" . __esc('Click to view just this Graph in Real-time'). "'></a><br/>";
+			print "<a class='iconLink realtime' href='#' id='graph_" . $graph_id_html .
+				"_realtime'><img class='drillDown' src='" . $path_html .
+				"images/chart_curve_go.png' alt='' title='" . __esc('Click to view just this Graph in Real-time'). "'></a><br/>";
 		} else {
-			print "<a class='iconLink' href='#' onclick=\"window.open('" . $config['url_path'] . 'graph_realtime.php?top=0&left=0&local_graph_id=' . $local_graph_id . "', 'popup_" . $local_graph_id . "', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=yes,width=650,height=300');return false\"><img src='" . $config['url_path'] . "images/chart_curve_go.png' alt='' title='" . __esc('Click to view just this Graph in Real-time') . "'></a><br/>";
+			$json_flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE;
+			$popup_url = $config['url_path'] . 'graph_realtime.php?top=0&left=0&local_graph_id=';
+			$popup_url .= rawurlencode((string)$local_graph_id);
+			$popup_script = 'window.open(' . json_encode($popup_url, $json_flags) . ', ';
+			$popup_script .= json_encode('popup_' . $local_graph_id, $json_flags) . ', ';
+			$popup_script .= "'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,";
+			$popup_script .= "scrollbars=no,resizable=yes,width=650,height=300');return false";
+			$popup_html = htmlspecialchars($popup_script, $escape_flags, 'UTF-8');
+			$popup_html = str_replace('`', '&#96;', $popup_html);
+			print "<a class='iconLink' href='#' onclick='$popup_html'>";
+			print "<img src='{$path_html}images/chart_curve_go.png' alt='' title='";
+			print __esc('Click to view just this Graph in Real-time') . "'></a><br/>";
 		}
 	}
 
 	if (is_realm_allowed(1043)) {
-		print "<span class='iconLink spikekill' data-graph='" . $local_graph_id . "' id='graph_" . $local_graph_id . "_sk'><img id='sk" . $local_graph_id . "' class='drillDown' src='" . $config['url_path'] . "images/spikekill.gif' title='" . __esc('Kill Spikes in Graphs') . "'></span>";
+		print "<span class='iconLink spikekill' data-graph='" . $graph_id_html .
+			"' id='graph_" . $graph_id_html .
+			"_sk'><img id='sk" . $graph_id_html .
+			"' class='drillDown' src='" . $path_html .
+			"images/spikekill.gif' title='" . __esc('Kill Spikes in Graphs') .
+			"'></span>";
 		print '<br/>';
 	}
 
@@ -611,6 +688,13 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
    @arg $return_to - paint the resulting page into this dom object
    @arg $page_count - provide a page count */
 function html_nav_bar($base_url, $max_pages, $current_page, $rows_per_page, $total_rows, $colspan=30, $object = '', $page_var = 'page', $return_to = '', $page_count = true) {
+	$charset = ini_get('default_charset');
+	if ($charset === '') {
+		$charset = 'UTF-8';
+	}
+	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
+	$return_html = htmlspecialchars((string)$return_to, $escape_flags, $charset, false);
+	$return_html = str_replace('`', '&#96;', $return_html);
 	if ($object == '') $object = __('Rows');
 
 	if ($total_rows > $rows_per_page && $page_count) {
@@ -624,16 +708,32 @@ function html_nav_bar($base_url, $max_pages, $current_page, $rows_per_page, $tot
 
 		$next_page = $current_page + 1;
 		$prev_page = $current_page - 1;
+		$previous_url = $base_url . $page_var . '=' . $prev_page;
+		$previous_html = htmlspecialchars($previous_url, $escape_flags, $charset, false);
+		$previous_html = str_replace('`', '&#96;', $previous_html);
+		$next_url = $base_url . $page_var . '=' . $next_page;
+		$next_html = htmlspecialchars($next_url, $escape_flags, $charset, false);
+		$next_html = str_replace('`', '&#96;', $next_html);
+		$previous_link = '';
+		if ($current_page > 1) {
+			$previous_link = "<a data-url='$previous_html' data-return='$return_html' href='#'>";
+			$previous_link .= "<i class='fa fa-angle-double-left previous'></i>" . __('Previous') . '</a>';
+		}
+		$next_link = '';
+		if (($current_page*$rows_per_page) < $total_rows) {
+			$next_link = "<a data-url='$next_html' data-return='$return_html' href='#'>" . __('Next');
+			$next_link .= "<i class='fa fa-angle-double-right next'></i></a>";
+		}
 
 		$nav = "<div class='navBarNavigation'>
 			<div class='navBarNavigationPrevious'>
-				" . (($current_page > 1) ? "<a data-url='" . html_escape($base_url . $page_var . "=" . $prev_page) . "' data-return='" . html_escape($return_to) . "' href='#'><i class='fa fa-angle-double-left previous'></i>" . __('Previous'). '</a>':'') . "
+				$previous_link
 			</div>
 			<div class='navBarNavigationCenter'>
 				" . __('%d to %d of %s [ %s ]', (($rows_per_page*($current_page-1))+1), (($total_rows < $rows_per_page) || ($total_rows < ($rows_per_page*$current_page)) ? $total_rows : $rows_per_page*$current_page), $total_rows, $url_page_select) . "
 			</div>
 			<div class='navBarNavigationNext'>
-				" . (($current_page*$rows_per_page) < $total_rows ? "<a data-url='" . html_escape($base_url . $page_var . "=" . $next_page) . "' data-return='" . html_escape($return_to) . "' href='#'>" . __('Next'). "<i class='fa fa-angle-double-right next'></i></a>":'') . "
+				$next_link
 			</div>
 		</div>";
 	} elseif ($total_rows > 0) {
@@ -656,16 +756,32 @@ function html_nav_bar($base_url, $max_pages, $current_page, $rows_per_page, $tot
 
 			$next_page = $current_page + 1;
 			$prev_page = $current_page - 1;
+			$previous_url = $base_url . $page_var . '=' . $prev_page;
+			$previous_html = htmlspecialchars($previous_url, $escape_flags, $charset, false);
+			$previous_html = str_replace('`', '&#96;', $previous_html);
+			$next_url = $base_url . $page_var . '=' . $next_page;
+			$next_html = htmlspecialchars($next_url, $escape_flags, $charset, false);
+			$next_html = str_replace('`', '&#96;', $next_html);
+			$previous_link = '';
+			if ($current_page > 1) {
+				$previous_link = "<a data-url='$previous_html' data-return='$return_html' href='#'>";
+				$previous_link .= "<i class='fa fa-angle-double-left previous'></i>" . __('Previous') . '</a>';
+			}
+			$next_link = '';
+			if ($total_rows >= $rows_per_page) {
+				$next_link = "<a data-url='$next_html' data-return='$return_html' href='#'>" . __('Next');
+				$next_link .= "<i class='fa fa-angle-double-right next'></i></a>";
+			}
 
 			$nav = "<div class='navBarNavigation'>
 				<div class='navBarNavigationPrevious'>
-					" . (($current_page > 1) ? "<a data-url='" . html_escape($base_url . $page_var . "=" . $prev_page) . "' data-return='" . html_escape($return_to) . "' href='#'><i class='fa fa-angle-double-left previous'></i>" . __('Previous'). "</a>":"") . "
+					$previous_link
 				</div>
 				<div class='navBarNavigationCenter'>
 					" . __('Current Page: %s', $url_page_select) . "
 				</div>
 				<div class='navBarNavigationNext'>
-					" . ($total_rows >= $rows_per_page ? "<a data-url='" . html_escape($base_url . $page_var . "=" . $next_page) . "' data-return='" . html_escape($return_to) . "' href='#'>" . __('Next'). "<i class='fa fa-angle-double-right next'></i></a>":"") . "
+					$next_link
 				</div>
 			</div>";
 		}
