@@ -34,7 +34,11 @@ final readonly class LegacyDeviceRemovals implements DeviceRemovals
         if (!preg_match('/KADUPUL_REMOVE_RESULT=(\{[^\r\n]+\})/', $process->getOutput(), $match)) {
             throw new \RuntimeException('Device removal outcome is unknown.');
         }
-        $status = json_decode($match[1], true, 16, JSON_THROW_ON_ERROR)['status'] ?? '';
+        try {
+            $status = json_decode($match[1], true, 16, JSON_THROW_ON_ERROR)['status'] ?? '';
+        } catch (\JsonException) {
+            throw new \RuntimeException('Device removal outcome is unknown.');
+        }
         if ($status === 'conflict') {
             throw new DeviceEditConflict('Selected devices or their graphs and data sources changed. Reload the confirmation before removing devices.');
         }
