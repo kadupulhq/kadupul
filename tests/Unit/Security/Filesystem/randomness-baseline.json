@@ -1,0 +1,190 @@
+{
+  "project": "kadupulhq_kadupul-lts",
+  "rule": "php:S2245",
+  "baseRevision": "7ef2721e6",
+  "note": "26 initial findings; three targeted fixes, other assessments provisional. No scanner closures or false-positive transitions claimed.",
+  "issues": [
+    {
+      "key": "AaCs2N41Iug_wyaLilnz",
+      "file": "cli/splice_rrd.php",
+      "line": 255,
+      "disposition": "follow-up",
+      "assessment": "Temporary dump seed; current exclusive descriptor creation already mitigates planted paths. Keep legacy filenames; audit collision/denial-of-service behavior separately."
+    },
+    {
+      "key": "AaCs2NXKIug_wyaLilmj",
+      "file": "lib/csp_report_endpoint.php",
+      "line": 277,
+      "disposition": "non-secret candidate",
+      "assessment": "One-in-20 cleanup scheduling, not an authentication or secret value. Retained for LTS; no Sonar suppression in this PR."
+    },
+    {
+      "key": "AaCs2NruIug_wyaLilnO",
+      "file": "lib/headers_secure.php",
+      "line": 68,
+      "disposition": "fixed in this PR",
+      "assessment": "Remove predictable nonce fallback; validate strong OpenSSL output and throw if both secure sources fail."
+    },
+    {
+      "key": "AaCs2NOdIug_wyaLill9",
+      "file": "lib/utility.php",
+      "line": 33,
+      "disposition": "non-secret candidate",
+      "assessment": "Replication change marker fallback. Keep stored RIPEMD160 format and entropy-failure behavior pending consumer audit."
+    },
+    {
+      "key": "AaCs2NoEIug_wyaLilnI",
+      "file": "lib/boost.php",
+      "line": 1263,
+      "disposition": "non-secret candidate",
+      "assessment": "Connection-scoped temporary table suffix; not a secret. Retained."
+    },
+    {
+      "key": "AaCs2NNNIug_wyaLill0",
+      "file": "lib/rrd.php",
+      "line": 4994,
+      "disposition": "non-secret candidate",
+      "assessment": "RRD expression variable suffix; not a secret. Retained."
+    },
+    {
+      "key": "AaCs2NNNIug_wyaLill1",
+      "file": "lib/rrd.php",
+      "line": 4995,
+      "disposition": "non-secret candidate",
+      "assessment": "RRD expression variable suffix; not a secret. Retained."
+    },
+    {
+      "key": "AaCs2N41Iug_wyaLilny",
+      "file": "cli/splice_rrd.php",
+      "line": 45,
+      "disposition": "fixed in this PR",
+      "assessment": "Directory probe uses secure name plus atomic mkdir; never opens existing entries. Explicit file-path behavior unchanged."
+    },
+    {
+      "key": "AaCs2Oe2Iug_wyaLiloI",
+      "file": "graphs.php",
+      "line": 1726,
+      "disposition": "non-secret candidate",
+      "assessment": "URL cache-buster, not an access credential. Retained."
+    },
+    {
+      "key": "AaCs2NqBIug_wyaLilnM",
+      "file": "lib/spikekill.php",
+      "line": 442,
+      "disposition": "follow-up",
+      "assessment": "Backup filename seed; needs full ownership/collision audit before changing legacy filename contracts."
+    },
+    {
+      "key": "AaCs2NkYIug_wyaLilnD",
+      "file": "lib/installer.php",
+      "line": 854,
+      "disposition": "non-secret candidate",
+      "assessment": "Input for PHP executable arithmetic self-test. Not a secret. Retained."
+    },
+    {
+      "key": "AaCs2NZkIug_wyaLilmp",
+      "file": "lib/functions.php",
+      "line": 7273,
+      "disposition": "fixed in this PR",
+      "assessment": "Directory probe uses secure name plus atomic mkdir; never opens existing entries. Explicit file-path behavior unchanged."
+    },
+    {
+      "key": "AaCs2O0BIug_wyaLiloQ",
+      "file": "install/functions.php",
+      "line": 150,
+      "disposition": "non-secret candidate",
+      "assessment": "Connection-scoped temporary table suffix for installation self-test. Retained."
+    },
+    {
+      "key": "AaCs2PKWIug_wyaLilqE",
+      "file": "aggregate_graphs.php",
+      "line": 720,
+      "disposition": "non-secret candidate",
+      "assessment": "Graph image cache-buster. Retained."
+    },
+    {
+      "key": "AaCs2NNNIug_wyaLillz",
+      "file": "lib/rrd.php",
+      "line": 247,
+      "disposition": "non-secret candidate",
+      "assessment": "Random selection between configured load-balanced servers, not authentication. Retained."
+    },
+    {
+      "key": "AaCs2NemIug_wyaLilm6",
+      "file": "lib/api_data_source.php",
+      "line": 32,
+      "disposition": "non-secret candidate",
+      "assessment": "Replication cache-change marker, not an authentication hash. Preserve stored format pending consumer audit."
+    },
+    {
+      "key": "AaCs2M9wIug_wyaLilki",
+      "file": "lib/api_device.php",
+      "line": 35,
+      "disposition": "non-secret candidate",
+      "assessment": "Replication cache-change marker, not an authentication hash. Preserve stored format pending consumer audit."
+    },
+    {
+      "key": "AaCs2PLrIug_wyaLilqY",
+      "file": "user_admin.php",
+      "line": 634,
+      "disposition": "follow-up",
+      "assessment": "Permission-cache reset marker. Audit all comparison/restoration paths before changing semantics."
+    },
+    {
+      "key": "AaCs2NLVIug_wyaLillU",
+      "file": "lib/api_automation.php",
+      "line": 3738,
+      "disposition": "follow-up",
+      "assessment": "DNS transaction identifier restricted to 90 ASCII values. Audit packet validation and socket/response correlation; replacing rand alone is insufficient."
+    },
+    {
+      "key": "AaCs2PKWIug_wyaLilqF",
+      "file": "aggregate_graphs.php",
+      "line": 1414,
+      "disposition": "non-secret candidate",
+      "assessment": "Temporary text replacement tag. Retain behavior; any markup/collision issue needs a separate output-context audit."
+    },
+    {
+      "key": "AaCs2PMmIug_wyaLilrJ",
+      "file": "plugins.php",
+      "line": 233,
+      "disposition": "non-secret candidate",
+      "assessment": "Connection-scoped temporary table suffix with collision retry. Retained."
+    },
+    {
+      "key": "AaCs2PMmIug_wyaLilrK",
+      "file": "plugins.php",
+      "line": 258,
+      "disposition": "non-secret candidate",
+      "assessment": "Retry for connection-scoped temporary table suffix. Retained."
+    },
+    {
+      "key": "AaCs2NZkIug_wyaLilmo",
+      "file": "lib/functions.php",
+      "line": 5806,
+      "disposition": "follow-up",
+      "assessment": "DNS transaction identifier restricted to 90 ASCII values. Audit packet validation and socket/response correlation; replacing rand alone is insufficient."
+    },
+    {
+      "key": "AaCs2NhNIug_wyaLilm8",
+      "file": "lib/ping.php",
+      "line": 93,
+      "disposition": "follow-up",
+      "assessment": "ICMP identifier/sequence byte. Audit response matching together with high byte; CSPRNG replacement alone does not authenticate replies."
+    },
+    {
+      "key": "AaCs2NhNIug_wyaLilm9",
+      "file": "lib/ping.php",
+      "line": 94,
+      "disposition": "follow-up",
+      "assessment": "ICMP identifier/sequence byte. Audit response matching together with low byte."
+    },
+    {
+      "key": "AaCs2NZkIug_wyaLilmn",
+      "file": "lib/functions.php",
+      "line": 4459,
+      "disposition": "follow-up",
+      "assessment": "Shared identifier generator has weak entropy fallback. Audit all consumers before changing LTS failure behavior."
+    }
+  ]
+}
