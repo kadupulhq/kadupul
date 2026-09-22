@@ -1,4 +1,5 @@
 <?php
+// SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -1502,9 +1503,9 @@ function api_device_ping_device($device_id, $from_remote = false) {
 
 	if (!cacti_sizeof($host)) {
 		if ($from_remote) {
-			print __('ERROR: Device[' . $device_id . '] not found.  Please perform Full Sync!');
+			print html_escape(__('ERROR: Device[' . $device_id . '] not found.  Please perform Full Sync!'));
 		} else {
-			print __('ERROR: Device[' . $device_id . '] not found.  Please check database for errors.');
+			print html_escape(__('ERROR: Device[' . $device_id . '] not found.  Please check database for errors.'));
 		}
 		return;
 	}
