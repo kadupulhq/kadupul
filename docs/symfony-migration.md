@@ -802,7 +802,12 @@ AssignDeviceTemplate, a template-assignment aggregate, and a persistence port.
 Template and collector identities participate in stale-form detection. Choices
 are loaded through an authorized query; the worker locks policy/grants and
 rechecks visibility, references and the revision before writing. Creation shares
-the same authorization-lock helper.
+the same authorization-lock helper. Template writes use a repeatable-read
+transaction and current locking reads for visibility mode, user/group policies,
+memberships, and permission exceptions, including gaps where new exceptions could
+revoke access. The final device/graph visibility query is also a locking read.
+The isolated worker uses the configured PHP executable, with a platform-correct
+fallback on Windows.
 
 Changing a template delegates graph/query attachment and unused graph-association
 cleanup to the legacy API. Existing graphs and data remain intact. Unassignment

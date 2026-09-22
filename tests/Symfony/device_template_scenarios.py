@@ -1,5 +1,6 @@
 """Device-template assignment through real Symfony forms and legacy writes."""
 import json
+from pathlib import Path
 from urllib.request import Request
 from urllib.error import HTTPError
 from urllib.parse import urlencode, urlsplit
@@ -23,6 +24,9 @@ def verify_device_template(harness, session, user_id, device_id, hidden_id, chec
         parser.feed(body)
         check(urlsplit(parser.action).path == path and not urlsplit(parser.action).netloc and 'device_template[_token]' in parser.fields, 'template form has fixed action and CSRF protection')
         return parser.fields
+    probe = Path(__file__).with_name('device_template_authorization_probe.php').read_text().removeprefix('<?php')
+    result = harness.php('-r', probe, str(user_id), str(device_id))
+    check(result['exit'] == 0 and all(json.loads(result['stdout']).values()), 'template visibility permissions are current and locked through persistence: ' + repr(result))
     original = harness.sql(f'SELECT host_template_id,poller_id FROM host WHERE id={device_id}').strip().split('\t')
     template = int(harness.sql("INSERT INTO host_template (hash,name) VALUES ('template-assignment-fixture','Template <assignment>'); SELECT LAST_INSERT_ID()").strip())
     graph = int(harness.sql("SELECT id FROM graph_templates ORDER BY id LIMIT 1").strip())

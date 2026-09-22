@@ -47,7 +47,7 @@ try {
         || !is_string($command['revision'] ?? null)) {
         throw new InvalidArgumentException('Invalid command');
     }
-    if ((int) ($config['poller_id'] ?? 0) !== 1 || !db_begin_transaction()) {
+    if ((int) ($config['poller_id'] ?? 0) !== 1 || !db_execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') || !db_begin_transaction()) {
         throw new RuntimeException('Primary transaction unavailable');
     }
     $transactionStarted = true;
@@ -81,7 +81,7 @@ try {
         }
     };
     $visibility = new LegacyDeviceVisibility($provider);
-    $allowed = db_fetch_cell_prepared('SELECT h.id FROM host h LEFT JOIN graph_local gl ON gl.host_id = h.id WHERE h.id = ? AND (' . $visibility->predicate($command['actor']) . ') LIMIT 1', [$command['id']]);
+    $allowed = db_fetch_cell_prepared('SELECT h.id FROM host h LEFT JOIN graph_local gl ON gl.host_id = h.id WHERE h.id = ? AND (' . $visibility->predicate($command['actor'], true) . ') LIMIT 1 LOCK IN SHARE MODE', [$command['id']]);
     if (!$row || !$allowed) {
         $status = 'denied';
         throw new RuntimeException('Access denied');
