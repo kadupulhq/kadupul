@@ -122,6 +122,7 @@ try {
         throw new RuntimeException('Primary connection validation unavailable');
     }
     if ($previous !== $target) {
+        define('KADUPUL_THROW_DATABASE_ERRORS', true);
         $_SESSION['sess_user_id'] = $command['actor'];
         $writeStarted = true;
         // A queued purge from an earlier move must not delete a returning device.
@@ -203,7 +204,7 @@ try {
 } catch (Throwable) {
     // Side effects may already have reached a collector; report failure, never success.
 } finally {
-    if ($transactionStarted) {
+    if ($transactionStarted && $connection->inTransaction()) {
         db_rollback_transaction();
     }
 }

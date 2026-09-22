@@ -19,7 +19,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class DeviceCollectorPresentationTest extends TestCase
 {
-    public function testFrenchPresentationEscapesNamesAndPreservesAssignmentValues(): void
+    public static function saveOutcomes(): array
+    {
+        return [[null, 303], [true, 401], [false, 403]];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('saveOutcomes')]
+    public function testFrenchPresentationEscapesNamesAndPreservesAssignmentValues(?bool $unauthenticated, int $expectedStatus): void
     {
         $kernel = new Kernel('test', true);
         try {
@@ -41,7 +47,10 @@ final class DeviceCollectorPresentationTest extends TestCase
             $port = $this->createMock(DeviceCollectorAssignments::class);
             $port->method('findVisible')->willReturn($device);
             $port->method('collectors')->willReturn([1 => 'Primary', 2 => '<Collector>', 3 => '<Collector>']);
-            $port->expects(self::once())->method('save')->with(42, self::callback(fn($saved) => $saved->collectorId() === 2), $device->revision());
+            $save = $port->expects(self::once())->method('save')->with(42, self::callback(fn($saved) => $saved->collectorId() === 2), $device->revision());
+            if ($unauthenticated !== null) {
+                $save->willThrowException(new \Kadupul\Inventory\Application\Query\InventoryAccessDenied($unauthenticated));
+            }
             $container->set(DeviceCollectorAssignments::class, $port);
             $path = '/inventory/devices/7/collector';
             $response = $kernel->handle(Request::create($path, 'GET', [], ['Cacti' => 'fixture']));
@@ -65,7 +74,7 @@ final class DeviceCollectorPresentationTest extends TestCase
             }
             $request = Request::create($path, 'POST', ['device_collector' => $fields], ['Cacti' => 'fixture']);
             $request->headers->set('Origin', 'http://localhost');
-            self::assertSame(303, $kernel->handle($request)->getStatusCode());
+            self::assertSame($expectedStatus, $kernel->handle($request)->getStatusCode());
         } finally {
             $kernel->shutdown();
         }

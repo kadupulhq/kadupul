@@ -60,8 +60,8 @@ final class DeviceCollectorController
                 try {
                     $assign($id, $data['collector_id'], (string) $data['revision']);
                     return new RedirectResponse($urls->generate('inventory_device_collector', $editParameters + ['saved' => 1]), 303, $headers);
-                } catch (InventoryAccessDenied) {
-                    return new Response($translator->trans('Access denied.', [], 'inventory'), 403, $headers);
+                } catch (InventoryAccessDenied $error) {
+                    return new Response($translator->trans('Access denied.', [], 'inventory'), $error->unauthenticated ? 401 : 403, $headers);
                 } catch (DeviceEditConflict $error) {
                     $status = 409;
                     $form->addError(new FormError($translator->trans($error->getMessage(), [], 'inventory')));
