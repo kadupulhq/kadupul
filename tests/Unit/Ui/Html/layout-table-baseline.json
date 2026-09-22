@@ -105,7 +105,7 @@
         "before": "\t\t<table class='cactiTable'>",
         "after": "\t\t<table role='presentation' class='cactiTable'>",
         "reason": "Filter toolbar outer layout.",
-        "context": "\t</script>\n\t<form id='graphs_new' action='graphs_new.php'>\n\t\t<table role='presentation' class='cactiTable'>\n\t\t\t<tr><td style='width:70%;'>\n\t\t\t\t<table class='filterTable'>"
+        "context": "\t</script>\n\t<form id='graphs_new' action='graphs_new.php'>\n\t\t<table role='presentation' class='cactiTable'>\n\t\t\t<tr><td style='width:70%;'>\n\t\t\t\t<table class='filterTable' role='presentation'>"
     },
     {
         "key": "AaCeytjUrnQdoRHC48W8",
