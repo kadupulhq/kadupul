@@ -66,7 +66,7 @@ final readonly class NewDevice
             throw new \InvalidArgumentException('Clear Use configured credentials to enter device-specific credentials.');
         }
         if ($fields['snmp_version'] === '3') {
-            if ($fields['snmp_username'] === '' || ($fields['snmp_priv_protocol'] !== '[None]' && $fields['snmp_auth_protocol'] === '[None]')) {
+            if ((!$fields['use_default_credentials'] && $fields['snmp_username'] === '') || ($fields['snmp_priv_protocol'] !== '[None]' && $fields['snmp_auth_protocol'] === '[None]')) {
                 throw new \InvalidArgumentException('SNMPv3 requires a username; privacy also requires authentication.');
             }
             if (!$fields['use_default_credentials'] && (($fields['snmp_auth_protocol'] !== '[None]' && strlen($fields['snmp_password']) < 8) || ($fields['snmp_priv_protocol'] !== '[None]' && strlen($fields['snmp_priv_passphrase']) < 8))) {

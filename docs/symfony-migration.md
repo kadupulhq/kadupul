@@ -619,6 +619,9 @@ covered here. Existing legacy URLs and LTS remain unchanged.
 
 Device creation honors the configured `path_php_binary` executable (falling back
 to the current PHP installation) and legacy defaults when settings are absent.
+The HTTP catalog never reads the stored SNMPv3 username. With configured
+credentials selected, a blank username is resolved in the authorized CLI worker
+and validated before persistence; an explicitly entered username is retained.
 The worker locks the account, authentication/guest policy and whichever direct
 or group grants authorize the transaction. Remote collectors must be online:
 the worker prepares both connections for full UTF-8 and strict writes and checks

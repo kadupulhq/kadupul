@@ -6,6 +6,7 @@
  */
 
 use Kadupul\Inventory\Domain\NewDevice;
+use Kadupul\Inventory\Infrastructure\Legacy\DeviceCreationCredentials;
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceCreationVerifier;
 
 if (PHP_SAPI !== 'cli') {
@@ -89,13 +90,7 @@ try {
         || !db_fetch_cell_prepared("SELECT id FROM poller WHERE id = ? AND disabled = '' LOCK IN SHARE MODE", [$fields['poller_id']])) {
         throw new InvalidArgumentException('Invalid reference');
     }
-    if ($fields['use_default_credentials']) {
-        foreach (['snmp_community', 'snmp_password', 'snmp_priv_passphrase'] as $key) {
-            $fields[$key] = (string) read_config_option($key);
-        }
-        $fields['use_default_credentials'] = false;
-        $fields = (new NewDevice($fields))->fields;
-    }
+    $fields = (new DeviceCreationCredentials())->resolve($device, 'read_config_option')->fields;
     $remote = null;
     if ((int) $fields['poller_id'] > 1) {
         if (!remote_poller_up((int) $fields['poller_id'])) {

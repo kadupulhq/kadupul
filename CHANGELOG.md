@@ -11,6 +11,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Keep configured SNMPv3 usernames out of the device-creation HTTP catalog; resolve defaults inside the authorized worker before persistence.
+
 - Add Symfony Form/Twig device creation through an Inventory use case and isolated legacy adapter, preserving template and plugin behavior while keeping configured credentials out of the page.
 
 - Verify required device template associations and remote collector association parity before confirming device creation; report partial replication as an uncertain outcome.

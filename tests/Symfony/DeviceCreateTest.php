@@ -40,9 +40,45 @@ final class DeviceCreateTest extends TestCase
             }
         }
         yield 'unexpected id' => [['id' => '42']];
-        yield 'v3 needs user' => [['snmp_version' => '3']];
+        yield 'v3 needs user' => [['snmp_version' => '3', 'use_default_credentials' => false]];
         yield 'v3 privacy needs auth' => [['snmp_version' => '3', 'snmp_username' => 'x', 'snmp_priv_protocol' => 'AES']];
         yield 'v3 short passphrase' => [['snmp_version' => '3', 'snmp_username' => 'x', 'snmp_auth_protocol' => 'SHA', 'use_default_credentials' => false, 'snmp_password' => 'short']];
+    }
+
+    public function testConfiguredUsernameIsResolvedOnlyInTheWorker(): void
+    {
+        $device = new NewDevice(['description' => 'V3', 'hostname' => '::1', 'snmp_version' => '3']);
+        self::assertSame('', $device->fields['snmp_username']);
+        $resolved = (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCreationCredentials())->resolve($device, static fn(string $key): string => $key === 'snmp_username' ? 'stored-operator' : 'fixture-secret');
+        self::assertSame('stored-operator', $resolved->fields['snmp_username']);
+        self::assertFalse($resolved->fields['use_default_credentials']);
+        self::assertSame('', $device->fields['snmp_username']);
+    }
+
+    public function testExplicitUsernameIsNotOverwrittenByConfiguredDefault(): void
+    {
+        $device = new NewDevice(['description' => 'V3', 'hostname' => '::1', 'snmp_version' => '3', 'snmp_username' => 'device-operator']);
+        $resolved = (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCreationCredentials())->resolve($device, static function (string $key): string {
+            self::assertNotSame('snmp_username', $key);
+            return 'fixture-secret';
+        });
+        self::assertSame('device-operator', $resolved->fields['snmp_username']);
+    }
+
+    public function testMissingConfiguredUsernameFailsBeforePersistence(): void
+    {
+        $device = new NewDevice(['description' => 'V3', 'hostname' => '::1', 'snmp_version' => '3']);
+        $this->expectException(\InvalidArgumentException::class);
+        (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCreationCredentials())->resolve($device, static fn(string $key): string => '');
+    }
+
+    public function testExplicitCredentialsNeverReadStoredDefaults(): void
+    {
+        $device = new NewDevice(['description' => 'V3', 'hostname' => '::1', 'snmp_version' => '3', 'snmp_username' => 'device-operator', 'use_default_credentials' => false]);
+        $resolved = (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCreationCredentials())->resolve($device, static function (): never {
+            self::fail('Explicit credentials must not read configured secrets');
+        });
+        self::assertSame($device, $resolved);
     }
 
     #[DataProvider('invalidFields')]
@@ -164,7 +200,7 @@ final class DeviceCreateTest extends TestCase
     {
         $db = new \PDO('sqlite::memory:');
         $db->exec("CREATE TABLE settings (name TEXT,value TEXT); CREATE TABLE host_template (id INTEGER,name TEXT); CREATE TABLE sites (id INTEGER,name TEXT); CREATE TABLE poller (id INTEGER,name TEXT,disabled TEXT);
-            INSERT INTO settings VALUES ('snmp_community','private-fixture'),('snmp_password','private-fixture'),('snmp_priv_passphrase','private-fixture'),('default_template','99'),('default_site','3'),('default_poller','9'),('snmp_version','1');
+            INSERT INTO settings VALUES ('snmp_username','private-fixture'),('snmp_community','private-fixture'),('snmp_password','private-fixture'),('snmp_priv_passphrase','private-fixture'),('default_template','99'),('default_site','3'),('default_poller','9'),('snmp_version','1');
             INSERT INTO sites VALUES (3,'Tokyo'); INSERT INTO poller VALUES (1,'Main',''),(9,'Disabled','on'); INSERT INTO host_template VALUES (2,'Template');");
         $database = $this->createMock(\Kadupul\Platform\Contract\DatabaseConnection::class);
         $database->method('get')->willReturn($db);
@@ -180,6 +216,7 @@ final class DeviceCreateTest extends TestCase
         self::assertSame('400', $choices->defaults['ping_timeout']);
         self::assertSame('1', $choices->defaults['ping_retries']);
         self::assertStringNotContainsString('private-fixture', json_encode($choices));
+        self::assertSame('', $choices->defaults['snmp_username']);
         $db->exec("DELETE FROM settings WHERE name = 'default_site'; INSERT INTO sites VALUES (1,'Default');");
         $catalog = new \Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreationCatalog($database);
         self::assertSame(1, $catalog->choices()->defaults['site_id']);

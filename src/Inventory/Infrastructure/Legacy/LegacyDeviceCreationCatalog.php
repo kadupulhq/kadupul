@@ -21,10 +21,10 @@ final readonly class LegacyDeviceCreationCatalog implements DeviceCreationCatalo
         $db = $this->database->get();
         $defaults = array_replace(NewDevice::DEFAULTS, ['site_id' => '1', 'snmp_auth_protocol' => 'MD5', 'snmp_priv_protocol' => 'DES', 'ping_method' => '2', 'ping_timeout' => '400', 'ping_retries' => '1']);
         $mapping = ['default_template' => 'host_template_id', 'default_site' => 'site_id', 'default_poller' => 'poller_id', 'max_get_size' => 'max_oids'];
-        foreach (['snmp_version', 'snmp_username', 'snmp_context', 'snmp_engine_id', 'snmp_auth_protocol', 'snmp_priv_protocol', 'snmp_port', 'snmp_timeout', 'device_threads', 'availability_method', 'ping_method', 'ping_port', 'ping_timeout', 'ping_retries'] as $name) {
+        foreach (['snmp_version', 'snmp_context', 'snmp_engine_id', 'snmp_auth_protocol', 'snmp_priv_protocol', 'snmp_port', 'snmp_timeout', 'device_threads', 'availability_method', 'ping_method', 'ping_port', 'ping_timeout', 'ping_retries'] as $name) {
             $mapping[$name] = $name;
         }
-        // Do not select community strings or stored passphrases into the HTTP process.
+        // Do not select stored usernames, community strings or passphrases into HTTP.
         $query = $db->prepare('SELECT name, value FROM settings WHERE name IN (' . implode(',', array_fill(0, count($mapping), '?')) . ')');
         $query->execute(array_keys($mapping));
         foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $row) {
