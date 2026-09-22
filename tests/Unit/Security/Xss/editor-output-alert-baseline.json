@@ -1,0 +1,207 @@
+{
+  "project": "kadupulhq_kadupul-lts",
+  "revision": "144e641bfa64dd64296b136733bc959cf4631498",
+  "description": "25 open findings targeted at editor AJAX/navigation and graph state output. Tests execute matched output fragments, not full controllers.",
+  "issues": [
+    {
+      "key": "AaCs2PPyIug_wyaLilrx",
+      "file": "graph.php",
+      "line": 453,
+      "before": "var graph_id      = <?php print get_request_var('local_graph_id');?>;",
+      "context": "numeric",
+      "after": "var graph_id      = <?php\n    print (int)get_request_var('local_graph_id');\n?>;"
+    },
+    {
+      "key": "AaCs2PPyIug_wyaLilr3",
+      "file": "graph.php",
+      "line": 454,
+      "before": "var rra_id        = <?php print get_request_var('rra_id');?>;",
+      "context": "numeric",
+      "after": "var rra_id        = <?php\n    print (int)get_request_var('rra_id');\n?>;"
+    },
+    {
+      "key": "AaCs2PPyIug_wyaLilrv",
+      "file": "graph.php",
+      "line": 173,
+      "before": "<input type='hidden' id='thumbnails' value='<?php print html_escape(get_request_var('thumbnails'));?>'></input>",
+      "context": "html-string",
+      "after": "<input type='hidden' id='thumbnails' value='<?php\n    $thumbnail_html = htmlspecialchars(\n        (string)get_request_var('thumbnails'),\n        ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n        ini_get('default_charset') ?: 'UTF-8',\n        false\n    );\n    print str_replace('`', '&#96;', $thumbnail_html);\n?>'></input>"
+    },
+    {
+      "key": "AaCs2PPyIug_wyaLilru",
+      "file": "graph.php",
+      "line": 444,
+      "before": "<input type='hidden' id='graph_start' value='<?php print $graph_start;?>'>",
+      "context": "numeric",
+      "after": "<input type='hidden' id='graph_start' value='<?php\n    print (int)$graph_start;\n?>'>"
+    },
+    {
+      "key": "AaCs2PPyIug_wyaLilrz",
+      "file": "graph.php",
+      "line": 445,
+      "before": "<input type='hidden' id='graph_end' value='<?php print $graph_end;?>'>",
+      "context": "numeric",
+      "after": "<input type='hidden' id='graph_end' value='<?php\n    print (int)$graph_end;\n?>'>"
+    },
+    {
+      "key": "AaCs2PPyIug_wyaLilr5",
+      "file": "graph.php",
+      "line": 446,
+      "before": "<input type='hidden' id='thumbnails' value='<?php print html_escape(get_request_var('thumbnails'));?>'></input>",
+      "context": "html-string",
+      "after": "<input type='hidden' id='thumbnails' value='<?php\n    $thumbnail_html = htmlspecialchars(\n        (string)get_request_var('thumbnails'),\n        ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE,\n        ini_get('default_charset') ?: 'UTF-8',\n        false\n    );\n    print str_replace('`', '&#96;', $thumbnail_html);\n?>'></input>"
+    },
+    {
+      "key": "AaCs2PVtIug_wyaLils-",
+      "file": "data_source_profiles.php",
+      "line": 516,
+      "before": "<input type='hidden' id='rra_id' value='<?php print get_request_var('id');?>'>",
+      "context": "numeric",
+      "after": "<input type='hidden' id='rra_id' value='<?php\n    print (int)get_request_var('id');\n?>'>"
+    },
+    {
+      "key": "AaCs2PLDIug_wyaLilqS",
+      "file": "graphs_items.php",
+      "line": 654,
+      "before": "strURL = 'graphs_items.php?header=false&action=item_edit<?php print $id;?>' +",
+      "context": "json",
+      "after": "strURL = <?php\n    print json_encode(\n        'graphs_items.php?header=false&action=item_edit' . $id,\n        JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE\n    );\n?> +"
+    },
+    {
+      "key": "AaCs2O1QIug_wyaLiloW",
+      "file": "color_templates_items.php",
+      "line": 323,
+      "before": "loadPageNoHeader('color_templates.php?action=template_edit&header=false&color_template_id=<?php print get_request_var('id');?>');",
+      "context": "numeric",
+      "after": "loadPageNoHeader('color_templates.php?action=template_edit&header=false&color_template_id=<?php\n    print (int)get_request_var('id');\n?>');"
+    },
+    {
+      "key": "AaCs2O1QIug_wyaLiloV",
+      "file": "color_templates_items.php",
+      "line": 319,
+      "before": "color_id: <?php print get_request_var('color_id');?>,",
+      "context": "numeric",
+      "after": "color_id: <?php\n    print (int)get_request_var('color_id');\n?>,"
+    },
+    {
+      "key": "AaCs2O1QIug_wyaLiloU",
+      "file": "color_templates_items.php",
+      "line": 320,
+      "before": "id: <?php print get_request_var('id');?>",
+      "context": "numeric",
+      "after": "id: <?php\n    print (int)get_request_var('id');\n?>"
+    },
+    {
+      "key": "AaCs2O6BIug_wyaLilot",
+      "file": "automation_snmp.php",
+      "line": 395,
+      "before": "item_id: <?php print get_request_var('item_id');?>,",
+      "context": "numeric",
+      "after": "item_id: <?php\n    print (int)get_request_var('item_id');\n?>,"
+    },
+    {
+      "key": "AaCs2O6BIug_wyaLilor",
+      "file": "automation_snmp.php",
+      "line": 396,
+      "before": "id: <?php print get_request_var('id');?>",
+      "context": "numeric",
+      "after": "id: <?php\n    print (int)get_request_var('id');\n?>"
+    },
+    {
+      "key": "AaCs2O6BIug_wyaLilou",
+      "file": "automation_snmp.php",
+      "line": 399,
+      "before": "loadPageNoHeader('automation_snmp.php?action=edit&header=false&id=<?php print get_request_var('id');?>');",
+      "context": "numeric",
+      "after": "loadPageNoHeader('automation_snmp.php?action=edit&header=false&id=<?php\n    print (int)get_request_var('id');\n?>');"
+    },
+    {
+      "key": "AaCs2O6BIug_wyaLilow",
+      "file": "automation_snmp.php",
+      "line": 626,
+      "before": "loadPageNoHeader('automation_snmp.php?action=ajax_dnd&id=<?php isset_request_var('id') ? print get_request_var('id') : print 0;?>&'+$.tableDnD.serialize());",
+      "context": "numeric",
+      "after": "loadPageNoHeader('automation_snmp.php?action=ajax_dnd&id=<?php\n    print isset_request_var('id') ? (int)get_request_var('id') : 0;\n?>&'+$.tableDnD.serialize());"
+    },
+    {
+      "key": "AaCs2PLDIug_wyaLilqT",
+      "file": "graphs_items.php",
+      "line": 655,
+      "before": "'&local_graph_id=<?php print get_request_var('local_graph_id');?>' +",
+      "context": "numeric",
+      "after": "'&local_graph_id=<?php\n    print (int)get_request_var('local_graph_id');\n?>' +"
+    },
+    {
+      "key": "AaCs2PCLIug_wyaLilpU",
+      "file": "host_templates.php",
+      "line": 412,
+      "before": "host_template_id: <?php print get_request_var('host_template_id');?>,",
+      "context": "numeric",
+      "after": "host_template_id: <?php\n    print (int)get_request_var('host_template_id');\n?>,"
+    },
+    {
+      "key": "AaCs2PCLIug_wyaLilpR",
+      "file": "host_templates.php",
+      "line": 413,
+      "before": "id: <?php print get_request_var('id');?>",
+      "context": "numeric",
+      "after": "id: <?php\n    print (int)get_request_var('id');\n?>"
+    },
+    {
+      "key": "AaCs2PCLIug_wyaLilpV",
+      "file": "host_templates.php",
+      "line": 493,
+      "before": "host_template_id: <?php print get_request_var('host_template_id');?>,",
+      "context": "numeric",
+      "after": "host_template_id: <?php\n    print (int)get_request_var('host_template_id');\n?>,"
+    },
+    {
+      "key": "AaCs2PCLIug_wyaLilpP",
+      "file": "host_templates.php",
+      "line": 494,
+      "before": "id: <?php print get_request_var('id');?>",
+      "context": "numeric",
+      "after": "id: <?php\n    print (int)get_request_var('id');\n?>"
+    },
+    {
+      "key": "AaCs2POKIug_wyaLilrb",
+      "file": "data_input.php",
+      "line": 467,
+      "before": "data_input_id: <?php print get_request_var('data_input_id');?>,",
+      "context": "numeric",
+      "after": "data_input_id: <?php\n    print (int)get_request_var('data_input_id');\n?>,"
+    },
+    {
+      "key": "AaCs2POKIug_wyaLilrW",
+      "file": "data_input.php",
+      "line": 468,
+      "before": "id: <?php print get_request_var('id');?>",
+      "context": "numeric",
+      "after": "id: <?php\n    print (int)get_request_var('id');\n?>"
+    },
+    {
+      "key": "AaCs2POKIug_wyaLilra",
+      "file": "data_input.php",
+      "line": 470,
+      "before": "loadPageNoHeader('data_input.php?action=edit&header=false&id=<?php print get_request_var('data_input_id');?>');",
+      "context": "numeric",
+      "after": "loadPageNoHeader('data_input.php?action=edit&header=false&id=<?php\n    print (int)get_request_var('data_input_id');\n?>');"
+    },
+    {
+      "key": "AaCs2PciIug_wyaLiltj",
+      "file": "vdef.php",
+      "line": 680,
+      "before": "loadPageNoHeader('vdef.php?action=ajax_dnd&id=<?php isset_request_var('id') ? print get_request_var('id') : print 0;?>&'+$.tableDnD.serialize());",
+      "context": "numeric",
+      "after": "loadPageNoHeader('vdef.php?action=ajax_dnd&id=<?php\n    print isset_request_var('id') ? (int)get_request_var('id') : 0;\n?>&'+$.tableDnD.serialize());"
+    },
+    {
+      "key": "AaCs2PWRIug_wyaLiltK",
+      "file": "cdef.php",
+      "line": 655,
+      "before": "loadPageNoHeader('cdef.php?action=ajax_dnd&id=<?php isset_request_var('id') ? print get_request_var('id') : print 0;?>&'+$.tableDnD.serialize());",
+      "context": "numeric",
+      "after": "loadPageNoHeader('cdef.php?action=ajax_dnd&id=<?php\n    print isset_request_var('id') ? (int)get_request_var('id') : 0;\n?>&'+$.tableDnD.serialize());"
+    }
+  ]
+}
