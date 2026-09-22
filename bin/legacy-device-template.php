@@ -116,6 +116,7 @@ try {
                     throw new RuntimeException('Unassignment failed');
                 }
             }
+            api_plugin_hook_function('device_template_change', ['device_id' => $assignment->id, 'device_template_id' => 0]);
         } else {
             api_device_update_host_template($assignment->id, $assignment->templateId());
         }

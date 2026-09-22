@@ -27,6 +27,10 @@ def verify_device_template(harness, session, user_id, device_id, hidden_id, chec
     probe = Path(__file__).with_name('device_template_authorization_probe.php').read_text().removeprefix('<?php')
     result = harness.php('-r', probe, str(user_id), str(device_id))
     check(result['exit'] == 0 and all(json.loads(result['stdout']).values()), 'template visibility permissions are current and locked through persistence: ' + repr(result))
+    check(harness.php('-r', 'require "include/global.php"; function setup_template_change() { api_plugin_register_hook("compatibility_test","device_template_change","compatibility_test_filter","setup.php",true); } setup_template_change();')['exit'] == 0, 'template-change hook fixture registered')
+    def changes(template_id):
+        events = harness.command('cat', '/artifacts/plugin.jsonl')['stdout']
+        return sum(json.loads(line).get('args') == [{'device_id': device_id, 'device_template_id': template_id}] for line in events.splitlines())
     original = harness.sql(f'SELECT host_template_id,poller_id FROM host WHERE id={device_id}').strip().split('\t')
     template = int(harness.sql("INSERT INTO host_template (hash,name) VALUES ('template-assignment-fixture','Template <assignment>'); SELECT LAST_INSERT_ID()").strip())
     graph = int(harness.sql("SELECT id FROM graph_templates ORDER BY id LIMIT 1").strip())
@@ -54,7 +58,10 @@ def verify_device_template(harness, session, user_id, device_id, hidden_id, chec
         check(request(fields=fields)[0] == 409, 'template changes invalidate stale assignment forms')
         current = form()
         check(request(fields=current)[0] == 200, 'unchanged template assignment is a no-op')
+        before_unassign = changes(0)
         check(request(fields=current | {'device_template[template_id]': '0'})[0] == 200, 'device template can be explicitly unassigned')
+        check(changes(0) == before_unassign + 1, 'template unassignment invokes the template-change hook once')
+        check(request(fields=form())[0] == 200 and changes(0) == before_unassign + 1, 'unchanged unassignment does not repeat the template-change hook')
         check(harness.sql(f'SELECT COUNT(*) FROM host_graph WHERE host_id={device_id} AND graph_template_id={graph}').strip() == '1', 'unassignment retains existing graph associations')
         stale = form()
         harness.sql(f'UPDATE host SET poller_id=2 WHERE id={device_id}')
