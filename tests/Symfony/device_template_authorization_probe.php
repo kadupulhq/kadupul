@@ -18,9 +18,25 @@ $rival->exec('SET SESSION innodb_lock_wait_timeout = 1');
 $actor = (int) $argv[1];
 $device = (int) $argv[2];
 $group = 0;
+$template = 0;
 $results = [];
 $visibility = new LegacyDeviceVisibility($database);
 try {
+    $rival->exec("INSERT INTO host_template (name,hash) VALUES ('association-lock-fixture','association-lock-fixture')");
+    $template = (int) $rival->lastInsertId();
+    $db->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+    $db->beginTransaction();
+    $db->query("SELECT * FROM host_template_graph WHERE host_template_id=$template")->fetchAll();
+    $rival->exec("INSERT INTO host_template_graph (host_template_id,graph_template_id) VALUES ($template,16777214)");
+    $verifier = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCreationVerifier();
+    $verifier->verify($db, null, $device, $template);
+    try {
+        $verifier->verify($db, null, $device, $template, true);
+        $results['current_template_associations'] = false;
+    } catch (RuntimeException) {
+        $results['current_template_associations'] = true;
+    }
+    $db->rollBack();
     $rival->exec("INSERT INTO user_auth_group (name,enabled,policy_graphs,policy_hosts,policy_graph_templates) VALUES ('template-lock','on',2,2,2)");
     $group = (int) $rival->lastInsertId();
     $rival->exec("INSERT INTO user_auth_group_members (group_id,user_id) VALUES ($group,$actor)");
@@ -76,6 +92,10 @@ try {
     }
     if ($rival->inTransaction()) {
         $rival->rollBack();
+    }
+    if ($template) {
+        $rival->exec("DELETE FROM host_template_graph WHERE host_template_id=$template");
+        $rival->exec("DELETE FROM host_template WHERE id=$template");
     }
     if ($group) {
         $rival->exec("DELETE FROM user_auth_group_perms WHERE group_id=$group");

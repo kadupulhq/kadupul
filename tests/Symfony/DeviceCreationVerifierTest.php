@@ -30,6 +30,12 @@ final class DeviceCreationVerifierTest extends TestCase
         return $database;
     }
 
+    public function testCurrentAssociationVerificationRequiresAnOwningTransaction(): void
+    {
+        $this->expectException(\LogicException::class);
+        (new DeviceCreationVerifier())->verify($this->database(), null, 7, 3, true);
+    }
+
     public function testCompleteLocalAndRemoteCreationPasses(): void
     {
         $primary = $this->database();
