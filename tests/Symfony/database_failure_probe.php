@@ -84,4 +84,16 @@ $autocommit = new DeadlockConnection(false);
 if (db_execute_prepared('UPDATE fixture SET value=1', [], true, $autocommit) !== true || $autocommit->attempts !== 2) {
     throw new RuntimeException('Standalone retry compatibility changed');
 }
+define('KADUPUL_THROW_DATABASE_ERRORS', true);
+foreach ([true, false] as $transactional) {
+    $strict = new DeadlockConnection($transactional);
+    try {
+        db_execute_prepared('UPDATE fixture SET value=1', [], true, $strict);
+        throw new LogicException('Strict worker continued after failed SQL');
+    } catch (RuntimeException $error) {
+        if ($error->getMessage() !== 'Database operation failed.' || $strict->attempts !== 1) {
+            throw new LogicException('Strict worker retried SQL or exposed diagnostics');
+        }
+    }
+}
 echo 'database failures rejected';

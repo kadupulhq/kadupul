@@ -843,3 +843,29 @@ rolls back. The UI reports an uncertain outcome and requires reload/verification
 before retrying; a successful response is only sent after verification and
 primary commit. Offline/deferred moves and collector administration remain
 outside this workflow.
+
+
+### Bulk device enable/disable
+
+The Inventory list now selects up to 100 devices for a Symfony Form/Twig
+confirmation at `/inventory/devices/enable` or `/inventory/devices/disable`.
+`PrepareDeviceStateChange` and `SetDevicesEnabled` use the `DeviceStates` port;
+`DeviceSelection` and `DeviceState` keep selection and revision rules independent
+of Symfony and the legacy database. GET is read-only, POST requires stateless
+CSRF, and list filters survive confirmation and redirect.
+
+The isolated adapter worker locks authorization, sites, hosts and collectors,
+checks current visibility and every expected revision before any writes, and
+preflights online remote collectors. Primary writes share one transaction.
+Disabling resets primary status; enabling retains populated poller caches and
+uses the legacy rebuild/reindex functions for empty caches. The legacy
+`device_action_bottom` hook receives the action and full selection. Already
+matching states are no-ops and do not rebuild caches or invoke the hook.
+
+During writes the worker opts into immediate exceptions from the legacy SQL
+helper, so swallowed cache errors or a deadlock cannot continue later statements
+outside the authorization transaction. Other legacy callers retain their error
+return behavior. Final primary and remote states are verified before success;
+remote effects are not a distributed transaction and may survive primary
+rollback. HTTP 502 explicitly asks operators to inspect every selected device
+before retrying. Logs contain actor, requested state and IDs, never credentials.

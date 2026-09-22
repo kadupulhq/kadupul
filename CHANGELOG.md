@@ -12,6 +12,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Add Symfony bulk device enable/disable confirmation with whole-selection authorization and revision checks, transactional primary writes and verified remote state.
+
 - Add Symfony device-collector reassignment with verified replication, previous-collector cleanup, stale-form protection and explicit uncertain-outcome handling.
 
 - Add a Symfony device-template assignment workflow with authorization, stale-form protection and collector association verification.

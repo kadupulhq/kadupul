@@ -48,6 +48,6 @@ final class DeviceListController
                 'pageSize' => $criteria->pageSize, 'hasNext' => $result->hasNext], 200, $headers);
         }
 
-        return new Response($twig->render('inventory/devices.html.twig', ['result' => $result, 'criteria' => $criteria, 'sites' => $sites, 'filters' => DeviceListParameters::encode($criteria), 'created' => ($request->query->all()['created'] ?? null) === '1']), 200, $headers);
+        return new Response($twig->render('inventory/devices.html.twig', ['result' => $result, 'criteria' => $criteria, 'sites' => $sites, 'filters' => DeviceListParameters::encode($criteria), 'completed' => ($request->query->all()['completed'] ?? null), 'created' => ($request->query->all()['created'] ?? null) === '1']), 200, $headers);
     }
 }
