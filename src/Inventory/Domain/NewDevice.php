@@ -73,6 +73,6 @@ final readonly class NewDevice
                 throw new \InvalidArgumentException('SNMPv3 authentication and privacy passphrases require at least 8 bytes.');
             }
         }
-        $this->fields = $fields;
+        $this->fields = array_replace($fields, (new DevicePolling(array_intersect_key($fields, DevicePolling::DEFAULTS)))->fields);
     }
 }

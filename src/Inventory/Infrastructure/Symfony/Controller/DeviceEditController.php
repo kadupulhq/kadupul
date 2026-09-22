@@ -45,7 +45,7 @@ final class DeviceEditController
             return new Response($translator->trans('Invalid device list filters.', [], 'inventory'), 400, $headers);
         }
         $editParameters = ['id' => $id, 'list' => $filters];
-        $form = $forms->create(DeviceEditType::class, ['description' => $device->description(), 'hostname' => $device->hostname(), 'notes' => $device->notes(), 'enabled' => $device->enabled(), 'location' => $device->location(), 'external_id' => $device->externalId(), 'site_id' => $device->siteId(), 'revision' => $device->revision()], ['action' => $urls->generate('inventory_device_edit', $editParameters), 'sites' => $sites()]);
+        $form = $forms->create(DeviceEditType::class, ['description' => $device->description(), 'hostname' => $device->hostname(), 'notes' => $device->notes(), 'enabled' => $device->enabled(), 'location' => $device->location(), 'external_id' => $device->externalId(), 'site_id' => $device->siteId(), 'polling' => $device->polling(), 'revision' => $device->revision()], ['action' => $urls->generate('inventory_device_edit', $editParameters), 'sites' => $sites()]);
         $form->handleRequest($request);
         $status = $request->isMethod('POST') ? 422 : 200;
         if ($form->isSubmitted()) {
@@ -61,7 +61,7 @@ final class DeviceEditController
             if ($form->isValid()) {
                 $data = $form->getData();
                 try {
-                    $edit($id, (string) $data['description'], (string) $data['hostname'], (string) $data['notes'], $data['enabled'], (string) $data['location'], (string) $data['external_id'], (string) $data['revision'], $data['site_id']);
+                    $edit($id, (string) $data['description'], (string) $data['hostname'], (string) $data['notes'], $data['enabled'], (string) $data['location'], (string) $data['external_id'], (string) $data['revision'], $data['site_id'], $data['polling']);
                     return new RedirectResponse($urls->generate('inventory_device_edit', $editParameters + ['saved' => 1]), 303, $headers);
                 } catch (InventoryAccessDenied) {
                     return new Response($translator->trans('Access denied.', [], 'inventory'), 403, $headers);

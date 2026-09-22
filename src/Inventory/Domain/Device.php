@@ -9,7 +9,7 @@ namespace Kadupul\Inventory\Domain;
 
 final class Device
 {
-    public function __construct(public readonly int $id, private string $description, private string $hostname, private string $notes, private bool $enabled, private string $location, private string $externalId, private int $siteId = 0) {}
+    public function __construct(public readonly int $id, private string $description, private string $hostname, private string $notes, private bool $enabled, private string $location, private string $externalId, private int $siteId = 0, private array $polling = []) {}
     public function description(): string
     {
         return $this->description;
@@ -38,11 +38,15 @@ final class Device
     {
         return $this->siteId;
     }
+    public function polling(): array
+    {
+        return array_map(static fn($value): string => (string) $value, array_replace(DevicePolling::DEFAULTS, $this->polling));
+    }
     public function revision(): string
     {
-        return hash('sha256', json_encode([$this->id, $this->description, $this->hostname, $this->notes, $this->enabled, $this->location, $this->externalId, $this->siteId], JSON_THROW_ON_ERROR));
+        return hash('sha256', json_encode([$this->id, $this->description, $this->hostname, $this->notes, $this->enabled, $this->location, $this->externalId, $this->siteId, $this->polling()], JSON_THROW_ON_ERROR));
     }
-    public function revise(string $description, string $hostname, string $notes, bool $enabled, string $location, string $externalId, string $expectedRevision, ?int $siteId = null): void
+    public function revise(string $description, string $hostname, string $notes, bool $enabled, string $location, string $externalId, string $expectedRevision, ?int $siteId = null, ?array $polling = null): void
     {
         if (!hash_equals($this->revision(), $expectedRevision)) {
             throw new DeviceEditConflict('This device changed. Reload it before saving.');
@@ -67,6 +71,8 @@ final class Device
                 throw new \InvalidArgumentException($label . ' must be valid text of at most 40 characters.');
             }
         }
+        $polling = $polling === null ? $this->polling() : (new DevicePolling($polling))->fields;
+        $this->polling = $polling;
         $this->siteId = $siteId;
         $this->description = $description;
         $this->hostname = $hostname;
