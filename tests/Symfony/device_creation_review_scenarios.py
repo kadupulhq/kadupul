@@ -46,7 +46,9 @@ def verify_creation_compatibility(harness, post, fields, created, user_id, check
         if remote_created:
             harness.sql('DROP DATABASE create_remote')
 
-    check(harness.php('-r', 'require "include/global.php"; function register_creation_lock() { api_plugin_register_hook("compatibility_test","api_device_save","compatibility_create_lock","setup.php",true); } register_creation_lock();')['exit'] == 0, 'creation lock fixture registered')
+    check(harness.php('-r', 'require "include/global.php"; function setup_creation_lock() { api_plugin_register_hook("compatibility_test","api_device_save","compatibility_create_lock","setup.php",true); } setup_creation_lock();')['exit'] == 0, 'creation lock fixture registered')
+
+    check(harness.sql("SELECT COUNT(*) FROM plugin_hooks WHERE name='compatibility_test' AND hook='api_device_save' AND `function`='compatibility_create_lock' AND status=1").strip() == '1', 'creation lock hook is enabled in the registry')
 
     def blocked(sql):
         encoded = base64.b64encode(sql.encode()).decode()
@@ -58,7 +60,7 @@ def verify_creation_compatibility(harness, post, fields, created, user_id, check
     try:
         for mode in ['direct', 'group']:
             if mode == 'group':
-                group = int(harness.sql("INSERT INTO user_auth_group (name,enabled) VALUES ('creation-lock-fixture','on'); SELECT LAST_INSERT_ID()").strip())
+                group = int(harness.sql("INSERT INTO user_auth_group (name,enabled) VALUES ('creation-lock','on'); SELECT LAST_INSERT_ID()").strip())
                 harness.sql(f'INSERT INTO user_auth_group_members (group_id,user_id) VALUES ({group},{user_id}); INSERT INTO user_auth_group_realm (group_id,realm_id) VALUES ({group},3); DELETE FROM user_auth_realm WHERE user_id={user_id} AND realm_id=3')
             harness.command('rm', '-f', '/artifacts/create-lock-ready', '/artifacts/create-lock-release')
             with ThreadPoolExecutor(max_workers=1) as pool:
@@ -66,6 +68,8 @@ def verify_creation_compatibility(harness, post, fields, created, user_id, check
                 try:
                     deadline = time.monotonic() + 15
                     while harness.command('test', '-f', '/artifacts/create-lock-ready')['exit'] != 0:
+                        if future.done():
+                            raise RuntimeError('Creation returned before the lock fixture: ' + str(future.result()[0]))
                         if time.monotonic() > deadline:
                             raise RuntimeError('Creation did not reach the lock fixture')
                         time.sleep(0.1)
