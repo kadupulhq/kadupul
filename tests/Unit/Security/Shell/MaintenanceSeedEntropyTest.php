@@ -20,6 +20,8 @@ function maintenance_seed_child($file, $value) {
 			. 'echo json_encode(["seed" => $seed, "next" => $seed + 1]);';
 	} else {
 		$method = test_php_function_source($source, 'remove_spikes_locked');
+		// The token-based extractor starts at T_FUNCTION, excluding the original private modifier.
+		expect(strpos($method, 'function remove_spikes_locked('))->toBe(0);
 		$end = strpos($method, "\n\t\tif (\$config['cacti_server_os']");
 		expect($end)->not->toBeFalse();
 		// Execute the actual method through the seed boundary; only subsequent RRD work is omitted.
