@@ -39,7 +39,11 @@ final readonly class LegacyDeviceTemplateAssignments implements DeviceTemplateAs
         if (!preg_match('/KADUPUL_TEMPLATE_RESULT=(\{[^\r\n]+\})/', $process->getOutput(), $match)) {
             throw new \RuntimeException('Template assignment outcome is unknown.');
         }
-        $status = json_decode($match[1], true, 16, JSON_THROW_ON_ERROR)['status'] ?? '';
+        try {
+            $status = json_decode($match[1], true, 16, JSON_THROW_ON_ERROR)['status'] ?? '';
+        } catch (\JsonException) {
+            throw new \RuntimeException('Template assignment outcome is unknown.');
+        }
         if ($status === 'conflict') {
             throw new DeviceEditConflict('This device changed. Reload it before saving.');
         }
