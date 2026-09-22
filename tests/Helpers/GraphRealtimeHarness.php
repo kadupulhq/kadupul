@@ -58,6 +58,7 @@ $realtime_sizes        = array(25 => '25%', 50 => '50%', 75 => '75%', 100 => '10
 $realtime_default_size = 100;
 
 define('RRDTOOL_OUTPUT_GRAPH_DATA', 3);
+define('CACTI_LOCALE', 'en-US');
 
 register_shutdown_function(function () {
 	$GLOBALS['calls']['session'] = $_SESSION;
@@ -159,6 +160,10 @@ function html_escape($string) {
 function __($text, ...$args) {
 	return $args ? vsprintf($text, $args) : $text;
 }
+
+function __esc($text, ...$args) {
+	return html_escape(__($text, ...$args));
+}
 PHP);
 
     $env     = array('RT_SCENARIO' => $work . '/scenario.json', 'RT_CALLS' => $work . '/calls.json', 'RT_WORK' => $work, 'PATH' => getenv('PATH'));
@@ -167,9 +172,10 @@ PHP);
     fclose($pipes[0]);
     $stdout = stream_get_contents($pipes[1]);
     $stderr = stream_get_contents($pipes[2]);
-    proc_close($process);
+    $exitCode = proc_close($process);
 
     $result = array(
+        'exitCode' => $exitCode,
         'polls'    => file_exists($work . '/marker.txt') ? file($work . '/marker.txt', FILE_IGNORE_NEW_LINES) : array(),
         'calls'    => json_decode((string) @file_get_contents($work . '/calls.json'), true),
         'response' => json_decode($stdout, true),
