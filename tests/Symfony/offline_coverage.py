@@ -67,8 +67,11 @@ def main():
             manifest_path.write_text(json.dumps(manifest | fields))
             execute('tools/dependencies/install-legacy.php', error=message)
         manifest_path.write_text(json.dumps(manifest))
-        dependency = stage / selected
-        dependency.unlink()
+        # Use a fresh path: Docker Desktop can retain regular-file metadata
+        # briefly when a bind-mounted file is replaced by a symlink.
+        link_path = 'include/vendor/coverage-symlink-fixture'
+        dependency = stage / link_path
+        manifest_path.write_text(json.dumps(manifest | {'files': {link_path: manifest['files'][selected]}}))
         dependency.symlink_to(os.path.relpath(stage / 'composer.json', dependency.parent))
         execute('tools/dependencies/install-legacy.php', error='Refusing symlink')
     if not list(raw.glob('coverage-*.json')):
