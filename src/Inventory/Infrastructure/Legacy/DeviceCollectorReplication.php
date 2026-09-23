@@ -155,6 +155,7 @@ final class DeviceCollectorReplication
         // legacy purge removes the parent rows without foreign-key cascades.
         foreach ([
             'poller_output' => ['local_data_id IN (SELECT id FROM data_local WHERE host_id = ? AND id IN (%s))', $snapshot->dataSourceIds],
+            'poller_output_boost' => ['local_data_id IN (SELECT id FROM data_local WHERE host_id = ? AND id IN (%s))', $snapshot->dataSourceIds],
             'data_input_data' => ['data_template_data_id IN (SELECT id FROM data_template_data WHERE local_data_id IN (SELECT id FROM data_local WHERE host_id = ? AND id IN (%s)))', $snapshot->dataSourceIds],
             'data_template_rrd' => ['local_data_id IN (SELECT id FROM data_local WHERE host_id = ? AND id IN (%s))', $snapshot->dataSourceIds],
             'data_template_data' => ['local_data_id IN (SELECT id FROM data_local WHERE host_id = ? AND id IN (%s))', $snapshot->dataSourceIds],
@@ -200,6 +201,7 @@ final class DeviceCollectorReplication
         if ($snapshot !== null) {
             foreach ([
                 'poller_output' => ['local_data_id', $snapshot->dataSourceIds],
+                'poller_output_boost' => ['local_data_id', $snapshot->dataSourceIds],
                 'data_template_data' => ['local_data_id', $snapshot->dataSourceIds],
                 'data_template_rrd' => ['local_data_id', $snapshot->dataSourceIds],
                 'graph_templates_item' => ['local_graph_id', $snapshot->graphIds],
