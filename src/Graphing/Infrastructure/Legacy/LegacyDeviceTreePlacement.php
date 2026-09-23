@@ -7,6 +7,7 @@
 
 namespace Kadupul\Graphing\Infrastructure\Legacy;
 
+use Closure;
 use Kadupul\Graphing\Contract\DeviceTreePlacement;
 use Kadupul\IdentityAccess\Contract\ResourceAccess;
 use Kadupul\Platform\Contract\DatabaseConnection;
@@ -14,7 +15,7 @@ use PDO;
 
 final readonly class LegacyDeviceTreePlacement implements DeviceTreePlacement
 {
-    public function __construct(private DatabaseConnection $database, private ResourceAccess $access) {}
+    public function __construct(private DatabaseConnection $database, private ResourceAccess $access, private ?Closure $treeItemWriter = null) {}
     public function destinations(int $actorId): array
     {
         $db = $this->database->get();
@@ -69,7 +70,7 @@ final readonly class LegacyDeviceTreePlacement implements DeviceTreePlacement
         $query = $db->prepare('SELECT id FROM graph_tree_items WHERE graph_tree_id = ? AND parent = ? AND host_id = ? FOR UPDATE');
         foreach ($deviceIds as $deviceId) {
             $query->execute([$treeId, $parentId, $deviceId]);
-            if ($query->fetchColumn() === false && !api_tree_item_save(0, $treeId, TREE_ITEM_TYPE_HOST, $parentId, '', 0, $deviceId, 0, 1, 1, false)) {
+            if ($query->fetchColumn() === false && !$this->saveTreeItem($treeId, $parentId, $deviceId)) {
                 throw new \RuntimeException('Tree placement failed');
             }
             $query->execute([$treeId, $parentId, $deviceId]);
@@ -78,6 +79,13 @@ final readonly class LegacyDeviceTreePlacement implements DeviceTreePlacement
             }
         }
         return $this->records($deviceIds, $treeId, $parentId);
+    }
+    private function saveTreeItem(int $treeId, int $parentId, int $deviceId): bool
+    {
+        if ($this->treeItemWriter !== null) {
+            return ($this->treeItemWriter)($treeId, $parentId, $deviceId);
+        }
+        return api_tree_item_save(0, $treeId, TREE_ITEM_TYPE_HOST, $parentId, '', 0, $deviceId, 0, 1, 1, false);
     }
     public function verify(int $actorId, array $deviceIds, int $treeId, int $parentId, array $expected): void
     {
