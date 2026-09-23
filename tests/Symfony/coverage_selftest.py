@@ -58,6 +58,7 @@ def main():
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceRemovals.php',
         'src/Inventory/Infrastructure/Legacy/DeviceRemovalSnapshot.php',
         'src/Inventory/Infrastructure/Legacy/DeviceRemovalDependencies.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceRemovalDependencyReceipt.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceRemovalType.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceRemovalController.php',
         'src/Inventory/Domain/DeviceState.php',
