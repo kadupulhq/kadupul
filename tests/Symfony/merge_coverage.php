@@ -155,6 +155,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceTemplateAssignments.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceCollectorAssignments.php',
         'src/Inventory/Infrastructure/Legacy/DeviceWriteAuthorization.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceMutationSelection.php',
         'src/Inventory/Infrastructure/Legacy/DeviceCollectorReplication.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceTemplateType.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceCollectorType.php',
