@@ -31,10 +31,10 @@ final class DeviceRemovalDependencyReceiptTest extends TestCase
             CREATE TABLE data_template_rrd (id INTEGER,local_data_id INTEGER);
             CREATE TABLE graph_templates_item (id INTEGER,local_graph_id INTEGER,task_item_id INTEGER);
             CREATE TABLE graph_templates_graph (id INTEGER,local_graph_id INTEGER);
-            CREATE TABLE data_input_data (data_template_data_id INTEGER);
+            CREATE TABLE data_input_data (data_template_data_id INTEGER, data_input_field_id INTEGER DEFAULT 1);
             INSERT INTO data_template_data VALUES (101,12); INSERT INTO data_template_rrd VALUES (102,12);
             INSERT INTO graph_templates_item VALUES (103,11,102); INSERT INTO graph_templates_graph VALUES (104,11);
-            INSERT INTO data_input_data VALUES (101)');
+            INSERT INTO data_input_data (data_template_data_id) VALUES (101)');
         $db->beginTransaction();
         return $db;
     }
@@ -46,6 +46,16 @@ final class DeviceRemovalDependencyReceiptTest extends TestCase
         $db->exec('DELETE FROM data_template_rrd; INSERT INTO graph_templates_item VALUES (105,99,102)');
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('outside graph reference');
+        $receipt->assertExclusive($db);
+    }
+
+    public function testReparentedInputFieldCannotEscapeReviewedScope(): void
+    {
+        $db = $this->database();
+        $receipt = DeviceRemovalDependencyReceipt::capture($db, [11], [12]);
+        $db->exec('UPDATE data_input_data SET data_template_data_id = 999 WHERE data_template_data_id = 101');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Reviewed input field scope changed');
         $receipt->assertExclusive($db);
     }
 
@@ -73,6 +83,6 @@ final class DeviceRemovalDependencyReceiptTest extends TestCase
         yield ['INSERT INTO graph_templates_item VALUES (203,11,999)'];
         yield ['INSERT INTO graph_templates_graph VALUES (204,11)'];
         yield ['INSERT INTO graph_templates_item VALUES (205,99,102)'];
-        yield ['INSERT INTO data_input_data VALUES (101)'];
+        yield ['INSERT INTO data_input_data (data_template_data_id) VALUES (101)'];
     }
 }
