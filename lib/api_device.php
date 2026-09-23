@@ -241,7 +241,7 @@ function api_device_remove_multi($device_ids, $delete_type = 2, $reviewed_associ
 		if ($delete_type == 2) {
 			api_delete_graphs($graphs, $delete_type, $reviewed_associations === null ? null : $data_sources);
 		} else {
-			api_data_source_disable_multi($data_sources);
+			api_data_source_disable_multi($data_sources, $reviewed_associations === null);
 
 			if ($reviewed_associations === null) {
 				db_execute("UPDATE graph_local SET host_id = 0 WHERE host_id IN($devices_to_delete)");
