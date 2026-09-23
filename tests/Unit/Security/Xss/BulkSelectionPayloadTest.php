@@ -40,12 +40,13 @@ function round_trip($payload) {
 test('a selection of ids survives the confirmation page', function () {
 	$ids = array(3, 4, 5);
 
-	// Ids alone carry nothing the escaping touches, so the payload keeps its
-	// historic shape and a plugin reading the field directly still works.
+	// Bare integers carry nothing the escaping touches, so the payload keeps its
+	// historic shape.
 	expect(selected_items_payload($ids))->toBe(serialize($ids))
 		->and(unserialize(selected_items_decode(round_trip(selected_items_payload($ids))), array('allowed_classes' => false)))->toBe($ids);
 
-	// Anything carrying a quote or a bracket is encoded rather than escaped.
+	// Core pages collect ids as strings, which serialize with quotes, so those
+	// payloads are encoded rather than escaped.
 	$strings = array('1', '0042', 3);
 
 	expect(selected_items_payload($strings))->toBe(base64_encode(serialize($strings)))
@@ -80,6 +81,21 @@ test('a payload from a form rendered before this change is still accepted', func
 
 	expect(sanitize_unserialize_selected_items(serialize($items)))->toBe($items)
 		->and(sanitize_unserialize_selected_items(selected_items_payload($items)))->toBe($items);
+});
+
+test('the shape core actually posts is the encoded one', function () {
+	// Every page builds its selection from preg_match captures, so the ids are strings.
+	$items = array('3', '4');
+
+	expect(selected_items_payload($items))->toBe(base64_encode(serialize($items)))
+		->and(sanitize_unserialize_selected_items(selected_items_payload($items)))->toBe($items);
+});
+
+test('a payload that is already serialized is returned unchanged', function () {
+	$payload = serialize(array('3', '4'));
+
+	expect(selected_items_decode($payload))->toBe($payload)
+		->and(selected_items_decode(addslashes($payload)))->toBe($payload);
 });
 
 test('a payload that is neither encoding is refused', function () {

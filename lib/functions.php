@@ -4832,10 +4832,10 @@ function validate_relative_path_within($path, $base_dir) {
    serialize() returns a byte string with length prefixes. Escaping those bytes
    as text rewrites them on a non-UTF-8 install, and the selection no longer
    unserializes. Base64 keeps the payload ASCII, so the escaping cannot touch it.
-   A payload of ids alone carries nothing the escaping has to touch, so it keeps
-   the historic form and a plugin reading selected_items itself still sees what
-   it always saw. Anything else, including every payload escaping already
-   corrupted, is encoded.
+   A payload of bare integers carries nothing the escaping has to touch and keeps
+   its historic form. Core pages collect their ids as strings, so their payloads
+   carry quotes and are encoded: a plugin that reads selected_items itself must
+   decode through selected_items_decode() or sanitize_unserialize_selected_items().
    @arg $selected_items - the selection to encode
    @returns - the encoded payload */
 function selected_items_payload($selected_items) {
