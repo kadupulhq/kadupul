@@ -277,6 +277,11 @@ function api_device_remove_multi($device_ids, $delete_type = 2, $reviewed_associ
 		db_execute("DELETE FROM reports_items    WHERE host_id IN ($devices_to_delete)");
 
 		if ($delete_type == 2) {
+			// Host deletion can run database triggers. Revalidate the reviewed
+			// associations even when there are no graphs to enter api_delete_graphs.
+			if ($reviewed_associations !== null) {
+				$verify_reviewed_scope();
+			}
 			api_delete_graphs($graphs, $delete_type, $reviewed_associations === null ? null : $data_sources, $verify_reviewed_scope);
 		} else {
 			if ($verify_reviewed_scope !== null) {
