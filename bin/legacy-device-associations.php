@@ -33,6 +33,9 @@ try {
     }
     $change = new DeviceAssociationChange($command['kind'] ?? '', $command['operation'] ?? '', $command['target'] ?? 0, $command['reindex'] ?? 0);
     $connection = $database_sessions["$database_hostname:$database_port:$database_default"];
+    if ($connection->exec('SET NAMES utf8mb4') === false || $connection->exec("SET SESSION sql_mode = CONCAT_WS(',', @@SESSION.sql_mode, 'STRICT_TRANS_TABLES')") === false) {
+        throw new RuntimeException('Connection validation unavailable');
+    }
     if ((int) ($config['poller_id'] ?? 0) !== 1 || !db_execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') || !db_begin_transaction()) {
         throw new RuntimeException('Primary transaction unavailable');
     }
