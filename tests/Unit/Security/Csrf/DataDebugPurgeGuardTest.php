@@ -103,3 +103,10 @@ test('a token-less POST is refused', function () {
 	expect(run_guard('POST', array('purge' => '1')))->toBe('405');
 	expect(run_guard('DELETE', array('purge' => '1')))->toBe('405');
 });
+
+test('a token on a method csrf-magic never validates is refused', function () {
+	// csrf-magic checks the token only on POST, so one on DELETE or PUT proves nothing.
+	expect(run_guard('DELETE', array('purge' => '1'), array('__csrf_magic' => 'token')))->toBe('405');
+	expect(run_guard('PUT', array('purge' => '1'), array('__csrf_magic' => 'token')))->toBe('405');
+	expect(run_guard('HEAD', array('purge' => '1'), array('__csrf_magic' => 'token')))->toBe('405');
+});

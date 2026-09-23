@@ -36,13 +36,18 @@ ini_set('memory_limit', '-1');
 set_default_action();
 
 /* Purge carries no action name, so the guard in include/global.php never sees
-   it. 1.2.31 reached it from the Purge button, a same-site GET; refuse the
-   rest the same way the guarded actions are refused. */
-if (isset_request_var('purge') && !isset($_POST['__csrf_magic'])
-	&& ($_SERVER['REQUEST_METHOD'] !== 'GET' || csrf_request_is_cross_site())) {
-	header('Allow: POST');
-	http_response_code(405);
-	exit;
+   it. 1.2.31 reached it from the Purge button, a same-site GET; allow that and
+   a POST carrying a token, and refuse everything else. csrf-magic validates
+   the token only on POST, so a token on any other method proves nothing. */
+if (isset_request_var('purge')) {
+	$purge_method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : '';
+
+	if (!($purge_method === 'POST' && isset($_POST['__csrf_magic']))
+		&& !($purge_method === 'GET' && !csrf_request_is_cross_site())) {
+		header('Allow: POST');
+		http_response_code(405);
+		exit;
+	}
 }
 
 validate_request_vars();

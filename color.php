@@ -207,7 +207,12 @@ function form_actions() {
 					raise_message('color_lookup', __('The Colors could not be checked for use and were not Deleted.'), MESSAGE_LEVEL_ERROR);
 				} else {
 					if (cacti_sizeof($deletable)) {
-						db_execute('DELETE FROM colors WHERE ' . array_to_sql_or($deletable, 'id'));
+						/* The NOT EXISTS clauses repeat the check inside the delete, so a
+						   reference added between the two statements still wins. */
+						db_execute('DELETE FROM colors
+							WHERE ' . array_to_sql_or($deletable, 'id') . '
+							AND NOT EXISTS (SELECT 1 FROM graph_templates_item AS gti WHERE gti.color_id = colors.id)
+							AND NOT EXISTS (SELECT 1 FROM color_template_items AS cti WHERE cti.color_id = colors.id)');
 					}
 
 					if (cacti_sizeof($deletable) < cacti_sizeof($selected_items)) {
@@ -770,7 +775,7 @@ function color() {
 		'name'      => array('display' => __('Color Name'), 'align' => 'left', 'sort' => 'ASC', 'tip' => __('The name of this Color definition.')),
 		'read_only' => array('display' => __('Named Color'), 'align' => 'left', 'sort' => 'ASC', 'tip' => __('Is this color a named color which are read only.')),
 		'nosort1'   => array('display' => __('Color'), 'align' => 'center', 'sort' => 'DESC', 'tip' => __('The Color as shown on the screen.')),
-		'nosort'    => array('display' => __('Deletable'), 'align' => 'right', 'sort' => '', 'tip' => __('Colors in use cannot be Deleted.  In use is defined as being referenced either by a Graph or a Graph Template.')),
+		'nosort'    => array('display' => __('Deletable'), 'align' => 'right', 'sort' => '', 'tip' => __('Colors in use cannot be Deleted.  In use is defined as being referenced by a Graph, a Graph Template or a Color Template.')),
 		'graphs'    => array('display' => __('Graphs Using'), 'align' => 'right', 'sort' => 'DESC', 'tip' => __('The number of Graph using this Color.')),
 		'templates' => array('display' => __('Templates Using'), 'align' => 'right', 'sort' => 'DESC', 'tip' => __('The number of Graph Templates using this Color.'))
 	);

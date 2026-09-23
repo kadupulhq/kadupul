@@ -61,11 +61,14 @@ function db_fetch_assoc($sql) {
 	return $rows;
 }
 function db_execute($sql) {
+	// The delete repeats the check, so record that it does.
+	$GLOBALS["atomic"] = strpos($sql, "NOT EXISTS") !== false;
 	preg_match("/IN \(([0-9,]*)\)/", $sql, $matches);
 	$GLOBALS["deleted"] = $matches[1] === "" ? array() : array_map("intval", explode(",", $matches[1]));
 	return true;
 }
-register_shutdown_function(function () { echo json_encode(array("deleted" => $GLOBALS["deleted"], "message" => $GLOBALS["message"])); });
+$atomic = false;
+register_shutdown_function(function () { echo json_encode(array("deleted" => $GLOBALS["deleted"], "message" => $GLOBALS["message"], "atomic" => $GLOBALS["atomic"])); });
 ' . $functions . 'form_actions();
 ';
 
@@ -79,33 +82,38 @@ register_shutdown_function(function () { echo json_encode(array("deleted" => $GL
 	}
 }
 
+test('the delete repeats the in-use check itself', function () {
+	// A reference added between the check and the delete still blocks the row.
+	expect(run_delete(array(1, 3))['atomic'])->toBeTrue();
+});
+
 test('an unused color is still deleted', function () {
-	expect(run_delete(array(1, 3)))->toBe(array('deleted' => array(1, 3), 'message' => null));
+	expect(run_delete(array(1, 3)))->toMatchArray(array('deleted' => array(1, 3), 'message' => null));
 });
 
 test('a color a graph or template uses is kept', function () {
-	expect(run_delete(array(2)))->toBe(array('deleted' => array(), 'message' => 'color_in_use'));
+	expect(run_delete(array(2)))->toMatchArray(array('deleted' => array(), 'message' => 'color_in_use'));
 });
 
 test('a mixed selection deletes only the unused colors', function () {
-	expect(run_delete(array(1, 2, 3, 4)))->toBe(array('deleted' => array(1, 3), 'message' => 'color_in_use'));
+	expect(run_delete(array(1, 2, 3, 4)))->toMatchArray(array('deleted' => array(1, 3), 'message' => 'color_in_use'));
 });
 
 test('a non-canonical id cannot slip past the in-use check', function () {
 	// MySQL matches '007' to 7, so the check has to compare the same value.
-	expect(run_delete(array('007', '2', '0002')))->toBe(array('deleted' => array(7), 'message' => 'color_in_use'));
+	expect(run_delete(array('007', '2', '0002')))->toMatchArray(array('deleted' => array(7), 'message' => 'color_in_use'));
 });
 
 test('a color used only by a color template is kept', function () {
 	// Aggregate creation reads color_template_items, so that is a live reference.
-	expect(run_delete(array(1, 9)))->toBe(array('deleted' => array(1), 'message' => 'color_in_use'));
+	expect(run_delete(array(1, 9)))->toMatchArray(array('deleted' => array(1), 'message' => 'color_in_use'));
 });
 
 test('a numeric id that is not an integer is refused', function () {
-	expect(run_delete(array('3.9', '3x')))->toBe(array('deleted' => array(), 'message' => 'color_in_use'));
+	expect(run_delete(array('3.9', '3x')))->toMatchArray(array('deleted' => array(), 'message' => 'color_in_use'));
 });
 
 test('a failed lookup is reported as a lookup failure, not as a reference', function () {
 	// db_fetch_assoc returns false on a SQL error, which is not evidence of use.
-	expect(run_delete(array(1, 3), true))->toBe(array('deleted' => array(), 'message' => 'color_lookup'));
+	expect(run_delete(array(1, 3), true))->toMatchArray(array('deleted' => array(), 'message' => 'color_lookup'));
 });
