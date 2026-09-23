@@ -109,6 +109,12 @@ database's TLS and native-prepare settings. Other reads and all write
 transactions continue through their existing adapters until migrated with
 equivalent behavioral coverage.
 
+Migrated Twig pages currently make no stylesheet, script, image, media or frame
+requests. A template boundary test rejects static remote resource URLs while
+allowing ordinary navigation links. Future browser dependencies must use an
+exact version and lockfile, build to a repository-owned path, and be present in
+the disconnected release verification before a migrated page references them.
+
 Device editing now covers name, address, location, external ID, notes and polling state through a Device aggregate,
 EditDevice command, DeviceEditor port and Symfony Form/CSRF adapters. The write
 adapter isolates the legacy save API in a CLI process, rechecks authorization and
