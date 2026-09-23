@@ -1,0 +1,67 @@
+<?php
+
+/*
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+namespace Kadupul\Inventory\Infrastructure\Legacy;
+
+use Kadupul\Inventory\Application\Port\DeviceStates;
+use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
+use Kadupul\Inventory\Domain\DeviceState;
+use Kadupul\Inventory\Domain\DeviceSelection;
+use Kadupul\Inventory\Application\Command\DevicesNotFound;
+use Kadupul\Inventory\Domain\DeviceEditConflict;
+use Kadupul\Platform\Contract\DatabaseConnection;
+use Symfony\Component\Process\Process;
+
+final readonly class LegacyDeviceStates implements DeviceStates
+{
+    public function __construct(private DatabaseConnection $database, private LegacyDeviceVisibility $visibility, private string $projectDir) {}
+    public static function state(array $row): DeviceState
+    {
+        return new DeviceState((int) $row['id'], (string) $row['description'], (string) $row['hostname'], $row['disabled'] !== 'on', (int) $row['site_id'], (int) $row['poller_id'], (int) $row['host_template_id']);
+    }
+    public function findVisible(int $actorId, array $ids): array
+    {
+        $ids = DeviceSelection::validateIds($ids);
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $query = $this->database->get()->prepare("SELECT DISTINCT h.id, h.description, h.hostname, h.disabled, h.site_id, h.poller_id, h.host_template_id FROM host h LEFT JOIN graph_local gl ON gl.host_id = h.id WHERE h.id IN ($placeholders) AND h.deleted = '' AND (" . $this->visibility->predicate($actorId) . ') ORDER BY h.id');
+        $query->execute($ids);
+        $rows = $query->fetchAll(\PDO::FETCH_ASSOC);
+        if (count($rows) !== count($ids)) {
+            throw new DevicesNotFound();
+        }
+        return array_map(self::state(...), $rows);
+    }
+    public function setEnabled(int $actorId, DeviceSelection $selection, bool $enabled): void
+    {
+        $configured = $this->database->get()->query("SELECT value FROM settings WHERE name = 'path_php_binary'")->fetchColumn();
+        $binary = is_string($configured) && trim($configured) !== '' ? trim($configured) : PHP_BINDIR . (PHP_OS_FAMILY === 'Windows' ? '/php.exe' : '/php');
+        $process = new Process([$binary, $this->projectDir . '/bin/legacy-device-state.php'], $this->projectDir);
+        $process->setTimeout(120);
+        $process->setInput(json_encode(['actor' => $actorId, 'selection' => $selection->revisions, 'enabled' => $enabled], JSON_THROW_ON_ERROR));
+        $process->run();
+        if (!preg_match('/KADUPUL_STATE_RESULT=(\{[^\r\n]+\})/', $process->getOutput(), $match)) {
+            throw new \RuntimeException('Device state change outcome is unknown.');
+        }
+        try {
+            $status = json_decode($match[1], true, 16, JSON_THROW_ON_ERROR)['status'] ?? '';
+        } catch (\JsonException $error) {
+            throw new \RuntimeException('Device state change outcome is unknown.', 0, $error);
+        }
+        if ($status === 'conflict') {
+            throw new DeviceEditConflict('Selected devices changed. Reload the confirmation before saving.');
+        }
+        if ($status === 'denied') {
+            throw new InventoryAccessDenied(false);
+        }
+        if ($status === 'missing') {
+            throw new DevicesNotFound();
+        }
+        if (!$process->isSuccessful() || $status !== 'ok') {
+            throw new \RuntimeException('Device state change could not be confirmed.');
+        }
+    }
+}

@@ -14,6 +14,14 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Stop device collector reassignment immediately when the legacy replication helper reports an unavailable collector, before further graph replication.
 
+- Preserve four-byte device text in bulk-state workers and verify primary/remote SQL modes and encodings at runtime before enable and disable writes.
+
+- Supply the required MIB identity in SNMP cache upserts so device status callbacks work with strict SQL mode.
+
+- Add Symfony bulk device enable/disable confirmation with whole-selection authorization and revision checks, transactional primary writes and verified remote state.
+
+- Require strict SQL mode on bulk-state collector connections and restore it on the primary after remote setup, rejecting writes if validation cannot be enabled.
+
 - Share collector/template assignment bootstrap, ordered locking, subprocess protocol and form validation without changing their distinct write workflows.
 
 - Add Symfony device-collector reassignment with verified replication, previous-collector cleanup, stale-form protection and explicit uncertain-outcome handling.
