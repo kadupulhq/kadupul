@@ -98,6 +98,7 @@ final class KernelTest extends TestCase
                 self::assertSame(401, $kernel->handle(Request::create($path))->getStatusCode());
                 self::assertSame(405, $kernel->handle(Request::create($path, 'POST'))->getStatusCode());
             }
+            self::assertSame(401, $kernel->handle(Request::create('/inventory/devices/1/edit'))->getStatusCode());
             self::assertSame(400, $kernel->handle(Request::create('/inventory/devices?page[]=1'))->getStatusCode());
             self::assertFalse(defined('CACTI_VERSION'));
         } finally {
