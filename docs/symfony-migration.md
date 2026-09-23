@@ -932,3 +932,17 @@ but remote writes can survive a later failure. The UI reports an uncertain outco
 in that case. A poller may immediately record new statistics after a successful
 reset; zero counters are not a persistent invariant. Legacy bulk action callbacks
 run once for the selection using action 5, followed by normal cache invalidation.
+
+
+### Device template synchronization
+
+`/inventory/devices/sync-template` confirms a bounded selection through Symfony
+Form/Twig and dispatches `SynchronizeDeviceTemplates` through the
+`DeviceTemplateSynchronization` port. It reuses the bulk worker's authorization,
+visibility, identity revisions and collector preflight. Current template definitions
+are locked before legacy synchronization adds missing graph/data-query associations
+and removes unused graph associations. Devices without a template are skipped.
+Existing graph/data records are retained; legacy automation may create new graphs.
+Primary and remote associations are verified before primary commit. Remote changes
+may survive a later failure, which returns the existing uncertain-outcome response.
+Action 7 and template-change callbacks retain legacy semantics. LTS is unchanged.

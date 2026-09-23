@@ -261,3 +261,8 @@
 "Confirm clearing statistics": "Confirmer l’effacement des statistiques"
 "Selected device statistics cleared.": "Statistiques des appareils sélectionnés effacées."
 "Reset response times, poll counts and availability for these devices. Graphs, historical data and device settings are retained. Statistics resume with the next poll.": "Réinitialisez les temps de réponse, les compteurs de sondage et la disponibilité de ces appareils. Les graphiques, les données historiques et les paramètres sont conservés. Les statistiques reprennent au prochain sondage."
+
+"Synchronize device templates": "Synchroniser les modèles des appareils"
+"Confirm synchronization": "Confirmer la synchronisation"
+"Selected device templates synchronized.": "Modèles des appareils sélectionnés synchronisés."
+"Apply the current assigned templates to these devices. Missing graph and data-query associations are added, and unused graph-template associations may be removed. Devices without templates are skipped. Existing graphs and historical data are retained; automation may create new graphs.": "Appliquez les modèles actuellement affectés à ces appareils. Les associations manquantes de graphiques et de requêtes sont ajoutées et les associations de modèles de graphiques inutilisées peuvent être supprimées. Les appareils sans modèle sont ignorés. Les graphiques existants et les données historiques sont conservés ; l’automatisation peut créer de nouveaux graphiques."

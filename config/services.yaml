@@ -195,3 +195,7 @@ services:
     Kadupul\Inventory\Application\Port\DeviceStatistics:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates
     Kadupul\Inventory\Application\Command\ClearDeviceStatistics: ~
+
+    Kadupul\Inventory\Application\Port\DeviceTemplateSynchronization:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates
+    Kadupul\Inventory\Application\Command\SynchronizeDeviceTemplates: ~
