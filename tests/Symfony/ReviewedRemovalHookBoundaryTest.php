@@ -7,6 +7,7 @@
 
 namespace Kadupul\Tests\ReviewedRemovalHooks;
 
+use PDO;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -72,6 +73,13 @@ final class ReviewedRemovalHookBoundaryTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Reviewed collector connection unavailable');
         api_device_purge_from_remote([7], 3, [7 => ['graphs' => [], 'data_sources' => []]]);
+    }
+
+    public function testScopedRemotePurgeRequiresAnActiveTransaction(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Reviewed collector transaction unavailable');
+        api_device_purge_from_remote([7], 3, [7 => ['graphs' => [], 'data_sources' => []]], new PDO('sqlite::memory:'));
     }
 
     public function testDeviceHookOwnershipChangeStopsBeforeAnyWrite(): void
