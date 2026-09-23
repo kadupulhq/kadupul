@@ -9,20 +9,20 @@ app.php/inventory/devices	symfony:inventory_devices	methods=GET|HEAD; ConsoleAcc
 app.php/inventory/devices.csv	symfony:inventory_devices_csv	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices.json	symfony:inventory_devices_json	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/new	symfony:inventory_device_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
-app.php/inventory/devices/{id}	symfony:inventory_device_details	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
-app.php/inventory/devices/{id}/collector	symfony:inventory_device_collector	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
-app.php/inventory/devices/{id}/edit	symfony:inventory_device_edit	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
-app.php/inventory/devices/{id}/template	symfony:inventory_device_template	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/{id}	symfony:inventory_device_details	methods=GET|HEAD requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/{id}/collector	symfony:inventory_device_collector	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/{id}/edit	symfony:inventory_device_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/{id}/template	symfony:inventory_device_template	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
 app.php/inventory/devices/{operation}	symfony:inventory_device_state	methods=GET|HEAD|POST requirements=operation=enable|disable; ConsoleAccess realm 8 + realm 3
 app.php/inventory/sites	symfony:inventory_sites	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/sites.json	symfony:inventory_sites_json	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
 app.php/inventory/sites/legacy	symfony:inventory_sites_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
 app.php/inventory/sites/new	symfony:inventory_site_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
-app.php/inventory/sites/{id}/edit	symfony:inventory_site_edit	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
+app.php/inventory/sites/{id}/edit	symfony:inventory_site_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 3
 app.php/inventory/sites/{operation}	symfony:inventory_site_action	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 3
 app.php/session	symfony:session	methods=GET|HEAD; ConsoleAccess realm 8
-auth_changepassword.php	authenticated	own session check; action=checkpass answers anonymously with the password policy verdict
-auth_login.php	anonymous-allowed	fragment without bootstrap; included by include/auth.php
+auth_changepassword.php	authenticated	own session check; action=checkpass answers anonymously with the password policy verdict; reviewed at ff7ac6fa6c55
+auth_login.php	anonymous-allowed	login handler; include/auth.php includes it after bootstrap, so a direct request stops at the first undefined function; reviewed at 783892662d44
 auth_profile.php	realm:20	include/auth.php; guest_account
 automation_devices.php	realm:23	include/auth.php
 automation_graph_rules.php	realm:23	include/auth.php
@@ -44,7 +44,7 @@ color_templates.php	realm:5	include/auth.php
 color_templates_items.php	realm:5	include/auth.php
 config/	web-server-denied	nginx; apache .htaccess
 contrib/	web-server-denied	nginx; apache .htaccess
-csp_report.php	anonymous-allowed	CSP violation report sink; browsers post reports without credentials
+csp_report.php	anonymous-allowed	CSP violation report sink; browsers post reports without credentials; reviewed at efe610420705
 data_debug.php	realm:15	include/auth.php
 data_input.php	realm:2	include/auth.php
 data_queries.php	realm:13	include/auth.php
@@ -72,24 +72,24 @@ host_templates.php	realm:12	include/auth.php
 images/index.php	anonymous-allowed	redirect-only
 include/admin_notifications.php	anonymous-allowed	inert: declarations and literal assignments only
 include/auth.php	realm:0	include/auth.php; unmapped page, denied to every account
-include/bottom_footer.php	anonymous-allowed	fragment without bootstrap; included by lib/functions.php
+include/bottom_footer.php	anonymous-allowed	fragment without bootstrap, reviewed at f4a59fa39878; included by lib/functions.php
 include/cli_check.php	cli-only	guard: php_sapi_name() check
 include/config.php	web-server-denied	nginx; no apache .htaccess deny
 include/content/index.php	anonymous-allowed	redirect-only
-include/csrf.php	anonymous-allowed	fragment without bootstrap; included by include/global.php
+include/csrf.php	anonymous-allowed	fragment without bootstrap, reviewed at 80bc61dab43e; included by include/global.php
 include/global.php	web-server-denied	nginx; no apache .htaccess deny
-include/global_arrays.php	anonymous-allowed	fragment without bootstrap; included by include/global.php, lib/api_aggregate.php, lib/boost.php
-include/global_constants.php	anonymous-allowed	fragment without bootstrap; included by include/global.php
-include/global_form.php	anonymous-allowed	fragment without bootstrap; included by include/global.php
-include/global_languages.php	anonymous-allowed	fragment without bootstrap; included by include/global.php
-include/global_session.php	anonymous-allowed	fragment without bootstrap; included by auth_changepassword.php, auth_login.php, graph_realtime.php
-include/global_settings.php	anonymous-allowed	fragment without bootstrap; included by include/global.php
+include/global_arrays.php	anonymous-allowed	fragment without bootstrap, reviewed at 68f2974f3548; included by include/global.php, lib/api_aggregate.php, lib/boost.php
+include/global_constants.php	anonymous-allowed	fragment without bootstrap, reviewed at 44950e59dd15; included by include/global.php
+include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at 9fdc825797b5; included by include/global.php
+include/global_languages.php	anonymous-allowed	fragment without bootstrap, reviewed at 354693167fb4; included by include/global.php
+include/global_session.php	anonymous-allowed	fragment without bootstrap, reviewed at 0db939a69dc9; included by auth_changepassword.php, auth_login.php, graph_realtime.php
+include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at 0e36496c6cea; included by include/global.php
 include/index.php	anonymous-allowed	redirect-only
 include/js/LC_MESSAGES/index.php	anonymous-allowed	redirect-only
 include/js/index.php	anonymous-allowed	redirect-only
 include/plugins.php	web-server-denied	nginx; no apache .htaccess deny
-include/runtime.php	anonymous-allowed	fragment without bootstrap; included by config/bootstrap.php, include/global.php
-include/session.php	anonymous-allowed	fragment without bootstrap; included by include/global.php
+include/runtime.php	anonymous-allowed	fragment without bootstrap, reviewed at 338bc1c9ed7b; included by config/bootstrap.php, include/global.php
+include/session.php	anonymous-allowed	fragment without bootstrap, reviewed at 7abe13b5d1f6; included by include/global.php
 include/themes/classic/default/index.php	anonymous-allowed	redirect-only
 include/themes/classic/images/index.php	anonymous-allowed	redirect-only
 include/themes/classic/index.php	anonymous-allowed	redirect-only
@@ -120,9 +120,9 @@ include/themes/sunrise/default/index.php	anonymous-allowed	redirect-only
 include/themes/sunrise/images/index.php	anonymous-allowed	redirect-only
 include/themes/sunrise/index.php	anonymous-allowed	redirect-only
 include/themes/sunrise/rrdtheme.php	anonymous-allowed	inert: declarations and literal assignments only
-include/top_general_header.php	anonymous-allowed	fragment without bootstrap; included by lib/functions.php
-include/top_graph_header.php	anonymous-allowed	fragment without bootstrap; included by lib/functions.php
-include/top_header.php	anonymous-allowed	fragment without bootstrap; included by lib/functions.php
+include/top_general_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 0b6c358bacb7; included by lib/functions.php
+include/top_graph_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 3499de0769a5; included by lib/functions.php
+include/top_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 2ec65df77ed9; included by lib/functions.php
 include/vendor/	web-server-denied	nginx; no apache .htaccess deny
 index.php	realm:8	include/auth.php
 install/background.php	cli-only	guard: include/cli_check.php
@@ -192,7 +192,7 @@ install/upgrades/1_2_7.php	anonymous-allowed	inert: declarations and literal ass
 install/upgrades/1_2_8.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/index.php	anonymous-allowed	redirect-only
 lib/	web-server-denied	nginx; no apache .htaccess deny
-link.php	realm:10000+id	own realm check per external link id
+link.php	realm:10000+id	own realm check per external link id; reviewed at 929a564cf868
 links.php	realm:15	include/auth.php
 locales/LC_MESSAGES/index.php	anonymous-allowed	redirect-only
 locales/index.php	anonymous-allowed	redirect-only
@@ -218,7 +218,7 @@ poller_rrdcheck.php	cli-only	guard: include/cli_check.php
 poller_spikekill.php	cli-only	guard: include/cli_check.php
 pollers.php	realm:3	include/auth.php
 public/index.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
-remote_agent.php	anonymous-allowed	no user session; remote_client_authorized() admits registered poller addresses only
+remote_agent.php	anonymous-allowed	no user session; remote_client_authorized() admits registered poller addresses only; reviewed at 5d7a425129b8
 reports_admin.php	realm:21	include/auth.php
 reports_user.php	realm:22	include/auth.php
 resource/index.php	anonymous-allowed	redirect-only
@@ -228,10 +228,10 @@ resource/snmp_queries/index.php	anonymous-allowed	redirect-only
 rra/	web-server-denied	nginx; apache .htaccess
 rrdcheck.php	realm:15	include/auth.php
 rrdcleaner.php	realm:15	include/auth.php
-script_server.php	cli-only	guard: include/cli_check.php
+script_server.php	cli-only	FINDING: argument parsing runs before this guard, so an HTTP request fails with HTTP 500 before reaching it; reviewed at c13dd4489237
 scripts/	web-server-denied	nginx; apache .htaccess
 service/index.php	anonymous-allowed	redirect-only
-service_check.php	anonymous-allowed	service probe; prints success or fail for the schema version only
+service_check.php	anonymous-allowed	service probe; prints success or fail for the schema version only; reviewed at 5b3d5c6ba206
 settings.php	realm:15	include/auth.php
 sites.php	symfony:forward	forwards to app.php/inventory/sites/legacy
 snmpagent_mibcache.php	cli-only	guard: include/cli_check.php

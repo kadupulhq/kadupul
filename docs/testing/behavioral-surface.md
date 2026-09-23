@@ -23,7 +23,8 @@ Inventory was collected before adding scenarios. A machine-readable companion is
 
 The HTTP entry points and the gate on each are generated, not listed here.
 `tests/security/baselines/entry_points.baseline.tsv` is produced by
-`tests/security/build_entry_point_inventory.py` and checked in CI by
+`tests/security/build_entry_point_inventory.py`, which reads each gate from
+the PHP AST through `tests/security/classify_entry_points.php`, and checked in CI by
 `tests/security/verify_entry_point_inventory.sh`, which fails on drift and on
 any entry point without a recognised gate. `tests/security/entry_point_authorization.py`
 requests each one on a real install and requires anonymous, revoked-realm and
