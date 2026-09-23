@@ -90,7 +90,9 @@ try {
             if (!$query->execute([POLLER_COMMAND_PURGE, (string) $assignment->id])) {
                 throw new \RuntimeException('Destination purge cancellation failed');
             }
-            api_device_replicate_out($assignment->id, $target);
+            if (api_device_replicate_out($assignment->id, $target) === false) {
+                throw new RuntimeException('Collector replication unavailable');
+            }
             // Legacy bulk replication omits host_graph; preserve those associations too.
             $query = $connection->prepare('SELECT * FROM host_graph WHERE host_id = ?');
             $query->execute([$assignment->id]);
