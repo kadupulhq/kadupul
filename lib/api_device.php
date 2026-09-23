@@ -83,6 +83,9 @@ function api_device_remove($device_id) {
  * @param  $reviewed_associations - exact graph/data IDs reviewed per device
  */
 function api_device_purge_from_remote($device_ids, $poller_id = 0, $reviewed_associations = null, $reviewed_connection = null) {
+	if ($reviewed_associations !== null && !($reviewed_connection instanceof PDO)) {
+		throw new RuntimeException('Reviewed collector connection unavailable');
+	}
 	if (!is_array($device_ids)) {
 		$device_ids = array($device_ids);
 	}
@@ -252,6 +255,10 @@ function api_device_remove_multi($device_ids, $delete_type = 2, $reviewed_associ
 				WHERE id = ?',
 				array($device_id));
 
+			// Keep the authorized routing even if a preceding delete trigger changes host.
+			if ($reviewed_associations !== null) {
+				$poller_id = $reviewed_associations['by_device'][$device_id]['poller_id'];
+			}
 			$devices_by_poller[$poller_id][] = $device_id;
 
 			$i++;
