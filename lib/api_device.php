@@ -212,7 +212,7 @@ function api_device_remove_multi($device_ids, $delete_type = 2, $reviewed_associ
 			$i++;
 		}
 
-		$poller_ids = get_remote_poller_ids_from_devices($devices_to_delete);
+		ksort($devices_by_poller, SORT_NUMERIC);
 
 		// handle removal or mark for removal as required
 		db_execute("DELETE FROM host WHERE id IN ($devices_to_delete) AND poller_id = 1");
@@ -242,10 +242,10 @@ function api_device_remove_multi($device_ids, $delete_type = 2, $reviewed_associ
 			}
 		}
 
-		if (cacti_sizeof($poller_ids)) {
-			foreach($poller_ids as $poller_id) {
+		foreach($devices_by_poller as $poller_id => $poller_devices) {
+			if ((int) $poller_id > 1) {
 				api_device_cache_crc_update($poller_id);
-				api_device_purge_from_remote($devices_by_poller[$poller_id], $poller_id);
+				api_device_purge_from_remote($poller_devices, $poller_id);
 			}
 		}
 
