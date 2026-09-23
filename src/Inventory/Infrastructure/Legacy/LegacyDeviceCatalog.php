@@ -33,6 +33,8 @@ final readonly class LegacyDeviceCatalog implements DeviceCatalog
         }
         if ($criteria->status === 'disabled') {
             $where .= " AND h.disabled = 'on'";
+        } elseif ($criteria->status === 'not-up') {
+            $where .= " AND (h.status <> 3 OR h.disabled = 'on')";
         } elseif ($criteria->status !== 'all') {
             $where .= " AND (h.disabled = '' OR h.disabled IS NULL)";
             if ($criteria->status === 'unknown') {
@@ -47,6 +49,16 @@ final readonly class LegacyDeviceCatalog implements DeviceCatalog
         if ($criteria->siteId !== null) {
             $where .= ' AND h.site_id = ?';
             $parameters[] = $criteria->siteId;
+        }
+        foreach (['host_template_id' => $criteria->templateId, 'poller_id' => $criteria->collectorId] as $field => $value) {
+            if ($value !== null) {
+                $where .= " AND h.$field = ?";
+                $parameters[] = $value;
+            }
+        }
+        if ($criteria->location !== null) {
+            $where .= " AND COALESCE(h.location, '') = ?";
+            $parameters[] = $criteria->location;
         }
         $where .= ' AND (' . $this->visibility->predicate($userId) . ')';
         $column = match ($criteria->order->field) {

@@ -15,15 +15,15 @@ compatibility. LTS remains unchanged. Plugin-owned pages are outside this queue.
 | Device polling settings | Merged in #252 |
 | Device SNMP protocol and credentials | Merged in #257 |
 | Device template assignment | Merged in #262 |
-| Device collector assignment | PR #266 |
-| Device bulk enable/disable | PR #272 |
+| Device collector assignment | Merged in #266 |
+| Device bulk enable/disable | Merged in #272 |
 | Device deletion and graph/data retention choices | PR #276 |
-| Device bulk options, statistics and template synchronization | Statistics reset implemented in PR #288; template synchronization implemented in PR #295; bulk location/polling options implemented in PR #299; bulk assignments implemented in PR #302; SNMP credentials pending |
-| Device graph-template associations | Pending |
-| Device data-query associations and reindex settings | Pending |
-| Device reindex, poller-cache/debug and connectivity actions | Pending |
-| Device placement in trees/reports | Pending; preserve owning-module boundaries |
-| Legacy `host.php` compatibility entry and menu cutover | Pending completion of its workflows |
+| Device bulk options, statistics and template synchronization | Statistics reset implemented in PR #288; template synchronization implemented in PR #295; bulk location/polling options implemented in PR #299; bulk assignments implemented in PR #302; SNMP credentials implemented in PR #303 |
+| Device graph-template associations | Implemented in PR #305 |
+| Device data-query associations and reindex settings | Implemented in PR #307 |
+| Device reindex, poller-cache/debug and connectivity actions | Implemented in PR #309 |
+| Device placement in trees/reports | Implemented in PR #314 with owning-module contracts |
+| Legacy `host.php` compatibility entry and menu cutover | Implemented on `feat/inventory-legacy-cutover`; validation and review pending |
 
 The device editor is currently migrating in focused PRs because credentials,
 collector replication, and template association changes have different failure

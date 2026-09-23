@@ -14,6 +14,10 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Route Inventory device menus and legacy `host.php` links through Symfony. Legacy POSTs expire without replay; GET action links open confirmation forms. Existing automation rules are applied through an Inventory use case and Automation adapter. Preserve collector, template and exact-location list filters.
+- Device pages no longer execute legacy plugin UI hooks or custom device-page actions. Plugins must expose their own pages or adopt Symfony extensions; existing save/template/association/bulk action callbacks remain in isolated adapters. Legacy device CSV links now export the selected public-data page instead of unbounded host records.
+
+
 - Add Symfony device maintenance for reindexing, query diagnostics, polling cache refresh, debug controls and connectivity checks with secret-safe plain-text results.
 
 - Migrate device data-query associations and reindex settings to Symfony, retaining graph data and verifying primary/remote cache cleanup.
