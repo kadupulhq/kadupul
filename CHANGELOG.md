@@ -20,6 +20,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Read device-creation defaults and choices through Doctrine DBAL behind the existing port, keeping stored SNMP credentials out of the query.
 
+- Read the device-site filter, device details and site catalog through Doctrine DBAL, with visibility policies read on the same connection and the locked write checks unchanged.
+
 - Add a versioned, correlation-aware audit contract for migrated writes and record structured device-edit persistence decisions and outcomes without submitted fields or credentials.
 
 - Stop device collector reassignment immediately when the legacy replication helper reports an unavailable collector, before further graph replication.
