@@ -53,6 +53,17 @@ final class LegacyDevicesTest extends TestCase
             self::assertSame('3', $filters['collector']);
             self::assertSame('exact', $filters['location_mode']);
             self::assertSame('not-up', $filters['status']);
+            foreach (['Undefined', 'Indéfini', 'Undefiniert', '未定义', ''] as $undefined) {
+                $response = $kernel->handle(Request::create($base . '?location=' . rawurlencode($undefined)));
+                self::assertSame(302, $response->getStatusCode());
+                parse_str(parse_url($response->headers->get('Location'), PHP_URL_QUERY), $filters);
+                self::assertSame('exact', $filters['location_mode']);
+                self::assertSame('', $filters['location']);
+            }
+            $response = $kernel->handle(Request::create($base . '?location=' . rawurlencode('Rack Undefined')));
+            parse_str(parse_url($response->headers->get('Location'), PHP_URL_QUERY), $filters);
+            self::assertSame('Rack Undefined', $filters['location']);
+
             foreach (['?action=edit&id[]=7','?action=edit&id=-1','?host_status=invalid','?host_template_id=999999999','?location[]=rack'] as $query) {
                 self::assertSame(400, $kernel->handle(Request::create($base . $query))->getStatusCode());
             }
