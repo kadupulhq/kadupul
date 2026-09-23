@@ -212,6 +212,12 @@ function api_device_remove_multi($device_ids, $delete_type = 2, $reviewed_associ
 
     if (cacti_sizeof($device_ids)) {
         api_plugin_hook_function('device_remove', $device_ids);
+        if ($reviewed_associations !== null) {
+            if (!is_callable($verify_reviewed_scope)) {
+                throw new RuntimeException('Reviewed removal requires an ownership verifier');
+            }
+            $verify_reviewed_scope();
+        }
 
         if ($reviewed_associations === null) {
             $data_sources = array_rekey(
@@ -274,6 +280,9 @@ function api_device_remove_multi($device_ids, $delete_type = 2, $reviewed_associ
         if ($delete_type == 2) {
             api_delete_graphs($graphs, $delete_type, $reviewed_associations === null ? null : $data_sources, $verify_reviewed_scope);
         } else {
+            if ($verify_reviewed_scope !== null) {
+                $verify_reviewed_scope();
+            }
             api_data_source_disable_multi($data_sources, $reviewed_associations === null);
 
             if ($reviewed_associations === null) {

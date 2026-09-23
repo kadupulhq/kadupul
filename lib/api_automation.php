@@ -4049,7 +4049,7 @@ function automation_graph_result_exists($result, $host_id, $graph_template_id, $
 		return false;
 	}
 	foreach ($result['local_data_id'] as $data_id) {
-		if ((!is_int($data_id) && !is_string($data_id)) || filter_var($data_id, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1))) === false) {
+		if ((!is_int($data_id) && !(is_string($data_id) && ctype_digit($data_id))) || (int) $data_id < 1) {
 			return false;
 		}
 		$sql = 'SELECT COUNT(*) FROM data_local WHERE id = ? AND host_id = ?';
