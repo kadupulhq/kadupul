@@ -22,6 +22,13 @@ final readonly class LegacyDeviceAssociations implements DeviceAssociationStore
         $row = $query->fetch(\PDO::FETCH_ASSOC);
         return $row ? $this->records->snapshot($this->database->get(), $row, $kind) : null;
     }
+    public function defaultReindexMethod(): int
+    {
+        $query = $this->database->get()->query("SELECT value FROM settings WHERE name = 'reindex_method'");
+        $value = $query->fetchColumn();
+        // Matches the legacy configuration default when no setting was saved.
+        return in_array((string) $value, ['0', '1', '2', '3'], true) ? (int) $value : 1;
+    }
     public function available(string $kind): array
     {
         return $this->records->available($this->database->get(), $kind);
