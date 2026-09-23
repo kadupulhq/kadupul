@@ -149,7 +149,10 @@ try {
         }
     }
     // The lifecycle API partitions remote cleanup while preserving one batch hook.
-    api_device_remove_multi($ids, $policy === DeviceRemovalPolicy::Retain ? 1 : 2);
+    api_device_remove_multi($ids, $policy === DeviceRemovalPolicy::Retain ? 1 : 2, [
+        'graphs' => $graphs,
+        'data_sources' => $data,
+    ]);
     if ($policy === DeviceRemovalPolicy::Purge && $data !== []) {
         // Graph removal already purged linked sources and invoked their hooks.
         // Only remaining ungraphed sources need the additional lifecycle call.
@@ -175,6 +178,11 @@ try {
         foreach (['host_graph', 'host_snmp_query', 'host_snmp_cache', 'poller_item', 'poller_reindex', 'graph_tree_items', 'reports_items'] as $table) {
             if ($read($connection, "SELECT host_id FROM $table WHERE host_id = ? LIMIT 1", [$device->id]) !== []) {
                 throw new RuntimeException('Device associations remain');
+            }
+        }
+        foreach (['graph_local', 'data_local'] as $table) {
+            if ($read($connection, "SELECT host_id FROM $table WHERE host_id = ? LIMIT 1 FOR UPDATE", [$device->id]) !== []) {
+                throw new RuntimeException('Unreviewed graph or data-source association remains');
             }
         }
         foreach (['graph_local' => $snapshot->graphIds, 'data_local' => $snapshot->dataSourceIds] as $table => $relatedIds) {
