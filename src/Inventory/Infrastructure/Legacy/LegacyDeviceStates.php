@@ -16,18 +16,18 @@ use Kadupul\Inventory\Domain\DeviceEditConflict;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Symfony\Component\Process\Process;
 
-final readonly class LegacyDeviceStates implements DeviceStates, \Kadupul\Inventory\Application\Port\DeviceStatistics, \Kadupul\Inventory\Application\Port\DeviceTemplateSynchronization
+final readonly class LegacyDeviceStates implements DeviceStates, \Kadupul\Inventory\Application\Port\DeviceOptions, \Kadupul\Inventory\Application\Port\DeviceStatistics, \Kadupul\Inventory\Application\Port\DeviceTemplateSynchronization
 {
     public function __construct(private DatabaseConnection $database, private LegacyDeviceVisibility $visibility, private string $projectDir) {}
     public static function state(array $row): DeviceState
     {
-        return new DeviceState((int) $row['id'], (string) $row['description'], (string) $row['hostname'], $row['disabled'] !== 'on', (int) $row['site_id'], (int) $row['poller_id'], (int) $row['host_template_id']);
+        return new DeviceState((int) $row['id'], (string) $row['description'], (string) $row['hostname'], $row['disabled'] !== 'on', (int) $row['site_id'], (int) $row['poller_id'], (int) $row['host_template_id'], array_map(static fn($value): string => (string) $value, array_intersect_key($row, \Kadupul\Inventory\Domain\DeviceOptionsChange::DEFAULTS)));
     }
     public function findVisible(int $actorId, array $ids): array
     {
         $ids = DeviceSelection::validateIds($ids);
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
-        $query = $this->database->get()->prepare("SELECT DISTINCT h.id, h.description, h.hostname, h.disabled, h.site_id, h.poller_id, h.host_template_id FROM host h LEFT JOIN graph_local gl ON gl.host_id = h.id WHERE h.id IN ($placeholders) AND h.deleted = '' AND (" . $this->visibility->predicate($actorId) . ') ORDER BY h.id');
+        $query = $this->database->get()->prepare("SELECT DISTINCT h.id, h.description, h.hostname, h.disabled, h.site_id, h.poller_id, h.host_template_id, h.location, h.device_threads, h.snmp_port, h.snmp_timeout, h.max_oids, h.bulk_walk_size, h.availability_method, h.ping_method, h.ping_port, h.ping_timeout, h.ping_retries FROM host h LEFT JOIN graph_local gl ON gl.host_id = h.id WHERE h.id IN ($placeholders) AND h.deleted = '' AND (" . $this->visibility->predicate($actorId) . ') ORDER BY h.id');
         $query->execute($ids);
         $rows = $query->fetchAll(\PDO::FETCH_ASSOC);
         if (count($rows) !== count($ids)) {
@@ -46,6 +46,10 @@ final readonly class LegacyDeviceStates implements DeviceStates, \Kadupul\Invent
     public function synchronizeTemplates(int $actorId, DeviceSelection $selection): void
     {
         $this->run($actorId, $selection, ['operation' => 'sync-template']);
+    }
+    public function changeOptions(int $actorId, DeviceSelection $selection, \Kadupul\Inventory\Domain\DeviceOptionsChange $change): void
+    {
+        $this->run($actorId, $selection, ['operation' => 'options', 'changes' => $change->fields]);
     }
     private function run(int $actorId, DeviceSelection $selection, array $operation): void
     {

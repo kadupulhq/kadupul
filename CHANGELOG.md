@@ -12,6 +12,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Add Symfony bulk location and polling option edits with explicit field selection, domain validation, stale-option protection and verified collector writes.
+
 - Migrate device template synchronization to a Symfony confirmation and Inventory use case with current template locks and verified collector associations.
 
 - Migrate bulk device statistics reset to a Symfony confirmation page and Inventory use case, with authorized selection checks and primary/remote failure handling.

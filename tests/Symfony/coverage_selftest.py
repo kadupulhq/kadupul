@@ -68,6 +68,10 @@ def main():
         'src/Inventory/Application/Command/SetDevicesEnabled.php',
         'src/Inventory/Application/Query/PrepareDeviceStateChange.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceStates.php',
+        'src/Inventory/Domain/DeviceOptionsChange.php',
+        'src/Inventory/Application/Command/ChangeDeviceOptions.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceOptionsWriter.php',
+        'src/Inventory/Infrastructure/Symfony/Form/DeviceOptionsType.php',
         'src/Inventory/Application/Command/ClearDeviceStatistics.php',
         'src/Inventory/Application/Command/SynchronizeDeviceTemplates.php',
         'src/Inventory/Infrastructure/Legacy/DeviceStatisticsReset.php',
@@ -110,6 +114,7 @@ def main():
         raise RuntimeError('Self-test requires real HTTP and worker measurements')
     statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
     synchronization_checks = ['template synchronization saves through Symfony', 'template synchronization failure rolls back primary associations', 'remote template synchronization preserves assigned template identity', 'template synchronization invokes action 7 once with complete selection', 'template synchronization invokes the template-change hook once per assigned device', 'template synchronization retains existing graphs']
+    option_checks = ['bulk options save through Symfony', 'bulk options failure rolls back entire primary batch', 'bulk options verifies remote values', 'bulk options changes selected fields and preserves unchecked values', 'bulk options invokes action 4 once for the complete selection', 'rejected bulk options do not invoke action 4']
     failures = {
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
@@ -152,6 +157,8 @@ def main():
         failures['missing-statistics-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(synchronization_checks)):
         failures['missing-synchronization-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(option_checks)):
+        failures['missing-option-check-' + str(index)] = 'Incomplete Symfony integration'
     for source in required:
         failures.setdefault('unmeasured-' + source.rsplit('/', 1)[-1], 'Missing measured execution')
     with tempfile.TemporaryDirectory(prefix='symfony-coverage-negative-') as directory:
@@ -197,6 +204,9 @@ def main():
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case.startswith('missing-synchronization-check-'):
                 missing = synchronization_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-option-check-'):
+                missing = option_checks[int(case.rsplit('-', 1)[1])]
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case == 'missing-removal-callback-check':
                 evidence['checks'] = [check for check in evidence['checks'] if check != 'rejected removal emits no bulk action callback']

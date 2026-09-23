@@ -17,9 +17,13 @@ final class DeviceStateType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('selection', HiddenType::class);
+        if ($options['edit_options']) {
+            $builder->add('options', DeviceOptionsType::class, ['label' => 'Device options']);
+        }
     }
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['translation_domain' => 'inventory', 'csrf_protection' => true, 'csrf_token_id' => 'inventory_device_state', 'method' => 'POST']);
+        $resolver->setDefaults(['edit_options' => false, 'translation_domain' => 'inventory', 'csrf_protection' => true, 'csrf_token_id' => 'inventory_device_state', 'method' => 'POST']);
+        $resolver->setAllowedTypes('edit_options', 'bool');
     }
 }
