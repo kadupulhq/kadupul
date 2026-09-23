@@ -16,12 +16,12 @@ final readonly class LegacyResourceAccess implements ResourceAccess
     public function __construct(private DatabaseConnection $database) {}
     public function canManageTree(int $actorId, int $ownerId): bool
     {
-        return $this->realm($actorId, 4) && ($actorId === $ownerId || $this->realm($actorId, 1, false));
+        return $this->realm($actorId, 1, false) || ($this->realm($actorId, 4) && $actorId === $ownerId);
     }
     public function canManageReport(int $actorId, int $ownerId): bool
     {
-        $admin = $this->realm($actorId, 21);
-        return ($admin || $this->realm($actorId, 22)) && ($admin || $actorId === $ownerId || $this->realm($actorId, 1, false));
+        return $this->realm($actorId, 1, false) || $this->realm($actorId, 21)
+            || ($this->realm($actorId, 22) && $actorId === $ownerId);
     }
     private function realm(int $actorId, int $realmId, bool $groups = true): bool
     {

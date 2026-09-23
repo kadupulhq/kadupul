@@ -594,6 +594,7 @@ fs_write	./scripts/ss_net_snmp_disk_bytes.php:209			file_put_contents("$tmpdir/$
 fs_write	./scripts/ss_net_snmp_disk_io.php:208			file_put_contents("$tmpdir/$tmpfile", $data);
 fs_write	./snmpagent_mibcachechild.php:72		$lock = fopen($path_mibcache_lock, 'w');
 fs_write	./snmpagent_mibcachechild.php:76			file_put_contents($path_mibcache, '<?php $cache = ' . var_export($cache, true) . ';', LOCK_EX);
+fs_write	./src/IdentityAccess/Infrastructure/Legacy/LegacyAuditTrail.php:29	            $handle = @fopen($path, is_file($path) ? 'c+b' : 'x+b');
 fs_write	./templates_import.php:49				$fp = fopen($_FILES['import_file']['tmp_name'],'r');
 fs_write	./tools/dependencies/install-legacy.php:49	    $source = fopen($url, 'rb', false, $context);
 fs_write	./tools/dependencies/install-legacy.php:53	    $destination = fopen($archivePath, 'wb');

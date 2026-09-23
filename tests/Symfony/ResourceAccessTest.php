@@ -35,5 +35,12 @@ final class ResourceAccessTest extends TestCase
         $pdo->exec('INSERT INTO user_auth_realm VALUES (42,1)');
         self::assertTrue($access->canManageTree(42, 99));
         self::assertTrue($access->canManageReport(42, 99));
+        $pdo->exec('DELETE FROM user_auth_realm WHERE realm_id IN (4,22)');
+        self::assertTrue($access->canManageTree(42, 99), 'Direct system administrators do not need realm 4');
+        self::assertTrue($access->canManageReport(42, 99), 'Direct system administrators do not need report realms');
+        $pdo->exec('DELETE FROM user_auth_realm');
+        $pdo->exec("UPDATE user_auth_group SET enabled='on'; DELETE FROM user_auth_group_realm WHERE realm_id = 21");
+        self::assertFalse($access->canManageTree(42, 99), 'Group-only realm 1 must not grant administrator access');
+        self::assertFalse($access->canManageReport(42, 99), 'Group-only realm 1 must not grant administrator access');
     }
 }
