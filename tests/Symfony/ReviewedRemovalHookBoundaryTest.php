@@ -12,11 +12,11 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 require_once __DIR__ . '/../Helpers/PhpSource.php';
-foreach (['api_device.php' => ['api_device_remove_multi'], 'api_graph.php' => ['api_delete_graphs', 'api_graph_remove_multi'], 'api_data_source.php' => ['api_data_source_remove_multi']] as $file => $functions) {
+foreach (['api_device.php' => ['api_device_remove_multi', 'api_device_purge_from_remote'], 'api_graph.php' => ['api_delete_graphs', 'api_graph_remove_multi'], 'api_data_source.php' => ['api_data_source_remove_multi']] as $file => $functions) {
     $source = file_get_contents(__DIR__ . '/../../lib/' . $file);
     foreach ($functions as $function) {
         // Fixed first-party lifecycle bodies; no external executable input.
-        eval('namespace ' . __NAMESPACE__ . '; use RuntimeException;' . \test_php_function_source($source, $function)); // nosemgrep: php.lang.security.eval-use.eval-use
+        eval('namespace ' . __NAMESPACE__ . '; use RuntimeException; use PDO;' . \test_php_function_source($source, $function)); // nosemgrep: php.lang.security.eval-use.eval-use
     }
 }
 function api_graph_remove_bad_graphs(&$ids) {}
@@ -62,6 +62,13 @@ function api_plugin_hook_function($name, $ids)
 
 final class ReviewedRemovalHookBoundaryTest extends TestCase
 {
+    public function testScopedRemotePurgeCannotOpenAnUntrackedConnection(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Reviewed collector connection unavailable');
+        api_device_purge_from_remote([7], 3, [7 => ['graphs' => [], 'data_sources' => []]]);
+    }
+
     public function testDeviceHookOwnershipChangeStopsBeforeAnyWrite(): void
     {
         $GLOBALS['hook_boundary_writes'] = $GLOBALS['hook_boundary_events'] = [];
