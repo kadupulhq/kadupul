@@ -56,6 +56,19 @@ final class DeviceMaintenanceTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $state->assertRequest(new DeviceMaintenanceRequest('reload-query', 4), $state->revision());
     }
+    public function testQuotedAndRemoteCredentialsAreRedactedBeforeMarkupIsRemoved(): void
+    {
+        foreach (["quote'secret", 'quote"secret', 'tag<secret>', "line\nsecret"] as $secret) {
+            $unix = "'" . str_replace("'", "'\\''", str_replace(["\n", "\r"], '', $secret)) . "'";
+            $windows = '"' . str_replace('"', '\\"', $secret) . '"';
+            foreach ([$secret, $unix, $windows] as $encoded) {
+                $text = DeviceDiagnosticText::clean(htmlspecialchars($encoded, ENT_QUOTES, 'UTF-8'), ['snmp_password' => 'primary'], ['snmp_password' => $secret]);
+                self::assertStringContainsString('[redacted]', $text);
+                self::assertStringNotContainsString('secret', $text);
+            }
+        }
+    }
+
     public function testDiagnosticsAreBoundedPlainTextWithoutCredentials(): void
     {
         $text = DeviceDiagnosticText::clean('<b>Result</b><br>community=a&amp;b password=private' . "\0", ['snmp_community' => 'a&b', 'snmp_password' => 'private']);
