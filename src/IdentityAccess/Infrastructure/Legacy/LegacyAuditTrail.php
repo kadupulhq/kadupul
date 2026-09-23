@@ -38,6 +38,7 @@ final readonly class LegacyAuditTrail implements AuditTrail
                 throw new \RuntimeException('Audit sink lock failed.');
             }
             $file = fstat($handle);
+            clearstatcache(true, $path);
             $pathEntry = lstat($path);
             if ($file === false || $pathEntry === false || ($file['mode'] & 0170000) !== 0100000
                 || ($pathEntry['mode'] & 0170000) !== 0100000 || ($file['mode'] & 07777) !== 0600

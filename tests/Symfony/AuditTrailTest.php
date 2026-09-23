@@ -10,9 +10,31 @@ namespace Kadupul\Tests;
 use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuditTrail;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Process\Process;
 
 final class AuditTrailTest extends TestCase
 {
+    public function testRejectsPathReplacementDespiteCachedStat(): void
+    {
+        $root = sys_get_temp_dir() . '/kadupul-audit-' . bin2hex(random_bytes(8));
+        mkdir($root . '/log', 0700, true);
+        $path = $root . '/log/kadupul-audit.jsonl';
+        file_put_contents($path, 'original');
+        chmod($path, 0600);
+        try {
+            $probe = new Process([PHP_BINARY, __DIR__ . '/audit_rotation_probe.php', $root]);
+            $probe->mustRun();
+            self::assertSame('Audit path is not a private regular file.', $probe->getOutput());
+            self::assertSame('original', file_get_contents($path . '.rotated'));
+            self::assertSame('replacement', file_get_contents($path));
+        } finally {
+            @unlink($path);
+            @unlink($path . '.rotated');
+            @rmdir($root . '/log');
+            @rmdir($root);
+        }
+    }
+
     public function testAppendsPrivateJsonLinesIndependentlyOfGenericLogging(): void
     {
         $root = sys_get_temp_dir() . '/kadupul-audit-' . bin2hex(random_bytes(8));
