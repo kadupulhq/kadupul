@@ -57,7 +57,7 @@ final class DeviceMaintenanceController
                     $result = $assign($id, new \Kadupul\Inventory\Domain\DeviceMaintenanceRequest((string) $data['operation'], $data['query']), (string) $data['revision']);
                     $status = 200;
                     // Keep diagnostics visible and refresh the confirmation after state changes.
-                    $device = $prepare($id);
+                    $device = $prepare($id) ?? $device;
                     $form = $forms->create(DeviceMaintenanceType::class, ['revision' => $device->revision(), 'query' => 0], ['action' => $urls->generate('inventory_device_maintenance', $editParameters), 'queries' => $device->queries]);
                 } catch (InventoryAccessDenied $error) {
                     return new Response($translator->trans('Access denied.', [], 'inventory'), $error->unauthenticated ? 401 : 403, $headers);

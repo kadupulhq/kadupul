@@ -21,11 +21,11 @@ final class DeviceMaintenancePresentationTest extends TestCase
 {
     public static function saveOutcomes(): array
     {
-        return [[null, 200], [true, 401], [false, 403]];
+        return [[null, 200], [true, 401], [false, 403], [null, 200, true]];
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('saveOutcomes')]
-    public function testFrenchPresentationEscapesNamesAndPreservesAssignmentValues(?bool $unauthenticated, int $expectedStatus): void
+    public function testFrenchPresentationEscapesNamesAndPreservesAssignmentValues(?bool $unauthenticated, int $expectedStatus, bool $missingAfterSave = false): void
     {
         $kernel = new Kernel('test', true);
         try {
@@ -45,10 +45,16 @@ final class DeviceMaintenancePresentationTest extends TestCase
             $container->set(ConsoleAccess::class, $access);
             $device = new DeviceMaintenanceState(new \Kadupul\Inventory\Domain\DeviceState(7, '<router>', 'router.invalid', true, 0, 1, 0), [2 => '<Query>', 3 => '<Query>'], [], false);
             $port = $this->createMock(DeviceMaintenance::class);
-            $port->method('findVisible')->willReturn($device);
+            $saved = false;
+            $port->method('findVisible')->willReturnCallback(static function () use (&$saved, $missingAfterSave, $device) {
+                return $saved && $missingAfterSave ? null : $device;
+            });
             $save = $port->expects(self::once())->method('execute')->with(42, 7, self::callback(fn($request) => $request->operation === 'connectivity'), $device->revision());
             if ($unauthenticated === null) {
-                $save->willReturn(new \Kadupul\Inventory\Application\ReadModel\DeviceMaintenanceResult(true, 'Connectivity check finished.', '<unsafe>'));
+                $save->willReturnCallback(static function () use (&$saved) {
+                    $saved = true;
+                    return new \Kadupul\Inventory\Application\ReadModel\DeviceMaintenanceResult(true, 'Connectivity check finished.', '<unsafe>');
+                });
             }
             if ($unauthenticated !== null) {
                 $save->willThrowException(new \Kadupul\Inventory\Application\Query\InventoryAccessDenied($unauthenticated));
