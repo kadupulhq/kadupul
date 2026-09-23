@@ -61,8 +61,9 @@ final class DeviceCollectorReplicationTest extends TestCase
     public function testReviewedCleanupCannotFollowAssociationsReassignedToAnotherDevice(): void
     {
         $db = $this->removalDatabase();
-        $db->exec('INSERT INTO data_local VALUES (12, 99); INSERT INTO graph_local VALUES (11, 99); INSERT INTO data_template_data VALUES (101, 12); INSERT INTO data_template_rrd VALUES (102, 12); INSERT INTO data_input_data VALUES (101); INSERT INTO graph_templates_item (local_graph_id,task_item_id) VALUES (11,102)');
+        $db->exec('INSERT INTO data_local VALUES (12, 99); INSERT INTO graph_local VALUES (11, 99); INSERT INTO data_template_data VALUES (101, 12); INSERT INTO data_template_rrd VALUES (102, 12); INSERT INTO data_input_data VALUES (101,1); INSERT INTO graph_templates_item (local_graph_id,task_item_id) VALUES (11,102)');
         $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [11], [12]);
+        $db->beginTransaction();
         $replication = new DeviceCollectorReplication();
         $replication->purgeReviewedDependents($db, $snapshot);
         foreach (['data_template_data', 'data_template_rrd', 'data_input_data', 'graph_templates_item'] as $table) {
@@ -73,12 +74,43 @@ final class DeviceCollectorReplicationTest extends TestCase
         $replication->verifyPurged($db, 7, $snapshot);
     }
 
+    public function testReviewedCleanupRequiresWorkerOwnedTransaction(): void
+    {
+        $db = $this->removalDatabase();
+        $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [], []);
+        $this->expectException(\LogicException::class);
+        (new DeviceCollectorReplication())->purgeReviewedDependents($db, $snapshot);
+    }
+
+    #[DataProvider('lateDependentDuringCleanup')]
+    public function testLateReviewedChildIsNeverDeletedByParentScope(string $trigger, string $table): void
+    {
+        $db = $this->removalDatabase();
+        $db->exec('INSERT INTO data_local VALUES (12,7); INSERT INTO graph_local VALUES (11,7); INSERT INTO data_template_data VALUES (101,12); INSERT INTO data_template_rrd VALUES (102,12); INSERT INTO graph_templates_item VALUES (103,11,102); INSERT INTO poller_output VALUES (12); ' . $trigger);
+        $db->beginTransaction();
+        $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [11], [12]);
+        try {
+            (new DeviceCollectorReplication())->purgeReviewedDependents($db, $snapshot);
+            self::fail('Late dependent was silently included in reviewed cleanup');
+        } catch (\RuntimeException $error) {
+            self::assertSame('Collector dependent scope changed', $error->getMessage());
+            self::assertSame(1, (int) $db->query("SELECT COUNT(*) FROM $table WHERE id = 104")->fetchColumn());
+        }
+    }
+
+    public static function lateDependentDuringCleanup(): iterable
+    {
+        yield ['CREATE TRIGGER insert_late_template AFTER DELETE ON poller_output BEGIN INSERT INTO data_template_data VALUES (104,12); END', 'data_template_data'];
+        yield ['CREATE TRIGGER insert_late_graph_item AFTER DELETE ON poller_output BEGIN INSERT INTO graph_templates_item VALUES (104,11,102); END', 'graph_templates_item'];
+    }
+
     #[DataProvider('lateDependents')]
     public function testFinalVerificationRejectsDependentsInsertedAfterCleanup(string $insert): void
     {
         $db = $this->removalDatabase();
-        $db->exec('INSERT INTO data_local VALUES (12,7); INSERT INTO graph_local VALUES (11,7); INSERT INTO data_template_data VALUES (101,12); INSERT INTO data_input_data VALUES (101)');
+        $db->exec('INSERT INTO data_local VALUES (12,7); INSERT INTO graph_local VALUES (11,7); INSERT INTO data_template_data VALUES (101,12); INSERT INTO data_input_data VALUES (101,1)');
         $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [11], [12]);
+        $db->beginTransaction();
         $replication = new DeviceCollectorReplication();
         $receipt = $replication->purgeReviewedDependents($db, $snapshot);
         self::assertSame(['templates' => [101], 'rrds' => [], 'graph_items' => [], 'tree_items' => [], 'report_items' => [], 'poller_items' => []], $receipt);
@@ -95,7 +127,7 @@ final class DeviceCollectorReplicationTest extends TestCase
         yield ['INSERT INTO poller_output_boost VALUES (12)'];
         yield ['INSERT INTO data_template_data VALUES (102,12)'];
         yield ['INSERT INTO data_template_rrd VALUES (103,12)'];
-        yield ['INSERT INTO data_input_data VALUES (101)'];
+        yield ['INSERT INTO data_input_data VALUES (101,1)'];
         yield ['INSERT INTO graph_templates_item (local_graph_id,task_item_id) VALUES (11,102)'];
     }
 
@@ -107,11 +139,15 @@ final class DeviceCollectorReplicationTest extends TestCase
         $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [11], [12]);
         $replication = new DeviceCollectorReplication();
         if ($late) {
+            $db->beginTransaction();
             $receipt = $replication->purgeReviewedDependents($db, $snapshot);
             self::assertSame([102], $receipt['rrds']);
             $db->exec('DELETE FROM data_local; DELETE FROM graph_local');
         }
         $db->exec('INSERT INTO graph_templates_item (local_graph_id,task_item_id) VALUES (99,102)');
+        if (!$late) {
+            $db->beginTransaction();
+        }
         try {
             if ($late) {
                 $replication->verifyPurged($db, 7, $snapshot, $receipt);
@@ -138,6 +174,7 @@ final class DeviceCollectorReplicationTest extends TestCase
         $db = $this->removalDatabase();
         $db->exec('INSERT INTO data_local VALUES (12,7); INSERT INTO graph_local VALUES (11,7); INSERT INTO data_template_data VALUES (101,12); INSERT INTO data_template_rrd VALUES (102,12); INSERT INTO graph_templates_item VALUES (103,11,102)');
         $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [11], [12]);
+        $db->beginTransaction();
         $replication = new DeviceCollectorReplication();
         $receipt = $replication->purgeReviewedDependents($db, $snapshot);
         self::assertSame(['templates' => [101], 'rrds' => [102], 'graph_items' => [103], 'tree_items' => [], 'report_items' => [], 'poller_items' => []], $receipt);
@@ -159,6 +196,7 @@ final class DeviceCollectorReplicationTest extends TestCase
     {
         $db = $this->createMock(PDO::class);
         $db->method('inTransaction')->willReturn(true);
+        $db->method('getAttribute')->with(PDO::ATTR_DRIVER_NAME)->willReturn('mysql');
         $db->method('prepare')->willReturnCallback(function (string $sql): PDOStatement {
             self::assertStringEndsWith(' FOR UPDATE', $sql);
             $statement = $this->createMock(PDOStatement::class);
@@ -176,6 +214,7 @@ final class DeviceCollectorReplicationTest extends TestCase
         $db = $this->removalDatabase();
         $db->exec($insert);
         $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [], []);
+        $db->beginTransaction();
         $replication = new DeviceCollectorReplication();
         $receipt = $replication->purgeReviewedDependents($db, $snapshot);
         $db->exec("UPDATE $table SET host_id = 99 WHERE host_id = 7");
@@ -196,6 +235,7 @@ final class DeviceCollectorReplicationTest extends TestCase
         $db = $this->removalDatabase();
         $db->exec("INSERT INTO data_local VALUES (12,7),(13,99); INSERT INTO $table VALUES (12),(13)");
         $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [], [12,13]);
+        $db->beginTransaction();
         (new DeviceCollectorReplication())->purgeReviewedDependents($db, $snapshot);
         self::assertSame([13], array_map('intval', $db->query("SELECT local_data_id FROM $table")->fetchAll(PDO::FETCH_COLUMN)));
     }
@@ -217,7 +257,7 @@ final class DeviceCollectorReplicationTest extends TestCase
             'poller_output_boost' => 'local_data_id INTEGER',
             'data_local' => 'id INTEGER, host_id INTEGER', 'graph_local' => 'id INTEGER, host_id INTEGER',
             'data_template_data' => 'id INTEGER, local_data_id INTEGER', 'data_template_rrd' => 'id INTEGER, local_data_id INTEGER',
-            'data_input_data' => 'data_template_data_id INTEGER', 'graph_templates_item' => 'id INTEGER PRIMARY KEY, local_graph_id INTEGER, task_item_id INTEGER',
+            'data_input_data' => 'data_template_data_id INTEGER, data_input_field_id INTEGER DEFAULT 1', 'graph_templates_item' => 'id INTEGER PRIMARY KEY, local_graph_id INTEGER, task_item_id INTEGER',
         ] as $table => $columns) {
             $db->exec("CREATE TABLE $table ($columns)");
         }
