@@ -165,3 +165,11 @@ services:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCollectorAssignments
     Kadupul\Inventory\Application\Command\AssignDeviceCollector: ~
     Kadupul\Inventory\Application\Query\PrepareDeviceCollectorAssignment: ~
+
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+    Kadupul\Inventory\Application\Port\DeviceStates:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates
+    Kadupul\Inventory\Application\Query\PrepareDeviceStateChange: ~
+    Kadupul\Inventory\Application\Command\SetDevicesEnabled: ~

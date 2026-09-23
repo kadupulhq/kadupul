@@ -60,20 +60,26 @@
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
         <a href="{{ path('inventory_devices') }}">{{ 'Reset'|trans({}, 'inventory') }}</a>
     </form>
+    {% if completed|default('') in ['enable', 'disable'] %}<p><output>{{ (completed == 'enable' ? 'Selected devices enabled.' : 'Selected devices disabled.')|trans({}, 'inventory') }}</output></p>{% endif %}
+    <form method="get" action="{{ path('inventory_device_state', {operation: 'disable'}) }}">
+    {% for key, value in filters %}<input type="hidden" name="list[{{ key }}]" value="{{ value }}">{% endfor %}
     <table>
         <caption>{{ 'Devices you can access'|trans({}, 'inventory') }}</caption>
-        <thead><tr><th scope="col">{{ 'ID'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Name'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Hostname'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Status'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Location'|trans({}, 'inventory') }}</th><th scope="col">{{ 'External ID'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Actions'|trans({}, 'inventory') }}</th></tr></thead>
+        <thead><tr><th scope="col">{{ 'Select'|trans({}, 'inventory') }}</th><th scope="col">{{ 'ID'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Name'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Hostname'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Status'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Location'|trans({}, 'inventory') }}</th><th scope="col">{{ 'External ID'|trans({}, 'inventory') }}</th><th scope="col">{{ 'Actions'|trans({}, 'inventory') }}</th></tr></thead>
         <tbody>
         {% for device in result.devices %}
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
-            <tr><td>{{ device.id }}</td><td><a href="{{ path('inventory_device_details', {id: device.id, list: filters}) }}">{{ device.description }}</a></td><td>{{ device.hostname }}</td><td>{{ (device.disabled ? 'Disabled' : device.status)|trans({}, 'inventory') }}</td><td>{{ device.location }}</td><td>{{ device.externalId }}</td>
+            <tr><td><input type="checkbox" name="ids[]" value="{{ device.id }}" aria-label="{{ 'Select %device%'|trans({'%device%': device.description}, 'inventory') }}"></td><td>{{ device.id }}</td><td><a href="{{ path('inventory_device_details', {id: device.id, list: filters}) }}">{{ device.description }}</a></td><td>{{ device.hostname }}</td><td>{{ (device.disabled ? 'Disabled' : device.status)|trans({}, 'inventory') }}</td><td>{{ device.location }}</td><td>{{ device.externalId }}</td>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
             <td><a href="{{ path('inventory_device_edit', {id: device.id, list: filters}) }}">{{ 'Edit'|trans({}, 'inventory') }}</a></td></tr>
         {% else %}
-            <tr><td colspan="7">{{ 'No devices found on this page.'|trans({}, 'inventory') }}</td></tr>
+            <tr><td colspan="8">{{ 'No devices found on this page.'|trans({}, 'inventory') }}</td></tr>
         {% endfor %}
         </tbody>
     </table>
+    <button type="submit">{{ 'Disable selected devices'|trans({}, 'inventory') }}</button>
+    <button type="submit" formaction="{{ path('inventory_device_state', {operation: 'enable'}) }}">{{ 'Enable selected devices'|trans({}, 'inventory') }}</button>
+    </form>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}
     <p><a href="{{ path('inventory_devices_csv', filters|merge({page: criteria.page})) }}">{{ 'Export this page (CSV)'|trans({}, 'inventory') }}</a></p>
     <nav aria-label="{{ 'Device pages'|trans({}, 'inventory') }}">
