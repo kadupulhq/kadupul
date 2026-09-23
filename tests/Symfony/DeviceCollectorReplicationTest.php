@@ -91,6 +91,7 @@ final class DeviceCollectorReplicationTest extends TestCase
 
     public static function lateDependents(): iterable
     {
+        yield ['INSERT INTO poller_output VALUES (12)'];
         yield ['INSERT INTO data_template_data VALUES (102,12)'];
         yield ['INSERT INTO data_template_rrd VALUES (103,12)'];
         yield ['INSERT INTO data_input_data VALUES (101)'];
@@ -188,6 +189,15 @@ final class DeviceCollectorReplicationTest extends TestCase
         yield ['poller_item', "INSERT INTO poller_item VALUES (7,12,'traffic')"];
     }
 
+    public function testRemoteOutputCleanupStaysWithinReviewedOwnership(): void
+    {
+        $db = $this->removalDatabase();
+        $db->exec('INSERT INTO data_local VALUES (12,7),(13,99); INSERT INTO poller_output VALUES (12),(13)');
+        $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [], [12,13]);
+        (new DeviceCollectorReplication())->purgeReviewedDependents($db, $snapshot);
+        self::assertSame([13], array_map('intval', $db->query('SELECT local_data_id FROM poller_output')->fetchAll(PDO::FETCH_COLUMN)));
+    }
+
     private function removalDatabase(): PDO
     {
         $db = new PDO('sqlite::memory:');
@@ -195,6 +205,7 @@ final class DeviceCollectorReplicationTest extends TestCase
             'host' => 'id INTEGER', 'host_graph' => 'host_id INTEGER', 'host_snmp_query' => 'host_id INTEGER',
             'host_snmp_cache' => 'host_id INTEGER', 'poller_item' => 'host_id INTEGER, local_data_id INTEGER, rrd_name TEXT', 'poller_reindex' => 'host_id INTEGER',
             'graph_tree_items' => 'host_id INTEGER, id INTEGER', 'reports_items' => 'host_id INTEGER, id INTEGER', 'poller_command' => 'command TEXT',
+            'poller_output' => 'local_data_id INTEGER',
             'data_local' => 'id INTEGER, host_id INTEGER', 'graph_local' => 'id INTEGER, host_id INTEGER',
             'data_template_data' => 'id INTEGER, local_data_id INTEGER', 'data_template_rrd' => 'id INTEGER, local_data_id INTEGER',
             'data_input_data' => 'data_template_data_id INTEGER', 'graph_templates_item' => 'id INTEGER PRIMARY KEY, local_graph_id INTEGER, task_item_id INTEGER',

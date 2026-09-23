@@ -341,9 +341,9 @@ dynamic_include	./lib/api_aggregate.php:654		include_once($config['base_path'] .
 dynamic_include	./lib/api_automation.php:2367		include_once($config['base_path'] . '/lib/template.php');
 dynamic_include	./lib/api_automation.php:2368		include_once($config['base_path'] . '/lib/api_automation_tools.php');
 dynamic_include	./lib/api_automation.php:2369		include_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./lib/api_device.php:989		include_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./lib/api_device.php:990		include_once($config['base_path'] . '/lib/variables.php');
-dynamic_include	./lib/api_device.php:991		include_once($config['base_path'] . '/lib/data_query.php');
+dynamic_include	./lib/api_device.php:1000		include_once($config['base_path'] . '/lib/data_query.php');
+dynamic_include	./lib/api_device.php:998		include_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./lib/api_device.php:999		include_once($config['base_path'] . '/lib/variables.php');
 dynamic_include	./lib/boost.php:1317		include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/boost.php:1621			include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:315			include_once($config['library_path'] . '/poller.php');
@@ -552,7 +552,7 @@ fs_write	./install/functions.php:1043			file_put_contents($config['base_path'] .
 fs_write	./install/functions.php:348			file_put_contents($cacheFile, '<[version]> ' . $cacti_upgrade_version . ' <[status]> ' . $status . ' <[sql]> ' . clean_up_lines($sql) . ' <[error]> ' . $database_last_error . PHP_EOL, FILE_APPEND);
 fs_write	./install/functions.php:55				$fh = fopen($file, 'w');
 fs_write	./install/functions.php:839						$fp = fopen($config_file, 'w');
-fs_write	./lib/api_device.php:2690							file_put_contents($new_xmlfile, $data);
+fs_write	./lib/api_device.php:2699							file_put_contents($new_xmlfile, $data);
 fs_write	./lib/boost.php:500								if ($fileptr = fopen($cache_file, 'rb')) {
 fs_write	./lib/boost.php:623							if ($fileptr = fopen($cache_file, 'w')) {
 fs_write	./lib/clog_webapi.php:102					$log_fh = fopen($logfile, 'w');
