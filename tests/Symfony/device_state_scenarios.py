@@ -214,6 +214,7 @@ def verify_device_statistics(harness, session, ids, check, remote=None, hidden=N
 
 def verify_template_synchronization(harness, session, check, poller=1):
     graphs = [int(value) for value in harness.sql('SELECT id FROM graph_templates WHERE id NOT IN (SELECT graph_template_id FROM snmp_query_graph) ORDER BY id LIMIT 3').splitlines()]
+    query = int(harness.sql('SELECT MIN(id) FROM snmp_query').strip())
     template = int(harness.sql("INSERT INTO host_template (hash,name) VALUES ('sync-template-fixture','Synchronization fixture'); SELECT LAST_INSERT_ID()").strip())
     device = int(harness.sql(f"INSERT INTO host (description,hostname,poller_id,host_template_id,snmp_version,availability_method) VALUES ('sync-device-fixture','127.0.0.1',{poller},{template},0,0); SELECT LAST_INSERT_ID()").strip())
     unassigned = int(harness.sql("INSERT INTO host (description,hostname,poller_id,host_template_id,snmp_version,availability_method) VALUES ('sync-unassigned-fixture','127.0.0.1',1,0,0,0); SELECT LAST_INSERT_ID()").strip())
@@ -223,6 +224,8 @@ def verify_template_synchronization(harness, session, check, poller=1):
     prefix = 'create_remote.' if poller > 1 else ''
     retained_graph = None
     trigger = False
+    marker_rows = harness.sql("SELECT value FROM settings WHERE name='time_last_change_device'").splitlines()
+    original_marker = marker_rows[0] if marker_rows else None
     check(harness.php('-r', 'require "include/global.php"; function setup_sync_hooks() { api_plugin_register_hook("compatibility_test","device_action_bottom","compatibility_statistics_action","setup.php",true); api_plugin_register_hook("compatibility_test","device_template_change","compatibility_template_sync","setup.php",true); } setup_sync_hooks();')['exit'] == 0, 'template synchronization hook registered')
     def actions():
         events = harness.command('cat', '/artifacts/plugin.jsonl')['stdout']
@@ -231,15 +234,25 @@ def verify_template_synchronization(harness, session, check, poller=1):
         events = harness.command('cat', '/artifacts/plugin.jsonl')['stdout']
         return [json.loads(line)['args'] for line in events.splitlines() if json.loads(line).get('callback') == 'template_sync']
     try:
+        harness.sql("INSERT INTO settings (name,value) VALUES ('time_last_change_device','sync-noop-sentinel') ON DUPLICATE KEY UPDATE value='sync-noop-sentinel'")
+        skipped = StateForm(harness, session, [unassigned])
+        skipped.path = skipped.path.replace('/disable?', '/sync-template?')
+        before_skipped_actions = actions()
+        before_skipped_templates = template_events()
+        check(skipped.apply(skipped.fields()) == 200, 'template synchronization accepts an all-unassigned selection as a no-op')
+        check(actions() == before_skipped_actions and template_events() == before_skipped_templates, 'all-unassigned template synchronization invokes no mutation callbacks')
+        check(harness.sql("SELECT value FROM settings WHERE name='time_last_change_device'").strip() == 'sync-noop-sentinel', 'all-unassigned template synchronization preserves the device-change marker')
         retained_graph = int(harness.sql(f"INSERT INTO graph_local (host_id,graph_template_id) VALUES ({device},{graphs[2]}); SELECT LAST_INSERT_ID()").strip())
         harness.sql(f'INSERT INTO host_graph (host_id,graph_template_id) VALUES ({device},{graphs[2]})')
         harness.sql(f'INSERT INTO host_template_graph (host_template_id,graph_template_id) VALUES ({template},{graphs[0]})')
+        harness.sql(f'INSERT INTO host_template_snmp_query (host_template_id,snmp_query_id) VALUES ({template},{query})')
         harness.sql(f'INSERT INTO host_graph (host_id,graph_template_id) VALUES ({device},{graphs[1]})')
         if poller > 1:
             harness.sql(f'INSERT INTO create_remote.host SELECT * FROM host WHERE id={device}')
             harness.sql(f'INSERT INTO create_remote.host_graph SELECT * FROM host_graph WHERE host_id={device}')
         fields = form.fields()
         check(harness.sql(f'SELECT COUNT(*) FROM host_graph WHERE host_id={device} AND graph_template_id={graphs[0]}').strip() == '0', 'template synchronization GET does not add associations')
+        check(harness.sql(f'SELECT COUNT(*) FROM host_snmp_query WHERE host_id={device} AND snmp_query_id={query}').strip() == '0', 'template synchronization GET does not add data-query associations')
         check(form.request(fields=fields, origin=False)[0] == 422, 'template synchronization requires same-origin CSRF')
         missing = dict(fields)
         missing.pop('device_state[_token]')
@@ -269,6 +282,8 @@ def verify_template_synchronization(harness, session, check, poller=1):
         for database in (['', 'create_remote.'] if poller > 1 else ['']):
             check(harness.sql(f'SELECT COUNT(*) FROM {database}host_graph WHERE host_id={device} AND graph_template_id={graphs[0]}').strip() == '1', 'template synchronization adds required graph associations')
             check(harness.sql(f'SELECT COUNT(*) FROM {database}host_graph WHERE host_id={device} AND graph_template_id={graphs[1]}').strip() == '0', 'template synchronization removes unused graph associations')
+            check(harness.sql(f'SELECT COUNT(*) FROM {database}host_snmp_query WHERE host_id={device} AND snmp_query_id={query}').strip() == '1', 'template synchronization adds required data-query associations')
+            check(harness.sql(f"SELECT reindex_method FROM {database}host_snmp_query WHERE host_id={device} AND snmp_query_id={query}").strip() == harness.sql("SELECT value FROM settings WHERE name='reindex_method'").strip(), 'template synchronization preserves the configured data-query reindex method')
         if poller > 1:
             check(harness.sql(f'SELECT host_template_id FROM create_remote.host WHERE id={device}').strip() == str(template), 'remote template synchronization preserves assigned template identity')
         check(harness.sql(f'SELECT COUNT(*) FROM graph_local WHERE id={retained_graph} AND host_id={device}').strip() == '1', 'template synchronization retains existing graphs')
@@ -283,8 +298,13 @@ def verify_template_synchronization(harness, session, check, poller=1):
         if retained_graph is not None:
             harness.sql(f'DELETE FROM graph_local WHERE id={retained_graph}')
         for database in (['', 'create_remote.'] if poller > 1 else ['']):
+            harness.sql(f'DELETE FROM {database}host_snmp_cache WHERE host_id IN ({device},{unassigned}) AND snmp_query_id={query}; DELETE FROM {database}host_snmp_query WHERE host_id IN ({device},{unassigned}) AND snmp_query_id={query}')
             harness.sql(f'DELETE FROM {database}host_graph WHERE host_id IN ({device},{unassigned}); DELETE FROM {database}host WHERE id IN ({device},{unassigned})')
-        harness.sql(f'DELETE FROM host_template_graph WHERE host_template_id={template}; DELETE FROM host_template WHERE id={template}')
+        harness.sql(f'DELETE FROM host_template_snmp_query WHERE host_template_id={template}; DELETE FROM host_template_graph WHERE host_template_id={template}; DELETE FROM host_template WHERE id={template}')
+        if original_marker is None:
+            harness.sql("DELETE FROM settings WHERE name='time_last_change_device'")
+        else:
+            harness.sql(f"UPDATE settings SET value=UNHEX('{original_marker.encode().hex()}') WHERE name='time_last_change_device'")
 
 
 def verify_bulk_options(harness, session, check, poller=1):
