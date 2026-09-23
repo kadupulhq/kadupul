@@ -27,7 +27,7 @@ final class DeviceOptionsType extends AbstractType
             if ($field === 'location') {
                 $builder->add($field, TextType::class, ['label' => $labels[$field], 'required' => false, 'trim' => false, 'empty_data' => '', 'attr' => ['maxlength' => 40]]);
             } else {
-                $builder->add($polling->get($field));
+                $builder->add($polling->get($field)->setRequired(false));
             }
         }
     }

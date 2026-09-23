@@ -58,6 +58,21 @@ final class DeviceOptionsTest extends TestCase
         }
     }
 
+    public function testLocationLengthUsesUtf8RegardlessOfInternalEncoding(): void
+    {
+        $encoding = mb_internal_encoding();
+        try {
+            mb_internal_encoding('ISO-8859-1');
+            $location = str_repeat('🌏', 40);
+            $change = new \Kadupul\Inventory\Domain\DeviceOptionsChange(['location' => $location]);
+            self::assertSame($location, $change->fields['location']);
+            $this->expectException(\InvalidArgumentException::class);
+            new \Kadupul\Inventory\Domain\DeviceOptionsChange(['location' => $location . '🌏']);
+        } finally {
+            mb_internal_encoding($encoding);
+        }
+    }
+
     public function testChangedOptionsInvalidateBulkConfirmation(): void
     {
         $before = new \Kadupul\Inventory\Domain\DeviceState(1, 'Device', 'device.invalid', true, 0, 1, 0, ['location' => 'A']);

@@ -49,6 +49,8 @@ final class DeviceOptionsPresentationTest extends TestCase
             self::assertStringContainsString('&lt;router&gt;', $response->getContent());
             $document = new \DOMDocument();
             @$document->loadHTML($response->getContent());
+            $xpath = new \DOMXPath($document);
+            self::assertSame(0, $xpath->query('//*[starts-with(@name, "device_state[options][") and @required]')->length);
             $token = (new \DOMXPath($document))->evaluate('string(//input[@name="device_state[_token]"]/@value)');
             $fields = ['selection' => json_encode([7 => $device->revision()]), '_token' => $token, 'options' => ['apply_location' => '1', 'location' => 'Rack']];
             foreach (['', 'null', '{}', '{"8":"' . $device->revision() . '"}'] as $invalid) {
