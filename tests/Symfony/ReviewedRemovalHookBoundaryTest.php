@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
 require_once __DIR__ . '/../Helpers/PhpSource.php';
-foreach (['api_graph.php' => ['api_delete_graphs', 'api_graph_remove_multi'], 'api_data_source.php' => ['api_data_source_remove_multi']] as $file => $functions) {
+foreach (['api_device.php' => ['api_device_remove_multi'], 'api_graph.php' => ['api_delete_graphs', 'api_graph_remove_multi'], 'api_data_source.php' => ['api_data_source_remove_multi']] as $file => $functions) {
     $source = file_get_contents(__DIR__ . '/../../lib/' . $file);
     foreach ($functions as $function) {
         // Fixed first-party lifecycle bodies; no external executable input.
@@ -58,6 +58,23 @@ function api_plugin_hook_function($name, $ids)
 
 final class ReviewedRemovalHookBoundaryTest extends TestCase
 {
+    public function testDeviceHookOwnershipChangeStopsBeforeAnyWrite(): void
+    {
+        $GLOBALS['hook_boundary_writes'] = $GLOBALS['hook_boundary_events'] = [];
+        $GLOBALS['hook_boundary_inject'] = 'device_remove';
+        $GLOBALS['hook_boundary_changed'] = false;
+        try {
+            api_device_remove_multi([7], 2, [], [], static function (): void {
+                self::assertTrue($GLOBALS['hook_boundary_changed']);
+                throw new RuntimeException('Ownership changed');
+            });
+            self::fail('Changed ownership was accepted');
+        } catch (RuntimeException $error) {
+            self::assertSame('Ownership changed', $error->getMessage());
+        }
+        self::assertSame([], $GLOBALS['hook_boundary_writes']);
+    }
+
     #[DataProvider('boundaries')]
     public function testReviewedDependencyPolicyRunsAfterEachRemovalHook(?string $hook): void
     {
