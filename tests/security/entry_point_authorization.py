@@ -27,6 +27,7 @@ import harness  # noqa: E402
 PASSWORD = 'entry-auth-sweep'
 CONSOLE_REALM = 8
 PROFILE_REALM = 20
+LOGIN_TARGETS = ('', 'index.php', 'auth_login.php')
 
 # The observed refusal contracts. auth.php renders the login form in place
 # (HTTP 200) for anonymous callers and the Permission Denied page (HTTP 200)
@@ -39,7 +40,10 @@ REFUSALS = [
     ('install-denied', lambda r: 'Only Kadupul Administrators with Install/Upgrade privilege' in r['body']),
     ('json-not-logged-in', lambda r: '"statusText":"Not Logged In"' in r['body']),
     ('text-not-logged-in', lambda r: 'You must be logged in to access this area' in r['body']),
-    ('redirect', lambda r: r['status'] in (301, 302, 303) and not r['admin_layout']),
+    # A redirect only refuses when it lands on the login entry; any other
+    # target could be a success page.
+    ('redirect', lambda r: r['status'] in (301, 302, 303) and not r['admin_layout']
+        and urllib.parse.urlsplit(r['location']).path.rsplit('/', 1)[-1] in LOGIN_TARGETS),
     ('status', lambda r: r['status'] in (401, 403, 404, 405) and not r['admin_layout']),
 ]
 

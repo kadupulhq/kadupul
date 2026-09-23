@@ -258,7 +258,11 @@ def realm_map():
     block = re.search(r'\$user_auth_realm_filenames\s*=\s*array\((.*?)\);', text, re.S)
     if not block:
         raise SystemExit('ERROR: $user_auth_realm_filenames not found in include/global_arrays.php')
-    realms = {name: int(value) for name, value in re.findall(r"'([\w.]+)'\s*=>\s*(-?\d+)", block[1])}
+    pairs = re.findall(r"'([^']+)'\s*=>\s*(-?\d+)", block[1])
+    # An entry the pattern cannot read would silently become realm:0.
+    if len(pairs) != block[1].count('=>'):
+        raise SystemExit('ERROR: unparsed entry in $user_auth_realm_filenames')
+    realms = {name: int(value) for name, value in pairs}
     # api_plugin_load_realms() maps plugin_realms rows to id + 100.
     sql = (ROOT / 'cacti.sql').read_text()
     for realm_id, files in re.findall(r"INSERT INTO `plugin_realms` VALUES \((\d+), '[^']*', '([^']*)'", sql.replace('REPLACE INTO', 'INSERT INTO')):
@@ -326,7 +330,8 @@ def reached_checks(controller):
 def symfony_routes():
     realms = symfony_realms()
     rows = []
-    controllers = [f for f in git_files('src/*.php') if re.fullmatch(r'src/\w+/Infrastructure/Symfony/Controller/\w+\.php', f)]
+    # Every file that declares a route, wherever it lives under src/.
+    controllers = [f for f in git_files('src/*.php') if '#[Route' in (ROOT / f).read_text()]
     for controller in [ROOT / f for f in controllers]:
         text = controller.read_text()
         checks = reached_checks(controller)
