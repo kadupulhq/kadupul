@@ -81,7 +81,7 @@ final class LegacyDevicesTest extends TestCase
             self::assertStringContainsString('ancien formulaire a expiré', $response->getContent());
             self::assertSame(405, $kernel->handle(Request::create($base . '?action=save'))->getStatusCode());
             foreach ([str_repeat('x', 201), "\xff", "bad\0term"] as $invalidTerm) {
-                $response = $kernel->handle(Request::create($base . '?action=ajax_locations&term=' . rawurlencode($invalidTerm)));
+                $response = $kernel->handle(Request::create($base . '?action=ajax_locations&term=' . rawurlencode($invalidTerm), 'GET', [], ['Cacti' => 'fixture']));
                 self::assertSame(400, $response->getStatusCode());
                 self::assertSame('Recherche de localisation invalide.', $response->getContent());
             }
