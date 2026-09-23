@@ -12,6 +12,9 @@ def verify_device_placement(harness, session, user_id, check):
         report = int(harness.sql(f"INSERT INTO reports (name,user_id,from_name,from_email,email,bcc) VALUES ('placement-report',{user_id},'','','',''); SELECT LAST_INSERT_ID()").strip())
         for index in range(2):
             ids.append(int(harness.sql(f"INSERT INTO host (description,hostname,site_id) VALUES ('placement-device-{index}','127.0.0.1',0); SELECT LAST_INSERT_ID()").strip()))
+        for kind, destination, parent in [('tree', tree, branch), ('report', report, 0)]:
+            probe = harness.php('-r', f'$placementFixture = ["{kind}",{destination},{parent},{ids[0]},{user_id}]; require "tests/Symfony/placement_lock_probe.php";')
+            check(probe['exit'] == 0 and 'PLACEMENT_LOCK_OK' in probe['stdout'], kind+' legacy placement shares destination locks and rejects duplicates')
         check(harness.php('-r', 'require "include/global.php"; function setup_placement_hook() { api_plugin_register_hook("compatibility_test","device_action_bottom","compatibility_placement_tamper","setup.php",true); } setup_placement_hook();')['exit'] == 0, 'placement callback fixture registered')
         selection = ' OR '.join(f'host_id={id}' for id in ids)
         for kind, target, table in [('tree',f'{tree}:{branch}','graph_tree_items'),('report',str(report),'reports_items')]:

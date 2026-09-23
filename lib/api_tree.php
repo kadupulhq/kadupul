@@ -694,6 +694,30 @@ function api_tree_get_node($tree_id, $node_id, $editing = false) {
  * @returns - boolean true or false depending on the outcome of the operation */
 function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, $local_graph_id,
 	$host_id, $site_id, $host_grouping_type, $sort_children_type, $propagate_changes) {
+    $owns_transaction = (int) db_fetch_cell('SELECT @@in_transaction') === 0;
+    if ($owns_transaction && !db_begin_transaction()) {
+        return false;
+    }
+    try {
+        if (!db_fetch_cell_prepared('SELECT id FROM graph_tree WHERE id = ? FOR UPDATE', array($tree_id))) {
+            return false;
+        }
+        $result = api_tree_item_save_locked($id, $tree_id, $type, $parent_tree_item_id, $title, $local_graph_id,
+            $host_id, $site_id, $host_grouping_type, $sort_children_type, $propagate_changes);
+        if ($owns_transaction && $result && !db_commit_transaction()) {
+            return false;
+        }
+        return $result;
+    } finally {
+        if ($owns_transaction && (int) db_fetch_cell('SELECT @@in_transaction') !== 0) {
+            db_rollback_transaction();
+        }
+    }
+}
+
+// Shared with Symfony placement: lock the tree before checking for duplicates.
+function api_tree_item_save_locked($id, $tree_id, $type, $parent_tree_item_id, $title, $local_graph_id,
+	$host_id, $site_id, $host_grouping_type, $sort_children_type, $propagate_changes) {
 	global $config;
 
 	input_validate_input_number($tree_id);
@@ -706,7 +730,7 @@ function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, 
 			FROM graph_tree_items
 			WHERE local_graph_id = ?
 			AND parent = ?
-			AND graph_tree_id = ?',
+			AND graph_tree_id = ? FOR UPDATE',
 			array($local_graph_id, $parent_tree_item_id, $tree_id));
 
 		if ($exists) {
@@ -717,7 +741,7 @@ function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, 
 			FROM graph_tree_items
 			WHERE site_id = ?
 			AND parent = ?
-			AND graph_tree_id = ?',
+			AND graph_tree_id = ? FOR UPDATE',
 			array($site_id, $parent_tree_item_id, $tree_id));
 
 		if ($exists) {
@@ -728,7 +752,7 @@ function api_tree_item_save($id, $tree_id, $type, $parent_tree_item_id, $title, 
 			FROM graph_tree_items
 			WHERE host_id = ?
 			AND parent = ?
-			AND graph_tree_id = ?',
+			AND graph_tree_id = ? FOR UPDATE',
 			array($host_id, $parent_tree_item_id, $tree_id));
 
 		if ($exists) {
