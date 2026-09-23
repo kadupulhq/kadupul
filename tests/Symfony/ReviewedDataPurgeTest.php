@@ -14,6 +14,8 @@ require_once __DIR__ . '/../Helpers/PhpSource.php';
 $source = file_get_contents(__DIR__ . '/../../lib/api_data_source.php');
 // Fixed first-party function only; no request or external input is executable.
 eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, 'api_data_source_remove_multi')); // nosemgrep: php.lang.security.eval-use.eval-use
+// Same fixed-source boundary for the retain lifecycle.
+eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, 'api_data_source_disable_multi')); // nosemgrep: php.lang.security.eval-use.eval-use
 
 function cacti_sizeof($value)
 {
@@ -32,7 +34,15 @@ function get_remote_poller_ids_from_data_sources($ids)
 }
 function db_fetch_assoc($sql)
 {
+    if (str_contains($sql, 'SELECT poller_id')) {
+        $GLOBALS['reviewed_data_discovery']++;
+        return [['poller_id' => 2], ['poller_id' => 3]];
+    }
     return array_map(static fn($id) => ['id' => $id], range(1, 1001));
+}
+function array_rekey($rows, $key, $value)
+{
+    return array_column($rows, $value, $key);
 }
 function db_execute($sql, $log = true, $connection = null)
 {
@@ -47,6 +57,23 @@ function api_data_source_cache_crc_update($id) {}
 
 final class ReviewedDataPurgeTest extends TestCase
 {
+    #[DataProvider('modes')]
+    public function testScopedRetentionSkipsRemoteWritesAcrossChunkBoundary(?bool $propagate): void
+    {
+        $GLOBALS['reviewed_data_discovery'] = 0;
+        $GLOBALS['reviewed_data_writes'] = [];
+        if ($propagate === null) {
+            api_data_source_disable_multi(range(1, 1001));
+        } else {
+            api_data_source_disable_multi(range(1, 1001), $propagate);
+        }
+        $primary = array_filter($GLOBALS['reviewed_data_writes'], static fn($write) => $write[1] === null);
+        $remote = array_filter($GLOBALS['reviewed_data_writes'], static fn($write) => $write[1] !== null);
+        self::assertCount(4, $primary, 'Both primary chunks must disable data and clear polling');
+        self::assertSame($propagate === false ? 0 : 2, $GLOBALS['reviewed_data_discovery']);
+        self::assertCount($propagate === false ? 0 : 8, $remote);
+    }
+
     #[DataProvider('modes')]
     public function testScopedPurgeNeverDiscoversOrWritesRemoteCollectors(?bool $propagate): void
     {

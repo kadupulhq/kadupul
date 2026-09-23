@@ -17,7 +17,10 @@ $source = file_get_contents(__DIR__ . '/../../lib/api_graph.php');
 eval('namespace ' . __NAMESPACE__ . '; use RuntimeException;' . \test_php_function_source($source, 'api_delete_graphs')); // nosemgrep: php.lang.security.eval-use.eval-use
 
 function api_graph_remove_bad_graphs(&$ids) {}
-function api_graph_remove_aggregate_items($ids) {}
+function api_graph_remove_aggregate_items($ids, $rejectAggregates = false)
+{
+    $GLOBALS['reviewed_graph_reject_aggregates'][] = $rejectAggregates;
+}
 function cacti_sizeof($value)
 {
     return count($value);
@@ -40,9 +43,10 @@ function api_data_source_remove_multi($ids, $propagateRemote = true)
     $GLOBALS['reviewed_graph_deleted_data'] = array_values($ids);
     $GLOBALS['reviewed_graph_propagate_remote'] = $propagateRemote;
 }
-function api_graph_remove_multi($ids)
+function api_graph_remove_multi($ids, $rejectAggregates = false)
 {
     $GLOBALS['reviewed_graph_deleted_graphs'] = $ids;
+    $GLOBALS['reviewed_graph_reject_aggregates'][] = $rejectAggregates;
 }
 function set_config_option($key, $value)
 {
@@ -60,6 +64,7 @@ final class ReviewedGraphPurgeTest extends TestCase
         $GLOBALS['reviewed_graph_deleted_graphs'] = [];
         $GLOBALS['reviewed_graph_marker'] = null;
         $GLOBALS['reviewed_graph_propagate_remote'] = null;
+        $GLOBALS['reviewed_graph_reject_aggregates'] = [];
         $graphs = [7];
         try {
             api_delete_graphs($graphs, 2, $reviewed);
@@ -71,6 +76,7 @@ final class ReviewedGraphPurgeTest extends TestCase
         self::assertSame($accepted ? $discovered : [], $GLOBALS['reviewed_graph_deleted_data']);
         self::assertSame($accepted ? [7] : [], $GLOBALS['reviewed_graph_deleted_graphs']);
         self::assertSame($accepted ? 'time_last_change_graph' : null, $GLOBALS['reviewed_graph_marker']);
+        self::assertSame(array_fill(0, $accepted ? 2 : 1, $reviewed !== null), $GLOBALS['reviewed_graph_reject_aggregates']);
         if ($accepted && $discovered !== []) {
             self::assertSame($reviewed === null, $GLOBALS['reviewed_graph_propagate_remote']);
         }

@@ -362,7 +362,7 @@ function api_data_source_disable($local_data_id) {
 	}
 }
 
-function api_data_source_disable_multi($local_data_ids) {
+function api_data_source_disable_multi($local_data_ids, $propagate_remote = true) {
 	/* initialize variables */
 	$ids_to_disable = '';
 	$i = 0;
@@ -385,9 +385,9 @@ function api_data_source_disable_multi($local_data_ids) {
 			$i++;
 
 			if (!($i % 1000)) {
-				$poller_ids = array_rekey(db_fetch_assoc('SELECT poller_id
+				$poller_ids = $propagate_remote ? array_rekey(db_fetch_assoc('SELECT poller_id
 					FROM poller_item
-					WHERE local_data_id IN(' . $ids_to_disable . ')'), 'poller_id', 'poller_id');
+					WHERE local_data_id IN(' . $ids_to_disable . ')'), 'poller_id', 'poller_id') : array();
 
 				$all_poller_ids = $all_poller_ids + $poller_ids;
 
@@ -409,12 +409,12 @@ function api_data_source_disable_multi($local_data_ids) {
 		}
 
 		if ($i > 0) {
-			$poller_ids = array_rekey(
+			$poller_ids = $propagate_remote ? array_rekey(
 				db_fetch_assoc('SELECT poller_id
 					FROM poller_item
 					WHERE local_data_id IN(' . $ids_to_disable .')'),
 				'poller_id', 'poller_id'
-			);
+			) : array();
 
 			$all_poller_ids = $all_poller_ids + $poller_ids;
 
