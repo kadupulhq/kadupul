@@ -11,6 +11,7 @@ use Doctrine\DBAL\DriverManager;
 use Kadupul\Inventory\Infrastructure\Persistence\DoctrineSiteAssignmentCatalog;
 use Kadupul\Inventory\Infrastructure\Persistence\InventoryReadConnectionFactory;
 use Kadupul\Platform\Contract\LegacyConfiguration;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class DoctrineSiteAssignmentCatalogTest extends TestCase
@@ -61,6 +62,65 @@ final class DoctrineSiteAssignmentCatalogTest extends TestCase
         $this->expectExceptionMessage('Database TLS requires a CA certificate.');
 
         (new InventoryReadConnectionFactory($this->configuration(['ssl' => true])))->create();
+    }
+
+    public function testConnectionFactoryUsesReadOnlyCredentialsWhenConfigured(): void
+    {
+        $params = (new InventoryReadConnectionFactory($this->configuration([
+            'read_username' => 'kadupul_read',
+            'read_password' => 'read-secret',
+        ])))->create()->getParams();
+
+        self::assertSame('kadupul_read', $params['user']);
+        // Compare without assertSame so a failure cannot print the password.
+        self::assertTrue($params['password'] === 'read-secret', 'The read-only password was not used.');
+    }
+
+    public function testConnectionFactoryFallsBackToPrimaryCredentials(): void
+    {
+        $params = (new InventoryReadConnectionFactory($this->configuration([
+            'read_username' => '',
+            'read_password' => '',
+        ])))->create()->getParams();
+
+        self::assertSame('kadupul', $params['user']);
+        self::assertTrue($params['password'] === 'secret', 'The primary password was not used.');
+    }
+
+    #[DataProvider('incompleteReadCredentials')]
+    public function testConnectionFactoryRejectsIncompleteReadCredentials(bool $usernameOnly): void
+    {
+        // PHPUnit prints data-set values on failure, so the password stays out of the provider.
+        $credentials = $usernameOnly
+            ? ['read_username' => 'kadupul_read', 'read_password' => '']
+            : ['read_username' => '', 'read_password' => 'read-secret'];
+        try {
+            (new InventoryReadConnectionFactory($this->configuration($credentials)))->create();
+            self::fail('Incomplete read-only credentials were accepted.');
+        } catch (\RuntimeException $exception) {
+            self::assertTrue($exception->getMessage() === 'Incomplete read-only database credentials.', 'Unexpected exception message.');
+            self::assertFalse(str_contains($exception->getMessage(), 'read-secret'), 'The exception message contains the password.');
+        }
+    }
+
+    public static function incompleteReadCredentials(): iterable
+    {
+        yield 'username only' => [true];
+        yield 'password only' => [false];
+    }
+
+    public function testCollectorConnectionIgnoresReadOnlyCredentials(): void
+    {
+        $params = (new InventoryReadConnectionFactory($this->configuration([
+            'collector_id' => 2,
+            'username' => 'primary_user',
+            'password' => 'primary-secret',
+            'read_username' => 'kadupul_read',
+            'read_password' => '',
+        ])))->create()->getParams();
+
+        self::assertSame('primary_user', $params['user']);
+        self::assertTrue($params['password'] === 'primary-secret', 'The primary password was not used.');
     }
 
     private function configuration(array $overrides = []): LegacyConfiguration
