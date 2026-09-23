@@ -48,6 +48,6 @@
         </FilesMatch>
         RewriteEngine On
         RewriteOptions Inherit
-        RewriteRule ^.+/index\.php$ - [F,NC]
+        RewriteRule ^.+/index\.php(/|$) - [F,NC]
     </IfModule>
 </IfModule>
