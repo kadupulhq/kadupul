@@ -183,6 +183,27 @@ def verify_device_removal(harness, session, user_id, poller, check):
             check(harness.sql(f'SELECT COUNT(*) FROM data_template_rrd WHERE id={rrd}').strip() == '1', 'remote retention preserves the primary RRD definition')
             check(harness.sql(f'SELECT COUNT(*) FROM data_source_purge_action WHERE local_data_id={data}').strip() == '0', 'remote retention never schedules RRD deletion')
             check(harness.sql(f'SELECT COUNT(*) FROM create_remote.data_input_data WHERE data_template_data_id={dtd}').strip() == '0', 'remote removal purges dependent configuration')
+        remote_purge = create(poller)
+        check(RemovalForm(harness, session, [remote_purge['device']]).remove('purge') == 200,
+              'explicit remote purge succeeds through the graph and data lifecycle')
+        check(harness.sql(f"SELECT deleted FROM host WHERE id={remote_purge['device']}").strip() == 'on',
+              'remote purge preserves the primary cleanup tombstone')
+        check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host WHERE id={remote_purge["device"]}').strip() == '0',
+              'explicit remote purge removes the collector device')
+        for prefix in ['', 'create_remote.']:
+            for table, where in [('graph_local', f'id={remote_purge["graph"]}'),
+                                 ('graph_templates_item', f'local_graph_id={remote_purge["graph"]}')]:
+                check(harness.sql(f'SELECT COUNT(*) FROM {prefix}{table} WHERE {where}').strip() == '0',
+                      'explicit remote purge removes graph configuration: ' + prefix + table)
+            for data, dtd, rrd in remote_purge['sources']:
+                for table, where in [('data_local', f'id={data}'), ('data_template_data', f'id={dtd}'),
+                                     ('data_template_rrd', f'id={rrd}'), ('data_input_data', f'data_template_data_id={dtd}'),
+                                     ('poller_item', f'local_data_id={data}')]:
+                    check(harness.sql(f'SELECT COUNT(*) FROM {prefix}{table} WHERE {where}').strip() == '0',
+                          'explicit remote purge removes linked and ungraphed data: ' + prefix + table)
+        for data, _, _ in remote_purge['sources']:
+            check(harness.sql(f'SELECT COUNT(*) FROM data_source_purge_action WHERE local_data_id={data}').strip() == '1',
+                  'explicit remote purge schedules primary RRD maintenance once')
     finally:
         for trigger in triggers:
             harness.sql('DROP TRIGGER ' + trigger)
