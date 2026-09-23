@@ -110,7 +110,7 @@ try {
     }
     $remotes = [];
     $snapshots = [];
-    $graphs = $data = [];
+    $graphs = $data = $reviewed = [];
     // Every identity, association set and collector is checked before mutation.
     foreach ($rows as $index => $row) {
         if ((int) $row['site_id'] !== (int) $associations[$index]['site_id']) {
@@ -120,6 +120,7 @@ try {
         $snapshot = DeviceRemovalSnapshot::read($connection, $device, true);
         $snapshot->assertRevision($selection->revisions[$device->id]);
         $snapshots[] = $snapshot;
+        $reviewed[$device->id] = ['graphs' => $snapshot->graphIds, 'data_sources' => $snapshot->dataSourceIds];
         array_push($graphs, ...$snapshot->graphIds);
         array_push($data, ...$snapshot->dataSourceIds);
         if ($device->pollerId > 1) {
@@ -145,13 +146,15 @@ try {
     $verifier = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorReplication();
     foreach ($snapshots as $snapshot) {
         if (isset($remotes[$snapshot->device->pollerId])) {
-            $verifier->purgeDependents($remotes[$snapshot->device->pollerId], $snapshot->device->id);
+            $verifier->assertRemovalScope($remotes[$snapshot->device->pollerId], $snapshot);
+            $verifier->purgeReviewedDependents($remotes[$snapshot->device->pollerId], $snapshot);
         }
     }
     // The lifecycle API partitions remote cleanup while preserving one batch hook.
     api_device_remove_multi($ids, $policy === DeviceRemovalPolicy::Retain ? 1 : 2, [
         'graphs' => $graphs,
         'data_sources' => $data,
+        'by_device' => $reviewed,
     ]);
     if ($policy === DeviceRemovalPolicy::Purge && $data !== []) {
         // Graph removal already purged linked sources and invoked their hooks.

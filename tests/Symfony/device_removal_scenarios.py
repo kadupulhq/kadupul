@@ -148,6 +148,10 @@ def verify_device_removal(harness, session, user_id, poller, check):
 
         remote = create(poller)
         remote_form = RemovalForm(harness, session, [remote['device']])
+        remote_extra = int(harness.sql(f'INSERT INTO create_remote.graph_local (host_id) VALUES ({remote["device"]}); SELECT LAST_INSERT_ID()').strip())
+        check(remote_form.remove() == 502 and exists(remote['device']), 'collector association drift prevents device removal')
+        check(harness.sql(f'SELECT COUNT(*) FROM create_remote.graph_local WHERE id={remote_extra}').strip() == '1', 'collector drift is not silently purged')
+        harness.sql(f'DELETE FROM create_remote.graph_local WHERE id={remote_extra}')
         harness.sql(f"UPDATE poller SET last_status='2000-01-01 00:00:00' WHERE id={poller}")
         check(remote_form.remove() == 502 and exists(remote['device']), 'offline collector prevents device removal')
         harness.sql(f'UPDATE poller SET last_status=NOW() WHERE id={poller}')
