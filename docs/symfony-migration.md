@@ -314,6 +314,12 @@ the existing `fa-circle-thin` alias. The small unminified tablesorter pager stay
 as pinned source because the npm distribution omits it. Other small legacy
 browser libraries remain until their owning screens migrate.
 
+Symfony's migrated Twig templates currently request no browser assets. The test
+suite rejects static remote script, stylesheet, image, media and frame URLs in
+those templates. When a migrated page first needs a browser dependency, pin its
+exact version in `package.json` and `package-lock.json`, build it to a local path,
+and add that output to `tools/verify-offline.php` before referencing it.
+
 ## Offline installation
 
 Build on a connected machine with the required PHP extensions and selected

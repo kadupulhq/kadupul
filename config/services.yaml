@@ -151,6 +151,7 @@ services:
     kadupul.inventory.read_database:
         class: Doctrine\DBAL\Connection
         factory: ['@Kadupul\Inventory\Infrastructure\Persistence\InventoryReadConnectionFactory', 'create']
+        lazy: true
 
     Kadupul\Inventory\Infrastructure\Persistence\DoctrineSiteAssignmentCatalog:
         arguments:
