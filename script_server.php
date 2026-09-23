@@ -7,6 +7,12 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+/* reject HTTP before the argument parsing below, which assumes the CLI */
+if (php_sapi_name() !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 if (function_exists('pcntl_async_signals')) {
     pcntl_async_signals(true);
 } else {

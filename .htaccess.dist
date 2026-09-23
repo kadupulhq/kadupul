@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2004-2026 The Cacti Group
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
 # Optional security-header overlay for Apache deployments.
@@ -12,6 +13,37 @@
 # Distros that manage Apache config centrally should put the same
 # directives in /etc/httpd/conf.d/cacti.conf instead of enabling this
 # file.
+#
+# It also denies the root paths Nginx denies: dotfiles, dot-directories
+# such as .git/, and the dependency manifests. /.well-known/ stays
+# reachable for ACME and similar clients. These rules live here rather
+# than in a shipped root .htaccess so that upgrades never overwrite an
+# operator's copy of this file.
+
+<FilesMatch "^\.|^(composer\.(json|lock)|package(-lock)?\.json|phpunit[^/]*\.xml|mise\.toml)$">
+	<IfModule mod_authz_core.c>
+		Require all denied
+	</IfModule>
+	<IfModule !mod_authz_core.c>
+		Order Allow,Deny
+		Deny from all
+	</IfModule>
+</FilesMatch>
+
+# Apache 2.4
+<IfModule mod_authz_core.c>
+	<If "%{REQUEST_URI} =~ m#(^|/)\.(?!well-known(/|$))#">
+		Require all denied
+	</If>
+</IfModule>
+
+# Apache 2.2 has no <If>, so dot-directories need mod_rewrite. The rules are
+# not wrapped in <IfModule mod_rewrite.c> on purpose: without the module the
+# server answers 500 instead of silently serving .git/.
+<IfModule !mod_authz_core.c>
+	RewriteEngine On
+	RewriteRule (^|/)\.(?!well-known(/|$)) - [F]
+</IfModule>
 
 <IfModule mod_headers.c>
 	# Applied to every response (including static files).

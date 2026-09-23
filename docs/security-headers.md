@@ -128,7 +128,18 @@ carry whatever headers the web server adds.
 For Apache deployments that don't manage config centrally, rename the
 shipped `.htaccess.dist` to `.htaccess` at the project root. It applies
 `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, and a
-narrow `Content-Security-Policy` to static files.
+narrow `Content-Security-Policy` to static files. It also denies the root
+paths Nginx denies (dotfiles, dot-directories such as `.git/`, and the
+dependency manifests) while leaving `/.well-known/` reachable. On Apache
+2.2 the dot-directory deny needs `mod_rewrite`; without it the server
+answers 500 rather than serve `.git/`.
+
+The `.htaccess` files shipped in `cache/`, `docs/`, `include/` and `lib/`
+are active wherever `AllowOverride` lets Apache read them. They deny
+what Nginx denies in those directories, including the local
+documentation under `docs/`. The deny on PHP under
+`include/vendor/` needs Apache 2.4, or `mod_rewrite` on Apache 2.2; a 2.2
+server without `mod_rewrite` still serves those files.
 
 For distros that install Kadupul via `.deb` or `.rpm`, put the same
 directives in `/etc/httpd/conf.d/cacti.conf` or `/etc/apache2/conf-available/`
