@@ -260,6 +260,9 @@ try {
             throw new RuntimeException('Device operation could not be confirmed');
         }
         $markers = ['time_last_change_device' => (string) time()];
+        if ($assignDevices && $assignment->kind === 'site') {
+            $markers['time_last_change_site_device'] = (string) time();
+        }
         foreach ($changed as $device) {
             $markers['poller_replicate_device_cache_crc_' . $device->pollerId] = bin2hex(random_bytes(20));
         }
