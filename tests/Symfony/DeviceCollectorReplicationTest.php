@@ -61,7 +61,7 @@ final class DeviceCollectorReplicationTest extends TestCase
     public function testReviewedCleanupCannotFollowAssociationsReassignedToAnotherDevice(): void
     {
         $db = $this->removalDatabase();
-        $db->exec('INSERT INTO data_local VALUES (12, 99); INSERT INTO graph_local VALUES (11, 99); INSERT INTO data_template_data VALUES (101, 12); INSERT INTO data_template_rrd VALUES (102, 12); INSERT INTO data_input_data VALUES (101); INSERT INTO graph_templates_item VALUES (11,102)');
+        $db->exec('INSERT INTO data_local VALUES (12, 99); INSERT INTO graph_local VALUES (11, 99); INSERT INTO data_template_data VALUES (101, 12); INSERT INTO data_template_rrd VALUES (102, 12); INSERT INTO data_input_data VALUES (101); INSERT INTO graph_templates_item (local_graph_id,task_item_id) VALUES (11,102)');
         $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [11], [12]);
         $replication = new DeviceCollectorReplication();
         $replication->purgeReviewedDependents($db, $snapshot);
@@ -81,7 +81,7 @@ final class DeviceCollectorReplicationTest extends TestCase
         $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [11], [12]);
         $replication = new DeviceCollectorReplication();
         $receipt = $replication->purgeReviewedDependents($db, $snapshot);
-        self::assertSame(['templates' => [101], 'rrds' => []], $receipt);
+        self::assertSame(['templates' => [101], 'rrds' => [], 'graph_items' => []], $receipt);
         $db->exec('DELETE FROM data_local; DELETE FROM graph_local');
         $db->exec($insert);
         $this->expectException(\RuntimeException::class);
@@ -94,7 +94,7 @@ final class DeviceCollectorReplicationTest extends TestCase
         yield ['INSERT INTO data_template_data VALUES (102,12)'];
         yield ['INSERT INTO data_template_rrd VALUES (103,12)'];
         yield ['INSERT INTO data_input_data VALUES (101)'];
-        yield ['INSERT INTO graph_templates_item VALUES (11,102)'];
+        yield ['INSERT INTO graph_templates_item (local_graph_id,task_item_id) VALUES (11,102)'];
     }
 
     #[DataProvider('referenceTiming')]
@@ -109,7 +109,7 @@ final class DeviceCollectorReplicationTest extends TestCase
             self::assertSame([102], $receipt['rrds']);
             $db->exec('DELETE FROM data_local; DELETE FROM graph_local');
         }
-        $db->exec('INSERT INTO graph_templates_item VALUES (99,102)');
+        $db->exec('INSERT INTO graph_templates_item (local_graph_id,task_item_id) VALUES (99,102)');
         try {
             if ($late) {
                 $replication->verifyPurged($db, 7, $snapshot, $receipt);
@@ -130,6 +130,44 @@ final class DeviceCollectorReplicationTest extends TestCase
         yield 'outside reference added after cleanup' => [true];
     }
 
+    #[DataProvider('reassignedDependents')]
+    public function testFinalVerificationRejectsReassignedCapturedIdentities(string $insert): void
+    {
+        $db = $this->removalDatabase();
+        $db->exec('INSERT INTO data_local VALUES (12,7); INSERT INTO graph_local VALUES (11,7); INSERT INTO data_template_data VALUES (101,12); INSERT INTO data_template_rrd VALUES (102,12); INSERT INTO graph_templates_item VALUES (103,11,102)');
+        $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [11], [12]);
+        $replication = new DeviceCollectorReplication();
+        $receipt = $replication->purgeReviewedDependents($db, $snapshot);
+        self::assertSame(['templates' => [101], 'rrds' => [102], 'graph_items' => [103]], $receipt);
+        $db->exec('DELETE FROM data_local; DELETE FROM graph_local');
+        $db->exec($insert);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Reviewed collector dependent identity remains');
+        $replication->verifyPurged($db, 7, $snapshot, $receipt);
+    }
+
+    public static function reassignedDependents(): iterable
+    {
+        yield ['INSERT INTO data_template_data VALUES (101,99)'];
+        yield ['INSERT INTO data_template_rrd VALUES (102,99)'];
+        yield ['INSERT INTO graph_templates_item VALUES (103,99,999)'];
+    }
+
+    public function testFinalTransactionalChecksUseCurrentReads(): void
+    {
+        $db = $this->createMock(PDO::class);
+        $db->method('inTransaction')->willReturn(true);
+        $db->method('prepare')->willReturnCallback(function (string $sql): PDOStatement {
+            self::assertStringEndsWith(' FOR UPDATE', $sql);
+            $statement = $this->createMock(PDOStatement::class);
+            $statement->method('execute')->willReturn(true);
+            $statement->method('fetchColumn')->willReturn(0);
+            return $statement;
+        });
+        $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [11], [12]);
+        (new DeviceCollectorReplication())->verifyPurged($db, 7, $snapshot, ['templates' => [101], 'rrds' => [102], 'graph_items' => [103]]);
+    }
+
     private function removalDatabase(): PDO
     {
         $db = new PDO('sqlite::memory:');
@@ -139,7 +177,7 @@ final class DeviceCollectorReplicationTest extends TestCase
             'graph_tree_items' => 'host_id INTEGER', 'reports_items' => 'host_id INTEGER', 'poller_command' => 'command TEXT',
             'data_local' => 'id INTEGER, host_id INTEGER', 'graph_local' => 'id INTEGER, host_id INTEGER',
             'data_template_data' => 'id INTEGER, local_data_id INTEGER', 'data_template_rrd' => 'id INTEGER, local_data_id INTEGER',
-            'data_input_data' => 'data_template_data_id INTEGER', 'graph_templates_item' => 'local_graph_id INTEGER, task_item_id INTEGER',
+            'data_input_data' => 'data_template_data_id INTEGER', 'graph_templates_item' => 'id INTEGER PRIMARY KEY, local_graph_id INTEGER, task_item_id INTEGER',
         ] as $table => $columns) {
             $db->exec("CREATE TABLE $table ($columns)");
         }
