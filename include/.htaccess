@@ -4,7 +4,7 @@
 # include/ serves the interface's scripts, styles and images, so only the
 # bootstrap files and vendored PHP are denied. The prefix match on the
 # bootstrap names also covers config.php.dist and editor backups.
-<FilesMatch "^(config|global|plugins)\.php">
+<FilesMatch "(?i)^(config|global|plugins)\.php">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>

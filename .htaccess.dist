@@ -20,7 +20,7 @@
 # than in a shipped root .htaccess so that upgrades never overwrite an
 # operator's copy of this file.
 
-<FilesMatch "^\.|^(composer\.(json|lock)|package(-lock)?\.json|phpunit[^/]*\.xml|mise\.toml)$">
+<FilesMatch "(?i)^\.|^(composer\.(json|lock)|package(-lock)?\.json|phpunit[^/]*\.xml|mise\.toml)$">
 	<IfModule mod_authz_core.c>
 		Require all denied
 	</IfModule>
@@ -32,7 +32,7 @@
 
 # Apache 2.4
 <IfModule mod_authz_core.c>
-	<If "%{REQUEST_URI} =~ m#(^|/)\.(?!well-known(/|$))#">
+	<If "%{REQUEST_URI} =~ m#/\.(?!well-known(/|$))#i || %{REQUEST_URI} =~ m#./\.well-known(/|$)#i">
 		Require all denied
 	</If>
 </IfModule>
@@ -42,7 +42,8 @@
 # server answers 500 instead of silently serving .git/.
 <IfModule !mod_authz_core.c>
 	RewriteEngine On
-	RewriteRule (^|/)\.(?!well-known(/|$)) - [F]
+	RewriteRule (^|/)\.(?!well-known(/|$)) - [F,NC]
+	RewriteRule ^.+/\.well-known(/|$) - [F,NC]
 </IfModule>
 
 <IfModule mod_headers.c>
