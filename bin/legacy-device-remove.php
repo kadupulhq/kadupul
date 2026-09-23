@@ -144,8 +144,11 @@ try {
         $status = 'shared';
         throw new RuntimeException('Shared graph dependencies');
     }
-    $verifyReviewedScope = static function () use ($connection, $graphs, $data): void {
-        if (!DeviceRemovalDependencies::exclusive($connection, $graphs, $data)) {
+    $verifyReviewedScope = static function () use ($connection, $graphs, $data, $reviewed, $policy): void {
+        if (!DeviceRemovalDependencies::ownsRemaining($connection, $reviewed)) {
+            throw new RuntimeException('Reviewed graph or data-source ownership changed');
+        }
+        if ($policy === DeviceRemovalPolicy::Purge && !DeviceRemovalDependencies::exclusive($connection, $graphs, $data)) {
             throw new RuntimeException('Graph data-source scope changed');
         }
     };
