@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 require_once __DIR__ . '/../Helpers/PhpSource.php';
 $source = file_get_contents(__DIR__ . '/../../lib/api_device.php');
 // Fixed first-party function only; no request or external input is executable.
-eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source($source, 'api_device_purge_from_remote')); // nosemgrep: php.lang.security.eval-use.eval-use
+eval('namespace ' . __NAMESPACE__ . '; use PDO; use RuntimeException;' . \test_php_function_source($source, 'api_device_purge_from_remote')); // nosemgrep: php.lang.security.eval-use.eval-use
 
 const POLLER_COMMAND_PURGE = 99;
 function remote_poller_up($id)
