@@ -251,9 +251,9 @@ function user_group_copy($id, $prefix = 'New Group') {
 		policy_graphs, policy_trees, policy_hosts, policy_graph_templates, enabled
 		FROM user_auth_group WHERE id = ?', array($id));
 
-	$id = db_fetch_insert_id();
+	$group_id = db_fetch_insert_id();
 
-	if (!empty($id)) {
+	if (!empty($group_id)) {
 		$perms = db_fetch_assoc_prepared('SELECT *
 			FROM user_auth_group_perms
 			WHERE group_id = ?',
@@ -264,7 +264,7 @@ function user_group_copy($id, $prefix = 'New Group') {
 				db_execute_prepared('INSERT INTO user_auth_group_perms
 					(group_id, item_id, type)
 					VALUES (?, ?, ?)',
-					array($id, $p['item_id'], $p['type']));
+					array($group_id, $p['item_id'], $p['type']));
 			}
 		}
 
@@ -278,8 +278,14 @@ function user_group_copy($id, $prefix = 'New Group') {
 				db_execute_prepared('INSERT INTO user_auth_group_realm
 					(group_id, realm_id)
 					VALUES (?, ?)',
-					array($id, $r['realm_id']));
+					array($group_id, $r['realm_id']));
 			}
+		}
+
+		$login_opts = db_fetch_cell_prepared('SELECT login_opts FROM user_auth_group WHERE id = ?', array($group_id));
+
+		if ($login_opts !== false && user_group_login_opts($login_opts, $group_id) !== $login_opts) {
+			db_execute_prepared("UPDATE user_auth_group SET login_opts = '3' WHERE id = ?", array($group_id));
 		}
 	}
 

@@ -341,15 +341,18 @@ function domain_enable($domain_id) {
 }
 
 function domain_default($domain_id) {
-	/* Clearing first would leave no default domain at all for an id that does not exist. */
-	if (!domain_exists($domain_id)) {
+	/* Set the new default first and confirm it stuck. Clearing first left no
+	   default at all when the id named no row, and checking before clearing
+	   still lost the race against a delete. */
+	db_execute_prepared('UPDATE user_domains SET defdomain = 1 WHERE domain_id = ?', array($domain_id));
+
+	if (db_fetch_cell_prepared('SELECT COUNT(*) FROM user_domains WHERE domain_id = ? AND defdomain = 1', array($domain_id)) == 0) {
 		raise_message('domain_missing', __('The domain to make default no longer exists.'), MESSAGE_LEVEL_ERROR);
 
 		return;
 	}
 
-	db_execute('UPDATE user_domains SET defdomain = 0');
-	db_execute_prepared('UPDATE user_domains SET defdomain = 1 WHERE domain_id = ?', array($domain_id));
+	db_execute_prepared('UPDATE user_domains SET defdomain = 0 WHERE domain_id != ?', array($domain_id));
 }
 
 function domain_edit() {

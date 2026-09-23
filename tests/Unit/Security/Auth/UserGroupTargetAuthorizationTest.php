@@ -24,12 +24,12 @@ require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
  *
  * @return array<string, mixed> The writes made and the message raised.
  */
-function run_handler($handler, array $request, array $db) {
+function run_handler($handler, array $request, array $db, $arguments = '()') {
 	$root   = dirname(__DIR__, 4);
 	$source = file_get_contents($root . '/user_group_admin.php');
 
 	$functions = '';
-	foreach (array('user_group_exists', 'user_group_refuse', 'user_group_login_opts', 'is_user_group_realm_allowed', 'update_policies', 'perm_remove', 'form_actions', 'form_save') as $name) {
+	foreach (array('user_group_exists', 'user_group_refuse', 'user_group_login_opts', 'is_user_group_realm_allowed', 'update_policies', 'perm_remove', 'form_actions', 'form_save', 'user_group_copy') as $name) {
 		$functions .= test_php_function_source($source, $name) . "\n";
 	}
 
@@ -53,8 +53,22 @@ function cacti_log(...$args) {}
 function raise_message($name) { if ($GLOBALS["message"] === null) { $GLOBALS["message"] = $name; } }
 function reset_group_perms($id) {}
 function cacti_count($x) { return count($x); }
+function cacti_sizeof($x) { return is_array($x) ? count($x) : 0; }
 function user_group_enable($id) { $GLOBALS["writes"][] = "ENABLE " . $id; }
-function db_execute_prepared($sql, $params = array()) { $GLOBALS["writes"][] = strtok(trim($sql), " "); return true; }
+function db_execute_prepared($sql, $params = array()) {
+	if (strpos($sql, "INSERT INTO user_auth_group_realm") !== false) { $GLOBALS["writes"][] = "REALM " . $params[0] . ":" . $params[1]; }
+	elseif (strpos($sql, "INSERT INTO user_auth_group_perms") !== false) { $GLOBALS["writes"][] = "PERM " . $params[0] . ":" . $params[1]; }
+	elseif (strpos($sql, "SET login_opts") !== false) { $GLOBALS["writes"][] = "LOGIN_OPTS " . $params[0]; }
+	else { $GLOBALS["writes"][] = strtok(trim($sql), " "); }
+	return true;
+}
+function db_fetch_insert_id() { return 77; }
+function db_fetch_assoc_prepared($sql, $params = array()) {
+	// The source group owns one realm and one permission; the copy owns none yet.
+	if ($params[0] != 5) { return array(); }
+	return strpos($sql, "user_auth_group_realm") !== false ? array(array("realm_id" => 8)) : array(array("item_id" => 4, "type" => 1));
+}
+function db_qstr($value) { return chr(39) . $value . chr(39); }
 function db_fetch_cell_prepared($sql, $params) {
 	$db = $GLOBALS["db"];
 	if (strpos($sql, "FROM user_auth_group_realm") !== false) {
@@ -66,7 +80,7 @@ function db_fetch_cell_prepared($sql, $params) {
 	return (int) in_array($params[0], $db["groups"]);
 }
 register_shutdown_function(function () { echo json_encode(array("writes" => $GLOBALS["writes"], "message" => $GLOBALS["message"])); });
-' . $functions . $handler . '();
+' . $functions . $handler . $arguments . ';
 ';
 
 	$file = tempnam(sys_get_temp_dir(), 'group-target-');
@@ -123,6 +137,13 @@ test('the console landing page needs the console realm', function () {
 		->and(user_group_login_opts('2', 0))->toBe('3')
 		->and(user_group_login_opts('2', 6))->toBe('2')
 		->and(user_group_login_opts('1', 5))->toBe('1');
+});
+
+test('a copied group receives the realms and permissions of its source', function () use ($db) {
+	$result = run_handler('user_group_copy', array(), $db, '(5)');
+
+	expect($result['writes'])->toContain('REALM 77:8')
+		->and($result['writes'])->toContain('PERM 77:4');
 });
 
 test('a realm save stores the posted realms and nothing else', function () use ($db) {

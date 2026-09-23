@@ -55,6 +55,10 @@ function db_execute_prepared($sql, $params = array()) { $GLOBALS["writes"][] = s
 function cacti_authorize_has_realm($user_id, $realm_id) { return in_array($user_id, $GLOBALS["db"]["realm1"]); }
 function db_fetch_cell_prepared($sql, $params) {
 	$db = $GLOBALS["db"];
+	if (strpos($sql, "defdomain = 1") !== false) {
+		// The row is default only once the UPDATE above matched it.
+		return (int) (in_array($params[0], $db["domains"]) && in_array("UPDATE", $GLOBALS["writes"], true));
+	}
 	if (strpos($sql, "FROM user_domains") !== false) { return (int) in_array($params[0], $db["domains"]); }
 	return (int) in_array($params[0], $db["local_users"]);
 }
@@ -98,7 +102,8 @@ test('a non-LDAP domain save applies the same rule', function () use ($db) {
 });
 
 test('a domain becomes default only when it exists', function () use ($db) {
-	expect(run_handler('domain_default(2)', array(), $db))->toBe(array('writes' => array('CLEAR', 'UPDATE'), 'message' => null));
-	// Nothing is cleared, so the current default survives.
-	expect(run_handler('domain_default(404)', array(), $db))->toBe(array('writes' => array(), 'message' => 'domain_missing'));
+	// The target is set first, then the others are cleared, so a delete racing
+	// the check cannot leave the system with no default at all.
+	expect(run_handler('domain_default(2)', array(), $db))->toBe(array('writes' => array('UPDATE', 'UPDATE'), 'message' => null));
+	expect(run_handler('domain_default(404)', array(), $db))->toBe(array('writes' => array('UPDATE'), 'message' => 'domain_missing'));
 });
