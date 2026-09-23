@@ -62,6 +62,26 @@ final class DeviceRemovalDependenciesTest extends TestCase
         DeviceRemovalDependencies::exclusive($this->database(), [1], [10]);
     }
 
+    public function testAFailedAggregateQueryIsReportedNotDereferenced(): void
+    {
+        // In silent error mode query() returns false, which must not be called on.
+        $db = $this->createMock(PDO::class);
+        $db->method('inTransaction')->willReturn(true);
+        $db->method('query')->willReturnCallback(function (string $sql): PDOStatement|false {
+            if (str_contains($sql, 'aggregate_graphs')) {
+                return false;
+            }
+            $statement = $this->createMock(PDOStatement::class);
+            $statement->method('fetchAll')->willReturn([]);
+            $statement->method('errorCode')->willReturn('00000');
+            return $statement;
+        });
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Dependency scope unavailable');
+        DeviceRemovalDependencies::exclusive($db, [1], [10]);
+    }
+
     #[DataProvider('emptySelections')]
     public function testEmptySelectionsIgnoreTemplateRows(array $graphs, array $data, bool $outsideReference, bool $expected): void
     {
