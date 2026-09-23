@@ -38,8 +38,10 @@ require_once __DIR__ . '/../lib/utility.php';
 $status = 'failed';
 $transactionStarted = false;
 $remotes = [];
-try {
-    $input = stream_get_contents(STDIN, 16001);
+/* Parses one removal command. Bounded length and depth keep a hostile payload
+   away from the lifecycle below. */
+function device_removal_command($input)
+{
     if (strlen($input) > 16000) {
         throw new RuntimeException('Payload too large');
     }
@@ -49,6 +51,12 @@ try {
         || !is_array($command['selection'] ?? null) || !is_string($command['policy'] ?? null) || DeviceRemovalPolicy::tryFrom($command['policy']) === null) {
         throw new RuntimeException('Invalid command');
     }
+
+    return $command;
+}
+
+try {
+    $command = device_removal_command(stream_get_contents(STDIN, 16001));
     $selection = new DeviceSelection($command['selection']);
     $ids = array_keys($selection->revisions);
     $policy = DeviceRemovalPolicy::from($command['policy']);
