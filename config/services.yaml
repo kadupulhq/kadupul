@@ -147,8 +147,17 @@ services:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreationCatalog
 
     Kadupul\Inventory\Application\Query\ListAssignableSites: ~
+
+    kadupul.inventory.read_database:
+        class: Doctrine\DBAL\Connection
+        factory: ['@Kadupul\Inventory\Infrastructure\Persistence\InventoryReadConnectionFactory', 'create']
+
+    Kadupul\Inventory\Infrastructure\Persistence\DoctrineSiteAssignmentCatalog:
+        arguments:
+            $database: '@kadupul.inventory.read_database'
+
     Kadupul\Inventory\Application\Port\SiteAssignmentCatalog:
-        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacySiteAssignmentCatalog
+        alias: Kadupul\Inventory\Infrastructure\Persistence\DoctrineSiteAssignmentCatalog
 
     Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceTemplateAssignments:
         arguments:
