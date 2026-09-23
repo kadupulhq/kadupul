@@ -34,11 +34,14 @@ $observer = <<<'PHP'
 PHP;
 // Keep original source line numbers for integration coverage attribution.
 $observer = str_replace(["\r", "\n"], ' ', $observer);
-foreach (['function api_device_disable_devices($device_ids): bool {', 'function api_device_enable_devices($device_ids) {'] as $signature) {
-    if (substr_count($source, $signature) !== 1) {
+foreach ([
+    '/function api_device_disable_devices\(\$device_ids\): bool\s*\{/',
+    '/function api_device_enable_devices\(\$device_ids\)\s*\{/',
+] as $signature) {
+    if (preg_match_all($signature, $source) !== 1) {
         throw new RuntimeException('State writer fixture no longer matches');
     }
-    $source = str_replace($signature, $signature . $observer, $source);
+    $source = preg_replace_callback($signature, static fn(array $match): string => $match[0] . $observer, $source, 1);
 }
 if (!copy($file, $backup) || file_put_contents($file, $source) === false) {
     throw new RuntimeException('Cannot install state writer fixture');
