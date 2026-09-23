@@ -21,12 +21,16 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class DevicePlacementPresentationTest extends TestCase
 {
-    public static function kinds(): array
+    public static function kinds(): iterable
     {
-        return [['tree','2:0'],['report','3']];
+        foreach ([['tree', '2:0'], ['report', '3']] as [$kind, $destination]) {
+            foreach (['javascript:alert(1)', '//evil.invalid/path', '\" onmouseover=\"alert(1)<svg>'] as $search) {
+                yield [$kind, $destination, $search];
+            }
+        }
     }
     #[\PHPUnit\Framework\Attributes\DataProvider('kinds')]
-    public function testFrenchPageValidatesChoicesAndSubmitsToUseCase(string $kind, string $destination): void
+    public function testFrenchPageValidatesChoicesAndSubmitsToUseCase(string $kind, string $destination, string $search): void
     {
         $kernel = new Kernel('test', true);
         try {
@@ -56,7 +60,7 @@ final class DevicePlacementPresentationTest extends TestCase
             $port = $this->createMock(DevicePlacements::class);
             $port->expects(self::once())->method('place')->with(42, self::callback(fn($s) => $s->revisions === [7 => $device->revision()]), self::callback(fn($p) => $p->kind === $kind && $p->destination === $destination));
             $container->set(DevicePlacements::class, $port);
-            $path = '/inventory/devices/place/' . $kind . '?ids[]=7';
+            $path = '/inventory/devices/place/' . $kind . '?ids[]=7&' . http_build_query(['list' => ['q' => $search]]);
             $response = $kernel->handle(Request::create($path, 'GET', [], ['Cacti' => 'fixture']));
             self::assertSame(200, $response->getStatusCode());
             self::assertStringContainsString('Ajouter les appareils', $response->getContent());
@@ -64,6 +68,15 @@ final class DevicePlacementPresentationTest extends TestCase
             self::assertStringContainsString('&lt;destination&gt;', $response->getContent());
             $doc = new \DOMDocument();
             @$doc->loadHTML($response->getContent());
+            $links = (new \DOMXPath($doc))->query('//a');
+            self::assertCount(1, $links);
+            $href = $links->item(0)->getAttribute('href');
+            self::assertSame('/inventory/devices', parse_url($href, PHP_URL_PATH));
+            self::assertNull(parse_url($href, PHP_URL_SCHEME));
+            self::assertNull(parse_url($href, PHP_URL_HOST));
+            parse_str(parse_url($href, PHP_URL_QUERY), $linkQuery);
+            self::assertSame($search, $linkQuery['q']);
+            self::assertFalse($links->item(0)->hasAttribute('onmouseover'));
             $token = (new \DOMXPath($doc))->evaluate('string(//input[@name="device_placement[_token]"]/@value)');
             $fields = ['selection' => json_encode([7 => $device->revision()]),'target' => $destination,'_token' => $token];
             if ($kind === 'report') {
