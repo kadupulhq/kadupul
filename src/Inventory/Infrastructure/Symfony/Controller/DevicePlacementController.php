@@ -38,6 +38,7 @@ final class DevicePlacementController
             // The query authorizes before any repository access or selection read.
             $devices = $prepare($rawIds);
             $choices = $targets($kind);
+            $defaults = $kind === 'report' ? $targets->reportDefaults() : [];
             $ids = DeviceSelection::validateIds($rawIds);
             $filters = DeviceListParameters::context($query);
         } catch (InventoryAccessDenied $error) {
@@ -52,7 +53,7 @@ final class DevicePlacementController
             $revisions[$device->id] = $device->revision();
         }
         $parameters = ['kind' => $kind, 'ids' => $ids, 'list' => $filters];
-        $form = $forms->create(\Kadupul\Inventory\Infrastructure\Symfony\Form\DevicePlacementType::class, ['selection' => json_encode($revisions, JSON_THROW_ON_ERROR)], ['targets' => $choices, 'kind' => $kind, 'action' => $urls->generate('inventory_device_placement', $parameters)]);
+        $form = $forms->create(\Kadupul\Inventory\Infrastructure\Symfony\Form\DevicePlacementType::class, ['selection' => json_encode($revisions, JSON_THROW_ON_ERROR)] + $defaults, ['targets' => $choices, 'kind' => $kind, 'action' => $urls->generate('inventory_device_placement', $parameters)]);
         $form->handleRequest($request);
         $status = $request->isMethod('POST') ? 422 : 200;
         if ($form->isSubmitted()) {

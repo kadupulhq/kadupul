@@ -19,16 +19,30 @@ final readonly class LegacyDeviceTreePlacement implements DeviceTreePlacement
     {
         $db = $this->database->get();
         $result = [];
+        $trees = [];
+        $own = $this->access->canManageTree($actorId, $actorId);
+        $others = $this->access->canManageTree($actorId, 0);
         foreach ($db->query('SELECT id, name, user_id, locked, modified_by FROM graph_tree ORDER BY name, id')->fetchAll(PDO::FETCH_ASSOC) as $tree) {
-            if (!$this->available($actorId, $tree)) {
+            if (!((int) $tree['user_id'] === $actorId ? $own : $others)
+                || ((bool) $tree['locked'] && (int) $tree['modified_by'] !== $actorId)) {
                 continue;
             }
-            $id = (int) $tree['id'];
-            $result[$id . ':0'] = $tree['name'] . ' (#' . $id . ')';
-            $query = $db->prepare("SELECT id, title FROM graph_tree_items WHERE graph_tree_id = ? AND host_id = 0 AND local_graph_id = 0 AND site_id = 0 AND title <> '' ORDER BY title, id");
-            $query->execute([$id]);
-            foreach ($query->fetchAll(PDO::FETCH_ASSOC) as $branch) {
-                $result[$id . ':' . $branch['id']] = $tree['name'] . ' / ' . $branch['title'] . ' (#' . $branch['id'] . ')';
+            $trees[(int) $tree['id']] = $tree['name'];
+        }
+        if ($trees === []) {
+            return [];
+        }
+        $branches = [];
+        $query = $db->query("SELECT id, title, graph_tree_id FROM graph_tree_items WHERE host_id = 0 AND local_graph_id = 0 AND site_id = 0 AND title <> '' ORDER BY graph_tree_id, title, id");
+        foreach ($query->fetchAll(PDO::FETCH_ASSOC) as $branch) {
+            if (isset($trees[(int) $branch['graph_tree_id']])) {
+                $branches[(int) $branch['graph_tree_id']][] = $branch;
+            }
+        }
+        foreach ($trees as $id => $name) {
+            $result[$id . ':0'] = $name . ' (#' . $id . ')';
+            foreach ($branches[$id] ?? [] as $branch) {
+                $result[$id . ':' . $branch['id']] = $name . ' / ' . $branch['title'] . ' (#' . $branch['id'] . ')';
             }
         }
         return $result;

@@ -19,7 +19,10 @@ final readonly class DevicePlacement
         $parts = explode(':', $destination);
         $this->targetId = (int) $parts[0];
         $this->parentId = (int) ($parts[1] ?? 0);
-        if ($this->targetId > 4294967295 || $this->parentId > 4294967295 || ($kind === 'tree' && ($timespan !== 0 || $alignment !== 0)) || ($kind === 'report' && ($timespan < 1 || $timespan > 28 || $alignment < 1 || $alignment > 3))) {
+        if ($this->targetId > 4294967295 || $this->parentId > 4294967295) {
+            throw new \InvalidArgumentException('Select a valid placement destination.');
+        }
+        if (($kind === 'tree' && ($timespan !== 0 || $alignment !== 0)) || ($kind === 'report' && ($timespan < 1 || $timespan > 28 || $alignment < 1 || $alignment > 3))) {
             throw new \InvalidArgumentException('Select valid report display settings.');
         }
     }
