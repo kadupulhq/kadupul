@@ -1,4 +1,5 @@
 """Real Symfony form, CSRF, authorization, concurrency and legacy-save checks."""
+import json
 from html.parser import HTMLParser
 from urllib.parse import parse_qs, urlencode, urlsplit
 from urllib.request import Request
@@ -161,11 +162,29 @@ def verify_device_edit(harness, session, user_id, allowed_id, hidden_id, check):
           'legacy host-save plugin receives the edited device')
     audit = harness.command('cat', '/var/www/html/log/cacti.log', check=True)['stdout']
     check(f'INVENTORY: User {user_id} edited device {allowed_id}' in audit, 'save records actor and device in the audit log')
+    events = [json.loads(line) for line in
+              harness.command('cat', '/var/www/html/log/kadupul-audit.jsonl', check=True)['stdout'].splitlines()]
+    expected = lambda event, outcome: (
+        event.get('schema') == 'kadupul.audit.v1'
+        and event.get('actor') == {'id': user_id}
+        and event.get('action') == 'inventory.device.edit'
+        and event.get('target') == {'type': 'device', 'id': str(allowed_id)}
+        and event.get('decision') == 'allowed'
+        and event.get('outcome') == outcome
+        and len(event.get('correlation_id', '')) == 32
+    )
+    check(any(expected(event, 'succeeded') for event in events), 'successful edit records the structured audit contract')
     harness.sql(f'DELETE FROM graph_templates_graph WHERE local_graph_id={graph_id}; DELETE FROM graph_local WHERE id={graph_id}')
     check(harness.php('-r', 'require "include/global.php"; function setup_edit_site_guard() { api_plugin_register_hook("compatibility_test", "api_device_save", "compatibility_create_guard", "setup.php", true); } setup_edit_site_guard();')['exit'] == 0, 'site-changing save hook is registered')
     guarded = get_fields() | {'device_edit[description]': 'create-hook-change-site_id'}
     check(post(guarded, harness.base)[0] == 502, 'save hook cannot replace the locked site assignment')
     check(harness.sql(f'SELECT description FROM host WHERE id={allowed_id}').strip() == 'Edited inventory device', 'rejected site-changing hook leaves device unchanged')
+    audit = harness.command('cat', '/var/www/html/log/kadupul-audit.jsonl', check=True)['stdout']
+    events = [json.loads(line) for line in audit.splitlines()]
+    check(any(expected(event, 'failed') for event in events), 'post-authorization rollback records the structured failure outcome')
+    check('edited.invalid' not in audit and '<script>alert(1)</script>' not in audit
+          and 'create-hook-change-site_id' not in audit,
+          'structured audit excludes submitted device fields')
     for action in ('--disable', '--uninstall'):
         check(harness.php('cli/plugin_manage.php', '--plugin=compatibility_test', action)['exit'] == 0,
               'save-hook fixture is removed')
