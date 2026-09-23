@@ -98,15 +98,15 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
 	}
 	$table_id = $table_prefix . $table_suffix;
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$table_id_html = htmlspecialchars((string)$table_id, $escape_flags, 'UTF-8', false);
+	$table_id_html = htmlspecialchars((string)$table_id, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$table_id_html = str_replace('`', '&#96;', $table_id_html);
-	$width_html = htmlspecialchars((string)$width, $escape_flags, 'UTF-8', false);
+	$width_html = htmlspecialchars((string)$width, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$width_html = str_replace('`', '&#96;', $width_html);
-	$align_html = htmlspecialchars((string)$align, $escape_flags, 'UTF-8', false);
+	$align_html = htmlspecialchars((string)$align, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$align_html = str_replace('`', '&#96;', $align_html);
-	$padding_html = htmlspecialchars((string)$cell_padding, $escape_flags, 'UTF-8', false);
+	$padding_html = htmlspecialchars((string)$cell_padding, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$padding_html = str_replace('`', '&#96;', $padding_html);
-	$add_label_html = htmlspecialchars((string)$add_label, $escape_flags, 'UTF-8', false);
+	$add_label_html = htmlspecialchars((string)$add_label, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$add_label_html = str_replace('`', '&#96;', $add_label_html);
 
 	if ($title != '') {
@@ -133,7 +133,7 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
 		}
 
 		if ($help_file !== false && $help_count == 0 && is_realm_allowed(28)) {
-			$help_html = htmlspecialchars(basename($help_file), $escape_flags, 'UTF-8', false);
+			$help_html = htmlspecialchars(basename($help_file), $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$help_html = str_replace('`', '&#96;', $help_html);
 			print "<span class='cactiHelp' title='" . __esc('Get Page Help') . "'>" .
 				"<a class='linkOverDark helpPage' data-page='$help_html' href='#'>" .
@@ -142,7 +142,7 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
 		}
 
 		if ($add_text != '' && !is_array($add_text)) {
-			$add_text_html = htmlspecialchars((string)$add_text, $escape_flags, 'UTF-8', false);
+			$add_text_html = htmlspecialchars((string)$add_text, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$add_text_html = str_replace('`', '&#96;', $add_text_html);
 			print "<span class='cactiFilterAdd' title='$add_label_html'>" .
 				"<a class='linkOverDark' href='$add_text_html'><i class='fa fa-plus'></i></a></span>";
@@ -174,15 +174,15 @@ function html_start_box($title, $width, $div, $cell_padding, $align, $add_text, 
 							$title = $add_label;
 						}
 
-						$href_html = htmlspecialchars((string)$href, $escape_flags, 'UTF-8', false);
+						$href_html = htmlspecialchars((string)$href, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 						$href_html = str_replace('`', '&#96;', $href_html);
-						$title_html = htmlspecialchars((string)$title, $escape_flags, 'UTF-8', false);
+						$title_html = htmlspecialchars((string)$title, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 						$title_html = str_replace('`', '&#96;', $title_html);
-						$classi_html = htmlspecialchars((string)$classi, $escape_flags, 'UTF-8', false);
+						$classi_html = htmlspecialchars((string)$classi, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 						$classi_html = str_replace('`', '&#96;', $classi_html);
 						$id_attribute = '';
 						if (isset($icon['id'])) {
-							$id_html = htmlspecialchars((string)$icon['id'], $escape_flags, 'UTF-8', false);
+							$id_html = htmlspecialchars((string)$icon['id'], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 							$id_html = str_replace('`', '&#96;', $id_html);
 							$id_attribute = " id='$id_html'";
 						}
@@ -365,13 +365,13 @@ function html_graph_area(&$graph_array, $no_graphs_message = '', $extra_url_args
 
 			$title_size = read_user_setting('custom_fonts') == 'on'
 				? read_user_setting('title_size') : read_config_option('title_size');
-			$graph_id_html = htmlspecialchars((string)$graph['local_graph_id'], $escape_flags, 'UTF-8', false);
+			$graph_id_html = htmlspecialchars((string)$graph['local_graph_id'], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$graph_id_html = str_replace('`', '&#96;', $graph_id_html);
-			$width_html = htmlspecialchars((string)$graph['width'], $escape_flags, 'UTF-8', false);
+			$width_html = htmlspecialchars((string)$graph['width'], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$width_html = str_replace('`', '&#96;', $width_html);
-			$height_html = htmlspecialchars((string)$graph['height'], $escape_flags, 'UTF-8', false);
+			$height_html = htmlspecialchars((string)$graph['height'], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$height_html = str_replace('`', '&#96;', $height_html);
-			$font_size_html = htmlspecialchars((string)$title_size, $escape_flags, 'UTF-8', false);
+			$font_size_html = htmlspecialchars((string)$title_size, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$font_size_html = str_replace('`', '&#96;', $font_size_html);
 			?>
 			<td class='graphWrapperOuter' data-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>' style='width:<?php print round(100 / $columns, 2);?>%;'>
@@ -383,7 +383,7 @@ function html_graph_area(&$graph_array, $no_graphs_message = '', $extra_url_args
 								graph_width='<?php print $width_html;?>' graph_height='<?php print $height_html;?>'
 								title_font_size='<?php print $font_size_html;?>'></div>
 							<?php if (read_user_setting('show_graph_title') == 'on') {
-								$title_html = htmlspecialchars((string)$graph['title_cache'], $escape_flags, 'UTF-8', false);
+								$title_html = htmlspecialchars((string)$graph['title_cache'], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 								$title_html = str_replace('`', '&#96;', $title_html);
 								print "<span class='center'>$title_html</span>";
 							} ?>
@@ -504,9 +504,9 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = '', $extr
 						print '</tr>';
 					}
 
-					$query_html = htmlspecialchars((string)$graph['data_query_name'], $escape_flags, 'UTF-8', false);
+					$query_html = htmlspecialchars((string)$graph['data_query_name'], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 					$query_html = str_replace('`', '&#96;', $query_html);
-					$columns_html = htmlspecialchars((string)$columns, $escape_flags, 'UTF-8', false);
+					$columns_html = htmlspecialchars((string)$columns, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 					$columns_html = str_replace('`', '&#96;', $columns_html);
 					print "<tr class='tableHeader'>";
 					print "<td class='graphSubHeaderColumn textHeaderDark' colspan='$columns_html'>";
@@ -520,11 +520,11 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = '', $extr
 				$start = false;
 			}
 
-			$graph_id_html = htmlspecialchars((string)$graph['local_graph_id'], $escape_flags, 'UTF-8', false);
+			$graph_id_html = htmlspecialchars((string)$graph['local_graph_id'], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$graph_id_html = str_replace('`', '&#96;', $graph_id_html);
-			$width_html = htmlspecialchars((string)read_user_setting('default_width'), $escape_flags, 'UTF-8', false);
+			$width_html = htmlspecialchars((string)read_user_setting('default_width'), $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$width_html = str_replace('`', '&#96;', $width_html);
-			$height_html = htmlspecialchars((string)read_user_setting('default_height'), $escape_flags, 'UTF-8', false);
+			$height_html = htmlspecialchars((string)read_user_setting('default_height'), $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$height_html = str_replace('`', '&#96;', $height_html);
 			?>
 			<td class='graphWrapperOuter' data-disabled='<?php print ($graph['disabled'] == 'on' ? 'true':'false');?>' style='width:<?php print round(100 / $columns, 2);?>%;'>
@@ -535,7 +535,7 @@ function html_graph_thumbnail_area(&$graph_array, $no_graphs_message = '', $extr
 							<div class='graphWrapper' id='wrapper_<?php print $graph_id_html;?>'
 								graph_width='<?php print $width_html;?>' graph_height='<?php print $height_html;?>'></div>
 							<?php if (read_user_setting('show_graph_title') == 'on') {
-								$title_html = htmlspecialchars((string)$graph['title_cache'], $escape_flags, 'UTF-8', false);
+								$title_html = htmlspecialchars((string)$graph['title_cache'], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 								$title_html = str_replace('`', '&#96;', $title_html);
 								print "<span class='center'>$title_html</span>";
 							} ?>
@@ -581,9 +581,9 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
 
 	static $rand = 0;
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$graph_id_html = htmlspecialchars((string)$local_graph_id, $escape_flags, 'UTF-8', false);
+	$graph_id_html = htmlspecialchars((string)$local_graph_id, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$graph_id_html = str_replace('`', '&#96;', $graph_id_html);
-	$path_html = htmlspecialchars((string)$config['url_path'], $escape_flags, 'UTF-8', false);
+	$path_html = htmlspecialchars((string)$config['url_path'], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$path_html = str_replace('`', '&#96;', $path_html);
 
 	$aggregate_url = aggregate_build_children_url($local_graph_id);
@@ -612,7 +612,7 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
 			array($local_graph_id));
 
 		if ($host_id > 0) {
-			$host_id_html = htmlspecialchars((string)$host_id, $escape_flags, 'UTF-8', false);
+			$host_id_html = htmlspecialchars((string)$host_id, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$host_id_html = str_replace('`', '&#96;', $host_id_html);
 			print "<a class='iconLink' href='" . html_escape($config['url_path'] .
 				"host.php?action=edit&id=$host_id") .
@@ -648,7 +648,7 @@ function graph_drilldown_icons($local_graph_id, $type = 'graph_buttons', $tree_i
 			$popup_script .= json_encode('popup_' . $local_graph_id, $json_flags) . ', ';
 			$popup_script .= "'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,";
 			$popup_script .= "scrollbars=no,resizable=yes,width=650,height=300');return false";
-			$popup_html = htmlspecialchars($popup_script, $escape_flags, 'UTF-8');
+			$popup_html = htmlspecialchars($popup_script, $escape_flags, ini_get('default_charset') ?: 'UTF-8');
 			$popup_html = str_replace('`', '&#96;', $popup_html);
 			print "<a class='iconLink' href='#' onclick='$popup_html'>";
 			print "<img src='{$path_html}images/chart_curve_go.png' alt='' title='";
@@ -865,11 +865,11 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 		break;
 	}
 
-	$return_html = htmlspecialchars((string) ($return_to == '' ? 'main' : $return_to), $escape_flags, 'UTF-8', false);
+	$return_html = htmlspecialchars((string) ($return_to == '' ? 'main' : $return_to), $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$return_html = str_replace('`', '&#96;', $return_html);
-	$page_html = htmlspecialchars((string) ($url == '' ? get_current_page(false) : $url), $escape_flags, 'UTF-8', false);
+	$page_html = htmlspecialchars((string) ($url == '' ? get_current_page(false) : $url), $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$page_html = str_replace('`', '&#96;', $page_html);
-	$colspan_html = htmlspecialchars((string) $last_item_colspan, $escape_flags, 'UTF-8', false);
+	$colspan_html = htmlspecialchars((string) $last_item_colspan, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$colspan_html = str_replace('`', '&#96;', $colspan_html);
 
 	print "<tr class='tableHeader'>";
@@ -975,13 +975,13 @@ function html_header_sort($header_items, $sort_column, $sort_direction, $last_it
 			$icon = 'fa fa-sort';
 		}
 
-		$tip_html = htmlspecialchars((string) $tip, $escape_flags, 'UTF-8', false);
+		$tip_html = htmlspecialchars((string) $tip, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$tip_html = str_replace('`', '&#96;', $tip_html);
-		$align_html = htmlspecialchars((string) $align, $escape_flags, 'UTF-8', false);
+		$align_html = htmlspecialchars((string) $align, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$align_html = str_replace('`', '&#96;', $align_html);
-		$db_column_html = htmlspecialchars((string) $db_column, $escape_flags, 'UTF-8', false);
+		$db_column_html = htmlspecialchars((string) $db_column, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$db_column_html = str_replace('`', '&#96;', $db_column_html);
-		$direction_html = htmlspecialchars((string) $direction, $escape_flags, 'UTF-8', false);
+		$direction_html = htmlspecialchars((string) $direction, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$direction_html = str_replace('`', '&#96;', $direction_html);
 
 		if (($db_column == '') || (substr_count($db_column, 'nosort'))) {
@@ -1072,11 +1072,11 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 	/* default to the 'current' file */
 	if ($form_action == '') { $form_action = get_current_page(); }
 
-	$return_html = htmlspecialchars((string) ($return_to == '' ? 'main' : $return_to), $escape_flags, 'UTF-8', false);
+	$return_html = htmlspecialchars((string) ($return_to == '' ? 'main' : $return_to), $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$return_html = str_replace('`', '&#96;', $return_html);
-	$page_html = htmlspecialchars((string) $form_action, $escape_flags, 'UTF-8', false);
+	$page_html = htmlspecialchars((string) $form_action, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$page_html = str_replace('`', '&#96;', $page_html);
-	$prefix_html = htmlspecialchars((string) $prefix, $escape_flags, 'UTF-8', false);
+	$prefix_html = htmlspecialchars((string) $prefix, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$prefix_html = str_replace('`', '&#96;', $prefix_html);
 
 	print "<tr class='tableHeader'>";
@@ -1182,13 +1182,13 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
 			$icon = 'fa fa-sort';
 		}
 
-		$tip_html = htmlspecialchars((string) $tip, $escape_flags, 'UTF-8', false);
+		$tip_html = htmlspecialchars((string) $tip, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$tip_html = str_replace('`', '&#96;', $tip_html);
-		$align_html = htmlspecialchars((string) $align, $escape_flags, 'UTF-8', false);
+		$align_html = htmlspecialchars((string) $align, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$align_html = str_replace('`', '&#96;', $align_html);
-		$db_column_html = htmlspecialchars((string) $db_column, $escape_flags, 'UTF-8', false);
+		$db_column_html = htmlspecialchars((string) $db_column, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$db_column_html = str_replace('`', '&#96;', $db_column_html);
-		$direction_html = htmlspecialchars((string) $direction, $escape_flags, 'UTF-8', false);
+		$direction_html = htmlspecialchars((string) $direction, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$direction_html = str_replace('`', '&#96;', $direction_html);
 
 		if (($db_column == '') || (substr_count($db_column, 'nosort'))) {
@@ -1223,7 +1223,7 @@ function html_header_sort_checkbox($header_items, $sort_column, $sort_direction,
    @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row */
 function html_header($header_items, $last_item_colspan = 1) {
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$colspan_html = htmlspecialchars((string) $last_item_colspan, $escape_flags, 'UTF-8', false);
+	$colspan_html = htmlspecialchars((string) $last_item_colspan, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$colspan_html = str_replace('`', '&#96;', $colspan_html);
 	print "<tr class='tableHeader " . (!$last_item_colspan > 1 ? 'tableFixed':'') . "'>";
 
@@ -1248,18 +1248,18 @@ function html_header($header_items, $last_item_colspan = 1) {
 				$tip = '';
 			}
 
-			$tip_html = htmlspecialchars((string) $tip, $escape_flags, 'UTF-8', false);
+			$tip_html = htmlspecialchars((string) $tip, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$tip_html = str_replace('`', '&#96;', $tip_html);
-			$align_html = htmlspecialchars((string) $align, $escape_flags, 'UTF-8', false);
+			$align_html = htmlspecialchars((string) $align, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$align_html = str_replace('`', '&#96;', $align_html);
-			$display_html = htmlspecialchars((string) $item['display'], $escape_flags, 'UTF-8', false);
+			$display_html = htmlspecialchars((string) $item['display'], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$display_html = str_replace('`', '&#96;', $display_html);
 			print '<th ' . ($tip != '' ? "title='$tip_html' " : '')
 				. "class='$nohide $align_html' "
 				. ((($i+1) == cacti_count($header_items)) ? "colspan='$colspan_html' " : '')
 				. '>' . $display_html . '</th>';
 		} else {
-			$display_html = htmlspecialchars((string) $item, $escape_flags, 'UTF-8', false);
+			$display_html = htmlspecialchars((string) $item, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$display_html = str_replace('`', '&#96;', $display_html);
 			print '<th ' . ((($i+1) == cacti_count($header_items)) ? "colspan='$colspan_html' " : '')
 				. '>' . $display_html . '</th>';
@@ -1278,12 +1278,12 @@ function html_header($header_items, $last_item_colspan = 1) {
    @arg $last_item_colspan - the TD 'colspan' to apply to the last cell in the row */
 function html_section_header($header_item, $last_item_colspan = 1) {
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$colspan_html = htmlspecialchars((string) $last_item_colspan, $escape_flags, 'UTF-8', false);
+	$colspan_html = htmlspecialchars((string) $last_item_colspan, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$colspan_html = str_replace('`', '&#96;', $colspan_html);
 	print "<tr class='tableHeader " . (!$last_item_colspan > 1 ? 'tableFixed':'') . "'>";
 
 	if (is_array($header_item) && isset($header_item['display'])) {
-		$align_html = htmlspecialchars((string) ($header_item['align'] ?? ''), $escape_flags, 'UTF-8', false);
+		$align_html = htmlspecialchars((string) ($header_item['align'] ?? ''), $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$align_html = str_replace('`', '&#96;', $align_html);
 		print '<th ' . (isset($header_item['align']) ? "style='text-align:$align_html;'" : '')
 			. " colspan='$colspan_html'>" . $header_item['display'] . '</th>';
@@ -1303,9 +1303,9 @@ function html_header_checkbox($header_items, $include_form = true, $form_action 
 	/* default to the 'current' file */
 	if ($form_action == '') { $form_action = get_current_page(); }
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$action_html = htmlspecialchars((string) $form_action, $escape_flags, 'UTF-8', false);
+	$action_html = htmlspecialchars((string) $form_action, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$action_html = str_replace('`', '&#96;', $action_html);
-	$prefix_html = htmlspecialchars((string) $prefix, $escape_flags, 'UTF-8', false);
+	$prefix_html = htmlspecialchars((string) $prefix, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$prefix_html = str_replace('`', '&#96;', $prefix_html);
 
 	print "<tr class='tableHeader " . (!$resizable ? 'tableFixed':'') . "'>";
@@ -1330,16 +1330,16 @@ function html_header_checkbox($header_items, $include_form = true, $form_action 
 				$tip = '';
 			}
 
-			$tip_html = htmlspecialchars((string) $tip, $escape_flags, 'UTF-8', false);
+			$tip_html = htmlspecialchars((string) $tip, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$tip_html = str_replace('`', '&#96;', $tip_html);
-			$align_html = htmlspecialchars((string) $align, $escape_flags, 'UTF-8', false);
+			$align_html = htmlspecialchars((string) $align, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$align_html = str_replace('`', '&#96;', $align_html);
-			$display_html = htmlspecialchars((string) $item['display'], $escape_flags, 'UTF-8', false);
+			$display_html = htmlspecialchars((string) $item['display'], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$display_html = str_replace('`', '&#96;', $display_html);
 			print '<th ' . ($tip != '' ? " title='$tip_html' " : '')
 				. "class='$align_html $nohide'>" . $display_html . '</th>';
 		} else {
-			$display_html = htmlspecialchars((string) $item, $escape_flags, 'UTF-8', false);
+			$display_html = htmlspecialchars((string) $item, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$display_html = str_replace('`', '&#96;', $display_html);
 			print "<th class='left'>" . $display_html . '</th>';
 		}
@@ -1373,10 +1373,10 @@ function html_create_list($form_data, $column_display, $column_id, $form_previou
 	if (empty($column_display)) {
 		if (cacti_sizeof($form_data)) {
 			foreach (array_keys($form_data) as $id) {
-				$id_html = htmlspecialchars((string) $id, $escape_flags, 'UTF-8', false);
+				$id_html = htmlspecialchars((string) $id, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 				$id_html = str_replace('`', '&#96;', $id_html);
 				$label = null_out_substitutions($form_data[$id]);
-				$label_html = htmlspecialchars((string) $label, $escape_flags, 'UTF-8', false);
+				$label_html = htmlspecialchars((string) $label, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 				$label_html = str_replace('`', '&#96;', $label_html);
 				print '<option value="' . $id_html . '"';
 
@@ -1390,7 +1390,7 @@ function html_create_list($form_data, $column_display, $column_id, $form_previou
 	} else {
 		if (cacti_sizeof($form_data)) {
 			foreach ($form_data as $row) {
-				$id_html = htmlspecialchars((string) $row[$column_id], $escape_flags, 'UTF-8', false);
+				$id_html = htmlspecialchars((string) $row[$column_id], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 				$id_html = str_replace('`', '&#96;', $id_html);
 				print "<option value='" . $id_html . "'";
 
@@ -1403,7 +1403,7 @@ function html_create_list($form_data, $column_display, $column_id, $form_previou
 				} else {
 					$label = null_out_substitutions($row[$column_display]);
 				}
-				$label_html = htmlspecialchars((string) $label, $escape_flags, 'UTF-8', false);
+				$label_html = htmlspecialchars((string) $label, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 				$label_html = str_replace('`', '&#96;', $label_html);
 				print '>' . $label_html . '</option>';
 			}
@@ -2628,23 +2628,23 @@ function html_spikekill_menu_item($text, $icon = '', $class = '', $id = '', $dat
 	$output = '<li ';
 
 	if (!empty($id)) {
-		$id_html = htmlspecialchars((string) $id, $escape_flags, 'UTF-8', false);
+		$id_html = htmlspecialchars((string) $id, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$id_html = str_replace('`', '&#96;', $id_html);
 		$output .= "id='$id_html' ";
 	}
 
 	if (!empty($data_graph)) {
-		$graph_html = htmlspecialchars((string) $data_graph, $escape_flags, 'UTF-8', false);
+		$graph_html = htmlspecialchars((string) $data_graph, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$graph_html = str_replace('`', '&#96;', $graph_html);
 		$output .= "data-graph='$graph_html' ";
 	}
 
-	$class_html = htmlspecialchars((string) $class, $escape_flags, 'UTF-8', false);
+	$class_html = htmlspecialchars((string) $class, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$class_html = str_replace('`', '&#96;', $class_html);
 	$output .= 'class=\'' . (empty($class)?'': " $class_html") . '\'>';
 	$output .= '<span class=\'spikeKillMenuItem\'>';
 	if (!empty($icon)) {
-		$icon_html = htmlspecialchars((string) $icon, $escape_flags, 'UTF-8', false);
+		$icon_html = htmlspecialchars((string) $icon, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$icon_html = str_replace('`', '&#96;', $icon_html);
 		$output .= "<i class='$icon_html'></i>";
 	}
