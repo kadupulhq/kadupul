@@ -35,6 +35,7 @@ function run_delete(array $selected, $lookupFails = false) {
 	$probe = '<?php
 $selected = ' . var_export($selected, true) . ';
 $in_use = array(2, 4);
+$axis_use = array(9);
 $lookup_fails = ' . var_export($lookupFails, true) . ';
 $deleted = array();
 $message = null;
@@ -52,8 +53,9 @@ function array_to_sql_or($ids, $column) { return $column . " IN (" . implode(","
 function array_rekey($rows, $key, $value) { return array_column($rows, $value, $key); }
 function db_fetch_assoc($sql) {
 	if ($GLOBALS["lookup_fails"]) { return false; }
+	$source = strpos($sql, "right_axis_format") !== false ? $GLOBALS["axis_use"] : $GLOBALS["in_use"];
 	$rows = array();
-	foreach ($GLOBALS["in_use"] as $id) {
+	foreach ($source as $id) {
 		if (strpos($sql, (string) $id) !== false) { $rows[] = array("gprint_id" => $id); }
 	}
 	return $rows;
@@ -92,6 +94,10 @@ test('a mixed selection deletes only the unused presets', function () {
 test('a non-canonical id cannot slip past the in-use check', function () {
 	// MySQL matches '007' to 7, so the check has to compare the same value.
 	expect(run_delete(array('007', '2', '0002')))->toBe(array('deleted' => array(7), 'message' => 'gprint_in_use'));
+});
+
+test('a preset used only as a right axis format is kept', function () {
+	expect(run_delete(array(1, 9)))->toBe(array('deleted' => array(1), 'message' => 'gprint_in_use'));
 });
 
 test('a failed lookup deletes nothing rather than everything', function () {

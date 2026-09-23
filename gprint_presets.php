@@ -110,12 +110,19 @@ function gprint_deletable($ids) {
 		WHERE gprint_id > 0
 		AND ' . array_to_sql_or($ids, 'gprint_id'));
 
+	/* graph_templates_graph.right_axis_format names a preset too, and the
+	   right_axis_format renderer reads it. */
+	$axis = db_fetch_assoc('SELECT DISTINCT right_axis_format AS gprint_id
+		FROM graph_templates_graph
+		WHERE right_axis_format > 0
+		AND ' . array_to_sql_or($ids, 'right_axis_format'));
+
 	/* A failed lookup must not read as "nothing is in use". */
-	if (!is_array($rows)) {
+	if (!is_array($rows) || !is_array($axis)) {
 		return array();
 	}
 
-	$in_use    = array_rekey($rows, 'gprint_id', 'gprint_id');
+	$in_use    = array_rekey(array_merge($rows, $axis), 'gprint_id', 'gprint_id');
 	$deletable = array();
 
 	foreach ($ids as $id) {
@@ -424,7 +431,8 @@ function gprint_presets() {
 
 	$gprint_list = db_fetch_assoc("SELECT rs.*,
 		SUM(CASE WHEN local_graph_id=0 THEN 1 ELSE 0 END) AS templates,
-		SUM(CASE WHEN local_graph_id>0 THEN 1 ELSE 0 END) AS graphs
+		SUM(CASE WHEN local_graph_id>0 THEN 1 ELSE 0 END) AS graphs,
+		(SELECT COUNT(*) FROM graph_templates_graph AS gtg WHERE gtg.right_axis_format = rs.id) AS axis
 		FROM (
 			SELECT gp.*, gti.local_graph_id
 			FROM graph_templates_gprint AS gp
@@ -483,7 +491,7 @@ function gprint_presets() {
 	$i = 0;
 	if (cacti_sizeof($gprint_list)) {
 		foreach ($gprint_list as $gp) {
-			if ($gp['graphs'] == 0 && $gp['templates'] == 0) {
+			if ($gp['graphs'] == 0 && $gp['templates'] == 0 && $gp['axis'] == 0) {
 				$disabled = false;
 			} else {
 				$disabled = true;
