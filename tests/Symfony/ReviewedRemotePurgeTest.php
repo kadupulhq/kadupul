@@ -23,6 +23,7 @@ function remote_poller_up($id)
 }
 function poller_push_to_remote_db_connect($id, $force)
 {
+    $GLOBALS['reviewed_remote_connections']++;
     return $GLOBALS['reviewed_remote_db'];
 }
 function cacti_sizeof($value)
@@ -45,6 +46,7 @@ final class ReviewedRemotePurgeTest extends TestCase
     {
         $db = new PDO('sqlite::memory:');
         $GLOBALS['reviewed_remote_db'] = $db;
+        $GLOBALS['reviewed_remote_connections'] = 0;
         $db->sqliteCreateFunction('SUBSTRING_INDEX', static fn($text, $separator, $count) => explode($separator, $text)[0]);
         foreach ([
             'host' => 'id INTEGER', 'host_graph' => 'host_id INTEGER', 'host_snmp_query' => 'host_id INTEGER',
@@ -61,13 +63,23 @@ final class ReviewedRemotePurgeTest extends TestCase
         }
         // Insert after scope preflight, during the legacy lifecycle itself.
         $db->exec('CREATE TRIGGER late_children AFTER DELETE ON host BEGIN INSERT INTO data_local VALUES (13,7); INSERT INTO graph_local VALUES (14,7); INSERT INTO poller_item VALUES (7,13); INSERT INTO graph_tree_items VALUES (7,14); INSERT INTO reports_items VALUES (7,14); END');
-        api_device_purge_from_remote([7], 2, $reviewed ? [7 => ['graphs' => [11], 'data_sources' => [12]]] : null);
+        if ($reviewed) {
+            $db->beginTransaction();
+        }
+        api_device_purge_from_remote([7], 2, $reviewed ? [7 => ['graphs' => [11], 'data_sources' => [12]]] : null, $reviewed ? $db : null);
+        self::assertSame($reviewed ? 0 : 1, $GLOBALS['reviewed_remote_connections']);
         self::assertSame($reviewed ? [13, 90] : [90], array_map('intval', $db->query('SELECT local_data_id FROM poller_item ORDER BY local_data_id')->fetchAll(PDO::FETCH_COLUMN)));
         foreach (['graph_tree_items', 'reports_items'] as $table) {
             self::assertSame($reviewed ? [14, 91] : [91], array_map('intval', $db->query("SELECT local_graph_id FROM $table ORDER BY local_graph_id")->fetchAll(PDO::FETCH_COLUMN)));
         }
         self::assertSame($reviewed ? [13, 90] : [90], array_map('intval', $db->query('SELECT id FROM data_local ORDER BY id')->fetchAll(PDO::FETCH_COLUMN)));
         self::assertSame($reviewed ? [14, 91] : [91], array_map('intval', $db->query('SELECT id FROM graph_local ORDER BY id')->fetchAll(PDO::FETCH_COLUMN)));
+        if ($reviewed) {
+            self::assertTrue($db->inTransaction());
+            $db->rollBack();
+            self::assertSame([12, 90], array_map('intval', $db->query('SELECT local_data_id FROM poller_item ORDER BY local_data_id')->fetchAll(PDO::FETCH_COLUMN)));
+            self::assertSame(1, (int) $db->query('SELECT COUNT(*) FROM host WHERE id=7')->fetchColumn());
+        }
         unset($GLOBALS['reviewed_remote_db']);
     }
 

@@ -163,13 +163,16 @@ function api_data_source_remove($local_data_id) {
 	api_data_source_cache_crc_update($poller_id);
 }
 
-function api_data_source_remove_multi($local_data_ids, $propagate_remote = true) {
+function api_data_source_remove_multi($local_data_ids, $propagate_remote = true, $verify_reviewed_scope = null) {
 	// Shortcut out if no data
 	if (!cacti_sizeof($local_data_ids)) {
 		return;
 	}
 
 	api_plugin_hook_function('data_source_remove', $local_data_ids);
+	if ($verify_reviewed_scope !== null) {
+		$verify_reviewed_scope();
+	}
 
 	$autoclean = read_config_option('rrd_autoclean');
 	$acmethod  = read_config_option('rrd_autoclean_method');

@@ -6,7 +6,11 @@
 
 require_once __DIR__ . '/graph_template_input.php';
 
-function api_delete_graphs(&$local_graph_ids, $delete_type, $reviewed_data_ids = null) {
+function api_delete_graphs(&$local_graph_ids, $delete_type, $reviewed_data_ids = null, $verify_reviewed_scope = null) {
+	if ($reviewed_data_ids !== null && !is_callable($verify_reviewed_scope)) {
+		throw new RuntimeException('Reviewed graph removal requires a dependency verifier');
+	}
+
 	/* check for a bad local_graph_id = 0, and remove graphs */
 	api_graph_remove_bad_graphs($local_graph_ids);
 
@@ -55,10 +59,10 @@ function api_delete_graphs(&$local_graph_ids, $delete_type, $reviewed_data_ids =
 			);
 
 			if (cacti_sizeof($data_sources)) {
-				api_data_source_remove_multi($data_sources, $reviewed_data_ids === null);
+				api_data_source_remove_multi($data_sources, $reviewed_data_ids === null, $verify_reviewed_scope);
 			}
 
-			api_graph_remove_multi($local_graph_ids, $reviewed_data_ids !== null);
+			api_graph_remove_multi($local_graph_ids, $reviewed_data_ids !== null, $verify_reviewed_scope);
 
 			/* Remove orphaned data sources */
 			$data_sources = array_rekey(
@@ -76,15 +80,15 @@ function api_delete_graphs(&$local_graph_ids, $delete_type, $reviewed_data_ids =
 			);
 
 			if (cacti_sizeof($data_sources)) {
-				api_data_source_remove_multi($data_sources, $reviewed_data_ids === null);
+				api_data_source_remove_multi($data_sources, $reviewed_data_ids === null, $verify_reviewed_scope);
 			}
 		} else {
-			api_graph_remove_multi($local_graph_ids, $reviewed_data_ids !== null);
+			api_graph_remove_multi($local_graph_ids, $reviewed_data_ids !== null, $verify_reviewed_scope);
 		}
 
 		break;
 	case '1':
-		api_graph_remove_multi($local_graph_ids, $reviewed_data_ids !== null);
+		api_graph_remove_multi($local_graph_ids, $reviewed_data_ids !== null, $verify_reviewed_scope);
 
 		break;
 	}
@@ -178,7 +182,7 @@ function api_graph_remove_aggregate_items($local_graph_ids, $reject_aggregates =
 	}
 }
 
-function api_graph_remove_multi($local_graph_ids, $reject_aggregates = false) {
+function api_graph_remove_multi($local_graph_ids, $reject_aggregates = false, $verify_reviewed_scope = null) {
 	/* check for a bad local_graph_id = 0, and remove graphs */
 	api_graph_remove_bad_graphs($local_graph_ids);
 
@@ -193,6 +197,9 @@ function api_graph_remove_multi($local_graph_ids, $reject_aggregates = false) {
 	/* build the array */
 	if (cacti_sizeof($local_graph_ids)) {
 		api_plugin_hook_function('graphs_remove', $local_graph_ids);
+		if ($verify_reviewed_scope !== null) {
+			$verify_reviewed_scope();
+		}
 
 		foreach($local_graph_ids as $local_graph_id) {
 			if ($i == 0) {
