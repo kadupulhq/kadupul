@@ -24,6 +24,7 @@ def verify_bulk_snmp(harness, session, check, poller):
         harness.sql(f'UPDATE host SET snmp_version=1 WHERE id={ids[1]}')
         check(form.apply(fields) == 409, 'bulk SNMP rejects concurrent protocol changes')
         harness.sql(f'UPDATE host SET snmp_version=2 WHERE id={ids[1]}')
+        harness.sql(f"UPDATE host SET snmp_username='valid-first',snmp_password='valid-first-pass' WHERE id={ids[0]}")
         invalid = fields | {'device_state[snmp][snmp_version]': '3', 'device_state[snmp][snmp_auth_protocol]': 'SHA256'}
         check(form.apply(invalid) == 422, 'bulk SNMP validates all stored credentials before writes')
         check(harness.sql(f'SELECT COUNT(*) FROM host WHERE id IN ({selected}) AND snmp_version=2').strip() == '2', 'invalid stored credentials leave entire bulk selection unchanged')
@@ -47,6 +48,13 @@ def verify_bulk_snmp(harness, session, check, poller):
         fields = form.fields() | {'device_state[snmp][snmp_version]': '2'}
         check(form.apply(fields) == 200, 'bulk SNMP permits leaving version 3')
         check(harness.sql(f"SELECT COUNT(*) FROM host WHERE id IN ({selected}) AND snmp_username='' AND snmp_password='' AND snmp_priv_passphrase='' AND snmp_auth_protocol='[None]'").strip() == '2', 'bulk SNMP clears version 3 secrets when leaving version 3')
+        query_id = int(harness.sql('SELECT id FROM snmp_query ORDER BY id LIMIT 1').strip())
+        for prefix, device in [('', ids[0]), ('', ids[1]), ('create_remote.', ids[0])]:
+            harness.sql(f"INSERT INTO {prefix}host_snmp_query (host_id,snmp_query_id,reindex_method) VALUES ({device},{query_id},1); INSERT INTO {prefix}poller_reindex (host_id,data_query_id,action,op,assert_value,arg1) VALUES ({device},{query_id},0,'=','1','fixture')")
+        off = form.fields() | {'device_state[snmp][snmp_version]': '0'}
+        check(form.apply(off) == 200, 'bulk SNMP disables protocol through Symfony')
+        for prefix in ['', 'create_remote.']:
+            check(harness.sql(f'SELECT COUNT(*) FROM {prefix}host_snmp_query WHERE host_id IN ({selected}) AND reindex_method<>0').strip() == '0' and harness.sql(f'SELECT COUNT(*) FROM {prefix}poller_reindex WHERE host_id IN ({selected})').strip() == '0', 'bulk SNMP disabling clears primary and remote reindex state')
         result = harness.php('-r', 'require "include/global.php"; $clean=true; foreach ([cacti_log_file(), sys_get_temp_dir()."/cacti-sql.log"] as $path) { if (is_file($path)) { $log=file_get_contents($path); foreach (["bulk-new-secret","bulk-auth-secret","bulk-privacy-secret"] as $secret) { if (str_contains($log,$secret)) { $clean=false; } } } } echo $clean ? "clean" : "leaked";')
         check(result['exit'] == 0 and result['stdout'] == 'clean', 'bulk SNMP secrets stay out of database diagnostics')
     finally:
@@ -55,4 +63,4 @@ def verify_bulk_snmp(harness, session, check, poller):
         if ids:
             selected = ','.join(map(str, ids))
             for prefix in ['', 'create_remote.']:
-                harness.sql(f'DELETE FROM {prefix}host WHERE id IN ({selected}); DELETE FROM {prefix}poller_item WHERE host_id IN ({selected})')
+                harness.sql(f'DELETE FROM {prefix}host WHERE id IN ({selected}); DELETE FROM {prefix}poller_item WHERE host_id IN ({selected}); DELETE FROM {prefix}host_snmp_query WHERE host_id IN ({selected}); DELETE FROM {prefix}poller_reindex WHERE host_id IN ({selected})')
