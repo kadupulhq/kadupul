@@ -94,10 +94,16 @@ function api_device_purge_from_remote($device_ids, $poller_id = 0, $reviewed_ass
 				db_execute('DELETE FROM host_graph       WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
 				db_execute('DELETE FROM host_snmp_query  WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
 				db_execute('DELETE FROM host_snmp_cache  WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
+				if ($reviewed_associations === null) {
 				db_execute('DELETE FROM poller_item      WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
+				}
 				db_execute('DELETE FROM poller_reindex   WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
+				if ($reviewed_associations === null) {
 				db_execute('DELETE FROM graph_tree_items WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
+				}
+				if ($reviewed_associations === null) {
 				db_execute('DELETE FROM reports_items    WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
+				}
 
 				db_execute('DELETE FROM poller_command
 					WHERE SUBSTRING_INDEX(command, ":", 1) IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
@@ -109,6 +115,16 @@ function api_device_purge_from_remote($device_ids, $poller_id = 0, $reviewed_ass
 					foreach($device_ids as $device_id) {
 						$data_sources = array_map('intval', $reviewed_associations[$device_id]['data_sources']);
 						$graphs = array_map('intval', $reviewed_associations[$device_id]['graphs']);
+						// Device-only metadata is owned by the reviewed host. Polling
+						// and graph-bearing placements also require reviewed child IDs.
+						if (cacti_sizeof($data_sources)) {
+							db_execute('DELETE FROM poller_item WHERE host_id = ' . (int) $device_id . ' AND local_data_id IN (' . implode(', ', $data_sources) . ')', true, $rcnn_id);
+						}
+						$graph_scope = cacti_sizeof($graphs) ? ' OR local_graph_id IN (' . implode(', ', $graphs) . ')' : '';
+						foreach(array('graph_tree_items', 'reports_items') as $table) {
+							db_execute('DELETE FROM ' . $table . ' WHERE host_id = ' . (int) $device_id . ' AND (local_graph_id = 0' . $graph_scope . ')', true, $rcnn_id);
+						}
+
 						if (cacti_sizeof($data_sources)) {
 							db_execute('DELETE FROM data_local WHERE host_id = ' . (int) $device_id . ' AND id IN (' . implode(', ', $data_sources) . ')', true, $rcnn_id);
 						}

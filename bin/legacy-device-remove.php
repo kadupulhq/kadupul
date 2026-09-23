@@ -144,10 +144,11 @@ try {
     define('KADUPUL_THROW_DATABASE_ERRORS', true);
     $database_last_error = '';
     $verifier = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorReplication();
+    $reviewedRemoteTemplates = [];
     foreach ($snapshots as $snapshot) {
         if (isset($remotes[$snapshot->device->pollerId])) {
             $verifier->assertRemovalScope($remotes[$snapshot->device->pollerId], $snapshot);
-            $verifier->purgeReviewedDependents($remotes[$snapshot->device->pollerId], $snapshot);
+            $reviewedRemoteTemplates[$snapshot->device->id] = $verifier->purgeReviewedDependents($remotes[$snapshot->device->pollerId], $snapshot);
         }
     }
     // The lifecycle API partitions remote cleanup while preserving one batch hook.
@@ -199,7 +200,7 @@ try {
             }
         }
         if (isset($remotes[$device->pollerId])) {
-            $verifier->verifyPurged($remotes[$device->pollerId], $device->id, $snapshot);
+            $verifier->verifyPurged($remotes[$device->pollerId], $device->id, $snapshot, $reviewedRemoteTemplates[$device->id]);
         }
     }
     set_request_var('drp_action', '1');
