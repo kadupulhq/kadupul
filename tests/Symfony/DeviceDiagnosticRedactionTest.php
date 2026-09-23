@@ -27,6 +27,9 @@ final class DeviceDiagnosticRedactionTest extends TestCase
         yield 'Unix CRLF normalization' => ["fixture\r\n'quoted", "'fixture'\\''quoted'"];
         yield 'HTML-encoded Unix command' => ["fixture'quoted", '&#039;fixture&#039;\\&#039;&#039;quoted&#039;'];
         yield 'markup-like credential' => ['fixture<tag>secret', 'fixture<tag>secret'];
+        yield 'HTML-encoded markup credential' => ['fixture<tag>secret', 'fixture&lt;tag&gt;secret'];
+        yield 'numeric-encoded markup credential' => ['fixture<tag>secret', 'fixture&#60;tag&#62;secret'];
+        yield 'encoded markup and Unix quote' => ["fixture<tag>'secret", '&#039;fixture&lt;tag&gt;&#039;\\&#039;&#039;secret&#039;'];
     }
 
     public function testOverlappingCredentialsAreReplacedInOnePass(): void
