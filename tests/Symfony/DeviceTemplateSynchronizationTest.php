@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 
 final class DeviceTemplateSynchronizationTest extends TestCase
 {
-    public function testAuthorizedResetPreservesSelectionAndActor(): void
+    public function testAuthorizedSynchronizationPreservesSelectionAndActor(): void
     {
         $access = $this->createMock(ConsoleAccess::class);
         $access->method('consoleActor')->willReturn(new Actor(42, 'operator'));
@@ -28,7 +28,7 @@ final class DeviceTemplateSynchronizationTest extends TestCase
         (new SynchronizeDeviceTemplates($access, $port))($selection);
     }
 
-    public function testAuthorizationPrecedesReset(): void
+    public function testAuthorizationPrecedesSynchronization(): void
     {
         foreach ([null, new Actor(42, 'operator')] as $actor) {
             $access = $this->createMock(ConsoleAccess::class);
