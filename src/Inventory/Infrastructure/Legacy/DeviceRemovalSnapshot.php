@@ -18,6 +18,9 @@ final class DeviceRemovalSnapshot
             throw new \LogicException('Removal locks require a transaction');
         }
         $ids = [];
+        // The removal worker uses REPEATABLE READ. InnoDB next-key locks on
+        // these host_id ranges also exclude concurrent inserts/reassignments,
+        // even for an empty set; a host-row lock alone would not provide that.
         foreach (['graph_local', 'data_local'] as $table) {
             $query = $db->prepare("SELECT id FROM $table WHERE host_id = ? ORDER BY id" . ($lock ? ' FOR UPDATE' : ''));
             if (!$query->execute([$device->id])) {
