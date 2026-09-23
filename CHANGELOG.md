@@ -10,6 +10,10 @@ follows [Semantic Versioning](VERSIONING.md).
 Targeting `v1.3.0`, the first planned application release. See
 [VERSIONING.md](VERSIONING.md).
 
+### Fixed
+
+- Commit through PDO rather than the MariaDB-only `@@in_transaction` variable, so device edits, creates, template assignments, collector moves and bulk state changes commit on MySQL instead of rolling back and reporting an uncertain outcome.
+
 ### Changed
 
 - Accept optional `$database_read_username` and `$database_read_password` so the Inventory DBAL read connection can use a SELECT-only MySQL user, rejecting a half-configured pair.
