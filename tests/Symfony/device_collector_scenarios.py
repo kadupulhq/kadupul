@@ -5,6 +5,12 @@ from urllib.parse import urlencode, urlsplit
 from device_edit_scenarios import Inputs
 
 
+def cache_markers(harness, collectors):
+    names = ['time_last_change_device'] + [f'poller_replicate_device_cache_crc_{int(collector)}' for collector in collectors]
+    values = ','.join("'" + name + "'" for name in names)
+    return dict(line.split('\t', 1) for line in harness.sql(f'SELECT name,value FROM settings WHERE name IN ({values}) ORDER BY name').splitlines())
+
+
 class CollectorForm:
     def __init__(self, harness, session, device_id):
         self.harness = harness
@@ -45,7 +51,9 @@ def verify_device_collector(harness, session, device_id, hidden_id, check):
         check(form.request(path='/app.php/inventory/devices/99999999/collector')[0] == 404, 'collector assignment hides missing devices')
         harness.sql(f'UPDATE poller SET name=NULL WHERE id={offline}')
         check(form.request()[0] == 200, 'collector form renders nullable collector names')
+        unchanged_markers = cache_markers(harness, [original[0]])
         check(form.assign(original[0]) == 200, 'unchanged collector assignment is a no-op')
+        check(cache_markers(harness, [original[0]]) == unchanged_markers, 'collector no-op preserves cache markers')
         check(form.request(fields=fields, origin=False)[0] == 422, 'collector assignment requires same-origin CSRF')
         missing = dict(fields)
         missing.pop('device_collector[_token]')
@@ -61,7 +69,9 @@ def verify_device_collector(harness, session, device_id, hidden_id, check):
         harness.sql(f'UPDATE host SET host_template_id=16777214 WHERE id={device_id}')
         check(form.assign(offline, stale) == 409, 'template changes invalidate collector confirmations')
         harness.sql(f'UPDATE host SET host_template_id={original[1]} WHERE id={device_id}')
+        rejected_markers = cache_markers(harness, [original[0], offline])
         check(form.assign(offline) == 502, 'offline target collector prevents assignment')
+        check(cache_markers(harness, [original[0], offline]) == rejected_markers, 'rejected collector move preserves cache markers')
         check(harness.sql(f'SELECT poller_id FROM host WHERE id={device_id}').strip() == original[0], 'offline target leaves polling ownership unchanged')
         harness.sql(f"UPDATE poller SET disabled='on' WHERE id={offline}")
         check(form.assign(offline) == 422, 'disabled collector cannot be selected')
@@ -132,12 +142,20 @@ def verify_remote_collector_assignment(harness, session, device_id, poller, chec
         harness.sql("CREATE TRIGGER create_remote.advance_host_status BEFORE INSERT ON create_remote.host FOR EACH ROW SET NEW.total_polls=NEW.total_polls+1")
         harness.sql("CREATE TRIGGER create_remote.advance_poller_step BEFORE INSERT ON create_remote.poller_item FOR EACH ROW SET NEW.rrd_next_step=NEW.rrd_next_step+1")
         harness.sql("DELIMITER $$\nCREATE TRIGGER create_remote.advance_snmp_cache BEFORE INSERT ON create_remote.host_snmp_cache FOR EACH ROW BEGIN SET NEW.field_value='refreshed'; SET NEW.oid='.1.3.6.2'; END$$\nDELIMITER ;")
+        harness.sql("REPLACE INTO settings (name,value) VALUES ('time_last_change_device','0')")
+        previous_markers = cache_markers(harness, [1, poller])
         try:
             check(form.assign(poller) == 200, 'collector reassignment replicates primary device to remote')
         finally:
             harness.sql('DROP TRIGGER create_remote.advance_host_status')
             harness.sql('DROP TRIGGER create_remote.advance_poller_step')
             harness.sql('DROP TRIGGER create_remote.advance_snmp_cache')
+        updated_markers = cache_markers(harness, [1, poller])
+        check(int(updated_markers['time_last_change_device']) > 0, 'collector move updates device change time')
+        for collector in [1, poller]:
+            name = f'poller_replicate_device_cache_crc_{collector}'
+            check(len(updated_markers[name]) == 40 and updated_markers[name] != previous_markers.get(name),
+                  'collector move invalidates source and target cache: ' + str(collector))
         check(harness.sql(f"SELECT field_value FROM create_remote.host_snmp_cache WHERE host_id={device_id} AND snmp_query_id=16777214").strip() == 'refreshed', 'collector move tolerates poller-refreshed SNMP observations')
         check(harness.sql(f"SELECT COUNT(*) FROM create_remote.poller_command WHERE action=3 AND command='{device_id}'").strip() == '0', 'returning device cancels already replicated destination purge')
         check(harness.sql("SELECT COUNT(*) FROM create_remote.poller_command WHERE action=3 AND command='16777214'").strip() == '1', 'destination purge cancellation preserves unrelated device commands')
