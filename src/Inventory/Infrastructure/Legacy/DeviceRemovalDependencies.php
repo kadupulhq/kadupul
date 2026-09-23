@@ -72,7 +72,11 @@ final class DeviceRemovalDependencies
             }
         }
         foreach (["SELECT id FROM aggregate_graphs WHERE local_graph_id IN ($graphs) FOR UPDATE", "SELECT local_graph_id FROM aggregate_graphs_items WHERE local_graph_id IN ($graphs) FOR UPDATE"] as $sql) {
-            if ($db->query($sql)->fetchColumn() !== false) {
+            $aggregates = $db->query($sql);
+            if (!$aggregates) {
+                throw new \RuntimeException('Dependency scope unavailable');
+            }
+            if ($aggregates->fetchColumn() !== false) {
                 return false;
             }
         }
