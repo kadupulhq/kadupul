@@ -659,6 +659,14 @@ function form_save() {
 			}
 		}
 
+		/* Removing console access leaves a console landing page the group cannot
+		   reach, so apply the same rule the edit page applies in JavaScript. */
+		$login_opts = db_fetch_cell_prepared('SELECT login_opts FROM user_auth_group WHERE id = ?', array(get_request_var('id')));
+
+		if ($login_opts !== false && user_group_login_opts($login_opts, get_request_var('id')) !== $login_opts) {
+			db_execute_prepared("UPDATE user_auth_group SET login_opts = '3' WHERE id = ?", array(get_request_var('id')));
+		}
+
 		reset_group_perms(get_request_var('id'));
 
 		raise_message(1);

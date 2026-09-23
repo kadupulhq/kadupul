@@ -146,7 +146,12 @@ test('a copied group receives the realms and permissions of its source', functio
 		->and($result['writes'])->toContain('PERM 77:4');
 });
 
-test('a realm save stores the posted realms and nothing else', function () use ($db) {
+test('a realm save that drops console access moves the landing page to graphs', function () use ($db) {
+	// Group 5 stores the console landing page and posts no console realm.
 	expect(run_handler('form_save', array('id' => 5, 'save_component_realm_perms' => 1, 'section7' => 'on'), $db))
+		->toBe(array('writes' => array('DELETE', 'REPLACE', 'LOGIN_OPTS 5'), 'message' => 1));
+
+	// Group 6 keeps console access, so its landing page is left alone.
+	expect(run_handler('form_save', array('id' => 6, 'save_component_realm_perms' => 1, 'section8' => 'on'), $db))
 		->toBe(array('writes' => array('DELETE', 'REPLACE'), 'message' => 1));
 });
