@@ -33,7 +33,7 @@
  * @return (void)
  */
 function api_device_cache_crc_update($poller_id, $variable = 'poller_replicate_device_cache_crc') {
-	$hash = hash('ripemd160', date('Y-m-d H:i:s') . rand() . $poller_id);
+	$hash = hash('ripemd160', date('Y-m-d H:i:s') . random_int(0, mt_getrandmax()) . $poller_id);
 
 	db_execute_prepared("REPLACE INTO settings SET value = ?, name='$variable" . "_" . "$poller_id'", array($hash));
 }
