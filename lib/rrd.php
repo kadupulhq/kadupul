@@ -2024,22 +2024,23 @@ function rrdtool_graph_item_fallbacks(&$graph_items, $local_graph_id) {
 	}
 
 	/* Preset 2 is the default a new graph item takes, and an operator can edit
-	   its format, so read it rather than repeating a copy here. */
+	   its format, so read it rather than repeating a copy here. Graphs whose
+	   references are intact never reach this query. */
 	static $default_format;
-
-	if ($default_format === null) {
-		$default_format = db_fetch_cell_prepared('SELECT gprint_text
-			FROM graph_templates_gprint
-			WHERE id = ?',
-			array(2));
-
-		if (empty($default_format)) {
-			$default_format = '%8.2lf %s';
-		}
-	}
 
 	foreach($graph_items as $index => $graph_item) {
 		if (!empty($graph_item['gprint_id']) && $graph_item['gprint_text'] === null) {
+			if ($default_format === null) {
+				$default_format = db_fetch_cell_prepared('SELECT gprint_text
+					FROM graph_templates_gprint
+					WHERE id = ?',
+					array(2));
+
+				if (empty($default_format)) {
+					$default_format = '%8.2lf %s';
+				}
+			}
+
 			$graph_items[$index]['gprint_text'] = $default_format;
 			$missing[] = 'GPRINT Preset ' . (int) $graph_item['gprint_id'];
 		}

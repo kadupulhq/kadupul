@@ -23,7 +23,7 @@ $runFallbacks = function (array $items, $defaultFormat = '%8.2lf %s') {
 	$helper = cacti_test_rrd_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/rrd.php'), 'rrdtool_graph_item_fallbacks');
 
 	$program = 'function cacti_log($m, $o = false, $e = "") { echo "LOG:" . $e . ":" . $m . "\n"; }'
-		. 'function db_fetch_cell_prepared($sql, $params = array()) { return ' . var_export($defaultFormat, true) . '; }'
+		. 'function db_fetch_cell_prepared($sql, $params = array()) { echo "QUERY\n"; return ' . var_export($defaultFormat, true) . '; }'
 		. 'function cacti_sizeof($a) { return is_array($a) ? count($a) : 0; }'
 		. $helper
 		. '$items = json_decode(stream_get_contents(STDIN), true);'
@@ -72,6 +72,15 @@ test('an edited Normal preset is what a dangling item falls back to', function (
 	$stdout = $runFallbacks(array(array('gprint_id' => '4', 'gprint_text' => null, 'color_id' => '0', 'hex' => null)), '%6.1lf%s');
 
 	expect($stdout)->toContain('"gprint_text":"%6.1lf%s"');
+});
+
+test('a graph whose references are intact runs no extra query', function () use ($runFallbacks) {
+	$stdout = $runFallbacks(array(
+		array('gprint_id' => '2', 'gprint_text' => '%8.2lf %s', 'color_id' => '5', 'hex' => 'FF0000'),
+		array('gprint_id' => '0', 'gprint_text' => null, 'color_id' => '7', 'hex' => null),
+	));
+
+	expect($stdout)->not->toContain('QUERY');
 });
 
 test('graph items with valid references or none are left alone and nothing is logged', function () use ($runFallbacks) {
