@@ -31,7 +31,7 @@ final readonly class LegacyDeviceEditor implements DeviceEditor
         // Fixed executable and script, argument array, stdin payload: no shell.
         $process = new Process([PHP_BINDIR . '/php', $this->projectDir . '/bin/legacy-device-edit.php'], $this->projectDir);
         $process->setTimeout(60);
-        $process->setInput(json_encode(['actor' => $userId, 'id' => $device->id, 'revision' => $expectedRevision,
+        $process->setInput(json_encode(['correlation_id' => bin2hex(random_bytes(16)), 'actor' => $userId, 'id' => $device->id, 'revision' => $expectedRevision,
             'description' => $device->description(), 'hostname' => $device->hostname(), 'notes' => $device->notes(), 'enabled' => $device->enabled(),
             'location' => $device->location(), 'external_id' => $device->externalId(), 'site_id' => $device->siteId(), 'polling' => $device->polling(), 'snmp' => $device->snmpChange()->fields], JSON_THROW_ON_ERROR));
         $process->run();

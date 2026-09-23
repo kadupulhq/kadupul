@@ -240,8 +240,17 @@ worker rechecks account, realms and visibility, locks the current device row,
 validates its revision and calls the existing device-save API with fresh settings.
 It retains legacy poller/remote synchronization, graph-title updates and host-save
 hooks without bootstrapping legacy globals inside Symfony's HTTP process. Successful
-saves log actor and device IDs without field values or credentials. A PHP CLI binary
-at PHP_BINDIR/php and process execution must be available to the web runtime.
+saves retain the human-readable actor and device entry. The adapter also
+generates an opaque correlation identifier for the worker. After commit or
+rollback, the worker records a versioned audit event containing only actor,
+action, target, authorization decision and outcome. Denied and
+post-authorization failed attempts contain no submitted fields, credentials,
+session data, plugin output or exception messages. See
+[architecture-alignment.md](architecture-alignment.md) for current sink
+limitations. Structured events append to the fixed private
+log/kadupul-audit.jsonl file independently of generic Cacti log destination and
+verbosity settings. A PHP CLI binary at PHP_BINDIR/php and process execution
+must be available to the web runtime.
 
 Local writes use a database transaction. External plugin and remote-collector
 effects cannot universally be rolled back. Timeouts or failures report an uncertain
