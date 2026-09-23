@@ -68,6 +68,7 @@ try {
     $rows = $locked['rows'];
     $pollers = $locked['pollers'];
     $read = $locked['read'];
+    $changed = [];
     $remotes = [];
     // Validate the entire selection before any local or remote writes.
     foreach ($rows as $index => $row) {
