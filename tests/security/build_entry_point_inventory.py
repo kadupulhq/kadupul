@@ -330,7 +330,12 @@ def symfony_routes():
     for controller in [ROOT / f for f in controllers]:
         text = controller.read_text()
         checks = reached_checks(controller)
-        for attribute in re.findall(r'#\[Route\((.*?)\)\]\s*\n', text):
+        # Attributes may span lines; a count mismatch means the parser missed
+        # one, and a missed route must fail the check rather than vanish.
+        attributes = re.findall(r'#\[Route\((.*?)\)\]', text, re.S)
+        if len(attributes) != text.count('#[Route'):
+            rows.append(('app.php', 'unknown', 'unparsed #[Route] attribute in ' + controller.name))
+        for attribute in attributes:
             path = re.match(r"\s*'([^']+)'", attribute)[1]
             name = re.search(r"name:\s*'([^']+)'", attribute)[1]
             methods = re.search(r'methods:\s*\[([^\]]*)\]', attribute)

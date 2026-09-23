@@ -79,7 +79,7 @@ class Client:
         return {'status': response.status, 'location': response.headers.get('Location') or '', 'body': body,
                 'admin_layout': bool(re.search(r"(?:id=['\"]main_logo|class=['\"]cactiPageHead)", body))}
 
-    def login(self, username, password=PASSWORD):
+    def login(self, username, password):
         self.request('index.php')
         result = self.request('index.php', {'action': 'login', 'login_username': username,
                                             'login_password': password, 'realm': 'local'})
@@ -149,13 +149,13 @@ def main():
 
         anonymous = Client(base)
         norealm, console = Client(base), Client(base)
-        norealm.login('entry-norealm')
+        norealm.login('entry-norealm', PASSWORD)
         rig.sql("SET @id = (SELECT id FROM user_auth WHERE username = 'entry-norealm');"
                 "DELETE FROM user_auth_realm WHERE user_id = @id;"
                 "UPDATE user_auth SET reset_perms = reset_perms + 1 WHERE id = @id;")
         if rig.sql("SELECT COUNT(*) FROM user_auth_realm r JOIN user_auth u ON u.id = r.user_id WHERE u.username = 'entry-norealm'").strip() != '0':
             raise RuntimeError('entry-norealm still holds a realm')
-        console.login('entry-console')
+        console.login('entry-console', PASSWORD)
         admin = Client(base)
         admin.login('admin', 'behavior-admin')
 
