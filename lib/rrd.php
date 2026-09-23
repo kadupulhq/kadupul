@@ -2029,7 +2029,7 @@ function rrdtool_graph_item_fallbacks(&$graph_items, $local_graph_id) {
 	static $default_format;
 
 	foreach($graph_items as $index => $graph_item) {
-		if (!empty($graph_item['gprint_id']) && $graph_item['gprint_text'] === null) {
+		if (!empty($graph_item['gprint_id']) && $graph_item['gprint_preset_id'] === null) {
 			if ($default_format === null) {
 				$default_format = db_fetch_cell_prepared('SELECT gprint_text
 					FROM graph_templates_gprint
@@ -2219,7 +2219,7 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 	/* lets make that sql query... */
 	$graph_items = db_fetch_assoc_prepared('SELECT gti.id AS graph_templates_item_id,
 		gti.cdef_id, gti.vdef_id, gti.text_format, gti.value, gti.hard_return,
-		gti.consolidation_function_id, gti.graph_type_id, gti.gprint_id, gti.color_id, gtgp.gprint_text,
+		gti.consolidation_function_id, gti.graph_type_id, gti.gprint_id, gti.color_id, gtgp.id AS gprint_preset_id, gtgp.gprint_text,
 		colors.hex, gti.alpha, gti.line_width, gti.dashes, gti.shift,
 		gti.dash_offset, gti.textalign, dl.snmp_query_id, dl.snmp_index,
 		dtr.id AS data_template_rrd_id, dtr.local_data_id,

@@ -47,8 +47,8 @@ $runFallbacks = function (array $items, $defaultFormat = '%8.2lf %s') {
 
 test('a graph item whose GPRINT preset was deleted gets the default format, logged once', function () use ($runFallbacks) {
 	$stdout = $runFallbacks(array(
-		array('gprint_id' => '4', 'gprint_text' => null, 'color_id' => '0', 'hex' => null),
-		array('gprint_id' => '2', 'gprint_text' => '%6.2lf', 'color_id' => '0', 'hex' => null),
+		array('gprint_id' => '4', 'gprint_preset_id' => null, 'gprint_text' => null, 'color_id' => '0', 'hex' => null),
+		array('gprint_id' => '2', 'gprint_preset_id' => '2', 'gprint_text' => '%6.2lf', 'color_id' => '0', 'hex' => null),
 	));
 
 	expect($stdout)->toContain('"gprint_text":"%8.2lf %s"')
@@ -58,11 +58,11 @@ test('a graph item whose GPRINT preset was deleted gets the default format, logg
 
 test('a graph item whose color was deleted draws with no color, logged once', function () use ($runFallbacks) {
 	$stdout = $runFallbacks(array(
-		array('gprint_id' => '0', 'gprint_text' => null, 'color_id' => '7', 'hex' => null),
-		array('gprint_id' => '4', 'gprint_text' => null, 'color_id' => '8', 'hex' => null),
+		array('gprint_id' => '0', 'gprint_preset_id' => null, 'gprint_text' => null, 'color_id' => '7', 'hex' => null),
+		array('gprint_id' => '4', 'gprint_preset_id' => null, 'gprint_text' => null, 'color_id' => '8', 'hex' => null),
 	));
 
-	expect($stdout)->toContain('ITEMS:[{"gprint_id":"0","gprint_text":null,"color_id":"7","hex":""},{"gprint_id":"4","gprint_text":"%8.2lf %s","color_id":"8","hex":""}]')
+	expect($stdout)->toContain('ITEMS:[{"gprint_id":"0","gprint_preset_id":null,"gprint_text":null,"color_id":"7","hex":""},{"gprint_id":"4","gprint_preset_id":null,"gprint_text":"%8.2lf %s","color_id":"8","hex":""}]')
 		->and(substr_count($stdout, 'LOG:'))->toBe(1)
 		->and($stdout)->toContain('LOG:WEBUI:WARNING: Graph 9 names a deleted Color 7, GPRINT Preset 4, Color 8');
 });
@@ -74,20 +74,30 @@ test('an edited Normal preset is what a dangling item falls back to', function (
 	expect($stdout)->toContain('"gprint_text":"%6.1lf%s"');
 });
 
+test('a preset that exists with no format is left alone', function () use ($runFallbacks) {
+	// gprint_text is nullable, so a present row with a null format is not an orphan.
+	$stdout = $runFallbacks(array(array('gprint_id' => '5', 'gprint_preset_id' => '5', 'gprint_text' => null, 'color_id' => '0', 'hex' => null)));
+
+	expect($stdout)->toContain('"gprint_text":null')
+		->and($stdout)->not->toContain('LOG:')
+		->and($stdout)->not->toContain('QUERY');
+});
+
 test('a graph whose references are intact runs no extra query', function () use ($runFallbacks) {
 	$stdout = $runFallbacks(array(
-		array('gprint_id' => '2', 'gprint_text' => '%8.2lf %s', 'color_id' => '5', 'hex' => 'FF0000'),
-		array('gprint_id' => '0', 'gprint_text' => null, 'color_id' => '7', 'hex' => null),
+		array('gprint_id' => '2', 'gprint_preset_id' => '2', 'gprint_text' => '%8.2lf %s', 'color_id' => '5', 'hex' => 'FF0000'),
+		array('gprint_id' => '0', 'gprint_preset_id' => null, 'gprint_text' => null, 'color_id' => '0', 'hex' => null),
 	));
 
-	expect($stdout)->not->toContain('QUERY');
+	expect($stdout)->not->toContain('QUERY')
+		->and($stdout)->not->toContain('LOG:');
 });
 
 test('graph items with valid references or none are left alone and nothing is logged', function () use ($runFallbacks) {
 	$items = array(
-		array('gprint_id' => '2', 'gprint_text' => '%8.2lf %s', 'color_id' => '5', 'hex' => 'FF0000'),
-		array('gprint_id' => '0', 'gprint_text' => null, 'color_id' => '0', 'hex' => null),
-		array('gprint_id' => '3', 'gprint_text' => '', 'color_id' => '6', 'hex' => ''),
+		array('gprint_id' => '2', 'gprint_preset_id' => '2', 'gprint_text' => '%8.2lf %s', 'color_id' => '5', 'hex' => 'FF0000'),
+		array('gprint_id' => '0', 'gprint_preset_id' => null, 'gprint_text' => null, 'color_id' => '0', 'hex' => null),
+		array('gprint_id' => '3', 'gprint_preset_id' => '3', 'gprint_text' => '', 'color_id' => '6', 'hex' => ''),
 	);
 
 	$stdout = $runFallbacks($items);
