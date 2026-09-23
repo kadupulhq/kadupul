@@ -988,6 +988,7 @@ header_redirect	./user_admin.php:725		header('Location: user_admin.php?action=us
 header_redirect	./user_admin.php:762		header('Location: user_admin.php?action=user_edit&header=false&tab=graph_perms_edit&id=' . get_request_var('user_id'));
 header_redirect	./user_admin.php:796				header('Location: user_admin.php&header=false');
 header_redirect	./user_admin.php:992				header('Location: user_admin.php&header=false');
+header_redirect	./user_domains.php:105				header('Location: user_domains.php?header=false&action=edit&domain_id=' . get_nfilter_request_var('domain_id'));
 header_redirect	./user_domains.php:171		header('Location: user_domains.php?header=false&action=edit&domain_id=' . (empty($domain_id) ? get_nfilter_request_var('domain_id') : $domain_id));
 header_redirect	./user_domains.php:205			header('Location: user_domains.php?header=false');
 header_redirect	./user_domains.php:271			header('Location: user_domains.php?header=false');
@@ -995,6 +996,7 @@ header_redirect	./user_group_admin.php:1827				header('Location: user_group_admi
 header_redirect	./user_group_admin.php:1835				header('Location: user_group_admin.php&header=false');
 header_redirect	./user_group_admin.php:1846				header('Location: user_group_admin.php&header=false');
 header_redirect	./user_group_admin.php:1854				header('Location: user_group_admin.php&header=false');
+header_redirect	./user_group_admin.php:201		header('Location: user_group_admin.php?header=false');
 header_redirect	./user_group_admin.php:279		header('Location: user_group_admin.php?action=edit&header=false&tab=' .  get_nfilter_request_var('tab') . '&id=' . get_filter_request_var('id'));
 header_redirect	./user_group_admin.php:311			header('Location: user_group_admin.php?action=edit&header=false&tab=permsd&id=' . get_nfilter_request_var('id'));
 header_redirect	./user_group_admin.php:337			header('Location: user_group_admin.php?action=edit&header=false&tab=permsg&id=' . get_nfilter_request_var('id'));
