@@ -35,9 +35,10 @@ function db_fetch_assoc($sql)
     $phase = $GLOBALS['reviewed_graph_query']++;
     return $phase < 2 ? array_map(static fn($id) => ['local_data_id' => $id], $GLOBALS['reviewed_graph_discovered']) : [];
 }
-function api_data_source_remove_multi($ids)
+function api_data_source_remove_multi($ids, $propagateRemote = true)
 {
     $GLOBALS['reviewed_graph_deleted_data'] = array_values($ids);
+    $GLOBALS['reviewed_graph_propagate_remote'] = $propagateRemote;
 }
 function api_graph_remove_multi($ids)
 {
@@ -58,6 +59,7 @@ final class ReviewedGraphPurgeTest extends TestCase
         $GLOBALS['reviewed_graph_deleted_data'] = [];
         $GLOBALS['reviewed_graph_deleted_graphs'] = [];
         $GLOBALS['reviewed_graph_marker'] = null;
+        $GLOBALS['reviewed_graph_propagate_remote'] = null;
         $graphs = [7];
         try {
             api_delete_graphs($graphs, 2, $reviewed);
@@ -69,6 +71,9 @@ final class ReviewedGraphPurgeTest extends TestCase
         self::assertSame($accepted ? $discovered : [], $GLOBALS['reviewed_graph_deleted_data']);
         self::assertSame($accepted ? [7] : [], $GLOBALS['reviewed_graph_deleted_graphs']);
         self::assertSame($accepted ? 'time_last_change_graph' : null, $GLOBALS['reviewed_graph_marker']);
+        if ($accepted && $discovered !== []) {
+            self::assertSame($reviewed === null, $GLOBALS['reviewed_graph_propagate_remote']);
+        }
     }
 
     public static function scopes(): iterable

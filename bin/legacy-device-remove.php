@@ -162,7 +162,7 @@ try {
         $dataPlaceholders = implode(',', array_fill(0, count($data), '?'));
         $remainingData = $read($connection, "SELECT id FROM data_local WHERE id IN ($dataPlaceholders) ORDER BY id FOR UPDATE", $data);
         if ($remainingData !== []) {
-            api_data_source_remove_multi(array_column($remainingData, 'id'));
+            api_data_source_remove_multi(array_column($remainingData, 'id'), false);
         }
     }
     foreach ($snapshots as $snapshot) {

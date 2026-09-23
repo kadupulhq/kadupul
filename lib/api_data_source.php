@@ -163,7 +163,7 @@ function api_data_source_remove($local_data_id) {
 	api_data_source_cache_crc_update($poller_id);
 }
 
-function api_data_source_remove_multi($local_data_ids) {
+function api_data_source_remove_multi($local_data_ids, $propagate_remote = true) {
 	// Shortcut out if no data
 	if (!cacti_sizeof($local_data_ids)) {
 		return;
@@ -180,7 +180,7 @@ function api_data_source_remove_multi($local_data_ids) {
 
 	$local_data_ids_chunks = array_chunk($local_data_ids, 1000);
 	foreach ($local_data_ids_chunks as $ids_to_delete) {
-		$poller_ids = get_remote_poller_ids_from_data_sources($ids_to_delete);
+		$poller_ids = $propagate_remote ? get_remote_poller_ids_from_data_sources($ids_to_delete) : array();
 
 		if (is_array($ids_to_delete)) {
 			cacti_log("Found as an array");
@@ -834,4 +834,3 @@ function api_data_input_more_inputs($id, $input_string) {
 		return false;
 	}
 }
-
