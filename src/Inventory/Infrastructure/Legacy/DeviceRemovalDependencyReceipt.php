@@ -13,7 +13,7 @@ use RuntimeException;
 /** Keeps dependency identities observable after the legacy lifecycle deletes parents. */
 final readonly class DeviceRemovalDependencyReceipt
 {
-    private function __construct(private array $checks, private array $rrds, private array $graphs, private array $inputFields) {}
+    private function __construct(private array $checks, private array $rrds, private array $graphs, private array $templates, private array $inputFields) {}
 
     public static function capture(PDO $db, array $graphs, array $data): self
     {
@@ -36,7 +36,7 @@ final readonly class DeviceRemovalDependencyReceipt
         }
         $checks[] = ['data_input_data', 'data_template_data_id', $templates];
         $checks[] = ['graph_templates_item', 'task_item_id', $rrds];
-        return new self($checks, $rrds, $graphs, self::readPairs($db, $templates));
+        return new self($checks, $rrds, $graphs, $templates, self::readPairs($db, $templates));
     }
 
     public function assertExclusive(PDO $db): void
@@ -46,8 +46,7 @@ final readonly class DeviceRemovalDependencyReceipt
                 throw new RuntimeException('Reviewed data acquired an outside graph reference');
             }
         }
-        $templateIds = array_values(array_unique(array_column($this->inputFields, 'data_template_data_id')));
-        $existingTemplates = self::read($db, 'data_template_data', 'id', 'id', $templateIds);
+        $existingTemplates = self::read($db, 'data_template_data', 'id', 'id', $this->templates);
         $expected = array_values(array_filter($this->inputFields, static fn(array $field): bool => in_array($field['data_template_data_id'], $existingTemplates, true)));
         if (self::readPairs($db, $existingTemplates) !== $expected) {
             throw new RuntimeException('Reviewed input field scope changed');

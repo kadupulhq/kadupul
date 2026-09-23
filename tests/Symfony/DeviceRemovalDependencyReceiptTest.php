@@ -59,6 +59,17 @@ final class DeviceRemovalDependencyReceiptTest extends TestCase
         $receipt->assertExclusive($db);
     }
 
+    public function testNewInputFieldOnReviewedEmptyTemplateChangesScope(): void
+    {
+        $db = $this->database();
+        $db->exec('DELETE FROM data_input_data');
+        $receipt = DeviceRemovalDependencyReceipt::capture($db, [11], [12]);
+        $db->exec('INSERT INTO data_input_data VALUES (101, 2)');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Reviewed input field scope changed');
+        $receipt->assertExclusive($db);
+    }
+
     #[DataProvider('lateRows')]
     public function testFinalCheckRejectsOrphanedOrReassignedDependent(string $sql): void
     {
