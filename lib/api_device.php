@@ -1503,10 +1503,13 @@ function api_device_ping_device($device_id, $from_remote = false) {
 
 	if (!cacti_sizeof($host)) {
 		if ($from_remote) {
-			print html_escape(__('ERROR: Device[' . $device_id . '] not found.  Please perform Full Sync!'));
+			$error = html_escape(__('ERROR: Device[' . $device_id . '] not found.  Please perform Full Sync!'));
 		} else {
-			print html_escape(__('ERROR: Device[' . $device_id . '] not found.  Please check database for errors.'));
+			$error = html_escape(__('ERROR: Device[' . $device_id . '] not found.  Please check database for errors.'));
 		}
+		// Keep the shared escaping contract and make the output boundary
+		// explicit for security analyzers that do not model html_escape().
+		print htmlspecialchars($error, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8', false);
 		return;
 	}
 

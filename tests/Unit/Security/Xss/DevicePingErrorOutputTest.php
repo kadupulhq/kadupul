@@ -31,11 +31,14 @@ test('missing device ping renders text and preserves the bound lookup', function
 	}
 	$suffix = $remote ? 'Please perform Full Sync!' : 'Please check database for errors.';
 	$message = 'ERROR: Device[' . $id . '] not found.  ' . $suffix;
-	expect($output)->toBe(htmlspecialchars($message, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8'));
+	$contract = str_replace('`', '&#96;', $message);
+	$contract = htmlspecialchars($contract, ENT_QUOTES | ENT_HTML5, 'UTF-8', false);
+	expect($output)->toBe($contract);
 	expect($output)->not->toContain('<svg', '<script', '<img');
 	expect($GLOBALS['ping_error_lookup'][1])->toBe([$id]);
 	expect($GLOBALS['ping_error_lookup'][0])->toContain('WHERE id = ?');
 })->with([
 	[7], ['42'], ['<svg onload=alert(1)>'], ['"><img src=x onerror=alert(1)>'],
-	["'&<script>alert(1)</script>"], ['router-日本語'],
+	["'&<script>alert(1)</script>"], ['router-日本語'], ['`onmouseover=alert(1)`'],
+	['router&amp;<b>encoded</b>'],
 ])->with([false, true]);
