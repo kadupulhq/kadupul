@@ -16,6 +16,11 @@ final class DeviceAssociationWriter
     public function apply(PDO $primary, ?PDO $remote, DeviceAssociations $device, DeviceAssociationChange $change): void
     {
         if ($change->kind === 'query') {
+            if ($change->operation !== 'remove') {
+                foreach (array_filter([$primary, $remote]) as $database) {
+                    $this->requireQuery($database, $change->targetId);
+                }
+            }
             match ($change->operation) {
                 'add' => api_device_dq_add($device->id, $change->targetId, $change->reindexMethod),
                 'change' => api_device_dq_change($device->id, $change->targetId, $change->reindexMethod),
@@ -24,7 +29,12 @@ final class DeviceAssociationWriter
             return;
         }
         if ($change->operation === 'remove') {
-            api_device_gt_remove($device->id, $change->targetId);
+            foreach (array_filter([$primary, $remote]) as $database) {
+                $query = $database->prepare('DELETE FROM host_graph WHERE host_id = ? AND graph_template_id = ?');
+                if (!$query->execute([$device->id, $change->targetId])) {
+                    throw new \RuntimeException('Graph association removal failed');
+                }
+            }
         } else {
             foreach (array_filter([$primary, $remote]) as $database) {
                 $query = $database->prepare('SELECT COUNT(*) FROM graph_templates WHERE id = ?');
@@ -44,14 +54,21 @@ final class DeviceAssociationWriter
     {
         foreach (array_filter([$primary, $remote]) as $database) {
             $query = $database->prepare("SELECT site_id, poller_id, host_template_id FROM host WHERE id = ? AND deleted = ''");
-            $query->execute([$device->id]);
+            if (!$query->execute([$device->id])) {
+                throw new \RuntimeException('Device identity could not be confirmed');
+            }
             $row = $query->fetch(PDO::FETCH_ASSOC);
             if (!$row || (int) $row['site_id'] !== $device->siteId || (int) $row['poller_id'] !== $device->pollerId || (int) $row['host_template_id'] !== $device->templateId) {
                 throw new \RuntimeException('Device identity changed');
             }
             if ($change->kind === 'query') {
+                if ($change->operation !== 'remove') {
+                    $this->requireQuery($database, $change->targetId);
+                }
                 $query = $database->prepare('SELECT reindex_method FROM host_snmp_query WHERE host_id = ? AND snmp_query_id = ?');
-                $query->execute([$device->id, $change->targetId]);
+                if (!$query->execute([$device->id, $change->targetId])) {
+                    throw new \RuntimeException('Data-query association could not be confirmed');
+                }
                 $method = $query->fetchColumn();
                 if ($change->operation === 'remove' ? $method !== false : ($method === false || (int) $method !== $change->reindexMethod)) {
                     throw new \RuntimeException('Data-query association could not be confirmed');
@@ -59,26 +76,29 @@ final class DeviceAssociationWriter
                 if ($change->operation === 'remove') {
                     foreach (['host_snmp_cache' => 'snmp_query_id', 'poller_reindex' => 'data_query_id'] as $table => $column) {
                         $query = $database->prepare("SELECT COUNT(*) FROM $table WHERE host_id = ? AND $column = ?");
-                        $query->execute([$device->id, $change->targetId]);
-                        if ((int) $query->fetchColumn() !== 0) {
+                        if (!$query->execute([$device->id, $change->targetId]) || ($count = $query->fetchColumn()) === false || (int) $count !== 0) {
                             throw new \RuntimeException('Data-query cache cleanup could not be confirmed');
                         }
                     }
                 }
                 continue;
             }
-            if ($change->operation === 'add') {
-                $query = $database->prepare('SELECT COUNT(*) FROM graph_templates WHERE id = ?');
-                if (!$query->execute([$change->targetId]) || (int) $query->fetchColumn() !== 1) {
-                    throw new \RuntimeException('Graph template unavailable');
-                }
-            }
-            // Orphaned mappings still count: removal must confirm their absence
-            // independently of whether the template catalog contains the target.
-            $query = $database->prepare('SELECT COUNT(*) FROM host_graph WHERE host_id = ? AND graph_template_id = ?');
+            // Addition requires both catalog and mapping in one observation.
+            // Removal must also reject orphan mappings without a catalog row.
+            $sql = $change->operation === 'add'
+                ? 'SELECT COUNT(*) FROM host_graph hg JOIN graph_templates gt ON gt.id = hg.graph_template_id WHERE hg.host_id = ? AND hg.graph_template_id = ?'
+                : 'SELECT COUNT(*) FROM host_graph WHERE host_id = ? AND graph_template_id = ?';
+            $query = $database->prepare($sql);
             if (!$query->execute([$device->id, $change->targetId]) || (int) $query->fetchColumn() !== ($change->operation === 'add' ? 1 : 0)) {
                 throw new \RuntimeException('Association could not be confirmed');
             }
+        }
+    }
+    private function requireQuery(PDO $database, int $targetId): void
+    {
+        $query = $database->prepare('SELECT COUNT(*) FROM snmp_query WHERE id = ?');
+        if (!$query->execute([$targetId]) || (int) $query->fetchColumn() !== 1) {
+            throw new \RuntimeException('Data query unavailable');
         }
     }
 }

@@ -14,6 +14,37 @@ use PHPUnit\Framework\TestCase;
 final class DeviceAssociationReadFailureTest extends TestCase
 {
     #[DataProvider('failures')]
+    public function testFailedReadsNeverProduceAnEmptySnapshotOrCatalog(string $kind, bool $catalog, string $failure): void
+    {
+        $statement = $this->createMock(\PDOStatement::class);
+        $statement->method('execute')->willReturn($failure !== 'execute');
+        if ($failure === 'fetch') {
+            $statement->method('fetchAll')->willThrowException(new \PDOException('Fixture fetch failed'));
+        } else {
+            $statement->expects(self::never())->method('fetchAll');
+        }
+        $db = $this->createMock(\PDO::class);
+        $db->method('prepare')->willReturn($failure === 'prepare' ? false : $statement);
+        $this->expectException(\RuntimeException::class);
+        $records = new DeviceAssociationRecords();
+        if ($catalog) {
+            $records->available($db, $kind);
+        } else {
+            $records->snapshot($db, ['id' => 7], $kind);
+        }
+    }
+
+    public static function failures(): iterable
+    {
+        foreach (['graph', 'query'] as $kind) {
+            foreach ([false, true] as $catalog) {
+                foreach (['prepare', 'execute', 'fetch'] as $failure) {
+                    yield [$kind, $catalog, $failure];
+                }
+            }
+        }
+    }
+    #[DataProvider('snapshotFailures')]
     public function testReadFailuresNeverBecomeEmptySnapshots(string $kind, string $failure): void
     {
         $db = $this->createMock(\PDO::class);
@@ -33,7 +64,7 @@ final class DeviceAssociationReadFailureTest extends TestCase
         (new DeviceAssociationRecords())->snapshot($db, ['id' => 7], $kind);
     }
 
-    public static function failures(): iterable
+    public static function snapshotFailures(): iterable
     {
         foreach (['query', 'graph'] as $kind) {
             foreach (['prepare', 'execute', 'fetch'] as $failure) {
