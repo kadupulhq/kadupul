@@ -12,6 +12,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Add a versioned, correlation-aware audit contract for migrated writes and record structured device-edit persistence decisions and outcomes without submitted fields or credentials.
+
 - Stop device collector reassignment immediately when the legacy replication helper reports an unavailable collector, before further graph replication.
 
 - Preserve four-byte device text in bulk-state workers and verify primary/remote SQL modes and encodings at runtime before enable and disable writes.
