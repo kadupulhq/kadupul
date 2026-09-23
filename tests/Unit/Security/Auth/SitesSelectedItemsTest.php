@@ -29,6 +29,7 @@ foreach (array(
     array($sites, 'duplicate_site'),
     array($sites, 'sites_selected_ids'),
     array($functions, 'sanitize_unserialize_selected_items'),
+    array($functions, 'selected_items_decode'),
     array($functions, 'array_rekey'),
     array($database, 'array_to_sql_or'),
 ) as $wanted) {

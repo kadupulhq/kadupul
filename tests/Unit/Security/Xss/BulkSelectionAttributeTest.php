@@ -7,6 +7,8 @@
 
 namespace BulkSelectionAttributeTest;
 
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+
 function __esc($text) {
 	return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
@@ -19,6 +21,11 @@ function get_nfilter_request_var($name) {
 	return get_request_var($name);
 }
 
+// The production encoders run here; the confirmation block calls them.
+foreach (array('selected_items_payload', 'selected_items_decode') as $name) {
+	eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/functions.php'), $name)); // nosemgrep: php.lang.security.eval-use.eval-use
+}
+
 function isset_request_var($name) {
 	return $name === 'local_graph_id';
 }
@@ -29,7 +36,7 @@ function get_filter_request_var($name) {
 }
 
 function render_confirmation($source, $items, $action, $save_html = '') {
-	expect(preg_match('/\$selected_items_html = (?:\(isset\(|serialize\()\$(\w+)\).*?<\/tr>[^;]*;/s', $source, $match))->toBe(1);
+	expect(preg_match('/\$selected_items_html = (?:\(isset\(|selected_items_payload\()\$(\w+)\).*?<\/tr>[^;]*;/s', $source, $match))->toBe(1);
 	if ($items !== null) {
 		${$match[1]} = $items;
 	}
@@ -76,9 +83,10 @@ test('bulk confirmation fields preserve serialized selections and action values'
 		expect($fields['local_graph_id'])->toBe('17');
 	}
 	expect($fields['drp_action'])->toBe($action);
-	expect($fields['selected_items'])->toBe($items === null ? '' : serialize($items));
+	// The payload is base64 so escaping cannot rewrite the serialized bytes.
+	expect($fields['selected_items'])->toBe($items === null ? '' : selected_items_payload($items));
 	if ($items !== null) {
-		expect(unserialize($fields['selected_items'], array('allowed_classes' => false)))->toBe($items);
+		expect(unserialize(selected_items_decode($fields['selected_items']), array('allowed_classes' => false)))->toBe($items);
 	}
 	expect($document->getElementsByTagName('script')->length)->toBe(0);
 	expect($document->getElementsByTagName('img')->length)->toBe(0);
@@ -140,5 +148,5 @@ test('confirmation keeps cancel and submit controls when an action is available'
 	expect($cancel->item(0)->getAttribute('value'))->toBe('Cancel');
 	expect($xpath->query('//button[@type="submit"]')->length)->toBe(1);
 	expect($xpath->query('//input[@name="selected_items"]')->item(0)->getAttribute('value'))
-		->toBe(serialize(array('0042')));
+		->toBe(selected_items_payload(array('0042')));
 })->with(array('automation_networks.php', 'automation_snmp.php', 'lib/html_reports.php'));

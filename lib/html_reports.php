@@ -620,7 +620,7 @@ function reports_form_actions() {
 		}
 	}
 
-	$selected_items_html = (isset($reports_array) ? serialize($reports_array) : '');
+	$selected_items_html = (isset($reports_array) ? selected_items_payload($reports_array) : '');
 	$selected_items_html = htmlspecialchars($selected_items_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 	$selected_items_html = str_replace('`', '&#96;', $selected_items_html);
 	$action_html = htmlspecialchars((string) get_nfilter_request_var('drp_action'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');

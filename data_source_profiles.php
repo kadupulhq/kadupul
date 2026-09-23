@@ -382,7 +382,7 @@ function form_actions() {
 		exit;
 	}
 
-	$selected_items_html = (isset($profile_array) ? serialize($profile_array) : '');
+	$selected_items_html = (isset($profile_array) ? selected_items_payload($profile_array) : '');
 	$selected_items_html = htmlspecialchars($selected_items_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 	$selected_items_html = str_replace('`', '&#96;', $selected_items_html);
 	$action_html = htmlspecialchars((string) get_request_var('drp_action'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');

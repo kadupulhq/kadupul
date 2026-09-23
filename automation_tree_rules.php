@@ -327,7 +327,7 @@ function automation_tree_rules_form_actions() {
 		$save_html = "<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' value='" . __esc('Cancel') . "'>&nbsp;<input type='submit' class='ui-button ui-corner-all ui-widget' value='" . __esc('Continue') . "' title='" . __esc('Apply requested action') . "'>";
 	}
 
-	$selected_items_html = (isset($automation_tree_rules_array) ? serialize($automation_tree_rules_array) : '');
+	$selected_items_html = (isset($automation_tree_rules_array) ? selected_items_payload($automation_tree_rules_array) : '');
 	$selected_items_html = htmlspecialchars($selected_items_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 	$selected_items_html = str_replace('`', '&#96;', $selected_items_html);
 	$action_html = htmlspecialchars((string) get_nfilter_request_var('drp_action'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
