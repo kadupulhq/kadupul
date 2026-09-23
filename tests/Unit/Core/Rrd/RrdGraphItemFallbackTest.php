@@ -40,7 +40,8 @@ $runFallbacks = function (array $items, $defaultFormat = '%8.2lf %s') {
 	fclose($pipes[1]);
 	fclose($pipes[2]);
 
-	expect(proc_close($process))->toBe(0, $stderr);
+	expect(proc_close($process))->toBe(0, $stderr)
+		->and($stderr)->toBe('');
 
 	return $stdout;
 };
@@ -69,7 +70,7 @@ test('a graph item whose color was deleted draws with no color, logged once', fu
 
 test('an edited Normal preset is what a dangling item falls back to', function () use ($runFallbacks) {
 	// Preset 2 is editable, so the fallback reads it rather than repeating a copy.
-	$stdout = $runFallbacks(array(array('gprint_id' => '4', 'gprint_text' => null, 'color_id' => '0', 'hex' => null)), '%6.1lf%s');
+	$stdout = $runFallbacks(array(array('gprint_id' => '4', 'gprint_preset_id' => null, 'gprint_text' => null, 'color_id' => '0', 'hex' => null)), '%6.1lf%s');
 
 	expect($stdout)->toContain('"gprint_text":"%6.1lf%s"');
 });
