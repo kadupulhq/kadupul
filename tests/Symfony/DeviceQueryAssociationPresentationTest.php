@@ -45,6 +45,7 @@ final class DeviceQueryAssociationPresentationTest extends TestCase
             $container->set(ConsoleAccess::class, $access);
             $device = new DeviceAssociations(7, '<router>', 0, 1, 0, [], [], 'query');
             $port = $this->createMock(DeviceAssociationStore::class);
+            $port->method('defaultReindexMethod')->willReturn(3);
             $port->method('findVisible')->willReturn($device);
             $port->method('available')->willReturn([1 => 'Primary', 2 => '<Collector>', 3 => '<Collector>']);
             $save = $port->expects(self::once())->method('change')->with(42, 7, self::callback(fn($change) => $change->targetId === 2 && $change->operation === 'add' && $change->reindexMethod === 2), $device->revision());
@@ -62,6 +63,7 @@ final class DeviceQueryAssociationPresentationTest extends TestCase
             self::assertStringNotContainsString('value="4"', $response->getContent());
             $document = new \DOMDocument();
             @$document->loadHTML($response->getContent());
+            self::assertSame('3', (new \DOMXPath($document))->evaluate('string(//select[@name="device_association[reindex]"]/option[@selected]/@value)'));
             $token = (new \DOMXPath($document))->evaluate('string(//input[@name="device_association[_token]"]/@value)');
             $fields = ['reindex' => '2', 'operation' => 'add', 'target' => '2', 'revision' => $device->revision(), '_token' => $token];
             foreach (['', '9999', null] as $invalid) {
