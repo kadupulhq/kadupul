@@ -16,6 +16,7 @@ require __DIR__ . '/legacy-assignment-bootstrap.php';
 
 $status = 'failed';
 $connection = null;
+$remote = null;
 $writing = false;
 try {
     $input = stream_get_contents(STDIN, 4097);
@@ -59,10 +60,20 @@ try {
         if (!remote_poller_up($device->pollerId) || !(($remote = poller_connect_to_remote($device->pollerId)) instanceof PDO)) {
             throw new RuntimeException('Collector unavailable');
         }
-        $query = $remote->prepare("SELECT id FROM host WHERE id = ? AND poller_id = ? AND deleted = ''");
+        if ($remote->inTransaction() || !$remote->beginTransaction()) {
+            throw new RuntimeException('Remote transaction unavailable');
+        }
+        $query = $remote->prepare("SELECT id FROM host WHERE id = ? AND poller_id = ? AND deleted = '' FOR UPDATE");
         $query->execute([$device->id, $device->pollerId]);
         if (!$query->fetchColumn()) {
             throw new RuntimeException('Remote device unavailable');
+        }
+        if ($change->operation !== 'remove') {
+            $query = $remote->prepare('SELECT id FROM graph_templates WHERE id = ? FOR UPDATE');
+            $query->execute([$change->targetId]);
+            if (!$query->fetchColumn()) {
+                throw new RuntimeException('Remote association target unavailable');
+            }
         }
     }
     foreach (array_filter([$connection, $remote]) as $database) {
@@ -76,7 +87,7 @@ try {
     $writing = true;
     $writer = new DeviceAssociationWriter();
     $writer->apply($connection, $remote, $device, $change);
-    if (db_error() !== '' || is_error_message() || !$connection->inTransaction()) {
+    if (db_error() !== '' || is_error_message() || !$connection->inTransaction() || ($remote !== null && !$remote->inTransaction())) {
         throw new RuntimeException('Association change failed');
     }
     $writer->verify($connection, $remote, $device, $change);
@@ -85,6 +96,9 @@ try {
         if (!$mark->execute([$name, $value, $value])) {
             throw new RuntimeException('Cache invalidation failed');
         }
+    }
+    if ($remote !== null && !$remote->commit()) {
+        throw new RuntimeException('Remote commit failed');
     }
     if (!db_commit_transaction()) {
         throw new RuntimeException('Commit failed');
@@ -98,6 +112,9 @@ try {
 } catch (Throwable) {
     // Remote effects can survive rollback; return no success without verification.
 } finally {
+    if ($remote instanceof PDO && $remote->inTransaction()) {
+        $remote->rollBack();
+    }
     if ($connection instanceof PDO && $connection->inTransaction()) {
         db_rollback_transaction($connection);
     }
