@@ -12,6 +12,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Changed
 
+- Add Symfony bulk SNMP settings with explicit credential replacement, per-device credential validation and secret-safe failure responses.
+
 - Add Symfony bulk site, template and collector assignments with whole-selection validation, primary rollback and verified collector replication.
 
 - Add Symfony bulk location and polling option edits with explicit field selection, domain validation, stale-option protection and verified collector writes.

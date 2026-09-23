@@ -17,7 +17,7 @@ use Kadupul\Platform\Contract\LegacyConfiguration;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-final class DeviceStatePresentationTest extends TestCase
+final class DeviceBulkSnmpPresentationTest extends TestCase
 {
     public function testFrenchPresentationEscapesNamesAndPreservesAssignmentValues(): void
     {
@@ -40,21 +40,28 @@ final class DeviceStatePresentationTest extends TestCase
             $device = new DeviceState(7, '<router>', 'router.invalid', true, 0, 1, 0);
             $port = $this->createMockForIntersectionOfInterfaces([DeviceStates::class, \Kadupul\Inventory\Application\Port\DeviceSnmpSettings::class, \Kadupul\Inventory\Application\Port\DeviceStatistics::class, \Kadupul\Inventory\Application\Port\DeviceTemplateSynchronization::class, \Kadupul\Inventory\Application\Port\DeviceOptions::class]);
             $port->method('findVisible')->willReturn([$device]);
-            $port->expects(self::once())->method('setEnabled')->with(42, self::callback(fn($selection) => $selection->revisions === [7 => $device->revision()]), false);
+            $port->expects(self::once())->method('changeSnmp')->with(42, self::callback(fn($selection) => $selection->revisions === [7 => $device->revision()]), self::callback(fn($change) => $change->fields['keep_credentials'] === false && $change->fields['snmp_community'] === 'fixture-bulk-secret'));
             $container->set(DeviceStates::class, $port);
-            $path = '/inventory/devices/disable?ids[]=7';
+            $path = '/inventory/devices/snmp?ids[]=7';
             $response = $kernel->handle(Request::create($path, 'GET', [], ['Cacti' => 'fixture']));
             self::assertSame(200, $response->getStatusCode());
-            self::assertStringContainsString('Désactiver les appareils', $response->getContent());
+            self::assertStringContainsString('Modifier les paramètres SNMP des appareils', $response->getContent());
             self::assertStringContainsString('&lt;router&gt;', $response->getContent());
             $document = new \DOMDocument();
             @$document->loadHTML($response->getContent());
             $token = (new \DOMXPath($document))->evaluate('string(//input[@name="device_state[_token]"]/@value)');
-            $fields = ['selection' => json_encode([7 => $device->revision()]), '_token' => $token];
+            $fields = ['selection' => json_encode([7 => $device->revision()]), '_token' => $token, 'snmp' => ['keep_credentials' => 'replace', 'snmp_community' => 'fixture-bulk-secret'] + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::PUBLIC_DEFAULTS + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::CREDENTIAL_DEFAULTS];
             foreach (['', 'null', '{}', '{"8":"' . $device->revision() . '"}'] as $invalid) {
                 $request = Request::create($path, 'POST', ['device_state' => array_replace($fields, ['selection' => $invalid])], ['Cacti' => 'fixture']);
                 $request->headers->set('Origin', 'http://localhost');
                 self::assertSame(422, $kernel->handle($request)->getStatusCode());
+            }
+            foreach ([['poller_id' => '2'], ['snmp_version' => '99'], ['keep_credentials' => 'keep']] as $extra) {
+                $request = Request::create($path, 'POST', ['device_state' => array_replace($fields, ['snmp' => array_replace($fields['snmp'], $extra)])], ['Cacti' => 'fixture']);
+                $request->headers->set('Origin', 'http://localhost');
+                $response = $kernel->handle($request);
+                self::assertSame(422, $response->getStatusCode());
+                self::assertStringNotContainsString('fixture-bulk-secret', $response->getContent());
             }
             $request = Request::create($path, 'POST', ['device_state' => $fields], ['Cacti' => 'fixture']);
             $request->headers->set('Origin', 'http://localhost');

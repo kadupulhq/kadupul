@@ -286,3 +286,8 @@
 "Confirm assignments": "Confirm assignments"
 "Selected device assignments updated.": "Selected device assignments updated."
 "The selected assignment is applied to every listed device. Template changes preserve existing graphs; automation may create new graphs. Collector changes transfer polling ownership.": "The selected assignment is applied to every listed device. Template changes preserve existing graphs; automation may create new graphs. Collector changes transfer polling ownership."
+
+"Change device SNMP settings": "Change device SNMP settings"
+"Confirm SNMP changes": "Confirm SNMP changes"
+"Selected device SNMP settings updated.": "Selected device SNMP settings updated."
+"Apply these SNMP settings to every selected device. Keep each device’s stored credentials or explicitly replace them. Stored secrets are never displayed.": "Apply these SNMP settings to every selected device. Keep each device’s stored credentials or explicitly replace them. Stored secrets are never displayed."

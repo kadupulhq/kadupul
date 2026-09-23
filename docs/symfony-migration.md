@@ -951,3 +951,15 @@ Site/template unassignment is explicit. Template changes preserve existing graph
 collector moves use the same transfer adapter as single-device assignment, including
 destination verification and old-collector cleanup. Remote writes are not distributed
 transactions: a failure may leave remote effects and requires inspection before retry.
+
+
+### Bulk SNMP settings
+
+`/inventory/devices/snmp` uses the existing SNMP form and domain validation through
+`ChangeDevicesSnmp` and a `DeviceSnmpSettings` port. Public SNMP settings participate
+in selection revisions; stored secrets never leave the isolated worker. It resolves
+each device's retained credentials and validates the entire selection before any
+writes. Explicit replacement applies the submitted credentials to every selected
+device. Leaving version 3 clears its credentials as in the single-device editor.
+Primary changes are transactional, remote values are verified, and failures use
+the existing uncertain-outcome response with empty password controls.

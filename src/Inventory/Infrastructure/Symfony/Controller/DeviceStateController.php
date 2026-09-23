@@ -27,8 +27,8 @@ use Twig\Environment;
 
 final class DeviceStateController
 {
-    #[Route('/inventory/devices/{operation}', name: 'inventory_device_state', requirements: ['operation' => 'enable|disable|clear-statistics|sync-template|options'], methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(string $operation, Request $request, PrepareDeviceStateChange $prepare, SetDevicesEnabled $setEnabled, \Kadupul\Inventory\Application\Command\ClearDeviceStatistics $clearStatistics, \Kadupul\Inventory\Application\Command\SynchronizeDeviceTemplates $synchronizeTemplates, \Kadupul\Inventory\Application\Command\ChangeDeviceOptions $changeOptions, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    #[Route('/inventory/devices/{operation}', name: 'inventory_device_state', requirements: ['operation' => 'enable|disable|clear-statistics|sync-template|options|snmp'], methods: ['GET', 'HEAD', 'POST'])]
+    public function __invoke(string $operation, Request $request, PrepareDeviceStateChange $prepare, SetDevicesEnabled $setEnabled, \Kadupul\Inventory\Application\Command\ClearDeviceStatistics $clearStatistics, \Kadupul\Inventory\Application\Command\SynchronizeDeviceTemplates $synchronizeTemplates, \Kadupul\Inventory\Application\Command\ChangeDeviceOptions $changeOptions, \Kadupul\Inventory\Application\Command\ChangeDevicesSnmp $changeSnmp, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         try {
@@ -53,11 +53,11 @@ final class DeviceStateController
             $revisions[$device->id] = $device->revision();
         }
         $parameters = ['operation' => $operation, 'ids' => $ids, 'list' => $filters];
-        $form = $forms->create(DeviceStateType::class, ['selection' => json_encode($revisions, JSON_THROW_ON_ERROR)] + ($operation === 'options' ? ['options' => \Kadupul\Inventory\Domain\DeviceOptionsChange::DEFAULTS] : []), ['edit_options' => $operation === 'options', 'action' => $urls->generate('inventory_device_state', $parameters)]);
+        $form = $forms->create(DeviceStateType::class, ['selection' => json_encode($revisions, JSON_THROW_ON_ERROR)] + ($operation === 'snmp' ? ['snmp' => ['keep_credentials' => true] + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::PUBLIC_DEFAULTS + \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::CREDENTIAL_DEFAULTS] : []) + ($operation === 'options' ? ['options' => \Kadupul\Inventory\Domain\DeviceOptionsChange::DEFAULTS] : []), ['edit_snmp' => $operation === 'snmp', 'edit_options' => $operation === 'options', 'action' => $urls->generate('inventory_device_state', $parameters)]);
         $form->handleRequest($request);
         $status = $request->isMethod('POST') ? 422 : 200;
         if ($form->isSubmitted()) {
-            if ($form->getExtraData() !== [] || ($form->has('options') && $form->get('options')->getExtraData() !== [])) {
+            if (($form->has('snmp') && $form->get('snmp')->getExtraData() !== []) || $form->getExtraData() !== [] || ($form->has('options') && $form->get('options')->getExtraData() !== [])) {
                 $form->addError(new FormError($translator->trans('Unexpected fields were submitted.', [], 'inventory')));
             }
             if ($form->isValid()) {
@@ -71,7 +71,9 @@ final class DeviceStateController
                     if (array_keys($selection->revisions) !== $ids) {
                         throw new \InvalidArgumentException('Invalid device selection.');
                     }
-                    if ($operation === 'options') {
+                    if ($operation === 'snmp') {
+                        $changeSnmp($selection, new \Kadupul\Inventory\Domain\DeviceSnmpChange($data['snmp']));
+                    } elseif ($operation === 'options') {
                         $changes = [];
                         foreach (\Kadupul\Inventory\Domain\DeviceOptionsChange::DEFAULTS as $field => $default) {
                             if ($data['options']['apply_' . $field] ?? false) {
