@@ -67,7 +67,7 @@ final class ReviewedGraphPurgeTest extends TestCase
         $GLOBALS['reviewed_graph_reject_aggregates'] = [];
         $graphs = [7];
         try {
-            api_delete_graphs($graphs, 2, $reviewed);
+            api_delete_graphs($graphs, 2, $reviewed, static function (): void {});
             self::assertTrue($accepted, 'Unreviewed data reached the destructive lifecycle');
         } catch (RuntimeException $error) {
             self::assertFalse($accepted);

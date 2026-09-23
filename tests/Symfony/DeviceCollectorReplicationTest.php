@@ -60,18 +60,8 @@ final class DeviceCollectorReplicationTest extends TestCase
 
     public function testReviewedCleanupCannotFollowAssociationsReassignedToAnotherDevice(): void
     {
-        $db = new PDO('sqlite::memory:');
-        foreach ([
-            'host' => 'id INTEGER', 'host_graph' => 'host_id INTEGER', 'host_snmp_query' => 'host_id INTEGER',
-            'host_snmp_cache' => 'host_id INTEGER', 'poller_item' => 'host_id INTEGER', 'poller_reindex' => 'host_id INTEGER',
-            'graph_tree_items' => 'host_id INTEGER', 'reports_items' => 'host_id INTEGER', 'poller_command' => 'command TEXT',
-            'data_local' => 'id INTEGER, host_id INTEGER', 'graph_local' => 'id INTEGER, host_id INTEGER',
-            'data_template_data' => 'id INTEGER, local_data_id INTEGER', 'data_template_rrd' => 'id INTEGER, local_data_id INTEGER',
-            'data_input_data' => 'data_template_data_id INTEGER', 'graph_templates_item' => 'local_graph_id INTEGER',
-        ] as $table => $columns) {
-            $db->exec("CREATE TABLE $table ($columns)");
-        }
-        $db->exec('INSERT INTO data_local VALUES (12, 99); INSERT INTO graph_local VALUES (11, 99); INSERT INTO data_template_data VALUES (101, 12); INSERT INTO data_template_rrd VALUES (102, 12); INSERT INTO data_input_data VALUES (101); INSERT INTO graph_templates_item VALUES (11)');
+        $db = $this->removalDatabase();
+        $db->exec('INSERT INTO data_local VALUES (12, 99); INSERT INTO graph_local VALUES (11, 99); INSERT INTO data_template_data VALUES (101, 12); INSERT INTO data_template_rrd VALUES (102, 12); INSERT INTO data_input_data VALUES (101); INSERT INTO graph_templates_item VALUES (11,102)');
         $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [11], [12]);
         $replication = new DeviceCollectorReplication();
         $replication->purgeReviewedDependents($db, $snapshot);
@@ -86,22 +76,12 @@ final class DeviceCollectorReplicationTest extends TestCase
     #[DataProvider('lateDependents')]
     public function testFinalVerificationRejectsDependentsInsertedAfterCleanup(string $insert): void
     {
-        $db = new PDO('sqlite::memory:');
-        foreach ([
-            'host' => 'id INTEGER', 'host_graph' => 'host_id INTEGER', 'host_snmp_query' => 'host_id INTEGER',
-            'host_snmp_cache' => 'host_id INTEGER', 'poller_item' => 'host_id INTEGER', 'poller_reindex' => 'host_id INTEGER',
-            'graph_tree_items' => 'host_id INTEGER', 'reports_items' => 'host_id INTEGER', 'poller_command' => 'command TEXT',
-            'data_local' => 'id INTEGER, host_id INTEGER', 'graph_local' => 'id INTEGER, host_id INTEGER',
-            'data_template_data' => 'id INTEGER, local_data_id INTEGER', 'data_template_rrd' => 'id INTEGER, local_data_id INTEGER',
-            'data_input_data' => 'data_template_data_id INTEGER', 'graph_templates_item' => 'local_graph_id INTEGER',
-        ] as $table => $columns) {
-            $db->exec("CREATE TABLE $table ($columns)");
-        }
+        $db = $this->removalDatabase();
         $db->exec('INSERT INTO data_local VALUES (12,7); INSERT INTO graph_local VALUES (11,7); INSERT INTO data_template_data VALUES (101,12); INSERT INTO data_input_data VALUES (101)');
         $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [11], [12]);
         $replication = new DeviceCollectorReplication();
         $receipt = $replication->purgeReviewedDependents($db, $snapshot);
-        self::assertSame([101], $receipt);
+        self::assertSame(['templates' => [101], 'rrds' => []], $receipt);
         $db->exec('DELETE FROM data_local; DELETE FROM graph_local');
         $db->exec($insert);
         $this->expectException(\RuntimeException::class);
@@ -114,7 +94,56 @@ final class DeviceCollectorReplicationTest extends TestCase
         yield ['INSERT INTO data_template_data VALUES (102,12)'];
         yield ['INSERT INTO data_template_rrd VALUES (103,12)'];
         yield ['INSERT INTO data_input_data VALUES (101)'];
-        yield ['INSERT INTO graph_templates_item VALUES (11)'];
+        yield ['INSERT INTO graph_templates_item VALUES (11,102)'];
+    }
+
+    #[DataProvider('referenceTiming')]
+    public function testRemoteSharedReferencesFailBeforeCleanupOrDuringFinalVerification(bool $late): void
+    {
+        $db = $this->removalDatabase();
+        $db->exec('INSERT INTO data_local VALUES (12,7); INSERT INTO graph_local VALUES (11,7); INSERT INTO data_template_data VALUES (101,12); INSERT INTO data_template_rrd VALUES (102,12)');
+        $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [11], [12]);
+        $replication = new DeviceCollectorReplication();
+        if ($late) {
+            $receipt = $replication->purgeReviewedDependents($db, $snapshot);
+            self::assertSame([102], $receipt['rrds']);
+            $db->exec('DELETE FROM data_local; DELETE FROM graph_local');
+        }
+        $db->exec('INSERT INTO graph_templates_item VALUES (99,102)');
+        try {
+            if ($late) {
+                $replication->verifyPurged($db, 7, $snapshot, $receipt);
+            } else {
+                $replication->purgeReviewedDependents($db, $snapshot);
+            }
+            self::fail('Shared collector reference was accepted');
+        } catch (\RuntimeException $error) {
+            self::assertSame('Collector data is shared with an unreviewed graph', $error->getMessage());
+            self::assertSame($late ? 0 : 1, (int) $db->query('SELECT COUNT(*) FROM data_template_rrd')->fetchColumn());
+            self::assertSame(1, (int) $db->query('SELECT COUNT(*) FROM graph_templates_item')->fetchColumn());
+        }
+    }
+
+    public static function referenceTiming(): iterable
+    {
+        yield 'existing outside graph' => [false];
+        yield 'outside reference added after cleanup' => [true];
+    }
+
+    private function removalDatabase(): PDO
+    {
+        $db = new PDO('sqlite::memory:');
+        foreach ([
+            'host' => 'id INTEGER', 'host_graph' => 'host_id INTEGER', 'host_snmp_query' => 'host_id INTEGER',
+            'host_snmp_cache' => 'host_id INTEGER', 'poller_item' => 'host_id INTEGER', 'poller_reindex' => 'host_id INTEGER',
+            'graph_tree_items' => 'host_id INTEGER', 'reports_items' => 'host_id INTEGER', 'poller_command' => 'command TEXT',
+            'data_local' => 'id INTEGER, host_id INTEGER', 'graph_local' => 'id INTEGER, host_id INTEGER',
+            'data_template_data' => 'id INTEGER, local_data_id INTEGER', 'data_template_rrd' => 'id INTEGER, local_data_id INTEGER',
+            'data_input_data' => 'data_template_data_id INTEGER', 'graph_templates_item' => 'local_graph_id INTEGER, task_item_id INTEGER',
+        ] as $table => $columns) {
+            $db->exec("CREATE TABLE $table ($columns)");
+        }
+        return $db;
     }
 
     private function connection(?string $missingTable = null, ?string $missingColumn = null): PDO

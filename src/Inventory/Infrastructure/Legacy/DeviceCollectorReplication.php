@@ -89,7 +89,7 @@ final class DeviceCollectorReplication
     public function assertRemovalScope(PDO $source, DeviceRemoval $snapshot): void
     {
         foreach (['graph_local' => $snapshot->graphIds, 'data_local' => $snapshot->dataSourceIds] as $table => $expected) {
-            $query = $source->prepare("SELECT id FROM $table WHERE host_id = ? ORDER BY id");
+            $query = $source->prepare("SELECT id FROM $table WHERE host_id = ? ORDER BY id" . ($source->inTransaction() ? ' FOR UPDATE' : ''));
             if (!$query->execute([$snapshot->device->id]) || array_map('intval', $query->fetchAll(PDO::FETCH_COLUMN)) !== $expected) {
                 throw new \RuntimeException('Collector removal scope changed');
             }
@@ -115,17 +115,23 @@ final class DeviceCollectorReplication
         }
     }
 
-    /** @return list<int> Reviewed template identities needed to detect late orphan inputs. */
+    /** @return array{templates: list<int>, rrds: list<int>} Reviewed dependent identities. */
     public function purgeReviewedDependents(PDO $source, DeviceRemoval $snapshot): array
     {
-        $templateIds = [];
+        $templateIds = $rrdIds = [];
         if ($snapshot->dataSourceIds !== []) {
             $query = $source->prepare('SELECT id FROM data_template_data WHERE local_data_id IN (SELECT id FROM data_local WHERE host_id = ? AND id IN (' . implode(',', array_fill(0, count($snapshot->dataSourceIds), '?')) . '))');
             if (!$query->execute([$snapshot->device->id, ...$snapshot->dataSourceIds])) {
                 throw new \RuntimeException('Collector dependent scope unavailable');
             }
             $templateIds = array_map('intval', $query->fetchAll(PDO::FETCH_COLUMN));
+            $query = $source->prepare('SELECT id FROM data_template_rrd WHERE local_data_id IN (SELECT id FROM data_local WHERE host_id = ? AND id IN (' . implode(',', array_fill(0, count($snapshot->dataSourceIds), '?')) . '))');
+            if (!$query->execute([$snapshot->device->id, ...$snapshot->dataSourceIds])) {
+                throw new \RuntimeException('Collector RRD scope unavailable');
+            }
+            $rrdIds = array_map('intval', $query->fetchAll(PDO::FETCH_COLUMN));
         }
+        $this->assertNoOutsideReferences($source, $snapshot->graphIds, $rrdIds);
         // Delete children while their ownership can still be discovered. The
         // legacy purge removes the parent rows without foreign-key cascades.
         foreach ([
@@ -148,10 +154,10 @@ final class DeviceCollectorReplication
                 throw new \RuntimeException('Previous collector dependents remain');
             }
         }
-        return $templateIds;
+        return ['templates' => $templateIds, 'rrds' => $rrdIds];
     }
 
-    public function verifyPurged(PDO $source, int $deviceId, ?DeviceRemoval $snapshot = null, array $reviewedTemplateIds = []): void
+    public function verifyPurged(PDO $source, int $deviceId, ?DeviceRemoval $snapshot = null, array $reviewedDependents = []): void
     {
         foreach (['host' => 'id', 'host_graph' => 'host_id', 'host_snmp_query' => 'host_id', 'host_snmp_cache' => 'host_id', 'poller_item' => 'host_id', 'poller_reindex' => 'host_id', 'graph_tree_items' => 'host_id', 'reports_items' => 'host_id', 'data_local' => 'host_id', 'graph_local' => 'host_id'] as $table => $column) {
             $query = $source->prepare("SELECT COUNT(*) FROM $table WHERE $column = ?");
@@ -175,7 +181,7 @@ final class DeviceCollectorReplication
                 'data_template_data' => ['local_data_id', $snapshot->dataSourceIds],
                 'data_template_rrd' => ['local_data_id', $snapshot->dataSourceIds],
                 'graph_templates_item' => ['local_graph_id', $snapshot->graphIds],
-                'data_input_data' => ['data_template_data_id', $reviewedTemplateIds],
+                'data_input_data' => ['data_template_data_id', $reviewedDependents['templates'] ?? []],
             ] as $table => [$column, $ids]) {
                 if ($ids === []) {
                     continue;
@@ -188,9 +194,24 @@ final class DeviceCollectorReplication
                 }
             }
         }
+        if ($snapshot !== null) {
+            $this->assertNoOutsideReferences($source, $snapshot->graphIds, $reviewedDependents['rrds'] ?? []);
+        }
         $query = $source->prepare("SELECT COUNT(*) FROM poller_command WHERE SUBSTRING_INDEX(command, ':', 1) = ?");
         if (!$query->execute([(string) $deviceId]) || (int) $query->fetchColumn() !== 0) {
             throw new \RuntimeException('Previous collector commands remain');
         }
     }
+    private function assertNoOutsideReferences(PDO $source, array $graphIds, array $rrdIds): void
+    {
+        if ($rrdIds === []) {
+            return;
+        }
+        $graphs = implode(',', array_map('intval', $graphIds)) ?: '-1';
+        $query = $source->prepare('SELECT COUNT(*) FROM graph_templates_item WHERE task_item_id IN (' . implode(',', array_fill(0, count($rrdIds), '?')) . ") AND local_graph_id NOT IN ($graphs)");
+        if (!$query->execute($rrdIds) || ($count = $query->fetchColumn()) === false || (int) $count !== 0) {
+            throw new \RuntimeException('Collector data is shared with an unreviewed graph');
+        }
+    }
+
 }

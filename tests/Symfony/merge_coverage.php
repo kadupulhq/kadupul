@@ -132,6 +132,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'device removal failure rolls back whole primary batch',
         'device removal rejects shared data-source purge',
         'remote removal failure cannot report success',
+        'remote removal rejects outside graph references before cleanup',
+        'remote removal failure rolls back dependent cleanup',
         'collector association failure cannot report successful template assignment',
         'SNMP credentials replace through Symfony without disclosure',
         'stored credential rotation survives unrelated edits',

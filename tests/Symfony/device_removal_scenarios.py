@@ -152,6 +152,13 @@ def verify_device_removal(harness, session, user_id, poller, check):
         check(remote_form.remove() == 502 and exists(remote['device']), 'collector association drift prevents device removal')
         check(harness.sql(f'SELECT COUNT(*) FROM create_remote.graph_local WHERE id={remote_extra}').strip() == '1', 'collector drift is not silently purged')
         harness.sql(f'DELETE FROM create_remote.graph_local WHERE id={remote_extra}')
+        outside_link = int(harness.sql(f'INSERT INTO create_remote.graph_templates_item (local_graph_id,task_item_id) VALUES (0,{remote["sources"][0][2]}); SELECT LAST_INSERT_ID()').strip())
+        try:
+            check(remote_form.remove() == 502 and exists(remote['device']), 'remote removal rejects outside graph references before cleanup')
+            check(harness.sql(f'SELECT COUNT(*) FROM create_remote.data_template_rrd WHERE id={remote["sources"][0][2]}').strip() == '1', 'remote shared reference preserves reviewed data')
+        finally:
+            harness.sql(f'DELETE FROM create_remote.graph_templates_item WHERE id={outside_link}')
+
         harness.sql(f"UPDATE poller SET last_status='2000-01-01 00:00:00' WHERE id={poller}")
         check(remote_form.remove() == 502 and exists(remote['device']), 'offline collector prevents device removal')
         harness.sql(f'UPDATE poller SET last_status=NOW() WHERE id={poller}')
@@ -159,6 +166,10 @@ def verify_device_removal(harness, session, user_id, poller, check):
         triggers.append('create_remote.reject_device_remove')
         check(remote_form.remove() == 502, 'remote removal failure cannot report success')
         check(harness.sql(f"SELECT deleted='' FROM host WHERE id={remote['device']}").strip() == '1', 'remote removal failure rolls back primary tombstone')
+        for data, dtd, rrd in remote['sources']:
+            for table, where in [('data_template_data', f'id={dtd}'), ('data_template_rrd', f'id={rrd}'), ('data_input_data', f'data_template_data_id={dtd}'), ('poller_item', f'local_data_id={data}')]:
+                check(harness.sql(f'SELECT COUNT(*) FROM create_remote.{table} WHERE {where}').strip() == '1', 'remote removal failure rolls back dependent cleanup')
+
         harness.sql('DROP TRIGGER create_remote.reject_device_remove')
         triggers.remove('create_remote.reject_device_remove')
         check(remote_form.remove() == 200, 'device removal recovers after remote purge failure')

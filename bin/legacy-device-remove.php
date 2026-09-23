@@ -37,6 +37,7 @@ require_once __DIR__ . '/../lib/utility.php';
 
 $status = 'failed';
 $transactionStarted = false;
+$remotes = [];
 try {
     $input = stream_get_contents(STDIN, 16001);
     if (strlen($input) > 16000) {
@@ -128,9 +129,12 @@ try {
                 if (!remote_poller_up($device->pollerId) || !(($remote = poller_connect_to_remote($device->pollerId)) instanceof PDO)) {
                     throw new RuntimeException('Collector unavailable');
                 }
+                if ($remote->inTransaction() || $remote->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') === false || !$remote->beginTransaction()) {
+                    throw new RuntimeException('Collector transaction unavailable');
+                }
                 $remotes[$device->pollerId] = $remote;
             }
-            $remoteRows = $read($remotes[$device->pollerId], "SELECT id, poller_id FROM host WHERE id = ? AND deleted = ''", [$device->id]);
+            $remoteRows = $read($remotes[$device->pollerId], "SELECT id, poller_id FROM host WHERE id = ? AND deleted = '' FOR UPDATE", [$device->id]);
             if (count($remoteRows) !== 1 || (int) $remoteRows[0]['poller_id'] !== $device->pollerId) {
                 throw new RuntimeException('Collector device unavailable');
             }
@@ -140,6 +144,11 @@ try {
         $status = 'shared';
         throw new RuntimeException('Shared graph dependencies');
     }
+    $verifyReviewedScope = static function () use ($connection, $graphs, $data): void {
+        if (!DeviceRemovalDependencies::exclusive($connection, $graphs, $data)) {
+            throw new RuntimeException('Graph data-source scope changed');
+        }
+    };
     $_SESSION['sess_user_id'] = $command['actor'];
     define('KADUPUL_THROW_DATABASE_ERRORS', true);
     $database_last_error = '';
@@ -148,6 +157,9 @@ try {
     foreach ($snapshots as $snapshot) {
         if (isset($remotes[$snapshot->device->pollerId])) {
             $verifier->assertRemovalScope($remotes[$snapshot->device->pollerId], $snapshot);
+            if (!DeviceRemovalDependencies::exclusive($remotes[$snapshot->device->pollerId], $snapshot->graphIds, $snapshot->dataSourceIds)) {
+                throw new RuntimeException('Collector graph dependencies changed');
+            }
             $reviewedRemoteTemplates[$snapshot->device->id] = $verifier->purgeReviewedDependents($remotes[$snapshot->device->pollerId], $snapshot);
         }
     }
@@ -156,16 +168,19 @@ try {
         'graphs' => $graphs,
         'data_sources' => $data,
         'by_device' => $reviewed,
-    ]);
+    ], $remotes, $verifyReviewedScope);
     if ($policy === DeviceRemovalPolicy::Purge && $data !== []) {
         // Graph removal already purged linked sources and invoked their hooks.
         // Only remaining ungraphed sources need the additional lifecycle call.
         $dataPlaceholders = implode(',', array_fill(0, count($data), '?'));
         $remainingData = $read($connection, "SELECT id FROM data_local WHERE id IN ($dataPlaceholders) ORDER BY id FOR UPDATE", $data);
         if ($remainingData !== []) {
-            api_data_source_remove_multi(array_column($remainingData, 'id'), false);
+            api_data_source_remove_multi(array_column($remainingData, 'id'), false, $verifyReviewedScope);
         }
     }
+    set_request_var('drp_action', '1');
+    snmpagent_device_action_bottom(['1', $ids]);
+    api_plugin_hook_function('device_action_bottom', ['1', $ids]);
     foreach ($snapshots as $snapshot) {
         $device = $snapshot->device;
         $remaining = $read($connection, 'SELECT deleted, poller_id FROM host WHERE id = ?', [$device->id]);
@@ -203,9 +218,6 @@ try {
             $verifier->verifyPurged($remotes[$device->pollerId], $device->id, $snapshot, $reviewedRemoteTemplates[$device->id]);
         }
     }
-    set_request_var('drp_action', '1');
-    snmpagent_device_action_bottom(['1', $ids]);
-    api_plugin_hook_function('device_action_bottom', ['1', $ids]);
     if (db_error() !== '' || is_error_message() || !$connection->inTransaction()) {
         throw new RuntimeException('Device removal could not be confirmed');
     }
@@ -219,6 +231,16 @@ try {
             throw new RuntimeException('Device cache invalidation failed');
         }
     }
+    foreach ($remotes as $remote) {
+        if (!$remote->inTransaction()) {
+            throw new RuntimeException('Collector transaction changed');
+        }
+    }
+    foreach ($remotes as $remote) {
+        if (!$remote->commit()) {
+            throw new RuntimeException('Collector commit failed');
+        }
+    }
     if (!db_commit_transaction()) {
         throw new RuntimeException('Commit failed');
     }
@@ -230,6 +252,11 @@ try {
 } catch (Throwable) {
     // Remote effects may survive a primary rollback; never report false success.
 } finally {
+    foreach ($remotes as $remote) {
+        if ($remote->inTransaction()) {
+            $remote->rollBack();
+        }
+    }
     if ($transactionStarted && $connection->inTransaction()) {
         db_rollback_transaction($connection);
     }

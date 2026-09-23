@@ -90,7 +90,7 @@ function api_device_remove($device_id)
  * @param  $poller_id  - the previous poller if it changed
  * @param  $reviewed_associations - exact graph/data IDs reviewed per device
  */
-function api_device_purge_from_remote($device_ids, $poller_id = 0, $reviewed_associations = null)
+function api_device_purge_from_remote($device_ids, $poller_id = 0, $reviewed_associations = null, $reviewed_connection = null)
 {
     if (!is_array($device_ids)) {
         $device_ids = array($device_ids);
@@ -98,7 +98,7 @@ function api_device_purge_from_remote($device_ids, $poller_id = 0, $reviewed_ass
 
     if ($poller_id > 1) {
         if (remote_poller_up($poller_id)) {
-            if (($rcnn_id = poller_push_to_remote_db_connect($poller_id, true)) !== false) {
+            if (($rcnn_id = $reviewed_connection ?? poller_push_to_remote_db_connect($poller_id, true)) !== false) {
                 db_execute('DELETE FROM host             WHERE      id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
                 db_execute('DELETE FROM host_graph       WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
                 db_execute('DELETE FROM host_snmp_query  WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
@@ -202,7 +202,7 @@ function api_device_purge_deleted_devices()
  *
  * @return (void)
  */
-function api_device_remove_multi($device_ids, $delete_type = 2, $reviewed_associations = null)
+function api_device_remove_multi($device_ids, $delete_type = 2, $reviewed_associations = null, $reviewed_connections = array(), $verify_reviewed_scope = null)
 {
     global $config;
 
@@ -272,7 +272,7 @@ function api_device_remove_multi($device_ids, $delete_type = 2, $reviewed_associ
         db_execute("DELETE FROM reports_items    WHERE host_id IN ($devices_to_delete)");
 
         if ($delete_type == 2) {
-            api_delete_graphs($graphs, $delete_type, $reviewed_associations === null ? null : $data_sources);
+            api_delete_graphs($graphs, $delete_type, $reviewed_associations === null ? null : $data_sources, $verify_reviewed_scope);
         } else {
             api_data_source_disable_multi($data_sources, $reviewed_associations === null);
 
@@ -292,7 +292,7 @@ function api_device_remove_multi($device_ids, $delete_type = 2, $reviewed_associ
         foreach ($devices_by_poller as $poller_id => $poller_devices) {
             if ((int) $poller_id > 1) {
                 api_device_cache_crc_update($poller_id);
-                api_device_purge_from_remote($poller_devices, $poller_id, $reviewed_associations === null ? null : $reviewed_associations['by_device']);
+                api_device_purge_from_remote($poller_devices, $poller_id, $reviewed_associations === null ? null : $reviewed_associations['by_device'], $reviewed_connections[$poller_id] ?? null);
             }
         }
 
