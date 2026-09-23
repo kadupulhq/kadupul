@@ -32,7 +32,7 @@ final class DeviceAssociationVerificationTest extends TestCase
     }
 
     #[DataProvider('outcomes')]
-    public function testMappingAndCatalogAreVerifiedSeparately(string $operation, bool $template, bool $mapping, bool $remote, bool $accepted): void
+    public function testAddsRequireCatalogAndRemovalsRejectOrphanMappings(string $operation, bool $template, bool $mapping, bool $remote, bool $accepted): void
     {
         $tested = $this->database($template, $mapping);
         $primary = $remote ? $this->database(true, $operation === 'add') : $tested;

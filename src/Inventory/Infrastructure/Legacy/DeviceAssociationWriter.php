@@ -75,15 +75,12 @@ final class DeviceAssociationWriter
                 }
                 continue;
             }
-            if ($change->operation === 'add') {
-                $query = $database->prepare('SELECT COUNT(*) FROM graph_templates WHERE id = ?');
-                if (!$query->execute([$change->targetId]) || (int) $query->fetchColumn() !== 1) {
-                    throw new \RuntimeException('Graph template unavailable');
-                }
-            }
-            // Orphaned mappings still count: removal must confirm their absence
-            // independently of whether the template catalog contains the target.
-            $query = $database->prepare('SELECT COUNT(*) FROM host_graph WHERE host_id = ? AND graph_template_id = ?');
+            // Addition requires both catalog and mapping in one observation.
+            // Removal must also reject orphan mappings without a catalog row.
+            $sql = $change->operation === 'add'
+                ? 'SELECT COUNT(*) FROM host_graph hg JOIN graph_templates gt ON gt.id = hg.graph_template_id WHERE hg.host_id = ? AND hg.graph_template_id = ?'
+                : 'SELECT COUNT(*) FROM host_graph WHERE host_id = ? AND graph_template_id = ?';
+            $query = $database->prepare($sql);
             if (!$query->execute([$device->id, $change->targetId]) || (int) $query->fetchColumn() !== ($change->operation === 'add' ? 1 : 0)) {
                 throw new \RuntimeException('Association could not be confirmed');
             }
