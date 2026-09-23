@@ -54,7 +54,9 @@ final class DeviceAssociationWriter
     {
         foreach (array_filter([$primary, $remote]) as $database) {
             $query = $database->prepare("SELECT site_id, poller_id, host_template_id FROM host WHERE id = ? AND deleted = ''");
-            $query->execute([$device->id]);
+            if (!$query->execute([$device->id])) {
+                throw new \RuntimeException('Device identity could not be confirmed');
+            }
             $row = $query->fetch(PDO::FETCH_ASSOC);
             if (!$row || (int) $row['site_id'] !== $device->siteId || (int) $row['poller_id'] !== $device->pollerId || (int) $row['host_template_id'] !== $device->templateId) {
                 throw new \RuntimeException('Device identity changed');
@@ -64,7 +66,9 @@ final class DeviceAssociationWriter
                     $this->requireQuery($database, $change->targetId);
                 }
                 $query = $database->prepare('SELECT reindex_method FROM host_snmp_query WHERE host_id = ? AND snmp_query_id = ?');
-                $query->execute([$device->id, $change->targetId]);
+                if (!$query->execute([$device->id, $change->targetId])) {
+                    throw new \RuntimeException('Data-query association could not be confirmed');
+                }
                 $method = $query->fetchColumn();
                 if ($change->operation === 'remove' ? $method !== false : ($method === false || (int) $method !== $change->reindexMethod)) {
                     throw new \RuntimeException('Data-query association could not be confirmed');
@@ -72,8 +76,7 @@ final class DeviceAssociationWriter
                 if ($change->operation === 'remove') {
                     foreach (['host_snmp_cache' => 'snmp_query_id', 'poller_reindex' => 'data_query_id'] as $table => $column) {
                         $query = $database->prepare("SELECT COUNT(*) FROM $table WHERE host_id = ? AND $column = ?");
-                        $query->execute([$device->id, $change->targetId]);
-                        if ((int) $query->fetchColumn() !== 0) {
+                        if (!$query->execute([$device->id, $change->targetId]) || ($count = $query->fetchColumn()) === false || (int) $count !== 0) {
                             throw new \RuntimeException('Data-query cache cleanup could not be confirmed');
                         }
                     }
