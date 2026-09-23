@@ -51,12 +51,12 @@ function draw_edit_form($array) {
 	if (cacti_sizeof($fields_array)) {
 		if (!isset($config_array['no_form_tag'])) {
 			$post_to = $config_array['post_to'] ?? get_current_page();
-			$post_html = htmlspecialchars((string) $post_to, $escape_flags, 'UTF-8', false);
+			$post_html = htmlspecialchars((string) $post_to, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$post_html = str_replace('`', '&#96;', $post_html);
 			print "<form class='cactiForm' method='post' autocomplete='off' action='$post_html'";
 			foreach (array('form_name' => 'name', 'enctype' => 'enctype') as $key => $attribute) {
 				if (isset($config_array[$key])) {
-					$value_html = htmlspecialchars((string) $config_array[$key], $escape_flags, 'UTF-8', false);
+					$value_html = htmlspecialchars((string) $config_array[$key], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 					$value_html = str_replace('`', '&#96;', $value_html);
 					print " $attribute='$value_html'";
 				}
@@ -68,7 +68,7 @@ function draw_edit_form($array) {
 		$row_class = 'odd';
 
 		foreach ($fields_array as $field_name => $field_array) {
-			$row_id_html = htmlspecialchars('row_' . $field_name, $escape_flags, 'UTF-8', false);
+			$row_id_html = htmlspecialchars('row_' . $field_name, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$row_id_html = str_replace('`', '&#96;', $row_id_html);
 			if ($field_array['method'] == 'hidden') {
 				if (!isset($field_array['value'])) {
@@ -104,7 +104,7 @@ function draw_edit_form($array) {
 				print '</div>';
 			} elseif ($field_array['method'] == 'spacer') {
 				$collapsible = (isset($field_array['collapsible']) && $field_array['collapsible'] == 'true');
-				$friendly_html = htmlspecialchars((string) $field_array['friendly_name'], $escape_flags, 'UTF-8', false);
+				$friendly_html = htmlspecialchars((string) $field_array['friendly_name'], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 				$friendly_html = str_replace('`', '&#96;', $friendly_html);
 
 				print "<div class='spacer formHeader" . ($collapsible ? ' collapsible':'')
@@ -190,7 +190,7 @@ function draw_edit_form($array) {
 
 			if (isset($_SESSION['form_change_actions']) && cacti_sizeof($_SESSION['form_change_actions'])) {
 				foreach($_SESSION['form_change_actions'] as $form_name => $action) {
-					$element_id = html_entity_decode((string) $form_name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+					$element_id = html_entity_decode((string) $form_name, ENT_QUOTES | ENT_HTML5, ini_get('default_charset') ?: 'UTF-8');
 					print '$(document.getElementById(' . json_encode($element_id, $json_flags)
 						. ")).on('change', function() { " . $action . "; });" . PHP_EOL;
 				}
@@ -198,7 +198,7 @@ function draw_edit_form($array) {
 
 			if (isset($_SESSION['form_click_actions']) && cacti_sizeof($_SESSION['form_click_actions'])) {
 				foreach($_SESSION['form_click_actions'] as $form_name => $action) {
-					$element_id = html_entity_decode((string) $form_name, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+					$element_id = html_entity_decode((string) $form_name, ENT_QUOTES | ENT_HTML5, ini_get('default_charset') ?: 'UTF-8');
 					print '$(document.getElementById(' . json_encode($element_id, $json_flags)
 						. ")).on('click', function() { " . $action . "; });" . PHP_EOL;
 				}
@@ -228,7 +228,7 @@ function draw_edit_form($array) {
  */
 function draw_edit_control($field_name, &$field_array) {
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$field_name_html = htmlspecialchars((string)$field_name, $escape_flags, 'UTF-8', false);
+	$field_name_html = htmlspecialchars((string)$field_name, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$field_name_html = str_replace('`', '&#96;', $field_name_html);
 
 	switch ($field_array['method']) {
@@ -562,7 +562,7 @@ function draw_edit_control($field_name, &$field_array) {
 		break;
 	default:
 		if (isset($field_array['value'])) {
-			$value_html = htmlspecialchars((string)$field_array['value'], $escape_flags, 'UTF-8', false);
+			$value_html = htmlspecialchars((string)$field_array['value'], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$value_html = str_replace('`', '&#96;', $value_html);
 			print '<em>' . $value_html . '</em>';
 
@@ -591,11 +591,11 @@ function form_button($form_name, $value, $title = '', $action = '') {
 	}
 
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, 'UTF-8', false);
+	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_name_html = str_replace('`', '&#96;', $form_name_html);
-	$value_html = htmlspecialchars((string) $value, $escape_flags, 'UTF-8', false);
+	$value_html = htmlspecialchars((string) $value, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$value_html = str_replace('`', '&#96;', $value_html);
-	$title_html = htmlspecialchars((string) $title, $escape_flags, 'UTF-8', false);
+	$title_html = htmlspecialchars((string) $title, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$title_html = str_replace('`', '&#96;', $title_html);
 
 	print "<input type='button' class='ui-button ui-corner-all ui-widget' " .
@@ -621,11 +621,11 @@ function form_submit($form_name, $value, $title = '', $action = '') {
 	}
 
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, 'UTF-8', false);
+	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_name_html = str_replace('`', '&#96;', $form_name_html);
-	$value_html = htmlspecialchars((string) $value, $escape_flags, 'UTF-8', false);
+	$value_html = htmlspecialchars((string) $value, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$value_html = str_replace('`', '&#96;', $value_html);
-	$title_html = htmlspecialchars((string) $title, $escape_flags, 'UTF-8', false);
+	$title_html = htmlspecialchars((string) $title, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$title_html = str_replace('`', '&#96;', $title_html);
 
 	print "<input type='submit' class='ui-button ui-corner-all ui-widget' " .
@@ -647,11 +647,11 @@ function form_submit($form_name, $value, $title = '', $action = '') {
 function form_file($form_name, $form_size = 30, $form_accept = '') {
 	// Retain pre-escaped callers while encoding every quoted attribute boundary.
 	$attribute_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$form_name_html = htmlspecialchars((string) $form_name, $attribute_flags, 'UTF-8', false);
+	$form_name_html = htmlspecialchars((string) $form_name, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_name_html = str_replace('`', '&#96;', $form_name_html);
-	$form_size_html = htmlspecialchars((string) $form_size, $attribute_flags, 'UTF-8', false);
+	$form_size_html = htmlspecialchars((string) $form_size, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_size_html = str_replace('`', '&#96;', $form_size_html);
-	$form_accept_html = htmlspecialchars((string) $form_accept, $attribute_flags, 'UTF-8', false);
+	$form_accept_html = htmlspecialchars((string) $form_accept, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_accept_html = str_replace('`', '&#96;', $form_accept_html);
 
 	print "<div>";
@@ -697,13 +697,13 @@ function form_filepath_box($form_name, $form_previous_value, $form_default_value
 
 	// Retain pre-escaped callers while encoding every quoted attribute boundary.
 	$attribute_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$form_name_html = htmlspecialchars((string) $form_name, $attribute_flags, 'UTF-8', false);
+	$form_name_html = htmlspecialchars((string) $form_name, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_name_html = str_replace('`', '&#96;', $form_name_html);
-	$form_size_html = htmlspecialchars((string) $form_size, $attribute_flags, 'UTF-8', false);
+	$form_size_html = htmlspecialchars((string) $form_size, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_size_html = str_replace('`', '&#96;', $form_size_html);
-	$form_max_length_html = htmlspecialchars((string) $form_max_length, $attribute_flags, 'UTF-8', false);
+	$form_max_length_html = htmlspecialchars((string) $form_max_length, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_max_length_html = str_replace('`', '&#96;', $form_max_length_html);
-	$type_html = htmlspecialchars((string) $type, $attribute_flags, 'UTF-8', false);
+	$type_html = htmlspecialchars((string) $type, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$type_html = str_replace('`', '&#96;', $type_html);
 
 	print "<input type='$type_html'";
@@ -750,14 +750,14 @@ function form_filepath_box($form_name, $form_previous_value, $form_default_value
 
 	$extra_data = '';
 	if ($extra_text != '') {
-		$extra_text = htmlspecialchars((string) $extra_text, $attribute_flags, 'UTF-8', false);
+		$extra_text = htmlspecialchars((string) $extra_text, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$extra_text = str_replace('`', '&#96;', $extra_text);
 		$extra_data = "<span class='cactiTooltipHint fa $extra_class' style='padding:5px;font-size:16px;color:$extra_color' title='$extra_text'></span>";
 	}
 
 	print " class='ui-state-default ui-corner-all$error_class'";
 
-	$form_previous_value_html = htmlspecialchars((string) $form_previous_value, $attribute_flags, 'UTF-8', false);
+	$form_previous_value_html = htmlspecialchars((string) $form_previous_value, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_previous_value_html = str_replace('`', '&#96;', $form_previous_value_html);
 
 	print " id='$form_name_html' placeholder='" .
@@ -791,13 +791,13 @@ function form_dirpath_box($form_name, $form_previous_value, $form_default_value,
 
 	// Retain pre-escaped callers while encoding every quoted attribute boundary.
 	$attribute_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$form_name_html = htmlspecialchars((string) $form_name, $attribute_flags, 'UTF-8', false);
+	$form_name_html = htmlspecialchars((string) $form_name, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_name_html = str_replace('`', '&#96;', $form_name_html);
-	$form_size_html = htmlspecialchars((string) $form_size, $attribute_flags, 'UTF-8', false);
+	$form_size_html = htmlspecialchars((string) $form_size, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_size_html = str_replace('`', '&#96;', $form_size_html);
-	$form_max_length_html = htmlspecialchars((string) $form_max_length, $attribute_flags, 'UTF-8', false);
+	$form_max_length_html = htmlspecialchars((string) $form_max_length, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_max_length_html = str_replace('`', '&#96;', $form_max_length_html);
-	$type_html = htmlspecialchars((string) $type, $attribute_flags, 'UTF-8', false);
+	$type_html = htmlspecialchars((string) $type, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$type_html = str_replace('`', '&#96;', $type_html);
 
 	print "<input type='$type_html'";
@@ -827,7 +827,7 @@ function form_dirpath_box($form_name, $form_previous_value, $form_default_value,
 		$extra_data = "<span class='cactiTooltipHint fa fa-times-circle' style='padding:5px;font-size:16px;color:red' title='" . __esc('Directory is Not found'). "'></span>";
 	}
 
-	$form_previous_value_html = htmlspecialchars((string) $form_previous_value, $attribute_flags, 'UTF-8', false);
+	$form_previous_value_html = htmlspecialchars((string) $form_previous_value, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_previous_value_html = str_replace('`', '&#96;', $form_previous_value_html);
 
 	print " id='$form_name_html' name='$form_name_html' placeholder='" .
@@ -862,15 +862,15 @@ function form_text_box($form_name, $form_previous_value, $form_default_value, $f
 
 	// Retain pre-escaped callers while encoding every quoted attribute boundary.
 	$attribute_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$form_name_html = htmlspecialchars((string) $form_name, $attribute_flags, 'UTF-8', false);
+	$form_name_html = htmlspecialchars((string) $form_name, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_name_html = str_replace('`', '&#96;', $form_name_html);
-	$form_size_html = htmlspecialchars((string) $form_size, $attribute_flags, 'UTF-8', false);
+	$form_size_html = htmlspecialchars((string) $form_size, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_size_html = str_replace('`', '&#96;', $form_size_html);
-	$form_max_length_html = htmlspecialchars((string) $form_max_length, $attribute_flags, 'UTF-8', false);
+	$form_max_length_html = htmlspecialchars((string) $form_max_length, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_max_length_html = str_replace('`', '&#96;', $form_max_length_html);
-	$type_html = htmlspecialchars((string) $type, $attribute_flags, 'UTF-8', false);
+	$type_html = htmlspecialchars((string) $type, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$type_html = str_replace('`', '&#96;', $type_html);
-	$title_html = htmlspecialchars((string) $title, $attribute_flags, 'UTF-8', false);
+	$title_html = htmlspecialchars((string) $title, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$title_html = str_replace('`', '&#96;', $title_html);
 
 	if ($type == 'password') {
@@ -898,10 +898,10 @@ function form_text_box($form_name, $form_previous_value, $form_default_value, $f
 		}
 	}
 
-	$form_previous_value_html = htmlspecialchars((string) $form_previous_value, $attribute_flags, 'UTF-8', false);
+	$form_previous_value_html = htmlspecialchars((string) $form_previous_value, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_previous_value_html = str_replace('`', '&#96;', $form_previous_value_html);
 
-	$placeholder_html = htmlspecialchars((string) $placeholder, $attribute_flags, 'UTF-8', false);
+	$placeholder_html = htmlspecialchars((string) $placeholder, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$placeholder_html = str_replace('`', '&#96;', $placeholder_html);
 
 	print " id='$form_name_html' " .
@@ -926,9 +926,9 @@ function form_hidden_box($form_name, $form_previous_value, $form_default_value, 
 		$form_previous_value = $form_default_value;
 	}
 
-	$name_html = htmlspecialchars((string) $form_name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	$name_html = htmlspecialchars((string) $form_name, ENT_QUOTES | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8');
 	$name_html = str_replace('`', '&#96;', $name_html);
-	$value_html = htmlspecialchars((string) $form_previous_value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	$value_html = htmlspecialchars((string) $form_previous_value, ENT_QUOTES | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8');
 	$value_html = str_replace('`', '&#96;', $value_html);
 
 	print "<div style='display:none;'><input style='height:0px;' type='hidden'"
@@ -972,9 +972,9 @@ function form_dropdown($form_name, $form_data, $column_display, $column_id, $for
 	}
 
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, 'UTF-8', false);
+	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_name_html = str_replace('`', '&#96;', $form_name_html);
-	$class_html = htmlspecialchars((string) $class, $escape_flags, 'UTF-8', false);
+	$class_html = htmlspecialchars((string) $class, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$class_html = str_replace('`', '&#96;', $class_html);
 
 	$class_attribute = $class != '' ? " class='$class_html' " : '';
@@ -1014,9 +1014,9 @@ function form_droplanguage($form_name, $column_display, $column_id, $form_previo
 	}
 
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, 'UTF-8', false);
+	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_name_html = str_replace('`', '&#96;', $form_name_html);
-	$class_html = htmlspecialchars((string) $class, $escape_flags, 'UTF-8', false);
+	$class_html = htmlspecialchars((string) $class, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$class_html = str_replace('`', '&#96;', $class_html);
 
 	$class_attribute = $class != '' ? " class='$class_html' " : '';
@@ -1043,11 +1043,11 @@ function form_droplanguage($form_name, $column_display, $column_id, $form_previo
 			$flagName = strtolower($flags[0]);
 		}
 
-		$key_html = htmlspecialchars((string) $key, $escape_flags, 'UTF-8', false);
+		$key_html = htmlspecialchars((string) $key, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$key_html = str_replace('`', '&#96;', $key_html);
-		$flag_html = htmlspecialchars((string) $flagName, $escape_flags, 'UTF-8', false);
+		$flag_html = htmlspecialchars((string) $flagName, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$flag_html = str_replace('`', '&#96;', $flag_html);
-		$label_html = htmlspecialchars((string) __($value), $escape_flags, 'UTF-8', false);
+		$label_html = htmlspecialchars((string) __($value), $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$label_html = str_replace('`', '&#96;', $label_html);
 		print "<option value='$key_html'" . $selected . " data-class='fi-$flag_html'>"
 			. "<span class='fi fis fi-$flag_html'></span>" . $label_html . '</option>';
@@ -1227,13 +1227,13 @@ function form_checkbox($form_name, $form_previous_value, $form_caption, $form_de
 	}
 
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, 'UTF-8', false);
+	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_name_html = str_replace('`', '&#96;', $form_name_html);
-	$class_html = htmlspecialchars((string) $class, $escape_flags, 'UTF-8', false);
+	$class_html = htmlspecialchars((string) $class, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$class_html = str_replace('`', '&#96;', $class_html);
-	$title_html = htmlspecialchars((string) $title, $escape_flags, 'UTF-8', false);
+	$title_html = htmlspecialchars((string) $title, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$title_html = str_replace('`', '&#96;', $title_html);
-	$form_caption_html = htmlspecialchars((string) $form_caption, $escape_flags, 'UTF-8', false);
+	$form_caption_html = htmlspecialchars((string) $form_caption, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_caption_html = str_replace('`', '&#96;', $form_caption_html);
 
 	print "<span class='nowrap'>";
@@ -1280,15 +1280,15 @@ function form_radio_button($form_name, $form_previous_value, $form_current_value
 	}
 
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, 'UTF-8', false);
+	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_name_html = str_replace('`', '&#96;', $form_name_html);
-	$css_id_html = htmlspecialchars((string) $css_id, $escape_flags, 'UTF-8', false);
+	$css_id_html = htmlspecialchars((string) $css_id, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$css_id_html = str_replace('`', '&#96;', $css_id_html);
-	$class_html = htmlspecialchars((string) $class, $escape_flags, 'UTF-8', false);
+	$class_html = htmlspecialchars((string) $class, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$class_html = str_replace('`', '&#96;', $class_html);
-	$form_current_value_html = htmlspecialchars((string) $form_current_value, $escape_flags, 'UTF-8', false);
+	$form_current_value_html = htmlspecialchars((string) $form_current_value, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_current_value_html = str_replace('`', '&#96;', $form_current_value_html);
-	$form_caption_html = htmlspecialchars((string) $form_caption, $escape_flags, 'UTF-8', false);
+	$form_caption_html = htmlspecialchars((string) $form_caption, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_caption_html = str_replace('`', '&#96;', $form_caption_html);
 
 	print "<span class='nowrap'>";
@@ -1329,17 +1329,17 @@ function form_text_area($form_name, $form_previous_value, $form_rows, $form_colu
 	}
 
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, 'UTF-8', false);
+	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_name_html = str_replace('`', '&#96;', $form_name_html);
-	$class_html = htmlspecialchars((string) $class, $escape_flags, 'UTF-8', false);
+	$class_html = htmlspecialchars((string) $class, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$class_html = str_replace('`', '&#96;', $class_html);
-	$form_columns_html = htmlspecialchars((string) $form_columns, $escape_flags, 'UTF-8', false);
+	$form_columns_html = htmlspecialchars((string) $form_columns, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_columns_html = str_replace('`', '&#96;', $form_columns_html);
-	$form_rows_html = htmlspecialchars((string) $form_rows, $escape_flags, 'UTF-8', false);
+	$form_rows_html = htmlspecialchars((string) $form_rows, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_rows_html = str_replace('`', '&#96;', $form_rows_html);
-	$placeholder_html = htmlspecialchars((string) $placeholder, $escape_flags, 'UTF-8', false);
+	$placeholder_html = htmlspecialchars((string) $placeholder, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$placeholder_html = str_replace('`', '&#96;', $placeholder_html);
-	$form_previous_value_html = htmlspecialchars((string) $form_previous_value, $escape_flags, 'UTF-8', false);
+	$form_previous_value_html = htmlspecialchars((string) $form_previous_value, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_previous_value_html = str_replace('`', '&#96;', $form_previous_value_html);
 
 	$placeholder_attribute = $placeholder != '' ? " placeholder='$placeholder_html'" : '';
@@ -1392,16 +1392,16 @@ function form_multi_dropdown($form_name, $array_display, $sql_previous_values, $
 	}
 
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, 'UTF-8', false);
+	$form_name_html = htmlspecialchars((string) $form_name, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_name_html = str_replace('`', '&#96;', $form_name_html);
 
 	print "<select style='height:20px;' size='1' class='$class' id='$form_name_html'"
 		. " name='$form_name_html" . "[]' multiple>";
 
 	foreach (array_keys($array_display) as $id) {
-		$id_html = htmlspecialchars((string) $id, $escape_flags, 'UTF-8', false);
+		$id_html = htmlspecialchars((string) $id, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$id_html = str_replace('`', '&#96;', $id_html);
-		$label_html = htmlspecialchars((string) $array_display[$id], $escape_flags, 'UTF-8', false);
+		$label_html = htmlspecialchars((string) $array_display[$id], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$label_html = str_replace('`', '&#96;', $label_html);
 		print "<option value='" . $id_html . "'";
 
@@ -1434,9 +1434,9 @@ function form_multi_dropdown($form_name, $array_display, $sql_previous_values, $
      no current value available */
 function form_color_dropdown($form_name, $form_previous_value, $form_none_entry, $form_default_value, $class = '', $on_change = '') {
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$form_name_html = htmlspecialchars((string)$form_name, $escape_flags, 'UTF-8', false);
+	$form_name_html = htmlspecialchars((string)$form_name, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_name_html = str_replace('`', '&#96;', $form_name_html);
-	$class_html = htmlspecialchars((string)$class, $escape_flags, 'UTF-8', false);
+	$class_html = htmlspecialchars((string)$class, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$class_html = str_replace('`', '&#96;', $class_html);
 
 	if ($form_previous_value == '') {
@@ -1453,7 +1453,7 @@ function form_color_dropdown($form_name, $form_previous_value, $form_none_entry,
 		FROM colors
 		WHERE id = ?',
 		array($form_previous_value));
-	$current_color_html = htmlspecialchars((string)$current_color, $escape_flags, 'UTF-8', false);
+	$current_color_html = htmlspecialchars((string)$current_color, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$current_color_html = str_replace('`', '&#96;', $current_color_html);
 
 	$on_change = "this.style.backgroundColor=this.options[this.selectedIndex].style.backgroundColor;$on_change";
@@ -1486,11 +1486,11 @@ function form_color_dropdown($form_name, $form_previous_value, $form_none_entry,
 				$display = $color['name'] . ' (' . $color['hex'] . ')';
 			}
 
-			$hex_html = htmlspecialchars((string)$color['hex'], $escape_flags, 'UTF-8', false);
+			$hex_html = htmlspecialchars((string)$color['hex'], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$hex_html = str_replace('`', '&#96;', $hex_html);
-			$id_html = htmlspecialchars((string)$color['id'], $escape_flags, 'UTF-8', false);
+			$id_html = htmlspecialchars((string)$color['id'], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$id_html = str_replace('`', '&#96;', $id_html);
-			$display_html = htmlspecialchars((string)$display, $escape_flags, 'UTF-8', false);
+			$display_html = htmlspecialchars((string)$display, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 			$display_html = str_replace('`', '&#96;', $display_html);
 
 			print "<option data-color='$hex_html' style='background-color: #$hex_html;' value='$id_html'";
@@ -1532,13 +1532,13 @@ function form_font_box($form_name, $form_previous_value, $form_default_value, $f
 
 	// Retain pre-escaped callers while encoding every quoted attribute boundary.
 	$attribute_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$form_name_html = htmlspecialchars((string) $form_name, $attribute_flags, 'UTF-8', false);
+	$form_name_html = htmlspecialchars((string) $form_name, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_name_html = str_replace('`', '&#96;', $form_name_html);
-	$form_size_html = htmlspecialchars((string) $form_size, $attribute_flags, 'UTF-8', false);
+	$form_size_html = htmlspecialchars((string) $form_size, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_size_html = str_replace('`', '&#96;', $form_size_html);
-	$form_max_length_html = htmlspecialchars((string) $form_max_length, $attribute_flags, 'UTF-8', false);
+	$form_max_length_html = htmlspecialchars((string) $form_max_length, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_max_length_html = str_replace('`', '&#96;', $form_max_length_html);
-	$type_html = htmlspecialchars((string) $type, $attribute_flags, 'UTF-8', false);
+	$type_html = htmlspecialchars((string) $type, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$type_html = str_replace('`', '&#96;', $type_html);
 
 	print "<input type='$type_html'";
@@ -1567,10 +1567,10 @@ function form_font_box($form_name, $form_previous_value, $form_default_value, $f
 		$extra_data = "<span style='color:green'><br>[" . __('NO FONT VERIFICATION POSSIBLE') . ']</span>';
 	}
 
-	$form_previous_value_html = htmlspecialchars((string) $form_previous_value, $attribute_flags, 'UTF-8', false);
+	$form_previous_value_html = htmlspecialchars((string) $form_previous_value, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$form_previous_value_html = str_replace('`', '&#96;', $form_previous_value_html);
 
-	$placeholder_html = htmlspecialchars((string) $placeholder, $attribute_flags, 'UTF-8', false);
+	$placeholder_html = htmlspecialchars((string) $placeholder, $attribute_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$placeholder_html = str_replace('`', '&#96;', $placeholder_html);
 
 	print " id='$form_name_html' " .
@@ -1623,10 +1623,10 @@ function form_confirm_buttons($action_url, $cancel_url) {
 	global $config;
 
 	$cancel_url_html = $config['url_path'] . $cancel_url;
-	$cancel_url_html = htmlspecialchars($cancel_url_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	$cancel_url_html = htmlspecialchars($cancel_url_html, ENT_QUOTES | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8');
 	$cancel_url_html = str_replace('`', '&#96;', $cancel_url_html);
 	$action_url_html = $config['url_path'] . $action_url . '&confirm=true';
-	$action_url_html = htmlspecialchars($action_url_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	$action_url_html = htmlspecialchars($action_url_html, ENT_QUOTES | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8');
 	$action_url_html = str_replace('`', '&#96;', $action_url_html);
 	?>
 	<tr>
@@ -1676,12 +1676,12 @@ function form_save_button($cancel_url, $force_type = '', $key_field = 'id', $aja
 	}
 
 	$escape_flags = ENT_QUOTES | ENT_HTML5 | ENT_SUBSTITUTE;
-	$force_type_html = htmlspecialchars((string) $force_type, $escape_flags, 'UTF-8', false);
+	$force_type_html = htmlspecialchars((string) $force_type, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 	$force_type_html = str_replace('`', '&#96;', $force_type_html);
 	if ($force_type != 'import' && $force_type != 'export' && $force_type != 'save' && $force_type != 'close' && $cancel_url != '') {
-		$cancel_url_html = htmlspecialchars(sanitize_uri($cancel_url), $escape_flags, 'UTF-8', false);
+		$cancel_url_html = htmlspecialchars(sanitize_uri($cancel_url), $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$cancel_url_html = str_replace('`', '&#96;', $cancel_url_html);
-		$calt_html = htmlspecialchars((string) $calt, $escape_flags, 'UTF-8', false);
+		$calt_html = htmlspecialchars((string) $calt, $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 		$calt_html = str_replace('`', '&#96;', $calt_html);
 		$cancel_action = "<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo'"
 			. " data-url='$cancel_url_html' value='$calt_html'>";
@@ -1721,9 +1721,9 @@ function form_save_buttons($buttons) {
 			<td class='saveRow'>
 				<input type='hidden' name='action' value='save'>
 				<?php foreach($buttons as $b) {
-					$id_html = htmlspecialchars((string) $b['id'], $escape_flags, 'UTF-8', false);
+					$id_html = htmlspecialchars((string) $b['id'], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 					$id_html = str_replace('`', '&#96;', $id_html);
-					$value_html = htmlspecialchars((string) $b['value'], $escape_flags, 'UTF-8', false);
+					$value_html = htmlspecialchars((string) $b['value'], $escape_flags, ini_get('default_charset') ?: 'UTF-8', false);
 					$value_html = str_replace('`', '&#96;', $value_html);
 					print "<input type='button' class='ui-button ui-corner-all ui-widget'"
 						. " id='$id_html' value='$value_html'>";
@@ -1756,9 +1756,9 @@ function form_start($action, $id = '', $multipart = false) {
 
 	$form_action = $action;
 
-	$form_id_html = htmlspecialchars((string) $form_id, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	$form_id_html = htmlspecialchars((string) $form_id, ENT_QUOTES | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8');
 	$form_id_html = str_replace('`', '&#96;', $form_id_html);
-	$form_action_html = htmlspecialchars((string) $form_action, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+	$form_action_html = htmlspecialchars((string) $form_action, ENT_QUOTES | ENT_SUBSTITUTE, ini_get('default_charset') ?: 'UTF-8');
 	$form_action_html = str_replace('`', '&#96;', $form_action_html);
 
 	print "<form class='cactiFormStart' id='$form_id_html' name='$form_id_html' action='$form_action_html'"
