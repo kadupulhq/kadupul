@@ -115,8 +115,17 @@ final class DeviceCollectorReplication
         }
     }
 
-    public function purgeReviewedDependents(PDO $source, DeviceRemoval $snapshot): void
+    /** @return list<int> Reviewed template identities needed to detect late orphan inputs. */
+    public function purgeReviewedDependents(PDO $source, DeviceRemoval $snapshot): array
     {
+        $templateIds = [];
+        if ($snapshot->dataSourceIds !== []) {
+            $query = $source->prepare('SELECT id FROM data_template_data WHERE local_data_id IN (SELECT id FROM data_local WHERE host_id = ? AND id IN (' . implode(',', array_fill(0, count($snapshot->dataSourceIds), '?')) . '))');
+            if (!$query->execute([$snapshot->device->id, ...$snapshot->dataSourceIds])) {
+                throw new \RuntimeException('Collector dependent scope unavailable');
+            }
+            $templateIds = array_map('intval', $query->fetchAll(PDO::FETCH_COLUMN));
+        }
         // Delete children while their ownership can still be discovered. The
         // legacy purge removes the parent rows without foreign-key cascades.
         foreach ([
@@ -139,9 +148,10 @@ final class DeviceCollectorReplication
                 throw new \RuntimeException('Previous collector dependents remain');
             }
         }
+        return $templateIds;
     }
 
-    public function verifyPurged(PDO $source, int $deviceId, ?DeviceRemoval $snapshot = null): void
+    public function verifyPurged(PDO $source, int $deviceId, ?DeviceRemoval $snapshot = null, array $reviewedTemplateIds = []): void
     {
         foreach (['host' => 'id', 'host_graph' => 'host_id', 'host_snmp_query' => 'host_id', 'host_snmp_cache' => 'host_id', 'poller_item' => 'host_id', 'poller_reindex' => 'host_id', 'graph_tree_items' => 'host_id', 'reports_items' => 'host_id', 'data_local' => 'host_id', 'graph_local' => 'host_id'] as $table => $column) {
             $query = $source->prepare("SELECT COUNT(*) FROM $table WHERE $column = ?");
@@ -157,6 +167,24 @@ final class DeviceCollectorReplication
                 $query = $source->prepare("SELECT COUNT(*) FROM $table WHERE id IN (" . implode(',', array_fill(0, count($ids), '?')) . ')');
                 if (!$query->execute($ids) || (int) $query->fetchColumn() !== 0) {
                     throw new \RuntimeException('Reviewed collector association remains');
+                }
+            }
+        }
+        if ($snapshot !== null) {
+            foreach ([
+                'data_template_data' => ['local_data_id', $snapshot->dataSourceIds],
+                'data_template_rrd' => ['local_data_id', $snapshot->dataSourceIds],
+                'graph_templates_item' => ['local_graph_id', $snapshot->graphIds],
+                'data_input_data' => ['data_template_data_id', $reviewedTemplateIds],
+            ] as $table => [$column, $ids]) {
+                if ($ids === []) {
+                    continue;
+                }
+                // Parents have already been removed: do not rediscover ownership
+                // through joins that would hide newly inserted orphan children.
+                $query = $source->prepare("SELECT COUNT(*) FROM $table WHERE $column IN (" . implode(',', array_fill(0, count($ids), '?')) . ')');
+                if (!$query->execute($ids) || (int) $query->fetchColumn() !== 0) {
+                    throw new \RuntimeException('Reviewed collector dependents remain');
                 }
             }
         }
