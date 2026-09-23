@@ -6,9 +6,9 @@
  */
 
 // Run only against the disposable HTTP fixture, with IDs supplied by its runner.
-require __DIR__ . '/../../bin/legacy-assignment-bootstrap.php';
-require_once __DIR__ . '/../../lib/reports.php';
-require_once __DIR__ . '/../../lib/sort.php';
+require 'bin/legacy-assignment-bootstrap.php';
+require_once 'lib/reports.php';
+require_once 'lib/sort.php';
 define('KADUPUL_THROW_DATABASE_ERRORS', true);
 [$kind, $destination, $parent, $device, $actor] = $placementFixture;
 $key = "$database_hostname:$database_port:$database_default";
