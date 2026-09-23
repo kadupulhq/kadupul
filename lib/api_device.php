@@ -92,8 +92,13 @@ function api_device_remove($device_id)
  */
 function api_device_purge_from_remote($device_ids, $poller_id = 0, $reviewed_associations = null, $reviewed_connection = null)
 {
-    if ($reviewed_associations !== null && !($reviewed_connection instanceof PDO)) {
-        throw new RuntimeException('Reviewed collector connection unavailable');
+    if ($reviewed_associations !== null) {
+        if (!($reviewed_connection instanceof PDO)) {
+            throw new RuntimeException('Reviewed collector connection unavailable');
+        }
+        if (!$reviewed_connection->inTransaction()) {
+            throw new RuntimeException('Reviewed collector transaction unavailable');
+        }
     }
     if (!is_array($device_ids)) {
         $device_ids = array($device_ids);
