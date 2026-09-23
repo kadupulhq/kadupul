@@ -68,6 +68,29 @@ final class DeviceAssociationVerificationTest extends TestCase
         }
     }
 
+    #[DataProvider('failedQueryChecks')]
+    public function testSilentReadFailuresCannotConfirmQueryRemoval(string $table, bool $remote): void
+    {
+        $valid = $this->database(false, false);
+        $valid->exec('CREATE TABLE host_snmp_query (host_id INTEGER, snmp_query_id INTEGER, reindex_method INTEGER); CREATE TABLE host_snmp_cache (host_id INTEGER, snmp_query_id INTEGER); CREATE TABLE poller_reindex (host_id INTEGER, data_query_id INTEGER)');
+        $failed = $this->createMock(\PDOStatement::class);
+        $failed->method('execute')->willReturn(false);
+        $failed->expects(self::never())->method('fetchColumn');
+        $db = $this->createMock(\PDO::class);
+        $db->method('prepare')->willReturnCallback(static fn(string $sql): \PDOStatement => str_contains($sql, 'FROM ' . $table . ' ') ? $failed : $valid->prepare($sql));
+        $this->expectException(\RuntimeException::class);
+        (new DeviceAssociationWriter())->verify($remote ? $valid : $db, $remote ? $db : null, new DeviceAssociations(7, 'fixture', 0, 3, 0, []), new DeviceAssociationChange('query', 'remove', 9));
+    }
+
+    public static function failedQueryChecks(): iterable
+    {
+        foreach (['host_snmp_query', 'host_snmp_cache', 'poller_reindex'] as $table) {
+            foreach ([false, true] as $remote) {
+                yield [$table, $remote];
+            }
+        }
+    }
+
     public static function outcomes(): iterable
     {
         foreach ([false, true] as $remote) {
