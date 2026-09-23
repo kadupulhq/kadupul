@@ -162,7 +162,12 @@ function form_actions() {
 				$deletable = gprint_deletable($selected_items);
 
 				if (cacti_sizeof($deletable)) {
-					db_execute('DELETE FROM graph_templates_gprint WHERE ' . array_to_sql_or($deletable, 'id'));
+					/* The NOT EXISTS clauses repeat the check inside the delete, so a
+					   reference added between the two statements still wins. */
+					db_execute('DELETE FROM graph_templates_gprint
+						WHERE ' . array_to_sql_or($deletable, 'id') . '
+						AND NOT EXISTS (SELECT 1 FROM graph_templates_item AS gti WHERE gti.gprint_id = graph_templates_gprint.id)
+						AND NOT EXISTS (SELECT 1 FROM graph_templates_graph AS gtg WHERE gtg.right_axis_format = graph_templates_gprint.id)');
 				}
 
 				if (cacti_sizeof($deletable) < cacti_sizeof($selected_items)) {

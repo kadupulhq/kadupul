@@ -61,11 +61,13 @@ function db_fetch_assoc($sql) {
 	return $rows;
 }
 function db_execute($sql) {
+	$GLOBALS["atomic"] = strpos($sql, "NOT EXISTS") !== false;
 	preg_match("/IN \(([0-9,]*)\)/", $sql, $matches);
 	$GLOBALS["deleted"] = $matches[1] === "" ? array() : array_map("intval", explode(",", $matches[1]));
 	return true;
 }
-register_shutdown_function(function () { echo json_encode(array("deleted" => $GLOBALS["deleted"], "message" => $GLOBALS["message"])); });
+$atomic = false;
+register_shutdown_function(function () { echo json_encode(array("deleted" => $GLOBALS["deleted"], "message" => $GLOBALS["message"], "atomic" => $GLOBALS["atomic"])); });
 ' . $functions . 'form_actions();
 ';
 
@@ -79,33 +81,37 @@ register_shutdown_function(function () { echo json_encode(array("deleted" => $GL
 	}
 }
 
+test('the delete repeats the in-use check itself', function () {
+	expect(run_delete(array(1, 3))['atomic'])->toBeTrue();
+});
+
 test('an unused preset is still deleted', function () {
-	expect(run_delete(array(1, 3)))->toBe(array('deleted' => array(1, 3), 'message' => null));
+	expect(run_delete(array(1, 3)))->toMatchArray(array('deleted' => array(1, 3), 'message' => null));
 });
 
 test('a preset a graph or template uses is kept', function () {
-	expect(run_delete(array(2)))->toBe(array('deleted' => array(), 'message' => 'gprint_in_use'));
+	expect(run_delete(array(2)))->toMatchArray(array('deleted' => array(), 'message' => 'gprint_in_use'));
 });
 
 test('a mixed selection deletes only the unused presets', function () {
-	expect(run_delete(array(1, 2, 3, 4)))->toBe(array('deleted' => array(1, 3), 'message' => 'gprint_in_use'));
+	expect(run_delete(array(1, 2, 3, 4)))->toMatchArray(array('deleted' => array(1, 3), 'message' => 'gprint_in_use'));
 });
 
 test('a non-canonical id cannot slip past the in-use check', function () {
 	// MySQL matches '007' to 7, so the check has to compare the same value.
-	expect(run_delete(array('007', '2', '0002')))->toBe(array('deleted' => array(7), 'message' => 'gprint_in_use'));
+	expect(run_delete(array('007', '2', '0002')))->toMatchArray(array('deleted' => array(7), 'message' => 'gprint_in_use'));
 });
 
 test('a preset used only as a right axis format is kept', function () {
-	expect(run_delete(array(1, 9)))->toBe(array('deleted' => array(1), 'message' => 'gprint_in_use'));
+	expect(run_delete(array(1, 9)))->toMatchArray(array('deleted' => array(1), 'message' => 'gprint_in_use'));
 });
 
 test('a numeric id that is not an integer is refused', function () {
 	// MySQL would not match '3.9' to id 3, so the delete must not either.
-	expect(run_delete(array('3.9', '3x', '')))->toBe(array('deleted' => array(), 'message' => 'gprint_in_use'));
+	expect(run_delete(array('3.9', '3x', '')))->toMatchArray(array('deleted' => array(), 'message' => 'gprint_in_use'));
 });
 
 test('a failed lookup deletes nothing rather than everything', function () {
 	// db_fetch_assoc returns false on a SQL error, which must not read as "none in use".
-	expect(run_delete(array(1, 3), true))->toBe(array('deleted' => array(), 'message' => 'gprint_in_use'));
+	expect(run_delete(array(1, 3), true))->toMatchArray(array('deleted' => array(), 'message' => 'gprint_in_use'));
 });
