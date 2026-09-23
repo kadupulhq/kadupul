@@ -16,7 +16,7 @@ use Kadupul\Inventory\Domain\DeviceEditConflict;
 use Kadupul\Platform\Contract\DatabaseConnection;
 use Symfony\Component\Process\Process;
 
-final readonly class LegacyDeviceStates implements DeviceStates, \Kadupul\Inventory\Application\Port\DeviceOptions, \Kadupul\Inventory\Application\Port\DeviceStatistics, \Kadupul\Inventory\Application\Port\DeviceTemplateSynchronization
+final readonly class LegacyDeviceStates implements DeviceStates, \Kadupul\Inventory\Application\Port\DeviceBulkAssignments, \Kadupul\Inventory\Application\Port\DeviceOptions, \Kadupul\Inventory\Application\Port\DeviceStatistics, \Kadupul\Inventory\Application\Port\DeviceTemplateSynchronization
 {
     public function __construct(private DatabaseConnection $database, private LegacyDeviceVisibility $visibility, private string $projectDir) {}
     public static function state(array $row): DeviceState
@@ -50,6 +50,10 @@ final readonly class LegacyDeviceStates implements DeviceStates, \Kadupul\Invent
     public function changeOptions(int $actorId, DeviceSelection $selection, \Kadupul\Inventory\Domain\DeviceOptionsChange $change): void
     {
         $this->run($actorId, $selection, ['operation' => 'options', 'changes' => $change->fields]);
+    }
+    public function assign(int $actorId, DeviceSelection $selection, \Kadupul\Inventory\Domain\DeviceBulkAssignment $assignment): void
+    {
+        $this->run($actorId, $selection, ['operation' => 'assign', 'kind' => $assignment->kind, 'target' => $assignment->targetId]);
     }
     private function run(int $actorId, DeviceSelection $selection, array $operation): void
     {

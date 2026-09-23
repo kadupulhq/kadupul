@@ -43,12 +43,15 @@ try {
     $clearStatistics = is_array($command) && ($command['operation'] ?? null) === 'clear-statistics';
     $syncTemplates = is_array($command) && ($command['operation'] ?? null) === 'sync-template';
     $changeOptions = is_array($command) && ($command['operation'] ?? null) === 'options';
-    $preserveState = $clearStatistics || $syncTemplates || $changeOptions;
-    if (!is_array($command) || array_diff(array_keys($command), $changeOptions ? ['actor', 'selection', 'operation', 'changes'] : ($preserveState ? ['actor', 'selection', 'operation'] : ['actor', 'selection', 'enabled'])) !== []
+    $assignDevices = is_array($command) && ($command['operation'] ?? null) === 'assign';
+    $preserveState = $clearStatistics || $syncTemplates || $changeOptions || $assignDevices;
+    if (!is_array($command) || array_diff(array_keys($command), $assignDevices ? ['actor', 'selection', 'operation', 'kind', 'target'] : ($changeOptions ? ['actor', 'selection', 'operation', 'changes'] : ($preserveState ? ['actor', 'selection', 'operation'] : ['actor', 'selection', 'enabled']))) !== []
         || !is_int($command['actor'] ?? null) || $command['actor'] <= 0
         || !is_array($command['selection'] ?? null) || (!$preserveState && !is_bool($command['enabled'] ?? null))) {
         throw new RuntimeException('Invalid command');
     }
+    $assignment = $assignDevices ? new \Kadupul\Inventory\Domain\DeviceBulkAssignment($command['kind'] ?? '', $command['target'] ?? -1) : null;
+    $assignmentWriter = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceBulkAssignmentWriter();
     $optionsChange = $changeOptions ? new \Kadupul\Inventory\Domain\DeviceOptionsChange($command['changes'] ?? []) : null;
     $optionsWriter = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceOptionsWriter();
     $selection = new DeviceSelection($command['selection']);
@@ -80,10 +83,17 @@ try {
         throw new RuntimeException('Devices unavailable');
     }
     $sites = array_unique(array_map(static fn($row) => (int) $row['site_id'], $associations));
+    if ($assignDevices && $assignment->kind === 'site') {
+        $sites[] = $assignment->targetId;
+        $sites = array_unique($sites);
+    }
     sort($sites, SORT_NUMERIC);
     foreach ($sites as $siteId) {
         if ($siteId > 0) {
-            $read($connection, 'SELECT id FROM sites WHERE id = ? FOR UPDATE', [$siteId]);
+            $lockedSite = $read($connection, 'SELECT id FROM sites WHERE id = ? FOR UPDATE', [$siteId]);
+            if ($assignDevices && $assignment->kind === 'site' && $assignment->targetId === $siteId && count($lockedSite) !== 1) {
+                throw new RuntimeException('Assignment site unavailable');
+            }
         }
     }
     $rows = $read($connection, "SELECT id, description, hostname, disabled, status, site_id, poller_id, host_template_id, location, device_threads, snmp_port, snmp_timeout, max_oids, bulk_walk_size, availability_method, ping_method, ping_port, ping_timeout, ping_retries FROM host WHERE id IN ($placeholders) AND deleted = '' ORDER BY id FOR UPDATE", $ids);
@@ -105,13 +115,23 @@ try {
         throw new RuntimeException('Devices unavailable');
     }
     $pollers = array_unique(array_map(static fn($row) => (int) $row['poller_id'], $rows));
+    if ($assignDevices && $assignment->kind === 'collector') {
+        $pollers[] = $assignment->targetId;
+        $pollers = array_unique($pollers);
+    }
     sort($pollers, SORT_NUMERIC);
     foreach ($pollers as $pollerId) {
-        $read($connection, 'SELECT id FROM poller WHERE id = ? FOR UPDATE', [$pollerId]);
+        $lockedPoller = $read($connection, 'SELECT id, disabled FROM poller WHERE id = ? FOR UPDATE', [$pollerId]);
+        if ($assignDevices && $assignment->kind === 'collector' && $assignment->targetId === $pollerId && (count($lockedPoller) !== 1 || $lockedPoller[0]['disabled'] !== '')) {
+            throw new RuntimeException('Assignment collector unavailable');
+        }
     }
-    if ($syncTemplates) {
+    if ($syncTemplates || ($assignDevices && $assignment->kind === 'template')) {
         // Lock current template definitions in a deterministic order before effects.
         $templates = array_unique(array_map(static fn($row) => (int) $row['host_template_id'], $rows));
+        if ($assignDevices) {
+            $templates = [$assignment->targetId];
+        }
         sort($templates, SORT_NUMERIC);
         foreach ($templates as $templateId) {
             if ($templateId === 0) {
@@ -161,6 +181,16 @@ try {
         }
         $changed[$device->id] = $device;
     }
+    if ($assignDevices && $assignment->kind === 'collector' && $assignment->targetId > 1 && !isset($remotes[$assignment->targetId])) {
+        if (!remote_poller_up($assignment->targetId) || !(($remote = poller_connect_to_remote($assignment->targetId)) instanceof PDO)) {
+            throw new RuntimeException('Destination collector unavailable');
+        }
+        if ($remote->exec('SET NAMES utf8mb4') === false
+            || $remote->exec("SET SESSION sql_mode = CONCAT_WS(',', @@SESSION.sql_mode, 'STRICT_TRANS_TABLES')") === false) {
+            throw new RuntimeException('Destination connection validation unavailable');
+        }
+        $remotes[$assignment->targetId] = $remote;
+    }
     if ($changed !== [] || $syncTemplates) {
         // Opening a legacy remote connection can reset the primary SQL modes.
         // Restore strict writes after all connections are open, before mutations.
@@ -172,7 +202,11 @@ try {
         // Legacy SQL helpers retain their last error even after later successes.
         // Check it without exposing diagnostics or credentials to the parent.
         $database_last_error = '';
-        if ($changeOptions) {
+        if ($assignDevices) {
+            foreach ($changed as $device) {
+                $assignmentWriter->apply($connection, $remotes, $device, $assignment);
+            }
+        } elseif ($changeOptions) {
             foreach ($changed as $device) {
                 $optionsWriter->apply($connection, $device, $optionsChange);
                 if (isset($remotes[$device->pollerId])) {
@@ -197,7 +231,7 @@ try {
         } elseif (!api_device_disable_devices(array_keys($changed))) {
             throw new RuntimeException('Disabling devices failed');
         }
-        $action = $changeOptions ? '4' : ($syncTemplates ? '7' : ($clearStatistics ? '5' : ($enabled ? '2' : '3')));
+        $action = ($changeOptions || $assignDevices) ? '4' : ($syncTemplates ? '7' : ($clearStatistics ? '5' : ($enabled ? '2' : '3')));
         set_request_var('drp_action', $action);
         snmpagent_device_action_bottom([$action, $ids]);
         api_plugin_hook_function('device_action_bottom', [$action, $ids]);
@@ -218,6 +252,10 @@ try {
     // Confirm every selected copy even when preflight found no changes.
     foreach ($rows as $row) {
         $device = LegacyDeviceStates::state($row);
+        if ($assignDevices) {
+            $assignmentWriter->verify($connection, $remotes, $device, $assignment);
+            continue;
+        }
         $verify = $read($connection, "SELECT disabled, status, site_id, poller_id, host_template_id FROM host WHERE id = ? AND deleted = ''", [$device->id]);
         if (count($verify) !== 1 || ($verify[0]['disabled'] !== 'on') !== ($preserveState ? $device->enabled : $enabled)
             || (int) $verify[0]['site_id'] !== $device->siteId || (int) $verify[0]['poller_id'] !== $device->pollerId
@@ -246,7 +284,7 @@ try {
     }
     $transactionStarted = false;
     $status = 'ok';
-    cacti_log('INVENTORY: User ' . $command['actor'] . ' confirmed ' . ($changeOptions ? 'changed options' : ($syncTemplates ? 'synchronized templates' : ($clearStatistics ? 'cleared statistics' : ($enabled ? 'enabled' : 'disabled')))) . ' for devices ' . implode(',', $ids), false, 'AUDIT');
+    cacti_log('INVENTORY: User ' . $command['actor'] . ' confirmed ' . ($assignDevices ? 'assigned ' . $assignment->kind : ($changeOptions ? 'changed options' : ($syncTemplates ? 'synchronized templates' : ($clearStatistics ? 'cleared statistics' : ($enabled ? 'enabled' : 'disabled'))))) . ' for devices ' . implode(',', $ids), false, 'AUDIT');
 } catch (DeviceEditConflict) {
     $status = 'conflict';
 } catch (Throwable) {
