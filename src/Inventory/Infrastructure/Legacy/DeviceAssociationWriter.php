@@ -16,6 +16,11 @@ final class DeviceAssociationWriter
     public function apply(PDO $primary, ?PDO $remote, DeviceAssociations $device, DeviceAssociationChange $change): void
     {
         if ($change->kind === 'query') {
+            if ($change->operation !== 'remove') {
+                foreach (array_filter([$primary, $remote]) as $database) {
+                    $this->requireQuery($database, $change->targetId);
+                }
+            }
             match ($change->operation) {
                 'add' => api_device_dq_add($device->id, $change->targetId, $change->reindexMethod),
                 'change' => api_device_dq_change($device->id, $change->targetId, $change->reindexMethod),
@@ -50,6 +55,9 @@ final class DeviceAssociationWriter
                 throw new \RuntimeException('Device identity changed');
             }
             if ($change->kind === 'query') {
+                if ($change->operation !== 'remove') {
+                    $this->requireQuery($database, $change->targetId);
+                }
                 $query = $database->prepare('SELECT reindex_method FROM host_snmp_query WHERE host_id = ? AND snmp_query_id = ?');
                 $query->execute([$device->id, $change->targetId]);
                 $method = $query->fetchColumn();
@@ -79,6 +87,13 @@ final class DeviceAssociationWriter
             if (!$query->execute([$device->id, $change->targetId]) || (int) $query->fetchColumn() !== ($change->operation === 'add' ? 1 : 0)) {
                 throw new \RuntimeException('Association could not be confirmed');
             }
+        }
+    }
+    private function requireQuery(PDO $database, int $targetId): void
+    {
+        $query = $database->prepare('SELECT COUNT(*) FROM snmp_query WHERE id = ?');
+        if (!$query->execute([$targetId]) || (int) $query->fetchColumn() !== 1) {
+            throw new \RuntimeException('Data query unavailable');
         }
     }
 }
