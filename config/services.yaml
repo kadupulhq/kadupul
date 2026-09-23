@@ -56,18 +56,27 @@ services:
 
     Kadupul\Inventory\Application\Query\ListDeviceSites: ~
 
+    Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceSites:
+        arguments:
+            $database: '@kadupul.inventory.read_database'
     Kadupul\Inventory\Application\Port\DeviceSites:
-        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceSites
+        alias: Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceSites
 
     Kadupul\Inventory\Application\Query\FindDeviceDetails: ~
 
+    Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceDetailsReader:
+        arguments:
+            $database: '@kadupul.inventory.read_database'
     Kadupul\Inventory\Application\Port\DeviceDetailsReader:
-        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceDetailsReader
+        alias: Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceDetailsReader
 
     Kadupul\Inventory\Application\Query\ListSites: ~
 
+    Kadupul\Inventory\Infrastructure\Persistence\DoctrineSiteCatalog:
+        arguments:
+            $database: '@kadupul.inventory.read_database'
     Kadupul\Inventory\Application\Port\SiteCatalog:
-        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacySiteCatalog
+        alias: Kadupul\Inventory\Infrastructure\Persistence\DoctrineSiteCatalog
 
     Kadupul\Inventory\Application\Query\FindEditableSite: ~
     Kadupul\Inventory\Application\Command\EditSite: ~
@@ -155,6 +164,12 @@ services:
         class: Doctrine\DBAL\Connection
         factory: ['@Kadupul\Inventory\Infrastructure\Persistence\InventoryReadConnectionFactory', 'create']
         lazy: true
+
+    # Device-visibility policies must be read on the connection that runs the
+    # filtered query, so both come from the same read connection.
+    Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceVisibility:
+        arguments:
+            $database: '@kadupul.inventory.read_database'
 
     Kadupul\Inventory\Infrastructure\Persistence\DoctrineSiteAssignmentCatalog:
         arguments:
