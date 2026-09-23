@@ -1509,7 +1509,7 @@ function api_device_ping_device($device_id, $from_remote = false) {
 		}
 		// Keep the shared escaping contract and make the output boundary
 		// explicit for security analyzers that do not model html_escape().
-		print htmlspecialchars($error, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8', false);
+		print htmlspecialchars($error, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, ini_get('default_charset') ?: 'UTF-8', false);
 		return;
 	}
 

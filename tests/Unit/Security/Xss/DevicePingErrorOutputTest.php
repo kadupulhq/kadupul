@@ -12,12 +12,14 @@ function db_fetch_row_prepared($sql, $parameters) {
 }
 
 $root = dirname(__DIR__, 4);
+$pingErrorProduction = '';
 foreach (['lib/api_device.php' => 'api_device_ping_device', 'lib/html.php' => 'html_escape'] as $file => $function) {
 	$source = file_get_contents($root . '/' . $file);
 	if (!preg_match('/^function ' . $function . '\(.*?^}/ms', $source, $match)) {
 		throw new \RuntimeException('Missing production function: ' . $function);
 	}
 	eval('namespace ' . __NAMESPACE__ . ';' . $match[0]);
+	$pingErrorProduction .= $match[0] . "\n";
 }
 
 test('missing device ping renders text and preserves the bound lookup', function ($id, $remote) {
@@ -41,4 +43,31 @@ test('missing device ping renders text and preserves the bound lookup', function
 	[7], ['42'], ['<svg onload=alert(1)>'], ['"><img src=x onerror=alert(1)>'],
 	["'&<script>alert(1)</script>"], ['router-日本語'], ['`onmouseover=alert(1)`'],
 	['router&amp;<b>encoded</b>'],
+])->with([false, true]);
+
+test('ping errors preserve the configured character set', function ($charset, $id, $remote) use ($pingErrorProduction) {
+	// A fresh process models a separate installation and isolates html_escape's static charset.
+	$script = 'function __($message) { return $message; }'
+		. 'function cacti_sizeof($value) { return count($value); }'
+		. 'function db_fetch_row_prepared($sql, $parameters) { return []; }'
+		. $pingErrorProduction
+		. 'api_device_ping_device(base64_decode(' . var_export(base64_encode($id), true) . '), ' . ($remote ? 'true' : 'false') . ');';
+	$process = proc_open([PHP_BINARY, '-d', 'default_charset=' . $charset, '-r', $script],
+		[0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);
+	expect(is_resource($process))->toBeTrue();
+	fclose($pipes[0]);
+	$output = stream_get_contents($pipes[1]);
+	$error = stream_get_contents($pipes[2]);
+	fclose($pipes[1]);
+	fclose($pipes[2]);
+	expect(proc_close($process))->toBe(0);
+	expect($error)->toBe('');
+	$suffix = $remote ? 'Please perform Full Sync!' : 'Please check database for errors.';
+	$message = 'ERROR: Device[' . $id . '] not found.  ' . $suffix;
+	$expected = htmlspecialchars(str_replace('`', '&#96;', $message), ENT_QUOTES | ENT_HTML5, $charset ?: 'UTF-8', false);
+	expect($output)->toBe($expected);
+})->with([
+	['ISO-8859-1', "caf\xe9 `<svg>&amp;"],
+	['UTF-8', 'café `<svg>&amp;'],
+	['', 'café `<svg>&amp;'],
 ])->with([false, true]);
