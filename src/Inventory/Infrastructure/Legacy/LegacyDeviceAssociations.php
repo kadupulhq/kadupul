@@ -29,9 +29,9 @@ final readonly class LegacyDeviceAssociations implements DeviceAssociationStore
         // Matches the legacy configuration default when no setting was saved.
         return in_array((string) $value, ['0', '1', '2', '3'], true) ? (int) $value : 1;
     }
-    public function available(string $kind): array
+    public function available(string $kind, int $snmpVersion): array
     {
-        return $this->records->available($this->database->get(), $kind);
+        return $this->records->available($this->database->get(), $kind, false, $snmpVersion);
     }
     public function change(int $actorId, int $id, DeviceAssociationChange $change, string $revision): void
     {
