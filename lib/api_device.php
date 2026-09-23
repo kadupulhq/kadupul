@@ -240,7 +240,7 @@ function api_device_remove_multi($device_ids, $delete_type = 2, $reviewed_associ
 		db_execute("DELETE FROM reports_items    WHERE host_id IN ($devices_to_delete)");
 
 		if ($delete_type == 2) {
-			api_delete_graphs($graphs, $delete_type);
+			api_delete_graphs($graphs, $delete_type, $reviewed_associations === null ? null : $data_sources);
 		} else {
 			api_data_source_disable_multi($data_sources);
 

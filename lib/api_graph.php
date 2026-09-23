@@ -6,7 +6,7 @@
 
 require_once __DIR__ . '/graph_template_input.php';
 
-function api_delete_graphs(&$local_graph_ids, $delete_type) {
+function api_delete_graphs(&$local_graph_ids, $delete_type, $reviewed_data_ids = null) {
 	/* check for a bad local_graph_id = 0, and remove graphs */
 	api_graph_remove_bad_graphs($local_graph_ids);
 
@@ -30,6 +30,12 @@ function api_delete_graphs(&$local_graph_ids, $delete_type) {
 				AND dtd.local_data_id > 0'),
 			'local_data_id', 'local_data_id'
 		);
+
+		// A reviewed removal must not widen its data-source scope through links
+		// created by a trigger or plugin after the confirmation snapshot.
+		if ($reviewed_data_ids !== null && array_diff($all_data_sources, $reviewed_data_ids)) {
+			throw new RuntimeException('Graph data-source scope changed');
+		}
 
 		if (cacti_sizeof($all_data_sources)) {
 			$data_sources = array_rekey(
