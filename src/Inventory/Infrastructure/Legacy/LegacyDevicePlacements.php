@@ -21,7 +21,7 @@ final readonly class LegacyDevicePlacements implements DevicePlacements
     public function place(int $actorId, DeviceSelection $selection, DevicePlacement $placement): void
     {
         $configured = $this->database->get()->query("SELECT value FROM settings WHERE name = 'path_php_binary'")->fetchColumn();
-        $binary = is_string($configured) && trim($configured) !== '' ? trim($configured) : PHP_BINARY;
+        $binary = is_string($configured) && trim($configured) !== '' ? trim($configured) : PHP_BINDIR . (PHP_OS_FAMILY === 'Windows' ? '/php.exe' : '/php');
         $process = new Process([$binary, $this->projectDir . '/bin/legacy-device-placement.php'], $this->projectDir);
         $process->setTimeout(120);
         $process->setInput(json_encode(['actor' => $actorId, 'selection' => $selection->revisions, 'kind' => $placement->kind, 'destination' => $placement->destination, 'timespan' => $placement->timespan, 'alignment' => $placement->alignment], JSON_THROW_ON_ERROR));
