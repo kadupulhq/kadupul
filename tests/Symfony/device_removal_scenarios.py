@@ -23,7 +23,10 @@ def verify_device_removal(harness, session, user_id, poller, check):
     saved_method = harness.sql("SELECT value FROM settings WHERE name='rrd_autoclean_method'").strip()
 
     def create(collector=1):
-        device = int(harness.sql(f"INSERT INTO host (description,hostname,poller_id,site_id) VALUES ('remove-fixture','remove.invalid',{collector},0); SELECT LAST_INSERT_ID()").strip())
+        description_hex = 'remove-fixture 🌏'.encode().hex().upper()
+        device = int(harness.sql(f"INSERT INTO host (description,hostname,poller_id,site_id) VALUES (CONVERT(UNHEX('{description_hex}') USING utf8mb4),'remove.invalid',{collector},0); SELECT LAST_INSERT_ID()").strip())
+        check(harness.sql(f'SELECT HEX(description) FROM host WHERE id={device}').strip() == description_hex,
+              'removal fixture preserves four-byte description before revision checks')
         graph = int(harness.sql(f'INSERT INTO graph_local (host_id) VALUES ({device}); SELECT LAST_INSERT_ID()').strip())
         sources = []
         for index in range(2):

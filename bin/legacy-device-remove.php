@@ -56,6 +56,11 @@ try {
     }
     $transactionStarted = true;
     $connection = $database_sessions["$database_hostname:$database_port:$database_default"];
+    // Revisions include descriptions; match the HTTP connection before reading
+    // four-byte characters through the legacy connection's utf8mb3 default.
+    if ($connection->exec('SET NAMES utf8mb4') === false) {
+        throw new RuntimeException('Primary connection encoding unavailable');
+    }
     if (!(new \Kadupul\Inventory\Infrastructure\Legacy\DeviceWriteAuthorization())->allows($connection, $command['actor'])) {
         $status = 'denied';
         throw new RuntimeException('Access denied');
