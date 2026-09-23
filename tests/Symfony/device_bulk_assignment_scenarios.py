@@ -13,7 +13,7 @@ def verify_bulk_assignments(harness, session, check, poller):
         harness.sql(f'INSERT INTO host_template_graph (host_template_id,graph_template_id) VALUES ({template},{graph})')
         for index in range(2):
             owner = poller if index == 0 else 1
-            ids.append(int(harness.sql(f"INSERT INTO host (description,hostname,poller_id,snmp_version,availability_method) VALUES ('bulk-assignment-{index}','127.0.0.1',{owner},0,0); SELECT LAST_INSERT_ID()").strip()))
+            ids.append(int(harness.sql(f"INSERT INTO host (description,hostname,poller_id,site_id,snmp_version,availability_method) VALUES ('bulk-assignment-{index}','127.0.0.1',{owner},0,0,0); SELECT LAST_INSERT_ID()").strip()))
         harness.sql(f'INSERT INTO create_remote.host SELECT * FROM host WHERE id={ids[0]}')
         selected = ','.join(map(str, ids))
 
