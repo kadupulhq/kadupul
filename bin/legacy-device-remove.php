@@ -199,7 +199,7 @@ try {
             }
         }
         if (isset($remotes[$device->pollerId])) {
-            $verifier->verifyPurged($remotes[$device->pollerId], $device->id);
+            $verifier->verifyPurged($remotes[$device->pollerId], $device->id, $snapshot);
         }
     }
     set_request_var('drp_action', '1');

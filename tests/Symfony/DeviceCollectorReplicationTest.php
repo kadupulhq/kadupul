@@ -7,6 +7,8 @@
 
 namespace Kadupul\Tests;
 
+use Kadupul\Inventory\Domain\DeviceRemoval;
+use Kadupul\Inventory\Domain\DeviceState;
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorReplication;
 use PDO;
 use PDOStatement;
@@ -54,6 +56,31 @@ final class DeviceCollectorReplicationTest extends TestCase
     {
         (new DeviceCollectorReplication())->verifyTarget($this->connection(), $this->connection('host', 'notes'), 7);
         $this->addToAssertionCount(1);
+    }
+
+    public function testReviewedCleanupCannotFollowAssociationsReassignedToAnotherDevice(): void
+    {
+        $db = new PDO('sqlite::memory:');
+        foreach ([
+            'host' => 'id INTEGER', 'host_graph' => 'host_id INTEGER', 'host_snmp_query' => 'host_id INTEGER',
+            'host_snmp_cache' => 'host_id INTEGER', 'poller_item' => 'host_id INTEGER', 'poller_reindex' => 'host_id INTEGER',
+            'graph_tree_items' => 'host_id INTEGER', 'reports_items' => 'host_id INTEGER', 'poller_command' => 'command TEXT',
+            'data_local' => 'id INTEGER, host_id INTEGER', 'graph_local' => 'id INTEGER, host_id INTEGER',
+            'data_template_data' => 'id INTEGER, local_data_id INTEGER', 'data_template_rrd' => 'id INTEGER, local_data_id INTEGER',
+            'data_input_data' => 'data_template_data_id INTEGER', 'graph_templates_item' => 'local_graph_id INTEGER',
+        ] as $table => $columns) {
+            $db->exec("CREATE TABLE $table ($columns)");
+        }
+        $db->exec('INSERT INTO data_local VALUES (12, 99); INSERT INTO graph_local VALUES (11, 99); INSERT INTO data_template_data VALUES (101, 12); INSERT INTO data_template_rrd VALUES (102, 12); INSERT INTO data_input_data VALUES (101); INSERT INTO graph_templates_item VALUES (11)');
+        $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [11], [12]);
+        $replication = new DeviceCollectorReplication();
+        $replication->purgeReviewedDependents($db, $snapshot);
+        foreach (['data_template_data', 'data_template_rrd', 'data_input_data', 'graph_templates_item'] as $table) {
+            self::assertSame(1, (int) $db->query("SELECT COUNT(*) FROM $table")->fetchColumn(), "$table followed a reassigned parent");
+        }
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Reviewed collector association remains');
+        $replication->verifyPurged($db, 7, $snapshot);
     }
 
     private function connection(?string $missingTable = null, ?string $missingColumn = null): PDO
