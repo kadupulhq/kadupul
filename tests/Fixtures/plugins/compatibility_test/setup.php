@@ -91,3 +91,8 @@ function compatibility_template_sync($value) {
     compatibility_test_record('template_sync', [$value]);
     return $value;
 }
+
+function compatibility_graph_association($value) {
+    compatibility_test_record('graph_association', [$value]);
+    return $value;
+}
