@@ -204,6 +204,15 @@ function api_device_remove_multi($device_ids, $delete_type = 2, $reviewed_associ
 				throw new RuntimeException('Reviewed removal requires an ownership verifier');
 			}
 			$verify_reviewed_scope();
+			// Hooks must not redirect cleanup to an unreviewed collector.
+			foreach ($device_ids as $device_id) {
+				$poller_id = $reviewed_associations['by_device'][$device_id]['poller_id'] ?? null;
+				$current = db_fetch_cell_prepared('SELECT poller_id FROM host WHERE id = ? FOR UPDATE', array($device_id));
+				if ($poller_id === null || $current === false || (int) $current !== (int) $poller_id
+					|| ((int) $poller_id > 1 && !(($reviewed_connections[$poller_id] ?? null) instanceof PDO))) {
+					throw new RuntimeException('Reviewed collector ownership changed');
+				}
+			}
 		}
 
 		if ($reviewed_associations === null) {
