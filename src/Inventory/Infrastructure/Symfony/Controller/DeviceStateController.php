@@ -57,7 +57,7 @@ final class DeviceStateController
         $form->handleRequest($request);
         $status = $request->isMethod('POST') ? 422 : 200;
         if ($form->isSubmitted()) {
-            if ($form->getExtraData() !== []) {
+            if ($form->getExtraData() !== [] || ($form->has('options') && $form->get('options')->getExtraData() !== [])) {
                 $form->addError(new FormError($translator->trans('Unexpected fields were submitted.', [], 'inventory')));
             }
             if ($form->isValid()) {
