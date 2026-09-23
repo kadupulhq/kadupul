@@ -4045,7 +4045,24 @@ function automation_graph_result_exists($result, $host_id, $graph_template_id, $
 		$sql .= ' AND snmp_query_id = ? AND snmp_query_graph_id = ? AND snmp_index = ?';
 		array_push($parameters, $query['snmp_query_id'], $query['snmp_query_graph_id'], $query['snmp_index']);
 	}
-	return (int) db_fetch_cell_prepared($sql, $parameters) === 1;
+	if ((int) db_fetch_cell_prepared($sql, $parameters) !== 1) {
+		return false;
+	}
+	foreach ($result['local_data_id'] as $data_id) {
+		if ((!is_int($data_id) && !is_string($data_id)) || filter_var($data_id, FILTER_VALIDATE_INT, array('options' => array('min_range' => 1))) === false) {
+			return false;
+		}
+		$sql = 'SELECT COUNT(*) FROM data_local WHERE id = ? AND host_id = ?';
+		$parameters = array((int) $data_id, $host_id);
+		if ($query !== array()) {
+			$sql .= ' AND snmp_query_id = ? AND snmp_index = ?';
+			array_push($parameters, $query['snmp_query_id'], $query['snmp_index']);
+		}
+		if ((int) db_fetch_cell_prepared($sql, $parameters) !== 1) {
+			return false;
+		}
+	}
+	return true;
 }
 
 function automation_update_device($host_id): bool {
