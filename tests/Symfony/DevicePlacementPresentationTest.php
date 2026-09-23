@@ -54,6 +54,9 @@ final class DevicePlacementPresentationTest extends TestCase
             $container->set(DeviceStates::class, $states);
             foreach ([DeviceTreePlacement::class,DeviceReportPlacement::class] as $contract) {
                 $catalog = $this->createMock($contract);
+                if ($contract === DeviceReportPlacement::class) {
+                    $catalog->method('defaultTimespan')->willReturn(11);
+                }
                 $catalog->method('destinations')->willReturn([$destination => '<destination>']);
                 $container->set($contract, $catalog);
             }
@@ -77,6 +80,10 @@ final class DevicePlacementPresentationTest extends TestCase
             parse_str(parse_url($href, PHP_URL_QUERY), $linkQuery);
             self::assertSame($search, $linkQuery['q']);
             self::assertFalse($links->item(0)->hasAttribute('onmouseover'));
+            if ($kind === 'report') {
+                self::assertSame('11', (new \DOMXPath($doc))->evaluate('string(//select[@name="device_placement[timespan]"]/option[@selected]/@value)'));
+                self::assertSame('2', (new \DOMXPath($doc))->evaluate('string(//select[@name="device_placement[alignment]"]/option[@selected]/@value)'));
+            }
             $token = (new \DOMXPath($doc))->evaluate('string(//input[@name="device_placement[_token]"]/@value)');
             $fields = ['selection' => json_encode([7 => $device->revision()]),'target' => $destination,'_token' => $token];
             if ($kind === 'report') {
@@ -85,7 +92,9 @@ final class DevicePlacementPresentationTest extends TestCase
             foreach ([['target' => '99999'],['target' => ['2:0']],['poller_id' => '2']] as $invalid) {
                 $request = Request::create($path, 'POST', ['device_placement' => array_replace($fields, $invalid)], ['Cacti' => 'fixture']);
                 $request->headers->set('Origin', 'http://localhost');
-                self::assertSame(422, $kernel->handle($request)->getStatusCode());
+                $invalidResponse = $kernel->handle($request);
+                self::assertSame(422, $invalidResponse->getStatusCode());
+                self::assertStringContainsString('Sélectionnez une destination valide.', $invalidResponse->getContent());
             }
             $request = Request::create($path, 'POST', ['device_placement' => $fields], ['Cacti' => 'fixture']);
             $request->headers->set('Origin', 'http://localhost');

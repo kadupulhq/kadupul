@@ -15,11 +15,20 @@ use PDO;
 final readonly class LegacyDeviceReportPlacement implements DeviceReportPlacement
 {
     public function __construct(private DatabaseConnection $database, private ResourceAccess $access) {}
+    public function defaultTimespan(int $actorId): int
+    {
+        $query = $this->database->get()->prepare("SELECT value FROM settings_user WHERE user_id = ? AND name = 'default_timespan'");
+        $query->execute([$actorId]);
+        $value = $query->fetchColumn();
+        return filter_var($value, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 28]]) !== false ? (int) $value : 7;
+    }
     public function destinations(int $actorId): array
     {
         $result = [];
+        $own = $this->access->canManageReport($actorId, $actorId);
+        $others = $this->access->canManageReport($actorId, 0);
         foreach ($this->database->get()->query('SELECT id, name, user_id FROM reports ORDER BY name, id')->fetchAll(PDO::FETCH_ASSOC) as $report) {
-            if ($this->access->canManageReport($actorId, (int) $report['user_id'])) {
+            if ((int) $report['user_id'] === $actorId ? $own : $others) {
                 $result[(string) $report['id']] = $report['name'] . ' (#' . $report['id'] . ')';
             }
         }

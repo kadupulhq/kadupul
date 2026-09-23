@@ -9,6 +9,7 @@ namespace Kadupul\Reporting\Contract;
 
 interface DeviceReportPlacement
 {
+    public function defaultTimespan(int $actorId): int;
     /** @return array<string, string> Accessible destination IDs and labels. */
     public function destinations(int $actorId): array;
     /** Called inside an authenticated primary transaction with all devices locked. */
