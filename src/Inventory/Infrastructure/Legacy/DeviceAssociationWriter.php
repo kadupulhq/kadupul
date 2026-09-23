@@ -16,7 +16,12 @@ final class DeviceAssociationWriter
     public function apply(PDO $primary, ?PDO $remote, DeviceAssociations $device, DeviceAssociationChange $change): void
     {
         if ($change->operation === 'remove') {
-            api_device_gt_remove($device->id, $change->targetId);
+            foreach (array_filter([$primary, $remote]) as $database) {
+                $query = $database->prepare('DELETE FROM host_graph WHERE host_id = ? AND graph_template_id = ?');
+                if (!$query->execute([$device->id, $change->targetId])) {
+                    throw new \RuntimeException('Graph association removal failed');
+                }
+            }
         } else {
             foreach (array_filter([$primary, $remote]) as $database) {
                 $query = $database->prepare('SELECT COUNT(*) FROM graph_templates WHERE id = ?');
