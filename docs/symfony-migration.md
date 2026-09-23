@@ -789,7 +789,8 @@ move to DBAL:
 CREATE USER 'kadupul_read'@'localhost' IDENTIFIED BY 'change-me';
 GRANT SELECT ON cacti.sites TO 'kadupul_read'@'localhost';
 GRANT SELECT ON cacti.settings TO 'kadupul_read'@'localhost';
-GRANT SELECT ON cacti.host TO 'kadupul_read'@'localhost';
+GRANT SELECT (id, description, hostname, disabled, status, location, external_id,
+    notes, site_id, deleted) ON cacti.host TO 'kadupul_read'@'localhost';
 GRANT SELECT ON cacti.host_template TO 'kadupul_read'@'localhost';
 GRANT SELECT ON cacti.poller TO 'kadupul_read'@'localhost';
 GRANT SELECT ON cacti.graph_local TO 'kadupul_read'@'localhost';
@@ -804,10 +805,11 @@ GRANT SELECT ON cacti.user_auth_group_perms TO 'kadupul_read'@'localhost';
 
 Replace `cacti` with `$database_default` and the host with the web server's
 address.
-The column lists on `user_auth` and `user_auth_group` keep password hashes and
-other account fields away from the read user. `host` and `settings` still hold
-stored SNMP credentials, so protect the read user's password as closely as the
-primary one.
+The column lists keep password hashes, account fields and per-device SNMP
+credentials away from the read user. `settings` cannot be limited by row and
+still holds the default SNMP credentials, so protect the read user's password
+as closely as the primary one. Extend a column list when an adapter selects a
+new column.
 The domain revision includes site ID,
 so an assignment changed in another editor invalidates stale forms. Missing or
 invalid submitted choices cannot silently unassign a device.
