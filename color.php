@@ -137,6 +137,57 @@ function form_save() {
     Color Functions
    ----------------------- */
 
+/* The list offers a checkbox only for a color no Graph or Graph Template uses,
+   which is what the Deletable column promises. The delete applies the same rule,
+   or a forged selection leaves graph items pointing at a color that is gone. */
+function color_deletable($ids) {
+	/* The posted ids are strings, and MySQL matches '007' to 7 but not '3.9' to
+	   3. Keep only decimal integers, so the lookup and the delete agree on the
+	   same rows. */
+	$canonical = array();
+
+	foreach ($ids as $id) {
+		if (preg_match('/^[0-9]+$/', (string) $id)) {
+			$canonical[] = (int) $id;
+		}
+	}
+
+	$ids = array_values(array_unique($canonical));
+
+	if (!cacti_sizeof($ids)) {
+		return array();
+	}
+
+	$in_use = array();
+
+	/* A colour reaches a graph through a graph item, and through a colour
+	   template that aggregate creation reads (lib/api_aggregate.php). */
+	foreach (array(
+		'SELECT DISTINCT color_id FROM graph_templates_item WHERE color_id > 0 AND ' . array_to_sql_or($ids, 'color_id'),
+		'SELECT DISTINCT color_id FROM color_template_items WHERE color_id > 0 AND ' . array_to_sql_or($ids, 'color_id'),
+	) as $sql) {
+		$rows = db_fetch_assoc($sql);
+
+		/* A failed lookup says nothing about references, so refuse rather than
+		   report every colour as in use. */
+		if (!is_array($rows)) {
+			return false;
+		}
+
+		$in_use += array_rekey($rows, 'color_id', 'color_id');
+	}
+
+	$deletable = array();
+
+	foreach ($ids as $id) {
+		if (!isset($in_use[$id])) {
+			$deletable[] = $id;
+		}
+	}
+
+	return $deletable;
+}
+
 function form_actions() {
 	global $color_actions;
 
@@ -150,7 +201,24 @@ function form_actions() {
 
 		if ($selected_items != false) {
 			if (get_request_var('drp_action') == '1') { // delete
-				db_execute('DELETE FROM colors WHERE ' . array_to_sql_or($selected_items, 'id'));
+				$deletable = color_deletable($selected_items);
+
+				if ($deletable === false) {
+					raise_message('color_lookup', __('The Colors could not be checked for use and were not Deleted.'), MESSAGE_LEVEL_ERROR);
+				} else {
+					if (cacti_sizeof($deletable)) {
+						/* The NOT EXISTS clauses repeat the check inside the delete, so a
+						   reference added between the two statements still wins. */
+						db_execute('DELETE FROM colors
+							WHERE ' . array_to_sql_or($deletable, 'id') . '
+							AND NOT EXISTS (SELECT 1 FROM graph_templates_item AS gti WHERE gti.color_id = colors.id)
+							AND NOT EXISTS (SELECT 1 FROM color_template_items AS cti WHERE cti.color_id = colors.id)');
+					}
+
+					if (cacti_sizeof($deletable) < cacti_sizeof($selected_items)) {
+						raise_message('color_in_use', __('Colors referenced by a Graph, Graph Template or Color Template were not Deleted.'), MESSAGE_LEVEL_WARN);
+					}
+				}
 			}
 		}
 
@@ -669,7 +737,8 @@ function color() {
 
 	$colors = db_fetch_assoc("SELECT *,
         SUM(CASE WHEN local_graph_id>0 THEN 1 ELSE 0 END) AS graphs,
-        SUM(CASE WHEN local_graph_id=0 THEN 1 ELSE 0 END) AS templates
+        SUM(CASE WHEN local_graph_id=0 THEN 1 ELSE 0 END) AS templates,
+        COALESCE(cti.total, 0) AS color_templates
         FROM (
 			SELECT c.*, local_graph_id
 			FROM colors AS c
@@ -680,6 +749,13 @@ function color() {
 			) AS gti
 			ON c.id=gti.color_id
 		) AS rs
+		LEFT JOIN (
+			SELECT color_id, COUNT(*) AS total
+			FROM color_template_items
+			WHERE color_id>0
+			GROUP BY color_id
+		) AS cti
+		ON cti.color_id = rs.id
 		$sql_where
 		GROUP BY rs.id
 		$sql_having
@@ -699,7 +775,7 @@ function color() {
 		'name'      => array('display' => __('Color Name'), 'align' => 'left', 'sort' => 'ASC', 'tip' => __('The name of this Color definition.')),
 		'read_only' => array('display' => __('Named Color'), 'align' => 'left', 'sort' => 'ASC', 'tip' => __('Is this color a named color which are read only.')),
 		'nosort1'   => array('display' => __('Color'), 'align' => 'center', 'sort' => 'DESC', 'tip' => __('The Color as shown on the screen.')),
-		'nosort'    => array('display' => __('Deletable'), 'align' => 'right', 'sort' => '', 'tip' => __('Colors in use cannot be Deleted.  In use is defined as being referenced either by a Graph or a Graph Template.')),
+		'nosort'    => array('display' => __('Deletable'), 'align' => 'right', 'sort' => '', 'tip' => __('Colors in use cannot be Deleted.  In use is defined as being referenced by a Graph, a Graph Template or a Color Template.')),
 		'graphs'    => array('display' => __('Graphs Using'), 'align' => 'right', 'sort' => 'DESC', 'tip' => __('The number of Graph using this Color.')),
 		'templates' => array('display' => __('Templates Using'), 'align' => 'right', 'sort' => 'DESC', 'tip' => __('The number of Graph Templates using this Color.'))
 	);
@@ -709,7 +785,7 @@ function color() {
 	$i = 0;
 	if (cacti_sizeof($colors)) {
 		foreach ($colors as $color) {
-			if ($color['graphs'] == 0 && $color['templates'] == 0) {
+			if ($color['graphs'] == 0 && $color['templates'] == 0 && $color['color_templates'] == 0) {
 				$disabled = false;
 			} else {
 				$disabled = true;
