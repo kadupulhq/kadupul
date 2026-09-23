@@ -163,13 +163,16 @@ function api_data_source_remove($local_data_id) {
 	api_data_source_cache_crc_update($poller_id);
 }
 
-function api_data_source_remove_multi($local_data_ids) {
+function api_data_source_remove_multi($local_data_ids, $propagate_remote = true, $verify_reviewed_scope = null) {
 	// Shortcut out if no data
 	if (!cacti_sizeof($local_data_ids)) {
 		return;
 	}
 
 	api_plugin_hook_function('data_source_remove', $local_data_ids);
+	if ($verify_reviewed_scope !== null) {
+		$verify_reviewed_scope();
+	}
 
 	$autoclean = read_config_option('rrd_autoclean');
 	$acmethod  = read_config_option('rrd_autoclean_method');
@@ -180,7 +183,7 @@ function api_data_source_remove_multi($local_data_ids) {
 
 	$local_data_ids_chunks = array_chunk($local_data_ids, 1000);
 	foreach ($local_data_ids_chunks as $ids_to_delete) {
-		$poller_ids = get_remote_poller_ids_from_data_sources($ids_to_delete);
+		$poller_ids = $propagate_remote ? get_remote_poller_ids_from_data_sources($ids_to_delete) : array();
 
 		if (is_array($ids_to_delete)) {
 			cacti_log("Found as an array");
@@ -362,7 +365,7 @@ function api_data_source_disable($local_data_id) {
 	}
 }
 
-function api_data_source_disable_multi($local_data_ids) {
+function api_data_source_disable_multi($local_data_ids, $propagate_remote = true) {
 	/* initialize variables */
 	$ids_to_disable = '';
 	$i = 0;
@@ -385,9 +388,9 @@ function api_data_source_disable_multi($local_data_ids) {
 			$i++;
 
 			if (!($i % 1000)) {
-				$poller_ids = array_rekey(db_fetch_assoc('SELECT poller_id
+				$poller_ids = $propagate_remote ? array_rekey(db_fetch_assoc('SELECT poller_id
 					FROM poller_item
-					WHERE local_data_id IN(' . $ids_to_disable . ')'), 'poller_id', 'poller_id');
+					WHERE local_data_id IN(' . $ids_to_disable . ')'), 'poller_id', 'poller_id') : array();
 
 				$all_poller_ids = $all_poller_ids + $poller_ids;
 
@@ -409,12 +412,12 @@ function api_data_source_disable_multi($local_data_ids) {
 		}
 
 		if ($i > 0) {
-			$poller_ids = array_rekey(
+			$poller_ids = $propagate_remote ? array_rekey(
 				db_fetch_assoc('SELECT poller_id
 					FROM poller_item
 					WHERE local_data_id IN(' . $ids_to_disable .')'),
 				'poller_id', 'poller_id'
-			);
+			) : array();
 
 			$all_poller_ids = $all_poller_ids + $poller_ids;
 
@@ -834,4 +837,3 @@ function api_data_input_more_inputs($id, $input_string) {
 		return false;
 	}
 }
-
