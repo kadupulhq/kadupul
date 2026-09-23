@@ -82,6 +82,29 @@ final class DeviceCollectorReplicationTest extends TestCase
         (new DeviceCollectorReplication())->purgeReviewedDependents($db, $snapshot);
     }
 
+    public function testCollectorRemovalScopeRequiresTransactionAndRejectsScopeChanges(): void
+    {
+        $db = $this->removalDatabase();
+        $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [11], [12]);
+        $replication = new DeviceCollectorReplication();
+        try {
+            $replication->assertRemovalScope($db, $snapshot);
+            self::fail('Collector scope was checked outside its transaction');
+        } catch (\LogicException $error) {
+            self::assertSame('Collector removal scope requires a transaction', $error->getMessage());
+        }
+        $db->exec('INSERT INTO graph_local VALUES (11,7); INSERT INTO data_local VALUES (12,7)');
+        $db->beginTransaction();
+        $replication->assertRemovalScope($db, $snapshot);
+        $db->exec('INSERT INTO graph_local VALUES (13,7)');
+        try {
+            $replication->assertRemovalScope($db, $snapshot);
+            self::fail('Changed collector scope was accepted');
+        } catch (\RuntimeException $error) {
+            self::assertSame('Collector removal scope changed', $error->getMessage());
+        }
+    }
+
     #[DataProvider('lateDependentDuringCleanup')]
     public function testLateReviewedChildIsNeverDeletedByParentScope(string $trigger, string $table): void
     {
