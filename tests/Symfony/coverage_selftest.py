@@ -66,6 +66,7 @@ def main():
         'src/Inventory/Application/Query/PrepareDeviceStateChange.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceStates.php',
         'src/Inventory/Application/Command/ClearDeviceStatistics.php',
+        'src/Inventory/Application/Command/SynchronizeDeviceTemplates.php',
         'src/Inventory/Infrastructure/Legacy/DeviceStatisticsReset.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceStateType.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceStateController.php',

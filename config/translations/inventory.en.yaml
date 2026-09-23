@@ -261,3 +261,8 @@
 "Confirm clearing statistics": "Confirm clearing statistics"
 "Selected device statistics cleared.": "Selected device statistics cleared."
 "Reset response times, poll counts and availability for these devices. Graphs, historical data and device settings are retained. Statistics resume with the next poll.": "Reset response times, poll counts and availability for these devices. Graphs, historical data and device settings are retained. Statistics resume with the next poll."
+
+"Synchronize device templates": "Synchronize device templates"
+"Confirm synchronization": "Confirm synchronization"
+"Selected device templates synchronized.": "Selected device templates synchronized."
+"Apply the current assigned templates to these devices. Missing graph and data-query associations are added, and unused graph-template associations may be removed. Devices without templates are skipped. Existing graphs and historical data are retained; automation may create new graphs.": "Apply the current assigned templates to these devices. Missing graph and data-query associations are added, and unused graph-template associations may be removed. Devices without templates are skipped. Existing graphs and historical data are retained; automation may create new graphs."

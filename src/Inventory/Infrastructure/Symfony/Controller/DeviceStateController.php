@@ -27,8 +27,8 @@ use Twig\Environment;
 
 final class DeviceStateController
 {
-    #[Route('/inventory/devices/{operation}', name: 'inventory_device_state', requirements: ['operation' => 'enable|disable|clear-statistics'], methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(string $operation, Request $request, PrepareDeviceStateChange $prepare, SetDevicesEnabled $setEnabled, \Kadupul\Inventory\Application\Command\ClearDeviceStatistics $clearStatistics, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    #[Route('/inventory/devices/{operation}', name: 'inventory_device_state', requirements: ['operation' => 'enable|disable|clear-statistics|sync-template'], methods: ['GET', 'HEAD', 'POST'])]
+    public function __invoke(string $operation, Request $request, PrepareDeviceStateChange $prepare, SetDevicesEnabled $setEnabled, \Kadupul\Inventory\Application\Command\ClearDeviceStatistics $clearStatistics, \Kadupul\Inventory\Application\Command\SynchronizeDeviceTemplates $synchronizeTemplates, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         try {
@@ -71,7 +71,9 @@ final class DeviceStateController
                     if (array_keys($selection->revisions) !== $ids) {
                         throw new \InvalidArgumentException('Invalid device selection.');
                     }
-                    if ($operation === 'clear-statistics') {
+                    if ($operation === 'sync-template') {
+                        $synchronizeTemplates($selection);
+                    } elseif ($operation === 'clear-statistics') {
                         $clearStatistics($selection);
                     } else {
                         $setEnabled($selection, $operation === 'enable');

@@ -210,3 +210,78 @@ def verify_device_statistics(harness, session, ids, check, remote=None, hidden=N
         check(actions()[len(before_repeat):] == [[['5', sorted(ids)]]], 'repeated statistics reset invokes action 5 once')
     finally:
         harness.sql("DELETE FROM plugin_hooks WHERE name='compatibility_test' AND hook='device_action_bottom' AND `function`='compatibility_statistics_action'")
+
+
+def verify_template_synchronization(harness, session, check, poller=1):
+    graphs = [int(value) for value in harness.sql('SELECT id FROM graph_templates WHERE id NOT IN (SELECT graph_template_id FROM snmp_query_graph) ORDER BY id LIMIT 3').splitlines()]
+    template = int(harness.sql("INSERT INTO host_template (hash,name) VALUES ('sync-template-fixture','Synchronization fixture'); SELECT LAST_INSERT_ID()").strip())
+    device = int(harness.sql(f"INSERT INTO host (description,hostname,poller_id,host_template_id,snmp_version,availability_method) VALUES ('sync-device-fixture','127.0.0.1',{poller},{template},0,0); SELECT LAST_INSERT_ID()").strip())
+    unassigned = int(harness.sql("INSERT INTO host (description,hostname,poller_id,host_template_id,snmp_version,availability_method) VALUES ('sync-unassigned-fixture','127.0.0.1',1,0,0,0); SELECT LAST_INSERT_ID()").strip())
+    ids = sorted([device, unassigned])
+    form = StateForm(harness, session, ids)
+    form.path = form.path.replace('/disable?', '/sync-template?')
+    prefix = 'create_remote.' if poller > 1 else ''
+    retained_graph = None
+    trigger = False
+    check(harness.php('-r', 'require "include/global.php"; function setup_sync_hooks() { api_plugin_register_hook("compatibility_test","device_action_bottom","compatibility_statistics_action","setup.php",true); api_plugin_register_hook("compatibility_test","device_template_change","compatibility_template_sync","setup.php",true); } setup_sync_hooks();')['exit'] == 0, 'template synchronization hook registered')
+    def actions():
+        events = harness.command('cat', '/artifacts/plugin.jsonl')['stdout']
+        return [json.loads(line)['args'] for line in events.splitlines() if json.loads(line).get('callback') == 'statistics_action']
+    def template_events():
+        events = harness.command('cat', '/artifacts/plugin.jsonl')['stdout']
+        return [json.loads(line)['args'] for line in events.splitlines() if json.loads(line).get('callback') == 'template_sync']
+    try:
+        retained_graph = int(harness.sql(f"INSERT INTO graph_local (host_id,graph_template_id) VALUES ({device},{graphs[2]}); SELECT LAST_INSERT_ID()").strip())
+        harness.sql(f'INSERT INTO host_graph (host_id,graph_template_id) VALUES ({device},{graphs[2]})')
+        harness.sql(f'INSERT INTO host_template_graph (host_template_id,graph_template_id) VALUES ({template},{graphs[0]})')
+        harness.sql(f'INSERT INTO host_graph (host_id,graph_template_id) VALUES ({device},{graphs[1]})')
+        if poller > 1:
+            harness.sql(f'INSERT INTO create_remote.host SELECT * FROM host WHERE id={device}')
+            harness.sql(f'INSERT INTO create_remote.host_graph SELECT * FROM host_graph WHERE host_id={device}')
+        fields = form.fields()
+        check(harness.sql(f'SELECT COUNT(*) FROM host_graph WHERE host_id={device} AND graph_template_id={graphs[0]}').strip() == '0', 'template synchronization GET does not add associations')
+        check(form.request(fields=fields, origin=False)[0] == 422, 'template synchronization requires same-origin CSRF')
+        missing = dict(fields)
+        missing.pop('device_state[_token]')
+        check(form.apply(missing) == 422, 'template synchronization requires CSRF token')
+        check(form.apply(fields | {'device_state[extra]': '1'}) == 422, 'template synchronization rejects unexpected fields')
+        harness.sql(f"UPDATE host SET description='changed-sync-fixture' WHERE id={device}")
+        check(form.apply(fields) == 409, 'template synchronization rejects stale device revisions')
+        harness.sql(f"UPDATE host SET description='sync-device-fixture' WHERE id={device}")
+        if poller > 1:
+            harness.sql(f"UPDATE poller SET last_status='2000-01-01 00:00:00' WHERE id={poller}")
+            try:
+                check(form.apply() == 502, 'template synchronization rejects offline collectors before writes')
+            finally:
+                harness.sql(f'UPDATE poller SET last_status=NOW() WHERE id={poller}')
+        before = actions()
+        harness.sql(f"CREATE TRIGGER {prefix}reject_template_sync BEFORE INSERT ON {prefix}host_graph FOR EACH ROW SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='sync association rejection'")
+        trigger = True
+        check(form.apply() == 502, 'template synchronization association failure cannot report success')
+        check(harness.sql(f'SELECT COUNT(*) FROM host_graph WHERE host_id={device} AND graph_template_id={graphs[0]}').strip() == '0', 'template synchronization failure rolls back primary associations')
+        check(actions() == before, 'failed synchronization does not invoke the bulk action callback')
+        harness.sql(f'DROP TRIGGER {prefix}reject_template_sync')
+        trigger = False
+        before_templates = template_events()
+        check(form.apply() == 200, 'template synchronization saves through Symfony')
+        check(template_events()[len(before_templates):] == [[{'device_id': device, 'device_template_id': template}]], 'template synchronization invokes the template-change hook once per assigned device')
+        check(actions()[len(before):] == [[['7', ids]]], 'template synchronization invokes action 7 once with complete selection')
+        for database in (['', 'create_remote.'] if poller > 1 else ['']):
+            check(harness.sql(f'SELECT COUNT(*) FROM {database}host_graph WHERE host_id={device} AND graph_template_id={graphs[0]}').strip() == '1', 'template synchronization adds required graph associations')
+            check(harness.sql(f'SELECT COUNT(*) FROM {database}host_graph WHERE host_id={device} AND graph_template_id={graphs[1]}').strip() == '0', 'template synchronization removes unused graph associations')
+        if poller > 1:
+            check(harness.sql(f'SELECT host_template_id FROM create_remote.host WHERE id={device}').strip() == str(template), 'remote template synchronization preserves assigned template identity')
+        check(harness.sql(f'SELECT COUNT(*) FROM graph_local WHERE id={retained_graph} AND host_id={device}').strip() == '1', 'template synchronization retains existing graphs')
+        check(harness.sql(f'SELECT COUNT(*) FROM host_graph WHERE host_id={device} AND graph_template_id={graphs[2]}').strip() == '1', 'template synchronization retains associations used by existing graphs')
+        check(harness.sql(f'SELECT host_template_id FROM host WHERE id={unassigned}').strip() == '0', 'template synchronization skips unassigned devices')
+        check(form.apply() == 200, 'template synchronization supports repeated synchronization')
+    finally:
+        if trigger:
+            harness.sql(f'DROP TRIGGER {prefix}reject_template_sync')
+        harness.sql("DELETE FROM plugin_hooks WHERE name='compatibility_test' AND hook='device_action_bottom' AND `function`='compatibility_statistics_action'")
+        harness.sql("DELETE FROM plugin_hooks WHERE name='compatibility_test' AND hook='device_template_change' AND `function`='compatibility_template_sync'")
+        if retained_graph is not None:
+            harness.sql(f'DELETE FROM graph_local WHERE id={retained_graph}')
+        for database in (['', 'create_remote.'] if poller > 1 else ['']):
+            harness.sql(f'DELETE FROM {database}host_graph WHERE host_id IN ({device},{unassigned}); DELETE FROM {database}host WHERE id IN ({device},{unassigned})')
+        harness.sql(f'DELETE FROM host_template_graph WHERE host_template_id={template}; DELETE FROM host_template WHERE id={template}')
