@@ -662,7 +662,12 @@ function manager_logs($id, $header_label) {
 		SNMPAGENT_EVENT_SEVERITY_CRITICAL => '#FF00FF'
 	);
 
-	if (isset_request_var('purge')) {
+	/* csrf-magic only checks the token on POST, and the Purge button posts one,
+	   so a GET must not purge. utilities.php guards its copy of this log the
+	   same way. */
+	if (isset_request_var('purge') && (!isset($_POST['__csrf_magic']) || !isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST')) {
+		cacti_log('WARNING: Rejected non-POST request to purge the SNMP Agent notification log from IP ' . get_client_addr(), false, 'AUTH');
+	} elseif (isset_request_var('purge')) {
 		db_execute_prepared('DELETE FROM snmpagent_notifications_log WHERE manager_id = ?', array($id));
 		set_request_var('clear', true);
 	}
