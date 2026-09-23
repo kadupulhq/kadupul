@@ -20,7 +20,16 @@ final class DeviceAssociationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $targets = $options['targets'];
-        $builder->add('revision', HiddenType::class)->add('operation', ChoiceType::class, ['label' => 'Association change', 'choices' => ['Add association' => 'add', 'Remove association' => 'remove'], 'placeholder' => 'Select a change'])->add('target', ChoiceType::class, [
+        $operations = ['Add association' => 'add', 'Remove association' => 'remove'];
+        if ($options['kind'] === 'query') {
+            $operations['Change reindex method'] = 'change';
+            $methods = ['None' => 0, 'Index count' => 2, 'Verify all' => 3];
+            if ($options['snmp_enabled']) {
+                $methods['Uptime'] = 1;
+            }
+            $builder->add('reindex', ChoiceType::class, ['label' => 'Reindex method', 'choices' => $methods, 'invalid_message' => $this->translator->trans('Select a valid association change.', [], 'inventory')]);
+        }
+        $builder->add('revision', HiddenType::class)->add('operation', ChoiceType::class, ['label' => 'Association change', 'choices' => $operations, 'placeholder' => 'Select a change'])->add('target', ChoiceType::class, [
             'label' => 'Assignment target',
             'choices' => array_map('intval', array_keys($targets)),
             'choice_label' => static fn(int $id): string => $targets[$id],
@@ -34,6 +43,8 @@ final class DeviceAssociationType extends AbstractType
     {
         $resolver->setRequired(['targets']);
         $resolver->setAllowedTypes('targets', 'array');
-        $resolver->setDefaults(['translation_domain' => 'inventory', 'csrf_protection' => true, 'csrf_token_id' => 'inventory_device_associations', 'method' => 'POST']);
+        $resolver->setDefaults(['kind' => 'graph', 'snmp_enabled' => true, 'translation_domain' => 'inventory', 'csrf_protection' => true, 'csrf_token_id' => 'inventory_device_associations', 'method' => 'POST']);
+        $resolver->setAllowedTypes('snmp_enabled', 'bool');
+        $resolver->setAllowedValues('kind', ['graph', 'query']);
     }
 }

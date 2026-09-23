@@ -132,6 +132,7 @@ def main():
     assignment_checks = ['bulk site assigns through Symfony', 'bulk template assigns through Symfony', 'bulk site failure rolls back whole primary selection', 'bulk template failure rolls back whole primary selection', 'bulk collector moves full selection to remote', 'bulk collector returns full selection to primary', 'bulk collector purges old remote copies']
     snmp_checks = ['bulk SNMP never displays stored credentials', 'bulk SNMP keeps each device credentials through Symfony', 'bulk SNMP validates all stored credentials before writes', 'bulk SNMP failure rolls back entire primary selection', 'bulk SNMP replaces credentials through Symfony', 'bulk SNMP verifies remote credentials', 'bulk SNMP secrets stay out of database diagnostics']
     graph_checks = ['graph association adds through Symfony', 'graph association removes through Symfony', 'graph association failure rolls back primary writes', 'graph association verifies remote template', 'graph association removal retains existing graphs']
+    query_checks = ['query association adds through Symfony', 'query association removes through Symfony', 'query association failure rolls back primary writes', 'query reindex method changes through Symfony', 'query reindex method is verified on collector', 'query removal retains existing graphs', 'query removal clears associations cache and reindex state']
     option_checks = ['bulk options save through Symfony', 'bulk options failure rolls back entire primary batch', 'bulk options verifies remote values', 'bulk options changes selected fields and preserves unchecked values', 'bulk options invokes action 4 once for the complete selection', 'rejected bulk options do not invoke action 4']
     failures = {
         'source-hash': 'Covered source differs',
@@ -178,6 +179,8 @@ def main():
         failures['missing-snmp-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(graph_checks)):
         failures['missing-graph-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(query_checks)):
+        failures['missing-query-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(option_checks)):
         failures['missing-option-check-' + str(index)] = 'Incomplete Symfony integration'
     for source in required:
@@ -234,6 +237,9 @@ def main():
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case.startswith('missing-graph-check-'):
                 missing = graph_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-query-check-'):
+                missing = query_checks[int(case.rsplit('-', 1)[1])]
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case.startswith('missing-option-check-'):
                 missing = option_checks[int(case.rsplit('-', 1)[1])]

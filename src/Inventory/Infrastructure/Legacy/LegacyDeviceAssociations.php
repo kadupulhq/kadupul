@@ -17,7 +17,7 @@ final readonly class LegacyDeviceAssociations implements DeviceAssociationStore
     public function __construct(private DatabaseConnection $database, private LegacyDeviceVisibility $visibility, private DeviceAssociationRecords $records, private string $projectDir) {}
     public function findVisible(int $actorId, int $id, string $kind): ?DeviceAssociations
     {
-        $query = $this->database->get()->prepare("SELECT DISTINCT h.id, h.description, h.site_id, h.poller_id, h.host_template_id FROM host h LEFT JOIN graph_local gl ON gl.host_id = h.id WHERE h.id = ? AND h.deleted = '' AND (" . $this->visibility->predicate($actorId) . ')');
+        $query = $this->database->get()->prepare("SELECT DISTINCT h.id, h.description, h.site_id, h.poller_id, h.host_template_id, h.snmp_version FROM host h LEFT JOIN graph_local gl ON gl.host_id = h.id WHERE h.id = ? AND h.deleted = '' AND (" . $this->visibility->predicate($actorId) . ')');
         $query->execute([$id]);
         $row = $query->fetch(\PDO::FETCH_ASSOC);
         return $row ? $this->records->snapshot($this->database->get(), $row, $kind) : null;
@@ -28,6 +28,6 @@ final readonly class LegacyDeviceAssociations implements DeviceAssociationStore
     }
     public function change(int $actorId, int $id, DeviceAssociationChange $change, string $revision): void
     {
-        DeviceAssignmentProcess::run($this->database->get(), $this->projectDir, 'associations', ['actor' => $actorId, 'id' => $id, 'kind' => $change->kind, 'operation' => $change->operation, 'target' => $change->targetId, 'revision' => $revision]);
+        DeviceAssignmentProcess::run($this->database->get(), $this->projectDir, 'associations', ['actor' => $actorId, 'id' => $id, 'kind' => $change->kind, 'operation' => $change->operation, 'target' => $change->targetId, 'revision' => $revision, 'reindex' => $change->reindexMethod]);
     }
 }

@@ -23,13 +23,14 @@ try {
         throw new InvalidArgumentException('Invalid command');
     }
     $command = json_decode($input, true, 8, JSON_THROW_ON_ERROR);
-    if (!is_array($command) || array_diff(array_keys($command), ['actor', 'id', 'kind', 'operation', 'target', 'revision']) !== []
+    if (!is_array($command) || array_diff(array_keys($command), ['actor', 'id', 'kind', 'operation', 'target', 'revision', 'reindex']) !== []
         || !is_int($command['actor'] ?? null) || $command['actor'] < 1
         || !is_int($command['id'] ?? null) || $command['id'] < 1 || $command['id'] > 16777215
+        || !is_int($command['target'] ?? null) || !is_int($command['reindex'] ?? 0)
         || !is_string($command['revision'] ?? null)) {
         throw new InvalidArgumentException('Invalid command');
     }
-    $change = new DeviceAssociationChange($command['kind'] ?? '', $command['operation'] ?? '', $command['target'] ?? 0);
+    $change = new DeviceAssociationChange($command['kind'] ?? '', $command['operation'] ?? '', $command['target'] ?? 0, $command['reindex'] ?? 0);
     $connection = $database_sessions["$database_hostname:$database_port:$database_default"];
     if ((int) ($config['poller_id'] ?? 0) !== 1 || !db_execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') || !db_begin_transaction()) {
         throw new RuntimeException('Primary transaction unavailable');
@@ -46,7 +47,7 @@ try {
     $records = new DeviceAssociationRecords();
     $device = $records->snapshot($connection, $row, $change->kind, true);
     $device->assertChange($change, $command['revision']);
-    if ($change->operation === 'add' && !array_key_exists($change->targetId, $records->available($connection, $change->kind, true))) {
+    if ($change->operation !== 'remove' && !array_key_exists($change->targetId, $records->available($connection, $change->kind, true))) {
         throw new InvalidArgumentException('Invalid association target');
     }
     $query = $connection->prepare('SELECT id FROM poller WHERE id = ? FOR UPDATE');

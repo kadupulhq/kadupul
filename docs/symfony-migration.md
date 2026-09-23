@@ -974,3 +974,15 @@ templates can be added. The worker rechecks visibility and locks the device and
 association rows, preserves automation/plugin hooks on addition, verifies primary
 and remote state and retains existing graphs on removal. Primary rollback cannot
 undo remote or automation side effects; failures require inspection before retry.
+
+
+### Data-query associations and reindex settings
+
+`/inventory/devices/{id}/associations/query` extends the association use case with
+query addition, removal and reindex-method changes. Revisions include methods and
+SNMP availability; uptime reindex is unavailable when SNMP is disabled. The worker
+uses the existing data-query APIs and verifies the stored association/method on
+both collectors. Removal confirms query cache and reindex-state cleanup while
+retaining graphs. Discovery follows device availability; saving an association is
+not evidence that a live discovery completed. Explicit diagnostic actions are a
+separate workflow.

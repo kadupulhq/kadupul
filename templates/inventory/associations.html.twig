@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
-{% block title %}{{ 'Device graph-template associations'|trans({}, 'inventory') }} · Kadupul{% endblock %}
+{% set heading = kind == 'query' ? 'Device data-query associations' : 'Device graph-template associations' %}
+{% block title %}{{ heading|trans({}, 'inventory') }} · Kadupul{% endblock %}
 {% block body %}
 <main>
-    <h1>{{ 'Device graph-template associations'|trans({}, 'inventory') }} — {{ device.description }}</h1>
+    <h1>{{ heading|trans({}, 'inventory') }} — {{ device.description }}</h1>
     {% if saved %}<p><output>{{ 'Device associations updated.'|trans({}, 'inventory') }}</output></p>{% endif %}
     <p>{{ 'Removing an association retains existing graphs and historical data. Adding an association may create graphs through automation. Affected collectors must be online.'|trans({}, 'inventory') }}</p>
-    <ul>{% for id, name in device.items %}<li>{{ name }} (#{{ id }})</li>{% else %}<li>{{ 'None'|trans({}, 'inventory') }}</li>{% endfor %}</ul>
+    <ul>{% for id, name in device.items %}<li>{{ name }} (#{{ id }}){% if kind == 'query' %} — {{ 'Reindex method'|trans({}, 'inventory') }}: {{ {0: 'None', 1: 'Uptime', 2: 'Index count', 3: 'Verify all'}[device.methods[id]]|default('Unknown')|trans({}, 'inventory') }}{% endif %}</li>{% else %}<li>{{ 'None'|trans({}, 'inventory') }}</li>{% endfor %}</ul>
     {{ form_start(form) }}{{ form_errors(form) }}{{ form_widget(form) }}
         <button type="submit">{{ 'Save association'|trans({}, 'inventory') }}</button>
     {{ form_end(form) }}

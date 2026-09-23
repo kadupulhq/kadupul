@@ -8,6 +8,8 @@
     <p><a href="{{ path('inventory_device_details', {id: device.id, list: filters}) }}">{{ 'View device details'|trans({}, 'inventory') }}</a></p>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() encodes fixed-route parameters. #}
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony association route and validated context. #}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony association route and validated context. #}
+    <p><a href="{{ path('inventory_device_associations', {id: device.id, kind: 'query', list: filters}) }}">{{ 'Device data-query associations'|trans({}, 'inventory') }}</a></p>
     <p><a href="{{ path('inventory_device_associations', {id: device.id, kind: 'graph', list: filters}) }}">{{ 'Device graph-template associations'|trans({}, 'inventory') }}</a></p>
     <p><a href="{{ path('inventory_device_template', {id: device.id, list: filters}) }}">{{ 'Assign device template'|trans({}, 'inventory') }}</a></p>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() encodes fixed-route parameters. #}

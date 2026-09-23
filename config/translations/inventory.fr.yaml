@@ -302,3 +302,10 @@
 "Select a valid association change.": "Sélectionnez une modification d’association valide."
 "Save association": "Enregistrer l’association"
 "Select a valid device associations.": "Sélectionnez une association valide."
+
+"Device data-query associations": "Associations de requêtes de données de l’appareil"
+"Change reindex method": "Modifier la méthode de réindexation"
+"Reindex method": "Méthode de réindexation"
+"Index count": "Nombre d’index"
+"Verify all": "Tout vérifier"
+"Uptime": "Temps de fonctionnement"
