@@ -752,7 +752,13 @@ CLI filename is platform-specific (`php.exe` on Windows).
 The Symfony device editor now includes site assignment and explicit Unassigned.
 `ListAssignableSites` authorizes the choices query through a dedicated Inventory
 port; site administrators can select any current site, while device visibility
-still controls which devices they may edit. The domain revision includes site ID,
+still controls which devices they may edit. Its infrastructure adapter uses a
+module-owned Doctrine DBAL connection;
+the application query and returned site map remain unchanged. The connection
+retains the installation's TLS certificate verification, UTF-8 and native
+prepare settings. Other read adapters and all write transactions keep their
+existing persistence path until migrated and covered independently.
+The domain revision includes site ID,
 so an assignment changed in another editor invalidates stale forms. Missing or
 invalid submitted choices cannot silently unassign a device.
 
