@@ -102,7 +102,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'maintenance failure rolls back primary debug settings',
         'maintenance refreshes polling cache through Symfony',
         'maintenance connectivity probes the real SNMP fixture',
-        'maintenance executes reload-query against the SNMP fixture', 'maintenance executes reindex against the SNMP fixture',
+        'collector ping returns sanitized diagnostics', 'collector runquery returns sanitized diagnostics', 'maintenance executes reload-query against the SNMP fixture', 'maintenance executes reindex against the SNMP fixture',
         'maintenance executes query-diagnostics against the SNMP fixture',
         'maintenance rejects stale device settings',
         'graph association adds through Symfony',
