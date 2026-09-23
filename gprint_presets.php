@@ -100,10 +100,22 @@ function form_save() {
    which is what the Deletable column promises. The delete applies the same rule,
    or a forged selection leaves graph items naming a preset that is gone. */
 function gprint_deletable($ids) {
-	/* The posted ids are strings, and MySQL matches '007' to 7. Compare and
-	   delete the canonical integers, or a non-canonical id skips the lookup
-	   and still deletes the row. */
-	$ids = array_values(array_unique(array_map('intval', $ids)));
+	/* The posted ids are strings, and MySQL matches '007' to 7 but not '3.9' to
+	   3. Keep only decimal integers, so the lookup and the delete agree on the
+	   same rows and intval() cannot widen the selection. */
+	$canonical = array();
+
+	foreach ($ids as $id) {
+		if (preg_match('/^[0-9]+$/', (string) $id)) {
+			$canonical[] = (int) $id;
+		}
+	}
+
+	$ids = array_values(array_unique($canonical));
+
+	if (!cacti_sizeof($ids)) {
+		return array();
+	}
 
 	$rows = db_fetch_assoc('SELECT DISTINCT gprint_id
 		FROM graph_templates_item
@@ -432,7 +444,7 @@ function gprint_presets() {
 	$gprint_list = db_fetch_assoc("SELECT rs.*,
 		SUM(CASE WHEN local_graph_id=0 THEN 1 ELSE 0 END) AS templates,
 		SUM(CASE WHEN local_graph_id>0 THEN 1 ELSE 0 END) AS graphs,
-		(SELECT COUNT(*) FROM graph_templates_graph AS gtg WHERE gtg.right_axis_format = rs.id) AS axis
+		COALESCE(axis.total, 0) AS axis
 		FROM (
 			SELECT gp.*, gti.local_graph_id
 			FROM graph_templates_gprint AS gp
@@ -440,6 +452,13 @@ function gprint_presets() {
 			ON gti.gprint_id=gp.id
 			GROUP BY gp.id, gti.graph_template_id, gti.local_graph_id
 		) AS rs
+		LEFT JOIN (
+			SELECT right_axis_format, COUNT(*) AS total
+			FROM graph_templates_graph
+			WHERE right_axis_format > 0
+			GROUP BY right_axis_format
+		) AS axis
+		ON axis.right_axis_format = rs.id
 		$sql_where
 		GROUP BY rs.id
 		$sql_having

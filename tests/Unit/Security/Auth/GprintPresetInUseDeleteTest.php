@@ -100,6 +100,11 @@ test('a preset used only as a right axis format is kept', function () {
 	expect(run_delete(array(1, 9)))->toBe(array('deleted' => array(1), 'message' => 'gprint_in_use'));
 });
 
+test('a numeric id that is not an integer is refused', function () {
+	// MySQL would not match '3.9' to id 3, so the delete must not either.
+	expect(run_delete(array('3.9', '3x', '')))->toBe(array('deleted' => array(), 'message' => 'gprint_in_use'));
+});
+
 test('a failed lookup deletes nothing rather than everything', function () {
 	// db_fetch_assoc returns false on a SQL error, which must not read as "none in use".
 	expect(run_delete(array(1, 3), true))->toBe(array('deleted' => array(), 'message' => 'gprint_in_use'));
