@@ -221,8 +221,8 @@ final class DeviceCollectorReplication
             if (!$current->execute($parents) || array_map('intval', $current->fetchAll(PDO::FETCH_COLUMN)) !== $reviewedIds) {
                 throw new \RuntimeException('Collector dependent scope changed');
             }
-            $delete = $source->prepare("DELETE FROM $table WHERE id IN (" . implode(',', array_fill(0, count($reviewedIds), '?')) . ')');
-            if (!$delete->execute($reviewedIds)) {
+            $delete = $source->prepare("DELETE FROM $table WHERE id IN (" . implode(',', array_fill(0, count($reviewedIds), '?')) . ") AND $where");
+            if (!$delete->execute([...$reviewedIds, ...$parents])) {
                 throw new \RuntimeException('Previous collector dependent cleanup failed');
             }
         }
