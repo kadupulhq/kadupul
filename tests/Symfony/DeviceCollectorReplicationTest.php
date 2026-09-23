@@ -81,7 +81,7 @@ final class DeviceCollectorReplicationTest extends TestCase
         $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [11], [12]);
         $replication = new DeviceCollectorReplication();
         $receipt = $replication->purgeReviewedDependents($db, $snapshot);
-        self::assertSame(['templates' => [101], 'rrds' => [], 'graph_items' => []], $receipt);
+        self::assertSame(['templates' => [101], 'rrds' => [], 'graph_items' => [], 'tree_items' => [], 'report_items' => [], 'poller_items' => []], $receipt);
         $db->exec('DELETE FROM data_local; DELETE FROM graph_local');
         $db->exec($insert);
         $this->expectException(\RuntimeException::class);
@@ -138,7 +138,7 @@ final class DeviceCollectorReplicationTest extends TestCase
         $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [11], [12]);
         $replication = new DeviceCollectorReplication();
         $receipt = $replication->purgeReviewedDependents($db, $snapshot);
-        self::assertSame(['templates' => [101], 'rrds' => [102], 'graph_items' => [103]], $receipt);
+        self::assertSame(['templates' => [101], 'rrds' => [102], 'graph_items' => [103], 'tree_items' => [], 'report_items' => [], 'poller_items' => []], $receipt);
         $db->exec('DELETE FROM data_local; DELETE FROM graph_local');
         $db->exec($insert);
         $this->expectException(\RuntimeException::class);
@@ -168,13 +168,33 @@ final class DeviceCollectorReplicationTest extends TestCase
         (new DeviceCollectorReplication())->verifyPurged($db, 7, $snapshot, ['templates' => [101], 'rrds' => [102], 'graph_items' => [103]]);
     }
 
+    #[DataProvider('placementIdentities')]
+    public function testReassignedPlacementCannotEscapeCapturedReceipt(string $table, string $insert): void
+    {
+        $db = $this->removalDatabase();
+        $db->exec($insert);
+        $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [], []);
+        $replication = new DeviceCollectorReplication();
+        $receipt = $replication->purgeReviewedDependents($db, $snapshot);
+        $db->exec("UPDATE $table SET host_id = 99 WHERE host_id = 7");
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Reviewed collector placement identity remains');
+        $replication->verifyPurged($db, 7, $snapshot, $receipt);
+    }
+    public static function placementIdentities(): iterable
+    {
+        yield ['graph_tree_items', 'INSERT INTO graph_tree_items VALUES (7,101)'];
+        yield ['reports_items', 'INSERT INTO reports_items VALUES (7,102)'];
+        yield ['poller_item', "INSERT INTO poller_item VALUES (7,12,'traffic')"];
+    }
+
     private function removalDatabase(): PDO
     {
         $db = new PDO('sqlite::memory:');
         foreach ([
             'host' => 'id INTEGER', 'host_graph' => 'host_id INTEGER', 'host_snmp_query' => 'host_id INTEGER',
-            'host_snmp_cache' => 'host_id INTEGER', 'poller_item' => 'host_id INTEGER', 'poller_reindex' => 'host_id INTEGER',
-            'graph_tree_items' => 'host_id INTEGER', 'reports_items' => 'host_id INTEGER', 'poller_command' => 'command TEXT',
+            'host_snmp_cache' => 'host_id INTEGER', 'poller_item' => 'host_id INTEGER, local_data_id INTEGER, rrd_name TEXT', 'poller_reindex' => 'host_id INTEGER',
+            'graph_tree_items' => 'host_id INTEGER, id INTEGER', 'reports_items' => 'host_id INTEGER, id INTEGER', 'poller_command' => 'command TEXT',
             'data_local' => 'id INTEGER, host_id INTEGER', 'graph_local' => 'id INTEGER, host_id INTEGER',
             'data_template_data' => 'id INTEGER, local_data_id INTEGER', 'data_template_rrd' => 'id INTEGER, local_data_id INTEGER',
             'data_input_data' => 'data_template_data_id INTEGER', 'graph_templates_item' => 'id INTEGER PRIMARY KEY, local_graph_id INTEGER, task_item_id INTEGER',
