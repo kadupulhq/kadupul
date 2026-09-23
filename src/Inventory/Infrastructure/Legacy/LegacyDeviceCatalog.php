@@ -23,8 +23,13 @@ final readonly class LegacyDeviceCatalog implements DeviceCatalog
         $parameters = [];
         if ($criteria->search !== '') {
             $pattern = '%' . strtr($criteria->search, ['!' => '!!', '%' => '!%', '_' => '!_']) . '%';
-            $where .= " AND (h.description LIKE ? ESCAPE '!' OR h.hostname LIKE ? ESCAPE '!' OR h.location LIKE ? ESCAPE '!' OR h.external_id LIKE ? ESCAPE '!')";
+            $where .= " AND (h.description LIKE ? ESCAPE '!' OR h.hostname LIKE ? ESCAPE '!' OR h.location LIKE ? ESCAPE '!' OR h.external_id LIKE ? ESCAPE '!'";
             $parameters = [$pattern, $pattern, $pattern, $pattern];
+            if (ctype_digit($criteria->search) && strlen($criteria->search) <= 8 && (int) $criteria->search <= 16777215) {
+                $where .= ' OR h.id = ?';
+                $parameters[] = (int) $criteria->search;
+            }
+            $where .= ')';
         }
         if ($criteria->state === 'disabled') {
             $where .= " AND h.disabled = 'on'";

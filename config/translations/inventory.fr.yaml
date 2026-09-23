@@ -388,3 +388,5 @@
 "Confirm applying automation rules": "Confirmer l’application des règles d’automatisation"
 "Device automation rules applied.": "Les règles d’automatisation des appareils ont été appliquées."
 "Apply existing graph and tree automation rules to the selected devices. Rules may create graphs, data sources and tree entries.": "Appliquez les règles existantes de graphiques et d’arbres aux appareils sélectionnés. Les règles peuvent créer des graphiques, des sources de données et des entrées d’arbre."
+
+"Invalid location search.": "Recherche de localisation invalide."

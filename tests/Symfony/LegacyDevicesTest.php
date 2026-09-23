@@ -64,6 +64,15 @@ final class LegacyDevicesTest extends TestCase
             parse_str(parse_url($response->headers->get('Location'), PHP_URL_QUERY), $filters);
             self::assertSame('Rack Undefined', $filters['location']);
 
+            foreach (['10' => '25', '30' => '50', '100' => '100', '250' => '100', '5000' => '100'] as $rows => $size) {
+                $response = $kernel->handle(Request::create($base . '?rows=' . $rows));
+                self::assertSame(302, $response->getStatusCode());
+                parse_str(parse_url($response->headers->get('Location'), PHP_URL_QUERY), $filters);
+                self::assertSame($size, $filters['size']);
+            }
+            foreach (['0', '-2', 'garbage', '10000000000000000000'] as $rows) {
+                self::assertSame(400, $kernel->handle(Request::create($base . '?rows=' . $rows))->getStatusCode());
+            }
             foreach (['?action=edit&id[]=7','?action=edit&id=-1','?host_status=invalid','?host_template_id=999999999','?location[]=rack'] as $query) {
                 self::assertSame(400, $kernel->handle(Request::create($base . $query))->getStatusCode());
             }

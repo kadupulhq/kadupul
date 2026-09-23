@@ -95,7 +95,7 @@ final class LegacyDevicesController
                     'description' => 'name', 'hostname' => 'hostname', default => throw new \InvalidArgumentException()
                 },
                 'direction' => strtolower($query['sort_direction'] ?? 'ASC'), 'page' => $query['page'] ?? '1',
-                'size' => ($query['rows'] ?? '-1') === '-1' ? '25' : $query['rows'],
+                'size' => self::pageSize($query['rows'] ?? '-1'),
             ];
             foreach (['site_id' => 'site','host_template_id' => 'template','poller_id' => 'collector'] as $old => $new) {
                 $filters[$new] = ($query[$old] ?? '-1') === '-1' ? '' : $query[$old];
@@ -112,4 +112,16 @@ final class LegacyDevicesController
             return new Response($translator->trans('Invalid device list filters.', [], 'inventory'), 400, $headers);
         }
     }
+    private static function pageSize(string $rows): string
+    {
+        if ($rows === '-1') {
+            return '25';
+        }
+        // Legacy menus allowed larger pages. Saved links use the nearest bounded size.
+        if (!in_array($rows, ['10', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '30', '40', '44', '45', '50', '100', '250', '500', '750', '1000', '2000', '3000', '4000', '5000'], true)) {
+            throw new \InvalidArgumentException('Invalid device list filters.');
+        }
+        return (int) $rows <= 25 ? '25' : ((int) $rows <= 50 ? '50' : '100');
+    }
+
 }
