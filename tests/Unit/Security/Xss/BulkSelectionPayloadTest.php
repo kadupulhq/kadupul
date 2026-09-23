@@ -38,11 +38,24 @@ function round_trip($payload) {
 }
 
 test('a selection of ids survives the confirmation page', function () {
-	$items = array('1', '0042', 3);
+	$ids = array(3, 4, 5);
 
-	// An ASCII payload keeps its historic shape, so a plugin reading the field
-	// directly sees what it always saw.
-	expect(selected_items_payload($items))->toBe(serialize($items))
+	// Ids alone carry nothing the escaping touches, so the payload keeps its
+	// historic shape and a plugin reading the field directly still works.
+	expect(selected_items_payload($ids))->toBe(serialize($ids))
+		->and(unserialize(selected_items_decode(round_trip(selected_items_payload($ids))), array('allowed_classes' => false)))->toBe($ids);
+
+	// Anything carrying a quote or a bracket is encoded rather than escaped.
+	$strings = array('1', '0042', 3);
+
+	expect(selected_items_payload($strings))->toBe(base64_encode(serialize($strings)))
+		->and(unserialize(selected_items_decode(round_trip(selected_items_payload($strings))), array('allowed_classes' => false)))->toBe($strings);
+});
+
+test('a payload that could carry markup is never rendered raw', function () {
+	$items = array('"><script>alert(1)</script>' => 1);
+
+	expect(selected_items_payload($items))->toMatch('/^[A-Za-z0-9+\/=]+$/')
 		->and(unserialize(selected_items_decode(round_trip(selected_items_payload($items))), array('allowed_classes' => false)))->toBe($items);
 });
 
