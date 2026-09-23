@@ -231,6 +231,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Added
 
+- Add a generated inventory of HTTP entry points and their gates, verified in CI, and a real-install sweep that requires anonymous, revoked-realm and console-only callers to be refused.
+
 - Add a Symfony device details page with permission-filtered metadata, site, status and escaped notes, preserving inventory navigation.
 
 - Filter Symfony Inventory by site, with permission-aware site choices and preserved list/export/editor context.

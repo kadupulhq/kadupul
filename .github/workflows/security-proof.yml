@@ -52,6 +52,15 @@ jobs:
       - name: Verify no new architectural hotspots
         run: tests/security/verify_architectural_hotspots.sh
 
+      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+        with:
+          install_args: python@3.12.12
+
+      # Fails on any added, removed or reclassified entry point, and on any
+      # entry point whose gate the generator cannot read from the code.
+      - name: Verify entry-point gate inventory
+        run: mise exec python@3.12.12 -- tests/security/verify_entry_point_inventory.sh
+
   branding-migration-guard:
     name: branding migration (utf8mb4 and latin1)
     runs-on: ubuntu-latest
