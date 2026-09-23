@@ -144,7 +144,11 @@ try {
         $status = 'shared';
         throw new RuntimeException('Shared graph dependencies');
     }
-    $verifyReviewedScope = static function () use ($connection, $graphs, $data, $reviewed, $policy): void {
+    $primaryReceipt = $policy === DeviceRemovalPolicy::Purge
+        ? \Kadupul\Inventory\Infrastructure\Legacy\DeviceRemovalDependencyReceipt::capture($connection, $graphs, $data)
+        : null;
+    $verifyReviewedScope = static function () use ($connection, $graphs, $data, $reviewed, $policy, $primaryReceipt): void {
+        $primaryReceipt?->assertExclusive($connection);
         if (!DeviceRemovalDependencies::ownsRemaining($connection, $reviewed)) {
             throw new RuntimeException('Reviewed graph or data-source ownership changed');
         }
@@ -181,7 +185,8 @@ try {
             api_data_source_remove_multi(array_column($remainingData, 'id'), false, $verifyReviewedScope);
         }
     }
-    $verifyRemoval = static function () use ($snapshots, $connection, $read, $policy, $remotes, $verifier, $reviewedRemoteTemplates): void {
+    $verifyRemoval = static function () use ($snapshots, $connection, $read, $policy, $remotes, $verifier, $reviewedRemoteTemplates, $primaryReceipt): void {
+        $primaryReceipt?->assertPurged($connection);
         foreach ($snapshots as $snapshot) {
             $device = $snapshot->device;
             $remaining = $read($connection, 'SELECT deleted, poller_id FROM host WHERE id = ?', [$device->id]);
