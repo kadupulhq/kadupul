@@ -120,32 +120,44 @@ final class DeviceCollectorReplication
         // Delete children while their ownership can still be discovered. The
         // legacy purge removes the parent rows without foreign-key cascades.
         foreach ([
-            'data_input_data' => ['data_template_data_id IN (SELECT id FROM data_template_data WHERE local_data_id IN (%s))', $snapshot->dataSourceIds],
-            'data_template_rrd' => ['local_data_id IN (%s)', $snapshot->dataSourceIds],
-            'data_template_data' => ['local_data_id IN (%s)', $snapshot->dataSourceIds],
-            'graph_templates_item' => ['local_graph_id IN (%s)', $snapshot->graphIds],
+            'data_input_data' => ['data_template_data_id IN (SELECT id FROM data_template_data WHERE local_data_id IN (SELECT id FROM data_local WHERE host_id = ? AND id IN (%s)))', $snapshot->dataSourceIds],
+            'data_template_rrd' => ['local_data_id IN (SELECT id FROM data_local WHERE host_id = ? AND id IN (%s))', $snapshot->dataSourceIds],
+            'data_template_data' => ['local_data_id IN (SELECT id FROM data_local WHERE host_id = ? AND id IN (%s))', $snapshot->dataSourceIds],
+            'graph_templates_item' => ['local_graph_id IN (SELECT id FROM graph_local WHERE host_id = ? AND id IN (%s))', $snapshot->graphIds],
         ] as $table => [$where, $ids]) {
             if ($ids === []) {
                 continue;
             }
             $where = sprintf($where, implode(',', array_fill(0, count($ids), '?')));
+            $parameters = [$snapshot->device->id, ...$ids];
             $delete = $source->prepare("DELETE FROM $table WHERE $where");
-            if (!$delete->execute($ids)) {
+            if (!$delete->execute($parameters)) {
                 throw new \RuntimeException('Previous collector dependent cleanup failed');
             }
             $verify = $source->prepare("SELECT COUNT(*) FROM $table WHERE $where");
-            if (!$verify->execute($ids) || (int) $verify->fetchColumn() !== 0) {
+            if (!$verify->execute($parameters) || (int) $verify->fetchColumn() !== 0) {
                 throw new \RuntimeException('Previous collector dependents remain');
             }
         }
     }
 
-    public function verifyPurged(PDO $source, int $deviceId): void
+    public function verifyPurged(PDO $source, int $deviceId, ?DeviceRemoval $snapshot = null): void
     {
         foreach (['host' => 'id', 'host_graph' => 'host_id', 'host_snmp_query' => 'host_id', 'host_snmp_cache' => 'host_id', 'poller_item' => 'host_id', 'poller_reindex' => 'host_id', 'graph_tree_items' => 'host_id', 'reports_items' => 'host_id', 'data_local' => 'host_id', 'graph_local' => 'host_id'] as $table => $column) {
             $query = $source->prepare("SELECT COUNT(*) FROM $table WHERE $column = ?");
             if (!$query->execute([$deviceId]) || (int) $query->fetchColumn() !== 0) {
                 throw new \RuntimeException('Previous collector cleanup could not be confirmed');
+            }
+        }
+        if ($snapshot !== null) {
+            foreach (['graph_local' => $snapshot->graphIds, 'data_local' => $snapshot->dataSourceIds] as $table => $ids) {
+                if ($ids === []) {
+                    continue;
+                }
+                $query = $source->prepare("SELECT COUNT(*) FROM $table WHERE id IN (" . implode(',', array_fill(0, count($ids), '?')) . ')');
+                if (!$query->execute($ids) || (int) $query->fetchColumn() !== 0) {
+                    throw new \RuntimeException('Reviewed collector association remains');
+                }
             }
         }
         $query = $source->prepare("SELECT COUNT(*) FROM poller_command WHERE SUBSTRING_INDEX(command, ':', 1) = ?");
