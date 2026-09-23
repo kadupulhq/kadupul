@@ -279,11 +279,13 @@ def verify_template_synchronization(harness, session, check, poller=1):
         check(form.apply() == 200, 'template synchronization saves through Symfony')
         check(template_events()[len(before_templates):] == [[{'device_id': device, 'device_template_id': template}]], 'template synchronization invokes the template-change hook once per assigned device')
         check(actions()[len(before):] == [[['7', ids]]], 'template synchronization invokes action 7 once with complete selection')
+        configured_method = harness.php('-r', 'require "include/global.php"; echo read_config_option("reindex_method");')
+        check(configured_method["exit"] == 0 and configured_method["stdout"] in ("0", "1", "2", "3"), "template synchronization resolves the effective default reindex method")
         for database in (['', 'create_remote.'] if poller > 1 else ['']):
             check(harness.sql(f'SELECT COUNT(*) FROM {database}host_graph WHERE host_id={device} AND graph_template_id={graphs[0]}').strip() == '1', 'template synchronization adds required graph associations')
             check(harness.sql(f'SELECT COUNT(*) FROM {database}host_graph WHERE host_id={device} AND graph_template_id={graphs[1]}').strip() == '0', 'template synchronization removes unused graph associations')
             check(harness.sql(f'SELECT COUNT(*) FROM {database}host_snmp_query WHERE host_id={device} AND snmp_query_id={query}').strip() == '1', 'template synchronization adds required data-query associations')
-            check(harness.sql(f"SELECT reindex_method FROM {database}host_snmp_query WHERE host_id={device} AND snmp_query_id={query}").strip() == harness.sql("SELECT value FROM settings WHERE name='reindex_method'").strip(), 'template synchronization preserves the configured data-query reindex method')
+            check(harness.sql(f"SELECT reindex_method FROM {database}host_snmp_query WHERE host_id={device} AND snmp_query_id={query}").strip() == configured_method["stdout"], 'template synchronization preserves the configured data-query reindex method')
         if poller > 1:
             check(harness.sql(f'SELECT host_template_id FROM create_remote.host WHERE id={device}').strip() == str(template), 'remote template synchronization preserves assigned template identity')
         check(harness.sql(f'SELECT COUNT(*) FROM graph_local WHERE id={retained_graph} AND host_id={device}').strip() == '1', 'template synchronization retains existing graphs')
