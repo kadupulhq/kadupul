@@ -121,7 +121,7 @@ try {
         $snapshot = DeviceRemovalSnapshot::read($connection, $device, true);
         $snapshot->assertRevision($selection->revisions[$device->id]);
         $snapshots[] = $snapshot;
-        $reviewed[$device->id] = ['graphs' => $snapshot->graphIds, 'data_sources' => $snapshot->dataSourceIds];
+        $reviewed[$device->id] = ['graphs' => $snapshot->graphIds, 'data_sources' => $snapshot->dataSourceIds, 'poller_id' => $device->pollerId];
         array_push($graphs, ...$snapshot->graphIds);
         array_push($data, ...$snapshot->dataSourceIds);
         if ($device->pollerId > 1) {
