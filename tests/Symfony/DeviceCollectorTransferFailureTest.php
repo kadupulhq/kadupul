@@ -33,6 +33,8 @@ final class DeviceCollectorTransferFailureTest extends TestCase
         $target = 3;
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Collector replication unavailable');
-        eval('namespace ' . __NAMESPACE__ . '; use RuntimeException; use PDO;' . $transfer);
+        // Intentional source-execution regression: fixed repository path and
+        // asserted boundaries above; no request, fixture or remote input enters code.
+        eval('namespace ' . __NAMESPACE__ . '; use RuntimeException; use PDO;' . $transfer); // nosemgrep: php.lang.security.eval-use.eval-use
     }
 }
