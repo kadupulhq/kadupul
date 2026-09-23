@@ -83,7 +83,7 @@ try {
     $_SESSION['sess_user_id'] = $command['actor'];
     $database_last_error = '';
     $writing = true;
-    $result = (new DeviceMaintenanceExecutor())->execute($connection, $remote, $state, $request, $row);
+    $result = (new DeviceMaintenanceExecutor($config['url_path']))->execute($connection, $remote, $state, $request, $row);
     if (db_error() !== '' || is_error_message() || !$connection->inTransaction()) {
         throw new RuntimeException('Maintenance failed');
     }
@@ -109,6 +109,7 @@ try {
 } catch (Throwable) {
     // Remote effects can survive rollback; no success without verified results.
 } finally {
+    unset($_SESSION['debug_log'], $config['debug_log']);
     if ($connection instanceof PDO && $connection->inTransaction()) {
         db_rollback_transaction($connection);
     }
