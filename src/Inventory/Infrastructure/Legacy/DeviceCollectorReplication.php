@@ -115,7 +115,7 @@ final class DeviceCollectorReplication
         }
     }
 
-    /** @return array{templates: list<int>, rrds: list<int>, graph_items: list<int>} Reviewed dependent identities. */
+    /** Capture stable dependent identities, including composite polling keys. */
     public function purgeReviewedDependents(PDO $source, DeviceRemoval $snapshot): array
     {
         $templateIds = $rrdIds = $graphItemIds = [];
@@ -137,6 +137,18 @@ final class DeviceCollectorReplication
                 throw new \RuntimeException('Collector graph item scope unavailable');
             }
             $graphItemIds = array_map('intval', $query->fetchAll(PDO::FETCH_COLUMN));
+        }
+        $placements = [];
+        foreach (['graph_tree_items' => 'tree_items', 'reports_items' => 'report_items', 'poller_item' => 'poller_items'] as $table => $key) {
+            $columns = $table === 'poller_item' ? 'local_data_id, rrd_name' : 'id';
+            $query = $source->prepare("SELECT $columns FROM $table WHERE host_id = ?" . ($source->inTransaction() ? ' FOR UPDATE' : ''));
+            if (!$query || !$query->execute([$snapshot->device->id])) {
+                throw new \RuntimeException('Collector placement scope unavailable');
+            }
+            $placements[$key] = $query->fetchAll(PDO::FETCH_ASSOC);
+            if ($query->errorCode() !== '00000') {
+                throw new \RuntimeException('Collector placement scope unavailable');
+            }
         }
         $this->assertNoOutsideReferences($source, $snapshot->graphIds, $rrdIds);
         // Delete children while their ownership can still be discovered. The
@@ -161,7 +173,7 @@ final class DeviceCollectorReplication
                 throw new \RuntimeException('Previous collector dependents remain');
             }
         }
-        return ['templates' => $templateIds, 'rrds' => $rrdIds, 'graph_items' => $graphItemIds];
+        return ['templates' => $templateIds, 'rrds' => $rrdIds, 'graph_items' => $graphItemIds] + $placements;
     }
 
     public function verifyPurged(PDO $source, int $deviceId, ?DeviceRemoval $snapshot = null, array $reviewedDependents = []): void
@@ -211,6 +223,16 @@ final class DeviceCollectorReplication
                 $query = $source->prepare("SELECT COUNT(*) FROM $table WHERE id IN (" . implode(',', array_fill(0, count($ids), '?')) . ')' . $lock);
                 if (!$query->execute($ids) || (int) $query->fetchColumn() !== 0) {
                     throw new \RuntimeException('Reviewed collector dependent identity remains');
+                }
+            }
+            foreach (['graph_tree_items' => 'tree_items', 'reports_items' => 'report_items', 'poller_item' => 'poller_items'] as $table => $key) {
+                foreach ($reviewedDependents[$key] ?? [] as $identity) {
+                    $where = $table === 'poller_item' ? 'local_data_id = ? AND rrd_name = ?' : 'id = ?';
+                    $parameters = $table === 'poller_item' ? [$identity['local_data_id'], $identity['rrd_name']] : [$identity['id']];
+                    $query = $source->prepare("SELECT COUNT(*) FROM $table WHERE $where" . $lock);
+                    if (!$query || !$query->execute($parameters) || ($count = $query->fetchColumn()) === false || (int) $count !== 0) {
+                        throw new \RuntimeException('Reviewed collector placement identity remains');
+                    }
                 }
             }
             $this->assertNoOutsideReferences($source, $snapshot->graphIds, $reviewedDependents['rrds'] ?? []);
