@@ -27,6 +27,7 @@ foreach (array(
     array($templates, 'form_actions'),
     array($templates, 'host_templates_without_devices'),
     array($functions, 'sanitize_unserialize_selected_items'),
+    array($functions, 'selected_items_decode'),
     array($database, 'array_to_sql_or'),
 ) as $wanted) {
     if (preg_match('/^function ' . $wanted[1] . '\(.*?^}\n/ms', $wanted[0], $match)) {

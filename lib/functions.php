@@ -4828,11 +4828,6 @@ function validate_relative_path_within($path, $base_dir) {
 	return $candidate;
 }
 
-/**
- * @param string $items   An array of serialized items from a post
- *
- * @return array          The sanitized selected items array
- */
 /* selected_items_payload - encodes a bulk selection for its hidden form field
    serialize() returns a byte string with length prefixes. Escaping those bytes
    as text rewrites them on a non-UTF-8 install, and the selection no longer
@@ -4862,6 +4857,11 @@ function selected_items_decode($items) {
 	return $items;
 }
 
+/**
+ * @param string $items   An array of serialized items from a post
+ *
+ * @return array          The sanitized selected items array
+ */
 function sanitize_unserialize_selected_items($items) {
 	if ($items != '') {
 		$unstripped = selected_items_decode($items);

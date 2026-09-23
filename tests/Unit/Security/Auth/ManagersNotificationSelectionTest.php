@@ -27,6 +27,11 @@ if (!preg_match('/^function form_actions\(\).*?^}\n/ms', $source, $handler)) {
 
 preg_match('/^function managers_cached_notification_pairs\(.*?^}\n/ms', $source, $helper);
 
+// form_actions() decodes the posted payload through this helper.
+if (!preg_match('/^function selected_items_decode\(.*?^}\n/ms', file_get_contents(getcwd() . '/lib/functions.php'), $decoder)) {
+    exit(2);
+}
+
 function isset_request_var($name) { return isset($GLOBALS['request'][$name]); }
 function get_nfilter_request_var($name) { return isset($GLOBALS['request'][$name]) ? $GLOBALS['request'][$name] : ''; }
 function get_request_var($name) { return get_nfilter_request_var($name); }
@@ -53,6 +58,7 @@ if (!empty($helper[0])) {
     eval('namespace ManagersNotificationRuntime; ' . $helper[0]);
 }
 
+eval('namespace ManagersNotificationRuntime; ' . $decoder[0]);
 eval('namespace ManagersNotificationRuntime; ' . $handler[0]);
 
 form_actions();
