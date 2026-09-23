@@ -63,7 +63,7 @@ final class DeviceAssociationWriter
                 }
                 continue;
             }
-            $query = $database->prepare('SELECT COUNT(*) FROM host_graph WHERE host_id = ? AND graph_template_id = ?');
+            $query = $database->prepare('SELECT COUNT(*) FROM host_graph hg INNER JOIN graph_templates gt ON gt.id = hg.graph_template_id WHERE hg.host_id = ? AND hg.graph_template_id = ?');
             if (!$query->execute([$device->id, $change->targetId]) || (int) $query->fetchColumn() !== ($change->operation === 'add' ? 1 : 0)) {
                 throw new \RuntimeException('Association could not be confirmed');
             }

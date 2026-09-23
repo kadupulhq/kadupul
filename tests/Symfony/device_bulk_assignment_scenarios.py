@@ -22,6 +22,9 @@ def verify_bulk_assignments(harness, session, check, poller):
             form.path = form.path.replace('/disable?', '/assign/' + kind + '?')
             return form
 
+        harness.sql(f'INSERT INTO graph_local (host_id,graph_template_id) VALUES ({ids[0]},{graph}); INSERT INTO data_local (host_id) VALUES ({ids[0]})')
+        retained_graphs = harness.sql(f'SELECT id FROM graph_local WHERE host_id={ids[0]}')
+        retained_data = harness.sql(f'SELECT id FROM data_local WHERE host_id={ids[0]}')
         for kind, target, column in [('site', site, 'site_id'), ('template', template, 'host_template_id')]:
             form = form_for(kind)
             fields = form.fields() | {'device_bulk_assignment[target]': str(target)}
@@ -46,9 +49,14 @@ def verify_bulk_assignments(harness, session, check, poller):
             check(harness.sql(f'SELECT COUNT(*) FROM host WHERE id IN ({selected}) AND {column}=0').strip() == '2', f'bulk {kind} failure rolls back whole primary selection')
             harness.sql('DROP TRIGGER reject_bulk_assignment')
             trigger = False
+            if kind == 'site':
+                harness.sql("REPLACE INTO settings (name,value) VALUES ('time_last_change_site_device','1')")
             check(form.apply(fields) == 200, f'bulk {kind} assigns through Symfony')
+            if kind == 'site':
+                check(int(harness.sql("SELECT value FROM settings WHERE name='time_last_change_site_device'").strip()) > 1, 'bulk site invalidates site membership cache')
             check(harness.sql(f'SELECT COUNT(*) FROM host WHERE id IN ({selected}) AND {column}={target}').strip() == '2', f'bulk {kind} persists entire selection')
             check(harness.sql(f'SELECT {column} FROM create_remote.host WHERE id={ids[0]}').strip() == str(target), f'bulk {kind} verifies remote assignment')
+        check(harness.sql(f'SELECT id FROM graph_local WHERE host_id={ids[0]}') == retained_graphs and harness.sql(f'SELECT id FROM data_local WHERE host_id={ids[0]}') == retained_data, 'bulk template assignment retains existing graphs and data')
         check(harness.sql(f'SELECT COUNT(*) FROM host_graph WHERE host_id IN ({selected}) AND graph_template_id={graph}').strip() == '2', 'bulk templates apply graph associations')
         for kind in ['site', 'template']:
             form = form_for(kind)
@@ -73,7 +81,7 @@ def verify_bulk_assignments(harness, session, check, poller):
         if ids:
             selected = ','.join(map(str, ids))
             for prefix in ['', 'create_remote.']:
-                for table, column in [('host','id'), ('host_graph','host_id'), ('host_snmp_query','host_id'), ('poller_item','host_id')]:
+                for table, column in [('host','id'), ('graph_local','host_id'), ('data_local','host_id'), ('host_graph','host_id'), ('host_snmp_query','host_id'), ('poller_item','host_id')]:
                     harness.sql(f'DELETE FROM {prefix}{table} WHERE {column} IN ({selected})')
         if site:
             harness.sql(f'DELETE FROM sites WHERE id={site}')
