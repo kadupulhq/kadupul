@@ -17,9 +17,9 @@ final class DeviceAssociationRecords
         if ($kind !== 'graph') {
             throw new \InvalidArgumentException('Invalid association kind.');
         }
-        $query = $db->prepare("SELECT hg.graph_template_id, COALESCE(gt.name, '') AS name FROM host_graph hg LEFT JOIN graph_templates gt ON gt.id = hg.graph_template_id WHERE hg.host_id = ? ORDER BY hg.graph_template_id" . ($lock ? ' FOR UPDATE' : ''));
-        $query->execute([(int) $row['id']]);
-        return new DeviceAssociations((int) $row['id'], (string) $row['description'], (int) $row['site_id'], (int) $row['poller_id'], (int) $row['host_template_id'], $query->fetchAll(PDO::FETCH_KEY_PAIR));
+        $sql = ("SELECT hg.graph_template_id, COALESCE(gt.name, '') AS name FROM host_graph hg LEFT JOIN graph_templates gt ON gt.id = hg.graph_template_id WHERE hg.host_id = ? ORDER BY hg.graph_template_id" . ($lock ? ' FOR UPDATE' : ''));
+        $items = $this->read($db, $sql, [(int) $row['id']], PDO::FETCH_KEY_PAIR);
+        return new DeviceAssociations((int) $row['id'], (string) $row['description'], (int) $row['site_id'], (int) $row['poller_id'], (int) $row['host_template_id'], $items);
     }
     public function available(PDO $db, string $kind, bool $lock = false): array
     {
@@ -27,6 +27,19 @@ final class DeviceAssociationRecords
             throw new \InvalidArgumentException('Invalid association kind.');
         }
         // Preserve the legacy catalog: query-owned templates are attached via data queries.
-        return $db->query("SELECT DISTINCT gt.id, gt.name FROM graph_templates gt LEFT JOIN snmp_query_graph sqg ON sqg.graph_template_id = gt.id INNER JOIN graph_templates_item gti ON gti.graph_template_id = gt.id INNER JOIN data_template_rrd dtr ON gti.task_item_id = dtr.id INNER JOIN data_template_data dtd ON dtd.data_template_id = dtr.data_template_id WHERE sqg.name IS NULL AND gti.local_graph_id = 0 AND dtr.local_data_id = 0 ORDER BY gt.id" . ($lock ? ' LOCK IN SHARE MODE' : ''))->fetchAll(PDO::FETCH_KEY_PAIR);
+        return $this->read($db, "SELECT DISTINCT gt.id, gt.name FROM graph_templates gt LEFT JOIN snmp_query_graph sqg ON sqg.graph_template_id = gt.id INNER JOIN graph_templates_item gti ON gti.graph_template_id = gt.id INNER JOIN data_template_rrd dtr ON gti.task_item_id = dtr.id INNER JOIN data_template_data dtd ON dtd.data_template_id = dtr.data_template_id WHERE sqg.name IS NULL AND gti.local_graph_id = 0 AND dtr.local_data_id = 0 ORDER BY gt.id" . ($lock ? ' LOCK IN SHARE MODE' : ''), [], PDO::FETCH_KEY_PAIR);
     }
+    private function read(PDO $db, string $sql, array $parameters, int $mode): array
+    {
+        $query = $db->prepare($sql);
+        if (!$query instanceof \PDOStatement || !$query->execute($parameters)) {
+            throw new \RuntimeException('Association snapshot unavailable');
+        }
+        $rows = $query->fetchAll($mode);
+        if (!is_array($rows)) {
+            throw new \RuntimeException('Association snapshot unavailable');
+        }
+        return $rows;
+    }
+
 }
