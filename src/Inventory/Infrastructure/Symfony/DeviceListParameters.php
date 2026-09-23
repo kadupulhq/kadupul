@@ -55,6 +55,9 @@ final class DeviceListParameters
     {
         return ['q' => $criteria->search, 'state' => $criteria->state, 'status' => $criteria->status,
             'sort' => $criteria->order->field, 'direction' => $criteria->order->direction,
-            'page' => $criteria->page, 'size' => $criteria->pageSize, 'site' => $criteria->siteId ?? '', 'template' => $criteria->templateId ?? '', 'collector' => $criteria->collectorId ?? '', 'location_mode' => $criteria->location === null ? 'all' : 'exact', 'location' => $criteria->location ?? ''];
+            'page' => $criteria->page, 'size' => $criteria->pageSize, 'site' => $criteria->siteId ?? '']
+            + ($criteria->templateId === null ? [] : ['template' => $criteria->templateId])
+            + ($criteria->collectorId === null ? [] : ['collector' => $criteria->collectorId])
+            + ($criteria->location === null ? [] : ['location_mode' => 'exact', 'location' => $criteria->location]);
     }
 }
