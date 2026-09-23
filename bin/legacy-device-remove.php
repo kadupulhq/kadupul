@@ -62,53 +62,18 @@ try {
     if ($connection->exec('SET NAMES utf8mb4') === false) {
         throw new RuntimeException('Primary connection encoding unavailable');
     }
-    if (!(new \Kadupul\Inventory\Infrastructure\Legacy\DeviceWriteAuthorization())->allows($connection, $command['actor'])) {
-        $status = 'denied';
-        throw new RuntimeException('Access denied');
-    }
-    $read = static function (PDO $db, string $sql, array $parameters): array {
-        $query = $db->prepare($sql);
-        if (!$query->execute($parameters)) {
-            throw new RuntimeException('Device query failed');
+    $locked = (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceMutationSelection())->lock(
+        $connection,
+        $command['actor'],
+        $ids,
+        static function (string $next) use (&$status): void {
+            $status = $next;
         }
-        return $query->fetchAll(PDO::FETCH_ASSOC);
-    };
-    $placeholders = implode(',', array_fill(0, count($ids), '?'));
-    $associations = $read($connection, "SELECT id, site_id FROM host WHERE id IN ($placeholders) AND deleted = '' ORDER BY id", $ids);
-    if (count($associations) !== count($ids)) {
-        $status = 'missing';
-        throw new RuntimeException('Devices unavailable');
-    }
-    $sites = array_unique(array_map(static fn($row) => (int) $row['site_id'], $associations));
-    sort($sites, SORT_NUMERIC);
-    foreach ($sites as $siteId) {
-        if ($siteId > 0) {
-            $read($connection, 'SELECT id FROM sites WHERE id = ? FOR UPDATE', [$siteId]);
-        }
-    }
-    $rows = $read($connection, "SELECT id, description, hostname, disabled, status, site_id, poller_id, host_template_id, location, device_threads, snmp_port, snmp_timeout, max_oids, bulk_walk_size, availability_method, ping_method, ping_port, ping_timeout, ping_retries, snmp_version, snmp_auth_protocol, snmp_priv_protocol, snmp_context, snmp_engine_id FROM host WHERE id IN ($placeholders) AND deleted = '' ORDER BY id FOR UPDATE", $ids);
-    if (count($rows) !== count($ids)) {
-        $status = 'missing';
-        throw new RuntimeException('Devices unavailable');
-    }
-    $provider = new class ($connection) implements DatabaseConnection {
-        public function __construct(private PDO $connection) {}
-        public function get(): PDO
-        {
-            return $this->connection;
-        }
-    };
-    $predicate = (new LegacyDeviceVisibility($provider))->predicate($command['actor'], true);
-    $visible = $read($connection, "SELECT DISTINCT h.id FROM host h LEFT JOIN graph_local gl ON gl.host_id = h.id WHERE h.id IN ($placeholders) AND ($predicate) ORDER BY h.id LOCK IN SHARE MODE", $ids);
-    if (count($visible) !== count($ids)) {
-        $status = 'missing';
-        throw new RuntimeException('Devices unavailable');
-    }
-    $pollers = array_unique(array_map(static fn($row) => (int) $row['poller_id'], $rows));
-    sort($pollers, SORT_NUMERIC);
-    foreach ($pollers as $pollerId) {
-        $read($connection, 'SELECT id FROM poller WHERE id = ? FOR UPDATE', [$pollerId]);
-    }
+    );
+    $associations = $locked['associations'];
+    $rows = $locked['rows'];
+    $pollers = $locked['pollers'];
+    $read = $locked['read'];
     $remotes = [];
     $snapshots = [];
     $graphs = $data = $reviewed = [];
