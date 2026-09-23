@@ -16,6 +16,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Add Symfony device-removal confirmation with graph/data retention choices, shared-dependency protection and verified remote cleanup.
 
+- Keep the Inventory DBAL connection lazy through unauthenticated requests and enforce the documented no-remote-assets boundary for migrated Twig pages.
+
 - Use Doctrine DBAL behind the existing Inventory assignable-site read port while preserving installation TLS settings and application APIs.
 
 - Add a versioned, correlation-aware audit contract for migrated writes and record structured device-edit persistence decisions and outcomes without submitted fields or credentials.
