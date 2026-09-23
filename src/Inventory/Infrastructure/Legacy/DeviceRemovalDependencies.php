@@ -51,11 +51,24 @@ final class DeviceRemovalDependencies
         $data = implode(',', array_map('intval', $dataIds)) ?: '-1';
         // Lock both the selected graphs' references and outside graphs that
         // reference selected data. Missing references never grant wider scope.
-        $query = $db->query("SELECT gti.local_graph_id, dtr.local_data_id FROM graph_templates_item gti LEFT JOIN data_template_rrd dtr ON dtr.id = gti.task_item_id WHERE gti.local_graph_id IN ($graphs) OR dtr.local_data_id IN ($data) FOR UPDATE");
-        foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $row) {
-            if (!in_array((int) $row['local_graph_id'], $graphIds, true)
-                || ((int) $row['local_data_id'] > 0 && !in_array((int) $row['local_data_id'], $dataIds, true))) {
-                return false;
+        // Separate indexed ownership ranges: a cross-table OR forces a broad
+        // scan whose next-key locks can block unrelated graph writers.
+        foreach ([
+            "SELECT gti.local_graph_id, dtr.local_data_id FROM graph_templates_item gti LEFT JOIN data_template_rrd dtr ON dtr.id = gti.task_item_id WHERE gti.local_graph_id IN ($graphs) FOR UPDATE",
+            "SELECT gti.local_graph_id, dtr.local_data_id FROM data_template_rrd dtr INNER JOIN graph_templates_item gti ON gti.task_item_id = dtr.id WHERE dtr.local_data_id IN ($data) FOR UPDATE",
+        ] as $sql) {
+            $query = $db->query($sql);
+            if (!$query) {
+                throw new \RuntimeException('Dependency scope unavailable');
+            }
+            foreach ($query->fetchAll(\PDO::FETCH_ASSOC) as $row) {
+                if (!in_array((int) $row['local_graph_id'], $graphIds, true)
+                    || ((int) $row['local_data_id'] > 0 && !in_array((int) $row['local_data_id'], $dataIds, true))) {
+                    return false;
+                }
+            }
+            if ($query->errorCode() !== '00000') {
+                throw new \RuntimeException('Dependency scope unavailable');
             }
         }
         foreach (["SELECT id FROM aggregate_graphs WHERE local_graph_id IN ($graphs) FOR UPDATE", "SELECT local_graph_id FROM aggregate_graphs_items WHERE local_graph_id IN ($graphs) FOR UPDATE"] as $sql) {
