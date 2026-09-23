@@ -214,6 +214,14 @@ def verify_device_statistics(harness, session, ids, check, remote=None, hidden=N
         finally:
             harness.sql(f'DROP TRIGGER {prefix}reject_statistics')
         check(actions() == before_actions, 'rejected statistics resets do not invoke action 5 callbacks')
+        harness.sql(f"DELIMITER $$\nCREATE TRIGGER {prefix}alter_statistics BEFORE UPDATE ON {prefix}host FOR EACH ROW BEGIN IF NEW.id={last} AND NEW.total_polls=0 THEN SET NEW.total_polls=1; END IF; END$$\nDELIMITER ;")
+        try:
+            check(form.apply() == 502, 'statistics reset rejects a successful write with altered stored values')
+            check(actions() == before_actions, 'unconfirmed statistics resets do not invoke action 5 callbacks')
+        finally:
+            harness.sql(f'DROP TRIGGER {prefix}alter_statistics')
+            if remote:
+                seeded('create_remote.')
         check(form.apply() == 200, 'statistics confirmation resets selected devices')
         check(actions()[len(before_actions):] == [[['5', sorted(ids)]]], 'statistics reset invokes action 5 once with the complete selection')
         predicate = 'min_time=9.99999 AND max_time=0 AND cur_time=0 AND avg_time=0 AND total_polls=0 AND failed_polls=0 AND availability=100'
