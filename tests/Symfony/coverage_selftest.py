@@ -84,6 +84,7 @@ def main():
         'src/Inventory/Infrastructure/Legacy/DeviceMaintenanceRecords.php',
         'src/Inventory/Infrastructure/Legacy/DeviceMaintenanceExecutor.php',
         'src/Inventory/Infrastructure/Legacy/DeviceDiagnosticText.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceDiagnosticScope.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceMaintenanceController.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceMaintenanceType.php',
         'bin/legacy-device-associations.php',
