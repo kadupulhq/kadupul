@@ -103,6 +103,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Restore the `.DS_Store` ignore rule that a committed merge marker had replaced.
+
 - Preserve the legacy Error device status in Symfony Inventory filtering, display and CSV exports.
 
 - Deny internal application paths in the Nginx deployment and reject HTTP execution of command-line tools before bootstrap.
