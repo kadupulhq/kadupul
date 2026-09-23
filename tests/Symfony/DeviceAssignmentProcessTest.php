@@ -17,7 +17,7 @@ final class DeviceAssignmentProcessTest extends TestCase
 {
     public static function outcomes(): iterable
     {
-        foreach (['collector', 'template'] as $kind) {
+        foreach (['collector', 'template', 'associations'] as $kind) {
             foreach ([
                 ['ok', 0, null],
                 ['ok', 1, \RuntimeException::class],
@@ -50,6 +50,9 @@ final class DeviceAssignmentProcessTest extends TestCase
             $database->prepare('INSERT INTO settings VALUES (?, ?)')->execute(['path_php_binary', PHP_BINARY]);
             if ($error !== null) {
                 $this->expectException($error);
+            }
+            if ($status === 'invalid') {
+                $this->expectExceptionMessage('Select a valid device ' . ($kind === 'associations' ? 'association' : $kind) . '.');
             }
             DeviceAssignmentProcess::run($database, $directory, $kind, $command);
             self::assertNull($error);
