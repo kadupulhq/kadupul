@@ -61,4 +61,26 @@ final class DeviceRemovalDependenciesTest extends TestCase
         $this->expectException(\LogicException::class);
         DeviceRemovalDependencies::exclusive($this->database(), [1], [10]);
     }
+
+    #[DataProvider('emptySelections')]
+    public function testEmptySelectionsIgnoreTemplateRows(array $graphs, array $data, bool $outsideReference, bool $expected): void
+    {
+        $db = $this->database();
+        $db->exec('INSERT INTO data_template_rrd VALUES (100, 0), (200, 10)');
+        $db->exec('INSERT INTO graph_templates_item VALUES (0, 100)');
+        if ($outsideReference) {
+            $db->exec('INSERT INTO graph_templates_item VALUES (2, 200)');
+        }
+        $db->beginTransaction();
+        self::assertSame($expected, DeviceRemovalDependencies::exclusive($db, $graphs, $data));
+        $db->rollBack();
+    }
+
+    public static function emptySelections(): iterable
+    {
+        yield 'no graphs or data' => [[], [], false, true];
+        yield 'ungraphed owned data' => [[], [10], false, true];
+        yield 'graph without owned data' => [[1], [], false, true];
+        yield 'ungraphed selection still protects outside reference' => [[], [10], true, false];
+    }
 }
