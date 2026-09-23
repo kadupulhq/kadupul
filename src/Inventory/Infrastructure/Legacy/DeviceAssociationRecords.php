@@ -49,7 +49,7 @@ final class DeviceAssociationRecords
             throw new \RuntimeException('Association snapshot unavailable');
         }
         $rows = $query->fetchAll($mode);
-        if (!is_array($rows)) {
+        if (!is_array($rows) || $query->errorCode() !== '00000') {
             throw new \RuntimeException('Association snapshot unavailable');
         }
         return $rows;
