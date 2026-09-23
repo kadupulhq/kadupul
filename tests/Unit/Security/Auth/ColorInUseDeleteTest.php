@@ -29,7 +29,7 @@ require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
  *
  * @return array<string, mixed> The ids deleted and the message raised.
  */
-function run_delete(array $selected) {
+function run_delete(array $selected, $lookupFails = false) {
 	$root   = dirname(__DIR__, 4);
 	$source = file_get_contents($root . '/color.php');
 
@@ -41,6 +41,7 @@ function run_delete(array $selected) {
 	$probe = '<?php
 $selected = ' . var_export($selected, true) . ';
 $in_use = array(2, 4);
+$lookup_fails = ' . var_export($lookupFails, true) . ';
 $deleted = array();
 $message = null;
 $color_actions = array();
@@ -56,6 +57,7 @@ function raise_message($id, $text = "", $level = 0) { $GLOBALS["message"] = $id;
 function array_to_sql_or($ids, $column) { return $column . " IN (" . implode(",", $ids) . ")"; }
 function array_rekey($rows, $key, $value) { return array_column($rows, $value, $key); }
 function db_fetch_assoc($sql) {
+	if ($GLOBALS["lookup_fails"]) { return false; }
 	$rows = array();
 	foreach ($GLOBALS["in_use"] as $id) {
 		if (strpos($sql, (string) $id) !== false) { $rows[] = array("color_id" => $id); }
@@ -91,4 +93,9 @@ test('a color a graph or template uses is kept', function () {
 
 test('a mixed selection deletes only the unused colors', function () {
 	expect(run_delete(array(1, 2, 3, 4)))->toBe(array('deleted' => array(1, 3), 'message' => 'color_in_use'));
+});
+
+test('a failed lookup deletes nothing rather than everything', function () {
+	// db_fetch_assoc returns false on a SQL error, which must not read as "none in use".
+	expect(run_delete(array(1, 3), true))->toBe(array('deleted' => array(), 'message' => 'color_in_use'));
 });

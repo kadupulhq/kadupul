@@ -141,14 +141,17 @@ function form_save() {
    which is what the Deletable column promises. The delete applies the same rule,
    or a forged selection leaves graph items pointing at a color that is gone. */
 function color_deletable($ids) {
-	$in_use = array_rekey(
-		db_fetch_assoc('SELECT DISTINCT color_id
-			FROM graph_templates_item
-			WHERE color_id > 0
-			AND ' . array_to_sql_or($ids, 'color_id')),
-		'color_id', 'color_id'
-	);
+	$rows = db_fetch_assoc('SELECT DISTINCT color_id
+		FROM graph_templates_item
+		WHERE color_id > 0
+		AND ' . array_to_sql_or($ids, 'color_id'));
 
+	/* A failed lookup must not read as "nothing is in use". */
+	if (!is_array($rows)) {
+		return array();
+	}
+
+	$in_use    = array_rekey($rows, 'color_id', 'color_id');
 	$deletable = array();
 
 	foreach ($ids as $id) {
