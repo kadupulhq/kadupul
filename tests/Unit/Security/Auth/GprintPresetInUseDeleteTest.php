@@ -89,6 +89,11 @@ test('a mixed selection deletes only the unused presets', function () {
 	expect(run_delete(array(1, 2, 3, 4)))->toBe(array('deleted' => array(1, 3), 'message' => 'gprint_in_use'));
 });
 
+test('a non-canonical id cannot slip past the in-use check', function () {
+	// MySQL matches '007' to 7, so the check has to compare the same value.
+	expect(run_delete(array('007', '2', '0002')))->toBe(array('deleted' => array(7), 'message' => 'gprint_in_use'));
+});
+
 test('a failed lookup deletes nothing rather than everything', function () {
 	// db_fetch_assoc returns false on a SQL error, which must not read as "none in use".
 	expect(run_delete(array(1, 3), true))->toBe(array('deleted' => array(), 'message' => 'gprint_in_use'));

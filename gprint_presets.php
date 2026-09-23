@@ -100,6 +100,11 @@ function form_save() {
    which is what the Deletable column promises. The delete applies the same rule,
    or a forged selection leaves graph items naming a preset that is gone. */
 function gprint_deletable($ids) {
+	/* The posted ids are strings, and MySQL matches '007' to 7. Compare and
+	   delete the canonical integers, or a non-canonical id skips the lookup
+	   and still deletes the row. */
+	$ids = array_values(array_unique(array_map('intval', $ids)));
+
 	$rows = db_fetch_assoc('SELECT DISTINCT gprint_id
 		FROM graph_templates_item
 		WHERE gprint_id > 0
@@ -114,7 +119,7 @@ function gprint_deletable($ids) {
 	$deletable = array();
 
 	foreach ($ids as $id) {
-		if (!isset($in_use[$id])) {
+		if ($id > 0 && !isset($in_use[$id])) {
 			$deletable[] = $id;
 		}
 	}
