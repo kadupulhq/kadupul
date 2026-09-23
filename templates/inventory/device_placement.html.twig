@@ -5,5 +5,6 @@
 <ul>{% for device in devices %}<li>{{ device.description }} (#{{ device.id }})</li>{% endfor %}</ul>
 <p>{{ 'Existing placements are retained without duplication.'|trans }}</p>
 {{ form_start(form) }}{{ form_widget(form) }}<button type="submit">{{ 'Place devices'|trans }}</button>{{ form_end(form) }}
+{# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route; path() encodes filter values and Twig escapes the attribute. Regression covers javascript, external URLs and quote injection. #}
 <p><a href="{{ path('inventory_devices', filters) }}">{{ 'Back to devices'|trans }}</a></p>
 </main></body></html>
