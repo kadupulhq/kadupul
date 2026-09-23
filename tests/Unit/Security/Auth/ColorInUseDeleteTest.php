@@ -34,11 +34,13 @@ function run_delete(array $selected, $lookupFails = false) {
 	$probe = '<?php
 $selected = ' . var_export($selected, true) . ';
 $in_use = array(2, 4);
+$template_use = array(9);
 $lookup_fails = ' . var_export($lookupFails, true) . ';
 $deleted = array();
 $message = null;
 $color_actions = array();
 define("MESSAGE_LEVEL_WARN", 2);
+define("MESSAGE_LEVEL_ERROR", 3);
 function __($text, ...$args) { return $text; }
 function isset_request_var($name) { return $name === "selected_items"; }
 function get_request_var($name) { return $name === "drp_action" ? "1" : ""; }
@@ -51,8 +53,9 @@ function array_to_sql_or($ids, $column) { return $column . " IN (" . implode(","
 function array_rekey($rows, $key, $value) { return array_column($rows, $value, $key); }
 function db_fetch_assoc($sql) {
 	if ($GLOBALS["lookup_fails"]) { return false; }
+	$source = strpos($sql, "color_template_items") !== false ? $GLOBALS["template_use"] : $GLOBALS["in_use"];
 	$rows = array();
-	foreach ($GLOBALS["in_use"] as $id) {
+	foreach ($source as $id) {
 		if (strpos($sql, (string) $id) !== false) { $rows[] = array("color_id" => $id); }
 	}
 	return $rows;
@@ -93,7 +96,16 @@ test('a non-canonical id cannot slip past the in-use check', function () {
 	expect(run_delete(array('007', '2', '0002')))->toBe(array('deleted' => array(7), 'message' => 'color_in_use'));
 });
 
-test('a failed lookup deletes nothing rather than everything', function () {
-	// db_fetch_assoc returns false on a SQL error, which must not read as "none in use".
-	expect(run_delete(array(1, 3), true))->toBe(array('deleted' => array(), 'message' => 'color_in_use'));
+test('a color used only by a color template is kept', function () {
+	// Aggregate creation reads color_template_items, so that is a live reference.
+	expect(run_delete(array(1, 9)))->toBe(array('deleted' => array(1), 'message' => 'color_in_use'));
+});
+
+test('a numeric id that is not an integer is refused', function () {
+	expect(run_delete(array('3.9', '3x')))->toBe(array('deleted' => array(), 'message' => 'color_in_use'));
+});
+
+test('a failed lookup is reported as a lookup failure, not as a reference', function () {
+	// db_fetch_assoc returns false on a SQL error, which is not evidence of use.
+	expect(run_delete(array(1, 3), true))->toBe(array('deleted' => array(), 'message' => 'color_lookup'));
 });

@@ -141,26 +141,46 @@ function form_save() {
    which is what the Deletable column promises. The delete applies the same rule,
    or a forged selection leaves graph items pointing at a color that is gone. */
 function color_deletable($ids) {
-	/* The posted ids are strings, and MySQL matches '007' to 7. Compare and
-	   delete the canonical integers, or a non-canonical id skips the lookup
-	   and still deletes the row. */
-	$ids = array_values(array_unique(array_map('intval', $ids)));
+	/* The posted ids are strings, and MySQL matches '007' to 7 but not '3.9' to
+	   3. Keep only decimal integers, so the lookup and the delete agree on the
+	   same rows. */
+	$canonical = array();
 
-	$rows = db_fetch_assoc('SELECT DISTINCT color_id
-		FROM graph_templates_item
-		WHERE color_id > 0
-		AND ' . array_to_sql_or($ids, 'color_id'));
+	foreach ($ids as $id) {
+		if (preg_match('/^[0-9]+$/', (string) $id)) {
+			$canonical[] = (int) $id;
+		}
+	}
 
-	/* A failed lookup must not read as "nothing is in use". */
-	if (!is_array($rows)) {
+	$ids = array_values(array_unique($canonical));
+
+	if (!cacti_sizeof($ids)) {
 		return array();
 	}
 
-	$in_use    = array_rekey($rows, 'color_id', 'color_id');
+	$in_use = array();
+
+	/* A colour reaches a graph through a graph item, and through a colour
+	   template that aggregate creation reads (lib/api_aggregate.php). */
+	foreach (array(
+		'SELECT DISTINCT color_id FROM graph_templates_item WHERE color_id > 0 AND ' . array_to_sql_or($ids, 'color_id'),
+		'SELECT DISTINCT color_id FROM color_template_items WHERE color_id > 0 AND ' . array_to_sql_or($ids, 'color_id'),
+	) as $sql) {
+		$rows = db_fetch_assoc($sql);
+
+		/* A failed lookup says nothing about references, so refuse rather than
+		   report every colour as in use. */
+		if (!is_array($rows)) {
+			return false;
+		}
+
+		$in_use += array_rekey($rows, 'color_id', 'color_id');
+	}
+
 	$deletable = array();
 
 	foreach ($ids as $id) {
-		if ($id > 0 && !isset($in_use[$id])) {
+		if (!isset($in_use[$id])) {
 			$deletable[] = $id;
 		}
 	}
@@ -183,12 +203,16 @@ function form_actions() {
 			if (get_request_var('drp_action') == '1') { // delete
 				$deletable = color_deletable($selected_items);
 
-				if (cacti_sizeof($deletable)) {
-					db_execute('DELETE FROM colors WHERE ' . array_to_sql_or($deletable, 'id'));
-				}
+				if ($deletable === false) {
+					raise_message('color_lookup', __('The Colors could not be checked for use and were not Deleted.'), MESSAGE_LEVEL_ERROR);
+				} else {
+					if (cacti_sizeof($deletable)) {
+						db_execute('DELETE FROM colors WHERE ' . array_to_sql_or($deletable, 'id'));
+					}
 
-				if (cacti_sizeof($deletable) < cacti_sizeof($selected_items)) {
-					raise_message('color_in_use', __('Colors referenced by a Graph or Graph Template were not Deleted.'), MESSAGE_LEVEL_WARN);
+					if (cacti_sizeof($deletable) < cacti_sizeof($selected_items)) {
+						raise_message('color_in_use', __('Colors referenced by a Graph, Graph Template or Color Template were not Deleted.'), MESSAGE_LEVEL_WARN);
+					}
 				}
 			}
 		}
@@ -708,7 +732,8 @@ function color() {
 
 	$colors = db_fetch_assoc("SELECT *,
         SUM(CASE WHEN local_graph_id>0 THEN 1 ELSE 0 END) AS graphs,
-        SUM(CASE WHEN local_graph_id=0 THEN 1 ELSE 0 END) AS templates
+        SUM(CASE WHEN local_graph_id=0 THEN 1 ELSE 0 END) AS templates,
+        COALESCE(cti.total, 0) AS color_templates
         FROM (
 			SELECT c.*, local_graph_id
 			FROM colors AS c
@@ -719,6 +744,13 @@ function color() {
 			) AS gti
 			ON c.id=gti.color_id
 		) AS rs
+		LEFT JOIN (
+			SELECT color_id, COUNT(*) AS total
+			FROM color_template_items
+			WHERE color_id>0
+			GROUP BY color_id
+		) AS cti
+		ON cti.color_id = rs.id
 		$sql_where
 		GROUP BY rs.id
 		$sql_having
@@ -748,7 +780,7 @@ function color() {
 	$i = 0;
 	if (cacti_sizeof($colors)) {
 		foreach ($colors as $color) {
-			if ($color['graphs'] == 0 && $color['templates'] == 0) {
+			if ($color['graphs'] == 0 && $color['templates'] == 0 && $color['color_templates'] == 0) {
 				$disabled = false;
 			} else {
 				$disabled = true;
