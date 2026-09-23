@@ -43,6 +43,10 @@ function db_fetch_assoc($sql)
 {
     return $GLOBALS['hook_boundary_reads']++ < 2 ? [['local_data_id' => 10]] : [];
 }
+function db_fetch_cell_prepared($sql, $parameters)
+{
+    return $GLOBALS['hook_boundary_poller'];
+}
 function db_execute($sql)
 {
     $GLOBALS['hook_boundary_writes'][] = $sql;
@@ -73,6 +77,28 @@ final class ReviewedRemovalHookBoundaryTest extends TestCase
             self::assertSame('Ownership changed', $error->getMessage());
         }
         self::assertSame([], $GLOBALS['hook_boundary_writes']);
+    }
+
+    #[DataProvider('collectorChanges')]
+    public function testCollectorHookCannotRedirectRemoval(int $current, array $connections): void
+    {
+        $GLOBALS['hook_boundary_writes'] = $GLOBALS['hook_boundary_events'] = [];
+        $GLOBALS['hook_boundary_inject'] = 'device_remove';
+        $GLOBALS['hook_boundary_poller'] = $current;
+        try {
+            api_device_remove_multi([7], 2, ['by_device' => [7 => ['poller_id' => 2]]], $connections, static function (): void {});
+            self::fail('Unreviewed collector accepted');
+        } catch (RuntimeException $error) {
+            self::assertSame('Reviewed collector ownership changed', $error->getMessage());
+        }
+        self::assertSame([], $GLOBALS['hook_boundary_writes']);
+    }
+
+    public static function collectorChanges(): iterable
+    {
+        yield 'hook moves device to another remote' => [3, []];
+        yield 'hook moves device to primary' => [1, []];
+        yield 'missing reviewed transaction' => [2, []];
     }
 
     #[DataProvider('boundaries')]
