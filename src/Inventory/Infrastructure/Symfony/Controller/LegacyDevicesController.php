@@ -19,6 +19,32 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class LegacyDevicesController
 {
+    // Frozen legacy gettext aliases keep saved links valid across locale changes.
+    private const UNASSIGNED_LOCATIONS = [
+        'Indefinido',
+        'Indéfini',
+        'Mùi không xác định',
+        'Nav noteikts',
+        'Niet gedefinieerd',
+        'Niezdefiniowane',
+        'Non Definito',
+        'Não definido',
+        'Odefinierad',
+        'Tanımlanmamış',
+        'Undefined',
+        'Undefiniert',
+        'Δεν έχει οριστεί',
+        'Не визначено',
+        'Не определено',
+        'Неопределена',
+        'לא מוגדר',
+        'غير مُحدد',
+        'अपरिभाशत',
+        '未定义',
+        '未定義',
+        '정의되지 않음',
+    ];
+
     #[Route('/inventory/devices/legacy', name: 'inventory_devices_legacy', methods: ['GET', 'HEAD', 'POST'])]
     public function __invoke(Request $request, ConsoleAccess $access, \Kadupul\Inventory\Application\Query\SuggestDeviceLocations $locations, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
@@ -76,7 +102,7 @@ final class LegacyDevicesController
             }
             if (($query['location'] ?? '-1') !== '-1') {
                 $filters['location_mode'] = 'exact';
-                $filters['location'] = $query['location'];
+                $filters['location'] = in_array($query['location'], self::UNASSIGNED_LOCATIONS, true) ? '' : $query['location'];
             }
             $criteria = DeviceListParameters::parse($filters);
             return new RedirectResponse($urls->generate($action === 'export' ? 'inventory_devices_csv' : 'inventory_devices', DeviceListParameters::encode($criteria)), 302, $headers);

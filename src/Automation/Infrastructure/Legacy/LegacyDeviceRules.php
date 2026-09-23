@@ -19,7 +19,7 @@ final class LegacyDeviceRules implements DeviceRules
             }
         }
         foreach ($deviceIds as $id) {
-            if (automation_update_device($id) === false) {
+            if (automation_update_device($id) !== true) {
                 throw new \RuntimeException('Device automation failed');
             }
         }

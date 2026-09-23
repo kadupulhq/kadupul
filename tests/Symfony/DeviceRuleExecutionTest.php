@@ -9,7 +9,7 @@ namespace Kadupul\Automation\Infrastructure\Legacy {
     function automation_update_device(int $id): mixed
     {
         \Kadupul\Tests\DeviceRuleExecutionTest::$calls[] = $id;
-        return $id === 9 ? false : null;
+        return $id === 9 ? false : true;
     }
 }
 
