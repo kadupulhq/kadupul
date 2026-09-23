@@ -19,7 +19,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class DeviceBulkSnmpPresentationTest extends TestCase
 {
-    public function testFrenchPresentationEscapesNamesAndPreservesAssignmentValues(): void
+    public static function outcomes(): array
+    {
+        return [[false], [true]];
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('outcomes')]
+    public function testFrenchPresentationEscapesNamesAndPreservesAssignmentValues(bool $incompatible): void
     {
         $kernel = new Kernel('test', true);
         try {
@@ -41,6 +47,9 @@ final class DeviceBulkSnmpPresentationTest extends TestCase
             $port = $this->createMockForIntersectionOfInterfaces([DeviceStates::class, \Kadupul\Inventory\Application\Port\DeviceSnmpSettings::class, \Kadupul\Inventory\Application\Port\DeviceStatistics::class, \Kadupul\Inventory\Application\Port\DeviceTemplateSynchronization::class, \Kadupul\Inventory\Application\Port\DeviceOptions::class]);
             $port->method('findVisible')->willReturn([$device]);
             $port->expects(self::once())->method('changeSnmp')->with(42, self::callback(fn($selection) => $selection->revisions === [7 => $device->revision()]), self::callback(fn($change) => $change->fields['keep_credentials'] === false && $change->fields['snmp_community'] === 'fixture-bulk-secret'));
+            if ($incompatible) {
+                $port->method('changeSnmp')->willThrowException(new \InvalidArgumentException('SNMP settings and stored credentials are incompatible. Replace credentials or review the selected settings.'));
+            }
             $container->set(DeviceStates::class, $port);
             $path = '/inventory/devices/snmp?ids[]=7';
             $response = $kernel->handle(Request::create($path, 'GET', [], ['Cacti' => 'fixture']));
@@ -65,7 +74,13 @@ final class DeviceBulkSnmpPresentationTest extends TestCase
             }
             $request = Request::create($path, 'POST', ['device_state' => $fields], ['Cacti' => 'fixture']);
             $request->headers->set('Origin', 'http://localhost');
-            self::assertSame(303, $kernel->handle($request)->getStatusCode());
+            $response = $kernel->handle($request);
+            self::assertSame($incompatible ? 422 : 303, $response->getStatusCode());
+            if ($incompatible) {
+                self::assertStringContainsString('Les paramètres SNMP', $response->getContent());
+                self::assertStringNotContainsString('SNMP settings and stored credentials', $response->getContent());
+                self::assertStringNotContainsString('fixture-bulk-secret', $response->getContent());
+            }
         } finally {
             $kernel->shutdown();
         }

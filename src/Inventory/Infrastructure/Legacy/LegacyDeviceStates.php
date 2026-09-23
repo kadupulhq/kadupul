@@ -76,7 +76,7 @@ final readonly class LegacyDeviceStates implements DeviceStates, \Kadupul\Invent
             throw new \RuntimeException('Device state change outcome is unknown.', 0, $error);
         }
         if ($status === 'snmp_invalid') {
-            throw new \InvalidArgumentException('SNMP settings and stored credentials are incompatible.');
+            throw new \InvalidArgumentException('SNMP settings and stored credentials are incompatible. Replace credentials or review the selected settings.');
         }
         if ($status === 'conflict') {
             throw new DeviceEditConflict('Selected devices changed. Reload the confirmation before saving.');
