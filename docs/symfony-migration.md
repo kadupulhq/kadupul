@@ -986,3 +986,15 @@ both collectors. Removal confirms query cache and reindex-state cleanup while
 retaining graphs. Discovery follows device availability; saving an association is
 not evidence that a live discovery completed. Explicit diagnostic actions are a
 separate workflow.
+
+
+### Device maintenance
+
+`/inventory/devices/{id}/maintenance` uses `MaintainDevice` and a `DeviceMaintenance`
+port for reindex-all, query reload/diagnostics, polling cache refresh, debug controls
+and connectivity. Symfony owns forms, authorization, CSRF and escaped output. The
+isolated worker rechecks device/query revisions and collector availability. It
+redacts stored credentials from bounded plain-text diagnostics and does not report
+false query results or disabled devices as completed reindex operations. Debug
+settings are updated with locking and verified on affected collectors. Primary
+rollback cannot undo remote effects or external probes.

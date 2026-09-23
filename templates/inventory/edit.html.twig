@@ -11,6 +11,8 @@
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony association route and validated context. #}
     <p><a href="{{ path('inventory_device_associations', {id: device.id, kind: 'query', list: filters}) }}">{{ 'Device data-query associations'|trans({}, 'inventory') }}</a></p>
     <p><a href="{{ path('inventory_device_associations', {id: device.id, kind: 'graph', list: filters}) }}">{{ 'Device graph-template associations'|trans({}, 'inventory') }}</a></p>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony maintenance route and validated context. #}
+    <p><a href="{{ path('inventory_device_maintenance', {id: device.id, list: filters}) }}">{{ 'Device maintenance'|trans({}, 'inventory') }}</a></p>
     <p><a href="{{ path('inventory_device_template', {id: device.id, list: filters}) }}">{{ 'Assign device template'|trans({}, 'inventory') }}</a></p>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() encodes fixed-route parameters. #}
     <p><a href="{{ path('inventory_device_collector', {id: device.id, list: filters}) }}">{{ 'Assign device collector'|trans({}, 'inventory') }}</a></p>

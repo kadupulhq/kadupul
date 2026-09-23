@@ -210,3 +210,11 @@ services:
             $projectDir: '%kernel.project_dir%'
     Kadupul\Inventory\Application\Query\PrepareDeviceAssociations: ~
     Kadupul\Inventory\Application\Command\ChangeDeviceAssociation: ~
+
+    Kadupul\Inventory\Application\Port\DeviceMaintenance:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceMaintenance
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceMaintenance:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+    Kadupul\Inventory\Application\Query\PrepareDeviceMaintenance: ~
+    Kadupul\Inventory\Application\Command\MaintainDevice: ~

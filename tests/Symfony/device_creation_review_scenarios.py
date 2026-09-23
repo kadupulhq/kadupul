@@ -58,6 +58,9 @@ def verify_creation_compatibility(harness, post, fields, created, user_id, check
         verify_remote_collector_assignment(harness, session, created[-1], poller, check)
         from device_state_scenarios import verify_remote_device_state
         verify_remote_device_state(harness, session, created[-1], poller, check)
+        from device_maintenance_scenarios import verify_device_maintenance
+        verify_device_maintenance(harness, session, check)
+        verify_device_maintenance(harness, session, check, poller)
         from device_association_scenarios import verify_query_associations
         verify_query_associations(harness, session, check)
         verify_query_associations(harness, session, check, poller)
