@@ -19,10 +19,11 @@ require_once __DIR__ . '/../../../Helpers/RrdGraphHarness.php';
  * Runs rrdtool_graph_item_fallbacks() from lib/rrd.php on $items twice for
  * graph 9 in a child process and returns what it logged and the items after.
  */
-$runFallbacks = function (array $items) {
+$runFallbacks = function (array $items, $defaultFormat = '%8.2lf %s') {
 	$helper = cacti_test_rrd_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/rrd.php'), 'rrdtool_graph_item_fallbacks');
 
 	$program = 'function cacti_log($m, $o = false, $e = "") { echo "LOG:" . $e . ":" . $m . "\n"; }'
+		. 'function db_fetch_cell_prepared($sql, $params = array()) { return ' . var_export($defaultFormat, true) . '; }'
 		. 'function cacti_sizeof($a) { return is_array($a) ? count($a) : 0; }'
 		. $helper
 		. '$items = json_decode(stream_get_contents(STDIN), true);'
@@ -64,6 +65,13 @@ test('a graph item whose color was deleted draws with no color, logged once', fu
 	expect($stdout)->toContain('ITEMS:[{"gprint_id":"0","gprint_text":null,"color_id":"7","hex":""},{"gprint_id":"4","gprint_text":"%8.2lf %s","color_id":"8","hex":""}]')
 		->and(substr_count($stdout, 'LOG:'))->toBe(1)
 		->and($stdout)->toContain('LOG:WEBUI:WARNING: Graph 9 names a deleted Color 7, GPRINT Preset 4, Color 8');
+});
+
+test('an edited Normal preset is what a dangling item falls back to', function () use ($runFallbacks) {
+	// Preset 2 is editable, so the fallback reads it rather than repeating a copy.
+	$stdout = $runFallbacks(array(array('gprint_id' => '4', 'gprint_text' => null, 'color_id' => '0', 'hex' => null)), '%6.1lf%s');
+
+	expect($stdout)->toContain('"gprint_text":"%6.1lf%s"');
 });
 
 test('graph items with valid references or none are left alone and nothing is logged', function () use ($runFallbacks) {
