@@ -285,3 +285,70 @@ def verify_template_synchronization(harness, session, check, poller=1):
         for database in (['', 'create_remote.'] if poller > 1 else ['']):
             harness.sql(f'DELETE FROM {database}host_graph WHERE host_id IN ({device},{unassigned}); DELETE FROM {database}host WHERE id IN ({device},{unassigned})')
         harness.sql(f'DELETE FROM host_template_graph WHERE host_template_id={template}; DELETE FROM host_template WHERE id={template}')
+
+
+def verify_bulk_options(harness, session, check, poller=1):
+    ids = []
+    trigger = False
+    prefix = 'create_remote.' if poller > 1 else ''
+    check(harness.php('-r', 'require "include/global.php"; function setup_options_hook() { api_plugin_register_hook("compatibility_test","device_action_bottom","compatibility_statistics_action","setup.php",true); } setup_options_hook();')['exit'] == 0, 'bulk options action hook registered')
+    def actions():
+        events = harness.command('cat', '/artifacts/plugin.jsonl')['stdout']
+        return [json.loads(line)['args'] for line in events.splitlines() if json.loads(line).get('callback') == 'statistics_action']
+    before_actions = actions()
+    try:
+        for index in range(2):
+            owner = poller if index == 0 else 1
+            ids.append(int(harness.sql(f"INSERT INTO host (description,hostname,poller_id,location,snmp_port,snmp_timeout,snmp_version,availability_method) VALUES ('bulk-options-{index}','127.0.0.1',{owner},'Original',161,500,0,0); SELECT LAST_INSERT_ID()").strip()))
+        if poller > 1:
+            harness.sql(f'INSERT INTO create_remote.host SELECT * FROM host WHERE id={ids[0]}')
+        selected = ','.join(map(str, ids))
+        form = StateForm(harness, session, ids)
+        form.path = form.path.replace('/disable?', '/options?')
+        fields = form.fields()
+        # HTML parsers capture unchecked inputs too; mimic an actual browser.
+        fields = {key: value for key, value in fields.items() if '[apply_' not in key}
+        check(harness.sql(f"SELECT COUNT(*) FROM host WHERE id IN ({selected}) AND location='Original' AND snmp_timeout=500").strip() == '2', 'bulk options GET does not modify selected devices')
+        check(form.apply(fields) == 422, 'bulk options requires an explicit field selection')
+        update = fields | {'device_state[options][apply_location]': '1', 'device_state[options][location]': 'Rack 東京', 'device_state[options][apply_snmp_timeout]': '1', 'device_state[options][snmp_timeout]': '750'}
+        check(form.request(fields=update, origin=False)[0] == 422, 'bulk options requires same-origin CSRF')
+        missing = dict(update)
+        missing.pop('device_state[_token]')
+        check(form.apply(missing) == 422, 'bulk options requires CSRF token')
+        check(form.apply(update | {'device_state[options][poller_id]': '2'}) == 422, 'bulk options rejects assignment mass updates')
+        check(form.apply(update | {'device_state[options][snmp_timeout]': '0'}) == 422, 'bulk options validates selected polling values')
+        harness.sql(f"UPDATE host SET location='Concurrent' WHERE id={ids[1]}")
+        check(form.apply(update) == 409, 'bulk options rejects concurrent option edits')
+        harness.sql(f"UPDATE host SET location='Original' WHERE id={ids[1]}")
+        if poller > 1:
+            harness.sql(f"UPDATE poller SET last_status='2000-01-01 00:00:00' WHERE id={poller}")
+            try:
+                check(form.apply(update) == 502, 'bulk options rejects offline collectors before writes')
+            finally:
+                harness.sql(f'UPDATE poller SET last_status=NOW() WHERE id={poller}')
+        rejected = ids[0] if poller > 1 else ids[1]
+        harness.sql(f"DELIMITER $$\nCREATE TRIGGER {prefix}reject_bulk_options BEFORE UPDATE ON {prefix}host FOR EACH ROW BEGIN IF NEW.id={rejected} AND NEW.snmp_timeout=750 THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='options fixture rejection'; END IF; END$$\nDELIMITER ;")
+        trigger = True
+        check(form.apply(update) == 502, 'bulk options write failure cannot report success')
+        check(harness.sql(f"SELECT COUNT(*) FROM host WHERE id IN ({selected}) AND location='Original' AND snmp_timeout=500").strip() == '2', 'bulk options failure rolls back entire primary batch')
+        harness.sql(f'DROP TRIGGER {prefix}reject_bulk_options')
+        trigger = False
+        check(actions() == before_actions, 'rejected bulk options do not invoke action 4')
+        check(form.apply(update) == 200, 'bulk options save through Symfony')
+        check(actions()[len(before_actions):] == [[['4', sorted(ids)]]], 'bulk options invokes action 4 once for the complete selection')
+        location_hex = 'Rack 東京'.encode().hex().upper()
+        check(harness.sql(f"SELECT COUNT(*) FROM host WHERE id IN ({selected}) AND HEX(location)='{location_hex}' AND snmp_timeout=750 AND snmp_port=161").strip() == '2', 'bulk options changes selected fields and preserves unchecked values')
+        if poller > 1:
+            check(harness.sql(f"SELECT COUNT(*) FROM create_remote.host WHERE id={ids[0]} AND HEX(location)='{location_hex}' AND snmp_timeout=750 AND snmp_port=161").strip() == '1', 'bulk options verifies remote values')
+        cleared = {key: value for key, value in form.fields().items() if '[apply_' not in key}
+        cleared |= {'device_state[options][apply_location]': '1', 'device_state[options][location]': '', 'device_state[options][snmp_timeout]': '0'}
+        check(form.apply(cleared) == 200, 'bulk options allows clearing location and ignores unchecked invalid values')
+        check(harness.sql(f"SELECT COUNT(*) FROM host WHERE id IN ({selected}) AND location='' AND snmp_timeout=750").strip() == '2', 'bulk location clearing preserves polling values')
+    finally:
+        harness.sql("DELETE FROM plugin_hooks WHERE name='compatibility_test' AND hook='device_action_bottom' AND `function`='compatibility_statistics_action'")
+        if trigger:
+            harness.sql(f'DROP TRIGGER {prefix}reject_bulk_options')
+        if ids:
+            selected = ','.join(map(str, ids))
+            for database in (['', 'create_remote.'] if poller > 1 else ['']):
+                harness.sql(f'DELETE FROM {database}host WHERE id IN ({selected}); DELETE FROM {database}poller_item WHERE host_id IN ({selected})')

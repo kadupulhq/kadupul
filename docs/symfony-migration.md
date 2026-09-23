@@ -925,3 +925,17 @@ Existing graph/data records are retained; legacy automation may create new graph
 Primary and remote associations are verified before primary commit. Remote changes
 may survive a later failure, which returns the existing uncertain-outcome response.
 Action 7 and template-change callbacks retain legacy semantics. LTS is unchanged.
+
+
+### Bulk location and polling options
+
+`/inventory/devices/options` uses explicit field selectors, a Symfony form and
+`ChangeDeviceOptions` through the `DeviceOptions` port. `DeviceOptionsChange`
+rejects unsupported fields and validates selected polling values with the existing
+domain rules. Unchecked values are retained; an explicitly selected empty location
+clears it. Confirmation revisions include all supported options. The isolated
+worker rechecks authorization, writes the entire primary selection transactionally,
+refreshes polling configuration and invokes legacy action 4. Remote outcomes are
+verified and failures report uncertainty because remote writes are not distributed
+transactions. Bulk collector/site/template assignment and SNMP credential changes
+remain separate pending slices; the legacy bulk options page is not retired yet.

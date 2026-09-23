@@ -80,7 +80,7 @@ try {
             $read($connection, 'SELECT id FROM sites WHERE id = ? FOR UPDATE', [$siteId]);
         }
     }
-    $rows = $read($connection, "SELECT id, description, hostname, disabled, status, site_id, poller_id, host_template_id FROM host WHERE id IN ($placeholders) AND deleted = '' ORDER BY id FOR UPDATE", $ids);
+    $rows = $read($connection, "SELECT id, description, hostname, disabled, status, site_id, poller_id, host_template_id, location, device_threads, snmp_port, snmp_timeout, max_oids, bulk_walk_size, availability_method, ping_method, ping_port, ping_timeout, ping_retries FROM host WHERE id IN ($placeholders) AND deleted = '' ORDER BY id FOR UPDATE", $ids);
     if (count($rows) !== count($ids)) {
         $status = 'missing';
         throw new RuntimeException('Devices unavailable');

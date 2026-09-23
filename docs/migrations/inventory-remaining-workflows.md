@@ -18,7 +18,7 @@ compatibility. LTS remains unchanged. Plugin-owned pages are outside this queue.
 | Device collector assignment | PR #266 |
 | Device bulk enable/disable | PR #272 |
 | Device deletion and graph/data retention choices | PR #276 |
-| Device bulk options, statistics and template synchronization | Statistics reset implemented in PR #288; template synchronization implemented in PR #295; bulk options pending |
+| Device bulk options, statistics and template synchronization | Statistics reset implemented in PR #288; template synchronization implemented in PR #295; bulk location/polling options implemented in the next stacked PR; bulk assignments and SNMP credentials pending |
 | Device graph-template associations | Pending |
 | Device data-query associations and reindex settings | Pending |
 | Device reindex, poller-cache/debug and connectivity actions | Pending |

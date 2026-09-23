@@ -27,8 +27,8 @@ use Twig\Environment;
 
 final class DeviceStateController
 {
-    #[Route('/inventory/devices/{operation}', name: 'inventory_device_state', requirements: ['operation' => 'enable|disable|clear-statistics|sync-template'], methods: ['GET', 'HEAD', 'POST'])]
-    public function __invoke(string $operation, Request $request, PrepareDeviceStateChange $prepare, SetDevicesEnabled $setEnabled, \Kadupul\Inventory\Application\Command\ClearDeviceStatistics $clearStatistics, \Kadupul\Inventory\Application\Command\SynchronizeDeviceTemplates $synchronizeTemplates, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
+    #[Route('/inventory/devices/{operation}', name: 'inventory_device_state', requirements: ['operation' => 'enable|disable|clear-statistics|sync-template|options'], methods: ['GET', 'HEAD', 'POST'])]
+    public function __invoke(string $operation, Request $request, PrepareDeviceStateChange $prepare, SetDevicesEnabled $setEnabled, \Kadupul\Inventory\Application\Command\ClearDeviceStatistics $clearStatistics, \Kadupul\Inventory\Application\Command\SynchronizeDeviceTemplates $synchronizeTemplates, \Kadupul\Inventory\Application\Command\ChangeDeviceOptions $changeOptions, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator): Response
     {
         $headers = ['Cache-Control' => 'private, no-store'];
         try {
@@ -53,7 +53,7 @@ final class DeviceStateController
             $revisions[$device->id] = $device->revision();
         }
         $parameters = ['operation' => $operation, 'ids' => $ids, 'list' => $filters];
-        $form = $forms->create(DeviceStateType::class, ['selection' => json_encode($revisions, JSON_THROW_ON_ERROR)], [ 'action' => $urls->generate('inventory_device_state', $parameters)]);
+        $form = $forms->create(DeviceStateType::class, ['selection' => json_encode($revisions, JSON_THROW_ON_ERROR)] + ($operation === 'options' ? ['options' => \Kadupul\Inventory\Domain\DeviceOptionsChange::DEFAULTS] : []), ['edit_options' => $operation === 'options', 'action' => $urls->generate('inventory_device_state', $parameters)]);
         $form->handleRequest($request);
         $status = $request->isMethod('POST') ? 422 : 200;
         if ($form->isSubmitted()) {
@@ -71,7 +71,15 @@ final class DeviceStateController
                     if (array_keys($selection->revisions) !== $ids) {
                         throw new \InvalidArgumentException('Invalid device selection.');
                     }
-                    if ($operation === 'sync-template') {
+                    if ($operation === 'options') {
+                        $changes = [];
+                        foreach (\Kadupul\Inventory\Domain\DeviceOptionsChange::DEFAULTS as $field => $default) {
+                            if ($data['options']['apply_' . $field] ?? false) {
+                                $changes[$field] = $data['options'][$field];
+                            }
+                        }
+                        $changeOptions($selection, new \Kadupul\Inventory\Domain\DeviceOptionsChange($changes));
+                    } elseif ($operation === 'sync-template') {
                         $synchronizeTemplates($selection);
                     } elseif ($operation === 'clear-statistics') {
                         $clearStatistics($selection);
@@ -86,7 +94,9 @@ final class DeviceStateController
                 } catch (DeviceEditConflict $error) {
                     $status = 409;
                     $form->addError(new FormError($translator->trans($error->getMessage(), [], 'inventory')));
-                } catch (\JsonException|\InvalidArgumentException) {
+                } catch (\InvalidArgumentException $error) {
+                    $form->addError(new FormError($translator->trans($error->getMessage(), [], 'inventory')));
+                } catch (\JsonException) {
                     $form->addError(new FormError($translator->trans('Invalid device selection.', [], 'inventory')));
                 } catch (\RuntimeException) {
                     $status = 502;
