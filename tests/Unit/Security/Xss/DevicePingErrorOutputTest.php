@@ -12,14 +12,14 @@ function db_fetch_row_prepared($sql, $parameters) {
 }
 
 $root = dirname(__DIR__, 4);
+require_once $root . '/tests/Helpers/PhpSource.php';
 $pingErrorProduction = '';
 foreach (['lib/api_device.php' => 'api_device_ping_device', 'lib/html.php' => 'html_escape'] as $file => $function) {
 	$source = file_get_contents($root . '/' . $file);
-	if (!preg_match('/^function ' . $function . '\(.*?^}/ms', $source, $match)) {
-		throw new \RuntimeException('Missing production function: ' . $function);
-	}
-	eval('namespace ' . __NAMESPACE__ . ';' . $match[0]);
-	$pingErrorProduction .= $match[0] . "\n";
+	$body = \test_php_function_source($source, $function);
+	// Only checked-in production functions are evaluated; no request input is executable.
+	eval('namespace ' . __NAMESPACE__ . ';' . $body); // nosemgrep: php.lang.security.eval-use.eval-use
+	$pingErrorProduction .= $body . "\n";
 }
 
 test('missing device ping renders text and preserves the bound lookup', function ($id, $remote) {
