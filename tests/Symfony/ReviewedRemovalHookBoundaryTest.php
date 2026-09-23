@@ -52,6 +52,11 @@ function db_execute($sql)
     $GLOBALS['hook_boundary_writes'][] = $sql;
     return true;
 }
+function db_execute_prepared($sql, $parameters)
+{
+    $GLOBALS['hook_boundary_writes'][] = $sql;
+    return true;
+}
 function api_plugin_hook_function($name, $ids)
 {
     $GLOBALS['hook_boundary_events'][] = $name;
@@ -84,6 +89,31 @@ final class ReviewedRemovalHookBoundaryTest extends TestCase
             self::assertSame('Ownership changed', $error->getMessage());
         }
         self::assertSame([], $GLOBALS['hook_boundary_writes']);
+    }
+
+    public function testGraphlessPurgeRevalidatesAfterHostMutation(): void
+    {
+        $GLOBALS['hook_boundary_writes'] = $GLOBALS['hook_boundary_events'] = [];
+        $GLOBALS['hook_boundary_inject'] = null;
+        $GLOBALS['hook_boundary_poller'] = 1;
+        $verifications = 0;
+        try {
+            api_device_remove_multi([7], 2, [
+                'graphs' => [],
+                'data_sources' => [10],
+                'by_device' => [7 => ['poller_id' => 1]],
+            ], [], static function () use (&$verifications): void {
+                ++$verifications;
+                if ($verifications === 2) {
+                    self::assertContains('DELETE FROM host WHERE id IN (7) AND poller_id = 1', $GLOBALS['hook_boundary_writes']);
+                    throw new RuntimeException('Post-host ownership changed');
+                }
+            });
+            self::fail('Post-host mutation was not revalidated');
+        } catch (RuntimeException $error) {
+            self::assertSame('Post-host ownership changed', $error->getMessage());
+        }
+        self::assertSame(2, $verifications);
     }
 
     #[DataProvider('collectorChanges')]
