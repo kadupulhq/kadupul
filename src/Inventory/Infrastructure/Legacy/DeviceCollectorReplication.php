@@ -33,7 +33,20 @@ final class DeviceCollectorReplication
             // present on both ends are copied. Identity is always mandatory.
             $columns = static fn(PDO $db): array => $db->query("SHOW COLUMNS FROM $table")->fetchAll(PDO::FETCH_COLUMN);
             $common = array_values(array_intersect($columns($primary), $columns($target)));
-            $required = $table === 'host' ? ['id', 'poller_id', 'host_template_id', 'hostname', 'disabled', 'deleted'] : [];
+            $required = match ($table) {
+                'host' => ['id', 'poller_id', 'host_template_id', 'hostname', 'disabled', 'deleted'],
+                'host_graph' => ['host_id', 'graph_template_id'],
+                'host_snmp_query' => ['host_id', 'snmp_query_id'],
+                'host_snmp_cache' => ['host_id', 'snmp_query_id', 'field_name', 'snmp_index'],
+                'poller_item' => ['host_id', 'poller_id', 'local_data_id', 'rrd_name'],
+                'poller_reindex' => ['host_id', 'data_query_id', 'arg1'],
+                'data_local' => ['id', 'host_id', 'data_template_id', 'snmp_query_id', 'snmp_index'],
+                'graph_local' => ['id', 'host_id', 'graph_template_id', 'snmp_query_id', 'snmp_query_graph_id', 'snmp_index'],
+                'data_template_data' => ['id', 'local_data_id', 'local_data_template_data_id', 'data_template_id', 'data_input_id'],
+                'data_template_rrd' => ['id', 'local_data_id', 'local_data_template_rrd_id', 'data_template_id', 'data_source_name', 'data_input_field_id'],
+                'graph_templates_item' => ['id', 'local_graph_id', 'local_graph_template_item_id', 'graph_template_id', 'task_item_id'],
+                'data_input_data' => ['data_template_data_id', 'data_input_field_id'],
+            };
             if ($common === [] || array_diff($required, $common) !== []) {
                 throw new \RuntimeException('Collector schema lacks required identity');
             }
