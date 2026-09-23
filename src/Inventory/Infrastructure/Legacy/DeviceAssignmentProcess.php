@@ -17,7 +17,7 @@ final class DeviceAssignmentProcess
 {
     public static function run(PDO $database, string $projectDir, string $kind, array $command): void
     {
-        if (!in_array($kind, ['collector', 'template'], true)) {
+        if (!in_array($kind, ['collector', 'template', 'associations'], true)) {
             throw new \InvalidArgumentException('Unknown assignment worker.');
         }
         $label = ucfirst($kind);

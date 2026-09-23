@@ -74,6 +74,16 @@ def main():
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceBulkAssignmentController.php',
         'src/Inventory/Application/Command/ChangeDevicesSnmp.php',
         'src/Inventory/Infrastructure/Legacy/DeviceSnmpWriter.php',
+        'bin/legacy-device-associations.php',
+        'src/Inventory/Domain/DeviceAssociations.php',
+        'src/Inventory/Domain/DeviceAssociationChange.php',
+        'src/Inventory/Application/Command/ChangeDeviceAssociation.php',
+        'src/Inventory/Application/Query/PrepareDeviceAssociations.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDeviceAssociations.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceAssociationRecords.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceAssociationWriter.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DeviceAssociationController.php',
+        'src/Inventory/Infrastructure/Symfony/Form/DeviceAssociationType.php',
         'src/Inventory/Domain/DeviceOptionsChange.php',
         'src/Inventory/Application/Command/ChangeDeviceOptions.php',
         'src/Inventory/Infrastructure/Legacy/DeviceOptionsWriter.php',
@@ -121,6 +131,7 @@ def main():
     synchronization_checks = ['template synchronization saves through Symfony', 'template synchronization failure rolls back primary associations', 'remote template synchronization preserves assigned template identity', 'template synchronization invokes action 7 once with complete selection', 'template synchronization invokes the template-change hook once per assigned device', 'template synchronization retains existing graphs']
     assignment_checks = ['bulk site assigns through Symfony', 'bulk template assigns through Symfony', 'bulk site failure rolls back whole primary selection', 'bulk template failure rolls back whole primary selection', 'bulk collector moves full selection to remote', 'bulk collector returns full selection to primary', 'bulk collector purges old remote copies']
     snmp_checks = ['bulk SNMP never displays stored credentials', 'bulk SNMP keeps each device credentials through Symfony', 'bulk SNMP validates all stored credentials before writes', 'bulk SNMP failure rolls back entire primary selection', 'bulk SNMP replaces credentials through Symfony', 'bulk SNMP verifies remote credentials', 'bulk SNMP secrets stay out of database diagnostics']
+    graph_checks = ['graph association adds through Symfony', 'graph association removes through Symfony', 'graph association failure rolls back primary writes', 'graph association verifies remote template', 'graph association removal retains existing graphs']
     option_checks = ['bulk options save through Symfony', 'bulk options failure rolls back entire primary batch', 'bulk options verifies remote values', 'bulk options changes selected fields and preserves unchecked values', 'bulk options invokes action 4 once for the complete selection', 'rejected bulk options do not invoke action 4']
     failures = {
         'source-hash': 'Covered source differs',
@@ -165,6 +176,8 @@ def main():
         failures['missing-assignment-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(snmp_checks)):
         failures['missing-snmp-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(graph_checks)):
+        failures['missing-graph-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(option_checks)):
         failures['missing-option-check-' + str(index)] = 'Incomplete Symfony integration'
     for source in required:
@@ -218,6 +231,9 @@ def main():
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case.startswith('missing-snmp-check-'):
                 missing = snmp_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-graph-check-'):
+                missing = graph_checks[int(case.rsplit('-', 1)[1])]
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case.startswith('missing-option-check-'):
                 missing = option_checks[int(case.rsplit('-', 1)[1])]

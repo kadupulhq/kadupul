@@ -963,3 +963,14 @@ writes. Explicit replacement applies the submitted credentials to every selected
 device. Leaving version 3 clears its credentials as in the single-device editor.
 Primary changes are transactional, remote values are verified, and failures use
 the existing uncertain-outcome response with empty password controls.
+
+
+### Device graph-template associations
+
+`/inventory/devices/{id}/associations/graph` uses Symfony Form/Twig and the
+`ChangeDeviceAssociation` use case through `DeviceAssociationStore`. Revisions cover
+the current associations and assignment identity. Only eligible non-query graph
+templates can be added. The worker rechecks visibility and locks the device and
+association rows, preserves automation/plugin hooks on addition, verifies primary
+and remote state and retains existing graphs on removal. Primary rollback cannot
+undo remote or automation side effects; failures require inspection before retry.

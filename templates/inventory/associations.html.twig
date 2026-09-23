@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'Device graph-template associations'|trans({}, 'inventory') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    <h1>{{ 'Device graph-template associations'|trans({}, 'inventory') }} — {{ device.description }}</h1>
+    {% if saved %}<p><output>{{ 'Device associations updated.'|trans({}, 'inventory') }}</output></p>{% endif %}
+    <p>{{ 'Removing an association retains existing graphs and historical data. Adding an association may create graphs through automation. Affected collectors must be online.'|trans({}, 'inventory') }}</p>
+    <ul>{% for id, name in device.items %}<li>{{ name }} (#{{ id }})</li>{% else %}<li>{{ 'None'|trans({}, 'inventory') }}</li>{% endfor %}</ul>
+    {{ form_start(form) }}{{ form_errors(form) }}{{ form_widget(form) }}
+        <button type="submit">{{ 'Save association'|trans({}, 'inventory') }}</button>
+    {{ form_end(form) }}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route and validated list filters. #}
+    <p><a href="{{ path('inventory_devices', filters) }}">{{ 'Back to devices'|trans({}, 'inventory') }}</a></p>
+</main>
+{% endblock %}

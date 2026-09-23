@@ -58,6 +58,9 @@ def verify_creation_compatibility(harness, post, fields, created, user_id, check
         verify_remote_collector_assignment(harness, session, created[-1], poller, check)
         from device_state_scenarios import verify_remote_device_state
         verify_remote_device_state(harness, session, created[-1], poller, check)
+        from device_association_scenarios import verify_graph_associations
+        verify_graph_associations(harness, session, check)
+        verify_graph_associations(harness, session, check, poller)
         from device_bulk_snmp_scenarios import verify_bulk_snmp
         verify_bulk_snmp(harness, session, check, poller)
         from device_bulk_assignment_scenarios import verify_bulk_assignments
