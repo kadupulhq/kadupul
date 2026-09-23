@@ -34,7 +34,7 @@ function run_remove($handler) {
 	$source = file_get_contents(dirname(__DIR__, 4) . '/lib/api_device.php');
 
 	$functions = '';
-	foreach (array('api_device_remove', 'api_device_remove_multi') as $name) {
+	foreach (array('api_device_remove', 'api_device_remove_multi', 'api_device_purge_deleted_devices') as $name) {
 		$functions .= test_php_function_source($source, $name) . "\n";
 	}
 
@@ -43,7 +43,7 @@ $config = array();
 $bound = array();
 function db_fetch_cell_prepared($sql, $params) { return 1; }
 function db_fetch_assoc($sql) { return array(array("id" => 5, "poller_id" => 1)); }
-function db_fetch_assoc_prepared($sql, $params = array()) { return array(); }
+function db_fetch_assoc_prepared($sql, $params = array()) { return strpos($sql, "deleted") !== false ? array(array("id" => 5, "poller_id" => 1)) : array(); }
 function db_execute($sql, $log = true, $conn = false) { return true; }
 function db_execute_prepared($sql, $params = array()) {
 	if (preg_match("/DELETE FROM ([a-z_]+)/", $sql, $matches)) {
@@ -68,7 +68,6 @@ function poller_push_to_remote_db_connect(...$args) { return false; }
 function input_validate_input_number(...$args) {}
 function set_config_option(...$args) {}
 function api_device_cache_crc_update(...$args) {}
-function api_device_purge_deleted_devices(...$args) {}
 register_shutdown_function(function () { echo json_encode($GLOBALS["bound"]); });
 ' . $functions . $handler . ';
 ';
@@ -94,4 +93,12 @@ test('the poller command delete keeps its LIKE pattern', function () {
 	$bound = run_remove('api_device_remove(5)');
 
 	expect($bound['poller_command'])->toBe('5:%');
+});
+
+test('the deferred purge binds the device id the same way', function () {
+	// db_fetch_assoc_prepared returns one device awaiting purge, id 5.
+	$bound = run_remove('api_device_purge_deleted_devices()');
+
+	expect($bound['reports_items'])->toBe(5)
+		->and($bound['poller_command'])->toBe('5:%');
 });
