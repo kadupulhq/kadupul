@@ -14,6 +14,17 @@ use PHPUnit\Framework\TestCase;
 
 final class DeviceQueryCatalogTest extends TestCase
 {
+    public function testCatalogHonorsSnmpCapabilityAndRetainsExistingMappings(): void
+    {
+        $db = new \PDO('sqlite::memory:');
+        $db->exec("CREATE TABLE snmp_query (id INTEGER,name TEXT,data_input_id INTEGER); INSERT INTO snmp_query VALUES (1,'SNMP',2),(2,'Script',3); CREATE TABLE host_snmp_query (host_id INTEGER,snmp_query_id INTEGER,reindex_method INTEGER); INSERT INTO host_snmp_query VALUES (7,1,0)");
+        $records = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceAssociationRecords();
+        self::assertSame([2 => 'Script'], $records->available($db, 'query', false, 0));
+        self::assertSame([1 => 'SNMP', 2 => 'Script'], $records->available($db, 'query', false, 2));
+        $snapshot = $records->snapshot($db, ['id' => 7, 'description' => 'fixture', 'site_id' => 0, 'poller_id' => 1, 'host_template_id' => 0, 'snmp_version' => 0], 'query');
+        self::assertSame([1 => 'SNMP'], $snapshot->items);
+        $snapshot->assertChange(new DeviceAssociationChange('query', 'remove', 1), $snapshot->revision());
+    }
     private function database(bool $catalog): \PDO
     {
         $db = new \PDO('sqlite::memory:');
