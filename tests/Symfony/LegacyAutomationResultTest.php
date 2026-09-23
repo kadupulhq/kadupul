@@ -158,7 +158,10 @@ function create_complete_graph_from_template($template, $host, $query, &$suggest
     if (RuleFixture::$kind === 'graph-tree') {
         automation_hook_graph_create_tree(['id' => 8]);
     }
-    return ['local_graph_id' => 8, 'local_data_id' => [11]];
+    if (RuleFixture::$outcome !== 'missing-data') {
+        RuleFixture::$db->prepare('INSERT INTO data_local VALUES (11,?,?,?)')->execute([RuleFixture::$outcome === 'wrong-data-owner' ? 99 : $host, $query['snmp_query_id'] ?? 0, $query['snmp_index'] ?? '']);
+    }
+    return ['local_graph_id' => 8, 'local_data_id' => [RuleFixture::$outcome === 'false-data-id' ? false : 11]];
 }
 function fixture_tree_node($host, $graph, $parent, $rule)
 {
@@ -194,7 +197,7 @@ final class LegacyAutomationResultTest extends TestCase
         $GLOBALS['config'] = ['base_path' => $this->directory];
         $GLOBALS['automation_tree_header_types'] = ['string' => 'fixture'];
         RuleFixture::$db = new PDO('sqlite::memory:');
-        RuleFixture::$db->exec('CREATE TABLE graph_local (id INTEGER, host_id INTEGER, graph_template_id INTEGER, snmp_query_id INTEGER, snmp_query_graph_id INTEGER, snmp_index TEXT); CREATE TABLE graph_tree_items (id INTEGER, graph_tree_id INTEGER, parent INTEGER, host_id INTEGER, local_graph_id INTEGER)');
+        RuleFixture::$db->exec('CREATE TABLE data_local (id INTEGER, host_id INTEGER, snmp_query_id INTEGER, snmp_index TEXT); CREATE TABLE graph_local (id INTEGER, host_id INTEGER, graph_template_id INTEGER, snmp_query_id INTEGER, snmp_query_graph_id INTEGER, snmp_index TEXT); CREATE TABLE graph_tree_items (id INTEGER, graph_tree_id INTEGER, parent INTEGER, host_id INTEGER, local_graph_id INTEGER)');
     }
     protected function tearDown(): void
     {
@@ -225,7 +228,7 @@ final class LegacyAutomationResultTest extends TestCase
     {
         yield 'no applicable rules is complete' => ['none', 'valid', true];
         foreach (['graph', 'query'] as $kind) {
-            foreach (['false', 'empty', 'unpersisted', 'wrong-owner', 'invalid-data', 'valid'] as $outcome) {
+            foreach (['false', 'empty', 'unpersisted', 'wrong-owner', 'invalid-data', 'false-data-id', 'missing-data', 'wrong-data-owner', 'valid'] as $outcome) {
                 yield "$kind $outcome" => [$kind, $outcome, $outcome === 'valid'];
             }
         }
