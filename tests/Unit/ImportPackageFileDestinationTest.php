@@ -156,6 +156,26 @@ test('previews an existing script file', function () {
 	expect($result[1])->toBe(array('scripts/ss_test.php' => 'writable, identical'));
 });
 
+test('previews changed script content without overwriting it', function () {
+	$path = $this->base . '/scripts/ss_test.php';
+	file_put_contents($path, "different content\0with binary bytes");
+	$result = importPkgDestRun(array('scripts/ss_test.php'), true);
+	expect($result[1]['scripts/ss_test.php'])->toBe('writable, differences');
+	expect(file_get_contents($path))->toBe("different content\0with binary bytes");
+});
+
+test('replacement warnings distinguish equal and changed content', function ($existing, $warns) {
+	$name = 'scripts/ss_test.php';
+	file_put_contents($this->base . '/' . $name, $existing);
+	$result = importPkgDestRun(array($name));
+	expect($result[1][$name])->toBe('written');
+	expect(file_get_contents($this->base . '/' . $name))->toBe('payload for ' . $name);
+	$warnings = array_filter($GLOBALS['import_pkg_dest']['logs'], function ($message) {
+		return strpos($message, 'WARNING: Package file replaces a different existing file:') === 0;
+	});
+	expect(count($warnings))->toBe($warns ? 1 : 0);
+})->with([['payload for scripts/ss_test.php', false], ['different payload', true]]);
+
 test('refuses a scripts directory that is not at the Cacti base or in a plugin', function () {
 	$result = importPkgDestRun(array('evil/scripts/payload.php', 'plugins/thold/evil/resource/x.php'));
 

@@ -1,4 +1,5 @@
 <?php
+// SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
 /*
  +-------------------------------------------------------------------------+
  | Copyright (C) 2004-2026 The Cacti Group                                 |
@@ -748,7 +749,7 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 						continue;
 					}
 
-					if (file_exists($filename) && md5_file($filename) !== md5($fdata)) {
+					if (file_exists($filename) && hash_file('sha256', $filename) !== hash('sha256', $fdata)) {
 						cacti_log('WARNING: Package file replaces a different existing file: ' . $filename, false, 'IMPORT');
 					}
 
@@ -780,10 +781,10 @@ function import_package($xmlfile, $profile_id = 1, $remove_orphans = false, $rep
 			} else {
 				cacti_log('Previewing file: ' . $filename, false, 'IMPORT', POLLER_VERBOSITY_MEDIUM);
 
-				$new = md5($fdata);
+				$new = hash('sha256', $fdata);
 
 				if (file_exists($filename)) {
-					$existing = md5_file($filename);
+					$existing = hash_file('sha256', $filename);
 				}
 
 				if (is_writeable(dirname($filename))) {
