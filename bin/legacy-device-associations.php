@@ -51,7 +51,7 @@ try {
     $records = new DeviceAssociationRecords();
     $device = $records->snapshot($connection, $row, $change->kind, true);
     $device->assertChange($change, $command['revision']);
-    if ($change->operation !== 'remove' && !array_key_exists($change->targetId, $records->available($connection, $change->kind, true))) {
+    if ($change->operation !== 'remove' && !array_key_exists($change->targetId, $records->available($connection, $change->kind, true, $device->snmpVersion))) {
         throw new InvalidArgumentException('Invalid association target');
     }
     $query = $connection->prepare('SELECT id FROM poller WHERE id = ? FOR UPDATE');

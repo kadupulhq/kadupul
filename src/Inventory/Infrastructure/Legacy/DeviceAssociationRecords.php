@@ -31,10 +31,10 @@ final class DeviceAssociationRecords
         $items = $this->read($db, $sql, [(int) $row['id']], PDO::FETCH_KEY_PAIR);
         return new DeviceAssociations((int) $row['id'], (string) $row['description'], (int) $row['site_id'], (int) $row['poller_id'], (int) $row['host_template_id'], $items, [], 'graph', (int) $row['snmp_version']);
     }
-    public function available(PDO $db, string $kind, bool $lock = false): array
+    public function available(PDO $db, string $kind, bool $lock = false, int $snmpVersion = 0): array
     {
         if ($kind === 'query') {
-            return $this->read($db, "SELECT id, COALESCE(name, '') AS name FROM snmp_query WHERE id > 0 ORDER BY id" . ($lock ? ' LOCK IN SHARE MODE' : ''), [], PDO::FETCH_KEY_PAIR);
+            return $this->read($db, "SELECT id, COALESCE(name, '') AS name FROM snmp_query WHERE id > 0" . ($snmpVersion === 0 ? " AND data_input_id <> 2" : "") . " ORDER BY id" . ($lock ? ' LOCK IN SHARE MODE' : ''), [], PDO::FETCH_KEY_PAIR);
         }
         if ($kind !== 'graph') {
             throw new \InvalidArgumentException('Invalid association kind.');

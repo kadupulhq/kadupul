@@ -111,9 +111,11 @@ def verify_query_associations(harness, session, check, poller=1):
         device = int(harness.sql(f"INSERT INTO host (description,hostname,poller_id,site_id,snmp_version,availability_method,disabled) VALUES ('query-association-fixture','127.0.0.1',{poller},0,0,0,'on'); SELECT LAST_INSERT_ID()").strip())
         if poller > 1:
             harness.sql(f'INSERT INTO create_remote.host SELECT * FROM host WHERE id={device}')
-        target = int(harness.sql('SELECT id FROM snmp_query ORDER BY id LIMIT 1').strip())
+        target = int(harness.sql('SELECT id FROM snmp_query WHERE data_input_id <> 2 ORDER BY id LIMIT 1').strip())
         form = AssociationForm(harness, session, device, 'query')
         fields = form.fields() | {'device_association[operation]': 'add', 'device_association[target]': str(target), 'device_association[reindex]': '2'}
+        snmp_only = int(harness.sql('SELECT id FROM snmp_query WHERE data_input_id=2 ORDER BY id LIMIT 1').strip())
+        check(form.request(fields=fields | {'device_association[target]': str(snmp_only)})[0] == 422, 'SNMP-disabled device rejects an SNMP query target')
         check(form.request(fields=fields, origin=False)[0] == 422, 'query association requires same-origin CSRF')
         missing = dict(fields)
         missing.pop('device_association[_token]')
