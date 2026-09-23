@@ -18,7 +18,7 @@ final class DeviceRemovalDependentsTest extends TestCase
     {
         $sqlite = new \PDO('sqlite::memory:');
         $sqlite->exec('CREATE TABLE graph_templates_graph (id INTEGER, local_graph_id INTEGER)');
-        $sqlite->exec('CREATE TABLE data_template_data (id INTEGER, local_data_id INTEGER); CREATE TABLE data_template_rrd (id INTEGER, local_data_id INTEGER); CREATE TABLE graph_templates_item (id INTEGER, local_graph_id INTEGER, task_item_id INTEGER); CREATE TABLE data_input_data (data_template_data_id INTEGER)');
+        $sqlite->exec('CREATE TABLE data_template_data (id INTEGER, local_data_id INTEGER); CREATE TABLE data_template_rrd (id INTEGER, local_data_id INTEGER); CREATE TABLE graph_templates_item (id INTEGER, local_graph_id INTEGER, task_item_id INTEGER); CREATE TABLE data_input_data (data_template_data_id INTEGER, data_input_field_id INTEGER)');
         $sqlite->exec('INSERT INTO data_template_data VALUES (101,12); INSERT INTO data_template_rrd VALUES (102,12); INSERT INTO graph_templates_item VALUES (103,11,102)');
         // Execute real predicates in SQLite; separately assert MySQL locking intent.
         $db = $this->createMock(\PDO::class);
@@ -44,7 +44,7 @@ final class DeviceRemovalDependentsTest extends TestCase
         yield 'new graph item on deleted graph' => ['INSERT INTO graph_templates_item VALUES (999,11,999)'];
         yield 'new template on deleted data' => ['INSERT INTO data_template_data VALUES (999,12)'];
         yield 'new RRD on deleted data' => ['INSERT INTO data_template_rrd VALUES (999,12)'];
-        yield 'input points to deleted template' => ['INSERT INTO data_input_data VALUES (101)'];
+        yield 'input points to deleted template' => ['INSERT INTO data_input_data VALUES (101, 1)'];
         yield 'reassigned template' => ['INSERT INTO data_template_data VALUES (101,99)'];
         yield 'reassigned RRD' => ['INSERT INTO data_template_rrd VALUES (102,99)'];
         yield 'reassigned graph item' => ['INSERT INTO graph_templates_item VALUES (103,99,999)'];

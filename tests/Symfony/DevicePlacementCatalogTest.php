@@ -47,7 +47,7 @@ final class DevicePlacementCatalogTest extends TestCase
         $sqlite->exec("CREATE TABLE graph_tree (id INTEGER, name TEXT, user_id INTEGER, locked INTEGER, modified_by INTEGER);
             INSERT INTO graph_tree VALUES (1,'Owned',42,0,0);
             CREATE TABLE graph_tree_items (id INTEGER, graph_tree_id INTEGER, parent INTEGER, host_id INTEGER, local_graph_id INTEGER, site_id INTEGER, title TEXT, host_grouping_type INTEGER, sort_children_type INTEGER);
-            INSERT INTO graph_tree_items VALUES (11,1,10,7,0,0,'',1,1)");
+            CREATE UNIQUE INDEX graph_tree_device_placement ON graph_tree_items (graph_tree_id, parent, host_id);");
         $sqlite->prepare('INSERT INTO graph_tree_items VALUES (10,1,0,0,0,?,?,1,1)')->execute([$site, $title]);
         // SQL semantics run against SQLite; row locking is covered by the
         // disposable MariaDB contention probe rather than simulated here.
@@ -58,7 +58,11 @@ final class DevicePlacementCatalogTest extends TestCase
         $db->method('get')->willReturn($pdo);
         $access = $this->createMock(ResourceAccess::class);
         $access->method('canManageTree')->willReturn(true);
-        $placement = new LegacyDeviceTreePlacement($db, $access);
+        $writer = static function (int $treeId, int $parentId, int $deviceId) use ($sqlite): bool {
+            $statement = $sqlite->prepare("INSERT INTO graph_tree_items VALUES (11,?, ?, ?,0,0,'',1,1)");
+            return $statement->execute([$treeId, $parentId, $deviceId]);
+        };
+        $placement = new LegacyDeviceTreePlacement($db, $access, $writer);
         $receipt = $placement->place(42, [7], 1, 10);
         self::assertCount(1, $receipt);
         self::assertSame(10, $receipt[0]['parent']);
