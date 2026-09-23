@@ -44,7 +44,11 @@ final class DeviceRemovalController
                 try {
                     $data = $form->getData();
                     $selection = $selectionForm->selection($data, $ids);
-                    $remove($selection, DeviceRemovalPolicy::from($data['policy']));
+                    $policy = DeviceRemovalPolicy::tryFrom($data['policy']);
+                    if ($policy === null) {
+                        throw new \InvalidArgumentException('Unknown removal policy');
+                    }
+                    $remove($selection, $policy);
                     return new RedirectResponse($urls->generate('inventory_devices', $filters + ['completed' => 'remove']), 303, $headers);
                 } catch (\RuntimeException|\JsonException|\InvalidArgumentException $error) {
                     $status = $selectionForm->failure($error, $form, 'Device removal outcome is uncertain. Check selected devices, graphs and data sources before retrying.');
