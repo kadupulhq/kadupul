@@ -105,6 +105,7 @@ def main():
     if set(measured['files']) != set(required):
         raise RuntimeError('Self-test requires real HTTP and worker measurements')
     statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
+    synchronization_checks = ['template synchronization saves through Symfony', 'template synchronization failure rolls back primary associations', 'remote template synchronization preserves assigned template identity', 'template synchronization invokes action 7 once with complete selection', 'template synchronization invokes the template-change hook once per assigned device', 'template synchronization retains existing graphs']
     failures = {
         'source-hash': 'Covered source differs',
         'test-hash': 'Integration test source differs',
@@ -142,6 +143,8 @@ def main():
     }
     for index in range(len(statistics_checks)):
         failures['missing-statistics-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(synchronization_checks)):
+        failures['missing-synchronization-check-' + str(index)] = 'Incomplete Symfony integration'
     for source in required:
         failures.setdefault('unmeasured-' + source.rsplit('/', 1)[-1], 'Missing measured execution')
     with tempfile.TemporaryDirectory(prefix='symfony-coverage-negative-') as directory:
@@ -184,6 +187,9 @@ def main():
                 evidence['checks'].remove('legacy template graph associations are preserved')
             elif case.startswith('missing-statistics-check-'):
                 missing = statistics_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-synchronization-check-'):
+                missing = synchronization_checks[int(case.rsplit('-', 1)[1])]
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case == 'missing-check':
                 evidence['checks'] = []
