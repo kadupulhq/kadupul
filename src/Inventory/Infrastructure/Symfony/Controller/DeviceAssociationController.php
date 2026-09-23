@@ -46,7 +46,7 @@ final class DeviceAssociationController
             return new Response($translator->trans('Invalid device list filters.', [], 'inventory'), 400, $headers);
         }
         $editParameters = ['id' => $id, 'kind' => $kind, 'list' => $filters];
-        $form = $forms->create(DeviceAssociationType::class, ['revision' => $device->revision()] + ($kind === 'query' ? ['reindex' => 2] : []), ['kind' => $kind, 'snmp_enabled' => $device->snmpVersion !== 0, 'action' => $urls->generate('inventory_device_associations', $editParameters), 'targets' => $device->items + $view['available']]);
+        $form = $forms->create(DeviceAssociationType::class, ['revision' => $device->revision()] + ($kind === 'query' ? ['reindex' => $view['default_reindex']] : []), ['kind' => $kind, 'snmp_enabled' => $device->snmpVersion !== 0, 'action' => $urls->generate('inventory_device_associations', $editParameters), 'targets' => $device->items + $view['available']]);
         $form->handleRequest($request);
         $status = $request->isMethod('POST') ? 422 : 200;
         if ($form->isSubmitted()) {
