@@ -876,14 +876,15 @@ function classify(string $root, string $path, array $realms, array $early, array
  */
 function auth_gate(string $path, array $stmts, array $before, array $realms, array $early): array
 {
-    $extras = [];
+    // auth.php tests isset($guest_account), so any value but null opts in.
+    $guest = false;
     foreach ($before as $stmt) {
         $expr = expression_of($stmt);
-        if ($expr instanceof Expr\Assign && is_variable($expr->var, 'guest_account')) {
-            $extras[] = 'guest_account';
-            break;
+        if ($expr instanceof Expr\Assign && is_variable($expr->var, 'guest_account') && !is_const($expr->expr, 'null')) {
+            $guest = true;
         }
     }
+    $extras = $guest ? ['guest_account'] : [];
     foreach (['auth_json', 'auth_text'] as $flag) {
         foreach (walk($stmts, false) as $node) {
             if ($node instanceof Expr\Assign && is_variable($node->var, $flag) && is_const($node->expr, 'true')) {
@@ -897,15 +898,18 @@ function auth_gate(string $path, array $stmts, array $before, array $realms, arr
     if (in_array($name, $early, true)) {
         return ['anonymous-allowed', 'include/auth.php returns before the session check' . $suffix];
     }
+    // With a guest user configured, auth.php admits these pages as that
+    // user before it looks up the realm.
+    $prefix = $guest ? 'guest-or-' : '';
     $realm = $realms[$name] ?? 0;
     if ($realm === -1) {
-        return ['authenticated', 'include/auth.php realm -1' . $suffix];
+        return [$prefix . 'authenticated', 'include/auth.php realm -1' . $suffix];
     }
     if ($realm === 0) {
-        return ['realm:0', 'include/auth.php; unmapped page, denied to every account' . $suffix];
+        return [$prefix . 'realm:0', 'include/auth.php; unmapped page, denied to every account' . $suffix];
     }
 
-    return ['realm:' . $realm, 'include/auth.php' . $suffix];
+    return [$prefix . 'realm:' . $realm, 'include/auth.php' . $suffix];
 }
 
 /**

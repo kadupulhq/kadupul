@@ -214,6 +214,10 @@ def main():
         # the missing-page redirect.
         rig.sql("INSERT INTO external_links (id, sortorder, enabled, contentfile, title, style) VALUES (1, 1, 'on', 'basic-example.html', 'Sweep', 'CONSOLE');")
         guest = rig.sql("SELECT value FROM settings WHERE name = 'guest_user'").strip()
+        # guest-or-* pages admit anonymous callers once a guest user is set, so
+        # the main pass means nothing unless none is.
+        if guest not in ('', '0'):
+            failures.append('guest_user is %r before the main pass; expected no guest user' % guest)
 
         anonymous = Client(base)
         norealm, console = Client(base), Client(base)
@@ -265,6 +269,8 @@ def main():
             if gate == 'symfony:forward':
                 # A compatibility forwarder carries its target route's gate.
                 gate, detail = routes['app.php' + detail.rsplit('app.php', 1)[1]]
+            # Without a guest user a guest-or-* page is gated like the rest.
+            gate = gate.removeprefix('guest-or-')
             protected = gate.startswith('realm:') or gate == 'authenticated' or (gate.startswith('symfony:') and 'ConsoleAccess' in detail)
             url = entry + ('?id=1' if entry == 'link.php' else '')
             if entry.startswith('app.php/'):
@@ -335,6 +341,33 @@ def main():
 
         if theme_css_digest(rig) != css_before:
             failures.append('theme CSS changed during the sweep')
+
+        # Guest pass: with a guest user set as the Settings page stores it,
+        # exactly the guest-or-* pages admit an anonymous caller.
+        rig.sql("INSERT INTO settings (name, value) SELECT 'guest_user', id FROM user_auth WHERE username = 'guest' "
+                "ON DUPLICATE KEY UPDATE `value` = VALUES(`value`);")
+        if rig.sql("SELECT value FROM settings WHERE name = 'guest_user'").strip() in ('', '0'):
+            raise RuntimeError('guest_user was not set for the guest pass')
+        for entry, gate, detail in rows:
+            if gate == 'symfony:forward':
+                gate, detail = routes['app.php' + detail.rsplit('app.php', 1)[1]]
+            guest_page = gate.startswith('guest-or-')
+            gated = guest_page or gate.startswith('realm:') or gate == 'authenticated' \
+                or (gate.startswith('symfony:') and 'ConsoleAccess' in detail)
+            if not gated:
+                continue
+            counted += 1
+            url = sample(entry, detail) if entry.startswith('app.php/') else entry + ('?id=1' if entry == 'link.php' else '')
+            # A fresh client each time, so a guest session from one page
+            # cannot carry into the next.
+            response = Client(base).request(url)
+            verdict = refusal(response)
+            observed.setdefault('guest-pass %s %s' % ('guest-or-*' if guest_page else 'gated', verdict or 'admitted'), []).append(url)
+            if guest_page and verdict is not None:
+                failures.append('guest pass %s: guest page refused an anonymous caller (%s)' % (url, verdict))
+            elif not guest_page and verdict is None:
+                failures.append('guest pass %s: not refused with a guest user set (HTTP %d)' % (url, response['status']))
+        rig.sql("UPDATE settings SET value = '0' WHERE name = 'guest_user';")
 
         # Last, because it changes what every later request would see.
         opt_in = [denied_probe(entry) for entry, gate, detail in rows if gate == 'web-server-denied' and detail == OPT_IN]

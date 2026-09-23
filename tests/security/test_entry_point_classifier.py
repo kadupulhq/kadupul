@@ -39,7 +39,7 @@ CASES = {
     'unreviewed library ahead of the auth include': (
         "<?php\ninclude_once('lib/evil.php');\n" + AUTH, 'unknown'),
     'reviewed preamble before the auth include': (
-        "<?php\nob_start();\n$guest_account = true;\n" + AUTH, 'realm:3'),
+        "<?php\nob_start();\n$guest_account = true;\n" + AUTH, 'guest-or-realm:3'),
     'reviewed refusal before the auth include': (
         "<?php\nif (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {\n\thttp_response_code(405);\n\texit;\n}\n" + AUTH, 'realm:3'),
 }
@@ -62,6 +62,9 @@ NEW_CASES = {
     'auth include assigned from a ternary': (
         "<?php\n$_GET['x'] ? include('./include/auth.php') : null;\n", 'unknown'),
     'gated page that does not parse': (GATED + "function (\n", 'unknown'),
+    # isset() is true for false, so the guest path still applies.
+    'guest flag set to false': ("<?php\n$guest_account = false;\n" + AUTH, 'guest-or-realm:3'),
+    'guest flag set to null': ("<?php\n$guest_account = null;\n" + AUTH, 'realm:3'),
 }
 
 FRAGMENT_EFFECTS = {
@@ -192,7 +195,7 @@ ROUTES = {
     'app.php/via-checked': 'symfony:via_checked',
 }
 
-REALMS = "<?php\n$user_auth_realm_filenames = array(\n\t'page.php' => 3,\n\t\"dq.php\" => 3,\n);\n"
+REALMS = "<?php\n$user_auth_realm_filenames = array(\n\t'page.php' => 3,\n\t\"dq.php\" => 3,\n\t'open.php' => -1,\n);\n"
 UNREADABLE_REALMS = {
     'constant value': "<?php\n$user_auth_realm_filenames = array('page.php' => 3, 'x.php' => REALM_X);\n",
     'concatenated key': "<?php\n$user_auth_realm_filenames = array('page.php' => 3, 'a' . '.php' => 3);\n",
@@ -271,6 +274,10 @@ def main():
         count += 1
         if gate(root, 'dq.php', GATED)[0] != 'realm:3':
             failures.append('double-quoted realm key: expected realm:3')
+        count += 1
+        got = gate(root, 'open.php', "<?php\n$guest_account = true;\n" + AUTH)[0]
+        if got != 'guest-or-authenticated':
+            failures.append('guest page with realm -1: expected guest-or-authenticated, got %s' % got)
 
     with tempfile.TemporaryDirectory(prefix='entry-classifier-routes-') as directory:
         root = tree(directory)
