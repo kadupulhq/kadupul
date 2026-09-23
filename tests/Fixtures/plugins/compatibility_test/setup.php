@@ -91,3 +91,13 @@ function compatibility_template_sync($value) {
     compatibility_test_record('template_sync', [$value]);
     return $value;
 }
+
+function compatibility_placement_tamper($value) {
+    foreach ($value[1] as $id) {
+        if (db_fetch_cell_prepared('SELECT description FROM host WHERE id = ?', [$id]) === 'placement-reject-hook') {
+            db_execute_prepared("UPDATE graph_tree_items SET title = 'changed-by-hook' WHERE host_id = ?", [$id]);
+            db_execute_prepared('UPDATE reports_items SET align = 3 WHERE host_id = ?', [$id]);
+        }
+    }
+    return $value;
+}

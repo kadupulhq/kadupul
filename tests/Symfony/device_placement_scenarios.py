@@ -12,6 +12,7 @@ def verify_device_placement(harness, session, user_id, check):
         report = int(harness.sql(f"INSERT INTO reports (name,user_id,from_name,from_email,email,bcc) VALUES ('placement-report',{user_id},'','','',''); SELECT LAST_INSERT_ID()").strip())
         for index in range(2):
             ids.append(int(harness.sql(f"INSERT INTO host (description,hostname,site_id) VALUES ('placement-device-{index}','127.0.0.1',0); SELECT LAST_INSERT_ID()").strip()))
+        check(harness.php('-r', 'require "include/global.php"; function setup_placement_hook() { api_plugin_register_hook("compatibility_test","device_action_bottom","compatibility_placement_tamper","setup.php",true); } setup_placement_hook();')['exit'] == 0, 'placement callback fixture registered')
         selection = ' OR '.join(f'host_id={id}' for id in ids)
         for kind, target, table in [('tree',f'{tree}:{branch}','graph_tree_items'),('report',str(report),'reports_items')]:
             form = AssociationForm(harness,session,ids[0])
@@ -37,6 +38,12 @@ def verify_device_placement(harness, session, user_id, check):
             check(form.request(fields=fields)[0]==502, kind+' placement rejects partial SQL failure')
             check(harness.sql(f'SELECT COUNT(*) FROM {table} WHERE {selection}').strip()=='0', kind+' placement rolls back entire selection')
             harness.sql('DROP TRIGGER reject_placement');trigger=False
+            harness.sql(f"UPDATE host SET description='placement-reject-hook' WHERE id={ids[1]}")
+            rejected = form.fields() | {'device_placement[target]':target}
+            if kind=='report': rejected.update({'device_placement[timespan]':'7','device_placement[alignment]':'2'})
+            check(form.request(fields=rejected)[0]==502, kind+' placement verifies final state after callbacks')
+            check(harness.sql(f'SELECT COUNT(*) FROM {table} WHERE {selection}').strip()=='0', kind+' placement rolls back callback changes')
+            harness.sql(f"UPDATE host SET description='placement-device-1' WHERE id={ids[1]}")
             check(form.request(fields=fields)[0]==200, kind+' placement saves through Symfony')
             check(harness.sql(f'SELECT COUNT(*) FROM {table} WHERE {selection}').strip()=='2', kind+' placement persists every selected device')
             if kind=='tree':
@@ -47,6 +54,7 @@ def verify_device_placement(harness, session, user_id, check):
             check(harness.sql(f'SELECT COUNT(*) FROM {table} WHERE {selection}').strip()=='2', kind+' placement does not duplicate existing devices')
         check(harness.sql('SELECT COUNT(*) FROM host WHERE id IN ('+','.join(map(str,ids))+')').strip()=='2', 'placement retains selected devices')
     finally:
+        harness.sql("DELETE FROM plugin_hooks WHERE name='compatibility_test' AND hook='device_action_bottom' AND `function`='compatibility_placement_tamper'")
         if trigger: harness.sql('DROP TRIGGER reject_placement')
         if tree: harness.sql(f'DELETE FROM graph_tree_items WHERE graph_tree_id={tree}; DELETE FROM graph_tree WHERE id={tree}')
         if report: harness.sql(f'DELETE FROM reports_items WHERE report_id={report}; DELETE FROM reports WHERE id={report}')

@@ -84,6 +84,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'existing device automation rules run through Symfony',
         'device automation preserves action 6 once with full selection',
         'device automation SQL failure cannot report success',
+        'tree placement verifies final state after callbacks',
+        'report placement verifies final state after callbacks',
         'tree placement saves through Symfony',
         'report placement saves through Symfony',
         'tree placement rolls back entire selection',

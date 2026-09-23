@@ -25,7 +25,7 @@ final readonly class LegacyDeviceReportPlacement implements DeviceReportPlacemen
         }
         return $result;
     }
-    public function place(int $actorId, array $deviceIds, int $reportId, int $timespan, int $alignment): void
+    public function place(int $actorId, array $deviceIds, int $reportId, int $timespan, int $alignment): array
     {
         $db = $this->database->get();
         if (!$db->inTransaction()) {
@@ -54,5 +54,33 @@ final readonly class LegacyDeviceReportPlacement implements DeviceReportPlacemen
                 throw new \RuntimeException('Report placement could not be confirmed');
             }
         }
+        return $this->records($deviceIds, $reportId, $timespan);
+    }
+    public function verify(int $actorId, array $deviceIds, int $reportId, int $timespan, int $alignment, array $expected): void
+    {
+        if ($this->records($deviceIds, $reportId, $timespan) !== $expected) {
+            throw new \RuntimeException('Placement changed during callbacks');
+        }
+        $db = $this->database->get();
+        $query = $db->prepare('SELECT user_id FROM reports WHERE id = ?');
+        $query->execute([$reportId]);
+        $owner = $query->fetchColumn();
+        if ($owner === false || !$this->access->canManageReport($actorId, (int) $owner)) {
+            throw new \RuntimeException('Report destination changed');
+        }
+        $query = $db->prepare('SELECT COUNT(*) FROM reports_items WHERE report_id = ? AND host_id = ? AND item_type = 5 AND timespan = ?');
+        foreach ($deviceIds as $deviceId) {
+            $query->execute([$reportId, $deviceId, $timespan]);
+            if ((int) $query->fetchColumn() < 1) {
+                throw new \RuntimeException('Report placement could not be confirmed');
+            }
+        }
+    }
+    private function records(array $deviceIds, int $reportId, int $timespan): array
+    {
+        $placeholders = implode(',', array_fill(0, count($deviceIds), '?'));
+        $query = $this->database->get()->prepare("SELECT id, report_id, item_type, host_id, host_template_id, site_id, graph_template_id, local_graph_id, timespan, align, sequence, item_text FROM reports_items WHERE report_id = ? AND timespan = ? AND item_type = 5 AND host_id IN ($placeholders) ORDER BY id");
+        $query->execute([$reportId, $timespan, ...$deviceIds]);
+        return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 }
