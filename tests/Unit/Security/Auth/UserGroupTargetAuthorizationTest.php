@@ -47,6 +47,8 @@ function get_filter_request_var($name) { return $GLOBALS["request"][$name] ?? 0;
 function get_request_var($name) { return $GLOBALS["request"][$name] ?? 0; }
 function get_nfilter_request_var($name, $default = "") { return $GLOBALS["request"][$name] ?? $default; }
 function sanitize_unserialize_selected_items($items) { return $items; }
+function input_validate_input_number($value, $name = "") {}
+function reset_user_perms($id) {}
 function csrf_require_post($strict) {}
 function get_client_addr() { return "192.0.2.1"; }
 function cacti_log(...$args) {}
@@ -57,6 +59,8 @@ function cacti_sizeof($x) { return is_array($x) ? count($x) : 0; }
 function user_group_enable($id) { $GLOBALS["writes"][] = "ENABLE " . $id; }
 function db_execute_prepared($sql, $params = array()) {
 	if (strpos($sql, "INSERT INTO user_auth_group_realm") !== false) { $GLOBALS["writes"][] = "REALM " . $params[0] . ":" . $params[1]; }
+	elseif (strpos($sql, "REPLACE INTO user_auth_group_perms") !== false) { $GLOBALS["writes"][] = (strpos($sql, "FROM user_auth_group") !== false ? "GATED " : "BARE ") . "PERM " . $params[0] . ":" . $params[1]; }
+	elseif (strpos($sql, "REPLACE INTO user_auth_group_members") !== false) { $GLOBALS["writes"][] = (strpos($sql, "FROM user_auth_group") !== false ? "GATED " : "BARE ") . "MEMBER " . $params[0] . ":" . $params[1]; }
 	elseif (strpos($sql, "INSERT INTO user_auth_group_perms") !== false) { $GLOBALS["writes"][] = "PERM " . $params[0] . ":" . $params[1]; }
 	elseif (strpos($sql, "SET login_opts") !== false) { $GLOBALS["writes"][] = "LOGIN_OPTS " . $params[0]; }
 	else { $GLOBALS["writes"][] = strtok(trim($sql), " "); }
@@ -110,6 +114,17 @@ test('policies change only on a group that exists', function () use ($db, $refus
 test('a permission is removed only from a group that exists', function () use ($db, $refused) {
 	expect(run_handler('perm_remove', array('id' => 9, 'group_id' => 5, 'type' => 'graph'), $db))->toBe(array('writes' => array('DELETE'), 'message' => null));
 	expect(run_handler('perm_remove', array('id' => 9, 'group_id' => 404, 'type' => 'graph'), $db))->toBe($refused);
+});
+
+test('an association write is gated on the parent inside the statement', function () use ($db) {
+	// A group deleted between the check and the write leaves no orphan row.
+	$result = run_handler('form_actions', array('id' => 5, 'associate_host' => 1, 'drp_action' => '1', 'chk_7' => 'on'), $db);
+
+	expect($result['writes'])->toContain('GATED PERM 7:5');
+
+	$member = run_handler('form_actions', array('id' => 5, 'associate_member' => 1, 'drp_action' => '1', 'chk_9' => 'on'), $db);
+
+	expect($member['writes'])->toContain('GATED MEMBER 9:5');
 });
 
 test('associations and bulk actions refuse a missing group', function () use ($db, $refused) {

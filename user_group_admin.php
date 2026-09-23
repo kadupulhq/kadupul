@@ -333,10 +333,14 @@ function form_actions() {
 				/* ==================================================== */
 
 				if (get_nfilter_request_var('drp_action') == '1') {
+					/* Selecting the parent writes nothing once the group is gone, so a
+					   delete racing the check above cannot leave an orphan row. */
 					db_execute_prepared('REPLACE INTO user_auth_group_perms
 						(group_id, item_id, type)
-						VALUES (?, ?, 3)',
-						array(get_nfilter_request_var('id'), $matches[1]));
+						SELECT id, ?, 3
+						FROM user_auth_group
+						WHERE id = ?',
+						array($matches[1], get_nfilter_request_var('id')));
 				} else {
 					db_execute_prepared('DELETE FROM user_auth_group_perms
 						WHERE group_id = ?
@@ -359,10 +363,14 @@ function form_actions() {
 				/* ==================================================== */
 
 				if (get_nfilter_request_var('drp_action') == '1') {
+					/* Selecting the parent writes nothing once the group is gone, so a
+					   delete racing the check above cannot leave an orphan row. */
 					db_execute_prepared('REPLACE INTO user_auth_group_perms
 						(group_id, item_id, type)
-						VALUES (?, ?, 1)',
-						array(get_nfilter_request_var('id'), $matches[1]));
+						SELECT id, ?, 1
+						FROM user_auth_group
+						WHERE id = ?',
+						array($matches[1], get_nfilter_request_var('id')));
 				} else {
 					db_execute_prepared('DELETE FROM user_auth_group_perms
 						WHERE group_id = ?
@@ -385,10 +393,14 @@ function form_actions() {
 				/* ==================================================== */
 
 				if (get_nfilter_request_var('drp_action') == '1') {
+					/* Selecting the parent writes nothing once the group is gone, so a
+					   delete racing the check above cannot leave an orphan row. */
 					db_execute_prepared('REPLACE INTO user_auth_group_perms
 						(group_id, item_id, type)
-						VALUES (?, ?, 4)',
-						array(get_nfilter_request_var('id'), $matches[1]));
+						SELECT id, ?, 4
+						FROM user_auth_group
+						WHERE id = ?',
+						array($matches[1], get_nfilter_request_var('id')));
 				} else {
 					db_execute_prepared('DELETE FROM user_auth_group_perms
 						WHERE group_id = ?
@@ -411,10 +423,14 @@ function form_actions() {
 				/* ==================================================== */
 
 				if (get_nfilter_request_var('drp_action') == '1') {
+					/* Selecting the parent writes nothing once the group is gone, so a
+					   delete racing the check above cannot leave an orphan row. */
 					db_execute_prepared('REPLACE INTO user_auth_group_perms
 						(group_id, item_id, type)
-						VALUES (?, ?, 2)',
-						array(get_nfilter_request_var('id'), $matches[1]));
+						SELECT id, ?, 2
+						FROM user_auth_group
+						WHERE id = ?',
+						array($matches[1], get_nfilter_request_var('id')));
 				} else {
 					db_execute_prepared('DELETE FROM user_auth_group_perms
 						WHERE group_id = ?
@@ -437,10 +453,13 @@ function form_actions() {
 				/* ==================================================== */
 
 				if (get_nfilter_request_var('drp_action') == '1') {
+					/* Selecting the parent writes nothing once the group is gone. */
 					db_execute_prepared('REPLACE INTO user_auth_group_members
 						(group_id, user_id)
-						VALUES (?, ?)',
-						array(get_nfilter_request_var('id'), $matches[1]));
+						SELECT id, ?
+						FROM user_auth_group
+						WHERE id = ?',
+						array($matches[1], get_nfilter_request_var('id')));
 				} else {
 					db_execute_prepared('DELETE FROM user_auth_group_members
 						WHERE group_id = ?
