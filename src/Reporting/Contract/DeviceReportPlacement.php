@@ -12,5 +12,6 @@ interface DeviceReportPlacement
     /** @return array<string, string> Accessible destination IDs and labels. */
     public function destinations(int $actorId): array;
     /** Called inside an authenticated primary transaction with all devices locked. */
-    public function place(int $actorId, array $deviceIds, int $reportId, int $timespan, int $alignment): void;
+    public function verify(int $actorId, array $deviceIds, int $reportId, int $timespan, int $alignment, array $expected): void;
+    public function place(int $actorId, array $deviceIds, int $reportId, int $timespan, int $alignment): array;
 }

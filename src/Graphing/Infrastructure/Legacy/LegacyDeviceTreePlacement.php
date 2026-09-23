@@ -33,7 +33,7 @@ final readonly class LegacyDeviceTreePlacement implements DeviceTreePlacement
         }
         return $result;
     }
-    public function place(int $actorId, array $deviceIds, int $treeId, int $parentId): void
+    public function place(int $actorId, array $deviceIds, int $treeId, int $parentId): array
     {
         $db = $this->database->get();
         if (!$db->inTransaction()) {
@@ -63,9 +63,44 @@ final readonly class LegacyDeviceTreePlacement implements DeviceTreePlacement
                 throw new \RuntimeException('Tree placement could not be confirmed');
             }
         }
+        return $this->records($deviceIds, $treeId, $parentId);
+    }
+    public function verify(int $actorId, array $deviceIds, int $treeId, int $parentId, array $expected): void
+    {
+        if ($this->records($deviceIds, $treeId, $parentId) !== $expected) {
+            throw new \RuntimeException('Placement changed during callbacks');
+        }
+        $db = $this->database->get();
+        $query = $db->prepare('SELECT id, user_id, locked, modified_by FROM graph_tree WHERE id = ?');
+        $query->execute([$treeId]);
+        $tree = $query->fetch(PDO::FETCH_ASSOC);
+        if (!$tree || !$this->available($actorId, $tree)) {
+            throw new \RuntimeException('Tree destination changed');
+        }
+        if ($parentId > 0) {
+            $query = $db->prepare("SELECT id FROM graph_tree_items WHERE id = ? AND graph_tree_id = ? AND host_id = 0 AND local_graph_id = 0 AND site_id = 0 AND title <> ''");
+            $query->execute([$parentId, $treeId]);
+            if ($query->fetchColumn() === false) {
+                throw new \RuntimeException('Tree branch changed');
+            }
+        }
+        $query = $db->prepare('SELECT COUNT(*) FROM graph_tree_items WHERE graph_tree_id = ? AND parent = ? AND host_id = ?');
+        foreach ($deviceIds as $deviceId) {
+            $query->execute([$treeId, $parentId, $deviceId]);
+            if ((int) $query->fetchColumn() < 1) {
+                throw new \RuntimeException('Tree placement could not be confirmed');
+            }
+        }
     }
     private function available(int $actorId, array $tree): bool
     {
         return $this->access->canManageTree($actorId, (int) $tree['user_id']) && (!(bool) $tree['locked'] || (int) $tree['modified_by'] === $actorId);
+    }
+    private function records(array $deviceIds, int $treeId, int $parentId): array
+    {
+        $placeholders = implode(',', array_fill(0, count($deviceIds), '?'));
+        $query = $this->database->get()->prepare("SELECT id, graph_tree_id, parent, host_id, local_graph_id, site_id, title, host_grouping_type, sort_children_type FROM graph_tree_items WHERE graph_tree_id = ? AND parent = ? AND host_id IN ($placeholders) ORDER BY id");
+        $query->execute([$treeId, $parentId, ...$deviceIds]);
+        return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 }

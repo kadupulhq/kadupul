@@ -12,5 +12,6 @@ interface DeviceTreePlacement
     /** @return array<string, string> Accessible destination IDs and labels. */
     public function destinations(int $actorId): array;
     /** Called inside an authenticated primary transaction with all devices locked. */
-    public function place(int $actorId, array $deviceIds, int $treeId, int $parentId): void;
+    public function verify(int $actorId, array $deviceIds, int $treeId, int $parentId, array $expected): void;
+    public function place(int $actorId, array $deviceIds, int $treeId, int $parentId): array;
 }

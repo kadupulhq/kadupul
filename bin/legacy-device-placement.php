@@ -87,15 +87,29 @@ try {
     $access = new \Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyResourceAccess($provider);
     if ($placement->kind === 'tree') {
         $owner = new \Kadupul\Graphing\Infrastructure\Legacy\LegacyDeviceTreePlacement($provider, $access);
-        $owner->place($command['actor'], $ids, $placement->targetId, $placement->parentId);
+        $expected = $owner->place($command['actor'], $ids, $placement->targetId, $placement->parentId);
         $action = 'tr_' . $placement->targetId;
     } else {
         $owner = new \Kadupul\Reporting\Infrastructure\Legacy\LegacyDeviceReportPlacement($provider, $access);
-        $owner->place($command['actor'], $ids, $placement->targetId, $placement->timespan, $placement->alignment);
+        $expected = $owner->place($command['actor'], $ids, $placement->targetId, $placement->timespan, $placement->alignment);
         $action = '8';
     }
+    set_request_var('drp_action', $action);
     snmpagent_device_action_bottom([$action, $ids]);
     api_plugin_hook_function('device_action_bottom', [$action, $ids]);
+    if ($placement->kind === 'tree') {
+        $owner->verify($command['actor'], $ids, $placement->targetId, $placement->parentId, $expected);
+    } else {
+        $owner->verify($command['actor'], $ids, $placement->targetId, $placement->timespan, $placement->alignment, $expected);
+    }
+    $after = $read("SELECT $fields FROM host WHERE id IN ($placeholders) AND deleted = '' ORDER BY id", $ids);
+    if (count($after) !== count($rows)) {
+        throw new RuntimeException('Selected devices changed');
+    }
+    foreach ($after as $row) {
+        $device = LegacyDeviceStates::state($row);
+        $device->assertRevision($selection->revisions[$device->id]);
+    }
     if (db_error() !== '' || is_error_message() || !$connection->inTransaction() || !db_commit_transaction()) {
         throw new RuntimeException('Placement failed');
     }

@@ -76,6 +76,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'bulk SNMP replaces credentials through Symfony',
         'bulk SNMP verifies remote credentials',
         'bulk SNMP secrets stay out of database diagnostics',
+        'tree placement verifies final state after callbacks',
+        'report placement verifies final state after callbacks',
         'tree placement saves through Symfony',
         'report placement saves through Symfony',
         'tree placement rolls back entire selection',
