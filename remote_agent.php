@@ -33,6 +33,7 @@ if ($config['poller_id'] > 1 && $config['connection'] == 'online') {
 }
 
 if (!remote_client_authorized()) {
+    http_response_code(403);
 	print 'FATAL: Client authorization failed.  You are not authorized to use this service';
 	exit;
 }
@@ -51,13 +52,17 @@ switch (get_request_var('action')) {
 		break;
 	case 'runquery':
 		debug('Start: Running Data Query');
-		run_remote_data_query();
+        remote_inventory_diagnostics('runquery');
 		debug('End: Running Data Query');
 
 		break;
 	case 'ping':
 		debug('Start: Pinging Device');
-		ping_device();
+        if (get_nfilter_request_var('safe_diagnostics') === '1') {
+            remote_inventory_diagnostics('ping');
+        } else {
+            ping_device();
+        }
 		debug('End: Pinging Device');
 
 		break;
@@ -93,6 +98,45 @@ switch (get_request_var('action')) {
 }
 
 exit;
+
+function remote_inventory_diagnostics($operation) {
+    global $config;
+    $scope = \Kadupul\Inventory\Infrastructure\Legacy\DeviceDiagnosticScope::class;
+    $scope::begin();
+    $level = ob_get_level();
+    ob_start();
+    try {
+        if ($operation === 'ping') {
+            ping_device();
+            $payload = ['output' => (string) ob_get_contents()];
+        } else {
+            $id = get_filter_request_var('host_id');
+            $query = get_filter_request_var('data_query_id');
+            if ($id < 1 || $query < 1) {
+                throw new RuntimeException('Invalid diagnostic request');
+            }
+            $completed = run_data_query($id, $query);
+            $output = (string) ob_get_contents();
+            $payload = $output === '' ? ['result' => $completed, 'data_query' => $_SESSION['debug_log']['data_query'] ?? $config['debug_log']['data_query'] ?? []] : json_decode($output, true, 32, JSON_THROW_ON_ERROR);
+            if (!is_array($payload)) {
+                throw new RuntimeException('Invalid diagnostic response');
+            }
+        }
+        $payload = $scope::finish($payload);
+        $payload['diagnostics_sanitized'] = true;
+    } catch (Throwable) {
+        http_response_code(502);
+        $payload = ['error' => 'diagnostics_unavailable'];
+    } finally {
+        while (ob_get_level() > $level) {
+            ob_end_clean();
+        }
+        $scope::discard();
+        unset($_SESSION['debug_log'], $config['debug_log']);
+    }
+    header('Content-Type: application/json');
+    echo json_encode($payload, JSON_THROW_ON_ERROR);
+}
 
 function debug($message) {
 	global $debug;

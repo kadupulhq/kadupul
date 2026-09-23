@@ -68,14 +68,18 @@ final class DeviceMaintenanceExecutor
         $completed = true;
         $output = '';
         try {
+            unset($_SESSION['inventory_diagnostics_sanitized']);
             foreach ($queries as $queryId) {
                 $completed = run_data_query($id, $queryId) !== false && $completed;
             }
             if ($request->operation === 'query-diagnostics') {
+                if ($remote !== null && ($_SESSION['inventory_diagnostics_sanitized'] ?? false) !== true) {
+                    throw new \RuntimeException('Remote diagnostic protocol unavailable');
+                }
                 $output = $clean((string) debug_log_return('data_query'));
             }
         } finally {
-            unset($_SESSION['debug_log']);
+            unset($_SESSION['debug_log'], $_SESSION['inventory_diagnostics_sanitized']);
         }
         return new DeviceMaintenanceResult($completed, 'Data queries reindexed.', $output);
     }
@@ -90,13 +94,17 @@ final class DeviceMaintenanceExecutor
             || str_contains($this->basePath, '..') || preg_match('/[\\\\\s?#]/', $this->basePath)) {
             throw new \RuntimeException('Invalid remote collector address');
         }
-        $url = get_url_type() . '://' . $hostname . rtrim($this->basePath, '/') . '/remote_agent.php?action=ping&host_id=' . $deviceId;
+        $url = get_url_type() . '://' . $hostname . rtrim($this->basePath, '/') . '/remote_agent.php?action=ping&safe_diagnostics=1&host_id=' . $deviceId;
         $timeout = max(1, min(300, (int) read_config_option('remote_agent_timeout')));
         $output = cacti_http($url, $timeout, [$hostname]);
         if ($output === false) {
             throw new \RuntimeException('Remote collector probe failed');
         }
-        return $output;
+        $payload = json_decode($output, true, 8, JSON_THROW_ON_ERROR);
+        if (!is_array($payload) || ($payload['diagnostics_sanitized'] ?? false) !== true || !is_string($payload['output'] ?? null)) {
+            throw new \RuntimeException('Remote diagnostic protocol unavailable');
+        }
+        return $payload['output'];
     }
 
     private function setDebug(PDO $db, int $id, bool $enabled): void

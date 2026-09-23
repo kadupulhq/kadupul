@@ -9,7 +9,7 @@ namespace Kadupul\Inventory\Infrastructure\Legacy {
     final class MaintenanceProbeFixture
     {
         public static array $calls = [];
-        public static string|false $output = 'primary-secret remote-secret';
+        public static string|false $output = false;
     }
     function cacti_http($url, $timeout, array $allowlist): string|false
     {
@@ -56,11 +56,20 @@ namespace Kadupul\Tests {
             $remote->exec("CREATE TABLE host (id INTEGER, poller_id INTEGER, deleted TEXT, snmp_community TEXT, snmp_username TEXT, snmp_password TEXT, snmp_priv_passphrase TEXT); INSERT INTO host VALUES (7,2,'','','','remote-secret','')");
             $state = new DeviceMaintenanceState(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [], [], false);
             \Kadupul\Inventory\Infrastructure\Legacy\MaintenanceProbeFixture::$calls = [];
-            \Kadupul\Inventory\Infrastructure\Legacy\MaintenanceProbeFixture::$output = 'primary-secret remote-secret';
+            \Kadupul\Inventory\Infrastructure\Legacy\MaintenanceProbeFixture::$output = json_encode(['diagnostics_sanitized' => true, 'output' => 'primary-secret remote-secret'], JSON_THROW_ON_ERROR);
             $executor = new DeviceMaintenanceExecutor('/kadupul/');
             $result = $executor->execute($primary, $remote, $state, new DeviceMaintenanceRequest('connectivity'), ['snmp_password' => 'primary-secret']);
             self::assertSame('[redacted] [redacted]', $result->output);
-            self::assertSame([['https://collector.example.test/kadupul/remote_agent.php?action=ping&host_id=7', 15, ['collector.example.test']]], \Kadupul\Inventory\Infrastructure\Legacy\MaintenanceProbeFixture::$calls);
+            self::assertSame([['https://collector.example.test/kadupul/remote_agent.php?action=ping&safe_diagnostics=1&host_id=7', 15, ['collector.example.test']]], \Kadupul\Inventory\Infrastructure\Legacy\MaintenanceProbeFixture::$calls);
+            foreach (['FATAL: Client authorization failed', '{"output":"unsafe-secret"}', '{"diagnostics_sanitized":false,"output":"unsafe-secret"}'] as $invalid) {
+                \Kadupul\Inventory\Infrastructure\Legacy\MaintenanceProbeFixture::$output = $invalid;
+                try {
+                    $executor->execute($primary, $remote, $state, new DeviceMaintenanceRequest('connectivity'), []);
+                    self::fail('Untrusted remote response was accepted');
+                } catch (\RuntimeException|\JsonException $error) {
+                    self::assertStringNotContainsString('unsafe-secret', $error->getMessage());
+                }
+            }
             \Kadupul\Inventory\Infrastructure\Legacy\MaintenanceProbeFixture::$output = false;
             $this->expectException(\RuntimeException::class);
             $executor->execute($primary, $remote, $state, new DeviceMaintenanceRequest('connectivity'), []);

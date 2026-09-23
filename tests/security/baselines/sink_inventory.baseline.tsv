@@ -67,9 +67,9 @@ cmd_exec	./lib/rrd.php:142	    return popen($command, 'w');
 cmd_exec	./lib/rrd.php:596	            $process = proc_open(read_config_option('path_rrdtool') . ' - ' . $debug, $descriptorspec, $pipes);
 cmd_exec	./lib/rrd_maintenance.php:416	    $process = @proc_open($argv, $descriptors, $pipes);
 cmd_exec	./lib/rrdcheck.php:781		$process = proc_open($command, $fds, $pipes);
-cmd_exec	./lib/snmp.php:197			exec($command, $snmp_value);
-cmd_exec	./lib/snmp.php:297			exec($command, $snmp_value);
-cmd_exec	./lib/snmp.php:392			exec($command, $snmp_value);
+cmd_exec	./lib/snmp.php:203			exec($command, $snmp_value);
+cmd_exec	./lib/snmp.php:306			exec($command, $snmp_value);
+cmd_exec	./lib/snmp.php:404			exec($command, $snmp_value);
 cmd_exec	./lib/snmpagent.php:642		/* add pollers of a distributed system (future) */
 cmd_exec	./lib/utility.php:1691						$nproc = system('nproc');
 cmd_exec	./lib/utility.php:1810			exec('wmic os get FreePhysicalMemory', $memInfo['FreePhysicalMemory']);
@@ -85,7 +85,7 @@ cmd_exec	./lib/utility.php:2098		$json     = shell_exec($php . ' -q ' . $php_fil
 cmd_exec	./poller_boost.php:556	        $process = proc_open($arguments, $descriptors, $pipes);
 cmd_exec	./poller_realtime.php:235					shell_exec($command);
 cmd_exec	./poller_spikekill.php:230				$response = exec(cacti_escapeshellcmd(read_config_option('path_php_binary')) . ' -q ' .
-cmd_exec	./remote_agent.php:481								$cactiphp = proc_open($php_bin . ' -q ' . $srv_path . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
+cmd_exec	./remote_agent.php:525								$cactiphp = proc_open($php_bin . ' -q ' . $srv_path . ' realtime ' . cacti_escapeshellarg($poller_id), $cactides, $pipes);
 cmd_exec	./script_server.php:168					exec("TASKLIST /FO LIST /FI \"PID eq $parent_pid\"", $out);
 cmd_exec	./snmpagent_mibcache.php:32			popen('start "CactiSNMPCacheChild" /I ' . $php . ' ' . $extra_args, 'r');
 cmd_exec	./snmpagent_mibcache.php:34			exec($php . ' ' . $extra_args . ' > /dev/null &');
@@ -349,13 +349,13 @@ dynamic_include	./lib/boost.php:1621			include_once($config['library_path'] . '/
 dynamic_include	./lib/boost.php:315			include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:380		include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:747		include_once($config['library_path'] . '/rrd.php');
-dynamic_include	./lib/data_query.php:1946		include_once($config['library_path'] . '/sort.php');
-dynamic_include	./lib/data_query.php:2355		include_once($config['library_path'] . '/variables.php');
-dynamic_include	./lib/data_query.php:585		include_once($config['library_path'] . '/xml.php');
-dynamic_include	./lib/data_query.php:66		include_once($config['library_path'] . '/poller.php');
-dynamic_include	./lib/data_query.php:67		include_once($config['library_path'] . '/api_data_source.php');
-dynamic_include	./lib/data_query.php:68		include_once($config['library_path'] . '/utility.php');
-dynamic_include	./lib/data_query.php:798		include_once($config['library_path'] . '/snmp.php');
+dynamic_include	./lib/data_query.php:1950		include_once($config['library_path'] . '/sort.php');
+dynamic_include	./lib/data_query.php:2359		include_once($config['library_path'] . '/variables.php');
+dynamic_include	./lib/data_query.php:589		include_once($config['library_path'] . '/xml.php');
+dynamic_include	./lib/data_query.php:70		include_once($config['library_path'] . '/poller.php');
+dynamic_include	./lib/data_query.php:71		include_once($config['library_path'] . '/api_data_source.php');
+dynamic_include	./lib/data_query.php:72		include_once($config['library_path'] . '/utility.php');
+dynamic_include	./lib/data_query.php:802		include_once($config['library_path'] . '/snmp.php');
 dynamic_include	./lib/database.php:234			include($config['base_path'] . '/include/config.php');
 dynamic_include	./lib/dsstats.php:950			include_once($config['base_path'] . '/lib/rrd.php');
 dynamic_include	./lib/dsstats.php:992			include_once($config['library_path'] . '/poller.php');
