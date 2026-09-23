@@ -23,7 +23,7 @@ compatibility. LTS remains unchanged. Plugin-owned pages are outside this queue.
 | Device data-query associations and reindex settings | Implemented in PR #307 |
 | Device reindex, poller-cache/debug and connectivity actions | Implemented in PR #309 |
 | Device placement in trees/reports | Implemented in PR #314 with owning-module contracts |
-| Legacy `host.php` compatibility entry and menu cutover | Implemented on `feat/inventory-legacy-cutover`; validation and review pending |
+| Legacy `host.php` compatibility entry and menu cutover | Implemented in PR #316; final validation and review pending |
 
 The device editor is currently migrating in focused PRs because credentials,
 collector replication, and template association changes have different failure
