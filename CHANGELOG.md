@@ -12,6 +12,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Check every changed PHP file in the style check; a large file list could make it skip some.
+
 - Commit through PDO rather than the MariaDB-only `@@in_transaction` variable, so device edits, creates, template assignments, collector moves and bulk state changes commit on MySQL instead of rolling back and reporting an uncertain outcome.
 
 ### Changed
