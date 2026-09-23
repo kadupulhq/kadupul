@@ -13,14 +13,44 @@ $cases = array();
 // Extract each real fatal diagnostic through its exit, without loading the
 // operational CLI bootstrap or touching any RRD files or database.
 preg_match_all('/print [^;]*FATAL:[^;]*;\s*(?:display_help\(\);\s*)?exit[^;]*;/', $source, $matches);
-$expectedCodes = array(1, 1, 1, 1, 1, 1, 1, 5, 6, 3);
+/* Keyed by a distinctive part of each diagnostic rather than by position, so
+   reordering or inserting a branch cannot silently re-map the expectations. */
+$expectedCodes = array(
+	'designed for the main Data Collector' => 1,
+	'designed for local RRDfile storage'   => 1,
+	'Cacti'                                => 1,
+	'specifying a Device ID'               => 1,
+	'specifying a Device Template ID'      => 1,
+	'Explicitly Instruct This Script'      => 1,
+	'Could NOT Make New Directory'         => 1,
+	'Set Permissions for Directory'        => 5,
+	'Set Permissions for File'             => 6,
+	'Could not Move RRD File'              => 3,
+);
+
 foreach ($matches[0] as $index => $fragment) {
-	$cases['fatal branch ' . $index] = array($fragment, $expectedCodes[$index] ?? null);
+	$expected = null;
+
+	foreach ($expectedCodes as $needle => $code) {
+		if (strpos($fragment, $needle) !== false) {
+			$expected = $code;
+
+			break;
+		}
+	}
+
+	$cases['fatal branch ' . $index] = array($fragment, $expected);
 }
 dataset('structure RRA fatal branches', $cases);
 
-test('all ten structure RRA fatal exits including eight corrected ones are covered', function () use ($matches) {
+test('all ten structure RRA fatal exits including eight corrected ones are covered', function () use ($matches, $cases) {
 	expect(count($matches[0]))->toBe(10);
+
+	// A branch whose diagnostic matches no entry would otherwise be asserted
+	// against null and pass for the wrong reason.
+	foreach ($cases as $name => $case) {
+		expect($case[1])->not->toBeNull($name);
+	}
 });
 
 test('real fatal branches print diagnostics and exit nonzero before continuing', function ($fragment, $expected) {
