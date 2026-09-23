@@ -158,7 +158,7 @@ try {
         }
         $changed[$device->id] = $device;
     }
-    if ($changed !== [] || $syncTemplates) {
+    if ($changed !== []) {
         // Opening a legacy remote connection can reset the primary SQL modes.
         // Restore strict writes after all connections are open, before mutations.
         if ($connection->exec("SET SESSION sql_mode = CONCAT_WS(',', @@SESSION.sql_mode, 'STRICT_TRANS_TABLES')") === false) {
