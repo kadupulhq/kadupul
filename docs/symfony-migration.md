@@ -960,3 +960,15 @@ refreshes polling configuration and invokes legacy action 4. Remote outcomes are
 verified and failures report uncertainty because remote writes are not distributed
 transactions. Bulk collector/site/template assignment and SNMP credential changes
 remain separate pending slices; the legacy bulk options page is not retired yet.
+
+
+### Bulk site, template and collector assignments
+
+`/inventory/devices/assign/{kind}` uses a Symfony choice form backed by
+`AssignDevices`, `DeviceBulkAssignment` and the `DeviceBulkAssignments` port. The
+worker authorizes and revision-checks the complete selection before effects, locks
+the target and participating collectors, and keeps primary writes transactional.
+Site/template unassignment is explicit. Template changes preserve existing graphs;
+collector moves use the same transfer adapter as single-device assignment, including
+destination verification and old-collector cleanup. Remote writes are not distributed
+transactions: a failure may leave remote effects and requires inspection before retry.

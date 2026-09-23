@@ -20,7 +20,7 @@ final class DeviceCollectorTransferFailureTest extends TestCase
 {
     public function testExplicitReplicationFailureStopsBeforeGraphReadsAndWrites(): void
     {
-        $source = file_get_contents(dirname(__DIR__, 2) . '/bin/legacy-device-collector.php');
+        $source = file_get_contents(dirname(__DIR__, 2) . '/src/Inventory/Infrastructure/Legacy/DeviceCollectorTransfer.php');
         $start = strpos($source, '            if (api_device_replicate_out(');
         self::assertNotFalse($start);
         $end = strpos($source, '        } else {', $start);
@@ -29,10 +29,10 @@ final class DeviceCollectorTransferFailureTest extends TestCase
         self::assertStringContainsString('replicate_table_to_poller(', $transfer);
         $connection = $this->createMock(\PDO::class);
         $connection->expects(self::never())->method('prepare');
-        $assignment = (object) ['id' => 7];
+        $deviceId = 7;
         $target = 3;
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Collector replication unavailable');
+        $this->expectExceptionMessage('Collector replication failed');
         // Intentional source-execution regression: fixed repository path and
         // asserted boundaries above; no request, fixture or remote input enters code.
         eval('namespace ' . __NAMESPACE__ . '; use RuntimeException; use PDO;' . $transfer); // nosemgrep: php.lang.security.eval-use.eval-use
