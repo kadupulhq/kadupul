@@ -11,6 +11,7 @@ require __DIR__ . '/../../include/vendor/autoload.php';
 
 use Kadupul\Inventory\Domain\DeviceState;
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceRemovalSnapshot;
+use Kadupul\Inventory\Infrastructure\Legacy\DeviceRemovalDependencies;
 
 $dsn = getenv('REMOVAL_TEST_DSN');
 if (!$dsn) {
@@ -29,8 +30,8 @@ try {
     }
     // Use the real schema definitions, including storage engines and indexes.
     $schemaSource = file_get_contents(__DIR__ . '/../../cacti.sql');
-    foreach (['graph_local', 'data_local'] as $table) {
-        if (!preg_match('/CREATE TABLE ' . $table . ' \(.*?;\s/s', $schemaSource, $match)) {
+    foreach (['graph_local', 'data_local', 'graph_templates_item', 'data_template_rrd', 'aggregate_graphs', 'aggregate_graphs_items'] as $table) {
+        if (!preg_match('/CREATE TABLE `?' . $table . '`? \(.*?;\s/s', $schemaSource, $match)) {
             throw new RuntimeException('Fixture schema unavailable');
         }
         $owner->exec($match[0]);
@@ -71,7 +72,40 @@ try {
             $owner->rollBack();
         }
     }
-    echo 'PASS: 16 association insert/reassignment cases (empty and populated ranges), server ' . $owner->query('SELECT VERSION()')->fetchColumn() . "\n";
+    for ($id = 1; $id <= 200; ++$id) {
+        $owner->exec("INSERT INTO data_template_rrd (id, local_data_id) VALUES ($id, $id)");
+        $owner->exec("INSERT INTO graph_templates_item (id, local_graph_id, task_item_id) VALUES ($id, $id, $id)");
+    }
+    $owner->exec('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ');
+    $owner->beginTransaction();
+    if (!DeviceRemovalDependencies::exclusive($owner, [1], [1])) {
+        throw new RuntimeException('Owned dependency rejected');
+    }
+    $writer->beginTransaction();
+    try {
+        $writer->exec('INSERT INTO graph_templates_item (local_graph_id, task_item_id) VALUES (150, 150)');
+    } finally {
+        $writer->rollBack();
+    }
+    foreach (['(1, 150)', '(150, 1)'] as $reference) {
+        $writer->beginTransaction();
+        $blocked = false;
+        try {
+            $writer->exec('INSERT INTO graph_templates_item (local_graph_id, task_item_id) VALUES ' . $reference);
+        } catch (PDOException $error) {
+            if (($error->errorInfo[1] ?? null) !== 1205) {
+                throw $error;
+            }
+            $blocked = true;
+        } finally {
+            $writer->rollBack();
+        }
+        if (!$blocked) {
+            throw new RuntimeException('Reviewed graph/data reference was not locked');
+        }
+    }
+    $owner->rollBack();
+    echo 'PASS: association insert/reassignment cases and unrelated graph writer, server ' . $owner->query('SELECT VERSION()')->fetchColumn() . "\n";
 } finally {
     foreach ([$owner, $writer] as $db) {
         if ($db->inTransaction()) {
