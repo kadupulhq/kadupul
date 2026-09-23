@@ -33,7 +33,7 @@ final readonly class LegacyDeviceTreePlacement implements DeviceTreePlacement
             return [];
         }
         $branches = [];
-        $query = $db->query("SELECT id, title, graph_tree_id FROM graph_tree_items WHERE host_id = 0 AND local_graph_id = 0 AND site_id = 0 AND title <> '' ORDER BY graph_tree_id, title, id");
+        $query = $db->query("SELECT id, title, graph_tree_id FROM graph_tree_items WHERE host_id = 0 AND local_graph_id = 0 ORDER BY graph_tree_id, title, id");
         foreach ($query->fetchAll(PDO::FETCH_ASSOC) as $branch) {
             if (isset($trees[(int) $branch['graph_tree_id']])) {
                 $branches[(int) $branch['graph_tree_id']][] = $branch;
@@ -60,7 +60,7 @@ final readonly class LegacyDeviceTreePlacement implements DeviceTreePlacement
             throw new \RuntimeException('Tree destination unavailable');
         }
         if ($parentId > 0) {
-            $query = $db->prepare("SELECT id FROM graph_tree_items WHERE id = ? AND graph_tree_id = ? AND host_id = 0 AND local_graph_id = 0 AND site_id = 0 AND title <> '' FOR UPDATE");
+            $query = $db->prepare("SELECT id FROM graph_tree_items WHERE id = ? AND graph_tree_id = ? AND host_id = 0 AND local_graph_id = 0 FOR UPDATE");
             $query->execute([$parentId, $treeId]);
             if ($query->fetchColumn() === false) {
                 throw new \RuntimeException('Tree branch unavailable');
@@ -92,7 +92,7 @@ final readonly class LegacyDeviceTreePlacement implements DeviceTreePlacement
             throw new \RuntimeException('Tree destination changed');
         }
         if ($parentId > 0) {
-            $query = $db->prepare("SELECT id FROM graph_tree_items WHERE id = ? AND graph_tree_id = ? AND host_id = 0 AND local_graph_id = 0 AND site_id = 0 AND title <> ''");
+            $query = $db->prepare("SELECT id FROM graph_tree_items WHERE id = ? AND graph_tree_id = ? AND host_id = 0 AND local_graph_id = 0");
             $query->execute([$parentId, $treeId]);
             if ($query->fetchColumn() === false) {
                 throw new \RuntimeException('Tree branch changed');
