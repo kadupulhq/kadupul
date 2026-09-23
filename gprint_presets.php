@@ -96,6 +96,32 @@ function form_save() {
     gprint_presets - GPRINT Presets
    ----------------------------------- */
 
+/* The list offers a checkbox only for a preset no Graph or Graph Template uses,
+   which is what the Deletable column promises. The delete applies the same rule,
+   or a forged selection leaves graph items naming a preset that is gone. */
+function gprint_deletable($ids) {
+	$rows = db_fetch_assoc('SELECT DISTINCT gprint_id
+		FROM graph_templates_item
+		WHERE gprint_id > 0
+		AND ' . array_to_sql_or($ids, 'gprint_id'));
+
+	/* A failed lookup must not read as "nothing is in use". */
+	if (!is_array($rows)) {
+		return array();
+	}
+
+	$in_use    = array_rekey($rows, 'gprint_id', 'gprint_id');
+	$deletable = array();
+
+	foreach ($ids as $id) {
+		if (!isset($in_use[$id])) {
+			$deletable[] = $id;
+		}
+	}
+
+	return $deletable;
+}
+
 function form_actions() {
 	global $gprint_actions;
 
@@ -109,7 +135,15 @@ function form_actions() {
 
 		if ($selected_items != false) {
 			if (get_nfilter_request_var('drp_action') == '1') { /* delete */
-				db_execute('DELETE FROM graph_templates_gprint WHERE ' . array_to_sql_or($selected_items, 'id'));
+				$deletable = gprint_deletable($selected_items);
+
+				if (cacti_sizeof($deletable)) {
+					db_execute('DELETE FROM graph_templates_gprint WHERE ' . array_to_sql_or($deletable, 'id'));
+				}
+
+				if (cacti_sizeof($deletable) < cacti_sizeof($selected_items)) {
+					raise_message('gprint_in_use', __('GPRINT Presets referenced by a Graph or Graph Template were not Deleted.'), MESSAGE_LEVEL_WARN);
+				}
 			}
 		}
 
