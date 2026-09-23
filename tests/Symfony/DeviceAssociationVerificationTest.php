@@ -50,6 +50,24 @@ final class DeviceAssociationVerificationTest extends TestCase
         }
     }
 
+    public function testRemovalUsesCallerTransactionsOnBothDatabases(): void
+    {
+        $primary = $this->database(true, true);
+        $remote = $this->database(true, true);
+        $primary->beginTransaction();
+        $remote->beginTransaction();
+        $writer = new DeviceAssociationWriter();
+        $device = new DeviceAssociations(7, 'fixture', 0, 3, 0, []);
+        $change = new DeviceAssociationChange('graph', 'remove', 9);
+        $writer->apply($primary, $remote, $device, $change);
+        $writer->verify($primary, $remote, $device, $change);
+        foreach ([$primary, $remote] as $db) {
+            self::assertTrue($db->inTransaction());
+            $db->rollBack();
+            self::assertSame(1, (int) $db->query('SELECT COUNT(*) FROM host_graph')->fetchColumn());
+        }
+    }
+
     public static function outcomes(): iterable
     {
         foreach ([false, true] as $remote) {
