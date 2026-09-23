@@ -54,6 +54,7 @@ rra/**
 
 # Ignore Cacti cache files/folders
 cache/**
+!cache/.htaccess
 *.cache
 
 # Ignore Cacti plugin files/folders

@@ -1,6 +1,7 @@
 Cacti CHANGELOG
 
 1.2.32
+-security: Deny Apache access to the library, cache and internal documentation directories, the bootstrap include files and vendored PHP, offer root dotfile and manifest denies in .htaccess.dist, and refuse HTTP requests to the theme hash script and script server
 -security: Encode automation preview URLs and input/template links in their HTML and JavaScript contexts while preserving filters and navigation
 -security: Constrain editor AJAX IDs and graph timestamps at output and encode graph state and navigation strings without changing mutation routes
 -issue: Preserve configured character sets in shared table-cell and checkbox output encoding

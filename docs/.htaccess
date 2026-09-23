@@ -1,0 +1,53 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Local documentation, when an operator installs it here, is linked from the
+# help pages and served by docs/index.php, so those stay readable along with
+# the HTML and its assets. Everything else is denied. main denies all of
+# docs/; the 1.2 series keeps these served so 1.2.31 help links still work.
+
+# Apache 2.4
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+
+# Apache 2.2
+<IfModule !mod_authz_core.c>
+    Order Allow,Deny
+    Deny from all
+</IfModule>
+
+<FilesMatch "\.(html?|css|js|png|jpe?g|gif|svg|webp|ico)$">
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Allow,Deny
+        Allow from all
+    </IfModule>
+</FilesMatch>
+
+# Only the top-level index is the documentation landing page, so a PHP file
+# named index.php deeper in docs/ must not run. The match is case-sensitive
+# because on a case-insensitive filesystem INDEX.PHP would be served as source.
+<IfModule mod_authz_core.c>
+    # Unanchored so a prefix such as /cacti/ works; a nested docs/ is excluded.
+    <If "%{REQUEST_URI} =~ m#/docs/(index\.php)?$# && ! (%{REQUEST_URI} =~ m#/docs/.+/docs/#)">
+        Require all granted
+    </If>
+</IfModule>
+
+# Apache 2.2 has no <If> and FilesMatch cannot tell depth, so the index is
+# granted only where mod_rewrite can refuse the nested ones. Without it the
+# landing page stays denied rather than every index.php below it running.
+<IfModule !mod_authz_core.c>
+    <IfModule mod_rewrite.c>
+        <FilesMatch "^(index\.php)?$">
+            Order Allow,Deny
+            Allow from all
+        </FilesMatch>
+        RewriteEngine On
+        RewriteOptions Inherit
+        RewriteRule ^.+/index\.php(/|$) - [F,NC]
+    </IfModule>
+</IfModule>

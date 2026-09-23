@@ -1,0 +1,35 @@
+# SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# include/ serves the interface's scripts, styles and images, so only the
+# bootstrap files and vendored PHP are denied. The prefix match on the
+# bootstrap names also covers config.php.dist and editor backups.
+<FilesMatch "(?i)^(config|global|plugins)\.php">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Allow,Deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# include/vendor is rebuilt by Composer, so its deny lives here. Its CSS,
+# flag images and csrf-magic.js stay served.
+<IfModule mod_authz_core.c>
+    <If "%{REQUEST_URI} =~ m#/include/vendor/.*\.php(/|$)#i">
+        Require all denied
+    </If>
+</IfModule>
+
+# Apache 2.2 has no <If>. This file is always active, so the rule is guarded:
+# an unguarded RewriteEngine would answer 500 for all of include/ on a 2.2
+# server without mod_rewrite. Inherit keeps any root rewrite rules in force
+# below this directory.
+<IfModule !mod_authz_core.c>
+    <IfModule mod_rewrite.c>
+        RewriteEngine On
+        RewriteOptions Inherit
+        RewriteRule ^vendor/.*\.php(/|$) - [F,NC]
+    </IfModule>
+</IfModule>
