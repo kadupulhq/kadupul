@@ -91,8 +91,9 @@ installation database collation. Sorting is retained in page and CSV links;
 lookahead avoids stale permission counts.
 The `site` filter accepts an empty value for all sites, `0` for unassigned
 (site ID zero), or a positive site ID. Inventory's `ListDeviceSites` query obtains
-choices through the `DeviceSites` port; its legacy adapter uses the same device
-visibility policy as the list. Only sites with accessible, non-deleted devices
+choices through the `DeviceSites` port; its Doctrine DBAL adapter applies the
+same device visibility rules as the list, reading the policies on its own
+connection. Only sites with accessible, non-deleted devices
 are named. Hidden, empty and deleted-only sites are omitted. An unavailable
 selected site retains a generic label without revealing its name. Search, state,
 status and site intersect before pagination. Site selection survives CSV and
@@ -141,7 +142,8 @@ state, country and accessible-device counts. All positive-ID sites are listed,
 including empty sites and sites with no accessible devices. This is a site
 administration view; the device filter still names only sites with visible devices.
 
-Counts apply the existing device visibility policy, exclude deleted devices, and
+Counts apply the existing device visibility policy, read through the Inventory
+DBAL connection, exclude deleted devices, and
 count each device once even when it has multiple graphs. Count links open the
 permission-filtered device list for that site. Neither notes nor other site fields
 are selected. Legacy null address fields display as empty text.
@@ -193,8 +195,8 @@ there is no automatic retry. Controller responses are private/no-store. Other se
 
 Device names open `/app.php/inventory/devices/{id}` (GET/HEAD). Symfony invokes
 `FindDeviceDetails`, which authorizes through IdentityAccess and reads through
-Inventory's `DeviceDetailsReader` port. The legacy adapter applies the same
-visibility policy as the list and selects only the displayed fields. Twig shows
+Inventory's `DeviceDetailsReader` port. Its Doctrine DBAL adapter applies the
+same visibility rules as the list and selects only the displayed fields. Twig shows
 metadata, site, status and escaped plain-text notes; SNMP credentials are never
 selected. Missing/hidden/deleted devices return 404, anonymous requests 401, and
 revoked device-realm access 403. Responses produced by the details controller are
@@ -707,7 +709,8 @@ document instead of inserting it as an AJAX fragment, retaining unsaved-form pro
 
 `/inventory/devices/new` now uses a Symfony Form and Twig page backed by the
 Inventory `CreateDevice` use case. `PrepareDeviceCreation` reads non-secret
-installation defaults and current template, site and enabled-poller choices.
+installation defaults and current template, site and enabled-poller choices
+through a Doctrine DBAL adapter on the Inventory read connection.
 Domain validation rejects unknown fields, invalid references at the form boundary,
 unsupported protocols, out-of-range values and invalid SNMPv3 combinations.
 The isolated legacy adapter rechecks the actor, realms and selected references
@@ -762,8 +765,51 @@ still controls which devices they may edit. Its infrastructure adapter uses a
 module-owned Doctrine DBAL connection;
 the application query and returned site map remain unchanged. The connection
 retains the installation's TLS certificate verification, UTF-8 and native
-prepare settings. Other read adapters and all write transactions keep their
-existing persistence path until migrated and covered independently.
+prepare settings. The device-site filter, device details and site catalog reads
+share that connection. The device list, which is the remaining
+permission-filtered read, moves after its search rewrite; it and all write
+transactions keep their existing PDO path until migrated and covered
+independently.
+
+An operator can give that connection its own MySQL user with SELECT only, so
+the database itself rejects writes through it. Set both
+`$database_read_username` and `$database_read_password` in
+`include/config.php`. Setting only one of them stops the connection with
+`Incomplete read-only database credentials.` rather than guessing. With neither
+set, the connection keeps using `$database_username` and `$database_password`
+as before; that fallback grants nothing new, and the read-only protection
+starts only once the read user is configured. A remote collector ignores both
+settings and keeps the `$rdatabase_*` primary credentials on Sites routes.
+
+Grant the read user only the tables the DBAL adapters read, including the
+permission tables that device visibility reads. The list grows as more adapters
+move to DBAL:
+
+```sql
+CREATE USER 'kadupul_read'@'localhost' IDENTIFIED BY 'change-me';
+GRANT SELECT ON cacti.sites TO 'kadupul_read'@'localhost';
+GRANT SELECT ON cacti.settings TO 'kadupul_read'@'localhost';
+GRANT SELECT (id, description, hostname, disabled, status, location, external_id,
+    notes, site_id, deleted) ON cacti.host TO 'kadupul_read'@'localhost';
+GRANT SELECT ON cacti.host_template TO 'kadupul_read'@'localhost';
+GRANT SELECT ON cacti.poller TO 'kadupul_read'@'localhost';
+GRANT SELECT ON cacti.graph_local TO 'kadupul_read'@'localhost';
+GRANT SELECT (id, policy_graphs, policy_hosts, policy_graph_templates)
+    ON cacti.user_auth TO 'kadupul_read'@'localhost';
+GRANT SELECT ON cacti.user_auth_perms TO 'kadupul_read'@'localhost';
+GRANT SELECT (id, enabled, policy_graphs, policy_hosts, policy_graph_templates)
+    ON cacti.user_auth_group TO 'kadupul_read'@'localhost';
+GRANT SELECT ON cacti.user_auth_group_members TO 'kadupul_read'@'localhost';
+GRANT SELECT ON cacti.user_auth_group_perms TO 'kadupul_read'@'localhost';
+```
+
+Replace `cacti` with `$database_default` and the host with the web server's
+address.
+The column lists keep password hashes, account fields and per-device SNMP
+credentials away from the read user. `settings` cannot be limited by row and
+still holds the default SNMP credentials, so protect the read user's password
+as closely as the primary one. Extend a column list when an adapter selects a
+new column.
 The domain revision includes site ID,
 so an assignment changed in another editor invalidates stale forms. Missing or
 invalid submitted choices cannot silently unassign a device.

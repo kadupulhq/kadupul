@@ -5,17 +5,17 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-namespace Kadupul\Inventory\Infrastructure\Legacy;
+namespace Kadupul\Inventory\Infrastructure\Persistence;
 
+use Doctrine\DBAL\Connection;
 use Kadupul\Inventory\Application\Port\SiteCatalog;
 use Kadupul\Inventory\Application\ReadModel\SitePage;
 use Kadupul\Inventory\Application\ReadModel\SiteSummary;
 use Kadupul\Inventory\Domain\SiteListCriteria;
-use Kadupul\Platform\Contract\DatabaseConnection;
 
-final readonly class LegacySiteCatalog implements SiteCatalog
+final readonly class DoctrineSiteCatalog implements SiteCatalog
 {
-    public function __construct(private DatabaseConnection $database, private LegacyDeviceVisibility $visibility) {}
+    public function __construct(private Connection $database, private DoctrineDeviceVisibility $visibility) {}
 
     public function listFor(int $userId, SiteListCriteria $criteria): SitePage
     {
@@ -29,20 +29,19 @@ final readonly class LegacySiteCatalog implements SiteCatalog
         }
         $direction = $criteria->direction === 'desc' ? 'DESC' : 'ASC';
         $order = ['name' => 's.name', 'id' => 's.id', 'devices' => 'devices', 'city' => 's.city', 'state' => 's.state', 'country' => 's.country'][$criteria->sort];
-        $query = $this->database->get()->prepare("SELECT s.id, s.name, s.city, s.state, s.country, COALESCE(d.devices, 0) AS devices
+        $rows = $this->database->fetchAllAssociative("SELECT s.id, s.name, s.city, s.state, s.country, COALESCE(d.devices, 0) AS devices
             FROM sites s LEFT JOIN (
                 SELECT h.site_id, COUNT(DISTINCT h.id) AS devices
                 FROM host h LEFT JOIN graph_local gl ON gl.host_id = h.id
                 WHERE h.id > 0 AND h.deleted = '' AND ($predicate)
                 GROUP BY h.site_id
             ) d ON d.site_id = s.id
-            WHERE $where ORDER BY $order $direction, s.id $direction LIMIT " . $criteria->offset() . ',' . ($criteria->pageSize + 1));
-        $query->execute($parameters);
-        $rows = $query->fetchAll();
+            WHERE $where ORDER BY $order $direction, s.id $direction LIMIT " . $criteria->offset() . ',' . ($criteria->pageSize + 1), $parameters);
         $sites = [];
         foreach (array_slice($rows, 0, $criteria->pageSize) as $row) {
             $sites[] = new SiteSummary((int) $row['id'], $row['name'], $row['city'] ?? '', $row['state'] ?? '', $row['country'] ?? '', (int) $row['devices']);
         }
+
         return new SitePage($sites, count($rows) > $criteria->pageSize);
     }
 }

@@ -205,13 +205,15 @@ final class DeviceCreateTest extends TestCase
     }
     public function testCatalogNeverLoadsSecretsAndFallsBackFromMissingReferences(): void
     {
-        $db = new \PDO('sqlite::memory:');
-        $db->exec("CREATE TABLE settings (name TEXT,value TEXT); CREATE TABLE host_template (id INTEGER,name TEXT); CREATE TABLE sites (id INTEGER,name TEXT); CREATE TABLE poller (id INTEGER,name TEXT,disabled TEXT);
-            INSERT INTO settings VALUES ('snmp_username','private-fixture'),('snmp_community','private-fixture'),('snmp_password','private-fixture'),('snmp_priv_passphrase','private-fixture'),('default_template','99'),('default_site','3'),('default_poller','9'),('snmp_version','1');
-            INSERT INTO sites VALUES (3,'Tokyo'); INSERT INTO poller VALUES (1,'Main',''),(9,'Disabled','on'); INSERT INTO host_template VALUES (2,'Template');");
-        $database = $this->createMock(\Kadupul\Platform\Contract\DatabaseConnection::class);
-        $database->method('get')->willReturn($db);
-        $choices = (new \Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreationCatalog($database))->choices();
+        $db = \Doctrine\DBAL\DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
+        foreach (['CREATE TABLE settings (name TEXT,value TEXT)', 'CREATE TABLE host_template (id INTEGER,name TEXT)', 'CREATE TABLE sites (id INTEGER,name TEXT)', 'CREATE TABLE poller (id INTEGER,name TEXT,disabled TEXT)'] as $table) {
+            $db->executeStatement($table);
+        }
+        $db->executeStatement("INSERT INTO settings VALUES ('snmp_username','private-fixture'),('snmp_community','private-fixture'),('snmp_password','private-fixture'),('snmp_priv_passphrase','private-fixture'),('default_template','99'),('default_site','3'),('default_poller','9'),('snmp_version','1')");
+        $db->executeStatement("INSERT INTO sites VALUES (3,'Tokyo')");
+        $db->executeStatement("INSERT INTO poller VALUES (1,'Main',''),(9,'Disabled','on')");
+        $db->executeStatement("INSERT INTO host_template VALUES (2,'Template')");
+        $choices = (new \Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceCreationCatalog($db))->choices();
         self::assertSame(0, $choices->defaults['host_template_id']);
         self::assertSame(3, $choices->defaults['site_id']);
         self::assertSame(1, $choices->defaults['poller_id']);
@@ -224,10 +226,11 @@ final class DeviceCreateTest extends TestCase
         self::assertSame('1', $choices->defaults['ping_retries']);
         self::assertStringNotContainsString('private-fixture', json_encode($choices));
         self::assertSame('', $choices->defaults['snmp_username']);
-        $db->exec("DELETE FROM settings WHERE name = 'default_site'; INSERT INTO sites VALUES (1,'Default');");
-        $catalog = new \Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreationCatalog($database);
+        $db->executeStatement("DELETE FROM settings WHERE name = 'default_site'");
+        $db->executeStatement("INSERT INTO sites VALUES (1,'Default')");
+        $catalog = new \Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceCreationCatalog($db);
         self::assertSame(1, $catalog->choices()->defaults['site_id']);
-        $db->exec("INSERT INTO settings VALUES ('default_site','')");
+        $db->executeStatement("INSERT INTO settings VALUES ('default_site','')");
         self::assertSame(0, $catalog->choices()->defaults['site_id']);
     }
 

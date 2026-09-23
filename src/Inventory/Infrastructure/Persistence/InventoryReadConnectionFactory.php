@@ -24,6 +24,22 @@ final readonly class InventoryReadConnectionFactory
             }
         }
 
+        $username = $config['username'];
+        $password = $config['password'];
+        // A remote collector already points these at the primary through the
+        // rdatabase_* settings; a local read user would not exist there.
+        if (($config['collector_id'] ?? 1) === 1) {
+            $readUsername = $config['read_username'] ?? '';
+            $readPassword = $config['read_password'] ?? '';
+            if (($readUsername === '') !== ($readPassword === '')) {
+                throw new \RuntimeException('Incomplete read-only database credentials.');
+            }
+            if ($readUsername !== '') {
+                $username = $readUsername;
+                $password = $readPassword;
+            }
+        }
+
         $options = [
             \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
             \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
@@ -46,8 +62,8 @@ final readonly class InventoryReadConnectionFactory
             'host' => $config['host'],
             'port' => (int) $config['port'],
             'dbname' => $config['database'],
-            'user' => $config['username'],
-            'password' => $config['password'],
+            'user' => $username,
+            'password' => $password,
             'charset' => 'utf8mb4',
             'driverOptions' => $options,
         ]);
