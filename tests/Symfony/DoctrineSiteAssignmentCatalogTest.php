@@ -87,6 +87,14 @@ final class DoctrineSiteAssignmentCatalogTest extends TestCase
         self::assertTrue($params['password'] === 'secret', 'The primary password was not used.');
     }
 
+    public function testConnectionFactoryFallsBackWhenReadCredentialKeysAreAbsent(): void
+    {
+        $params = (new InventoryReadConnectionFactory($this->configuration()))->create()->getParams();
+
+        self::assertSame('kadupul', $params['user']);
+        self::assertTrue($params['password'] === 'secret', 'The primary password was not used.');
+    }
+
     #[DataProvider('incompleteReadCredentials')]
     public function testConnectionFactoryRejectsIncompleteReadCredentials(bool $usernameOnly): void
     {
