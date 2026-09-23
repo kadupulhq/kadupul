@@ -101,6 +101,7 @@ exit;
 
 function remote_inventory_diagnostics($operation) {
     global $config;
+    unset($_SESSION['debug_log'], $config['debug_log']);
     $scope = \Kadupul\Inventory\Infrastructure\Legacy\DeviceDiagnosticScope::class;
     $scope::begin();
     $level = ob_get_level();
