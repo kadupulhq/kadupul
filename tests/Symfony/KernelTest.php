@@ -104,4 +104,33 @@ final class KernelTest extends TestCase
             $kernel->shutdown();
         }
     }
+
+    public function testDeviceFormsRejectAnonymousRequestsBeforeLoadingInstallationConfiguration(): void
+    {
+        $kernel = new Kernel('test', true);
+        try {
+            $kernel->boot();
+            $configuration = $this->createMock(\Kadupul\Platform\Contract\LegacyConfiguration::class);
+            $configuration->expects(self::never())->method('values');
+            $kernel->getContainer()->get('test.service_container')->set(\Kadupul\Platform\Contract\LegacyConfiguration::class, $configuration);
+            foreach (['/inventory/devices/1/edit', '/inventory/devices/new'] as $path) {
+                $response = $kernel->handle(Request::create($path));
+                self::assertSame(401, $response->getStatusCode());
+                self::assertTrue($response->headers->hasCacheControlDirective('no-store'));
+            }
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public function testProductionDeviceEditRouteRejectsAnonymousRequestWithoutInstallationConfiguration(): void
+    {
+        $kernel = new Kernel('prod', false);
+        try {
+            $response = $kernel->handle(Request::create('/inventory/devices/1/edit'));
+            self::assertSame(401, $response->getStatusCode());
+        } finally {
+            $kernel->shutdown();
+        }
+    }
 }
