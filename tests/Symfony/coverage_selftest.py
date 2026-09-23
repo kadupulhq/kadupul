@@ -129,6 +129,9 @@ def main():
         'sites-test-hash': 'Integration test source differs',
         'site-edit-test-hash': 'Integration test source differs',
         'missing-check': 'Incomplete Symfony integration',
+        'missing-removal-callback-check': 'Incomplete Symfony integration',
+        'missing-removal-shared-check': 'Incomplete Symfony integration',
+        'missing-removal-rollback-check': 'Incomplete Symfony integration',
         'wrong-handler': 'Wrong integration suite',
         'missing-reports': 'Missing integration coverage',
         'invalid-hit': 'Invalid PCOV',
@@ -222,6 +225,11 @@ def main():
             elif case.startswith('missing-option-check-'):
                 missing = option_checks[int(case.rsplit('-', 1)[1])]
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case == 'missing-removal-callback-check':
+                evidence['checks'] = [check for check in evidence['checks'] if check != 'rejected removal emits no bulk action callback']
+            elif case in ['missing-removal-shared-check', 'missing-removal-rollback-check']:
+                omitted = 'remote removal rejects outside graph references before cleanup' if case == 'missing-removal-shared-check' else 'remote removal failure rolls back dependent cleanup'
+                evidence['checks'] = [check for check in evidence['checks'] if check != omitted]
             elif case == 'missing-check':
                 evidence['checks'] = []
             elif case == 'wrong-handler':

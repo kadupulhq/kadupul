@@ -15,8 +15,10 @@ final class DeviceRemovalDependencies
         if (!$db->inTransaction()) {
             throw new \LogicException('Dependency checks require a transaction');
         }
-        $graphs = implode(',', array_map('intval', $graphIds)) ?: '0';
-        $data = implode(',', array_map('intval', $dataIds)) ?: '0';
+        // Zero denotes template rows, not an empty selection. Local object IDs
+        // are positive, so -1 cannot match an unrelated template or instance.
+        $graphs = implode(',', array_map('intval', $graphIds)) ?: '-1';
+        $data = implode(',', array_map('intval', $dataIds)) ?: '-1';
         // Lock both the selected graphs' references and outside graphs that
         // reference selected data. Missing references never grant wider scope.
         $query = $db->query("SELECT gti.local_graph_id, dtr.local_data_id FROM graph_templates_item gti LEFT JOIN data_template_rrd dtr ON dtr.id = gti.task_item_id WHERE gti.local_graph_id IN ($graphs) OR dtr.local_data_id IN ($data) FOR UPDATE");
