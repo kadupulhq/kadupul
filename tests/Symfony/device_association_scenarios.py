@@ -83,6 +83,7 @@ def verify_graph_associations(harness, session, check, poller=1):
 def verify_query_associations(harness, session, check, poller=1):
     device = None
     trigger = False
+    remote_query_removed = False
     prefix = 'create_remote.' if poller > 1 else ''
     try:
         # Disabled devices validate configuration without claiming live discovery.
@@ -99,6 +100,13 @@ def verify_query_associations(harness, session, check, poller=1):
         for method in ['', '1', '4', '-1', 'garbage']:
             check(form.request(fields=fields | {'device_association[reindex]': method})[0] == 422, 'query association rejects invalid or SNMP-only method: ' + method)
         check(form.request(fields=fields | {'device_association[extra]': '1'})[0] == 422, 'query association rejects extra fields')
+        if poller > 1:
+            harness.sql(f'DELETE FROM create_remote.snmp_query WHERE id={target}')
+            remote_query_removed = True
+            check(form.request(fields=fields)[0] == 502, 'query association rejects a stale remote catalog')
+            check(harness.sql(f'SELECT COUNT(*) FROM host_snmp_query WHERE host_id={device}').strip() == '0' and harness.sql(f'SELECT COUNT(*) FROM create_remote.host_snmp_query WHERE host_id={device}').strip() == '0', 'missing remote query cannot create orphan associations')
+            harness.sql(f'INSERT INTO create_remote.snmp_query SELECT * FROM snmp_query WHERE id={target}')
+            remote_query_removed = False
         harness.sql(f"DELIMITER $$\nCREATE TRIGGER {prefix}reject_query_association BEFORE INSERT ON {prefix}host_snmp_query FOR EACH ROW BEGIN IF NEW.host_id={device} THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='query association rejection'; END IF; END$$\nDELIMITER ;")
         trigger = True
         check(form.request(fields=fields)[0] == 502, 'query association SQL rejection cannot report success')
@@ -123,6 +131,8 @@ def verify_query_associations(harness, session, check, poller=1):
             check(harness.sql(f'SELECT (SELECT COUNT(*) FROM {database}host_snmp_query WHERE host_id={device})+(SELECT COUNT(*) FROM {database}host_snmp_cache WHERE host_id={device})+(SELECT COUNT(*) FROM {database}poller_reindex WHERE host_id={device})').strip() == '0', 'query removal clears associations cache and reindex state')
         check(harness.sql(f'SELECT COUNT(*) FROM graph_local WHERE id={graph}').strip() == '1', 'query removal retains existing graphs')
     finally:
+        if remote_query_removed:
+            harness.sql(f'INSERT INTO create_remote.snmp_query SELECT * FROM snmp_query WHERE id={target}')
         if trigger:
             harness.sql(f'DROP TRIGGER {prefix}reject_query_association')
         if device:
