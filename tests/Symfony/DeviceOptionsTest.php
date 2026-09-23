@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 
 final class DeviceOptionsTest extends TestCase
 {
-    public function testAuthorizedResetPreservesSelectionAndActor(): void
+    public function testAuthorizedOptionsChangePreservesSelectionAndActor(): void
     {
         $access = $this->createMock(ConsoleAccess::class);
         $access->method('consoleActor')->willReturn(new Actor(42, 'operator'));
@@ -28,7 +28,7 @@ final class DeviceOptionsTest extends TestCase
         (new ChangeDeviceOptions($access, $port))($selection, new \Kadupul\Inventory\Domain\DeviceOptionsChange(['location' => 'Rack']));
     }
 
-    public function testAuthorizationPrecedesReset(): void
+    public function testAuthorizationPrecedesOptionsChange(): void
     {
         foreach ([null, new Actor(42, 'operator')] as $actor) {
             $access = $this->createMock(ConsoleAccess::class);
@@ -38,7 +38,7 @@ final class DeviceOptionsTest extends TestCase
             $port->expects(self::never())->method('changeOptions');
             try {
                 (new ChangeDeviceOptions($access, $port))(new DeviceSelection([7 => str_repeat('a', 64)]), new \Kadupul\Inventory\Domain\DeviceOptionsChange(['location' => 'Rack']));
-                self::fail('Unauthorized reset accepted');
+                self::fail('Unauthorized options change accepted');
             } catch (InventoryAccessDenied $error) {
                 self::assertSame($actor === null, $error->unauthenticated);
             }

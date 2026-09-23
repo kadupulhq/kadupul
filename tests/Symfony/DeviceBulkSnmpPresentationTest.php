@@ -25,7 +25,7 @@ final class DeviceBulkSnmpPresentationTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('outcomes')]
-    public function testFrenchPresentationEscapesNamesAndPreservesAssignmentValues(bool $incompatible): void
+    public function testFrenchPresentationEscapesNamesAndPreservesSnmpValues(bool $incompatible): void
     {
         $kernel = new Kernel('test', true);
         try {
