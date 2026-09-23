@@ -18,7 +18,7 @@ preg_match_all('/print [^;]*FATAL:[^;]*;\s*(?:display_help\(\);\s*)?exit[^;]*;/'
 $expectedCodes = array(
 	'designed for the main Data Collector' => 1,
 	'designed for local RRDfile storage'   => 1,
-	'Cacti'                                => 1,
+	'Performance Booster required'         => 1,
 	'specifying a Device ID'               => 1,
 	'specifying a Device Template ID'      => 1,
 	'Explicitly Instruct This Script'      => 1,
@@ -28,29 +28,33 @@ $expectedCodes = array(
 	'Could not Move RRD File'              => 3,
 );
 
+$matched = array();
 foreach ($matches[0] as $index => $fragment) {
-	$expected = null;
+	$hits = array();
 
 	foreach ($expectedCodes as $needle => $code) {
 		if (strpos($fragment, $needle) !== false) {
-			$expected = $code;
-
-			break;
+			$hits[$needle] = $code;
 		}
 	}
 
-	$cases['fatal branch ' . $index] = array($fragment, $expected);
+	$matched += $hits;
+	// A diagnostic matching none, or more than one, has no unambiguous
+	// expectation; the inventory test names it rather than asserting on null.
+	$cases['fatal branch ' . $index] = array($fragment, count($hits) === 1 ? reset($hits) : null);
 }
 dataset('structure RRA fatal branches', $cases);
 
-test('all ten structure RRA fatal exits including eight corrected ones are covered', function () use ($matches, $cases) {
+test('every structure RRA fatal exit maps to exactly one expectation', function () use ($matches, $cases, $expectedCodes, $matched) {
 	expect(count($matches[0]))->toBe(10);
 
-	// A branch whose diagnostic matches no entry would otherwise be asserted
-	// against null and pass for the wrong reason.
 	foreach ($cases as $name => $case) {
 		expect($case[1])->not->toBeNull($name);
 	}
+
+	// Without this, a branch rewritten to repeat a diagnostic another branch
+	// already carries would keep the count at ten and leave one code unchecked.
+	expect(array_keys(array_diff_key($expectedCodes, $matched)))->toBe(array());
 });
 
 test('real fatal branches print diagnostics and exit nonzero before continuing', function ($fragment, $expected) {
