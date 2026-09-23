@@ -35,6 +35,16 @@ ini_set('memory_limit', '-1');
 
 set_default_action();
 
+/* Purge carries no action name, so the guard in include/global.php never sees
+   it. 1.2.31 reached it from the Purge button, a same-site GET; refuse the
+   rest the same way the guarded actions are refused. */
+if (isset_request_var('purge') && !isset($_POST['__csrf_magic'])
+	&& ($_SERVER['REQUEST_METHOD'] !== 'GET' || csrf_request_is_cross_site())) {
+	header('Allow: POST');
+	http_response_code(405);
+	exit;
+}
+
 validate_request_vars();
 
 switch (get_request_var('action')) {
