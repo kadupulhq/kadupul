@@ -343,9 +343,9 @@ dynamic_include	./lib/api_automation.php:2368		include_once($config['base_path']
 dynamic_include	./lib/api_automation.php:2369		include_once($config['base_path'] . '/lib/utility.php');
 dynamic_include	./lib/api_automation.php:3063					include_once($config['base_path'] . '/plugins/thold/thold-functions.php');
 dynamic_include	./lib/api_automation.php:3066					include_once($config['base_path'] . '/plugins/thold/thold_functions.php');
-dynamic_include	./lib/api_device.php:938		include_once($config['base_path'] . '/lib/utility.php');
-dynamic_include	./lib/api_device.php:939		include_once($config['base_path'] . '/lib/variables.php');
-dynamic_include	./lib/api_device.php:940		include_once($config['base_path'] . '/lib/data_query.php');
+dynamic_include	./lib/api_device.php:965		include_once($config['base_path'] . '/lib/utility.php');
+dynamic_include	./lib/api_device.php:966		include_once($config['base_path'] . '/lib/variables.php');
+dynamic_include	./lib/api_device.php:967		include_once($config['base_path'] . '/lib/data_query.php');
 dynamic_include	./lib/boost.php:1317		include($config['include_path'] . '/global_arrays.php');
 dynamic_include	./lib/boost.php:1621			include_once($config['library_path'] . '/poller.php');
 dynamic_include	./lib/boost.php:315			include_once($config['library_path'] . '/poller.php');
@@ -384,7 +384,7 @@ dynamic_include	./lib/html_tree.php:808		include_once($config['library_path'] . 
 dynamic_include	./lib/import.php:14		include_once($config['library_path'] . '/xml.php');
 dynamic_include	./lib/import.php:2031		include_once($config['library_path'] . '/vdef.php');
 dynamic_include	./lib/installer.php:3675	                include_once($upgrade_file);
-dynamic_include	./lib/mib_cache.php:42	        include_once($config['include_path'] . '/vendor/phpsnmp/mib_parser.php');
+dynamic_include	./lib/mib_cache.php:43	        include_once($config['include_path'] . '/vendor/phpsnmp/mib_parser.php');
 dynamic_include	./lib/plugins.php:137							include_once($plugin_include);
 dynamic_include	./lib/plugins.php:447		include_once($config['library_path'] . '/database.php');
 dynamic_include	./lib/plugins.php:596		include_once($config['library_path'] . '/database.php');

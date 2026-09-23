@@ -23,7 +23,10 @@ def verify_device_removal(harness, session, user_id, poller, check):
     saved_method = harness.sql("SELECT value FROM settings WHERE name='rrd_autoclean_method'").strip()
 
     def create(collector=1):
-        device = int(harness.sql(f"INSERT INTO host (description,hostname,poller_id,site_id) VALUES ('remove-fixture','remove.invalid',{collector},0); SELECT LAST_INSERT_ID()").strip())
+        description_hex = 'remove-fixture 🌏'.encode().hex().upper()
+        device = int(harness.sql(f"INSERT INTO host (description,hostname,poller_id,site_id) VALUES (CONVERT(UNHEX('{description_hex}') USING utf8mb4),'remove.invalid',{collector},0); SELECT LAST_INSERT_ID()").strip())
+        check(harness.sql(f'SELECT HEX(description) FROM host WHERE id={device}').strip() == description_hex,
+              'removal fixture preserves four-byte description before revision checks')
         graph = int(harness.sql(f'INSERT INTO graph_local (host_id) VALUES ({device}); SELECT LAST_INSERT_ID()').strip())
         sources = []
         for index in range(2):
@@ -79,6 +82,13 @@ def verify_device_removal(harness, session, user_id, poller, check):
         added = int(harness.sql(f'INSERT INTO graph_local (host_id) VALUES ({device}); SELECT LAST_INSERT_ID()').strip())
         check(form.remove(fields=fields) == 409 and exists(device), 'new graph invalidates device removal confirmation')
         harness.sql(f'DELETE FROM graph_local WHERE id={added}')
+        harness.sql(f"DELIMITER $$\nCREATE TRIGGER inject_unreviewed_remove BEFORE DELETE ON host FOR EACH ROW BEGIN IF OLD.id={device} THEN INSERT INTO graph_local (host_id) VALUES (OLD.id); INSERT INTO data_local (host_id) VALUES (OLD.id); END IF; END$$\nDELIMITER ;")
+        triggers.append('inject_unreviewed_remove')
+        check(form.remove() == 502 and exists(device), 'association added during removal fails closed')
+        check(harness.sql(f'SELECT COUNT(*) FROM graph_local WHERE host_id={device}').strip() == '1', 'failed removal rolls back the unreviewed graph and reviewed graph changes')
+        check(harness.sql(f'SELECT COUNT(*) FROM data_local WHERE host_id={device}').strip() == '2', 'failed removal rolls back the unreviewed data source and reviewed data-source changes')
+        harness.sql('DROP TRIGGER inject_unreviewed_remove')
+        triggers.remove('inject_unreviewed_remove')
         before = hook_count([str(device)]) + hook_count([device])
         check(form.remove() == 200, 'device removal retains graphs and disabled data sources')
         check(not exists(device), 'primary device row is removed')
@@ -138,6 +148,10 @@ def verify_device_removal(harness, session, user_id, poller, check):
 
         remote = create(poller)
         remote_form = RemovalForm(harness, session, [remote['device']])
+        remote_extra = int(harness.sql(f'INSERT INTO create_remote.graph_local (host_id) VALUES ({remote["device"]}); SELECT LAST_INSERT_ID()').strip())
+        check(remote_form.remove() == 502 and exists(remote['device']), 'collector association drift prevents device removal')
+        check(harness.sql(f'SELECT COUNT(*) FROM create_remote.graph_local WHERE id={remote_extra}').strip() == '1', 'collector drift is not silently purged')
+        harness.sql(f'DELETE FROM create_remote.graph_local WHERE id={remote_extra}')
         harness.sql(f"UPDATE poller SET last_status='2000-01-01 00:00:00' WHERE id={poller}")
         check(remote_form.remove() == 502 and exists(remote['device']), 'offline collector prevents device removal')
         harness.sql(f'UPDATE poller SET last_status=NOW() WHERE id={poller}')

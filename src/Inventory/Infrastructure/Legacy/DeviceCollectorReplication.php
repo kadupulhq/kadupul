@@ -7,6 +7,7 @@
 
 namespace Kadupul\Inventory\Infrastructure\Legacy;
 
+use Kadupul\Inventory\Domain\DeviceRemoval;
 use PDO;
 
 /** Verifies the legacy transfer inside the isolated worker; never exports row data. */
@@ -33,7 +34,20 @@ final class DeviceCollectorReplication
             // present on both ends are copied. Identity is always mandatory.
             $columns = static fn(PDO $db): array => $db->query("SHOW COLUMNS FROM $table")->fetchAll(PDO::FETCH_COLUMN);
             $common = array_values(array_intersect($columns($primary), $columns($target)));
-            $required = $table === 'host' ? ['id', 'poller_id', 'host_template_id', 'hostname', 'disabled', 'deleted'] : [];
+            $required = match ($table) {
+                'host' => ['id', 'poller_id', 'host_template_id', 'hostname', 'disabled', 'deleted'],
+                'host_graph' => ['host_id', 'graph_template_id'],
+                'host_snmp_query' => ['host_id', 'snmp_query_id'],
+                'host_snmp_cache' => ['host_id', 'snmp_query_id', 'field_name', 'snmp_index'],
+                'poller_item' => ['host_id', 'poller_id', 'local_data_id', 'rrd_name'],
+                'poller_reindex' => ['host_id', 'data_query_id', 'arg1'],
+                'data_local' => ['id', 'host_id', 'data_template_id', 'snmp_query_id', 'snmp_index'],
+                'graph_local' => ['id', 'host_id', 'graph_template_id', 'snmp_query_id', 'snmp_query_graph_id', 'snmp_index'],
+                'data_template_data' => ['id', 'local_data_id', 'local_data_template_data_id', 'data_template_id', 'data_input_id'],
+                'data_template_rrd' => ['id', 'local_data_id', 'local_data_template_rrd_id', 'data_template_id', 'data_source_name', 'data_input_field_id'],
+                'graph_templates_item' => ['id', 'local_graph_id', 'local_graph_template_item_id', 'graph_template_id', 'task_item_id'],
+                'data_input_data' => ['data_template_data_id', 'data_input_field_id'],
+            };
             if ($common === [] || array_diff($required, $common) !== []) {
                 throw new \RuntimeException('Collector schema lacks required identity');
             }
@@ -72,10 +86,18 @@ final class DeviceCollectorReplication
         }
     }
 
+    public function assertRemovalScope(PDO $source, DeviceRemoval $snapshot): void
+    {
+        foreach (['graph_local' => $snapshot->graphIds, 'data_local' => $snapshot->dataSourceIds] as $table => $expected) {
+            $query = $source->prepare("SELECT id FROM $table WHERE host_id = ? ORDER BY id");
+            if (!$query->execute([$snapshot->device->id]) || array_map('intval', $query->fetchAll(PDO::FETCH_COLUMN)) !== $expected) {
+                throw new \RuntimeException('Collector removal scope changed');
+            }
+        }
+    }
+
     public function purgeDependents(PDO $source, int $deviceId): void
     {
-        // Delete children while their ownership can still be discovered. The
-        // legacy purge removes the parent rows without foreign-key cascades.
         foreach ([
             'data_input_data' => 'data_template_data_id IN (SELECT id FROM data_template_data WHERE local_data_id IN (SELECT id FROM data_local WHERE host_id = ?))',
             'data_template_rrd' => 'local_data_id IN (SELECT id FROM data_local WHERE host_id = ?)',
@@ -88,6 +110,31 @@ final class DeviceCollectorReplication
             }
             $verify = $source->prepare("SELECT COUNT(*) FROM $table WHERE $where");
             if (!$verify->execute([$deviceId]) || (int) $verify->fetchColumn() !== 0) {
+                throw new \RuntimeException('Previous collector dependents remain');
+            }
+        }
+    }
+
+    public function purgeReviewedDependents(PDO $source, DeviceRemoval $snapshot): void
+    {
+        // Delete children while their ownership can still be discovered. The
+        // legacy purge removes the parent rows without foreign-key cascades.
+        foreach ([
+            'data_input_data' => ['data_template_data_id IN (SELECT id FROM data_template_data WHERE local_data_id IN (%s))', $snapshot->dataSourceIds],
+            'data_template_rrd' => ['local_data_id IN (%s)', $snapshot->dataSourceIds],
+            'data_template_data' => ['local_data_id IN (%s)', $snapshot->dataSourceIds],
+            'graph_templates_item' => ['local_graph_id IN (%s)', $snapshot->graphIds],
+        ] as $table => [$where, $ids]) {
+            if ($ids === []) {
+                continue;
+            }
+            $where = sprintf($where, implode(',', array_fill(0, count($ids), '?')));
+            $delete = $source->prepare("DELETE FROM $table WHERE $where");
+            if (!$delete->execute($ids)) {
+                throw new \RuntimeException('Previous collector dependent cleanup failed');
+            }
+            $verify = $source->prepare("SELECT COUNT(*) FROM $table WHERE $where");
+            if (!$verify->execute($ids) || (int) $verify->fetchColumn() !== 0) {
                 throw new \RuntimeException('Previous collector dependents remain');
             }
         }

@@ -56,6 +56,11 @@ try {
     }
     $transactionStarted = true;
     $connection = $database_sessions["$database_hostname:$database_port:$database_default"];
+    // Revisions include descriptions; match the HTTP connection before reading
+    // four-byte characters through the legacy connection's utf8mb3 default.
+    if ($connection->exec('SET NAMES utf8mb4') === false) {
+        throw new RuntimeException('Primary connection encoding unavailable');
+    }
     if (!(new \Kadupul\Inventory\Infrastructure\Legacy\DeviceWriteAuthorization())->allows($connection, $command['actor'])) {
         $status = 'denied';
         throw new RuntimeException('Access denied');
@@ -105,7 +110,7 @@ try {
     }
     $remotes = [];
     $snapshots = [];
-    $graphs = $data = [];
+    $graphs = $data = $reviewed = [];
     // Every identity, association set and collector is checked before mutation.
     foreach ($rows as $index => $row) {
         if ((int) $row['site_id'] !== (int) $associations[$index]['site_id']) {
@@ -115,6 +120,7 @@ try {
         $snapshot = DeviceRemovalSnapshot::read($connection, $device, true);
         $snapshot->assertRevision($selection->revisions[$device->id]);
         $snapshots[] = $snapshot;
+        $reviewed[$device->id] = ['graphs' => $snapshot->graphIds, 'data_sources' => $snapshot->dataSourceIds];
         array_push($graphs, ...$snapshot->graphIds);
         array_push($data, ...$snapshot->dataSourceIds);
         if ($device->pollerId > 1) {
@@ -140,11 +146,16 @@ try {
     $verifier = new \Kadupul\Inventory\Infrastructure\Legacy\DeviceCollectorReplication();
     foreach ($snapshots as $snapshot) {
         if (isset($remotes[$snapshot->device->pollerId])) {
-            $verifier->purgeDependents($remotes[$snapshot->device->pollerId], $snapshot->device->id);
+            $verifier->assertRemovalScope($remotes[$snapshot->device->pollerId], $snapshot);
+            $verifier->purgeReviewedDependents($remotes[$snapshot->device->pollerId], $snapshot);
         }
     }
     // The lifecycle API partitions remote cleanup while preserving one batch hook.
-    api_device_remove_multi($ids, $policy === DeviceRemovalPolicy::Retain ? 1 : 2);
+    api_device_remove_multi($ids, $policy === DeviceRemovalPolicy::Retain ? 1 : 2, [
+        'graphs' => $graphs,
+        'data_sources' => $data,
+        'by_device' => $reviewed,
+    ]);
     if ($policy === DeviceRemovalPolicy::Purge && $data !== []) {
         // Graph removal already purged linked sources and invoked their hooks.
         // Only remaining ungraphed sources need the additional lifecycle call.
@@ -153,12 +164,6 @@ try {
         if ($remainingData !== []) {
             api_data_source_remove_multi(array_column($remainingData, 'id'));
         }
-    }
-    set_request_var('drp_action', '1');
-    snmpagent_device_action_bottom(['1', $ids]);
-    api_plugin_hook_function('device_action_bottom', ['1', $ids]);
-    if (db_error() !== '' || is_error_message() || !$connection->inTransaction()) {
-        throw new RuntimeException('Device removal could not be confirmed');
     }
     foreach ($snapshots as $snapshot) {
         $device = $snapshot->device;
@@ -170,6 +175,11 @@ try {
         foreach (['host_graph', 'host_snmp_query', 'host_snmp_cache', 'poller_item', 'poller_reindex', 'graph_tree_items', 'reports_items'] as $table) {
             if ($read($connection, "SELECT host_id FROM $table WHERE host_id = ? LIMIT 1", [$device->id]) !== []) {
                 throw new RuntimeException('Device associations remain');
+            }
+        }
+        foreach (['graph_local', 'data_local'] as $table) {
+            if ($read($connection, "SELECT host_id FROM $table WHERE host_id = ? LIMIT 1 FOR UPDATE", [$device->id]) !== []) {
+                throw new RuntimeException('Unreviewed graph or data-source association remains');
             }
         }
         foreach (['graph_local' => $snapshot->graphIds, 'data_local' => $snapshot->dataSourceIds] as $table => $relatedIds) {
@@ -191,6 +201,12 @@ try {
         if (isset($remotes[$device->pollerId])) {
             $verifier->verifyPurged($remotes[$device->pollerId], $device->id);
         }
+    }
+    set_request_var('drp_action', '1');
+    snmpagent_device_action_bottom(['1', $ids]);
+    api_plugin_hook_function('device_action_bottom', ['1', $ids]);
+    if (db_error() !== '' || is_error_message() || !$connection->inTransaction()) {
+        throw new RuntimeException('Device removal could not be confirmed');
     }
     $markers = ['time_last_change_device' => (string) time(), 'time_last_change_site_device' => (string) time()];
     foreach ($pollers as $pollerId) {
