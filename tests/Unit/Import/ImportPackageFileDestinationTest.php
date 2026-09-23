@@ -18,7 +18,7 @@
  * directory; only signature checks, logging and XML import are stubbed.
  */
 
-$root = dirname(__DIR__, 2);
+$root = dirname(__DIR__, 3);
 
 foreach (array('POLLER_VERBOSITY_LOW' => 2, 'POLLER_VERBOSITY_MEDIUM' => 3, 'OPENSSL_ALGO_SHA1' => 1, 'OPENSSL_ALGO_SHA256' => 7) as $name => $value) {
 	if (!defined($name)) {
@@ -96,11 +96,11 @@ function importPkgDestNormalizeSelectedFile($root, $pfile) {
 	return package_import_normalize_selected_file($pfile);
 }
 
-function importPkgDestRun($names, $preview = false, $import_files = array()) {
+function importPkgDestRun($names, $preview = false, $import_files = array(), $contents = array()) {
 	$files = array();
 
 	foreach ($names as $name) {
-		$files[] = array('name' => $name, 'data' => base64_encode('payload for ' . $name), 'filesignature' => '');
+		$files[] = array('name' => $name, 'data' => base64_encode($contents[$name] ?? ('payload for ' . $name)), 'filesignature' => '');
 	}
 
 	/* every real package carries its template, and import_package() needs one */
@@ -175,6 +175,30 @@ test('replacement warnings distinguish equal and changed content', function ($ex
 	});
 	expect(count($warnings))->toBe($warns ? 1 : 0);
 })->with([['payload for scripts/ss_test.php', false], ['different payload', true]]);
+
+test('MD5-colliding file contents remain different in previews and replacement warnings', function () {
+	$fixture = json_decode(file_get_contents(__DIR__ . '/fixtures/md5-collision.json'), true, 512, JSON_THROW_ON_ERROR);
+	$first = base64_decode($fixture['first'], true);
+	$second = base64_decode($fixture['second'], true);
+	expect($first)->not->toBeFalse()->not->toBe($second);
+	expect($second)->not->toBeFalse();
+	// Prove this fixture detects a regression to the previous algorithm.
+	expect(md5($first))->toBe(md5($second));
+	expect(hash('sha256', $first))->not->toBe(hash('sha256', $second));
+	$name = 'scripts/collision.bin';
+	$path = $this->base . '/' . $name;
+	file_put_contents($path, $first);
+	$preview = importPkgDestRun(array($name), true, array(), array($name => $second));
+	expect($preview[1][$name])->toBe('writable, differences');
+	expect(file_get_contents($path))->toBe($first);
+	$result = importPkgDestRun(array($name), false, array(), array($name => $second));
+	expect($result[1][$name])->toBe('written');
+	expect(file_get_contents($path))->toBe($second);
+	$warnings = array_filter($GLOBALS['import_pkg_dest']['logs'], function ($message) {
+		return strpos($message, 'WARNING: Package file replaces a different existing file:') === 0;
+	});
+	expect(count($warnings))->toBe(1);
+});
 
 test('refuses a scripts directory that is not at the Cacti base or in a plugin', function () {
 	$result = importPkgDestRun(array('evil/scripts/payload.php', 'plugins/thold/evil/resource/x.php'));
