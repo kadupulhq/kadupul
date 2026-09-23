@@ -20,6 +20,7 @@ class AssociationForm(CollectorForm):
 def verify_graph_associations(harness, session, check, poller=1):
     device = None
     trigger = False
+    remote_template_removed = False
     prefix = 'create_remote.' if poller > 1 else ''
     try:
         device = int(harness.sql(f"INSERT INTO host (description,hostname,poller_id,site_id,snmp_version,availability_method) VALUES ('graph-association-fixture','127.0.0.1',{poller},0,0,0); SELECT LAST_INSERT_ID()").strip())
@@ -44,6 +45,13 @@ def verify_graph_associations(harness, session, check, poller=1):
                 check(form.request(fields=fields)[0] == 502, 'graph association refuses offline collector before writes')
             finally:
                 harness.sql(f'UPDATE poller SET last_status=NOW() WHERE id={poller}')
+            harness.sql(f'DELETE FROM create_remote.graph_templates WHERE id={target}')
+            remote_template_removed = True
+            check(form.request(fields=fields)[0] == 502, 'graph association rejects a stale remote template catalog')
+            check(harness.sql(f'SELECT COUNT(*) FROM host_graph WHERE host_id={device}').strip() == '0', 'missing remote template rolls back the primary association')
+            check(harness.sql(f'SELECT COUNT(*) FROM create_remote.host_graph WHERE host_id={device}').strip() == '0', 'missing remote template leaves no orphan collector association')
+            harness.sql(f'INSERT INTO create_remote.graph_templates SELECT * FROM graph_templates WHERE id={target}')
+            remote_template_removed = False
         harness.sql(f"DELIMITER $$\nCREATE TRIGGER {prefix}reject_graph_association BEFORE INSERT ON {prefix}host_graph FOR EACH ROW BEGIN IF NEW.host_id={device} THEN SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT='graph association rejection'; END IF; END$$\nDELIMITER ;")
         trigger = True
         check(form.request(fields=fields)[0] == 502, 'graph association SQL rejection cannot report success')
@@ -65,6 +73,8 @@ def verify_graph_associations(harness, session, check, poller=1):
     finally:
         if trigger:
             harness.sql(f'DROP TRIGGER {prefix}reject_graph_association')
+        if remote_template_removed:
+            harness.sql(f'INSERT INTO create_remote.graph_templates SELECT * FROM graph_templates WHERE id={target}')
         if device:
             for database in (['', 'create_remote.'] if poller > 1 else ['']):
                 harness.sql(f'DELETE FROM {database}host_graph WHERE host_id={device}; DELETE FROM {database}graph_local WHERE host_id={device}; DELETE FROM {database}host WHERE id={device}')
