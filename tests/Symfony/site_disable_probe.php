@@ -32,7 +32,22 @@ try {
     }
     $row = $db->query('SELECT * FROM host WHERE id=' . $hostId)->fetch();
     $device = new \Kadupul\Inventory\Domain\Device($hostId, $row['description'], $row['hostname'], (string) $row['notes'], true, (string) $row['location'], (string) $row['external_id'], (int) $row['site_id'], array_intersect_key($row, \Kadupul\Inventory\Domain\DevicePolling::DEFAULTS), array_intersect_key($row, \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::PUBLIC_DEFAULTS));
-    $command = ['actor' => (int) $db->query("SELECT id FROM user_auth WHERE username='admin'")->fetchColumn(), 'id' => $hostId, 'description' => $device->description(), 'hostname' => $device->hostname(), 'notes' => $device->notes(), 'enabled' => false, 'location' => $device->location(), 'external_id' => $device->externalId(), 'revision' => $device->revision(), 'site_id' => $siteId, 'polling' => $device->polling(), 'snmp' => $device->snmpChange()->fields];
+    $command = ['correlation_id' => bin2hex(random_bytes(16)), 'actor' => (int) $db->query("SELECT id FROM user_auth WHERE username='admin'")->fetchColumn(), 'id' => $hostId, 'description' => $device->description(), 'hostname' => $device->hostname(), 'notes' => $device->notes(), 'enabled' => false, 'location' => $device->location(), 'external_id' => $device->externalId(), 'revision' => $device->revision(), 'site_id' => $siteId, 'polling' => $device->polling(), 'snmp' => $device->snmpChange()->fields];
+    $denied = $command;
+    $denied['correlation_id'] = bin2hex(random_bytes(16));
+    $denied['actor'] = 2147483647;
+    $rejected = new \Symfony\Component\Process\Process([PHP_BINARY, 'bin/legacy-device-edit.php'], getcwd());
+    $rejected->setInput(json_encode($denied, JSON_THROW_ON_ERROR));
+    $rejected->run();
+    if ($rejected->isSuccessful() || !str_contains($rejected->getOutput(), 'KADUPUL_EDIT_RESULT={"status":"denied"}')) {
+        throw new RuntimeException('Persistence authorization rejection was not reported');
+    }
+    $audit = file_get_contents('log/kadupul-audit.jsonl');
+    if (!str_contains($audit, '"correlation_id":"' . $denied['correlation_id'] . '"')
+        || !str_contains($audit, '"actor":{"id":2147483647}')
+        || !str_contains($audit, '"decision":"denied","outcome":"denied"')) {
+        throw new RuntimeException('Persistence authorization rejection was not audited');
+    }
     $db->beginTransaction();
     $db->query('SELECT id FROM sites WHERE id=' . $siteId . ' FOR UPDATE')->fetchColumn();
     $worker = proc_open([PHP_BINARY, 'bin/legacy-device-edit.php'], [0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes);

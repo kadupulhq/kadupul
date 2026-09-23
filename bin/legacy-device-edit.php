@@ -9,6 +9,8 @@ use Kadupul\Inventory\Domain\Device;
 use Kadupul\Inventory\Domain\DeviceEditConflict;
 use Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceVisibility;
 use Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceSiteWriter;
+use Kadupul\IdentityAccess\Contract\AuditEvent;
+use Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuditTrail;
 use Kadupul\Platform\Contract\DatabaseConnection;
 
 if (PHP_SAPI !== 'cli') {
@@ -34,18 +36,29 @@ require_once __DIR__ . '/../lib/utility.php';
 
 $status = 'failed';
 $transactionStarted = false;
+$auditCorrelation = bin2hex(random_bytes(16));
+$auditActor = null;
+$auditTarget = 'unknown';
+$auditDecision = AuditEvent::DENIED;
+$auditOutcome = AuditEvent::DENIED;
 try {
     $input = stream_get_contents(STDIN, 500001);
     if (strlen($input) > 500000) {
         throw new InvalidArgumentException('Payload too large');
     }
     $command = json_decode($input, true, 16, JSON_THROW_ON_ERROR);
-    if (!is_array($command) || array_diff(array_keys($command), ['actor', 'id', 'revision', 'description', 'hostname', 'notes', 'enabled', 'location', 'external_id', 'site_id', 'polling', 'snmp']) !== []
+    if (!is_array($command) || array_diff(array_keys($command), ['correlation_id', 'actor', 'id', 'revision', 'description', 'hostname', 'notes', 'enabled', 'location', 'external_id', 'site_id', 'polling', 'snmp']) !== []
         || !is_array($command['polling'] ?? null) || !is_array($command['snmp'] ?? null)
         || !is_int($command['site_id'] ?? null) || $command['site_id'] < 0 || $command['site_id'] > 4294967295
         || !is_bool($command['enabled'] ?? null) || !is_int($command['actor'] ?? null) || !is_int($command['id'] ?? null) || $command['actor'] <= 0 || $command['id'] <= 0) {
         throw new InvalidArgumentException('Invalid command');
     }
+    if (!is_string($command['correlation_id'] ?? null) || !preg_match('/^[a-f0-9]{32}$/D', $command['correlation_id'])) {
+        throw new InvalidArgumentException('Invalid command');
+    }
+    $auditCorrelation = $command['correlation_id'];
+    $auditActor = $command['actor'];
+    $auditTarget = (string) $command['id'];
     foreach (['revision', 'description', 'hostname', 'notes', 'location', 'external_id'] as $field) {
         if (!is_string($command[$field] ?? null)) {
             throw new InvalidArgumentException('Invalid command');
@@ -70,6 +83,21 @@ try {
         $status = 'denied';
         throw new RuntimeException('Access denied');
     }
+    $provider = new class ($connection) implements DatabaseConnection {
+        public function __construct(private PDO $connection) {}
+        public function get(): PDO
+        {
+            return $this->connection;
+        }
+    };
+    $visibility = new LegacyDeviceVisibility($provider);
+    $initiallyAllowed = db_fetch_cell_prepared("SELECT h.id FROM host h LEFT JOIN graph_local gl ON gl.host_id = h.id WHERE h.id = ? AND (" . $visibility->predicate($command['actor']) . ') LIMIT 1', [$command['id']]);
+    if (!$initiallyAllowed) {
+        $status = 'denied';
+        throw new RuntimeException('Access denied');
+    }
+    $auditDecision = AuditEvent::ALLOWED;
+    $auditOutcome = AuditEvent::FAILED;
     $siteIds = array_unique([(int) $association['site_id'], $command['site_id']]);
     sort($siteIds, SORT_NUMERIC);
     foreach ($siteIds as $siteId) {
@@ -88,18 +116,15 @@ try {
     if ($row && (int) $row['site_id'] !== (int) $association['site_id']) {
         throw new DeviceEditConflict('Device site changed. Reload before saving.');
     }
-    $provider = new class ($connection) implements DatabaseConnection {
-        public function __construct(private PDO $connection) {}
-        public function get(): PDO
-        {
-            return $this->connection;
-        }
-    };
-    $visibility = new LegacyDeviceVisibility($provider);
     $allowed = db_fetch_cell_prepared("SELECT h.id FROM host h LEFT JOIN graph_local gl ON gl.host_id = h.id WHERE h.id = ? AND (" . $visibility->predicate($command['actor']) . ') LIMIT 1', [$command['id']]);
-    if (!$row || !$allowed) {
+    if (!$allowed) {
         $status = 'denied';
+        $auditDecision = AuditEvent::DENIED;
+        $auditOutcome = AuditEvent::DENIED;
         throw new RuntimeException('Access denied');
+    }
+    if (!$row) {
+        throw new RuntimeException('Device disappeared during save.');
     }
     $device = new Device((int) $row['id'], $row['description'], (string) $row['hostname'], (string) $row['notes'], $row['disabled'] !== 'on', (string) $row['location'], (string) $row['external_id'], (int) $row['site_id'], array_intersect_key($row, \Kadupul\Inventory\Domain\DevicePolling::DEFAULTS), array_intersect_key($row, \Kadupul\Inventory\Domain\DeviceSnmpConfiguration::PUBLIC_DEFAULTS));
     $device->revise($command['description'], $command['hostname'], $command['notes'], $command['enabled'], $command['location'], $command['external_id'], $command['revision'], $command['site_id'], $command['polling'], $command['snmp']);
@@ -150,6 +175,7 @@ try {
     }
     $transactionStarted = false;
     $status = 'ok';
+    $auditOutcome = AuditEvent::SUCCEEDED;
     cacti_log('INVENTORY: User ' . $command['actor'] . ' edited device ' . $device->id, false, 'AUDIT');
 } catch (DeviceEditConflict) {
     $status = 'conflict';
@@ -157,7 +183,24 @@ try {
     // The parent receives only stable error codes, never credentials or plugin output.
 } finally {
     if ($transactionStarted) {
-        db_rollback_transaction();
+        try {
+            db_rollback_transaction();
+        } catch (Throwable) {
+            // Audit the unresolved operation even when legacy rollback reports an error.
+        }
+    }
+    try {
+        (new LegacyAuditTrail(dirname(__DIR__)))->record(new AuditEvent(
+            $auditCorrelation,
+            $auditActor,
+            'inventory.device.edit',
+            'device',
+            $auditTarget,
+            $auditDecision,
+            $auditOutcome,
+        ));
+    } catch (Throwable) {
+        // The transitional sink must not replace the stable worker result.
     }
 }
 while (ob_get_level() > 0) {
