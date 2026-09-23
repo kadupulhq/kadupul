@@ -1,4 +1,6 @@
 """Device maintenance through Symfony and disposable local/remote collectors."""
+import json
+
 from device_association_scenarios import AssociationForm
 
 
@@ -58,6 +60,19 @@ def verify_device_maintenance(harness, session, check, poller=1):
                 status, body = form.request(fields=fields)
                 check(status == 200 and 'Data queries reindexed.' in body, 'maintenance executes ' + operation + ' against the SNMP fixture')
                 check(' -c public' not in body, 'maintenance diagnostics do not expose community arguments')
+            # Exercise the real collector HTTP boundary with the credentials used by SNMP.
+            # The loopback collector is only an authorization fixture, never a polling destination.
+            collector = int(harness.sql("INSERT INTO poller (name,hostname,disabled) VALUES ('diagnostic-loopback','127.0.0.1',''); SELECT LAST_INSERT_ID()").strip())
+            try:
+                for action in ['ping', 'runquery']:
+                    url = f'http://127.0.0.1/remote_agent.php?action={action}&safe_diagnostics=1&host_id={device}&data_query_id={target}'
+                    response = harness.php('-r', 'echo file_get_contents(' + json.dumps(url) + ');')
+                    check(response['exit'] == 0, 'collector diagnostic HTTP request completes')
+                    payload = json.loads(response['stdout'])
+                    check(payload.get('diagnostics_sanitized') is True, 'collector ' + action + ' returns sanitized diagnostics')
+                    check(' -c public' not in response['stdout'], 'collector diagnostics redact actual SNMP credentials')
+            finally:
+                harness.sql(f'DELETE FROM poller WHERE id={collector}')
             harness.sql(f"UPDATE host SET disabled='on' WHERE id={device}")
             fields = form.fields() | {'device_maintenance[operation]': 'reindex', 'device_maintenance[query]': '0'}
             check(form.request(fields=fields)[0] == 422, 'maintenance does not report disabled device queries as reindexed')
