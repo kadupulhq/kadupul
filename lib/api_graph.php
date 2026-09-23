@@ -55,7 +55,7 @@ function api_delete_graphs(&$local_graph_ids, $delete_type, $reviewed_data_ids =
 			);
 
 			if (cacti_sizeof($data_sources)) {
-				api_data_source_remove_multi($data_sources);
+				api_data_source_remove_multi($data_sources, $reviewed_data_ids === null);
 			}
 
 			api_graph_remove_multi($local_graph_ids);
@@ -76,7 +76,7 @@ function api_delete_graphs(&$local_graph_ids, $delete_type, $reviewed_data_ids =
 			);
 
 			if (cacti_sizeof($data_sources)) {
-				api_data_source_remove_multi($data_sources);
+				api_data_source_remove_multi($data_sources, $reviewed_data_ids === null);
 			}
 		} else {
 			api_graph_remove_multi($local_graph_ids);
