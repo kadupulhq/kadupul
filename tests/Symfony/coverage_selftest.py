@@ -75,6 +75,8 @@ def main():
         'src/Inventory/Infrastructure/Legacy/DeviceCollectorTransfer.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceBulkAssignmentType.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceBulkAssignmentController.php',
+        'src/Inventory/Application/Command/ChangeDevicesSnmp.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceSnmpWriter.php',
         'src/Inventory/Domain/DeviceOptionsChange.php',
         'src/Inventory/Application/Command/ChangeDeviceOptions.php',
         'src/Inventory/Infrastructure/Legacy/DeviceOptionsWriter.php',
@@ -122,6 +124,7 @@ def main():
     statistics_checks = ['statistics confirmation resets selected devices', 'statistics SQL rejection rolls back entire primary selection', 'remote statistics match the legacy reset', 'statistics reset invokes action 5 once with the complete selection', 'rejected statistics resets do not invoke action 5 callbacks', 'repeated statistics reset invokes action 5 once']
     synchronization_checks = ['template synchronization saves through Symfony', 'template synchronization failure rolls back primary associations', 'remote template synchronization preserves assigned template identity', 'template synchronization invokes action 7 once with complete selection', 'template synchronization invokes the template-change hook once per assigned device', 'template synchronization retains existing graphs']
     assignment_checks = ['bulk site assigns through Symfony', 'bulk template assigns through Symfony', 'bulk site failure rolls back whole primary selection', 'bulk template failure rolls back whole primary selection', 'bulk collector moves full selection to remote', 'bulk collector returns full selection to primary', 'bulk collector purges old remote copies']
+    snmp_checks = ['bulk SNMP never displays stored credentials', 'bulk SNMP keeps each device credentials through Symfony', 'bulk SNMP validates all stored credentials before writes', 'bulk SNMP failure rolls back entire primary selection', 'bulk SNMP replaces credentials through Symfony', 'bulk SNMP verifies remote credentials', 'bulk SNMP secrets stay out of database diagnostics']
     option_checks = ['bulk options save through Symfony', 'bulk options failure rolls back entire primary batch', 'bulk options verifies remote values', 'bulk options changes selected fields and preserves unchecked values', 'bulk options invokes action 4 once for the complete selection', 'rejected bulk options do not invoke action 4']
     failures = {
         'source-hash': 'Covered source differs',
@@ -167,6 +170,8 @@ def main():
         failures['missing-synchronization-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(assignment_checks)):
         failures['missing-assignment-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(snmp_checks)):
+        failures['missing-snmp-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(option_checks)):
         failures['missing-option-check-' + str(index)] = 'Incomplete Symfony integration'
     for source in required:
@@ -217,6 +222,9 @@ def main():
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case.startswith('missing-assignment-check-'):
                 missing = assignment_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-snmp-check-'):
+                missing = snmp_checks[int(case.rsplit('-', 1)[1])]
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case.startswith('missing-option-check-'):
                 missing = option_checks[int(case.rsplit('-', 1)[1])]

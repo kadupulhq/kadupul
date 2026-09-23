@@ -26,7 +26,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
     if (($manifest['suite'] ?? '') !== $suite || ($manifest['session_handler'] ?? '') !== $handler) {
         throw new RuntimeException('Wrong integration suite or session handler');
     }
-    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'device_bulk_assignment_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'coverage_support.py'];
+    $scripts = $handler === 'none' ? ['offline_coverage.py'] : ['session_bridge.py', 'inventory_scenarios.py', 'details_scenarios.py', 'site_scenarios.py', 'site_catalog_scenarios.py', 'site_edit_scenarios.py', 'site_create_scenarios.py', 'device_create_scenarios.py', 'device_creation_review_scenarios.py', 'device_bulk_assignment_scenarios.py', 'device_bulk_snmp_scenarios.py', 'site_creation_probe.php', 'site_lifecycle_scenarios.py', 'site_collector_scenarios.py', 'site_lifecycle_probe.php', 'site_assignment_probe.php', 'site_disable_probe.php', 'database_failure_probe.php', 'site_authorization_probe.php', 'device_edit_scenarios.py', 'device_template_scenarios.py', 'device_collector_scenarios.py', 'device_state_scenarios.py', 'device_state_connection_probe.php', 'device_removal_scenarios.py', 'device_template_authorization_probe.php', 'coverage_support.py'];
     $sourcePaths = array_map(static fn(string $script): string => 'tests/Symfony/' . $script, $scripts);
     if ($handler !== 'none') {
         $sourcePaths[] = 'tests/Fixtures/plugins/compatibility_test/setup.php';
@@ -69,6 +69,13 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'bulk collector moves full selection to remote',
         'bulk collector returns full selection to primary',
         'bulk collector purges old remote copies',
+        'bulk SNMP never displays stored credentials',
+        'bulk SNMP keeps each device credentials through Symfony',
+        'bulk SNMP validates all stored credentials before writes',
+        'bulk SNMP failure rolls back entire primary selection',
+        'bulk SNMP replaces credentials through Symfony',
+        'bulk SNMP verifies remote credentials',
+        'bulk SNMP secrets stay out of database diagnostics',
         'bulk options save through Symfony',
         'bulk options failure rolls back entire primary batch',
         'bulk options verifies remote values',
@@ -212,6 +219,8 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Infrastructure/Legacy/DeviceCollectorTransfer.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceBulkAssignmentType.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceBulkAssignmentController.php',
+        'src/Inventory/Application/Command/ChangeDevicesSnmp.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceSnmpWriter.php',
         'src/Inventory/Domain/DeviceOptionsChange.php',
         'src/Inventory/Application/Command/ChangeDeviceOptions.php',
         'src/Inventory/Infrastructure/Legacy/DeviceOptionsWriter.php',

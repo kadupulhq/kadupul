@@ -286,3 +286,8 @@
 "Confirm assignments": "Confirmer les affectations"
 "Selected device assignments updated.": "Affectations des appareils sélectionnés mises à jour."
 "The selected assignment is applied to every listed device. Template changes preserve existing graphs; automation may create new graphs. Collector changes transfer polling ownership.": "L’affectation sélectionnée est appliquée à chaque appareil répertorié. Les changements de modèle conservent les graphiques existants ; l’automatisation peut en créer de nouveaux. Les changements de collecteur transfèrent la responsabilité de la collecte."
+
+"Change device SNMP settings": "Modifier les paramètres SNMP des appareils"
+"Confirm SNMP changes": "Confirmer les modifications SNMP"
+"Selected device SNMP settings updated.": "Paramètres SNMP des appareils sélectionnés mis à jour."
+"Apply these SNMP settings to every selected device. Keep each device’s stored credentials or explicitly replace them. Stored secrets are never displayed.": "Appliquer ces paramètres SNMP à chaque appareil sélectionné. Conservez les identifiants propres à chaque appareil ou remplacez-les explicitement. Les secrets enregistrés ne sont jamais affichés."
