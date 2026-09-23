@@ -88,6 +88,10 @@ final class DeviceCollectorReplication
 
     public function assertRemovalScope(PDO $source, DeviceRemoval $snapshot): void
     {
+        if (!$source->inTransaction()) {
+            throw new \LogicException('Collector removal scope requires a transaction');
+        }
+        $lock = $source->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite' ? '' : ' FOR UPDATE';
         foreach (['graph_local' => $snapshot->graphIds, 'data_local' => $snapshot->dataSourceIds] as $table => $expected) {
             $query = $source->prepare("SELECT id FROM $table WHERE host_id = ? ORDER BY id" . $lock);
             if (!$query->execute([$snapshot->device->id]) || array_map('intval', $query->fetchAll(PDO::FETCH_COLUMN)) !== $expected) {
