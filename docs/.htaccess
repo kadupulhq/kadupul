@@ -31,7 +31,8 @@
 # named index.php deeper in docs/ must not run. The match is case-sensitive
 # because on a case-insensitive filesystem INDEX.PHP would be served as source.
 <IfModule mod_authz_core.c>
-    <If "%{REQUEST_URI} =~ m#/docs/(index\.php)?$#">
+    # Unanchored so a prefix such as /cacti/ works; a nested docs/ is excluded.
+    <If "%{REQUEST_URI} =~ m#/docs/(index\.php)?$# && ! (%{REQUEST_URI} =~ m#/docs/.+/docs/#)">
         Require all granted
     </If>
 </IfModule>
