@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 
 final class DeviceBulkAssignmentTest extends TestCase
 {
-    public function testAuthorizedResetPreservesSelectionAndActor(): void
+    public function testAuthorizedAssignmentPreservesSelectionAndActor(): void
     {
         $access = $this->createMock(ConsoleAccess::class);
         $access->method('consoleActor')->willReturn(new Actor(42, 'operator'));
@@ -28,7 +28,7 @@ final class DeviceBulkAssignmentTest extends TestCase
         (new AssignDevices($access, $port))($selection, new \Kadupul\Inventory\Domain\DeviceBulkAssignment('site', 3));
     }
 
-    public function testAuthorizationPrecedesReset(): void
+    public function testAuthorizationPrecedesAssignment(): void
     {
         foreach ([null, new Actor(42, 'operator')] as $actor) {
             $access = $this->createMock(ConsoleAccess::class);
@@ -38,7 +38,7 @@ final class DeviceBulkAssignmentTest extends TestCase
             $port->expects(self::never())->method('assign');
             try {
                 (new AssignDevices($access, $port))(new DeviceSelection([7 => str_repeat('a', 64)]), new \Kadupul\Inventory\Domain\DeviceBulkAssignment('site', 3));
-                self::fail('Unauthorized reset accepted');
+                self::fail('Unauthorized assignment accepted');
             } catch (InventoryAccessDenied $error) {
                 self::assertSame($actor === null, $error->unauthenticated);
             }

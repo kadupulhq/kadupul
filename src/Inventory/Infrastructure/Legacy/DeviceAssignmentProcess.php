@@ -43,7 +43,7 @@ final class DeviceAssignmentProcess
             throw new InventoryAccessDenied(false);
         }
         if ($status === 'invalid') {
-            throw new \InvalidArgumentException('Select a valid device ' . $kind . '.');
+            throw new \InvalidArgumentException('Select a valid device ' . ($kind === 'associations' ? 'association' : $kind) . '.');
         }
         if (!$process->isSuccessful() || $status !== 'ok') {
             throw new \RuntimeException($label . ' assignment could not be confirmed.');
