@@ -108,6 +108,7 @@ def main():
         'sites-test-hash': 'Integration test source differs',
         'site-edit-test-hash': 'Integration test source differs',
         'missing-check': 'Incomplete Symfony integration',
+        'missing-removal-callback-check': 'Incomplete Symfony integration',
         'missing-removal-shared-check': 'Incomplete Symfony integration',
         'missing-removal-rollback-check': 'Incomplete Symfony integration',
         'wrong-handler': 'Wrong integration suite',
@@ -178,6 +179,8 @@ def main():
                 evidence['source_sha256']['tests/Fixtures/plugins/compatibility_test/setup.php'] = '0' * 64
             elif case == 'missing-device-creation-check':
                 evidence['checks'].remove('legacy template graph associations are preserved')
+            elif case == 'missing-removal-callback-check':
+                evidence['checks'] = [check for check in evidence['checks'] if check != 'rejected removal emits no bulk action callback']
             elif case in ['missing-removal-shared-check', 'missing-removal-rollback-check']:
                 omitted = 'remote removal rejects outside graph references before cleanup' if case == 'missing-removal-shared-check' else 'remote removal failure rolls back dependent cleanup'
                 evidence['checks'] = [check for check in evidence['checks'] if check != omitted]
