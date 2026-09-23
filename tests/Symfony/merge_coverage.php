@@ -97,7 +97,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'collector ping returns sanitized diagnostics', 'collector runquery returns sanitized diagnostics', 'maintenance executes reload-query against the SNMP fixture', 'maintenance executes reindex against the SNMP fixture',
         'maintenance executes query-diagnostics against the SNMP fixture',
         'maintenance rejects stale device settings',
-        'graph association adds through Symfony',
+        'graph association adds through Symfony', 'graph association invokes plugin hook once with exact payload', 'graph association automation creates a graph',
         'graph association removes through Symfony',
         'graph association failure rolls back primary writes',
         'graph association verifies remote template',
