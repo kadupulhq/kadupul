@@ -63,7 +63,9 @@ final class DeviceBulkAssignmentWriter
         }
         if ($change->kind === 'collector') {
             $verifier = new DeviceCollectorReplication();
-            if ($poller > 1) {
+            // An unchanged owner has no transfer to verify. Automation may have
+            // queued configuration that has not reached its collector yet.
+            if ($poller > 1 && $device->pollerId !== $poller) {
                 $verifier->verifyTarget($connection, $connections[$poller], $device->id);
             }
             if ($device->pollerId > 1 && $device->pollerId !== $poller) {

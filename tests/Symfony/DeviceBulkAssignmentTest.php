@@ -59,4 +59,22 @@ final class DeviceBulkAssignmentTest extends TestCase
             }
         }
     }
+    public function testUnchangedCollectorDoesNotRequireAFullReplicationSnapshot(): void
+    {
+        $row = ['site_id' => 0, 'poller_id' => 2, 'host_template_id' => 0, 'disabled' => ''];
+        $identity = $this->createMock(\PDOStatement::class);
+        $identity->method('execute')->willReturn(true);
+        $identity->method('fetch')->willReturn($row);
+        $ownership = $this->createMock(\PDOStatement::class);
+        $ownership->method('execute')->willReturn(true);
+        $ownership->method('fetchColumn')->willReturn(0);
+        $primary = $this->createMock(\PDO::class);
+        $primary->expects(self::exactly(2))->method('prepare')->willReturnCallback(static fn($sql) => str_starts_with($sql, 'SELECT poller_id') ? $identity : $ownership);
+        $primary->expects(self::never())->method('query');
+        $remote = $this->createMock(\PDO::class);
+        $remote->expects(self::once())->method('prepare')->with(self::stringStartsWith('SELECT poller_id'))->willReturn($identity);
+        $remote->expects(self::never())->method('query');
+        (new \Kadupul\Inventory\Infrastructure\Legacy\DeviceBulkAssignmentWriter())->verify($primary, [2 => $remote], new \Kadupul\Inventory\Domain\DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), new \Kadupul\Inventory\Domain\DeviceBulkAssignment('collector', 2));
+    }
+
 }
