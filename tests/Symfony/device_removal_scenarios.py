@@ -85,6 +85,7 @@ def verify_device_removal(harness, session, user_id, poller, check):
         harness.sql(f"DELIMITER $$\nCREATE TRIGGER inject_unreviewed_remove BEFORE DELETE ON host FOR EACH ROW BEGIN IF OLD.id={device} THEN INSERT INTO graph_local (host_id) VALUES (OLD.id); INSERT INTO data_local (host_id) VALUES (OLD.id); END IF; END$$\nDELIMITER ;")
         triggers.append('inject_unreviewed_remove')
         check(form.remove() == 502 and exists(device), 'association added during removal fails closed')
+        check(hook_count(['1', [device]]) == 0, 'rejected removal emits no bulk action callback')
         check(harness.sql(f'SELECT COUNT(*) FROM graph_local WHERE host_id={device}').strip() == '1', 'failed removal rolls back the unreviewed graph and reviewed graph changes')
         check(harness.sql(f'SELECT COUNT(*) FROM data_local WHERE host_id={device}').strip() == '2', 'failed removal rolls back the unreviewed data source and reviewed data-source changes')
         harness.sql('DROP TRIGGER inject_unreviewed_remove')
