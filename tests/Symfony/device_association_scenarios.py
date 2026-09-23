@@ -31,7 +31,7 @@ def verify_graph_associations(harness, session, check, poller=1):
                 if json.loads(line).get('callback') == 'graph_association']
     check(harness.php('-r', 'require "include/global.php"; function setup_association_hook() { api_plugin_register_hook("compatibility_test","add_graph_template_to_host","compatibility_graph_association","setup.php",true); } setup_association_hook();')['exit'] == 0, 'graph association plugin hook registered')
     try:
-        device = int(harness.sql(f"INSERT INTO host (description,hostname,poller_id,site_id,snmp_version,availability_method) VALUES ('graph-association-fixture 🌏','127.0.0.1',{poller},0,0,0); SELECT LAST_INSERT_ID()").strip())
+        device = int(harness.sql(f"INSERT INTO host (description,hostname,poller_id,site_id,snmp_version,availability_method) VALUES (CONVERT(UNHEX('67726170682d6173736f63696174696f6e2d6669787475726520f09f8c8f') USING utf8mb4),'127.0.0.1',{poller},0,0,0); SELECT LAST_INSERT_ID()").strip())
         if poller > 1:
             harness.sql(f'INSERT INTO create_remote.host SELECT * FROM host WHERE id={device}')
         target = int(harness.sql('SELECT DISTINCT gt.id FROM graph_templates gt LEFT JOIN snmp_query_graph sqg ON sqg.graph_template_id=gt.id INNER JOIN graph_templates_item gti ON gti.graph_template_id=gt.id INNER JOIN data_template_rrd dtr ON gti.task_item_id=dtr.id INNER JOIN data_template_data dtd ON dtd.data_template_id=dtr.data_template_id WHERE sqg.name IS NULL AND gti.local_graph_id=0 AND dtr.local_data_id=0 ORDER BY gt.id LIMIT 1').strip())
