@@ -228,7 +228,7 @@ final class DeviceCollectorReplication
         }
         foreach ($inputFields as $field) {
             $delete = $source->prepare('DELETE FROM data_input_data WHERE data_template_data_id = ? AND data_input_field_id = ?');
-            if (!$delete->execute([$field['data_template_data_id'], $field['data_input_field_id']])) {
+            if (!$delete->execute([$field['data_template_data_id'], $field['data_input_field_id']]) || $delete->rowCount() !== 1) {
                 throw new \RuntimeException('Previous collector input field cleanup failed');
             }
         }

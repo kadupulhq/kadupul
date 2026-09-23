@@ -127,6 +127,25 @@ final class DeviceCollectorReplicationTest extends TestCase
         yield ['CREATE TRIGGER insert_late_graph_item AFTER DELETE ON poller_output BEGIN INSERT INTO graph_templates_item VALUES (104,11,102); END', 'graph_templates_item'];
     }
 
+    public function testReassignedInputFieldCannotEscapeReviewedDeletion(): void
+    {
+        $db = $this->removalDatabase();
+        $db->exec('INSERT INTO data_local VALUES (12,7); INSERT INTO data_template_data VALUES (101,12); INSERT INTO data_input_data VALUES (101,1); INSERT INTO poller_output VALUES (12)');
+        $db->exec('CREATE TRIGGER reassign_input AFTER DELETE ON poller_output BEGIN UPDATE data_input_data SET data_template_data_id = 999 WHERE data_template_data_id = 101; END');
+        $snapshot = new DeviceRemoval(new DeviceState(7, 'Router', 'router.invalid', true, 0, 2, 0), [], [12]);
+        $db->beginTransaction();
+        try {
+            (new DeviceCollectorReplication())->purgeReviewedDependents($db, $snapshot);
+            self::fail('Reassigned input field escaped reviewed cleanup');
+        } catch (\RuntimeException $error) {
+            self::assertSame('Previous collector input field cleanup failed', $error->getMessage());
+            self::assertSame(999, (int) $db->query('SELECT data_template_data_id FROM data_input_data')->fetchColumn());
+        } finally {
+            $db->rollBack();
+        }
+        self::assertSame(101, (int) $db->query('SELECT data_template_data_id FROM data_input_data')->fetchColumn());
+    }
+
     #[DataProvider('lateDependents')]
     public function testFinalVerificationRejectsDependentsInsertedAfterCleanup(string $insert): void
     {
