@@ -157,3 +157,11 @@ services:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceTemplateAssignments
     Kadupul\Inventory\Application\Command\AssignDeviceTemplate: ~
     Kadupul\Inventory\Application\Query\PrepareDeviceTemplateAssignment: ~
+
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCollectorAssignments:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+    Kadupul\Inventory\Application\Port\DeviceCollectorAssignments:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCollectorAssignments
+    Kadupul\Inventory\Application\Command\AssignDeviceCollector: ~
+    Kadupul\Inventory\Application\Query\PrepareDeviceCollectorAssignment: ~

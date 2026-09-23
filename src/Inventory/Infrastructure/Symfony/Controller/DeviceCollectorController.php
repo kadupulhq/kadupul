@@ -1,0 +1,74 @@
+<?php
+
+/*
+ * SPDX-FileCopyrightText: 2026 The Kadupul project and contributors
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+namespace Kadupul\Inventory\Infrastructure\Symfony\Controller;
+
+use Kadupul\Inventory\Application\Command\AssignDeviceCollector;
+use Kadupul\Inventory\Application\Query\PrepareDeviceCollectorAssignment;
+use Kadupul\Inventory\Application\Query\InventoryAccessDenied;
+use Kadupul\Inventory\Domain\DeviceEditConflict;
+use Kadupul\Inventory\Infrastructure\Symfony\DeviceListParameters;
+use Kadupul\Inventory\Infrastructure\Symfony\Form\DeviceCollectorType;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Environment;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use Kadupul\Inventory\Infrastructure\Symfony\DeviceAssignmentForm;
+
+final class DeviceCollectorController
+{
+    #[Route('/inventory/devices/{id}/collector', name: 'inventory_device_collector', requirements: ['id' => '[1-9][0-9]{0,7}'], methods: ['GET', 'HEAD', 'POST'])]
+    public function __invoke(int $id, Request $request, PrepareDeviceCollectorAssignment $prepare, AssignDeviceCollector $assign, FormFactoryInterface $forms, Environment $twig, UrlGeneratorInterface $urls, TranslatorInterface $translator, DeviceAssignmentForm $validation): Response
+    {
+        $headers = ['Cache-Control' => 'private, no-store'];
+        try {
+            $view = $prepare($id);
+            $device = $view['device'];
+        } catch (InventoryAccessDenied $error) {
+            return new Response($translator->trans('Access denied.', [], 'inventory'), $error->unauthenticated ? 401 : 403, $headers);
+        }
+        if ($device === null) {
+            return new Response($translator->trans('Device not found.', [], 'inventory'), 404, $headers);
+        }
+        $query = $request->query->all();
+        try {
+            $filters = DeviceListParameters::context($query);
+        } catch (\InvalidArgumentException) {
+            return new Response($translator->trans('Invalid device list filters.', [], 'inventory'), 400, $headers);
+        }
+        $editParameters = ['id' => $id, 'list' => $filters];
+        $form = $forms->create(DeviceCollectorType::class, ['collector_id' => array_key_exists($device->collectorId(), $view['collectors']) ? $device->collectorId() : null, 'revision' => $device->revision()], ['action' => $urls->generate('inventory_device_collector', $editParameters), 'collectors' => $view['collectors']]);
+        $form->handleRequest($request);
+        $status = $request->isMethod('POST') ? 422 : 200;
+        if ($form->isSubmitted()) {
+            $validation->validate($form, 'collector_id', 'Select a valid device collector.');
+            if ($form->isValid()) {
+                $data = $form->getData();
+                try {
+                    $assign($id, $data['collector_id'], (string) $data['revision']);
+                    return new RedirectResponse($urls->generate('inventory_device_collector', $editParameters + ['saved' => 1]), 303, $headers);
+                } catch (InventoryAccessDenied $error) {
+                    return new Response($translator->trans('Access denied.', [], 'inventory'), $error->unauthenticated ? 401 : 403, $headers);
+                } catch (DeviceEditConflict $error) {
+                    $status = 409;
+                    $form->addError(new FormError($translator->trans($error->getMessage(), [], 'inventory')));
+                } catch (\InvalidArgumentException $error) {
+                    $form->addError(new FormError($translator->trans($error->getMessage(), [], 'inventory')));
+                } catch (\RuntimeException $error) {
+                    $status = 502;
+                    $form->addError(new FormError($translator->trans('Save outcome is uncertain. Reload the device before retrying.', [], 'inventory')));
+                }
+            }
+        }
+        return new Response($twig->render('inventory/collector.html.twig', ['device' => $device, 'form' => $form->createView(), 'saved' => ($query['saved'] ?? null) === '1', 'filters' => $filters]), $status, $headers);
+    }
+}

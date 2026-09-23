@@ -443,6 +443,9 @@ function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = fa
 			}
 
 			$database_last_error = 'DB ' . $execute_name . ' -- No connection found';
+			if (defined('KADUPUL_THROW_DATABASE_ERRORS') && KADUPUL_THROW_DATABASE_ERRORS) {
+				throw new Error('Database operation failed.');
+			}
 
 			return false;
 		}
@@ -554,6 +557,14 @@ function db_execute_prepared($sql, $params = array(), $log = true, $db_conn = fa
 				$query->closeCursor();
 			}
 			unset($query);
+
+			// Use Error so legacy catch(Exception) handlers cannot resume after SQL
+			// failure. Isolated workers catch Throwable at their outer boundary.
+			// Transactional workers must stop before later statements can
+			// run after a deadlock or another SQL failure releases their locks.
+			if (defined('KADUPUL_THROW_DATABASE_ERRORS') && KADUPUL_THROW_DATABASE_ERRORS) {
+				throw new Error('Database operation failed.');
+			}
 
 			if ($transaction_started) {
 				return false;

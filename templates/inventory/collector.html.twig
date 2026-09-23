@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ 'Assign device collector'|trans({}, 'inventory') }} · Kadupul{% endblock %}
+{% block body %}
+<main>
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() encodes fixed-route parameters. #}
+    <p><a href="{{ path('inventory_device_edit', {id: device.id, list: filters}) }}">{{ 'Edit device'|trans({}, 'inventory') }}</a></p>
+    <h1>{{ 'Collector for %device%'|trans({'%device%': device.description}, 'inventory') }}</h1>
+    <p>{{ 'Moving a device copies its polling configuration and removes it from the previous collector. Existing graphs and collected data are retained.'|trans({}, 'inventory') }}</p>
+    <p>{{ 'Remote collectors must be online. Reload and verify the device after a failed assignment before retrying.'|trans({}, 'inventory') }}</p>
+    {% if saved %}<output>{{ 'Device collector assigned.'|trans({}, 'inventory') }}</output>{% endif %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.collector_id) }}
+        <button type="submit">{{ 'Assign device collector'|trans({}, 'inventory') }}</button>
+    {{ form_end(form) }}
+</main>
+{% endblock %}
