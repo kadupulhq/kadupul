@@ -96,6 +96,56 @@ function form_save() {
     gprint_presets - GPRINT Presets
    ----------------------------------- */
 
+/* The list offers a checkbox only for a preset no Graph or Graph Template uses,
+   which is what the Deletable column promises. The delete applies the same rule,
+   or a forged selection leaves graph items naming a preset that is gone. */
+function gprint_deletable($ids) {
+	/* The posted ids are strings, and MySQL matches '007' to 7 but not '3.9' to
+	   3. Keep only decimal integers, so the lookup and the delete agree on the
+	   same rows and intval() cannot widen the selection. */
+	$canonical = array();
+
+	foreach ($ids as $id) {
+		if (preg_match('/^[0-9]+$/', (string) $id)) {
+			$canonical[] = (int) $id;
+		}
+	}
+
+	$ids = array_values(array_unique($canonical));
+
+	if (!cacti_sizeof($ids)) {
+		return array();
+	}
+
+	$rows = db_fetch_assoc('SELECT DISTINCT gprint_id
+		FROM graph_templates_item
+		WHERE gprint_id > 0
+		AND ' . array_to_sql_or($ids, 'gprint_id'));
+
+	/* graph_templates_graph.right_axis_format names a preset too, and the
+	   right_axis_format renderer reads it. */
+	$axis = db_fetch_assoc('SELECT DISTINCT right_axis_format AS gprint_id
+		FROM graph_templates_graph
+		WHERE right_axis_format > 0
+		AND ' . array_to_sql_or($ids, 'right_axis_format'));
+
+	/* A failed lookup must not read as "nothing is in use". */
+	if (!is_array($rows) || !is_array($axis)) {
+		return array();
+	}
+
+	$in_use    = array_rekey(array_merge($rows, $axis), 'gprint_id', 'gprint_id');
+	$deletable = array();
+
+	foreach ($ids as $id) {
+		if ($id > 0 && !isset($in_use[$id])) {
+			$deletable[] = $id;
+		}
+	}
+
+	return $deletable;
+}
+
 function form_actions() {
 	global $gprint_actions;
 
@@ -109,7 +159,20 @@ function form_actions() {
 
 		if ($selected_items != false) {
 			if (get_nfilter_request_var('drp_action') == '1') { /* delete */
-				db_execute('DELETE FROM graph_templates_gprint WHERE ' . array_to_sql_or($selected_items, 'id'));
+				$deletable = gprint_deletable($selected_items);
+
+				if (cacti_sizeof($deletable)) {
+					/* The NOT EXISTS clauses repeat the check inside the delete, so a
+					   reference added between the two statements still wins. */
+					db_execute('DELETE FROM graph_templates_gprint
+						WHERE ' . array_to_sql_or($deletable, 'id') . '
+						AND NOT EXISTS (SELECT 1 FROM graph_templates_item AS gti WHERE gti.gprint_id = graph_templates_gprint.id)
+						AND NOT EXISTS (SELECT 1 FROM graph_templates_graph AS gtg WHERE gtg.right_axis_format = graph_templates_gprint.id)');
+				}
+
+				if (cacti_sizeof($deletable) < cacti_sizeof($selected_items)) {
+					raise_message('gprint_in_use', __('GPRINT Presets referenced by a Graph or Graph Template were not Deleted.'), MESSAGE_LEVEL_WARN);
+				}
 			}
 		}
 
@@ -385,7 +448,8 @@ function gprint_presets() {
 
 	$gprint_list = db_fetch_assoc("SELECT rs.*,
 		SUM(CASE WHEN local_graph_id=0 THEN 1 ELSE 0 END) AS templates,
-		SUM(CASE WHEN local_graph_id>0 THEN 1 ELSE 0 END) AS graphs
+		SUM(CASE WHEN local_graph_id>0 THEN 1 ELSE 0 END) AS graphs,
+		COALESCE(axis.total, 0) AS axis
 		FROM (
 			SELECT gp.*, gti.local_graph_id
 			FROM graph_templates_gprint AS gp
@@ -393,6 +457,13 @@ function gprint_presets() {
 			ON gti.gprint_id=gp.id
 			GROUP BY gp.id, gti.graph_template_id, gti.local_graph_id
 		) AS rs
+		LEFT JOIN (
+			SELECT right_axis_format, COUNT(*) AS total
+			FROM graph_templates_graph
+			WHERE right_axis_format > 0
+			GROUP BY right_axis_format
+		) AS axis
+		ON axis.right_axis_format = rs.id
 		$sql_where
 		GROUP BY rs.id
 		$sql_having
@@ -444,7 +515,7 @@ function gprint_presets() {
 	$i = 0;
 	if (cacti_sizeof($gprint_list)) {
 		foreach ($gprint_list as $gp) {
-			if ($gp['graphs'] == 0 && $gp['templates'] == 0) {
+			if ($gp['graphs'] == 0 && $gp['templates'] == 0 && $gp['axis'] == 0) {
 				$disabled = false;
 			} else {
 				$disabled = true;
