@@ -4832,10 +4832,19 @@ function validate_relative_path_within($path, $base_dir) {
    serialize() returns a byte string with length prefixes. Escaping those bytes
    as text rewrites them on a non-UTF-8 install, and the selection no longer
    unserializes. Base64 keeps the payload ASCII, so the escaping cannot touch it.
+   A printable ASCII payload survives escaping as it is, so it keeps the historic
+   form: a plugin that reads selected_items itself still sees what it always saw,
+   and only the payloads that were already corrupted change shape.
    @arg $selected_items - the selection to encode
    @returns - the encoded payload */
 function selected_items_payload($selected_items) {
-	return base64_encode(serialize($selected_items));
+	$payload = serialize($selected_items);
+
+	if (preg_match('/^[\x20-\x7e]*$/', $payload)) {
+		return $payload;
+	}
+
+	return base64_encode($payload);
 }
 
 /* selected_items_decode - reads a payload in either encoding

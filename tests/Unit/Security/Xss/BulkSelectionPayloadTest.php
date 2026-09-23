@@ -40,7 +40,10 @@ function round_trip($payload) {
 test('a selection of ids survives the confirmation page', function () {
 	$items = array('1', '0042', 3);
 
-	expect(unserialize(selected_items_decode(round_trip(selected_items_payload($items))), array('allowed_classes' => false)))->toBe($items);
+	// An ASCII payload keeps its historic shape, so a plugin reading the field
+	// directly sees what it always saw.
+	expect(selected_items_payload($items))->toBe(serialize($items))
+		->and(unserialize(selected_items_decode(round_trip(selected_items_payload($items))), array('allowed_classes' => false)))->toBe($items);
 });
 
 test('a selection keyed by a non-UTF-8 name survives', function () {
