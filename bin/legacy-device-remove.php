@@ -215,15 +215,19 @@ try {
             throw new RuntimeException('Collector transaction changed');
         }
     }
-    foreach ($remotes as $remote) {
-        if (!$remote->commit()) {
-            throw new RuntimeException('Collector commit failed');
-        }
-    }
+    // The main database is authoritative, so it commits first. A collector that
+    // then fails to commit rolls back and keeps stale rows, which the cache
+    // markers written above make replication reconcile. Committing a collector
+    // before the primary cannot be undone if the primary then fails.
     if (!db_commit_transaction()) {
         throw new RuntimeException('Commit failed');
     }
     $transactionStarted = false;
+    foreach ($remotes as $pollerId => $remote) {
+        if (!$remote->commit()) {
+            cacti_log('WARNING: Device removal committed locally but not on collector ' . $pollerId . '; replication will reconcile', false, 'AUDIT');
+        }
+    }
     $status = 'ok';
     cacti_log('INVENTORY: User ' . $command['actor'] . ' removed devices ' . implode(',', $ids) . ' using policy ' . $policy->value, false, 'AUDIT');
 } catch (DeviceEditConflict) {
