@@ -218,3 +218,21 @@ services:
             $projectDir: '%kernel.project_dir%'
     Kadupul\Inventory\Application\Query\PrepareDeviceMaintenance: ~
     Kadupul\Inventory\Application\Command\MaintainDevice: ~
+
+    Kadupul\IdentityAccess\Contract\ResourceAccess:
+        alias: Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyResourceAccess
+    Kadupul\Graphing\Infrastructure\:
+        resource: '../src/Graphing/Infrastructure/'
+    Kadupul\Reporting\Infrastructure\:
+        resource: '../src/Reporting/Infrastructure/'
+    Kadupul\Graphing\Contract\DeviceTreePlacement:
+        alias: Kadupul\Graphing\Infrastructure\Legacy\LegacyDeviceTreePlacement
+    Kadupul\Reporting\Contract\DeviceReportPlacement:
+        alias: Kadupul\Reporting\Infrastructure\Legacy\LegacyDeviceReportPlacement
+    Kadupul\Inventory\Application\Port\DevicePlacements:
+        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDevicePlacements
+    Kadupul\Inventory\Infrastructure\Legacy\LegacyDevicePlacements:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+    Kadupul\Inventory\Application\Command\PlaceDevices: ~
+    Kadupul\Inventory\Application\Query\ListDevicePlacementDestinations: ~

@@ -63,6 +63,7 @@
     {% if completed|default('') == 'clear-statistics' %}<p><output>{{ 'Selected device statistics cleared.'|trans({}, 'inventory') }}</output></p>{% endif %}
     {% if completed|default('') == 'sync-template' %}<p><output>{{ 'Selected device templates synchronized.'|trans({}, 'inventory') }}</output></p>{% endif %}
     {% if completed|default('') in ['assign-site', 'assign-template', 'assign-collector'] %}<p><output>{{ 'Selected device assignments updated.'|trans({}, 'inventory') }}</output></p>{% endif %}
+    {% if completed|default('') in ['place-tree', 'place-report'] %}<p><output>{{ 'Selected devices placed.'|trans({}, 'inventory') }}</output></p>{% endif %}
     {% if completed|default('') == 'snmp' %}<p><output>{{ 'Selected device SNMP settings updated.'|trans({}, 'inventory') }}</output></p>{% endif %}
     {% if completed|default('') == 'options' %}<p><output>{{ 'Selected device options updated.'|trans({}, 'inventory') }}</output></p>{% endif %}
     {% if completed|default('') == 'remove' %}<p><output>{{ 'Selected devices removed.'|trans({}, 'inventory') }}</output></p>{% endif %}
@@ -96,6 +97,10 @@
     {% for kind, label in {'site': 'Assign device sites', 'template': 'Assign device templates', 'collector': 'Assign device collectors'} %}
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route and allowlisted assignment kind. #}
     <button type="submit" formaction="{{ path('inventory_device_bulk_assignment', {kind: kind}) }}">{{ label|trans({}, 'inventory') }}</button>
+    {% endfor %}
+    {% for kind, label in {'tree': 'Add devices to a tree', 'report': 'Add devices to a report'} %}
+    {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Fixed Symfony route and allowlisted placement kind. #}
+    <button type="submit" formaction="{{ path('inventory_device_placement', {kind: kind}) }}">{{ label|trans({}, 'inventory') }}</button>
     {% endfor %}
     </form>
     {# nosemgrep: generic.html-templates.security.var-in-href.var-in-href -- Symfony path() uses fixed route names and encodes parameters; no user-supplied URI. #}

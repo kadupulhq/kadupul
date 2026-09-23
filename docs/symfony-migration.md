@@ -998,3 +998,7 @@ redacts stored credentials from bounded plain-text diagnostics and does not repo
 false query results or disabled devices as completed reindex operations. Debug
 settings are updated with locking and verified on affected collectors. Primary
 rollback cannot undo remote effects or external probes.
+
+### Device tree and report placement
+
+Inventory now coordinates bounded device selections through `PlaceDevices`. Destination catalogs and writes belong to Graphing and Reporting contracts. Their legacy adapters enforce ownership and realm permissions, reject another user's tree edit lock and invalid branches, preserve existing placements, and verify additions. The isolated worker rechecks device authorization and revisions under site-before-device locks, invokes legacy action hooks, and commits the primary transaction only after confirmation. Plugin side effects may survive a rollback; failures must be inspected before retrying.

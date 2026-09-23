@@ -74,6 +74,16 @@ def main():
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceBulkAssignmentController.php',
         'src/Inventory/Application/Command/ChangeDevicesSnmp.php',
         'src/Inventory/Infrastructure/Legacy/DeviceSnmpWriter.php',
+        'src/Graphing/Infrastructure/Legacy/LegacyDeviceTreePlacement.php',
+        'src/Reporting/Infrastructure/Legacy/LegacyDeviceReportPlacement.php',
+        'bin/legacy-device-placement.php',
+        'src/IdentityAccess/Infrastructure/Legacy/LegacyResourceAccess.php',
+        'src/Inventory/Domain/DevicePlacement.php',
+        'src/Inventory/Application/Command/PlaceDevices.php',
+        'src/Inventory/Application/Query/ListDevicePlacementDestinations.php',
+        'src/Inventory/Infrastructure/Legacy/LegacyDevicePlacements.php',
+        'src/Inventory/Infrastructure/Symfony/Controller/DevicePlacementController.php',
+        'src/Inventory/Infrastructure/Symfony/Form/DevicePlacementType.php',
         'bin/legacy-device-maintenance.php',
         'src/Inventory/Domain/DeviceMaintenanceRequest.php',
         'src/Inventory/Domain/DeviceMaintenanceState.php',
@@ -143,6 +153,7 @@ def main():
     synchronization_checks = ['template synchronization saves through Symfony', 'template synchronization failure rolls back primary associations', 'remote template synchronization preserves assigned template identity', 'template synchronization invokes action 7 once with complete selection', 'template synchronization invokes the template-change hook once per assigned device', 'template synchronization retains existing graphs']
     assignment_checks = ['bulk site assigns through Symfony', 'bulk template assigns through Symfony', 'bulk site failure rolls back whole primary selection', 'bulk template failure rolls back whole primary selection', 'bulk collector moves full selection to remote', 'bulk collector returns full selection to primary', 'bulk collector purges old remote copies']
     snmp_checks = ['bulk SNMP never displays stored credentials', 'bulk SNMP keeps each device credentials through Symfony', 'bulk SNMP validates all stored credentials before writes', 'bulk SNMP failure rolls back entire primary selection', 'bulk SNMP replaces credentials through Symfony', 'bulk SNMP verifies remote credentials', 'bulk SNMP secrets stay out of database diagnostics']
+    placement_checks = ['tree placement saves through Symfony', 'report placement saves through Symfony', 'tree placement rolls back entire selection', 'report placement rolls back entire selection', 'tree placement preserves selected parent', 'report placement preserves display settings', 'tree placement does not duplicate existing devices', 'report placement does not duplicate existing devices']
     maintenance_checks = ['maintenance enables debug through Symfony', 'maintenance confirms remote debug setting', 'maintenance SQL rejection cannot report success', 'maintenance failure rolls back primary debug settings', 'maintenance refreshes polling cache through Symfony', 'maintenance connectivity probes the real SNMP fixture', 'maintenance executes reindex against the SNMP fixture', 'maintenance executes query-diagnostics against the SNMP fixture', 'maintenance rejects stale device settings']
     graph_checks = ['graph association adds through Symfony', 'graph association removes through Symfony', 'graph association failure rolls back primary writes', 'graph association verifies remote template', 'graph association removal retains existing graphs']
     query_checks = ['query association adds through Symfony', 'query association removes through Symfony', 'query association failure rolls back primary writes', 'query reindex method changes through Symfony', 'query reindex method is verified on collector', 'query removal retains existing graphs', 'query removal clears associations cache and reindex state']
@@ -190,6 +201,8 @@ def main():
         failures['missing-assignment-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(snmp_checks)):
         failures['missing-snmp-check-' + str(index)] = 'Incomplete Symfony integration'
+    for index in range(len(placement_checks)):
+        failures['missing-placement-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(maintenance_checks)):
         failures['missing-maintenance-check-' + str(index)] = 'Incomplete Symfony integration'
     for index in range(len(graph_checks)):
@@ -249,6 +262,9 @@ def main():
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case.startswith('missing-snmp-check-'):
                 missing = snmp_checks[int(case.rsplit('-', 1)[1])]
+                evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case.startswith('missing-placement-check-'):
+                missing = placement_checks[int(case.rsplit('-', 1)[1])]
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
             elif case.startswith('missing-maintenance-check-'):
                 missing = maintenance_checks[int(case.rsplit('-', 1)[1])]

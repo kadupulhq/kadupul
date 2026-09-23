@@ -1,0 +1,9 @@
+{% trans_default_domain 'inventory' %}
+<!DOCTYPE html>
+<html lang="{{ app.request.locale }}"><head><meta charset="UTF-8"><title>{{ 'Place devices'|trans }} · Kadupul</title></head><body><main>
+<h1>{{ (kind == 'tree' ? 'Add devices to a tree' : 'Add devices to a report')|trans }}</h1>
+<ul>{% for device in devices %}<li>{{ device.description }} (#{{ device.id }})</li>{% endfor %}</ul>
+<p>{{ 'Existing placements are retained without duplication.'|trans }}</p>
+{{ form_start(form) }}{{ form_widget(form) }}<button type="submit">{{ 'Place devices'|trans }}</button>{{ form_end(form) }}
+<p><a href="{{ path('inventory_devices', filters) }}">{{ 'Back to devices'|trans }}</a></p>
+</main></body></html>
