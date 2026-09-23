@@ -17,7 +17,7 @@
     Deny from all
 </IfModule>
 
-<FilesMatch "^(index\.php)?$|\.(html?|css|js|png|jpe?g|gif|svg|webp|ico)$">
+<FilesMatch "\.(html?|css|js|png|jpe?g|gif|svg|webp|ico)$">
     <IfModule mod_authz_core.c>
         Require all granted
     </IfModule>
@@ -26,3 +26,26 @@
         Allow from all
     </IfModule>
 </FilesMatch>
+
+# Only the top-level index is the documentation landing page, so a PHP file
+# named index.php deeper in docs/ must not run. The match is case-sensitive
+# because on a case-insensitive filesystem INDEX.PHP would be served as source.
+<IfModule mod_authz_core.c>
+    <If "%{REQUEST_URI} =~ m#/docs/(index\.php)?$#">
+        Require all granted
+    </If>
+</IfModule>
+
+# Apache 2.2 has no <If>; FilesMatch cannot tell depth, so mod_rewrite
+# refuses the nested index files where it is loaded.
+<IfModule !mod_authz_core.c>
+    <FilesMatch "^(index\.php)?$">
+        Order Allow,Deny
+        Allow from all
+    </FilesMatch>
+    <IfModule mod_rewrite.c>
+        RewriteEngine On
+        RewriteOptions Inherit
+        RewriteRule ^.+/index\.php$ - [F,NC]
+    </IfModule>
+</IfModule>
