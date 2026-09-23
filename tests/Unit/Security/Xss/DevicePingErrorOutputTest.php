@@ -45,8 +45,10 @@ test('missing device ping renders text and preserves the bound lookup', function
 	['router&amp;<b>encoded</b>'],
 ])->with([false, true]);
 
-test('ping errors preserve the configured character set', function ($charset, $id, $remote) use ($pingErrorProduction) {
+test('ping errors preserve the configured character set', function ($charset, $encodedId, $remote) use ($pingErrorProduction) {
 	// A fresh process models a separate installation and isolates html_escape's static charset.
+	$id = hex2bin($encodedId);
+	expect($id)->not->toBeFalse();
 	$script = 'function __($message) { return $message; }'
 		. 'function cacti_sizeof($value) { return count($value); }'
 		. 'function db_fetch_row_prepared($sql, $parameters) { return []; }'
@@ -67,7 +69,7 @@ test('ping errors preserve the configured character set', function ($charset, $i
 	$expected = htmlspecialchars(str_replace('`', '&#96;', $message), ENT_QUOTES | ENT_HTML5, $charset ?: 'UTF-8', false);
 	expect($output)->toBe($expected);
 })->with([
-	['ISO-8859-1', "caf\xe9 `<svg>&amp;"],
-	['UTF-8', 'café `<svg>&amp;'],
-	['', 'café `<svg>&amp;'],
+	['ISO-8859-1', bin2hex("caf\xe9 `<svg>&amp;")],
+	['UTF-8', bin2hex('café `<svg>&amp;')],
+	['', bin2hex('café `<svg>&amp;')],
 ])->with([false, true]);
