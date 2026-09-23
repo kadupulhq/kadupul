@@ -80,29 +80,62 @@ function api_device_remove($device_id) {
  *
  * @param  $device_ids - device id or an array of device_ids of a host or hosts
  * @param  $poller_id  - the previous poller if it changed
+ * @param  $reviewed_associations - exact graph/data IDs reviewed per device
  */
-function api_device_purge_from_remote($device_ids, $poller_id = 0) {
+function api_device_purge_from_remote($device_ids, $poller_id = 0, $reviewed_associations = null, $reviewed_connection = null) {
+	if ($reviewed_associations !== null && !($reviewed_connection instanceof PDO)) {
+		throw new RuntimeException('Reviewed collector connection unavailable');
+	}
 	if (!is_array($device_ids)) {
 		$device_ids = array($device_ids);
 	}
 
 	if ($poller_id > 1) {
 		if (remote_poller_up($poller_id)) {
-			if (($rcnn_id = poller_push_to_remote_db_connect($poller_id, true)) !== false) {
+			if (($rcnn_id = $reviewed_connection ?? poller_push_to_remote_db_connect($poller_id, true)) !== false) {
 				db_execute('DELETE FROM host             WHERE      id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
 				db_execute('DELETE FROM host_graph       WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
 				db_execute('DELETE FROM host_snmp_query  WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
 				db_execute('DELETE FROM host_snmp_cache  WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
+				if ($reviewed_associations === null) {
 				db_execute('DELETE FROM poller_item      WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
+				}
 				db_execute('DELETE FROM poller_reindex   WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
+				if ($reviewed_associations === null) {
 				db_execute('DELETE FROM graph_tree_items WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
+				}
+				if ($reviewed_associations === null) {
 				db_execute('DELETE FROM reports_items    WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
+				}
 
 				db_execute('DELETE FROM poller_command
 					WHERE SUBSTRING_INDEX(command, ":", 1) IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
 
-				db_execute('DELETE FROM data_local       WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
-				db_execute('DELETE FROM graph_local      WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
+				if ($reviewed_associations === null) {
+					db_execute('DELETE FROM data_local  WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
+					db_execute('DELETE FROM graph_local WHERE host_id IN (' . implode(', ', $device_ids) . ')', true, $rcnn_id);
+				} else {
+					foreach($device_ids as $device_id) {
+						$data_sources = array_map('intval', $reviewed_associations[$device_id]['data_sources']);
+						$graphs = array_map('intval', $reviewed_associations[$device_id]['graphs']);
+						// Device-only metadata is owned by the reviewed host. Polling
+						// and graph-bearing placements also require reviewed child IDs.
+						if (cacti_sizeof($data_sources)) {
+							db_execute('DELETE FROM poller_item WHERE host_id = ' . (int) $device_id . ' AND local_data_id IN (' . implode(', ', $data_sources) . ')', true, $rcnn_id);
+						}
+						$graph_scope = cacti_sizeof($graphs) ? ' OR local_graph_id IN (' . implode(', ', $graphs) . ')' : '';
+						foreach(array('graph_tree_items', 'reports_items') as $table) {
+							db_execute('DELETE FROM ' . $table . ' WHERE host_id = ' . (int) $device_id . ' AND (local_graph_id = 0' . $graph_scope . ')', true, $rcnn_id);
+						}
+
+						if (cacti_sizeof($data_sources)) {
+							db_execute('DELETE FROM data_local WHERE host_id = ' . (int) $device_id . ' AND id IN (' . implode(', ', $data_sources) . ')', true, $rcnn_id);
+						}
+						if (cacti_sizeof($graphs)) {
+							db_execute('DELETE FROM graph_local WHERE host_id = ' . (int) $device_id . ' AND id IN (' . implode(', ', $graphs) . ')', true, $rcnn_id);
+						}
+					}
+				}
 			} else {
 				raise_message('poller_down_' . $poller_id, __('Remote Poller %s is Down, you will need to perform a FullSync once it is up again', $poller_id), MESSAGE_LEVEL_WARN);
 			}
@@ -156,10 +189,11 @@ function api_device_purge_deleted_devices() {
  *
  * @param  (array) An array of device id's to remove
  * @param  (int)   Boolean to keep data source and graphs or remove
+ * @param  (array|null) Exact graph and data-source IDs already reviewed by a caller
  *
  * @return (void)
  */
-function api_device_remove_multi($device_ids, $delete_type = 2) {
+function api_device_remove_multi($device_ids, $delete_type = 2, $reviewed_associations = null, $reviewed_connections = array(), $verify_reviewed_scope = null) {
 	global $config;
 
 	$devices_to_delete = '';
@@ -168,23 +202,40 @@ function api_device_remove_multi($device_ids, $delete_type = 2) {
 
 	if (cacti_sizeof($device_ids)) {
 		api_plugin_hook_function('device_remove', $device_ids);
+		if ($reviewed_associations !== null) {
+			if (!is_callable($verify_reviewed_scope)) {
+				throw new RuntimeException('Reviewed removal requires an ownership verifier');
+			}
+			$verify_reviewed_scope();
+			// Hooks must not redirect cleanup to an unreviewed collector.
+			foreach ($device_ids as $device_id) {
+				$poller_id = $reviewed_associations['by_device'][$device_id]['poller_id'] ?? null;
+				$current = db_fetch_cell_prepared('SELECT poller_id FROM host WHERE id = ? FOR UPDATE', array($device_id));
+				if ($poller_id === null || $current === false || (int) $current !== (int) $poller_id
+					|| ((int) $poller_id > 1 && !(($reviewed_connections[$poller_id] ?? null) instanceof PDO))) {
+					throw new RuntimeException('Reviewed collector ownership changed');
+				}
+			}
+		}
 
-		$data_sources = array();
-		$graphs       = array();
+		if ($reviewed_associations === null) {
+			$data_sources = array_rekey(
+				db_fetch_assoc('SELECT id
+					FROM data_local
+					WHERE host_id IN (' . implode(', ', $device_ids) . ')'),
+				'id', 'id'
+			);
 
-		$data_sources = array_rekey(
-			db_fetch_assoc('SELECT id
-				FROM data_local
-				WHERE host_id IN (' . implode(', ', $device_ids) . ')'),
-			'id', 'id'
-		);
-
-		$graphs = array_rekey(
-			db_fetch_assoc('SELECT id
-				FROM graph_local
-				WHERE host_id IN (' . implode(', ', $device_ids) . ')'),
-			'id', 'id'
-		);
+			$graphs = array_rekey(
+				db_fetch_assoc('SELECT id
+					FROM graph_local
+					WHERE host_id IN (' . implode(', ', $device_ids) . ')'),
+				'id', 'id'
+			);
+		} else {
+			$data_sources = array_map('intval', array_values($reviewed_associations['data_sources']));
+			$graphs       = array_map('intval', array_values($reviewed_associations['graphs']));
+		}
 
 		/* build the list */
 		foreach($device_ids as $device_id) {
@@ -204,12 +255,16 @@ function api_device_remove_multi($device_ids, $delete_type = 2) {
 				WHERE id = ?',
 				array($device_id));
 
+			// Keep the authorized routing even if a preceding delete trigger changes host.
+			if ($reviewed_associations !== null) {
+				$poller_id = $reviewed_associations['by_device'][$device_id]['poller_id'];
+			}
 			$devices_by_poller[$poller_id][] = $device_id;
 
 			$i++;
 		}
 
-		$poller_ids = get_remote_poller_ids_from_devices($devices_to_delete);
+		ksort($devices_by_poller, SORT_NUMERIC);
 
 		// handle removal or mark for removal as required
 		db_execute("DELETE FROM host WHERE id IN ($devices_to_delete) AND poller_id = 1");
@@ -222,18 +277,30 @@ function api_device_remove_multi($device_ids, $delete_type = 2) {
 		db_execute("DELETE FROM reports_items    WHERE host_id IN ($devices_to_delete)");
 
 		if ($delete_type == 2) {
-			api_delete_graphs($graphs, $delete_type);
+			api_delete_graphs($graphs, $delete_type, $reviewed_associations === null ? null : $data_sources, $verify_reviewed_scope);
 		} else {
-			api_data_source_disable_multi($data_sources);
+			if ($verify_reviewed_scope !== null) {
+				$verify_reviewed_scope();
+			}
+			api_data_source_disable_multi($data_sources, $reviewed_associations === null);
 
-			db_execute("UPDATE graph_local SET host_id = 0 WHERE host_id IN($devices_to_delete)");
-			db_execute("UPDATE data_local  SET host_id = 0 WHERE host_id IN($devices_to_delete)");
+			if ($reviewed_associations === null) {
+				db_execute("UPDATE graph_local SET host_id = 0 WHERE host_id IN($devices_to_delete)");
+				db_execute("UPDATE data_local  SET host_id = 0 WHERE host_id IN($devices_to_delete)");
+			} else {
+				if (cacti_sizeof($graphs)) {
+					db_execute('UPDATE graph_local SET host_id = 0 WHERE id IN (' . implode(', ', $graphs) . ')');
+				}
+				if (cacti_sizeof($data_sources)) {
+					db_execute('UPDATE data_local SET host_id = 0 WHERE id IN (' . implode(', ', $data_sources) . ')');
+				}
+			}
 		}
 
-		if (cacti_sizeof($poller_ids)) {
-			foreach($poller_ids as $poller_id) {
+		foreach($devices_by_poller as $poller_id => $poller_devices) {
+			if ((int) $poller_id > 1) {
 				api_device_cache_crc_update($poller_id);
-				api_device_purge_from_remote($devices_by_poller[$poller_id], $poller_id);
+				api_device_purge_from_remote($poller_devices, $poller_id, $reviewed_associations === null ? null : $reviewed_associations['by_device'], $reviewed_connections[$poller_id] ?? null);
 			}
 		}
 
@@ -2891,4 +2958,3 @@ function api_clone_device_template($template_id, $template_name, $include_gt, $c
 
 	return $new_template;
 }
-

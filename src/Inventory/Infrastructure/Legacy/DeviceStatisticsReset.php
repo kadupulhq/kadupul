@@ -20,5 +20,13 @@ final class DeviceStatisticsReset
         if (!$query->execute([$device->id, $device->pollerId]) || $query->rowCount() !== 1) {
             throw new \RuntimeException('Device statistics reset could not be confirmed.');
         }
+
+        // A matched UPDATE does not prove that the requested values survived
+        // database-side behavior such as BEFORE UPDATE triggers. Confirm the
+        // persisted reset before the worker can emit action callbacks.
+        $verification = $connection->prepare("SELECT id FROM host WHERE id = ? AND poller_id = ? AND deleted = '' AND min_time = '9.99999' AND max_time = 0 AND cur_time = 0 AND avg_time = 0 AND total_polls = 0 AND failed_polls = 0 AND availability = 100");
+        if (!$verification->execute([$device->id, $device->pollerId]) || (int) $verification->fetchColumn() !== $device->id) {
+            throw new \RuntimeException('Device statistics reset could not be confirmed.');
+        }
     }
 }

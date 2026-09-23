@@ -43,6 +43,7 @@ def main():
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceTemplateAssignments.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceCollectorAssignments.php',
         'src/Inventory/Infrastructure/Legacy/DeviceWriteAuthorization.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceMutationSelection.php',
         'src/Inventory/Infrastructure/Legacy/DeviceCollectorReplication.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceTemplateType.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceCollectorType.php',
@@ -58,6 +59,8 @@ def main():
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceRemovals.php',
         'src/Inventory/Infrastructure/Legacy/DeviceRemovalSnapshot.php',
         'src/Inventory/Infrastructure/Legacy/DeviceRemovalDependencies.php',
+        'src/Inventory/Infrastructure/Symfony/DeviceSelectionForm.php',
+        'src/Inventory/Infrastructure/Legacy/DeviceRemovalDependencyReceipt.php',
         'src/Inventory/Infrastructure/Symfony/Form/DeviceRemovalType.php',
         'src/Inventory/Infrastructure/Symfony/Controller/DeviceRemovalController.php',
         'src/Inventory/Domain/DeviceState.php',
@@ -131,7 +134,7 @@ def main():
     synchronization_checks = ['template synchronization saves through Symfony', 'template synchronization failure rolls back primary associations', 'remote template synchronization preserves assigned template identity', 'template synchronization invokes action 7 once with complete selection', 'template synchronization invokes the template-change hook once per assigned device', 'template synchronization retains existing graphs']
     assignment_checks = ['bulk site assigns through Symfony', 'bulk template assigns through Symfony', 'bulk site failure rolls back whole primary selection', 'bulk template failure rolls back whole primary selection', 'bulk collector moves full selection to remote', 'bulk collector returns full selection to primary', 'bulk collector purges old remote copies']
     snmp_checks = ['bulk SNMP never displays stored credentials', 'bulk SNMP keeps each device credentials through Symfony', 'bulk SNMP validates all stored credentials before writes', 'bulk SNMP failure rolls back entire primary selection', 'bulk SNMP replaces credentials through Symfony', 'bulk SNMP verifies remote credentials', 'bulk SNMP secrets stay out of database diagnostics']
-    graph_checks = ['graph association adds through Symfony', 'graph association removes through Symfony', 'graph association failure rolls back primary writes', 'graph association verifies remote template', 'graph association removal retains existing graphs']
+    graph_checks = ['graph association adds through Symfony', 'graph association invokes plugin hook once with exact payload', 'graph association automation creates a graph', 'graph association removes through Symfony', 'graph association failure rolls back primary writes', 'graph association verifies remote template', 'graph association removal retains existing graphs']
     query_checks = ['query association adds through Symfony', 'query association removes through Symfony', 'query association failure rolls back primary writes', 'query reindex method changes through Symfony', 'query reindex method is verified on collector', 'query removal retains existing graphs', 'query removal clears associations cache and reindex state']
     option_checks = ['bulk options save through Symfony', 'bulk options failure rolls back entire primary batch', 'bulk options verifies remote values', 'bulk options changes selected fields and preserves unchecked values', 'bulk options invokes action 4 once for the complete selection', 'rejected bulk options do not invoke action 4']
     failures = {
@@ -141,6 +144,9 @@ def main():
         'sites-test-hash': 'Integration test source differs',
         'site-edit-test-hash': 'Integration test source differs',
         'missing-check': 'Incomplete Symfony integration',
+        'missing-removal-callback-check': 'Incomplete Symfony integration',
+        'missing-removal-shared-check': 'Incomplete Symfony integration',
+        'missing-removal-rollback-check': 'Incomplete Symfony integration',
         'wrong-handler': 'Wrong integration suite',
         'missing-reports': 'Missing integration coverage',
         'invalid-hit': 'Invalid PCOV',
@@ -244,6 +250,11 @@ def main():
             elif case.startswith('missing-option-check-'):
                 missing = option_checks[int(case.rsplit('-', 1)[1])]
                 evidence['checks'] = [check for check in evidence['checks'] if check != missing]
+            elif case == 'missing-removal-callback-check':
+                evidence['checks'] = [check for check in evidence['checks'] if check != 'rejected removal emits no bulk action callback']
+            elif case in ['missing-removal-shared-check', 'missing-removal-rollback-check']:
+                omitted = 'remote removal rejects outside graph references before cleanup' if case == 'missing-removal-shared-check' else 'remote removal failure rolls back dependent cleanup'
+                evidence['checks'] = [check for check in evidence['checks'] if check != omitted]
             elif case == 'missing-check':
                 evidence['checks'] = []
             elif case == 'wrong-handler':
