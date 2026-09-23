@@ -651,8 +651,12 @@ if ($config['is_web']) {
 			'purge_data_source_statistics', 'rebuild_snmpagent_cache'
 		);
 
+		/* csrf-magic validates the token only on POST, so a field of that name on
+		   any other method proves nothing and must not excuse the request. */
+		$posted_token = $method === 'POST' && isset($_POST['__csrf_magic']);
+
 		foreach($bad_actions as $bad) {
-			if ($action === $bad && !isset($_POST['__csrf_magic'])) {
+			if ($action === $bad && !$posted_token) {
 				/* 1.2.31 refused the form actions from any request without a
 				 * token and logged it. The other names were GET links in 1.2.31
 				 * that plugins, bookmarks and scripts still use, so only a GET
@@ -674,7 +678,7 @@ if ($config['is_web']) {
 		   confirmation page by GET. Every form_actions() changes data only once
 		   selected_items arrives, so that is the request to refuse unless it is
 		   a same-site GET. */
-		if ($action === 'actions' && isset_request_var('selected_items') && !isset($_POST['__csrf_magic']) && ($method !== 'GET' || csrf_request_is_cross_site())) {
+		if ($action === 'actions' && isset_request_var('selected_items') && !$posted_token && ($method !== 'GET' || csrf_request_is_cross_site())) {
 			header('Allow: POST');
 			http_response_code(405);
 			exit;

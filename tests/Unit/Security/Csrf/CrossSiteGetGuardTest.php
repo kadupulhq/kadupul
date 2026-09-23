@@ -461,6 +461,22 @@ test('only GET gets the same-site relaxation on a guarded action; HEAD, PUT, DEL
 });
 
 
+test('a token field on a method csrf-magic never validates does not excuse the request', function () {
+	// csrf_check() validates the token only on POST, so a field of that name on
+	// any other method proved nothing and skipped the guard entirely.
+	foreach (array('DELETE', 'PUT', 'PATCH', 'HEAD') as $method) {
+		expect(run_guard($method, array('action' => 'remove'), array('__csrf_magic' => 'anything')))->toBe('405', $method);
+		expect(run_guard($method, array('action' => 'save'), array('__csrf_magic' => 'anything')))->toBe('405', $method);
+		expect(run_guard($method, array('action' => 'actions', 'selected_items' => 'a:1:{i:0;i:3;}'), array('__csrf_magic' => 'anything')))->toBe('405', $method);
+	}
+});
+
+test('a POST that carries its token still passes', function () {
+	expect(run_guard('POST', array('action' => 'remove'), array('__csrf_magic' => 'token')))->toBe('pass');
+	expect(run_guard('POST', array('action' => 'save'), array('__csrf_magic' => 'token')))->toBe('pass');
+	expect(run_guard('POST', array('action' => 'actions', 'selected_items' => 'a:1:{i:0;i:3;}'), array('__csrf_magic' => 'token')))->toBe('pass');
+});
+
 test('IPv6 Referer survives global bootstrap before same-site validation', function () {
     expect(run_guard('GET', array('action' => 'item_remove'), array(), array('SERVER_NAME' => '::1', 'HTTP_REFERER' => 'http://[::1]/cacti/')))->toBe('pass')
         ->and(run_guard('GET', array('action' => 'item_remove'), array(), array('SERVER_NAME' => '::1', 'HTTP_REFERER' => 'http://[::2]/cacti/')))->toBe('405');
