@@ -76,7 +76,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'bulk SNMP replaces credentials through Symfony',
         'bulk SNMP verifies remote credentials',
         'bulk SNMP secrets stay out of database diagnostics',
-        'graph association adds through Symfony',
+        'graph association adds through Symfony', 'graph association invokes plugin hook once with exact payload', 'graph association automation creates a graph',
         'graph association removes through Symfony',
         'graph association failure rolls back primary writes',
         'graph association verifies remote template',
