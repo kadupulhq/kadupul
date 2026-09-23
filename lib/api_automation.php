@@ -4095,6 +4095,13 @@ function automation_update_device($host_id): bool {
 		foreach ($graph_templates as $graph_template) {
 			cacti_log($function . ' Found GT[' . $graph_template['id'] . '] for Device[' . $host_id . ']', true, 'AUTOM8 TRACE', POLLER_VERBOSITY_HIGH);
 
+			// Ineligible templates are configured no-ops. A false result from an
+			// eligible template means creation failed and must reach the caller.
+			if (!automation_graph_automation_eligible($graph_template['id'])) {
+				cacti_log($function . ' Skipping ineligible GT[' . $graph_template['id'] . '] for Device[' . $host_id . ']', false, 'AUTOM8', POLLER_VERBOSITY_MEDIUM);
+				continue;
+			}
+
 			if (!automation_execute_graph_template($host_id, $graph_template['id'])) {
 				return false;
 			}

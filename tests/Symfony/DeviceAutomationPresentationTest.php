@@ -41,7 +41,7 @@ final class DeviceAutomationPresentationTest extends TestCase
             $port = $this->createMockForIntersectionOfInterfaces([\Kadupul\Inventory\Application\Port\DeviceAutomation::class, DeviceStates::class, \Kadupul\Inventory\Application\Port\DeviceSnmpSettings::class, \Kadupul\Inventory\Application\Port\DeviceStatistics::class, \Kadupul\Inventory\Application\Port\DeviceTemplateSynchronization::class, \Kadupul\Inventory\Application\Port\DeviceOptions::class]);
             $port->method('findVisible')->willReturn([$device]);
             $port->expects(self::once())->method('applyRules')->with(42, self::callback(fn($selection) => $selection->revisions === [7 => $device->revision()]));
-            $container->set(DeviceStates::class, $port);
+            $container->set(\Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceStates::class, $port);
             $path = '/inventory/devices/automation?ids[]=7';
             $response = $kernel->handle(Request::create($path, 'GET', [], ['Cacti' => 'fixture']));
             self::assertSame(200, $response->getStatusCode());

@@ -52,7 +52,7 @@ function getInputFields($id)
 }
 function automation_graph_automation_eligible($id)
 {
-    return true;
+    return RuleFixture::$outcome !== 'ineligible';
 }
 function test_data_sources(...$args)
 {
@@ -240,6 +240,7 @@ final class LegacyAutomationResultTest extends TestCase
     public static function outcomes(): iterable
     {
         yield 'no applicable rules is complete' => ['none', 'valid', true];
+        yield 'ineligible graph template is a successful no-op' => ['graph', 'ineligible', true];
         foreach (['graph', 'query'] as $kind) {
             foreach (['false', 'empty', 'unpersisted', 'wrong-owner', 'invalid-data', 'failed-data', 'zero-data', 'negative-data', 'malformed-data', 'missing-data', 'wrong-data-owner', 'unlinked-data', 'other-graph-data', 'valid'] as $outcome) {
                 yield "$kind $outcome" => [$kind, $outcome, $outcome === 'valid'];
