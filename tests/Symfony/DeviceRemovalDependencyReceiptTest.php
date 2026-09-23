@@ -31,7 +31,10 @@ final class DeviceRemovalDependencyReceiptTest extends TestCase
             CREATE TABLE data_template_rrd (id INTEGER,local_data_id INTEGER);
             CREATE TABLE graph_templates_item (id INTEGER,local_graph_id INTEGER,task_item_id INTEGER);
             CREATE TABLE graph_templates_graph (id INTEGER,local_graph_id INTEGER);
+            CREATE TABLE data_local (id INTEGER);
+            CREATE TABLE graph_local (id INTEGER);
             CREATE TABLE data_input_data (data_template_data_id INTEGER, data_input_field_id INTEGER DEFAULT 1);
+            INSERT INTO data_local VALUES (12); INSERT INTO graph_local VALUES (11);
             INSERT INTO data_template_data VALUES (101,12); INSERT INTO data_template_rrd VALUES (102,12);
             INSERT INTO graph_templates_item VALUES (103,11,102); INSERT INTO graph_templates_graph VALUES (104,11);
             INSERT INTO data_input_data (data_template_data_id) VALUES (101)');
@@ -43,7 +46,7 @@ final class DeviceRemovalDependencyReceiptTest extends TestCase
     {
         $db = $this->database();
         $receipt = DeviceRemovalDependencyReceipt::capture($db, [11], [12]);
-        $db->exec('DELETE FROM data_template_rrd; INSERT INTO graph_templates_item VALUES (105,99,102)');
+        $db->exec('DELETE FROM data_input_data; DELETE FROM data_template_data; DELETE FROM data_template_rrd; DELETE FROM data_local; INSERT INTO graph_templates_item VALUES (105,99,102)');
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('outside graph reference');
         $receipt->assertExclusive($db);
@@ -67,6 +70,26 @@ final class DeviceRemovalDependencyReceiptTest extends TestCase
         $db->exec('INSERT INTO data_input_data VALUES (101, 2)');
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Reviewed input field scope changed');
+        $receipt->assertExclusive($db);
+    }
+
+    public function testNewRrdOnReviewedDataSourceChangesScope(): void
+    {
+        $db = $this->database();
+        $receipt = DeviceRemovalDependencyReceipt::capture($db, [11], [12]);
+        $db->exec('INSERT INTO data_template_rrd VALUES (999,12)');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Reviewed dependent scope changed');
+        $receipt->assertExclusive($db);
+    }
+
+    public function testNewGraphItemOnReviewedGraphChangesScope(): void
+    {
+        $db = $this->database();
+        $receipt = DeviceRemovalDependencyReceipt::capture($db, [11], [12]);
+        $db->exec('INSERT INTO graph_templates_item VALUES (999,11,102)');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Reviewed dependent scope changed');
         $receipt->assertExclusive($db);
     }
 
