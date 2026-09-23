@@ -20,7 +20,8 @@ not a claim that the procedural application has already been decomposed.
 Symfony owns the application lifecycle and composition root. Platform owns
 health, response security headers and installation configuration adapters.
 IdentityAccess owns the current-actor query and public Actor/ConsoleAccess
-contracts. Inventory owns device-list criteria, its ListDevices use case,
+contracts, including the closed audit-event boundary used to attribute security
+decisions. Inventory owns device-list criteria, its ListDevices use case,
 read models and DeviceCatalog port, plus the Device aggregate, EditDevice command
 and DeviceEditor port. Site administration reads use the ListSites query and
 SiteCatalog port; site device counts share Inventory’s device visibility adapter. Other
@@ -131,6 +132,8 @@ so this path needs no procedural bootstrap or process bridge.
 `tests/Symfony/ArchitectureTest.php` checks inward dependencies, cross-module
 contract usage, framework isolation and entry points. Behavioral HTTP tests cover
 the adapters against a disposable database. Both are required CI checks.
+The [architecture atlas alignment ledger](architecture-alignment.md) records
+which target gates have evidence and which remain transitional or planned.
 
 Symfony Translation is a presentation dependency. Platform resolves the Inventory HTML
 request locale using IdentityAccess's public LocalePreference contract and existing
