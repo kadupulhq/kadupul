@@ -988,6 +988,7 @@ header_redirect	./user_admin.php:725		header('Location: user_admin.php?action=us
 header_redirect	./user_admin.php:762		header('Location: user_admin.php?action=user_edit&header=false&tab=graph_perms_edit&id=' . get_request_var('user_id'));
 header_redirect	./user_admin.php:796				header('Location: user_admin.php&header=false');
 header_redirect	./user_admin.php:992				header('Location: user_admin.php&header=false');
+header_redirect	./user_domains.php:105				header('Location: user_domains.php?header=false&action=edit&domain_id=' . get_nfilter_request_var('domain_id'));
 header_redirect	./user_domains.php:171		header('Location: user_domains.php?header=false&action=edit&domain_id=' . (empty($domain_id) ? get_nfilter_request_var('domain_id') : $domain_id));
 header_redirect	./user_domains.php:205			header('Location: user_domains.php?header=false');
 header_redirect	./user_domains.php:271			header('Location: user_domains.php?header=false');

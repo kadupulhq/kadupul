@@ -70,6 +70,21 @@ switch (get_request_var('action')) {
     The Save Function
    -------------------------- */
 
+/* The template user dropdown offers local accounts only, and saving an LDAP
+   domain disables the account it names. The same allowlist belongs here, or a
+   forged user_id disables an account the form never offered. */
+function domain_template_user_valid($user_id) {
+	if ($user_id == 0) {
+		return true;
+	}
+
+	return db_fetch_cell_prepared('SELECT COUNT(*) FROM user_auth WHERE id = ? AND realm = 0', array($user_id)) > 0;
+}
+
+function domain_exists($domain_id) {
+	return $domain_id > 0 && db_fetch_cell_prepared('SELECT COUNT(*) FROM user_domains WHERE domain_id = ?', array($domain_id)) > 0;
+}
+
 function form_save() {
 	global $registered_cacti_names;
 
@@ -79,6 +94,12 @@ function form_save() {
 		get_filter_request_var('type');
 		get_filter_request_var('user_id');
 		/* ==================================================== */
+
+		if (!domain_template_user_valid(get_request_var('user_id'))) {
+			raise_message('domain_template_user', __('Choose a local account as the user template.'), MESSAGE_LEVEL_ERROR);
+			header('Location: user_domains.php?header=false&action=edit&domain_id=' . get_nfilter_request_var('domain_id'));
+			exit;
+		}
 
 		$save['domain_id']   = get_nfilter_request_var('domain_id');
 		$save['type']        = get_nfilter_request_var('type');
@@ -93,7 +114,9 @@ function form_save() {
 				// Disable template user from logging in
 				db_execute_prepared('UPDATE user_auth
 					SET enabled=""
-					WHERE id = ?', array($save['user_id']));
+					WHERE id = ?
+					AND realm = 0
+					AND id = (SELECT user_id FROM user_domains WHERE domain_id = ?)', array($save['user_id'], $domain_id));
 
 				raise_message(1);
 			} else {
@@ -150,6 +173,12 @@ function form_save() {
 		get_filter_request_var('type');
 		get_filter_request_var('user_id');
 		/* ==================================================== */
+
+		if (!domain_template_user_valid(get_request_var('user_id'))) {
+			raise_message('domain_template_user', __('Choose a local account as the user template.'), MESSAGE_LEVEL_ERROR);
+			header('Location: user_domains.php?header=false&action=edit&domain_id=' . get_nfilter_request_var('domain_id'));
+			exit;
+		}
 
 		$save['domain_id']   = get_nfilter_request_var('domain_id');
 		$save['domain_name'] = form_input_validate(get_nfilter_request_var('domain_name'), 'domain_name', '', false, 3);
@@ -312,6 +341,13 @@ function domain_enable($domain_id) {
 }
 
 function domain_default($domain_id) {
+	/* Clearing first would leave no default domain at all for an id that does not exist. */
+	if (!domain_exists($domain_id)) {
+		raise_message('domain_missing', __('The domain to make default no longer exists.'), MESSAGE_LEVEL_ERROR);
+
+		return;
+	}
+
 	db_execute('UPDATE user_domains SET defdomain = 0');
 	db_execute_prepared('UPDATE user_domains SET defdomain = 1 WHERE domain_id = ?', array($domain_id));
 }
