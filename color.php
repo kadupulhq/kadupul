@@ -137,6 +137,29 @@ function form_save() {
     Color Functions
    ----------------------- */
 
+/* The list offers a checkbox only for a color no Graph or Graph Template uses,
+   which is what the Deletable column promises. The delete applies the same rule,
+   or a forged selection leaves graph items pointing at a color that is gone. */
+function color_deletable($ids) {
+	$in_use = array_rekey(
+		db_fetch_assoc('SELECT DISTINCT color_id
+			FROM graph_templates_item
+			WHERE color_id > 0
+			AND ' . array_to_sql_or($ids, 'color_id')),
+		'color_id', 'color_id'
+	);
+
+	$deletable = array();
+
+	foreach ($ids as $id) {
+		if (!isset($in_use[$id])) {
+			$deletable[] = $id;
+		}
+	}
+
+	return $deletable;
+}
+
 function form_actions() {
 	global $color_actions;
 
@@ -150,7 +173,15 @@ function form_actions() {
 
 		if ($selected_items != false) {
 			if (get_request_var('drp_action') == '1') { // delete
-				db_execute('DELETE FROM colors WHERE ' . array_to_sql_or($selected_items, 'id'));
+				$deletable = color_deletable($selected_items);
+
+				if (cacti_sizeof($deletable)) {
+					db_execute('DELETE FROM colors WHERE ' . array_to_sql_or($deletable, 'id'));
+				}
+
+				if (cacti_sizeof($deletable) < cacti_sizeof($selected_items)) {
+					raise_message('color_in_use', __('Colors referenced by a Graph or Graph Template were not Deleted.'), MESSAGE_LEVEL_WARN);
+				}
 			}
 		}
 
