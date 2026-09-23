@@ -13,21 +13,23 @@ use RuntimeException;
 /** Keeps dependency identities observable after the legacy lifecycle deletes parents. */
 final readonly class DeviceRemovalDependencyReceipt
 {
-    private function __construct(private array $checks, private array $rrds, private array $graphs, private array $templates, private array $inputFields) {}
+    private function __construct(private array $checks, private array $rrds, private array $graphs, private array $templates, private array $scopeRows, private array $inputFields) {}
 
     public static function capture(PDO $db, array $graphs, array $data): self
     {
         $checks = [];
+        $scopeRows = [];
         $templates = $rrds = [];
         foreach ([
-            ['data_template_data', 'local_data_id', $data],
-            ['data_template_rrd', 'local_data_id', $data],
-            ['graph_templates_item', 'local_graph_id', $graphs],
-            ['graph_templates_graph', 'local_graph_id', $graphs],
-        ] as [$table, $column, $parents]) {
+            ['data_template_data', 'local_data_id', 'data_local', $data, ['id', 'local_data_id']],
+            ['data_template_rrd', 'local_data_id', 'data_local', $data, ['id', 'local_data_id']],
+            ['graph_templates_item', 'local_graph_id', 'graph_local', $graphs, ['id', 'local_graph_id', 'task_item_id']],
+            ['graph_templates_graph', 'local_graph_id', 'graph_local', $graphs, ['id', 'local_graph_id']],
+        ] as [$table, $column, $ownerTable, $parents, $identityColumns]) {
             $ids = self::read($db, $table, 'id', $column, $parents);
             $checks[] = [$table, $column, $parents];
             $checks[] = [$table, 'id', $ids];
+            $scopeRows[] = [$table, $column, $ownerTable, $parents, $identityColumns, self::readRows($db, $table, $identityColumns, $column, $parents)];
             if ($table === 'data_template_data') {
                 $templates = $ids;
             } elseif ($table === 'data_template_rrd') {
@@ -36,11 +38,18 @@ final readonly class DeviceRemovalDependencyReceipt
         }
         $checks[] = ['data_input_data', 'data_template_data_id', $templates];
         $checks[] = ['graph_templates_item', 'task_item_id', $rrds];
-        return new self($checks, $rrds, $graphs, $templates, self::readPairs($db, $templates));
+        return new self($checks, $rrds, $graphs, $templates, $scopeRows, self::readPairs($db, $templates));
     }
 
     public function assertExclusive(PDO $db): void
     {
+        foreach ($this->scopeRows as [$table, $parentColumn, $ownerTable, $ownerIds, $identityColumns, $capturedRows]) {
+            $existingOwners = self::read($db, $ownerTable, 'id', 'id', $ownerIds);
+            $expectedRows = array_values(array_filter($capturedRows, static fn(array $row): bool => in_array($row[$parentColumn], $existingOwners, true)));
+            if (self::readRows($db, $table, $identityColumns, $parentColumn, $ownerIds) !== $expectedRows) {
+                throw new RuntimeException('Reviewed dependent scope changed');
+            }
+        }
         foreach (self::read($db, 'graph_templates_item', 'local_graph_id', 'task_item_id', $this->rrds) as $graph) {
             if (!in_array($graph, $this->graphs, true)) {
                 throw new RuntimeException('Reviewed data acquired an outside graph reference');
@@ -104,6 +113,27 @@ final readonly class DeviceRemovalDependencyReceipt
             'data_template_data_id' => (int) $row['data_template_data_id'],
             'data_input_field_id' => (int) $row['data_input_field_id'],
         ], $query->fetchAll(PDO::FETCH_ASSOC));
+        if ($query->errorCode() !== '00000') {
+            throw new RuntimeException('Dependency receipt unavailable');
+        }
+        return $rows;
+    }
+
+    private static function readRows(PDO $db, string $table, array $columns, string $parentColumn, array $parentIds): array
+    {
+        if (!$db->inTransaction()) {
+            throw new \LogicException('Dependency receipts require a transaction');
+        }
+        if ($parentIds === []) {
+            return [];
+        }
+        $select = implode(', ', $columns);
+        $lock = $db->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite' ? '' : ' FOR UPDATE';
+        $query = $db->prepare("SELECT $select FROM $table WHERE $parentColumn IN (" . implode(',', array_fill(0, count($parentIds), '?')) . ") ORDER BY $parentColumn, id$lock");
+        if (!$query || !$query->execute($parentIds)) {
+            throw new RuntimeException('Dependency receipt unavailable');
+        }
+        $rows = array_map(static fn(array $row): array => array_map('intval', $row), $query->fetchAll(PDO::FETCH_ASSOC));
         if ($query->errorCode() !== '00000') {
             throw new RuntimeException('Dependency receipt unavailable');
         }
