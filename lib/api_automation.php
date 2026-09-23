@@ -4061,6 +4061,10 @@ function automation_graph_result_exists($result, $host_id, $graph_template_id, $
 		if ((int) db_fetch_cell_prepared($sql, $parameters) !== 1) {
 			return false;
 		}
+		$references = db_fetch_cell_prepared('SELECT COUNT(*) FROM graph_templates_item gti INNER JOIN data_template_rrd dtr ON dtr.id = gti.task_item_id WHERE gti.local_graph_id = ? AND dtr.local_data_id = ?', array($result['local_graph_id'], (int) $data_id));
+		if ($references === false || (int) $references < 1) {
+			return false;
+		}
 	}
 	return true;
 }

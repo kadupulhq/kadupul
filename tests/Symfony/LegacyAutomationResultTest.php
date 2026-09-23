@@ -165,6 +165,10 @@ function create_complete_graph_from_template($template, $host, $query, &$suggest
             RuleFixture::$outcome === 'wrong-data-index' ? 'other' : ($query['snmp_index'] ?? ''),
         ]);
     }
+    if (RuleFixture::$outcome !== 'unlinked-data') {
+        RuleFixture::$db->exec('INSERT INTO data_template_rrd VALUES (111,11)');
+        RuleFixture::$db->prepare('INSERT INTO graph_templates_item VALUES (?,111)')->execute([RuleFixture::$outcome === 'other-graph-data' ? 99 : 8]);
+    }
     $id = match (RuleFixture::$outcome) {
         'failed-data' => false, 'zero-data' => 0, 'negative-data' => -1, 'malformed-data' => '11oops', default => 11,
     };
@@ -204,6 +208,7 @@ final class LegacyAutomationResultTest extends TestCase
         $GLOBALS['config'] = ['base_path' => $this->directory];
         $GLOBALS['automation_tree_header_types'] = ['string' => 'fixture'];
         RuleFixture::$db = new PDO('sqlite::memory:');
+        RuleFixture::$db->exec('CREATE TABLE graph_templates_item (local_graph_id INTEGER, task_item_id INTEGER); CREATE TABLE data_template_rrd (id INTEGER, local_data_id INTEGER)');
         RuleFixture::$db->exec('CREATE TABLE data_local (id INTEGER, host_id INTEGER, snmp_query_id INTEGER, snmp_index TEXT)');
         RuleFixture::$db->exec('CREATE TABLE graph_local (id INTEGER, host_id INTEGER, graph_template_id INTEGER, snmp_query_id INTEGER, snmp_query_graph_id INTEGER, snmp_index TEXT); CREATE TABLE graph_tree_items (id INTEGER, graph_tree_id INTEGER, parent INTEGER, host_id INTEGER, local_graph_id INTEGER)');
     }
@@ -236,7 +241,7 @@ final class LegacyAutomationResultTest extends TestCase
     {
         yield 'no applicable rules is complete' => ['none', 'valid', true];
         foreach (['graph', 'query'] as $kind) {
-            foreach (['false', 'empty', 'unpersisted', 'wrong-owner', 'invalid-data', 'failed-data', 'zero-data', 'negative-data', 'malformed-data', 'missing-data', 'wrong-data-owner', 'valid'] as $outcome) {
+            foreach (['false', 'empty', 'unpersisted', 'wrong-owner', 'invalid-data', 'failed-data', 'zero-data', 'negative-data', 'malformed-data', 'missing-data', 'wrong-data-owner', 'unlinked-data', 'other-graph-data', 'valid'] as $outcome) {
                 yield "$kind $outcome" => [$kind, $outcome, $outcome === 'valid'];
             }
         }
