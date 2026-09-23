@@ -12,14 +12,30 @@ class State {
 	public static $validated = false;
 	public static $events = array();
 }
+class RequestTerminated extends \RuntimeException {}
+
 function validate_request_vars() { State::$validated = true; }
 function isset_request_var($name) { return isset(State::$request[$name]); }
 function get_nfilter_request_var($name) { return State::$request[$name]; }
-function get_filter_request_var($name) {
+/* The real helper takes a filter and options, and hands a rejected value to
+   die_html_input_error(), which renders the error page and exits. The stub
+   models that contract: it records the call and stops the request. Asserting a
+   fabricated exception here would pass even if production stopped validating. */
+function get_filter_request_var($name, $filter = FILTER_VALIDATE_INT, $options = array()) {
 	State::$events[] = 'filter:' . $name;
-	$value = filter_var(State::$request[$name], FILTER_VALIDATE_INT);
-	if ($value === false) { throw new \UnexpectedValueException('Invalid integer'); }
+	$value = filter_var(State::$request[$name], $filter);
+
+	if ($value === false) {
+		die_html_input_error($name, State::$request[$name]);
+	}
+
 	return $value;
+}
+
+function die_html_input_error($variable = '', $value = '', $message = '') {
+	State::$events[] = 'die:' . $variable;
+
+	throw new RequestTerminated('die_html_input_error() ends the request');
 }
 function set_request_var($name, $value) { State::$request[$name] = $value; }
 function form_start($url, $name, $multipart = false) { State::$events[] = $multipart ? 'form:local' : 'form:remote'; }
@@ -57,6 +73,9 @@ test('production form-start block validates package location before choosing upl
 test('malformed package locations cannot start form output', function ($location) {
 	State::$request = array('package_location' => $location);
 	State::$events = array();
-	expect(function () { form_mode(); })->toThrow(\UnexpectedValueException::class);
-	expect(State::$events)->toBe(array('filter:package_location'));
+
+	// Production ends the request inside die_html_input_error(); the form must
+	// not have started by then.
+	expect(function () { form_mode(); })->toThrow(RequestTerminated::class);
+	expect(State::$events)->toBe(array('filter:package_location', 'die:package_location'));
 })->with(array(array('1x'), array(array('1'))));
