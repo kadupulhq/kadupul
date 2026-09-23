@@ -41,6 +41,7 @@ final class InstallationConfiguration implements LegacyConfiguration
             'forced_locale' => $i18n_force_language ?? null,
             'host' => $database_hostname ?? 'localhost', 'port' => $database_port ?? 3306,
             'database' => $database_default ?? '', 'username' => $database_username ?? '', 'password' => $database_password ?? '',
+            'read_username' => $database_read_username ?? '', 'read_password' => $database_read_password ?? '',
             'ssl' => $database_ssl ?? false, 'ssl_key' => $database_ssl_key ?? '',
             'ssl_cert' => $database_ssl_cert ?? '', 'ssl_ca' => $database_ssl_ca ?? '',
             'session_name' => $cacti_session_name ?? 'Cacti', 'database_sessions' => $cacti_db_session ?? false,

@@ -765,6 +765,31 @@ the application query and returned site map remain unchanged. The connection
 retains the installation's TLS certificate verification, UTF-8 and native
 prepare settings. Other read adapters and all write transactions keep their
 existing persistence path until migrated and covered independently.
+
+An operator can give that connection its own MySQL user with SELECT only, so
+the database itself rejects writes through it. Set both
+`$database_read_username` and `$database_read_password` in
+`include/config.php`. Setting only one of them stops the connection with
+`Incomplete read-only database credentials.` rather than guessing. With neither
+set, the connection keeps using `$database_username` and `$database_password`
+as before; that fallback grants nothing new, and the read-only protection
+starts only once the read user is configured. A remote collector ignores both
+settings and keeps the `$rdatabase_*` primary credentials on Sites routes.
+
+Grant the read user only the tables the DBAL adapters read. Today those are
+`sites`, `settings`, `host_template` and `poller`; the list grows as more
+adapters move to DBAL:
+
+```sql
+CREATE USER 'kadupul_read'@'localhost' IDENTIFIED BY 'change-me';
+GRANT SELECT ON cacti.sites TO 'kadupul_read'@'localhost';
+GRANT SELECT ON cacti.settings TO 'kadupul_read'@'localhost';
+GRANT SELECT ON cacti.host_template TO 'kadupul_read'@'localhost';
+GRANT SELECT ON cacti.poller TO 'kadupul_read'@'localhost';
+```
+
+Replace `cacti` with `$database_default` and the host with the web server's
+address.
 The domain revision includes site ID,
 so an assignment changed in another editor invalidates stale forms. Missing or
 invalid submitted choices cannot silently unassign a device.
