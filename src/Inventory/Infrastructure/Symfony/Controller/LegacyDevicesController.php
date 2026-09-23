@@ -70,7 +70,11 @@ final class LegacyDevicesController
             if ($action === 'edit') {
                 $id = $query['id'] ?? '0';
                 if ($id === '' || $id === '0') {
-                    return new RedirectResponse($urls->generate('inventory_device_create'), 302, $headers);
+                    $parameters = [];
+                    if (isset($query['host_template_id'])) {
+                        $parameters['host_template_id'] = $query['host_template_id'] === '0' ? 0 : DeviceSelection::validateIds([$query['host_template_id']])[0];
+                    }
+                    return new RedirectResponse($urls->generate('inventory_device_create', $parameters), 302, $headers);
                 }
                 $id = DeviceSelection::validateIds([$id])[0];
                 return new RedirectResponse($urls->generate('inventory_device_edit', ['id' => $id]), 302, $headers);
@@ -109,7 +113,8 @@ final class LegacyDevicesController
         } catch (\Kadupul\Inventory\Application\Query\InventoryAccessDenied $error) {
             return new Response($translator->trans('Access denied.', [], 'inventory'), $error->unauthenticated ? 401 : 403, $headers);
         } catch (\InvalidArgumentException) {
-            return new Response($translator->trans('Invalid device list filters.', [], 'inventory'), 400, $headers);
+            $message = ($query['action'] ?? '') === 'ajax_locations' ? 'Invalid location search.' : 'Invalid device list filters.';
+            return new Response($translator->trans($message, [], 'inventory'), 400, $headers);
         }
     }
     private static function pageSize(string $rows): string

@@ -43,7 +43,20 @@ final class DeviceCreateController
         } catch (InventoryAccessDenied $error) {
             return new Response($translator->trans('Access denied.', [], 'inventory'), $error->unauthenticated ? 401 : 403, $headers);
         }
-        $form = $forms->create(DeviceCreateType::class, $choices->defaults, ['action' => $urls->generate('inventory_device_create', ['list' => $filters]), 'host_template_id' => [0 => $translator->trans('None', [], 'inventory')] + $choices->templates, 'site_id' => [0 => $translator->trans('Unassigned', [], 'inventory')] + $choices->sites, 'poller_id' => $choices->pollers]);
+        $defaults = $choices->defaults;
+        if (!$request->isMethod('POST') && $request->query->has('host_template_id')) {
+            try {
+                $value = $request->query->all()['host_template_id'];
+                $template = $value === '0' ? 0 : \Kadupul\Inventory\Domain\DeviceSelection::validateIds([$value])[0];
+                if ($template !== 0 && !array_key_exists($template, $choices->templates)) {
+                    throw new \InvalidArgumentException();
+                }
+                $defaults['host_template_id'] = $template;
+            } catch (\InvalidArgumentException) {
+                return new Response($translator->trans('Invalid device list filters.', [], 'inventory'), 400, $headers);
+            }
+        }
+        $form = $forms->create(DeviceCreateType::class, $defaults, ['action' => $urls->generate('inventory_device_create', ['list' => $filters]), 'host_template_id' => [0 => $translator->trans('None', [], 'inventory')] + $choices->templates, 'site_id' => [0 => $translator->trans('Unassigned', [], 'inventory')] + $choices->sites, 'poller_id' => $choices->pollers]);
         $form->handleRequest($request);
         $status = $request->isMethod('POST') ? 422 : 200;
         if ($form->isSubmitted()) {

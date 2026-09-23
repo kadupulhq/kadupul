@@ -163,6 +163,14 @@ final class DeviceCreateTest extends TestCase
                 $creator->expects(self::never())->method('create');
             }
             $container->set(DeviceCreator::class, $creator);
+            if ($mode === 'success') {
+                $page = $kernel->handle(Request::create('/inventory/devices/new?host_template_id=2'));
+                self::assertSame(200, $page->getStatusCode());
+                self::assertStringContainsString('value="2" selected="selected">Template', $page->getContent());
+                foreach (['999', '-1', 'bogus', '2&host_template_id[]=2'] as $invalidTemplate) {
+                    self::assertSame(400, $kernel->handle(Request::create('/inventory/devices/new?host_template_id=' . $invalidTemplate))->getStatusCode());
+                }
+            }
             $token = $container->get(CsrfTokenManagerInterface::class)->getToken('inventory_device_create')->getValue();
             $data = array_replace(NewDevice::DEFAULTS, ['description' => $mode === 'invalid' ? '' : 'Tokyo', 'hostname' => '127.0.0.1', 'enabled' => '0', 'use_default_credentials' => '1', '_token' => $token]);
             if ($mode === 'legacy') {
