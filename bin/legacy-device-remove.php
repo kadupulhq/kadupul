@@ -162,12 +162,6 @@ try {
             api_data_source_remove_multi(array_column($remainingData, 'id'));
         }
     }
-    set_request_var('drp_action', '1');
-    snmpagent_device_action_bottom(['1', $ids]);
-    api_plugin_hook_function('device_action_bottom', ['1', $ids]);
-    if (db_error() !== '' || is_error_message() || !$connection->inTransaction()) {
-        throw new RuntimeException('Device removal could not be confirmed');
-    }
     foreach ($snapshots as $snapshot) {
         $device = $snapshot->device;
         $remaining = $read($connection, 'SELECT deleted, poller_id FROM host WHERE id = ?', [$device->id]);
@@ -204,6 +198,12 @@ try {
         if (isset($remotes[$device->pollerId])) {
             $verifier->verifyPurged($remotes[$device->pollerId], $device->id);
         }
+    }
+    set_request_var('drp_action', '1');
+    snmpagent_device_action_bottom(['1', $ids]);
+    api_plugin_hook_function('device_action_bottom', ['1', $ids]);
+    if (db_error() !== '' || is_error_message() || !$connection->inTransaction()) {
+        throw new RuntimeException('Device removal could not be confirmed');
     }
     $markers = ['time_last_change_device' => (string) time(), 'time_last_change_site_device' => (string) time()];
     foreach ($pollers as $pollerId) {
