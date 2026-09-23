@@ -19,7 +19,7 @@ final readonly class DeviceOptionsChange
         }
         if (array_key_exists('location', $fields)) {
             $location = $fields['location'];
-            if (!is_string($location) || !mb_check_encoding($location, 'UTF-8') || mb_strlen($location) > 40 || str_contains($location, "\0")) {
+            if (!is_string($location) || !mb_check_encoding($location, 'UTF-8') || mb_strlen($location, 'UTF-8') > 40 || str_contains($location, "\0")) {
                 throw new \InvalidArgumentException('Location must be valid text of at most 40 characters.');
             }
         }
