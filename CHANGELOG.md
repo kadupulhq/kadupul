@@ -16,6 +16,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 - Use Doctrine DBAL behind the existing Inventory assignable-site read port while preserving installation TLS settings and application APIs.
 
+- Read device-creation defaults and choices through Doctrine DBAL behind the existing port, keeping stored SNMP credentials out of the query.
+
 - Add a versioned, correlation-aware audit contract for migrated writes and record structured device-edit persistence decisions and outcomes without submitted fields or credentials.
 
 - Stop device collector reassignment immediately when the legacy replication helper reports an unavailable collector, before further graph replication.

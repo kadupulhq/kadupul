@@ -101,13 +101,20 @@ are confined to adapters; new routes do not bootstrap the procedural application
 Platform's PDO/configuration contracts are technical integration APIs used only
 by infrastructure, never domain/application services.
 
-Assignable-site reads are the first Doctrine DBAL persistence slice. The
+Assignable-site and device-creation choice reads use Doctrine DBAL. Each
 Inventory infrastructure adapter receives a module-owned DBAL connection and
 implements the existing application port, so neither the use case nor its
 domain-facing result changes. The connection factory preserves the installation
 database's TLS and native-prepare settings. Other reads and all write
 transactions continue through their existing adapters until migrated with
 equivalent behavioral coverage.
+
+Doctrine is a query layer here, not a schema owner. `cacti.sql` and the
+`install/upgrades` scripts still create and upgrade every table. The project has
+no ORM mapping and no Doctrine Migrations configuration, because a second
+migration path could apply changes the installer does not know about. A table
+moves to Doctrine-managed schema only after it has one documented owner and
+upgrade tests cover both the installer and the migration.
 
 Migrated Twig pages currently make no stylesheet, script, image, media or frame
 requests. A template boundary test rejects static remote resource URLs while

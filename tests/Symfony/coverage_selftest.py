@@ -83,7 +83,7 @@ def main():
         'src/Inventory/Application/Command/CreateDevice.php',
         'src/Inventory/Application/Query/PrepareDeviceCreation.php',
         'src/Inventory/Domain/NewDevice.php',
-        'src/Inventory/Infrastructure/Legacy/LegacyDeviceCreationCatalog.php',
+        'src/Inventory/Infrastructure/Persistence/DoctrineDeviceCreationCatalog.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceCreator.php',
         'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php')]
     for path in (args.files / 'raw').glob('coverage-*.json'):
@@ -124,7 +124,7 @@ def main():
         'unmeasured-CreateDevice.php': 'Missing measured execution: src/Inventory/Application/Command/CreateDevice.php',
         'unmeasured-PrepareDeviceCreation.php': 'Missing measured execution: src/Inventory/Application/Query/PrepareDeviceCreation.php',
         'unmeasured-NewDevice.php': 'Missing measured execution: src/Inventory/Domain/NewDevice.php',
-        'unmeasured-LegacyDeviceCreationCatalog.php': 'Missing measured execution: src/Inventory/Infrastructure/Legacy/LegacyDeviceCreationCatalog.php',
+        'unmeasured-DoctrineDeviceCreationCatalog.php': 'Missing measured execution: src/Inventory/Infrastructure/Persistence/DoctrineDeviceCreationCatalog.php',
         'unmeasured-LegacyDeviceCreator.php': 'Missing measured execution: src/Inventory/Infrastructure/Legacy/LegacyDeviceCreator.php',
         'path-traversal': 'Invalid integration source path',
     }

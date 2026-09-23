@@ -187,7 +187,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Inventory/Application/Command/CreateDevice.php',
         'src/Inventory/Application/Query/PrepareDeviceCreation.php',
         'src/Inventory/Domain/NewDevice.php',
-        'src/Inventory/Infrastructure/Legacy/LegacyDeviceCreationCatalog.php',
+        'src/Inventory/Infrastructure/Persistence/DoctrineDeviceCreationCatalog.php',
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceCreator.php',
         'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php'];
     foreach ($requiredPaths as $required) {

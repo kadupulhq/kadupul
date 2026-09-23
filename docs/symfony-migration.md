@@ -707,7 +707,8 @@ document instead of inserting it as an AJAX fragment, retaining unsaved-form pro
 
 `/inventory/devices/new` now uses a Symfony Form and Twig page backed by the
 Inventory `CreateDevice` use case. `PrepareDeviceCreation` reads non-secret
-installation defaults and current template, site and enabled-poller choices.
+installation defaults and current template, site and enabled-poller choices
+through a Doctrine DBAL adapter on the Inventory read connection.
 Domain validation rejects unknown fields, invalid references at the form boundary,
 unsupported protocols, out-of-range values and invalid SNMPv3 combinations.
 The isolated legacy adapter rechecks the actor, realms and selected references

@@ -143,8 +143,11 @@ services:
             $projectDir: '%kernel.project_dir%'
     Kadupul\Inventory\Application\Port\DeviceCreator:
         alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreator
+    Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceCreationCatalog:
+        arguments:
+            $database: '@kadupul.inventory.read_database'
     Kadupul\Inventory\Application\Port\DeviceCreationCatalog:
-        alias: Kadupul\Inventory\Infrastructure\Legacy\LegacyDeviceCreationCatalog
+        alias: Kadupul\Inventory\Infrastructure\Persistence\DoctrineDeviceCreationCatalog
 
     Kadupul\Inventory\Application\Query\ListAssignableSites: ~
 
