@@ -7,6 +7,13 @@
 
 namespace UserManagerConfirmationTest;
 
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+
+// The production encoders run here; the confirmation block calls them.
+foreach (array('selected_items_payload', 'selected_items_decode') as $name) {
+	eval('namespace ' . __NAMESPACE__ . ';' . \test_php_function_source(file_get_contents(dirname(__DIR__, 4) . '/lib/functions.php'), $name)); // nosemgrep: php.lang.security.eval-use.eval-use
+}
+
 function get_nfilter_request_var($name) {
 	return $GLOBALS['confirmation_request'][$name];
 }
@@ -25,7 +32,7 @@ test('user and manager confirmations preserve values without creating markup', f
 			? array($payload => array($payload => 1)) : $user_array;
 	}
 	$expected = $variant === 'user copy' ? $user_id
-		: ($payload === null ? '' : serialize($file === 'managers.php' ? $selected_items : $user_array));
+		: ($payload === null ? '' : selected_items_payload($file === 'managers.php' ? $selected_items : $user_array));
 	$save_html = '<button type="submit">Continue</button>';
 	$GLOBALS['confirmation_request'] = array('drp_action' => $action, 'id' => $payload ?? '0042');
 	ob_start();
@@ -51,7 +58,7 @@ test('user and manager confirmations preserve values without creating markup', f
 	expect($fields['drp_action'])->toBe($action);
 	expect($fields['selected_items'])->toBe($expected);
 	if ($variant !== 'user copy' && $payload !== null) {
-		expect(unserialize($fields['selected_items'], array('allowed_classes' => false)))
+		expect(unserialize(selected_items_decode($fields['selected_items']), array('allowed_classes' => false)))
 			->toBe($file === 'managers.php' ? $selected_items : $user_array);
 	}
 	if ($variant === 'notifications') {

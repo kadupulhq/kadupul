@@ -393,7 +393,7 @@ function form_actions() {
 		$save_html = "<input type='submit' class='ui-button ui-corner-all ui-widget' value='" . __esc('Continue') . "' name='save'>";
 	}
 
-	$selected_items_html = (isset($networks_array) ? serialize($networks_array) : '');
+	$selected_items_html = (isset($networks_array) ? selected_items_payload($networks_array) : '');
 	$selected_items_html = htmlspecialchars($selected_items_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 	$selected_items_html = str_replace('`', '&#96;', $selected_items_html);
 	$action_html = htmlspecialchars((string) get_nfilter_request_var('drp_action'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');

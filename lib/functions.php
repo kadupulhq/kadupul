@@ -4833,9 +4833,38 @@ function validate_relative_path_within($path, $base_dir) {
  *
  * @return array          The sanitized selected items array
  */
+/* selected_items_payload - encodes a bulk selection for its hidden form field
+   serialize() returns a byte string with length prefixes. Escaping those bytes
+   as text rewrites them on a non-UTF-8 install, and the selection no longer
+   unserializes. Base64 keeps the payload ASCII, so the escaping cannot touch it.
+   @arg $selected_items - the selection to encode
+   @returns - the encoded payload */
+function selected_items_payload($selected_items) {
+	return base64_encode(serialize($selected_items));
+}
+
+/* selected_items_decode - reads a payload in either encoding
+   A form rendered before this change, a plugin, or a bookmarked POST still
+   sends raw serialized data.
+   @arg $items - the posted payload
+   @returns - the serialized string, ready to unserialize */
+function selected_items_decode($items) {
+	$items = stripslashes((string) $items);
+
+	if (strpos($items, 'a:') !== 0) {
+		$decoded = base64_decode($items, true);
+
+		if ($decoded !== false && strpos($decoded, 'a:') === 0) {
+			return $decoded;
+		}
+	}
+
+	return $items;
+}
+
 function sanitize_unserialize_selected_items($items) {
 	if ($items != '') {
-		$unstripped = stripslashes($items);
+		$unstripped = selected_items_decode($items);
 
 		// validate that sanitized string is correctly formatted
 		if (preg_match('/^a:[0-9]+:{/', $unstripped) && !preg_match('/(^|;|{|})O:\+?[0-9]+:"/', $unstripped)) {

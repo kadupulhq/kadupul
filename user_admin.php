@@ -472,7 +472,7 @@ function form_actions() {
 		exit;
 	}
 
-	$selected_items_html = (isset($user_array) ? serialize($user_array) : '');
+	$selected_items_html = (isset($user_array) ? selected_items_payload($user_array) : '');
 	if (get_nfilter_request_var('drp_action') == '2') { // copy uses a scalar ID, not a serialized selection
 		$selected_items_html = (string) $user_id;
 	}

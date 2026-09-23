@@ -1067,7 +1067,7 @@ function form_actions() {
 			get_filter_request_var('id');
 			/* ==================================================== */
 
-			$pairs = managers_cached_notification_pairs(cacti_unserialize(stripslashes(get_nfilter_request_var('selected_items'))));
+			$pairs = managers_cached_notification_pairs(cacti_unserialize(selected_items_decode(get_nfilter_request_var('selected_items'))));
 
 			if (get_nfilter_request_var('drp_action') == '1') { // disable
 				foreach($pairs as $pair) {
@@ -1135,7 +1135,7 @@ function form_actions() {
 				exit;
 			}
 
-			$selected_items_html = (isset($selected_items) ? serialize($selected_items) : '');
+			$selected_items_html = (isset($selected_items) ? selected_items_payload($selected_items) : '');
 			$selected_items_html = htmlspecialchars($selected_items_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 			$selected_items_html = str_replace('`', '&#96;', $selected_items_html);
 			$action_html = (string) get_nfilter_request_var('drp_action');
@@ -1202,7 +1202,7 @@ function form_actions() {
 				$save_html = "<input type='button' class='ui-button ui-corner-all ui-widget cactiReturnTo' value='" . __esc('Return') . "'>";
 			}
 
-			$selected_items_html = (isset($selected_items) ? serialize($selected_items) : '');
+			$selected_items_html = (isset($selected_items) ? selected_items_payload($selected_items) : '');
 			$selected_items_html = htmlspecialchars($selected_items_html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 			$selected_items_html = str_replace('`', '&#96;', $selected_items_html);
 			$action_html = (string) get_nfilter_request_var('drp_action');
