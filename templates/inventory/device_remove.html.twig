@@ -7,7 +7,7 @@
     <p>{{ 'Shared data sources and aggregate graphs must be detached before graph removal. Retained graphs and data sources become unassigned.'|trans({}, 'inventory') }}</p>
     <p>{{ 'Affected remote collectors must be online. Failed removal may leave remote or plugin changes; inspect the outcome before retrying.'|trans({}, 'inventory') }}</p>
     <p>{{ 'RRD file cleanup follows the configured maintenance policy.'|trans({}, 'inventory') }}</p>
-    <ul>{% for item in devices %}<li>{{ item.device.description }} (#{{ item.device.id }}) — {{ item.device.hostname }} — {{ '%graphs% graphs, %sources% data sources'|trans({'%graphs%': item.graphIds|length, '%sources%': item.dataSourceIds|length}, 'inventory') }}</li>{% endfor %}</ul>
+    <ul>{% for item in devices %}<li>{{ item.device.description }} (#{{ item.device.id }}), {{ item.device.hostname }}, {{ '%graphs% graphs, %sources% data sources'|trans({'%graphs%': item.graphIds|length, '%sources%': item.dataSourceIds|length}, 'inventory') }}</li>{% endfor %}</ul>
     {{ form_start(form) }}
         {{ form_errors(form) }}
         {{ form_widget(form) }}

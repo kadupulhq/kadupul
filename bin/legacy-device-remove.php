@@ -228,8 +228,9 @@ try {
     cacti_log('INVENTORY: User ' . $command['actor'] . ' removed devices ' . implode(',', $ids) . ' using policy ' . $policy->value, false, 'AUDIT');
 } catch (DeviceEditConflict) {
     $status = 'conflict';
-} catch (Throwable) {
+} catch (Throwable $error) {
     // Remote effects may survive a primary rollback; never report false success.
+    cacti_log('WARNING: Device removal failed: ' . get_class($error) . ': ' . $error->getMessage(), false, 'AUDIT');
 } finally {
     foreach ($remotes as $remote) {
         if ($remote->inTransaction()) {
