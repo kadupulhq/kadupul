@@ -1229,7 +1229,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 							$spath .= '/' . $path;
 
 							$powner_id = fileowner($config['rra_path'] . $spath);
-							$pgroup_id = fileowner($config['rra_path'] . $spath);
+							$pgroup_id = filegroup($config['rra_path'] . $spath);
 
 							if ($powner_id != $owner_id) {
 								$success = chown($config['rra_path'] . $spath, $owner_id);
