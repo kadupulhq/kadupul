@@ -87,6 +87,53 @@ test('change_device and add_device agree on what a numeric flag means', function
 		->and(change_device_disable('0')['disabled'])->toBe('');
 });
 
+/*
+ * --bulk_walk once ran off the end of its case into display_version(), so a
+ * correct value printed the banner and exited 0 without changing the device.
+ * Check the whole loop, not just that option, so the next omission is caught.
+ */
+test('every option in the argument loop ends its own case', function () use ($root) {
+	$source = file_get_contents($root . '/cli/change_device.php');
+	$start  = strpos($source, "\tswitch (\$arg) {");
+	$end    = strpos($source, "\n\t}\n", $start);
+
+	expect($start)->not->toBeFalse();
+	expect($end)->not->toBeFalse();
+
+	$lines  = explode("\n", substr($source, $start, $end - $start));
+	$labels = array();
+
+	/* Two tabs matches the outer switch only, leaving the nested --avail and
+	   --ping_method switches to their own enclosing case. */
+	foreach ($lines as $index => $line) {
+		if (preg_match("/^\t\t(case .+|default):$/", rtrim($line, "\r"))) {
+			$labels[] = $index;
+		}
+	}
+
+	expect(count($labels))->toBeGreaterThan(20);
+
+	$fallen = array();
+	$total  = count($labels);
+
+	foreach ($labels as $position => $index) {
+		$next = $position + 1 < $total ? $labels[$position + 1] : count($lines);
+		$body = array_slice($lines, $index + 1, $next - $index - 1);
+		$body = array_values(array_filter(array_map('trim', $body), 'strlen'));
+
+		// An empty body means stacked labels sharing the next one's body.
+		if ($body === array()) {
+			continue;
+		}
+
+		if (!preg_match('/^(break;|continue\b.*;|exit\(.*\);|return\b.*;)$/', end($body))) {
+			$fallen[] = trim($lines[$index]);
+		}
+	}
+
+	expect($fallen)->toBe(array());
+});
+
 test('the --disable help states which value disables', function () use ($root) {
 	$source = file_get_contents($root . '/cli/change_device.php');
 	$help   = preg_grep('/--disable\s/', explode("\n", $source));
