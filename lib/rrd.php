@@ -512,21 +512,22 @@ function rrdtool_proxy_token_is_safe($argument)
 }
 
 /**
- * Write an RRD path for a command that rrdtool_execute() sends as a string:
- * quoted for the local pipe, bare for the RRDtool proxy, which resolves paths
- * as sent. False when the path cannot be sent on the transport in use; a line
- * break is refused rather than removed, since removing it names another file.
+ * Write one argument, such as an RRD path, for a command that rrdtool_execute()
+ * sends as a string: quoted for the local pipe, bare for the RRDtool proxy,
+ * which resolves paths as sent. False when the argument cannot be sent on the
+ * transport in use; a line break is refused rather than removed, since
+ * removing it from a path names another file.
  */
-function rrdtool_command_path($path)
+function rrdtool_command_argument($argument)
 {
     global $config;
 
-    $path = (string) $path;
+    $argument = (string) $argument;
     if (($config['force_storage_location_local'] ?? false) !== true && read_config_option('storage_location')) {
-        return rrdtool_proxy_token_is_safe($path) ? $path : false;
+        return rrdtool_proxy_token_is_safe($argument) ? $argument : false;
     }
 
-    return strpbrk($path, "\r\n\0") === false ? rrdtool_pipe_quote($path) : false;
+    return strpbrk($argument, "\r\n\0") === false ? rrdtool_pipe_encoder()->quote($argument) : false;
 }
 
 /**
@@ -1142,20 +1143,21 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
             // A substituted maximum is device data. A line break would start
             // another RRDtool command, and is_numeric() accepts one around a
             // number, so it is refused first. Anything else but a number or U
-            // is quoted so it stays inside this DS argument, where RRDtool
-            // rejects it instead of reading it as more arguments.
+            // must stay inside this DS argument, where RRDtool rejects it: the
+            // local pipe quotes it, and the proxy, which would keep quotes as
+            // text, takes it only as one bare token.
             if (strpbrk((string) $data_source['rrd_maximum'], "\r\n\0") !== false) {
                 cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. The data source maximum contains a line break or NUL.', false, 'POLLER');
                 return false;
             }
 
             if (!is_numeric($data_source['rrd_maximum']) && $data_source['rrd_maximum'] !== 'U') {
-                try {
-                    $data_source['rrd_maximum'] = rrdtool_pipe_quote($data_source['rrd_maximum']);
-                } catch (\Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument $e) {
-                    cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. ' . $e->getMessage(), false, 'POLLER');
+                $maximum = rrdtool_command_argument($data_source['rrd_maximum']);
+                if ($maximum === false) {
+                    cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. Its maximum cannot be sent to RRDtool.', false, 'POLLER');
                     return false;
                 }
+                $data_source['rrd_maximum'] = $maximum;
             }
 
             $create_ds .= "DS:$data_source_name:" . $data_source_types[$data_source['data_source_type_id']] . ':' . $data_source['rrd_heartbeat'] . ':' . $data_source['rrd_minimum'] . ':' . $data_source['rrd_maximum'] . RRD_NL;
@@ -1228,7 +1230,7 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
     if ($show_source == true) {
         return read_config_option('path_rrdtool') . ' create' . RRD_NL . "$data_source_path$create_ds$create_rra";
     } else {
-        $quoted_path = rrdtool_command_path($data_source_path);
+        $quoted_path = rrdtool_command_argument($data_source_path);
         if ($quoted_path === false) {
             cacti_log('ERROR: RRD file for Data Source ' . $local_data_id . ' was not created. Its path cannot be sent to RRDtool.', false, 'POLLER');
             return false;
@@ -1280,7 +1282,7 @@ function rrdtool_function_update($update_cache_array, $rrdtool_pipe = false, &$c
         if (is_array($rrd_fields['times']) && cacti_sizeof($rrd_fields['times'])) {
             // Samples for a path RRDtool cannot be given stay queued, as for
             // any other failed update.
-            $quoted_path = rrdtool_command_path($rrd_path);
+            $quoted_path = rrdtool_command_argument($rrd_path);
             if ($quoted_path === false) {
                 cacti_log('ERROR: RRD pending samples retained for Data Source ' . $rrd_fields['local_data_id'] . '. Its path cannot be sent to RRDtool.', false, 'POLLER');
                 $failed = true;
