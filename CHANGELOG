@@ -3,6 +3,10 @@ Cacti CHANGELOG
 1.2.32
 -issue: import_template --preview now reports through the command line rather than printing raw HTML, and says the Template would be imported instead of claiming it was; the preview flag reached import_display_results as its web argument
 -issue: Remove the Refresh Poller Table Per Cycle setting, which had no reader and described rebuilding a MEMORY table that 1.2.32 converts to InnoDB; the upgrade drops the stored row
+-issue: float_rrdfiles now accepts --host-template-id as its help documents; only the undocumented --host-template_id spelling worked and the documented one exited as an invalid parameter
+-issue: add_graphs --list-snmp-values now refuses an empty --snmp-field and keeps the supplied one; the guard assigned to $snmpField instead of comparing, so it never fired and emptied the field it was about to use
+-issue: copy_user now detects a missing user and exits non-zero; the guards tested the row with isset(), which is true for the empty array db_fetch_row returns, and the branches ended in die() with a string, which exits 0
+-issue: md5sum --quiet now exits with a distinct code when a hash does not match, instead of dying with an undefined constant EXIT_MD5ERR
 -issue: Clean each configured log once during rotation; a stray call after the loop re-scanned whichever log the loop left behind and inflated the reported count
 -issue: Match the whole filename against the rotation format before purging a log, so cleanup no longer deletes an unrelated file whose name merely contains the log basename and an old date
 -issue: Correct the remove_graphs help, which called --graph-template-id mandatory when any one of the four selectors is enough, and did not mention that a bare --list lists every Graph or that an empty selection is refused without --all

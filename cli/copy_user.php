@@ -56,19 +56,22 @@ print 'New User:      ' . $new_user . PHP_EOL;
 
 /* Check that user exists */
 $user_auth = db_fetch_row("SELECT * FROM user_auth WHERE username = '" . $template_user . "' AND realm = 0");
-if (! isset($user_auth)) {
-	die("Error: Template user does not exist!" . PHP_EOL . PHP_EOL);
+if (!cacti_sizeof($user_auth)) {
+	print "Error: Template user does not exist!" . PHP_EOL . PHP_EOL;
+	exit(1);
 }
 
 print PHP_EOL . 'Copying User...' . PHP_EOL;
 
 if (user_copy($template_user, $new_user) === false) {
-	die('Error: User not copied!' . PHP_EOL . PHP_EOL);
+	print 'Error: User not copied!' . PHP_EOL . PHP_EOL;
+	exit(1);
 }
 
 $user_auth = db_fetch_row("SELECT * FROM user_auth WHERE username = '" . $new_user . "' AND realm = 0");
-if (! isset($user_auth)) {
-	die('Error: User not copied!' . PHP_EOL . PHP_EOL);
+if (!cacti_sizeof($user_auth)) {
+	print 'Error: User not copied!' . PHP_EOL . PHP_EOL;
+	exit(1);
 }
 
 print "User copied..." . PHP_EOL;
