@@ -1509,6 +1509,34 @@ function guarded_checks(string $root, array $stmts, Closure $type_of, bool $acti
  */
 function pure(string $root, mixed $nodes, Closure $type_of): bool
 {
+    // Exception and Error declare getMessage() final, so on the variable a
+    // catch binds it only reads the exception. Any use of that variable in the
+    // catch body other than that call or a property read could rebind it, so
+    // then no call there counts.
+    $messages = [];
+    foreach (walk($nodes, false) as $node) {
+        if (!$node instanceof Stmt\Catch_ || $node->var === null || !is_string($node->var->name)) {
+            continue;
+        }
+        $calls = [];
+        $receivers = [];
+        foreach (walk($node->stmts, false) as $inner) {
+            if ($inner instanceof Expr\MethodCall && is_variable($inner->var, $node->var->name) && $inner->args === []
+                && $inner->name instanceof Node\Identifier && $inner->name->toLowerString() === 'getmessage') {
+                $calls[spl_object_id($inner)] = true;
+                $receivers[spl_object_id($inner->var)] = true;
+            } elseif (($inner instanceof Expr\PropertyFetch || $inner instanceof Expr\NullsafePropertyFetch)
+                && is_variable($inner->var, $node->var->name)) {
+                $receivers[spl_object_id($inner->var)] = true;
+            }
+        }
+        foreach (walk($node->stmts, false) as $inner) {
+            if (is_variable($inner, $node->var->name) && !isset($receivers[spl_object_id($inner)])) {
+                continue 2;
+            }
+        }
+        $messages += $calls;
+    }
     foreach (walk($nodes, false) as $node) {
         if ($node instanceof Expr\Include_ || $node instanceof Expr\Eval_ || $node instanceof Expr\ShellExec
             || $node instanceof Expr\Exit_ || $node instanceof Expr\Print_ || $node instanceof Stmt\Echo_
@@ -1535,7 +1563,8 @@ function pure(string $root, mixed $nodes, Closure $type_of): bool
         if ($node instanceof Expr\New_ && !($node->class instanceof Name && pure_new($root, $node->class->toString()))) {
             return false;
         }
-        if (($node instanceof Expr\MethodCall || $node instanceof Expr\NullsafeMethodCall) && !pure_method_call($node, $type_of)) {
+        if (($node instanceof Expr\MethodCall || $node instanceof Expr\NullsafeMethodCall)
+            && !isset($messages[spl_object_id($node)]) && !pure_method_call($node, $type_of)) {
             return false;
         }
     }
@@ -1582,14 +1611,12 @@ function pure_method_call(Expr\MethodCall|Expr\NullsafeMethodCall $call, Closure
     if ($target !== null) {
         return in_array($name, PURE_METHODS[$target[0]] ?? [], true);
     }
-    // $request->query->all() reads a request bag, and a caught exception's
-    // getMessage() reads the exception.
+    // $request->query->all() reads a request bag.
     $bag = $call->var instanceof Expr\PropertyFetch && $call->var->name instanceof Node\Identifier
         && in_array($call->var->name->toString(), ['query', 'request', 'attributes'], true)
         && $type_of($call->var->var) === 'Symfony\Component\HttpFoundation\Request';
 
-    return ($bag && in_array($name, ['all', 'get', 'has'], true))
-        || (is_variable($call->var) && $name === 'getMessage' && $call->args === []);
+    return $bag && in_array($name, ['all', 'get', 'has'], true);
 }
 
 /**

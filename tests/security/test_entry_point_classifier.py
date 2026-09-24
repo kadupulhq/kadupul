@@ -500,6 +500,43 @@ final class ServiceActions
         return new Response();
     }
 
+    // getMessage() is a pure read only on the exception the catch binds.
+    #[Route('/message-from-other', name: 'message_from_other')]
+    public function messageFromOther(Sites $sites, $writer): Response
+    {
+        try {
+            $sites->checked();
+        } catch (\\RuntimeException $error) {
+            return new Response($writer->getMessage(), 401);
+        }
+        return new Response();
+    }
+
+    #[Route('/message-after-rebind', name: 'message_after_rebind')]
+    public function messageAfterRebind(Sites $sites, $writer): Response
+    {
+        try {
+            $sites->checked();
+        } catch (\\RuntimeException $error) {
+            $error = $writer;
+            return new Response($error->getMessage(), 401);
+        }
+        return new Response();
+    }
+
+    #[Route('/message-after-foreach', name: 'message_after_foreach')]
+    public function messageAfterForeach(Sites $sites, array $writers): Response
+    {
+        try {
+            $sites->checked();
+        } catch (\\RuntimeException $error) {
+            foreach ($writers as $error) {
+            }
+            return new Response($error->getMessage(), 401);
+        }
+        return new Response();
+    }
+
     #[Route('/after-other-call', name: 'after_other_call')]
     public function afterOtherCall(Sites $sites): Response
     {
@@ -588,6 +625,9 @@ ROUTES = {
     'app.php/conditional-call': 'unknown',
     'app.php/effect-in-catch': 'unknown',
     'app.php/pure-then-checked': 'symfony:pure_then_checked',
+    'app.php/message-from-other': 'unknown',
+    'app.php/message-after-rebind': 'unknown',
+    'app.php/message-after-foreach': 'unknown',
     'app.php/catch-swallows': 'unknown',
     'app.php/effect-in-guard': 'unknown',
     'app.php/effect-before-null-check': 'unknown',
