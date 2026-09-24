@@ -139,6 +139,7 @@ $access = new class implements Kadupul\IdentityAccess\Contract\ConsoleAccess {
     public bool $allowed = true;
     public function consoleActor(): ?Kadupul\IdentityAccess\Contract\Actor { return $this->actor; }
     public function canManageDevices(Kadupul\IdentityAccess\Contract\Actor $actor): bool { return $this->allowed; }
+    public function canAdministerInstallation(Kadupul\IdentityAccess\Contract\Actor $actor): bool { return false; }
 };
 $access->actor = new Kadupul\IdentityAccess\Contract\Actor(ACTOR_ID, 'test');
 $editor = new Kadupul\Inventory\Infrastructure\Legacy\LegacySiteEditor($db, $access, new Kadupul\Inventory\Infrastructure\Legacy\SiteWriteAudit(new Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuditTrail('/var/www/html')));

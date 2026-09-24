@@ -75,7 +75,8 @@ def main():
         'src/Inventory/Infrastructure/Symfony/Form/DeviceSnmpType.php',
         'src/Inventory/Infrastructure/Symfony/Form/DevicePollingType.php',
         'src/Inventory/Application/Query/ListAssignableSites.php',
-        'src/Inventory/Infrastructure/Persistence/InventoryReadConnectionFactory.php',
+        'src/Platform/Infrastructure/Doctrine/InstallationConnectionMiddleware.php',
+        'src/Platform/Infrastructure/Doctrine/InstallationConnectionDriver.php',
         'src/Inventory/Infrastructure/Persistence/DoctrineSiteAssignmentCatalog.php',
         'src/Inventory/Application/Command/CreateSite.php',
         'src/Inventory/Domain/NewSite.php',
@@ -99,7 +100,19 @@ def main():
         'src/Inventory/Infrastructure/Legacy/LegacyDeviceCreator.php',
         'src/Platform/Infrastructure/Symfony/InventoryLocaleSubscriber.php',
         'script_server.php',
-        'include/themes/midwinter/update_hash.php')]
+        'include/themes/midwinter/update_hash.php',
+        'cli/analyze_database.php',
+        'src/Platform/Infrastructure/Symfony/Console/LegacyCli.php',
+        'src/Platform/Infrastructure/Symfony/Console/LegacyArguments.php',
+        'src/Platform/Infrastructure/Symfony/Console/AnalyzeDatabaseLegacyArguments.php',
+        'src/Platform/Infrastructure/Symfony/Console/CliPresentation.php',
+        'src/Platform/Infrastructure/Symfony/Console/AnalyzeDatabaseCommand.php',
+        'src/Platform/Infrastructure/Symfony/Console/ResultRenderer.php',
+        'src/Platform/Application/Command/AnalyzeDatabase.php',
+        'src/IdentityAccess/Infrastructure/Cli/CliConsoleAccess.php',
+        'src/Platform/Infrastructure/Persistence/DbalDatabaseMaintenance.php',
+        'src/Platform/Infrastructure/Legacy/InstallationVersion.php',
+        'src/Platform/Infrastructure/Legacy/LegacyOperatorLog.php')]
     for path in (args.files / 'raw').glob('coverage-*.json'):
         report = json.loads(path.read_text())
         for source in required:
@@ -146,6 +159,8 @@ def main():
         'path-traversal': 'Invalid integration source path',
         'script-server-test-hash': 'Integration test source differs',
         'missing-script-server-check': 'Incomplete Symfony integration checks',
+        'cli-parity-test-hash': 'Integration test source differs',
+        'missing-cli-parity-check': 'Incomplete Symfony integration checks',
     }
     for source in required:
         failures.setdefault('unmeasured-' + source.rsplit('/', 1)[-1], 'Missing measured execution')
@@ -189,6 +204,10 @@ def main():
                 evidence['source_sha256']['tests/Symfony/script_server_scenarios.py'] = '0' * 64
             elif case == 'missing-script-server-check':
                 evidence['checks'].remove('script server refuses includes outside the base path')
+            elif case == 'cli-parity-test-hash':
+                evidence['source_sha256']['tests/Symfony/cli_parity_scenarios.py'] = '0' * 64
+            elif case == 'missing-cli-parity-check':
+                evidence['checks'].remove('analyze: shim analyzes every table through the kernel container')
             elif case == 'missing-device-creation-check':
                 evidence['checks'].remove('legacy template graph associations are preserved')
             elif case == 'missing-removal-callback-check':

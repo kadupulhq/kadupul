@@ -11,4 +11,5 @@ interface ConsoleAccess
 {
     public function consoleActor(): ?Actor;
     public function canManageDevices(Actor $actor): bool;
+    public function canAdministerInstallation(Actor $actor): bool;
 }

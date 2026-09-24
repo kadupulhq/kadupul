@@ -16,6 +16,7 @@ final readonly class LegacyAuthenticatedSession implements AuthenticatedSession,
 {
     public function __construct(private SharedSession $session, private DatabaseConnection $database) {}
 
+    #[\Override]
     public function consoleActor(): ?Actor
     {
         $snapshot = $this->session->read();
@@ -41,9 +42,16 @@ final readonly class LegacyAuthenticatedSession implements AuthenticatedSession,
         return new Actor($id, $user['username']);
     }
 
+    #[\Override]
     public function canManageDevices(Actor $actor): bool
     {
         return $actor->id > 0 && $this->hasRealm($actor->id, 3);
+    }
+
+    #[\Override]
+    public function canAdministerInstallation(Actor $actor): bool
+    {
+        return $actor->id > 0 && $this->hasRealm($actor->id, 15);
     }
 
     private function hasRealm(int $id, int $realm): bool

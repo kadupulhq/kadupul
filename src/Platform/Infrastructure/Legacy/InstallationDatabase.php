@@ -16,6 +16,7 @@ final class InstallationDatabase implements DatabaseConnection
 
     public function __construct(private readonly LegacyConfiguration $configuration) {}
 
+    #[\Override]
     public function get(): \PDO
     {
         if ($this->connection !== null) {
@@ -33,11 +34,11 @@ final class InstallationDatabase implements DatabaseConnection
             if ($config['ssl_ca'] === '') {
                 throw new \RuntimeException('Database TLS requires a CA certificate.');
             }
-            $options[\PDO::MYSQL_ATTR_SSL_CA] = $config['ssl_ca'];
-            $options[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = true;
+            $options[\Pdo\Mysql::ATTR_SSL_CA] = $config['ssl_ca'];
+            $options[\Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT] = true;
             if ($config['ssl_cert'] !== '') {
-                $options[\PDO::MYSQL_ATTR_SSL_CERT] = $config['ssl_cert'];
-                $options[\PDO::MYSQL_ATTR_SSL_KEY] = $config['ssl_key'];
+                $options[\Pdo\Mysql::ATTR_SSL_CERT] = $config['ssl_cert'];
+                $options[\Pdo\Mysql::ATTR_SSL_KEY] = $config['ssl_key'];
             }
         }
 
