@@ -3010,6 +3010,13 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
  */
 function rrdtool_pipe_quote($argument)
 {
+    // This file can be loaded without include/global.php, and so without the
+    // Composer autoloader, as the RRD maintenance tests do.
+    if (!class_exists(\Kadupul\Graphing\Infrastructure\Rrd\PipeEncoder::class)) {
+        require_once __DIR__ . '/../src/Graphing/Infrastructure/Rrd/UnrepresentableArgument.php';
+        require_once __DIR__ . '/../src/Graphing/Infrastructure/Rrd/PipeEncoder.php';
+    }
+
     $encoder = new \Kadupul\Graphing\Infrastructure\Rrd\PipeEncoder();
 
     return $encoder->quote(str_replace(array("\r", "\n"), '', (string) $argument));
