@@ -104,6 +104,12 @@ const BOOTSTRAP = [
 const REVIEWED_INCLUDES = [
     'include/global_languages.php' => 'providerFull',
 ];
+// Fragment requires that end a direct request, traced by hand: the path is
+// built from $config, which only the bootstrap defines, so without it the
+// require names a file under / and PHP stops. Nothing after it runs.
+const HALTING_REQUIRES = [
+    'include/csrf.php' => 'include/vendor/csrf/csrf-conf.php',
+];
 
 const SIDE_EFFECT_CALLS = [
     'file_put_contents', 'fputs', 'unlink', 'rename', 'copy', 'mkdir', 'rmdir', 'touch', 'chmod', 'chown', 'symlink',
@@ -1064,8 +1070,10 @@ function fragment(string $root, string $path, array $active, array $by, array $f
         && array_intersect($functions[$name], $reached) === [];
     foreach ($active as $stmt) {
         $head = $stmt instanceof Stmt\If_ ? $stmt->cond : ($stmt instanceof Stmt\Expression ? $stmt->expr : null);
-        $halts = false;
-        foreach ($head === null ? [] : always_calls($head) as $call) {
+        $halts = $head instanceof Expr\Include_ && in_array($head->type, [Expr\Include_::TYPE_REQUIRE, Expr\Include_::TYPE_REQUIRE_ONCE], true)
+            && isset(HALTING_REQUIRES[$path]) && resolve($head->expr, $root, $path) === HALTING_REQUIRES[$path]
+            && array_filter(iterator_to_array(walk($head->expr), false), fn(Node $n) => is_variable($n, 'config')) !== [];
+        foreach ($halts || $head === null ? [] : always_calls($head) as $call) {
             $name = call_name($call);
             if ($name !== null && !function_exists($name) && $stops($name)) {
                 $halts = true;
@@ -1079,9 +1087,16 @@ function fragment(string $root, string $path, array $active, array $by, array $f
             if ($node instanceof Expr\ShellExec) {
                 return ['unknown', 'fragment runs a backtick command'];
             }
-            if ($node instanceof Expr\Include_ && resolve($node->expr, $root, $path) === null
-                && !($reviewed !== null && is_variable($node->expr, $reviewed))) {
-                return ['unknown', 'fragment includes a path the generator cannot resolve'];
+            if ($node instanceof Expr\Include_) {
+                $target = resolve($node->expr, $root, $path);
+                if ($target === null && !($reviewed !== null && is_variable($node->expr, $reviewed))) {
+                    return ['unknown', 'fragment includes a path the generator cannot resolve'];
+                }
+                // The pin covers only this file, so what it loads must be
+                // declarations that cannot change behaviour without drift here.
+                if ($target !== null && !inert_file($root, $target) && !($halts && $node === $head)) {
+                    return ['unknown', 'fragment includes ' . $target . ', whose top level runs code'];
+                }
             }
             if ($node instanceof Expr\FuncCall && !$node->name instanceof Name) {
                 return ['unknown', 'fragment makes a dynamic function call'];
@@ -1315,55 +1330,55 @@ function is_device_denial(Expr $expr, string $var, Closure $type_of): bool
  * The condition of an if with no other branch whose body ends in return or
  * throw, so a true condition stops the action.
  */
-function refusal_guard(?Stmt $stmt): ?Expr
+function refusal_guard(?Stmt $stmt, bool $return_stops): ?Expr
 {
     if (!$stmt instanceof Stmt\If_ || $stmt->elseifs !== [] || $stmt->else !== null || $stmt->stmts === []) {
         return null;
     }
     $last = $stmt->stmts[count($stmt->stmts) - 1];
-    $stops = $last instanceof Stmt\Return_ || ($last instanceof Stmt\Expression && $last->expr instanceof Expr\Throw_);
+    $stops = ($return_stops && $last instanceof Stmt\Return_) || ($last instanceof Stmt\Expression && $last->expr instanceof Expr\Throw_);
 
     return $stops ? $stmt->cond : null;
 }
 
 /**
- * Checks that guard the code after them. consoleActor() counts when its result
- * is assigned and the next statement returns or throws on null; a negated
+ * Checks that guard everything the method does. consoleActor() counts when
+ * its result is assigned at the method's top level, only literal assignments
+ * come before it, and the next statement stops on a null actor; a negated
  * canManageDevices() of that variable counts in the same guard or the one
- * right after it. A discarded or unguarded call counts for nothing.
+ * right after it. Only the action itself may stop with return: a return in a
+ * callee hands control back to the caller, so there only throw stops.
  *
  * @param list<Stmt> $stmts
  * @return array<string, true>
  */
-function guarded_checks(string $root, array $stmts, Closure $type_of): array
+function guarded_checks(string $root, array $stmts, Closure $type_of, bool $action): array
 {
-    $lists = [$stmts];
-    foreach (walk($stmts, false) as $node) {
-        if ($node instanceof Stmt && !$node instanceof Node\FunctionLike && !$node instanceof Stmt\ClassLike
-            && property_exists($node, 'stmts') && is_array($node->stmts)) {
-            $lists[] = $node->stmts;
-        }
-    }
-    $checks = [];
-    foreach ($lists as $list) {
-        $list = array_values($list);
-        foreach ($list as $i => $stmt) {
-            $var = actor_assignment($root, $stmt, $type_of);
-            $guard = $var === null ? null : refusal_guard($list[$i + 1] ?? null);
-            if ($guard === null || !array_filter(disjuncts($guard), fn(Expr $e) => is_null_check($e, $var))) {
+    $list = array_values($stmts);
+    foreach ($list as $i => $stmt) {
+        $var = actor_assignment($root, $stmt, $type_of);
+        if ($var === null) {
+            $expr = expression_of($stmt);
+            if ($expr instanceof Expr\Assign && is_variable($expr->var) && is_literal($expr->expr)) {
                 continue;
             }
-            $checks['consoleActor'] = true;
-            $next = refusal_guard($list[$i + 2] ?? null);
-            foreach ([...disjuncts($guard), ...($next === null ? [] : disjuncts($next))] as $expr) {
-                if (is_device_denial($expr, $var, $type_of)) {
-                    $checks['canManageDevices'] = true;
-                }
+            return [];
+        }
+        $guard = refusal_guard($list[$i + 1] ?? null, $action);
+        if ($guard === null || !array_filter(disjuncts($guard), fn(Expr $e) => is_null_check($e, $var))) {
+            return [];
+        }
+        $checks = ['consoleActor' => true];
+        $next = refusal_guard($list[$i + 2] ?? null, $action);
+        foreach ([...disjuncts($guard), ...($next === null ? [] : disjuncts($next))] as $expr) {
+            if (is_device_denial($expr, $var, $type_of)) {
+                $checks['canManageDevices'] = true;
             }
         }
+        return $checks;
     }
 
-    return $checks;
+    return [];
 }
 
 /**
@@ -1373,31 +1388,36 @@ function guarded_checks(string $root, array $stmts, Closure $type_of): array
 function method_checks(string $root, string $class, Stmt\ClassMethod $method, int $depth, array &$seen): array
 {
     $type_of = receiver_types($root, $class, $method);
-    $checks = guarded_checks($root, $method->stmts ?? [], $type_of);
-    $calls = [];
-    foreach (walk($method->stmts ?? []) as $node) {
-        $target = call_target($node, $type_of);
-        if ($target !== null && !in_array($target[0], ACCESS_TYPES, true)) {
-            $calls[] = $target;
-        }
-    }
-    if ($depth >= CALL_DEPTH) {
+    $checks = guarded_checks($root, $method->stmts ?? [], $type_of, $depth === 0);
+    if ($checks !== [] || $depth >= CALL_DEPTH) {
         return $checks;
     }
-    foreach ($calls as [$type, $name]) {
-        $key = strtolower($type . '::' . $name);
-        if (isset($seen[$key])) {
+    // Without its own guard, a method is covered only by the first service it
+    // calls, and only when that service guards. Whatever an earlier service
+    // call did has already run by the time a later one refuses.
+    foreach (walk($method->stmts ?? [], false) as $node) {
+        $target = call_target($node, $type_of);
+        if ($target === null || (in_array($target[0], ACCESS_TYPES, true) && $target[1] !== 'consoleActor')) {
             continue;
         }
-        $seen[$key] = true;
-        $target = load_class($root, $type);
-        $callee = $target === null ? null : find_method($target, $name);
-        if ($callee !== null) {
-            $checks += method_checks($root, $type, $callee, $depth + 1, $seen);
+        // Arguments run before the call, so a service call among them came first.
+        foreach (walk($node instanceof Expr\CallLike ? $node->getRawArgs() : [], false) as $inner) {
+            if (call_target($inner, $type_of) !== null) {
+                return [];
+            }
         }
+        [$type, $name] = $target;
+        $key = strtolower($type . '::' . $name);
+        if (isset($seen[$key])) {
+            return [];
+        }
+        $seen[$key] = true;
+        $loaded = load_class($root, $type);
+        $callee = $loaded === null ? null : find_method($loaded, $name);
+        return $callee === null ? [] : method_checks($root, $type, $callee, $depth + 1, $seen);
     }
 
-    return $checks;
+    return [];
 }
 
 /**

@@ -90,9 +90,12 @@ NEW_FRAGMENT_EFFECTS = {
     'unreviewed builtin': "<?php\nignore_user_abort(true);\n",
     'call to a function nothing declares': "<?php\nextension_only_call();\n",
     'effect behind a call that does not always run': "<?php\nif (1 || helper()) {\n\tunlink($_GET['f']);\n}\n",
+    # The effect is in the included file, which the fragment's pin does not cover.
+    'include of a file with top-level code': "<?php\ninclude('./lib/evil.php');\n",
 }
 # helper() is declared only in lib/helpers.php, which a direct request of the
 # fragment never loads, so PHP stops there and the unlink never runs.
+FRAGMENT_INCLUDES_DECLARATIONS = "<?php\ninclude('./lib/declarations.php');\n"
 FRAGMENT_HALTS = "<?php\n$x = helper();\nunlink($_GET['f']);\n"
 FRAGMENT_TEXT = "<?php\n$label = 'PHP Mail() and `quoted` text';\necho $label;\n"
 
@@ -179,6 +182,30 @@ final class TwoActions
         return new Response();
     }
 
+    #[Route('/effect-first', name: 'effect_first')]
+    public function effectFirst(Sites $sites): Response
+    {
+        $sites->unchecked();
+        $actor = $this->access->consoleActor();
+        if ($actor === null) {
+            return new Response('', 401);
+        }
+        return new Response();
+    }
+
+    #[Route('/nested-guard', name: 'nested_guard')]
+    public function nestedGuard(Sites $sites): Response
+    {
+        if ($this->access !== null) {
+            $actor = $this->access->consoleActor();
+            if ($actor === null) {
+                return new Response('', 401);
+            }
+        }
+        $sites->unchecked();
+        return new Response();
+    }
+
     #[Route('/devices', name: 'devices')]
     public function devices(): Response
     {
@@ -233,6 +260,15 @@ final class Sites
     public function unchecked(): void
     {
     }
+
+    // A return leaves only this method; the action carries on.
+    public function returnsOnNull(): void
+    {
+        $actor = $this->access->consoleActor();
+        if ($actor === null) {
+            return;
+        }
+    }
 }
 '''
 SERVICE_CONTROLLER = '''<?php
@@ -254,6 +290,21 @@ final class ServiceActions
     )]
     public function viaChecked(Sites $sites): Response
     {
+        $sites->checked();
+        return new Response();
+    }
+
+    #[Route('/via-return', name: 'via_return')]
+    public function viaReturn(Sites $sites): Response
+    {
+        $sites->returnsOnNull();
+        return new Response();
+    }
+
+    #[Route('/after-other-call', name: 'after_other_call')]
+    public function afterOtherCall(Sites $sites): Response
+    {
+        $sites->unchecked();
         $sites->checked();
         return new Response();
     }
@@ -328,6 +379,10 @@ ROUTES = {
     'app.php/devices-discarded': 'symfony:devices_discarded',
     'app.php/via-unchecked': 'unknown',
     'app.php/via-checked': 'symfony:via_checked',
+    'app.php/via-return': 'unknown',
+    'app.php/after-other-call': 'unknown',
+    'app.php/effect-first': 'unknown',
+    'app.php/nested-guard': 'unknown',
     'app.php/who-guarded': 'symfony:who_guarded',
     'app.php/who-discarded': 'unknown',
     'app.php/session': 'unknown',
@@ -353,7 +408,8 @@ def tree(directory):
     for path, text in (('include/auth.php', '<?php\n'), ('include/cli_check.php', '<?php\n'),
                        ('include/global_arrays.php', REALMS), ('host.php', "<?php\ninclude('./fragment.php');\n"),
                        ('lib/evil.php', "<?php\nunlink('/tmp/x');\n"),
-                       ('lib/helpers.php', "<?php\nfunction helper() {\n\tunlink('/tmp/x');\n}\n")):
+                       ('lib/helpers.php', "<?php\nfunction helper() {\n\tunlink('/tmp/x');\n}\n"),
+                       ('lib/declarations.php', "<?php\nfunction declared() {\n}\n")):
         (root / path).parent.mkdir(parents=True, exist_ok=True)
         (root / path).write_text(text)
     return root
@@ -394,6 +450,17 @@ def main():
         got = gate(root, 'fragment.php', FRAGMENT_HALTS)[0]
         if got != 'anonymous-allowed':
             failures.append('fragment that stops at an undefined function: expected anonymous-allowed, got %s' % got)
+        # Including declarations is fine, until the included file gains code.
+        count += 1
+        got = gate(root, 'fragment.php', FRAGMENT_INCLUDES_DECLARATIONS)[0]
+        if got != 'anonymous-allowed':
+            failures.append('fragment including declarations only: expected anonymous-allowed, got %s' % got)
+        count += 1
+        (root / 'lib/declarations.php').write_text("<?php\nfunction declared() {\n}\nunlink('/tmp/x');\n")
+        got = gate(root, 'fragment.php', FRAGMENT_INCLUDES_DECLARATIONS)[0]
+        (root / 'lib/declarations.php').write_text("<?php\nfunction declared() {\n}\n")
+        if got != 'unknown':
+            failures.append('fragment including a file that gained top-level code: expected unknown, got %s' % got)
         # Reformatting a fragment keeps its pin.
         count += 1
         spaced = FRAGMENT_TEXT.replace('echo $label;', "/* note */\necho   $label ;")
