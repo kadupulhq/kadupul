@@ -47,6 +47,35 @@ final readonly class ResultRenderer
         return $this->render(new CommandResult([], $lines), OutputMode::Legacy, $output);
     }
 
+    /**
+     * What a write command does before its use case: a cli/ shim's version or
+     * help request, and an empty --as=, which the use case would only see as a
+     * denial. Null means the command goes on to run.
+     *
+     * @param \Closure(): string $versionLine called only for a version or help request
+     */
+    public function preflight(LegacyRequest $request, \Closure $versionLine, LegacyArguments $arguments, ?string $as, SymfonyStyle $io, OutputInterface $output, OutputMode $mode): ?int
+    {
+        if ($request !== LegacyRequest::Run) {
+            return $this->legacyRequest($request, $versionLine(), $arguments, $output);
+        }
+
+        return $as === '' ? $this->emptyOperator($io, $output, $mode) : null;
+    }
+
+    /** The human ending of a write command: success, or a warning naming the failures. */
+    public function summary(SymfonyStyle $io, string $summary, int $failed): int
+    {
+        if ($failed === 0) {
+            $io->success($summary . '.');
+
+            return Command::SUCCESS;
+        }
+        $io->warning(sprintf('%s; %d failed.', $summary, $failed));
+
+        return Command::FAILURE;
+    }
+
     public function failure(SymfonyStyle $io, OutputInterface $output, OutputMode $mode, string $human, CommandResult $result): int
     {
         if ($mode !== OutputMode::Human) {

@@ -34,15 +34,8 @@ final class ConvertTablesLegacyArguments extends LegacyArguments
             '-f' => ['force', false], '--force' => ['force', false],
             '-u' => ['utf8', false], '--utf8' => ['utf8', false],
             '--as' => ['as', true],
-            '--version' => [null, false], '-V' => [null, false], '-v' => [null, false],
-            '--help' => [null, false], '-H' => [null, false], '-h' => [null, false],
+            ...self::versionAndHelp(),
         ];
-    }
-
-    #[\Override]
-    protected function special(string $flag): LegacyRequest
-    {
-        return in_array($flag, ['--version', '-V', '-v'], true) ? LegacyRequest::Version : LegacyRequest::Help;
     }
 
     /** The original's help text after its version line, which the caller prepends. */
@@ -67,20 +60,14 @@ final class ConvertTablesLegacyArguments extends LegacyArguments
             '-d | --debug   - Display verbose output during execution', ''];
     }
 
-    #[\Override]
-    public function invalid(string $argument): array
-    {
-        return ['ERROR: Invalid Parameter ' . $argument, ''];
-    }
-
     /** @return list<string> */
     public function problem(ConversionProblem $problem, string $versionLine): array
     {
         $error = match ($problem) {
             ConversionProblem::TableAndSkip => ['ERROR: You can not specify a single table and skip tables at the same time.', ''],
             ConversionProblem::NoConversion => ['ERROR: Must select either UTF8, LATIN1 or InnoDB conversion.', ''],
-            // The shim's pattern rejects a bad size before this can run.
-            ConversionProblem::Size => $this->invalid('--size'),
+            // WHOLE_NUMBER rejects a bad size in translate(), before the kernel boots.
+            ConversionProblem::Size => throw new \LogicException('A cli/ shim cannot pass an invalid --size.'),
         };
 
         return [...$error, $versionLine, ...$this->help()];

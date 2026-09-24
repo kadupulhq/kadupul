@@ -73,8 +73,7 @@ final class ArchitectureTest extends TestCase
      */
     public function testOnlyTheInstallerConvertsTablesWithoutAnOperator(): void
     {
-        $root = dirname(__DIR__, 2);
-        $allowed = [
+        $this->assertOnlyTheseFilesName([
             'TableConversionStep' => [
                 'src/Platform/Application/Command/TableConversionStep.php',
                 'src/Platform/Application/Command/ConvertTables.php',
@@ -86,9 +85,71 @@ final class ArchitectureTest extends TestCase
                 'config/services.yaml',
                 'lib/installer.php',
             ],
-        ];
-        // Tests may use both; the rest are dependencies, build output or state.
-        $skipped = ['.git', '.superpowers', 'node_modules', 'tests', 'var', 'vendor'];
+        ]);
+    }
+
+    /**
+     * The schema ports send DDL without checking an operator; only their use
+     * cases, which check and audit, and their adapters may name them. The
+     * catalogs name their port in a docblock.
+     */
+    public function testOnlyTheSchemaUseCasesReachTheSchemaPorts(): void
+    {
+        $this->assertOnlyTheseFilesName([
+            'TableConversion' => [
+                'src/Platform/Application/Command/ConvertTables.php',
+                'src/Platform/Application/Command/TableConversionStep.php',
+                'src/Platform/Application/Port/TableCatalog.php',
+                'src/Platform/Application/Port/TableConversion.php',
+                'src/Platform/Infrastructure/Legacy/InstallerTableConversion.php',
+                'src/Platform/Infrastructure/Persistence/DbalTableConversion.php',
+                'config/services.yaml',
+            ],
+            'ColumnWidening' => [
+                'src/Platform/Application/Command/WidenIdColumns.php',
+                'src/Platform/Application/Port/ColumnCatalog.php',
+                'src/Platform/Application/Port/ColumnWidening.php',
+                'src/Platform/Infrastructure/Persistence/DbalColumnWidening.php',
+                'config/services.yaml',
+            ],
+        ]);
+    }
+
+    /**
+     * The concrete adapters send the same unchecked DDL as their ports, and
+     * MaintenanceConnections::execute() runs any statement it is given. Only
+     * the container may wire the adapters, and only the adapters may hold the
+     * connections, so no command can inject around the use cases.
+     */
+    public function testOnlyTheSchemaAdaptersReachTheMaintenanceConnections(): void
+    {
+        $this->assertOnlyTheseFilesName([
+            'DbalTableConversion' => [
+                'src/Platform/Infrastructure/Persistence/DbalTableConversion.php',
+                'config/services.yaml',
+            ],
+            'DbalColumnWidening' => [
+                'src/Platform/Infrastructure/Persistence/DbalColumnWidening.php',
+                'config/services.yaml',
+            ],
+            'MaintenanceConnections' => [
+                'src/Platform/Infrastructure/Persistence/MaintenanceConnections.php',
+                'src/Platform/Infrastructure/Persistence/DbalTableConversion.php',
+                'src/Platform/Infrastructure/Persistence/DbalColumnWidening.php',
+            ],
+        ]);
+    }
+
+    /**
+     * Fails unless each class's short name appears, as a whole word, in
+     * exactly the listed files outside tests and dependencies.
+     *
+     * @param array<string, list<string>> $allowed
+     */
+    private function assertOnlyTheseFilesName(array $allowed): void
+    {
+        $root = dirname(__DIR__, 2);
+        $skipped = ['.git', 'node_modules', 'tests', 'var', 'vendor'];
         $directories = new \RecursiveCallbackFilterIterator(
             new \RecursiveDirectoryIterator($root, \FilesystemIterator::SKIP_DOTS),
             static fn(\SplFileInfo $file): bool => !$file->isDir() || !in_array($file->getFilename(), $skipped, true),
@@ -100,7 +161,8 @@ final class ArchitectureTest extends TestCase
             }
             $source = (string) file_get_contents($file->getPathname());
             foreach (array_keys($allowed) as $class) {
-                if (str_contains($source, $class)) {
+                // Whole word, so DbalTableConversion does not count as TableConversion.
+                if (preg_match('/\\b' . $class . '\\b/', $source) === 1) {
                     $found[$class][] = substr($file->getPathname(), strlen($root) + 1);
                 }
             }

@@ -34,6 +34,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         // against these frozen originals.
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/analyze_database.php';
         $sourcePaths[] = 'tests/Fixtures/legacy-cli/convert_tables.php';
+        $sourcePaths[] = 'tests/Fixtures/legacy-cli/fix_mediumint.php';
     }
     foreach ($sourcePaths as $path) {
         if (($manifest['source_sha256'][$path] ?? '') !== hash_file('sha256', $root . '/' . $path)) {
@@ -115,7 +116,22 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'convert tables fallback still needs a direct Settings/Utilities grant',
         'convert tables sends no DDL for a table name the server does not list',
         'installer converts a queued MyISAM table to InnoDB and utf8mb4 in-process',
-        'installer logs the queued conversion through log_install_always'];
+        'installer logs the queued conversion through log_install_always',
+        'widen narrowed columns: shim widens the columns the original statement missed',
+        'widen narrowed columns: only the original logs the statement that failed',
+        'widen narrowed columns debug: shim stdout matches the original',
+        'widen fresh schema: shim logs the same cacti.log lines, date included',
+        'widen never narrows a bigint column',
+        'widen keeps a nullable column nullable',
+        'widen alters a hostile table name as one quoted identifier',
+        'widen refuses an unknown operator before any statement',
+        'widen refuses an empty --as rather than falling back to admin_user',
+        'widen refuses a run with no operator',
+        'widen refuses an operator without the Installation/Upgrades realm',
+        'widen fallback still needs a direct Settings/Utilities grant',
+        'widen falls back to Settings/Utilities while nobody holds Installation/Upgrades',
+        'widen --dry-run through bin/console plans each table and changes nothing',
+        'widen scenarios leave the schema as they found it'];
     foreach ($checks as $check) {
         if (!in_array($check, $manifest['checks'] ?? [], true)) {
             throw new RuntimeException('Incomplete Symfony integration checks');
@@ -140,7 +156,7 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
             // generated configuration/cache, dependencies or installed plugins.
             // The script server, theme hash builder and cli/ shims are listed
             // because only a subprocess or an HTTP request can reach their entry guards.
-            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['script_server.php', 'include/themes/midwinter/update_hash.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
+            if (!str_starts_with($relative, 'src/') && !in_array($relative, ['script_server.php', 'include/themes/midwinter/update_hash.php', 'cli/analyze_database.php', 'cli/convert_tables.php', 'cli/fix_mediumint.php', 'bin/legacy-device-edit.php', 'bin/legacy-device-create.php', 'bin/legacy-device-template.php', 'bin/legacy-device-collector.php', 'bin/legacy-assignment-bootstrap.php', 'bin/legacy-device-state.php', 'bin/legacy-device-remove.php', 'app.php', 'sites.php', 'lib/database.php', 'public/index.php', 'config/bootstrap.php', 'tools/verify-offline.php', 'tools/dependencies/install-legacy.php'], true)) {
                 continue;
             }
             $local = $root . '/' . $relative;
@@ -282,7 +298,21 @@ foreach ([2 => 'files', 3 => 'database', 4 => 'none'] as $argument => $handler) 
         'src/Platform/Infrastructure/Persistence/MaintenanceConnections.php',
         'src/Platform/Infrastructure/Symfony/Console/ConvertTablesCommand.php',
         'src/Platform/Infrastructure/Symfony/Console/ConvertTablesInput.php',
-        'src/Platform/Infrastructure/Symfony/Console/ConvertTablesLegacyArguments.php'];
+        'src/Platform/Infrastructure/Symfony/Console/ConvertTablesLegacyArguments.php',
+        'cli/fix_mediumint.php',
+        'src/Platform/Application/Command/WidenIdColumns.php',
+        'src/Platform/Application/Port/ColumnCatalog.php',
+        'src/Platform/Application/Port/ColumnWidening.php',
+        'src/Platform/Application/ReadModel/WideningEvent.php',
+        'src/Platform/Application/ReadModel/WideningReport.php',
+        'src/Platform/Domain/Schema/ColumnChange.php',
+        'src/Platform/Domain/Schema/ColumnDefinition.php',
+        'src/Platform/Domain/Schema/IdColumns.php',
+        'src/Platform/Domain/Schema/IdColumnPlan.php',
+        'src/Platform/Infrastructure/Persistence/DbalColumnWidening.php',
+        'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsCommand.php',
+        'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsInput.php',
+        'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php'];
     foreach ($requiredPaths as $required) {
         if (!($observed[$required] ?? false)) {
             throw new RuntimeException('Missing measured execution: ' . $required);

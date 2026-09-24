@@ -253,7 +253,7 @@ are the first.
   statement. A refusal runs nothing and records a denied audit event.
 - **Identifiers and values.** Table names in DDL come from the target's
   `information_schema` or `SHOW TABLES`, or from class constants; column names
-  come from `SHOW COLUMNS`. An operator-supplied name is used only if it is an
+  come from `information_schema.COLUMNS`. An operator-supplied name is used only if it is an
   exact match in that list. Every identifier is quoted with
   `quoteSingleIdentifier()`. Engines, charsets, collations, row formats and
   column types come from enums or constants. Values such as column defaults

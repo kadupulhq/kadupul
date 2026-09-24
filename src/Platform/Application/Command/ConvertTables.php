@@ -31,14 +31,7 @@ final readonly class ConvertTables
      */
     public function __invoke(ConversionOptions $options, bool $local, ?string $operator, bool $apply): ConversionReport
     {
-        // A dry run passes the same check: it reads the same schema.
-        try {
-            $scope = $this->target->select($local, $operator, MaintenanceRealm::Upgrade);
-        } catch (InstallationAccessDenied $denied) {
-            $this->audit->denied(self::ACTION, $denied, !$apply);
-
-            throw $denied;
-        }
+        $scope = $this->audit->select($this->target, self::ACTION, $local, $operator, $apply);
         $main = $scope->target === DatabaseTarget::Main;
         // One read of the target's own schema; the step sends DDL only for names it has.
         $catalog = $this->conversion->tableStatuses($scope->target);

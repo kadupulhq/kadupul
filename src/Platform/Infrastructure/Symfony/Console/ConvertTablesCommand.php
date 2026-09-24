@@ -42,13 +42,9 @@ final readonly class ConvertTablesCommand
         $mode = $input->json ? OutputMode::Json : $this->presentation->mode;
         $legacy = new ConvertTablesLegacyArguments();
         try {
-            if ($this->presentation->legacy !== LegacyRequest::Run) {
-                return $this->renderer->legacyRequest($this->presentation->legacy, $this->version->line(self::UTILITY, $this->clock->now()), $legacy, $output);
-            }
-            // The use case also refuses '', but only as a denial; an empty --as=
-            // is a usage error and is reported as one.
-            if ($input->as === '') {
-                return $this->renderer->emptyOperator($io, $output, $mode);
+            $early = $this->renderer->preflight($this->presentation->legacy, fn(): string => $this->version->line(self::UTILITY, $this->clock->now()), $legacy, $input->as, $io, $output, $mode);
+            if ($early !== null) {
+                return $early;
             }
             $options = $input->options();
             $report = ($this->convert)($options, $input->local, $input->as, !$input->dryRun);
@@ -72,11 +68,7 @@ final readonly class ConvertTablesCommand
             ConversionProblem::Size => ['The --size option needs a whole number of rows.', 'size must be a whole number'],
         };
         // The original printed its own two errors, then its help, and exited 0.
-        $exit = match (true) {
-            $mode !== OutputMode::Legacy => Command::INVALID,
-            $problem === ConversionProblem::Size => Command::FAILURE,
-            default => Command::SUCCESS,
-        };
+        $exit = $mode === OutputMode::Legacy ? Command::SUCCESS : Command::INVALID;
         $lines = $mode === OutputMode::Legacy ? $legacy->problem($problem, $this->version->line(self::UTILITY, $this->clock->now())) : [];
 
         return $this->renderer->failure($io, $output, $mode, $human, new CommandResult(['status' => 'invalid', 'error' => $error], $lines, $exit));
@@ -119,13 +111,7 @@ final readonly class ConvertTablesCommand
             $tables,
         ));
         $changed = count(array_filter($report->tables, static fn(array $table): bool => in_array($table['result'], [TableResult::Converted, TableResult::Planned], true)));
-        $summary = sprintf($report->dryRun ? 'Planned %d of %d tables' : 'Converted %d of %d tables', $changed, count($tables));
-        if ($exit === Command::SUCCESS) {
-            $io->success($summary . '.');
-        } else {
-            $io->warning(sprintf('%s; %d failed.', $summary, $report->failed()));
-        }
 
-        return $exit;
+        return $this->renderer->summary($io, sprintf($report->dryRun ? 'Planned %d of %d tables' : 'Converted %d of %d tables', $changed, count($tables)), $report->failed());
     }
 }

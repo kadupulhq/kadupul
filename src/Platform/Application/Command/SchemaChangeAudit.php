@@ -27,6 +27,22 @@ final readonly class SchemaChangeAudit
         return bin2hex(random_bytes(16));
     }
 
+    /**
+     * The target and operator for a schema change, with realm 26 required. A
+     * refusal is audited, with the dry-run suffix when $apply is false, then
+     * rethrown. A dry run passes the same check: it reads the same schema.
+     */
+    public function select(MaintenanceTarget $target, string $action, bool $local, ?string $operator, bool $apply): MaintenanceScope
+    {
+        try {
+            return $target->select($local, $operator, MaintenanceRealm::Upgrade);
+        } catch (InstallationAccessDenied $denied) {
+            $this->denied($action, $denied, !$apply);
+
+            throw $denied;
+        }
+    }
+
     public function denied(string $action, InstallationAccessDenied $denied, bool $dryRun): void
     {
         $this->record(

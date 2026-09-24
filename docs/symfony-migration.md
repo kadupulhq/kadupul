@@ -1026,6 +1026,10 @@ Known differences from `cli/convert_tables.php`:
   path without its separator and died with a PHP fatal error, exit 255.
 - `--size` must be a whole number, and `--size=`, `--table=` and
   `--skip-innodb=` with no value are invalid parameters.
+- `--size=abc`, or any size that is not a whole number, prints
+  `ERROR: Invalid Parameter` and the help and exits 1. The original accepted
+  it, exited 0, and compared row counts with the text, which in PHP 8 let
+  every table through.
 - A table name that does not exactly match (letter case included) a table the
   server lists is reported as `Failed` and logged, without sending `ALTER TABLE`. The original sent the
   statement, logged the server's error and printed PHP warnings.
@@ -1063,13 +1067,37 @@ Known differences from `cli/fix_mediumint.php`:
   `install/upgrades/1_2_17.php`. The original appended those columns to the
   last named table's statement, which then failed, and counted them per
   column; the command counts tables.
+  With `--debug` such a table prints one `Updating Table` line, where the
+  original printed one per column.
 - Only integer columns narrower than `int unsigned` are changed. The original
   also rewrote `bigint` columns, which narrowed them, and non-integer columns.
   MySQL 8's `int unsigned`, printed without a display width, counts as
   already converted.
 - A nullable column with a default stays nullable. The original made it
   `NOT NULL`.
-- Columns match by exact name; the original used `LIKE`.
+- Tables and columns match by exact name, letter case included, as the
+  server's `information_schema` lists them; the original used `LIKE` for
+  columns. Names are checked again just before each `ALTER TABLE`, and a name
+  the server no longer lists fails without a statement being sent.
+- Only base tables are read. The original also walked views, whose
+  `ALTER TABLE` failed. MariaDB system-versioned tables are not base tables
+  either, so this command and `kadupul:database:convert-tables` skip them,
+  where both originals included them.
+- Generated and invisible columns are skipped (`EXTRA` containing
+  `GENERATED` or `INVISIBLE`, which on MySQL 8 includes an expression default
+  marked `DEFAULT_GENERATED`); `--debug` reports each one. `MODIFY` cannot
+  give a generated column a plain type and would drop `INVISIBLE`. The
+  original rewrote both.
+- A column is widened only if it is still exactly as the command read it,
+  type, nullability, default and `EXTRA` included, just before its
+  `ALTER TABLE`; otherwise that table fails without a statement being sent.
+- As in the original, a signed column becomes unsigned, and strict SQL mode
+  refuses the statement when the column holds a negative value. `MODIFY`
+  also drops a column `COMMENT`, as the original's did. On MariaDB an
+  expression default is sent as a quoted literal, which the server refuses;
+  the table is reported as failed and audited.
+- JSON `adjusted` counts every table a statement was sent or planned for,
+  failed ones included, as the legacy `Column widths adjusted` line does.
 - On a remote collector the command reads the main database's own table list.
 - A failed statement is logged with the two `DBCALL` lines and no backtrace.
 - An invalid flag prints the error and help without the version line.

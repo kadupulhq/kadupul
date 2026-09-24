@@ -140,7 +140,21 @@ def main():
         'src/Platform/Infrastructure/Persistence/MaintenanceConnections.php',
         'src/Platform/Infrastructure/Symfony/Console/ConvertTablesCommand.php',
         'src/Platform/Infrastructure/Symfony/Console/ConvertTablesInput.php',
-        'src/Platform/Infrastructure/Symfony/Console/ConvertTablesLegacyArguments.php')]
+        'src/Platform/Infrastructure/Symfony/Console/ConvertTablesLegacyArguments.php',
+        'cli/fix_mediumint.php',
+        'src/Platform/Application/Command/WidenIdColumns.php',
+        'src/Platform/Application/Port/ColumnCatalog.php',
+        'src/Platform/Application/Port/ColumnWidening.php',
+        'src/Platform/Application/ReadModel/WideningEvent.php',
+        'src/Platform/Application/ReadModel/WideningReport.php',
+        'src/Platform/Domain/Schema/ColumnChange.php',
+        'src/Platform/Domain/Schema/ColumnDefinition.php',
+        'src/Platform/Domain/Schema/IdColumns.php',
+        'src/Platform/Domain/Schema/IdColumnPlan.php',
+        'src/Platform/Infrastructure/Persistence/DbalColumnWidening.php',
+        'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsCommand.php',
+        'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsInput.php',
+        'src/Platform/Infrastructure/Symfony/Console/WidenIdColumnsLegacyArguments.php')]
     for path in (args.files / 'raw').glob('coverage-*.json'):
         report = json.loads(path.read_text())
         for source in required:
@@ -194,6 +208,8 @@ def main():
         'cli-convert-original-test-hash': 'Integration test source differs',
         'missing-cli-schema-check': 'Incomplete Symfony integration checks',
         'missing-installer-conversion-check': 'Incomplete Symfony integration checks',
+        'cli-widen-original-test-hash': 'Integration test source differs',
+        'missing-widen-check': 'Incomplete Symfony integration checks',
     }
     for source in required:
         failures.setdefault('unmeasured-' + source.rsplit('/', 1)[-1], 'Missing measured execution')
@@ -251,6 +267,10 @@ def main():
                 evidence['checks'].remove('convert tables refuses an operator without the Installation/Upgrades realm')
             elif case == 'missing-installer-conversion-check':
                 evidence['checks'].remove('installer converts a queued MyISAM table to InnoDB and utf8mb4 in-process')
+            elif case == 'cli-widen-original-test-hash':
+                evidence['source_sha256']['tests/Fixtures/legacy-cli/fix_mediumint.php'] = '0' * 64
+            elif case == 'missing-widen-check':
+                evidence['checks'].remove('widen refuses an operator without the Installation/Upgrades realm')
             elif case == 'missing-device-creation-check':
                 evidence['checks'].remove('legacy template graph associations are preserved')
             elif case == 'missing-removal-callback-check':
