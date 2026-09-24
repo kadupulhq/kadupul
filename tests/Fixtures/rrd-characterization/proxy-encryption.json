@@ -1,0 +1,41 @@
+[
+    {
+        "returned": "update x.rrd N:1",
+        "printed": "",
+        "diagnostics": [],
+        "commands": []
+    },
+    {
+        "returned": "OK u:0.00",
+        "printed": "",
+        "diagnostics": [],
+        "commands": []
+    },
+    {
+        "returned": {
+            "thrown": "Error",
+            "message": "Class \"phpseclib\\phpseclib\\phpseclib\\Crypt\\RSA\" not found"
+        },
+        "printed": "",
+        "diagnostics": [],
+        "commands": []
+    },
+    {
+        "returned": {
+            "thrown": "Error",
+            "message": "Class \"phpseclib\\phpseclib\\phpseclib\\Crypt\\RSA\" not found"
+        },
+        "printed": "",
+        "diagnostics": [],
+        "commands": []
+    },
+    {
+        "returned": {
+            "thrown": "Error",
+            "message": "Class \"phpseclib\\phpseclib\\phpseclib\\Crypt\\RSA\" not found"
+        },
+        "printed": "",
+        "diagnostics": [],
+        "commands": []
+    }
+]

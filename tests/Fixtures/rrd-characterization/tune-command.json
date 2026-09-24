@@ -1,0 +1,62 @@
+[
+    {
+        "returned": null,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [
+            {
+                "argv": [
+                    "tune",
+                    "<DIR>/rra/router_traffic_21.rrd",
+                    "--heartbeat",
+                    "traffic_in:600",
+                    "--minimum",
+                    "traffic_in:U",
+                    "--maximum",
+                    "traffic_in:1e9",
+                    "--data-source-type",
+                    "traffic_in:DERIVE",
+                    "--data-source-rename",
+                    "traffic_in:in'bound \"x\""
+                ],
+                "stdin": [
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "returned": null,
+        "printed": "",
+        "diagnostics": [
+            "2: Undefined array key \"\""
+        ],
+        "commands": [
+            {
+                "argv": [
+                    "tune",
+                    "<DIR>/rra/router_traffic_21.rrd",
+                    "--minimum",
+                    "traffic_in:0"
+                ],
+                "stdin": [
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "returned": null,
+        "printed": "",
+        "diagnostics": [
+            "2: Undefined array key \"\""
+        ],
+        "commands": []
+    },
+    {
+        "returned": null,
+        "printed": "",
+        "diagnostics": [],
+        "commands": []
+    }
+]
