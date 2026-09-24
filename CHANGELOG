@@ -2,6 +2,7 @@ Cacti CHANGELOG
 
 1.2.32
 -issue: import_template --preview now reports through the command line rather than printing raw HTML, and says the Template would be imported instead of claiming it was; the preview flag reached import_display_results as its web argument
+-security: Escape the Data Source Info cells; rrdtool_info2html rendered every value with form_selectable_cell, which prints its contents raw, so a data source path or an RRD field carrying markup was reflected into the page
 -issue: Boost no longer discards buffered samples for a data source that has no graph item; the poller_item fallback for an empty RRD path was guarded by a test that could never be false, and an empty path is treated as a deleted data source and deleted
 -issue: Remove the Refresh Poller Table Per Cycle setting, which had no reader and described rebuilding a MEMORY table that 1.2.32 converts to InnoDB; the upgrade drops the stored row
 -issue: Count Data Collectors from the poller table in boost; the query named a pollers table that does not exist, so disabling boost in the UI could switch it off even with multiple collectors defined
