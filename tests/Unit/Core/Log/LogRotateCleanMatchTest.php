@@ -9,6 +9,8 @@ namespace LogRotateCleanMatchTest;
 
 $root = dirname(__DIR__, 4);
 
+require_once dirname(__DIR__, 3) . '/Helpers/PhpSource.php';
+
 /**
  * Run the real logrotate_file_clean() against a throwaway directory and report
  * which files survived. The function is taken from poller_maintenance.php, so
@@ -25,29 +27,9 @@ function clean_directory(array $files, $log = 'cacti.log', $rotation = 7)
     $source = file_get_contents(dirname(__DIR__, 4) . '/poller_maintenance.php');
     expect($source)->not->toBeFalse();
 
-    $start = strpos($source, 'function logrotate_file_clean(');
-    expect($start)->not->toBeFalse();
-
-    // Balance braces so the whole function comes across intact.
-    $open  = strpos($source, '{', $start);
-    $depth = 0;
-    $end   = $open;
-
-    for ($i = $open; $i < strlen($source); $i++) {
-        if ($source[$i] === '{') {
-            $depth++;
-        } elseif ($source[$i] === '}') {
-            $depth--;
-
-            if ($depth === 0) {
-                $end = $i + 1;
-
-                break;
-            }
-        }
-    }
-
-    $function = substr($source, $start, $end - $start);
+    /* Tokenises rather than counting braces, so a brace inside a string or
+       comment cannot truncate the body. */
+    $function = test_php_function_source($source, 'logrotate_file_clean');
     expect($function)->toContain('@unlink');
 
     $directory = sys_get_temp_dir() . '/kadupul-logclean-' . bin2hex(random_bytes(6));
@@ -200,28 +182,9 @@ function rotatenow_calls($stderr = null)
     $source = file_get_contents(dirname(__DIR__, 4) . '/poller_maintenance.php');
     expect($source)->not->toBeFalse();
 
-    $start = strpos($source, 'function logrotate_rotatenow()');
-    expect($start)->not->toBeFalse();
-
-    $open  = strpos($source, '{', $start);
-    $depth = 0;
-    $end   = $open;
-
-    for ($i = $open; $i < strlen($source); $i++) {
-        if ($source[$i] === '{') {
-            $depth++;
-        } elseif ($source[$i] === '}') {
-            $depth--;
-
-            if ($depth === 0) {
-                $end = $i + 1;
-
-                break;
-            }
-        }
-    }
-
-    $function = substr($source, $start, $end - $start);
+    /* Tokenises rather than counting braces, so a brace inside a string or
+       comment cannot truncate the body. */
+    $function = test_php_function_source($source, 'logrotate_rotatenow');
 
     $code = '<?php
 $GLOBALS["rotated"] = array();
