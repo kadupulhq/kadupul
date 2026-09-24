@@ -1628,11 +1628,12 @@ function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &
         $graph_opts .= '--disable-rrdtool-tag ' . RRD_NL;
     }
 
+    $quoted_text = array();
     foreach ($graph as $key => $value) {
         switch ($key) {
             case 'title_cache':
                 if (!empty($value)) {
-                    $graph_opts .= '--title=' . cacti_escapeshellarg(html_escape($value)) . RRD_NL;
+                    $graph_opts .= '--title=' . rrd_substituted_text_placeholder($quoted_text, '--title', $value, $graph) . RRD_NL;
                 }
                 break;
             case 'alt_y_grid':
@@ -1678,7 +1679,7 @@ function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &
                 break;
             case 'vertical_label':
                 if (!empty($value)) {
-                    $graph_opts .= '--vertical-label=' . cacti_escapeshellarg(html_escape($value)) . RRD_NL;
+                    $graph_opts .= '--vertical-label=' . rrd_substituted_text_placeholder($quoted_text, '--vertical-label', $value, $graph) . RRD_NL;
                 }
                 break;
             case 'slope_mode':
@@ -1768,6 +1769,7 @@ function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &
 
     /* Replace "|query_*|" in the graph command to replace e.g. vertical_label.  */
     $graph_opts = rrd_substitute_host_query_data($graph_opts, $graph, array());
+    $graph_opts = strtr($graph_opts, $quoted_text);
 
     /* if the user desires a watermark set it */
     $watermark = str_replace("'", '"', read_config_option('graph_watermark'));
@@ -3000,6 +3002,32 @@ function rrdtool_function_graph($local_graph_id, $rra_id, $graph_data_array, $rr
 
         return $xport_array;
     }
+}
+
+/**
+ * Quote one argument for a command sent to `rrdtool -` or the RRDtool proxy.
+ * CR and LF are removed first, as cacti_escapeshellarg() did.
+ */
+function rrdtool_pipe_quote($argument)
+{
+    $encoder = new \Kadupul\Graphing\Infrastructure\Rrd\PipeEncoder();
+
+    return $encoder->quote(str_replace(array("\r", "\n"), '', (string) $argument));
+}
+
+/**
+ * Title and vertical label text reaches RRDtool HTML-escaped, with host and
+ * query values substituted unescaped. Substituting before quoting keeps a
+ * quote in those values inside the argument. The placeholder keeps the later
+ * substitution pass over the whole command from reading the values a second
+ * time.
+ */
+function rrd_substituted_text_placeholder(&$quoted_text, $option, $text, $graph)
+{
+    $placeholder = "\0" . $option . "\0";
+    $quoted_text[$placeholder] = rrdtool_pipe_quote(rrd_substitute_host_query_data(html_escape($text), $graph, array()));
+
+    return $placeholder;
 }
 
 function rrdtool_escape_string($text, $ignore_percent = true)
