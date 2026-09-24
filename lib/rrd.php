@@ -9,11 +9,6 @@
 define('RRD_NL', " \\\n");
 define('MAX_FETCH_CACHE_SIZE', 5);
 
-if (read_config_option('storage_location')) {
-    global $encryption;
-    $encryption = true;
-}
-
 function escape_command($command)
 {
     return $command;		# we escape every single argument now, no need for 'special' escaping
@@ -226,82 +221,159 @@ function rrd_acknowledged_command($pipe, $command)
 
 function __rrd_proxy_init($logopt = 'WEBLOG')
 {
-    global $encryption;
     $terminator = "_EOT_\r\n";
-    $encryption = true;
-    $rsa = new \phpseclib\phpseclib\phpseclib\Crypt\RSA();
 
-    $rrdp_socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-    if ($rrdp_socket === false) {
-        cacti_log('CACTI2RRDP ERROR: Unable to create socket to connect to RRDtool Proxy Server', false, $logopt, POLLER_VERBOSITY_LOW);
+    $client_key = (string) read_config_option('rsa_public_key');
+    if ($client_key === '') {
+        cacti_log('CACTI2RRDP ERROR: This server has no RSA key pair to present to the RRDtool Proxy Server.', false, $logopt, POLLER_VERBOSITY_LOW);
         return false;
     }
 
-    if (read_config_option('rrdp_load_balancing') == 'on') {
-        $rrdp_id = rand(1, 2);
-        $rrdp = @socket_connect($rrdp_socket, (($rrdp_id == 1) ? read_config_option('rrdp_server') : read_config_option('rrdp_server_backup')), (($rrdp_id == 1) ? read_config_option('rrdp_port') : read_config_option('rrdp_port_backup')));
-    } else {
-        $rrdp_id = 1;
-        $rrdp = @socket_connect($rrdp_socket, read_config_option('rrdp_server'), read_config_option('rrdp_port'));
+    // Every reply is decrypted with the private half, so a session without a
+    // matching one would connect and then fail on each command.
+    if (!rrdtool_proxy_cipher()->isKeyPair($client_key, (string) read_config_option('rsa_private_key'))) {
+        cacti_log('CACTI2RRDP ERROR: This server\'s RSA private key is missing or does not match its public key.', false, $logopt, POLLER_VERBOSITY_LOW);
+        return false;
     }
 
-    if ($rrdp === false) {
-        /* log entry ... */
-        cacti_log('CACTI2RRDP ERROR: Unable to connect to RRDtool Proxy Server #' . $rrdp_id, false, $logopt, POLLER_VERBOSITY_LOW);
-
-        /* ... and try to use backup path */
-        $rrdp_id = ($rrdp_id + 1) % 2;
-        $rrdp = @socket_connect($rrdp_socket, (($rrdp_id == 1) ? read_config_option('rrdp_server') : read_config_option('rrdp_server_backup')), (($rrdp_id == 1) ? read_config_option('rrdp_port') : read_config_option('rrdp_port_backup')));
-
-        if ($rrdp === false) {
-            cacti_log('CACTI2RRDP ERROR: Unable to connect to RRDtool Proxy Server #' . $rrdp_id, false, $logopt, POLLER_VERBOSITY_LOW);
+    // Server #1 is the main proxy and #2 the backup; either is tried when the other fails.
+    $suffixes = array(1 => '', 2 => '_backup');
+    $order = (read_config_option('rrdp_load_balancing') == 'on' && random_int(1, 2) === 2) ? array(2, 1) : array(1, 2);
+    $rrdp_socket = false;
+    foreach ($order as $rrdp_id) {
+        $rrdp_socket = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+        if ($rrdp_socket === false) {
+            cacti_log('CACTI2RRDP ERROR: Unable to create socket to connect to RRDtool Proxy Server', false, $logopt, POLLER_VERBOSITY_LOW);
             return false;
         }
-    }
-
-    $rrdp_fingerprint = ($rrdp_id == 1) ? read_config_option('rrdp_fingerprint') : read_config_option('rrdp_fingerprint_backup');
-
-    socket_write($rrdp_socket, read_config_option('rsa_public_key') . $terminator);
-
-    /* read public key being returned by the proxy server */
-    $rrdp_public_key = '';
-    while (1) {
-        $recv = socket_read($rrdp_socket, 1000, PHP_BINARY_READ);
-        if ($recv === false) {
-            /* timeout  */
-            cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - Time-out while reading', false, $logopt, POLLER_VERBOSITY_LOW);
-            $rrdp_public_key = false;
+        // A socket whose connect failed is not reliably reusable, so each server gets its own.
+        if (@socket_connect($rrdp_socket, (string) read_config_option('rrdp_server' . $suffixes[$rrdp_id]), (int) read_config_option('rrdp_port' . $suffixes[$rrdp_id]))) {
             break;
-        } elseif ($recv == '') {
-            cacti_log('CACTI2RRDP ERROR: Session closed by Proxy.', false, $logopt, POLLER_VERBOSITY_LOW);
-            /* session closed by Proxy */
-            break;
-        } else {
-            $rrdp_public_key .= $recv;
-            if (strpos($rrdp_public_key, $terminator) !== false) {
-                $rrdp_public_key = trim(trim($rrdp_public_key, $terminator));
-                break;
-            }
         }
+        cacti_log('CACTI2RRDP ERROR: Unable to connect to RRDtool Proxy Server #' . $rrdp_id, false, $logopt, POLLER_VERBOSITY_LOW);
+        socket_close($rrdp_socket);
+        $rrdp_socket = false;
     }
-
-    $rsa->loadKey($rrdp_public_key);
-    $fingerprint = $rsa->getPublicKeyFingerprint();
-
-    if ($rrdp_fingerprint != $fingerprint) {
-        cacti_log('CACTI2RRDP ERROR: Mismatch RSA Fingerprint.', false, $logopt, POLLER_VERBOSITY_LOW);
+    if ($rrdp_socket === false) {
         return false;
-    } else {
-        $rrdproxy = array($rrdp_socket, $rrdp_public_key);
-        /* set the rrdtool default font */
-        if (read_config_option('path_rrdtool_default_font')) {
-            rrdtool_execute("setenv RRD_DEFAULT_FONT '" . read_config_option('path_rrdtool_default_font') . "'", false, RRDTOOL_OUTPUT_NULL, $rrdproxy, $logopt = 'WEBLOG');
-        }
-
-        /* disable encryption */
-        $encryption = rrdtool_execute('setcnn encryption off', false, RRDTOOL_OUTPUT_BOOLEAN, $rrdproxy, $logopt = 'WEBLOG') ? false : true;
-        return $rrdproxy;
     }
+
+    $request = $client_key . $terminator;
+    if (!rrdtool_proxy_write($rrdp_socket, $request)) {
+        cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - Unable to send the client key.', false, $logopt, POLLER_VERBOSITY_LOW);
+        socket_close($rrdp_socket);
+        return false;
+    }
+
+    $rrdp_public_key = rrdtool_proxy_read_key($rrdp_socket, $logopt);
+    if ($rrdp_public_key === false) {
+        socket_close($rrdp_socket);
+        return false;
+    }
+
+    try {
+        $fingerprint = rrdtool_proxy_cipher()->fingerprint($rrdp_public_key);
+    } catch (\Throwable $e) {
+        cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - RRDtool Proxy Server #' . $rrdp_id . ' did not send an RSA public key.', false, $logopt, POLLER_VERBOSITY_LOW);
+        socket_close($rrdp_socket);
+        return false;
+    }
+
+    // Stored fingerprints are typed in by hand; case and surrounding blanks are not significant.
+    $rrdp_fingerprint = strtolower(trim((string) read_config_option('rrdp_fingerprint' . $suffixes[$rrdp_id])));
+    if ($rrdp_fingerprint === '' || !hash_equals($rrdp_fingerprint, strtolower($fingerprint))) {
+        cacti_log('CACTI2RRDP ERROR: Mismatch RSA Fingerprint.', false, $logopt, POLLER_VERBOSITY_LOW);
+        socket_close($rrdp_socket);
+        return false;
+    }
+
+    $rrdproxy = array($rrdp_socket, $rrdp_public_key);
+
+    /* set the rrdtool default font */
+    $font = (string) read_config_option('path_rrdtool_default_font');
+    if ($font !== '') {
+        // rrdproxy splits the value on blanks and keeps any quotes as part of it.
+        if (rrdtool_proxy_token_is_safe($font)) {
+            $set = rrdtool_execute('setenv RRD_DEFAULT_FONT ' . $font, false, RRDTOOL_OUTPUT_BOOLEAN, $rrdproxy, $logopt);
+            if ($set === null) {
+                cacti_log('CACTI2RRDP ERROR: The RRDtool Proxy Server did not answer during session setup.', false, $logopt, POLLER_VERBOSITY_LOW);
+                socket_close($rrdp_socket);
+                return false;
+            }
+            if ($set === false) {
+                cacti_log('CACTI2RRDP WARNING: The RRDtool Proxy Server refused the default font path.', false, $logopt, POLLER_VERBOSITY_LOW);
+            }
+        } else {
+            cacti_log('CACTI2RRDP WARNING: The RRDtool default font path contains a blank, a quote or a backslash and was not sent to the RRDtool Proxy Server.', false, $logopt, POLLER_VERBOSITY_LOW);
+        }
+    }
+
+    // rrdproxy has no plaintext mode and answers this with an error. The request
+    // is still sent so the proxy sees the same session, and frames stay encrypted
+    // whatever it says; only a missing answer means the session is gone.
+    if (rrdtool_execute('setcnn encryption off', false, RRDTOOL_OUTPUT_BOOLEAN, $rrdproxy, $logopt) === null) {
+        cacti_log('CACTI2RRDP ERROR: The RRDtool Proxy Server did not answer during session setup.', false, $logopt, POLLER_VERBOSITY_LOW);
+        socket_close($rrdp_socket);
+        return false;
+    }
+
+    return $rrdproxy;
+}
+
+/**
+ * Read the RRDtool proxy's public key. rrdproxy sends it once, followed by the
+ * sequence terminator. A reply longer than $max_bytes, or one that does not
+ * finish within $timeout seconds, is refused rather than waited on.
+ */
+function rrdtool_proxy_read_key($socket, $logopt, $timeout = 10, $max_bytes = 16384)
+{
+    $terminator = "_EOT_\r\n";
+    $deadline = hrtime(true) + (int) ($timeout * 1000000000);
+    $received = '';
+
+    while (($end = strpos($received, $terminator)) === false) {
+        if (strlen($received) >= $max_bytes + strlen($terminator)) {
+            cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - The proxy reply exceeds ' . $max_bytes . ' bytes.', false, $logopt, POLLER_VERBOSITY_LOW);
+            return false;
+        }
+        $remaining = $deadline - hrtime(true);
+        if ($remaining <= 0) {
+            cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - Time-out while reading', false, $logopt, POLLER_VERBOSITY_LOW);
+            return false;
+        }
+        socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => intdiv($remaining, 1000000000), 'usec' => max(1, intdiv($remaining % 1000000000, 1000))));
+        // Never ask for more than the cap leaves, so the buffer cannot outgrow it.
+        $recv = @socket_read($socket, min(4096, $max_bytes + strlen($terminator) - strlen($received)), PHP_BINARY_READ);
+        if ($recv === false) {
+            cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - Time-out while reading', false, $logopt, POLLER_VERBOSITY_LOW);
+            return false;
+        }
+        if ($recv === '') {
+            cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - Session closed by Proxy.', false, $logopt, POLLER_VERBOSITY_LOW);
+            return false;
+        }
+        $received .= $recv;
+    }
+    // Later commands keep the blocking reads they had before the exchange.
+    socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 0, 'usec' => 0));
+
+    if ($end > $max_bytes) {
+        cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - The proxy reply exceeds ' . $max_bytes . ' bytes.', false, $logopt, POLLER_VERBOSITY_LOW);
+        return false;
+    }
+    // The proxy says nothing more until the client sends a command.
+    if ($end + strlen($terminator) !== strlen($received)) {
+        cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - Unexpected data after the proxy key.', false, $logopt, POLLER_VERBOSITY_LOW);
+        return false;
+    }
+
+    $key = trim(substr($received, 0, $end));
+    if ($key === 'Authentication failed') {
+        cacti_log('CACTI2RRDP ERROR: Public RSA Key Exchange - The proxy did not accept this server\'s RSA key.', false, $logopt, POLLER_VERBOSITY_LOW);
+        return false;
+    }
+
+    return $key;
 }
 
 function rrd_close()
@@ -369,62 +441,65 @@ function __rrd_close($rrdtool_pipe)
     rrdtool_reset_language();
 }
 
+/** Write all of $data; socket_write() may send only part of it. False on an error or no progress. */
+function rrdtool_proxy_write($socket, $data)
+{
+    while ($data !== '') {
+        $written = @socket_write($socket, $data);
+        if ($written === false || $written === 0) {
+            return false;
+        }
+        $data = substr($data, $written);
+    }
+
+    return true;
+}
+
 function __rrd_proxy_close($rrdp)
 {
     /* close the rrdtool proxy server connection */
     $terminator = "_EOT_\r\n";
     if ($rrdp) {
-        socket_write($rrdp[0], encrypt('quit', $rrdp[1]) . $terminator);
+        $quit = encrypt('quit', $rrdp[1]);
+        if ($quit !== false) {
+            rrdtool_proxy_write($rrdp[0], $quit . $terminator);
+        }
         @socket_shutdown($rrdp[0], 2);
         @socket_close($rrdp[0]);
         return;
     }
 }
 
+/** Encrypt one frame for the RRDtool proxy holding $rsa_key; false when that fails. */
 function encrypt($output, $rsa_key)
 {
-    global $encryption;
-
-    if ($encryption) {
-        $rsa = new \phpseclib\phpseclib\phpseclib\Crypt\RSA();
-        $aes = new \phpseclib\phpseclib\phpseclib\Crypt\Rijndael();
-        $aes_key = \phpseclib\phpseclib\phpseclib\Crypt\Random::string(192);
-
-        $aes->setKey($aes_key);
-        $ciphertext = base64_encode($aes->encrypt($output));
-        $rsa->loadKey($rsa_key);
-        $aes_key = base64_encode($rsa->encrypt($aes_key));
-        $aes_key_length = str_pad(dechex(strlen($aes_key)), 3, '0', STR_PAD_LEFT);
-
-        return $aes_key_length . $aes_key . $ciphertext;
-    } else {
-        return $output;
+    try {
+        return rrdtool_proxy_cipher()->encrypt((string) $output, (string) $rsa_key);
+    } catch (\Throwable $e) {
+        return false;
     }
 }
 
+/** Decrypt one frame from the RRDtool proxy; false when it is not a valid frame for this server. */
 function decrypt($input)
 {
-    global $encryption;
-
-    if ($encryption) {
-        $rsa = new \phpseclib\phpseclib\phpseclib\Crypt\RSA();
-        $aes = new \phpseclib\phpseclib\phpseclib\Crypt\Rijndael();
-
-        $rsa_private_key = read_config_option('rsa_private_key');
-
-        $aes_key_length = hexdec(substr($input, 0, 3));
-        $aes_key = base64_decode(substr($input, 3, $aes_key_length));
-        $ciphertext = base64_decode(substr($input, 3 + $aes_key_length));
-
-        $rsa->loadKey($rsa_private_key);
-        $aes_key = $rsa->decrypt($aes_key);
-        $aes->setKey($aes_key);
-        $plaintext = $aes->decrypt($ciphertext);
-
-        return $plaintext;
-    } else {
-        return $input;
+    try {
+        return rrdtool_proxy_cipher()->decrypt((string) $input, (string) read_config_option('rsa_private_key'));
+    } catch (\Throwable $e) {
+        return false;
     }
+}
+
+function rrdtool_proxy_cipher()
+{
+    // As rrdtool_pipe_encoder(): the class may be needed before the autoloader.
+    if (!class_exists(\Kadupul\Graphing\Infrastructure\Rrd\ProxyCipher::class)) {
+        require_once __DIR__ . '/../src/Graphing/Infrastructure/Rrd/ProxyCipher.php';
+    }
+
+    static $cipher = null;
+
+    return $cipher ??= new \Kadupul\Graphing\Infrastructure\Rrd\ProxyCipher();
 }
 
 /** Last local command rejection, distinct from an unavailable response. */
@@ -1050,7 +1125,7 @@ function rrdtool_trim_output(&$output)
 
 function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp = '', $logopt = 'WEBLOG')
 {
-    global $config, $encryption;
+    global $config;
 
     static $last_command;
     $end_of_packet = "_EOP_\r\n";
@@ -1099,7 +1174,21 @@ function __rrd_proxy_execute($command_line, $log_to_stdout, $output_flag, $rrdp 
     if (strlen($command_line) >= 8192) {
         $command_line = gzencode($command_line, 1);
     }
-    socket_write($rrdp_socket, encrypt($command_line, $rrdp_public_key) . $end_of_sequence);
+    $frame = encrypt($command_line, $rrdp_public_key);
+    if ($frame === false) {
+        cacti_log('CACTI2RRDP ERROR: Unable to encrypt the command for the RRDtool proxy; nothing was sent.', $log_to_stdout, $logopt, POLLER_VERBOSITY_LOW);
+        if ($rrdp_auto_close) {
+            __rrd_proxy_close($rrdp);
+        }
+        return null;
+    }
+    if (!rrdtool_proxy_write($rrdp_socket, $frame . $end_of_sequence)) {
+        cacti_log('CACTI2RRDP ERROR: Unable to send the command to the RRDtool proxy.', $log_to_stdout, $logopt, POLLER_VERBOSITY_LOW);
+        if ($rrdp_auto_close) {
+            __rrd_proxy_close($rrdp);
+        }
+        return null;
+    }
 
     $input = '';
     $output = '';

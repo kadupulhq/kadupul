@@ -1,6 +1,6 @@
 [
     {
-        "returned": "update x.rrd N:1",
+        "returned": false,
         "printed": "",
         "diagnostics": [],
         "commands": [],
@@ -10,7 +10,7 @@
         ]
     },
     {
-        "returned": "OK u:0.00",
+        "returned": false,
         "printed": "",
         "diagnostics": [],
         "commands": [],
@@ -19,23 +19,7 @@
         ]
     },
     {
-        "returned": {
-            "thrown": "Error",
-            "message": "Class \"phpseclib\\phpseclib\\phpseclib\\Crypt\\RSA\" not found"
-        },
-        "printed": "",
-        "diagnostics": [],
-        "commands": [],
-        "args": [
-            "update x.rrd N:1",
-            "public key"
-        ]
-    },
-    {
-        "returned": {
-            "thrown": "Error",
-            "message": "Class \"phpseclib\\phpseclib\\phpseclib\\Crypt\\RSA\" not found"
-        },
+        "returned": false,
         "printed": "",
         "diagnostics": [],
         "commands": [],
@@ -44,10 +28,7 @@
         ]
     },
     {
-        "returned": {
-            "thrown": "Error",
-            "message": "Class \"phpseclib\\phpseclib\\phpseclib\\Crypt\\RSA\" not found"
-        },
+        "returned": false,
         "printed": "",
         "diagnostics": [],
         "commands": [],

@@ -27,9 +27,11 @@ if($tree){$operation=substr($operation,0,-5);}
 $max=str_starts_with($operation,'max:')?explode(':',$operation,3):null;
 $config=array('rra_path'=>'/fixture','include_path'=>__DIR__,'cacti_server_os'=>$max?'win32':'unix');
 require $root.'/include/global_constants.php';
+require $root.'/include/vendor/autoload.php';
+require $root.'/tests/Helpers/RrdProxyFrames.php';
 function cacti_log(...$args){}
 function cacti_sizeof($value){return is_array($value)?count($value):0;}
-function read_config_option($key){return $key==='storage_location'?1:($key==='extended_paths'&&$GLOBALS['tree']?'on':'');}
+function read_config_option($key){return $key==='storage_location'?1:($key==='extended_paths'&&$GLOBALS['tree']?'on':($key==='rsa_private_key'?$GLOBALS['proxy_key']:''));}
 function get_data_source_path(...$args){return '/fixture/sample.rrd';}
 function get_rrdtool_version(){return '1.7.2';}
 function cacti_version_compare($a,$b,$op){return version_compare($a,$b,$op);}
@@ -45,12 +47,12 @@ function get_data_source_item_name(...$args){return 'value';}
 function substitute_snmp_query_data(...$args){return $GLOBALS['max'][2];}
 require $root.'/lib/rrd.php';
 require $root.'/lib/boost.php';
-$encryption=false;
+$proxy_key=rrd_proxy_test_key();$public_key=rrd_proxy_test_public_key($proxy_key);
 if(!socket_create_pair(AF_UNIX,SOCK_STREAM,0,$sockets)){exit(2);}
 foreach($sockets as $socket){socket_set_option($socket,SOL_SOCKET,SO_RCVTIMEO,array('sec'=>2,'usec'=>0));}
-if($response!==null){$packet=$response."_EOP_\r\n_EOT_\r\n";if(socket_write($sockets[1],$packet)!==strlen($packet)){exit(3);}}
+if($response!==null){$packet=encrypt($response,$public_key)."_EOP_\r\n_EOT_\r\n";if(socket_write($sockets[1],$packet)!==strlen($packet)){exit(3);}}
 socket_shutdown($sockets[1],1);
-$pipe=array($sockets[0],'fixture-key');$values='1700000060:42';
+$pipe=array($sockets[0],$public_key);$values='1700000060:42';
 if($operation==='boost-update'){$result=boost_rrdtool_function_update(1,'/fixture/sample.rrd','value',$values,$pipe);}
 elseif($operation==='update'||$operation==='update-unsafe'||$operation==='update-nested'){$path=$operation==='update'?'/fixture/sample.rrd':($operation==='update-nested'?'/fixture/sub/fixture/sample.rrd':"/fixture/it's a.rrd");$result=rrdtool_function_update(array($path=>array('local_data_id'=>1,'data_template_id'=>0,'times'=>array(1700000060=>array('value'=>'42')))),$pipe);}
 elseif($operation==='paths-spaced-root'){$config['rra_path']='/fixture dir';$result=array(rrdtool_command_path('/fixture dir/sample.rrd'),rrdtool_proxy_command(array('file_exists','/fixture dir/sample.rrd'),'POLLER'),rrdtool_command_path('/fixture dir/it s.rrd'));}
@@ -59,7 +61,7 @@ elseif($operation==='paths'){$result=array(rrdtool_command_path('/fixture/sample
 elseif($max){$result=$max[1]==='boost'?boost_rrdtool_function_create(1,false,$pipe):rrdtool_function_create(1,false,$pipe);}
 elseif($operation==='boost-create'){$result=boost_rrdtool_function_create(1,false,$pipe);}
 else{$result=rrdtool_function_create(1,false,$pipe);}
-$command=socket_read($sockets[1],4096,PHP_BINARY_READ);
+$command=rrd_proxy_test_plaintext(socket_read($sockets[1],4096,PHP_BINARY_READ));
 echo json_encode(array($result,$values,$command));
 socket_close($sockets[0]);socket_close($sockets[1]);
 PHP;
