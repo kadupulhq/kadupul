@@ -82,6 +82,11 @@ const UNGATED = [];
 const ANONYMOUS_ROUTES = [
     'health' => 'liveness probe; returns a fixed status document',
 ];
+// Actions that read the actor without the guard shape, traced by hand. The
+// detail pins the action body, so an edit to it shows as drift.
+const REVIEWED_ROUTES = [
+    'session' => 'answers 401 with no identity when the actor is null',
+];
 
 const BOOTSTRAP = [
     'include/auth.php' => 'auth',
@@ -1067,10 +1072,12 @@ function find_method(Stmt\ClassLike $class, string $method): ?Stmt\ClassMethod
 }
 
 /**
- * @param array<string, true> $seen
- * @return array<string, true>
+ * The class a receiver holds inside one method: $this, a typed parameter or a
+ * typed $this->property.
+ *
+ * @return Closure(Expr): ?string
  */
-function method_checks(string $root, string $class, Stmt\ClassMethod $method, int $depth, array &$seen): array
+function receiver_types(string $root, string $class, Stmt\ClassMethod $method): Closure
 {
     $loaded = load_class($root, $class);
     $properties = $loaded === null ? [] : property_types($loaded);
@@ -1080,7 +1087,8 @@ function method_checks(string $root, string $class, Stmt\ClassMethod $method, in
             $params[$param->var->name] = type_name($param->type);
         }
     }
-    $type_of = function (Expr $receiver) use ($params, $properties, $class): ?string {
+
+    return function (Expr $receiver) use ($params, $properties, $class): ?string {
         if (is_variable($receiver, 'this')) {
             return $class;
         }
@@ -1092,24 +1100,162 @@ function method_checks(string $root, string $class, Stmt\ClassMethod $method, in
         }
         return null;
     };
+}
 
+/**
+ * @return array{0: string, 1: string}|null class and method a call runs
+ */
+function call_target(Node $node, Closure $type_of): ?array
+{
+    if (($node instanceof Expr\MethodCall || $node instanceof Expr\NullsafeMethodCall) && $node->name instanceof Node\Identifier) {
+        $type = $type_of($node->var);
+        return $type === null ? null : [$type, $node->name->toString()];
+    }
+    if ($node instanceof Expr\FuncCall && $node->name instanceof Expr) {
+        // $useCase($criteria) runs the invokable's __invoke.
+        $type = $type_of($node->name);
+        return $type === null ? null : [$type, '__invoke'];
+    }
+
+    return null;
+}
+
+function is_access_call(?array $target, string $check): bool
+{
+    return $target !== null && in_array($target[0], ACCESS_TYPES, true) && $target[1] === $check;
+}
+
+/**
+ * True when the expression is consoleActor(), or a call to a method whose
+ * whole body returns one, such as the CurrentActor query.
+ */
+function yields_actor(string $root, Expr $expr, Closure $type_of, int $depth): bool
+{
+    $target = call_target($expr, $type_of);
+    if (is_access_call($target, 'consoleActor')) {
+        return true;
+    }
+    if ($target === null || $depth >= CALL_DEPTH) {
+        return false;
+    }
+    $class = load_class($root, $target[0]);
+    $callee = $class === null ? null : find_method($class, $target[1]);
+    $body = $callee?->stmts ?? [];
+
+    return count($body) === 1 && $body[0] instanceof Stmt\Return_ && $body[0]->expr !== null
+        && yields_actor($root, $body[0]->expr, receiver_types($root, $target[0], $callee), $depth + 1);
+}
+
+/**
+ * The variable an assignment of the console actor writes, or null.
+ */
+function actor_assignment(string $root, Stmt $stmt, Closure $type_of): ?string
+{
+    if (!$stmt instanceof Stmt\Expression || !$stmt->expr instanceof Expr\Assign || !is_variable($stmt->expr->var)) {
+        return null;
+    }
+
+    return yields_actor($root, $stmt->expr->expr, $type_of, 0) ? $stmt->expr->var->name : null;
+}
+
+/**
+ * @return list<Expr>
+ */
+function disjuncts(Expr $cond): array
+{
+    return $cond instanceof Expr\BinaryOp\BooleanOr ? [...disjuncts($cond->left), ...disjuncts($cond->right)] : [$cond];
+}
+
+function is_null_check(Expr $expr, string $var): bool
+{
+    if ($expr instanceof Expr\BinaryOp\Identical) {
+        return (is_variable($expr->left, $var) && is_const($expr->right, 'null'))
+            || (is_const($expr->left, 'null') && is_variable($expr->right, $var));
+    }
+
+    return ($expr instanceof Expr\BooleanNot && is_variable($expr->expr, $var))
+        || is_call($expr, 'is_null', [fn(Expr $arg) => is_variable($arg, $var)]);
+}
+
+function is_device_denial(Expr $expr, string $var, Closure $type_of): bool
+{
+    if (!$expr instanceof Expr\BooleanNot || !$expr->expr instanceof Expr\CallLike) {
+        return false;
+    }
+    $args = plain_args($expr->expr);
+
+    return is_access_call(call_target($expr->expr, $type_of), 'canManageDevices')
+        && $args !== null && count($args) === 1 && is_variable($args[0], $var);
+}
+
+/**
+ * The condition of an if with no other branch whose body ends in return or
+ * throw, so a true condition stops the action.
+ */
+function refusal_guard(?Stmt $stmt): ?Expr
+{
+    if (!$stmt instanceof Stmt\If_ || $stmt->elseifs !== [] || $stmt->else !== null || $stmt->stmts === []) {
+        return null;
+    }
+    $last = $stmt->stmts[count($stmt->stmts) - 1];
+    $stops = $last instanceof Stmt\Return_ || ($last instanceof Stmt\Expression && $last->expr instanceof Expr\Throw_);
+
+    return $stops ? $stmt->cond : null;
+}
+
+/**
+ * Checks that guard the code after them. consoleActor() counts when its result
+ * is assigned and the next statement returns or throws on null; a negated
+ * canManageDevices() of that variable counts in the same guard or the one
+ * right after it. A discarded or unguarded call counts for nothing.
+ *
+ * @param list<Stmt> $stmts
+ * @return array<string, true>
+ */
+function guarded_checks(string $root, array $stmts, Closure $type_of): array
+{
+    $lists = [$stmts];
+    foreach (walk($stmts, false) as $node) {
+        if ($node instanceof Stmt && !$node instanceof Node\FunctionLike && !$node instanceof Stmt\ClassLike
+            && property_exists($node, 'stmts') && is_array($node->stmts)) {
+            $lists[] = $node->stmts;
+        }
+    }
     $checks = [];
+    foreach ($lists as $list) {
+        $list = array_values($list);
+        foreach ($list as $i => $stmt) {
+            $var = actor_assignment($root, $stmt, $type_of);
+            $guard = $var === null ? null : refusal_guard($list[$i + 1] ?? null);
+            if ($guard === null || !array_filter(disjuncts($guard), fn(Expr $e) => is_null_check($e, $var))) {
+                continue;
+            }
+            $checks['consoleActor'] = true;
+            $next = refusal_guard($list[$i + 2] ?? null);
+            foreach ([...disjuncts($guard), ...($next === null ? [] : disjuncts($next))] as $expr) {
+                if (is_device_denial($expr, $var, $type_of)) {
+                    $checks['canManageDevices'] = true;
+                }
+            }
+        }
+    }
+
+    return $checks;
+}
+
+/**
+ * @param array<string, true> $seen
+ * @return array<string, true>
+ */
+function method_checks(string $root, string $class, Stmt\ClassMethod $method, int $depth, array &$seen): array
+{
+    $type_of = receiver_types($root, $class, $method);
+    $checks = guarded_checks($root, $method->stmts ?? [], $type_of);
     $calls = [];
     foreach (walk($method->stmts ?? []) as $node) {
-        if (($node instanceof Expr\MethodCall || $node instanceof Expr\NullsafeMethodCall) && $node->name instanceof Node\Identifier) {
-            $type = $type_of($node->var);
-            $name = $node->name->toString();
-            if ($type !== null && in_array($type, ACCESS_TYPES, true) && in_array($name, ACCESS_CHECKS, true)) {
-                $checks[$name] = true;
-            } elseif ($type !== null) {
-                $calls[] = [$type, $name];
-            }
-        } elseif ($node instanceof Expr\FuncCall && $node->name instanceof Expr) {
-            // $useCase($criteria) runs the invokable's __invoke.
-            $type = $type_of($node->name);
-            if ($type !== null) {
-                $calls[] = [$type, '__invoke'];
-            }
+        $target = call_target($node, $type_of);
+        if ($target !== null && !in_array($target[0], ACCESS_TYPES, true)) {
+            $calls[] = $target;
         }
     }
     if ($depth >= CALL_DEPTH) {
@@ -1276,15 +1422,27 @@ function symfony_routes(string $root, array $files): array
                             continue;
                         }
                         $seen = [];
-                        $checks = method_checks($root, $class->namespacedName?->toString() ?? '', $method, 0, $seen);
+                        $name = $class->namespacedName?->toString() ?? '';
+                        $checks = method_checks($root, $name, $method, 0, $seen);
                         $detail = $route['detail'];
+                        $reviewed = '';
+                        if (!isset($checks['consoleActor']) && isset(REVIEWED_ROUTES[$route['name']])) {
+                            $type_of = receiver_types($root, $name, $method);
+                            foreach ($method->stmts ?? [] as $stmt) {
+                                if (actor_assignment($root, $stmt, $type_of) !== null) {
+                                    $checks['consoleActor'] = true;
+                                    $reviewed = '; reviewed at ' . digest($method->stmts) . ': ' . REVIEWED_ROUTES[$route['name']];
+                                    break;
+                                }
+                            }
+                        }
                         if (isset($checks['consoleActor'])) {
                             $realms ??= session_realms($root, $sources);
                             $grant = 'realm ' . $realms['consoleActor'];
                             if (isset($checks['canManageDevices'])) {
                                 $grant .= ' + realm ' . $realms['canManageDevices'];
                             }
-                            $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; ConsoleAccess ' . $grant];
+                            $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; ConsoleAccess ' . $grant . $reviewed];
                         } elseif (array_key_exists($route['name'], ANONYMOUS_ROUTES)) {
                             $rows[] = ['app.php' . $route['path'], 'symfony:' . $route['name'], $detail . '; anonymous-allowed: ' . ANONYMOUS_ROUTES[$route['name']]];
                         } else {

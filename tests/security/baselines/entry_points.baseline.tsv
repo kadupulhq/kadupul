@@ -20,7 +20,7 @@ app.php/inventory/sites/legacy	symfony:inventory_sites_legacy	methods=GET|HEAD|P
 app.php/inventory/sites/new	symfony:inventory_site_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
 app.php/inventory/sites/{id}/edit	symfony:inventory_site_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 3
 app.php/inventory/sites/{operation}	symfony:inventory_site_action	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 3
-app.php/session	symfony:session	methods=GET|HEAD; ConsoleAccess realm 8
+app.php/session	symfony:session	methods=GET|HEAD; ConsoleAccess realm 8; reviewed at c1e137157c2e: answers 401 with no identity when the actor is null
 auth_changepassword.php	authenticated	own session check; action=checkpass answers anonymously with the password policy verdict; reviewed at ff7ac6fa6c55
 auth_login.php	anonymous-allowed	login handler; include/auth.php includes it after bootstrap, so a direct request stops at the first undefined function; reviewed at 783892662d44
 auth_profile.php	guest-or-realm:20	include/auth.php; guest_account

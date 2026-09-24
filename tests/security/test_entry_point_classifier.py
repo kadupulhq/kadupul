@@ -123,13 +123,85 @@ final class TwoActions
     #[Route('/a', name: 'a')]
     public function checked(): Response
     {
-        $this->access->consoleActor();
+        $actor = $this->access->consoleActor();
+        if ($actor === null) {
+            return new Response('', 401);
+        }
         return new Response();
     }
 
     #[Route('/b', name: 'b')]
     public function open(): Response
     {
+        return new Response();
+    }
+
+    #[Route('/discarded', name: 'discarded')]
+    public function discarded(): Response
+    {
+        $this->access->consoleActor();
+        return new Response();
+    }
+
+    #[Route('/unguarded', name: 'unguarded')]
+    public function unguarded(): Response
+    {
+        $actor = $this->access->consoleActor();
+        return new Response((string) $actor?->id);
+    }
+
+    #[Route('/late-guard', name: 'late_guard')]
+    public function lateGuard(Sites $sites): Response
+    {
+        $actor = $this->access->consoleActor();
+        $sites->unchecked();
+        if ($actor === null) {
+            return new Response('', 401);
+        }
+        return new Response();
+    }
+
+    #[Route('/logged-only', name: 'logged_only')]
+    public function loggedOnly(): Response
+    {
+        $actor = $this->access->consoleActor();
+        if ($actor === null) {
+            error_log('no actor');
+        }
+        return new Response();
+    }
+
+    #[Route('/devices', name: 'devices')]
+    public function devices(): Response
+    {
+        $actor = $this->access->consoleActor();
+        if ($actor === null || !$this->access->canManageDevices($actor)) {
+            return new Response('', 403);
+        }
+        return new Response();
+    }
+
+    #[Route('/devices-split', name: 'devices_split')]
+    public function devicesSplit(): Response
+    {
+        $actor = $this->access->consoleActor();
+        if (null === $actor) {
+            throw new \\RuntimeException();
+        }
+        if (!$this->access->canManageDevices($actor)) {
+            throw new \\RuntimeException();
+        }
+        return new Response();
+    }
+
+    #[Route('/devices-discarded', name: 'devices_discarded')]
+    public function devicesDiscarded(): Response
+    {
+        $actor = $this->access->consoleActor();
+        if ($actor === null) {
+            return new Response('', 401);
+        }
+        $this->access->canManageDevices($actor);
         return new Response();
     }
 }
@@ -144,7 +216,10 @@ final class Sites
 
     public function checked(): void
     {
-        $this->access->consoleActor();
+        $actor = $this->access->consoleActor();
+        if (!$actor) {
+            throw new \\RuntimeException();
+        }
     }
 
     public function unchecked(): void
@@ -176,6 +251,51 @@ final class ServiceActions
     }
 }
 '''
+# A query that only returns the actor passes the guard duty to its caller.
+WHO = '''<?php
+namespace Kadupul\\Fixture;
+use Kadupul\\IdentityAccess\\Contract\\ConsoleAccess;
+final class Who
+{
+    public function __construct(private ConsoleAccess $access) {}
+
+    public function __invoke(): ?Actor
+    {
+        return $this->access->consoleActor();
+    }
+}
+'''
+WHO_CONTROLLER = '''<?php
+namespace Kadupul\\Fixture;
+use Symfony\\Component\\Routing\\Attribute\\Route;
+final class WhoActions
+{
+    #[Route('/who-guarded', name: 'who_guarded')]
+    public function guarded(Who $who): Response
+    {
+        $actor = $who();
+        if (is_null($actor)) {
+            return new Response('', 401);
+        }
+        return new Response();
+    }
+
+    #[Route('/who-discarded', name: 'who_discarded')]
+    public function discarded(Who $who): Response
+    {
+        $who();
+        return new Response();
+    }
+
+    // Reviewed by name, but the review needs the actor to be read at all.
+    #[Route('/session', name: 'session')]
+    public function session(Who $who): Response
+    {
+        $who();
+        return new Response();
+    }
+}
+'''
 ALIASED_CONTROLLER = '''<?php
 namespace Kadupul\\Fixture;
 use Symfony\\Component\\Routing\\Attribute\\Route as Path;
@@ -191,8 +311,26 @@ final class Aliased
 ROUTES = {
     'app.php/a': 'symfony:a',
     'app.php/b': 'unknown',
+    'app.php/discarded': 'unknown',
+    'app.php/unguarded': 'unknown',
+    'app.php/late-guard': 'unknown',
+    'app.php/logged-only': 'unknown',
+    'app.php/devices': 'symfony:devices',
+    'app.php/devices-split': 'symfony:devices_split',
+    'app.php/devices-discarded': 'symfony:devices_discarded',
     'app.php/via-unchecked': 'unknown',
     'app.php/via-checked': 'symfony:via_checked',
+    'app.php/who-guarded': 'symfony:who_guarded',
+    'app.php/who-discarded': 'unknown',
+    'app.php/session': 'unknown',
+}
+# canManageDevices() counts only in a guard on the checked actor.
+GRANTS = {
+    'app.php/a': 'ConsoleAccess realm 8',
+    'app.php/devices': 'ConsoleAccess realm 8 + realm 3',
+    'app.php/devices-split': 'ConsoleAccess realm 8 + realm 3',
+    'app.php/devices-discarded': 'ConsoleAccess realm 8',
+    'app.php/who-guarded': 'ConsoleAccess realm 8',
 }
 
 REALMS = "<?php\n$user_auth_realm_filenames = array(\n\t'page.php' => 3,\n\t\"dq.php\" => 3,\n\t'open.php' => -1,\n);\n"
@@ -283,7 +421,8 @@ def main():
         root = tree(directory)
         for path, text in (('src/IdentityAccess/Infrastructure/Legacy/LegacyAuthenticatedSession.php', SESSION),
                            ('src/Fixture/TwoActions.php', CONTROLLER), ('src/Fixture/Sites.php', SERVICE),
-                           ('src/Fixture/ServiceActions.php', SERVICE_CONTROLLER)):
+                           ('src/Fixture/ServiceActions.php', SERVICE_CONTROLLER), ('src/Fixture/Who.php', WHO),
+                           ('src/Fixture/WhoActions.php', WHO_CONTROLLER)):
             (root / path).parent.mkdir(parents=True, exist_ok=True)
             (root / path).write_text(text)
         # A check in one action, or in one method of a used class, must not
@@ -294,9 +433,10 @@ def main():
             got = rows.get(entry, ('missing',))[0]
             if got != expected:
                 failures.append('route %s: expected %s, got %s' % (entry, expected, got))
-        count += 1
-        if 'ConsoleAccess realm 8' not in rows.get('app.php/a', ('', ''))[1]:
-            failures.append('route app.php/a: expected the realm read from the session adapter, got %s' % (rows.get('app.php/a'),))
+        for entry, grant in GRANTS.items():
+            count += 1
+            if not rows.get(entry, ('', ''))[1].endswith('; ' + grant):
+                failures.append('route %s: expected %s read from the session adapter, got %s' % (entry, grant, rows.get(entry)))
         # A route under an alias is not missed.
         count += 1
         (root / 'src/Fixture/Aliased.php').write_text(ALIASED_CONTROLLER)
