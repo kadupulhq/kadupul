@@ -73,6 +73,21 @@ final class ProxyCipher
         return $this->publicKey($publicKey)->getFingerprint('md5');
     }
 
+    /** Whether the private key belongs to the public key this server presents. */
+    public function isKeyPair(string $publicKey, string $privateKey): bool
+    {
+        try {
+            $private = RSA::loadPrivateKey($privateKey);
+            if (!$private instanceof RSA\PrivateKey) {
+                return false;
+            }
+
+            return hash_equals($this->fingerprint($publicKey), $private->getPublicKey()->getFingerprint('md5'));
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
     private function publicKey(string $publicKey): RSA\PublicKey
     {
         $key = RSA::loadPublicKey($publicKey);

@@ -229,6 +229,13 @@ function __rrd_proxy_init($logopt = 'WEBLOG')
         return false;
     }
 
+    // Every reply is decrypted with the private half, so a session without a
+    // matching one would connect and then fail on each command.
+    if (!rrdtool_proxy_cipher()->isKeyPair($client_key, (string) read_config_option('rsa_private_key'))) {
+        cacti_log('CACTI2RRDP ERROR: This server\'s RSA private key is missing or does not match its public key.', false, $logopt, POLLER_VERBOSITY_LOW);
+        return false;
+    }
+
     // Server #1 is the main proxy and #2 the backup; either is tried when the other fails.
     $suffixes = array(1 => '', 2 => '_backup');
     $order = (read_config_option('rrdp_load_balancing') == 'on' && random_int(1, 2) === 2) ? array(2, 1) : array(1, 2);
