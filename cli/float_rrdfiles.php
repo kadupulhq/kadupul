@@ -111,6 +111,7 @@ if (cacti_sizeof($parms)) {
 			$host_id = $value;
 
 			break;
+		case '--host-template-id':
 		case '--host-template_id':
 			$host_template_id = $value;
 
