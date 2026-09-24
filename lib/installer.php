@@ -3608,12 +3608,12 @@ class Installer implements JsonSerializable
 
     private function convertDatabase()
     {
-        $tables = db_fetch_assoc("SELECT value FROM settings WHERE name like 'install_table_%'");
+        $tables = db_fetch_assoc("SELECT name, value FROM settings WHERE name like 'install_table_%'");
         if (cacti_sizeof($tables)) {
             log_install_always('', __('Found %s tables to convert', cacti_sizeof($tables)));
             $this->setProgress(Installer::PROGRESS_TABLES_BEGIN);
             $i = 0;
-            foreach ($tables as $key => $table) {
+            foreach ($tables as $table) {
                 $i++;
                 $name = $table['value'];
                 if (!empty($name)) {
@@ -3628,7 +3628,7 @@ class Installer implements JsonSerializable
                         log_install_always('convert', __('Converting Table #%s \'%s\' failed in-process: %s', $i, $name, $conversion->error), true);
                     }
                     if ($conversion->dequeues()) {
-                        set_install_config_option($key, '');
+                        set_install_config_option($table['name'], '');
                     }
                 }
             }

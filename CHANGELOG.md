@@ -12,6 +12,8 @@ Targeting `v1.3.0`, the first planned application release. See
 
 ### Fixed
 
+- Clear each converted table from the installer's queue. It wrote a setting named `0` instead, so the queue was never cleared.
+
 - Restore the RRDtool proxy client, which could not connect on phpseclib 4. It now checks the proxy's key fingerprint in constant time, gives up on a key exchange that is oversized or too slow, and never falls back to unencrypted frames. A default font path with a blank or a quote is no longer sent to the proxy. Fixes #399.
 
 - Leave the data source type alone when tuning an RRD file with an empty or unknown type, instead of raising a PHP warning and, for an unknown type, sending RRDtool an empty type.

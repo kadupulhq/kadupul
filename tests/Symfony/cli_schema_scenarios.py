@@ -284,10 +284,11 @@ def verify_installer_conversion(harness, check, admin):
     try:
         result = harness.php('-r', step)
         converted = status(harness, MYISAM)
+        dequeued = harness.sql(f"SELECT value FROM settings WHERE name = 'install_table_{MYISAM}'").strip()
+        stray = harness.sql("SELECT COUNT(*) FROM settings WHERE name = '0'").strip()
         written = after_timestamp(log_lines(harness)[marks:], 'INSTALL')
     finally:
-        # #431: the step leaves the queue row and adds one named by its index;
-        # both are existing behaviour, so the harness only cleans up after it.
+        # Restore the queue exactly as it was before the scenario.
         added = set(harness.sql('SELECT name FROM settings').splitlines()) - names
         harness.sql("DELETE FROM settings WHERE name LIKE 'install\\_table\\_%';"
                     + ''.join(f"DELETE FROM settings WHERE name = CONVERT(UNHEX('{name.encode().hex()}') USING utf8mb4) COLLATE utf8mb4_unicode_ci;" for name in added))
@@ -303,6 +304,8 @@ def verify_installer_conversion(harness, check, admin):
           and f"INSTALL: always: Converting Table #1 '{MYISAM}'" in written
           and not any('failed in-process' in line for line in written),
           'installer logs the queued conversion through log_install_always')
+    check(dequeued == '' and stray == '0',
+          'installer clears the converted table from its queue')
 
 
 WIDEN_ORIGINAL = 'tests/Fixtures/legacy-cli/fix_mediumint.php'
