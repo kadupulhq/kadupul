@@ -1,0 +1,254 @@
+entry	gate	detail
+.php-cs-fixer.php	web-server-denied	nginx; apache: opt-in via .htaccess.dist
+about.php	authenticated	include/auth.php realm -1
+aggregate_graphs.php	realm:5	include/auth.php
+aggregate_templates.php	realm:5	include/auth.php
+app.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
+app.php/healthz	symfony:health	methods=GET|HEAD; anonymous-allowed: liveness probe; returns a fixed status document
+app.php/inventory/devices	symfony:inventory_devices	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices.csv	symfony:inventory_devices_csv	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices.json	symfony:inventory_devices_json	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/new	symfony:inventory_device_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/remove	symfony:inventory_device_remove	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/{id}	symfony:inventory_device_details	methods=GET|HEAD requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/{id}/collector	symfony:inventory_device_collector	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/{id}/edit	symfony:inventory_device_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/{id}/template	symfony:inventory_device_template	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,7}; ConsoleAccess realm 8 + realm 3
+app.php/inventory/devices/{operation}	symfony:inventory_device_state	methods=GET|HEAD|POST requirements=operation=enable|disable; ConsoleAccess realm 8 + realm 3
+app.php/inventory/sites	symfony:inventory_sites	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
+app.php/inventory/sites.json	symfony:inventory_sites_json	methods=GET|HEAD; ConsoleAccess realm 8 + realm 3
+app.php/inventory/sites/legacy	symfony:inventory_sites_legacy	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
+app.php/inventory/sites/new	symfony:inventory_site_create	methods=GET|HEAD|POST; ConsoleAccess realm 8 + realm 3
+app.php/inventory/sites/{id}/edit	symfony:inventory_site_edit	methods=GET|HEAD|POST requirements=id=[1-9][0-9]{0,9}; ConsoleAccess realm 8 + realm 3
+app.php/inventory/sites/{operation}	symfony:inventory_site_action	methods=GET|HEAD|POST requirements=operation=delete|duplicate; ConsoleAccess realm 8 + realm 3
+app.php/session	symfony:session	methods=GET|HEAD; ConsoleAccess realm 8; reviewed at c1e137157c2e: answers 401 with no identity when the actor is null
+auth_changepassword.php	authenticated	own session check; action=checkpass answers anonymously with the password policy verdict; reviewed at ff7ac6fa6c55
+auth_login.php	anonymous-allowed	login handler; include/auth.php includes it after bootstrap, so a direct request stops at the first undefined function; reviewed at 783892662d44
+auth_profile.php	guest-or-realm:20	include/auth.php; guest_account
+automation_devices.php	realm:23	include/auth.php
+automation_graph_rules.php	realm:23	include/auth.php
+automation_networks.php	realm:23	include/auth.php
+automation_snmp.php	realm:23	include/auth.php
+automation_templates.php	realm:23	include/auth.php
+automation_tree_rules.php	realm:23	include/auth.php
+bin/	web-server-denied	nginx; apache .htaccess
+cache/	web-server-denied	nginx; apache .htaccess
+cactid.php	cli-only	guard: include/cli_check.php
+cdef.php	realm:14	include/auth.php
+cli/	web-server-denied	nginx; apache .htaccess
+clog.php	guest-or-realm:18	include/auth.php; guest_account
+clog_user.php	guest-or-realm:19	include/auth.php; guest_account
+cmd.php	cli-only	guard: include/cli_check.php
+cmd_realtime.php	cli-only	guard: include/cli_check.php
+color.php	realm:5	include/auth.php
+color_templates.php	realm:5	include/auth.php
+color_templates_items.php	realm:5	include/auth.php
+config/	web-server-denied	nginx; apache .htaccess
+contrib/	web-server-denied	nginx; apache .htaccess
+csp_report.php	anonymous-allowed	CSP violation report sink; browsers post reports without credentials; reviewed at efe610420705
+data_debug.php	realm:15	include/auth.php
+data_input.php	realm:2	include/auth.php
+data_queries.php	realm:13	include/auth.php
+data_source_profiles.php	realm:9	include/auth.php
+data_sources.php	realm:3	include/auth.php
+data_templates.php	realm:11	include/auth.php
+docs/	web-server-denied	nginx; apache .htaccess
+formats/index.php	anonymous-allowed	redirect-only
+gprint_presets.php	realm:5	include/auth.php
+graph.php	guest-or-realm:7	include/auth.php; guest_account
+graph_image.php	guest-or-realm:7	include/auth.php; guest_account, auth_text
+graph_json.php	guest-or-realm:7	include/auth.php; guest_account, auth_json
+graph_realtime.php	guest-or-realm:25	include/auth.php; guest_account
+graph_templates.php	realm:10	include/auth.php
+graph_templates_inputs.php	realm:10	include/auth.php
+graph_templates_items.php	realm:10	include/auth.php
+graph_view.php	guest-or-realm:7	include/auth.php; guest_account
+graph_xport.php	guest-or-realm:7	include/auth.php; guest_account
+graphs.php	realm:5	include/auth.php
+graphs_items.php	realm:5	include/auth.php
+graphs_new.php	realm:5	include/auth.php
+help.php	guest-or-authenticated	include/auth.php realm -1; guest_account
+host.php	realm:3	include/auth.php
+host_templates.php	realm:12	include/auth.php
+images/index.php	anonymous-allowed	redirect-only
+include/admin_notifications.php	anonymous-allowed	inert: declarations and literal assignments only
+include/auth.php	realm:0	include/auth.php; unmapped page, denied to every account
+include/bottom_footer.php	anonymous-allowed	fragment without bootstrap, reviewed at f4a59fa39878; included by lib/functions.php
+include/cli_check.php	cli-only	guard: php_sapi_name() check
+include/config.php	web-server-denied	nginx; apache .htaccess
+include/content/index.php	anonymous-allowed	redirect-only
+include/csrf.php	anonymous-allowed	fragment without bootstrap, reviewed at 80bc61dab43e; included by include/global.php
+include/global.php	web-server-denied	nginx; apache .htaccess
+include/global_arrays.php	anonymous-allowed	fragment without bootstrap, reviewed at 68f2974f3548; included by include/global.php, lib/api_aggregate.php, lib/boost.php
+include/global_constants.php	anonymous-allowed	fragment without bootstrap, reviewed at 44950e59dd15; included by include/global.php
+include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at 9fdc825797b5; included by include/global.php
+include/global_languages.php	anonymous-allowed	fragment without bootstrap, reviewed at 614a6beac129; included by include/global.php
+include/global_session.php	anonymous-allowed	fragment without bootstrap, reviewed at 0db939a69dc9; included by auth_changepassword.php, auth_login.php, graph_realtime.php
+include/global_settings.php	anonymous-allowed	fragment without bootstrap, reviewed at 0e36496c6cea; included by include/global.php
+include/index.php	anonymous-allowed	redirect-only
+include/js/LC_MESSAGES/index.php	anonymous-allowed	redirect-only
+include/js/index.php	anonymous-allowed	redirect-only
+include/plugins.php	web-server-denied	nginx; apache .htaccess
+include/runtime.php	anonymous-allowed	fragment without bootstrap, reviewed at 338bc1c9ed7b; included by config/bootstrap.php, include/global.php
+include/session.php	anonymous-allowed	fragment without bootstrap, reviewed at 7abe13b5d1f6; included by include/global.php
+include/themes/classic/default/index.php	anonymous-allowed	redirect-only
+include/themes/classic/images/index.php	anonymous-allowed	redirect-only
+include/themes/classic/index.php	anonymous-allowed	redirect-only
+include/themes/classic/rrdtheme.php	anonymous-allowed	inert: declarations and literal assignments only
+include/themes/dark/default/index.php	anonymous-allowed	redirect-only
+include/themes/dark/images/index.php	anonymous-allowed	redirect-only
+include/themes/dark/index.php	anonymous-allowed	redirect-only
+include/themes/dark/rrdtheme.php	anonymous-allowed	inert: declarations and literal assignments only
+include/themes/index.php	anonymous-allowed	redirect-only
+include/themes/midwinter/default/index.php	anonymous-allowed	redirect-only
+include/themes/midwinter/images/index.php	anonymous-allowed	redirect-only
+include/themes/midwinter/index.php	anonymous-allowed	redirect-only
+include/themes/midwinter/rrdtheme.php	anonymous-allowed	inert: declarations and literal assignments only
+include/themes/midwinter/update_hash.php	cli-only	guard: php_sapi_name() check
+include/themes/modern/default/index.php	anonymous-allowed	redirect-only
+include/themes/modern/images/index.php	anonymous-allowed	redirect-only
+include/themes/modern/index.php	anonymous-allowed	redirect-only
+include/themes/modern/rrdtheme.php	anonymous-allowed	inert: declarations and literal assignments only
+include/themes/paper-plane/default/index.php	anonymous-allowed	redirect-only
+include/themes/paper-plane/images/index.php	anonymous-allowed	redirect-only
+include/themes/paper-plane/index.php	anonymous-allowed	redirect-only
+include/themes/paper-plane/rrdtheme.php	anonymous-allowed	inert: declarations and literal assignments only
+include/themes/paw/default/index.php	anonymous-allowed	redirect-only
+include/themes/paw/images/index.php	anonymous-allowed	redirect-only
+include/themes/paw/index.php	anonymous-allowed	redirect-only
+include/themes/paw/rrdtheme.php	anonymous-allowed	inert: declarations and literal assignments only
+include/themes/sunrise/default/index.php	anonymous-allowed	redirect-only
+include/themes/sunrise/images/index.php	anonymous-allowed	redirect-only
+include/themes/sunrise/index.php	anonymous-allowed	redirect-only
+include/themes/sunrise/rrdtheme.php	anonymous-allowed	inert: declarations and literal assignments only
+include/top_general_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 0b6c358bacb7; included by lib/functions.php
+include/top_graph_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 3499de0769a5; included by lib/functions.php
+include/top_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 2ec65df77ed9; included by lib/functions.php
+include/vendor/	web-server-denied	nginx; apache .htaccess
+index.php	realm:8	include/auth.php
+install/background.php	cli-only	guard: include/cli_check.php
+install/cli_check.php	cli-only	guard: include/cli_check.php
+install/cli_test.php	cli-only	guard: php_sapi_name() check
+install/functions.php	anonymous-allowed	inert: declarations and literal assignments only
+install/index.php	anonymous-allowed	redirect-only
+install/install.php	realm:26	include/auth.php
+install/step_json.php	realm:26	include/auth.php; auth_json
+install/upgrades/0_8_1.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/0_8_2.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/0_8_2a.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/0_8_3.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/0_8_4.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/0_8_5.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/0_8_6.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/0_8_6a.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/0_8_6d.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/0_8_6e.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/0_8_6g.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/0_8_6h.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/0_8_6i.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/0_8_7.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/0_8_7a.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/0_8_7b.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/0_8_7c.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/0_8_7h.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/0_8_8.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_0_0.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_0_4.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_0_5.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_1_11.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_1_14.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_1_17.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_1_2.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_1_20.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_1_26.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_1_28.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_1_31.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_1_34.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_1_35.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_1_36.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_1_37.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_1_4.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_1_6.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_1_7.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_1_8.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_0.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_1.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_11.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_14.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_15.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_17.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_19.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_2.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_20.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_21.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_22.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_23.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_25.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_26.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_27.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_3.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_31.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_5.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_7.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/1_2_8.php	anonymous-allowed	inert: declarations and literal assignments only
+install/upgrades/index.php	anonymous-allowed	redirect-only
+lib/	web-server-denied	nginx; apache .htaccess
+link.php	realm:10000+id	own realm check per external link id; reviewed at 929a564cf868
+links.php	realm:15	include/auth.php
+locales/LC_MESSAGES/index.php	anonymous-allowed	redirect-only
+locales/index.php	anonymous-allowed	redirect-only
+locales/po/index.php	anonymous-allowed	redirect-only
+log/	web-server-denied	nginx; apache .htaccess
+logout.php	anonymous-allowed	include/auth.php returns before the session check
+managers.php	realm:15	include/auth.php
+mibs/	web-server-denied	nginx; apache .htaccess
+package_import.php	realm:17	include/auth.php
+permission_denied.php	authenticated	include/auth.php realm -1
+plugins.php	realm:101	include/auth.php
+plugins/index.php	anonymous-allowed	redirect-only
+poller.php	cli-only	guard: include/cli_check.php
+poller_automation.php	cli-only	guard: include/cli_check.php
+poller_boost.php	cli-only	guard: include/cli_check.php
+poller_commands.php	cli-only	guard: include/cli_check.php
+poller_dsstats.php	cli-only	guard: include/cli_check.php
+poller_maintenance.php	cli-only	guard: include/cli_check.php
+poller_realtime.php	cli-only	guard: include/cli_check.php
+poller_recovery.php	cli-only	guard: include/cli_check.php
+poller_reports.php	cli-only	guard: include/cli_check.php
+poller_rrdcheck.php	cli-only	guard: include/cli_check.php
+poller_spikekill.php	cli-only	guard: include/cli_check.php
+pollers.php	realm:3	include/auth.php
+public/index.php	symfony:front-controller	Symfony kernel; routes listed as app.php/... rows
+remote_agent.php	anonymous-allowed	no user session; remote_client_authorized() admits registered poller addresses only; reviewed at 5d7a425129b8
+reports_admin.php	realm:21	include/auth.php
+reports_user.php	realm:22	include/auth.php
+resource/index.php	anonymous-allowed	redirect-only
+resource/script_queries/index.php	anonymous-allowed	redirect-only
+resource/script_server/index.php	anonymous-allowed	redirect-only
+resource/snmp_queries/index.php	anonymous-allowed	redirect-only
+rra/	web-server-denied	nginx; apache .htaccess
+rrdcheck.php	realm:15	include/auth.php
+rrdcleaner.php	realm:15	include/auth.php
+script_server.php	cli-only	guard: php_sapi_name() check
+scripts/	web-server-denied	nginx; apache .htaccess
+service/index.php	anonymous-allowed	redirect-only
+service_check.php	anonymous-allowed	service probe; prints success or fail for the schema version only; reviewed at 5b3d5c6ba206
+settings.php	realm:15	include/auth.php
+sites.php	symfony:forward	forwards to app.php/inventory/sites/legacy
+snmpagent_mibcache.php	cli-only	guard: include/cli_check.php
+snmpagent_mibcachechild.php	cli-only	guard: include/cli_check.php
+snmpagent_persist.php	cli-only	guard: include/cli_check.php
+spikekill.php	realm:1043	include/auth.php
+src/	web-server-denied	nginx; apache .htaccess
+templates/	web-server-denied	nginx; apache .htaccess
+templates_export.php	realm:16	include/auth.php
+templates_import.php	realm:17	include/auth.php
+tests/	web-server-denied	nginx; apache .htaccess
+tools/	web-server-denied	nginx; apache .htaccess
+tree.php	realm:4	include/auth.php
+user_admin.php	realm:1	include/auth.php
+user_domains.php	realm:1	include/auth.php
+user_group_admin.php	realm:1	include/auth.php
+utilities.php	realm:15	include/auth.php
+var/	web-server-denied	nginx; apache .htaccess
+vdef.php	realm:14	include/auth.php
