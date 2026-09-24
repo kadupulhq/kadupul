@@ -131,7 +131,9 @@ Use the house wrappers instead of raw equivalents:
    re-push.
 3. Commit touches `lib/api_aggregate.php` or `lib/aggregate.php` when the PR
    title does not mention aggregates — an assistant rewrote it by mistake.
-4. `str_contains(` appears on a 1.2.x branch — not PHP 7.4 compatible.
+4. Syntax newer than PHP 8.1 appears on a 1.2.x branch.  `readonly class` and
+   the rest of 8.2 parse on a current interpreter and fail on the oldest one
+   the branch supports, so a local run proves nothing.
 5. PR description has "Summary / Test plan / Impact" headers with bullets — a
    dead giveaway of AI authorship.  Write a short paragraph instead.
 6. 9 commits pushed within 30 seconds — pace commits, or squash them before
