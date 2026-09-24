@@ -3,6 +3,7 @@ Cacti CHANGELOG
 1.2.32
 -issue: import_template --preview now reports through the command line rather than printing raw HTML, and says the Template would be imported instead of claiming it was; the preview flag reached import_display_results as its web argument
 -issue: Remove the Refresh Poller Table Per Cycle setting, which had no reader and described rebuilding a MEMORY table that 1.2.32 converts to InnoDB; the upgrade drops the stored row
+-issue: Count Data Collectors from the poller table in boost; the query named a pollers table that does not exist, so disabling boost in the UI could switch it off even with multiple collectors defined
 -issue: float_rrdfiles now accepts --host-template-id as its help documents; only the undocumented --host-template_id spelling worked and the documented one exited as an invalid parameter
 -issue: add_graphs --list-snmp-values now refuses an empty --snmp-field and keeps the supplied one; the guard assigned to $snmpField instead of comparing, so it never fired and emptied the field it was about to use
 -issue: copy_user now detects a missing user and exits non-zero; the guards tested the row with isset(), which is true for the empty array db_fetch_row returns, and the branches ended in die() with a string, which exits 0
