@@ -1384,10 +1384,15 @@ function boost_process_poller_output($local_data_id, $rrdtool_pipe = '') {
 
 		$path_template = boost_get_rrd_filename_and_template($local_data_id);
 
-		if (cacti_sizeof($path_template)) {
-			$rrd_path = $path_template['rrd_path'];
-			$rrd_tmpl = $path_template['rrd_template'];
-		} else {
+		$rrd_path = $path_template['rrd_path'];
+		$rrd_tmpl = $path_template['rrd_template'];
+
+		// boost_get_rrd_filename_and_template() always returns both keys, so
+		// testing the array told us nothing and this fallback never ran. It is
+		// needed: that lookup joins graph_templates_item, so a data source that
+		// is polled but has no graph item comes back with an empty path, and an
+		// empty path is discarded as a deleted data source further down.
+		if ($rrd_path == '') {
 			$rrd_path = db_fetch_cell_prepared('SELECT rrd_path
 				FROM poller_item
 				WHERE local_data_id = ?',
