@@ -46,6 +46,11 @@ SOURCE;
         fclose($pipes[1]);
         fclose($pipes[2]);
         $status = proc_close($process);
+        if ($coverage !== null) {
+            $reports = glob($dir . '/*.coverage');
+            expect($reports)->toHaveCount(1);
+            $coverage->merge(unserialize(file_get_contents($reports[0])));
+        }
     } finally {
         foreach (glob($dir . '/*') as $file) {
             unlink($file);
