@@ -155,3 +155,92 @@ test('the skip notice names only the files that were skipped', function () {
 	expect(strpos($result['out'], 'ignoring Kadupul Log : cacti.log-20200101'))->toBeFalse();
 	expect($result['out'])->toContain('Purging Kadupul Log : cacti.log-20200101');
 });
+
+/**
+ * Run logrotate_rotatenow() with its collaborators stubbed and report which
+ * logs it rotated and cleaned, in order.
+ *
+ * @param string|null $stderr The configured stderr log, or null for none.
+ *
+ * @return array{rotated: array<int, string>, cleaned: array<int, string>}
+ */
+function rotatenow_calls($stderr = null) {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/poller_maintenance.php');
+	expect($source)->not->toBeFalse();
+
+	$start = strpos($source, 'function logrotate_rotatenow()');
+	expect($start)->not->toBeFalse();
+
+	$open  = strpos($source, '{', $start);
+	$depth = 0;
+	$end   = $open;
+
+	for ($i = $open; $i < strlen($source); $i++) {
+		if ($source[$i] === '{') {
+			$depth++;
+		} elseif ($source[$i] === '}') {
+			$depth--;
+
+			if ($depth === 0) {
+				$end = $i + 1;
+
+				break;
+			}
+		}
+	}
+
+	$function = substr($source, $start, $end - $start);
+
+	$code = '<?php
+$GLOBALS["rotated"] = array();
+$GLOBALS["cleaned"] = array();
+$config = array("base_path" => "/opt/cacti");
+function read_config_option($name) {
+	if ($name === "path_cactilog")  { return "/opt/cacti/log/cacti.log"; }
+	if ($name === "path_stderrlog") { return ' . var_export($stderr === null ? '' : $stderr, true) . '; }
+	if ($name === "logrotate_retain") { return 7; }
+	return "";
+}
+function set_config_option($n, $v) {}
+function cacti_log($m, $s = true, $f = "", $v = 0) {}
+function logrotate_file_rotate($name, $log, $date) { $GLOBALS["rotated"][] = $name; return 1; }
+function logrotate_file_clean($name, $log, $date, $rotation) { $GLOBALS["cleaned"][] = $name; return 1; }
+' . $function . '
+logrotate_rotatenow();
+echo json_encode(array("rotated" => $GLOBALS["rotated"], "cleaned" => $GLOBALS["cleaned"]));
+';
+
+	$file = tempnam(sys_get_temp_dir(), 'rotatenow-');
+	file_put_contents($file, $code);
+
+	try {
+		$out    = (string) shell_exec(escapeshellarg(PHP_BINARY) . ' ' . escapeshellarg($file) . ' 2>&1');
+		$result = json_decode($out, true);
+
+		expect($result)->toBeArray($out);
+
+		return $result;
+	} finally {
+		unlink($file);
+	}
+}
+
+/*
+ * A stray call after the loop cleaned whichever log the loop happened to leave
+ * in $name, so one log was scanned twice and the reported count was inflated.
+ * The log names differ between branches, so assert the invariant rather than
+ * the names: whatever was rotated is what gets cleaned, once each.
+ */
+test('each configured log is cleaned exactly once', function () {
+	$both = rotatenow_calls('/opt/cacti/log/cacti_stderr.log');
+
+	expect(count($both['rotated']))->toBe(2)
+		->and($both['rotated'])->toBe(array_unique($both['rotated']))
+		->and($both['cleaned'])->toBe($both['rotated']);
+
+	// With no stderr log configured the duplicate hit the active log instead.
+	$one = rotatenow_calls();
+
+	expect(count($one['rotated']))->toBe(1)
+		->and($one['cleaned'])->toBe($one['rotated']);
+});

@@ -411,8 +411,6 @@ function logrotate_rotatenow() {
 		$cleaned += logrotate_file_clean($name, $log, $date, $days);
 	}
 
-	$cleaned += logrotate_file_clean($name, $log, $date, $days);
-
 	/* record the start time */
 	$poller_end = microtime(true);
 	$string = sprintf('LOGMAINT STATS: Time:%4.4f, Rotated:%d, Removed:%d, Days Retained:%d', ($poller_end - $poller_start), $rotated, $cleaned, $days);
