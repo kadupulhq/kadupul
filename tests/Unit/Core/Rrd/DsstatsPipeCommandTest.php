@@ -52,7 +52,13 @@ if ($binary !== '') {
     $stats[1] = $values;
 }
 dsstats_write_buffer($stats, 'daily');
-echo json_encode(array('refused' => $refused, 'sent' => $sent, 'logged' => $logged, 'values' => $values, 'written' => $written));
+$logged_before = count($logged);
+$pipes = array(fopen('php://temp', 'r+'), fopen('php://temp', 'r+'));
+$command = array('output' => dsstats_rrdtool_execute(array('info', "rra/a\nb.rrd"), $pipes));
+rewind($pipes[0]);
+$command['sent'] = stream_get_contents($pipes[0]);
+$command['logged'] = array_splice($logged, $logged_before);
+echo json_encode(array('refused' => $refused, 'sent' => $sent, 'logged' => $logged, 'values' => $values, 'written' => $written, 'command' => $command));
 SOURCE;
     file_put_contents($dir . '/probe.php', $bootstrap);
     try {
@@ -68,6 +74,11 @@ SOURCE;
         expect($result['refused'])->toBeNull()
             ->and($result['sent'])->toBe('')
             ->and($result['logged'])->toBe(array('ERROR: Data Source statistics skipped for Local Data ID 2. The RRD path contains a line break or NUL.'));
+        // A line break in an argument array is refused by the pipe writer, not sent.
+        expect($result['command']['output'])->toBeNull()
+            ->and($result['command']['sent'])->toBe('')
+            ->and($result['command']['logged'])->toHaveCount(1)
+            ->and($result['command']['logged'][0])->toStartWith('ERROR: RRDtool info was not run.');
         if ($real) {
             expect($result['values'])->toBe(array('value' => array('AVG' => '5.000000', 'MAX' => '9.000000')))
                 ->and($result['written'])->toHaveCount(1)

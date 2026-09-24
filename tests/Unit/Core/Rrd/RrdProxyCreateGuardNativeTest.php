@@ -20,13 +20,16 @@ function rrd_proxy_create_guard_run($test, string $operation, ?string $response)
     }
     $program = '<?php ' . $bootstrap . '$root=' . var_export($root, true) . ';$operation=' . var_export($operation, true)
         . ';$response=' . var_export($response, true) . ';' . <<<'PHP'
-// max:<boost|direct>:<alias> creates an RRD whose maximum is the substituted alias.
+// max:<boost|direct>:<alias> creates an RRD whose maximum is the substituted alias;
+// a +tree suffix turns on structured paths.
+$tree=str_ends_with($operation,'+tree');
+if($tree){$operation=substr($operation,0,-5);}
 $max=str_starts_with($operation,'max:')?explode(':',$operation,3):null;
 $config=array('rra_path'=>'/fixture','include_path'=>__DIR__,'cacti_server_os'=>$max?'win32':'unix');
 require $root.'/include/global_constants.php';
 function cacti_log(...$args){}
 function cacti_sizeof($value){return is_array($value)?count($value):0;}
-function read_config_option($key){return $key==='storage_location'?1:'';}
+function read_config_option($key){return $key==='storage_location'?1:($key==='extended_paths'&&$GLOBALS['tree']?'on':'');}
 function get_data_source_path(...$args){return '/fixture/sample.rrd';}
 function get_rrdtool_version(){return '1.7.2';}
 function cacti_version_compare($a,$b,$op){return version_compare($a,$b,$op);}
@@ -143,4 +146,11 @@ test('a proxied create sends a substituted maximum bare, or not at all when the 
         $result = rrd_proxy_create_guard_run($this, 'max:' . $function . ':' . $alias, $missing);
         expect($result[0])->toBeFalse()->and($result[2])->toBe("file_exists ./sample.rrd_EOT_\r\n");
     }
+})->with(array('direct', 'boost'));
+
+test('a proxied create with structured paths checks its directory with a bare path', function ($function) {
+    // The fake proxy answers only file_exists, so is_dir reads as unknown and mkdir is not sent.
+    $result = rrd_proxy_create_guard_run($this, 'max:' . $function . ':100+tree', "ERROR: opening './sample.rrd': No such file or directory");
+
+    expect($result[2])->toStartWith("file_exists ./sample.rrd_EOT_\r\nis_dir ._EOT_\r\ncreate ./sample.rrd ");
 })->with(array('direct', 'boost'));
