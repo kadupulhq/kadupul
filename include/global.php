@@ -341,7 +341,7 @@ if ($config['poller_id'] > 1 || isset($rdatabase_hostname)) {
 	 * a remote poller, let's attempt to get back online.
 	 */
 	if ($conn_mode != 'offline') {
-		$remote_db_cnn_id = db_connect_real($rdatabase_hostname, $rdatabase_username, $rdatabase_password, $rdatabase_default, $rdatabase_type, $rdatabase_port, $database_retries, $rdatabase_ssl, $rdatabase_ssl_key, $rdatabase_ssl_cert, $rdatabase_ssl_ca);
+		$remote_db_cnn_id = db_connect_real($rdatabase_hostname, $rdatabase_username, $rdatabase_password, $rdatabase_default, $rdatabase_type, $rdatabase_port, $rdatabase_retries, $rdatabase_ssl, $rdatabase_ssl_key, $rdatabase_ssl_cert, $rdatabase_ssl_ca);
 	}
 
 	if ($config['is_web'] && is_object($remote_db_cnn_id) && $config['connection'] != 'recovery' && $config['cacti_db_version'] != 'new_install' && !defined('IN_CACTI_INSTALL')) {
