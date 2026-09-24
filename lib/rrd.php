@@ -674,13 +674,6 @@ function rrdtool_create_structured_path($data_source_path, $use_proxy, $rrdtool_
 }
 
 /**
- * Join an argument array for the RRDtool proxy as bare tokens. rrdproxy splits
- * on whitespace and resolves path operands with realpath() as sent
- * (rrdp_resolve_command_paths() in its lib/functions.php at 54aad57), so
- * quoting breaks its path checks. An argument it cannot carry bare is refused
- * and nothing is sent.
- */
-/**
  * __rrd_proxy_execute() sends paths relative to the RRA root, so a token is
  * checked in that form: a space in the local RRA directory never reaches the
  * proxy.
@@ -694,6 +687,13 @@ function rrdtool_proxy_token($argument)
     return $rra_path === '' ? (string) $argument : str_replace($rra_path, '.', (string) $argument);
 }
 
+/**
+ * Join an argument array for the RRDtool proxy as bare tokens. rrdproxy splits
+ * on whitespace and resolves path operands with realpath() as sent
+ * (rrdp_resolve_command_paths() in its lib/functions.php at 54aad57), so
+ * quoting breaks its path checks. An argument it cannot carry bare is refused
+ * and nothing is sent.
+ */
 function rrdtool_proxy_command(array $command, $logopt)
 {
     $verb    = array_shift($command);
