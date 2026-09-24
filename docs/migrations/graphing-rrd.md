@@ -37,7 +37,7 @@ second implementation or a module boundary needs one.
 | Slice | Status |
 | --- | --- |
 | Characterization tests for generated commands and helpers | This PR |
-| `RrdCommand` and a pipe-mode encoder replacing shell escaping on the pipe | Pending |
+| `RrdCommand` and a pipe-mode encoder replacing shell escaping on the pipe | In progress (fix/rrd-pipe-encoder) |
 | One-shot calls through `symfony/process` argument arrays; long-lived pipe in `LocalRrdtool` | Pending |
 | Proxy client hardening without a wire format change | Pending |
 | Graph command generation split by option, definition, item type and legend | Pending |
