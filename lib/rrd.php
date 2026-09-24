@@ -1742,30 +1742,13 @@ function rrd_function_process_graph_options($graph_start, $graph_end, &$graph, &
                 }
                 break;
             case 'legend_position':
-                if (cacti_version_compare($version, '1.4', '>=')) {
-                    if (!empty($value)) {
-                        $graph_opts .= '--legend-position ' . rrdtool_pipe_quote_substituted($value, $graph) . RRD_NL;
-                    }
-                }
-                break;
             case 'legend_direction':
-                if (cacti_version_compare($version, '1.4', '>=')) {
-                    if (!empty($value)) {
-                        $graph_opts .= '--legend-direction ' . rrdtool_pipe_quote_substituted($value, $graph) . RRD_NL;
-                    }
-                }
-                break;
             case 'left_axis_formatter':
-                if (cacti_version_compare($version, '1.4', '>=')) {
-                    if (!empty($value)) {
-                        $graph_opts .= '--left-axis-formatter ' . rrdtool_pipe_quote_substituted($value, $graph) . RRD_NL;
-                    }
-                }
-                break;
             case 'right_axis_formatter':
+                // Each option's RRDtool flag is its column name with dashes.
                 if (cacti_version_compare($version, '1.4', '>=')) {
                     if (!empty($value)) {
-                        $graph_opts .= '--right-axis-formatter ' . rrdtool_pipe_quote_substituted($value, $graph) . RRD_NL;
+                        $graph_opts .= '--' . str_replace('_', '-', $key) . ' ' . rrdtool_pipe_quote_substituted($value, $graph) . RRD_NL;
                     }
                 }
                 break;
