@@ -111,6 +111,14 @@ const SIDE_EFFECT_CALLS = [
     'mb_send_mail', 'setcookie', 'assert', 'unserialize',
 ];
 const SIDE_EFFECT_PREFIXES = ['db_execute', 'db_insert', 'db_replace'];
+// Builtins a fragment may call at its top level: they read, format or
+// compare, or set response headers and the locale for this request only.
+const PURE_CALLS = [
+    'array_combine', 'array_key_exists', 'array_keys', 'array_values', 'asort', 'basename', 'date', 'define',
+    'defined', 'dir', 'explode', 'extension_loaded', 'file_exists', 'function_exists', 'gethostname', 'header',
+    'http_response_code', 'ini_get', 'is_array', 'is_dir', 'is_executable', 'is_string', 'php_sapi_name', 'range',
+    'setlocale', 'sprintf', 'str_replace', 'strpos', 'strstr', 'strtotime', 'ucwords', 'version_compare',
+];
 // Calls that run whatever callable they are given, so the name alone says
 // nothing about the effect.
 const CALLBACK_CALLS = [
@@ -126,6 +134,9 @@ const REVIEWED_FRAGMENT_CALLS = [
     'include/global_session.php' => [
         ['CactiSecureHeaders::getNonceAttribute()', 'returns the per-request CSP nonce attribute; generates the nonce once and stores nothing'],
         ['CactiSecureHeaders::getNonce()', 'returns the same per-request CSP nonce'],
+    ],
+    'include/global_languages.php' => [
+        ['get_list_of_locales()', 'declared in the same file; returns a literal locale map'],
     ],
     'include/global_settings.php' => [
         ['$dir->read()', 'lists the theme directory opened by dir() on a fixed path'],
@@ -690,6 +701,57 @@ function includers(string $root, array $files): array
 }
 
 /**
+ * The files that declare each named function, keyed by lower-case name.
+ *
+ * @param list<string> $files
+ * @return array<string, list<string>>
+ */
+function declared_functions(string $root, array $files): array
+{
+    $found = [];
+    foreach ($files as $path) {
+        foreach (walk(parse_file($root, $path, true) ?? []) as $node) {
+            if ($node instanceof Stmt\Function_) {
+                $found[strtolower($node->namespacedName?->toString() ?? $node->name->toString())][] = $path;
+            }
+        }
+    }
+
+    return $found;
+}
+
+/**
+ * The file and every file it includes by a path the generator can resolve,
+ * or null when one of them includes a path it cannot.
+ *
+ * @return list<string>|null
+ */
+function reached_files(string $root, string $path): ?array
+{
+    $seen = [$path => true];
+    $queue = [$path];
+    while ($queue !== []) {
+        $current = array_shift($queue);
+        foreach (walk(parse_file($root, $current) ?? []) as $node) {
+            if (!$node instanceof Expr\Include_) {
+                continue;
+            }
+            $target = resolve($node->expr, $root, $current);
+            $reviewed = REVIEWED_INCLUDES[$current] ?? null;
+            if ($target === null && !($reviewed !== null && is_variable($node->expr, $reviewed))) {
+                return null;
+            }
+            if ($target !== null && !isset($seen[$target])) {
+                $seen[$target] = true;
+                $queue[] = $target;
+            }
+        }
+    }
+
+    return array_keys($seen);
+}
+
+/**
  * @return array<string, int>
  */
 function realm_map(string $root): array
@@ -783,7 +845,7 @@ function preamble_clean(array $before, string $root, string $path): bool
  * @param array<string, list<string>> $includers
  * @return array{0: string, 1: string}
  */
-function classify(string $root, string $path, array $realms, array $early, array $includers): array
+function classify(string $root, string $path, array $realms, array $early, array $includers, array $functions): array
 {
     $stmts = program($root, $path);
     if ($stmts === null) {
@@ -866,7 +928,7 @@ function classify(string $root, string $path, array $realms, array $early, array
         return ['anonymous-allowed', 'redirect-only'];
     }
     if (array_key_exists($path, $includers)) {
-        return fragment($root, $path, $active, $includers[$path]);
+        return fragment($root, $path, $active, $includers[$path], $functions);
     }
 
     return ['unknown', 'no gate recognised'];
@@ -948,48 +1010,109 @@ function reviewed_call(string $path, Node $node): bool
 }
 
 /**
+ * Calls an expression makes whenever it is evaluated, in evaluation order.
+ * Only the left side of a short-circuit operator and the condition of a
+ * ternary always run.
+ *
+ * @return iterable<Expr\FuncCall>
+ */
+function always_calls(Expr $expr): iterable
+{
+    if ($expr instanceof Expr\FuncCall) {
+        foreach (plain_args($expr) ?? [] as $arg) {
+            yield from always_calls($arg);
+        }
+        yield $expr;
+    } elseif ($expr instanceof Expr\BooleanNot || $expr instanceof Expr\Cast || $expr instanceof Expr\UnaryMinus) {
+        yield from always_calls($expr->expr);
+    } elseif ($expr instanceof Expr\BinaryOp\BooleanAnd || $expr instanceof Expr\BinaryOp\BooleanOr
+        || $expr instanceof Expr\BinaryOp\LogicalAnd || $expr instanceof Expr\BinaryOp\LogicalOr
+        || $expr instanceof Expr\BinaryOp\Coalesce) {
+        yield from always_calls($expr->left);
+    } elseif ($expr instanceof Expr\BinaryOp) {
+        yield from always_calls($expr->left);
+        yield from always_calls($expr->right);
+    } elseif ($expr instanceof Expr\Assign || $expr instanceof Expr\AssignOp) {
+        yield from always_calls($expr->expr);
+    } elseif ($expr instanceof Expr\Ternary) {
+        yield from always_calls($expr->cond);
+    }
+}
+
+/**
  * A fragment is harmless on its own only while nothing at its top level
  * writes, executes, sends or loads code the generator cannot name. The sweep
  * separately checks it emits no content.
  *
+ * Every named call must be a reviewed builtin, a reviewed call, or a function
+ * declared only in files the fragment does not load. That last kind is
+ * undefined on a direct request, so PHP stops there, and a top-level
+ * statement that always reaches one ends the review: nothing after it runs.
+ *
  * @param list<Stmt> $active
  * @param list<string> $by
+ * @param array<string, list<string>> $functions
  * @return array{0: string, 1: string}
  */
-function fragment(string $root, string $path, array $active, array $by): array
+function fragment(string $root, string $path, array $active, array $by, array $functions): array
 {
     $reviewed = REVIEWED_INCLUDES[$path] ?? null;
-    foreach (walk($active) as $node) {
-        if ($node instanceof Expr\Eval_) {
-            return ['unknown', 'fragment calls eval'];
+    $reached = reached_files($root, $path);
+    // A name nothing declares may belong to an extension the classifier
+    // lacks, and a dynamic include may load its declaration, so neither stops.
+    $stops = fn(string $name) => $reached !== null && ($functions[$name] ?? []) !== []
+        && array_intersect($functions[$name], $reached) === [];
+    foreach ($active as $stmt) {
+        $head = $stmt instanceof Stmt\If_ ? $stmt->cond : ($stmt instanceof Stmt\Expression ? $stmt->expr : null);
+        $halts = false;
+        foreach ($head === null ? [] : always_calls($head) as $call) {
+            $name = call_name($call);
+            if ($name !== null && !function_exists($name) && $stops($name)) {
+                $halts = true;
+                break;
+            }
         }
-        if ($node instanceof Expr\ShellExec) {
-            return ['unknown', 'fragment runs a backtick command'];
+        foreach (walk($halts ? $head : $stmt) as $node) {
+            if ($node instanceof Expr\Eval_) {
+                return ['unknown', 'fragment calls eval'];
+            }
+            if ($node instanceof Expr\ShellExec) {
+                return ['unknown', 'fragment runs a backtick command'];
+            }
+            if ($node instanceof Expr\Include_ && resolve($node->expr, $root, $path) === null
+                && !($reviewed !== null && is_variable($node->expr, $reviewed))) {
+                return ['unknown', 'fragment includes a path the generator cannot resolve'];
+            }
+            if ($node instanceof Expr\FuncCall && !$node->name instanceof Name) {
+                return ['unknown', 'fragment makes a dynamic function call'];
+            }
+            // A method, static call or constructor runs code the name list
+            // cannot see, and so does a function handed a callable.
+            $object = $node instanceof Expr\MethodCall || $node instanceof Expr\NullsafeMethodCall
+                || $node instanceof Expr\StaticCall || $node instanceof Expr\New_;
+            $callback = in_array(call_name($node), CALLBACK_CALLS, true);
+            if (($object || $callback) && !reviewed_call($path, $node)) {
+                return ['unknown', 'fragment makes an unreviewed ' . ($object ? 'object' : 'callback') . ' call on line ' . $node->getStartLine()];
+            }
+            $name = call_name($node);
+            if ($name === null) {
+                continue;
+            }
+            $args = plain_args($node);
+            $console = $name === 'fwrite' && $args !== null && $args !== [] && is_const($args[0], 'stderr', 'stdout');
+            if (in_array($name, SIDE_EFFECT_CALLS, true) || ($name === 'fwrite' && !$console)
+                || array_filter(SIDE_EFFECT_PREFIXES, fn(string $p) => str_starts_with($name, $p)) !== []) {
+                return ['unknown', 'fragment has a top-level side effect: ' . $name . '()'];
+            }
+            if (in_array($name, PURE_CALLS, true) || $console || reviewed_call($path, $node)) {
+                continue;
+            }
+            if (function_exists($name) || !$stops($name)) {
+                return ['unknown', 'fragment makes an unreviewed call on line ' . $node->getStartLine() . ': ' . $name . '()'];
+            }
         }
-        if ($node instanceof Expr\Include_ && resolve($node->expr, $root, $path) === null
-            && !($reviewed !== null && is_variable($node->expr, $reviewed))) {
-            return ['unknown', 'fragment includes a path the generator cannot resolve'];
-        }
-        if ($node instanceof Expr\FuncCall && !$node->name instanceof Name) {
-            return ['unknown', 'fragment makes a dynamic function call'];
-        }
-        // A method, static call or constructor runs code the name list
-        // cannot see, and so does a function handed a callable.
-        $object = $node instanceof Expr\MethodCall || $node instanceof Expr\NullsafeMethodCall
-            || $node instanceof Expr\StaticCall || $node instanceof Expr\New_;
-        $callback = in_array(call_name($node), CALLBACK_CALLS, true);
-        if (($object || $callback) && !reviewed_call($path, $node)) {
-            return ['unknown', 'fragment makes an unreviewed ' . ($object ? 'object' : 'callback') . ' call on line ' . $node->getStartLine()];
-        }
-        $name = call_name($node);
-        if ($name === null) {
-            continue;
-        }
-        $args = plain_args($node);
-        $console = $name === 'fwrite' && $args !== null && $args !== [] && is_const($args[0], 'stderr', 'stdout');
-        if (in_array($name, SIDE_EFFECT_CALLS, true) || ($name === 'fwrite' && !$console)
-            || array_filter(SIDE_EFFECT_PREFIXES, fn(string $p) => str_starts_with($name, $p)) !== []) {
-            return ['unknown', 'fragment has a top-level side effect: ' . $name . '()'];
+        if ($halts) {
+            break;
         }
     }
     // A call list cannot prove a fragment harmless, so its top-level code is
@@ -1475,9 +1598,10 @@ function main(): int
         }
         $early = auth_early_returns($root);
         $includers = includers($root, $files);
+        $functions = declared_functions($root, $files);
         $rows = [];
         foreach ($request['served'] as $path) {
-            [$gate, $detail] = classify($root, $path, $realms, $early, $includers);
+            [$gate, $detail] = classify($root, $path, $realms, $early, $includers, $functions);
             $rows[] = [$path, $gate, $detail];
         }
         array_push($rows, ...symfony_routes($root, $files));

@@ -85,7 +85,15 @@ NEW_FRAGMENT_EFFECTS = {
     'callable handed to array_map': "<?php\narray_map('unlink', $_GET['f']);\n",
     # Reviewed for include/session.php only, so it does not carry over.
     'reviewed call in another file': "<?php\nregister_shutdown_function('session_write_close');\n",
+    'call to a function it declares': "<?php\nfunction top_level_mutation() {\n\tunlink('/tmp/x');\n}\ntop_level_mutation();\n",
+    'call to a function a file it includes declares': "<?php\ninclude('./lib/helpers.php');\nhelper();\n",
+    'unreviewed builtin': "<?php\nignore_user_abort(true);\n",
+    'call to a function nothing declares': "<?php\nextension_only_call();\n",
+    'effect behind a call that does not always run': "<?php\nif (1 || helper()) {\n\tunlink($_GET['f']);\n}\n",
 }
+# helper() is declared only in lib/helpers.php, which a direct request of the
+# fragment never loads, so PHP stops there and the unlink never runs.
+FRAGMENT_HALTS = "<?php\n$x = helper();\nunlink($_GET['f']);\n"
 FRAGMENT_TEXT = "<?php\n$label = 'PHP Mail() and `quoted` text';\necho $label;\n"
 
 # remote_agent.php is self-gated on !remote_client_authorized().
@@ -344,7 +352,8 @@ def tree(directory):
     root = Path(directory)
     for path, text in (('include/auth.php', '<?php\n'), ('include/cli_check.php', '<?php\n'),
                        ('include/global_arrays.php', REALMS), ('host.php', "<?php\ninclude('./fragment.php');\n"),
-                       ('lib/evil.php', "<?php\nunlink('/tmp/x');\n")):
+                       ('lib/evil.php', "<?php\nunlink('/tmp/x');\n"),
+                       ('lib/helpers.php', "<?php\nfunction helper() {\n\tunlink('/tmp/x');\n}\n")):
         (root / path).parent.mkdir(parents=True, exist_ok=True)
         (root / path).write_text(text)
     return root
@@ -381,6 +390,10 @@ def main():
         got = gate(root, 'fragment.php', FRAGMENT_TEXT)[0]
         if got != 'anonymous-allowed':
             failures.append('fragment with call-like text in a string: expected anonymous-allowed, got %s' % got)
+        count += 1
+        got = gate(root, 'fragment.php', FRAGMENT_HALTS)[0]
+        if got != 'anonymous-allowed':
+            failures.append('fragment that stops at an undefined function: expected anonymous-allowed, got %s' % got)
         # Reformatting a fragment keeps its pin.
         count += 1
         spaced = FRAGMENT_TEXT.replace('echo $label;', "/* note */\necho   $label ;")
