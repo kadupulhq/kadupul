@@ -1303,12 +1303,6 @@ $settings = array(
 			'max_length' => '10',
 			'size' => '5'
 		),
-		'poller_refresh_output_table' => array(
-			'friendly_name' => __('Refresh Poller Table Per Cycle'),
-			'description' => __('This setting is for a single poller systems only to rebuild the poller output table on each polling cycle to prevent the memory table from swapping on very large systems with large databases that could use swap.'),
-			'method' => 'checkbox',
-			'default' => '',
-		),
 		'disable_cache_replication' => array(
 			'friendly_name' => __('Disable Resource Cache Replication'),
 			'description' => __('By default, the main Cacti Data Collector will cache the entire web site and plugins into a Resource Cache.  Then, periodically the Remote Data Collectors will update themselves with any updates from the main Cacti Data Collector.  This Resource Cache essentially allows Remote Data Collectors to self upgrade.  If you do not wish to use this option, you can disable it using this setting.'),
