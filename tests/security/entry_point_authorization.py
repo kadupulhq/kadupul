@@ -51,6 +51,27 @@ REFUSALS = [
 # empty POST cannot submit their forms.
 MUTATING_SEGMENTS = re.compile(r'\{operation\}')
 
+# Written wherever a denied path has no file in the image, so a 403 is Apache's
+# deny and not a missing file, and a served canary shows in the body.
+CANARY = 'kadupul-entry-canary'
+WEBROOT = '/var/www/html/'
+
+# update_hash.php rewrites stylesheets under here when it runs.
+THEME = 'include/themes/midwinter'
+
+# The root rules ship in .htaccess.dist and apply only once it is renamed.
+OPT_IN = 'nginx; apache: opt-in via .htaccess.dist'
+# The nested .well-known checks that the ACME exception is anchored at the root.
+OPT_IN_DENIED = ('composer.json', '.git/config', 'plugins/kadupul-entry/.well-known/canary.txt')
+OPT_IN_SERVED = '.well-known/kadupul-entry-canary.txt'
+
+# Denied by default without a baseline row of their own: static docs, which
+# Nginx denies with the rest of docs/, and a bootstrap name in another case.
+DENIED_EXTRA = ('docs/kadupul-entry-canary.html', 'include/Config.php')
+
+# CLI tools with no bootstrap of their own, so a request reaches their guard.
+CLI_TOOLS = ('include/themes/midwinter/update_hash.php', 'script_server.php')
+
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, *args, **kwargs):
@@ -90,6 +111,49 @@ class Client:
         if 'login_username' in result['body'] and result['status'] == 200:
             raise RuntimeError('Login failed for ' + username)
         return result
+
+
+def cli_refused(response):
+    # mod_php echoes a shebang line ahead of the guard.
+    body = response['body'].strip()
+    return (response['status'] == 404 and body in ('', '#!/usr/bin/env php')) \
+        or 'only meant to run at the command line' in body
+
+
+def denied_probe(entry):
+    # Directly inside the denied directory, so a deny in a subdirectory
+    # cannot stand in for a missing one on the directory itself.
+    return entry + 'index.php' if entry.endswith('/') else entry
+
+
+def stage_denied_paths(rig, rows):
+    """Put every tracked .htaccess and a file at every denied probe into the image.
+
+    .dockerignore drops cache/, docs/, tests/ and .php-cs-fixer.php, so without
+    this those rows would answer 404 whether or not Apache denies them.
+    """
+    for htaccess in harness.run(['git', '-C', str(ROOT), 'ls-files', '*.htaccess'])['stdout'].split():
+        rig.compose('exec', '-T', '-u', 'www-data', 'web', 'sh', '-c', 'mkdir -p "$(dirname "$1")" && cat > "$1"',
+                    'sh', WEBROOT + htaccess, data=(ROOT / htaccess).read_text())
+    canaries = [denied_probe(entry) for entry, gate, _ in rows if gate == 'web-server-denied']
+    canaries += DENIED_EXTRA
+    for path in canaries:
+        rig.command('sh', '-c', 'test -e "$1" || { mkdir -p "$(dirname "$1")" && printf "%s" "$2" > "$1"; }',
+                    'sh', WEBROOT + path, ('<?php print "%s";' % CANARY) if path.endswith('.php') else CANARY, check=True)
+
+
+def theme_css_digest(rig):
+    digest = rig.command('sh', '-c', 'cd "$1" && find . -name "*.css" | LC_ALL=C sort | xargs sha256sum',
+                         'sh', WEBROOT + THEME, check=True)['stdout']
+    if 'main.css' not in digest:
+        raise RuntimeError('theme stylesheets not found in ' + THEME)
+    return digest
+
+
+def page_assets(body):
+    """Same-origin scripts and stylesheets a page loads, without cache busters."""
+    urls = re.findall(r'<(?:script[^>]+src|link[^>]+href)=[\'"]([^\'"]+\.(?:js|css))(?:\?[^\'"]*)?[\'"]', body)
+    return sorted({urllib.parse.urlsplit(u).path.lstrip('/') for u in urls if not urllib.parse.urlsplit(u).netloc})
 
 
 def refusal(response):
@@ -175,9 +239,27 @@ def main():
             if not test(response):
                 failures.append('control %s: expected admission, got HTTP %d' % (label, response['status']))
 
-        tracked = harness.run(['git', '-C', str(ROOT), 'ls-files', '*.php'])['stdout'].split()
         counted = 0
         rows = entries()
+        stage_denied_paths(rig, rows)
+        css_before = theme_css_digest(rig)
+
+        # Denies must not reach what the login form and the console load.
+        for name, client in (('anonymous', anonymous), ('admin', admin)):
+            assets = page_assets(client.request('index.php')['body'])
+            if not any(a.endswith('.js') for a in assets) or not any(a.endswith('.css') for a in assets):
+                failures.append('%s index.php: no scripts or stylesheets found to check' % name)
+            for asset in assets:
+                response = client.request(asset)
+                if response['status'] != 200:
+                    failures.append('%s asset %s: HTTP %d' % (name, asset, response['status']))
+            observed.setdefault('asset %s status:200' % name, []).extend(assets)
+
+        for tool in CLI_TOOLS:
+            counted += 1
+            response = anonymous.request(tool)
+            if not cli_refused(response):
+                failures.append('%s: CLI tool answered HTTP %d with %d bytes' % (tool, response['status'], len(response['body'].strip())))
         routes = {entry: (gate, detail) for entry, gate, detail in rows}
         for entry, gate, detail in rows:
             if gate == 'symfony:forward':
@@ -208,25 +290,20 @@ def main():
             elif gate == 'cli-only':
                 counted += 1
                 response = anonymous.request(url)
-                body = response['body'].strip()
-                # mod_php echoes a shebang line. script_server.php parses its
-                # arguments before the guard and dies there with HTTP 500.
-                if not ((response['status'] in (404, 500) and body in ('', '#!/usr/bin/env php'))
-                        or 'only meant to run at the command line' in body):
-                    failures.append('%s: CLI entry answered HTTP %d with %d bytes' % (url, response['status'], len(body)))
+                if not cli_refused(response):
+                    failures.append('%s: CLI entry answered HTTP %d with %d bytes' % (url, response['status'], len(response['body'].strip())))
                 observed.setdefault('cli-only status:%d' % response['status'], []).append(url)
             elif gate == 'web-server-denied':
-                inside = [f for f in tracked if f.startswith(entry)] if entry.endswith('/') else []
-                probe = inside[0] if inside else (entry + 'index.php' if entry.endswith('/') else entry)
+                # Nginx denies these too; nginx_private_paths.py covers that.
+                probe = denied_probe(entry)
                 response = anonymous.request(probe)
-                if detail != 'nginx; apache .htaccess':
-                    # Nginx denies these; nginx_private_paths.py covers that.
-                    # Apache has no matching deny, so record what it does.
-                    observed.setdefault('apache-parity-gap status:%d' % response['status'], []).append(probe)
+                if detail == OPT_IN:
+                    # Not denied by default; the opt-in pass below checks it.
+                    observed.setdefault('opt-in default status:%d' % response['status'], []).append(probe)
                     continue
                 counted += 1
-                if response['status'] not in (403, 404):
-                    failures.append('%s: denied path answered HTTP %d' % (probe, response['status']))
+                if response['status'] != 403 or CANARY in response['body']:
+                    failures.append('%s: denied path answered HTTP %d (%s)' % (probe, response['status'], detail))
                 observed.setdefault('web-server-denied status:%d' % response['status'], []).append(probe)
             elif gate == 'ungated':
                 # Requesting it runs the finding; it is reported, not exercised.
@@ -249,6 +326,35 @@ def main():
                 observed.setdefault('anonymous-allowed status:%d' % response['status'], []).append(url)
             else:
                 failures.append('%s: gate %s has no expectation in this suite' % (entry, gate))
+        for path in DENIED_EXTRA:
+            counted += 1
+            response = anonymous.request(path)
+            if response['status'] != 403 or CANARY in response['body']:
+                failures.append('%s: denied path answered HTTP %d' % (path, response['status']))
+            observed.setdefault('web-server-denied status:%d' % response['status'], []).append(path)
+
+        if theme_css_digest(rig) != css_before:
+            failures.append('theme CSS changed during the sweep')
+
+        # Last, because it changes what every later request would see.
+        opt_in = [denied_probe(entry) for entry, gate, detail in rows if gate == 'web-server-denied' and detail == OPT_IN]
+        rig.command('sh', '-c', 'cd "$1" && cp -f .htaccess.dist .htaccess && mkdir -p .git .well-known "$(dirname "$4")" '
+                    '&& { test -e .git/config || printf "%s" "$2" > .git/config; } && printf "%s" "$2" > "$3" '
+                    '&& printf "%s" "$2" > "$4"',
+                    'sh', WEBROOT, CANARY, OPT_IN_SERVED, OPT_IN_DENIED[-1], check=True)
+        for path in opt_in + list(OPT_IN_DENIED):
+            counted += 1
+            response = anonymous.request(path)
+            if response['status'] != 403 or CANARY in response['body']:
+                failures.append('%s: answered HTTP %d with .htaccess.dist enabled' % (path, response['status']))
+            observed.setdefault('opt-in enabled status:%d' % response['status'], []).append(path)
+        response = anonymous.request(OPT_IN_SERVED)
+        if response['status'] != 200 or CANARY not in response['body']:
+            failures.append('%s: answered HTTP %d with .htaccess.dist enabled' % (OPT_IN_SERVED, response['status']))
+        observed.setdefault('opt-in enabled status:%d' % response['status'], []).append(OPT_IN_SERVED)
+        response = anonymous.request('index.php')
+        if response['status'] != 200 or 'login_username' not in response['body']:
+            failures.append('index.php: login page did not load with .htaccess.dist enabled')
 
         finished = time.monotonic()
         for key in sorted(observed):

@@ -91,6 +91,9 @@ jobs:
       - name: Check the inventory classifier fails closed
         run: mise exec python@3.12.12 -- python tests/security/test_entry_point_classifier.py
 
+      - name: Verify Apache verdicts depend on the .htaccess rules
+        run: mise exec python@3.12.12 -- python tests/security/test_entry_point_apache_denies.py
+
   branding-migration-guard:
     name: branding migration (utf8mb4 and latin1)
     runs-on: ubuntu-latest

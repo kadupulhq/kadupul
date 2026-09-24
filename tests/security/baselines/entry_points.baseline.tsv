@@ -1,5 +1,5 @@
 entry	gate	detail
-.php-cs-fixer.php	web-server-denied	nginx; no apache .htaccess deny
+.php-cs-fixer.php	web-server-denied	nginx; apache: opt-in via .htaccess.dist
 about.php	authenticated	include/auth.php realm -1
 aggregate_graphs.php	realm:5	include/auth.php
 aggregate_templates.php	realm:5	include/auth.php
@@ -31,7 +31,7 @@ automation_snmp.php	realm:23	include/auth.php
 automation_templates.php	realm:23	include/auth.php
 automation_tree_rules.php	realm:23	include/auth.php
 bin/	web-server-denied	nginx; apache .htaccess
-cache/	web-server-denied	nginx; no apache .htaccess deny
+cache/	web-server-denied	nginx; apache .htaccess
 cactid.php	cli-only	guard: include/cli_check.php
 cdef.php	realm:14	include/auth.php
 cli/	web-server-denied	nginx; apache .htaccess
@@ -51,7 +51,7 @@ data_queries.php	realm:13	include/auth.php
 data_source_profiles.php	realm:9	include/auth.php
 data_sources.php	realm:3	include/auth.php
 data_templates.php	realm:11	include/auth.php
-docs/	web-server-denied	nginx; no apache .htaccess deny
+docs/	web-server-denied	nginx; apache .htaccess
 formats/index.php	anonymous-allowed	redirect-only
 gprint_presets.php	realm:5	include/auth.php
 graph.php	realm:7	include/auth.php; guest_account
@@ -74,10 +74,10 @@ include/admin_notifications.php	anonymous-allowed	inert: declarations and litera
 include/auth.php	realm:0	include/auth.php; unmapped page, denied to every account
 include/bottom_footer.php	anonymous-allowed	fragment without bootstrap, reviewed at f4a59fa39878; included by lib/functions.php
 include/cli_check.php	cli-only	guard: php_sapi_name() check
-include/config.php	web-server-denied	nginx; no apache .htaccess deny
+include/config.php	web-server-denied	nginx; apache .htaccess
 include/content/index.php	anonymous-allowed	redirect-only
 include/csrf.php	anonymous-allowed	fragment without bootstrap, reviewed at 80bc61dab43e; included by include/global.php
-include/global.php	web-server-denied	nginx; no apache .htaccess deny
+include/global.php	web-server-denied	nginx; apache .htaccess
 include/global_arrays.php	anonymous-allowed	fragment without bootstrap, reviewed at 68f2974f3548; included by include/global.php, lib/api_aggregate.php, lib/boost.php
 include/global_constants.php	anonymous-allowed	fragment without bootstrap, reviewed at 44950e59dd15; included by include/global.php
 include/global_form.php	anonymous-allowed	fragment without bootstrap, reviewed at 9fdc825797b5; included by include/global.php
@@ -87,7 +87,7 @@ include/global_settings.php	anonymous-allowed	fragment without bootstrap, review
 include/index.php	anonymous-allowed	redirect-only
 include/js/LC_MESSAGES/index.php	anonymous-allowed	redirect-only
 include/js/index.php	anonymous-allowed	redirect-only
-include/plugins.php	web-server-denied	nginx; no apache .htaccess deny
+include/plugins.php	web-server-denied	nginx; apache .htaccess
 include/runtime.php	anonymous-allowed	fragment without bootstrap, reviewed at 338bc1c9ed7b; included by config/bootstrap.php, include/global.php
 include/session.php	anonymous-allowed	fragment without bootstrap, reviewed at 7abe13b5d1f6; included by include/global.php
 include/themes/classic/default/index.php	anonymous-allowed	redirect-only
@@ -103,7 +103,7 @@ include/themes/midwinter/default/index.php	anonymous-allowed	redirect-only
 include/themes/midwinter/images/index.php	anonymous-allowed	redirect-only
 include/themes/midwinter/index.php	anonymous-allowed	redirect-only
 include/themes/midwinter/rrdtheme.php	anonymous-allowed	inert: declarations and literal assignments only
-include/themes/midwinter/update_hash.php	ungated	FINDING: theme build script runs over HTTP with no CLI guard and rewrites theme CSS files; expected cli-only or web-server-denied
+include/themes/midwinter/update_hash.php	cli-only	guard: php_sapi_name() check
 include/themes/modern/default/index.php	anonymous-allowed	redirect-only
 include/themes/modern/images/index.php	anonymous-allowed	redirect-only
 include/themes/modern/index.php	anonymous-allowed	redirect-only
@@ -123,7 +123,7 @@ include/themes/sunrise/rrdtheme.php	anonymous-allowed	inert: declarations and li
 include/top_general_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 0b6c358bacb7; included by lib/functions.php
 include/top_graph_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 3499de0769a5; included by lib/functions.php
 include/top_header.php	anonymous-allowed	fragment without bootstrap, reviewed at 2ec65df77ed9; included by lib/functions.php
-include/vendor/	web-server-denied	nginx; no apache .htaccess deny
+include/vendor/	web-server-denied	nginx; apache .htaccess
 index.php	realm:8	include/auth.php
 install/background.php	cli-only	guard: include/cli_check.php
 install/cli_check.php	cli-only	guard: include/cli_check.php
@@ -191,7 +191,7 @@ install/upgrades/1_2_5.php	anonymous-allowed	inert: declarations and literal ass
 install/upgrades/1_2_7.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/1_2_8.php	anonymous-allowed	inert: declarations and literal assignments only
 install/upgrades/index.php	anonymous-allowed	redirect-only
-lib/	web-server-denied	nginx; no apache .htaccess deny
+lib/	web-server-denied	nginx; apache .htaccess
 link.php	realm:10000+id	own realm check per external link id; reviewed at 929a564cf868
 links.php	realm:15	include/auth.php
 locales/LC_MESSAGES/index.php	anonymous-allowed	redirect-only
@@ -228,7 +228,7 @@ resource/snmp_queries/index.php	anonymous-allowed	redirect-only
 rra/	web-server-denied	nginx; apache .htaccess
 rrdcheck.php	realm:15	include/auth.php
 rrdcleaner.php	realm:15	include/auth.php
-script_server.php	cli-only	FINDING: argument parsing runs before this guard, so an HTTP request fails with HTTP 500 before reaching it; reviewed at c13dd4489237
+script_server.php	cli-only	guard: php_sapi_name() check
 scripts/	web-server-denied	nginx; apache .htaccess
 service/index.php	anonymous-allowed	redirect-only
 service_check.php	anonymous-allowed	service probe; prints success or fail for the schema version only; reviewed at 5b3d5c6ba206

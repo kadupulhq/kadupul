@@ -42,11 +42,6 @@ use PhpParser\PrettyPrinter\Standard;
  * or an edit to it shows as drift.
  */
 const SELF_GATED = [
-    'script_server.php' => [
-        'cli-only',
-        "require(__DIR__ . '/include/cli_check.php')",
-        'FINDING: argument parsing runs before this guard, so an HTTP request fails with HTTP 500 before reaching it',
-    ],
     'auth_login.php' => [
         'anonymous-allowed',
         "db_execute_prepared('INSERT IGNORE INTO user_log\n\t\t\t(username, user_id, result, ip, time)\n\t\t\tVALUES (?, ?, 1, ?, NOW())', array(\$username, \$user['id'], \$client_addr))",
@@ -81,9 +76,7 @@ const SELF_GATED = [
 
 // Reachable without the gate they need. Each is reported, not fixed, here,
 // and must leave this list in the pull request that adds the gate.
-const UNGATED = [
-    'include/themes/midwinter/update_hash.php' => 'FINDING: theme build script runs over HTTP with no CLI guard and rewrites theme CSS files; expected cli-only or web-server-denied',
-];
+const UNGATED = [];
 
 // Symfony routes that deliberately answer without an actor.
 const ANONYMOUS_ROUTES = [

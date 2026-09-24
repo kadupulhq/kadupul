@@ -3,13 +3,15 @@
 """Print every HTTP entry point with the gate that protects it, as TSV.
 
 This script reads what the web server decides: the Nginx deny locations in
-the reference vhost and the Apache .htaccess denies. Every file Nginx serves
+the reference vhost and the Apache .htaccess and .htaccess.dist denies, and
+stops when Nginx denies a path Apache would serve. Every file Nginx serves
 goes to classify_entry_points.php, which reads the gate from the PHP AST (the
 include/auth.php realm map, the CLI guards, the self-gated pages and the
 Symfony routes) and reports unknown for anything it cannot prove.
 
 Set PHP to choose the interpreter; the classifier needs composer install.
 """
+import fnmatch
 import json
 import os
 import re
@@ -50,14 +52,65 @@ def nginx_denies():
     return rules, named
 
 
+SECTION = re.compile(r'<(Files|FilesMatch|If)\s+"([^"]*)"\s*>(.*?)</\1>', re.S | re.I)
+REQUIRE = re.compile(r'^\s*Require\s+all\s+(denied|granted)\b', re.M | re.I)
+OPT_IN = 'apache: opt-in via .htaccess.dist'
+
+
+def htaccess_rules(text):
+    """Directory-wide verdict and per-file or per-URI sections of one .htaccess.
+
+    Only the Apache 2.4 Require form is read; the 2.2 blocks beside it mirror it.
+    """
+    text = re.sub(r'^\s*#.*$', '', text, flags=re.M)
+    sections = []
+    for kind, argument, body in SECTION.findall(text):
+        verdict = REQUIRE.findall(body)
+        if not verdict:
+            continue
+        if kind.lower() == 'files':
+            pattern, subject = re.compile(fnmatch.translate(argument)), 'name'
+        elif kind.lower() == 'filesmatch':
+            pattern, subject = re.compile(argument), 'name'
+        else:
+            # Only a disjunction of REQUEST_URI matches is understood; any other
+            # expression stops the build rather than being read as served.
+            for clause in re.split(r'\s*\|\|\s*', argument.strip()):
+                m = re.fullmatch(r'%\{REQUEST_URI\}\s*=~\s*m#([^#]*)#(i?)', clause)
+                if not m:
+                    raise SystemExit('ERROR: unsupported <If> expression in .htaccess: ' + argument)
+                sections.append((re.compile(m[1], re.I if m[2] else 0), 'uri', verdict[-1].lower()))
+            continue
+        sections.append((pattern, subject, verdict[-1].lower()))
+    outside = REQUIRE.findall(SECTION.sub('', text))
+    return (outside[-1].lower() if outside else None), sections
+
+
 def apache_denied(path, htaccess):
-    """True when a tracked .htaccess in the path or an ancestor denies all."""
-    parent = Path(path.rstrip('/')) if path.endswith('/') else Path(path).parent
-    while str(parent) not in ('', '.'):
-        if str(parent / '.htaccess') in htaccess:
-            return True
-        parent = parent.parent
-    return False
+    """True when the tracked .htaccess files on the way to path deny it.
+
+    A directory entry stands for the PHP inside it, which is what the Nginx
+    rules deny, so it is judged by a representative index.php. Directory
+    verdicts apply first and file or URI sections after them, as Apache
+    merges them.
+    """
+    probe = path + 'index.php' if path.endswith('/') else path
+    parts = probe.split('/')
+    directories = ['/'.join(parts[:i]) for i in range(len(parts))]
+    denied = False
+    sections = []
+    for directory in directories:
+        rules = htaccess.get((directory + '/' if directory else '') + '.htaccess')
+        if rules is None:
+            continue
+        verdict, found = rules
+        if verdict:
+            denied = verdict == 'denied'
+        sections += found
+    for pattern, subject, verdict in sections:
+        if pattern.search(parts[-1] if subject == 'name' else '/' + probe):
+            denied = verdict == 'denied'
+    return denied
 
 
 def plugin_realms(root):
@@ -95,15 +148,27 @@ def main():
 
     # Denied paths are listed as Nginx names them, whether or not the tree
     # tracks PHP there: include/vendor/ and cache/ fill up at install time.
-    htaccess = {f for f in git_files('*.htaccess')
-                if re.search(r'Require\s+all\s+denied', (ROOT / f).read_text())}
+    htaccess = {f: htaccess_rules((ROOT / f).read_text()) for f in git_files('*.htaccess')}
+    # The root rules ship in .htaccess.dist, which operators rename to enable,
+    # so they are reported apart from the denies every install gets.
+    opt_in = {**htaccess, '.htaccess': htaccess_rules((ROOT / '.htaccess.dist').read_text())}
     entries = set(named)
     for path in denied:
         owner = [n for n in named if path == n or (n.endswith('/') and path.startswith(n))]
         entries.add(max(owner, key=len) if owner else path)
-    for entry in entries:
-        apache = 'apache .htaccess' if apache_denied(entry, htaccess) else 'no apache .htaccess deny'
+    gaps = []
+    for entry in sorted(entries):
+        if apache_denied(entry, htaccess):
+            apache = 'apache .htaccess'
+        elif apache_denied(entry, opt_in):
+            apache = OPT_IN
+        else:
+            gaps.append(entry)
+            continue
         rows.append((entry, 'web-server-denied', 'nginx; ' + apache))
+    # Nginx and Apache installs must refuse the same paths.
+    if gaps:
+        raise SystemExit('ERROR: Nginx denies these paths but no Apache .htaccess or .htaccess.dist rule does: ' + ', '.join(gaps))
 
     print('entry\tgate\tdetail')
     for row in sorted(rows):
