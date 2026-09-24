@@ -129,6 +129,11 @@ function rrd_characterization_path_quoting_scenario(array $options = array()): a
                 array('id' => '301', 'data_source_name' => 'value', 'rrd_heartbeat' => '600', 'rrd_minimum' => '0', 'rrd_maximum' => '|query_ifAlias|', 'data_source_type_id' => '1'),
             )),
             array('sql' => 'SELECT host_id, snmp_query_id, snmp_index FROM data_local', 'result' => array('host_id' => '3', 'snmp_query_id' => '1', 'snmp_index' => '2')),
+            // Boost reads the same rows with its own queries.
+            array('sql' => 'FROM data_template_rrd AS dtr WHERE dtr.local_data_id', 'result' => array(
+                array('id' => '301', 'data_source_name' => 'value', 'rrd_heartbeat' => '600', 'rrd_minimum' => '0', 'rrd_maximum' => '|query_ifAlias|', 'data_source_type_id' => '1'),
+            )),
+            array('sql' => 'SELECT * FROM data_local WHERE id', 'result' => array('id' => '33', 'data_template_id' => '0', 'host_id' => '3', 'snmp_query_id' => '1', 'snmp_index' => '2')),
             array('sql' => 'field_name="ifHighSpeed"', 'result' => ''),
             array('sql' => 'field_name="ifSpeed"', 'result' => ''),
             array('sql' => 'dtr.data_source_name, dtd.name FROM data_template_rrd', 'result' => array('data_source_name' => 'value', 'name' => 'Quoted')),
@@ -155,6 +160,46 @@ test('commands on an RRD path with a space and a quote match their golden', func
         array('fn' => 'rrdtool_function_update', 'args' => array(array("rra/it\0s.rrd" => array('local_data_id' => 32, 'data_template_id' => 0, 'times' => array(1700000600 => array('value' => '5')))))),
     );
     rrd_characterization_golden('path-quoting', rrd_characterization_observe_all(rrd_characterization_run($this, $scenario)));
+});
+
+test('a line break in a substituted maximum never splits the create command', function () {
+    $path = "rra/it's a.rrd";
+    $observed = array();
+    // Surrounding line breaks are trimmed; one inside the value refuses the create.
+    foreach (array("\n100", "100\r\n", "10\n0") as $alias) {
+        $scenario = rrd_characterization_path_quoting_scenario();
+        foreach ($scenario['db'] as $index => $row) {
+            if ($row['sql'] === 'field_name, field_value FROM host_snmp_cache') {
+                $scenario['db'][$index]['result'][0]['field_value'] = $alias;
+            }
+        }
+        $scenario['calls'] = array(
+            // Fetch loads lib/boost.php before it looks at its arguments.
+            array('fn' => 'rrdtool_function_fetch', 'args' => array(0, 1700000000, 1700001000)),
+            array('fn' => 'rrdtool_function_create', 'args' => array(33, false)),
+            array('fn' => 'boost_rrdtool_function_create', 'args' => array(33, false, false)),
+        );
+        $observed[json_encode($alias)] = array_slice(rrd_characterization_observe_all(rrd_characterization_run($this, $scenario)), 1);
+    }
+    foreach ($observed as $calls) {
+        foreach ($calls as $call) {
+            expect(count($call['commands']))->toBeLessThanOrEqual(1);
+        }
+    }
+    rrd_characterization_golden('create-maximum-line-breaks', $observed);
+});
+
+test('a NUL in a Boost RRD path writes nothing to RRDtool', function () {
+    $scenario = rrd_characterization_path_quoting_scenario();
+    $scenario['db'][] = array('sql' => 'SELECT id FROM data_local WHERE id', 'result' => '32');
+    $scenario['calls'] = array(
+        array('fn' => 'rrdtool_function_fetch', 'args' => array(0, 1700000000, 1700001000)),
+        array('fn' => 'boost_rrdtool_function_create', 'args' => array(32, false, false)),
+        // The existence check fails for a NUL path, so the update tries to
+        // create the file, that is refused, and no update is sent.
+        array('fn' => 'boost_rrdtool_function_update', 'args' => array(32, "rra/it\0s.rrd", 'value', '1700000900:6', false)),
+    );
+    rrd_characterization_golden('boost-nul-path', array_slice(rrd_characterization_observe_all(rrd_characterization_run($this, $scenario)), 1));
 });
 
 test('pure helpers match their golden', function () {

@@ -1,0 +1,119 @@
+{
+    "\"\\n100\"": [
+        {
+            "returned": "",
+            "printed": "",
+            "diagnostics": [],
+            "commands": [
+                {
+                    "argv": [
+                        "-"
+                    ],
+                    "stdin": [
+                        "create '<DIR>/rra/new '\"'\"'one'\"'\"'.rrd' ",
+                        "--start 0 --step 300 ",
+                        "DS:value:GAUGE:600:0:100",
+                        "RRA:AVERAGE:0.5:1:600  \r\nquit\r\n"
+                    ]
+                }
+            ],
+            "args": [
+                33,
+                false
+            ]
+        },
+        {
+            "returned": "",
+            "printed": "",
+            "diagnostics": [],
+            "commands": [
+                {
+                    "argv": [
+                        "-"
+                    ],
+                    "stdin": [
+                        "create '<DIR>/rra/new '\"'\"'one'\"'\"'.rrd' ",
+                        "--start 0 --step 300 ",
+                        "DS:value:GAUGE:600:0:100",
+                        "RRA:AVERAGE:0.5:1:600  \r\nquit\r\n"
+                    ]
+                }
+            ],
+            "args": [
+                33,
+                false,
+                false
+            ]
+        }
+    ],
+    "\"100\\r\\n\"": [
+        {
+            "returned": "",
+            "printed": "",
+            "diagnostics": [],
+            "commands": [
+                {
+                    "argv": [
+                        "-"
+                    ],
+                    "stdin": [
+                        "create '<DIR>/rra/new '\"'\"'one'\"'\"'.rrd' ",
+                        "--start 0 --step 300 ",
+                        "DS:value:GAUGE:600:0:100",
+                        "RRA:AVERAGE:0.5:1:600  \r\nquit\r\n"
+                    ]
+                }
+            ],
+            "args": [
+                33,
+                false
+            ]
+        },
+        {
+            "returned": "",
+            "printed": "",
+            "diagnostics": [],
+            "commands": [
+                {
+                    "argv": [
+                        "-"
+                    ],
+                    "stdin": [
+                        "create '<DIR>/rra/new '\"'\"'one'\"'\"'.rrd' ",
+                        "--start 0 --step 300 ",
+                        "DS:value:GAUGE:600:0:100",
+                        "RRA:AVERAGE:0.5:1:600  \r\nquit\r\n"
+                    ]
+                }
+            ],
+            "args": [
+                33,
+                false,
+                false
+            ]
+        }
+    ],
+    "\"10\\n0\"": [
+        {
+            "returned": false,
+            "printed": "",
+            "diagnostics": [],
+            "commands": [],
+            "args": [
+                33,
+                false
+            ]
+        },
+        {
+            "returned": false,
+            "printed": "",
+            "diagnostics": [],
+            "commands": [],
+            "args": [
+                33,
+                false,
+                false
+            ]
+        }
+    ]
+}
