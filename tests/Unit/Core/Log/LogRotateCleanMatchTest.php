@@ -120,6 +120,7 @@ test('a counter the writer cannot emit is not treated as a rotation', function (
 	$result = clean_directory(array(
 		'cacti.log',
 		'cacti.log-20200101-0',
+		'cacti.log-20200101-00',
 		'cacti.log-20200101-01',
 		'cacti.log-20200101-100',
 	));
@@ -127,6 +128,7 @@ test('a counter the writer cannot emit is not treated as a rotation', function (
 	expect($result['survivors'])->toBe(array(
 		'cacti.log',
 		'cacti.log-20200101-0',
+		'cacti.log-20200101-00',
 		'cacti.log-20200101-01',
 		'cacti.log-20200101-100',
 	));
