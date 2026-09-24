@@ -81,5 +81,17 @@
                 "VRULE:1700001800#000000FF:        \r\nquit\r\n"
             ]
         }
+    ],
+    "args": [
+        7,
+        0,
+        {
+            "graph_start": 1700000000,
+            "graph_end": 1700003600,
+            "graph_nolegend": true
+        },
+        false,
+        [],
+        0
     ]
 }

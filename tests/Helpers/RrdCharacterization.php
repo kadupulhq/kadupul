@@ -110,7 +110,9 @@ function rrd_characterization_observed(array $result): array
     }
     $printed = rrd_characterization_clock($result['printed'], $result['clock']);
 
-    return array('returned' => $result['returned'], 'printed' => $printed, 'diagnostics' => $result['diagnostics'], 'commands' => $commands);
+    // Arguments are recorded after the call because several functions report
+    // through by-reference parameters.
+    return array('returned' => $result['returned'], 'printed' => $printed, 'diagnostics' => $result['diagnostics'], 'commands' => $commands, 'args' => $result['args']);
 }
 
 function rrd_characterization_golden(string $name, $actual): void

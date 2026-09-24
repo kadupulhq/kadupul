@@ -3,13 +3,20 @@
         "returned": "update x.rrd N:1",
         "printed": "",
         "diagnostics": [],
-        "commands": []
+        "commands": [],
+        "args": [
+            "update x.rrd N:1",
+            "public key"
+        ]
     },
     {
         "returned": "OK u:0.00",
         "printed": "",
         "diagnostics": [],
-        "commands": []
+        "commands": [],
+        "args": [
+            "OK u:0.00"
+        ]
     },
     {
         "returned": {
@@ -18,7 +25,11 @@
         },
         "printed": "",
         "diagnostics": [],
-        "commands": []
+        "commands": [],
+        "args": [
+            "update x.rrd N:1",
+            "public key"
+        ]
     },
     {
         "returned": {
@@ -27,7 +38,10 @@
         },
         "printed": "",
         "diagnostics": [],
-        "commands": []
+        "commands": [],
+        "args": [
+            "010QUJD"
+        ]
     },
     {
         "returned": {
@@ -36,6 +50,9 @@
         },
         "printed": "",
         "diagnostics": [],
-        "commands": []
+        "commands": [],
+        "args": [
+            "POLLER"
+        ]
     }
 ]

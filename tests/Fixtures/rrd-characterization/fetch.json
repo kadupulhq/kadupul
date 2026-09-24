@@ -30,6 +30,11 @@
                     "fetch <DIR>/rra/router_traffic_11.rrd AVERAGE -s 1700000000 -e 1700001000 -r 300\r\nquit\r\n"
                 ]
             }
+        ],
+        "args": [
+            11,
+            1700000000,
+            1700001000
         ]
     },
     {
@@ -66,6 +71,15 @@
                     "fetch <DIR>/rra/router_traffic_11.rrd MAX -s 1700000000 -e 1700001000 -r 60\r\nquit\r\n"
                 ]
             }
+        ],
+        "args": [
+            11,
+            1700000000,
+            1700001000,
+            60,
+            true,
+            null,
+            "MAX"
         ]
     },
     {
@@ -99,12 +113,26 @@
                     "fetch rra/other.rrd LAST -s 1700000000 -e 1700001000 -r 300\r\nquit\r\n"
                 ]
             }
+        ],
+        "args": [
+            0,
+            1700000000,
+            1700001000,
+            0,
+            false,
+            "rra/other.rrd",
+            "LAST"
         ]
     },
     {
         "returned": [],
         "printed": "",
         "diagnostics": [],
-        "commands": []
+        "commands": [],
+        "args": [
+            0,
+            1700000000,
+            1700001000
+        ]
     }
 ]

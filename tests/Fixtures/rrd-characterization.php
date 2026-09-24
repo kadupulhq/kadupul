@@ -177,6 +177,9 @@ $_COOKIE = $scenario['cookies'] ?? array();
 // fake RRDtool received, and its arguments afterwards so by-reference outputs
 // are pinned too. The clock brackets the call for output that embeds time().
 $results = array();
+// Calls in one scenario share settings and globals on purpose: a later call
+// sees what an earlier one set, the way a single request would. Scenarios do
+// not share anything, because each one runs in its own child process.
 foreach ($scenario['calls'] as $call) {
     $config['config_options_array'] = array_replace($config['config_options_array'], $call['options'] ?? array());
     $args = $call['args'];

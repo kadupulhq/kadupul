@@ -93,5 +93,16 @@
                 "AREA:var340220#1F3D7A00   \r\nquit\r\n"
             ]
         }
+    ],
+    "args": [
+        7,
+        0,
+        {
+            "graph_start": 1700000000,
+            "graph_end": 1700003600
+        },
+        false,
+        [],
+        0
     ]
 }

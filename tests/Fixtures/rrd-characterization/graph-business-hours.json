@@ -73,5 +73,16 @@
                 "AREA:a#3366CC99:'Inbound\\: 50%' \r\nquit\r\n"
             ]
         }
+    ],
+    "args": [
+        7,
+        0,
+        {
+            "graph_start": 1699900000,
+            "graph_end": 1700400000
+        },
+        false,
+        [],
+        0
     ]
 }

@@ -19,5 +19,17 @@
                 "info rra/router_errors_12.rrd\r\nquit\r\n"
             ]
         }
+    ],
+    "args": [
+        7,
+        0,
+        {
+            "graph_start": 1700000000,
+            "graph_end": 1700003600,
+            "print_source": true
+        },
+        false,
+        [],
+        0
     ]
 }

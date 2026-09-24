@@ -23,6 +23,16 @@
                     ""
                 ]
             }
+        ],
+        "args": [
+            {
+                "data_source_id": 21,
+                "data-source-type": "3",
+                "heartbeat": "600",
+                "minimum": "U",
+                "maximum": "1e9",
+                "data-source-rename": "in'bound \"x\""
+            }
         ]
     },
     {
@@ -43,6 +53,16 @@
                     ""
                 ]
             }
+        ],
+        "args": [
+            {
+                "heartbeat": "",
+                "minimum": "0",
+                "maximum": "",
+                "data-source-type": "",
+                "data-source-rename": "",
+                "data_source_id": 21
+            }
         ]
     },
     {
@@ -51,12 +71,32 @@
         "diagnostics": [
             "2: Undefined array key \"\""
         ],
-        "commands": []
+        "commands": [],
+        "args": [
+            {
+                "heartbeat": "",
+                "minimum": "",
+                "maximum": "",
+                "data-source-type": "",
+                "data-source-rename": "",
+                "data_source_id": 21
+            }
+        ]
     },
     {
         "returned": null,
         "printed": "",
         "diagnostics": [],
-        "commands": []
+        "commands": [],
+        "args": [
+            {
+                "data_source_id": 22,
+                "data-source-type": "3",
+                "heartbeat": "600",
+                "minimum": "U",
+                "maximum": "1e9",
+                "data-source-rename": "in'bound \"x\""
+            }
+        ]
     }
 ]
