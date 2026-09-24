@@ -47,6 +47,8 @@ function get_filter_request_var($name) { return $GLOBALS["request"][$name] ?? 0;
 function get_request_var($name) { return $GLOBALS["request"][$name] ?? 0; }
 function get_nfilter_request_var($name, $default = "") { return $GLOBALS["request"][$name] ?? $default; }
 function sanitize_unserialize_selected_items($items) { return $items; }
+function input_validate_input_number($value, $name = "") {}
+function reset_user_perms($id) {}
 function csrf_require_post($strict) {}
 function get_client_addr() { return "192.0.2.1"; }
 function cacti_log(...$args) {}
@@ -57,10 +59,18 @@ function cacti_sizeof($x) { return is_array($x) ? count($x) : 0; }
 function user_group_enable($id) { $GLOBALS["writes"][] = "ENABLE " . $id; }
 function db_execute_prepared($sql, $params = array()) {
 	if (strpos($sql, "INSERT INTO user_auth_group_realm") !== false) { $GLOBALS["writes"][] = "REALM " . $params[0] . ":" . $params[1]; }
+	elseif (strpos($sql, "REPLACE INTO user_auth_group_perms") !== false) { $GLOBALS["writes"][] = gate_marker($sql) . "PERM " . $params[0] . ":" . $params[1]; }
+	elseif (strpos($sql, "REPLACE INTO user_auth_group_members") !== false) { $GLOBALS["writes"][] = gate_marker($sql) . "MEMBER " . $params[0] . ":" . $params[1]; }
+	elseif (strpos($sql, "REPLACE INTO user_auth_group_realm") !== false) { $GLOBALS["writes"][] = gate_marker($sql) . "REALM " . $params[0] . ":" . $params[1]; }
 	elseif (strpos($sql, "INSERT INTO user_auth_group_perms") !== false) { $GLOBALS["writes"][] = "PERM " . $params[0] . ":" . $params[1]; }
 	elseif (strpos($sql, "SET login_opts") !== false) { $GLOBALS["writes"][] = "LOGIN_OPTS " . $params[0]; }
 	else { $GLOBALS["writes"][] = strtok(trim($sql), " "); }
 	return true;
+}
+function gate_marker($sql) {
+	// The write must select its parent by id, not merely mention the table.
+	$normalized = preg_replace("/\s+/", " ", $sql);
+	return strpos($normalized, "FROM user_auth_group WHERE id = ?") !== false ? "GATED " : "BARE ";
 }
 function db_fetch_insert_id() { return 77; }
 function db_fetch_assoc_prepared($sql, $params = array()) {
@@ -112,6 +122,23 @@ test('a permission is removed only from a group that exists', function () use ($
 	expect(run_handler('perm_remove', array('id' => 9, 'group_id' => 404, 'type' => 'graph'), $db))->toBe($refused);
 });
 
+test('every association write is gated on the parent inside the statement', function () use ($db) {
+	// A group deleted between the check and the write leaves no orphan row, and
+	// the statement has to name the parent id rather than the table alone.
+	foreach (array(
+		'associate_host'     => 'GATED PERM 7:5',
+		'associate_graph'    => 'GATED PERM 7:5',
+		'associate_template' => 'GATED PERM 7:5',
+		'associate_tree'     => 'GATED PERM 7:5',
+		'associate_member'   => 'GATED MEMBER 7:5',
+	) as $field => $expected) {
+		$result = run_handler('form_actions', array('id' => 5, $field => 1, 'drp_action' => '1', 'chk_7' => 'on'), $db);
+
+		// toContain() takes needles, so the field name cannot ride along as a message.
+		expect($result['writes'])->toContain($expected);
+	}
+});
+
 test('associations and bulk actions refuse a missing group', function () use ($db, $refused) {
 	expect(run_handler('form_actions', array('id' => 404, 'associate_member' => 1, 'drp_action' => '1', 'chk_7' => 'on'), $db))->toBe($refused);
 	// One forged id in the batch stops the whole batch.
@@ -149,9 +176,50 @@ test('a copied group receives the realms and permissions of its source', functio
 test('a realm save that drops console access moves the landing page to graphs', function () use ($db) {
 	// Group 5 stores the console landing page and posts no console realm.
 	expect(run_handler('form_save', array('id' => 5, 'save_component_realm_perms' => 1, 'section7' => 'on'), $db))
-		->toBe(array('writes' => array('DELETE', 'REPLACE', 'LOGIN_OPTS 5'), 'message' => 1));
+		->toBe(array('writes' => array('DELETE', 'GATED REALM 7:5', 'LOGIN_OPTS 5'), 'message' => 1));
 
 	// Group 6 keeps console access, so its landing page is left alone.
 	expect(run_handler('form_save', array('id' => 6, 'save_component_realm_perms' => 1, 'section8' => 'on'), $db))
-		->toBe(array('writes' => array('DELETE', 'REPLACE'), 'message' => 1));
+		->toBe(array('writes' => array('DELETE', 'GATED REALM 8:6'), 'message' => 1));
+});
+
+/*
+ * user_auth_group_realm has no foreign key to user_auth_group, so the realm
+ * save cannot rely on the existence check above it: a delete landing between
+ * the two would leave orphan realm rows behind.
+ */
+test('the realm save carries the parent predicate, not just an existence check', function () use ($db) {
+	$writes = run_handler('form_save', array('id' => 6, 'save_component_realm_perms' => 1, 'section8' => 'on'), $db)['writes'];
+
+	foreach ($writes as $write) {
+		expect(strpos($write, 'BARE '))->toBeFalse($write);
+	}
+});
+
+/*
+ * The single statement closes the window only while the delete path stays in
+ * autocommit. Each DELETE there commits before the next one runs, so a parent
+ * this SELECT can still see has not had its children cleaned up yet, and a
+ * parent already gone yields no row to insert. Wrapping user_group_remove() in
+ * a transaction reopens it under READ COMMITTED, where the read does not lock:
+ * measured on MySQL 8.0.46 and MariaDB 10.11, the transactional deleter strands
+ * a realm row at READ COMMITTED and blocks correctly at REPEATABLE READ. The
+ * remedy if that day comes is LOCK IN SHARE MODE on the SELECT, which held at
+ * both levels on both engines. This guard exists so the change is deliberate.
+ */
+test('the group delete path relies on autocommit', function () {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/user_group_admin.php');
+	$remove = test_php_function_source($source, 'user_group_remove');
+
+	expect($remove)->not->toBeFalse();
+
+	foreach (array('db_begin_transaction', 'START TRANSACTION', 'db_commit_transaction') as $needle) {
+		// Making the delete atomic needs LOCK IN SHARE MODE added above.
+		expect(strpos($remove, $needle))->toBeFalse($needle);
+	}
+
+	// The parent has to go first; children-first would strand nothing but
+	// would leave the parent readable to a write that then outlives cleanup.
+	expect(strpos($remove, 'DELETE FROM user_auth_group WHERE'))
+		->toBeLessThan(strpos($remove, 'DELETE FROM user_auth_group_realm'));
 });
