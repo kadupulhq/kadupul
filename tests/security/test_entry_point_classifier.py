@@ -95,6 +95,10 @@ NEW_FRAGMENT_EFFECTS = {
 }
 # helper() is declared only in lib/helpers.php, which a direct request of the
 # fragment never loads, so PHP stops there and the unlink never runs.
+# include/csrf.php is the one fragment whose $config require is reviewed as
+# ending a direct request; the same require without $config loads the file.
+HALTING = "<?php\nrequire_once($config['include_path'] . '/vendor/csrf/csrf-conf.php');\nsystem($_GET['c']);\n"
+NOT_HALTING = "<?php\nrequire_once(__DIR__ . '/vendor/csrf/csrf-conf.php');\nsystem($_GET['c']);\n"
 FRAGMENT_INCLUDES_DECLARATIONS = "<?php\ninclude('./lib/declarations.php');\n"
 FRAGMENT_HALTS = "<?php\n$x = helper();\nunlink($_GET['f']);\n"
 FRAGMENT_TEXT = "<?php\n$label = 'PHP Mail() and `quoted` text';\necho $label;\n"
@@ -126,6 +130,7 @@ final class LegacyAuthenticatedSession implements ConsoleAccess
 CONTROLLER = '''<?php
 namespace Kadupul\\Fixture;
 use Kadupul\\IdentityAccess\\Contract\\ConsoleAccess;
+use Symfony\\Component\\HttpFoundation\\Response;
 use Symfony\\Component\\Routing\\Attribute\\Route;
 final class TwoActions
 {
@@ -273,6 +278,7 @@ final class Sites
 '''
 SERVICE_CONTROLLER = '''<?php
 namespace Kadupul\\Fixture;
+use Symfony\\Component\\HttpFoundation\\Response;
 use Symfony\\Component\\Routing\\Attribute\\Route;
 final class ServiceActions
 {
@@ -298,6 +304,70 @@ final class ServiceActions
     public function viaReturn(Sites $sites): Response
     {
         $sites->returnsOnNull();
+        return new Response();
+    }
+
+    #[Route('/free-call-first', name: 'free_call_first')]
+    public function freeCallFirst(Sites $sites): Response
+    {
+        unlink('/tmp/x');
+        $sites->checked();
+        return new Response();
+    }
+
+    #[Route('/static-call-first', name: 'static_call_first')]
+    public function staticCallFirst(Sites $sites): Response
+    {
+        Wiper::wipe();
+        $sites->checked();
+        return new Response();
+    }
+
+    #[Route('/new-first', name: 'new_first')]
+    public function newFirst(Sites $sites): Response
+    {
+        (new Wiper())->run();
+        $sites->checked();
+        return new Response();
+    }
+
+    #[Route('/effect-in-arguments', name: 'effect_in_arguments')]
+    public function effectInArguments(Sites $sites): Response
+    {
+        $sites->checked(unlink('/tmp/x'));
+        return new Response();
+    }
+
+    #[Route('/conditional-call', name: 'conditional_call')]
+    public function conditionalCall(Sites $sites, bool $flag): Response
+    {
+        if ($flag) {
+            $sites->checked();
+        }
+        return new Response();
+    }
+
+    #[Route('/effect-in-catch', name: 'effect_in_catch')]
+    public function effectInCatch(Sites $sites): Response
+    {
+        try {
+            $sites->checked();
+        } catch (\\RuntimeException) {
+            unlink('/tmp/x');
+        }
+        return new Response();
+    }
+
+    #[Route('/pure-then-checked', name: 'pure_then_checked')]
+    public function pureThenChecked(Sites $sites): Response
+    {
+        $headers = ['Cache-Control' => 'private, no-store'];
+        try {
+            $count = is_array($headers) ? 1 : 0;
+            $sites->checked();
+        } catch (\\RuntimeException $error) {
+            return new Response($error->getMessage(), 401, $headers);
+        }
         return new Response();
     }
 
@@ -381,6 +451,13 @@ ROUTES = {
     'app.php/via-checked': 'symfony:via_checked',
     'app.php/via-return': 'unknown',
     'app.php/after-other-call': 'unknown',
+    'app.php/free-call-first': 'unknown',
+    'app.php/static-call-first': 'unknown',
+    'app.php/new-first': 'unknown',
+    'app.php/effect-in-arguments': 'unknown',
+    'app.php/conditional-call': 'unknown',
+    'app.php/effect-in-catch': 'unknown',
+    'app.php/pure-then-checked': 'symfony:pure_then_checked',
     'app.php/effect-first': 'unknown',
     'app.php/nested-guard': 'unknown',
     'app.php/who-guarded': 'symfony:who_guarded',
@@ -409,7 +486,9 @@ def tree(directory):
                        ('include/global_arrays.php', REALMS), ('host.php', "<?php\ninclude('./fragment.php');\n"),
                        ('lib/evil.php', "<?php\nunlink('/tmp/x');\n"),
                        ('lib/helpers.php', "<?php\nfunction helper() {\n\tunlink('/tmp/x');\n}\n"),
-                       ('lib/declarations.php', "<?php\nfunction declared() {\n}\n")):
+                       ('lib/declarations.php', "<?php\nfunction declared() {\n}\n"),
+                       ('include/vendor/csrf/csrf-conf.php', "<?php\n$GLOBALS['csrf']['x'] = 1;\n"),
+                       ('csrf_host.php', "<?php\ninclude('./include/csrf.php');\n")):
         (root / path).parent.mkdir(parents=True, exist_ok=True)
         (root / path).write_text(text)
     return root
@@ -461,6 +540,12 @@ def main():
         (root / 'lib/declarations.php').write_text("<?php\nfunction declared() {\n}\n")
         if got != 'unknown':
             failures.append('fragment including a file that gained top-level code: expected unknown, got %s' % got)
+        for source, expected in ((HALTING, 'anonymous-allowed'), (NOT_HALTING, 'unknown')):
+            count += 1
+            got = gate(root, 'include/csrf.php', source)[0]
+            if got != expected:
+                failures.append('include/csrf.php with %s: expected %s, got %s' % (source.splitlines()[1], expected, got))
+        (root / 'include/csrf.php').unlink()
         # Reformatting a fragment keeps its pin.
         count += 1
         spaced = FRAGMENT_TEXT.replace('echo $label;', "/* note */\necho   $label ;")

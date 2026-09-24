@@ -52,7 +52,7 @@ def nginx_denies():
     return rules, named
 
 
-SECTION = re.compile(r'<(Files|FilesMatch|If)\s+"([^"]*)"\s*>(.*?)</\1>', re.S | re.I)
+SECTION = re.compile(r'<(Files|FilesMatch|If)\s+("?)([^">]*)\2\s*>(.*?)</\1>', re.S | re.I)
 REQUIRE = re.compile(r'^\s*Require\s+all\s+(denied|granted)\b', re.M | re.I)
 OPT_IN = 'apache: opt-in via .htaccess.dist'
 
@@ -64,7 +64,7 @@ def htaccess_rules(text):
     """
     text = re.sub(r'^\s*#.*$', '', text, flags=re.M)
     sections = []
-    for kind, argument, body in SECTION.findall(text):
+    for kind, _, argument, body in SECTION.findall(text):
         verdict = REQUIRE.findall(body)
         if not verdict:
             continue
@@ -82,7 +82,12 @@ def htaccess_rules(text):
                 sections.append((re.compile(m[1], re.I if m[2] else 0), 'uri', verdict[-1].lower()))
             continue
         sections.append((pattern, subject, verdict[-1].lower()))
-    outside = REQUIRE.findall(SECTION.sub('', text))
+    rest = SECTION.sub('', text)
+    # Any other section around a Require would be read as directory-wide.
+    other = re.search(r'<(?!/?IfModule\b)/?([A-Za-z]+)', rest)
+    if other and REQUIRE.search(rest):
+        raise SystemExit('ERROR: unsupported <%s> section in .htaccess' % other[1])
+    outside = REQUIRE.findall(rest)
     return (outside[-1].lower() if outside else None), sections
 
 

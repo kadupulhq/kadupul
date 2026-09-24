@@ -61,6 +61,18 @@ def main():
     for path in OPT_IN_SERVED:
         if inventory.apache_denied(path, enabled):
             failures.append(path + ': served path is denied with .htaccess.dist enabled')
+    # Section forms the parser must read, or refuse, rather than take a
+    # per-file Require as a directory-wide one.
+    deny = '\n    Require all denied\n'
+    if inventory.htaccess_rules('<Files x.php>' + deny + '</Files>\n')[0] is not None:
+        failures.append('unquoted <Files> read as a directory-wide verdict')
+    if not inventory.apache_denied('d/x.php', {'d/.htaccess': inventory.htaccess_rules('<FilesMatch ^x>' + deny + '</FilesMatch>\n')}):
+        failures.append('unquoted <FilesMatch> deny not applied')
+    try:
+        inventory.htaccess_rules('<RequireAll>' + deny + '</RequireAll>\n')
+        failures.append('unsupported <RequireAll> section accepted')
+    except SystemExit:
+        pass
     for failure in failures:
         print('FAIL ' + failure)
     if failures:

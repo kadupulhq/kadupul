@@ -168,6 +168,20 @@ const ACCESS_TYPES = [
     'Kadupul\IdentityAccess\Application\Port\AuthenticatedSession',
     SESSION_ADAPTER,
 ];
+// Service methods and value parsers an action may call before the service
+// that guards it: each reads the request, translates, builds a URL, or
+// validates plain values, and none reaches a repository.
+const PURE_METHODS = [
+    'Symfony\Component\HttpFoundation\Request' => ['isMethod', 'getRequestFormat'],
+    'Symfony\Contracts\Translation\TranslatorInterface' => ['trans'],
+    'Symfony\Component\Routing\Generator\UrlGeneratorInterface' => ['generate'],
+];
+const PURE_STATIC_CALLS = [
+    'Kadupul\Inventory\Infrastructure\Symfony\DeviceListParameters' => ['parse', 'context'],
+    'Kadupul\Inventory\Infrastructure\Symfony\SiteListParameters' => ['parse', 'context'],
+    'Kadupul\Inventory\Domain\DeviceSelection' => ['validateIds'],
+    'Kadupul\Inventory\Domain\SiteSelection' => ['validateIds'],
+];
 // Controller, use case, adapter.
 const CALL_DEPTH = 3;
 
@@ -1382,6 +1396,125 @@ function guarded_checks(string $root, array $stmts, Closure $type_of, bool $acti
 }
 
 /**
+ * True when every node under $nodes only reads, computes or builds a response,
+ * so running it ahead of a guard changes nothing. Anything else, including a
+ * call to a service the lists above do not name, is not pure.
+ */
+function pure(mixed $nodes, Closure $type_of): bool
+{
+    foreach (walk($nodes, false) as $node) {
+        if ($node instanceof Expr\Include_ || $node instanceof Expr\Eval_ || $node instanceof Expr\ShellExec
+            || $node instanceof Expr\Exit_ || $node instanceof Expr\Print_ || $node instanceof Stmt\Echo_
+            || $node instanceof Stmt\InlineHTML || $node instanceof Node\FunctionLike || $node instanceof Expr\Clone_
+            || $node instanceof Expr\Yield_ || $node instanceof Expr\YieldFrom || $node instanceof Expr\AssignRef) {
+            return false;
+        }
+        if ($node instanceof Expr\Assign || $node instanceof Expr\AssignOp) {
+            $var = $node->var;
+            while ($var instanceof Expr\ArrayDimFetch) {
+                $var = $var->var;
+            }
+            if (!is_variable($var) || is_variable($var, 'this') || in_array($var->name, SUPERGLOBALS, true)) {
+                return false;
+            }
+        }
+        if ($node instanceof Expr\FuncCall && !in_array(call_name($node), PURE_CALLS, true)) {
+            return false;
+        }
+        if ($node instanceof Expr\StaticCall && !($node->class instanceof Name && $node->name instanceof Node\Identifier
+            && in_array($node->name->toString(), PURE_STATIC_CALLS[$node->class->toString()] ?? [], true))) {
+            return false;
+        }
+        if ($node instanceof Expr\New_ && !($node->class instanceof Name
+            && (str_starts_with($node->class->toString(), 'Symfony\Component\HttpFoundation\\')
+                || (class_exists($node->class->toString()) && is_a($node->class->toString(), Throwable::class, true)
+                    && (new ReflectionClass($node->class->toString()))->isInternal())))) {
+            return false;
+        }
+        if (($node instanceof Expr\MethodCall || $node instanceof Expr\NullsafeMethodCall) && !pure_method_call($node, $type_of)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function pure_method_call(Expr\MethodCall|Expr\NullsafeMethodCall $call, Closure $type_of): bool
+{
+    if (!$call->name instanceof Node\Identifier) {
+        return false;
+    }
+    $name = $call->name->toString();
+    $target = call_target($call, $type_of);
+    if ($target !== null) {
+        return in_array($name, PURE_METHODS[$target[0]] ?? [], true);
+    }
+    // $request->query->all() reads a request bag, and a caught exception's
+    // getMessage() reads the exception.
+    $bag = $call->var instanceof Expr\PropertyFetch && $call->var->name instanceof Node\Identifier
+        && in_array($call->var->name->toString(), ['query', 'request', 'attributes'], true)
+        && $type_of($call->var->var) === 'Symfony\Component\HttpFoundation\Request';
+
+    return ($bag && in_array($name, ['all', 'get', 'has'], true))
+        || (is_variable($call->var) && $name === 'getMessage' && $call->args === []);
+}
+
+/**
+ * The service call a method makes first, when everything that can run before
+ * it is pure: the statements ahead of it, the other parts of its statement,
+ * its arguments, and the catch blocks of a try it sits in, which run when an
+ * earlier statement throws.
+ *
+ * @param list<Stmt> $stmts
+ * @return array{0: string, 1: string}|null
+ */
+function first_service_call(array $stmts, Closure $type_of): ?array
+{
+    foreach ($stmts as $stmt) {
+        if ($stmt instanceof Stmt\TryCatch) {
+            if ($stmt->finally !== null || !pure($stmt->catches, $type_of)) {
+                return null;
+            }
+            $found = first_service_call($stmt->stmts, $type_of);
+            if ($found !== null) {
+                return $found;
+            }
+            if (!pure($stmt->stmts, $type_of)) {
+                return null;
+            }
+            continue;
+        }
+        $service = null;
+        foreach (walk($stmt, false) as $node) {
+            $target = call_target($node, $type_of);
+            if ($target !== null && !in_array($target[1], PURE_METHODS[$target[0]] ?? [], true)) {
+                $service = [$node, $target];
+                break;
+            }
+        }
+        if ($service === null) {
+            if (!pure($stmt, $type_of)) {
+                return null;
+            }
+            continue;
+        }
+        // Only a plain call, alone or assigned to a variable, runs
+        // unconditionally with nothing but its arguments ahead of it.
+        [$node, $target] = $service;
+        $expr = $stmt instanceof Stmt\Return_ ? $stmt->expr : expression_of($stmt);
+        if ($expr instanceof Expr\Assign && is_variable($expr->var) && !is_variable($expr->var, 'this')) {
+            $expr = $expr->expr;
+        }
+        if ($expr !== $node || !pure($node->getRawArgs(), $type_of)) {
+            return null;
+        }
+        return $target;
+    }
+
+    return null;
+}
+
+/**
  * @param array<string, true> $seen
  * @return array<string, true>
  */
@@ -1393,31 +1526,22 @@ function method_checks(string $root, string $class, Stmt\ClassMethod $method, in
         return $checks;
     }
     // Without its own guard, a method is covered only by the first service it
-    // calls, and only when that service guards. Whatever an earlier service
-    // call did has already run by the time a later one refuses.
-    foreach (walk($method->stmts ?? [], false) as $node) {
-        $target = call_target($node, $type_of);
-        if ($target === null || (in_array($target[0], ACCESS_TYPES, true) && $target[1] !== 'consoleActor')) {
-            continue;
-        }
-        // Arguments run before the call, so a service call among them came first.
-        foreach (walk($node instanceof Expr\CallLike ? $node->getRawArgs() : [], false) as $inner) {
-            if (call_target($inner, $type_of) !== null) {
-                return [];
-            }
-        }
-        [$type, $name] = $target;
-        $key = strtolower($type . '::' . $name);
-        if (isset($seen[$key])) {
-            return [];
-        }
-        $seen[$key] = true;
-        $loaded = load_class($root, $type);
-        $callee = $loaded === null ? null : find_method($loaded, $name);
-        return $callee === null ? [] : method_checks($root, $type, $callee, $depth + 1, $seen);
+    // calls, and only when that service guards and nothing but pure code can
+    // run ahead of it.
+    $target = first_service_call($method->stmts ?? [], $type_of);
+    if ($target === null || (in_array($target[0], ACCESS_TYPES, true) && $target[1] !== 'consoleActor')) {
+        return [];
     }
+    [$type, $name] = $target;
+    $key = strtolower($type . '::' . $name);
+    if (isset($seen[$key])) {
+        return [];
+    }
+    $seen[$key] = true;
+    $loaded = load_class($root, $type);
+    $callee = $loaded === null ? null : find_method($loaded, $name);
 
-    return [];
+    return $callee === null ? [] : method_checks($root, $type, $callee, $depth + 1, $seen);
 }
 
 /**
