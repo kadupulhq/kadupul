@@ -169,7 +169,7 @@ test('a line break in a substituted maximum never splits the create command', fu
     $path = "rra/it's a.rrd";
     $observed = array();
     // Surrounding line breaks are trimmed; one inside the value refuses the create.
-    foreach (array("\n100", "100\r\n", "10\n0") as $alias) {
+    foreach (array("\n100", "100\r\n", "10\n0", "100\0") as $alias) {
         $scenario = rrd_characterization_path_quoting_scenario();
         foreach ($scenario['db'] as $index => $row) {
             if ($row['sql'] === 'field_name, field_value FROM host_snmp_cache') {

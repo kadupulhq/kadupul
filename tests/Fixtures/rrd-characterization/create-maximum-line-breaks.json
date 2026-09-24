@@ -115,5 +115,28 @@
                 false
             ]
         }
+    ],
+    "\"100\\u0000\"": [
+        {
+            "returned": false,
+            "printed": "",
+            "diagnostics": [],
+            "commands": [],
+            "args": [
+                33,
+                false
+            ]
+        },
+        {
+            "returned": false,
+            "printed": "",
+            "diagnostics": [],
+            "commands": [],
+            "args": [
+                33,
+                false,
+                false
+            ]
+        }
     ]
 }

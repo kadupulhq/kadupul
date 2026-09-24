@@ -1481,7 +1481,7 @@ function boost_rrdtool_function_create($local_data_id, $show_source, &$rrdtool_p
                 if ($data_source['rrd_maximum'] == '|query_ifSpeed|' || $data_source['rrd_maximum'] == '|query_ifHighSpeed|') {
                     $data_source['rrd_maximum'] = $speed;
                 } else {
-                    $data_source['rrd_maximum'] = trim(substitute_snmp_query_data($data_source['rrd_maximum'], $data_local['host_id'], $data_local['snmp_query_id'], $data_local['snmp_index']));
+                    $data_source['rrd_maximum'] = trim(substitute_snmp_query_data($data_source['rrd_maximum'], $data_local['host_id'], $data_local['snmp_query_id'], $data_local['snmp_index']), " \t\n\r\x0B");
                 }
             } elseif (($data_source['rrd_maximum'] != 'U') && (int) $data_source['rrd_maximum'] <= (int) $data_source['rrd_minimum']) {
                 /* max > min required, but take care of an "Undef" value */
