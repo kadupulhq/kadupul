@@ -41,7 +41,7 @@
                 "-"
             ],
             "stdin": [
-                "info rra/router_traffic_11.rrd\r\nquit\r\n"
+                "info 'rra/router_traffic_11.rrd'\r\nquit\r\n"
             ]
         },
         {
@@ -49,7 +49,7 @@
                 "-"
             ],
             "stdin": [
-                "info rra/router_errors_12.rrd\r\nquit\r\n"
+                "info 'rra/router_errors_12.rrd'\r\nquit\r\n"
             ]
         },
         {

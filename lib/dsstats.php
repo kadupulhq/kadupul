@@ -263,8 +263,16 @@ function dsstats_obtain_data_source_avgpeak_values($local_data_id, $rrdfile, $in
 
     $use_proxy = (read_config_option('storage_location') ? true : false);
 
+    try {
+        $quoted_file = rrdtool_pipe_quote($rrdfile);
+    } catch (\Kadupul\Graphing\Infrastructure\Rrd\UnrepresentableArgument $e) {
+        cacti_log('ERROR: Data Source statistics skipped for Local Data ID ' . $local_data_id . '. ' . $e->getMessage(), false, 'DSSTATS');
+
+        return;
+    }
+
     if ($use_proxy) {
-        $file_exists = rrdtool_execute("file_exists $rrdfile", true, RRDTOOL_OUTPUT_BOOLEAN, false, 'DSSTATS');
+        $file_exists = rrdtool_execute("file_exists $quoted_file", true, RRDTOOL_OUTPUT_BOOLEAN, false, 'DSSTATS');
     } else {
         clearstatcache();
         $file_exists = file_exists($rrdfile);
@@ -274,9 +282,9 @@ function dsstats_obtain_data_source_avgpeak_values($local_data_id, $rrdfile, $in
     if ($file_exists) {
         /* high speed or snail speed */
         if ($use_proxy) {
-            $info = rrdtool_execute("info $rrdfile", false, RRDTOOL_OUTPUT_STDOUT, false, 'DSSTATS');
+            $info = rrdtool_execute("info $quoted_file", false, RRDTOOL_OUTPUT_STDOUT, false, 'DSSTATS');
         } else {
-            $info = dsstats_rrdtool_execute("info $rrdfile", $pipes);
+            $info = dsstats_rrdtool_execute("info $quoted_file", $pipes);
         }
 
         /* don't do anything if RRDfile did not return data */
@@ -331,13 +339,13 @@ function dsstats_obtain_data_source_avgpeak_values($local_data_id, $rrdfile, $in
             if (cacti_sizeof($dsnames)) {
                 foreach ($dsnames as $dsname => $present) {
                     if ($average) {
-                        $def .= 'DEF:' . $defs[$j] . $defs[$i] . "=\"" . $rrdfile . "\":" . $dsname . ':AVERAGE ';
+                        $def .= 'DEF:' . $defs[$j] . $defs[$i] . '=' . $quoted_file . ':' . $dsname . ':AVERAGE ';
                         $command .= ' VDEF:' . $defs[$j] . $defs[$i] . '_out=' . $defs[$j] . $defs[$i] . ',AVERAGE PRINT:' . $defs[$j] . $defs[$i] . '_out:%lf';
                         $i++;
                     }
 
                     if ($max) {
-                        $def .= 'DEF:' . $defs[$j] . $defs[$i] . "=\"" . $rrdfile . "\":" . $dsname . ':MAX ';
+                        $def .= 'DEF:' . $defs[$j] . $defs[$i] . '=' . $quoted_file . ':' . $dsname . ':MAX ';
                         $command .= ' VDEF:' . $defs[$j] . $defs[$i] . '_out=' . $defs[$j] . $defs[$i] . ',MAXIMUM PRINT:' . $defs[$j] . $defs[$i] . '_out:%lf';
                         $i++;
                     }

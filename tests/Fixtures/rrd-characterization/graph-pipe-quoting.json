@@ -8,7 +8,7 @@
                 "-"
             ],
             "stdin": [
-                "info rra/router's traffic_11.rrd\r\nquit\r\n"
+                "info 'rra/router'\"'\"'s traffic_11.rrd'\r\nquit\r\n"
             ]
         },
         {
