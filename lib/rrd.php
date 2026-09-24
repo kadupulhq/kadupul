@@ -610,6 +610,23 @@ function rrdtool_create_path($path, $local_data_id, $logopt)
 }
 
 /**
+ * Refuse a create path RRDtool cannot receive before anything touches the
+ * disk, then make its structured-path directory. Returns false, or the path as
+ * the create command writes it and the RRA root's owner and group.
+ */
+function rrdtool_create_prepare($data_source_path, $show_source, $use_proxy, $rrdtool_pipe, $local_data_id, $logopt)
+{
+    $quoted_path = $show_source == true ? '' : rrdtool_create_path($data_source_path, $local_data_id, $logopt);
+    if ($quoted_path === false) {
+        return false;
+    }
+
+    list($owner_id, $group_id) = rrdtool_create_structured_path($data_source_path, $use_proxy, $rrdtool_pipe, $logopt);
+
+    return array($quoted_path, $owner_id, $group_id);
+}
+
+/**
  * Check for structured path configuration and, if in place, verify that the
  * RRD's directory exists and create it if not. $use_proxy is the caller's own
  * storage_location test; $logopt tags the proxy commands.
@@ -1320,13 +1337,11 @@ function rrdtool_function_create($local_data_id, $show_source, $rrdtool_pipe = f
 
     $create_rra = rrdtool_create_rras($rras, $consolidation_functions);
 
-    // Refuse a path RRDtool cannot receive before anything touches the disk.
-    $quoted_path = $show_source == true ? '' : rrdtool_create_path($data_source_path, $local_data_id, 'POLLER');
-    if ($quoted_path === false) {
+    $prepared = rrdtool_create_prepare($data_source_path, $show_source, read_config_option('storage_location'), $rrdtool_pipe, $local_data_id, 'POLLER');
+    if ($prepared === false) {
         return false;
     }
-
-    list($owner_id, $group_id) = rrdtool_create_structured_path($data_source_path, read_config_option('storage_location'), $rrdtool_pipe, 'POLLER');
+    list($quoted_path, $owner_id, $group_id) = $prepared;
 
     if ($show_source == true) {
         return read_config_option('path_rrdtool') . ' create' . RRD_NL . "$data_source_path$create_ds$create_rra";
