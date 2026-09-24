@@ -136,9 +136,9 @@ final class DbalTableConversionTest extends TestCase
     public function testAgainstARealMariaDb(): void
     {
         $db = $this->realMariaDb();
-        $db->executeStatement('DROP TABLE IF EXISTS kadupul_convert_probe');
-        $db->executeStatement("CREATE TABLE kadupul_convert_probe (id INT UNSIGNED NOT NULL PRIMARY KEY, name VARCHAR(20) NOT NULL DEFAULT '') ENGINE=MyISAM DEFAULT CHARSET=latin1");
         try {
+            $db->executeStatement('DROP TABLE IF EXISTS kadupul_convert_probe');
+            $db->executeStatement("CREATE TABLE kadupul_convert_probe (id INT UNSIGNED NOT NULL PRIMARY KEY, name VARCHAR(20) NOT NULL DEFAULT '') ENGINE=MyISAM DEFAULT CHARSET=latin1");
             $adapter = $this->adapter($db);
             // Read from the connection's own DATABASE(), whatever config.php calls it.
             $before = $adapter->tableStatuses(DatabaseTarget::Local)->status('kadupul_convert_probe');
@@ -161,6 +161,7 @@ final class DbalTableConversionTest extends TestCase
         $hostile = 'kadupul`; DROP TABLE kadupul_convert_bystander; -- x';
         $quoted = $db->quoteSingleIdentifier($hostile);
         try {
+            $db->executeStatement('DROP TABLE IF EXISTS kadupul_convert_bystander, ' . $quoted);
             $db->executeStatement('CREATE TABLE kadupul_convert_bystander (id INT) ENGINE=MyISAM');
             $db->executeStatement('CREATE TABLE ' . $quoted . ' (id INT) ENGINE=MyISAM');
             $adapter = $this->adapter($db);
@@ -181,8 +182,8 @@ final class DbalTableConversionTest extends TestCase
         $db = $this->realMariaDb();
         // A temporary table accepts ALTER TABLE but is not a BASE TABLE, so it
         // shows whether convert() checks the catalog before sending.
-        $db->executeStatement('CREATE TEMPORARY TABLE kadupul_convert_temp (id INT) ENGINE=MyISAM');
         try {
+            $db->executeStatement('CREATE TEMPORARY TABLE kadupul_convert_temp (id INT) ENGINE=MyISAM');
             $adapter = $this->adapter($db);
             self::assertFalse($adapter->tableStatuses(DatabaseTarget::Local)->has('kadupul_convert_temp'));
             self::assertFalse($adapter->convert(DatabaseTarget::Local, 'kadupul_convert_temp', new TableChange(false, null, true)));

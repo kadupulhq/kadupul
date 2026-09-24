@@ -10,7 +10,11 @@ namespace Kadupul\Tests\Fixtures;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 
-/** The MariaDB KADUPUL_TEST_MYSQL_DSN names, for SQL that SQLite cannot express; skipped without it. */
+/**
+ * The MariaDB KADUPUL_TEST_MYSQL_DSN names, for SQL that SQLite cannot express;
+ * skipped without it. Point it at a throwaway database: the tests drop and
+ * recreate settings, and the widening use case walks every table it finds.
+ */
 trait RealMariaDb
 {
     private function realMariaDb(): Connection

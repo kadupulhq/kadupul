@@ -184,12 +184,12 @@ final class ColumnWideningTest extends TestCase
     public function testAgainstARealMariaDb(): void
     {
         $db = $this->realMariaDb();
-        $db->executeStatement('DROP VIEW IF EXISTS kadupul_widen_view');
-        $db->executeStatement('DROP TABLE IF EXISTS ' . self::PROBE);
-        $db->executeStatement('CREATE TABLE ' . self::PROBE . " (id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, graph_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0', "
-            . "data_id INT(11) NULL DEFAULT '5', x SMALLINT(5) NULL, y TINYINT(4) NOT NULL, z INT(11) NULL DEFAULT NULL) ENGINE=InnoDB");
-        $db->executeStatement('CREATE VIEW kadupul_widen_view AS SELECT graph_id FROM ' . self::PROBE);
         try {
+            $db->executeStatement('DROP VIEW IF EXISTS kadupul_widen_view');
+            $db->executeStatement('DROP TABLE IF EXISTS ' . self::PROBE);
+            $db->executeStatement('CREATE TABLE ' . self::PROBE . " (id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, graph_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0', "
+                . "data_id INT(11) NULL DEFAULT '5', x SMALLINT(5) NULL, y TINYINT(4) NOT NULL, z INT(11) NULL DEFAULT NULL) ENGINE=InnoDB");
+            $db->executeStatement('CREATE VIEW kadupul_widen_view AS SELECT graph_id FROM ' . self::PROBE);
             $adapter = $this->adapter($db);
             $catalog = $adapter->catalog(DatabaseTarget::Local);
             // Views are not base tables and cannot be altered.
@@ -215,10 +215,10 @@ final class ColumnWideningTest extends TestCase
     {
         $db = $this->realMariaDb();
         $hostile = $db->quoteSingleIdentifier(self::HOSTILE);
-        $db->executeStatement('DROP TABLE IF EXISTS ' . $hostile . ', ' . self::PROBE);
-        $db->executeStatement('CREATE TABLE ' . self::PROBE . ' (id INT) ENGINE=InnoDB');
-        $db->executeStatement('CREATE TABLE ' . $hostile . " (graph_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0') ENGINE=InnoDB");
         try {
+            $db->executeStatement('DROP TABLE IF EXISTS ' . $hostile . ', ' . self::PROBE);
+            $db->executeStatement('CREATE TABLE ' . self::PROBE . ' (id INT) ENGINE=InnoDB');
+            $db->executeStatement('CREATE TABLE ' . $hostile . " (graph_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0') ENGINE=InnoDB");
             $adapter = $this->adapter($db);
             $catalog = $adapter->catalog(DatabaseTarget::Local);
             self::assertTrue($catalog->has(self::HOSTILE));
@@ -233,9 +233,9 @@ final class ColumnWideningTest extends TestCase
     public function testANameTheCatalogLacksSendsNothingOnARealMariaDb(): void
     {
         $db = $this->realMariaDb();
-        $db->executeStatement('DROP TABLE IF EXISTS ' . self::PROBE);
-        $db->executeStatement('CREATE TABLE ' . self::PROBE . " (graph_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0') ENGINE=InnoDB");
         try {
+            $db->executeStatement('DROP TABLE IF EXISTS ' . self::PROBE);
+            $db->executeStatement('CREATE TABLE ' . self::PROBE . " (graph_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0') ENGINE=InnoDB");
             $adapter = $this->adapter($db);
             $change = [new ColumnDefinition('graph_id', 'mediumint(8) unsigned', false, '0', '')];
             // Letter case differs, which a case-insensitive server would accept.
@@ -253,13 +253,13 @@ final class ColumnWideningTest extends TestCase
     public function testARefusedStatementIsLoggedAndReportedOnARealMariaDb(): void
     {
         $db = $this->realMariaDb();
-        $db->executeStatement('DROP TABLE IF EXISTS ' . self::PROBE);
-        $db->executeStatement('CREATE TABLE ' . self::PROBE . ' (graph_id INT(11) NOT NULL) ENGINE=InnoDB');
-        $db->executeStatement('INSERT INTO ' . self::PROBE . ' VALUES (-1)');
-        $db->executeStatement('DROP TABLE IF EXISTS settings');
-        $db->executeStatement('CREATE TABLE settings (name varchar(50) PRIMARY KEY, value varchar(1024))');
-        $db->executeStatement("INSERT INTO settings VALUES ('path_cactilog', ?)", [$this->root . '/log/cacti.log']);
         try {
+            $db->executeStatement('DROP TABLE IF EXISTS ' . self::PROBE);
+            $db->executeStatement('CREATE TABLE ' . self::PROBE . ' (graph_id INT(11) NOT NULL) ENGINE=InnoDB');
+            $db->executeStatement('INSERT INTO ' . self::PROBE . ' VALUES (-1)');
+            $db->executeStatement('DROP TABLE IF EXISTS settings');
+            $db->executeStatement('CREATE TABLE settings (name varchar(50) PRIMARY KEY, value varchar(1024))');
+            $db->executeStatement("INSERT INTO settings VALUES ('path_cactilog', ?)", [$this->root . '/log/cacti.log']);
             // A signed column holding -1 becomes unsigned, which strict mode refuses, as it did for the original.
             $db->executeStatement("SET SESSION sql_mode = 'STRICT_ALL_TABLES'");
             self::assertFalse($this->adapter($db)->widen(DatabaseTarget::Local, self::PROBE, [new ColumnDefinition('graph_id', 'int(11)', false, null, '')]));
@@ -272,9 +272,9 @@ final class ColumnWideningTest extends TestCase
     public function testAColumnChangedSinceTheReadSendsNothingOnARealMariaDb(): void
     {
         $db = $this->realMariaDb();
-        $db->executeStatement('DROP TABLE IF EXISTS ' . self::PROBE);
-        $db->executeStatement('CREATE TABLE ' . self::PROBE . " (graph_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0') ENGINE=InnoDB");
         try {
+            $db->executeStatement('DROP TABLE IF EXISTS ' . self::PROBE);
+            $db->executeStatement('CREATE TABLE ' . self::PROBE . " (graph_id MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT '0') ENGINE=InnoDB");
             $adapter = $this->adapter($db);
             $read = $adapter->catalog(DatabaseTarget::Local)->columns(self::PROBE);
             // Another session changes the column between the read and the statement.
@@ -291,10 +291,10 @@ final class ColumnWideningTest extends TestCase
     public function testGeneratedAndInvisibleColumnsAreReadAsSuchOnARealMariaDb(): void
     {
         $db = $this->realMariaDb();
-        $db->executeStatement('DROP TABLE IF EXISTS ' . self::PROBE);
-        $db->executeStatement('CREATE TABLE ' . self::PROBE . ' (id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT INVISIBLE PRIMARY KEY, '
-            . 'c MEDIUMINT(8) NOT NULL DEFAULT 0, graph_id MEDIUMINT(8) UNSIGNED INVISIBLE DEFAULT 0, data_id MEDIUMINT(8) AS (c + 1) VIRTUAL, x MEDIUMINT(8) AS (c + 2) STORED) ENGINE=InnoDB');
         try {
+            $db->executeStatement('DROP TABLE IF EXISTS ' . self::PROBE);
+            $db->executeStatement('CREATE TABLE ' . self::PROBE . ' (id MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT INVISIBLE PRIMARY KEY, '
+                . 'c MEDIUMINT(8) NOT NULL DEFAULT 0, graph_id MEDIUMINT(8) UNSIGNED INVISIBLE DEFAULT 0, data_id MEDIUMINT(8) AS (c + 1) VIRTUAL, x MEDIUMINT(8) AS (c + 2) STORED) ENGINE=InnoDB');
             $columns = $this->adapter($db)->catalog(DatabaseTarget::Local)->columns(self::PROBE);
             self::assertSame(['auto_increment, INVISIBLE', '', 'INVISIBLE', 'VIRTUAL GENERATED', 'STORED GENERATED'], array_map(static fn(ColumnDefinition $c): string => $c->extra, $columns));
             self::assertSame([false, true, false, false, false], array_map(static fn(ColumnDefinition $c): bool => $c->changeable(), $columns));
@@ -311,16 +311,16 @@ final class ColumnWideningTest extends TestCase
     public function testAnExpressionDefaultFailsIsReportedAndAuditedOnARealMariaDb(): void
     {
         $db = $this->realMariaDb();
-        $db->executeStatement('DROP TABLE IF EXISTS settings, ' . self::PROBE);
-        $db->executeStatement('CREATE TABLE settings (name varchar(50) PRIMARY KEY, value varchar(1024))');
-        $db->executeStatement("INSERT INTO settings VALUES ('path_cactilog', ?)", [$this->root . '/log/cacti.log']);
-        $db->executeStatement('CREATE TABLE ' . self::PROBE . ' (graph_id INT(11) NOT NULL DEFAULT (1 + 1)) ENGINE=InnoDB');
         $events = [];
         $trail = $this->createStub(AuditTrail::class);
         $trail->method('record')->willReturnCallback(static function (AuditEvent $event) use (&$events): void {
             $events[] = $event;
         });
         try {
+            $db->executeStatement('DROP TABLE IF EXISTS settings, ' . self::PROBE);
+            $db->executeStatement('CREATE TABLE settings (name varchar(50) PRIMARY KEY, value varchar(1024))');
+            $db->executeStatement("INSERT INTO settings VALUES ('path_cactilog', ?)", [$this->root . '/log/cacti.log']);
+            $db->executeStatement('CREATE TABLE ' . self::PROBE . ' (graph_id INT(11) NOT NULL DEFAULT (1 + 1)) ENGINE=InnoDB');
             $report = $this->widenUseCase($db, $trail)(false, null, true);
             // MariaDB lists the default as "(1 + 1)"; as a quoted literal it is not an integer.
             self::assertSame([['table' => self::PROBE, 'column' => null, 'event' => WideningEvent::Failed,

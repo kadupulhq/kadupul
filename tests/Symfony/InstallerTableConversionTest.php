@@ -202,9 +202,9 @@ final class InstallerTableConversionTest extends TestCase
     {
         $db = $this->realMariaDb();
         $root = sys_get_temp_dir() . '/kadupul-installer-convert-' . bin2hex(random_bytes(8));
-        $db->executeStatement('DROP TABLE IF EXISTS kadupul_installer_probe');
-        $db->executeStatement("CREATE TABLE kadupul_installer_probe (id INT UNSIGNED NOT NULL PRIMARY KEY) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT");
         try {
+            $db->executeStatement('DROP TABLE IF EXISTS kadupul_installer_probe');
+            $db->executeStatement("CREATE TABLE kadupul_installer_probe (id INT UNSIGNED NOT NULL PRIMARY KEY) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT");
             $conversion = new DbalTableConversion($root, new Filesystem(), new MaintenanceConnections($db, $db, new LegacyOperatorLog($root, new Filesystem(), new MockClock())));
             $result = $this->adapter($conversion)->convert('kadupul_installer_probe');
             self::assertSame(self::HEADER . "Converting Table > 'kadupul_installer_probe' Successful\n", $result->output);
