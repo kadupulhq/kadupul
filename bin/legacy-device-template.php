@@ -7,6 +7,7 @@
 
 use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuditTrail;
+use Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyWorkerAudit;
 use Kadupul\Inventory\Domain\DeviceTemplateAssignment;
 use Kadupul\Inventory\Domain\DeviceEditConflict;
 
@@ -15,11 +16,7 @@ require __DIR__ . '/legacy-assignment-bootstrap.php';
 $status = 'failed';
 $transactionStarted = false;
 $writeStarted = false;
-$auditCorrelation = bin2hex(random_bytes(16));
-$auditActor = null;
-$auditTarget = 'unknown';
-$auditDecision = AuditEvent::DENIED;
-$auditOutcome = AuditEvent::DENIED;
+$audit = new LegacyWorkerAudit(new LegacyAuditTrail(dirname(__DIR__)), 'inventory.device.assign-template', 'device', 'unknown');
 try {
     $input = stream_get_contents(STDIN, 4097);
     if (strlen($input) > 4096) {
@@ -33,12 +30,9 @@ try {
         || !is_string($command['revision'] ?? null)) {
         throw new InvalidArgumentException('Invalid command');
     }
-    if (!is_string($command['correlation_id'] ?? null) || !preg_match('/^[a-f0-9]{32}$/D', $command['correlation_id'])) {
-        throw new InvalidArgumentException('Invalid command');
-    }
-    $auditCorrelation = $command['correlation_id'];
-    $auditActor = $command['actor'];
-    $auditTarget = (string) $command['id'];
+    $audit->correlate($command['correlation_id'] ?? null);
+    $audit->actorId = $command['actor'];
+    $audit->targetId = (string) $command['id'];
     if ((int) ($config['poller_id'] ?? 0) !== 1 || !db_execute('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ') || !db_begin_transaction()) {
         throw new RuntimeException('Primary transaction unavailable');
     }
@@ -48,16 +42,16 @@ try {
         $status = 'denied';
         throw new RuntimeException('Access denied');
     }
-    $auditDecision = AuditEvent::ALLOWED;
-    $auditOutcome = AuditEvent::FAILED;
+    $audit->decision = AuditEvent::ALLOWED;
+    $audit->outcome = AuditEvent::FAILED;
     if ($command['template_id'] > 0 && !db_fetch_cell_prepared('SELECT id FROM host_template WHERE id = ? LOCK IN SHARE MODE', [$command['template_id']])) {
         throw new InvalidArgumentException('Invalid template');
     }
     $row = \Kadupul\Inventory\Infrastructure\Legacy\DeviceAssignmentLock::findVisible($connection, $command['actor'], $command['id']);
     if ($row === null) {
         $status = 'denied';
-        $auditDecision = AuditEvent::DENIED;
-        $auditOutcome = AuditEvent::DENIED;
+        $audit->decision = AuditEvent::DENIED;
+        $audit->outcome = AuditEvent::DENIED;
         throw new RuntimeException('Access denied');
     }
     $assignment = new DeviceTemplateAssignment((int) $row['id'], $row['description'], (int) $row['host_template_id'], (int) $row['poller_id']);
@@ -119,7 +113,7 @@ try {
     }
     $transactionStarted = false;
     $status = 'ok';
-    $auditOutcome = AuditEvent::SUCCEEDED;
+    $audit->outcome = AuditEvent::SUCCEEDED;
     cacti_log('INVENTORY: User ' . $command['actor'] . ' confirmed template ' . $assignment->templateId() . ' for device ' . $assignment->id, false, 'AUDIT');
 } catch (DeviceEditConflict) {
     $status = 'conflict';
@@ -128,26 +122,7 @@ try {
 } catch (Throwable) {
     // Side effects may already have reached a collector; report failure, never success.
 } finally {
-    if ($transactionStarted) {
-        try {
-            db_rollback_transaction();
-        } catch (Throwable) {
-            // Audit the unresolved operation even when legacy rollback reports an error.
-        }
-    }
-    try {
-        (new LegacyAuditTrail(dirname(__DIR__)))->record(new AuditEvent(
-            $auditCorrelation,
-            $auditActor,
-            'inventory.device.assign-template',
-            'device',
-            $auditTarget,
-            $auditDecision,
-            $auditOutcome,
-        ));
-    } catch (Throwable) {
-        // The transitional sink must not replace the stable worker result.
-    }
+    $audit->recordAfter($transactionStarted ? db_rollback_transaction(...) : null);
 }
 while (ob_get_level() > 0) {
     ob_end_clean();

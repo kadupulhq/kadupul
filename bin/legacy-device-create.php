@@ -7,6 +7,7 @@
 
 use Kadupul\IdentityAccess\Contract\AuditEvent;
 use Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyAuditTrail;
+use Kadupul\IdentityAccess\Infrastructure\Legacy\LegacyWorkerAudit;
 use Kadupul\Inventory\Domain\NewDevice;
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceCreationCredentials;
 use Kadupul\Inventory\Infrastructure\Legacy\DeviceCreationVerifier;
@@ -37,11 +38,7 @@ $status = 'failed';
 $id = null;
 $transactionStarted = false;
 $writeStarted = false;
-$auditCorrelation = bin2hex(random_bytes(16));
-$auditActor = null;
-$auditTarget = 'new';
-$auditDecision = AuditEvent::DENIED;
-$auditOutcome = AuditEvent::DENIED;
+$audit = new LegacyWorkerAudit(new LegacyAuditTrail(dirname(__DIR__)), 'inventory.device.create', 'device', 'new');
 try {
     $input = stream_get_contents(STDIN, 500001);
     if (strlen($input) > 500000) {
@@ -52,11 +49,8 @@ try {
         || !is_int($command['actor'] ?? null) || $command['actor'] <= 0 || !is_array($command['fields'] ?? null)) {
         throw new InvalidArgumentException('Invalid command');
     }
-    if (!is_string($command['correlation_id'] ?? null) || !preg_match('/^[a-f0-9]{32}$/D', $command['correlation_id'])) {
-        throw new InvalidArgumentException('Invalid command');
-    }
-    $auditCorrelation = $command['correlation_id'];
-    $auditActor = $command['actor'];
+    $audit->correlate($command['correlation_id'] ?? null);
+    $audit->actorId = $command['actor'];
     $device = new NewDevice($command['fields']);
     // The legacy connection defaults to utf8mb3 and permissive SQL modes.
     // Preserve validated Unicode and fail instead of silently truncating input.
@@ -73,8 +67,8 @@ try {
         $status = 'denied';
         throw new RuntimeException('Access denied');
     }
-    $auditDecision = AuditEvent::ALLOWED;
-    $auditOutcome = AuditEvent::FAILED;
+    $audit->decision = AuditEvent::ALLOWED;
+    $audit->outcome = AuditEvent::FAILED;
     $fields = $device->fields;
     if (((int) $fields['host_template_id'] !== 0 && !db_fetch_cell_prepared('SELECT id FROM host_template WHERE id = ? LOCK IN SHARE MODE', [$fields['host_template_id']]))
         || ((int) $fields['site_id'] !== 0 && !db_fetch_cell_prepared('SELECT id FROM sites WHERE id = ? LOCK IN SHARE MODE', [$fields['site_id']]))
@@ -131,34 +125,15 @@ try {
     $transactionStarted = false;
     $id = (int) $saved;
     $status = 'ok';
-    $auditTarget = (string) $id;
-    $auditOutcome = AuditEvent::SUCCEEDED;
+    $audit->targetId = (string) $id;
+    $audit->outcome = AuditEvent::SUCCEEDED;
     cacti_log('INVENTORY: User ' . $command['actor'] . ' created device ' . $id, false, 'AUDIT');
 } catch (InvalidArgumentException) {
     $status = $writeStarted ? 'failed' : 'invalid';
 } catch (Throwable) {
     // Return stable codes only; discard credentials, diagnostics and plugin output.
 } finally {
-    if ($transactionStarted) {
-        try {
-            db_rollback_transaction();
-        } catch (Throwable) {
-            // Audit the unresolved operation even when legacy rollback reports an error.
-        }
-    }
-    try {
-        (new LegacyAuditTrail(dirname(__DIR__)))->record(new AuditEvent(
-            $auditCorrelation,
-            $auditActor,
-            'inventory.device.create',
-            'device',
-            $auditTarget,
-            $auditDecision,
-            $auditOutcome,
-        ));
-    } catch (Throwable) {
-        // The transitional sink must not replace the stable worker result.
-    }
+    $audit->recordAfter($transactionStarted ? db_rollback_transaction(...) : null);
 }
 while (ob_get_level() > 0) {
     ob_end_clean();
