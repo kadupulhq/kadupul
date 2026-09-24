@@ -20,10 +20,12 @@ namespace StructuredPathOwnershipTest;
  * @param int    $group_id GID of rra/.
  * @param string $file     The file holding the loop; rrd.php and boost.php both have one.
  * @param string $fail     'chown' or 'chgrp' to make that call fail, '' for neither.
+ * @param string $rrd      The data source path; its directory decides how many
+ *                         segments the loop walks.
  *
  * @return array<int, string> The ownership calls the loop made, in order.
  */
-function structured_path_calls($dir_uid, $dir_gid, $owner_id, $group_id, $file = 'lib/rrd.php', $fail = '')
+function structured_path_calls($dir_uid, $dir_gid, $owner_id, $group_id, $file = 'lib/rrd.php', $fail = '', $rrd = '/rra/host/device.rrd')
 {
     $source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
     expect($source)->not->toBeFalse();
@@ -69,7 +71,7 @@ $GLOBALS["dir_gid"] = ' . (int) $dir_gid . ';
 $owner_id = ' . (int) $owner_id . ';
 $group_id = ' . (int) $group_id . ';
 $config = array("rra_path" => "/rra");
-$data_source_path = "/rra/host/device.rrd";
+$data_source_path = ' . var_export($rrd, true) . ';
 ' . $fragment . '
 echo json_encode($GLOBALS["calls"]);
 ';
@@ -168,6 +170,40 @@ test('a failed ownership change is logged and stops the walk', function () use (
 
         if ($calls !== array('chown:0', 'chgrp:500', 'log:permissions')) {
             $wrong[$file . ' chgrp'] = $calls;
+        }
+    }
+
+    expect($wrong)->toBe(array());
+});
+
+/*
+ * The single-segment fixture above cannot show that the loop stops: with one
+ * path segment there is no later one to skip. A nested path gives the break
+ * something to prevent.
+ */
+test('a failure stops the walk instead of continuing to the next segment', function () use ($copies) {
+    $nested = '/rra/alpha/beta/device.rrd';
+    $wrong  = array();
+
+    foreach ($copies as $file) {
+        // Both segments are wrong, so a completed walk makes four calls.
+        $calls = structured_path_calls(42, 999, 0, 500, $file, '', $nested);
+
+        if ($calls !== array('chown:0', 'chgrp:500', 'chown:0', 'chgrp:500')) {
+            $wrong[$file . ' both segments'] = $calls;
+        }
+
+        // chown fails on the first segment, so the second is never touched.
+        $calls = structured_path_calls(42, 999, 0, 500, $file, 'chown', $nested);
+
+        if ($calls !== array('chown:0', 'log:permissions')) {
+            $wrong[$file . ' stops after chown'] = $calls;
+        }
+
+        $calls = structured_path_calls(42, 999, 0, 500, $file, 'chgrp', $nested);
+
+        if ($calls !== array('chown:0', 'chgrp:500', 'log:permissions')) {
+            $wrong[$file . ' stops after chgrp'] = $calls;
         }
     }
 
