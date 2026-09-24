@@ -211,6 +211,42 @@ test('a valid --bulk_walk applies its size instead of printing the version', fun
     expect(json_decode($out, true))->toBe(array('bulk_walk_size' => '10'));
 });
 
+/*
+ * The behavior harness compares add_device.php --help against a recorded
+ * golden, so a help change that skips the golden lands as a REGRESSION after
+ * merge rather than on the PR. Tie the two together here instead.
+ */
+test('the recorded help golden matches the help the source prints', function () use ($root) {
+    $golden = $root . '/tests/Golden/kadupul/php-8.4/cli/device-help.json';
+
+    expect(file_exists($golden))->toBeTrue();
+
+    $recorded = json_decode((string) file_get_contents($golden), true);
+
+    expect($recorded)->toBeArray();
+
+    $lines = array();
+
+    foreach (explode("\n", $recorded['stdout']) as $line) {
+        if (strpos($line, '--disable') === 0 || strpos($line, '    --disable') === 0) {
+            $lines[] = $line;
+        }
+    }
+
+    expect(count($lines))->toBe(1);
+
+    // Recover the literal the source prints, so the two cannot drift apart.
+    $source = file_get_contents($root . '/cli/add_device.php');
+    $matched = preg_grep('/print "    --disable\s/', explode("\n", $source));
+
+    expect(count($matched))->toBe(1);
+
+    $literal = trim((string) reset($matched));
+    $literal = substr($literal, strlen('print "'), -strlen('\n";'));
+
+    expect($lines[0])->toBe(str_replace('\\"', '"', $literal));
+});
+
 test('both device CLIs state which numeric value disables', function () use ($root) {
     $wrong = array();
 
