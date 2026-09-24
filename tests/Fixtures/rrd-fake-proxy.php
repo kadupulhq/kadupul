@@ -124,7 +124,7 @@ if (!$authenticated) {
         $command = trim($command);
         $commands[] = $command;
         $verb = strtok($command, ' ');
-        if ($verb === 'quit') {
+        if ($verb === 'quit' || $verb === ($setup['hang_up_on'] ?? null)) {
             break;
         }
         if ($verb === 'setenv') {

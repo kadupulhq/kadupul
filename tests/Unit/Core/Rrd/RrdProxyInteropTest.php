@@ -290,6 +290,19 @@ test('a failed key exchange connects to nothing and sends no command', function 
     'closed mid-key' => array(array(), array('key_reply' => 'close'), 'CACTI2RRDP ERROR: Public RSA Key Exchange - Session closed by Proxy.'),
 ));
 
+test('a proxy that hangs up during session setup is not used', function () {
+    $client = rrd_proxy_interop_key();
+    $proxy = rrd_proxy_interop_key();
+    $result = rrd_proxy_interop_session($this, null, array(
+        'rsa_public_key' => $client['public'], 'rsa_private_key' => $client['private'], 'rrdp_fingerprint' => $proxy['fingerprint'],
+    ), array(
+        'proxy_private_key' => $proxy['private'], 'proxy_public_key' => $proxy['public'], 'client_fingerprint' => $client['fingerprint'], 'hang_up_on' => 'setcnn',
+    ));
+    expect($result['connected'])->toBeFalse()
+        ->and($result['problems'])->toContain('CACTI2RRDP ERROR: The RRDtool Proxy Server did not answer during session setup.')
+        ->and($result['proxy_received'])->toBe(array('setcnn encryption off'));
+});
+
 test('a proxy that reads the request a few bytes at a time still gets all of it', function () {
     $client = rrd_proxy_interop_key();
     $proxy = rrd_proxy_interop_key();
