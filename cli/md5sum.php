@@ -35,6 +35,7 @@ define_exit('EXIT_MD5WRI',  4, "ERROR: Failed to write to MD5 file '%s'\n");
 define_exit('EXIT_MD5MIS',  5, "ERROR: MD5 file '%s' is missing, cannot verify\n");
 define_exit('EXIT_MD5CON',  6, "ERROR: Failed to read from MD5 file '%s'\n");
 define_exit('EXIT_MD5LIN',  7, "ERROR: Failed to parse line %d:\n      %s\n");
+define_exit('EXIT_MD5ERR',  8, "ERROR: MD5 hash verification failed\n");
 
 /* process calling arguments */
 $parms = $_SERVER['argv'];
