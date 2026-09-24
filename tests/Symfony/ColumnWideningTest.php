@@ -259,7 +259,7 @@ final class ColumnWideningTest extends TestCase
             $db->executeStatement('INSERT INTO ' . self::PROBE . ' VALUES (-1)');
             $db->executeStatement('DROP TABLE IF EXISTS settings');
             $db->executeStatement('CREATE TABLE settings (name varchar(50) PRIMARY KEY, value varchar(1024))');
-            $db->executeStatement("INSERT INTO settings VALUES ('path_cactilog', ?)", [$this->root . '/log/cacti.log']);
+            $db->executeStatement("INSERT INTO settings VALUES ('path_cactilog', ?), ('log_verbosity', '5')", [$this->root . '/log/cacti.log']);
             // A signed column holding -1 becomes unsigned, which strict mode refuses, as it did for the original.
             $db->executeStatement("SET SESSION sql_mode = 'STRICT_ALL_TABLES'");
             self::assertFalse($this->adapter($db)->widen(DatabaseTarget::Local, self::PROBE, [new ColumnDefinition('graph_id', 'int(11)', false, null, '')]));
@@ -319,7 +319,7 @@ final class ColumnWideningTest extends TestCase
         try {
             $db->executeStatement('DROP TABLE IF EXISTS settings, ' . self::PROBE);
             $db->executeStatement('CREATE TABLE settings (name varchar(50) PRIMARY KEY, value varchar(1024))');
-            $db->executeStatement("INSERT INTO settings VALUES ('path_cactilog', ?)", [$this->root . '/log/cacti.log']);
+            $db->executeStatement("INSERT INTO settings VALUES ('path_cactilog', ?), ('log_verbosity', '5')", [$this->root . '/log/cacti.log']);
             $db->executeStatement('CREATE TABLE ' . self::PROBE . ' (graph_id INT(11) NOT NULL DEFAULT (1 + 1)) ENGINE=InnoDB');
             $report = $this->widenUseCase($db, $trail)(false, null, true);
             // MariaDB lists the default as "(1 + 1)"; as a quoted literal it is not an integer.

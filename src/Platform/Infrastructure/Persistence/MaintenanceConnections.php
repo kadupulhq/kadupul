@@ -15,6 +15,9 @@ use Kadupul\Platform\Infrastructure\Legacy\LegacyOperatorLog;
 
 final readonly class MaintenanceConnections
 {
+    /** POLLER_VERBOSITY_DEBUG: db_execute_prepared() logs its SQL line at this level (lib/database.php:638). */
+    private const int SQL_LINE_LEVEL = 5;
+
     public function __construct(
         private Connection $localConnection,
         private Connection $mainConnection,
@@ -41,20 +44,33 @@ final readonly class MaintenanceConnections
 
             return true;
         } catch (DriverException $error) {
-            $this->log($target, 'DBCALL', 'ERROR: A DB Exec Failed!, Error: ' . $error->getCode() . ", SQL: '" . $statement . "'");
-            $this->log($target, 'DBCALL', 'ERROR: A DB Exec Failed!, Error: ' . ($error->getPrevious() ?? $error)->getMessage());
+            $this->failed($target, $statement, $error);
 
             return false;
         }
     }
 
-    public function log(DatabaseTarget $target, string $environ, string $message): void
+    public function log(DatabaseTarget $target, string $environ, string $message, ?int $level = null): void
     {
         try {
-            $this->operatorLog->record($this->for($target), $environ, $message);
+            $this->operatorLog->record($this->for($target), $environ, $message, $level);
         } catch (Exception) {
             // Best effort, as cacti_log() is: a connection that just failed a
             // statement must not also fail the report of that statement.
         }
+    }
+
+    /**
+     * db_execute_prepared()'s two lines (lib/database.php:638-639): the
+     * server's error number and the statement at debug verbosity, then the
+     * server's own message, which PDO's errorInfo holds without the SQLSTATE
+     * prefix its exception message adds.
+     */
+    private function failed(DatabaseTarget $target, string $statement, DriverException $error): void
+    {
+        $pdo = $error->getPrevious()?->getPrevious();
+        $message = $pdo instanceof \PDOException && is_string($pdo->errorInfo[2] ?? null) ? $pdo->errorInfo[2] : ($error->getPrevious() ?? $error)->getMessage();
+        $this->log($target, 'DBCALL', 'ERROR: A DB Exec Failed!, Error: ' . $error->getCode() . ", SQL: '" . $statement . "'", self::SQL_LINE_LEVEL);
+        $this->log($target, 'DBCALL', 'ERROR: A DB Exec Failed!, Error: ' . $message);
     }
 }

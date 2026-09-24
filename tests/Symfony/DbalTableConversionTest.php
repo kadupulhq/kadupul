@@ -97,7 +97,10 @@ final class DbalTableConversionTest extends TestCase
 
     public function testAFailedStatementIsLoggedLikeDbExecute(): void
     {
-        $connections = $this->connections($this->sqlite());
+        $db = $this->sqlite();
+        // db_execute() writes its SQL line only at debug verbosity (lib/database.php:638).
+        $db->executeStatement("INSERT INTO settings VALUES ('log_verbosity', '5')");
+        $connections = $this->connections($db);
         self::assertTrue($connections->execute(DatabaseTarget::Local, 'CREATE TABLE t (id INTEGER)'));
         self::assertFalse($connections->execute(DatabaseTarget::Local, 'ALTER TABLE missing ADD COLUMN x INTEGER'));
         $log = $this->log();

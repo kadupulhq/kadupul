@@ -38,8 +38,10 @@ final readonly class LegacyOperatorLog
     /**
      * Callers must not pass $environ = 'POLLER': there is no poller id here, so
      * cacti_log()'s "Poller[id] PID[pid]" prefix for that environ cannot be reproduced.
+     *
+     * @param ?int $level cacti_log()'s fourth argument, a POLLER_VERBOSITY_* value, or null for none
      */
-    public function record(Connection $settings, string $environ, string $message): void
+    public function record(Connection $settings, string $environ, string $message, ?int $level = null): void
     {
         if (trim($message) === '') {
             return;
@@ -50,6 +52,9 @@ final readonly class LegacyOperatorLog
             return $found === false ? null : (string) $found;
         };
         $value = static fn(string $name, string $default): string => $row($name) ?? $default;
+        if ($level !== null && !self::loudEnough($level, $value('log_verbosity', '2'))) {
+            return;
+        }
         $text = (string) preg_replace('/\s*[\r\n]+\s*/', ' ', $message);
         $destination = (int) $value('log_destination', '1');
         if (($destination === 1 || $destination === 2) && $value('log_verbosity', '2') !== '1') {
@@ -102,6 +107,21 @@ final readonly class LegacyOperatorLog
         }
 
         return sprintf(self::DATE[4], $character) . ' H:i:s';
+    }
+
+    /**
+     * cacti_log()'s level gate (lib/functions.php:1343-1359), compared as
+     * loosely as there. Selective debug is not honoured: it keys on the running
+     * script's file name, which a command does not have.
+     */
+    private static function loudEnough(int $level, string $verbosity): bool
+    {
+        // POLLER_VERBOSITY_DEVDBG (6) passes its own level and LOW (2) and below.
+        if ($verbosity == 6) {
+            return $level == 6 || $level <= 2;
+        }
+
+        return !($level > $verbosity);
     }
 
     private function send(int $priority, string $line): void
