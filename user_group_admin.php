@@ -673,7 +673,12 @@ function form_save() {
 		foreach ($_POST as $var => $val) {
 			if (preg_match('/^[section]/i', $var)) {
 				if (substr($var, 0, 7) == 'section') {
-				    db_execute_prepared('REPLACE INTO user_auth_group_realm (group_id, realm_id) VALUES (?, ?)', array(get_request_var('id'), substr($var, 7)));
+				    db_execute_prepared('REPLACE INTO user_auth_group_realm
+						(group_id, realm_id)
+						SELECT id, ?
+						FROM user_auth_group
+						WHERE id = ?',
+						array(substr($var, 7), get_request_var('id')));
 				}
 			}
 		}

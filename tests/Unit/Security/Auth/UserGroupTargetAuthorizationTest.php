@@ -61,6 +61,7 @@ function db_execute_prepared($sql, $params = array()) {
 	if (strpos($sql, "INSERT INTO user_auth_group_realm") !== false) { $GLOBALS["writes"][] = "REALM " . $params[0] . ":" . $params[1]; }
 	elseif (strpos($sql, "REPLACE INTO user_auth_group_perms") !== false) { $GLOBALS["writes"][] = gate_marker($sql) . "PERM " . $params[0] . ":" . $params[1]; }
 	elseif (strpos($sql, "REPLACE INTO user_auth_group_members") !== false) { $GLOBALS["writes"][] = gate_marker($sql) . "MEMBER " . $params[0] . ":" . $params[1]; }
+	elseif (strpos($sql, "REPLACE INTO user_auth_group_realm") !== false) { $GLOBALS["writes"][] = gate_marker($sql) . "REALM " . $params[0] . ":" . $params[1]; }
 	elseif (strpos($sql, "INSERT INTO user_auth_group_perms") !== false) { $GLOBALS["writes"][] = "PERM " . $params[0] . ":" . $params[1]; }
 	elseif (strpos($sql, "SET login_opts") !== false) { $GLOBALS["writes"][] = "LOGIN_OPTS " . $params[0]; }
 	else { $GLOBALS["writes"][] = strtok(trim($sql), " "); }
@@ -175,9 +176,22 @@ test('a copied group receives the realms and permissions of its source', functio
 test('a realm save that drops console access moves the landing page to graphs', function () use ($db) {
 	// Group 5 stores the console landing page and posts no console realm.
 	expect(run_handler('form_save', array('id' => 5, 'save_component_realm_perms' => 1, 'section7' => 'on'), $db))
-		->toBe(array('writes' => array('DELETE', 'REPLACE', 'LOGIN_OPTS 5'), 'message' => 1));
+		->toBe(array('writes' => array('DELETE', 'GATED REALM 7:5', 'LOGIN_OPTS 5'), 'message' => 1));
 
 	// Group 6 keeps console access, so its landing page is left alone.
 	expect(run_handler('form_save', array('id' => 6, 'save_component_realm_perms' => 1, 'section8' => 'on'), $db))
-		->toBe(array('writes' => array('DELETE', 'REPLACE'), 'message' => 1));
+		->toBe(array('writes' => array('DELETE', 'GATED REALM 8:6'), 'message' => 1));
+});
+
+/*
+ * user_auth_group_realm has no foreign key to user_auth_group, so the realm
+ * save cannot rely on the existence check above it: a delete landing between
+ * the two would leave orphan realm rows behind.
+ */
+test('the realm save carries the parent predicate, not just an existence check', function () use ($db) {
+	$writes = run_handler('form_save', array('id' => 6, 'save_component_realm_perms' => 1, 'section8' => 'on'), $db)['writes'];
+
+	foreach ($writes as $write) {
+		expect(strpos($write, 'BARE '))->toBeFalse($write);
+	}
 });
