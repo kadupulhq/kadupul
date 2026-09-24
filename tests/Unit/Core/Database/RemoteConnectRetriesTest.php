@@ -16,14 +16,23 @@ $root = dirname(__DIR__, 4);
  *
  * @param string $needle Text identifying the statement to run.
  * @param array  $vars   The configuration variables in scope, as config.php sets them.
+ * @param string $file   The file holding the statement.
+ * @param string $after  Text the statement must follow, for a file with several.
  *
  * @return array<int, mixed> The positional arguments the statement passed.
  */
-function connect_arguments($needle, array $vars) {
-	$source = file_get_contents(dirname(__DIR__, 4) . '/include/global.php');
+function connect_arguments($needle, array $vars, $file = 'include/global.php', $after = '') {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/' . $file);
 	expect($source)->not->toBeFalse();
 
-	$start = strpos($source, $needle);
+	$from = 0;
+
+	if ($after !== '') {
+		$from = strpos($source, $after);
+		expect($from)->not->toBeFalse();
+	}
+
+	$start = strpos($source, $needle, $from);
 	expect($start)->not->toBeFalse();
 
 	$end = strpos($source, ';', $start);
@@ -122,9 +131,13 @@ test('no argument of the remote call is taken from the local settings', function
  * The installer's own remote connect has always passed the remote value, which
  * is the precedent the fix follows.
  */
-test('the installer already passed the remote retry count', function () use ($root) {
-	$source = file_get_contents($root . '/install/functions.php');
+test('the installer already passed the remote retry count', function () use ($vars) {
+	// Run the installer's own call, rather than counting a variable name that
+	// also appears in the global declaration above it.
+	// install/functions.php has three of these; the local one comes first.
+	$arguments = connect_arguments('$connection = db_connect_real(', $vars,
+		'install/functions.php', 'function install_test_remote_database_connection()');
 
-	expect($source)->not->toBeFalse();
-	expect(substr_count($source, '$rdatabase_retries'))->toBeGreaterThan(1);
+	expect($arguments[0])->toBe('main.invalid')
+		->and($arguments[RETRIES])->toBe(1);
 });
