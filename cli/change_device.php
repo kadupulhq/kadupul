@@ -117,7 +117,13 @@ foreach($parms as $parameter) {
 		case '--disable':
 			$value = trim($value);
 			if (is_numeric($value)) {
-				$overrides['disabled'] = intval($value) == 0 ? 'on' : '';
+				/* 1 disables and 0 enables, as in add_device.php and the help below */
+				if ($value != 0 && $value != 1) {
+					print "ERROR: Invalid disable flag ($value)\n";
+					exit(1);
+				}
+
+				$overrides['disabled'] = $value == 1 ? 'on' : '';
 			} else {
 				$overrides['disabled'] = $value == 'on' ? 'on': '';
 			}
@@ -417,7 +423,7 @@ function display_help() {
 	print "    --location     '', The physical location of the Device.\n";
 	print "    --notes        '', General information about this host.  Must be enclosed using double quotes.\n";
 	print "    --external-id  '', An external ID to align Cacti devices with devices from other systems.\n";
-	print "    --disable      0, 1 to add this host but to disable checks and 0 to enable it\n";
+	print "    --disable      1 to disable checks for this host, 0 to enable it, or on/off\n";
 	print "    --poller       0, numeric poller id that will perform data collection for the device.\n";
 	print "    --site         0, numeric site id that will be associated with the device.\n";
 	print "    --threads      1, numeric number of threads to poll device with.\n";
