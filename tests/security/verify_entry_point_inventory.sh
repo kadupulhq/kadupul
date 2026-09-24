@@ -22,7 +22,9 @@ tr -d '\r' < "$BASELINE" | LC_ALL=C sort -u > "$TMP_BASELINE"
 status=0
 
 # An unclassified entry point is a gap even when someone baselined it.
-if awk -F '\t' '$2 == "unknown"' "$TMP_CUR" | grep -q .; then
+# awk reports the match in its exit status. grep -q in a pipe can exit early,
+# and under pipefail the SIGPIPE would read as "no unknown entries".
+if awk -F '\t' '$2 == "unknown" { found = 1 } END { exit !found }' "$TMP_CUR"; then
 	echo "ERROR: entry points without a recognised gate:"
 	awk -F '\t' '$2 == "unknown" { print "  " $1 "\t" $3 }' "$TMP_CUR"
 	status=1
