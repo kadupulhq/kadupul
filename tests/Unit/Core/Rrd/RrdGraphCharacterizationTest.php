@@ -49,6 +49,54 @@ function rrd_characterization_graph_scenario(array $graph_data_array, array $opt
     ), $extra);
 }
 
+/**
+ * Every value a quoted argument can carry: a quote, a space, a percent sign, a
+ * colon and a double quote, in a data source path, legends, GPRINT and COMMENT
+ * text and a font path. RRDtool must be able to read the result, so the data
+ * source names stay valid and the graph goes to /dev/null.
+ */
+/** Replace the ifAlias value that |query_ifAlias| substitutes. */
+function rrd_characterization_if_alias(array $db, string $alias): array
+{
+    foreach ($db as $index => $row) {
+        if ($row['sql'] === 'field_name, field_value FROM host_snmp_cache') {
+            $db[$index]['result'][0]['field_value'] = $alias;
+        }
+    }
+
+    return $db;
+}
+
+function rrd_characterization_quoting_scenario(): array
+{
+    $in = rrd_characterization_ds('traffic_in');
+    $out = rrd_characterization_ds('traffic_out');
+    $items = array(
+        rrd_characterization_item(1, 'AREA', $in + array('hex' => '00CF00', 'text_format' => 'In\'s "peak" 50%: a b')),
+        rrd_characterization_item(2, 'GPRINT_LAST', $in + array('text_format' => 'Now:', 'gprint_text' => '%8.2lf %s it\'s "q"')),
+        rrd_characterization_item(3, 'LINE1', $out + array('hex' => '002A97')),
+        rrd_characterization_item(4, 'GPRINT', $out + array('text_format' => 'Out\'s:', 'gprint_text' => '%6.1lf%% \'x\'', 'consolidation_function_id' => '4')),
+        rrd_characterization_item(5, 'COMMENT', array('text_format' => 'Don\'t "stop" 100%: now', 'hard_return' => 'on')),
+    );
+    $scenario = rrd_characterization_graph_scenario(
+        array('graph_start' => 1700000000, 'graph_end' => 1700003600, 'output_filename' => '/dev/null'),
+        array('font_method' => '0', 'title_font' => "fonts/My Font's.ttf", 'title_size' => '10', 'axis_font' => 'DejaVu Sans', 'axis_size' => '8'),
+        // Substituted values are not HTML-escaped, so this alias avoids & and <
+        // that Pango would warn about.
+        array('title_cache' => "Router's |query_ifAlias|", 'vertical_label' => 'bits', 'right_axis' => '1:0', 'right_axis_label' => '|query_ifAlias| out'),
+        $items,
+        array('files' => array("router's traffic_11.rrd"))
+    );
+    $scenario['db'] = rrd_characterization_if_alias($scenario['db'], 'O\'Brien "core" 50%: a b');
+    foreach ($scenario['db'] as $index => $row) {
+        if ($row['sql'] === 'SELECT name, data_source_path FROM data_template_data' && $row['params'] === array(11)) {
+            $scenario['db'][$index]['result']['data_source_path'] = "rra/router's traffic_11.rrd";
+        }
+    }
+
+    return $scenario;
+}
+
 dataset('rrd graph scenarios', function () {
     $window = array('graph_start' => 1700000000, 'graph_end' => 1700003600);
     $area = array(rrd_characterization_item(1, 'AREA', rrd_characterization_ds('traffic_in') + array('hex' => '3366CC', 'alpha' => '99', 'text_format' => 'Inbound: 50%')));
@@ -64,6 +112,17 @@ dataset('rrd graph scenarios', function () {
             $quoting_db[$index]['result']['description'] = 'O\'Brien "core" \\ 50%: a b';
         }
     }
+
+    $nul_items = array_merge($area, array(rrd_characterization_item(2, 'COMMENT', array('text_format' => 'Host |host_description|'))));
+    $nul_db = rrd_characterization_graph_db(rrd_characterization_graph(), $nul_items);
+    foreach ($nul_db as $index => $row) {
+        if ($row['sql'] === 'FROM host AS h LEFT JOIN sites') {
+            $nul_db[$index]['result']['description'] = "core\0edge";
+        }
+    }
+
+    $right_axis = array('right_axis' => '1:0', 'right_axis_label' => '|query_ifAlias|');
+    $right_axis_db = rrd_characterization_graph_db(rrd_characterization_graph($right_axis), $area);
 
     return array(
         'every item type' => array('graph-items', rrd_characterization_graph_scenario($window)),
@@ -87,6 +146,28 @@ dataset('rrd graph scenarios', function () {
             array(),
             $area,
             array('cookies' => array('CactiColorMode' => 'dark'))
+        )),
+        'quotes, spaces, percent, colon and double quotes in arguments' => array('graph-pipe-quoting', rrd_characterization_quoting_scenario()),
+        'a NUL in a substituted comment' => array('graph-unrepresentable', rrd_characterization_graph_scenario(
+            $window + array('print_source' => true),
+            array(),
+            array(),
+            $nul_items,
+            array('db' => $nul_db)
+        )),
+        'a quote in a substituted right axis label' => array('graph-substituted-right-axis', rrd_characterization_graph_scenario(
+            $window,
+            array(),
+            $right_axis,
+            $area,
+            array('db' => rrd_characterization_if_alias($right_axis_db, 'it\'s --daemon x'))
+        )),
+        'a NUL in a substituted right axis label' => array('graph-substituted-right-axis-nul', rrd_characterization_graph_scenario(
+            $window + array('print_source' => true),
+            array(),
+            $right_axis,
+            $area,
+            array('db' => rrd_characterization_if_alias($right_axis_db, "core\0edge"))
         )),
         'quotes in a substituted title' => array('graph-substituted-quotes', rrd_characterization_graph_scenario($window, array(), $quoting, $area, array('db' => $quoting_db))),
         'export to file' => array('graph-export', rrd_characterization_graph_scenario($window + array('export' => true, 'export_filename' => 'rra/graph_7.png', 'graphv' => true), array(), array('image_format_id' => '3'), $area)),
@@ -163,4 +244,44 @@ test('graph options match their golden for each scale and axis setting', functio
     // get_rrdtool_version() caches per process, so RRDtool 1.3 needs its own run.
     $old = rrd_characterization_run($this, array('options' => array('rrdtool_version' => '1.3.0') + rrd_characterization_options(), 'db' => $db, 'calls' => array($calls[11])));
     rrd_characterization_golden('graph-options-rrdtool-1.3', explode(" \\\n", $old['results'][0]['returned']));
+});
+
+test('a generated graph command renders in RRDtool', function () {
+    $binary = getenv('RRDTOOL_TEST_BINARY');
+    if (!$binary || !is_executable($binary)) {
+        $this->markTestSkipped('RRDTOOL_TEST_BINARY is required');
+    }
+    $output = rrd_characterization_run($this, rrd_characterization_quoting_scenario());
+    $graph = array_values(array_filter($output['results'][0]['sent'], function ($sent) {
+        return strncmp($sent['stdin'], 'graph ', 6) === 0;
+    }));
+    expect($graph)->toHaveCount(1);
+
+    $directory = sys_get_temp_dir() . '/rrd-graph-roundtrip-' . bin2hex(random_bytes(8));
+    mkdir($directory . '/rra', 0700, true);
+    try {
+        // Paths in the command are relative to the directory RRDtool runs in.
+        $create = "create 'rra/router'\"'\"'s traffic_11.rrd' --start 1699990000 --step 300 DS:traffic_in:GAUGE:600:U:U DS:traffic_out:GAUGE:600:U:U"
+            . ' RRA:AVERAGE:0.5:1:100 RRA:MIN:0.5:1:100 RRA:MAX:0.5:1:100 RRA:LAST:0.5:1:100';
+        $environment = array('PATH' => getenv('PATH'), 'LANG' => 'C', 'LC_ALL' => 'C');
+        $process = proc_open(array($binary, '-'), array(0 => array('pipe', 'r'), 1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes, $directory, $environment);
+        fwrite($pipes[0], $create . "\n" . $graph[0]['stdin']);
+        fclose($pipes[0]);
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        proc_close($process);
+    } finally {
+        foreach (array_merge(glob($directory . '/rra/*'), array($directory . '/rra')) as $file) {
+            is_dir($file) ? rmdir($file) : unlink($file);
+        }
+        rmdir($directory);
+    }
+
+    expect($stderr)->toBe('');
+    expect($stdout)->not->toContain('ERROR');
+    // One OK for create and one for graph, which first prints the image size.
+    expect(preg_match_all('/^OK u:/m', $stdout))->toBe(2);
+    expect($stdout)->toMatch('/^\d+x\d+$/m');
 });

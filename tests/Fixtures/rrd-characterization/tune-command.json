@@ -98,5 +98,35 @@
                 "data-source-rename": "in'bound \"x\""
             }
         ]
+    },
+    {
+        "returned": false,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            {
+                "data-source-rename": "in\u0000bound",
+                "data_source_id": 21,
+                "data-source-type": "3",
+                "heartbeat": "600",
+                "minimum": "U",
+                "maximum": "1e9"
+            }
+        ]
+    },
+    {
+        "returned": false,
+        "printed": "",
+        "diagnostics": [],
+        "commands": [],
+        "args": [
+            [
+                "info",
+                "<path_rra>/router\u0000traffic_21.rrd"
+            ],
+            false,
+            1
+        ]
     }
 ]
