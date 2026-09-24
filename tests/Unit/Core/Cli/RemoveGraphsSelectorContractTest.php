@@ -129,15 +129,70 @@ test('--all ignores the other selectors', function () {
 	expect($result['where'])->toBe('WHERE gl.id > 0');
 });
 
-/*
- * Tie the help to the behaviour above, so the two cannot drift apart again.
+/**
+ * Render the real --help output by running display_help() from the file, with
+ * the two globals it needs stubbed. Asserting on the printed text means a
+ * requirement satisfied only by a comment or an unused string cannot pass.
+ *
+ * @return string Everything --help prints.
  */
-test('the help describes the contract the code implements', function () use ($root) {
-	$source = file_get_contents($root . '/cli/remove_graphs.php');
-	$start  = strpos($source, 'function display_help()');
-	expect($start)->not->toBeFalse();
+function rendered_help() {
+	$source = file_get_contents(dirname(__DIR__, 4) . '/cli/remove_graphs.php');
+	expect($source)->not->toBeFalse();
 
-	$help  = substr($source, $start);
+	$functions = '';
+
+	foreach (array('function display_version()', 'function display_help()') as $signature) {
+		$start = strpos($source, $signature);
+		expect($start)->not->toBeFalse();
+
+		$open  = strpos($source, '{', $start);
+		$depth = 0;
+		$end   = $open;
+
+		for ($i = $open; $i < strlen($source); $i++) {
+			if ($source[$i] === '{') {
+				$depth++;
+			} elseif ($source[$i] === '}') {
+				$depth--;
+
+				if ($depth === 0) {
+					$end = $i + 1;
+
+					break;
+				}
+			}
+		}
+
+		$functions .= substr($source, $start, $end - $start) . "\n";
+	}
+
+	$code = 'define("COPYRIGHT_YEARS", "2004-2026");'
+		. 'function get_cacti_cli_version() { return "1.2.32"; }'
+		. $functions . 'display_help();';
+
+	$pipes   = array();
+	$process = proc_open(array(PHP_BINARY, '-r', $code),
+		array(1 => array('pipe', 'w'), 2 => array('pipe', 'w')), $pipes);
+	expect($process)->not->toBeFalse();
+
+	$out = stream_get_contents($pipes[1]);
+	$err = stream_get_contents($pipes[2]);
+	fclose($pipes[1]);
+	fclose($pipes[2]);
+	proc_close($process);
+
+	expect($err)->toBe('');
+	expect($out)->not->toBe('');
+
+	return $out;
+}
+
+/*
+ * Tie the printed help to the behaviour above, so the two cannot drift apart.
+ */
+test('the printed help describes the contract the code implements', function () {
+	$help  = rendered_help();
 	$wrong = array();
 
 	// No selector is mandatory, and the old wording said one was.
@@ -150,18 +205,22 @@ test('the help describes the contract the code implements', function () use ($ro
 	}
 
 	// Both facts a reader cannot get from the option list alone.
-	if (strpos($help, '--all') === false || strpos($help, 'refused') === false) {
-		$wrong[] = 'does not say an empty selection is refused without --all';
+	if (strpos($help, 'refused') === false) {
+		$wrong[] = 'does not say an empty selection is refused';
 	}
 
 	if (strpos($help, 'lists every Graph') === false) {
-		$wrong[] = 'does not say a bare --list lists every Graph';
+		$wrong[] = 'does not say a selectorless --list lists every Graph';
 	}
 
-	// Every option the file actually parses must appear in the help.
+	// A stray escape would reach the terminal verbatim.
+	if (strpos($help, '\\') !== false) {
+		$wrong[] = 'prints a backslash';
+	}
+
 	foreach (array('--graph-template-id', '--host-template-id', '--host-id',
 		'--graph-regex', '--all', '--list', '--force', '--preserve') as $option) {
-		if (substr_count($help, $option) === 0) {
+		if (strpos($help, $option) === false) {
 			$wrong[] = 'omits ' . $option;
 		}
 	}
@@ -173,50 +232,36 @@ test('the help describes the contract the code implements', function () use ($ro
  * The usage block is its own regression: it named only two of the options and
  * left its first bracket unclosed, which the option list above would not catch.
  */
-test('the usage block lists every option and balances its brackets', function () use ($root) {
-	$source = file_get_contents($root . '/cli/remove_graphs.php');
-	$start  = strpos($source, 'usage: remove_graphs.php');
+test('the printed usage block lists every option and balances its brackets', function () {
+	$help  = rendered_help();
+	$start = strpos($help, 'usage: remove_graphs.php');
 	expect($start)->not->toBeFalse();
 
-	$end = strpos($source, 'PHP_EOL . PHP_EOL;', $start);
+	$end = strpos($help, 'Kadupul utility');
+	if ($end === false) {
+		$end = strpos($help, 'Cacti utility');
+	}
 	expect($end)->not->toBeFalse();
 
-	// Recover the printed text, not the source, so quoting cannot hide a defect.
-	$printed = '';
-	foreach (explode("\n", substr($source, $start - 200, $end - $start + 220)) as $line) {
-		if (preg_match('/print (?:PHP_EOL \. )?"(.*)" \. PHP_EOL/', $line, $matches)) {
-			$printed .= stripcslashes($matches[1]) . "\n";
-		}
-	}
+	$usage = substr($help, $start, $end - $start);
 
-	expect(substr_count($printed, '['))->toBe(substr_count($printed, ']'));
+	expect(substr_count($usage, '['))->toBe(substr_count($usage, ']'));
 
 	$missing = array();
 	foreach (array('--graph-template-id', '--host-template-id', '--host-id',
 		'--graph-regex', '--all', '--list', '--force', '--preserve') as $option) {
-		if (strpos($printed, $option) === false) {
+		if (strpos($usage, $option) === false) {
 			$missing[] = $option;
 		}
 	}
 
 	expect($missing)->toBe(array());
-	expect($printed)->toContain('usage: remove_graphs.php');
 });
 
-/* The help is user-facing text; a stray escape would print verbatim. */
-test('no help line prints a stray backslash', function () use ($root) {
-	$source = file_get_contents($root . '/cli/remove_graphs.php');
-	$start  = strpos($source, 'function display_help()');
-	$stray  = array();
-
-	foreach (explode("\n", substr($source, $start)) as $line) {
-		if (preg_match('/print (?:PHP_EOL \. )?"(.*?)"/', $line, $matches)) {
-			// Inside a double-quoted string only a few escapes are real.
-			if (preg_match('/\\\\[^nrtvef\\\\$"0-7xu]/', $matches[1])) {
-				$stray[] = trim($line);
-			}
-		}
-	}
-
-	expect($stray)->toBe(array());
+/*
+ * --all bypasses the empty-selection guard too, so the help must not claim
+ * --list is the only mode that works without a selector.
+ */
+test('the help does not call --list the only selectorless mode', function () {
+	expect(strpos(rendered_help(), 'the one mode that accepts no'))->toBeFalse();
 });
