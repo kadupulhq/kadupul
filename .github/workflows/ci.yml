@@ -345,12 +345,13 @@ jobs:
           set -euo pipefail
           changed=$(git diff --name-only "$BASE_SHA" HEAD)
 
-          # A branch that only moves CI, docs or the changelog itself needs no entry.
+          # A branch that only moves CI, contributor hooks, docs or the
+          # changelog itself needs no entry.
           substantive=false
           while IFS= read -r f; do
             [ -z "$f" ] && continue
             case "$f" in
-              CHANGELOG.md|.github/*|docs/*|*.md) ;;
+              CHANGELOG.md|.github/*|.githooks/*|docs/*|*.md) ;;
               *) substantive=true ;;
             esac
           done <<< "$changed"
